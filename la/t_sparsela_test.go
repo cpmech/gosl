@@ -7,7 +7,7 @@ package la
 import (
 	"testing"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 func TestSparseLA01(tst *testing.T) {

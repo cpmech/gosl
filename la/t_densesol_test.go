@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 func calc_LLt(L [][]float64) (LLt [][]float64) {

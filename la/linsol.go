@@ -7,7 +7,7 @@ package la
 import (
 	"time"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 type LinSol interface {

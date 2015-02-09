@@ -5,7 +5,7 @@
 package la
 
 import (
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // MatToColMaj returns a vector representation of a column-major matrix

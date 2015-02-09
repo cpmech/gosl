@@ -24,7 +24,7 @@ import (
 	"time"
 	"unsafe"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // LinSolUmfpack holds UMFPACK data

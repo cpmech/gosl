@@ -7,7 +7,7 @@ package la
 import (
 	"testing"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x_correct []float64) {

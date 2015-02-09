@@ -7,7 +7,7 @@ package la
 import (
 	"math"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // MatInv returns the matrix inverse of 'a' in 'ai', in addition to the determinant of 'a'

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 var (

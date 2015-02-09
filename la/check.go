@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // check_residR (real) calculates max |component| of resid: r = a*x - b

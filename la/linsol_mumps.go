@@ -18,8 +18,8 @@ import (
 	"time"
 	"unsafe"
 
-	"code.google.com/p/gosl/mpi"
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/mpi"
+	"github.com/cpmech/gosl/utl"
 )
 
 // LinSolMumps holds MUMPS data

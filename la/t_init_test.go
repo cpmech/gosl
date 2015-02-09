@@ -5,7 +5,7 @@
 package la
 
 import (
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 func init() {

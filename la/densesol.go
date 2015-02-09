@@ -7,7 +7,7 @@ package la
 import (
 	"math"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Cholesky returns the Cholesky decomposition of a symmetric positive-definite matrix:

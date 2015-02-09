@@ -7,7 +7,7 @@
 package la
 
 import (
-	"code.google.com/p/gosl/mpi"
+	"github.com/cpmech/gosl/mpi"
 )
 
 // SpTriSumToRoot join (MPI) parallel triplets to root (Rank == 0) processor.

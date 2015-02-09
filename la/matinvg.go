@@ -17,7 +17,7 @@ import "C"
 import (
 	"unsafe"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 //  NOTE: __IMPORTANT__ this package works on 64bit machines only,

@@ -5,7 +5,7 @@
 package la
 
 import (
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Triplet is a simple representation of a sparse matrix, where the indices and values
