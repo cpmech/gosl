@@ -7,7 +7,7 @@ package fdm
 import (
 	"testing"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 func TestGrid2D(tst *testing.T) {

@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 type Grid2D struct {

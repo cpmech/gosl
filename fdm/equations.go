@@ -5,8 +5,8 @@
 package fdm
 
 import (
-    "fmt"
-    "sort"
+	"fmt"
+	"sort"
 )
 
 /* Equations
@@ -16,7 +16,7 @@ import (
     |   +---> prescribed
     +-------> unknowns
 
-   "RF" means "reduced to full" 
+   "RF" means "reduced to full"
    "FR" means "full to reduced"
    reduced 1: is a reduced system of equations where only unknown    equations are present
    reduced 2: is a reduced system of equations where only prescribed equations are present
@@ -60,43 +60,43 @@ import (
             -1 -1    -1 -1    -1 -1   => indicates 'value not set'
 */
 type Equations struct {
-    N1, N2, N int   // unknowns, prescribed, total numbers
-    RF1, FR1  []int // reduced=>full/full=>reduced maps for unknowns
-    RF2, FR2  []int // reduced=>full/full=>reduced maps for prescribed
+	N1, N2, N int   // unknowns, prescribed, total numbers
+	RF1, FR1  []int // reduced=>full/full=>reduced maps for unknowns
+	RF2, FR2  []int // reduced=>full/full=>reduced maps for prescribed
 }
 
 func (e *Equations) Init(n int, peq_notsorted []int) {
-    peq := make([]int, len(peq_notsorted))
-    copy(peq, peq_notsorted)
-    sort.Ints(peq)
-    e.N   = n
-    e.N2  = len(peq)
-    e.N1  = e.N - e.N2
-    e.RF1 = make([]int, e.N1)
-    e.FR1 = make([]int, e.N)
-    e.RF2 = make([]int, e.N2)
-    e.FR2 = make([]int, e.N)
-    var i1, i2 int
-    for eq := 0; eq < n; eq++ {
-        e.FR1[eq] = -1 // indicates 'not set'
-        e.FR2[eq] = -1
-        idx := sort.SearchInts(peq, eq)
-        if idx < len(peq) && peq[idx] == eq { // found => prescribed
-            e.RF2[i2] = eq
-            e.FR2[eq] = i2
-            i2 += 1
-        } else { // not found => unknowns
-            e.RF1[i1] = eq
-            e.FR1[eq] = i1
-            i1 += 1
-        }
-    }
+	peq := make([]int, len(peq_notsorted))
+	copy(peq, peq_notsorted)
+	sort.Ints(peq)
+	e.N = n
+	e.N2 = len(peq)
+	e.N1 = e.N - e.N2
+	e.RF1 = make([]int, e.N1)
+	e.FR1 = make([]int, e.N)
+	e.RF2 = make([]int, e.N2)
+	e.FR2 = make([]int, e.N)
+	var i1, i2 int
+	for eq := 0; eq < n; eq++ {
+		e.FR1[eq] = -1 // indicates 'not set'
+		e.FR2[eq] = -1
+		idx := sort.SearchInts(peq, eq)
+		if idx < len(peq) && peq[idx] == eq { // found => prescribed
+			e.RF2[i2] = eq
+			e.FR2[eq] = i2
+			i2 += 1
+		} else { // not found => unknowns
+			e.RF1[i1] = eq
+			e.FR1[eq] = i1
+			i1 += 1
+		}
+	}
 }
 
 func (e *Equations) Print() {
-    fmt.Printf("N1 = %v, N2 = %v, N = %v\n", e.N1, e.N2, e.N)
-    fmt.Printf("RF1 (unknown) =\n %v\n",     e.RF1)
-    fmt.Printf("FR1 = \n%v\n",               e.FR1)
-    fmt.Printf("RF2 (prescribed) =\n %v\n",  e.RF2)
-    fmt.Printf("FR2 = \n%v\n",               e.FR2)
+	fmt.Printf("N1 = %v, N2 = %v, N = %v\n", e.N1, e.N2, e.N)
+	fmt.Printf("RF1 (unknown) =\n %v\n", e.RF1)
+	fmt.Printf("FR1 = \n%v\n", e.FR1)
+	fmt.Printf("RF2 (prescribed) =\n %v\n", e.RF2)
+	fmt.Printf("FR2 = \n%v\n", e.FR2)
 }
