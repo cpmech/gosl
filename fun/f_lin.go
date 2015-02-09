@@ -5,7 +5,7 @@
 package fun
 
 import (
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Lin implements a linear function w.r.t t

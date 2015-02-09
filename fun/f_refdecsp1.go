@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // RefDecSp1 implements a specialisation of the reference decreasing model

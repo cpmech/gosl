@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // RefDecGen implements the reference decreasing model (general)

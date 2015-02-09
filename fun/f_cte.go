@@ -5,7 +5,7 @@
 package fun
 
 import (
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Zero implements an specialisation of Cte function that always returns zero

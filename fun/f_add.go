@@ -4,7 +4,7 @@
 
 package fun
 
-import "code.google.com/p/gosl/utl"
+import "github.com/cpmech/gosl/utl"
 
 // Add implements the addition of two other functions.
 //  F(t, x) := A*Fa(t,x) + B*Fb(t,x)

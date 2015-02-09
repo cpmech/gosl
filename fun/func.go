@@ -8,8 +8,8 @@ package fun
 import (
 	"os"
 
-	"code.google.com/p/gosl/plt"
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Func defines the interface for y(t, x) functions

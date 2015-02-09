@@ -7,8 +7,8 @@ package fun
 import (
 	"testing"
 
-	"code.google.com/p/gosl/plt"
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 const (

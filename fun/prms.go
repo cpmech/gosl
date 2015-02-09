@@ -4,7 +4,7 @@
 
 package fun
 
-import "code.google.com/p/gosl/utl"
+import "github.com/cpmech/gosl/utl"
 
 // global auxiliary variables
 var (
