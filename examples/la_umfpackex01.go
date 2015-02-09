@@ -9,7 +9,7 @@ package main
 import (
 	"fmt"
 
-	"code.google.com/p/gosl/la"
+	"github.com/cpmech/gosl/la"
 )
 
 func main() {
