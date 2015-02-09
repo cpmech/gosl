@@ -13,16 +13,18 @@ fi
 echo "platform = $platform"
 
 install_and_test(){
+    HERE=`pwd`
     PKG=$1
     DOTEST=$2
     echo
     echo
-    echo "[1;32m>>> compiling $GOPATH/src/code.google.com/p/gosl/$PKG <<<<<<<<<<<<<<<<<<<<[0m"
-    cd $GOPATH/src/code.google.com/p/gosl/$PKG
+    echo "[1;32m>>> compiling $p <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
+    cd $p
     go install
     if [ "$DOTEST" -eq 1 ]; then
         go test
     fi
+    cd $HERE
 }
 
 install_and_test utl 1

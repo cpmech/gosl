@@ -5,10 +5,10 @@
 package utl
 
 import (
-    "flag"
-    "os"
-    "path/filepath"
-    "runtime/pprof"
+	"flag"
+	"os"
+	"path/filepath"
+	"runtime/pprof"
 )
 
 var do_prof_cpu = flag.Bool("cpuprof", false, "write cpu profile data to file")
@@ -17,44 +17,44 @@ var do_prof_mem = flag.Bool("memprof", false, "write mem profile data to file")
 // ProfCPU activates CPU profiling
 //  Note: returns a "stop()" function to be called before shutting down
 func ProfCPU(dirout, filename string, silent bool) func() {
-    os.MkdirAll(dirout, 0777)
-    fn := filepath.Join(dirout, filename)
-    f, err := os.Create(fn)
-    if err != nil {
-        Panic(_profiling_err1, "ProfCPU", err.Error())
-    }
-    if !silent {
-        Pfcyan("CPU profiling => %s\n", fn)
-    }
-    pprof.StartCPUProfile(f)
-    return func() {
-        pprof.StopCPUProfile()
-        f.Close()
-        if !silent {
-            Pfcyan("CPU profiling finished\n")
-        }
-    }
+	os.MkdirAll(dirout, 0777)
+	fn := filepath.Join(dirout, filename)
+	f, err := os.Create(fn)
+	if err != nil {
+		Panic(_profiling_err1, "ProfCPU", err.Error())
+	}
+	if !silent {
+		Pfcyan("CPU profiling => %s\n", fn)
+	}
+	pprof.StartCPUProfile(f)
+	return func() {
+		pprof.StopCPUProfile()
+		f.Close()
+		if !silent {
+			Pfcyan("CPU profiling finished\n")
+		}
+	}
 }
 
 // ProfMEM activates memory profiling
 //  Note: returns a "stop()" function to be called before shutting down
 func ProfMEM(dirout, filename string, silent bool) func() {
-    os.MkdirAll(dirout, 0777)
-    fn := filepath.Join(dirout, filename)
-    f, err := os.Create(fn)
-    if err != nil {
-        Panic(_profiling_err1, "ProfMEM", err.Error())
-    }
-    if !silent {
-        Pfcyan("MEM profiling => %s\n", fn)
-    }
-    return func() {
-        pprof.WriteHeapProfile(f)
-        f.Close()
-        if !silent {
-            Pfcyan("MEM profiling finished\n")
-        }
-    }
+	os.MkdirAll(dirout, 0777)
+	fn := filepath.Join(dirout, filename)
+	f, err := os.Create(fn)
+	if err != nil {
+		Panic(_profiling_err1, "ProfMEM", err.Error())
+	}
+	if !silent {
+		Pfcyan("MEM profiling => %s\n", fn)
+	}
+	return func() {
+		pprof.WriteHeapProfile(f)
+		f.Close()
+		if !silent {
+			Pfcyan("MEM profiling finished\n")
+		}
+	}
 }
 
 // DoProf runs either CPU profiling or MEM profiling
@@ -65,15 +65,15 @@ func ProfMEM(dirout, filename string, silent bool) func() {
 //    3) output files are saved to "/tmp/gosl/cpu.pprof"; or
 //                                 "/tmp/gosl/mem.pprof"
 func DoProf(silent bool) func() {
-    if *do_prof_cpu {
-        return ProfCPU("/tmp/gosl/", "cpu.pprof", silent)
-    } else if *do_prof_mem {
-        return ProfMEM("/tmp/gosl/", "mem.pprof", silent)
-    }
-    return func() {}
+	if *do_prof_cpu {
+		return ProfCPU("/tmp/gosl/", "cpu.pprof", silent)
+	} else if *do_prof_mem {
+		return ProfMEM("/tmp/gosl/", "mem.pprof", silent)
+	}
+	return func() {}
 }
 
 // error messages
 var (
-    _profiling_err1 = "profiling.go: %s: cannot create file:\n%v"
+	_profiling_err1 = "profiling.go: %s: cannot create file:\n%v"
 )

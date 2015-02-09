@@ -5,18 +5,18 @@
 package utl
 
 import (
-    "os"
+	"os"
 )
 
 type RTEhandler func() (stop bool)
 
 // CatchRTE catch run time error
 func CatchRTE(msg string, handler RTEhandler) {
-    if err := recover(); err != nil {
-        Pfred("\n\n%v:\n%v\n", msg, err)
-        if handler() {
-            PfRed("rterrors.go: CatchRTE: STOP\n")
-            os.Exit(1)
-        }
-    }
+	if err := recover(); err != nil {
+		Pfred("\n\n%v:\n%v\n", msg, err)
+		if handler() {
+			PfRed("rterrors.go: CatchRTE: STOP\n")
+			os.Exit(1)
+		}
+	}
 }
