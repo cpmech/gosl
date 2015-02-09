@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/utl"
-	"github.com/cpmech/gosl/vtk"
 )
 
 const (
@@ -284,15 +283,6 @@ func Test_isofun03(tst *testing.T) {
 		PlotOct("fig_isofun03.png", σcCte, rmin, rmax, nr, nα, φ, o.Fa, o.Ga,
 			npolarc, simplec, only0, grads, showpts, true, true, ferr)
 	}
-
-	if false {
-		//if true {
-		grads := true
-		gftol := 5e-2
-		o.View(2.0*SQ3, λ, grads, gftol, func(e *vtk.IsoSurf) {
-			//e.Nlevels = 40
-		})
-	}
 }
 
 func Test_isofun04(tst *testing.T) {
@@ -415,15 +405,5 @@ func Test_isofun04(tst *testing.T) {
 	if SAVEISOPLOT {
 		PlotOct("fig_isofun04.png", σcCte, rmin, rmax, nr, nα, φ, o.Fa, o.Ga,
 			npolarc, simplec, only0, grads, showpts, true, true, ferr)
-	}
-
-	if false {
-		//if true {
-		grads := true
-		gftol := 5e-2
-		o.View(2.0*SQ3, λ, grads, gftol, func(e *vtk.IsoSurf) {
-			e.OctRotate = false
-			e.Ndiv = []int{61, 61, 61}
-		})
 	}
 }

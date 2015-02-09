@@ -5,12 +5,9 @@
 package tsr
 
 import (
-	"math"
-
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
-	"github.com/cpmech/gosl/vtk"
 )
 
 // Callbacks
@@ -444,66 +441,6 @@ func (o *IsoFun) FindIntersect(p0, k float64, Δλ []float64, usek, debug bool, 
 		λ_at_int[2] = xsol[2]
 	}
 	return
-}
-
-// View visualises the isosurface with VTK
-func (o *IsoFun) View(l float64, λ []float64, grads bool, gradsFtol float64, extraconf func(is *vtk.IsoSurf), args ...interface{}) {
-
-	// scene
-	scn := vtk.NewScene()
-	scn.AxesLen = l
-	scn.Reverse = true
-	scn.SaveOnExit = false
-
-	// stress point
-	var sph *vtk.Sphere
-	if λ != nil {
-		sph = vtk.NewSphere()
-		sph.Cen = λ
-		sph.R = 0.2
-		sph.Color = []float64{1, 1, 0, 1}
-		sph.AddTo(scn)
-	}
-
-	// isosurface
-	isf := vtk.NewIsoSurf(func(x []float64) (f, vx, vy, vz float64) {
-		o.L[0], o.L[1], o.L[2] = x[0], x[1], x[2]
-		f, err := o.Fp(o.L, args...)
-		if err != nil {
-			f = 1e+5
-			return
-		}
-		if grads {
-			_, err = o.Gp(o.L, args...)
-			if err != nil {
-				return
-			}
-			if math.Abs(f) < gradsFtol {
-				vx, vy, vz = o.Dfdλ[0], o.Dfdλ[1], o.Dfdλ[2]
-			}
-		}
-		return
-	})
-
-	// set isosurface
-	isf.OctRotate = true
-	if isf.OctRotate {
-		isf.Limits = []float64{-l, l, 0, l, 0, 360}
-		isf.Ndiv = []int{31, 31, 101}
-	} else {
-		isf.Limits = []float64{-l, l, -l, l, -l, l}
-		isf.Ndiv = []int{31, 31, 31}
-	}
-	isf.Nlevels = 1
-	isf.Frange = []float64{0, 0}
-	isf.CmapNclrs = 24
-	isf.CmapType = "warm"
-	if extraconf != nil {
-		extraconf(isf)
-	}
-
-	// run visualisation
-	scn.Run()
 }
 
 // CheckGrads check df/dA and d²f/dA²
