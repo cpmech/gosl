@@ -1,0 +1,1012 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GoSL &ndash; package fun</title>
+<link type="text/css" rel="stylesheet" href="static/style.css">
+<script type="text/javascript" src="static/godocs.js"></script>
+<style type="text/css"></style>
+</head>
+<body>
+<div id="page"><h1>GoSL &ndash; <b>fun</b> &ndash; Functions</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "code.google.com/p/gosl/fun"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+fun (functions) implements a number of y(t,x) functions and their first and second order derivatives
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="#PlotT">func PlotT(o Func, dirout, fname string, t0, tf float64, xcte []float64, np int, args string, withG, withH, save, show bool, extra func())</a></dd>
+			
+			
+				
+				<dd><a href="#Add">type Add</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Add.F">func (o Add) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Add.G">func (o Add) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Add.Grad">func (o Add) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Add.H">func (o Add) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Add.Init">func (o *Add) Init(prms Prms)</a></dd>
+				
+			
+				
+				<dd><a href="#Cte">type Cte</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cte.F">func (o Cte) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cte.G">func (o Cte) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cte.Grad">func (o Cte) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cte.H">func (o Cte) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cte.Init">func (o *Cte) Init(prms Prms)</a></dd>
+				
+			
+				
+				<dd><a href="#Func">type Func</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(name string, prms Prms) Func</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Lin">type Lin</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Lin.F">func (o Lin) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Lin.G">func (o Lin) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Lin.Grad">func (o Lin) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Lin.H">func (o Lin) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Lin.Init">func (o *Lin) Init(prms Prms)</a></dd>
+				
+			
+				
+				<dd><a href="#Prm">type Prm</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Prm.String">func (o *Prm) String() string</a></dd>
+				
+			
+				
+				<dd><a href="#Prms">type Prms</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Prms.Find">func (o Prms) Find(name string) *Prm</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Prms.GetValueOrPanic">func (o Prms) GetValueOrPanic(name string, minval, maxval float64, usemin, usemax bool) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Prms.String">func (o Prms) String() string</a></dd>
+				
+			
+				
+				<dd><a href="#RefDecGen">type RefDecGen</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecGen.F">func (o RefDecGen) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecGen.G">func (o RefDecGen) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecGen.Grad">func (o RefDecGen) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecGen.H">func (o RefDecGen) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecGen.Init">func (o *RefDecGen) Init(prms Prms)</a></dd>
+				
+			
+				
+				<dd><a href="#RefDecSp1">type RefDecSp1</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecSp1.F">func (o RefDecSp1) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecSp1.G">func (o RefDecSp1) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecSp1.Grad">func (o RefDecSp1) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecSp1.H">func (o RefDecSp1) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefDecSp1.Init">func (o *RefDecSp1) Init(prms Prms)</a></dd>
+				
+			
+				
+				<dd><a href="#Srmps">type Srmps</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Srmps.F">func (o Srmps) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Srmps.G">func (o Srmps) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Srmps.Grad">func (o Srmps) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Srmps.H">func (o Srmps) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Srmps.Init">func (o *Srmps) Init(prms Prms)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/code.google.com/p/gosl/fun/auxiliary.go">auxiliary.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/fun/f_add.go">f_add.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/fun/f_cte.go">f_cte.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/fun/f_lin.go">f_lin.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/fun/f_refdecgen.go">f_refdecgen.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/fun/f_refdecsp1.go">f_refdecsp1.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/fun/f_srmps.go">f_srmps.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/fun/func.go">func.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/fun/prms.go">prms.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="G_extraindent">G_extraindent</span>  <a href="/pkg/builtin/#string">string</a> <span class="comment">// extra indentation</span>
+    <span id="G_openbrackets">G_openbrackets</span> <a href="/pkg/builtin/#bool">bool</a>   <span class="comment">// add initial brackets</span>
+)</pre>
+				<p>
+global auxiliary variables
+</p>
+
+			
+				<pre>var <span id="One">One</span> = <a href="#Cte">Cte</a>{1}</pre>
+				<p>
+One implements an specialisation of Cte function that always returns one
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="PlotT">func <a href="/src/target/func.go?s=1190:1328#L32">PlotT</a></h2>
+			<pre>func PlotT(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, withG, withH, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
+			<p>
+PlotT plots F, G and H for varying t and fixed coordinates x
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Add">type <a href="/src/target/f_add.go?s=313:361#L1">Add</a></h2>
+			<pre>type Add struct {
+    Fa, Fb <a href="#Func">Func</a>
+    A, B   <a href="/pkg/builtin/#float64">float64</a>
+}</pre>
+			<p>
+Add implements the addition of two other functions.
+</p>
+<pre>F(t, x) := A*Fa(t,x) + B*Fb(t,x)
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Add.F">func (Add) <a href="/src/target/f_add.go?s=748:794#L29">F</a></h3>
+				<pre>func (o <a href="#Add">Add</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Add.G">func (Add) <a href="/src/target/f_add.go?s=929:975#L37">G</a></h3>
+				<pre>func (o <a href="#Add">Add</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Add.Grad">func (Add) <a href="/src/target/f_add.go?s=1303:1357#L53">Grad</a></h3>
+				<pre>func (o <a href="#Add">Add</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Add.H">func (Add) <a href="/src/target/f_add.go?s=1114:1160#L45">H</a></h3>
+				<pre>func (o <a href="#Add">Add</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Add.Init">func (*Add) <a href="/src/target/f_add.go?s=493:522#L12">Init</a></h3>
+				<pre>func (o *<a href="#Add">Add</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Cte">type <a href="/src/target/f_cte.go?s=450:480#L8">Cte</a></h2>
+			<pre>type Cte struct {
+    C <a href="/pkg/builtin/#float64">float64</a>
+}</pre>
+			<p>
+Cte implements a constant function
+</p>
+
+
+			
+
+			
+				<pre>var <span id="Zero">Zero</span> <a href="#Cte">Cte</a></pre>
+				<p>
+Zero implements an specialisation of Cte function that always returns zero
+</p>
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Cte.F">func (Cte) <a href="/src/target/f_cte.go?s=750:796#L28">F</a></h3>
+				<pre>func (o <a href="#Cte">Cte</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cte.G">func (Cte) <a href="/src/target/f_cte.go?s=872:918#L34">G</a></h3>
+				<pre>func (o <a href="#Cte">Cte</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+first derivative
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cte.Grad">func (Cte) <a href="/src/target/f_cte.go?s=1109:1163#L45">Grad</a></h3>
+				<pre>func (o <a href="#Cte">Cte</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cte.H">func (Cte) <a href="/src/target/f_cte.go?s=999:1045#L40">H</a></h3>
+				<pre>func (o <a href="#Cte">Cte</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+second derivative
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cte.Init">func (*Cte) <a href="/src/target/f_cte.go?s=612:641#L18">Init</a></h3>
+				<pre>func (o *<a href="#Cte">Cte</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Func">type <a href="/src/target/func.go?s=419:739#L6">Func</a></h2>
+			<pre>type Func interface {
+    Init(prms <a href="#Prms">Prms</a>)
+    F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// y = F(t, x)</span>
+    G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// ∂y/∂t_cteX = G(t, x)</span>
+    H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// ∂²y/∂t²_cteX = H(t, x)</span>
+    Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <span class="comment">// ∇F = ∂y/∂x = Grad(t, x)</span>
+}</pre>
+			<p>
+Func defines the interface for y(t, x) functions
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="/src/target/func.go?s=903:940#L18">New</a></h3>
+				<pre>func New(name <a href="/pkg/builtin/#string">string</a>, prms <a href="#Prms">Prms</a>) <a href="#Func">Func</a></pre>
+				<p>
+New allocates function by name
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Lin">type <a href="/src/target/f_lin.go?s=291:352#L3">Lin</a></h2>
+			<pre>type Lin struct {
+    M  <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// slope</span>
+    Ts <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// shift</span>
+}</pre>
+			<p>
+Lin implements a linear function w.r.t t
+</p>
+<pre>y = m * (t - ts)
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Lin.F">func (Lin) <a href="/src/target/f_lin.go?s=655:701#L26">F</a></h3>
+				<pre>func (o <a href="#Lin">Lin</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Lin.G">func (Lin) <a href="/src/target/f_lin.go?s=770:816#L31">G</a></h3>
+				<pre>func (o <a href="#Lin">Lin</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Lin.Grad">func (Lin) <a href="/src/target/f_lin.go?s=984:1038#L41">Grad</a></h3>
+				<pre>func (o <a href="#Lin">Lin</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Lin.H">func (Lin) <a href="/src/target/f_lin.go?s=876:922#L36">H</a></h3>
+				<pre>func (o <a href="#Lin">Lin</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Lin.Init">func (*Lin) <a href="/src/target/f_lin.go?s=484:513#L14">Init</a></h3>
+				<pre>func (o *<a href="#Lin">Lin</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Prm">type <a href="/src/target/prms.go?s=585:1010#L8">Prm</a></h2>
+			<pre>type Prm struct {
+    N      <a href="/pkg/builtin/#string">string</a>  `json:&#34;n&#34;`      <span class="comment">// name of parameter</span>
+    V      <a href="/pkg/builtin/#float64">float64</a> `json:&#34;v&#34;`      <span class="comment">// value of parameter</span>
+    U      <a href="/pkg/builtin/#string">string</a>  `json:&#34;u&#34;`      <span class="comment">// unit (not verified)</span>
+    Extra  <a href="/pkg/builtin/#string">string</a>  `json:&#34;extra&#34;`  <span class="comment">// extra data</span>
+    Inact  <a href="/pkg/builtin/#bool">bool</a>    `json:&#34;inact&#34;`  <span class="comment">// parameter is inactive in optimisation</span>
+    SetDef <a href="/pkg/builtin/#bool">bool</a>    `json:&#34;setdef&#34;` <span class="comment">// tells model to use a default value</span>
+    Fcn    <a href="#Func">Func</a>    `json:&#34;fcn&#34;`    <span class="comment">// a function y=f(t,x)</span>
+}</pre>
+			<p>
+Prm holds material parameter names and values
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Prm.String">func (*Prm) <a href="/src/target/prms.go?s=1923:1952#L53">String</a></h3>
+				<pre>func (o *<a href="#Prm">Prm</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+String outputs a nice formatted representation of a parameter
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Prms">type <a href="/src/target/prms.go?s=1042:1058#L19">Prms</a></h2>
+			<pre>type Prms []*<a href="#Prm">Prm</a></pre>
+			<p>
+Prms holds many parameters
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Prms.Find">func (Prms) <a href="/src/target/prms.go?s=1129:1165#L23">Find</a></h3>
+				<pre>func (o <a href="#Prms">Prms</a>) Find(name <a href="/pkg/builtin/#string">string</a>) *<a href="#Prm">Prm</a></pre>
+				<p>
+Find finds a parameter by name
+</p>
+<pre>Note: returns nil if not found
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Prms.GetValueOrPanic">func (Prms) <a href="/src/target/prms.go?s=1423:1518#L34">GetValueOrPanic</a></h3>
+				<pre>func (o <a href="#Prms">Prms</a>) GetValueOrPanic(name <a href="/pkg/builtin/#string">string</a>, minval, maxval <a href="/pkg/builtin/#float64">float64</a>, usemin, usemax <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+GetValueOrPanic returns the parameter value if it exists; if it does not exists then panic.
+minval and maxval are used to check parameter range if usemin or usemax are true
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Prms.String">func (Prms) <a href="/src/target/prms.go?s=2597:2626#L85">String</a></h3>
+				<pre>func (o <a href="#Prms">Prms</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+String outputs all materials
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RefDecGen">type <a href="/src/target/f_refdecgen.go?s=300:564#L4">RefDecGen</a></h2>
+			<pre>type RefDecGen struct {
+    A, B <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// lambda function coeficients</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+RefDecGen implements the reference decreasing model (general)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RefDecGen.F">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1415:1467#L40">F</a></h3>
+				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecGen.G">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1582:1634#L45">G</a></h3>
+				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1983:2043#L56">Grad</a></h3>
+				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecGen.H">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1766:1818#L50">H</a></h3>
+				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="/src/target/f_refdecgen.go?s=710:745#L21">Init</a></h3>
+				<pre>func (o *<a href="#RefDecGen">RefDecGen</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RefDecSp1">type <a href="/src/target/f_refdecsp1.go?s=897:1090#L25">RefDecSp1</a></h2>
+			<pre>type RefDecSp1 struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+RefDecSp1 implements a specialisation of the reference decreasing model
+</p>
+<pre>          y ^
+            |
+         ya o
+            | \
+            |
+            |   \
+            |
+------------+-------------------------&gt; x
+            |
+         yb o--._ -\-------- λ0 = 0
+            |    `.
+            |      \\
+            |       .
+            |        \
+            |         \---
+            |          \ | λ1
+            |           \|
+            |            \
+            |
+            |
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1945:1997#L68">F</a></h3>
+				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2150:2202#L76">G</a></h3>
+				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2639:2699#L93">Grad</a></h3>
+				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2382:2434#L84">H</a></h3>
+				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1233:1268#L42">Init</a></h3>
+				<pre>func (o *<a href="#RefDecSp1">RefDecSp1</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<p>
+Init initialises the model
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Srmps">type <a href="/src/target/f_srmps.go?s=291:344#L4">Srmps</a></h2>
+			<pre>type Srmps struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Increasing or decreasing smooth-ramp-smooth function
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Srmps.F">func (Srmps) <a href="/src/target/f_srmps.go?s=697:745#L31">F</a></h3>
+				<pre>func (o <a href="#Srmps">Srmps</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Srmps.G">func (Srmps) <a href="/src/target/f_srmps.go?s=929:977#L42">G</a></h3>
+				<pre>func (o <a href="#Srmps">Srmps</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Srmps.Grad">func (Srmps) <a href="/src/target/f_srmps.go?s=1463:1519#L64">Grad</a></h3>
+				<pre>func (o <a href="#Srmps">Srmps</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Srmps.H">func (Srmps) <a href="/src/target/f_srmps.go?s=1181:1229#L53">H</a></h3>
+				<pre>func (o <a href="#Srmps">Srmps</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Srmps.Init">func (*Srmps) <a href="/src/target/f_srmps.go?s=479:510#L15">Init</a></h3>
+				<pre>func (o *<a href="#Srmps">Srmps</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+</div><!-- page -->
+<div id="footer">
+<br /><br />
+<hr>
+<pre class="copyright">
+Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Dorival M Pedroso nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre><!-- copyright -->
+</div><!-- footer -->
+</body>
+</html>

@@ -1,0 +1,503 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GoSL &ndash; package vtk</title>
+<link type="text/css" rel="stylesheet" href="static/style.css">
+<script type="text/javascript" src="static/godocs.js"></script>
+<style type="text/css"></style>
+</head>
+<body>
+<div id="page"><h1>GoSL &ndash; <b>vtk</b> &ndash; 3D visualisation with VTK</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "code.google.com/p/gosl/vtk"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="#pkg-variables">Variables</a></dd>
+			
+			
+			
+				
+				<dd><a href="#Arrow">type Arrow</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewArrow">func NewArrow() *Arrow</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Arrow.AddTo">func (o *Arrow) AddTo(scn *Scene) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Cb_fcn">type Cb_fcn</a></dd>
+				
+				
+			
+				
+				<dd><a href="#IsoSurf">type IsoSurf</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewIsoSurf">func NewIsoSurf(f Cb_fcn) *IsoSurf</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#IsoSurf.AddTo">func (o *IsoSurf) AddTo(scn *Scene) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Scene">type Scene</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewScene">func NewScene() *Scene</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Scene.Run">func (o *Scene) Run() (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Sphere">type Sphere</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewSphere">func NewSphere() *Sphere</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sphere.AddTo">func (o *Sphere) AddTo(scn *Scene) (err error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/code.google.com/p/gosl/vtk/govtk.go">govtk.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="GOVTK_FCN">GOVTK_FCN</span> []<a href="#Cb_fcn">Cb_fcn</a>
+    <span id="GOVTK_F">GOVTK_F</span>   <a href="/pkg/builtin/#float64">float64</a>
+    <span id="GOVTK_VX">GOVTK_VX</span>  <a href="/pkg/builtin/#float64">float64</a>
+    <span id="GOVTK_VY">GOVTK_VY</span>  <a href="/pkg/builtin/#float64">float64</a>
+    <span id="GOVTK_VZ">GOVTK_VZ</span>  <a href="/pkg/builtin/#float64">float64</a>
+    <span id="GOVTK_X">GOVTK_X</span>   []<a href="/pkg/builtin/#float64">float64</a>
+    <span id="GOVTK_I">GOVTK_I</span>   <a href="/pkg/builtin/#int">int</a>
+)</pre>
+				<p>
+global variables for communication with C
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="Arrow">type <a href="/src/target/govtk.go?s=1263:1699#L29">Arrow</a></h2>
+			<pre>type Arrow struct {
+    X0         []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// origin of arrow</span>
+    V          []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// vector defining arrow</span>
+    ConePct    <a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// percentage of length to draw tip cone</span>
+    ConeRad    <a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// radius of cone</span>
+    CyliRad    <a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// cylinder radius</span>
+    Resolution <a href="/pkg/builtin/#int">int</a>       <span class="comment">// resolution of cross-section</span>
+    Color      []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// {red, green, blue, opacity}</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Arrow adds an arrow to Scene
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewArrow">func <a href="/src/target/govtk.go?s=3500:3522#L91">NewArrow</a></h3>
+				<pre>func NewArrow() *<a href="#Arrow">Arrow</a></pre>
+				<p>
+NewArrow allocates a new Arrow structure
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Arrow.AddTo">func (*Arrow) <a href="/src/target/govtk.go?s=4442:4487#L128">AddTo</a></h3>
+				<pre>func (o *<a href="#Arrow">Arrow</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+AddTo adds Arrow to Scene
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Cb_fcn">type <a href="/src/target/govtk.go?s=2016:2072#L51">Cb_fcn</a></h2>
+			<pre>type Cb_fcn func(x []<a href="/pkg/builtin/#float64">float64</a>) (fval, vx, vy, vz <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Cb_fcn is a callback function to compute f, v := f(x) where v = dfdx
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="IsoSurf">type <a href="/src/target/govtk.go?s=2293:3186#L60">IsoSurf</a></h2>
+			<pre>type IsoSurf struct {
+    Limits        []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// {xmin,xmax, ymin,ymax, zmin,zmax}</span>
+    Ndiv          []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// {nx, ny, nz}. all must be &gt;= 2</span>
+    Frange        []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// {fmin, fmax}. min and max values of isosurface levels</span>
+    OctRotate     <a href="/pkg/builtin/#bool">bool</a>      <span class="comment">// apply rotation to octahedral reference system</span>
+    Nlevels       <a href="/pkg/builtin/#int">int</a>       <span class="comment">// number of isosurface levels (0 or 1 =&gt; just one @ Levelmin)</span>
+    CmapType      <a href="/pkg/builtin/#string">string</a>    <span class="comment">// colormap type. e.g. &#34;warm&#34;</span>
+    CmapNclrs     <a href="/pkg/builtin/#int">int</a>       <span class="comment">// colormap number of colors</span>
+    CmapRangeType <a href="/pkg/builtin/#int">int</a>       <span class="comment">// colormap range type</span>
+    CmapFrange    []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// colormap fmin and fmax</span>
+    Color         []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// {red, green, blue, opacity}</span>
+    ShowWire      <a href="/pkg/builtin/#bool">bool</a>      <span class="comment">// show wireframe of main object</span>
+    GridShowPts   <a href="/pkg/builtin/#bool">bool</a>      <span class="comment">// show underlying grid</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+IsoSurf holds data to generate isosurfaces
+</p>
+<pre>CmapNclrs:
+    0 =&gt; use fixed color
+CmapRangeType:
+    0 =&gt; [default] use sgrid range values (automatic)
+    1 =&gt; use Frange
+    2 =&gt; use CmapFrange
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewIsoSurf">func <a href="/src/target/govtk.go?s=4031:4065#L113">NewIsoSurf</a></h3>
+				<pre>func NewIsoSurf(f <a href="#Cb_fcn">Cb_fcn</a>) *<a href="#IsoSurf">IsoSurf</a></pre>
+				<p>
+NewIsoSurf allocates a new IsoSurf structure
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="IsoSurf.AddTo">func (*IsoSurf) <a href="/src/target/govtk.go?s=4708:4755#L140">AddTo</a></h3>
+				<pre>func (o *<a href="#IsoSurf">IsoSurf</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+AddTo adds IsoSurf to Scene
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Scene">type <a href="/src/target/govtk.go?s=628:1229#L11">Scene</a></h2>
+			<pre>type Scene struct {
+    AxesLen    <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// length of x-y-z axes</span>
+    HydroLine  <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// show hydrostatic line</span>
+    Reverse    <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// reverse direction for default camera</span>
+    FullAxes   <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// show negative and positive portions of axes</span>
+    WithPlanes <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// show transparent auxiliary planes</span>
+    Interact   <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// run interactive mode</span>
+    SaveOnExit <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// save figure upon exit</span>
+    Fnk        <a href="/pkg/builtin/#string">string</a>  <span class="comment">// file name key (without .png)</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Scene holds essential data to draw and interect with the x-y-z Cartesian system
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewScene">func <a href="/src/target/govtk.go?s=3232:3254#L79">NewScene</a></h3>
+				<pre>func NewScene() *<a href="#Scene">Scene</a></pre>
+				<p>
+NewScene allocates a new Scene structure
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Scene.Run">func (*Scene) <a href="/src/target/govtk.go?s=4981:5014#L154">Run</a></h3>
+				<pre>func (o *<a href="#Scene">Scene</a>) Run() (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Run shows Scene in interactive mode or saving a .png file
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Sphere">type <a href="/src/target/govtk.go?s=1734:1942#L42">Sphere</a></h2>
+			<pre>type Sphere struct {
+    Cen   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// centre x-y-z coordinates</span>
+    R     <a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// radius</span>
+    Color []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// {red, green, blue, opacity}</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Sphere adds a sphere to Scene
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewSphere">func <a href="/src/target/govtk.go?s=3831:3855#L104">NewSphere</a></h3>
+				<pre>func NewSphere() *<a href="#Sphere">Sphere</a></pre>
+				<p>
+NewSphere allocates a new Sphere structure
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Sphere.AddTo">func (*Sphere) <a href="/src/target/govtk.go?s=4573:4619#L134">AddTo</a></h3>
+				<pre>func (o *<a href="#Sphere">Sphere</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+AddTo adds Sphere to Scene
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+	<table class="dir">
+	<tr>
+	<th>Name</th>
+	<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+	<th style="text-align: left; width: auto">Synopsis</th>
+	</tr>
+	
+		<tr>
+		<td><a href="..">..</a></td>
+		</tr>
+	
+	
+		
+			<tr>
+			<td class="name"><a href="examples/">examples</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+	</table>
+
+	
+
+</div><!-- page -->
+<div id="footer">
+<br /><br />
+<hr>
+<pre class="copyright">
+Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Dorival M Pedroso nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre><!-- copyright -->
+</div><!-- footer -->
+</body>
+</html>

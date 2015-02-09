@@ -1,0 +1,927 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GoSL &ndash; package num</title>
+<link type="text/css" rel="stylesheet" href="static/style.css">
+<script type="text/javascript" src="static/godocs.js"></script>
+<style type="text/css"></style>
+</head>
+<body>
+<div id="page"><h1>GoSL &ndash; <b>num</b> &ndash; A few numerical methods</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "code.google.com/p/gosl/num"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="#CompareJac">func CompareJac(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64, distr bool)</a></dd>
+			
+				
+				<dd><a href="#DerivBackward">func DerivBackward(f Cb_fx, x, h float64, args ...interface{}) (result, abserr float64)</a></dd>
+			
+				
+				<dd><a href="#DerivBwd">func DerivBwd(f Cb_fx, x float64, args ...interface{}) float64</a></dd>
+			
+				
+				<dd><a href="#DerivCen">func DerivCen(f Cb_fx, x float64, args ...interface{}) float64</a></dd>
+			
+				
+				<dd><a href="#DerivCentral">func DerivCentral(f Cb_fx, x, h float64, args ...interface{}) (result, abserr float64)</a></dd>
+			
+				
+				<dd><a href="#DerivForward">func DerivForward(f Cb_fx, x, h float64, args ...interface{}) (result, abserr float64)</a></dd>
+			
+				
+				<dd><a href="#DerivFwd">func DerivFwd(f Cb_fx, x float64, args ...interface{}) float64</a></dd>
+			
+				
+				<dd><a href="#DerivRange">func DerivRange(f Cb_fx, x, xmin, xmax float64, args ...interface{}) float64</a></dd>
+			
+				
+				<dd><a href="#Jacobian">func Jacobian(J *la.Triplet, ffcn Cb_f, x, fx, w []float64, distr bool) (err error)</a></dd>
+			
+				
+				<dd><a href="#LineSearch">func LineSearch(x, fx []float64, ffcn Cb_f, dx, x0, dφdx0 []float64, φ0 float64, max_it int, dx_is_mdx bool) (nFeval int, err error)</a></dd>
+			
+				
+				<dd><a href="#MinComp">func MinComp(tol, expected float64) float64</a></dd>
+			
+				
+				<dd><a href="#PlotYxe">func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error)</a></dd>
+			
+				
+				<dd><a href="#TestAbs">func TestAbs(result, expected, absolute_error float64, test_description string) (status int)</a></dd>
+			
+				
+				<dd><a href="#Trapz">func Trapz(x, y []float64) (A float64)</a></dd>
+			
+				
+				<dd><a href="#TrapzF">func TrapzF(x []float64, y Cb_yx) (A float64)</a></dd>
+			
+				
+				<dd><a href="#TrapzRange">func TrapzRange(xa, xb float64, npts int, y Cb_yx) (A float64)</a></dd>
+			
+			
+				
+				<dd><a href="#Brent">type Brent</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Brent.Init">func (o *Brent) Init(ffcn Cb_yxe)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Brent.Min">func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Brent.Solve">func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Cb_J">type Cb_J</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_Jd">type Cb_Jd</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_f">type Cb_f</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_fx">type Cb_fx</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_out">type Cb_out</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_yx">type Cb_yx</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_yxe">type Cb_yxe</a></dd>
+				
+				
+			
+				
+				<dd><a href="#NlSolver">type NlSolver</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.CheckJ">func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd float64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.Clean">func (o *NlSolver) Clean()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.Init">func (o *NlSolver) Init(neq int, Ffcn Cb_f, JfcnSp Cb_J, JfcnDn Cb_Jd, useDn, numJ bool, prms map[string]float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.SetTols">func (o *NlSolver) SetTols(Atol, Rtol, Ftol, ϵ float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.Solve">func (o *NlSolver) Solve(x []float64, silent bool) (err error)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/code.google.com/p/gosl/num/auxiliary.go">auxiliary.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/num/brent.go">brent.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/num/deriv.go">deriv.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/num/integration.go">integration.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/num/linesearch.go">linesearch.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/num/newnlsolver.go">newnlsolver.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="DBL_EPSILON">DBL_EPSILON</span> = 1.0e-15
+    <span id="DBL_MIN">DBL_MIN</span>     = <a href="/pkg/math/">math</a>.<a href="/pkg/math/#SmallestNonzeroFloat64">SmallestNonzeroFloat64</a>
+)</pre>
+				
+			
+				<pre>const (
+    <span id="NaN">NaN</span> = <a href="/pkg/builtin/#iota">iota</a>
+    <span id="Inf">Inf</span>
+    <span id="Equal">Equal</span>
+    <span id="NotEqual">NotEqual</span>
+)</pre>
+				
+			
+				<pre>const (
+    <span id="EPS">EPS</span>  = 1e-16 <span class="comment">// smallest number satisfying 1.0 + EPS &gt; 1.0</span>
+    <span id="CTE1">CTE1</span> = 1e-5  <span class="comment">// a minimum value to be used in Jacobian</span>
+)</pre>
+				<p>
+constants
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="CompareJac">func <a href="/src/target/auxiliary.go?s=2620:2711#L91">CompareJac</a></h2>
+			<pre>func CompareJac(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, ffcn <a href="#Cb_f">Cb_f</a>, Jfcn <a href="#Cb_J">Cb_J</a>, x []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, distr <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DerivBackward">func <a href="/src/target/deriv.go?s=8530:8617#L235">DerivBackward</a></h2>
+			<pre>func DerivBackward(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DerivBwd">func <a href="/src/target/deriv.go?s=3412:3474#L94">DerivBwd</a></h2>
+			<pre>func DerivBwd(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DerivBwd employs a 1st order backward difference to approximate the derivative of f(x) w.r.t x @ x
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DerivCen">func <a href="/src/target/deriv.go?s=3635:3697#L100">DerivCen</a></h2>
+			<pre>func DerivCen(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DerivCen uses a central difference method
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DerivCentral">func <a href="/src/target/deriv.go?s=5451:5537#L149">DerivCentral</a></h2>
+			<pre>func DerivCentral(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DerivForward">func <a href="/src/target/deriv.go?s=7625:7711#L207">DerivForward</a></h2>
+			<pre>func DerivForward(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DerivFwd">func <a href="/src/target/deriv.go?s=3132:3194#L88">DerivFwd</a></h2>
+			<pre>func DerivFwd(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DerivFwd employs a 1st order forward difference to approximate the derivative of f(x) w.r.t x @ x
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DerivRange">func <a href="/src/target/deriv.go?s=3855:3931#L106">DerivRange</a></h2>
+			<pre>func DerivRange(f <a href="#Cb_fx">Cb_fx</a>, x, xmin, xmax <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DerivRange chooses fwd, bwd or cen according to whether x is near the boundary or not
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Jacobian">func <a href="/src/target/deriv.go?s=1363:1446#L34">Jacobian</a></h2>
+			<pre>func Jacobian(J *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, ffcn <a href="#Cb_f">Cb_f</a>, x, fx, w []<a href="/pkg/builtin/#float64">float64</a>, distr <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Jacobian
+</p>
+<pre>========
+    Calculates (with N=n-1):
+        df0dx0, df0dx1, df0dx2, ... df0dxN
+        df1dx0, df1dx1, df1dx2, ... df1dxN
+             . . . . . . . . . . . . .
+        dfNdx0, dfNdx1, dfNdx2, ... dfNdxN
+INPUT:
+    ffcn : f(x) function
+    x    : station where dfdx has to be calculated
+    fx   : f @ x
+    w    : workspace with size == n == len(x)
+RETURNS:
+    J : dfdx @ x [must be pre-allocated]
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="LineSearch">func <a href="/src/target/linesearch.go?s=1237:1371#L24">LineSearch</a></h2>
+			<pre>func LineSearch(x, fx []<a href="/pkg/builtin/#float64">float64</a>, ffcn <a href="#Cb_f">Cb_f</a>, dx, x0, dφdx0 []<a href="/pkg/builtin/#float64">float64</a>, φ0 <a href="/pkg/builtin/#float64">float64</a>, max_it <a href="/pkg/builtin/#int">int</a>, dx_is_mdx <a href="/pkg/builtin/#bool">bool</a>) (nFeval <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+LineSearch finds a new point x along the direction dx, from x0, where the function
+has decreased sufficiently. The new function value is returned in fx
+</p>
+<pre>Input:
+    ffcn      -- f(x) callback
+    dx        -- direction vector
+    x0        -- initial x
+    dφdx0     -- initial dφdx0 = fx * dfdx
+    φ0        -- initial φ = 0.5 * dot(fx,fx)
+    max_it    -- max number of iterations
+    dx_is_mdx -- whether dx is actually -dx ==&gt; IMPORTANT: dx will then be changed dx := -dx
+Output:
+    x      -- updated x (along dx)
+    fx     -- updated f(x)
+    φ0     -- updated φ = 0.5 * dot(fx,fx)
+    dx     -- changed to -dx if dx_is_mdx == true
+    nFeval -- number of calls to f(x)
+Local constants:
+    tol_gra_min -- tolerance to consider local minimum
+    mul_dx_max  -- multiplier to control maximum dx
+    slope_max   -- ~0 but &lt; 0
+    α           -- Armijo coefficient
+    ε           -- machine epsilon
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MinComp">func <a href="/src/target/auxiliary.go?s=1312:1355#L53">MinComp</a></h2>
+			<pre>func MinComp(tol, expected <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PlotYxe">func <a href="/src/target/auxiliary.go?s=525:667#L19">PlotYxe</a></h2>
+			<pre>func PlotYxe(ffcn <a href="#Cb_yxe">Cb_yxe</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, xsol, xa, xb <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xsolLbl, args <a href="/pkg/builtin/#string">string</a>, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func()) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+PlotYxe plots the function y(x) implemented by Cb_yxe
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TestAbs">func <a href="/src/target/auxiliary.go?s=1415:1507#L57">TestAbs</a></h2>
+			<pre>func TestAbs(result, expected, absolute_error <a href="/pkg/builtin/#float64">float64</a>, test_description <a href="/pkg/builtin/#string">string</a>) (status <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Trapz">func <a href="/src/target/integration.go?s=359:397#L3">Trapz</a></h2>
+			<pre>func Trapz(x, y []<a href="/pkg/builtin/#float64">float64</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Trapz returns the area below the discrete curve defined by x and y.
+Computations are carried out with the trapezoidal rule.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TrapzF">func <a href="/src/target/integration.go?s=745:790#L15">TrapzF</a></h2>
+			<pre>func TrapzF(x []<a href="/pkg/builtin/#float64">float64</a>, y <a href="#Cb_yx">Cb_yx</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+TrapzF (function callback version) returns the area below the discrete curve defined by x and y.
+Computations are carried out with the trapezoidal rule.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TrapzRange">func <a href="/src/target/integration.go?s=1114:1176#L24">TrapzRange</a></h2>
+			<pre>func TrapzRange(xa, xb <a href="/pkg/builtin/#float64">float64</a>, npts <a href="/pkg/builtin/#int">int</a>, y <a href="#Cb_yx">Cb_yx</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+TrapzRange (x-range and function callback version) returns the area below the discrete curve defined by x and y.
+Computations are carried out with the trapezoidal rule from xa to xb, with npts points
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Brent">type <a href="/src/target/brent.go?s=312:651#L3">Brent</a></h2>
+			<pre>type Brent struct {
+    MaxIt  <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max iterations</span>
+    Tol    <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// tolerance</span>
+    Ffcn   <a href="#Cb_yxe">Cb_yxe</a>  <span class="comment">// y = f(x) function</span>
+    NFeval <a href="/pkg/builtin/#int">int</a>     <span class="comment">// number of calls to Ffcn (function evaluations)</span>
+    It     <a href="/pkg/builtin/#int">int</a>     <span class="comment">// number of iterations from last call to Solve</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Brent implements Brent&#39;s method for finding the roots of an equation
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Brent.Init">func (*Brent) <a href="/src/target/brent.go?s=688:721#L14">Init</a></h3>
+				<pre>func (o *<a href="#Brent">Brent</a>) Init(ffcn <a href="#Cb_yxe">Cb_yxe</a>)</pre>
+				<p>
+Init intialises Brent structure
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Brent.Min">func (*Brent) <a href="/src/target/brent.go?s=7909:7982#L207">Min</a></h3>
+				<pre>func (o *<a href="#Brent">Brent</a>) Min(xa, xb <a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Min finds the minimum of f(x) in [xa, xb]
+</p>
+<pre>Based on ZEROIN C math library: <a href="http://www.netlib.org/c/">http://www.netlib.org/c/</a>
+By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
+
+ G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
+ computations. M., Mir, 1980, p.202 of the Russian edition
+
+ The function makes use of the &#34;gold section&#34; procedure combined with
+ the parabolic interpolation.
+ At every step program operates three abscissae - x,v, and w.
+ x - the last and the best approximation to the minimum location,
+     i.e. f(x) &lt;= f(a) or/and f(x) &lt;= f(b)
+     (if the function f has a local minimum in (a,b), then the both
+     conditions are fulfiled after one or two steps).
+ v,w are previous approximations to the minimum location. They may
+ coincide with a, b, or x (although the algorithm tries to make all
+ u, v, and w distinct). Points x, v, and w are used to construct
+ interpolating parabola whose minimum will be treated as a new
+ approximation to the minimum location if the former falls within
+ [a,b] and reduces the range enveloping minimum more efficient than
+ the gold section procedure.
+ When f(x) has a second derivative positive at the minimum location
+ (not coinciding with a or b) the procedure converges superlinearly
+ at a rate order about 1.324
+
+ The function always obtains a local minimum which coincides with
+ the global one only if a function under investigation being
+ unimodular. If a function being examined possesses no local minimum
+ within the given range, Fminbr returns &#39;a&#39; (if f(a) &lt; f(b)), otherwise
+ it returns the right range boundary value b.
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Brent.Solve">func (*Brent) <a href="/src/target/brent.go?s=2293:2368#L49">Solve</a></h3>
+				<pre>func (o *<a href="#Brent">Brent</a>) Solve(xa, xb <a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Solve solves y(x) = 0 for x in [xa, xb] with f(xa) * f(xb) &lt; 0
+</p>
+<pre>Based on ZEROIN C math library: <a href="http://www.netlib.org/c/">http://www.netlib.org/c/</a>
+By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
+
+ G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
+ computations. M., Mir, 1980, p.180 of the Russian edition
+
+ The function makes use of the bissection procedure combined with
+ the linear or quadric inverse interpolation.
+ At every step program operates on three abscissae - a, b, and c.
+ b - the last and the best approximation to the root
+ a - the last but one approximation
+ c - the last but one or even earlier approximation than a that
+     1) |f(b)| &lt;= |f(c)|
+     2) f(b) and f(c) have opposite signs, i.e. b and c confine
+        the root
+ At every step Zeroin selects one of the two new approximations, the
+ former being obtained by the bissection procedure and the latter
+ resulting in the interpolation (if a,b, and c are all different
+ the quadric interpolation is utilized, otherwise the linear one).
+ If the latter (i.e. obtained by the interpolation) point is
+ reasonable (i.e. lies within the current interval [b,c] not being
+ too close to the boundaries) it is accepted. The bissection result
+ is used in the other case. Therefore, the range of uncertainty is
+ ensured to be reduced at least by the factor 1.6
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Cb_J">type <a href="/src/target/deriv.go?s=528:581#L10">Cb_J</a></h2>
+			<pre>type Cb_J func(dfdx *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// sparse version</span>
+</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_Jd">type <a href="/src/target/deriv.go?s=600:653#L11">Cb_Jd</a></h2>
+			<pre>type Cb_Jd func(dfdx [][]<a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// dense version</span>
+</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_f">type <a href="/src/target/deriv.go?s=474:527#L9">Cb_f</a></h2>
+			<pre>type Cb_f func(fx, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+callbacks (for systems)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_fx">type <a href="/src/target/deriv.go?s=389:445#L6">Cb_fx</a></h2>
+			<pre>type Cb_fx func(x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_out">type <a href="/src/target/deriv.go?s=671:706#L12">Cb_out</a></h2>
+			<pre>type Cb_out func(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// for output</span>
+</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_yx">type <a href="/src/target/deriv.go?s=308:343#L4">Cb_yx</a></h2>
+			<pre>type Cb_yx func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+callbacks (for single equations)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_yxe">type <a href="/src/target/deriv.go?s=344:388#L5">Cb_yxe</a></h2>
+			<pre>type Cb_yxe func(x <a href="/pkg/builtin/#float64">float64</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="NlSolver">type <a href="/src/target/newnlsolver.go?s=272:1850#L3">NlSolver</a></h2>
+			<pre>type NlSolver struct {
+    <span class="comment">// constants</span>
+    CteJac  <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// constant Jacobian (Modified Newton&#39;s method)</span>
+    Lsearch <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// use linear search</span>
+    LsMaxIt <a href="/pkg/builtin/#int">int</a>  <span class="comment">// linear solver maximum iterations</span>
+    MaxIt   <a href="/pkg/builtin/#int">int</a>  <span class="comment">// Newton&#39;s method maximum iterations</span>
+    ChkConv <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// check convergence</span>
+
+    <span class="comment">// callbacks</span>
+    Ffcn   <a href="#Cb_f">Cb_f</a>   <span class="comment">// f(x) function</span>
+    JfcnSp <a href="#Cb_J">Cb_J</a>   <span class="comment">// J(x)=dfdx Jacobian for sparse solver</span>
+    JfcnDn <a href="#Cb_Jd">Cb_Jd</a>  <span class="comment">// J(x)=dfdx Jacobian for dense solver</span>
+    Out    <a href="#Cb_out">Cb_out</a> <span class="comment">// for output</span>
+
+    <span class="comment">// data for Umfpack (sparse)</span>
+    Jtri <a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a> <span class="comment">// triplet</span>
+
+    <span class="comment">// data for dense solver (matrix inversion)</span>
+    J  [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// dense Jacobian matrix</span>
+    Ji [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// inverse of Jacobian matrix</span>
+
+    <span class="comment">// stat data</span>
+    It     <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of iterations from the last call to Solve</span>
+    NFeval <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of calls to Ffcn (function evaluations)</span>
+    NJeval <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of calls to Jfcn (Jacobian evaluations)</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="NlSolver.CheckJ">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=9248:9346#L313">CheckJ</a></h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) CheckJ(x []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, chkJnum, silent <a href="/pkg/builtin/#bool">bool</a>) (cnd <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+CheckJ check Jacobian matrix
+</p>
+<pre>Ouptut: cnd -- condition number (with Frobenius norm)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="NlSolver.Clean">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3635:3661#L113">Clean</a></h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Clean()</pre>
+				<p>
+Clean performs clean ups
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NlSolver.Init">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=2109:2222#L55">Init</a></h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Init(neq <a href="/pkg/builtin/#int">int</a>, Ffcn <a href="#Cb_f">Cb_f</a>, JfcnSp <a href="#Cb_J">Cb_J</a>, JfcnDn <a href="#Cb_Jd">Cb_Jd</a>, useDn, numJ <a href="/pkg/builtin/#bool">bool</a>, prms map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Init initialises solver
+</p>
+<pre>Input:
+ useSp -- Use sparse solver with JfcnSp
+ useDn -- Use dense solver (matrix inversion) with JfcnDn
+ numJ  -- Use numeric Jacobian (sparse version only)
+ prms  -- atol, rtol, ftol, lSearch, lsMaxIt, maxIt
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="NlSolver.SetTols">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3739:3795#L120">SetTols</a></h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) SetTols(Atol, Rtol, Ftol, ϵ <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+SetTols set tolerances
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NlSolver.Solve">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3956:4018#L126">Solve</a></h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Solve(x []<a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Solve solves non-linear problem f(x) == 0
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+	<table class="dir">
+	<tr>
+	<th>Name</th>
+	<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+	<th style="text-align: left; width: auto">Synopsis</th>
+	</tr>
+	
+		<tr>
+		<td><a href="..">..</a></td>
+		</tr>
+	
+	
+		
+			<tr>
+			<td class="name"><a href="cmp/">cmp</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+	</table>
+
+	
+
+</div><!-- page -->
+<div id="footer">
+<br /><br />
+<hr>
+<pre class="copyright">
+Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Dorival M Pedroso nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre><!-- copyright -->
+</div><!-- footer -->
+</body>
+</html>

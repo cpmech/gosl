@@ -1,0 +1,2344 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GoSL &ndash; package la</title>
+<link type="text/css" rel="stylesheet" href="static/style.css">
+<script type="text/javascript" src="static/godocs.js"></script>
+<style type="text/css"></style>
+</head>
+<body>
+<div id="page"><h1>GoSL &ndash; <b>la</b> &ndash; Linear algebra routines</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "code.google.com/p/gosl/la"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package la implements routines and structures for linear algebra with
+matrices and vectors in dense and sparse formats (including complex)
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+				<dd><a href="#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="#Cholesky">func Cholesky(L, a [][]float64) (err error)</a></dd>
+			
+				
+				<dd><a href="#ColMajToMat">func ColMajToMat(a [][]float64, am []float64)</a></dd>
+			
+				
+				<dd><a href="#ColMajToMatNew">func ColMajToMatNew(am []float64, m, n int) (a [][]float64)</a></dd>
+			
+				
+				<dd><a href="#ComplexToRC">func ComplexToRC(rc []complex128) (r, c []float64)</a></dd>
+			
+				
+				<dd><a href="#Jacobi">func Jacobi(Q [][]float64, v []float64, A [][]float64) (nit int, err error)</a></dd>
+			
+				
+				<dd><a href="#MatAlloc">func MatAlloc(m, n int) (mat [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MatClone">func MatClone(a [][]float64) (b [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MatCondG">func MatCondG(a [][]float64, normtype string, tol float64) (res float64, err error)</a></dd>
+			
+				
+				<dd><a href="#MatCopy">func MatCopy(a [][]float64, α float64, b [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MatFill">func MatFill(a [][]float64, s float64)</a></dd>
+			
+				
+				<dd><a href="#MatGetCol">func MatGetCol(j int, a [][]float64) (col []float64)</a></dd>
+			
+				
+				<dd><a href="#MatInv">func MatInv(ai, a [][]float64, tol float64) (det float64, err error)</a></dd>
+			
+				
+				<dd><a href="#MatInvG">func MatInvG(ai, a [][]float64, tol float64) (err error)</a></dd>
+			
+				
+				<dd><a href="#MatMaxDiff">func MatMaxDiff(a, b [][]float64) (maxdiff float64)</a></dd>
+			
+				
+				<dd><a href="#MatMul">func MatMul(c [][]float64, α float64, a, b [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MatMul3">func MatMul3(d [][]float64, α float64, a, b, c [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MatNormF">func MatNormF(a [][]float64) (res float64)</a></dd>
+			
+				
+				<dd><a href="#MatNormI">func MatNormI(a [][]float64) (res float64)</a></dd>
+			
+				
+				<dd><a href="#MatScale">func MatScale(a [][]float64, α float64)</a></dd>
+			
+				
+				<dd><a href="#MatSetDiag">func MatSetDiag(a [][]float64, s float64)</a></dd>
+			
+				
+				<dd><a href="#MatSvd">func MatSvd(u [][]float64, s []float64, vt [][]float64, a [][]float64, tol float64) (err error)</a></dd>
+			
+				
+				<dd><a href="#MatToColMaj">func MatToColMaj(a [][]float64) (am []float64)</a></dd>
+			
+				
+				<dd><a href="#MatTrMul3">func MatTrMul3(d [][]float64, α float64, a, b, c [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MatTrMulAdd3">func MatTrMulAdd3(d [][]float64, α float64, a, b, c [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MatTrVecMul">func MatTrVecMul(v []float64, α float64, a [][]float64, u []float64)</a></dd>
+			
+				
+				<dd><a href="#MatTrVecMulAdd">func MatTrVecMulAdd(v []float64, α float64, a [][]float64, u []float64)</a></dd>
+			
+				
+				<dd><a href="#MatVecMul">func MatVecMul(v []float64, α float64, a [][]float64, u []float64)</a></dd>
+			
+				
+				<dd><a href="#MatVecMulAdd">func MatVecMulAdd(v []float64, α float64, a [][]float64, u []float64)</a></dd>
+			
+				
+				<dd><a href="#MatVecMulAddC">func MatVecMulAddC(v []complex128, α complex128, a [][]complex128, u []complex128)</a></dd>
+			
+				
+				<dd><a href="#MatVecMulCopyAdd">func MatVecMulCopyAdd(w []float64, α float64, v []float64, β float64, a [][]float64, u []float64)</a></dd>
+			
+				
+				<dd><a href="#PrintMat">func PrintMat(name string, a [][]float64, format string, numpy bool)</a></dd>
+			
+				
+				<dd><a href="#PrintMatC">func PrintMatC(name string, a [][]complex128, format, formatz string, numpy bool)</a></dd>
+			
+				
+				<dd><a href="#PrintVec">func PrintVec(name string, a []float64, format string, numpy bool)</a></dd>
+			
+				
+				<dd><a href="#PrintVecC">func PrintVecC(name string, a []complex128, format, formatz string, numpy bool)</a></dd>
+			
+				
+				<dd><a href="#RCtoComplex">func RCtoComplex(r, c []float64) (rc []complex128)</a></dd>
+			
+				
+				<dd><a href="#RunMumpsTestC">func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct []complex128, sum_b_to_root bool)</a></dd>
+			
+				
+				<dd><a href="#RunMumpsTestR">func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct []float64, sum_b_to_root bool)</a></dd>
+			
+				
+				<dd><a href="#SPDsolve">func SPDsolve(x []float64, a [][]float64, b []float64) (err error)</a></dd>
+			
+				
+				<dd><a href="#SmatCCMatrix">func SmatCCMatrix(fnkey string, a *CCMatrix)</a></dd>
+			
+				
+				<dd><a href="#SmatTriplet">func SmatTriplet(fnkey string, t *Triplet)</a></dd>
+			
+				
+				<dd><a href="#SpCheckDiag">func SpCheckDiag(a *CCMatrix) bool</a></dd>
+			
+				
+				<dd><a href="#SpInitRc">func SpInitRc(rcmatR *CCMatrix, rcmatC *CCMatrixC, a *CCMatrix)</a></dd>
+			
+				
+				<dd><a href="#SpInitSimilar">func SpInitSimilar(b *CCMatrix, a *CCMatrix)</a></dd>
+			
+				
+				<dd><a href="#SpInitSimilarR2C">func SpInitSimilarR2C(b *CCMatrixC, a *CCMatrix)</a></dd>
+			
+				
+				<dd><a href="#SpMatAddI">func SpMatAddI(r *CCMatrix, α float64, a *CCMatrix, β float64)</a></dd>
+			
+				
+				<dd><a href="#SpMatAddMat">func SpMatAddMat(c *CCMatrix, α float64, a *CCMatrix, β float64, b *CCMatrix, a2c, b2c []int)</a></dd>
+			
+				
+				<dd><a href="#SpMatAddMatC">func SpMatAddMatC(cC *CCMatrixC, cR *CCMatrix, α, β, γ float64, a *CCMatrix, μ float64, b *CCMatrix, a2c, b2c []int)</a></dd>
+			
+				
+				<dd><a href="#SpMatTrVecMul">func SpMatTrVecMul(v []float64, α float64, a *CCMatrix, u []float64)</a></dd>
+			
+				
+				<dd><a href="#SpMatTrVecMulAdd">func SpMatTrVecMulAdd(v []float64, α float64, a *CCMatrix, u []float64)</a></dd>
+			
+				
+				<dd><a href="#SpMatTrVecMulAddC">func SpMatTrVecMulAddC(v []complex128, α float64, a *CCMatrixC, u []complex128)</a></dd>
+			
+				
+				<dd><a href="#SpMatTrVecMulC">func SpMatTrVecMulC(v []complex128, α float64, a *CCMatrixC, u []complex128)</a></dd>
+			
+				
+				<dd><a href="#SpMatVecMul">func SpMatVecMul(v []float64, α float64, a *CCMatrix, u []float64)</a></dd>
+			
+				
+				<dd><a href="#SpMatVecMulAdd">func SpMatVecMulAdd(v []float64, α float64, a *CCMatrix, u []float64)</a></dd>
+			
+				
+				<dd><a href="#SpMatVecMulAddC">func SpMatVecMulAddC(v []complex128, α float64, a *CCMatrixC, u []complex128)</a></dd>
+			
+				
+				<dd><a href="#SpMatVecMulAddX">func SpMatVecMulAddX(v []float64, a *CCMatrix, α float64, u []float64, β float64, w []float64)</a></dd>
+			
+				
+				<dd><a href="#SpMatVecMulC">func SpMatVecMulC(v []complex128, α float64, a *CCMatrixC, u []complex128)</a></dd>
+			
+				
+				<dd><a href="#SpSetRc">func SpSetRc(rcmatR *CCMatrix, rcmatC *CCMatrixC, α, β, γ float64, a *CCMatrix)</a></dd>
+			
+				
+				<dd><a href="#SpTriAdd">func SpTriAdd(c *Triplet, α float64, a *Triplet, β float64, b *Triplet)</a></dd>
+			
+				
+				<dd><a href="#SpTriAddR2C">func SpTriAddR2C(c *TripletC, α, β float64, a *Triplet, μ float64, b *Triplet)</a></dd>
+			
+				
+				<dd><a href="#SpTriMatTrVecMul">func SpTriMatTrVecMul(y []float64, a *Triplet, x []float64)</a></dd>
+			
+				
+				<dd><a href="#SpTriSetDiag">func SpTriSetDiag(a *Triplet, n int, v float64)</a></dd>
+			
+				
+				<dd><a href="#SpTriSumToRoot">func SpTriSumToRoot(J *Triplet)</a></dd>
+			
+				
+				<dd><a href="#VecAdd">func VecAdd(a []float64, α float64, b []float64)</a></dd>
+			
+				
+				<dd><a href="#VecAdd2">func VecAdd2(u []float64, α float64, a []float64, β float64, b []float64)</a></dd>
+			
+				
+				<dd><a href="#VecCopy">func VecCopy(a []float64, α float64, b []float64)</a></dd>
+			
+				
+				<dd><a href="#VecDot">func VecDot(u, v []float64) (res float64)</a></dd>
+			
+				
+				<dd><a href="#VecFill">func VecFill(v []float64, s float64)</a></dd>
+			
+				
+				<dd><a href="#VecFillC">func VecFillC(v []complex128, s complex128)</a></dd>
+			
+				
+				<dd><a href="#VecLargest">func VecLargest(u []float64, den float64) (largest float64)</a></dd>
+			
+				
+				<dd><a href="#VecMax">func VecMax(v []float64) (max float64)</a></dd>
+			
+				
+				<dd><a href="#VecMaxDiff">func VecMaxDiff(a, b []float64) (maxdiff float64)</a></dd>
+			
+				
+				<dd><a href="#VecMaxDiffC">func VecMaxDiffC(a, b []complex128) (maxdiff float64)</a></dd>
+			
+				
+				<dd><a href="#VecMin">func VecMin(v []float64) (min float64)</a></dd>
+			
+				
+				<dd><a href="#VecMinMax">func VecMinMax(v []float64) (min, max float64)</a></dd>
+			
+				
+				<dd><a href="#VecNorm">func VecNorm(v []float64) (nrm float64)</a></dd>
+			
+				
+				<dd><a href="#VecNormDiff">func VecNormDiff(u, v []float64) (nrm float64)</a></dd>
+			
+				
+				<dd><a href="#VecOuterAdd">func VecOuterAdd(a [][]float64, α float64, u, v []float64)</a></dd>
+			
+				
+				<dd><a href="#VecRms">func VecRms(u []float64) (rms float64)</a></dd>
+			
+				
+				<dd><a href="#VecRmsErr">func VecRmsErr(u []float64, Atol, Rtol float64, v []float64) (rms float64)</a></dd>
+			
+				
+				<dd><a href="#VecRmsError">func VecRmsError(u, w []float64, Atol, Rtol float64, v []float64) (rms float64)</a></dd>
+			
+				
+				<dd><a href="#VecScale">func VecScale(res []float64, Atol, Rtol float64, v []float64)</a></dd>
+			
+				
+				<dd><a href="#VecScaleAbs">func VecScaleAbs(res []float64, Atol, Rtol float64, v []float64)</a></dd>
+			
+				
+				<dd><a href="#WriteSmat">func WriteSmat(fnkey string, a [][]float64, tol float64)</a></dd>
+			
+			
+				
+				<dd><a href="#CCMatrix">type CCMatrix</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#SpAllocMatAddMat">func SpAllocMatAddMat(a, b *CCMatrix) (c *CCMatrix, a2c, b2c []int)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#CCMatrix.ToDense">func (a *CCMatrix) ToDense() [][]float64</a></dd>
+				
+			
+				
+				<dd><a href="#CCMatrixC">type CCMatrixC</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#CCMatrixC.ToDense">func (a *CCMatrixC) ToDense() [][]complex128</a></dd>
+				
+			
+				
+				<dd><a href="#LinSol">type LinSol</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GetSolver">func GetSolver(name string) LinSol</a></dd>
+				
+				
+			
+				
+				<dd><a href="#LinSolMumps">type LinSolMumps</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.Clean">func (o *LinSolMumps) Clean()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.Fact">func (o *LinSolMumps) Fact() (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.InitC">func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.InitR">func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.SetOrdScal">func (o *LinSolMumps) SetOrdScal(ordering, scaling string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.SolveC">func (o *LinSolMumps) SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.SolveR">func (o *LinSolMumps) SolveR(xR, bR []float64, sum_b_to_root bool) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#LinSolUmfpack">type LinSolUmfpack</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.Clean">func (o *LinSolUmfpack) Clean()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.Fact">func (o *LinSolUmfpack) Fact() (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.InitC">func (o *LinSolUmfpack) InitC(tC *TripletC, symmetric, verbose, timing bool) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.InitR">func (o *LinSolUmfpack) InitR(tR *Triplet, symmetric, verbose, timing bool) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.SetOrdScal">func (o *LinSolUmfpack) SetOrdScal(ordering, scaling string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.SolveC">func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC []float64, dummy bool) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.SolveR">func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Triplet">type Triplet</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ReadSmat">func ReadSmat(fn string) *Triplet</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Triplet.Init">func (t *Triplet) Init(m, n, max int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Triplet.Len">func (t *Triplet) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Triplet.Max">func (t *Triplet) Max() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Triplet.Put">func (t *Triplet) Put(i, j int, x float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Triplet.PutMatAndMatT">func (o *Triplet) PutMatAndMatT(a *Triplet)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Triplet.Start">func (t *Triplet) Start()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Triplet.ToMatrix">func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix</a></dd>
+				
+			
+				
+				<dd><a href="#TripletC">type TripletC</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#TripletC.Init">func (t *TripletC) Init(m, n, max int, xzmonolithic bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#TripletC.Len">func (t *TripletC) Len() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#TripletC.Max">func (t *TripletC) Max() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#TripletC.Put">func (t *TripletC) Put(i, j int, x, z float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#TripletC.Start">func (t *TripletC) Start()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#TripletC.ToMatrix">func (t *TripletC) ToMatrix(a *CCMatrixC) *CCMatrixC</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/code.google.com/p/gosl/la/auxiliary.go">auxiliary.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/check.go">check.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/conversions.go">conversions.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/densesol.go">densesol.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/io.go">io.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/jacobi.go">jacobi.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/linalg.go">linalg.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/linsol.go">linsol.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/linsol_mumps.go">linsol_mumps.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/linsol_umfpack.go">linsol_umfpack.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/matinv.go">matinv.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/matinvg.go">matinvg.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/mpi_sparsela.go">mpi_sparsela.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/sparsela.go">sparsela.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/sparsemat.go">sparsemat.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/la/sparsemat_umfpack.go">sparsemat_umfpack.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="JACOBI_TOL">JACOBI_TOL</span>    = 1e-15
+    <span id="JACOBI_EPS">JACOBI_EPS</span>    = 1e-16
+    <span id="JACOBI_NITMAX">JACOBI_NITMAX</span> = 20
+)</pre>
+				
+			
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="NCPU">NCPU</span> <a href="/pkg/builtin/#int">int</a> = 16 <span class="comment">// number of CPUs to use</span>
+</pre>
+				
+			
+				<pre>var <span id="Pll">Pll</span> <a href="/pkg/builtin/#bool">bool</a> = <a href="/pkg/builtin/#false">false</a> <span class="comment">// use parallel version of routines?</span>
+</pre>
+				<p>
+variables for parallel code
+</p>
+
+			
+				<pre>var (
+    <span id="Uerr2Text">Uerr2Text</span> = map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>{
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_out_of_memory">UMFPACK_ERROR_out_of_memory</a>:           &#34;out_of_memory (-1)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_invalid_Numeric_object">UMFPACK_ERROR_invalid_Numeric_object</a>:  &#34;invalid_Numeric_object (-3)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_invalid_Symbolic_object">UMFPACK_ERROR_invalid_Symbolic_object</a>: &#34;invalid_Symbolic_object (-4)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_argument_missing">UMFPACK_ERROR_argument_missing</a>:        &#34;argument_missing (-5)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_n_nonpositive">UMFPACK_ERROR_n_nonpositive</a>:           &#34;n_nonpositive (-6)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_invalid_matrix">UMFPACK_ERROR_invalid_matrix</a>:          &#34;invalid_matrix (-8)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_different_pattern">UMFPACK_ERROR_different_pattern</a>:       &#34;different_pattern (-11)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_invalid_system">UMFPACK_ERROR_invalid_system</a>:          &#34;invalid_system (-13)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_invalid_permutation">UMFPACK_ERROR_invalid_permutation</a>:     &#34;invalid_permutation (-15)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_internal_error">UMFPACK_ERROR_internal_error</a>:          &#34;internal_error (-911)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_ERROR_file_IO">UMFPACK_ERROR_file_IO</a>:                 &#34;file_IO (-17)&#34;,
+        -18: &#34;ordering_failed (-18)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_WARNING_singular_matrix">UMFPACK_WARNING_singular_matrix</a>:       &#34;singular_matrix (1)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_WARNING_determinant_underflow">UMFPACK_WARNING_determinant_underflow</a>: &#34;determinant_underflow (2)&#34;,
+        <a href="/pkg/C/">C</a>.<a href="/pkg/C/#UMFPACK_WARNING_determinant_overflow">UMFPACK_WARNING_determinant_overflow</a>:  &#34;determinant_overflow (3)&#34;,
+    }
+)</pre>
+				<p>
+Umfpack error codes
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="Cholesky">func <a href="/src/target/densesol.go?s=343:386#L5">Cholesky</a></h2>
+			<pre>func Cholesky(L, a [][]<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Cholesky returns the Cholesky decomposition of a symmetric positive-definite matrix:
+</p>
+<pre>a = L * trans(L)
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ColMajToMat">func <a href="/src/target/conversions.go?s=868:913#L26">ColMajToMat</a></h2>
+			<pre>func ColMajToMat(a [][]<a href="/pkg/builtin/#float64">float64</a>, am []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+ColMajToMat returns a matrix from a column-major representation
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ColMajToMatNew">func <a href="/src/target/conversions.go?s=591:650#L14">ColMajToMatNew</a></h2>
+			<pre>func ColMajToMatNew(am []<a href="/pkg/builtin/#float64">float64</a>, m, n <a href="/pkg/builtin/#int">int</a>) (a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+ColMajToMatNew returns a new matrix from a column-major representation
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ComplexToRC">func <a href="/src/target/conversions.go?s=1405:1455#L49">ComplexToRC</a></h2>
+			<pre>func ComplexToRC(rc []<a href="/pkg/builtin/#complex128">complex128</a>) (r, c []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+ComplexToRC converts a slice of complex numbers into two slices
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Jacobi">func <a href="/src/target/jacobi.go?s=814:889#L17">Jacobi</a></h2>
+			<pre>func Jacobi(Q [][]<a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>, A [][]<a href="/pkg/builtin/#float64">float64</a>) (nit <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Jacobi performs the Jacobi transformation of a symmetric matrix to find its eigenvectors and
+eigenvalues. Note that for matrices of order greater than about 10, say, the algorithm is slower,
+by a significant constant factor, than the QR method.   A = Q * L * Q.T
+</p>
+<pre>Arguments:
+ A In/Out -- matrix to compute eigenvalues (SYMMETRIC and SQUARE)
+ Q   Out  -- matrix which columns are the eigenvectors
+ v   Out  -- vector with the eigenvalues
+ nit Out  -- the number of iterations
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatAlloc">func <a href="/src/target/linalg.go?s=14987:15028#L624">MatAlloc</a></h2>
+			<pre>func MatAlloc(m, n <a href="/pkg/builtin/#int">int</a>) (mat [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatAlloc allocates a matrix with size m,n:
+</p>
+<pre>a := 0  =&gt;  aij = 0
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatClone">func <a href="/src/target/linalg.go?s=15186:15230#L634">MatClone</a></h2>
+			<pre>func MatClone(a [][]<a href="/pkg/builtin/#float64">float64</a>) (b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatClone allocates and clones a matrix
+</p>
+<pre>b := a
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatCondG">func <a href="/src/target/matinvg.go?s=2627:2710#L69">MatCondG</a></h2>
+			<pre>func MatCondG(a [][]<a href="/pkg/builtin/#float64">float64</a>, normtype <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+MatCondG returns the condition number of a square matrix using the inverse of this matrix; thus
+it is not as efficient as it could be, e.g. by using the SV decomposition.
+</p>
+<pre>normtype -- Type of norm to use:
+  &#34;F&#34; or &#34;&#34; =&gt; Frobenius
+  &#34;I&#34;       =&gt; Infinite
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatCopy">func <a href="/src/target/linalg.go?s=16681:16735#L705">MatCopy</a></h2>
+			<pre>func MatCopy(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatCopy copies to matrix &#34;a&#34;, another matrix &#34;b&#34; (scaled):
+</p>
+<pre>a := α * b  =&gt;  aij := α * bij
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatFill">func <a href="/src/target/linalg.go?s=15468:15506#L647">MatFill</a></h2>
+			<pre>func MatFill(a [][]<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatFill fills a matrix with a single number s:
+</p>
+<pre>aij := s
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatGetCol">func <a href="/src/target/linalg.go?s=18972:19024#L809">MatGetCol</a></h2>
+			<pre>func MatGetCol(j <a href="/pkg/builtin/#int">int</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>) (col []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatGetCol returns a column of matrix a into vector col:
+</p>
+<pre>col := a[:][j]
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatInv">func <a href="/src/target/matinv.go?s=325:393#L4">MatInv</a></h2>
+			<pre>func MatInv(ai, a [][]<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (det <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+MatInv returns the matrix inverse of &#39;a&#39; in &#39;ai&#39;, in addition to the determinant of &#39;a&#39;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatInvG">func <a href="/src/target/matinvg.go?s=1461:1517#L38">MatInvG</a></h2>
+			<pre>func MatInvG(ai, a [][]<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+MatInvG returns the matrix inverse of &#39;a&#39; in &#39;ai&#39;. &#39;a&#39; can be of any size,
+even non-square; in this case, the pseudo-inverse is returned
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatMaxDiff">func <a href="/src/target/linalg.go?s=18000:18051#L767">MatMaxDiff</a></h2>
+			<pre>func MatMaxDiff(a, b [][]<a href="/pkg/builtin/#float64">float64</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatMaxDiff returns the maximum difference between components of two matrices
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatMul">func <a href="/src/target/linalg.go?s=24112:24168#L996">MatMul</a></h2>
+			<pre>func MatMul(c [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatMul returns the matrix multiplication (scaled):
+</p>
+<pre>c := α * a * b  =&gt;  cij := α * aik * bkj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatMul3">func <a href="/src/target/linalg.go?s=24518:24578#L1010">MatMul3</a></h2>
+			<pre>func MatMul3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatMul3 returns the triple matrix multiplication:
+</p>
+<pre>d := α * a * b * c  =&gt;  dij := α * aik * bkl * clj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatNormF">func <a href="/src/target/linalg.go?s=19555:19597#L836">MatNormF</a></h2>
+			<pre>func MatNormF(a [][]<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatNormF returns the Frobenious norm of a matrix:
+</p>
+<pre>||A||_F := sqrt(sum_i sum_j aij*aij)
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatNormI">func <a href="/src/target/linalg.go?s=20245:20287#L867">MatNormI</a></h2>
+			<pre>func MatNormI(a [][]<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatNormI returns the infinite norm of a matrix:
+</p>
+<pre>||A||_∞ := max_i sum_j aij
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatScale">func <a href="/src/target/linalg.go?s=16062:16102#L676">MatScale</a></h2>
+			<pre>func MatScale(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatScale scales a matrix by a scalar s:
+</p>
+<pre>a := α * a  =&gt;  aij := α * aij
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatSetDiag">func <a href="/src/target/linalg.go?s=17315:17356#L733">MatSetDiag</a></h2>
+			<pre>func MatSetDiag(a [][]<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatSetDiag sets a diagonal matrix where the diagonal components are equal to s
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatSvd">func <a href="/src/target/matinvg.go?s=732:827#L20">MatSvd</a></h2>
+			<pre>func MatSvd(u [][]<a href="/pkg/builtin/#float64">float64</a>, s []<a href="/pkg/builtin/#float64">float64</a>, vt [][]<a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+MatSvd returns the singular value decomposition of a matrix such that:
+</p>
+<pre>Note:
+a = u * s * v
+u[m][m], s[n], vt[n][n] must be pre-allocated
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatToColMaj">func <a href="/src/target/conversions.go?s=297:343#L2">MatToColMaj</a></h2>
+			<pre>func MatToColMaj(a [][]<a href="/pkg/builtin/#float64">float64</a>) (am []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatToColMaj returns a vector representation of a column-major matrix
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatTrMul3">func <a href="/src/target/linalg.go?s=25010:25072#L1026">MatTrMul3</a></h2>
+			<pre>func MatTrMul3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatTrMul3 returns the triple matrix multiplication with tranposed &#34;a&#34;:
+</p>
+<pre>d := α * trans(a) * b * c  =&gt;  dij := α * aki * bkl * clj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatTrMulAdd3">func <a href="/src/target/linalg.go?s=25520:25585#L1042">MatTrMulAdd3</a></h2>
+			<pre>func MatTrMulAdd3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatTrMulAdd3 returns the triple matrix multiplication with addition and tranposed &#34;a&#34;:
+</p>
+<pre>d += α * trans(a) * b * c  =&gt;  dij += α * aki * bkl * clj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatTrVecMul">func <a href="/src/target/linalg.go?s=22918:22987#L961">MatTrVecMul</a></h2>
+			<pre>func MatTrVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatTrVecMult returns the matrix-vector multiplication with &#34;a&#34; transposed (scaled):
+</p>
+<pre>v := α * transp(a) * u  =&gt;  vi = α * aji * uj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatTrVecMulAdd">func <a href="/src/target/linalg.go?s=23330:23402#L973">MatTrVecMulAdd</a></h2>
+			<pre>func MatTrVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatTrVecMulAdd returns the matrix-vector multiplication with addition and &#34;a&#34; transposed (scaled):
+</p>
+<pre>v += α * transp(a) * u  =&gt;  vi += α * aji * uj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatVecMul">func <a href="/src/target/linalg.go?s=21767:21834#L927">MatVecMul</a></h2>
+			<pre>func MatVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatVecMul returns the matrix-vector multiplication (scaled):
+</p>
+<pre>v := α * a * u  =&gt;  vi = α * aij * uj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatVecMulAdd">func <a href="/src/target/linalg.go?s=22145:22215#L939">MatVecMulAdd</a></h2>
+			<pre>func MatVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatVecMulAdd returns the matrix-vector multiplication with addition (scaled):
+</p>
+<pre>v += α * a * u  =&gt;  vi += α * aij * uj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatVecMulAddC">func <a href="/src/target/linalg.go?s=22524:22607#L950">MatVecMulAddC</a></h2>
+			<pre>func MatVecMulAddC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#complex128">complex128</a>, a [][]<a href="/pkg/builtin/#complex128">complex128</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
+			<p>
+MatVecMulAddC (complex) returns the matrix-vector multiplication with addition (scaled):
+</p>
+<pre>v += α * a * u  =&gt;  vi += α * aij * uj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MatVecMulCopyAdd">func <a href="/src/target/linalg.go?s=23721:23820#L984">MatVecMulCopyAdd</a></h2>
+			<pre>func MatVecMulCopyAdd(w []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MatVecMulCopyAdd returns the matrix-vector multiplication with copy and addition (scaled):
+</p>
+<pre>w = α*v + β*a*u  =&gt;  wi = α*vi + β*aij*uj
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PrintMat">func <a href="/src/target/io.go?s=788:856#L32">PrintMat</a></h2>
+			<pre>func PrintMat(name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, format <a href="/pkg/builtin/#string">string</a>, numpy <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+PrintMat prints a dense matrix
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PrintMatC">func <a href="/src/target/io.go?s=2626:2707#L131">PrintMatC</a></h2>
+			<pre>func PrintMatC(name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#complex128">complex128</a>, format, formatz <a href="/pkg/builtin/#string">string</a>, numpy <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+PrintMatC prints a matrix of complex numbers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PrintVec">func <a href="/src/target/io.go?s=434:500#L9">PrintVec</a></h2>
+			<pre>func PrintVec(name <a href="/pkg/builtin/#string">string</a>, a []<a href="/pkg/builtin/#float64">float64</a>, format <a href="/pkg/builtin/#string">string</a>, numpy <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+PrintVec prints a vector
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PrintVecC">func <a href="/src/target/io.go?s=2200:2279#L107">PrintVecC</a></h2>
+			<pre>func PrintVecC(name <a href="/pkg/builtin/#string">string</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, format, formatz <a href="/pkg/builtin/#string">string</a>, numpy <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+PrintVecC prints a vector of complex numbers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RCtoComplex">func <a href="/src/target/conversions.go?s=1104:1154#L37">RCtoComplex</a></h2>
+			<pre>func RCtoComplex(r, c []<a href="/pkg/builtin/#float64">float64</a>) (rc []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
+			<p>
+RCtoComplex converts two slices into a slice of complex numbers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RunMumpsTestC">func <a href="/src/target/linsol_mumps.go?s=13017:13112#L517">RunMumpsTestC</a></h2>
+			<pre>func RunMumpsTestC(t *<a href="#TripletC">TripletC</a>, tol_cmp <a href="/pkg/builtin/#float64">float64</a>, b, x_correct []<a href="/pkg/builtin/#complex128">complex128</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="RunMumpsTestR">func <a href="/src/target/linsol_mumps.go?s=12076:12167#L470">RunMumpsTestR</a></h2>
+			<pre>func RunMumpsTestR(t *<a href="#Triplet">Triplet</a>, tol_cmp <a href="/pkg/builtin/#float64">float64</a>, b, x_correct []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SPDsolve">func <a href="/src/target/densesol.go?s=1071:1137#L29">SPDsolve</a></h2>
+			<pre>func SPDsolve(x []<a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+SPDsolve (Symmetric/Positive-Definite) solves a small dense linear system A*x=b where
+the &#34;a&#34; matrix is symmetric and positive-definite (and real, and, of course, square)
+</p>
+<pre>x := inv(a) * b
+NOTE: this function uses Cholesky decomposition and should be used for small systems
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SmatCCMatrix">func <a href="/src/target/io.go?s=3685:3729#L184">SmatCCMatrix</a></h2>
+			<pre>func SmatCCMatrix(fnkey <a href="/pkg/builtin/#string">string</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
+			<p>
+SmatCCMatrix writes a &#34;.smat&#34; file that can be visualised with vismatrix
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SmatTriplet">func <a href="/src/target/io.go?s=3283:3325#L170">SmatTriplet</a></h2>
+			<pre>func SmatTriplet(fnkey <a href="/pkg/builtin/#string">string</a>, t *<a href="#Triplet">Triplet</a>)</pre>
+			<p>
+SmatTriplet writes a &#34;.smat&#34; file that can be visualised with vismatrix
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpCheckDiag">func <a href="/src/target/sparsela.go?s=5740:5774#L156">SpCheckDiag</a></h2>
+			<pre>func SpCheckDiag(a *<a href="#CCMatrix">CCMatrix</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+			<p>
+SpCheckDiag checks if all elements on the diagonal of &#34;a&#34; are present.
+</p>
+<pre>OUTPUT:
+ ok -- true if all diagonal elements are present;
+       otherwise, ok == false if any diagonal element is missing.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpInitRc">func <a href="/src/target/sparsela.go?s=6204:6267#L177">SpInitRc</a></h2>
+			<pre>func SpInitRc(rcmatR *<a href="#CCMatrix">CCMatrix</a>, rcmatC *<a href="#CCMatrixC">CCMatrixC</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
+			<p>
+SpInitRc initialises two complex sparse matrices (residual correction) according to:
+</p>
+<pre>Real:     γ      *I - J
+Complex: (α + βi)*I - J
+NOTE: &#34;a&#34; must include all diagonal elements
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpInitSimilar">func <a href="/src/target/sparsela.go?s=4435:4479#L109">SpInitSimilar</a></h2>
+			<pre>func SpInitSimilar(b *<a href="#CCMatrix">CCMatrix</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
+			<p>
+SpInitSimilar initialises another matrix &#34;b&#34; with the same structure (Ap, Ai) of
+sparse matrix &#34;a&#34;. The values Ax are not copied though.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpInitSimilarR2C">func <a href="/src/target/sparsela.go?s=4891:4939#L124">SpInitSimilarR2C</a></h2>
+			<pre>func SpInitSimilarR2C(b *<a href="#CCMatrixC">CCMatrixC</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
+			<p>
+SpInitSimilarR2C initialises another matrix &#34;b&#34; (complex) with the same structure (Ap, Ai) of
+sparse matrix &#34;a&#34; (real). The values Ax are not copied though (Bx and Bz are not set).
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatAddI">func <a href="/src/target/sparsela.go?s=5296:5360#L140">SpMatAddI</a></h2>
+			<pre>func SpMatAddI(r *<a href="#CCMatrix">CCMatrix</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, β <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SpMatAddI adds an identity matrix I to &#34;a&#34;, scaled by α and β according to:
+</p>
+<pre>r := α*a + β*I
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatAddMat">func <a href="/src/target/sparsela.go?s=9793:9888#L303">SpMatAddMat</a></h2>
+			<pre>func SpMatAddMat(c *<a href="#CCMatrix">CCMatrix</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, β <a href="/pkg/builtin/#float64">float64</a>, b *<a href="#CCMatrix">CCMatrix</a>, a2c, b2c []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+SpMatAddMat adds two sparse matrices. The &#39;c&#39; matrix matrix and the &#39;a2c&#39; and &#39;b2c&#39; arrays
+must be pre-allocated by SpAllocMatAddMat. The result is:
+</p>
+<pre>c := α*a + β*b
+NOTE: this routine does not check for the correct sizes, since this is expect to be
+      done by SpAllocMatAddMat
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatAddMatC">func <a href="/src/target/sparsela.go?s=10527:10647#L321">SpMatAddMatC</a></h2>
+			<pre>func SpMatAddMatC(cC *<a href="#CCMatrixC">CCMatrixC</a>, cR *<a href="#CCMatrix">CCMatrix</a>, α, β, γ <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, μ <a href="/pkg/builtin/#float64">float64</a>, b *<a href="#CCMatrix">CCMatrix</a>, a2c, b2c []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+SpMatAddMatC adds two real sparse matrices with two sets of coefficients in such a way that
+one real matrix (cR) and another complex matrix (cC) are obtained. The results are:
+</p>
+<pre>  cR :=      γ*a + μ*b
+  cC := (α+βi)*a + μ*b
+NOTE: the structure of cR and cC are the same and can be allocated with SpAllocMatAddMat,
+      followed by one call to SpInitSimilarR2C. For example:
+          cR, a2c, b2c := SpAllocMatAddMat(a, b)
+          SpInitSimilarR2C(cC, cR)
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatTrVecMul">func <a href="/src/target/sparsela.go?s=1827:1896#L40">SpMatTrVecMul</a></h2>
+			<pre>func SpMatTrVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SpMatTrVecMult returns the (sparse) matrix-vector multiplication with &#34;a&#34; transposed (scaled):
+</p>
+<pre>v := α * transp(a) * u  =&gt;  vj = α * aij * ui
+NOTE: dense vector v will be first initialised with zeros
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatTrVecMulAdd">func <a href="/src/target/sparsela.go?s=2192:2264#L51">SpMatTrVecMulAdd</a></h2>
+			<pre>func SpMatTrVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SpMatTrVecMulAdd returns the (sparse) matrix-vector multiplication with addition and &#34;a&#34; transposed (scaled):
+</p>
+<pre>v += α * transp(a) * u  =&gt;  vj += α * aij * ui
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatTrVecMulAddC">func <a href="/src/target/sparsela.go?s=3772:3852#L95">SpMatTrVecMulAddC</a></h2>
+			<pre>func SpMatTrVecMulAddC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrixC">CCMatrixC</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
+			<p>
+SpMatTrVecMulAddC returns the (sparse/complex) matrix-vector multiplication with addition and &#34;a&#34; transposed (scaled):
+</p>
+<pre>v += α * transp(a) * u  =&gt;  vj += α * aij * ui
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatTrVecMulC">func <a href="/src/target/sparsela.go?s=3371:3448#L84">SpMatTrVecMulC</a></h2>
+			<pre>func SpMatTrVecMulC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrixC">CCMatrixC</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
+			<p>
+SpMatTrVecMultC returns the (sparse/complex) matrix-vector multiplication with &#34;a&#34; transposed (scaled):
+</p>
+<pre>v := α * transp(a) * u  =&gt;  vj = α * aij * ui
+NOTE: dense vector v will be first initialised with zeros
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatVecMul">func <a href="/src/target/sparsela.go?s=713:780#L8">SpMatVecMul</a></h2>
+			<pre>func SpMatVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SpMatVecMul returns the (sparse) matrix-vector multiplication (scaled):
+</p>
+<pre>v := α * a * u  =&gt;  vi = α * aij * uj
+NOTE: dense vector v will be first initialised with zeros
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatVecMulAdd">func <a href="/src/target/sparsela.go?s=1047:1117#L19">SpMatVecMulAdd</a></h2>
+			<pre>func SpMatVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SpMatVecMulAdd returns the (sparse) matrix-vector multiplication with addition (scaled):
+</p>
+<pre>v += α * a * u  =&gt;  vi += α * aij * uj
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatVecMulAddC">func <a href="/src/target/sparsela.go?s=2939:3017#L73">SpMatVecMulAddC</a></h2>
+			<pre>func SpMatVecMulAddC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrixC">CCMatrixC</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
+			<p>
+SpMatVecMulAddC returns the (sparse/complex) matrix-vector multiplication with addition (scaled):
+</p>
+<pre>v += α * a * u  =&gt;  vi += α * aij * uj
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatVecMulAddX">func <a href="/src/target/sparsela.go?s=1394:1490#L29">SpMatVecMulAddX</a></h2>
+			<pre>func SpMatVecMulAddX(v []<a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, α <a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SpMatVecMulAddX returns the (sparse) matrix-vector multiplication with addition (scaled/extended):
+</p>
+<pre>v += a * (α*u + β*w)  =&gt;  vi += aij * (α*uj + β*wj)
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpMatVecMulC">func <a href="/src/target/sparsela.go?s=2569:2644#L62">SpMatVecMulC</a></h2>
+			<pre>func SpMatVecMulC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrixC">CCMatrixC</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
+			<p>
+SpMatVecMulC returns the (sparse/complex) matrix-vector multiplication (scaled):
+</p>
+<pre>v := α * a * u  =&gt;  vi = α * aij * uj
+NOTE: dense vector v will be first initialised with zeros
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpSetRc">func <a href="/src/target/sparsela.go?s=6966:7048#L201">SpSetRc</a></h2>
+			<pre>func SpSetRc(rcmatR *<a href="#CCMatrix">CCMatrix</a>, rcmatC *<a href="#CCMatrixC">CCMatrixC</a>, α, β, γ <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
+			<p>
+SpSetRc sets the values within two complex sparse matrices (residual correction) according to:
+</p>
+<pre>Real:     γ      *I - J
+Complex: (α + βi)*I - J
+NOTE: &#34;a&#34; must include all diagonal elements
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpTriAdd">func <a href="/src/target/sparsela.go?s=11148:11221#L340">SpTriAdd</a></h2>
+			<pre>func SpTriAdd(c *<a href="#Triplet">Triplet</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#Triplet">Triplet</a>, β <a href="/pkg/builtin/#float64">float64</a>, b *<a href="#Triplet">Triplet</a>)</pre>
+			<p>
+SpTriAdd adds two matrices in Triplet format:
+</p>
+<pre>c := α*a + β*b
+NOTE: the output &#39;c&#39; triplet must be able to hold all nonzeros of &#39;a&#39; and &#39;b&#39;
+      actually the &#39;c&#39; triplet is just expanded
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpTriAddR2C">func <a href="/src/target/sparsela.go?s=11640:11721#L355">SpTriAddR2C</a></h2>
+			<pre>func SpTriAddR2C(c *<a href="#TripletC">TripletC</a>, α, β <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#Triplet">Triplet</a>, μ <a href="/pkg/builtin/#float64">float64</a>, b *<a href="#Triplet">Triplet</a>)</pre>
+			<p>
+SpTriAddR2C adds two real matrices in Triplet format generating a complex triplet
+accordint to:
+</p>
+<pre>c := (α+βi)*a + μ*b
+NOTE: the output &#39;c&#39; triplet must be able to hold all nonzeros of &#39;a&#39; and &#39;b&#39;
+      actually the &#39;c&#39; triplet is just expanded
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpTriMatTrVecMul">func <a href="/src/target/sparsela.go?s=12106:12165#L368">SpTriMatTrVecMul</a></h2>
+			<pre>func SpTriMatTrVecMul(y []<a href="/pkg/builtin/#float64">float64</a>, a *<a href="#Triplet">Triplet</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SpTriMatTrVecMul returns the matrix-vector multiplication with transposed matrix a in
+triplet format and two dense vectors x and y
+</p>
+<pre>y := transpose(a) * x    or    y_I := a_JI * x_J    or     y_j := a_ij * x_i
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpTriSetDiag">func <a href="/src/target/sparsela.go?s=7389:7436#L218">SpTriSetDiag</a></h2>
+			<pre>func SpTriSetDiag(a *<a href="#Triplet">Triplet</a>, n <a href="/pkg/builtin/#int">int</a>, v <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SpTriSetDiag sets a (n x n) real triplet with diagonal values &#39;v&#39;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SpTriSumToRoot">func <a href="/src/target/mpi_sparsela.go?s=388:419#L5">SpTriSumToRoot</a></h2>
+			<pre>func SpTriSumToRoot(J *<a href="#Triplet">Triplet</a>)</pre>
+			<p>
+SpTriSumToRoot join (MPI) parallel triplets to root (Rank == 0) processor.
+</p>
+<pre>NOTE: J in root is also joined into Jroot
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecAdd">func <a href="/src/target/linalg.go?s=4520:4569#L180">VecAdd</a></h2>
+			<pre>func VecAdd(a []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecAdd adds to vector &#34;a&#34;, another vector &#34;b&#34; (scaled):
+</p>
+<pre>a += α * b  =&gt;  ai += α * bi
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecAdd2">func <a href="/src/target/linalg.go?s=5053:5128#L205">VecAdd2</a></h2>
+			<pre>func VecAdd2(u []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecAdd2 adds two vectors (scaled):
+</p>
+<pre>u := α*a + β*b  =&gt;  ui := α*ai + β*bi
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecCopy">func <a href="/src/target/linalg.go?s=3978:4028#L155">VecCopy</a></h2>
+			<pre>func VecCopy(a []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecCopy copies a vector &#34;b&#34; into vector &#34;a&#34; (scaled):
+</p>
+<pre>a := α * b  =&gt;  ai := α * bi
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecDot">func <a href="/src/target/linalg.go?s=3368:3409#L127">VecDot</a></h2>
+			<pre>func VecDot(u, v []<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecDot returns the dot product between two vectors:
+</p>
+<pre>s := u dot v
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecFill">func <a href="/src/target/linalg.go?s=1095:1131#L19">VecFill</a></h2>
+			<pre>func VecFill(v []<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecFill fills a vector with a single number s:
+</p>
+<pre>v := s*ones(len(v))  =&gt;  vi = s
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecFillC">func <a href="/src/target/linalg.go?s=1608:1651#L44">VecFillC</a></h2>
+			<pre>func VecFillC(v []<a href="/pkg/builtin/#complex128">complex128</a>, s <a href="/pkg/builtin/#complex128">complex128</a>)</pre>
+			<p>
+VecFillC fills a complex vector with a single number s:
+</p>
+<pre>v := s*ones(len(v))  =&gt;  vi = s
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecLargest">func <a href="/src/target/linalg.go?s=7912:7971#L344">VecLargest</a></h2>
+			<pre>func VecLargest(u []<a href="/pkg/builtin/#float64">float64</a>, den <a href="/pkg/builtin/#float64">float64</a>) (largest <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecLargest returns the largest component of a vector, normalised by den
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecMax">func <a href="/src/target/linalg.go?s=6267:6305#L264">VecMax</a></h2>
+			<pre>func VecMax(v []<a href="/pkg/builtin/#float64">float64</a>) (max <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecMax returns the maximum component of a vector
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecMaxDiff">func <a href="/src/target/linalg.go?s=8765:8814#L381">VecMaxDiff</a></h2>
+			<pre>func VecMaxDiff(a, b []<a href="/pkg/builtin/#float64">float64</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecMaxDiff returns the maximum difference between components of two vectors
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecMaxDiffC">func <a href="/src/target/linalg.go?s=9631:9684#L418">VecMaxDiffC</a></h2>
+			<pre>func VecMaxDiffC(a, b []<a href="/pkg/builtin/#complex128">complex128</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecMaxDiffC returns the maximum difference between components of two complex vectors
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecMin">func <a href="/src/target/linalg.go?s=5594:5632#L229">VecMin</a></h2>
+			<pre>func VecMin(v []<a href="/pkg/builtin/#float64">float64</a>) (min <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecMin returns the minimum component of a vector
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecMinMax">func <a href="/src/target/linalg.go?s=6948:6994#L299">VecMinMax</a></h2>
+			<pre>func VecMinMax(v []<a href="/pkg/builtin/#float64">float64</a>) (min, max <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecMinMax returns the min and max components of a vector
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecNorm">func <a href="/src/target/linalg.go?s=2101:2140#L69">VecNorm</a></h2>
+			<pre>func VecNorm(v []<a href="/pkg/builtin/#float64">float64</a>) (nrm <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecNorm returns the Euclidian norm of a vector:
+</p>
+<pre>nrm := ||v||
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecNormDiff">func <a href="/src/target/linalg.go?s=2718:2764#L98">VecNormDiff</a></h2>
+			<pre>func VecNormDiff(u, v []<a href="/pkg/builtin/#float64">float64</a>) (nrm <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecNormDiff returns the Euclidian norm of the difference:
+</p>
+<pre>nrm := ||u - v||
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecOuterAdd">func <a href="/src/target/linalg.go?s=25975:26034#L1057">VecOuterAdd</a></h2>
+			<pre>func VecOuterAdd(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, u, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecOuterAdd returns the outer product between two vectors, with addition (scaled)
+</p>
+<pre>aij += α * u[i] * v[j]
+NOTE: not efficient implementation =&gt; use for small matrices
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecRms">func <a href="/src/target/linalg.go?s=12220:12258#L523">VecRms</a></h2>
+			<pre>func VecRms(u []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecRms returns the root-mean-square of a vector u:
+</p>
+<pre>rms := sqrt(mean((u[:])^2))  ==  sqrt(sum_i((ui)^2)/n)
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecRmsErr">func <a href="/src/target/linalg.go?s=12942:13016#L553">VecRmsErr</a></h2>
+			<pre>func VecRmsErr(u []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecRmsErr returns the root-mean-square of a vector u normalised by scal[i] = Atol + Rtol * |vi|
+</p>
+<pre>rms     := sqrt(sum_i((u[i]/scal[i])^2)/n)
+scal[i] := Atol + Rtol * |v[i]|
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecRmsError">func <a href="/src/target/linalg.go?s=13842:13921#L586">VecRmsError</a></h2>
+			<pre>func VecRmsError(u, w []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecRmsError returns the root-mean-square of a vector u normalised by scal[i] = Atol + Rtol * |vi|
+</p>
+<pre>rms     := sqrt(sum_i((|u[i]-w[i]|/scal[i])^2)/n)
+scal[i] := Atol + Rtol * |v[i]|
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecScale">func <a href="/src/target/linalg.go?s=11019:11080#L473">VecScale</a></h2>
+			<pre>func VecScale(res []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecScale scales vector &#34;v&#34; using an absolute value (Atol) and a multiplier (Rtol)
+</p>
+<pre>res[i] := Atol + Rtol * v[i]
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecScaleAbs">func <a href="/src/target/linalg.go?s=11616:11680#L498">VecScaleAbs</a></h2>
+			<pre>func VecScaleAbs(res []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecScaleAbs scales vector abs(v) using an absolute value (Atol) and a multiplier (Rtol)
+</p>
+<pre>res[i] := Atol + Rtol * Abs(v[i])
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteSmat">func <a href="/src/target/io.go?s=1381:1437#L72">WriteSmat</a></h2>
+			<pre>func WriteSmat(fnkey <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+WriteSmat writes a smat matrix for vismatrix
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="CCMatrix">type <a href="/src/target/sparsemat.go?s=743:966#L11">CCMatrix</a></h2>
+			<pre>type CCMatrix struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+CCMatrix represents a sparse matrix using the so-called &#34;column-compressed format&#34;.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="SpAllocMatAddMat">func <a href="/src/target/sparsela.go?s=8078:8145#L233">SpAllocMatAddMat</a></h3>
+				<pre>func SpAllocMatAddMat(a, b *<a href="#CCMatrix">CCMatrix</a>) (c *<a href="#CCMatrix">CCMatrix</a>, a2c, b2c []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+SpAllocMatAddMat allocates a matrix &#39;c&#39; to hold the result of the addition of &#39;a&#39; and &#39;b&#39;.
+It also allocates the mapping arrays a2c and b2c, where:
+</p>
+<pre>a2c maps &#39;k&#39; in &#39;a&#39; to &#39;k&#39; in &#39;c&#39;: len(a2c) = a.nnz
+b2c maps &#39;k&#39; in &#39;b&#39; to &#39;k&#39; in &#39;c&#39;: len(b2c) = b.nnz
+</pre>
+
+				
+				
+			
+
+			
+				
+				<h3 id="CCMatrix.ToDense">func (*CCMatrix) <a href="/src/target/sparsemat.go?s=4633:4673#L134">ToDense</a></h3>
+				<pre>func (a *<a href="#CCMatrix">CCMatrix</a>) ToDense() [][]<a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+ToDense converts a column-compressed matrix to dense form
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CCMatrixC">type <a href="/src/target/sparsemat.go?s=3179:3450#L82">CCMatrixC</a></h2>
+			<pre>type CCMatrixC struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+CCMatrixC is the equivalent to CCMatrix but with values stored as paris of
+float64 representing compressed numbers
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="CCMatrixC.ToDense">func (*CCMatrixC) <a href="/src/target/sparsemat.go?s=4949:4993#L148">ToDense</a></h3>
+				<pre>func (a *<a href="#CCMatrixC">CCMatrixC</a>) ToDense() [][]<a href="/pkg/builtin/#complex128">complex128</a></pre>
+				<p>
+ToDense converts a column-compressed matrix (complex) to dense form
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LinSol">type <a href="/src/target/linsol.go?s=234:881#L3">LinSol</a></h2>
+			<pre>type LinSol interface {
+    InitR(tR *<a href="#Triplet">Triplet</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a>  <span class="comment">// init for Real solution</span>
+    InitC(tC *<a href="#TripletC">TripletC</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// init for Complex solution</span>
+    Fact() <a href="/pkg/builtin/#error">error</a>                                               <span class="comment">// factorise</span>
+    SolveR(xR, bR []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a>         <span class="comment">// solve Real problem. x = inv(A) * b</span>
+    SolveC(xR, xC, bR, bC []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// solve Complex problem x = inv(A) * b</span>
+    Clean()                                                    <span class="comment">// deallocate memory</span>
+    SetOrdScal(ordering, scaling <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#error">error</a>                 <span class="comment">// set ordering and scaling method</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="GetSolver">func <a href="/src/target/linsol.go?s=1099:1133#L17">GetSolver</a></h3>
+				<pre>func GetSolver(name <a href="/pkg/builtin/#string">string</a>) <a href="#LinSol">LinSol</a></pre>
+				<p>
+GetSolver returns a linear solver by name. e.g. &#34;umfpack&#34; or &#34;mumps&#34;
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="LinSolMumps">type <a href="/src/target/linsol_mumps.go?s=478:627#L16">LinSolMumps</a></h2>
+			<pre>type LinSolMumps struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+LinSolMumps holds MUMPS data
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LinSolMumps.Clean">func (*LinSolMumps) <a href="/src/target/linsol_mumps.go?s=9947:9976#L374">Clean</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) Clean()</pre>
+				<p>
+Clean deletes temporary data structures
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolMumps.Fact">func (*LinSolMumps) <a href="/src/target/linsol_mumps.go?s=6487:6527#L220">Fact</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) Fact() (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Fact performs symbolic/numeric factorisation. This method also converts the triplet form
+to the column-compressed form, including the summation of duplicated entries
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolMumps.InitC">func (*LinSolMumps) <a href="/src/target/linsol_mumps.go?s=3516:3602#L120">InitC</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) InitC(tC *<a href="#TripletC">TripletC</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+InitC initialises a LinSolMumps data structure for Complex systems. It also performs some initial analyses.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolMumps.InitR">func (*LinSolMumps) <a href="/src/target/linsol_mumps.go?s=846:931#L31">InitR</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) InitR(tR *<a href="#Triplet">Triplet</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+InitR initialises a LinSolMumps data structure for Real systems. It also performs some initial analyses.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolMumps.SetOrdScal">func (*LinSolMumps) <a href="/src/target/linsol_mumps.go?s=10532:10602#L402">SetOrdScal</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) SetOrdScal(ordering, scaling <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+SetOrdScal sets the ordering and scaling methods for MUMPS
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolMumps.SolveC">func (*LinSolMumps) <a href="/src/target/linsol_mumps.go?s=8636:8722#L312">SolveC</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) SolveC(xR, xC, bR, bC []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+SolveC solves the linear Complex system A.x = b
+</p>
+<pre>NOTES:
+  1) sum_b_to_root is a flag for MUMPS; it tells Solve to sum the values in &#39;b&#39; arrays to the root processor
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolMumps.SolveR">func (*LinSolMumps) <a href="/src/target/linsol_mumps.go?s=7512:7590#L263">SolveR</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) SolveR(xR, bR []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+SolveR solves the linear Real system A.x = b
+</p>
+<pre>NOTES:
+  1) sum_b_to_root is a flag for MUMPS; it tells Solve to sum the values in &#39;b&#39; arrays to the root processor
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="LinSolUmfpack">type <a href="/src/target/linsol_umfpack.go?s=733:967#L21">LinSolUmfpack</a></h2>
+			<pre>type LinSolUmfpack struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+LinSolUmfpack holds UMFPACK data
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="LinSolUmfpack.Clean">func (*LinSolUmfpack) <a href="/src/target/linsol_umfpack.go?s=7272:7303#L269">Clean</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) Clean()</pre>
+				<p>
+Clean deletes temporary data structures
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolUmfpack.Fact">func (*LinSolUmfpack) <a href="/src/target/linsol_umfpack.go?s=3610:3652#L132">Fact</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) Fact() (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Fact performs symbolic/numeric factorisation. This method also converts the triplet form
+to the column-compressed form, including the summation of duplicated entries
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolUmfpack.InitC">func (*LinSolUmfpack) <a href="/src/target/linsol_umfpack.go?s=2232:2320#L84">InitC</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) InitC(tC *<a href="#TripletC">TripletC</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+InitC initialises a LinSolUmfpack data structure for Complex systems. It also performs some initial analyses.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolUmfpack.InitR">func (*LinSolUmfpack) <a href="/src/target/linsol_umfpack.go?s=1192:1279#L44">InitR</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) InitR(tR *<a href="#Triplet">Triplet</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+InitR initialises a LinSolUmfpack data structure for Real systems. It also performs some initial analyses.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolUmfpack.SetOrdScal">func (*LinSolUmfpack) <a href="/src/target/linsol_umfpack.go?s=7873:7945#L297">SetOrdScal</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SetOrdScal(ordering, scaling <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+SetOrdScal sets the ordering and scaling methods for MUMPS
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolUmfpack.SolveC">func (*LinSolUmfpack) <a href="/src/target/linsol_umfpack.go?s=6353:6433#L232">SolveC</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SolveC(xR, xC, bR, bC []<a href="/pkg/builtin/#float64">float64</a>, dummy <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+SolveC solves the linear Complex system A.x = b
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="LinSolUmfpack.SolveR">func (*LinSolUmfpack) <a href="/src/target/linsol_umfpack.go?s=5532:5604#L197">SolveR</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SolveR(xR, bR []<a href="/pkg/builtin/#float64">float64</a>, dummy <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+SolveR solves the linear Real system A.x = b
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Triplet">type <a href="/src/target/sparsemat.go?s=351:654#L3">Triplet</a></h2>
+			<pre>type Triplet struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Triplet is a simple representation of a sparse matrix, where the indices and values
+of this matrix are stored directly.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="ReadSmat">func <a href="/src/target/io.go?s=1803:1836#L90">ReadSmat</a></h3>
+				<pre>func ReadSmat(fn <a href="/pkg/builtin/#string">string</a>) *<a href="#Triplet">Triplet</a></pre>
+				<p>
+ReadSmat reads a smat matrix back
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Triplet.Init">func (*Triplet) <a href="/src/target/sparsemat.go?s=1046:1083#L19">Init</a></h3>
+				<pre>func (t *<a href="#Triplet">Triplet</a>) Init(m, n, max <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Init allocates all memory required to hold a sparse matrix in triplet form
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Triplet.Len">func (*Triplet) <a href="/src/target/sparsemat.go?s=2315:2342#L60">Len</a></h3>
+				<pre>func (t *<a href="#Triplet">Triplet</a>) Len() <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+Len returns the number of items just inserted in the triplet
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Triplet.Max">func (*Triplet) <a href="/src/target/sparsemat.go?s=2441:2468#L65">Max</a></h3>
+				<pre>func (t *<a href="#Triplet">Triplet</a>) Max() <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+Max returns the maximum number of items that can be inserted in the triplet
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Triplet.Put">func (*Triplet) <a href="/src/target/sparsemat.go?s=1276:1318#L27">Put</a></h3>
+				<pre>func (t *<a href="#Triplet">Triplet</a>) Put(i, j <a href="/pkg/builtin/#int">int</a>, x <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Put inserts an element to a pre-allocated (with Init) triplet matrix
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Triplet.PutMatAndMatT">func (*Triplet) <a href="/src/target/sparsemat.go?s=1827:1870#L43">PutMatAndMatT</a></h3>
+				<pre>func (o *<a href="#Triplet">Triplet</a>) PutMatAndMatT(a *<a href="#Triplet">Triplet</a>)</pre>
+				<p>
+PutMatAndMatT adds the content of a matrix &#34;a&#34; and its transpose &#34;at&#34; to triplet &#34;o&#34;
+ex:    0   1   2   3   4   5
+</p>
+<pre>[... ... ... a00 a10 ...] 0
+[... ... ... a01 a11 ...] 1
+[... ... ... a02 a12 ...] 2      [. at  .]
+[a00 a01 a02 ... ... ...] 3  =&gt;  [a  .  .]
+[a10 a11 a12 ... ... ...] 4      [.  .  .]
+[... ... ... ... ... ...] 5
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Triplet.Start">func (*Triplet) <a href="/src/target/sparsemat.go?s=2209:2234#L55">Start</a></h3>
+				<pre>func (t *<a href="#Triplet">Triplet</a>) Start()</pre>
+				<p>
+Start (re-)starts the insertion index within &#34;t&#34; in order to allow (re-)insertion of
+items using the Put method
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Triplet.ToMatrix">func (*Triplet) <a href="/src/target/sparsemat_umfpack.go?s=1116:1165#L26">ToMatrix</a></h3>
+				<pre>func (t *<a href="#Triplet">Triplet</a>) ToMatrix(a *<a href="#CCMatrix">CCMatrix</a>) *<a href="#CCMatrix">CCMatrix</a></pre>
+				<p>
+ToMatrix converts a sparse matrix in triplet form to column-compressed form using Umfpack&#39;s
+routines. &#34;realloc_a&#34; indicates whether the internal &#34;a&#34; matrix must be reallocated or not,
+for instance, in case the structure of the triplet has changed.
+</p>
+<pre>INPUT:
+ a -- a previous CCMatrix to be filled in; otherwise, &#34;nil&#34; tells to allocate a new one
+OUTPUT:
+ the previous &#34;a&#34; matrix or a pointer to a new one
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="TripletC">type <a href="/src/target/sparsemat.go?s=2604:3056#L71">TripletC</a></h2>
+			<pre>type TripletC struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+TripletC is the equivalent to Triplet but with values stored as pairs of
+float64 representing complex numbers
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="TripletC.Init">func (*TripletC) <a href="/src/target/sparsemat.go?s=3540:3597#L91">Init</a></h3>
+				<pre>func (t *<a href="#TripletC">TripletC</a>) Init(m, n, max <a href="/pkg/builtin/#int">int</a>, xzmonolithic <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+Init allocates all memory required to hold a sparse matrix in triplet (complex) form
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TripletC.Len">func (*TripletC) <a href="/src/target/sparsemat.go?s=4389:4417#L124">Len</a></h3>
+				<pre>func (t *<a href="#TripletC">TripletC</a>) Len() <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+Len returns the number of items just inserted in the complex triplet
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TripletC.Max">func (*TripletC) <a href="/src/target/sparsemat.go?s=4524:4552#L129">Max</a></h3>
+				<pre>func (t *<a href="#TripletC">TripletC</a>) Max() <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+Max returns the maximum number of items that can be inserted in the complex triplet
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TripletC.Put">func (*TripletC) <a href="/src/target/sparsemat.go?s=3894:3940#L104">Put</a></h3>
+				<pre>func (t *<a href="#TripletC">TripletC</a>) Put(i, j <a href="/pkg/builtin/#int">int</a>, x, z <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Put inserts an element to a pre-allocated (with Init) triplet (complex) matrix
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TripletC.Start">func (*TripletC) <a href="/src/target/sparsemat.go?s=4274:4300#L119">Start</a></h3>
+				<pre>func (t *<a href="#TripletC">TripletC</a>) Start()</pre>
+				<p>
+Start (re-)starts the insertion index within &#34;t&#34; in order to allow (re-)insertion of
+items using the Put method
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="TripletC.ToMatrix">func (*TripletC) <a href="/src/target/sparsemat_umfpack.go?s=2285:2337#L57">ToMatrix</a></h3>
+				<pre>func (t *<a href="#TripletC">TripletC</a>) ToMatrix(a *<a href="#CCMatrixC">CCMatrixC</a>) *<a href="#CCMatrixC">CCMatrixC</a></pre>
+				<p>
+ToMatrix converts a sparse matrix in triplet form with complex numbers to column-compressed form.
+&#34;realloc_a&#34; indicates whether the internal &#34;a&#34; matrix must be reallocated or not, for instance,
+in case the structure of the triplet has changed.
+</p>
+<pre>INPUT:
+ a -- a previous CCMatrixC to be filled in; otherwise, &#34;nil&#34; tells to allocate a new one
+OUTPUT:
+ the previous &#34;a&#34; matrix or a pointer to a new one
+</pre>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+</div><!-- page -->
+<div id="footer">
+<br /><br />
+<hr>
+<pre class="copyright">
+Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Dorival M Pedroso nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre><!-- copyright -->
+</div><!-- footer -->
+</body>
+</html>

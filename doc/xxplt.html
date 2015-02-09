@@ -1,0 +1,838 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>GoSL &ndash; package plt</title>
+<link type="text/css" rel="stylesheet" href="static/style.css">
+<script type="text/javascript" src="static/godocs.js"></script>
+<style type="text/css"></style>
+</head>
+<body>
+<div id="page"><h1>GoSL &ndash; <b>plt</b> &ndash; Plotting routines (wrapping matplotlib)</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "code.google.com/p/gosl/plt"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+plt contains functions for plotting
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#Annotate">func Annotate(x, y float64, txt string, args string)</a></dd>
+			
+				
+				<dd><a href="#AnnotateXlabels">func AnnotateXlabels(x float64, txt string, args string)</a></dd>
+			
+				
+				<dd><a href="#Arrow">func Arrow(xi, yi, xf, yf float64, args string)</a></dd>
+			
+				
+				<dd><a href="#AutoScale">func AutoScale(P [][]float64)</a></dd>
+			
+				
+				<dd><a href="#AxHline">func AxHline(y float64, args string)</a></dd>
+			
+				
+				<dd><a href="#AxVline">func AxVline(x float64, args string)</a></dd>
+			
+				
+				<dd><a href="#AxisLims">func AxisLims(lims []float64)</a></dd>
+			
+				
+				<dd><a href="#AxisOff">func AxisOff()</a></dd>
+			
+				
+				<dd><a href="#AxisRange">func AxisRange(xmin, xmax, ymin, ymax float64)</a></dd>
+			
+				
+				<dd><a href="#AxisXmax">func AxisXmax(xmax float64)</a></dd>
+			
+				
+				<dd><a href="#AxisXmin">func AxisXmin(xmin float64)</a></dd>
+			
+				
+				<dd><a href="#AxisXrange">func AxisXrange(xmin, xmax float64)</a></dd>
+			
+				
+				<dd><a href="#AxisYmax">func AxisYmax(ymax float64)</a></dd>
+			
+				
+				<dd><a href="#AxisYmin">func AxisYmin(ymin float64)</a></dd>
+			
+				
+				<dd><a href="#Circle">func Circle(xc, yc, r float64, args string)</a></dd>
+			
+				
+				<dd><a href="#Clf">func Clf()</a></dd>
+			
+				
+				<dd><a href="#Contour">func Contour(x, y, z [][]float64, args string)</a></dd>
+			
+				
+				<dd><a href="#ContourSimple">func ContourSimple(x, y, z [][]float64, args string)</a></dd>
+			
+				
+				<dd><a href="#Cross">func Cross()</a></dd>
+			
+				
+				<dd><a href="#DrawLegend">func DrawLegend(dat []LineData, fs int, loc string, frame bool, args string)</a></dd>
+			
+				
+				<dd><a href="#DrawPolyline">func DrawPolyline(P [][]float64, sd *ShapeData, args string)</a></dd>
+			
+				
+				<dd><a href="#Equal">func Equal()</a></dd>
+			
+				
+				<dd><a href="#Gll">func Gll(xl, yl string, args string)</a></dd>
+			
+				
+				<dd><a href="#Grid">func Grid(args string)</a></dd>
+			
+				
+				<dd><a href="#HideTRframe">func HideTRframe()</a></dd>
+			
+				
+				<dd><a href="#Plot">func Plot(x, y []float64, args string)</a></dd>
+			
+				
+				<dd><a href="#PlotOne">func PlotOne(x, y float64, args string)</a></dd>
+			
+				
+				<dd><a href="#Quiver">func Quiver(x, y, gx, gy [][]float64, args string)</a></dd>
+			
+				
+				<dd><a href="#Reset">func Reset()</a></dd>
+			
+				
+				<dd><a href="#Save">func Save(fname string)</a></dd>
+			
+				
+				<dd><a href="#SaveD">func SaveD(dirout, fname string)</a></dd>
+			
+				
+				<dd><a href="#SetAxis">func SetAxis(xmin, xmax, ymin, ymax float64)</a></dd>
+			
+				
+				<dd><a href="#SetFontSize">func SetFontSize(args string)</a></dd>
+			
+				
+				<dd><a href="#SetForEps">func SetForEps(prop, widpt float64)</a></dd>
+			
+				
+				<dd><a href="#SetForPng">func SetForPng(prop, widpt float64, dpi int)</a></dd>
+			
+				
+				<dd><a href="#SetHspace">func SetHspace(hspace float64)</a></dd>
+			
+				
+				<dd><a href="#SetScientific">func SetScientific(axis string, min_order, max_order int)</a></dd>
+			
+				
+				<dd><a href="#SetVspace">func SetVspace(vspace float64)</a></dd>
+			
+				
+				<dd><a href="#SetXlog">func SetXlog()</a></dd>
+			
+				
+				<dd><a href="#SetXnticks">func SetXnticks(num int)</a></dd>
+			
+				
+				<dd><a href="#SetYlog">func SetYlog()</a></dd>
+			
+				
+				<dd><a href="#SetYnticks">func SetYnticks(num int)</a></dd>
+			
+				
+				<dd><a href="#Show">func Show()</a></dd>
+			
+				
+				<dd><a href="#SplotGap">func SplotGap(w, h float64)</a></dd>
+			
+				
+				<dd><a href="#Subplot">func Subplot(i, j, k int)</a></dd>
+			
+				
+				<dd><a href="#SupTitle">func SupTitle(txt, args string)</a></dd>
+			
+				
+				<dd><a href="#Text">func Text(x, y float64, txt, args string)</a></dd>
+			
+				
+				<dd><a href="#Title">func Title(txt, args string)</a></dd>
+			
+			
+				
+				<dd><a href="#LineData">type LineData</a></dd>
+				
+				
+			
+				
+				<dd><a href="#ShapeData">type ShapeData</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ShapeData.Init">func (o *ShapeData) Init()</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/code.google.com/p/gosl/plt/drawing.go">drawing.go</a>
+			
+				<a href="/src/code.google.com/p/gosl/plt/mplotlib.go">mplotlib.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Annotate">func <a href="/src/target/mplotlib.go?s=1536:1588#L67">Annotate</a></h2>
+			<pre>func Annotate(x, y <a href="/pkg/builtin/#float64">float64</a>, txt <a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AnnotateXlabels">func <a href="/src/target/mplotlib.go?s=1744:1800#L75">AnnotateXlabels</a></h2>
+			<pre>func AnnotateXlabels(x <a href="/pkg/builtin/#float64">float64</a>, txt <a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Arrow">func <a href="/src/target/mplotlib.go?s=933:978#L39">Arrow</a></h2>
+			<pre>func Arrow(xi, yi, xf, yf <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AutoScale">func <a href="/src/target/drawing.go?s=566:595#L17">AutoScale</a></h2>
+			<pre>func AutoScale(P [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+AutoScale rescales plot area
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="AxHline">func <a href="/src/target/mplotlib.go?s=1132:1168#L47">AxHline</a></h2>
+			<pre>func AxHline(y <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxVline">func <a href="/src/target/mplotlib.go?s=1303:1339#L55">AxVline</a></h2>
+			<pre>func AxVline(x <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisLims">func <a href="/src/target/mplotlib.go?s=3615:3644#L153">AxisLims</a></h2>
+			<pre>func AxisLims(lims []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisOff">func <a href="/src/target/mplotlib.go?s=6479:6493#L270">AxisOff</a></h2>
+			<pre>func AxisOff()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisRange">func <a href="/src/target/mplotlib.go?s=3495:3541#L149">AxisRange</a></h2>
+			<pre>func AxisRange(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisXmax">func <a href="/src/target/mplotlib.go?s=3072:3099#L133">AxisXmax</a></h2>
+			<pre>func AxisXmax(xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisXmin">func <a href="/src/target/mplotlib.go?s=2968:2995#L129">AxisXmin</a></h2>
+			<pre>func AxisXmin(xmin <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisXrange">func <a href="/src/target/mplotlib.go?s=3384:3419#L145">AxisXrange</a></h2>
+			<pre>func AxisXrange(xmin, xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisYmax">func <a href="/src/target/mplotlib.go?s=3280:3307#L141">AxisYmax</a></h2>
+			<pre>func AxisYmax(ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisYmin">func <a href="/src/target/mplotlib.go?s=3176:3203#L137">AxisYmin</a></h2>
+			<pre>func AxisYmin(ymin <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Circle">func <a href="/src/target/mplotlib.go?s=6643:6686#L283">Circle</a></h2>
+			<pre>func Circle(xc, yc, r <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Clf">func <a href="/src/target/mplotlib.go?s=5737:5747#L237">Clf</a></h2>
+			<pre>func Clf()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Contour">func <a href="/src/target/mplotlib.go?s=4228:4274#L177">Contour</a></h2>
+			<pre>func Contour(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="ContourSimple">func <a href="/src/target/mplotlib.go?s=4605:4657#L192">ContourSimple</a></h2>
+			<pre>func ContourSimple(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Cross">func <a href="/src/target/mplotlib.go?s=2581:2593#L109">Cross</a></h2>
+			<pre>func Cross()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DrawLegend">func <a href="/src/target/drawing.go?s=2111:2187#L69">DrawLegend</a></h2>
+			<pre>func DrawLegend(dat []<a href="#LineData">LineData</a>, fs <a href="/pkg/builtin/#int">int</a>, loc <a href="/pkg/builtin/#string">string</a>, frame <a href="/pkg/builtin/#bool">bool</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+DrawLegend draws legend with given lines data. fs == fontsize
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DrawPolyline">func <a href="/src/target/drawing.go?s=995:1055#L33">DrawPolyline</a></h2>
+			<pre>func DrawPolyline(P [][]<a href="/pkg/builtin/#float64">float64</a>, sd *<a href="#ShapeData">ShapeData</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+DrawPolyline draws a polyline
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Equal">func <a href="/src/target/mplotlib.go?s=6532:6544#L274">Equal</a></h2>
+			<pre>func Equal()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Gll">func <a href="/src/target/mplotlib.go?s=5506:5542#L228">Gll</a></h2>
+			<pre>func Gll(xl, yl <a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Grid">func <a href="/src/target/mplotlib.go?s=5442:5464#L224">Grid</a></h2>
+			<pre>func Grid(args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="HideTRframe">func <a href="/src/target/mplotlib.go?s=1474:1492#L63">HideTRframe</a></h2>
+			<pre>func HideTRframe()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Plot">func <a href="/src/target/mplotlib.go?s=3730:3768#L157">Plot</a></h2>
+			<pre>func Plot(x, y []<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PlotOne">func <a href="/src/target/mplotlib.go?s=4026:4065#L169">PlotOne</a></h2>
+			<pre>func PlotOne(x, y <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Quiver">func <a href="/src/target/mplotlib.go?s=4988:5038#L207">Quiver</a></h2>
+			<pre>func Quiver(x, y, gx, gy [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Reset">func <a href="/src/target/mplotlib.go?s=404:416#L12">Reset</a></h2>
+			<pre>func Reset()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Save">func <a href="/src/target/mplotlib.go?s=6059:6082#L253">Save</a></h2>
+			<pre>func Save(fname <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SaveD">func <a href="/src/target/mplotlib.go?s=6185:6217#L259">SaveD</a></h2>
+			<pre>func SaveD(dirout, fname <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetAxis">func <a href="/src/target/mplotlib.go?s=6361:6405#L266">SetAxis</a></h2>
+			<pre>func SetAxis(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetFontSize">func <a href="/src/target/mplotlib.go?s=5780:5809#L241">SetFontSize</a></h2>
+			<pre>func SetFontSize(args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetForEps">func <a href="/src/target/mplotlib.go?s=5858:5893#L245">SetForEps</a></h2>
+			<pre>func SetForEps(prop, widpt <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetForPng">func <a href="/src/target/mplotlib.go?s=5950:5994#L249">SetForPng</a></h2>
+			<pre>func SetForPng(prop, widpt <a href="/pkg/builtin/#float64">float64</a>, dpi <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetHspace">func <a href="/src/target/mplotlib.go?s=2784:2814#L121">SetHspace</a></h2>
+			<pre>func SetHspace(hspace <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetScientific">func <a href="/src/target/mplotlib.go?s=765:822#L35">SetScientific</a></h2>
+			<pre>func SetScientific(axis <a href="/pkg/builtin/#string">string</a>, min_order, max_order <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetVspace">func <a href="/src/target/mplotlib.go?s=2876:2906#L125">SetVspace</a></h2>
+			<pre>func SetVspace(vspace <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetXlog">func <a href="/src/target/mplotlib.go?s=521:535#L19">SetXlog</a></h2>
+			<pre>func SetXlog()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetXnticks">func <a href="/src/target/mplotlib.go?s=623:647#L27">SetXnticks</a></h2>
+			<pre>func SetXnticks(num <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetYlog">func <a href="/src/target/mplotlib.go?s=572:586#L23">SetYlog</a></h2>
+			<pre>func SetYlog()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SetYnticks">func <a href="/src/target/mplotlib.go?s=694:718#L31">SetYnticks</a></h2>
+			<pre>func SetYnticks(num <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Show">func <a href="/src/target/mplotlib.go?s=6585:6596#L278">Show</a></h2>
+			<pre>func Show()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SplotGap">func <a href="/src/target/mplotlib.go?s=2628:2655#L113">SplotGap</a></h2>
+			<pre>func SplotGap(w, h <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Subplot">func <a href="/src/target/mplotlib.go?s=2705:2730#L117">Subplot</a></h2>
+			<pre>func Subplot(i, j, k <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="SupTitle">func <a href="/src/target/mplotlib.go?s=1952:1983#L83">SupTitle</a></h2>
+			<pre>func SupTitle(txt, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Text">func <a href="/src/target/mplotlib.go?s=2377:2418#L101">Text</a></h2>
+			<pre>func Text(x, y <a href="/pkg/builtin/#float64">float64</a>, txt, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Title">func <a href="/src/target/mplotlib.go?s=2208:2236#L93">Title</a></h2>
+			<pre>func Title(txt, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+		
+			
+			
+			<h2 id="LineData">type <a href="/src/target/drawing.go?s=1856:2044#L59">LineData</a></h2>
+			<pre>type LineData struct {
+    Label      <a href="/pkg/builtin/#string">string</a>
+    Color      <a href="/pkg/builtin/#string">string</a>
+    LineWidth  <a href="/pkg/builtin/#float64">float64</a>
+    MarkerSize <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// negative values =&gt; default</span>
+    Marker     <a href="/pkg/builtin/#string">string</a>
+    LineStyle  <a href="/pkg/builtin/#string">string</a>
+}</pre>
+			<p>
+LineData holds data for ploting lines
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ShapeData">type <a href="/src/target/drawing.go?s=272:376#L2">ShapeData</a></h2>
+			<pre>type ShapeData struct {
+    FaceColor <a href="/pkg/builtin/#string">string</a>
+    EdgeColor <a href="/pkg/builtin/#string">string</a>
+    LineWidth <a href="/pkg/builtin/#int">int</a>
+    Closed    <a href="/pkg/builtin/#bool">bool</a>
+}</pre>
+			<p>
+ShapeData holds data for drawing shapes
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ShapeData.Init">func (*ShapeData) <a href="/src/target/drawing.go?s=428:454#L10">Init</a></h3>
+				<pre>func (o *<a href="#ShapeData">ShapeData</a>) Init()</pre>
+				<p>
+Init initialises ShapeData with default values
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+</div><!-- page -->
+<div id="footer">
+<br /><br />
+<hr>
+<pre class="copyright">
+Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+   * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+   * Neither the name of Dorival M Pedroso nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+</pre><!-- copyright -->
+</div><!-- footer -->
+</body>
+</html>
