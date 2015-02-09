@@ -18,8 +18,8 @@ install_and_test(){
     DOTEST=$2
     echo
     echo
-    echo "[1;32m>>> compiling $p <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
-    cd $p
+    echo "[1;32m>>> compiling $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
+    cd $PKG
     go install
     if [ "$DOTEST" -eq 1 ]; then
         go test

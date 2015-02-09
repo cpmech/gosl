@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>GoSL &ndash; package vtk</title>
+<title>Gosl &ndash; package vtk</title>
 <link type="text/css" rel="stylesheet" href="static/style.css">
 <script type="text/javascript" src="static/godocs.js"></script>
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>GoSL &ndash; <b>vtk</b> &ndash; 3D visualisation with VTK</h1>
+<div id="page"><h1>Gosl &ndash; <b>vtk</b> &ndash; 3D visualisation with VTK</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -29,7 +29,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "code.google.com/p/gosl/vtk"</code></dd>
+			<dd><code>import "github.com/cpmech/gosl/vtk"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -128,7 +128,7 @@
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="/src/code.google.com/p/gosl/vtk/govtk.go">govtk.go</a>
+				<a href="/src/github.com/cpmech/gosl/vtk/govtk.go">govtk.go</a>
 			
 			</span>
 			</p>
@@ -196,8 +196,10 @@ global variables for communication with C
 		
 			
 			
-			<h2 id="Arrow">type <a href="/src/target/govtk.go?s=1263:1699#L29">Arrow</a></h2>
+			<h2 id="Arrow">type <a href="/src/target/govtk.go?s=1230:1652#L34">Arrow</a></h2>
 			<pre>type Arrow struct {
+
+    <span class="comment">// options</span>
     X0         []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// origin of arrow</span>
     V          []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// vector defining arrow</span>
     ConePct    <a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// percentage of length to draw tip cone</span>
@@ -222,7 +224,7 @@ Arrow adds an arrow to Scene
 
 			
 				
-				<h3 id="NewArrow">func <a href="/src/target/govtk.go?s=3500:3522#L91">NewArrow</a></h3>
+				<h3 id="NewArrow">func <a href="/src/target/govtk.go?s=3371:3393#L105">NewArrow</a></h3>
 				<pre>func NewArrow() *<a href="#Arrow">Arrow</a></pre>
 				<p>
 NewArrow allocates a new Arrow structure
@@ -234,7 +236,7 @@ NewArrow allocates a new Arrow structure
 
 			
 				
-				<h3 id="Arrow.AddTo">func (*Arrow) <a href="/src/target/govtk.go?s=4442:4487#L128">AddTo</a></h3>
+				<h3 id="Arrow.AddTo">func (*Arrow) <a href="/src/target/govtk.go?s=4162:4207#L142">AddTo</a></h3>
 				<pre>func (o *<a href="#Arrow">Arrow</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 AddTo adds Arrow to Scene
@@ -247,7 +249,7 @@ AddTo adds Arrow to Scene
 		
 			
 			
-			<h2 id="Cb_fcn">type <a href="/src/target/govtk.go?s=2016:2072#L51">Cb_fcn</a></h2>
+			<h2 id="Cb_fcn">type <a href="/src/target/govtk.go?s=1967:2023#L62">Cb_fcn</a></h2>
 			<pre>type Cb_fcn func(x []<a href="/pkg/builtin/#float64">float64</a>) (fval, vx, vy, vz <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cb_fcn is a callback function to compute f, v := f(x) where v = dfdx
@@ -268,8 +270,10 @@ Cb_fcn is a callback function to compute f, v := f(x) where v = dfdx
 		
 			
 			
-			<h2 id="IsoSurf">type <a href="/src/target/govtk.go?s=2293:3186#L60">IsoSurf</a></h2>
+			<h2 id="IsoSurf">type <a href="/src/target/govtk.go?s=2244:3105#L71">IsoSurf</a></h2>
 			<pre>type IsoSurf struct {
+
+    <span class="comment">// options</span>
     Limits        []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// {xmin,xmax, ymin,ymax, zmin,zmax}</span>
     Ndiv          []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// {nx, ny, nz}. all must be &gt;= 2</span>
     Frange        []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// {fmin, fmax}. min and max values of isosurface levels</span>
@@ -306,7 +310,7 @@ CmapRangeType:
 
 			
 				
-				<h3 id="NewIsoSurf">func <a href="/src/target/govtk.go?s=4031:4065#L113">NewIsoSurf</a></h3>
+				<h3 id="NewIsoSurf">func <a href="/src/target/govtk.go?s=3820:3854#L127">NewIsoSurf</a></h3>
 				<pre>func NewIsoSurf(f <a href="#Cb_fcn">Cb_fcn</a>) *<a href="#IsoSurf">IsoSurf</a></pre>
 				<p>
 NewIsoSurf allocates a new IsoSurf structure
@@ -318,7 +322,7 @@ NewIsoSurf allocates a new IsoSurf structure
 
 			
 				
-				<h3 id="IsoSurf.AddTo">func (*IsoSurf) <a href="/src/target/govtk.go?s=4708:4755#L140">AddTo</a></h3>
+				<h3 id="IsoSurf.AddTo">func (*IsoSurf) <a href="/src/target/govtk.go?s=4416:4463#L154">AddTo</a></h3>
 				<pre>func (o *<a href="#IsoSurf">IsoSurf</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 AddTo adds IsoSurf to Scene
@@ -331,8 +335,10 @@ AddTo adds IsoSurf to Scene
 		
 			
 			
-			<h2 id="Scene">type <a href="/src/target/govtk.go?s=628:1229#L11">Scene</a></h2>
+			<h2 id="Scene">type <a href="/src/target/govtk.go?s=623:1196#L12">Scene</a></h2>
 			<pre>type Scene struct {
+
+    <span class="comment">// options</span>
     AxesLen    <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// length of x-y-z axes</span>
     HydroLine  <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// show hydrostatic line</span>
     Reverse    <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// reverse direction for default camera</span>
@@ -358,7 +364,7 @@ Scene holds essential data to draw and interect with the x-y-z Cartesian system
 
 			
 				
-				<h3 id="NewScene">func <a href="/src/target/govtk.go?s=3232:3254#L79">NewScene</a></h3>
+				<h3 id="NewScene">func <a href="/src/target/govtk.go?s=3151:3173#L93">NewScene</a></h3>
 				<pre>func NewScene() *<a href="#Scene">Scene</a></pre>
 				<p>
 NewScene allocates a new Scene structure
@@ -370,7 +376,7 @@ NewScene allocates a new Scene structure
 
 			
 				
-				<h3 id="Scene.Run">func (*Scene) <a href="/src/target/govtk.go?s=4981:5014#L154">Run</a></h3>
+				<h3 id="Scene.Run">func (*Scene) <a href="/src/target/govtk.go?s=4668:4701#L168">Run</a></h3>
 				<pre>func (o *<a href="#Scene">Scene</a>) Run() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Run shows Scene in interactive mode or saving a .png file
@@ -383,8 +389,10 @@ Run shows Scene in interactive mode or saving a .png file
 		
 			
 			
-			<h2 id="Sphere">type <a href="/src/target/govtk.go?s=1734:1942#L42">Sphere</a></h2>
+			<h2 id="Sphere">type <a href="/src/target/govtk.go?s=1687:1893#L50">Sphere</a></h2>
 			<pre>type Sphere struct {
+
+    <span class="comment">// options</span>
     Cen   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// centre x-y-z coordinates</span>
     R     <a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// radius</span>
     Color []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// {red, green, blue, opacity}</span>
@@ -405,7 +413,7 @@ Sphere adds a sphere to Scene
 
 			
 				
-				<h3 id="NewSphere">func <a href="/src/target/govtk.go?s=3831:3855#L104">NewSphere</a></h3>
+				<h3 id="NewSphere">func <a href="/src/target/govtk.go?s=3647:3671#L118">NewSphere</a></h3>
 				<pre>func NewSphere() *<a href="#Sphere">Sphere</a></pre>
 				<p>
 NewSphere allocates a new Sphere structure
@@ -417,7 +425,7 @@ NewSphere allocates a new Sphere structure
 
 			
 				
-				<h3 id="Sphere.AddTo">func (*Sphere) <a href="/src/target/govtk.go?s=4573:4619#L134">AddTo</a></h3>
+				<h3 id="Sphere.AddTo">func (*Sphere) <a href="/src/target/govtk.go?s=4287:4333#L148">AddTo</a></h3>
 				<pre>func (o *<a href="#Sphere">Sphere</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 AddTo adds Sphere to Scene
@@ -470,33 +478,34 @@ AddTo adds Sphere to Scene
 <br /><br />
 <hr>
 <pre class="copyright">
-Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Dorival M Pedroso nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 </pre><!-- copyright -->
 </div><!-- footer -->
 </body>

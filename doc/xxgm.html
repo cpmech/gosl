@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>GoSL &ndash; package gm</title>
+<title>Gosl &ndash; package gm</title>
 <link type="text/css" rel="stylesheet" href="static/style.css">
 <script type="text/javascript" src="static/godocs.js"></script>
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>GoSL &ndash; <b>gm</b> &ndash; Geometry</h1>
+<div id="page"><h1>Gosl &ndash; <b>gm</b> &ndash; Geometry routines</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -29,7 +29,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "code.google.com/p/gosl/gm"</code></dd>
+			<dd><code>import "github.com/cpmech/gosl/gm"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -314,15 +314,15 @@ handling geometry and mesh structures
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="/src/code.google.com/p/gosl/gm/basicgeom.go">basicgeom.go</a>
+				<a href="/src/github.com/cpmech/gosl/gm/basicgeom.go">basicgeom.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/gm/bspline.go">bspline.go</a>
+				<a href="/src/github.com/cpmech/gosl/gm/bspline.go">bspline.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/gm/draw.go">draw.go</a>
+				<a href="/src/github.com/cpmech/gosl/gm/draw.go">draw.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/gm/io.go">io.go</a>
+				<a href="/src/github.com/cpmech/gosl/gm/io.go">io.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/gm/nurbs.go">nurbs.go</a>
+				<a href="/src/github.com/cpmech/gosl/gm/nurbs.go">nurbs.go</a>
 			
 			</span>
 			</p>
@@ -391,7 +391,7 @@ handling geometry and mesh structures
 		
 			
 			
-			<h2 id="DistPointLine">func <a href="/src/target/basicgeom.go?s=3182:3251#L93">DistPointLine</a></h2>
+			<h2 id="DistPointLine">func <a href="/src/target/basicgeom.go?s=2964:3033#L94">DistPointLine</a></h2>
 			<pre>func DistPointLine(p, a, b *<a href="#Point">Point</a>, tol <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 DistPointLine computes the distance from p to line passing through a -&gt; b
@@ -403,7 +403,7 @@ DistPointLine computes the distance from p to line passing through a -&gt; b
 		
 			
 			
-			<h2 id="DistPointPoint">func <a href="/src/target/basicgeom.go?s=992:1032#L30">DistPointPoint</a></h2>
+			<h2 id="DistPointPoint">func <a href="/src/target/basicgeom.go?s=972:1012#L31">DistPointPoint</a></h2>
 			<pre>func DistPointPoint(a, b *<a href="#Point">Point</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 DistPointPoint computes the unsigned distance from a to b
@@ -427,7 +427,7 @@ HashPoint returns a unique id of a point
 		
 			
 			
-			<h2 id="IsPointIn">func <a href="/src/target/basicgeom.go?s=4525:4589#L131">IsPointIn</a></h2>
+			<h2 id="IsPointIn">func <a href="/src/target/basicgeom.go?s=4217:4281#L144">IsPointIn</a></h2>
 			<pre>func IsPointIn(p *<a href="#Point">Point</a>, cMin, cMax []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 IsPointIn returns whether p is inside box with cMin and cMax
@@ -439,7 +439,7 @@ IsPointIn returns whether p is inside box with cMin and cMax
 		
 			
 			
-			<h2 id="IsPointInLine">func <a href="/src/target/basicgeom.go?s=4886:4952#L139">IsPointInLine</a></h2>
+			<h2 id="IsPointInLine">func <a href="/src/target/basicgeom.go?s=4563:4629#L158">IsPointInLine</a></h2>
 			<pre>func IsPointInLine(p, a, b *<a href="#Point">Point</a>, zero, told, tolin <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 IsPointInLine returns whether p is inside line passing through a and b
@@ -451,7 +451,7 @@ IsPointInLine returns whether p is inside line passing through a and b
 		
 			
 			
-			<h2 id="PointsLims">func <a href="/src/target/basicgeom.go?s=3869:3920#L113">PointsLims</a></h2>
+			<h2 id="PointsLims">func <a href="/src/target/basicgeom.go?s=3594:3645#L114">PointsLims</a></h2>
 			<pre>func PointsLims(pp []*<a href="#Point">Point</a>) (cmin, cmax []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PointsLims returns the limits of a set of points
@@ -475,7 +475,7 @@ ReadMsh reads .msh file
 		
 			
 			
-			<h2 id="VecDot">func <a href="/src/target/basicgeom.go?s=2387:2422#L70">VecDot</a></h2>
+			<h2 id="VecDot">func <a href="/src/target/basicgeom.go?s=2169:2204#L71">VecDot</a></h2>
 			<pre>func VecDot(u, v []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 VecDot returns the dot product between two vectors
@@ -487,7 +487,7 @@ VecDot returns the dot product between two vectors
 		
 			
 			
-			<h2 id="VecNew">func <a href="/src/target/basicgeom.go?s=2670:2715#L80">VecNew</a></h2>
+			<h2 id="VecNew">func <a href="/src/target/basicgeom.go?s=2446:2491#L81">VecNew</a></h2>
 			<pre>func VecNew(m <a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 VecNew returns a new vector scaled by m
@@ -499,7 +499,7 @@ VecNew returns a new vector scaled by m
 		
 			
 			
-			<h2 id="VecNewAdd">func <a href="/src/target/basicgeom.go?s=2849:2923#L86">VecNewAdd</a></h2>
+			<h2 id="VecNewAdd">func <a href="/src/target/basicgeom.go?s=2628:2702#L87">VecNewAdd</a></h2>
 			<pre>func VecNewAdd(α <a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 VecNewAdd returns a new vector by adding two other vectors
@@ -513,7 +513,7 @@ VecNewAdd returns a new vector by adding two other vectors
 		
 			
 			
-			<h2 id="VecNorm">func <a href="/src/target/basicgeom.go?s=2532:2565#L75">VecNorm</a></h2>
+			<h2 id="VecNorm">func <a href="/src/target/basicgeom.go?s=2311:2344#L76">VecNorm</a></h2>
 			<pre>func VecNorm(u []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 VecNorm returns the length (Euclidian norm) of a vector
@@ -541,8 +541,9 @@ Input: vtagged maps hashed id of control point to vertex tag
 		
 			
 			
-			<h2 id="Bspline">type <a href="/src/target/bspline.go?s=531:1399#L14">Bspline</a></h2>
+			<h2 id="Bspline">type <a href="/src/target/bspline.go?s=508:1267#L15">Bspline</a></h2>
 			<pre>type Bspline struct {
+
     <span class="comment">// essential</span>
     T []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// array of knots: e.g: T = [t_0, t_1, ..., t_{m-1}]</span>
 
@@ -567,7 +568,7 @@ Bspline holds B-spline data
 
 			
 				
-				<h3 id="Bspline.CalcBasis">func (*Bspline) <a href="/src/target/bspline.go?s=2433:2471#L73">CalcBasis</a></h3>
+				<h3 id="Bspline.CalcBasis">func (*Bspline) <a href="/src/target/bspline.go?s=2231:2269#L77">CalcBasis</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) CalcBasis(t <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 CalcBasis computes all non-zero basis functions N[i] @ t
@@ -579,7 +580,7 @@ Note: use GetBasis to get a particular basis function value
 				
 			
 				
-				<h3 id="Bspline.CalcBasisAndDerivs">func (*Bspline) <a href="/src/target/bspline.go?s=2977:3024#L87">CalcBasisAndDerivs</a></h3>
+				<h3 id="Bspline.CalcBasisAndDerivs">func (*Bspline) <a href="/src/target/bspline.go?s=2751:2798#L91">CalcBasisAndDerivs</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) CalcBasisAndDerivs(t <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 CalcBasisAndDerivs computes all non-zero basis functions N[i] and corresponding
@@ -594,7 +595,7 @@ Note: use GetBasis to get a particular basis function value
 				
 			
 				
-				<h3 id="Bspline.Draw2D">func (*Bspline) <a href="/src/target/bspline.go?s=6095:6165#L194">Draw2D</a></h3>
+				<h3 id="Bspline.Draw2D">func (*Bspline) <a href="/src/target/bspline.go?s=5523:5593#L198">Draw2D</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) Draw2D(curveArgs, ctrlArgs <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Draw draws curve and control points
@@ -608,7 +609,7 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Bspline.Elements">func (*Bspline) <a href="/src/target/bspline.go?s=5523:5567#L170">Elements</a></h3>
+				<h3 id="Bspline.Elements">func (*Bspline) <a href="/src/target/bspline.go?s=5045:5089#L174">Elements</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) Elements() (spans [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Elements returns the indices of nonzero spans
@@ -619,7 +620,7 @@ Elements returns the indices of nonzero spans
 				
 			
 				
-				<h3 id="Bspline.GetBasis">func (*Bspline) <a href="/src/target/bspline.go?s=3377:3418#L98">GetBasis</a></h3>
+				<h3 id="Bspline.GetBasis">func (*Bspline) <a href="/src/target/bspline.go?s=3127:3168#L102">GetBasis</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) GetBasis(i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetBasis returns the basis function N[i] just computed by CalcBasis or CalcBasisAndDerivs
@@ -630,7 +631,7 @@ GetBasis returns the basis function N[i] just computed by CalcBasis or CalcBasis
 				
 			
 				
-				<h3 id="Bspline.GetDeriv">func (*Bspline) <a href="/src/target/bspline.go?s=3605:3646#L107">GetDeriv</a></h3>
+				<h3 id="Bspline.GetDeriv">func (*Bspline) <a href="/src/target/bspline.go?s=3337:3378#L111">GetDeriv</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) GetDeriv(i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetDeriv returns the derivative dN[i]dt just computed by CalcBasisAndDerivs
@@ -641,7 +642,7 @@ GetDeriv returns the derivative dN[i]dt just computed by CalcBasisAndDerivs
 				
 			
 				
-				<h3 id="Bspline.Init">func (*Bspline) <a href="/src/target/bspline.go?s=1430:1472#L34">Init</a></h3>
+				<h3 id="Bspline.Init">func (*Bspline) <a href="/src/target/bspline.go?s=1298:1340#L38">Init</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) Init(T []<a href="/pkg/builtin/#float64">float64</a>, p <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Init initialises B-spline
@@ -652,7 +653,7 @@ Init initialises B-spline
 				
 			
 				
-				<h3 id="Bspline.NumBasis">func (*Bspline) <a href="/src/target/bspline.go?s=2039:2071#L59">NumBasis</a></h3>
+				<h3 id="Bspline.NumBasis">func (*Bspline) <a href="/src/target/bspline.go?s=1855:1887#L63">NumBasis</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) NumBasis() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 NumBasis returns the number (n) of basis functions == number of control points
@@ -663,7 +664,7 @@ NumBasis returns the number (n) of basis functions == number of control points
 				
 			
 				
-				<h3 id="Bspline.NumericalDeriv">func (*Bspline) <a href="/src/target/bspline.go?s=4262:4320#L127">NumericalDeriv</a></h3>
+				<h3 id="Bspline.NumericalDeriv">func (*Bspline) <a href="/src/target/bspline.go?s=3955:4013#L131">NumericalDeriv</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) NumericalDeriv(t <a href="/pkg/builtin/#float64">float64</a>, i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 NumericalDeriv computes a particular derivative dN[i]dt @ t using numerical differentiation
@@ -675,7 +676,7 @@ Note: it uses RecursiveBasis and therefore is highly non-efficient
 				
 			
 				
-				<h3 id="Bspline.PlotBasis">func (*Bspline) <a href="/src/target/bspline.go?s=7045:7103#L220">PlotBasis</a></h3>
+				<h3 id="Bspline.PlotBasis">func (*Bspline) <a href="/src/target/bspline.go?s=6401:6459#L224">PlotBasis</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) PlotBasis(args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotBasis plots basis functions in I
@@ -690,7 +691,7 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Bspline.PlotDerivs">func (*Bspline) <a href="/src/target/bspline.go?s=8350:8409#L254">PlotDerivs</a></h3>
+				<h3 id="Bspline.PlotDerivs">func (*Bspline) <a href="/src/target/bspline.go?s=7509:7568#L258">PlotDerivs</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) PlotDerivs(args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotDerivs plots derivatives of basis functions in I
@@ -704,7 +705,7 @@ option =  0 : use CalcBasisAndDerivs
 				
 			
 				
-				<h3 id="Bspline.Point">func (*Bspline) <a href="/src/target/bspline.go?s=4746:4806#L142">Point</a></h3>
+				<h3 id="Bspline.Point">func (*Bspline) <a href="/src/target/bspline.go?s=4406:4466#L146">Point</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) Point(t <a href="/pkg/builtin/#float64">float64</a>, option <a href="/pkg/builtin/#int">int</a>) (C []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Point returns the x-y-z coordinates of a point on B-spline
@@ -718,7 +719,7 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Bspline.RecursiveBasis">func (*Bspline) <a href="/src/target/bspline.go?s=3842:3900#L116">RecursiveBasis</a></h3>
+				<h3 id="Bspline.RecursiveBasis">func (*Bspline) <a href="/src/target/bspline.go?s=3556:3614#L120">RecursiveBasis</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) RecursiveBasis(t <a href="/pkg/builtin/#float64">float64</a>, i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 RecursiveBasis computes one particular basis function N[i] recursively (not efficient)
@@ -729,7 +730,7 @@ RecursiveBasis computes one particular basis function N[i] recursively (not effi
 				
 			
 				
-				<h3 id="Bspline.SetControl">func (*Bspline) <a href="/src/target/bspline.go?s=2145:2188#L64">SetControl</a></h3>
+				<h3 id="Bspline.SetControl">func (*Bspline) <a href="/src/target/bspline.go?s=1958:2001#L68">SetControl</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) SetControl(Q [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetControl sets B-spline control points
@@ -740,7 +741,7 @@ SetControl sets B-spline control points
 				
 			
 				
-				<h3 id="Bspline.SetOrder">func (*Bspline) <a href="/src/target/bspline.go?s=1906:1939#L54">SetOrder</a></h3>
+				<h3 id="Bspline.SetOrder">func (*Bspline) <a href="/src/target/bspline.go?s=1725:1758#L58">SetOrder</a></h3>
 				<pre>func (o *<a href="#Bspline">Bspline</a>) SetOrder(p <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 SetOrder sets B-spline order (p)
@@ -777,7 +778,7 @@ Data holds all geometry data
 		
 			
 			
-			<h2 id="Nurbs">type <a href="/src/target/nurbs.go?s=493:1489#L10">Nurbs</a></h2>
+			<h2 id="Nurbs">type <a href="/src/target/nurbs.go?s=482:1432#L11">Nurbs</a></h2>
 			<pre>type Nurbs struct {
     Q [][][][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// Qw: 4D control points [n[0]][n[1]][n[2]][4]</span>
     <span class="comment">// contains filtered or unexported fields</span>
@@ -802,7 +803,7 @@ Note: Control points must be set after a call to Init
 
 			
 				
-				<h3 id="Nurbs.CalcBasis">func (*Nurbs) <a href="/src/target/nurbs.go?s=3900:3938#L108">CalcBasis</a></h3>
+				<h3 id="Nurbs.CalcBasis">func (*Nurbs) <a href="/src/target/nurbs.go?s=3504:3542#L111">CalcBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CalcBasis(u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 CalcBasis computes all non-zero basis functions R[i][j][k] @ u.
@@ -814,7 +815,7 @@ Note: use GetBasisI or GetBasisL to get a particular basis function value
 				
 			
 				
-				<h3 id="Nurbs.CalcBasisAndDerivs">func (*Nurbs) <a href="/src/target/nurbs.go?s=5930:5977#L168">CalcBasisAndDerivs</a></h3>
+				<h3 id="Nurbs.CalcBasisAndDerivs">func (*Nurbs) <a href="/src/target/nurbs.go?s=5078:5125#L171">CalcBasisAndDerivs</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CalcBasisAndDerivs(u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 CalcBasisAndDerivs computes all non-zero basis functions R[i][j][k] and corresponding
@@ -829,7 +830,7 @@ Note: use GetBasisI or GetBasisL to get a particular basis function value
 				
 			
 				
-				<h3 id="Nurbs.DrawCtrl2D">func (*Nurbs) <a href="/src/target/draw.go?s=325:361#L4">DrawCtrl2D</a></h3>
+				<h3 id="Nurbs.DrawCtrl2D">func (*Nurbs) <a href="/src/target/draw.go?s=316:352#L4">DrawCtrl2D</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawCtrl2D(ids <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 DrawCtrl2D draws control net
@@ -840,7 +841,7 @@ DrawCtrl2D draws control net
 				
 			
 				
-				<h3 id="Nurbs.DrawElem2D">func (*Nurbs) <a href="/src/target/draw.go?s=2135:2214#L58">DrawElem2D</a></h3>
+				<h3 id="Nurbs.DrawElem2D">func (*Nurbs) <a href="/src/target/draw.go?s=1715:1794#L58">DrawElem2D</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElem2D(span []<a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, args, idargs <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 DrawElem2D draws element (non-zero span)
@@ -851,7 +852,7 @@ DrawElem2D draws element (non-zero span)
 				
 			
 				
-				<h3 id="Nurbs.DrawElems2D">func (*Nurbs) <a href="/src/target/draw.go?s=3717:3785#L97">DrawElems2D</a></h3>
+				<h3 id="Nurbs.DrawElems2D">func (*Nurbs) <a href="/src/target/draw.go?s=3063:3131#L97">DrawElems2D</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElems2D(npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, args, idargs <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 DrawElems2D draws all elements (non-zero spans)
@@ -862,7 +863,7 @@ DrawElems2D draws all elements (non-zero spans)
 				
 			
 				
-				<h3 id="Nurbs.Elements">func (*Nurbs) <a href="/src/target/nurbs.go?s=16142:16184#L465">Elements</a></h3>
+				<h3 id="Nurbs.Elements">func (*Nurbs) <a href="/src/target/nurbs.go?s=13766:13808#L468">Elements</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Elements() (spans [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Elements returns the indices of nonzero spans
@@ -873,7 +874,7 @@ Elements returns the indices of nonzero spans
 				
 			
 				
-				<h3 id="Nurbs.Enodes">func (*Nurbs) <a href="/src/target/nurbs.go?s=17392:17433#L505">Enodes</a></h3>
+				<h3 id="Nurbs.Enodes">func (*Nurbs) <a href="/src/target/nurbs.go?s=14741:14782#L508">Enodes</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Enodes() (enodes [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Enodes returns the indices of control points (nodes) for each element
@@ -884,7 +885,7 @@ Enodes returns the indices of control points (nodes) for each element
 				
 			
 				
-				<h3 id="Nurbs.GetBasisI">func (*Nurbs) <a href="/src/target/nurbs.go?s=9456:9498#L246">GetBasisI</a></h3>
+				<h3 id="Nurbs.GetBasisI">func (*Nurbs) <a href="/src/target/nurbs.go?s=7908:7950#L249">GetBasisI</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetBasisI(I []<a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetBasisI returns the basis function R[i][j][k] just computed
@@ -897,7 +898,7 @@ Note: I = [i,j,k]
 				
 			
 				
-				<h3 id="Nurbs.GetBasisL">func (*Nurbs) <a href="/src/target/nurbs.go?s=9853:9893#L259">GetBasisL</a></h3>
+				<h3 id="Nurbs.GetBasisL">func (*Nurbs) <a href="/src/target/nurbs.go?s=8269:8309#L262">GetBasisL</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetBasisL(l <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetBasisL returns the basis function R[i][j][k] just computed
@@ -910,7 +911,7 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.GetDerivI">func (*Nurbs) <a href="/src/target/nurbs.go?s=10060:10110#L266">GetDerivI</a></h3>
+				<h3 id="Nurbs.GetDerivI">func (*Nurbs) <a href="/src/target/nurbs.go?s=8473:8523#L269">GetDerivI</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetDerivI(dRdu []<a href="/pkg/builtin/#float64">float64</a>, I []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 GetDerivI returns the derivative of basis function dR[i][j][k]du just computed
@@ -923,7 +924,7 @@ Note: I = [i,j,k]
 				
 			
 				
-				<h3 id="Nurbs.GetDerivL">func (*Nurbs) <a href="/src/target/nurbs.go?s=10604:10652#L286">GetDerivL</a></h3>
+				<h3 id="Nurbs.GetDerivL">func (*Nurbs) <a href="/src/target/nurbs.go?s=8951:8999#L289">GetDerivL</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetDerivL(dRdu []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 GetDerivL returns the derivative of basis function dR[i][j][k]du just computed
@@ -936,7 +937,7 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.GetQ">func (*Nurbs) <a href="/src/target/nurbs.go?s=15404:15451#L437">GetQ</a></h3>
+				<h3 id="Nurbs.GetQ">func (*Nurbs) <a href="/src/target/nurbs.go?s=13073:13120#L440">GetQ</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetQ(i, j, k <a href="/pkg/builtin/#int">int</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 GetQ gets a control point x[i,j,k] (size==4)
@@ -947,7 +948,7 @@ GetQ gets a control point x[i,j,k] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.GetQl">func (*Nurbs) <a href="/src/target/nurbs.go?s=15643:15685#L447">GetQl</a></h3>
+				<h3 id="Nurbs.GetQl">func (*Nurbs) <a href="/src/target/nurbs.go?s=13288:13330#L450">GetQl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetQl(l <a href="/pkg/builtin/#int">int</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 GetQl gets a control point x[l] (size==4)
@@ -958,7 +959,7 @@ GetQl gets a control point x[l] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.GetU">func (*Nurbs) <a href="/src/target/nurbs.go?s=14878:14917#L417">GetU</a></h3>
+				<h3 id="Nurbs.GetU">func (*Nurbs) <a href="/src/target/nurbs.go?s=12559:12598#L420">GetU</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetU(dir <a href="/pkg/builtin/#int">int</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetU returns the knots along direction dir
@@ -969,7 +970,7 @@ GetU returns the knots along direction dir
 				
 			
 				
-				<h3 id="Nurbs.Gnd">func (*Nurbs) <a href="/src/target/nurbs.go?s=14678:14703#L407">Gnd</a></h3>
+				<h3 id="Nurbs.Gnd">func (*Nurbs) <a href="/src/target/nurbs.go?s=12365:12390#L410">Gnd</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Gnd() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 GetGnd returns the geometry dimension
@@ -980,7 +981,7 @@ GetGnd returns the geometry dimension
 				
 			
 				
-				<h3 id="Nurbs.IndBasis">func (*Nurbs) <a href="/src/target/nurbs.go?s=19706:19752#L570">IndBasis</a></h3>
+				<h3 id="Nurbs.IndBasis">func (*Nurbs) <a href="/src/target/nurbs.go?s=16367:16413#L573">IndBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) IndBasis(span []<a href="/pkg/builtin/#int">int</a>) (L []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 IndBasis returns the indices of basis functions == local indices of control points
@@ -991,7 +992,7 @@ IndBasis returns the indices of basis functions == local indices of control poin
 				
 			
 				
-				<h3 id="Nurbs.Init">func (*Nurbs) <a href="/src/target/nurbs.go?s=1621:1681#L30">Init</a></h3>
+				<h3 id="Nurbs.Init">func (*Nurbs) <a href="/src/target/nurbs.go?s=1564:1624#L33">Init</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Init(gnd <a href="/pkg/builtin/#int">int</a>, ords []<a href="/pkg/builtin/#int">int</a>, knots [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises Nurbs
@@ -1002,7 +1003,7 @@ Init initialises Nurbs
 				
 			
 				
-				<h3 id="Nurbs.Krefine">func (*Nurbs) <a href="/src/target/nurbs.go?s=22889:22938#L659">Krefine</a></h3>
+				<h3 id="Nurbs.Krefine">func (*Nurbs) <a href="/src/target/nurbs.go?s=18875:18924#L662">Krefine</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Krefine(X [][]<a href="/pkg/builtin/#float64">float64</a>) (O *<a href="#Nurbs">Nurbs</a>)</pre>
 				<p>
 Krefine returns a new Nurbs with knots refined
@@ -1014,7 +1015,7 @@ Note: X[gnd][numNewKnots]
 				
 			
 				
-				<h3 id="Nurbs.KrefineN">func (*Nurbs) <a href="/src/target/nurbs.go?s=21294:21351#L618">KrefineN</a></h3>
+				<h3 id="Nurbs.KrefineN">func (*Nurbs) <a href="/src/target/nurbs.go?s=17611:17668#L621">KrefineN</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) KrefineN(ndiv <a href="/pkg/builtin/#int">int</a>, useCspace <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Nurbs">Nurbs</a></pre>
 				<p>
 KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
@@ -1025,7 +1026,7 @@ KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
 				
 			
 				
-				<h3 id="Nurbs.NonZeroSpans">func (*Nurbs) <a href="/src/target/nurbs.go?s=15274:15319#L432">NonZeroSpans</a></h3>
+				<h3 id="Nurbs.NonZeroSpans">func (*Nurbs) <a href="/src/target/nurbs.go?s=12946:12991#L435">NonZeroSpans</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NonZeroSpans(dir <a href="/pkg/builtin/#int">int</a>) [][]<a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 NonZeroSpans returns the &#39;elements&#39; along direction dir
@@ -1036,7 +1037,7 @@ NonZeroSpans returns the &#39;elements&#39; along direction dir
 				
 			
 				
-				<h3 id="Nurbs.NumBasis">func (*Nurbs) <a href="/src/target/nurbs.go?s=15141:15178#L427">NumBasis</a></h3>
+				<h3 id="Nurbs.NumBasis">func (*Nurbs) <a href="/src/target/nurbs.go?s=12816:12853#L430">NumBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NumBasis(dir <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 NumBasis returns the number of basis (controls) along direction dir
@@ -1047,7 +1048,7 @@ NumBasis returns the number of basis (controls) along direction dir
 				
 			
 				
-				<h3 id="Nurbs.NumericalDeriv">func (*Nurbs) <a href="/src/target/nurbs.go?s=12551:12617#L338">NumericalDeriv</a></h3>
+				<h3 id="Nurbs.NumericalDeriv">func (*Nurbs) <a href="/src/target/nurbs.go?s=10648:10714#L341">NumericalDeriv</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NumericalDeriv(dRdu []<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 NumericalDeriv computes a particular derivative dR[i][j][k]du @ t using numerical differentiation
@@ -1059,7 +1060,7 @@ Note: it uses RecursiveBasis and therefore is highly non-efficient
 				
 			
 				
-				<h3 id="Nurbs.Ord">func (*Nurbs) <a href="/src/target/nurbs.go?s=14774:14806#L412">Ord</a></h3>
+				<h3 id="Nurbs.Ord">func (*Nurbs) <a href="/src/target/nurbs.go?s=12458:12490#L415">Ord</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Ord(dir <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 GetOrd returns the order along direction dir
@@ -1070,7 +1071,7 @@ GetOrd returns the order along direction dir
 				
 			
 				
-				<h3 id="Nurbs.PlotBasis">func (*Nurbs) <a href="/src/target/draw.go?s=4053:4116#L108">PlotBasis</a></h3>
+				<h3 id="Nurbs.PlotBasis">func (*Nurbs) <a href="/src/target/draw.go?s=3384:3447#L108">PlotBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotBasis(l <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotBasis plots basis function (2D only)
@@ -1085,7 +1086,7 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Nurbs.PlotDeriv">func (*Nurbs) <a href="/src/target/draw.go?s=6053:6119#L168">PlotDeriv</a></h3>
+				<h3 id="Nurbs.PlotDeriv">func (*Nurbs) <a href="/src/target/draw.go?s=4898:4964#L168">PlotDeriv</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotDeriv(l, d <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotDeriv plots derivative dR[i][j][k]du[d] (2D only)
@@ -1099,7 +1100,7 @@ option =  0 : use CalcBasisAndDerivs
 				
 			
 				
-				<h3 id="Nurbs.Point">func (*Nurbs) <a href="/src/target/nurbs.go?s=13174:13222#L357">Point</a></h3>
+				<h3 id="Nurbs.Point">func (*Nurbs) <a href="/src/target/nurbs.go?s=11164:11212#L360">Point</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Point(u []<a href="/pkg/builtin/#float64">float64</a>) (C []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Point returns the x-y-z coordinates of a point on curve/surface/volume
@@ -1110,7 +1111,7 @@ Point returns the x-y-z coordinates of a point on curve/surface/volume
 				
 			
 				
-				<h3 id="Nurbs.RecursiveBasis">func (*Nurbs) <a href="/src/target/nurbs.go?s=10887:10951#L293">RecursiveBasis</a></h3>
+				<h3 id="Nurbs.RecursiveBasis">func (*Nurbs) <a href="/src/target/nurbs.go?s=9230:9294#L296">RecursiveBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) RecursiveBasis(u []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 RecursiveBasis implements basis functions by means of summing all terms
@@ -1123,7 +1124,7 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.SetControl">func (*Nurbs) <a href="/src/target/nurbs.go?s=2971:3029#L80">SetControl</a></h3>
+				<h3 id="Nurbs.SetControl">func (*Nurbs) <a href="/src/target/nurbs.go?s=2716:2774#L83">SetControl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetControl(verts [][]<a href="/pkg/builtin/#float64">float64</a>, ctrls []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 SetControl sets control points from list of global vertices
@@ -1134,7 +1135,7 @@ SetControl sets control points from list of global vertices
 				
 			
 				
-				<h3 id="Nurbs.SetQ">func (*Nurbs) <a href="/src/target/nurbs.go?s=15796:15842#L452">SetQ</a></h3>
+				<h3 id="Nurbs.SetQ">func (*Nurbs) <a href="/src/target/nurbs.go?s=13438:13484#L455">SetQ</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetQ(i, j, k <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetQ sets a control point x[i,j,k] (size==4)
@@ -1145,7 +1146,7 @@ SetQ sets a control point x[i,j,k] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.SetQl">func (*Nurbs) <a href="/src/target/nurbs.go?s=15993:16034#L460">SetQl</a></h3>
+				<h3 id="Nurbs.SetQl">func (*Nurbs) <a href="/src/target/nurbs.go?s=13620:13661#L463">SetQl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetQl(l <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetQl sets a control point x[l] (size==4)
@@ -1156,7 +1157,7 @@ SetQl sets a control point x[l] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.U">func (*Nurbs) <a href="/src/target/nurbs.go?s=14998:15037#L422">U</a></h3>
+				<h3 id="Nurbs.U">func (*Nurbs) <a href="/src/target/nurbs.go?s=12676:12715#L425">U</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) U(dir, idx <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 U returns the value of a knot along direction dir
@@ -1196,7 +1197,7 @@ NurbsD holds all data required to read/save a Nurbs to/from files
 		
 			
 			
-			<h2 id="Point">type <a href="/src/target/basicgeom.go?s=303:344#L3">Point</a></h2>
+			<h2 id="Point">type <a href="/src/target/basicgeom.go?s=298:336#L4">Point</a></h2>
 			<pre>type Point struct {
     X, Y, Z <a href="/pkg/builtin/#float64">float64</a>
 }</pre>
@@ -1217,7 +1218,7 @@ Point holds the Cartesian coordinates of a point in 3D space
 
 			
 				
-				<h3 id="Point.NewCopy">func (*Point) <a href="/src/target/basicgeom.go?s=583:615#L15">NewCopy</a></h3>
+				<h3 id="Point.NewCopy">func (*Point) <a href="/src/target/basicgeom.go?s=572:604#L16">NewCopy</a></h3>
 				<pre>func (o *<a href="#Point">Point</a>) NewCopy() *<a href="#Point">Point</a></pre>
 				<p>
 NewCopy creates a new copy of Point
@@ -1228,7 +1229,7 @@ NewCopy creates a new copy of Point
 				
 			
 				
-				<h3 id="Point.NewDisp">func (*Point) <a href="/src/target/basicgeom.go?s=717:767#L20">NewDisp</a></h3>
+				<h3 id="Point.NewDisp">func (*Point) <a href="/src/target/basicgeom.go?s=703:753#L21">NewDisp</a></h3>
 				<pre>func (o *<a href="#Point">Point</a>) NewDisp(dx, dy, dz <a href="/pkg/builtin/#float64">float64</a>) *<a href="#Point">Point</a></pre>
 				<p>
 NewDisp creates a new copy of Point displaced by dx, dy, dz
@@ -1239,7 +1240,7 @@ NewDisp creates a new copy of Point displaced by dx, dy, dz
 				
 			
 				
-				<h3 id="Point.String">func (*Point) <a href="/src/target/basicgeom.go?s=845:876#L25">String</a></h3>
+				<h3 id="Point.String">func (*Point) <a href="/src/target/basicgeom.go?s=828:859#L26">String</a></h3>
 				<pre>func (o *<a href="#Point">Point</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 String outputs Point
@@ -1252,7 +1253,7 @@ String outputs Point
 		
 			
 			
-			<h2 id="Segment">type <a href="/src/target/basicgeom.go?s=399:438#L8">Segment</a></h2>
+			<h2 id="Segment">type <a href="/src/target/basicgeom.go?s=391:427#L9">Segment</a></h2>
 			<pre>type Segment struct {
     A, B *<a href="#Point">Point</a>
 }</pre>
@@ -1271,7 +1272,7 @@ Segment represents a directed segment from A to B
 
 			
 				
-				<h3 id="NewSegment">func <a href="/src/target/basicgeom.go?s=2160:2197#L63">NewSegment</a></h3>
+				<h3 id="NewSegment">func <a href="/src/target/basicgeom.go?s=1945:1982#L64">NewSegment</a></h3>
 				<pre>func NewSegment(a, b *<a href="#Point">Point</a>) *<a href="#Segment">Segment</a></pre>
 				<p>
 NewSegment creates a new segment from a to b
@@ -1283,7 +1284,7 @@ NewSegment creates a new segment from a to b
 
 			
 				
-				<h3 id="Segment.Len">func (*Segment) <a href="/src/target/basicgeom.go?s=1344:1375#L39">Len</a></h3>
+				<h3 id="Segment.Len">func (*Segment) <a href="/src/target/basicgeom.go?s=1265:1296#L40">Len</a></h3>
 				<pre>func (o *<a href="#Segment">Segment</a>) Len() <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Len computes the length of Segment == Euclidian norm
@@ -1294,7 +1295,7 @@ Len computes the length of Segment == Euclidian norm
 				
 			
 				
-				<h3 id="Segment.New">func (*Segment) <a href="/src/target/basicgeom.go?s=1484:1525#L44">New</a></h3>
+				<h3 id="Segment.New">func (*Segment) <a href="/src/target/basicgeom.go?s=1402:1443#L45">New</a></h3>
 				<pre>func (o *<a href="#Segment">Segment</a>) New(m <a href="/pkg/builtin/#float64">float64</a>) *<a href="#Segment">Segment</a></pre>
 				<p>
 NewScaled creates a new Segment scaled by m and starting from A
@@ -1305,7 +1306,7 @@ NewScaled creates a new Segment scaled by m and starting from A
 				
 			
 				
-				<h3 id="Segment.String">func (*Segment) <a href="/src/target/basicgeom.go?s=2018:2051#L58">String</a></h3>
+				<h3 id="Segment.String">func (*Segment) <a href="/src/target/basicgeom.go?s=1806:1839#L59">String</a></h3>
 				<pre>func (o *<a href="#Segment">Segment</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 String outputs Segment
@@ -1316,7 +1317,7 @@ String outputs Segment
 				
 			
 				
-				<h3 id="Segment.Vector">func (*Segment) <a href="/src/target/basicgeom.go?s=1815:1860#L51">Vector</a></h3>
+				<h3 id="Segment.Vector">func (*Segment) <a href="/src/target/basicgeom.go?s=1644:1689#L52">Vector</a></h3>
 				<pre>func (o *<a href="#Segment">Segment</a>) Vector(m <a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Vector returns the vector representing Segment from A to B (scaled by m)
@@ -1365,33 +1366,34 @@ Vert holds data for a vertex =&gt; control point
 <br /><br />
 <hr>
 <pre class="copyright">
-Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Dorival M Pedroso nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 </pre><!-- copyright -->
 </div><!-- footer -->
 </body>

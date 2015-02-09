@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>GoSL &ndash; package ode</title>
+<title>Gosl &ndash; package ode</title>
 <link type="text/css" rel="stylesheet" href="static/style.css">
 <script type="text/javascript" src="static/godocs.js"></script>
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>GoSL &ndash; <b>ode</b> &ndash; Solvers for ordinary differential equations</h1>
+<div id="page"><h1>Gosl &ndash; <b>ode</b> &ndash; Solvers for ordinary differential equations</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -29,7 +29,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "code.google.com/p/gosl/ode"</code></dd>
+			<dd><code>import "github.com/cpmech/gosl/ode"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -135,19 +135,19 @@
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="/src/code.google.com/p/gosl/ode/auxiliary.go">auxiliary.go</a>
+				<a href="/src/github.com/cpmech/gosl/ode/auxiliary.go">auxiliary.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/ode/bweuler.go">bweuler.go</a>
+				<a href="/src/github.com/cpmech/gosl/ode/bweuler.go">bweuler.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/ode/dbg.go">dbg.go</a>
+				<a href="/src/github.com/cpmech/gosl/ode/dbg.go">dbg.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/ode/erk.go">erk.go</a>
+				<a href="/src/github.com/cpmech/gosl/ode/erk.go">erk.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/ode/fweuler.go">fweuler.go</a>
+				<a href="/src/github.com/cpmech/gosl/ode/fweuler.go">fweuler.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/ode/ode.go">ode.go</a>
+				<a href="/src/github.com/cpmech/gosl/ode/ode.go">ode.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/ode/radau5.go">radau5.go</a>
+				<a href="/src/github.com/cpmech/gosl/ode/radau5.go">radau5.go</a>
 			
 			</span>
 			</p>
@@ -225,7 +225,7 @@ constants
 		
 			
 			
-			<h2 id="Plot">func <a href="/src/target/auxiliary.go?s=452:608#L11">Plot</a></h2>
+			<h2 id="Plot">func <a href="/src/target/auxiliary.go?s=432:579#L12">Plot</a></h2>
 			<pre>func Plot(dirout, fnkey, method <a href="/pkg/builtin/#string">string</a>, bres *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, ycps []<a href="/pkg/builtin/#int">int</a>, ndim <a href="/pkg/builtin/#int">int</a>, ycfcn <a href="#Cb_ycorr">Cb_ycorr</a>, xa, xb <a href="/pkg/builtin/#float64">float64</a>,
     withdx, show <a href="/pkg/builtin/#bool">bool</a>, extra <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
@@ -238,8 +238,8 @@ plot results corresponding to one run
 		
 			
 			
-			<h2 id="WcAnalysis">func <a href="/src/target/auxiliary.go?s=3130:3305#L100">WcAnalysis</a></h2>
-			<pre>func WcAnalysis(dirout, fnkey, method <a href="/pkg/builtin/#string">string</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, ycfcn <a href="#Cb_ycorr">Cb_ycorr</a>, ya []<a href="/pkg/builtin/#float64">float64</a>, xa, xb <a href="/pkg/builtin/#float64">float64</a>,
+			<h2 id="WcAnalysis">func <a href="/src/target/auxiliary.go?s=2628:2788#L101">WcAnalysis</a></h2>
+			<pre>func WcAnalysis(dirout, fnkey, method <a href="/pkg/builtin/#string">string</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, ycfcn <a href="#Cb_ycorr">Cb_ycorr</a>, ya []<a href="/pkg/builtin/#float64">float64</a>, xa, xb <a href="/pkg/builtin/#float64">float64</a>,
     orders []<a href="/pkg/builtin/#float64">float64</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 work/correctness analysis
@@ -252,7 +252,7 @@ work/correctness analysis
 		
 			
 			
-			<h2 id="Cb_fcn">type <a href="/src/target/ode.go?s=328:413#L6">Cb_fcn</a></h2>
+			<h2 id="Cb_fcn">type <a href="/src/target/ode.go?s=314:394#L7">Cb_fcn</a></h2>
 			<pre>type Cb_fcn func(f []<a href="/pkg/builtin/#float64">float64</a>, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// function</span>
 </pre>
 			<p>
@@ -274,8 +274,8 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_jac">type <a href="/src/target/ode.go?s=426:511#L7">Cb_jac</a></h2>
-			<pre>type Cb_jac func(dfdy *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// Jacobian (must have at least all diagonal elements set)</span>
+			<h2 id="Cb_jac">type <a href="/src/target/ode.go?s=412:497#L8">Cb_jac</a></h2>
+			<pre>type Cb_jac func(dfdy *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// Jacobian (must have at least all diagonal elements set)</span>
 </pre>
 			
 
@@ -293,7 +293,7 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_out">type <a href="/src/target/ode.go?s=571:656#L8">Cb_out</a></h2>
+			<h2 id="Cb_out">type <a href="/src/target/ode.go?s=557:639#L9">Cb_out</a></h2>
 			<pre>type Cb_out func(first <a href="/pkg/builtin/#bool">bool</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// output</span>
 </pre>
 			
@@ -312,7 +312,7 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_ycorr">type <a href="/src/target/auxiliary.go?s=330:393#L8">Cb_ycorr</a></h2>
+			<h2 id="Cb_ycorr">type <a href="/src/target/auxiliary.go?s=310:373#L9">Cb_ycorr</a></h2>
 			<pre>type Cb_ycorr func(y []<a href="/pkg/builtin/#float64">float64</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <span class="comment">// y(x) correct</span>
 </pre>
 			<p>
@@ -334,7 +334,7 @@ callbacks
 		
 			
 			
-			<h2 id="ERKdat">type <a href="/src/target/erk.go?s=239:483#L2">ERKdat</a></h2>
+			<h2 id="ERKdat">type <a href="/src/target/erk.go?s=234:463#L3">ERKdat</a></h2>
 			<pre>type ERKdat struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -354,7 +354,7 @@ callbacks
 		
 			
 			
-			<h2 id="ODE">type <a href="/src/target/ode.go?s=865:5860#L17">ODE</a></h2>
+			<h2 id="ODE">type <a href="/src/target/ode.go?s=851:5039#L18">ODE</a></h2>
 			<pre>type ODE struct {
     ZeroTrial <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// always start iterations with zero trial values (instead of collocation interpolation)</span>
     Atol      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// absolute tolerance</span>
@@ -395,7 +395,7 @@ ODE structure
 
 			
 				
-				<h3 id="ODE.GetStat">func (*ODE) <a href="/src/target/ode.go?s=16721:16755#L501">GetStat</a></h3>
+				<h3 id="ODE.GetStat">func (*ODE) <a href="/src/target/ode.go?s=13233:13267#L502">GetStat</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) GetStat() (s <a href="/pkg/builtin/#string">string</a>)</pre>
 				
 				
@@ -403,8 +403,8 @@ ODE structure
 				
 			
 				
-				<h3 id="ODE.Init">func (*ODE) <a href="/src/target/ode.go?s=5936:6043#L108">Init</a></h3>
-				<pre>func (o *<a href="#ODE">ODE</a>) Init(method <a href="/pkg/builtin/#string">string</a>, ndim <a href="/pkg/builtin/#int">int</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, out <a href="#Cb_out">Cb_out</a>, silent <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<h3 id="ODE.Init">func (*ODE) <a href="/src/target/ode.go?s=5115:5222#L109">Init</a></h3>
+				<pre>func (o *<a href="#ODE">ODE</a>) Init(method <a href="/pkg/builtin/#string">string</a>, ndim <a href="/pkg/builtin/#int">int</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, out <a href="#Cb_out">Cb_out</a>, silent <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Init initialises ODE structure with default values and allocate slices
 </p>
@@ -414,7 +414,7 @@ Init initialises ODE structure with default values and allocate slices
 				
 			
 				
-				<h3 id="ODE.SetTol">func (*ODE) <a href="/src/target/ode.go?s=8989:9029#L219">SetTol</a></h3>
+				<h3 id="ODE.SetTol">func (*ODE) <a href="/src/target/ode.go?s=7550:7590#L220">SetTol</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) SetTol(atol, rtol <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetTol sets tolerances according to Hairer and Wanner suggestions. This routine also
@@ -426,7 +426,7 @@ checks for consistent values and only considers the case of scalars Atol and Rto
 				
 			
 				
-				<h3 id="ODE.Solve">func (*ODE) <a href="/src/target/ode.go?s=9409:9507#L233">Solve</a></h3>
+				<h3 id="ODE.Solve">func (*ODE) <a href="/src/target/ode.go?s=7927:8025#L234">Solve</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) Solve(y []<a href="/pkg/builtin/#float64">float64</a>, x, xb, Δx <a href="/pkg/builtin/#float64">float64</a>, fixstp <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
@@ -437,7 +437,7 @@ Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
 				
 			
 				
-				<h3 id="ODE.Stat">func (*ODE) <a href="/src/target/ode.go?s=16193:16213#L487">Stat</a></h3>
+				<h3 id="ODE.Stat">func (*ODE) <a href="/src/target/ode.go?s=12741:12761#L488">Stat</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) Stat()</pre>
 				
 				
@@ -447,7 +447,7 @@ Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
 		
 			
 			
-			<h2 id="R5cte">type <a href="/src/target/radau5.go?s=362:1029#L7">R5cte</a></h2>
+			<h2 id="R5cte">type <a href="/src/target/radau5.go?s=342:949#L8">R5cte</a></h2>
 			<pre>type R5cte struct {
     T  [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// T matrix</span>
     Ti [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// inv(T) matrix</span>
@@ -509,33 +509,34 @@ Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
 <br /><br />
 <hr>
 <pre class="copyright">
-Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Dorival M Pedroso nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 </pre><!-- copyright -->
 </div><!-- footer -->
 </body>

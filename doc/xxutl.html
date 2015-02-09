@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>GoSL &ndash; package utl</title>
+<title>Gosl &ndash; package utl</title>
 <link type="text/css" rel="stylesheet" href="static/style.css">
 <script type="text/javascript" src="static/godocs.js"></script>
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>GoSL &ndash; <b>utl</b> &ndash; Utilities</h1>
+<div id="page"><h1>Gosl &ndash; <b>utl</b> &ndash; Utilities</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -29,7 +29,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "code.google.com/p/gosl/utl"</code></dd>
+			<dd><code>import "github.com/cpmech/gosl/utl"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -568,6 +568,9 @@ including for making the transition from NumPy to Go easier.
 				<dd><a href="#Str2Dbl">func Str2Dbl(s []string) (v []float64)</a></dd>
 			
 				
+				<dd><a href="#StrAssert">func StrAssert(a, b string)</a></dd>
+			
+				
 				<dd><a href="#StrBoolMapSort">func StrBoolMapSort(m map[string]bool) (sorted_keys []string)</a></dd>
 			
 				
@@ -742,45 +745,45 @@ including for making the transition from NumPy to Go easier.
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="/src/code.google.com/p/gosl/utl/auxiliary.go">auxiliary.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/auxiliary.go">auxiliary.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/basic.go">basic.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/basic.go">basic.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/deepslices.go">deepslices.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/deepslices.go">deepslices.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/evalexpr.go">evalexpr.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/evalexpr.go">evalexpr.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/fileio.go">fileio.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/fileio.go">fileio.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/genscript.go">genscript.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/genscript.go">genscript.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/mapops.go">mapops.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/mapops.go">mapops.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/myjson.go">myjson.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/myjson.go">myjson.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/mylab.go">mylab.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/mylab.go">mylab.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/parsing.go">parsing.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/parsing.go">parsing.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/postprocess.go">postprocess.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/postprocess.go">postprocess.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/profiling.go">profiling.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/profiling.go">profiling.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/rterrors.go">rterrors.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/rterrors.go">rterrors.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/serialize.go">serialize.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/serialize.go">serialize.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/sorting.go">sorting.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/sorting.go">sorting.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/stat.go">stat.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/stat.go">stat.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/testing.go">testing.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/testing.go">testing.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/time.go">time.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/time.go">time.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/xyreader.go">xyreader.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/xyreader.go">xyreader.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/utl/xywriter.go">xywriter.go</a>
+				<a href="/src/github.com/cpmech/gosl/utl/xywriter.go">xywriter.go</a>
 			
 			</span>
 			</p>
@@ -843,7 +846,7 @@ including for making the transition from NumPy to Go easier.
 		
 			
 			
-			<h2 id="AnaNum">func <a href="/src/target/testing.go?s=2814:2884#L112">AnaNum</a></h2>
+			<h2 id="AnaNum">func <a href="/src/target/testing.go?s=3039:3109#L123">AnaNum</a></h2>
 			<pre>func AnaNum(msg <a href="/pkg/builtin/#string">string</a>, tol, ana, num <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) (e <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 AnaNum formats the output of analytical versus numerical comparisons
@@ -995,7 +998,7 @@ Catch catches a panic
 		
 			
 			
-			<h2 id="CatchRTE">func <a href="/src/target/rterrors.go?s=274:319#L4">CatchRTE</a></h2>
+			<h2 id="CatchRTE">func <a href="/src/target/rterrors.go?s=271:316#L4">CatchRTE</a></h2>
 			<pre>func CatchRTE(msg <a href="/pkg/builtin/#string">string</a>, handler <a href="#RTEhandler">RTEhandler</a>)</pre>
 			<p>
 CatchRTE catch run time error
@@ -1007,7 +1010,7 @@ CatchRTE catch run time error
 		
 			
 			
-			<h2 id="CheckAnaNum">func <a href="/src/target/testing.go?s=3339:3420#L132">CheckAnaNum</a></h2>
+			<h2 id="CheckAnaNum">func <a href="/src/target/testing.go?s=3564:3645#L143">CheckAnaNum</a></h2>
 			<pre>func CheckAnaNum(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, ana, num <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 CheckAnaNum compares analytical versus numerical values
@@ -1019,7 +1022,7 @@ CheckAnaNum compares analytical versus numerical values
 		
 			
 			
-			<h2 id="CheckIntMat">func <a href="/src/target/testing.go?s=14446:14512#L478">CheckIntMat</a></h2>
+			<h2 id="CheckIntMat">func <a href="/src/target/testing.go?s=14671:14737#L489">CheckIntMat</a></h2>
 			<pre>func CheckIntMat(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, res, correct [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 CheckIntMat compares matrices of ints
@@ -1031,7 +1034,7 @@ CheckIntMat compares matrices of ints
 		
 			
 			
-			<h2 id="CheckMatrix">func <a href="/src/target/testing.go?s=3553:3636#L140">CheckMatrix</a></h2>
+			<h2 id="CheckMatrix">func <a href="/src/target/testing.go?s=3778:3861#L151">CheckMatrix</a></h2>
 			<pre>func CheckMatrix(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CheckMatrix compares two matrices
@@ -1043,7 +1046,7 @@ CheckMatrix compares two matrices
 		
 			
 			
-			<h2 id="CheckMatrixC">func <a href="/src/target/testing.go?s=5319:5406#L206">CheckMatrixC</a></h2>
+			<h2 id="CheckMatrixC">func <a href="/src/target/testing.go?s=5544:5631#L217">CheckMatrixC</a></h2>
 			<pre>func CheckMatrixC(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct [][]<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 CheckMatrixC compares two matrices of complex nummbers
@@ -1055,7 +1058,7 @@ CheckMatrixC compares two matrices of complex nummbers
 		
 			
 			
-			<h2 id="CheckScalar">func <a href="/src/target/testing.go?s=2284:2355#L95">CheckScalar</a></h2>
+			<h2 id="CheckScalar">func <a href="/src/target/testing.go?s=2509:2580#L106">CheckScalar</a></h2>
 			<pre>func CheckScalar(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, res, correct <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CheckScalar compares two scalars
@@ -1067,7 +1070,7 @@ CheckScalar compares two scalars
 		
 			
 			
-			<h2 id="CheckStrMat">func <a href="/src/target/testing.go?s=13267:13336#L441">CheckStrMat</a></h2>
+			<h2 id="CheckStrMat">func <a href="/src/target/testing.go?s=13492:13561#L452">CheckStrMat</a></h2>
 			<pre>func CheckStrMat(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, res, correct [][]<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 CheckStrMat compares matrices of strings
@@ -1079,7 +1082,7 @@ CheckStrMat compares matrices of strings
 		
 			
 			
-			<h2 id="CheckString">func <a href="/src/target/testing.go?s=2445:2498#L100">CheckString</a></h2>
+			<h2 id="CheckString">func <a href="/src/target/testing.go?s=2670:2723#L111">CheckString</a></h2>
 			<pre>func CheckString(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, str, correct <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 CheckString compares two strings
@@ -1091,7 +1094,7 @@ CheckString compares two strings
 		
 			
 			
-			<h2 id="CheckVector">func <a href="/src/target/testing.go?s=4557:4638#L177">CheckVector</a></h2>
+			<h2 id="CheckVector">func <a href="/src/target/testing.go?s=4782:4863#L188">CheckVector</a></h2>
 			<pre>func CheckVector(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CheckVector compares two vectors
@@ -1103,7 +1106,7 @@ CheckVector compares two vectors
 		
 			
 			
-			<h2 id="CheckVectorC">func <a href="/src/target/testing.go?s=6706:6791#L253">CheckVectorC</a></h2>
+			<h2 id="CheckVectorC">func <a href="/src/target/testing.go?s=6931:7016#L264">CheckVectorC</a></h2>
 			<pre>func CheckVectorC(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 CheckVectorC compares two vectors of complex nummbers
@@ -1115,7 +1118,7 @@ CheckVectorC compares two vectors of complex nummbers
 		
 			
 			
-			<h2 id="CompareBools">func <a href="/src/target/testing.go?s=12003:12061#L403">CompareBools</a></h2>
+			<h2 id="CompareBools">func <a href="/src/target/testing.go?s=12228:12286#L414">CompareBools</a></h2>
 			<pre>func CompareBools(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 CompareBools compare two slices of bools
@@ -1127,7 +1130,7 @@ CompareBools compare two slices of bools
 		
 			
 			
-			<h2 id="CompareDbls">func <a href="/src/target/testing.go?s=8447:8507#L311">CompareDbls</a></h2>
+			<h2 id="CompareDbls">func <a href="/src/target/testing.go?s=8672:8732#L322">CompareDbls</a></h2>
 			<pre>func CompareDbls(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CompareDbls compares two slices of doubles (floats)
@@ -1139,7 +1142,7 @@ CompareDbls compares two slices of doubles (floats)
 		
 			
 			
-			<h2 id="CompareDeep3">func <a href="/src/target/testing.go?s=9087:9152#L330">CompareDeep3</a></h2>
+			<h2 id="CompareDeep3">func <a href="/src/target/testing.go?s=9312:9377#L341">CompareDeep3</a></h2>
 			<pre>func CompareDeep3(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CompareDeep3 compares two deep3 slices
@@ -1151,7 +1154,7 @@ CompareDeep3 compares two deep3 slices
 		
 			
 			
-			<h2 id="CompareDeep4">func <a href="/src/target/testing.go?s=10358:10425#L363">CompareDeep4</a></h2>
+			<h2 id="CompareDeep4">func <a href="/src/target/testing.go?s=10583:10650#L374">CompareDeep4</a></h2>
 			<pre>func CompareDeep4(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CompareDeep4 compares two deep4 slices
@@ -1163,7 +1166,7 @@ CompareDeep4 compares two deep4 slices
 		
 			
 			
-			<h2 id="CompareInts">func <a href="/src/target/testing.go?s=7815:7871#L292">CompareInts</a></h2>
+			<h2 id="CompareInts">func <a href="/src/target/testing.go?s=8040:8096#L303">CompareInts</a></h2>
 			<pre>func CompareInts(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 CompareInts compares two slices of integers
@@ -1175,7 +1178,7 @@ CompareInts compares two slices of integers
 		
 			
 			
-			<h2 id="CompareStrs">func <a href="/src/target/testing.go?s=12635:12694#L422">CompareStrs</a></h2>
+			<h2 id="CompareStrs">func <a href="/src/target/testing.go?s=12860:12919#L433">CompareStrs</a></h2>
 			<pre>func CompareStrs(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 CompareStrs compare two slices of strings
@@ -1199,7 +1202,7 @@ Dbl2Str converts a slice of doubles (float64) to a slice of strings
 		
 			
 			
-			<h2 id="DblArrayToMat">func <a href="/src/target/serialize.go?s=559:616#L11">DblArrayToMat</a></h2>
+			<h2 id="DblArrayToMat">func <a href="/src/target/serialize.go?s=512:569#L11">DblArrayToMat</a></h2>
 			<pre>func DblArrayToMat(v []<a href="/pkg/builtin/#float64">float64</a>, m, n <a href="/pkg/builtin/#int">int</a>) (a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblArrayToMat converts a column-major array to a matrix
@@ -1223,7 +1226,7 @@ DblAssert asserts that a is equal to b (floats)
 		
 			
 			
-			<h2 id="DblDsort3">func <a href="/src/target/sorting.go?s=479:511#L15">DblDsort3</a></h2>
+			<h2 id="DblDsort3">func <a href="/src/target/sorting.go?s=440:472#L15">DblDsort3</a></h2>
 			<pre>func DblDsort3(a, b, c *<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblDsort3 sorts 3 values in descending order
@@ -1235,7 +1238,7 @@ DblDsort3 sorts 3 values in descending order
 		
 			
 			
-			<h2 id="DblGetSorted">func <a href="/src/target/sorting.go?s=716:766#L28">DblGetSorted</a></h2>
+			<h2 id="DblGetSorted">func <a href="/src/target/sorting.go?s=641:691#L28">DblGetSorted</a></h2>
 			<pre>func DblGetSorted(A []<a href="/pkg/builtin/#float64">float64</a>) (Asorted []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblGetSorted returns a sorted (increasing) copy of &#39;A&#39;
@@ -1285,7 +1288,7 @@ DblOnes generates a slice of double precision &#39;1s&#39;
 		
 			
 			
-			<h2 id="DblPrint">func <a href="/src/target/auxiliary.go?s=1028:1085#L33">DblPrint</a></h2>
+			<h2 id="DblPrint">func <a href="/src/target/auxiliary.go?s=788:845#L33">DblPrint</a></h2>
 			<pre>func DblPrint(a []<a href="/pkg/builtin/#float64">float64</a>, printfkey <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -1294,7 +1297,7 @@ DblOnes generates a slice of double precision &#39;1s&#39;
 		
 			
 			
-			<h2 id="DblSort3">func <a href="/src/target/sorting.go?s=253:284#L2">DblSort3</a></h2>
+			<h2 id="DblSort3">func <a href="/src/target/sorting.go?s=250:281#L2">DblSort3</a></h2>
 			<pre>func DblSort3(a, b, c *<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblSort3 sorts 3 values in ascending order
@@ -1318,7 +1321,7 @@ DblSplit splits a string into floats
 		
 			
 			
-			<h2 id="DblStat">func <a href="/src/target/stat.go?s=2250:2337#L65">DblStat</a></h2>
+			<h2 id="DblStat">func <a href="/src/target/stat.go?s=2084:2171#L73">DblStat</a></h2>
 			<pre>func DblStat(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, flts []<a href="/pkg/builtin/#float64">float64</a>, name <a href="/pkg/builtin/#string">string</a>) (min, max, ave, sum <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblStat generates the line for the statistics table corresponding to results collected in &#39;flts&#39;
@@ -1356,7 +1359,7 @@ DblVals generates a slice of double precision values
 		
 			
 			
-			<h2 id="Deep3Deserialize">func <a href="/src/target/serialize.go?s=2432:2508#L88">Deep3Deserialize</a></h2>
+			<h2 id="Deep3Deserialize">func <a href="/src/target/serialize.go?s=2084:2160#L88">Deep3Deserialize</a></h2>
 			<pre>func Deep3Deserialize(I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>, debug <a href="/pkg/builtin/#bool">bool</a>) (A [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3Deserialize deserializes an array of array of array in column-compressed format
@@ -1370,7 +1373,7 @@ Deep3Deserialize deserializes an array of array of array in column-compressed fo
 		
 			
 			
-			<h2 id="Deep3GetInfo">func <a href="/src/target/serialize.go?s=1769:1869#L64">Deep3GetInfo</a></h2>
+			<h2 id="Deep3GetInfo">func <a href="/src/target/serialize.go?s=1508:1608#L64">Deep3GetInfo</a></h2>
 			<pre>func Deep3GetInfo(I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) (nitems, nrows, ncols_tot <a href="/pkg/builtin/#int">int</a>, ncols []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Deep3GetInfo returns information of serialized array of array of array
@@ -1384,7 +1387,7 @@ Deep3GetInfo returns information of serialized array of array of array
 		
 			
 			
-			<h2 id="Deep3Print">func <a href="/src/target/serialize.go?s=870:915#L24">Deep3Print</a></h2>
+			<h2 id="Deep3Print">func <a href="/src/target/serialize.go?s=781:826#L24">Deep3Print</a></h2>
 			<pre>func Deep3Print(name <a href="/pkg/builtin/#string">string</a>, A [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3Print prints an array of array of array
@@ -1396,7 +1399,7 @@ Deep3Print prints an array of array of array
 		
 			
 			
-			<h2 id="Deep3Serialize">func <a href="/src/target/serialize.go?s=1116:1178#L35">Deep3Serialize</a></h2>
+			<h2 id="Deep3Serialize">func <a href="/src/target/serialize.go?s=1009:1071#L35">Deep3Serialize</a></h2>
 			<pre>func Deep3Serialize(A [][][]<a href="/pkg/builtin/#float64">float64</a>) (I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3Serialize serializes an array of array of array in column-compressed format
@@ -1422,7 +1425,7 @@ Deep3alloc allocates a slice of slice of slice
 		
 			
 			
-			<h2 id="Deep3set">func <a href="/src/target/deepslices.go?s=980:1021#L25">Deep3set</a></h2>
+			<h2 id="Deep3set">func <a href="/src/target/deepslices.go?s=872:913#L25">Deep3set</a></h2>
 			<pre>func Deep3set(a [][][]<a href="/pkg/builtin/#float64">float64</a>, v <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3set sets deep slice of slice of slice with v values
@@ -1434,7 +1437,7 @@ Deep3set sets deep slice of slice of slice with v values
 		
 			
 			
-			<h2 id="Deep4alloc">func <a href="/src/target/deepslices.go?s=550:605#L10">Deep4alloc</a></h2>
+			<h2 id="Deep4alloc">func <a href="/src/target/deepslices.go?s=511:566#L10">Deep4alloc</a></h2>
 			<pre>func Deep4alloc(n1, n2, n3, n4 <a href="/pkg/builtin/#int">int</a>) (a [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep4alloc allocates a slice of slice of slice of slice
@@ -1446,7 +1449,7 @@ Deep4alloc allocates a slice of slice of slice of slice
 		
 			
 			
-			<h2 id="Deep4set">func <a href="/src/target/deepslices.go?s=1280:1323#L36">Deep4set</a></h2>
+			<h2 id="Deep4set">func <a href="/src/target/deepslices.go?s=1124:1167#L36">Deep4set</a></h2>
 			<pre>func Deep4set(a [][][][]<a href="/pkg/builtin/#float64">float64</a>, v <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep4set sets deep slice of slice of slice of slice with v values
@@ -1458,7 +1461,7 @@ Deep4set sets deep slice of slice of slice of slice with v values
 		
 			
 			
-			<h2 id="DiffVecs">func <a href="/src/target/testing.go?s=15641:15695#L515">DiffVecs</a></h2>
+			<h2 id="DiffVecs">func <a href="/src/target/testing.go?s=15866:15920#L526">DiffVecs</a></h2>
 			<pre>func DiffVecs(a, b []<a href="/pkg/builtin/#float64">float64</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DiffVecs returns the formatted difference between two slices of floats
@@ -1482,7 +1485,7 @@ Digits returns the nubmer of digits
 		
 			
 			
-			<h2 id="DoProf">func <a href="/src/target/profiling.go?s=1943:1974#L57">DoProf</a></h2>
+			<h2 id="DoProf">func <a href="/src/target/profiling.go?s=1784:1815#L57">DoProf</a></h2>
 			<pre>func DoProf(silent <a href="/pkg/builtin/#bool">bool</a>) func()</pre>
 			<p>
 DoProf runs either CPU profiling or MEM profiling
@@ -1501,7 +1504,7 @@ DoProf runs either CPU profiling or MEM profiling
 		
 			
 			
-			<h2 id="DurGetCol">func <a href="/src/target/time.go?s=259:323#L2">DurGetCol</a></h2>
+			<h2 id="DurGetCol">func <a href="/src/target/time.go?s=256:320#L2">DurGetCol</a></h2>
 			<pre>func DurGetCol(j <a href="/pkg/builtin/#int">int</a>, a [][]<a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>) (col []<a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>)</pre>
 			<p>
 DurGetCol returns a columns with duration values
@@ -1513,7 +1516,7 @@ DurGetCol returns a columns with duration values
 		
 			
 			
-			<h2 id="DurMinMaxAve">func <a href="/src/target/time.go?s=531:597#L11">DurMinMaxAve</a></h2>
+			<h2 id="DurMinMaxAve">func <a href="/src/target/time.go?s=510:576#L11">DurMinMaxAve</a></h2>
 			<pre>func DurMinMaxAve(v []<a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>) (min, max, ave <a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>)</pre>
 			<p>
 DurMinMaxAve returns statistics data correponding a duration data collected in &#39;v&#39;
@@ -1525,7 +1528,7 @@ DurMinMaxAve returns statistics data correponding a duration data collected in &
 		
 			
 			
-			<h2 id="DurStat">func <a href="/src/target/stat.go?s=1140:1239#L29">DurStat</a></h2>
+			<h2 id="DurStat">func <a href="/src/target/stat.go?s=1068:1167#L29">DurStat</a></h2>
 			<pre>func DurStat(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, durs []<a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>, name <a href="/pkg/builtin/#string">string</a>) (min, max, ave, sum <a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>)</pre>
 			<p>
 DurStat generates the line for the statistics table corresponding to a duration
@@ -1563,7 +1566,7 @@ Err returns a new error
 		
 			
 			
-			<h2 id="ErrorMsg">func <a href="/src/target/testing.go?s=1947:2010#L83">ErrorMsg</a></h2>
+			<h2 id="ErrorMsg">func <a href="/src/target/testing.go?s=2172:2235#L94">ErrorMsg</a></h2>
 			<pre>func ErrorMsg(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ErrorMsg returns a formatted error message
@@ -1575,7 +1578,7 @@ ErrorMsg returns a formatted error message
 		
 			
 			
-			<h2 id="Eval">func <a href="/src/target/evalexpr.go?s=3586:3671#L126">Eval</a></h2>
+			<h2 id="Eval">func <a href="/src/target/evalexpr.go?s=2788:2873#L126">Eval</a></h2>
 			<pre>func Eval(expr <a href="/pkg/builtin/#string">string</a>, vars map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>, funcs map[<a href="/pkg/builtin/#string">string</a>]interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Eval evaluates an expression with variables in vars and functions in funcs
@@ -1587,7 +1590,7 @@ Eval evaluates an expression with variables in vars and functions in funcs
 		
 			
 			
-			<h2 id="EvalE">func <a href="/src/target/evalexpr.go?s=816:920#L27">EvalE</a></h2>
+			<h2 id="EvalE">func <a href="/src/target/evalexpr.go?s=734:838#L27">EvalE</a></h2>
 			<pre>func EvalE(aex <a href="/pkg/go/ast/">ast</a>.<a href="/pkg/go/ast/#Expr">Expr</a>, vars map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>, funcs map[<a href="/pkg/builtin/#string">string</a>]interface{}) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 EvalE evaluates an expression for given parsed structure in &#39;e&#39;
@@ -1648,7 +1651,7 @@ FnKey returns the file name key (without path and extension, if any)
 		
 			
 			
-			<h2 id="Gen2Arrays">func <a href="/src/target/genscript.go?s=1122:1193#L32">Gen2Arrays</a></h2>
+			<h2 id="Gen2Arrays">func <a href="/src/target/genscript.go?s=1038:1109#L32">Gen2Arrays</a></h2>
 			<pre>func Gen2Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen2Arrays generates the NumPy text in &#39;b&#39; corresponding to 2 arrays of float point numbers
@@ -1660,7 +1663,7 @@ Gen2Arrays generates the NumPy text in &#39;b&#39; corresponding to 2 arrays of 
 		
 			
 			
-			<h2 id="Gen3Arrays">func <a href="/src/target/genscript.go?s=1350:1431#L38">Gen3Arrays</a></h2>
+			<h2 id="Gen3Arrays">func <a href="/src/target/genscript.go?s=1260:1341#L38">Gen3Arrays</a></h2>
 			<pre>func Gen3Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB, nameC <a href="/pkg/builtin/#string">string</a>, a, b, c []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen3Arrays generates the NumPy text in &#39;b&#39; corresponding to 3 arrays of float point numbers
@@ -1672,7 +1675,7 @@ Gen3Arrays generates the NumPy text in &#39;b&#39; corresponding to 3 arrays of 
 		
 			
 			
-			<h2 id="Gen4Arrays">func <a href="/src/target/genscript.go?s=1600:1691#L44">Gen4Arrays</a></h2>
+			<h2 id="Gen4Arrays">func <a href="/src/target/genscript.go?s=1504:1595#L44">Gen4Arrays</a></h2>
 			<pre>func Gen4Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB, nameC, nameD <a href="/pkg/builtin/#string">string</a>, a, b, c, d []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen4Arrays generates the NumPy text in &#39;b&#39; corresponding to 4 arrays of float point numbers
@@ -1684,7 +1687,7 @@ Gen4Arrays generates the NumPy text in &#39;b&#39; corresponding to 4 arrays of 
 		
 			
 			
-			<h2 id="Gen5Arrays">func <a href="/src/target/genscript.go?s=1870:1971#L50">Gen5Arrays</a></h2>
+			<h2 id="Gen5Arrays">func <a href="/src/target/genscript.go?s=1768:1869#L50">Gen5Arrays</a></h2>
 			<pre>func Gen5Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB, nameC, nameD, nameE <a href="/pkg/builtin/#string">string</a>, a, b, c, d, e []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen5Arrays generates the NumPy text in &#39;b&#39; corresponding to 5 arrays of float point numbers
@@ -1696,7 +1699,7 @@ Gen5Arrays generates the NumPy text in &#39;b&#39; corresponding to 5 arrays of 
 		
 			
 			
-			<h2 id="Gen6Arrays">func <a href="/src/target/genscript.go?s=2160:2271#L56">Gen6Arrays</a></h2>
+			<h2 id="Gen6Arrays">func <a href="/src/target/genscript.go?s=2052:2163#L56">Gen6Arrays</a></h2>
 			<pre>func Gen6Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB, nameC, nameD, nameE, nameF <a href="/pkg/builtin/#string">string</a>, a, b, c, d, e, f []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen6Arrays generates the NumPy text in &#39;b&#39; corresponding to 6 arrays of float point numbers
@@ -1708,7 +1711,7 @@ Gen6Arrays generates the NumPy text in &#39;b&#39; corresponding to 6 arrays of 
 		
 			
 			
-			<h2 id="Gen7Arrays">func <a href="/src/target/genscript.go?s=2470:2591#L62">Gen7Arrays</a></h2>
+			<h2 id="Gen7Arrays">func <a href="/src/target/genscript.go?s=2356:2477#L62">Gen7Arrays</a></h2>
 			<pre>func Gen7Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB, nameC, nameD, nameE, nameF, nameG <a href="/pkg/builtin/#string">string</a>, a, b, c, d, e, f, g []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen7Arrays generates the NumPy text in &#39;b&#39; corresponding to 7 arrays of float point numbers
@@ -1720,7 +1723,7 @@ Gen7Arrays generates the NumPy text in &#39;b&#39; corresponding to 7 arrays of 
 		
 			
 			
-			<h2 id="Gen8Arrays">func <a href="/src/target/genscript.go?s=2800:2931#L68">Gen8Arrays</a></h2>
+			<h2 id="Gen8Arrays">func <a href="/src/target/genscript.go?s=2680:2811#L68">Gen8Arrays</a></h2>
 			<pre>func Gen8Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB, nameC, nameD, nameE, nameF, nameG, nameH <a href="/pkg/builtin/#string">string</a>, a, b, c, d, e, f, g, h []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen8Arrays generates the NumPy text in &#39;b&#39; corresponding to 8 arrays of float point numbers
@@ -1732,7 +1735,7 @@ Gen8Arrays generates the NumPy text in &#39;b&#39; corresponding to 8 arrays of 
 		
 			
 			
-			<h2 id="GenArray">func <a href="/src/target/genscript.go?s=564:620#L11">GenArray</a></h2>
+			<h2 id="GenArray">func <a href="/src/target/genscript.go?s=543:599#L11">GenArray</a></h2>
 			<pre>func GenArray(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenArray generates the NumPy text in &#39;b&#39; corresponding to an array of float point numbers
@@ -1744,7 +1747,7 @@ GenArray generates the NumPy text in &#39;b&#39; corresponding to an array of fl
 		
 			
 			
-			<h2 id="GenFuncT">func <a href="/src/target/genscript.go?s=3158:3257#L74">GenFuncT</a></h2>
+			<h2 id="GenFuncT">func <a href="/src/target/genscript.go?s=3032:3131#L74">GenFuncT</a></h2>
 			<pre>func GenFuncT(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameT, nameF <a href="/pkg/builtin/#string">string</a>, t0, tf, Δt <a href="/pkg/builtin/#float64">float64</a>, F func(t <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenFuncT generates the NumPy text in &#39;b&#39; corresponding to a time series by calling the &#39;F&#39; function
@@ -1756,7 +1759,7 @@ GenFuncT generates the NumPy text in &#39;b&#39; corresponding to a time series 
 		
 			
 			
-			<h2 id="GenIntArray">func <a href="/src/target/genscript.go?s=293:348#L2">GenIntArray</a></h2>
+			<h2 id="GenIntArray">func <a href="/src/target/genscript.go?s=290:345#L2">GenIntArray</a></h2>
 			<pre>func GenIntArray(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, u []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 GenIntArray generates the NumPy text in &#39;b&#39; corresponding to an array of integers
@@ -1768,7 +1771,7 @@ GenIntArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="GenMat">func <a href="/src/target/genscript.go?s=745:803#L19">GenMat</a></h2>
+			<h2 id="GenMat">func <a href="/src/target/genscript.go?s=706:764#L19">GenMat</a></h2>
 			<pre>func GenMat(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -1777,7 +1780,7 @@ GenIntArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="GetITout">func <a href="/src/target/postprocess.go?s=655:751#L11">GetITout</a></h2>
+			<h2 id="GetITout">func <a href="/src/target/postprocess.go?s=652:748#L11">GetITout</a></h2>
 			<pre>func GetITout(all_output_times, time_stations_out []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (I []<a href="/pkg/builtin/#int">int</a>, T []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GetITout returns indices and output times
@@ -1799,7 +1802,7 @@ Notes:
 		
 			
 			
-			<h2 id="GetMapIntSlice">func <a href="/src/target/myjson.go?s=1043:1100#L31">GetMapIntSlice</a></h2>
+			<h2 id="GetMapIntSlice">func <a href="/src/target/myjson.go?s=938:995#L31">GetMapIntSlice</a></h2>
 			<pre>func GetMapIntSlice(dict interface{}) (res map[<a href="/pkg/builtin/#int">int</a>][]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 GetMapIntSlice gets a map of slice of integers from interface (read by json)
@@ -1953,7 +1956,7 @@ IntNegOut filters out negative components in slice
 		
 			
 			
-			<h2 id="IntPrint">func <a href="/src/target/auxiliary.go?s=804:857#L21">IntPrint</a></h2>
+			<h2 id="IntPrint">func <a href="/src/target/auxiliary.go?s=606:659#L21">IntPrint</a></h2>
 			<pre>func IntPrint(a []<a href="/pkg/builtin/#int">int</a>, printfkey <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2010,7 +2013,7 @@ IntRange3 generates a slice of integers from start to stop (but not stop), afer 
 		
 			
 			
-			<h2 id="IntStat">func <a href="/src/target/stat.go?s=1716:1795#L47">IntStat</a></h2>
+			<h2 id="IntStat">func <a href="/src/target/stat.go?s=1597:1676#L51">IntStat</a></h2>
 			<pre>func IntStat(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, ints []<a href="/pkg/builtin/#int">int</a>, name <a href="/pkg/builtin/#string">string</a>) (min, max, ave, sum <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntStat generates the line for the statistics table corresponding to results collected in &#39;ints&#39;
@@ -2073,7 +2076,7 @@ Itob converts from integer to bool
 		
 			
 			
-			<h2 id="JoinKeys">func <a href="/src/target/parsing.go?s=4089:4124#L134">JoinKeys</a></h2>
+			<h2 id="JoinKeys">func <a href="/src/target/parsing.go?s=3605:3640#L134">JoinKeys</a></h2>
 			<pre>func JoinKeys(keys []<a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 JoinKeys join keys separeted by spaces
@@ -2085,7 +2088,7 @@ JoinKeys join keys separeted by spaces
 		
 			
 			
-			<h2 id="JoinKeys3">func <a href="/src/target/parsing.go?s=2114:2174#L57">JoinKeys3</a></h2>
+			<h2 id="JoinKeys3">func <a href="/src/target/parsing.go?s=1852:1912#L57">JoinKeys3</a></h2>
 			<pre>func JoinKeys3(k0, k1, k2 []<a href="/pkg/builtin/#string">string</a>, sep <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 JoinKeys3 joins keys from 3 slices into a string with sets separated by sep
@@ -2098,7 +2101,7 @@ and keys separeted by spaces
 		
 			
 			
-			<h2 id="JoinKeys4">func <a href="/src/target/parsing.go?s=3040:3104#L92">JoinKeys4</a></h2>
+			<h2 id="JoinKeys4">func <a href="/src/target/parsing.go?s=2682:2746#L92">JoinKeys4</a></h2>
 			<pre>func JoinKeys4(k0, k1, k2, k3 []<a href="/pkg/builtin/#string">string</a>, sep <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 JoinKeys4 joins keys from 4 slices into a string with sets separated by sep
@@ -2111,7 +2114,7 @@ and keys separeted by spaces
 		
 			
 			
-			<h2 id="JoinKeysPre">func <a href="/src/target/parsing.go?s=4224:4283#L139">JoinKeysPre</a></h2>
+			<h2 id="JoinKeysPre">func <a href="/src/target/parsing.go?s=3737:3796#L139">JoinKeysPre</a></h2>
 			<pre>func JoinKeysPre(prefix <a href="/pkg/builtin/#string">string</a>, keys []<a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 JoinKeysPre join keys separeted by spaces with a prefix
@@ -2123,7 +2126,7 @@ JoinKeysPre join keys separeted by spaces with a prefix
 		
 			
 			
-			<h2 id="JsonMapIntSlice">func <a href="/src/target/myjson.go?s=575:651#L15">JsonMapIntSlice</a></h2>
+			<h2 id="JsonMapIntSlice">func <a href="/src/target/myjson.go?s=530:606#L15">JsonMapIntSlice</a></h2>
 			<pre>func JsonMapIntSlice(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, indent, name <a href="/pkg/builtin/#string">string</a>, m *map[<a href="/pkg/builtin/#int">int</a>][]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 JsonMapIntSlice writes to buffer a JSON string representation of a map of slice of integers
@@ -2135,7 +2138,7 @@ JsonMapIntSlice writes to buffer a JSON string representation of a map of slice 
 		
 			
 			
-			<h2 id="Keycode">func <a href="/src/target/parsing.go?s=365:434#L3">Keycode</a></h2>
+			<h2 id="Keycode">func <a href="/src/target/parsing.go?s=362:431#L3">Keycode</a></h2>
 			<pre>func Keycode(String <a href="/pkg/builtin/#string">string</a>, Type <a href="/pkg/builtin/#string">string</a>) (keycode <a href="/pkg/builtin/#string">string</a>, found <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 Keycode extracts a keycode from a string such as &#34;!typeA:keycodeA !typeB:keycodeB!typeC:keycodeC&#34;
@@ -2149,7 +2152,7 @@ Keycode extracts a keycode from a string such as &#34;!typeA:keycodeA !typeB:key
 		
 			
 			
-			<h2 id="Keycodes">func <a href="/src/target/parsing.go?s=1375:1423#L34">Keycodes</a></h2>
+			<h2 id="Keycodes">func <a href="/src/target/parsing.go?s=1208:1256#L34">Keycodes</a></h2>
 			<pre>func Keycodes(String <a href="/pkg/builtin/#string">string</a>) (keycodes []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Keycodes extracts keys from a keycode (extra) string
@@ -2220,7 +2223,7 @@ LocGlobMapsM is the same as LocGlobMaps but using a map for excludedkeys
 		
 			
 			
-			<h2 id="OpenAndParseJson">func <a href="/src/target/myjson.go?s=1985:2060#L61">OpenAndParseJson</a></h2>
+			<h2 id="OpenAndParseJson">func <a href="/src/target/myjson.go?s=1651:1726#L61">OpenAndParseJson</a></h2>
 			<pre>func OpenAndParseJson(results interface{}, filepath, ext <a href="/pkg/builtin/#string">string</a>) (b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
 			<p>
 OpenAndParseJson opens and parse a json text file
@@ -2268,7 +2271,7 @@ PanicSimple panicks without calling CallerInfo
 		
 			
 			
-			<h2 id="ParseE">func <a href="/src/target/evalexpr.go?s=667:709#L22">ParseE</a></h2>
+			<h2 id="ParseE">func <a href="/src/target/evalexpr.go?s=588:630#L22">ParseE</a></h2>
 			<pre>func ParseE(expr <a href="/pkg/builtin/#string">string</a>) (<a href="/pkg/go/ast/">ast</a>.<a href="/pkg/go/ast/#Expr">Expr</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ParseE will parse an expression.
@@ -2552,7 +2555,7 @@ PrintTime prints simulation time (long format)
 		
 			
 			
-			<h2 id="ProfCPU">func <a href="/src/target/profiling.go?s=524:581#L9">ProfCPU</a></h2>
+			<h2 id="ProfCPU">func <a href="/src/target/profiling.go?s=512:569#L9">ProfCPU</a></h2>
 			<pre>func ProfCPU(dirout, filename <a href="/pkg/builtin/#string">string</a>, silent <a href="/pkg/builtin/#bool">bool</a>) func()</pre>
 			<p>
 ProfCPU activates CPU profiling
@@ -2566,7 +2569,7 @@ ProfCPU activates CPU profiling
 		
 			
 			
-			<h2 id="ProfMEM">func <a href="/src/target/profiling.go?s=1127:1184#L31">ProfMEM</a></h2>
+			<h2 id="ProfMEM">func <a href="/src/target/profiling.go?s=1040:1097#L31">ProfMEM</a></h2>
 			<pre>func ProfMEM(dirout, filename <a href="/pkg/builtin/#string">string</a>, silent <a href="/pkg/builtin/#bool">bool</a>) func()</pre>
 			<p>
 ProfMEM activates memory profiling
@@ -2690,7 +2693,7 @@ Sign function
 		
 			
 			
-			<h2 id="SortQuadruples">func <a href="/src/target/sorting.go?s=3687:3774#L144">SortQuadruples</a></h2>
+			<h2 id="SortQuadruples">func <a href="/src/target/sorting.go?s=3375:3462#L148">SortQuadruples</a></h2>
 			<pre>func SortQuadruples(i []<a href="/pkg/builtin/#int">int</a>, x, y, z []<a href="/pkg/builtin/#float64">float64</a>, by <a href="/pkg/builtin/#string">string</a>) (I []<a href="/pkg/builtin/#int">int</a>, X, Y, Z []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SortQuadruples sorts i, x, y, and z by &#34;i&#34;, &#34;x&#34;, &#34;y&#34;, or &#34;z&#34;
@@ -2704,7 +2707,7 @@ SortQuadruples sorts i, x, y, and z by &#34;i&#34;, &#34;x&#34;, &#34;y&#34;, or
 		
 			
 			
-			<h2 id="SplitKeys">func <a href="/src/target/parsing.go?s=4474:4510#L150">SplitKeys</a></h2>
+			<h2 id="SplitKeys">func <a href="/src/target/parsing.go?s=3949:3985#L150">SplitKeys</a></h2>
 			<pre>func SplitKeys(keys <a href="/pkg/builtin/#string">string</a>) []<a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 SplitKeys splits keys separeted by spaces
@@ -2716,7 +2719,7 @@ SplitKeys splits keys separeted by spaces
 		
 			
 			
-			<h2 id="SplitKeys3">func <a href="/src/target/parsing.go?s=2457:2506#L70">SplitKeys3</a></h2>
+			<h2 id="SplitKeys3">func <a href="/src/target/parsing.go?s=2162:2211#L70">SplitKeys3</a></h2>
 			<pre>func SplitKeys3(res <a href="/pkg/builtin/#string">string</a>) (k0, k1, k2 []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SplitKeys3 splits a string with three sets of keys separated by comma
@@ -2728,7 +2731,7 @@ SplitKeys3 splits a string with three sets of keys separated by comma
 		
 			
 			
-			<h2 id="SplitKeys4">func <a href="/src/target/parsing.go?s=3471:3524#L109">SplitKeys4</a></h2>
+			<h2 id="SplitKeys4">func <a href="/src/target/parsing.go?s=3065:3118#L109">SplitKeys4</a></h2>
 			<pre>func SplitKeys4(res <a href="/pkg/builtin/#string">string</a>) (k0, k1, k2, k3 []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SplitKeys4 splits a string with four sets of keys separated by comma
@@ -2776,7 +2779,7 @@ SrampD2 returns the second derivative of Sramp
 		
 			
 			
-			<h2 id="StatFooter">func <a href="/src/target/stat.go?s=837:881#L19">StatFooter</a></h2>
+			<h2 id="StatFooter">func <a href="/src/target/stat.go?s=789:833#L19">StatFooter</a></h2>
 			<pre>func StatFooter(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, lines <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 StatFooter returns the horizontal line closing the statistics table
@@ -2788,7 +2791,7 @@ StatFooter returns the horizontal line closing the statistics table
 		
 			
 			
-			<h2 id="StatHeader">func <a href="/src/target/stat.go?s=320:364#L4">StatHeader</a></h2>
+			<h2 id="StatHeader">func <a href="/src/target/stat.go?s=314:358#L4">StatHeader</a></h2>
 			<pre>func StatHeader(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, lines <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 StatHeader returns the header of a statistics table with:
@@ -2814,7 +2817,19 @@ Str2Dbl converts a slice of strings to a slice of doubles (float64)
 		
 			
 			
-			<h2 id="StrBoolMapSort">func <a href="/src/target/sorting.go?s=4694:4755#L190">StrBoolMapSort</a></h2>
+			<h2 id="StrAssert">func <a href="/src/target/testing.go?s=1727:1754#L74">StrAssert</a></h2>
+			<pre>func StrAssert(a, b <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+StrAssert asserts that a is equal to b (strings)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StrBoolMapSort">func <a href="/src/target/sorting.go?s=4257:4318#L199">StrBoolMapSort</a></h2>
 			<pre>func StrBoolMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2823,7 +2838,7 @@ Str2Dbl converts a slice of strings to a slice of doubles (float64)
 		
 			
 			
-			<h2 id="StrBoolMapSortSplit">func <a href="/src/target/sorting.go?s=5683:5769#L231">StrBoolMapSortSplit</a></h2>
+			<h2 id="StrBoolMapSortSplit">func <a href="/src/target/sorting.go?s=5126:5212#L240">StrBoolMapSortSplit</a></h2>
 			<pre>func StrBoolMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 			
@@ -2832,7 +2847,7 @@ Str2Dbl converts a slice of strings to a slice of doubles (float64)
 		
 			
 			
-			<h2 id="StrDblMapSort">func <a href="/src/target/sorting.go?s=4457:4520#L179">StrDblMapSort</a></h2>
+			<h2 id="StrDblMapSort">func <a href="/src/target/sorting.go?s=4050:4113#L188">StrDblMapSort</a></h2>
 			<pre>func StrDblMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2841,7 +2856,7 @@ Str2Dbl converts a slice of strings to a slice of doubles (float64)
 		
 			
 			
-			<h2 id="StrDblMapSortSplit">func <a href="/src/target/sorting.go?s=5300:5391#L216">StrDblMapSortSplit</a></h2>
+			<h2 id="StrDblMapSortSplit">func <a href="/src/target/sorting.go?s=4788:4879#L225">StrDblMapSortSplit</a></h2>
 			<pre>func StrDblMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -2850,7 +2865,7 @@ Str2Dbl converts a slice of strings to a slice of doubles (float64)
 		
 			
 			
-			<h2 id="StrDblsMapAppend">func <a href="/src/target/mapops.go?s=665:737#L10">StrDblsMapAppend</a></h2>
+			<h2 id="StrDblsMapAppend">func <a href="/src/target/mapops.go?s=638:710#L10">StrDblsMapAppend</a></h2>
 			<pre>func StrDblsMapAppend(m *map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, key <a href="/pkg/builtin/#string">string</a>, item <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StrDblsMapAppend appends a new item to a map of slice.
@@ -2878,7 +2893,7 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
-			<h2 id="StrIntMapSort">func <a href="/src/target/sorting.go?s=4224:4283#L168">StrIntMapSort</a></h2>
+			<h2 id="StrIntMapSort">func <a href="/src/target/sorting.go?s=3847:3906#L177">StrIntMapSort</a></h2>
 			<pre>func StrIntMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2887,7 +2902,7 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
-			<h2 id="StrIntMapSortSplit">func <a href="/src/target/sorting.go?s=4929:5012#L201">StrIntMapSortSplit</a></h2>
+			<h2 id="StrIntMapSortSplit">func <a href="/src/target/sorting.go?s=4462:4545#L210">StrIntMapSortSplit</a></h2>
 			<pre>func StrIntMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -2908,7 +2923,7 @@ StrVals allocates a slice of strings with size==n, filled with val
 		
 			
 			
-			<h2 id="TTitle">func <a href="/src/target/testing.go?s=1708:1733#L74">TTitle</a></h2>
+			<h2 id="TTitle">func <a href="/src/target/testing.go?s=1933:1958#L85">TTitle</a></h2>
 			<pre>func TTitle(title <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 TTitle returns the Test Title
@@ -3028,7 +3043,7 @@ WriteFileVD writes data to a new file (and shows message: file written), after c
 		
 			
 			
-			<h2 id="WriteIntSlice">func <a href="/src/target/myjson.go?s=282:326#L3">WriteIntSlice</a></h2>
+			<h2 id="WriteIntSlice">func <a href="/src/target/myjson.go?s=276:320#L3">WriteIntSlice</a></h2>
 			<pre>func WriteIntSlice(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, v []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 WriteIntSlice writes to buffer a slice of integers
@@ -3054,7 +3069,7 @@ this script if show == true
 		
 			
 			
-			<h2 id="Quadruple">type <a href="/src/target/sorting.go?s=932:1009#L36">Quadruple</a></h2>
+			<h2 id="Quadruple">type <a href="/src/target/sorting.go?s=845:910#L36">Quadruple</a></h2>
 			<pre>type Quadruple struct {
     I <a href="/pkg/builtin/#int">int</a>
     X <a href="/pkg/builtin/#float64">float64</a>
@@ -3080,7 +3095,7 @@ Quadruple helps to sort a quadruple of 1 int and 3 float64s
 		
 			
 			
-			<h2 id="Quadruples">type <a href="/src/target/sorting.go?s=1050:1078#L44">Quadruples</a></h2>
+			<h2 id="Quadruples">type <a href="/src/target/sorting.go?s=951:979#L44">Quadruples</a></h2>
 			<pre>type Quadruples []*<a href="#Quadruple">Quadruple</a></pre>
 			<p>
 Quadruples helps to sort quadruples
@@ -3097,7 +3112,7 @@ Quadruples helps to sort quadruples
 
 			
 				
-				<h3 id="BuildQuadruples">func <a href="/src/target/sorting.go?s=1207:1270#L48">BuildQuadruples</a></h3>
+				<h3 id="BuildQuadruples">func <a href="/src/target/sorting.go?s=1108:1171#L48">BuildQuadruples</a></h3>
 				<pre>func BuildQuadruples(i []<a href="/pkg/builtin/#int">int</a>, x, y, z []<a href="/pkg/builtin/#float64">float64</a>) (q <a href="#Quadruples">Quadruples</a>)</pre>
 				<p>
 Init initialise Quadruples with i, x, y, and z
@@ -3111,7 +3126,7 @@ Init initialise Quadruples with i, x, y, and z
 
 			
 				
-				<h3 id="Quadruples.I">func (Quadruples) <a href="/src/target/sorting.go?s=1816:1849#L76">I</a></h3>
+				<h3 id="Quadruples.I">func (Quadruples) <a href="/src/target/sorting.go?s=1594:1627#L76">I</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) I() (i []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 I returns the &#39;i&#39; in quadruples
@@ -3122,7 +3137,7 @@ I returns the &#39;i&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Len">func (Quadruples) <a href="/src/target/sorting.go?s=2545:2574#L112">Len</a></h3>
+				<h3 id="Quadruples.Len">func (Quadruples) <a href="/src/target/sorting.go?s=2251:2280#L112">Len</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Len() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 Len returns the length of Quadruples
@@ -3133,7 +3148,7 @@ Len returns the length of Quadruples
 				
 			
 				
-				<h3 id="Quadruples.String">func (Quadruples) <a href="/src/target/sorting.go?s=2745:2780#L118">String</a></h3>
+				<h3 id="Quadruples.String">func (Quadruples) <a href="/src/target/sorting.go?s=2451:2486#L118">String</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 String returns the string representation of Quadruples
@@ -3144,7 +3159,7 @@ String returns the string representation of Quadruples
 				
 			
 				
-				<h3 id="Quadruples.Swap">func (Quadruples) <a href="/src/target/sorting.go?s=2623:2657#L115">Swap</a></h3>
+				<h3 id="Quadruples.Swap">func (Quadruples) <a href="/src/target/sorting.go?s=2329:2363#L115">Swap</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Swap(i, j <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Swap swaps two quadruples
@@ -3155,7 +3170,7 @@ Swap swaps two quadruples
 				
 			
 				
-				<h3 id="Quadruples.X">func (Quadruples) <a href="/src/target/sorting.go?s=1991:2028#L85">X</a></h3>
+				<h3 id="Quadruples.X">func (Quadruples) <a href="/src/target/sorting.go?s=1751:1788#L85">X</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) X() (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 X returns the &#39;x&#39; in quadruples
@@ -3166,7 +3181,7 @@ X returns the &#39;x&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Y">func (Quadruples) <a href="/src/target/sorting.go?s=2174:2211#L94">Y</a></h3>
+				<h3 id="Quadruples.Y">func (Quadruples) <a href="/src/target/sorting.go?s=1916:1953#L94">Y</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Y() (y []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Y returns the &#39;y&#39; in quadruples
@@ -3177,7 +3192,7 @@ Y returns the &#39;y&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Z">func (Quadruples) <a href="/src/target/sorting.go?s=2357:2394#L103">Z</a></h3>
+				<h3 id="Quadruples.Z">func (Quadruples) <a href="/src/target/sorting.go?s=2081:2118#L103">Z</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Z() (z []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Z returns the &#39;z&#39; in quadruples
@@ -3190,7 +3205,7 @@ Z returns the &#39;z&#39; in quadruples
 		
 			
 			
-			<h2 id="QuadruplesByI">type <a href="/src/target/sorting.go?s=2930:2970#L127">QuadruplesByI</a></h2>
+			<h2 id="QuadruplesByI">type <a href="/src/target/sorting.go?s=2618:2657#L127">QuadruplesByI</a></h2>
 			<pre>type QuadruplesByI struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by I
@@ -3209,7 +3224,7 @@ Sort Quadruples by I
 
 			
 				
-				<h3 id="QuadruplesByI.Less">func (QuadruplesByI) <a href="/src/target/sorting.go?s=2971:3013#L128">Less</a></h3>
+				<h3 id="QuadruplesByI.Less">func (QuadruplesByI) <a href="/src/target/sorting.go?s=2659:2701#L129">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByI">QuadruplesByI</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -3219,7 +3234,7 @@ Sort Quadruples by I
 		
 			
 			
-			<h2 id="QuadruplesByX">type <a href="/src/target/sorting.go?s=3088:3128#L131">QuadruplesByX</a></h2>
+			<h2 id="QuadruplesByX">type <a href="/src/target/sorting.go?s=2776:2815#L132">QuadruplesByX</a></h2>
 			<pre>type QuadruplesByX struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by X
@@ -3238,7 +3253,7 @@ Sort Quadruples by X
 
 			
 				
-				<h3 id="QuadruplesByX.Less">func (QuadruplesByX) <a href="/src/target/sorting.go?s=3129:3171#L132">Less</a></h3>
+				<h3 id="QuadruplesByX.Less">func (QuadruplesByX) <a href="/src/target/sorting.go?s=2817:2859#L134">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByX">QuadruplesByX</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -3248,7 +3263,7 @@ Sort Quadruples by X
 		
 			
 			
-			<h2 id="QuadruplesByY">type <a href="/src/target/sorting.go?s=3246:3286#L135">QuadruplesByY</a></h2>
+			<h2 id="QuadruplesByY">type <a href="/src/target/sorting.go?s=2934:2973#L137">QuadruplesByY</a></h2>
 			<pre>type QuadruplesByY struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by Y
@@ -3267,7 +3282,7 @@ Sort Quadruples by Y
 
 			
 				
-				<h3 id="QuadruplesByY.Less">func (QuadruplesByY) <a href="/src/target/sorting.go?s=3287:3329#L136">Less</a></h3>
+				<h3 id="QuadruplesByY.Less">func (QuadruplesByY) <a href="/src/target/sorting.go?s=2975:3017#L139">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByY">QuadruplesByY</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -3277,7 +3292,7 @@ Sort Quadruples by Y
 		
 			
 			
-			<h2 id="QuadruplesByZ">type <a href="/src/target/sorting.go?s=3404:3444#L139">QuadruplesByZ</a></h2>
+			<h2 id="QuadruplesByZ">type <a href="/src/target/sorting.go?s=3092:3131#L142">QuadruplesByZ</a></h2>
 			<pre>type QuadruplesByZ struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by Z
@@ -3296,7 +3311,7 @@ Sort Quadruples by Z
 
 			
 				
-				<h3 id="QuadruplesByZ.Less">func (QuadruplesByZ) <a href="/src/target/sorting.go?s=3445:3487#L140">Less</a></h3>
+				<h3 id="QuadruplesByZ.Less">func (QuadruplesByZ) <a href="/src/target/sorting.go?s=3133:3175#L144">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByZ">QuadruplesByZ</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -3306,7 +3321,7 @@ Sort Quadruples by Z
 		
 			
 			
-			<h2 id="RTEhandler">type <a href="/src/target/rterrors.go?s=205:239#L1">RTEhandler</a></h2>
+			<h2 id="RTEhandler">type <a href="/src/target/rterrors.go?s=202:236#L1">RTEhandler</a></h2>
 			<pre>type RTEhandler func() (stop <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 
@@ -3345,7 +3360,7 @@ ReadLinesCallback is used in ReadLines to process line by line during reading of
 		
 			
 			
-			<h2 id="XYreader">type <a href="/src/target/xyreader.go?s=272:423#L2">XYreader</a></h2>
+			<h2 id="XYreader">type <a href="/src/target/xyreader.go?s=269:414#L2">XYreader</a></h2>
 			<pre>type XYreader struct {
     X []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// X   [n]: n=number of data rows</span>
     Y [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// Y[m][n]: m=number of y columns, n=number of data rows</span>
@@ -3367,7 +3382,7 @@ XYreader holds data for reading X and Y values from a file
 
 			
 				
-				<h3 id="XYreader.ReadFile">func (*XYreader) <a href="/src/target/xyreader.go?s=470:522#L8">ReadFile</a></h3>
+				<h3 id="XYreader.ReadFile">func (*XYreader) <a href="/src/target/xyreader.go?s=461:513#L8">ReadFile</a></h3>
 				<pre>func (o *<a href="#XYreader">XYreader</a>) ReadFile(fn <a href="/pkg/builtin/#string">string</a>) (oserr <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ReadFile reads X and Y values from a file
@@ -3380,7 +3395,7 @@ ReadFile reads X and Y values from a file
 		
 			
 			
-			<h2 id="XYwriter">type <a href="/src/target/xywriter.go?s=392:464#L6">XYwriter</a></h2>
+			<h2 id="XYwriter">type <a href="/src/target/xywriter.go?s=386:449#L6">XYwriter</a></h2>
 			<pre>type XYwriter struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -3401,7 +3416,7 @@ XYwriter holds data to write a file with X and Y values
 
 			
 				
-				<h3 id="XYwriter.Save">func (*XYwriter) <a href="/src/target/xywriter.go?s=1452:1486#L56">Save</a></h3>
+				<h3 id="XYwriter.Save">func (*XYwriter) <a href="/src/target/xywriter.go?s=1242:1276#L56">Save</a></h3>
 				<pre>func (w *<a href="#XYwriter">XYwriter</a>) Save(fn <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 Save save a file with X and Y values
@@ -3412,7 +3427,7 @@ Save save a file with X and Y values
 				
 			
 				
-				<h3 id="XYwriter.Write">func (*XYwriter) <a href="/src/target/xywriter.go?s=509:570#L13">Write</a></h3>
+				<h3 id="XYwriter.Write">func (*XYwriter) <a href="/src/target/xywriter.go?s=494:555#L13">Write</a></h3>
 				<pre>func (w *<a href="#XYwriter">XYwriter</a>) Write(x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, Yc <a href="#Ycorrect">Ycorrect</a>)</pre>
 				<p>
 Write writes a file with X and Y values
@@ -3425,7 +3440,7 @@ Write writes a file with X and Y values
 		
 			
 			
-			<h2 id="Ycorrect">type <a href="/src/target/xywriter.go?s=289:331#L3">Ycorrect</a></h2>
+			<h2 id="Ycorrect">type <a href="/src/target/xywriter.go?s=283:325#L3">Ycorrect</a></h2>
 			<pre>type Ycorrect func(y []<a href="/pkg/builtin/#float64">float64</a>, x <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Ycorrect is a callback function used to calculate correct Y values
@@ -3486,33 +3501,34 @@ Ycorrect is a callback function used to calculate correct Y values
 <br /><br />
 <hr>
 <pre class="copyright">
-Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Dorival M Pedroso nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 </pre><!-- copyright -->
 </div><!-- footer -->
 </body>

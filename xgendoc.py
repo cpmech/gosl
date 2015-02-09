@@ -31,12 +31,11 @@ pkgs = [
     ("tsr", "Tensor algebra and calculus"),
     ("utl", "Utilities"),
     ("vtk", "3D visualisation with VTK"),
-    ("web", "Web server helpers"),
 ]
 
 odir  = 'doc/'
 idxfn = odir+'index.html'
-licen = open('LICENSE.txt', 'r').read()
+licen = open('LICENSE', 'r').read()
 
 def header(title):
     return """<html>
@@ -74,7 +73,7 @@ Cmd('echo "<h2 id=\\"pkg-index\\">Index</h2>\n<div id=\\"manual-nav\\">\n<dl>" >
 for pkg in pkgs:
     fn = odir+'xx'+pkg[0]+'.html'
     Cmd('echo "'+pkgheader(pkg)+'" > '+fn)
-    Cmd('godoc -html code.google.com/p/gosl/'+pkg[0]+' >> '+fn)
+    Cmd('godoc -html github.com/cpmech/gosl/'+pkg[0]+' >> '+fn)
     Cmd('echo "'+footer()+'" >> '+fn)
     Cmd('echo "'+pkgitem(pkg)+'" >> '+idxfn)
 

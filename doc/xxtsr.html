@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>GoSL &ndash; package tsr</title>
+<title>Gosl &ndash; package tsr</title>
 <link type="text/css" rel="stylesheet" href="static/style.css">
 <script type="text/javascript" src="static/godocs.js"></script>
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>GoSL &ndash; <b>tsr</b> &ndash; Tensor algebra and calculus</h1>
+<div id="page"><h1>Gosl &ndash; <b>tsr</b> &ndash; Tensor algebra and calculus</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -29,7 +29,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "code.google.com/p/gosl/tsr"</code></dd>
+			<dd><code>import "github.com/cpmech/gosl/tsr"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -472,9 +472,6 @@ tsr implements routines to conduct tensor operations
 					
 					<dd>&nbsp; &nbsp; <a href="#IsoFun.String">func (o *IsoFun) String() (l string)</a></dd>
 				
-					
-					<dd>&nbsp; &nbsp; <a href="#IsoFun.View">func (o *IsoFun) View(l float64, λ []float64, grads bool, gradsFtol float64, extraconf func(is *vtk.IsoSurf), args ...interface{})</a></dd>
-				
 			
 				
 				<dd><a href="#NcteM">type NcteM</a></dd>
@@ -513,31 +510,31 @@ tsr implements routines to conduct tensor operations
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="/src/code.google.com/p/gosl/tsr/contmech.go">contmech.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/contmech.go">contmech.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/eigenprojs.go">eigenprojs.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/eigenprojs.go">eigenprojs.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/fcritcoef.go">fcritcoef.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/fcritcoef.go">fcritcoef.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/generalinvs.go">generalinvs.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/generalinvs.go">generalinvs.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/invariants.go">invariants.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/invariants.go">invariants.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/isofun.go">isofun.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/isofun.go">isofun.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/mandelops.go">mandelops.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/mandelops.go">mandelops.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/nonctem.go">nonctem.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/nonctem.go">nonctem.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/octahedral.go">octahedral.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/octahedral.go">octahedral.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/operators.go">operators.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/operators.go">operators.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/smpinvsV1.go">smpinvsV1.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/smpinvsV1.go">smpinvsV1.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/smpinvsV2.go">smpinvsV2.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/smpinvsV2.go">smpinvsV2.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/tsr/tensor.go">tensor.go</a>
+				<a href="/src/github.com/cpmech/gosl/tsr/tensor.go">tensor.go</a>
 			
 			</span>
 			</p>
@@ -701,7 +698,7 @@ Add adds two second order tensors according to:
 		
 			
 			
-			<h2 id="Alloc2">func <a href="/src/target/tensor.go?s=4025:4059#L96">Alloc2</a></h2>
+			<h2 id="Alloc2">func <a href="/src/target/tensor.go?s=3809:3843#L97">Alloc2</a></h2>
 			<pre>func Alloc2() (tensor [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Alloc2 allocates a 3x3 2nd order tensor
@@ -713,7 +710,7 @@ Alloc2 allocates a 3x3 2nd order tensor
 		
 			
 			
-			<h2 id="Alloc4">func <a href="/src/target/tensor.go?s=4231:4269#L105">Alloc4</a></h2>
+			<h2 id="Alloc4">func <a href="/src/target/tensor.go?s=3997:4035#L106">Alloc4</a></h2>
 			<pre>func Alloc4() (tensor [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Alloc4 allocates a 3x3x3x3 4th order tensor
@@ -725,7 +722,7 @@ Alloc4 allocates a 3x3x3x3 4th order tensor
 		
 			
 			
-			<h2 id="AlmansiStrain">func <a href="/src/target/contmech.go?s=1370:1407#L41">AlmansiStrain</a></h2>
+			<h2 id="AlmansiStrain">func <a href="/src/target/contmech.go?s=1169:1206#L41">AlmansiStrain</a></h2>
 			<pre>func AlmansiStrain(e, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Eulerian or Almansi strain tensor: e := 0.5 * (I - inv(F)^t * inv(F))
@@ -738,7 +735,7 @@ Symmetric
 		
 			
 			
-			<h2 id="CauchyToPK1">func <a href="/src/target/contmech.go?s=2058:2111#L68">CauchyToPK1</a></h2>
+			<h2 id="CauchyToPK1">func <a href="/src/target/contmech.go?s=1713:1766#L68">CauchyToPK1</a></h2>
 			<pre>func CauchyToPK1(P, σ, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cauchy stress =&gt; first Piola-Kirchhoff: P := σ * inv(F)^t * J
@@ -750,7 +747,7 @@ Cauchy stress =&gt; first Piola-Kirchhoff: P := σ * inv(F)^t * J
 		
 			
 			
-			<h2 id="CauchyToPK2">func <a href="/src/target/contmech.go?s=2724:2777#L92">CauchyToPK2</a></h2>
+			<h2 id="CauchyToPK2">func <a href="/src/target/contmech.go?s=2265:2318#L92">CauchyToPK2</a></h2>
 			<pre>func CauchyToPK2(S, σ, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cauchy stress =&gt; second Piola-Kirchhoff: S := inv(F) * σ * inv(F)^t * J
@@ -804,7 +801,7 @@ Dev returns the second order deviatoric tensor
 		
 			
 			
-			<h2 id="GenInvs">func <a href="/src/target/generalinvs.go?s=801:867#L19">GenInvs</a></h2>
+			<h2 id="GenInvs">func <a href="/src/target/generalinvs.go?s=748:814#L20">GenInvs</a></h2>
 			<pre>func GenInvs(λ, n []<a href="/pkg/builtin/#float64">float64</a>, a <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 GenInvs returns the SMP invariants
@@ -818,7 +815,7 @@ GenInvs returns the SMP invariants
 		
 			
 			
-			<h2 id="GenInvsDeriv1">func <a href="/src/target/generalinvs.go?s=2354:2469#L69">GenInvsDeriv1</a></h2>
+			<h2 id="GenInvsDeriv1">func <a href="/src/target/generalinvs.go?s=2147:2262#L70">GenInvsDeriv1</a></h2>
 			<pre>func GenInvsDeriv1(dpdλ, dqdλ []<a href="/pkg/builtin/#float64">float64</a>, λ, n []<a href="/pkg/builtin/#float64">float64</a>, dndλ [][]<a href="/pkg/builtin/#float64">float64</a>, a <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 GenInvsDeriv1 computes the first order derivatives of p and q w.r.t λ (shifted eigenvalues)
@@ -832,7 +829,7 @@ GenInvsDeriv1 computes the first order derivatives of p and q w.r.t λ (shifted 
 		
 			
 			
-			<h2 id="GenInvsDeriv2">func <a href="/src/target/generalinvs.go?s=3502:3654#L104">GenInvsDeriv2</a></h2>
+			<h2 id="GenInvsDeriv2">func <a href="/src/target/generalinvs.go?s=3114:3266#L105">GenInvsDeriv2</a></h2>
 			<pre>func GenInvsDeriv2(d2pdλdλ, d2qdλdλ [][]<a href="/pkg/builtin/#float64">float64</a>, λ, n, dpdλ, dqdλ []<a href="/pkg/builtin/#float64">float64</a>, p, q <a href="/pkg/builtin/#float64">float64</a>, dndλ [][]<a href="/pkg/builtin/#float64">float64</a>, d2ndλdλ [][][]<a href="/pkg/builtin/#float64">float64</a>, a <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenInvsDeriv2 computes the second order derivatives of p and q w.r.t λ (shifted eigenvalues)
@@ -846,7 +843,7 @@ GenInvsDeriv2 computes the second order derivatives of p and q w.r.t λ (shifted
 		
 			
 			
-			<h2 id="GenTvec">func <a href="/src/target/generalinvs.go?s=1368:1400#L35">GenTvec</a></h2>
+			<h2 id="GenTvec">func <a href="/src/target/generalinvs.go?s=1260:1292#L36">GenTvec</a></h2>
 			<pre>func GenTvec(t, λ, n []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenTvec computes the t vector (stress vector on SMP via Cauchy&#39;s rule: t = λ dot n)
@@ -860,7 +857,7 @@ GenTvec computes the t vector (stress vector on SMP via Cauchy&#39;s rule: t = �
 		
 			
 			
-			<h2 id="GenTvecDeriv1">func <a href="/src/target/generalinvs.go?s=1573:1646#L43">GenTvecDeriv1</a></h2>
+			<h2 id="GenTvecDeriv1">func <a href="/src/target/generalinvs.go?s=1453:1526#L44">GenTvecDeriv1</a></h2>
 			<pre>func GenTvecDeriv1(dtdλ [][]<a href="/pkg/builtin/#float64">float64</a>, λ, n []<a href="/pkg/builtin/#float64">float64</a>, dndλ [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenTvecDeriv1 computes the first derivative dt/dλ
@@ -874,7 +871,7 @@ GenTvecDeriv1 computes the first derivative dt/dλ
 		
 			
 			
-			<h2 id="GenTvecDeriv2">func <a href="/src/target/generalinvs.go?s=1960:2061#L56">GenTvecDeriv2</a></h2>
+			<h2 id="GenTvecDeriv2">func <a href="/src/target/generalinvs.go?s=1783:1884#L57">GenTvecDeriv2</a></h2>
 			<pre>func GenTvecDeriv2(i, j, k <a href="/pkg/builtin/#int">int</a>, λ []<a href="/pkg/builtin/#float64">float64</a>, dndλ [][]<a href="/pkg/builtin/#float64">float64</a>, d2ndλdλ_ijk <a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenTvecDeriv2 computes the second derivative d²t/dλdλ
@@ -888,7 +885,7 @@ GenTvecDeriv2 computes the second derivative d²t/dλdλ
 		
 			
 			
-			<h2 id="GreenStrain">func <a href="/src/target/contmech.go?s=969:1003#L25">GreenStrain</a></h2>
+			<h2 id="GreenStrain">func <a href="/src/target/contmech.go?s=855:889#L25">GreenStrain</a></h2>
 			<pre>func GreenStrain(E, F [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Lagrangian or Green strain tensor: E := 0.5 * (Ft * F - I)
@@ -915,7 +912,7 @@ Inv computes the inverse of a second order tensor
 		
 			
 			
-			<h2 id="L2O">func <a href="/src/target/octahedral.go?s=387:442#L5">L2O</a></h2>
+			<h2 id="L2O">func <a href="/src/target/octahedral.go?s=376:431#L6">L2O</a></h2>
 			<pre>func L2O(σ1, σ2, σ3 <a href="/pkg/builtin/#float64">float64</a>) (σa, σb, σc <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 L2O converts principal values (σ1,σ2,σ3) to octahedral values (σa,σb,σc)
@@ -927,7 +924,7 @@ L2O converts principal values (σ1,σ2,σ3) to octahedral values (σa,σb,σc)
 		
 			
 			
-			<h2 id="LeftCauchyGreenDef">func <a href="/src/target/contmech.go?s=647:688#L12">LeftCauchyGreenDef</a></h2>
+			<h2 id="LeftCauchyGreenDef">func <a href="/src/target/contmech.go?s=590:631#L12">LeftCauchyGreenDef</a></h2>
 			<pre>func LeftCauchyGreenDef(b, F [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Left Cauchy-Green deformation tensor: b := F * Ft
@@ -940,7 +937,7 @@ Symmetric and positive definite: det(b) = det(F)^2
 		
 			
 			
-			<h2 id="LinStrain">func <a href="/src/target/contmech.go?s=1756:1789#L56">LinStrain</a></h2>
+			<h2 id="LinStrain">func <a href="/src/target/contmech.go?s=1468:1501#L56">LinStrain</a></h2>
 			<pre>func LinStrain(ε, F [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Linear strain tensor: ε := 0.5 * (H + Ht) = 0.5 * (F + Ft) - I
@@ -952,7 +949,7 @@ Linear strain tensor: ε := 0.5 * (H + Ht) = 0.5 * (F + Ft) - I
 		
 			
 			
-			<h2 id="M2Phi">func <a href="/src/target/fcritcoef.go?s=1749:1790#L48">M2Phi</a></h2>
+			<h2 id="M2Phi">func <a href="/src/target/fcritcoef.go?s=1610:1651#L49">M2Phi</a></h2>
 			<pre>func M2Phi(M <a href="/pkg/builtin/#float64">float64</a>, typ <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M2Phi calculates φ (friction angle at compression (degrees)) given M (max q/p at compression)
@@ -964,7 +961,7 @@ M2Phi calculates φ (friction angle at compression (degrees)) given M (max q/p a
 		
 			
 			
-			<h2 id="M2T">func <a href="/src/target/tensor.go?s=5362:5418#L147">M2T</a></h2>
+			<h2 id="M2T">func <a href="/src/target/tensor.go?s=5025:5081#L148">M2T</a></h2>
 			<pre>func M2T(mandel []<a href="/pkg/builtin/#float64">float64</a>, i, j <a href="/pkg/builtin/#int">int</a>) (component <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M2T converts Mandel components to 3x3 second order tensor components,
@@ -977,7 +974,7 @@ i.e. correcting off-diagonal values that were multiplied by SQ2
 		
 			
 			
-			<h2 id="M2TT">func <a href="/src/target/tensor.go?s=5963:6016#L168">M2TT</a></h2>
+			<h2 id="M2TT">func <a href="/src/target/tensor.go?s=5551:5604#L169">M2TT</a></h2>
 			<pre>func M2TT(mandel [][]<a href="/pkg/builtin/#float64">float64</a>, i, j, k, l <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M2TT converts Mandel components to 3x3x3x3 fourth order tensor components,
@@ -990,7 +987,7 @@ i.e. correcting all values that were multiplied by 2 or SQ2
 		
 			
 			
-			<h2 id="M_Alloc2">func <a href="/src/target/tensor.go?s=4674:4711#L120">M_Alloc2</a></h2>
+			<h2 id="M_Alloc2">func <a href="/src/target/tensor.go?s=4371:4408#L121">M_Alloc2</a></h2>
 			<pre>func M_Alloc2(ndim <a href="/pkg/builtin/#int">int</a>) (a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Alloc2 allocates a 2th order tensor in Mandel&#39;s representation (2*ndim)
@@ -1002,7 +999,7 @@ M_Alloc2 allocates a 2th order tensor in Mandel&#39;s representation (2*ndim)
 		
 			
 			
-			<h2 id="M_Alloc4">func <a href="/src/target/tensor.go?s=4867:4906#L127">M_Alloc4</a></h2>
+			<h2 id="M_Alloc4">func <a href="/src/target/tensor.go?s=4553:4592#L128">M_Alloc4</a></h2>
 			<pre>func M_Alloc4(ndim <a href="/pkg/builtin/#int">int</a>) (A [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Alloc4 allocates a 4th order tensor in Mandel&#39;s representation ((2*ndim)x(2*ndim))
@@ -1030,7 +1027,7 @@ P[2] = {P2_0, P2_1, P2_2, P2_3, P2_4, P2_5}
 		
 			
 			
-			<h2 id="M_CharInvs">func <a href="/src/target/invariants.go?s=7854:7903#L233">M_CharInvs</a></h2>
+			<h2 id="M_CharInvs">func <a href="/src/target/invariants.go?s=6825:6874#L275">M_CharInvs</a></h2>
 			<pre>func M_CharInvs(a []<a href="/pkg/builtin/#float64">float64</a>) (I1, I2, I3 <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_CharInvs computes the characteristic invariants of a 2nd order symmetric tensor
@@ -1042,7 +1039,7 @@ M_CharInvs computes the characteristic invariants of a 2nd order symmetric tenso
 		
 			
 			
-			<h2 id="M_CharInvsAndDerivs">func <a href="/src/target/invariants.go?s=8314:8403#L246">M_CharInvsAndDerivs</a></h2>
+			<h2 id="M_CharInvsAndDerivs">func <a href="/src/target/invariants.go?s=7255:7344#L288">M_CharInvsAndDerivs</a></h2>
 			<pre>func M_CharInvsAndDerivs(a []<a href="/pkg/builtin/#float64">float64</a>) (I1, I2, I3 <a href="/pkg/builtin/#float64">float64</a>, dI1da, dI2da, dI3da []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_CharInvsAndDerivs computes the characteristic invariants of a
@@ -1055,7 +1052,7 @@ M_CharInvsAndDerivs computes the characteristic invariants of a
 		
 			
 			
-			<h2 id="M_Det">func <a href="/src/target/mandelops.go?s=1041:1072#L25">M_Det</a></h2>
+			<h2 id="M_Det">func <a href="/src/target/mandelops.go?s=996:1027#L26">M_Det</a></h2>
 			<pre>func M_Det(a []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_Det calculates the determinant a 2nd order tensor represented in Mandel&#39;s basis
@@ -1067,7 +1064,7 @@ M_Det calculates the determinant a 2nd order tensor represented in Mandel&#39;s 
 		
 			
 			
-			<h2 id="M_DetDeriv">func <a href="/src/target/mandelops.go?s=1369:1400#L34">M_DetDeriv</a></h2>
+			<h2 id="M_DetDeriv">func <a href="/src/target/mandelops.go?s=1309:1340#L35">M_DetDeriv</a></h2>
 			<pre>func M_DetDeriv(d, a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_DetDeriv computes the derivative of the determinant of a w.r.t a
@@ -1081,7 +1078,7 @@ M_DetDeriv computes the derivative of the determinant of a w.r.t a
 		
 			
 			
-			<h2 id="M_Dev">func <a href="/src/target/mandelops.go?s=777:814#L16">M_Dev</a></h2>
+			<h2 id="M_Dev">func <a href="/src/target/mandelops.go?s=754:791#L17">M_Dev</a></h2>
 			<pre>func M_Dev(a []<a href="/pkg/builtin/#float64">float64</a>) (s []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Dev calculates the deviator a 2nd order tensor represented in Mandel&#39;s basis
@@ -1093,7 +1090,7 @@ M_Dev calculates the deviator a 2nd order tensor represented in Mandel&#39;s bas
 		
 			
 			
-			<h2 id="M_Dot">func <a href="/src/target/mandelops.go?s=4905:4975#L115">M_Dot</a></h2>
+			<h2 id="M_Dot">func <a href="/src/target/mandelops.go?s=4525:4595#L158">M_Dot</a></h2>
 			<pre>func M_Dot(c []<a href="/pkg/builtin/#float64">float64</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>, nonsymTol <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_Dot multiplies two second order symmetric tensors (the result may be non-symmetric)
@@ -1108,7 +1105,7 @@ An error is returned in case the result is non-symmetric
 		
 			
 			
-			<h2 id="M_Dy">func <a href="/src/target/mandelops.go?s=3571:3612#L82">M_Dy</a></h2>
+			<h2 id="M_Dy">func <a href="/src/target/mandelops.go?s=3255:3296#L125">M_Dy</a></h2>
 			<pre>func M_Dy(a, b []<a href="/pkg/builtin/#float64">float64</a>) (c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Dy returns the dyadic product between a and b
@@ -1122,7 +1119,7 @@ M_Dy returns the dyadic product between a and b
 		
 			
 			
-			<h2 id="M_DyAdd">func <a href="/src/target/mandelops.go?s=4526:4580#L103">M_DyAdd</a></h2>
+			<h2 id="M_DyAdd">func <a href="/src/target/mandelops.go?s=4176:4230#L146">M_DyAdd</a></h2>
 			<pre>func M_DyAdd(c [][]<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_DyAdd adds the dyadic product between a and b scaled by s
@@ -1236,7 +1233,7 @@ if there are zero or repeated components
 		
 			
 			
-			<h2 id="M_Inv">func <a href="/src/target/mandelops.go?s=6548:6613#L153">M_Inv</a></h2>
+			<h2 id="M_Inv">func <a href="/src/target/mandelops.go?s=6028:6093#L196">M_Inv</a></h2>
 			<pre>func M_Inv(ai, a []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (det <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_Inv computes the inverse of a 2nd order symmetric tensor &#39;a&#39;
@@ -1248,7 +1245,7 @@ M_Inv computes the inverse of a 2nd order symmetric tensor &#39;a&#39;
 		
 			
 			
-			<h2 id="M_InvDeriv">func <a href="/src/target/mandelops.go?s=7552:7596#L181">M_InvDeriv</a></h2>
+			<h2 id="M_InvDeriv">func <a href="/src/target/mandelops.go?s=6957:7001#L224">M_InvDeriv</a></h2>
 			<pre>func M_InvDeriv(d [][]<a href="/pkg/builtin/#float64">float64</a>, ai []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_InvDeriv computes the derivative of the inverse of a tensor with respect to itself
@@ -1263,7 +1260,7 @@ d  := dai/da
 		
 			
 			
-			<h2 id="M_LodeDeriv1">func <a href="/src/target/invariants.go?s=4584:4642#L166">M_LodeDeriv1</a></h2>
+			<h2 id="M_LodeDeriv1">func <a href="/src/target/invariants.go?s=3915:3973#L166">M_LodeDeriv1</a></h2>
 			<pre>func M_LodeDeriv1(dwdσ, σ, s []<a href="/pkg/builtin/#float64">float64</a>, p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_LodeDeriv1 computes the first derivative of w w.r.t σ
@@ -1277,7 +1274,7 @@ M_LodeDeriv1 computes the first derivative of w w.r.t σ
 		
 			
 			
-			<h2 id="M_LodeDeriv2">func <a href="/src/target/invariants.go?s=5135:5216#L184">M_LodeDeriv2</a></h2>
+			<h2 id="M_LodeDeriv2">func <a href="/src/target/invariants.go?s=4414:4495#L184">M_LodeDeriv2</a></h2>
 			<pre>func M_LodeDeriv2(d2wdσdσ [][]<a href="/pkg/builtin/#float64">float64</a>, dwdσ, σ, s []<a href="/pkg/builtin/#float64">float64</a>, p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_LodeDeriv2 computes the first and second derivatives of w w.r.t. σ
@@ -1291,7 +1288,7 @@ M_LodeDeriv2 computes the first and second derivatives of w w.r.t. σ
 		
 			
 			
-			<h2 id="M_Norm">func <a href="/src/target/mandelops.go?s=322:354#L3">M_Norm</a></h2>
+			<h2 id="M_Norm">func <a href="/src/target/mandelops.go?s=317:349#L4">M_Norm</a></h2>
 			<pre>func M_Norm(a []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_Norm calculates the norm of a 2nd order tensor represented in Mandel&#39;s basis
@@ -1316,7 +1313,7 @@ using Jacobi rotation.
 		
 			
 			
-			<h2 id="M_Sq">func <a href="/src/target/mandelops.go?s=1714:1739#L46">M_Sq</a></h2>
+			<h2 id="M_Sq">func <a href="/src/target/mandelops.go?s=1626:1651#L47">M_Sq</a></h2>
 			<pre>func M_Sq(b, a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Sq returns the square of a tensor in Mandel&#39;s representation
@@ -1330,7 +1327,7 @@ M_Sq returns the square of a tensor in Mandel&#39;s representation
 		
 			
 			
-			<h2 id="M_SqDeriv">func <a href="/src/target/mandelops.go?s=2362:2404#L64">M_SqDeriv</a></h2>
+			<h2 id="M_SqDeriv">func <a href="/src/target/mandelops.go?s=2234:2276#L65">M_SqDeriv</a></h2>
 			<pre>func M_SqDeriv(d [][]<a href="/pkg/builtin/#float64">float64</a>, a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_SqDeriv (Mandel) derivative of square of a tensor
@@ -1344,7 +1341,7 @@ M_SqDeriv (Mandel) derivative of square of a tensor
 		
 			
 			
-			<h2 id="M_Tr">func <a href="/src/target/mandelops.go?s=629:659#L11">M_Tr</a></h2>
+			<h2 id="M_Tr">func <a href="/src/target/mandelops.go?s=609:639#L12">M_Tr</a></h2>
 			<pre>func M_Tr(a []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_Tr calculates the trace a 2nd order tensor represented in Mandel&#39;s basis
@@ -1356,7 +1353,7 @@ M_Tr calculates the trace a 2nd order tensor represented in Mandel&#39;s basis
 		
 			
 			
-			<h2 id="M_Ts">func <a href="/src/target/invariants.go?s=6167:6205#L216">M_Ts</a></h2>
+			<h2 id="M_Ts">func <a href="/src/target/invariants.go?s=5274:5312#L216">M_Ts</a></h2>
 			<pre>func M_Ts(Ts [][]<a href="/pkg/builtin/#float64">float64</a>, s []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Ts computes Ts = Psd:(ds²/ds):Psd
@@ -1368,7 +1365,7 @@ M_Ts computes Ts = Psd:(ds²/ds):Psd
 		
 			
 			
-			<h2 id="M_devε">func <a href="/src/target/invariants.go?s=1833:1886#L50">M_devε</a></h2>
+			<h2 id="M_devε">func <a href="/src/target/invariants.go?s=1615:1668#L50">M_devε</a></h2>
 			<pre>func M_devε(e, ε []<a href="/pkg/builtin/#float64">float64</a>) (eno, εv, εd <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_devε returns the deviator of ε (e := dev(ε)), the norm of the deviator (eno) and the εv, εd invariants
@@ -1380,7 +1377,7 @@ M_devε returns the deviator of ε (e := dev(ε)), the norm of the deviator (eno
 		
 			
 			
-			<h2 id="M_devσ">func <a href="/src/target/invariants.go?s=1466:1515#L38">M_devσ</a></h2>
+			<h2 id="M_devσ">func <a href="/src/target/invariants.go?s=1282:1331#L38">M_devσ</a></h2>
 			<pre>func M_devσ(s, σ []<a href="/pkg/builtin/#float64">float64</a>) (sno, p, q <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_devσ returns the deviator of σ (s := dev(σ)), the norm of the deviator (sno) and the p, q invariants
@@ -1392,7 +1389,7 @@ M_devσ returns the deviator of σ (s := dev(σ)), the norm of the deviator (sno
 		
 			
 			
-			<h2 id="M_oct">func <a href="/src/target/octahedral.go?s=1612:1659#L43">M_oct</a></h2>
+			<h2 id="M_oct">func <a href="/src/target/octahedral.go?s=1533:1580#L44">M_oct</a></h2>
 			<pre>func M_oct(a []<a href="/pkg/builtin/#float64">float64</a>) (σa, σb, σc <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_oct computes octahedral values of a 2nd order symmetric tensor with Mandel components
@@ -1407,7 +1404,7 @@ M_oct computes octahedral values of a 2nd order symmetric tensor with Mandel com
 		
 			
 			
-			<h2 id="M_p">func <a href="/src/target/invariants.go?s=400:430#L4">M_p</a></h2>
+			<h2 id="M_p">func <a href="/src/target/invariants.go?s=397:427#L4">M_p</a></h2>
 			<pre>func M_p(σ []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_p returns the hydrostatic pressure == negative of the mean pressure == - tr(σ) / 3
@@ -1419,7 +1416,7 @@ M_p returns the hydrostatic pressure == negative of the mean pressure == - tr(σ
 		
 			
 			
-			<h2 id="M_pq_smp">func <a href="/src/target/invariants.go?s=9257:9332#L271">M_pq_smp</a></h2>
+			<h2 id="M_pq_smp">func <a href="/src/target/invariants.go?s=8122:8197#L313">M_pq_smp</a></h2>
 			<pre>func M_pq_smp(σ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_pq_smp computes p and q SMP invariants of 2nd order symmetric tensor (Mandel components)
@@ -1434,7 +1431,7 @@ M_pq_smp computes p and q SMP invariants of 2nd order symmetric tensor (Mandel c
 		
 			
 			
-			<h2 id="M_pqw">func <a href="/src/target/invariants.go?s=2835:2876#L90">M_pqw</a></h2>
+			<h2 id="M_pqw">func <a href="/src/target/invariants.go?s=2479:2520#L90">M_pqw</a></h2>
 			<pre>func M_pqw(a []<a href="/pkg/builtin/#float64">float64</a>) (p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_pqw returns p, q and w invariants
@@ -1446,7 +1443,7 @@ M_pqw returns p, q and w invariants
 		
 			
 			
-			<h2 id="M_pqws">func <a href="/src/target/invariants.go?s=4016:4061#L141">M_pqws</a></h2>
+			<h2 id="M_pqws">func <a href="/src/target/invariants.go?s=3448:3493#L141">M_pqws</a></h2>
 			<pre>func M_pqws(s, a []<a href="/pkg/builtin/#float64">float64</a>) (p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_pqws returns p, q, w invariants and the deviatoric stress s := dev(σ)
@@ -1458,7 +1455,7 @@ M_pqws returns p, q, w invariants and the deviatoric stress s := dev(σ)
 		
 			
 			
-			<h2 id="M_pqθ">func <a href="/src/target/invariants.go?s=3383:3426#L115">M_pqθ</a></h2>
+			<h2 id="M_pqθ">func <a href="/src/target/invariants.go?s=2922:2965#L115">M_pqθ</a></h2>
 			<pre>func M_pqθ(a []<a href="/pkg/builtin/#float64">float64</a>) (p, q, θ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_pqθ returns p, q and θ invariants
@@ -1470,7 +1467,7 @@ M_pqθ returns p, q and θ invariants
 		
 			
 			
-			<h2 id="M_q">func <a href="/src/target/invariants.go?s=522:552#L9">M_q</a></h2>
+			<h2 id="M_q">func <a href="/src/target/invariants.go?s=516:546#L9">M_q</a></h2>
 			<pre>func M_q(σ []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_q returns von Mises&#39; equivalent stress
@@ -1482,7 +1479,7 @@ M_q returns von Mises&#39; equivalent stress
 		
 			
 			
-			<h2 id="M_w">func <a href="/src/target/invariants.go?s=2154:2187#L62">M_w</a></h2>
+			<h2 id="M_w">func <a href="/src/target/invariants.go?s=1901:1934#L62">M_w</a></h2>
 			<pre>func M_w(a []<a href="/pkg/builtin/#float64">float64</a>) (w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_w returns the Lode invariant -1 ≤ w := sin(3θ) ≤ 1
@@ -1494,7 +1491,7 @@ M_w returns the Lode invariant -1 ≤ w := sin(3θ) ≤ 1
 		
 			
 			
-			<h2 id="M_εd">func <a href="/src/target/invariants.go?s=1010:1042#L26">M_εd</a></h2>
+			<h2 id="M_εd">func <a href="/src/target/invariants.go?s=916:948#L26">M_εd</a></h2>
 			<pre>func M_εd(ε []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_εd returns the deviatoric strain
@@ -1506,7 +1503,7 @@ M_εd returns the deviatoric strain
 		
 			
 			
-			<h2 id="M_εv">func <a href="/src/target/invariants.go?s=900:932#L21">M_εv</a></h2>
+			<h2 id="M_εv">func <a href="/src/target/invariants.go?s=809:841#L21">M_εv</a></h2>
 			<pre>func M_εv(ε []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_εv returns the volumetric strain
@@ -1518,7 +1515,7 @@ M_εv returns the volumetric strain
 		
 			
 			
-			<h2 id="M_θ">func <a href="/src/target/invariants.go?s=2697:2735#L85">M_θ</a></h2>
+			<h2 id="M_θ">func <a href="/src/target/invariants.go?s=2344:2382#L85">M_θ</a></h2>
 			<pre>func M_θ(a []<a href="/pkg/builtin/#float64">float64</a>) (θdeg <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_θ returns the Lode invariant -30° ≤ θ := asin(w) / 3 ≤ 30°
@@ -1530,7 +1527,7 @@ M_θ returns the Lode invariant -30° ≤ θ := asin(w) / 3 ≤ 30°
 		
 			
 			
-			<h2 id="Man2Ten">func <a href="/src/target/tensor.go?s=6314:6364#L180">Man2Ten</a></h2>
+			<h2 id="Man2Ten">func <a href="/src/target/tensor.go?s=5884:5934#L181">Man2Ten</a></h2>
 			<pre>func Man2Ten(tensor [][]<a href="/pkg/builtin/#float64">float64</a>, mandel []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Man2Ten returns the 3x3 2nd order tensor from its Mandel representation
@@ -1542,7 +1539,7 @@ Man2Ten returns the 3x3 2nd order tensor from its Mandel representation
 		
 			
 			
-			<h2 id="Mmatch">func <a href="/src/target/fcritcoef.go?s=589:645#L8">Mmatch</a></h2>
+			<h2 id="Mmatch">func <a href="/src/target/fcritcoef.go?s=584:640#L9">Mmatch</a></h2>
 			<pre>func Mmatch(c, φ <a href="/pkg/builtin/#float64">float64</a>, cone <a href="/pkg/builtin/#string">string</a>) (M, qy0 <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Mmatch computes M=q/p and qy0 from c and φ corresponding to the strength that would
@@ -1560,7 +1557,7 @@ Note: p, q, and M are Cambridge (conventional) quantities
 		
 			
 			
-			<h2 id="NewSmpCalcμ">func <a href="/src/target/smpinvsV2.go?s=320:376#L3">NewSmpCalcμ</a></h2>
+			<h2 id="NewSmpCalcμ">func <a href="/src/target/smpinvsV2.go?s=315:371#L4">NewSmpCalcμ</a></h2>
 			<pre>func NewSmpCalcμ(φ, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (μ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpCalcμ computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
@@ -1572,7 +1569,7 @@ NewSmpCalcμ computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
 		
 			
 			
-			<h2 id="NewSmpDerivs1">func <a href="/src/target/smpinvsV2.go?s=4882:4993#L113">NewSmpDerivs1</a></h2>
+			<h2 id="NewSmpDerivs1">func <a href="/src/target/smpinvsV2.go?s=4560:4671#L114">NewSmpDerivs1</a></h2>
 			<pre>func NewSmpDerivs1(dndλ [][]<a href="/pkg/builtin/#float64">float64</a>, dNdλ, N, F, G []<a href="/pkg/builtin/#float64">float64</a>, λ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (m <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpDerivs1 computes the first derivative and other variables
@@ -1586,7 +1583,7 @@ NewSmpDerivs1 computes the first derivative and other variables
 		
 			
 			
-			<h2 id="NewSmpDerivs2">func <a href="/src/target/smpinvsV2.go?s=5932:6059#L142">NewSmpDerivs2</a></h2>
+			<h2 id="NewSmpDerivs2">func <a href="/src/target/smpinvsV2.go?s=5487:5614#L143">NewSmpDerivs2</a></h2>
 			<pre>func NewSmpDerivs2(d2ndλdλ [][][]<a href="/pkg/builtin/#float64">float64</a>, λ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ, m <a href="/pkg/builtin/#float64">float64</a>, N, F, G, dNdλ []<a href="/pkg/builtin/#float64">float64</a>, dndλ [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpDerivs2 computes the second order derivative
@@ -1600,7 +1597,7 @@ NewSmpDerivs2 computes the second order derivative
 		
 			
 			
-			<h2 id="NewSmpDirector">func <a href="/src/target/smpinvsV2.go?s=922:992#L19">NewSmpDirector</a></h2>
+			<h2 id="NewSmpDirector">func <a href="/src/target/smpinvsV2.go?s=887:957#L20">NewSmpDirector</a></h2>
 			<pre>func NewSmpDirector(N, λ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (m <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpDirector computes the director (normal vector) of the spatially mobilised plane
@@ -1614,7 +1611,7 @@ NewSmpDirector computes the director (normal vector) of the spatially mobilised 
 		
 			
 			
-			<h2 id="NewSmpDirectorDeriv1">func <a href="/src/target/smpinvsV2.go?s=1389:1467#L29">NewSmpDirectorDeriv1</a></h2>
+			<h2 id="NewSmpDirectorDeriv1">func <a href="/src/target/smpinvsV2.go?s=1333:1411#L30">NewSmpDirectorDeriv1</a></h2>
 			<pre>func NewSmpDirectorDeriv1(dNdλ []<a href="/pkg/builtin/#float64">float64</a>, λ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpDirectorDeriv1 computes the first order derivative of the SMP director
@@ -1628,7 +1625,7 @@ NewSmpDirectorDeriv1 computes the first order derivative of the SMP director
 		
 			
 			
-			<h2 id="NewSmpDirectorDeriv2">func <a href="/src/target/smpinvsV2.go?s=1929:2009#L37">NewSmpDirectorDeriv2</a></h2>
+			<h2 id="NewSmpDirectorDeriv2">func <a href="/src/target/smpinvsV2.go?s=1858:1938#L38">NewSmpDirectorDeriv2</a></h2>
 			<pre>func NewSmpDirectorDeriv2(d2Ndλ2 []<a href="/pkg/builtin/#float64">float64</a>, λ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpDirectorDeriv2 computes the second order derivative of the SMP director
@@ -1642,7 +1639,7 @@ NewSmpDirectorDeriv2 computes the second order derivative of the SMP director
 		
 			
 			
-			<h2 id="NewSmpNormDirectorDeriv1">func <a href="/src/target/smpinvsV2.go?s=2512:2589#L51">NewSmpNormDirectorDeriv1</a></h2>
+			<h2 id="NewSmpNormDirectorDeriv1">func <a href="/src/target/smpinvsV2.go?s=2409:2486#L52">NewSmpNormDirectorDeriv1</a></h2>
 			<pre>func NewSmpNormDirectorDeriv1(dmdλ []<a href="/pkg/builtin/#float64">float64</a>, m <a href="/pkg/builtin/#float64">float64</a>, N, dNdλ []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpNormDirectorDeriv1 computes the first derivative of the norm of the SMP director
@@ -1656,7 +1653,7 @@ NewSmpNormDirectorDeriv1 computes the first derivative of the norm of the SMP di
 		
 			
 			
-			<h2 id="NewSmpNormDirectorDeriv2">func <a href="/src/target/smpinvsV2.go?s=2848:2975#L59">NewSmpNormDirectorDeriv2</a></h2>
+			<h2 id="NewSmpNormDirectorDeriv2">func <a href="/src/target/smpinvsV2.go?s=2736:2863#L60">NewSmpNormDirectorDeriv2</a></h2>
 			<pre>func NewSmpNormDirectorDeriv2(d2mdλdλ [][]<a href="/pkg/builtin/#float64">float64</a>, λ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ, m <a href="/pkg/builtin/#float64">float64</a>, N, dNdλ, d2Ndλ2, dmdλ []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpNormDirectorDeriv2 computes the second order derivative of the norm of the SMP director
@@ -1670,7 +1667,7 @@ NewSmpNormDirectorDeriv2 computes the second order derivative of the norm of the
 		
 			
 			
-			<h2 id="NewSmpUnitDirector">func <a href="/src/target/smpinvsV2.go?s=3431:3491#L74">NewSmpUnitDirector</a></h2>
+			<h2 id="NewSmpUnitDirector">func <a href="/src/target/smpinvsV2.go?s=3262:3322#L75">NewSmpUnitDirector</a></h2>
 			<pre>func NewSmpUnitDirector(n []<a href="/pkg/builtin/#float64">float64</a>, m <a href="/pkg/builtin/#float64">float64</a>, N []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpUnitDirector computed the unit normal of the SMP
@@ -1684,7 +1681,7 @@ NewSmpUnitDirector computed the unit normal of the SMP
 		
 			
 			
-			<h2 id="NewSmpUnitDirectorDeriv1">func <a href="/src/target/smpinvsV2.go?s=3680:3766#L82">NewSmpUnitDirectorDeriv1</a></h2>
+			<h2 id="NewSmpUnitDirectorDeriv1">func <a href="/src/target/smpinvsV2.go?s=3502:3588#L83">NewSmpUnitDirectorDeriv1</a></h2>
 			<pre>func NewSmpUnitDirectorDeriv1(dndλ [][]<a href="/pkg/builtin/#float64">float64</a>, m <a href="/pkg/builtin/#float64">float64</a>, N, dNdλ, dmdλ []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpUnitDirectorDeriv1 computes the first derivative of the SMP unit normal
@@ -1698,7 +1695,7 @@ NewSmpUnitDirectorDeriv1 computes the first derivative of the SMP unit normal
 		
 			
 			
-			<h2 id="NewSmpUnitDirectorDeriv2">func <a href="/src/target/smpinvsV2.go?s=4178:4312#L96">NewSmpUnitDirectorDeriv2</a></h2>
+			<h2 id="NewSmpUnitDirectorDeriv2">func <a href="/src/target/smpinvsV2.go?s=3943:4077#L97">NewSmpUnitDirectorDeriv2</a></h2>
 			<pre>func NewSmpUnitDirectorDeriv2(d2ndλdλ [][][]<a href="/pkg/builtin/#float64">float64</a>, m <a href="/pkg/builtin/#float64">float64</a>, N, dNdλ, d2Ndλ2, dmdλ, n []<a href="/pkg/builtin/#float64">float64</a>, d2mdλdλ, dndλ [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 NewSmpUnitDirectorDeriv2 computes the second order derivative of the unit director of the SMP
@@ -1713,7 +1710,7 @@ d²n[i]/dλ[j]dλ[k]
 		
 			
 			
-			<h2 id="O2L">func <a href="/src/target/octahedral.go?s=642:697#L13">O2L</a></h2>
+			<h2 id="O2L">func <a href="/src/target/octahedral.go?s=619:674#L14">O2L</a></h2>
 			<pre>func O2L(σa, σb, σc <a href="/pkg/builtin/#float64">float64</a>) (σ1, σ2, σ3 <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 O2L converts octahedral values (σa,σb,σc) to principal values (σ1,σ2,σ3)
@@ -1725,7 +1722,7 @@ O2L converts octahedral values (σa,σb,σc) to principal values (σ1,σ2,σ3)
 		
 			
 			
-			<h2 id="O2Lmat">func <a href="/src/target/octahedral.go?s=905:934#L21">O2Lmat</a></h2>
+			<h2 id="O2Lmat">func <a href="/src/target/octahedral.go?s=870:899#L22">O2Lmat</a></h2>
 			<pre>func O2Lmat() (L [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 O2Lmat computes L[I:{1,2,3}][A:{a,b,c}] = dσI/dσA =&gt; σI = L * σA
@@ -1737,7 +1734,7 @@ O2Lmat computes L[I:{1,2,3}][A:{a,b,c}] = dσI/dσA =&gt; σI = L * σA
 		
 			
 			
-			<h2 id="PK1ToCauchy">func <a href="/src/target/contmech.go?s=2383:2436#L80">PK1ToCauchy</a></h2>
+			<h2 id="PK1ToCauchy">func <a href="/src/target/contmech.go?s=1981:2034#L80">PK1ToCauchy</a></h2>
 			<pre>func PK1ToCauchy(σ, P, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 First Piola-Kirchhoff =&gt; Cauchy stress: σ := P * Ft / J
@@ -1749,7 +1746,7 @@ First Piola-Kirchhoff =&gt; Cauchy stress: σ := P * Ft / J
 		
 			
 			
-			<h2 id="PK2ToCauchy">func <a href="/src/target/contmech.go?s=3128:3181#L106">PK2ToCauchy</a></h2>
+			<h2 id="PK2ToCauchy">func <a href="/src/target/contmech.go?s=2585:2638#L106">PK2ToCauchy</a></h2>
 			<pre>func PK2ToCauchy(σ, S, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Second Piola-Kirchhoff =&gt; Cauchy stress: σ := F * S * Ft / J
@@ -1761,7 +1758,7 @@ Second Piola-Kirchhoff =&gt; Cauchy stress: σ := F * S * Ft / J
 		
 			
 			
-			<h2 id="PQW2O">func <a href="/src/target/octahedral.go?s=1152:1203#L30">PQW2O</a></h2>
+			<h2 id="PQW2O">func <a href="/src/target/octahedral.go?s=1098:1149#L31">PQW2O</a></h2>
 			<pre>func PQW2O(p, q, w <a href="/pkg/builtin/#float64">float64</a>) (σa, σb, σc <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PQW2O converts p,q,w to octahedral values (σa,σb,σc)
@@ -1773,7 +1770,7 @@ PQW2O converts p,q,w to octahedral values (σa,σb,σc)
 		
 			
 			
-			<h2 id="Phi2M">func <a href="/src/target/fcritcoef.go?s=1348:1390#L34">Phi2M</a></h2>
+			<h2 id="Phi2M">func <a href="/src/target/fcritcoef.go?s=1247:1289#L35">Phi2M</a></h2>
 			<pre>func Phi2M(φ <a href="/pkg/builtin/#float64">float64</a>, typ <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Phi2M calculates M = max q/p at compression (φ: friction angle at compression (degrees)).
@@ -1786,7 +1783,7 @@ type = {&#34;oct&#34;, &#34;cam&#34;, &#34;smp&#34;}
 		
 			
 			
-			<h2 id="PlotOct">func <a href="/src/target/octahedral.go?s=5051:5251#L119">PlotOct</a></h2>
+			<h2 id="PlotOct">func <a href="/src/target/octahedral.go?s=4706:4905#L120">PlotOct</a></h2>
 			<pre>func PlotOct(filename <a href="/pkg/builtin/#string">string</a>, σcCte, rmin, rmax <a href="/pkg/builtin/#float64">float64</a>, nr, nα <a href="/pkg/builtin/#int">int</a>, φ <a href="/pkg/builtin/#float64">float64</a>, F <a href="#Cb_F_t">Cb_F_t</a>, G <a href="#Cb_G_t">Cb_G_t</a>,
     notpolarc, simplec, only0, grads, showpts, first, last <a href="/pkg/builtin/#bool">bool</a>, ferr <a href="/pkg/builtin/#float64">float64</a>, args ...interface{})</pre>
 			<p>
@@ -1799,7 +1796,7 @@ PlotOct plots a function cross-section and gradients projections on octahedral p
 		
 			
 			
-			<h2 id="PlotRefOct">func <a href="/src/target/octahedral.go?s=4105:4157#L95">PlotRefOct</a></h2>
+			<h2 id="PlotRefOct">func <a href="/src/target/octahedral.go?s=3861:3913#L96">PlotRefOct</a></h2>
 			<pre>func PlotRefOct(φ, σc <a href="/pkg/builtin/#float64">float64</a>, withExtCircle <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 PlotRefOct plots reference failure criterions in octahedral plane:
@@ -1813,7 +1810,7 @@ PlotRefOct plots reference failure criterions in octahedral plane:
 		
 			
 			
-			<h2 id="PlotRosette">func <a href="/src/target/octahedral.go?s=1786:1857#L50">PlotRosette</a></h2>
+			<h2 id="PlotRosette">func <a href="/src/target/octahedral.go?s=1696:1767#L51">PlotRosette</a></h2>
 			<pre>func PlotRosette(r <a href="/pkg/builtin/#float64">float64</a>, full, ref <a href="/pkg/builtin/#bool">bool</a>, withtext <a href="/pkg/builtin/#bool">bool</a>, fsz <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PlotRosette plots rosette in octahedral plane
@@ -1825,7 +1822,7 @@ PlotRosette plots rosette in octahedral plane
 		
 			
 			
-			<h2 id="PullBack">func <a href="/src/target/contmech.go?s=3931:3971#L134">PullBack</a></h2>
+			<h2 id="PullBack">func <a href="/src/target/contmech.go?s=3220:3260#L134">PullBack</a></h2>
 			<pre>func PullBack(res, a, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Pull-back (type A/cov): res := push-back(a) = Ft * a * F
@@ -1837,7 +1834,7 @@ Pull-back (type A/cov): res := push-back(a) = Ft * a * F
 		
 			
 			
-			<h2 id="PullBackB">func <a href="/src/target/contmech.go?s=4724:4765#L162">PullBackB</a></h2>
+			<h2 id="PullBackB">func <a href="/src/target/contmech.go?s=3845:3886#L162">PullBackB</a></h2>
 			<pre>func PullBackB(res, a, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Pull-back (type B/contra): res := pull-back(a) = inv(F) * a * inv(F)^t
@@ -1849,7 +1846,7 @@ Pull-back (type B/contra): res := pull-back(a) = inv(F) * a * inv(F)^t
 		
 			
 			
-			<h2 id="PushForward">func <a href="/src/target/contmech.go?s=3543:3586#L120">PushForward</a></h2>
+			<h2 id="PushForward">func <a href="/src/target/contmech.go?s=2916:2959#L120">PushForward</a></h2>
 			<pre>func PushForward(res, a, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Push-forward (type A/cov): res := push-forward(a) = inv(F)^t * a * inv(F)
@@ -1861,7 +1858,7 @@ Push-forward (type A/cov): res := push-forward(a) = inv(F)^t * a * inv(F)
 		
 			
 			
-			<h2 id="PushForwardB">func <a href="/src/target/contmech.go?s=4323:4367#L148">PushForwardB</a></h2>
+			<h2 id="PushForwardB">func <a href="/src/target/contmech.go?s=3528:3572#L148">PushForwardB</a></h2>
 			<pre>func PushForwardB(res, a, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Push-forward (type B/contra): res := push-forward(a) = F * a * Ft
@@ -1886,7 +1883,7 @@ Symmetric and positive definite: det(C) = det(F)^2
 		
 			
 			
-			<h2 id="SMPderivs1">func <a href="/src/target/generalinvs.go?s=5272:5363#L145">SMPderivs1</a></h2>
+			<h2 id="SMPderivs1">func <a href="/src/target/generalinvs.go?s=4611:4702#L146">SMPderivs1</a></h2>
 			<pre>func SMPderivs1(dpdλ, dqdλ, λ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SMPderivs1 computes the 1st order derivatives of SMP invariants
@@ -1900,7 +1897,7 @@ SMPderivs1 computes the 1st order derivatives of SMP invariants
 		
 			
 			
-			<h2 id="SMPinvs">func <a href="/src/target/generalinvs.go?s=4881:4955#L135">SMPinvs</a></h2>
+			<h2 id="SMPinvs">func <a href="/src/target/generalinvs.go?s=4202:4276#L136">SMPinvs</a></h2>
 			<pre>func SMPinvs(λ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SMPinvs computes the SMP invariants, after the internal computation of the SMP unit director
@@ -1914,7 +1911,7 @@ SMPinvs computes the SMP invariants, after the internal computation of the SMP u
 		
 			
 			
-			<h2 id="ShiftedEigenvs">func <a href="/src/target/generalinvs.go?s=443:513#L6">ShiftedEigenvs</a></h2>
+			<h2 id="ShiftedEigenvs">func <a href="/src/target/generalinvs.go?s=435:505#L7">ShiftedEigenvs</a></h2>
 			<pre>func ShiftedEigenvs(λ, λbar []<a href="/pkg/builtin/#float64">float64</a>, λc, tol <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ShiftedEigenvs computes the positive and shifted eigenvalues of a second order tensor
@@ -1929,7 +1926,7 @@ Note: λbar are the eigenvalues of the tensor
 		
 			
 			
-			<h2 id="SmpCalcμ">func <a href="/src/target/smpinvsV1.go?s=284:326#L2">SmpCalcμ</a></h2>
+			<h2 id="SmpCalcμ">func <a href="/src/target/smpinvsV1.go?s=281:323#L2">SmpCalcμ</a></h2>
 			<pre>func SmpCalcμ(φ, b <a href="/pkg/builtin/#float64">float64</a>) (μ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpCalcμ computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
@@ -1941,7 +1938,7 @@ SmpCalcμ computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
 		
 			
 			
-			<h2 id="SmpCalcμNum">func <a href="/src/target/smpinvsV1.go?s=555:600#L9">SmpCalcμNum</a></h2>
+			<h2 id="SmpCalcμNum">func <a href="/src/target/smpinvsV1.go?s=552:597#L9">SmpCalcμNum</a></h2>
 			<pre>func SmpCalcμNum(φ, b <a href="/pkg/builtin/#float64">float64</a>) (μ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpCalcμNum computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
@@ -1953,7 +1950,7 @@ SmpCalcμNum computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
 		
 			
 			
-			<h2 id="SmpDerivs">func <a href="/src/target/smpinvsV1.go?s=4626:4717#L119">SmpDerivs</a></h2>
+			<h2 id="SmpDerivs">func <a href="/src/target/smpinvsV1.go?s=4305:4396#L119">SmpDerivs</a></h2>
 			<pre>func SmpDerivs(d2mdσdσ, dndσ [][]<a href="/pkg/builtin/#float64">float64</a>, dmdσ, n, σ []<a href="/pkg/builtin/#float64">float64</a>, b <a href="/pkg/builtin/#float64">float64</a>) (m <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDerivs computes the SMP director and its first order derivative. In addition, the
@@ -1966,7 +1963,7 @@ norm of the SMP director (m) and its first and second order derivatives are comp
 		
 			
 			
-			<h2 id="SmpDirector">func <a href="/src/target/smpinvsV1.go?s=1124:1168#L24">SmpDirector</a></h2>
+			<h2 id="SmpDirector">func <a href="/src/target/smpinvsV1.go?s=1097:1141#L24">SmpDirector</a></h2>
 			<pre>func SmpDirector(N, σ []<a href="/pkg/builtin/#float64">float64</a>, b <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDirector computes the director (normal vector) of the spatially mobilised plane
@@ -1980,7 +1977,7 @@ Note: σ are the shifted and positive eigenvalues of the tensor, i.e:
 		
 			
 			
-			<h2 id="SmpDirectorDeriv1">func <a href="/src/target/smpinvsV1.go?s=1326:1392#L31">SmpDirectorDeriv1</a></h2>
+			<h2 id="SmpDirectorDeriv1">func <a href="/src/target/smpinvsV1.go?s=1287:1353#L31">SmpDirectorDeriv1</a></h2>
 			<pre>func SmpDirectorDeriv1(dNdσ [][]<a href="/pkg/builtin/#float64">float64</a>, σ []<a href="/pkg/builtin/#float64">float64</a>, b <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDirectorDeriv1 computes the first order derivative of the SMP director
@@ -1992,7 +1989,7 @@ SmpDirectorDeriv1 computes the first order derivative of the SMP director
 		
 			
 			
-			<h2 id="SmpDirectorDeriv2">func <a href="/src/target/smpinvsV1.go?s=1705:1779#L44">SmpDirectorDeriv2</a></h2>
+			<h2 id="SmpDirectorDeriv2">func <a href="/src/target/smpinvsV1.go?s=1609:1683#L44">SmpDirectorDeriv2</a></h2>
 			<pre>func SmpDirectorDeriv2(i, j, k <a href="/pkg/builtin/#int">int</a>, σ []<a href="/pkg/builtin/#float64">float64</a>, b <a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDirectorDeriv2 computes the second order derivative of the SMP director
@@ -2005,7 +2002,7 @@ d²N[i]/dσ[j]dσ[k]
 		
 			
 			
-			<h2 id="SmpNormDirectorDeriv1">func <a href="/src/target/smpinvsV1.go?s=2075:2155#L54">SmpNormDirectorDeriv1</a></h2>
+			<h2 id="SmpNormDirectorDeriv1">func <a href="/src/target/smpinvsV1.go?s=1964:2044#L54">SmpNormDirectorDeriv1</a></h2>
 			<pre>func SmpNormDirectorDeriv1(dmdσ []<a href="/pkg/builtin/#float64">float64</a>, σ []<a href="/pkg/builtin/#float64">float64</a>, b <a href="/pkg/builtin/#float64">float64</a>) (m <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpNormDirectorDeriv1 computes the first derivative of the norm of the SMP director
@@ -2017,7 +2014,7 @@ SmpNormDirectorDeriv1 computes the first derivative of the norm of the SMP direc
 		
 			
 			
-			<h2 id="SmpNormDirectorDeriv2">func <a href="/src/target/smpinvsV1.go?s=2454:2548#L63">SmpNormDirectorDeriv2</a></h2>
+			<h2 id="SmpNormDirectorDeriv2">func <a href="/src/target/smpinvsV1.go?s=2325:2419#L63">SmpNormDirectorDeriv2</a></h2>
 			<pre>func SmpNormDirectorDeriv2(d2mdσdσ [][]<a href="/pkg/builtin/#float64">float64</a>, σ []<a href="/pkg/builtin/#float64">float64</a>, b, m <a href="/pkg/builtin/#float64">float64</a>, dmdσ []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpNormDirectorDeriv2 computes the second order derivative of the norm of the SMP director
@@ -2029,7 +2026,7 @@ SmpNormDirectorDeriv2 computes the second order derivative of the norm of the SM
 		
 			
 			
-			<h2 id="SmpUnitDirector">func <a href="/src/target/smpinvsV1.go?s=3177:3237#L83">SmpUnitDirector</a></h2>
+			<h2 id="SmpUnitDirector">func <a href="/src/target/smpinvsV1.go?s=2979:3039#L83">SmpUnitDirector</a></h2>
 			<pre>func SmpUnitDirector(n, σ []<a href="/pkg/builtin/#float64">float64</a>, b <a href="/pkg/builtin/#float64">float64</a>) (m <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpUnitDirector computed the unit normal of the SMP
@@ -2044,7 +2041,7 @@ m = norm(N)
 		
 			
 			
-			<h2 id="SmpUnitDirectorDeriv1">func <a href="/src/target/smpinvsV1.go?s=3501:3594#L92">SmpUnitDirectorDeriv1</a></h2>
+			<h2 id="SmpUnitDirectorDeriv1">func <a href="/src/target/smpinvsV1.go?s=3285:3378#L92">SmpUnitDirectorDeriv1</a></h2>
 			<pre>func SmpUnitDirectorDeriv1(dndσ [][]<a href="/pkg/builtin/#float64">float64</a>, σ, n []<a href="/pkg/builtin/#float64">float64</a>, b, m <a href="/pkg/builtin/#float64">float64</a>, dmdσ []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpUnitDirectorDeriv1 computes the first derivative of the SMP unit normal
@@ -2056,7 +2053,7 @@ SmpUnitDirectorDeriv1 computes the first derivative of the SMP unit normal
 		
 			
 			
-			<h2 id="SmpUnitDirectorDeriv2">func <a href="/src/target/smpinvsV1.go?s=3946:4065#L105">SmpUnitDirectorDeriv2</a></h2>
+			<h2 id="SmpUnitDirectorDeriv2">func <a href="/src/target/smpinvsV1.go?s=3673:3792#L105">SmpUnitDirectorDeriv2</a></h2>
 			<pre>func SmpUnitDirectorDeriv2(d2ndσdσ [][][]<a href="/pkg/builtin/#float64">float64</a>, σ, n, dmdσ []<a href="/pkg/builtin/#float64">float64</a>, b, m <a href="/pkg/builtin/#float64">float64</a>, d2mdσdσ, dndσ [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpUnitDirectorDeriv2 computes the second order derivative of the unit director of the SMP
@@ -2069,7 +2066,7 @@ d²n[i]/dσ[j]dσ[k]
 		
 			
 			
-			<h2 id="Ten2Man">func <a href="/src/target/tensor.go?s=7129:7179#L196">Ten2Man</a></h2>
+			<h2 id="Ten2Man">func <a href="/src/target/tensor.go?s=6594:6644#L197">Ten2Man</a></h2>
 			<pre>func Ten2Man(mandel []<a href="/pkg/builtin/#float64">float64</a>, tensor [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Ten2Man returns the Mandel representation of a 3x3 2nd order tensor
@@ -2094,7 +2091,7 @@ Tr returns the trace of a second order tensor
 		
 			
 			
-			<h2 id="Cb_F_t">type <a href="/src/target/octahedral.go?s=4802:4878#L115">Cb_F_t</a></h2>
+			<h2 id="Cb_F_t">type <a href="/src/target/octahedral.go?s=4457:4533#L116">Cb_F_t</a></h2>
 			<pre>type Cb_F_t func(A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			
 
@@ -2112,7 +2109,7 @@ Tr returns the trace of a second order tensor
 		
 			
 			
-			<h2 id="Cb_G_t">type <a href="/src/target/octahedral.go?s=4879:4961#L116">Cb_G_t</a></h2>
+			<h2 id="Cb_G_t">type <a href="/src/target/octahedral.go?s=4534:4616#L117">Cb_G_t</a></h2>
 			<pre>type Cb_G_t func(dfdA, A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			
 
@@ -2130,7 +2127,7 @@ Tr returns the trace of a second order tensor
 		
 			
 			
-			<h2 id="Cb_isofun_f">type <a href="/src/target/isofun.go?s=351:415#L6">Cb_isofun_f</a></h2>
+			<h2 id="Cb_isofun_f">type <a href="/src/target/isofun.go?s=298:362#L4">Cb_isofun_f</a></h2>
 			<pre>type Cb_isofun_f func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Callbacks
@@ -2151,7 +2148,7 @@ Callbacks
 		
 			
 			
-			<h2 id="Cb_isofun_g">type <a href="/src/target/isofun.go?s=416:493#L7">Cb_isofun_g</a></h2>
+			<h2 id="Cb_isofun_g">type <a href="/src/target/isofun.go?s=363:440#L5">Cb_isofun_g</a></h2>
 			<pre>type Cb_isofun_g func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (dfdp, dfdq <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 
@@ -2169,7 +2166,7 @@ Callbacks
 		
 			
 			
-			<h2 id="Cb_isofun_h">type <a href="/src/target/isofun.go?s=494:584#L8">Cb_isofun_h</a></h2>
+			<h2 id="Cb_isofun_h">type <a href="/src/target/isofun.go?s=441:531#L6">Cb_isofun_h</a></h2>
 			<pre>type Cb_isofun_h func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (d2fdp2, d2fdq2, d2fdpdq <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 
@@ -2187,7 +2184,7 @@ Callbacks
 		
 			
 			
-			<h2 id="IsoFun">type <a href="/src/target/isofun.go?s=646:2532#L11">IsoFun</a></h2>
+			<h2 id="IsoFun">type <a href="/src/target/isofun.go?s=593:2231#L9">IsoFun</a></h2>
 			<pre>type IsoFun struct {
 
     <span class="comment">// eigenvalues/projectors</span>
@@ -2226,7 +2223,7 @@ IsoFun handles isotropic functions and their derivatives
 
 			
 				
-				<h3 id="IsoFun.ApplyPert">func (*IsoFun) <a href="/src/target/isofun.go?s=6842:6893#L184">ApplyPert</a></h3>
+				<h3 id="IsoFun.ApplyPert">func (*IsoFun) <a href="/src/target/isofun.go?s=6223:6274#L182">ApplyPert</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) ApplyPert(A []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ApplyPert computes eigenvalues of A and applies a perturbation to avoid repeated eigenvalues
@@ -2242,7 +2239,7 @@ ApplyPert computes eigenvalues of A and applies a perturbation to avoid repeated
 				
 			
 				
-				<h3 id="IsoFun.CheckGrads">func (*IsoFun) <a href="/src/target/isofun.go?s=15927:15996#L499">CheckGrads</a></h3>
+				<h3 id="IsoFun.CheckGrads">func (*IsoFun) <a href="/src/target/isofun.go?s=12582:12651#L437">CheckGrads</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) CheckGrads(A []<a href="/pkg/builtin/#float64">float64</a>, tol, tol2 <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 CheckGrads check df/dA and d²f/dA²
@@ -2253,7 +2250,7 @@ CheckGrads check df/dA and d²f/dA²
 				
 			
 				
-				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="/src/target/isofun.go?s=18061:18105#L574">DebugOutput</a></h3>
+				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="/src/target/isofun.go?s=14328:14372#L512">DebugOutput</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) DebugOutput(princOnly <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 DebugOutput outputs debug information
@@ -2264,7 +2261,7 @@ DebugOutput outputs debug information
 				
 			
 				
-				<h3 id="IsoFun.Fa">func (*IsoFun) <a href="/src/target/isofun.go?s=7068:7146#L190">Fa</a></h3>
+				<h3 id="IsoFun.Fa">func (*IsoFun) <a href="/src/target/isofun.go?s=6443:6521#L188">Fa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Fa(A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Fa evaluates the isotropic function @ A (a second order tensor in Mandel&#39;s basis)
@@ -2275,7 +2272,7 @@ Fa evaluates the isotropic function @ A (a second order tensor in Mandel&#39;s b
 				
 			
 				
-				<h3 id="IsoFun.FindIntersect">func (*IsoFun) <a href="/src/target/isofun.go?s=10190:10312#L292">FindIntersect</a></h3>
+				<h3 id="IsoFun.FindIntersect">func (*IsoFun) <a href="/src/target/isofun.go?s=9215:9337#L290">FindIntersect</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) FindIntersect(p0, k <a href="/pkg/builtin/#float64">float64</a>, Δλ []<a href="/pkg/builtin/#float64">float64</a>, usek, debug <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (λ_at_int []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 FindIntersect find point on surface using Newton&#39;s method
@@ -2286,7 +2283,7 @@ FindIntersect find point on surface using Newton&#39;s method
 				
 			
 				
-				<h3 id="IsoFun.Fp">func (*IsoFun) <a href="/src/target/isofun.go?s=4114:4193#L99">Fp</a></h3>
+				<h3 id="IsoFun.Fp">func (*IsoFun) <a href="/src/target/isofun.go?s=3696:3775#L97">Fp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Fp(λ []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Fp evaluates the isotropic function @ λ (principal values)
@@ -2297,7 +2294,7 @@ Fp evaluates the isotropic function @ λ (principal values)
 				
 			
 				
-				<h3 id="IsoFun.Ga">func (*IsoFun) <a href="/src/target/isofun.go?s=7635:7720#L212">Ga</a></h3>
+				<h3 id="IsoFun.Ga">func (*IsoFun) <a href="/src/target/isofun.go?s=6962:7047#L210">Ga</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Ga(dfdA, A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Ga computes f and dfdA @ A (a second order tensor in Mandel&#39;s basis)
@@ -2312,7 +2309,7 @@ Ga computes f and dfdA @ A (a second order tensor in Mandel&#39;s basis)
 				
 			
 				
-				<h3 id="IsoFun.Get_bsmp">func (*IsoFun) <a href="/src/target/isofun.go?s=2547:2582#L52">Get_bsmp</a></h3>
+				<h3 id="IsoFun.Get_bsmp">func (*IsoFun) <a href="/src/target/isofun.go?s=2246:2281#L50">Get_bsmp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_bsmp() <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Accessors
@@ -2323,7 +2320,7 @@ Accessors
 				
 			
 				
-				<h3 id="IsoFun.Get_derivs_afterHa">func (*IsoFun) <a href="/src/target/isofun.go?s=9483:9542#L275">Get_derivs_afterHa</a></h3>
+				<h3 id="IsoFun.Get_derivs_afterHa">func (*IsoFun) <a href="/src/target/isofun.go?s=8553:8612#L273">Get_derivs_afterHa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_derivs_afterHa(dpdσ, dqdσ []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Get_derivs_afterHa returns the derivatives of SMP invariants after a call to HafterGa
@@ -2334,7 +2331,7 @@ Get_derivs_afterHa returns the derivatives of SMP invariants after a call to Haf
 				
 			
 				
-				<h3 id="IsoFun.Get_pq">func (*IsoFun) <a href="/src/target/isofun.go?s=2648:2688#L54">Get_pq</a></h3>
+				<h3 id="IsoFun.Get_pq">func (*IsoFun) <a href="/src/target/isofun.go?s=2355:2395#L52">Get_pq</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_pq() (p, q <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				
 				
@@ -2342,7 +2339,7 @@ Get_derivs_afterHa returns the derivatives of SMP invariants after a call to Haf
 				
 			
 				
-				<h3 id="IsoFun.Gp">func (*IsoFun) <a href="/src/target/isofun.go?s=4734:4814#L123">Gp</a></h3>
+				<h3 id="IsoFun.Gp">func (*IsoFun) <a href="/src/target/isofun.go?s=4274:4354#L121">Gp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Gp(λ []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Gp computes f and Dfdλ @ λ (principal values)
@@ -2357,7 +2354,7 @@ Notes:
 				
 			
 				
-				<h3 id="IsoFun.HafterGa">func (*IsoFun) <a href="/src/target/isofun.go?s=8422:8501#L248">HafterGa</a></h3>
+				<h3 id="IsoFun.HafterGa">func (*IsoFun) <a href="/src/target/isofun.go?s=7635:7714#L246">HafterGa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) HafterGa(d2fdAdA [][]<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 HafterGa computes d2fdada after G is called
@@ -2371,7 +2368,7 @@ HafterGa computes d2fdada after G is called
 				
 			
 				
-				<h3 id="IsoFun.HafterGp">func (*IsoFun) <a href="/src/target/isofun.go?s=5679:5737#L154">HafterGp</a></h3>
+				<h3 id="IsoFun.HafterGp">func (*IsoFun) <a href="/src/target/isofun.go?s=5147:5205#L152">HafterGp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) HafterGp(args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 HafterGp computes d2fdλdλ == dgdλ after Gp was called
@@ -2385,7 +2382,7 @@ Notes:
 				
 			
 				
-				<h3 id="IsoFun.Init">func (*IsoFun) <a href="/src/target/isofun.go?s=2763:2876#L57">Init</a></h3>
+				<h3 id="IsoFun.Init">func (*IsoFun) <a href="/src/target/isofun.go?s=2470:2583#L55">Init</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Init(a, b, β, ϵ, shift <a href="/pkg/builtin/#float64">float64</a>, ncp <a href="/pkg/builtin/#int">int</a>, ffcn <a href="#Cb_isofun_f">Cb_isofun_f</a>, gfcn <a href="#Cb_isofun_g">Cb_isofun_g</a>, hfcn <a href="#Cb_isofun_h">Cb_isofun_h</a>)</pre>
 				<p>
 Init initialises the isotropic function structure
@@ -2396,7 +2393,7 @@ Init initialises the isotropic function structure
 				
 			
 				
-				<h3 id="IsoFun.Set_bsmp">func (*IsoFun) <a href="/src/target/isofun.go?s=2599:2635#L53">Set_bsmp</a></h3>
+				<h3 id="IsoFun.Set_bsmp">func (*IsoFun) <a href="/src/target/isofun.go?s=2302:2338#L51">Set_bsmp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Set_bsmp(b <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				
 				
@@ -2404,7 +2401,7 @@ Init initialises the isotropic function structure
 				
 			
 				
-				<h3 id="IsoFun.String">func (*IsoFun) <a href="/src/target/isofun.go?s=17812:17848#L566">String</a></h3>
+				<h3 id="IsoFun.String">func (*IsoFun) <a href="/src/target/isofun.go?s=14092:14128#L504">String</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) String() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 String returns information of this object
@@ -2414,21 +2411,10 @@ String returns information of this object
 				
 				
 			
-				
-				<h3 id="IsoFun.View">func (*IsoFun) <a href="/src/target/isofun.go?s=14421:14552#L439">View</a></h3>
-				<pre>func (o *<a href="#IsoFun">IsoFun</a>) View(l <a href="/pkg/builtin/#float64">float64</a>, λ []<a href="/pkg/builtin/#float64">float64</a>, grads <a href="/pkg/builtin/#bool">bool</a>, gradsFtol <a href="/pkg/builtin/#float64">float64</a>, extraconf func(is *<a href="/pkg/code.google.com/p/gosl/vtk/">vtk</a>.<a href="/pkg/code.google.com/p/gosl/vtk/#IsoSurf">IsoSurf</a>), args ...interface{})</pre>
-				<p>
-View visualises the isosurface with VTK
-</p>
-
-				
-				
-				
-			
 		
 			
 			
-			<h2 id="NcteM">type <a href="/src/target/nonctem.go?s=312:464#L3">NcteM</a></h2>
+			<h2 id="NcteM">type <a href="/src/target/nonctem.go?s=307:435#L4">NcteM</a></h2>
 			<pre>type NcteM struct {
     Mfix <a href="/pkg/builtin/#bool">bool</a>
     <span class="comment">// derived</span>
@@ -2454,7 +2440,7 @@ NcteM implements Argyris-Sheng et al M(w) non-constant M coefficient
 
 			
 				
-				<h3 id="NcteM.D2Mdw2">func (*NcteM) <a href="/src/target/nonctem.go?s=1603:1644#L54">D2Mdw2</a></h3>
+				<h3 id="NcteM.D2Mdw2">func (*NcteM) <a href="/src/target/nonctem.go?s=1464:1505#L57">D2Mdw2</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) D2Mdw2(w <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 D2Mdw2 implements d²M/dw²
@@ -2465,7 +2451,7 @@ D2Mdw2 implements d²M/dw²
 				
 			
 				
-				<h3 id="NcteM.DMdw">func (*NcteM) <a href="/src/target/nonctem.go?s=1408:1447#L46">DMdw</a></h3>
+				<h3 id="NcteM.DMdw">func (*NcteM) <a href="/src/target/nonctem.go?s=1288:1327#L49">DMdw</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) DMdw(w <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 DMdw implements dM/dw
@@ -2476,7 +2462,7 @@ DMdw implements dM/dw
 				
 			
 				
-				<h3 id="NcteM.Deriv1">func (*NcteM) <a href="/src/target/nonctem.go?s=1895:1958#L64">Deriv1</a></h3>
+				<h3 id="NcteM.Deriv1">func (*NcteM) <a href="/src/target/nonctem.go?s=1734:1797#L67">Deriv1</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) Deriv1(dMdσ, σ, s []<a href="/pkg/builtin/#float64">float64</a>, p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Deriv1 returns the first derivative of M w.r.t σ
@@ -2489,7 +2475,7 @@ Deriv1 returns the first derivative of M w.r.t σ
 				
 			
 				
-				<h3 id="NcteM.Deriv2">func (*NcteM) <a href="/src/target/nonctem.go?s=2323:2409#L80">Deriv2</a></h3>
+				<h3 id="NcteM.Deriv2">func (*NcteM) <a href="/src/target/nonctem.go?s=2111:2197#L83">Deriv2</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) Deriv2(d2Mdσdσ [][]<a href="/pkg/builtin/#float64">float64</a>, dMdσ, σ, s []<a href="/pkg/builtin/#float64">float64</a>, p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Deriv2 returns the first and second derivatives of M w.r.t σ
@@ -2502,7 +2488,7 @@ Deriv2 returns the first and second derivatives of M w.r.t σ
 				
 			
 				
-				<h3 id="NcteM.Init">func (*NcteM) <a href="/src/target/nonctem.go?s=498:549#L15">Init</a></h3>
+				<h3 id="NcteM.Init">func (*NcteM) <a href="/src/target/nonctem.go?s=469:520#L16">Init</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) Init(prms []<a href="/pkg/builtin/#string">string</a>, vals []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises this object
@@ -2513,7 +2499,7 @@ Init initialises this object
 				
 			
 				
-				<h3 id="NcteM.M">func (*NcteM) <a href="/src/target/nonctem.go?s=1214:1250#L38">M</a></h3>
+				<h3 id="NcteM.M">func (*NcteM) <a href="/src/target/nonctem.go?s=1119:1155#L41">M</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) M(w <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 M implements M(w)
@@ -2524,7 +2510,7 @@ M implements M(w)
 				
 			
 				
-				<h3 id="NcteM.String">func (*NcteM) <a href="/src/target/nonctem.go?s=1085:1120#L33">String</a></h3>
+				<h3 id="NcteM.String">func (*NcteM) <a href="/src/target/nonctem.go?s=993:1028#L36">String</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) String() (s <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 String returns a string representing this structure
@@ -2548,33 +2534,34 @@ String returns a string representing this structure
 <br /><br />
 <hr>
 <pre class="copyright">
-Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Dorival M Pedroso nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 </pre><!-- copyright -->
 </div><!-- footer -->
 </body>

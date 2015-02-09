@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>GoSL &ndash; package fun</title>
+<title>Gosl &ndash; package fun</title>
 <link type="text/css" rel="stylesheet" href="static/style.css">
 <script type="text/javascript" src="static/godocs.js"></script>
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>GoSL &ndash; <b>fun</b> &ndash; Functions</h1>
+<div id="page"><h1>Gosl &ndash; <b>fun</b> &ndash; Functions such as y=f(t,x)</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -29,7 +29,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "code.google.com/p/gosl/fun"</code></dd>
+			<dd><code>import "github.com/cpmech/gosl/fun"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -163,6 +163,26 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 			
 				
+				<dd><a href="#Pts">type Pts</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Pts.F">func (o Pts) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Pts.G">func (o Pts) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Pts.Grad">func (o Pts) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Pts.H">func (o Pts) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Pts.Init">func (o *Pts) Init(prms Prms)</a></dd>
+				
+			
+				
 				<dd><a href="#RefDecGen">type RefDecGen</a></dd>
 				
 				
@@ -233,23 +253,25 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="/src/code.google.com/p/gosl/fun/auxiliary.go">auxiliary.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/auxiliary.go">auxiliary.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fun/f_add.go">f_add.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_add.go">f_add.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fun/f_cte.go">f_cte.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_cte.go">f_cte.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fun/f_lin.go">f_lin.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_lin.go">f_lin.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fun/f_refdecgen.go">f_refdecgen.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_pts.go">f_pts.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fun/f_refdecsp1.go">f_refdecsp1.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_refdecgen.go">f_refdecgen.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fun/f_srmps.go">f_srmps.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_refdecsp1.go">f_refdecsp1.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fun/func.go">func.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_srmps.go">f_srmps.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fun/prms.go">prms.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/func.go">func.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fun/prms.go">prms.go</a>
 			
 			</span>
 			</p>
@@ -354,7 +376,7 @@ Add implements the addition of two other functions.
 
 			
 				
-				<h3 id="Add.F">func (Add) <a href="/src/target/f_add.go?s=748:794#L29">F</a></h3>
+				<h3 id="Add.F">func (Add) <a href="/src/target/f_add.go?s=812:858#L31">F</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -365,7 +387,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Add.G">func (Add) <a href="/src/target/f_add.go?s=929:975#L37">G</a></h3>
+				<h3 id="Add.G">func (Add) <a href="/src/target/f_add.go?s=993:1039#L39">G</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -376,7 +398,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Add.Grad">func (Add) <a href="/src/target/f_add.go?s=1303:1357#L53">Grad</a></h3>
+				<h3 id="Add.Grad">func (Add) <a href="/src/target/f_add.go?s=1367:1421#L55">Grad</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -387,7 +409,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Add.H">func (Add) <a href="/src/target/f_add.go?s=1114:1160#L45">H</a></h3>
+				<h3 id="Add.H">func (Add) <a href="/src/target/f_add.go?s=1178:1224#L47">H</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -438,7 +460,7 @@ Zero implements an specialisation of Cte function that always returns zero
 
 			
 				
-				<h3 id="Cte.F">func (Cte) <a href="/src/target/f_cte.go?s=750:796#L28">F</a></h3>
+				<h3 id="Cte.F">func (Cte) <a href="/src/target/f_cte.go?s=814:860#L30">F</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -449,7 +471,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Cte.G">func (Cte) <a href="/src/target/f_cte.go?s=872:918#L34">G</a></h3>
+				<h3 id="Cte.G">func (Cte) <a href="/src/target/f_cte.go?s=936:982#L36">G</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 first derivative
@@ -461,7 +483,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Cte.Grad">func (Cte) <a href="/src/target/f_cte.go?s=1109:1163#L45">Grad</a></h3>
+				<h3 id="Cte.Grad">func (Cte) <a href="/src/target/f_cte.go?s=1173:1227#L47">Grad</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -472,7 +494,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Cte.H">func (Cte) <a href="/src/target/f_cte.go?s=999:1045#L40">H</a></h3>
+				<h3 id="Cte.H">func (Cte) <a href="/src/target/f_cte.go?s=1063:1109#L42">H</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 second derivative
@@ -558,7 +580,7 @@ Lin implements a linear function w.r.t t
 
 			
 				
-				<h3 id="Lin.F">func (Lin) <a href="/src/target/f_lin.go?s=655:701#L26">F</a></h3>
+				<h3 id="Lin.F">func (Lin) <a href="/src/target/f_lin.go?s=719:765#L28">F</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -569,7 +591,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Lin.G">func (Lin) <a href="/src/target/f_lin.go?s=770:816#L31">G</a></h3>
+				<h3 id="Lin.G">func (Lin) <a href="/src/target/f_lin.go?s=834:880#L33">G</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -580,7 +602,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Lin.Grad">func (Lin) <a href="/src/target/f_lin.go?s=984:1038#L41">Grad</a></h3>
+				<h3 id="Lin.Grad">func (Lin) <a href="/src/target/f_lin.go?s=1048:1102#L43">Grad</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -591,7 +613,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Lin.H">func (Lin) <a href="/src/target/f_lin.go?s=876:922#L36">H</a></h3>
+				<h3 id="Lin.H">func (Lin) <a href="/src/target/f_lin.go?s=940:986#L38">H</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -703,6 +725,84 @@ minval and maxval are used to check parameter range if usemin or usemax are true
 				<pre>func (o <a href="#Prms">Prms</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 String outputs all materials
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Pts">type <a href="/src/target/f_pts.go?s=317:377#L5">Pts</a></h2>
+			<pre>type Pts struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Pts is a function based on a linear interpolation over a set of points
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Pts.F">func (Pts) <a href="/src/target/f_pts.go?s=1120:1166#L49">F</a></h3>
+				<pre>func (o <a href="#Pts">Pts</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Pts.G">func (Pts) <a href="/src/target/f_pts.go?s=1473:1519#L63">G</a></h3>
+				<pre>func (o <a href="#Pts">Pts</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Pts.Grad">func (Pts) <a href="/src/target/f_pts.go?s=1916:1970#L82">Grad</a></h3>
+				<pre>func (o <a href="#Pts">Pts</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Pts.H">func (Pts) <a href="/src/target/f_pts.go?s=1808:1854#L77">H</a></h3>
+				<pre>func (o <a href="#Pts">Pts</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Pts.Init">func (*Pts) <a href="/src/target/f_pts.go?s=508:537#L17">Init</a></h3>
+				<pre>func (o *<a href="#Pts">Pts</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<p>
+Init initialises the function
 </p>
 
 				
@@ -911,7 +1011,7 @@ Increasing or decreasing smooth-ramp-smooth function
 
 			
 				
-				<h3 id="Srmps.F">func (Srmps) <a href="/src/target/f_srmps.go?s=697:745#L31">F</a></h3>
+				<h3 id="Srmps.F">func (Srmps) <a href="/src/target/f_srmps.go?s=761:809#L33">F</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -922,7 +1022,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Srmps.G">func (Srmps) <a href="/src/target/f_srmps.go?s=929:977#L42">G</a></h3>
+				<h3 id="Srmps.G">func (Srmps) <a href="/src/target/f_srmps.go?s=993:1041#L44">G</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -933,7 +1033,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Srmps.Grad">func (Srmps) <a href="/src/target/f_srmps.go?s=1463:1519#L64">Grad</a></h3>
+				<h3 id="Srmps.Grad">func (Srmps) <a href="/src/target/f_srmps.go?s=1527:1583#L66">Grad</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -944,7 +1044,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Srmps.H">func (Srmps) <a href="/src/target/f_srmps.go?s=1181:1229#L53">H</a></h3>
+				<h3 id="Srmps.H">func (Srmps) <a href="/src/target/f_srmps.go?s=1245:1293#L55">H</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -979,33 +1079,34 @@ Init initialises the function
 <br /><br />
 <hr>
 <pre class="copyright">
-Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Dorival M Pedroso nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 </pre><!-- copyright -->
 </div><!-- footer -->
 </body>

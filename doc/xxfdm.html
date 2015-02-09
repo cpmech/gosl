@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>GoSL &ndash; package fdm</title>
+<title>Gosl &ndash; package fdm</title>
 <link type="text/css" rel="stylesheet" href="static/style.css">
 <script type="text/javascript" src="static/godocs.js"></script>
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>GoSL &ndash; <b>fdm</b> &ndash; A simple finite differences solver</h1>
+<div id="page"><h1>Gosl &ndash; <b>fdm</b> &ndash; A simple finite differences solver</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -29,7 +29,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "code.google.com/p/gosl/fdm"</code></dd>
+			<dd><code>import "github.com/cpmech/gosl/fdm"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -119,11 +119,11 @@
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="/src/code.google.com/p/gosl/fdm/assembly.go">assembly.go</a>
+				<a href="/src/github.com/cpmech/gosl/fdm/assembly.go">assembly.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fdm/equations.go">equations.go</a>
+				<a href="/src/github.com/cpmech/gosl/fdm/equations.go">equations.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/fdm/grid2d.go">grid2d.go</a>
+				<a href="/src/github.com/cpmech/gosl/fdm/grid2d.go">grid2d.go</a>
 			
 			</span>
 			</p>
@@ -173,8 +173,8 @@
 		
 			
 			
-			<h2 id="Assemble">func <a href="/src/target/assembly.go?s=394:480#L8">Assemble</a></h2>
-			<pre>func Assemble(K11, K12 *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, F1 []<a href="/pkg/builtin/#float64">float64</a>, src <a href="#Cb_src">Cb_src</a>, g *<a href="#Grid2D">Grid2D</a>, e *<a href="#Equations">Equations</a>)</pre>
+			<h2 id="Assemble">func <a href="/src/target/assembly.go?s=385:471#L8">Assemble</a></h2>
+			<pre>func Assemble(K11, K12 *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, F1 []<a href="/pkg/builtin/#float64">float64</a>, src <a href="#Cb_src">Cb_src</a>, g *<a href="#Grid2D">Grid2D</a>, e *<a href="#Equations">Equations</a>)</pre>
 			
 			
 			
@@ -182,8 +182,8 @@
 		
 			
 			
-			<h2 id="InitK11andK12">func <a href="/src/target/assembly.go?s=268:322#L3">InitK11andK12</a></h2>
-			<pre>func InitK11andK12(K11, K12 *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, e *<a href="#Equations">Equations</a>)</pre>
+			<h2 id="InitK11andK12">func <a href="/src/target/assembly.go?s=265:319#L3">InitK11andK12</a></h2>
+			<pre>func InitK11andK12(K11, K12 *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, e *<a href="#Equations">Equations</a>)</pre>
 			
 			
 			
@@ -191,7 +191,7 @@
 		
 			
 			
-			<h2 id="JoinVecs">func <a href="/src/target/assembly.go?s=1433:1481#L38">JoinVecs</a></h2>
+			<h2 id="JoinVecs">func <a href="/src/target/assembly.go?s=1267:1315#L46">JoinVecs</a></h2>
 			<pre>func JoinVecs(U, U1, U2 []<a href="/pkg/builtin/#float64">float64</a>, e *<a href="#Equations">Equations</a>)</pre>
 			
 			
@@ -223,7 +223,7 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_src">type <a href="/src/target/assembly.go?s=228:266#L1">Cb_src</a></h2>
+			<h2 id="Cb_src">type <a href="/src/target/assembly.go?s=225:263#L1">Cb_src</a></h2>
 			<pre>type Cb_src func(x, y <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			
 
@@ -241,7 +241,7 @@ callbacks
 		
 			
 			
-			<h2 id="Equations">type <a href="/src/target/equations.go?s=2524:2748#L52">Equations</a></h2>
+			<h2 id="Equations">type <a href="/src/target/equations.go?s=2517:2732#L52">Equations</a></h2>
 			<pre>type Equations struct {
     N1, N2, N <a href="/pkg/builtin/#int">int</a>   <span class="comment">// unknowns, prescribed, total numbers</span>
     RF1, FR1  []<a href="/pkg/builtin/#int">int</a> <span class="comment">// reduced=&gt;full/full=&gt;reduced maps for unknowns</span>
@@ -313,7 +313,7 @@ FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation #
 
 			
 				
-				<h3 id="Equations.Init">func (*Equations) <a href="/src/target/equations.go?s=2750:2802#L58">Init</a></h3>
+				<h3 id="Equations.Init">func (*Equations) <a href="/src/target/equations.go?s=2734:2786#L58">Init</a></h3>
 				<pre>func (e *<a href="#Equations">Equations</a>) Init(n <a href="/pkg/builtin/#int">int</a>, peq_notsorted []<a href="/pkg/builtin/#int">int</a>)</pre>
 				
 				
@@ -321,7 +321,7 @@ FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation #
 				
 			
 				
-				<h3 id="Equations.Print">func (*Equations) <a href="/src/target/equations.go?s=3510:3537#L86">Print</a></h3>
+				<h3 id="Equations.Print">func (*Equations) <a href="/src/target/equations.go?s=3361:3388#L86">Print</a></h3>
 				<pre>func (e *<a href="#Equations">Equations</a>) Print()</pre>
 				
 				
@@ -393,33 +393,34 @@ fxy or z must be nil
 <br /><br />
 <hr>
 <pre class="copyright">
-Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Dorival M Pedroso nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 </pre><!-- copyright -->
 </div><!-- footer -->
 </body>

@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>GoSL &ndash; package num</title>
+<title>Gosl &ndash; package num</title>
 <link type="text/css" rel="stylesheet" href="static/style.css">
 <script type="text/javascript" src="static/godocs.js"></script>
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>GoSL &ndash; <b>num</b> &ndash; A few numerical methods</h1>
+<div id="page"><h1>Gosl &ndash; <b>num</b> &ndash; A few numerical methods</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -29,7 +29,7 @@
 		
 		<div id="short-nav">
 			<dl>
-			<dd><code>import "code.google.com/p/gosl/num"</code></dd>
+			<dd><code>import "github.com/cpmech/gosl/num"</code></dd>
 			</dl>
 			<dl>
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
@@ -196,17 +196,17 @@
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="/src/code.google.com/p/gosl/num/auxiliary.go">auxiliary.go</a>
+				<a href="/src/github.com/cpmech/gosl/num/auxiliary.go">auxiliary.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/num/brent.go">brent.go</a>
+				<a href="/src/github.com/cpmech/gosl/num/brent.go">brent.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/num/deriv.go">deriv.go</a>
+				<a href="/src/github.com/cpmech/gosl/num/deriv.go">deriv.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/num/integration.go">integration.go</a>
+				<a href="/src/github.com/cpmech/gosl/num/integration.go">integration.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/num/linesearch.go">linesearch.go</a>
+				<a href="/src/github.com/cpmech/gosl/num/linesearch.go">linesearch.go</a>
 			
-				<a href="/src/code.google.com/p/gosl/num/newnlsolver.go">newnlsolver.go</a>
+				<a href="/src/github.com/cpmech/gosl/num/newnlsolver.go">newnlsolver.go</a>
 			
 			</span>
 			</p>
@@ -282,7 +282,7 @@ constants
 		
 			
 			
-			<h2 id="CompareJac">func <a href="/src/target/auxiliary.go?s=2620:2711#L91">CompareJac</a></h2>
+			<h2 id="CompareJac">func <a href="/src/target/auxiliary.go?s=2297:2388#L92">CompareJac</a></h2>
 			<pre>func CompareJac(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, ffcn <a href="#Cb_f">Cb_f</a>, Jfcn <a href="#Cb_J">Cb_J</a>, x []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, distr <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 			
@@ -291,7 +291,7 @@ constants
 		
 			
 			
-			<h2 id="DerivBackward">func <a href="/src/target/deriv.go?s=8530:8617#L235">DerivBackward</a></h2>
+			<h2 id="DerivBackward">func <a href="/src/target/deriv.go?s=7817:7904#L236">DerivBackward</a></h2>
 			<pre>func DerivBackward(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -300,7 +300,7 @@ constants
 		
 			
 			
-			<h2 id="DerivBwd">func <a href="/src/target/deriv.go?s=3412:3474#L94">DerivBwd</a></h2>
+			<h2 id="DerivBwd">func <a href="/src/target/deriv.go?s=3151:3213#L95">DerivBwd</a></h2>
 			<pre>func DerivBwd(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 DerivBwd employs a 1st order backward difference to approximate the derivative of f(x) w.r.t x @ x
@@ -312,7 +312,7 @@ DerivBwd employs a 1st order backward difference to approximate the derivative o
 		
 			
 			
-			<h2 id="DerivCen">func <a href="/src/target/deriv.go?s=3635:3697#L100">DerivCen</a></h2>
+			<h2 id="DerivCen">func <a href="/src/target/deriv.go?s=3368:3430#L101">DerivCen</a></h2>
 			<pre>func DerivCen(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 DerivCen uses a central difference method
@@ -324,7 +324,7 @@ DerivCen uses a central difference method
 		
 			
 			
-			<h2 id="DerivCentral">func <a href="/src/target/deriv.go?s=5451:5537#L149">DerivCentral</a></h2>
+			<h2 id="DerivCentral">func <a href="/src/target/deriv.go?s=5048:5134#L150">DerivCentral</a></h2>
 			<pre>func DerivCentral(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -333,7 +333,7 @@ DerivCen uses a central difference method
 		
 			
 			
-			<h2 id="DerivForward">func <a href="/src/target/deriv.go?s=7625:7711#L207">DerivForward</a></h2>
+			<h2 id="DerivForward">func <a href="/src/target/deriv.go?s=7007:7093#L208">DerivForward</a></h2>
 			<pre>func DerivForward(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -342,7 +342,7 @@ DerivCen uses a central difference method
 		
 			
 			
-			<h2 id="DerivFwd">func <a href="/src/target/deriv.go?s=3132:3194#L88">DerivFwd</a></h2>
+			<h2 id="DerivFwd">func <a href="/src/target/deriv.go?s=2877:2939#L89">DerivFwd</a></h2>
 			<pre>func DerivFwd(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 DerivFwd employs a 1st order forward difference to approximate the derivative of f(x) w.r.t x @ x
@@ -354,7 +354,7 @@ DerivFwd employs a 1st order forward difference to approximate the derivative of
 		
 			
 			
-			<h2 id="DerivRange">func <a href="/src/target/deriv.go?s=3855:3931#L106">DerivRange</a></h2>
+			<h2 id="DerivRange">func <a href="/src/target/deriv.go?s=3582:3658#L107">DerivRange</a></h2>
 			<pre>func DerivRange(f <a href="#Cb_fx">Cb_fx</a>, x, xmin, xmax <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 DerivRange chooses fwd, bwd or cen according to whether x is near the boundary or not
@@ -366,8 +366,8 @@ DerivRange chooses fwd, bwd or cen according to whether x is near the boundary o
 		
 			
 			
-			<h2 id="Jacobian">func <a href="/src/target/deriv.go?s=1363:1446#L34">Jacobian</a></h2>
-			<pre>func Jacobian(J *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, ffcn <a href="#Cb_f">Cb_f</a>, x, fx, w []<a href="/pkg/builtin/#float64">float64</a>, distr <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<h2 id="Jacobian">func <a href="/src/target/deriv.go?s=1328:1411#L35">Jacobian</a></h2>
+			<pre>func Jacobian(J *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, ffcn <a href="#Cb_f">Cb_f</a>, x, fx, w []<a href="/pkg/builtin/#float64">float64</a>, distr <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 Jacobian
 </p>
@@ -392,7 +392,7 @@ RETURNS:
 		
 			
 			
-			<h2 id="LineSearch">func <a href="/src/target/linesearch.go?s=1237:1371#L24">LineSearch</a></h2>
+			<h2 id="LineSearch">func <a href="/src/target/linesearch.go?s=1232:1366#L25">LineSearch</a></h2>
 			<pre>func LineSearch(x, fx []<a href="/pkg/builtin/#float64">float64</a>, ffcn <a href="#Cb_f">Cb_f</a>, dx, x0, dφdx0 []<a href="/pkg/builtin/#float64">float64</a>, φ0 <a href="/pkg/builtin/#float64">float64</a>, max_it <a href="/pkg/builtin/#int">int</a>, dx_is_mdx <a href="/pkg/builtin/#bool">bool</a>) (nFeval <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 LineSearch finds a new point x along the direction dx, from x0, where the function
@@ -426,7 +426,7 @@ Local constants:
 		
 			
 			
-			<h2 id="MinComp">func <a href="/src/target/auxiliary.go?s=1312:1355#L53">MinComp</a></h2>
+			<h2 id="MinComp">func <a href="/src/target/auxiliary.go?s=1151:1194#L54">MinComp</a></h2>
 			<pre>func MinComp(tol, expected <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			
 			
@@ -435,7 +435,7 @@ Local constants:
 		
 			
 			
-			<h2 id="PlotYxe">func <a href="/src/target/auxiliary.go?s=525:667#L19">PlotYxe</a></h2>
+			<h2 id="PlotYxe">func <a href="/src/target/auxiliary.go?s=490:632#L20">PlotYxe</a></h2>
 			<pre>func PlotYxe(ffcn <a href="#Cb_yxe">Cb_yxe</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, xsol, xa, xb <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xsolLbl, args <a href="/pkg/builtin/#string">string</a>, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func()) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 PlotYxe plots the function y(x) implemented by Cb_yxe
@@ -447,7 +447,7 @@ PlotYxe plots the function y(x) implemented by Cb_yxe
 		
 			
 			
-			<h2 id="TestAbs">func <a href="/src/target/auxiliary.go?s=1415:1507#L57">TestAbs</a></h2>
+			<h2 id="TestAbs">func <a href="/src/target/auxiliary.go?s=1251:1343#L58">TestAbs</a></h2>
 			<pre>func TestAbs(result, expected, absolute_error <a href="/pkg/builtin/#float64">float64</a>, test_description <a href="/pkg/builtin/#string">string</a>) (status <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -456,7 +456,7 @@ PlotYxe plots the function y(x) implemented by Cb_yxe
 		
 			
 			
-			<h2 id="Trapz">func <a href="/src/target/integration.go?s=359:397#L3">Trapz</a></h2>
+			<h2 id="Trapz">func <a href="/src/target/integration.go?s=356:394#L3">Trapz</a></h2>
 			<pre>func Trapz(x, y []<a href="/pkg/builtin/#float64">float64</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Trapz returns the area below the discrete curve defined by x and y.
@@ -469,7 +469,7 @@ Computations are carried out with the trapezoidal rule.
 		
 			
 			
-			<h2 id="TrapzF">func <a href="/src/target/integration.go?s=745:790#L15">TrapzF</a></h2>
+			<h2 id="TrapzF">func <a href="/src/target/integration.go?s=715:760#L15">TrapzF</a></h2>
 			<pre>func TrapzF(x []<a href="/pkg/builtin/#float64">float64</a>, y <a href="#Cb_yx">Cb_yx</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 TrapzF (function callback version) returns the area below the discrete curve defined by x and y.
@@ -482,7 +482,7 @@ Computations are carried out with the trapezoidal rule.
 		
 			
 			
-			<h2 id="TrapzRange">func <a href="/src/target/integration.go?s=1114:1176#L24">TrapzRange</a></h2>
+			<h2 id="TrapzRange">func <a href="/src/target/integration.go?s=1069:1131#L24">TrapzRange</a></h2>
 			<pre>func TrapzRange(xa, xb <a href="/pkg/builtin/#float64">float64</a>, npts <a href="/pkg/builtin/#int">int</a>, y <a href="#Cb_yx">Cb_yx</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 TrapzRange (x-range and function callback version) returns the area below the discrete curve defined by x and y.
@@ -496,7 +496,7 @@ Computations are carried out with the trapezoidal rule from xa to xb, with npts 
 		
 			
 			
-			<h2 id="Brent">type <a href="/src/target/brent.go?s=312:651#L3">Brent</a></h2>
+			<h2 id="Brent">type <a href="/src/target/brent.go?s=307:625#L4">Brent</a></h2>
 			<pre>type Brent struct {
     MaxIt  <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max iterations</span>
     Tol    <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// tolerance</span>
@@ -522,7 +522,7 @@ Brent implements Brent&#39;s method for finding the roots of an equation
 
 			
 				
-				<h3 id="Brent.Init">func (*Brent) <a href="/src/target/brent.go?s=688:721#L14">Init</a></h3>
+				<h3 id="Brent.Init">func (*Brent) <a href="/src/target/brent.go?s=662:695#L15">Init</a></h3>
 				<pre>func (o *<a href="#Brent">Brent</a>) Init(ffcn <a href="#Cb_yxe">Cb_yxe</a>)</pre>
 				<p>
 Init intialises Brent structure
@@ -533,7 +533,7 @@ Init intialises Brent structure
 				
 			
 				
-				<h3 id="Brent.Min">func (*Brent) <a href="/src/target/brent.go?s=7909:7982#L207">Min</a></h3>
+				<h3 id="Brent.Min">func (*Brent) <a href="/src/target/brent.go?s=7133:7206#L208">Min</a></h3>
 				<pre>func (o *<a href="#Brent">Brent</a>) Min(xa, xb <a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Min finds the minimum of f(x) in [xa, xb]
@@ -574,7 +574,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 				
 			
 				
-				<h3 id="Brent.Solve">func (*Brent) <a href="/src/target/brent.go?s=2293:2368#L49">Solve</a></h3>
+				<h3 id="Brent.Solve">func (*Brent) <a href="/src/target/brent.go?s=2247:2322#L50">Solve</a></h3>
 				<pre>func (o *<a href="#Brent">Brent</a>) Solve(xa, xb <a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves y(x) = 0 for x in [xa, xb] with f(xa) * f(xb) &lt; 0
@@ -612,8 +612,8 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_J">type <a href="/src/target/deriv.go?s=528:581#L10">Cb_J</a></h2>
-			<pre>type Cb_J func(dfdx *<a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// sparse version</span>
+			<h2 id="Cb_J">type <a href="/src/target/deriv.go?s=502:553#L11">Cb_J</a></h2>
+			<pre>type Cb_J func(dfdx *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// sparse version</span>
 </pre>
 			
 
@@ -631,7 +631,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_Jd">type <a href="/src/target/deriv.go?s=600:653#L11">Cb_Jd</a></h2>
+			<h2 id="Cb_Jd">type <a href="/src/target/deriv.go?s=573:625#L12">Cb_Jd</a></h2>
 			<pre>type Cb_Jd func(dfdx [][]<a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// dense version</span>
 </pre>
 			
@@ -650,7 +650,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_f">type <a href="/src/target/deriv.go?s=474:527#L9">Cb_f</a></h2>
+			<h2 id="Cb_f">type <a href="/src/target/deriv.go?s=464:501#L10">Cb_f</a></h2>
 			<pre>type Cb_f func(fx, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 callbacks (for systems)
@@ -671,7 +671,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_fx">type <a href="/src/target/deriv.go?s=389:445#L6">Cb_fx</a></h2>
+			<h2 id="Cb_fx">type <a href="/src/target/deriv.go?s=380:435#L7">Cb_fx</a></h2>
 			<pre>type Cb_fx func(x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			
 
@@ -689,7 +689,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_out">type <a href="/src/target/deriv.go?s=671:706#L12">Cb_out</a></h2>
+			<h2 id="Cb_out">type <a href="/src/target/deriv.go?s=643:678#L13">Cb_out</a></h2>
 			<pre>type Cb_out func(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// for output</span>
 </pre>
 			
@@ -708,7 +708,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_yx">type <a href="/src/target/deriv.go?s=308:343#L4">Cb_yx</a></h2>
+			<h2 id="Cb_yx">type <a href="/src/target/deriv.go?s=300:334#L5">Cb_yx</a></h2>
 			<pre>type Cb_yx func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 callbacks (for single equations)
@@ -729,7 +729,7 @@ callbacks (for single equations)
 		
 			
 			
-			<h2 id="Cb_yxe">type <a href="/src/target/deriv.go?s=344:388#L5">Cb_yxe</a></h2>
+			<h2 id="Cb_yxe">type <a href="/src/target/deriv.go?s=335:379#L6">Cb_yxe</a></h2>
 			<pre>type Cb_yxe func(x <a href="/pkg/builtin/#float64">float64</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			
 
@@ -747,7 +747,7 @@ callbacks (for single equations)
 		
 			
 			
-			<h2 id="NlSolver">type <a href="/src/target/newnlsolver.go?s=272:1850#L3">NlSolver</a></h2>
+			<h2 id="NlSolver">type <a href="/src/target/newnlsolver.go?s=264:1731#L4">NlSolver</a></h2>
 			<pre>type NlSolver struct {
     <span class="comment">// constants</span>
     CteJac  <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// constant Jacobian (Modified Newton&#39;s method)</span>
@@ -763,7 +763,7 @@ callbacks (for single equations)
     Out    <a href="#Cb_out">Cb_out</a> <span class="comment">// for output</span>
 
     <span class="comment">// data for Umfpack (sparse)</span>
-    Jtri <a href="/pkg/code.google.com/p/gosl/la/">la</a>.<a href="/pkg/code.google.com/p/gosl/la/#Triplet">Triplet</a> <span class="comment">// triplet</span>
+    Jtri <a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a> <span class="comment">// triplet</span>
 
     <span class="comment">// data for dense solver (matrix inversion)</span>
     J  [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// dense Jacobian matrix</span>
@@ -789,7 +789,7 @@ callbacks (for single equations)
 
 			
 				
-				<h3 id="NlSolver.CheckJ">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=9248:9346#L313">CheckJ</a></h3>
+				<h3 id="NlSolver.CheckJ">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=7654:7752#L320">CheckJ</a></h3>
 				<pre>func (o *<a href="#NlSolver">NlSolver</a>) CheckJ(x []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, chkJnum, silent <a href="/pkg/builtin/#bool">bool</a>) (cnd <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 CheckJ check Jacobian matrix
@@ -802,7 +802,7 @@ CheckJ check Jacobian matrix
 				
 			
 				
-				<h3 id="NlSolver.Clean">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3635:3661#L113">Clean</a></h3>
+				<h3 id="NlSolver.Clean">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3303:3329#L120">Clean</a></h3>
 				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Clean()</pre>
 				<p>
 Clean performs clean ups
@@ -813,7 +813,7 @@ Clean performs clean ups
 				
 			
 				
-				<h3 id="NlSolver.Init">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=2109:2222#L55">Init</a></h3>
+				<h3 id="NlSolver.Init">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=1990:2103#L56">Init</a></h3>
 				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Init(neq <a href="/pkg/builtin/#int">int</a>, Ffcn <a href="#Cb_f">Cb_f</a>, JfcnSp <a href="#Cb_J">Cb_J</a>, JfcnDn <a href="#Cb_Jd">Cb_Jd</a>, useDn, numJ <a href="/pkg/builtin/#bool">bool</a>, prms map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises solver
@@ -830,7 +830,7 @@ Init initialises solver
 				
 			
 				
-				<h3 id="NlSolver.SetTols">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3739:3795#L120">SetTols</a></h3>
+				<h3 id="NlSolver.SetTols">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3395:3451#L127">SetTols</a></h3>
 				<pre>func (o *<a href="#NlSolver">NlSolver</a>) SetTols(Atol, Rtol, Ftol, ϵ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetTols set tolerances
@@ -841,7 +841,7 @@ SetTols set tolerances
 				
 			
 				
-				<h3 id="NlSolver.Solve">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3956:4018#L126">Solve</a></h3>
+				<h3 id="NlSolver.Solve">func (*NlSolver) <a href="/src/target/newnlsolver.go?s=3602:3664#L133">Solve</a></h3>
 				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Solve(x []<a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves non-linear problem f(x) == 0
@@ -894,33 +894,34 @@ Solve solves non-linear problem f(x) == 0
 <br /><br />
 <hr>
 <pre class="copyright">
-Copyright (c) 2012 Dorival de Moraes Pedroso. All rights reserved.
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Dorival M Pedroso nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 </pre><!-- copyright -->
 </div><!-- footer -->
 </body>
