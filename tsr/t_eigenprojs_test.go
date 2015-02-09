@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 func Test_eigenp01(tst *testing.T) {

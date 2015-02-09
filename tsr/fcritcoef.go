@@ -5,8 +5,9 @@
 package tsr
 
 import (
-    "math"
-    "code.google.com/p/gosl/utl"
+	"math"
+
+	"github.com/cpmech/gosl/utl"
 )
 
 // Mmatch computes M=q/p and qy0 from c and φ corresponding to the strength that would
@@ -16,60 +17,60 @@ import (
 //       == "psa" : plane-strain
 //  Note: p, q, and M are Cambridge (conventional) quantities
 func Mmatch(c, φ float64, cone string) (M, qy0 float64) {
-    φr := φ * math.Pi / 180.0
-    si := math.Sin(φr)
-    co := math.Cos(φr)
-    var ξ float64
-    switch cone {
-    case "cmp": // compression cone (outer)
-        M = 6.0 * si / (3.0 - si)
-        ξ = 6.0 * co / (3.0 - si)
-    case "ext": // extension cone (inner)
-        M = 6.0 * si / (3.0 + si)
-        ξ = 6.0 * co / (3.0 + si)
-    case "psa": // plane-strain
-        t := si / co
-        d := math.Sqrt(3.0 + 4.0 * t * t)
-        M  = 3.0 * t / d
-        ξ  = 3.0 / d
-    default:
-        utl.Panic(_fcritcoef_err1, cone)
-    }
-    qy0 = ξ * c
-    return
+	φr := φ * math.Pi / 180.0
+	si := math.Sin(φr)
+	co := math.Cos(φr)
+	var ξ float64
+	switch cone {
+	case "cmp": // compression cone (outer)
+		M = 6.0 * si / (3.0 - si)
+		ξ = 6.0 * co / (3.0 - si)
+	case "ext": // extension cone (inner)
+		M = 6.0 * si / (3.0 + si)
+		ξ = 6.0 * co / (3.0 + si)
+	case "psa": // plane-strain
+		t := si / co
+		d := math.Sqrt(3.0 + 4.0*t*t)
+		M = 3.0 * t / d
+		ξ = 3.0 / d
+	default:
+		utl.Panic(_fcritcoef_err1, cone)
+	}
+	qy0 = ξ * c
+	return
 }
 
 // Phi2M calculates M = max q/p at compression (φ: friction angle at compression (degrees)).
 // type = {"oct", "cam", "smp"}
 func Phi2M(φ float64, typ string) float64 {
-    sφ := math.Sin(φ * math.Pi / 180.0)
-    switch typ {
-    case "oct":
-        return 2.0 * SQ2 * sφ / (3.0 - sφ)
-    case"cam":
-        return 6.0 * sφ / (3.0 - sφ)
-    default:
-        utl.Panic(_fcritcoef_err2, "Phi2M", typ)
-    }
-    return 0
+	sφ := math.Sin(φ * math.Pi / 180.0)
+	switch typ {
+	case "oct":
+		return 2.0 * SQ2 * sφ / (3.0 - sφ)
+	case "cam":
+		return 6.0 * sφ / (3.0 - sφ)
+	default:
+		utl.Panic(_fcritcoef_err2, "Phi2M", typ)
+	}
+	return 0
 }
 
 // M2Phi calculates φ (friction angle at compression (degrees)) given M (max q/p at compression)
 func M2Phi(M float64, typ string) float64 {
-    var sφ float64
-    switch typ {
-    case "oct":
-        sφ = 3.0 * M / (M + 2.0*SQ2)
-    case "cam":
-        sφ = 3.0 * M / (M + 6.0)
-    default:
-        utl.Panic(_fcritcoef_err2, "M2Phi", typ)
-    }
-    return math.Asin(sφ) * 180.0 / math.Pi
+	var sφ float64
+	switch typ {
+	case "oct":
+		sφ = 3.0 * M / (M + 2.0*SQ2)
+	case "cam":
+		sφ = 3.0 * M / (M + 6.0)
+	default:
+		utl.Panic(_fcritcoef_err2, "M2Phi", typ)
+	}
+	return math.Asin(sφ) * 180.0 / math.Pi
 }
 
 // error messages
 var (
-    _fcritcoef_err1 = "fcritcoef.go: tsr.Mmatch: 'cone = %s' is incorrect"
-    _fcritcoef_err2 = "fcritcoef.go: tsr.%s: 'typ = %s' is unavailable"
+	_fcritcoef_err1 = "fcritcoef.go: tsr.Mmatch: 'cone = %s' is incorrect"
+	_fcritcoef_err2 = "fcritcoef.go: tsr.%s: 'typ = %s' is unavailable"
 )

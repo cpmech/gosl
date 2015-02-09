@@ -7,7 +7,7 @@ package tsr
 import (
 	"math"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Tr returns the trace of a second order tensor

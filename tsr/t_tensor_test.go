@@ -9,7 +9,7 @@ import (
 	"math"
 	"testing"
 
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 func Test_tsr01(tst *testing.T) {

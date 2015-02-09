@@ -7,9 +7,9 @@ package tsr
 import (
 	"math"
 
-	"code.google.com/p/gosl/la"
-	"code.google.com/p/gosl/num"
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/num"
+	"github.com/cpmech/gosl/utl"
 )
 
 // M_PrincValsNum returns the (sorted, ascending) eigenvalues of tensor 'a' (2nd order symmetric tensor in Mandel's basis)
