@@ -5,14 +5,14 @@
 package ode
 
 import (
-    "fmt"
+	"fmt"
 )
 
 func pv(name string, v []float64) {
-    fmt.Printf(name + " =")
-    for _, val := range v {
-        //fmt.Printf("%23.15e", val)
-        fmt.Printf("%20.10e", val)
-    }
-    fmt.Println()
+	fmt.Printf(name + " =")
+	for _, val := range v {
+		//fmt.Printf("%23.15e", val)
+		fmt.Printf("%20.10e", val)
+	}
+	fmt.Println()
 }

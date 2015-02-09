@@ -11,10 +11,10 @@ import (
 	"fmt"
 	"time"
 
-	"code.google.com/p/gosl/la"
-	"code.google.com/p/gosl/mpi"
-	"code.google.com/p/gosl/ode"
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/mpi"
+	"github.com/cpmech/gosl/ode"
+	"github.com/cpmech/gosl/utl"
 )
 
 func main() {

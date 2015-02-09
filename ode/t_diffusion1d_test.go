@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"code.google.com/p/gosl/la"
-	"code.google.com/p/gosl/utl"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 func TestDiffusion1D(tst *testing.T) {
