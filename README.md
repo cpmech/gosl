@@ -1,4 +1,4 @@
-# Gosl -- Go scientific library
+# Gosl &ndash; Go scientific library
 
 Gosl contains a mix of routines for research on numerical methods. These include linear algebra,
 linear solvers, nonlinear solvers, ordinary differential equation solvers, plotting routines,
