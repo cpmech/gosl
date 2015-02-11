@@ -22,7 +22,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Srmps) Init(prms Prms) {
+func (o *Srmps) Init(prms Prms) (err error) {
 	for _, p := range prms {
 		switch p.N {
 		case "ca":
@@ -34,9 +34,10 @@ func (o *Srmps) Init(prms Prms) {
 		case "tb":
 			o.tb = p.V
 		default:
-			utl.Panic("parameter named %q is incorrect", p.N)
+			return utl.Err("srmps: parameter named %q is invalid", p.N)
 		}
 	}
+	return
 }
 
 // F returns y = F(t, x)
@@ -74,5 +75,6 @@ func (o Srmps) H(t float64, x []float64) float64 {
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
 func (o Srmps) Grad(v []float64, t float64, x []float64) {
-	utl.Panic("not implemented")
+	setvzero(v)
+	return
 }

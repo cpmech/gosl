@@ -19,7 +19,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Add) Init(prms Prms) {
+func (o *Add) Init(prms Prms) (err error) {
 	o.A, o.B = 1, 1
 	for _, p := range prms {
 		switch p.N {
@@ -32,9 +32,10 @@ func (o *Add) Init(prms Prms) {
 		case "Fb", "fb":
 			o.Fb = p.Fcn
 		default:
-			utl.Panic("parameter named %q is incorrect", p.N)
+			return utl.Err("add: parameter named %q is invalid", p.N)
 		}
 	}
+	return
 }
 
 // F returns y = F(t, x)
@@ -63,5 +64,6 @@ func (o Add) H(t float64, x []float64) float64 {
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
 func (o Add) Grad(v []float64, t float64, x []float64) {
-	utl.Panic("not implemented")
+	setvzero(v)
+	return
 }

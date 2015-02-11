@@ -21,15 +21,18 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Exc1) Init(prms Prms) {
+func (o *Exc1) Init(prms Prms) (err error) {
 	for _, p := range prms {
 		switch p.N {
 		case "A":
 			o.A = p.V
 		case "b":
 			o.b = p.V
+		default:
+			return utl.Err("exc1: parameter named %q is invalid", p.N)
 		}
 	}
+	return
 }
 
 // F returns y = F(t, x)
@@ -49,5 +52,6 @@ func (o Exc1) H(t float64, x []float64) float64 {
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
 func (o Exc1) Grad(v []float64, t float64, x []float64) {
-	utl.PfRed("not implemented")
+	setvzero(v)
+	return
 }

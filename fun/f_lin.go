@@ -21,17 +21,18 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Lin) Init(prms Prms) {
+func (o *Lin) Init(prms Prms) (err error) {
 	for _, p := range prms {
 		switch p.N {
-		case "M", "m":
+		case "m":
 			o.M = p.V
-		case "Ts", "ts":
+		case "ts":
 			o.Ts = p.V
 		default:
-			utl.Panic("parameter named %q is incorrect", p.N)
+			return utl.Err("lin: parameter named %q is invalid", p.N)
 		}
 	}
+	return
 }
 
 // F returns y = F(t, x)
@@ -51,5 +52,6 @@ func (o Lin) H(t float64, x []float64) float64 {
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
 func (o Lin) Grad(v []float64, t float64, x []float64) {
-	utl.Panic("not implemented")
+	setvzero(v)
+	return
 }

@@ -49,17 +49,27 @@ func init() {
 }
 
 // Init initialises the model
-func (o *RefDecSp1) Init(prms Prms) {
+func (o *RefDecSp1) Init(prms Prms) (err error) {
 
 	// parameters
-	o.β = prms.GetValueOrPanic("bet", 0, 0, false, false)
-	o.λ1 = prms.GetValueOrPanic("lam1", 0, 0, false, false)
-	o.ya = prms.GetValueOrPanic("ya", 0, 0, false, false)
-	o.yb = prms.GetValueOrPanic("yb", 0, 0, false, false)
+	for _, p := range prms {
+		switch p.N {
+		case "bet":
+			o.β = p.V
+		case "lam1":
+			o.λ1 = p.V
+		case "ya":
+			o.ya = p.V
+		case "yb":
+			o.yb = p.V
+		default:
+			return utl.Err("ref-dec-sp1: parameter named %q is invalid", p.N)
+		}
+	}
 
 	// check
 	if o.yb >= o.ya {
-		utl.Panic("yb(%g) must be smaller than ya(%g)", o.yb, o.ya)
+		return utl.Err("yb(%g) must be smaller than ya(%g)", o.yb, o.ya)
 	}
 
 	// constants
@@ -70,8 +80,9 @@ func (o *RefDecSp1) Init(prms Prms) {
 
 	// check
 	if math.IsInf(o.c2, 0) || math.IsInf(o.c3, 0) {
-		utl.Panic("β*ya or β*yb is too large:\n β=%v, ya=%v, yb=%v\n c1=%v, c2=%v, c3=%v", o.β, o.ya, o.yb, o.c1, o.c2, o.c3)
+		return utl.Err("β*ya or β*yb is too large:\n β=%v, ya=%v, yb=%v\n c1=%v, c2=%v, c3=%v", o.β, o.ya, o.yb, o.c1, o.c2, o.c3)
 	}
+	return
 }
 
 // F returns y = F(t, x)
@@ -101,5 +112,6 @@ func (o RefDecSp1) H(t float64, x []float64) float64 {
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
 func (o RefDecSp1) Grad(v []float64, t float64, x []float64) {
-	utl.Panic("not implemented")
+	setvzero(v)
+	return
 }

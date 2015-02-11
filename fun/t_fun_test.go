@@ -5,6 +5,7 @@
 package fun
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/plt"
@@ -33,7 +34,7 @@ func Test_fun01(tst *testing.T) {
 	yb := -0.5
 	λ1 := 1.0
 
-	o := New("ref-dec-gen", []*Prm{
+	o, err := New("ref-dec-gen", []*Prm{
 		&Prm{N: "bet", V: 5.0},
 		&Prm{N: "a", V: -λ1},
 		&Prm{N: "b", V: -1.0},
@@ -43,6 +44,10 @@ func Test_fun01(tst *testing.T) {
 		&Prm{N: "xini", V: 0.0},
 		&Prm{N: "yini", V: yb},
 	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
 
 	tmax := 3.0
 	xcte := []float64{0, 0, 0}
@@ -79,12 +84,16 @@ func Test_fun02(tst *testing.T) {
 	yb := -50.0
 	λ1 := 1.0
 
-	o := New("ref-dec-sp1", []*Prm{
+	o, err := New("ref-dec-sp1", []*Prm{
 		&Prm{N: "bet", V: 5.0},
 		&Prm{N: "lam1", V: λ1},
 		&Prm{N: "ya", V: ya},
 		&Prm{N: "yb", V: yb},
 	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
 
 	tmin := 0.0
 	tmax := 300.0
@@ -122,19 +131,33 @@ func Test_fun03(tst *testing.T) {
 	//utl.Tsilent = false
 	utl.TTitle("fun03. add, cte, srmps")
 
-	cte := New("cte", []*Prm{&Prm{N: "C", V: 30}})
-	srmps := New("srmps", []*Prm{
+	cte, err := New("cte", []*Prm{&Prm{N: "C", V: 30}})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	srmps, err := New("srmps", []*Prm{
 		&Prm{N: "ca", V: 0},
 		&Prm{N: "cb", V: 1},
 		&Prm{N: "ta", V: 0},
 		&Prm{N: "tb", V: 1},
 	})
-	add := New("add", []*Prm{
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	add, err := New("add", []*Prm{
 		&Prm{N: "a", V: 1},
 		&Prm{N: "b", V: 1},
 		&Prm{N: "fa", Fcn: cte},
 		&Prm{N: "fb", Fcn: srmps},
 	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
 
 	tmin := 0.0
 	tmax := 1.0
@@ -177,10 +200,14 @@ func Test_fun04(tst *testing.T) {
 	//utl.Tsilent = false
 	utl.TTitle("fun04. lin")
 
-	lin := New("lin", []*Prm{
+	lin, err := New("lin", []*Prm{
 		&Prm{N: "m", V: 0.5},
 		&Prm{N: "ts", V: 0},
 	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
 
 	tmin := 0.0
 	tmax := 1.0
@@ -233,7 +260,7 @@ func Test_fun06(tst *testing.T) {
 	//utl.Tsilent = false
 	utl.TTitle("fun06. pts")
 
-	fun := New("pts", []*Prm{
+	fun, err := New("pts", []*Prm{
 		&Prm{N: "t0", V: 0.00}, {N: "y0", V: 0.50},
 		&Prm{N: "t1", V: 1.00}, {N: "y1", V: 0.20},
 		&Prm{N: "t2", V: 2.00}, {N: "y2", V: 0.20},
@@ -241,14 +268,18 @@ func Test_fun06(tst *testing.T) {
 		&Prm{N: "t4", V: 4.00}, {N: "y4", V: 0.01},
 		&Prm{N: "t5", V: 5.00}, {N: "y5", V: 0.00},
 	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
 
-	tmin := 0.0
-	tmax := 5.0
+	tmin := -1.0
+	tmax := 6.0
 	xcte := []float64{0, 0, 0}
 	if T_FUN_SAVE {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
-		PlotT(fun, "/tmp/gosl", "fun-pts-01.png", tmin, tmax, xcte, 6, "'o-'", withG, withH, save, show, nil)
+		PlotT(fun, "/tmp/gosl", "fun-pts-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
 	}
 
 	if true {
@@ -274,12 +305,16 @@ func Test_fun07(tst *testing.T) {
 	}()
 
 	//utl.Tsilent = false
-	utl.TTitle("fun07. pts")
+	utl.TTitle("fun07. exc1")
 
-	fun := New("exc1", []*Prm{
+	fun, err := New("exc1", []*Prm{
 		&Prm{N: "A", V: 200},
 		&Prm{N: "b", V: 2},
 	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
 
 	tmin := 0.0
 	tmax := 1.0
@@ -310,13 +345,17 @@ func Test_fun08(tst *testing.T) {
 	}()
 
 	//utl.Tsilent = false
-	utl.TTitle("fun08. pts")
+	utl.TTitle("fun08. exc2")
 
-	fun := New("exc2", []*Prm{
+	fun, err := New("exc2", []*Prm{
 		&Prm{N: "ta", V: 5},
 		&Prm{N: "A", V: 3},
 		&Prm{N: "b", V: 0.2},
 	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
 
 	tmin := 0.0
 	tmax := 7.0
@@ -331,6 +370,47 @@ func Test_fun08(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-10
 		dtol2 := 1e-10
+		ver := true
+		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	}
+}
+
+func Test_fun09(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mSome error has happened:[0m\n", err)
+		}
+	}()
+
+	//utl.Tsilent = false
+	utl.TTitle("fun09. cos")
+
+	fun, err := New("cos", []*Prm{
+		&Prm{N: "a", V: 10},
+		&Prm{N: "b", V: math.Pi},
+		&Prm{N: "c", V: 1.0},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	tmin := 0.0
+	tmax := 2.0
+	xcte := []float64{0, 0, 0}
+	if T_FUN_SAVE {
+		plt.Reset()
+		withG, withH, save, show := true, true, false, true
+		PlotT(fun, "/tmp/gosl", "fun-cos-01.png", tmin, tmax, xcte, 41, "'.-'", withG, withH, save, show, nil)
+	}
+
+	if true {
+		sktol := 1e-10
+		dtol := 1e-8
+		dtol2 := 1e-7
 		ver := true
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}

@@ -28,22 +28,37 @@ func init() {
 }
 
 // Init initialises the function
-func (o *RefDecGen) Init(prms Prms) {
+func (o *RefDecGen) Init(prms Prms) (err error) {
 
 	// parameters
-	o.β = prms.GetValueOrPanic("bet", 0, 0, false, false)
-	o.a = prms.GetValueOrPanic("a", 0, 0, false, false)
-	o.b = prms.GetValueOrPanic("b", 0, 0, false, false)
-	o.c = prms.GetValueOrPanic("c", 0, 0, false, false)
-	o.A = prms.GetValueOrPanic("A", 0, 0, false, false)
-	o.B = prms.GetValueOrPanic("B", 0, 0, false, false)
-	o.xini = prms.GetValueOrPanic("xini", 0, 0, false, false)
-	o.yini = prms.GetValueOrPanic("yini", 0, 0, false, false)
+	for _, p := range prms {
+		switch p.N {
+		case "bet":
+			o.β = p.V
+		case "a":
+			o.a = p.V
+		case "b":
+			o.b = p.V
+		case "c":
+			o.c = p.V
+		case "A":
+			o.A = p.V
+		case "B":
+			o.B = p.V
+		case "xini":
+			o.xini = p.V
+		case "yini":
+			o.yini = p.V
+		default:
+			return utl.Err("ref-dec-gen: parameter named %q is invalid", p.N)
+		}
+	}
 
 	// constants
 	o.c1 = o.β * (o.b*o.A - o.a)
 	o.c2 = ((o.A - o.B) / (o.A - o.a/o.b)) * math.Exp(-o.β*o.c)
 	o.c3 = math.Exp(o.β*o.b*(o.yini+o.A*o.xini)) - o.c2*math.Exp(o.c1*o.xini)
+	return
 }
 
 // F returns y = F(t, x)
@@ -64,5 +79,6 @@ func (o RefDecGen) H(t float64, x []float64) float64 {
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
 func (o RefDecGen) Grad(v []float64, t float64, x []float64) {
-	utl.Panic("not implemented")
+	setvzero(v)
+	return
 }

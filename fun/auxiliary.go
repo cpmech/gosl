@@ -4,6 +4,8 @@
 
 package fun
 
+import "github.com/cpmech/gosl/utl"
+
 // imax returns the max between two integers
 func imax(a, b int) int {
 	if a > b {
@@ -18,4 +20,26 @@ func imin(a, b int) int {
 		return a
 	}
 	return b
+}
+
+// checkprm checks if parameter value is correct
+func checkprm(name string, val, minval, maxval float64, usemin, usemax bool) (err error) {
+	if usemin {
+		if val < minval {
+			return utl.Err("%q parameter: wrong value: %g < %g", name, val, minval)
+		}
+	}
+	if usemax {
+		if val > maxval {
+			return utl.Err("%q parameter: wrong value: %g > %g", name, val, maxval)
+		}
+	}
+	return
+}
+
+// setvzero sets v := 0
+func setvzero(v []float64) {
+	for i := 0; i < len(v); i++ {
+		v[i] = 0
+	}
 }

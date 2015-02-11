@@ -24,11 +24,11 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Pts) Init(prms Prms) {
+func (o *Pts) Init(prms Prms) (err error) {
 	var T, Y []float64
 	for _, p := range prms {
 		if len(p.N) < 2 {
-			utl.Panic(_pts_err01, p.N)
+			return utl.Err(_pts_err01, p.N)
 		}
 		switch p.N[:1] {
 		case "t":
@@ -36,11 +36,11 @@ func (o *Pts) Init(prms Prms) {
 		case "y":
 			Y = append(Y, p.V)
 		default:
-			utl.Panic(_pts_err01, p.N)
+			return utl.Err("pts: parameter named %q is invalid", p.N)
 		}
 	}
 	if len(T) != len(Y) {
-		utl.Panic(_pts_err04, len(T), len(Y))
+		return utl.Err(_pts_err04, len(T), len(Y))
 	}
 	for i, t := range T {
 		o.p = append(o.p, &point{t, Y[i]})
@@ -48,38 +48,40 @@ func (o *Pts) Init(prms Prms) {
 	sort.Sort(o.p)
 	for i := 1; i < len(o.p); i++ {
 		if math.Abs(o.p[i].t-o.p[i-1].t) < 1e-7 {
-			utl.Panic(_pts_err02, o.p[i].t, 1e-7)
+			return utl.Err(_pts_err02, o.p[i].t, 1e-7)
 		}
 	}
 	o.tmin = o.p[0].t
 	o.tmax = o.p[len(o.p)-1].t
+	return
 }
 
 // F returns y = F(t, x)
 func (o Pts) F(t float64, x []float64) float64 {
-	if t < o.tmin || t > o.tmax {
-		utl.Panic(_pts_err03, t, o.tmin, o.tmax)
+	if t < o.tmin {
+		return o.p[0].y
+	}
+	if t > o.tmax {
+		return o.p[len(o.p)-1].y
 	}
 	for i := 1; i < len(o.p); i++ {
 		if t <= o.p[i].t {
 			return o.p[i-1].y + (t-o.p[i-1].t)*(o.p[i].y-o.p[i-1].y)/(o.p[i].t-o.p[i-1].t)
 		}
 	}
-	utl.Panic("__internal_error__")
 	return 0
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Pts) G(t float64, x []float64) float64 {
 	if t < o.tmin || t > o.tmax {
-		utl.Panic(_pts_err03, t, o.tmin, o.tmax)
+		return 0
 	}
 	for i := 1; i < len(o.p); i++ {
 		if t <= o.p[i].t {
 			return (o.p[i].y - o.p[i-1].y) / (o.p[i].t - o.p[i-1].t)
 		}
 	}
-	utl.Panic("__internal_error__")
 	return 0
 }
 
@@ -90,7 +92,8 @@ func (o Pts) H(t float64, x []float64) float64 {
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
 func (o Pts) Grad(v []float64, t float64, x []float64) {
-	utl.Panic("not implemented")
+	setvzero(v)
+	return
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////

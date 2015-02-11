@@ -39,26 +39,6 @@ func (o Prms) Find(name string) *Prm {
 	return nil
 }
 
-// GetValueOrPanic returns the parameter value if it exists; if it does not exists then panic.
-// minval and maxval are used to check parameter range if usemin or usemax are true
-func (o Prms) GetValueOrPanic(name string, minval, maxval float64, usemin, usemax bool) float64 {
-	prm := o.Find(name)
-	if prm == nil {
-		utl.Panic("cannot get parameter named %s", name)
-	}
-	if usemin {
-		if prm.V < minval {
-			utl.Panic("%s parameter: wrong value: %g < %g", name, prm.V, minval)
-		}
-	}
-	if usemax {
-		if prm.V > maxval {
-			utl.Panic("%s parameter: wrong value: %g > %g", name, prm.V, maxval)
-		}
-	}
-	return prm.V
-}
-
 // String outputs a nice formatted representation of a parameter
 func (o *Prm) String() string {
 	sknam, skval := "%s", "%s"
