@@ -262,3 +262,76 @@ func Test_fun06(tst *testing.T) {
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
+
+func Test_fun07(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mSome error has happened:[0m\n", err)
+		}
+	}()
+
+	//utl.Tsilent = false
+	utl.TTitle("fun07. pts")
+
+	fun := New("exc1", []*Prm{
+		&Prm{N: "A", V: 200},
+		&Prm{N: "b", V: 2},
+	})
+
+	tmin := 0.0
+	tmax := 1.0
+	xcte := []float64{0, 0, 0}
+	if T_FUN_SAVE {
+		plt.Reset()
+		withG, withH, save, show := true, true, false, true
+		PlotT(fun, "/tmp/gosl", "fun-exc1-01.png", tmin, tmax, xcte, 41, "'o-'", withG, withH, save, show, nil)
+	}
+
+	if true {
+		sktol := 1e-10
+		dtol := 1e-7
+		dtol2 := 1e-6
+		ver := true
+		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	}
+}
+
+func Test_fun08(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mSome error has happened:[0m\n", err)
+		}
+	}()
+
+	//utl.Tsilent = false
+	utl.TTitle("fun08. pts")
+
+	fun := New("exc2", []*Prm{
+		&Prm{N: "ta", V: 5},
+		&Prm{N: "A", V: 3},
+		&Prm{N: "b", V: 0.2},
+	})
+
+	tmin := 0.0
+	tmax := 7.0
+	xcte := []float64{0, 0, 0}
+	if T_FUN_SAVE {
+		plt.Reset()
+		withG, withH, save, show := true, true, false, true
+		PlotT(fun, "/tmp/gosl", "fun-exc2-01.png", tmin, tmax, xcte, 41, "'o-'", withG, withH, save, show, nil)
+	}
+
+	if true {
+		sktol := 1e-10
+		dtol := 1e-10
+		dtol2 := 1e-10
+		ver := true
+		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	}
+}

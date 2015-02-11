@@ -34,9 +34,6 @@ func Ff(b *bytes.Buffer, msg string, prm ...interface{}) {
 
 // Err returns a new error
 func Err(msg string, prm ...interface{}) error {
-	if UseColors {
-		return errors.New(Sf("[1;35m"+msg+"[0m", prm...))
-	}
 	return errors.New(Sf(msg, prm...))
 }
 
