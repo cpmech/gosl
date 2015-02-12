@@ -415,3 +415,45 @@ func Test_fun09(tst *testing.T) {
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
+
+func Test_fun10(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mSome error has happened:[0m\n", err)
+		}
+	}()
+
+	//utl.Tsilent = false
+	utl.TTitle("fun10. rmp")
+
+	fun, err := New("rmp", []*Prm{
+		&Prm{N: "ta", V: 1},
+		&Prm{N: "tb", V: 2},
+		&Prm{N: "ca", V: 0.5},
+		&Prm{N: "cb", V: -1.5},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	tmin := 0.0
+	tmax := 3.0
+	xcte := []float64{0, 0, 0}
+	if T_FUN_SAVE {
+		plt.Reset()
+		withG, withH, save, show := true, true, false, true
+		PlotT(fun, "/tmp/gosl", "fun-rmp-01.png", tmin, tmax, xcte, 4, "'.-'", withG, withH, save, show, nil)
+	}
+
+	if true {
+		sktol := 1e-10
+		dtol := 1e-12
+		dtol2 := 1e-17
+		ver := true
+		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	}
+}

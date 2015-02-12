@@ -15,6 +15,8 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+const PRINTZEROTOL = 1e-13
+
 // PrintVec prints a vector
 func PrintVec(name string, a []float64, format string, numpy bool) {
 	if utl.Tsilent {
@@ -25,7 +27,11 @@ func PrintVec(name string, a []float64, format string, numpy bool) {
 		r += " array(["
 	}
 	for i := 0; i < len(a); i++ {
-		r += fmt.Sprintf(format, a[i])
+		if math.Abs(a[i]) <= PRINTZEROTOL {
+			r += fmt.Sprintf(format, 0.0)
+		} else {
+			r += fmt.Sprintf(format, a[i])
+		}
 		if numpy {
 			if i < len(a)-1 {
 				r += ","
