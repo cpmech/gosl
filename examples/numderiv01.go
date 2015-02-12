@@ -19,21 +19,29 @@ func main() {
 	// define function and derivative function
 	y_fcn := func(x float64) float64 { return math.Sin(x) }
 	dydx_fcn := func(x float64) float64 { return math.Cos(x) }
+	d2ydx2_fcn := func(x float64) float64 { return -math.Sin(x) }
 
 	// run test for 11 points
 	X := utl.LinSpace(0, 2*math.Pi, 11)
 	for _, x := range X {
 
-		// analytical derivative
+		// analytical derivatives
 		dydx_ana := dydx_fcn(x)
+		d2ydx2_ana := d2ydx2_fcn(x)
 
-		// numerical derivative
+		// numerical derivative: dydx
 		dydx_num, _ := num.DerivCentral(func(t float64, args ...interface{}) float64 {
 			return y_fcn(t)
 		}, x, 1e-3)
 
+		// numerical derivative d2ydx2
+		d2ydx2_num, _ := num.DerivCentral(func(t float64, args ...interface{}) float64 {
+			return dydx_fcn(t)
+		}, x, 1e-3)
+
 		// check
-		utl.AnaNum(utl.Sf("dydx @ %.6f", x), 1e-10, dydx_ana, dydx_num, true)
+		utl.AnaNum(utl.Sf("dy/dx   @ %.6f", x), 1e-10, dydx_ana, dydx_num, true)
+		utl.AnaNum(utl.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2_ana, d2ydx2_num, true)
 	}
 
 	// generate 101 points
