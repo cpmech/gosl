@@ -35,11 +35,12 @@ func main() {
 		return
 	}
 
-	ffcn := func(fx, x []float64) {
+	ffcn := func(fx, x []float64) error {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
 		fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
+		return nil
 	}
-	Jfcn := func(dfdx *la.Triplet, x []float64) {
+	Jfcn := func(dfdx *la.Triplet, x []float64) error {
 		dfdx.Start()
 		if false {
 			if mpi.Rank() == 0 {
@@ -58,6 +59,7 @@ func main() {
 				dfdx.Put(1, 1, 3.0*x[1]*x[1])
 			}
 		}
+		return nil
 	}
 	x := []float64{0.5, 0.5}
 	var tst testing.T

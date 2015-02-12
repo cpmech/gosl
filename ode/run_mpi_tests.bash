@@ -1,9 +1,4 @@
 #!/bin/bash
 
-go build t_ODE01b_main.go
-mpirun -np 2 ./t_ODE01b_main
-rm t_ODE01b_main
-
-go build t_ODE04b_main.go
-mpirun -np 3 ./t_ODE04b_main
-rm t_ODE04b_main
+go build -o /tmp/gosl/t_ODE01b_main t_ODE01b_main.go && mpirun -np 2 /tmp/gosl/t_ODE01b_main
+go build -o /tmp/gosl/t_ODE04b_main t_ODE04b_main.go && mpirun -np 3 /tmp/gosl/t_ODE04b_main

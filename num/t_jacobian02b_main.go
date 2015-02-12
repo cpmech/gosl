@@ -42,15 +42,16 @@ func main() {
 		return
 	}
 
-	ffcn := func(fx, x []float64) {
+	ffcn := func(fx, x []float64) error {
 		fx[0] = 2.0*x[0] - x[1] + sin(x[2]) - cos(x[3]) - x[5]*x[5] - 1.0      // 0
 		fx[1] = -x[0] + 2.0*x[1] + cos(x[2]) - sin(x[3]) + x[5] - 1.0          // 1
 		fx[2] = x[0] + 3.0*x[1] + sin(x[3]) - cos(x[4]) - x[5]*x[5] - 1.0      // 2
 		fx[3] = 2.0*x[0] + 4.0*x[1] + cos(x[3]) - cos(x[4]) + x[5] - 1.0       // 3
 		fx[4] = x[0] + 5.0*x[1] - sin(x[2]) + sin(x[4]) - x[5]*x[5]*x[5] - 1.0 // 4
 		fx[5] = x[0] + 6.0*x[1] - cos(x[2]) + cos(x[4]) + x[5] - 1.0           // 5
+		return nil
 	}
-	Jfcn := func(dfdx *la.Triplet, x []float64) {
+	Jfcn := func(dfdx *la.Triplet, x []float64) error {
 		dfdx.Start()
 		J := [][]float64{
 			{2.0, -1.0, cos(x[2]), sin(x[3]), 0.0, -2.0 * x[5]},
@@ -68,6 +69,7 @@ func main() {
 			}
 		}
 		//la.PrintMat(fmt.Sprintf("J @ %d",mpi.Rank()), dfdx.ToMatrix(nil).ToDense(), "%12.6f", false)
+		return nil
 	}
 	x := []float64{5.0, 5.0, pi, pi, pi, 5.0}
 	var tst testing.T
