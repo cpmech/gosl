@@ -322,6 +322,9 @@ including for making the transition from NumPy to Go easier.
 				<dd><a href="#IntAssertLessThanOrEqualTo">func IntAssertLessThanOrEqualTo(a, b int)</a></dd>
 			
 				
+				<dd><a href="#IntBoolMapSort">func IntBoolMapSort(m map[int]bool) (sorted_keys []int)</a></dd>
+			
+				
 				<dd><a href="#IntFill">func IntFill(s []int, val int)</a></dd>
 			
 				
@@ -894,7 +897,7 @@ Atan2pDeg implements a positive version of atan2, in such a way that: 0 ≤ α �
 		
 			
 			
-			<h2 id="Atob">func <a href="/src/target/basic.go?s=2181:2214#L92">Atob</a></h2>
+			<h2 id="Atob">func <a href="/src/target/basic.go?s=2108:2141#L89">Atob</a></h2>
 			<pre>func Atob(val <a href="/pkg/builtin/#string">string</a>) (bres <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 Atob converts string to bool
@@ -906,7 +909,7 @@ Atob converts string to bool
 		
 			
 			
-			<h2 id="Atof">func <a href="/src/target/basic.go?s=2736:2771#L119">Atof</a></h2>
+			<h2 id="Atof">func <a href="/src/target/basic.go?s=2663:2698#L116">Atof</a></h2>
 			<pre>func Atof(val <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atof converts string to float64
@@ -918,7 +921,7 @@ Atof converts string to float64
 		
 			
 			
-			<h2 id="Atoi">func <a href="/src/target/basic.go?s=2527:2558#L110">Atoi</a></h2>
+			<h2 id="Atoi">func <a href="/src/target/basic.go?s=2454:2485#L107">Atoi</a></h2>
 			<pre>func Atoi(val <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Atoi converts string to integer
@@ -942,7 +945,7 @@ BestSquare finds the best square for given size=Nrows * Ncolumns
 		
 			
 			
-			<h2 id="Btoa">func <a href="/src/target/basic.go?s=3332:3359#L150">Btoa</a></h2>
+			<h2 id="Btoa">func <a href="/src/target/basic.go?s=3259:3286#L147">Btoa</a></h2>
 			<pre>func Btoa(flag <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 Btoa converts flag to string
@@ -957,7 +960,7 @@ Btoa converts flag to string
 		
 			
 			
-			<h2 id="Btoi">func <a href="/src/target/basic.go?s=3182:3206#L140">Btoi</a></h2>
+			<h2 id="Btoi">func <a href="/src/target/basic.go?s=3109:3133#L137">Btoi</a></h2>
 			<pre>func Btoi(flag <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 Btoi converts flag to interger
@@ -986,7 +989,7 @@ CallerInfo returns the file and line positions where an error occurred
 		
 			
 			
-			<h2 id="Catch">func <a href="/src/target/basic.go?s=1365:1391#L53">Catch</a></h2>
+			<h2 id="Catch">func <a href="/src/target/basic.go?s=1292:1318#L50">Catch</a></h2>
 			<pre>func Catch(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>)</pre>
 			<p>
 Catch catches a panic
@@ -1473,7 +1476,7 @@ DiffVecs returns the formatted difference between two slices of floats
 		
 			
 			
-			<h2 id="Digits">func <a href="/src/target/basic.go?s=1852:1904#L76">Digits</a></h2>
+			<h2 id="Digits">func <a href="/src/target/basic.go?s=1779:1831#L73">Digits</a></h2>
 			<pre>func Digits(maxint <a href="/pkg/builtin/#int">int</a>) (ndigits <a href="/pkg/builtin/#int">int</a>, format <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Digits returns the nubmer of digits
@@ -1602,7 +1605,7 @@ EvalE evaluates an expression for given parsed structure in &#39;e&#39;
 		
 			
 			
-			<h2 id="Expon">func <a href="/src/target/basic.go?s=2027:2064#L83">Expon</a></h2>
+			<h2 id="Expon">func <a href="/src/target/basic.go?s=1954:1991#L80">Expon</a></h2>
 			<pre>func Expon(val <a href="/pkg/builtin/#float64">float64</a>) (ndigits <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Expon returns the exponent
@@ -1874,6 +1877,15 @@ IntAssertLessThanOrEqualTo asserts that a ≤ b (ints)
 		
 			
 			
+			<h2 id="IntBoolMapSort">func <a href="/src/target/sorting.go?s=5660:5715#L259">IntBoolMapSort</a></h2>
+			<pre>func IntBoolMapSort(m map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
 			<h2 id="IntFill">func <a href="/src/target/mylab.go?s=279:309#L6">IntFill</a></h2>
 			<pre>func IntFill(s []<a href="/pkg/builtin/#int">int</a>, val <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
@@ -2061,7 +2073,7 @@ IntsAlloc allocates a matrix of integers
 		
 			
 			
-			<h2 id="Itob">func <a href="/src/target/basic.go?s=3031:3054#L130">Itob</a></h2>
+			<h2 id="Itob">func <a href="/src/target/basic.go?s=2958:2981#L127">Itob</a></h2>
 			<pre>func Itob(val <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 Itob converts from integer to bool
@@ -2247,7 +2259,7 @@ OpenFileR opens a file for reading data
 		
 			
 			
-			<h2 id="Panic">func <a href="/src/target/basic.go?s=1162:1204#L42">Panic</a></h2>
+			<h2 id="Panic">func <a href="/src/target/basic.go?s=1089:1131#L39">Panic</a></h2>
 			<pre>func Panic(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Panic panicks
@@ -2259,7 +2271,7 @@ Panic panicks
 		
 			
 			
-			<h2 id="PanicSimple">func <a href="/src/target/basic.go?s=1006:1054#L34">PanicSimple</a></h2>
+			<h2 id="PanicSimple">func <a href="/src/target/basic.go?s=933:981#L31">PanicSimple</a></h2>
 			<pre>func PanicSimple(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 PanicSimple panicks without calling CallerInfo
@@ -2297,7 +2309,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pf">func <a href="/src/target/basic.go?s=3512:3551#L161">Pf</a></h2>
+			<h2 id="Pf">func <a href="/src/target/basic.go?s=3439:3478#L158">Pf</a></h2>
 			<pre>func Pf(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2306,7 +2318,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfBlue">func <a href="/src/target/basic.go?s=7452:7495#L390">PfBlue</a></h2>
+			<h2 id="PfBlue">func <a href="/src/target/basic.go?s=7379:7422#L387">PfBlue</a></h2>
 			<pre>func PfBlue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2315,7 +2327,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfCyan">func <a href="/src/target/basic.go?s=6765:6808#L350">PfCyan</a></h2>
+			<h2 id="PfCyan">func <a href="/src/target/basic.go?s=6692:6735#L347">PfCyan</a></h2>
 			<pre>func PfCyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2324,7 +2336,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfGreen">func <a href="/src/target/basic.go?s=7279:7323#L380">PfGreen</a></h2>
+			<h2 id="PfGreen">func <a href="/src/target/basic.go?s=7206:7250#L377">PfGreen</a></h2>
 			<pre>func PfGreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2333,7 +2345,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfMag">func <a href="/src/target/basic.go?s=7624:7666#L400">PfMag</a></h2>
+			<h2 id="PfMag">func <a href="/src/target/basic.go?s=7551:7593#L397">PfMag</a></h2>
 			<pre>func PfMag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2342,7 +2354,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfRed">func <a href="/src/target/basic.go?s=7108:7150#L370">PfRed</a></h2>
+			<h2 id="PfRed">func <a href="/src/target/basic.go?s=7035:7077#L367">PfRed</a></h2>
 			<pre>func PfRed(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2351,7 +2363,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfWhite">func <a href="/src/target/basic.go?s=7795:7839#L410">PfWhite</a></h2>
+			<h2 id="PfWhite">func <a href="/src/target/basic.go?s=7722:7766#L407">PfWhite</a></h2>
 			<pre>func PfWhite(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2360,7 +2372,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfYel">func <a href="/src/target/basic.go?s=6937:6979#L360">PfYel</a></h2>
+			<h2 id="PfYel">func <a href="/src/target/basic.go?s=6864:6906#L357">PfYel</a></h2>
 			<pre>func PfYel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2369,7 +2381,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfblue">func <a href="/src/target/basic.go?s=4294:4337#L207">Pfblue</a></h2>
+			<h2 id="Pfblue">func <a href="/src/target/basic.go?s=4221:4264#L204">Pfblue</a></h2>
 			<pre>func Pfblue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2378,7 +2390,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfblue2">func <a href="/src/target/basic.go?s=6217:6261#L317">Pfblue2</a></h2>
+			<h2 id="Pfblue2">func <a href="/src/target/basic.go?s=6144:6188#L314">Pfblue2</a></h2>
 			<pre>func Pfblue2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2387,7 +2399,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfcyan">func <a href="/src/target/basic.go?s=3607:3650#L167">Pfcyan</a></h2>
+			<h2 id="Pfcyan">func <a href="/src/target/basic.go?s=3534:3577#L164">Pfcyan</a></h2>
 			<pre>func Pfcyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2396,7 +2408,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfcyan2">func <a href="/src/target/basic.go?s=5515:5559#L277">Pfcyan2</a></h2>
+			<h2 id="Pfcyan2">func <a href="/src/target/basic.go?s=5442:5486#L274">Pfcyan2</a></h2>
 			<pre>func Pfcyan2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2405,7 +2417,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfdgreen">func <a href="/src/target/basic.go?s=4985:5030#L247">Pfdgreen</a></h2>
+			<h2 id="Pfdgreen">func <a href="/src/target/basic.go?s=4912:4957#L244">Pfdgreen</a></h2>
 			<pre>func Pfdgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2414,7 +2426,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfdyel">func <a href="/src/target/basic.go?s=5691:5734#L287">Pfdyel</a></h2>
+			<h2 id="Pfdyel">func <a href="/src/target/basic.go?s=5618:5661#L284">Pfdyel</a></h2>
 			<pre>func Pfdyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2423,7 +2435,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfdyel2">func <a href="/src/target/basic.go?s=5866:5910#L297">Pfdyel2</a></h2>
+			<h2 id="Pfdyel2">func <a href="/src/target/basic.go?s=5793:5837#L294">Pfdyel2</a></h2>
 			<pre>func Pfdyel2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2432,7 +2444,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfgreen">func <a href="/src/target/basic.go?s=4121:4165#L197">Pfgreen</a></h2>
+			<h2 id="Pfgreen">func <a href="/src/target/basic.go?s=4048:4092#L194">Pfgreen</a></h2>
 			<pre>func Pfgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2441,7 +2453,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfgreen2">func <a href="/src/target/basic.go?s=5162:5207#L257">Pfgreen2</a></h2>
+			<h2 id="Pfgreen2">func <a href="/src/target/basic.go?s=5089:5134#L254">Pfgreen2</a></h2>
 			<pre>func Pfgreen2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2450,7 +2462,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfgrey">func <a href="/src/target/basic.go?s=6042:6085#L307">Pfgrey</a></h2>
+			<h2 id="Pfgrey">func <a href="/src/target/basic.go?s=5969:6012#L304">Pfgrey</a></h2>
 			<pre>func Pfgrey(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2459,7 +2471,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfgrey2">func <a href="/src/target/basic.go?s=6393:6437#L327">Pfgrey2</a></h2>
+			<h2 id="Pfgrey2">func <a href="/src/target/basic.go?s=6320:6364#L324">Pfgrey2</a></h2>
 			<pre>func Pfgrey2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2468,7 +2480,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pflmag">func <a href="/src/target/basic.go?s=4637:4680#L227">Pflmag</a></h2>
+			<h2 id="Pflmag">func <a href="/src/target/basic.go?s=4564:4607#L224">Pflmag</a></h2>
 			<pre>func Pflmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2477,7 +2489,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfmag">func <a href="/src/target/basic.go?s=4466:4508#L217">Pfmag</a></h2>
+			<h2 id="Pfmag">func <a href="/src/target/basic.go?s=4393:4435#L214">Pfmag</a></h2>
 			<pre>func Pfmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2486,7 +2498,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pforan">func <a href="/src/target/basic.go?s=6569:6612#L337">Pforan</a></h2>
+			<h2 id="Pforan">func <a href="/src/target/basic.go?s=6496:6539#L334">Pforan</a></h2>
 			<pre>func Pforan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2495,7 +2507,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfpink">func <a href="/src/target/basic.go?s=4809:4852#L237">Pfpink</a></h2>
+			<h2 id="Pfpink">func <a href="/src/target/basic.go?s=4736:4779#L234">Pfpink</a></h2>
 			<pre>func Pfpink(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2504,7 +2516,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfpurple">func <a href="/src/target/basic.go?s=5338:5383#L267">Pfpurple</a></h2>
+			<h2 id="Pfpurple">func <a href="/src/target/basic.go?s=5265:5310#L264">Pfpurple</a></h2>
 			<pre>func Pfpurple(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2513,7 +2525,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfred">func <a href="/src/target/basic.go?s=3950:3992#L187">Pfred</a></h2>
+			<h2 id="Pfred">func <a href="/src/target/basic.go?s=3877:3919#L184">Pfred</a></h2>
 			<pre>func Pfred(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2522,7 +2534,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfyel">func <a href="/src/target/basic.go?s=3779:3821#L177">Pfyel</a></h2>
+			<h2 id="Pfyel">func <a href="/src/target/basic.go?s=3706:3748#L174">Pfyel</a></h2>
 			<pre>func Pfyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -2531,7 +2543,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PrintTime">func <a href="/src/target/basic.go?s=1529:1554#L60">PrintTime</a></h2>
+			<h2 id="PrintTime">func <a href="/src/target/basic.go?s=1456:1481#L57">PrintTime</a></h2>
 			<pre>func PrintTime(t <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PrintTime prints simulation time
@@ -2543,7 +2555,7 @@ PrintTime prints simulation time
 		
 			
 			
-			<h2 id="PrintTimeLong">func <a href="/src/target/basic.go?s=1687:1716#L68">PrintTimeLong</a></h2>
+			<h2 id="PrintTimeLong">func <a href="/src/target/basic.go?s=1614:1643#L65">PrintTimeLong</a></h2>
 			<pre>func PrintTimeLong(t <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PrintTime prints simulation time (long format)
@@ -2829,7 +2841,7 @@ StrAssert asserts that a is equal to b (strings)
 		
 			
 			
-			<h2 id="StrBoolMapSort">func <a href="/src/target/sorting.go?s=4257:4318#L199">StrBoolMapSort</a></h2>
+			<h2 id="StrBoolMapSort">func <a href="/src/target/sorting.go?s=4359:4420#L201">StrBoolMapSort</a></h2>
 			<pre>func StrBoolMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2838,7 +2850,7 @@ StrAssert asserts that a is equal to b (strings)
 		
 			
 			
-			<h2 id="StrBoolMapSortSplit">func <a href="/src/target/sorting.go?s=5126:5212#L240">StrBoolMapSortSplit</a></h2>
+			<h2 id="StrBoolMapSortSplit">func <a href="/src/target/sorting.go?s=5228:5314#L242">StrBoolMapSortSplit</a></h2>
 			<pre>func StrBoolMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 			
@@ -2847,7 +2859,7 @@ StrAssert asserts that a is equal to b (strings)
 		
 			
 			
-			<h2 id="StrDblMapSort">func <a href="/src/target/sorting.go?s=4050:4113#L188">StrDblMapSort</a></h2>
+			<h2 id="StrDblMapSort">func <a href="/src/target/sorting.go?s=4152:4215#L190">StrDblMapSort</a></h2>
 			<pre>func StrDblMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2856,7 +2868,7 @@ StrAssert asserts that a is equal to b (strings)
 		
 			
 			
-			<h2 id="StrDblMapSortSplit">func <a href="/src/target/sorting.go?s=4788:4879#L225">StrDblMapSortSplit</a></h2>
+			<h2 id="StrDblMapSortSplit">func <a href="/src/target/sorting.go?s=4890:4981#L227">StrDblMapSortSplit</a></h2>
 			<pre>func StrDblMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -2893,7 +2905,7 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
-			<h2 id="StrIntMapSort">func <a href="/src/target/sorting.go?s=3847:3906#L177">StrIntMapSort</a></h2>
+			<h2 id="StrIntMapSort">func <a href="/src/target/sorting.go?s=3949:4008#L179">StrIntMapSort</a></h2>
 			<pre>func StrIntMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2902,7 +2914,7 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
-			<h2 id="StrIntMapSortSplit">func <a href="/src/target/sorting.go?s=4462:4545#L210">StrIntMapSortSplit</a></h2>
+			<h2 id="StrIntMapSortSplit">func <a href="/src/target/sorting.go?s=4564:4647#L212">StrIntMapSortSplit</a></h2>
 			<pre>func StrIntMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -2935,7 +2947,7 @@ TTitle returns the Test Title
 		
 			
 			
-			<h2 id="UnColor">func <a href="/src/target/basic.go?s=8110:8141#L424">UnColor</a></h2>
+			<h2 id="UnColor">func <a href="/src/target/basic.go?s=8037:8068#L421">UnColor</a></h2>
 			<pre>func UnColor(msg <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 UnColor removes console characters used to show colors

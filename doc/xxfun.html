@@ -89,7 +89,27 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 					<dd>&nbsp; &nbsp; <a href="#Add.H">func (o Add) H(t float64, x []float64) float64</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Add.Init">func (o *Add) Init(prms Prms)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Add.Init">func (o *Add) Init(prms Prms) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Cos">type Cos</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cos.F">func (o Cos) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cos.G">func (o Cos) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cos.Grad">func (o Cos) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cos.H">func (o Cos) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cos.Init">func (o *Cos) Init(prms Prms) (err error)</a></dd>
 				
 			
 				
@@ -109,14 +129,54 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 					<dd>&nbsp; &nbsp; <a href="#Cte.H">func (o Cte) H(t float64, x []float64) float64</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Cte.Init">func (o *Cte) Init(prms Prms)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Cte.Init">func (o *Cte) Init(prms Prms) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Exc1">type Exc1</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc1.F">func (o Exc1) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc1.G">func (o Exc1) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc1.Grad">func (o Exc1) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc1.H">func (o Exc1) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc1.Init">func (o *Exc1) Init(prms Prms) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Exc2">type Exc2</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc2.F">func (o Exc2) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc2.G">func (o Exc2) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc2.Grad">func (o Exc2) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc2.H">func (o Exc2) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Exc2.Init">func (o *Exc2) Init(prms Prms) (err error)</a></dd>
 				
 			
 				
 				<dd><a href="#Func">type Func</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#New">func New(name string, prms Prms) Func</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#New">func New(name string, prms Prms) (Func, error)</a></dd>
 				
 				
 			
@@ -137,7 +197,7 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 					<dd>&nbsp; &nbsp; <a href="#Lin.H">func (o Lin) H(t float64, x []float64) float64</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Lin.Init">func (o *Lin) Init(prms Prms)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Lin.Init">func (o *Lin) Init(prms Prms) (err error)</a></dd>
 				
 			
 				
@@ -154,9 +214,6 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Prms.Find">func (o Prms) Find(name string) *Prm</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#Prms.GetValueOrPanic">func (o Prms) GetValueOrPanic(name string, minval, maxval float64, usemin, usemax bool) float64</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Prms.String">func (o Prms) String() string</a></dd>
@@ -179,7 +236,7 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 					<dd>&nbsp; &nbsp; <a href="#Pts.H">func (o Pts) H(t float64, x []float64) float64</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Pts.Init">func (o *Pts) Init(prms Prms)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Pts.Init">func (o *Pts) Init(prms Prms) (err error)</a></dd>
 				
 			
 				
@@ -199,7 +256,7 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 					<dd>&nbsp; &nbsp; <a href="#RefDecGen.H">func (o RefDecGen) H(t float64, x []float64) float64</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#RefDecGen.Init">func (o *RefDecGen) Init(prms Prms)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#RefDecGen.Init">func (o *RefDecGen) Init(prms Prms) (err error)</a></dd>
 				
 			
 				
@@ -219,7 +276,27 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 					<dd>&nbsp; &nbsp; <a href="#RefDecSp1.H">func (o RefDecSp1) H(t float64, x []float64) float64</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#RefDecSp1.Init">func (o *RefDecSp1) Init(prms Prms)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#RefDecSp1.Init">func (o *RefDecSp1) Init(prms Prms) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Rmp">type Rmp</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rmp.F">func (o Rmp) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rmp.G">func (o Rmp) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rmp.Grad">func (o Rmp) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rmp.H">func (o Rmp) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Rmp.Init">func (o *Rmp) Init(prms Prms) (err error)</a></dd>
 				
 			
 				
@@ -239,7 +316,7 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 					<dd>&nbsp; &nbsp; <a href="#Srmps.H">func (o Srmps) H(t float64, x []float64) float64</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Srmps.Init">func (o *Srmps) Init(prms Prms)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Srmps.Init">func (o *Srmps) Init(prms Prms) (err error)</a></dd>
 				
 			
 			
@@ -257,7 +334,13 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_add.go">f_add.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/fun/f_cos.go">f_cos.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/fun/f_cte.go">f_cte.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fun/f_exc1.go">f_exc1.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fun/f_exc2.go">f_exc2.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_lin.go">f_lin.go</a>
 			
@@ -266,6 +349,8 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<a href="/src/github.com/cpmech/gosl/fun/f_refdecgen.go">f_refdecgen.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_refdecsp1.go">f_refdecsp1.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fun/f_rmp.go">f_rmp.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_srmps.go">f_srmps.go</a>
 			
@@ -339,7 +424,7 @@ One implements an specialisation of Cte function that always returns one
 		
 			
 			
-			<h2 id="PlotT">func <a href="/src/target/func.go?s=1190:1328#L32">PlotT</a></h2>
+			<h2 id="PlotT">func <a href="/src/target/func.go?s=1324:1462#L35">PlotT</a></h2>
 			<pre>func PlotT(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, withG, withH, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
 			<p>
 PlotT plots F, G and H for varying t and fixed coordinates x
@@ -376,7 +461,7 @@ Add implements the addition of two other functions.
 
 			
 				
-				<h3 id="Add.F">func (Add) <a href="/src/target/f_add.go?s=812:858#L31">F</a></h3>
+				<h3 id="Add.F">func (Add) <a href="/src/target/f_add.go?s=840:886#L32">F</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -387,7 +472,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Add.G">func (Add) <a href="/src/target/f_add.go?s=993:1039#L39">G</a></h3>
+				<h3 id="Add.G">func (Add) <a href="/src/target/f_add.go?s=1021:1067#L40">G</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -398,7 +483,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Add.Grad">func (Add) <a href="/src/target/f_add.go?s=1367:1421#L55">Grad</a></h3>
+				<h3 id="Add.Grad">func (Add) <a href="/src/target/f_add.go?s=1395:1449#L56">Grad</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -409,7 +494,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Add.H">func (Add) <a href="/src/target/f_add.go?s=1178:1224#L47">H</a></h3>
+				<h3 id="Add.H">func (Add) <a href="/src/target/f_add.go?s=1206:1252#L48">H</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -420,8 +505,86 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Add.Init">func (*Add) <a href="/src/target/f_add.go?s=493:522#L12">Init</a></h3>
-				<pre>func (o *<a href="#Add">Add</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<h3 id="Add.Init">func (*Add) <a href="/src/target/f_add.go?s=493:534#L12">Init</a></h3>
+				<pre>func (o *<a href="#Add">Add</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Cos">type <a href="/src/target/f_cos.go?s=277:329#L4">Cos</a></h2>
+			<pre>type Cos struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Cos implements y(t) = a * cos(b*t) + c
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Cos.F">func (Cos) <a href="/src/target/f_cos.go?s=736:782#L33">F</a></h3>
+				<pre>func (o <a href="#Cos">Cos</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cos.G">func (Cos) <a href="/src/target/f_cos.go?s=860:906#L38">G</a></h3>
+				<pre>func (o <a href="#Cos">Cos</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cos.Grad">func (Cos) <a href="/src/target/f_cos.go?s=1132:1186#L48">Grad</a></h3>
+				<pre>func (o <a href="#Cos">Cos</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cos.H">func (Cos) <a href="/src/target/f_cos.go?s=991:1037#L43">H</a></h3>
+				<pre>func (o <a href="#Cos">Cos</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cos.Init">func (*Cos) <a href="/src/target/f_cos.go?s=461:502#L16">Init</a></h3>
+				<pre>func (o *<a href="#Cos">Cos</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>
@@ -460,7 +623,7 @@ Zero implements an specialisation of Cte function that always returns zero
 
 			
 				
-				<h3 id="Cte.F">func (Cte) <a href="/src/target/f_cte.go?s=814:860#L30">F</a></h3>
+				<h3 id="Cte.F">func (Cte) <a href="/src/target/f_cte.go?s=842:888#L31">F</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -471,7 +634,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Cte.G">func (Cte) <a href="/src/target/f_cte.go?s=936:982#L36">G</a></h3>
+				<h3 id="Cte.G">func (Cte) <a href="/src/target/f_cte.go?s=964:1010#L37">G</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 first derivative
@@ -483,7 +646,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Cte.Grad">func (Cte) <a href="/src/target/f_cte.go?s=1173:1227#L47">Grad</a></h3>
+				<h3 id="Cte.Grad">func (Cte) <a href="/src/target/f_cte.go?s=1201:1255#L48">Grad</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -494,7 +657,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Cte.H">func (Cte) <a href="/src/target/f_cte.go?s=1063:1109#L42">H</a></h3>
+				<h3 id="Cte.H">func (Cte) <a href="/src/target/f_cte.go?s=1091:1137#L43">H</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 second derivative
@@ -506,8 +669,8 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Cte.Init">func (*Cte) <a href="/src/target/f_cte.go?s=612:641#L18">Init</a></h3>
-				<pre>func (o *<a href="#Cte">Cte</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<h3 id="Cte.Init">func (*Cte) <a href="/src/target/f_cte.go?s=612:653#L18">Init</a></h3>
+				<pre>func (o *<a href="#Cte">Cte</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>
@@ -519,9 +682,167 @@ Init initialises the function
 		
 			
 			
-			<h2 id="Func">type <a href="/src/target/func.go?s=419:739#L6">Func</a></h2>
+			<h2 id="Exc1">type <a href="/src/target/f_exc1.go?s=285:319#L4">Exc1</a></h2>
+			<pre>type Exc1 struct {
+    A <a href="/pkg/builtin/#float64">float64</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Excitation #1 y(t) = A * (1 - cos(b*π*t)) / 2
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Exc1.F">func (Exc1) <a href="/src/target/f_exc1.go?s=704:751#L29">F</a></h3>
+				<pre>func (o <a href="#Exc1">Exc1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Exc1.G">func (Exc1) <a href="/src/target/f_exc1.go?s=847:894#L34">G</a></h3>
+				<pre>func (o <a href="#Exc1">Exc1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Exc1.Grad">func (Exc1) <a href="/src/target/f_exc1.go?s=1177:1232#L44">Grad</a></h3>
+				<pre>func (o <a href="#Exc1">Exc1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Exc1.H">func (Exc1) <a href="/src/target/f_exc1.go?s=1002:1049#L39">H</a></h3>
+				<pre>func (o <a href="#Exc1">Exc1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Exc1.Init">func (*Exc1) <a href="/src/target/f_exc1.go?s=452:494#L14">Init</a></h3>
+				<pre>func (o *<a href="#Exc1">Exc1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Exc2">type <a href="/src/target/f_exc2.go?s=293:349#L4">Exc2</a></h2>
+			<pre>type Exc2 struct {
+    A <a href="/pkg/builtin/#float64">float64</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Excitation # 2: y(t) = if t &lt; ta A*sin(b*π*t), else 0
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Exc2.F">func (Exc2) <a href="/src/target/f_exc2.go?s=761:808#L33">F</a></h3>
+				<pre>func (o <a href="#Exc2">Exc2</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Exc2.G">func (Exc2) <a href="/src/target/f_exc2.go?s=921:968#L41">G</a></h3>
+				<pre>func (o <a href="#Exc2">Exc2</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Exc2.Grad">func (Exc2) <a href="/src/target/f_exc2.go?s=1302:1357#L57">Grad</a></h3>
+				<pre>func (o <a href="#Exc2">Exc2</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Exc2.H">func (Exc2) <a href="/src/target/f_exc2.go?s=1101:1148#L49">H</a></h3>
+				<pre>func (o <a href="#Exc2">Exc2</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Exc2.Init">func (*Exc2) <a href="/src/target/f_exc2.go?s=482:524#L16">Init</a></h3>
+				<pre>func (o *<a href="#Exc2">Exc2</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Func">type <a href="/src/target/func.go?s=419:799#L6">Func</a></h2>
 			<pre>type Func interface {
-    Init(prms <a href="#Prms">Prms</a>)
+    Init(prms <a href="#Prms">Prms</a>) <a href="/pkg/builtin/#error">error</a>                     <span class="comment">// initialise function parameters</span>
     F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// y = F(t, x)</span>
     G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// ∂y/∂t_cteX = G(t, x)</span>
     H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// ∂²y/∂t²_cteX = H(t, x)</span>
@@ -542,8 +863,8 @@ Func defines the interface for y(t, x) functions
 
 			
 				
-				<h3 id="New">func <a href="/src/target/func.go?s=903:940#L18">New</a></h3>
-				<pre>func New(name <a href="/pkg/builtin/#string">string</a>, prms <a href="#Prms">Prms</a>) <a href="#Func">Func</a></pre>
+				<h3 id="New">func <a href="/src/target/func.go?s=963:1009#L18">New</a></h3>
+				<pre>func New(name <a href="/pkg/builtin/#string">string</a>, prms <a href="#Prms">Prms</a>) (<a href="#Func">Func</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 New allocates function by name
 </p>
@@ -580,7 +901,7 @@ Lin implements a linear function w.r.t t
 
 			
 				
-				<h3 id="Lin.F">func (Lin) <a href="/src/target/f_lin.go?s=719:765#L28">F</a></h3>
+				<h3 id="Lin.F">func (Lin) <a href="/src/target/f_lin.go?s=736:782#L29">F</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -591,7 +912,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Lin.G">func (Lin) <a href="/src/target/f_lin.go?s=834:880#L33">G</a></h3>
+				<h3 id="Lin.G">func (Lin) <a href="/src/target/f_lin.go?s=851:897#L34">G</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -602,7 +923,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Lin.Grad">func (Lin) <a href="/src/target/f_lin.go?s=1048:1102#L43">Grad</a></h3>
+				<h3 id="Lin.Grad">func (Lin) <a href="/src/target/f_lin.go?s=1065:1119#L44">Grad</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -613,7 +934,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Lin.H">func (Lin) <a href="/src/target/f_lin.go?s=940:986#L38">H</a></h3>
+				<h3 id="Lin.H">func (Lin) <a href="/src/target/f_lin.go?s=957:1003#L39">H</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -624,8 +945,8 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Lin.Init">func (*Lin) <a href="/src/target/f_lin.go?s=484:513#L14">Init</a></h3>
-				<pre>func (o *<a href="#Lin">Lin</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<h3 id="Lin.Init">func (*Lin) <a href="/src/target/f_lin.go?s=484:525#L14">Init</a></h3>
+				<pre>func (o *<a href="#Lin">Lin</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>
@@ -664,7 +985,7 @@ Prm holds material parameter names and values
 
 			
 				
-				<h3 id="Prm.String">func (*Prm) <a href="/src/target/prms.go?s=1923:1952#L53">String</a></h3>
+				<h3 id="Prm.String">func (*Prm) <a href="/src/target/prms.go?s=1309:1338#L33">String</a></h3>
 				<pre>func (o *<a href="#Prm">Prm</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 String outputs a nice formatted representation of a parameter
@@ -709,19 +1030,7 @@ Find finds a parameter by name
 				
 			
 				
-				<h3 id="Prms.GetValueOrPanic">func (Prms) <a href="/src/target/prms.go?s=1423:1518#L34">GetValueOrPanic</a></h3>
-				<pre>func (o <a href="#Prms">Prms</a>) GetValueOrPanic(name <a href="/pkg/builtin/#string">string</a>, minval, maxval <a href="/pkg/builtin/#float64">float64</a>, usemin, usemax <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
-				<p>
-GetValueOrPanic returns the parameter value if it exists; if it does not exists then panic.
-minval and maxval are used to check parameter range if usemin or usemax are true
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="Prms.String">func (Prms) <a href="/src/target/prms.go?s=2597:2626#L85">String</a></h3>
+				<h3 id="Prms.String">func (Prms) <a href="/src/target/prms.go?s=1983:2012#L65">String</a></h3>
 				<pre>func (o <a href="#Prms">Prms</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 String outputs all materials
@@ -755,7 +1064,7 @@ Pts is a function based on a linear interpolation over a set of points
 
 			
 				
-				<h3 id="Pts.F">func (Pts) <a href="/src/target/f_pts.go?s=1120:1166#L49">F</a></h3>
+				<h3 id="Pts.F">func (Pts) <a href="/src/target/f_pts.go?s=1186:1232#L50">F</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -766,7 +1075,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Pts.G">func (Pts) <a href="/src/target/f_pts.go?s=1473:1519#L63">G</a></h3>
+				<h3 id="Pts.G">func (Pts) <a href="/src/target/f_pts.go?s=1514:1560#L66">G</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -777,7 +1086,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Pts.Grad">func (Pts) <a href="/src/target/f_pts.go?s=1916:1970#L82">Grad</a></h3>
+				<h3 id="Pts.Grad">func (Pts) <a href="/src/target/f_pts.go?s=1892:1946#L84">Grad</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -788,7 +1097,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Pts.H">func (Pts) <a href="/src/target/f_pts.go?s=1808:1854#L77">H</a></h3>
+				<h3 id="Pts.H">func (Pts) <a href="/src/target/f_pts.go?s=1784:1830#L79">H</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -799,8 +1108,8 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Pts.Init">func (*Pts) <a href="/src/target/f_pts.go?s=508:537#L17">Init</a></h3>
-				<pre>func (o *<a href="#Pts">Pts</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<h3 id="Pts.Init">func (*Pts) <a href="/src/target/f_pts.go?s=508:549#L17">Init</a></h3>
+				<pre>func (o *<a href="#Pts">Pts</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>
@@ -834,7 +1143,7 @@ RefDecGen implements the reference decreasing model (general)
 
 			
 				
-				<h3 id="RefDecGen.F">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1415:1467#L40">F</a></h3>
+				<h3 id="RefDecGen.F">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1339:1391#L55">F</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -845,7 +1154,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.G">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1582:1634#L45">G</a></h3>
+				<h3 id="RefDecGen.G">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1506:1558#L60">G</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -856,7 +1165,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1983:2043#L56">Grad</a></h3>
+				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1907:1967#L71">Grad</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -867,7 +1176,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.H">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1766:1818#L50">H</a></h3>
+				<h3 id="RefDecGen.H">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1690:1742#L65">H</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -878,8 +1187,8 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="/src/target/f_refdecgen.go?s=710:745#L21">Init</a></h3>
-				<pre>func (o *<a href="#RefDecGen">RefDecGen</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="/src/target/f_refdecgen.go?s=710:757#L21">Init</a></h3>
+				<pre>func (o *<a href="#RefDecGen">RefDecGen</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>
@@ -933,7 +1242,7 @@ RefDecSp1 implements a specialisation of the reference decreasing model
 
 			
 				
-				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1945:1997#L68">F</a></h3>
+				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1991:2043#L79">F</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -944,7 +1253,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2150:2202#L76">G</a></h3>
+				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2196:2248#L87">G</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -955,7 +1264,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2639:2699#L93">Grad</a></h3>
+				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2685:2745#L104">Grad</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -966,7 +1275,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2382:2434#L84">H</a></h3>
+				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2428:2480#L95">H</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -977,10 +1286,91 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1233:1268#L42">Init</a></h3>
-				<pre>func (o *<a href="#RefDecSp1">RefDecSp1</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1233:1280#L42">Init</a></h3>
+				<pre>func (o *<a href="#RefDecSp1">RefDecSp1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the model
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Rmp">type <a href="/src/target/f_rmp.go?s=260:327#L2">Rmp</a></h2>
+			<pre>type Rmp struct {
+    Ca <a href="/pkg/builtin/#float64">float64</a>
+    Cb <a href="/pkg/builtin/#float64">float64</a>
+    Ta <a href="/pkg/builtin/#float64">float64</a>
+    Tb <a href="/pkg/builtin/#float64">float64</a>
+}</pre>
+			<p>
+Rmp implements a ramp function
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Rmp.F">func (Rmp) <a href="/src/target/f_rmp.go?s=791:837#L34">F</a></h3>
+				<pre>func (o <a href="#Rmp">Rmp</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Rmp.G">func (Rmp) <a href="/src/target/f_rmp.go?s=993:1039#L45">G</a></h3>
+				<pre>func (o <a href="#Rmp">Rmp</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Rmp.Grad">func (Rmp) <a href="/src/target/f_rmp.go?s=1292:1346#L61">Grad</a></h3>
+				<pre>func (o <a href="#Rmp">Rmp</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Rmp.H">func (Rmp) <a href="/src/target/f_rmp.go?s=1184:1230#L56">H</a></h3>
+				<pre>func (o <a href="#Rmp">Rmp</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Rmp.Init">func (*Rmp) <a href="/src/target/f_rmp.go?s=459:500#L15">Init</a></h3>
+				<pre>func (o *<a href="#Rmp">Rmp</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the function
 </p>
 
 				
@@ -1011,7 +1401,7 @@ Increasing or decreasing smooth-ramp-smooth function
 
 			
 				
-				<h3 id="Srmps.F">func (Srmps) <a href="/src/target/f_srmps.go?s=761:809#L33">F</a></h3>
+				<h3 id="Srmps.F">func (Srmps) <a href="/src/target/f_srmps.go?s=791:839#L34">F</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1022,7 +1412,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Srmps.G">func (Srmps) <a href="/src/target/f_srmps.go?s=993:1041#L44">G</a></h3>
+				<h3 id="Srmps.G">func (Srmps) <a href="/src/target/f_srmps.go?s=1023:1071#L45">G</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1033,7 +1423,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Srmps.Grad">func (Srmps) <a href="/src/target/f_srmps.go?s=1527:1583#L66">Grad</a></h3>
+				<h3 id="Srmps.Grad">func (Srmps) <a href="/src/target/f_srmps.go?s=1557:1613#L67">Grad</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1044,7 +1434,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Srmps.H">func (Srmps) <a href="/src/target/f_srmps.go?s=1245:1293#L55">H</a></h3>
+				<h3 id="Srmps.H">func (Srmps) <a href="/src/target/f_srmps.go?s=1275:1323#L56">H</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1055,8 +1445,8 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Srmps.Init">func (*Srmps) <a href="/src/target/f_srmps.go?s=479:510#L15">Init</a></h3>
-				<pre>func (o *<a href="#Srmps">Srmps</a>) Init(prms <a href="#Prms">Prms</a>)</pre>
+				<h3 id="Srmps.Init">func (*Srmps) <a href="/src/target/f_srmps.go?s=479:522#L15">Init</a></h3>
+				<pre>func (o *<a href="#Srmps">Srmps</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>

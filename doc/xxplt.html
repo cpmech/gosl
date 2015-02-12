@@ -109,6 +109,9 @@ plt contains functions for plotting
 				<dd><a href="#AxisYmin">func AxisYmin(ymin float64)</a></dd>
 			
 				
+				<dd><a href="#AxisYrange">func AxisYrange(ymin, ymax float64)</a></dd>
+			
+				
 				<dd><a href="#Circle">func Circle(xc, yc, r float64, args string)</a></dd>
 			
 				
@@ -344,7 +347,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisLims">func <a href="/src/target/mplotlib.go?s=3383:3412#L154">AxisLims</a></h2>
+			<h2 id="AxisLims">func <a href="/src/target/mplotlib.go?s=3491:3520#L158">AxisLims</a></h2>
 			<pre>func AxisLims(lims []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -353,7 +356,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisOff">func <a href="/src/target/mplotlib.go?s=5998:6012#L271">AxisOff</a></h2>
+			<h2 id="AxisOff">func <a href="/src/target/mplotlib.go?s=6106:6120#L275">AxisOff</a></h2>
 			<pre>func AxisOff()</pre>
 			
 			
@@ -362,7 +365,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisRange">func <a href="/src/target/mplotlib.go?s=3266:3312#L150">AxisRange</a></h2>
+			<h2 id="AxisRange">func <a href="/src/target/mplotlib.go?s=3374:3420#L154">AxisRange</a></h2>
 			<pre>func AxisRange(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -416,7 +419,16 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Circle">func <a href="/src/target/mplotlib.go?s=6150:6193#L284">Circle</a></h2>
+			<h2 id="AxisYrange">func <a href="/src/target/mplotlib.go?s=3266:3301#L150">AxisYrange</a></h2>
+			<pre>func AxisYrange(ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Circle">func <a href="/src/target/mplotlib.go?s=6258:6301#L288">Circle</a></h2>
 			<pre>func Circle(xc, yc, r <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -425,7 +437,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Clf">func <a href="/src/target/mplotlib.go?s=5292:5302#L238">Clf</a></h2>
+			<h2 id="Clf">func <a href="/src/target/mplotlib.go?s=5400:5410#L242">Clf</a></h2>
 			<pre>func Clf()</pre>
 			
 			
@@ -434,7 +446,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Contour">func <a href="/src/target/mplotlib.go?s=3938:3984#L178">Contour</a></h2>
+			<h2 id="Contour">func <a href="/src/target/mplotlib.go?s=4046:4092#L182">Contour</a></h2>
 			<pre>func Contour(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -443,7 +455,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="ContourSimple">func <a href="/src/target/mplotlib.go?s=4275:4327#L193">ContourSimple</a></h2>
+			<h2 id="ContourSimple">func <a href="/src/target/mplotlib.go?s=4383:4435#L197">ContourSimple</a></h2>
 			<pre>func ContourSimple(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -485,7 +497,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Equal">func <a href="/src/target/mplotlib.go?s=6048:6060#L275">Equal</a></h2>
+			<h2 id="Equal">func <a href="/src/target/mplotlib.go?s=6156:6168#L279">Equal</a></h2>
 			<pre>func Equal()</pre>
 			
 			
@@ -494,7 +506,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Gll">func <a href="/src/target/mplotlib.go?s=5084:5120#L229">Gll</a></h2>
+			<h2 id="Gll">func <a href="/src/target/mplotlib.go?s=5192:5228#L233">Gll</a></h2>
 			<pre>func Gll(xl, yl <a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -503,7 +515,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Grid">func <a href="/src/target/mplotlib.go?s=5023:5045#L225">Grid</a></h2>
+			<h2 id="Grid">func <a href="/src/target/mplotlib.go?s=5131:5153#L229">Grid</a></h2>
 			<pre>func Grid(args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -521,7 +533,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Plot">func <a href="/src/target/mplotlib.go?s=3495:3533#L158">Plot</a></h2>
+			<h2 id="Plot">func <a href="/src/target/mplotlib.go?s=3603:3641#L162">Plot</a></h2>
 			<pre>func Plot(x, y []<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -530,7 +542,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="PlotOne">func <a href="/src/target/mplotlib.go?s=3757:3796#L170">PlotOne</a></h2>
+			<h2 id="PlotOne">func <a href="/src/target/mplotlib.go?s=3865:3904#L174">PlotOne</a></h2>
 			<pre>func PlotOne(x, y <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -539,7 +551,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Quiver">func <a href="/src/target/mplotlib.go?s=4618:4668#L208">Quiver</a></h2>
+			<h2 id="Quiver">func <a href="/src/target/mplotlib.go?s=4726:4776#L212">Quiver</a></h2>
 			<pre>func Quiver(x, y, gx, gy [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -557,7 +569,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Save">func <a href="/src/target/mplotlib.go?s=5602:5625#L254">Save</a></h2>
+			<h2 id="Save">func <a href="/src/target/mplotlib.go?s=5710:5733#L258">Save</a></h2>
 			<pre>func Save(fname <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -566,7 +578,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="SaveD">func <a href="/src/target/mplotlib.go?s=5719:5751#L260">SaveD</a></h2>
+			<h2 id="SaveD">func <a href="/src/target/mplotlib.go?s=5827:5859#L264">SaveD</a></h2>
 			<pre>func SaveD(dirout, fname <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -575,7 +587,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="SetAxis">func <a href="/src/target/mplotlib.go?s=5883:5927#L267">SetAxis</a></h2>
+			<h2 id="SetAxis">func <a href="/src/target/mplotlib.go?s=5991:6035#L271">SetAxis</a></h2>
 			<pre>func SetAxis(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -584,7 +596,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="SetFontSize">func <a href="/src/target/mplotlib.go?s=5332:5361#L242">SetFontSize</a></h2>
+			<h2 id="SetFontSize">func <a href="/src/target/mplotlib.go?s=5440:5469#L246">SetFontSize</a></h2>
 			<pre>func SetFontSize(args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -593,7 +605,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="SetForEps">func <a href="/src/target/mplotlib.go?s=5407:5442#L246">SetForEps</a></h2>
+			<h2 id="SetForEps">func <a href="/src/target/mplotlib.go?s=5515:5550#L250">SetForEps</a></h2>
 			<pre>func SetForEps(prop, widpt <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -602,7 +614,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="SetForPng">func <a href="/src/target/mplotlib.go?s=5496:5540#L250">SetForPng</a></h2>
+			<h2 id="SetForPng">func <a href="/src/target/mplotlib.go?s=5604:5648#L254">SetForPng</a></h2>
 			<pre>func SetForPng(prop, widpt <a href="/pkg/builtin/#float64">float64</a>, dpi <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -674,7 +686,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Show">func <a href="/src/target/mplotlib.go?s=6098:6109#L279">Show</a></h2>
+			<h2 id="Show">func <a href="/src/target/mplotlib.go?s=6206:6217#L283">Show</a></h2>
 			<pre>func Show()</pre>
 			
 			
