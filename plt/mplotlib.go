@@ -157,6 +157,10 @@ func AxisXrange(xmin, xmax float64) {
 	utl.Ff(&bb, "axis([%g, %g, axis()[2], axis()[3]])\n", xmin, xmax)
 }
 
+func AyisYrange(ymin, ymax float64) {
+	utl.Ff(&bb, "axis([axis()[0], axis()[1], %g, %g])\n", ymin, ymax)
+}
+
 func AxisRange(xmin, xmax, ymin, ymax float64) {
 	utl.Ff(&bb, "axis([%g, %g, %g, %g])\n", xmin, xmax, ymin, ymax)
 }
