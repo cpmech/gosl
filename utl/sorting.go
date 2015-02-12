@@ -184,6 +184,8 @@ func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []f
 	return
 }
 
+// Str => ??? maps /////////////////////////////////////////////////////////////////////////////////
+
 func StrIntMapSort(m map[string]int) (sorted_keys []string) {
 	sorted_keys = make([]string, len(m))
 	i := 0
@@ -259,6 +261,19 @@ func StrBoolMapSortSplit(m map[string]bool) (sorted_keys []string, sorted_vals [
 	for j, key := range sorted_keys {
 		sorted_vals[j] = m[key]
 	}
+	return
+}
+
+// Int => ??? maps /////////////////////////////////////////////////////////////////////////////////
+
+func IntBoolMapSort(m map[int]bool) (sorted_keys []int) {
+	sorted_keys = make([]int, len(m))
+	i := 0
+	for key, _ := range m {
+		sorted_keys[i] = key
+		i++
+	}
+	sort.Ints(sorted_keys)
 	return
 }
 

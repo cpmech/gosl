@@ -198,3 +198,22 @@ func Test_sort05(tst *testing.T) {
 	CompareStrs(tst, "kc", kc, []string{"a", "b", "c", "d", "x", "y", "z"})
 	CompareBools(tst, "vc", vc, []bool{false, false, false, true, true, true, true})
 }
+
+func Test_sort06(tst *testing.T) {
+
+	prevTs := Tsilent
+	defer func() {
+		Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mSome error has happened:[0m\n", err)
+		}
+	}()
+
+	//Tsilent = false
+	TTitle("sort06. int => ??? maps")
+
+	a := map[int]bool{100: true, 101: false, 102: true, 10: false, 9: true, 8: false, 0: true}
+	k := IntBoolMapSort(a)
+	Pforan("sorted_keys(a) = %v\n", k)
+	CompareInts(tst, "k", k, []int{0, 8, 9, 10, 100, 101, 102})
+}
