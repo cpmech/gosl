@@ -9,13 +9,38 @@ import (
 	"testing"
 )
 
+func Test_strpair01(tst *testing.T) {
+
+	prevTs := Tsilent
+	defer func() {
+		Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mERROR:", err, "[0m\n")
+		}
+	}()
+
+	//Tsilent = false
+	TTitle("strpair01")
+
+	str := "keyA: value :"
+	key, val := ExtractStrPair(str, ":")
+	Pforan("key = %q\n", key)
+	Pforan("val = %q\n", val)
+	if key != "keyA" {
+		tst.Errorf("key %q is incorrect\n", key)
+	}
+	if val != "value" {
+		tst.Errorf("val %q is incorrect\n", val)
+	}
+}
+
 func Test_keycode01(tst *testing.T) {
 
 	prevTs := Tsilent
 	defer func() {
 		Tsilent = prevTs
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -83,7 +108,7 @@ func Test_keycode02(tst *testing.T) {
 	defer func() {
 		Tsilent = prevTs
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -101,7 +126,7 @@ func Test_parsing02(tst *testing.T) {
 	defer func() {
 		Tsilent = prevTs
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -160,7 +185,7 @@ func Test_parsing03(tst *testing.T) {
 	defer func() {
 		Tsilent = prevTs
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -198,7 +223,7 @@ func Test_parsing04(tst *testing.T) {
 	defer func() {
 		Tsilent = prevTs
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -216,6 +241,7 @@ func TestEval01(tst *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -231,7 +257,7 @@ func TestEval01(tst *testing.T) {
 func TestEval02(tst *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -247,7 +273,7 @@ func TestEval02(tst *testing.T) {
 func TestEval03(tst *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -270,7 +296,7 @@ func TestEval03(tst *testing.T) {
 func TestEval04(tst *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -307,7 +333,7 @@ func TestEval04(tst *testing.T) {
 func TestEval05(tst *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
@@ -324,7 +350,7 @@ func TestEval05(tst *testing.T) {
 func TestEval06(tst *testing.T) {
 	defer func() {
 		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
+			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 

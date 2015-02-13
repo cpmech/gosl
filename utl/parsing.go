@@ -8,6 +8,19 @@ import (
 	"strings"
 )
 
+// ExtractStrPair extracts the pair from, e.g., "key:val"
+//  Note: it returs empty strings if any is not found
+func ExtractStrPair(pair, sep string) (key, val string) {
+	res := strings.Split(pair, sep)
+	if len(res) > 0 {
+		key = strings.TrimSpace(res[0])
+	}
+	if len(res) > 1 {
+		val = strings.TrimSpace(res[1])
+	}
+	return
+}
+
 // Keycode extracts a keycode from a string such as "!typeA:keycodeA !typeB:keycodeB!typeC:keycodeC"
 //  Note: String == "!keyA !typeB:valB" is also valid
 func Keycode(String string, Type string) (keycode string, found bool) {
