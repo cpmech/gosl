@@ -457,3 +457,45 @@ func Test_fun10(tst *testing.T) {
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
+
+func Test_fun11(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mSome error has happened:[0m\n", err)
+		}
+	}()
+
+	//utl.Tsilent = false
+	utl.TTitle("fun11. ref-inc-rl1")
+
+	fun, err := New("ref-inc-rl1", []*Prm{
+		&Prm{N: "lam0", V: 0.001},
+		&Prm{N: "lam1", V: 1.2},
+		&Prm{N: "alp", V: 0.01},
+		&Prm{N: "bet", V: 10},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	tmin := 0.0
+	tmax := 1.0
+	xcte := []float64{0, 0, 0}
+	if T_FUN_SAVE {
+		plt.Reset()
+		withG, withH, save, show := true, true, false, true
+		PlotT(fun, "/tmp/gosl", "fun-ref-inc-rl1-01.png", tmin, tmax, xcte, 41, "'.-'", withG, withH, save, show, nil)
+	}
+
+	if true {
+		sktol := 1e-10
+		dtol := 1e-10
+		dtol2 := 1e-10
+		ver := true
+		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	}
+}
