@@ -15,11 +15,6 @@ const (
 	NURBS_GEO = 18 // geometry type in geodefs
 )
 
-// HashPoint returns a unique id of a point
-func HashPoint(x, y, z float64) int {
-	return int(x*10001 + y*1000001 + z*100000001)
-}
-
 // WriteMshD writes .msh file
 // Input: vtagged maps hashed id of control point to vertex tag
 //        ctagged maps idOfNurbs_localIdOfElem to cell tag
