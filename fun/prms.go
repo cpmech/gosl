@@ -88,6 +88,9 @@ func (o Prms) String() string {
 		}
 		l += utl.Sf("%s      %v", G_extraindent, prm)
 	}
-	l += utl.Sf("\n%s    ]", G_extraindent)
+	if len(o) > 0 {
+		l += utl.Sf("\n")
+	}
+	l += utl.Sf("%s    ]", G_extraindent)
 	return l
 }
