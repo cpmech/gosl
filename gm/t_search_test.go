@@ -97,3 +97,24 @@ func Test_bins01(tst *testing.T) {
 	utl.CompareInts(tst, "check ids", ID, IDchk)
 
 }
+
+func Test_bins02(tst *testing.T) {
+	//utl.Tsilent = false
+	var bins Bins
+	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 10)
+
+	// fill bins structure
+	maxit := 1000 // number of entries
+	ID := make([]int, maxit)
+	for k := 0; k < maxit; k++ {
+		x := float64(k) / float64(maxit)
+		ID[k] = k * 11
+		bins.Append([]float64{x, x, x}, ID[k])
+	}
+
+	ids := bins.FindAlongLine([]float64{0, 0, 0}, []float64{10, 10, 10}, 0.0000001)
+	utl.Pforan("ids = %v\n", ids)
+
+	utl.CompareInts(tst, "check FindAlongLine", ID, ids)
+
+}

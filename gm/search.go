@@ -85,9 +85,9 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 	}
 
 	o.All = make([]*Bin, nbins)
-	for k := 0; k < len(o.All); k++ {
-		o.All[k] = new(Bin)
-	}
+	//for k := 0; k < len(o.All); k++ {
+	//o.All[k] = new(Bin)
+	//}
 	o.tmp = make([]int, o.Ndim)
 
 	return
@@ -143,6 +143,12 @@ func (o Bins) FindBinByIndex(idx int) *Bin {
 	if idx < 0 || idx >= len(o.All) {
 		return nil
 	}
+
+	// Allocate new bin if necessary
+	if o.All[idx] == nil {
+		o.All[idx] = new(Bin)
+	}
+
 	return o.All[idx]
 }
 
@@ -160,4 +166,62 @@ func (o Bins) CalcIdx(x []float64) int {
 		idx += o.tmp[2] * o.N[0] * o.N[1]
 	}
 	return idx
+}
+
+// FindAlongLine gets the ids of entries that lie close to a line
+func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
+	btol := 0.9 * o.S
+	var sbins []*Bin // selected bins
+	var p, pi, pf Point
+	var x, y, z float64
+	pi.X = xi[0]
+	pf.X = xf[0]
+	pi.Y = xi[1]
+	pf.Y = xf[1]
+	if o.Ndim == 3 {
+		pi.Z = xi[2]
+		pf.Z = xf[2]
+	}
+
+	// loop along all bins
+	for i, bin := range o.All {
+		if bin == nil {
+			continue
+		}
+		// coordinates of bin center
+		x = float64(i % o.N[0])
+		y = float64(i % (o.N[0] * o.N[1]) / o.N[0])
+		z = float64(i / (o.N[0] * o.N[1]))
+		x = (x + 0.5) * o.S
+		y = (y + 0.5) * o.S
+		z = (z + 0.5) * o.S
+
+		p = Point{x, y, z}
+
+		d := DistPointLine(&p, &pi, &pf, tol, false)
+		if d <= btol {
+			sbins = append(sbins, bin)
+		}
+	}
+
+	var ids []int // entries ids
+
+	// find closest points
+	for _, bin := range sbins {
+		for _, entry := range bin.Entries {
+			x = entry.x[0]
+			y = entry.x[1]
+			if o.Ndim == 3 {
+				z = entry.x[0]
+			}
+			p := Point{x, y, z}
+
+			d := DistPointLine(&p, &pi, &pf, tol, false)
+			if d <= tol {
+				ids = append(ids, entry.Id)
+			}
+		}
+	}
+
+	return ids
 }
