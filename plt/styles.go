@@ -34,8 +34,8 @@ type LineData struct {
 }
 
 // GetArgs returns arguments for Plot
-func (o LineData) GetArgs() string {
-	l := ""
+func (o LineData) GetArgs(start string) string {
+	l := start
 	if o.Label != "" {
 		if len(l) > 0 {
 			l += ","

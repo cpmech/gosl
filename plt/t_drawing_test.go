@@ -59,7 +59,7 @@ func Test_draw02(tst *testing.T) {
 	utl.TTitle("draw02")
 
 	d := LineData{"gofem", "red", 1.2, 10, "o", "--"}
-	l := d.GetArgs()
+	l := d.GetArgs("clip_on=0")
 	utl.Pforan("l = %q\n", l)
-	utl.CheckString(tst, l, "label='gofem',color='red',lw=1.2,ms=10,marker='o',ls='--'")
+	utl.CheckString(tst, l, "clip_on=0,label='gofem',color='red',lw=1.2,ms=10,marker='o',ls='--'")
 }
