@@ -7,6 +7,8 @@ package gm
 import (
 	"testing"
 
+	"math/rand"
+
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -59,4 +61,39 @@ func Test_hash01(tst *testing.T) {
 			utl.Panic("h3 must not be equal to h4")
 		}
 	}
+}
+
+func Test_bins01(tst *testing.T) {
+	//utl.Tsilent = false
+	var bins Bins
+	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 100)
+
+	// fill bins structure
+	maxit := 10000 // number of entries
+	X := make([]float64, maxit)
+	Y := make([]float64, maxit)
+	Z := make([]float64, maxit)
+	ID := make([]int, maxit)
+	for k := 0; k < maxit; k++ {
+		x := rand.Float64() * 10
+		y := rand.Float64() * 10
+		z := rand.Float64() * 10
+		X[k] = x
+		Y[k] = y
+		Z[k] = z
+		ID[k] = k
+		bins.Append([]float64{x, y, z}, k)
+	}
+
+	// getting ids from bins
+	IDchk := make([]int, maxit)
+	for k := 0; k < maxit; k++ {
+		x := X[k]
+		y := Y[k]
+		z := Z[k]
+		id := bins.Find([]float64{x, y, z})
+		IDchk[k] = id
+	}
+	utl.CompareInts(tst, "check ids", ID, IDchk)
+
 }

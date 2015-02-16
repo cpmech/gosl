@@ -85,6 +85,9 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 	}
 
 	o.All = make([]*Bin, nbins)
+	for k := 0; k < len(o.All); k++ {
+		o.All[k] = new(Bin)
+	}
 	o.tmp = make([]int, o.Ndim)
 
 	return
@@ -109,21 +112,17 @@ func (o *Bins) Clear() {
 	o.All = make([]*Bin, 0)
 }
 
-func (o Bins) FindBinByIndex(idx int) *Bin {
-	if idx < 0 || idx >= len(o.All) {
-		return nil
-	}
-	return o.All[idx]
-}
-
-func (o Bins) Find(x []float64) *BinEntry {
+func (o Bins) Find(x []float64) int {
 	idx := o.CalcIdx(x)
 	if idx < 0 {
-		return nil // out-of-range
+		return -1 // out-of-range
 	}
+
+	// search for the closest point
 	bin := o.FindBinByIndex(idx)
 	dmin := math.MaxFloat64
-	var entry, closest *BinEntry
+	id_closest := -1
+	var entry *BinEntry
 	for _, entry = range bin.Entries {
 		var d float64
 		for k := 0; k < o.Ndim; k++ {
@@ -131,10 +130,17 @@ func (o Bins) Find(x []float64) *BinEntry {
 		}
 		if d < dmin {
 			dmin = d
-			closest = entry
+			id_closest = entry.Id
 		}
 	}
-	return closest
+	return id_closest
+}
+
+func (o Bins) FindBinByIndex(idx int) *Bin {
+	if idx < 0 || idx >= len(o.All) {
+		return nil
+	}
+	return o.All[idx]
 }
 
 // CalcIdx calculates the bin index where the point x is
