@@ -8,21 +8,6 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// ShapeData holds data for drawing shapes
-type ShapeData struct {
-	FaceColor string
-	EdgeColor string
-	LineWidth int
-	Closed    bool
-}
-
-// Init initialises ShapeData with default values
-func (o *ShapeData) Init() {
-	o.FaceColor = "#edf5ff"
-	o.EdgeColor = "black"
-	o.LineWidth = 1
-}
-
 // AutoScale rescales plot area
 func AutoScale(P [][]float64) {
 	if len(P) < 1 {
@@ -71,16 +56,6 @@ func DrawPolyline(P [][]float64, sd *ShapeData, args string) {
 		utl.Ff(&bb, ")\n")
 	}
 	utl.Ff(&bb, "gca().add_patch(pc%d)\n", n)
-}
-
-// LineData holds data for ploting lines
-type LineData struct {
-	Label      string
-	Color      string
-	LineWidth  float64
-	MarkerSize float64 // negative values => default
-	Marker     string
-	LineStyle  string
 }
 
 // DrawLegend draws legend with given lines data. fs == fontsize

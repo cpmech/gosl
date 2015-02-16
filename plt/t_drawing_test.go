@@ -44,3 +44,22 @@ func Test_draw01(tst *testing.T) {
 	}, 10, "best", false, "")
 	//Show()
 }
+
+func Test_draw02(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mSome error has happened:[0m\n", err)
+		}
+	}()
+
+	//utl.Tsilent = false
+	utl.TTitle("draw02")
+
+	d := LineData{"gofem", "red", 1.2, 10, "o", "--"}
+	l := d.GetArgs()
+	utl.Pforan("l = %q\n", l)
+	utl.CheckString(tst, l, "label='gofem',color='red',lw=1.2,ms=10,marker='o',ls='--'")
+}
