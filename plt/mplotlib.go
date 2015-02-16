@@ -129,6 +129,13 @@ func Subplot(i, j, k int) {
 	utl.Ff(&bb, "subplot(%d,%d,%d)\n", i, j, k)
 }
 
+func SubplotI(I []int) {
+	if len(I) != 3 {
+		return
+	}
+	utl.Ff(&bb, "subplot(%d,%d,%d)\n", I[0], I[1], I[2])
+}
+
 func SetHspace(hspace float64) {
 	utl.Ff(&bb, "subplots_adjust(hspace=%g)\n", hspace)
 }
