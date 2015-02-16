@@ -64,6 +64,15 @@ func Test_hash01(tst *testing.T) {
 }
 
 func Test_bins01(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mERROR:", err, "[0m\n")
+		}
+	}()
+
 	//utl.Tsilent = false
 	var bins Bins
 	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 100)
@@ -99,6 +108,15 @@ func Test_bins01(tst *testing.T) {
 }
 
 func Test_bins02(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mERROR:", err, "[0m\n")
+		}
+	}()
+
 	//utl.Tsilent = false
 	var bins Bins
 	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 10)
