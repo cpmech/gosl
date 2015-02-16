@@ -53,7 +53,7 @@ type Bins struct {
 }
 
 // xi   -- [ndim] initial positions
-// l    -- [ndim] whole box lengths
+// xf   -- [ndim] final positions
 // ndiv -- number of divisions for the maximun length
 func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 	o.Ndim = len(xi)
@@ -93,6 +93,7 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 	return
 }
 
+// Append adds a new entry {x, id} to the bins structure
 func (o *Bins) Append(x []float64, id int) (err error) {
 	idx := o.CalcIdx(x)
 	if idx < 0 {
@@ -112,6 +113,8 @@ func (o *Bins) Clear() {
 	o.All = make([]*Bin, 0)
 }
 
+// Find returns the stored id of the entry whose coordinates are closest to x
+// returns -1 if out of range or not found
 func (o Bins) Find(x []float64) int {
 	idx := o.CalcIdx(x)
 	if idx < 0 {
