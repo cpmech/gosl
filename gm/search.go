@@ -51,19 +51,24 @@ return fract( P.xzxz * P.yyww * ( 1.0 / SOMELARGEFLOAT.x ).xxxx );
 
 type BinEntry struct {
 	Id  int // object Id
-	Idx int // index in Entries slice
+	Idx int // index of bin
+}
+
+type Bin struct {
+	Idx     int         // index of bin
+	Entries []*BinEntry // entries
 }
 
 type Bins struct {
-	Ndim      int         // space dimension
-	Xi        []float64   // [ndim] left/lower-most point
-	Xf        []float64   // [ndim] right/upper-most point
-	L         []float64   // [ndim] whole box lengths
-	N         []int       // [ndim] number of divisions
-	S         float64     // size of bins
-	Entries   []*BinEntry // entries
-	Idx2entry []int       // maps idx to entry in Entries
-	tmp       []int       // [ndim] temporary (auxiliary) slice
+	Ndim    int       // space dimension
+	Xi      []float64 // [ndim] left/lower-most point
+	Xf      []float64 // [ndim] right/upper-most point
+	L       []float64 // [ndim] whole box lengths
+	N       []int     // [ndim] number of divisions
+	S       float64   // size of bins
+	All     []*Bin    // [nbins] all bins
+	Idx2bin []int     // maps idx of bin to item in All
+	tmp     []int     // [ndim] temporary (auxiliary) slice
 }
 
 // xi   -- [ndim] initial positions
@@ -88,11 +93,14 @@ func (o *Bins) Append(x []float64, id int) (err error) {
 	if idx < 0 {
 		return utl.Err("point %v is out of range", x)
 	}
-	entry := o.FindByIndex(idx)
-	if entry == nil {
-		o.Entries = append(o.Entries, &BinEntry{id, idx})
+	bin := o.FindBinByIndex(idx)
+	if len(bin) == 0 {
+		entrynumber := len(o.Entries)
+		o.Entries = append(o.Entries, []*BinEntry{&BinEntry{id, idx}})
+		o.Idx2entry[idx] = entrynumber
 		return
 	}
+
 	entry.Id = id
 	return
 }
@@ -102,12 +110,12 @@ func (o *Bins) Clear() {
 	o.Idx2entry = make([]int, 0)
 }
 
-func (o Bins) FindByIndex(idx int) *BinEntry {
-	if idx < 0 || idx >= len(o.Idx2entry) {
+func (o Bins) FindBinByIndex(idx int) *Bin {
+	if idx < 0 || idx >= len(o.Idx2bin) {
 		return nil
 	}
-	i := o.Idx2entry[idx]
-	return o.Entries[i]
+	k := o.Idx2bin[idx]
+	return o.All[k]
 }
 
 func (o Bins) FindByCoords(x []float64) *BinEntry {
@@ -115,8 +123,11 @@ func (o Bins) FindByCoords(x []float64) *BinEntry {
 	if idx < 0 {
 		return nil // out-of-range
 	}
-	i := o.Idx2entry[idx]
-	return o.Entries[i]
+	return o.FindByIndex(idx)
+}
+
+func (o Bins) FindCloseTo(x []float64) *BinEntry {
+	return nil
 }
 
 // returns -1 if out-of-range
