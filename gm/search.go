@@ -174,9 +174,9 @@ func (o Bins) CalcIdx(x []float64) int {
 // FindAlongLine gets the ids of entries that lie close to a line
 func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 
-	// essential data
-	btol := 0.9 * o.S
-	var sbins []*Bin // selected bins
+	// auxiliary variables
+	var sbins []*Bin  // selected bins
+	btol := 0.9 * o.S // tolerance for bins
 	var p, pi, pf Point
 	var x, y, z float64
 	pi.X = xi[0]
