@@ -196,10 +196,13 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 		// coordinates of bin center
 		x = float64(i % o.N[0])
 		y = float64(i % (o.N[0] * o.N[1]) / o.N[0])
-		z = float64(i / (o.N[0] * o.N[1]))
 		x = (x + 0.5) * o.S
 		y = (y + 0.5) * o.S
-		z = (z + 0.5) * o.S
+
+		if o.Ndim == 3 {
+			z = float64(i / (o.N[0] * o.N[1]))
+			z = (z + 0.5) * o.S
+		}
 
 		p = Point{x, y, z}
 

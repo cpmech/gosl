@@ -63,6 +63,7 @@ func Test_hash01(tst *testing.T) {
 	}
 }
 
+// Test for save and recovery
 func Test_bins01(tst *testing.T) {
 
 	prevTs := utl.Tsilent
@@ -107,7 +108,39 @@ func Test_bins01(tst *testing.T) {
 
 }
 
+// Test for function FindAlongLine (2D)
 func Test_bins02(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mERROR:", err, "[0m\n")
+		}
+	}()
+
+	//utl.Tsilent = false
+	var bins Bins
+	bins.Init([]float64{0, 0}, []float64{1, 1}, 10)
+
+	// fill bins structure
+	maxit := 10 // number of entries
+	ID := make([]int, maxit)
+	for k := 0; k < maxit; k++ {
+		x := float64(k) / float64(maxit)
+		ID[k] = k * 11
+		bins.Append([]float64{x, x}, ID[k])
+	}
+
+	ids := bins.FindAlongLine([]float64{0, 0}, []float64{10, 10}, 0.0000001)
+	utl.Pforan("ids = %v\n", ids)
+
+	utl.CompareInts(tst, "check FindAlongLine", ID, ids)
+
+}
+
+// Test for function FindAlongLine (3D)
+func Test_bins03(tst *testing.T) {
 
 	prevTs := utl.Tsilent
 	defer func() {
@@ -134,5 +167,52 @@ func Test_bins02(tst *testing.T) {
 	utl.Pforan("ids = %v\n", ids)
 
 	utl.CompareInts(tst, "check FindAlongLine", ID, ids)
+
+}
+
+// Test for function FindAlongLine (2D) real case
+func Test_bins04(tst *testing.T) {
+
+	prevTs := utl.Tsilent
+	defer func() {
+		utl.Tsilent = prevTs
+		if err := recover(); err != nil {
+			tst.Error("[1;31mERROR:", err, "[0m\n")
+		}
+	}()
+
+	//utl.Tsilent = false
+	var bins Bins
+	bins.Init([]float64{0, 0}, []float64{1, 2}, 10)
+
+	// fill bins structure
+
+	points := [][]float64{
+		{0.21132486540518713, 0.21132486540518713},
+		{0.7886751345948129, 0.21132486540518713},
+		{0.21132486540518713, 0.7886751345948129},
+		{0.7886751345948129, 0.7886751345948129},
+		{0.21132486540518713, 1.2113248654051871},
+		{0.7886751345948129, 1.2113248654051871},
+		{0.21132486540518713, 1.788675134594813},
+		{0.7886751345948129, 1.788675134594813}}
+
+	var err error
+	for i := 0; i < 8; i++ {
+		err = bins.Append(points[i], i)
+		if err != nil {
+			utl.Panic("Point %v out of range\n", points[i])
+		}
+	}
+
+	utl.Pforan("bins = %v\n", bins)
+
+	// Find
+	x := 0.7886751345948129
+	ids := bins.FindAlongLine([]float64{x, 0}, []float64{x, 1}, 1.e-15)
+
+	utl.Pforan("ids = %v\n", ids)
+
+	utl.CompareInts(tst, "check FindAlongLine", []int{1, 3, 5, 7}, ids)
 
 }
