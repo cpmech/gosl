@@ -56,6 +56,8 @@ type Bins struct {
 // xf   -- [ndim] final positions
 // ndiv -- number of divisions for the maximun length
 func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
+
+	// check for out-of-range values
 	o.Ndim = len(xi)
 	o.Xi = xi
 	o.Xf = xf
@@ -63,14 +65,14 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 		return utl.Err("sizes of xi and l must be the same and equal to either 2 or 3")
 	}
 
+	// allocate lentgth and number of division slices
 	o.L = make([]float64, o.Ndim)
 	o.N = make([]int, o.Ndim)
-
 	for k := 0; k < o.Ndim; k++ {
 		o.L[k] = o.Xf[k] - o.Xi[k]
 	}
 
-	// maximun lenght
+	// maximun length
 	lmax := math.Max(o.L[0], o.L[1])
 	if o.Ndim == 3 {
 		lmax = math.Max(lmax, o.L[2])
@@ -84,12 +86,9 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 		nbins *= o.N[k]
 	}
 
+	// allocate slices
 	o.All = make([]*Bin, nbins)
-	//for k := 0; k < len(o.All); k++ {
-	//o.All[k] = new(Bin)
-	//}
 	o.tmp = make([]int, o.Ndim)
-
 	return
 }
 
@@ -103,12 +102,12 @@ func (o *Bins) Append(x []float64, id int) (err error) {
 	if bin == nil {
 		return utl.Err("bin index %v is out of range", idx)
 	}
-
 	entry := BinEntry{id, x}
 	bin.Entries = append(bin.Entries, &entry)
 	return
 }
 
+// Clear clears all bins
 func (o *Bins) Clear() {
 	o.All = make([]*Bin, 0)
 }
@@ -116,6 +115,8 @@ func (o *Bins) Clear() {
 // Find returns the stored id of the entry whose coordinates are closest to x
 // returns -1 if out of range or not found
 func (o Bins) Find(x []float64) int {
+
+	// index and check
 	idx := o.CalcIdx(x)
 	if idx < 0 {
 		return -1 // out-of-range
@@ -140,15 +141,17 @@ func (o Bins) Find(x []float64) int {
 }
 
 func (o Bins) FindBinByIndex(idx int) *Bin {
+
+	// check
 	if idx < 0 || idx >= len(o.All) {
 		return nil
 	}
 
-	// Allocate new bin if necessary
+	// allocate new bin if necessary
 	if o.All[idx] == nil {
 		o.All[idx] = new(Bin)
+		o.All[idx].Idx = idx
 	}
-
 	return o.All[idx]
 }
 
@@ -170,6 +173,8 @@ func (o Bins) CalcIdx(x []float64) int {
 
 // FindAlongLine gets the ids of entries that lie close to a line
 func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
+
+	// essential data
 	btol := 0.9 * o.S
 	var sbins []*Bin // selected bins
 	var p, pi, pf Point
@@ -204,7 +209,8 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 		}
 	}
 
-	var ids []int // entries ids
+	// entries ids
+	var ids []int
 
 	// find closest points
 	for _, bin := range sbins {
@@ -222,6 +228,37 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 			}
 		}
 	}
-
 	return ids
+}
+
+func (o Bin) String() string {
+	l := utl.Sf("{\"idx\":%d, \"entries\":[", o.Idx)
+	for i, entry := range o.Entries {
+		if i > 0 {
+			l += ", "
+		}
+		l += utl.Sf("{\"id\":%d, \"x\":[%g,%g", entry.Id, entry.x[0], entry.x[1])
+		if len(entry.x) > 2 {
+			l += utl.Sf(",%g", entry.x[2])
+		}
+		l += "]}"
+	}
+	l += "]}"
+	return l
+}
+
+func (o Bins) String() string {
+	l := "[\n"
+	k := 0
+	for _, bin := range o.All {
+		if bin != nil {
+			if k > 0 {
+				l += ",\n"
+			}
+			l += utl.Sf("  %v", bin)
+			k += 1
+		}
+	}
+	l += "\n]"
+	return l
 }
