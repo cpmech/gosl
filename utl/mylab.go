@@ -206,7 +206,7 @@ func DurSum(v []time.Duration) (seconds float64) {
 }
 
 // StrIndexSmall finds the index of an item in a slice of strings
-//  NOTE: this function is not efficient and should be used with small slices only
+//  NOTE: this function is not efficient and should be used with small slices only; say smaller than 20
 func StrIndexSmall(a []string, val string) int {
 	for idx, str := range a {
 		if str == val {
@@ -217,7 +217,7 @@ func StrIndexSmall(a []string, val string) int {
 }
 
 // IntIndexSmall finds the index of an item in a slice of ints
-//  NOTE: this function is not efficient and should be used with small slices only
+//  NOTE: this function is not efficient and should be used with small slices only; say smaller than 20
 func IntIndexSmall(a []int, val int) int {
 	for idx, item := range a {
 		if item == val {
