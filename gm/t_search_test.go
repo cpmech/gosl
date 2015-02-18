@@ -75,6 +75,7 @@ func Test_bins01(tst *testing.T) {
 	}()
 
 	//utl.Tsilent = false
+	utl.TTitle("bins01")
 	var bins Bins
 	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 100)
 
@@ -92,7 +93,10 @@ func Test_bins01(tst *testing.T) {
 		Y[k] = y
 		Z[k] = z
 		ID[k] = k
-		bins.Append([]float64{x, y, z}, k)
+		err := bins.Append([]float64{x, y, z}, k)
+		if err != nil {
+			utl.Panic(err.Error())
+		}
 	}
 
 	// getting ids from bins
@@ -120,6 +124,8 @@ func Test_bins02(tst *testing.T) {
 	}()
 
 	//utl.Tsilent = false
+	utl.TTitle("bins02")
+
 	var bins Bins
 	bins.Init([]float64{0, 0}, []float64{1, 1}, 10)
 
@@ -129,7 +135,10 @@ func Test_bins02(tst *testing.T) {
 	for k := 0; k < maxit; k++ {
 		x := float64(k) / float64(maxit)
 		ID[k] = k * 11
-		bins.Append([]float64{x, x}, ID[k])
+		err := bins.Append([]float64{x, x}, ID[k])
+		if err != nil {
+			utl.Panic(err.Error())
+		}
 	}
 
 	ids := bins.FindAlongLine([]float64{0, 0}, []float64{10, 10}, 0.0000001)
@@ -151,16 +160,22 @@ func Test_bins03(tst *testing.T) {
 	}()
 
 	//utl.Tsilent = false
+	utl.TTitle("bins03")
+
 	var bins Bins
 	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 10)
 
 	// fill bins structure
 	maxit := 1000 // number of entries
 	ID := make([]int, maxit)
+	var err error
 	for k := 0; k < maxit; k++ {
-		x := float64(k) / float64(maxit)
+		x := float64(k) / float64(maxit) * 10
 		ID[k] = k * 11
-		bins.Append([]float64{x, x, x}, ID[k])
+		err = bins.Append([]float64{x, x, x}, ID[k])
+		if err != nil {
+			utl.Panic(err.Error())
+		}
 	}
 
 	ids := bins.FindAlongLine([]float64{0, 0, 0}, []float64{10, 10, 10}, 0.0000001)
@@ -182,6 +197,8 @@ func Test_bins04(tst *testing.T) {
 	}()
 
 	//utl.Tsilent = false
+	utl.TTitle("bins04")
+
 	var bins Bins
 	bins.Init([]float64{0, 0}, []float64{1, 2}, 10)
 
@@ -201,7 +218,7 @@ func Test_bins04(tst *testing.T) {
 	for i := 0; i < 8; i++ {
 		err = bins.Append(points[i], i)
 		if err != nil {
-			utl.Panic("Point %v out of range\n", points[i])
+			utl.Panic(err.Error())
 		}
 	}
 
