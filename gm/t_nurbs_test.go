@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -91,7 +93,7 @@ func do_plot_nurbs_basis(b *Nurbs, la, lb int) {
 	b.DrawElems2D(npts, false, "", "")
 	t0 := time.Now()
 	b.PlotBasis(la, "", 11, 0) // 0 => CalcBasis
-	utl.Pfcyan("time elapsed (calcbasis) = %v\n", time.Now().Sub(t0))
+	io.Pfcyan("time elapsed (calcbasis) = %v\n", time.Now().Sub(t0))
 	plt.Equal()
 
 	plt.Subplot(3, 2, 2)
@@ -117,7 +119,7 @@ func do_plot_nurbs_basis(b *Nurbs, la, lb int) {
 	b.DrawElems2D(npts, false, "", "")
 	t0 = time.Now()
 	b.PlotBasis(la, "", 11, 2) // 2 => RecursiveBasis
-	utl.Pfcyan("time elapsed (recursive) = %v\n", time.Now().Sub(t0))
+	io.Pfcyan("time elapsed (recursive) = %v\n", time.Now().Sub(t0))
 	plt.Equal()
 
 	plt.Subplot(3, 2, 6)
@@ -134,13 +136,13 @@ func do_plot_nurbs_derivs(b *Nurbs, la, lb int) {
 	plt.Subplot(4, 2, 1)
 	t0 := time.Now()
 	b.PlotDeriv(la, 0, "", np, 0) // 0 => CalcBasisAndDerivs
-	utl.Pfcyan("time elapsed (calcbasis) = %v\n", time.Now().Sub(t0))
+	io.Pfcyan("time elapsed (calcbasis) = %v\n", time.Now().Sub(t0))
 	plt.Equal()
 
 	plt.Subplot(4, 2, 2)
 	t0 = time.Now()
 	b.PlotDeriv(la, 0, "", np, 1) // 1 => NumericalDeriv
-	utl.Pfcyan("time elapsed (numerical) = %v\n", time.Now().Sub(t0))
+	io.Pfcyan("time elapsed (numerical) = %v\n", time.Now().Sub(t0))
 	plt.Equal()
 
 	plt.Subplot(4, 2, 3)
@@ -205,8 +207,8 @@ func do_check_derivs(tst *testing.T, b *Nurbs, nn int, tol float64, ver bool) {
 					l := i + j*b.n[0]
 					b.GetDerivL(dana, l)
 					b.NumericalDeriv(dnum, uu, l)
-					utl.CheckAnaNum(tst, utl.Sf("dR[%d][%d][0](%g,%g)", i, j, uu[0], uu[1]), tol, dana[0], dnum[0], ver)
-					utl.CheckAnaNum(tst, utl.Sf("dR[%d][%d][1](%g,%g)", i, j, uu[0], uu[1]), tol, dana[1], dnum[1], ver)
+					chk.AnaNum(tst, io.Sf("dR[%d][%d][0](%g,%g)", i, j, uu[0], uu[1]), tol, dana[0], dnum[0], ver)
+					chk.AnaNum(tst, io.Sf("dR[%d][%d][1](%g,%g)", i, j, uu[0], uu[1]), tol, dana[1], dnum[1], ver)
 				}
 			}
 		}
@@ -215,27 +217,27 @@ func do_check_derivs(tst *testing.T, b *Nurbs, nn int, tol float64, ver bool) {
 
 func Test_nurbs01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nurbs01")
+	//verbose() = false
+	chk.PrintTitle("nurbs01")
 
 	b := get_nurbs_A()
 	elems := b.Elements()
 	enodes := b.Enodes()
-	utl.PfYel("enodes = %v\n", enodes)
-	utl.CompareInts(tst, "elem[0]", elems[0], []int{2, 3, 1, 2})
-	utl.CompareInts(tst, "elem[1]", elems[1], []int{3, 4, 1, 2})
-	utl.CompareInts(tst, "elem[2]", elems[2], []int{4, 5, 1, 2})
-	utl.CompareInts(tst, "enodes[0]", enodes[0], []int{0, 1, 2, 5, 6, 7})
-	utl.CompareInts(tst, "enodes[1]", enodes[1], []int{1, 2, 3, 6, 7, 8})
-	utl.CompareInts(tst, "enodes[2]", enodes[2], []int{2, 3, 4, 7, 8, 9})
+	io.PfYel("enodes = %v\n", enodes)
+	chk.Ints(tst, "elem[0]", elems[0], []int{2, 3, 1, 2})
+	chk.Ints(tst, "elem[1]", elems[1], []int{3, 4, 1, 2})
+	chk.Ints(tst, "elem[2]", elems[2], []int{4, 5, 1, 2})
+	chk.Ints(tst, "enodes[0]", enodes[0], []int{0, 1, 2, 5, 6, 7})
+	chk.Ints(tst, "enodes[1]", enodes[1], []int{1, 2, 3, 6, 7, 8})
+	chk.Ints(tst, "enodes[2]", enodes[2], []int{2, 3, 4, 7, 8, 9})
 
 	if T_NURBS_SAVE {
 		do_plot_nurbs_basis(b, 0, 7)
@@ -245,16 +247,16 @@ func Test_nurbs01(tst *testing.T) {
 
 func Test_nurbs02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nurbs02")
+	//verbose() = false
+	chk.PrintTitle("nurbs02")
 
 	b := get_nurbs_A()
 	do_check_derivs(tst, b, 11, 1e-5, false)
@@ -267,16 +269,16 @@ func Test_nurbs02(tst *testing.T) {
 
 func Test_nurbs03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nurbs03")
+	//verbose() = false
+	chk.PrintTitle("nurbs03")
 
 	b := get_nurbs_B()
 
@@ -290,16 +292,16 @@ func Test_nurbs03(tst *testing.T) {
 
 func Test_nurbs04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nurbs04")
+	//verbose() = false
+	chk.PrintTitle("nurbs04")
 
 	b := get_nurbs_B()
 	do_check_derivs(tst, b, 11, 1e-5, false)
@@ -314,16 +316,16 @@ func Test_nurbs04(tst *testing.T) {
 
 func Test_nurbs05(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nurbs05")
+	//verbose() = false
+	chk.PrintTitle("nurbs05")
 
 	b := get_nurbs_A()
 	elems := b.Elements()
@@ -331,9 +333,9 @@ func Test_nurbs05(tst *testing.T) {
 	solL := [][]int{{0, 1, 2, 5, 6, 7}, {1, 2, 3, 6, 7, 8}, {2, 3, 4, 7, 8, 9}}
 	for k, e := range elems {
 		L := b.IndBasis(e)
-		utl.Pforan("e=%v: L=%v\n", e, L)
-		utl.CompareInts(tst, "span", e, solE[k])
-		utl.CompareInts(tst, "L", L, solL[k])
+		io.Pforan("e=%v: L=%v\n", e, L)
+		chk.Ints(tst, "span", e, solE[k])
+		chk.Ints(tst, "L", L, solL[k])
 	}
 
 	if T_NURBS_SAVE {
@@ -347,26 +349,26 @@ func Test_nurbs05(tst *testing.T) {
 
 func Test_nurbs06(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nurbs06")
+	//verbose() = false
+	chk.PrintTitle("nurbs06")
 
 	b := get_nurbs_C()
 	elems := b.Elements()
 	enodes := b.Enodes()
-	utl.CompareInts(tst, "elem[0]", elems[0], []int{3, 4})
-	utl.CompareInts(tst, "elem[1]", elems[1], []int{4, 5})
-	utl.CompareInts(tst, "elem[2]", elems[2], []int{5, 6})
-	utl.CompareInts(tst, "enodes[0]", enodes[0], []int{0, 1, 2, 3})
-	utl.CompareInts(tst, "enodes[1]", enodes[1], []int{1, 2, 3, 4})
-	utl.CompareInts(tst, "enodes[2]", enodes[2], []int{2, 3, 4, 5})
+	chk.Ints(tst, "elem[0]", elems[0], []int{3, 4})
+	chk.Ints(tst, "elem[1]", elems[1], []int{4, 5})
+	chk.Ints(tst, "elem[2]", elems[2], []int{5, 6})
+	chk.Ints(tst, "enodes[0]", enodes[0], []int{0, 1, 2, 3})
+	chk.Ints(tst, "enodes[1]", enodes[1], []int{1, 2, 3, 4})
+	chk.Ints(tst, "enodes[2]", enodes[2], []int{2, 3, 4, 5})
 	c := b.Krefine([][]float64{
 		//{0.15},
 		{0.15, 0.5, 0.85},
@@ -380,16 +382,16 @@ func Test_nurbs06(tst *testing.T) {
 
 func Test_nurbs07(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nurbs07")
+	//verbose() = false
+	chk.PrintTitle("nurbs07")
 
 	b := get_nurbs_A()
 	c := b.Krefine([][]float64{
@@ -428,44 +430,44 @@ func tag_verts(b *Nurbs) (vt map[int]int) {
 
 func Test_nurbs08(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nurbs08")
+	//verbose() = false
+	chk.PrintTitle("nurbs08")
 
 	a := get_nurbs_B()
 	a_el := a.Elements()
 	a_en := a.Enodes()
-	utl.CompareInts(tst, "a_el[0]", a_el[0], []int{2, 3, 2, 3})
-	utl.CompareInts(tst, "a_el[1]", a_el[1], []int{3, 4, 2, 3})
-	utl.CompareInts(tst, "a_en[0]", a_en[0], []int{0, 1, 2, 4, 5, 6, 8, 9, 10})
-	utl.CompareInts(tst, "a_en[1]", a_en[1], []int{1, 2, 3, 5, 6, 7, 9, 10, 11})
+	chk.Ints(tst, "a_el[0]", a_el[0], []int{2, 3, 2, 3})
+	chk.Ints(tst, "a_el[1]", a_el[1], []int{3, 4, 2, 3})
+	chk.Ints(tst, "a_en[0]", a_en[0], []int{0, 1, 2, 4, 5, 6, 8, 9, 10})
+	chk.Ints(tst, "a_en[1]", a_en[1], []int{1, 2, 3, 5, 6, 7, 9, 10, 11})
 
 	b := a.KrefineN(2, false)
 	b_el := b.Elements()
 	b_en := b.Enodes()
-	utl.CompareInts(tst, "b_el[0]", b_el[0], []int{2, 3, 2, 3})
-	utl.CompareInts(tst, "b_el[1]", b_el[1], []int{3, 4, 2, 3})
-	utl.CompareInts(tst, "b_el[2]", b_el[2], []int{4, 5, 2, 3})
-	utl.CompareInts(tst, "b_el[3]", b_el[3], []int{5, 6, 2, 3})
-	utl.CompareInts(tst, "b_el[4]", b_el[4], []int{2, 3, 3, 4})
-	utl.CompareInts(tst, "b_el[5]", b_el[5], []int{3, 4, 3, 4})
-	utl.CompareInts(tst, "b_el[6]", b_el[6], []int{4, 5, 3, 4})
-	utl.CompareInts(tst, "b_el[7]", b_el[7], []int{5, 6, 3, 4})
-	utl.CompareInts(tst, "b_en[0]", b_en[0], []int{0, 1, 2, 6, 7, 8, 12, 13, 14})
-	utl.CompareInts(tst, "b_en[1]", b_en[1], []int{1, 2, 3, 7, 8, 9, 13, 14, 15})
-	utl.CompareInts(tst, "b_en[2]", b_en[2], []int{2, 3, 4, 8, 9, 10, 14, 15, 16})
-	utl.CompareInts(tst, "b_en[3]", b_en[3], []int{3, 4, 5, 9, 10, 11, 15, 16, 17})
-	utl.CompareInts(tst, "b_en[4]", b_en[4], []int{6, 7, 8, 12, 13, 14, 18, 19, 20})
-	utl.CompareInts(tst, "b_en[5]", b_en[5], []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
-	utl.CompareInts(tst, "b_en[6]", b_en[6], []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
-	utl.CompareInts(tst, "b_en[7]", b_en[7], []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
+	chk.Ints(tst, "b_el[0]", b_el[0], []int{2, 3, 2, 3})
+	chk.Ints(tst, "b_el[1]", b_el[1], []int{3, 4, 2, 3})
+	chk.Ints(tst, "b_el[2]", b_el[2], []int{4, 5, 2, 3})
+	chk.Ints(tst, "b_el[3]", b_el[3], []int{5, 6, 2, 3})
+	chk.Ints(tst, "b_el[4]", b_el[4], []int{2, 3, 3, 4})
+	chk.Ints(tst, "b_el[5]", b_el[5], []int{3, 4, 3, 4})
+	chk.Ints(tst, "b_el[6]", b_el[6], []int{4, 5, 3, 4})
+	chk.Ints(tst, "b_el[7]", b_el[7], []int{5, 6, 3, 4})
+	chk.Ints(tst, "b_en[0]", b_en[0], []int{0, 1, 2, 6, 7, 8, 12, 13, 14})
+	chk.Ints(tst, "b_en[1]", b_en[1], []int{1, 2, 3, 7, 8, 9, 13, 14, 15})
+	chk.Ints(tst, "b_en[2]", b_en[2], []int{2, 3, 4, 8, 9, 10, 14, 15, 16})
+	chk.Ints(tst, "b_en[3]", b_en[3], []int{3, 4, 5, 9, 10, 11, 15, 16, 17})
+	chk.Ints(tst, "b_en[4]", b_en[4], []int{6, 7, 8, 12, 13, 14, 18, 19, 20})
+	chk.Ints(tst, "b_en[5]", b_en[5], []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
+	chk.Ints(tst, "b_en[6]", b_en[6], []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
+	chk.Ints(tst, "b_en[7]", b_en[7], []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
 
 	c := a.KrefineN(4, false)
 
@@ -484,10 +486,10 @@ func Test_nurbs08(tst *testing.T) {
 	B := ReadMsh("/tmp/gosl/m_nurbs08a")
 
 	if a.gnd != B[0].gnd {
-		utl.Panic("Read: gnd is wrong")
+		chk.Panic("Read: gnd is wrong")
 	}
-	utl.CompareInts(tst, "Read: p", a.p, B[0].p)
-	utl.CompareInts(tst, "Read: n", a.n, B[0].n)
+	chk.Ints(tst, "Read: p", a.p, B[0].p)
+	chk.Ints(tst, "Read: n", a.n, B[0].n)
 	utl.CompareDeep4(tst, "Read: Q", a.Q, B[0].Q)
 	utl.CheckIntMat(tst, "Read: l2i", a.l2i, B[0].l2i)
 

@@ -4,9 +4,7 @@
 
 package la
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/chk"
 
 // MatToColMaj returns a vector representation of a column-major matrix
 func MatToColMaj(a [][]float64) (am []float64) {
@@ -46,7 +44,7 @@ func ColMajToMat(a [][]float64, am []float64) {
 // RCtoComplex converts two slices into a slice of complex numbers
 func RCtoComplex(r, c []float64) (rc []complex128) {
 	if len(r) != len(c) {
-		utl.Panic(_conversions_err1, len(r), len(c))
+		chk.Panic(_conversions_err1, len(r), len(c))
 	}
 	rc = make([]complex128, len(r))
 	for i := 0; i < len(r); i++ {

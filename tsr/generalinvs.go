@@ -7,8 +7,8 @@ package tsr
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
 )
 
 // ShiftedEigenvs computes the positive and shifted eigenvalues of a second order tensor
@@ -18,7 +18,7 @@ func ShiftedEigenvs(λ, λbar []float64, λc, tol float64) (err error) {
 	for i := 0; i < 3; i++ {
 		λ[i] = -λbar[i] + λc
 		if λ[i] < tol {
-			err = utl.Err(_geninvs_err1, λ, λbar, λc, tol)
+			err = chk.Err(_geninvs_err1, λ, λbar, λc, tol)
 			return
 		}
 	}
@@ -32,7 +32,7 @@ func GenInvs(λ, n []float64, a float64) (p, q float64, err error) {
 	d := λ[0]*λ[0]*n[0]*n[0] + λ[1]*λ[1]*n[1]*n[1] + λ[2]*λ[2]*n[2]*n[2] - p*p
 	if d < 0 {
 		if math.Abs(d) > SMPINVSTOL {
-			err = utl.Err(_geninvs_err2, "GenInvs", d, SMPINVSTOL, λ)
+			err = chk.Err(_geninvs_err2, "GenInvs", d, SMPINVSTOL, λ)
 			return
 		}
 		d = 0
@@ -83,7 +83,7 @@ func GenInvsDeriv1(dpdλ, dqdλ []float64, λ, n []float64, dndλ [][]float64, a
 	d := λ[0]*λ[0]*n[0]*n[0] + λ[1]*λ[1]*n[1]*n[1] + λ[2]*λ[2]*n[2]*n[2] - p*p
 	if d < 0 {
 		if math.Abs(d) > SMPINVSTOL {
-			err = utl.Err(_geninvs_err2, "GenInvsDeriv1", d, SMPINVSTOL, λ)
+			err = chk.Err(_geninvs_err2, "GenInvsDeriv1", d, SMPINVSTOL, λ)
 			return
 		}
 		d = 0

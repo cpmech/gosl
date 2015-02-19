@@ -17,7 +17,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 //  NOTE: __IMPORTANT__ this package works on 64bit machines only,
@@ -29,14 +29,14 @@ import (
 //  u[m][m], s[n], vt[n][n] must be pre-allocated
 func MatSvd(u [][]float64, s []float64, vt [][]float64, a [][]float64, tol float64) (err error) {
 	if len(a) < 1 {
-		return utl.Err(_matinvg_err1)
+		return chk.Err(_matinvg_err1)
 	}
 	m, n := len(a), len(a[0])
 	um, vtm := make([]float64, m*m), make([]float64, n*n)
 	am := MatToColMaj(a)
 	status := C.lapack_svd((*C.double)(unsafe.Pointer(&um[0])), (*C.double)(unsafe.Pointer(&s[0])), (*C.double)(unsafe.Pointer(&vtm[0])), (C.long)(m), (C.long)(n), (*C.double)(unsafe.Pointer(&am[0])))
 	if status != 0 {
-		return utl.Err(_matinvg_err3, m, n, "lapack_svd", status)
+		return chk.Err(_matinvg_err3, m, n, "lapack_svd", status)
 	}
 	ColMajToMat(u, um)
 	ColMajToMat(vt, vtm)
@@ -47,7 +47,7 @@ func MatSvd(u [][]float64, s []float64, vt [][]float64, a [][]float64, tol float
 // even non-square; in this case, the pseudo-inverse is returned
 func MatInvG(ai, a [][]float64, tol float64) (err error) {
 	if len(a) < 1 {
-		return utl.Err(_matinvg_err1)
+		return chk.Err(_matinvg_err1)
 	}
 	m, n := len(a), len(a[0])
 	if m == n && m < 4 { // call simple function
@@ -59,12 +59,12 @@ func MatInvG(ai, a [][]float64, tol float64) (err error) {
 	if m == n {                 // general matrix inverse
 		status := C.lapack_square_inverse((*C.double)(unsafe.Pointer(&ami[0])), (C.long)(m), (*C.double)(unsafe.Pointer(&am[0])))
 		if status != 0 {
-			return utl.Err(_matinvg_err2, m, n, "lapack_square_inverse", status)
+			return chk.Err(_matinvg_err2, m, n, "lapack_square_inverse", status)
 		}
 	} else { // pseudo inverse
 		status := C.lapack_pseudo_inverse((*C.double)(unsafe.Pointer(&ami[0])), (C.long)(m), (C.long)(n), (*C.double)(unsafe.Pointer(&am[0])), (C.double)(tol))
 		if status != 0 {
-			return utl.Err(_matinvg_err2, m, n, "lapack_pseudo_inverse", status)
+			return chk.Err(_matinvg_err2, m, n, "lapack_pseudo_inverse", status)
 		}
 	}
 	ColMajToMat(ai, ami)
@@ -78,13 +78,13 @@ func MatInvG(ai, a [][]float64, tol float64) (err error) {
 //    "I"       => Infinite
 func MatCondG(a [][]float64, normtype string, tol float64) (res float64, err error) {
 	if len(a) < 1 {
-		return 0, utl.Err(_matinvg_err1)
+		return 0, chk.Err(_matinvg_err1)
 	}
 	m, n := len(a), len(a[0])
 	ai := MatAlloc(m, n)
 	err = MatInvG(ai, a, tol)
 	if err != nil {
-		return 0, utl.Err(_matinvg_err4, err.Error())
+		return 0, chk.Err(_matinvg_err4, err.Error())
 	}
 	if normtype == "I" {
 		res = MatNormI(a) * MatNormI(ai)

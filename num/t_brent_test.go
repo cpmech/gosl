@@ -8,6 +8,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -17,54 +19,54 @@ import (
 func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA Cb_yxe, ffcnB Cb_f, JfcnB Cb_Jd, fname string, save, show bool) (xbrent float64) {
 
 	// Brent
-	utl.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")
+	io.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")
 	var o Brent
 	o.Init(ffcnA)
 	var err error
 	xbrent, err = o.Solve(xa, xb, false)
 	if err != nil {
-		utl.Panic("%v", err)
+		chk.Panic("%v", err)
 	}
 	var ybrent float64
 	ybrent, err = ffcnA(xbrent)
 	if err != nil {
-		utl.Panic("%v", err)
+		chk.Panic("%v", err)
 	}
-	utl.Pforan("x      = %v\n", xbrent)
-	utl.Pforan("f(x)   = %v\n", ybrent)
-	utl.Pforan("nfeval = %v\n", o.NFeval)
-	utl.Pforan("nit    = %v\n", o.It)
+	io.Pforan("x      = %v\n", xbrent)
+	io.Pforan("f(x)   = %v\n", ybrent)
+	io.Pforan("nfeval = %v\n", o.NFeval)
+	io.Pforan("nit    = %v\n", o.It)
 	if math.Abs(ybrent) > 1e-10 {
-		utl.Panic("Brent failed: f(x) = %g > 1e-10\n", ybrent)
+		chk.Panic("Brent failed: f(x) = %g > 1e-10\n", ybrent)
 	}
 
 	// Newton
-	utl.Pfcyan("\n       - - - - - - - using Newton's method - - -- - - - \n")
+	io.Pfcyan("\n       - - - - - - - using Newton's method - - -- - - - \n")
 	var p NlSolver
 	p.Init(1, ffcnB, nil, JfcnB, true, false, nil)
 	xnewt := []float64{xguess}
 	var cnd float64
 	cnd, err = p.CheckJ(xnewt, 1e-6, true, false)
-	utl.Pforan("cond(J) = %v\n", cnd)
+	io.Pforan("cond(J) = %v\n", cnd)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	err = p.Solve(xnewt, false)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	var ynewt float64
 	ynewt, err = ffcnA(xnewt[0])
 	if err != nil {
-		utl.Panic("%v", err)
+		chk.Panic("%v", err)
 	}
-	utl.Pforan("x      = %v\n", xnewt[0])
-	utl.Pforan("f(x)   = %v\n", ynewt)
-	utl.Pforan("nfeval = %v\n", p.NFeval)
-	utl.Pforan("nJeval = %v\n", p.NJeval)
-	utl.Pforan("nit    = %v\n", p.It)
+	io.Pforan("x      = %v\n", xnewt[0])
+	io.Pforan("f(x)   = %v\n", ynewt)
+	io.Pforan("nfeval = %v\n", p.NFeval)
+	io.Pforan("nJeval = %v\n", p.NJeval)
+	io.Pforan("nit    = %v\n", p.It)
 	if math.Abs(ynewt) > 1e-9 {
-		utl.Panic("Newton failed: f(x) = %g > 1e-10\n", ynewt)
+		chk.Panic("Newton failed: f(x) = %g > 1e-10\n", ynewt)
 	}
 
 	// compare Brent's and Newton's solutions
@@ -77,16 +79,16 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA Cb_y
 
 func Test_brent01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("brent01. root finding")
+	//verbose() = false
+	chk.PrintTitle("brent01. root finding")
 
 	ffcnA := func(x float64) (res float64, err error) {
 		res = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
@@ -113,16 +115,16 @@ func Test_brent01(tst *testing.T) {
 
 func Test_brent02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("brent02. root finding")
+	//verbose() = false
+	chk.PrintTitle("brent02. root finding")
 
 	ffcnA := func(x float64) (res float64, err error) {
 		return x*x*x - 2.0*x - 5.0, nil
@@ -148,16 +150,16 @@ func Test_brent02(tst *testing.T) {
 
 func Test_brent03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("brent03. minimum finding")
+	//verbose() = false
+	chk.PrintTitle("brent03. minimum finding")
 
 	ffcn := func(x float64) (res float64, err error) {
 		return x*x*x - 2.0*x - 5.0, nil
@@ -168,17 +170,17 @@ func Test_brent03(tst *testing.T) {
 	xa, xb := 0.0, 1.0
 	x, err := o.Min(xa, xb, false)
 	if err != nil {
-		utl.Panic("%v", err)
+		chk.Panic("%v", err)
 	}
 	y, err := ffcn(x)
 	if err != nil {
-		utl.Panic("%v", err)
+		chk.Panic("%v", err)
 	}
 	xcor := math.Sqrt(2.0 / 3.0)
-	utl.Pforan("x      = %v (correct=%g)\n", x, xcor)
-	utl.Pforan("f(x)   = %v\n", y)
-	utl.Pforan("nfeval = %v\n", o.NFeval)
-	utl.Pforan("nit    = %v\n", o.It)
+	io.Pforan("x      = %v (correct=%g)\n", x, xcor)
+	io.Pforan("f(x)   = %v\n", y)
+	io.Pforan("nfeval = %v\n", o.NFeval)
+	io.Pforan("nit    = %v\n", o.It)
 
 	//save := true
 	save := false

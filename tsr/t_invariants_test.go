@@ -8,6 +8,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -20,16 +22,16 @@ const (
 
 func Test_invs01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("invs01")
+	//verbose() = false
+	chk.PrintTitle("invs01")
 
 	sig := [][]float64{
 		{100, 150, 5},
@@ -47,19 +49,19 @@ func Test_invs01(tst *testing.T) {
 	p1, q1, θ1 := M_pqθ(σ)
 	la.MatVecMul(s_, 1, Psd, σ)
 	la.PrintMat("sig", sig, "%8g", false)
-	utl.Pf("σ   = %v\n", σ)
-	utl.Pf("s   = %v\n", s)
-	utl.Pf("s_  = %v\n", s_)
-	utl.Pf("sno = %v\n", sno)
-	utl.Pf("p   = %v\n", p)
-	utl.Pf("q   = %v\n", q)
-	utl.Pf("q_  = %v\n", q_)
-	utl.Pf("θ   = %v\n", θ)
+	io.Pf("σ   = %v\n", σ)
+	io.Pf("s   = %v\n", s)
+	io.Pf("s_  = %v\n", s_)
+	io.Pf("sno = %v\n", sno)
+	io.Pf("p   = %v\n", p)
+	io.Pf("q   = %v\n", q)
+	io.Pf("q_  = %v\n", q_)
+	io.Pf("θ   = %v\n", θ)
 	utl.CheckScalar(tst, "p", 1e-17, p, p_)
 	utl.CheckScalar(tst, "p", 1e-17, p, -100)
 	utl.CheckScalar(tst, "q", 1e-17, q, 260.52830940226056)
 	utl.CheckScalar(tst, "q", 1e-13, q, q_)
-	utl.CheckVector(tst, "s", 1e-17, s, s_)
+	chk.Vector(tst, "s", 1e-17, s, s_)
 	utl.CheckScalar(tst, "p1", 1e-17, p, p1)
 	utl.CheckScalar(tst, "q1", 1e-13, q, q1)
 	utl.CheckScalar(tst, "θ1", 1e-17, θ, θ1)
@@ -67,16 +69,16 @@ func Test_invs01(tst *testing.T) {
 
 func Test_invs02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("invs02")
+	//verbose() = false
+	chk.PrintTitle("invs02")
 
 	eps := [][]float64{
 		{100 / 200.0, 150 / 200.0, 5 / 200.0},
@@ -92,31 +94,31 @@ func Test_invs02(tst *testing.T) {
 	eno, εv_, εd_ := M_devε(e, ε)
 	la.MatVecMul(e_, 1, Psd, ε)
 	la.PrintMat("eps", eps, "%8g", false)
-	utl.Pf("ε   = %v\n", ε)
-	utl.Pf("e   = %v\n", e)
-	utl.Pf("e_  = %v\n", e_)
-	utl.Pf("eno = %v\n", eno)
-	utl.Pf("εv  = %v\n", εv)
-	utl.Pf("εd  = %v\n", εd)
-	utl.Pf("εd_ = %v\n", εd_)
+	io.Pf("ε   = %v\n", ε)
+	io.Pf("e   = %v\n", e)
+	io.Pf("e_  = %v\n", e_)
+	io.Pf("eno = %v\n", eno)
+	io.Pf("εv  = %v\n", εv)
+	io.Pf("εd  = %v\n", εd)
+	io.Pf("εd_ = %v\n", εd_)
 	utl.CheckScalar(tst, "εv", 1e-17, εv, εv_)
 	utl.CheckScalar(tst, "εv", 1e-17, εv, eps[0][0]+eps[1][1]+eps[2][2])
 	utl.CheckScalar(tst, "εd", 1e-13, εd, εd_)
-	utl.CheckVector(tst, "e", 1e-17, e, e_)
+	chk.Vector(tst, "e", 1e-17, e, e_)
 }
 
 func Test_invs03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("invs03")
+	//verbose() = false
+	chk.PrintTitle("invs03")
 
 	// square with vertical stress only under plane-strain
 	E, ν := 210000.0, 0.49999
@@ -147,9 +149,9 @@ func Test_invs03(tst *testing.T) {
 	la.MatVecMul(σm, 1, De, εm)
 	q := M_q(σm)
 	θ := M_θ(σm)
-	utl.Pfcyan("σm = %v\n", σm)
-	utl.Pfcyan("q  = %v\n", q)
-	utl.Pfcyan("θ  = %v\n", θ)
+	io.Pfcyan("σm = %v\n", σm)
+	io.Pfcyan("q  = %v\n", q)
+	io.Pfcyan("θ  = %v\n", θ)
 	utl.CheckScalar(tst, "q", 1e-10, q, qY)
 	utl.CheckScalar(tst, "θ", 1e-3, θ, 0)
 }
@@ -175,7 +177,7 @@ func run_invs_tests(tst *testing.T, a []float64, ver bool) {
 	sno, p1, q1 := M_devσ(s, a)
 	λ0, λ1, λ2, err := M_PrincValsNum(a)
 	if err != nil {
-		utl.Panic("PrincValsNum failed:\n%v", err)
+		chk.Panic("PrincValsNum failed:\n%v", err)
 	}
 	I1, I2, I3 := M_CharInvs(a)
 	utl.CheckScalar(tst, "tr(a)", 1e-17, tra, trat)
@@ -198,20 +200,20 @@ func run_invs_tests(tst *testing.T, a []float64, ver bool) {
 	utl.CheckScalar(tst, "I2", 1e-12, I2, λ0*λ1+λ1*λ2+λ2*λ0)
 	utl.CheckScalar(tst, "I3", 1e-12, I3, λ0*λ1*λ2)
 	if ver {
-		utl.Pf("θ    = %v\n", θ)
-		utl.Pf("na   = %v\n", na)
-		utl.Pf("tra  = %v\n", tra)
-		utl.Pf("deva = %v\n", deva)
-		utl.Pf("deta = %v\n", deta)
-		utl.Pf("w    = %v\n", w)
+		io.Pf("θ    = %v\n", θ)
+		io.Pf("na   = %v\n", na)
+		io.Pf("tra  = %v\n", tra)
+		io.Pf("deva = %v\n", deva)
+		io.Pf("deta = %v\n", deta)
+		io.Pf("w    = %v\n", w)
 	}
 	devat := Alloc2()
 	deva_ := Alloc2()
 	Man2Ten(devat, deva)
 	Add(deva_, 1, at, -(at[0][0]+at[1][1]+at[2][2])/3.0, It) // deva_ := at - tr(at) * It / 3
-	utl.CheckMatrix(tst, "deva", 1e-17, devat, deva_)
-	utl.CheckVector(tst, "s", 1e-14, s, deva)
-	utl.CheckVector(tst, "sX", 1e-14, s, sX)
+	chk.Matrix(tst, "deva", 1e-17, devat, deva_)
+	chk.Vector(tst, "s", 1e-14, s, deva)
+	chk.Vector(tst, "sX", 1e-14, s, sX)
 	// octahedral invariants
 	σa, σb, σc := L2O(λ0, λ1, λ2)
 	if σa > 0 {
@@ -229,33 +231,33 @@ func run_invs_tests(tst *testing.T, a []float64, ver bool) {
 	utl.CheckScalar(tst, "Σb", 1e-13, σb, Σb)
 	utl.CheckScalar(tst, "Σc", 1e-13, σc, Σc)
 	if ver {
-		utl.Pforan("λ0 = %v\n", λ0)
-		utl.Pforan("λ1 = %v\n", λ1)
-		utl.Pforan("λ2 = %v\n", λ2)
-		utl.Pforan("σa = %v (%v)\n", σa, σa_)
-		utl.Pforan("σb = %v (%v)\n", σb, σb_)
-		utl.Pforan("σc = %v (%v)\n", σc, σc_)
+		io.Pforan("λ0 = %v\n", λ0)
+		io.Pforan("λ1 = %v\n", λ1)
+		io.Pforan("λ2 = %v\n", λ2)
+		io.Pforan("σa = %v (%v)\n", σa, σa_)
+		io.Pforan("σb = %v (%v)\n", σb, σb_)
+		io.Pforan("σc = %v (%v)\n", σc, σc_)
 	}
 }
 
 func Test_invs04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("invs04")
+	//verbose() = false
+	chk.PrintTitle("invs04")
 
 	a := []float64{-10.0, -20.0, -30.0, 4.0 * SQ2, 5.0 * SQ2, 6.0 * SQ2}
 	at := Alloc2()
 	Man2Ten(at, a)
-	utl.Pf("a = %v\n", a)
-	utl.CheckMatrix(tst, "Man2Ten", 1e-17, at, [][]float64{
+	io.Pf("a = %v\n", a)
+	chk.Matrix(tst, "Man2Ten", 1e-17, at, [][]float64{
 		{-10, 4, 6},
 		{4, -20, 5},
 		{6, 5, -30},
@@ -264,8 +266,8 @@ func Test_invs04(tst *testing.T) {
 	b := []float64{-88, -77, -55, -3 * SQ2}
 	bt := Alloc2()
 	Man2Ten(bt, b)
-	utl.Pf("b = %v\n", b)
-	utl.CheckMatrix(tst, "Man2Ten", 1e-17, bt, [][]float64{
+	io.Pf("b = %v\n", b)
+	chk.Matrix(tst, "Man2Ten", 1e-17, bt, [][]float64{
 		{-88, -3, 0},
 		{-3, -77, 0},
 		{0, 0, -55},
@@ -278,16 +280,16 @@ func Test_invs04(tst *testing.T) {
 
 func Test_invs05(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("invs05")
+	//verbose() = false
+	chk.PrintTitle("invs05")
 
 	if SAVEPLOT {
 		plt.Reset()
@@ -297,7 +299,7 @@ func Test_invs05(tst *testing.T) {
 
 	addtoplot := func(σa, σb float64, σ []float64) {
 		plt.PlotOne(σa, σb, "'ro', ms=5")
-		plt.Text(σa, σb, utl.Sf("$\\sigma_{123}=(%g,%g,%g)$", σ[0], σ[1], σ[2]), "size=8")
+		plt.Text(σa, σb, io.Sf("$\\sigma_{123}=(%g,%g,%g)$", σ[0], σ[1], σ[2]), "size=8")
 	}
 
 	dotest := func(σ []float64, σacor, σbcor, σccor, θcor, tolσ float64) {
@@ -308,9 +310,9 @@ func Test_invs05(tst *testing.T) {
 		σ0, σ1, σ2 := O2L(σa, σb, σc)
 		σI, σA := make([]float64, 3), []float64{σa, σb, σc}
 		la.MatVecMul(σI, 1, O2Lmat(), σA) // σI := L * σA
-		utl.Pf("σa σb σc = %v %v %v\n", σa, σb, σc)
-		utl.Pf("w        = %v\n", w)
-		utl.Pf("θ2, θ3   = %v, %v\n", θ2, θ3)
+		io.Pf("σa σb σc = %v %v %v\n", σa, σb, σc)
+		io.Pf("w        = %v\n", w)
+		io.Pf("θ2, θ3   = %v, %v\n", θ2, θ3)
 		utl.CheckScalar(tst, "σa", 1e-17, σa, σacor)
 		utl.CheckScalar(tst, "σb", 1e-17, σb, σbcor)
 		utl.CheckScalar(tst, "σc", 1e-17, σc, σccor)
@@ -338,16 +340,16 @@ func Test_invs05(tst *testing.T) {
 
 func Test_invs06(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("invs06")
+	//verbose() = false
+	chk.PrintTitle("invs06")
 
 	ver := true
 	s := make([]float64, 4)
@@ -357,8 +359,8 @@ func Test_invs06(tst *testing.T) {
 		σ0, σ1, σ2 := O2L(σa, σb, σc)
 		σ := []float64{σ0, σ1, σ2, 0}
 		θ := M_θ(σ)
-		utl.Pf("σ = %v\n", σ)
-		utl.Pf("θ = %v\n", θ)
+		io.Pf("σ = %v\n", σ)
+		io.Pf("θ = %v\n", θ)
 		run_invs_tests(tst, σ, ver)
 		sno, p, _ := M_devσ(s, σ)
 		utl.CheckScalar(tst, "σc", 1e-15, p, σc/SQ3)
@@ -368,16 +370,16 @@ func Test_invs06(tst *testing.T) {
 
 func Test_invs07(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("invs07")
+	//verbose() = false
+	chk.PrintTitle("invs07")
 
 	a, b, β, ϵ := -1.0, 0.0, 1.0, 1e-3
 
@@ -391,17 +393,17 @@ func Test_invs07(tst *testing.T) {
 	SmpUnitDirector(nold, λ, b)
 	psmp1, qsmp1, err := GenInvs(λ, nold, 1)
 	if err != nil {
-		utl.Panic("M_GenInvs failed:\n%v", err)
+		chk.Panic("M_GenInvs failed:\n%v", err)
 	}
 
 	psmp2, qsmp2, err := M_pq_smp(σ, a, b, β, ϵ)
 	if err != nil {
-		utl.Panic("M_pq_smp failed:\n%v", err)
+		chk.Panic("M_pq_smp failed:\n%v", err)
 	}
-	utl.Pforan("pcam,  qcam  = %v, %v\n", pcam, qcam)
-	utl.Pforan("poct,  qoct  = %v, %v\n", poct, qoct)
-	utl.Pforan("psmp1, qsmp1 = %v, %v\n", psmp1, qsmp1)
-	utl.Pforan("psmp2, qsmp2 = %v, %v\n", psmp2, qsmp2)
+	io.Pforan("pcam,  qcam  = %v, %v\n", pcam, qcam)
+	io.Pforan("poct,  qoct  = %v, %v\n", poct, qoct)
+	io.Pforan("psmp1, qsmp1 = %v, %v\n", psmp1, qsmp1)
+	io.Pforan("psmp2, qsmp2 = %v, %v\n", psmp2, qsmp2)
 	utl.CheckScalar(tst, "p", 1e-15, psmp1, psmp2)
 	utl.CheckScalar(tst, "q", 1e-15, qsmp1, qsmp2)
 }

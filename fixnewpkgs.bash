@@ -33,11 +33,29 @@ fix_pkgs() {
                -e 's/utl.Itob/io.Itob/g' \
                -e 's/utl.Btoi/io.Btoi/g' \
                -e 's/utl.Btoa/io.Btoa/g' $f
+        goimports -w $f
+    done
+
+    cd $HERE
+}
+
+fix_pkgs_simple() {
+    HERE=`pwd`
+    PKG=$1
+    DOTEST=$2
+    echo
+    echo
+    echo "[1;32m>>> fixing $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
+    cd $PKG
+
+    for f in t_*.go; do
+        sed -i -e 's/utl.Tsilent/verbose()/g' $f
     done
 
     cd $HERE
 }
 
 for p in mpi la plt fdm num fun ode gm tsr vtk; do
-    fix_pkgs $p 1
+#    fix_pkgs $p 1
+    fix_pkgs_simple $p 1
 done

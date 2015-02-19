@@ -8,9 +8,10 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
-	"github.com/cpmech/gosl/utl"
 )
 
 // callbacks
@@ -193,7 +194,7 @@ func (o *ODE) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triple
 		o.accept = radau5_accept
 		o.nstg = 3
 	default:
-		utl.Panic(_ode_err1, method)
+		chk.Panic(_ode_err1, method)
 	}
 
 	// allocate step variables
@@ -232,7 +233,7 @@ func (o *ODE) SetTol(atol, rtol float64) {
 	// check and change the tolerances
 	β := 2.0 / 3.0
 	if o.Atol <= 0.0 || o.Rtol <= 10.0*o.ϵ {
-		utl.Panic(_ode_err4, o.Atol, o.Rtol)
+		chk.Panic(_ode_err4, o.Atol, o.Rtol)
 	} else {
 		quot := o.Atol / o.Rtol
 		o.Rtol = 0.1 * math.Pow(o.Rtol, β)
@@ -245,7 +246,7 @@ func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interf
 
 	// check
 	if xb < x {
-		err = utl.Err(_ode_err3, xb, x)
+		err = chk.Err(_ode_err3, xb, x)
 		return
 	}
 
@@ -318,7 +319,7 @@ func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interf
 	if fixstp {
 		la.VecCopy(o.w[0], 1, y) // copy initial values to worksapce
 		if o.Verbose {
-			utl.Pfgreen("x = %v\n", x)
+			io.Pfgreen("x = %v\n", x)
 		}
 		for x < xb {
 			//if x + o.h > xb { o.h = xb - x }
@@ -342,7 +343,7 @@ func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interf
 				o.out(false, o.h, x, y, args...)
 			}
 			if o.Verbose {
-				utl.Pfgreen("x = %v\n", x)
+				io.Pfgreen("x = %v\n", x)
 			}
 		}
 		return
@@ -488,7 +489,7 @@ func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interf
 
 		// sub-stepping failed
 		if failed {
-			err = utl.Err(_ode_err2, o.NmaxSS)
+			err = chk.Err(_ode_err2, o.NmaxSS)
 			break
 		}
 	}
@@ -499,14 +500,14 @@ func (o *ODE) Stat() {
 	if !o.root {
 		return
 	}
-	utl.Pf("number of F evaluations   =%6d\n", o.nfeval)
-	utl.Pf("number of J evaluations   =%6d\n", o.njeval)
-	utl.Pf("total number of steps     =%6d\n", o.nsteps)
-	utl.Pf("number of accepted steps  =%6d\n", o.naccepted)
-	utl.Pf("number of rejected steps  =%6d\n", o.nrejected)
-	utl.Pf("number of decompositions  =%6d\n", o.ndecomp)
-	utl.Pf("number of lin solutions   =%6d\n", o.nlinsol)
-	utl.Pf("max number of iterations  =%6d\n", o.nitmax)
+	io.Pf("number of F evaluations   =%6d\n", o.nfeval)
+	io.Pf("number of J evaluations   =%6d\n", o.njeval)
+	io.Pf("total number of steps     =%6d\n", o.nsteps)
+	io.Pf("number of accepted steps  =%6d\n", o.naccepted)
+	io.Pf("number of rejected steps  =%6d\n", o.nrejected)
+	io.Pf("number of decompositions  =%6d\n", o.ndecomp)
+	io.Pf("number of lin solutions   =%6d\n", o.nlinsol)
+	io.Pf("max number of iterations  =%6d\n", o.nitmax)
 }
 
 func (o *ODE) GetStat() (s string) {

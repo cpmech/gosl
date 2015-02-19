@@ -7,7 +7,7 @@ package tsr
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Mmatch computes M=q/p and qy0 from c and φ corresponding to the strength that would
@@ -34,7 +34,7 @@ func Mmatch(c, φ float64, cone string) (M, qy0 float64) {
 		M = 3.0 * t / d
 		ξ = 3.0 / d
 	default:
-		utl.Panic(_fcritcoef_err1, cone)
+		chk.Panic(_fcritcoef_err1, cone)
 	}
 	qy0 = ξ * c
 	return
@@ -50,7 +50,7 @@ func Phi2M(φ float64, typ string) float64 {
 	case "cam":
 		return 6.0 * sφ / (3.0 - sφ)
 	default:
-		utl.Panic(_fcritcoef_err2, "Phi2M", typ)
+		chk.Panic(_fcritcoef_err2, "Phi2M", typ)
 	}
 	return 0
 }
@@ -64,7 +64,7 @@ func M2Phi(M float64, typ string) float64 {
 	case "cam":
 		sφ = 3.0 * M / (M + 6.0)
 	default:
-		utl.Panic(_fcritcoef_err2, "M2Phi", typ)
+		chk.Panic(_fcritcoef_err2, "M2Phi", typ)
 	}
 	return math.Asin(sφ) * 180.0 / math.Pi
 }

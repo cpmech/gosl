@@ -7,6 +7,8 @@
 package main
 
 import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/utl"
@@ -17,15 +19,15 @@ func main() {
 	mpi.Start(false)
 	defer func() {
 		if err := recover(); err != nil {
-			utl.PfRed("Some error has happened: %v\n", err)
+			io.PfRed("Some error has happened: %v\n", err)
 		}
 		mpi.Stop(false)
 	}()
 
-	utl.Tsilent = false
+	verbose() = false
 	myrank := mpi.Rank()
 	if myrank == 0 {
-		utl.TTitle("Test MUMPS Sol 01b")
+		chk.PrintTitle("Test MUMPS Sol 01b")
 	}
 
 	var t la.Triplet
@@ -77,7 +79,7 @@ func main() {
 			b[4] = 19.0
 		}
 	default:
-		utl.Panic("this test needs 1 or 2 procs")
+		chk.Panic("this test needs 1 or 2 procs")
 	}
 
 	x_correct := []float64{1, 2, 3, 4, 5}

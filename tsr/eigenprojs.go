@@ -7,6 +7,8 @@ package tsr
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
@@ -99,15 +101,15 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 
 	// debug
 	if EV_DEBUG {
-		utl.PfGreen("\nM_FixZeroOrRepeated:\n")
-		utl.Pfgreen(" a = %#v\n", a)
+		io.PfGreen("\nM_FixZeroOrRepeated:\n")
+		io.Pfgreen(" a = %#v\n", a)
 	}
 
 	// define: compute eigenvalues
 	calceigen := func() (e error) {
 		ee := M_EigenValsNum(λ, a)
 		if ee != nil {
-			return utl.Err(_eigenprojs_err9, ee)
+			return chk.Err(_eigenprojs_err9, ee)
 		}
 		return
 	}
@@ -119,7 +121,7 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 				a[i] -= pert
 				recompute = true
 				if EV_DEBUG {
-					utl.Pfgreen(" λ%d zero. a(after)=%v\n", i, a)
+					io.Pfgreen(" λ%d zero. a(after)=%v\n", i, a)
 				}
 			}
 		}
@@ -139,7 +141,7 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 		cf := evtol * fac
 		pt := pert + cf
 		if EV_DEBUG {
-			utl.Pfgreen(" cf=%v, pert=%v, pt=%v\n", cf, pert, pt)
+			io.Pfgreen(" cf=%v, pert=%v, pt=%v\n", cf, pert, pt)
 		}
 		if math.Abs(λ[0]-λ[1]) < cf && math.Abs(λ[1]-λ[2]) < cf && math.Abs(λ[2]-λ[0]) < cf {
 			a[0] -= pt * 2.0
@@ -147,7 +149,7 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 			a[2] += pt * 2.0
 			recompute = true
 			if EV_DEBUG {
-				utl.Pfgreen(" λ0 ≈ λ1 ≈ λ2 (diff=%v, %v, %v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[0]-λ[1]), math.Abs(λ[1]-λ[2]), math.Abs(λ[2]-λ[0]), λ, a)
+				io.Pfgreen(" λ0 ≈ λ1 ≈ λ2 (diff=%v, %v, %v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[0]-λ[1]), math.Abs(λ[1]-λ[2]), math.Abs(λ[2]-λ[0]), λ, a)
 			}
 		} else {
 			if math.Abs(λ[0]-λ[1]) < cf {
@@ -155,7 +157,7 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 				doadd(1, 2, +pt, cf)
 				recompute = true
 				if EV_DEBUG {
-					utl.Pfgreen(" λ0 ≈ λ1 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[0]-λ[1]), λ, a)
+					io.Pfgreen(" λ0 ≈ λ1 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[0]-λ[1]), λ, a)
 				}
 			}
 			if math.Abs(λ[1]-λ[2]) < cf {
@@ -163,7 +165,7 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 				doadd(2, 0, +pt, cf)
 				recompute = true
 				if EV_DEBUG {
-					utl.Pfgreen(" λ1 ≈ λ2 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[1]-λ[2]), λ, a)
+					io.Pfgreen(" λ1 ≈ λ2 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[1]-λ[2]), λ, a)
 				}
 			}
 			if math.Abs(λ[2]-λ[0]) < cf {
@@ -171,7 +173,7 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 				doadd(0, 1, +pt, cf)
 				recompute = true
 				if EV_DEBUG {
-					utl.Pfgreen(" λ2 ≈ λ0 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[2]-λ[0]), λ, a)
+					io.Pfgreen(" λ2 ≈ λ0 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[2]-λ[0]), λ, a)
 				}
 			}
 		}
@@ -196,7 +198,7 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 
 	// fix repeated (first call)
 	if EV_DEBUG {
-		utl.PfGreen(" first call to fix_repeated\n")
+		io.PfGreen(" first call to fix_repeated\n")
 	}
 	recompute = fix_repeated()
 	if recompute {
@@ -208,7 +210,7 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 
 		// fix repeated (second call)
 		if EV_DEBUG {
-			utl.PfGreen(" second call to fix_repeated\n")
+			io.PfGreen(" second call to fix_repeated\n")
 		}
 		recompute = fix_repeated()
 		if recompute {
@@ -219,11 +221,11 @@ func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bo
 
 			// check
 			if EV_DEBUG {
-				utl.PfGreen(" last call to fix_repeated\n")
+				io.PfGreen(" last call to fix_repeated\n")
 			}
 			recompute = fix_repeated()
 			if recompute {
-				return true, utl.Err(_eigenprojs_err11, a, λ)
+				return true, chk.Err(_eigenprojs_err11, a, λ)
 			}
 		}
 	}
@@ -252,26 +254,26 @@ func M_EigenValsAna(λ, a []float64, evtol, zero float64) {
 	if d < 0 {
 		d = 0
 		if EV_DEBUG {
-			utl.Pfgrey("eigenprojs.go: M_EigenValsAna: d = %g < 0\n", d)
+			io.Pfgrey("eigenprojs.go: M_EigenValsAna: d = %g < 0\n", d)
 		}
 	}
 	fac := max(1, la.VecLargest(a, 1))
 	sd := math.Sqrt(d)
 	if sd < evtol*fac {
-		utl.Panic("eigenprojs.go: M_EigenValsAna: all repeated eigenvalues\n  a=%v\n  λ=%v\n", a, λ)
+		chk.Panic("eigenprojs.go: M_EigenValsAna: all repeated eigenvalues\n  a=%v\n  λ=%v\n", a, λ)
 	}
 	nm := 2.0*I1*I1*I1 - 9.0*I1*I2 + 27.0*I3
 	if math.Abs(nm) < evtol {
 		nm = 0
 		if EV_DEBUG {
-			utl.Pfgrey("eigenprojs.go: M_EigenValsAna: |nm| = %g < %g\n", math.Abs(nm), evtol)
+			io.Pfgrey("eigenprojs.go: M_EigenValsAna: |nm| = %g < %g\n", math.Abs(nm), evtol)
 		}
 	}
 	t := 0.5 * nm / (sd * sd * sd)
 	if math.Abs(t) > 1.0 {
 		t = utl.Sign(t)
 		if EV_DEBUG {
-			utl.Pfgrey("eigenprojs.go: M_EigenValsAna: |t| = %g > 1\n", math.Abs(t))
+			io.Pfgrey("eigenprojs.go: M_EigenValsAna: |t| = %g > 1\n", math.Abs(t))
 		}
 	}
 	θ := math.Acos(t)
@@ -279,7 +281,7 @@ func M_EigenValsAna(λ, a []float64, evtol, zero float64) {
 		λ[k] = (I1 + 2.0*sd*math.Cos((θ+2.0*math.Pi*(1.0+float64(k)))/3.0)) / 3.0
 	}
 	if EV_DEBUG {
-		utl.Pfgrey("eigenprojs.go: M_EigenValsAna:\n  a = %v\n  λ = %v\n", a, λ)
+		io.Pfgrey("eigenprojs.go: M_EigenValsAna:\n  a = %v\n  λ = %v\n", a, λ)
 	}
 	return
 }
@@ -290,14 +292,14 @@ func M_EigenProjsAna(P [][]float64, a, λ []float64, zero float64) (err error) {
 
 	// check eigenvalues
 	if math.Abs(λ[0]) < zero || math.Abs(λ[1]) < zero || math.Abs(λ[2]) < zero {
-		return utl.Err(_eigenprojs_err1, "M_EigenProjsAna", λ, a, zero)
+		return chk.Err(_eigenprojs_err1, "M_EigenProjsAna", λ, a, zero)
 	}
 
 	// inverse tensor
 	ai := make([]float64, len(a))
 	_, err = M_Inv(ai, a, MINDET)
 	if err != nil {
-		return utl.Err(_eigenprojs_err7, "M_EigenProjsAna", err.Error())
+		return chk.Err(_eigenprojs_err7, "M_EigenProjsAna", err.Error())
 	}
 
 	// characteristic invariants
@@ -310,7 +312,7 @@ func M_EigenProjsAna(P [][]float64, a, λ []float64, zero float64) (err error) {
 		dn = 2.0*λ[k]*λ[k] - λ[k]*I1 + I3/λ[k]
 		cf = λ[k] / dn
 		if math.Abs(dn) < EV_DNMIN {
-			return utl.Err(_eigenprojs_err4, dn, EV_DNMIN, a, λ, I1, I3, cf)
+			return chk.Err(_eigenprojs_err4, dn, EV_DNMIN, a, λ, I1, I3, cf)
 		}
 		for i := 0; i < len(a); i++ {
 			P[k][i] = cf * (a[i] + (λ[k]-I1)*Im[i] + (I3/λ[k])*ai[i])
@@ -331,14 +333,14 @@ func M_EigenProjsDeriv(dPda [][][]float64, a, λ []float64, P [][]float64, zero 
 
 	// check eigenvalues
 	if math.Abs(λ[0]) < zero || math.Abs(λ[1]) < zero || math.Abs(λ[2]) < zero {
-		return utl.Err(_eigenprojs_err5, "M_EigenProjsDeriv", λ, zero)
+		return chk.Err(_eigenprojs_err5, "M_EigenProjsDeriv", λ, zero)
 	}
 
 	// derivative of inverse tensor
 	ai := make([]float64, len(a))
 	_, err = M_Inv(ai, a, MINDET)
 	if err != nil {
-		return utl.Err(_eigenprojs_err7, "M_EigenProjsDeriv", err.Error())
+		return chk.Err(_eigenprojs_err7, "M_EigenProjsDeriv", err.Error())
 	}
 	M_InvDeriv(dPda[0], ai) // dPda[0] := daida
 
@@ -351,7 +353,7 @@ func M_EigenProjsDeriv(dPda [][][]float64, a, λ []float64, P [][]float64, zero 
 	α1 := 2.0*λ[1]*λ[1] - I1*λ[1] + I3/λ[1]
 	α2 := 2.0*λ[2]*λ[2] - I1*λ[2] + I3/λ[2]
 	if math.Abs(α0) < EV_ALPMIN || math.Abs(α1) < EV_ALPMIN || math.Abs(α2) < EV_ALPMIN {
-		return utl.Err(_eigenprojs_err2, α0, α1, α2, λ)
+		return chk.Err(_eigenprojs_err2, α0, α1, α2, λ)
 	}
 
 	// compute derivatives
@@ -379,13 +381,13 @@ func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evt
 	if usenum {
 		err := M_EigenValsProjsNum(P, λ, a)
 		if err != nil {
-			utl.Panic("eigenprojs.go: CheckEigenprojs failed:\n %v", err.Error())
+			chk.Panic("eigenprojs.go: CheckEigenprojs failed:\n %v", err.Error())
 		}
 	} else {
 		M_EigenValsAna(λ, a, evtol, zero)
 		err := M_EigenProjsAna(P, a, λ, zero)
 		if err != nil {
-			utl.Panic("eigenprojs.go: CheckEigenprojs failed:\n %v", err.Error())
+			chk.Panic("eigenprojs.go: CheckEigenprojs failed:\n %v", err.Error())
 		}
 	}
 
@@ -403,21 +405,21 @@ func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evt
 		for j := 0; j < 3; j++ {
 			err := M_Dot(PdotP, P[i], P[j], 1e-14)
 			if err != nil {
-				utl.Panic("%v", err)
+				chk.Panic("%v", err)
 			}
 			if i == j {
 				diff := la.VecMaxDiff(PdotP, P[i])
 				if diff > tolP {
-					utl.Panic("eigenprojs.go: CheckEigenprojs failed: P%d dot P%d != P%d (diff=%g)", i, j, i, diff)
+					chk.Panic("eigenprojs.go: CheckEigenprojs failed: P%d dot P%d != P%d (diff=%g)", i, j, i, diff)
 				} else if ver {
-					utl.Pf("P%d dot P%d == P%d [1;32mOK[0m (diff=%g)\n", i, j, i, diff)
+					io.Pf("P%d dot P%d == P%d [1;32mOK[0m (diff=%g)\n", i, j, i, diff)
 				}
 			} else {
 				diff := la.VecMaxDiff(PdotP, Z)
 				if diff > tolP {
-					utl.Panic("eigenprojs.go: CheckEigenprojs failed: P%d dot P%d !=  0 (diff=%g)", i, j, diff)
+					chk.Panic("eigenprojs.go: CheckEigenprojs failed: P%d dot P%d !=  0 (diff=%g)", i, j, diff)
 				} else if ver {
-					utl.Pf("P%d dot P%d ==  0 [1;32mOK[0m (diff=%g)\n", i, j, diff)
+					io.Pf("P%d dot P%d ==  0 [1;32mOK[0m (diff=%g)\n", i, j, diff)
 				}
 			}
 		}
@@ -432,9 +434,9 @@ func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evt
 	}
 	diff := la.VecMaxDiff(sumP, Im[:ncp])
 	if diff > tolP {
-		utl.Panic("eigenprojs.go: CheckEigenprojs failed: sumP != I (diff=%g)", diff)
+		chk.Panic("eigenprojs.go: CheckEigenprojs failed: sumP != I (diff=%g)", diff)
 	} else if ver {
-		utl.Pf("sum(P) [1;32mOK[0m (diff=%g)\n", diff)
+		io.Pf("sum(P) [1;32mOK[0m (diff=%g)\n", diff)
 	}
 
 	// check spectral decomposition
@@ -446,9 +448,9 @@ func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evt
 	}
 	diff = la.VecMaxDiff(as, a)
 	if diff > tolS {
-		utl.Panic("eigenprojs.go: CheckEigenprojs failed: a(spectral) != a (diff=%g)", diff)
+		chk.Panic("eigenprojs.go: CheckEigenprojs failed: a(spectral) != a (diff=%g)", diff)
 	} else if ver {
-		utl.Pf("a(spectral) == a [1;32mOK[0m (diff=%g)\n", diff)
+		io.Pf("a(spectral) == a [1;32mOK[0m (diff=%g)\n", diff)
 	}
 
 	// sort eigenvalues and eigenprojectors
@@ -474,15 +476,15 @@ func CheckEigenprojsDerivs(usenum bool, a []float64, tol float64, ver bool, evto
 		if usenum {
 			err := M_EigenValsProjsNum(P, λ, a)
 			if err != nil {
-				utl.Panic("eigenprojs.go: CheckEigenprojsDerivs failed:\n %v", err.Error())
+				chk.Panic("eigenprojs.go: CheckEigenprojsDerivs failed:\n %v", err.Error())
 			}
 		} else {
 			M_EigenValsAna(λ, a, evtol, zero)
-			//utl.Pforan("a = %v\n", a)
-			//utl.Pforan("λ = %v\n", λ)
+			//io.Pforan("a = %v\n", a)
+			//io.Pforan("λ = %v\n", λ)
 			err := M_EigenProjsAna(P, a, λ, zero)
 			if err != nil {
-				utl.Panic("eigenprojs.go: CheckEigenprojsDerivs failed:\n %v", err.Error())
+				chk.Panic("eigenprojs.go: CheckEigenprojsDerivs failed:\n %v", err.Error())
 			}
 		}
 	}
@@ -492,7 +494,7 @@ func CheckEigenprojsDerivs(usenum bool, a []float64, tol float64, ver bool, evto
 	dPda := utl.Deep3alloc(3, ncp, ncp)
 	err := M_EigenProjsDeriv(dPda, a, λ, P, zero)
 	if err != nil {
-		utl.Panic("%v", err)
+		chk.Panic("%v", err)
 	}
 
 	// check
@@ -508,27 +510,27 @@ func CheckEigenprojsDerivs(usenum bool, a []float64, tol float64, ver bool, evto
 					a[j] = tmp
 					return P[k][i]
 				}, a[j], 1e-6)
-				err := utl.AnaNum(utl.Sf("dP%d[%d]/da[%d]", k, i, j), tol, dPda[k][i][j], dnum, ver)
+				err := chk.PrintAnaNum(io.Sf("dP%d[%d]/da[%d]", k, i, j), tol, dPda[k][i][j], dnum, ver)
 				if err != nil {
 					has_error = true
 				}
 			}
 		}
 		if ver {
-			utl.Pf("\n")
+			io.Pf("\n")
 		}
 	}
 	if has_error {
-		utl.Panic(_eigenprojs_err8)
+		chk.Panic(_eigenprojs_err8)
 	}
 	return
 }
 
 // print_eigenvecs prints the eigenvectors in matrix Q
 func print_eigenvecs(Q [][]float64) {
-	utl.Pforan("Q0 = [%v %v %v]\n", Q[0][0], Q[1][0], Q[2][0])
-	utl.Pforan("Q1 = [%v %v %v]\n", Q[0][1], Q[1][1], Q[2][1])
-	utl.Pforan("Q2 = [%v %v %v]\n", Q[0][2], Q[1][2], Q[2][2])
+	io.Pforan("Q0 = [%v %v %v]\n", Q[0][0], Q[1][0], Q[2][0])
+	io.Pforan("Q1 = [%v %v %v]\n", Q[0][1], Q[1][1], Q[2][1])
+	io.Pforan("Q2 = [%v %v %v]\n", Q[0][2], Q[1][2], Q[2][2])
 }
 
 // error messages

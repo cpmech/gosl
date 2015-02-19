@@ -4,7 +4,7 @@
 
 package fun
 
-import "github.com/cpmech/gosl/utl"
+import "github.com/cpmech/gosl/io"
 
 // global auxiliary variables
 var (
@@ -47,19 +47,19 @@ func (o *Prm) String() string {
 		ncom = 1
 	}
 	if g_largestname > 0 {
-		sknam = utl.Sf("%%-%ds", g_largestname+3)
+		sknam = io.Sf("%%-%ds", g_largestname+3)
 	}
 	if g_largestsval > 0 {
-		skval = utl.Sf("%%-%ds", g_largestsval+ncom)
+		skval = io.Sf("%%-%ds", g_largestsval+ncom)
 	}
 	l := ""
 	if o.U != "" {
-		l = utl.Sf("{\"n\":"+sknam+" \"v\":"+skval+" \"u\":%q", "\""+o.N+"\",", utl.Sf("%g", o.V)+",", o.U)
+		l = io.Sf("{\"n\":"+sknam+" \"v\":"+skval+" \"u\":%q", "\""+o.N+"\",", io.Sf("%g", o.V)+",", o.U)
 	} else {
-		l = utl.Sf("{\"n\":"+sknam+" \"v\":"+skval, "\""+o.N+"\",", utl.Sf("%g", o.V))
+		l = io.Sf("{\"n\":"+sknam+" \"v\":"+skval, "\""+o.N+"\",", io.Sf("%g", o.V))
 	}
 	if o.Extra != "" {
-		l += utl.Sf(", \"extra\":%q", o.Extra)
+		l += io.Sf(", \"extra\":%q", o.Extra)
 	}
 	if o.Inact {
 		l += ", \"inact\":true"
@@ -76,21 +76,21 @@ func (o Prms) String() string {
 	g_largestname, g_largestsval = 0, 0
 	for _, prm := range o {
 		g_largestname = imax(g_largestname, len(prm.N))
-		g_largestsval = imax(g_largestsval, len(utl.Sf("%g", prm.V)))
+		g_largestsval = imax(g_largestsval, len(io.Sf("%g", prm.V)))
 	}
 	l := ""
 	if G_openbrackets {
-		l += utl.Sf("%s    [\n", G_extraindent)
+		l += io.Sf("%s    [\n", G_extraindent)
 	}
 	for j, prm := range o {
 		if j > 0 {
 			l += ",\n"
 		}
-		l += utl.Sf("%s      %v", G_extraindent, prm)
+		l += io.Sf("%s      %v", G_extraindent, prm)
 	}
 	if len(o) > 0 {
-		l += utl.Sf("\n")
+		l += io.Sf("\n")
 	}
-	l += utl.Sf("%s    ]", G_extraindent)
+	l += io.Sf("%s    ]", G_extraindent)
 	return l
 }

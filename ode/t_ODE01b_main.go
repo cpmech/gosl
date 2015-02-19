@@ -11,6 +11,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/ode"
@@ -22,18 +24,18 @@ func main() {
 	mpi.Start(false)
 	defer func() {
 		if err := recover(); err != nil {
-			utl.PfRed("Some error has happened: %v\n", err)
+			io.PfRed("Some error has happened: %v\n", err)
 		}
 		mpi.Stop(false)
 	}()
 
-	utl.Tsilent = false
+	verbose() = false
 	if mpi.Rank() == 0 {
-		utl.TTitle("Test ODE 02b")
-		utl.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation (MPI)\n")
+		chk.PrintTitle("Test ODE 02b")
+		io.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation (MPI)\n")
 	}
 	if mpi.Size() != 2 {
-		utl.Panic(">> error: this test requires 2 MPI processors\n")
+		chk.Panic(">> error: this test requires 2 MPI processors\n")
 		return
 	}
 
@@ -137,6 +139,6 @@ func main() {
 		o.Solve(y, xa, xb, xb-xa, fixstp)
 	}
 	if mpi.Rank() == 0 {
-		utl.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
+		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 	}
 }

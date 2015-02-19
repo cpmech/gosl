@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/utl"
@@ -31,14 +33,14 @@ func main() {
 	mpi.Start(false)
 	defer func() {
 		if err := recover(); err != nil {
-			utl.PfRed("Some error has happened: %v\n", err)
+			io.PfRed("Some error has happened: %v\n", err)
 		}
 		mpi.Stop(false)
 	}()
 
-	utl.Tsilent = false
+	verbose() = false
 	if mpi.Rank() == 0 {
-		utl.TTitle("Test SumToRoot 01")
+		chk.PrintTitle("Test SumToRoot 01")
 	}
 
 	M := [][]float64{
@@ -54,7 +56,7 @@ func main() {
 	start, endp1 := (id*m)/sz, ((id+1)*m)/sz
 
 	if sz > 6 {
-		utl.Panic("this test works with at most 6 processors")
+		chk.Panic("this test works with at most 6 processors")
 	}
 
 	var J la.Triplet
@@ -69,7 +71,7 @@ func main() {
 	la.SpTriSumToRoot(&J)
 	var tst testing.T
 	if mpi.Rank() == 0 {
-		utl.CheckMatrix(&tst, "J @ proc 0", 1.0e-17, J.ToMatrix(nil).ToDense(), [][]float64{
+		chk.Matrix(&tst, "J @ proc 0", 1.0e-17, J.ToMatrix(nil).ToDense(), [][]float64{
 			{1000, 1000, 1000, 1011, 1021, 1000},
 			{1000, 1000, 1000, 1012, 1022, 1000},
 			{1000, 1000, 1000, 1013, 1023, 1000},

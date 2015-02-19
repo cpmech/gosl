@@ -8,21 +8,23 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_trapz01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("trapz01")
+	//verbose() = false
+	chk.PrintTitle("trapz01")
 
 	x := []float64{4, 6, 8}
 	y := []float64{1, 2, 3}
@@ -32,16 +34,16 @@ func Test_trapz01(tst *testing.T) {
 
 func Test_trapz02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("trapz02")
+	//verbose() = false
+	chk.PrintTitle("trapz02")
 
 	y := func(x float64) float64 {
 		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
@@ -51,8 +53,8 @@ func Test_trapz02(tst *testing.T) {
 	x := utl.LinSpace(0, 1, n)
 	A := TrapzF(x, y)
 	A_ := TrapzRange(0, 1, n, y)
-	utl.Pforan("A  = %v\n", A)
-	utl.Pforan("A_ = %v\n", A_)
+	io.Pforan("A  = %v\n", A)
+	io.Pforan("A_ = %v\n", A_)
 	Acor := 1.08306090851465
 	utl.CheckScalar(tst, "A", 1e-15, A, Acor)
 	utl.CheckScalar(tst, "A_", 1e-15, A_, Acor)

@@ -7,8 +7,9 @@ package num
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
 )
 
 type NlSolver struct {
@@ -206,7 +207,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			// invert matrix
 			err = la.MatInvG(o.Ji, o.J, 1e-10)
 			if err != nil {
-				return utl.Err(_nls_err1, err.Error())
+				return chk.Err(_nls_err1, err.Error())
 			}
 
 			// solve linear system (compute mdx) and compute lin-search data
@@ -229,7 +230,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 				symmetric, verbose, timing := false, false, false
 				err := o.lis.InitR(&o.Jtri, symmetric, verbose, timing)
 				if err != nil {
-					return utl.Err(_nls_err9, err.Error())
+					return chk.Err(_nls_err9, err.Error())
 				}
 			}
 
@@ -246,8 +247,8 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			}
 		}
 
-		//utl.Pforan("φ    = %v\n", o.φ)
-		//utl.Pforan("dφdx = %v\n", o.dφdx)
+		//io.Pforan("φ    = %v\n", o.φ)
+		//io.Pforan("dφdx = %v\n", o.dφdx)
 
 		// update x
 		Ldx = 0.0
@@ -287,7 +288,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			nfv, err = LineSearch(x, o.fx, o.Ffcn, o.mdx, o.x0, o.dφdx, o.φ, o.LsMaxIt, true)
 			o.NFeval += nfv
 			if err != nil {
-				return utl.Err(_nls_err2, err.Error())
+				return chk.Err(_nls_err2, err.Error())
 			}
 			Ldx = 0.0
 			for i := 0; i < o.neq; i++ {
@@ -307,7 +308,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		if o.It > 0 && o.ChkConv {
 			Θ = Ldx / Ldx_prev
 			if Θ > 0.99 {
-				return utl.Err(_nls_err3, Θ, Ldx, Ldx_prev)
+				return chk.Err(_nls_err3, Θ, Ldx, Ldx_prev)
 			}
 		}
 		Ldx_prev = Ldx
@@ -320,7 +321,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 	// check convergence
 	if o.It == o.MaxIt {
-		err = utl.Err(_nls_err4, o.It)
+		err = chk.Err(_nls_err4, o.It)
 	}
 	return
 }
@@ -335,18 +336,18 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 		Jmat = la.MatAlloc(o.neq, o.neq)
 		err = o.JfcnDn(Jmat, x)
 		if err != nil {
-			return 0, utl.Err(_nls_err5, "dense", err.Error())
+			return 0, chk.Err(_nls_err5, "dense", err.Error())
 		}
 	} else {
 		if o.numJ {
 			err = Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w, false)
 			if err != nil {
-				return 0, utl.Err(_nls_err5, "sparse", err.Error())
+				return 0, chk.Err(_nls_err5, "sparse", err.Error())
 			}
 		} else {
 			err = o.JfcnSp(&o.Jtri, x)
 			if err != nil {
-				return 0, utl.Err(_nls_err5, "sparse(num)", err.Error())
+				return 0, chk.Err(_nls_err5, "sparse(num)", err.Error())
 			}
 		}
 		Jmat = o.Jtri.ToMatrix(nil).ToDense()
@@ -356,10 +357,10 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	// condition number
 	cnd, err = la.MatCondG(Jmat, "F", 1e-10)
 	if err != nil {
-		return cnd, utl.Err(_nls_err6, err.Error())
+		return cnd, chk.Err(_nls_err6, err.Error())
 	}
 	if math.IsInf(cnd, 0) || math.IsNaN(cnd) {
-		return cnd, utl.Err(_nls_err7, cnd)
+		return cnd, chk.Err(_nls_err7, cnd)
 	}
 
 	// numerical Jacobian
@@ -377,12 +378,12 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	Jnum := Jtmp.ToMatrix(nil).ToDense()
 	for i := 0; i < o.neq; i++ {
 		for j := 0; j < o.neq; j++ {
-			utl.AnaNum(utl.Sf("J[%d][%d]", i, j), tol, Jmat[i][j], Jnum[i][j], !silent)
+			chk.PrintAnaNum(io.Sf("J[%d][%d]", i, j), tol, Jmat[i][j], Jnum[i][j], !silent)
 		}
 	}
 	maxdiff := la.MatMaxDiff(Jmat, Jnum)
 	if maxdiff > tol {
-		err = utl.Err(_nls_err8, maxdiff)
+		err = chk.Err(_nls_err8, maxdiff)
 	}
 	return
 }
@@ -390,13 +391,13 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 // msg prints information on residuals
 func (o *NlSolver) msg(typ string, it int, Ldx, fx_max float64, first, last bool) {
 	if first {
-		utl.Pfpink("\n%4s%23s%23s\n", "it", "Ldx", "fx_max")
-		utl.Pfpink("%4s%23s%23s\n", "", utl.Sf("(%7.1e)", o.fnewt), utl.Sf("(%7.1e)", o.ftol))
+		io.Pfpink("\n%4s%23s%23s\n", "it", "Ldx", "fx_max")
+		io.Pfpink("%4s%23s%23s\n", "", io.Sf("(%7.1e)", o.fnewt), io.Sf("(%7.1e)", o.ftol))
 		return
 	}
-	utl.Pfyel("%4d%23.15e%23.15e\n", it, Ldx, fx_max)
+	io.Pfyel("%4d%23.15e%23.15e\n", it, Ldx, fx_max)
 	if last {
-		utl.Pfgrey(". . . converged with %s. nit=%d, nFeval=%d, nJeval=%d\n", typ, it, o.NFeval, o.NJeval)
+		io.Pfgrey(". . . converged with %s. nit=%d, nFeval=%d, nJeval=%d\n", typ, it, o.NFeval, o.NJeval)
 	}
 }
 

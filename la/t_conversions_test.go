@@ -7,21 +7,14 @@ package la
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func Test_conv01(tst *testing.T) {
 
-	tsprev := utl.Tsilent
-	defer func() {
-		utl.Tsilent = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//utl.Tsilent = false
-	utl.TTitle("conv01")
+	//verbose()
+	chk.PrintTitle("conv01")
 
 	var t Triplet
 	t.Init(3, 3, 10)
@@ -37,10 +30,10 @@ func Test_conv01(tst *testing.T) {
 	t.Put(2, 2, 32.0)
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	if !utl.Tsilent {
+	if chk.Verbose {
 		PrintMat("a", ad, "%5g", false)
 	}
-	utl.CheckMatrix(tst, "a", 1e-17, ad, [][]float64{
+	chk.Matrix(tst, "a", 1e-17, ad, [][]float64{
 		{10, 11, 12},
 		{20, 21, 22},
 		{30, 31, 32},
@@ -49,16 +42,8 @@ func Test_conv01(tst *testing.T) {
 
 func Test_conv02(tst *testing.T) {
 
-	tsprev := utl.Tsilent
-	defer func() {
-		utl.Tsilent = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//utl.Tsilent = false
-	utl.TTitle("conv02")
+	//verbose()
+	chk.PrintTitle("conv02")
 
 	var t Triplet
 	t.Init(4, 3, 4*3+2)
@@ -78,10 +63,10 @@ func Test_conv02(tst *testing.T) {
 	t.Put(3, 0, 3.0) // repeated
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	if !utl.Tsilent {
+	if chk.Verbose {
 		PrintMat("a", ad, "%5g", false)
 	}
-	utl.CheckMatrix(tst, "a", 1e-17, ad, [][]float64{
+	chk.Matrix(tst, "a", 1e-17, ad, [][]float64{
 		{1, 2, 3},
 		{4, 5, 6},
 		{7, 8, 9},
@@ -91,16 +76,8 @@ func Test_conv02(tst *testing.T) {
 
 func Test_conv03(tst *testing.T) {
 
-	tsprev := utl.Tsilent
-	defer func() {
-		utl.Tsilent = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//utl.Tsilent = false
-	utl.TTitle("conv03")
+	//verbose()
+	chk.PrintTitle("conv03")
 
 	var K, A Triplet
 	K.Init(6, 6, 36+2*6) // 2*6 == number of nonzeros in A
@@ -117,16 +94,16 @@ func Test_conv03(tst *testing.T) {
 	}
 	Kd := K.ToMatrix(nil).ToDense()
 	Ad := A.ToMatrix(nil).ToDense()
-	if !utl.Tsilent {
+	if chk.Verbose {
 		PrintMat("K", Kd, "%8g", false)
 		PrintMat("A", Ad, "%8g", false)
 	}
 	K.PutMatAndMatT(&A)
 	Kaug := K.ToMatrix(nil).ToDense()
-	if !utl.Tsilent {
+	if chk.Verbose {
 		PrintMat("K augmented", Kaug, "%8g", false)
 	}
-	utl.CheckMatrix(tst, "Kaug", 1.0e-17, Kaug, [][]float64{
+	chk.Matrix(tst, "Kaug", 1.0e-17, Kaug, [][]float64{
 		{1000, 1000, 1000, 1011, 1021, 1000},
 		{1000, 1000, 1000, 1012, 1022, 1000},
 		{1000, 1000, 1000, 1013, 1023, 1000},
@@ -138,16 +115,8 @@ func Test_conv03(tst *testing.T) {
 
 func Test_conv04(tst *testing.T) {
 
-	tsprev := utl.Tsilent
-	defer func() {
-		utl.Tsilent = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//utl.Tsilent = false
-	utl.TTitle("conv04")
+	//verbose()
+	chk.PrintTitle("conv04")
 
 	var t TripletC
 	t.Init(3, 3, 10, false)
@@ -163,10 +132,10 @@ func Test_conv04(tst *testing.T) {
 	t.Put(2, 2, 32.0, 666.0)
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	if !utl.Tsilent {
+	if chk.Verbose {
 		PrintMatC("a", ad, "(%2g", " +%4gi)  ", false)
 	}
-	utl.CheckMatrixC(tst, "a", 1.0e-17, ad, [][]complex128{
+	chk.MatrixC(tst, "a", 1.0e-17, ad, [][]complex128{
 		{10, 11, 12},
 		{20, 21, 22},
 		{30, 31, 32 + 666i},
@@ -175,16 +144,8 @@ func Test_conv04(tst *testing.T) {
 
 func Test_conv05(tst *testing.T) {
 
-	tsprev := utl.Tsilent
-	defer func() {
-		utl.Tsilent = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//utl.Tsilent = false
-	utl.TTitle("conv05")
+	//verbose()
+	chk.PrintTitle("conv05")
 
 	var t TripletC
 	t.Init(4, 3, 4*3+2, false)
@@ -204,10 +165,10 @@ func Test_conv05(tst *testing.T) {
 	t.Put(3, 0, 3.0, 1.5) // repeated
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	if !utl.Tsilent {
+	if chk.Verbose {
 		PrintMatC("a", ad, "(%2g", " +%4gi)  ", false)
 	}
-	utl.CheckMatrixC(tst, "a", 1.0e-17, ad, [][]complex128{
+	chk.MatrixC(tst, "a", 1.0e-17, ad, [][]complex128{
 		{1 + 1i, 2 + 1i, 3 + 2i},
 		{4 + 2i, 5 + 2i, 6 + 1i},
 		{7 + 3i, 8 + 3i, 9 + 4i},
@@ -217,16 +178,8 @@ func Test_conv05(tst *testing.T) {
 
 func Test_conv06(tst *testing.T) {
 
-	tsprev := utl.Tsilent
-	defer func() {
-		utl.Tsilent = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//utl.Tsilent = false
-	utl.TTitle("conv06")
+	//verbose()
+	chk.PrintTitle("conv06")
 
 	a := [][]float64{
 		{1, 2, 3},
@@ -238,12 +191,12 @@ func Test_conv06(tst *testing.T) {
 	am := MatToColMaj(a)
 	aa := ColMajToMatNew(am, 4, 3)
 	ColMajToMat(a_, am)
-	utl.Pforan("a  = %v\n", a)
-	utl.Pforan("am = %v\n", am)
-	utl.Pforan("aa = %v\n", aa)
-	utl.CheckVector(tst, "a => am", 1e-17, am, []float64{1, 4, 7, 10, 2, 5, 8, 11, 3, 6, 9, 12})
-	utl.CheckMatrix(tst, "am => a", 1e-17, aa, a)
-	utl.CheckMatrix(tst, "am => a", 1e-17, a_, a)
+	io.Pforan("a  = %v\n", a)
+	io.Pforan("am = %v\n", am)
+	io.Pforan("aa = %v\n", aa)
+	chk.Vector(tst, "a => am", 1e-17, am, []float64{1, 4, 7, 10, 2, 5, 8, 11, 3, 6, 9, 12})
+	chk.Matrix(tst, "am => a", 1e-17, aa, a)
+	chk.Matrix(tst, "am => a", 1e-17, a_, a)
 
 	b := [][]float64{
 		{1, 2, 3, 4},
@@ -252,32 +205,24 @@ func Test_conv06(tst *testing.T) {
 	}
 	bm := MatToColMaj(b)
 	bb := ColMajToMatNew(bm, 3, 4)
-	utl.Pforan("b  = %v\n", b)
-	utl.Pforan("bm = %v\n", bm)
-	utl.Pforan("bb = %v\n", bb)
-	utl.CheckVector(tst, "b => bm", 1e-15, bm, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
-	utl.CheckMatrix(tst, "bm => b", 1e-15, bb, b)
+	io.Pforan("b  = %v\n", b)
+	io.Pforan("bm = %v\n", bm)
+	io.Pforan("bb = %v\n", bb)
+	chk.Vector(tst, "b => bm", 1e-15, bm, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
+	chk.Matrix(tst, "bm => b", 1e-15, bb, b)
 }
 
 func Test_conv07(tst *testing.T) {
 
-	tsprev := utl.Tsilent
-	defer func() {
-		utl.Tsilent = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//utl.Tsilent = false
-	utl.TTitle("conv07")
+	//verbose()
+	chk.PrintTitle("conv07")
 
 	r := []float64{1, 2, 3, 4, 5, 6}
 	c := []float64{0.1, 0.2, 0.3, 0.4, 0.5, 0.6}
 	rc := RCtoComplex(r, c)
-	utl.CheckVectorC(tst, "rc", 1e-17, rc, []complex128{1 + 0.1i, 2 + 0.2i, 3 + 0.3i, 4 + 0.4i, 5 + 0.5i, 6 + 0.6i})
+	chk.VectorC(tst, "rc", 1e-17, rc, []complex128{1 + 0.1i, 2 + 0.2i, 3 + 0.3i, 4 + 0.4i, 5 + 0.5i, 6 + 0.6i})
 
 	R, C := ComplexToRC(rc)
-	utl.CheckVector(tst, "r", 1e-17, R, r)
-	utl.CheckVector(tst, "c", 1e-17, C, c)
+	chk.Vector(tst, "r", 1e-17, R, r)
+	chk.Vector(tst, "c", 1e-17, C, c)
 }

@@ -8,7 +8,7 @@ import (
 	"math"
 	"sort"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Pts is a function based on a linear interpolation over a set of points
@@ -28,7 +28,7 @@ func (o *Pts) Init(prms Prms) (err error) {
 	var T, Y []float64
 	for _, p := range prms {
 		if len(p.N) < 2 {
-			return utl.Err(_pts_err01, p.N)
+			return chk.Err(_pts_err01, p.N)
 		}
 		switch p.N[:1] {
 		case "t":
@@ -36,11 +36,11 @@ func (o *Pts) Init(prms Prms) (err error) {
 		case "y":
 			Y = append(Y, p.V)
 		default:
-			return utl.Err("pts: parameter named %q is invalid", p.N)
+			return chk.Err("pts: parameter named %q is invalid", p.N)
 		}
 	}
 	if len(T) != len(Y) {
-		return utl.Err(_pts_err04, len(T), len(Y))
+		return chk.Err(_pts_err04, len(T), len(Y))
 	}
 	for i, t := range T {
 		o.p = append(o.p, &point{t, Y[i]})
@@ -48,7 +48,7 @@ func (o *Pts) Init(prms Prms) (err error) {
 	sort.Sort(o.p)
 	for i := 1; i < len(o.p); i++ {
 		if math.Abs(o.p[i].t-o.p[i-1].t) < 1e-7 {
-			return utl.Err(_pts_err02, o.p[i].t, 1e-7)
+			return chk.Err(_pts_err02, o.p[i].t, 1e-7)
 		}
 	}
 	o.tmin = o.p[0].t

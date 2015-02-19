@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 func f1(x float64, args ...interface{}) float64    { return math.Exp(x) }
@@ -61,7 +61,7 @@ func TestDeriv01(tst *testing.T) {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
-	utl.TTitle("TestDeriv 01")
+	chk.PrintTitle("TestDeriv 01")
 
 	check(tst, DerivCentral, f1, df1dx, 1.0, "exp(x), x=1, central deriv")
 	check(tst, DerivForward, f1, df1dx, 1.0, "exp(x), x=1, forward deriv")

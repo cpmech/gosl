@@ -8,6 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -18,16 +20,16 @@ const (
 
 func Test_bspline01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("bspline01")
+	//verbose() = false
+	chk.PrintTitle("bspline01")
 
 	var s1 Bspline
 	T1 := []float64{0, 0, 0, 1, 1, 1}
@@ -83,16 +85,16 @@ func Test_bspline01(tst *testing.T) {
 
 func Test_bspline02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("bspline02")
+	//verbose() = false
+	chk.PrintTitle("bspline02")
 
 	//               0 1 2 3 4 5 6 7 8 9 10
 	T := []float64{0, 0, 0, 1, 2, 3, 4, 4, 5, 5, 5}
@@ -104,9 +106,9 @@ func Test_bspline02(tst *testing.T) {
 	tt := utl.LinSpace(0, 5, 11)
 	for k, t := range tt {
 		span := s.find_span(t)
-		utl.Pforan("t=%.4f  =>  span=%v\n", t, span)
+		io.Pforan("t=%.4f  =>  span=%v\n", t, span)
 		if span != sol[k] {
-			utl.Panic("find_span failed: t=%v  span => %d != %d", t, span, sol[k])
+			chk.Panic("find_span failed: t=%v  span => %d != %d", t, span, sol[k])
 		}
 	}
 
@@ -116,13 +118,13 @@ func Test_bspline02(tst *testing.T) {
 	for k, t := range tt {
 		t0 := time.Now()
 		pa := s.Point(t, 0) // 0 => CalcBasis
-		utl.Pf("Point(rec): dtime = %v\n", time.Now().Sub(t0))
+		io.Pf("Point(rec): dtime = %v\n", time.Now().Sub(t0))
 		t0 = time.Now()
 		pb := s.Point(t, 1) // 1 => RecursiveBasis
-		utl.Pf("Point:      dtime = %v\n", time.Now().Sub(t0))
+		io.Pf("Point:      dtime = %v\n", time.Now().Sub(t0))
 		xx[k], yy[k] = pb[0], pb[1]
-		utl.Pfred("pa - pb = %v, %v\n", pa[0]-pb[0], pa[1]-pb[1])
-		utl.CheckVector(tst, "Point", tol, pa, pb)
+		io.Pfred("pa - pb = %v, %v\n", pa[0]-pb[0], pa[1]-pb[1])
+		chk.Vector(tst, "Point", tol, pa, pb)
 	}
 
 	if T_BSPLINE_SAVE {
@@ -139,16 +141,16 @@ func Test_bspline02(tst *testing.T) {
 
 func Test_bspline03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("bspline03")
+	//verbose() = false
+	chk.PrintTitle("bspline03")
 
 	//             0 1 2 3 4 5 6 7 8 9 10
 	T := []float64{0, 0, 0, 1, 2, 3, 4, 4, 5, 5, 5}
@@ -158,21 +160,21 @@ func Test_bspline03(tst *testing.T) {
 
 	// analytical derivatives
 	s.CalcBasisAndDerivs(3.99)
-	utl.Pfpink("ana: dNdt(t=3.99, i=5) = %v\n", s.GetDeriv(5))
-	utl.Pfpink("ana: dNdt(t=3.99, i=6) = %v\n", s.GetDeriv(6))
-	utl.Pfpink("ana: dNdt(t=3.99, i=7) = %v\n", s.GetDeriv(7))
+	io.Pfpink("ana: dNdt(t=3.99, i=5) = %v\n", s.GetDeriv(5))
+	io.Pfpink("ana: dNdt(t=3.99, i=6) = %v\n", s.GetDeriv(6))
+	io.Pfpink("ana: dNdt(t=3.99, i=7) = %v\n", s.GetDeriv(7))
 	s.CalcBasisAndDerivs(4.0)
-	utl.Pforan("ana: dNdt(t=4.00, i=5) = %v\n", s.GetDeriv(5))
-	utl.Pforan("ana: dNdt(t=4.00, i=6) = %v\n", s.GetDeriv(6))
-	utl.Pforan("ana: dNdt(t=4.00, i=7) = %v\n", s.GetDeriv(7))
+	io.Pforan("ana: dNdt(t=4.00, i=5) = %v\n", s.GetDeriv(5))
+	io.Pforan("ana: dNdt(t=4.00, i=6) = %v\n", s.GetDeriv(6))
+	io.Pforan("ana: dNdt(t=4.00, i=7) = %v\n", s.GetDeriv(7))
 
 	// numerical derivatives
-	utl.Pfcyan("num: dNdt(t=3.99, i=5) = %v\n", s.NumericalDeriv(3.99, 5))
-	utl.Pfcyan("num: dNdt(t=3.99, i=6) = %v\n", s.NumericalDeriv(3.99, 6))
-	utl.Pfcyan("num: dNdt(t=3.99, i=7) = %v\n", s.NumericalDeriv(3.99, 7))
-	utl.Pfblue2("num: dNdt(t=4.00, i=5) = %v\n", s.NumericalDeriv(4.00, 5))
-	utl.Pfblue2("num: dNdt(t=4.00, i=6) = %v\n", s.NumericalDeriv(4.00, 6))
-	utl.Pfblue2("num: dNdt(t=4.00, i=7) = %v\n", s.NumericalDeriv(4.00, 7))
+	io.Pfcyan("num: dNdt(t=3.99, i=5) = %v\n", s.NumericalDeriv(3.99, 5))
+	io.Pfcyan("num: dNdt(t=3.99, i=6) = %v\n", s.NumericalDeriv(3.99, 6))
+	io.Pfcyan("num: dNdt(t=3.99, i=7) = %v\n", s.NumericalDeriv(3.99, 7))
+	io.Pfblue2("num: dNdt(t=4.00, i=5) = %v\n", s.NumericalDeriv(4.00, 5))
+	io.Pfblue2("num: dNdt(t=4.00, i=6) = %v\n", s.NumericalDeriv(4.00, 6))
+	io.Pfblue2("num: dNdt(t=4.00, i=7) = %v\n", s.NumericalDeriv(4.00, 7))
 
 	ver := false
 	tol := 1e-5
@@ -190,9 +192,9 @@ func Test_bspline03(tst *testing.T) {
 				numd[5] = anad[5]
 				numd[6] = anad[6]
 			}
-			utl.AnaNum(utl.Sf("i=%d t=%v", i, t), tol, anad[i], numd[i], ver)
+			chk.PrintAnaNum(io.Sf("i=%d t=%v", i, t), tol, anad[i], numd[i], ver)
 		}
-		utl.CheckVector(tst, utl.Sf("derivs @ %v", t), tol, numd, anad)
+		chk.Vector(tst, io.Sf("derivs @ %v", t), tol, numd, anad)
 	}
 
 	if T_BSPLINE_SAVE {

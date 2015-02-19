@@ -8,12 +8,14 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
 )
 
 func init() {
-	utl.Tsilent = true
+	verbose() = true
 }
 
 // Check checks derivatives w.r.t to t for fixed coordinates x
@@ -35,10 +37,10 @@ func CheckT(tst *testing.T, o Func, t0, tf float64, xcte []float64, np int, tski
 		dnum := num.DerivCen(func(t float64, args ...interface{}) (res float64) {
 			return o.F(t, xcte)
 		}, t[i])
-		utl.CheckAnaNum(tst, utl.Sf("G(%10f)", t[i]), dtol, g, dnum, ver)
+		chk.AnaNum(tst, io.Sf("G(%10f)", t[i]), dtol, g, dnum, ver)
 		dnum2 := num.DerivCen(func(t float64, args ...interface{}) (res float64) {
 			return o.G(t, xcte)
 		}, t[i])
-		utl.CheckAnaNum(tst, utl.Sf("H(%10f)", t[i]), dtol2, h, dnum2, ver)
+		chk.AnaNum(tst, io.Sf("H(%10f)", t[i]), dtol2, h, dnum2, ver)
 	}
 }

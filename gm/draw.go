@@ -5,6 +5,7 @@
 package gm
 
 import (
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -27,7 +28,7 @@ func (o *Nurbs) DrawCtrl2D(ids bool) {
 			for i := 0; i < o.n[0]; i++ {
 				x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
 				y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
-				plt.Text(x, y, utl.Sf("%d", i), "color='r', size=9")
+				plt.Text(x, y, io.Sf("%d", i), "color='r', size=9")
 			}
 		}
 	// surface
@@ -57,7 +58,7 @@ func (o *Nurbs) DrawCtrl2D(ids bool) {
 					x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
 					y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
 					l := i + j*o.n[0]
-					plt.Text(x, y, utl.Sf("%d", l), "color='r', size=9")
+					plt.Text(x, y, io.Sf("%d", l), "color='r', size=9")
 				}
 			}
 		}
@@ -76,10 +77,10 @@ func (o *Nurbs) DrawElem2D(span []int, npts int, ids bool, args, idargs string) 
 		o.draw_edge2d(umin, umax, 0.0, 0, npts, args)
 		if ids {
 			c := o.Point([]float64{umin})
-			plt.Text(c[0], c[1], utl.Sf("(%d)", span[0]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d)", span[0]), idargs)
 			if span[1] == o.b[0].m-o.p[0]-1 {
 				c := o.Point([]float64{umax})
-				plt.Text(c[0], c[1], utl.Sf("(%d)", span[1]), idargs)
+				plt.Text(c[0], c[1], io.Sf("(%d)", span[1]), idargs)
 			}
 		}
 	// surface
@@ -92,13 +93,13 @@ func (o *Nurbs) DrawElem2D(span []int, npts int, ids bool, args, idargs string) 
 		o.draw_edge2d(vmin, vmax, umax, 1, npts, args)
 		if ids {
 			c := o.Point([]float64{umin, vmin})
-			plt.Text(c[0], c[1], utl.Sf("(%d,%d)", span[0], span[2]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[0], span[2]), idargs)
 			c = o.Point([]float64{umin, vmax})
-			plt.Text(c[0], c[1], utl.Sf("(%d,%d)", span[0], span[3]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[0], span[3]), idargs)
 			c = o.Point([]float64{umax, vmin})
-			plt.Text(c[0], c[1], utl.Sf("(%d,%d)", span[1], span[2]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[1], span[2]), idargs)
 			c = o.Point([]float64{umax, vmax})
-			plt.Text(c[0], c[1], utl.Sf("(%d,%d)", span[1], span[3]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[1], span[3]), idargs)
 		}
 	}
 }
@@ -169,7 +170,7 @@ func (o *Nurbs) PlotBasis(l int, args string, npts, option int) {
 		}
 		plt.Contour(xx, yy, zz, "fsz=8")
 	}
-	plt.Title(utl.Sf("%d:%s", l, lbls[option]), "size=10")
+	plt.Title(io.Sf("%d:%s", l, lbls[option]), "size=10")
 }
 
 // PlotDeriv plots derivative dR[i][j][k]du[d] (2D only)
@@ -206,7 +207,7 @@ func (o *Nurbs) PlotDeriv(l, d int, args string, npts, option int) {
 				zz[m][n] = drdu[d]
 			}
 		}
-		plt.Title(utl.Sf("%d,%d:%s", l, d, lbls[option]), "size=10")
+		plt.Title(io.Sf("%d,%d:%s", l, d, lbls[option]), "size=10")
 		plt.Contour(xx, yy, zz, "fsz=8")
 	}
 }

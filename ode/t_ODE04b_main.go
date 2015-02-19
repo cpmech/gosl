@@ -12,6 +12,8 @@ import (
 	"math"
 	"time"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/ode"
@@ -56,19 +58,19 @@ func main() {
 	mpi.Start(false)
 	defer func() {
 		if err := recover(); err != nil {
-			utl.PfRed("Some error has happened: %v\n", err)
+			io.PfRed("Some error has happened: %v\n", err)
 		}
 		mpi.Stop(false)
 	}()
 
-	utl.Tsilent = false
+	verbose() = false
 	if mpi.Rank() == 0 {
-		utl.TTitle("Test ODE 04b (MPI)")
-		utl.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier (MPI)\n")
-		utl.Pfcyan("(from E Hairer's website, not the system in the book)\n")
+		chk.PrintTitle("Test ODE 04b (MPI)")
+		io.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier (MPI)\n")
+		io.Pfcyan("(from E Hairer's website, not the system in the book)\n")
 	}
 	if mpi.Size() != 3 {
-		utl.Panic(">> error: this test requires 3 MPI processors\n")
+		chk.Panic(">> error: this test requires 3 MPI processors\n")
 		return
 	}
 
@@ -176,7 +178,7 @@ func main() {
 	}
 	defer func() {
 		if mpi.Rank() == 0 {
-			utl.WriteFileD("/tmp/gosl", "hwamplifierB.res", &b)
+			io.WriteFileD("/tmp/gosl", "hwamplifierB.res", &b)
 		}
 	}()
 
@@ -214,6 +216,6 @@ func main() {
 		osol.Solve(ya, xa, xb, xb-xa, fixstp, &D)
 	}
 	if mpi.Rank() == 0 {
-		utl.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
+		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 	}
 }

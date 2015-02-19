@@ -7,7 +7,8 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // HashPoint returns a unique id of a point
@@ -62,7 +63,7 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 	o.Xi = xi
 	o.Xf = xf
 	if len(xi) != len(xf) || len(xi) < 2 || len(xi) > 3 {
-		return utl.Err("sizes of xi and l must be the same and equal to either 2 or 3")
+		return chk.Err("sizes of xi and l must be the same and equal to either 2 or 3")
 	}
 
 	// allocate lentgth and number of division slices
@@ -96,11 +97,11 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 func (o *Bins) Append(x []float64, id int) (err error) {
 	idx := o.CalcIdx(x)
 	if idx < 0 {
-		return utl.Err("point %v is out of range", x)
+		return chk.Err("point %v is out of range", x)
 	}
 	bin := o.FindBinByIndex(idx)
 	if bin == nil {
-		return utl.Err("bin index %v is out of range", idx)
+		return chk.Err("bin index %v is out of range", idx)
 	}
 	entry := BinEntry{id, x}
 	bin.Entries = append(bin.Entries, &entry)
@@ -235,14 +236,14 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 }
 
 func (o Bin) String() string {
-	l := utl.Sf("{\"idx\":%d, \"entries\":[", o.Idx)
+	l := io.Sf("{\"idx\":%d, \"entries\":[", o.Idx)
 	for i, entry := range o.Entries {
 		if i > 0 {
 			l += ", "
 		}
-		l += utl.Sf("{\"id\":%d, \"x\":[%g,%g", entry.Id, entry.x[0], entry.x[1])
+		l += io.Sf("{\"id\":%d, \"x\":[%g,%g", entry.Id, entry.x[0], entry.x[1])
 		if len(entry.x) > 2 {
-			l += utl.Sf(",%g", entry.x[2])
+			l += io.Sf(",%g", entry.x[2])
 		}
 		l += "]}"
 	}
@@ -258,7 +259,7 @@ func (o Bins) String() string {
 			if k > 0 {
 				l += ",\n"
 			}
-			l += utl.Sf("  %v", bin)
+			l += io.Sf("  %v", bin)
 			k += 1
 		}
 	}

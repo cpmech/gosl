@@ -15,7 +15,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Scene holds essential data to draw and interect with the x-y-z Cartesian system
@@ -201,7 +201,7 @@ func (o *Scene) Run() (err error) {
 	o.win = C.win_alloc(reverse)
 	defer C.win_dealloc(o.win)
 	if o.win == nil {
-		return utl.Err("C.scene_begin failed\n")
+		return chk.Err("C.scene_begin failed\n")
 	}
 
 	// arrows
@@ -257,7 +257,7 @@ func (o *Scene) Run() (err error) {
 	// call C routine: end
 	status := C.scene_run(o.win, axeslen, hydroline, reverse, fullaxes, withplanes, interact, saveonexit, fnk)
 	if status != 0 {
-		return utl.Err("C.scene_end failed\n")
+		return chk.Err("C.scene_end failed\n")
 	}
 	return
 }

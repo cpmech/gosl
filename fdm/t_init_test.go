@@ -9,5 +9,5 @@ import (
 )
 
 func init() {
-	utl.Tsilent = true
+	verbose() = true
 }

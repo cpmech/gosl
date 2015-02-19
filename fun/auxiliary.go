@@ -4,7 +4,7 @@
 
 package fun
 
-import "github.com/cpmech/gosl/utl"
+import "github.com/cpmech/gosl/chk"
 
 // imax returns the max between two integers
 func imax(a, b int) int {
@@ -42,12 +42,12 @@ func min(a, b float64) float64 {
 func checkprm(name string, val, minval, maxval float64, usemin, usemax bool) (err error) {
 	if usemin {
 		if val < minval {
-			return utl.Err("%q parameter: wrong value: %g < %g", name, val, minval)
+			return chk.Err("%q parameter: wrong value: %g < %g", name, val, minval)
 		}
 	}
 	if usemax {
 		if val > maxval {
-			return utl.Err("%q parameter: wrong value: %g > %g", name, val, maxval)
+			return chk.Err("%q parameter: wrong value: %g > %g", name, val, maxval)
 		}
 	}
 	return

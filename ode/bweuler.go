@@ -7,9 +7,10 @@ package ode
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/utl"
 )
 
 func bweuler_accept(o *ODE, y []float64) {
@@ -58,7 +59,7 @@ func bweuler_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr flo
 			rmsnr = math.Sqrt(rmsnr)
 		}
 		if o.Verbose {
-			utl.Pfgrey("    residual = %10.5e    (tol = %10.5e)\n", rmsnr, o.fnewt)
+			io.Pfgrey("    residual = %10.5e    (tol = %10.5e)\n", rmsnr, o.fnewt)
 		}
 
 		// converged
@@ -84,7 +85,7 @@ func bweuler_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr flo
 			}
 			// debug
 			//if true {
-			//utl.Pfblue2("J = %v\n", o.dfdyT.ToMatrix(nil).ToDense()[0])
+			//io.Pfblue2("J = %v\n", o.dfdyT.ToMatrix(nil).ToDense()[0])
 			//}
 			if o.doinit {
 				o.rctriR = new(la.Triplet)
@@ -120,7 +121,7 @@ func bweuler_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr flo
 
 	// did not converge
 	if it == o.NmaxIt-1 {
-		utl.Panic("bweuler_step failed with it = %d", it)
+		chk.Panic("bweuler_step failed with it = %d", it)
 	}
 
 	return 1e+20, err // must not be used with automatic substepping

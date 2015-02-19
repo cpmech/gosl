@@ -5,6 +5,8 @@
 package tsr
 
 import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
@@ -326,7 +328,7 @@ func (o *IsoFun) FindIntersect(p0, k float64, Δλ []float64, usek, debug bool, 
 			A[0], A[1], A[2] = x[0], x[1], x[2]
 			fx[0], err = o.Fa(A, args...)
 			if err != nil {
-				utl.Panic(_isofun_err1)
+				chk.Panic(_isofun_err1)
 			}
 			fx[1] = a0*x[0] + a1*x[1] + 3.0*k*p0
 			fx[2] = a0*x[0] + a1*x[2] + 3.0*k*p0
@@ -338,7 +340,7 @@ func (o *IsoFun) FindIntersect(p0, k float64, Δλ []float64, usek, debug bool, 
 			A[0], A[1], A[2] = x[0], x[1], x[2]
 			_, err = o.Ga(dfdA, A, args...)
 			if err != nil {
-				utl.Panic(_isofun_err2)
+				chk.Panic(_isofun_err2)
 			}
 			dfdx.Start()
 			dfdx.Put(0, 0, o.dfdp*o.dpdλ[0]+o.dfdq*o.dqdλ[0])
@@ -362,7 +364,7 @@ func (o *IsoFun) FindIntersect(p0, k float64, Δλ []float64, usek, debug bool, 
 
 		// check
 		if len(Δλ) != 3 {
-			utl.Panic(_isofun_err3)
+			chk.Panic(_isofun_err3)
 		}
 
 		// nonlinear problem
@@ -373,7 +375,7 @@ func (o *IsoFun) FindIntersect(p0, k float64, Δλ []float64, usek, debug bool, 
 			A[2] = -p0 + m*Δλ[2]
 			fx[0], err = o.Fa(A, args...)
 			if err != nil {
-				utl.Panic(_isofun_err1)
+				chk.Panic(_isofun_err1)
 			}
 			return nil
 		}
@@ -386,7 +388,7 @@ func (o *IsoFun) FindIntersect(p0, k float64, Δλ []float64, usek, debug bool, 
 			A[2] = -p0 + m*Δλ[2]
 			_, err = o.Ga(dfdA, A, args...)
 			if err != nil {
-				utl.Panic(_isofun_err2)
+				chk.Panic(_isofun_err2)
 			}
 			dfdx.Start()
 			dfdx.Put(0, 0, o.dfdp*(o.dpdλ[0]*Δλ[0]+o.dpdλ[1]*Δλ[1]+o.dpdλ[2]*Δλ[2])+
@@ -405,26 +407,26 @@ func (o *IsoFun) FindIntersect(p0, k float64, Δλ []float64, usek, debug bool, 
 	if debug {
 		f_xsol := make([]float64, neq)
 		intersect_ffcn(f_xsol, xsol)
-		utl.Pforan("f_xsol (before) = %+v\n", f_xsol)
+		io.Pforan("f_xsol (before) = %+v\n", f_xsol)
 	}
 	var nls num.NlSolver
 	nls.Init(neq, intersect_ffcn, jacfcn, nil, false, numjac, prms)
 	defer nls.Clean()
 	err = nls.Solve(xsol, !debug)
 	if err != nil {
-		utl.Panic(_isofun_err10, err.Error())
+		chk.Panic(_isofun_err10, err.Error())
 	}
 	if debug {
 		f_xsol := make([]float64, neq)
 		intersect_ffcn(f_xsol, xsol)
-		utl.Pforan("f_xsol (after)  = %+v\n", f_xsol)
+		io.Pforan("f_xsol (after)  = %+v\n", f_xsol)
 	}
 
 	// check Jacobian
 	if debug {
 		_, err = nls.CheckJ(xsol, 1.5e-6, false, true)
 		if err != nil {
-			utl.Panic("%v", err)
+			chk.Panic("%v", err)
 		}
 	}
 
@@ -450,17 +452,17 @@ func (o *IsoFun) CheckGrads(A []float64, tol, tol2 float64, ver bool) {
 	dfdA := make([]float64, len(A))
 	_, err := o.Ga(dfdA, A)
 	if err != nil {
-		utl.Panic(_isofun_err4, err)
+		chk.Panic(_isofun_err4, err)
 	}
 	d2fdAdA := la.MatAlloc(len(A), len(A))
 	err = o.HafterGa(d2fdAdA)
 	if err != nil {
-		utl.Panic(_isofun_err6, err)
+		chk.Panic(_isofun_err6, err)
 	}
 
 	// df/dA
 	if ver {
-		utl.Pfpink("\ndfdA . . . . . . . . \n")
+		io.Pfpink("\ndfdA . . . . . . . . \n")
 	}
 	var fval, tmp float64
 	has_error := false
@@ -469,23 +471,23 @@ func (o *IsoFun) CheckGrads(A []float64, tol, tol2 float64, ver bool) {
 			tmp, A[j] = A[j], x
 			fval, err = o.Fa(A)
 			if err != nil {
-				utl.Panic(_isofun_err5, err)
+				chk.Panic(_isofun_err5, err)
 			}
 			A[j] = tmp
 			return fval
 		}, A[j], 1e-6)
-		err := utl.AnaNum(utl.Sf("df/dA[%d]", j), tol, dfdA[j], dnum, ver)
+		err := chk.PrintAnaNum(io.Sf("df/dA[%d]", j), tol, dfdA[j], dnum, ver)
 		if err != nil {
 			has_error = true
 		}
 	}
 	if has_error {
-		utl.Panic(_isofun_err8)
+		chk.Panic(_isofun_err8)
 	}
 
 	// d2f/dAdA
 	if ver {
-		utl.Pfpink("\nd²f/dAdA . . . . . . . . \n")
+		io.Pfpink("\nd²f/dAdA . . . . . . . . \n")
 	}
 	dfdA_tmp := make([]float64, len(A))
 	for i := 0; i < len(A); i++ {
@@ -494,61 +496,61 @@ func (o *IsoFun) CheckGrads(A []float64, tol, tol2 float64, ver bool) {
 				tmp, A[j] = A[j], x
 				_, err = o.Ga(dfdA_tmp, A)
 				if err != nil {
-					utl.Panic(_isofun_err7, err)
+					chk.Panic(_isofun_err7, err)
 				}
 				A[j] = tmp
 				return dfdA_tmp[i]
 			}, A[j], 1e-6)
-			err := utl.AnaNum(utl.Sf("d²f/dA[%d]dA[%d]", i, j), tol2, d2fdAdA[i][j], dnum, ver)
+			err := chk.PrintAnaNum(io.Sf("d²f/dA[%d]dA[%d]", i, j), tol2, d2fdAdA[i][j], dnum, ver)
 			if err != nil {
 				has_error = true
 			}
 		}
 	}
 	if has_error {
-		utl.Panic(_isofun_err9)
+		chk.Panic(_isofun_err9)
 	}
 }
 
 // String returns information of this object
 func (o *IsoFun) String() (l string) {
-	l = utl.Sf("  a=%v b=%v β=%v ϵ=%v\n", o.a, o.b, o.β, o.ϵ)
-	//l += utl.Sf(" λ    = %v\n", o.L)
-	//l += utl.Sf(" p, q = %v, %v\n", o.p, o.q)
+	l = io.Sf("  a=%v b=%v β=%v ϵ=%v\n", o.a, o.b, o.β, o.ϵ)
+	//l += io.Sf(" λ    = %v\n", o.L)
+	//l += io.Sf(" p, q = %v, %v\n", o.p, o.q)
 	return
 }
 
 // DebugOutput outputs debug information
 func (o *IsoFun) DebugOutput(princOnly bool) {
-	utl.Pfblue("a, b, β, ϵ = %v, %v, %v, %v\n", o.a, o.b, o.β, o.ϵ)
-	utl.Pfcyan2("L       = %v\n", o.L)
-	utl.Pfcyan2("Ls      = %v\n", o.Ls)
-	utl.Pfblue2("m       = %v\n", o.m)
-	utl.Pfblue2("N       = %v\n", o.N)
-	utl.Pfblue2("n       = %v\n", o.n)
-	utl.Pfblue("Frmp    = %v\n", o.Frmp)
-	utl.Pfblue("Grmp    = %v\n", o.Grmp)
-	utl.Pfblue("dNdλ    = %v\n", o.dNdλ)
-	utl.Pfblue("dndλ    = %v\n", o.dndλ)
-	utl.Pfblue("d2ndλdλ = %v\n", o.d2ndλdλ)
-	utl.Pfblue("d2pdλdλ = %v\n", o.d2pdλdλ)
-	utl.Pfblue("d2qdλdλ = %v\n", o.d2qdλdλ)
-	utl.Pfblue2("p       = %v\n", o.p)
-	utl.Pfblue2("q       = %v\n", o.q)
-	utl.Pfblue2("dpdλ    = %v\n", o.dpdλ)
-	utl.Pfblue2("dqdλ    = %v\n", o.dqdλ)
-	utl.Pfblue2("dfdp    = %v\n", o.dfdp)
-	utl.Pfblue2("dfdq    = %v\n", o.dfdq)
-	utl.Pfblue2("Dfdλ    = %v\n", o.Dfdλ)
-	utl.Pfblue("d2fdp2  = %v\n", o.d2fdp2)
-	utl.Pfblue("d2fdq2  = %v\n", o.d2fdq2)
-	utl.Pfblue("d2fdpdq = %v\n", o.d2fdpdq)
-	utl.Pfblue("Dgdλ    = %v\n", o.Dgdλ)
+	io.Pfblue("a, b, β, ϵ = %v, %v, %v, %v\n", o.a, o.b, o.β, o.ϵ)
+	io.Pfcyan2("L       = %v\n", o.L)
+	io.Pfcyan2("Ls      = %v\n", o.Ls)
+	io.Pfblue2("m       = %v\n", o.m)
+	io.Pfblue2("N       = %v\n", o.N)
+	io.Pfblue2("n       = %v\n", o.n)
+	io.Pfblue("Frmp    = %v\n", o.Frmp)
+	io.Pfblue("Grmp    = %v\n", o.Grmp)
+	io.Pfblue("dNdλ    = %v\n", o.dNdλ)
+	io.Pfblue("dndλ    = %v\n", o.dndλ)
+	io.Pfblue("d2ndλdλ = %v\n", o.d2ndλdλ)
+	io.Pfblue("d2pdλdλ = %v\n", o.d2pdλdλ)
+	io.Pfblue("d2qdλdλ = %v\n", o.d2qdλdλ)
+	io.Pfblue2("p       = %v\n", o.p)
+	io.Pfblue2("q       = %v\n", o.q)
+	io.Pfblue2("dpdλ    = %v\n", o.dpdλ)
+	io.Pfblue2("dqdλ    = %v\n", o.dqdλ)
+	io.Pfblue2("dfdp    = %v\n", o.dfdp)
+	io.Pfblue2("dfdq    = %v\n", o.dfdq)
+	io.Pfblue2("Dfdλ    = %v\n", o.Dfdλ)
+	io.Pfblue("d2fdp2  = %v\n", o.d2fdp2)
+	io.Pfblue("d2fdq2  = %v\n", o.d2fdq2)
+	io.Pfblue("d2fdpdq = %v\n", o.d2fdpdq)
+	io.Pfblue("Dgdλ    = %v\n", o.Dgdλ)
 	if !princOnly {
-		utl.Pf("Acpy = %+#v\n", o.Acpy)
-		utl.Pf("P[0] = %v\n", o.P[0])
-		utl.Pf("P[1] = %v\n", o.P[1])
-		utl.Pf("P[2] = %v\n", o.P[2])
+		io.Pf("Acpy = %+#v\n", o.Acpy)
+		io.Pf("P[0] = %v\n", o.P[0])
+		io.Pf("P[1] = %v\n", o.P[1])
+		io.Pf("P[2] = %v\n", o.P[2])
 		la.PrintMat("dPdA[0]", o.dPdA[0], "%15e", false)
 		la.PrintMat("dPdA[1]", o.dPdA[1], "%15e", false)
 		la.PrintMat("dPdA[2]", o.dPdA[2], "%15e", false)

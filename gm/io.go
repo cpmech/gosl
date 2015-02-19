@@ -8,7 +8,8 @@ import (
 	"bytes"
 	"encoding/json"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 const (
@@ -20,7 +21,7 @@ const (
 //        ctagged maps idOfNurbs_localIdOfElem to cell tag
 func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int) {
 	var buf bytes.Buffer
-	utl.Ff(&buf, "{\n  \"verts\" : [\n")
+	io.Ff(&buf, "{\n  \"verts\" : [\n")
 	verts := make(map[int]int)
 	vid := 0
 	for _, o := range nurbss {
@@ -37,9 +38,9 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 							}
 						}
 						if len(verts) > 0 {
-							utl.Ff(&buf, ",\n")
+							io.Ff(&buf, ",\n")
 						}
-						utl.Ff(&buf, "    { \"id\":%3d, \"tag\":%3d, \"c\":[%24.17e,%24.17e,%24.17e,%24.17e] }", vid, tag, x[0], x[1], x[2], x[3])
+						io.Ff(&buf, "    { \"id\":%3d, \"tag\":%3d, \"c\":[%24.17e,%24.17e,%24.17e,%24.17e] }", vid, tag, x[0], x[1], x[2], x[3])
 						verts[hsh] = vid
 						vid += 1
 					}
@@ -47,83 +48,83 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 			}
 		}
 	}
-	utl.Ff(&buf, "\n  ],\n  \"nurbss\" : [\n")
+	io.Ff(&buf, "\n  ],\n  \"nurbss\" : [\n")
 	for sid, o := range nurbss {
 		if sid > 0 {
-			utl.Ff(&buf, ",\n")
+			io.Ff(&buf, ",\n")
 		}
-		utl.Ff(&buf, "    { \"id\":%d, \"gnd\":%d, \"ords\":[%d,%d,%d],\n", sid, o.gnd, o.p[0], o.p[1], o.p[2])
-		utl.Ff(&buf, "      \"knots\":[\n")
+		io.Ff(&buf, "    { \"id\":%d, \"gnd\":%d, \"ords\":[%d,%d,%d],\n", sid, o.gnd, o.p[0], o.p[1], o.p[2])
+		io.Ff(&buf, "      \"knots\":[\n")
 		for d := 0; d < o.gnd; d++ {
 			if d > 0 {
-				utl.Ff(&buf, ",\n")
+				io.Ff(&buf, ",\n")
 			}
-			utl.Ff(&buf, "        [")
+			io.Ff(&buf, "        [")
 			for i, t := range o.b[d].T {
 				if i > 0 {
-					utl.Ff(&buf, ",")
+					io.Ff(&buf, ",")
 				}
-				utl.Ff(&buf, "%24.17e", t)
+				io.Ff(&buf, "%24.17e", t)
 			}
-			utl.Ff(&buf, "]")
+			io.Ff(&buf, "]")
 		}
-		utl.Ff(&buf, "\n      ],\n      \"ctrls\":[")
+		io.Ff(&buf, "\n      ],\n      \"ctrls\":[")
 		first := true
 		for k := 0; k < o.n[2]; k++ {
 			for j := 0; j < o.n[1]; j++ {
 				for i := 0; i < o.n[0]; i++ {
 					if !first {
-						utl.Ff(&buf, ",")
+						io.Ff(&buf, ",")
 					}
 					x := o.GetQ(i, j, k)
 					hsh := HashPoint(x[0], x[1], x[2])
-					utl.Ff(&buf, "%d", verts[hsh])
+					io.Ff(&buf, "%d", verts[hsh])
 					if first {
 						first = false
 					}
 				}
 			}
 		}
-		utl.Ff(&buf, "]\n    }")
+		io.Ff(&buf, "]\n    }")
 	}
-	utl.Ff(&buf, "\n  ],\n  \"cells\" : [\n")
+	io.Ff(&buf, "\n  ],\n  \"cells\" : [\n")
 	cid := 0
 	for sid, o := range nurbss {
 		elems := o.Elements()
 		enodes := o.Enodes()
 		for eid, e := range elems {
 			if cid > 0 {
-				utl.Ff(&buf, ",\n")
+				io.Ff(&buf, ",\n")
 			}
 			tag := -1
 			if ctagged != nil {
-				if val, tok := ctagged[utl.Sf("%d_%d", sid, eid)]; tok {
+				if val, tok := ctagged[io.Sf("%d_%d", sid, eid)]; tok {
 					tag = val
 				}
 			}
-			utl.Ff(&buf, "    { \"id\":%3d, \"tag\":%2d, \"nrb\":%d, \"part\":0, \"geo\":%d,", cid, tag, sid, NURBS_GEO)
-			utl.Ff(&buf, " \"span\":[")
+			io.Ff(&buf, "    { \"id\":%3d, \"tag\":%2d, \"nrb\":%d, \"part\":0, \"geo\":%d,", cid, tag, sid, NURBS_GEO)
+			io.Ff(&buf, " \"span\":[")
 			for k, idx := range e {
 				if k > 0 {
-					utl.Ff(&buf, ",")
+					io.Ff(&buf, ",")
 				}
-				utl.Ff(&buf, "%d", idx)
+				io.Ff(&buf, "%d", idx)
 			}
-			utl.Ff(&buf, "], \"verts\":[")
+			io.Ff(&buf, "], \"verts\":[")
 			for i, l := range enodes[eid] {
 				if i > 0 {
-					utl.Ff(&buf, ",")
+					io.Ff(&buf, ",")
 				}
 				x := o.GetQl(l)
 				hsh := HashPoint(x[0], x[1], x[2])
-				utl.Ff(&buf, "%d", verts[hsh])
+				io.Ff(&buf, "%d", verts[hsh])
 			}
-			utl.Ff(&buf, "] }")
+			io.Ff(&buf, "] }")
 			cid += 1
 		}
 	}
-	utl.Ff(&buf, "\n  ]\n}")
-	utl.WriteFileVD(dirout, fnk+".msh", &buf)
+	io.Ff(&buf, "\n  ]\n}")
+	io.WriteFileVD(dirout, fnk+".msh", &buf)
 }
 
 // Vert holds data for a vertex => control point
@@ -153,16 +154,16 @@ func ReadMsh(fnk string) (nurbss []*Nurbs) {
 
 	// read file
 	fn := fnk + ".msh"
-	buf, err := utl.ReadFile(fn)
+	buf, err := io.ReadFile(fn)
 	if err != nil {
-		utl.Panic(_io_err1, fn, err)
+		chk.Panic(_io_err1, fn, err)
 	}
 
 	// decode
 	var dat Data
 	err = json.Unmarshal(buf, &dat)
 	if err != nil {
-		utl.Panic(_io_err2, fn, err)
+		chk.Panic(_io_err2, fn, err)
 	}
 
 	// list of vertices

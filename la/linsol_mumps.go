@@ -18,8 +18,9 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/mpi"
-	"github.com/cpmech/gosl/utl"
 )
 
 // LinSolMumps holds MUMPS data
@@ -43,7 +44,7 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	// check
 	o.tR = tR
 	if tR.pos == 0 {
-		return utl.Err(_linsol_mumps_err01)
+		return chk.Err(_linsol_mumps_err01)
 	}
 
 	// flags
@@ -72,7 +73,7 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	o.m.job = -1     // initialisation code
 	C.dmumps_c(&o.m) // initialise
 	if o.m.info[1-1] < 0 {
-		return utl.Err(_linsol_mumps_err02, mumps_error(o.m.info[1-1], o.m.info[2-1]))
+		return chk.Err(_linsol_mumps_err02, mumps_error(o.m.info[1-1], o.m.info[2-1]))
 	}
 
 	// convert indices to C.int (not C.long) and
@@ -93,7 +94,7 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	// control
 	if verbose {
 		if mpi.Rank() == 0 {
-			utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.InitR . . (MUMPS) . . . . . . . . . \n\n")
+			io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.InitR . . (MUMPS) . . . . . . . . . \n\n")
 		}
 		o.m.icntl[1-1] = 6 // output stream for error messages
 		o.m.icntl[2-1] = 0 // output stream for statistics and warnings
@@ -116,12 +117,12 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	o.m.job = 1      // analysis code
 	C.dmumps_c(&o.m) // analyse
 	if o.m.info[1-1] < 0 {
-		return utl.Err(_linsol_mumps_err03, mumps_error(o.m.info[1-1], o.m.info[2-1]))
+		return chk.Err(_linsol_mumps_err03, mumps_error(o.m.info[1-1], o.m.info[2-1]))
 	}
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolMumps.InitR = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolMumps.InitR = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -132,7 +133,7 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	// check
 	o.tC = tC
 	if tC.pos == 0 {
-		return utl.Err(_linsol_mumps_err04)
+		return chk.Err(_linsol_mumps_err04)
 	}
 
 	// flags
@@ -153,7 +154,7 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 
 	// check xz
 	if len(o.tC.xz) != 2*len(o.tC.i) {
-		return utl.Err(_linsol_mumps_err05, len(o.tC.xz), len(o.tC.i))
+		return chk.Err(_linsol_mumps_err05, len(o.tC.xz), len(o.tC.i))
 	}
 
 	// initialise Mumps
@@ -166,7 +167,7 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	o.mz.job = -1     // initialisation code
 	C.zmumps_c(&o.mz) // initialise
 	if o.mz.info[1-1] < 0 {
-		return utl.Err(_linsol_mumps_err06, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
+		return chk.Err(_linsol_mumps_err06, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
 	}
 
 	// convert indices to C.int (not C.long) and
@@ -193,7 +194,7 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	// control
 	if verbose {
 		if mpi.Rank() == 0 {
-			utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.InitC . . (MUMPS) . . . . . . . . . \n\n")
+			io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.InitC . . (MUMPS) . . . . . . . . . \n\n")
 		}
 		o.mz.icntl[1-1] = 6 // output stream for error messages
 		o.mz.icntl[2-1] = 0 // output stream for statistics and warnings
@@ -215,12 +216,12 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	o.mz.job = 1      // analysis code
 	C.zmumps_c(&o.mz) // analyse
 	if o.mz.info[1-1] < 0 {
-		return utl.Err(_linsol_mumps_err07, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
+		return chk.Err(_linsol_mumps_err07, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
 	}
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolMumps.InitC = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolMumps.InitC = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -236,7 +237,7 @@ func (o *LinSolMumps) Fact() (err error) {
 
 	// message
 	if o.verb {
-		utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.Fact . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.Fact . . . . . . . . . . . . . . . \n\n")
 	}
 
 	// complex
@@ -246,7 +247,7 @@ func (o *LinSolMumps) Fact() (err error) {
 		o.mz.job = 2      // factorisation code
 		C.zmumps_c(&o.mz) // factorise
 		if o.mz.info[1-1] < 0 {
-			return utl.Err(_linsol_mumps_err08, "Real", mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
+			return chk.Err(_linsol_mumps_err08, "Real", mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
 		}
 
 		// real
@@ -256,13 +257,13 @@ func (o *LinSolMumps) Fact() (err error) {
 		o.m.job = 2      // factorisation code
 		C.dmumps_c(&o.m) // factorise
 		if o.m.info[1-1] < 0 {
-			return utl.Err(_linsol_mumps_err08, "Complex", mumps_error(o.m.info[1-1], o.m.info[2-1]))
+			return chk.Err(_linsol_mumps_err08, "Complex", mumps_error(o.m.info[1-1], o.m.info[2-1]))
 		}
 	}
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolMumps.Fact  = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolMumps.Fact  = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -274,7 +275,7 @@ func (o *LinSolMumps) SolveR(xR, bR []float64, sum_b_to_root bool) (err error) {
 
 	// check
 	if o.cmplx {
-		return utl.Err(_linsol_mumps_err09)
+		return chk.Err(_linsol_mumps_err09)
 	}
 
 	// start time
@@ -284,7 +285,7 @@ func (o *LinSolMumps) SolveR(xR, bR []float64, sum_b_to_root bool) (err error) {
 
 	// message
 	if o.verb {
-		utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.SolveR . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.SolveR . . . . . . . . . . . . . . . \n\n")
 	}
 
 	// MUMPS: set RHS in processor # 0
@@ -305,13 +306,13 @@ func (o *LinSolMumps) SolveR(xR, bR []float64, sum_b_to_root bool) (err error) {
 	o.m.job = 3      // solution code
 	C.dmumps_c(&o.m) // solve
 	if o.m.info[1-1] < 0 {
-		return utl.Err(_linsol_mumps_err10, mumps_error(o.m.info[1-1], o.m.info[2-1]))
+		return chk.Err(_linsol_mumps_err10, mumps_error(o.m.info[1-1], o.m.info[2-1]))
 	}
 	mpi.BcastFromRoot(xR) // broadcast from root
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolMumps.Solve = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolMumps.Solve = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -323,7 +324,7 @@ func (o *LinSolMumps) SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) (err 
 
 	// check
 	if !o.cmplx {
-		return utl.Err(_linsol_mumps_err11)
+		return chk.Err(_linsol_mumps_err11)
 	}
 
 	// start time
@@ -333,7 +334,7 @@ func (o *LinSolMumps) SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) (err 
 
 	// message
 	if o.verb {
-		utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.SolveC . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.SolveC . . . . . . . . . . . . . . . \n\n")
 	}
 
 	// MUMPS: set RHS in processor # 0
@@ -359,7 +360,7 @@ func (o *LinSolMumps) SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) (err 
 	o.mz.job = 3      // solution code
 	C.zmumps_c(&o.mz) // solve
 	if o.mz.info[1-1] < 0 {
-		return utl.Err(_linsol_mumps_err12, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
+		return chk.Err(_linsol_mumps_err12, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
 	}
 
 	// MUMPS: split complex values
@@ -375,7 +376,7 @@ func (o *LinSolMumps) SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) (err 
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolMumps.Solve = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolMumps.Solve = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -390,7 +391,7 @@ func (o *LinSolMumps) Clean() {
 
 	// message
 	if o.verb {
-		utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.Clean . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.Clean . . . . . . . . . . . . . . . \n\n")
 	}
 
 	// clean up
@@ -404,7 +405,7 @@ func (o *LinSolMumps) Clean() {
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolMumps.Clean   = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolMumps.Clean   = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 }
 
@@ -430,7 +431,7 @@ func (o *LinSolMumps) SetOrdScal(ordering, scaling string) (err error) {
 	case "auto":
 		ord = 7
 	default:
-		return utl.Err(_linsol_mumps_err13, ordering)
+		return chk.Err(_linsol_mumps_err13, ordering)
 	}
 	if scaling == "" {
 		scaling = "rcit"
@@ -447,7 +448,7 @@ func (o *LinSolMumps) SetOrdScal(ordering, scaling string) (err error) {
 	case "auto":
 		sca = 77 // automatic
 	default:
-		return utl.Err(_linsol_mumps_err14, scaling)
+		return chk.Err(_linsol_mumps_err14, scaling)
 	}
 	if o.cmplx {
 		o.mz.icntl[7-1] = C.int(ord) // ordering
@@ -466,13 +467,13 @@ func mumps_error(info, infx C.int) string {
 	case -6:
 		return "linsol.go: Solve(MUMPS): Error # -6: singular matrix"
 	case -9:
-		return utl.Sf("linsol.go: Solve(MUMPS): Error # -9: main internal real/complex workarray S too small. info(2)=%v", infx)
+		return io.Sf("linsol.go: Solve(MUMPS): Error # -9: main internal real/complex workarray S too small. info(2)=%v", infx)
 	case -10:
 		return "linsol.go: Solve(MUMPS): Error # -10: singular matrix"
 	case -13:
 		return "linsol.go: Solve(MUMPS): Error # -13: out of memory"
 	default:
-		return utl.Sf("linsol.go: Solve(MUMPS): Error # %d: unknown error", info)
+		return io.Sf("linsol.go: Solve(MUMPS): Error # %d: unknown error", info)
 	}
 	return ""
 }
@@ -491,26 +492,26 @@ func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct []float64, sum_b_to
 	// initialise solver
 	err := lis.InitR(t, symmetric, verbose, timing)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// factorise
 	err = lis.Fact()
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// solve
 	x := make([]float64, len(b))
 	err = lis.SolveR(x, b, sum_b_to_root) // x := inv(A) * b
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	if mpi.Rank() == 0 {
 		// output
 		A := t.ToMatrix(nil)
-		utl.Pforan("A.x = b\n")
+		io.Pforan("A.x = b\n")
 		PrintMat("A", A.ToDense(), "%5g", false)
 		PrintVec("x", x, "%g ", false)
 		PrintVec("b", b, "%g ", false)
@@ -518,9 +519,9 @@ func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct []float64, sum_b_to
 		// check
 		err := VecMaxDiff(x, x_correct)
 		if err > tol_cmp {
-			utl.Panic("test failed: err = %g", err)
+			chk.Panic("test failed: err = %g", err)
 		}
-		utl.Pf("err(x) = %g [1;32mOK[0m\n", err)
+		io.Pf("err(x) = %g [1;32mOK[0m\n", err)
 	}
 }
 
@@ -538,13 +539,13 @@ func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct []complex128, sum_
 	// initialise solver
 	err := lis.InitC(t, symmetric, verbose, timing)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// factorise
 	err = lis.Fact()
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// solve
@@ -553,14 +554,14 @@ func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct []complex128, sum_
 	xC := make([]float64, len(b))
 	err = lis.SolveC(xR, xC, bR, bC, sum_b_to_root) // x := inv(A) * b
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	x := RCtoComplex(xR, xC)
 
 	if mpi.Rank() == 0 {
 		// output
 		A := t.ToMatrix(nil)
-		utl.Pforan("A.x = b\n")
+		io.Pforan("A.x = b\n")
 		PrintMatC("A", A.ToDense(), "(%g+", "%gi) ", false)
 		PrintVecC("x", x, "(%g+", "%gi) ", false)
 		PrintVecC("b", b, "(%g+", "%gi) ", false)
@@ -569,14 +570,14 @@ func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct []complex128, sum_
 		xR_correct, xC_correct := ComplexToRC(x_correct)
 		errR := VecMaxDiff(xR, xR_correct)
 		if errR > tol_cmp {
-			utl.Panic("test failed: errR = %g", errR)
+			chk.Panic("test failed: errR = %g", errR)
 		}
 		errC := VecMaxDiff(xC, xC_correct)
 		if errC > tol_cmp {
-			utl.Panic("test failed: errC = %g", errC)
+			chk.Panic("test failed: errC = %g", errC)
 		}
-		utl.Pf("err(xR) = %g [1;32mOK[0m\n", errR)
-		utl.Pf("err(xC) = %g [1;32mOK[0m\n", errC)
+		io.Pf("err(xR) = %g [1;32mOK[0m\n", errR)
+		io.Pf("err(xC) = %g [1;32mOK[0m\n", errC)
 	}
 }
 

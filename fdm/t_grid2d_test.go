@@ -7,7 +7,7 @@ package fdm
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestGrid2D(tst *testing.T) {
@@ -17,7 +17,7 @@ func TestGrid2D(tst *testing.T) {
 		}
 	}()
 
-	utl.TTitle("Grid 2D")
+	chk.PrintTitle("Grid 2D")
 
 	var g Grid2D
 	//g.Init(6.0, 4.0, 7, 5)

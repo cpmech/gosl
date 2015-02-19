@@ -9,7 +9,9 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fdm"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
@@ -28,7 +30,7 @@ func TestJacobian01a(tst *testing.T) {
 		}
 	}()
 
-	utl.TTitle("TestJacobian 01a")
+	chk.PrintTitle("TestJacobian 01a")
 
 	ffcn := func(fx, x []float64) error {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
@@ -54,7 +56,7 @@ func TestJacobian02a(tst *testing.T) {
 		}
 	}()
 
-	utl.TTitle("TestJacobian 02a")
+	chk.PrintTitle("TestJacobian 02a")
 
 	ffcn := func(fx, x []float64) error {
 		fx[0] = 2.0*x[0] - x[1] + sin(x[2]) - cos(x[3]) - x[5]*x[5] - 1.0      // 0
@@ -110,7 +112,7 @@ func TestJacobian03(tst *testing.T) {
 		}
 	}()
 
-	utl.TTitle("TestJacobian 03")
+	chk.PrintTitle("TestJacobian 03")
 
 	// grid
 	var g fdm.Grid2D
@@ -186,6 +188,6 @@ func TestJacobian03(tst *testing.T) {
 		}
 		fU1 := make([]float64, e.N1)
 		min, max := la.VecMinMax(fU1)
-		utl.Pf("min/max fU1 = %v\n", min, max)
+		io.Pf("min/max fU1 = %v\n", min, max)
 	}
 }

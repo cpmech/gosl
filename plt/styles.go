@@ -4,9 +4,7 @@
 
 package plt
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/io"
 
 // ShapeData holds data for drawing shapes
 type ShapeData struct {
@@ -40,37 +38,37 @@ func (o LineData) GetArgs(start string) string {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += utl.Sf("label='%s'", o.Label)
+		l += io.Sf("label='%s'", o.Label)
 	}
 	if o.Color != "" {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += utl.Sf("color='%s'", o.Color)
+		l += io.Sf("color='%s'", o.Color)
 	}
 	if o.LineWidth > 0 {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += utl.Sf("lw=%g", o.LineWidth)
+		l += io.Sf("lw=%g", o.LineWidth)
 	}
 	if o.MarkerSize > 0 {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += utl.Sf("ms=%d", int(o.MarkerSize))
+		l += io.Sf("ms=%d", int(o.MarkerSize))
 	}
 	if o.Marker != "" {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += utl.Sf("marker='%s'", o.Marker)
+		l += io.Sf("marker='%s'", o.Marker)
 	}
 	if o.LineStyle != "" {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += utl.Sf("ls='%s'", o.LineStyle)
+		l += io.Sf("ls='%s'", o.LineStyle)
 	}
 	return l
 }

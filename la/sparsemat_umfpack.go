@@ -23,7 +23,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // ToMatrix converts a sparse matrix in triplet form to column-compressed form using Umfpack's
@@ -35,7 +35,7 @@ import (
 //   the previous "a" matrix or a pointer to a new one
 func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 	if t.pos < 1 {
-		utl.Panic(_sparsemat_umfpack_err1, t.pos)
+		chk.Panic(_sparsemat_umfpack_err1, t.pos)
 	}
 	if a == nil {
 		a = new(CCMatrix)
@@ -52,7 +52,7 @@ func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 	Ax := (*C.double)(unsafe.Pointer(&a.x[0]))
 	status := C.umfpack_dl_triplet_to_col(C.LONG(a.m), C.LONG(a.n), C.LONG(a.nnz), Ti, Tj, Tx, Ap, Ai, Ax, nil)
 	if status != C.UMFPACK_OK {
-		utl.Panic(_sparsemat_umfpack_err2, Uerr2Text[int(status)])
+		chk.Panic(_sparsemat_umfpack_err2, Uerr2Text[int(status)])
 	}
 	return a
 }
@@ -66,7 +66,7 @@ func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 //   the previous "a" matrix or a pointer to a new one
 func (t *TripletC) ToMatrix(a *CCMatrixC) *CCMatrixC {
 	if t.pos < 1 {
-		utl.Panic(_sparsemat_umfpack_err3, t.pos)
+		chk.Panic(_sparsemat_umfpack_err3, t.pos)
 	}
 	if a == nil {
 		a = new(CCMatrixC)
@@ -97,7 +97,7 @@ func (t *TripletC) ToMatrix(a *CCMatrixC) *CCMatrixC {
 	}
 	status := C.umfpack_zl_triplet_to_col(C.LONG(a.m), C.LONG(a.n), C.LONG(a.nnz), Ti, Tj, Tx, Tz, Ap, Ai, Ax, Az, nil)
 	if status != C.UMFPACK_OK {
-		utl.Panic(_sparsemat_umfpack_err4, Uerr2Text[int(status)])
+		chk.Panic(_sparsemat_umfpack_err4, Uerr2Text[int(status)])
 	}
 	return a
 }

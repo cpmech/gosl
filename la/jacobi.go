@@ -7,7 +7,7 @@ package la
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 const (
@@ -129,7 +129,7 @@ func Jacobi(Q [][]float64, v []float64, A [][]float64) (nit int, err error) {
 		}
 	}
 
-	err = utl.Err(_jacobi_err1, JACOBI_NITMAX+1)
+	err = chk.Err(_jacobi_err1, JACOBI_NITMAX+1)
 	return
 }
 

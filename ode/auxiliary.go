@@ -11,8 +11,9 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
 )
 
 // callbacks
@@ -25,7 +26,7 @@ func Plot(dirout, fnkey, method string, bres *bytes.Buffer, ycps []int, ndim int
 	// save file with results
 	os.MkdirAll(dirout, 0777)
 	if bres != nil {
-		utl.WriteFileD(dirout, fnkey+".res", bres)
+		io.WriteFileD(dirout, fnkey+".res", bres)
 	}
 
 	// new python script
@@ -96,13 +97,13 @@ func Plot(dirout, fnkey, method string, bres *bytes.Buffer, ycps []int, ndim int
 
 	// write file
 	fn := fmt.Sprintf("%s/%s.py", dirout, fnkey)
-	utl.WriteFile(fn, &b)
+	io.WriteFile(fn, &b)
 
 	// run script
 	if show {
 		_, err := exec.Command("python", fn).Output()
 		if err != nil {
-			utl.Panic("failed when calling python %s\n%v", fn, err)
+			chk.Panic("failed when calling python %s\n%v", fn, err)
 		}
 	}
 }
@@ -147,7 +148,7 @@ func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Trip
 	for i := 1; i < nt+1; i++ {
 		tols[i-1] = math.Pow(10.0, -float64(i))
 	}
-	utl.Pf("tols = %v\n", tols)
+	io.Pf("tols = %v\n", tols)
 	y := make([]float64, ndim)
 	for i, tol := range tols {
 
@@ -161,7 +162,7 @@ func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Trip
 		var re RmsErr
 		o.Solve(y, xa, xb, xb-xa, false, &re)
 		re.value = math.Sqrt(re.value / float64(re.count))
-		utl.Pf("tol = %e  =>  err = %e  =>  feval = %d\n", tol, re.value, o.nfeval)
+		io.Pf("tol = %e  =>  err = %e  =>  feval = %d\n", tol, re.value, o.nfeval)
 
 		// python script
 		if i == len(tols)-1 {
@@ -192,13 +193,13 @@ func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Trip
 
 	// write file
 	fnpath := fmt.Sprintf("%s/%s_wc.py", dirout, fnkey)
-	utl.WriteFileD(dirout, fnkey+"_wc.py", &b0, &b1, &b2, &b3)
+	io.WriteFileD(dirout, fnkey+"_wc.py", &b0, &b1, &b2, &b3)
 
 	// run script
 	if show {
 		_, err := exec.Command("python", fnpath).Output()
 		if err != nil {
-			utl.Panic("failed when calling python %s\n%v", fnpath, err)
+			chk.Panic("failed when calling python %s\n%v", fnpath, err)
 		}
 	}
 }

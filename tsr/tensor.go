@@ -8,7 +8,7 @@ package tsr
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 const (
@@ -169,7 +169,7 @@ func M2T(mandel []float64, i, j int) (component float64) {
 	case 6:
 		component = mandel[T2MI[i][j]] / SQ2
 	default:
-		utl.Panic(_tensor_oor, "tensor.go: M2T", len(mandel))
+		chk.Panic(_tensor_oor, "tensor.go: M2T", len(mandel))
 	}
 	return
 }
@@ -199,7 +199,7 @@ func Man2Ten(tensor [][]float64, mandel []float64) {
 		tensor[1][0], tensor[1][1], tensor[1][2] = mandel[3]/SQ2, mandel[1], mandel[4]/SQ2
 		tensor[2][0], tensor[2][1], tensor[2][2] = mandel[5]/SQ2, mandel[4]/SQ2, mandel[2]
 	default:
-		utl.Panic(_tensor_oor, "tensor.go: Man2Ten", len(mandel))
+		chk.Panic(_tensor_oor, "tensor.go: Man2Ten", len(mandel))
 	}
 }
 
@@ -207,22 +207,22 @@ func Man2Ten(tensor [][]float64, mandel []float64) {
 func Ten2Man(mandel []float64, tensor [][]float64) {
 	// check symmetry
 	if math.Abs(tensor[0][1]-tensor[1][0]) > EPS {
-		utl.Panic(_tensor_m1, len(mandel))
+		chk.Panic(_tensor_m1, len(mandel))
 	}
 	if math.Abs(tensor[1][2]-tensor[2][1]) > EPS {
-		utl.Panic(_tensor_m1, len(mandel))
+		chk.Panic(_tensor_m1, len(mandel))
 	}
 	if math.Abs(tensor[2][0]-tensor[0][2]) > EPS {
-		utl.Panic(_tensor_m1, len(mandel))
+		chk.Panic(_tensor_m1, len(mandel))
 	}
 	// convert
 	switch len(mandel) {
 	case 4:
 		if math.Abs(tensor[0][2]) > EPS {
-			utl.Panic(_tensor_m2, tensor[0][2], tensor[1][2])
+			chk.Panic(_tensor_m2, tensor[0][2], tensor[1][2])
 		}
 		if math.Abs(tensor[1][2]) > EPS {
-			utl.Panic(_tensor_m2, tensor[0][2], tensor[1][2])
+			chk.Panic(_tensor_m2, tensor[0][2], tensor[1][2])
 		}
 		mandel[0] = tensor[0][0]
 		mandel[1] = tensor[1][1]
@@ -236,7 +236,7 @@ func Ten2Man(mandel []float64, tensor [][]float64) {
 		mandel[4] = tensor[1][2] * SQ2
 		mandel[5] = tensor[2][0] * SQ2
 	default:
-		utl.Panic(_tensor_oor, "tensor.go: Ten2Man", len(mandel))
+		chk.Panic(_tensor_oor, "tensor.go: Ten2Man", len(mandel))
 	}
 }
 

@@ -4,7 +4,7 @@
 
 package fun
 
-import "github.com/cpmech/gosl/utl"
+import "github.com/cpmech/gosl/chk"
 
 // Add implements the addition of two other functions.
 //  F(t, x) := A*Fa(t,x) + B*Fb(t,x)
@@ -32,7 +32,7 @@ func (o *Add) Init(prms Prms) (err error) {
 		case "Fb", "fb":
 			o.Fb = p.Fcn
 		default:
-			return utl.Err("add: parameter named %q is invalid", p.N)
+			return chk.Err("add: parameter named %q is invalid", p.N)
 		}
 	}
 	return

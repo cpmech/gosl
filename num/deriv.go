@@ -68,7 +68,7 @@ func Jacobian(J *la.Triplet, ffcn Cb_f, x, fx, w []float64, distr bool) (err err
 	       delta := math.Sqrt(EPS * max(CTE1, math.Abs(xsafe)))
 	       x[col] = xsafe + delta
 	       ffcn(w, x) // fnew
-	       utl.Pforan("x = %v, f = %v\n", x, w)
+	       io.Pforan("x = %v, f = %v\n", x, w)
 	       for row := 0; row < ndim; row++ {
 	           J.Put(row, col, (w[row]-fx[row])/delta)
 	       }

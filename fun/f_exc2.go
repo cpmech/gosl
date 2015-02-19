@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Excitation # 2: y(t) = if t < ta A*sin(b*π*t), else 0
@@ -33,7 +33,7 @@ func (o *Exc2) Init(prms Prms) (err error) {
 		case "b":
 			o.b = p.V
 		default:
-			return utl.Err("exc2: parameter named %q is invalid", p.N)
+			return chk.Err("exc2: parameter named %q is invalid", p.N)
 		}
 	}
 	return

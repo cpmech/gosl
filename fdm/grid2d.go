@@ -9,6 +9,8 @@ import (
 	"fmt"
 	"os/exec"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -58,11 +60,11 @@ func (g *Grid2D) Draw(dirout, fnkey string, show bool) {
 	fmt.Fprintf(&b, "grid()\n")
 	fmt.Fprintf(&b, "show()\n")
 	// save file
-	utl.WriteFileD(dirout, fnkey+".py", &b)
+	io.WriteFileD(dirout, fnkey+".py", &b)
 	if show {
 		_, err := exec.Command("python", dirout+"/"+fnkey+".py").Output()
 		if err != nil {
-			utl.Panic("Grid2D:Draw failed when calling python\n%v", err)
+			chk.Panic("Grid2D:Draw failed when calling python\n%v", err)
 		}
 	}
 }
@@ -92,11 +94,11 @@ func (g *Grid2D) Contour(dirout, fnkey string, fxy Cb_fxy, z []float64, nlevels 
 	fmt.Fprintf(&b, "axis('equal')\n")
 	fmt.Fprintf(&b, "show()\n")
 	// save file
-	utl.WriteFileD(dirout, fnkey+".py", &b)
+	io.WriteFileD(dirout, fnkey+".py", &b)
 	if show {
 		_, err := exec.Command("python", dirout+"/"+fnkey+".py").Output()
 		if err != nil {
-			utl.Panic("Grid2D:Draw failed when calling python\n%v", err)
+			chk.Panic("Grid2D:Draw failed when calling python\n%v", err)
 		}
 	}
 }

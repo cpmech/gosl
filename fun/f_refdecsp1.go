@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // RefDecSp1 implements a specialisation of the reference decreasing model
@@ -64,13 +64,13 @@ func (o *RefDecSp1) Init(prms Prms) (err error) {
 		case "yb":
 			o.yb = p.V
 		default:
-			return utl.Err("ref-dec-sp1: parameter named %q is invalid", p.N)
+			return chk.Err("ref-dec-sp1: parameter named %q is invalid", p.N)
 		}
 	}
 
 	// check
 	if o.yb >= o.ya {
-		return utl.Err("yb(%g) must be smaller than ya(%g)", o.yb, o.ya)
+		return chk.Err("yb(%g) must be smaller than ya(%g)", o.yb, o.ya)
 	}
 
 	// constants
@@ -81,7 +81,7 @@ func (o *RefDecSp1) Init(prms Prms) (err error) {
 
 	// check
 	if math.IsInf(o.c2, 0) || math.IsInf(o.c3, 0) {
-		return utl.Err("β*ya or β*yb is too large:\n β=%v, ya=%v, yb=%v\n c1=%v, c2=%v, c3=%v", o.β, o.ya, o.yb, o.c1, o.c2, o.c3)
+		return chk.Err("β*ya or β*yb is too large:\n β=%v, ya=%v, yb=%v\n c1=%v, c2=%v, c3=%v", o.β, o.ya, o.yb, o.c1, o.c2, o.c3)
 	}
 	return
 }

@@ -4,9 +4,7 @@
 
 package plt
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/io"
 
 // AutoScale rescales plot area
 func AutoScale(P [][]float64) {
@@ -29,7 +27,7 @@ func AutoScale(P [][]float64) {
 			ymax = p[1]
 		}
 	}
-	utl.Ff(&bb, "axis([%g, %g, %g, %g])\n", xmin, xmax, ymin, ymax)
+	io.Ff(&bb, "axis([%g, %g, %g, %g])\n", xmin, xmax, ymin, ymax)
 }
 
 // DrawPolyline draws a polyline
@@ -38,47 +36,47 @@ func DrawPolyline(P [][]float64, sd *ShapeData, args string) {
 		return
 	}
 	n := bb.Len()
-	utl.Ff(&bb, "dat%d = [[MPLPath.MOVETO, [%g, %g]]", n, P[0][0], P[0][1])
+	io.Ff(&bb, "dat%d = [[MPLPath.MOVETO, [%g, %g]]", n, P[0][0], P[0][1])
 	for _, p := range P {
-		utl.Ff(&bb, ", [MPLPath.LINETO, [%g, %g]]", p[0], p[1])
+		io.Ff(&bb, ", [MPLPath.LINETO, [%g, %g]]", p[0], p[1])
 	}
 	if sd.Closed {
-		utl.Ff(&bb, ", [MPLPath.CLOSEPOLY, [0, 0]]")
+		io.Ff(&bb, ", [MPLPath.CLOSEPOLY, [0, 0]]")
 	}
-	utl.Ff(&bb, "]\n")
-	utl.Ff(&bb, "commands%d, vertices%d = zip(*dat%d)\n", n, n, n)
-	utl.Ff(&bb, "ph%d = MPLPath(vertices%d, commands%d)\n", n, n, n)
-	utl.Ff(&bb, "pc%d = PathPatch(ph%d", n, n)
-	utl.Ff(&bb, ", fc='%s', ec='%s', lw=%d", sd.FaceColor, sd.EdgeColor, sd.LineWidth)
+	io.Ff(&bb, "]\n")
+	io.Ff(&bb, "commands%d, vertices%d = zip(*dat%d)\n", n, n, n)
+	io.Ff(&bb, "ph%d = MPLPath(vertices%d, commands%d)\n", n, n, n)
+	io.Ff(&bb, "pc%d = PathPatch(ph%d", n, n)
+	io.Ff(&bb, ", fc='%s', ec='%s', lw=%d", sd.FaceColor, sd.EdgeColor, sd.LineWidth)
 	if len(args) > 0 {
-		utl.Ff(&bb, ", %s)\n", args)
+		io.Ff(&bb, ", %s)\n", args)
 	} else {
-		utl.Ff(&bb, ")\n")
+		io.Ff(&bb, ")\n")
 	}
-	utl.Ff(&bb, "gca().add_patch(pc%d)\n", n)
+	io.Ff(&bb, "gca().add_patch(pc%d)\n", n)
 }
 
 // DrawLegend draws legend with given lines data. fs == fontsize
 func DrawLegend(dat []LineData, fs int, loc string, frame bool, args string) {
 	n := bb.Len()
-	utl.Ff(&bb, "handles%d = [", n)
+	io.Ff(&bb, "handles%d = [", n)
 	for i, d := range dat {
 		if i > 0 {
-			utl.Ff(&bb, ",\n")
+			io.Ff(&bb, ",\n")
 		}
-		utl.Ff(&bb, "Line2D([], [], label='%s', color='%s', lw=%g, marker='%s', ls='%s'", d.Label, d.Color, d.LineWidth, d.Marker, d.LineStyle)
+		io.Ff(&bb, "Line2D([], [], label='%s', color='%s', lw=%g, marker='%s', ls='%s'", d.Label, d.Color, d.LineWidth, d.Marker, d.LineStyle)
 		if d.MarkerSize >= 0 {
-			utl.Ff(&bb, ", ms=%g", d.MarkerSize)
+			io.Ff(&bb, ", ms=%g", d.MarkerSize)
 		}
-		utl.Ff(&bb, ")")
+		io.Ff(&bb, ")")
 	}
-	utl.Ff(&bb, "]\nlg%d=legend(handles=handles%d, fontsize=%d, loc='%s'", n, n, fs, loc)
+	io.Ff(&bb, "]\nlg%d=legend(handles=handles%d, fontsize=%d, loc='%s'", n, n, fs, loc)
 	if len(args) > 0 {
-		utl.Ff(&bb, ", %s", args)
+		io.Ff(&bb, ", %s", args)
 	}
-	utl.Ff(&bb, ")\n")
+	io.Ff(&bb, ")\n")
 	if !frame {
-		utl.Ff(&bb, "lg%d.get_frame().set_linewidth(0.0)\n", n)
+		io.Ff(&bb, "lg%d.get_frame().set_linewidth(0.0)\n", n)
 	}
-	utl.Ff(&bb, "ea.append(lg%d)\n", n)
+	io.Ff(&bb, "ea.append(lg%d)\n", n)
 }

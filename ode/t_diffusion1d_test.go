@@ -10,6 +10,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
@@ -21,9 +23,9 @@ func TestDiffusion1D(tst *testing.T) {
 		}
 	}()
 
-	prevTs := utl.Tsilent
-	//utl.Tsilent = false
-	utl.TTitle("Test Diffusion 1D (cooling)")
+	prevTs := verbose()
+	//verbose() = false
+	chk.PrintTitle("Test Diffusion 1D (cooling)")
 
 	// solution parameters
 	silent := false
@@ -67,14 +69,14 @@ func TestDiffusion1D(tst *testing.T) {
 				f[i] += mol[p] * y[j]
 			}
 		}
-		//utl.Pfgrey("y = %v\n", y)
-		//utl.Pfcyan("f = %v\n", f)
+		//io.Pfgrey("y = %v\n", y)
+		//io.Pfcyan("f = %v\n", f)
 		return nil
 	}
 
 	// Jacobian
 	jac := func(dfdy *la.Triplet, t float64, y []float64, args ...interface{}) error {
-		//utl.Panic("jac is not available")
+		//chk.Panic("jac is not available")
 		if dfdy.Max() == 0 {
 			//dfdy.Init(Nb, Nb, 3*N)
 			dfdy.Init(N, N, 3*N)
@@ -111,13 +113,13 @@ func TestDiffusion1D(tst *testing.T) {
 	//f0 := make([]float64, Nb)
 	fcn(f0, 0, y)
 	if false {
-		utl.Pforan("y0 = %v\n", y)
-		utl.Pforan("f0 = %v\n", f0)
+		io.Pforan("y0 = %v\n", y)
+		io.Pforan("f0 = %v\n", f0)
 		var J la.Triplet
 		jac(&J, 0, y)
 		la.PrintMat("J", J.ToMatrix(nil).ToDense(), "%8.3f", false)
 	}
-	//utl.Panic("stop")
+	//chk.Panic("stop")
 
 	/*
 	   // constraints
@@ -125,12 +127,12 @@ func TestDiffusion1D(tst *testing.T) {
 	   A.Init(2, N, 2)
 	   A.Put(0,   0, 1.0)
 	   A.Put(1, N-1, 1.0)
-	   utl.Pfcyan("A = %+v\n", A)
+	   io.Pfcyan("A = %+v\n", A)
 	   Am := A.ToMatrix(nil)
 	   c  := make([]float64, 2)
 	   la.SpMatVecMul(c, 1, Am, y) // c := Am*y
 	   la.PrintMat("A", Am.ToDense(), "%3g", false)
-	   utl.Pfcyan("c = %v  ([0, 0] => consistent)\n", c)
+	   io.Pfcyan("c = %v  ([0, 0] => consistent)\n", c)
 	*/
 
 	/*
@@ -167,7 +169,7 @@ func TestDiffusion1D(tst *testing.T) {
 		fmt.Fprintf(&b2, "ax = PlotSurf(tt, xx, vstack(transpose(U)), 't', 'x', 'u', 0.0, 1.0)\n")
 		fmt.Fprintf(&b2, "ax.view_init(20.0, 30.0)\n")
 		fmt.Fprintf(&b2, "show()\n")
-		utl.WriteFileD("/tmp/gosl", "plot_diffusion_1d.py", &b0, &b1, &b2)
+		io.WriteFileD("/tmp/gosl", "plot_diffusion_1d.py", &b0, &b1, &b2)
 	}()
 
 	// ode solver
@@ -192,7 +194,7 @@ func TestDiffusion1D(tst *testing.T) {
 		dt = tf - t0
 	}
 	osol.Solve(y, t0, tf, dt, fixstp)
-	utl.Pfmag("elapsed time = %v\n", time.Now().Sub(wallt0))
+	io.Pfmag("elapsed time = %v\n", time.Now().Sub(wallt0))
 
-	utl.Tsilent = prevTs
+	verbose() = prevTs
 }

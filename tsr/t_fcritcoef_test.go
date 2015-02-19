@@ -7,21 +7,23 @@ package tsr
 import (
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_fcritcoef01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fcritcoef01")
+	//verbose() = false
+	chk.PrintTitle("fcritcoef01")
 
 	φ := 30.0
 	Ma, _ := Mmatch(0, φ, "cmp")
@@ -33,13 +35,13 @@ func Test_fcritcoef01(tst *testing.T) {
 	Me := NewSmpCalcμ(φ, -1.0, 0.0, 1.0, 1e-3)
 	Mf := NewSmpCalcμ(φ, 1.0, 0.0, 1.0, 1e-3)
 	Mg := NewSmpCalcμ(φ, 1.0, 0.0, 10.0, 1e-7)
-	utl.Pforan("Ma (cam) = %v\n", Ma)
-	utl.Pforan("Mb (cam) = %v\n", Mb)
-	utl.Pforan("Mc (oct) = %v\n", Mc)
-	utl.Pforan("Md (oct) = %v\n", Md)
-	utl.Pforan("Me (oct) = %v\n", Me)
-	utl.Pforan("Mf (oct) = %v\n", Mf)
-	utl.Pforan("Mg (oct) = %v\n", Mg)
+	io.Pforan("Ma (cam) = %v\n", Ma)
+	io.Pforan("Mb (cam) = %v\n", Mb)
+	io.Pforan("Mc (oct) = %v\n", Mc)
+	io.Pforan("Md (oct) = %v\n", Md)
+	io.Pforan("Me (oct) = %v\n", Me)
+	io.Pforan("Mf (oct) = %v\n", Mf)
+	io.Pforan("Mg (oct) = %v\n", Mg)
 	utl.CheckScalar(tst, "Ma-Mb", 1e-17, Ma, Mb)
 	utl.CheckScalar(tst, "φ-φb", 1e-14, φ, φb)
 	utl.CheckScalar(tst, "φ-φc", 1e-14, φ, φc)

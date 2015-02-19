@@ -9,10 +9,10 @@ import (
 	"math"
 	"sync"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/utl"
 )
 
 type R5cte struct {
@@ -67,13 +67,13 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 
 			// Jacobian triplet
 			if o.jac == nil { // numerical
-				//if x0 == 0.0 { utl.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
+				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
 				err = num.Jacobian(&o.dfdyT, func(fy, y []float64) (e error) {
 					e = o.fcn(fy, x0, y, args...)
 					return
 				}, y0, o.f0, o.w[0], o.Distr) // w works here as workspace variable
 			} else { // analytical
-				//if x0 == 0.0 { utl.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n") }
+				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n") }
 				err = o.jac(&o.dfdyT, x0, y0, args...)
 			}
 			if err != nil {
@@ -299,7 +299,7 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 
 	// did not converge
 	if it == o.NmaxIt-1 {
-		utl.Panic("radau5_step failed with it=%d", it)
+		chk.Panic("radau5_step failed with it=%d", it)
 	}
 
 	// diverging => stop

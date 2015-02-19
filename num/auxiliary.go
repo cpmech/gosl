@@ -9,6 +9,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -46,7 +47,7 @@ func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xs
 	}
 	plt.Cross()
 	plt.Plot(x, y, args)
-	plt.PlotOne(xsol, ysol, utl.Sf("'ro', label='%s'", xsolLbl))
+	plt.PlotOne(xsol, ysol, io.Sf("'ro', label='%s'", xsolLbl))
 	if extra != nil {
 		extra()
 	}
@@ -84,16 +85,16 @@ func TestAbs(result, expected, absolute_error float64, test_description string) 
 		}
 	}
 	if test_description != "" {
-		utl.Pf(test_description)
+		io.Pf(test_description)
 		switch status {
 		case NaN:
-			utl.Pf(" [1;31mNaN[0m\n  %v observed\n  %v expected.  diff = %v\n", result, expected, result-expected)
+			io.Pf(" [1;31mNaN[0m\n  %v observed\n  %v expected.  diff = %v\n", result, expected, result-expected)
 		case Inf:
-			utl.Pf(" [1;31mInf[0m\n  %v observed\n  %v expected.  diff = %v\n", result, expected, result-expected)
+			io.Pf(" [1;31mInf[0m\n  %v observed\n  %v expected.  diff = %v\n", result, expected, result-expected)
 		case Equal:
-			utl.Pf(" [1;32mOk[0m\n  %v observed\n  %v expected.  diff = %v\n", result, expected, result-expected)
+			io.Pf(" [1;32mOk[0m\n  %v observed\n  %v expected.  diff = %v\n", result, expected, result-expected)
 		case NotEqual:
-			utl.Pf(" [1;31mError[0m\n  %v observed\n  %v expected.  diff = %v\n", result, expected, result-expected)
+			io.Pf(" [1;31mError[0m\n  %v observed\n  %v expected.  diff = %v\n", result, expected, result-expected)
 		}
 	}
 	return
@@ -121,7 +122,7 @@ func CompareJac(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64, 
 	if max_diff > tol {
 		tst.Errorf("[1;31mmax_diff = %g[0m\n", max_diff)
 	} else {
-		utl.Pf("[1;32mmax_diff = %g[0m\n", max_diff)
+		io.Pf("[1;32mmax_diff = %g[0m\n", max_diff)
 	}
 }
 

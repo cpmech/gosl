@@ -4,9 +4,7 @@
 
 package la
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/chk"
 
 // Triplet is a simple representation of a sparse matrix, where the indices and values
 // of this matrix are stored directly.
@@ -36,7 +34,7 @@ func (t *Triplet) Init(m, n, max int) {
 // Put inserts an element to a pre-allocated (with Init) triplet matrix
 func (t *Triplet) Put(i, j int, x float64) {
 	if t.pos >= t.max {
-		utl.Panic(_sparsemat_err1, t.pos, t.max)
+		chk.Panic(_sparsemat_err1, t.pos, t.max)
 	}
 	t.i[t.pos], t.j[t.pos], t.x[t.pos] = i, j, x
 	t.pos++
@@ -52,7 +50,7 @@ func (t *Triplet) Put(i, j int, x float64) {
 //      [... ... ... ... ... ...] 5
 func (o *Triplet) PutMatAndMatT(a *Triplet) {
 	if a.n+a.m > o.m || a.n+a.m > o.n {
-		utl.Panic(_sparsemat_err3, a.m, a.n, o.m, o.n)
+		chk.Panic(_sparsemat_err3, a.m, a.n, o.m, o.n)
 	}
 	for k := 0; k < a.pos; k++ {
 		o.Put(a.n+a.i[k], a.j[k], a.x[k]) // puts a
@@ -113,7 +111,7 @@ func (t *TripletC) Init(m, n, max int, xzmonolithic bool) {
 // Put inserts an element to a pre-allocated (with Init) triplet (complex) matrix
 func (t *TripletC) Put(i, j int, x, z float64) {
 	if t.pos >= t.max {
-		utl.Panic(_sparsemat_err2, t.pos, t.max)
+		chk.Panic(_sparsemat_err2, t.pos, t.max)
 	}
 	t.i[t.pos], t.j[t.pos] = i, j
 	if t.xz != nil {

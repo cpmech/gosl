@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -16,16 +18,16 @@ import (
 
 func Test_matinvSmall01(tst *testing.T) {
 
-	tsprev := utl.Tsilent
+	tsprev := verbose()
 	defer func() {
-		utl.Tsilent = tsprev
+		verbose() = tsprev
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("matinvSmall01")
+	//verbose() = false
+	chk.PrintTitle("matinvSmall01")
 
 	noise := 0.0
 	tol := 1.0e-16
@@ -34,10 +36,10 @@ func Test_matinvSmall01(tst *testing.T) {
 	res := MatAlloc(1, 1)
 	det, err := MatInv(res, [][]float64{{2.0}}, tol)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	utl.CheckScalar(tst, "1 x 1 matrix: det ", tol, det, 2.0)
-	utl.CheckMatrix(tst, "1 x 1 matrix: ", tol, res, [][]float64{{0.5}})
+	chk.Matrix(tst, "1 x 1 matrix: ", tol, res, [][]float64{{0.5}})
 
 	// matrix: inverse
 	A := [][]float64{{1.0, 2.0}, {3.0, 2.0}}
@@ -45,18 +47,18 @@ func Test_matinvSmall01(tst *testing.T) {
 	Ai := MatAlloc(2, 2)
 	detA, err := MatInv(Ai, A, tol)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	utl.CheckScalar(tst, "matrix: inv (det) ", tol, detA, -4.0+noise)
-	utl.CheckMatrix(tst, "matrix: inv (A)   ", tol, Ai, Aicorr)
+	chk.Matrix(tst, "matrix: inv (A)   ", tol, Ai, Aicorr)
 
 	// using MatInvG
 	Ai_ := MatAlloc(2, 2)
 	err = MatInvG(Ai_, A, tol)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
-	utl.CheckMatrix(tst, "matrix: inv with MatInvG", tol, Ai_, Aicorr)
+	chk.Matrix(tst, "matrix: inv with MatInvG", tol, Ai_, Aicorr)
 
 	// another test
 	B := [][]float64{{9.0, 3.0, 5.0}, {-6.0, -9.0, 7.0}, {-1.0, -8.0, 1.0}}
@@ -68,18 +70,18 @@ func Test_matinvSmall01(tst *testing.T) {
 	Bi := MatAlloc(3, 3)
 	detB, err := MatInv(Bi, B, tol)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	utl.CheckScalar(tst, "matrix: det ", tol, detB, 615.0+noise)
-	utl.CheckMatrix(tst, "matrix: inv ", tol, Bi, Bicorr)
+	chk.Matrix(tst, "matrix: inv ", tol, Bi, Bicorr)
 
 	// using MatInvG
 	Bi_ := MatAlloc(3, 3)
 	err = MatInvG(Bi_, B, tol)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
-	utl.CheckMatrix(tst, "matrix: inv with MatInvG", tol, Bi_, Bicorr)
+	chk.Matrix(tst, "matrix: inv with MatInvG", tol, Bi_, Bicorr)
 }
 
 /// General Matrix Inversion /////////////////////////////////////////////////////////////////////////
@@ -90,19 +92,19 @@ func RunInvCheck(tst *testing.T, key string, M, CorrectInvM [][]float64, checkI 
 	t0 := time.Now()
 	err := MatInvG(Mi, M, 1e-13)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
-	utl.Pfpink("Lapack: time elapsed = %v\n", time.Now().Sub(t0))
+	io.Pfpink("Lapack: time elapsed = %v\n", time.Now().Sub(t0))
 	MMi := MatAlloc(m, m)
 	MMiM := MatAlloc(m, n)
 	MatMul(MMi, 1, M, Mi)   // MMi = M * Mi
 	MatMul(MMiM, 1, MMi, M) // MMiM = M * Mi * M == M
-	utl.CheckMatrix(tst, utl.Sf("%s => Mi - CorrectInvM ", key), Tol, Mi, CorrectInvM)
-	utl.CheckMatrix(tst, utl.Sf("%s => M*Mi*M = M       ", key), Tol, MMiM, M)
+	chk.Matrix(tst, io.Sf("%s => Mi - CorrectInvM ", key), Tol, Mi, CorrectInvM)
+	chk.Matrix(tst, io.Sf("%s => M*Mi*M = M       ", key), Tol, MMiM, M)
 	if checkI {
 		I := MatAlloc(m, m)
 		MatSetDiag(I, 1)
-		utl.CheckMatrix(tst, utl.Sf("%s => M*Mi = I         ", key), TolI, MMi, I)
+		chk.Matrix(tst, io.Sf("%s => M*Mi = I         ", key), TolI, MMi, I)
 	}
 }
 
@@ -112,11 +114,11 @@ func RunSvdCheck(tst *testing.T, key string, A, CorU [][]float64, CorS []float64
 	U, S, Vt := MatAlloc(m, m), make([]float64, ns), MatAlloc(n, n)
 	err := MatSvd(U, S, Vt, A, 1e-14)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
-	utl.CheckMatrix(tst, utl.Sf("%s => U", key), Tol, U, CorU)
-	utl.CheckVector(tst, utl.Sf("%s => S", key), Tol, S, CorS)
-	utl.CheckMatrix(tst, utl.Sf("%s => Vt", key), Tol, Vt, CorVt)
+	chk.Matrix(tst, io.Sf("%s => U", key), Tol, U, CorU)
+	chk.Vector(tst, io.Sf("%s => S", key), Tol, S, CorS)
+	chk.Matrix(tst, io.Sf("%s => Vt", key), Tol, Vt, CorVt)
 	usvt := MatAlloc(m, n)
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
@@ -125,23 +127,23 @@ func RunSvdCheck(tst *testing.T, key string, A, CorU [][]float64, CorS []float64
 			}
 		}
 	}
-	utl.CheckMatrix(tst, utl.Sf("%s => U*S*Vt", key), Tol, A, usvt)
+	chk.Matrix(tst, io.Sf("%s => U*S*Vt", key), Tol, A, usvt)
 }
 
 func Test_matinv01(tst *testing.T) {
 
-	tsprev := utl.Tsilent
+	tsprev := verbose()
 	defer func() {
-		utl.Tsilent = tsprev
+		verbose() = tsprev
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("matinv01")
+	//verbose() = false
+	chk.PrintTitle("matinv01")
 
-	utl.Pf("--- A --(2 x 2)-----------------------------------\n")
+	io.Pf("--- A --(2 x 2)-----------------------------------\n")
 	A := [][]float64{
 		{1, 2},
 		{3, 4},
@@ -172,7 +174,7 @@ func Test_matinv01(tst *testing.T) {
 	RunInvCheck(tst, "Aa", Aa, corInvAa, checkI, 1e-15, 1e-15)
 	RunSvdCheck(tst, "A", A, corUA, corSA, corVtA, 1e-14)
 
-	utl.Pf("\n--- B --(3 x 3)-----------------------------------\n")
+	io.Pf("\n--- B --(3 x 3)-----------------------------------\n")
 	B := [][]float64{
 		{10, 1, 2},
 		{3, 20, 4},
@@ -208,7 +210,7 @@ func Test_matinv01(tst *testing.T) {
 	RunInvCheck(tst, "Ba", Ba, corInvBa, checkI, 1e-14, 1e-14)
 	RunSvdCheck(tst, "B", B, corUB, corSB, corVtB, 1e-13)
 
-	utl.Pf("\n--- C --(5 x 5)-----------------------------------\n")
+	io.Pf("\n--- C --(5 x 5)-----------------------------------\n")
 	C := [][]float64{
 		{12, 28, 22, 20, 8},
 		{0, 3, 5, 17, 28},
@@ -241,7 +243,7 @@ func Test_matinv01(tst *testing.T) {
 	RunInvCheck(tst, "C", C, corInvC, checkI, 1e-12, 1e-12)
 	RunSvdCheck(tst, "C", C, corUC, corSC, corVtC, 1e-13)
 
-	utl.Pf("\n--- F --(8 x 8)-----------------------------------\n")
+	io.Pf("\n--- F --(8 x 8)-----------------------------------\n")
 	F := [][]float64{
 		{1.01, 2.01, 3.01, 4.01, 5.01, 6.01, 7.01, 8.01},
 		{1.02, 2.02, 3.02, 4.02, 5.02, 6.02, 7.02, 8.02},
@@ -269,18 +271,18 @@ func Test_matinv01(tst *testing.T) {
 
 func Test_matinv02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("matinv02")
+	//verbose() = false
+	chk.PrintTitle("matinv02")
 
-	utl.Pf("\n--- K --(6 x 6)-----------------------------------\n")
+	io.Pf("\n--- K --(6 x 6)-----------------------------------\n")
 	K := [][]float64{
 		{3.46540497998689445e-05, -1.39368151175265866e-05, -1.39368151175265866e-05, 0.00000000000000000e+00, 7.15957288480514429e-23, -2.93617909908697186e+02},
 		{-1.39368151175265866e-05, 3.46540497998689445e-05, -1.39368151175265866e-05, 0.00000000000000000e+00, 7.15957288480514429e-23, -2.93617909908697186e+02},
@@ -301,7 +303,7 @@ func Test_matinv02(tst *testing.T) {
 	checkI := true
 	RunInvCheck(tst, "K", K, Kcor, checkI, 1e-8, 1e-12)
 
-	utl.Pf("\n--- A --(4 x 3)-----------------------------------\n")
+	io.Pf("\n--- A --(4 x 3)-----------------------------------\n")
 	A := [][]float64{
 		{-5.773502691896260e-01, -5.773502691896260e-01, 1.000000000000000e+00},
 		{5.773502691896260e-01, -5.773502691896260e-01, 1.000000000000000e+00},
@@ -329,7 +331,7 @@ func Test_matinv02(tst *testing.T) {
 	RunInvCheck(tst, "A", A, corInvA, checkI, 1e-15, 1e-15)
 	RunSvdCheck(tst, "A", A, corUA, corSA, corVtA, 1e-15)
 
-	utl.Pf("\n--- E --(4 x 5)-----------------------------------\n")
+	io.Pf("\n--- E --(4 x 5)-----------------------------------\n")
 	E := [][]float64{
 		{1, 0, 0, 0, 2},
 		{0, 0, 3, 0, 0},
@@ -360,7 +362,7 @@ func Test_matinv02(tst *testing.T) {
 	RunInvCheck(tst, "E", E, corInvE, false, 1e-15, 1e-15)
 	RunSvdCheck(tst, "E", E, corUE, corSE, corVtE, 1e-15)
 
-	utl.Pf("\n--- D --(5 x 6)-----------------------------------\n")
+	io.Pf("\n--- D --(5 x 6)-----------------------------------\n")
 	D := [][]float64{
 		{12, 28, 22, 20, 8, 1},
 		{0, 3, 5, 17, 28, 1},
@@ -378,7 +380,7 @@ func Test_matinv02(tst *testing.T) {
 	}
 	RunInvCheck(tst, "D", D, corInvD, false, 1e-12, 1e-12)
 
-	utl.Pf("\n--- M --(8 x 6)-----------------------------------\n")
+	io.Pf("\n--- M --(8 x 6)-----------------------------------\n")
 
 	N := [][]float64{
 		{64, 2, 3, 61, 60, 6},
@@ -414,16 +416,16 @@ func Test_matinv02(tst *testing.T) {
 
 func Test_cond01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("cond01. condition number of matrix using general inverse")
+	//verbose() = false
+	chk.PrintTitle("cond01. condition number of matrix using general inverse")
 
 	a := [][]float64{
 		{1, 2},
@@ -431,21 +433,21 @@ func Test_cond01(tst *testing.T) {
 	}
 	cIa, err := MatCondG(a, "I", 1e-10)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	ai := MatAlloc(2, 2)
 	_, err = MatInv(ai, a, 1e-10)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	nIa := MatNormI(a)
 	nIai := MatNormI(ai)
 	PrintMat("a", a, "%10g", false)
 	PrintMat("ai", ai, "%20g", false)
-	utl.Pforan("normI(a)  = %v\n", nIa)
-	utl.Pforan("normI(ai) = %v\n", nIai)
-	utl.Pforan("cond(a,I) = %v\n", cIa)
-	utl.CheckMatrix(tst, "ai       ", 1e-9, ai, [][]float64{{-3999, 2000}, {2000, -1000}})
+	io.Pforan("normI(a)  = %v\n", nIa)
+	io.Pforan("normI(ai) = %v\n", nIai)
+	io.Pforan("cond(a,I) = %v\n", cIa)
+	chk.Matrix(tst, "ai       ", 1e-9, ai, [][]float64{{-3999, 2000}, {2000, -1000}})
 	utl.CheckScalar(tst, "normI(a) ", 1e-15, nIa, 5.999)
 	utl.CheckScalar(tst, "normI(ai)", 1e-9, nIai, 5999)
 	utl.CheckScalar(tst, "condI(a) ", 1e-8, cIa, 35988.001)
@@ -457,30 +459,30 @@ func Test_cond01(tst *testing.T) {
 	bi := MatAlloc(2, 2)
 	_, err = MatInv(bi, b, 1e-10)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	cIb, err := MatCondG(b, "I", 1e-10)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	cIbi, err := MatCondG(bi, "I", 1e-10)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	cFb, err := MatCondG(b, "F", 1e-10)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	cFbi, err := MatCondG(bi, "F", 1e-10)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	PrintMat("\nb", b, "%10g", false)
-	utl.Pforan("cond(b, I) = %v\n", cIb)
-	utl.Pforan("cond(bi,I) = %v\n", cIbi)
-	utl.Pforan("cond(b, F) = %v\n", cFb)
-	utl.Pforan("cond(bi,F) = %v\n", cFbi)
-	utl.CheckMatrix(tst, "bi       ", 1e-17, bi, [][]float64{{-3, 2}, {2, -1}})
+	io.Pforan("cond(b, I) = %v\n", cIb)
+	io.Pforan("cond(bi,I) = %v\n", cIbi)
+	io.Pforan("cond(b, F) = %v\n", cFb)
+	io.Pforan("cond(bi,F) = %v\n", cFbi)
+	chk.Matrix(tst, "bi       ", 1e-17, bi, [][]float64{{-3, 2}, {2, -1}})
 	utl.CheckScalar(tst, "condI(b) ", 1e-17, cIb, 25.0)
 	utl.CheckScalar(tst, "condF(b) ", 1e-14, cFb, 18.0)
 }

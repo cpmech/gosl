@@ -8,6 +8,7 @@ package fun
 import (
 	"os"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -31,7 +32,7 @@ func New(name string, prms Prms) (Func, error) {
 	}
 	allocator, ok := allocators[name]
 	if !ok {
-		return nil, utl.Err("cannot find function named %q", name)
+		return nil, chk.Err("cannot find function named %q", name)
 	}
 	o := allocator()
 	err := o.Init(prms)

@@ -7,21 +7,23 @@ package la
 import (
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_mvMul01(tst *testing.T) {
 
-	tsprev := utl.Tsilent
+	tsprev := verbose()
 	defer func() {
-		utl.Tsilent = tsprev
+		verbose() = tsprev
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("mvMul01. MatrixVector multiplication")
+	//verbose() = false
+	chk.PrintTitle("mvMul01. MatrixVector multiplication")
 
 	a := [][]float64{
 		{10.0, 20.0, 30.0, 40.0, 50.0},
@@ -42,24 +44,24 @@ func Test_mvMul01(tst *testing.T) {
 	MatTrVecMul(atr, 1, a, r)  // atr = 1*transp(a)*r
 	MatVecMulAdd(z, 1, a, u)   // z  += 1*a*u
 	MatTrVecMulAdd(w, 1, a, r) // w  += 1*transp(a)*r
-	utl.CheckVector(tst, "au", 1.0e-17, au, au_cor)
-	utl.CheckVector(tst, "atr", 1.0e-17, atr, atr_cor)
-	utl.CheckVector(tst, "zpau", 1.0e-12, z, zpau_cor)
-	utl.CheckVector(tst, "wpar", 1.0e-12, w, wpar_cor)
+	chk.Vector(tst, "au", 1.0e-17, au, au_cor)
+	chk.Vector(tst, "atr", 1.0e-17, atr, atr_cor)
+	chk.Vector(tst, "zpau", 1.0e-12, z, zpau_cor)
+	chk.Vector(tst, "wpar", 1.0e-12, w, wpar_cor)
 }
 
 func Test_mmMul01(tst *testing.T) {
 
-	tsprev := utl.Tsilent
+	tsprev := verbose()
 	defer func() {
-		utl.Tsilent = tsprev
+		verbose() = tsprev
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("mmMul01. MatrixMatrix multiplication")
+	//verbose() = false
+	chk.PrintTitle("mmMul01. MatrixMatrix multiplication")
 
 	a := [][]float64{
 		{1.0, 2.0, 3.0},
@@ -72,29 +74,29 @@ func Test_mmMul01(tst *testing.T) {
 	}
 	c := MatAlloc(2, 4)
 	MatMul(c, 1, a, b) // c := 1*a*b
-	utl.Pf("a = %v\n", a)
-	utl.Pf("b = %v\n", b)
-	utl.Pf("c = %v\n", c)
+	io.Pf("a = %v\n", a)
+	io.Pf("b = %v\n", b)
+	io.Pf("c = %v\n", c)
 
 	ccor := [][]float64{
 		{1.4, 6.0, 6.0, 6.25},
 		{0.65, 2.5, 2.5, 2.625},
 	}
-	utl.CheckMatrix(tst, "c", 1.0e-15, c, ccor)
+	chk.Matrix(tst, "c", 1.0e-15, c, ccor)
 }
 
 func Test_mmMul02(tst *testing.T) {
 
-	tsprev := utl.Tsilent
+	tsprev := verbose()
 	defer func() {
-		utl.Tsilent = tsprev
+		verbose() = tsprev
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("mmMul02. MatrixMatrix multiplication")
+	//verbose() = false
+	chk.PrintTitle("mmMul02. MatrixMatrix multiplication")
 
 	a := [][]float64{
 		{0.1, 0.2, 0.3},
@@ -174,8 +176,8 @@ func Test_mmMul02(tst *testing.T) {
 		{1011.25, 1022.5, 1033.75, 1045},
 	}
 
-	utl.CheckMatrix(tst, "ab", 1.0e-17, ab, ab_cor)
-	utl.CheckMatrix(tst, "abc", 1.0e-17, abc, abc_cor)
-	utl.CheckMatrix(tst, "etbc", 1.0e-13, etbc, etbc_cor)
-	utl.CheckMatrix(tst, "detbc", 1.0e-13, detbc, detbc_cor)
+	chk.Matrix(tst, "ab", 1.0e-17, ab, ab_cor)
+	chk.Matrix(tst, "abc", 1.0e-17, abc, abc_cor)
+	chk.Matrix(tst, "etbc", 1.0e-13, etbc, etbc_cor)
+	chk.Matrix(tst, "detbc", 1.0e-13, detbc, detbc_cor)
 }

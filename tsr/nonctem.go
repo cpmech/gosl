@@ -7,7 +7,8 @@ package tsr
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // NcteM implements Argyris-Sheng et al M(w) non-constant M coefficient
@@ -34,7 +35,7 @@ func (o *NcteM) Init(prms []string, vals []float64) {
 	}
 	φmin, φmax := 1e-7, 89.99
 	if o.φ < φmin || o.φ > φmax {
-		utl.Panic(_nonctem_err1, φmin, φmax, o.φ)
+		chk.Panic(_nonctem_err1, φmin, φmax, o.φ)
 	}
 	o.Sinφ = math.Sin(o.φ * math.Pi / 180.0)
 	o.Tanφ = math.Tan(o.φ * math.Pi / 180.0)
@@ -44,7 +45,7 @@ func (o *NcteM) Init(prms []string, vals []float64) {
 
 // String returns a string representing this structure
 func (o *NcteM) String() (s string) {
-	return utl.Sf("  φ=%v Mcs=%v Mfix=%v\n", o.φ, o.Mcs, o.Mfix)
+	return io.Sf("  φ=%v Mcs=%v Mfix=%v\n", o.φ, o.Mcs, o.Mfix)
 }
 
 // M implements M(w)

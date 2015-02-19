@@ -24,7 +24,8 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // LinSolUmfpack holds UMFPACK data
@@ -56,7 +57,7 @@ func (o *LinSolUmfpack) InitR(tR *Triplet, symmetric, verbose, timing bool) (err
 	// check
 	o.tR = tR
 	if tR.pos == 0 {
-		return utl.Err(_linsol_umfpack_err01)
+		return chk.Err(_linsol_umfpack_err01)
 	}
 
 	// flags
@@ -85,7 +86,7 @@ func (o *LinSolUmfpack) InitR(tR *Triplet, symmetric, verbose, timing bool) (err
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolUmfpack.InitR = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolUmfpack.InitR = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -96,7 +97,7 @@ func (o *LinSolUmfpack) InitC(tC *TripletC, symmetric, verbose, timing bool) (er
 	// check
 	o.tC = tC
 	if tC.pos == 0 {
-		return utl.Err(_linsol_umfpack_err02)
+		return chk.Err(_linsol_umfpack_err02)
 	}
 
 	// flags
@@ -113,7 +114,7 @@ func (o *LinSolUmfpack) InitC(tC *TripletC, symmetric, verbose, timing bool) (er
 
 	// check x and z
 	if len(o.tC.x) != len(o.tC.i) || len(o.tC.z) != len(o.tC.i) {
-		return utl.Err(_linsol_umfpack_err03, len(o.tC.x), len(o.tC.z), len(o.tC.i))
+		return chk.Err(_linsol_umfpack_err03, len(o.tC.x), len(o.tC.z), len(o.tC.i))
 	}
 
 	// pointers
@@ -132,7 +133,7 @@ func (o *LinSolUmfpack) InitC(tC *TripletC, symmetric, verbose, timing bool) (er
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolUmfpack.InitC = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolUmfpack.InitC = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -148,7 +149,7 @@ func (o *LinSolUmfpack) Fact() (err error) {
 
 	// message
 	if o.verb {
-		utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.Fact . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.Fact . . . . . . . . . . . . . . . \n\n")
 	}
 
 	// factorisation
@@ -157,19 +158,19 @@ func (o *LinSolUmfpack) Fact() (err error) {
 		// UMFPACK: convert triplet to column-compressed format
 		st := C.umfpack_zl_triplet_to_col(C.LONG(o.tC.m), C.LONG(o.tC.n), C.LONG(o.tC.pos), o.ti, o.tj, o.tx, o.tz, o.ap, o.ai, o.ax, o.az, nil)
 		if st != C.UMFPACK_OK {
-			return utl.Err(_linsol_umfpack_err04, Uerr2Text[int(st)])
+			return chk.Err(_linsol_umfpack_err04, Uerr2Text[int(st)])
 		}
 
 		// UMFPACK: symbolic factorisation
 		st = C.umfpack_zl_symbolic(C.LONG(o.tC.m), C.LONG(o.tC.n), o.ap, o.ai, o.ax, o.az, &o.usymb, o.uctrl, nil)
 		if st != C.UMFPACK_OK {
-			return utl.Err(_linsol_umfpack_err05, Uerr2Text[int(st)])
+			return chk.Err(_linsol_umfpack_err05, Uerr2Text[int(st)])
 		}
 
 		// UMFPACK: numeric factorisation
 		st = C.umfpack_zl_numeric(o.ap, o.ai, o.ax, o.az, o.usymb, &o.unum, o.uctrl, nil)
 		if st != C.UMFPACK_OK {
-			return utl.Err(_linsol_umfpack_err06, Uerr2Text[int(st)])
+			return chk.Err(_linsol_umfpack_err06, Uerr2Text[int(st)])
 		}
 
 	} else {
@@ -177,19 +178,19 @@ func (o *LinSolUmfpack) Fact() (err error) {
 		// UMFPACK: convert triplet to column-compressed format
 		st := C.umfpack_dl_triplet_to_col(C.LONG(o.tR.m), C.LONG(o.tR.n), C.LONG(o.tR.pos), o.ti, o.tj, o.tx, o.ap, o.ai, o.ax, nil)
 		if st != C.UMFPACK_OK {
-			return utl.Err(_linsol_umfpack_err07, Uerr2Text[int(st)])
+			return chk.Err(_linsol_umfpack_err07, Uerr2Text[int(st)])
 		}
 
 		// UMFPACK: symbolic factorisation
 		st = C.umfpack_dl_symbolic(C.LONG(o.tR.m), C.LONG(o.tR.n), o.ap, o.ai, o.ax, &o.usymb, o.uctrl, nil)
 		if st != C.UMFPACK_OK {
-			return utl.Err(_linsol_umfpack_err08, Uerr2Text[int(st)])
+			return chk.Err(_linsol_umfpack_err08, Uerr2Text[int(st)])
 		}
 
 		// UMFPACK: numeric factorisation
 		st = C.umfpack_dl_numeric(o.ap, o.ai, o.ax, o.usymb, &o.unum, o.uctrl, nil)
 		if st != C.UMFPACK_OK {
-			return utl.Err(_linsol_umfpack_err09, Uerr2Text[int(st)])
+			return chk.Err(_linsol_umfpack_err09, Uerr2Text[int(st)])
 		}
 
 		return
@@ -198,7 +199,7 @@ func (o *LinSolUmfpack) Fact() (err error) {
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolUmfpack.Fact  = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolUmfpack.Fact  = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -208,7 +209,7 @@ func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error) {
 
 	// check
 	if o.cmplx {
-		return utl.Err(_linsol_umfpack_err10)
+		return chk.Err(_linsol_umfpack_err10)
 	}
 
 	// start time
@@ -218,7 +219,7 @@ func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error) {
 
 	// message
 	if o.verb {
-		utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.SolveR . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.SolveR . . . . . . . . . . . . . . . \n\n")
 	}
 
 	// UMFPACK: pointers
@@ -228,12 +229,12 @@ func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error) {
 	// UMFPACK: solve
 	st := C.umfpack_dl_solve(C.UMFPACK_A, o.ap, o.ai, o.ax, pxR, pbR, o.unum, o.uctrl, nil)
 	if st != C.UMFPACK_OK {
-		return utl.Err(_linsol_umfpack_err11, Uerr2Text[int(st)])
+		return chk.Err(_linsol_umfpack_err11, Uerr2Text[int(st)])
 	}
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolUmfpack.Solve = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolUmfpack.Solve = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -243,7 +244,7 @@ func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC []float64, dummy bool) (err error)
 
 	// check
 	if !o.cmplx {
-		return utl.Err(_linsol_umfpack_err12)
+		return chk.Err(_linsol_umfpack_err12)
 	}
 
 	// start time
@@ -253,7 +254,7 @@ func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC []float64, dummy bool) (err error)
 
 	// message
 	if o.verb {
-		utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.SolveC . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.SolveC . . . . . . . . . . . . . . . \n\n")
 	}
 
 	// UMFPACK: pointers
@@ -265,12 +266,12 @@ func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC []float64, dummy bool) (err error)
 	// UMFPACK: solve
 	st := C.umfpack_zl_solve(C.UMFPACK_A, o.ap, o.ai, o.ax, o.az, pxR, pxC, pbR, pbC, o.unum, o.uctrl, nil)
 	if st != C.UMFPACK_OK {
-		utl.Err(_linsol_umfpack_err13, Uerr2Text[int(st)])
+		chk.Err(_linsol_umfpack_err13, Uerr2Text[int(st)])
 	}
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolUmfpack.Solve = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolUmfpack.Solve = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 	return
 }
@@ -285,7 +286,7 @@ func (o *LinSolUmfpack) Clean() {
 
 	// message
 	if o.verb {
-		utl.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.Clean . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.Clean . . . . . . . . . . . . . . . \n\n")
 	}
 
 	// clean up
@@ -299,7 +300,7 @@ func (o *LinSolUmfpack) Clean() {
 
 	// duration
 	if o.ton {
-		utl.Pfcyan("%s: Time spent in LinSolUmfpack.Clean   = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolUmfpack.Clean   = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 }
 

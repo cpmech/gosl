@@ -7,6 +7,8 @@ package la
 import (
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -24,13 +26,13 @@ func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x
 	// initialise solver
 	err := lis.InitR(t, symmetric, verbose, timing)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// factorise
 	err = lis.Fact()
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// solve
@@ -38,18 +40,18 @@ func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x
 	x := make([]float64, len(b))
 	err = lis.SolveR(x, b, dummy) // x := inv(A) * b
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// output
 	A := t.ToMatrix(nil)
-	utl.Pforan("A.x = b\n")
+	io.Pforan("A.x = b\n")
 	PrintMat("A", A.ToDense(), "%5g", false)
 	PrintVec("x", x, "%g ", false)
 	PrintVec("b", b, "%g ", false)
 
 	// check
-	utl.CheckVector(tst, "x", tol_cmp, x, x_correct)
+	chk.Vector(tst, "x", tol_cmp, x, x_correct)
 	check_residR(tst, tol_res, A.ToDense(), x, b)
 }
 
@@ -67,13 +69,13 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 	// initialise solver
 	err := lis.InitC(t, symmetric, verbose, timing)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// factorise
 	err = lis.Fact()
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 
 	// solve
@@ -83,34 +85,34 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 	xC := make([]float64, len(b))
 	err = lis.SolveC(xR, xC, bR, bC, dummy) // x := inv(A) * b
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	x := RCtoComplex(xR, xC)
 
 	// output
 	A := t.ToMatrix(nil)
-	utl.Pforan("A.x = b\n")
+	io.Pforan("A.x = b\n")
 	PrintMatC("A", A.ToDense(), "(%g+", "%gi) ", false)
 	PrintVecC("x", x, "(%g+", "%gi) ", false)
 	PrintVecC("b", b, "(%g+", "%gi) ", false)
 
 	// check
-	utl.CheckVectorC(tst, "x", tol_cmp, x, x_correct)
+	chk.VectorC(tst, "x", tol_cmp, x, x_correct)
 	check_residC(tst, tol_res, A.ToDense(), x, b)
 }
 
 func Test_linsol01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("linsol01. real")
+	//verbose() = false
+	chk.PrintTitle("linsol01. real")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -137,16 +139,16 @@ func Test_linsol01(tst *testing.T) {
 
 func Test_linsol02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("linsol02. real")
+	//verbose() = false
+	chk.PrintTitle("linsol02. real")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -173,16 +175,16 @@ func Test_linsol02(tst *testing.T) {
 
 func Test_linsol03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("linsol03. complex (but real)")
+	//verbose() = false
+	chk.PrintTitle("linsol03. complex (but real)")
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -209,16 +211,16 @@ func Test_linsol03(tst *testing.T) {
 
 func Test_linsol04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("linsol04. complex (but real)")
+	//verbose() = false
+	chk.PrintTitle("linsol04. complex (but real)")
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -245,16 +247,16 @@ func Test_linsol04(tst *testing.T) {
 
 func Test_linsol05(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("linsol05. complex (but real)")
+	//verbose() = false
+	chk.PrintTitle("linsol05. complex (but real)")
 
 	// data
 	n := 10

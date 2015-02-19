@@ -8,6 +8,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
 )
@@ -170,16 +172,16 @@ var (
 
 func Test_Ts(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("Ts")
+	//verbose() = false
+	chk.PrintTitle("Ts")
 
 	nd := test_nd
 	for m := 0; m < len(test_nd)-3; m++ {
@@ -204,22 +206,22 @@ func Test_Ts(tst *testing.T) {
 				}
 			}
 		}
-		utl.CheckMatrix(tst, "Ts", 1e-13, Ts, Ts_)
+		chk.Matrix(tst, "Ts", 1e-13, Ts, Ts_)
 	}
 }
 
 func Test_ops01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("ops01")
+	//verbose() = false
+	chk.PrintTitle("ops01")
 
 	// basic derivatives
 	dver := false
@@ -282,22 +284,22 @@ func Test_ops01(tst *testing.T) {
 		}
 		// check basic
 		if math.Abs(trA-tra) > 1e-17 {
-			utl.Panic("tra failed. diff = %g", trA-tra)
+			chk.Panic("tra failed. diff = %g", trA-tra)
 		}
 		if math.Abs(detA-deta) > 1e-14 {
-			utl.Panic("detA failed. diff = %g", detA-deta)
+			chk.Panic("detA failed. diff = %g", detA-deta)
 		}
 		if math.Abs(trDevA) > 1e-13 {
-			utl.Panic("trDevA failed. error = %g", trDevA)
+			chk.Panic("trDevA failed. error = %g", trDevA)
 		}
-		utl.CheckMatrix(tst, "devA", 1e-13, devA, devA_)
-		utl.CheckMatrix(tst, "devA", 1e-13, devA, devA__)
-		utl.CheckVector(tst, "devA", 1e-13, deva, deva__)
-		utl.CheckMatrix(tst, "A²", 1e-11, A2, A2_)
+		chk.Matrix(tst, "devA", 1e-13, devA, devA_)
+		chk.Matrix(tst, "devA", 1e-13, devA, devA__)
+		chk.Vector(tst, "devA", 1e-13, deva, deva__)
+		chk.Matrix(tst, "A²", 1e-11, A2, A2_)
 		// check tr(s2)
-		utl.Pfblue2("tr(s²) = %v\n", M_Tr(s2))
+		io.Pfblue2("tr(s²) = %v\n", M_Tr(s2))
 		if M_Tr(s2) < 1 {
-			utl.Panic("Tr(s2) failed")
+			chk.Panic("Tr(s2) failed")
 		}
 		// check derivatives
 		da2da := M_Alloc4(nd[m])
@@ -312,7 +314,7 @@ func Test_ops01(tst *testing.T) {
 					a[j] = tmp
 					return a2tmp[i]
 				}, a[j], 1e-6)
-				utl.CheckAnaNum(tst, utl.Sf("da²/da[%d][%d]", i, j), dtol, da2da[i][j], dnum, dver)
+				chk.AnaNum(tst, io.Sf("da²/da[%d][%d]", i, j), dtol, da2da[i][j], dnum, dver)
 			}
 		}
 		// characteristic invariants
@@ -320,22 +322,22 @@ func Test_ops01(tst *testing.T) {
 		I2a := 0.5 * (tra*tra - M_Tr(a2))
 		I1_, I2_, I3_, dI1da, dI2da, dI3da := M_CharInvsAndDerivs(a)
 		if math.Abs(I1-tra) > 1e-17 {
-			utl.Panic("I1 failed (a). error = %v", I1-tra)
+			chk.Panic("I1 failed (a). error = %v", I1-tra)
 		}
 		if math.Abs(I2-I2a) > 1e-12 {
-			utl.Panic("I2 failed (a). error = %v (I2=%v, I2_=%v)", I2-I2a, I2, I2a)
+			chk.Panic("I2 failed (a). error = %v (I2=%v, I2_=%v)", I2-I2a, I2, I2a)
 		}
 		if math.Abs(I3-deta) > 1e-17 {
-			utl.Panic("I3 failed (a). error = %v", I3-deta)
+			chk.Panic("I3 failed (a). error = %v", I3-deta)
 		}
 		if math.Abs(I1-I1_) > 1e-17 {
-			utl.Panic("I1 failed (b). error = %v", I1-I1_)
+			chk.Panic("I1 failed (b). error = %v", I1-I1_)
 		}
 		if math.Abs(I2-I2_) > 1e-17 {
-			utl.Panic("I2 failed (b). error = %v", I2-I2_)
+			chk.Panic("I2 failed (b). error = %v", I2-I2_)
 		}
 		if math.Abs(I3-I3_) > 1e-17 {
-			utl.Panic("I3 failed (b). error = %v", I3-I3_)
+			chk.Panic("I3 failed (b). error = %v", I3-I3_)
 		}
 		// dI1da
 		for j := 0; j < len(a); j++ {
@@ -345,7 +347,7 @@ func Test_ops01(tst *testing.T) {
 				a[j] = tmp
 				return i1
 			}, a[j], 1e-6)
-			utl.CheckAnaNum(tst, utl.Sf("dI1/da[%d]", j), dtoli1[m], dI1da[j], dnum, dveri)
+			chk.AnaNum(tst, io.Sf("dI1/da[%d]", j), dtoli1[m], dI1da[j], dnum, dveri)
 		}
 		// dI2da
 		for j := 0; j < len(a); j++ {
@@ -355,7 +357,7 @@ func Test_ops01(tst *testing.T) {
 				a[j] = tmp
 				return i2
 			}, a[j], 1e-6)
-			utl.CheckAnaNum(tst, utl.Sf("dI2/da[%d]", j), dtoli2[m], dI2da[j], dnum, dveri)
+			chk.AnaNum(tst, io.Sf("dI2/da[%d]", j), dtoli2[m], dI2da[j], dnum, dveri)
 		}
 		// dI3da
 		for j := 0; j < len(a); j++ {
@@ -365,13 +367,13 @@ func Test_ops01(tst *testing.T) {
 				a[j] = tmp
 				return i3
 			}, a[j], 1e-6)
-			utl.CheckAnaNum(tst, utl.Sf("dI3/da[%d]", j), dtoli3[m], dI3da[j], dnum, dveri)
+			chk.AnaNum(tst, io.Sf("dI3/da[%d]", j), dtoli3[m], dI3da[j], dnum, dveri)
 		}
 		// dDet(a)/da
 		DdetaDa := make([]float64, len(a))
 		M_DetDeriv(DdetaDa, a)
 		for j := 0; j < len(a); j++ {
-			utl.CheckAnaNum(tst, utl.Sf("dDet(a)/da[%d]", j), dtoli3[m], dI3da[j], DdetaDa[j], dveri)
+			chk.AnaNum(tst, io.Sf("dDet(a)/da[%d]", j), dtoli3[m], dI3da[j], DdetaDa[j], dveri)
 		}
 		// lode angle
 		if true {
@@ -382,8 +384,8 @@ func Test_ops01(tst *testing.T) {
 			p, q, w := M_pqws(s, a)
 			M_LodeDeriv1(dwda, a, s, p, q, w)
 			M_LodeDeriv2(d2wdada, dwda_, a, s, p, q, w)
-			utl.CheckVector(tst, "s", 1e-13, deva, s)
-			utl.CheckVector(tst, "dwda", 1e-13, dwda, dwda_)
+			chk.Vector(tst, "s", 1e-13, deva, s)
+			chk.Vector(tst, "dwda", 1e-13, dwda, dwda_)
 			// dwda
 			for j := 0; j < len(a); j++ {
 				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
@@ -392,7 +394,7 @@ func Test_ops01(tst *testing.T) {
 					a[j] = tmp
 					return res
 				}, a[j], 1e-6)
-				utl.CheckAnaNum(tst, utl.Sf("dw/da[%d]", j), dtolw, dwda[j], dnum, dverw)
+				chk.AnaNum(tst, io.Sf("dw/da[%d]", j), dtolw, dwda[j], dnum, dverw)
 			}
 			// d2wdada
 			s_tmp := M_Alloc2(nd[m])
@@ -406,7 +408,7 @@ func Test_ops01(tst *testing.T) {
 						a[j] = tmp
 						return dwda_tmp[i]
 					}, a[j], 1e-6)
-					utl.CheckAnaNum(tst, utl.Sf("d2w/dada[%d][%d]", i, j), dtolw, d2wdada[i][j], dnum, dverw)
+					chk.AnaNum(tst, io.Sf("d2w/dada[%d][%d]", i, j), dtolw, d2wdada[i][j], dnum, dverw)
 				}
 			}
 		}
@@ -415,16 +417,16 @@ func Test_ops01(tst *testing.T) {
 
 func Test_ops02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("ops02")
+	//verbose() = false
+	chk.PrintTitle("ops02")
 
 	nd := []int{2, 2, 3, 3, 3}
 	AA := [][][]float64{
@@ -493,9 +495,9 @@ func Test_ops02(tst *testing.T) {
 		b := M_Alloc2(nd[m])
 		Ten2Man(a, A)
 		Ten2Man(b, B)
-		utl.PfYel("\n\ntst # %d ###################################################################################\n", m)
-		utl.Pfblue2("a = %v\n", a)
-		utl.Pfblue2("b = %v\n", b)
+		io.PfYel("\n\ntst # %d ###################################################################################\n", m)
+		io.Pfblue2("a = %v\n", a)
+		io.Pfblue2("b = %v\n", b)
 
 		// dyadic
 		c := M_Dy(a, b)
@@ -509,8 +511,8 @@ func Test_ops02(tst *testing.T) {
 				}
 			}
 		}
-		utl.CheckMatrix(tst, "a dy b", 1e-12, c, c_)
-		utl.CheckMatrix(tst, "a dy b", 1e-12, c, c__)
+		chk.Matrix(tst, "a dy b", 1e-12, c, c_)
+		chk.Matrix(tst, "a dy b", 1e-12, c, c__)
 
 		// dot product
 		d := M_Alloc2(nd[m])
@@ -524,7 +526,7 @@ func Test_ops02(tst *testing.T) {
 		}
 		err := M_Dot(d, a, b, nonsymTol)
 		for i := 0; i < 3; i++ {
-			utl.CheckScalar(tst, utl.Sf("a_dot_b[%d][%d]", i, i), 1e-15, D[i][i], d[i])
+			utl.CheckScalar(tst, io.Sf("a_dot_b[%d][%d]", i, i), 1e-15, D[i][i], d[i])
 		}
 		/*
 		   for k := 0; k < 2*nd[m]; k++ {
@@ -533,12 +535,12 @@ func Test_ops02(tst *testing.T) {
 		       if k > 2 {
 		           cf = 1.0 / SQ2
 		       }
-		       utl.Pforan("%v %v\n", D[I][J], d[k] * cf)
-		       utl.CheckScalar(tst, utl.Sf("a_dot_b[%d][%d]",I,J), 1e-15, D[I][J], d[k] * cf)
+		       io.Pforan("%v %v\n", D[I][J], d[k] * cf)
+		       utl.CheckScalar(tst, io.Sf("a_dot_b[%d][%d]",I,J), 1e-15, D[I][J], d[k] * cf)
 		   }
 		*/
 		if err == nil {
-			utl.Panic("dot product failed: error should be non-nil, since the result is expected to be non-symmetric")
+			chk.Panic("dot product failed: error should be non-nil, since the result is expected to be non-symmetric")
 		}
 
 		// dot product (square tensor)
@@ -550,28 +552,28 @@ func Test_ops02(tst *testing.T) {
 			nonsymTol = 1e-12
 		}
 		err = M_Dot(aa, a, a, nonsymTol)
-		utl.Pforan("a2 = %v\n", a2)
-		utl.Pforan("aa = %v\n", aa)
+		io.Pforan("a2 = %v\n", a2)
+		io.Pforan("aa = %v\n", aa)
 		if err != nil {
-			utl.Panic("%v", err)
+			chk.Panic("%v", err)
 		}
-		utl.CheckVector(tst, "a2", 1e-15, a2, aa)
+		chk.Vector(tst, "a2", 1e-15, a2, aa)
 		nonsymTol = tol_tmp
 	}
 }
 
 func Test_ops03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("ops03")
+	//verbose() = false
+	chk.PrintTitle("ops03")
 
 	nonsymTol := 1e-15
 
@@ -586,33 +588,33 @@ func Test_ops03(tst *testing.T) {
 		A := test_AA[idxA]
 		a := M_Alloc2(nd[idxA])
 		Ten2Man(a, A)
-		utl.PfYel("\n\ntst # %d ###################################################################################\n", idxA)
-		utl.Pfblue2("a = %v\n", a)
+		io.PfYel("\n\ntst # %d ###################################################################################\n", idxA)
+		io.Pfblue2("a = %v\n", a)
 
 		// inverse
 		Ai := Alloc2()
 		ai := M_Alloc2(nd[idxA])
 		detA, err := Inv(Ai, A)
 		if err != nil {
-			utl.Panic("%v", err)
+			chk.Panic("%v", err)
 		}
 		deta_ := M_Det(a)
 		deta, err := M_Inv(ai, a, MINDET)
 		if err != nil {
-			utl.Panic("%v", err)
+			chk.Panic("%v", err)
 		}
 		Ai_ := Alloc2()
 		Man2Ten(Ai_, ai)
 		aia := M_Alloc2(nd[idxA])
 		err = M_Dot(aia, ai, a, nonsymTol)
 		if err != nil {
-			utl.Panic("%v", err)
+			chk.Panic("%v", err)
 		}
 		utl.CheckScalar(tst, "detA", 1e-14, detA, deta)
 		utl.CheckScalar(tst, "deta", 1e-14, deta, deta_)
-		utl.CheckMatrix(tst, "Ai", 1e-14, Ai, Ai_)
-		utl.CheckVector(tst, "ai*a", 1e-15, aia, Im[:2*nd[idxA]])
-		utl.Pforan("ai*a = %v\n", aia)
+		chk.Matrix(tst, "Ai", 1e-14, Ai, Ai_)
+		chk.Vector(tst, "ai*a", 1e-15, aia, Im[:2*nd[idxA]])
+		io.Pforan("ai*a = %v\n", aia)
 
 		// derivative of inverse
 		dtol_tmp := dtol
@@ -623,7 +625,7 @@ func Test_ops03(tst *testing.T) {
 		ai_tmp := M_Alloc2(nd[idxA])
 		daida := M_Alloc4(nd[idxA])
 		M_InvDeriv(daida, ai)
-		utl.Pforan("ai = %v\n", ai)
+		io.Pforan("ai = %v\n", ai)
 		for i := 0; i < len(a); i++ {
 			for j := 0; j < len(a); j++ {
 				//dnum, _ := num.DerivForward(func(x float64, args ...interface{}) (res float64) {
@@ -632,11 +634,11 @@ func Test_ops03(tst *testing.T) {
 					_, err := M_Inv(ai_tmp, a, MINDET)
 					a[j] = tmp
 					if err != nil {
-						utl.Panic("daida failed:\n%v", err)
+						chk.Panic("daida failed:\n%v", err)
 					}
 					return ai_tmp[i]
 				}, a[j], 1e-6)
-				utl.CheckAnaNum(tst, utl.Sf("dai/da[%d][%d]", i, j), dtol, daida[i][j], dnum, dver)
+				chk.AnaNum(tst, io.Sf("dai/da[%d][%d]", i, j), dtol, daida[i][j], dnum, dver)
 			}
 		}
 		dtol = dtol_tmp

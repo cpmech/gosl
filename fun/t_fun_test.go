@@ -8,6 +8,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -19,16 +21,16 @@ const (
 
 func Test_fun01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun01. Decreasing Reference Model")
+	//verbose() = false
+	chk.PrintTitle("fun01. Decreasing Reference Model")
 
 	ya := 1.0
 	yb := -0.5
@@ -69,16 +71,16 @@ func Test_fun01(tst *testing.T) {
 
 func Test_fun02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun02. Dec Ref Model (specialised)")
+	//verbose() = false
+	chk.PrintTitle("fun02. Dec Ref Model (specialised)")
 
 	ya := 1.0
 	yb := -50.0
@@ -120,16 +122,16 @@ func Test_fun02(tst *testing.T) {
 
 func Test_fun03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun03. add, cte, srmps")
+	//verbose() = false
+	chk.PrintTitle("fun03. add, cte, srmps")
 
 	cte, err := New("cte", []*Prm{&Prm{N: "C", V: 30}})
 	if err != nil {
@@ -180,25 +182,25 @@ func Test_fun03(tst *testing.T) {
 		ver := true
 		tskip := []float64{tmin, tmax}
 		CheckT(tst, cte, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-		utl.Pf("\n")
+		io.Pf("\n")
 		CheckT(tst, srmps, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
-		utl.Pf("\n")
+		io.Pf("\n")
 		CheckT(tst, add, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 	}
 }
 
 func Test_fun04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun04. lin")
+	//verbose() = false
+	chk.PrintTitle("fun04. lin")
 
 	lin, err := New("lin", []*Prm{
 		&Prm{N: "m", V: 0.5},
@@ -230,35 +232,35 @@ func Test_fun04(tst *testing.T) {
 
 func Test_fun05(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun05. zero and one")
+	//verbose() = false
+	chk.PrintTitle("fun05. zero and one")
 
-	utl.Pforan("Zero(666,nil) = %v\n", Zero.F(666, nil))
-	utl.Pforan("One(666,nil)  = %v\n", One.F(666, nil))
+	io.Pforan("Zero(666,nil) = %v\n", Zero.F(666, nil))
+	io.Pforan("One(666,nil)  = %v\n", One.F(666, nil))
 	utl.CheckScalar(tst, "zero", 1e-17, Zero.F(666, nil), 0)
 	utl.CheckScalar(tst, "one ", 1e-17, One.F(666, nil), 1)
 }
 
 func Test_fun06(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun06. pts")
+	//verbose() = false
+	chk.PrintTitle("fun06. pts")
 
 	fun, err := New("pts", []*Prm{
 		&Prm{N: "t0", V: 0.00}, {N: "y0", V: 0.50},
@@ -296,16 +298,16 @@ func Test_fun06(tst *testing.T) {
 
 func Test_fun07(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun07. exc1")
+	//verbose() = false
+	chk.PrintTitle("fun07. exc1")
 
 	fun, err := New("exc1", []*Prm{
 		&Prm{N: "A", V: 200},
@@ -336,16 +338,16 @@ func Test_fun07(tst *testing.T) {
 
 func Test_fun08(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun08. exc2")
+	//verbose() = false
+	chk.PrintTitle("fun08. exc2")
 
 	fun, err := New("exc2", []*Prm{
 		&Prm{N: "ta", V: 5},
@@ -377,16 +379,16 @@ func Test_fun08(tst *testing.T) {
 
 func Test_fun09(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun09. cos")
+	//verbose() = false
+	chk.PrintTitle("fun09. cos")
 
 	fun, err := New("cos", []*Prm{
 		&Prm{N: "a", V: 10},
@@ -418,16 +420,16 @@ func Test_fun09(tst *testing.T) {
 
 func Test_fun10(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun10. rmp")
+	//verbose() = false
+	chk.PrintTitle("fun10. rmp")
 
 	fun, err := New("rmp", []*Prm{
 		&Prm{N: "ta", V: 1},
@@ -460,16 +462,16 @@ func Test_fun10(tst *testing.T) {
 
 func Test_fun11(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("fun11. ref-inc-rl1")
+	//verbose() = false
+	chk.PrintTitle("fun11. ref-inc-rl1")
 
 	fun, err := New("ref-inc-rl1", []*Prm{
 		&Prm{N: "lam0", V: 0.001},

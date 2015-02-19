@@ -9,21 +9,23 @@ import (
 
 	"math/rand"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_hash01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("hash01")
+	//verbose() = false
+	chk.PrintTitle("hash01")
 
 	c1 := []float64{1.0000000001}
 	c2 := []float64{1.0000000000001, 2.0000000002}
@@ -35,30 +37,30 @@ func Test_hash01(tst *testing.T) {
 	h3 := HashPointC(c3)
 	h4 := HashPointC(c4)
 
-	utl.Pforan("h1 = %v\n", h1)
-	utl.Pforan("h2 = %v\n", h2)
-	utl.Pforan("h3 = %v\n", h3)
-	utl.Pforan("h4 = %v\n", h4)
+	io.Pforan("h1 = %v\n", h1)
+	io.Pforan("h2 = %v\n", h2)
+	io.Pforan("h3 = %v\n", h3)
+	io.Pforan("h4 = %v\n", h4)
 
 	if h1 == h2 {
-		utl.Panic("h1 must not be equal to h2")
+		chk.Panic("h1 must not be equal to h2")
 	}
 	if h1 == h3 {
-		utl.Panic("h1 must not be equal to h3")
+		chk.Panic("h1 must not be equal to h3")
 	}
 	if h1 == h4 {
-		utl.Panic("h1 must not be equal to h4")
+		chk.Panic("h1 must not be equal to h4")
 	}
 	if h2 == h3 {
-		utl.Panic("h2 must not be equal to h3")
+		chk.Panic("h2 must not be equal to h3")
 	}
 	if h2 == h4 {
-		utl.Panic("h2 must not be equal to h4")
+		chk.Panic("h2 must not be equal to h4")
 	}
 	// TODO: this one fails
 	if false {
 		if h3 == h4 {
-			utl.Panic("h3 must not be equal to h4")
+			chk.Panic("h3 must not be equal to h4")
 		}
 	}
 }
@@ -66,16 +68,16 @@ func Test_hash01(tst *testing.T) {
 // Test for save and recovery
 func Test_bins01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("bins01")
+	//verbose() = false
+	chk.PrintTitle("bins01")
 	var bins Bins
 	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 100)
 
@@ -95,7 +97,7 @@ func Test_bins01(tst *testing.T) {
 		ID[k] = k
 		err := bins.Append([]float64{x, y, z}, k)
 		if err != nil {
-			utl.Panic(err.Error())
+			chk.Panic(err.Error())
 		}
 	}
 
@@ -108,23 +110,23 @@ func Test_bins01(tst *testing.T) {
 		id := bins.Find([]float64{x, y, z})
 		IDchk[k] = id
 	}
-	utl.CompareInts(tst, "check ids", ID, IDchk)
+	chk.Ints(tst, "check ids", ID, IDchk)
 
 }
 
 // Test for function FindAlongLine (2D)
 func Test_bins02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("bins02")
+	//verbose() = false
+	chk.PrintTitle("bins02")
 
 	var bins Bins
 	bins.Init([]float64{0, 0}, []float64{1, 1}, 10)
@@ -137,30 +139,30 @@ func Test_bins02(tst *testing.T) {
 		ID[k] = k * 11
 		err := bins.Append([]float64{x, x}, ID[k])
 		if err != nil {
-			utl.Panic(err.Error())
+			chk.Panic(err.Error())
 		}
 	}
 
 	ids := bins.FindAlongLine([]float64{0, 0}, []float64{10, 10}, 0.0000001)
-	utl.Pforan("ids = %v\n", ids)
+	io.Pforan("ids = %v\n", ids)
 
-	utl.CompareInts(tst, "check FindAlongLine", ID, ids)
+	chk.Ints(tst, "check FindAlongLine", ID, ids)
 
 }
 
 // Test for function FindAlongLine (3D)
 func Test_bins03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("bins03")
+	//verbose() = false
+	chk.PrintTitle("bins03")
 
 	var bins Bins
 	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 10)
@@ -174,30 +176,30 @@ func Test_bins03(tst *testing.T) {
 		ID[k] = k * 11
 		err = bins.Append([]float64{x, x, x}, ID[k])
 		if err != nil {
-			utl.Panic(err.Error())
+			chk.Panic(err.Error())
 		}
 	}
 
 	ids := bins.FindAlongLine([]float64{0, 0, 0}, []float64{10, 10, 10}, 0.0000001)
-	utl.Pforan("ids = %v\n", ids)
+	io.Pforan("ids = %v\n", ids)
 
-	utl.CompareInts(tst, "check FindAlongLine", ID, ids)
+	chk.Ints(tst, "check FindAlongLine", ID, ids)
 
 }
 
 // Test for function FindAlongLine (2D) real case
 func Test_bins04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mERROR:", err, "[0m\n")
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("bins04")
+	//verbose() = false
+	chk.PrintTitle("bins04")
 
 	var bins Bins
 	bins.Init([]float64{0, 0}, []float64{1, 2}, 10)
@@ -218,18 +220,18 @@ func Test_bins04(tst *testing.T) {
 	for i := 0; i < 8; i++ {
 		err = bins.Append(points[i], i)
 		if err != nil {
-			utl.Panic(err.Error())
+			chk.Panic(err.Error())
 		}
 	}
 
-	utl.Pforan("bins = %v\n", bins)
+	io.Pforan("bins = %v\n", bins)
 
 	// Find
 	x := 0.7886751345948129
 	ids := bins.FindAlongLine([]float64{x, 0}, []float64{x, 1}, 1.e-15)
 
-	utl.Pforan("ids = %v\n", ids)
+	io.Pforan("ids = %v\n", ids)
 
-	utl.CompareInts(tst, "check FindAlongLine", []int{1, 3, 5, 7}, ids)
+	chk.Ints(tst, "check FindAlongLine", []int{1, 3, 5, 7}, ids)
 
 }

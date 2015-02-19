@@ -7,7 +7,7 @@ package la
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Cholesky returns the Cholesky decomposition of a symmetric positive-definite matrix:
@@ -21,7 +21,7 @@ func Cholesky(L, a [][]float64) (err error) {
 			}
 			if i == j {
 				if amsum <= 0.0 {
-					err = utl.Err(_densesol_err1)
+					err = chk.Err(_densesol_err1)
 				}
 				L[i][j] = math.Sqrt(amsum)
 			} else {
@@ -42,7 +42,7 @@ func SPDsolve(x []float64, a [][]float64, b []float64) (err error) {
 	L := MatAlloc(n, n)
 	cerr := Cholesky(L, a)
 	if cerr != nil {
-		err = utl.Err(_densesol_err2, cerr.Error())
+		err = chk.Err(_densesol_err2, cerr.Error())
 		return
 	}
 	// solve L*y = b storing y in x

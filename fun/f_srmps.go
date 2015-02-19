@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Increasing or decreasing smooth-ramp-smooth function
@@ -34,7 +34,7 @@ func (o *Srmps) Init(prms Prms) (err error) {
 		case "tb":
 			o.tb = p.V
 		default:
-			return utl.Err("srmps: parameter named %q is invalid", p.N)
+			return chk.Err("srmps: parameter named %q is invalid", p.N)
 		}
 	}
 	return

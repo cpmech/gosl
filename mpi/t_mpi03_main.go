@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/utl"
 )
@@ -19,18 +21,18 @@ func main() {
 	mpi.Start(false)
 	defer func() {
 		if err := recover(); err != nil {
-			utl.PfRed("Some error has happened: %v\n", err)
+			io.PfRed("Some error has happened: %v\n", err)
 		}
 		mpi.Stop(false)
 	}()
 
-	utl.Tsilent = false
+	verbose() = false
 
 	if mpi.Rank() == 0 {
-		utl.TTitle("Test MPI 03")
+		chk.PrintTitle("Test MPI 03")
 	}
 	if mpi.Size() != 3 {
-		utl.Panic("this test needs 3 processors")
+		chk.Panic("this test needs 3 processors")
 	}
 	x := []int{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 	n := len(x)
@@ -40,13 +42,13 @@ func main() {
 		x[i] = i
 	}
 
-	//utl.Pforan("x = %v\n", x)
+	//io.Pforan("x = %v\n", x)
 
 	// IntAllReduceMax
 	w := make([]int, n)
 	mpi.IntAllReduceMax(x, w)
 	var tst testing.T
-	utl.CompareInts(&tst, fmt.Sprintf("IntAllReduceMax: x @ proc # %d", id), x, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	chk.Ints(&tst, fmt.Sprintf("IntAllReduceMax: x @ proc # %d", id), x, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 
-	//utl.Pfred("x = %v\n", x)
+	//io.Pfred("x = %v\n", x)
 }

@@ -7,7 +7,8 @@ package num
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // Brent implements Brent's method for finding the roots of an equation
@@ -67,22 +68,22 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 	fb, errb := o.Ffcn(b)
 	o.NFeval = 2
 	if erra != nil {
-		return 0, utl.Err(_brent_err1, "a", xa, erra.Error())
+		return 0, chk.Err(_brent_err1, "a", xa, erra.Error())
 	}
 	if errb != nil {
-		return 0, utl.Err(_brent_err1, "b", xb, errb.Error())
+		return 0, chk.Err(_brent_err1, "b", xb, errb.Error())
 	}
 	fc := fa
 
 	// check input
 	if fa*fb >= -EPS {
-		return 0, utl.Err(_brent_err2, xa, xb, fa, fb)
+		return 0, chk.Err(_brent_err2, xa, xb, fa, fb)
 	}
 
 	// message
 	if !silent {
-		utl.Pfpink("%4s%23s%23s%23s\n", "it", "x", "f(x)", "err")
-		utl.Pfpink("%50s%23.1e\n", "", o.Tol)
+		io.Pfpink("%4s%23s%23s%23s\n", "it", "x", "f(x)", "err")
+		io.Pfpink("%50s%23.1e\n", "", o.Tol)
 	}
 
 	// solve
@@ -110,7 +111,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 
 		// converged?
 		if !silent {
-			utl.Pfyel("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(new_step))
+			io.Pfyel("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(new_step))
 		}
 		if math.Abs(new_step) <= tol_act || fb == 0.0 {
 			return b, nil
@@ -169,7 +170,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 		fb, errb = o.Ffcn(b)
 		o.NFeval += 1
 		if errb != nil {
-			return 0, utl.Err(_brent_err1, "", b, errb.Error())
+			return 0, chk.Err(_brent_err1, "", b, errb.Error())
 		}
 
 		// adjust c for it to have a sign opposite to that of b
@@ -180,7 +181,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 	}
 
 	// did not converge
-	return fb, utl.Err(_brent_err3, "Solve", o.It)
+	return fb, chk.Err(_brent_err3, "Solve", o.It)
 }
 
 // Min finds the minimum of f(x) in [xa, xb]
@@ -219,7 +220,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 
 	// check
 	if xb < xa {
-		return 0, utl.Err(_brent_err4, xa, xb)
+		return 0, chk.Err(_brent_err4, xa, xb)
 	}
 
 	// first step: always gold section
@@ -227,7 +228,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 	fv, errv := o.Ffcn(v)
 	o.NFeval = 1
 	if errv != nil {
-		return 0, utl.Err(_brent_err5, errv.Error())
+		return 0, chk.Err(_brent_err5, errv.Error())
 	}
 	x, w, fx, fw := v, v, fv, fv
 
@@ -247,7 +248,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 
 		// converged?
 		if !silent {
-			utl.Pfyel("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-mid_rng)+rng/2.0)
+			io.Pfyel("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-mid_rng)+rng/2.0)
 		}
 		if math.Abs(x-mid_rng)+rng/2.0 <= 2.0*tol_act {
 			return x, nil
@@ -294,7 +295,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 		t = x + new_step // tentative point for the min  */
 		ft, err = o.Ffcn(t)
 		if err != nil {
-			return 0, utl.Err(_brent_err5, err.Error())
+			return 0, chk.Err(_brent_err5, err.Error())
 		}
 
 		// t is a better approximation
@@ -332,7 +333,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 	}
 
 	// did not converge
-	return x, utl.Err(_brent_err3, "Min", o.It)
+	return x, chk.Err(_brent_err3, "Min", o.It)
 }
 
 // error messages

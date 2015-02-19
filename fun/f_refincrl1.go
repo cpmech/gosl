@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // RefIncRL1 implements a specialisation of the reference increasing model
@@ -49,7 +49,7 @@ func (o *RefIncRL1) Init(prms Prms) (err error) {
 		case "bet":
 			o.β = p.V
 		default:
-			return utl.Err("ref-inc-rl1: parameter named %q is invalid", p.N)
+			return chk.Err("ref-inc-rl1: parameter named %q is invalid", p.N)
 		}
 	}
 

@@ -8,6 +8,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -18,23 +20,23 @@ const (
 
 func Test_isofun01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("isofun01")
+	//verbose() = false
+	chk.PrintTitle("isofun01")
 
 	a, b, β, ϵ := 1.0, 0.5, 2.0, 1e-3
 	shift := 0.0
 
 	φ := 30.0
 	μ := NewSmpCalcμ(φ, a, b, β, ϵ)
-	utl.Pforan("μ = %v\n", μ)
+	io.Pforan("μ = %v\n", μ)
 
 	simpleform := true
 	notfcrit := false
@@ -101,8 +103,8 @@ func Test_isofun01(tst *testing.T) {
 		AA := test_AA[idxA]
 		A := M_Alloc2(nd[idxA])
 		Ten2Man(A, AA)
-		utl.PfYel("\n\ntst # %d ###################################################################################\n", idxA)
-		utl.Pfblue2("A = %v\n", A)
+		io.PfYel("\n\ntst # %d ###################################################################################\n", idxA)
+		io.Pfblue2("A = %v\n", A)
 
 		// isotropic function
 		var o IsoFun
@@ -111,15 +113,15 @@ func Test_isofun01(tst *testing.T) {
 		// function evaluation and shifted eigenvalues
 		fval, err := o.Fa(A)
 		if err != nil {
-			utl.Panic("cannot compute F(A):\n%v", err)
+			chk.Panic("cannot compute F(A):\n%v", err)
 		}
 		if o.HasRep {
 			copy(A, o.Acpy)
-			utl.Pfyel("A(pert) = %v\n", A)
-			utl.Pfyel("λ(pert) = %v\n", o.L)
+			io.Pfyel("A(pert) = %v\n", A)
+			io.Pfyel("λ(pert) = %v\n", o.L)
 		}
-		utl.Pforan("p, q = %v, %v\n", o.p, o.q)
-		utl.Pforan("f(A) = %v\n", fval)
+		io.Pforan("p, q = %v, %v\n", o.p, o.q)
+		io.Pforan("f(A) = %v\n", fval)
 
 		// check gradients
 		o.CheckGrads(A, dtol, dtol2, dver)
@@ -131,16 +133,16 @@ func Test_isofun01(tst *testing.T) {
 
 func Test_isofun02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("isofun02")
+	//verbose() = false
+	chk.PrintTitle("isofun02")
 
 	// SMP director parameters
 	a, b, β, ϵ := -1.0, 0.5, 2.0, 1e-3
@@ -151,7 +153,7 @@ func Test_isofun02(tst *testing.T) {
 
 	// q/p coefficient
 	μ := NewSmpCalcμ(φ, a, b, β, ϵ)
-	utl.Pforan("μ = %v\n", μ)
+	io.Pforan("μ = %v\n", μ)
 
 	// yield func coefficients
 	r := 2.0
@@ -162,7 +164,7 @@ func Test_isofun02(tst *testing.T) {
 
 	// yield function
 	ffcn := func(p, q float64, args ...interface{}) float64 {
-		//utl.Pfgrey("p, q = %v, %v\n", p, q)
+		//io.Pfgrey("p, q = %v, %v\n", p, q)
 		pc := -qy/μ + r/sα
 		R := math.Sqrt(q*q + (p-pc)*(p-pc))
 		pd := pc - R*sα
@@ -206,16 +208,16 @@ func Test_isofun02(tst *testing.T) {
 
 func Test_isofun03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("isofun03")
+	//verbose() = false
+	chk.PrintTitle("isofun03")
 
 	// SMP director parameters
 	a, b, β, ϵ := -1.0, 0.0, 1.0, 1e-3
@@ -264,8 +266,8 @@ func Test_isofun03(tst *testing.T) {
 	A := make([]float64, ncp)
 	A[0], A[1], A[2] = λ[0], λ[1], λ[2]
 	f_at_A, _ := o.Fa(A)
-	utl.Pforan("λ==A = %+v\n", λ)
-	utl.Pforan("f(A) = %+v\n", f_at_A)
+	io.Pforan("λ==A = %+v\n", λ)
+	io.Pforan("f(A) = %+v\n", f_at_A)
 	o.CheckGrads(A, dtol, dtol2, ver)
 
 	// plot
@@ -287,16 +289,16 @@ func Test_isofun03(tst *testing.T) {
 
 func Test_isofun04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("isofun04")
+	//verbose() = false
+	chk.PrintTitle("isofun04")
 
 	// constants
 	dtol, dtol2, ver := 1e-6, 1e-8, true
@@ -383,10 +385,10 @@ func Test_isofun04(tst *testing.T) {
 		copy(λ, o.L)
 	}
 	f_at_λ, _ := o.Fp(λ)
-	utl.Pforan("λ = %v\n", λ)
-	utl.Pforan("A = %v\n", A)
-	utl.Pforan("f(λ) = %v\n", f_at_λ)
-	utl.Pforan("f(A) = %v\n", f_at_A)
+	io.Pforan("λ = %v\n", λ)
+	io.Pforan("A = %v\n", A)
+	io.Pforan("f(λ) = %v\n", f_at_λ)
+	io.Pforan("f(A) = %v\n", f_at_A)
 
 	// check gradients @ intersection
 	o.CheckGrads(A, dtol, dtol2, ver)

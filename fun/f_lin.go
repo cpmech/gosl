@@ -4,9 +4,7 @@
 
 package fun
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/chk"
 
 // Lin implements a linear function w.r.t t
 //  y = m * (t - ts)
@@ -29,7 +27,7 @@ func (o *Lin) Init(prms Prms) (err error) {
 		case "ts":
 			o.Ts = p.V
 		default:
-			return utl.Err("lin: parameter named %q is invalid", p.N)
+			return chk.Err("lin: parameter named %q is invalid", p.N)
 		}
 	}
 	return

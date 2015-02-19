@@ -7,21 +7,23 @@ package plt
 import (
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_draw01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("draw01")
+	//verbose() = false
+	chk.PrintTitle("draw01")
 
 	P := [][]float64{
 		{-2.5, 0.0},
@@ -47,19 +49,19 @@ func Test_draw01(tst *testing.T) {
 
 func Test_draw02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("draw02")
+	//verbose() = false
+	chk.PrintTitle("draw02")
 
 	d := LineData{"gofem", "red", 1.2, 10, "o", "--"}
 	l := d.GetArgs("clip_on=0")
-	utl.Pforan("l = %q\n", l)
+	io.Pforan("l = %q\n", l)
 	utl.CheckString(tst, l, "clip_on=0,label='gofem',color='red',lw=1.2,ms=10,marker='o',ls='--'")
 }

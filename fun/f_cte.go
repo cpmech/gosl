@@ -4,9 +4,7 @@
 
 package fun
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/chk"
 
 // Zero implements an specialisation of Cte function that always returns zero
 var Zero Cte
@@ -31,7 +29,7 @@ func (o *Cte) Init(prms Prms) (err error) {
 		case "C", "c":
 			o.C = p.V
 		default:
-			return utl.Err("cte: parameter named %q is invalid", p.N)
+			return chk.Err("cte: parameter named %q is invalid", p.N)
 		}
 	}
 	return

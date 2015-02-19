@@ -7,21 +7,22 @@ package plt
 import (
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_plot01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("plot01")
+	//verbose() = false
+	chk.PrintTitle("plot01")
 
 	x := utl.LinSpace(0.0, 1.0, 11)
 	y := make([]float64, len(x))

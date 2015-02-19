@@ -4,15 +4,13 @@
 
 package num
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/chk"
 
 // Trapz returns the area below the discrete curve defined by x and y.
 // Computations are carried out with the trapezoidal rule.
 func Trapz(x, y []float64) (A float64) {
 	if len(x) != len(y) {
-		utl.Panic(_trapz_err1, len(x), len(y))
+		chk.Panic(_trapz_err1, len(x), len(y))
 	}
 	for i := 1; i < len(x); i++ {
 		A += (x[i] - x[i-1]) * (y[i] + y[i-1]) / 2.0
@@ -33,7 +31,7 @@ func TrapzF(x []float64, y Cb_yx) (A float64) {
 // Computations are carried out with the trapezoidal rule from xa to xb, with npts points
 func TrapzRange(xa, xb float64, npts int, y Cb_yx) (A float64) {
 	if npts < 2 {
-		utl.Panic(_trapz_err2, npts)
+		chk.Panic(_trapz_err2, npts)
 	}
 	dx := (xb - xa) / float64(npts-1)
 	var x0, x1 float64

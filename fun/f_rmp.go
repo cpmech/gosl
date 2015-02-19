@@ -4,9 +4,7 @@
 
 package fun
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/chk"
 
 // Rmp implements a ramp function
 type Rmp struct {
@@ -34,7 +32,7 @@ func (o *Rmp) Init(prms Prms) (err error) {
 		case "Tb", "tb":
 			o.Tb = p.V
 		default:
-			return utl.Err("rmp: parameter named %q is invalid", p.N)
+			return chk.Err("rmp: parameter named %q is invalid", p.N)
 		}
 	}
 	return

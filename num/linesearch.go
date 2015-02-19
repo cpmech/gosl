@@ -7,7 +7,7 @@ package num
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // LineSearch finds a new point x along the direction dx, from x0, where the function
@@ -75,7 +75,7 @@ func LineSearch(x, fx []float64, ffcn Cb_f, dx, x0, dφdx0 []float64, φ0 float6
 
 	// check slope on the direction of dx
 	if slope > slope_max {
-		return nFeval, utl.Err(_linesearch_err1, slope)
+		return nFeval, chk.Err(_linesearch_err1, slope)
 	}
 
 	// iterations
@@ -113,7 +113,7 @@ func LineSearch(x, fx []float64, ffcn Cb_f, dx, x0, dφdx0 []float64, φ0 float6
 				}
 			}
 			if gra < tol_gra_min {
-				return nFeval, utl.Err(_linesearch_err2, λ, λ_min, gra)
+				return nFeval, chk.Err(_linesearch_err2, λ, λ_min, gra)
 			}
 			return // converged
 		}
@@ -155,7 +155,7 @@ func LineSearch(x, fx []float64, ffcn Cb_f, dx, x0, dφdx0 []float64, φ0 float6
 
 	// check convergence
 	if it == max_it {
-		return nFeval, utl.Err(_linesearch_err3, it+1)
+		return nFeval, chk.Err(_linesearch_err3, it+1)
 	}
 
 	return

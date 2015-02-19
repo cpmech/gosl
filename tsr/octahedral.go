@@ -7,9 +7,10 @@ package tsr
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
 )
 
 // L2O converts principal values (σ1,σ2,σ3) to octahedral values (σa,σb,σc)
@@ -92,11 +93,11 @@ func PlotRosette(r float64, full, ref bool, withtext bool, fsz float64) {
 
 	// text
 	if withtext {
-		plt.Text(l1[0], l1[1], "$-\\sigma_1,\\\\theta=+30^\\circ$", utl.Sf("ha='center', fontsize=%g", fsz))
-		plt.Text(l2[0], l2[1], "$-\\sigma_3$", utl.Sf("ha='right',  fontsize=%g", fsz))
-		plt.Text(l3[0], l3[1], "$-\\sigma_2$", utl.Sf("ha='left',   fontsize=%g", fsz))
-		plt.Text(lo[0], lo[1], "$\\\\theta=0^\\circ$", utl.Sf("ha='center', fontsize=%g", fsz))
-		plt.Text(l4[0], l4[1], "$\\\\theta=-30^\\circ$", utl.Sf("ha='center', fontsize=%g", fsz))
+		plt.Text(l1[0], l1[1], "$-\\sigma_1,\\\\theta=+30^\\circ$", io.Sf("ha='center', fontsize=%g", fsz))
+		plt.Text(l2[0], l2[1], "$-\\sigma_3$", io.Sf("ha='right',  fontsize=%g", fsz))
+		plt.Text(l3[0], l3[1], "$-\\sigma_2$", io.Sf("ha='left',   fontsize=%g", fsz))
+		plt.Text(lo[0], lo[1], "$\\\\theta=0^\\circ$", io.Sf("ha='center', fontsize=%g", fsz))
+		plt.Text(l4[0], l4[1], "$\\\\theta=-30^\\circ$", io.Sf("ha='center', fontsize=%g", fsz))
 	}
 	plt.Equal()
 }
@@ -175,13 +176,13 @@ func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float6
 				if ferr > 0 {
 					f[i][j] = ferr
 				} else {
-					utl.Panic(_octahedral_err1, "func", err)
+					chk.Panic(_octahedral_err1, "func", err)
 				}
 			}
 			if grads {
 				_, err = G(dfdA, A, args...)
 				if err != nil {
-					utl.Panic(_octahedral_err1, "grads", err)
+					chk.Panic(_octahedral_err1, "grads", err)
 				}
 				/*
 				   gx[i][j] = -o.dfdλ[0]*L[0][0] - o.dfdλ[1]*L[1][0] - o.dfdλ[2]*L[2][0]

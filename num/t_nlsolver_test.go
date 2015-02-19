@@ -8,24 +8,26 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fdm"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_nls01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
+	//verbose() = false
 	//utl.UseColors = false
-	utl.TTitle("nls01. 2 eqs system")
+	chk.PrintTitle("nls01. 2 eqs system")
 
 	ffcn := func(fx, x []float64) error {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
@@ -53,7 +55,7 @@ func Test_nls01(tst *testing.T) {
 		"lSearch": 1.0,
 	}
 
-	utl.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
+	io.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
 
 	// init
 	var nls_ana NlSolver
@@ -63,23 +65,23 @@ func Test_nls01(tst *testing.T) {
 	// solve
 	err := nls_ana.Solve(x, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
 	// check
 	ffcn(fx, x)
-	utl.Pf("x    = %v  expected = %v\n", x, []float64{1.0, 0.0})
-	utl.Pf("f(x) = %v\n", fx)
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
+	io.Pf("x    = %v  expected = %v\n", x, []float64{1.0, 0.0})
+	io.Pf("f(x) = %v\n", fx)
+	chk.Vector(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
 
 	// check Jacobian
-	utl.Pforan("\nchecking Jacobian @ %v\n", x)
+	io.Pforan("\nchecking Jacobian @ %v\n", x)
 	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
-	utl.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
+	io.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
 	xx := []float64{0.5, 0.5}
 
 	// init
@@ -90,37 +92,37 @@ func Test_nls01(tst *testing.T) {
 	// solve
 	err = nls_num.Solve(xx, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
 	// check
 	ffcn(fx, xx)
-	utl.Pf("xx    = %v  expected = %v\n", xx, []float64{1.0, 0.0})
-	utl.Pf("f(xx) = %v\n", fx)
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
-	utl.CheckVector(tst, "x == xx", 1e-15, x, xx)
+	io.Pf("xx    = %v  expected = %v\n", xx, []float64{1.0, 0.0})
+	io.Pf("f(xx) = %v\n", fx)
+	chk.Vector(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
+	chk.Vector(tst, "x == xx", 1e-15, x, xx)
 
 	// check Jacobian
-	utl.Pforan("\nchecking Jacobian @ %v\n", x)
+	io.Pforan("\nchecking Jacobian @ %v\n", x)
 	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 }
 
 func Test_nls02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
+	//verbose() = false
 	//utl.UseColors = false
-	utl.TTitle("nls02. 2 eqs system with exp function")
+	chk.PrintTitle("nls02. 2 eqs system with exp function")
 
 	ffcn := func(fx, x []float64) error {
 		fx[0] = 2.0*x[0] - x[1] - math.Exp(-x[0])
@@ -148,7 +150,7 @@ func Test_nls02(tst *testing.T) {
 		"lSearch": 1.0,
 	}
 
-	utl.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
+	io.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
 
 	// init
 	var nls_ana NlSolver
@@ -158,23 +160,23 @@ func Test_nls02(tst *testing.T) {
 	// solve
 	err := nls_ana.Solve(x, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
 	// check
 	ffcn(fx, x)
-	utl.Pf("x    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
-	utl.Pf("f(x) = %v\n", fx)
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-15, fx, []float64{})
+	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
+	io.Pf("f(x) = %v\n", fx)
+	chk.Vector(tst, "f(x) = 0? ", 1e-15, fx, []float64{})
 
 	// check Jacobian
-	utl.Pforan("\nchecking Jacobian @ %v\n", x)
+	io.Pforan("\nchecking Jacobian @ %v\n", x)
 	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
-	utl.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
+	io.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
 	xx := []float64{5.0, 5.0}
 
 	// init
@@ -185,36 +187,36 @@ func Test_nls02(tst *testing.T) {
 	// solve
 	err = nls_num.Solve(xx, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
 	// check
 	ffcn(fx, x)
-	utl.Pf("xx    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
-	utl.Pf("f(xx) = %v\n", fx)
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-15, fx, []float64{})
-	utl.CheckVector(tst, "x == xx", 1e-15, x, xx)
+	io.Pf("xx    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
+	io.Pf("f(xx) = %v\n", fx)
+	chk.Vector(tst, "f(x) = 0? ", 1e-15, fx, []float64{})
+	chk.Vector(tst, "x == xx", 1e-15, x, xx)
 
 	// check Jacobian
-	utl.Pforan("\nchecking Jacobian @ %v\n", x)
+	io.Pforan("\nchecking Jacobian @ %v\n", x)
 	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 }
 
 func Test_nls03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nls03. 2 eqs system with trig functions")
+	//verbose() = false
+	chk.PrintTitle("nls03. 2 eqs system with trig functions")
 
 	e := math.E
 	ffcn := func(fx, x []float64) error {
@@ -260,100 +262,100 @@ func Test_nls03(tst *testing.T) {
 	defer nls_sps.Clean()
 	defer nls_den.Clean()
 
-	utl.PfMag("\n/////////////////////// sparse //////////////////////////////////////////\n")
+	io.PfMag("\n/////////////////////// sparse //////////////////////////////////////////\n")
 
 	x = []float64{0.4, 3.0}
-	utl.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
+	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
 	err := nls_sps.Solve(x, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 	ffcn(fx, x)
-	utl.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
-	utl.Pf("f(x) = %v\n", fx)
-	utl.CheckVector(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-11, fx, nil)
+	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
+	io.Pf("f(x) = %v\n", fx)
+	chk.Vector(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
+	chk.Vector(tst, "f(x) = 0? ", 1e-11, fx, nil)
 
 	x = []float64{0.7, 4.0}
-	utl.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
+	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
 	//rtol = 1e-2
 	err = nls_sps.Solve(x, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 	ffcn(fx, x)
-	utl.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
-	utl.Pf("f(x) = %v\n", fx)
-	utl.CheckVector(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-7, fx, nil)
+	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
+	io.Pf("f(x) = %v\n", fx)
+	chk.Vector(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
+	chk.Vector(tst, "f(x) = 0? ", 1e-7, fx, nil)
 
 	x = []float64{1.0, 4.0}
-	utl.PfYel("\n--- sparse ------------- with x = %v ---------------\n", x)
+	io.PfYel("\n--- sparse ------------- with x = %v ---------------\n", x)
 	//lSearch, chkConv := false, true  // this combination fails due to divergence
 	//lSearch, chkConv := false, false // this combination works but results are different
 	//lSearch, chkConv := true, true   // this combination works but results are wrong => fails
 	nls_sps.ChkConv = false
 	err = nls_sps.Solve(x, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 	ffcn(fx, x)
-	utl.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
-	utl.Pf("f(x) = %v << converges to a different solution\n", fx)
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-8, fx, nil)
+	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
+	io.Pf("f(x) = %v << converges to a different solution\n", fx)
+	chk.Vector(tst, "f(x) = 0? ", 1e-8, fx, nil)
 
-	utl.PfMag("\n/////////////////////// dense //////////////////////////////////////////\n")
+	io.PfMag("\n/////////////////////// dense //////////////////////////////////////////\n")
 
 	x = []float64{0.4, 3.0}
-	utl.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
+	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
 	err = nls_den.Solve(x, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 	ffcn(fx, x)
-	utl.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
-	utl.Pf("f(x) = %v\n", fx)
-	utl.CheckVector(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-11, fx, nil)
+	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
+	io.Pf("f(x) = %v\n", fx)
+	chk.Vector(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
+	chk.Vector(tst, "f(x) = 0? ", 1e-11, fx, nil)
 
 	x = []float64{0.7, 4.0}
-	utl.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
+	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
 	//rtol = 1e-2
 	err = nls_den.Solve(x, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 	ffcn(fx, x)
-	utl.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
-	utl.Pf("f(x) = %v\n", fx)
-	utl.CheckVector(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-7, fx, nil)
+	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
+	io.Pf("f(x) = %v\n", fx)
+	chk.Vector(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
+	chk.Vector(tst, "f(x) = 0? ", 1e-7, fx, nil)
 
 	x = []float64{1.0, 4.0}
-	utl.PfYel("\n--- dense ------------- with x = %v ---------------\n", x)
+	io.PfYel("\n--- dense ------------- with x = %v ---------------\n", x)
 	nls_den.ChkConv = false
 	err = nls_den.Solve(x, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 	ffcn(fx, x)
-	utl.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
-	utl.Pf("f(x) = %v << converges to a different solution\n", fx)
-	utl.CheckVector(tst, "f(x) = 0? ", 1e-8, fx, nil)
+	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
+	io.Pf("f(x) = %v << converges to a different solution\n", fx)
+	chk.Vector(tst, "f(x) = 0? ", 1e-8, fx, nil)
 }
 
 func Test_nls04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("nls04. finite differences problem")
+	//verbose() = false
+	chk.PrintTitle("nls04. finite differences problem")
 
 	// grid
 	var g fdm.Grid2D
@@ -438,44 +440,44 @@ func Test_nls04(tst *testing.T) {
 		50.0, 50.0, 50.0, 50.0,
 	}
 
-	utl.PfYel("\n---- sparse -------- Analytical Jacobian -------------------\n")
+	io.PfYel("\n---- sparse -------- Analytical Jacobian -------------------\n")
 
 	// solve
 	err := nls_sps.Solve(U1sps, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
 	// check
 	fdm.JoinVecs(Usps, U1sps, U2, &e)
-	utl.CheckVector(tst, "Usps", 1e-14, Usps, Uc)
+	chk.Vector(tst, "Usps", 1e-14, Usps, Uc)
 
 	// plot
 	if false {
 		g.Contour("results", "fig_t_heat_square", nil, Usps, 11, false)
 	}
 
-	utl.PfYel("\n---- dense -------- Analytical Jacobian -------------------\n")
+	io.PfYel("\n---- dense -------- Analytical Jacobian -------------------\n")
 
 	// solve
 	err = nls_den.Solve(U1den, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
 	// check
 	fdm.JoinVecs(Uden, U1den, U2, &e)
-	utl.CheckVector(tst, "Uden", 1e-14, Uden, Uc)
+	chk.Vector(tst, "Uden", 1e-14, Uden, Uc)
 
-	utl.PfYel("\n---- sparse -------- Numerical Jacobian -------------------\n")
+	io.PfYel("\n---- sparse -------- Numerical Jacobian -------------------\n")
 
 	// solve
 	err = nls_num.Solve(U1num, false)
 	if err != nil {
-		utl.Panic(err.Error())
+		chk.Panic(err.Error())
 	}
 
 	// check
 	fdm.JoinVecs(Unum, U1num, U2, &e)
-	utl.CheckVector(tst, "Unum", 1e-14, Unum, Uc)
+	chk.Vector(tst, "Unum", 1e-14, Unum, Uc)
 }

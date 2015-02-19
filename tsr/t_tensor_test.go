@@ -9,21 +9,23 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_tsr01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("tsr01")
+	//verbose() = false
+	chk.PrintTitle("tsr01")
 
 	F := [][]float64{
 		{1, 1.5, 0},
@@ -50,7 +52,7 @@ func Test_tsr01(tst *testing.T) {
 	Cpb[0][0] = 666      // noise
 	J, err := Inv(Fi, F) // Fi  := inv(F)
 	if err != nil {
-		utl.Panic("%v", err)
+		chk.Panic("%v", err)
 	}
 	RightCauchyGreenDef(C, F)  // C   := Ft * F
 	LeftCauchyGreenDef(b, F)   // b   := F * Ft
@@ -61,26 +63,26 @@ func Test_tsr01(tst *testing.T) {
 	PushForward(Ipf, C, F, Fi) // Ipf := push-forward(C)
 	PullBack(Cpb, It, F, Fi)   // Cpb := pull-back(I)
 	detC, detb := Det(C), Det(b)
-	utl.Pf("F   = %v\n", F)
-	utl.Pf("Fi  = %v\n", Fi)
-	utl.Pf("C   = %v\n", C)
-	utl.Pf("b   = %v\n", b)
-	utl.Pf("E   = %v\n", E)
-	utl.Pf("e   = %v\n", e)
-	utl.Pf("epf = %v\n", epf)
-	utl.Pf("Epb = %v\n", Epb)
-	utl.Pf("Ipf = %v\n", Ipf)
-	utl.Pf("Cpb = %v\n", Cpb)
-	utl.Pf("det(F)=%v, det(C)=%v, det(b)=%v\n", J, detC, detb)
-	utl.CheckMatrix(tst, "Fi", 1.0e-17, Fi, [][]float64{{1, -1, 0}, {0, 2.0 / 3.0, 0}, {0, 0, 1}})
-	utl.CheckMatrix(tst, "C", 1.0e-17, C, [][]float64{{1, 1.5, 0}, {1.5, 4.5, 0}, {0, 0, 1}})
-	utl.CheckMatrix(tst, "b", 1.0e-17, b, [][]float64{{3.25, 2.25, 0}, {2.25, 2.25, 0}, {0, 0, 1}})
-	utl.CheckMatrix(tst, "E", 1.0e-17, E, [][]float64{{0, 0.75, 0}, {0.75, 1.75, 0}, {0, 0, 0}})
-	utl.CheckMatrix(tst, "e", 1.0e-17, e, [][]float64{{0, 0.5, 0}, {0.5, -2.0 / 9.0, 0}, {0, 0, 0}})
-	utl.CheckMatrix(tst, "epf", 1.0e-15, epf, [][]float64{{0, 0.5, 0}, {0.5, -2.0 / 9.0, 0}, {0, 0, 0}})
-	utl.CheckMatrix(tst, "Epb", 1.0e-17, Epb, [][]float64{{0, 0.75, 0}, {0.75, 1.75, 0}, {0, 0, 0}})
-	utl.CheckMatrix(tst, "Ipf", 1.0e-17, Ipf, It)
-	utl.CheckMatrix(tst, "Cpb", 1.0e-17, Cpb, [][]float64{{1, 1.5, 0}, {1.5, 4.5, 0}, {0, 0, 1}})
+	io.Pf("F   = %v\n", F)
+	io.Pf("Fi  = %v\n", Fi)
+	io.Pf("C   = %v\n", C)
+	io.Pf("b   = %v\n", b)
+	io.Pf("E   = %v\n", E)
+	io.Pf("e   = %v\n", e)
+	io.Pf("epf = %v\n", epf)
+	io.Pf("Epb = %v\n", Epb)
+	io.Pf("Ipf = %v\n", Ipf)
+	io.Pf("Cpb = %v\n", Cpb)
+	io.Pf("det(F)=%v, det(C)=%v, det(b)=%v\n", J, detC, detb)
+	chk.Matrix(tst, "Fi", 1.0e-17, Fi, [][]float64{{1, -1, 0}, {0, 2.0 / 3.0, 0}, {0, 0, 1}})
+	chk.Matrix(tst, "C", 1.0e-17, C, [][]float64{{1, 1.5, 0}, {1.5, 4.5, 0}, {0, 0, 1}})
+	chk.Matrix(tst, "b", 1.0e-17, b, [][]float64{{3.25, 2.25, 0}, {2.25, 2.25, 0}, {0, 0, 1}})
+	chk.Matrix(tst, "E", 1.0e-17, E, [][]float64{{0, 0.75, 0}, {0.75, 1.75, 0}, {0, 0, 0}})
+	chk.Matrix(tst, "e", 1.0e-17, e, [][]float64{{0, 0.5, 0}, {0.5, -2.0 / 9.0, 0}, {0, 0, 0}})
+	chk.Matrix(tst, "epf", 1.0e-15, epf, [][]float64{{0, 0.5, 0}, {0.5, -2.0 / 9.0, 0}, {0, 0, 0}})
+	chk.Matrix(tst, "Epb", 1.0e-17, Epb, [][]float64{{0, 0.75, 0}, {0.75, 1.75, 0}, {0, 0, 0}})
+	chk.Matrix(tst, "Ipf", 1.0e-17, Ipf, It)
+	chk.Matrix(tst, "Cpb", 1.0e-17, Cpb, [][]float64{{1, 1.5, 0}, {1.5, 4.5, 0}, {0, 0, 1}})
 	utl.CheckScalar(tst, "det(F)", 1.0e-17, J, 1.5)
 	utl.CheckScalar(tst, "det(C)", 1.0e-17, detC, 1.5*1.5)
 	utl.CheckScalar(tst, "det(b)", 1.0e-17, detb, 1.5*1.5)
@@ -88,16 +90,16 @@ func Test_tsr01(tst *testing.T) {
 
 func Test_tsr02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("tsr02")
+	//verbose() = false
+	chk.PrintTitle("tsr02")
 
 	F := [][]float64{
 		{2, 8.0 / 3.0, 0},
@@ -109,16 +111,16 @@ func Test_tsr02(tst *testing.T) {
 	b := Alloc2()
 	J, err := Inv(Fi, F)
 	if err != nil {
-		utl.Panic("%v", err)
+		chk.Panic("%v", err)
 	}
 	RightCauchyGreenDef(C, F)
 	LeftCauchyGreenDef(b, F)
-	utl.Pf("F = %v\n", F)
-	utl.Pf("C = %v\n", C)
-	utl.Pf("b = %v\n", b)
+	io.Pf("F = %v\n", F)
+	io.Pf("C = %v\n", C)
+	io.Pf("b = %v\n", b)
 	utl.CheckScalar(tst, "J", 1.0e-17, J, 4.0)
-	utl.CheckMatrix(tst, "C", 1.0e-17, C, [][]float64{{36.0 / 9.0, 48.0 / 9.0, 0}, {48.0 / 9.0, 100.0 / 9.0, 0}, {0, 0, 1}})
-	utl.CheckMatrix(tst, "b", 1.0e-17, b, [][]float64{{100.0 / 9.0, 48.0 / 9.0, 0}, {48.0 / 9.0, 36.0 / 9.0, 0}, {0, 0, 1}})
+	chk.Matrix(tst, "C", 1.0e-17, C, [][]float64{{36.0 / 9.0, 48.0 / 9.0, 0}, {48.0 / 9.0, 100.0 / 9.0, 0}, {0, 0, 1}})
+	chk.Matrix(tst, "b", 1.0e-17, b, [][]float64{{100.0 / 9.0, 48.0 / 9.0, 0}, {48.0 / 9.0, 36.0 / 9.0, 0}, {0, 0, 1}})
 
 	λ, μ := 2.0, 3.0
 	σ := Alloc2()
@@ -137,25 +139,25 @@ func Test_tsr02(tst *testing.T) {
 	PK1ToCauchy(σfromP, P, F, Fi, J)
 	PK2ToCauchy(σfromS, S, F, Fi, J)
 
-	utl.Pf("σ = %v\n", σ)
-	utl.Pf("P = %v\n", P)
-	utl.Pf("S = %v\n", S)
-	utl.CheckMatrix(tst, "σfromP", 1.0e-17, σfromP, σ)
-	utl.CheckMatrix(tst, "σfromS", 1.0e-14, σfromS, σ)
+	io.Pf("σ = %v\n", σ)
+	io.Pf("P = %v\n", P)
+	io.Pf("S = %v\n", S)
+	chk.Matrix(tst, "σfromP", 1.0e-17, σfromP, σ)
+	chk.Matrix(tst, "σfromS", 1.0e-14, σfromS, σ)
 }
 
 func Test_tsr03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("tsr03")
+	//verbose() = false
+	chk.PrintTitle("tsr03")
 
 	a := [][]float64{
 		{4.0, 1.0 / SQ2, 0},
@@ -166,10 +168,10 @@ func Test_tsr03(tst *testing.T) {
 	aa := Alloc2()
 	Ten2Man(am, a)
 	Man2Ten(aa, am)
-	utl.Pf("a  = %v\n", a)
-	utl.Pf("am = %v\n", am)
-	utl.Pf("aa = %v\n", aa)
-	utl.CheckMatrix(tst, "aa", 1.0e-15, aa, a)
+	io.Pf("a  = %v\n", a)
+	io.Pf("am = %v\n", am)
+	io.Pf("aa = %v\n", aa)
+	chk.Matrix(tst, "aa", 1.0e-15, aa, a)
 
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
@@ -186,10 +188,10 @@ func Test_tsr03(tst *testing.T) {
 	bb := Alloc2()
 	Ten2Man(bm, b)
 	Man2Ten(bb, bm)
-	utl.Pf("b  = %v\n", b)
-	utl.Pf("bm = %v\n", bm)
-	utl.Pf("bb = %v\n", bb)
-	utl.CheckMatrix(tst, "bb", 1.0e-15, bb, b)
+	io.Pf("b  = %v\n", b)
+	io.Pf("bm = %v\n", bm)
+	io.Pf("bb = %v\n", bb)
+	chk.Matrix(tst, "bb", 1.0e-15, bb, b)
 
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
@@ -200,16 +202,16 @@ func Test_tsr03(tst *testing.T) {
 
 func Test_tsr04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("tsr04")
+	//verbose() = false
+	chk.PrintTitle("tsr04")
 
 	a := [][]float64{
 		{8.0, 1.0 / SQ2, 2.0 / SQ2},
@@ -219,7 +221,7 @@ func Test_tsr04(tst *testing.T) {
 
 	am := make([]float64, 6)
 	Ten2Man(am, a)
-	utl.CheckVector(tst, "Ten2Man", 1e-17, am, []float64{8, -5, 7, 1, 0.5, 2})
+	chk.Vector(tst, "Ten2Man", 1e-17, am, []float64{8, -5, 7, 1, 0.5, 2})
 
 	amdyam := make([][]float64, 6)
 	for i := 0; i < 6; i++ {
@@ -240,8 +242,8 @@ func Test_tsr04(tst *testing.T) {
 		}
 	}
 
-	//utl.Pforan("adya = %v\n", adya)
-	//utl.Pforan("amdyam = %v\n", amdyam)
+	//io.Pforan("adya = %v\n", adya)
+	//io.Pforan("amdyam = %v\n", amdyam)
 
 	var err float64
 	for i := 0; i < 3; i++ {
@@ -254,6 +256,6 @@ func Test_tsr04(tst *testing.T) {
 		}
 	}
 	if err > 1e-13 {
-		utl.Panic("M2TT failed")
+		chk.Panic("M2TT failed")
 	}
 }

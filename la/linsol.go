@@ -7,7 +7,7 @@ package la
 import (
 	"time"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 type LinSol interface {
@@ -27,7 +27,7 @@ var lsAllocators = map[string]func() LinSol{} // maps solver name to solver allo
 func GetSolver(name string) LinSol {
 	allocator, ok := lsAllocators[name]
 	if !ok {
-		utl.Panic(_linsol_err01, name)
+		chk.Panic(_linsol_err01, name)
 	}
 	return allocator()
 }

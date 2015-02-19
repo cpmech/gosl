@@ -11,6 +11,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -23,18 +25,18 @@ const (
 // Hairer-Wanner VII-p2 Eq.(1.1)
 func TestODE01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
+	//verbose() = false
 	//utl.UseColors = false
-	utl.TTitle("Test ODE 01")
-	utl.Pfcyan("Hairer-Wanner VII-p2 Eq.(1.1) and work/correctness analysis\n")
+	chk.PrintTitle("Test ODE 01")
+	io.Pfcyan("Hairer-Wanner VII-p2 Eq.(1.1) and work/correctness analysis\n")
 
 	lam := -50.0
 	silent := false
@@ -65,7 +67,7 @@ func TestODE01(tst *testing.T) {
 		Y := args[2].(*[]float64)
 		i := *k
 		if i >= MAXN-1 {
-			utl.Panic("cannot add more than %d points in slice", MAXN)
+			chk.Panic("cannot add more than %d points in slice", MAXN)
 		}
 		(*X)[i], (*Y)[i] = x, y[0]
 		*k = i + 1
@@ -73,7 +75,7 @@ func TestODE01(tst *testing.T) {
 	}
 
 	// FwEuler
-	utl.Pforan(". . . FwEuler . . . \n")
+	io.Pforan(". . . FwEuler . . . \n")
 	dx := 1.875 / 50.0
 	copy(y, ya)
 	k_FwEuler, X_FwEuler, Y_FwEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
@@ -82,7 +84,7 @@ func TestODE01(tst *testing.T) {
 	FwEuler.Solve(y, xa, xb, dx, true, &k_FwEuler, &X_FwEuler, &Y_FwEuler)
 
 	// BwEuler
-	utl.Pforan(". . . BwEuler . . . \n")
+	io.Pforan(". . . BwEuler . . . \n")
 	copy(y, ya)
 	k_BwEuler, X_BwEuler, Y_BwEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var BwEuler ODE
@@ -91,7 +93,7 @@ func TestODE01(tst *testing.T) {
 	BwEuler.Solve(y, xa, xb, dx, true, &k_BwEuler, &X_BwEuler, &Y_BwEuler)
 
 	// MoEuler
-	utl.Pforan(". . . MoEuler . . . \n")
+	io.Pforan(". . . MoEuler . . . \n")
 	copy(y, ya)
 	k_MoEuler, X_MoEuler, Y_MoEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var MoEuler ODE
@@ -99,7 +101,7 @@ func TestODE01(tst *testing.T) {
 	MoEuler.Solve(y, xa, xb, xb-xa, false, &k_MoEuler, &X_MoEuler, &Y_MoEuler)
 
 	// Dopri5
-	utl.Pforan(". . . Dopri5 . . . \n")
+	io.Pforan(". . . Dopri5 . . . \n")
 	copy(y, ya)
 	k_Dopri5, X_Dopri5, Y_Dopri5 := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var Dopri5 ODE
@@ -107,7 +109,7 @@ func TestODE01(tst *testing.T) {
 	Dopri5.Solve(y, xa, xb, xb-xa, false, &k_Dopri5, &X_Dopri5, &Y_Dopri5)
 
 	// Radau5
-	utl.Pforan(". . . Radau5 . . . \n")
+	io.Pforan(". . . Radau5 . . . \n")
 	copy(y, ya)
 	k_Radau5, X_Radau5, Y_Radau5 := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var Radau5 ODE
@@ -138,18 +140,18 @@ func TestODE01(tst *testing.T) {
 // Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation
 func TestODE02a(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
+	//verbose() = false
 	//utl.UseColors = false
-	utl.TTitle("Test ODE 02a")
-	utl.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation\n")
+	chk.PrintTitle("Test ODE 02a")
+	io.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation\n")
 
 	eps := 1.0e-6
 	fcn := func(f []float64, x float64, y []float64, args ...interface{}) error {
@@ -221,24 +223,24 @@ func TestODE02a(tst *testing.T) {
 	} else {
 		o.Solve(y, xa, xb, xb-xa, fixstp)
 	}
-	utl.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
+	io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 }
 
 // Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation
 func TestODE03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
+	//verbose() = false
 	//utl.UseColors = false
-	utl.TTitle("Test ODE 03")
-	utl.Pfcyan("Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation\n")
+	chk.PrintTitle("Test ODE 03")
+	io.Pfcyan("Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation\n")
 
 	fcn := func(f []float64, x float64, y []float64, args ...interface{}) error {
 		f[0] = -0.04*y[0] + 1.0e4*y[1]*y[2]
@@ -345,19 +347,19 @@ func HWtransIni() (D HWtransData, xa, xb float64, ya []float64) {
 // (from E Hairer's website, not the system in the book)
 func TestODE04a(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
+	//verbose() = false
 	//utl.UseColors = false
-	utl.TTitle("Test ODE 04a")
-	utl.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier\n")
-	utl.Pfcyan("(from E Hairer's website, not the system in the book)\n")
+	chk.PrintTitle("Test ODE 04a")
+	io.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier\n")
+	io.Pfcyan("(from E Hairer's website, not the system in the book)\n")
 
 	// RIGHT-HAND SIDE OF THE AMPLIFIER PROBLEM
 	fcn := func(f []float64, x float64, y []float64, args ...interface{}) error {
@@ -442,7 +444,7 @@ func TestODE04a(tst *testing.T) {
 		return nil
 	}
 	defer func() {
-		utl.WriteFileD("/tmp/gosl", "hwamplifierA.res", &b)
+		io.WriteFileD("/tmp/gosl", "hwamplifierA.res", &b)
 	}()
 
 	// INITIAL DATA
@@ -477,5 +479,5 @@ func TestODE04a(tst *testing.T) {
 	} else {
 		osol.Solve(ya, xa, xb, xb-xa, fixstp, &D)
 	}
-	utl.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
+	io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 }

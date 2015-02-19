@@ -7,6 +7,8 @@ package gm
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
 )
@@ -54,7 +56,7 @@ func (o *Nurbs) Init(gnd int, ords []int, knots [][]float64) {
 		o.b[d].Init(knots[d], o.p[d])
 		o.n[d] = o.b[d].NumBasis()
 		if o.n[d] < 2 {
-			utl.Panic(_nurbs_err2, d, o.n[d])
+			chk.Panic(_nurbs_err2, d, o.n[d])
 		}
 	}
 	for d := o.gnd; d < 3; d++ {
@@ -95,7 +97,7 @@ func (o *Nurbs) SetControl(verts [][]float64, ctrls []int) {
 	// check
 	nctrl := o.n[0] * o.n[1] * o.n[2]
 	if nctrl != len(ctrls) {
-		utl.Panic(_nurbs_err3, nctrl, len(ctrls))
+		chk.Panic(_nurbs_err3, nctrl, len(ctrls))
 	}
 
 	// set control points
@@ -314,7 +316,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 			den += o.b[0].RecursiveBasis(u[0], i) * o.Q[i][j][k][3]
 		}
 		if math.Abs(den) < ZTOL {
-			utl.Panic(_nurbs_err5, den, u, l)
+			chk.Panic(_nurbs_err5, den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.Q[I[0]][j][k][3] / den
 	// surface
@@ -326,7 +328,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 			}
 		}
 		if math.Abs(den) < ZTOL {
-			utl.Panic(_nurbs_err5, den, u, l)
+			chk.Panic(_nurbs_err5, den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.b[1].RecursiveBasis(u[1], I[1]) * o.Q[I[0]][I[1]][k][3] / den
 	// volume
@@ -339,7 +341,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 			}
 		}
 		if math.Abs(den) < ZTOL {
-			utl.Panic(_nurbs_err5, den, u, l)
+			chk.Panic(_nurbs_err5, den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.b[1].RecursiveBasis(u[1], I[1]) * o.b[2].RecursiveBasis(u[2], I[2]) * o.Q[I[0]][I[1]][I[2]][3] / den
 	}
@@ -353,7 +355,7 @@ func (o *Nurbs) NumericalDeriv(dRdu []float64, u []float64, l int) {
 	for d := 0; d < o.gnd; d++ {
 		f := func(x float64, args ...interface{}) (val float64) {
 			if x < o.b[d].tmin || x > o.b[d].tmax {
-				utl.Panic(_nurbs_err6, x, o.b[d].tmin, o.b[d].tmax)
+				chk.Panic(_nurbs_err6, x, o.b[d].tmin, o.b[d].tmax)
 			}
 			tmp = u[d]
 			u[d] = x
@@ -640,14 +642,14 @@ func (o *Nurbs) KrefineN(ndiv int, useCspace bool) *Nurbs {
 				xa := o.Point([]float64{umin, vmin})
 				xb := o.Point([]float64{umax, vmin})
 				xc := []float64{(xa[0] + xb[0]) / 2.0, (xa[1] + xb[1]) / 2.0}
-				utl.Pforan("xa, xb, xc = %v, %v, %v\n", xa, xb, xc)
+				io.Pforan("xa, xb, xc = %v, %v, %v\n", xa, xb, xc)
 				xa = o.Point([]float64{umin, vmax})
 				xb = o.Point([]float64{umax, vmax})
 				xc = []float64{(xa[0] + xb[0]) / 2.0, (xa[1] + xb[1]) / 2.0}
-				utl.Pfpink("xa, xb, xc = %v, %v, %v\n", xa, xb, xc)
+				io.Pfpink("xa, xb, xc = %v, %v, %v\n", xa, xb, xc)
 			}
 		}
-		utl.Panic("nurbs.go: KrefineN with useCspace==true => not implemented yet")
+		chk.Panic("nurbs.go: KrefineN with useCspace==true => not implemented yet")
 	} else {
 		for d := 0; d < o.gnd; d++ {
 			nspans := o.b[d].m - 2*o.p[d] - 1
@@ -673,7 +675,7 @@ func (o *Nurbs) Krefine(X [][]float64) (O *Nurbs) {
 
 	// check
 	if len(X) != o.gnd {
-		utl.Panic(_nurbs_err7, o.gnd, len(X))
+		chk.Panic(_nurbs_err7, o.gnd, len(X))
 	}
 
 	// number of new knots and first and last knots
@@ -711,7 +713,7 @@ func (o *Nurbs) Krefine(X [][]float64) (O *Nurbs) {
 		Qnew = utl.Deep4alloc(nn[0], o.n[1]+nk[1], o.n[2], 4)
 		krefine(Unew, Qnew, Qtmp, 1, X[1], o.b[1].T, nn, o.p, a[1], b[1])
 	case 3:
-		utl.Panic("nurbs.go: Krefine: gnd=3 not implemented yet")
+		chk.Panic("nurbs.go: Krefine: gnd=3 not implemented yet")
 	}
 
 	// initialize new nurbs

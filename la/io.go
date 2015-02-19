@@ -12,14 +12,14 @@ import (
 	"math"
 	"strings"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/io"
 )
 
 const PRINTZEROTOL = 1e-13
 
 // PrintVec prints a vector
 func PrintVec(name string, a []float64, format string, numpy bool) {
-	if utl.Tsilent {
+	if io.Verbose {
 		return
 	}
 	r := name + " = "
@@ -46,7 +46,7 @@ func PrintVec(name string, a []float64, format string, numpy bool) {
 
 // PrintMat prints a dense matrix
 func PrintMat(name string, a [][]float64, format string, numpy bool) {
-	if utl.Tsilent {
+	if io.Verbose {
 		return
 	}
 	r := name + " ="
@@ -99,20 +99,20 @@ func WriteSmat(fnkey string, a [][]float64, tol float64) {
 		}
 	}
 	fmt.Fprintf(&bfa, "%d  %d  %d\n", m, n, nnz)
-	utl.WriteFile(fnkey+".smat", &bfa, &bfb)
+	io.WriteFile(fnkey+".smat", &bfa, &bfb)
 }
 
 // ReadSmat reads a smat matrix back
 func ReadSmat(fn string) *Triplet {
 	var t Triplet
-	utl.ReadLines(fn,
+	io.ReadLines(fn,
 		func(idx int, line string) (stop bool) {
 			r := strings.Fields(line)
 			if idx == 0 {
-				m, n, nnz := utl.Atoi(r[0]), utl.Atoi(r[1]), utl.Atoi(r[2])
+				m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 				t.Init(m, n, nnz)
 			} else {
-				t.Put(utl.Atoi(r[0]), utl.Atoi(r[1]), utl.Atof(r[2]))
+				t.Put(io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2]))
 			}
 			return
 		})
@@ -121,7 +121,7 @@ func ReadSmat(fn string) *Triplet {
 
 // PrintVecC prints a vector of complex numbers
 func PrintVecC(name string, a []complex128, format, formatz string, numpy bool) {
-	if utl.Tsilent {
+	if io.Verbose {
 		return
 	}
 	r := name + " ="
@@ -145,7 +145,7 @@ func PrintVecC(name string, a []complex128, format, formatz string, numpy bool) 
 
 // PrintMatC prints a matrix of complex numbers
 func PrintMatC(name string, a [][]complex128, format, formatz string, numpy bool) {
-	if utl.Tsilent {
+	if io.Verbose {
 		return
 	}
 	r := name + " ="
@@ -193,7 +193,7 @@ func SmatTriplet(fnkey string, t *Triplet) {
 		}
 	}
 	fmt.Fprintf(&bfa, "%d  %d  %d\n", t.m, t.n, nnz)
-	utl.WriteFile(fnkey+".smat", &bfa, &bfb)
+	io.WriteFile(fnkey+".smat", &bfa, &bfb)
 }
 
 // SmatCCMatrix writes a ".smat" file that can be visualised with vismatrix
@@ -209,5 +209,5 @@ func SmatCCMatrix(fnkey string, a *CCMatrix) {
 		}
 	}
 	fmt.Fprintf(&bfa, "%d  %d  %d\n", a.m, a.n, nnz)
-	utl.WriteFile(fnkey+".smat", &bfa, &bfb)
+	io.WriteFile(fnkey+".smat", &bfa, &bfb)
 }

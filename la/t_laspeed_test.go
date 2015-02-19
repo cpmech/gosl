@@ -9,6 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -83,15 +85,15 @@ func TestLinAlg01(tst *testing.T) {
 	N, n := 100, 100
 	allocate(N, n)
 
-	utl.TTitle("TestLinAlg 01 (serial)")
+	chk.PrintTitle("TestLinAlg 01 (serial)")
 	Pll = false
 	run_tests(N, n, true, tst)
 
-	utl.TTitle("TestLinAlg 01 (parallel)")
+	chk.PrintTitle("TestLinAlg 01 (parallel)")
 	Pll = true
 	_, msg := run_tests(N, n, true, tst)
 
-	utl.TTitle("TestLinAlg 02 (speed)")
+	chk.PrintTitle("TestLinAlg 02 (speed)")
 
 	N, n = 10, 10
 	//N, n = 100, 100
@@ -111,12 +113,12 @@ func TestLinAlg01(tst *testing.T) {
 		Dt_pll[irun], _ = run_tests(N, n, false, tst)
 	}
 
-	utl.Pf("%s  %20s |  %20s | %10s %10s\n", "                  ", "serial    ", "parallel    ", "serial", "parallel")
-	utl.Pf("%s %10s %10s | %10s %10s | %10s %10s\n", "                  ", "min", "max", "min", "max", "ave", "ave")
+	io.Pf("%s  %20s |  %20s | %10s %10s\n", "                  ", "serial    ", "parallel    ", "serial", "parallel")
+	io.Pf("%s %10s %10s | %10s %10s | %10s %10s\n", "                  ", "min", "max", "min", "max", "ave", "ave")
 	for j := 0; j < len(msg); j++ {
 		min_s, max_s, ave_s := utl.DurMinMaxAve(utl.DurGetCol(j, Dt_ser))
 		min_p, max_p, ave_p := utl.DurMinMaxAve(utl.DurGetCol(j, Dt_pll))
-		utl.Pf("%s %10v %10v | %10v %10v | %10v %10v\n", msg[j], min_s, max_s, min_p, max_p, ave_s, ave_p)
+		io.Pf("%s %10v %10v | %10v %10v | %10v %10v\n", msg[j], min_s, max_s, min_p, max_p, ave_s, ave_p)
 	}
 }
 
@@ -132,7 +134,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	v[0] += noise
 	dt[0], msg[0] = time.Now().Sub(t0), "vector: alloc     "
 	if do_check {
-		utl.CheckVector(tst, msg[0], tol, v, []float64{})
+		chk.Vector(tst, msg[0], tol, v, []float64{})
 	}
 
 	// 1: matrix: allocate
@@ -141,7 +143,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	a[0][0] += noise
 	dt[1], msg[1] = time.Now().Sub(t0), "matrix: alloc     "
 	if do_check {
-		utl.CheckMatrix(tst, msg[1], tol, a, [][]float64{})
+		chk.Matrix(tst, msg[1], tol, a, [][]float64{})
 	}
 
 	// 2: vector: fill
@@ -151,7 +153,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	u[0] += 100 * noise
 	dt[2], msg[2] = time.Now().Sub(t0), "vector: fill      "
 	if do_check {
-		utl.CheckVector(tst, msg[2], tol, u, ucorr0)
+		chk.Vector(tst, msg[2], tol, u, ucorr0)
 	}
 
 	// 3: matrix: fill
@@ -160,7 +162,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	a[0][0] += 100 * noise
 	dt[3], msg[3] = time.Now().Sub(t0), "matrix: fill      "
 	if do_check {
-		utl.CheckMatrix(tst, msg[3], tol, a, acorr0)
+		chk.Matrix(tst, msg[3], tol, a, acorr0)
 	}
 
 	// 4: vector: norm (Euclidian)
@@ -203,7 +205,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	MatScale(a, 0.5)
 	dt[8], msg[8] = time.Now().Sub(t0), "matrix: scale     "
 	if do_check {
-		utl.CheckMatrix(tst, msg[8], tol, a, acorr1)
+		chk.Matrix(tst, msg[8], tol, a, acorr1)
 	}
 
 	// 9: vector: a := b
@@ -212,7 +214,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	v[0] += noise
 	dt[9], msg[9] = time.Now().Sub(t0), "vector: copy      "
 	if do_check {
-		utl.CheckVector(tst, msg[9], tol, v, u)
+		chk.Vector(tst, msg[9], tol, v, u)
 	}
 
 	// 10: vector: a += b * s
@@ -221,7 +223,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	u[0] += noise
 	dt[10], msg[10] = time.Now().Sub(t0), "vector: addscaled "
 	if do_check {
-		utl.CheckVector(tst, msg[10], tol, u, []float64{})
+		chk.Vector(tst, msg[10], tol, u, []float64{})
 	}
 
 	// 11: matrix: a := b * s
@@ -230,7 +232,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	a[0][0] += noise
 	dt[11], msg[11] = time.Now().Sub(t0), "matrix: copyscaled"
 	if do_check {
-		utl.CheckMatrix(tst, msg[11], tol, a, bmat)
+		chk.Matrix(tst, msg[11], tol, a, bmat)
 	}
 
 	// 12: matrix: set diagonal with v
@@ -239,7 +241,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	a[0][0] += noise
 	dt[12], msg[12] = time.Now().Sub(t0), "matrix: setdiag   "
 	if do_check {
-		utl.CheckMatrix(tst, msg[12], tol, a, dmat)
+		chk.Matrix(tst, msg[12], tol, a, dmat)
 	}
 
 	// 13: vector: max difference
@@ -263,7 +265,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	col := MatGetCol(4, amat)
 	dt[15], msg[15] = time.Now().Sub(t0), "matrix: getcol    "
 	if do_check {
-		utl.CheckVector(tst, msg[15], tol, col, avec)
+		chk.Vector(tst, msg[15], tol, col, avec)
 	}
 
 	// 16: vector: a := b * s
@@ -272,7 +274,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	v[0] += noise
 	dt[16], msg[16] = time.Now().Sub(t0), "vector: copyscaled"
 	if do_check {
-		utl.CheckVector(tst, msg[16], tol, v, evec)
+		chk.Vector(tst, msg[16], tol, v, evec)
 	}
 
 	// 17: vector: add: u := α*a + β*b
@@ -281,7 +283,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	v[0] += noise
 	dt[17], msg[17] = time.Now().Sub(t0), "vector: add       "
 	if do_check {
-		utl.CheckVector(tst, msg[17], tol, u, fvec)
+		chk.Vector(tst, msg[17], tol, u, fvec)
 	}
 
 	// 18: vector: dot product: s := u dot v
@@ -308,7 +310,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	VecFillC(uc, 666+666i)
 	dt[20], msg[20] = time.Now().Sub(t0), "vector: fillC     "
 	if do_check {
-		utl.CheckVectorC(tst, msg[20], tol, uc, ucorZ0)
+		chk.VectorC(tst, msg[20], tol, uc, ucorZ0)
 	}
 
 	// 21: vector: max difference C

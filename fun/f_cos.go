@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Cos implements y(t) = a * cos(b*t) + c
@@ -33,7 +33,7 @@ func (o *Cos) Init(prms Prms) (err error) {
 		case "c":
 			o.c = p.V
 		default:
-			return utl.Err("cos: parameter named %q is invalid", p.N)
+			return chk.Err("cos: parameter named %q is invalid", p.N)
 		}
 	}
 	return

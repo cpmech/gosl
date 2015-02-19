@@ -7,7 +7,7 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/io"
 )
 
 // Point holds the Cartesian coordinates of a point in 3D space
@@ -34,7 +34,7 @@ func (o *Point) NewDisp(dx, dy, dz float64) *Point {
 
 // String outputs Point
 func (o *Point) String() string {
-	return utl.Sf("{%g, %g, %g}", o.X, o.Y, o.Z)
+	return io.Sf("{%g, %g, %g}", o.X, o.Y, o.Z)
 }
 
 // DistPointPoint computes the unsigned distance from a to b
@@ -67,7 +67,7 @@ func (o *Segment) Vector(m float64) []float64 {
 
 // String outputs Segment
 func (o *Segment) String() string {
-	return utl.Sf("{%v %v} len=%g", o.A, o.B, o.Len())
+	return io.Sf("{%v %v} len=%g", o.A, o.B, o.Len())
 }
 
 // NewSegment creates a new segment from a to b
@@ -107,7 +107,7 @@ func DistPointLine(p, a, b *Point, tol float64, verbose bool) float64 {
 	nn := ns.Len()
 	if nn < tol { // point-point distance
 		if verbose {
-			utl.Pfred("basicgeom.go: DistPointLine: __WARNING__ point-point distance too small:\n p=%v a=%v b=%v\n", p, a, b)
+			io.Pfred("basicgeom.go: DistPointLine: __WARNING__ point-point distance too small:\n p=%v a=%v b=%v\n", p, a, b)
 		}
 		return vs.Len()
 	}

@@ -7,8 +7,8 @@ package fdm
 import (
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
 )
 
 func TestAssemb01(tst *testing.T) {
@@ -18,7 +18,7 @@ func TestAssemb01(tst *testing.T) {
 		}
 	}()
 
-	utl.TTitle("Assemb 01")
+	chk.PrintTitle("Assemb 01")
 
 	// grid
 	var g Grid2D
@@ -55,6 +55,6 @@ func TestAssemb01(tst *testing.T) {
 		{0.0, 0.0, -4.0},
 		{0.0, 0.0, 0.0},
 	}
-	utl.CheckMatrix(tst, "K11: ", 1e-16, K11d, K11c)
-	utl.CheckMatrix(tst, "K12: ", 1e-16, K12d, K12c)
+	chk.Matrix(tst, "K11: ", 1e-16, K11d, K11c)
+	chk.Matrix(tst, "K12: ", 1e-16, K12d, K12c)
 }

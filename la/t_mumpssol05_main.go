@@ -7,6 +7,8 @@
 package main
 
 import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/utl"
@@ -17,15 +19,15 @@ func main() {
 	mpi.Start(false)
 	defer func() {
 		if err := recover(); err != nil {
-			utl.PfRed("Some error has happened: %v\n", err)
+			io.PfRed("Some error has happened: %v\n", err)
 		}
 		mpi.Stop(false)
 	}()
 
-	utl.Tsilent = false
+	verbose() = false
 	myrank := mpi.Rank()
 	if myrank == 0 {
-		utl.TTitle("Test MUMPS Sol 05")
+		chk.PrintTitle("Test MUMPS Sol 05")
 	}
 
 	ndim := 10
@@ -33,7 +35,7 @@ func main() {
 	start, endp1 := (id*ndim)/sz, ((id+1)*ndim)/sz
 
 	if mpi.Size() > ndim {
-		utl.Panic("the number of processors must be smaller than or equal to %d", ndim)
+		chk.Panic("the number of processors must be smaller than or equal to %d", ndim)
 	}
 
 	n := 10

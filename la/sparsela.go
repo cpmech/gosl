@@ -4,9 +4,7 @@
 
 package la
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
+import "github.com/cpmech/gosl/chk"
 
 // --------------------------------------------------------------------------------------------------
 // matrix-vector ------------------------------------------------------------------------------------
@@ -242,7 +240,7 @@ func SpTriSetDiag(a *Triplet, n int, v float64) {
 //  b2c maps 'k' in 'b' to 'k' in 'c': len(b2c) = b.nnz
 func SpAllocMatAddMat(a, b *CCMatrix) (c *CCMatrix, a2c, b2c []int) {
 	if a.m != b.m || a.n != b.n {
-		utl.Panic(_sparsela_err1, a.m, a.n, b.m, b.n)
+		chk.Panic(_sparsela_err1, a.m, a.n, b.m, b.n)
 	}
 	// number of nonzeros in 'c'
 	var i, j, k, nnz int
@@ -377,7 +375,7 @@ func SpTriAddR2C(c *TripletC, α, β float64, a *Triplet, μ float64, b *Triplet
 //  y := transpose(a) * x    or    y_I := a_JI * x_J    or     y_j := a_ij * x_i
 func SpTriMatTrVecMul(y []float64, a *Triplet, x []float64) {
 	if len(y) != a.n {
-		utl.Panic(_sparsela_err2, a.n, len(y), a.m, a.n)
+		chk.Panic(_sparsela_err2, a.n, len(y), a.m, a.n)
 	}
 	for j := 0; j < len(y); j++ {
 		y[j] = 0

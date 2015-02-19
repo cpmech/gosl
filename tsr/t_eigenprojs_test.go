@@ -8,21 +8,23 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_eigenp01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("eigenp01")
+	//verbose() = false
+	chk.PrintTitle("eigenp01")
 
 	cmpλ := 1e-12
 	cmpP := 1e-12
@@ -56,46 +58,46 @@ func Test_eigenp01(tst *testing.T) {
 		A := test_AA[idxA]
 		a := M_Alloc2(nd[idxA])
 		Ten2Man(a, A)
-		utl.PfYel("\n\ntst # %d ###################################################################################\n", idxA)
-		utl.Pfblue2("a = %v\n", a)
-		utl.Pfblue2("λ = %v\n", test_λ[idxA])
+		io.PfYel("\n\ntst # %d ###################################################################################\n", idxA)
+		io.Pfblue2("a = %v\n", a)
+		io.Pfblue2("λ = %v\n", test_λ[idxA])
 
 		// perturbation
 		λper := make([]float64, 3)
 		haspert, err := M_FixZeroOrRepeated(λper, a, EV_PERT, EV_EVTOL, EV_ZERO)
 		if haspert {
-			utl.Pfyel("a(pert) = %v\n", a)
-			utl.Pfyel("λ(pert) = %v\n", λper)
+			io.Pfyel("a(pert) = %v\n", a)
+			io.Pfyel("λ(pert) = %v\n", λper)
 		}
 		if err != nil {
-			utl.Panic("%v", err.Error())
+			chk.Panic("%v", err.Error())
 		}
 
 		// check analytical eigenprojectors
-		utl.Pforan("\nana\n")
+		io.Pforan("\nana\n")
 		λana, Pana := CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
-		utl.Pfyel("λana = %v\n", λana)
+		io.Pfyel("λana = %v\n", λana)
 		if !haspert {
 			λchk := utl.DblGetSorted(test_λ[idxA])
-			utl.CheckVector(tst, "λchk", 1e-12, λana, λchk)
+			chk.Vector(tst, "λchk", 1e-12, λana, λchk)
 		}
 
 		// check numerical eigenprojectors
-		utl.Pforan("\nnum\n")
+		io.Pforan("\nnum\n")
 		λnum, Pnum := CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
-		utl.Pfyel("λnum = %v\n", λnum)
+		io.Pfyel("λnum = %v\n", λnum)
 
 		// compare ana-num
-		utl.Pforan("\nana-num\n")
-		utl.CheckVector(tst, "λana-λnum", cmpλ, λana, λnum)
-		utl.CheckMatrix(tst, "Pana-Pnum", cmpP, Pana, Pnum)
+		io.Pforan("\nana-num\n")
+		chk.Vector(tst, "λana-λnum", cmpλ, λana, λnum)
+		chk.Matrix(tst, "Pana-Pnum", cmpP, Pana, Pnum)
 
 		// check derivatives of analytical eigenprojectors
-		utl.Pforan("\nderivatives (anaP)\n")
+		io.Pforan("\nderivatives (anaP)\n")
 		CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 
 		// check derivatives of numerical eigenprojectors
-		utl.Pforan("\nderivatives (numP)\n")
+		io.Pforan("\nderivatives (numP)\n")
 		CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 
 		// restore tolerances
@@ -105,16 +107,16 @@ func Test_eigenp01(tst *testing.T) {
 
 func Test_eigenp02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("eigenp02")
+	//verbose() = false
+	chk.PrintTitle("eigenp02")
 
 	// constants
 	tolP := 1e-12
@@ -135,44 +137,44 @@ func Test_eigenp02(tst *testing.T) {
 	λ := make([]float64, 3)
 	err := M_EigenValsNum(λ, a)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
-	utl.Pfblue2("a = %v\n", a)
-	utl.Pfblue2("λ = %v\n", λ)
+	io.Pfblue2("a = %v\n", a)
+	io.Pfblue2("λ = %v\n", λ)
 
 	// perturbation
 	if true {
 		λper := make([]float64, 3)
 		haspert, err := M_FixZeroOrRepeated(λper, a, EV_PERT, EV_EVTOL, EV_ZERO)
 		if haspert {
-			utl.Pfyel("a(pert) = %v\n", a)
-			utl.Pfyel("λ(pert) = %v\n", λper)
+			io.Pfyel("a(pert) = %v\n", a)
+			io.Pfyel("λ(pert) = %v\n", λper)
 		}
 		if err != nil {
-			utl.Panic("%v", err.Error())
+			chk.Panic("%v", err.Error())
 		}
 	}
 
 	// run test
-	utl.Pforan("\neigenprojectors\n")
+	io.Pforan("\neigenprojectors\n")
 	CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-	utl.Pforan("\nderivatives\n")
+	io.Pforan("\nderivatives\n")
 	CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 }
 
 func Test_eigenp03(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("eigenp03")
+	//verbose() = false
+	chk.PrintTitle("eigenp03")
 
 	// constants
 	tolP := 1e-15
@@ -192,55 +194,55 @@ func Test_eigenp03(tst *testing.T) {
 	λ := make([]float64, 3)
 	err := M_EigenValsNum(λ, a)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
-	utl.Pfblue2("a = %v\n", a)
-	utl.Pfblue2("λ = %v\n", λ)
+	io.Pfblue2("a = %v\n", a)
+	io.Pfblue2("λ = %v\n", λ)
 
 	// perturbation
 	if true {
 		λper := make([]float64, 3)
 		haspert, err := M_FixZeroOrRepeated(λper, a, EV_PERT, EV_EVTOL, EV_ZERO)
 		if haspert {
-			utl.Pfyel("a(pert) = %v\n", a)
-			utl.Pfyel("λ(pert) = %v\n", λper)
+			io.Pfyel("a(pert) = %v\n", a)
+			io.Pfyel("λ(pert) = %v\n", λper)
 		}
 		if err != nil {
-			utl.Panic("%v", err.Error())
+			chk.Panic("%v", err.Error())
 		}
 	}
 
 	// run test (ana)
 	if false {
-		utl.Pforan("\neigenprojectors (ana)\n")
+		io.Pforan("\neigenprojectors (ana)\n")
 		CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-		utl.Pforan("\nderivatives (anaP)\n")
+		io.Pforan("\nderivatives (anaP)\n")
 		CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 	}
 
 	// run test
 	if true {
-		utl.Pforan("\neigenprojectors (num)\n")
+		io.Pforan("\neigenprojectors (num)\n")
 		CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-		utl.Pforan("\nderivatives (numP)\n")
+		io.Pforan("\nderivatives (numP)\n")
 		CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 	}
 }
 
 func Test_eigenp04(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("eigenp04")
+	//verbose() = false
+	chk.PrintTitle("eigenp04")
 
 	// constants
 	tolP := 1e-15
@@ -266,46 +268,46 @@ func Test_eigenp04(tst *testing.T) {
 
 		// noise
 		δ := math.Pow(10.0, -float64(i))
-		utl.PfYel("\n\nδ = %v ##################################################################################\n", δ)
+		io.PfYel("\n\nδ = %v ##################################################################################\n", δ)
 
 		// tensor and eigenvalues
 		a := []float64{s, s + δ, s - δ, 0, 0, 0}
 		λ := make([]float64, 3)
 		err := M_EigenValsNum(λ, a)
 		if err != nil {
-			utl.Panic("%v", err.Error())
+			chk.Panic("%v", err.Error())
 		}
-		utl.Pfblue2("a = %v\n", a)
-		utl.Pfblue2("λ = %v\n", λ)
+		io.Pfblue2("a = %v\n", a)
+		io.Pfblue2("λ = %v\n", λ)
 
 		// perturbation
 		if true {
 			λper := make([]float64, 3)
 			haspert, err := M_FixZeroOrRepeated(λper, a, EV_PERT, EV_EVTOL, EV_ZERO)
 			if haspert {
-				utl.Pfyel("a(pert) = %v\n", a)
-				utl.Pfyel("λ(pert) = %v\n", λper)
+				io.Pfyel("a(pert) = %v\n", a)
+				io.Pfyel("λ(pert) = %v\n", λper)
 			}
 			if err != nil {
-				utl.Panic("%v", err.Error())
+				chk.Panic("%v", err.Error())
 			}
 		}
 
 		// run test (ana)
 		if false {
-			utl.Pforan("\neigenprojectors (ana)\n")
+			io.Pforan("\neigenprojectors (ana)\n")
 			CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-			utl.Pforan("\nderivatives (anaP)\n")
+			io.Pforan("\nderivatives (anaP)\n")
 			CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 		}
 
 		// run test
 		if true {
-			utl.Pforan("\neigenprojectors (num)\n")
+			io.Pforan("\neigenprojectors (num)\n")
 			CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-			utl.Pforan("\nderivatives (numP)\n")
+			io.Pforan("\nderivatives (numP)\n")
 			CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 		}
 
@@ -316,16 +318,16 @@ func Test_eigenp04(tst *testing.T) {
 
 func Test_eigenp05(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("eigenp05")
+	//verbose() = false
+	chk.PrintTitle("eigenp05")
 
 	// constants
 	tolP := 1e-14
@@ -351,54 +353,54 @@ func Test_eigenp05(tst *testing.T) {
 		tolS = 1e-9
 		toldP = 0.023
 	}
-	utl.Pfblue2("a = %v\n", a)
+	io.Pfblue2("a = %v\n", a)
 
 	// eigenvalues
 	λ := make([]float64, 3)
 	haspert, err := M_FixZeroOrRepeated(λ, a, EV_PERT, EV_EVTOL, EV_ZERO)
 	if err != nil {
-		utl.Panic("%v", err.Error())
+		chk.Panic("%v", err.Error())
 	}
 	if haspert {
-		utl.Pfyel("a(pert) = %v\n", a)
+		io.Pfyel("a(pert) = %v\n", a)
 	}
-	utl.Pfblue2("λ = %v\n", λ)
+	io.Pfblue2("λ = %v\n", λ)
 
 	// run test (ana)
 	if true {
-		utl.Pforan("\neigenprojectors (ana)\n")
+		io.Pforan("\neigenprojectors (ana)\n")
 		CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-		utl.Pforan("\nderivatives (anaP)\n")
+		io.Pforan("\nderivatives (anaP)\n")
 		CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 	}
 
 	// run test
 	if false {
-		utl.Pforan("\neigenprojectors (num)\n")
+		io.Pforan("\neigenprojectors (num)\n")
 		CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-		utl.Pforan("\nderivatives (numP)\n")
+		io.Pforan("\nderivatives (numP)\n")
 		CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
 	}
 }
 
 func Test_eigenp06(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("eigenp06")
+	//verbose() = false
+	chk.PrintTitle("eigenp06")
 
 	ncp := 6
 	P := M_AllocEigenprojs(ncp)
-	utl.CheckVector(tst, "P0", 1e-17, P[0], []float64{0, 0, 0, 0, 0, 0})
-	utl.CheckVector(tst, "P1", 1e-17, P[1], []float64{0, 0, 0, 0, 0, 0})
-	utl.CheckVector(tst, "P2", 1e-17, P[2], []float64{0, 0, 0, 0, 0, 0})
+	chk.Vector(tst, "P0", 1e-17, P[0], []float64{0, 0, 0, 0, 0, 0})
+	chk.Vector(tst, "P1", 1e-17, P[1], []float64{0, 0, 0, 0, 0, 0})
+	chk.Vector(tst, "P2", 1e-17, P[2], []float64{0, 0, 0, 0, 0, 0})
 }

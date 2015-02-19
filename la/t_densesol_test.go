@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 func calc_LLt(L [][]float64) (LLt [][]float64) {
@@ -30,7 +30,7 @@ func TestCholesky01(tst *testing.T) {
 		}
 	}()
 
-	utl.TTitle("TestCholesky 01")
+	chk.PrintTitle("TestCholesky 01")
 
 	a := [][]float64{
 		{25.0, 15.0, -5.0},
@@ -43,8 +43,8 @@ func TestCholesky01(tst *testing.T) {
 	PrintMat("a", a, "%6g", false)
 	PrintMat("L", L, "%6g", false)
 	LLt := calc_LLt(L)
-	utl.CheckMatrix(tst, "a = LLt", 1e-17, LLt, a)
-	utl.CheckMatrix(tst, "L", 1e-17, L, [][]float64{
+	chk.Matrix(tst, "a = LLt", 1e-17, LLt, a)
+	chk.Matrix(tst, "L", 1e-17, L, [][]float64{
 		{5, 0, -0},
 		{3, 3, 0},
 		{-1, 1, 3},
@@ -58,7 +58,7 @@ func TestCholesky02(tst *testing.T) {
 		}
 	}()
 
-	utl.TTitle("TestCholesky 02")
+	chk.PrintTitle("TestCholesky 02")
 
 	a := [][]float64{
 		{2, 1, 1, 3, 2},
@@ -71,8 +71,8 @@ func TestCholesky02(tst *testing.T) {
 	Cholesky(L, a)
 	PrintMat("a", a, "%6g", false)
 	PrintMat("L", L, "%10.6f", false)
-	utl.CheckMatrix(tst, "a = LLt", 1e-15, calc_LLt(L), a)
-	utl.CheckMatrix(tst, "L", 1e-15, L, [][]float64{
+	chk.Matrix(tst, "a = LLt", 1e-15, calc_LLt(L), a)
+	chk.Matrix(tst, "L", 1e-15, L, [][]float64{
 		{math.Sqrt2, 0, 0, 0, 0},
 		{1.0 / math.Sqrt2, math.Sqrt(3.0 / 2.0), 0, 0, 0},
 		{1.0 / math.Sqrt2, math.Sqrt(3.0 / 2.0), math.Sqrt(7.0), 0, 0},
@@ -88,7 +88,7 @@ func TestSPDsolve01(tst *testing.T) {
 		}
 	}()
 
-	utl.TTitle("TestSPDsolve 01")
+	chk.PrintTitle("TestSPDsolve 01")
 
 	a := [][]float64{
 		{2, 1, 1, 3, 2},
@@ -101,7 +101,7 @@ func TestSPDsolve01(tst *testing.T) {
 	x := make([]float64, 5)
 	SPDsolve(x, a, b)
 	check_residR(tst, 1e-14, a, x, b)
-	utl.CheckVector(tst, "x = inv(a) * b", 1e-13, x, []float64{
+	chk.Vector(tst, "x = inv(a) * b", 1e-13, x, []float64{
 		-629.0 / 98.0,
 		237.0 / 49.0,
 		-53.0 / 49.0,

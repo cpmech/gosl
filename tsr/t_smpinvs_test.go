@@ -8,21 +8,23 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 func Test_smp01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("smp01")
+	//verbose() = false
+	chk.PrintTitle("smp01")
 
 	a, b, β, ϵ := -1.0, 0.5, 2.0, 1e-3
 
@@ -31,22 +33,22 @@ func Test_smp01(tst *testing.T) {
 	n := make([]float64, 3)
 	m := NewSmpDirector(N, λ, a, b, β, ϵ)
 	NewSmpUnitDirector(n, m, N)
-	utl.Pforan("λ = %v\n", λ)
-	utl.Pforan("N = %v\n", N)
-	utl.Pforan("m = %v\n", m)
-	utl.Pforan("n = %v\n", n)
-	utl.CheckVector(tst, "n", 1e-15, n, []float64{a / SQ3, a / SQ3, a / SQ3})
+	io.Pforan("λ = %v\n", λ)
+	io.Pforan("N = %v\n", N)
+	io.Pforan("m = %v\n", m)
+	io.Pforan("n = %v\n", n)
+	chk.Vector(tst, "n", 1e-15, n, []float64{a / SQ3, a / SQ3, a / SQ3})
 
 	p, q, err := GenInvs(λ, n, a)
 	if err != nil {
-		utl.Panic("GenInvs failed:\n%v", err.Error())
+		chk.Panic("GenInvs failed:\n%v", err.Error())
 	}
-	utl.Pforan("p = %v\n", p)
-	utl.Pforan("q = %v\n", q)
+	io.Pforan("p = %v\n", p)
+	io.Pforan("q = %v\n", q)
 	if q < 0.0 || q > 1e-17 {
-		utl.Panic("q=%g is incorrect", q)
+		chk.Panic("q=%g is incorrect", q)
 	}
 	if math.Abs(p-a*λ[0]) > 1e-14 {
-		utl.Panic("p=%g is incorrect. err = %g", p, math.Abs(p-a*λ[0]))
+		chk.Panic("p=%g is incorrect. err = %g", p, math.Abs(p-a*λ[0]))
 	}
 }

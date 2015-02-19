@@ -10,6 +10,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/num"
@@ -21,17 +23,17 @@ func main() {
 	mpi.Start(false)
 	defer func() {
 		if err := recover(); err != nil {
-			utl.PfRed("Some error has happened: %v\n", err)
+			io.PfRed("Some error has happened: %v\n", err)
 		}
 		mpi.Stop(false)
 	}()
 
-	utl.Tsilent = false
+	verbose() = false
 	if mpi.Rank() == 0 {
-		utl.TTitle("TestJacobian 01b (MPI)")
+		chk.PrintTitle("TestJacobian 01b (MPI)")
 	}
 	if mpi.Size() != 2 {
-		utl.Pf("this tests needs MPI 2 processors\n")
+		io.Pf("this tests needs MPI 2 processors\n")
 		return
 	}
 

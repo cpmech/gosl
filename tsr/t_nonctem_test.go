@@ -8,6 +8,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -20,16 +22,16 @@ const (
 
 func Test_noncteM01(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("noncteM01")
+	//verbose() = false
+	chk.PrintTitle("noncteM01")
 
 	prms := []string{"φ", "Mfix"}
 	vals := []float64{32, 0}
@@ -38,16 +40,16 @@ func Test_noncteM01(tst *testing.T) {
 
 	// check
 	if math.Abs(o.M(1)-o.Mcs) > 1e-17 {
-		utl.Panic("M(+1) failed. err = %v", o.M(1)-o.Mcs)
+		chk.Panic("M(+1) failed. err = %v", o.M(1)-o.Mcs)
 	}
 	if o.Mfix {
 		if math.Abs(o.M(-1)-o.Mcs) > 1e-17 {
-			utl.Panic("M(-1) failed. err = %v", o.M(-1)-o.Mcs)
+			chk.Panic("M(-1) failed. err = %v", o.M(-1)-o.Mcs)
 		}
 	} else {
 		Mext := 6.0 * math.Sin(32*math.Pi/180) / (3 + math.Sin(32*math.Pi/180))
 		if math.Abs(o.M(-1)-Mext) > 1e-15 {
-			utl.Panic("M(-1) failed. err = %v", o.M(-1)-Mext)
+			chk.Panic("M(-1) failed. err = %v", o.M(-1)-Mext)
 		}
 	}
 
@@ -61,13 +63,13 @@ func Test_noncteM01(tst *testing.T) {
 			res, w = o.M(w), tmp
 			return
 		}, w, 1e-6)
-		utl.CheckAnaNum(tst, "dM/dw  ", tol, dMdw, dnum, ver)
+		chk.AnaNum(tst, "dM/dw  ", tol, dMdw, dnum, ver)
 		dnum, _ = num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 			tmp, w = w, x
 			res, w = o.DMdw(w), tmp
 			return
 		}, w, 1e-6)
-		utl.CheckAnaNum(tst, "d²M/dw²", tol, d2Mdw2, dnum, ver)
+		chk.AnaNum(tst, "d²M/dw²", tol, d2Mdw2, dnum, ver)
 	}
 
 	ver, tol = true, 1e-9
@@ -82,10 +84,10 @@ func Test_noncteM01(tst *testing.T) {
 		d2Mdσdσ := M_Alloc4(nd[m])
 		p, q, w := M_pqws(s, σ)
 		o.Deriv2(d2Mdσdσ, dMdσ, σ, s, p, q, w)
-		utl.Pforan("σ = %v\n", σ)
-		utl.Pforan("tr(dMdσ) = %v\n", M_Tr(dMdσ))
+		io.Pforan("σ = %v\n", σ)
+		io.Pforan("tr(dMdσ) = %v\n", M_Tr(dMdσ))
 		if math.Abs(M_Tr(dMdσ)) > 1e-16 {
-			utl.Panic("tr(dMdσ)=%v failed", M_Tr(dMdσ))
+			chk.Panic("tr(dMdσ)=%v failed", M_Tr(dMdσ))
 		}
 		I_dc_d2Mdσdσ := M_Alloc2(nd[m]) // I:d²M/dσdσ
 		for j := 0; j < len(σ); j++ {
@@ -93,8 +95,8 @@ func Test_noncteM01(tst *testing.T) {
 				I_dc_d2Mdσdσ[j] += Im[k] * d2Mdσdσ[k][j]
 			}
 		}
-		//utl.Pfblue2("I_dc_d2Mdσdσ = %v\n", I_dc_d2Mdσdσ)
-		utl.CheckVector(tst, "I_dc_d2Mdσdσ", 1e-15, I_dc_d2Mdσdσ, nil)
+		//io.Pfblue2("I_dc_d2Mdσdσ = %v\n", I_dc_d2Mdσdσ)
+		chk.Vector(tst, "I_dc_d2Mdσdσ", 1e-15, I_dc_d2Mdσdσ, nil)
 		// dMdσ
 		for j := 0; j < len(σ); j++ {
 			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
@@ -103,7 +105,7 @@ func Test_noncteM01(tst *testing.T) {
 				σ[j] = tmp
 				return o.M(w)
 			}, σ[j], 1e-6)
-			utl.CheckAnaNum(tst, utl.Sf("dM/dσ[%d]", j), tol, dMdσ[j], dnum, ver)
+			chk.AnaNum(tst, io.Sf("dM/dσ[%d]", j), tol, dMdσ[j], dnum, ver)
 		}
 		// d²Mdσdσ
 		s_tmp := M_Alloc2(nd[m])
@@ -117,7 +119,7 @@ func Test_noncteM01(tst *testing.T) {
 					σ[j] = tmp
 					return dMdσ_tmp[i]
 				}, σ[j], 1e-6)
-				utl.CheckAnaNum(tst, utl.Sf("d²M/dσdσ[%d][%d]", i, j), tol, d2Mdσdσ[i][j], dnum, ver)
+				chk.AnaNum(tst, io.Sf("d²M/dσdσ[%d][%d]", i, j), tol, d2Mdσdσ[i][j], dnum, ver)
 			}
 		}
 	}
@@ -125,16 +127,16 @@ func Test_noncteM01(tst *testing.T) {
 
 func Test_Mw02(tst *testing.T) {
 
-	prevTs := utl.Tsilent
+	prevTs := verbose()
 	defer func() {
-		utl.Tsilent = prevTs
+		verbose() = prevTs
 		if err := recover(); err != nil {
 			tst.Error("[1;31mSome error has happened:[0m\n", err)
 		}
 	}()
 
-	//utl.Tsilent = false
-	utl.TTitle("Mw02")
+	//verbose() = false
+	chk.PrintTitle("Mw02")
 
 	prms := []string{"φ", "Mfix"}
 	vals := []float64{32, 0}
@@ -157,8 +159,8 @@ func Test_Mw02(tst *testing.T) {
 			r := SQ2 * o.M(w) / 3.0
 			X[i] = -r * math.Sin(math.Pi/6.0-θ)
 			Y[i] = r * math.Cos(math.Pi/6.0-θ)
-			//plt.Text(X[i], Y[i], utl.Sf("$\\\\theta=%.2f$", θ*180.0/math.Pi), "size=8, ha='center', color='red'")
-			//plt.Text(X[i], Y[i], utl.Sf("$w=%.2f$", w), "size=8, ha='center', color='red'")
+			//plt.Text(X[i], Y[i], io.Sf("$\\\\theta=%.2f$", θ*180.0/math.Pi), "size=8, ha='center', color='red'")
+			//plt.Text(X[i], Y[i], io.Sf("$w=%.2f$", w), "size=8, ha='center', color='red'")
 		}
 		plt.Plot(X, Y, "'b-'")
 
@@ -166,8 +168,8 @@ func Test_Mw02(tst *testing.T) {
 		g := func(θ float64) float64 {
 			return SQ2 * o.Sinφ / (SQ3*math.Cos(θ) - o.Sinφ*math.Sin(θ))
 		}
-		utl.Pforan("M( 1) = %v\n", SQ2*o.M(1)/3.0)
-		utl.Pforan("g(30) = %v\n", g(math.Pi/6.0))
+		io.Pforan("M( 1) = %v\n", SQ2*o.M(1)/3.0)
+		io.Pforan("g(30) = %v\n", g(math.Pi/6.0))
 		for i, w := range W {
 			θ := math.Asin(w) / 3.0
 			r := g(θ)

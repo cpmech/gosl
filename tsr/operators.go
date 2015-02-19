@@ -7,7 +7,7 @@ package tsr
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Tr returns the trace of a second order tensor
@@ -50,7 +50,7 @@ func Inv(ai, a [][]float64) (det float64, err error) {
 		ai[2][2] = (a[0][0]*a[1][1] - a[0][1]*a[1][0]) / det
 		return
 	}
-	err = utl.Err(_tsr_inv_1, det)
+	err = chk.Err(_tsr_inv_1, det)
 	return
 }
 

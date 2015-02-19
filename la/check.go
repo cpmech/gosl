@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/io"
 )
 
 // check_residR (real) calculates max |component| of resid: r = a*x - b
@@ -29,7 +29,7 @@ func check_residR(tst *testing.T, tol float64, a [][]float64, x, b []float64) {
 	if max_abs_cp > tol {
 		tst.Errorf("[1;31mresidual is too large: max|r[i]| = %g[0m", max_abs_cp)
 	} else {
-		utl.Pf("max|r[i]| = %g [1;32mOK[0m\n", max_abs_cp)
+		io.Pf("max|r[i]| = %g [1;32mOK[0m\n", max_abs_cp)
 	}
 	return
 }
@@ -52,7 +52,7 @@ func check_residC(tst *testing.T, tol float64, a [][]complex128, x, b []complex1
 	if max_abs_cp > tol {
 		tst.Errorf("[1;31mresidual is too large: max|r[i]| = %g[0m", max_abs_cp)
 	} else {
-		utl.Pf("max|r[i]| = %g [1;32mOK[0m\n", max_abs_cp)
+		io.Pf("max|r[i]| = %g [1;32mOK[0m\n", max_abs_cp)
 	}
 	return
 }

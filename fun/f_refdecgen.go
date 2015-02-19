@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // RefDecGen implements the reference decreasing model (general)
@@ -51,7 +51,7 @@ func (o *RefDecGen) Init(prms Prms) (err error) {
 		case "yini":
 			o.yini = p.V
 		default:
-			return utl.Err("ref-dec-gen: parameter named %q is invalid", p.N)
+			return chk.Err("ref-dec-gen: parameter named %q is invalid", p.N)
 		}
 	}
 

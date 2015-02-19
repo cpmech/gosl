@@ -7,7 +7,7 @@ package tsr
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // M_Norm calculates the norm of a 2nd order tensor represented in Mandel's basis
@@ -173,7 +173,7 @@ func M_Dot(c []float64, a, b []float64, nonsymTol float64) (err error) {
 		c[3] = ((a[1]+a[0])*b[3] + a[3]*b[1] + a[3]*b[0]) / 2.0
 		c6 := ((a[1]-a[0])*b[3] - a[3]*b[1] + a[3]*b[0]) / 2.0
 		if math.Abs(c6) > nonsymTol {
-			err = utl.Err(_mandelops_err2, "2D", c6)
+			err = chk.Err(_mandelops_err2, "2D", c6)
 			return
 		}
 		return
@@ -188,15 +188,15 @@ func M_Dot(c []float64, a, b []float64, nonsymTol float64) (err error) {
 	c7 := (a[5]*b[3] - a[3]*b[5] - (SQ2*a[1]-SQ2*a[2])*b[4] - SQ2*a[4]*b[2] + SQ2*a[4]*b[1]) / TWOSQ2
 	c8 := ((SQ2*a[2]-SQ2*a[0])*b[5] - a[3]*b[4] + a[4]*b[3] - SQ2*a[5]*b[2] + SQ2*a[5]*b[0]) / TWOSQ2
 	if math.Abs(c6) > nonsymTol {
-		err = utl.Err(_mandelops_err2, "3D", c6)
+		err = chk.Err(_mandelops_err2, "3D", c6)
 		return
 	}
 	if math.Abs(c7) > nonsymTol {
-		err = utl.Err(_mandelops_err2, "3D", c7)
+		err = chk.Err(_mandelops_err2, "3D", c7)
 		return
 	}
 	if math.Abs(c8) > nonsymTol {
-		err = utl.Err(_mandelops_err2, "3D", c8)
+		err = chk.Err(_mandelops_err2, "3D", c8)
 		return
 	}
 	return
@@ -207,7 +207,7 @@ func M_Inv(ai, a []float64, tol float64) (det float64, err error) {
 	if len(a) == 4 {
 		det = a[0]*a[1]*a[2] - a[2]*a[3]*a[3]/2.0
 		if math.Abs(det) < tol {
-			return 0, utl.Err(_mandelops_err1, a, det, tol)
+			return 0, chk.Err(_mandelops_err1, a, det, tol)
 		}
 		ai[0] = a[1] * a[2] / det
 		ai[1] = a[0] * a[2] / det
@@ -217,7 +217,7 @@ func M_Inv(ai, a []float64, tol float64) (det float64, err error) {
 	}
 	det = a[0]*a[1]*a[2] + a[3]*a[4]*a[5]/SQ2 - a[0]*a[4]*a[4]/2.0 - a[1]*a[5]*a[5]/2.0 - a[2]*a[3]*a[3]/2.0
 	if math.Abs(det) < tol {
-		return 0, utl.Err(_mandelops_err1, a, det, tol)
+		return 0, chk.Err(_mandelops_err1, a, det, tol)
 	}
 	ai[0] = (a[1]*a[2] - a[4]*a[4]/2.0) / det
 	ai[1] = (a[0]*a[2] - a[5]*a[5]/2.0) / det

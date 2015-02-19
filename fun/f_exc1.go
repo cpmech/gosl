@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
 )
 
 // Excitation #1 y(t) = A * (1 - cos(b*π*t)) / 2
@@ -29,7 +29,7 @@ func (o *Exc1) Init(prms Prms) (err error) {
 		case "b":
 			o.b = p.V
 		default:
-			return utl.Err("exc1: parameter named %q is invalid", p.N)
+			return chk.Err("exc1: parameter named %q is invalid", p.N)
 		}
 	}
 	return
