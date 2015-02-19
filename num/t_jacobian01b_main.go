@@ -24,7 +24,6 @@ func main() {
 		mpi.Stop(false)
 	}()
 
-	verbose()
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("TestJacobian 01b (MPI)")
 	}
