@@ -12,7 +12,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 var bb bytes.Buffer // the buffer
@@ -182,7 +181,7 @@ func Plot(x, y []float64, args string) {
 	n := bb.Len()
 	sx := io.Sf("x%d", n)
 	sy := io.Sf("y%d", n)
-	utl.Gen2Arrays(&bb, sx, sy, x, y)
+	Gen2Arrays(&bb, sx, sy, x, y)
 	if len(args) > 0 {
 		io.Ff(&bb, "plot(%s,%s,%s)\n", sx, sy, args)
 	} else {
@@ -203,9 +202,9 @@ func Contour(x, y, z [][]float64, args string) {
 	sx := io.Sf("x%d", n)
 	sy := io.Sf("y%d", n)
 	sz := io.Sf("z%d", n)
-	utl.GenMat(&bb, sx, x)
-	utl.GenMat(&bb, sy, y)
-	utl.GenMat(&bb, sz, z)
+	GenMat(&bb, sx, x)
+	GenMat(&bb, sy, y)
+	GenMat(&bb, sz, z)
 	cmd := io.Sf("Contour(%s,%s,%s", sx, sy, sz)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
@@ -218,9 +217,9 @@ func ContourSimple(x, y, z [][]float64, args string) {
 	sx := io.Sf("x%d", n)
 	sy := io.Sf("y%d", n)
 	sz := io.Sf("z%d", n)
-	utl.GenMat(&bb, sx, x)
-	utl.GenMat(&bb, sy, y)
-	utl.GenMat(&bb, sz, z)
+	GenMat(&bb, sx, x)
+	GenMat(&bb, sy, y)
+	GenMat(&bb, sz, z)
 	cmd := io.Sf("contour(%s,%s,%s", sx, sy, sz)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
@@ -234,10 +233,10 @@ func Quiver(x, y, gx, gy [][]float64, args string) {
 	sy := io.Sf("y%d", n)
 	sgx := io.Sf("gx%d", n)
 	sgy := io.Sf("gy%d", n)
-	utl.GenMat(&bb, sx, x)
-	utl.GenMat(&bb, sy, y)
-	utl.GenMat(&bb, sgx, gx)
-	utl.GenMat(&bb, sgy, gy)
+	GenMat(&bb, sx, x)
+	GenMat(&bb, sy, y)
+	GenMat(&bb, sgx, gx)
+	GenMat(&bb, sgy, gy)
 	cmd := io.Sf("quiver(%s,%s,%s,%s", sx, sy, sgx, sgy)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
@@ -328,6 +327,34 @@ func run(extra *bytes.Buffer) {
 		chk.Panic(_mplotlib_err1, serr.String())
 	}
 	io.Pf("%s", out.String())
+}
+
+// Auxiliary functions
+func GenMat(buf *bytes.Buffer, name string, a [][]float64) {
+	io.Ff(buf, "%s=array([", name)
+	for i, _ := range a {
+		io.Ff(buf, "[")
+		for j, _ := range a[i] {
+			io.Ff(buf, "%g,", a[i][j])
+		}
+		io.Ff(buf, "],")
+	}
+	io.Ff(buf, "],dtype=float)\n")
+}
+
+// GenArray generates the NumPy text in 'b' corresponding to an array of float point numbers
+func GenArray(b *bytes.Buffer, name string, u []float64) {
+	io.Ff(b, "%s=array([", name)
+	for i, _ := range u {
+		io.Ff(b, "%g,", u[i])
+	}
+	io.Ff(b, "],dtype=float)\n")
+}
+
+// Gen2Arrays generates the NumPy text in 'b' corresponding to 2 arrays of float point numbers
+func Gen2Arrays(buf *bytes.Buffer, nameA, nameB string, a, b []float64) {
+	GenArray(buf, nameA, a)
+	GenArray(buf, nameB, b)
 }
 
 var (

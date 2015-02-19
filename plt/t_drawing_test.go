@@ -9,20 +9,11 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_draw01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("draw01")
 
 	P := [][]float64{
@@ -49,19 +40,10 @@ func Test_draw01(tst *testing.T) {
 
 func Test_draw02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
 	chk.PrintTitle("draw02")
 
 	d := LineData{"gofem", "red", 1.2, 10, "o", "--"}
 	l := d.GetArgs("clip_on=0")
 	io.Pforan("l = %q\n", l)
-	utl.CheckString(tst, l, "clip_on=0,label='gofem',color='red',lw=1.2,ms=10,marker='o',ls='--'")
+	chk.String(tst, l, "clip_on=0,label='gofem',color='red',lw=1.2,ms=10,marker='o',ls='--'")
 }
