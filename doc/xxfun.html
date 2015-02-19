@@ -69,7 +69,31 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 			
 				
+				<dd><a href="#Atan2p">func Atan2p(y, x float64) (αrad float64)</a></dd>
+			
+				
+				<dd><a href="#Atan2pDeg">func Atan2pDeg(y, x float64) (αdeg float64)</a></dd>
+			
+				
+				<dd><a href="#Heav">func Heav(x float64) float64</a></dd>
+			
+				
 				<dd><a href="#PlotT">func PlotT(o Func, dirout, fname string, t0, tf float64, xcte []float64, np int, args string, withG, withH, save, show bool, extra func())</a></dd>
+			
+				
+				<dd><a href="#Ramp">func Ramp(x float64) float64</a></dd>
+			
+				
+				<dd><a href="#Sign">func Sign(x float64) float64</a></dd>
+			
+				
+				<dd><a href="#Sramp">func Sramp(x, β float64) float64</a></dd>
+			
+				
+				<dd><a href="#SrampD1">func SrampD1(x, β float64) float64</a></dd>
+			
+				
+				<dd><a href="#SrampD2">func SrampD2(x, β float64) float64</a></dd>
 			
 			
 				
@@ -280,6 +304,26 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 			
 				
+				<dd><a href="#RefIncRL1">type RefIncRL1</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefIncRL1.F">func (o RefIncRL1) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefIncRL1.G">func (o RefIncRL1) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefIncRL1.Grad">func (o RefIncRL1) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefIncRL1.H">func (o RefIncRL1) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#RefIncRL1.Init">func (o *RefIncRL1) Init(prms Prms) (err error)</a></dd>
+				
+			
+				
 				<dd><a href="#Rmp">type Rmp</a></dd>
 				
 				
@@ -350,11 +394,15 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_refdecsp1.go">f_refdecsp1.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/fun/f_refincrl1.go">f_refincrl1.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/fun/f_rmp.go">f_rmp.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_srmps.go">f_srmps.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/func.go">func.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fun/functions.go">functions.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/prms.go">prms.go</a>
 			
@@ -424,10 +472,106 @@ One implements an specialisation of Cte function that always returns one
 		
 			
 			
+			<h2 id="Atan2p">func <a href="/src/target/functions.go?s=290:331#L1">Atan2p</a></h2>
+			<pre>func Atan2p(y, x <a href="/pkg/builtin/#float64">float64</a>) (αrad <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 2π
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Atan2pDeg">func <a href="/src/target/functions.go?s=507:551#L9">Atan2pDeg</a></h2>
+			<pre>func Atan2pDeg(y, x <a href="/pkg/builtin/#float64">float64</a>) (αdeg <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Atan2pDeg implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 360
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Heav">func <a href="/src/target/functions.go?s=813:841#L26">Heav</a></h2>
+			<pre>func Heav(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Heaviside step function (== derivative of Ramp(x))
+</p>
+
+			
+			
+
+		
+			
+			
 			<h2 id="PlotT">func <a href="/src/target/func.go?s=1324:1462#L35">PlotT</a></h2>
 			<pre>func PlotT(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, withG, withH, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
 			<p>
 PlotT plots F, G and H for varying t and fixed coordinates x
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Ramp">func <a href="/src/target/functions.go?s=685:713#L18">Ramp</a></h2>
+			<pre>func Ramp(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Ramp function =&gt; MacAulay brackets
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sign">func <a href="/src/target/functions.go?s=936:964#L37">Sign</a></h2>
+			<pre>func Sign(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Sign function
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sramp">func <a href="/src/target/functions.go?s=1092:1125#L48">Sramp</a></h2>
+			<pre>func Sramp(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Sramp implements a smooth ramp function. Ramp
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SrampD1">func <a href="/src/target/functions.go?s=1261:1296#L56">SrampD1</a></h2>
+			<pre>func SrampD1(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+SrampD1 returns the first derivative of Sramp
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SrampD2">func <a href="/src/target/functions.go?s=1426:1461#L64">SrampD2</a></h2>
+			<pre>func SrampD2(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+SrampD2 returns the second derivative of Sramp
 </p>
 
 			
@@ -1121,7 +1265,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="RefDecGen">type <a href="/src/target/f_refdecgen.go?s=300:564#L4">RefDecGen</a></h2>
+			<h2 id="RefDecGen">type <a href="/src/target/f_refdecgen.go?s=499:763#L5">RefDecGen</a></h2>
 			<pre>type RefDecGen struct {
     A, B <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// lambda function coeficients</span>
     <span class="comment">// contains filtered or unexported fields</span>
@@ -1129,104 +1273,7 @@ Init initialises the function
 			<p>
 RefDecGen implements the reference decreasing model (general)
 </p>
-
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-				
-				<h3 id="RefDecGen.F">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1339:1391#L55">F</a></h3>
-				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
-				<p>
-F returns y = F(t, x)
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="RefDecGen.G">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1506:1558#L60">G</a></h3>
-				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
-				<p>
-G returns ∂y/∂t_cteX = G(t, x)
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1907:1967#L71">Grad</a></h3>
-				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
-				<p>
-Grad returns ∇F = ∂y/∂x = Grad(t, x)
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="RefDecGen.H">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1690:1742#L65">H</a></h3>
-				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
-				<p>
-H returns ∂²y/∂t²_cteX = H(t, x)
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="/src/target/f_refdecgen.go?s=710:757#L21">Init</a></h3>
-				<pre>func (o *<a href="#RefDecGen">RefDecGen</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
-				<p>
-Init initialises the function
-</p>
-
-				
-				
-				
-			
-		
-			
-			
-			<h2 id="RefDecSp1">type <a href="/src/target/f_refdecsp1.go?s=897:1090#L25">RefDecSp1</a></h2>
-			<pre>type RefDecSp1 struct {
-    <span class="comment">// contains filtered or unexported fields</span>
-}</pre>
-			<p>
-RefDecSp1 implements a specialisation of the reference decreasing model
-</p>
-<pre>          y ^
-            |
-         ya o
-            | \
-            |
-            |   \
-            |
-------------+-------------------------&gt; x
-            |
-         yb o--._ -\-------- λ0 = 0
-            |    `.
-            |      \\
-            |       .
-            |        \
-            |         \---
-            |          \ | λ1
-            |           \|
-            |            \
-            |
-            |
+<pre>[1] Pedroso DM, Sheng D, Zhao J. The concept of reference curves for constitutive modelling in soil mechanics, Computers and Geotechnics, 36, 1-2, <a href="http://dx.doi.org/10.1016/j.compgeo.2008.01.009">http://dx.doi.org/10.1016/j.compgeo.2008.01.009</a>
 </pre>
 
 
@@ -1242,7 +1289,108 @@ RefDecSp1 implements a specialisation of the reference decreasing model
 
 			
 				
-				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1991:2043#L79">F</a></h3>
+				<h3 id="RefDecGen.F">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1538:1590#L56">F</a></h3>
+				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecGen.G">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1705:1757#L61">G</a></h3>
+				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=2106:2166#L72">Grad</a></h3>
+				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecGen.H">func (RefDecGen) <a href="/src/target/f_refdecgen.go?s=1889:1941#L66">H</a></h3>
+				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="/src/target/f_refdecgen.go?s=909:956#L22">Init</a></h3>
+				<pre>func (o *<a href="#RefDecGen">RefDecGen</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RefDecSp1">type <a href="/src/target/f_refdecsp1.go?s=1096:1289#L26">RefDecSp1</a></h2>
+			<pre>type RefDecSp1 struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+RefDecSp1 implements a specialisation of the reference decreasing model
+</p>
+<pre>[1] Pedroso DM, Sheng D, Zhao J. The concept of reference curves for constitutive modelling in soil mechanics, Computers and Geotechnics, 36, 1-2, <a href="http://dx.doi.org/10.1016/j.compgeo.2008.01.009">http://dx.doi.org/10.1016/j.compgeo.2008.01.009</a>
+
+              y ^
+                |
+             ya o
+                | \
+                |
+                |   \
+                |
+    ------------+-------------------------&gt; x
+                |
+             yb o--._ -\-------- λ0 = 0
+                |    `.
+                |      \\
+                |       .
+                |        \
+                |         \---
+                |          \ | λ1
+                |           \|
+                |            \
+                |
+                |
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2190:2242#L80">F</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1253,7 +1401,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2196:2248#L87">G</a></h3>
+				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2395:2447#L88">G</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1264,7 +1412,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2685:2745#L104">Grad</a></h3>
+				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2884:2944#L105">Grad</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1275,7 +1423,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2428:2480#L95">H</a></h3>
+				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=2627:2679#L96">H</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1286,8 +1434,89 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1233:1280#L42">Init</a></h3>
+				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="/src/target/f_refdecsp1.go?s=1432:1479#L43">Init</a></h3>
 				<pre>func (o *<a href="#RefDecSp1">RefDecSp1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the model
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="RefIncRL1">type <a href="/src/target/f_refincrl1.go?s=501:825#L7">RefIncRL1</a></h2>
+			<pre>type RefIncRL1 struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+RefIncRL1 implements a specialisation of the reference increasing model
+Reference concept model: dydx growth but solved from right to left
+with right-most initial point @ x,y=1,1 with (0 &lt;= x &lt;= 1)
+Flipped model is also available if λ1 &lt; λ0 ( b == 1 )
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="RefIncRL1.F">func (RefIncRL1) <a href="/src/target/f_refincrl1.go?s=1547:1599#L60">F</a></h3>
+				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefIncRL1.G">func (RefIncRL1) <a href="/src/target/f_refincrl1.go?s=1709:1761#L65">G</a></h3>
+				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefIncRL1.Grad">func (RefIncRL1) <a href="/src/target/f_refincrl1.go?s=2108:2168#L75">Grad</a></h3>
+				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefIncRL1.H">func (RefIncRL1) <a href="/src/target/f_refincrl1.go?s=1892:1944#L70">H</a></h3>
+				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="RefIncRL1.Init">func (*RefIncRL1) <a href="/src/target/f_refincrl1.go?s=968:1015#L28">Init</a></h3>
+				<pre>func (o *<a href="#RefIncRL1">RefIncRL1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the model
 </p>

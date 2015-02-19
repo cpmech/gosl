@@ -79,6 +79,9 @@ handling geometry and mesh structures
 				<dd><a href="#HashPoint">func HashPoint(x, y, z float64) int</a></dd>
 			
 				
+				<dd><a href="#HashPointC">func HashPointC(c []float64) int</a></dd>
+			
+				
 				<dd><a href="#IsPointIn">func IsPointIn(p *Point, cMin, cMax []float64, tol float64) bool</a></dd>
 			
 				
@@ -105,6 +108,48 @@ handling geometry and mesh structures
 				
 				<dd><a href="#WriteMshD">func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int)</a></dd>
 			
+			
+				
+				<dd><a href="#Bin">type Bin</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bin.String">func (o Bin) String() string</a></dd>
+				
+			
+				
+				<dd><a href="#BinEntry">type BinEntry</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Bins">type Bins</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Append">func (o *Bins) Append(x []float64, id int) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.CalcIdx">func (o Bins) CalcIdx(x []float64) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Clear">func (o *Bins) Clear()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Find">func (o Bins) Find(x []float64) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.FindAlongLine">func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.FindBinByIndex">func (o Bins) FindBinByIndex(idx int) *Bin</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Init">func (o *Bins) Init(xi, xf []float64, ndiv int) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.String">func (o Bins) String() string</a></dd>
+				
 			
 				
 				<dd><a href="#Bspline">type Bspline</a></dd>
@@ -324,6 +369,8 @@ handling geometry and mesh structures
 			
 				<a href="/src/github.com/cpmech/gosl/gm/nurbs.go">nurbs.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/gm/search.go">search.go</a>
+			
 			</span>
 			</p>
 		
@@ -415,10 +462,22 @@ DistPointPoint computes the unsigned distance from a to b
 		
 			
 			
-			<h2 id="HashPoint">func <a href="/src/target/io.go?s=351:386#L9">HashPoint</a></h2>
+			<h2 id="HashPoint">func <a href="/src/target/search.go?s=278:313#L4">HashPoint</a></h2>
 			<pre>func HashPoint(x, y, z <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 HashPoint returns a unique id of a point
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="HashPointC">func <a href="/src/target/search.go?s=442:474#L9">HashPointC</a></h2>
+			<pre>func HashPointC(c []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+HashPoint returns a unique id of a point (given slice of coordinates)
 </p>
 
 			
@@ -463,7 +522,7 @@ PointsLims returns the limits of a set of points
 		
 			
 			
-			<h2 id="ReadMsh">func <a href="/src/target/io.go?s=3857:3899#L147">ReadMsh</a></h2>
+			<h2 id="ReadMsh">func <a href="/src/target/io.go?s=3725:3767#L142">ReadMsh</a></h2>
 			<pre>func ReadMsh(fnk <a href="/pkg/builtin/#string">string</a>) (nurbss []*<a href="#Nurbs">Nurbs</a>)</pre>
 			<p>
 ReadMsh reads .msh file
@@ -525,7 +584,7 @@ VecNorm returns the length (Euclidian norm) of a vector
 		
 			
 			
-			<h2 id="WriteMshD">func <a href="/src/target/io.go?s=592:688#L16">WriteMshD</a></h2>
+			<h2 id="WriteMshD">func <a href="/src/target/io.go?s=460:556#L11">WriteMshD</a></h2>
 			<pre>func WriteMshD(dirout, fnk <a href="/pkg/builtin/#string">string</a>, nurbss []*<a href="#Nurbs">Nurbs</a>, vtagged map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#int">int</a>, ctagged map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 WriteMshD writes .msh file
@@ -538,6 +597,169 @@ Input: vtagged maps hashed id of control point to vertex tag
 			
 
 		
+		
+			
+			
+			<h2 id="Bin">type <a href="/src/target/search.go?s=706:794#L29">Bin</a></h2>
+			<pre>type Bin struct {
+    Idx     <a href="/pkg/builtin/#int">int</a>         <span class="comment">// index of bin</span>
+    Entries []*<a href="#BinEntry">BinEntry</a> <span class="comment">// entries</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Bin.String">func (Bin) <a href="/src/target/search.go?s=4908:4936#L227">String</a></h3>
+				<pre>func (o <a href="#Bin">Bin</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="BinEntry">type <a href="/src/target/search.go?s=619:704#L24">BinEntry</a></h2>
+			<pre>type BinEntry struct {
+    Id <a href="/pkg/builtin/#int">int</a> <span class="comment">// object Id</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Bins">type <a href="/src/target/search.go?s=796:1160#L34">Bins</a></h2>
+			<pre>type Bins struct {
+    Ndim <a href="/pkg/builtin/#int">int</a>       <span class="comment">// space dimension</span>
+    Xi   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] left/lower-most point</span>
+    Xf   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] right/upper-most point</span>
+    L    []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] whole box lengths</span>
+    N    []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// [ndim] number of divisions</span>
+    S    <a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// size of bins</span>
+    All  []*<a href="#Bin">Bin</a>    <span class="comment">// [nbins] all bins</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Bins.Append">func (*Bins) <a href="/src/target/search.go?s=2138:2192#L86">Append</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Append(x []<a href="/pkg/builtin/#float64">float64</a>, id <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Append adds a new entry {x, id} to the bins structure
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.CalcIdx">func (Bins) <a href="/src/target/search.go?s=3449:3487#L150">CalcIdx</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) CalcIdx(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+CalcIdx calculates the bin index where the point x is
+returns -1 if out-of-range
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Clear">func (*Bins) <a href="/src/target/search.go?s=2490:2512#L101">Clear</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Clear()</pre>
+				<p>
+Clear clears all bins
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Find">func (Bins) <a href="/src/target/search.go?s=2664:2699#L107">Find</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) Find(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+Find returns the stored id of the entry whose coordinates are closest to x
+returns -1 if out of range or not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.FindAlongLine">func (Bins) <a href="/src/target/search.go?s=3794:3858#L165">FindAlongLine</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) FindAlongLine(xi, xf []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+FindAlongLine gets the ids of entries that lie close to a line
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.FindBinByIndex">func (Bins) <a href="/src/target/search.go?s=3124:3166#L133">FindBinByIndex</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) FindBinByIndex(idx <a href="/pkg/builtin/#int">int</a>) *<a href="#Bin">Bin</a></pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Bins.Init">func (*Bins) <a href="/src/target/search.go?s=1286:1345#L48">Init</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Init(xi, xf []<a href="/pkg/builtin/#float64">float64</a>, ndiv <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+xi   -- [ndim] initial positions
+xf   -- [ndim] final positions
+ndiv -- number of divisions for the maximun length
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.String">func (Bins) <a href="/src/target/search.go?s=5231:5260#L243">String</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
 		
 			
 			
@@ -754,7 +976,7 @@ SetOrder sets B-spline order (p)
 		
 			
 			
-			<h2 id="Data">type <a href="/src/target/io.go?s=3752:3828#L141">Data</a></h2>
+			<h2 id="Data">type <a href="/src/target/io.go?s=3620:3696#L136">Data</a></h2>
 			<pre>type Data struct {
     Verts  []<a href="#Vert">Vert</a>   <span class="comment">// vertices</span>
     Nurbss []<a href="#NurbsD">NurbsD</a> <span class="comment">// NURBSs</span>
@@ -1170,7 +1392,7 @@ U returns the value of a knot along direction dir
 		
 			
 			
-			<h2 id="NurbsD">type <a href="/src/target/io.go?s=3413:3718#L132">NurbsD</a></h2>
+			<h2 id="NurbsD">type <a href="/src/target/io.go?s=3281:3586#L127">NurbsD</a></h2>
 			<pre>type NurbsD struct {
     Id    <a href="/pkg/builtin/#int">int</a>         <span class="comment">// id of Nurbs</span>
     Gnd   <a href="/pkg/builtin/#int">int</a>         <span class="comment">// 1: curve, 2:surface, 3:volume (geometry dimension)</span>
@@ -1330,7 +1552,7 @@ Vector returns the vector representing Segment from A to B (scaled by m)
 		
 			
 			
-			<h2 id="Vert">type <a href="/src/target/io.go?s=3239:3342#L125">Vert</a></h2>
+			<h2 id="Vert">type <a href="/src/target/io.go?s=3107:3210#L120">Vert</a></h2>
 			<pre>type Vert struct {
     Id  <a href="/pkg/builtin/#int">int</a>       <span class="comment">// id</span>
     Tag <a href="/pkg/builtin/#int">int</a>       <span class="comment">// tag</span>
