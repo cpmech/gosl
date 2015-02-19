@@ -30,8 +30,10 @@ func CallerInfo(idx int) {
 	if f != nil {
 		fname = f.Name()
 	}
-	fmt.Printf("file = %s:%d\n", file, line)
-	fmt.Printf("func = %s\n", fname)
+	if Verbose {
+		fmt.Printf("file = %s:%d\n", file, line)
+		fmt.Printf("func = %s\n", fname)
+	}
 }
 
 // PanicSimple panicks without calling CallerInfo

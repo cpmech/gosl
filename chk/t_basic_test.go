@@ -8,7 +8,7 @@ import "testing"
 
 func Test_err01(tst *testing.T) {
 
-	Verbose = true
+	//Verbose = true
 	defer func() { Verbose = false }()
 	PrintTitle("err01")
 
