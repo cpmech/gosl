@@ -2,10 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package utl
+package io
 
 import (
 	"strings"
+
+	"github.com/cpmech/gosl/chk"
 )
 
 // ExtractStrPair extracts the pair from, e.g., "key:val"
@@ -28,7 +30,7 @@ func Keycode(String string, Type string) (keycode string, found bool) {
 		return "", false
 	}
 	if String[0] != '!' {
-		Panic(_parsing_err3, "Keycode", String)
+		chk.Panic(_parsing_err3, "Keycode", String)
 	}
 	for _, s := range strings.Split(String[1:], "!") { // [1:] => skip first "!"
 		ss := strings.TrimSpace(s)
@@ -38,7 +40,7 @@ func Keycode(String string, Type string) (keycode string, found bool) {
 			sss[i] = strings.TrimSpace(val)
 		}
 		//if len(sss) < 1 { // TODO: remove this since this will not happen
-		//Panic(_parsing_err4, "Keycode", String)
+		//chk.Panic(_parsing_err4, "Keycode", String)
 		//}
 		//Pfgreen("ss=%#v, sss=%#v\n", ss, sss)
 		if sss[0] == Type {
@@ -59,7 +61,7 @@ func Keycodes(String string) (keycodes []string) {
 		return
 	}
 	if String[0] != '!' {
-		Panic(_parsing_err3, "Keycodes", String)
+		chk.Panic(_parsing_err3, "Keycodes", String)
 	}
 	for _, s := range strings.Split(String[1:], "!") { // [1:] => skip first "!"
 		ss := strings.TrimSpace(s)
@@ -68,7 +70,7 @@ func Keycodes(String string) (keycodes []string) {
 			sss[i] = strings.TrimSpace(val)
 		}
 		//if len(sss) < 1 { // TODO: remove this since this will not happen
-		//Panic(_parsing_err4, "Keycodes", String)
+		//chk.Panic(_parsing_err4, "Keycodes", String)
 		//}
 		keycodes = append(keycodes, sss[0])
 	}
@@ -93,7 +95,7 @@ func JoinKeys3(k0, k1, k2 []string, sep string) (res string) {
 func SplitKeys3(res string) (k0, k1, k2 []string) {
 	sets := strings.Split(res, ",")
 	if len(sets) != 3 {
-		Panic(_parsing_err1, res, sets)
+		chk.Panic(_parsing_err1, res, sets)
 	}
 	s0 := strings.TrimSpace(sets[0])
 	s1 := strings.TrimSpace(sets[1])
@@ -132,7 +134,7 @@ func JoinKeys4(k0, k1, k2, k3 []string, sep string) (res string) {
 func SplitKeys4(res string) (k0, k1, k2, k3 []string) {
 	sets := strings.Split(res, ",")
 	if len(sets) != 4 {
-		Panic(_parsing_err2, res, sets)
+		chk.Panic(_parsing_err2, res, sets)
 	}
 	s0 := strings.TrimSpace(sets[0])
 	s1 := strings.TrimSpace(sets[1])
@@ -176,8 +178,7 @@ func SplitKeys(keys string) []string {
 
 // error messages
 var (
-	_parsing_err1 = "parsing.go: SplitKeys3: string '%s' does not contain 3 subsets separated by 2 commas. sets = %v"
-	_parsing_err2 = "parsing.go: SplitKeys4: string '%s' does not contain 4 subsets separated by 3 commas. sets = %v"
-	_parsing_err3 = "parsing.go: %s: first character in keycode string must be an exclamation mark !\nstring = \"%v\""
-	//_parsing_err4 = "parsing.go: %s: keycode string is invalid:\nstring = \"%v\""
+	_parsing_err1 = "string '%s' does not contain 3 subsets separated by 2 commas. sets = %v"
+	_parsing_err2 = "string '%s' does not contain 4 subsets separated by 3 commas. sets = %v"
+	_parsing_err3 = "%s: first character in keycode string must be an exclamation mark !\nstring = \"%v\""
 )

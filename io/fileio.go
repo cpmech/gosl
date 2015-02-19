@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package utl
+package io
 
 import (
 	"bufio"
@@ -10,9 +10,10 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/cpmech/gosl/chk"
 )
 
 // FnKey returns the file name key (without path and extension, if any)
@@ -36,7 +37,7 @@ func PathKey(fn string) string {
 func AppendToFile(fn string, buffer ...*bytes.Buffer) {
 	fil, err := os.OpenFile(os.ExpandEnv(fn), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		Panic(_fileio_err01, fn)
+		chk.Panic(_fileio_err01, fn)
 	}
 	defer fil.Close()
 	for k, _ := range buffer {
@@ -51,7 +52,7 @@ func WriteFile(fn string, buffer ...*bytes.Buffer) {
 	//fil, err := os.OpenFile(os.ExpandEnv(fn), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
-		Panic(_fileio_err02, fn)
+		chk.Panic(_fileio_err02, fn)
 	}
 	defer fil.Close()
 	for k, _ := range buffer {
@@ -71,7 +72,7 @@ func WriteFileD(dirout, fn string, buffer ...*bytes.Buffer) {
 func WriteFileS(fn, data string) {
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
-		Panic(_fileio_err02, fn)
+		chk.Panic(_fileio_err02, fn)
 	}
 	defer fil.Close()
 	fil.WriteString(data)
@@ -104,11 +105,11 @@ func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer) {
 func WriteBytesToFile(fn string, b []byte) {
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
-		Panic(_fileio_err03, fn)
+		chk.Panic(_fileio_err03, fn)
 	}
 	defer fil.Close()
 	if _, err = fil.Write(b); err != nil {
-		Panic(_fileio_err04, err.Error())
+		chk.Panic(_fileio_err04, err.Error())
 	}
 }
 
@@ -136,7 +137,7 @@ type ReadLinesCallback func(idx int, line string) (stop bool)
 func ReadLines(fn string, cb ReadLinesCallback) {
 	fil, err := os.Open(os.ExpandEnv(fn))
 	if err != nil {
-		Panic(_fileio_err05, fn)
+		chk.Panic(_fileio_err05, fn)
 	}
 	defer fil.Close()
 	r := bufio.NewReader(fil)
@@ -144,13 +145,13 @@ func ReadLines(fn string, cb ReadLinesCallback) {
 	for {
 		lin, prefix, errl := r.ReadLine()
 		if prefix {
-			Panic(_fileio_err06, fn)
+			chk.Panic(_fileio_err06, fn)
 		}
 		if errl == io.EOF {
 			break
 		}
 		if errl != nil {
-			Panic(_fileio_err07, fn)
+			chk.Panic(_fileio_err07, fn)
 		}
 		stop := cb(idx, string(lin))
 		if stop {
@@ -167,13 +168,13 @@ func ReadLinesFile(fil *os.File, cb ReadLinesCallback) (oserr error) {
 	for {
 		lin, prefix, errl := r.ReadLine()
 		if prefix {
-			return Err(_fileio_err08, fil.Name())
+			return chk.Err(_fileio_err08, fil.Name())
 		}
 		if errl == io.EOF {
 			break
 		}
 		if errl != nil {
-			return Err(_fileio_err09, fil.Name())
+			return chk.Err(_fileio_err09, fil.Name())
 		}
 		stop := cb(idx, string(lin))
 		if stop {
@@ -210,7 +211,7 @@ func ReadTable(fn string) (keys []string, T map[string][]float64, err error) {
 		}
 		ncol := len(r)
 		if ncol < 1 {
-			err = Err("ReadTable: number of columns must be at least 1")
+			err = chk.Err("ReadTable: number of columns must be at least 1")
 			return true
 		}
 		if header {
@@ -249,7 +250,7 @@ func ReadMatrix(fn string) (M [][]float64, err error) {
 		}
 		ncol := len(r)
 		if ncol < 1 {
-			err = Err("ReadMatrix: number of columns must be at least 1")
+			err = chk.Err("ReadMatrix: number of columns must be at least 1")
 			return true
 		}
 		if M == nil {
@@ -257,7 +258,7 @@ func ReadMatrix(fn string) (M [][]float64, err error) {
 			ncol_fix = ncol
 		}
 		if ncol != ncol_fix {
-			err = Err("ReadMatrix: nubmer of columns must be equal for all lines (%d != %d)", ncol, ncol_fix)
+			err = chk.Err("ReadMatrix: nubmer of columns must be equal for all lines (%d != %d)", ncol, ncol_fix)
 			return
 		}
 		vals := make([]float64, ncol)
@@ -268,26 +269,6 @@ func ReadMatrix(fn string) (M [][]float64, err error) {
 		return
 	})
 	return
-}
-
-// WritePython writes data corresponding to a Python script and eventually runs
-// this script if show == true
-func WritePython(dirout, fnkey string, show bool, buffer ...*bytes.Buffer) {
-
-	// create output directory
-	os.MkdirAll(dirout, 0777)
-
-	// save file
-	fn := Sf("%s/%s.py", dirout, fnkey)
-	WriteFile(fn, buffer...)
-
-	// run script
-	if show {
-		_, err := exec.Command("python", fn).Output()
-		if err != nil {
-			Panic(_fileio_err10, fn, err)
-		}
-	}
 }
 
 // error messages
@@ -301,5 +282,4 @@ var (
 	_fileio_err07 = "cannot read line. file = <%s>"
 	_fileio_err08 = "cannot read long line yet. file = <%s>"
 	_fileio_err09 = "cannot read line. file = <%s>"
-	_fileio_err10 = "cannot execute python command. file =<%s>\n\t%v"
 )

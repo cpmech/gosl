@@ -2,22 +2,18 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package utl
+package io
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/cpmech/gosl/chk"
+)
 
 func Test_strpair01(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("strpair01")
+	//verbose()
+	chk.PrintTitle("strpair01")
 
 	str := "keyA: value :"
 	key, val := ExtractStrPair(str, ":")
@@ -33,16 +29,8 @@ func Test_strpair01(tst *testing.T) {
 
 func Test_keycode01(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("keycode01")
+	//verbose()
+	chk.PrintTitle("keycode01")
 
 	str := "!typeA:keycodeA !typeB:keycodeB!typeC  : keycodeC"
 	if resA, ok := Keycode(str, "typeA"); !ok {
@@ -101,34 +89,18 @@ func Test_keycode01(tst *testing.T) {
 
 func Test_keycode02(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("keycode02")
+	//verbose()
+	chk.PrintTitle("keycode02")
 
 	str := "!flagA !typeA:keycodeA !typeB:keycodeB!typeC  : keycodeC !FlagB"
 	res := Keycodes(str)
-	CompareStrs(tst, "keycodes", res, []string{"flagA", "typeA", "typeB", "typeC", "FlagB"})
+	chk.Strings(tst, "keycodes", res, []string{"flagA", "typeA", "typeB", "typeC", "FlagB"})
 }
 
 func Test_parsing02(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("parsing02")
+	//verbose()
+	chk.PrintTitle("parsing02")
 
 	keys := []string{"ux", "uy", "uz", "pl", "sl"}
 	skeys := JoinKeys(keys)
@@ -136,100 +108,84 @@ func Test_parsing02(tst *testing.T) {
 	Pforan("keys  = %+v\n", keys)
 	Pforan("skeys = %q\n", skeys)
 	Pforan("kkeys = %+v\n", kkeys)
-	CompareStrs(tst, "keys", keys, kkeys)
+	chk.Strings(tst, "keys", keys, kkeys)
 
 	k1, k2 := []string{"ex1", "ex2"}, []string{"more1", "more2"}
 	allkeys := JoinKeys3(keys, k1, k2, "")
 	Pfpink("allkeys = %q\n", allkeys)
-	CheckString(tst, allkeys, "ux uy uz pl sl ex1 ex2 more1 more2")
+	chk.String(tst, allkeys, "ux uy uz pl sl ex1 ex2 more1 more2")
 
 	allkeys = JoinKeys3(keys, k1, k2, ",")
 	Pfpink("allkeys = %q\n", allkeys)
-	CheckString(tst, allkeys, "ux uy uz pl sl, ex1 ex2, more1 more2")
+	chk.String(tst, allkeys, "ux uy uz pl sl, ex1 ex2, more1 more2")
 
 	r0, r1, r2 := SplitKeys3(allkeys)
 	Pfblue2("r0 = %v\n", r0)
 	Pfblue2("r1 = %v\n", r1)
 	Pfblue2("r2 = %v\n", r2)
-	CompareStrs(tst, "r0", r0, keys)
-	CompareStrs(tst, "r1", r1, k1)
-	CompareStrs(tst, "r2", r2, k2)
+	chk.Strings(tst, "r0", r0, keys)
+	chk.Strings(tst, "r1", r1, k1)
+	chk.Strings(tst, "r2", r2, k2)
 
 	allkeys = JoinKeys3(keys, []string{}, k2, ",")
 	Pfpink("allkeys = %q\n", allkeys)
-	CheckString(tst, allkeys, "ux uy uz pl sl,, more1 more2")
+	chk.String(tst, allkeys, "ux uy uz pl sl,, more1 more2")
 
 	allkeys = JoinKeys3(keys, []string{}, []string{}, ",")
 	Pfpink("allkeys = %q\n", allkeys)
-	CheckString(tst, allkeys, "ux uy uz pl sl,,")
+	chk.String(tst, allkeys, "ux uy uz pl sl,,")
 
 	allkeys = JoinKeys3([]string{}, k1, k2, ",")
 	Pfpink("allkeys = %q\n", allkeys)
-	CheckString(tst, allkeys, ", ex1 ex2, more1 more2")
+	chk.String(tst, allkeys, ", ex1 ex2, more1 more2")
 
 	r0, r1, r2 = SplitKeys3("a ,b c,")
 	Pfblue2("r0 = %v\n", r0)
 	Pfblue2("r1 = %v\n", r1)
 	Pfblue2("r2 = %v\n", r2)
-	CompareStrs(tst, "r0", r0, []string{"a"})
-	CompareStrs(tst, "r1", r1, []string{"b", "c"})
-	CompareStrs(tst, "r2", r2, []string{})
+	chk.Strings(tst, "r0", r0, []string{"a"})
+	chk.Strings(tst, "r1", r1, []string{"b", "c"})
+	chk.Strings(tst, "r2", r2, []string{})
 }
 
 func Test_parsing03(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("parsing03")
+	//verbose()
+	chk.PrintTitle("parsing03")
 
 	keys := []string{"ux", "uy", "uz", "pl", "sl"}
 	k1, k2, k3 := []string{"ex1", "ex2"}, []string{"more1", "more2"}, []string{"a", "b", "c"}
 	allkeys := JoinKeys4(keys, k1, k2, k3, "")
 	Pfpink("allkeys = %q\n", allkeys)
-	CheckString(tst, allkeys, "ux uy uz pl sl ex1 ex2 more1 more2 a b c")
+	chk.String(tst, allkeys, "ux uy uz pl sl ex1 ex2 more1 more2 a b c")
 
 	allkeys = JoinKeys4(keys, k1, k2, k3, ",")
 	Pfpink("allkeys = %q\n", allkeys)
-	CheckString(tst, allkeys, "ux uy uz pl sl, ex1 ex2, more1 more2, a b c")
+	chk.String(tst, allkeys, "ux uy uz pl sl, ex1 ex2, more1 more2, a b c")
 
 	r0, r1, r2, r3 := SplitKeys4(allkeys)
 	Pfblue2("r0 = %v\n", r0)
 	Pfblue2("r1 = %v\n", r1)
 	Pfblue2("r2 = %v\n", r2)
 	Pfblue2("r3 = %v\n", r3)
-	CompareStrs(tst, "r0", r0, keys)
-	CompareStrs(tst, "r1", r1, k1)
-	CompareStrs(tst, "r2", r2, k2)
-	CompareStrs(tst, "r3", r3, k3)
+	chk.Strings(tst, "r0", r0, keys)
+	chk.Strings(tst, "r1", r1, k1)
+	chk.Strings(tst, "r2", r2, k2)
+	chk.Strings(tst, "r3", r3, k3)
 
 	allkeys = JoinKeys4(keys, []string{}, k2, []string{}, ",")
 	Pfpink("allkeys = %q\n", allkeys)
-	CheckString(tst, allkeys, "ux uy uz pl sl,, more1 more2,")
+	chk.String(tst, allkeys, "ux uy uz pl sl,, more1 more2,")
 }
 
 func Test_parsing04(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("parsing04")
+	//verbose()
+	chk.PrintTitle("parsing04")
 
 	keys := []string{"ux", "uy", "uz"}
 	skeys := JoinKeysPre("R", keys)
 	Pforan("keys  = %+v\n", keys)
 	Pforan("skeys = %q\n", skeys)
-	CheckString(tst, skeys, "Rux Ruy Ruz")
+	chk.String(tst, skeys, "Rux Ruy Ruz")
 }

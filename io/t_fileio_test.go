@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package utl
+package io
 
 import (
 	"bytes"
@@ -10,34 +10,28 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/cpmech/gosl/chk"
 )
 
-func TestFileIO1(tst *testing.T) {
+func Test_fileIO1(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("TestFile IO 1")
+	//verbose()
+	chk.PrintTitle("fileIO1")
 
 	fn := "test/dorival/file.sim"
-	CheckString(tst, "file.sim", filepath.Base(fn))
-	CheckString(tst, ".sim", filepath.Ext(fn))
-	CheckString(tst, "file", FnKey(fn))
-	CheckString(tst, ".sim", FnExt(fn))
-	CheckString(tst, "test/dorival/file", PathKey(fn))
+	chk.String(tst, "file.sim", filepath.Base(fn))
+	chk.String(tst, ".sim", filepath.Ext(fn))
+	chk.String(tst, "file", FnKey(fn))
+	chk.String(tst, ".sim", FnExt(fn))
+	chk.String(tst, "test/dorival/file", PathKey(fn))
 
 	gn := "test/dorival/file.h5"
-	CheckString(tst, "file.h5", filepath.Base(gn))
-	CheckString(tst, ".h5", filepath.Ext(gn))
-	CheckString(tst, "file", FnKey(gn))
-	CheckString(tst, ".h5", FnExt(gn))
-	CheckString(tst, "test/dorival/file", PathKey(gn))
+	chk.String(tst, "file.h5", filepath.Base(gn))
+	chk.String(tst, ".h5", filepath.Ext(gn))
+	chk.String(tst, "file", FnKey(gn))
+	chk.String(tst, ".h5", FnExt(gn))
+	chk.String(tst, "test/dorival/file", PathKey(gn))
 
 	Pf("\n")
 	Pf("fn   = %s\n", fn)
@@ -47,10 +41,10 @@ func TestFileIO1(tst *testing.T) {
 	Pf("\n")
 
 	fn = "test/dorival/file"
-	CheckString(tst, "file", filepath.Base(fn))
-	CheckString(tst, "", filepath.Ext(fn))
-	CheckString(tst, "file", FnKey(fn))
-	CheckString(tst, "test/dorival/file", PathKey(fn))
+	chk.String(tst, "file", filepath.Base(fn))
+	chk.String(tst, "", filepath.Ext(fn))
+	chk.String(tst, "file", FnKey(fn))
+	chk.String(tst, "test/dorival/file", PathKey(fn))
 
 	Pf("\n")
 	Pf("fn   = %s\n", fn)
@@ -60,10 +54,10 @@ func TestFileIO1(tst *testing.T) {
 	Pf("\n")
 
 	fn = "test/dorival/file."
-	CheckString(tst, "file.", filepath.Base(fn))
-	CheckString(tst, ".", filepath.Ext(fn))
-	CheckString(tst, "file", FnKey(fn))
-	CheckString(tst, "test/dorival/file", PathKey(fn))
+	chk.String(tst, "file.", filepath.Base(fn))
+	chk.String(tst, ".", filepath.Ext(fn))
+	chk.String(tst, "file", FnKey(fn))
+	chk.String(tst, "test/dorival/file", PathKey(fn))
 
 	Pf("\n")
 	Pf("fn   = %s\n", fn)
@@ -73,10 +67,10 @@ func TestFileIO1(tst *testing.T) {
 	Pf("\n")
 
 	fn = "test/dorival/f.extension"
-	CheckString(tst, "f.extension", filepath.Base(fn))
-	CheckString(tst, ".extension", filepath.Ext(fn))
-	CheckString(tst, "f", FnKey(fn))
-	CheckString(tst, "test/dorival/f", PathKey(fn))
+	chk.String(tst, "f.extension", filepath.Base(fn))
+	chk.String(tst, ".extension", filepath.Ext(fn))
+	chk.String(tst, "f", FnKey(fn))
+	chk.String(tst, "test/dorival/f", PathKey(fn))
 
 	Pf("\n")
 	Pf("fn   = %s\n", fn)
@@ -87,18 +81,10 @@ func TestFileIO1(tst *testing.T) {
 	Pf("\n")
 }
 
-func TestFileIO2(tst *testing.T) {
+func Test_fileIO2(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("TestFile IO 2")
+	//verbose()
+	chk.PrintTitle("fileIO2")
 
 	os.MkdirAll("/tmp/gosl", 0777)
 
@@ -109,24 +95,16 @@ func TestFileIO2(tst *testing.T) {
 
 	ReadLines(fn, func(idx int, line string) (stop bool) {
 		if line != "just testing 666" {
-			Panic("read wrong line: '%v'", line)
+			chk.Panic("read wrong line: '%v'", line)
 		}
 		return false
 	})
 }
 
-func TestFileIO3(tst *testing.T) {
+func Test_fileIO3(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("TestFile IO 3")
+	//verbose()
+	chk.PrintTitle("fileIO3")
 
 	type Test struct {
 		Id     int
@@ -139,59 +117,28 @@ func TestFileIO3(tst *testing.T) {
 
 	b, err := json.Marshal(&t)
 	if err != nil {
-		Panic("marshal failed for %+v", t)
+		chk.Panic("marshal failed for %+v", t)
 	}
 	WriteBytesToFileD("/tmp/gosl/", "gosl_jsontest.res", b)
 	PfBlue("file written /tmp/gosl/gosl_jsontest.res\n")
 }
 
-func TestFileIO4(tst *testing.T) {
+func Test_fileIO4(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("TestFile IO 4")
-
-	var b0, b1 bytes.Buffer
-	Ff(&b0, "from gosl_fig import *\n")
-	Ff(&b1, "x = linspace(0., 4., 101)\n")
-	Ff(&b1, "y = exp(-2.0*x)\n")
-	Ff(&b1, "plot(x,y, label='decay')\n")
-	Ff(&b1, "Gll('x','y')\n")
-	Ff(&b1, "show()\n")
-	WritePython("/tmp/gosl/", "testfileio04", false, &b0, &b1)
-}
-
-func TestFileIO5(tst *testing.T) {
-
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("TestFile IO 5")
+	//verbose()
+	chk.PrintTitle("fileIO4")
 
 	theline := "Hello World !!!"
 	WriteFileSD("/tmp/gosl", "filestring.txt", theline)
 
 	f, err := OpenFileR("/tmp/gosl/filestring.txt")
 	if err != nil {
-		Panic("%v", err)
+		chk.Panic("%v", err)
 	}
 
 	ReadLinesFile(f, func(idx int, line string) (stop bool) {
 		Pforan("line = %v\n", line)
-		CheckString(tst, line, theline)
+		chk.String(tst, line, theline)
 		return
 	})
 }
