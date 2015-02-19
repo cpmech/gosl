@@ -12,11 +12,7 @@ import (
 )
 
 func TestMatVec01(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
+
 	chk.PrintTitle("TestMatVec 01")
 
 	a := [][]float64{

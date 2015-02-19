@@ -19,7 +19,7 @@ const PRINTZEROTOL = 1e-13
 
 // PrintVec prints a vector
 func PrintVec(name string, a []float64, format string, numpy bool) {
-	if io.Verbose {
+	if !io.Verbose {
 		return
 	}
 	r := name + " = "
@@ -46,7 +46,7 @@ func PrintVec(name string, a []float64, format string, numpy bool) {
 
 // PrintMat prints a dense matrix
 func PrintMat(name string, a [][]float64, format string, numpy bool) {
-	if io.Verbose {
+	if !io.Verbose {
 		return
 	}
 	r := name + " ="
@@ -121,7 +121,7 @@ func ReadSmat(fn string) *Triplet {
 
 // PrintVecC prints a vector of complex numbers
 func PrintVecC(name string, a []complex128, format, formatz string, numpy bool) {
-	if io.Verbose {
+	if !io.Verbose {
 		return
 	}
 	r := name + " ="
@@ -145,7 +145,7 @@ func PrintVecC(name string, a []complex128, format, formatz string, numpy bool) 
 
 // PrintMatC prints a matrix of complex numbers
 func PrintMatC(name string, a [][]complex128, format, formatz string, numpy bool) {
-	if io.Verbose {
+	if !io.Verbose {
 		return
 	}
 	r := name + " ="

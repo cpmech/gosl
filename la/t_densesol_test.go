@@ -24,11 +24,6 @@ func calc_LLt(L [][]float64) (LLt [][]float64) {
 }
 
 func TestCholesky01(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	chk.PrintTitle("TestCholesky 01")
 
@@ -52,11 +47,6 @@ func TestCholesky01(tst *testing.T) {
 }
 
 func TestCholesky02(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	chk.PrintTitle("TestCholesky 02")
 
@@ -82,11 +72,6 @@ func TestCholesky02(tst *testing.T) {
 }
 
 func TestSPDsolve01(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	chk.PrintTitle("TestSPDsolve 01")
 

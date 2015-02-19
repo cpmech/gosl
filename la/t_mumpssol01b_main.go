@@ -8,23 +8,18 @@ package main
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
-	"github.com/cpmech/gosl/utl"
 )
 
 func main() {
 
 	mpi.Start(false)
 	defer func() {
-		if err := recover(); err != nil {
-			io.PfRed("Some error has happened: %v\n", err)
-		}
 		mpi.Stop(false)
 	}()
 
-	verbose() = false
+	verbose()
 	myrank := mpi.Rank()
 	if myrank == 0 {
 		chk.PrintTitle("Test MUMPS Sol 01b")

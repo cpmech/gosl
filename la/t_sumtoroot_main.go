@@ -11,10 +11,8 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
-	"github.com/cpmech/gosl/utl"
 )
 
 func setslice(x []float64) {
@@ -32,13 +30,10 @@ func main() {
 
 	mpi.Start(false)
 	defer func() {
-		if err := recover(); err != nil {
-			io.PfRed("Some error has happened: %v\n", err)
-		}
 		mpi.Stop(false)
 	}()
 
-	verbose() = false
+	verbose()
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("Test SumToRoot 01")
 	}

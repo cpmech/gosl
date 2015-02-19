@@ -10,15 +10,10 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func TestVector01(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
+
 	chk.PrintTitle("TestVector 01")
 
 	io.Pf("func VecFill(v []float64, s float64)\n")
@@ -37,7 +32,7 @@ func TestVector01(tst *testing.T) {
 	PrintVec("v", v, "%5g", false)
 	nrm := VecNorm(v)
 	io.Pf("norm(v) = %23.15e\n", nrm)
-	utl.CheckScalar(tst, "norm(v)", 1e-17, nrm, 1.489221273014860e+03)
+	chk.Scalar(tst, "norm(v)", 1e-17, nrm, 1.489221273014860e+03)
 
 	io.Pf("\nfunc VecNormDiff(u, v []float64) (nrm float64)\n")
 	u := []float64{333, 333, 333, 333, 333}
@@ -45,7 +40,7 @@ func TestVector01(tst *testing.T) {
 	PrintVec("v", v, "%5g", false)
 	nrm = VecNormDiff(u, v)
 	io.Pf("norm(u-v) = %23.15e\n", nrm)
-	utl.CheckScalar(tst, "norm(u-v)", 1e-17, nrm, math.Sqrt(5.0*333.0*333.0))
+	chk.Scalar(tst, "norm(u-v)", 1e-17, nrm, math.Sqrt(5.0*333.0*333.0))
 
 	io.Pf("\nfunc VecDot(u, v []float64) (res float64)\n")
 	u = []float64{0.1, 0.2, 0.3, 0.4, 0.5}
@@ -53,7 +48,7 @@ func TestVector01(tst *testing.T) {
 	PrintVec("v", v, "%5g", false)
 	udotv := VecDot(u, v)
 	io.Pf("u dot v = %v\n", udotv)
-	utl.CheckScalar(tst, "u dot v", 1e-12, udotv, 999)
+	chk.Scalar(tst, "u dot v", 1e-12, udotv, 999)
 
 	io.Pf("\nfunc VecCopy(a []float64, alp float64, b []float64)\n")
 	a := make([]float64, len(u))
@@ -81,21 +76,21 @@ func TestVector01(tst *testing.T) {
 	PrintVec("a", a, "%5g", false)
 	mina := VecMin(a)
 	io.Pf("min(a) = %v\n", mina)
-	utl.CheckScalar(tst, "min(a)", 1e-17, mina, 0.1)
+	chk.Scalar(tst, "min(a)", 1e-17, mina, 0.1)
 
 	io.Pf("\nfunc VecMax(v []float64) (max float64)\n")
 	PrintVec("a", a, "%5g", false)
 	maxa := VecMax(a)
 	io.Pf("max(a) = %v\n", maxa)
-	utl.CheckScalar(tst, "max(a)", 1e-17, maxa, 0.5)
+	chk.Scalar(tst, "max(a)", 1e-17, maxa, 0.5)
 
 	io.Pf("\nfunc VecMinMax(v []float64) (min, max float64)\n")
 	PrintVec("a", a, "%5g", false)
 	min2a, max2a := VecMinMax(a)
 	io.Pf("min(a) = %v\n", min2a)
 	io.Pf("max(a) = %v\n", max2a)
-	utl.CheckScalar(tst, "min(a)", 1e-17, min2a, 0.1)
-	utl.CheckScalar(tst, "max(a)", 1e-17, max2a, 0.5)
+	chk.Scalar(tst, "min(a)", 1e-17, min2a, 0.1)
+	chk.Scalar(tst, "max(a)", 1e-17, max2a, 0.5)
 
 	io.Pf("\nfunc VecLargest(u []float64, den float64) (largest float64)\n")
 	PrintVec("b     ", b, "%5g", false)
@@ -103,7 +98,7 @@ func TestVector01(tst *testing.T) {
 	PrintVec("b / 11", bdiv11, "%5g", false)
 	maxbdiv11 := VecLargest(b, 11)
 	io.Pf("max(b/11) = %v\n", maxbdiv11)
-	utl.CheckScalar(tst, "max(b/11)", 1e-17, maxbdiv11, 5)
+	chk.Scalar(tst, "max(b/11)", 1e-17, maxbdiv11, 5)
 
 	io.Pf("\nfunc VecMaxDiff(a, b []float64) (maxdiff float64)\n")
 	amb1 := []float64{a[0] - b[0], a[1] - b[1], a[2] - b[2], a[3] - b[3], a[4] - b[4]}
@@ -116,7 +111,7 @@ func TestVector01(tst *testing.T) {
 	maxdiffab := VecMaxDiff(a, b)
 	io.Pf("maxdiff(a,b) = max(abs(a-b)) = %v\n", maxdiffab)
 	chk.Vector(tst, "amb1 == amb2", 1e-17, amb1, amb2)
-	utl.CheckScalar(tst, "maxdiff(a,b)", 1e-17, maxdiffab, 54.5)
+	chk.Scalar(tst, "maxdiff(a,b)", 1e-17, maxdiffab, 54.5)
 
 	io.Pf("\nfunc VecMaxDiffC(a, b []complex128) (maxdiff float64)\n")
 	az := []complex128{complex(a[0], 1), complex(a[1], 3), complex(a[2], 0.5), complex(a[3], 1), complex(a[4], 0)}
@@ -127,7 +122,7 @@ func TestVector01(tst *testing.T) {
 	PrintVecC("az-bz", ambz, "(%5g +", "%4gi) ", false)
 	maxdiffabz := VecMaxDiffC(az, bz)
 	io.Pf("maxdiff(az,bz) = %v\n", maxdiffabz)
-	utl.CheckScalar(tst, "maxdiff(az,bz)", 1e-17, maxdiffabz, 54.5)
+	chk.Scalar(tst, "maxdiff(az,bz)", 1e-17, maxdiffabz, 54.5)
 
 	io.Pf("\nfunc VecScale(res []float64, Atol, Rtol float64, v []float64)\n")
 	scal1 := make([]float64, len(a))
@@ -147,18 +142,18 @@ func TestVector01(tst *testing.T) {
 	PrintVec("v", v, "%5g", false)
 	rms := VecRms(v)
 	io.Pf("rms(v) = %23.15e\n", rms)
-	utl.CheckScalar(tst, "rms(v)", 1e-17, rms, 666.0)
+	chk.Scalar(tst, "rms(v)", 1e-17, rms, 666.0)
 
 	io.Pf("func VecRmsErr(u []float64, Atol, Rtol float64, v []float64) (rms float64)\n")
 	PrintVec("v", v, "%5g", false)
 	rmserr := VecRmsErr(v, 0, 1, v)
 	io.Pf("rmserr(v,v) = %23.15e\n", rmserr)
-	utl.CheckScalar(tst, "rmserr(v,v,0,1)", 1e-17, rmserr, 1)
+	chk.Scalar(tst, "rmserr(v,v,0,1)", 1e-17, rmserr, 1)
 
 	io.Pf("func VecRmsError(u, w []float64, Atol, Rtol float64, v []float64) (rms float64)\n")
 	PrintVec("v", v, "%5g", false)
 	w := []float64{333, 333, 333, 333, 333}
 	rmserr = VecRmsError(v, w, 0, 1, v)
 	io.Pf("rmserr(v,w,v) = %23.15e\n", rmserr)
-	utl.CheckScalar(tst, "rmserr(v,w,0,1,v)", 1e-17, rmserr, 0.5)
+	chk.Scalar(tst, "rmserr(v,w,0,1,v)", 1e-17, rmserr, 0.5)
 }

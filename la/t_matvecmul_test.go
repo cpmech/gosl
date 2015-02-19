@@ -9,20 +9,11 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_mvMul01(tst *testing.T) {
 
-	tsprev := verbose()
-	defer func() {
-		verbose() = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("mvMul01. MatrixVector multiplication")
 
 	a := [][]float64{
@@ -52,15 +43,7 @@ func Test_mvMul01(tst *testing.T) {
 
 func Test_mmMul01(tst *testing.T) {
 
-	tsprev := verbose()
-	defer func() {
-		verbose() = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("mmMul01. MatrixMatrix multiplication")
 
 	a := [][]float64{
@@ -87,15 +70,7 @@ func Test_mmMul01(tst *testing.T) {
 
 func Test_mmMul02(tst *testing.T) {
 
-	tsprev := verbose()
-	defer func() {
-		verbose() = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("mmMul02. MatrixMatrix multiplication")
 
 	a := [][]float64{

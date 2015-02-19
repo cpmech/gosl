@@ -11,22 +11,13 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 /// Small Matrix Inversion ///////////////////////////////////////////////////////////////////////////
 
 func Test_matinvSmall01(tst *testing.T) {
 
-	tsprev := verbose()
-	defer func() {
-		verbose() = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("matinvSmall01")
 
 	noise := 0.0
@@ -38,7 +29,7 @@ func Test_matinvSmall01(tst *testing.T) {
 	if err != nil {
 		chk.Panic("%v", err.Error())
 	}
-	utl.CheckScalar(tst, "1 x 1 matrix: det ", tol, det, 2.0)
+	chk.Scalar(tst, "1 x 1 matrix: det ", tol, det, 2.0)
 	chk.Matrix(tst, "1 x 1 matrix: ", tol, res, [][]float64{{0.5}})
 
 	// matrix: inverse
@@ -49,7 +40,7 @@ func Test_matinvSmall01(tst *testing.T) {
 	if err != nil {
 		chk.Panic("%v", err.Error())
 	}
-	utl.CheckScalar(tst, "matrix: inv (det) ", tol, detA, -4.0+noise)
+	chk.Scalar(tst, "matrix: inv (det) ", tol, detA, -4.0+noise)
 	chk.Matrix(tst, "matrix: inv (A)   ", tol, Ai, Aicorr)
 
 	// using MatInvG
@@ -72,7 +63,7 @@ func Test_matinvSmall01(tst *testing.T) {
 	if err != nil {
 		chk.Panic("%v", err.Error())
 	}
-	utl.CheckScalar(tst, "matrix: det ", tol, detB, 615.0+noise)
+	chk.Scalar(tst, "matrix: det ", tol, detB, 615.0+noise)
 	chk.Matrix(tst, "matrix: inv ", tol, Bi, Bicorr)
 
 	// using MatInvG
@@ -132,15 +123,7 @@ func RunSvdCheck(tst *testing.T, key string, A, CorU [][]float64, CorS []float64
 
 func Test_matinv01(tst *testing.T) {
 
-	tsprev := verbose()
-	defer func() {
-		verbose() = tsprev
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("matinv01")
 
 	io.Pf("--- A --(2 x 2)-----------------------------------\n")
@@ -271,15 +254,7 @@ func Test_matinv01(tst *testing.T) {
 
 func Test_matinv02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("matinv02")
 
 	io.Pf("\n--- K --(6 x 6)-----------------------------------\n")
@@ -416,15 +391,7 @@ func Test_matinv02(tst *testing.T) {
 
 func Test_cond01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("cond01. condition number of matrix using general inverse")
 
 	a := [][]float64{
@@ -448,9 +415,9 @@ func Test_cond01(tst *testing.T) {
 	io.Pforan("normI(ai) = %v\n", nIai)
 	io.Pforan("cond(a,I) = %v\n", cIa)
 	chk.Matrix(tst, "ai       ", 1e-9, ai, [][]float64{{-3999, 2000}, {2000, -1000}})
-	utl.CheckScalar(tst, "normI(a) ", 1e-15, nIa, 5.999)
-	utl.CheckScalar(tst, "normI(ai)", 1e-9, nIai, 5999)
-	utl.CheckScalar(tst, "condI(a) ", 1e-8, cIa, 35988.001)
+	chk.Scalar(tst, "normI(a) ", 1e-15, nIa, 5.999)
+	chk.Scalar(tst, "normI(ai)", 1e-9, nIai, 5999)
+	chk.Scalar(tst, "condI(a) ", 1e-8, cIa, 35988.001)
 
 	b := [][]float64{
 		{1, 2},
@@ -483,6 +450,6 @@ func Test_cond01(tst *testing.T) {
 	io.Pforan("cond(b, F) = %v\n", cFb)
 	io.Pforan("cond(bi,F) = %v\n", cFbi)
 	chk.Matrix(tst, "bi       ", 1e-17, bi, [][]float64{{-3, 2}, {2, -1}})
-	utl.CheckScalar(tst, "condI(b) ", 1e-17, cIb, 25.0)
-	utl.CheckScalar(tst, "condF(b) ", 1e-14, cFb, 18.0)
+	chk.Scalar(tst, "condI(b) ", 1e-17, cIb, 25.0)
+	chk.Scalar(tst, "condF(b) ", 1e-14, cFb, 18.0)
 }

@@ -9,7 +9,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x_correct []float64) {
@@ -103,15 +102,7 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 
 func Test_linsol01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("linsol01. real")
 
 	// input matrix data into Triplet
@@ -139,15 +130,7 @@ func Test_linsol01(tst *testing.T) {
 
 func Test_linsol02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("linsol02. real")
 
 	// input matrix data into Triplet
@@ -175,15 +158,7 @@ func Test_linsol02(tst *testing.T) {
 
 func Test_linsol03(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("linsol03. complex (but real)")
 
 	// input matrix data into Triplet
@@ -211,15 +186,7 @@ func Test_linsol03(tst *testing.T) {
 
 func Test_linsol04(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("linsol04. complex (but real)")
 
 	// input matrix data into Triplet
@@ -247,15 +214,7 @@ func Test_linsol04(tst *testing.T) {
 
 func Test_linsol05(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("linsol05. complex (but real)")
 
 	// data

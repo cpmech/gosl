@@ -9,20 +9,11 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_mat01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("mat01. Matrix functions")
 
 	// MatAlloc
@@ -119,7 +110,7 @@ func Test_mat01(tst *testing.T) {
 	PrintMat("f-a", fma, "%5g", false)
 	maxdiff := MatMaxDiff(f, a)
 	io.Pf("max(f-a) = %v\n", maxdiff)
-	utl.CheckScalar(tst, "maxdiff", 1e-17, maxdiff, 45)
+	chk.Scalar(tst, "maxdiff", 1e-17, maxdiff, 45)
 
 	// MatGetCol
 	io.Pfblue2("\nfunc MatGetCol(j int, a [][]float64) (col []float64)\n")
@@ -140,14 +131,14 @@ func Test_mat01(tst *testing.T) {
 	PrintMat("A", A, "%5g", false)
 	normFA := MatNormF(A)
 	io.Pf("normF(A) = %g\n", normFA)
-	utl.CheckScalar(tst, "normF(A)", 1e-17, normFA, 1.438749456993816e+01)
+	chk.Scalar(tst, "normF(A)", 1e-17, normFA, 1.438749456993816e+01)
 
 	// MatNormI
 	io.Pfblue2("\nfunc MatNormI(a [][]float64) (res float64)\n")
 	PrintMat("A", A, "%5g", false)
 	normIA := MatNormI(A)
 	io.Pf("normI(A) = %g\n", normIA)
-	utl.CheckScalar(tst, "normI(A)", 1e-17, normIA, 15.0)
+	chk.Scalar(tst, "normI(A)", 1e-17, normIA, 15.0)
 
 	// MatInv
 	io.Pfblue2("\nfunc MatInv(ai, a [][]float64, tol float64) (det float64, ok bool)\n")
@@ -169,7 +160,7 @@ func Test_mat01(tst *testing.T) {
 	PrintMat("g", g, "%5g", false)
 	PrintMat("gi * 22", gi22, "%5g", false)
 	io.Pf("det(g) = %g\n", detg)
-	utl.CheckScalar(tst, "det(g)", 1e-17, detg, 22)
+	chk.Scalar(tst, "det(g)", 1e-17, detg, 22)
 	chk.Matrix(tst, "gi", 1e-17, gi, [][]float64{
 		{12.0 / 11.0, -6.0 / 11.0, -1.0 / 11.0},
 		{5.0 / 22.0, 3.0 / 22.0, -5.0 / 22.0},

@@ -11,7 +11,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 var (
@@ -76,11 +75,6 @@ func allocate(N, n int) {
 }
 
 func TestLinAlg01(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	N, n := 100, 100
 	allocate(N, n)
@@ -116,8 +110,8 @@ func TestLinAlg01(tst *testing.T) {
 	io.Pf("%s  %20s |  %20s | %10s %10s\n", "                  ", "serial    ", "parallel    ", "serial", "parallel")
 	io.Pf("%s %10s %10s | %10s %10s | %10s %10s\n", "                  ", "min", "max", "min", "max", "ave", "ave")
 	for j := 0; j < len(msg); j++ {
-		min_s, max_s, ave_s := utl.DurMinMaxAve(utl.DurGetCol(j, Dt_ser))
-		min_p, max_p, ave_p := utl.DurMinMaxAve(utl.DurGetCol(j, Dt_pll))
+		min_s, max_s, ave_s := durminmaxave(durgetcol(j, Dt_ser))
+		min_p, max_p, ave_p := durminmaxave(durgetcol(j, Dt_pll))
 		io.Pf("%s %10v %10v | %10v %10v | %10v %10v\n", msg[j], min_s, max_s, min_p, max_p, ave_s, ave_p)
 	}
 }
@@ -171,7 +165,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	nrm := VecNorm(v)
 	dt[4], msg[4] = time.Now().Sub(t0), "vector: norm      "
 	if do_check {
-		utl.CheckScalar(tst, msg[4], tol*10, nrm, 1.0+noise)
+		chk.Scalar(tst, msg[4], tol*10, nrm, 1.0+noise)
 	}
 
 	// 5: vector: min component
@@ -180,7 +174,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	min := VecMin(v)
 	dt[5], msg[5] = time.Now().Sub(t0), "vector: min       "
 	if do_check {
-		utl.CheckScalar(tst, msg[5], tol, min, -1.0+noise)
+		chk.Scalar(tst, msg[5], tol, min, -1.0+noise)
 	}
 
 	// 6: vector: max component
@@ -188,7 +182,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	max := VecMax(v)
 	dt[6], msg[6] = time.Now().Sub(t0), "vector: max       "
 	if do_check {
-		utl.CheckScalar(tst, msg[6], tol, max, 1.0+noise)
+		chk.Scalar(tst, msg[6], tol, max, 1.0+noise)
 	}
 
 	// 7: vector: min and max components
@@ -196,8 +190,8 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	min, max = VecMinMax(v)
 	dt[7], msg[7] = time.Now().Sub(t0), "vector: minmax    "
 	if do_check {
-		utl.CheckScalar(tst, msg[7], tol, min, -1.0+noise)
-		utl.CheckScalar(tst, msg[7], tol, max, 1.0+noise)
+		chk.Scalar(tst, msg[7], tol, min, -1.0+noise)
+		chk.Scalar(tst, msg[7], tol, max, 1.0+noise)
 	}
 
 	// 8: matrix: a := a * s
@@ -249,7 +243,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	maxdiff := VecMaxDiff(bvec, dvec)
 	dt[13], msg[13] = time.Now().Sub(t0), "vector: maxdiff   "
 	if do_check {
-		utl.CheckScalar(tst, msg[13], tol, maxdiff, float64(N-1)+100*noise)
+		chk.Scalar(tst, msg[13], tol, maxdiff, float64(N-1)+100*noise)
 	}
 
 	// 14: matrix: max difference
@@ -257,7 +251,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	maxdiff = MatMaxDiff(acorr0, acorr1)
 	dt[14], msg[14] = time.Now().Sub(t0), "matrix: maxdiff   "
 	if do_check {
-		utl.CheckScalar(tst, msg[14], tol, maxdiff, 333.0+noise)
+		chk.Scalar(tst, msg[14], tol, maxdiff, 333.0+noise)
 	}
 
 	// 15: matrix: get col
@@ -292,7 +286,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	res += noise
 	dt[18], msg[18] = time.Now().Sub(t0), "vector: dot       "
 	if do_check {
-		utl.CheckScalar(tst, msg[18], tol, res, float64(N*(N+1)*(2*N+1)/6)) // Faulhaber's formula
+		chk.Scalar(tst, msg[18], tol, res, float64(N*(N+1)*(2*N+1)/6)) // Faulhaber's formula
 	}
 
 	// 19: vector: largest component (divided by den)
@@ -301,7 +295,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	res += noise
 	dt[19], msg[19] = time.Now().Sub(t0), "vector: largest   "
 	if do_check {
-		utl.CheckScalar(tst, msg[19], tol, res, float64(N)/2.0)
+		chk.Scalar(tst, msg[19], tol, res, float64(N)/2.0)
 	}
 
 	// 20: vectorC: fill
@@ -318,7 +312,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	maxdiffC := VecMaxDiffC(bveZ, dveZ)
 	dt[21], msg[21] = time.Now().Sub(t0), "vector: maxdiffC  "
 	if do_check {
-		utl.CheckScalar(tst, msg[21], tol, maxdiffC, float64(N-1)+100*noise)
+		chk.Scalar(tst, msg[21], tol, maxdiffC, float64(N-1)+100*noise)
 	}
 
 	// 22: vector: rms
@@ -328,7 +322,7 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	rms := VecRms(bvec)
 	dt[22], msg[22] = time.Now().Sub(t0), "vector: rms       "
 	if do_check {
-		utl.CheckScalar(tst, msg[22], 1e-17, rms, rms_corr+noise)
+		chk.Scalar(tst, msg[22], 1e-17, rms, rms_corr+noise)
 	}
 
 	// 23: vector: rmserr
@@ -336,8 +330,33 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	rmserr := VecRmsErr(v, 0, 1, v)
 	dt[23], msg[23] = time.Now().Sub(t0), "vector: rmserr    "
 	if do_check {
-		utl.CheckScalar(tst, msg[23], 1e-17, rmserr, 1.0+noise)
+		chk.Scalar(tst, msg[23], 1e-17, rmserr, 1.0+noise)
 	}
 
+	return
+}
+
+// durgetcol returns a columns with duration values
+func durgetcol(j int, a [][]time.Duration) (col []time.Duration) {
+	col = make([]time.Duration, len(a))
+	for i := 0; i < len(a); i++ {
+		col[i] = a[i][j]
+	}
+	return
+}
+
+// durminmaxave returns statistics data correponding a duration data collected in 'v'
+func durminmaxave(v []time.Duration) (min, max, ave time.Duration) {
+	min, max, ave = v[0], v[0], v[0]
+	for i := 1; i < len(v); i++ {
+		if v[i] < min {
+			min = v[i]
+		}
+		if v[i] > max {
+			max = v[i]
+		}
+		ave += v[i]
+	}
+	ave /= time.Duration(len(v)) * time.Nanosecond
 	return
 }
