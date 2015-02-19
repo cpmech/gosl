@@ -27,27 +27,3 @@ func BestSquare(size int) (nrow, ncol int) {
 	}
 	return
 }
-
-func IntPrint(a []int, printfkey string) (res string) {
-	res = "["
-	for i, val := range a {
-		if i > 0 {
-			res += Sf(", ")
-		}
-		res += Sf(printfkey, val)
-	}
-	res += "]"
-	return
-}
-
-func DblPrint(a []float64, printfkey string) (res string) {
-	res = "["
-	for i, val := range a {
-		if i > 0 {
-			res += Sf(", ")
-		}
-		res += Sf(printfkey, val)
-	}
-	res += "]"
-	return
-}

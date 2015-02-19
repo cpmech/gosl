@@ -9,6 +9,9 @@ import (
 	"os"
 	"path/filepath"
 	"runtime/pprof"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 var do_prof_cpu = flag.Bool("cpuprof", false, "write cpu profile data to file")
@@ -21,17 +24,17 @@ func ProfCPU(dirout, filename string, silent bool) func() {
 	fn := filepath.Join(dirout, filename)
 	f, err := os.Create(fn)
 	if err != nil {
-		Panic(_profiling_err1, "ProfCPU", err.Error())
+		chk.Panic(_profiling_err1, "ProfCPU", err.Error())
 	}
 	if !silent {
-		Pfcyan("CPU profiling => %s\n", fn)
+		io.Pfcyan("CPU profiling => %s\n", fn)
 	}
 	pprof.StartCPUProfile(f)
 	return func() {
 		pprof.StopCPUProfile()
 		f.Close()
 		if !silent {
-			Pfcyan("CPU profiling finished\n")
+			io.Pfcyan("CPU profiling finished\n")
 		}
 	}
 }
@@ -43,16 +46,16 @@ func ProfMEM(dirout, filename string, silent bool) func() {
 	fn := filepath.Join(dirout, filename)
 	f, err := os.Create(fn)
 	if err != nil {
-		Panic(_profiling_err1, "ProfMEM", err.Error())
+		chk.Panic(_profiling_err1, "ProfMEM", err.Error())
 	}
 	if !silent {
-		Pfcyan("MEM profiling => %s\n", fn)
+		io.Pfcyan("MEM profiling => %s\n", fn)
 	}
 	return func() {
 		pprof.WriteHeapProfile(f)
 		f.Close()
 		if !silent {
-			Pfcyan("MEM profiling finished\n")
+			io.Pfcyan("MEM profiling finished\n")
 		}
 	}
 }

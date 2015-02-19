@@ -4,6 +4,8 @@
 
 package utl
 
+import "github.com/cpmech/gosl/io"
+
 // DblMatToArray converts a matrix into a column-major array
 func DblMatToArray(a [][]float64) (v []float64) {
 	m, n, k := len(a), len(a[0]), 0
@@ -32,11 +34,11 @@ func DblArrayToMat(v []float64, m, n int) (a [][]float64) {
 
 // Deep3Print prints an array of array of array
 func Deep3Print(name string, A [][][]float64) {
-	Pf("%s = [\n", name)
+	io.Pf("%s = [\n", name)
 	for _, a := range A {
-		Pf("  %v\n", a)
+		io.Pf("  %v\n", a)
 	}
-	Pf("]\n")
+	io.Pf("]\n")
 }
 
 // Deep3Serialize serializes an array of array of array in column-compressed format
@@ -73,9 +75,9 @@ func Deep3Serialize(A [][][]float64) (I, P []int, S []float64) {
 //  Example:
 func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncols_tot int, ncols []int) {
 	if verbose {
-		Pf("I = %v\n", I)
-		Pf("P = %v\n", P)
-		Pf("S = %v\n", S)
+		io.Pf("I = %v\n", I)
+		io.Pf("P = %v\n", P)
+		io.Pf("S = %v\n", S)
 	}
 	nitems = P[len(P)-1]
 	nrows = I[len(I)-1] + 1
@@ -85,10 +87,10 @@ func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncols_t
 		ncols[j] += 1
 	}
 	if verbose {
-		Pf("nitems    = %v\n", nitems)
-		Pf("nrows     = %v\n", nrows)
-		Pf("ncols_tot = %v\n", ncols_tot)
-		Pf("ncols     = %v\n", ncols)
+		io.Pf("nitems    = %v\n", nitems)
+		io.Pf("nrows     = %v\n", nrows)
+		io.Pf("ncols_tot = %v\n", ncols_tot)
+		io.Pf("ncols     = %v\n", ncols)
 	}
 	return
 }
@@ -109,11 +111,11 @@ func Deep3Deserialize(I, P []int, S []float64, debug bool) (A [][][]float64) {
 			j = 0
 		}
 		if debug {
-			Pf("l=%v  i=%v  nitems=%v  j=%v\n", l, i, nitems, j)
+			io.Pf("l=%v  i=%v  nitems=%v  j=%v\n", l, i, nitems, j)
 		}
 		for k, p := 0, P[l]; p < P[l+1]; k, p = k+1, p+1 {
 			if debug {
-				Pf("  k=%v  p=%v  s=%v\n", k, p, S[p])
+				io.Pf("  k=%v  p=%v  s=%v\n", k, p, S[p])
 			}
 			if k == 0 {
 				A[i][j] = make([]float64, nitems)

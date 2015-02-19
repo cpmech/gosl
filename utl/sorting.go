@@ -6,6 +6,9 @@ package utl
 
 import (
 	"sort"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // DblSort3 sorts 3 values in ascending order
@@ -128,7 +131,7 @@ func (o Quadruples) Swap(i, j int) { o[i], o[j] = o[j], o[i] }
 func (o Quadruples) String() string {
 	res := ""
 	for _, p := range o {
-		res += Sf("%6d%20g%20g%20g\n", p.I, p.X, p.Y, p.Z)
+		res += io.Sf("%6d%20g%20g%20g\n", p.I, p.X, p.Y, p.Z)
 	}
 	return res
 }
@@ -155,7 +158,7 @@ func (o QuadruplesByZ) Less(i, j int) bool { return o.Quadruples[i].Z < o.Quadru
 
 // SortQuadruples sorts i, x, y, and z by "i", "x", "y", or "z"
 //  Note: either i, x, y, or z can be nil; i.e. at least one of them must be non nil
-func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []float64) {
+func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []float64, err error) {
 	q := BuildQuadruples(i, x, y, z)
 	switch by {
 	case "i":
@@ -167,7 +170,7 @@ func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []f
 	case "z":
 		sort.Sort(QuadruplesByZ{q})
 	default:
-		Panic(_sorting_err3, by)
+		return nil, nil, nil, nil, chk.Err("sort quadruples command must be 'i', 'x', 'y', or 'z'. by == '%s' is invalid", by)
 	}
 	if i != nil {
 		I = q.I()
@@ -276,10 +279,3 @@ func IntBoolMapSort(m map[int]bool) (sorted_keys []int) {
 	sort.Ints(sorted_keys)
 	return
 }
-
-// error messages
-var (
-	_sorting_err1 = "sorting.go: BuildIdVals: length of slices of ints (len=%d) and floats (len=%d) must be equal to each other"
-	_sorting_err2 = "sorting.go: BuildIdVals: length of slices of ints (len=%d) and exts (len=%d) must be equal to each other"
-	_sorting_err3 = "sorting.go: SortQuadruples: by must be 'i', 'x', 'y', or 'z'. by == '%s' is invalid"
-)

@@ -7,20 +7,15 @@ package utl
 import (
 	"math"
 	"testing"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func Test_deep01(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("deep01")
+	//verbose()
+	chk.PrintTitle("deep01")
 
 	a := Deep3alloc(3, 2, 4)
 	for i := 0; i < 3; i++ {
@@ -32,7 +27,7 @@ func Test_deep01(tst *testing.T) {
 			}
 		}
 	}
-	Pf("a = %v\n", a)
+	io.Pf("a = %v\n", a)
 
 	b := Deep4alloc(3, 2, 1, 2)
 	for i := 0; i < 3; i++ {
@@ -46,37 +41,29 @@ func Test_deep01(tst *testing.T) {
 			}
 		}
 	}
-	Pf("b = %v\n", b)
+	io.Pf("b = %v\n", b)
 }
 
 func Test_deep02(tst *testing.T) {
 
-	prevTs := Tsilent
-	defer func() {
-		Tsilent = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
-	//Tsilent = false
-	TTitle("deep02")
+	//verbose()
+	chk.PrintTitle("deep02")
 
 	a := Deep3alloc(3, 2, 4)
 	Deep3set(a, 666)
-	CompareDeep3(tst, "a", a, [][][]float64{
+	chk.Deep3(tst, "a", 1e-16, a, [][][]float64{
 		{{666, 666, 666, 666}, {666, 666, 666, 666}},
 		{{666, 666, 666, 666}, {666, 666, 666, 666}},
 		{{666, 666, 666, 666}, {666, 666, 666, 666}},
 	})
-	Pf("a = %v\n", a)
+	io.Pf("a = %v\n", a)
 
 	b := Deep4alloc(3, 2, 1, 2)
 	Deep4set(b, 666)
-	CompareDeep4(tst, "b", b, [][][][]float64{
+	chk.Deep4(tst, "b", 1e-16, b, [][][][]float64{
 		{{{666, 666}}, {{666, 666}}},
 		{{{666, 666}}, {{666, 666}}},
 		{{{666, 666}}, {{666, 666}}},
 	})
-	Pf("b = %v\n", b)
+	io.Pf("b = %v\n", b)
 }

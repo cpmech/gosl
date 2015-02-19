@@ -7,6 +7,8 @@ package utl
 import (
 	"math/rand"
 	"testing"
+
+	"github.com/cpmech/gosl/io"
 )
 
 var ___benchmarking_strindexsmall___ []string
@@ -27,14 +29,14 @@ func init() {
 	for i := 0; i < n; i++ {
 		j := rand.Intn(len(answers))
 		___benchmarking_strindexsmall___[i] = answers[j]
-		___benchmarking_strindexmap___[Sf("%s_%d", answers[j], i)] = i
+		___benchmarking_strindexmap___[io.Sf("%s_%d", answers[j], i)] = i
 		if i == m {
 			___benchmarking_strindexsmall___[i] = "dorival"
 			___benchmarking_strindexmap___["dorival"] = i
 		}
 	}
-	//Pforan("%v\n", ___benchmarking_strindexsmall___)
-	//Pfcyan("%v\n", ___benchmarking_strindexmap___)
+	//io.Pforan("%v\n", ___benchmarking_strindexsmall___)
+	//io.Pfcyan("%v\n", ___benchmarking_strindexmap___)
 }
 
 func BenchmarkStrIndexSmall(b *testing.B) {

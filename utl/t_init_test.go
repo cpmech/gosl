@@ -4,6 +4,17 @@
 
 package utl
 
+import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+)
+
 func init() {
-	Tsilent = true
+	io.Verbose = false
+	//chk.Verbose = true
+}
+
+func verbose() {
+	io.Verbose = true
+	chk.Verbose = true
 }

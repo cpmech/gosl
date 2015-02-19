@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/cpmech/gosl/io"
 )
 
 // IntFill fills a slice of integers
@@ -285,7 +287,7 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 func Dbl2Str(v []float64, format string) (s []string) {
 	s = make([]string, len(v))
 	for i := 0; i < len(v); i++ {
-		s[i] = Sf(format, v[i])
+		s[i] = io.Sf(format, v[i])
 	}
 	return
 }
@@ -294,7 +296,7 @@ func Dbl2Str(v []float64, format string) (s []string) {
 func Str2Dbl(s []string) (v []float64) {
 	v = make([]float64, len(s))
 	for i := 0; i < len(s); i++ {
-		v[i] = Atof(s[i])
+		v[i] = io.Atof(s[i])
 	}
 	return
 }
@@ -304,7 +306,7 @@ func DblSplit(s string) (r []float64) {
 	ss := strings.Fields(s)
 	r = make([]float64, len(ss))
 	for i, v := range ss {
-		r[i] = Atof(v)
+		r[i] = io.Atof(v)
 	}
 	return
 }
@@ -312,7 +314,7 @@ func DblSplit(s string) (r []float64) {
 // Digits returns the nubmer of digits
 func Digits(maxint int) (ndigits int, format string) {
 	ndigits = int(math.Log10(float64(maxint))) + 1
-	format = Sf("%%%dd", ndigits)
+	format = io.Sf("%%%dd", ndigits)
 	return
 }
 
