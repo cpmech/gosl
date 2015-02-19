@@ -16,3 +16,7 @@ go get github.com/cpmech/gosl/...
 ## Website
 
 http://cpmech.github.io/gosl
+
+## Documentation for developers
+
+http://rawgit.com/cpmech/gosl/master/doc/index.html
