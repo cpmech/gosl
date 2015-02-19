@@ -23,7 +23,7 @@ http://cpmech.github.io/gosl
 
 http://rawgit.com/cpmech/gosl/master/doc/index.html
 
-### References
+## References
 Most of Gosl was developed to support the numerical research that resulted in the following papers:
 
 1. Pedroso DM (2015) A consistent u-p formulation for porous media with hysteresis. Int Journal for Numerical Methods in Engineering, 101(8) 606-634 http://dx.doi.org/10.1002/nme.4808
@@ -32,5 +32,5 @@ Most of Gosl was developed to support the numerical research that resulted in th
 4. Pedroso DM and Williams DJ (2010) A novel approach for modelling soil-water characteristic curves with hysteresis, Computers and Geotechnics, 37(3), 374-380, http://dx.doi.org/10.1016/j.compgeo.2009.12.004
 5. Pedroso DM and Williams DJ (2011) Automatic Calibration of soil-water characteristic curves using genetic algorithms. Computers and Geotechnics, 38(3), 330-340, http://dx.doi.org/10.1016/j.compgeo.2010.12.004
 
-### Acknowledgements
+## Acknowledgements
 Funding from the Australian Research Council is acknowledged.
