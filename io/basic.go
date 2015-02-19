@@ -11,7 +11,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"math"
 	"strconv"
 	"strings"
 	"testing"
@@ -77,22 +76,6 @@ func PrintTimeLong(t float64) {
 		return
 	}
 	fmt.Printf("%20.8f\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b", t)
-}
-
-// Digits returns the nubmer of digits
-func Digits(maxint int) (ndigits int, format string) {
-	ndigits = int(math.Log10(float64(maxint))) + 1
-	format = Sf("%%%dd", ndigits)
-	return
-}
-
-// Expon returns the exponent
-func Expon(val float64) (ndigits int) {
-	if val == 0.0 {
-		return
-	}
-	ndigits = int(math.Log10(math.Abs(val)))
-	return
 }
 
 // Atob converts string to bool
