@@ -20,6 +20,11 @@ import (
 
 func main() {
 
+	mpi.Start(false)
+	defer func() {
+		mpi.Stop(false)
+	}()
+
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("Test ODE 02b")
 		io.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation (MPI)\n")
