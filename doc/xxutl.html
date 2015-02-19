@@ -7,7 +7,7 @@
 <style type="text/css"></style>
 </head>
 <body>
-<div id="page"><h1>Gosl &ndash; <b>utl</b> &ndash; Utilities</h1>
+<div id="page"><h1>Gosl &ndash; <b>utl</b> &ndash; Utilities such as IntRange and LinSpace and allocators</h1>
 <!--
 	Copyright 2009 The Go Authors. All rights reserved.
 	Use of this source code is governed by a BSD-style
@@ -48,9 +48,8 @@
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
 				<p>
-utl (utilities) implements auxiliary functions for a number of tasks
-(printing, parsing, handling files and directories, etc.),
-including for making the transition from NumPy to Go easier.
+package utl implements functions for simplifying calculations and allocation of structures
+such as slices and slices of slices. It also contains functions for sorting quantities.
 </p>
 
 			</div>
@@ -69,92 +68,15 @@ including for making the transition from NumPy to Go easier.
 			<dl>
 			
 			
-				<dd><a href="#pkg-variables">Variables</a></dd>
-			
-			
-				
-				<dd><a href="#AnaNum">func AnaNum(msg string, tol, ana, num float64, verbose bool) (e error)</a></dd>
-			
-				
-				<dd><a href="#AppendToFile">func AppendToFile(fn string, buffer ...*bytes.Buffer)</a></dd>
-			
-				
-				<dd><a href="#Atob">func Atob(val string) (bres bool)</a></dd>
-			
-				
-				<dd><a href="#Atof">func Atof(val string) (res float64)</a></dd>
-			
-				
-				<dd><a href="#Atoi">func Atoi(val string) (res int)</a></dd>
 			
 				
 				<dd><a href="#BestSquare">func BestSquare(size int) (nrow, ncol int)</a></dd>
-			
-				
-				<dd><a href="#Btoa">func Btoa(flag bool) string</a></dd>
-			
-				
-				<dd><a href="#Btoi">func Btoi(flag bool) int</a></dd>
-			
-				
-				<dd><a href="#CallerInfo">func CallerInfo(idx int)</a></dd>
-			
-				
-				<dd><a href="#Catch">func Catch(tst *testing.T)</a></dd>
-			
-				
-				<dd><a href="#CheckAnaNum">func CheckAnaNum(tst *testing.T, msg string, tol, ana, num float64, verbose bool)</a></dd>
-			
-				
-				<dd><a href="#CheckIntMat">func CheckIntMat(tst *testing.T, msg string, res, correct [][]int)</a></dd>
-			
-				
-				<dd><a href="#CheckMatrix">func CheckMatrix(tst *testing.T, msg string, tol float64, res, correct [][]float64)</a></dd>
-			
-				
-				<dd><a href="#CheckMatrixC">func CheckMatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex128)</a></dd>
-			
-				
-				<dd><a href="#CheckScalar">func CheckScalar(tst *testing.T, msg string, tol, res, correct float64)</a></dd>
-			
-				
-				<dd><a href="#CheckStrMat">func CheckStrMat(tst *testing.T, msg string, res, correct [][]string)</a></dd>
-			
-				
-				<dd><a href="#CheckString">func CheckString(tst *testing.T, str, correct string)</a></dd>
-			
-				
-				<dd><a href="#CheckVector">func CheckVector(tst *testing.T, msg string, tol float64, res, correct []float64)</a></dd>
-			
-				
-				<dd><a href="#CheckVectorC">func CheckVectorC(tst *testing.T, msg string, tol float64, res, correct []complex128)</a></dd>
-			
-				
-				<dd><a href="#CompareBools">func CompareBools(tst *testing.T, msg string, a, b []bool)</a></dd>
-			
-				
-				<dd><a href="#CompareDbls">func CompareDbls(tst *testing.T, msg string, a, b []float64)</a></dd>
-			
-				
-				<dd><a href="#CompareDeep3">func CompareDeep3(tst *testing.T, msg string, a, b [][][]float64)</a></dd>
-			
-				
-				<dd><a href="#CompareDeep4">func CompareDeep4(tst *testing.T, msg string, a, b [][][][]float64)</a></dd>
-			
-				
-				<dd><a href="#CompareInts">func CompareInts(tst *testing.T, msg string, a, b []int)</a></dd>
-			
-				
-				<dd><a href="#CompareStrs">func CompareStrs(tst *testing.T, msg string, a, b []string)</a></dd>
 			
 				
 				<dd><a href="#Dbl2Str">func Dbl2Str(v []float64, format string) (s []string)</a></dd>
 			
 				
 				<dd><a href="#DblArrayToMat">func DblArrayToMat(v []float64, m, n int) (a [][]float64)</a></dd>
-			
-				
-				<dd><a href="#DblAssert">func DblAssert(a, b float64)</a></dd>
 			
 				
 				<dd><a href="#DblDsort3">func DblDsort3(a, b, c *float64)</a></dd>
@@ -170,9 +92,6 @@ including for making the transition from NumPy to Go easier.
 			
 				
 				<dd><a href="#DblOnes">func DblOnes(n int) (res []float64)</a></dd>
-			
-				
-				<dd><a href="#DblPrint">func DblPrint(a []float64, printfkey string) (res string)</a></dd>
 			
 				
 				<dd><a href="#DblSort3">func DblSort3(a, b, c *float64)</a></dd>
@@ -211,9 +130,6 @@ including for making the transition from NumPy to Go easier.
 				<dd><a href="#Deep4set">func Deep4set(a [][][][]float64, v float64)</a></dd>
 			
 				
-				<dd><a href="#DiffVecs">func DiffVecs(a, b []float64, msg string, tol float64)</a></dd>
-			
-				
 				<dd><a href="#Digits">func Digits(maxint int) (ndigits int, format string)</a></dd>
 			
 				
@@ -223,43 +139,13 @@ including for making the transition from NumPy to Go easier.
 				<dd><a href="#DurSum">func DurSum(v []time.Duration) (seconds float64)</a></dd>
 			
 				
-				<dd><a href="#Err">func Err(msg string, prm ...interface{}) error</a></dd>
-			
-				
-				<dd><a href="#ErrorMsg">func ErrorMsg(tst *testing.T, msg string, tol, maxdiff float64)</a></dd>
-			
-				
 				<dd><a href="#Expon">func Expon(val float64) (ndigits int)</a></dd>
-			
-				
-				<dd><a href="#ExtractStrPair">func ExtractStrPair(pair, sep string) (key, val string)</a></dd>
-			
-				
-				<dd><a href="#Ff">func Ff(b *bytes.Buffer, msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#FnExt">func FnExt(fn string) string</a></dd>
-			
-				
-				<dd><a href="#FnKey">func FnKey(fn string) string</a></dd>
 			
 				
 				<dd><a href="#GetITout">func GetITout(all_output_times, time_stations_out []float64, tol float64) (I []int, T []float64)</a></dd>
 			
 				
-				<dd><a href="#GetMapIntSlice">func GetMapIntSlice(dict interface{}) (res map[int][]int)</a></dd>
-			
-				
 				<dd><a href="#IntAddScalar">func IntAddScalar(a []int, s int) (res []int)</a></dd>
-			
-				
-				<dd><a href="#IntAssert">func IntAssert(a, b int)</a></dd>
-			
-				
-				<dd><a href="#IntAssertLessThan">func IntAssertLessThan(a, b int)</a></dd>
-			
-				
-				<dd><a href="#IntAssertLessThanOrEqualTo">func IntAssertLessThanOrEqualTo(a, b int)</a></dd>
 			
 				
 				<dd><a href="#IntBoolMapSort">func IntBoolMapSort(m map[int]bool) (sorted_keys []int)</a></dd>
@@ -283,9 +169,6 @@ including for making the transition from NumPy to Go easier.
 				<dd><a href="#IntNegOut">func IntNegOut(a []int) (res []int)</a></dd>
 			
 				
-				<dd><a href="#IntPrint">func IntPrint(a []int, printfkey string) (res string)</a></dd>
-			
-				
 				<dd><a href="#IntPy">func IntPy(a []int) (res string)</a></dd>
 			
 				
@@ -307,133 +190,10 @@ including for making the transition from NumPy to Go easier.
 				<dd><a href="#IntsAlloc">func IntsAlloc(m, n int) (mat [][]int)</a></dd>
 			
 				
-				<dd><a href="#Itob">func Itob(val int) bool</a></dd>
-			
-				
-				<dd><a href="#JoinKeys">func JoinKeys(keys []string) string</a></dd>
-			
-				
-				<dd><a href="#JoinKeys3">func JoinKeys3(k0, k1, k2 []string, sep string) (res string)</a></dd>
-			
-				
-				<dd><a href="#JoinKeys4">func JoinKeys4(k0, k1, k2, k3 []string, sep string) (res string)</a></dd>
-			
-				
-				<dd><a href="#JoinKeysPre">func JoinKeysPre(prefix string, keys []string) (res string)</a></dd>
-			
-				
-				<dd><a href="#JsonMapIntSlice">func JsonMapIntSlice(b *bytes.Buffer, indent, name string, m *map[int][]int)</a></dd>
-			
-				
-				<dd><a href="#Keycode">func Keycode(String string, Type string) (keycode string, found bool)</a></dd>
-			
-				
-				<dd><a href="#Keycodes">func Keycodes(String string) (keycodes []string)</a></dd>
-			
-				
 				<dd><a href="#LinSpace">func LinSpace(start, stop float64, num int) (res []float64)</a></dd>
 			
 				
 				<dd><a href="#LinSpaceOpen">func LinSpaceOpen(start, stop float64, num int) (res []float64)</a></dd>
-			
-				
-				<dd><a href="#OpenAndParseJson">func OpenAndParseJson(results interface{}, filepath, ext string) (b []byte)</a></dd>
-			
-				
-				<dd><a href="#OpenFileR">func OpenFileR(fn string) (fil *os.File, err error)</a></dd>
-			
-				
-				<dd><a href="#Panic">func Panic(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PanicSimple">func PanicSimple(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PathKey">func PathKey(fn string) string</a></dd>
-			
-				
-				<dd><a href="#Pf">func Pf(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PfBlue">func PfBlue(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PfCyan">func PfCyan(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PfGreen">func PfGreen(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PfMag">func PfMag(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PfRed">func PfRed(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PfWhite">func PfWhite(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PfYel">func PfYel(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfblue">func Pfblue(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfblue2">func Pfblue2(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfcyan">func Pfcyan(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfcyan2">func Pfcyan2(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfdgreen">func Pfdgreen(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfdyel">func Pfdyel(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfdyel2">func Pfdyel2(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfgreen">func Pfgreen(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfgreen2">func Pfgreen2(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfgrey">func Pfgrey(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfgrey2">func Pfgrey2(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pflmag">func Pflmag(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfmag">func Pfmag(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pforan">func Pforan(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfpink">func Pfpink(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfpurple">func Pfpurple(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfred">func Pfred(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#Pfyel">func Pfyel(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PrintTime">func PrintTime(t float64)</a></dd>
-			
-				
-				<dd><a href="#PrintTimeLong">func PrintTimeLong(t float64)</a></dd>
 			
 				
 				<dd><a href="#ProfCPU">func ProfCPU(dirout, filename string, silent bool) func()</a></dd>
@@ -442,43 +202,10 @@ including for making the transition from NumPy to Go easier.
 				<dd><a href="#ProfMEM">func ProfMEM(dirout, filename string, silent bool) func()</a></dd>
 			
 				
-				<dd><a href="#ReadFile">func ReadFile(fn string) (b []byte, err error)</a></dd>
-			
-				
-				<dd><a href="#ReadLines">func ReadLines(fn string, cb ReadLinesCallback)</a></dd>
-			
-				
-				<dd><a href="#ReadLinesFile">func ReadLinesFile(fil *os.File, cb ReadLinesCallback) (oserr error)</a></dd>
-			
-				
-				<dd><a href="#ReadMatrix">func ReadMatrix(fn string) (M [][]float64, err error)</a></dd>
-			
-				
-				<dd><a href="#ReadTable">func ReadTable(fn string) (keys []string, T map[string][]float64, err error)</a></dd>
-			
-				
-				<dd><a href="#RemoveAll">func RemoveAll(key string)</a></dd>
-			
-				
-				<dd><a href="#Sf">func Sf(msg string, prm ...interface{}) string</a></dd>
-			
-				
-				<dd><a href="#SortQuadruples">func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []float64)</a></dd>
-			
-				
-				<dd><a href="#SplitKeys">func SplitKeys(keys string) []string</a></dd>
-			
-				
-				<dd><a href="#SplitKeys3">func SplitKeys3(res string) (k0, k1, k2 []string)</a></dd>
-			
-				
-				<dd><a href="#SplitKeys4">func SplitKeys4(res string) (k0, k1, k2, k3 []string)</a></dd>
+				<dd><a href="#SortQuadruples">func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []float64, err error)</a></dd>
 			
 				
 				<dd><a href="#Str2Dbl">func Str2Dbl(s []string) (v []float64)</a></dd>
-			
-				
-				<dd><a href="#StrAssert">func StrAssert(a, b string)</a></dd>
 			
 				
 				<dd><a href="#StrBoolMapSort">func StrBoolMapSort(m map[string]bool) (sorted_keys []string)</a></dd>
@@ -506,42 +233,6 @@ including for making the transition from NumPy to Go easier.
 			
 				
 				<dd><a href="#StrVals">func StrVals(n int, val string) (s []string)</a></dd>
-			
-				
-				<dd><a href="#TTitle">func TTitle(title string)</a></dd>
-			
-				
-				<dd><a href="#UnColor">func UnColor(msg string) string</a></dd>
-			
-				
-				<dd><a href="#WriteBytesToFile">func WriteBytesToFile(fn string, b []byte)</a></dd>
-			
-				
-				<dd><a href="#WriteBytesToFileD">func WriteBytesToFileD(dirout, fn string, b []byte)</a></dd>
-			
-				
-				<dd><a href="#WriteFile">func WriteFile(fn string, buffer ...*bytes.Buffer)</a></dd>
-			
-				
-				<dd><a href="#WriteFileD">func WriteFileD(dirout, fn string, buffer ...*bytes.Buffer)</a></dd>
-			
-				
-				<dd><a href="#WriteFileS">func WriteFileS(fn, data string)</a></dd>
-			
-				
-				<dd><a href="#WriteFileSD">func WriteFileSD(dirout, fn, data string)</a></dd>
-			
-				
-				<dd><a href="#WriteFileV">func WriteFileV(fn string, buffer ...*bytes.Buffer)</a></dd>
-			
-				
-				<dd><a href="#WriteFileVD">func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer)</a></dd>
-			
-				
-				<dd><a href="#WriteIntSlice">func WriteIntSlice(b *bytes.Buffer, v []int)</a></dd>
-			
-				
-				<dd><a href="#WritePython">func WritePython(dirout, fnkey string, show bool, buffer ...*bytes.Buffer)</a></dd>
 			
 			
 				
@@ -610,11 +301,6 @@ including for making the transition from NumPy to Go easier.
 					<dd>&nbsp; &nbsp; <a href="#QuadruplesByZ.Less">func (o QuadruplesByZ) Less(i, j int) bool</a></dd>
 				
 			
-				
-				<dd><a href="#ReadLinesCallback">type ReadLinesCallback</a></dd>
-				
-				
-			
 			
 			</dl>
 			</div><!-- #manual-nav -->
@@ -628,19 +314,11 @@ including for making the transition from NumPy to Go easier.
 			
 				<a href="/src/github.com/cpmech/gosl/utl/auxiliary.go">auxiliary.go</a>
 			
-				<a href="/src/github.com/cpmech/gosl/utl/basic.go">basic.go</a>
-			
 				<a href="/src/github.com/cpmech/gosl/utl/deepslices.go">deepslices.go</a>
-			
-				<a href="/src/github.com/cpmech/gosl/utl/fileio.go">fileio.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/utl/mapops.go">mapops.go</a>
 			
-				<a href="/src/github.com/cpmech/gosl/utl/myjson.go">myjson.go</a>
-			
 				<a href="/src/github.com/cpmech/gosl/utl/mylab.go">mylab.go</a>
-			
-				<a href="/src/github.com/cpmech/gosl/utl/parsing.go">parsing.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/utl/postprocess.go">postprocess.go</a>
 			
@@ -649,8 +327,6 @@ including for making the transition from NumPy to Go easier.
 				<a href="/src/github.com/cpmech/gosl/utl/serialize.go">serialize.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/utl/sorting.go">sorting.go</a>
-			
-				<a href="/src/github.com/cpmech/gosl/utl/testing.go">testing.go</a>
 			
 			</span>
 			</p>
@@ -697,79 +373,6 @@ including for making the transition from NumPy to Go easier.
 
 		
 		
-			<h2 id="pkg-variables">Variables</h2>
-			
-				<pre>var (
-    <span id="UseColors">UseColors</span> = <a href="/pkg/builtin/#true">true</a>
-    <span id="Tsilent">Tsilent</span>   = <a href="/pkg/builtin/#false">false</a> <span class="comment">// silent during testing, except with errors</span>
-)</pre>
-				
-			
-				<pre>var <span id="Tassert">Tassert</span> = <a href="/pkg/builtin/#true">true</a> <span class="comment">// activates/deactivates asserts</span>
-</pre>
-				
-			
-		
-		
-			
-			
-			<h2 id="AnaNum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=3039:3109#L123">AnaNum</a></h2>
-			<pre>func AnaNum(msg <a href="/pkg/builtin/#string">string</a>, tol, ana, num <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) (e <a href="/pkg/builtin/#error">error</a>)</pre>
-			<p>
-AnaNum formats the output of analytical versus numerical comparisons
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="AppendToFile">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=876:929#L26">AppendToFile</a></h2>
-			<pre>func AppendToFile(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
-			<p>
-AppendToFile appends data to an existent (or new) file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Atob">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=2108:2141#L89">Atob</a></h2>
-			<pre>func Atob(val <a href="/pkg/builtin/#string">string</a>) (bres <a href="/pkg/builtin/#bool">bool</a>)</pre>
-			<p>
-Atob converts string to bool
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Atof">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=2663:2698#L116">Atof</a></h2>
-			<pre>func Atof(val <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-Atof converts string to float64
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Atoi">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=2454:2485#L107">Atoi</a></h2>
-			<pre>func Atoi(val <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-Atoi converts string to integer
-</p>
-
-			
-			
-
 		
 			
 			
@@ -785,243 +388,7 @@ BestSquare finds the best square for given size=Nrows * Ncolumns
 		
 			
 			
-			<h2 id="Btoa">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=3259:3286#L147">Btoa</a></h2>
-			<pre>func Btoa(flag <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-Btoa converts flag to string
-</p>
-<pre>Note: true  =&gt; &#34;true&#34;
-      false =&gt; &#34;false&#34;
-</pre>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Btoi">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=3109:3133#L137">Btoi</a></h2>
-			<pre>func Btoi(flag <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#int">int</a></pre>
-			<p>
-Btoi converts flag to interger
-</p>
-<pre>Note: true  =&gt; 1
-      false =&gt; 0
-</pre>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CallerInfo">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=408:432#L8">CallerInfo</a></h2>
-			<pre>func CallerInfo(idx <a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-CallerInfo returns the file and line positions where an error occurred
-</p>
-<pre>idx -- use idx=2 to get the caller of Panic
-</pre>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Catch">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=1292:1318#L50">Catch</a></h2>
-			<pre>func Catch(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>)</pre>
-			<p>
-Catch catches a panic
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckAnaNum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=3564:3645#L143">CheckAnaNum</a></h2>
-			<pre>func CheckAnaNum(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, ana, num <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>)</pre>
-			<p>
-CheckAnaNum compares analytical versus numerical values
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckIntMat">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=14671:14737#L489">CheckIntMat</a></h2>
-			<pre>func CheckIntMat(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, res, correct [][]<a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-CheckIntMat compares matrices of ints
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=3778:3861#L151">CheckMatrix</a></h2>
-			<pre>func CheckMatrix(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-CheckMatrix compares two matrices
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckMatrixC">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=5544:5631#L217">CheckMatrixC</a></h2>
-			<pre>func CheckMatrixC(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct [][]<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
-			<p>
-CheckMatrixC compares two matrices of complex nummbers
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckScalar">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=2509:2580#L106">CheckScalar</a></h2>
-			<pre>func CheckScalar(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, res, correct <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-CheckScalar compares two scalars
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckStrMat">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=13492:13561#L452">CheckStrMat</a></h2>
-			<pre>func CheckStrMat(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, res, correct [][]<a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-CheckStrMat compares matrices of strings
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckString">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=2670:2723#L111">CheckString</a></h2>
-			<pre>func CheckString(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, str, correct <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-CheckString compares two strings
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckVector">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=4782:4863#L188">CheckVector</a></h2>
-			<pre>func CheckVector(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct []<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-CheckVector compares two vectors
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckVectorC">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=6931:7016#L264">CheckVectorC</a></h2>
-			<pre>func CheckVectorC(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
-			<p>
-CheckVectorC compares two vectors of complex nummbers
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CompareBools">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=12228:12286#L414">CompareBools</a></h2>
-			<pre>func CompareBools(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#bool">bool</a>)</pre>
-			<p>
-CompareBools compare two slices of bools
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CompareDbls">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=8672:8732#L322">CompareDbls</a></h2>
-			<pre>func CompareDbls(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-CompareDbls compares two slices of doubles (floats)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CompareDeep3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=9312:9377#L341">CompareDeep3</a></h2>
-			<pre>func CompareDeep3(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-CompareDeep3 compares two deep3 slices
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CompareDeep4">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=10583:10650#L374">CompareDeep4</a></h2>
-			<pre>func CompareDeep4(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-CompareDeep4 compares two deep4 slices
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CompareInts">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=8040:8096#L303">CompareInts</a></h2>
-			<pre>func CompareInts(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-CompareInts compares two slices of integers
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CompareStrs">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=12860:12919#L433">CompareStrs</a></h2>
-			<pre>func CompareStrs(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-CompareStrs compare two slices of strings
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Dbl2Str">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6253:6306#L274">Dbl2Str</a></h2>
+			<h2 id="Dbl2Str">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6476:6529#L279">Dbl2Str</a></h2>
 			<pre>func Dbl2Str(v []<a href="/pkg/builtin/#float64">float64</a>, format <a href="/pkg/builtin/#string">string</a>) (s []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Dbl2Str converts a slice of doubles (float64) to a slice of strings
@@ -1033,7 +400,7 @@ Dbl2Str converts a slice of doubles (float64) to a slice of strings
 		
 			
 			
-			<h2 id="DblArrayToMat">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=512:569#L11">DblArrayToMat</a></h2>
+			<h2 id="DblArrayToMat">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=548:605#L13">DblArrayToMat</a></h2>
 			<pre>func DblArrayToMat(v []<a href="/pkg/builtin/#float64">float64</a>, m, n <a href="/pkg/builtin/#int">int</a>) (a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblArrayToMat converts a column-major array to a matrix
@@ -1045,19 +412,7 @@ DblArrayToMat converts a column-major array to a matrix
 		
 			
 			
-			<h2 id="DblAssert">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=1501:1529#L63">DblAssert</a></h2>
-			<pre>func DblAssert(a, b <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-DblAssert asserts that a is equal to b (floats)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="DblDsort3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=440:472#L15">DblDsort3</a></h2>
+			<h2 id="DblDsort3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=500:532#L18">DblDsort3</a></h2>
 			<pre>func DblDsort3(a, b, c *<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblDsort3 sorts 3 values in descending order
@@ -1069,7 +424,7 @@ DblDsort3 sorts 3 values in descending order
 		
 			
 			
-			<h2 id="DblGetSorted">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=641:691#L28">DblGetSorted</a></h2>
+			<h2 id="DblGetSorted">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=701:751#L31">DblGetSorted</a></h2>
 			<pre>func DblGetSorted(A []<a href="/pkg/builtin/#float64">float64</a>) (Asorted []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblGetSorted returns a sorted (increasing) copy of &#39;A&#39;
@@ -1081,7 +436,7 @@ DblGetSorted returns a sorted (increasing) copy of &#39;A&#39;
 		
 			
 			
-			<h2 id="DblMatToArray">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=245:292#L1">DblMatToArray</a></h2>
+			<h2 id="DblMatToArray">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=281:328#L1">DblMatToArray</a></h2>
 			<pre>func DblMatToArray(a [][]<a href="/pkg/builtin/#float64">float64</a>) (v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblMatToArray converts a matrix into a column-major array
@@ -1093,7 +448,7 @@ DblMatToArray converts a matrix into a column-major array
 		
 			
 			
-			<h2 id="DblMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3681:3725#L166">DblMinMax</a></h2>
+			<h2 id="DblMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3904:3948#L171">DblMinMax</a></h2>
 			<pre>func DblMinMax(v []<a href="/pkg/builtin/#float64">float64</a>) (mi, ma <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblMinMax returns the maximum and minimum elements in v
@@ -1107,7 +462,7 @@ DblMinMax returns the maximum and minimum elements in v
 		
 			
 			
-			<h2 id="DblOnes">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2941:2976#L132">DblOnes</a></h2>
+			<h2 id="DblOnes">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3164:3199#L137">DblOnes</a></h2>
 			<pre>func DblOnes(n <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblOnes generates a slice of double precision &#39;1s&#39;
@@ -1119,16 +474,7 @@ DblOnes generates a slice of double precision &#39;1s&#39;
 		
 			
 			
-			<h2 id="DblPrint">func <a href="https://github.com/cpmech/gosl/blob/master/utl/auxiliary.go?s=788:845#L33">DblPrint</a></h2>
-			<pre>func DblPrint(a []<a href="/pkg/builtin/#float64">float64</a>, printfkey <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="DblSort3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=250:281#L2">DblSort3</a></h2>
+			<h2 id="DblSort3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=310:341#L5">DblSort3</a></h2>
 			<pre>func DblSort3(a, b, c *<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblSort3 sorts 3 values in ascending order
@@ -1140,7 +486,7 @@ DblSort3 sorts 3 values in ascending order
 		
 			
 			
-			<h2 id="DblSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6654:6691#L292">DblSplit</a></h2>
+			<h2 id="DblSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6883:6920#L297">DblSplit</a></h2>
 			<pre>func DblSplit(s <a href="/pkg/builtin/#string">string</a>) (r []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblSplit splits a string into floats
@@ -1152,7 +498,7 @@ DblSplit splits a string into floats
 		
 			
 			
-			<h2 id="DblSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3965:4003#L181">DblSum</a></h2>
+			<h2 id="DblSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4188:4226#L186">DblSum</a></h2>
 			<pre>func DblSum(v []<a href="/pkg/builtin/#float64">float64</a>) (sum <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblSum sums all items in v
@@ -1166,7 +512,7 @@ DblSum sums all items in v
 		
 			
 			
-			<h2 id="DblVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3116:3162#L141">DblVals</a></h2>
+			<h2 id="DblVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3339:3385#L146">DblVals</a></h2>
 			<pre>func DblVals(n <a href="/pkg/builtin/#int">int</a>, v <a href="/pkg/builtin/#float64">float64</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblVals generates a slice of double precision values
@@ -1178,7 +524,7 @@ DblVals generates a slice of double precision values
 		
 			
 			
-			<h2 id="Deep3Deserialize">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=2084:2160#L88">Deep3Deserialize</a></h2>
+			<h2 id="Deep3Deserialize">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=2150:2226#L90">Deep3Deserialize</a></h2>
 			<pre>func Deep3Deserialize(I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>, debug <a href="/pkg/builtin/#bool">bool</a>) (A [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3Deserialize deserializes an array of array of array in column-compressed format
@@ -1192,7 +538,7 @@ Deep3Deserialize deserializes an array of array of array in column-compressed fo
 		
 			
 			
-			<h2 id="Deep3GetInfo">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=1508:1608#L64">Deep3GetInfo</a></h2>
+			<h2 id="Deep3GetInfo">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=1553:1653#L66">Deep3GetInfo</a></h2>
 			<pre>func Deep3GetInfo(I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) (nitems, nrows, ncols_tot <a href="/pkg/builtin/#int">int</a>, ncols []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Deep3GetInfo returns information of serialized array of array of array
@@ -1206,7 +552,7 @@ Deep3GetInfo returns information of serialized array of array of array
 		
 			
 			
-			<h2 id="Deep3Print">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=781:826#L24">Deep3Print</a></h2>
+			<h2 id="Deep3Print">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=817:862#L26">Deep3Print</a></h2>
 			<pre>func Deep3Print(name <a href="/pkg/builtin/#string">string</a>, A [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3Print prints an array of array of array
@@ -1218,7 +564,7 @@ Deep3Print prints an array of array of array
 		
 			
 			
-			<h2 id="Deep3Serialize">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=1009:1071#L35">Deep3Serialize</a></h2>
+			<h2 id="Deep3Serialize">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=1054:1116#L37">Deep3Serialize</a></h2>
 			<pre>func Deep3Serialize(A [][][]<a href="/pkg/builtin/#float64">float64</a>) (I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3Serialize serializes an array of array of array in column-compressed format
@@ -1280,19 +626,7 @@ Deep4set sets deep slice of slice of slice of slice with v values
 		
 			
 			
-			<h2 id="DiffVecs">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=15866:15920#L526">DiffVecs</a></h2>
-			<pre>func DiffVecs(a, b []<a href="/pkg/builtin/#float64">float64</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-DiffVecs returns the formatted difference between two slices of floats
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Digits">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=1779:1831#L73">Digits</a></h2>
+			<h2 id="Digits">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7075:7127#L307">Digits</a></h2>
 			<pre>func Digits(maxint <a href="/pkg/builtin/#int">int</a>) (ndigits <a href="/pkg/builtin/#int">int</a>, format <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Digits returns the nubmer of digits
@@ -1304,7 +638,7 @@ Digits returns the nubmer of digits
 		
 			
 			
-			<h2 id="DoProf">func <a href="https://github.com/cpmech/gosl/blob/master/utl/profiling.go?s=1784:1815#L57">DoProf</a></h2>
+			<h2 id="DoProf">func <a href="https://github.com/cpmech/gosl/blob/master/utl/profiling.go?s=1864:1895#L60">DoProf</a></h2>
 			<pre>func DoProf(silent <a href="/pkg/builtin/#bool">bool</a>) func()</pre>
 			<p>
 DoProf runs either CPU profiling or MEM profiling
@@ -1323,7 +657,7 @@ DoProf runs either CPU profiling or MEM profiling
 		
 			
 			
-			<h2 id="DurSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4170:4218#L190">DurSum</a></h2>
+			<h2 id="DurSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4393:4441#L195">DurSum</a></h2>
 			<pre>func DurSum(v []<a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>) (seconds <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DurSum sums all seconds in v
@@ -1337,85 +671,10 @@ DurSum sums all seconds in v
 		
 			
 			
-			<h2 id="Err">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=795:841#L26">Err</a></h2>
-			<pre>func Err(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{}) <a href="/pkg/builtin/#error">error</a></pre>
-			<p>
-Err returns a new error
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="ErrorMsg">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=2172:2235#L94">ErrorMsg</a></h2>
-			<pre>func ErrorMsg(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-ErrorMsg returns a formatted error message
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Expon">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=1954:1991#L80">Expon</a></h2>
+			<h2 id="Expon">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7253:7290#L314">Expon</a></h2>
 			<pre>func Expon(val <a href="/pkg/builtin/#float64">float64</a>) (ndigits <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Expon returns the exponent
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="ExtractStrPair">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=319:374#L3">ExtractStrPair</a></h2>
-			<pre>func ExtractStrPair(pair, sep <a href="/pkg/builtin/#string">string</a>) (key, val <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-ExtractStrPair extracts the pair from, e.g., &#34;key:val&#34;
-</p>
-<pre>Note: it returs empty strings if any is not found
-</pre>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Ff">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=677:733#L21">Ff</a></h2>
-			<pre>func Ff(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			<p>
-Ff wraps Fprintf
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="FnExt">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=627:655#L16">FnExt</a></h2>
-			<pre>func FnExt(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-FnExt returns the extension of a file name.
-The extension is the suffix beginning at the final dot in the final element of path; it is empty if there is no dot.
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="FnKey">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=350:378#L9">FnKey</a></h2>
-			<pre>func FnKey(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-FnKey returns the file name key (without path and extension, if any)
 </p>
 
 			
@@ -1446,19 +705,7 @@ Notes:
 		
 			
 			
-			<h2 id="GetMapIntSlice">func <a href="https://github.com/cpmech/gosl/blob/master/utl/myjson.go?s=938:995#L31">GetMapIntSlice</a></h2>
-			<pre>func GetMapIntSlice(dict interface{}) (res map[<a href="/pkg/builtin/#int">int</a>][]<a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-GetMapIntSlice gets a map of slice of integers from interface (read by json)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="IntAddScalar">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1838:1883#L80">IntAddScalar</a></h2>
+			<h2 id="IntAddScalar">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2061:2106#L85">IntAddScalar</a></h2>
 			<pre>func IntAddScalar(a []<a href="/pkg/builtin/#int">int</a>, s <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntAddScalar adds a scalar to all values in a slice of integers
@@ -1470,43 +717,7 @@ IntAddScalar adds a scalar to all values in a slice of integers
 		
 			
 			
-			<h2 id="IntAssert">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=820:844#L28">IntAssert</a></h2>
-			<pre>func IntAssert(a, b <a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-IntAssert asserts that a is equal to b (ints)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="IntAssertLessThan">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=1034:1066#L39">IntAssertLessThan</a></h2>
-			<pre>func IntAssertLessThan(a, b <a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-IntAssertLessThan asserts that a &lt; b (ints)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="IntAssertLessThanOrEqualTo">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=1265:1306#L51">IntAssertLessThanOrEqualTo</a></h2>
-			<pre>func IntAssertLessThanOrEqualTo(a, b <a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-IntAssertLessThanOrEqualTo asserts that a ≤ b (ints)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="IntBoolMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5660:5715#L259">IntBoolMapSort</a></h2>
+			<h2 id="IntBoolMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5828:5883#L262">IntBoolMapSort</a></h2>
 			<pre>func IntBoolMapSort(m map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -1515,7 +726,7 @@ IntAssertLessThanOrEqualTo asserts that a ≤ b (ints)
 		
 			
 			
-			<h2 id="IntFill">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=271:301#L5">IntFill</a></h2>
+			<h2 id="IntFill">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=494:524#L10">IntFill</a></h2>
 			<pre>func IntFill(s []<a href="/pkg/builtin/#int">int</a>, val <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntFill fills a slice of integers
@@ -1527,7 +738,7 @@ IntFill fills a slice of integers
 		
 			
 			
-			<h2 id="IntFilter">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5028:5087#L221">IntFilter</a></h2>
+			<h2 id="IntFilter">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5251:5310#L226">IntFilter</a></h2>
 			<pre>func IntFilter(a []<a href="/pkg/builtin/#int">int</a>, out func(idx <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntFilter filters out components in slice
@@ -1541,7 +752,7 @@ IntFilter filters out components in slice
 		
 			
 			
-			<h2 id="IntIndexSmall">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4762:4802#L210">IntIndexSmall</a></h2>
+			<h2 id="IntIndexSmall">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4985:5025#L215">IntIndexSmall</a></h2>
 			<pre>func IntIndexSmall(a []<a href="/pkg/builtin/#int">int</a>, val <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 IntIndexSmall finds the index of an item in a slice of ints
@@ -1569,7 +780,7 @@ IntIntsMapAppend appends a new item to a map of slice.
 		
 			
 			
-			<h2 id="IntMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3376:3412#L151">IntMinMax</a></h2>
+			<h2 id="IntMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3599:3635#L156">IntMinMax</a></h2>
 			<pre>func IntMinMax(v []<a href="/pkg/builtin/#int">int</a>) (mi, ma <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntMinMax returns the maximum and minimum elements in v
@@ -1583,7 +794,7 @@ IntMinMax returns the maximum and minimum elements in v
 		
 			
 			
-			<h2 id="IntNegOut">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5328:5363#L233">IntNegOut</a></h2>
+			<h2 id="IntNegOut">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5551:5586#L238">IntNegOut</a></h2>
 			<pre>func IntNegOut(a []<a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntNegOut filters out negative components in slice
@@ -1597,16 +808,7 @@ IntNegOut filters out negative components in slice
 		
 			
 			
-			<h2 id="IntPrint">func <a href="https://github.com/cpmech/gosl/blob/master/utl/auxiliary.go?s=606:659#L21">IntPrint</a></h2>
-			<pre>func IntPrint(a []<a href="/pkg/builtin/#int">int</a>, printfkey <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="IntPy">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2717:2749#L119">IntPy</a></h2>
+			<h2 id="IntPy">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2940:2972#L124">IntPy</a></h2>
 			<pre>func IntPy(a []<a href="/pkg/builtin/#int">int</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 IntPy returns a Python string representing a slice of integers
@@ -1618,7 +820,7 @@ IntPy returns a Python string representing a slice of integers
 		
 			
 			
-			<h2 id="IntRange">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=963:995#L39">IntRange</a></h2>
+			<h2 id="IntRange">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1186:1218#L44">IntRange</a></h2>
 			<pre>func IntRange(n <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntRange generates a slice of integers from 0 to n-1
@@ -1630,7 +832,7 @@ IntRange generates a slice of integers from 0 to n-1
 		
 			
 			
-			<h2 id="IntRange2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1173:1210#L51">IntRange2</a></h2>
+			<h2 id="IntRange2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1396:1433#L56">IntRange2</a></h2>
 			<pre>func IntRange2(start, stop <a href="/pkg/builtin/#int">int</a>) []<a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 IntRange2 generates slice of integers from start to stop (but not stop)
@@ -1642,7 +844,7 @@ IntRange2 generates slice of integers from start to stop (but not stop)
 		
 			
 			
-			<h2 id="IntRange3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1345:1394#L56">IntRange3</a></h2>
+			<h2 id="IntRange3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1568:1617#L61">IntRange3</a></h2>
 			<pre>func IntRange3(start, stop, step <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntRange3 generates a slice of integers from start to stop (but not stop), afer each &#39;step&#39;
@@ -1654,7 +856,7 @@ IntRange3 generates a slice of integers from start to stop (but not stop), afer 
 		
 			
 			
-			<h2 id="IntUnique">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2037:2080#L89">IntUnique</a></h2>
+			<h2 id="IntUnique">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2260:2303#L94">IntUnique</a></h2>
 			<pre>func IntUnique(slices ...[]<a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntUnique returns a unique and sorted slice of integers
@@ -1666,7 +868,7 @@ IntUnique returns a unique and sorted slice of integers
 		
 			
 			
-			<h2 id="IntVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=425:463#L12">IntVals</a></h2>
+			<h2 id="IntVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=648:686#L17">IntVals</a></h2>
 			<pre>func IntVals(n <a href="/pkg/builtin/#int">int</a>, val <a href="/pkg/builtin/#int">int</a>) (s []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntVals allocates a slice of integers with size==n, filled with val
@@ -1678,7 +880,7 @@ IntVals allocates a slice of integers with size==n, filled with val
 		
 			
 			
-			<h2 id="IntsAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=776:814#L30">IntsAlloc</a></h2>
+			<h2 id="IntsAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=999:1037#L35">IntsAlloc</a></h2>
 			<pre>func IntsAlloc(m, n <a href="/pkg/builtin/#int">int</a>) (mat [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntsAlloc allocates a matrix of integers
@@ -1690,112 +892,7 @@ IntsAlloc allocates a matrix of integers
 		
 			
 			
-			<h2 id="Itob">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=2958:2981#L127">Itob</a></h2>
-			<pre>func Itob(val <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
-			<p>
-Itob converts from integer to bool
-</p>
-<pre>Note: only zero returns false
-      anything else returns true
-</pre>
-
-			
-			
-
-		
-			
-			
-			<h2 id="JoinKeys">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=3931:3966#L147">JoinKeys</a></h2>
-			<pre>func JoinKeys(keys []<a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-JoinKeys join keys separeted by spaces
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="JoinKeys3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=2178:2238#L70">JoinKeys3</a></h2>
-			<pre>func JoinKeys3(k0, k1, k2 []<a href="/pkg/builtin/#string">string</a>, sep <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-JoinKeys3 joins keys from 3 slices into a string with sets separated by sep
-and keys separeted by spaces
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="JoinKeys4">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=3008:3072#L105">JoinKeys4</a></h2>
-			<pre>func JoinKeys4(k0, k1, k2, k3 []<a href="/pkg/builtin/#string">string</a>, sep <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-JoinKeys4 joins keys from 4 slices into a string with sets separated by sep
-and keys separeted by spaces
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="JoinKeysPre">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=4063:4122#L152">JoinKeysPre</a></h2>
-			<pre>func JoinKeysPre(prefix <a href="/pkg/builtin/#string">string</a>, keys []<a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-JoinKeysPre join keys separeted by spaces with a prefix
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="JsonMapIntSlice">func <a href="https://github.com/cpmech/gosl/blob/master/utl/myjson.go?s=530:606#L15">JsonMapIntSlice</a></h2>
-			<pre>func JsonMapIntSlice(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, indent, name <a href="/pkg/builtin/#string">string</a>, m *map[<a href="/pkg/builtin/#int">int</a>][]<a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-JsonMapIntSlice writes to buffer a JSON string representation of a map of slice of integers
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Keycode">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=688:757#L16">Keycode</a></h2>
-			<pre>func Keycode(String <a href="/pkg/builtin/#string">string</a>, Type <a href="/pkg/builtin/#string">string</a>) (keycode <a href="/pkg/builtin/#string">string</a>, found <a href="/pkg/builtin/#bool">bool</a>)</pre>
-			<p>
-Keycode extracts a keycode from a string such as &#34;!typeA:keycodeA !typeB:keycodeB!typeC:keycodeC&#34;
-</p>
-<pre>Note: String == &#34;!keyA !typeB:valB&#34; is also valid
-</pre>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Keycodes">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=1534:1582#L47">Keycodes</a></h2>
-			<pre>func Keycodes(String <a href="/pkg/builtin/#string">string</a>) (keycodes []<a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-Keycodes extracts keys from a keycode (extra) string
-</p>
-<pre>Example: &#34;!keyA !typeB:valB&#34; =&gt; keycodes = [keyA, typeB]
-</pre>
-
-			
-			
-
-		
-			
-			
-			<h2 id="LinSpace">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5545:5604#L244">LinSpace</a></h2>
+			<h2 id="LinSpace">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5768:5827#L249">LinSpace</a></h2>
 			<pre>func LinSpace(start, stop <a href="/pkg/builtin/#float64">float64</a>, num <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 LinSpace returns evenly spaced numbers over a specified closed interval.
@@ -1807,7 +904,7 @@ LinSpace returns evenly spaced numbers over a specified closed interval.
 		
 			
 			
-			<h2 id="LinSpaceOpen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5933:5996#L261">LinSpaceOpen</a></h2>
+			<h2 id="LinSpaceOpen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6156:6219#L266">LinSpaceOpen</a></h2>
 			<pre>func LinSpaceOpen(start, stop <a href="/pkg/builtin/#float64">float64</a>, num <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 LinSpaceOpen returns evenly spaced numbers over a specified open interval.
@@ -1819,325 +916,7 @@ LinSpaceOpen returns evenly spaced numbers over a specified open interval.
 		
 			
 			
-			<h2 id="OpenAndParseJson">func <a href="https://github.com/cpmech/gosl/blob/master/utl/myjson.go?s=1651:1726#L61">OpenAndParseJson</a></h2>
-			<pre>func OpenAndParseJson(results interface{}, filepath, ext <a href="/pkg/builtin/#string">string</a>) (b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
-			<p>
-OpenAndParseJson opens and parse a json text file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="OpenFileR">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=3204:3255#L112">OpenFileR</a></h2>
-			<pre>func OpenFileR(fn <a href="/pkg/builtin/#string">string</a>) (fil *<a href="/pkg/os/">os</a>.<a href="/pkg/os/#File">File</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
-			<p>
-OpenFileR opens a file for reading data
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Panic">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=1089:1131#L39">Panic</a></h2>
-			<pre>func Panic(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			<p>
-Panic panicks
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="PanicSimple">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=933:981#L31">PanicSimple</a></h2>
-			<pre>func PanicSimple(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			<p>
-PanicSimple panicks without calling CallerInfo
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="PathKey">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=739:769#L21">PathKey</a></h2>
-			<pre>func PathKey(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-PathKey returs the full path except the extension
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Pf">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=3439:3478#L158">Pf</a></h2>
-			<pre>func Pf(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="PfBlue">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=7379:7422#L387">PfBlue</a></h2>
-			<pre>func PfBlue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="PfCyan">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=6692:6735#L347">PfCyan</a></h2>
-			<pre>func PfCyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="PfGreen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=7206:7250#L377">PfGreen</a></h2>
-			<pre>func PfGreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="PfMag">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=7551:7593#L397">PfMag</a></h2>
-			<pre>func PfMag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="PfRed">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=7035:7077#L367">PfRed</a></h2>
-			<pre>func PfRed(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="PfWhite">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=7722:7766#L407">PfWhite</a></h2>
-			<pre>func PfWhite(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="PfYel">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=6864:6906#L357">PfYel</a></h2>
-			<pre>func PfYel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfblue">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=4221:4264#L204">Pfblue</a></h2>
-			<pre>func Pfblue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfblue2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=6144:6188#L314">Pfblue2</a></h2>
-			<pre>func Pfblue2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfcyan">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=3534:3577#L164">Pfcyan</a></h2>
-			<pre>func Pfcyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfcyan2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=5442:5486#L274">Pfcyan2</a></h2>
-			<pre>func Pfcyan2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfdgreen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=4912:4957#L244">Pfdgreen</a></h2>
-			<pre>func Pfdgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfdyel">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=5618:5661#L284">Pfdyel</a></h2>
-			<pre>func Pfdyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfdyel2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=5793:5837#L294">Pfdyel2</a></h2>
-			<pre>func Pfdyel2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfgreen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=4048:4092#L194">Pfgreen</a></h2>
-			<pre>func Pfgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfgreen2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=5089:5134#L254">Pfgreen2</a></h2>
-			<pre>func Pfgreen2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfgrey">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=5969:6012#L304">Pfgrey</a></h2>
-			<pre>func Pfgrey(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfgrey2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=6320:6364#L324">Pfgrey2</a></h2>
-			<pre>func Pfgrey2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pflmag">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=4564:4607#L224">Pflmag</a></h2>
-			<pre>func Pflmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfmag">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=4393:4435#L214">Pfmag</a></h2>
-			<pre>func Pfmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pforan">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=6496:6539#L334">Pforan</a></h2>
-			<pre>func Pforan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfpink">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=4736:4779#L234">Pfpink</a></h2>
-			<pre>func Pfpink(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfpurple">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=5265:5310#L264">Pfpurple</a></h2>
-			<pre>func Pfpurple(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfred">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=3877:3919#L184">Pfred</a></h2>
-			<pre>func Pfred(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="Pfyel">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=3706:3748#L174">Pfyel</a></h2>
-			<pre>func Pfyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
-			
-			
-
-		
-			
-			
-			<h2 id="PrintTime">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=1456:1481#L57">PrintTime</a></h2>
-			<pre>func PrintTime(t <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-PrintTime prints simulation time
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="PrintTimeLong">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=1614:1643#L65">PrintTimeLong</a></h2>
-			<pre>func PrintTimeLong(t <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-PrintTime prints simulation time (long format)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="ProfCPU">func <a href="https://github.com/cpmech/gosl/blob/master/utl/profiling.go?s=512:569#L9">ProfCPU</a></h2>
+			<h2 id="ProfCPU">func <a href="https://github.com/cpmech/gosl/blob/master/utl/profiling.go?s=572:629#L12">ProfCPU</a></h2>
 			<pre>func ProfCPU(dirout, filename <a href="/pkg/builtin/#string">string</a>, silent <a href="/pkg/builtin/#bool">bool</a>) func()</pre>
 			<p>
 ProfCPU activates CPU profiling
@@ -2151,7 +930,7 @@ ProfCPU activates CPU profiling
 		
 			
 			
-			<h2 id="ProfMEM">func <a href="https://github.com/cpmech/gosl/blob/master/utl/profiling.go?s=1040:1097#L31">ProfMEM</a></h2>
+			<h2 id="ProfMEM">func <a href="https://github.com/cpmech/gosl/blob/master/utl/profiling.go?s=1110:1167#L34">ProfMEM</a></h2>
 			<pre>func ProfMEM(dirout, filename <a href="/pkg/builtin/#string">string</a>, silent <a href="/pkg/builtin/#bool">bool</a>) func()</pre>
 			<p>
 ProfMEM activates memory profiling
@@ -2165,94 +944,8 @@ ProfMEM activates memory profiling
 		
 			
 			
-			<h2 id="ReadFile">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=3343:3389#L118">ReadFile</a></h2>
-			<pre>func ReadFile(fn <a href="/pkg/builtin/#string">string</a>) (b []<a href="/pkg/builtin/#byte">byte</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
-			<p>
-ReadFile reads bytes from a file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="ReadLines">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=3688:3735#L126">ReadLines</a></h2>
-			<pre>func ReadLines(fn <a href="/pkg/builtin/#string">string</a>, cb <a href="#ReadLinesCallback">ReadLinesCallback</a>)</pre>
-			<p>
-ReadLines reads lines from a file and calls ReadLinesCallback to process each line being read
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="ReadLinesFile">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=4226:4294#L154">ReadLinesFile</a></h2>
-			<pre>func ReadLinesFile(fil *<a href="/pkg/os/">os</a>.<a href="/pkg/os/#File">File</a>, cb <a href="#ReadLinesCallback">ReadLinesCallback</a>) (oserr <a href="/pkg/builtin/#error">error</a>)</pre>
-			<p>
-ReadLinesFile reads lines from a file and calls ReadLinesCallback to process each line being read
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="ReadMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=5946:5999#L226">ReadMatrix</a></h2>
-			<pre>func ReadMatrix(fn <a href="/pkg/builtin/#string">string</a>) (M [][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
-			<p>
-ReadMatrix reads a text file in which the float64 type of numeric values represent
-a matrix of data. The number of columns must be equal, including for the headers
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="ReadTable">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=5013:5089#L187">ReadTable</a></h2>
-			<pre>func ReadTable(fn <a href="/pkg/builtin/#string">string</a>) (keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
-			<p>
-ReadTable reads a text file in which the first line contains the headers and the next lines the float64
-type of numeric values. The number of columns must be equal, including for the headers
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="RemoveAll">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=4692:4718#L178">RemoveAll</a></h2>
-			<pre>func RemoveAll(key <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-RemoveAll deletes all files matching filename specified by key (be careful)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Sf">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=572:618#L16">Sf</a></h2>
-			<pre>func Sf(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{}) <a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-Sf wraps Sprintf
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="SortQuadruples">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3375:3462#L148">SortQuadruples</a></h2>
-			<pre>func SortQuadruples(i []<a href="/pkg/builtin/#int">int</a>, x, y, z []<a href="/pkg/builtin/#float64">float64</a>, by <a href="/pkg/builtin/#string">string</a>) (I []<a href="/pkg/builtin/#int">int</a>, X, Y, Z []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="SortQuadruples">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3438:3536#L151">SortQuadruples</a></h2>
+			<pre>func SortQuadruples(i []<a href="/pkg/builtin/#int">int</a>, x, y, z []<a href="/pkg/builtin/#float64">float64</a>, by <a href="/pkg/builtin/#string">string</a>) (I []<a href="/pkg/builtin/#int">int</a>, X, Y, Z []<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SortQuadruples sorts i, x, y, and z by &#34;i&#34;, &#34;x&#34;, &#34;y&#34;, or &#34;z&#34;
 </p>
@@ -2265,43 +958,7 @@ SortQuadruples sorts i, x, y, and z by &#34;i&#34;, &#34;x&#34;, &#34;y&#34;, or
 		
 			
 			
-			<h2 id="SplitKeys">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=4275:4311#L163">SplitKeys</a></h2>
-			<pre>func SplitKeys(keys <a href="/pkg/builtin/#string">string</a>) []<a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-SplitKeys splits keys separeted by spaces
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="SplitKeys3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=2488:2537#L83">SplitKeys3</a></h2>
-			<pre>func SplitKeys3(res <a href="/pkg/builtin/#string">string</a>) (k0, k1, k2 []<a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-SplitKeys3 splits a string with three sets of keys separated by comma
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="SplitKeys4">func <a href="https://github.com/cpmech/gosl/blob/master/utl/parsing.go?s=3391:3444#L122">SplitKeys4</a></h2>
-			<pre>func SplitKeys4(res <a href="/pkg/builtin/#string">string</a>) (k0, k1, k2, k3 []<a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-SplitKeys4 splits a string with four sets of keys separated by comma
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Str2Dbl">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6479:6517#L283">Str2Dbl</a></h2>
+			<h2 id="Str2Dbl">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6705:6743#L288">Str2Dbl</a></h2>
 			<pre>func Str2Dbl(s []<a href="/pkg/builtin/#string">string</a>) (v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Str2Dbl converts a slice of strings to a slice of doubles (float64)
@@ -2313,19 +970,7 @@ Str2Dbl converts a slice of strings to a slice of doubles (float64)
 		
 			
 			
-			<h2 id="StrAssert">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=1727:1754#L74">StrAssert</a></h2>
-			<pre>func StrAssert(a, b <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-StrAssert asserts that a is equal to b (strings)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="StrBoolMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4359:4420#L201">StrBoolMapSort</a></h2>
+			<h2 id="StrBoolMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4527:4588#L204">StrBoolMapSort</a></h2>
 			<pre>func StrBoolMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2334,7 +979,7 @@ StrAssert asserts that a is equal to b (strings)
 		
 			
 			
-			<h2 id="StrBoolMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5228:5314#L242">StrBoolMapSortSplit</a></h2>
+			<h2 id="StrBoolMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5396:5482#L245">StrBoolMapSortSplit</a></h2>
 			<pre>func StrBoolMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 			
@@ -2343,7 +988,7 @@ StrAssert asserts that a is equal to b (strings)
 		
 			
 			
-			<h2 id="StrDblMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4152:4215#L190">StrDblMapSort</a></h2>
+			<h2 id="StrDblMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4320:4383#L193">StrDblMapSort</a></h2>
 			<pre>func StrDblMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2352,7 +997,7 @@ StrAssert asserts that a is equal to b (strings)
 		
 			
 			
-			<h2 id="StrDblMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4890:4981#L227">StrDblMapSortSplit</a></h2>
+			<h2 id="StrDblMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5058:5149#L230">StrDblMapSortSplit</a></h2>
 			<pre>func StrDblMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -2375,7 +1020,7 @@ StrDblsMapAppend appends a new item to a map of slice.
 		
 			
 			
-			<h2 id="StrIndexSmall">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4453:4499#L199">StrIndexSmall</a></h2>
+			<h2 id="StrIndexSmall">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4676:4722#L204">StrIndexSmall</a></h2>
 			<pre>func StrIndexSmall(a []<a href="/pkg/builtin/#string">string</a>, val <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 StrIndexSmall finds the index of an item in a slice of strings
@@ -2389,7 +1034,7 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
-			<h2 id="StrIntMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3949:4008#L179">StrIntMapSort</a></h2>
+			<h2 id="StrIntMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4117:4176#L182">StrIntMapSort</a></h2>
 			<pre>func StrIntMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -2398,7 +1043,7 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
-			<h2 id="StrIntMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4564:4647#L212">StrIntMapSortSplit</a></h2>
+			<h2 id="StrIntMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4732:4815#L215">StrIntMapSortSplit</a></h2>
 			<pre>func StrIntMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -2407,7 +1052,7 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
-			<h2 id="StrVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=609:653#L21">StrVals</a></h2>
+			<h2 id="StrVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=832:876#L26">StrVals</a></h2>
 			<pre>func StrVals(n <a href="/pkg/builtin/#int">int</a>, val <a href="/pkg/builtin/#string">string</a>) (s []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 StrVals allocates a slice of strings with size==n, filled with val
@@ -2417,155 +1062,10 @@ StrVals allocates a slice of strings with size==n, filled with val
 			
 
 		
-			
-			
-			<h2 id="TTitle">func <a href="https://github.com/cpmech/gosl/blob/master/utl/testing.go?s=1933:1958#L85">TTitle</a></h2>
-			<pre>func TTitle(title <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-TTitle returns the Test Title
-</p>
-
-			
-			
-
 		
 			
 			
-			<h2 id="UnColor">func <a href="https://github.com/cpmech/gosl/blob/master/utl/basic.go?s=8037:8068#L421">UnColor</a></h2>
-			<pre>func UnColor(msg <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-UnColor removes console characters used to show colors
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteBytesToFile">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=2713:2755#L94">WriteBytesToFile</a></h2>
-			<pre>func WriteBytesToFile(fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
-			<p>
-WriteBytesToFile writes bytes to a new file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteBytesToFileD">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=3041:3092#L106">WriteBytesToFileD</a></h2>
-			<pre>func WriteBytesToFileD(dirout, fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
-			<p>
-WriteBytesToFile writes bytes to a new file and create a directory to save the file within
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteFile">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=1217:1267#L40">WriteFile</a></h2>
-			<pre>func WriteFile(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
-			<p>
-WriteFile writes data to a new file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteFileD">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=1645:1704#L55">WriteFileD</a></h2>
-			<pre>func WriteFileD(dirout, fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
-			<p>
-WriteFileD writes data to a new file and create a directory to save the file within
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteFileS">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=1821:1853#L61">WriteFileS</a></h2>
-			<pre>func WriteFileS(fn, data <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-WriteFileS writes data string to a new file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteFileSD">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=2081:2122#L71">WriteFileSD</a></h2>
-			<pre>func WriteFileSD(dirout, fn, data <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-WriteFileSD writes data string to a new file after creating a directory to save the file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteFileV">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=2262:2313#L77">WriteFileV</a></h2>
-			<pre>func WriteFileV(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
-			<p>
-WriteFileV writes data to a new file (and shows message: file written)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteFileVD">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=2493:2553#L85">WriteFileVD</a></h2>
-			<pre>func WriteFileVD(dirout, fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
-			<p>
-WriteFileVD writes data to a new file (and shows message: file written), after creating a directory
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteIntSlice">func <a href="https://github.com/cpmech/gosl/blob/master/utl/myjson.go?s=276:320#L3">WriteIntSlice</a></h2>
-			<pre>func WriteIntSlice(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, v []<a href="/pkg/builtin/#int">int</a>)</pre>
-			<p>
-WriteIntSlice writes to buffer a slice of integers
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WritePython">func <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=6831:6905#L265">WritePython</a></h2>
-			<pre>func WritePython(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, show <a href="/pkg/builtin/#bool">bool</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
-			<p>
-WritePython writes data corresponding to a Python script and eventually runs
-this script if show == true
-</p>
-
-			
-			
-
-		
-		
-			
-			
-			<h2 id="Quadruple">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=845:910#L36">Quadruple</a></h2>
+			<h2 id="Quadruple">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=905:970#L39">Quadruple</a></h2>
 			<pre>type Quadruple struct {
     I <a href="/pkg/builtin/#int">int</a>
     X <a href="/pkg/builtin/#float64">float64</a>
@@ -2591,7 +1091,7 @@ Quadruple helps to sort a quadruple of 1 int and 3 float64s
 		
 			
 			
-			<h2 id="Quadruples">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=951:979#L44">Quadruples</a></h2>
+			<h2 id="Quadruples">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1011:1039#L47">Quadruples</a></h2>
 			<pre>type Quadruples []*<a href="#Quadruple">Quadruple</a></pre>
 			<p>
 Quadruples helps to sort quadruples
@@ -2608,7 +1108,7 @@ Quadruples helps to sort quadruples
 
 			
 				
-				<h3 id="BuildQuadruples">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1108:1171#L48">BuildQuadruples</a></h3>
+				<h3 id="BuildQuadruples">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1168:1231#L51">BuildQuadruples</a></h3>
 				<pre>func BuildQuadruples(i []<a href="/pkg/builtin/#int">int</a>, x, y, z []<a href="/pkg/builtin/#float64">float64</a>) (q <a href="#Quadruples">Quadruples</a>)</pre>
 				<p>
 Init initialise Quadruples with i, x, y, and z
@@ -2622,7 +1122,7 @@ Init initialise Quadruples with i, x, y, and z
 
 			
 				
-				<h3 id="Quadruples.I">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1594:1627#L76">I</a></h3>
+				<h3 id="Quadruples.I">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1654:1687#L79">I</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) I() (i []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 I returns the &#39;i&#39; in quadruples
@@ -2633,7 +1133,7 @@ I returns the &#39;i&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Len">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2251:2280#L112">Len</a></h3>
+				<h3 id="Quadruples.Len">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2311:2340#L115">Len</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Len() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 Len returns the length of Quadruples
@@ -2644,7 +1144,7 @@ Len returns the length of Quadruples
 				
 			
 				
-				<h3 id="Quadruples.String">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2451:2486#L118">String</a></h3>
+				<h3 id="Quadruples.String">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2511:2546#L121">String</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 String returns the string representation of Quadruples
@@ -2655,7 +1155,7 @@ String returns the string representation of Quadruples
 				
 			
 				
-				<h3 id="Quadruples.Swap">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2329:2363#L115">Swap</a></h3>
+				<h3 id="Quadruples.Swap">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2389:2423#L118">Swap</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Swap(i, j <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Swap swaps two quadruples
@@ -2666,7 +1166,7 @@ Swap swaps two quadruples
 				
 			
 				
-				<h3 id="Quadruples.X">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1751:1788#L85">X</a></h3>
+				<h3 id="Quadruples.X">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1811:1848#L88">X</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) X() (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 X returns the &#39;x&#39; in quadruples
@@ -2677,7 +1177,7 @@ X returns the &#39;x&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Y">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1916:1953#L94">Y</a></h3>
+				<h3 id="Quadruples.Y">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1976:2013#L97">Y</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Y() (y []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Y returns the &#39;y&#39; in quadruples
@@ -2688,7 +1188,7 @@ Y returns the &#39;y&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Z">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2081:2118#L103">Z</a></h3>
+				<h3 id="Quadruples.Z">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2141:2178#L106">Z</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Z() (z []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Z returns the &#39;z&#39; in quadruples
@@ -2701,7 +1201,7 @@ Z returns the &#39;z&#39; in quadruples
 		
 			
 			
-			<h2 id="QuadruplesByI">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2618:2657#L127">QuadruplesByI</a></h2>
+			<h2 id="QuadruplesByI">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2681:2720#L130">QuadruplesByI</a></h2>
 			<pre>type QuadruplesByI struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by I
@@ -2720,7 +1220,7 @@ Sort Quadruples by I
 
 			
 				
-				<h3 id="QuadruplesByI.Less">func (QuadruplesByI) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2659:2701#L129">Less</a></h3>
+				<h3 id="QuadruplesByI.Less">func (QuadruplesByI) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2722:2764#L132">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByI">QuadruplesByI</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -2730,7 +1230,7 @@ Sort Quadruples by I
 		
 			
 			
-			<h2 id="QuadruplesByX">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2776:2815#L132">QuadruplesByX</a></h2>
+			<h2 id="QuadruplesByX">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2839:2878#L135">QuadruplesByX</a></h2>
 			<pre>type QuadruplesByX struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by X
@@ -2749,7 +1249,7 @@ Sort Quadruples by X
 
 			
 				
-				<h3 id="QuadruplesByX.Less">func (QuadruplesByX) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2817:2859#L134">Less</a></h3>
+				<h3 id="QuadruplesByX.Less">func (QuadruplesByX) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2880:2922#L137">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByX">QuadruplesByX</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -2759,7 +1259,7 @@ Sort Quadruples by X
 		
 			
 			
-			<h2 id="QuadruplesByY">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2934:2973#L137">QuadruplesByY</a></h2>
+			<h2 id="QuadruplesByY">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2997:3036#L140">QuadruplesByY</a></h2>
 			<pre>type QuadruplesByY struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by Y
@@ -2778,7 +1278,7 @@ Sort Quadruples by Y
 
 			
 				
-				<h3 id="QuadruplesByY.Less">func (QuadruplesByY) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2975:3017#L139">Less</a></h3>
+				<h3 id="QuadruplesByY.Less">func (QuadruplesByY) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3038:3080#L142">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByY">QuadruplesByY</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -2788,7 +1288,7 @@ Sort Quadruples by Y
 		
 			
 			
-			<h2 id="QuadruplesByZ">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3092:3131#L142">QuadruplesByZ</a></h2>
+			<h2 id="QuadruplesByZ">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3155:3194#L145">QuadruplesByZ</a></h2>
 			<pre>type QuadruplesByZ struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by Z
@@ -2807,33 +1307,12 @@ Sort Quadruples by Z
 
 			
 				
-				<h3 id="QuadruplesByZ.Less">func (QuadruplesByZ) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3133:3175#L144">Less</a></h3>
+				<h3 id="QuadruplesByZ.Less">func (QuadruplesByZ) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3196:3238#L147">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByZ">QuadruplesByZ</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
 				
 				
-			
-		
-			
-			
-			<h2 id="ReadLinesCallback">type <a href="https://github.com/cpmech/gosl/blob/master/utl/fileio.go?s=3528:3589#L123">ReadLinesCallback</a></h2>
-			<pre>type ReadLinesCallback func(idx <a href="/pkg/builtin/#int">int</a>, line <a href="/pkg/builtin/#string">string</a>) (stop <a href="/pkg/builtin/#bool">bool</a>)</pre>
-			<p>
-ReadLinesCallback is used in ReadLines to process line by line during reading of a file
-</p>
-
-
-			
-
-			
-
-			
-			
-			
-
-			
-
 			
 		
 	

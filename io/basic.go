@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// io (input/output) implements auxiliary functions for printing, parsing,
-// handling files, directories, etc.
+// package io (input/output) implements auxiliary functions for printing,
+// parsing, handling files, directories, etc.
 package io
 
 import (

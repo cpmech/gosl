@@ -20,16 +20,18 @@ def Cmd(command, verbose=False, debug=False):
     return out, err
 
 pkgs = [
-    ("fdm", "A simple finite differences solver"),
-    ("fun", "Functions such as y=f(t,x)"),
-    ("gm",  "Geometry routines"),
-    ("la",  "Linear algebra routines"),
+    ("chk", "Checking numerical calculations and testing"),
+    ("io",  "Input and output of files and printing and parsing strings"),
+    ("utl", "Utilities such as IntRange and LinSpace and allocators"),
     ("mpi", "A lightweight wrapper to MPI"),
-    ("num", "A few numerical methods"),
-    ("ode", "Solvers for ordinary differential equations"),
+    ("la",  "Linear algebra routines"),
     ("plt", "Plotting routines (wrapping matplotlib)"),
+    ("fdm", "A simple finite differences solver"),
+    ("num", "A few numerical methods"),
+    ("fun", "Functions such as y=f(t,x)"),
+    ("ode", "Solvers for ordinary differential equations"),
+    ("gm",  "Geometry routines"),
     ("tsr", "Tensor algebra and calculus"),
-    ("utl", "Utilities"),
     ("vtk", "3D visualisation with VTK"),
 ]
 

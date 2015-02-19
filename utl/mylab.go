@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// package utl implements functions for simplifying calculations and allocation of structures
+// such as slices and slices of slices. It also contains functions for sorting quantities.
 package utl
 
 import (

@@ -201,7 +201,7 @@
 		
 			
 			
-			<h2 id="Cb_fxy">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=3016:3058#L95">Cb_fxy</a></h2>
+			<h2 id="Cb_fxy">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=3073:3115#L97">Cb_fxy</a></h2>
 			<pre>type Cb_fxy func(x, y <a href="/pkg/builtin/#float64">float64</a>) (z <a href="/pkg/builtin/#float64">float64</a>) <span class="comment">// z = f(x,y)</span>
 </pre>
 			<p>
@@ -331,7 +331,7 @@ FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation #
 		
 			
 			
-			<h2 id="Grid2D">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=254:370#L5">Grid2D</a></h2>
+			<h2 id="Grid2D">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=313:429#L7">Grid2D</a></h2>
 			<pre>type Grid2D struct {
     Lx, Ly     <a href="/pkg/builtin/#float64">float64</a>
     Nx, Ny, N  <a href="/pkg/builtin/#int">int</a>
@@ -353,7 +353,7 @@ FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation #
 
 			
 				
-				<h3 id="Grid2D.Contour">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=1957:2052#L61">Contour</a></h3>
+				<h3 id="Grid2D.Contour">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=2015:2110#L63">Contour</a></h3>
 				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Contour(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, fxy <a href="#Cb_fxy">Cb_fxy</a>, z []<a href="/pkg/builtin/#float64">float64</a>, nlevels <a href="/pkg/builtin/#int">int</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 fxy or z must be nil
@@ -364,7 +364,7 @@ fxy or z must be nil
 				
 			
 				
-				<h3 id="Grid2D.Draw">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=714:768#L25">Draw</a></h3>
+				<h3 id="Grid2D.Draw">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=773:827#L27">Draw</a></h3>
 				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Draw(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				
 				
@@ -372,7 +372,7 @@ fxy or z must be nil
 				
 			
 				
-				<h3 id="Grid2D.Init">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=372:421#L13">Init</a></h3>
+				<h3 id="Grid2D.Init">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=431:480#L15">Init</a></h3>
 				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Init(lx, ly <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>)</pre>
 				
 				
