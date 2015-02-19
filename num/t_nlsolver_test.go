@@ -17,16 +17,7 @@ import (
 
 func Test_nls01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
-	//utl.UseColors = false
 	chk.PrintTitle("nls01. 2 eqs system")
 
 	ffcn := func(fx, x []float64) error {
@@ -112,16 +103,7 @@ func Test_nls01(tst *testing.T) {
 
 func Test_nls02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
-	//utl.UseColors = false
 	chk.PrintTitle("nls02. 2 eqs system with exp function")
 
 	ffcn := func(fx, x []float64) error {
@@ -206,14 +188,6 @@ func Test_nls02(tst *testing.T) {
 }
 
 func Test_nls03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("nls03. 2 eqs system with trig functions")
@@ -345,14 +319,6 @@ func Test_nls03(tst *testing.T) {
 }
 
 func Test_nls04(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("nls04. finite differences problem")

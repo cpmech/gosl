@@ -56,11 +56,7 @@ func check(tst *testing.T, deriv NumDerivFunc, f Cb_fx, dfdx Cb_fx, x float64, d
 }
 
 func TestDeriv01(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
+
 	chk.PrintTitle("TestDeriv 01")
 
 	check(tst, DerivCentral, f1, df1dx, 1.0, "exp(x), x=1, central deriv")

@@ -28,9 +28,6 @@ func main() {
 
 	mpi.Start(false)
 	defer func() {
-		if err := recover(); err != nil {
-			io.PfRed("Some error has happened: %v\n", err)
-		}
 		mpi.Stop(false)
 	}()
 

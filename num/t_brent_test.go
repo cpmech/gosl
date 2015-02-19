@@ -45,7 +45,7 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA Cb_y
 	p.Init(1, ffcnB, nil, JfcnB, true, false, nil)
 	xnewt := []float64{xguess}
 	var cnd float64
-	cnd, err = p.CheckJ(xnewt, 1e-6, true, false)
+	cnd, err = p.CheckJ(xnewt, 1e-6, true, !chk.Verbose)
 	io.Pforan("cond(J) = %v\n", cnd)
 	if err != nil {
 		chk.Panic("%v", err.Error())
@@ -78,14 +78,6 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA Cb_y
 
 func Test_brent01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("brent01. root finding")
 
@@ -114,14 +106,6 @@ func Test_brent01(tst *testing.T) {
 
 func Test_brent02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("brent02. root finding")
 
@@ -148,14 +132,6 @@ func Test_brent02(tst *testing.T) {
 }
 
 func Test_brent03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("brent03. minimum finding")

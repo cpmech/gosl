@@ -24,11 +24,6 @@ func sin(x float64) float64 { return math.Sin(x) }
 func cos(x float64) float64 { return math.Cos(x) }
 
 func TestJacobian01a(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	chk.PrintTitle("TestJacobian 01a")
 
@@ -50,11 +45,6 @@ func TestJacobian01a(tst *testing.T) {
 }
 
 func TestJacobian02a(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	chk.PrintTitle("TestJacobian 02a")
 
@@ -106,11 +96,6 @@ func TestJacobian02a(tst *testing.T) {
 }
 
 func TestJacobian03(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	chk.PrintTitle("TestJacobian 03")
 
