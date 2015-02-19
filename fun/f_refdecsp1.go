@@ -11,6 +11,7 @@ import (
 )
 
 // RefDecSp1 implements a specialisation of the reference decreasing model
+//  [1] Pedroso DM, Sheng D, Zhao J. The concept of reference curves for constitutive modelling in soil mechanics, Computers and Geotechnics, 36, 1-2, http://dx.doi.org/10.1016/j.compgeo.2008.01.009
 //
 //                y ^
 //                  |

@@ -22,6 +22,22 @@ func imin(a, b int) int {
 	return b
 }
 
+// max returns the max between two floats
+func max(a, b float64) float64 {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// min returns the min between two floats
+func min(a, b float64) float64 {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 // checkprm checks if parameter value is correct
 func checkprm(name string, val, minval, maxval float64, usemin, usemax bool) (err error) {
 	if usemin {
