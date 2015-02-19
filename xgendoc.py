@@ -77,5 +77,8 @@ for pkg in pkgs:
     Cmd('echo "'+footer()+'" >> '+fn)
     Cmd('echo "'+pkgitem(pkg)+'" >> '+idxfn)
 
+    # fix links
+    Cmd("sed -i -e 's@/src/target@https://github.com/cpmech/gosl/blob/master/"+pkg[0]+"@g' "+fn+"")
+
 Cmd('echo "</dl>\n</div><!-- manual-nav -->" >> '+idxfn)
 Cmd('echo "'+footer()+'" >> '+idxfn)
