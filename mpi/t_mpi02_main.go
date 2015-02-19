@@ -18,15 +18,11 @@ func main() {
 
 	mpi.Start(false)
 	defer func() {
-		if err := recover(); err != nil {
-			io.PfRed("Some error has happened: %v\n", err)
-		}
 		mpi.Stop(false)
 	}()
 
-	verbose()
 	if mpi.Rank() == 0 {
-		chk.PrintTitle("Test MPI 02")
+		io.PfYel("\nTest MPI 02\n")
 	}
 	if mpi.Size() != 3 {
 		chk.Panic("this test needs 3 processors")
@@ -76,7 +72,7 @@ func main() {
 		chk.Ints(&tst, "SingleIntRecv: vals", v1, []int{0, 1001, 1002})
 		chk.Ints(&tst, "SingleIntRecv: vals", v2, []int{0, 2001, 2002})
 		chk.Ints(&tst, "IntRecv: allints", allints, []int{1, 2, 3, 4, 20, 30, 40, 50, 60})
-		chk.Vector(&tst, "IntRecv: alldbls", alldbls, []float64{-1, -2, -3, -20, -50})
+		chk.Vector(&tst, "IntRecv: alldbls", 1e-17, alldbls, []float64{-1, -2, -3, -20, -50})
 	} else {
 		// SingleIntSend
 		mpi.SingleIntSend(1000+mpi.Rank(), 0)

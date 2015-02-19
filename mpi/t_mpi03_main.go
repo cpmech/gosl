@@ -19,16 +19,11 @@ func main() {
 
 	mpi.Start(false)
 	defer func() {
-		if err := recover(); err != nil {
-			io.PfRed("Some error has happened: %v\n", err)
-		}
 		mpi.Stop(false)
 	}()
 
-	verbose()
-
 	if mpi.Rank() == 0 {
-		chk.PrintTitle("Test MPI 03")
+		io.PfYel("\nTest MPI 03\n")
 	}
 	if mpi.Size() != 3 {
 		chk.Panic("this test needs 3 processors")

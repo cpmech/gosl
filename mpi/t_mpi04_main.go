@@ -9,7 +9,6 @@ package main
 import (
 	"time"
 
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/mpi"
 )
@@ -18,16 +17,11 @@ func main() {
 
 	mpi.Start(false)
 	defer func() {
-		if err := recover(); err != nil {
-			io.PfRed("Some error has happened: %v\n", err)
-		}
 		mpi.Stop(false)
 	}()
 
-	verbose()
-
 	if mpi.Rank() == 0 {
-		chk.PrintTitle("Test MPI 04")
+		io.PfYel("\nTest MPI 04\n")
 	}
 
 	for i := 0; i < 60; i++ {
