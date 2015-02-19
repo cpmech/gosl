@@ -5,9 +5,16 @@
 package plt
 
 import (
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func init() {
-	verbose() = true
+	io.Verbose = false
+	//chk.Verbose = true
+}
+
+func verbose() {
+	io.Verbose = true
+	chk.Verbose = true
 }
