@@ -19,7 +19,6 @@ func main() {
 		mpi.Stop(false)
 	}()
 
-	verbose()
 	myrank := mpi.Rank()
 	if myrank == 0 {
 		chk.PrintTitle("Test MUMPS Sol 02")

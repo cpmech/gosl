@@ -33,7 +33,6 @@ func main() {
 		mpi.Stop(false)
 	}()
 
-	verbose()
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("Test SumToRoot 01")
 	}
