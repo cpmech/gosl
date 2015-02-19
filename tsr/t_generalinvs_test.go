@@ -17,14 +17,6 @@ import (
 
 func Test_geninvs01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("geninvs01")
 
@@ -215,14 +207,6 @@ func Test_geninvs01(tst *testing.T) {
 }
 
 func Test_geninvs02(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("geninvs02")

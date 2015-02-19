@@ -15,14 +15,6 @@ import (
 
 func Test_tsr01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("tsr01")
 
@@ -89,14 +81,6 @@ func Test_tsr01(tst *testing.T) {
 
 func Test_tsr02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("tsr02")
 
@@ -147,14 +131,6 @@ func Test_tsr02(tst *testing.T) {
 
 func Test_tsr03(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("tsr03")
 
@@ -200,14 +176,6 @@ func Test_tsr03(tst *testing.T) {
 }
 
 func Test_tsr04(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("tsr04")

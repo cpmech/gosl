@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
@@ -271,7 +272,7 @@ func M_EigenValsAna(λ, a []float64, evtol, zero float64) {
 	}
 	t := 0.5 * nm / (sd * sd * sd)
 	if math.Abs(t) > 1.0 {
-		t = utl.Sign(t)
+		t = fun.Sign(t)
 		if EV_DEBUG {
 			io.Pfgrey("eigenprojs.go: M_EigenValsAna: |t| = %g > 1\n", math.Abs(t))
 		}
@@ -458,7 +459,11 @@ func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evt
 		λsorted = make([]float64, 3)
 		Psorted = la.MatAlloc(3, ncp)
 		I := []int{0, 1, 2}
-		I, λsorted, _, _ = utl.SortQuadruples(I, λ, nil, nil, "x")
+		var err error
+		I, λsorted, _, _, err = utl.SortQuadruples(I, λ, nil, nil, "x")
+		if err != nil {
+			chk.Panic("%v", err)
+		}
 		for i, k := range I {
 			copy(Psorted[i], P[k])
 		}

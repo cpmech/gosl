@@ -13,14 +13,6 @@ import (
 
 func Test_fcritcoef01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("fcritcoef01")
 

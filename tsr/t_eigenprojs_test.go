@@ -15,14 +15,6 @@ import (
 
 func Test_eigenp01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("eigenp01")
 
@@ -107,14 +99,6 @@ func Test_eigenp01(tst *testing.T) {
 
 func Test_eigenp02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("eigenp02")
 
@@ -164,14 +148,6 @@ func Test_eigenp02(tst *testing.T) {
 }
 
 func Test_eigenp03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("eigenp03")
@@ -232,14 +208,6 @@ func Test_eigenp03(tst *testing.T) {
 }
 
 func Test_eigenp04(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("eigenp04")
@@ -318,14 +286,6 @@ func Test_eigenp04(tst *testing.T) {
 
 func Test_eigenp05(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("eigenp05")
 
@@ -387,13 +347,7 @@ func Test_eigenp05(tst *testing.T) {
 
 func Test_eigenp06(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
+	prevTs
 
 	//verbose()
 	chk.PrintTitle("eigenp06")

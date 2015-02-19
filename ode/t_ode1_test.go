@@ -25,16 +25,7 @@ const (
 // Hairer-Wanner VII-p2 Eq.(1.1)
 func TestODE01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
-	//utl.UseColors = false
 	chk.PrintTitle("Test ODE 01")
 	io.Pfcyan("Hairer-Wanner VII-p2 Eq.(1.1) and work/correctness analysis\n")
 
@@ -140,16 +131,7 @@ func TestODE01(tst *testing.T) {
 // Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation
 func TestODE02a(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
-	//utl.UseColors = false
 	chk.PrintTitle("Test ODE 02a")
 	io.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation\n")
 
@@ -229,16 +211,7 @@ func TestODE02a(tst *testing.T) {
 // Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation
 func TestODE03(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
-	//utl.UseColors = false
 	chk.PrintTitle("Test ODE 03")
 	io.Pfcyan("Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation\n")
 
@@ -347,16 +320,7 @@ func HWtransIni() (D HWtransData, xa, xb float64, ya []float64) {
 // (from E Hairer's website, not the system in the book)
 func TestODE04a(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
-	//utl.UseColors = false
 	chk.PrintTitle("Test ODE 04a")
 	io.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier\n")
 	io.Pfcyan("(from E Hairer's website, not the system in the book)\n")

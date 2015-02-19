@@ -14,6 +14,7 @@ fix_pkgs() {
     for f in *.go; do
         sed -i -e 's/utl.Panic/chk.Panic/g' \
                -e 's/utl.Err\>/chk.Err/g' \
+               -e 's/utl.CheckScalar/chk.Scalar/g' \
                -e 's/utl.CheckString/chk.String/g' \
                -e 's/utl.CheckVector/chk.Vector/g' \
                -e 's/utl.CheckMatrix/chk.Matrix/g' \
@@ -50,9 +51,8 @@ fix_pkgs_simple() {
     cd $PKG
 
     for f in t_*.go; do
-        #sed -i -e 's/utl.CheckScalar/chk.Scalar/g' $f
-        sed -i -e 's/verbose() = false/verbose()/g' $f
-        goimports -w $f
+        sed -i -e 's/utl.Sramp/fun.Sramp/g' $f
+        #goimports -w $f
     done
 
     cd $HERE

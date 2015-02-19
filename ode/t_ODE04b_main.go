@@ -56,13 +56,9 @@ func main() {
 
 	mpi.Start(false)
 	defer func() {
-		if err := recover(); err != nil {
-			io.PfRed("Some error has happened: %v\n", err)
-		}
 		mpi.Stop(false)
 	}()
 
-	verbose()
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("Test ODE 04b (MPI)")
 		io.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier (MPI)\n")

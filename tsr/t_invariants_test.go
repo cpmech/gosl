@@ -21,14 +21,6 @@ const (
 
 func Test_invs01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("invs01")
 
@@ -68,14 +60,6 @@ func Test_invs01(tst *testing.T) {
 
 func Test_invs02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("invs02")
 
@@ -107,14 +91,6 @@ func Test_invs02(tst *testing.T) {
 }
 
 func Test_invs03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("invs03")
@@ -241,14 +217,6 @@ func run_invs_tests(tst *testing.T, a []float64, ver bool) {
 
 func Test_invs04(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("invs04")
 
@@ -278,14 +246,6 @@ func Test_invs04(tst *testing.T) {
 }
 
 func Test_invs05(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("invs05")
@@ -339,14 +299,6 @@ func Test_invs05(tst *testing.T) {
 
 func Test_invs06(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("invs06")
 
@@ -368,14 +320,6 @@ func Test_invs06(tst *testing.T) {
 }
 
 func Test_invs07(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("invs07")

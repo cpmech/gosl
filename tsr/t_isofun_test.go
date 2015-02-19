@@ -19,14 +19,6 @@ const (
 
 func Test_isofun01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("isofun01")
 
@@ -132,14 +124,6 @@ func Test_isofun01(tst *testing.T) {
 
 func Test_isofun02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("isofun02")
 
@@ -206,14 +190,6 @@ func Test_isofun02(tst *testing.T) {
 }
 
 func Test_isofun03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("isofun03")
@@ -287,14 +263,6 @@ func Test_isofun03(tst *testing.T) {
 }
 
 func Test_isofun04(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("isofun04")

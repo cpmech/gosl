@@ -17,13 +17,7 @@ import (
 )
 
 func TestDiffusion1D(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
-	prevTs := verbose()
 	//verbose()
 	chk.PrintTitle("Test Diffusion 1D (cooling)")
 
@@ -195,6 +189,4 @@ func TestDiffusion1D(tst *testing.T) {
 	}
 	osol.Solve(y, t0, tf, dt, fixstp)
 	io.Pfmag("elapsed time = %v\n", time.Now().Sub(wallt0))
-
-	verbose() = prevTs
 }
