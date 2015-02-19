@@ -11,14 +11,9 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func TestEquations01(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
+func Test_eqs01(tst *testing.T) {
 
-	chk.PrintTitle("TestEquations 01")
+	chk.PrintTitle("eqs01")
 
 	var e Equations
 	e.Init(9, []int{0, 6, 3})

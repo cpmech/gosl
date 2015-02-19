@@ -10,14 +10,9 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-func TestGrid2D(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
+func Test_grid2D(tst *testing.T) {
 
-	chk.PrintTitle("Grid 2D")
+	chk.PrintTitle("grid2D")
 
 	var g Grid2D
 	//g.Init(6.0, 4.0, 7, 5)

@@ -11,14 +11,9 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-func TestAssemb01(tst *testing.T) {
-	defer func() {
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
+func Test_assemb01(tst *testing.T) {
 
-	chk.PrintTitle("Assemb 01")
+	chk.PrintTitle("assemb01")
 
 	// grid
 	var g Grid2D
