@@ -20,14 +20,6 @@ const (
 
 func Test_bspline01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("bspline01")
 
@@ -85,14 +77,6 @@ func Test_bspline01(tst *testing.T) {
 
 func Test_bspline02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("bspline02")
 
@@ -140,14 +124,6 @@ func Test_bspline02(tst *testing.T) {
 }
 
 func Test_bspline03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("bspline03")

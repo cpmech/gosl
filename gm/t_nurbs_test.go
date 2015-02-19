@@ -217,14 +217,6 @@ func do_check_derivs(tst *testing.T, b *Nurbs, nn int, tol float64, ver bool) {
 
 func Test_nurbs01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("nurbs01")
 
@@ -247,14 +239,6 @@ func Test_nurbs01(tst *testing.T) {
 
 func Test_nurbs02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("nurbs02")
 
@@ -268,14 +252,6 @@ func Test_nurbs02(tst *testing.T) {
 }
 
 func Test_nurbs03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("nurbs03")
@@ -292,14 +268,6 @@ func Test_nurbs03(tst *testing.T) {
 
 func Test_nurbs04(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("nurbs04")
 
@@ -315,14 +283,6 @@ func Test_nurbs04(tst *testing.T) {
 }
 
 func Test_nurbs05(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("nurbs05")
@@ -349,14 +309,6 @@ func Test_nurbs05(tst *testing.T) {
 
 func Test_nurbs06(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("nurbs06")
 
@@ -381,14 +333,6 @@ func Test_nurbs06(tst *testing.T) {
 }
 
 func Test_nurbs07(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("nurbs07")
@@ -429,14 +373,6 @@ func tag_verts(b *Nurbs) (vt map[int]int) {
 }
 
 func Test_nurbs08(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("nurbs08")
@@ -490,8 +426,8 @@ func Test_nurbs08(tst *testing.T) {
 	}
 	chk.Ints(tst, "Read: p", a.p, B[0].p)
 	chk.Ints(tst, "Read: n", a.n, B[0].n)
-	utl.CompareDeep4(tst, "Read: Q", a.Q, B[0].Q)
-	utl.CheckIntMat(tst, "Read: l2i", a.l2i, B[0].l2i)
+	chk.Deep4(tst, "Read: Q", 1.0e-17, a.Q, B[0].Q)
+	chk.IntMat(tst, "Read: l2i", a.l2i, B[0].l2i)
 
 	if T_NURBS_SAVE {
 		do_plot_nurbs_refined(a, c)

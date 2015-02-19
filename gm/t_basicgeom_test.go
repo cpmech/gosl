@@ -14,14 +14,6 @@ import (
 
 func Test_basicgeom01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("basicgeom01. Point")
 
@@ -67,14 +59,6 @@ func Test_basicgeom01(tst *testing.T) {
 
 func Test_basicgeom02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("basicgeom02. Vector")
 
@@ -95,14 +79,6 @@ func Test_basicgeom02(tst *testing.T) {
 }
 
 func Test_basicgeom03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("basicgeom03. Segment")
@@ -140,14 +116,6 @@ func Test_basicgeom03(tst *testing.T) {
 }
 
 func Test_basicgeom04(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("basicgeom04")
@@ -277,14 +245,6 @@ func Test_basicgeom04(tst *testing.T) {
 }
 
 func Test_basicgeom05(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("basicgeom05")

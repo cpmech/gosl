@@ -15,14 +15,6 @@ import (
 
 func Test_hash01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("hash01")
 
@@ -67,14 +59,6 @@ func Test_hash01(tst *testing.T) {
 // Test for save and recovery
 func Test_bins01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("bins01")
 	var bins Bins
@@ -116,14 +100,6 @@ func Test_bins01(tst *testing.T) {
 // Test for function FindAlongLine (2D)
 func Test_bins02(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("bins02")
 
@@ -151,14 +127,6 @@ func Test_bins02(tst *testing.T) {
 
 // Test for function FindAlongLine (3D)
 func Test_bins03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("bins03")
@@ -188,14 +156,6 @@ func Test_bins03(tst *testing.T) {
 
 // Test for function FindAlongLine (2D) real case
 func Test_bins04(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mERROR:", err, "[0m\n")
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("bins04")
