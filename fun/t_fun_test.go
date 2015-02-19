@@ -20,14 +20,6 @@ const (
 
 func Test_fun01(tst *testing.T) {
 
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
-
 	//verbose()
 	chk.PrintTitle("fun01. Decreasing Reference Model")
 
@@ -60,23 +52,15 @@ func Test_fun01(tst *testing.T) {
 			plt.Equal()
 		})
 	}
-
+	//
 	sktol := 1e-10
 	dtol := 1e-10
 	dtol2 := 1e-10
-	ver := true
+	ver := chk.Verbose
 	CheckT(tst, o, 0.0, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun02(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun02. Dec Ref Model (specialised)")
@@ -114,20 +98,12 @@ func Test_fun02(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-10
 		dtol2 := 1e-10
-		ver := true
+		ver := chk.Verbose
 		CheckT(tst, o, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
 func Test_fun03(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun03. add, cte, srmps")
@@ -178,7 +154,7 @@ func Test_fun03(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-10
 		dtol2 := 1e-9
-		ver := true
+		ver := chk.Verbose
 		tskip := []float64{tmin, tmax}
 		CheckT(tst, cte, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 		io.Pf("\n")
@@ -189,14 +165,6 @@ func Test_fun03(tst *testing.T) {
 }
 
 func Test_fun04(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun04. lin")
@@ -224,20 +192,12 @@ func Test_fun04(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-10
 		dtol2 := 1e-10
-		ver := true
+		ver := chk.Verbose
 		CheckT(tst, lin, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
 func Test_fun05(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun05. zero and one")
@@ -249,14 +209,6 @@ func Test_fun05(tst *testing.T) {
 }
 
 func Test_fun06(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun06. pts")
@@ -290,20 +242,12 @@ func Test_fun06(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-10
 		dtol2 := 1e-10
-		ver := true
+		ver := chk.Verbose
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
 func Test_fun07(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun07. exc1")
@@ -330,20 +274,12 @@ func Test_fun07(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-7
 		dtol2 := 1e-6
-		ver := true
+		ver := chk.Verbose
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
 func Test_fun08(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun08. exc2")
@@ -371,20 +307,12 @@ func Test_fun08(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-10
 		dtol2 := 1e-10
-		ver := true
+		ver := chk.Verbose
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
 func Test_fun09(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun09. cos")
@@ -412,20 +340,12 @@ func Test_fun09(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-8
 		dtol2 := 1e-7
-		ver := true
+		ver := chk.Verbose
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
 func Test_fun10(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun10. rmp")
@@ -454,20 +374,12 @@ func Test_fun10(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-12
 		dtol2 := 1e-17
-		ver := true
+		ver := chk.Verbose
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
 func Test_fun11(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("fun11. ref-inc-rl1")
@@ -496,7 +408,7 @@ func Test_fun11(tst *testing.T) {
 		sktol := 1e-10
 		dtol := 1e-10
 		dtol2 := 1e-10
-		ver := true
+		ver := chk.Verbose
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }

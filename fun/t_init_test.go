@@ -15,7 +15,13 @@ import (
 )
 
 func init() {
-	verbose() = true
+	io.Verbose = false
+	//chk.Verbose = true
+}
+
+func verbose() {
+	io.Verbose = true
+	chk.Verbose = true
 }
 
 // Check checks derivatives w.r.t to t for fixed coordinates x

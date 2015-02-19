@@ -5,7 +5,6 @@
 package fun
 
 import (
-	"bytes"
 	"math"
 	"testing"
 
@@ -15,14 +14,6 @@ import (
 )
 
 func Test_functions01(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("functions01")
@@ -45,27 +36,6 @@ func Test_functions01(tst *testing.T) {
 	chk.Vector(tst, "abs => ramp", 1e-17, ym, yAbs2Ramp)
 	chk.Vector(tst, "hea => ramp", 1e-17, ym, yHea2Ramp)
 	chk.Vector(tst, "sig => heav", 1e-17, yh, ySig2Heav)
-
-	var b bytes.Buffer
-	io.Ff(&b, "from gosl_fig import *\n")
-	utl.Gen4Arrays(&b, "x", "ym", "yh", "ys", x, ym, yh, ys)
-	io.Ff(&b, "subplot(3,1,1)\n")
-	io.Ff(&b, "plot(x,ym,label='Ramp/Macaulay',clip_on=0,lw=2,marker='o')\n")
-	io.Ff(&b, "axis([axis()[0],axis()[1],-0.1,axis()[3]])\n")
-	io.Ff(&b, "Cross()\n")
-	io.Ff(&b, "Gll('x','y',leg_loc='upper left')\n")
-	io.Ff(&b, "subplot(3,1,2)\n")
-	io.Ff(&b, "plot(x,yh,label='Heaviside',clip_on=0,lw=2,marker='o')\n")
-	io.Ff(&b, "axis([axis()[0],axis()[1],-0.1,1.1])\n")
-	io.Ff(&b, "Cross()\n")
-	io.Ff(&b, "Gll('x','y',leg_loc='upper left')\n")
-	io.Ff(&b, "subplot(3,1,3)\n")
-	io.Ff(&b, "plot(x,ys,label='Sign',clip_on=0,lw=2,marker='o')\n")
-	io.Ff(&b, "axis([axis()[0],axis()[1],-1.1,1.1])\n")
-	io.Ff(&b, "Cross()\n")
-	io.Ff(&b, "Gll('x','y',leg_loc='upper left')\n")
-	io.Ff(&b, "show()\n")
-	io.WriteFileD("/tmp/gosl/", "functions01.py", &b)
 }
 
 // numderiv employs a 1st order forward difference to approximate the derivative of f(x) w.r.t x @ x
@@ -76,14 +46,6 @@ func numderiv(f func(x float64) float64, x float64) float64 {
 }
 
 func Test_functions02(tst *testing.T) {
-
-	prevTs := verbose()
-	defer func() {
-		verbose() = prevTs
-		if err := recover(); err != nil {
-			tst.Error("[1;31mSome error has happened:[0m\n", err)
-		}
-	}()
 
 	//verbose()
 	chk.PrintTitle("functions02")
@@ -118,24 +80,6 @@ func Test_functions02(tst *testing.T) {
 		}
 		io.Pf("errg = %s%23.15e   errh = %s%23.15e[0m\n", clrg, errg, clrh, errh)
 	}
-
-	var b bytes.Buffer
-	io.Ff(&b, "from gosl_fig import *\n")
-	utl.Gen4Arrays(&b, "x", "y", "g", "h", x, y, g, h)
-	io.Ff(&b, "subplot(3,1,1)\n")
-	io.Ff(&b, "plot(x,y, 'b-', lw=2)\n")
-	io.Ff(&b, "axis('equal')\n")
-	io.Ff(&b, "Cross()\n")
-	io.Ff(&b, "Gll('x','y',leg=0)\n")
-	io.Ff(&b, "subplot(3,1,2)\n")
-	io.Ff(&b, "plot(x,g, 'b-', lw=2)\n")
-	io.Ff(&b, "Gll('x','g',leg=0)\n")
-	io.Ff(&b, "subplot(3,1,3)\n")
-	io.Ff(&b, "plot(x,h, 'b-', lw=2)\n")
-	io.Ff(&b, "Gll('x','h',leg=0)\n")
-	io.Ff(&b, "show()\n")
-	io.WriteFileD("/tmp/gosl/", "functions02.py", &b)
-	io.PfBlue("file <results/functions02.py> saved\n")
 
 	if with_err {
 		chk.Panic("errors found")
