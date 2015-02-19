@@ -27,13 +27,18 @@ install_and_test(){
     cd $HERE
 }
 
-install_and_test utl 1
+for p in chk io utl; do
+    install_and_test $p 1
+done
+
 if [[ $platform == 'linux' ]]; then
     install_and_test mpi 0
 fi
+
 for p in la plt fdm num fun ode gm tsr; do
     install_and_test $p 1
 done
+
 if [[ $platform == 'linux' ]]; then
     install_and_test vtk 0
 fi
