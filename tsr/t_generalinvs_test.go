@@ -25,7 +25,7 @@ func Test_geninvs01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("geninvs01")
 
 	tol := 1e-15
@@ -72,8 +72,8 @@ func Test_geninvs01(tst *testing.T) {
 		io.Pforan("m = %v\n", m)
 		io.Pfpink("n = %v\n", n)
 		chk.Vector(tst, "λ", 1e-12, λ, test_λ[idxA])
-		utl.CheckScalar(tst, "norm(n)==1", 1e-15, la.VecNorm(n), 1)
-		utl.CheckScalar(tst, "m=norm(N)", 1e-14, m, la.VecNorm(N))
+		chk.Scalar(tst, "norm(n)==1", 1e-15, la.VecNorm(n), 1)
+		chk.Scalar(tst, "m=norm(N)", 1e-14, m, la.VecNorm(N))
 
 		// dN/dσ
 		var tmp float64
@@ -98,7 +98,7 @@ func Test_geninvs01(tst *testing.T) {
 		dmdσ := make([]float64, 3)
 		mm := SmpNormDirectorDeriv1(dmdσ, σ, b)
 		io.Pfpink("\ndmdσ = %v\n", dmdσ)
-		utl.CheckScalar(tst, "m", 1e-17, m, mm)
+		chk.Scalar(tst, "m", 1e-17, m, mm)
 		dtol_tmp := dtol
 		if idxA == 5 {
 			dtol = 1e-6
@@ -206,7 +206,7 @@ func Test_geninvs01(tst *testing.T) {
 		dmdσ_ := make([]float64, 3)
 		n_ := make([]float64, 3)
 		m_ := SmpDerivs(d2mdσdσ_, dndσ_, dmdσ_, n_, σ, b)
-		utl.CheckScalar(tst, "m_", 1e-14, m_, m)
+		chk.Scalar(tst, "m_", 1e-14, m_, m)
 		chk.Vector(tst, "n_", 1e-15, n_, n)
 		chk.Vector(tst, "dmdσ_", 1e-15, dmdσ_, dmdσ)
 		chk.Matrix(tst, "dndσ_", 1e-13, dndσ_, dndσ)
@@ -224,7 +224,7 @@ func Test_geninvs02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("geninvs02")
 
 	b := 0.5
@@ -291,8 +291,8 @@ func Test_geninvs02(tst *testing.T) {
 		q_ := math.Sqrt(norm_tvec*norm_tvec - norm_proj*norm_proj)
 		io.Pforan("proj = %v\n", proj)
 		io.Pforan("norm(proj) = %v == p\n", norm_proj)
-		utl.CheckScalar(tst, "p", 1e-14, p, norm_proj)
-		utl.CheckScalar(tst, "q", 1e-13, q, q_)
+		chk.Scalar(tst, "p", 1e-14, p, norm_proj)
+		chk.Scalar(tst, "q", 1e-13, q, q_)
 
 		// dt/dσ
 		var tmp float64
@@ -349,8 +349,8 @@ func Test_geninvs02(tst *testing.T) {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		utl.CheckScalar(tst, "p", 1e-17, p, p_)
-		utl.CheckScalar(tst, "q", 1e-17, q, q_)
+		chk.Scalar(tst, "p", 1e-17, p, p_)
+		chk.Scalar(tst, "q", 1e-17, q, q_)
 		var ptmp, qtmp float64
 		io.Pfpink("\ndp/dσ\n")
 		for j := 0; j < 3; j++ {

@@ -15,7 +15,6 @@ import (
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/utl"
 )
 
 func main() {
@@ -28,7 +27,7 @@ func main() {
 		mpi.Stop(false)
 	}()
 
-	verbose() = false
+	verbose()
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("TestJacobian 01b (MPI)")
 	}

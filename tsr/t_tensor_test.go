@@ -11,7 +11,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_tsr01(tst *testing.T) {
@@ -24,7 +23,7 @@ func Test_tsr01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("tsr01")
 
 	F := [][]float64{
@@ -83,9 +82,9 @@ func Test_tsr01(tst *testing.T) {
 	chk.Matrix(tst, "Epb", 1.0e-17, Epb, [][]float64{{0, 0.75, 0}, {0.75, 1.75, 0}, {0, 0, 0}})
 	chk.Matrix(tst, "Ipf", 1.0e-17, Ipf, It)
 	chk.Matrix(tst, "Cpb", 1.0e-17, Cpb, [][]float64{{1, 1.5, 0}, {1.5, 4.5, 0}, {0, 0, 1}})
-	utl.CheckScalar(tst, "det(F)", 1.0e-17, J, 1.5)
-	utl.CheckScalar(tst, "det(C)", 1.0e-17, detC, 1.5*1.5)
-	utl.CheckScalar(tst, "det(b)", 1.0e-17, detb, 1.5*1.5)
+	chk.Scalar(tst, "det(F)", 1.0e-17, J, 1.5)
+	chk.Scalar(tst, "det(C)", 1.0e-17, detC, 1.5*1.5)
+	chk.Scalar(tst, "det(b)", 1.0e-17, detb, 1.5*1.5)
 }
 
 func Test_tsr02(tst *testing.T) {
@@ -98,7 +97,7 @@ func Test_tsr02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("tsr02")
 
 	F := [][]float64{
@@ -118,7 +117,7 @@ func Test_tsr02(tst *testing.T) {
 	io.Pf("F = %v\n", F)
 	io.Pf("C = %v\n", C)
 	io.Pf("b = %v\n", b)
-	utl.CheckScalar(tst, "J", 1.0e-17, J, 4.0)
+	chk.Scalar(tst, "J", 1.0e-17, J, 4.0)
 	chk.Matrix(tst, "C", 1.0e-17, C, [][]float64{{36.0 / 9.0, 48.0 / 9.0, 0}, {48.0 / 9.0, 100.0 / 9.0, 0}, {0, 0, 1}})
 	chk.Matrix(tst, "b", 1.0e-17, b, [][]float64{{100.0 / 9.0, 48.0 / 9.0, 0}, {48.0 / 9.0, 36.0 / 9.0, 0}, {0, 0, 1}})
 
@@ -156,7 +155,7 @@ func Test_tsr03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("tsr03")
 
 	a := [][]float64{
@@ -175,7 +174,7 @@ func Test_tsr03(tst *testing.T) {
 
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
-			utl.CheckScalar(tst, fmt.Sprintf("am[%d][%d]", i, j), 1.0e-15, M2T(am, i, j), a[i][j])
+			chk.Scalar(tst, fmt.Sprintf("am[%d][%d]", i, j), 1.0e-15, M2T(am, i, j), a[i][j])
 		}
 	}
 
@@ -195,7 +194,7 @@ func Test_tsr03(tst *testing.T) {
 
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
-			utl.CheckScalar(tst, fmt.Sprintf("bm[%d][%d]", i, j), 1.0e-15, M2T(bm, i, j), b[i][j])
+			chk.Scalar(tst, fmt.Sprintf("bm[%d][%d]", i, j), 1.0e-15, M2T(bm, i, j), b[i][j])
 		}
 	}
 }
@@ -210,7 +209,7 @@ func Test_tsr04(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("tsr04")
 
 	a := [][]float64{

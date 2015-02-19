@@ -28,7 +28,7 @@ func Test_bspline01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("bspline01")
 
 	var s1 Bspline
@@ -93,7 +93,7 @@ func Test_bspline02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("bspline02")
 
 	//               0 1 2 3 4 5 6 7 8 9 10
@@ -149,7 +149,7 @@ func Test_bspline03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("bspline03")
 
 	//             0 1 2 3 4 5 6 7 8 9 10

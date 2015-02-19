@@ -24,7 +24,7 @@ func Test_functions01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("functions01")
 
 	x := utl.LinSpace(-2, 2, 21)
@@ -85,7 +85,7 @@ func Test_functions02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("functions02")
 
 	β := 6.0

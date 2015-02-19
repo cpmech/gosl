@@ -11,7 +11,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
 )
 
 // run_rootsol_test runs root solution test
@@ -73,7 +72,7 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA Cb_y
 	PlotYxe(ffcnA, "results", fname, xbrent, xa, xb, 101, "Brent", "'b-'", save, show, func() {
 		plt.PlotOne(xnewt[0], ynewt, "'g+', ms=15, label='Newton'")
 	})
-	utl.CheckScalar(tst, "xbrent - xnewt", tolcmp, xbrent, xnewt[0])
+	chk.Scalar(tst, "xbrent - xnewt", tolcmp, xbrent, xnewt[0])
 	return
 }
 
@@ -87,7 +86,7 @@ func Test_brent01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("brent01. root finding")
 
 	ffcnA := func(x float64) (res float64, err error) {
@@ -123,7 +122,7 @@ func Test_brent02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("brent02. root finding")
 
 	ffcnA := func(x float64) (res float64, err error) {
@@ -145,7 +144,7 @@ func Test_brent02(tst *testing.T) {
 	//save   := true
 	save := false
 	xbrent := run_rootsol_test(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB, "brent02.png", save, false)
-	utl.CheckScalar(tst, "xsol", 1e-14, xbrent, 2.09455148154233)
+	chk.Scalar(tst, "xsol", 1e-14, xbrent, 2.09455148154233)
 }
 
 func Test_brent03(tst *testing.T) {
@@ -158,7 +157,7 @@ func Test_brent03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("brent03. minimum finding")
 
 	ffcn := func(x float64) (res float64, err error) {
@@ -185,5 +184,5 @@ func Test_brent03(tst *testing.T) {
 	//save := true
 	save := false
 	PlotYxe(ffcn, "results", "brent03.png", x, -1, 3, 101, "Brent", "'b-'", save, false, nil)
-	utl.CheckScalar(tst, "xcorrect", 1e-8, x, xcor)
+	chk.Scalar(tst, "xcorrect", 1e-8, x, xcor)
 }

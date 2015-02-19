@@ -9,7 +9,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_fcritcoef01(tst *testing.T) {
@@ -22,7 +21,7 @@ func Test_fcritcoef01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("fcritcoef01")
 
 	φ := 30.0
@@ -42,11 +41,11 @@ func Test_fcritcoef01(tst *testing.T) {
 	io.Pforan("Me (oct) = %v\n", Me)
 	io.Pforan("Mf (oct) = %v\n", Mf)
 	io.Pforan("Mg (oct) = %v\n", Mg)
-	utl.CheckScalar(tst, "Ma-Mb", 1e-17, Ma, Mb)
-	utl.CheckScalar(tst, "φ-φb", 1e-14, φ, φb)
-	utl.CheckScalar(tst, "φ-φc", 1e-14, φ, φc)
-	utl.CheckScalar(tst, "Mc-Md", 1e-17, Mc, Md)
-	utl.CheckScalar(tst, "Mc-Me", 1e-15, Mc, Me)
-	utl.CheckScalar(tst, "Mc-Mf", 1e-15, Mc, Mf)
-	utl.CheckScalar(tst, "Mc-Mg", 1e-15, Mc, Mg)
+	chk.Scalar(tst, "Ma-Mb", 1e-17, Ma, Mb)
+	chk.Scalar(tst, "φ-φb", 1e-14, φ, φb)
+	chk.Scalar(tst, "φ-φc", 1e-14, φ, φc)
+	chk.Scalar(tst, "Mc-Md", 1e-17, Mc, Md)
+	chk.Scalar(tst, "Mc-Me", 1e-15, Mc, Me)
+	chk.Scalar(tst, "Mc-Mf", 1e-15, Mc, Mf)
+	chk.Scalar(tst, "Mc-Mg", 1e-15, Mc, Mg)
 }

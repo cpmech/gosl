@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_smp01(tst *testing.T) {
@@ -23,7 +22,7 @@ func Test_smp01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("smp01")
 
 	a, b, β, ϵ := -1.0, 0.5, 2.0, 1e-3

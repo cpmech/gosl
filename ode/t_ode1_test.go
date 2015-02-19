@@ -33,7 +33,7 @@ func TestODE01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	//utl.UseColors = false
 	chk.PrintTitle("Test ODE 01")
 	io.Pfcyan("Hairer-Wanner VII-p2 Eq.(1.1) and work/correctness analysis\n")
@@ -148,7 +148,7 @@ func TestODE02a(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	//utl.UseColors = false
 	chk.PrintTitle("Test ODE 02a")
 	io.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation\n")
@@ -237,7 +237,7 @@ func TestODE03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	//utl.UseColors = false
 	chk.PrintTitle("Test ODE 03")
 	io.Pfcyan("Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation\n")
@@ -355,7 +355,7 @@ func TestODE04a(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	//utl.UseColors = false
 	chk.PrintTitle("Test ODE 04a")
 	io.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier\n")

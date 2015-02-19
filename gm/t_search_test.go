@@ -11,7 +11,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_hash01(tst *testing.T) {
@@ -24,7 +23,7 @@ func Test_hash01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("hash01")
 
 	c1 := []float64{1.0000000001}
@@ -76,7 +75,7 @@ func Test_bins01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("bins01")
 	var bins Bins
 	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 100)
@@ -125,7 +124,7 @@ func Test_bins02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("bins02")
 
 	var bins Bins
@@ -161,7 +160,7 @@ func Test_bins03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("bins03")
 
 	var bins Bins
@@ -198,7 +197,7 @@ func Test_bins04(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("bins04")
 
 	var bins Bins

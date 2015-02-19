@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_basicgeom01(tst *testing.T) {
@@ -23,7 +22,7 @@ func Test_basicgeom01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("basicgeom01. Point")
 
 	a := &Point{0, 0, 0}
@@ -32,38 +31,38 @@ func Test_basicgeom01(tst *testing.T) {
 	io.Pforan("a = %+v\n", a)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	utl.CheckScalar(tst, "dist(a,b)", 1e-17, δ, 0.0)
+	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, 0.0)
 
 	SQ3 := math.Sqrt(3.0)
 	c := a.NewDisp(-1.0/SQ3, -1.0/SQ3, -1.0/SQ3)
 	δ = DistPointPoint(a, c)
 	io.Pforan("c = %+v\n", c)
 	io.Pforan("δ(a,c) = %v\n", δ)
-	utl.CheckScalar(tst, "dist(a,c)", 1e-17, δ, 1.0)
+	chk.Scalar(tst, "dist(a,c)", 1e-17, δ, 1.0)
 
 	b.X, b.Y, b.Z = 1, 0, 0
 	δ = DistPointPoint(a, b)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	utl.CheckScalar(tst, "dist(a,b)", 1e-17, δ, 1)
+	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, 1)
 
 	b.X, b.Y, b.Z = 0, 2, 0
 	δ = DistPointPoint(a, b)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	utl.CheckScalar(tst, "dist(a,b)", 1e-17, δ, 2)
+	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, 2)
 
 	b.X, b.Y, b.Z = 0, 3, 0
 	δ = DistPointPoint(a, b)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	utl.CheckScalar(tst, "dist(a,b)", 1e-17, δ, 3)
+	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, 3)
 
 	b.X, b.Y, b.Z = 1, 1, 1
 	δ = DistPointPoint(a, b)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	utl.CheckScalar(tst, "dist(a,b)", 1e-17, δ, math.Sqrt(3.0))
+	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, math.Sqrt(3.0))
 }
 
 func Test_basicgeom02(tst *testing.T) {
@@ -76,7 +75,7 @@ func Test_basicgeom02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("basicgeom02. Vector")
 
 	u := []float64{1, 2, 3}
@@ -88,9 +87,9 @@ func Test_basicgeom02(tst *testing.T) {
 	io.Pforan("v = %v  norm = %g\n", v, VecNorm(v))
 	io.Pforan("w = %v  norm = %g\n", w, VecNorm(w))
 	io.Pforan("u.v = %v\n", s)
-	utl.CheckScalar(tst, "u.v", 1e-17, s, 32.0)
-	utl.CheckScalar(tst, "norm(u)", 1e-17, VecNorm(u), math.Sqrt(14.0))
-	utl.CheckScalar(tst, "norm(v)", 1e-17, VecNorm(v), math.Sqrt(77.0))
+	chk.Scalar(tst, "u.v", 1e-17, s, 32.0)
+	chk.Scalar(tst, "norm(u)", 1e-17, VecNorm(u), math.Sqrt(14.0))
+	chk.Scalar(tst, "norm(v)", 1e-17, VecNorm(v), math.Sqrt(77.0))
 	chk.Vector(tst, "r", 1e-17, r, []float64{2, 4, 6})
 	chk.Vector(tst, "w", 1e-17, w, []float64{-10, -11, -12})
 }
@@ -105,7 +104,7 @@ func Test_basicgeom03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("basicgeom03. Segment")
 
 	u := &Segment{&Point{1, 7, 0}, &Point{4, 7, 0}}
@@ -120,12 +119,12 @@ func Test_basicgeom03(tst *testing.T) {
 	io.Pforan("U = %v\n", U)
 	io.Pforan("V = %v\n", V)
 	io.Pforan("W = %v\n", W)
-	utl.CheckScalar(tst, "len(u)", 1e-17, u.Len(), 3.0)
-	utl.CheckScalar(tst, "len(v)", 1e-17, v.Len(), 5.0)
-	utl.CheckScalar(tst, "len(w)", 1e-17, w.Len(), 10.0)
-	utl.CheckScalar(tst, "w.A.X", 1e-17, w.A.X, v.A.X)
-	utl.CheckScalar(tst, "w.A.Y", 1e-17, w.A.Y, v.A.Y)
-	utl.CheckScalar(tst, "w.A.Z", 1e-17, w.A.Z, v.A.Z)
+	chk.Scalar(tst, "len(u)", 1e-17, u.Len(), 3.0)
+	chk.Scalar(tst, "len(v)", 1e-17, v.Len(), 5.0)
+	chk.Scalar(tst, "len(w)", 1e-17, w.Len(), 10.0)
+	chk.Scalar(tst, "w.A.X", 1e-17, w.A.X, v.A.X)
+	chk.Scalar(tst, "w.A.Y", 1e-17, w.A.Y, v.A.Y)
+	chk.Scalar(tst, "w.A.Z", 1e-17, w.A.Z, v.A.Z)
 	chk.Vector(tst, "U", 1e-17, U, []float64{3, 0, 0})
 	chk.Vector(tst, "V", 1e-17, V, []float64{3, 4, 0})
 	chk.Vector(tst, "W", 1e-17, W, []float64{6, 8, 0})
@@ -135,9 +134,9 @@ func Test_basicgeom03(tst *testing.T) {
 	io.Pforan("dot(u,v) = %v\n", udotv)
 	io.Pforan("dot(u,w) = %v\n", udotw)
 	io.Pforan("dot(v,w) = %v\n", vdotw)
-	utl.CheckScalar(tst, "dot(u,v)", 1e-17, udotv, 9.0)
-	utl.CheckScalar(tst, "dot(u,w)", 1e-17, udotw, 18.0)
-	utl.CheckScalar(tst, "dot(v,w)", 1e-17, vdotw, 50.0)
+	chk.Scalar(tst, "dot(u,v)", 1e-17, udotv, 9.0)
+	chk.Scalar(tst, "dot(u,w)", 1e-17, udotw, 18.0)
+	chk.Scalar(tst, "dot(v,w)", 1e-17, vdotw, 50.0)
 }
 
 func Test_basicgeom04(tst *testing.T) {
@@ -150,7 +149,7 @@ func Test_basicgeom04(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("basicgeom04")
 
 	zero := 1e-8
@@ -287,7 +286,7 @@ func Test_basicgeom05(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("basicgeom05")
 
 	zero := 1e-1

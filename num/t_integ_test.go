@@ -23,13 +23,13 @@ func Test_trapz01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("trapz01")
 
 	x := []float64{4, 6, 8}
 	y := []float64{1, 2, 3}
 	A := Trapz(x, y)
-	utl.CheckScalar(tst, "A", 1e-17, A, 8)
+	chk.Scalar(tst, "A", 1e-17, A, 8)
 }
 
 func Test_trapz02(tst *testing.T) {
@@ -42,7 +42,7 @@ func Test_trapz02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("trapz02")
 
 	y := func(x float64) float64 {
@@ -56,6 +56,6 @@ func Test_trapz02(tst *testing.T) {
 	io.Pforan("A  = %v\n", A)
 	io.Pforan("A_ = %v\n", A_)
 	Acor := 1.08306090851465
-	utl.CheckScalar(tst, "A", 1e-15, A, Acor)
-	utl.CheckScalar(tst, "A_", 1e-15, A_, Acor)
+	chk.Scalar(tst, "A", 1e-15, A, Acor)
+	chk.Scalar(tst, "A_", 1e-15, A_, Acor)
 }

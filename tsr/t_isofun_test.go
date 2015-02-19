@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 const (
@@ -28,7 +27,7 @@ func Test_isofun01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("isofun01")
 
 	a, b, β, ϵ := 1.0, 0.5, 2.0, 1e-3
@@ -141,7 +140,7 @@ func Test_isofun02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("isofun02")
 
 	// SMP director parameters
@@ -216,7 +215,7 @@ func Test_isofun03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("isofun03")
 
 	// SMP director parameters
@@ -297,7 +296,7 @@ func Test_isofun04(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("isofun04")
 
 	// constants

@@ -25,7 +25,7 @@ func Test_nls01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	//utl.UseColors = false
 	chk.PrintTitle("nls01. 2 eqs system")
 
@@ -120,7 +120,7 @@ func Test_nls02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	//utl.UseColors = false
 	chk.PrintTitle("nls02. 2 eqs system with exp function")
 
@@ -215,7 +215,7 @@ func Test_nls03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nls03. 2 eqs system with trig functions")
 
 	e := math.E
@@ -354,7 +354,7 @@ func Test_nls04(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nls04. finite differences problem")
 
 	// grid

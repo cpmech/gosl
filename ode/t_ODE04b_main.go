@@ -17,7 +17,6 @@ import (
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/ode"
-	"github.com/cpmech/gosl/utl"
 )
 
 // DATA STRUCTURE FOR HW TRANSISTOR PROBLEM
@@ -63,7 +62,7 @@ func main() {
 		mpi.Stop(false)
 	}()
 
-	verbose() = false
+	verbose()
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("Test ODE 04b (MPI)")
 		io.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier (MPI)\n")

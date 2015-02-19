@@ -24,7 +24,7 @@ func TestDiffusion1D(tst *testing.T) {
 	}()
 
 	prevTs := verbose()
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("Test Diffusion 1D (cooling)")
 
 	// solution parameters

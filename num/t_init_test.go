@@ -4,10 +4,6 @@
 
 package num
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
-
 func init() {
 	verbose() = true
 }

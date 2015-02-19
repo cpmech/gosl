@@ -23,7 +23,7 @@ func Test_eigenp01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("eigenp01")
 
 	cmpλ := 1e-12
@@ -115,7 +115,7 @@ func Test_eigenp02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("eigenp02")
 
 	// constants
@@ -173,7 +173,7 @@ func Test_eigenp03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("eigenp03")
 
 	// constants
@@ -241,7 +241,7 @@ func Test_eigenp04(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("eigenp04")
 
 	// constants
@@ -326,7 +326,7 @@ func Test_eigenp05(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("eigenp05")
 
 	// constants
@@ -395,7 +395,7 @@ func Test_eigenp06(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("eigenp06")
 
 	ncp := 6

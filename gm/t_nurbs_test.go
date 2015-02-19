@@ -225,7 +225,7 @@ func Test_nurbs01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nurbs01")
 
 	b := get_nurbs_A()
@@ -255,7 +255,7 @@ func Test_nurbs02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nurbs02")
 
 	b := get_nurbs_A()
@@ -277,7 +277,7 @@ func Test_nurbs03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nurbs03")
 
 	b := get_nurbs_B()
@@ -300,7 +300,7 @@ func Test_nurbs04(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nurbs04")
 
 	b := get_nurbs_B()
@@ -324,7 +324,7 @@ func Test_nurbs05(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nurbs05")
 
 	b := get_nurbs_A()
@@ -357,7 +357,7 @@ func Test_nurbs06(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nurbs06")
 
 	b := get_nurbs_C()
@@ -390,7 +390,7 @@ func Test_nurbs07(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nurbs07")
 
 	b := get_nurbs_A()
@@ -438,7 +438,7 @@ func Test_nurbs08(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("nurbs08")
 
 	a := get_nurbs_B()

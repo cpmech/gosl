@@ -4,10 +4,6 @@
 
 package tsr
 
-import (
-	"github.com/cpmech/gosl/utl"
-)
-
 func init() {
 	verbose() = true
 }

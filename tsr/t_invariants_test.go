@@ -12,7 +12,6 @@ import (
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
 )
 
 const (
@@ -30,7 +29,7 @@ func Test_invs01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("invs01")
 
 	sig := [][]float64{
@@ -57,14 +56,14 @@ func Test_invs01(tst *testing.T) {
 	io.Pf("q   = %v\n", q)
 	io.Pf("q_  = %v\n", q_)
 	io.Pf("θ   = %v\n", θ)
-	utl.CheckScalar(tst, "p", 1e-17, p, p_)
-	utl.CheckScalar(tst, "p", 1e-17, p, -100)
-	utl.CheckScalar(tst, "q", 1e-17, q, 260.52830940226056)
-	utl.CheckScalar(tst, "q", 1e-13, q, q_)
+	chk.Scalar(tst, "p", 1e-17, p, p_)
+	chk.Scalar(tst, "p", 1e-17, p, -100)
+	chk.Scalar(tst, "q", 1e-17, q, 260.52830940226056)
+	chk.Scalar(tst, "q", 1e-13, q, q_)
 	chk.Vector(tst, "s", 1e-17, s, s_)
-	utl.CheckScalar(tst, "p1", 1e-17, p, p1)
-	utl.CheckScalar(tst, "q1", 1e-13, q, q1)
-	utl.CheckScalar(tst, "θ1", 1e-17, θ, θ1)
+	chk.Scalar(tst, "p1", 1e-17, p, p1)
+	chk.Scalar(tst, "q1", 1e-13, q, q1)
+	chk.Scalar(tst, "θ1", 1e-17, θ, θ1)
 }
 
 func Test_invs02(tst *testing.T) {
@@ -77,7 +76,7 @@ func Test_invs02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("invs02")
 
 	eps := [][]float64{
@@ -101,9 +100,9 @@ func Test_invs02(tst *testing.T) {
 	io.Pf("εv  = %v\n", εv)
 	io.Pf("εd  = %v\n", εd)
 	io.Pf("εd_ = %v\n", εd_)
-	utl.CheckScalar(tst, "εv", 1e-17, εv, εv_)
-	utl.CheckScalar(tst, "εv", 1e-17, εv, eps[0][0]+eps[1][1]+eps[2][2])
-	utl.CheckScalar(tst, "εd", 1e-13, εd, εd_)
+	chk.Scalar(tst, "εv", 1e-17, εv, εv_)
+	chk.Scalar(tst, "εv", 1e-17, εv, eps[0][0]+eps[1][1]+eps[2][2])
+	chk.Scalar(tst, "εd", 1e-13, εd, εd_)
 	chk.Vector(tst, "e", 1e-17, e, e_)
 }
 
@@ -117,7 +116,7 @@ func Test_invs03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("invs03")
 
 	// square with vertical stress only under plane-strain
@@ -152,8 +151,8 @@ func Test_invs03(tst *testing.T) {
 	io.Pfcyan("σm = %v\n", σm)
 	io.Pfcyan("q  = %v\n", q)
 	io.Pfcyan("θ  = %v\n", θ)
-	utl.CheckScalar(tst, "q", 1e-10, q, qY)
-	utl.CheckScalar(tst, "θ", 1e-3, θ, 0)
+	chk.Scalar(tst, "q", 1e-10, q, qY)
+	chk.Scalar(tst, "θ", 1e-3, θ, 0)
 }
 
 func run_invs_tests(tst *testing.T, a []float64, ver bool) {
@@ -180,25 +179,25 @@ func run_invs_tests(tst *testing.T, a []float64, ver bool) {
 		chk.Panic("PrincValsNum failed:\n%v", err)
 	}
 	I1, I2, I3 := M_CharInvs(a)
-	utl.CheckScalar(tst, "tr(a)", 1e-17, tra, trat)
-	utl.CheckScalar(tst, "det(a)", 1e-14, deta, detat)
-	utl.CheckScalar(tst, "p", 1e-14, p, p_)
-	utl.CheckScalar(tst, "q", 1e-14, q, q_)
-	utl.CheckScalar(tst, "sno", 1e-14, sno, q/SQ3by2)
-	utl.CheckScalar(tst, "p1", 1e-14, p, p1)
-	utl.CheckScalar(tst, "q1", 1e-14, q, q1)
-	utl.CheckScalar(tst, "θ", 1e-14, θ, θ_)
-	utl.CheckScalar(tst, "pp", 1e-14, p, pp)
-	utl.CheckScalar(tst, "qq", 1e-14, q, qq)
-	utl.CheckScalar(tst, "rr", 1e-14, θ, math.Asin(rr)*180.0/(3.0*math.Pi))
-	utl.CheckScalar(tst, "pX", 1e-14, p, pX)
-	utl.CheckScalar(tst, "qX", 1e-14, q, qX)
-	utl.CheckScalar(tst, "rX", 1e-14, θ, math.Asin(rX)*180.0/(3.0*math.Pi))
-	utl.CheckScalar(tst, "I1", 1e-17, I1, tra)
-	utl.CheckScalar(tst, "I3", 1e-17, I3, deta)
-	utl.CheckScalar(tst, "I1", 1e-14, I1, λ0+λ1+λ2)
-	utl.CheckScalar(tst, "I2", 1e-12, I2, λ0*λ1+λ1*λ2+λ2*λ0)
-	utl.CheckScalar(tst, "I3", 1e-12, I3, λ0*λ1*λ2)
+	chk.Scalar(tst, "tr(a)", 1e-17, tra, trat)
+	chk.Scalar(tst, "det(a)", 1e-14, deta, detat)
+	chk.Scalar(tst, "p", 1e-14, p, p_)
+	chk.Scalar(tst, "q", 1e-14, q, q_)
+	chk.Scalar(tst, "sno", 1e-14, sno, q/SQ3by2)
+	chk.Scalar(tst, "p1", 1e-14, p, p1)
+	chk.Scalar(tst, "q1", 1e-14, q, q1)
+	chk.Scalar(tst, "θ", 1e-14, θ, θ_)
+	chk.Scalar(tst, "pp", 1e-14, p, pp)
+	chk.Scalar(tst, "qq", 1e-14, q, qq)
+	chk.Scalar(tst, "rr", 1e-14, θ, math.Asin(rr)*180.0/(3.0*math.Pi))
+	chk.Scalar(tst, "pX", 1e-14, p, pX)
+	chk.Scalar(tst, "qX", 1e-14, q, qX)
+	chk.Scalar(tst, "rX", 1e-14, θ, math.Asin(rX)*180.0/(3.0*math.Pi))
+	chk.Scalar(tst, "I1", 1e-17, I1, tra)
+	chk.Scalar(tst, "I3", 1e-17, I3, deta)
+	chk.Scalar(tst, "I1", 1e-14, I1, λ0+λ1+λ2)
+	chk.Scalar(tst, "I2", 1e-12, I2, λ0*λ1+λ1*λ2+λ2*λ0)
+	chk.Scalar(tst, "I3", 1e-12, I3, λ0*λ1*λ2)
 	if ver {
 		io.Pf("θ    = %v\n", θ)
 		io.Pf("na   = %v\n", na)
@@ -224,12 +223,12 @@ func run_invs_tests(tst *testing.T, a []float64, ver bool) {
 	}
 	σa_, σb_, σc_ := PQW2O(p, q, w)
 	Σa, Σb, Σc := M_oct(a)
-	utl.CheckScalar(tst, "σa", 1e-13, σa, σa_)
-	utl.CheckScalar(tst, "σb", 1e-13, σb, σb_)
-	utl.CheckScalar(tst, "σc", 1e-13, σc, σc_)
-	utl.CheckScalar(tst, "Σa", 1e-13, σa, Σa)
-	utl.CheckScalar(tst, "Σb", 1e-13, σb, Σb)
-	utl.CheckScalar(tst, "Σc", 1e-13, σc, Σc)
+	chk.Scalar(tst, "σa", 1e-13, σa, σa_)
+	chk.Scalar(tst, "σb", 1e-13, σb, σb_)
+	chk.Scalar(tst, "σc", 1e-13, σc, σc_)
+	chk.Scalar(tst, "Σa", 1e-13, σa, Σa)
+	chk.Scalar(tst, "Σb", 1e-13, σb, Σb)
+	chk.Scalar(tst, "Σc", 1e-13, σc, Σc)
 	if ver {
 		io.Pforan("λ0 = %v\n", λ0)
 		io.Pforan("λ1 = %v\n", λ1)
@@ -250,7 +249,7 @@ func Test_invs04(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("invs04")
 
 	a := []float64{-10.0, -20.0, -30.0, 4.0 * SQ2, 5.0 * SQ2, 6.0 * SQ2}
@@ -288,7 +287,7 @@ func Test_invs05(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("invs05")
 
 	if SAVEPLOT {
@@ -313,17 +312,17 @@ func Test_invs05(tst *testing.T) {
 		io.Pf("σa σb σc = %v %v %v\n", σa, σb, σc)
 		io.Pf("w        = %v\n", w)
 		io.Pf("θ2, θ3   = %v, %v\n", θ2, θ3)
-		utl.CheckScalar(tst, "σa", 1e-17, σa, σacor)
-		utl.CheckScalar(tst, "σb", 1e-17, σb, σbcor)
-		utl.CheckScalar(tst, "σc", 1e-17, σc, σccor)
-		utl.CheckScalar(tst, "σ0", tolσ, σ0, σ[0])
-		utl.CheckScalar(tst, "σ1", tolσ, σ1, σ[1])
-		utl.CheckScalar(tst, "σ2", tolσ, σ2, σ[2])
-		utl.CheckScalar(tst, "σI0", tolσ, σI[0], σ[0])
-		utl.CheckScalar(tst, "σI1", tolσ, σI[1], σ[1])
-		utl.CheckScalar(tst, "σI2", tolσ, σI[2], σ[2])
-		utl.CheckScalar(tst, "θ2", 1e-6, θ2, θcor)
-		utl.CheckScalar(tst, "θ3", 1e-17, θ3, θ2)
+		chk.Scalar(tst, "σa", 1e-17, σa, σacor)
+		chk.Scalar(tst, "σb", 1e-17, σb, σbcor)
+		chk.Scalar(tst, "σc", 1e-17, σc, σccor)
+		chk.Scalar(tst, "σ0", tolσ, σ0, σ[0])
+		chk.Scalar(tst, "σ1", tolσ, σ1, σ[1])
+		chk.Scalar(tst, "σ2", tolσ, σ2, σ[2])
+		chk.Scalar(tst, "σI0", tolσ, σI[0], σ[0])
+		chk.Scalar(tst, "σI1", tolσ, σI[1], σ[1])
+		chk.Scalar(tst, "σI2", tolσ, σI[2], σ[2])
+		chk.Scalar(tst, "θ2", 1e-6, θ2, θcor)
+		chk.Scalar(tst, "θ3", 1e-17, θ3, θ2)
 		addtoplot(σa, σb, σ)
 	}
 
@@ -348,7 +347,7 @@ func Test_invs06(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("invs06")
 
 	ver := true
@@ -363,8 +362,8 @@ func Test_invs06(tst *testing.T) {
 		io.Pf("θ = %v\n", θ)
 		run_invs_tests(tst, σ, ver)
 		sno, p, _ := M_devσ(s, σ)
-		utl.CheckScalar(tst, "σc", 1e-15, p, σc/SQ3)
-		utl.CheckScalar(tst, "sno", 1e-15, sno, float64(i))
+		chk.Scalar(tst, "σc", 1e-15, p, σc/SQ3)
+		chk.Scalar(tst, "sno", 1e-15, sno, float64(i))
 	}
 }
 
@@ -378,7 +377,7 @@ func Test_invs07(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("invs07")
 
 	a, b, β, ϵ := -1.0, 0.0, 1.0, 1e-3
@@ -404,6 +403,6 @@ func Test_invs07(tst *testing.T) {
 	io.Pforan("poct,  qoct  = %v, %v\n", poct, qoct)
 	io.Pforan("psmp1, qsmp1 = %v, %v\n", psmp1, qsmp1)
 	io.Pforan("psmp2, qsmp2 = %v, %v\n", psmp2, qsmp2)
-	utl.CheckScalar(tst, "p", 1e-15, psmp1, psmp2)
-	utl.CheckScalar(tst, "q", 1e-15, qsmp1, qsmp2)
+	chk.Scalar(tst, "p", 1e-15, psmp1, psmp2)
+	chk.Scalar(tst, "q", 1e-15, qsmp1, qsmp2)
 }

@@ -12,7 +12,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/mpi"
-	"github.com/cpmech/gosl/utl"
 )
 
 func main() {
@@ -25,7 +24,7 @@ func main() {
 		mpi.Stop(false)
 	}()
 
-	verbose() = false
+	verbose()
 
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("Test MPI 04")

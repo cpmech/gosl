@@ -30,7 +30,7 @@ func Test_noncteM01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("noncteM01")
 
 	prms := []string{"φ", "Mfix"}
@@ -135,7 +135,7 @@ func Test_Mw02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("Mw02")
 
 	prms := []string{"φ", "Mfix"}

@@ -11,7 +11,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/utl"
 )
 
 var (
@@ -180,7 +179,7 @@ func Test_Ts(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("Ts")
 
 	nd := test_nd
@@ -220,7 +219,7 @@ func Test_ops01(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("ops01")
 
 	// basic derivatives
@@ -425,7 +424,7 @@ func Test_ops02(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("ops02")
 
 	nd := []int{2, 2, 3, 3, 3}
@@ -526,7 +525,7 @@ func Test_ops02(tst *testing.T) {
 		}
 		err := M_Dot(d, a, b, nonsymTol)
 		for i := 0; i < 3; i++ {
-			utl.CheckScalar(tst, io.Sf("a_dot_b[%d][%d]", i, i), 1e-15, D[i][i], d[i])
+			chk.Scalar(tst, io.Sf("a_dot_b[%d][%d]", i, i), 1e-15, D[i][i], d[i])
 		}
 		/*
 		   for k := 0; k < 2*nd[m]; k++ {
@@ -536,7 +535,7 @@ func Test_ops02(tst *testing.T) {
 		           cf = 1.0 / SQ2
 		       }
 		       io.Pforan("%v %v\n", D[I][J], d[k] * cf)
-		       utl.CheckScalar(tst, io.Sf("a_dot_b[%d][%d]",I,J), 1e-15, D[I][J], d[k] * cf)
+		       chk.Scalar(tst, io.Sf("a_dot_b[%d][%d]",I,J), 1e-15, D[I][J], d[k] * cf)
 		   }
 		*/
 		if err == nil {
@@ -572,7 +571,7 @@ func Test_ops03(tst *testing.T) {
 		}
 	}()
 
-	//verbose() = false
+	//verbose()
 	chk.PrintTitle("ops03")
 
 	nonsymTol := 1e-15
@@ -610,8 +609,8 @@ func Test_ops03(tst *testing.T) {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		utl.CheckScalar(tst, "detA", 1e-14, detA, deta)
-		utl.CheckScalar(tst, "deta", 1e-14, deta, deta_)
+		chk.Scalar(tst, "detA", 1e-14, detA, deta)
+		chk.Scalar(tst, "deta", 1e-14, deta, deta_)
 		chk.Matrix(tst, "Ai", 1e-14, Ai, Ai_)
 		chk.Vector(tst, "ai*a", 1e-15, aia, Im[:2*nd[idxA]])
 		io.Pforan("ai*a = %v\n", aia)
