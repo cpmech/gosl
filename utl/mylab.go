@@ -280,61 +280,6 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 	return
 }
 
-// LocGlobMaps returns two maps of integers where g2l contains the indices corresponding
-// to each item in allkeys, except that excluded keys are indicated with -1.
-// l2g contains only the indices of of keys not excluded
-//  Example:
-//                         0    1    2    3    4    5
-//   allkeys  := []string{"a", "b", "A", "B", "α", "β"}
-//   excluded := []string{          "A",           "β"}
-//   g2l       = []int   { 0,   1,  -1,   2,   3,  -1 }
-//   l2g       = []int   { 0,   1,        3,   4      }
-func LocGlobMaps(allkeys, excludedkeys []string) (g2l, l2g []int) {
-	N := len(allkeys)           // number of global (all) keys
-	n := N - len(excludedkeys)  // number of local keys
-	g2l = make([]int, N)        // global => local
-	l2g = make([]int, n)        // local => global
-	k2I := make(map[string]int) // key => global index I (-1 means excluded)
-	for I, k := range allkeys {
-		k2I[k] = I
-		g2l[I] = -1
-	}
-	for _, k := range excludedkeys {
-		_, ok := k2I[k]
-		if !ok {
-			Panic("mylab.go: LocGlobMaps: cannot find excluded key '%s' within allkeys=%v (excludedkeys=%v)", k, allkeys, excludedkeys)
-		}
-		k2I[k] = -1 // exclude key k
-	}
-	i := 0
-	for I, k := range allkeys {
-		if k2I[k] >= 0 { // not excluded
-			g2l[I] = i
-			l2g[i] = I
-			i += 1
-		}
-	}
-	return
-}
-
-// LocGlobMapsM is the same as LocGlobMaps but using a map for excludedkeys
-func LocGlobMapsM(allkeys []string, excludedkeysM map[string]bool) (g2l, l2g []int) {
-	nexcl := 0 // number of excluded keys
-	for _, val := range excludedkeysM {
-		if val {
-			nexcl += 1
-		}
-	}
-	excludedkeys, k := make([]string, nexcl), 0
-	for key, val := range excludedkeysM {
-		if val {
-			excludedkeys[k] = key
-			k += 1
-		}
-	}
-	return LocGlobMaps(allkeys, excludedkeys)
-}
-
 // Dbl2Str converts a slice of doubles (float64) to a slice of strings
 func Dbl2Str(v []float64, format string) (s []string) {
 	s = make([]string, len(v))
