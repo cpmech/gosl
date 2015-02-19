@@ -32,7 +32,7 @@ func Test_isofun01(tst *testing.T) {
 	simpleform := true
 	notfcrit := false
 
-	dver := true
+	dver := chk.Verbose
 	dtol := 1e-5
 	dtol2 := 1e-6
 
@@ -237,7 +237,7 @@ func Test_isofun03(tst *testing.T) {
 	//λ = []float64{-1,-1,-1}
 
 	// check gradients @ intersection
-	dtol, dtol2, ver := 1e-7, 1e-9, true
+	dtol, dtol2, ver := 1e-7, 1e-9, chk.Verbose
 	A := make([]float64, ncp)
 	A[0], A[1], A[2] = λ[0], λ[1], λ[2]
 	f_at_A, _ := o.Fa(A)
@@ -268,7 +268,7 @@ func Test_isofun04(tst *testing.T) {
 	chk.PrintTitle("isofun04")
 
 	// constants
-	dtol, dtol2, ver := 1e-6, 1e-8, true
+	dtol, dtol2, ver := 1e-6, 1e-8, chk.Verbose
 
 	// SMP director parameters
 	a, b, β, ϵ := -1.0, 1.0, 1.0, 1e-3

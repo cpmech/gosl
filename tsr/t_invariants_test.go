@@ -240,7 +240,7 @@ func Test_invs04(tst *testing.T) {
 		{0, 0, -55},
 	})
 
-	ver := true
+	ver := chk.Verbose
 	run_invs_tests(tst, a, ver)
 	run_invs_tests(tst, b, ver)
 }
@@ -302,7 +302,7 @@ func Test_invs06(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("invs06")
 
-	ver := true
+	ver := chk.Verbose
 	s := make([]float64, 4)
 	cos30, sin30 := SQ3/2.0, 0.5
 	for i := 0; i < 11; i++ {

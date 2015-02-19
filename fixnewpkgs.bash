@@ -34,7 +34,8 @@ fix_pkgs() {
                -e 's/utl.Atob/io.Atob/g' \
                -e 's/utl.Itob/io.Itob/g' \
                -e 's/utl.Btoi/io.Btoi/g' \
-               -e 's/utl.Btoa/io.Btoa/g' $f
+               -e 's/utl.Btoa/io.Btoa/g' \
+               -e 's/utl.Sramp/fun.Sramp/g' $f
         goimports -w $f
     done
 

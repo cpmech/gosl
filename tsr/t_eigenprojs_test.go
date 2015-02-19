@@ -23,8 +23,8 @@ func Test_eigenp01(tst *testing.T) {
 	tolP := 1e-12
 	tolS := 1e-12
 	toldP := 1e-6
-	verdP := true
-	ver := true
+	verdP := chk.Verbose
+	ver := chk.Verbose
 
 	// run test
 	nd := test_nd
@@ -106,8 +106,8 @@ func Test_eigenp02(tst *testing.T) {
 	tolP := 1e-12
 	tolS := 1e-12
 	toldP := 1e-4
-	verdP := true
-	ver := true
+	verdP := chk.Verbose
+	ver := chk.Verbose
 
 	// set tensor
 	ϵ := 1e-10
@@ -156,8 +156,8 @@ func Test_eigenp03(tst *testing.T) {
 	tolP := 1e-15
 	tolS := 1e-13
 	toldP := 0.008
-	verdP := true
-	ver := true
+	verdP := chk.Verbose
+	ver := chk.Verbose
 
 	// set tensor
 	ϵ := 1e-7
@@ -216,8 +216,8 @@ func Test_eigenp04(tst *testing.T) {
 	tolP := 1e-15
 	tolS := 1e-15
 	toldP := 1e-4
-	verdP := true
-	ver := true
+	verdP := chk.Verbose
+	ver := chk.Verbose
 
 	// tensor main value
 	//s := 400.0
@@ -293,8 +293,8 @@ func Test_eigenp05(tst *testing.T) {
 	tolP := 1e-14
 	tolS := 1e-15
 	toldP := 1e-6
-	verdP := true
-	ver := true
+	verdP := chk.Verbose
+	ver := chk.Verbose
 
 	// tensor
 	idx := 3
@@ -346,8 +346,6 @@ func Test_eigenp05(tst *testing.T) {
 }
 
 func Test_eigenp06(tst *testing.T) {
-
-	prevTs
 
 	//verbose()
 	chk.PrintTitle("eigenp06")

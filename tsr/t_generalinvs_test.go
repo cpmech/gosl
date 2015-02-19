@@ -23,7 +23,7 @@ func Test_geninvs01(tst *testing.T) {
 	tol := 1e-15
 	b := 0.5
 	dtol := 1e-7
-	dver := true
+	dver := chk.Verbose
 	dtol2 := 1e-6
 
 	nd := test_nd
@@ -215,7 +215,7 @@ func Test_geninvs02(tst *testing.T) {
 	tol := 1e-10
 	dtol := 1e-7
 	dtol2 := 1e-7
-	dver := true
+	dver := chk.Verbose
 
 	nd := test_nd
 	for idxA := 0; idxA < len(test_nd)-3; idxA++ {

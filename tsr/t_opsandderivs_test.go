@@ -207,7 +207,7 @@ func Test_ops01(tst *testing.T) {
 	chk.PrintTitle("ops01")
 
 	// basic derivatives
-	dver := false
+	dver := chk.Verbose
 	dtol := 1e-5
 
 	// invariants derivatives
@@ -217,7 +217,7 @@ func Test_ops01(tst *testing.T) {
 	dtoli3 := []float64{1e-6, 1e-3, 1e-6, 1e-3, 1e-3, 1e-6, 1e-6, 1e-6, 1e-5, 1e-6}
 
 	// lode derivatives
-	dverw := true
+	dverw := chk.Verbose
 	dtolw := 1e-8
 
 	nd := test_nd
@@ -545,7 +545,7 @@ func Test_ops03(tst *testing.T) {
 	nonsymTol := 1e-15
 
 	dtol := 1e-9
-	dver := true
+	dver := chk.Verbose
 
 	nd := test_nd
 	for idxA := 0; idxA < len(test_nd)-3; idxA++ {

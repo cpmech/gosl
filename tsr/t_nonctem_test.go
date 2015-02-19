@@ -45,7 +45,7 @@ func Test_noncteM01(tst *testing.T) {
 		}
 	}
 
-	ver, tol := false, 1e-9
+	ver, tol := chk.Verbose, 1e-9
 	var tmp float64
 	for _, w := range utl.LinSpace(-1, 1, 11) {
 		dMdw := o.DMdw(w)
@@ -64,7 +64,7 @@ func Test_noncteM01(tst *testing.T) {
 		chk.AnaNum(tst, "d²M/dw²", tol, d2Mdw2, dnum, ver)
 	}
 
-	ver, tol = true, 1e-9
+	ver, tol = chk.Verbose, 1e-9
 	nd := test_nd
 	for m := 0; m < len(test_nd)-3; m++ {
 		//for m := 0; m < 3; m++ {

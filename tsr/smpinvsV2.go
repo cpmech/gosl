@@ -7,7 +7,7 @@ package tsr
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/fun"
 )
 
 // NewSmpCalcμ computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
@@ -28,9 +28,9 @@ func NewSmpCalcμ(φ, a, b, β, ϵ float64) (μ float64) {
 // NewSmpDirector computes the director (normal vector) of the spatially mobilised plane
 //  Note: the norm of N is returned => m := norm(N)
 func NewSmpDirector(N, λ []float64, a, b, β, ϵ float64) (m float64) {
-	N[0] = a / math.Pow(ϵ+utl.Sramp(a*λ[0], β), b)
-	N[1] = a / math.Pow(ϵ+utl.Sramp(a*λ[1], β), b)
-	N[2] = a / math.Pow(ϵ+utl.Sramp(a*λ[2], β), b)
+	N[0] = a / math.Pow(ϵ+fun.Sramp(a*λ[0], β), b)
+	N[1] = a / math.Pow(ϵ+fun.Sramp(a*λ[1], β), b)
+	N[2] = a / math.Pow(ϵ+fun.Sramp(a*λ[2], β), b)
 	m = math.Sqrt(N[0]*N[0] + N[1]*N[1] + N[2]*N[2])
 	return
 }
@@ -38,9 +38,9 @@ func NewSmpDirector(N, λ []float64, a, b, β, ϵ float64) (m float64) {
 // NewSmpDirectorDeriv1 computes the first order derivative of the SMP director
 //  Notes: Only non-zero components are returned; i.e. dNdλ[i] := dNdλ[i][i]
 func NewSmpDirectorDeriv1(dNdλ []float64, λ []float64, a, b, β, ϵ float64) {
-	dNdλ[0] = -b * utl.SrampD1(a*λ[0], β) * math.Pow(ϵ+utl.Sramp(a*λ[0], β), -b-1.0)
-	dNdλ[1] = -b * utl.SrampD1(a*λ[1], β) * math.Pow(ϵ+utl.Sramp(a*λ[1], β), -b-1.0)
-	dNdλ[2] = -b * utl.SrampD1(a*λ[2], β) * math.Pow(ϵ+utl.Sramp(a*λ[2], β), -b-1.0)
+	dNdλ[0] = -b * fun.SrampD1(a*λ[0], β) * math.Pow(ϵ+fun.Sramp(a*λ[0], β), -b-1.0)
+	dNdλ[1] = -b * fun.SrampD1(a*λ[1], β) * math.Pow(ϵ+fun.Sramp(a*λ[1], β), -b-1.0)
+	dNdλ[2] = -b * fun.SrampD1(a*λ[2], β) * math.Pow(ϵ+fun.Sramp(a*λ[2], β), -b-1.0)
 }
 
 // NewSmpDirectorDeriv2 computes the second order derivative of the SMP director
@@ -48,9 +48,9 @@ func NewSmpDirectorDeriv1(dNdλ []float64, λ []float64, a, b, β, ϵ float64) {
 func NewSmpDirectorDeriv2(d2Ndλ2 []float64, λ []float64, a, b, β, ϵ float64) {
 	var F_i, G_i, H_i float64
 	for i := 0; i < 3; i++ {
-		F_i = utl.Sramp(a*λ[i], β)
-		G_i = utl.SrampD1(a*λ[i], β)
-		H_i = utl.SrampD2(a*λ[i], β)
+		F_i = fun.Sramp(a*λ[i], β)
+		G_i = fun.SrampD1(a*λ[i], β)
+		H_i = fun.SrampD2(a*λ[i], β)
 		d2Ndλ2[i] = a * b * ((b+1.0)*G_i*G_i - (ϵ+F_i)*H_i) * math.Pow(ϵ+F_i, -b-2.0)
 	}
 }
@@ -122,12 +122,12 @@ func NewSmpUnitDirectorDeriv2(d2ndλdλ [][][]float64, m float64, N, dNdλ, d2Nd
 // NewSmpDerivs1 computes the first derivative and other variables
 //  Note: m, dNdλ, N, F and G are output
 func NewSmpDerivs1(dndλ [][]float64, dNdλ, N, F, G []float64, λ []float64, a, b, β, ϵ float64) (m float64) {
-	F[0] = utl.Sramp(a*λ[0], β)
-	F[1] = utl.Sramp(a*λ[1], β)
-	F[2] = utl.Sramp(a*λ[2], β)
-	G[0] = utl.SrampD1(a*λ[0], β)
-	G[1] = utl.SrampD1(a*λ[1], β)
-	G[2] = utl.SrampD1(a*λ[2], β)
+	F[0] = fun.Sramp(a*λ[0], β)
+	F[1] = fun.Sramp(a*λ[1], β)
+	F[2] = fun.Sramp(a*λ[2], β)
+	G[0] = fun.SrampD1(a*λ[0], β)
+	G[1] = fun.SrampD1(a*λ[1], β)
+	G[2] = fun.SrampD1(a*λ[2], β)
 	N[0] = a / math.Pow(ϵ+F[0], b)
 	N[1] = a / math.Pow(ϵ+F[1], b)
 	N[2] = a / math.Pow(ϵ+F[2], b)
@@ -152,9 +152,9 @@ func NewSmpDerivs1(dndλ [][]float64, dNdλ, N, F, G []float64, λ []float64, a,
 //  Note: m, N, F, G, dNdλ and dndλ are input
 func NewSmpDerivs2(d2ndλdλ [][][]float64, λ []float64, a, b, β, ϵ, m float64, N, F, G, dNdλ []float64, dndλ [][]float64) {
 	H := []float64{
-		utl.SrampD2(a*λ[0], β),
-		utl.SrampD2(a*λ[1], β),
-		utl.SrampD2(a*λ[2], β),
+		fun.SrampD2(a*λ[0], β),
+		fun.SrampD2(a*λ[1], β),
+		fun.SrampD2(a*λ[2], β),
 	}
 	var dmdλ_k, dmdλ_j, d2mdλdλ_jk, d2Ndλ2_jj, d2Ndλdλ_ijk float64
 	for k := 0; k < 3; k++ {
