@@ -52,7 +52,9 @@ fix_pkgs_simple() {
     cd $PKG
 
     for f in t_*.go; do
-        sed -i -e 's/utl.Sramp/fun.Sramp/g' $f
+        sed -i -e 's/Copyright 2012 Dorival de Moraes Pedroso/Copyright 2015 Dorival Pedroso and Raul Durand/g' $f
+        #sed -i -e 's/Copyright 2012 Dorival Pedroso & Raul Durand/Copyright 2015 Dorival Pedroso and Raul Durand/g' $f
+        #sed -i -e 's/Copyright 2015 Dorival Pedroso & Raul Durand/Copyright 2015 Dorival Pedroso and Raul Durand/g' $f
         #goimports -w $f
     done
 
