@@ -51,7 +51,7 @@ fix_pkgs_simple() {
     echo "[1;32m>>> fixing $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
     cd $PKG
 
-    for f in t_*.go; do
+    for f in *.go; do
         sed -i -e 's/Copyright 2012 Dorival de Moraes Pedroso/Copyright 2015 Dorival Pedroso and Raul Durand/g' $f
         #sed -i -e 's/Copyright 2012 Dorival Pedroso & Raul Durand/Copyright 2015 Dorival Pedroso and Raul Durand/g' $f
         #sed -i -e 's/Copyright 2015 Dorival Pedroso & Raul Durand/Copyright 2015 Dorival Pedroso and Raul Durand/g' $f
