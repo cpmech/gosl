@@ -25,7 +25,7 @@ func Test_serial01(tst *testing.T) {
 	}
 
 	// serialize
-	Deep3Print("A", A)
+	PrintDeep3("A", A)
 	I, P, S := Deep3Serialize(A)
 	Deep3GetInfo(I, P, S, true)
 
@@ -38,7 +38,7 @@ func Test_serial01(tst *testing.T) {
 
 	// deserialize
 	B := Deep3Deserialize(I, P, S, false)
-	Deep3Print("B", B)
+	PrintDeep3("B", B)
 
 	// check deserialization
 	chk.Deep3(tst, "A", 1e-16, A, B)
@@ -56,7 +56,7 @@ func Test_serial02(tst *testing.T) {
 	}
 
 	// serialize
-	Deep3Print("A", A)
+	PrintDeep3("A", A)
 	I, P, S := Deep3Serialize(A)
 	Deep3GetInfo(I, P, S, true)
 
@@ -67,7 +67,7 @@ func Test_serial02(tst *testing.T) {
 
 	// deserialize
 	B := Deep3Deserialize(I, P, S, false)
-	Deep3Print("B", B)
+	PrintDeep3("B", B)
 
 	// check deserialization
 	chk.Deep3(tst, "A", 1e-16, A, B)
