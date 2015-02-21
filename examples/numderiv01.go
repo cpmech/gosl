@@ -9,6 +9,8 @@ package main
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -40,8 +42,8 @@ func main() {
 		}, x, 1e-3)
 
 		// check
-		utl.AnaNum(utl.Sf("dy/dx   @ %.6f", x), 1e-10, dydx_ana, dydx_num, true)
-		utl.AnaNum(utl.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2_ana, d2ydx2_num, true)
+		chk.PrintAnaNum(io.Sf("dy/dx   @ %.6f", x), 1e-10, dydx_ana, dydx_num, true)
+		chk.PrintAnaNum(io.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2_ana, d2ydx2_num, true)
 	}
 
 	// generate 101 points

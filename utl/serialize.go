@@ -32,15 +32,6 @@ func DblArrayToMat(v []float64, m, n int) (a [][]float64) {
 	return
 }
 
-// Deep3Print prints an array of array of array
-func Deep3Print(name string, A [][][]float64) {
-	io.Pf("%s = [\n", name)
-	for _, a := range A {
-		io.Pf("  %v\n", a)
-	}
-	io.Pf("]\n")
-}
-
 // Deep3Serialize serializes an array of array of array in column-compressed format
 //  Example:
 //
