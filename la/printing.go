@@ -60,7 +60,11 @@ func PrintMat(name string, a [][]float64, format string, numpy bool) {
 			r += "["
 		}
 		for j := 0; j < len(a[0]); j++ {
-			r += fmt.Sprintf(format, a[i][j])
+			if math.Abs(a[i][j]) <= PRINTZEROTOL {
+				r += fmt.Sprintf(format, 0.0)
+			} else {
+				r += fmt.Sprintf(format, a[i][j])
+			}
 			if numpy {
 				if j != len(a[0])-1 {
 					r += ","
