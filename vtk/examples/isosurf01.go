@@ -7,7 +7,7 @@ package main
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/vtk"
 )
 
@@ -47,12 +47,12 @@ func main() {
 	c := qy0 * tanφ / M
 	pt := c / tanφ
 	κ_ := 6.0 * c * cosφ / (SQ3 * (3.0 - sinφ))
-	utl.Pforan("α   = %v\n", α)
-	utl.Pforan("κ   = %v  (%v)\n", κ, κ_)
-	utl.Pforan("φ   = %v\n", φdeg)
-	utl.Pforan("c   = %v\n", c)
-	utl.Pforan("M   = %v\n", M)
-	utl.Pforan("qy0 = %v\n", qy0)
+	io.Pforan("α   = %v\n", α)
+	io.Pforan("κ   = %v  (%v)\n", κ, κ_)
+	io.Pforan("φ   = %v\n", φdeg)
+	io.Pforan("c   = %v\n", c)
+	io.Pforan("M   = %v\n", M)
+	io.Pforan("qy0 = %v\n", qy0)
 
 	scn := vtk.NewScene()
 	scn.AxesLen = c * SQ3
