@@ -60,3 +60,28 @@ func Test_map02(tst *testing.T) {
 	chk.Vector(tst, "m[\"d\"]", 1e-16, m["d"], []float64{666})
 	chk.Vector(tst, "m[\"e\"]", 1e-16, m["e"], nil)
 }
+
+func Test_map03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("map03")
+
+	m := map[string][]int{
+		"a": []int{100, 101},
+		"b": []int{1000},
+		"c": []int{200, 300, 400},
+	}
+	io.Pforan("m (before) = %v\n", m)
+	StrIntsMapAppend(&m, "a", 102)
+	io.Pfpink("m (after) = %v\n", m)
+	chk.Ints(tst, "m[\"a\"]", m["a"], []int{100, 101, 102})
+	chk.Ints(tst, "m[\"b\"]", m["b"], []int{1000})
+	chk.Ints(tst, "m[\"c\"]", m["c"], []int{200, 300, 400})
+	StrIntsMapAppend(&m, "d", 666)
+	io.Pfcyan("m (after) = %v\n", m)
+	chk.Ints(tst, "m[\"a\"]", m["a"], []int{100, 101, 102})
+	chk.Ints(tst, "m[\"b\"]", m["b"], []int{1000})
+	chk.Ints(tst, "m[\"c\"]", m["c"], []int{200, 300, 400})
+	chk.Ints(tst, "m[\"d\"]", m["d"], []int{666})
+	chk.Ints(tst, "m[\"e\"]", m["e"], nil)
+}
