@@ -54,3 +54,19 @@ func Deep4set(a [][][][]float64, v float64) {
 		}
 	}
 }
+
+// Deep2mat implements a matrix with variable number of entities
+//  Example:
+//    Vals = [][]float64{
+//             {0.0},
+//             {1.0, 1.1, 1.2, 1.3},
+//             {2.0, 2.1},
+//             {3.0, 3.1, 3.2},
+//           }
+type Deep2mat struct {
+	Vals [][]float64 // values
+}
+
+// Append appends items to Deep2mat
+func (o *Deep2mat) Append(rowidx int, value float64) {
+}
