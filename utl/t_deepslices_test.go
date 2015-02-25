@@ -71,7 +71,7 @@ func Test_deep02(tst *testing.T) {
 
 func Test_deep03(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("deep03. Deep2mat")
 
 	var m Deep2mat
