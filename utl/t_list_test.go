@@ -12,18 +12,18 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func Test_coll01(tst *testing.T) {
+func Test_list01(tst *testing.T) {
 
 	verbose()
 	io.Pforan("=========")
-	chk.PrintTitle("coll01. Collection.Append")
+	chk.PrintTitle("list01. DblList.Append")
 
-	var m Collection
+	var m DblList
 	m.Append(2, 2.0)
 	io.Pforan("m = %v\n", m)
 	equal := reflect.DeepEqual(m.Vals, [][]float64{{}, {}, {2}})
 	if !equal {
-		chk.PrintFail("Collection Append")
+		chk.PrintFail("DblList Append")
 	}
 
 	m.Append(0, 0.0)
@@ -31,6 +31,6 @@ func Test_coll01(tst *testing.T) {
 	io.Pforan("m = %v\n", m)
 	equal = reflect.DeepEqual(m.Vals, [][]float64{{0}, {1}, {2}})
 	if !equal {
-		chk.PrintFail("Collection Append")
+		chk.PrintFail("DblList Append")
 	}
 }

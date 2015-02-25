@@ -4,7 +4,7 @@
 
 package utl
 
-// Collection implements a matrix with variable number of entities
+// DblList implements a matrix with variable number of entities
 //  Example:
 //    Vals = [][]float64{
 //             {0.0},
@@ -12,12 +12,12 @@ package utl
 //             {2.0, 2.1},
 //             {3.0, 3.1, 3.2},
 //           }
-type Collection struct {
+type DblList struct {
 	Vals [][]float64 // values
 }
 
-// Append appends items to Collection
-func (o *Collection) Append(rowidx int, value float64) {
+// Append appends items to DblList
+func (o *DblList) Append(rowidx int, value float64) {
 	size := len(o.Vals)
 
 	// fill new rows if necessary
