@@ -6,6 +6,7 @@ package utl
 
 import (
 	"math"
+	"reflect"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -66,4 +67,26 @@ func Test_deep02(tst *testing.T) {
 		{{{666, 666}}, {{666, 666}}},
 	})
 	io.Pf("b = %v\n", b)
+}
+
+func Test_deep03(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("deep03. Deep2mat")
+
+	var m Deep2mat
+	m.Append(2, 2.0)
+	io.Pforan("m = %v\n", m)
+	equal := reflect.DeepEqual(m.Vals, [][]float64{{}, {}, {2}})
+	if !equal {
+		chk.PrintFail("Deep2mat Append")
+	}
+
+	m.Append(0, 0.0)
+	m.Append(1, 1.0)
+	io.Pforan("m = %v\n", m)
+	equal = reflect.DeepEqual(m.Vals, [][]float64{{0}, {1}, {2}})
+	if !equal {
+		chk.PrintFail("Deep2mat Append")
+	}
 }
