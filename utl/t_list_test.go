@@ -14,8 +14,7 @@ import (
 
 func Test_list01(tst *testing.T) {
 
-	verbose()
-	io.Pforan("=========")
+	//verbose()
 	chk.PrintTitle("list01. DblList.Append")
 
 	var m DblList
