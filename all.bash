@@ -20,6 +20,7 @@ install_and_test(){
     echo
     echo "[1;32m>>> compiling $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
     cd $PKG
+    touch *.go
     go install
     if [ "$DOTEST" -eq 1 ]; then
         go test
