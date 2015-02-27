@@ -13,8 +13,8 @@ type fcn func(x float64) float64
 
 //Abstract base class for elementary quadrature algorithms.
 type Quadrature interface {
-	Init(f fcn, a, b float64) // The constructor takes as inputs fcn, the function or functor to be integrated between limits a and b, also input.
-	Next() float64            // Returns the value of the integral at the nth stage of refinement. The function next() must be defined in the derived class.
+	Init(f fcn, a, b, eps float64) // The constructor takes as inputs fcn, the function or functor to be integrated between limits a and b, also input.
+	Integrate() (float64, error)   // Returns the integral for the specified input data
 }
 
 // Trap structure is used for the trapezoidal integration rule

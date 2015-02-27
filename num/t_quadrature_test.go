@@ -28,7 +28,7 @@ func Test_simpson01(tst *testing.T) {
 	chk.Scalar(tst, "A", 1e-11, A, Acor)
 }
 
-func Test_quad_01(tst *testing.T) {
+func Test_quad01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("quad01")
@@ -40,24 +40,24 @@ func Test_quad_01(tst *testing.T) {
 	Acor := 1.08268158558
 
 	// trapezoidal rule
-	var T Trap
+	var T Quadrature
+	T = new(Trap)
 	T.Init(y, 0, 1, 1e-11)
 	A, err := T.Integrate()
 	if err != nil {
 		io.Pforan(err.Error())
 	}
 	io.Pforan("A  = %v\n", A)
-	io.Pforan("n  = %v\n", T.n)
 	chk.Scalar(tst, "A", 1e-11, A, Acor)
 
 	// Simpson's rule
-	var S Simp
-	S.Init(y, 0, 1, 1e-09)
+	var S Quadrature
+	S = new(Simp)
+	S.Init(y, 0, 1, 1e-11)
 	A, err = S.Integrate()
 	if err != nil {
 		io.Pforan(err.Error())
 	}
 	io.Pforan("A  = %v\n", A)
-	io.Pforan("n  = %v\n", S.n)
-	chk.Scalar(tst, "A", 1e-09, A, Acor)
+	chk.Scalar(tst, "A", 1e-11, A, Acor)
 }
