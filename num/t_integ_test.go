@@ -39,7 +39,7 @@ func Test_trapz02(tst *testing.T) {
 	A_ := TrapzRange(0, 1, n, y)
 	io.Pforan("A  = %v\n", A)
 	io.Pforan("A_ = %v\n", A_)
-	Acor := 1.08306090851465
+	Acor := 1.08306090851465 // right value is Acor := 1.08268158558
 	chk.Scalar(tst, "A", 1e-15, A, Acor)
 	chk.Scalar(tst, "A_", 1e-15, A_, Acor)
 }

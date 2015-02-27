@@ -27,3 +27,21 @@ func Test_simpson01(tst *testing.T) {
 	Acor := 1.08268158558
 	chk.Scalar(tst, "A", 1e-11, A, Acor)
 }
+
+func Test_trap01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("trapz03")
+
+	y := func(x float64) float64 {
+		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
+	}
+
+	var T Trap
+	T.Init(y, 0, 1, 1e-11)
+	A, _ := T.Integrate()
+	io.Pforan("A  = %v\n", A)
+	io.Pforan("n  = %v\n", T.n)
+	Acor := 1.08268158558
+	chk.Scalar(tst, "A", 1e-11, A, Acor)
+}
