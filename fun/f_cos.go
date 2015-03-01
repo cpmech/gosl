@@ -32,6 +32,8 @@ func (o *Cos) Init(prms Prms) (err error) {
 			o.b = p.V
 		case "c":
 			o.c = p.V
+		case "b/pi": // b/π => b = b/pi * π
+			o.b = p.V * math.Pi
 		default:
 			return chk.Err("cos: parameter named %q is invalid", p.N)
 		}
