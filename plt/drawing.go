@@ -31,7 +31,7 @@ func AutoScale(P [][]float64) {
 }
 
 // DrawPolyline draws a polyline
-func DrawPolyline(P [][]float64, sd *ShapeData, args string) {
+func DrawPolyline(P [][]float64, sd *FmtH, args string) {
 	if len(P) < 1 {
 		return
 	}
@@ -47,7 +47,7 @@ func DrawPolyline(P [][]float64, sd *ShapeData, args string) {
 	io.Ff(&bb, "commands%d, vertices%d = zip(*dat%d)\n", n, n, n)
 	io.Ff(&bb, "ph%d = MPLPath(vertices%d, commands%d)\n", n, n, n)
 	io.Ff(&bb, "pc%d = PathPatch(ph%d", n, n)
-	io.Ff(&bb, ", fc='%s', ec='%s', lw=%d", sd.FaceColor, sd.EdgeColor, sd.LineWidth)
+	io.Ff(&bb, ", fc='%s', ec='%s', lw=%d", sd.Fc, sd.Ec, sd.Lw)
 	if len(args) > 0 {
 		io.Ff(&bb, ", %s)\n", args)
 	} else {
@@ -57,16 +57,16 @@ func DrawPolyline(P [][]float64, sd *ShapeData, args string) {
 }
 
 // DrawLegend draws legend with given lines data. fs == fontsize
-func DrawLegend(dat []LineData, fs int, loc string, frame bool, args string) {
+func DrawLegend(dat []FmtL, fs int, loc string, frame bool, args string) {
 	n := bb.Len()
 	io.Ff(&bb, "handles%d = [", n)
 	for i, d := range dat {
 		if i > 0 {
 			io.Ff(&bb, ",\n")
 		}
-		io.Ff(&bb, "Line2D([], [], label='%s', color='%s', lw=%g, marker='%s', ls='%s'", d.Label, d.Color, d.LineWidth, d.Marker, d.LineStyle)
-		if d.MarkerSize >= 0 {
-			io.Ff(&bb, ", ms=%g", d.MarkerSize)
+		io.Ff(&bb, "Line2D([], [], label='%s', color='%s', lw=%g, marker='%s', ls='%s'", d.L, d.C, d.Lw, d.M, d.Ls)
+		if d.Ms >= 0 {
+			io.Ff(&bb, ", ms=%g", d.Ms)
 		}
 		io.Ff(&bb, ")")
 	}
