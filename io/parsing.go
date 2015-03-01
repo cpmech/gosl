@@ -35,14 +35,9 @@ func Keycode(String string, Type string) (keycode string, found bool) {
 	for _, s := range strings.Split(String[1:], "!") { // [1:] => skip first "!"
 		ss := strings.TrimSpace(s)
 		sss := strings.Split(ss, ":")
-		//Pforan("ss=%#v, sss=%#v\n", ss, sss)
 		for i, val := range sss {
 			sss[i] = strings.TrimSpace(val)
 		}
-		//if len(sss) < 1 { // TODO: remove this since this will not happen
-		//chk.Panic(_parsing_err4, "Keycode", String)
-		//}
-		//Pfgreen("ss=%#v, sss=%#v\n", ss, sss)
 		if sss[0] == Type {
 			if len(sss) > 1 {
 				return sss[1], true
