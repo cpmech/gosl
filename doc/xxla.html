@@ -594,7 +594,7 @@ Umfpack error codes
 		
 			
 			
-			<h2 id="Cholesky">func <a href="https://github.com/cpmech/gosl/blob/master/la/densesol.go?s=343:386#L5">Cholesky</a></h2>
+			<h2 id="Cholesky">func <a href="https://github.com/cpmech/gosl/blob/master/la/densesol.go?s=349:392#L5">Cholesky</a></h2>
 			<pre>func Cholesky(L, a [][]<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 Cholesky returns the Cholesky decomposition of a symmetric positive-definite matrix:
@@ -608,7 +608,7 @@ Cholesky returns the Cholesky decomposition of a symmetric positive-definite mat
 		
 			
 			
-			<h2 id="ColMajToMat">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=863:908#L24">ColMajToMat</a></h2>
+			<h2 id="ColMajToMat">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=869:914#L24">ColMajToMat</a></h2>
 			<pre>func ColMajToMat(a [][]<a href="/pkg/builtin/#float64">float64</a>, am []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ColMajToMat returns a matrix from a column-major representation
@@ -620,7 +620,7 @@ ColMajToMat returns a matrix from a column-major representation
 		
 			
 			
-			<h2 id="ColMajToMatNew">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=586:645#L12">ColMajToMatNew</a></h2>
+			<h2 id="ColMajToMatNew">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=592:651#L12">ColMajToMatNew</a></h2>
 			<pre>func ColMajToMatNew(am []<a href="/pkg/builtin/#float64">float64</a>, m, n <a href="/pkg/builtin/#int">int</a>) (a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ColMajToMatNew returns a new matrix from a column-major representation
@@ -632,7 +632,7 @@ ColMajToMatNew returns a new matrix from a column-major representation
 		
 			
 			
-			<h2 id="ComplexToRC">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=1400:1450#L47">ComplexToRC</a></h2>
+			<h2 id="ComplexToRC">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=1406:1456#L47">ComplexToRC</a></h2>
 			<pre>func ComplexToRC(rc []<a href="/pkg/builtin/#complex128">complex128</a>) (r, c []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ComplexToRC converts a slice of complex numbers into two slices
@@ -644,7 +644,7 @@ ComplexToRC converts a slice of complex numbers into two slices
 		
 			
 			
-			<h2 id="Jacobi">func <a href="https://github.com/cpmech/gosl/blob/master/la/jacobi.go?s=814:889#L17">Jacobi</a></h2>
+			<h2 id="Jacobi">func <a href="https://github.com/cpmech/gosl/blob/master/la/jacobi.go?s=820:895#L17">Jacobi</a></h2>
 			<pre>func Jacobi(Q [][]<a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>, A [][]<a href="/pkg/builtin/#float64">float64</a>) (nit <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 Jacobi performs the Jacobi transformation of a symmetric matrix to find its eigenvectors and
@@ -664,7 +664,7 @@ by a significant constant factor, than the QR method.   A = Q * L * Q.T
 		
 			
 			
-			<h2 id="MatAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=14987:15028#L624">MatAlloc</a></h2>
+			<h2 id="MatAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=14993:15034#L624">MatAlloc</a></h2>
 			<pre>func MatAlloc(m, n <a href="/pkg/builtin/#int">int</a>) (mat [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatAlloc allocates a matrix with size m,n:
@@ -678,7 +678,7 @@ MatAlloc allocates a matrix with size m,n:
 		
 			
 			
-			<h2 id="MatClone">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=15186:15230#L634">MatClone</a></h2>
+			<h2 id="MatClone">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=15192:15236#L634">MatClone</a></h2>
 			<pre>func MatClone(a [][]<a href="/pkg/builtin/#float64">float64</a>) (b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatClone allocates and clones a matrix
@@ -692,7 +692,7 @@ MatClone allocates and clones a matrix
 		
 			
 			
-			<h2 id="MatCondG">func <a href="https://github.com/cpmech/gosl/blob/master/la/matinvg.go?s=2627:2710#L69">MatCondG</a></h2>
+			<h2 id="MatCondG">func <a href="https://github.com/cpmech/gosl/blob/master/la/matinvg.go?s=2633:2716#L69">MatCondG</a></h2>
 			<pre>func MatCondG(a [][]<a href="/pkg/builtin/#float64">float64</a>, normtype <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 MatCondG returns the condition number of a square matrix using the inverse of this matrix; thus
@@ -709,7 +709,7 @@ it is not as efficient as it could be, e.g. by using the SV decomposition.
 		
 			
 			
-			<h2 id="MatCopy">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=16681:16735#L705">MatCopy</a></h2>
+			<h2 id="MatCopy">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=16687:16741#L705">MatCopy</a></h2>
 			<pre>func MatCopy(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatCopy copies to matrix &#34;a&#34;, another matrix &#34;b&#34; (scaled):
@@ -723,7 +723,7 @@ MatCopy copies to matrix &#34;a&#34;, another matrix &#34;b&#34; (scaled):
 		
 			
 			
-			<h2 id="MatFill">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=15468:15506#L647">MatFill</a></h2>
+			<h2 id="MatFill">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=15474:15512#L647">MatFill</a></h2>
 			<pre>func MatFill(a [][]<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatFill fills a matrix with a single number s:
@@ -737,7 +737,7 @@ MatFill fills a matrix with a single number s:
 		
 			
 			
-			<h2 id="MatGetCol">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=18972:19024#L809">MatGetCol</a></h2>
+			<h2 id="MatGetCol">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=18978:19030#L809">MatGetCol</a></h2>
 			<pre>func MatGetCol(j <a href="/pkg/builtin/#int">int</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>) (col []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatGetCol returns a column of matrix a into vector col:
@@ -751,7 +751,7 @@ MatGetCol returns a column of matrix a into vector col:
 		
 			
 			
-			<h2 id="MatInv">func <a href="https://github.com/cpmech/gosl/blob/master/la/matinv.go?s=325:393#L4">MatInv</a></h2>
+			<h2 id="MatInv">func <a href="https://github.com/cpmech/gosl/blob/master/la/matinv.go?s=331:399#L4">MatInv</a></h2>
 			<pre>func MatInv(ai, a [][]<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (det <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 MatInv returns the matrix inverse of &#39;a&#39; in &#39;ai&#39;, in addition to the determinant of &#39;a&#39;
@@ -763,7 +763,7 @@ MatInv returns the matrix inverse of &#39;a&#39; in &#39;ai&#39;, in addition to
 		
 			
 			
-			<h2 id="MatInvG">func <a href="https://github.com/cpmech/gosl/blob/master/la/matinvg.go?s=1461:1517#L38">MatInvG</a></h2>
+			<h2 id="MatInvG">func <a href="https://github.com/cpmech/gosl/blob/master/la/matinvg.go?s=1467:1523#L38">MatInvG</a></h2>
 			<pre>func MatInvG(ai, a [][]<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 MatInvG returns the matrix inverse of &#39;a&#39; in &#39;ai&#39;. &#39;a&#39; can be of any size,
@@ -776,7 +776,7 @@ even non-square; in this case, the pseudo-inverse is returned
 		
 			
 			
-			<h2 id="MatMaxDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=18000:18051#L767">MatMaxDiff</a></h2>
+			<h2 id="MatMaxDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=18006:18057#L767">MatMaxDiff</a></h2>
 			<pre>func MatMaxDiff(a, b [][]<a href="/pkg/builtin/#float64">float64</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatMaxDiff returns the maximum difference between components of two matrices
@@ -788,7 +788,7 @@ MatMaxDiff returns the maximum difference between components of two matrices
 		
 			
 			
-			<h2 id="MatMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=24112:24168#L996">MatMul</a></h2>
+			<h2 id="MatMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=24118:24174#L996">MatMul</a></h2>
 			<pre>func MatMul(c [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatMul returns the matrix multiplication (scaled):
@@ -803,7 +803,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatMul3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=24518:24578#L1010">MatMul3</a></h2>
+			<h2 id="MatMul3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=24524:24584#L1010">MatMul3</a></h2>
 			<pre>func MatMul3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatMul3 returns the triple matrix multiplication:
@@ -818,7 +818,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatNormF">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=19555:19597#L836">MatNormF</a></h2>
+			<h2 id="MatNormF">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=19561:19603#L836">MatNormF</a></h2>
 			<pre>func MatNormF(a [][]<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatNormF returns the Frobenious norm of a matrix:
@@ -832,7 +832,7 @@ MatNormF returns the Frobenious norm of a matrix:
 		
 			
 			
-			<h2 id="MatNormI">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=20245:20287#L867">MatNormI</a></h2>
+			<h2 id="MatNormI">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=20251:20293#L867">MatNormI</a></h2>
 			<pre>func MatNormI(a [][]<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatNormI returns the infinite norm of a matrix:
@@ -846,7 +846,7 @@ MatNormI returns the infinite norm of a matrix:
 		
 			
 			
-			<h2 id="MatScale">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=16062:16102#L676">MatScale</a></h2>
+			<h2 id="MatScale">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=16068:16108#L676">MatScale</a></h2>
 			<pre>func MatScale(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatScale scales a matrix by a scalar s:
@@ -860,7 +860,7 @@ MatScale scales a matrix by a scalar s:
 		
 			
 			
-			<h2 id="MatSetDiag">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=17315:17356#L733">MatSetDiag</a></h2>
+			<h2 id="MatSetDiag">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=17321:17362#L733">MatSetDiag</a></h2>
 			<pre>func MatSetDiag(a [][]<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatSetDiag sets a diagonal matrix where the diagonal components are equal to s
@@ -872,7 +872,7 @@ MatSetDiag sets a diagonal matrix where the diagonal components are equal to s
 		
 			
 			
-			<h2 id="MatSvd">func <a href="https://github.com/cpmech/gosl/blob/master/la/matinvg.go?s=732:827#L20">MatSvd</a></h2>
+			<h2 id="MatSvd">func <a href="https://github.com/cpmech/gosl/blob/master/la/matinvg.go?s=738:833#L20">MatSvd</a></h2>
 			<pre>func MatSvd(u [][]<a href="/pkg/builtin/#float64">float64</a>, s []<a href="/pkg/builtin/#float64">float64</a>, vt [][]<a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 MatSvd returns the singular value decomposition of a matrix such that:
@@ -888,7 +888,7 @@ u[m][m], s[n], vt[n][n] must be pre-allocated
 		
 			
 			
-			<h2 id="MatToColMaj">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=292:338#L1">MatToColMaj</a></h2>
+			<h2 id="MatToColMaj">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=298:344#L1">MatToColMaj</a></h2>
 			<pre>func MatToColMaj(a [][]<a href="/pkg/builtin/#float64">float64</a>) (am []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatToColMaj returns a vector representation of a column-major matrix
@@ -900,7 +900,7 @@ MatToColMaj returns a vector representation of a column-major matrix
 		
 			
 			
-			<h2 id="MatTrMul3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25010:25072#L1026">MatTrMul3</a></h2>
+			<h2 id="MatTrMul3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25016:25078#L1026">MatTrMul3</a></h2>
 			<pre>func MatTrMul3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatTrMul3 returns the triple matrix multiplication with tranposed &#34;a&#34;:
@@ -915,7 +915,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatTrMulAdd3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25520:25585#L1042">MatTrMulAdd3</a></h2>
+			<h2 id="MatTrMulAdd3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25526:25591#L1042">MatTrMulAdd3</a></h2>
 			<pre>func MatTrMulAdd3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatTrMulAdd3 returns the triple matrix multiplication with addition and tranposed &#34;a&#34;:
@@ -930,7 +930,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatTrVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=22918:22987#L961">MatTrVecMul</a></h2>
+			<h2 id="MatTrVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=22924:22993#L961">MatTrVecMul</a></h2>
 			<pre>func MatTrVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatTrVecMult returns the matrix-vector multiplication with &#34;a&#34; transposed (scaled):
@@ -945,7 +945,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatTrVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=23330:23402#L973">MatTrVecMulAdd</a></h2>
+			<h2 id="MatTrVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=23336:23408#L973">MatTrVecMulAdd</a></h2>
 			<pre>func MatTrVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatTrVecMulAdd returns the matrix-vector multiplication with addition and &#34;a&#34; transposed (scaled):
@@ -960,7 +960,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=21767:21834#L927">MatVecMul</a></h2>
+			<h2 id="MatVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=21773:21840#L927">MatVecMul</a></h2>
 			<pre>func MatVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatVecMul returns the matrix-vector multiplication (scaled):
@@ -975,7 +975,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=22145:22215#L939">MatVecMulAdd</a></h2>
+			<h2 id="MatVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=22151:22221#L939">MatVecMulAdd</a></h2>
 			<pre>func MatVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatVecMulAdd returns the matrix-vector multiplication with addition (scaled):
@@ -990,7 +990,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatVecMulAddC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=22524:22607#L950">MatVecMulAddC</a></h2>
+			<h2 id="MatVecMulAddC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=22530:22613#L950">MatVecMulAddC</a></h2>
 			<pre>func MatVecMulAddC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#complex128">complex128</a>, a [][]<a href="/pkg/builtin/#complex128">complex128</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 MatVecMulAddC (complex) returns the matrix-vector multiplication with addition (scaled):
@@ -1005,7 +1005,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatVecMulCopyAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=23721:23820#L984">MatVecMulCopyAdd</a></h2>
+			<h2 id="MatVecMulCopyAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=23727:23826#L984">MatVecMulCopyAdd</a></h2>
 			<pre>func MatVecMulCopyAdd(w []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatVecMulCopyAdd returns the matrix-vector multiplication with copy and addition (scaled):
@@ -1020,7 +1020,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="PrintMat">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=902:970#L38">PrintMat</a></h2>
+			<h2 id="PrintMat">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=908:976#L38">PrintMat</a></h2>
 			<pre>func PrintMat(name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, format <a href="/pkg/builtin/#string">string</a>, numpy <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 PrintMat prints a dense matrix
@@ -1032,7 +1032,7 @@ PrintMat prints a dense matrix
 		
 			
 			
-			<h2 id="PrintMatC">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=2732:2813#L137">PrintMatC</a></h2>
+			<h2 id="PrintMatC">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=2832:2913#L141">PrintMatC</a></h2>
 			<pre>func PrintMatC(name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#complex128">complex128</a>, format, formatz <a href="/pkg/builtin/#string">string</a>, numpy <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 PrintMatC prints a matrix of complex numbers
@@ -1044,7 +1044,7 @@ PrintMatC prints a matrix of complex numbers
 		
 			
 			
-			<h2 id="PrintVec">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=461:527#L11">PrintVec</a></h2>
+			<h2 id="PrintVec">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=467:533#L11">PrintVec</a></h2>
 			<pre>func PrintVec(name <a href="/pkg/builtin/#string">string</a>, a []<a href="/pkg/builtin/#float64">float64</a>, format <a href="/pkg/builtin/#string">string</a>, numpy <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 PrintVec prints a vector
@@ -1056,7 +1056,7 @@ PrintVec prints a vector
 		
 			
 			
-			<h2 id="PrintVecC">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=2306:2385#L113">PrintVecC</a></h2>
+			<h2 id="PrintVecC">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=2406:2485#L117">PrintVecC</a></h2>
 			<pre>func PrintVecC(name <a href="/pkg/builtin/#string">string</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, format, formatz <a href="/pkg/builtin/#string">string</a>, numpy <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 PrintVecC prints a vector of complex numbers
@@ -1068,7 +1068,7 @@ PrintVecC prints a vector of complex numbers
 		
 			
 			
-			<h2 id="RCtoComplex">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=1099:1149#L35">RCtoComplex</a></h2>
+			<h2 id="RCtoComplex">func <a href="https://github.com/cpmech/gosl/blob/master/la/conversions.go?s=1105:1155#L35">RCtoComplex</a></h2>
 			<pre>func RCtoComplex(r, c []<a href="/pkg/builtin/#float64">float64</a>) (rc []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 RCtoComplex converts two slices into a slice of complex numbers
@@ -1080,7 +1080,7 @@ RCtoComplex converts two slices into a slice of complex numbers
 		
 			
 			
-			<h2 id="RunMumpsTestC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=13030:13125#L518">RunMumpsTestC</a></h2>
+			<h2 id="RunMumpsTestC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=13036:13131#L518">RunMumpsTestC</a></h2>
 			<pre>func RunMumpsTestC(t *<a href="#TripletC">TripletC</a>, tol_cmp <a href="/pkg/builtin/#float64">float64</a>, b, x_correct []<a href="/pkg/builtin/#complex128">complex128</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 			
@@ -1089,7 +1089,7 @@ RCtoComplex converts two slices into a slice of complex numbers
 		
 			
 			
-			<h2 id="RunMumpsTestR">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=12091:12182#L471">RunMumpsTestR</a></h2>
+			<h2 id="RunMumpsTestR">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=12097:12188#L471">RunMumpsTestR</a></h2>
 			<pre>func RunMumpsTestR(t *<a href="#Triplet">Triplet</a>, tol_cmp <a href="/pkg/builtin/#float64">float64</a>, b, x_correct []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 			
@@ -1098,7 +1098,7 @@ RCtoComplex converts two slices into a slice of complex numbers
 		
 			
 			
-			<h2 id="SPDsolve">func <a href="https://github.com/cpmech/gosl/blob/master/la/densesol.go?s=1071:1137#L29">SPDsolve</a></h2>
+			<h2 id="SPDsolve">func <a href="https://github.com/cpmech/gosl/blob/master/la/densesol.go?s=1077:1143#L29">SPDsolve</a></h2>
 			<pre>func SPDsolve(x []<a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SPDsolve (Symmetric/Positive-Definite) solves a small dense linear system A*x=b where
@@ -1114,7 +1114,7 @@ NOTE: this function uses Cholesky decomposition and should be used for small sys
 		
 			
 			
-			<h2 id="SmatCCMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=3790:3834#L190">SmatCCMatrix</a></h2>
+			<h2 id="SmatCCMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=3890:3934#L194">SmatCCMatrix</a></h2>
 			<pre>func SmatCCMatrix(fnkey <a href="/pkg/builtin/#string">string</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
 			<p>
 SmatCCMatrix writes a &#34;.smat&#34; file that can be visualised with vismatrix
@@ -1126,7 +1126,7 @@ SmatCCMatrix writes a &#34;.smat&#34; file that can be visualised with vismatrix
 		
 			
 			
-			<h2 id="SmatTriplet">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=3389:3431#L176">SmatTriplet</a></h2>
+			<h2 id="SmatTriplet">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=3489:3531#L180">SmatTriplet</a></h2>
 			<pre>func SmatTriplet(fnkey <a href="/pkg/builtin/#string">string</a>, t *<a href="#Triplet">Triplet</a>)</pre>
 			<p>
 SmatTriplet writes a &#34;.smat&#34; file that can be visualised with vismatrix
@@ -1138,7 +1138,7 @@ SmatTriplet writes a &#34;.smat&#34; file that can be visualised with vismatrix
 		
 			
 			
-			<h2 id="SpCheckDiag">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=5735:5769#L154">SpCheckDiag</a></h2>
+			<h2 id="SpCheckDiag">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=5741:5775#L154">SpCheckDiag</a></h2>
 			<pre>func SpCheckDiag(a *<a href="#CCMatrix">CCMatrix</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 SpCheckDiag checks if all elements on the diagonal of &#34;a&#34; are present.
@@ -1154,7 +1154,7 @@ SpCheckDiag checks if all elements on the diagonal of &#34;a&#34; are present.
 		
 			
 			
-			<h2 id="SpInitRc">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=6199:6262#L175">SpInitRc</a></h2>
+			<h2 id="SpInitRc">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=6205:6268#L175">SpInitRc</a></h2>
 			<pre>func SpInitRc(rcmatR *<a href="#CCMatrix">CCMatrix</a>, rcmatC *<a href="#CCMatrixC">CCMatrixC</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
 			<p>
 SpInitRc initialises two complex sparse matrices (residual correction) according to:
@@ -1170,7 +1170,7 @@ NOTE: &#34;a&#34; must include all diagonal elements
 		
 			
 			
-			<h2 id="SpInitSimilar">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=4430:4474#L107">SpInitSimilar</a></h2>
+			<h2 id="SpInitSimilar">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=4436:4480#L107">SpInitSimilar</a></h2>
 			<pre>func SpInitSimilar(b *<a href="#CCMatrix">CCMatrix</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
 			<p>
 SpInitSimilar initialises another matrix &#34;b&#34; with the same structure (Ap, Ai) of
@@ -1183,7 +1183,7 @@ sparse matrix &#34;a&#34;. The values Ax are not copied though.
 		
 			
 			
-			<h2 id="SpInitSimilarR2C">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=4886:4934#L122">SpInitSimilarR2C</a></h2>
+			<h2 id="SpInitSimilarR2C">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=4892:4940#L122">SpInitSimilarR2C</a></h2>
 			<pre>func SpInitSimilarR2C(b *<a href="#CCMatrixC">CCMatrixC</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
 			<p>
 SpInitSimilarR2C initialises another matrix &#34;b&#34; (complex) with the same structure (Ap, Ai) of
@@ -1196,7 +1196,7 @@ sparse matrix &#34;a&#34; (real). The values Ax are not copied though (Bx and Bz
 		
 			
 			
-			<h2 id="SpMatAddI">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=5291:5355#L138">SpMatAddI</a></h2>
+			<h2 id="SpMatAddI">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=5297:5361#L138">SpMatAddI</a></h2>
 			<pre>func SpMatAddI(r *<a href="#CCMatrix">CCMatrix</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, β <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SpMatAddI adds an identity matrix I to &#34;a&#34;, scaled by α and β according to:
@@ -1210,7 +1210,7 @@ SpMatAddI adds an identity matrix I to &#34;a&#34;, scaled by α and β accordin
 		
 			
 			
-			<h2 id="SpMatAddMat">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=9788:9883#L301">SpMatAddMat</a></h2>
+			<h2 id="SpMatAddMat">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=9794:9889#L301">SpMatAddMat</a></h2>
 			<pre>func SpMatAddMat(c *<a href="#CCMatrix">CCMatrix</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, β <a href="/pkg/builtin/#float64">float64</a>, b *<a href="#CCMatrix">CCMatrix</a>, a2c, b2c []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 SpMatAddMat adds two sparse matrices. The &#39;c&#39; matrix matrix and the &#39;a2c&#39; and &#39;b2c&#39; arrays
@@ -1227,7 +1227,7 @@ NOTE: this routine does not check for the correct sizes, since this is expect to
 		
 			
 			
-			<h2 id="SpMatAddMatC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=10522:10642#L319">SpMatAddMatC</a></h2>
+			<h2 id="SpMatAddMatC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=10528:10648#L319">SpMatAddMatC</a></h2>
 			<pre>func SpMatAddMatC(cC *<a href="#CCMatrixC">CCMatrixC</a>, cR *<a href="#CCMatrix">CCMatrix</a>, α, β, γ <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, μ <a href="/pkg/builtin/#float64">float64</a>, b *<a href="#CCMatrix">CCMatrix</a>, a2c, b2c []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 SpMatAddMatC adds two real sparse matrices with two sets of coefficients in such a way that
@@ -1247,7 +1247,7 @@ NOTE: the structure of cR and cC are the same and can be allocated with SpAllocM
 		
 			
 			
-			<h2 id="SpMatTrVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=1822:1891#L38">SpMatTrVecMul</a></h2>
+			<h2 id="SpMatTrVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=1828:1897#L38">SpMatTrVecMul</a></h2>
 			<pre>func SpMatTrVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SpMatTrVecMult returns the (sparse) matrix-vector multiplication with &#34;a&#34; transposed (scaled):
@@ -1262,7 +1262,7 @@ NOTE: dense vector v will be first initialised with zeros
 		
 			
 			
-			<h2 id="SpMatTrVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=2187:2259#L49">SpMatTrVecMulAdd</a></h2>
+			<h2 id="SpMatTrVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=2193:2265#L49">SpMatTrVecMulAdd</a></h2>
 			<pre>func SpMatTrVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SpMatTrVecMulAdd returns the (sparse) matrix-vector multiplication with addition and &#34;a&#34; transposed (scaled):
@@ -1276,7 +1276,7 @@ SpMatTrVecMulAdd returns the (sparse) matrix-vector multiplication with addition
 		
 			
 			
-			<h2 id="SpMatTrVecMulAddC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=3767:3847#L93">SpMatTrVecMulAddC</a></h2>
+			<h2 id="SpMatTrVecMulAddC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=3773:3853#L93">SpMatTrVecMulAddC</a></h2>
 			<pre>func SpMatTrVecMulAddC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrixC">CCMatrixC</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 SpMatTrVecMulAddC returns the (sparse/complex) matrix-vector multiplication with addition and &#34;a&#34; transposed (scaled):
@@ -1290,7 +1290,7 @@ SpMatTrVecMulAddC returns the (sparse/complex) matrix-vector multiplication with
 		
 			
 			
-			<h2 id="SpMatTrVecMulC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=3366:3443#L82">SpMatTrVecMulC</a></h2>
+			<h2 id="SpMatTrVecMulC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=3372:3449#L82">SpMatTrVecMulC</a></h2>
 			<pre>func SpMatTrVecMulC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrixC">CCMatrixC</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 SpMatTrVecMultC returns the (sparse/complex) matrix-vector multiplication with &#34;a&#34; transposed (scaled):
@@ -1305,7 +1305,7 @@ NOTE: dense vector v will be first initialised with zeros
 		
 			
 			
-			<h2 id="SpMatVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=708:775#L6">SpMatVecMul</a></h2>
+			<h2 id="SpMatVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=714:781#L6">SpMatVecMul</a></h2>
 			<pre>func SpMatVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SpMatVecMul returns the (sparse) matrix-vector multiplication (scaled):
@@ -1320,7 +1320,7 @@ NOTE: dense vector v will be first initialised with zeros
 		
 			
 			
-			<h2 id="SpMatVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=1042:1112#L17">SpMatVecMulAdd</a></h2>
+			<h2 id="SpMatVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=1048:1118#L17">SpMatVecMulAdd</a></h2>
 			<pre>func SpMatVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SpMatVecMulAdd returns the (sparse) matrix-vector multiplication with addition (scaled):
@@ -1334,7 +1334,7 @@ SpMatVecMulAdd returns the (sparse) matrix-vector multiplication with addition (
 		
 			
 			
-			<h2 id="SpMatVecMulAddC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=2934:3012#L71">SpMatVecMulAddC</a></h2>
+			<h2 id="SpMatVecMulAddC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=2940:3018#L71">SpMatVecMulAddC</a></h2>
 			<pre>func SpMatVecMulAddC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrixC">CCMatrixC</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 SpMatVecMulAddC returns the (sparse/complex) matrix-vector multiplication with addition (scaled):
@@ -1348,7 +1348,7 @@ SpMatVecMulAddC returns the (sparse/complex) matrix-vector multiplication with a
 		
 			
 			
-			<h2 id="SpMatVecMulAddX">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=1389:1485#L27">SpMatVecMulAddX</a></h2>
+			<h2 id="SpMatVecMulAddX">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=1395:1491#L27">SpMatVecMulAddX</a></h2>
 			<pre>func SpMatVecMulAddX(v []<a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>, α <a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SpMatVecMulAddX returns the (sparse) matrix-vector multiplication with addition (scaled/extended):
@@ -1362,7 +1362,7 @@ SpMatVecMulAddX returns the (sparse) matrix-vector multiplication with addition 
 		
 			
 			
-			<h2 id="SpMatVecMulC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=2564:2639#L60">SpMatVecMulC</a></h2>
+			<h2 id="SpMatVecMulC">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=2570:2645#L60">SpMatVecMulC</a></h2>
 			<pre>func SpMatVecMulC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrixC">CCMatrixC</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 SpMatVecMulC returns the (sparse/complex) matrix-vector multiplication (scaled):
@@ -1377,7 +1377,7 @@ NOTE: dense vector v will be first initialised with zeros
 		
 			
 			
-			<h2 id="SpSetRc">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=6961:7043#L199">SpSetRc</a></h2>
+			<h2 id="SpSetRc">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=6967:7049#L199">SpSetRc</a></h2>
 			<pre>func SpSetRc(rcmatR *<a href="#CCMatrix">CCMatrix</a>, rcmatC *<a href="#CCMatrixC">CCMatrixC</a>, α, β, γ <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
 			<p>
 SpSetRc sets the values within two complex sparse matrices (residual correction) according to:
@@ -1393,7 +1393,7 @@ NOTE: &#34;a&#34; must include all diagonal elements
 		
 			
 			
-			<h2 id="SpTriAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=11143:11216#L338">SpTriAdd</a></h2>
+			<h2 id="SpTriAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=11149:11222#L338">SpTriAdd</a></h2>
 			<pre>func SpTriAdd(c *<a href="#Triplet">Triplet</a>, α <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#Triplet">Triplet</a>, β <a href="/pkg/builtin/#float64">float64</a>, b *<a href="#Triplet">Triplet</a>)</pre>
 			<p>
 SpTriAdd adds two matrices in Triplet format:
@@ -1409,7 +1409,7 @@ NOTE: the output &#39;c&#39; triplet must be able to hold all nonzeros of &#39;a
 		
 			
 			
-			<h2 id="SpTriAddR2C">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=11635:11716#L353">SpTriAddR2C</a></h2>
+			<h2 id="SpTriAddR2C">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=11641:11722#L353">SpTriAddR2C</a></h2>
 			<pre>func SpTriAddR2C(c *<a href="#TripletC">TripletC</a>, α, β <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#Triplet">Triplet</a>, μ <a href="/pkg/builtin/#float64">float64</a>, b *<a href="#Triplet">Triplet</a>)</pre>
 			<p>
 SpTriAddR2C adds two real matrices in Triplet format generating a complex triplet
@@ -1426,7 +1426,7 @@ NOTE: the output &#39;c&#39; triplet must be able to hold all nonzeros of &#39;a
 		
 			
 			
-			<h2 id="SpTriMatTrVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=12101:12160#L366">SpTriMatTrVecMul</a></h2>
+			<h2 id="SpTriMatTrVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=12107:12166#L366">SpTriMatTrVecMul</a></h2>
 			<pre>func SpTriMatTrVecMul(y []<a href="/pkg/builtin/#float64">float64</a>, a *<a href="#Triplet">Triplet</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SpTriMatTrVecMul returns the matrix-vector multiplication with transposed matrix a in
@@ -1441,7 +1441,7 @@ triplet format and two dense vectors x and y
 		
 			
 			
-			<h2 id="SpTriSetDiag">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=7384:7431#L216">SpTriSetDiag</a></h2>
+			<h2 id="SpTriSetDiag">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=7390:7437#L216">SpTriSetDiag</a></h2>
 			<pre>func SpTriSetDiag(a *<a href="#Triplet">Triplet</a>, n <a href="/pkg/builtin/#int">int</a>, v <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SpTriSetDiag sets a (n x n) real triplet with diagonal values &#39;v&#39;
@@ -1453,7 +1453,7 @@ SpTriSetDiag sets a (n x n) real triplet with diagonal values &#39;v&#39;
 		
 			
 			
-			<h2 id="SpTriSumToRoot">func <a href="https://github.com/cpmech/gosl/blob/master/la/mpi_sparsela.go?s=388:419#L5">SpTriSumToRoot</a></h2>
+			<h2 id="SpTriSumToRoot">func <a href="https://github.com/cpmech/gosl/blob/master/la/mpi_sparsela.go?s=394:425#L5">SpTriSumToRoot</a></h2>
 			<pre>func SpTriSumToRoot(J *<a href="#Triplet">Triplet</a>)</pre>
 			<p>
 SpTriSumToRoot join (MPI) parallel triplets to root (Rank == 0) processor.
@@ -1467,7 +1467,7 @@ SpTriSumToRoot join (MPI) parallel triplets to root (Rank == 0) processor.
 		
 			
 			
-			<h2 id="VecAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=4520:4569#L180">VecAdd</a></h2>
+			<h2 id="VecAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=4526:4575#L180">VecAdd</a></h2>
 			<pre>func VecAdd(a []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecAdd adds to vector &#34;a&#34;, another vector &#34;b&#34; (scaled):
@@ -1481,7 +1481,7 @@ VecAdd adds to vector &#34;a&#34;, another vector &#34;b&#34; (scaled):
 		
 			
 			
-			<h2 id="VecAdd2">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=5053:5128#L205">VecAdd2</a></h2>
+			<h2 id="VecAdd2">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=5059:5134#L205">VecAdd2</a></h2>
 			<pre>func VecAdd2(u []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecAdd2 adds two vectors (scaled):
@@ -1495,7 +1495,7 @@ VecAdd2 adds two vectors (scaled):
 		
 			
 			
-			<h2 id="VecCopy">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=3978:4028#L155">VecCopy</a></h2>
+			<h2 id="VecCopy">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=3984:4034#L155">VecCopy</a></h2>
 			<pre>func VecCopy(a []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecCopy copies a vector &#34;b&#34; into vector &#34;a&#34; (scaled):
@@ -1509,7 +1509,7 @@ VecCopy copies a vector &#34;b&#34; into vector &#34;a&#34; (scaled):
 		
 			
 			
-			<h2 id="VecDot">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=3368:3409#L127">VecDot</a></h2>
+			<h2 id="VecDot">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=3374:3415#L127">VecDot</a></h2>
 			<pre>func VecDot(u, v []<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecDot returns the dot product between two vectors:
@@ -1523,7 +1523,7 @@ VecDot returns the dot product between two vectors:
 		
 			
 			
-			<h2 id="VecFill">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=1095:1131#L19">VecFill</a></h2>
+			<h2 id="VecFill">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=1101:1137#L19">VecFill</a></h2>
 			<pre>func VecFill(v []<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecFill fills a vector with a single number s:
@@ -1537,7 +1537,7 @@ VecFill fills a vector with a single number s:
 		
 			
 			
-			<h2 id="VecFillC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=1608:1651#L44">VecFillC</a></h2>
+			<h2 id="VecFillC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=1614:1657#L44">VecFillC</a></h2>
 			<pre>func VecFillC(v []<a href="/pkg/builtin/#complex128">complex128</a>, s <a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 VecFillC fills a complex vector with a single number s:
@@ -1551,7 +1551,7 @@ VecFillC fills a complex vector with a single number s:
 		
 			
 			
-			<h2 id="VecLargest">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=7912:7971#L344">VecLargest</a></h2>
+			<h2 id="VecLargest">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=7918:7977#L344">VecLargest</a></h2>
 			<pre>func VecLargest(u []<a href="/pkg/builtin/#float64">float64</a>, den <a href="/pkg/builtin/#float64">float64</a>) (largest <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecLargest returns the largest component of a vector, normalised by den
@@ -1563,7 +1563,7 @@ VecLargest returns the largest component of a vector, normalised by den
 		
 			
 			
-			<h2 id="VecMax">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=6267:6305#L264">VecMax</a></h2>
+			<h2 id="VecMax">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=6273:6311#L264">VecMax</a></h2>
 			<pre>func VecMax(v []<a href="/pkg/builtin/#float64">float64</a>) (max <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMax returns the maximum component of a vector
@@ -1575,7 +1575,7 @@ VecMax returns the maximum component of a vector
 		
 			
 			
-			<h2 id="VecMaxDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=8765:8814#L381">VecMaxDiff</a></h2>
+			<h2 id="VecMaxDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=8771:8820#L381">VecMaxDiff</a></h2>
 			<pre>func VecMaxDiff(a, b []<a href="/pkg/builtin/#float64">float64</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMaxDiff returns the maximum difference between components of two vectors
@@ -1587,7 +1587,7 @@ VecMaxDiff returns the maximum difference between components of two vectors
 		
 			
 			
-			<h2 id="VecMaxDiffC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=9631:9684#L418">VecMaxDiffC</a></h2>
+			<h2 id="VecMaxDiffC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=9637:9690#L418">VecMaxDiffC</a></h2>
 			<pre>func VecMaxDiffC(a, b []<a href="/pkg/builtin/#complex128">complex128</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMaxDiffC returns the maximum difference between components of two complex vectors
@@ -1599,7 +1599,7 @@ VecMaxDiffC returns the maximum difference between components of two complex vec
 		
 			
 			
-			<h2 id="VecMin">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=5594:5632#L229">VecMin</a></h2>
+			<h2 id="VecMin">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=5600:5638#L229">VecMin</a></h2>
 			<pre>func VecMin(v []<a href="/pkg/builtin/#float64">float64</a>) (min <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMin returns the minimum component of a vector
@@ -1611,7 +1611,7 @@ VecMin returns the minimum component of a vector
 		
 			
 			
-			<h2 id="VecMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=6948:6994#L299">VecMinMax</a></h2>
+			<h2 id="VecMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=6954:7000#L299">VecMinMax</a></h2>
 			<pre>func VecMinMax(v []<a href="/pkg/builtin/#float64">float64</a>) (min, max <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMinMax returns the min and max components of a vector
@@ -1623,7 +1623,7 @@ VecMinMax returns the min and max components of a vector
 		
 			
 			
-			<h2 id="VecNorm">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2101:2140#L69">VecNorm</a></h2>
+			<h2 id="VecNorm">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2107:2146#L69">VecNorm</a></h2>
 			<pre>func VecNorm(v []<a href="/pkg/builtin/#float64">float64</a>) (nrm <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecNorm returns the Euclidian norm of a vector:
@@ -1637,7 +1637,7 @@ VecNorm returns the Euclidian norm of a vector:
 		
 			
 			
-			<h2 id="VecNormDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2718:2764#L98">VecNormDiff</a></h2>
+			<h2 id="VecNormDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2724:2770#L98">VecNormDiff</a></h2>
 			<pre>func VecNormDiff(u, v []<a href="/pkg/builtin/#float64">float64</a>) (nrm <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecNormDiff returns the Euclidian norm of the difference:
@@ -1651,7 +1651,7 @@ VecNormDiff returns the Euclidian norm of the difference:
 		
 			
 			
-			<h2 id="VecOuterAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25975:26034#L1057">VecOuterAdd</a></h2>
+			<h2 id="VecOuterAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25981:26040#L1057">VecOuterAdd</a></h2>
 			<pre>func VecOuterAdd(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, u, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecOuterAdd returns the outer product between two vectors, with addition (scaled)
@@ -1666,7 +1666,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="VecRms">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=12220:12258#L523">VecRms</a></h2>
+			<h2 id="VecRms">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=12226:12264#L523">VecRms</a></h2>
 			<pre>func VecRms(u []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecRms returns the root-mean-square of a vector u:
@@ -1680,7 +1680,7 @@ VecRms returns the root-mean-square of a vector u:
 		
 			
 			
-			<h2 id="VecRmsErr">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=12942:13016#L553">VecRmsErr</a></h2>
+			<h2 id="VecRmsErr">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=12948:13022#L553">VecRmsErr</a></h2>
 			<pre>func VecRmsErr(u []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecRmsErr returns the root-mean-square of a vector u normalised by scal[i] = Atol + Rtol * |vi|
@@ -1695,7 +1695,7 @@ scal[i] := Atol + Rtol * |v[i]|
 		
 			
 			
-			<h2 id="VecRmsError">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=13842:13921#L586">VecRmsError</a></h2>
+			<h2 id="VecRmsError">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=13848:13927#L586">VecRmsError</a></h2>
 			<pre>func VecRmsError(u, w []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecRmsError returns the root-mean-square of a vector u normalised by scal[i] = Atol + Rtol * |vi|
@@ -1710,7 +1710,7 @@ scal[i] := Atol + Rtol * |v[i]|
 		
 			
 			
-			<h2 id="VecScale">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=11019:11080#L473">VecScale</a></h2>
+			<h2 id="VecScale">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=11025:11086#L473">VecScale</a></h2>
 			<pre>func VecScale(res []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecScale scales vector &#34;v&#34; using an absolute value (Atol) and a multiplier (Rtol)
@@ -1724,7 +1724,7 @@ VecScale scales vector &#34;v&#34; using an absolute value (Atol) and a multipli
 		
 			
 			
-			<h2 id="VecScaleAbs">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=11616:11680#L498">VecScaleAbs</a></h2>
+			<h2 id="VecScaleAbs">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=11622:11686#L498">VecScaleAbs</a></h2>
 			<pre>func VecScaleAbs(res []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecScaleAbs scales vector abs(v) using an absolute value (Atol) and a multiplier (Rtol)
@@ -1738,7 +1738,7 @@ VecScaleAbs scales vector abs(v) using an absolute value (Atol) and a multiplier
 		
 			
 			
-			<h2 id="WriteSmat">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=1495:1551#L78">WriteSmat</a></h2>
+			<h2 id="WriteSmat">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=1595:1651#L82">WriteSmat</a></h2>
 			<pre>func WriteSmat(fnkey <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 WriteSmat writes a smat matrix for vismatrix
@@ -1751,7 +1751,7 @@ WriteSmat writes a smat matrix for vismatrix
 		
 			
 			
-			<h2 id="CCMatrix">type <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=738:961#L9">CCMatrix</a></h2>
+			<h2 id="CCMatrix">type <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=744:967#L9">CCMatrix</a></h2>
 			<pre>type CCMatrix struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -1770,7 +1770,7 @@ CCMatrix represents a sparse matrix using the so-called &#34;column-compressed f
 
 			
 				
-				<h3 id="SpAllocMatAddMat">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=8073:8140#L231">SpAllocMatAddMat</a></h3>
+				<h3 id="SpAllocMatAddMat">func <a href="https://github.com/cpmech/gosl/blob/master/la/sparsela.go?s=8079:8146#L231">SpAllocMatAddMat</a></h3>
 				<pre>func SpAllocMatAddMat(a, b *<a href="#CCMatrix">CCMatrix</a>) (c *<a href="#CCMatrix">CCMatrix</a>, a2c, b2c []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 SpAllocMatAddMat allocates a matrix &#39;c&#39; to hold the result of the addition of &#39;a&#39; and &#39;b&#39;.
@@ -1786,7 +1786,7 @@ b2c maps &#39;k&#39; in &#39;b&#39; to &#39;k&#39; in &#39;c&#39;: len(b2c) = b.
 
 			
 				
-				<h3 id="CCMatrix.ToDense">func (*CCMatrix) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4628:4668#L132">ToDense</a></h3>
+				<h3 id="CCMatrix.ToDense">func (*CCMatrix) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4634:4674#L132">ToDense</a></h3>
 				<pre>func (a *<a href="#CCMatrix">CCMatrix</a>) ToDense() [][]<a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 ToDense converts a column-compressed matrix to dense form
@@ -1799,7 +1799,7 @@ ToDense converts a column-compressed matrix to dense form
 		
 			
 			
-			<h2 id="CCMatrixC">type <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=3174:3445#L80">CCMatrixC</a></h2>
+			<h2 id="CCMatrixC">type <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=3180:3451#L80">CCMatrixC</a></h2>
 			<pre>type CCMatrixC struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -1821,7 +1821,7 @@ float64 representing compressed numbers
 
 			
 				
-				<h3 id="CCMatrixC.ToDense">func (*CCMatrixC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4944:4988#L146">ToDense</a></h3>
+				<h3 id="CCMatrixC.ToDense">func (*CCMatrixC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4950:4994#L146">ToDense</a></h3>
 				<pre>func (a *<a href="#CCMatrixC">CCMatrixC</a>) ToDense() [][]<a href="/pkg/builtin/#complex128">complex128</a></pre>
 				<p>
 ToDense converts a column-compressed matrix (complex) to dense form
@@ -1834,7 +1834,7 @@ ToDense converts a column-compressed matrix (complex) to dense form
 		
 			
 			
-			<h2 id="LinSol">type <a href="https://github.com/cpmech/gosl/blob/master/la/linsol.go?s=234:881#L3">LinSol</a></h2>
+			<h2 id="LinSol">type <a href="https://github.com/cpmech/gosl/blob/master/la/linsol.go?s=240:887#L3">LinSol</a></h2>
 			<pre>type LinSol interface {
     InitR(tR *<a href="#Triplet">Triplet</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a>  <span class="comment">// init for Real solution</span>
     InitC(tC *<a href="#TripletC">TripletC</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// init for Complex solution</span>
@@ -1856,7 +1856,7 @@ ToDense converts a column-compressed matrix (complex) to dense form
 
 			
 				
-				<h3 id="GetSolver">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol.go?s=1099:1133#L17">GetSolver</a></h3>
+				<h3 id="GetSolver">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol.go?s=1105:1139#L17">GetSolver</a></h3>
 				<pre>func GetSolver(name <a href="/pkg/builtin/#string">string</a>) <a href="#LinSol">LinSol</a></pre>
 				<p>
 GetSolver returns a linear solver by name. e.g. &#34;umfpack&#34; or &#34;mumps&#34;
@@ -1870,7 +1870,7 @@ GetSolver returns a linear solver by name. e.g. &#34;umfpack&#34; or &#34;mumps&
 		
 			
 			
-			<h2 id="LinSolMumps">type <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=507:656#L17">LinSolMumps</a></h2>
+			<h2 id="LinSolMumps">type <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=513:662#L17">LinSolMumps</a></h2>
 			<pre>type LinSolMumps struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -1891,7 +1891,7 @@ LinSolMumps holds MUMPS data
 
 			
 				
-				<h3 id="LinSolMumps.Clean">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=9966:9995#L375">Clean</a></h3>
+				<h3 id="LinSolMumps.Clean">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=9972:10001#L375">Clean</a></h3>
 				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) Clean()</pre>
 				<p>
 Clean deletes temporary data structures
@@ -1902,7 +1902,7 @@ Clean deletes temporary data structures
 				
 			
 				
-				<h3 id="LinSolMumps.Fact">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=6512:6552#L221">Fact</a></h3>
+				<h3 id="LinSolMumps.Fact">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=6518:6558#L221">Fact</a></h3>
 				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) Fact() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Fact performs symbolic/numeric factorisation. This method also converts the triplet form
@@ -1914,7 +1914,7 @@ to the column-compressed form, including the summation of duplicated entries
 				
 			
 				
-				<h3 id="LinSolMumps.InitC">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=3543:3629#L121">InitC</a></h3>
+				<h3 id="LinSolMumps.InitC">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=3549:3635#L121">InitC</a></h3>
 				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) InitC(tC *<a href="#TripletC">TripletC</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 InitC initialises a LinSolMumps data structure for Complex systems. It also performs some initial analyses.
@@ -1925,7 +1925,7 @@ InitC initialises a LinSolMumps data structure for Complex systems. It also perf
 				
 			
 				
-				<h3 id="LinSolMumps.InitR">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=875:960#L32">InitR</a></h3>
+				<h3 id="LinSolMumps.InitR">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=881:966#L32">InitR</a></h3>
 				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) InitR(tR *<a href="#Triplet">Triplet</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 InitR initialises a LinSolMumps data structure for Real systems. It also performs some initial analyses.
@@ -1936,7 +1936,7 @@ InitR initialises a LinSolMumps data structure for Real systems. It also perform
 				
 			
 				
-				<h3 id="LinSolMumps.SetOrdScal">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=10549:10619#L403">SetOrdScal</a></h3>
+				<h3 id="LinSolMumps.SetOrdScal">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=10555:10625#L403">SetOrdScal</a></h3>
 				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) SetOrdScal(ordering, scaling <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SetOrdScal sets the ordering and scaling methods for MUMPS
@@ -1947,7 +1947,7 @@ SetOrdScal sets the ordering and scaling methods for MUMPS
 				
 			
 				
-				<h3 id="LinSolMumps.SolveC">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=8657:8743#L313">SolveC</a></h3>
+				<h3 id="LinSolMumps.SolveC">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=8663:8749#L313">SolveC</a></h3>
 				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) SolveC(xR, xC, bR, bC []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SolveC solves the linear Complex system A.x = b
@@ -1961,7 +1961,7 @@ SolveC solves the linear Complex system A.x = b
 				
 			
 				
-				<h3 id="LinSolMumps.SolveR">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=7535:7613#L264">SolveR</a></h3>
+				<h3 id="LinSolMumps.SolveR">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=7541:7619#L264">SolveR</a></h3>
 				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) SolveR(xR, bR []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SolveR solves the linear Real system A.x = b
@@ -1977,7 +1977,7 @@ SolveR solves the linear Real system A.x = b
 		
 			
 			
-			<h2 id="LinSolUmfpack">type <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=762:996#L22">LinSolUmfpack</a></h2>
+			<h2 id="LinSolUmfpack">type <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=768:1002#L22">LinSolUmfpack</a></h2>
 			<pre>type LinSolUmfpack struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -1998,7 +1998,7 @@ LinSolUmfpack holds UMFPACK data
 
 			
 				
-				<h3 id="LinSolUmfpack.Clean">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=7293:7324#L270">Clean</a></h3>
+				<h3 id="LinSolUmfpack.Clean">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=7299:7330#L270">Clean</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) Clean()</pre>
 				<p>
 Clean deletes temporary data structures
@@ -2009,7 +2009,7 @@ Clean deletes temporary data structures
 				
 			
 				
-				<h3 id="LinSolUmfpack.Fact">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=3637:3679#L133">Fact</a></h3>
+				<h3 id="LinSolUmfpack.Fact">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=3643:3685#L133">Fact</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) Fact() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Fact performs symbolic/numeric factorisation. This method also converts the triplet form
@@ -2021,7 +2021,7 @@ to the column-compressed form, including the summation of duplicated entries
 				
 			
 				
-				<h3 id="LinSolUmfpack.InitC">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=2260:2348#L85">InitC</a></h3>
+				<h3 id="LinSolUmfpack.InitC">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=2266:2354#L85">InitC</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) InitC(tC *<a href="#TripletC">TripletC</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 InitC initialises a LinSolUmfpack data structure for Complex systems. It also performs some initial analyses.
@@ -2032,7 +2032,7 @@ InitC initialises a LinSolUmfpack data structure for Complex systems. It also pe
 				
 			
 				
-				<h3 id="LinSolUmfpack.InitR">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=1221:1308#L45">InitR</a></h3>
+				<h3 id="LinSolUmfpack.InitR">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=1227:1314#L45">InitR</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) InitR(tR *<a href="#Triplet">Triplet</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 InitR initialises a LinSolUmfpack data structure for Real systems. It also performs some initial analyses.
@@ -2043,7 +2043,7 @@ InitR initialises a LinSolUmfpack data structure for Real systems. It also perfo
 				
 			
 				
-				<h3 id="LinSolUmfpack.SetOrdScal">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=7892:7964#L298">SetOrdScal</a></h3>
+				<h3 id="LinSolUmfpack.SetOrdScal">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=7898:7970#L298">SetOrdScal</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SetOrdScal(ordering, scaling <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SetOrdScal sets the ordering and scaling methods for MUMPS
@@ -2054,7 +2054,7 @@ SetOrdScal sets the ordering and scaling methods for MUMPS
 				
 			
 				
-				<h3 id="LinSolUmfpack.SolveC">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=6376:6456#L233">SolveC</a></h3>
+				<h3 id="LinSolUmfpack.SolveC">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=6382:6462#L233">SolveC</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SolveC(xR, xC, bR, bC []<a href="/pkg/builtin/#float64">float64</a>, dummy <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SolveC solves the linear Complex system A.x = b
@@ -2065,7 +2065,7 @@ SolveC solves the linear Complex system A.x = b
 				
 			
 				
-				<h3 id="LinSolUmfpack.SolveR">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=5557:5629#L198">SolveR</a></h3>
+				<h3 id="LinSolUmfpack.SolveR">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=5563:5635#L198">SolveR</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SolveR(xR, bR []<a href="/pkg/builtin/#float64">float64</a>, dummy <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SolveR solves the linear Real system A.x = b
@@ -2078,7 +2078,7 @@ SolveR solves the linear Real system A.x = b
 		
 			
 			
-			<h2 id="Triplet">type <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=346:649#L1">Triplet</a></h2>
+			<h2 id="Triplet">type <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=352:655#L1">Triplet</a></h2>
 			<pre>type Triplet struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -2098,7 +2098,7 @@ of this matrix are stored directly.
 
 			
 				
-				<h3 id="ReadSmat">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=1916:1949#L96">ReadSmat</a></h3>
+				<h3 id="ReadSmat">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=2016:2049#L100">ReadSmat</a></h3>
 				<pre>func ReadSmat(fn <a href="/pkg/builtin/#string">string</a>) *<a href="#Triplet">Triplet</a></pre>
 				<p>
 ReadSmat reads a smat matrix back
@@ -2110,7 +2110,7 @@ ReadSmat reads a smat matrix back
 
 			
 				
-				<h3 id="Triplet.Init">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=1041:1078#L17">Init</a></h3>
+				<h3 id="Triplet.Init">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=1047:1084#L17">Init</a></h3>
 				<pre>func (t *<a href="#Triplet">Triplet</a>) Init(m, n, max <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Init allocates all memory required to hold a sparse matrix in triplet form
@@ -2121,7 +2121,7 @@ Init allocates all memory required to hold a sparse matrix in triplet form
 				
 			
 				
-				<h3 id="Triplet.Len">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=2310:2337#L58">Len</a></h3>
+				<h3 id="Triplet.Len">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=2316:2343#L58">Len</a></h3>
 				<pre>func (t *<a href="#Triplet">Triplet</a>) Len() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 Len returns the number of items just inserted in the triplet
@@ -2132,7 +2132,7 @@ Len returns the number of items just inserted in the triplet
 				
 			
 				
-				<h3 id="Triplet.Max">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=2436:2463#L63">Max</a></h3>
+				<h3 id="Triplet.Max">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=2442:2469#L63">Max</a></h3>
 				<pre>func (t *<a href="#Triplet">Triplet</a>) Max() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 Max returns the maximum number of items that can be inserted in the triplet
@@ -2143,7 +2143,7 @@ Max returns the maximum number of items that can be inserted in the triplet
 				
 			
 				
-				<h3 id="Triplet.Put">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=1271:1313#L25">Put</a></h3>
+				<h3 id="Triplet.Put">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=1277:1319#L25">Put</a></h3>
 				<pre>func (t *<a href="#Triplet">Triplet</a>) Put(i, j <a href="/pkg/builtin/#int">int</a>, x <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Put inserts an element to a pre-allocated (with Init) triplet matrix
@@ -2154,7 +2154,7 @@ Put inserts an element to a pre-allocated (with Init) triplet matrix
 				
 			
 				
-				<h3 id="Triplet.PutMatAndMatT">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=1822:1865#L41">PutMatAndMatT</a></h3>
+				<h3 id="Triplet.PutMatAndMatT">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=1828:1871#L41">PutMatAndMatT</a></h3>
 				<pre>func (o *<a href="#Triplet">Triplet</a>) PutMatAndMatT(a *<a href="#Triplet">Triplet</a>)</pre>
 				<p>
 PutMatAndMatT adds the content of a matrix &#34;a&#34; and its transpose &#34;at&#34; to triplet &#34;o&#34;
@@ -2173,7 +2173,7 @@ ex:    0   1   2   3   4   5
 				
 			
 				
-				<h3 id="Triplet.Start">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=2204:2229#L53">Start</a></h3>
+				<h3 id="Triplet.Start">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=2210:2235#L53">Start</a></h3>
 				<pre>func (t *<a href="#Triplet">Triplet</a>) Start()</pre>
 				<p>
 Start (re-)starts the insertion index within &#34;t&#34; in order to allow (re-)insertion of
@@ -2185,7 +2185,7 @@ items using the Put method
 				
 			
 				
-				<h3 id="Triplet.ToMatrix">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat_umfpack.go?s=1116:1165#L26">ToMatrix</a></h3>
+				<h3 id="Triplet.ToMatrix">func (*Triplet) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat_umfpack.go?s=1122:1171#L26">ToMatrix</a></h3>
 				<pre>func (t *<a href="#Triplet">Triplet</a>) ToMatrix(a *<a href="#CCMatrix">CCMatrix</a>) *<a href="#CCMatrix">CCMatrix</a></pre>
 				<p>
 ToMatrix converts a sparse matrix in triplet form to column-compressed form using Umfpack&#39;s
@@ -2205,7 +2205,7 @@ OUTPUT:
 		
 			
 			
-			<h2 id="TripletC">type <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=2599:3051#L69">TripletC</a></h2>
+			<h2 id="TripletC">type <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=2605:3057#L69">TripletC</a></h2>
 			<pre>type TripletC struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -2227,7 +2227,7 @@ float64 representing complex numbers
 
 			
 				
-				<h3 id="TripletC.Init">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=3535:3592#L89">Init</a></h3>
+				<h3 id="TripletC.Init">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=3541:3598#L89">Init</a></h3>
 				<pre>func (t *<a href="#TripletC">TripletC</a>) Init(m, n, max <a href="/pkg/builtin/#int">int</a>, xzmonolithic <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Init allocates all memory required to hold a sparse matrix in triplet (complex) form
@@ -2238,7 +2238,7 @@ Init allocates all memory required to hold a sparse matrix in triplet (complex) 
 				
 			
 				
-				<h3 id="TripletC.Len">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4384:4412#L122">Len</a></h3>
+				<h3 id="TripletC.Len">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4390:4418#L122">Len</a></h3>
 				<pre>func (t *<a href="#TripletC">TripletC</a>) Len() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 Len returns the number of items just inserted in the complex triplet
@@ -2249,7 +2249,7 @@ Len returns the number of items just inserted in the complex triplet
 				
 			
 				
-				<h3 id="TripletC.Max">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4519:4547#L127">Max</a></h3>
+				<h3 id="TripletC.Max">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4525:4553#L127">Max</a></h3>
 				<pre>func (t *<a href="#TripletC">TripletC</a>) Max() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 Max returns the maximum number of items that can be inserted in the complex triplet
@@ -2260,7 +2260,7 @@ Max returns the maximum number of items that can be inserted in the complex trip
 				
 			
 				
-				<h3 id="TripletC.Put">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=3889:3935#L102">Put</a></h3>
+				<h3 id="TripletC.Put">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=3895:3941#L102">Put</a></h3>
 				<pre>func (t *<a href="#TripletC">TripletC</a>) Put(i, j <a href="/pkg/builtin/#int">int</a>, x, z <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Put inserts an element to a pre-allocated (with Init) triplet (complex) matrix
@@ -2271,7 +2271,7 @@ Put inserts an element to a pre-allocated (with Init) triplet (complex) matrix
 				
 			
 				
-				<h3 id="TripletC.Start">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4269:4295#L117">Start</a></h3>
+				<h3 id="TripletC.Start">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat.go?s=4275:4301#L117">Start</a></h3>
 				<pre>func (t *<a href="#TripletC">TripletC</a>) Start()</pre>
 				<p>
 Start (re-)starts the insertion index within &#34;t&#34; in order to allow (re-)insertion of
@@ -2283,7 +2283,7 @@ items using the Put method
 				
 			
 				
-				<h3 id="TripletC.ToMatrix">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat_umfpack.go?s=2285:2337#L57">ToMatrix</a></h3>
+				<h3 id="TripletC.ToMatrix">func (*TripletC) <a href="https://github.com/cpmech/gosl/blob/master/la/sparsemat_umfpack.go?s=2291:2343#L57">ToMatrix</a></h3>
 				<pre>func (t *<a href="#TripletC">TripletC</a>) ToMatrix(a *<a href="#CCMatrixC">CCMatrixC</a>) *<a href="#CCMatrixC">CCMatrixC</a></pre>
 				<p>
 ToMatrix converts a sparse matrix in triplet form with complex numbers to column-compressed form.

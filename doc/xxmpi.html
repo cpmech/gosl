@@ -185,7 +185,7 @@
 		
 			
 			
-			<h2 id="Abort">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=725:737#L18">Abort</a></h2>
+			<h2 id="Abort">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=731:743#L18">Abort</a></h2>
 			<pre>func Abort()</pre>
 			<p>
 Abort aborts MPI
@@ -197,7 +197,7 @@ Abort aborts MPI
 		
 			
 			
-			<h2 id="AllReduceMax">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=3699:3732#L124">AllReduceMax</a></h2>
+			<h2 id="AllReduceMax">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=3705:3738#L124">AllReduceMax</a></h2>
 			<pre>func AllReduceMax(x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AllReduceMax combines all values in &#39;x&#39; from all processors. When corresponding components (at the
@@ -214,7 +214,7 @@ x := w
 		
 			
 			
-			<h2 id="AllReduceMin">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=3168:3201#L109">AllReduceMin</a></h2>
+			<h2 id="AllReduceMin">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=3174:3207#L109">AllReduceMin</a></h2>
 			<pre>func AllReduceMin(x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AllReduceMin combines all values in &#39;x&#39; from all processors. When corresponding components (at the
@@ -231,7 +231,7 @@ x := w
 		
 			
 			
-			<h2 id="AllReduceSum">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=2119:2152#L79">AllReduceSum</a></h2>
+			<h2 id="AllReduceSum">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=2125:2158#L79">AllReduceSum</a></h2>
 			<pre>func AllReduceSum(x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AllReduceSum combines all values in &#39;x&#39; from all processors. Corresponding components in
@@ -247,7 +247,7 @@ x := w
 		
 			
 			
-			<h2 id="AllReduceSumAdd">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=2630:2669#L94">AllReduceSumAdd</a></h2>
+			<h2 id="AllReduceSumAdd">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=2636:2675#L94">AllReduceSumAdd</a></h2>
 			<pre>func AllReduceSumAdd(y, x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AllReduceSumAdd combines all values in &#39;x&#39; from all processors and adds the result to another
@@ -264,7 +264,7 @@ y += w
 		
 			
 			
-			<h2 id="Barrier">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1332:1346#L60">Barrier</a></h2>
+			<h2 id="Barrier">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1338:1352#L60">Barrier</a></h2>
 			<pre>func Barrier()</pre>
 			<p>
 Barrier forces synchronisation
@@ -276,7 +276,7 @@ Barrier forces synchronisation
 		
 			
 			
-			<h2 id="BcastFromRoot">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1785:1816#L71">BcastFromRoot</a></h2>
+			<h2 id="BcastFromRoot">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1791:1822#L71">BcastFromRoot</a></h2>
 			<pre>func BcastFromRoot(x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 BcastFromRoot broadcasts &#39;x&#39; slice from root (Rank == 0) to all other processors
@@ -288,7 +288,7 @@ BcastFromRoot broadcasts &#39;x&#39; slice from root (Rank == 0) to all other pr
 		
 			
 			
-			<h2 id="DblRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5669:5712#L180">DblRecv</a></h2>
+			<h2 id="DblRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5675:5718#L180">DblRecv</a></h2>
 			<pre>func DblRecv(vals []<a href="/pkg/builtin/#float64">float64</a>, from_proc <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 DblRecv receives a slice of floats from processor &#39;from_proc&#39;
@@ -303,7 +303,7 @@ DblRecv receives a slice of floats from processor &#39;from_proc&#39;
 		
 			
 			
-			<h2 id="DblSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5359:5400#L173">DblSend</a></h2>
+			<h2 id="DblSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5365:5406#L173">DblSend</a></h2>
 			<pre>func DblSend(vals []<a href="/pkg/builtin/#float64">float64</a>, to_proc <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 DblSend sends a slice of floats to processor &#39;to_proc&#39;
@@ -315,7 +315,7 @@ DblSend sends a slice of floats to processor &#39;to_proc&#39;
 		
 			
 			
-			<h2 id="IntAllReduceMax">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4239:4271#L139">IntAllReduceMax</a></h2>
+			<h2 id="IntAllReduceMax">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4245:4277#L139">IntAllReduceMax</a></h2>
 			<pre>func IntAllReduceMax(x, w []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntAllReduceMax combines all (int) values in &#39;x&#39; from all processors. When corresponding components (at the
@@ -332,7 +332,7 @@ x := w
 		
 			
 			
-			<h2 id="IntRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5173:5212#L168">IntRecv</a></h2>
+			<h2 id="IntRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5179:5218#L168">IntRecv</a></h2>
 			<pre>func IntRecv(vals []<a href="/pkg/builtin/#int">int</a>, from_proc <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntRecv receives a slice of integers from processor &#39;from_proc&#39;
@@ -347,7 +347,7 @@ IntRecv receives a slice of integers from processor &#39;from_proc&#39;
 		
 			
 			
-			<h2 id="IntSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4868:4905#L161">IntSend</a></h2>
+			<h2 id="IntSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4874:4911#L161">IntSend</a></h2>
 			<pre>func IntSend(vals []<a href="/pkg/builtin/#int">int</a>, to_proc <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntSend sends a slice of integers to processor &#39;to_proc&#39;
@@ -359,7 +359,7 @@ IntSend sends a slice of integers to processor &#39;to_proc&#39;
 		
 			
 			
-			<h2 id="IsOn">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=840:856#L24">IsOn</a></h2>
+			<h2 id="IsOn">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=846:862#L24">IsOn</a></h2>
 			<pre>func IsOn() <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 InOn tells whether MPI is on or not
@@ -373,7 +373,7 @@ InOn tells whether MPI is on or not
 		
 			
 			
-			<h2 id="Rank">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1165:1180#L50">Rank</a></h2>
+			<h2 id="Rank">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1171:1186#L50">Rank</a></h2>
 			<pre>func Rank() <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 Rank returns the processor rank/ID
@@ -385,7 +385,7 @@ Rank returns the processor rank/ID
 		
 			
 			
-			<h2 id="SingleIntRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4700:4743#L155">SingleIntRecv</a></h2>
+			<h2 id="SingleIntRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4706:4749#L155">SingleIntRecv</a></h2>
 			<pre>func SingleIntRecv(from_proc <a href="/pkg/builtin/#int">int</a>) (val <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 SingleIntRecv receives a single integer &#39;val&#39; from processor &#39;to_proc&#39;
@@ -397,7 +397,7 @@ SingleIntRecv receives a single integer &#39;val&#39; from processor &#39;to_pro
 		
 			
 			
-			<h2 id="SingleIntSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4539:4575#L150">SingleIntSend</a></h2>
+			<h2 id="SingleIntSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4545:4581#L150">SingleIntSend</a></h2>
 			<pre>func SingleIntSend(val, to_proc <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 SingleIntSend sends a single integer &#39;val&#39; to processor &#39;to_proc&#39;
@@ -409,7 +409,7 @@ SingleIntSend sends a single integer &#39;val&#39; to processor &#39;to_proc&#39
 		
 			
 			
-			<h2 id="Size">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1252:1267#L55">Size</a></h2>
+			<h2 id="Size">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1258:1273#L55">Size</a></h2>
 			<pre>func Size() <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 Size returns the number of processors
@@ -421,7 +421,7 @@ Size returns the number of processors
 		
 			
 			
-			<h2 id="Start">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=938:960#L32">Start</a></h2>
+			<h2 id="Start">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=944:966#L32">Start</a></h2>
 			<pre>func Start(debug <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 Start initialises MPI
@@ -433,7 +433,7 @@ Start initialises MPI
 		
 			
 			
-			<h2 id="Stop">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1045:1066#L41">Stop</a></h2>
+			<h2 id="Stop">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1051:1072#L41">Stop</a></h2>
 			<pre>func Stop(debug <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 Stop finalises MPI
@@ -445,7 +445,7 @@ Stop finalises MPI
 		
 			
 			
-			<h2 id="SumToRoot">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1550:1586#L66">SumToRoot</a></h2>
+			<h2 id="SumToRoot">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1556:1592#L66">SumToRoot</a></h2>
 			<pre>func SumToRoot(dest, orig []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SumToRoot sums all values in &#39;orig&#39; to &#39;dest&#39; in root (Rank == 0) processor

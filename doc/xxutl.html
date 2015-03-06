@@ -67,6 +67,8 @@ such as slices and slices of slices. It also contains functions for sorting quan
 			<div id="manual-nav">
 			<dl>
 			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
 			
 			
 				
@@ -110,9 +112,6 @@ such as slices and slices of slices. It also contains functions for sorting quan
 			
 				
 				<dd><a href="#Deep3GetInfo">func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncols_tot int, ncols []int)</a></dd>
-			
-				
-				<dd><a href="#Deep3Print">func Deep3Print(name string, A [][][]float64)</a></dd>
 			
 				
 				<dd><a href="#Deep3Serialize">func Deep3Serialize(A [][][]float64) (I, P []int, S []float64)</a></dd>
@@ -196,6 +195,12 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#LinSpaceOpen">func LinSpaceOpen(start, stop float64, num int) (res []float64)</a></dd>
 			
 				
+				<dd><a href="#PrintDeep3">func PrintDeep3(name string, A [][][]float64)</a></dd>
+			
+				
+				<dd><a href="#PrintDeep4">func PrintDeep4(name string, A [][][][]float64, format string)</a></dd>
+			
+				
 				<dd><a href="#ProfCPU">func ProfCPU(dirout, filename string, silent bool) func()</a></dd>
 			
 				
@@ -232,8 +237,19 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#StrIntMapSortSplit">func StrIntMapSortSplit(m map[string]int) (sorted_keys []string, sorted_vals []int)</a></dd>
 			
 				
+				<dd><a href="#StrIntsMapAppend">func StrIntsMapAppend(m *map[string][]int, key string, item int)</a></dd>
+			
+				
 				<dd><a href="#StrVals">func StrVals(n int, val string) (s []string)</a></dd>
 			
+			
+				
+				<dd><a href="#DblList">type DblList</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DblList.Append">func (o *DblList) Append(rowidx int, value float64)</a></dd>
+				
 			
 				
 				<dd><a href="#Quadruple">type Quadruple</a></dd>
@@ -316,11 +332,15 @@ such as slices and slices of slices. It also contains functions for sorting quan
 			
 				<a href="/src/github.com/cpmech/gosl/utl/deepslices.go">deepslices.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/utl/list.go">list.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/utl/mapops.go">mapops.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/utl/mylab.go">mylab.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/utl/postprocess.go">postprocess.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/utl/printing.go">printing.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/utl/profiling.go">profiling.go</a>
 			
@@ -371,6 +391,12 @@ such as slices and slices of slices. It also contains functions for sorting quan
 		</div>
 		</div> <!-- #pkg-callgraph -->
 
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="PRINTDEEPZERO">PRINTDEEPZERO</span> = 1e-3</pre>
+				
+			
 		
 		
 		
@@ -524,7 +550,7 @@ DblVals generates a slice of double precision values
 		
 			
 			
-			<h2 id="Deep3Deserialize">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=2150:2226#L90">Deep3Deserialize</a></h2>
+			<h2 id="Deep3Deserialize">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=1965:2041#L81">Deep3Deserialize</a></h2>
 			<pre>func Deep3Deserialize(I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>, debug <a href="/pkg/builtin/#bool">bool</a>) (A [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3Deserialize deserializes an array of array of array in column-compressed format
@@ -538,7 +564,7 @@ Deep3Deserialize deserializes an array of array of array in column-compressed fo
 		
 			
 			
-			<h2 id="Deep3GetInfo">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=1553:1653#L66">Deep3GetInfo</a></h2>
+			<h2 id="Deep3GetInfo">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=1368:1468#L57">Deep3GetInfo</a></h2>
 			<pre>func Deep3GetInfo(I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) (nitems, nrows, ncols_tot <a href="/pkg/builtin/#int">int</a>, ncols []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Deep3GetInfo returns information of serialized array of array of array
@@ -552,19 +578,7 @@ Deep3GetInfo returns information of serialized array of array of array
 		
 			
 			
-			<h2 id="Deep3Print">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=817:862#L26">Deep3Print</a></h2>
-			<pre>func Deep3Print(name <a href="/pkg/builtin/#string">string</a>, A [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-Deep3Print prints an array of array of array
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Deep3Serialize">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=1054:1116#L37">Deep3Serialize</a></h2>
+			<h2 id="Deep3Serialize">func <a href="https://github.com/cpmech/gosl/blob/master/utl/serialize.go?s=869:931#L28">Deep3Serialize</a></h2>
 			<pre>func Deep3Serialize(A [][][]<a href="/pkg/builtin/#float64">float64</a>) (I, P []<a href="/pkg/builtin/#int">int</a>, S []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3Serialize serializes an array of array of array in column-compressed format
@@ -916,6 +930,30 @@ LinSpaceOpen returns evenly spaced numbers over a specified open interval.
 		
 			
 			
+			<h2 id="PrintDeep3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/printing.go?s=317:362#L7">PrintDeep3</a></h2>
+			<pre>func PrintDeep3(name <a href="/pkg/builtin/#string">string</a>, A [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+PrintDeep3 prints an array of array of array
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PrintDeep4">func <a href="https://github.com/cpmech/gosl/blob/master/utl/printing.go?s=502:564#L16">PrintDeep4</a></h2>
+			<pre>func PrintDeep4(name <a href="/pkg/builtin/#string">string</a>, A [][][][]<a href="/pkg/builtin/#float64">float64</a>, format <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+PrintDeep4 prints an array of array of array
+</p>
+
+			
+			
+
+		
+			
+			
 			<h2 id="ProfCPU">func <a href="https://github.com/cpmech/gosl/blob/master/utl/profiling.go?s=572:629#L12">ProfCPU</a></h2>
 			<pre>func ProfCPU(dirout, filename <a href="/pkg/builtin/#string">string</a>, silent <a href="/pkg/builtin/#bool">bool</a>) func()</pre>
 			<p>
@@ -1006,7 +1044,7 @@ Str2Dbl converts a slice of strings to a slice of doubles (float64)
 		
 			
 			
-			<h2 id="StrDblsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=638:710#L10">StrDblsMapAppend</a></h2>
+			<h2 id="StrDblsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=964:1036#L21">StrDblsMapAppend</a></h2>
 			<pre>func StrDblsMapAppend(m *map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, key <a href="/pkg/builtin/#string">string</a>, item <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StrDblsMapAppend appends a new item to a map of slice.
@@ -1052,6 +1090,20 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
+			<h2 id="StrIntsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=638:702#L10">StrIntsMapAppend</a></h2>
+			<pre>func StrIntsMapAppend(m *map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#int">int</a>, key <a href="/pkg/builtin/#string">string</a>, item <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+StrIntsMapAppend appends a new item to a map of slice.
+</p>
+<pre>Note: this function creates a new slice in the map if key is not found.
+</pre>
+
+			
+			
+
+		
+			
+			
 			<h2 id="StrVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=832:876#L26">StrVals</a></h2>
 			<pre>func StrVals(n <a href="/pkg/builtin/#int">int</a>, val <a href="/pkg/builtin/#string">string</a>) (s []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
@@ -1062,6 +1114,48 @@ StrVals allocates a slice of strings with size==n, filled with val
 			
 
 		
+		
+			
+			
+			<h2 id="DblList">type <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=420:471#L5">DblList</a></h2>
+			<pre>type DblList struct {
+    Vals [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// values</span>
+}</pre>
+			<p>
+DblList implements a matrix with variable number of entities
+</p>
+<pre>Example:
+  Vals = [][]float64{
+           {0.0},
+           {1.0, 1.1, 1.2, 1.3},
+           {2.0, 2.1},
+           {3.0, 3.1, 3.2},
+         }
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DblList.Append">func (*DblList) <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=508:559#L10">Append</a></h3>
+				<pre>func (o *<a href="#DblList">DblList</a>) Append(rowidx <a href="/pkg/builtin/#int">int</a>, value <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Append appends items to DblList
+</p>
+
+				
+				
+				
+			
 		
 			
 			
