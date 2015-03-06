@@ -12,6 +12,8 @@ under the BSD-style license found in the LICENSE file.
 ## Download
 
 ```
+sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
+sudo apt-get install gfortran libvtk5-dev python-scipy python-matplotlib dvipng
 go get github.com/cpmech/gosl/...
 ```
 
