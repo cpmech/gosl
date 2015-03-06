@@ -5,8 +5,9 @@
 package num
 
 import (
-	"fmt"
 	"math"
+
+	"github.com/cpmech/gosl/chk"
 )
 
 type fcn func(x float64) float64
@@ -76,7 +77,7 @@ func (o *Trap) Integrate() (float64, error) {
 		}
 		olds = o.s
 	}
-	return 0, fmt.Errorf("Error - achieved maximun number of iterations (n=%d)", jmax)
+	return 0, chk.Err("achieved maximun number of iterations (n=%d)", jmax)
 }
 
 // Then the Simp structure is derived from this as follows:
@@ -141,5 +142,5 @@ func (o *Simp) Integrate() (float64, error) {
 		os = s
 		ost = st
 	}
-	return 0, fmt.Errorf("Error - achieved maximun number of interatios (n=%d)", jmax)
+	return 0, chk.Err("achieved maximun number of interatios (n=%d)", jmax)
 }

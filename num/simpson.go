@@ -4,7 +4,7 @@
 
 package num
 
-import "fmt"
+import "github.com/cpmech/gosl/chk"
 
 // scalar function
 type Fun0 func(float64) float64
@@ -12,7 +12,7 @@ type Fun0 func(float64) float64
 // Simpson integrates function f from x=a to x=b using n subintervals (n must be even)
 func Simpson(f Fun0, a, b float64, n int) (float64, error) {
 	if n < 2 || n%2 > 0 {
-		return 0, fmt.Errorf("Error - number of subintervas should be even (n=%d)", n)
+		return 0, chk.Err("number of subintervas should be even (n=%d)", n)
 	}
 
 	h := (b - a) / float64(n)
