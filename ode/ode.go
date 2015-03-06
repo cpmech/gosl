@@ -27,11 +27,13 @@ type acptfcn func(o *ODE, y []float64)
 
 // ODE structure
 type ODE struct {
+
 	// method
 	method string  // method name
 	step   stpfcn  // step function
 	accept acptfcn // accept update function
 	nstg   int     // number of stages
+
 	// primary variables
 	ndim       int          // size of y
 	fcn        Cb_fcn       // dydx := f(x,y)
@@ -60,10 +62,12 @@ type ODE struct {
 	CteTg      bool         // use constant tangent (Jacobian) in BwEuler
 	UseRmsNorm bool         // use RMS norm instead of Euclidian in BwEuler
 	Verbose    bool         // be more verbose, e.g. during iterations
+
 	// derived variables
 	Distr bool    // MPI distributed execution
 	root  bool    // if distributed, tells if this is the root processor
 	fnewt float64 // Newton's iterations tolerance
+
 	// stat variables
 	nfeval    int // number of calls to fcn
 	njeval    int // number of Jacobian matrix evaluations
@@ -73,6 +77,7 @@ type ODE struct {
 	ndecomp   int // number of matrix decompositions
 	nlinsol   int // number of calls to linsolver
 	nitmax    int // number max of iterations
+
 	// control variables
 	doinit    bool    // flag indicating 'do initialisation' within step function
 	first     bool    // first substep
@@ -87,17 +92,21 @@ type ODE struct {
 	nit       int     // current number of iterations
 	hopt      float64 // optimal h after successful substepping
 	θ         float64 // theta variable
+
 	// step variables
 	h, hprev float64   // step-size and previous step-size
 	f0       []float64 // f(x,y) before step
 	scal     []float64 // scal = Atol + Rtol*abs(y)
+
 	// rk variables
 	u     []float64   // u[stg]      = x + h*c[stg]
 	v     [][]float64 // v[stg][dim] = ya[dim] + h*sum(a[stg][j]*f[j][dim], j, nstg)
 	w, δw [][]float64 // workspace
 	f     [][]float64 // f[stg][dim] = f(u[stg], v[stg][dim])
+
 	// explicit rk variables
 	erkdat ERKdat // explicit RK data
+
 	// radau5 variables
 	z             [][]float64 // Radau5
 	ez, lerr, rhs []float64   // Radau5
@@ -108,8 +117,10 @@ type ODE struct {
 	//M2c, J2c      []int         // maps required in sparse additions such as: c = M + J
 	//usymbR        la.UmfpSymb   // real matrix: symbolic factorisation
 	//usymbC        la.UmfpSymbC  // complex matrix: symbolic factorisation
+
 	// interpolation (radau5)
 	ycol [][]float64 // colocation values
+
 	// for distributed solver
 	rctriR       *la.Triplet
 	rctriC       *la.TripletC
