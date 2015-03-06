@@ -26,6 +26,8 @@ type stpfcn func(o *ODE, y []float64, x float64, args ...interface{}) (rerr floa
 type acptfcn func(o *ODE, y []float64)
 
 // ODE structure
+//  Note: Distr is automatically set ON by Init if mpi is on and there are more then one processor.
+//        However, it can be set OFF after calling Init.
 type ODE struct {
 
 	// method
@@ -64,7 +66,7 @@ type ODE struct {
 	Verbose    bool         // be more verbose, e.g. during iterations
 
 	// derived variables
-	Distr bool    // MPI distributed execution
+	Distr bool    // MPI distributed execution. automatically set ON in Init if mpi is on and there are more then one processor.
 	root  bool    // if distributed, tells if this is the root processor
 	fnewt float64 // Newton's iterations tolerance
 
@@ -111,12 +113,6 @@ type ODE struct {
 	z             [][]float64 // Radau5
 	ez, lerr, rhs []float64   // Radau5
 	dfdyT         la.Triplet  // Jacobian (triplet)
-	//dfdyM         *la.CCMatrix  // Jacobian (matrix)
-	//rcmatR        *la.CCMatrix  // resid correct matrix Real:    gam*I - J
-	//rcmatC        *la.CCMatrixC // resid correct matrix Complex: (alp+i*bet)*I-J
-	//M2c, J2c      []int         // maps required in sparse additions such as: c = M + J
-	//usymbR        la.UmfpSymb   // real matrix: symbolic factorisation
-	//usymbC        la.UmfpSymbC  // complex matrix: symbolic factorisation
 
 	// interpolation (radau5)
 	ycol [][]float64 // colocation values
