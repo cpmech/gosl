@@ -42,6 +42,7 @@ func (o Mul) F(t float64, x []float64) float64 {
 
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Mul) G(t float64, x []float64) float64 {
+	panic("f_mul.go: G: test needed")
 	if o.Fa != nil && o.Fb != nil {
 		return o.Fa.G(t, x)*o.Fb.F(t, x) + o.Fa.F(t, x)*o.Fb.G(t, x)
 	}
