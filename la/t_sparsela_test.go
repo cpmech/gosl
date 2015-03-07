@@ -238,6 +238,7 @@ func TestSparseLA04(tst *testing.T) {
 
 func TestSparseLA05(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("TestSparse LA05")
 
 	var ta Triplet
@@ -275,7 +276,7 @@ func TestSparseLA05(tst *testing.T) {
 	b := tb.ToMatrix(nil)
 	io.Pf("b = %+v\n", b)
 	PrintMat("b", b.ToDense(), "%2g ", false)
-	chk.Vector(tst, "b.x", 1e-17, b.x, []float64{1, 8, 1, 2, 3, 4, 5, 5, 1, 4, 2, 1})
+	chk.Vector(tst, "b.x", 1e-16, b.x, []float64{1, 8, 1, 2, 3, 4, 5, 5, 1, 4, 2, 1})
 	chk.Ints(tst, "b.i", b.i, []int{1, 3, 0, 1, 2, 3, 4, 2, 0, 1, 2, 4})
 	chk.Ints(tst, "b.p", b.p, []int{0, 0, 2, 7, 7, 8, 12})
 
@@ -283,12 +284,12 @@ func TestSparseLA05(tst *testing.T) {
 	SpMatAddMat(c, 0.1, a, 2, b, a2c, b2c)
 	io.Pf("c = %+v\n", c)
 	PrintMat("c", c.ToDense(), "%10.6f ", false)
-	chk.Vector(tst, "c.x", 1e-17, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
+	chk.Vector(tst, "c.x", 1e-16, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
 	chk.Ints(tst, "c.i", c.i, []int{0, 2, 4, 1, 3, 0, 1, 2, 3, 4, 0, 4, 2, 0, 1, 2, 4})
 	chk.Ints(tst, "c.p", c.p, []int{0, 3, 5, 10, 12, 13, 17})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 2, 6, 8, 10, 11, 13, 15})
 	chk.Ints(tst, "b2c", b2c, []int{3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16})
-	chk.Matrix(tst, "c", 1e-17, c.ToDense(), [][]float64{
+	chk.Matrix(tst, "c", 1e-16, c.ToDense(), [][]float64{
 		{0.1, 0, 2.0, 0.1, 0, 2.7},
 		{0, 2, 4.3, 0, 0, 8.0},
 		{0.2, 0, 6.0, 0, 10, 4.8},
@@ -299,6 +300,7 @@ func TestSparseLA05(tst *testing.T) {
 
 func TestSparseLA06(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("TestSparse LA06")
 
 	var ta Triplet
@@ -355,12 +357,12 @@ func TestSparseLA06(tst *testing.T) {
 	io.Pf("d = %+v\n", d)
 	PrintMat("c", c.ToDense(), "%5.2f ", false)
 	PrintMatC("d", d.ToDense(), "(%5.2f", "%5.2f) ", false)
-	chk.Vector(tst, "c.x", 1e-17, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
-	chk.Vector(tst, "d.x", 1e-17, d.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
+	chk.Vector(tst, "c.x", 1e-16, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
+	chk.Vector(tst, "d.x", 1e-16, d.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
 	chk.Vector(tst, "d.z", 1e-17, d.z, []float64{1, 2, 3, 0, 0, 0, 3, 0, 1, 0, 1, 5, 0, 7, 0, 8, 0})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 2, 6, 8, 10, 11, 13, 15})
 	chk.Ints(tst, "b2c", b2c, []int{3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16})
-	chk.Matrix(tst, "c", 1e-17, c.ToDense(), [][]float64{
+	chk.Matrix(tst, "c", 1e-16, c.ToDense(), [][]float64{
 		{0.1, 0, 2.0, 0.1, 0, 2.7},
 		{0, 2, 4.3, 0, 0, 8.0},
 		{0.2, 0, 6.0, 0, 10, 4.8},
@@ -378,6 +380,7 @@ func TestSparseLA06(tst *testing.T) {
 
 func TestSparseLA07(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("TestSparse LA07")
 
 	var ta Triplet
@@ -413,7 +416,7 @@ func TestSparseLA07(tst *testing.T) {
 	tc.Init(5, 6, ta.Len()+tb.Len())
 	SpTriAdd(&tc, 0.1, &ta, 2, &tb)
 	io.Pf("tc = %+v\n", tc)
-	chk.Matrix(tst, "c", 1e-17, tc.ToMatrix(nil).ToDense(), [][]float64{
+	chk.Matrix(tst, "c", 1e-16, tc.ToMatrix(nil).ToDense(), [][]float64{
 		{0.1, 0, 2.0, 0.1, 0, 2.7},
 		{0, 2, 4.3, 0, 0, 8.0},
 		{0.2, 0, 6.0, 0, 10, 4.8},
