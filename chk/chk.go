@@ -87,33 +87,37 @@ func PrintTitle(title string) {
 }
 
 // PrintMsg returns a formatted error message
-func PrintMsg(tst *testing.T, msg string, tol, maxdiff float64) {
-	if Verbose {
-		if maxdiff > tol {
-			fmt.Printf("%s [1;31merror |maxdiff| = %g[0m\n", msg, maxdiff)
-			tst.Errorf("[1;31m%s failed with |maxdiff| = %g[0m", msg, maxdiff)
-			return
-		}
-		PrintOk(msg)
+func CheckAndPrint(tst *testing.T, msg string, tol, diff float64) {
+	if math.IsNaN(diff) || math.IsInf(diff, 0) {
+		tst.Errorf("[1;31m%s failed with NaN or Inf: %v[0m", msg, diff)
+		return
 	}
+	if diff > tol {
+		if Verbose {
+			fmt.Printf("%s [1;31merror |diff| = %g[0m\n", msg, diff)
+		}
+		tst.Errorf("[1;31m%s failed with |diff| = %g[0m", msg, diff)
+		return
+	}
+	PrintOk(msg)
 }
 
 // PrintAnaNum formats the output of analytical versus numerical comparisons
 func PrintAnaNum(msg string, tol, ana, num float64, verbose bool) (e error) {
-	err := math.Abs(ana - num)
-	if math.IsNaN(err) || math.IsInf(err, 0) {
-		e = Err("[1;31m%s failed with NaN or Inf: %v[0m", msg, err)
+	diff := math.Abs(ana - num)
+	if math.IsNaN(diff) || math.IsInf(diff, 0) {
+		e = Err("[1;31m%s failed with NaN or Inf: %v[0m", msg, diff)
 		return
 	}
 	if verbose {
 		clr := "[1;32m" // green
-		if err > tol {
+		if diff > tol {
 			clr = "[1;31m" // red
 		}
-		fmt.Printf("%s %23v %23v %s%23v[0m\n", msg, ana, num, clr, err)
+		fmt.Printf("%s %23v %23v %s%23v[0m\n", msg, ana, num, clr, diff)
 	}
-	if err > tol {
-		e = Err("[1;31m%s failed with |maxdiff| = %g[0m", msg, err)
+	if diff > tol {
+		e = Err("[1;31m%s failed with |diff| = %g[0m", msg, diff)
 	}
 	return
 }

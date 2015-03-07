@@ -12,7 +12,7 @@ import (
 
 // Scalar compares two scalars
 func Scalar(tst *testing.T, msg string, tol, res, correct float64) {
-	PrintMsg(tst, msg, tol, math.Abs(res-correct))
+	CheckAndPrint(tst, msg, tol, math.Abs(res-correct))
 }
 
 // AnaNum compares analytical versus numerical values
@@ -118,7 +118,7 @@ func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 			}
 		}
 	}
-	PrintMsg(tst, msg, tol, maxdiff)
+	CheckAndPrint(tst, msg, tol, maxdiff)
 }
 
 // Vector compares two vectors
@@ -147,7 +147,7 @@ func Vector(tst *testing.T, msg string, tol float64, res, correct []float64) {
 			maxdiff = diff
 		}
 	}
-	PrintMsg(tst, msg, tol, maxdiff)
+	CheckAndPrint(tst, msg, tol, maxdiff)
 }
 
 // MatrixC compares two matrices of complex nummbers
