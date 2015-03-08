@@ -18,9 +18,9 @@ type Sty struct {
 type Fmt struct {
 	C  string  // color
 	M  string  // marker
-	Ls string  // linestype
-	Lw float64 // linewidth
-	Ms float64 // negative values => default
+	Ls string  // linestyle
+	Lw float64 // linewidth; -1 => default
+	Ms float64 // marker size; -1 => default
 	L  string  // label
 }
 
