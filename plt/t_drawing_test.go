@@ -31,9 +31,9 @@ func Test_draw01(tst *testing.T) {
 	AutoScale(P)
 	Equal()
 	DrawLegend([]Fmt{
-		Fmt{"red", "o", "-", 1, -1, "first"},
-		Fmt{"green", "s", "-", 2, 0, "second"},
-		Fmt{"blue", "+", "-", 3, 10, "third"},
+		Fmt{"red", "o", "-", 1, -1, "first", -1},
+		Fmt{"green", "s", "-", 2, 0, "second", -1},
+		Fmt{"blue", "+", "-", 3, 10, "third", -1},
 	}, 10, "best", false, "")
 	//Show()
 }
@@ -42,8 +42,8 @@ func Test_draw02(tst *testing.T) {
 
 	chk.PrintTitle("draw02")
 
-	d := Fmt{"red", "o", "--", 1.2, -1, "gofem"}
+	d := Fmt{"red", "o", "--", 1.2, -1, "gofem", 2}
 	l := d.GetArgs("clip_on=0")
 	io.Pforan("l = %q\n", l)
-	chk.String(tst, l, "clip_on=0,color='red',marker='o',ls='--',lw=1.2,label='gofem'")
+	chk.String(tst, l, "clip_on=0,color='red',marker='o',ls='--',lw=1.2,label='gofem',markevery=2")
 }

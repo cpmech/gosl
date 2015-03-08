@@ -20,8 +20,9 @@ type Fmt struct {
 	M  string  // marker
 	Ls string  // linestyle
 	Lw float64 // linewidth; -1 => default
-	Ms float64 // marker size; -1 => default
+	Ms int     // marker size; -1 => default
 	L  string  // label
+	Me int     // mark-every; -1 => default
 }
 
 // Init initialises Fmt with default values
@@ -62,13 +63,19 @@ func (o Fmt) GetArgs(start string) string {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += io.Sf("ms=%d", int(o.Ms))
+		l += io.Sf("ms=%d", o.Ms)
 	}
 	if o.L != "" {
 		if len(l) > 0 {
 			l += ","
 		}
 		l += io.Sf("label='%s'", o.L)
+	}
+	if o.Me > 0 {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += io.Sf("markevery=%d", o.Me)
 	}
 	return l
 }
