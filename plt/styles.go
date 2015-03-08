@@ -16,20 +16,20 @@ type FmtS []string
 
 // ShapeData holds data for drawing shapes
 type FmtH struct {
-	Fc     string
-	Ec     string
-	Lw     int
-	Closed bool
+	Fc     string // face color
+	Ec     string // edge color
+	Lw     int    // linewidth
+	Closed bool   // closed shape
 }
 
 // LineData holds data for ploting lines
 type FmtL struct {
-	L  string
-	C  string
-	Lw float64
+	L  string  // label
+	C  string  // color
+	Lw float64 // linewidth
 	Ms float64 // negative values => default
-	M  string
-	Ls string
+	M  string  // marker
+	Ls string  // linestype
 }
 
 // Init initialises ShapeData with default values
