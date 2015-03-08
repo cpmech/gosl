@@ -6,65 +6,51 @@ package plt
 
 import "github.com/cpmech/gosl/io"
 
-// Formatter defines an interface to format lines with markers and colors
-type Formatter interface {
-	GetArgs(start string) string
-}
-
-// FmtS implemetns a formatter using a slice of strings
-type FmtS []string
-
-// ShapeData holds data for drawing shapes
-type FmtH struct {
+// Sty holds data for drawing shapes
+type Sty struct {
 	Fc     string // face color
 	Ec     string // edge color
 	Lw     int    // linewidth
 	Closed bool   // closed shape
 }
 
-// LineData holds data for ploting lines
-type FmtL struct {
-	L  string  // label
+// Fmt holds data for ploting lines
+type Fmt struct {
 	C  string  // color
-	Lw float64 // linewidth
-	Ms float64 // negative values => default
 	M  string  // marker
 	Ls string  // linestype
+	Lw float64 // linewidth
+	Ms float64 // negative values => default
+	L  string  // label
 }
 
-// Init initialises ShapeData with default values
-func (o *FmtH) Init() {
+// Init initialises Fmt with default values
+func (o *Sty) Init() {
 	o.Fc = "#edf5ff"
 	o.Ec = "black"
 	o.Lw = 1
 }
 
-// GetArgs returns the arguments for plt
-func (o FmtS) GetArgs(start string) string {
-	l := "'"
-	for _, s := range o {
-		l += s
-	}
-	if start != "" {
-		return l + "'" + "," + start
-	}
-	return l + "'"
-}
-
 // GetArgs returns arguments for Plot
-func (o FmtL) GetArgs(start string) string {
+func (o Fmt) GetArgs(start string) string {
 	l := start
-	if o.L != "" {
-		if len(l) > 0 {
-			l += ","
-		}
-		l += io.Sf("label='%s'", o.L)
-	}
 	if o.C != "" {
 		if len(l) > 0 {
 			l += ","
 		}
 		l += io.Sf("color='%s'", o.C)
+	}
+	if o.M != "" {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += io.Sf("marker='%s'", o.M)
+	}
+	if o.Ls != "" {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += io.Sf("ls='%s'", o.Ls)
 	}
 	if o.Lw > 0 {
 		if len(l) > 0 {
@@ -78,17 +64,11 @@ func (o FmtL) GetArgs(start string) string {
 		}
 		l += io.Sf("ms=%d", int(o.Ms))
 	}
-	if o.M != "" {
+	if o.L != "" {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += io.Sf("marker='%s'", o.M)
-	}
-	if o.Ls != "" {
-		if len(l) > 0 {
-			l += ","
-		}
-		l += io.Sf("ls='%s'", o.Ls)
+		l += io.Sf("label='%s'", o.L)
 	}
 	return l
 }
