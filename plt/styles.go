@@ -45,6 +45,9 @@ func (o FmtS) GetArgs(start string) string {
 	for _, s := range o {
 		l += s
 	}
+	if start != "" {
+		return l + "'" + "," + start
+	}
 	return l + "'"
 }
 
