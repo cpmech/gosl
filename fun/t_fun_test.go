@@ -412,3 +412,65 @@ func Test_fun11(tst *testing.T) {
 		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
+
+func Test_fun12(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("fun03. mul")
+
+	cos, err := New("cos", []*Prm{
+		&Prm{N: "a", V: 1},
+		&Prm{N: "b/pi", V: 2},
+		&Prm{N: "c", V: 1},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	lin, err := New("lin", []*Prm{
+		&Prm{N: "m", V: 0.5},
+		&Prm{N: "ts", V: 0},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	mul, err := New("mul", []*Prm{
+		&Prm{N: "fa", Fcn: cos},
+		&Prm{N: "fb", Fcn: lin},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	tmin := 0.0
+	tmax := 1.0
+	xcte := []float64{0, 0, 0}
+	//if true {
+	if false {
+		withG, withH, save, show := true, true, false, true
+		plt.Reset()
+		PlotT(cos, "/tmp/gosl", "fun-cos-12.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
+		plt.Reset()
+		PlotT(lin, "/tmp/gosl", "fun-lin-12.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
+		plt.Reset()
+		PlotT(mul, "/tmp/gosl", "fun-mul-12.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
+	}
+
+	if true {
+		//if false {
+		sktol := 1e-10
+		dtol := 1e-9
+		dtol2 := 1e-8
+		ver := chk.Verbose
+		tskip := []float64{tmin, tmax}
+		CheckT(tst, cos, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		io.Pf("\n")
+		CheckT(tst, lin, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+		io.Pf("\n")
+		CheckT(tst, mul, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+	}
+}

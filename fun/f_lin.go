@@ -22,9 +22,9 @@ func init() {
 func (o *Lin) Init(prms Prms) (err error) {
 	for _, p := range prms {
 		switch p.N {
-		case "m":
+		case "M", "m":
 			o.M = p.V
-		case "ts":
+		case "Ts", "ts":
 			o.Ts = p.V
 		default:
 			return chk.Err("lin: parameter named %q is invalid", p.N)

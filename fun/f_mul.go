@@ -37,26 +37,31 @@ func (o Mul) F(t float64, x []float64) float64 {
 	if o.Fa != nil && o.Fb != nil {
 		return o.Fa.F(t, x) * o.Fb.F(t, x)
 	}
+	chk.Panic("mul: fa and fb functions are <nil>\n")
 	return 0
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Mul) G(t float64, x []float64) float64 {
-	panic("f_mul.go: G: test needed")
 	if o.Fa != nil && o.Fb != nil {
-		return o.Fa.G(t, x)*o.Fb.F(t, x) + o.Fa.F(t, x)*o.Fb.G(t, x)
+		return o.Fa.F(t, x)*o.Fb.G(t, x) + o.Fb.F(t, x)*o.Fa.G(t, x)
 	}
+	chk.Panic("mul: fa and fb functions are <nil>\n")
 	return 0
 }
 
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o Mul) H(t float64, x []float64) float64 {
-	panic("f_mul.go: H is not implemented yet")
+	if o.Fa != nil && o.Fb != nil {
+		return o.Fa.F(t, x)*o.Fb.H(t, x) + 2.0*o.Fa.G(t, x)*o.Fb.G(t, x) + o.Fb.F(t, x)*o.Fa.H(t, x)
+	}
+	chk.Panic("mul: fa and fb functions are <nil>\n")
 	return 0
 }
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
 func (o Mul) Grad(v []float64, t float64, x []float64) {
+	chk.Panic("mul: Grad is not implemented yet")
 	setvzero(v)
 	return
 }
