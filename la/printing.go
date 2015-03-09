@@ -187,11 +187,11 @@ func PrintMatC(name string, a [][]complex128, format, formatz string, numpy bool
 }
 
 // SmatTriplet writes a ".smat" file that can be visualised with vismatrix
-func SmatTriplet(fnkey string, t *Triplet) {
+func SmatTriplet(fnkey string, t *Triplet, tol float64) {
 	var bfa, bfb bytes.Buffer
 	var nnz int
 	for k := 0; k < t.pos; k++ {
-		if math.Abs(t.x[k]) > 1e-16 {
+		if math.Abs(t.x[k]) > tol {
 			fmt.Fprintf(&bfb, "  %d  %d  %23.15e\n", t.i[k], t.j[k], t.x[k])
 			nnz++
 		}
