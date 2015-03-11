@@ -416,7 +416,7 @@ func Test_fun11(tst *testing.T) {
 func Test_fun12(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun03. mul")
+	chk.PrintTitle("fun12. mul")
 
 	cos, err := New("cos", []*Prm{
 		&Prm{N: "a", V: 1},
@@ -472,5 +472,42 @@ func Test_fun12(tst *testing.T) {
 		CheckT(tst, lin, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 		io.Pf("\n")
 		CheckT(tst, mul, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+	}
+}
+
+func Test_fun13(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("fun13. mul")
+
+	pulse, err := New("pulse", []*Prm{
+		&Prm{N: "ca", V: 0.2},
+		&Prm{N: "cb", V: 2.0},
+		&Prm{N: "ta", V: 1.0},
+		&Prm{N: "tb", V: 2.5},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	tmin := 0.0
+	tmax := 5.0
+	xcte := []float64{0, 0, 0}
+	//if true {
+	if false {
+		withG, withH, save, show := true, true, false, true
+		plt.Reset()
+		PlotT(pulse, "/tmp/gosl", "fun-pulse-13.png", tmin, tmax, xcte, 61, "", withG, withH, save, show, nil)
+	}
+
+	if true {
+		//if false {
+		sktol := 1e-17
+		dtol := 1e-10
+		dtol2 := 1e-10
+		ver := chk.Verbose
+		tskip := []float64{1, 4}
+		CheckT(tst, pulse, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 	}
 }
