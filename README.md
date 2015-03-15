@@ -35,4 +35,4 @@ Most of Gosl was developed to support the numerical research that resulted in th
 5. Pedroso DM and Williams DJ (2011) Automatic Calibration of soil-water characteristic curves using genetic algorithms. Computers and Geotechnics, 38(3), 330-340, http://dx.doi.org/10.1016/j.compgeo.2010.12.004
 
 ## Acknowledgements
-Funding from the Australian Research Council is acknowledged.
+Funding from the Australian Research Council is gratefully acknowledged.
