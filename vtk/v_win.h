@@ -159,7 +159,7 @@ void Win::WritePNG(char const * Filekey, bool Large, int Magnification) {
     writer -> Delete();
 
     // Notification
-    printf("File <%s.png%s> written\n", Filekey);
+    printf("File <%s.png> written\n", Filekey);
 }
 
 void Win::Camera(double xUp, double yUp, double zUp, double xFoc, double yFoc, double zFoc, double xPos, double yPos, double zPos) {
