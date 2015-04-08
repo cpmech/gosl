@@ -59,6 +59,7 @@ func M_devσ(s, σ []float64) (sno, p, q float64) {
 }
 
 // M_devε returns the deviator of ε (e := dev(ε)), the norm of the deviator (eno) and the εv, εd invariants
+//  Note: this function also works for principal values with len(ε) = len(e) = 3
 func M_devε(e, ε []float64) (eno, εv, εd float64) {
 	εv = ε[0] + ε[1] + ε[2]
 	for i := 0; i < len(ε); i++ {
