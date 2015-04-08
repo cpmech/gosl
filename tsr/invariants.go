@@ -21,10 +21,7 @@ func M_q(σ []float64) float64 {
 	if len(σ) == 6 { // 3D
 		m = σ[4]*σ[4] + σ[5]*σ[5]
 	}
-	return math.Sqrt(((σ[0]-σ[1])*(σ[0]-σ[1]) +
-		(σ[1]-σ[2])*(σ[1]-σ[2]) +
-		(σ[2]-σ[0])*(σ[2]-σ[0]) +
-		3.0*(σ[3]*σ[3]+m)) / 2.0)
+	return math.Sqrt(((σ[0]-σ[1])*(σ[0]-σ[1]) + (σ[1]-σ[2])*(σ[1]-σ[2]) + (σ[2]-σ[0])*(σ[2]-σ[0]) + 3.0*(σ[3]*σ[3]+m)) / 2.0)
 }
 
 // M_εv returns the volumetric strain
@@ -38,10 +35,15 @@ func M_εd(ε []float64) float64 {
 	if len(ε) == 6 { // 3D
 		m = ε[4]*ε[4] + ε[5]*ε[5]
 	}
-	return math.Sqrt(((ε[0]-ε[1])*(ε[0]-ε[1])+
-		(ε[1]-ε[2])*(ε[1]-ε[2])+
-		(ε[2]-ε[0])*(ε[2]-ε[0])+
-		3.0*(ε[3]*ε[3]+m))*2.0) / 3.0
+	return math.Sqrt(((ε[0]-ε[1])*(ε[0]-ε[1])+(ε[1]-ε[2])*(ε[1]-ε[2])+(ε[2]-ε[0])*(ε[2]-ε[0])+3.0*(ε[3]*ε[3]+m))*2.0) / 3.0
+}
+
+// L_strains compute strain invariants given principal values
+//  ε -- principal values [3]
+func L_strains(ε []float64) (εv, εd float64) {
+	εv = ε[0] + ε[1] + ε[2]
+	εd = math.Sqrt(((ε[0]-ε[1])*(ε[0]-ε[1])+(ε[1]-ε[2])*(ε[1]-ε[2])+(ε[2]-ε[0])*(ε[2]-ε[0]))*2.0) / 3.0
+	return
 }
 
 // M_devσ returns the deviator of σ (s := dev(σ)), the norm of the deviator (sno) and the p, q invariants
