@@ -47,6 +47,7 @@ func L_strains(ε []float64) (εv, εd float64) {
 }
 
 // M_devσ returns the deviator of σ (s := dev(σ)), the norm of the deviator (sno) and the p, q invariants
+//  Note: this function also works for principal values with len(σ) = len(s) = 3
 func M_devσ(s, σ []float64) (sno, p, q float64) {
 	p = -(σ[0] + σ[1] + σ[2]) / 3.0
 	for i := 0; i < len(σ); i++ {
@@ -151,6 +152,7 @@ func M_pqθ(a []float64) (p, q, θ float64) {
 }
 
 // M_pqws returns p, q, w invariants and the deviatoric stress s := dev(σ)
+//  Note: this function also works for principal values with len(a) = len(s) = 3
 func M_pqws(s, a []float64) (p, q, w float64) {
 	ns := 0.0 // norm of s
 	p = -(a[0] + a[1] + a[2]) / 3.0

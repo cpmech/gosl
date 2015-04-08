@@ -33,7 +33,11 @@ func M_Dev(a []float64) (s []float64) {
 }
 
 // M_Det calculates the determinant a 2nd order tensor represented in Mandel's basis
+//  Note: this function also works for principal values with len(a) = 3
 func M_Det(a []float64) float64 {
+	if len(a) == 3 {
+		return a[0] * a[1] * a[2]
+	}
 	if len(a) == 4 {
 		return a[0]*a[1]*a[2] - a[2]*a[3]*a[3]/2.0
 	}
