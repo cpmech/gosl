@@ -161,6 +161,13 @@ func DblVals(n int, v float64) (res []float64) {
 	return
 }
 
+// DblCopy gets a copy of slice of doubles
+func DblCopy(in []float64) (out []float64) {
+	out = make([]float64, len(in))
+	copy(out, in)
+	return
+}
+
 // IntMinMax returns the maximum and minimum elements in v
 //  NOTE: this is not efficient and should be used for small slices only
 func IntMinMax(v []int) (mi, ma int) {

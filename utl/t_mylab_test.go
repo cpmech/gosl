@@ -205,3 +205,14 @@ func Test_split01(tst *testing.T) {
 	io.Pfblue2("r = %v\n", r)
 	chk.Vector(tst, "r", 1e-16, r, []float64{1e4, 1, 3, 8, 88})
 }
+
+func Test_copy01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("copy01")
+
+	v := []float64{1, 2, 3, 4, 4, 5, 5, 6, 6, 6}
+	w := DblCopy(v)
+	io.Pfblue2("v = %v\n", v)
+	chk.Vector(tst, "w==v", 1e-16, w, v)
+}
