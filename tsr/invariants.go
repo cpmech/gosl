@@ -332,7 +332,7 @@ func M_pq_smp(σ []float64, a, b, β, ϵ float64) (p, q float64, err error) {
 		return
 	}
 	W := make([]float64, 3)
-	m := NewSmpDirector(W, λ, a, b, β, ϵ)     // W := N
+	m := SmpDirector(W, λ, a, b, β, ϵ)        // W := N
 	W[0], W[1], W[2] = W[0]/m, W[1]/m, W[2]/m // W := n
 	p, q, err = GenInvs(λ, W, a)
 	return

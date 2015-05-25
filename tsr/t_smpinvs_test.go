@@ -22,8 +22,8 @@ func Test_smp01(tst *testing.T) {
 	λ := []float64{-8.0, -8.0, -8.0}
 	N := make([]float64, 3)
 	n := make([]float64, 3)
-	m := NewSmpDirector(N, λ, a, b, β, ϵ)
-	NewSmpUnitDirector(n, m, N)
+	m := SmpDirector(N, λ, a, b, β, ϵ)
+	SmpUnitDirector(n, m, N)
 	io.Pforan("λ = %v\n", λ)
 	io.Pforan("N = %v\n", N)
 	io.Pforan("m = %v\n", m)

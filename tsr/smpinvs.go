@@ -10,6 +10,8 @@ import (
 	"github.com/cpmech/gosl/fun"
 )
 
+const SMPUSESRAMP = false
+
 // SmpCalcμ computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
 func SmpCalcμ(φ, a, b, β, ϵ float64) (μ float64) {
 	sφ := math.Sin(φ * math.Pi / 180.0)
@@ -28,9 +30,16 @@ func SmpCalcμ(φ, a, b, β, ϵ float64) (μ float64) {
 // SmpDirector computes the director (normal vector) of the spatially mobilised plane
 //  Note: the norm of N is returned => m := norm(N)
 func SmpDirector(N, λ []float64, a, b, β, ϵ float64) (m float64) {
-	N[0] = a / math.Pow(ϵ+fun.Sramp(a*λ[0], β), b)
-	N[1] = a / math.Pow(ϵ+fun.Sramp(a*λ[1], β), b)
-	N[2] = a / math.Pow(ϵ+fun.Sramp(a*λ[2], β), b)
+	if SMPUSESRAMP {
+		N[0] = a / math.Pow(ϵ+fun.Sramp(a*λ[0], β), b)
+		N[1] = a / math.Pow(ϵ+fun.Sramp(a*λ[1], β), b)
+		N[2] = a / math.Pow(ϵ+fun.Sramp(a*λ[2], β), b)
+	} else {
+		c := β
+		N[0] = a / math.Pow(ϵ+fun.Sabs(a*λ[0], c), b)
+		N[1] = a / math.Pow(ϵ+fun.Sabs(a*λ[1], c), b)
+		N[2] = a / math.Pow(ϵ+fun.Sabs(a*λ[2], c), b)
+	}
 	m = math.Sqrt(N[0]*N[0] + N[1]*N[1] + N[2]*N[2])
 	return
 }
@@ -38,9 +47,16 @@ func SmpDirector(N, λ []float64, a, b, β, ϵ float64) (m float64) {
 // SmpDirectorDeriv1 computes the first order derivative of the SMP director
 //  Notes: Only non-zero components are returned; i.e. dNdλ[i] := dNdλ[i][i]
 func SmpDirectorDeriv1(dNdλ []float64, λ []float64, a, b, β, ϵ float64) {
-	dNdλ[0] = -b * fun.SrampD1(a*λ[0], β) * math.Pow(ϵ+fun.Sramp(a*λ[0], β), -b-1.0)
-	dNdλ[1] = -b * fun.SrampD1(a*λ[1], β) * math.Pow(ϵ+fun.Sramp(a*λ[1], β), -b-1.0)
-	dNdλ[2] = -b * fun.SrampD1(a*λ[2], β) * math.Pow(ϵ+fun.Sramp(a*λ[2], β), -b-1.0)
+	if SMPUSESRAMP {
+		dNdλ[0] = -b * fun.SrampD1(a*λ[0], β) * math.Pow(ϵ+fun.Sramp(a*λ[0], β), -b-1.0)
+		dNdλ[1] = -b * fun.SrampD1(a*λ[1], β) * math.Pow(ϵ+fun.Sramp(a*λ[1], β), -b-1.0)
+		dNdλ[2] = -b * fun.SrampD1(a*λ[2], β) * math.Pow(ϵ+fun.Sramp(a*λ[2], β), -b-1.0)
+	} else {
+		c := β
+		dNdλ[0] = -b * fun.SabsD1(a*λ[0], c) * math.Pow(ϵ+fun.Sabs(a*λ[0], c), -b-1.0)
+		dNdλ[1] = -b * fun.SabsD1(a*λ[1], c) * math.Pow(ϵ+fun.Sabs(a*λ[1], c), -b-1.0)
+		dNdλ[2] = -b * fun.SabsD1(a*λ[2], c) * math.Pow(ϵ+fun.Sabs(a*λ[2], c), -b-1.0)
+	}
 }
 
 // SmpDirectorDeriv2 computes the second order derivative of the SMP director
@@ -48,9 +64,16 @@ func SmpDirectorDeriv1(dNdλ []float64, λ []float64, a, b, β, ϵ float64) {
 func SmpDirectorDeriv2(d2Ndλ2 []float64, λ []float64, a, b, β, ϵ float64) {
 	var F_i, G_i, H_i float64
 	for i := 0; i < 3; i++ {
-		F_i = fun.Sramp(a*λ[i], β)
-		G_i = fun.SrampD1(a*λ[i], β)
-		H_i = fun.SrampD2(a*λ[i], β)
+		if SMPUSESRAMP {
+			F_i = fun.Sramp(a*λ[i], β)
+			G_i = fun.SrampD1(a*λ[i], β)
+			H_i = fun.SrampD2(a*λ[i], β)
+		} else {
+			c := β
+			F_i = fun.Sabs(a*λ[i], c)
+			G_i = fun.SabsD1(a*λ[i], c)
+			H_i = fun.SabsD2(a*λ[i], c)
+		}
 		d2Ndλ2[i] = a * b * ((b+1.0)*G_i*G_i - (ϵ+F_i)*H_i) * math.Pow(ϵ+F_i, -b-2.0)
 	}
 }
@@ -122,12 +145,22 @@ func SmpUnitDirectorDeriv2(d2ndλdλ [][][]float64, m float64, N, dNdλ, d2Ndλ2
 // SmpDerivs1 computes the first derivative and other variables
 //  Note: m, dNdλ, N, F and G are output
 func SmpDerivs1(dndλ [][]float64, dNdλ, N, F, G []float64, λ []float64, a, b, β, ϵ float64) (m float64) {
-	F[0] = fun.Sramp(a*λ[0], β)
-	F[1] = fun.Sramp(a*λ[1], β)
-	F[2] = fun.Sramp(a*λ[2], β)
-	G[0] = fun.SrampD1(a*λ[0], β)
-	G[1] = fun.SrampD1(a*λ[1], β)
-	G[2] = fun.SrampD1(a*λ[2], β)
+	if SMPUSESRAMP {
+		F[0] = fun.Sramp(a*λ[0], β)
+		F[1] = fun.Sramp(a*λ[1], β)
+		F[2] = fun.Sramp(a*λ[2], β)
+		G[0] = fun.SrampD1(a*λ[0], β)
+		G[1] = fun.SrampD1(a*λ[1], β)
+		G[2] = fun.SrampD1(a*λ[2], β)
+	} else {
+		c := β
+		F[0] = fun.Sabs(a*λ[0], c)
+		F[1] = fun.Sabs(a*λ[1], c)
+		F[2] = fun.Sabs(a*λ[2], c)
+		G[0] = fun.SabsD1(a*λ[0], c)
+		G[1] = fun.SabsD1(a*λ[1], c)
+		G[2] = fun.SabsD1(a*λ[2], c)
+	}
 	N[0] = a / math.Pow(ϵ+F[0], b)
 	N[1] = a / math.Pow(ϵ+F[1], b)
 	N[2] = a / math.Pow(ϵ+F[2], b)
@@ -151,10 +184,20 @@ func SmpDerivs1(dndλ [][]float64, dNdλ, N, F, G []float64, λ []float64, a, b,
 // SmpDerivs2 computes the second order derivative
 //  Note: m, N, F, G, dNdλ and dndλ are input
 func SmpDerivs2(d2ndλdλ [][][]float64, λ []float64, a, b, β, ϵ, m float64, N, F, G, dNdλ []float64, dndλ [][]float64) {
-	H := []float64{
-		fun.SrampD2(a*λ[0], β),
-		fun.SrampD2(a*λ[1], β),
-		fun.SrampD2(a*λ[2], β),
+	var H []float64
+	if SMPUSESRAMP {
+		H = []float64{
+			fun.SrampD2(a*λ[0], β),
+			fun.SrampD2(a*λ[1], β),
+			fun.SrampD2(a*λ[2], β),
+		}
+	} else {
+		c := β
+		H = []float64{
+			fun.SabsD2(a*λ[0], c),
+			fun.SabsD2(a*λ[1], c),
+			fun.SabsD2(a*λ[2], c),
+		}
 	}
 	var dmdλ_k, dmdλ_j, d2mdλdλ_jk, d2Ndλ2_jj, d2Ndλdλ_ijk float64
 	for k := 0; k < 3; k++ {

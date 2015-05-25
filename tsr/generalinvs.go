@@ -145,7 +145,7 @@ func GenInvsDeriv2(d2pdλdλ, d2qdλdλ [][]float64, λ, n, dpdλ, dqdλ []float
 //  Note: internal variables are created => not efficient
 func SMPinvs(λ []float64, a, b, β, ϵ float64) (p, q float64, err error) {
 	W := make([]float64, 3)                   // workspace
-	m := NewSmpDirector(W, λ, a, b, β, ϵ)     // W := N
+	m := SmpDirector(W, λ, a, b, β, ϵ)        // W := N
 	W[0], W[1], W[2] = W[0]/m, W[1]/m, W[2]/m // W := n
 	p, q, err = GenInvs(λ, W, a)
 	return
@@ -158,9 +158,9 @@ func SMPderivs1(dpdλ, dqdλ, λ []float64, a, b, β, ϵ float64) (p, q float64,
 	dNdλ := make([]float64, 3)
 	Frmp := make([]float64, 3)
 	Grmp := make([]float64, 3)
-	W := make([]float64, 3)                                      // workspace
-	m := NewSmpDerivs1(dndλ, dNdλ, W, Frmp, Grmp, λ, a, b, β, ϵ) // W := N
-	W[0], W[1], W[2] = W[0]/m, W[1]/m, W[2]/m                    // W := n
+	W := make([]float64, 3)                                   // workspace
+	m := SmpDerivs1(dndλ, dNdλ, W, Frmp, Grmp, λ, a, b, β, ϵ) // W := N
+	W[0], W[1], W[2] = W[0]/m, W[1]/m, W[2]/m                 // W := n
 	p, q, err = GenInvsDeriv1(dpdλ, dqdλ, λ, W, dndλ, a)
 	return
 }

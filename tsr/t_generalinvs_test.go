@@ -196,20 +196,23 @@ func Test_geninvs01(tst *testing.T) {
 		}
 
 		// SMP derivs
-		io.Pfpink("\nSMP derivs\n")
-		dndσ_ := la.MatAlloc(3, 3)
-		dNdσ_ := make([]float64, 3)
-		d2ndσdσ_ := utl.Deep3alloc(3, 3, 3)
-		N_ := make([]float64, 3)
-		F_ := make([]float64, 3)
-		G_ := make([]float64, 3)
-		m_ := SmpDerivs1(dndσ_, dNdσ_, N_, F_, G_, σ, smp_a, smp_b, smp_β, smp_ϵ)
-		SmpDerivs2(d2ndσdσ_, σ, smp_a, smp_b, smp_β, smp_ϵ, m_, N_, F_, G_, dNdσ_, dndσ_)
-		chk.Scalar(tst, "m_", 1e-14, m_, m)
-		chk.Vector(tst, "N_", 1e-15, N_, N)
-		chk.Vector(tst, "dNdσ_", 1e-15, dNdσ_, dNdσ)
-		chk.Matrix(tst, "dndσ_", 1e-13, dndσ_, dndσ)
-		chk.Deep3(tst, "d2ndσdσ_", 1e-13, d2ndσdσ_, d2ndσdσ)
+		//if false {
+		if true {
+			io.Pfpink("\nSMP derivs\n")
+			dndσ_ := la.MatAlloc(3, 3)
+			dNdσ_ := make([]float64, 3)
+			d2ndσdσ_ := utl.Deep3alloc(3, 3, 3)
+			N_ := make([]float64, 3)
+			F_ := make([]float64, 3)
+			G_ := make([]float64, 3)
+			m_ := SmpDerivs1(dndσ_, dNdσ_, N_, F_, G_, σ, smp_a, smp_b, smp_β, smp_ϵ)
+			SmpDerivs2(d2ndσdσ_, σ, smp_a, smp_b, smp_β, smp_ϵ, m_, N_, F_, G_, dNdσ_, dndσ_)
+			chk.Scalar(tst, "m_", 1e-14, m_, m)
+			chk.Vector(tst, "N_", 1e-15, N_, N)
+			chk.Vector(tst, "dNdσ_", 1e-15, dNdσ_, dNdσ)
+			chk.Matrix(tst, "dndσ_", 1e-13, dndσ_, dndσ)
+			chk.Deep3(tst, "d2ndσdσ_", 1e-13, d2ndσdσ_, d2ndσdσ)
+		}
 	}
 }
 

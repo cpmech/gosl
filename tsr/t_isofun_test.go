@@ -22,7 +22,7 @@ func Test_isofun01(tst *testing.T) {
 	shift := 0.0
 
 	φ := 30.0
-	μ := NewSmpCalcμ(φ, a, b, β, ϵ)
+	μ := SmpCalcμ(φ, a, b, β, ϵ)
 	io.Pforan("μ = %v\n", μ)
 
 	simpleform := true
@@ -121,7 +121,7 @@ func Test_isofun02(tst *testing.T) {
 	φ, ncp := 30.0, 4
 
 	// q/p coefficient
-	μ := NewSmpCalcμ(φ, a, b, β, ϵ)
+	μ := SmpCalcμ(φ, a, b, β, ϵ)
 	io.Pforan("μ = %v\n", μ)
 
 	// yield func coefficients
@@ -176,8 +176,8 @@ func Test_isofun02(tst *testing.T) {
 	}
 
 	// 3D view
-	if false {
-		//if true {
+	//if false {
+	if true {
 		grads := true
 		gftol := 5e-2
 		o.View(10, nil, grads, gftol, func(e *vtk.IsoSurf) {
@@ -197,7 +197,7 @@ func Test_isofun03(tst *testing.T) {
 
 	// failure crit parameters
 	φ := 20.0
-	M := NewSmpCalcμ(φ, a, b, β, ϵ)
+	M := SmpCalcμ(φ, a, b, β, ϵ)
 
 	// functions
 	ffcn := func(p, q float64, args ...interface{}) float64 {
@@ -284,7 +284,7 @@ func Test_isofun04(tst *testing.T) {
 
 	// failure crit parameters
 	φ := 20.0
-	M := NewSmpCalcμ(φ, a, b, β, ϵ)
+	M := SmpCalcμ(φ, a, b, β, ϵ)
 
 	// for rounding
 	r := 0.3

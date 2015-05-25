@@ -121,8 +121,8 @@ func (o *IsoFun) Fp(λ []float64, args ...interface{}) (res float64, err error) 
 	o.apply_shift(o.Ls, λ)
 
 	// SMP director and unit director
-	o.m = NewSmpDirector(o.N, o.Ls, o.a, o.b, o.β, o.ϵ)
-	NewSmpUnitDirector(o.n, o.m, o.N)
+	o.m = SmpDirector(o.N, o.Ls, o.a, o.b, o.β, o.ϵ)
+	SmpUnitDirector(o.n, o.m, o.N)
 
 	// SMP invariants
 	o.p, o.q, err = GenInvs(o.Ls, o.n, o.a)
@@ -147,8 +147,8 @@ func (o *IsoFun) Gp(λ []float64, args ...interface{}) (fval float64, err error)
 	o.apply_shift(o.Ls, λ)
 
 	// SMP director, unit director and derivatives
-	o.m = NewSmpDerivs1(o.dndλ, o.dNdλ, o.N, o.Frmp, o.Grmp, o.Ls, o.a, o.b, o.β, o.ϵ)
-	NewSmpUnitDirector(o.n, o.m, o.N)
+	o.m = SmpDerivs1(o.dndλ, o.dNdλ, o.N, o.Frmp, o.Grmp, o.Ls, o.a, o.b, o.β, o.ϵ)
+	SmpUnitDirector(o.n, o.m, o.N)
 
 	// SMP invariants and derivatives
 	o.p, o.q, err = GenInvsDeriv1(o.dpdλ, o.dqdλ, o.Ls, o.n, o.dndλ, o.a)
@@ -175,7 +175,7 @@ func (o *IsoFun) Gp(λ []float64, args ...interface{}) (fval float64, err error)
 func (o *IsoFun) HafterGp(args ...interface{}) (err error) {
 
 	// SMP director second derivatives
-	NewSmpDerivs2(o.d2ndλdλ, o.Ls, o.a, o.b, o.β, o.ϵ, o.m, o.N, o.Frmp, o.Grmp, o.dNdλ, o.dndλ)
+	SmpDerivs2(o.d2ndλdλ, o.Ls, o.a, o.b, o.β, o.ϵ, o.m, o.N, o.Frmp, o.Grmp, o.dNdλ, o.dndλ)
 
 	// SMP invariants and derivatives
 	GenInvsDeriv2(o.d2pdλdλ, o.d2qdλdλ, o.Ls, o.n, o.dpdλ, o.dqdλ, o.p, o.q, o.dndλ, o.d2ndλdλ, o.a)
