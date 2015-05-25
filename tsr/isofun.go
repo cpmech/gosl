@@ -5,11 +5,14 @@
 package tsr
 
 import (
+	"math"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/vtk"
 )
 
 // Callbacks
@@ -128,8 +131,8 @@ func (o *IsoFun) Fp(λ []float64, args ...interface{}) (res float64, err error) 
 	}
 
 	// function evaluation
-	io.PfMag("Fp: λ=%v Ls=%v\n", λ, o.Ls)
-	io.Pforan("Fp: b=%v N=%v p=%v q=%v\n", o.b, o.N, o.p, o.q)
+	//io.PfMag("Fp: λ=%v Ls=%v\n", λ, o.Ls)
+	//io.Pforan("Fp: b=%v N=%v p=%v q=%v\n", o.b, o.N, o.p, o.q)
 	res = o.ffcn(o.p, o.q, args...)
 	return
 }
@@ -451,6 +454,81 @@ func (o *IsoFun) FindIntersect(p0, k float64, Δλ []float64, usek, debug bool, 
 		λ_at_int[2] = xsol[2]
 	}
 	return
+}
+
+// View visualises the isosurface with VTK
+func (o IsoFun) View(l float64, λ []float64, grads bool, gradsFtol float64, extraconf func(is *vtk.IsoSurf), args ...interface{}) {
+
+	// scene
+	scn := vtk.NewScene()
+	scn.AxesLen = l
+	scn.Reverse = o.a < 0
+	scn.SaveOnExit = false
+
+	// stress point
+	var sph *vtk.Sphere
+	if λ != nil {
+		sph = vtk.NewSphere()
+		sph.Cen = λ
+		sph.R = 0.2
+		sph.Color = []float64{1, 1, 0, 1}
+		sph.AddTo(scn)
+	}
+
+	// callback function
+	fcn := func(x []float64) (f, vx, vy, vz float64) {
+		o.L[0], o.L[1], o.L[2] = x[0], x[1], x[2]
+		f, err := o.Fp(o.L, args...)
+		if err != nil {
+			f = 1e+5
+			return
+		}
+		if grads {
+			_, err = o.Gp(o.L, args...)
+			if err != nil {
+				return
+			}
+			if math.Abs(f) < gradsFtol {
+				vx, vy, vz = o.Dfdλ[0], o.Dfdλ[1], o.Dfdλ[2]
+			}
+		}
+		return
+	}
+
+	// isosurfaces
+	isf1 := vtk.NewIsoSurf(fcn)
+	isf2 := vtk.NewIsoSurf(fcn)
+	isf1.AddTo(scn)
+	isf2.AddTo(scn)
+
+	// set isosurfaces
+	npq := 61
+	npt := 101
+	setisof := func(isf *vtk.IsoSurf) {
+		isf.OctRotate = true
+		if isf.OctRotate {
+			isf.Limits = []float64{-l, l, 0, l, 0, 360}
+			isf.Ndiv = []int{npq, npq, npt}
+		} else {
+			isf.Limits = []float64{-l, l, -l, l, -l, l}
+			isf.Ndiv = []int{npq, npq, npq}
+		}
+		isf.Nlevels = 1
+		isf.Frange = []float64{0, 0}
+	}
+	setisof(isf1)
+	isf1.CmapNclrs = 24
+	isf1.CmapType = "warm"
+	if extraconf != nil {
+		extraconf(isf1)
+	}
+	setisof(isf2)
+	isf2.CmapNclrs = 0
+	isf2.Color = []float64{0, 0, 0, 1}
+	isf2.ShowWire = true
+
+	// run visualisation
+	scn.Run()
 }
 
 // CheckGrads check df/dA and d²f/dA²

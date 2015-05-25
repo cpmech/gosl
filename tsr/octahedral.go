@@ -215,7 +215,7 @@ func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float6
 	if last {
 		plt.AxisOff()
 		plt.Equal()
-		plt.SaveD("results", filename)
+		plt.SaveD("/tmp", filename)
 	}
 }
 

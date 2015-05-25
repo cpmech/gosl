@@ -10,11 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-)
-
-const (
-	//SAVEISOPLOT = true
-	SAVEISOPLOT = false
+	"github.com/cpmech/gosl/vtk"
 )
 
 func Test_isofun01(tst *testing.T) {
@@ -22,7 +18,7 @@ func Test_isofun01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("isofun01")
 
-	a, b, β, ϵ := 1.0, 0.5, 2.0, 1e-3
+	a, b, β, ϵ := -1.0, 0.5, 2.0, 1e-3
 	shift := 0.0
 
 	φ := 30.0
@@ -33,8 +29,8 @@ func Test_isofun01(tst *testing.T) {
 	notfcrit := false
 
 	dver := chk.Verbose
-	dtol := 1e-5
-	dtol2 := 1e-6
+	dtol := 1e-4
+	dtol2 := 1e-4
 
 	ffcn := func(p, q float64, args ...interface{}) float64 {
 		if notfcrit {
@@ -83,13 +79,6 @@ func Test_isofun01(tst *testing.T) {
 		//for idxA := 10; idxA < 11; idxA++ {
 		//for idxA := 10; idxA < len(test_nd); idxA++ {
 
-		// change tolerances
-		dtol_, dtol2_ := dtol, dtol2
-		switch idxA {
-		case 12:
-			dtol, dtol2 = 1.72e-5, 1e-4
-		}
-
 		// tensor
 		AA := test_AA[idxA]
 		A := M_Alloc2(nd[idxA])
@@ -116,9 +105,6 @@ func Test_isofun01(tst *testing.T) {
 
 		// check gradients
 		o.CheckGrads(A, dtol, dtol2, dver)
-
-		// recover tolerances
-		dtol, dtol2 = dtol_, dtol2_
 	}
 }
 
@@ -183,9 +169,20 @@ func Test_isofun02(tst *testing.T) {
 	grads := false
 	showpts := false
 	ferr := 10.0
-	if SAVEISOPLOT {
+	if false {
+		//if true {
 		PlotOct("fig_isofun02.png", σcCte, rmin, rmax, nr, nα, φ, o.Fa, o.Ga,
 			npolarc, simplec, only0, grads, showpts, true, true, ferr)
+	}
+
+	// 3D view
+	if false {
+		//if true {
+		grads := true
+		gftol := 5e-2
+		o.View(10, nil, grads, gftol, func(e *vtk.IsoSurf) {
+			e.Nlevels = 7
+		})
 	}
 }
 
@@ -256,9 +253,20 @@ func Test_isofun03(tst *testing.T) {
 	grads := false
 	showpts := false
 	ferr := 10.0
-	if SAVEISOPLOT {
+	if false {
+		//if true {
 		PlotOct("fig_isofun03.png", σcCte, rmin, rmax, nr, nα, φ, o.Fa, o.Ga,
 			npolarc, simplec, only0, grads, showpts, true, true, ferr)
+	}
+
+	// 3D view
+	if false {
+		//if true {
+		grads := true
+		gftol := 5e-2
+		o.View(2.0*SQ3, λ, grads, gftol, func(e *vtk.IsoSurf) {
+			//e.Nlevels = 40
+		})
 	}
 }
 
@@ -371,8 +379,19 @@ func Test_isofun04(tst *testing.T) {
 	grads := false
 	showpts := false
 	ferr := 10.0
-	if SAVEISOPLOT {
+	if false {
+		//if true {
 		PlotOct("fig_isofun04.png", σcCte, rmin, rmax, nr, nα, φ, o.Fa, o.Ga,
 			npolarc, simplec, only0, grads, showpts, true, true, ferr)
+	}
+
+	// 3D view
+	if false {
+		//if true {
+		grads := true
+		gftol := 5e-2
+		o.View(2.0*SQ3, λ, grads, gftol, func(e *vtk.IsoSurf) {
+			//e.Nlevels = 40
+		})
 	}
 }
