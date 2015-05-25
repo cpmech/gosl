@@ -72,6 +72,12 @@ func (o *IsoFun) Get_bsmp() float64      { return o.b }
 func (o *IsoFun) Set_bsmp(b float64)     { o.b = b }
 func (o *IsoFun) Get_pq() (p, q float64) { return o.p, o.q }
 
+// SetPrms set parameters
+func (o *IsoFun) SetPrms(a, b, β, ϵ, shift float64) {
+	o.a, o.b, o.β, o.ϵ = a, b, β, ϵ
+	o.shift = shift
+}
+
 // Init initialises the isotropic function structure
 func (o *IsoFun) Init(a, b, β, ϵ, shift float64, ncp int, ffcn Cb_isofun_f, gfcn Cb_isofun_g, hfcn Cb_isofun_h) {
 
