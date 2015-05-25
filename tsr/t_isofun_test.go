@@ -176,8 +176,8 @@ func Test_isofun02(tst *testing.T) {
 	}
 
 	// 3D view
-	//if false {
-	if true {
+	if false {
+		//if true {
 		grads := true
 		gftol := 5e-2
 		o.View(10, nil, grads, gftol, func(e *vtk.IsoSurf) {
