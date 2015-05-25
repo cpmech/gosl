@@ -77,3 +77,41 @@ func SrampD2(x, β float64) float64 {
 	}
 	return β * math.Exp(β*x) / math.Pow(math.Exp(β*x)+1.0, 2.0)
 }
+
+// Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
+func Sabs(x, eps float64) float64 {
+	s := 0.0
+	if x > 0.0 {
+		s = 1.0
+	} else if x < 0.0 {
+		s = -1.0
+	}
+	return x * x / (s*x + eps)
+}
+
+// SabsD1 returns the first derivative of Sabs
+func SabsD1(x, eps float64) float64 {
+	s := 0.0
+	if x > 0.0 {
+		s = 1.0
+	} else if x < 0.0 {
+		s = -1.0
+	}
+	d := s*x + eps
+	y := x * x / d
+	return (2.0*x - s*y) / d
+}
+
+// SabsD2 returns the first derivative of Sabs
+func SabsD2(x, eps float64) float64 {
+	s := 0.0
+	if x > 0.0 {
+		s = 1.0
+	} else if x < 0.0 {
+		s = -1.0
+	}
+	d := s*x + eps
+	y := x * x / d
+	dydt := (2.0*x - s*y) / d
+	return 2.0 * (1.0 - s*dydt) / d
+}

@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -83,5 +84,66 @@ func Test_functions02(tst *testing.T) {
 
 	if with_err {
 		chk.Panic("errors found")
+	}
+}
+
+func Test_functions03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("functions03")
+
+	eps := 1e-2
+	f := func(x float64) float64 { return Sabs(x, eps) }
+	ff := func(x float64) float64 { return SabsD1(x, eps) }
+
+	np := 401
+	//x  := utl.LinSpace(-5e5, 5e5, np)
+	//x  := utl.LinSpace(-5e2, 5e2, np)
+	x := utl.LinSpace(-5e1, 5e1, np)
+	Y := make([]float64, np)
+	y := make([]float64, np)
+	g := make([]float64, np)
+	h := make([]float64, np)
+	tolg, tolh := 1e-6, 1e-5
+	with_err := false
+	for i := 0; i < np; i++ {
+		Y[i] = math.Abs(x[i])
+		y[i] = Sabs(x[i], eps)
+		g[i] = SabsD1(x[i], eps)
+		h[i] = SabsD2(x[i], eps)
+		gnum := numderiv(f, x[i])
+		hnum := numderiv(ff, x[i])
+		errg := math.Abs(g[i] - gnum)
+		errh := math.Abs(h[i] - hnum)
+		clrg, clrh := "[1;32m", "[1;32m"
+		if errg > tolg {
+			clrg, with_err = "[1;31m", true
+		}
+		if errh > tolh {
+			clrh, with_err = "[1;31m", true
+		}
+		io.Pf("errg = %s%23.15e   errh = %s%23.15e[0m\n", clrg, errg, clrh, errh)
+	}
+
+	if with_err {
+		chk.Panic("errors found")
+	}
+
+	if false {
+		//if true {
+		plt.Subplot(3, 1, 1)
+		plt.Plot(x, y, "'k--', label='abs'")
+		plt.Plot(x, y, "'b-', label='sabs'")
+		plt.Gll("x", "y", "")
+
+		plt.Subplot(3, 1, 2)
+		plt.Plot(x, g, "'b-', label='sabs'")
+		plt.Gll("x", "dy/dx", "")
+
+		plt.Subplot(3, 1, 3)
+		plt.Plot(x, h, "'b-', label='sabs'")
+		plt.Gll("x", "d2y/dx2", "")
+
+		plt.Show()
 	}
 }
