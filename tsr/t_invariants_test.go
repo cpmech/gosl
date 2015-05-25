@@ -333,22 +333,23 @@ func Test_invs07(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("invs07")
 
-	a, b, β, ϵ := -1.0, 0.0, 1.0, 1e-3
+	smp_a, smp_b, smp_β, smp_ϵ := -1.0, 0.0, 1.0, 1e-3
 
-	σ := []float64{-1, -1, -1, 0}
-	λ := []float64{1, 1, 1, 0}
+	σ := []float64{-1, -1, 0, 0}
 
 	pcam, qcam, _ := M_pqw(σ)
 	poct, qoct := pcam*SQ3, qcam*SQ2by3
 
-	nold := make([]float64, 3)
-	SmpUnitDirector(nold, λ, b)
-	psmp1, qsmp1, err := GenInvs(λ, nold, 1)
+	N := make([]float64, 3)
+	n := make([]float64, 3)
+	m := SmpDirector(N, σ, smp_a, smp_b, smp_β, smp_ϵ)
+	SmpUnitDirector(n, m, N)
+	psmp1, qsmp1, err := GenInvs(σ, n, smp_a)
 	if err != nil {
 		chk.Panic("M_GenInvs failed:\n%v", err)
 	}
 
-	psmp2, qsmp2, err := M_pq_smp(σ, a, b, β, ϵ)
+	psmp2, qsmp2, err := M_pq_smp(σ, smp_a, smp_b, smp_β, smp_ϵ)
 	if err != nil {
 		chk.Panic("M_pq_smp failed:\n%v", err)
 	}

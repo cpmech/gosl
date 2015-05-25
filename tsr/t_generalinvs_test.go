@@ -21,10 +21,14 @@ func Test_geninvs01(tst *testing.T) {
 	chk.PrintTitle("geninvs01")
 
 	tol := 1e-15
-	b := 0.5
-	dtol := 1e-7
+	dtol := 1e-6
 	dver := chk.Verbose
 	dtol2 := 1e-6
+
+	smp_a := -1.0
+	smp_b := 0.5
+	smp_β := 2.0
+	smp_ϵ := 1e-3
 
 	nd := test_nd
 	for idxA := 0; idxA < len(test_nd)-3; idxA++ {
@@ -53,8 +57,8 @@ func Test_geninvs01(tst *testing.T) {
 		// SMP director
 		N := make([]float64, 3)
 		n := make([]float64, 3)
-		m := SmpUnitDirector(n, σ, b)
-		SmpDirector(N, σ, b)
+		m := SmpDirector(N, σ, smp_a, smp_b, smp_β, smp_ϵ)
+		SmpUnitDirector(n, m, N)
 
 		// output
 		io.PfYel("\n\ntst # %d ###################################################################################\n", idxA)
@@ -70,37 +74,39 @@ func Test_geninvs01(tst *testing.T) {
 		// dN/dσ
 		var tmp float64
 		N_tmp := make([]float64, 3)
-		dNdσ := la.MatAlloc(3, 3)
-		SmpDirectorDeriv1(dNdσ, σ, b)
+		dNdσ := make([]float64, 3)
+		SmpDirectorDeriv1(dNdσ, σ, smp_a, smp_b, smp_β, smp_ϵ)
 		io.Pfpink("\ndNdσ = %v\n", dNdσ)
-		for i := 0; i < 3; i++ {
-			for j := 0; j < 3; j++ {
-				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-					tmp, σ[j] = σ[j], x
-					SmpDirector(N_tmp, σ, b)
-					σ[j] = tmp
-					return N_tmp[i]
-				}, σ[j], 1e-6)
-				chk.AnaNum(tst, io.Sf("dN/dσ[%d][%d]", i, j), dtol, dNdσ[i][j], dnum, dver)
-			}
+		dtol_tmp := dtol
+		if idxA == 0 || idxA == 2 {
+			dtol = 1e-5
 		}
+		for i := 0; i < 3; i++ {
+			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
+				tmp, σ[i] = σ[i], x
+				SmpDirector(N_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+				σ[i] = tmp
+				return N_tmp[i]
+			}, σ[i], 1e-6)
+			chk.AnaNum(tst, io.Sf("dN/dσ[%d][%d]", i, i), dtol, dNdσ[i], dnum, dver)
+		}
+		dtol = dtol_tmp
 
 		// dm/dσ
 		n_tmp := make([]float64, 3)
 		dmdσ := make([]float64, 3)
-		mm := SmpNormDirectorDeriv1(dmdσ, σ, b)
+		SmpNormDirectorDeriv1(dmdσ, m, N, dNdσ)
 		io.Pfpink("\ndmdσ = %v\n", dmdσ)
-		chk.Scalar(tst, "m", 1e-17, m, mm)
-		dtol_tmp := dtol
-		if idxA == 5 {
-			dtol = 1e-6
+		dtol_tmp = dtol
+		if idxA == 0 || idxA == 2 {
+			dtol = 1e-5
 		}
 		for j := 0; j < 3; j++ {
 			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 				tmp, σ[j] = σ[j], x
-				m := SmpUnitDirector(n_tmp, σ, b)
+				m_tmp := SmpDirector(N_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
 				σ[j] = tmp
-				return m
+				return m_tmp
 			}, σ[j], 1e-6)
 			chk.AnaNum(tst, io.Sf("dm/dσ[%d]", j), dtol, dmdσ[j], dnum, dver)
 		}
@@ -108,13 +114,14 @@ func Test_geninvs01(tst *testing.T) {
 
 		// dn/dσ
 		dndσ := la.MatAlloc(3, 3)
-		SmpUnitDirectorDeriv1(dndσ, σ, n, b, m, dmdσ)
+		SmpUnitDirectorDeriv1(dndσ, m, N, dNdσ, dmdσ)
 		io.Pfpink("\ndndσ = %v\n", dndσ)
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 					tmp, σ[j] = σ[j], x
-					SmpUnitDirector(n_tmp, σ, b)
+					m_tmp := SmpDirector(N_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+					SmpUnitDirector(n_tmp, m_tmp, N_tmp)
 					σ[j] = tmp
 					return n_tmp[i]
 				}, σ[j], 1e-6)
@@ -123,19 +130,24 @@ func Test_geninvs01(tst *testing.T) {
 		}
 
 		// d²m/dσdσ
+		dNdσ_tmp := make([]float64, 3)
 		dmdσ_tmp := make([]float64, 3)
+		d2Ndσ2 := make([]float64, 3)
 		d2mdσdσ := la.MatAlloc(3, 3)
-		SmpNormDirectorDeriv2(d2mdσdσ, σ, b, m, dmdσ)
+		SmpDirectorDeriv2(d2Ndσ2, σ, smp_a, smp_b, smp_β, smp_ϵ)
+		SmpNormDirectorDeriv2(d2mdσdσ, σ, smp_a, smp_b, smp_β, smp_ϵ, m, N, dNdσ, d2Ndσ2, dmdσ)
 		io.Pfpink("\nd2mdσdσ = %v\n", d2mdσdσ)
 		tol_tmp := dtol2
-		if idxA == 5 {
-			dtol2 = 1e-3
+		if idxA == 0 {
+			dtol2 = 1e-5
 		}
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 					tmp, σ[j] = σ[j], x
-					SmpNormDirectorDeriv1(dmdσ_tmp, σ, b)
+					m_tmp := SmpDirector(N_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+					SmpDirectorDeriv1(dNdσ_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+					SmpNormDirectorDeriv1(dmdσ_tmp, m_tmp, N_tmp, dNdσ_tmp)
 					σ[j] = tmp
 					return dmdσ_tmp[i]
 				}, σ[j], 1e-6)
@@ -146,27 +158,18 @@ func Test_geninvs01(tst *testing.T) {
 
 		// d²N/dσdσ
 		io.Pfpink("\nd²N/dσdσ\n")
-		dNdσ_tmp := la.MatAlloc(3, 3)
 		tol_tmp = dtol2
-		if idxA == 5 {
-			dtol2 = 1e-4
-		}
-		if idxA == 7 {
+		if idxA == 0 || idxA == 7 {
 			dtol2 = 1e-5
 		}
 		for i := 0; i < 3; i++ {
-			for j := 0; j < 3; j++ {
-				for k := 0; k < 3; k++ {
-					dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-						tmp, σ[k] = σ[k], x
-						SmpDirectorDeriv1(dNdσ_tmp, σ, b)
-						σ[k] = tmp
-						return dNdσ_tmp[i][j]
-					}, σ[k], 1e-6)
-					dana := SmpDirectorDeriv2(i, j, k, σ, b)
-					chk.AnaNum(tst, io.Sf("d²N[%d]/dσ[%d]dσ[%d]", i, j, k), dtol2, dana, dnum, dver)
-				}
-			}
+			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
+				tmp, σ[i] = σ[i], x
+				SmpDirectorDeriv1(dNdσ_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+				σ[i] = tmp
+				return dNdσ_tmp[i]
+			}, σ[i], 1e-6)
+			chk.AnaNum(tst, io.Sf("d²N[%d]/dσ[%d]dσ[%d]", i, i, i), dtol2, d2Ndσ2[i], dnum, dver)
 		}
 		dtol2 = tol_tmp
 
@@ -174,15 +177,16 @@ func Test_geninvs01(tst *testing.T) {
 		io.Pfpink("\nd²n/dσdσ\n")
 		dndσ_tmp := la.MatAlloc(3, 3)
 		d2ndσdσ := utl.Deep3alloc(3, 3, 3)
-		SmpUnitDirectorDeriv2(d2ndσdσ, σ, n, dmdσ, b, m, d2mdσdσ, dndσ)
+		SmpUnitDirectorDeriv2(d2ndσdσ, m, N, dNdσ, d2Ndσ2, dmdσ, n, d2mdσdσ, dndσ)
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				for k := 0; k < 3; k++ {
 					dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 						tmp, σ[k] = σ[k], x
-						SmpUnitDirector(n_tmp, σ, b)
-						m_tmp := SmpNormDirectorDeriv1(dmdσ_tmp, σ, b)
-						SmpUnitDirectorDeriv1(dndσ_tmp, σ, n_tmp, b, m_tmp, dmdσ_tmp)
+						m_tmp := SmpDirector(N_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+						SmpDirectorDeriv1(dNdσ_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+						SmpNormDirectorDeriv1(dmdσ_tmp, m_tmp, N_tmp, dNdσ_tmp)
+						SmpUnitDirectorDeriv1(dndσ_tmp, m_tmp, N_tmp, dNdσ_tmp, dmdσ_tmp)
 						σ[k] = tmp
 						return dndσ_tmp[i][j]
 					}, σ[k], 1e-6)
@@ -193,16 +197,19 @@ func Test_geninvs01(tst *testing.T) {
 
 		// SMP derivs
 		io.Pfpink("\nSMP derivs\n")
-		d2mdσdσ_ := la.MatAlloc(3, 3)
 		dndσ_ := la.MatAlloc(3, 3)
-		dmdσ_ := make([]float64, 3)
-		n_ := make([]float64, 3)
-		m_ := SmpDerivs(d2mdσdσ_, dndσ_, dmdσ_, n_, σ, b)
+		dNdσ_ := make([]float64, 3)
+		d2ndσdσ_ := utl.Deep3alloc(3, 3, 3)
+		N_ := make([]float64, 3)
+		F_ := make([]float64, 3)
+		G_ := make([]float64, 3)
+		m_ := SmpDerivs1(dndσ_, dNdσ_, N_, F_, G_, σ, smp_a, smp_b, smp_β, smp_ϵ)
+		SmpDerivs2(d2ndσdσ_, σ, smp_a, smp_b, smp_β, smp_ϵ, m_, N_, F_, G_, dNdσ_, dndσ_)
 		chk.Scalar(tst, "m_", 1e-14, m_, m)
-		chk.Vector(tst, "n_", 1e-15, n_, n)
-		chk.Vector(tst, "dmdσ_", 1e-15, dmdσ_, dmdσ)
+		chk.Vector(tst, "N_", 1e-15, N_, N)
+		chk.Vector(tst, "dNdσ_", 1e-15, dNdσ_, dNdσ)
 		chk.Matrix(tst, "dndσ_", 1e-13, dndσ_, dndσ)
-		chk.Matrix(tst, "d2mdσdσ_", 1e-13, d2mdσdσ_, d2mdσdσ)
+		chk.Deep3(tst, "d2ndσdσ_", 1e-13, d2ndσdσ_, d2ndσdσ)
 	}
 }
 
@@ -211,11 +218,15 @@ func Test_geninvs02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("geninvs02")
 
-	b := 0.5
 	tol := 1e-10
-	dtol := 1e-7
-	dtol2 := 1e-7
+	dtol := 1e-6
+	dtol2 := 1e-6
 	dver := chk.Verbose
+
+	smp_a := -1.0
+	smp_b := 0.5
+	smp_β := 2.0
+	smp_ϵ := 1e-3
 
 	nd := test_nd
 	for idxA := 0; idxA < len(test_nd)-3; idxA++ {
@@ -243,14 +254,19 @@ func Test_geninvs02(tst *testing.T) {
 		}
 
 		// SMP derivs and SMP director
-		d2mdσdσ := la.MatAlloc(3, 3)
 		dndσ := la.MatAlloc(3, 3)
-		dmdσ := make([]float64, 3)
+		dNdσ := make([]float64, 3)
+		d2ndσdσ := utl.Deep3alloc(3, 3, 3)
+		N := make([]float64, 3)
+		F := make([]float64, 3)
+		G := make([]float64, 3)
+		m := SmpDerivs1(dndσ, dNdσ, N, F, G, σ, smp_a, smp_b, smp_β, smp_ϵ)
+		SmpDerivs2(d2ndσdσ, σ, smp_a, smp_b, smp_β, smp_ϵ, m, N, F, G, dNdσ, dndσ)
 		n := make([]float64, 3)
-		m := SmpDerivs(d2mdσdσ, dndσ, dmdσ, n, σ, b)
+		SmpUnitDirector(n, m, N)
 
 		// SMP invariants
-		p, q, err := GenInvs(σ, n, 1)
+		p, q, err := GenInvs(σ, n, smp_a)
 		if err != nil {
 			chk.Panic("SmpInvs failed:\n%v", err)
 		}
@@ -275,20 +291,26 @@ func Test_geninvs02(tst *testing.T) {
 		q_ := math.Sqrt(norm_tvec*norm_tvec - norm_proj*norm_proj)
 		io.Pforan("proj = %v\n", proj)
 		io.Pforan("norm(proj) = %v == p\n", norm_proj)
-		chk.Scalar(tst, "p", 1e-14, p, norm_proj)
+		chk.Scalar(tst, "p", 1e-14, p, smp_a*norm_proj)
 		chk.Scalar(tst, "q", 1e-13, q, q_)
 
 		// dt/dσ
 		var tmp float64
+		N_tmp := make([]float64, 3)
 		n_tmp := make([]float64, 3)
 		tvec_tmp := make([]float64, 3)
 		dtdσ := la.MatAlloc(3, 3)
 		GenTvecDeriv1(dtdσ, σ, n, dndσ)
+		dtol_tmp := dtol
+		if idxA == 4 {
+			dtol = 1e-5
+		}
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 					tmp, σ[j] = σ[j], x
-					SmpUnitDirector(n_tmp, σ, b)
+					m_tmp := SmpDirector(N_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+					SmpUnitDirector(n_tmp, m_tmp, N_tmp)
 					GenTvec(tvec_tmp, σ, n_tmp)
 					σ[j] = tmp
 					return tvec_tmp[i]
@@ -296,25 +318,20 @@ func Test_geninvs02(tst *testing.T) {
 				chk.AnaNum(tst, io.Sf("dt/dσ[%d][%d]", i, j), dtol, dtdσ[i][j], dnum, dver)
 			}
 		}
+		dtol = dtol_tmp
 
 		// d²t/dσdσ
 		io.Pfpink("\nd²t/dσdσ\n")
-		d2mdσdσ_tmp := la.MatAlloc(3, 3)
+		dNdσ_tmp := make([]float64, 3)
 		dndσ_tmp := la.MatAlloc(3, 3)
-		dmdσ_tmp := make([]float64, 3)
 		dtdσ_tmp := la.MatAlloc(3, 3)
-		d2ndσdσ := utl.Deep3alloc(3, 3, 3)
-		SmpUnitDirectorDeriv2(d2ndσdσ, σ, n, dmdσ, b, m, d2mdσdσ, dndσ)
-		dtol2_tmp := dtol2
-		if idxA == 5 {
-			dtol2 = 1e-6
-		}
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				for k := 0; k < 3; k++ {
 					dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 						tmp, σ[k] = σ[k], x
-						SmpDerivs(d2mdσdσ_tmp, dndσ_tmp, dmdσ_tmp, n_tmp, σ, b)
+						m_tmp := SmpDerivs1(dndσ_tmp, dNdσ_tmp, N_tmp, F, G, σ, smp_a, smp_b, smp_β, smp_ϵ)
+						SmpUnitDirector(n_tmp, m_tmp, N_tmp)
 						GenTvecDeriv1(dtdσ_tmp, σ, n_tmp, dndσ_tmp)
 						σ[k] = tmp
 						return dtdσ_tmp[i][j]
@@ -324,12 +341,11 @@ func Test_geninvs02(tst *testing.T) {
 				}
 			}
 		}
-		dtol2 = dtol2_tmp
 
 		// first order derivatives
 		dpdσ := make([]float64, 3)
 		dqdσ := make([]float64, 3)
-		p_, q_, err := GenInvsDeriv1(dpdσ, dqdσ, σ, n, dndσ, 1)
+		p_, q_, err := GenInvsDeriv1(dpdσ, dqdσ, σ, n, dndσ, smp_a)
 		if err != nil {
 			chk.Panic("%v", err)
 		}
@@ -337,11 +353,16 @@ func Test_geninvs02(tst *testing.T) {
 		chk.Scalar(tst, "q", 1e-17, q, q_)
 		var ptmp, qtmp float64
 		io.Pfpink("\ndp/dσ\n")
+		dtol_tmp = dtol
+		if idxA == 4 {
+			dtol = 1e-5
+		}
 		for j := 0; j < 3; j++ {
 			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 				tmp, σ[j] = σ[j], x
-				SmpUnitDirector(n_tmp, σ, b)
-				ptmp, _, err = GenInvs(σ, n_tmp, 1)
+				m_tmp := SmpDirector(N_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+				SmpUnitDirector(n_tmp, m_tmp, N_tmp)
+				ptmp, _, err = GenInvs(σ, n_tmp, smp_a)
 				if err != nil {
 					chk.Panic("DerivCentral: SmpInvs failed:\n%v", err)
 				}
@@ -357,8 +378,9 @@ func Test_geninvs02(tst *testing.T) {
 		for j := 0; j < 3; j++ {
 			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 				tmp, σ[j] = σ[j], x
-				SmpUnitDirector(n_tmp, σ, b)
-				_, qtmp, err = GenInvs(σ, n_tmp, 1)
+				m_tmp := SmpDirector(N_tmp, σ, smp_a, smp_b, smp_β, smp_ϵ)
+				SmpUnitDirector(n_tmp, m_tmp, N_tmp)
+				_, qtmp, err = GenInvs(σ, n_tmp, smp_a)
 				if err != nil {
 					chk.Panic("DerivCentral: SmpInvs failed:\n%v", err)
 				}
@@ -370,20 +392,22 @@ func Test_geninvs02(tst *testing.T) {
 			}, σ[j], 1e-6)
 			chk.AnaNum(tst, io.Sf("dq/dσ[%d]", j), dtol, dqdσ[j], dnum, dver)
 		}
+		dtol = dtol_tmp
 
 		// second order derivatives
 		dpdσ_tmp := make([]float64, 3)
 		dqdσ_tmp := make([]float64, 3)
 		d2pdσdσ := la.MatAlloc(3, 3)
 		d2qdσdσ := la.MatAlloc(3, 3)
-		GenInvsDeriv2(d2pdσdσ, d2qdσdσ, σ, n, dpdσ, dqdσ, p, q, dndσ, d2ndσdσ, 1)
+		GenInvsDeriv2(d2pdσdσ, d2qdσdσ, σ, n, dpdσ, dqdσ, p, q, dndσ, d2ndσdσ, smp_a)
 		io.Pfpink("\nd²p/dσdσ\n")
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
 				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 					tmp, σ[j] = σ[j], x
-					SmpDerivs(d2mdσdσ_tmp, dndσ_tmp, dmdσ_tmp, n_tmp, σ, b)
-					GenInvsDeriv1(dpdσ_tmp, dqdσ_tmp, σ, n_tmp, dndσ_tmp, 1)
+					m_tmp := SmpDerivs1(dndσ_tmp, dNdσ_tmp, N_tmp, F, G, σ, smp_a, smp_b, smp_β, smp_ϵ)
+					SmpUnitDirector(n_tmp, m_tmp, N_tmp)
+					GenInvsDeriv1(dpdσ_tmp, dqdσ_tmp, σ, n_tmp, dndσ_tmp, smp_a)
 					if σ[0] < 1e-14 || σ[1] < 1e-14 || σ[2] < 1e-14 {
 						chk.Panic("d²p/dσdσdp/dσ failed: σ=%v must be all greater than %v", σ, 1e-14)
 					}
@@ -396,12 +420,11 @@ func Test_geninvs02(tst *testing.T) {
 		io.Pfpink("\nd²q/dσdσ\n")
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
-				//dnum, _ := num.DerivForward(func(x float64, args ...interface{}) (res float64) {
-				//dnum, _ := num.DerivBackward(func(x float64, args ...interface{}) (res float64) {
 				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 					tmp, σ[j] = σ[j], x
-					SmpDerivs(d2mdσdσ_tmp, dndσ_tmp, dmdσ_tmp, n_tmp, σ, b)
-					GenInvsDeriv1(dpdσ_tmp, dqdσ_tmp, σ, n_tmp, dndσ_tmp, 1)
+					m_tmp := SmpDerivs1(dndσ_tmp, dNdσ_tmp, N_tmp, F, G, σ, smp_a, smp_b, smp_β, smp_ϵ)
+					SmpUnitDirector(n_tmp, m_tmp, N_tmp)
+					GenInvsDeriv1(dpdσ_tmp, dqdσ_tmp, σ, n_tmp, dndσ_tmp, smp_a)
 					if σ[0] < 1e-14 || σ[1] < 1e-14 || σ[2] < 1e-14 {
 						chk.Panic("d²q/dσdσdp/dσ failed: σ=%v must be all greater than %v", σ, 1e-14)
 					}

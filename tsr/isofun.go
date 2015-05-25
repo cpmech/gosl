@@ -19,14 +19,17 @@ type Cb_isofun_h func(p, q float64, args ...interface{}) (d2fdp2, d2fdq2, d2fdpd
 
 // IsoFun handles isotropic functions and their derivatives
 type IsoFun struct {
+
 	// smp invs parameters
 	a, b, β, ϵ float64 // smp parameters
 	shift      float64 // shift eigenvalues; e.g. to account for cohesion
 	ncp        int     // number of stress components
+
 	// callback functions
 	ffcn Cb_isofun_f // callback function
 	gfcn Cb_isofun_g // callback function
 	hfcn Cb_isofun_h // callback function
+
 	// eigenvalues/projectors
 	FixRep bool        // do run perturbation code to fix repeated eigenvalues
 	HasRep bool        // has repeated eigenvalues
@@ -35,17 +38,20 @@ type IsoFun struct {
 	Zero   float64     // minimum λ to be considered zero
 	L, Ls  []float64   // eigenvalues and shifted eigenvalues
 	P      [][]float64 // eigenprojectors
+
 	// smp variables
 	m          float64   // norm of SMP director
 	N, n       []float64 // SMP director and unit director
 	Frmp, Grmp []float64 // ramp function values
 	p, q       float64   // invariants
+
 	// derivatives
 	dNdλ       []float64   // derivatives
 	dndλ       [][]float64 // derivatives
 	dpdλ, dqdλ []float64   // derivatives
 	dfdp, dfdq float64     // derivatives of f w.r.t invariants
 	Dfdλ       []float64   // first derivative of f
+
 	// for second derivatives
 	Acpy    []float64     // copy of tensor 'A'
 	d2ndλdλ [][][]float64 // derivatives
@@ -122,6 +128,8 @@ func (o *IsoFun) Fp(λ []float64, args ...interface{}) (res float64, err error) 
 	}
 
 	// function evaluation
+	io.PfMag("Fp: λ=%v Ls=%v\n", λ, o.Ls)
+	io.Pforan("Fp: b=%v N=%v p=%v q=%v\n", o.b, o.N, o.p, o.q)
 	res = o.ffcn(o.p, o.q, args...)
 	return
 }
