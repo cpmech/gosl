@@ -73,9 +73,10 @@ func (o *IsoFun) Set_bsmp(b float64)     { o.b = b }
 func (o *IsoFun) Get_pq() (p, q float64) { return o.p, o.q }
 
 // SetPrms set parameters
-func (o *IsoFun) SetPrms(a, b, β, ϵ, shift float64) {
+func (o *IsoFun) SetPrms(a, b, β, ϵ, shift float64, ffcn Cb_isofun_f, gfcn Cb_isofun_g, hfcn Cb_isofun_h) {
 	o.a, o.b, o.β, o.ϵ = a, b, β, ϵ
 	o.shift = shift
+	o.ffcn, o.gfcn, o.hfcn = ffcn, gfcn, hfcn // TODO: check why this is neccessary to refresh plot?
 }
 
 // Init initialises the isotropic function structure
