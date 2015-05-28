@@ -17,6 +17,10 @@ sudo apt-get install gfortran libvtk5-dev python-scipy python-matplotlib dvipng
 go get github.com/cpmech/gosl/...
 ```
 
+## Configurations
+
+1. gosl/scripts must be in PYTHONPATH
+
 ## Website
 
 http://cpmech.github.io/gosl
