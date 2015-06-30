@@ -197,6 +197,19 @@ func PlotOne(x, y float64, args string) {
 	}
 }
 
+func Hist(x [][]float64, labels []string, args string) {
+	n := bb.Len()
+	sx := io.Sf("x%d", n)
+	sy := io.Sf("y%d", n)
+	GenList(&bb, sx, x)
+	GenStrArray(&bb, sy, labels)
+	if len(args) > 0 {
+		io.Ff(&bb, "hist(%s,label=%s,%s)\n", sx, sy, args)
+	} else {
+		io.Ff(&bb, "hist(%s,label=%s)\n", sx, sy)
+	}
+}
+
 func Contour(x, y, z [][]float64, args string) {
 	n := bb.Len()
 	sx := io.Sf("x%d", n)
@@ -329,7 +342,7 @@ func run(extra *bytes.Buffer) {
 	io.Pf("%s", out.String())
 }
 
-// Auxiliary functions
+// GenMat generates matrix
 func GenMat(buf *bytes.Buffer, name string, a [][]float64) {
 	io.Ff(buf, "%s=array([", name)
 	for i, _ := range a {
@@ -340,6 +353,19 @@ func GenMat(buf *bytes.Buffer, name string, a [][]float64) {
 		io.Ff(buf, "],")
 	}
 	io.Ff(buf, "],dtype=float)\n")
+}
+
+// GenList generates list
+func GenList(buf *bytes.Buffer, name string, a [][]float64) {
+	io.Ff(buf, "%s=[", name)
+	for i, _ := range a {
+		io.Ff(buf, "[")
+		for j, _ := range a[i] {
+			io.Ff(buf, "%g,", a[i][j])
+		}
+		io.Ff(buf, "],")
+	}
+	io.Ff(buf, "]\n")
 }
 
 // GenArray generates the NumPy text in 'b' corresponding to an array of float point numbers
@@ -355,6 +381,15 @@ func GenArray(b *bytes.Buffer, name string, u []float64) {
 func Gen2Arrays(buf *bytes.Buffer, nameA, nameB string, a, b []float64) {
 	GenArray(buf, nameA, a)
 	GenArray(buf, nameB, b)
+}
+
+// GenStrArray generates the NumPy text in 'b' corresponding to an array of strings
+func GenStrArray(b *bytes.Buffer, name string, u []string) {
+	io.Ff(b, "%s=[", name)
+	for i, _ := range u {
+		io.Ff(b, "%q,", u[i])
+	}
+	io.Ff(b, "]\n")
 }
 
 var (
