@@ -47,7 +47,7 @@ func Test_trapz02(tst *testing.T) {
 
 func Test_2dinteg01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("2dinteg01. volume of box")
 
 	x := utl.LinSpace(-1, 1, 7)
@@ -70,7 +70,7 @@ func Test_2dinteg01(tst *testing.T) {
 
 func Test_2dinteg02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("2dinteg02. bidimensional integral")
 
 	// Γ(1/4, 1)
@@ -99,7 +99,7 @@ func Test_2dinteg02(tst *testing.T) {
 
 func Test_2dinteg03(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("2dinteg03. ∫∫(1+8xy)dxdy")
 
 	x := utl.LinSpace(0, 3, 5)
@@ -122,7 +122,7 @@ func Test_2dinteg03(tst *testing.T) {
 
 func Test_2dinteg04(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("2dinteg04. ∫∫y・sin(x)")
 
 	x := utl.LinSpace(0, math.Pi/2.0, 11)

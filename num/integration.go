@@ -64,10 +64,8 @@ func Trapz2D(dx, dy float64, f [][]float64) (V float64) {
 	// left/right: 2
 	for i := 1; i < m-1; i++ {
 		V += 2.0 * (f[i][0] + f[i][n-1])
-	}
 
-	// centre: 4
-	for i := 1; i < m-1; i++ {
+		// centre: 4
 		for j := 1; j < n-1; j++ {
 			V += 4.0 * f[i][j]
 		}
@@ -104,38 +102,30 @@ func Simps2D(dx, dy float64, f [][]float64) (V float64) {
 	// left/right: 4
 	for i := 1; i < m-1; i += 2 {
 		V += 4.0 * (f[i][0] + f[i][n-1])
+
+		// centre: 16
+		for j := 1; j < n-1; j += 2 {
+			V += 16.0 * f[i][j]
+		}
+
+		// centre: 8a
+		for j := 2; j < n-1; j += 2 {
+			V += 8.0 * f[i][j]
+		}
 	}
 
 	// left/right: 2
 	for i := 2; i < m-1; i += 2 {
 		V += 2.0 * (f[i][0] + f[i][n-1])
-	}
 
-	// centre: 4
-	for i := 2; i < m-1; i += 2 {
+		// centre: 4
 		for j := 2; j < n-1; j += 2 {
 			V += 4.0 * f[i][j]
 		}
-	}
 
-	// centre: 8a
-	for i := 1; i < m-1; i += 2 {
-		for j := 2; j < n-1; j += 2 {
-			V += 8.0 * f[i][j]
-		}
-	}
-
-	// centre: 8b
-	for i := 2; i < m-1; i += 2 {
+		// centre: 8b
 		for j := 1; j < n-1; j += 2 {
 			V += 8.0 * f[i][j]
-		}
-	}
-
-	// centre: 16
-	for i := 1; i < m-1; i += 2 {
-		for j := 1; j < n-1; j += 2 {
-			V += 16.0 * f[i][j]
 		}
 	}
 
