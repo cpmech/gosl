@@ -41,6 +41,15 @@ func StrVals(n int, val string) (s []string) {
 	return
 }
 
+// DblsAlloc allocates a matrix of float64
+func DblsAlloc(m, n int) (mat [][]float64) {
+	mat = make([][]float64, m)
+	for i := 0; i < m; i++ {
+		mat[i] = make([]float64, n)
+	}
+	return
+}
+
 // IntsAlloc allocates a matrix of integers
 func IntsAlloc(m, n int) (mat [][]int) {
 	mat = make([][]int, m)
@@ -333,5 +342,28 @@ func Expon(val float64) (ndigits int) {
 		return
 	}
 	ndigits = int(math.Log10(math.Abs(val)))
+	return
+}
+
+// MeshGrid2D creates a grid with x-y coordinates
+//  x -- [ny][nx]
+//  y -- [ny][nx]
+func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (x, y [][]float64) {
+	if nx < 2 {
+		return
+	}
+	if ny < 2 {
+		return
+	}
+	dx := (xmax - xmin) / float64(nx-1)
+	dy := (ymax - ymin) / float64(ny-1)
+	x = DblsAlloc(ny, nx)
+	y = DblsAlloc(ny, nx)
+	for i := 0; i < ny; i++ {
+		for j := 0; j < nx; j++ {
+			x[i][j] = xmin + float64(j)*dx
+			y[i][j] = ymin + float64(i)*dy
+		}
+	}
 	return
 }

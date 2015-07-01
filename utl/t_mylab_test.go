@@ -21,6 +21,7 @@ func Test_mylab01(tst *testing.T) {
 	J := IntVals(5, 666)
 	Js := StrVals(5, "666")
 	M := IntsAlloc(3, 4)
+	N := DblsAlloc(3, 4)
 	A := IntRange(-1)
 	a := IntRange2(0, 0)
 	b := IntRange2(0, 1)
@@ -35,6 +36,7 @@ func Test_mylab01(tst *testing.T) {
 	h := IntUnique(g)
 	G := []int{1, 2, 3, 38, 3, 5, 3, 1, 2, 15, 38, 1, 11}
 	H := IntUnique(D, C, G, []int{16, 39})
+	X, Y := MeshGrid2D(3, 6, 10, 20, 4, 3)
 	io.Pf("I  = %v\n", I)
 	io.Pf("Js = %v\n", Js)
 	io.Pf("J  = %v\n", J)
@@ -52,6 +54,9 @@ func Test_mylab01(tst *testing.T) {
 	io.Pf("g  = %v\n", g)
 	io.Pf("h  = %v\n", h)
 	io.Pf("M  = %v\n", M)
+	io.Pf("N  = %v\n", N)
+	io.Pf("X  = %v\n", X)
+	io.Pf("Y  = %v\n", Y)
 	chk.Ints(tst, "I", I, []int{666, 666, 666, 666, 666})
 	chk.Ints(tst, "J", J, []int{666, 666, 666, 666, 666})
 	chk.Strings(tst, "Js", Js, []string{"666", "666", "666", "666", "666"})
@@ -68,6 +73,9 @@ func Test_mylab01(tst *testing.T) {
 	chk.Ints(tst, "h", h, []int{0, 1, 2, 3, 4, 7, 8, 9, 11, 12, 23, 32, 37})
 	chk.Ints(tst, "H", H, []int{-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 11, 15, 16, 38, 39})
 	chk.IntMat(tst, "M", M, [][]int{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}})
+	chk.Matrix(tst, "N", 1e-17, N, [][]float64{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}})
+	chk.Matrix(tst, "X", 1e-17, X, [][]float64{{3, 4, 5, 6}, {3, 4, 5, 6}, {3, 4, 5, 6}})
+	chk.Matrix(tst, "Y", 1e-17, Y, [][]float64{{10, 10, 10, 10}, {15, 15, 15, 15}, {20, 20, 20, 20}})
 }
 
 func Test_mylab02(tst *testing.T) {
