@@ -52,7 +52,7 @@ func Test_fun01(tst *testing.T) {
 	dtol := 1e-10
 	dtol2 := 1e-10
 	ver := chk.Verbose
-	CheckT(tst, o, 0.0, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	CheckDerivT(tst, o, 0.0, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun02(tst *testing.T) {
@@ -94,7 +94,7 @@ func Test_fun02(tst *testing.T) {
 		dtol := 1e-10
 		dtol2 := 1e-10
 		ver := chk.Verbose
-		CheckT(tst, o, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, o, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -151,11 +151,11 @@ func Test_fun03(tst *testing.T) {
 		dtol2 := 1e-9
 		ver := chk.Verbose
 		tskip := []float64{tmin, tmax}
-		CheckT(tst, cte, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, cte, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 		io.Pf("\n")
-		CheckT(tst, srmps, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, srmps, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 		io.Pf("\n")
-		CheckT(tst, add, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, add, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -188,7 +188,7 @@ func Test_fun04(tst *testing.T) {
 		dtol := 1e-10
 		dtol2 := 1e-10
 		ver := chk.Verbose
-		CheckT(tst, lin, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, lin, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -238,7 +238,7 @@ func Test_fun06(tst *testing.T) {
 		dtol := 1e-10
 		dtol2 := 1e-10
 		ver := chk.Verbose
-		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -270,7 +270,7 @@ func Test_fun07(tst *testing.T) {
 		dtol := 1e-7
 		dtol2 := 1e-6
 		ver := chk.Verbose
-		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -303,7 +303,7 @@ func Test_fun08(tst *testing.T) {
 		dtol := 1e-10
 		dtol2 := 1e-10
 		ver := chk.Verbose
-		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -336,7 +336,7 @@ func Test_fun09(tst *testing.T) {
 		dtol := 1e-8
 		dtol2 := 1e-7
 		ver := chk.Verbose
-		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -370,7 +370,7 @@ func Test_fun10(tst *testing.T) {
 		dtol := 1e-12
 		dtol2 := 1e-17
 		ver := chk.Verbose
-		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -404,7 +404,7 @@ func Test_fun11(tst *testing.T) {
 		dtol := 1e-10
 		dtol2 := 1e-10
 		ver := chk.Verbose
-		CheckT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -462,11 +462,11 @@ func Test_fun12(tst *testing.T) {
 		dtol2 := 1e-8
 		ver := chk.Verbose
 		tskip := []float64{tmin, tmax}
-		CheckT(tst, cos, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, cos, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 		io.Pf("\n")
-		CheckT(tst, lin, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, lin, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 		io.Pf("\n")
-		CheckT(tst, mul, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, mul, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 	}
 }
 
@@ -503,6 +503,6 @@ func Test_fun13(tst *testing.T) {
 		dtol2 := 1e-10
 		ver := chk.Verbose
 		tskip := []float64{1, 4}
-		CheckT(tst, pulse, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+		CheckDerivT(tst, pulse, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 	}
 }

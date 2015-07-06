@@ -26,12 +26,12 @@ func Test_xfun01(tst *testing.T) {
 		return
 	}
 
+	tcte := 0.0
+	xmin := []float64{-1, -1}
+	xmax := []float64{2, 2}
+	np := 21
 	if false {
 		//if true {
-		tcte := 0.0
-		xmin := []float64{-1, -1}
-		xmax := []float64{2, 2}
-		np := 21
 		withGrad := true
 		hlZero := true
 		axEqual := true
@@ -43,11 +43,9 @@ func Test_xfun01(tst *testing.T) {
 		})
 	}
 
-	/*
-		sktol := 1e-10
-		dtol := 1e-10
-		dtol2 := 1e-10
-		ver := chk.Verbose
-		CheckT(tst, o, 0.0, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-	*/
+	np = 4
+	sktol := 1e-10
+	dtol := 1e-10
+	ver := chk.Verbose
+	CheckDerivX(tst, o, tcte, xmin, xmax, np, nil, sktol, dtol, ver)
 }
