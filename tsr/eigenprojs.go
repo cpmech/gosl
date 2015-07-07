@@ -8,7 +8,6 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
@@ -95,212 +94,19 @@ func M_EigenValsProjsNum(P [][]float64, λ, a []float64) (err error) {
 	return
 }
 
-// M_FixZeroOrRepeated computes the eigenvalues λ and applies pertubation to tensor 'a'
-// if there are zero or repeated components
-//  Note: 'a' is modified
-func M_FixZeroOrRepeated(λ, a []float64, pert, evtol, zero float64) (haspert bool, err error) {
-
-	// debug
-	if EV_DEBUG {
-		io.PfGreen("\nM_FixZeroOrRepeated:\n")
-		io.Pfgreen(" a = %#v\n", a)
-	}
-
-	// define: compute eigenvalues
-	calceigen := func() (e error) {
-		ee := M_EigenValsNum(λ, a)
-		if ee != nil {
-			return chk.Err(_eigenprojs_err9, ee)
-		}
-		return
-	}
-
-	// define: fix any zero
-	fix_any_zero := func() (recompute bool) {
-		for i := 0; i < 3; i++ {
-			if math.Abs(λ[i]) < zero {
-				a[i] -= pert
-				recompute = true
-				if EV_DEBUG {
-					io.Pfgreen(" λ%d zero. a(after)=%v\n", i, a)
-				}
-			}
-		}
-		return
-	}
-
-	// define: doadd
-	doadd := func(i, j int, val, cf float64) {
-		if math.Abs(a[i]+val-a[j]) > cf {
-			a[i] += val
-		}
-	}
-
-	// define: fix repeated
-	fix_repeated := func() (recompute bool) {
-		fac := max(1, la.VecLargest(a, 1))
-		cf := evtol * fac
-		pt := pert + cf
-		if EV_DEBUG {
-			io.Pfgreen(" cf=%v, pert=%v, pt=%v\n", cf, pert, pt)
-		}
-		if math.Abs(λ[0]-λ[1]) < cf && math.Abs(λ[1]-λ[2]) < cf && math.Abs(λ[2]-λ[0]) < cf {
-			a[0] -= pt * 2.0
-			a[1] -= pt
-			a[2] += pt * 2.0
-			recompute = true
-			if EV_DEBUG {
-				io.Pfgreen(" λ0 ≈ λ1 ≈ λ2 (diff=%v, %v, %v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[0]-λ[1]), math.Abs(λ[1]-λ[2]), math.Abs(λ[2]-λ[0]), λ, a)
-			}
-		} else {
-			if math.Abs(λ[0]-λ[1]) < cf {
-				doadd(0, 2, -pt, cf)
-				doadd(1, 2, +pt, cf)
-				recompute = true
-				if EV_DEBUG {
-					io.Pfgreen(" λ0 ≈ λ1 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[0]-λ[1]), λ, a)
-				}
-			}
-			if math.Abs(λ[1]-λ[2]) < cf {
-				doadd(1, 0, -pt, cf)
-				doadd(2, 0, +pt, cf)
-				recompute = true
-				if EV_DEBUG {
-					io.Pfgreen(" λ1 ≈ λ2 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[1]-λ[2]), λ, a)
-				}
-			}
-			if math.Abs(λ[2]-λ[0]) < cf {
-				doadd(2, 1, -pt, cf)
-				doadd(0, 1, +pt, cf)
-				recompute = true
-				if EV_DEBUG {
-					io.Pfgreen(" λ2 ≈ λ0 (diff=%v)\n  λ=%v\n  a(after)=%v\n", math.Abs(λ[2]-λ[0]), λ, a)
-				}
-			}
-		}
-		return
-	}
-
-	// compute eigenvalues
-	err = calceigen()
-	if err != nil {
-		return
-	}
-
-	// fix any zero
-	recompute := fix_any_zero()
-	if recompute {
-		haspert = true
-		err = calceigen()
-		if err != nil {
-			return
-		}
-	}
-
-	// fix repeated (first call)
-	if EV_DEBUG {
-		io.PfGreen(" first call to fix_repeated\n")
-	}
-	recompute = fix_repeated()
-	if recompute {
-		haspert = true
-		err = calceigen()
-		if err != nil {
-			return
-		}
-
-		// fix repeated (second call)
-		if EV_DEBUG {
-			io.PfGreen(" second call to fix_repeated\n")
-		}
-		recompute = fix_repeated()
-		if recompute {
-			err = calceigen()
-			if err != nil {
-				return
-			}
-
-			// check
-			if EV_DEBUG {
-				io.PfGreen(" last call to fix_repeated\n")
-			}
-			recompute = fix_repeated()
-			if recompute {
-				return true, chk.Err(_eigenprojs_err11, a, λ)
-			}
-		}
-	}
-	return
-}
-
-// M_EigenValsAna returns the eigenvalues of tensor 'a' (2nd order symmetric tensor in Mandel's basis)
-// using the analytical formula
-func M_EigenValsAna(λ, a []float64, evtol, zero float64) {
-	// check for diagonal tensor
-	isdiagonal := true
-	for i := 3; i < len(a); i++ {
-		if math.Abs(a[i]) > zero {
-			isdiagonal = false
-			break
-		}
-	}
-	// copy eigenvalues
-	if isdiagonal {
-		λ[0], λ[1], λ[2] = a[0], a[1], a[2]
-		return
-	}
-	// compute eigenvalues
-	I1, I2, I3 := M_CharInvs(a)
-	d := I1*I1 - 3.0*I2
-	if d < 0 {
-		d = 0
-		if EV_DEBUG {
-			io.Pfgrey("eigenprojs.go: M_EigenValsAna: d = %g < 0\n", d)
-		}
-	}
-	fac := max(1, la.VecLargest(a, 1))
-	sd := math.Sqrt(d)
-	if sd < evtol*fac {
-		chk.Panic("eigenprojs.go: M_EigenValsAna: all repeated eigenvalues\n  a=%v\n  λ=%v\n", a, λ)
-	}
-	nm := 2.0*I1*I1*I1 - 9.0*I1*I2 + 27.0*I3
-	if math.Abs(nm) < evtol {
-		nm = 0
-		if EV_DEBUG {
-			io.Pfgrey("eigenprojs.go: M_EigenValsAna: |nm| = %g < %g\n", math.Abs(nm), evtol)
-		}
-	}
-	t := 0.5 * nm / (sd * sd * sd)
-	if math.Abs(t) > 1.0 {
-		t = fun.Sign(t)
-		if EV_DEBUG {
-			io.Pfgrey("eigenprojs.go: M_EigenValsAna: |t| = %g > 1\n", math.Abs(t))
-		}
-	}
-	θ := math.Acos(t)
-	for k := 0; k < 3; k++ {
-		λ[k] = (I1 + 2.0*sd*math.Cos((θ+2.0*math.Pi*(1.0+float64(k)))/3.0)) / 3.0
-	}
-	if EV_DEBUG {
-		io.Pfgrey("eigenprojs.go: M_EigenValsAna:\n  a = %v\n  λ = %v\n", a, λ)
-	}
-	return
-}
-
 // M_EigenProjsDerivAna returns the derivatives of the eigenprojectors w.r.t its defining tensor
 // using the analytical formula.
 //  Input:
-//    a    -- (perturbed) tensor 'a' (in Mandel basis)
-//    λ    -- eigenvalues of 'a'
-//    P    -- eigenprojectors of 'a'
-//    zero -- tolerance to assume zero eigenvalues
+//    a -- (perturbed) tensor 'a' (in Mandel basis)
+//    λ -- eigenvalues of 'a'
+//    P -- eigenprojectors of 'a'
 //  Output:
 //    dPda -- the derivatives of P w.r.t 'a'
-func M_EigenProjsDerivAna(dPda [][][]float64, a, λ []float64, P [][]float64, zero float64) (err error) {
+func M_EigenProjsDerivAna(dPda [][][]float64, a, λ []float64, P [][]float64) (err error) {
 
 	// check eigenvalues
-	if math.Abs(λ[0]) < zero || math.Abs(λ[1]) < zero || math.Abs(λ[2]) < zero {
-		return chk.Err(_eigenprojs_err5, "M_EigenProjsDeriv", λ, zero)
+	if math.Abs(λ[0]) < EV_ZERO || math.Abs(λ[1]) < EV_ZERO || math.Abs(λ[2]) < EV_ZERO {
+		return chk.Err(_eigenprojs_err5, "M_EigenProjsDeriv", λ, EV_ZERO)
 	}
 
 	// derivative of inverse tensor
@@ -420,22 +226,21 @@ func M_EigenProjsDerivNum(dPda [][][]float64, a []float64, h float64) (err error
 //  Output:
 //    dPda -- the derivatives of P w.r.t 'a'
 func M_EigenProjsDerivAuto(dPda [][][]float64, a, λ []float64, P [][]float64) (err error) {
-	zero := 1e-14
-	if math.Abs(λ[0]) < zero ||
-		math.Abs(λ[1]) < zero ||
-		math.Abs(λ[2]) < zero ||
-		math.Abs(λ[0]-λ[1]) < zero ||
-		math.Abs(λ[1]-λ[2]) < zero ||
-		math.Abs(λ[2]-λ[0]) < zero {
-		h := 1e-6
-		return M_EigenProjsDerivNum(dPda, a, h)
+	if math.Abs(λ[0]) < EV_ZERO || math.Abs(λ[1]) < EV_ZERO || math.Abs(λ[2]) < EV_ZERO {
+		return M_EigenProjsDerivNum(dPda, a, 1e-6)
 	}
-	return M_EigenProjsDerivAna(dPda, a, λ, P, zero)
+	if math.Abs(λ[0]-λ[1]) < EV_EQUAL*max(λ[0], λ[1]) ||
+		math.Abs(λ[1]-λ[2]) < EV_EQUAL*max(λ[1], λ[2]) ||
+		math.Abs(λ[2]-λ[0]) < EV_EQUAL*max(λ[2], λ[0]) {
+		return M_EigenProjsDerivNum(dPda, a, 1e-6)
+	}
+	return M_EigenProjsDerivAna(dPda, a, λ, P)
 }
 
 // auxiliary /////////////////////////////////////////////////////////////////////////////////////////
 
-func CheckEigenprojs(a []float64, tolP, tolS float64, ver bool, dosort bool) (λsorted []float64, Psorted [][]float64) {
+// CheckEigenprojs checks eigen projectors
+func CheckEigenprojs(a []float64, tolP, tolS float64, ver bool) (λsorted []float64) {
 
 	// compute eigenvalues and eigenprojectors
 	ncp := len(a)
@@ -508,24 +313,18 @@ func CheckEigenprojs(a []float64, tolP, tolS float64, ver bool, dosort bool) (λ
 		io.Pf("a(spectral) == a [1;32mOK[0m (diff=%g)\n", diff)
 	}
 
-	// sort eigenvalues and eigenprojectors
-	if dosort {
-		λsorted = make([]float64, 3)
-		Psorted = la.MatAlloc(3, ncp)
-		I := []int{0, 1, 2}
-		var err error
-		I, λsorted, _, _, err = utl.SortQuadruples(I, λ, nil, nil, "x")
-		if err != nil {
-			chk.Panic("%v", err)
-		}
-		for i, k := range I {
-			copy(Psorted[i], P[k])
-		}
+	// sort eigenvalues
+	λsorted = make([]float64, 3)
+	I := []int{0, 1, 2}
+	I, λsorted, _, _, err = utl.SortQuadruples(I, λ, nil, nil, "x")
+	if err != nil {
+		chk.Panic("%v", err)
 	}
 	return
 }
 
-func CheckEigenprojsDerivs(a []float64, tol float64, ver bool, zero float64) (dPda, dPda_num [][][]float64) {
+// CheckEigenprojsDerivs checks the derivatives of eigen projectors w.r.t defining tensor
+func CheckEigenprojsDerivs(a []float64, tol float64, ver bool, zero float64) {
 
 	// compute eigenvalues and eigenprojectors
 	ncp := len(a)
@@ -540,15 +339,8 @@ func CheckEigenprojsDerivs(a []float64, tol float64, ver bool, zero float64) (dP
 
 	// compute derivatives of eigenprojectors
 	docalc()
-	dPda = utl.Deep3alloc(3, ncp, ncp)
-	err := M_EigenProjsDerivAna(dPda, a, λ, P, zero)
-	if err != nil {
-		chk.Panic("%v", err)
-	}
-
-	// compute numerical derivatives of eigenprojectors
-	dPda_num = utl.Deep3alloc(3, ncp, ncp)
-	err = M_EigenProjsDerivNum(dPda_num, a, 1e-6)
+	dPda := utl.Deep3alloc(3, ncp, ncp)
+	err := M_EigenProjsDerivAuto(dPda, a, λ, P)
 	if err != nil {
 		chk.Panic("%v", err)
 	}
@@ -559,8 +351,7 @@ func CheckEigenprojsDerivs(a []float64, tol float64, ver bool, zero float64) (dP
 	for k := 0; k < 3; k++ {
 		for i := 0; i < ncp; i++ {
 			for j := 0; j < ncp; j++ {
-				dnum := num.DerivFwd(func(x float64, args ...interface{}) (res float64) {
-					//dnum := num.DerivCen(func(x float64, args ...interface{}) (res float64) {
+				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
 					tmp, a[j] = a[j], x
 					docalc()
 					a[j] = tmp

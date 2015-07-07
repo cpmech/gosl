@@ -13,19 +13,29 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+func Test_eigenp00(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("eigenp00")
+
+	ncp := 6
+	P := M_AllocEigenprojs(ncp)
+	chk.Vector(tst, "P0", 1e-17, P[0], []float64{0, 0, 0, 0, 0, 0})
+	chk.Vector(tst, "P1", 1e-17, P[1], []float64{0, 0, 0, 0, 0, 0})
+	chk.Vector(tst, "P2", 1e-17, P[2], []float64{0, 0, 0, 0, 0, 0})
+}
+
 func Test_eigenp01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("eigenp01")
 
-	cmpλ := 1e-12
-	cmpP := 1e-12
-	tolP := 1e-12
-	tolS := 1e-12
-	toldP := 1e-6
-	toldP2 := 1e-7
-	verdP := chk.Verbose
-	ver := chk.Verbose
+	// constants
+	tolP := 1e-14        // eigenprojectors
+	tolS := 1e-13        // spectral decomposition
+	toldP := 1e-9        // derivatives of eigenprojectors
+	ver := chk.Verbose   // check P verbose
+	verdP := chk.Verbose // check dPda verbose
 
 	// run test
 	nd := test_nd
@@ -33,19 +43,6 @@ func Test_eigenp01(tst *testing.T) {
 		//for idxA := 10; idxA < 11; idxA++ {
 		//for idxA := 11; idxA < 12; idxA++ {
 		//for idxA := 12; idxA < 13; idxA++ {
-
-		// fix tolerances
-		cmpλ_, cmpP_, tolP_, tolS_, toldP_ := cmpλ, cmpP, tolP, tolS, toldP
-		switch idxA {
-		case 5:
-			toldP = 1e-4
-		case 10:
-			toldP = 1e-4
-		case 11:
-			toldP = 0.00021
-		case 12:
-			tolP, tolS, cmpP, toldP = 1e-9, 1e-9, 1e-10, 0.017
-		}
 
 		// tensor and eigenvalues
 		A := test_AA[idxA]
@@ -55,33 +52,17 @@ func Test_eigenp01(tst *testing.T) {
 		io.Pfblue2("a = %v\n", a)
 		io.Pfblue2("λ = %v\n", test_λ[idxA])
 
-		// perturbation
-		λper := make([]float64, 3)
-		haspert, err := M_FixZeroOrRepeated(λper, a, EV_PERT, EV_EVTOL, EV_ZERO)
-		if haspert {
-			io.Pfyel("a(pert) = %v\n", a)
-			io.Pfyel("λ(pert) = %v\n", λper)
-		}
-		if err != nil {
-			chk.Panic("%v", err.Error())
-		}
-
 		// check eigenprojectors
 		io.Pforan("\neigenprojectors\n")
-		λana, _ := CheckEigenprojs(a, tolP, tolS, ver, true)
-		io.Pfyel("λana = %v\n", λana)
-		if !haspert {
-			λchk := utl.DblGetSorted(test_λ[idxA])
-			chk.Vector(tst, "λchk", 1e-12, λana, λchk)
-		}
+		λsorted := CheckEigenprojs(a, tolP, tolS, ver)
+		io.Pfyel("λsorted = %v\n", λsorted)
+		λchk := utl.DblGetSorted(test_λ[idxA])
+		chk.Vector(tst, "λchk", 1e-12, λsorted, λchk)
 
 		// check derivatives of eigenprojectors
 		io.Pforan("\nderivatives\n")
-		dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
-		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
+		CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
 
-		// restore tolerances
-		cmpλ, cmpP, tolP, tolS, toldP = cmpλ_, cmpP_, tolP_, tolS_, toldP_
 	}
 }
 
@@ -91,12 +72,11 @@ func Test_eigenp02(tst *testing.T) {
 	chk.PrintTitle("eigenp02")
 
 	// constants
-	tolP := 1e-12
-	tolS := 1e-12
-	toldP := 1e-4
-	toldP2 := 1e-9
-	verdP := chk.Verbose
-	ver := chk.Verbose
+	tolP := 1e-14        // eigenprojectors
+	tolS := 1e-14        // spectral decomposition
+	toldP := 1e-14       // derivatives of eigenprojectors
+	ver := chk.Verbose   // check P verbose
+	verdP := chk.Verbose // check dPda verbose
 
 	// set tensor
 	ϵ := 1e-10
@@ -106,37 +86,12 @@ func Test_eigenp02(tst *testing.T) {
 		a[i] *= s
 	}
 
-	// eigenvalues
-	λ := make([]float64, 3)
-	err := M_EigenValsNum(λ, a)
-	if err != nil {
-		chk.Panic("%v", err.Error())
-	}
-	io.Pfblue2("a = %v\n", a)
-	io.Pfblue2("λ = %v\n", λ)
-
-	// perturbation
-	if true {
-		λper := make([]float64, 3)
-		haspert, err := M_FixZeroOrRepeated(λper, a, EV_PERT, EV_EVTOL, EV_ZERO)
-		if haspert {
-			io.Pfyel("a(pert) = %v\n", a)
-			io.Pfyel("λ(pert) = %v\n", λper)
-		}
-		if err != nil {
-			chk.Panic("%v", err.Error())
-		}
-	}
-
 	// run test
 	io.Pforan("\neigenprojectors\n")
-	CheckEigenprojs(a, tolP, tolS, ver, true)
+	CheckEigenprojs(a, tolP, tolS, ver)
 
 	io.Pforan("\nderivatives\n")
-	dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
-
-	// compare derivatives
-	chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
+	CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
 }
 
 func Test_eigenp03(tst *testing.T) {
@@ -145,50 +100,30 @@ func Test_eigenp03(tst *testing.T) {
 	chk.PrintTitle("eigenp03")
 
 	// constants
-	tolP := 1e-15
-	tolS := 1e-13
-	toldP := 0.008
-	toldP2 := 0.002
-	verdP := chk.Verbose
-	ver := chk.Verbose
+	tolP := 1e-14        // eigenprojectors
+	tolS := 1e-13        // spectral decomposition
+	toldP := 1e-14       // derivatives of eigenprojectors
+	ver := chk.Verbose   // check P verbose
+	verdP := chk.Verbose // check dPda verbose
 
-	// set tensor
-	ϵ := 1e-7
-	//ϵ := 1e-2 // this causes problmes with EVTOL=1e-5
-	//ϵ := 1e-1
+	// run
 	s := 100.0
-	a := []float64{s, s + ϵ/4.0, s + 3.0*ϵ/4.0, 0, SQ3 * ϵ / 4.0, 0}
+	for _, ϵ := range []float64{1e-7, 1e-2, 1e-2} {
 
-	// eigenvalues
-	λ := make([]float64, 3)
-	err := M_EigenValsNum(λ, a)
-	if err != nil {
-		chk.Panic("%v", err.Error())
+		// set tensor
+		a := []float64{s, s + ϵ/4.0, s + 3.0*ϵ/4.0, 0, SQ3 * ϵ / 4.0, 0}
+		io.PfYel("\n\ntst ####################################################################################\n")
+		io.Pfblue2("ϵ = %v\n", ϵ)
+		io.Pfblue2("a = %v\n", a)
+
+		// run test
+		io.Pforan("\neigenprojectors (num)\n")
+		CheckEigenprojs(a, tolP, tolS, ver)
+
+		// check derivatives
+		io.Pforan("\nderivatives\n")
+		CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
 	}
-	io.Pfblue2("a = %v\n", a)
-	io.Pfblue2("λ = %v\n", λ)
-
-	// perturbation
-	if true {
-		λper := make([]float64, 3)
-		haspert, err := M_FixZeroOrRepeated(λper, a, EV_PERT, EV_EVTOL, EV_ZERO)
-		if haspert {
-			io.Pfyel("a(pert) = %v\n", a)
-			io.Pfyel("λ(pert) = %v\n", λper)
-		}
-		if err != nil {
-			chk.Panic("%v", err.Error())
-		}
-	}
-
-	// run test
-	io.Pforan("\neigenprojectors (num)\n")
-	CheckEigenprojs(a, tolP, tolS, ver, true)
-
-	// check derivatives
-	io.Pforan("\nderivatives\n")
-	dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
-	chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 }
 
 func Test_eigenp04(tst *testing.T) {
@@ -197,12 +132,11 @@ func Test_eigenp04(tst *testing.T) {
 	chk.PrintTitle("eigenp04")
 
 	// constants
-	tolP := 1e-15
-	tolS := 1e-15
-	toldP := 1e-4
-	toldP2 := 1e-6
-	verdP := chk.Verbose
-	ver := chk.Verbose
+	tolP := 1e-14        // eigenprojectors
+	tolS := 1e-14        // spectral decomposition
+	toldP := 1e-6        // derivatives of eigenprojectors
+	ver := chk.Verbose   // check P verbose
+	verdP := chk.Verbose // check dPda verbose
 
 	// tensor main value
 	//s := 400.0
@@ -212,116 +146,19 @@ func Test_eigenp04(tst *testing.T) {
 	// run for a number of δ
 	for _, i := range []int{3, 5, 7, 9} {
 
-		// fix tolerances
-		toldP_ := toldP
-		switch i {
-		case 5:
-			toldP = 0.1582
-			toldP2 = 0.105
-		}
-
-		// noise
+		// set tensor
 		δ := math.Pow(10.0, -float64(i))
-		io.PfYel("\n\nδ = %v ##################################################################################\n", δ)
-
-		// tensor and eigenvalues
 		a := []float64{s, s + δ, s - δ, 0, 0, 0}
-		λ := make([]float64, 3)
-		err := M_EigenValsNum(λ, a)
-		if err != nil {
-			chk.Panic("%v", err.Error())
-		}
+		io.PfYel("\n\ntst ####################################################################################\n")
+		io.Pfblue2("δ = %v\n", δ)
 		io.Pfblue2("a = %v\n", a)
-		io.Pfblue2("λ = %v\n", λ)
-
-		// perturbation
-		if true {
-			λper := make([]float64, 3)
-			haspert, err := M_FixZeroOrRepeated(λper, a, EV_PERT, EV_EVTOL, EV_ZERO)
-			if haspert {
-				io.Pfyel("a(pert) = %v\n", a)
-				io.Pfyel("λ(pert) = %v\n", λper)
-			}
-			if err != nil {
-				chk.Panic("%v", err.Error())
-			}
-		}
 
 		// run test
 		io.Pforan("\neigenprojectors\n")
-		CheckEigenprojs(a, tolP, tolS, ver, true)
+		CheckEigenprojs(a, tolP, tolS, ver)
 
 		// check derivatives
 		io.Pforan("\nderivatives\n")
-		dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
-		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
-
-		// restore tolerances
-		toldP = toldP_
+		CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
 	}
-}
-
-func Test_eigenp05(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("eigenp05")
-
-	// constants
-	tolP := 1e-14
-	tolS := 1e-15
-	toldP := 1e-6
-	toldP2 := 1e-6
-	verdP := chk.Verbose
-	ver := chk.Verbose
-
-	// tensor
-	idx := 3
-	var a []float64
-	switch idx {
-	case 1:
-		a = []float64{-3.4520830204845048, -3.452083020484557, -2.4945423175657706, 17.714258863230363, -2.242430664369921, -2.242430664370262}
-	case 2:
-		a = []float64{19538.58315173556, 18558.787254622286, 18558.787254622286, 0}
-		tolP = 1e-8
-		tolS = 1e-4
-		toldP = 0.0025
-	case 3:
-		a = []float64{0.9985833333333334, 0.9995833333333333, 0.9995833333333333, 0, 0, 0}
-		tolP = 1e-9
-		tolS = 1e-9
-		toldP = 0.023
-	}
-	io.Pfblue2("a = %v\n", a)
-
-	// eigenvalues
-	λ := make([]float64, 3)
-	haspert, err := M_FixZeroOrRepeated(λ, a, EV_PERT, EV_EVTOL, EV_ZERO)
-	if err != nil {
-		chk.Panic("%v", err.Error())
-	}
-	if haspert {
-		io.Pfyel("a(pert) = %v\n", a)
-	}
-	io.Pfblue2("λ = %v\n", λ)
-
-	// run test
-	io.Pforan("\neigenprojectors\n")
-	CheckEigenprojs(a, tolP, tolS, ver, true)
-
-	// check derivatives
-	io.Pforan("\nderivatives\n")
-	dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
-	chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
-}
-
-func Test_eigenp06(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("eigenp06")
-
-	ncp := 6
-	P := M_AllocEigenprojs(ncp)
-	chk.Vector(tst, "P0", 1e-17, P[0], []float64{0, 0, 0, 0, 0, 0})
-	chk.Vector(tst, "P1", 1e-17, P[1], []float64{0, 0, 0, 0, 0, 0})
-	chk.Vector(tst, "P2", 1e-17, P[2], []float64{0, 0, 0, 0, 0, 0})
 }

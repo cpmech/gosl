@@ -14,14 +14,11 @@ import (
 const (
 	EPS        = 1e-16 // smallest number satisfying 1.0 + EPS > 1.0
 	QMIN       = 1e-10 // smallest q value to compute qCam invariant
-	MINDET     = 1e-30 // minimum determinant of tensor
+	MINDET     = 1e-20 // minimum determinant of tensor
 	SMPINVSTOL = 1e-8  // tolerance used in SmpInvs to avoid sqrt(negativenumber)
-	EV_DEBUG   = false // flag to activate debugging of eivenvalues/projectors
-	EV_DNMIN   = 1e-10 // minimum denominator to be used in analytical eigenprojectors computation
-	EV_ALPMIN  = 1e-12 // minimum α to be used in eigenprojectors derivatives
-	EV_PERT    = 1e-3  // perturbation value
-	EV_EVTOL   = 1e-6  // mfac coefficient
-	EV_ZERO    = 1e-8  // minimum eigenvalue
+	EV_ALPMIN  = 1e-10 // minimum α to be used in eigenprojectors derivatives
+	EV_ZERO    = 1e-9  // minimum eigenvalue
+	EV_EQUAL   = 1e-4  // relative tolerance for equal eigenvalues
 )
 
 var (

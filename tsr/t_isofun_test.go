@@ -13,24 +13,109 @@ import (
 	"github.com/cpmech/gosl/vtk"
 )
 
-func Test_isofun01(tst *testing.T) {
+func rounded_cone_auxvars(p, q, r, sα float64) (pc, R, pd float64) {
+	pc = r / sα
+	R = math.Sqrt(q*q + (p-pc)*(p-pc))
+	pd = pc - R*sα
+	return
+}
 
-	//verbose()
+func rounded_cone_ffcn(p, q float64, args ...interface{}) float64 {
+	r := args[0].(float64)
+	μ := args[1].(float64)
+	α := math.Atan(μ)
+	sα := math.Sin(α)
+	cα := math.Cos(α)
+	pc, R, pd := rounded_cone_auxvars(p, q, r, sα)
+	if p < pd {
+		return R - r
+	}
+	return q*cα - (p-pc)*sα - r
+}
+
+func rounded_cone_gfcn(p, q float64, args ...interface{}) (dfdp, dfdq float64) {
+	return
+}
+
+func rounded_cone_hfcn(p, q float64, args ...interface{}) (d2fdp2, d2fdq2, d2fdpdq float64) {
+	return
+}
+
+func test_isofun01(tst *testing.T) {
+
+	verbose()
 	chk.PrintTitle("isofun01")
 
+	// SMP director parameters
 	a, b, β, ϵ := -1.0, 0.5, 2.0, 1e-3
 	shift := 0.0
 
-	φ := 30.0
+	// radius
+	r := 2.0
+
+	// failure crit parameters and number of stress components
+	φ, ncp := 30.0, 4
+
+	// q/p coefficient
+	μ := SmpCalcμ(φ, a, b, β, ϵ)
+	io.Pforan("μ = %v\n", μ)
+
+	// isotropic functions
+	var o IsoFun
+	o.Init(a, b, β, ϵ, shift, ncp, rounded_cone_ffcn, rounded_cone_gfcn, rounded_cone_hfcn)
+
+	// plot
+	//if false {
+	if true {
+		σcCte := 10.0
+		M := Phi2M(φ, "oct")
+		rmin, rmax := 0.0, 1.28*M*σcCte
+		nr, nα := 31, 81
+		//nr,   nα   := 31, 1001
+		npolarc := true
+		simplec := false
+		only0 := false
+		grads := false
+		showpts := false
+		ferr := 10.0
+		PlotOct("fig_isofun02.png", σcCte, rmin, rmax, nr, nα, φ, o.Fa, o.Ga,
+			npolarc, simplec, only0, grads, showpts, true, true, ferr, r, μ)
+	}
+
+	// 3D view
+	if false {
+		//if true {
+		grads := true
+		gftol := 5e-2
+		o.View(10, nil, grads, gftol, func(e *vtk.IsoSurf) {
+			e.Nlevels = 7
+		}, r, μ)
+	}
+}
+
+func test_isofun02(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("isofun02")
+
+	// SMP director parameters
+	a, b, β, ϵ := -1.0, 0.5, 2.0, 1e-3
+	shift := 0.0
+
+	// failure crit parameters and number of stress components
+	φ, ncp := 30.0, 4
+	_ = ncp
+
+	// q/p coefficient
 	μ := SmpCalcμ(φ, a, b, β, ϵ)
 	io.Pforan("μ = %v\n", μ)
 
 	simpleform := true
-	notfcrit := false
+	notfcrit := true
 
 	dver := chk.Verbose
-	dtol := 1e-4
-	dtol2 := 1e-4
+	dtol := 1e-5
+	dtol2 := 1e-8
 
 	ffcn := func(p, q float64, args ...interface{}) float64 {
 		if notfcrit {
@@ -75,8 +160,8 @@ func Test_isofun01(tst *testing.T) {
 	}
 
 	nd := test_nd
-	for idxA := 0; idxA < len(test_nd); idxA++ {
-		//for idxA := 10; idxA < 11; idxA++ {
+	//for idxA := 0; idxA < len(test_nd); idxA++ {
+	for idxA := 10; idxA < 11; idxA++ {
 		//for idxA := 10; idxA < len(test_nd); idxA++ {
 
 		// tensor
@@ -95,11 +180,6 @@ func Test_isofun01(tst *testing.T) {
 		if err != nil {
 			chk.Panic("cannot compute F(A):\n%v", err)
 		}
-		if o.HasRep {
-			copy(A, o.Acpy)
-			io.Pfyel("A(pert) = %v\n", A)
-			io.Pfyel("λ(pert) = %v\n", o.L)
-		}
 		io.Pforan("p, q = %v, %v\n", o.p, o.q)
 		io.Pforan("f(A) = %v\n", fval)
 
@@ -108,85 +188,7 @@ func Test_isofun01(tst *testing.T) {
 	}
 }
 
-func Test_isofun02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("isofun02")
-
-	// SMP director parameters
-	a, b, β, ϵ := -1.0, 0.5, 2.0, 1e-3
-	shift := 0.0
-
-	// failure crit parameters and number of stress components
-	φ, ncp := 30.0, 4
-
-	// q/p coefficient
-	μ := SmpCalcμ(φ, a, b, β, ϵ)
-	io.Pforan("μ = %v\n", μ)
-
-	// yield func coefficients
-	r := 2.0
-	qy := 0.0
-	α := math.Atan(μ)
-	sα := math.Sin(α)
-	cα := math.Cos(α)
-
-	// yield function
-	ffcn := func(p, q float64, args ...interface{}) float64 {
-		//io.Pfgrey("p, q = %v, %v\n", p, q)
-		pc := -qy/μ + r/sα
-		R := math.Sqrt(q*q + (p-pc)*(p-pc))
-		pd := pc - R*sα
-		if p < pd {
-			return R - r
-		}
-		return q*cα - (p-pc)*sα - r
-	}
-
-	// first order derivative
-	gfcn := func(p, q float64, args ...interface{}) (dfdp, dfdq float64) {
-		return
-	}
-
-	// second order derivative
-	hfcn := func(p, q float64, args ...interface{}) (d2fdp2, d2fdq2, d2fdpdq float64) {
-		return
-	}
-
-	// isotropic functions
-	var o IsoFun
-	o.Init(a, b, β, ϵ, shift, ncp, ffcn, gfcn, hfcn)
-
-	// plot
-	σcCte := 10.0
-	M := Phi2M(φ, "oct")
-	rmin, rmax := 0.0, 1.28*M*σcCte
-	nr, nα := 31, 81
-	//nr,   nα   := 31, 1001
-	npolarc := true
-	simplec := false
-	only0 := false
-	grads := false
-	showpts := false
-	ferr := 10.0
-	if false {
-		//if true {
-		PlotOct("fig_isofun02.png", σcCte, rmin, rmax, nr, nα, φ, o.Fa, o.Ga,
-			npolarc, simplec, only0, grads, showpts, true, true, ferr)
-	}
-
-	// 3D view
-	if false {
-		//if true {
-		grads := true
-		gftol := 5e-2
-		o.View(10, nil, grads, gftol, func(e *vtk.IsoSurf) {
-			e.Nlevels = 7
-		})
-	}
-}
-
-func Test_isofun03(tst *testing.T) {
+func test_isofun03(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("isofun03")
@@ -270,9 +272,9 @@ func Test_isofun03(tst *testing.T) {
 	}
 }
 
-func Test_isofun04(tst *testing.T) {
+func test_isofun04(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("isofun04")
 
 	// constants
@@ -353,12 +355,8 @@ func Test_isofun04(tst *testing.T) {
 	A := make([]float64, ncp)
 	A[0], A[1], A[2] = λ[0], λ[1], λ[2]
 
-	// handle repeated eigenvalues
+	// output
 	f_at_A, _ := o.Fa(A)
-	if o.HasRep {
-		copy(A, o.Acpy)
-		copy(λ, o.L)
-	}
 	f_at_λ, _ := o.Fp(λ)
 	io.Pforan("λ = %v\n", λ)
 	io.Pforan("A = %v\n", A)
@@ -366,7 +364,9 @@ func Test_isofun04(tst *testing.T) {
 	io.Pforan("f(A) = %v\n", f_at_A)
 
 	// check gradients @ intersection
-	o.CheckGrads(A, dtol, dtol2, ver)
+	if false {
+		o.CheckGrads(A, dtol, dtol2, ver)
+	}
 
 	// plot
 	σcCte := 10.0
@@ -379,15 +379,15 @@ func Test_isofun04(tst *testing.T) {
 	grads := false
 	showpts := false
 	ferr := 10.0
-	if false {
-		//if true {
+	//if false {
+	if true {
 		PlotOct("fig_isofun04.png", σcCte, rmin, rmax, nr, nα, φ, o.Fa, o.Ga,
 			npolarc, simplec, only0, grads, showpts, true, true, ferr)
 	}
 
 	// 3D view
-	if false {
-		//if true {
+	//if false {
+	if true {
 		grads := true
 		gftol := 5e-2
 		o.View(2.0*SQ3, λ, grads, gftol, func(e *vtk.IsoSurf) {

@@ -34,13 +34,8 @@ type IsoFun struct {
 	hfcn Cb_isofun_h // callback function
 
 	// eigenvalues/projectors
-	FixRep bool        // do run perturbation code to fix repeated eigenvalues
-	HasRep bool        // has repeated eigenvalues
-	Pert   float64     // perturbation values
-	EvTol  float64     // tolerance to detect repeated eigenvalues
-	Zero   float64     // minimum λ to be considered zero
-	L, Ls  []float64   // eigenvalues and shifted eigenvalues
-	P      [][]float64 // eigenprojectors
+	L, Ls []float64   // eigenvalues and shifted eigenvalues
+	P     [][]float64 // eigenprojectors
 
 	// smp variables
 	m          float64   // norm of SMP director
@@ -90,13 +85,7 @@ func (o *IsoFun) Init(a, b, β, ϵ, shift float64, ncp int, ffcn Cb_isofun_f, gf
 	// callback functions
 	o.ffcn, o.gfcn, o.hfcn = ffcn, gfcn, hfcn
 
-	// do fix repeated eigenvalues?
-	o.FixRep = true
-
 	// eigenvalues/projectors
-	o.Pert = EV_PERT
-	o.EvTol = EV_EVTOL
-	o.Zero = EV_ZERO
 	o.L = make([]float64, 3)
 	o.Ls = make([]float64, 3)
 	o.P = la.MatAlloc(3, ncp)
@@ -204,26 +193,11 @@ func (o *IsoFun) HafterGp(args ...interface{}) (err error) {
 
 // functions w.r.t full tensor (Mandel) //////////////////////////////////////////////////////////
 
-// ApplyPert computes eigenvalues of A and applies a perturbation to avoid repeated eigenvalues
-//  Notes:
-//   1) 'A' is modified
-//   2) eigenvalues are stored in L
-//   3) HasRep indicates that there were repeated eigenvalues
-func (o *IsoFun) ApplyPert(A []float64) (err error) {
-	o.HasRep, err = M_FixZeroOrRepeated(o.L, A, o.Pert, o.EvTol, o.Zero)
-	return
-}
-
 // Fa evaluates the isotropic function @ A (a second order tensor in Mandel's basis)
 func (o *IsoFun) Fa(A []float64, args ...interface{}) (res float64, err error) {
 
 	// eigenvalues
-	copy(o.Acpy, A)
-	if o.FixRep {
-		err = o.ApplyPert(o.Acpy)
-	} else {
-		err = M_EigenValsNum(o.L, o.Acpy)
-	}
+	err = M_EigenValsNum(o.L, A)
 	if err != nil {
 		return
 	}
@@ -239,16 +213,8 @@ func (o *IsoFun) Fa(A []float64, args ...interface{}) (res float64, err error) {
 //   2) Dfdλ is calculated and is availabe for external use
 func (o *IsoFun) Ga(dfdA, A []float64, args ...interface{}) (fval float64, err error) {
 
-	// fix repeated
-	copy(o.Acpy, A)
-	if o.FixRep {
-		err = o.ApplyPert(o.Acpy)
-		if err != nil {
-			return
-		}
-	}
-
 	// eigenvalues and eigenprojectors
+	copy(o.Acpy, A)
 	err = M_EigenValsProjsNum(o.P, o.L, o.Acpy)
 	if err != nil {
 		return
@@ -276,7 +242,7 @@ func (o *IsoFun) Ga(dfdA, A []float64, args ...interface{}) (fval float64, err e
 func (o *IsoFun) HafterGa(d2fdAdA [][]float64, args ...interface{}) (err error) {
 
 	// derivatives of eigenprojectors
-	err = M_EigenProjsDerivAna(o.dPdA, o.Acpy, o.L, o.P, o.Zero)
+	err = M_EigenProjsDerivAuto(o.dPdA, o.Acpy, o.L, o.P)
 	if err != nil {
 		return
 	}
@@ -539,16 +505,16 @@ func (o IsoFun) View(l float64, λ []float64, grads bool, gradsFtol float64, ext
 }
 
 // CheckGrads check df/dA and d²f/dA²
-func (o *IsoFun) CheckGrads(A []float64, tol, tol2 float64, ver bool) {
+func (o *IsoFun) CheckGrads(A []float64, tol, tol2 float64, ver bool, args ...interface{}) {
 
 	// compute derivatives
 	dfdA := make([]float64, len(A))
-	_, err := o.Ga(dfdA, A)
+	_, err := o.Ga(dfdA, A, args...)
 	if err != nil {
 		chk.Panic(_isofun_err4, err)
 	}
 	d2fdAdA := la.MatAlloc(len(A), len(A))
-	err = o.HafterGa(d2fdAdA)
+	err = o.HafterGa(d2fdAdA, args...)
 	if err != nil {
 		chk.Panic(_isofun_err6, err)
 	}
@@ -560,13 +526,13 @@ func (o *IsoFun) CheckGrads(A []float64, tol, tol2 float64, ver bool) {
 	var fval, tmp float64
 	has_error := false
 	for j := 0; j < len(A); j++ {
-		dnum := num.DerivFwd(func(x float64, args ...interface{}) (res float64) {
+		dnum, _ := num.DerivCentral(func(x float64, notused ...interface{}) (res float64) {
 			tmp, A[j] = A[j], x
-			fval, err = o.Fa(A)
+			defer func() { A[j] = tmp }()
+			fval, err = o.Fa(A, args...)
 			if err != nil {
 				chk.Panic(_isofun_err5, err)
 			}
-			A[j] = tmp
 			return fval
 		}, A[j], 1e-6)
 		err := chk.PrintAnaNum(io.Sf("df/dA[%d]", j), tol, dfdA[j], dnum, ver)
@@ -585,13 +551,13 @@ func (o *IsoFun) CheckGrads(A []float64, tol, tol2 float64, ver bool) {
 	dfdA_tmp := make([]float64, len(A))
 	for i := 0; i < len(A); i++ {
 		for j := 0; j < len(A); j++ {
-			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
+			dnum, _ := num.DerivCentral(func(x float64, notused ...interface{}) (res float64) {
 				tmp, A[j] = A[j], x
-				_, err = o.Ga(dfdA_tmp, A)
+				defer func() { A[j] = tmp }()
+				_, err = o.Ga(dfdA_tmp, A, args...)
 				if err != nil {
 					chk.Panic(_isofun_err7, err)
 				}
-				A[j] = tmp
 				return dfdA_tmp[i]
 			}, A[j], 1e-6)
 			err := chk.PrintAnaNum(io.Sf("d²f/dA[%d]dA[%d]", i, j), tol2, d2fdAdA[i][j], dnum, ver)
