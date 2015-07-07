@@ -330,7 +330,7 @@ func M_EigenProjsAna(P [][]float64, a, λ []float64, zero float64) (err error) {
 //          zero   -- tolerance to assume zero eigenvalues
 //          usefdm -- use finite difference method instead of analytical formula
 //  Output: dPda   -- the derivatives of P w.r.t 'a'
-func M_EigenProjsDeriv(dPda [][][]float64, a, λ []float64, P [][]float64, zero float64) (err error) {
+func M_EigenProjsDerivAna(dPda [][][]float64, a, λ []float64, P [][]float64, zero float64) (err error) {
 
 	// check eigenvalues
 	if math.Abs(λ[0]) < zero || math.Abs(λ[1]) < zero || math.Abs(λ[2]) < zero {
@@ -567,7 +567,7 @@ func CheckEigenprojsDerivs(usenum bool, a []float64, tol float64, ver bool, evto
 	// compute derivatives of eigenprojectors
 	docalc()
 	dPda = utl.Deep3alloc(3, ncp, ncp)
-	err := M_EigenProjsDeriv(dPda, a, λ, P, zero)
+	err := M_EigenProjsDerivAna(dPda, a, λ, P, zero)
 	if err != nil {
 		chk.Panic("%v", err)
 	}

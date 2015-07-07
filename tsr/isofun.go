@@ -276,7 +276,7 @@ func (o *IsoFun) Ga(dfdA, A []float64, args ...interface{}) (fval float64, err e
 func (o *IsoFun) HafterGa(d2fdAdA [][]float64, args ...interface{}) (err error) {
 
 	// derivatives of eigenprojectors
-	err = M_EigenProjsDeriv(o.dPdA, o.Acpy, o.L, o.P, o.Zero)
+	err = M_EigenProjsDerivAna(o.dPdA, o.Acpy, o.L, o.P, o.Zero)
 	if err != nil {
 		return
 	}
