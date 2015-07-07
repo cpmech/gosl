@@ -287,7 +287,7 @@ func M_EigenValsAna(λ, a []float64, evtol, zero float64) {
 	return
 }
 
-// M_EigenProjsDeriv returns the derivatives of the eigenprojectors w.r.t its defining tensor
+// M_EigenProjsDerivAna returns the derivatives of the eigenprojectors w.r.t its defining tensor
 // using the analytical formula.
 //  Input:
 //    a    -- (perturbed) tensor 'a' (in Mandel basis)
@@ -435,7 +435,7 @@ func M_EigenProjsDerivAuto(dPda [][][]float64, a, λ []float64, P [][]float64) (
 
 // auxiliary /////////////////////////////////////////////////////////////////////////////////////////
 
-func CheckEigenprojs(a []float64, tolP, tolS float64, ver bool, evtol, zero float64, dosort bool) (λsorted []float64, Psorted [][]float64) {
+func CheckEigenprojs(a []float64, tolP, tolS float64, ver bool, dosort bool) (λsorted []float64, Psorted [][]float64) {
 
 	// compute eigenvalues and eigenprojectors
 	ncp := len(a)
@@ -525,7 +525,7 @@ func CheckEigenprojs(a []float64, tolP, tolS float64, ver bool, evtol, zero floa
 	return
 }
 
-func CheckEigenprojsDerivs(a []float64, tol float64, ver bool, evtol, zero float64) (dPda, dPda_num [][][]float64) {
+func CheckEigenprojsDerivs(a []float64, tol float64, ver bool, zero float64) (dPda, dPda_num [][][]float64) {
 
 	// compute eigenvalues and eigenprojectors
 	ncp := len(a)
@@ -592,7 +592,7 @@ func print_eigenvecs(Q [][]float64) {
 // error messages
 var (
 	_eigenprojs_err1  = "eigenprojs.go: %s: λ=%v of tensor a=%v is too small (zero=%v)"
-	_eigenprojs_err2  = "eigenprojs.go: M_EigenProjsDeriv: α=[%v %v %v] coefficients must be non-zero (λ=%v)"
+	_eigenprojs_err2  = "eigenprojs.go: M_EigenProjsDerivAna: α=[%v %v %v] coefficients must be non-zero (λ=%v)"
 	_eigenprojs_err3  = "eigenprojs.go: %s: cannot handle repeated eigenvalues λ=%v of tensor a=%v (tol=%v)"
 	_eigenprojs_err4  = "eigenprojs.go: M_EigenProjsAna: cannot compute eigenprojectors since:\n  den = 2*λ² - λ*I1 + I3/λ = %g < %g\n  a=%v\n  λ=%v\n  I1=%v  I3=%v\n  cf=%v"
 	_eigenprojs_err5  = "eigenprojs.go: %s: λ=%v of tensor is too small (zero=%v)"
