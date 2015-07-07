@@ -371,6 +371,76 @@ func M_EigenProjsDeriv(dPda [][][]float64, a, λ []float64, P [][]float64, zero 
 	return
 }
 
+// M_EigenProjsDerivNum returns the derivatives of the eigenprojectors w.r.t its defining tensor
+// using the finite differences method.
+//  Input:
+//    a -- tensor in Mandel basis
+//    h -- step size for finite differences
+//  Output:
+//    dPda -- derivatives [3][ncp][ncp]
+func M_EigenProjsDerivNum(dPda [][][]float64, a []float64, h float64) (err error) {
+	ncp := len(a)
+	λ := make([]float64, 3)
+	P := la.MatAlloc(3, ncp)
+	Q := Alloc2()
+	A := Alloc2()
+	q2p := func(k int) {
+		switch k {
+		case 0:
+			P[0][0] = Q[0][0] * Q[0][0]
+			P[0][1] = Q[1][0] * Q[1][0]
+			P[0][2] = Q[2][0] * Q[2][0]
+			P[0][3] = Q[0][0] * Q[1][0] * SQ2
+			if ncp == 6 {
+				P[0][4] = Q[1][0] * Q[2][0] * SQ2
+				P[0][5] = Q[2][0] * Q[0][0] * SQ2
+			}
+		case 1:
+			P[1][0] = Q[0][1] * Q[0][1]
+			P[1][1] = Q[1][1] * Q[1][1]
+			P[1][2] = Q[2][1] * Q[2][1]
+			P[1][3] = Q[0][1] * Q[1][1] * SQ2
+			if ncp == 6 {
+				P[1][4] = Q[1][1] * Q[2][1] * SQ2
+				P[1][5] = Q[2][1] * Q[0][1] * SQ2
+			}
+		case 2:
+			P[2][0] = Q[0][2] * Q[0][2]
+			P[2][1] = Q[1][2] * Q[1][2]
+			P[2][2] = Q[2][2] * Q[2][2]
+			P[2][3] = Q[0][2] * Q[1][2] * SQ2
+			if ncp == 6 {
+				P[2][4] = Q[1][2] * Q[2][2] * SQ2
+				P[2][5] = Q[2][2] * Q[0][2] * SQ2
+			}
+		}
+	}
+	var tmp float64
+	failed := false
+	for k := 0; k < 3; k++ {
+		for i := 0; i < ncp; i++ {
+			for j := 0; j < ncp; j++ {
+				dPda[k][i][j], _ = num.DerivCentral(func(x float64, args ...interface{}) float64 {
+					tmp, a[j] = a[j], x
+					defer func() { a[j] = tmp }()
+					Man2Ten(A, a)
+					_, err = la.Jacobi(Q, λ, A)
+					if err != nil {
+						failed = true
+						return 0
+					}
+					q2p(k)
+					return P[k][i]
+				}, a[j], h)
+				if failed {
+					return
+				}
+			}
+		}
+	}
+	return
+}
+
 // auxiliary /////////////////////////////////////////////////////////////////////////////////////////
 
 func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evtol, zero float64, dosort bool) (λsorted []float64, Psorted [][]float64) {
@@ -471,7 +541,7 @@ func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evt
 	return
 }
 
-func CheckEigenprojsDerivs(usenum bool, a []float64, tol float64, ver bool, evtol, zero float64) {
+func CheckEigenprojsDerivs(usenum bool, a []float64, tol float64, ver bool, evtol, zero float64) (dPda, dPda_num [][][]float64) {
 
 	// compute eigenvalues and eigenprojectors
 	ncp := len(a)
@@ -496,8 +566,15 @@ func CheckEigenprojsDerivs(usenum bool, a []float64, tol float64, ver bool, evto
 
 	// compute derivatives of eigenprojectors
 	docalc()
-	dPda := utl.Deep3alloc(3, ncp, ncp)
+	dPda = utl.Deep3alloc(3, ncp, ncp)
 	err := M_EigenProjsDeriv(dPda, a, λ, P, zero)
+	if err != nil {
+		chk.Panic("%v", err)
+	}
+
+	// compute numerical derivatives of eigenprojectors
+	dPda_num = utl.Deep3alloc(3, ncp, ncp)
+	err = M_EigenProjsDerivNum(dPda_num, a, 1e-6)
 	if err != nil {
 		chk.Panic("%v", err)
 	}

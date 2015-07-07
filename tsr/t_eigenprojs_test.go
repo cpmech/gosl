@@ -23,6 +23,7 @@ func Test_eigenp01(tst *testing.T) {
 	tolP := 1e-12
 	tolS := 1e-12
 	toldP := 1e-6
+	toldP2 := 1e-7
 	verdP := chk.Verbose
 	ver := chk.Verbose
 
@@ -90,7 +91,10 @@ func Test_eigenp01(tst *testing.T) {
 
 		// check derivatives of numerical eigenprojectors
 		io.Pforan("\nderivatives (numP)\n")
-		CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+		dPda, dPda_num := CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+
+		// compare derivatives
+		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 
 		// restore tolerances
 		cmpλ, cmpP, tolP, tolS, toldP = cmpλ_, cmpP_, tolP_, tolS_, toldP_
@@ -106,6 +110,7 @@ func Test_eigenp02(tst *testing.T) {
 	tolP := 1e-12
 	tolS := 1e-12
 	toldP := 1e-4
+	toldP2 := 1e-9
 	verdP := chk.Verbose
 	ver := chk.Verbose
 
@@ -144,7 +149,10 @@ func Test_eigenp02(tst *testing.T) {
 	CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
 	io.Pforan("\nderivatives\n")
-	CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+	dPda, dPda_num := CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+
+	// compare derivatives
+	chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 }
 
 func Test_eigenp03(tst *testing.T) {
@@ -156,6 +164,7 @@ func Test_eigenp03(tst *testing.T) {
 	tolP := 1e-15
 	tolS := 1e-13
 	toldP := 0.008
+	toldP2 := 0.002
 	verdP := chk.Verbose
 	ver := chk.Verbose
 
@@ -203,7 +212,10 @@ func Test_eigenp03(tst *testing.T) {
 		CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
 		io.Pforan("\nderivatives (numP)\n")
-		CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+		dPda, dPda_num := CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+
+		// compare derivatives
+		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 	}
 }
 
@@ -216,6 +228,7 @@ func Test_eigenp04(tst *testing.T) {
 	tolP := 1e-15
 	tolS := 1e-15
 	toldP := 1e-4
+	toldP2 := 1e-6
 	verdP := chk.Verbose
 	ver := chk.Verbose
 
@@ -232,6 +245,7 @@ func Test_eigenp04(tst *testing.T) {
 		switch i {
 		case 5:
 			toldP = 0.1582
+			toldP2 = 0.105
 		}
 
 		// noise
@@ -276,7 +290,10 @@ func Test_eigenp04(tst *testing.T) {
 			CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
 			io.Pforan("\nderivatives (numP)\n")
-			CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+			dPda, dPda_num := CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+
+			// compare derivatives
+			chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 		}
 
 		// restore tolerances
@@ -293,6 +310,7 @@ func Test_eigenp05(tst *testing.T) {
 	tolP := 1e-14
 	tolS := 1e-15
 	toldP := 1e-6
+	toldP2 := 1e-6
 	verdP := chk.Verbose
 	ver := chk.Verbose
 
@@ -332,7 +350,10 @@ func Test_eigenp05(tst *testing.T) {
 		CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
 		io.Pforan("\nderivatives (anaP)\n")
-		CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+		dPda, dPda_num := CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+
+		// compare derivatives
+		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 	}
 
 	// run test
@@ -341,7 +362,10 @@ func Test_eigenp05(tst *testing.T) {
 		CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
 		io.Pforan("\nderivatives (numP)\n")
-		CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+		dPda, dPda_num := CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+
+		// compare derivatives
+		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 	}
 }
 
