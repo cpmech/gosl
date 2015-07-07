@@ -68,7 +68,7 @@ func Test_eigenp01(tst *testing.T) {
 
 		// check analytical eigenprojectors
 		io.Pforan("\nana\n")
-		λana, Pana := CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
+		λana, Pana := CheckEigenprojs(a, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 		io.Pfyel("λana = %v\n", λana)
 		if !haspert {
 			λchk := utl.DblGetSorted(test_λ[idxA])
@@ -77,7 +77,7 @@ func Test_eigenp01(tst *testing.T) {
 
 		// check numerical eigenprojectors
 		io.Pforan("\nnum\n")
-		λnum, Pnum := CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
+		λnum, Pnum := CheckEigenprojs(a, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 		io.Pfyel("λnum = %v\n", λnum)
 
 		// compare ana-num
@@ -87,11 +87,11 @@ func Test_eigenp01(tst *testing.T) {
 
 		// check derivatives of analytical eigenprojectors
 		io.Pforan("\nderivatives (anaP)\n")
-		CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+		CheckEigenprojsDerivs(a, toldP, verdP, EV_EVTOL, EV_ZERO)
 
 		// check derivatives of numerical eigenprojectors
 		io.Pforan("\nderivatives (numP)\n")
-		dPda, dPda_num := CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+		dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_EVTOL, EV_ZERO)
 
 		// compare derivatives
 		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
@@ -146,10 +146,10 @@ func Test_eigenp02(tst *testing.T) {
 
 	// run test
 	io.Pforan("\neigenprojectors\n")
-	CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
+	CheckEigenprojs(a, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
 	io.Pforan("\nderivatives\n")
-	dPda, dPda_num := CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+	dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_EVTOL, EV_ZERO)
 
 	// compare derivatives
 	chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
@@ -197,26 +197,15 @@ func Test_eigenp03(tst *testing.T) {
 		}
 	}
 
-	// run test (ana)
-	if false {
-		io.Pforan("\neigenprojectors (ana)\n")
-		CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
-
-		io.Pforan("\nderivatives (anaP)\n")
-		CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
-	}
-
 	// run test
-	if true {
-		io.Pforan("\neigenprojectors (num)\n")
-		CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
+	io.Pforan("\neigenprojectors (num)\n")
+	CheckEigenprojs(a, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-		io.Pforan("\nderivatives (numP)\n")
-		dPda, dPda_num := CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+	io.Pforan("\nderivatives (numP)\n")
+	dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_EVTOL, EV_ZERO)
 
-		// compare derivatives
-		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
-	}
+	// compare derivatives
+	chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 }
 
 func Test_eigenp04(tst *testing.T) {
@@ -275,26 +264,15 @@ func Test_eigenp04(tst *testing.T) {
 			}
 		}
 
-		// run test (ana)
-		if false {
-			io.Pforan("\neigenprojectors (ana)\n")
-			CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
-
-			io.Pforan("\nderivatives (anaP)\n")
-			CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
-		}
-
 		// run test
-		if true {
-			io.Pforan("\neigenprojectors (num)\n")
-			CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
+		io.Pforan("\neigenprojectors (num)\n")
+		CheckEigenprojs(a, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-			io.Pforan("\nderivatives (numP)\n")
-			dPda, dPda_num := CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+		io.Pforan("\nderivatives (numP)\n")
+		dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_EVTOL, EV_ZERO)
 
-			// compare derivatives
-			chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
-		}
+		// compare derivatives
+		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 
 		// restore tolerances
 		toldP = toldP_
@@ -344,29 +322,15 @@ func Test_eigenp05(tst *testing.T) {
 	}
 	io.Pfblue2("λ = %v\n", λ)
 
-	// run test (ana)
-	if true {
-		io.Pforan("\neigenprojectors (ana)\n")
-		CheckEigenprojs(a, false, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
-
-		io.Pforan("\nderivatives (anaP)\n")
-		dPda, dPda_num := CheckEigenprojsDerivs(false, a, toldP, verdP, EV_EVTOL, EV_ZERO)
-
-		// compare derivatives
-		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
-	}
-
 	// run test
-	if false {
-		io.Pforan("\neigenprojectors (num)\n")
-		CheckEigenprojs(a, true, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
+	io.Pforan("\neigenprojectors (num)\n")
+	CheckEigenprojs(a, tolP, tolS, ver, EV_EVTOL, EV_ZERO, true)
 
-		io.Pforan("\nderivatives (numP)\n")
-		dPda, dPda_num := CheckEigenprojsDerivs(true, a, toldP, verdP, EV_EVTOL, EV_ZERO)
+	io.Pforan("\nderivatives (numP)\n")
+	dPda, dPda_num := CheckEigenprojsDerivs(a, toldP, verdP, EV_EVTOL, EV_ZERO)
 
-		// compare derivatives
-		chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
-	}
+	// compare derivatives
+	chk.Deep3(tst, "dPda", toldP2, dPda, dPda_num)
 }
 
 func Test_eigenp06(tst *testing.T) {

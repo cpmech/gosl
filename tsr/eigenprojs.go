@@ -287,49 +287,15 @@ func M_EigenValsAna(λ, a []float64, evtol, zero float64) {
 	return
 }
 
-// M_EigenProjsAna computes the eigenprojectors of tensor 'a' (2nd order symmetric tensor in Mandel's basis)
-// using the analytical formula.
-func M_EigenProjsAna(P [][]float64, a, λ []float64, zero float64) (err error) {
-
-	// check eigenvalues
-	if math.Abs(λ[0]) < zero || math.Abs(λ[1]) < zero || math.Abs(λ[2]) < zero {
-		return chk.Err(_eigenprojs_err1, "M_EigenProjsAna", λ, a, zero)
-	}
-
-	// inverse tensor
-	ai := make([]float64, len(a))
-	_, err = M_Inv(ai, a, MINDET)
-	if err != nil {
-		return chk.Err(_eigenprojs_err7, "M_EigenProjsAna", err.Error())
-	}
-
-	// characteristic invariants
-	I1 := λ[0] + λ[1] + λ[2]
-	I3 := λ[0] * λ[1] * λ[2]
-
-	// eigenvalues and eigenprojectors
-	var dn, cf float64
-	for k := 0; k < 3; k++ {
-		dn = 2.0*λ[k]*λ[k] - λ[k]*I1 + I3/λ[k]
-		cf = λ[k] / dn
-		if math.Abs(dn) < EV_DNMIN {
-			return chk.Err(_eigenprojs_err4, dn, EV_DNMIN, a, λ, I1, I3, cf)
-		}
-		for i := 0; i < len(a); i++ {
-			P[k][i] = cf * (a[i] + (λ[k]-I1)*Im[i] + (I3/λ[k])*ai[i])
-		}
-	}
-	return
-}
-
 // M_EigenProjsDeriv returns the derivatives of the eigenprojectors w.r.t its defining tensor
 // using the analytical formula.
-//  Input:  a      -- (perturbed) tensor 'a' (in Mandel basis)
-//          λ      -- (shifted) eigenvalues of 'a'
-//          P      -- eigenprojectors of 'a'
-//          zero   -- tolerance to assume zero eigenvalues
-//          usefdm -- use finite difference method instead of analytical formula
-//  Output: dPda   -- the derivatives of P w.r.t 'a'
+//  Input:
+//    a    -- (perturbed) tensor 'a' (in Mandel basis)
+//    λ    -- eigenvalues of 'a'
+//    P    -- eigenprojectors of 'a'
+//    zero -- tolerance to assume zero eigenvalues
+//  Output:
+//    dPda -- the derivatives of P w.r.t 'a'
 func M_EigenProjsDerivAna(dPda [][][]float64, a, λ []float64, P [][]float64, zero float64) (err error) {
 
 	// check eigenvalues
@@ -441,25 +407,43 @@ func M_EigenProjsDerivNum(dPda [][][]float64, a []float64, h float64) (err error
 	return
 }
 
+// M_EigenProjsDerivAuto computes the derivatives of the eigenprojectors of tensor a
+// w.r.t. to itself by automatically calling the numerical or the analytical formulae
+// depending on whether the eigenvalues are zero/repeated or not
+//
+//  Note: this function should work for non-perturbed tensors with zero/repeated eigenvalues.
+//
+//  Input:
+//    a -- tensor 'a' (in Mandel basis)
+//    λ -- eigenvalues of 'a'
+//    P -- eigenprojectors of 'a'
+//  Output:
+//    dPda -- the derivatives of P w.r.t 'a'
+func M_EigenProjsDerivAuto(dPda [][][]float64, a, λ []float64, P [][]float64) (err error) {
+	zero := 1e-14
+	if math.Abs(λ[0]) < zero ||
+		math.Abs(λ[1]) < zero ||
+		math.Abs(λ[2]) < zero ||
+		math.Abs(λ[0]-λ[1]) < zero ||
+		math.Abs(λ[1]-λ[2]) < zero ||
+		math.Abs(λ[2]-λ[0]) < zero {
+		h := 1e-6
+		return M_EigenProjsDerivNum(dPda, a, h)
+	}
+	return M_EigenProjsDerivAna(dPda, a, λ, P, zero)
+}
+
 // auxiliary /////////////////////////////////////////////////////////////////////////////////////////
 
-func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evtol, zero float64, dosort bool) (λsorted []float64, Psorted [][]float64) {
+func CheckEigenprojs(a []float64, tolP, tolS float64, ver bool, evtol, zero float64, dosort bool) (λsorted []float64, Psorted [][]float64) {
 
 	// compute eigenvalues and eigenprojectors
 	ncp := len(a)
 	λ := make([]float64, 3)
 	P := la.MatAlloc(3, ncp)
-	if usenum {
-		err := M_EigenValsProjsNum(P, λ, a)
-		if err != nil {
-			chk.Panic("eigenprojs.go: CheckEigenprojs failed:\n %v", err.Error())
-		}
-	} else {
-		M_EigenValsAna(λ, a, evtol, zero)
-		err := M_EigenProjsAna(P, a, λ, zero)
-		if err != nil {
-			chk.Panic("eigenprojs.go: CheckEigenprojs failed:\n %v", err.Error())
-		}
+	err := M_EigenValsProjsNum(P, λ, a)
+	if err != nil {
+		chk.Panic("eigenprojs.go: CheckEigenprojs failed:\n %v", err.Error())
 	}
 
 	// print projectors
@@ -541,26 +525,16 @@ func CheckEigenprojs(a []float64, usenum bool, tolP, tolS float64, ver bool, evt
 	return
 }
 
-func CheckEigenprojsDerivs(usenum bool, a []float64, tol float64, ver bool, evtol, zero float64) (dPda, dPda_num [][][]float64) {
+func CheckEigenprojsDerivs(a []float64, tol float64, ver bool, evtol, zero float64) (dPda, dPda_num [][][]float64) {
 
 	// compute eigenvalues and eigenprojectors
 	ncp := len(a)
 	λ := make([]float64, 3)
 	P := la.MatAlloc(3, ncp)
 	docalc := func() {
-		if usenum {
-			err := M_EigenValsProjsNum(P, λ, a)
-			if err != nil {
-				chk.Panic("eigenprojs.go: CheckEigenprojsDerivs failed:\n %v", err.Error())
-			}
-		} else {
-			M_EigenValsAna(λ, a, evtol, zero)
-			//io.Pforan("a = %v\n", a)
-			//io.Pforan("λ = %v\n", λ)
-			err := M_EigenProjsAna(P, a, λ, zero)
-			if err != nil {
-				chk.Panic("eigenprojs.go: CheckEigenprojsDerivs failed:\n %v", err.Error())
-			}
+		err := M_EigenValsProjsNum(P, λ, a)
+		if err != nil {
+			chk.Panic("eigenprojs.go: CheckEigenprojsDerivs failed:\n %v", err.Error())
 		}
 	}
 
