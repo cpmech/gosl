@@ -27,6 +27,7 @@ func rounded_cone_ffcn(p, q float64, args ...interface{}) float64 {
 	sα := math.Sin(α)
 	cα := math.Cos(α)
 	pc, R, pd := rounded_cone_auxvars(p, q, r, sα)
+	//return q - μ*p
 	if p < pd {
 		return R - r
 	}
@@ -41,13 +42,18 @@ func rounded_cone_hfcn(p, q float64, args ...interface{}) (d2fdp2, d2fdq2, d2fdp
 	return
 }
 
-func test_isofun01(tst *testing.T) {
+func Test_isofun01(tst *testing.T) {
 
 	verbose()
 	chk.PrintTitle("isofun01")
 
 	// SMP director parameters
-	a, b, β, ϵ := -1.0, 0.5, 2.0, 1e-3
+	//  Note:
+	//   1) eps and ϵ have an effect on how close to DP/MC SMP will be
+	//   2) as eps increases, SMP is closer to DP/MC
+	//   3) as ϵ increases, SMP is closer to DP/MC
+	//   4) eps also changes the shape of FC surface
+	a, b, eps, ϵ := -1.0, 0.5, 1e-5, 1e-8
 	shift := 0.0
 
 	// radius
@@ -57,12 +63,12 @@ func test_isofun01(tst *testing.T) {
 	φ, ncp := 30.0, 4
 
 	// q/p coefficient
-	μ := SmpCalcμ(φ, a, b, β, ϵ)
+	μ := SmpCalcμ(φ, a, b, eps, ϵ)
 	io.Pforan("μ = %v\n", μ)
 
 	// isotropic functions
 	var o IsoFun
-	o.Init(a, b, β, ϵ, shift, ncp, rounded_cone_ffcn, rounded_cone_gfcn, rounded_cone_hfcn)
+	o.Init(a, b, eps, ϵ, shift, ncp, rounded_cone_ffcn, rounded_cone_gfcn, rounded_cone_hfcn)
 
 	// plot
 	//if false {
@@ -73,8 +79,8 @@ func test_isofun01(tst *testing.T) {
 		nr, nα := 31, 81
 		//nr,   nα   := 31, 1001
 		npolarc := true
-		simplec := false
-		only0 := false
+		simplec := true
+		only0 := true
 		grads := false
 		showpts := false
 		ferr := 10.0
@@ -83,8 +89,8 @@ func test_isofun01(tst *testing.T) {
 	}
 
 	// 3D view
-	if false {
-		//if true {
+	//if false {
+	if true {
 		grads := true
 		gftol := 5e-2
 		o.View(10, nil, grads, gftol, func(e *vtk.IsoSurf) {

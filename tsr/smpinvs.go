@@ -28,17 +28,19 @@ func SmpCalcμ(φ, a, b, β, ϵ float64) (μ float64) {
 /// SMP director ////////////////////////////////////////////////////////////////////////////////////
 
 // SmpDirector computes the director (normal vector) of the spatially mobilised plane
-//  Note: the norm of N is returned => m := norm(N)
+//  Notes:
+//    1) the norm of N is returned => m := norm(N)
+//    2) if !SMPUSESRAMP, β==eps and must be a small quantity
 func SmpDirector(N, λ []float64, a, b, β, ϵ float64) (m float64) {
 	if SMPUSESRAMP {
 		N[0] = a / math.Pow(ϵ+fun.Sramp(a*λ[0], β), b)
 		N[1] = a / math.Pow(ϵ+fun.Sramp(a*λ[1], β), b)
 		N[2] = a / math.Pow(ϵ+fun.Sramp(a*λ[2], β), b)
 	} else {
-		c := β
-		N[0] = a / math.Pow(ϵ+fun.Sabs(a*λ[0], c), b)
-		N[1] = a / math.Pow(ϵ+fun.Sabs(a*λ[1], c), b)
-		N[2] = a / math.Pow(ϵ+fun.Sabs(a*λ[2], c), b)
+		eps := β
+		N[0] = a / math.Pow(ϵ+fun.Sabs(a*λ[0], eps), b)
+		N[1] = a / math.Pow(ϵ+fun.Sabs(a*λ[1], eps), b)
+		N[2] = a / math.Pow(ϵ+fun.Sabs(a*λ[2], eps), b)
 	}
 	m = math.Sqrt(N[0]*N[0] + N[1]*N[1] + N[2]*N[2])
 	return
@@ -52,10 +54,10 @@ func SmpDirectorDeriv1(dNdλ []float64, λ []float64, a, b, β, ϵ float64) {
 		dNdλ[1] = -b * fun.SrampD1(a*λ[1], β) * math.Pow(ϵ+fun.Sramp(a*λ[1], β), -b-1.0)
 		dNdλ[2] = -b * fun.SrampD1(a*λ[2], β) * math.Pow(ϵ+fun.Sramp(a*λ[2], β), -b-1.0)
 	} else {
-		c := β
-		dNdλ[0] = -b * fun.SabsD1(a*λ[0], c) * math.Pow(ϵ+fun.Sabs(a*λ[0], c), -b-1.0)
-		dNdλ[1] = -b * fun.SabsD1(a*λ[1], c) * math.Pow(ϵ+fun.Sabs(a*λ[1], c), -b-1.0)
-		dNdλ[2] = -b * fun.SabsD1(a*λ[2], c) * math.Pow(ϵ+fun.Sabs(a*λ[2], c), -b-1.0)
+		eps := β
+		dNdλ[0] = -b * fun.SabsD1(a*λ[0], eps) * math.Pow(ϵ+fun.Sabs(a*λ[0], eps), -b-1.0)
+		dNdλ[1] = -b * fun.SabsD1(a*λ[1], eps) * math.Pow(ϵ+fun.Sabs(a*λ[1], eps), -b-1.0)
+		dNdλ[2] = -b * fun.SabsD1(a*λ[2], eps) * math.Pow(ϵ+fun.Sabs(a*λ[2], eps), -b-1.0)
 	}
 }
 
@@ -69,10 +71,10 @@ func SmpDirectorDeriv2(d2Ndλ2 []float64, λ []float64, a, b, β, ϵ float64) {
 			G_i = fun.SrampD1(a*λ[i], β)
 			H_i = fun.SrampD2(a*λ[i], β)
 		} else {
-			c := β
-			F_i = fun.Sabs(a*λ[i], c)
-			G_i = fun.SabsD1(a*λ[i], c)
-			H_i = fun.SabsD2(a*λ[i], c)
+			eps := β
+			F_i = fun.Sabs(a*λ[i], eps)
+			G_i = fun.SabsD1(a*λ[i], eps)
+			H_i = fun.SabsD2(a*λ[i], eps)
 		}
 		d2Ndλ2[i] = a * b * ((b+1.0)*G_i*G_i - (ϵ+F_i)*H_i) * math.Pow(ϵ+F_i, -b-2.0)
 	}
