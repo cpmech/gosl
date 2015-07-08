@@ -27,8 +27,8 @@ func Test_geninvs01(tst *testing.T) {
 
 	smp_a := -1.0
 	smp_b := 0.5
-	smp_β := 2.0
-	smp_ϵ := 1e-3
+	smp_β := 1e-5
+	smp_ϵ := 1e-8
 
 	nd := test_nd
 	for idxA := 0; idxA < len(test_nd)-3; idxA++ {
@@ -138,8 +138,11 @@ func Test_geninvs01(tst *testing.T) {
 		SmpNormDirectorDeriv2(d2mdσdσ, σ, smp_a, smp_b, smp_β, smp_ϵ, m, N, dNdσ, d2Ndσ2, dmdσ)
 		io.Pfpink("\nd2mdσdσ = %v\n", d2mdσdσ)
 		tol_tmp := dtol2
-		if idxA == 0 {
+		if idxA == 0 || idxA == 7 {
 			dtol2 = 1e-5
+		}
+		if idxA == 5 {
+			dtol2 = 0.00019
 		}
 		for i := 0; i < 3; i++ {
 			for j := 0; j < 3; j++ {
@@ -161,6 +164,9 @@ func Test_geninvs01(tst *testing.T) {
 		tol_tmp = dtol2
 		if idxA == 0 || idxA == 7 {
 			dtol2 = 1e-5
+		}
+		if idxA == 5 {
+			dtol2 = 1e-4
 		}
 		for i := 0; i < 3; i++ {
 			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
@@ -211,7 +217,7 @@ func Test_geninvs01(tst *testing.T) {
 			chk.Vector(tst, "N_", 1e-15, N_, N)
 			chk.Vector(tst, "dNdσ_", 1e-15, dNdσ_, dNdσ)
 			chk.Matrix(tst, "dndσ_", 1e-13, dndσ_, dndσ)
-			chk.Deep3(tst, "d2ndσdσ_", 1e-13, d2ndσdσ_, d2ndσdσ)
+			chk.Deep3(tst, "d2ndσdσ_", 1e-11, d2ndσdσ_, d2ndσdσ)
 		}
 	}
 }
@@ -228,8 +234,8 @@ func Test_geninvs02(tst *testing.T) {
 
 	smp_a := -1.0
 	smp_b := 0.5
-	smp_β := 2.0
-	smp_ϵ := 1e-3
+	smp_β := 1e-5
+	smp_ϵ := 1e-8
 
 	nd := test_nd
 	for idxA := 0; idxA < len(test_nd)-3; idxA++ {
