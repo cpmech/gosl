@@ -11,28 +11,14 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// ShiftedEigenvs computes the positive and shifted eigenvalues of a second order tensor
-// Note: λbar are the eigenvalues of the tensor
-//       λc is a positive value
-func ShiftedEigenvs(λ, λbar []float64, λc, tol float64) (err error) {
-	for i := 0; i < 3; i++ {
-		λ[i] = -λbar[i] + λc
-		if λ[i] < tol {
-			err = chk.Err(_geninvs_err1, λ, λbar, λc, tol)
-			return
-		}
-	}
-	return
-}
-
 // GenInvs returns the SMP invariants
-//  Note: λ are the eigenvalues (shifted or not)
-func GenInvs(λ, n []float64, a float64) (p, q float64, err error) {
-	p = a * (λ[0]*n[0]*n[0] + λ[1]*n[1]*n[1] + λ[2]*n[2]*n[2])
-	d := λ[0]*λ[0]*n[0]*n[0] + λ[1]*λ[1]*n[1]*n[1] + λ[2]*λ[2]*n[2]*n[2] - p*p
+//  Note: L are the eigenvalues (shifted or not)
+func GenInvs(L, n []float64, a float64) (p, q float64, err error) {
+	p = a * (L[0]*n[0]*n[0] + L[1]*n[1]*n[1] + L[2]*n[2]*n[2])
+	d := L[0]*L[0]*n[0]*n[0] + L[1]*L[1]*n[1]*n[1] + L[2]*L[2]*n[2]*n[2] - p*p
 	if d < 0 {
 		if math.Abs(d) > SMPINVSTOL {
-			err = chk.Err(_geninvs_err2, "GenInvs", d, SMPINVSTOL, λ)
+			err = chk.Err("difference==%g (>%g) is negative and cannot be used to computed q=sqrt(d). L=%v", d, SMPINVSTOL, L)
 			return
 		}
 		d = 0
@@ -41,101 +27,101 @@ func GenInvs(λ, n []float64, a float64) (p, q float64, err error) {
 	return
 }
 
-// GenTvec computes the t vector (stress vector on SMP via Cauchy's rule: t = λ dot n)
-//  Note: λ are the eigenvalues (shifted or not)
-func GenTvec(t, λ, n []float64) {
+// GenTvec computes the t vector (stress vector on SMP via Cauchy's rule: t = L dot n)
+//  Note: L are the eigenvalues (shifted or not)
+func GenTvec(t, L, n []float64) {
 	for i := 0; i < 3; i++ {
-		t[i] = λ[i] * n[i]
+		t[i] = L[i] * n[i]
 	}
 }
 
-// GenTvecDeriv1 computes the first derivative dt/dλ
-//  Note: λ are the eigenvalues (shifted or not)
-func GenTvecDeriv1(dtdλ [][]float64, λ, n []float64, dndλ [][]float64) {
+// GenTvecDeriv1 computes the first derivative dt/dL
+//  Note: L are the eigenvalues (shifted or not)
+func GenTvecDeriv1(dtdL [][]float64, L, n []float64, dndL [][]float64) {
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
-			dtdλ[i][j] = λ[i] * dndλ[i][j]
+			dtdL[i][j] = L[i] * dndL[i][j]
 			if i == j {
-				dtdλ[i][j] += n[i]
+				dtdL[i][j] += n[i]
 			}
 		}
 	}
 }
 
-// GenTvecDeriv2 computes the second derivative d²t/dλdλ
-//  Note: λ are the eigenvalues (shifted or not)
-func GenTvecDeriv2(i, j, k int, λ []float64, dndλ [][]float64, d2ndλdλ_ijk float64) (res float64) {
-	res = λ[i] * d2ndλdλ_ijk
+// GenTvecDeriv2 computes the second derivative d²t/dLdL
+//  Note: L are the eigenvalues (shifted or not)
+func GenTvecDeriv2(i, j, k int, L []float64, dndL [][]float64, d2ndLdL_ijk float64) (res float64) {
+	res = L[i] * d2ndLdL_ijk
 	if i == j {
-		res += dndλ[i][k]
+		res += dndL[i][k]
 	}
 	if i == k {
-		res += dndλ[i][j]
+		res += dndL[i][j]
 	}
 	return
 }
 
-// GenInvsDeriv1 computes the first order derivatives of p and q w.r.t λ (shifted eigenvalues)
-//  Note: λ are the eigenvalues (shifted or not)
-func GenInvsDeriv1(dpdλ, dqdλ []float64, λ, n []float64, dndλ [][]float64, a float64) (p, q float64, err error) {
+// GenInvsDeriv1 computes the first order derivatives of p and q w.r.t L (shifted eigenvalues)
+//  Note: L are the eigenvalues (shifted or not)
+func GenInvsDeriv1(dpdL, dqdL []float64, L, n []float64, dndL [][]float64, a float64) (p, q float64, err error) {
 	// invariants
-	p = a * (λ[0]*n[0]*n[0] + λ[1]*n[1]*n[1] + λ[2]*n[2]*n[2])
-	d := λ[0]*λ[0]*n[0]*n[0] + λ[1]*λ[1]*n[1]*n[1] + λ[2]*λ[2]*n[2]*n[2] - p*p
+	p = a * (L[0]*n[0]*n[0] + L[1]*n[1]*n[1] + L[2]*n[2]*n[2])
+	d := L[0]*L[0]*n[0]*n[0] + L[1]*L[1]*n[1]*n[1] + L[2]*L[2]*n[2]*n[2] - p*p
 	if d < 0 {
 		if math.Abs(d) > SMPINVSTOL {
-			err = chk.Err(_geninvs_err2, "GenInvsDeriv1", d, SMPINVSTOL, λ)
+			err = chk.Err("difference==%g (>%g) is negative and cannot be used to computed q=sqrt(d). L=%v", d, SMPINVSTOL, L)
 			return
 		}
 		d = 0
 	}
 	q = math.Sqrt(d)
 	// derivatives
-	var t_k, dtdλ_ki float64
+	var t_k, dtdL_ki float64
 	for i := 0; i < 3; i++ {
-		dpdλ[i] = a * n[i] * n[i]
-		dqdλ[i] = 0
+		dpdL[i] = a * n[i] * n[i]
+		dqdL[i] = 0
 		for k := 0; k < 3; k++ {
-			t_k = λ[k] * n[k]
-			dtdλ_ki = λ[k] * dndλ[k][i]
+			t_k = L[k] * n[k]
+			dtdL_ki = L[k] * dndL[k][i]
 			if k == i {
-				dtdλ_ki += n[k]
+				dtdL_ki += n[k]
 			}
-			dpdλ[i] += 2.0 * a * t_k * dndλ[k][i]
-			dqdλ[i] += t_k * dtdλ_ki
+			dpdL[i] += 2.0 * a * t_k * dndL[k][i]
+			dqdL[i] += t_k * dtdL_ki
 		}
 		if q > 0 {
-			dqdλ[i] = (dqdλ[i] - p*dpdλ[i]) / q
+			dqdL[i] = (dqdL[i] - p*dpdL[i]) / q
 		}
 	}
 	return
 }
 
-// GenInvsDeriv2 computes the second order derivatives of p and q w.r.t λ (shifted eigenvalues)
-//  Note: λ are the eigenvalues (shifted or not)
-func GenInvsDeriv2(d2pdλdλ, d2qdλdλ [][]float64, λ, n, dpdλ, dqdλ []float64, p, q float64, dndλ [][]float64, d2ndλdλ [][][]float64, a float64) {
-	var t_k, dtdλ_ki, dtdλ_kj, d2tdλdλ_kij float64
+// GenInvsDeriv2 computes the second order derivatives of p and q w.r.t L (shifted eigenvalues)
+//  Note: L are the eigenvalues (shifted or not)
+func GenInvsDeriv2(d2pdLdL, d2qdLdL [][]float64, L, n, dpdL, dqdL []float64, p, q float64, dndL [][]float64, d2ndLdL [][][]float64, a float64) {
+	var t_k, dtdL_ki, dtdL_kj, d2tdLdL_kij float64
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
-			d2pdλdλ[i][j] = 2.0 * a * n[i] * dndλ[i][j]
-			d2qdλdλ[i][j] = -dpdλ[i]*dpdλ[j] - dqdλ[i]*dqdλ[j]
+			d2pdLdL[i][j] = 2.0 * a * n[i] * dndL[i][j]
+			d2qdLdL[i][j] = -dpdL[i]*dpdL[j] - dqdL[i]*dqdL[j]
 			for k := 0; k < 3; k++ {
-				t_k = λ[k] * n[k]
-				dtdλ_ki = λ[k] * dndλ[k][i]
-				dtdλ_kj = λ[k] * dndλ[k][j]
-				d2tdλdλ_kij = λ[k] * d2ndλdλ[k][i][j]
+				t_k = L[k] * n[k]
+				dtdL_ki = L[k] * dndL[k][i]
+				dtdL_kj = L[k] * dndL[k][j]
+				d2tdLdL_kij = L[k] * d2ndLdL[k][i][j]
 				if k == i {
-					dtdλ_ki += n[k]
-					d2tdλdλ_kij += dndλ[k][j]
+					dtdL_ki += n[k]
+					d2tdLdL_kij += dndL[k][j]
 				}
 				if k == j {
-					dtdλ_kj += n[k]
-					d2tdλdλ_kij += dndλ[k][i]
+					dtdL_kj += n[k]
+					d2tdLdL_kij += dndL[k][i]
 				}
-				d2pdλdλ[i][j] += 2.0*a*dndλ[k][i]*dtdλ_kj + 2.0*a*t_k*d2ndλdλ[k][i][j]
-				d2qdλdλ[i][j] += dtdλ_ki*dtdλ_kj + t_k*d2tdλdλ_kij
+				d2pdLdL[i][j] += 2.0*a*dndL[k][i]*dtdL_kj + 2.0*a*t_k*d2ndLdL[k][i][j]
+				d2qdLdL[i][j] += dtdL_ki*dtdL_kj + t_k*d2tdLdL_kij
 			}
 			if q > 0 {
-				d2qdλdλ[i][j] = (d2qdλdλ[i][j] - p*d2pdλdλ[i][j]) / q
+				d2qdLdL[i][j] = (d2qdLdL[i][j] - p*d2pdLdL[i][j]) / q
 			}
 		}
 	}
@@ -143,30 +129,24 @@ func GenInvsDeriv2(d2pdλdλ, d2qdλdλ [][]float64, λ, n, dpdλ, dqdλ []float
 
 // SMPinvs computes the SMP invariants, after the internal computation of the SMP unit director
 //  Note: internal variables are created => not efficient
-func SMPinvs(λ []float64, a, b, β, ϵ float64) (p, q float64, err error) {
+func SMPinvs(L []float64, a, b, β, ϵ float64) (p, q float64, err error) {
 	W := make([]float64, 3)                   // workspace
-	m := SmpDirector(W, λ, a, b, β, ϵ)        // W := N
+	m := SmpDirector(W, L, a, b, β, ϵ)        // W := N
 	W[0], W[1], W[2] = W[0]/m, W[1]/m, W[2]/m // W := n
-	p, q, err = GenInvs(λ, W, a)
+	p, q, err = GenInvs(L, W, a)
 	return
 }
 
 // SMPderivs1 computes the 1st order derivatives of SMP invariants
 //  Note: internal variables are created => not efficient
-func SMPderivs1(dpdλ, dqdλ, λ []float64, a, b, β, ϵ float64) (p, q float64, err error) {
-	dndλ := la.MatAlloc(3, 3)
-	dNdλ := make([]float64, 3)
+func SMPderivs1(dpdL, dqdL, L []float64, a, b, β, ϵ float64) (p, q float64, err error) {
+	dndL := la.MatAlloc(3, 3)
+	dNdL := make([]float64, 3)
 	Frmp := make([]float64, 3)
 	Grmp := make([]float64, 3)
 	W := make([]float64, 3)                                   // workspace
-	m := SmpDerivs1(dndλ, dNdλ, W, Frmp, Grmp, λ, a, b, β, ϵ) // W := N
+	m := SmpDerivs1(dndL, dNdL, W, Frmp, Grmp, L, a, b, β, ϵ) // W := N
 	W[0], W[1], W[2] = W[0]/m, W[1]/m, W[2]/m                 // W := n
-	p, q, err = GenInvsDeriv1(dpdλ, dqdλ, λ, W, dndλ, a)
+	p, q, err = GenInvsDeriv1(dpdL, dqdL, L, W, dndL, a)
 	return
 }
-
-// error messages
-var (
-	_geninvs_err1 = "generalinvs.go: ShiftedEigenvs: shifted eigenvalues are negative:\n  λ(out)=%v\n  λbar(in)=%v\n  (λc=%v, tol=%v)"
-	_geninvs_err2 = "generalinvs.go: %s: difference==%g (>%g) is negative and cannot be used to computed q=sqrt(d). λ=%v"
-)
