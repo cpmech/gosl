@@ -90,6 +90,9 @@ parsing, handling files, directories, etc.
 				<dd><a href="#Btoi">func Btoi(flag bool) int</a></dd>
 			
 				
+				<dd><a href="#CopyFileOver">func CopyFileOver(destination, source string) (err error)</a></dd>
+			
+				
 				<dd><a href="#ExtractStrPair">func ExtractStrPair(pair, sep string) (key, val string)</a></dd>
 			
 				
@@ -207,6 +210,9 @@ parsing, handling files, directories, etc.
 				<dd><a href="#Pfyel">func Pfyel(msg string, prm ...interface{})</a></dd>
 			
 				
+				<dd><a href="#Pipeline">func Pipeline(cmds ...*exec.Cmd) (pipeLineOutput, collectedStandardError []byte, pipeLineError error)</a></dd>
+			
+				
 				<dd><a href="#ReadFile">func ReadFile(fn string) (b []byte, err error)</a></dd>
 			
 				
@@ -223,6 +229,9 @@ parsing, handling files, directories, etc.
 			
 				
 				<dd><a href="#RemoveAll">func RemoveAll(key string)</a></dd>
+			
+				
+				<dd><a href="#RunCmd">func RunCmd(verbose bool, cmd string, args ...string) (string, error)</a></dd>
 			
 				
 				<dd><a href="#Sf">func Sf(msg string, prm ...interface{}) string</a></dd>
@@ -281,6 +290,8 @@ parsing, handling files, directories, etc.
 			<span style="font-size:90%">
 			
 				<a href="/src/github.com/cpmech/gosl/io/basic.go">basic.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/io/external.go">external.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/io/fileio.go">fileio.go</a>
 			
@@ -414,6 +425,18 @@ Btoi converts flag to interger
 <pre>Note: true  =&gt; 1
       false =&gt; 0
 </pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CopyFileOver">func <a href="https://github.com/cpmech/gosl/blob/master/io/external.go?s=755:812#L23">CopyFileOver</a></h2>
+			<pre>func CopyFileOver(destination, source <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+CopyFileOver copies file (Linux only with cp), overwriting if it exists already
+</p>
 
 			
 			
@@ -823,6 +846,28 @@ PathKey returs the full path except the extension
 		
 			
 			
+			<h2 id="Pipeline">func <a href="https://github.com/cpmech/gosl/blob/master/io/external.go?s=1343:1444#L37">Pipeline</a></h2>
+			<pre>func Pipeline(cmds ...*<a href="/pkg/os/exec/">exec</a>.<a href="/pkg/os/exec/#Cmd">Cmd</a>) (pipeLineOutput, collectedStandardError []<a href="/pkg/builtin/#byte">byte</a>, pipeLineError <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Pipeline strings together the given exec.Cmd commands in a similar fashion
+to the Unix pipeline. Each command&#39;s standard output is connected to the
+standard input of the next command, and the output of the final command in
+the pipeline is returned, along with the collected standard error of all
+commands and the first error found (if any).
+</p>
+<p>
+by Kyle Lemons
+</p>
+<p>
+To provide input to the pipeline, assign an io.Reader to the first&#39;s Stdin.
+</p>
+
+			
+			
+
+		
+			
+			
 			<h2 id="ReadFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3382:3428#L119">ReadFile</a></h2>
 			<pre>func ReadFile(fn <a href="/pkg/builtin/#string">string</a>) (b []<a href="/pkg/builtin/#byte">byte</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
@@ -889,6 +934,18 @@ type of numeric values. The number of columns must be equal, including for the h
 			<pre>func RemoveAll(key <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 RemoveAll deletes all files matching filename specified by key (be careful)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RunCmd">func <a href="https://github.com/cpmech/gosl/blob/master/io/external.go?s=278:347#L5">RunCmd</a></h2>
+			<pre>func RunCmd(verbose <a href="/pkg/builtin/#bool">bool</a>, cmd <a href="/pkg/builtin/#string">string</a>, args ...<a href="/pkg/builtin/#string">string</a>) (<a href="/pkg/builtin/#string">string</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+RunCmd runs external command
 </p>
 
 			

@@ -104,6 +104,9 @@
 				<dd><a href="#PlotYxe">func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error)</a></dd>
 			
 				
+				<dd><a href="#Simps2D">func Simps2D(dx, dy float64, f [][]float64) (V float64)</a></dd>
+			
+				
 				<dd><a href="#Simpson">func Simpson(f Fun0, a, b float64, n int) (float64, error)</a></dd>
 			
 				
@@ -111,6 +114,9 @@
 			
 				
 				<dd><a href="#Trapz">func Trapz(x, y []float64) (A float64)</a></dd>
+			
+				
+				<dd><a href="#Trapz2D">func Trapz2D(dx, dy float64, f [][]float64) (V float64)</a></dd>
 			
 				
 				<dd><a href="#TrapzF">func TrapzF(x []float64, y Cb_yx) (A float64)</a></dd>
@@ -492,6 +498,19 @@ PlotYxe plots the function y(x) implemented by Cb_yxe
 		
 			
 			
+			<h2 id="Simps2D">func <a href="https://github.com/cpmech/gosl/blob/master/num/integration.go?s=2245:2300#L71">Simps2D</a></h2>
+			<pre>func Simps2D(dx, dy <a href="/pkg/builtin/#float64">float64</a>, f [][]<a href="/pkg/builtin/#float64">float64</a>) (V <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Simps2D computes a double integral over the x-y plane (Simpson&#39;s rule); thus resulting on
+the volume defined between the function f(x,y) and the plane ortogonal to z
+</p>
+
+			
+			
+
+		
+			
+			
 			<h2 id="Simpson">func <a href="https://github.com/cpmech/gosl/blob/master/num/simpson.go?s=366:424#L3">Simpson</a></h2>
 			<pre>func Simpson(f <a href="#Fun0">Fun0</a>, a, b <a href="/pkg/builtin/#float64">float64</a>, n <a href="/pkg/builtin/#int">int</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
@@ -518,6 +537,19 @@ Simpson integrates function f from x=a to x=b using n subintervals (n must be ev
 			<p>
 Trapz returns the area below the discrete curve defined by x and y.
 Computations are carried out with the trapezoidal rule.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Trapz2D">func <a href="https://github.com/cpmech/gosl/blob/master/num/integration.go?s=1534:1589#L38">Trapz2D</a></h2>
+			<pre>func Trapz2D(dx, dy <a href="/pkg/builtin/#float64">float64</a>, f [][]<a href="/pkg/builtin/#float64">float64</a>) (V <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Trapz2D computes a double integral over the x-y plane; thus resulting on
+the volume defined between the function f(x,y) and the plane ortogonal to z
 </p>
 
 			

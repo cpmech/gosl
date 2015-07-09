@@ -78,6 +78,9 @@ package chk contains functions for checking and testing computations
 				<dd><a href="#CallerInfo">func CallerInfo(idx int)</a></dd>
 			
 				
+				<dd><a href="#CheckAndPrint">func CheckAndPrint(tst *testing.T, msg string, tol, diff float64)</a></dd>
+			
+				
 				<dd><a href="#DblAssert">func DblAssert(a, b float64)</a></dd>
 			
 				
@@ -121,9 +124,6 @@ package chk contains functions for checking and testing computations
 			
 				
 				<dd><a href="#PrintFail">func PrintFail(msg string, prm ...interface{})</a></dd>
-			
-				
-				<dd><a href="#PrintMsg">func PrintMsg(tst *testing.T, msg string, tol, maxdiff float64)</a></dd>
 			
 				
 				<dd><a href="#PrintOk">func PrintOk(msg string, prm ...interface{})</a></dd>
@@ -230,7 +230,7 @@ package chk contains functions for checking and testing computations
 		
 			
 			
-			<h2 id="AnaNum">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=427:503#L9">AnaNum</a></h2>
+			<h2 id="AnaNum">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=432:508#L9">AnaNum</a></h2>
 			<pre>func AnaNum(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, ana, num <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 AnaNum compares analytical versus numerical values
@@ -242,7 +242,7 @@ AnaNum compares analytical versus numerical values
 		
 			
 			
-			<h2 id="Bools">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=1501:1552#L44">Bools</a></h2>
+			<h2 id="Bools">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=1506:1557#L44">Bools</a></h2>
 			<pre>func Bools(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 Bools compare two slices of bools
@@ -268,6 +268,18 @@ CallerInfo returns the file and line positions where an error occurred
 		
 			
 			
+			<h2 id="CheckAndPrint">func <a href="https://github.com/cpmech/gosl/blob/master/chk/chk.go?s=1859:1924#L80">CheckAndPrint</a></h2>
+			<pre>func CheckAndPrint(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, diff <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+PrintMsg returns a formatted error message
+</p>
+
+			
+			
+
+		
+			
+			
 			<h2 id="DblAssert">func <a href="https://github.com/cpmech/gosl/blob/master/chk/asssert.go?s=917:945#L33">DblAssert</a></h2>
 			<pre>func DblAssert(a, b <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
@@ -280,7 +292,7 @@ DblAssert asserts that a is equal to b (floats)
 		
 			
 			
-			<h2 id="Deep3">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=9005:9076#L296">Deep3</a></h2>
+			<h2 id="Deep3">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=9020:9091#L296">Deep3</a></h2>
 			<pre>func Deep3(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, a, b [][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep3 compares two deep3 slices
@@ -292,7 +304,7 @@ Deep3 compares two deep3 slices
 		
 			
 			
-			<h2 id="Deep4">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=10227:10300#L327">Deep4</a></h2>
+			<h2 id="Deep4">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=10242:10315#L327">Deep4</a></h2>
 			<pre>func Deep4(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, a, b [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Deep4 compares two deep4 slices
@@ -352,7 +364,7 @@ IntAssertLessThanOrEqualTo asserts that a ≤ b (ints)
 		
 			
 			
-			<h2 id="IntMat">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=7898:7959#L261">IntMat</a></h2>
+			<h2 id="IntMat">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=7913:7974#L261">IntMat</a></h2>
 			<pre>func IntMat(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, res, correct [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntMat compares matrices of ints
@@ -364,7 +376,7 @@ IntMat compares matrices of ints
 		
 			
 			
-			<h2 id="Ints">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=938:987#L27">Ints</a></h2>
+			<h2 id="Ints">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=943:992#L27">Ints</a></h2>
 			<pre>func Ints(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Ints compares two slices of integers
@@ -376,7 +388,7 @@ Ints compares two slices of integers
 		
 			
 			
-			<h2 id="Matrix">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=2650:2728#L78">Matrix</a></h2>
+			<h2 id="Matrix">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=2655:2733#L78">Matrix</a></h2>
 			<pre>func Matrix(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Matrix compares two matrices
@@ -388,7 +400,7 @@ Matrix compares two matrices
 		
 			
 			
-			<h2 id="MatrixC">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=4396:4478#L144">MatrixC</a></h2>
+			<h2 id="MatrixC">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=4411:4493#L144">MatrixC</a></h2>
 			<pre>func MatrixC(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct [][]<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 MatrixC compares two matrices of complex nummbers
@@ -424,7 +436,7 @@ PanicSimple panicks without calling CallerInfo
 		
 			
 			
-			<h2 id="PrintAnaNum">func <a href="https://github.com/cpmech/gosl/blob/master/chk/chk.go?s=2212:2287#L92">PrintAnaNum</a></h2>
+			<h2 id="PrintAnaNum">func <a href="https://github.com/cpmech/gosl/blob/master/chk/chk.go?s=2322:2397#L96">PrintAnaNum</a></h2>
 			<pre>func PrintAnaNum(msg <a href="/pkg/builtin/#string">string</a>, tol, ana, num <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) (e <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 PrintAnaNum formats the output of analytical versus numerical comparisons
@@ -439,18 +451,6 @@ PrintAnaNum formats the output of analytical versus numerical comparisons
 			<h2 id="PrintFail">func <a href="https://github.com/cpmech/gosl/blob/master/chk/chk.go?s=1398:1444#L59">PrintFail</a></h2>
 			<pre>func PrintFail(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
-			
-			
-
-		
-			
-			
-			<h2 id="PrintMsg">func <a href="https://github.com/cpmech/gosl/blob/master/chk/chk.go?s=1859:1922#L80">PrintMsg</a></h2>
-			<pre>func PrintMsg(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-PrintMsg returns a formatted error message
-</p>
-
 			
 			
 
@@ -502,7 +502,7 @@ StrAssert asserts that a is equal to b (strings)
 		
 			
 			
-			<h2 id="StrMat">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=6773:6837#L226">StrMat</a></h2>
+			<h2 id="StrMat">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=6788:6852#L226">StrMat</a></h2>
 			<pre>func StrMat(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, res, correct [][]<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 StrMat compares matrices of strings
@@ -514,7 +514,7 @@ StrMat compares matrices of strings
 		
 			
 			
-			<h2 id="String">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=635:683#L17">String</a></h2>
+			<h2 id="String">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=640:688#L17">String</a></h2>
 			<pre>func String(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, str, correct <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 String compares two strings
@@ -526,7 +526,7 @@ String compares two strings
 		
 			
 			
-			<h2 id="Strings">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=2078:2133#L61">Strings</a></h2>
+			<h2 id="Strings">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=2083:2138#L61">Strings</a></h2>
 			<pre>func Strings(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Strings compare two slices of strings
@@ -538,7 +538,7 @@ Strings compare two slices of strings
 		
 			
 			
-			<h2 id="Vector">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=3644:3720#L115">Vector</a></h2>
+			<h2 id="Vector">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=3654:3730#L115">Vector</a></h2>
 			<pre>func Vector(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Vector compares two vectors
@@ -550,7 +550,7 @@ Vector compares two vectors
 		
 			
 			
-			<h2 id="VectorC">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=5725:5805#L189">VectorC</a></h2>
+			<h2 id="VectorC">func <a href="https://github.com/cpmech/gosl/blob/master/chk/testing.go?s=5740:5820#L189">VectorC</a></h2>
 			<pre>func VectorC(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, res, correct []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 VectorC compares two vectors of complex nummbers

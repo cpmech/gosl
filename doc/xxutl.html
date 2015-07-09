@@ -81,6 +81,9 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#DblArrayToMat">func DblArrayToMat(v []float64, m, n int) (a [][]float64)</a></dd>
 			
 				
+				<dd><a href="#DblCopy">func DblCopy(in []float64) (out []float64)</a></dd>
+			
+				
 				<dd><a href="#DblDsort3">func DblDsort3(a, b, c *float64)</a></dd>
 			
 				
@@ -106,6 +109,9 @@ such as slices and slices of slices. It also contains functions for sorting quan
 			
 				
 				<dd><a href="#DblVals">func DblVals(n int, v float64) (res []float64)</a></dd>
+			
+				
+				<dd><a href="#DblsAlloc">func DblsAlloc(m, n int) (mat [][]float64)</a></dd>
 			
 				
 				<dd><a href="#Deep3Deserialize">func Deep3Deserialize(I, P []int, S []float64, debug bool) (A [][][]float64)</a></dd>
@@ -195,6 +201,9 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#LinSpaceOpen">func LinSpaceOpen(start, stop float64, num int) (res []float64)</a></dd>
 			
 				
+				<dd><a href="#MeshGrid2D">func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (x, y [][]float64)</a></dd>
+			
+				
 				<dd><a href="#PrintDeep3">func PrintDeep3(name string, A [][][]float64)</a></dd>
 			
 				
@@ -249,6 +258,17 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#DblList.Append">func (o *DblList) Append(rowidx int, value float64)</a></dd>
+				
+			
+				
+				<dd><a href="#DblSlist">type DblSlist</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DblSlist.Append">func (o *DblSlist) Append(startRow bool, value float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DblSlist.Print">func (o DblSlist) Print(fmt string)</a></dd>
 				
 			
 				
@@ -414,7 +434,7 @@ BestSquare finds the best square for given size=Nrows * Ncolumns
 		
 			
 			
-			<h2 id="Dbl2Str">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6476:6529#L279">Dbl2Str</a></h2>
+			<h2 id="Dbl2Str">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6808:6861#L295">Dbl2Str</a></h2>
 			<pre>func Dbl2Str(v []<a href="/pkg/builtin/#float64">float64</a>, format <a href="/pkg/builtin/#string">string</a>) (s []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Dbl2Str converts a slice of doubles (float64) to a slice of strings
@@ -430,6 +450,18 @@ Dbl2Str converts a slice of doubles (float64) to a slice of strings
 			<pre>func DblArrayToMat(v []<a href="/pkg/builtin/#float64">float64</a>, m, n <a href="/pkg/builtin/#int">int</a>) (a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblArrayToMat converts a column-major array to a matrix
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DblCopy">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3696:3738#L164">DblCopy</a></h2>
+			<pre>func DblCopy(in []<a href="/pkg/builtin/#float64">float64</a>) (out []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+DblCopy gets a copy of slice of doubles
 </p>
 
 			
@@ -474,7 +506,7 @@ DblMatToArray converts a matrix into a column-major array
 		
 			
 			
-			<h2 id="DblMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3904:3948#L171">DblMinMax</a></h2>
+			<h2 id="DblMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4236:4280#L187">DblMinMax</a></h2>
 			<pre>func DblMinMax(v []<a href="/pkg/builtin/#float64">float64</a>) (mi, ma <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblMinMax returns the maximum and minimum elements in v
@@ -488,7 +520,7 @@ DblMinMax returns the maximum and minimum elements in v
 		
 			
 			
-			<h2 id="DblOnes">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3164:3199#L137">DblOnes</a></h2>
+			<h2 id="DblOnes">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3350:3385#L146">DblOnes</a></h2>
 			<pre>func DblOnes(n <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblOnes generates a slice of double precision &#39;1s&#39;
@@ -512,7 +544,7 @@ DblSort3 sorts 3 values in ascending order
 		
 			
 			
-			<h2 id="DblSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6883:6920#L297">DblSplit</a></h2>
+			<h2 id="DblSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7215:7252#L313">DblSplit</a></h2>
 			<pre>func DblSplit(s <a href="/pkg/builtin/#string">string</a>) (r []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblSplit splits a string into floats
@@ -524,7 +556,7 @@ DblSplit splits a string into floats
 		
 			
 			
-			<h2 id="DblSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4188:4226#L186">DblSum</a></h2>
+			<h2 id="DblSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4520:4558#L202">DblSum</a></h2>
 			<pre>func DblSum(v []<a href="/pkg/builtin/#float64">float64</a>) (sum <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblSum sums all items in v
@@ -538,10 +570,22 @@ DblSum sums all items in v
 		
 			
 			
-			<h2 id="DblVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3339:3385#L146">DblVals</a></h2>
+			<h2 id="DblVals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3525:3571#L155">DblVals</a></h2>
 			<pre>func DblVals(n <a href="/pkg/builtin/#int">int</a>, v <a href="/pkg/builtin/#float64">float64</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblVals generates a slice of double precision values
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DblsAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=998:1040#L35">DblsAlloc</a></h2>
+			<pre>func DblsAlloc(m, n <a href="/pkg/builtin/#int">int</a>) (mat [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+DblsAlloc allocates a matrix of float64
 </p>
 
 			
@@ -640,7 +684,7 @@ Deep4set sets deep slice of slice of slice of slice with v values
 		
 			
 			
-			<h2 id="Digits">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7075:7127#L307">Digits</a></h2>
+			<h2 id="Digits">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7407:7459#L323">Digits</a></h2>
 			<pre>func Digits(maxint <a href="/pkg/builtin/#int">int</a>) (ndigits <a href="/pkg/builtin/#int">int</a>, format <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Digits returns the nubmer of digits
@@ -671,7 +715,7 @@ DoProf runs either CPU profiling or MEM profiling
 		
 			
 			
-			<h2 id="DurSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4393:4441#L195">DurSum</a></h2>
+			<h2 id="DurSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4725:4773#L211">DurSum</a></h2>
 			<pre>func DurSum(v []<a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>) (seconds <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DurSum sums all seconds in v
@@ -685,7 +729,7 @@ DurSum sums all seconds in v
 		
 			
 			
-			<h2 id="Expon">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7253:7290#L314">Expon</a></h2>
+			<h2 id="Expon">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7585:7622#L330">Expon</a></h2>
 			<pre>func Expon(val <a href="/pkg/builtin/#float64">float64</a>) (ndigits <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Expon returns the exponent
@@ -719,7 +763,7 @@ Notes:
 		
 			
 			
-			<h2 id="IntAddScalar">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2061:2106#L85">IntAddScalar</a></h2>
+			<h2 id="IntAddScalar">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2247:2292#L94">IntAddScalar</a></h2>
 			<pre>func IntAddScalar(a []<a href="/pkg/builtin/#int">int</a>, s <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntAddScalar adds a scalar to all values in a slice of integers
@@ -752,7 +796,7 @@ IntFill fills a slice of integers
 		
 			
 			
-			<h2 id="IntFilter">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5251:5310#L226">IntFilter</a></h2>
+			<h2 id="IntFilter">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5583:5642#L242">IntFilter</a></h2>
 			<pre>func IntFilter(a []<a href="/pkg/builtin/#int">int</a>, out func(idx <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntFilter filters out components in slice
@@ -766,7 +810,7 @@ IntFilter filters out components in slice
 		
 			
 			
-			<h2 id="IntIndexSmall">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4985:5025#L215">IntIndexSmall</a></h2>
+			<h2 id="IntIndexSmall">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5317:5357#L231">IntIndexSmall</a></h2>
 			<pre>func IntIndexSmall(a []<a href="/pkg/builtin/#int">int</a>, val <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 IntIndexSmall finds the index of an item in a slice of ints
@@ -794,7 +838,7 @@ IntIntsMapAppend appends a new item to a map of slice.
 		
 			
 			
-			<h2 id="IntMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3599:3635#L156">IntMinMax</a></h2>
+			<h2 id="IntMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3931:3967#L172">IntMinMax</a></h2>
 			<pre>func IntMinMax(v []<a href="/pkg/builtin/#int">int</a>) (mi, ma <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntMinMax returns the maximum and minimum elements in v
@@ -808,7 +852,7 @@ IntMinMax returns the maximum and minimum elements in v
 		
 			
 			
-			<h2 id="IntNegOut">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5551:5586#L238">IntNegOut</a></h2>
+			<h2 id="IntNegOut">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5883:5918#L254">IntNegOut</a></h2>
 			<pre>func IntNegOut(a []<a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntNegOut filters out negative components in slice
@@ -822,7 +866,7 @@ IntNegOut filters out negative components in slice
 		
 			
 			
-			<h2 id="IntPy">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2940:2972#L124">IntPy</a></h2>
+			<h2 id="IntPy">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=3126:3158#L133">IntPy</a></h2>
 			<pre>func IntPy(a []<a href="/pkg/builtin/#int">int</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 IntPy returns a Python string representing a slice of integers
@@ -834,7 +878,7 @@ IntPy returns a Python string representing a slice of integers
 		
 			
 			
-			<h2 id="IntRange">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1186:1218#L44">IntRange</a></h2>
+			<h2 id="IntRange">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1372:1404#L53">IntRange</a></h2>
 			<pre>func IntRange(n <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntRange generates a slice of integers from 0 to n-1
@@ -846,7 +890,7 @@ IntRange generates a slice of integers from 0 to n-1
 		
 			
 			
-			<h2 id="IntRange2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1396:1433#L56">IntRange2</a></h2>
+			<h2 id="IntRange2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1582:1619#L65">IntRange2</a></h2>
 			<pre>func IntRange2(start, stop <a href="/pkg/builtin/#int">int</a>) []<a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 IntRange2 generates slice of integers from start to stop (but not stop)
@@ -858,7 +902,7 @@ IntRange2 generates slice of integers from start to stop (but not stop)
 		
 			
 			
-			<h2 id="IntRange3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1568:1617#L61">IntRange3</a></h2>
+			<h2 id="IntRange3">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1754:1803#L70">IntRange3</a></h2>
 			<pre>func IntRange3(start, stop, step <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntRange3 generates a slice of integers from start to stop (but not stop), afer each &#39;step&#39;
@@ -870,7 +914,7 @@ IntRange3 generates a slice of integers from start to stop (but not stop), afer 
 		
 			
 			
-			<h2 id="IntUnique">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2260:2303#L94">IntUnique</a></h2>
+			<h2 id="IntUnique">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=2446:2489#L103">IntUnique</a></h2>
 			<pre>func IntUnique(slices ...[]<a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntUnique returns a unique and sorted slice of integers
@@ -894,7 +938,7 @@ IntVals allocates a slice of integers with size==n, filled with val
 		
 			
 			
-			<h2 id="IntsAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=999:1037#L35">IntsAlloc</a></h2>
+			<h2 id="IntsAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=1185:1223#L44">IntsAlloc</a></h2>
 			<pre>func IntsAlloc(m, n <a href="/pkg/builtin/#int">int</a>) (mat [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntsAlloc allocates a matrix of integers
@@ -906,7 +950,7 @@ IntsAlloc allocates a matrix of integers
 		
 			
 			
-			<h2 id="LinSpace">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5768:5827#L249">LinSpace</a></h2>
+			<h2 id="LinSpace">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6100:6159#L265">LinSpace</a></h2>
 			<pre>func LinSpace(start, stop <a href="/pkg/builtin/#float64">float64</a>, num <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 LinSpace returns evenly spaced numbers over a specified closed interval.
@@ -918,11 +962,26 @@ LinSpace returns evenly spaced numbers over a specified closed interval.
 		
 			
 			
-			<h2 id="LinSpaceOpen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6156:6219#L266">LinSpaceOpen</a></h2>
+			<h2 id="LinSpaceOpen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6488:6551#L282">LinSpaceOpen</a></h2>
 			<pre>func LinSpaceOpen(start, stop <a href="/pkg/builtin/#float64">float64</a>, num <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 LinSpaceOpen returns evenly spaced numbers over a specified open interval.
 </p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MeshGrid2D">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7793:7871#L341">MeshGrid2D</a></h2>
+			<pre>func MeshGrid2D(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>) (x, y [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MeshGrid2D creates a grid with x-y coordinates
+</p>
+<pre>x -- [ny][nx]
+y -- [ny][nx]
+</pre>
 
 			
 			
@@ -996,7 +1055,7 @@ SortQuadruples sorts i, x, y, and z by &#34;i&#34;, &#34;x&#34;, &#34;y&#34;, or
 		
 			
 			
-			<h2 id="Str2Dbl">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6705:6743#L288">Str2Dbl</a></h2>
+			<h2 id="Str2Dbl">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7037:7075#L304">Str2Dbl</a></h2>
 			<pre>func Str2Dbl(s []<a href="/pkg/builtin/#string">string</a>) (v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Str2Dbl converts a slice of strings to a slice of doubles (float64)
@@ -1058,7 +1117,7 @@ StrDblsMapAppend appends a new item to a map of slice.
 		
 			
 			
-			<h2 id="StrIndexSmall">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4676:4722#L204">StrIndexSmall</a></h2>
+			<h2 id="StrIndexSmall">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5008:5054#L220">StrIndexSmall</a></h2>
 			<pre>func StrIndexSmall(a []<a href="/pkg/builtin/#string">string</a>, val <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 StrIndexSmall finds the index of an item in a slice of strings
@@ -1117,12 +1176,12 @@ StrVals allocates a slice of strings with size==n, filled with val
 		
 			
 			
-			<h2 id="DblList">type <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=420:471#L5">DblList</a></h2>
+			<h2 id="DblList">type <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=461:512#L7">DblList</a></h2>
 			<pre>type DblList struct {
     Vals [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// values</span>
 }</pre>
 			<p>
-DblList implements a matrix with variable number of entities
+DblList implements a tabular list with variable number of columns
 </p>
 <pre>Example:
   Vals = [][]float64{
@@ -1146,10 +1205,70 @@ DblList implements a matrix with variable number of entities
 
 			
 				
-				<h3 id="DblList.Append">func (*DblList) <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=508:559#L10">Append</a></h3>
+				<h3 id="DblList.Append">func (*DblList) <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=549:600#L12">Append</a></h3>
 				<pre>func (o *<a href="#DblList">DblList</a>) Append(rowidx <a href="/pkg/builtin/#int">int</a>, value <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Append appends items to DblList
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DblSlist">type <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=1284:1362#L40">DblSlist</a></h2>
+			<pre>type DblSlist struct {
+    Vals []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// values</span>
+    Ptrs []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// pointers</span>
+}</pre>
+			<p>
+DblSlist implements a tabular list with variable number of columns
+using a serial representation
+</p>
+<pre>Example:
+    0.0
+    1.0  1.1  1.2  1.3
+    2.0  2.1
+    3.0  3.1  3.2
+becomes:
+           (0)   (1)    2    3    4   (5)    6   (7)    8    9   (10)
+    Vals = 0.0 | 1.0  1.1  1.2  1.3 | 2.0  2.1 | 3.0  3.1  3.2 |
+    Ptrs = 0 1 5 7 10
+Notes:
+    len(Ptrs) = nrows + 1
+    Ptrs[len(Ptrs)-1] = len(Vals)
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DblSlist.Append">func (*DblSlist) <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=1399:1454#L46">Append</a></h3>
+				<pre>func (o *<a href="#DblSlist">DblSlist</a>) Append(startRow <a href="/pkg/builtin/#bool">bool</a>, value <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Append appends item to DblSlist
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DblSlist.Print">func (DblSlist) <a href="https://github.com/cpmech/gosl/blob/master/utl/list.go?s=1708:1743#L60">Print</a></h3>
+				<pre>func (o <a href="#DblSlist">DblSlist</a>) Print(fmt <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+Print prints the souble-serial-list
 </p>
 
 				

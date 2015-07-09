@@ -189,7 +189,7 @@ matrices and vectors in dense and sparse formats (including complex)
 				<dd><a href="#SmatCCMatrix">func SmatCCMatrix(fnkey string, a *CCMatrix)</a></dd>
 			
 				
-				<dd><a href="#SmatTriplet">func SmatTriplet(fnkey string, t *Triplet)</a></dd>
+				<dd><a href="#SmatTriplet">func SmatTriplet(fnkey string, t *Triplet, tol float64)</a></dd>
 			
 				
 				<dd><a href="#SpCheckDiag">func SpCheckDiag(a *CCMatrix) bool</a></dd>
@@ -1114,7 +1114,7 @@ NOTE: this function uses Cholesky decomposition and should be used for small sys
 		
 			
 			
-			<h2 id="SmatCCMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=3890:3934#L194">SmatCCMatrix</a></h2>
+			<h2 id="SmatCCMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=3901:3945#L194">SmatCCMatrix</a></h2>
 			<pre>func SmatCCMatrix(fnkey <a href="/pkg/builtin/#string">string</a>, a *<a href="#CCMatrix">CCMatrix</a>)</pre>
 			<p>
 SmatCCMatrix writes a &#34;.smat&#34; file that can be visualised with vismatrix
@@ -1126,8 +1126,8 @@ SmatCCMatrix writes a &#34;.smat&#34; file that can be visualised with vismatrix
 		
 			
 			
-			<h2 id="SmatTriplet">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=3489:3531#L180">SmatTriplet</a></h2>
-			<pre>func SmatTriplet(fnkey <a href="/pkg/builtin/#string">string</a>, t *<a href="#Triplet">Triplet</a>)</pre>
+			<h2 id="SmatTriplet">func <a href="https://github.com/cpmech/gosl/blob/master/la/printing.go?s=3489:3544#L180">SmatTriplet</a></h2>
+			<pre>func SmatTriplet(fnkey <a href="/pkg/builtin/#string">string</a>, t *<a href="#Triplet">Triplet</a>, tol <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmatTriplet writes a &#34;.smat&#34; file that can be visualised with vismatrix
 </p>

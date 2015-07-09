@@ -127,10 +127,10 @@ plt contains functions for plotting
 				<dd><a href="#Cross">func Cross()</a></dd>
 			
 				
-				<dd><a href="#DrawLegend">func DrawLegend(dat []FmtL, fs int, loc string, frame bool, args string)</a></dd>
+				<dd><a href="#DrawLegend">func DrawLegend(dat []Fmt, fs int, loc string, frame bool, args string)</a></dd>
 			
 				
-				<dd><a href="#DrawPolyline">func DrawPolyline(P [][]float64, sd *FmtH, args string)</a></dd>
+				<dd><a href="#DrawPolyline">func DrawPolyline(P [][]float64, sd *Sty, args string)</a></dd>
 			
 				
 				<dd><a href="#Equal">func Equal()</a></dd>
@@ -142,7 +142,13 @@ plt contains functions for plotting
 				<dd><a href="#GenArray">func GenArray(b *bytes.Buffer, name string, u []float64)</a></dd>
 			
 				
+				<dd><a href="#GenList">func GenList(buf *bytes.Buffer, name string, a [][]float64)</a></dd>
+			
+				
 				<dd><a href="#GenMat">func GenMat(buf *bytes.Buffer, name string, a [][]float64)</a></dd>
+			
+				
+				<dd><a href="#GenStrArray">func GenStrArray(b *bytes.Buffer, name string, u []string)</a></dd>
 			
 				
 				<dd><a href="#Gll">func Gll(xl, yl string, args string)</a></dd>
@@ -152,6 +158,9 @@ plt contains functions for plotting
 			
 				
 				<dd><a href="#HideTRframe">func HideTRframe()</a></dd>
+			
+				
+				<dd><a href="#Hist">func Hist(x [][]float64, labels []string, args string)</a></dd>
 			
 				
 				<dd><a href="#Plot">func Plot(x, y []float64, args string)</a></dd>
@@ -227,32 +236,19 @@ plt contains functions for plotting
 			
 			
 				
-				<dd><a href="#FmtH">type FmtH</a></dd>
+				<dd><a href="#Fmt">type Fmt</a></dd>
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#FmtH.Init">func (o *FmtH) Init()</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Fmt.GetArgs">func (o Fmt) GetArgs(start string) string</a></dd>
 				
 			
 				
-				<dd><a href="#FmtL">type FmtL</a></dd>
+				<dd><a href="#Sty">type Sty</a></dd>
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#FmtL.GetArgs">func (o FmtL) GetArgs(start string) string</a></dd>
-				
-			
-				
-				<dd><a href="#FmtS">type FmtS</a></dd>
-				
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#FmtS.GetArgs">func (o FmtS) GetArgs(start string) string</a></dd>
-				
-			
-				
-				<dd><a href="#Formatter">type Formatter</a></dd>
-				
+					<dd>&nbsp; &nbsp; <a href="#Sty.Init">func (o *Sty) Init()</a></dd>
 				
 			
 			
@@ -386,7 +382,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisOff">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6129:6143#L283">AxisOff</a></h2>
+			<h2 id="AxisOff">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6431:6445#L296">AxisOff</a></h2>
 			<pre>func AxisOff()</pre>
 			
 			
@@ -458,7 +454,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Circle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6278:6321#L296">Circle</a></h2>
+			<h2 id="Circle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6580:6623#L309">Circle</a></h2>
 			<pre>func Circle(xc, yc, r <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -467,7 +463,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Clf">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5430:5440#L250">Clf</a></h2>
+			<h2 id="Clf">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5732:5742#L263">Clf</a></h2>
 			<pre>func Clf()</pre>
 			
 			
@@ -476,7 +472,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Contour">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4139:4185#L190">Contour</a></h2>
+			<h2 id="Contour">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4441:4487#L203">Contour</a></h2>
 			<pre>func Contour(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -485,7 +481,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="ContourSimple">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4458:4510#L205">ContourSimple</a></h2>
+			<h2 id="ContourSimple">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4760:4812#L218">ContourSimple</a></h2>
 			<pre>func ContourSimple(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -503,8 +499,8 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="DrawLegend">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=1422:1494#L50">DrawLegend</a></h2>
-			<pre>func DrawLegend(dat []<a href="#FmtL">FmtL</a>, fs <a href="/pkg/builtin/#int">int</a>, loc <a href="/pkg/builtin/#string">string</a>, frame <a href="/pkg/builtin/#bool">bool</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			<h2 id="DrawLegend">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=1421:1492#L50">DrawLegend</a></h2>
+			<pre>func DrawLegend(dat []<a href="#Fmt">Fmt</a>, fs <a href="/pkg/builtin/#int">int</a>, loc <a href="/pkg/builtin/#string">string</a>, frame <a href="/pkg/builtin/#bool">bool</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 DrawLegend draws legend with given lines data. fs == fontsize
 </p>
@@ -515,8 +511,8 @@ DrawLegend draws legend with given lines data. fs == fontsize
 		
 			
 			
-			<h2 id="DrawPolyline">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=655:710#L24">DrawPolyline</a></h2>
-			<pre>func DrawPolyline(P [][]<a href="/pkg/builtin/#float64">float64</a>, sd *<a href="#FmtH">FmtH</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			<h2 id="DrawPolyline">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=655:709#L24">DrawPolyline</a></h2>
+			<pre>func DrawPolyline(P [][]<a href="/pkg/builtin/#float64">float64</a>, sd *<a href="#Sty">Sty</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 DrawPolyline draws a polyline
 </p>
@@ -527,7 +523,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Equal">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6178:6190#L287">Equal</a></h2>
+			<h2 id="Equal">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6480:6492#L300">Equal</a></h2>
 			<pre>func Equal()</pre>
 			
 			
@@ -536,7 +532,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Gen2Arrays">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7459:7530#L345">Gen2Arrays</a></h2>
+			<h2 id="Gen2Arrays">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8025:8096#L371">Gen2Arrays</a></h2>
 			<pre>func Gen2Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen2Arrays generates the NumPy text in &#39;b&#39; corresponding to 2 arrays of float point numbers
@@ -548,7 +544,7 @@ Gen2Arrays generates the NumPy text in &#39;b&#39; corresponding to 2 arrays of 
 		
 			
 			
-			<h2 id="GenArray">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7192:7248#L336">GenArray</a></h2>
+			<h2 id="GenArray">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7758:7814#L362">GenArray</a></h2>
 			<pre>func GenArray(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenArray generates the NumPy text in &#39;b&#39; corresponding to an array of float point numbers
@@ -560,10 +556,10 @@ GenArray generates the NumPy text in &#39;b&#39; corresponding to an array of fl
 		
 			
 			
-			<h2 id="GenMat">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6847:6905#L323">GenMat</a></h2>
-			<pre>func GenMat(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="GenList">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7431:7490#L349">GenList</a></h2>
+			<pre>func GenList(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
-Auxiliary functions
+GenList generates list
 </p>
 
 			
@@ -572,7 +568,31 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="Gll">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5225:5261#L241">Gll</a></h2>
+			<h2 id="GenMat">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7153:7211#L336">GenMat</a></h2>
+			<pre>func GenMat(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+GenMat generates matrix
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="GenStrArray">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8236:8294#L377">GenStrArray</a></h2>
+			<pre>func GenStrArray(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, u []<a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of strings
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Gll">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5527:5563#L254">Gll</a></h2>
 			<pre>func Gll(xl, yl <a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -581,7 +601,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="Grid">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5165:5187#L237">Grid</a></h2>
+			<h2 id="Grid">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5467:5489#L250">Grid</a></h2>
 			<pre>func Grid(args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -592,6 +612,15 @@ Auxiliary functions
 			
 			<h2 id="HideTRframe">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1402:1420#L65">HideTRframe</a></h2>
 			<pre>func HideTRframe()</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Hist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4139:4193#L190">Hist</a></h2>
+			<pre>func Hist(x [][]<a href="/pkg/builtin/#float64">float64</a>, labels []<a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
 			
@@ -617,7 +646,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="Quiver">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4783:4833#L220">Quiver</a></h2>
+			<h2 id="Quiver">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5085:5135#L233">Quiver</a></h2>
 			<pre>func Quiver(x, y, gx, gy [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -635,7 +664,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="Save">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5736:5759#L266">Save</a></h2>
+			<h2 id="Save">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6038:6061#L279">Save</a></h2>
 			<pre>func Save(fname <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -644,7 +673,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="SaveD">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5852:5884#L272">SaveD</a></h2>
+			<h2 id="SaveD">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6154:6186#L285">SaveD</a></h2>
 			<pre>func SaveD(dirout, fname <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -653,7 +682,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="SetAxis">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6015:6059#L279">SetAxis</a></h2>
+			<h2 id="SetAxis">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6317:6361#L292">SetAxis</a></h2>
 			<pre>func SetAxis(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -662,7 +691,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="SetFontSize">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5469:5498#L254">SetFontSize</a></h2>
+			<h2 id="SetFontSize">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5771:5800#L267">SetFontSize</a></h2>
 			<pre>func SetFontSize(args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -671,7 +700,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="SetForEps">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5543:5578#L258">SetForEps</a></h2>
+			<h2 id="SetForEps">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5845:5880#L271">SetForEps</a></h2>
 			<pre>func SetForEps(prop, widpt <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -680,7 +709,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="SetForPng">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5631:5675#L262">SetForPng</a></h2>
+			<h2 id="SetForPng">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5933:5977#L275">SetForPng</a></h2>
 			<pre>func SetForPng(prop, widpt <a href="/pkg/builtin/#float64">float64</a>, dpi <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -752,7 +781,7 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="Show">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6227:6238#L291">Show</a></h2>
+			<h2 id="Show">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6529:6540#L304">Show</a></h2>
 			<pre>func Show()</pre>
 			
 			
@@ -816,15 +845,18 @@ Auxiliary functions
 		
 			
 			
-			<h2 id="FmtH">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=479:554#L8">FmtH</a></h2>
-			<pre>type FmtH struct {
-    Fc     <a href="/pkg/builtin/#string">string</a>
-    Ec     <a href="/pkg/builtin/#string">string</a>
-    Lw     <a href="/pkg/builtin/#int">int</a>
-    Closed <a href="/pkg/builtin/#bool">bool</a>
+			<h2 id="Fmt">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=437:668#L8">Fmt</a></h2>
+			<pre>type Fmt struct {
+    C  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// color</span>
+    M  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// marker</span>
+    Ls <a href="/pkg/builtin/#string">string</a>  <span class="comment">// linestyle</span>
+    Lw <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// linewidth; -1 =&gt; default</span>
+    Ms <a href="/pkg/builtin/#int">int</a>     <span class="comment">// marker size; -1 =&gt; default</span>
+    L  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// label</span>
+    Me <a href="/pkg/builtin/#int">int</a>     <span class="comment">// mark-every; -1 =&gt; default</span>
 }</pre>
 			<p>
-ShapeData holds data for drawing shapes
+Fmt holds data for ploting lines
 </p>
 
 
@@ -840,47 +872,8 @@ ShapeData holds data for drawing shapes
 
 			
 				
-				<h3 id="FmtH.Init">func (*FmtH) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=767:788#L26">Init</a></h3>
-				<pre>func (o *<a href="#FmtH">FmtH</a>) Init()</pre>
-				<p>
-Init initialises ShapeData with default values
-</p>
-
-				
-				
-				
-			
-		
-			
-			
-			<h2 id="FmtL">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=597:715#L16">FmtL</a></h2>
-			<pre>type FmtL struct {
-    L  <a href="/pkg/builtin/#string">string</a>
-    C  <a href="/pkg/builtin/#string">string</a>
-    Lw <a href="/pkg/builtin/#float64">float64</a>
-    Ms <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// negative values =&gt; default</span>
-    M  <a href="/pkg/builtin/#string">string</a>
-    Ls <a href="/pkg/builtin/#string">string</a>
-}</pre>
-			<p>
-LineData holds data for ploting lines
-</p>
-
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-				
-				<h3 id="FmtL.GetArgs">func (FmtL) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=1026:1068#L42">GetArgs</a></h3>
-				<pre>func (o <a href="#FmtL">FmtL</a>) GetArgs(start <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
+				<h3 id="Fmt.GetArgs">func (Fmt) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=822:863#L26">GetArgs</a></h3>
+				<pre>func (o <a href="#Fmt">Fmt</a>) GetArgs(start <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 GetArgs returns arguments for Plot
 </p>
@@ -892,44 +885,15 @@ GetArgs returns arguments for Plot
 		
 			
 			
-			<h2 id="FmtS">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=416:434#L5">FmtS</a></h2>
-			<pre>type FmtS []<a href="/pkg/builtin/#string">string</a></pre>
-			<p>
-FmtS implemetns a formatter using a slice of strings
-</p>
-
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-				
-				<h3 id="FmtS.GetArgs">func (FmtS) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=879:921#L33">GetArgs</a></h3>
-				<pre>func (o <a href="#FmtS">FmtS</a>) GetArgs(start <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
-				<p>
-GetArgs returns the arguments for plt
-</p>
-
-				
-				
-				
-			
-		
-			
-			
-			<h2 id="Formatter">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=300:358#L1">Formatter</a></h2>
-			<pre>type Formatter interface {
-    GetArgs(start <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a>
+			<h2 id="Sty">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=263:399#L1">Sty</a></h2>
+			<pre>type Sty struct {
+    Fc     <a href="/pkg/builtin/#string">string</a> <span class="comment">// face color</span>
+    Ec     <a href="/pkg/builtin/#string">string</a> <span class="comment">// edge color</span>
+    Lw     <a href="/pkg/builtin/#int">int</a>    <span class="comment">// linewidth</span>
+    Closed <a href="/pkg/builtin/#bool">bool</a>   <span class="comment">// closed shape</span>
 }</pre>
 			<p>
-Formatter defines an interface to format lines with markers and colors
+Sty holds data for drawing shapes
 </p>
 
 
@@ -943,6 +907,17 @@ Formatter defines an interface to format lines with markers and colors
 
 			
 
+			
+				
+				<h3 id="Sty.Init">func (*Sty) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=714:734#L19">Init</a></h3>
+				<pre>func (o *<a href="#Sty">Sty</a>) Init()</pre>
+				<p>
+Init initialises Fmt with default values
+</p>
+
+				
+				
+				
 			
 		
 	
