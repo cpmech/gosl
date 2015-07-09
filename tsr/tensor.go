@@ -12,13 +12,15 @@ import (
 )
 
 const (
-	EPS        = 1e-16 // smallest number satisfying 1.0 + EPS > 1.0
-	QMIN       = 1e-10 // smallest q value to compute qCam invariant
-	MINDET     = 1e-20 // minimum determinant of tensor
-	SMPINVSTOL = 1e-8  // tolerance used in SmpInvs to avoid sqrt(negativenumber)
-	EV_ALPMIN  = 1e-10 // minimum α to be used in eigenprojectors derivatives
-	EV_ZERO    = 1e-9  // minimum eigenvalue
-	EV_EQUAL   = 1e-4  // relative tolerance for equal eigenvalues
+	EPS         = 1e-16 // smallest number satisfying 1.0 + EPS > 1.0
+	QMIN        = 1e-10 // smallest q value to compute qCam invariant
+	MINDET      = 1e-20 // minimum determinant of tensor
+	GENINVSQEPS = 1e-6  // EPS tolerance to be added when computing q
+	SMPINVSTOL  = 1e-8  // tolerance used in SmpInvs to avoid sqrt(negativenumber)
+	SMPUSESRAMP = false // use smooth abs instead of smooth ramp
+	EV_ALPMIN   = 1e-10 // minimum α to be used in eigenprojectors derivatives
+	EV_ZERO     = 1e-9  // minimum eigenvalue
+	EV_EQUAL    = 1e-4  // relative tolerance for equal eigenvalues
 )
 
 var (
