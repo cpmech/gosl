@@ -229,9 +229,12 @@ func M_EigenProjsDerivAuto(dPda [][][]float64, a, λ []float64, P [][]float64) (
 	if math.Abs(λ[0]) < EV_ZERO || math.Abs(λ[1]) < EV_ZERO || math.Abs(λ[2]) < EV_ZERO {
 		return M_EigenProjsDerivNum(dPda, a, 1e-6)
 	}
-	if math.Abs(λ[0]-λ[1]) < EV_EQUAL*max(λ[0], λ[1]) ||
-		math.Abs(λ[1]-λ[2]) < EV_EQUAL*max(λ[1], λ[2]) ||
-		math.Abs(λ[2]-λ[0]) < EV_EQUAL*max(λ[2], λ[0]) {
+	//io.Pf("%v < %v\n", math.Abs(λ[0]-λ[1]), EV_EQUAL*max(λ[0], λ[1]))
+	//io.Pf("%v < %v\n", math.Abs(λ[1]-λ[2]), EV_EQUAL*max(λ[1], λ[2]))
+	//io.Pf("%v < %v\n", math.Abs(λ[2]-λ[0]), EV_EQUAL*max(λ[2], λ[0]))
+	if math.Abs(λ[0]-λ[1]) < EV_EQUAL*math.Abs(max(λ[0], λ[1])) ||
+		math.Abs(λ[1]-λ[2]) < EV_EQUAL*math.Abs(max(λ[1], λ[2])) ||
+		math.Abs(λ[2]-λ[0]) < EV_EQUAL*math.Abs(max(λ[2], λ[0])) {
 		return M_EigenProjsDerivNum(dPda, a, 1e-6)
 	}
 	return M_EigenProjsDerivAna(dPda, a, λ, P)
