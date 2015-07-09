@@ -34,7 +34,7 @@ func Test_fcritcoef01(tst *testing.T) {
 	chk.Scalar(tst, "Ma-Mb", 1e-17, Ma, Mb)
 	chk.Scalar(tst, "φ-φb", 1e-14, φ, φb)
 	chk.Scalar(tst, "φ-φc", 1e-14, φ, φc)
-	chk.Scalar(tst, "Mc-Me", 1e-15, Mc, Me)
-	chk.Scalar(tst, "Mc-Mf", 1e-15, Mc, Mf)
-	chk.Scalar(tst, "Mc-Mg", 1e-15, Mc, Mg)
+	chk.Scalar(tst, "Mc-Me", 1e-6, Mc, Me)
+	chk.Scalar(tst, "Mc-Mf", 1e-6, Mc, Mf)
+	chk.Scalar(tst, "Mc-Mg", 1e-6, Mc, Mg)
 }
