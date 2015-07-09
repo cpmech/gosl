@@ -9,6 +9,7 @@ import (
 	"sort"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Pts is a function based on a linear interpolation over a set of points
@@ -25,30 +26,82 @@ func init() {
 
 // Init initialises the function
 func (o *Pts) Init(prms Prms) (err error) {
+
+	// read parameters
 	var T, Y []float64
+	var dT, dY []float64
+	y_equal_dt := false
 	for _, p := range prms {
-		if len(p.N) < 2 {
-			return chk.Err(_pts_err01, p.N)
-		}
-		switch p.N[:1] {
-		case "t":
-			T = append(T, p.V)
-		case "y":
-			Y = append(Y, p.V)
+		switch p.N {
+		case "dt":
+			dT = utl.DblSplit(p.Extra)
+		case "dy":
+			dY = utl.DblSplit(p.Extra)
+		case "y=dt":
+			Y = utl.DblSplit(p.Extra)
+			y_equal_dt = true
 		default:
-			return chk.Err("pts: parameter named %q is invalid", p.N)
+			switch p.N[:1] {
+			case "t":
+				T = append(T, p.V)
+			case "y":
+				Y = append(Y, p.V)
+			default:
+				return chk.Err("pts: parameter named %q is invalid", p.N)
+			}
 		}
 	}
-	if len(T) != len(Y) {
-		return chk.Err(_pts_err04, len(T), len(Y))
+
+	// given increments
+	if dY != nil {
+		for _, dy := range dY {
+			Y = append(Y, Y[len(Y)-1]+dy)
+		}
+		if dT == nil {
+			t0 := 0.0
+			if len(T) > 0 {
+				t0 = T[0]
+			}
+			T = utl.LinSpace(t0, 1, len(Y))
+		}
 	}
+	if dT != nil {
+		for _, dy := range dT {
+			T = append(T, T[len(T)-1]+dy)
+		}
+		if dY == nil {
+			y0 := 0.0
+			if len(Y) > 0 {
+				y0 = Y[0]
+			}
+			Y = utl.LinSpace(y0, 1, len(T))
+		}
+	}
+
+	// given y=dt
+	if y_equal_dt {
+		ny := len(Y)
+		T = make([]float64, ny)
+		for i := 0; i < ny-1; i++ {
+			T[i+1] = T[i] + Y[i]
+		}
+	}
+	//io.Pforan("T = %v\n", T)
+	//io.Pforan("Y = %v\n", Y)
+
+	// check
+	if len(T) != len(Y) {
+		return chk.Err("number of 't' parameters must be the same as the number of 'y' parameters. len(T)=%d != len(Y)=%d", len(T), len(Y))
+	}
+
+	// add points
 	for i, t := range T {
 		o.p = append(o.p, &point{t, Y[i]})
 	}
 	sort.Sort(o.p)
 	for i := 1; i < len(o.p); i++ {
 		if math.Abs(o.p[i].t-o.p[i-1].t) < 1e-7 {
-			return chk.Err(_pts_err02, o.p[i].t, 1e-7)
+			return chk.Err("points must not have coincident t coordinates (t=%g; tol=%g)", o.p[i].t, 1e-7)
 		}
 	}
 	o.tmin = o.p[0].t
@@ -120,11 +173,3 @@ func (o points) Swap(i, j int) {
 func (o points) Less(i, j int) bool {
 	return o[i].t < o[j].t
 }
-
-// error messages
-var (
-	_pts_err01 = "parameter name must start with 't' or 'y'; e.g. t0, t1, t2, ... y0, y1, y2. %q is incorrect"
-	_pts_err02 = "points must not have coincident t coordinates (t=%g; tol=%g)"
-	_pts_err03 = "t=%v is out of range. tmin=%g tmax=%g"
-	_pts_err04 = "number of 't' parameters must be the same as the number of 'y' parameters. len(T)=%d != len(Y)=%d"
-)

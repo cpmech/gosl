@@ -33,7 +33,7 @@ func Test_fun01(tst *testing.T) {
 		&Prm{N: "yini", V: yb},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -71,7 +71,7 @@ func Test_fun02(tst *testing.T) {
 		&Prm{N: "yb", V: yb},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -88,14 +88,11 @@ func Test_fun02(tst *testing.T) {
 		})
 	}
 
-	if true {
-		//if false {
-		sktol := 1e-10
-		dtol := 1e-10
-		dtol2 := 1e-10
-		ver := chk.Verbose
-		CheckDerivT(tst, o, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-10
+	dtol2 := 1e-10
+	ver := chk.Verbose
+	CheckDerivT(tst, o, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun03(tst *testing.T) {
@@ -105,7 +102,7 @@ func Test_fun03(tst *testing.T) {
 
 	cte, err := New("cte", []*Prm{&Prm{N: "C", V: 30}})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -116,7 +113,7 @@ func Test_fun03(tst *testing.T) {
 		&Prm{N: "tb", V: 1},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -127,7 +124,7 @@ func Test_fun03(tst *testing.T) {
 		&Prm{N: "fb", Fcn: srmps},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -144,19 +141,16 @@ func Test_fun03(tst *testing.T) {
 		PlotT(add, "/tmp/gosl", "fun-add-01.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
 	}
 
-	if true {
-		//if false {
-		sktol := 1e-10
-		dtol := 1e-10
-		dtol2 := 1e-9
-		ver := chk.Verbose
-		tskip := []float64{tmin, tmax}
-		CheckDerivT(tst, cte, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-		io.Pf("\n")
-		CheckDerivT(tst, srmps, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
-		io.Pf("\n")
-		CheckDerivT(tst, add, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-10
+	dtol2 := 1e-9
+	ver := chk.Verbose
+	tskip := []float64{tmin, tmax}
+	CheckDerivT(tst, cte, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	io.Pf("\n")
+	CheckDerivT(tst, srmps, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+	io.Pf("\n")
+	CheckDerivT(tst, add, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun04(tst *testing.T) {
@@ -169,7 +163,7 @@ func Test_fun04(tst *testing.T) {
 		&Prm{N: "ts", V: 0},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -182,14 +176,11 @@ func Test_fun04(tst *testing.T) {
 		PlotT(lin, "/tmp/gosl", "fun-lin-01.png", tmin, tmax, xcte, 11, "", withG, withH, save, show, nil)
 	}
 
-	if true {
-		//if false {
-		sktol := 1e-10
-		dtol := 1e-10
-		dtol2 := 1e-10
-		ver := chk.Verbose
-		CheckDerivT(tst, lin, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-10
+	dtol2 := 1e-10
+	ver := chk.Verbose
+	CheckDerivT(tst, lin, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun05(tst *testing.T) {
@@ -203,43 +194,107 @@ func Test_fun05(tst *testing.T) {
 	chk.Scalar(tst, "one ", 1e-17, One.F(666, nil), 1)
 }
 
-func Test_fun06(tst *testing.T) {
+func Test_fun06a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun06. pts")
+	chk.PrintTitle("fun06a. pts")
 
 	fun, err := New("pts", []*Prm{
-		&Prm{N: "t0", V: 0.00}, {N: "y0", V: 0.50},
-		&Prm{N: "t1", V: 1.00}, {N: "y1", V: 0.20},
-		&Prm{N: "t2", V: 2.00}, {N: "y2", V: 0.20},
-		&Prm{N: "t3", V: 3.00}, {N: "y3", V: 0.05},
-		&Prm{N: "t4", V: 4.00}, {N: "y4", V: 0.01},
-		&Prm{N: "t5", V: 5.00}, {N: "y5", V: 0.00},
+		&Prm{N: "t", V: 0.00}, {N: "y", V: 0.50},
+		&Prm{N: "t", V: 1.00}, {N: "y", V: 0.20},
+		&Prm{N: "t", V: 2.00}, {N: "y", V: 0.20},
+		&Prm{N: "t", V: 3.00}, {N: "y", V: 0.05},
+		&Prm{N: "t", V: 4.00}, {N: "y", V: 0.01},
+		&Prm{N: "t", V: 5.00}, {N: "y", V: 0.00},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
 	tmin := -1.0
 	tmax := 6.0
 	xcte := []float64{0, 0, 0}
+	//if true {
 	if false {
 		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(fun, "/tmp/gosl", "fun-pts-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
+		withG, withH, save, show := true, true, true, false
+		PlotT(fun, "/tmp/gosl", "fun-ptsA-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
 	}
 
-	if true {
-		tmin = 0.01
-		tmax = 4.99
-		//if false {
-		sktol := 1e-10
-		dtol := 1e-10
-		dtol2 := 1e-10
-		ver := chk.Verbose
-		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	tmin = 0.01
+	tmax = 4.99
+	sktol := 1e-10
+	dtol := 1e-10
+	dtol2 := 1e-10
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+}
+
+func Test_fun06b(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("fun06b. pts")
+
+	fun, err := New("pts", []*Prm{
+		&Prm{N: "t0", V: 0.0}, {N: "y0", V: 0.50},
+		&Prm{N: "dy", Extra: "-0.3  0  -0.15  -0.04  -0.01"},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n", err)
+		return
 	}
+
+	tmin := 0.0
+	tmax := 1.0
+	xcte := []float64{0, 0, 0}
+	//if true {
+	if false {
+		plt.Reset()
+		withG, withH, save, show := true, true, true, false
+		PlotT(fun, "/tmp/gosl", "fun-ptsB-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
+	}
+
+	tmin = 0.01
+	tmax = 0.99
+	sktol := 1e-10
+	dtol := 1e-10
+	dtol2 := 1e-10
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+}
+
+func Test_fun06c(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("fun06c. pts")
+
+	fun, err := New("pts", []*Prm{
+		// T =                     0 0.05 0.1 0.2 0.3 0.5  0.75 1
+		&Prm{N: "y=dt", Extra: "0.05 0.05 0.1 0.1 0.2 0.25 0.25 0"},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n", err)
+		return
+	}
+
+	tmin := 0.0
+	tmax := 1.0
+	xcte := []float64{0, 0, 0}
+	//if true {
+	if false {
+		plt.Reset()
+		withG, withH, save, show := true, true, true, false
+		PlotT(fun, "/tmp/gosl", "fun-ptsC-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
+	}
+
+	tmin = 0.01
+	tmax = 0.99
+	sktol := 1e-10
+	dtol := 1e-10
+	dtol2 := 1e-10
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 10, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun07(tst *testing.T) {
@@ -252,7 +307,7 @@ func Test_fun07(tst *testing.T) {
 		&Prm{N: "b", V: 2},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -265,13 +320,11 @@ func Test_fun07(tst *testing.T) {
 		PlotT(fun, "/tmp/gosl", "fun-exc1-01.png", tmin, tmax, xcte, 41, "'o-'", withG, withH, save, show, nil)
 	}
 
-	if true {
-		sktol := 1e-10
-		dtol := 1e-7
-		dtol2 := 1e-6
-		ver := chk.Verbose
-		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-7
+	dtol2 := 1e-6
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun08(tst *testing.T) {
@@ -285,7 +338,7 @@ func Test_fun08(tst *testing.T) {
 		&Prm{N: "b", V: 0.2},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -298,13 +351,11 @@ func Test_fun08(tst *testing.T) {
 		PlotT(fun, "/tmp/gosl", "fun-exc2-01.png", tmin, tmax, xcte, 41, "'o-'", withG, withH, save, show, nil)
 	}
 
-	if true {
-		sktol := 1e-10
-		dtol := 1e-10
-		dtol2 := 1e-10
-		ver := chk.Verbose
-		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-10
+	dtol2 := 1e-10
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun09(tst *testing.T) {
@@ -318,7 +369,7 @@ func Test_fun09(tst *testing.T) {
 		&Prm{N: "c", V: 1.0},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -331,13 +382,11 @@ func Test_fun09(tst *testing.T) {
 		PlotT(fun, "/tmp/gosl", "fun-cos-01.png", tmin, tmax, xcte, 41, "'.-'", withG, withH, save, show, nil)
 	}
 
-	if true {
-		sktol := 1e-10
-		dtol := 1e-8
-		dtol2 := 1e-7
-		ver := chk.Verbose
-		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-8
+	dtol2 := 1e-7
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun10(tst *testing.T) {
@@ -352,7 +401,7 @@ func Test_fun10(tst *testing.T) {
 		&Prm{N: "cb", V: -1.5},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -365,13 +414,11 @@ func Test_fun10(tst *testing.T) {
 		PlotT(fun, "/tmp/gosl", "fun-rmp-01.png", tmin, tmax, xcte, 4, "'.-'", withG, withH, save, show, nil)
 	}
 
-	if true {
-		sktol := 1e-10
-		dtol := 1e-12
-		dtol2 := 1e-17
-		ver := chk.Verbose
-		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-12
+	dtol2 := 1e-17
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun11(tst *testing.T) {
@@ -386,7 +433,7 @@ func Test_fun11(tst *testing.T) {
 		&Prm{N: "bet", V: 10},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -399,13 +446,11 @@ func Test_fun11(tst *testing.T) {
 		PlotT(fun, "/tmp/gosl", "fun-ref-inc-rl1-01.png", tmin, tmax, xcte, 41, "'.-'", withG, withH, save, show, nil)
 	}
 
-	if true {
-		sktol := 1e-10
-		dtol := 1e-10
-		dtol2 := 1e-10
-		ver := chk.Verbose
-		CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-10
+	dtol2 := 1e-10
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun12(tst *testing.T) {
@@ -419,7 +464,7 @@ func Test_fun12(tst *testing.T) {
 		&Prm{N: "c", V: 1},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -428,7 +473,7 @@ func Test_fun12(tst *testing.T) {
 		&Prm{N: "ts", V: 0},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -437,7 +482,7 @@ func Test_fun12(tst *testing.T) {
 		&Prm{N: "fb", Fcn: lin},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -455,19 +500,16 @@ func Test_fun12(tst *testing.T) {
 		PlotT(mul, "/tmp/gosl", "fun-mul-12.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
 	}
 
-	if true {
-		//if false {
-		sktol := 1e-10
-		dtol := 1e-9
-		dtol2 := 1e-8
-		ver := chk.Verbose
-		tskip := []float64{tmin, tmax}
-		CheckDerivT(tst, cos, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
-		io.Pf("\n")
-		CheckDerivT(tst, lin, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
-		io.Pf("\n")
-		CheckDerivT(tst, mul, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-10
+	dtol := 1e-9
+	dtol2 := 1e-8
+	ver := chk.Verbose
+	tskip := []float64{tmin, tmax}
+	CheckDerivT(tst, cos, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+	io.Pf("\n")
+	CheckDerivT(tst, lin, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
+	io.Pf("\n")
+	CheckDerivT(tst, mul, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 }
 
 func Test_fun13(tst *testing.T) {
@@ -482,7 +524,7 @@ func Test_fun13(tst *testing.T) {
 		&Prm{N: "tb", V: 2.5},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
@@ -496,13 +538,10 @@ func Test_fun13(tst *testing.T) {
 		PlotT(pulse, "/tmp/gosl", "fun-pulse-13.png", tmin, tmax, xcte, 61, "", withG, withH, save, show, nil)
 	}
 
-	if true {
-		//if false {
-		sktol := 1e-17
-		dtol := 1e-10
-		dtol2 := 1e-10
-		ver := chk.Verbose
-		tskip := []float64{1, 4}
-		CheckDerivT(tst, pulse, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
-	}
+	sktol := 1e-17
+	dtol := 1e-10
+	dtol2 := 1e-10
+	ver := chk.Verbose
+	tskip := []float64{1, 4}
+	CheckDerivT(tst, pulse, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 }
