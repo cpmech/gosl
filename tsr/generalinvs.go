@@ -23,7 +23,7 @@ func GenInvs(L, n []float64, a float64) (p, q float64, err error) {
 		}
 		d = 0
 	}
-	q = math.Sqrt(d)
+	q = GENINVSQEPS + math.Sqrt(d)
 	return
 }
 
@@ -74,7 +74,7 @@ func GenInvsDeriv1(dpdL, dqdL []float64, L, n []float64, dndL [][]float64, a flo
 		}
 		d = 0
 	}
-	q = math.Sqrt(d)
+	q = GENINVSQEPS + math.Sqrt(d)
 	// derivatives
 	var t_k, dtdL_ki float64
 	for i := 0; i < 3; i++ {
@@ -89,9 +89,7 @@ func GenInvsDeriv1(dpdL, dqdL []float64, L, n []float64, dndL [][]float64, a flo
 			dpdL[i] += 2.0 * a * t_k * dndL[k][i]
 			dqdL[i] += t_k * dtdL_ki
 		}
-		if q > 0 {
-			dqdL[i] = (dqdL[i] - p*dpdL[i]) / q
-		}
+		dqdL[i] = (dqdL[i] - p*dpdL[i]) / q
 	}
 	return
 }
@@ -120,9 +118,7 @@ func GenInvsDeriv2(d2pdLdL, d2qdLdL [][]float64, L, n, dpdL, dqdL []float64, p, 
 				d2pdLdL[i][j] += 2.0*a*dndL[k][i]*dtdL_kj + 2.0*a*t_k*d2ndLdL[k][i][j]
 				d2qdLdL[i][j] += dtdL_ki*dtdL_kj + t_k*d2tdLdL_kij
 			}
-			if q > 0 {
-				d2qdLdL[i][j] = (d2qdLdL[i][j] - p*d2pdLdL[i][j]) / q
-			}
+			d2qdLdL[i][j] = (d2qdLdL[i][j] - p*d2pdLdL[i][j]) / q
 		}
 	}
 }
