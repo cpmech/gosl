@@ -333,9 +333,9 @@ def SetForEps(proport=0.75, fig_width_pt=455.24, xylabel_fs=9, leg_fs=8, text_fs
         'legend.fontsize'    : leg_fs,
         'xtick.labelsize'    : xtick_fs,
         'ytick.labelsize'    : ytick_fs,
-        'text.usetex'        : True,
-        'ps.useafm'          : True,
-        'pdf.use14corefonts' : True,
+        'text.usetex'        : True, # very IMPORTANT to avoid Type 3 fonts
+        'ps.useafm'          : True, # very IMPORTANT to avoid Type 3 fonts
+        'pdf.use14corefonts' : True, # very IMPORTANT to avoid Type 3 fonts
         'figure.figsize'     : fig_size,
     }
     MPLclose()
