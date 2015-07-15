@@ -15,7 +15,7 @@ import "math"
 //   2) from Numerical Recipes 2007, page 228
 //  Output:
 //   x[i] -- roots
-//   nx   -- number of real roots: 1 or 3
+//   nx   -- number of real roots: 1, 2 or 3
 func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int) { //, err error) {
 
 	// tolerance
@@ -46,6 +46,21 @@ func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int) { //, err er
 	B := 0.0
 	if math.Abs(A) > ϵ {
 		B = Q / A
+	}
+
+	// one root
+	if math.Abs(A) < ϵ && math.Abs(B) < ϵ {
+		x1 = -a / 3.0
+		nx = 1
+		return
+	}
+
+	// two roots
+	if math.Abs(A-B) < ϵ {
+		x1 = (A + B) - a/3.0
+		x2 = -(A+B)/2.0 - a/3.0
+		nx = 2
+		return
 	}
 
 	// one real root
