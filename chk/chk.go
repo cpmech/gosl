@@ -80,7 +80,7 @@ func PrintFail(msg string, prm ...interface{}) {
 // PrintTitle returns the Test Title
 func PrintTitle(title string) {
 	if Verbose {
-		fmt.Printf("\n========================= %s =========================\n", title)
+		fmt.Printf("\n================= %s =================\n", title)
 		return
 	}
 	fmt.Printf("   . . . testing . . .   %s\n", title)
