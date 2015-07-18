@@ -74,3 +74,13 @@ func FlipCoin(p float64) bool {
 func IntShuffle(v []int) {
 	sfmt.Shuffle(v)
 }
+
+// DblShuffle shuffles a slice of float point numbers
+func DblShuffle(v []float64) {
+	//TODO
+	//I :=utl.IntRange(len(v))
+	//smft.Shuffle(I)
+	//for j, i := range I {
+	//v[j]
+	//}
+}
