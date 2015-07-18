@@ -44,3 +44,37 @@ func Test_sfmt01(tst *testing.T) {
 
 	io.Pf(TextHist(labels, ifreqs, 60))
 }
+
+func Test_sfmt02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("sfmt02. integers")
+
+	Init(1234)
+
+	nints := 10
+	irange := utl.IntRange(nints) // integers; e.g. 0,1,2,3,4,5,6,7,8,9
+	ifreqs := make([]int, nints)  // frequencies of each integer
+
+	labels := make([]string, nints)
+	for i := 0; i < nints; i++ {
+		labels[i] = io.Sf("%3d", irange[i])
+	}
+
+	t0 := time.Now()
+	nsamples := 1000
+	samples := make([]int, nsamples)
+	IntRands(samples, 0, nints-1)
+	//io.Pforan("samples = %v\n", samples)
+	for i := 0; i < nsamples; i++ {
+		for j, val := range irange {
+			if samples[i] == val {
+				ifreqs[j]++
+				break
+			}
+		}
+	}
+	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
+
+	io.Pf(TextHist(labels, ifreqs, 60))
+}

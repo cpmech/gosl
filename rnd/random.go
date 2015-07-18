@@ -31,3 +31,17 @@ func Init(seed int) {
 func IntRand(low, high int) int {
 	return int(C.IntRand(C.long(low), C.long(high)))
 }
+
+// IntRands generates pseudo random integers between low and high
+//  Input:
+//   values -- slice to be filled with len(values) numbers
+//   low    -- lower limit
+//   high   -- upper limit
+func IntRands(values []int, low, high int) {
+	if len(values) < 1 {
+		return
+	}
+	for i := 0; i < len(values); i++ {
+		values[i] = IntRand(low, high)
+	}
+}
