@@ -4,13 +4,12 @@
 
 package rnd
 
-/*
-#cgo CFLAGS: -O3 -finline-functions -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing --param max-inline-insns-single=1800 -Wall -std=c99 -msse2 -DHAVE_SSE2 -DSFMT_MEXP=19937
-#include "random.h"
-*/
-import "C"
+import (
+	"time"
 
-import "time"
+	"github.com/cpmech/gosl/rnd/dsfmt"
+	"github.com/cpmech/gosl/rnd/sfmt"
+)
 
 // Init initialises random numbers generator
 //  Input:
@@ -19,7 +18,8 @@ func Init(seed int) {
 	if seed <= 0 {
 		seed = int(time.Now().Unix())
 	}
-	C.Init(C.long(seed))
+	sfmt.Init(seed)
+	dsfmt.Init(seed)
 }
 
 // IntRand generates pseudo random integer between low and high
@@ -29,7 +29,7 @@ func Init(seed int) {
 //  Output:
 //   random integer
 func IntRand(low, high int) int {
-	return int(C.IntRand(C.long(low), C.long(high)))
+	return sfmt.Rand(low, high)
 }
 
 // IntRands generates pseudo random integers between low and high
@@ -44,4 +44,14 @@ func IntRands(values []int, low, high int) {
 	for i := 0; i < len(values); i++ {
 		values[i] = IntRand(low, high)
 	}
+}
+
+// DblRand generates pseudo random real numbers between low and high; i.e. in [low, right)
+//  Input:
+//   low  -- lower limit (closed)
+//   high -- upper limit (open)
+//  Output:
+//   random float64
+func DblRand(low, high float64) float64 {
+	return dsfmt.Rand(low, high)
 }

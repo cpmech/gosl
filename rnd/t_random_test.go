@@ -13,10 +13,10 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func Test_sfmt01(tst *testing.T) {
+func Test_int01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("sfmt01. integers")
+	chk.PrintTitle("int01. integers")
 
 	Init(1234)
 
@@ -45,10 +45,10 @@ func Test_sfmt01(tst *testing.T) {
 	io.Pf(TextHist(labels, ifreqs, 60))
 }
 
-func Test_sfmt02(tst *testing.T) {
+func Test_int02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("sfmt02. integers")
+	chk.PrintTitle("int02. integers")
 
 	Init(1234)
 
@@ -77,4 +77,24 @@ func Test_sfmt02(tst *testing.T) {
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
 	io.Pf(TextHist(labels, ifreqs, 60))
+}
+
+func Test_flt01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("flt01. float64")
+
+	Init(1234)
+
+	xmin := 10.0
+	xmax := 20.0
+
+	nsamples := 10
+	t0 := time.Now()
+	for i := 0; i < nsamples; i++ {
+		gen := DblRand(xmin, xmax)
+		io.Pforan("gen = %v\n", gen)
+	}
+	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
+
 }

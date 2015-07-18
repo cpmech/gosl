@@ -5,7 +5,7 @@
 #ifndef GOSL_RANDOM_H
 #define GOSL_RANDOM_H
 
-void Init(long seed);
-long IntRand(long lo, long hi);
+void SfmtInit(long seed);
+long SfmtRand(long lo, long hi);
 
 #endif // GOSL_RANDOM_H

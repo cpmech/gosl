@@ -6,10 +6,10 @@
 
 sfmt_t GLOBAL_SFMT;
 
-void Init(long seed) {
+void SfmtInit(long seed) {
     sfmt_init_gen_rand(&GLOBAL_SFMT, seed);
 }
 
-long IntRand(long lo, long hi) {
+long SfmtRand(long lo, long hi) {
     return (sfmt_genrand_uint64(&GLOBAL_SFMT) % (hi-lo+1) + lo);
 }
