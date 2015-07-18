@@ -6,13 +6,14 @@ package rnd
 
 import (
 	"testing"
+	"time"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
-func Test_list01(tst *testing.T) {
+func Test_sfmt01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("sfmt01. integers")
@@ -29,6 +30,7 @@ func Test_list01(tst *testing.T) {
 	}
 
 	nsamples := 1000
+	t0 := time.Now()
 	for i := 0; i < nsamples; i++ {
 		gen := IntRand(0, nints-1)
 		for j, val := range irange {
@@ -38,6 +40,7 @@ func Test_list01(tst *testing.T) {
 			}
 		}
 	}
+	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
 	io.Pf(TextHist(labels, ifreqs, 60))
 }

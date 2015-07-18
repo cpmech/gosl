@@ -13,8 +13,8 @@ import "C"
 import "time"
 
 // Init initialises random numbers generator
-// Input:
-//  seed -- seed value; use seed <= 0 to use current time
+//  Input:
+//   seed -- seed value; use seed <= 0 to use current time
 func Init(seed int) {
 	if seed <= 0 {
 		seed = int(time.Now().Unix())
@@ -23,6 +23,11 @@ func Init(seed int) {
 }
 
 // IntRand generates pseudo random integer between low and high
+//  Input:
+//   low  -- lower limit
+//   high -- upper limit
+//  Output:
+//   random integer
 func IntRand(low, high int) int {
 	return int(C.IntRand(C.long(low), C.long(high)))
 }
