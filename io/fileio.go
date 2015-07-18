@@ -97,7 +97,7 @@ func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer) {
 	os.MkdirAll(dirout, 0777)
 	WriteFileD(dirout, fn, buffer...)
 	Pf("File <")
-	PfBlue(fn)
+	PfBlue(dirout + "/" + fn)
 	Pf("> written\n")
 }
 
