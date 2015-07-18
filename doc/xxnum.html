@@ -92,6 +92,9 @@
 				<dd><a href="#DerivRange">func DerivRange(f Cb_fx, x, xmin, xmax float64, args ...interface{}) float64</a></dd>
 			
 				
+				<dd><a href="#EqCubicSolveReal">func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int)</a></dd>
+			
+				
 				<dd><a href="#Jacobian">func Jacobian(J *la.Triplet, ffcn Cb_f, x, fx, w []float64, distr bool) (err error)</a></dd>
 			
 				
@@ -246,6 +249,8 @@
 				<a href="/src/github.com/cpmech/gosl/num/auxiliary.go">auxiliary.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/num/brent.go">brent.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/cubicequation.go">cubicequation.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/num/deriv.go">deriv.go</a>
 			
@@ -410,6 +415,28 @@ DerivFwd employs a 1st order forward difference to approximate the derivative of
 			<p>
 DerivRange chooses fwd, bwd or cen according to whether x is near the boundary or not
 </p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="EqCubicSolveReal">func <a href="https://github.com/cpmech/gosl/blob/master/num/cubicequation.go?s=589:656#L9">EqCubicSolveReal</a></h2>
+			<pre>func EqCubicSolveReal(a, b, c <a href="/pkg/builtin/#float64">float64</a>) (x1, x2, x3 <a href="/pkg/builtin/#float64">float64</a>, nx <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+EqCubicSolveReal solves a cubic equation, ignoring the complex answers.
+</p>
+<pre>The equation is specified by:
+ x³ + a x² + b x + c = 0
+Notes:
+ 1) every cubic equation with real coefficients has at least one solution
+    x among the real numbers
+ 2) from Numerical Recipes 2007, page 228
+Output:
+ x[i] -- roots
+ nx   -- number of real roots: 1, 2 or 3
+</pre>
 
 			
 			

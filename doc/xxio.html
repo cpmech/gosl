@@ -75,6 +75,9 @@ parsing, handling files, directories, etc.
 				<dd><a href="#AppendToFile">func AppendToFile(fn string, buffer ...*bytes.Buffer)</a></dd>
 			
 				
+				<dd><a href="#Args0toFilename">func Args0toFilename(fnDefault, ext string, check bool) (filename, fnkey string)</a></dd>
+			
+				
 				<dd><a href="#Atob">func Atob(val string) (bres bool)</a></dd>
 			
 				
@@ -289,6 +292,8 @@ parsing, handling files, directories, etc.
 			<p>
 			<span style="font-size:90%">
 			
+				<a href="/src/github.com/cpmech/gosl/io/args.go">args.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/io/basic.go">basic.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/io/external.go">external.go</a>
@@ -359,6 +364,31 @@ parsing, handling files, directories, etc.
 			<p>
 AppendToFile appends data to an existent (or new) file
 </p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Args0toFilename">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=812:892#L16">Args0toFilename</a></h2>
+			<pre>func Args0toFilename(fnDefault, ext <a href="/pkg/builtin/#string">string</a>, check <a href="/pkg/builtin/#bool">bool</a>) (filename, fnkey <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+Args0toFilename parses the first argument as a filename
+</p>
+<pre>Input:
+ fnDefault -- default filename; can be &#34;&#34;
+ ext       -- the file extension to be added
+ check     -- check for null filename
+Output:
+ filename -- the filename with extension added
+ fnkey    -- filename key == filename without extension
+Notes:
+ The first first argument may be a file with extention or not.
+Examples:
+ If the first argument is &#34;simulation.sim&#34; or &#34;simulation&#34; (with ext=&#34;sim&#34;)
+ then the results are: filename=&#34;simulation.sim&#34; and fnkey=&#34;simulation&#34;
+</pre>
 
 			
 			
@@ -588,7 +618,7 @@ Keycodes extracts keys from a keycode (extra) string
 		
 			
 			
-			<h2 id="OpenFileR">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3243:3294#L113">OpenFileR</a></h2>
+			<h2 id="OpenFileR">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3258:3309#L113">OpenFileR</a></h2>
 			<pre>func OpenFileR(fn <a href="/pkg/builtin/#string">string</a>) (fil *<a href="/pkg/os/">os</a>.<a href="/pkg/os/#File">File</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 OpenFileR opens a file for reading data
@@ -868,7 +898,7 @@ To provide input to the pipeline, assign an io.Reader to the first&#39;s Stdin.
 		
 			
 			
-			<h2 id="ReadFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3382:3428#L119">ReadFile</a></h2>
+			<h2 id="ReadFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3397:3443#L119">ReadFile</a></h2>
 			<pre>func ReadFile(fn <a href="/pkg/builtin/#string">string</a>) (b []<a href="/pkg/builtin/#byte">byte</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadFile reads bytes from a file
@@ -880,7 +910,7 @@ ReadFile reads bytes from a file
 		
 			
 			
-			<h2 id="ReadLines">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3727:3774#L127">ReadLines</a></h2>
+			<h2 id="ReadLines">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3742:3789#L127">ReadLines</a></h2>
 			<pre>func ReadLines(fn <a href="/pkg/builtin/#string">string</a>, cb <a href="#ReadLinesCallback">ReadLinesCallback</a>)</pre>
 			<p>
 ReadLines reads lines from a file and calls ReadLinesCallback to process each line being read
@@ -892,7 +922,7 @@ ReadLines reads lines from a file and calls ReadLinesCallback to process each li
 		
 			
 			
-			<h2 id="ReadLinesFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4277:4345#L155">ReadLinesFile</a></h2>
+			<h2 id="ReadLinesFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4292:4360#L155">ReadLinesFile</a></h2>
 			<pre>func ReadLinesFile(fil *<a href="/pkg/os/">os</a>.<a href="/pkg/os/#File">File</a>, cb <a href="#ReadLinesCallback">ReadLinesCallback</a>) (oserr <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadLinesFile reads lines from a file and calls ReadLinesCallback to process each line being read
@@ -904,7 +934,7 @@ ReadLinesFile reads lines from a file and calls ReadLinesCallback to process eac
 		
 			
 			
-			<h2 id="ReadMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=6009:6062#L227">ReadMatrix</a></h2>
+			<h2 id="ReadMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=6024:6077#L227">ReadMatrix</a></h2>
 			<pre>func ReadMatrix(fn <a href="/pkg/builtin/#string">string</a>) (M [][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadMatrix reads a text file in which the float64 type of numeric values represent
@@ -917,7 +947,7 @@ a matrix of data. The number of columns must be equal, including for the headers
 		
 			
 			
-			<h2 id="ReadTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5072:5148#L188">ReadTable</a></h2>
+			<h2 id="ReadTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5087:5163#L188">ReadTable</a></h2>
 			<pre>func ReadTable(fn <a href="/pkg/builtin/#string">string</a>) (keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadTable reads a text file in which the first line contains the headers and the next lines the float64
@@ -930,7 +960,7 @@ type of numeric values. The number of columns must be equal, including for the h
 		
 			
 			
-			<h2 id="RemoveAll">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4751:4777#L179">RemoveAll</a></h2>
+			<h2 id="RemoveAll">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4766:4792#L179">RemoveAll</a></h2>
 			<pre>func RemoveAll(key <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 RemoveAll deletes all files matching filename specified by key (be careful)
@@ -1014,7 +1044,7 @@ UnColor removes console characters used to show colors
 		
 			
 			
-			<h2 id="WriteBytesToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2744:2786#L95">WriteBytesToFile</a></h2>
+			<h2 id="WriteBytesToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2759:2801#L95">WriteBytesToFile</a></h2>
 			<pre>func WriteBytesToFile(fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
 			<p>
 WriteBytesToFile writes bytes to a new file
@@ -1026,7 +1056,7 @@ WriteBytesToFile writes bytes to a new file
 		
 			
 			
-			<h2 id="WriteBytesToFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3080:3131#L107">WriteBytesToFileD</a></h2>
+			<h2 id="WriteBytesToFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3095:3146#L107">WriteBytesToFileD</a></h2>
 			<pre>func WriteBytesToFileD(dirout, fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
 			<p>
 WriteBytesToFile writes bytes to a new file and create a directory to save the file within
@@ -1111,7 +1141,7 @@ WriteFileVD writes data to a new file (and shows message: file written), after c
 		
 			
 			
-			<h2 id="ReadLinesCallback">type <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3567:3628#L124">ReadLinesCallback</a></h2>
+			<h2 id="ReadLinesCallback">type <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3582:3643#L124">ReadLinesCallback</a></h2>
 			<pre>type ReadLinesCallback func(idx <a href="/pkg/builtin/#int">int</a>, line <a href="/pkg/builtin/#string">string</a>) (stop <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 ReadLinesCallback is used in ReadLines to process line by line during reading of a file

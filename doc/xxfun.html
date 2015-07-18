@@ -135,6 +135,26 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 			
 				
+				<dd><a href="#Cdist">type Cdist</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cdist.F">func (o Cdist) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cdist.G">func (o Cdist) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cdist.Grad">func (o Cdist) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cdist.H">func (o Cdist) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Cdist.Init">func (o *Cdist) Init(prms Prms) (err error)</a></dd>
+				
+			
+				
 				<dd><a href="#Cos">type Cos</a></dd>
 				
 				
@@ -475,6 +495,8 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<a href="/src/github.com/cpmech/gosl/fun/auxiliary.go">auxiliary.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_add.go">f_add.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fun/f_cdist.go">f_cdist.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_cos.go">f_cos.go</a>
 			
@@ -834,6 +856,90 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 				<h3 id="Add.Init">func (*Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=499:540#L12">Init</a></h3>
 				<pre>func (o *<a href="#Add">Add</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Cdist">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=571:706#L9">Cdist</a></h2>
+			<pre>type Cdist struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Cdist implements the distance from point to a circle (2D) or a sphere (3D)
+where the circle/sphere is implicitly defined by means of F(x) = 0.
+</p>
+<pre>where
+  F(x) = sqrt((x-xc) dot (x-xc)) - r
+with r being the radius and xc the coordinates of the centre.
+Thus F &gt; 0 is outside and F &lt; 0 is inside the circle/sphere
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Cdist.F">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1381:1429#L51">F</a></h3>
+				<pre>func (o <a href="#Cdist">Cdist</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cdist.G">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1632:1680#L60">G</a></h3>
+				<pre>func (o <a href="#Cdist">Cdist</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cdist.Grad">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1848:1904#L70">Grad</a></h3>
+				<pre>func (o <a href="#Cdist">Cdist</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cdist.H">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1738:1786#L65">H</a></h3>
+				<pre>func (o <a href="#Cdist">Cdist</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Cdist.Init">func (*Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=842:885#L20">Init</a></h3>
+				<pre>func (o *<a href="#Cdist">Cdist</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>
@@ -1612,7 +1718,7 @@ String outputs all materials
 		
 			
 			
-			<h2 id="Pts">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=323:383#L5">Pts</a></h2>
+			<h2 id="Pts">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=353:413#L6">Pts</a></h2>
 			<pre>type Pts struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -1633,7 +1739,7 @@ Pts is a function based on a linear interpolation over a set of points
 
 			
 				
-				<h3 id="Pts.F">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=1192:1238#L50">F</a></h3>
+				<h3 id="Pts.F">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2175:2221#L103">F</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1644,7 +1750,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Pts.G">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=1520:1566#L66">G</a></h3>
+				<h3 id="Pts.G">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2503:2549#L119">G</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1655,7 +1761,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Pts.Grad">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=1898:1952#L84">Grad</a></h3>
+				<h3 id="Pts.Grad">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2881:2935#L137">Grad</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1666,7 +1772,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Pts.H">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=1790:1836#L79">H</a></h3>
+				<h3 id="Pts.H">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2773:2819#L132">H</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1677,7 +1783,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Pts.Init">func (*Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=514:555#L17">Init</a></h3>
+				<h3 id="Pts.Init">func (*Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=544:585#L18">Init</a></h3>
 				<pre>func (o *<a href="#Pts">Pts</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function

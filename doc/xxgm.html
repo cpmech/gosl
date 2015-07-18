@@ -110,6 +110,17 @@ handling geometry and mesh structures
 			
 			
 				
+				<dd><a href="#BezierQuad">type BezierQuad</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#BezierQuad.DistPoint">func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#BezierQuad.Point">func (o *BezierQuad) Point(C []float64, t float64)</a></dd>
+				
+			
+				
 				<dd><a href="#Bin">type Bin</a></dd>
 				
 				
@@ -361,6 +372,8 @@ handling geometry and mesh structures
 			
 				<a href="/src/github.com/cpmech/gosl/gm/basicgeom.go">basicgeom.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/gm/bezier.go">bezier.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/gm/bspline.go">bspline.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/gm/draw.go">draw.go</a>
@@ -597,6 +610,62 @@ Input: vtagged maps hashed id of control point to vertex tag
 			
 
 		
+		
+			
+			
+			<h2 id="BezierQuad">type <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=502:640#L11">BezierQuad</a></h2>
+			<pre>type BezierQuad struct {
+
+    <span class="comment">// input</span>
+    Q [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// control points; can be set outside</span>
+
+    <span class="comment">// auxiliary</span>
+    P []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// a point on curve</span>
+}</pre>
+			<p>
+BezierQuad implements a quadratic Bezier curve
+</p>
+<pre>C(t) = (1-t)² Q0  +  2 t (1-t) Q1  +  t² Q2
+     = t² A  +  2 t B  +  Q0
+A = Q2 - 2 Q1 + Q0
+B = Q1 - Q0
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="BezierQuad.DistPoint">func (*BezierQuad) <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=1167:1231#L35">DistPoint</a></h3>
+				<pre>func (o *<a href="#BezierQuad">BezierQuad</a>) DistPoint(X []<a href="/pkg/builtin/#float64">float64</a>, doplot <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+DistPoint returns the distance from a point to this Bezier curve
+It finds the closest projection which is stored in P
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BezierQuad.Point">func (*BezierQuad) <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=708:758#L21">Point</a></h3>
+				<pre>func (o *<a href="#BezierQuad">BezierQuad</a>) Point(C []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Point returns the x-y-z coordinates of a point on Bezier curve
+</p>
+
+				
+				
+				
+			
 		
 			
 			

@@ -31,6 +31,7 @@ pkgs = [
     ("fun", "Functions such as y=f(t,x)"),
     ("ode", "Solvers for ordinary differential equations"),
     ("gm",  "Geometry routines"),
+    ("rnd", "Random numbers generator"),
     ("tsr", "Tensor algebra and calculus"),
     ("vtk", "3D visualisation with VTK"),
 ]
