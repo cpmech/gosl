@@ -31,3 +31,8 @@ func Init(seed int) {
 func Rand(low, high float64) float64 {
 	return float64(C.DsfmtRand(C.double(low), C.double(high)))
 }
+
+// Rand01 generates float point random between 0 (inclusive) and 1 (exclusive)
+func Rand01() float64 {
+	return float64(C.DsfmtRand01())
+}

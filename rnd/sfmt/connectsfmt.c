@@ -13,3 +13,14 @@ void SfmtInit(long seed) {
 long SfmtRand(long lo, long hi) {
     return (sfmt_genrand_uint64(&GLOBAL_SFMT) % (hi-lo+1) + lo);
 }
+
+void SfmtShuffle(long *values, long size) {
+    uint64_t j;
+    long tmp;
+    for (uint64_t i=size-1; i>0; i--) {
+        j = sfmt_genrand_uint64(&GLOBAL_SFMT) % i;
+        tmp = values[j];
+        values[j] = values[i];
+        values[i] = tmp;
+    }
+}

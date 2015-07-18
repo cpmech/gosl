@@ -98,3 +98,39 @@ func Test_flt01(tst *testing.T) {
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
 }
+
+func Test_flip01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("flip01")
+
+	Init(1234)
+
+	p := 0.5
+	nsamples := 100
+	ntrue := 0
+	nfalse := 0
+	for i := 0; i < nsamples; i++ {
+		if FlipCoin(p) {
+			ntrue++
+		} else {
+			nfalse++
+		}
+	}
+
+	io.Pforan("ntrue  = %v (42)\n", ntrue)
+	io.Pforan("nfalse = %v (58)\n", nfalse)
+}
+
+func Test_shuffle01(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("shuffle01")
+
+	Init(0)
+
+	nums := utl.IntRange(10)
+	io.Pfgreen("before = %v\n", nums)
+	IntShuffle(nums)
+	io.Pfcyan("after  = %v\n", nums)
+}

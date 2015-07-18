@@ -55,3 +55,22 @@ func IntRands(values []int, low, high int) {
 func DblRand(low, high float64) float64 {
 	return dsfmt.Rand(low, high)
 }
+
+// FlipCoin generates a Bernoulli variable; throw a coin with probability p
+func FlipCoin(p float64) bool {
+	if p == 1.0 {
+		return true
+	}
+	if p == 0.0 {
+		return false
+	}
+	if dsfmt.Rand01() <= p {
+		return true
+	}
+	return false
+}
+
+// IntShuffle shuffles a slice of integers
+func IntShuffle(v []int) {
+	sfmt.Shuffle(v)
+}

@@ -10,7 +10,10 @@ package sfmt
 */
 import "C"
 
-import "time"
+import (
+	"time"
+	"unsafe"
+)
 
 // Init initialises random numbers generator
 //  Input:
@@ -30,4 +33,9 @@ func Init(seed int) {
 //   random integer
 func Rand(low, high int) int {
 	return int(C.SfmtRand(C.long(low), C.long(high)))
+}
+
+// Shuffle shuffles slice of integers
+func Shuffle(values []int) {
+	C.SfmtShuffle((*C.long)(unsafe.Pointer(&values[0])), C.long(len(values)))
 }

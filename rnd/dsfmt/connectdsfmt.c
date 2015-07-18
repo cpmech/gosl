@@ -13,3 +13,7 @@ void DsfmtInit(long seed) {
 double DsfmtRand(double lo, double hi) {
     return lo + (hi - lo) * dsfmt_genrand_close_open(&GLOBAL_DSFMT);
 }
+
+double DsfmtRand01() {
+    return dsfmt_genrand_close_open(&GLOBAL_DSFMT);
+}

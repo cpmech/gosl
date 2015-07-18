@@ -7,5 +7,6 @@
 
 void DsfmtInit(long seed);
 double DsfmtRand(double lo, double hi);
+double DsfmtRand01();
 
 #endif // GOSL_RANDOM_H
