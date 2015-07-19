@@ -74,6 +74,34 @@ func VecFillC(v []complex128, s complex128) {
 	}
 }
 
+// VecAccum sum/accumulates all components in a vector
+//  sum := Σ_i v[i]
+func VecAccum(v []float64) (sum float64) {
+	if Pll {
+		ncpu := imin(len(v), NCPU)
+		chsum := make(chan float64, ncpu)
+		for icpu := 0; icpu < ncpu; icpu++ {
+			start, endp1 := (icpu*len(v))/ncpu, ((icpu+1)*len(v))/ncpu
+			go func() {
+				var mysum float64
+				for i := start; i < endp1; i++ {
+					mysum += v[i]
+				}
+				chsum <- mysum
+			}()
+		}
+		sum = <-chsum
+		for icpu := 1; icpu < ncpu; icpu++ {
+			sum += <-chsum
+		}
+	} else {
+		for i := 0; i < len(v); i++ {
+			sum += v[i]
+		}
+	}
+	return
+}
+
 // VecNorm returns the Euclidian norm of a vector:
 //  nrm := ||v||
 func VecNorm(v []float64) (nrm float64) {

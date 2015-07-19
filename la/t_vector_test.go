@@ -14,6 +14,7 @@ import (
 
 func TestVector01(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("TestVector 01")
 
 	io.Pf("func VecFill(v []float64, s float64)\n")
@@ -27,6 +28,12 @@ func TestVector01(tst *testing.T) {
 	VecFillC(vc, 666+666i)
 	PrintVecC("vc", vc, "(%2g +", "%4gi) ", false)
 	chk.VectorC(tst, "vc", 1e-17, vc, []complex128{666 + 666i, 666 + 666i, 666 + 666i, 666 + 666i, 666 + 666i})
+
+	io.Pf("\nfunc VecAccum(v []float64) (sum float64)\n")
+	PrintVec("v", v, "%5g", false)
+	sum := VecAccum(v)
+	io.Pf("sum(v) = %23.15e\n", sum)
+	chk.Scalar(tst, "sum(v)", 1e-17, sum, 5*666)
 
 	io.Pf("\nfunc VecNorm(v []float64) (nrm float64)\n")
 	PrintVec("v", v, "%5g", false)
