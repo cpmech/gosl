@@ -36,9 +36,10 @@ func Int(low, high int) int {
 
 // Ints generates pseudo random integers between low and high.
 //  Input:
-//   values -- slice to be filled with len(values) numbers
 //   low    -- lower limit
 //   high   -- upper limit
+//  Output:
+//   values -- slice to be filled with len(values) numbers
 func Ints(values []int, low, high int) {
 	if len(values) < 1 {
 		return
@@ -60,9 +61,10 @@ func MTint(low, high int) int {
 
 // MTints generates pseudo random integers between low and high using the Mersenne Twister method.
 //  Input:
-//   values -- slice to be filled with len(values) numbers
 //   low    -- lower limit
 //   high   -- upper limit
+//  Output:
+//   values -- slice to be filled with len(values) numbers
 func MTints(values []int, low, high int) {
 	if len(values) < 1 {
 		return
@@ -72,8 +74,30 @@ func MTints(values []int, low, high int) {
 	}
 }
 
+// Float64 generates a pseudo random real number between low and high; i.e. in [low, right)
+//  Input:
+//   low  -- lower limit (closed)
+//   high -- upper limit (open)
+//  Output:
+//   random float64
+func Float64(low, high float64) float64 {
+	return low + (high-low)*rand.Float64()
+}
+
+// Float64s generates pseudo random real numbers between low and high; i.e. in [low, right)
+//  Input:
+//   low  -- lower limit (closed)
+//   high -- upper limit (open)
+//  Output:
+//   values -- slice to be filled with len(values) numbers
+func Float64s(values []float64, low, high float64) {
+	for i := 0; i < len(values); i++ {
+		values[i] = low + (high-low)*rand.Float64()
+	}
+}
+
 // MTfloat64 generates pseudo random real numbers between low and high; i.e. in [low, right)
-// using the Mersenne Twister method
+// using the Mersenne Twister method.
 //  Input:
 //   low  -- lower limit (closed)
 //   high -- upper limit (open)
@@ -81,6 +105,19 @@ func MTints(values []int, low, high int) {
 //   random float64
 func MTfloat64(low, high float64) float64 {
 	return dsfmt.Rand(low, high)
+}
+
+// MTfloat64s generates pseudo random real numbers between low and high; i.e. in [low, right)
+// using the Mersenne Twister method.
+//  Input:
+//   low  -- lower limit (closed)
+//   high -- upper limit (open)
+//  Output:
+//   values -- slice to be filled with len(values) numbers
+func MTfloat64s(values []float64, low, high float64) {
+	for i := 0; i < len(values); i++ {
+		values[i] = dsfmt.Rand(low, high)
+	}
 }
 
 // FlipCoin generates a Bernoulli variable; throw a coin with probability p
@@ -91,23 +128,36 @@ func FlipCoin(p float64) bool {
 	if p == 0.0 {
 		return false
 	}
-	if dsfmt.Rand01() <= p {
+	if rand.Float64() <= p {
 		return true
 	}
 	return false
 }
 
 // IntShuffle shuffles a slice of integers
-func IntShuffle(v []int) {
+func IntShuffle(values []int) {
+	var j, tmp int
+	for i := len(values) - 1; i > 0; i-- {
+		j = rand.Int() % i
+		tmp = values[j]
+		values[j] = values[i]
+		values[i] = tmp
+	}
+}
+
+// MTintShuffle shuffles a slice of integers using Mersenne Twister algorithm.
+func MTintShuffle(v []int) {
 	sfmt.Shuffle(v)
 }
 
 // DblShuffle shuffles a slice of float point numbers
-func DblShuffle(v []float64) {
-	//TODO
-	//I :=utl.IntRange(len(v))
-	//smft.Shuffle(I)
-	//for j, i := range I {
-	//v[j]
-	//}
+func DblShuffle(values []float64) {
+	var tmp float64
+	var j int
+	for i := len(values) - 1; i > 0; i-- {
+		j = rand.Int() % i
+		tmp = values[j]
+		values[j] = values[i]
+		values[i] = tmp
+	}
 }

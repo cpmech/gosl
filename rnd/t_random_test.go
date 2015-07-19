@@ -5,6 +5,7 @@
 package rnd
 
 import (
+	"sort"
 	"testing"
 	"time"
 
@@ -15,67 +16,34 @@ import (
 
 const NSAMPLES = 1000
 
-func Test_int01(tst *testing.T) {
+func Test_GOint01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("int01. integers")
+	chk.PrintTitle("GOint01. integers")
 
 	Init(1234)
 
 	nints := 10
-	irange := utl.IntRange(nints) // integers; e.g. 0,1,2,3,4,5,6,7,8,9
-	ifreqs := make([]int, nints)  // frequencies of each integer
+	vals := make([]int, NSAMPLES)
 
-	labels := make([]string, nints)
-	for i := 0; i < nints; i++ {
-		labels[i] = io.Sf("%3d", irange[i])
-	}
-
+	// using Int
 	t0 := time.Now()
 	for i := 0; i < NSAMPLES; i++ {
-		gen := Int(0, nints-1)
-		for j, val := range irange {
-			if gen == val {
-				ifreqs[j]++
-				break
-			}
-		}
+		vals[i] = Int(0, nints-1)
 	}
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	io.Pf(TextHist(labels, ifreqs, 60))
-}
+	hist := IntHistogram{Stations: utl.IntRange(nints + 1)}
+	hist.Count(vals)
+	io.Pfyel(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 
-func Test_int02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("int02. integers")
-
-	Init(1234)
-
-	nints := 10
-	irange := utl.IntRange(nints) // integers; e.g. 0,1,2,3,4,5,6,7,8,9
-	ifreqs := make([]int, nints)  // frequencies of each integer
-
-	labels := make([]string, nints)
-	for i := 0; i < nints; i++ {
-		labels[i] = io.Sf("%3d", irange[i])
-	}
-
-	t0 := time.Now()
-	samples := make([]int, NSAMPLES)
-	Ints(samples, 0, nints-1)
-	for i := 0; i < NSAMPLES; i++ {
-		for j, val := range irange {
-			if samples[i] == val {
-				ifreqs[j]++
-				break
-			}
-		}
-	}
+	// using Ints
+	t0 = time.Now()
+	Ints(vals, 0, nints-1)
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	io.Pf(TextHist(labels, ifreqs, 60))
+	hist.Count(vals)
+	io.Pfcyan(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 }
 
 func Test_MTint01(tst *testing.T) {
@@ -86,84 +54,88 @@ func Test_MTint01(tst *testing.T) {
 	Init(1234)
 
 	nints := 10
-	irange := utl.IntRange(nints) // integers; e.g. 0,1,2,3,4,5,6,7,8,9
-	ifreqs := make([]int, nints)  // frequencies of each integer
+	vals := make([]int, NSAMPLES)
 
-	labels := make([]string, nints)
-	for i := 0; i < nints; i++ {
-		labels[i] = io.Sf("%3d", irange[i])
-	}
-
+	// using MTint
 	t0 := time.Now()
 	for i := 0; i < NSAMPLES; i++ {
-		gen := MTint(0, nints-1)
-		for j, val := range irange {
-			if gen == val {
-				ifreqs[j]++
-				break
-			}
-		}
+		vals[i] = MTint(0, nints-1)
 	}
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	io.Pf(TextHist(labels, ifreqs, 60))
+	hist := IntHistogram{Stations: utl.IntRange(nints + 1)}
+	hist.Count(vals)
+	io.Pfyel(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
+
+	// using MTints
+	t0 = time.Now()
+	MTints(vals, 0, nints-1)
+	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
+
+	hist.Count(vals)
+	io.Pfcyan(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 }
 
-func Test_MTint02(tst *testing.T) {
+func Test_GOflt01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("MTint02. integers (Mersenne Twister)")
+	chk.PrintTitle("GOflt01. float64")
 
 	Init(1234)
 
-	nints := 10
-	irange := utl.IntRange(nints) // integers; e.g. 0,1,2,3,4,5,6,7,8,9
-	ifreqs := make([]int, nints)  // frequencies of each integer
+	xmin := 10.0
+	xmax := 20.0
+	vals := make([]float64, NSAMPLES)
 
-	labels := make([]string, nints)
-	for i := 0; i < nints; i++ {
-		labels[i] = io.Sf("%3d", irange[i])
-	}
-
+	// using Float64
 	t0 := time.Now()
-	samples := make([]int, NSAMPLES)
-	MTints(samples, 0, nints-1)
 	for i := 0; i < NSAMPLES; i++ {
-		for j, val := range irange {
-			if samples[i] == val {
-				ifreqs[j]++
-				break
-			}
-		}
+		vals[i] = Float64(xmin, xmax)
 	}
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	io.Pf(TextHist(labels, ifreqs, 60))
-}
+	hist := Histogram{Stations: []float64{10, 12.5, 15, 17.5, 20}}
+	hist.Count(vals)
+	io.Pfpink(TextHist(hist.GenLabels("%4g"), hist.Counts, 60))
 
-func Test_bins01(tst *testing.T) {
+	// using Float64s
+	t0 = time.Now()
+	Float64s(vals, xmin, xmax)
+	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	verbose()
-	chk.PrintTitle("bins01")
+	hist.Count(vals)
+	io.Pfblue2(TextHist(hist.GenLabels("%4g"), hist.Counts, 60))
 }
 
 func Test_MTflt01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("MTflt01. float64 (Mersenne Twister)")
 
 	Init(1234)
 
 	xmin := 10.0
 	xmax := 20.0
+	vals := make([]float64, NSAMPLES)
 
+	// using MTfloat64
 	t0 := time.Now()
 	for i := 0; i < NSAMPLES; i++ {
-		gen := MTfloat64(xmin, xmax)
-		io.Pforan("gen = %v\n", gen)
+		vals[i] = MTfloat64(xmin, xmax)
 	}
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
+	hist := Histogram{Stations: []float64{10, 12.5, 15, 17.5, 20}}
+	hist.Count(vals)
+	io.Pfpink(TextHist(hist.GenLabels("%4g"), hist.Counts, 60))
+
+	// using MTfloat64s
+	t0 = time.Now()
+	MTfloat64s(vals, xmin, xmax)
+	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
+
+	hist.Count(vals)
+	io.Pfblue2(TextHist(hist.GenLabels("%4g"), hist.Counts, 60))
 }
 
 func Test_flip01(tst *testing.T) {
@@ -189,15 +161,38 @@ func Test_flip01(tst *testing.T) {
 	io.Pforan("nfalse = %v (58)\n", nfalse)
 }
 
-func Test_shuffle01(tst *testing.T) {
+func Test_GOshuffleInts01(tst *testing.T) {
 
-	verbose()
-	chk.PrintTitle("shuffle01")
+	//verbose()
+	chk.PrintTitle("GOshuffleInts01")
 
 	Init(0)
 
-	nums := utl.IntRange(10)
+	n := 10
+	nums := utl.IntRange(n)
 	io.Pfgreen("before = %v\n", nums)
 	IntShuffle(nums)
 	io.Pfcyan("after  = %v\n", nums)
+
+	sort.Ints(nums)
+	io.Pforan("sorted = %v\n", nums)
+	chk.Ints(tst, "nums", nums, utl.IntRange(n))
+}
+
+func Test_MTshuffleInts01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("MTshuffleInts01. Mersenne Twister")
+
+	Init(0)
+
+	n := 10
+	nums := utl.IntRange(n)
+	io.Pfgreen("before = %v\n", nums)
+	MTintShuffle(nums)
+	io.Pfcyan("after  = %v\n", nums)
+
+	sort.Ints(nums)
+	io.Pforan("sorted = %v\n", nums)
+	chk.Ints(tst, "nums", nums, utl.IntRange(n))
 }
