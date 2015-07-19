@@ -16,7 +16,12 @@ func Test_sfmt01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("sfmt01. integers")
 
-	Init(1234)
+	Init(4321)
+
+	PrintIdString()
+	//TODO: add SFMT original test here
+	//io.Pf("64 bit generated randoms\n")
+	//io.Pf("init_gen_rand__________\n")
 
 	nsamples := 10
 	for i := 0; i < nsamples; i++ {

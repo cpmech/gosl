@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+#include "stdio.h"
 #include "SFMT.h"
 
 sfmt_t GLOBAL_SFMT;
@@ -23,4 +24,8 @@ void SfmtShuffle(long *values, long size) {
         values[j] = values[i];
         values[i] = tmp;
     }
+}
+
+void SfmtPrintIdString() {
+    printf("%s\n", sfmt_get_idstring(&GLOBAL_SFMT));
 }

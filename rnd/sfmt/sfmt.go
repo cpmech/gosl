@@ -5,7 +5,8 @@
 package sfmt
 
 /*
-#cgo CFLAGS: -O3 -finline-functions -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing --param max-inline-insns-single=1800 -Wall -std=c99 -msse2 -DHAVE_SSE2 -DSFMT_MEXP=19937
+#cgo CFLAGS: -O3 -finline-functions -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing --param max-inline-insns-single=1800 -std=c99 -msse2 -DHAVE_SSE2 -DSFMT_MEXP=19937
+// #cgo CFLAGS: -Wall // deactivated since cgo fails with Wunused-variable for SfmtPrintIdString
 #include "connectsfmt.h"
 */
 import "C"
@@ -13,6 +14,8 @@ import "C"
 import (
 	"time"
 	"unsafe"
+
+	"github.com/cpmech/gosl/io"
 )
 
 // Init initialises random numbers generator
@@ -38,4 +41,11 @@ func Rand(low, high int) int {
 // Shuffle shuffles slice of integers
 func Shuffle(values []int) {
 	C.SfmtShuffle((*C.long)(unsafe.Pointer(&values[0])), C.long(len(values)))
+}
+
+// PrintIdString prints SFMT id string
+func PrintIdString() {
+	if io.Verbose {
+		C.SfmtPrintIdString()
+	}
 }

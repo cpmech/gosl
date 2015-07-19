@@ -8,5 +8,6 @@
 void SfmtInit(long seed);
 long SfmtRand(long lo, long hi);
 void SfmtShuffle(long *values, long size);
+void SfmtPrintIdString();
 
 #endif // GOSL_RANDOM_H
