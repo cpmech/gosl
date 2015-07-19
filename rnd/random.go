@@ -5,54 +5,81 @@
 package rnd
 
 import (
+	"math/rand"
 	"time"
 
 	"github.com/cpmech/gosl/rnd/dsfmt"
 	"github.com/cpmech/gosl/rnd/sfmt"
 )
 
-// Init initialises random numbers generator
+// Init initialises random numbers generators
 //  Input:
 //   seed -- seed value; use seed <= 0 to use current time
 func Init(seed int) {
 	if seed <= 0 {
 		seed = int(time.Now().Unix())
 	}
+	rand.Seed(int64(seed))
 	sfmt.Init(seed)
 	dsfmt.Init(seed)
 }
 
-// IntRand generates pseudo random integer between low and high
+// Int generates pseudo random integer between low and high.
 //  Input:
 //   low  -- lower limit
 //   high -- upper limit
 //  Output:
 //   random integer
-func IntRand(low, high int) int {
-	return sfmt.Rand(low, high)
+func Int(low, high int) int {
+	return rand.Int()%(high-low+1) + low
 }
 
-// IntRands generates pseudo random integers between low and high
+// Ints generates pseudo random integers between low and high.
 //  Input:
 //   values -- slice to be filled with len(values) numbers
 //   low    -- lower limit
 //   high   -- upper limit
-func IntRands(values []int, low, high int) {
+func Ints(values []int, low, high int) {
 	if len(values) < 1 {
 		return
 	}
 	for i := 0; i < len(values); i++ {
-		values[i] = IntRand(low, high)
+		values[i] = Int(low, high)
 	}
 }
 
-// DblRand generates pseudo random real numbers between low and high; i.e. in [low, right)
+// MTint generates pseudo random integer between low and high using the Mersenne Twister method.
+//  Input:
+//   low  -- lower limit
+//   high -- upper limit
+//  Output:
+//   random integer
+func MTint(low, high int) int {
+	return sfmt.Rand(low, high)
+}
+
+// MTints generates pseudo random integers between low and high using the Mersenne Twister method.
+//  Input:
+//   values -- slice to be filled with len(values) numbers
+//   low    -- lower limit
+//   high   -- upper limit
+func MTints(values []int, low, high int) {
+	if len(values) < 1 {
+		return
+	}
+	for i := 0; i < len(values); i++ {
+		values[i] = MTint(low, high)
+	}
+}
+
+// MTfloat64 generates pseudo random real numbers between low and high; i.e. in [low, right)
+// using the Mersenne Twister method
 //  Input:
 //   low  -- lower limit (closed)
 //   high -- upper limit (open)
 //  Output:
 //   random float64
-func DblRand(low, high float64) float64 {
+func MTfloat64(low, high float64) float64 {
 	return dsfmt.Rand(low, high)
 }
 
