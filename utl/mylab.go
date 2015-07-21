@@ -50,6 +50,15 @@ func DblsAlloc(m, n int) (mat [][]float64) {
 	return
 }
 
+// StrsAlloc allocates a matrix of strings
+func StrsAlloc(m, n int) (mat [][]string) {
+	mat = make([][]string, m)
+	for i := 0; i < m; i++ {
+		mat[i] = make([]string, n)
+	}
+	return
+}
+
 // IntsAlloc allocates a matrix of integers
 func IntsAlloc(m, n int) (mat [][]int) {
 	mat = make([][]int, m)
