@@ -145,6 +145,14 @@ func IntShuffle(values []int) {
 	}
 }
 
+// IntGetShuffled returns a shufled slice of integers
+func IntGetShuffled(values []int) (shuffled []int) {
+	shuffled = make([]int, len(values))
+	copy(shuffled, values)
+	IntShuffle(shuffled)
+	return
+}
+
 // MTintShuffle shuffles a slice of integers using Mersenne Twister algorithm.
 func MTintShuffle(v []int) {
 	sfmt.Shuffle(v)

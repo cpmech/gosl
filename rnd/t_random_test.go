@@ -177,6 +177,11 @@ func Test_GOshuffleInts01(tst *testing.T) {
 	sort.Ints(nums)
 	io.Pforan("sorted = %v\n", nums)
 	chk.Ints(tst, "nums", nums, utl.IntRange(n))
+
+	shufled := IntGetShuffled(nums)
+	io.Pfyel("shufled = %v\n", shufled)
+	sort.Ints(shufled)
+	chk.Ints(tst, "shufled", shufled, utl.IntRange(n))
 }
 
 func Test_MTshuffleInts01(tst *testing.T) {
