@@ -226,6 +226,28 @@ func Test_getunique01(tst *testing.T) {
 	io.Pf(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 }
 
+func Test_getunique02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("getunique02")
+
+	Init(0)
+
+	nsel := 5 // number of selections
+	size := 10
+	hist := IntHistogram{Stations: utl.IntRange(size + 1)}
+	sel := IntGetUniqueN(size, nsel)
+	io.Pfcyan("sel  = %v\n", sel)
+	for i := 0; i < NSAMPLES; i++ {
+		sel := IntGetUniqueN(size, nsel)
+		check_repeated(sel)
+		hist.Count(sel, false)
+		//io.Pfgrey("sel  = %v\n", sel)
+	}
+
+	io.Pf(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
+}
+
 func check_repeated(v []int) {
 	for i := 1; i < len(v); i++ {
 		if v[i] == v[i-1] {

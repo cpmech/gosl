@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/rnd/dsfmt"
 	"github.com/cpmech/gosl/rnd/sfmt"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Init initialises random numbers generators
@@ -153,6 +154,32 @@ func IntGetUnique(values []int, n int) (selected []int) {
 		j = rand.Intn(i + 1)
 		if j < n {
 			selected[j] = values[i]
+		}
+	}
+	return
+}
+
+// IntGetUniqueN randomly selects n items from 0 to size-1 avoiding duplicates
+//  Note: using the 'reservoir sampling' method; see Wikipedia:
+//        https://en.wikipedia.org/wiki/Reservoir_sampling
+func IntGetUniqueN(size, n int) (selected []int) {
+	if n < 1 {
+		return
+	}
+	if n >= size {
+		selected = utl.IntRange(size)
+		IntShuffle(selected)
+		return
+	}
+	selected = make([]int, n)
+	for i := 0; i < n; i++ {
+		selected[i] = i
+	}
+	var j int
+	for i := n; i < size; i++ {
+		j = rand.Intn(i + 1)
+		if j < n {
+			selected[j] = i
 		}
 	}
 	return
