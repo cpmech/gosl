@@ -16,6 +16,8 @@ import (
 
 const NSAMPLES = 1000
 
+//const NSAMPLES = 10
+
 func Test_GOint01(tst *testing.T) {
 
 	//verbose()
@@ -212,7 +214,7 @@ func Test_getunique01(tst *testing.T) {
 	nsel := 5 // number of selections
 	size := 10
 	nums := utl.IntRange(size)
-	hist := IntHistogram{Stations: utl.IntRange(size + 1)}
+	hist := IntHistogram{Stations: utl.IntRange(size + 5)}
 	sel := IntGetUnique(nums, nsel)
 	io.Pfgreen("nums = %v\n", nums)
 	io.Pfcyan("sel  = %v\n", sel)
@@ -236,7 +238,7 @@ func Test_getunique02(tst *testing.T) {
 	nsel := 5 // number of selections
 	start := 2
 	size := 10
-	hist := IntHistogram{Stations: utl.IntRange(size + 1)}
+	hist := IntHistogram{Stations: utl.IntRange(size + 3)}
 	sel := IntGetUniqueN(start, size, nsel)
 	io.Pfcyan("sel  = %v\n", sel)
 	for i := 0; i < NSAMPLES; i++ {

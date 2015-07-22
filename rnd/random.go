@@ -159,15 +159,16 @@ func IntGetUnique(values []int, n int) (selected []int) {
 	return
 }
 
-// IntGetUniqueN randomly selects n items from start to size-1 avoiding duplicates
+// IntGetUniqueN randomly selects n items from start to endp1-1 avoiding duplicates
 //  Note: using the 'reservoir sampling' method; see Wikipedia:
 //        https://en.wikipedia.org/wiki/Reservoir_sampling
-func IntGetUniqueN(start, size, n int) (selected []int) {
+func IntGetUniqueN(start, endp1, n int) (selected []int) {
 	if n < 1 {
 		return
 	}
+	size := endp1 - start
 	if n >= size {
-		selected = utl.IntRange2(start, size)
+		selected = utl.IntRange2(start, endp1)
 		IntShuffle(selected)
 		return
 	}
