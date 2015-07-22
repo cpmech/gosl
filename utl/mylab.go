@@ -11,7 +11,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/cpmech/gosl/io"
 )
@@ -183,100 +182,6 @@ func DblVals(n int, v float64) (res []float64) {
 func DblCopy(in []float64) (out []float64) {
 	out = make([]float64, len(in))
 	copy(out, in)
-	return
-}
-
-// IntMinMax returns the maximum and minimum elements in v
-//  NOTE: this is not efficient and should be used for small slices only
-func IntMinMax(v []int) (mi, ma int) {
-	mi, ma = v[0], v[0]
-	for i := 1; i < len(v); i++ {
-		if v[i] < mi {
-			mi = v[i]
-		}
-		if v[i] > ma {
-			ma = v[i]
-		}
-	}
-	return
-}
-
-// DblMinMax returns the maximum and minimum elements in v
-//  NOTE: this is not efficient and should be used for small slices only
-func DblMinMax(v []float64) (mi, ma float64) {
-	mi, ma = v[0], v[0]
-	for i := 1; i < len(v); i++ {
-		if v[i] < mi {
-			mi = v[i]
-		}
-		if v[i] > ma {
-			ma = v[i]
-		}
-	}
-	return
-}
-
-// DblSum sums all items in v
-//  NOTE: this is not efficient and should be used for small slices only
-func DblSum(v []float64) (sum float64) {
-	for i := 0; i < len(v); i++ {
-		sum += v[i]
-	}
-	return
-}
-
-// DurSum sums all seconds in v
-//  NOTE: this is not efficient and should be used for small slices only
-func DurSum(v []time.Duration) (seconds float64) {
-	for _, t := range v {
-		seconds += t.Seconds()
-	}
-	return
-}
-
-// StrIndexSmall finds the index of an item in a slice of strings
-//  NOTE: this function is not efficient and should be used with small slices only; say smaller than 20
-func StrIndexSmall(a []string, val string) int {
-	for idx, str := range a {
-		if str == val {
-			return idx
-		}
-	}
-	return -1 // not found
-}
-
-// IntIndexSmall finds the index of an item in a slice of ints
-//  NOTE: this function is not efficient and should be used with small slices only; say smaller than 20
-func IntIndexSmall(a []int, val int) int {
-	for idx, item := range a {
-		if item == val {
-			return idx
-		}
-	}
-	return -1 // not found
-}
-
-// IntFilter filters out components in slice
-//  NOTE: this function is not efficient and should be used with small slices only
-func IntFilter(a []int, out func(idx int) bool) (res []int) {
-	for i := 0; i < len(a); i++ {
-		if out(i) {
-			continue
-		}
-		res = append(res, a[i])
-	}
-	return
-}
-
-// IntNegOut filters out negative components in slice
-//  NOTE: this function is not efficient and should be used with small slices only
-func IntNegOut(a []int) (res []int) {
-	for i := 0; i < len(a); i++ {
-		if a[i] < 0 {
-			continue
-		}
-		res = append(res, a[i])
-	}
 	return
 }
 
