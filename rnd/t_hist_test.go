@@ -58,7 +58,7 @@ func Test_hist01(tst *testing.T) {
 		4.1, 4.5, 4.9, // 3
 		-3, -2, -1,
 		5, 6, 7, 8,
-	})
+	}, true)
 	io.Pforan("counts = %v\n", hist.Counts)
 	chk.Ints(tst, "counts", hist.Counts, []int{5, 8, 2, 2, 3})
 
@@ -98,7 +98,7 @@ func Test_hist02(tst *testing.T) {
 		4, 4, 4, // 3
 		-3, -2, -1,
 		5, 6, 7, 8,
-	})
+	}, true)
 	io.Pforan("counts = %v\n", hist.Counts)
 	chk.Ints(tst, "counts", hist.Counts, []int{5, 8, 2, 2, 3})
 

@@ -34,7 +34,7 @@ func Test_GOint01(tst *testing.T) {
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
 	hist := IntHistogram{Stations: utl.IntRange(nints + 1)}
-	hist.Count(vals)
+	hist.Count(vals, true)
 	io.Pfyel(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 
 	// using Ints
@@ -42,7 +42,7 @@ func Test_GOint01(tst *testing.T) {
 	Ints(vals, 0, nints-1)
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	hist.Count(vals)
+	hist.Count(vals, true)
 	io.Pfcyan(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 }
 
@@ -64,7 +64,7 @@ func Test_MTint01(tst *testing.T) {
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
 	hist := IntHistogram{Stations: utl.IntRange(nints + 1)}
-	hist.Count(vals)
+	hist.Count(vals, true)
 	io.Pfyel(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 
 	// using MTints
@@ -72,7 +72,7 @@ func Test_MTint01(tst *testing.T) {
 	MTints(vals, 0, nints-1)
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	hist.Count(vals)
+	hist.Count(vals, true)
 	io.Pfcyan(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 }
 
@@ -95,7 +95,7 @@ func Test_GOflt01(tst *testing.T) {
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
 	hist := Histogram{Stations: []float64{10, 12.5, 15, 17.5, 20}}
-	hist.Count(vals)
+	hist.Count(vals, true)
 	io.Pfpink(TextHist(hist.GenLabels("%4g"), hist.Counts, 60))
 
 	// using Float64s
@@ -103,7 +103,7 @@ func Test_GOflt01(tst *testing.T) {
 	Float64s(vals, xmin, xmax)
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	hist.Count(vals)
+	hist.Count(vals, true)
 	io.Pfblue2(TextHist(hist.GenLabels("%4g"), hist.Counts, 60))
 }
 
@@ -126,7 +126,7 @@ func Test_MTflt01(tst *testing.T) {
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
 	hist := Histogram{Stations: []float64{10, 12.5, 15, 17.5, 20}}
-	hist.Count(vals)
+	hist.Count(vals, true)
 	io.Pfpink(TextHist(hist.GenLabels("%4g"), hist.Counts, 60))
 
 	// using MTfloat64s
@@ -134,7 +134,7 @@ func Test_MTflt01(tst *testing.T) {
 	MTfloat64s(vals, xmin, xmax)
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
 
-	hist.Count(vals)
+	hist.Count(vals, true)
 	io.Pfblue2(TextHist(hist.GenLabels("%4g"), hist.Counts, 60))
 }
 
@@ -200,4 +200,36 @@ func Test_MTshuffleInts01(tst *testing.T) {
 	sort.Ints(nums)
 	io.Pforan("sorted = %v\n", nums)
 	chk.Ints(tst, "nums", nums, utl.IntRange(n))
+}
+
+func Test_getunique01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("getunique01")
+
+	Init(0)
+
+	nsel := 5 // number of selections
+	size := 10
+	nums := utl.IntRange(size)
+	hist := IntHistogram{Stations: utl.IntRange(size + 1)}
+	sel := IntGetUnique(nums, nsel)
+	io.Pfgreen("nums = %v\n", nums)
+	io.Pfcyan("sel  = %v\n", sel)
+	for i := 0; i < NSAMPLES; i++ {
+		sel := IntGetUnique(nums, nsel)
+		check_repeated(sel)
+		hist.Count(sel, false)
+		//io.Pfgrey("sel  = %v\n", sel)
+	}
+
+	io.Pf(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
+}
+
+func check_repeated(v []int) {
+	for i := 1; i < len(v); i++ {
+		if v[i] == v[i-1] {
+			chk.Panic("there are repeated entries in v = %v", v)
+		}
+	}
 }

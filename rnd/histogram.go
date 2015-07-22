@@ -97,7 +97,7 @@ func (o Histogram) FindBin(x float64) int {
 }
 
 // Count counts how many items fall within each bin
-func (o *Histogram) Count(vals []float64) {
+func (o *Histogram) Count(vals []float64, clear bool) {
 
 	// check
 	if len(o.Stations) < 2 {
@@ -108,7 +108,7 @@ func (o *Histogram) Count(vals []float64) {
 	nbins := len(o.Stations) - 1
 	if len(o.Counts) != nbins {
 		o.Counts = make([]int, nbins)
-	} else {
+	} else if clear {
 		for i := 0; i < nbins; i++ {
 			o.Counts[i] = 0
 		}
@@ -180,7 +180,7 @@ func (o IntHistogram) FindBin(x int) int {
 }
 
 // Count counts how many items fall within each bin
-func (o *IntHistogram) Count(vals []int) {
+func (o *IntHistogram) Count(vals []int, clear bool) {
 
 	// check
 	if len(o.Stations) < 2 {
@@ -191,7 +191,7 @@ func (o *IntHistogram) Count(vals []int) {
 	nbins := len(o.Stations) - 1
 	if len(o.Counts) != nbins {
 		o.Counts = make([]int, nbins)
-	} else {
+	} else if clear {
 		for i := 0; i < nbins; i++ {
 			o.Counts[i] = 0
 		}

@@ -134,6 +134,30 @@ func FlipCoin(p float64) bool {
 	return false
 }
 
+// IntGetUnique randomly selects n items in a list avoiding duplicates
+//  Note: using the 'reservoir sampling' method; see Wikipedia:
+//        https://en.wikipedia.org/wiki/Reservoir_sampling
+func IntGetUnique(values []int, n int) (selected []int) {
+	if n < 1 {
+		return
+	}
+	if n >= len(values) {
+		return IntGetShuffled(values)
+	}
+	selected = make([]int, n)
+	for i := 0; i < n; i++ {
+		selected[i] = values[i]
+	}
+	var j int
+	for i := n; i < len(values); i++ {
+		j = rand.Intn(i + 1)
+		if j < n {
+			selected[j] = values[i]
+		}
+	}
+	return
+}
+
 // IntShuffle shuffles a slice of integers
 func IntShuffle(values []int) {
 	var j, tmp int
