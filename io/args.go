@@ -10,10 +10,11 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Args0toFilename parses the first argument as a filename
+// ArgToFilename parses an argument as a filename
 //  Input:
+//   idxArg    -- index of argument; e.g. 0==first, 1==second, etc.
 //   fnDefault -- default filename; can be ""
-//   ext       -- the file extension to be added
+//   ext       -- the file extension to be added; e.g. ".sim"
 //   check     -- check for null filename
 //  Output:
 //   filename -- the filename with extension added
@@ -21,15 +22,15 @@ import (
 //  Notes:
 //   The first first argument may be a file with extention or not.
 //  Examples:
-//   If the first argument is "simulation.sim" or "simulation" (with ext="sim")
+//   If the first argument is "simulation.sim" or "simulation" (with ext=".sim")
 //   then the results are: filename="simulation.sim" and fnkey="simulation"
-func Args0toFilename(fnDefault, ext string, check bool) (filename, fnkey string) {
+func ArgToFilename(idxArg int, fnDefault, ext string, check bool) (filename, fnkey string) {
 	if !flag.Parsed() {
 		flag.Parse()
 	}
 	filename = fnDefault
-	if len(flag.Args()) > 0 {
-		filename = flag.Arg(0)
+	if len(flag.Args()) > idxArg {
+		filename = flag.Arg(idxArg)
 	}
 	if FnExt(filename) == "" {
 		filename += ext
@@ -41,4 +42,32 @@ func Args0toFilename(fnDefault, ext string, check bool) (filename, fnkey string)
 		}
 	}
 	return
+}
+
+// ArgToBool parses an argument as a boolean value
+//  Input:
+//   idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+//   defaultValue -- default value
+func ArgToBool(idxArg int, defaultValue bool) bool {
+	if !flag.Parsed() {
+		flag.Parse()
+	}
+	if len(flag.Args()) > idxArg {
+		return Atob(flag.Arg(idxArg))
+	}
+	return defaultValue
+}
+
+// ArgToString parses an argument as a string
+//  Input:
+//   idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+//   defaultValue -- default value
+func ArgToString(idxArg int, defaultValue string) string {
+	if !flag.Parsed() {
+		flag.Parse()
+	}
+	if len(flag.Args()) > idxArg {
+		return flag.Arg(idxArg)
+	}
+	return defaultValue
 }

@@ -12,7 +12,7 @@ import (
 
 func Test_basic01(tst *testing.T) {
 
-	//chk.Verbose = true
+	//verbose()
 	chk.PrintTitle("basic01")
 
 	v0 := Atob("1")
