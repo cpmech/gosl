@@ -44,6 +44,20 @@ func ArgToFilename(idxArg int, fnDefault, ext string, check bool) (filename, fnk
 	return
 }
 
+// ArgToInt parses an argument as an integer value
+//  Input:
+//   idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+//   defaultValue -- default value
+func ArgToInt(idxArg int, defaultValue int) int {
+	if !flag.Parsed() {
+		flag.Parse()
+	}
+	if len(flag.Args()) > idxArg {
+		return Atoi(flag.Arg(idxArg))
+	}
+	return defaultValue
+}
+
 // ArgToBool parses an argument as a boolean value
 //  Input:
 //   idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
