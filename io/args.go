@@ -44,6 +44,20 @@ func ArgToFilename(idxArg int, fnDefault, ext string, check bool) (filename, fnk
 	return
 }
 
+// ArgToFloat parses an argument as a float64 value
+//  Input:
+//   idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+//   defaultValue -- default value
+func ArgToFloat(idxArg int, defaultValue float64) float64 {
+	if !flag.Parsed() {
+		flag.Parse()
+	}
+	if len(flag.Args()) > idxArg {
+		return Atof(flag.Arg(idxArg))
+	}
+	return defaultValue
+}
+
 // ArgToInt parses an argument as an integer value
 //  Input:
 //   idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
