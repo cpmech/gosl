@@ -71,3 +71,45 @@ func ArgToString(idxArg int, defaultValue string) string {
 	}
 	return defaultValue
 }
+
+// ArgsTable prints a nice table with input arguments
+//  Input: sets of THREE items in the following order:
+//   description, key, value, ...
+//   description, key, value, ...
+//        ...
+//   description, key, value, ...
+func ArgsTable(data ...interface{}) (table string) {
+	if len(data) < 3 {
+		return
+	}
+	ndat := len(data)
+	nlines := ndat / 3
+	sizes := []int{0, 0, 0}
+	for i := 0; i < nlines; i++ {
+		if i*3+2 >= ndat {
+			return "ArgsTable: input arguments are not a multiple of 3\n"
+		}
+		dsc := data[i*3]
+		key := data[i*3+1]
+		val := data[i*3+2]
+		sizes[0] = imax(sizes[0], len(Sf("%v", dsc)))
+		sizes[1] = imax(sizes[1], len(Sf("%v", key)))
+		sizes[2] = imax(sizes[2], len(Sf("%v", val)))
+	}
+	strfmt := Sf("%%%dv  %%%dv   %%%dv\n", sizes[0]+1, sizes[1]+1, sizes[2]+1)
+	n := sizes[0] + sizes[1] + sizes[2] + 3 + 5
+	m := (n - 15) / 2
+	table += printSpaces(m)
+	table += "INPUT ARGUMENTS\n"
+	table += printThickLine(n)
+	table += Sf(strfmt, "description", "key", "value")
+	table += printThinLine(n)
+	for i := 0; i < nlines; i++ {
+		dsc := data[i*3]
+		key := data[i*3+1]
+		val := data[i*3+2]
+		table += Sf(strfmt, dsc, key, val)
+	}
+	table += printThickLine(n)
+	return
+}
