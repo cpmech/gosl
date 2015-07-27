@@ -35,8 +35,10 @@ func Args0toFilename(fnDefault, ext string, check bool) (filename, fnkey string)
 		filename += ext
 	}
 	fnkey = FnKey(filename)
-	if filename == "" || fnkey == "" {
-		chk.Panic("filename must be given as first argument")
+	if check {
+		if filename == "" || fnkey == "" {
+			chk.Panic("filename must be given as first argument")
+		}
 	}
 	return
 }
