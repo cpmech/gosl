@@ -74,6 +74,16 @@ func VecFillC(v []complex128, s complex128) {
 	}
 }
 
+// VecClone allocates a clone of a vector
+//  b := a
+func VecClone(a []float64) (b []float64) {
+	b = make([]float64, len(a))
+	for i := 0; i < len(a); i++ {
+		b[i] = a[i]
+	}
+	return
+}
+
 // VecAccum sum/accumulates all components in a vector
 //  sum := Σ_i v[i]
 func VecAccum(v []float64) (sum float64) {
