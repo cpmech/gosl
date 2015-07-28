@@ -10,6 +10,46 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
+// Stat performs some basic statistics
+//  Input:
+//   x -- sample
+//  Output:
+//   mean -- mean average (first moment)
+//   adev -- average deviation
+//   sdev -- standrad deviation
+func Stat(x []float64) (mean, adev, sdev float64) {
+
+	// check
+	n := len(x)
+	if n < 2 {
+		return
+	}
+
+	// first pass to get the mean
+	var sum float64
+	for i := 0; i < n; i++ {
+		sum += x[i]
+	}
+	N := float64(n)
+	mean = sum / N
+
+	// second pass to get the deviations
+	var d, c, p, vari float64
+	for i := 0; i < n; i++ {
+		d = x[i] - mean     // d ← xi - bar(x)
+		adev += math.Abs(d) // adev ← Σ |d|
+		c += d              // c ← Σ d  // corrector
+		p = d * d           // p ← d²
+		vari += p           // vari ← Σ d²
+	}
+
+	// put the pieces together according to the conventional definitions
+	adev /= N
+	vari = (vari - c*c/N) / (N - 1.0)
+	sdev = math.Sqrt(vari)
+	return
+}
+
 // Moments computes the 4th moments of a data set
 //  Input:
 //   x -- sample
