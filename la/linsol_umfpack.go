@@ -44,6 +44,9 @@ type LinSolUmfpack struct {
 	ap     *C.LONG
 	ai     *C.LONG
 	ax, az *C.double
+
+	// derived
+	is_initialised bool
 }
 
 // factory of allocators
@@ -88,6 +91,9 @@ func (o *LinSolUmfpack) InitR(tR *Triplet, symmetric, verbose, timing bool) (err
 	if o.ton {
 		io.Pfcyan("%s: Time spent in LinSolUmfpack.InitR = %v\n", o.name, time.Now().Sub(o.tini))
 	}
+
+	// success
+	o.is_initialised = true
 	return
 }
 
@@ -135,12 +141,20 @@ func (o *LinSolUmfpack) InitC(tC *TripletC, symmetric, verbose, timing bool) (er
 	if o.ton {
 		io.Pfcyan("%s: Time spent in LinSolUmfpack.InitC = %v\n", o.name, time.Now().Sub(o.tini))
 	}
+
+	// success
+	o.is_initialised = true
 	return
 }
 
 // Fact performs symbolic/numeric factorisation. This method also converts the triplet form
 // to the column-compressed form, including the summation of duplicated entries
 func (o *LinSolUmfpack) Fact() (err error) {
+
+	// check
+	if !o.is_initialised {
+		return chk.Err("linear solver must be initialised first\n")
+	}
 
 	// start time
 	if o.ton {
@@ -208,6 +222,9 @@ func (o *LinSolUmfpack) Fact() (err error) {
 func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error) {
 
 	// check
+	if !o.is_initialised {
+		return chk.Err("linear solver must be initialised first\n")
+	}
 	if o.cmplx {
 		return chk.Err(_linsol_umfpack_err10)
 	}
@@ -243,6 +260,9 @@ func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error) {
 func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC []float64, dummy bool) (err error) {
 
 	// check
+	if !o.is_initialised {
+		return chk.Err("linear solver must be initialised first\n")
+	}
 	if !o.cmplx {
 		return chk.Err(_linsol_umfpack_err12)
 	}
@@ -279,6 +299,11 @@ func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC []float64, dummy bool) (err error)
 // Clean deletes temporary data structures
 func (o *LinSolUmfpack) Clean() {
 
+	// exit if not initialised
+	if !o.is_initialised {
+		return
+	}
+
 	// start time
 	if o.ton {
 		o.tini = time.Now()
@@ -304,7 +329,8 @@ func (o *LinSolUmfpack) Clean() {
 	}
 }
 
-// SetOrdScal sets the ordering and scaling methods for MUMPS
+// SetOrdScal sets the ordering and scaling methods
+//  Note: this method is not available for UMFPACK
 func (o *LinSolUmfpack) SetOrdScal(ordering, scaling string) (err error) {
 	return
 }
