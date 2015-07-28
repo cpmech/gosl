@@ -38,6 +38,12 @@ func Test_mylab01(tst *testing.T) {
 	G := []int{1, 2, 3, 38, 3, 5, 3, 1, 2, 15, 38, 1, 11}
 	H := IntUnique(D, C, G, []int{16, 39})
 	X, Y := MeshGrid2D(3, 6, 10, 20, 4, 3)
+	P := [][]int{
+		{1, 2, 3, 4, 5},
+		{-1, -2, -3, -4, -5},
+		{6, 7, 8, 9, 10},
+	}
+	Pc := IntsClone(P)
 	chk.Ints(tst, "I", I, []int{666, 666, 666, 666, 666})
 	chk.Ints(tst, "J", J, []int{666, 666, 666, 666, 666})
 	chk.Strings(tst, "Js", Js, []string{"666", "666", "666", "666", "666"})
@@ -58,6 +64,7 @@ func Test_mylab01(tst *testing.T) {
 	chk.Matrix(tst, "X", 1e-17, X, [][]float64{{3, 4, 5, 6}, {3, 4, 5, 6}, {3, 4, 5, 6}})
 	chk.Matrix(tst, "Y", 1e-17, Y, [][]float64{{10, 10, 10, 10}, {15, 15, 15, 15}, {20, 20, 20, 20}})
 	chk.StrMat(tst, "S", S, [][]string{{"", "", ""}, {"", "", ""}})
+	chk.IntMat(tst, "Pc", Pc, P)
 }
 
 func Test_mylab02(tst *testing.T) {

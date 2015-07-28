@@ -67,6 +67,18 @@ func IntsAlloc(m, n int) (mat [][]int) {
 	return
 }
 
+// IntsClone allocates and clones a matrix of integers
+func IntsClone(a [][]int) (b [][]int) {
+	b = make([][]int, len(a))
+	for i := 0; i < len(a); i++ {
+		b[i] = make([]int, len(a[i]))
+		for j := 0; j < len(a[i]); j++ {
+			b[i][j] = a[i][j]
+		}
+	}
+	return
+}
+
 // IntRange generates a slice of integers from 0 to n-1
 func IntRange(n int) (res []int) {
 	if n <= 0 {
