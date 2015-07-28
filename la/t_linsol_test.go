@@ -11,11 +11,10 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x_correct []float64) {
+func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x_correct []float64, verbose bool) {
 
 	// info
 	symmetric := false
-	verbose := false
 	timing := false
 
 	// allocate solver
@@ -44,21 +43,22 @@ func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x
 
 	// output
 	A := t.ToMatrix(nil)
-	io.Pforan("A.x = b\n")
-	PrintMat("A", A.ToDense(), "%5g", false)
-	PrintVec("x", x, "%g ", false)
-	PrintVec("b", b, "%g ", false)
+	if verbose {
+		io.Pforan("A.x = b\n")
+		PrintMat("A", A.ToDense(), "%5g", false)
+		PrintVec("x", x, "%g ", false)
+		PrintVec("b", b, "%g ", false)
+	}
 
 	// check
 	chk.Vector(tst, "x", tol_cmp, x, x_correct)
 	check_residR(tst, tol_res, A.ToDense(), x, b)
 }
 
-func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, x_correct []complex128) {
+func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, x_correct []complex128, verbose bool) {
 
 	// info
 	symmetric := false
-	verbose := false
 	timing := false
 
 	// allocate solver
@@ -90,20 +90,22 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 
 	// output
 	A := t.ToMatrix(nil)
-	io.Pforan("A.x = b\n")
-	PrintMatC("A", A.ToDense(), "(%g+", "%gi) ", false)
-	PrintVecC("x", x, "(%g+", "%gi) ", false)
-	PrintVecC("b", b, "(%g+", "%gi) ", false)
+	if verbose {
+		io.Pforan("A.x = b\n")
+		PrintMatC("A", A.ToDense(), "(%g+", "%gi) ", false)
+		PrintVecC("x", x, "(%g+", "%gi) ", false)
+		PrintVecC("b", b, "(%g+", "%gi) ", false)
+	}
 
 	// check
 	chk.VectorC(tst, "x", tol_cmp, x, x_correct)
 	check_residC(tst, tol_res, A.ToDense(), x, b)
 }
 
-func Test_linsol01(tst *testing.T) {
+func Test_linsol01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linsol01. real")
+	chk.PrintTitle("linsol01a. real")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -125,7 +127,45 @@ func Test_linsol01(tst *testing.T) {
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 	x_correct := []float64{1, 2, 3, 4, 5}
-	run_linsol_testR(tst, &t, 1e-14, 1e-13, b, x_correct)
+	run_linsol_testR(tst, &t, 1e-14, 1e-13, b, x_correct, true)
+}
+
+func Test_linsol01b(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("linsol01b. real. go-routines")
+
+	// input matrix data into Triplet
+	var t Triplet
+	t.Init(5, 5, 13)
+	t.Put(0, 0, 1.0)
+	t.Put(0, 0, 1.0)
+	t.Put(1, 0, 3.0)
+	t.Put(0, 1, 3.0)
+	t.Put(2, 1, -1.0)
+	t.Put(4, 1, 4.0)
+	t.Put(1, 2, 4.0)
+	t.Put(2, 2, -3.0)
+	t.Put(3, 2, 1.0)
+	t.Put(4, 2, 2.0)
+	t.Put(2, 3, 2.0)
+	t.Put(1, 4, 6.0)
+	t.Put(4, 4, 1.0)
+
+	// run test
+	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
+	x_correct := []float64{1, 2, 3, 4, 5}
+	nch := 2
+	done := make(chan int, nch)
+	for i := 0; i < nch; i++ {
+		go func() {
+			run_linsol_testR(tst, &t, 1e-14, 1e-13, b, x_correct, false)
+			done <- 1
+		}()
+	}
+	for i := 0; i < nch; i++ {
+		<-done
+	}
 }
 
 func Test_linsol02(tst *testing.T) {
@@ -154,7 +194,7 @@ func Test_linsol02(tst *testing.T) {
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	x_correct := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
 	tol := 1e-9 // TODO: check why tests fails with 1e-10 @ office but not @ home
-	run_linsol_testR(tst, &t, 1e-4, tol, b, x_correct)
+	run_linsol_testR(tst, &t, 1e-4, tol, b, x_correct, true)
 }
 
 func Test_linsol03(tst *testing.T) {
@@ -182,7 +222,7 @@ func Test_linsol03(tst *testing.T) {
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
 	x_correct := []complex128{1, 2, 3, 4, 5}
-	run_linsol_testC(tst, &t, 1e-14, 1e-13, b, x_correct)
+	run_linsol_testC(tst, &t, 1e-14, 1e-13, b, x_correct, true)
 }
 
 func Test_linsol04(tst *testing.T) {
@@ -210,7 +250,7 @@ func Test_linsol04(tst *testing.T) {
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	x_correct := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	run_linsol_testC(tst, &t, 1e-4, 1e-9, b, x_correct)
+	run_linsol_testC(tst, &t, 1e-4, 1e-9, b, x_correct, true)
 }
 
 func Test_linsol05(tst *testing.T) {
@@ -242,5 +282,5 @@ func Test_linsol05(tst *testing.T) {
 	}
 
 	// run text
-	run_linsol_testC(tst, &t, 1e-14, 1e-13, b, x_correct)
+	run_linsol_testC(tst, &t, 1e-14, 1e-13, b, x_correct, true)
 }
