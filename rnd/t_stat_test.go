@@ -23,6 +23,7 @@ func Test_stat01(tst *testing.T) {
 	_, _, _, xdevA := StatBasic(x, false)
 	xdevS1 := StatDev(x, true)
 	xdevA1 := StatDev(x, false)
+	xave1 := StatAve(x)
 
 	sum, mean, adev, sdev, vari, skew, kurt, err := StatMoments(x)
 	if err != nil {
@@ -30,7 +31,7 @@ func Test_stat01(tst *testing.T) {
 	}
 	io.Pforan("x    = %v\n", x)
 	io.Pforan("sum  = %v\n", sum)
-	io.Pforan("mean = %v  (%v)\n", mean, xave)
+	io.Pforan("mean = %v  (%v)  (%v)\n", mean, xave, xave1)
 	io.Pforan("adev = %v  (%v)  (%v)\n", adev, xdevA, xdevA1)
 	io.Pforan("sdev = %v  (%v)  (%v)\n", sdev, xdevS, xdevS1)
 	io.Pforan("vari = %v\n", vari)
@@ -42,6 +43,7 @@ func Test_stat01(tst *testing.T) {
 	chk.Scalar(tst, "vari ", 1e-17, vari, 147.25)
 	chk.Scalar(tst, "xmin ", 1e-17, xmin, 70)
 	chk.Scalar(tst, "xave ", 1e-17, xave, 849.0/9.0)
+	chk.Scalar(tst, "xave1", 1e-17, xave1, 849.0/9.0)
 	chk.Scalar(tst, "xmax ", 1e-17, xmax, 105)
 	chk.Scalar(tst, "xdevA", 1e-17, xdevA, adev)
 	chk.Scalar(tst, "xdevS", 1e-17, xdevS, 12.134661099511597)

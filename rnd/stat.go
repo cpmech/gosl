@@ -11,6 +11,23 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
+// StatAve computes the average of x values
+//  Input:
+//   x -- sample
+//  Output:
+//   xave -- average
+func StatAve(x []float64) (xave float64) {
+	n := len(x)
+	if n < 1 {
+		return
+	}
+	for i := 0; i < n; i++ {
+		xave += x[i]
+	}
+	xave /= float64(n)
+	return
+}
+
 // StatDevFirst computes the average deviation or standard deviation (σ)
 // for given value of average/mean/first moment
 //  Input:
@@ -66,11 +83,11 @@ func StatDev(x []float64, std bool) (xdev float64) {
 	}
 
 	// average
-	var sum float64
+	var xave float64
 	for i := 0; i < n; i++ {
-		sum += x[i]
+		xave += x[i]
 	}
-	xave := sum / float64(n)
+	xave /= float64(n)
 	xdev = StatDevFirst(x, xave, std)
 	return
 }
@@ -93,14 +110,13 @@ func StatBasic(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
 	}
 
 	// average, min and max
-	var sum float64
 	xmin, xmax = x[0], x[0]
 	for i := 0; i < n; i++ {
-		sum += x[i]
+		xave += x[i]
 		xmin = min(xmin, x[i])
 		xmax = max(xmax, x[i])
 	}
-	xave = sum / float64(n)
+	xave /= float64(n)
 	xdev = StatDevFirst(x, xave, std)
 	return
 }
