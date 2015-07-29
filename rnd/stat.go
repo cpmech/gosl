@@ -11,33 +11,22 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// Stat performs some basic statistics
+// StatDevFirst computes the average deviation or standard deviation (σ)
+// for given value of average/mean/first moment
 //  Input:
-//   x   -- sample
-//   std -- compute standard deviation (σ) instead of average deviation (adev)
+//   x    -- sample
+//   xave -- bar(x) == average/mean/first moment
+//   std  -- compute standard deviation (σ) instead of average deviation (adev)
 //  Output:
-//   xmin -- minimum value
-//   xave -- mean average (first moment)
-//   xmax -- maximum value
 //   xdev -- average deviation; if std==true, computes standard deviation (σ) instead
-func Stat(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
+func StatDevFirst(x []float64, xave float64, std bool) (xdev float64) {
 
 	// check
 	n := len(x)
 	if n < 2 {
 		return
 	}
-
-	// average, min and max
-	var sum float64
-	xmin, xmax = x[0], x[0]
-	for i := 0; i < n; i++ {
-		sum += x[i]
-		xmin = min(xmin, x[i])
-		xmax = max(xmax, x[i])
-	}
 	N := float64(n)
-	xave = sum / N
 
 	// standard deviation
 	if std {
@@ -53,8 +42,7 @@ func Stat(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
 	}
 
 	// average deviation
-	sum = 0
-	var d float64
+	var sum, d float64
 	for i := 0; i < n; i++ {
 		d = x[i] - xave    // d ← xi - bar(x)
 		sum += math.Abs(d) // sum ← Σ |d|
@@ -63,7 +51,61 @@ func Stat(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
 	return
 }
 
-// Moments computes the 4th moments of a data set
+// StatDev computes the average deviation or standard deviation (σ)
+//  Input:
+//   x   -- sample
+//   std -- compute standard deviation (σ) instead of average deviation (adev)
+//  Output:
+//   xdev -- average deviation; if std==true, computes standard deviation (σ) instead
+func StatDev(x []float64, std bool) (xdev float64) {
+
+	// check
+	n := len(x)
+	if n < 2 {
+		return
+	}
+
+	// average
+	var sum float64
+	for i := 0; i < n; i++ {
+		sum += x[i]
+	}
+	xave := sum / float64(n)
+	xdev = StatDevFirst(x, xave, std)
+	return
+}
+
+// StatBasic performs some basic statistics
+//  Input:
+//   x   -- sample
+//   std -- compute standard deviation (σ) instead of average deviation (adev)
+//  Output:
+//   xmin -- minimum value
+//   xave -- mean average (first moment)
+//   xmax -- maximum value
+//   xdev -- average deviation; if std==true, computes standard deviation (σ) instead
+func StatBasic(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
+
+	// check
+	n := len(x)
+	if n < 2 {
+		return
+	}
+
+	// average, min and max
+	var sum float64
+	xmin, xmax = x[0], x[0]
+	for i := 0; i < n; i++ {
+		sum += x[i]
+		xmin = min(xmin, x[i])
+		xmax = max(xmax, x[i])
+	}
+	xave = sum / float64(n)
+	xdev = StatDevFirst(x, xave, std)
+	return
+}
+
+// StatMoments computes the 4th moments of a data set
 //  Input:
 //   x -- sample
 //  Output:
@@ -77,7 +119,7 @@ func Stat(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
 //  Based on:
 //     Press WH, Teukolsky SA, Vetterling WT and Flannery BP (2007)
 //       Numerical Recipes in C++ 2007 (3rd Edition), page 725.
-func Moments(x []float64) (sum, mean, adev, sdev, vari, skew, kurt float64, err error) {
+func StatMoments(x []float64) (sum, mean, adev, sdev, vari, skew, kurt float64, err error) {
 
 	// check
 	n := len(x)
@@ -157,14 +199,14 @@ func StatTable(x [][]float64, std, withZ bool) (y, z [][]float64) {
 	// compute y
 	y = la.MatAlloc(4, m)
 	for i := 0; i < m; i++ {
-		y[0][i], y[1][i], y[2][i], y[3][i] = Stat(x[i], std)
+		y[0][i], y[1][i], y[2][i], y[3][i] = StatBasic(x[i], std)
 	}
 
 	// compute z
 	if withZ {
 		z = la.MatAlloc(4, 4)
 		for i := 0; i < 4; i++ {
-			z[0][i], z[1][i], z[2][i], z[3][i] = Stat(y[i], std)
+			z[0][i], z[1][i], z[2][i], z[3][i] = StatBasic(y[i], std)
 		}
 	}
 	return

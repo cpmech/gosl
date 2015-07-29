@@ -19,18 +19,20 @@ func Test_stat01(tst *testing.T) {
 
 	x := []float64{100, 100, 102, 98, 77, 99, 70, 105, 98}
 
-	xmin, xave, xmax, xdevS := Stat(x, true)
-	_, _, _, xdevA := Stat(x, false)
+	xmin, xave, xmax, xdevS := StatBasic(x, true)
+	_, _, _, xdevA := StatBasic(x, false)
+	xdevS1 := StatDev(x, true)
+	xdevA1 := StatDev(x, false)
 
-	sum, mean, adev, sdev, vari, skew, kurt, err := Moments(x)
+	sum, mean, adev, sdev, vari, skew, kurt, err := StatMoments(x)
 	if err != nil {
 		chk.Panic("Moments failed:\n%v", err)
 	}
 	io.Pforan("x    = %v\n", x)
 	io.Pforan("sum  = %v\n", sum)
 	io.Pforan("mean = %v  (%v)\n", mean, xave)
-	io.Pforan("adev = %v  (%v)\n", adev, xdevA)
-	io.Pforan("sdev = %v  (%v)\n", sdev, xdevS)
+	io.Pforan("adev = %v  (%v)  (%v)\n", adev, xdevA, xdevA1)
+	io.Pforan("sdev = %v  (%v)  (%v)\n", sdev, xdevS, xdevS1)
 	io.Pforan("vari = %v\n", vari)
 	io.Pforan("skew = %v\n", skew)
 	io.Pforan("kurt = %v\n", kurt)
@@ -43,6 +45,8 @@ func Test_stat01(tst *testing.T) {
 	chk.Scalar(tst, "xmax ", 1e-17, xmax, 105)
 	chk.Scalar(tst, "xdevA", 1e-17, xdevA, adev)
 	chk.Scalar(tst, "xdevS", 1e-17, xdevS, 12.134661099511597)
+	chk.Scalar(tst, "xdevA1", 1e-17, xdevA1, adev)
+	chk.Scalar(tst, "xdevS1", 1e-17, xdevS1, 12.134661099511597)
 	// TODO: add checks for adev, skew and kurt
 }
 
