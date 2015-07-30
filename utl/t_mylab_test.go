@@ -99,7 +99,7 @@ func Test_mylab02(tst *testing.T) {
 	}
 }
 
-func TestMyLab03a(tst *testing.T) {
+func Test_mylab03a(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab03a")
@@ -117,7 +117,7 @@ func TestMyLab03a(tst *testing.T) {
 	}
 }
 
-func TestMyLab03b(tst *testing.T) {
+func Test_mylab03b(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab03b")
@@ -148,7 +148,7 @@ func TestMyLab03b(tst *testing.T) {
 	chk.Scalar(tst, "max(A)", 1e-17, ma, 8)
 }
 
-func TestMyLab04(tst *testing.T) {
+func Test_mylab04(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab04")
@@ -179,7 +179,69 @@ func TestMyLab04(tst *testing.T) {
 	c := LinSpace(2.0, 3.0, 1)
 	io.Pf("c = %v\n", c)
 	chk.Vector(tst, "linspace(2,3,1)", 1e-17, c, []float64{2.0})
+}
 
+func Test_mylab05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab05. cumsum, gtpenalty, scaling")
+
+	p := []float64{1, 2, 3, 4, 5}
+	cs := make([]float64, len(p))
+	CumSum(cs, p)
+	io.Pforan("cs = %v\n", cs)
+	chk.Vector(tst, "cumsum", 1e-17, cs, []float64{1, 3, 6, 10, 15})
+
+	res := GtPenalty(0, 0, 1)
+	io.Pforan("\n0 > 0: penalty = %v\n", res)
+	chk.Scalar(tst, "0 > 0", 1e-18, res, 1e-16)
+
+	res = GtePenalty(0, 0, 1)
+	io.Pforan("\n0 ≥ 0: penalty = %v\n", res)
+	chk.Scalar(tst, "0 ≥ 0", 1e-18, res, 0)
+
+	res = GtPenalty(0, -1, 1)
+	io.Pforan("\n0 > -1: penalty = %v\n", res)
+	chk.Scalar(tst, "0 > -1", 1e-18, res, 0)
+
+	res = GtPenalty(1, 0, 1)
+	io.Pforan("\n1 > 0: penalty = %v\n", res)
+	chk.Scalar(tst, "1 > 0", 1e-18, res, 0)
+
+	res = GtPenalty(1, 1, 1)
+	io.Pforan("\n1 > 1: penalty = %v\n", res)
+	chk.Scalar(tst, "1 > 1", 1e-18, res, 1e-16)
+
+	res = GtePenalty(1, 1, 1)
+	io.Pforan("\n1 ≥ 1: penalty = %v\n", res)
+	chk.Scalar(tst, "1 ≥ 1", 1e-18, res, 0)
+
+	res = GtPenalty(23, 123, 10)
+	io.Pforan("\n23 > 123: (m=10) penalty = %v\n", res)
+	chk.Scalar(tst, "23 > 123 (m=10)", 1e-18, res, 1000)
+
+	res = GtePenalty(23, 123, 10)
+	io.Pforan("\n23 ≥ 123: (m=10) penalty = %v\n", res)
+	chk.Scalar(tst, "23 ≥ 123 (m=10)", 1e-18, res, 1000)
+
+	x := []float64{10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+	s := make([]float64, len(x))
+	Scaling(s, x, 1e-16, true)
+	io.Pfpink("\nx = %v\n", x)
+	io.Pforan("s = %v\n", s)
+	chk.Vector(tst, "s", 1e-15, s, LinSpace(0, 1, len(x)))
+
+	x = []float64{123, 123, 123, 123, 123}
+	s = make([]float64, len(x))
+	Scaling(s, x, 1e-16, true)
+	io.Pfpink("\nx = %v\n", x)
+	io.Pforan("s = %v\n", s)
+	chk.Vector(tst, "s", 1e-15, s, []float64{0, 0.25, 0.5, 0.75, 1})
+
+	Scaling(s, x, 1e-16, false)
+	io.Pfpink("\nx = %v\n", x)
+	io.Pforan("s = %v\n", s)
+	chk.Vector(tst, "s", 1e-15, s, nil)
 }
 
 func Test_conversions01(tst *testing.T) {

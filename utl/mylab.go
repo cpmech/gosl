@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 )
 
@@ -292,4 +293,82 @@ func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (x, y [][]float64) {
 		}
 	}
 	return
+}
+
+// Scaling computes a scaled version of the input slice with results in [0.0, 1.0]
+//  Input:
+//   x       -- values
+//   tol     -- tolerance for capturing xmax ≅ xmin
+//   useinds -- if (xmax-xmin)<tol, use indices to generate the 's' slice;
+//              otherwise, 's' will be filled with zeros
+//  Ouptut:
+//   s          -- scaled series; pre--allocated with len(s) == len(x)
+//   xmin, xmax -- min(x) and max(x)
+func Scaling(s, x []float64, tol float64, useinds bool) (xmin, xmax float64) {
+	if len(x) < 2 {
+		return
+	}
+	n := len(x)
+	chk.IntAssert(len(s), n)
+	xmin, xmax = x[0], x[0]
+	for i := 1; i < n; i++ {
+		if x[i] < xmin {
+			xmin = x[i]
+		}
+		if x[i] > xmax {
+			xmax = x[i]
+		}
+	}
+	dx := xmax - xmin
+	if dx < tol {
+		if useinds {
+			N := float64(n - 1)
+			for i := 0; i < n; i++ {
+				s[i] = float64(i) / N
+			}
+			return
+		}
+		for i := 0; i < n; i++ {
+			s[i] = 0
+		}
+		return
+	}
+	for i := 0; i < n; i++ {
+		s[i] = (x[i] - xmin) / dx
+	}
+	return
+}
+
+// CumSum returns the cumulative sum of the elements in p
+//  Input:
+//   p -- values
+//  Output:
+//   cs -- cumulated sum; pre-allocated with len(cs) == len(p)
+func CumSum(cs, p []float64) {
+	if len(p) < 1 {
+		return
+	}
+	chk.IntAssert(len(cs), len(p))
+	cs[0] = p[0]
+	for i := 1; i < len(p); i++ {
+		cs[i] = cs[i-1] + p[i]
+	}
+}
+
+// GtPenalty implements a 'greater than' penalty function where
+// x must be greater than b; otherwise the error is magnified
+func GtPenalty(x, b, penaltyM float64) float64 {
+	if x > b {
+		return 0.0
+	}
+	return penaltyM*(b-x) + 1e-16 // must add small number because x must be greater than b
+}
+
+// GtePenalty implements a 'greater than or equal' penalty function where
+// x must be greater than b or equal to be; otherwise the error is magnified
+func GtePenalty(x, b, penaltyM float64) float64 {
+	if x >= b {
+		return 0.0
+	}
+	return penaltyM * (b - x)
 }
