@@ -249,6 +249,15 @@ func Test_mylab06(tst *testing.T) {
 	io.Pforan("s = %v\n", s)
 	chk.Vector(tst, "s", 1e-15, s, LinSpace(-2, -3, len(x)))
 
+	// |dx|>0: increasing
+	io.Pfblue2("\n|dx|>0: increasing (shuffled)\n")
+	reverse = false
+	x = []float64{11, 10, 12, 19, 15, 20, 17, 16, 18, 13, 14}
+	Scaling(s, x, 0.0, 1e-16, reverse, useinds)
+	io.Pfpink("x = %v\n", x)
+	io.Pforan("s = %v\n", s)
+	chk.Vector(tst, "s", 1e-15, s, []float64{0.1, 0.0, 0.2, 0.9, 0.5, 1.0, 0.7, 0.6, 0.8, 0.3, 0.4})
+
 	// |dx|=0: increasing (using indices)
 	io.Pfblue2("\n|dx|=0: increasing (using indices)\n")
 	reverse = false
