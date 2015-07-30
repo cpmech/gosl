@@ -184,7 +184,7 @@ func Test_mylab04(tst *testing.T) {
 func Test_mylab05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mylab05. cumsum, gtpenalty, scaling")
+	chk.PrintTitle("mylab05. cumsum, gtpenalty")
 
 	p := []float64{1, 2, 3, 4, 5}
 	cs := make([]float64, len(p))
@@ -223,25 +223,66 @@ func Test_mylab05(tst *testing.T) {
 	res = GtePenalty(23, 123, 10)
 	io.Pforan("\n23 ≥ 123: (m=10) penalty = %v\n", res)
 	chk.Scalar(tst, "23 ≥ 123 (m=10)", 1e-18, res, 1000)
+}
 
+func Test_mylab06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab06. scaling")
+
+	// |dx|>0: increasing
+	io.Pfblue2("\n|dx|>0: increasing\n")
+	reverse := false
+	useinds := true
 	x := []float64{10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
 	s := make([]float64, len(x))
-	Scaling(s, x, 1e-16, true)
-	io.Pfpink("\nx = %v\n", x)
+	Scaling(s, x, -2.0, 1e-16, reverse, useinds)
+	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, LinSpace(0, 1, len(x)))
+	chk.Vector(tst, "s", 1e-15, s, LinSpace(-2, -1, len(x)))
 
+	// |dx|>0: reverse
+	io.Pfblue2("\n|dx|>0: reverse\n")
+	reverse = true
+	Scaling(s, x, -3.0, 1e-16, reverse, useinds)
+	io.Pfpink("x = %v\n", x)
+	io.Pforan("s = %v\n", s)
+	chk.Vector(tst, "s", 1e-15, s, LinSpace(-2, -3, len(x)))
+
+	// |dx|=0: increasing (using indices)
+	io.Pfblue2("\n|dx|=0: increasing (using indices)\n")
+	reverse = false
 	x = []float64{123, 123, 123, 123, 123}
 	s = make([]float64, len(x))
-	Scaling(s, x, 1e-16, true)
-	io.Pfpink("\nx = %v\n", x)
+	Scaling(s, x, 10.0, 1e-16, reverse, useinds)
+	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, []float64{0, 0.25, 0.5, 0.75, 1})
+	chk.Vector(tst, "s", 1e-15, s, []float64{10, 10.25, 10.5, 10.75, 11})
 
-	Scaling(s, x, 1e-16, false)
-	io.Pfpink("\nx = %v\n", x)
+	// |dx|=0: reverse (using indices)
+	io.Pfblue2("\n|dx|=0: reverse (using indices)\n")
+	reverse = true
+	Scaling(s, x, 10.0, 1e-16, reverse, useinds)
+	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, nil)
+	chk.Vector(tst, "s", 1e-15, s, []float64{11, 10.75, 10.5, 10.25, 10})
+
+	// |dx|=0: increasing (not using indices)
+	io.Pfblue2("\n|dx|=0: increasing (not using indices)\n")
+	reverse = false
+	useinds = false
+	Scaling(s, x, 88.0, 1e-16, reverse, useinds)
+	io.Pfpink("x = %v\n", x)
+	io.Pforan("s = %v\n", s)
+	chk.Vector(tst, "s", 1e-15, s, DblVals(len(x), 88))
+
+	// |dx|=0: reverse (not using indices)
+	io.Pfblue2("\n|dx|=0: reverse (not using indices)\n")
+	reverse = true
+	Scaling(s, x, 88.0, 1e-16, reverse, useinds)
+	io.Pfpink("x = %v\n", x)
+	io.Pforan("s = %v\n", s)
+	chk.Vector(tst, "s", 1e-15, s, DblVals(len(x), 88))
 }
 
 func Test_conversions01(tst *testing.T) {

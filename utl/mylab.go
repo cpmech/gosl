@@ -298,13 +298,16 @@ func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (x, y [][]float64) {
 // Scaling computes a scaled version of the input slice with results in [0.0, 1.0]
 //  Input:
 //   x       -- values
+//   ds      -- δs value to be added to all 's' values
 //   tol     -- tolerance for capturing xmax ≅ xmin
+//   reverse -- compute reverse series;
+//              i.e. 's' decreases from 1 to 0 while x goes from xmin to xmax
 //   useinds -- if (xmax-xmin)<tol, use indices to generate the 's' slice;
-//              otherwise, 's' will be filled with zeros
+//              otherwise, 's' will be filled with δs + zeros
 //  Ouptut:
 //   s          -- scaled series; pre--allocated with len(s) == len(x)
 //   xmin, xmax -- min(x) and max(x)
-func Scaling(s, x []float64, tol float64, useinds bool) (xmin, xmax float64) {
+func Scaling(s, x []float64, ds, tol float64, reverse, useinds bool) (xmin, xmax float64) {
 	if len(x) < 2 {
 		return
 	}
@@ -323,18 +326,30 @@ func Scaling(s, x []float64, tol float64, useinds bool) (xmin, xmax float64) {
 	if dx < tol {
 		if useinds {
 			N := float64(n - 1)
+			if reverse {
+				for i := 0; i < n; i++ {
+					s[i] = ds + float64(n-1-i)/N
+				}
+				return
+			}
 			for i := 0; i < n; i++ {
-				s[i] = float64(i) / N
+				s[i] = ds + float64(i)/N
 			}
 			return
 		}
 		for i := 0; i < n; i++ {
-			s[i] = 0
+			s[i] = ds
+		}
+		return
+	}
+	if reverse {
+		for i := 0; i < n; i++ {
+			s[i] = ds + (xmax-x[i])/dx
 		}
 		return
 	}
 	for i := 0; i < n; i++ {
-		s[i] = (x[i] - xmin) / dx
+		s[i] = ds + (x[i]-xmin)/dx
 	}
 	return
 }
