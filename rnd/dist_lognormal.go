@@ -15,8 +15,8 @@ type LogNormal struct {
 	den   float64 // σ * sqrt(2 * π)
 }
 
-// derived compute derived/auxiliary quantities
-func (o *LogNormal) derived() {
+// CalcDerived compute derived/auxiliary quantities
+func (o *LogNormal) CalcDerived() {
 	o.vari2 = 2.0 * o.Sig * o.Sig
 	o.den = o.Sig * math.Sqrt(2.0*math.Pi)
 }
@@ -27,13 +27,13 @@ func (o *LogNormal) derived() {
 func (o *LogNormal) InitStd(m, s float64) {
 	o.Sig = math.Sqrt(math.Log(1.0 + s*s/(m*m)))
 	o.Mu = math.Log(m / o.Sig)
-	o.derived()
+	o.CalcDerived()
 }
 
 // Init initialises lognormal distribution
 func (o *LogNormal) Init(μ, σ float64) {
 	o.Mu, o.Sig = μ, σ
-	o.derived()
+	o.CalcDerived()
 }
 
 // Pdf computes the probability density function @ x
