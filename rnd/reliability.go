@@ -100,7 +100,7 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 	}
 
 	// lognormal distribution structure
-	var lnd LogNormal
+	var lnd DistLogNormal
 
 	// has lognormal random variable?
 	haslrv := false

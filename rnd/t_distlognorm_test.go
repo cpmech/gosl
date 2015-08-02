@@ -15,17 +15,16 @@ import (
 
 func plot_lognormal(μ, σ float64) {
 
-	var lognrm LogNormal
-	lognrm.Init(μ, σ)
-	//io.Pforan("lognrm = %+v\n", lognrm)
+	var dist DistLogNormal
+	dist.Init(μ, σ)
 
 	n := 101
 	x := utl.LinSpace(0, 3, n)
 	y := make([]float64, n)
 	Y := make([]float64, n)
 	for i := 0; i < n; i++ {
-		y[i] = lognrm.Pdf(x[i])
-		Y[i] = lognrm.Cdf(x[i])
+		y[i] = dist.Pdf(x[i])
+		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
 	plt.Plot(x, y, io.Sf("label='$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
@@ -38,16 +37,10 @@ func Test_lognorm01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("lognorm01")
 
-	plt.SetForEps(1.5, 300)
-
-	for _, σ := range []float64{1, 0.5, 0.25} {
-		plot_lognormal(0, σ)
-	}
-
 	// values from R language: dnorm and pnorm functions. Example:
 	//  options(digits=17)
 	//  X = seq(0, 3, 0.25)
-	//  dnorm(X, 0, 0.25)
+	//  dlnorm(X, 0, 0.25)
 	X := []float64{0.00, 0.25, 0.50, 0.75, 1.00, 1.25, 1.50, 1.75, 2.00, 2.25, 2.50, 2.75, 3.00}
 	pdf_μ0_σ025 := []float64{0.0000000000000000e+00, 1.3426755490116912e-06, 6.8349495096432164e-02, 1.0974069753632885e+00, 1.5957691216057308e+00, 8.5715880056255800e-01, 2.8555377571925905e-01, 7.4450664020965812e-02, 1.7087373774108041e-02, 3.6814929619841388e-03, 7.7268078822629541e-04, 1.6151115930367854e-04, 3.4078354273924143e-05}
 	pdf_μ0_σ05 := []float64{0.000000000000000000, 0.068349495096432164, 0.610455304190183234, 0.901557703729439885, 0.797884560802865406, 0.577803754559389593, 0.382869771988592789, 0.243717185734742298, 0.152613826047545809, 0.095184591906419674, 0.059530916570285738, 0.037475605662833117, 0.023794482261436555}
@@ -62,78 +55,78 @@ func Test_lognorm01(tst *testing.T) {
 	cdf_μ1_σ05 := []float64{0.0000000000000000e+00, 9.0936473087462811e-07, 3.5421674466618914e-04, 5.0067301053332691e-03, 2.2750131948179212e-02, 6.0126457619697919e-02, 1.1720610376847471e-01, 1.8922158674265119e-01, 2.6970493073490953e-01, 3.5266345803129762e-01, 4.3352037059466092e-01, 5.0925535791422860e-01, 5.7817410080287324e-01}
 	cdf_μ1_σ1 := []float64{0.0000000000000000000, 0.0085095612560889284, 0.0452137277902241314, 0.0989283283290915555, 0.1586552539314570465, 0.2186217341859028884, 0.2760772061741955108, 0.3298294288332768165, 0.3794777011200848871, 0.4250190616904856444, 0.4666437940564928111, 0.5046279903528034794, 0.5392769436822993923}
 
-	var ln LogNormal
-	ln.Init(0, 0.25)
+	var dist DistLogNormal
+	dist.Init(0, 0.25)
 	n := len(X)
 	x := make([]float64, n)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Pdf(X[i])
+		x[i] = dist.Pdf(X[i])
 	}
-	chk.Vector(tst, "pdf: μ=0 σ=0.25", 1e-16, x, pdf_μ0_σ025)
+	chk.Vector(tst, "pdf: μ=0 σ=0.25", 1e-15, x, pdf_μ0_σ025)
 
-	ln.Init(0, 0.5)
+	dist.Init(0, 0.5)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Pdf(X[i])
+		x[i] = dist.Pdf(X[i])
 	}
-	chk.Vector(tst, "pdf: μ=0 σ=0.50", 1e-16, x, pdf_μ0_σ05)
+	chk.Vector(tst, "pdf: μ=0 σ=0.50", 1e-15, x, pdf_μ0_σ05)
 
-	ln.Init(0, 1.0)
+	dist.Init(0, 1.0)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Pdf(X[i])
+		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=0 σ=1.00", 1e-15, x, pdf_μ0_σ1)
 
-	ln.Init(1, 0.25)
+	dist.Init(1, 0.25)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Pdf(X[i])
+		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=1 σ=0.25", 1e-15, x, pdf_μ1_σ025)
 
-	ln.Init(1, 0.5)
+	dist.Init(1, 0.5)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Pdf(X[i])
+		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=1 σ=0.50", 1e-15, x, pdf_μ1_σ05)
 
-	ln.Init(1, 1.0)
+	dist.Init(1, 1.0)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Pdf(X[i])
+		x[i] = dist.Pdf(X[i])
 	}
-	chk.Vector(tst, "pdf: μ=1 σ=1.00", 1e-16, x, pdf_μ1_σ1)
+	chk.Vector(tst, "pdf: μ=1 σ=1.00", 1e-15, x, pdf_μ1_σ1)
 
-	ln.Init(0, 0.25)
+	dist.Init(0, 0.25)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Cdf(X[i])
+		x[i] = dist.Cdf(X[i])
 	}
-	chk.Vector(tst, "cdf: μ=0 σ=0.25", 1e-16, x, cdf_μ0_σ025)
+	chk.Vector(tst, "cdf: μ=0 σ=0.25", 1e-15, x, cdf_μ0_σ025)
 
-	ln.Init(0, 0.5)
+	dist.Init(0, 0.5)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Cdf(X[i])
+		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=0 σ=0.50", 1e-15, x, cdf_μ0_σ05)
 
-	ln.Init(0, 1)
+	dist.Init(0, 1)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Cdf(X[i])
+		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=0 σ=1.00", 1e-15, x, cdf_μ0_σ1)
 
-	ln.Init(1, 0.25)
+	dist.Init(1, 0.25)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Cdf(X[i])
+		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=1 σ=0.25", 1e-15, x, cdf_μ1_σ025)
 
-	ln.Init(1, 0.5)
+	dist.Init(1, 0.5)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Cdf(X[i])
+		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=1 σ=0.50", 1e-15, x, cdf_μ1_σ05)
 
-	ln.Init(1, 1)
+	dist.Init(1, 1)
 	for i := 0; i < n; i++ {
-		x[i] = ln.Cdf(X[i])
+		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=1 σ=1.00", 1e-15, x, cdf_μ1_σ1)
 }
@@ -143,8 +136,7 @@ func Test_lognorm02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("lognorm02")
 
-	doplot := false
-
+	doplot := chk.Verbose
 	if doplot {
 		plt.SetForEps(1.5, 300)
 		for _, σ := range []float64{1, 0.5, 0.25} {

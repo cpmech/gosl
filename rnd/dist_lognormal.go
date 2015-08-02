@@ -6,7 +6,7 @@ package rnd
 
 import "math"
 
-type LogNormal struct {
+type DistLogNormal struct {
 	Mu  float64 // μ: location
 	Sig float64 // σ: scale
 
@@ -15,29 +15,29 @@ type LogNormal struct {
 	den   float64 // σ * sqrt(2 * π)
 }
 
-// CalcDerived compute derived/auxiliary quantities
-func (o *LogNormal) CalcDerived() {
+// CalcDerived computes derived/auxiliary quantities
+func (o *DistLogNormal) CalcDerived() {
 	o.vari2 = 2.0 * o.Sig * o.Sig
-	o.den = o.Sig * math.Sqrt(2.0*math.Pi)
+	o.den = o.Sig * math.Sqrt2 * math.SqrtPi
 }
 
-// InitNonlog initialise lognormal distribution with non-log parameters
+// InitStd initialises lognormal distribution with non-log parameters
 //  m -- non-logarithmised mean: μ
 //  s -- non-logarithmised standard deviation: σ
-func (o *LogNormal) InitStd(m, s float64) {
+func (o *DistLogNormal) InitStd(m, s float64) {
 	o.Sig = math.Sqrt(math.Log(1.0 + s*s/(m*m)))
 	o.Mu = math.Log(m / o.Sig)
 	o.CalcDerived()
 }
 
 // Init initialises lognormal distribution
-func (o *LogNormal) Init(μ, σ float64) {
+func (o *DistLogNormal) Init(μ, σ float64) {
 	o.Mu, o.Sig = μ, σ
 	o.CalcDerived()
 }
 
 // Pdf computes the probability density function @ x
-func (o LogNormal) Pdf(x float64) float64 {
+func (o DistLogNormal) Pdf(x float64) float64 {
 	if x < 1e-16 {
 		return 0
 	}
@@ -45,7 +45,7 @@ func (o LogNormal) Pdf(x float64) float64 {
 }
 
 // Cdf computes the cumulative probability function @ x
-func (o LogNormal) Cdf(x float64) float64 {
+func (o DistLogNormal) Cdf(x float64) float64 {
 	if x < 1e-16 {
 		return 0
 	}
