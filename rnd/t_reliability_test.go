@@ -56,6 +56,8 @@ func Test_reliab01(tst *testing.T) {
 	// first order reliability method
 	var form ReliabFORM
 	form.Init(μ, σ, lrv, gfcn, hfcn)
+	form.NlsSilent = !chk.Verbose
+	form.NlsCheckJ = chk.Verbose
 	form.TolA = 0.005
 	form.TolB = 0.005
 

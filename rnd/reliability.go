@@ -30,11 +30,13 @@ type ReliabFORM struct {
 	hfcn ReliabHfcn_t // gradient of limit state function
 
 	// constants
-	NmaxItA   int     // max number of iterations for direction cosines
-	NmaxItB   int     // max number of iterations for reliability index
-	TolA      float64 // tolerance to find α
-	TolB      float64 // tolerance to find β
-	NlsSilent bool    // flag for nonlinear solver
+	NmaxItA      int     // max number of iterations for direction cosines
+	NmaxItB      int     // max number of iterations for reliability index
+	TolA         float64 // tolerance to find α
+	TolB         float64 // tolerance to find β
+	NlsSilent    bool    // flag for nonlinear solver: print results
+	NlsCheckJ    bool    // flag for nonlinear solver: check J matrix
+	NlsCheckJtol float64 // tolerance for nonlinear solver when checking J
 
 	// auxiliary
 	α    []float64 // [nx] direction cosines
@@ -57,6 +59,8 @@ func (o *ReliabFORM) Init(μ, σ []float64, lrv []bool, gfcn ReliabGfcn_t, hfcn 
 	o.TolA = 0.001
 	o.TolB = 0.001
 	o.NlsSilent = true
+	o.NlsCheckJ = false
+	o.NlsCheckJtol = 1e-9
 
 	// allocate slices
 	nx := len(μ)
@@ -94,12 +98,10 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 		}
 	}
 
-	// nonlinear solver with y[0] = β
-	// solving:
+	// function to compute β with x-constant
 	//  gβ(β) = g(μ - β・A・σ) = 0
-	var nls num.NlSolver
 	var err error
-	nls.Init(1, func(fy, y []float64) error {
+	gβfcn := func(fy, y []float64) error {
 		βtmp := y[0]
 		for i := 0; i < nx; i++ {
 			o.xtmp[i] = μ[i] - βtmp*o.α[i]*σ[i]
@@ -109,7 +111,29 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 			chk.Panic("cannot compute gfcn(%v):\n%v", o.xtmp, err)
 		}
 		return nil
-	}, nil, nil, false, true, nil)
+	}
+
+	// derivative of gβ w.r.t β
+	hβfcn := func(dfdy [][]float64, y []float64) error {
+		βtmp := y[0]
+		for i := 0; i < nx; i++ {
+			o.xtmp[i] = μ[i] - βtmp*o.α[i]*σ[i]
+		}
+		err = o.hfcn(o.dgdx, o.xtmp, args)
+		if err != nil {
+			chk.Panic("cannot compute hfcn(%v):\n%v", o.xtmp, err)
+		}
+		dfdy[0][0] = 0
+		for i := 0; i < nx; i++ {
+			dfdy[0][0] -= o.dgdx[i] * o.α[i] * σ[i]
+		}
+		return nil
+	}
+
+	// nonlinear solver with y[0] = β
+	// solving:  gβ(β) = g(μ - β・A・σ) = 0
+	var nls num.NlSolver
+	nls.Init(1, gβfcn, nil, hβfcn, true, false, nil)
 	defer nls.Clean()
 
 	// message
@@ -124,7 +148,11 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 
 		// message
 		if verbose {
-			io.Pf("%s itB=%d β=%g\n", utl.PrintThinLine(60), itB, β)
+			gx, err := o.gfcn(x, args)
+			if err != nil {
+				chk.Panic("cannot compute gfcn(%v):\n%v", x, err)
+			}
+			io.Pf("%s itB=%d β=%g g=%g\n", utl.PrintThinLine(60), itB, β, gx)
 		}
 
 		// compute direction cosines
@@ -206,6 +234,9 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 		nls.Solve(B, o.NlsSilent)
 		βerr := math.Abs(B[0] - β)
 		β = B[0]
+		if o.NlsCheckJ {
+			nls.CheckJ(B, o.NlsCheckJtol, true, false)
+		}
 
 		// update x-star
 		for i := 0; i < nx; i++ {
