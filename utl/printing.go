@@ -41,3 +41,19 @@ func PrintDeep4(name string, A [][][][]float64, format string) {
 	}
 	fmt.Println(res)
 }
+
+// PrintThickLine prints a thick line (using '=')
+func PrintThickLine(n int) (l string) {
+	for i := 0; i < n; i++ {
+		l += "="
+	}
+	return l + "\n"
+}
+
+// PrintThinLine prints a thick line (using '-')
+func PrintThinLine(n int) (l string) {
+	for i := 0; i < n; i++ {
+		l += "-"
+	}
+	return l + "\n"
+}
