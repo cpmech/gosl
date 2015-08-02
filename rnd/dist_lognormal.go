@@ -6,6 +6,7 @@ package rnd
 
 import "math"
 
+// DistNormal implements the lognormal distribution
 type DistLogNormal struct {
 	Mu  float64 // μ: location
 	Sig float64 // σ: scale

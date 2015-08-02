@@ -6,6 +6,22 @@ package rnd
 
 import "math"
 
+// Stdphi implements φ(x), the standard probability density function
+func Stdphi(x float64) float64 {
+	return math.Exp(-x*x/2.0) / math.Sqrt2 / math.SqrtPi
+}
+
+// StdPhi implements Φ(x), the standard cumulative distribution function
+func StdPhi(x float64) float64 {
+	return (1.0 + math.Erf(x/math.Sqrt2)) / 2.0
+}
+
+// StdInvPhi implements Φ⁻¹(x), the inverse standard cumulative distribution function
+func StdInvPhi(x float64) float64 {
+	return ltqnorm(x)
+}
+
+// DistNormal implements the normal distribution
 type DistNormal struct {
 	Mu  float64 // μ: mean
 	Sig float64 // σ: std deviation
