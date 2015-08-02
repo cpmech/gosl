@@ -189,7 +189,9 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 
 			// check convergence on α
 			if itA > 1 && αerr < o.TolA {
-				io.Pfgrey(". . . converged on α with αerr=%g . . .\n", αerr)
+				if verbose {
+					io.Pfgrey(". . . converged on α with αerr=%g . . .\n", αerr)
+				}
 				break
 			}
 		}
@@ -212,7 +214,9 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 
 		// check convergence on β
 		if βerr < o.TolB {
-			io.Pfgrey2(". . . converged on β with βerr=%g . . .\n", βerr)
+			if verbose {
+				io.Pfgrey2(". . . converged on β with βerr=%g . . .\n", βerr)
+			}
 			break
 		}
 	}
