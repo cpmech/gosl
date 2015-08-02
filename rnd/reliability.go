@@ -9,7 +9,9 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -42,8 +44,19 @@ type ReliabFORM struct {
 	α    []float64 // [nx] direction cosines
 	xtmp []float64 // [nx] temporary vector of random variables
 	dgdx []float64 // [nx] gradient of g
+
+	// plotting
+	PlotFnk    string      // filenamekey for plot. "" means no plot
+	PlotNp     int         // number of points. can be zero
+	PlotCf     float64     // coefficient to compute meshgrid. can be zero
+	PlotUrange []float64   // range of values for contour. can be nil
+	PlotVrange []float64   // range of values for contour. can be nil
+	PlotU      [][]float64 // auxiliary variables for contour
+	PlotV      [][]float64 // auxiliary variables for contour
+	PlotZ      [][]float64 // auxiliary variables for contour
 }
 
+// Init initialises FORM structure
 func (o *ReliabFORM) Init(μ, σ []float64, lrv []bool, gfcn ReliabGfcn_t, hfcn ReliabHfcn_t) {
 
 	// input
@@ -141,6 +154,46 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 		io.Pf("\n%s", utl.PrintThickLine(60))
 	}
 
+	// plotting
+	plot := o.PlotFnk != ""
+	if nx != 2 {
+		plot = false
+	}
+	if plot {
+		if o.PlotNp < 3 {
+			o.PlotNp = 41
+		}
+		var umin, umax, vmin, vmax float64
+		if o.PlotCf < 1 {
+			o.PlotCf = 2
+		}
+		if len(o.PlotUrange) == 0 {
+			umin, umax = μ[0]-o.PlotCf*μ[0], μ[0]+o.PlotCf*μ[0]
+			vmin, vmax = μ[1]-o.PlotCf*μ[1], μ[1]+o.PlotCf*μ[1]
+		} else {
+			chk.IntAssert(len(o.PlotUrange), 2)
+			chk.IntAssert(len(o.PlotVrange), 2)
+			umin, umax = o.PlotUrange[0], o.PlotUrange[1]
+			vmin, vmax = o.PlotVrange[0], o.PlotVrange[1]
+		}
+		o.PlotU, o.PlotV = utl.MeshGrid2D(umin, umax, vmin, vmax, o.PlotNp, o.PlotNp)
+		o.PlotZ = la.MatAlloc(o.PlotNp, o.PlotNp)
+		plt.SetForEps(0.8, 300)
+		for i := 0; i < o.PlotNp; i++ {
+			for j := 0; j < o.PlotNp; j++ {
+				o.xtmp[0] = o.PlotU[i][j]
+				o.xtmp[1] = o.PlotV[i][j]
+				o.PlotZ[i][j], err = o.gfcn(o.xtmp, args)
+				if err != nil {
+					chk.Panic("cannot compute gfcn(%v):\n%v", x, err)
+				}
+			}
+		}
+		plt.Contour(o.PlotU, o.PlotV, o.PlotZ, "")
+		plt.ContourSimple(o.PlotU, o.PlotV, o.PlotZ, "levels=[0], colors=['yellow']")
+		plt.PlotOne(x[0], x[1], "'ro', label='initial'")
+	}
+
 	// iterations to find β
 	B := []float64{β}
 	itB := 0
@@ -153,6 +206,11 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 				chk.Panic("cannot compute gfcn(%v):\n%v", x, err)
 			}
 			io.Pf("%s itB=%d β=%g g=%g\n", utl.PrintThinLine(60), itB, β, gx)
+		}
+
+		// plot
+		if plot {
+			plt.PlotOne(x[0], x[1], "'r.'")
 		}
 
 		// compute direction cosines
@@ -266,6 +324,13 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 		io.Pfgreen("x = %v\n", x)
 		io.Pfgreen("g = %v\n", gx)
 		io.PfGreen("β = %v\n", β)
+	}
+
+	// plot
+	if plot {
+		plt.Gll("$x_0$", "$x_1$", "")
+		plt.Cross()
+		plt.SaveD("/tmp/gosl", "fig_form_"+o.PlotFnk+".eps")
 	}
 	return
 }

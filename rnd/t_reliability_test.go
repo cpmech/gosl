@@ -60,6 +60,9 @@ func Test_reliab01(tst *testing.T) {
 	form.NlsCheckJ = chk.Verbose
 	form.TolA = 0.005
 	form.TolB = 0.005
+	if chk.Verbose {
+		form.PlotFnk = "beam"
+	}
 
 	// run FORM
 	verbose := chk.Verbose // show messages
