@@ -44,6 +44,9 @@ func TextHist(labels []string, counts []int, barlen int) string {
 	for i, f := range counts {
 		l += io.Sf("%"+sz+"s | %"+Sz+"d ", labels[i], f)
 		n := int(float64(f) * scale)
+		if f > 0 { // TODO: improve this
+			n += 1
+		}
 		for j := 0; j < n; j++ {
 			l += "#"
 		}
@@ -65,7 +68,7 @@ func TextHist(labels []string, counts []int, barlen int) string {
 func BuildTextHist(xmin, xmax float64, nstations int, values []float64, numfmt string, barlen int) string {
 	hist := Histogram{Stations: utl.LinSpace(xmin, xmax, nstations)}
 	hist.Count(values, true)
-	return TextHist(hist.GenLabels(numfmt), hist.Counts, 60)
+	return TextHist(hist.GenLabels(numfmt), hist.Counts, barlen)
 }
 
 // Histogram holds data for computing/plotting histograms
