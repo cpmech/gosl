@@ -7,6 +7,7 @@ package rnd
 import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
 // TextHist prints a text histogram
@@ -51,6 +52,20 @@ func TextHist(labels []string, counts []int, barlen int) string {
 	}
 	l += io.Sf("%"+sz+"s   %"+Sz+"d\n", "", total)
 	return l
+}
+
+// BuildTextHist builds a text histogram
+//  Input:
+//   xmin      -- station xmin
+//   xmax      -- station xmax
+//   nstations -- number of stations
+//   values    -- values to be counted
+//   numfmt    -- number format
+//   barlen    -- max length of bar
+func BuildTextHist(xmin, xmax float64, nstations int, values []float64, numfmt string, barlen int) string {
+	hist := Histogram{Stations: utl.LinSpace(xmin, xmax, nstations)}
+	hist.Count(values, true)
+	return TextHist(hist.GenLabels(numfmt), hist.Counts, 60)
 }
 
 // Histogram holds data for computing/plotting histograms
