@@ -329,7 +329,7 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 	// plot
 	if plot {
 		plt.Gll("$x_0$", "$x_1$", "")
-		plt.Cross()
+		plt.Cross("")
 		plt.SaveD("/tmp/gosl", "fig_form_"+o.PlotFnk+".eps")
 	}
 	return

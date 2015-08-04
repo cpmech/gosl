@@ -118,8 +118,12 @@ func Text(x, y float64, txt, args string) {
 	}
 }
 
-func Cross() {
-	io.Ff(&bb, "Cross()\n")
+func Cross(args string) {
+	if len(args) > 0 {
+		io.Ff(&bb, "Cross(%s)\n", args)
+	} else {
+		io.Ff(&bb, "Cross()\n")
+	}
 }
 
 func SplotGap(w, h float64) {

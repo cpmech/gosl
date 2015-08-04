@@ -74,7 +74,7 @@ func Test_cubiceq03(tst *testing.T) {
 			}
 			plt.Plot(X, Y, io.Sf("color='%s', label='c=%g'", colors[k], c))
 			plt.PlotOne(x1, 0, io.Sf("'ko', color='%s'", colors[k]))
-			plt.Cross()
+			plt.Cross("")
 			plt.Gll("x", "y", "")
 		}
 	}

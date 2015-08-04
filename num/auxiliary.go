@@ -45,7 +45,7 @@ func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xs
 	if err != nil {
 		return
 	}
-	plt.Cross()
+	plt.Cross("")
 	plt.Plot(x, y, args)
 	plt.PlotOne(xsol, ysol, io.Sf("'ro', label='%s'", xsolLbl))
 	if extra != nil {
