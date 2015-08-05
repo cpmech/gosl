@@ -223,17 +223,14 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 				// find equivalent normal mean and std deviation for lognormal variables
 				for i := 0; i < nx; i++ {
 					if o.lrv[i] {
-						if true { // TODO: replace the following 2 hard-wired calculations
-							lnd.Sig = o.σ[i] / o.μ[i]
-							lnd.Mu = math.Log(o.μ[i]) - lnd.Sig*lnd.Sig/2.0
-						} else {
-							lnd.Init(o.μ[i], o.σ[i])
-						}
+
+						// set distribution
+						lnd.InitStd(o.μ[i], o.σ[i])
 						lnd.CalcDerived()
 
 						// update μ and σ
 						fx := lnd.Pdf(x[i])
-						Φinvx := (math.Log(x[i]) - lnd.Mu) / lnd.Sig
+						Φinvx := (math.Log(x[i]) - lnd.M) / lnd.S
 						φx := math.Exp(-Φinvx*Φinvx/2.0) / math.Sqrt2 / math.SqrtPi
 						σ[i] = φx / fx
 						μ[i] = x[i] - Φinvx*σ[i]

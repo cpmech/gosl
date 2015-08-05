@@ -23,18 +23,20 @@ func StdInvPhi(x float64) float64 {
 
 // DistNormal implements the normal distribution
 type DistNormal struct {
+
+	// input
 	Mu  float64 // μ: mean
 	Sig float64 // σ: std deviation
 
 	// auxiliary
-	vari2 float64 // 2 * σ²: 2 times variance
-	den   float64 // σ * sqrt(2 * π)
+	a float64 // 1 / (σ sqrt(2 π))
+	b float64 // -1 / (2 σ²)
 }
 
 // CalcDerived compute derived/auxiliary quantities
 func (o *DistNormal) CalcDerived() {
-	o.vari2 = 2.0 * o.Sig * o.Sig
-	o.den = o.Sig * math.Sqrt2 * math.SqrtPi
+	o.a = 1.0 / (o.Sig * math.Sqrt2 * math.SqrtPi)
+	o.b = -1.0 / (2.0 * o.Sig * o.Sig)
 }
 
 // Init initialises normal distribution
@@ -45,7 +47,7 @@ func (o *DistNormal) Init(μ, σ float64) {
 
 // Pdf computes the probability density function @ x
 func (o DistNormal) Pdf(x float64) float64 {
-	return math.Exp(-math.Pow(x-o.Mu, 2.0)/o.vari2) / o.den
+	return o.a * math.Exp(o.b*math.Pow(x-o.Mu, 2.0))
 }
 
 // Cdf computes the cumulative probability function @ x

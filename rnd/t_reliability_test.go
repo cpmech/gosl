@@ -68,5 +68,5 @@ func Test_reliab01(tst *testing.T) {
 	verbose := chk.Verbose // show messages
 	βtrial := 3.0
 	β, _, _, _ := form.Run(βtrial, verbose)
-	chk.Scalar(tst, "β", 1e-4, β, 3.8754)
+	chk.Scalar(tst, "β", 0.0015, β, 3.8754)
 }
