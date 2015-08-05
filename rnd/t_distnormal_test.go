@@ -16,7 +16,7 @@ import (
 func plot_normal(μ, σ float64) {
 
 	var dist DistNormal
-	dist.Init(μ, σ)
+	dist.Init(&VarData{M: μ, S: σ})
 
 	n := 101
 	x := utl.LinSpace(-2, 2, n)
@@ -47,8 +47,9 @@ func Test_norm01(tst *testing.T) {
 	cdf_μ0_σ05 := []float64{3.1671241833119924e-05, 1.3498980316300946e-03, 2.2750131948179212e-02, 1.5865525393145705e-01, 5.0000000000000000e-01, 8.4134474606854293e-01, 9.7724986805182079e-01, 9.9865010196836990e-01, 9.9996832875816688e-01}
 	cdf_μ1_σ05 := []float64{9.8658764503769809e-10, 2.8665157187919391e-07, 3.1671241833119924e-05, 1.3498980316300946e-03, 2.2750131948179212e-02, 1.5865525393145705e-01, 5.0000000000000000e-01, 8.4134474606854293e-01, 9.7724986805182079e-01}
 
+	dat := VarData{M: 0, S: 0.5}
 	var dist DistNormal
-	dist.Init(0, 0.5)
+	dist.Init(&dat)
 	n := len(X)
 	x := make([]float64, n)
 	for i := 0; i < n; i++ {
@@ -56,19 +57,25 @@ func Test_norm01(tst *testing.T) {
 	}
 	chk.Vector(tst, "pdf: μ=0 σ=0.50", 1e-15, x, pdf_μ0_σ05)
 
-	dist.Init(1, 0.5)
+	dat.M = 1
+	dat.S = 0.5
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=1 σ=0.50", 1e-15, x, pdf_μ1_σ05)
 
-	dist.Init(0, 0.5)
+	dat.M = 0
+	dat.S = 0.5
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=0 σ=0.50", 1e-15, x, cdf_μ0_σ05)
 
-	dist.Init(1, 0.5)
+	dat.M = 1
+	dat.S = 0.5
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Cdf(X[i])
 	}

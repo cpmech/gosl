@@ -33,6 +33,11 @@ type DistNormal struct {
 	b float64 // -1 / (2 σ²)
 }
 
+// set factory
+func init() {
+	distallocators["nrm"] = func() Distribution { return new(DistNormal) }
+}
+
 // CalcDerived compute derived/auxiliary quantities
 func (o *DistNormal) CalcDerived() {
 	o.a = 1.0 / (o.Sig * math.Sqrt2 * math.SqrtPi)
@@ -40,9 +45,10 @@ func (o *DistNormal) CalcDerived() {
 }
 
 // Init initialises normal distribution
-func (o *DistNormal) Init(μ, σ float64) {
-	o.Mu, o.Sig = μ, σ
+func (o *DistNormal) Init(p *VarData) error {
+	o.Mu, o.Sig = p.M, p.S
 	o.CalcDerived()
+	return nil
 }
 
 // Pdf computes the probability density function @ x

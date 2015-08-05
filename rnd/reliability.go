@@ -195,6 +195,8 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 	}
 
 	// iterations to find β
+	var dat VarData
+	dat.Std = true
 	B := []float64{β}
 	itB := 0
 	for itB = 0; itB < o.NmaxItB; itB++ {
@@ -225,8 +227,8 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 					if o.lrv[i] {
 
 						// set distribution
-						lnd.InitStd(o.μ[i], o.σ[i])
-						lnd.CalcDerived()
+						dat.M, dat.S = o.μ[i], o.σ[i]
+						lnd.Init(&dat)
 
 						// update μ and σ
 						fx := lnd.Pdf(x[i])

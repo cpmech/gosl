@@ -16,7 +16,7 @@ import (
 func plot_lognormal(μ, σ float64) {
 
 	var dist DistLogNormal
-	dist.Init(μ, σ)
+	dist.Init(&VarData{M: μ, S: σ})
 
 	n := 101
 	x := utl.LinSpace(0, 3, n)
@@ -55,8 +55,9 @@ func Test_lognorm01(tst *testing.T) {
 	cdf_μ1_σ05 := []float64{0.0000000000000000e+00, 9.0936473087462811e-07, 3.5421674466618914e-04, 5.0067301053332691e-03, 2.2750131948179212e-02, 6.0126457619697919e-02, 1.1720610376847471e-01, 1.8922158674265119e-01, 2.6970493073490953e-01, 3.5266345803129762e-01, 4.3352037059466092e-01, 5.0925535791422860e-01, 5.7817410080287324e-01}
 	cdf_μ1_σ1 := []float64{0.0000000000000000000, 0.0085095612560889284, 0.0452137277902241314, 0.0989283283290915555, 0.1586552539314570465, 0.2186217341859028884, 0.2760772061741955108, 0.3298294288332768165, 0.3794777011200848871, 0.4250190616904856444, 0.4666437940564928111, 0.5046279903528034794, 0.5392769436822993923}
 
+	dat := VarData{M: 0, S: 0.25}
 	var dist DistLogNormal
-	dist.Init(0, 0.25)
+	dist.Init(&dat)
 	n := len(X)
 	x := make([]float64, n)
 	for i := 0; i < n; i++ {
@@ -64,67 +65,89 @@ func Test_lognorm01(tst *testing.T) {
 	}
 	chk.Vector(tst, "pdf: μ=0 σ=0.25", 1e-15, x, pdf_μ0_σ025)
 
-	dist.Init(0, 0.5)
+	dat.M = 0
+	dat.S = 0.5
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=0 σ=0.50", 1e-15, x, pdf_μ0_σ05)
 
-	dist.Init(0, 1.0)
+	dat.M = 0
+	dat.S = 1
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=0 σ=1.00", 1e-15, x, pdf_μ0_σ1)
 
-	dist.Init(1, 0.25)
+	dat.M = 1
+	dat.S = 0.25
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=1 σ=0.25", 1e-15, x, pdf_μ1_σ025)
 
-	dist.Init(1, 0.5)
+	dat.M = 1
+	dat.S = 0.5
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=1 σ=0.50", 1e-15, x, pdf_μ1_σ05)
 
-	dist.Init(1, 1.0)
+	dat.M = 1
+	dat.S = 1
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Pdf(X[i])
 	}
 	chk.Vector(tst, "pdf: μ=1 σ=1.00", 1e-15, x, pdf_μ1_σ1)
 
-	dist.Init(0, 0.25)
+	dat.M = 0
+	dat.S = 0.25
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=0 σ=0.25", 1e-15, x, cdf_μ0_σ025)
 
-	dist.Init(0, 0.5)
+	dat.M = 0
+	dat.S = 0.5
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=0 σ=0.50", 1e-15, x, cdf_μ0_σ05)
 
-	dist.Init(0, 1)
+	dat.M = 0
+	dat.S = 1
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=0 σ=1.00", 1e-15, x, cdf_μ0_σ1)
 
-	dist.Init(1, 0.25)
+	dat.M = 1
+	dat.S = 0.25
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=1 σ=0.25", 1e-15, x, cdf_μ1_σ025)
 
-	dist.Init(1, 0.5)
+	dat.M = 1
+	dat.S = 0.5
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Cdf(X[i])
 	}
 	chk.Vector(tst, "cdf: μ=1 σ=0.50", 1e-15, x, cdf_μ1_σ05)
 
-	dist.Init(1, 1)
+	dat.M = 1
+	dat.S = 1
+	dist.Init(&dat)
 	for i := 0; i < n; i++ {
 		x[i] = dist.Cdf(X[i])
 	}
