@@ -14,13 +14,13 @@ type Distribution interface {
 }
 
 // factory
-var distallocators = make(map[string]func() Distribution)
+var distallocators = make(map[DistType]func() Distribution)
 
 // GetDistrib returns a distribution from factory
-func GetDistrib(name string) (d Distribution, err error) {
-	allocator, ok := distallocators[name]
+func GetDistrib(dtype DistType) (d Distribution, err error) {
+	allocator, ok := distallocators[dtype]
 	if !ok {
-		return nil, chk.Err("cannot find distribution named: %s", name)
+		return nil, chk.Err("cannot find distribution: %+v", dtype)
 	}
 	return allocator(), nil
 }

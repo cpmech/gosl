@@ -15,9 +15,13 @@ func Test_vars01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("vars01")
 
-	var vars Variables
-	vars.Data = []*VarData{
-		&VarData{D: "log", M: 120, S: 12, Std: true},
+	vars := Variables{
+		&VarData{D: D_Log, M: 120, S: 12, Std: true},
+		&VarData{D: D_Log, M: 120, S: 12, Std: true},
+		&VarData{D: D_Log, M: 120, S: 12, Std: true},
+		&VarData{D: D_Log, M: 120, S: 12, Std: true},
+		&VarData{D: D_Log, M: 50, S: 15, Std: true},
+		&VarData{D: D_Log, M: 40, S: 12, Std: true},
 	}
 	err := vars.Init()
 	if err != nil {

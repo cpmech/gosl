@@ -22,7 +22,7 @@ type DistLogNormal struct {
 
 // set factory
 func init() {
-	distallocators["log"] = func() Distribution { return new(DistLogNormal) }
+	distallocators[D_Log] = func() Distribution { return new(DistLogNormal) }
 }
 
 // CalcDerived computes derived/auxiliary quantities
@@ -39,6 +39,7 @@ func (o *DistLogNormal) Init(p *VarData) error {
 		δ := σ / μ
 		o.S = math.Sqrt(math.Log(1.0 + δ*δ))
 		o.M = math.Log(μ) - o.S*o.S/2.0
+		p.m, p.s = o.M, o.S
 	}
 	o.CalcDerived()
 	return nil
