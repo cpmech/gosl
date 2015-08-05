@@ -38,13 +38,14 @@ type VarData struct {
 }
 
 // CalcEquiv computes equivalent normal parameters at check/design point
-func (o *VarData) CalcEquiv(x float64) (μN, σN float64, err error) {
+func (o *VarData) CalcEquiv(x float64) (μN, σN float64, invalid bool) {
 	switch o.D {
 	case D_Normal:
-		return o.M, o.S, nil
+		return o.M, o.S, false
 	case D_Log:
 		if x < TOLMINLOG {
-			err = chk.Err("x must be ≥ 0 for lognormal distribution. %g is invalid", x)
+			//err = chk.Err("x must be ≥ 0 for lognormal distribution. %g is invalid", x)
+			invalid = true
 			return
 		}
 		σN = o.s * x
@@ -55,19 +56,19 @@ func (o *VarData) CalcEquiv(x float64) (μN, σN float64, err error) {
 	return
 }
 
-// Map maps x into a standard/normal space
-func (o *VarData) Map(x float64) (y float64, err error) {
-	μ, σ, err := o.CalcEquiv(x)
-	if err != nil {
+// Transform transform x into standard normal space
+func (o *VarData) Transform(x float64) (y float64, invalid bool) {
+	μ, σ, invalid := o.CalcEquiv(x)
+	if invalid {
 		return
 	}
 	y = (x - μ) / σ
 	return
 }
 
-// InvMap maps y from a standard/normal space back to x-space
-func (o *VarData) InvMap(y float64) (x float64, err error) {
-	chk.Panic("InvMap is not implemented yet")
+// InvTransform transform y from standard normal space into original space
+func (o *VarData) InvTransform(y float64) (x float64, invalid bool) {
+	chk.Panic("InvTransform is not implemented yet")
 	return
 }
 
@@ -85,6 +86,18 @@ func (o *Variables) Init() (err error) {
 		err = d.distr.Init(d)
 		if err != nil {
 			chk.Err("cannot initialise variables:\n%v", err)
+			return
+		}
+	}
+	return
+}
+
+// Transform transform all variables into standard normal space
+func (o *Variables) Transform(x []float64) (y []float64, invalid bool) {
+	y = make([]float64, len(x))
+	for i, d := range *o {
+		y[i], invalid = d.Transform(x[i])
+		if invalid {
 			return
 		}
 	}
