@@ -14,9 +14,9 @@ import (
 type DistType int
 
 const (
-	D_Normal DistType = iota + 1
+	D_Nrm DistType = iota + 1
 	D_Log
-	D_Beta
+	D_Bet
 	D_Gev
 )
 
@@ -42,7 +42,7 @@ type VarData struct {
 // CalcEquiv computes equivalent normal parameters at check/design point
 func (o *VarData) CalcEquiv(x float64) (μN, σN float64, invalid bool) {
 	switch o.D {
-	case D_Normal:
+	case D_Nrm:
 		return o.M, o.S, false
 	case D_Log:
 		if x < TOLMINLOG {
