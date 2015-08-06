@@ -8,7 +8,6 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 )
 
 // DistGev implements the generalised extreme value (GEV) distribution
@@ -47,7 +46,6 @@ func (o *DistGev) Init(p *VarData) (err error) {
 	o.S = σ * math.Sqrt(6.0) / math.Pi
 	o.M = μ - 0.5772*o.S
 	o.K = p.K
-	io.Pforan("μ=%v M=%v    σ=%v S=%v\n", μ, o.M, σ, o.S)
 	return
 }
 
