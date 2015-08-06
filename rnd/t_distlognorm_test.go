@@ -27,9 +27,11 @@ func plot_lognormal(μ, σ float64) {
 		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("label='$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
+	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
+	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=2")
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("label='$\\mu=%g,\\; \\sigma=%g$'", μ, σ))
+	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
+	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
 }
 
 func Test_lognorm01(tst *testing.T) {
@@ -100,10 +102,80 @@ func Test_lognorm02(tst *testing.T) {
 		for _, σ := range []float64{1, 0.5, 0.25} {
 			plot_lognormal(0, σ)
 		}
-		plt.Subplot(2, 1, 1)
-		plt.Gll("x", "f", "")
-		plt.Subplot(2, 1, 2)
-		plt.Gll("x", "F", "")
 		plt.SaveD("/tmp/gosl", "test_lognorm02.eps")
+	}
+}
+
+func Test_lognorm03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("lognorm03. Rackwitz-Fiessler conversion")
+
+	dat := &VarData{D: D_Log, M: 10, S: 2, Std: true}
+	var dist DistLogNormal
+	dist.Init(dat)
+	dat.distr = &dist
+
+	doplot := false
+	if doplot {
+		plt.SetForEps(1.5, 300)
+		n := 101
+		x := utl.LinSpace(5, 15, n)
+		y := make([]float64, n)
+		Y := make([]float64, n)
+		for i := 0; i < n; i++ {
+			y[i] = dist.Pdf(x[i])
+			Y[i] = dist.Cdf(x[i])
+		}
+		plt.Subplot(2, 1, 1)
+		plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$m=%.3f,\\;s=%.3f$'", dist.M, dist.S))
+		plt.Gll("$x$", "$f(x)$", "leg_out=0, leg_ncol=2")
+		plt.Subplot(2, 1, 2)
+		plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$m=%.3f,\\;s=%.3f$'", dist.M, dist.S))
+		plt.Gll("$x$", "$F(x)$", "leg_out=0, leg_ncol=2")
+		plt.SaveD("/tmp/gosl", "test_lognorm03.eps")
+	}
+
+	for i, x := range []float64{10, 20, 50} {
+
+		// Rackwitz-Fiessler
+		f := dist.Pdf(x)
+		F := dist.Cdf(x)
+		io.Pforan("\nx=%g  f(x)=%v  F(x)=%v\n", x, f, F)
+		var σNrf, μNrf float64
+		if F == 0 || F == 1 { // z = Φ⁻¹(F) → -∞ or +∞
+			chk.Panic("cannot compute equivalent normal parameters @ %g because F=%g", x, F)
+		} else {
+			z := StdInvPhi(F)
+			σNrf = Stdphi(z) / f
+			μNrf = x - σNrf*z
+			if μNrf < 0 {
+				μNrf = 0
+				σNrf = x / z
+			}
+		}
+
+		// analytical solution for lognormal distribution
+		μN, σN, invalid := dat.CalcEquiv(x)
+		if invalid {
+			tst.Errorf("CalcEquiv failed\n")
+			return
+		}
+
+		// check
+		tol := 1e-10
+		if i > 0 {
+			tol = 1e-6
+		}
+		err := chk.PrintAnaNum("μN", tol, μN, μNrf, chk.Verbose)
+		if err != nil {
+			tst.Errorf("μN values are different: %v\n", err)
+			//return
+		}
+		err = chk.PrintAnaNum("σN", tol, σN, σNrf, chk.Verbose)
+		if err != nil {
+			tst.Errorf("σN values are different: %v\n", err)
+			//return
+		}
 	}
 }

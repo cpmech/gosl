@@ -8,13 +8,14 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // DistType indicates the distribution to which a random variable appears to belong to
 type DistType int
 
 const (
-	D_Normal DistType = iota
+	D_Normal DistType = iota + 1
 	D_Log
 	D_Beta
 	D_Gev
@@ -52,8 +53,32 @@ func (o *VarData) CalcEquiv(x float64) (μN, σN float64, invalid bool) {
 		}
 		σN = o.s * x
 		μN = (1.0 - math.Log(x) + o.m) * x
+		if μN < 0 { // TODO: check this
+			F := o.distr.Cdf(x)
+			z := StdInvPhi(F)
+			μN = 0
+			σN = x / z
+		}
+	case D_Gev:
+		// using algorithm from:
+		//  Rackwitz R, Fiessler B. An algorithm for calculation of structural reliability
+		//  under combined loading. Berichte zur Sicherheitstheorie der Bauwerke,
+		//  Lab. f. Konstr. Ingb. Munich, Germany; 1977
+		F := o.distr.Cdf(x)
+		if F == 0 || F == 1 { // z = Φ⁻¹(F) → -∞ or +∞
+			chk.Panic("cannot compute equivalent normal parameters @ %g because F=%g", x, F)
+		}
+		f := o.distr.Pdf(x)
+		z := StdInvPhi(F)
+		σN = Stdphi(z) / f
+		μN = x - σN*z
+		if μN < 0 { // TODO: check if this is neccessary for all GEVs
+			io.Pfred("warning: fixing μN and σN to avoid μN<0\n")
+			μN = 0
+			σN = x / z
+		}
 	default:
-		chk.Panic("cannot handle %+v distribution yet", o.D)
+		chk.Panic("cannot handle <%v> distribution yet", o.D)
 	}
 	return
 }

@@ -27,9 +27,11 @@ func plot_normal(μ, σ float64) {
 		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("label='$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
+	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
+	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=2")
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("label='$\\mu=%g,\\; \\sigma=%g$'", μ, σ))
+	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
+	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
 }
 
 func Test_norm01(tst *testing.T) {
@@ -100,10 +102,6 @@ func Test_norm02(tst *testing.T) {
 		for _, σ := range []float64{1, 0.5, 0.25} {
 			plot_normal(0, σ)
 		}
-		plt.Subplot(2, 1, 1)
-		plt.Gll("x", "f", "")
-		plt.Subplot(2, 1, 2)
-		plt.Gll("x", "F", "")
 		plt.SaveD("/tmp/gosl", "test_norm02.eps")
 	}
 }

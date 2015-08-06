@@ -28,8 +28,10 @@ func plot_gev(μ, σ, ξ float64) {
 	}
 	plt.Subplot(2, 1, 1)
 	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g,\\;\\xi=%g$'", μ, σ, ξ))
+	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=2")
 	plt.Subplot(2, 1, 2)
 	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g,\\;\\xi=%g$'", μ, σ, ξ))
+	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
 }
 
 func Test_gev01(tst *testing.T) {
@@ -105,10 +107,6 @@ func Test_gev02(tst *testing.T) {
 		for _, ξ := range []float64{0.5, -0.5, 0} {
 			plot_gev(0, 1, ξ)
 		}
-		plt.Subplot(2, 1, 1)
-		plt.Gll("$x$", "$f$", "leg_out=1, leg_ncol=2")
-		plt.Subplot(2, 1, 2)
-		plt.Gll("$x$", "$F$", "leg_out=1, leg_ncol=2")
 		plt.SaveD("/tmp/gosl", "test_gev02.eps")
 	}
 }
