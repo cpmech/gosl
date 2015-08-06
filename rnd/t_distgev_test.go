@@ -16,7 +16,7 @@ import (
 func plot_gev(μ, σ, ξ float64) {
 
 	var dist DistGev
-	dist.Init(&VarData{M: μ, S: σ, K: ξ})
+	dist.Init(&VarData{M: μ, S: σ, K: ξ, Pori: true})
 
 	n := 101
 	x := utl.LinSpace(-4, 4, n)
@@ -80,7 +80,7 @@ func Test_gev01(tst *testing.T) {
 
 	n := len(X)
 	for i := 0; i < n; i++ {
-		dist.Init(&VarData{M: Mu[i], S: Sig[i], K: Ksi[i]})
+		dist.Init(&VarData{M: Mu[i], S: Sig[i], K: Ksi[i], Pori: true})
 		Ypdf := dist.Pdf(X[i])
 		Ycdf := dist.Cdf(X[i])
 		err := chk.PrintAnaNum("ypdf", 1e-15, YpdfCmp[i], Ypdf, chk.Verbose)

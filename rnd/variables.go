@@ -24,15 +24,15 @@ const (
 type VarData struct {
 
 	// input
-	D     DistType // type of distribution: "nrm", "log", "beta"
-	M     float64  // mean-type parameter
-	S     float64  // deviation-type parameter
-	MSlog bool     // M and S parameters are m and s of log distribution and not μ and σ from standard (default)
-	K     float64  // shape parameter
-	A     float64  // lower limit
-	B     float64  // upper limit
-	Q     float64  // q-parameter (e.g. for Beta distribution)
-	R     float64  // r-parameter (e.g. for Beta distribution)
+	D    DistType // type of distribution: "nrm", "log", "beta"
+	M    float64  // mean-type parameter
+	S    float64  // deviation-type parameter
+	Pori bool     // parameters are original parameters, not μ and σ standard values
+	K    float64  // shape parameter
+	A    float64  // lower limit
+	B    float64  // upper limit
+	Q    float64  // q-parameter (e.g. for Beta distribution)
+	R    float64  // r-parameter (e.g. for Beta distribution)
 
 	// derived
 	distr Distribution // pointer to distribution

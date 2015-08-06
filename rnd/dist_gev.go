@@ -4,7 +4,12 @@
 
 package rnd
 
-import "math"
+import (
+	"math"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+)
 
 // DistGev implements the generalised extreme value (GEV) distribution
 //  Gumbel, Fréchet and Weibull families also known as type I, II and III
@@ -27,9 +32,23 @@ func init() {
 }
 
 // Init initialises lognormal distribution
-func (o *DistGev) Init(p *VarData) error {
-	o.M, o.S, o.K = p.M, p.S, p.K
-	return nil
+func (o *DistGev) Init(p *VarData) (err error) {
+	if p.Pori {
+		o.M, o.S, o.K = p.M, p.S, p.K
+		return
+	}
+	if p.K > 0 {
+		chk.Panic("initialisation with μ and σ and ξ > 0 is not implemented yet")
+	}
+	if p.K < 0 {
+		chk.Panic("initialisation with μ and σ and ξ < 0 is not implemented yet")
+	}
+	μ, σ := p.M, p.S
+	o.S = σ * math.Sqrt(6.0) / math.Pi
+	o.M = μ - 0.5772*o.S
+	o.K = p.K
+	io.Pforan("μ=%v M=%v    σ=%v S=%v\n", μ, o.M, σ, o.S)
+	return
 }
 
 // Pdf computes the probability density function @ x

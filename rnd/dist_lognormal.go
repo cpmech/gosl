@@ -36,7 +36,7 @@ func (o *DistLogNormal) CalcDerived() {
 //        otherwise, p.M and p.S are μ and σ standard parameters and
 //        hence m and s are computed from μ and σ
 func (o *DistLogNormal) Init(p *VarData) error {
-	if p.MSlog {
+	if p.Pori {
 		o.M, o.S = p.M, p.S
 		p.m, p.s = o.M, o.S
 		o.CalcDerived()
