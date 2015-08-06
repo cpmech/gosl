@@ -8,7 +8,6 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 )
 
 // DistType indicates the distribution to which a random variable appears to belong to
@@ -65,15 +64,18 @@ func (o *VarData) CalcEquiv(x float64) (μN, σN float64, invalid bool) {
 		//  under combined loading. Berichte zur Sicherheitstheorie der Bauwerke,
 		//  Lab. f. Konstr. Ingb. Munich, Germany; 1977
 		F := o.distr.Cdf(x)
-		if F == 0 || F == 1 { // z = Φ⁻¹(F) → -∞ or +∞
-			chk.Panic("cannot compute equivalent normal parameters @ %g because F=%g", x, F)
+		if F == 0 || F == 1 { // z = Φ⁻¹(F) → -∞ or +∞   TODO: check this
+			//io.Pfred("cannot compute equivalent normal parameters @ %g because F=%g", x, F)
+			μN = 0
+			σN = o.S
+			return
 		}
 		f := o.distr.Pdf(x)
 		z := StdInvPhi(F)
 		σN = Stdphi(z) / f
 		μN = x - σN*z
 		if μN < 0 { // TODO: check if this is neccessary for all GEVs
-			io.Pfred("warning: fixing μN and σN to avoid μN<0\n")
+			//io.Pfred("warning: fixing μN and σN to avoid μN<0\n")
 			μN = 0
 			σN = x / z
 		}
