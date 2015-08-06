@@ -52,8 +52,15 @@ func (o *VarData) CalcEquiv(x float64) (μN, σN float64, invalid bool) {
 		}
 		σN = o.s * x
 		μN = (1.0 - math.Log(x) + o.m) * x
+		//io.Pforan("s=%v m=%v σN=%v μN=%v\n", o.s, o.m, σN, μN)
 		if μN < 0 { // TODO: check this
 			F := o.distr.Cdf(x)
+			if F == 0 || F == 1 { // z = Φ⁻¹(F) → -∞ or +∞   TODO: check this
+				//io.Pfred("cannot compute equivalent normal parameters @ %g because F=%g", x, F)
+				μN = 0
+				σN = o.S
+				return
+			}
 			z := StdInvPhi(F)
 			μN = 0
 			σN = x / z
