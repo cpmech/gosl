@@ -17,6 +17,7 @@ const (
 	D_Normal DistType = iota
 	D_Log
 	D_Beta
+	D_Gev
 )
 
 // VarData implements data defining one random variable
@@ -26,6 +27,7 @@ type VarData struct {
 	D   DistType // type of distribution: "nrm", "log", "beta"
 	M   float64  // mean-type parameter
 	S   float64  // deviation-type parameter
+	K   float64  // shape parameter
 	Std bool     // mean and deviation are standard values; e.g μ and σ instead of m and s
 	A   float64  // lower limit
 	B   float64  // upper limit
