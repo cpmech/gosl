@@ -37,49 +37,56 @@ func Test_norm01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("norm01")
 
-	// values from R language: dnorm and pnorm functions. Example:
-	//  options(digits=17)
-	//  X = seq(-2, 2, 0.5)
-	//  dlnorm(X, 0, 0.25)
-	X := []float64{-2.0, -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5, 2.0}
-	pdf_μ0_σ05 := []float64{0.00026766045152977074, 0.00886369682387601505, 0.10798193302637612567, 0.48394144903828673066, 0.79788456080286540573, 0.48394144903828673066, 0.10798193302637612567, 0.00886369682387601505, 0.00026766045152977074}
-	pdf_μ1_σ05 := []float64{1.2151765699646572e-08, 2.9734390294685954e-06, 2.6766045152977074e-04, 8.8636968238760151e-03, 1.0798193302637613e-01, 4.8394144903828673e-01, 7.9788456080286541e-01, 4.8394144903828673e-01, 1.0798193302637613e-01}
-	cdf_μ0_σ05 := []float64{3.1671241833119924e-05, 1.3498980316300946e-03, 2.2750131948179212e-02, 1.5865525393145705e-01, 5.0000000000000000e-01, 8.4134474606854293e-01, 9.7724986805182079e-01, 9.9865010196836990e-01, 9.9996832875816688e-01}
-	cdf_μ1_σ05 := []float64{9.8658764503769809e-10, 2.8665157187919391e-07, 3.1671241833119924e-05, 1.3498980316300946e-03, 2.2750131948179212e-02, 1.5865525393145705e-01, 5.0000000000000000e-01, 8.4134474606854293e-01, 9.7724986805182079e-01}
+	_, dat, err := io.ReadTable("data/normal.dat")
+	if err != nil {
+		tst.Errorf("cannot read comparison results:\n%v\n", err)
+		return
+	}
 
-	dat := VarData{M: 0, S: 0.5}
+	X, ok := dat["x"]
+	if !ok {
+		tst.Errorf("cannot get x values\n")
+		return
+	}
+	Mu, ok := dat["mu"]
+	if !ok {
+		tst.Errorf("cannot get mu values\n")
+		return
+	}
+	Sig, ok := dat["sig"]
+	if !ok {
+		tst.Errorf("cannot get sig values\n")
+		return
+	}
+	YpdfCmp, ok := dat["ypdf"]
+	if !ok {
+		tst.Errorf("cannot get ypdf values\n")
+		return
+	}
+	YcdfCmp, ok := dat["ycdf"]
+	if !ok {
+		tst.Errorf("cannot get ycdf values\n")
+		return
+	}
+
 	var dist DistNormal
-	dist.Init(&dat)
+
 	n := len(X)
-	x := make([]float64, n)
 	for i := 0; i < n; i++ {
-		x[i] = dist.Pdf(X[i])
+		dist.Init(&VarData{M: Mu[i], S: Sig[i]})
+		Ypdf := dist.Pdf(X[i])
+		Ycdf := dist.Cdf(X[i])
+		err := chk.PrintAnaNum("ypdf", 1e-15, YpdfCmp[i], Ypdf, chk.Verbose)
+		if err != nil {
+			tst.Errorf("pdf failed: %v\n", err)
+			return
+		}
+		err = chk.PrintAnaNum("ycdf", 1e-15, YcdfCmp[i], Ycdf, chk.Verbose)
+		if err != nil {
+			tst.Errorf("cdf failed: %v\n", err)
+			return
+		}
 	}
-	chk.Vector(tst, "pdf: μ=0 σ=0.50", 1e-15, x, pdf_μ0_σ05)
-
-	dat.M = 1
-	dat.S = 0.5
-	dist.Init(&dat)
-	for i := 0; i < n; i++ {
-		x[i] = dist.Pdf(X[i])
-	}
-	chk.Vector(tst, "pdf: μ=1 σ=0.50", 1e-15, x, pdf_μ1_σ05)
-
-	dat.M = 0
-	dat.S = 0.5
-	dist.Init(&dat)
-	for i := 0; i < n; i++ {
-		x[i] = dist.Cdf(X[i])
-	}
-	chk.Vector(tst, "cdf: μ=0 σ=0.50", 1e-15, x, cdf_μ0_σ05)
-
-	dat.M = 1
-	dat.S = 0.5
-	dist.Init(&dat)
-	for i := 0; i < n; i++ {
-		x[i] = dist.Cdf(X[i])
-	}
-	chk.Vector(tst, "cdf: μ=1 σ=0.50", 1e-15, x, cdf_μ1_σ05)
 }
 
 func Test_norm02(tst *testing.T) {
