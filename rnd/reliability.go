@@ -196,7 +196,6 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 
 	// iterations to find β
 	var dat VarData
-	dat.Std = true
 	B := []float64{β}
 	itB := 0
 	for itB = 0; itB < o.NmaxItB; itB++ {

@@ -32,15 +32,21 @@ func (o *DistLogNormal) CalcDerived() {
 }
 
 // Init initialises lognormal distribution
+//  Note: if p.MSlog==true, M and S are parameters of lognormal distribution;
+//        otherwise, p.M and p.S are μ and σ standard parameters and
+//        hence m and s are computed from μ and σ
 func (o *DistLogNormal) Init(p *VarData) error {
-	o.M, o.S = p.M, p.S
-	if p.Std {
-		μ, σ := p.M, p.S
-		δ := σ / μ
-		o.S = math.Sqrt(math.Log(1.0 + δ*δ))
-		o.M = math.Log(μ) - o.S*o.S/2.0
+	if p.MSlog {
+		o.M, o.S = p.M, p.S
 		p.m, p.s = o.M, o.S
+		o.CalcDerived()
+		return nil
 	}
+	μ, σ := p.M, p.S
+	δ := σ / μ
+	o.S = math.Sqrt(math.Log(1.0 + δ*δ))
+	o.M = math.Log(μ) - o.S*o.S/2.0
+	p.m, p.s = o.M, o.S
 	o.CalcDerived()
 	return nil
 }

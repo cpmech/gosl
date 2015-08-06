@@ -16,12 +16,12 @@ func Test_vars01(tst *testing.T) {
 	chk.PrintTitle("vars01")
 
 	vars := Variables{
-		&VarData{D: D_Log, M: 120, S: 12, Std: true},
-		&VarData{D: D_Log, M: 120, S: 12, Std: true},
-		&VarData{D: D_Log, M: 120, S: 12, Std: true},
-		&VarData{D: D_Log, M: 120, S: 12, Std: true},
-		&VarData{D: D_Log, M: 50, S: 15, Std: true},
-		&VarData{D: D_Log, M: 40, S: 12, Std: true},
+		&VarData{D: D_Log, M: 120, S: 12},
+		&VarData{D: D_Log, M: 120, S: 12},
+		&VarData{D: D_Log, M: 120, S: 12},
+		&VarData{D: D_Log, M: 120, S: 12},
+		&VarData{D: D_Log, M: 50, S: 15},
+		&VarData{D: D_Log, M: 40, S: 12},
 	}
 	err := vars.Init()
 	if err != nil {

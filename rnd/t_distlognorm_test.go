@@ -16,7 +16,7 @@ import (
 func plot_lognormal(μ, σ float64) {
 
 	var dist DistLogNormal
-	dist.Init(&VarData{M: μ, S: σ})
+	dist.Init(&VarData{M: μ, S: σ, MSlog: true})
 
 	n := 101
 	x := utl.LinSpace(0, 3, n)
@@ -75,7 +75,7 @@ func Test_lognorm01(tst *testing.T) {
 
 	n := len(X)
 	for i := 0; i < n; i++ {
-		dist.Init(&VarData{M: Mu[i], S: Sig[i]})
+		dist.Init(&VarData{M: Mu[i], S: Sig[i], MSlog: true})
 		Ypdf := dist.Pdf(X[i])
 		Ycdf := dist.Cdf(X[i])
 		err := chk.PrintAnaNum("ypdf", 1e-14, YpdfCmp[i], Ypdf, chk.Verbose)
@@ -111,7 +111,7 @@ func Test_lognorm03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("lognorm03. Rackwitz-Fiessler conversion")
 
-	dat := &VarData{D: D_Log, M: 10, S: 2, Std: true}
+	dat := &VarData{D: D_Log, M: 10, S: 2}
 	var dist DistLogNormal
 	dist.Init(dat)
 	dat.distr = &dist
