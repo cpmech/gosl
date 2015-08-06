@@ -7,6 +7,14 @@ package rnd
 import "math"
 
 // DistGev implements the generalised extreme value (GEV) distribution
+//  Gumbel, Fréchet and Weibull families also known as type I, II and III
+//  extreme value distributions.
+//  The shape parameter ξ governs the tail behaviour of the distribution.
+//  The sub-families defined by ξ=0, ξ>0 and ξ<0 correspond, respectively,
+//  to the Gumbel (ξ=0), Fréchet (ξ>0) and Weibull (ξ<0) families. In summary:
+//   Type-I   == Gumbel:  ξ = 0
+//   Type-II  == Fréchet: ξ > 0
+//   Type-III == Weibull: ξ < 0
 type DistGev struct {
 	M float64 // location: μ
 	S float64 // scale: σ (or β in R-lang)
