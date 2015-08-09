@@ -40,7 +40,7 @@ func Atob(val string) (bres bool) {
 	}
 	res, err := strconv.Atoi(val)
 	if err != nil {
-		chk.Panic("utl.Atob: cannot parse string representing integer: %s", val)
+		chk.Panic("cannot parse string representing integer: %s", val)
 	}
 	if res != 0 {
 		bres = true
@@ -52,7 +52,7 @@ func Atob(val string) (bres bool) {
 func Atoi(val string) (res int) {
 	res, err := strconv.Atoi(val)
 	if err != nil {
-		chk.Panic("utl.Atoi: cannot parse string representing integer number: %s", val)
+		chk.Panic("cannot parse string representing integer number: %s", val)
 	}
 	return
 }
@@ -61,7 +61,7 @@ func Atoi(val string) (res int) {
 func Atof(val string) (res float64) {
 	res, err := strconv.ParseFloat(val, 64)
 	if err != nil {
-		chk.Panic("utl.Atof: cannot parse string representing float number: %s", val)
+		chk.Panic("cannot parse string representing float number: %s", val)
 	}
 	return
 }
@@ -389,7 +389,7 @@ func PfWhite(msg string, prm ...interface{}) {
 // UnColor removes console characters used to show colors
 func UnColor(msg string) string {
 	if len(msg) < 7 {
-		chk.Panic("utl.UnColor: string must have at least 7 characters (colored)")
+		chk.Panic("string must have at least 7 characters (colored)")
 	}
 	return strings.Trim(msg, "")[6:]
 }

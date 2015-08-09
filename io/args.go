@@ -127,17 +127,17 @@ func ArgsTable(data ...interface{}) (table string) {
 	strfmt := Sf("%%%dv  %%%dv   %%%dv\n", sizes[0]+1, sizes[1]+1, sizes[2]+1)
 	n := sizes[0] + sizes[1] + sizes[2] + 3 + 5
 	m := (n - 15) / 2
-	table += printSpaces(m)
+	table += StrSpaces(m)
 	table += "INPUT ARGUMENTS\n"
-	table += printThickLine(n)
+	table += StrThickLine(n)
 	table += Sf(strfmt, "description", "key", "value")
-	table += printThinLine(n)
+	table += StrThinLine(n)
 	for i := 0; i < nlines; i++ {
 		dsc := data[i*3]
 		key := data[i*3+1]
 		val := data[i*3+2]
 		table += Sf(strfmt, dsc, key, val)
 	}
-	table += printThickLine(n)
+	table += StrThickLine(n)
 	return
 }

@@ -4,6 +4,9 @@
 
 package io
 
+// the following auxiliary functions cannot be in utl;
+// otherwise there will be cyclic referencing
+
 func imin(a, b int) int {
 	if a < b {
 		return a
@@ -30,25 +33,4 @@ func max(a, b float64) float64 {
 		return a
 	}
 	return b
-}
-
-func printThickLine(n int) (l string) {
-	for i := 0; i < n; i++ {
-		l += "="
-	}
-	return l + "\n"
-}
-
-func printThinLine(n int) (l string) {
-	for i := 0; i < n; i++ {
-		l += "-"
-	}
-	return l + "\n"
-}
-
-func printSpaces(n int) (l string) {
-	for i := 0; i < n; i++ {
-		l += " "
-	}
-	return
 }
