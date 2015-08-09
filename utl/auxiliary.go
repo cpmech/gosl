@@ -27,3 +27,35 @@ func BestSquare(size int) (nrow, ncol int) {
 	}
 	return
 }
+
+// Imin returns the minimum between two integers
+func Imin(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// Imin returns the maximum between two integers
+func Imax(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// Min returns the minimum between two float point numbers
+func Min(a, b float64) float64 {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// Max returns the maximum between two float point numbers
+func Max(a, b float64) float64 {
+	if a > b {
+		return a
+	}
+	return b
+}

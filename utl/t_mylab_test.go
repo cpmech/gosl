@@ -102,7 +102,7 @@ func Test_mylab02(tst *testing.T) {
 func Test_mylab03a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mylab03a")
+	chk.PrintTitle("mylab03a. ints: min and max. dbls: min and max")
 
 	A := []int{1, 2, 3, -1, -2, 0, 8, -3}
 	mi, ma := IntMinMax(A)
@@ -115,12 +115,25 @@ func Test_mylab03a(tst *testing.T) {
 	if ma != 8 {
 		chk.Panic("max(A) failed")
 	}
+
+	if Imin(-1, 2) != -1 {
+		chk.Panic("Imin(-1,2) failed")
+	}
+	if Imax(-1, 2) != 2 {
+		chk.Panic("Imax(-1,2) failed")
+	}
+	if Min(-1, 2) != -1.0 {
+		chk.Panic("Min(-1,2) failed")
+	}
+	if Max(-1, 2) != 2.0 {
+		chk.Panic("Max(-1,2) failed")
+	}
 }
 
 func Test_mylab03b(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mylab03b")
+	chk.PrintTitle("mylab03b. ints: neg out and dbls min and max")
 
 	a := []int{1, 2, 3, -1, -2, 0, 8, -3}
 	b := IntFilter(a, func(i int) bool {
