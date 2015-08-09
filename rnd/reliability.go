@@ -151,7 +151,7 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 
 	// message
 	if verbose {
-		io.Pf("\n%s", utl.PrintThickLine(60))
+		io.Pf("\n%s", io.StrThickLine(60))
 	}
 
 	// plotting
@@ -206,7 +206,7 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 			if err != nil {
 				chk.Panic("cannot compute gfcn(%v):\n%v", x, err)
 			}
-			io.Pf("%s itB=%d β=%g g=%g\n", utl.PrintThinLine(60), itB, β, gx)
+			io.Pf("%s itB=%d β=%g g=%g\n", io.StrThinLine(60), itB, β, gx)
 		}
 
 		// plot
