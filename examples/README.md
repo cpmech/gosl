@@ -6,7 +6,7 @@
 3.  **vtk_isosurf01** -- Visualisatioin of iso-surface using VTK.
 
 
-# 1 la_umfpack01 -- Linear Algebra -- Umfpack01
+# 1 la_umfpack01 &ndash; Linear Algebra: Umfpack01
 
 A small linear system is solved with [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html). The sparse matrix representation is initialised with a triplet.
 
@@ -25,7 +25,7 @@ x = 0.9999999999999998 2 3 4 4.999999999999998
 ```
 
 
-# 2 num_deriv01 -- Numerical -- differentiation
+# 2 num_deriv01 &ndash; Numerical: differentiation
 
 Numerical differentiation is employed to check that the implementation of derivatives of the sin function is corrected.
 
@@ -65,7 +65,7 @@ d²y/dx² @ 6.283185   2.449293598294703e-16                       0   2.4492935
 
 
 
-# 3 vtk_isosurf01 -- VTK -- visualising iso-surfaces
+# 3 vtk_isosurf01 &ndash; VTK: visualising iso-surfaces
 
 Two iso-surfaces are added to the 3D scene using VTK. One is a cone and the other an ellipsoid.
 
