@@ -10,7 +10,7 @@
 
 A small linear system is solved with [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html). The sparse matrix representation is initialised with a triplet.
 
-Source code: <a href="la_umfpackex01.go">la_umfpack01.go</a>
+Source code: <a href="la_umfpack01.go">la_umfpack01.go</a>
 
 Output:
 ```
