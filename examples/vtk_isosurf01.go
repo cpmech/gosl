@@ -76,5 +76,7 @@ func main() {
 	sph.AddTo(scn)
 
 	// start interactive mode
+	scn.SaveOnExit = true
+	scn.Fnk = "/tmp/gosl/vtk_isosurf01"
 	scn.Run()
 }

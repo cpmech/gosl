@@ -46,7 +46,7 @@ func main() {
 		chk.PrintAnaNum(io.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2_ana, d2ydx2_num, true)
 	}
 
-	// generate 101 points
+	// generate 101 points for plotting
 	X = utl.LinSpace(0, 2*math.Pi, 101)
 	Y := make([]float64, len(X))
 	for i, x := range X {
@@ -54,7 +54,8 @@ func main() {
 	}
 
 	// plot
-	plt.Plot(X, Y, "'b.-'")
+	plt.SetForPng(0.75, 300, 150)
+	plt.Plot(X, Y, "'b.-', clip_on=0, markevery=10, label='y(x)=sin(x)'")
 	plt.Gll("x", "y", "")
-	plt.Show()
+	plt.SaveD("/tmp/gosl", "num_deriv01.png")
 }
