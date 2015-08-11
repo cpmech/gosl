@@ -9,6 +9,10 @@ geometry functions, utilities for making better use of Go (golang), and more.
 Unless otherwise noted, the Gosl source files are distributed
 under the BSD-style license found in the LICENSE file.
 
+## Examples
+
+See examples here: https://github.com/cpmech/gosl/blob/master/examples/README.md
+
 ## Installation and documentation
 
 http://cpmech.github.io/gosl
