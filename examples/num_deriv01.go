@@ -25,6 +25,7 @@ func main() {
 
 	// run test for 11 points
 	X := utl.LinSpace(0, 2*math.Pi, 11)
+	io.Pf("          %8s %23s %23s %23s\n", "x", "analytical", "numerical", "error")
 	for _, x := range X {
 
 		// analytical derivatives
