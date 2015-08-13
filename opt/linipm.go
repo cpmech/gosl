@@ -9,11 +9,12 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
 
-// LinIPM implements the interior-point mehtods for linear programming problems
+// LinIpm implements the interior-point mehtods for linear programming problems
 //  Solve:
 //          min cᵀx   s.t.   Aᵀx = b, x ≥ 0
 //           x
@@ -22,132 +23,176 @@ import (
 //
 //          max bᵀλ   s.t.   Aᵀλ + s = c, s ≥ 0
 //           λ
-type LinIPM struct {
-	A      *la.Triplet // [nλ][nx]
-	b      []float64   // [nλ]
-	c      []float64   // [nx]
-	R      []float64   // residual
-	y      []float64   // auxiliary vector: y := [x, λ, s]
-	mdy    []float64   // -Δy
-	J      *la.Triplet // [ny][ny] Jacobian matrix
-	nx     int         // number of x
-	nλ     int         // number of λ
-	ny     int         // number of y == nx + ns + nλ == 2*nx + nλ
-	ix, jx int         // start and end+1 in R corresponding to rx
-	il, jl int         // start and end+1 in R corresponding to rl
-	is, js int         // start and end+1 in R corresponding to rs
-	x      []float64   // subset of y
-	λ      []float64   // subset of y
-	s      []float64   // subset of y
-	rx     []float64   // subset of y
-	rλ     []float64   // subset of y
-	rs     []float64   // subset of y
-	NmaxIt int         // max number of iterations
+type LinIpm struct {
+
+	// problem
+	A *la.Triplet // [Nl][nx]
+	B []float64   // [Nl]
+	C []float64   // [nx]
+
+	// constants
+	NmaxIt int // max number of iterations
+
+	// dimensions
+	Nx int // number of x
+	Nl int // number of λ
+	Ny int // number of y = nx + ns + nl = 2 * nx + nl
+
+	// solution vector
+	Y   []float64 // y := [x, λ, s]
+	X   []float64 // subset of y
+	L   []float64 // subset of y
+	S   []float64 // subset of y
+	Mdy []float64 // -Δy
+
+	// affine solution
+	R  []float64   // residual
+	Rx []float64   // subset of R
+	Rl []float64   // subset of R
+	Rs []float64   // subset of R
+	J  *la.Triplet // [ny][ny] Jacobian matrix
+
+	// linear solver
+	Lis la.LinSol // linear solver
 }
 
-func (o *LinIPM) Init(A *la.Triplet, b, c []float64) {
-	o.A, o.b, o.c = A, b, c
-	o.nx = len(o.c)
-	o.nλ = len(o.b)
-	o.ny = 2*o.nx + o.nλ
-	o.R = make([]float64, o.ny)
-	o.y = make([]float64, o.ny)
-	o.mdy = make([]float64, o.ny)
-	o.ix, o.jx = 0, o.nx
-	o.il, o.jl = o.nx, o.nx+o.nλ
-	o.is, o.js = o.nx+o.nλ, o.ny
-	o.J = new(la.Triplet)
-	nnz := 2*o.nλ*o.nx + 3*o.nx
-	o.J.Init(o.ny, o.ny, nnz)
-	o.x = o.y[o.ix:o.jx]
-	o.λ = o.y[o.il:o.jl]
-	o.s = o.y[o.is:o.js]
-	o.rx = o.R[o.ix:o.jx]
-	o.rλ = o.R[o.il:o.jl]
-	o.rs = o.R[o.is:o.js]
+// Clean cleans allocated memory
+func (o *LinIpm) Clean() {
+	o.Lis.Clean()
+}
+
+// Init initialises LinIpm
+func (o *LinIpm) Init(A *la.Triplet, b, c []float64, prms fun.Prms) {
+
+	// problem
+	o.A, o.B, o.C = A, b, c
+
+	// constants
 	o.NmaxIt = 1
+	for _, p := range prms {
+		switch p.N {
+		case "nmaxit":
+			o.NmaxIt = int(p.V)
+		}
+	}
+
+	// dimensions
+	o.Nx = len(o.C)
+	o.Nl = len(o.B)
+	o.Ny = 2*o.Nx + o.Nl
+	ix, jx := 0, o.Nx
+	il, jl := o.Nx, o.Nx+o.Nl
+	is, js := o.Nx+o.Nl, o.Ny
+
+	// solution vector
+	o.Y = make([]float64, o.Ny)
+	o.X = o.Y[ix:jx]
+	o.L = o.Y[il:jl]
+	o.S = o.Y[is:js]
+	o.Mdy = make([]float64, o.Ny)
+
+	// affine solution
+	o.R = make([]float64, o.Ny)
+	o.Rx = o.R[ix:jx]
+	o.Rl = o.R[il:jl]
+	o.Rs = o.R[is:js]
+	o.J = new(la.Triplet)
+	nnz := 2*o.Nl*o.Nx + 3*o.Nx
+	o.J.Init(o.Ny, o.Ny, nnz)
+
+	// linear solver
+	o.Lis = la.GetSolver("umfpack")
 }
 
-func (o *LinIPM) Solve() (err error) {
+// Solve solves linear programming problem
+func (o *LinIpm) Solve() (err error) {
 
-	// allocate solver
-	lis := la.GetSolver("umfpack")
-	defer lis.Clean()
+	// constants for linear solver
 	symmetric := false
 	verbose := false
 	timing := false
 
+	// auxiliary
+	ix, jx := 0, o.Nx
+	is, js := o.Nx+o.Nl, o.Ny
+
+	// control variables
+	var μ, σ float64  // μ and σ
+	var xrmin float64 // min{ x_i / (-Δx_i) } (x_ratio_minimum)
+	var srmin float64 // min{ s_i / (-Δs_i) } (s_ratio_minimum)
+	var αpa float64   // α_prime_affine
+	var αda float64   // α_dual_affine
+	var μaff float64  // μ_affine
+
+	// perform iterations
 	it := 0
 	for it = 0; it < o.NmaxIt; it++ {
-		μ := o.CalcMu()
-		o.CalcJ()
+
+		// compute residual
+		la.SpTriMatTrVecMul(o.Rx, o.A, o.L) // rx := Aᵀλ
+		la.SpTriMatVecMul(o.Rl, o.A, o.X)   // rλ := A x
+		for i := 0; i < o.Nx; i++ {
+			o.Rx[i] += o.S[i] - o.C[i]
+			o.Rs[i] = o.X[i] * o.S[i]
+		}
+		for i := 0; i < o.Nl; i++ {
+			o.Rl[i] -= o.B[i]
+		}
+
+		// assemble Jacobian
+		o.J.Start()
+		o.J.PutMatAndMatT(o.A)
+		for i := 0; i < o.Nx; i++ {
+			o.J.Put(i, is+i, 1.0)
+			o.J.Put(is+i, i, o.S[i])
+			o.J.Put(is+i, is+i, o.X[i])
+		}
+
+		// solve linear system
 		if it == 0 {
-			err = lis.InitR(o.J, symmetric, verbose, timing)
+			err = o.Lis.InitR(o.J, symmetric, verbose, timing)
 			if err != nil {
 				return
 			}
 		}
-		err = lis.Fact()
+		err = o.Lis.Fact()
 		if err != nil {
 			return
 		}
-		err = lis.SolveR(o.mdy, o.R, false) // mdy := inv(J) * R
+		err = o.Lis.SolveR(o.Mdy, o.R, false) // mdy := inv(J) * R
 		if err != nil {
 			return
 		}
-		mdx := o.mdy[o.ix:o.jx] // -Δx
-		mds := o.mdy[o.is:o.js] // -Δy
-		xdivdx_min := 0.0
-		sdivds_min := 0.0
-		for i := 0; i < o.nx; i++ {
+
+		// control variables
+		mdx := o.Mdy[ix:jx] // -Δx
+		mds := o.Mdy[is:js] // -Δs
+		xrmin, srmin, μ = 0, 0, 0
+		for i := 0; i < o.Nx; i++ {
 			if mdx[i] > 0 {
-				xdivdx_min = min(xdivdx_min, o.x[i]/mdx[i])
+				xrmin = min(xrmin, o.X[i]/mdx[i])
 			}
 			if mds[i] > 0 {
-				sdivds_min = min(sdivds_min, o.s[i]/mds[i])
+				srmin = min(srmin, o.S[i]/mds[i])
 			}
+			μ += o.X[i] * o.S[i]
 		}
-		αpri := min(1, xdivdx_min)
-		αdua := min(1, sdivds_min)
-		μaff := 0.0
-		for i := 0; i < o.nx; i++ {
-			μaff += (o.x[i] - αpri*mdx[i]) * (o.s[i] - αdua*mds[i])
+		μ /= float64(o.Nx)
+
+		// compute σ
+		αpa = min(1, xrmin)
+		αda = min(1, srmin)
+		μaff = 0
+		for i := 0; i < o.Nx; i++ {
+			μaff += (o.X[i] - αpa*mdx[i]) * (o.S[i] - αda*mds[i])
 		}
-		σ := math.Pow(μaff/μ/float64(o.nx), 3.0)
+		σ = math.Pow(μaff/μ, 3)
 		io.Pforan("σ = %v\n", σ)
 	}
 
+	// check convergence
 	if it == o.NmaxIt {
 		err = chk.Err("iterations dit not converge")
 	}
 	return
-}
-
-func (o *LinIPM) CalcR(y []float64) {
-	la.SpTriMatTrVecMul(o.rx, o.A, o.λ) // rx := Aᵀλ
-	la.SpTriMatVecMul(o.rλ, o.A, o.x)   // rλ := A x
-	for i := 0; i < o.nx; i++ {
-		o.rx[i] += o.s[i] - o.c[i]
-		o.rs[i] = o.x[i] * o.s[i]
-	}
-	for i := 0; i < o.nλ; i++ {
-		o.rλ[i] -= o.b[i]
-	}
-}
-
-func (o *LinIPM) CalcMu() (μ float64) {
-	for i := 0; i < o.nx; i++ {
-		μ += o.x[i] * o.s[i]
-	}
-	return μ / float64(o.nx)
-}
-
-func (o *LinIPM) CalcJ() {
-	o.J.Start()
-	o.J.PutMatAndMatT(o.A)
-	for i := 0; i < o.nx; i++ {
-		o.J.Put(i, o.is+i, 1)
-		o.J.Put(o.is+i, i, o.s[i])
-		o.J.Put(o.is+i, o.is+i, o.x[i])
-	}
 }
