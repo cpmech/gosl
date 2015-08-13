@@ -491,7 +491,7 @@ func TestSparseLA09(tst *testing.T) {
 
 func TestSparseLA10(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("TestSparse LA10: SpTriMatTrVecMul")
 
 	var a Triplet
