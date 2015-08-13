@@ -240,7 +240,7 @@ func SpTriSetDiag(a *Triplet, n int, v float64) {
 //  b2c maps 'k' in 'b' to 'k' in 'c': len(b2c) = b.nnz
 func SpAllocMatAddMat(a, b *CCMatrix) (c *CCMatrix, a2c, b2c []int) {
 	if a.m != b.m || a.n != b.n {
-		chk.Panic(_sparsela_err1, a.m, a.n, b.m, b.n)
+		chk.Panic("matrices 'a' (%dx%d) and 'b' (%dx%d) must have the same dimensions", a.m, a.n, b.m, b.n)
 	}
 	// number of nonzeros in 'c'
 	var i, j, k, nnz int
@@ -370,12 +370,33 @@ func SpTriAddR2C(c *TripletC, α, β float64, a *Triplet, μ float64, b *Triplet
 	}
 }
 
+// SpTriMatVecMul returns the matrix-vector multiplication with matrix a in
+// triplet format and two dense vectors x and y
+//  y := a * x    or    y_i := a_ij * x_j
+func SpTriMatVecMul(y []float64, a *Triplet, x []float64) {
+	if len(y) != a.m {
+		chk.Panic("length of vector y must be equal to %d. y_(%d × 1). a_(%d × %d)", a.m, len(y), a.m, a.n)
+	}
+	if len(x) != a.n {
+		chk.Panic("length of vector x must be equal to %d. x_(%d × 1). a_(%d × %d)", a.n, len(x), a.m, a.n)
+	}
+	for i := 0; i < len(y); i++ {
+		y[i] = 0
+	}
+	for k := 0; k < a.pos; k++ {
+		y[a.i[k]] += a.x[k] * x[a.j[k]]
+	}
+}
+
 // SpTriMatTrVecMul returns the matrix-vector multiplication with transposed matrix a in
 // triplet format and two dense vectors x and y
 //  y := transpose(a) * x    or    y_I := a_JI * x_J    or     y_j := a_ij * x_i
 func SpTriMatTrVecMul(y []float64, a *Triplet, x []float64) {
 	if len(y) != a.n {
-		chk.Panic(_sparsela_err2, a.n, len(y), a.m, a.n)
+		chk.Panic("length of vector y must be equal to %d. y_(%d × 1). a_(%d × %d)", a.n, len(y), a.m, a.n)
+	}
+	if len(x) != a.m {
+		chk.Panic("length of vector x must be equal to %d. x_(%d × 1). a_(%d × %d)", a.m, len(x), a.m, a.n)
 	}
 	for j := 0; j < len(y); j++ {
 		y[j] = 0
@@ -384,9 +405,3 @@ func SpTriMatTrVecMul(y []float64, a *Triplet, x []float64) {
 		y[a.j[k]] += a.x[k] * x[a.i[k]]
 	}
 }
-
-// error messages
-var (
-	_sparsela_err1 = "sparsela.go: SpMatAddMat: matrices 'a' (%dx%d) and 'b' (%dx%d) must have the same dimensions"
-	_sparsela_err2 = "sparsela.go: SpTriMatTrVecMul: length of vector y must be equal to %d. y_%dx1. a_%dx%d"
-)

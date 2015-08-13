@@ -491,7 +491,7 @@ func TestSparseLA09(tst *testing.T) {
 
 func TestSparseLA10(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("TestSparse LA10: SpTriMatTrVecMul")
 
 	var a Triplet
@@ -512,9 +512,17 @@ func TestSparseLA10(tst *testing.T) {
 	a.Put(2, 3, 4.0)
 	a.Put(2, 4, 50.0)
 
+	PrintMat("A", a.ToMatrix(nil).ToDense(), "%10f", true)
+
 	x := []float64{0.5, 0.4, 0.3}
 	y := make([]float64, 5)
 	SpTriMatTrVecMul(y, &a, x) // y := transpose(a) * x
-
+	io.Pforan("y = %v\n", y)
 	chk.Vector(tst, "y=Tr(a)*x", 1e-17, y, []float64{8.4, 18.6, 25.2, 37.2, 42})
+
+	u := []float64{8.4, 18.6, 25.2, 37.2, 42}
+	z := make([]float64, 3)
+	SpTriMatVecMul(z, &a, u)
+	io.Pfcyan("z = %v\n", z)
+	chk.Vector(tst, "z=a*u", 1e-17, z, []float64{4800, 2154, 3126})
 }
