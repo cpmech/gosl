@@ -26,9 +26,9 @@ import (
 type LinIpm struct {
 
 	// problem
-	A *la.Triplet // [Nl][nx]
-	B []float64   // [Nl]
-	C []float64   // [nx]
+	A *la.CCMatrix // [Nl][nx]
+	B []float64    // [Nl]
+	C []float64    // [nx]
 
 	// constants
 	NmaxIt int     // max number of iterations
@@ -66,7 +66,7 @@ func (o *LinIpm) Clean() {
 }
 
 // Init initialises LinIpm
-func (o *LinIpm) Init(A *la.Triplet, b, c []float64, prms fun.Prms) {
+func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms fun.Prms) {
 
 	// problem
 	o.A, o.B, o.C = A, b, c
@@ -116,28 +116,20 @@ func (o *LinIpm) Init(A *la.Triplet, b, c []float64, prms fun.Prms) {
 func (o *LinIpm) Solve(verbose bool) (err error) {
 
 	// starting point
-	Am := o.A.ToMatrix(nil)
-	AAt := la.MatAlloc(o.Nl, o.Nl)
-	la.SpMatMatTrMul(AAt, 1, Am)
-	Ad := Am.ToDense()
-	d := make([]float64, o.Nl)        // d := inv(AAt) * b
-	e := make([]float64, o.Nl)        // e := A * c
-	la.MatVecMul(e, 1, Ad, o.C)       // e := A * c
-	la.SPDsolve2(d, o.L, AAt, o.B, e) // d := inv(AAt) * b  and  L := inv(AAt) * e
-	var xmin, smin float64
-	for i := 0; i < o.Nx; i++ {
-		o.X[i], o.S[i] = 0, o.C[i]
-		for j := 0; j < o.Nl; j++ {
-			o.X[i] += Ad[j][i] * d[j]
-			o.S[i] -= Ad[j][i] * o.L[j]
-		}
-		if i == 0 {
-			xmin = o.X[i]
-			smin = o.S[i]
-		} else {
-			xmin = min(xmin, o.X[i])
-			smin = min(smin, o.S[i])
-		}
+	AAt := la.MatAlloc(o.Nl, o.Nl)         // A*Aᵀ
+	d := make([]float64, o.Nl)             // inv(AAt) * b
+	e := make([]float64, o.Nl)             // A * c
+	la.SpMatMatTrMul(AAt, 1, o.A)          // AAt := A*Aᵀ
+	la.SpMatVecMul(e, 1, o.A, o.C)         // e := A * c
+	la.SPDsolve2(d, o.L, AAt, o.B, e)      // d := inv(AAt) * b  and  L := inv(AAt) * e
+	la.SpMatTrVecMul(o.X, 1, o.A, d)       // x := Aᵀ * d
+	la.VecCopy(o.S, 1, o.C)                // s := c
+	la.SpMatTrVecMulAdd(o.S, -1, o.A, o.L) // s -= Aᵀλ
+	xmin := o.X[0]
+	smin := o.S[0]
+	for i := 1; i < o.Nx; i++ {
+		xmin = min(xmin, o.X[i])
+		smin = min(smin, o.S[i])
 	}
 	δx := max(-1.5*xmin, 0)
 	δs := max(-1.5*smin, 0)
@@ -182,8 +174,8 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 	for it = 0; it < o.NmaxIt; it++ {
 
 		// compute residual
-		la.SpTriMatTrVecMul(o.Rx, o.A, o.L) // rx := Aᵀλ
-		la.SpTriMatVecMul(o.Rl, o.A, o.X)   // rλ := A x
+		la.SpMatTrVecMul(o.Rx, 1, o.A, o.L) // rx := Aᵀλ
+		la.SpMatVecMul(o.Rl, 1, o.A, o.X)   // rλ := A x
 		ctx, btl, μ = 0, 0, 0
 		for i := 0; i < o.Nx; i++ {
 			o.Rx[i] += o.S[i] - o.C[i]
@@ -209,7 +201,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 
 		// assemble Jacobian
 		o.J.Start()
-		o.J.PutMatAndMatT(o.A)
+		o.J.PutCCMatAndMatT(o.A)
 		for i := 0; i < o.Nx; i++ {
 			o.J.Put(i, I+i, 1.0)
 			o.J.Put(I+i, i, o.S[i])
@@ -298,23 +290,3 @@ func (o *LinIpm) calc_min_ratios() (xrmin, srmin float64) {
 	}
 	return
 }
-
-/*
-la.PrintMat("AAt", AAt, "%10g", false)
-io.Pforan("x = %v\n", o.X)
-io.Pforan("λ = %v\n", o.L)
-io.Pforan("s = %v\n", o.S)
-io.Pfcyan("xmin = %v\n", xmin)
-io.Pfcyan("smin = %v\n", smin)
-io.Pfpink("δx = %v\n", δx)
-io.Pfpink("δs = %v\n", δs)
-io.Pforan("\nY  = %v\n", o.Y)
-io.Pforan("X  = %v\n", o.X)
-io.Pforan("L  = %v\n", o.L)
-io.Pforan("S  = %v\n", o.S)
-io.Pfcyan("R  = %v\n", o.R)
-io.Pfcyan("Rx = %v\n", o.Rx)
-io.Pfcyan("Rl = %v\n", o.Rl)
-io.Pfcyan("Rs = %v\n", o.Rs)
-la.PrintMat("J", o.J.ToMatrix(nil).ToDense(), "%8.3f", false)
-*/
