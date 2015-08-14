@@ -79,11 +79,13 @@ func Test_conv03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("conv03")
 
-	var K, A Triplet
+	var K, L, A Triplet
 	K.Init(6, 6, 36+2*6) // 2*6 == number of nonzeros in A
+	L.Init(6, 6, 36+2*6) // 2*6 == number of nonzeros in A
 	for i := 0; i < 6; i++ {
 		for j := 0; j < 6; j++ {
 			K.Put(i, j, 1000)
+			L.Put(i, j, 1000)
 		}
 	}
 	A.Init(2, 3, 6)
@@ -92,25 +94,33 @@ func Test_conv03(tst *testing.T) {
 			A.Put(i, j, float64(10*(i+1)+j+1))
 		}
 	}
-	Kd := K.ToMatrix(nil).ToDense()
-	Ad := A.ToMatrix(nil).ToDense()
+	Am := A.ToMatrix(nil)
+	Ad := Am.ToDense()
 	if chk.Verbose {
+		Kd := K.ToMatrix(nil).ToDense()
+		Ld := L.ToMatrix(nil).ToDense()
 		PrintMat("K", Kd, "%8g", false)
+		PrintMat("L", Ld, "%8g", false)
 		PrintMat("A", Ad, "%8g", false)
 	}
 	K.PutMatAndMatT(&A)
+	L.PutCCMatAndMatT(Am)
 	Kaug := K.ToMatrix(nil).ToDense()
+	Laug := L.ToMatrix(nil).ToDense()
 	if chk.Verbose {
 		PrintMat("K augmented", Kaug, "%8g", false)
+		PrintMat("L augmented", Laug, "%8g", false)
 	}
-	chk.Matrix(tst, "Kaug", 1.0e-17, Kaug, [][]float64{
+	Cor := [][]float64{
 		{1000, 1000, 1000, 1011, 1021, 1000},
 		{1000, 1000, 1000, 1012, 1022, 1000},
 		{1000, 1000, 1000, 1013, 1023, 1000},
 		{1011, 1012, 1013, 1000, 1000, 1000},
 		{1021, 1022, 1023, 1000, 1000, 1000},
 		{1000, 1000, 1000, 1000, 1000, 1000},
-	})
+	}
+	chk.Matrix(tst, "Kaug", 1.0e-17, Kaug, Cor)
+	chk.Matrix(tst, "Laug", 1.0e-17, Laug, Cor)
 }
 
 func Test_conv04(tst *testing.T) {

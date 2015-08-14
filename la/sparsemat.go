@@ -34,7 +34,7 @@ func (t *Triplet) Init(m, n, max int) {
 // Put inserts an element to a pre-allocated (with Init) triplet matrix
 func (t *Triplet) Put(i, j int, x float64) {
 	if t.pos >= t.max {
-		chk.Panic(_sparsemat_err1, t.pos, t.max)
+		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", t.pos, t.max)
 	}
 	t.i[t.pos], t.j[t.pos], t.x[t.pos] = i, j, x
 	t.pos++
@@ -50,11 +50,31 @@ func (t *Triplet) Put(i, j int, x float64) {
 //      [... ... ... ... ... ...] 5
 func (o *Triplet) PutMatAndMatT(a *Triplet) {
 	if a.n+a.m > o.m || a.n+a.m > o.n {
-		chk.Panic(_sparsemat_err3, a.m, a.n, o.m, o.n)
+		chk.Panic("cannot put larger matrix into sparse matrix.\nb := [[.. at] [a ..]] with len(a)=(%d,%d) and len(b)=(%d,%d)", a.m, a.n, o.m, o.n)
 	}
 	for k := 0; k < a.pos; k++ {
 		o.Put(a.n+a.i[k], a.j[k], a.x[k]) // puts a
 		o.Put(a.j[k], a.n+a.i[k], a.x[k]) // puts at
+	}
+}
+
+// PutCCMatAndMatT adds the content of a compressed-column matrix "a" and its transpose "at" to triplet "o"
+// ex:    0   1   2   3   4   5
+//      [... ... ... a00 a10 ...] 0
+//      [... ... ... a01 a11 ...] 1
+//      [... ... ... a02 a12 ...] 2      [. at  .]
+//      [a00 a01 a02 ... ... ...] 3  =>  [a  .  .]
+//      [a10 a11 a12 ... ... ...] 4      [.  .  .]
+//      [... ... ... ... ... ...] 5
+func (o *Triplet) PutCCMatAndMatT(a *CCMatrix) {
+	if a.n+a.m > o.m || a.n+a.m > o.n {
+		chk.Panic("cannot put larger matrix into sparse matrix.\nb := [[.. at] [a ..]] with len(a)=(%d,%d) and len(b)=(%d,%d)", a.m, a.n, o.m, o.n)
+	}
+	for j := 0; j < a.n; j++ {
+		for k := a.p[j]; k < a.p[j+1]; k++ {
+			o.Put(a.n+a.i[k], j, a.x[k]) // puts a
+			o.Put(j, a.n+a.i[k], a.x[k]) // puts at
+		}
 	}
 }
 
@@ -127,7 +147,7 @@ func (t *TripletC) Init(m, n, max int, xzmonolithic bool) {
 // Put inserts an element to a pre-allocated (with Init) triplet (complex) matrix
 func (t *TripletC) Put(i, j int, x, z float64) {
 	if t.pos >= t.max {
-		chk.Panic(_sparsemat_err2, t.pos, t.max)
+		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", t.pos, t.max)
 	}
 	t.i[t.pos], t.j[t.pos] = i, j
 	if t.xz != nil {
@@ -181,10 +201,3 @@ func (a *CCMatrixC) ToDense() [][]complex128 {
 	}
 	return r
 }
-
-// error messages
-var (
-	_sparsemat_err1 = "sparsemat.go: la.Triplet.Put: cannot put item because max number of items has been exceeded (pos = %d, max = %d)"
-	_sparsemat_err2 = "sparsemat.go: la.TripletC.Put: cannot put item because max number of items has been exceeded (pos = %d, max = %d)"
-	_sparsemat_err3 = "sparsemat.go: la.Triplet.PutMatAndMatT: cannot put larger matrix into sparse matrix.\nb := [[.. at] [a ..]] with len(a)=(%d,%d) and len(b)=(%d,%d)"
-)
