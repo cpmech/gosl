@@ -7,5 +7,5 @@ while true; do
     inotifywait -q -e modify $FILE
     echo
     echo
-    go test -test.run="linipm01"
+    go test -test.run="linipm02"
 done

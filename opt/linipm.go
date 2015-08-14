@@ -174,7 +174,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 
 	// message
 	if verbose {
-		io.Pf("%3s%12s\n", "it", "error")
+		io.Pf("%3s%16s%16s\n", "it", "f(x)", "error")
 	}
 
 	// perform iterations
@@ -200,7 +200,8 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 		// check convergence
 		lerr := math.Abs(ctx-btl) / (1.0 + math.Abs(ctx))
 		if verbose {
-			io.Pf("%3d%12.3e\n", it, lerr)
+			fx := la.VecDot(o.C, o.X)
+			io.Pf("%3d%16.8e%16.8e\n", it, fx, lerr)
 		}
 		if lerr < o.Tol {
 			break
