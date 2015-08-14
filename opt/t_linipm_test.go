@@ -10,8 +10,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_linipm01(tst *testing.T) {
@@ -62,39 +60,17 @@ func Test_linipm01(tst *testing.T) {
 
 	// plot
 	if true {
-		f := func(x []float64) float64 { return c[0]*x[0] + c[1]*x[1] }
-		g := func(x []float64) (res []float64) {
-			res = make([]float64, len(b))
-			la.MatVecMul(res, 1, Ad, x)
-			for i := 0; i < len(b); i++ {
-				res[i] -= b[i]
-			}
-			return
+		f := func(x []float64) float64 {
+			return c[0]*x[0] + c[1]*x[1]
+		}
+		g := func(x []float64, i int) float64 {
+			return Ad[i][0]*x[0] + Ad[i][1]*x[1] - b[i]
 		}
 		np := 41
-		vmin, vmax := -2.0, 2.0
-		xx, yy := utl.MeshGrid2D(vmin, vmax, vmin, vmax, np, np)
-		zz := la.MatAlloc(np, np)
-		nl := len(b)
-		ww := utl.Deep3alloc(nl, np, np)
-		for i := 0; i < np; i++ {
-			for j := 0; j < np; j++ {
-				xtmp := []float64{xx[i][j], yy[i][j]}
-				zz[i][j] = f(xtmp)
-				res := g(xtmp)
-				for k := 0; k < nl; k++ {
-					ww[k][i][j] = res[k]
-				}
-			}
-		}
-		plt.SetForEps(0.8, 300)
-		plt.Contour(xx, yy, zz, "")
-		for i := 0; i < nl; i++ {
-			plt.ContourSimple(xx, yy, ww[i], "zorder=5, levels=[0], colors=['yellow'], linewidths=[2], clip_on=0")
-		}
-		plt.PlotOne(x[0], x[1], "'r*',label='optimum', zorder=10")
-		plt.Gll("$x$", "$y$", "leg_out=1")
-		plt.Cross("clr='grey'")
-		plt.SaveD("/tmp/gosl", "test_linipm01.eps")
+		vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
+		PlotTwoVarsContour("/tmp/gosl", "test_linipm01", x, np, nil, true, vmin, vmax, f,
+			func(x []float64) float64 { return g(x, 0) },
+			func(x []float64) float64 { return g(x, 1) },
+		)
 	}
 }
