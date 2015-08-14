@@ -74,6 +74,22 @@ func (t *Triplet) Max() int {
 	return t.max
 }
 
+// Set sets column-compressed matrix directly
+func (o *CCMatrix) Set(m, n int, Ap, Ai []int, Ax []float64) {
+	if len(Ap)-1 != n {
+		chk.Panic("len(Ap) must be equal to n. %d != %d", len(Ap), n)
+	}
+	nnz := len(Ai)
+	if len(Ax) != nnz {
+		chk.Panic("len(Ax) must be equal to len(Ai) == nnz. %d != %d", len(Ax), nnz)
+	}
+	if Ap[n] != nnz {
+		chk.Panic("last item in Ap must be equal to nnz. %d != %d", Ap[n], nnz)
+	}
+	o.m, o.n, o.nnz = m, n, nnz
+	o.p, o.i, o.x = Ap, Ai, Ax
+}
+
 // TripletC is the equivalent to Triplet but with values stored as pairs of
 // float64 representing complex numbers
 type TripletC struct {

@@ -226,3 +226,27 @@ func Test_conv07(tst *testing.T) {
 	chk.Vector(tst, "r", 1e-17, R, r)
 	chk.Vector(tst, "c", 1e-17, C, c)
 }
+
+func Test_spset01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("spset01")
+
+	//          ↓     ↓        ↓           ↓  ↓     ↓
+	//          0  1  2  3  4  5  6  7  8  9 10 11 12
+	Ai := []int{0, 1, 0, 2, 4, 1, 2, 3, 4, 2, 1, 4}
+	Ax := []float64{2, 3, 3, -1, 4, 4, -3, 1, 2, 2, 6, 1}
+	Ap := []int{0, 2, 5, 9, 10, 12}
+	var A CCMatrix
+	A.Set(5, 5, Ap, Ai, Ax)
+	Ad := A.ToDense()
+	PrintMat("A", Ad, "%5g", false)
+
+	chk.Matrix(tst, "A", 1e-17, Ad, [][]float64{
+		{2, 3, 0, 0, 0},
+		{3, 0, 4, 0, 6},
+		{0, -1, -3, 2, 0},
+		{0, 0, 1, 0, 0},
+		{0, 4, 2, 0, 1},
+	})
+}
