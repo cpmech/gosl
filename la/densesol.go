@@ -64,6 +64,45 @@ func SPDsolve(x []float64, a [][]float64, b []float64) (err error) {
 	return
 }
 
+// SPDsolve2 (Symmetric/Positive-Definite) solves 2 small dense linear systems
+// A*x=b and A*X=C where the "a" matrix is symmetric and positive-definite
+// (and real, and, of course, square)
+//  x := inv(a) * b    and    X := inv(a) * B
+//  NOTE: this function uses Cholesky decomposition and should be used for small systems
+func SPDsolve2(x, X []float64, a [][]float64, b, B []float64) (err error) {
+	// Cholesky factorisation
+	n := len(a)
+	L := MatAlloc(n, n)
+	cerr := Cholesky(L, a)
+	if cerr != nil {
+		err = chk.Err(_densesol_err2, cerr.Error())
+		return
+	}
+	// solve L*y = b storing y in x
+	for i := 0; i < n; i++ {
+		bmsum := b[i]
+		Bmsum := B[i]
+		for k := 0; k < i; k++ {
+			bmsum -= L[i][k] * x[k]
+			Bmsum -= L[i][k] * X[k]
+		}
+		x[i] = bmsum / L[i][i]
+		X[i] = Bmsum / L[i][i]
+	}
+	// solve trans(L)*x = y with y==x
+	for i := n - 1; i >= 0; i-- {
+		bmsum := x[i]
+		Bmsum := X[i]
+		for k := i + 1; k < n; k++ {
+			bmsum -= L[k][i] * x[k]
+			Bmsum -= L[k][i] * X[k]
+		}
+		x[i] = bmsum / L[i][i]
+		X[i] = Bmsum / L[i][i]
+	}
+	return
+}
+
 // error messages
 var (
 	_densesol_err1 = "densesol.go: Cholesky factorization failed due to non positive-definite matrix"

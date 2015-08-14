@@ -94,3 +94,32 @@ func TestSPDsolve01(tst *testing.T) {
 		23.0 / 14.0,
 	})
 }
+
+func TestSPDsolve02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("TestSPDsolve 02")
+
+	a := [][]float64{
+		{2, 1, 1, 3, 2},
+		{1, 2, 2, 1, 1},
+		{1, 2, 9, 1, 5},
+		{3, 1, 1, 7, 1},
+		{2, 1, 5, 1, 8},
+	}
+	b := []float64{-2, 4, 3, -5, 1}
+	B := []float64{24, 29, 110, 12, 102}
+	x := make([]float64, 5)
+	X := make([]float64, 5)
+	SPDsolve2(x, X, a, b, B)
+	check_residR(tst, 1e-14, a, x, b)
+	check_residR(tst, 1e-14, a, X, B)
+	chk.Vector(tst, "x = inv(a) * b", 1e-13, x, []float64{
+		-629.0 / 98.0,
+		237.0 / 49.0,
+		-53.0 / 49.0,
+		62.0 / 49.0,
+		23.0 / 14.0,
+	})
+	chk.Vector(tst, "X = inv(a) * B", 1e-13, X, []float64{0, 4, 7, -1, 8})
+}
