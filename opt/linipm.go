@@ -31,7 +31,8 @@ type LinIpm struct {
 	C []float64   // [nx]
 
 	// constants
-	NmaxIt int // max number of iterations
+	NmaxIt int     // max number of iterations
+	Tol    float64 // tolerance ϵ for stopping iterations
 
 	// dimensions
 	Nx int // number of x
@@ -44,6 +45,9 @@ type LinIpm struct {
 	L   []float64 // subset of y
 	S   []float64 // subset of y
 	Mdy []float64 // -Δy
+	Mdx []float64 // subset of Mdy == -Δx
+	Mdl []float64 // subset of Mdy == -Δλ
+	Mds []float64 // subset of Mdy == -Δs
 
 	// affine solution
 	R  []float64   // residual
@@ -68,7 +72,8 @@ func (o *LinIpm) Init(A *la.Triplet, b, c []float64, prms fun.Prms) {
 	o.A, o.B, o.C = A, b, c
 
 	// constants
-	o.NmaxIt = 1
+	o.NmaxIt = 50
+	o.Tol = 1e-8
 	for _, p := range prms {
 		switch p.N {
 		case "nmaxit":
@@ -90,6 +95,9 @@ func (o *LinIpm) Init(A *la.Triplet, b, c []float64, prms fun.Prms) {
 	o.L = o.Y[il:jl]
 	o.S = o.Y[is:js]
 	o.Mdy = make([]float64, o.Ny)
+	o.Mdx = o.Mdy[ix:jx]
+	o.Mdl = o.Mdy[il:jl]
+	o.Mds = o.Mdy[is:js]
 
 	// affine solution
 	o.R = make([]float64, o.Ny)
@@ -105,24 +113,69 @@ func (o *LinIpm) Init(A *la.Triplet, b, c []float64, prms fun.Prms) {
 }
 
 // Solve solves linear programming problem
-func (o *LinIpm) Solve() (err error) {
+func (o *LinIpm) Solve(verbose bool) (err error) {
+
+	// starting point
+	Am := o.A.ToMatrix(nil)
+	AAt := la.MatAlloc(o.Nl, o.Nl)
+	la.SpMatMatTrMul(AAt, 1, Am)
+	Ad := Am.ToDense()
+	d := make([]float64, o.Nl)        // d := inv(AAt) * b
+	e := make([]float64, o.Nl)        // e := A * c
+	la.MatVecMul(e, 1, Ad, o.C)       // e := A * c
+	la.SPDsolve2(d, o.L, AAt, o.B, e) // d := inv(AAt) * b  and  L := inv(AAt) * e
+	var xmin, smin float64
+	for i := 0; i < o.Nx; i++ {
+		o.X[i], o.S[i] = 0, o.C[i]
+		for j := 0; j < o.Nl; j++ {
+			o.X[i] += Ad[j][i] * d[j]
+			o.S[i] -= Ad[j][i] * o.L[j]
+		}
+		if i == 0 {
+			xmin = o.X[i]
+			smin = o.S[i]
+		} else {
+			xmin = min(xmin, o.X[i])
+			smin = min(smin, o.S[i])
+		}
+	}
+	δx := max(-1.5*xmin, 0)
+	δs := max(-1.5*smin, 0)
+	var xdots, xsum, ssum float64
+	for i := 0; i < o.Nx; i++ {
+		o.X[i] += δx
+		o.S[i] += δs
+		xdots += o.X[i] * o.S[i]
+		xsum += o.X[i]
+		ssum += o.S[i]
+	}
+	δx = 0.5 * xdots / ssum
+	δs = 0.5 * xdots / xsum
+	for i := 0; i < o.Nx; i++ {
+		o.X[i] += δx
+		o.S[i] += δs
+	}
 
 	// constants for linear solver
 	symmetric := false
-	verbose := false
 	timing := false
 
 	// auxiliary
-	ix, jx := 0, o.Nx
-	is, js := o.Nx+o.Nl, o.Ny
+	I := o.Nx + o.Nl
 
 	// control variables
-	var μ, σ float64  // μ and σ
-	var xrmin float64 // min{ x_i / (-Δx_i) } (x_ratio_minimum)
-	var srmin float64 // min{ s_i / (-Δs_i) } (s_ratio_minimum)
-	var αpa float64   // α_prime_affine
-	var αda float64   // α_dual_affine
-	var μaff float64  // μ_affine
+	var μ, σ float64     // μ and σ
+	var xrmin float64    // min{ x_i / (-Δx_i) } (x_ratio_minimum)
+	var srmin float64    // min{ s_i / (-Δs_i) } (s_ratio_minimum)
+	var αpa float64      // α_prime_affine
+	var αda float64      // α_dual_affine
+	var μaff float64     // μ_affine
+	var ctx, btl float64 // cᵀx and bᵀl
+
+	// message
+	if verbose {
+		io.Pf("%3s%12s\n", "it", "error")
+	}
 
 	// perform iterations
 	it := 0
@@ -131,26 +184,40 @@ func (o *LinIpm) Solve() (err error) {
 		// compute residual
 		la.SpTriMatTrVecMul(o.Rx, o.A, o.L) // rx := Aᵀλ
 		la.SpTriMatVecMul(o.Rl, o.A, o.X)   // rλ := A x
+		ctx, btl, μ = 0, 0, 0
 		for i := 0; i < o.Nx; i++ {
 			o.Rx[i] += o.S[i] - o.C[i]
 			o.Rs[i] = o.X[i] * o.S[i]
+			ctx += o.C[i] * o.X[i]
+			μ += o.X[i] * o.S[i]
 		}
 		for i := 0; i < o.Nl; i++ {
 			o.Rl[i] -= o.B[i]
+			btl += o.B[i] * o.L[i]
+		}
+		μ /= float64(o.Nx)
+
+		// check convergence
+		lerr := math.Abs(ctx-btl) / (1.0 + math.Abs(ctx))
+		if verbose {
+			io.Pf("%3d%12.3e\n", it, lerr)
+		}
+		if lerr < o.Tol {
+			break
 		}
 
 		// assemble Jacobian
 		o.J.Start()
 		o.J.PutMatAndMatT(o.A)
 		for i := 0; i < o.Nx; i++ {
-			o.J.Put(i, is+i, 1.0)
-			o.J.Put(is+i, i, o.S[i])
-			o.J.Put(is+i, is+i, o.X[i])
+			o.J.Put(i, I+i, 1.0)
+			o.J.Put(I+i, i, o.S[i])
+			o.J.Put(I+i, I+i, o.X[i])
 		}
 
 		// solve linear system
 		if it == 0 {
-			err = o.Lis.InitR(o.J, symmetric, verbose, timing)
+			err = o.Lis.InitR(o.J, symmetric, false, timing)
 			if err != nil {
 				return
 			}
@@ -165,34 +232,88 @@ func (o *LinIpm) Solve() (err error) {
 		}
 
 		// control variables
-		mdx := o.Mdy[ix:jx] // -Δx
-		mds := o.Mdy[is:js] // -Δs
-		xrmin, srmin, μ = 0, 0, 0
-		for i := 0; i < o.Nx; i++ {
-			if mdx[i] > 0 {
-				xrmin = min(xrmin, o.X[i]/mdx[i])
-			}
-			if mds[i] > 0 {
-				srmin = min(srmin, o.S[i]/mds[i])
-			}
-			μ += o.X[i] * o.S[i]
-		}
-		μ /= float64(o.Nx)
-
-		// compute σ
+		xrmin, srmin = o.calc_min_ratios()
 		αpa = min(1, xrmin)
 		αda = min(1, srmin)
 		μaff = 0
 		for i := 0; i < o.Nx; i++ {
-			μaff += (o.X[i] - αpa*mdx[i]) * (o.S[i] - αda*mds[i])
+			μaff += (o.X[i] - αpa*o.Mdx[i]) * (o.S[i] - αda*o.Mds[i])
 		}
+		μaff /= float64(o.Nx)
 		σ = math.Pow(μaff/μ, 3)
-		io.Pforan("σ = %v\n", σ)
+
+		// update residual
+		for i := 0; i < o.Nx; i++ {
+			o.Rs[i] += o.Mdx[i]*o.Mds[i] - σ*μ
+		}
+
+		// solve linear system again
+		err = o.Lis.SolveR(o.Mdy, o.R, false) // mdy := inv(J) * R
+		if err != nil {
+			return
+		}
+
+		// step lengths
+		xrmin, srmin = o.calc_min_ratios()
+		αpa = min(1, 0.99*xrmin)
+		αda = min(1, 0.99*srmin)
+
+		// update
+		for i := 0; i < o.Nx; i++ {
+			o.X[i] -= αpa * o.Mdx[i]
+			o.S[i] -= αda * o.Mds[i]
+		}
+		for i := 0; i < o.Nl; i++ {
+			o.L[i] -= αda * o.Mdl[i]
+		}
 	}
 
 	// check convergence
 	if it == o.NmaxIt {
-		err = chk.Err("iterations dit not converge")
+		err = chk.Err("iterations did not converge")
 	}
 	return
 }
+
+func (o *LinIpm) calc_min_ratios() (xrmin, srmin float64) {
+	firstxrmin, firstsrmin := true, true
+	for i := 0; i < o.Nx; i++ {
+		if o.Mdx[i] > 0 {
+			if firstxrmin {
+				xrmin = o.X[i] / o.Mdx[i]
+				firstxrmin = false
+			} else {
+				xrmin = min(xrmin, o.X[i]/o.Mdx[i])
+			}
+		}
+		if o.Mds[i] > 0 {
+			if firstsrmin {
+				srmin = o.S[i] / o.Mds[i]
+				firstsrmin = false
+			} else {
+				srmin = min(srmin, o.S[i]/o.Mds[i])
+			}
+		}
+	}
+	return
+}
+
+/*
+la.PrintMat("AAt", AAt, "%10g", false)
+io.Pforan("x = %v\n", o.X)
+io.Pforan("λ = %v\n", o.L)
+io.Pforan("s = %v\n", o.S)
+io.Pfcyan("xmin = %v\n", xmin)
+io.Pfcyan("smin = %v\n", smin)
+io.Pfpink("δx = %v\n", δx)
+io.Pfpink("δs = %v\n", δs)
+io.Pforan("\nY  = %v\n", o.Y)
+io.Pforan("X  = %v\n", o.X)
+io.Pforan("L  = %v\n", o.L)
+io.Pforan("S  = %v\n", o.S)
+io.Pfcyan("R  = %v\n", o.R)
+io.Pfcyan("Rx = %v\n", o.Rx)
+io.Pfcyan("Rl = %v\n", o.Rl)
+io.Pfcyan("Rs = %v\n", o.Rs)
+la.PrintMat("J", o.J.ToMatrix(nil).ToDense(), "%8.3f", false)
+*/
