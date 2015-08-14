@@ -5,7 +5,9 @@
 package opt
 
 import (
+	"math"
 	"testing"
+	"time"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -170,4 +172,45 @@ func Test_linipm02(tst *testing.T) {
 			func(x []float64) float64 { return g(x, 1) },
 		)
 	}
+}
+
+func Test_linipm03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("linipm03")
+
+	t0 := time.Now()
+	defer func() { io.Pfblue2("\ntime elapsed = %v\n", time.Now().Sub(t0)) }()
+
+	// read LP
+	A, b, c, l, u := ReadLPfortran("data/afiro.dat")
+	//A, b, c, l, u := ReadLPfortran("data/adlittle.dat")
+	//A, b, c, l, u := ReadLPfortran("data/share1b.dat")
+
+	// check for unbounded variables
+	nx := len(c)
+	for i := 0; i < nx; i++ {
+		if math.Abs(l[i]) > 1e-15 {
+			chk.Panic("cannot handle l != 0 yet")
+		}
+		if math.Abs(u[i]-1e20) > 1e-15 {
+			chk.Panic("cannot handle u != ∞ yet")
+		}
+	}
+
+	// solve LP
+	var ipm LinIpm
+	defer ipm.Clean()
+	ipm.Init(A, b, c, nil)
+	err := ipm.Solve(chk.Verbose)
+	if err != nil {
+		tst.Errorf("ipm failed:\n%v", err)
+		return
+	}
+
+	// check
+	io.Pf("\n")
+	bres := make([]float64, len(b))
+	la.MatVecMul(bres, 1, A.ToDense(), ipm.X)
+	chk.Vector(tst, "A*x=b", 1e-13, bres, b)
 }
