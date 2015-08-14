@@ -7,6 +7,24 @@ package la
 import "github.com/cpmech/gosl/chk"
 
 // --------------------------------------------------------------------------------------------------
+// matrix-matrix ------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------
+
+// SpMatMatTrMul computes the multiplication of sparse matrix with itself transposed:
+//  b := α * a * aᵀ   b_iq = α * a_ij * a_qj
+/// Note: b is symmetric
+func SpMatMatTrMul(b [][]float64, α float64, a *CCMatrix) {
+	MatFill(b, 0)
+	for j := 0; j < a.n; j++ {
+		for k := a.p[j]; k < a.p[j+1]; k++ {
+			for l := a.p[j]; l < a.p[j+1]; l++ {
+				b[a.i[k]][a.i[l]] += α * a.x[k] * a.x[l]
+			}
+		}
+	}
+}
+
+// --------------------------------------------------------------------------------------------------
 // matrix-vector ------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------
 
@@ -341,6 +359,10 @@ func SpMatAddMatC(cC *CCMatrixC, cR *CCMatrix, α, β, γ float64, a *CCMatrix, 
 	}
 }
 
+// --------------------------------------------------------------------------------------------------
+// triplet-triplet ----------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------
+
 // SpTriAdd adds two matrices in Triplet format:
 //   c := α*a + β*b
 //   NOTE: the output 'c' triplet must be able to hold all nonzeros of 'a' and 'b'
@@ -356,7 +378,7 @@ func SpTriAdd(c *Triplet, α float64, a *Triplet, β float64, b *Triplet) {
 }
 
 // SpTriAddR2C adds two real matrices in Triplet format generating a complex triplet
-// accordint to:
+// according to:
 //   c := (α+βi)*a + μ*b
 //   NOTE: the output 'c' triplet must be able to hold all nonzeros of 'a' and 'b'
 //         actually the 'c' triplet is just expanded

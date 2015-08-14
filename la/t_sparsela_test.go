@@ -526,3 +526,70 @@ func TestSparseLA10(tst *testing.T) {
 	io.Pfcyan("z = %v\n", z)
 	chk.Vector(tst, "z=a*u", 1e-17, z, []float64{4800, 2154, 3126})
 }
+
+func TestSparseLA11(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("TestSparse LA11: SpMatMatTrMul")
+
+	var T1 Triplet
+	T1.Init(2, 3, 3)
+	T1.Put(0, 0, 1)
+	T1.Put(1, 1, 1)
+	T1.Put(1, 2, 1)
+
+	a1 := T1.ToMatrix(nil)
+	PrintMat("a1", a1.ToDense(), "%6g", false)
+
+	b1 := MatAlloc(a1.m, a1.m)
+	SpMatMatTrMul(b1, 1, a1)
+	PrintMat("b = a aᵀ", b1, "%6g", false)
+	chk.Matrix(tst, "b1", 1e-17, b1, [][]float64{{1, 0}, {0, 2}})
+
+	io.Pf("\n----------------------------------\n")
+	var T2 Triplet
+	T2.Init(3, 2, 6)
+	T2.Put(0, 0, 1)
+	T2.Put(0, 1, -1)
+	T2.Put(1, 0, 2)
+	T2.Put(1, 1, 3)
+	T2.Put(2, 0, -2)
+	T2.Put(2, 1, 4)
+
+	a2 := T2.ToMatrix(nil)
+	PrintMat("a2", a2.ToDense(), "%6g", false)
+
+	b2 := MatAlloc(a2.m, a2.m)
+	SpMatMatTrMul(b2, 1, a2)
+	PrintMat("b = a aᵀ", b2, "%6g", false)
+	chk.Matrix(tst, "b2", 1e-17, b2, [][]float64{{2, -1, -6}, {-1, 13, 8}, {-6, 8, 20}})
+
+	io.Pf("\n----------------------------------\n")
+	var T3 Triplet
+	T3.Init(4, 1, 3)
+	T3.Put(0, 0, 1)
+	T3.Put(1, 0, 2)
+	T3.Put(2, 0, -3)
+
+	a3 := T3.ToMatrix(nil)
+	PrintMat("a3", a3.ToDense(), "%6g", false)
+
+	b3 := MatAlloc(a3.m, a3.m)
+	SpMatMatTrMul(b3, 1, a3)
+	PrintMat("b = a aᵀ", b3, "%6g", false)
+	chk.Matrix(tst, "b3", 1e-17, b3, [][]float64{{1, 2, -3, 0}, {2, 4, -6, 0}, {-3, -6, 9, 0}, {0, 0, 0, 0}})
+
+	io.Pf("\n----------------------------------\n")
+	var T4 Triplet
+	T4.Init(1, 3, 2)
+	T4.Put(0, 0, 1)
+	T4.Put(0, 2, 2)
+
+	a4 := T4.ToMatrix(nil)
+	PrintMat("a4", a4.ToDense(), "%6g", false)
+
+	b4 := MatAlloc(a4.m, a4.m)
+	SpMatMatTrMul(b4, 1, a4)
+	PrintMat("b = a aᵀ", b4, "%6g", false)
+	chk.Matrix(tst, "b4", 1e-17, b4, [][]float64{{5}})
+}
