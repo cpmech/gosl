@@ -67,38 +67,6 @@ func Test_mylab01(tst *testing.T) {
 	chk.IntMat(tst, "Pc", Pc, P)
 }
 
-func Test_mylab02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("mylab02")
-
-	a := []string{"66", "644", "666", "653", "10", "0", "1", "1", "1"}
-	idx := StrIndexSmall(a, "666")
-	io.Pf("a = %v\n", a)
-	io.Pf("idx of '666' = %v\n", idx)
-	if idx != 2 {
-		tst.Errorf("idx is wrong")
-	}
-	idx = StrIndexSmall(a, "1")
-	io.Pf("idx of '1'   = %v\n", idx)
-	if idx != 6 {
-		tst.Errorf("idx is wrong")
-	}
-
-	b := []int{66, 644, 666, 653, 10, 0, 1, 1, 1}
-	idx = IntIndexSmall(b, 666)
-	io.Pf("b = %v\n", b)
-	io.Pf("idx of 666 = %v\n", idx)
-	if idx != 2 {
-		tst.Errorf("idx is wrong")
-	}
-	idx = IntIndexSmall(b, 1)
-	io.Pf("idx of 1   = %v\n", idx)
-	if idx != 6 {
-		tst.Errorf("idx is wrong")
-	}
-}
-
 func Test_mylab03a(tst *testing.T) {
 
 	//verbose()
