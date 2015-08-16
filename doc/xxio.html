@@ -75,7 +75,22 @@ parsing, handling files, directories, etc.
 				<dd><a href="#AppendToFile">func AppendToFile(fn string, buffer ...*bytes.Buffer)</a></dd>
 			
 				
-				<dd><a href="#Args0toFilename">func Args0toFilename(fnDefault, ext string, check bool) (filename, fnkey string)</a></dd>
+				<dd><a href="#ArgToBool">func ArgToBool(idxArg int, defaultValue bool) bool</a></dd>
+			
+				
+				<dd><a href="#ArgToFilename">func ArgToFilename(idxArg int, fnDefault, ext string, check bool) (filename, fnkey string)</a></dd>
+			
+				
+				<dd><a href="#ArgToFloat">func ArgToFloat(idxArg int, defaultValue float64) float64</a></dd>
+			
+				
+				<dd><a href="#ArgToInt">func ArgToInt(idxArg int, defaultValue int) int</a></dd>
+			
+				
+				<dd><a href="#ArgToString">func ArgToString(idxArg int, defaultValue string) string</a></dd>
+			
+				
+				<dd><a href="#ArgsTable">func ArgsTable(data ...interface{}) (table string)</a></dd>
 			
 				
 				<dd><a href="#Atob">func Atob(val string) (bres bool)</a></dd>
@@ -249,6 +264,15 @@ parsing, handling files, directories, etc.
 				<dd><a href="#SplitKeys4">func SplitKeys4(res string) (k0, k1, k2, k3 []string)</a></dd>
 			
 				
+				<dd><a href="#StrSpaces">func StrSpaces(n int) (l string)</a></dd>
+			
+				
+				<dd><a href="#StrThickLine">func StrThickLine(n int) (l string)</a></dd>
+			
+				
+				<dd><a href="#StrThinLine">func StrThinLine(n int) (l string)</a></dd>
+			
+				
 				<dd><a href="#UnColor">func UnColor(msg string) string</a></dd>
 			
 				
@@ -294,6 +318,8 @@ parsing, handling files, directories, etc.
 			
 				<a href="/src/github.com/cpmech/gosl/io/args.go">args.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/io/auxiliary.go">auxiliary.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/io/basic.go">basic.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/io/external.go">external.go</a>
@@ -301,6 +327,8 @@ parsing, handling files, directories, etc.
 				<a href="/src/github.com/cpmech/gosl/io/fileio.go">fileio.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/io/parsing.go">parsing.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/io/printing.go">printing.go</a>
 			
 			</span>
 			</p>
@@ -371,14 +399,31 @@ AppendToFile appends data to an existent (or new) file
 		
 			
 			
-			<h2 id="Args0toFilename">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=812:892#L16">Args0toFilename</a></h2>
-			<pre>func Args0toFilename(fnDefault, ext <a href="/pkg/builtin/#string">string</a>, check <a href="/pkg/builtin/#bool">bool</a>) (filename, fnkey <a href="/pkg/builtin/#string">string</a>)</pre>
+			<h2 id="ArgToBool">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=2177:2227#L69">ArgToBool</a></h2>
+			<pre>func ArgToBool(idxArg <a href="/pkg/builtin/#int">int</a>, defaultValue <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
-Args0toFilename parses the first argument as a filename
+ArgToBool parses an argument as a boolean value
 </p>
 <pre>Input:
+ idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+ defaultValue -- default value
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToFilename">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=885:975#L17">ArgToFilename</a></h2>
+			<pre>func ArgToFilename(idxArg <a href="/pkg/builtin/#int">int</a>, fnDefault, ext <a href="/pkg/builtin/#string">string</a>, check <a href="/pkg/builtin/#bool">bool</a>) (filename, fnkey <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+ArgToFilename parses an argument as a filename
+</p>
+<pre>Input:
+ idxArg    -- index of argument; e.g. 0==first, 1==second, etc.
  fnDefault -- default filename; can be &#34;&#34;
- ext       -- the file extension to be added
+ ext       -- the file extension to be added; e.g. &#34;.sim&#34;
  check     -- check for null filename
 Output:
  filename -- the filename with extension added
@@ -386,8 +431,74 @@ Output:
 Notes:
  The first first argument may be a file with extention or not.
 Examples:
- If the first argument is &#34;simulation.sim&#34; or &#34;simulation&#34; (with ext=&#34;sim&#34;)
+ If the first argument is &#34;simulation.sim&#34; or &#34;simulation&#34; (with ext=&#34;.sim&#34;)
  then the results are: filename=&#34;simulation.sim&#34; and fnkey=&#34;simulation&#34;
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToFloat">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=1471:1528#L41">ArgToFloat</a></h2>
+			<pre>func ArgToFloat(idxArg <a href="/pkg/builtin/#int">int</a>, defaultValue <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+ArgToFloat parses an argument as a float64 value
+</p>
+<pre>Input:
+ idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+ defaultValue -- default value
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToInt">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=1829:1876#L55">ArgToInt</a></h2>
+			<pre>func ArgToInt(idxArg <a href="/pkg/builtin/#int">int</a>, defaultValue <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+ArgToInt parses an argument as an integer value
+</p>
+<pre>Input:
+ idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+ defaultValue -- default value
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToString">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=2523:2579#L83">ArgToString</a></h2>
+			<pre>func ArgToString(idxArg <a href="/pkg/builtin/#int">int</a>, defaultValue <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+ArgToString parses an argument as a string
+</p>
+<pre>Input:
+ idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+ defaultValue -- default value
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgsTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=2931:2981#L99">ArgsTable</a></h2>
+			<pre>func ArgsTable(data ...interface{}) (table <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+ArgsTable prints a nice table with input arguments
+</p>
+<pre>Input: sets of THREE items in the following order:
+ description, key, value, ...
+ description, key, value, ...
+      ...
+ description, key, value, ...
 </pre>
 
 			
@@ -408,7 +519,7 @@ Atob converts string to bool
 		
 			
 			
-			<h2 id="Atof">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1242:1277#L51">Atof</a></h2>
+			<h2 id="Atof">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1222:1257#L51">Atof</a></h2>
 			<pre>func Atof(val <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atof converts string to float64
@@ -420,7 +531,7 @@ Atof converts string to float64
 		
 			
 			
-			<h2 id="Atoi">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1029:1060#L42">Atoi</a></h2>
+			<h2 id="Atoi">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1019:1050#L42">Atoi</a></h2>
 			<pre>func Atoi(val <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Atoi converts string to integer
@@ -432,7 +543,7 @@ Atoi converts string to integer
 		
 			
 			
-			<h2 id="Btoa">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1842:1869#L82">Btoa</a></h2>
+			<h2 id="Btoa">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1812:1839#L82">Btoa</a></h2>
 			<pre>func Btoa(flag <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 Btoa converts flag to string
@@ -447,7 +558,7 @@ Btoa converts flag to string
 		
 			
 			
-			<h2 id="Btoi">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1692:1716#L72">Btoi</a></h2>
+			<h2 id="Btoi">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1662:1686#L72">Btoi</a></h2>
 			<pre>func Btoi(flag <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 Btoi converts flag to interger
@@ -525,7 +636,7 @@ FnKey returns the file name key (without path and extension, if any)
 		
 			
 			
-			<h2 id="Itob">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1541:1564#L62">Itob</a></h2>
+			<h2 id="Itob">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1511:1534#L62">Itob</a></h2>
 			<pre>func Itob(val <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 Itob converts from integer to bool
@@ -642,7 +753,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pf">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2022:2061#L93">Pf</a></h2>
+			<h2 id="Pf">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1992:2031#L93">Pf</a></h2>
 			<pre>func Pf(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -651,7 +762,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfBlue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5985:6028#L344">PfBlue</a></h2>
+			<h2 id="PfBlue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5955:5998#L344">PfBlue</a></h2>
 			<pre>func PfBlue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -660,7 +771,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfCyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5294:5337#L300">PfCyan</a></h2>
+			<h2 id="PfCyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5264:5307#L300">PfCyan</a></h2>
 			<pre>func PfCyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -669,7 +780,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfGreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5811:5855#L333">PfGreen</a></h2>
+			<h2 id="PfGreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5781:5825#L333">PfGreen</a></h2>
 			<pre>func PfGreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -678,7 +789,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfMag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6158:6200#L355">PfMag</a></h2>
+			<h2 id="PfMag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6128:6170#L355">PfMag</a></h2>
 			<pre>func PfMag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -687,7 +798,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfRed">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5639:5681#L322">PfRed</a></h2>
+			<h2 id="PfRed">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5609:5651#L322">PfRed</a></h2>
 			<pre>func PfRed(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -696,7 +807,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfWhite">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6330:6374#L366">PfWhite</a></h2>
+			<h2 id="PfWhite">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6300:6344#L366">PfWhite</a></h2>
 			<pre>func PfWhite(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -705,7 +816,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="PfYel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5467:5509#L311">PfYel</a></h2>
+			<h2 id="PfYel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5437:5479#L311">PfYel</a></h2>
 			<pre>func PfYel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -714,7 +825,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfblue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2810:2853#L144">Pfblue</a></h2>
+			<h2 id="Pfblue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2780:2823#L144">Pfblue</a></h2>
 			<pre>func Pfblue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -723,7 +834,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfblue2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4744:4788#L265">Pfblue2</a></h2>
+			<h2 id="Pfblue2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4714:4758#L265">Pfblue2</a></h2>
 			<pre>func Pfblue2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -732,7 +843,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfcyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2119:2162#L100">Pfcyan</a></h2>
+			<h2 id="Pfcyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2089:2132#L100">Pfcyan</a></h2>
 			<pre>func Pfcyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -741,7 +852,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfcyan2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4038:4082#L221">Pfcyan2</a></h2>
+			<h2 id="Pfcyan2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4008:4052#L221">Pfcyan2</a></h2>
 			<pre>func Pfcyan2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -750,7 +861,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfdgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3505:3550#L188">Pfdgreen</a></h2>
+			<h2 id="Pfdgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3475:3520#L188">Pfdgreen</a></h2>
 			<pre>func Pfdgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -759,7 +870,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfdyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4215:4258#L232">Pfdyel</a></h2>
+			<h2 id="Pfdyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4185:4228#L232">Pfdyel</a></h2>
 			<pre>func Pfdyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -768,7 +879,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfdyel2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4391:4435#L243">Pfdyel2</a></h2>
+			<h2 id="Pfdyel2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4361:4405#L243">Pfdyel2</a></h2>
 			<pre>func Pfdyel2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -777,7 +888,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2636:2680#L133">Pfgreen</a></h2>
+			<h2 id="Pfgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2606:2650#L133">Pfgreen</a></h2>
 			<pre>func Pfgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -786,7 +897,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfgreen2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3683:3728#L199">Pfgreen2</a></h2>
+			<h2 id="Pfgreen2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3653:3698#L199">Pfgreen2</a></h2>
 			<pre>func Pfgreen2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -795,7 +906,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfgrey">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4568:4611#L254">Pfgrey</a></h2>
+			<h2 id="Pfgrey">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4538:4581#L254">Pfgrey</a></h2>
 			<pre>func Pfgrey(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -804,7 +915,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfgrey2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4921:4965#L276">Pfgrey2</a></h2>
+			<h2 id="Pfgrey2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4891:4935#L276">Pfgrey2</a></h2>
 			<pre>func Pfgrey2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -813,7 +924,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pflmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3155:3198#L166">Pflmag</a></h2>
+			<h2 id="Pflmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3125:3168#L166">Pflmag</a></h2>
 			<pre>func Pflmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -822,7 +933,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2983:3025#L155">Pfmag</a></h2>
+			<h2 id="Pfmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2953:2995#L155">Pfmag</a></h2>
 			<pre>func Pfmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -831,7 +942,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pforan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5098:5141#L287">Pforan</a></h2>
+			<h2 id="Pforan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5068:5111#L287">Pforan</a></h2>
 			<pre>func Pforan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -840,7 +951,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfpink">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3328:3371#L177">Pfpink</a></h2>
+			<h2 id="Pfpink">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3298:3341#L177">Pfpink</a></h2>
 			<pre>func Pfpink(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -849,7 +960,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfpurple">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3860:3905#L210">Pfpurple</a></h2>
+			<h2 id="Pfpurple">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3830:3875#L210">Pfpurple</a></h2>
 			<pre>func Pfpurple(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -858,7 +969,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfred">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2464:2506#L122">Pfred</a></h2>
+			<h2 id="Pfred">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2434:2476#L122">Pfred</a></h2>
 			<pre>func Pfred(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -867,7 +978,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pfyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2292:2334#L111">Pfyel</a></h2>
+			<h2 id="Pfyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2262:2304#L111">Pfyel</a></h2>
 			<pre>func Pfyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			
 			
@@ -1032,7 +1143,43 @@ SplitKeys4 splits a string with four sets of keys separated by comma
 		
 			
 			
-			<h2 id="UnColor">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6645:6676#L380">UnColor</a></h2>
+			<h2 id="StrSpaces">func <a href="https://github.com/cpmech/gosl/blob/master/io/printing.go?s=514:546#L14">StrSpaces</a></h2>
+			<pre>func StrSpaces(n <a href="/pkg/builtin/#int">int</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+StrSpaces returns a line with spaces
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StrThickLine">func <a href="https://github.com/cpmech/gosl/blob/master/io/printing.go?s=232:267#L1">StrThickLine</a></h2>
+			<pre>func StrThickLine(n <a href="/pkg/builtin/#int">int</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+StrThickLine returns a thick line (using &#39;=&#39;)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StrThinLine">func <a href="https://github.com/cpmech/gosl/blob/master/io/printing.go?s=377:411#L6">StrThinLine</a></h2>
+			<pre>func StrThinLine(n <a href="/pkg/builtin/#int">int</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+StrThinLine returns a thin line (using &#39;-&#39;)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="UnColor">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6615:6646#L380">UnColor</a></h2>
 			<pre>func UnColor(msg <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 UnColor removes console characters used to show colors

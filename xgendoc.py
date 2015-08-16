@@ -30,6 +30,7 @@ pkgs = [
     ("num", "A few numerical methods"),
     ("fun", "Functions such as y=f(t,x)"),
     ("ode", "Solvers for ordinary differential equations"),
+    ("opt", "Optimisation algorithms"),
     ("gm",  "Geometry routines"),
     ("rnd", "Random numbers generator"),
     ("tsr", "Tensor algebra and calculus"),

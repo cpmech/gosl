@@ -36,6 +36,8 @@
 			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
 			
 			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
 			</dl>
 		</div>
 		<!-- The package's Name is printed as title by the top-level template -->
@@ -61,17 +63,229 @@
 			<div id="manual-nav">
 			<dl>
 			
+				<dd><a href="#pkg-constants">Constants</a></dd>
 			
+			
+			
+				
+				<dd><a href="#BuildTextHist">func BuildTextHist(xmin, xmax float64, nstations int, values []float64, numfmt string, barlen int) string</a></dd>
+			
+				
+				<dd><a href="#DblShuffle">func DblShuffle(values []float64)</a></dd>
+			
+				
+				<dd><a href="#FlipCoin">func FlipCoin(p float64) bool</a></dd>
+			
+				
+				<dd><a href="#Float64">func Float64(low, high float64) float64</a></dd>
+			
+				
+				<dd><a href="#Float64s">func Float64s(values []float64, low, high float64)</a></dd>
 			
 				
 				<dd><a href="#Init">func Init(seed int)</a></dd>
 			
 				
-				<dd><a href="#IntRand">func IntRand(low, high int) int</a></dd>
+				<dd><a href="#Int">func Int(low, high int) int</a></dd>
 			
 				
-				<dd><a href="#TextHist">func TextHist(labels []string, freqs []int, barlen int) string</a></dd>
+				<dd><a href="#IntGetShuffled">func IntGetShuffled(values []int) (shuffled []int)</a></dd>
 			
+				
+				<dd><a href="#IntGetUnique">func IntGetUnique(values []int, n int) (selected []int)</a></dd>
+			
+				
+				<dd><a href="#IntGetUniqueN">func IntGetUniqueN(start, endp1, n int) (selected []int)</a></dd>
+			
+				
+				<dd><a href="#IntShuffle">func IntShuffle(values []int)</a></dd>
+			
+				
+				<dd><a href="#Ints">func Ints(values []int, low, high int)</a></dd>
+			
+				
+				<dd><a href="#MTfloat64">func MTfloat64(low, high float64) float64</a></dd>
+			
+				
+				<dd><a href="#MTfloat64s">func MTfloat64s(values []float64, low, high float64)</a></dd>
+			
+				
+				<dd><a href="#MTint">func MTint(low, high int) int</a></dd>
+			
+				
+				<dd><a href="#MTintShuffle">func MTintShuffle(v []int)</a></dd>
+			
+				
+				<dd><a href="#MTints">func MTints(values []int, low, high int)</a></dd>
+			
+				
+				<dd><a href="#StatAve">func StatAve(x []float64) (xave float64)</a></dd>
+			
+				
+				<dd><a href="#StatBasic">func StatBasic(x []float64, std bool) (xmin, xave, xmax, xdev float64)</a></dd>
+			
+				
+				<dd><a href="#StatDev">func StatDev(x []float64, std bool) (xdev float64)</a></dd>
+			
+				
+				<dd><a href="#StatDevFirst">func StatDevFirst(x []float64, xave float64, std bool) (xdev float64)</a></dd>
+			
+				
+				<dd><a href="#StatMoments">func StatMoments(x []float64) (sum, mean, adev, sdev, vari, skew, kurt float64, err error)</a></dd>
+			
+				
+				<dd><a href="#StatTable">func StatTable(x [][]float64, std, withZ bool) (y, z [][]float64)</a></dd>
+			
+				
+				<dd><a href="#StdInvPhi">func StdInvPhi(x float64) float64</a></dd>
+			
+				
+				<dd><a href="#StdPhi">func StdPhi(x float64) float64</a></dd>
+			
+				
+				<dd><a href="#Stdphi">func Stdphi(x float64) float64</a></dd>
+			
+				
+				<dd><a href="#TextHist">func TextHist(labels []string, counts []int, barlen int) string</a></dd>
+			
+				
+				<dd><a href="#UnitVectors">func UnitVectors(n int) (U [][]float64)</a></dd>
+			
+			
+				
+				<dd><a href="#DistGev">type DistGev</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistGev.Cdf">func (o DistGev) Cdf(x float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistGev.Init">func (o *DistGev) Init(p *VarData) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistGev.Pdf">func (o DistGev) Pdf(x float64) float64</a></dd>
+				
+			
+				
+				<dd><a href="#DistLogNormal">type DistLogNormal</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistLogNormal.CalcDerived">func (o *DistLogNormal) CalcDerived()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistLogNormal.Cdf">func (o DistLogNormal) Cdf(x float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistLogNormal.Init">func (o *DistLogNormal) Init(p *VarData) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistLogNormal.Pdf">func (o DistLogNormal) Pdf(x float64) float64</a></dd>
+				
+			
+				
+				<dd><a href="#DistNormal">type DistNormal</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistNormal.CalcDerived">func (o *DistNormal) CalcDerived()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistNormal.Cdf">func (o DistNormal) Cdf(x float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistNormal.Init">func (o *DistNormal) Init(p *VarData) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistNormal.Pdf">func (o DistNormal) Pdf(x float64) float64</a></dd>
+				
+			
+				
+				<dd><a href="#DistType">type DistType</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Distribution">type Distribution</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#GetDistrib">func GetDistrib(dtype DistType) (d Distribution, err error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Histogram">type Histogram</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Histogram.Count">func (o *Histogram) Count(vals []float64, clear bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Histogram.FindBin">func (o Histogram) FindBin(x float64) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Histogram.GenLabels">func (o Histogram) GenLabels(numfmt string) (labels []string)</a></dd>
+				
+			
+				
+				<dd><a href="#IntHistogram">type IntHistogram</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#IntHistogram.Count">func (o *IntHistogram) Count(vals []int, clear bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#IntHistogram.FindBin">func (o IntHistogram) FindBin(x int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#IntHistogram.GenLabels">func (o IntHistogram) GenLabels(numfmt string) (labels []string)</a></dd>
+				
+			
+				
+				<dd><a href="#ReliabFORM">type ReliabFORM</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ReliabFORM.Init">func (o *ReliabFORM) Init(μ, σ []float64, lrv []bool, gfcn ReliabGfcn_t, hfcn ReliabHfcn_t)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#ReliabFORM.Run">func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β float64, μ, σ, x []float64)</a></dd>
+				
+			
+				
+				<dd><a href="#ReliabGfcn_t">type ReliabGfcn_t</a></dd>
+				
+				
+			
+				
+				<dd><a href="#ReliabHfcn_t">type ReliabHfcn_t</a></dd>
+				
+				
+			
+				
+				<dd><a href="#VarData">type VarData</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#VarData.CalcEquiv">func (o *VarData) CalcEquiv(x float64) (μN, σN float64, invalid bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#VarData.InvTransform">func (o *VarData) InvTransform(y float64) (x float64, invalid bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#VarData.Transform">func (o *VarData) Transform(x float64) (y float64, invalid bool)</a></dd>
+				
+			
+				
+				<dd><a href="#Variables">type Variables</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Variables.Init">func (o *Variables) Init() (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Variables.Transform">func (o *Variables) Transform(x []float64) (y []float64, invalid bool)</a></dd>
+				
 			
 			
 			</dl>
@@ -86,9 +300,27 @@
 			
 				<a href="/src/github.com/cpmech/gosl/rnd/auxiliary.go">auxiliary.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/rnd/dist_gev.go">dist_gev.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/rnd/dist_lognormal.go">dist_lognormal.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/rnd/dist_normal.go">dist_normal.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/rnd/distribution.go">distribution.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/rnd/histogram.go">histogram.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/rnd/ltqnorm.go">ltqnorm.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/rnd/random.go">random.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/rnd/reliability.go">reliability.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/rnd/rotations.go">rotations.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/rnd/stat.go">stat.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/rnd/variables.go">variables.go</a>
 			
 			</span>
 			</p>
@@ -134,17 +366,28 @@
 		</div> <!-- #pkg-callgraph -->
 
 		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="TOLMINLOG">TOLMINLOG</span> = 1e-16</pre>
+				
+			
+		
 		
 		
 			
 			
-			<h2 id="Init">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=532:551#L8">Init</a></h2>
-			<pre>func Init(seed <a href="/pkg/builtin/#int">int</a>)</pre>
+			<h2 id="BuildTextHist">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=1503:1608#L58">BuildTextHist</a></h2>
+			<pre>func BuildTextHist(xmin, xmax <a href="/pkg/builtin/#float64">float64</a>, nstations <a href="/pkg/builtin/#int">int</a>, values []<a href="/pkg/builtin/#float64">float64</a>, numfmt <a href="/pkg/builtin/#string">string</a>, barlen <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
-Init initialises random numbers generator
-Input:
+BuildTextHist builds a text histogram
 </p>
-<pre>seed -- seed value; use seed &lt;= 0 to use current time
+<pre>Input:
+ xmin      -- station xmin
+ xmax      -- station xmax
+ nstations -- number of stations
+ values    -- values to be counted
+ numfmt    -- number format
+ barlen    -- max length of bar
 </pre>
 
 			
@@ -153,10 +396,10 @@ Input:
 		
 			
 			
-			<h2 id="IntRand">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=694:725#L16">IntRand</a></h2>
-			<pre>func IntRand(low, high <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<h2 id="DblShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=5168:5201#L204">DblShuffle</a></h2>
+			<pre>func DblShuffle(values []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
-IntRand generates pseudo random integer between low and high
+DblShuffle shuffles a slice of float point numbers
 </p>
 
 			
@@ -165,20 +408,1067 @@ IntRand generates pseudo random integer between low and high
 		
 			
 			
-			<h2 id="TextHist">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=351:413#L6">TextHist</a></h2>
-			<pre>func TextHist(labels []<a href="/pkg/builtin/#string">string</a>, freqs []<a href="/pkg/builtin/#int">int</a>, barlen <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<h2 id="FlipCoin">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3258:3287#L115">FlipCoin</a></h2>
+			<pre>func FlipCoin(p <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+			<p>
+FlipCoin generates a Bernoulli variable; throw a coin with probability p
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Float64">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1986:2025#L74">Float64</a></h2>
+			<pre>func Float64(low, high <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Float64 generates a pseudo random real number between low and high; i.e. in [low, right)
+</p>
+<pre>Input:
+ low  -- lower limit (closed)
+ high -- upper limit (open)
+Output:
+ random float64
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Float64s">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2311:2361#L84">Float64s</a></h2>
+			<pre>func Float64s(values []<a href="/pkg/builtin/#float64">float64</a>, low, high <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Float64s generates pseudo random real numbers between low and high; i.e. in [low, right)
+</p>
+<pre>Input:
+ low  -- lower limit (closed)
+ high -- upper limit (open)
+Output:
+ values -- slice to be filled with len(values) numbers
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Init">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=441:460#L9">Init</a></h2>
+			<pre>func Init(seed <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+Init initialises random numbers generators
+</p>
+<pre>Input:
+ seed -- seed value; use seed &lt;= 0 to use current time
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Int">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=730:757#L24">Int</a></h2>
+			<pre>func Int(low, high <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+Int generates pseudo random integer between low and high.
+</p>
+<pre>Input:
+ low  -- lower limit
+ high -- upper limit
+Output:
+ random integer
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IntGetShuffled">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4839:4889#L191">IntGetShuffled</a></h2>
+			<pre>func IntGetShuffled(values []<a href="/pkg/builtin/#int">int</a>) (shuffled []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+IntGetShuffled returns a shufled slice of integers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IntGetUnique">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3609:3664#L131">IntGetUnique</a></h2>
+			<pre>func IntGetUnique(values []<a href="/pkg/builtin/#int">int</a>, n <a href="/pkg/builtin/#int">int</a>) (selected []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+IntGetUnique randomly selects n items in a list avoiding duplicates
+</p>
+<pre>Note: using the &#39;reservoir sampling&#39; method; see Wikipedia:
+      <a href="https://en.wikipedia.org/wiki/Reservoir_sampling">https://en.wikipedia.org/wiki/Reservoir_sampling</a>
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IntGetUniqueN">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4166:4222#L155">IntGetUniqueN</a></h2>
+			<pre>func IntGetUniqueN(start, endp1, n <a href="/pkg/builtin/#int">int</a>) (selected []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+IntGetUniqueN randomly selects n items from start to endp1-1 avoiding duplicates
+</p>
+<pre>Note: using the &#39;reservoir sampling&#39; method; see Wikipedia:
+      <a href="https://en.wikipedia.org/wiki/Reservoir_sampling">https://en.wikipedia.org/wiki/Reservoir_sampling</a>
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IntShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4610:4639#L180">IntShuffle</a></h2>
+			<pre>func IntShuffle(values []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+IntShuffle shuffles a slice of integers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Ints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1000:1038#L34">Ints</a></h2>
+			<pre>func Ints(values []<a href="/pkg/builtin/#int">int</a>, low, high <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+Ints generates pseudo random integers between low and high.
+</p>
+<pre>Input:
+ low    -- lower limit
+ high   -- upper limit
+Output:
+ values -- slice to be filled with len(values) numbers
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MTfloat64">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2692:2733#L97">MTfloat64</a></h2>
+			<pre>func MTfloat64(low, high <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+MTfloat64 generates pseudo random real numbers between low and high; i.e. in [low, right)
+using the Mersenne Twister method.
+</p>
+<pre>Input:
+ low  -- lower limit (closed)
+ high -- upper limit (open)
+Output:
+ random float64
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MTfloat64s">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3049:3101#L108">MTfloat64s</a></h2>
+			<pre>func MTfloat64s(values []<a href="/pkg/builtin/#float64">float64</a>, low, high <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MTfloat64s generates pseudo random real numbers between low and high; i.e. in [low, right)
+using the Mersenne Twister method.
+</p>
+<pre>Input:
+ low  -- lower limit (closed)
+ high -- upper limit (open)
+Output:
+ values -- slice to be filled with len(values) numbers
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MTint">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1336:1365#L49">MTint</a></h2>
+			<pre>func MTint(low, high <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+MTint generates pseudo random integer between low and high using the Mersenne Twister method.
+</p>
+<pre>Input:
+ low  -- lower limit
+ high -- upper limit
+Output:
+ random integer
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MTintShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=5065:5091#L199">MTintShuffle</a></h2>
+			<pre>func MTintShuffle(v []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+MTintShuffle shuffles a slice of integers using Mersenne Twister algorithm.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MTints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1635:1675#L59">MTints</a></h2>
+			<pre>func MTints(values []<a href="/pkg/builtin/#int">int</a>, low, high <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+MTints generates pseudo random integers between low and high using the Mersenne Twister method.
+</p>
+<pre>Input:
+ low    -- lower limit
+ high   -- upper limit
+Output:
+ values -- slice to be filled with len(values) numbers
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StatAve">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=369:409#L9">StatAve</a></h2>
+			<pre>func StatAve(x []<a href="/pkg/builtin/#float64">float64</a>) (xave <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+StatAve computes the average of x values
+</p>
+<pre>Input:
+ x -- sample
+Output:
+ xave -- average
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StatBasic">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=2378:2448#L94">StatBasic</a></h2>
+			<pre>func StatBasic(x []<a href="/pkg/builtin/#float64">float64</a>, std <a href="/pkg/builtin/#bool">bool</a>) (xmin, xave, xmax, xdev <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+StatBasic performs some basic statistics
+</p>
+<pre>Input:
+ x   -- sample
+ std -- compute standard deviation (σ) instead of average deviation (adev)
+Output:
+ xmin -- minimum value
+ xave -- mean average (first moment)
+ xmax -- maximum value
+ xdev -- average deviation; if std==true, computes standard deviation (σ) instead
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StatDev">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=1788:1838#L67">StatDev</a></h2>
+			<pre>func StatDev(x []<a href="/pkg/builtin/#float64">float64</a>, std <a href="/pkg/builtin/#bool">bool</a>) (xdev <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+StatDev computes the average deviation or standard deviation (σ)
+</p>
+<pre>Input:
+ x   -- sample
+ std -- compute standard deviation (σ) instead of average deviation (adev)
+Output:
+ xdev -- average deviation; if std==true, computes standard deviation (σ) instead
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StatDevFirst">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=906:975#L29">StatDevFirst</a></h2>
+			<pre>func StatDevFirst(x []<a href="/pkg/builtin/#float64">float64</a>, xave <a href="/pkg/builtin/#float64">float64</a>, std <a href="/pkg/builtin/#bool">bool</a>) (xdev <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+StatDevFirst computes the average deviation or standard deviation (σ)
+for given value of average/mean/first moment
+</p>
+<pre>Input:
+ x    -- sample
+ xave -- bar(x) == average/mean/first moment
+ std  -- compute standard deviation (σ) instead of average deviation (adev)
+Output:
+ xdev -- average deviation; if std==true, computes standard deviation (σ) instead
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StatMoments">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=3194:3284#L128">StatMoments</a></h2>
+			<pre>func StatMoments(x []<a href="/pkg/builtin/#float64">float64</a>) (sum, mean, adev, sdev, vari, skew, kurt <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+StatMoments computes the 4th moments of a data set
+</p>
+<pre>Input:
+ x -- sample
+Output:
+ sum  -- sum of values
+ mean -- mean average (first moment)
+ adev -- average deviation
+ sdev -- standrad deviation
+ vari -- variance (second moment)
+ skew -- skewness (third moment)
+ kurt -- kurtosis (fourth moment)
+Based on:
+   Press WH, Teukolsky SA, Vetterling WT and Flannery BP (2007)
+     Numerical Recipes in C++ 2007 (3rd Edition), page 725.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StatTable">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=5912:5977#L193">StatTable</a></h2>
+			<pre>func StatTable(x [][]<a href="/pkg/builtin/#float64">float64</a>, std, withZ <a href="/pkg/builtin/#bool">bool</a>) (y, z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+StatTable computes the min, ave, max, and dev of values organised in a table
+</p>
+<pre>Input:
+ x     -- sample
+ std   -- compute standard deviation (σ) instead of average deviation (adev)
+ withZ -- computes z-matrix as well
+Convention of indices:
+ 0=min  1=ave  2=max  3=dev
+Output:                        min          ave          max          dev
+                                ↓            ↓            ↓            ↓
+ x00 x01 x02 x03 x04 x05 → y00=min(x0?) y10=ave(x0?) y20=max(x0?) y30=dev(x0?)
+ x10 x11 x12 x13 x14 x15 → y01=min(x1?) y11=ave(x1?) y21=max(x1?) y31=dev(x1?)
+ x20 x21 x22 x23 x24 x25 → y02=min(x2?) y12=ave(x2?) y22=max(x2?) y32=dev(x2?)
+                                ↓            ↓            ↓            ↓
+                     min → z00=min(y0?) z01=min(y1?) z02=min(y2?) z03=min(y3?)
+                     ave → z10=ave(y0?) z11=ave(y1?) z12=ave(y2?) z13=ave(y3?)
+                     max → z20=max(y0?) z21=max(y1?) z22=max(y2?) z23=max(y3?)
+                     dev → z30=dev(y0?) z31=dev(y1?) z32=dev(y2?) z33=dev(y3?)
+                                =            =            =            =
+                     min → z00=min(min) z01=min(ave) z02=min(max) z03=min(dev)
+                     ave → z10=ave(min) z11=ave(ave) z12=ave(max) z13=ave(dev)
+                     max → z20=max(min) z21=max(ave) z22=max(max) z23=max(dev)
+                     dev → z30=dev(min) z31=dev(ave) z32=dev(max) z33=dev(dev)
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StdInvPhi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=604:637#L10">StdInvPhi</a></h2>
+			<pre>func StdInvPhi(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+StdInvPhi implements Φ⁻¹(x), the inverse standard cumulative distribution function
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StdPhi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=433:463#L5">StdPhi</a></h2>
+			<pre>func StdPhi(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+StdPhi implements Φ(x), the standard cumulative distribution function
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Stdphi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=269:299#L1">Stdphi</a></h2>
+			<pre>func Stdphi(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Stdphi implements φ(x), the standard probability density function
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TextHist">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=381:444#L7">TextHist</a></h2>
+			<pre>func TextHist(labels []<a href="/pkg/builtin/#string">string</a>, counts []<a href="/pkg/builtin/#int">int</a>, barlen <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 TextHist prints a text histogram
 </p>
 <pre>Input:
  labels -- labels
- freqs  -- frequencies
+ counts -- frequencies
 </pre>
 
 			
 			
 
 		
+			
+			
+			<h2 id="UnitVectors">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/rotations.go?s=304:343#L5">UnitVectors</a></h2>
+			<pre>func UnitVectors(n <a href="/pkg/builtin/#int">int</a>) (U [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+UnitVectors generates random unit vectors in 3D
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="DistGev">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gev.go?s=750:912#L12">DistGev</a></h2>
+			<pre>type DistGev struct {
+    M <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// location: μ</span>
+    S <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// scale: σ (or β in R-lang)</span>
+    K <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// shape: ξ. If ξ==0, the distribution is of type Gumbel</span>
+}</pre>
+			<p>
+DistGev implements the generalised extreme value (GEV) distribution
+</p>
+<pre>Gumbel, Fréchet and Weibull families also known as type I, II and III
+extreme value distributions.
+The shape parameter ξ governs the tail behaviour of the distribution.
+The sub-families defined by ξ=0, ξ&gt;0 and ξ&lt;0 correspond, respectively,
+to the Gumbel (ξ=0), Fréchet (ξ&gt;0) and Weibull (ξ&lt;0) families. In summary:
+ Type-I   == Gumbel:  ξ = 0
+ Type-II  == Fréchet: ξ &gt; 0
+ Type-III == Weibull: ξ &lt; 0
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DistGev.Cdf">func (DistGev) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gev.go?s=1998:2037#L63">Cdf</a></h3>
+				<pre>func (o <a href="#DistGev">DistGev</a>) Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Cdf computes the cumulative probability function @ x
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistGev.Init">func (*DistGev) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gev.go?s=1058:1104#L24">Init</a></h3>
+				<pre>func (o *<a href="#DistGev">DistGev</a>) Init(p *<a href="#VarData">VarData</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises lognormal distribution
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistGev.Pdf">func (DistGev) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gev.go?s=1511:1550#L43">Pdf</a></h3>
+				<pre>func (o <a href="#DistGev">DistGev</a>) Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Pdf computes the probability density function @ x
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DistLogNormal">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=279:437#L2">DistLogNormal</a></h2>
+			<pre>type DistLogNormal struct {
+
+    <span class="comment">// input</span>
+    M <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// location</span>
+    S <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// scale</span>
+
+    <span class="comment">// auxiliary</span>
+    A <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// 1 / (s sqrt(2 π))</span>
+    B <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// -1 / (2 s²)</span>
+}</pre>
+			<p>
+DistLogNormal implements the lognormal distribution
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DistLogNormal.CalcDerived">func (*DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=599:636#L19">CalcDerived</a></h3>
+				<pre>func (o *<a href="#DistLogNormal">DistLogNormal</a>) CalcDerived()</pre>
+				<p>
+CalcDerived computes derived/auxiliary quantities
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistLogNormal.Cdf">func (DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=1523:1568#L53">Cdf</a></h3>
+				<pre>func (o <a href="#DistLogNormal">DistLogNormal</a>) Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Cdf computes the cumulative probability function @ x
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistLogNormal.Init">func (*DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=964:1010#L28">Init</a></h3>
+				<pre>func (o *<a href="#DistLogNormal">DistLogNormal</a>) Init(p *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a></pre>
+				<p>
+Init initialises lognormal distribution
+</p>
+<pre>Note: if p.MSlog==true, M and S are parameters of lognormal distribution;
+      otherwise, p.M and p.S are μ and σ standard parameters and
+      hence m and s are computed from μ and σ
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="DistLogNormal.Pdf">func (DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=1319:1364#L45">Pdf</a></h3>
+				<pre>func (o <a href="#DistLogNormal">DistLogNormal</a>) Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Pdf computes the probability density function @ x
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DistNormal">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=711:884#L15">DistNormal</a></h2>
+			<pre>type DistNormal struct {
+
+    <span class="comment">// input</span>
+    Mu  <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// μ: mean</span>
+    Sig <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// σ: std deviation</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+DistNormal implements the normal distribution
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DistNormal.CalcDerived">func (*DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1042:1076#L32">CalcDerived</a></h3>
+				<pre>func (o *<a href="#DistNormal">DistNormal</a>) CalcDerived()</pre>
+				<p>
+CalcDerived compute derived/auxiliary quantities
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistNormal.Cdf">func (DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1515:1557#L50">Cdf</a></h3>
+				<pre>func (o <a href="#DistNormal">DistNormal</a>) Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Cdf computes the cumulative probability function @ x
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistNormal.Init">func (*DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1206:1249#L38">Init</a></h3>
+				<pre>func (o *<a href="#DistNormal">DistNormal</a>) Init(p *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a></pre>
+				<p>
+Init initialises normal distribution
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistNormal.Pdf">func (DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1361:1403#L45">Pdf</a></h3>
+				<pre>func (o <a href="#DistNormal">DistNormal</a>) Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Pdf computes the probability density function @ x
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="DistType">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=328:345#L4">DistType</a></h2>
+			<pre>type DistType <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+DistType indicates the distribution to which a random variable appears to belong to
+</p>
+
+
+			
+				<pre>const (
+    <span id="D_Nrm">D_Nrm</span> <a href="#DistType">DistType</a> = <a href="/pkg/builtin/#iota">iota</a> + 1
+    <span id="D_Log">D_Log</span>
+    <span id="D_Bet">D_Bet</span>
+    <span id="D_Gev">D_Gev</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Distribution">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/distribution.go?s=278:384#L1">Distribution</a></h2>
+			<pre>type Distribution interface {
+    Init(prms *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a>
+    Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>
+    Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>
+}</pre>
+			<p>
+Distribution defines a probability distribution
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="GetDistrib">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/distribution.go?s=508:567#L10">GetDistrib</a></h3>
+				<pre>func GetDistrib(dtype <a href="#DistType">DistType</a>) (d <a href="#Distribution">Distribution</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+GetDistrib returns a distribution from factory
+</p>
+
+				
+				
+			
+
+			
+		
+			
+			
+			<h2 id="Histogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2081:2168#L72">Histogram</a></h2>
+			<pre>type Histogram struct {
+    Stations []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// stations</span>
+    Counts   []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// counts</span>
+}</pre>
+			<p>
+Histogram holds data for computing/plotting histograms
+</p>
+<pre>bin[i] corresponds to station[i] &lt;= x &lt; station[i+1]
+
+     [ bin[0] )[ bin[1] )[ bin[2] )[ bin[3] )[ bin[4] )
+  ---|---------|---------|---------|---------|---------|---  x
+   s[0]      s[1]      s[2]      s[3]      s[4]      s[5]
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Histogram.Count">func (*Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2749:2802#L108">Count</a></h3>
+				<pre>func (o *<a href="#Histogram">Histogram</a>) Count(vals []<a href="/pkg/builtin/#float64">float64</a>, clear <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+Count counts how many items fall within each bin
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Histogram.FindBin">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2244:2285#L79">FindBin</a></h3>
+				<pre>func (o <a href="#Histogram">Histogram</a>) FindBin(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+FindBin finds where x falls in
+returns -1 if x is outside the range
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Histogram.GenLabels">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3266:3327#L135">GenLabels</a></h3>
+				<pre>func (o <a href="#Histogram">Histogram</a>) GenLabels(numfmt <a href="/pkg/builtin/#string">string</a>) (labels []<a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+GenLabels generate nice labels identifying bins
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3929:4011#L155">IntHistogram</a></h2>
+			<pre>type IntHistogram struct {
+    Stations []<a href="/pkg/builtin/#int">int</a> <span class="comment">// stations</span>
+    Counts   []<a href="/pkg/builtin/#int">int</a> <span class="comment">// counts</span>
+}</pre>
+			<p>
+IntHistogram holds data for computing/plotting histograms with integers
+</p>
+<pre>bin[i] corresponds to station[i] &lt;= x &lt; station[i+1]
+
+     [ bin[0] )[ bin[1] )[ bin[2] )[ bin[3] )[ bin[4] )
+  ---|---------|---------|---------|---------|---------|---  x
+   s[0]      s[1]      s[2]      s[3]      s[4]      s[5]
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4594:4646#L191">Count</a></h3>
+				<pre>func (o *<a href="#IntHistogram">IntHistogram</a>) Count(vals []<a href="/pkg/builtin/#int">int</a>, clear <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+Count counts how many items fall within each bin
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4087:4127#L162">FindBin</a></h3>
+				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) FindBin(x <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+FindBin finds where x falls in
+returns -1 if x is outside the range
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5113:5177#L218">GenLabels</a></h3>
+				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) GenLabels(numfmt <a href="/pkg/builtin/#string">string</a>) (labels []<a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+GenLabels generate nice labels identifying bins
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ReliabFORM">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/reliability.go?s=718:2177#L15">ReliabFORM</a></h2>
+			<pre>type ReliabFORM struct {
+
+    <span class="comment">// constants</span>
+    NmaxItA      <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max number of iterations for direction cosines</span>
+    NmaxItB      <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max number of iterations for reliability index</span>
+    TolA         <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// tolerance to find α</span>
+    TolB         <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// tolerance to find β</span>
+    NlsSilent    <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// flag for nonlinear solver: print results</span>
+    NlsCheckJ    <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// flag for nonlinear solver: check J matrix</span>
+    NlsCheckJtol <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// tolerance for nonlinear solver when checking J</span>
+
+    <span class="comment">// plotting</span>
+    PlotFnk    <a href="/pkg/builtin/#string">string</a>      <span class="comment">// filenamekey for plot. &#34;&#34; means no plot</span>
+    PlotNp     <a href="/pkg/builtin/#int">int</a>         <span class="comment">// number of points. can be zero</span>
+    PlotCf     <a href="/pkg/builtin/#float64">float64</a>     <span class="comment">// coefficient to compute meshgrid. can be zero</span>
+    PlotUrange []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// range of values for contour. can be nil</span>
+    PlotVrange []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// range of values for contour. can be nil</span>
+    PlotU      [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// auxiliary variables for contour</span>
+    PlotV      [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// auxiliary variables for contour</span>
+    PlotZ      [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// auxiliary variables for contour</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+ReliabFORM implements the first order reliability method
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="ReliabFORM.Init">func (*ReliabFORM) <a href="https://github.com/cpmech/gosl/blob/master/rnd/reliability.go?s=2214:2307#L50">Init</a></h3>
+				<pre>func (o *<a href="#ReliabFORM">ReliabFORM</a>) Init(μ, σ []<a href="/pkg/builtin/#float64">float64</a>, lrv []<a href="/pkg/builtin/#bool">bool</a>, gfcn <a href="#ReliabGfcn_t">ReliabGfcn_t</a>, hfcn <a href="#ReliabHfcn_t">ReliabHfcn_t</a>)</pre>
+				<p>
+Init initialises FORM structure
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="ReliabFORM.Run">func (*ReliabFORM) <a href="https://github.com/cpmech/gosl/blob/master/rnd/reliability.go?s=2771:2881#L78">Run</a></h3>
+				<pre>func (o *<a href="#ReliabFORM">ReliabFORM</a>) Run(βtrial <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (β <a href="/pkg/builtin/#float64">float64</a>, μ, σ, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Run computes β starting witn an initial guess
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="ReliabGfcn_t">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/reliability.go?s=438:511#L9">ReliabGfcn_t</a></h2>
+			<pre>type ReliabGfcn_t func(x []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+ReliabGfcn_t defines the limit state function
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="ReliabHfcn_t">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/reliability.go?s=578:656#L12">ReliabHfcn_t</a></h2>
+			<pre>type ReliabHfcn_t func(dgdx []<a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+ReliabHfcn_t defines the gradient of the limit state function
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="VarData">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=462:1065#L14">VarData</a></h2>
+			<pre>type VarData struct {
+
+    <span class="comment">// input</span>
+    D    <a href="#DistType">DistType</a> <span class="comment">// type of distribution: &#34;nrm&#34;, &#34;log&#34;, &#34;beta&#34;</span>
+    M    <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// mean-type parameter</span>
+    S    <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// deviation-type parameter</span>
+    Pori <a href="/pkg/builtin/#bool">bool</a>     <span class="comment">// parameters are original parameters, not μ and σ standard values</span>
+    K    <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// shape parameter</span>
+    A    <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// lower limit</span>
+    B    <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// upper limit</span>
+    Q    <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// q-parameter (e.g. for Beta distribution)</span>
+    R    <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// r-parameter (e.g. for Beta distribution)</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+VarData implements data defining one random variable
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="VarData.CalcEquiv">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1140:1211#L33">CalcEquiv</a></h3>
+				<pre>func (o *<a href="#VarData">VarData</a>) CalcEquiv(x <a href="/pkg/builtin/#float64">float64</a>) (μN, σN <a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+CalcEquiv computes equivalent normal parameters at check/design point
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="VarData.InvTransform">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2926:2993#L96">InvTransform</a></h3>
+				<pre>func (o *<a href="#VarData">VarData</a>) InvTransform(y <a href="/pkg/builtin/#float64">float64</a>) (x <a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+InvTransform transform y from standard normal space into original space
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="VarData.Transform">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2693:2757#L86">Transform</a></h3>
+				<pre>func (o *<a href="#VarData">VarData</a>) Transform(x <a href="/pkg/builtin/#float64">float64</a>) (y <a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+Transform transform x into standard normal space
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Variables">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=3107:3132#L102">Variables</a></h2>
+			<pre>type Variables []*<a href="#VarData">VarData</a></pre>
+			<p>
+Variables implements a set of random variables
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Variables.Init">func (*Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=3181:3219#L105">Init</a></h3>
+				<pre>func (o *<a href="#Variables">Variables</a>) Init() (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises distributions in Variables
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Variables.Transform">func (*Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=3546:3616#L122">Transform</a></h3>
+				<pre>func (o *<a href="#Variables">Variables</a>) Transform(x []<a href="/pkg/builtin/#float64">float64</a>) (y []<a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+Transform transform all variables into standard normal space
+</p>
+
+				
+				
+				
+			
 		
 	
 
@@ -187,6 +1477,51 @@ TextHist prints a text histogram
 
 
 
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+	<table class="dir">
+	<tr>
+	<th>Name</th>
+	<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+	<th style="text-align: left; width: auto">Synopsis</th>
+	</tr>
+	
+		<tr>
+		<td><a href="..">..</a></td>
+		</tr>
+	
+	
+		
+			<tr>
+			<td class="name"><a href="data/">data</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+		
+			<tr>
+			<td class="name"><a href="dsfmt/">dsfmt</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+		
+			<tr>
+			<td class="name"><a href="sfmt/">sfmt</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+	</table>
+
+	
 
 </div><!-- page -->
 <div id="footer">

@@ -36,7 +36,7 @@ if [[ $platform == 'linux' ]]; then
     install_and_test mpi 0
 fi
 
-for p in la plt fdm num fun ode gm tsr rnd; do
+for p in la plt fdm num fun ode gm tsr rnd opt; do
     install_and_test $p 1
 done
 
