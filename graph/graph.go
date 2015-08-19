@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package utl
+package graph
 
 import (
 	"math"
@@ -10,6 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 const GRAPH_INF = 1e+30 // infinite distance
@@ -43,16 +44,16 @@ func (o *Graph) Init(edges [][]int, weightsE []float64, verts [][]float64, weigh
 	o.Key2edge = make(map[int]int)
 	for k, edge := range o.Edges {
 		i, j := edge[0], edge[1]
-		IntIntsMapAppend(&o.Shares, i, k)
-		IntIntsMapAppend(&o.Shares, j, k)
+		utl.IntIntsMapAppend(&o.Shares, i, k)
+		utl.IntIntsMapAppend(&o.Shares, j, k)
 		o.Key2edge[o.HashEdgeKey(i, j)] = k
 	}
 	if o.Verts != nil {
 		chk.IntAssert(len(o.Verts), len(o.Shares))
 	}
 	nv := len(o.Shares)
-	o.Dist = DblsAlloc(nv, nv)
-	o.Next = IntsAlloc(nv, nv)
+	o.Dist = utl.DblsAlloc(nv, nv)
+	o.Next = utl.IntsAlloc(nv, nv)
 }
 
 // ShortestPaths computes the shortest paths in a graph defined as follows
@@ -161,11 +162,11 @@ func (o *Graph) StrDistMatrix() (l string) {
 	for i := 0; i < nv; i++ {
 		for j := 0; j < nv; j++ {
 			if o.Dist[i][j] < GRAPH_INF {
-				maxlen = Imax(maxlen, len(io.Sf("%g", o.Dist[i][j])))
+				maxlen = utl.Imax(maxlen, len(io.Sf("%g", o.Dist[i][j])))
 			}
 		}
 	}
-	maxlen = Imax(3, maxlen)
+	maxlen = utl.Imax(3, maxlen)
 	fmts := io.Sf("%%%ds", maxlen+1)
 	fmtn := io.Sf("%%%dg", maxlen+1)
 	for i := 0; i < nv; i++ {
@@ -203,8 +204,8 @@ func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64,
 		}
 		plt.Text(v[0], v[1], lbl, io.Sf("clip_on=0, color='%s', fontsize=%g, ha='center', va='center'", verts_clr, verts_fsz))
 		plt.Circle(v[0], v[1], r, "clip_on=0, ec='k', lw=0.8")
-		xmin, ymin = Min(xmin, v[0]), Min(ymin, v[1])
-		xmax, ymax = Max(xmax, v[0]), Max(ymax, v[1])
+		xmin, ymin = utl.Min(xmin, v[0]), utl.Min(ymin, v[1])
+		xmax, ymax = utl.Max(xmax, v[0]), utl.Max(ymax, v[1])
 	}
 	if W > 2*r {
 		W = 1.8 * r
