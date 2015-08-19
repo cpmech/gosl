@@ -1,0 +1,335 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Gosl &ndash; package graph</title>
+<link type="text/css" rel="stylesheet" href="static/style.css">
+<script type="text/javascript" src="static/godocs.js"></script>
+<style type="text/css"></style>
+</head>
+<body>
+<div id="page"><h1>Gosl &ndash; <b>graph</b> &ndash; graph representation using nodes and links</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/graph"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+			
+				
+				<dd><a href="#Graph">type Graph</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Graph.Draw">func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64, verts_lbls map[int]string, verts_fsz float64, verts_clr string, edges_lbls map[int]string, edges_fsz float64, edges_clr string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Graph.HashEdgeKey">func (o *Graph) HashEdgeKey(i, j int) (edge int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Graph.Init">func (o *Graph) Init(edges [][]int, weightsE []float64, verts [][]float64, weightsV []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Graph.Path">func (o *Graph) Path(s, t int) (p []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Graph.ShortestPaths">func (o *Graph) ShortestPaths(method string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Graph.StrDistMatrix">func (o *Graph) StrDistMatrix() (l string)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/cpmech/gosl/graph/graph.go">graph.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const <span id="GRAPH_INF">GRAPH_INF</span> = 1e+30 <span class="comment">// infinite distance</span>
+</pre>
+				
+			
+		
+		
+		
+		
+			
+			
+			<h2 id="Graph">type <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=407:969#L9">Graph</a></h2>
+			<pre>type Graph struct {
+
+    <span class="comment">// input</span>
+    Edges    [][]<a href="/pkg/builtin/#int">int</a>     <span class="comment">// [nedges][2] edges (connectivity)</span>
+    WeightsE []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// [nedges] weights of edges. can be &lt;nil&gt;</span>
+    Verts    [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [nverts][ndim] vertices. can be &lt;nil&gt;</span>
+    WeightsV []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// [nverts] weights of vertices. can be &lt;nil&gt;</span>
+
+    <span class="comment">// auxiliary</span>
+    Shares   map[<a href="/pkg/builtin/#int">int</a>][]<a href="/pkg/builtin/#int">int</a> <span class="comment">// [nverts] edges sharing a vertex</span>
+    Key2edge map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#int">int</a>   <span class="comment">// maps (i,j) vertex to edge index</span>
+    Dist     [][]<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// [nverts][nverts] distances</span>
+    Next     [][]<a href="/pkg/builtin/#int">int</a>       <span class="comment">// [nverts][nverts] next tree connection. -1 means no connection</span>
+}</pre>
+			<p>
+Graph defines a graph structure
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Graph.Draw">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5039:5243#L180">Draw</a></h3>
+				<pre>func (o *<a href="#Graph">Graph</a>) Draw(dirout, fname <a href="/pkg/builtin/#string">string</a>, r, W, dwt, arrow_scale <a href="/pkg/builtin/#float64">float64</a>,
+    verts_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, verts_fsz <a href="/pkg/builtin/#float64">float64</a>, verts_clr <a href="/pkg/builtin/#string">string</a>,
+    edges_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, edges_fsz <a href="/pkg/builtin/#float64">float64</a>, edges_clr <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+Draw draws grid
+</p>
+<pre>r   -- radius of circles
+W   -- width of paths
+dwt -- δwt for positioning text (w = W/2)
+arrow_scale -- scale for arrows. use 0 for default value
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4181:4229#L144">HashEdgeKey</a></h3>
+				<pre>func (o *<a href="#Graph">Graph</a>) HashEdgeKey(i, j <a href="/pkg/builtin/#int">int</a>) (edge <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+HashEdgeKey creates a unique hash key identifying an edge
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Graph.Init">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1234:1328#L30">Init</a></h3>
+				<pre>func (o *<a href="#Graph">Graph</a>) Init(edges [][]<a href="/pkg/builtin/#int">int</a>, weightsE []<a href="/pkg/builtin/#float64">float64</a>, verts [][]<a href="/pkg/builtin/#float64">float64</a>, weightsV []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Init initialises graph
+</p>
+<pre>Input:
+  edges    -- [nedges][2] edges (connectivity)
+  weightsE -- [nedges] weights of edges. can be &lt;nil&gt;
+  verts    -- [nverts][ndim] vertices. can be &lt;nil&gt;
+  weightsV -- [nverts] weights of vertices. can be &lt;nil&gt;
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3147:3187#L93">Path</a></h3>
+				<pre>func (o *<a href="#Graph">Graph</a>) Path(s, t <a href="/pkg/builtin/#int">int</a>) (p []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Path returns the path from source (s) to destination (t)
+</p>
+<pre>Note: ShortestPaths method must be called first
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2540:2596#L67">ShortestPaths</a></h3>
+				<pre>func (o *<a href="#Graph">Graph</a>) ShortestPaths(method <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ShortestPaths computes the shortest paths in a graph defined as follows
+</p>
+<pre>        [10]
+     0 ––––––→ 3            numbers in brackets
+     |         ↑            indicate weights
+ [5] |         | [1]
+     ↓         |
+     1 ––––––→ 2
+         [3]                ∞ means that there are no
+                            connections from i to j
+ graph:  j= 0  1  2  3
+            -----------  i=
+            0  5  ∞ 10 |  0  ⇒  w(0→1)=5, w(0→3)=10
+            ∞  0  3  ∞ |  1  ⇒  w(1→2)=3
+            ∞  ∞  0  1 |  2  ⇒  w(2→3)=1
+            ∞  ∞  ∞  0 |  3
+Input:
+ method -- FW: Floyd-Warshall method
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4322:4364#L149">StrDistMatrix</a></h3>
+				<pre>func (o *<a href="#Graph">Graph</a>) StrDistMatrix() (l <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+StrDistMatrix returns a string representation of Dist matrix
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+</div><!-- page -->
+<div id="footer">
+<br /><br />
+<hr>
+<pre class="copyright">
+Copyright (c) 2015, Dorival Pedroso and Raul Durand
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+</pre><!-- copyright -->
+</div><!-- footer -->
+</body>
+</html>

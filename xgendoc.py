@@ -35,6 +35,7 @@ pkgs = [
     ("rnd", "Random numbers generator"),
     ("tsr", "Tensor algebra and calculus"),
     ("vtk", "3D visualisation with VTK"),
+    ("graph", "graph representation using nodes and links"),
 ]
 
 odir  = 'doc/'
