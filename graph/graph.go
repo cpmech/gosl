@@ -56,6 +56,17 @@ func (o *Graph) Init(edges [][]int, weightsE []float64, verts [][]float64, weigh
 	o.Next = utl.IntsAlloc(nv, nv)
 }
 
+// GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes ides
+func (o *Graph) GetEdge(i, j int) (k int, err error) {
+	key := o.HashEdgeKey(i, j)
+	var ok bool
+	if k, ok = o.Key2edge[key]; !ok {
+		err = chk.Err("cannot find edge from %d to %d", i, j)
+		return
+	}
+	return
+}
+
 // ShortestPaths computes the shortest paths in a graph defined as follows
 //
 //          [10]
