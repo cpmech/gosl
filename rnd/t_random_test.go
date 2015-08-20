@@ -237,12 +237,12 @@ func Test_getunique02(tst *testing.T) {
 
 	nsel := 5 // number of selections
 	start := 2
-	size := 10
-	hist := IntHistogram{Stations: utl.IntRange(size + 3)}
-	sel := IntGetUniqueN(start, size, nsel)
+	endp1 := 10
+	hist := IntHistogram{Stations: utl.IntRange(endp1 + 3)}
+	sel := IntGetUniqueN(start, endp1, nsel)
 	io.Pfcyan("sel  = %v\n", sel)
 	for i := 0; i < NSAMPLES; i++ {
-		sel := IntGetUniqueN(start, size, nsel)
+		sel := IntGetUniqueN(start, endp1, nsel)
 		check_repeated(sel)
 		hist.Count(sel, false)
 		//io.Pfgrey("sel  = %v\n", sel)
