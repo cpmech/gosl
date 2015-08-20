@@ -306,3 +306,55 @@ func Test_copy01(tst *testing.T) {
 	io.Pfblue2("v = %v\n", v)
 	chk.Vector(tst, "w==v", 1e-16, w, v)
 }
+
+func Test_pareto01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("pareto01. compare vectors: Pareto-optimal")
+
+	u := []float64{1, 2, 3, 4, 5, 6}
+	v := []float64{1, 2, 3, 4, 5, 6}
+	io.Pforan("u = %v\n", u)
+	io.Pfblue2("v = %v\n", v)
+	u_dominates, v_dominates := DblsParetoMin(u, v)
+	io.Pfpink("u_dominates = %v\n", u_dominates)
+	io.Pfpink("v_dominates = %v\n", v_dominates)
+	if u_dominates {
+		tst.Errorf("test failed\n")
+		return
+	}
+	if v_dominates {
+		tst.Errorf("test failed\n")
+		return
+	}
+
+	v = []float64{1, 1.8, 3, 4, 5, 6}
+	io.Pforan("\nu = %v\n", u)
+	io.Pfblue2("v = %v\n", v)
+	u_dominates, v_dominates = DblsParetoMin(u, v)
+	io.Pfpink("u_dominates = %v\n", u_dominates)
+	io.Pfpink("v_dominates = %v\n", v_dominates)
+	if u_dominates {
+		tst.Errorf("test failed\n")
+		return
+	}
+	if !v_dominates {
+		tst.Errorf("test failed\n")
+		return
+	}
+
+	v = []float64{1, 2.1, 3, 4, 5, 6}
+	io.Pforan("\nu = %v\n", u)
+	io.Pfblue2("v = %v\n", v)
+	u_dominates, v_dominates = DblsParetoMin(u, v)
+	io.Pfpink("u_dominates = %v\n", u_dominates)
+	io.Pfpink("v_dominates = %v\n", v_dominates)
+	if !u_dominates {
+		tst.Errorf("test failed\n")
+		return
+	}
+	if v_dominates {
+		tst.Errorf("test failed\n")
+		return
+	}
+}

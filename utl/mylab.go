@@ -387,3 +387,34 @@ func GtePenalty(x, b, penaltyM float64) float64 {
 	}
 	return penaltyM * (b - x)
 }
+
+// DblsParetoMin compares two vectors using Pareto's optimal criterion
+//  Note: minimum dominates (is better)
+func DblsParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
+	chk.IntAssert(len(u), len(v))
+	u_has_all_leq := true // all u values are less-than or equal-to v values
+	u_has_one_le := false // u has at least one value less-than v
+	v_has_all_leq := true // all v values are less-than or equalt-to u values
+	v_has_one_le := false // v has at least one value less-than u
+	for i := 0; i < len(u); i++ {
+		if u[i] > v[i] {
+			u_has_all_leq = false
+		}
+		if u[i] < v[i] {
+			u_has_one_le = true
+		}
+		if v[i] > u[i] {
+			v_has_all_leq = false
+		}
+		if v[i] < u[i] {
+			v_has_one_le = true
+		}
+	}
+	if u_has_all_leq && u_has_one_le {
+		u_dominates = true
+	}
+	if v_has_all_leq && v_has_one_le {
+		v_dominates = true
+	}
+	return
+}
