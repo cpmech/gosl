@@ -251,6 +251,37 @@ func Test_getunique02(tst *testing.T) {
 	io.Pf(TextHist(hist.GenLabels("%d"), hist.Counts, 60))
 }
 
+func Test_groups01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("groups01")
+
+	Init(0)
+
+	ng := 3            // number of groups
+	nints := 12        // number of integers
+	size := nints / ng // groups size
+	ints := utl.IntRange(nints)
+	groups := utl.IntsAlloc(ng, size)
+	hists := make([]*IntHistogram, ng)
+	for i := 0; i < ng; i++ {
+		hists[i] = &IntHistogram{Stations: utl.IntRange(nints + 1)}
+	}
+	IntGetGroups(groups, ints)
+	io.Pfcyan("groups = %v\n", groups)
+	for i := 0; i < NSAMPLES; i++ {
+		IntGetGroups(groups, ints)
+		for j := 0; j < ng; j++ {
+			check_repeated(groups[j])
+			hists[j].Count(groups[j], false)
+		}
+	}
+	for i := 0; i < ng; i++ {
+		io.Pf("\n")
+		io.Pf(TextHist(hists[i].GenLabels("%d"), hists[i].Counts, 60))
+	}
+}
+
 func check_repeated(v []int) {
 	for i := 1; i < len(v); i++ {
 		if v[i] == v[i-1] {

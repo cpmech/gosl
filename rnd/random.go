@@ -221,3 +221,22 @@ func DblShuffle(values []float64) {
 		values[i] = tmp
 	}
 }
+
+// IntGetGroups randomly selects indices from pool separating them in groups
+//  Input:
+//    pool -- all ints.
+//  Output:
+//    groups -- [ngroups][size_of_group] pre-allocated slices
+//  Note: pool will be shuffled
+func IntGetGroups(groups [][]int, pool []int) {
+	ngroups := len(groups)
+	sizeg := len(groups[0])
+	IntShuffle(pool)
+	var k int
+	for i := 0; i < ngroups; i++ {
+		for j := 0; j < sizeg; j++ {
+			groups[i][j] = pool[k]
+			k++
+		}
+	}
+}
