@@ -46,12 +46,57 @@ func Test_munkres01(tst *testing.T) {
 	verbose()
 	chk.PrintTitle("munkres01")
 
-	var mnk Munkres
-	mnk.Init([][]int{
+	C := [][]int{
 		{1, 2, 3},
 		{2, 4, 6},
 		{3, 6, 9},
-	})
+	}
 
-	mnk.Run(chk.Verbose)
+	var mnk Munkres
+	mnk.Init(C)
+
+	next_step := mnk.step1()
+	chk.IntAssert(next_step, 2)
+	chk.IntMat(tst, "after step1: C", mnk.C, [][]int{
+		{0, 1, 2},
+		{0, 2, 4},
+		{0, 3, 6},
+	})
+	chk.Bools(tst, "after step1: row_covered", mnk.row_covered, []bool{false, false, false})
+	chk.Bools(tst, "after step1: col_covered", mnk.col_covered, []bool{false, false, false})
+
+	next_step = mnk.step2()
+	chk.IntAssert(next_step, 3)
+	check_mask_matrix(tst, "after step1: M", mnk.M, [][]Mask_t{
+		{STAR, NONE, NONE},
+		{NONE, NONE, NONE},
+		{NONE, NONE, NONE},
+	})
+	chk.Bools(tst, "after step1: row_covered", mnk.row_covered, []bool{false, false, false})
+	chk.Bools(tst, "after step1: col_covered", mnk.col_covered, []bool{false, false, false})
+
+	//mnk.Run(chk.Verbose)
+}
+
+func check_mask_matrix(tst *testing.T, msg string, res, correct [][]Mask_t) {
+	if len(res) != len(correct) {
+		io.Pf("%s [1;31merror len(res)=%d != len(correct)=%d[0m\n", msg, len(res), len(correct))
+		tst.Errorf("[1;31m%s failed: res and correct matrices have different lengths. %d != %d[0m", msg, len(res), len(correct))
+		return
+	}
+	for i := 0; i < len(res); i++ {
+		if len(res[i]) != len(correct[i]) {
+			io.Pf("%s [1;31merror len(res[%d])=%d != len(correct[%d])=%d[0m\n", msg, i, len(res[i]), i, len(correct[i]))
+			tst.Errorf("[1;31m%s failed: matrices have different number of columns[0m", msg)
+			return
+		}
+		for j := 0; j < len(res[i]); j++ {
+			if res[i][j] != correct[i][j] {
+				io.Pf("%s [1;31merror [%d,%d] %v != %v[0m\n", msg, i, j, res[i][j], correct[i][j])
+				tst.Errorf("[1;31m%s failed: different int matrices:\n [%d,%d] item is wrong: %v != %v[0m", msg, i, j, res[i][j], correct[i][j])
+				return
+			}
+		}
+	}
+	chk.PrintOk(msg)
 }

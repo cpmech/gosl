@@ -16,8 +16,8 @@ type Mask_t int
 
 const (
 	NONE Mask_t = iota
-	STARRED
-	PRIMED
+	STAR
+	PRIM
 )
 
 // Munkres (Hungarian algorithm) method to solve the assignment problem
@@ -69,15 +69,17 @@ func (o *Munkres) step1() (next_step int) {
 
 // step2: find a zero (Z) in the resulting matrix. If there is no starred zero in its row or column,
 // star Z. Repeat for each element in the matrix. Check to see if Cij is a zero value and if its
-// column or row is not already covered. If not then we star this zero and cover its row and column.
+// column or row is not already covered. If not, then star this zero and cover its row and column.
 // Uncover all rows and columns before leaving. next_step = 3
 func (o *Munkres) step2() (next_step int) {
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.nrow; j++ {
-			if o.C[i][j] == 0 && !o.row_covered[i] && !o.col_covered[j] {
-				o.M[i][j] = STARRED
-				o.row_covered[i] = true
-				o.col_covered[j] = true
+			if !o.row_covered[i] && !o.col_covered[j] {
+				if o.C[i][j] == 0 {
+					o.M[i][j] = STAR
+					o.row_covered[i] = true
+					o.col_covered[j] = true
+				}
 			}
 		}
 	}
@@ -98,7 +100,7 @@ func (o *Munkres) step2() (next_step int) {
 func (o *Munkres) step3() (next_step int) {
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.nrow; j++ {
-			if o.M[i][j] == STARRED {
+			if o.M[i][j] == STAR {
 				o.col_covered[j] = true
 			}
 		}
@@ -128,7 +130,7 @@ func (o *Munkres) step4() (next_step int) {
 			done = true
 			next_step = 6
 		} else {
-			o.M[row][col] = PRIMED
+			o.M[row][col] = PRIM
 			col_star := o.find_star_in_row(row)
 			if col_star >= 0 {
 				col = col_star
@@ -177,10 +179,10 @@ func (o *Munkres) step5() (next_step int) {
 
 	// augment_path
 	for p := 0; p < o.path_count; p++ {
-		if o.M[o.path[p][0]][o.path[p][1]] == STARRED {
+		if o.M[o.path[p][0]][o.path[p][1]] == STAR {
 			o.M[o.path[p][0]][o.path[p][1]] = NONE
 		} else {
-			o.M[o.path[p][0]][o.path[p][1]] = STARRED
+			o.M[o.path[p][0]][o.path[p][1]] = STAR
 		}
 	}
 
@@ -195,7 +197,7 @@ func (o *Munkres) step5() (next_step int) {
 	// erase_primes
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.nrow; j++ {
-			if o.M[i][j] == PRIMED {
+			if o.M[i][j] == PRIM {
 				o.M[i][j] = NONE
 			}
 		}
@@ -275,9 +277,9 @@ func (o *Munkres) print_cost_matrix() {
 			switch o.M[i][j] {
 			case NONE:
 				io.Pf("%6s", io.Sf("%d ", o.C[i][j]))
-			case STARRED:
+			case STAR:
 				io.Pf("%6s", io.Sf("%d*", o.C[i][j]))
-			case PRIMED:
+			case PRIM:
 				io.Pf("%6s", io.Sf("%d'", o.C[i][j]))
 			}
 		}
@@ -314,7 +316,7 @@ func (o *Munkres) find_a_zero() (row, col int) {
 func (o *Munkres) find_star_in_row(row int) (col int) {
 	col = -1
 	for j := 0; j < o.nrow; j++ {
-		if o.M[row][j] == STARRED {
+		if o.M[row][j] == STAR {
 			col = j
 		}
 	}
@@ -325,7 +327,7 @@ func (o *Munkres) find_star_in_row(row int) (col int) {
 func (o *Munkres) find_star_in_col(c int) (r int) {
 	r = -1
 	for i := 0; i < o.nrow; i++ {
-		if o.M[i][c] == STARRED {
+		if o.M[i][c] == STAR {
 			r = i
 		}
 	}
@@ -335,7 +337,7 @@ func (o *Munkres) find_star_in_col(c int) (r int) {
 // find_star_in_col: method to support step 5
 func (o *Munkres) find_prime_in_row(r int) (c int) {
 	for j := 0; j < o.ncol; j++ {
-		if o.M[r][j] == PRIMED {
+		if o.M[r][j] == PRIM {
 			c = j
 		}
 	}
