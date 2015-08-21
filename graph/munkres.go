@@ -7,6 +7,7 @@ package graph
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
@@ -19,22 +20,25 @@ const (
 	PRIMED
 )
 
-// Munkres method to solve the assignment problem
+// Munkres (Hungarian algorithm) method to solve the assignment problem
 //  based on code by Bob Pilgrim from http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html
+//  Note: this method runs in O(n²), in the worst case; therefore is not efficient for large matrix
 type Munkres struct {
-	C          [][]int    // cost matrix
-	M          [][]Mask_t // mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero
-	path       [][]int
-	RowCover   []bool
-	ColCover   []bool
-	nrow       int
-	ncol       int
-	path_count int
-	path_row_0 int
-	path_col_0 int
+	C           [][]int    // cost matrix
+	M           [][]Mask_t // mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero
+	path        [][]int
+	row_covered []bool // indicates whether a row is covered or not
+	col_covered []bool // indicates whether a column is covered or not
+	nrow        int    // number of rows in cost/mask matrix
+	ncol        int    // number of column in cost/mask matrix
+	path_count  int
+	path_row_0  int
+	path_col_0  int
 }
 
+// Init initialises Munkres' structure
 func (o *Munkres) Init(C [][]int) {
+	chk.IntAssertLessThan(1, len(C))
 	o.C = C
 	o.nrow, o.ncol = len(o.C), len(o.C[0])
 	o.M = make([][]Mask_t, o.nrow)
@@ -43,21 +47,21 @@ func (o *Munkres) Init(C [][]int) {
 	}
 	npath := 2*o.nrow + 1 // TODO: check this
 	o.path = utl.IntsAlloc(npath, 2)
-	o.RowCover = make([]bool, o.nrow)
-	o.ColCover = make([]bool, o.ncol)
+	o.row_covered = make([]bool, o.nrow)
+	o.col_covered = make([]bool, o.ncol)
 }
 
 // step1: for each row of the cost matrix, find the smallest element and subtract it from every
 // element in its row. next_step = 2
 func (o *Munkres) step1() (next_step int) {
 	var xmin int
-	for r := 0; r < o.nrow; r++ {
-		xmin = o.C[r][0]
-		for c := 1; c < o.ncol; c++ {
-			xmin = utl.Imin(xmin, o.C[r][c])
+	for i := 0; i < o.nrow; i++ {
+		xmin = o.C[i][0]
+		for j := 1; j < o.ncol; j++ {
+			xmin = utl.Imin(xmin, o.C[i][j])
 		}
-		for c := 0; c < o.ncol; c++ {
-			o.C[r][c] -= xmin
+		for j := 0; j < o.nrow; j++ {
+			o.C[i][j] -= xmin
 		}
 	}
 	return 2
@@ -68,20 +72,20 @@ func (o *Munkres) step1() (next_step int) {
 // column or row is not already covered. If not then we star this zero and cover its row and column.
 // Uncover all rows and columns before leaving. next_step = 3
 func (o *Munkres) step2() (next_step int) {
-	for r := 0; r < o.nrow; r++ {
-		for c := 0; c < o.ncol; c++ {
-			if o.C[r][c] == 0 && !o.RowCover[r] && !o.ColCover[c] {
-				o.M[r][c] = STARRED
-				o.RowCover[r] = true
-				o.ColCover[c] = true
+	for i := 0; i < o.nrow; i++ {
+		for j := 0; j < o.nrow; j++ {
+			if o.C[i][j] == 0 && !o.row_covered[i] && !o.col_covered[j] {
+				o.M[i][j] = STARRED
+				o.row_covered[i] = true
+				o.col_covered[j] = true
 			}
 		}
 	}
-	for r := 0; r < o.nrow; r++ {
-		o.RowCover[r] = false
+	for i := 0; i < o.nrow; i++ {
+		o.row_covered[i] = false
 	}
-	for c := 0; c < o.ncol; c++ {
-		o.ColCover[c] = false
+	for j := 0; j < o.nrow; j++ {
+		o.col_covered[j] = false
 	}
 	return 3
 }
@@ -92,16 +96,16 @@ func (o *Munkres) step2() (next_step int) {
 // zeros found. If we have found (and starred) K independent zeros then we are done. If not we
 // proceed to Step 4.
 func (o *Munkres) step3() (next_step int) {
-	for r := 0; r < o.nrow; r++ {
-		for c := 0; c < o.ncol; c++ {
-			if o.M[r][c] == STARRED {
-				o.ColCover[c] = true
+	for i := 0; i < o.nrow; i++ {
+		for j := 0; j < o.nrow; j++ {
+			if o.M[i][j] == STARRED {
+				o.col_covered[j] = true
 			}
 		}
 	}
 	colcount := 0
-	for c := 0; c < o.ncol; c++ {
-		if o.ColCover[c] {
+	for j := 0; j < o.nrow; j++ {
+		if o.col_covered[j] {
 			colcount += 1
 		}
 	}
@@ -128,8 +132,8 @@ func (o *Munkres) step4() (next_step int) {
 			col_star := o.find_star_in_row(row)
 			if col_star >= 0 {
 				col = col_star
-				o.RowCover[row] = true
-				o.ColCover[col] = false
+				o.row_covered[row] = true
+				o.col_covered[col] = false
 			} else {
 				done = true
 				next_step = 5
@@ -181,18 +185,18 @@ func (o *Munkres) step5() (next_step int) {
 	}
 
 	// clear_covers
-	for r := 0; r < o.nrow; r++ {
-		o.RowCover[r] = false
+	for i := 0; i < o.nrow; i++ {
+		o.row_covered[i] = false
 	}
-	for c := 0; c < o.ncol; c++ {
-		o.ColCover[c] = false
+	for j := 0; j < o.nrow; j++ {
+		o.col_covered[j] = false
 	}
 
 	// erase_primes
-	for r := 0; r < o.nrow; r++ {
-		for c := 0; c < o.ncol; c++ {
-			if o.M[r][c] == PRIMED {
-				o.M[r][c] = NONE
+	for i := 0; i < o.nrow; i++ {
+		for j := 0; j < o.nrow; j++ {
+			if o.M[i][j] == PRIMED {
+				o.M[i][j] = NONE
 			}
 		}
 	}
@@ -206,24 +210,24 @@ func (o *Munkres) step6() (next_step int) {
 
 	// find_smallest
 	minval := math.MaxInt64
-	for r := 0; r < o.nrow; r++ {
-		for c := 0; c < o.ncol; c++ {
-			if !o.RowCover[r] && !o.ColCover[c] {
-				if minval > o.C[r][c] {
-					minval = o.C[r][c]
+	for i := 0; i < o.nrow; i++ {
+		for j := 0; j < o.nrow; j++ {
+			if !o.row_covered[i] && !o.col_covered[j] {
+				if minval > o.C[i][j] {
+					minval = o.C[i][j]
 				}
 			}
 		}
 	}
 
 	// add value from step 4
-	for r := 0; r < o.nrow; r++ {
-		for c := 0; c < o.ncol; c++ {
-			if o.RowCover[r] {
-				o.C[r][c] += minval
+	for i := 0; i < o.nrow; i++ {
+		for j := 0; j < o.nrow; j++ {
+			if o.row_covered[i] {
+				o.C[i][j] += minval
 			}
-			if !o.ColCover[c] {
-				o.C[r][c] -= minval
+			if !o.col_covered[j] {
+				o.C[i][j] -= minval
 			}
 		}
 	}
@@ -261,20 +265,20 @@ func (o *Munkres) Run(verbose bool) {
 
 func (o *Munkres) print_cost_matrix() {
 	io.Pf("%6v", " ")
-	for c := 0; c < o.ncol; c++ {
-		io.Pf("%6v", o.ColCover[c])
+	for j := 0; j < o.nrow; j++ {
+		io.Pf("%6v", o.col_covered[j])
 	}
 	io.Pf("\n")
-	for r := 0; r < o.nrow; r++ {
-		io.Pf("%6v", o.RowCover[r])
-		for c := 0; c < o.ncol; c++ {
-			switch o.M[r][c] {
+	for i := 0; i < o.nrow; i++ {
+		io.Pf("%6v", o.row_covered[i])
+		for j := 0; j < o.nrow; j++ {
+			switch o.M[i][j] {
 			case NONE:
-				io.Pf("%6s", io.Sf("%d ", o.C[r][c]))
+				io.Pf("%6s", io.Sf("%d ", o.C[i][j]))
 			case STARRED:
-				io.Pf("%6s", io.Sf("%d*", o.C[r][c]))
+				io.Pf("%6s", io.Sf("%d*", o.C[i][j]))
 			case PRIMED:
-				io.Pf("%6s", io.Sf("%d'", o.C[r][c]))
+				io.Pf("%6s", io.Sf("%d'", o.C[i][j]))
 			}
 		}
 		io.Pf("\n")
@@ -285,21 +289,21 @@ func (o *Munkres) print_cost_matrix() {
 
 // find_a_zero: method to support step 4
 func (o *Munkres) find_a_zero() (row, col int) {
-	r, c, done := 0, 0, false
+	i, j, done := 0, 0, false
 	row, col = -1, -1
 	for !done {
-		c = 0
+		j = 0
 		for true {
-			if o.C[r][c] == 0 && !o.RowCover[r] && !o.ColCover[c] {
-				row, col, done = r, c, true
+			if o.C[i][j] == 0 && !o.row_covered[i] && !o.col_covered[j] {
+				row, col, done = i, j, true
 			}
-			c += 1
-			if c >= o.ncol || done {
+			j += 1
+			if j >= o.ncol || done {
 				break
 			}
 		}
-		r += 1
-		if r >= o.nrow {
+		i += 1
+		if i >= o.nrow {
 			done = true
 		}
 	}
@@ -309,9 +313,9 @@ func (o *Munkres) find_a_zero() (row, col int) {
 // find_star_in_row: method to support step 4
 func (o *Munkres) find_star_in_row(row int) (col int) {
 	col = -1
-	for c := 0; c < o.ncol; c++ {
-		if o.M[row][c] == STARRED {
-			col = c
+	for j := 0; j < o.nrow; j++ {
+		if o.M[row][j] == STARRED {
+			col = j
 		}
 	}
 	return

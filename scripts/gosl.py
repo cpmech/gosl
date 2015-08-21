@@ -10,7 +10,7 @@ import sys
 import os.path
 from os import remove
 from os.path import basename, exists
-from scipy.special import erfc
+#from scipy.special import erfc
 from numpy.linalg import norm, eig, solve
 from numpy import cosh, sinh, polyfit
 from numpy import pi, sin, cos, tan, arcsin, arccos, arctan, arctan2, log, log10, exp, sqrt
@@ -33,7 +33,7 @@ from matplotlib.ticker          import FuncFormatter
 from mpl_toolkits.mplot3d       import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from matplotlib.ticker          import MaxNLocator
-from scipy.interpolate          import UnivariateSpline
+#from scipy.interpolate          import UnivariateSpline
 from matplotlib.patheffects     import Stroke # for fixing arrow tips
 from matplotlib.gridspec        import GridSpec
 
