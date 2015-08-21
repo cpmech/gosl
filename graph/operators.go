@@ -37,5 +37,45 @@ func Match(pairs [][]int, cost [][]float64) (optcost float64) {
 		return
 	}
 	chk.Panic("Match cannot handle cost %d x %d matrices yet", m, n)
+
+	/*
+		done := false
+		for !done {
+			switch step {
+			case 1:
+				step = munkres_step_one(step)
+			case 2:
+				step = munkres_step_two(step)
+			case 3:
+				step = munkres_step_three(step)
+			case 4:
+				step = munkres_step_four(step)
+			case 5:
+				step = munkres_step_five(step)
+			case 6:
+				step = munkres_step_six(step)
+			case 7:
+				step = munkres_step_seven(step)
+				done = true
+			}
+		}
+	*/
+
 	return
 }
+
+/*
+func munkres_step_one(step int) (next_step int) {
+	var min_in_row float64
+	for r := 0; r < nrow; r++ {
+		min_in_row = C[r][0]
+		for c := 0; c < ncol; c++ {
+			min_in_row = utl.Min(min_in_row, C[r][c])
+		}
+		for c := 0; c < ncol; c++ {
+			C[r][c] -= min_in_row
+		}
+	}
+	return 2
+}
+*/

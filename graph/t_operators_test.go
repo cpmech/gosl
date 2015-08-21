@@ -40,3 +40,18 @@ func Test_match01(tst *testing.T) {
 		{1, 0}, // 1 does 0
 	})
 }
+
+func Test_munkres01(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("munkres01")
+
+	var mnk Munkres
+	mnk.Init([][]int{
+		{1, 2, 3},
+		{2, 4, 6},
+		{3, 6, 9},
+	})
+
+	mnk.Run(chk.Verbose)
+}
