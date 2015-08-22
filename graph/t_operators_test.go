@@ -275,15 +275,14 @@ func Test_munkres02(tst *testing.T) {
 		{0, 1, 3},
 	}
 
-	pairs := utl.IntsAlloc(len(C), 2)
 	var mnk Munkres
 	mnk.Init(C)
-	mnk.Run(pairs)
+	mnk.Run()
 	chk.IntMat(tst, "C", mnk.C, Ccor)
-	chk.IntMat(tst, "pairs", pairs, [][]int{
-		{0, 2}, // 0 goes with 2
-		{1, 1}, // 1 goes with 1
-		{2, 0}, // 2 goes with 0
+	chk.Ints(tst, "links", mnk.Links, []int{
+		2, // 0 goes with 2
+		1, // 1 goes with 1
+		0, // 2 goes with 0
 	})
 }
 

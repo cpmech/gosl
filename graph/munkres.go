@@ -24,15 +24,16 @@ const (
 //  based on code by Bob Pilgrim from http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html
 //  Note: this method runs in O(n²), in the worst case; therefore is not efficient for large matrix
 type Munkres struct {
-	C           [][]int    // cost matrix
-	M           [][]Mask_t // mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero
-	path        [][]int
-	row_covered []bool // indicates whether a row is covered or not
-	col_covered []bool // indicates whether a column is covered or not
-	nrow        int    // number of rows in cost/mask matrix
-	ncol        int    // number of column in cost/mask matrix
-	path_row_0  int
-	path_col_0  int
+	C           [][]int    // [nrow][ncol] cost matrix
+	M           [][]Mask_t // [nrow][ncol] mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero
+	Links       []int      // [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j
+	path        [][]int    // path
+	row_covered []bool     // indicates whether a row is covered or not
+	col_covered []bool     // indicates whether a column is covered or not
+	nrow        int        // number of rows in cost/mask matrix
+	ncol        int        // number of column in cost/mask matrix
+	path_row_0  int        // first row in path
+	path_col_0  int        // first col in path
 }
 
 // Init initialises Munkres' structure
@@ -44,6 +45,7 @@ func (o *Munkres) Init(C [][]int) {
 	for i := 0; i < o.nrow; i++ {
 		o.M[i] = make([]Mask_t, o.ncol)
 	}
+	o.Links = make([]int, o.nrow)
 	npath := 2*o.nrow + 1 // TODO: check this
 	o.path = utl.IntsAlloc(npath, 2)
 	o.row_covered = make([]bool, o.nrow)
@@ -252,8 +254,9 @@ func (o *Munkres) step6() (next_step int) {
 
 // Run runs the iterative algorithm
 //  Output:
-//   pairs -- [nrow][2] assignments
-func (o *Munkres) Run(pairs [][]int) {
+//   o.Links will contain assignments, where len(assignments) == nrow and
+//   j := o.Links[i] means that i is assigned to j
+func (o *Munkres) Run() {
 	step := 1
 	done := false
 	for !done {
@@ -274,12 +277,11 @@ func (o *Munkres) Run(pairs [][]int) {
 			done = true
 		}
 	}
-	k := 0
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.ncol; j++ {
 			if o.M[i][j] == STAR {
-				pairs[k][0], pairs[k][1] = i, j
-				k++
+				o.Links[i] = j
+				break
 			}
 		}
 	}
