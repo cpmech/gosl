@@ -251,7 +251,9 @@ func (o *Munkres) step6() (next_step int) {
 }
 
 // Run runs the iterative algorithm
-func (o *Munkres) Run() {
+//  Output:
+//   pairs -- [nrow][2] assignments
+func (o *Munkres) Run(pairs [][]int) {
 	step := 1
 	done := false
 	for !done {
@@ -270,6 +272,15 @@ func (o *Munkres) Run() {
 			step = o.step6() // returns 4
 		case 7:
 			done = true
+		}
+	}
+	k := 0
+	for i := 0; i < o.nrow; i++ {
+		for j := 0; j < o.ncol; j++ {
+			if o.M[i][j] == STAR {
+				pairs[k][0], pairs[k][1] = i, j
+				k++
+			}
 		}
 	}
 }

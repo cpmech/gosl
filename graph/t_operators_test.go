@@ -259,6 +259,34 @@ func Test_munkres01(tst *testing.T) {
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, true})
 }
 
+func Test_munkres02(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("munkres02")
+
+	C := [][]int{
+		{1, 2, 3},
+		{2, 4, 6},
+		{3, 6, 9},
+	}
+	Ccor := [][]int{
+		{1, 0, 0},
+		{0, 0, 1},
+		{0, 1, 3},
+	}
+
+	pairs := utl.IntsAlloc(len(C), 2)
+	var mnk Munkres
+	mnk.Init(C)
+	mnk.Run(pairs)
+	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.IntMat(tst, "pairs", pairs, [][]int{
+		{0, 2}, // 0 goes with 2
+		{1, 1}, // 1 goes with 1
+		{2, 0}, // 2 goes with 0
+	})
+}
+
 func check_mask_matrix(tst *testing.T, msg string, res, correct [][]Mask_t) {
 	if len(res) != len(correct) {
 		io.Pf("%s [1;31merror len(res)=%d != len(correct)=%d[0m\n", msg, len(res), len(correct))
