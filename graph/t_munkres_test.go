@@ -33,7 +33,8 @@ func Test_munkres01(tst *testing.T) {
 	}
 
 	var mnk Munkres
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 
 	// 1:
 	io.PfYel("1: after step 0:\n")
@@ -239,25 +240,31 @@ func Test_munkres02(tst *testing.T) {
 		{1, 1},
 	}
 	var mnk Munkres
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 goes with 1 and 1 goes with 0
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 2)
 
 	C = [][]float64{
 		{2, 2},
 		{4, 3},
 	}
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 1}) // 0 does 0 and 1 does with 1
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 5)
 
 	C = [][]float64{
 		{2, 2},
 		{1, 3},
 	}
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 does 1 and 1 does 0
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 3)
 
 	C = [][]float64{
 		{2, 1},
@@ -265,35 +272,43 @@ func Test_munkres02(tst *testing.T) {
 		{1, 1},
 		{1, 1},
 	}
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, -1, 0, -1}) // 0 goes with 0 and 1 goes with 1 and the others are unconnected
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 2)
 
 	C = [][]float64{
 		{1, 2, 3},
 		{6, 5, 4},
 	}
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 2}) // 0 goes with 0 and 1 goes with 2
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 5)
 
 	C = [][]float64{
 		{1, 2, 3},
 		{6, 5, 4},
 		{1, 1, 1},
 	}
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 2, 1}) // 0 goes with 0, 1 goes with 2 and 2 goes with 1
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 6)
 
 	C = [][]float64{
 		{2, 4, 7, 9},
 		{3, 9, 5, 1},
 		{8, 2, 9, 7},
 	}
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 3, 1})
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 5)
 
 	C = [][]float64{
 		{1, 2, 3},
@@ -305,10 +320,12 @@ func Test_munkres02(tst *testing.T) {
 		{0, 0, 1},
 		{0, 1, 3},
 	}
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	chk.Ints(tst, "links", mnk.Links, []int{2, 1, 0}) // 0 goes with 2, 1 goes with 1 and 2 goes with 0
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 10)
 
 	// from https://projecteuler.net/index.php?section=problems&id=345
 	C = [][]float64{
@@ -323,9 +340,9 @@ func Test_munkres02(tst *testing.T) {
 			C[i][j] *= -1
 		}
 	}
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
-	io.Pforan("links = %v\n", mnk.Links)
 	chk.Ints(tst, "links", mnk.Links, []int{4, 1, 2, 3, 0})
 }
 
@@ -358,18 +375,13 @@ func Test_munkres03(tst *testing.T) {
 	}
 
 	var mnk Munkres
-	mnk.Init(C)
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
 	mnk.Run()
 	io.Pforan("links = %v\n", mnk.Links)
-
-	cost := 0.0
-	for i := 0; i < len(C); i++ {
-		j := mnk.Links[i]
-		cost += -C[i][j]
-	}
-	io.Pforan("cost = %v  (13938)\n", cost)
-	chk.Scalar(tst, "cost", 1e-17, cost, 13938)
+	io.Pforan("cost = %v  (13938)\n", -mnk.Cost)
 	chk.Ints(tst, "links", mnk.Links, []int{9, 10, 7, 4, 3, 0, 13, 2, 14, 11, 6, 5, 12, 8, 1})
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, -13938)
 }
 
 func check_mask_matrix(tst *testing.T, msg string, res, correct [][]Mask_t) {

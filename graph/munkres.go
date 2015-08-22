@@ -34,8 +34,9 @@ type Munkres struct {
 
 	// main
 	C     [][]float64 // [nrow][ncol] cost matrix
+	Cori  [][]float64 // [nrow][ncol] original cost matrix
 	Links []int       // [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j. -1 means no assignment/link
-	Cost  int         // total cost after Run() and links are established
+	Cost  float64     // total cost after Run() and links are established
 
 	// auxiliary
 	M           [][]Mask_t // [nrow][ncol] mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero
@@ -49,16 +50,11 @@ type Munkres struct {
 }
 
 // Init initialises Munkres' structure
-func (o *Munkres) Init(C [][]float64) {
-	chk.IntAssertLessThan(1, len(C))
-	chk.IntAssertLessThan(1, len(C[0]))
-	o.nrow, o.ncol = len(C), len(C[0])
+func (o *Munkres) Init(nrow, ncol int) {
+	chk.IntAssertLessThan(1, nrow) // nrow > 1
+	chk.IntAssertLessThan(1, ncol) // ncol > 1
+	o.nrow, o.ncol = nrow, ncol
 	o.C = utl.DblsAlloc(o.nrow, o.ncol)
-	for i := 0; i < o.nrow; i++ {
-		for j := 0; j < o.ncol; j++ {
-			o.C[i][j] = C[i][j]
-		}
-	}
 	o.M = make([][]Mask_t, o.nrow)
 	for i := 0; i < o.nrow; i++ {
 		o.M[i] = make([]Mask_t, o.ncol)
@@ -68,28 +64,59 @@ func (o *Munkres) Init(C [][]float64) {
 	o.path = utl.IntsAlloc(npath, 2)
 	o.row_covered = make([]bool, o.nrow)
 	o.col_covered = make([]bool, o.ncol)
-
-	/* Notes:
-	 1. The algorthm will work even when the minimum values in two or more rows are in the same column.
-	 2. The algorithm will work even when two or more of the rows contain the same values in the the same order.
-	 3. The algorithm will work even when all the values are the same (although the result is not very interesting).
-	 4. Munkres Assignment Algorithm is not exponential run time or intractable; it is of a low order polynomial run time, worst-case O(n3).
-	 5. Optimality is guaranteed in Munkres Assignment Algorithm.
-	 6. Setting the cost matrix to C(i,j) = i*j  makes a good testing matrix for this problem.
-	 7. In this algorithm the range of indices is[0..n-1] rather than [1..n].
-	 8. Step 3 is an example of the greedy method.  If the minimum values are all in different rows then their positions represent the minimal pairwise assignments.
-	 9. Step 5 is an example of the Augmenting Path Algorithm (Stable Marriage Problem).
-	10. Step 6 is an example of constraint relaxation.  It is "giving up" on a particular cost and raising the constraint by the least amount possible.
-	11. If your implementation is jumping between Step 4 and Step 6 without entering Step 5, you probably have not properly dealt with recognizing that there are no uncovered zeros in Step 4.
-	12. In the matrix M 1=starred zero and 2=primed zero.  So, if C[i,j] is a starred zero we would set M[i,j]=1.  All other elements in M are set to zero
-	13. The Munkres assignment algorithm can be implemented as a sparse matrix, but you will need to ensure that the correct (optimal) assignment pairs are active in the sparse cost matrix C
-	14. Munkres Assignment can be applied to TSP, pattern matching, track initiation, data correlation, and (of course) any pairwise assignment application.
-	15. Munkres can be extended to rectangular arrays (i.e. more jobs than workers, or more workers than jobs) .
-	16. The best way to find a maximal assignment is to replace the values ci,j in the cost matrix with C[i,j] = bigval - ci,j.
-	17. Original Reference: Algorithms for Assignment and Transportation Problems, James Munkres, Journal of the Society for Industrial and Applied Mathematics Volume 5, Number 1, March, 1957
-	18. Extension to Rectangular Arrays Ref:  F. Burgeois and J.-C. Lasalle. An extension of the Munkres algorithm for the assignment problem to rectangular matrices. Communications of the ACM, 142302-806, 1971.
-	*/
 }
+
+// SetCostMatrix sets cost matrix by copying from C to internal o.C
+func (o *Munkres) SetCostMatrix(C [][]float64) {
+	o.Cori = C
+	for i := 0; i < o.nrow; i++ {
+		for j := 0; j < o.ncol; j++ {
+			o.C[i][j] = C[i][j]
+		}
+	}
+}
+
+// Run runs the iterative algorithm
+//  Output:
+//   o.Links -- will contain assignments, where len(assignments) == nrow and
+//              j := o.Links[i] means that i is assigned to j
+//              -1 means no assignment/link
+//   o.Cost -- will have the total cost by following links
+func (o *Munkres) Run() {
+	step := 1
+	done := false
+	for !done {
+		switch step {
+		case 1:
+			step = o.step1() // returns 2
+		case 2:
+			step = o.step2() // returns 3
+		case 3:
+			step = o.step3() // returns 4 or 7
+		case 4:
+			step = o.step4() // returns 5 or 6
+		case 5:
+			step = o.step5() // returns 3
+		case 6:
+			step = o.step6() // returns 4
+		case 7:
+			done = true
+		}
+	}
+	o.Cost = 0
+	for i := 0; i < o.nrow; i++ {
+		o.Links[i] = -1
+		for j := 0; j < o.ncol; j++ {
+			if o.M[i][j] == STAR {
+				o.Links[i] = j
+				o.Cost += o.Cori[i][j]
+				break
+			}
+		}
+	}
+}
+
+// steps //////////////////////////////////////////////////////////////////////////////////////////
 
 // step1: for each row of the cost matrix, find the smallest element and subtract it from every
 // element in its row. next_step = 2
@@ -270,42 +297,7 @@ func (o *Munkres) step6() (next_step int) {
 	return 4
 }
 
-// Run runs the iterative algorithm
-//  Output:
-//   o.Links will contain assignments, where len(assignments) == nrow and
-//   j := o.Links[i] means that i is assigned to j
-//   -1 means no assignment/link
-func (o *Munkres) Run() {
-	step := 1
-	done := false
-	for !done {
-		switch step {
-		case 1:
-			step = o.step1() // returns 2
-		case 2:
-			step = o.step2() // returns 3
-		case 3:
-			step = o.step3() // returns 4 or 7
-		case 4:
-			step = o.step4() // returns 5 or 6
-		case 5:
-			step = o.step5() // returns 3
-		case 6:
-			step = o.step6() // returns 4
-		case 7:
-			done = true
-		}
-	}
-	for i := 0; i < o.nrow; i++ {
-		o.Links[i] = -1
-		for j := 0; j < o.ncol; j++ {
-			if o.M[i][j] == STAR {
-				o.Links[i] = j
-				break
-			}
-		}
-	}
-}
+// auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
 // StrCostMatrix returns a representation of cost matrix with masks and covers
 func (o *Munkres) StrCostMatrix() (l string) {
@@ -341,8 +333,6 @@ func (o *Munkres) StrCostMatrix() (l string) {
 	}
 	return
 }
-
-// auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
 // find_noncov_zero finds the row and column of a non-covered zero entry. -1 means not found
 func (o *Munkres) find_noncov_zero() (row, col int) {
@@ -400,3 +390,24 @@ func (o *Munkres) find_prime_in_row(r int) (c int) {
 	}
 	return
 }
+
+/* Notes:
+ 1. The algorthm will work even when the minimum values in two or more rows are in the same column.
+ 2. The algorithm will work even when two or more of the rows contain the same values in the the same order.
+ 3. The algorithm will work even when all the values are the same (although the result is not very interesting).
+ 4. Munkres Assignment Algorithm is not exponential run time or intractable; it is of a low order polynomial run time, worst-case O(n3).
+ 5. Optimality is guaranteed in Munkres Assignment Algorithm.
+ 6. Setting the cost matrix to C(i,j) = i*j  makes a good testing matrix for this problem.
+ 7. In this algorithm the range of indices is[0..n-1] rather than [1..n].
+ 8. Step 3 is an example of the greedy method.  If the minimum values are all in different rows then their positions represent the minimal pairwise assignments.
+ 9. Step 5 is an example of the Augmenting Path Algorithm (Stable Marriage Problem).
+10. Step 6 is an example of constraint relaxation.  It is "giving up" on a particular cost and raising the constraint by the least amount possible.
+11. If your implementation is jumping between Step 4 and Step 6 without entering Step 5, you probably have not properly dealt with recognizing that there are no uncovered zeros in Step 4.
+12. In the matrix M 1=starred zero and 2=primed zero.  So, if C[i,j] is a starred zero we would set M[i,j]=1.  All other elements in M are set to zero
+13. The Munkres assignment algorithm can be implemented as a sparse matrix, but you will need to ensure that the correct (optimal) assignment pairs are active in the sparse cost matrix C
+14. Munkres Assignment can be applied to TSP, pattern matching, track initiation, data correlation, and (of course) any pairwise assignment application.
+15. Munkres can be extended to rectangular arrays (i.e. more jobs than workers, or more workers than jobs) .
+16. The best way to find a maximal assignment is to replace the values ci,j in the cost matrix with C[i,j] = bigval - ci,j.
+17. Original Reference: Algorithms for Assignment and Transportation Problems, James Munkres, Journal of the Society for Industrial and Applied Mathematics Volume 5, Number 1, March, 1957
+18. Extension to Rectangular Arrays Ref:  F. Burgeois and J.-C. Lasalle. An extension of the Munkres algorithm for the assignment problem to rectangular matrices. Communications of the ACM, 142302-806, 1971.
+*/
