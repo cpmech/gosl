@@ -31,7 +31,6 @@ type Munkres struct {
 	col_covered []bool // indicates whether a column is covered or not
 	nrow        int    // number of rows in cost/mask matrix
 	ncol        int    // number of column in cost/mask matrix
-	path_count  int
 	path_row_0  int
 	path_col_0  int
 }
@@ -49,6 +48,27 @@ func (o *Munkres) Init(C [][]int) {
 	o.path = utl.IntsAlloc(npath, 2)
 	o.row_covered = make([]bool, o.nrow)
 	o.col_covered = make([]bool, o.ncol)
+
+	/* Notes:
+	 1. The algorthm will work even when the minimum values in two or more rows are in the same column.
+	 2. The algorithm will work even when two or more of the rows contain the same values in the the same order.
+	 3. The algorithm will work even when all the values are the same (although the result is not very interesting).
+	 4. Munkres Assignment Algorithm is not exponential run time or intractable; it is of a low order polynomial run time, worst-case O(n3).
+	 5. Optimality is guaranteed in Munkres Assignment Algorithm.
+	 6. Setting the cost matrix to C(i,j) = i*j  makes a good testing matrix for this problem.
+	 7. In this algorithm the range of indices is[0..n-1] rather than [1..n].
+	 8. Step 3 is an example of the greedy method.  If the minimum values are all in different rows then their positions represent the minimal pairwise assignments.
+	 9. Step 5 is an example of the Augmenting Path Algorithm (Stable Marriage Problem).
+	10. Step 6 is an example of constraint relaxation.  It is "giving up" on a particular cost and raising the constraint by the least amount possible.
+	11. If your implementation is jumping between Step 4 and Step 6 without entering Step 5, you probably have not properly dealt with recognizing that there are no uncovered zeros in Step 4.
+	12. In the matrix M 1=starred zero and 2=primed zero.  So, if C[i,j] is a starred zero we would set M[i,j]=1.  All other elements in M are set to zero
+	13. The Munkres assignment algorithm can be implemented as a sparse matrix, but you will need to ensure that the correct (optimal) assignment pairs are active in the sparse cost matrix C
+	14. Munkres Assignment can be applied to TSP, pattern matching, track initiation, data correlation, and (of course) any pairwise assignment application.
+	15. Munkres can be extended to rectangular arrays (i.e. more jobs than workers, or more workers than jobs) .
+	16. The best way to find a maximal assignment is to replace the values ci,j in the cost matrix with C[i,j] = bigval - ci,j.
+	17. Original Reference: Algorithms for Assignment and Transportation Problems, James Munkres, Journal of the Society for Industrial and Applied Mathematics Volume 5, Number 1, March, 1957
+	18. Extension to Rectangular Arrays Ref:  F. Burgeois and J.-C. Lasalle. An extension of the Munkres algorithm for the assignment problem to rectangular matrices. Communications of the ACM, 142302-806, 1971.
+	*/
 }
 
 // step1: for each row of the cost matrix, find the smallest element and subtract it from every
@@ -103,27 +123,26 @@ func (o *Munkres) step3() (next_step int) {
 			}
 		}
 	}
-	colcount := 0
+	count := 0
 	for j := 0; j < o.ncol; j++ {
 		if o.col_covered[j] {
-			colcount += 1
+			count += 1
 		}
 	}
-	next_step = 4
-	if colcount >= o.ncol || colcount >= o.nrow {
-		next_step = 7
+	next_step = 4 // not all columns are covered
+	if count >= o.ncol || count >= o.nrow {
+		next_step = 7 // all covered
 	}
 	return
 }
 
-// step4: find a noncovered zero and prime it. If there is no starred zero in the row containing
-// this primed zero, go to Step 5. Otherwise, cover this row and uncover the column containing the
-// starred zero. Continue in this manner until there are no uncovered zeros left. Save the smallest
-// uncovered value and go to Step 6.
+// step4: find a noncovered zero and prime it. Change cost matrix by adding min value to every
+// element of covered rows and subtracting it from elements of uncovered columns until a noncovered
+// zero is found.
 func (o *Munkres) step4() (next_step int) {
 	row, col, done := -1, -1, false
 	for !done {
-		row, col = o.find_a_zero()
+		row, col = o.find_noncov_zero()
 		if row == -1 {
 			done = true
 			next_step = 6
@@ -150,33 +169,33 @@ func (o *Munkres) step4() (next_step int) {
 // any). Let Z2 denote the primed zero in the row of Z1 (there will always be one). Continue until
 // the series terminates at a primed zero that has no starred zero in its column. Unstar each
 // starred zero of the series, star each primed zero of the series, erase all primes and uncover
-// every line in the matrix. Return to Step 3.
+// every line in the matrix. next_step = 3
 func (o *Munkres) step5() (next_step int) {
 
 	// construct series
 	r, c, done := -1, -1, false
-	o.path_count = 1
-	o.path[o.path_count-1][0] = o.path_row_0
-	o.path[o.path_count-1][1] = o.path_col_0
+	count := 1
+	o.path[count-1][0] = o.path_row_0
+	o.path[count-1][1] = o.path_col_0
 	for !done {
-		r = o.find_star_in_col(o.path[o.path_count-1][1])
+		r = o.find_star_in_col(o.path[count-1][1])
 		if r > -1 {
-			o.path_count += 1
-			o.path[o.path_count-1][0] = r
-			o.path[o.path_count-1][1] = o.path[o.path_count-2][1]
+			count += 1
+			o.path[count-1][0] = r
+			o.path[count-1][1] = o.path[count-2][1]
 		} else {
 			done = true
 		}
 		if !done {
-			c = o.find_prime_in_row(o.path[o.path_count-1][0])
-			o.path_count += 1
-			o.path[o.path_count-1][0] = o.path[o.path_count-2][0]
-			o.path[o.path_count-1][1] = c
+			c = o.find_prime_in_row(o.path[count-1][0])
+			count += 1
+			o.path[count-1][0] = o.path[count-2][0]
+			o.path[count-1][1] = c
 		}
 	}
 
-	// augment_path
-	for p := 0; p < o.path_count; p++ {
+	// augment path
+	for p := 0; p < count; p++ {
 		if o.M[o.path[p][0]][o.path[p][1]] == STAR {
 			o.M[o.path[p][0]][o.path[p][1]] = NONE
 		} else {
@@ -184,7 +203,7 @@ func (o *Munkres) step5() (next_step int) {
 		}
 	}
 
-	// clear_covers
+	// clear covers
 	for i := 0; i < o.nrow; i++ {
 		o.row_covered[i] = false
 	}
@@ -192,7 +211,7 @@ func (o *Munkres) step5() (next_step int) {
 		o.col_covered[j] = false
 	}
 
-	// erase_primes
+	// erase primes
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.ncol; j++ {
 			if o.M[i][j] == PRIM {
@@ -203,46 +222,39 @@ func (o *Munkres) step5() (next_step int) {
 	return 3
 }
 
-// step6: add the value found in Step 4 to every element of each covered row, and subtract it from
-// every element of each uncovered column. Return to Step 4 without altering any stars, primes, or
-// covered lines.
+// step6: add min value to every element of each covered row, and subtract it from every element of
+// each uncovered column. next_step = 4
 func (o *Munkres) step6() (next_step int) {
 
-	// find_smallest
-	minval := math.MaxInt64
+	// find min value
+	xmin := math.MaxInt64
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.ncol; j++ {
 			if !o.row_covered[i] && !o.col_covered[j] {
-				if minval > o.C[i][j] {
-					minval = o.C[i][j]
-				}
+				xmin = utl.Imin(xmin, o.C[i][j])
 			}
 		}
 	}
 
-	// add value from step 4
+	// add/subtract min value
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.ncol; j++ {
 			if o.row_covered[i] {
-				o.C[i][j] += minval
+				o.C[i][j] += xmin
 			}
 			if !o.col_covered[j] {
-				o.C[i][j] -= minval
+				o.C[i][j] -= xmin
 			}
 		}
 	}
 	return 4
 }
 
-func (o *Munkres) Run(verbose bool) {
-	k := 0
+// Run runs the iterative algorithm
+func (o *Munkres) Run() {
 	step := 1
 	done := false
 	for !done {
-		if verbose {
-			io.Pf("\n%2d: after step %d\n", k+1, step-1)
-			o.print_cost_matrix()
-		}
 		switch step {
 		case 1:
 			step = o.step1() // returns 2
@@ -259,43 +271,57 @@ func (o *Munkres) Run(verbose bool) {
 		case 7:
 			done = true
 		}
-		k++
 	}
 }
 
-func (o *Munkres) print_cost_matrix() {
-	io.Pf("%6v", " ")
+// StrCostMatrix returns a representation of cost matrix with masks and covers
+func (o *Munkres) StrCostMatrix() (l string) {
+	numfmt := "%v"
+	l += io.Sf("%4v", " ")
 	for j := 0; j < o.ncol; j++ {
-		io.Pf("%6v", o.col_covered[j])
+		if o.col_covered[j] {
+			l += io.Sf("%8v", "T ")
+		} else {
+			l += io.Sf("%8v", "F ")
+		}
 	}
-	io.Pf("\n")
+	l += io.Sf("\n")
 	for i := 0; i < o.nrow; i++ {
-		io.Pf("%6v", o.row_covered[i])
+		if o.row_covered[i] {
+			l += io.Sf("%4v", "T")
+		} else {
+			l += io.Sf("%4v", "F")
+		}
 		for j := 0; j < o.ncol; j++ {
+			s := io.Sf(numfmt, o.C[i][j])
 			switch o.M[i][j] {
 			case NONE:
-				io.Pf("%6s", io.Sf("%d ", o.C[i][j]))
+				s += " "
 			case STAR:
-				io.Pf("%6s", io.Sf("%d*", o.C[i][j]))
+				s += "*"
 			case PRIM:
-				io.Pf("%6s", io.Sf("%d'", o.C[i][j]))
+				s += "'"
 			}
+			l += io.Sf("%8v", s)
 		}
-		io.Pf("\n")
+		l += io.Sf("\n")
 	}
+	return
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
-// find_a_zero: method to support step 4
-func (o *Munkres) find_a_zero() (row, col int) {
+// find_noncov_zero finds the row and column of a non-covered zero entry. -1 means not found
+func (o *Munkres) find_noncov_zero() (row, col int) {
 	i, j, done := 0, 0, false
 	row, col = -1, -1
 	for !done {
 		j = 0
 		for true {
-			if o.C[i][j] == 0 && !o.row_covered[i] && !o.col_covered[j] {
-				row, col, done = i, j, true
+			if !o.row_covered[i] && !o.col_covered[j] {
+				if o.C[i][j] == 0 {
+					row, col, done = i, j, true
+				}
 			}
 			j += 1
 			if j >= o.ncol || done {
