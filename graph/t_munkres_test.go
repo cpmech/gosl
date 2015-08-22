@@ -16,12 +16,12 @@ func Test_munkres01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("munkres01")
 
-	C := [][]int{
+	C := [][]float64{
 		{1, 2, 3},
 		{2, 4, 6},
 		{3, 6, 9},
 	}
-	Ccor := [][]int{
+	Ccor := [][]float64{
 		{0, 1, 2},
 		{0, 2, 4},
 		{0, 3, 6},
@@ -44,7 +44,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n2: after step 1:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 2)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
 
@@ -53,7 +53,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n3: after step 2:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 3)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
@@ -63,7 +63,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n4: after step 3:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 4)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
@@ -73,13 +73,13 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n5: after step 4:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 6)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
 
 	// 6: step 6
-	Ccor = [][]int{
+	Ccor = [][]float64{
 		{0, 0, 1},
 		{0, 1, 3},
 		{0, 2, 5},
@@ -88,7 +88,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n6: after step 6:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 4)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
@@ -103,7 +103,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n7: after step 4 again (1):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 5)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{true, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
@@ -118,7 +118,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n8: after step 5:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 3)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
@@ -128,7 +128,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n9: after step 3 again (1):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 4)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, false})
@@ -138,13 +138,13 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n10: after step 4 again (2):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 6)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, false})
 
 	// 11: step 6 again (1)
-	Ccor = [][]int{
+	Ccor = [][]float64{
 		{0, 0, 0},
 		{0, 1, 2},
 		{0, 2, 4},
@@ -153,7 +153,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n11: after step 6 again (1):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 4)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, false})
@@ -168,13 +168,13 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n12: after step 4 again (3):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 6)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{true, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
 
 	// 13: step 6 again (2)
-	Ccor = [][]int{
+	Ccor = [][]float64{
 		{1, 0, 0},
 		{0, 0, 1},
 		{0, 1, 3},
@@ -183,7 +183,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n13: after step 6 again (2):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 4)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{true, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
@@ -198,7 +198,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n14: after step 4 again (4):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 5)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{true, true, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
@@ -213,7 +213,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n15: after step 5 again (1):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 3)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
@@ -223,7 +223,7 @@ func Test_munkres01(tst *testing.T) {
 	io.PfYel("\n15: after step 3 again (2):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
 	chk.IntAssert(next_step, 7)
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	check_mask_matrix(tst, "M", mnk.M, Mcor)
 	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
 	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, true})
@@ -234,7 +234,7 @@ func Test_munkres02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("munkres02")
 
-	C := [][]int{
+	C := [][]float64{
 		{2, 1},
 		{1, 1},
 	}
@@ -243,7 +243,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 goes with 1 and 1 goes with 0
 
-	C = [][]int{
+	C = [][]float64{
 		{2, 2},
 		{4, 3},
 	}
@@ -251,7 +251,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 1}) // 0 does 0 and 1 does with 1
 
-	C = [][]int{
+	C = [][]float64{
 		{2, 2},
 		{1, 3},
 	}
@@ -259,7 +259,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 does 1 and 1 does 0
 
-	C = [][]int{
+	C = [][]float64{
 		{2, 1},
 		{2, 1},
 		{1, 1},
@@ -269,7 +269,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, -1, 0, -1}) // 0 goes with 0 and 1 goes with 1 and the others are unconnected
 
-	C = [][]int{
+	C = [][]float64{
 		{1, 2, 3},
 		{6, 5, 4},
 	}
@@ -277,7 +277,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 2}) // 0 goes with 0 and 1 goes with 2
 
-	C = [][]int{
+	C = [][]float64{
 		{1, 2, 3},
 		{6, 5, 4},
 		{1, 1, 1},
@@ -286,7 +286,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 2, 1}) // 0 goes with 0, 1 goes with 2 and 2 goes with 1
 
-	C = [][]int{
+	C = [][]float64{
 		{2, 4, 7, 9},
 		{3, 9, 5, 1},
 		{8, 2, 9, 7},
@@ -295,23 +295,23 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 3, 1})
 
-	C = [][]int{
+	C = [][]float64{
 		{1, 2, 3},
 		{2, 4, 6},
 		{3, 6, 9},
 	}
-	Ccor := [][]int{
+	Ccor := [][]float64{
 		{1, 0, 0},
 		{0, 0, 1},
 		{0, 1, 3},
 	}
 	mnk.Init(C)
 	mnk.Run()
-	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	chk.Ints(tst, "links", mnk.Links, []int{2, 1, 0}) // 0 goes with 2, 1 goes with 1 and 2 goes with 0
 
 	// from https://projecteuler.net/index.php?section=problems&id=345
-	C = [][]int{
+	C = [][]float64{
 		{7, 53, 183, 439, 863},
 		{497, 383, 563, 79, 973},
 		{287, 63, 343, 169, 583},
@@ -334,7 +334,7 @@ func Test_munkres03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("munkres03. Euler problem 345")
 
-	C := [][]int{
+	C := [][]float64{
 		{7, 53, 183, 439, 863, 497, 383, 563, 79, 973, 287, 63, 343, 169, 583},
 		{627, 343, 773, 959, 943, 767, 473, 103, 699, 303, 957, 703, 583, 639, 913},
 		{447, 283, 463, 29, 23, 487, 463, 993, 119, 883, 327, 493, 423, 159, 743},
@@ -362,17 +362,15 @@ func Test_munkres03(tst *testing.T) {
 	mnk.Run()
 	io.Pforan("links = %v\n", mnk.Links)
 
-	cost := 0
+	cost := 0.0
 	for i := 0; i < len(C); i++ {
 		j := mnk.Links[i]
 		cost += -C[i][j]
 	}
 	io.Pforan("cost = %v  (13938)\n", cost)
-	chk.Scalar(tst, "cost", 1e-17, float64(cost), 13938)
+	chk.Scalar(tst, "cost", 1e-17, cost, 13938)
 	chk.Ints(tst, "links", mnk.Links, []int{9, 10, 7, 4, 3, 0, 13, 2, 14, 11, 6, 5, 12, 8, 1})
 }
-
-//13938
 
 func check_mask_matrix(tst *testing.T, msg string, res, correct [][]Mask_t) {
 	if len(res) != len(correct) {

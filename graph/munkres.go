@@ -33,9 +33,9 @@ const (
 type Munkres struct {
 
 	// main
-	C     [][]int // [nrow][ncol] cost matrix
-	Links []int   // [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j. -1 means no assignment/link
-	Cost  int     // total cost after Run() and links are established
+	C     [][]float64 // [nrow][ncol] cost matrix
+	Links []int       // [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j. -1 means no assignment/link
+	Cost  int         // total cost after Run() and links are established
 
 	// auxiliary
 	M           [][]Mask_t // [nrow][ncol] mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero
@@ -49,11 +49,11 @@ type Munkres struct {
 }
 
 // Init initialises Munkres' structure
-func (o *Munkres) Init(C [][]int) {
+func (o *Munkres) Init(C [][]float64) {
 	chk.IntAssertLessThan(1, len(C))
 	chk.IntAssertLessThan(1, len(C[0]))
 	o.nrow, o.ncol = len(C), len(C[0])
-	o.C = utl.IntsAlloc(o.nrow, o.ncol)
+	o.C = utl.DblsAlloc(o.nrow, o.ncol)
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.ncol; j++ {
 			o.C[i][j] = C[i][j]
@@ -94,11 +94,11 @@ func (o *Munkres) Init(C [][]int) {
 // step1: for each row of the cost matrix, find the smallest element and subtract it from every
 // element in its row. next_step = 2
 func (o *Munkres) step1() (next_step int) {
-	var xmin int
+	var xmin float64
 	for i := 0; i < o.nrow; i++ {
 		xmin = o.C[i][0]
 		for j := 1; j < o.ncol; j++ {
-			xmin = utl.Imin(xmin, o.C[i][j])
+			xmin = utl.Min(xmin, o.C[i][j])
 		}
 		for j := 0; j < o.ncol; j++ {
 			o.C[i][j] -= xmin
@@ -247,11 +247,11 @@ func (o *Munkres) step5() (next_step int) {
 func (o *Munkres) step6() (next_step int) {
 
 	// find min value
-	xmin := math.MaxInt64
+	xmin := math.MaxFloat64
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.ncol; j++ {
 			if !o.row_covered[i] && !o.col_covered[j] {
-				xmin = utl.Imin(xmin, o.C[i][j])
+				xmin = utl.Min(xmin, o.C[i][j])
 			}
 		}
 	}
