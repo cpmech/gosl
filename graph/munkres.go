@@ -23,10 +23,22 @@ const (
 // Munkres (Hungarian algorithm) method to solve the assignment problem
 //  based on code by Bob Pilgrim from http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html
 //  Note: this method runs in O(n²), in the worst case; therefore is not efficient for large matrix
+//   Example:
+//           $ | Clean  Sweep   Wash
+//      -------|--------------------
+//      Fry    |   [2]      3      3
+//      Leela  |     3    [2]      3
+//      Bender |     3      3    [2]
+//      minimum cost = 6
 type Munkres struct {
-	C           [][]int    // [nrow][ncol] cost matrix
+
+	// main
+	C     [][]int // [nrow][ncol] cost matrix
+	Links []int   // [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j. -1 means no assignment/link
+	Cost  int     // total cost after Run() and links are established
+
+	// auxiliary
 	M           [][]Mask_t // [nrow][ncol] mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero
-	Links       []int      // [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j. -1 means no assignment/link
 	path        [][]int    // path
 	row_covered []bool     // indicates whether a row is covered or not
 	col_covered []bool     // indicates whether a column is covered or not

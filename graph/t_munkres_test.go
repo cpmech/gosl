@@ -9,37 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
-
-func Test_match01(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("match01")
-
-	cost := [][]float64{
-		{2, 2},
-		{4, 3},
-	}
-	m := len(cost)
-	pairs := utl.IntsAlloc(m, 2)
-	opt := Match(pairs, cost)
-	chk.Scalar(tst, "optimum cost", 1e-17, opt, 5)
-	io.Pforan("pairs=%v  opt=%v\n", pairs, opt)
-	chk.IntMat(tst, "pairs", pairs, [][]int{
-		{0, 0}, // 0 does 0
-		{1, 1}, // 1 does 1
-	})
-
-	cost[1][0] = 1
-	opt = Match(pairs, cost)
-	io.Pforan("\npairs=%v  opt=%v\n", pairs, opt)
-	chk.Scalar(tst, "optimum cost", 1e-17, opt, 3)
-	chk.IntMat(tst, "pairs", pairs, [][]int{
-		{0, 1}, // 0 does 1
-		{1, 0}, // 1 does 0
-	})
-}
 
 func Test_munkres01(tst *testing.T) {
 
@@ -272,6 +242,22 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Init(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 goes with 1 and 1 goes with 0
+
+	C = [][]int{
+		{2, 2},
+		{4, 3},
+	}
+	mnk.Init(C)
+	mnk.Run()
+	chk.Ints(tst, "links", mnk.Links, []int{0, 1}) // 0 does 0 and 1 does with 1
+
+	C = [][]int{
+		{2, 2},
+		{1, 3},
+	}
+	mnk.Init(C)
+	mnk.Run()
+	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 does 1 and 1 does 0
 
 	C = [][]int{
 		{2, 1},
