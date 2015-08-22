@@ -26,7 +26,7 @@ const (
 type Munkres struct {
 	C           [][]int    // [nrow][ncol] cost matrix
 	M           [][]Mask_t // [nrow][ncol] mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero
-	Links       []int      // [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j
+	Links       []int      // [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j. -1 means no assignment/link
 	path        [][]int    // path
 	row_covered []bool     // indicates whether a row is covered or not
 	col_covered []bool     // indicates whether a column is covered or not
@@ -39,8 +39,14 @@ type Munkres struct {
 // Init initialises Munkres' structure
 func (o *Munkres) Init(C [][]int) {
 	chk.IntAssertLessThan(1, len(C))
-	o.C = C
-	o.nrow, o.ncol = len(o.C), len(o.C[0])
+	chk.IntAssertLessThan(1, len(C[0]))
+	o.nrow, o.ncol = len(C), len(C[0])
+	o.C = utl.IntsAlloc(o.nrow, o.ncol)
+	for i := 0; i < o.nrow; i++ {
+		for j := 0; j < o.ncol; j++ {
+			o.C[i][j] = C[i][j]
+		}
+	}
 	o.M = make([][]Mask_t, o.nrow)
 	for i := 0; i < o.nrow; i++ {
 		o.M[i] = make([]Mask_t, o.ncol)
@@ -256,6 +262,7 @@ func (o *Munkres) step6() (next_step int) {
 //  Output:
 //   o.Links will contain assignments, where len(assignments) == nrow and
 //   j := o.Links[i] means that i is assigned to j
+//   -1 means no assignment/link
 func (o *Munkres) Run() {
 	step := 1
 	done := false
@@ -278,6 +285,7 @@ func (o *Munkres) Run() {
 		}
 	}
 	for i := 0; i < o.nrow; i++ {
+		o.Links[i] = -1
 		for j := 0; j < o.ncol; j++ {
 			if o.M[i][j] == STAR {
 				o.Links[i] = j

@@ -43,7 +43,7 @@ func Test_match01(tst *testing.T) {
 
 func Test_munkres01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("munkres01")
 
 	C := [][]int{
@@ -261,10 +261,55 @@ func Test_munkres01(tst *testing.T) {
 
 func Test_munkres02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("munkres02")
 
 	C := [][]int{
+		{2, 1},
+		{1, 1},
+	}
+	var mnk Munkres
+	mnk.Init(C)
+	mnk.Run()
+	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 goes with 1 and 1 goes with 0
+
+	C = [][]int{
+		{2, 1},
+		{2, 1},
+		{1, 1},
+		{1, 1},
+	}
+	mnk.Init(C)
+	mnk.Run()
+	chk.Ints(tst, "links", mnk.Links, []int{1, -1, 0, -1}) // 0 goes with 0 and 1 goes with 1 and the others are unconnected
+
+	C = [][]int{
+		{1, 2, 3},
+		{6, 5, 4},
+	}
+	mnk.Init(C)
+	mnk.Run()
+	chk.Ints(tst, "links", mnk.Links, []int{0, 2}) // 0 goes with 0 and 1 goes with 2
+
+	C = [][]int{
+		{1, 2, 3},
+		{6, 5, 4},
+		{1, 1, 1},
+	}
+	mnk.Init(C)
+	mnk.Run()
+	chk.Ints(tst, "links", mnk.Links, []int{0, 2, 1}) // 0 goes with 0, 1 goes with 2 and 2 goes with 1
+
+	C = [][]int{
+		{2, 4, 7, 9},
+		{3, 9, 5, 1},
+		{8, 2, 9, 7},
+	}
+	mnk.Init(C)
+	mnk.Run()
+	chk.Ints(tst, "links", mnk.Links, []int{0, 3, 1})
+
+	C = [][]int{
 		{1, 2, 3},
 		{2, 4, 6},
 		{3, 6, 9},
@@ -274,17 +319,74 @@ func Test_munkres02(tst *testing.T) {
 		{0, 0, 1},
 		{0, 1, 3},
 	}
+	mnk.Init(C)
+	mnk.Run()
+	chk.IntMat(tst, "C", mnk.C, Ccor)
+	chk.Ints(tst, "links", mnk.Links, []int{2, 1, 0}) // 0 goes with 2, 1 goes with 1 and 2 goes with 0
+
+	// from https://projecteuler.net/index.php?section=problems&id=345
+	C = [][]int{
+		{7, 53, 183, 439, 863},
+		{497, 383, 563, 79, 973},
+		{287, 63, 343, 169, 583},
+		{627, 343, 773, 959, 943},
+		{767, 473, 103, 699, 303},
+	}
+	for i := 0; i < len(C); i++ {
+		for j := 0; j < len(C[i]); j++ {
+			C[i][j] *= -1
+		}
+	}
+	mnk.Init(C)
+	mnk.Run()
+	io.Pforan("links = %v\n", mnk.Links)
+	chk.Ints(tst, "links", mnk.Links, []int{4, 1, 2, 3, 0})
+}
+
+func Test_munkres03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("munkres03. Euler problem 345")
+
+	C := [][]int{
+		{7, 53, 183, 439, 863, 497, 383, 563, 79, 973, 287, 63, 343, 169, 583},
+		{627, 343, 773, 959, 943, 767, 473, 103, 699, 303, 957, 703, 583, 639, 913},
+		{447, 283, 463, 29, 23, 487, 463, 993, 119, 883, 327, 493, 423, 159, 743},
+		{217, 623, 3, 399, 853, 407, 103, 983, 89, 463, 290, 516, 212, 462, 350},
+		{960, 376, 682, 962, 300, 780, 486, 502, 912, 800, 250, 346, 172, 812, 350},
+		{870, 456, 192, 162, 593, 473, 915, 45, 989, 873, 823, 965, 425, 329, 803},
+		{973, 965, 905, 919, 133, 673, 665, 235, 509, 613, 673, 815, 165, 992, 326},
+		{322, 148, 972, 962, 286, 255, 941, 541, 265, 323, 925, 281, 601, 95, 973},
+		{445, 721, 11, 525, 473, 65, 511, 164, 138, 672, 18, 428, 154, 448, 848},
+		{414, 456, 310, 312, 798, 104, 566, 520, 302, 248, 694, 976, 430, 392, 198},
+		{184, 829, 373, 181, 631, 101, 969, 613, 840, 740, 778, 458, 284, 760, 390},
+		{821, 461, 843, 513, 17, 901, 711, 993, 293, 157, 274, 94, 192, 156, 574},
+		{34, 124, 4, 878, 450, 476, 712, 914, 838, 669, 875, 299, 823, 329, 699},
+		{815, 559, 813, 459, 522, 788, 168, 586, 966, 232, 308, 833, 251, 631, 107},
+		{813, 883, 451, 509, 615, 77, 281, 613, 459, 205, 380, 274, 302, 35, 805},
+	}
+	for i := 0; i < len(C); i++ {
+		for j := 0; j < len(C[i]); j++ {
+			C[i][j] *= -1
+		}
+	}
 
 	var mnk Munkres
 	mnk.Init(C)
 	mnk.Run()
-	chk.IntMat(tst, "C", mnk.C, Ccor)
-	chk.Ints(tst, "links", mnk.Links, []int{
-		2, // 0 goes with 2
-		1, // 1 goes with 1
-		0, // 2 goes with 0
-	})
+	io.Pforan("links = %v\n", mnk.Links)
+
+	cost := 0
+	for i := 0; i < len(C); i++ {
+		j := mnk.Links[i]
+		cost += -C[i][j]
+	}
+	io.Pforan("cost = %v  (13938)\n", cost)
+	chk.Scalar(tst, "cost", 1e-17, float64(cost), 13938)
+	chk.Ints(tst, "links", mnk.Links, []int{9, 10, 7, 4, 3, 0, 13, 2, 14, 11, 6, 5, 12, 8, 1})
 }
+
+//13938
 
 func check_mask_matrix(tst *testing.T, msg string, res, correct [][]Mask_t) {
 	if len(res) != len(correct) {
