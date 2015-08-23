@@ -8,6 +8,7 @@ package utl
 
 import (
 	"math"
+	"math/rand"
 	"sort"
 	"strconv"
 	"strings"
@@ -413,4 +414,57 @@ func DblsParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
 		v_dominates = true
 	}
 	return
+}
+
+// DblsParetoMinProb compares two vectors using Pareto's optimal criterion
+//  Note: minimum dominates (is better)
+func DblsParetoMinProb(u, v []float64, φ float64) (u_dominates, v_dominates bool) {
+	chk.IntAssert(len(u), len(v))
+	var pu, pv float64
+	var ui_is_smaller, vi_is_smaller bool
+	for i := 0; i < len(u); i++ {
+		pu = ProbContestSmall(u[i], v[i], φ)
+		pv = ProbContestSmall(v[i], u[i], φ)
+		ui_is_smaller = FlipCoin(pu)
+		vi_is_smaller = FlipCoin(pv)
+		if vi_is_smaller {
+			v_dominates = true
+		}
+		if ui_is_smaller {
+			u_dominates = true
+		}
+	}
+	if u_dominates && v_dominates {
+		u_dominates = FlipCoin(0.5)
+		v_dominates = !u_dominates
+	}
+	return
+}
+
+// ProbContestSmall computes the probability for a contest between u and v where u wins if it's
+// the smaller value. φ ∃ [0,1] is a scaling factor that helps v win even if it's not smaller.
+// If φ==0, deterministic analysis is carried out. If φ==1, probabilistic analysis is carried out.
+// As φ → 1, v "gets more help".
+func ProbContestSmall(u, v, φ float64) float64 {
+	if u < v {
+		return v / (v + φ*u)
+	}
+	if u > v {
+		return φ * v / (φ*v + u)
+	}
+	return 0.5
+}
+
+// FlipCoin generates a Bernoulli variable; throw a coin with probability p
+func FlipCoin(p float64) bool {
+	if p == 1.0 {
+		return true
+	}
+	if p == 0.0 {
+		return false
+	}
+	if rand.Float64() <= p {
+		return true
+	}
+	return false
 }

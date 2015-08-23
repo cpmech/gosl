@@ -5,7 +5,9 @@
 package utl
 
 import (
+	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -356,5 +358,35 @@ func Test_pareto01(tst *testing.T) {
 	if v_dominates {
 		tst.Errorf("test failed\n")
 		return
+	}
+}
+
+func Test_pareto02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("pareto02. probabilistic Pareto-optimal")
+
+	rand.Seed(time.Now().UnixNano())
+
+	n := 11
+	Φ := LinSpace(0, 1, n)
+	u := 0.4
+	v := 0.6
+	for _, φ := range Φ {
+		p := ProbContestSmall(u, v, φ)
+		io.Pf("u=%v v=%v p(u,v,%5.2f) = %.8f\n", u, v, φ, p)
+	}
+
+	io.Pf("\n")
+	U := []float64{1, 2, 3, 4, 5, 6}
+	V := []float64{1.5, 1.99, 3, 4, 5, 6}
+	io.Pforan("U = %v\n", U)
+	io.Pfblue2("V = %v\n", V)
+	for _, φ := range Φ {
+		io.Pf("\n")
+		for j := 0; j < 10; j++ {
+			u_dominates, v_dominates := DblsParetoMinProb(U, V, φ)
+			io.Pfpink("φ=%.2f u_dominates=%v v_dominates=%v\n", φ, u_dominates, v_dominates)
+		}
 	}
 }
