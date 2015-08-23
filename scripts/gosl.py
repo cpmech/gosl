@@ -315,7 +315,8 @@ def SetForPng(proport=0.75, fig_width_pt=455.24, dpi=150, xylabel_fs=9, leg_fs=8
     rcParams.update(params)
 
 
-def SetForEps(proport=0.75, fig_width_pt=455.24, xylabel_fs=9, leg_fs=8, text_fs=9, xtick_fs=7, ytick_fs=7):
+def SetForEps(proport=0.75, fig_width_pt=455.24, xylabel_fs=9, leg_fs=8, text_fs=9, xtick_fs=7,
+        ytick_fs=7, text_usetex=True, mplclose=True):
     """
     Set figure proportions
     ======================
@@ -333,12 +334,12 @@ def SetForEps(proport=0.75, fig_width_pt=455.24, xylabel_fs=9, leg_fs=8, text_fs
         'legend.fontsize'    : leg_fs,
         'xtick.labelsize'    : xtick_fs,
         'ytick.labelsize'    : ytick_fs,
-        'text.usetex'        : True, # very IMPORTANT to avoid Type 3 fonts
+        'text.usetex'        : text_usetex, # very IMPORTANT to avoid Type 3 fonts
         'ps.useafm'          : True, # very IMPORTANT to avoid Type 3 fonts
         'pdf.use14corefonts' : True, # very IMPORTANT to avoid Type 3 fonts
         'figure.figsize'     : fig_size,
     }
-    MPLclose()
+    if mplclose: MPLclose()
     rcdefaults()
     rcParams.update(params)
 
