@@ -368,8 +368,7 @@ func Test_pareto02(tst *testing.T) {
 
 	rand.Seed(time.Now().UnixNano())
 
-	n := 11
-	Φ := LinSpace(0, 1, n)
+	Φ := []float64{0, 0.25, 0.5, 0.75, 1}
 	u := 0.4
 	v := 0.6
 	for _, φ := range Φ {
@@ -377,16 +376,55 @@ func Test_pareto02(tst *testing.T) {
 		io.Pf("u=%v v=%v p(u,v,%5.2f) = %.8f\n", u, v, φ, p)
 	}
 
-	io.Pf("\n")
-	U := []float64{1, 2, 3, 4, 5, 6}
-	V := []float64{1.5, 1.99, 3, 4, 5, 6}
-	io.Pforan("U = %v\n", U)
-	io.Pfblue2("V = %v\n", V)
-	for _, φ := range Φ {
-		io.Pf("\n")
-		for j := 0; j < 10; j++ {
-			u_dominates, v_dominates := DblsParetoMinProb(U, V, φ)
-			io.Pfpink("φ=%.2f u_dominates=%v v_dominates=%v\n", φ, u_dominates, v_dominates)
+	ntrials := 100
+	run_test := func(U, V []float64) {
+		io.Pforan("\nu = %v\n", U)
+		io.Pforan("v = %v\n", V)
+		io.PfWhite("%5s%13s%13s\n", "φ", "u wins", "v wins")
+		for _, φ := range Φ {
+			u_wins := 0
+			v_wins := 0
+			for j := 0; j < ntrials; j++ {
+				u_dominates := DblsParetoMinProb(U, V, φ)
+				if u_dominates {
+					u_wins++
+				} else {
+					v_wins++
+				}
+			}
+			io.Pf("%5.2f%12.2f%%%12.2f%%\n", φ, 100*float64(u_wins)/float64(ntrials), 100*float64(v_wins)/float64(ntrials))
 		}
 	}
+
+	U := []float64{2, 3, 4, 4, 5, 6}
+	V := []float64{1, 2, 3, 4, 5, 6}
+	run_test(U, V)
+
+	U = []float64{1, 2, 3, 4, 5, 6}
+	V = []float64{1, 2, 3, 4, 5, 6}
+	run_test(U, V)
+
+	U = []float64{1, 2, 3, 4, 5, 6}
+	V = []float64{2, 2, 3, 4, 5, 6}
+	run_test(U, V)
+
+	U = []float64{1, 2, 3, 4, 5, 6}
+	V = []float64{2, 3, 3, 4, 5, 6}
+	run_test(U, V)
+
+	U = []float64{1, 2, 3, 4, 5, 6}
+	V = []float64{2, 3, 4, 4, 5, 6}
+	run_test(U, V)
+
+	U = []float64{1, 2, 3, 4, 5, 6}
+	V = []float64{2, 3, 4, 5, 5, 6}
+	run_test(U, V)
+
+	U = []float64{1, 2, 3, 4, 5, 6}
+	V = []float64{2, 3, 4, 5, 6, 6}
+	run_test(U, V)
+
+	U = []float64{1, 2, 3, 4, 5, 6}
+	V = []float64{2, 3, 4, 5, 6, 7}
+	run_test(U, V)
 }

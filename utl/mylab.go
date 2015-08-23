@@ -417,26 +417,21 @@ func DblsParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
 }
 
 // DblsParetoMinProb compares two vectors using Pareto's optimal criterion
-//  Note: minimum dominates (is better)
-func DblsParetoMinProb(u, v []float64, φ float64) (u_dominates, v_dominates bool) {
+// φ ∃ [0,1] is a scaling factor that helps v win even if it's not smaller.
+// If φ==0, deterministic analysis is carried out. If φ==1, probabilistic analysis is carried out.
+// As φ → 1, v "gets more help".
+//  Note: (1) minimum dominates (is better)
+//        (2) v dominates if !u_dominates
+func DblsParetoMinProb(u, v []float64, φ float64) (u_dominates bool) {
 	chk.IntAssert(len(u), len(v))
 	var pu, pv float64
-	var ui_is_smaller, vi_is_smaller bool
 	for i := 0; i < len(u); i++ {
-		pu = ProbContestSmall(u[i], v[i], φ)
-		pv = ProbContestSmall(v[i], u[i], φ)
-		ui_is_smaller = FlipCoin(pu)
-		vi_is_smaller = FlipCoin(pv)
-		if vi_is_smaller {
-			v_dominates = true
-		}
-		if ui_is_smaller {
-			u_dominates = true
-		}
+		pu += ProbContestSmall(u[i], v[i], φ)
+		pv += ProbContestSmall(v[i], u[i], φ)
 	}
-	if u_dominates && v_dominates {
-		u_dominates = FlipCoin(0.5)
-		v_dominates = !u_dominates
+	pu /= float64(len(u))
+	if FlipCoin(pu) {
+		u_dominates = true
 	}
 	return
 }
