@@ -399,15 +399,11 @@ func DblsParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
 	for i := 0; i < len(u); i++ {
 		if u[i] > v[i] {
 			u_has_all_leq = false
+			v_has_one_le = true
 		}
 		if u[i] < v[i] {
 			u_has_one_le = true
-		}
-		if v[i] > u[i] {
 			v_has_all_leq = false
-		}
-		if v[i] < u[i] {
-			v_has_one_le = true
 		}
 	}
 	if u_has_all_leq && u_has_one_le {
