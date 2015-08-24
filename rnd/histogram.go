@@ -114,6 +114,14 @@ func (o Histogram) FindBin(x float64) int {
 	return lower
 }
 
+// Clear restart counts
+func (o *Histogram) Clear() {
+	nbins := len(o.Stations) - 1
+	for i := 0; i < nbins; i++ {
+		o.Counts[i] = 0
+	}
+}
+
 // Count counts how many items fall within each bin
 func (o *Histogram) Count(vals []float64, clear bool) {
 
