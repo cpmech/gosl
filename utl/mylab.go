@@ -422,7 +422,6 @@ func DblsParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
 // As φ → 1, v "gets more help".
 //  Note: (1) minimum dominates (is better)
 //        (2) v dominates if !u_dominates
-//  Note: this function does NOT work for negative values => u and v must be scaled
 func DblsParetoMinProb(u, v []float64, φ float64) (u_dominates bool) {
 	chk.IntAssert(len(u), len(v))
 	var pu, pv float64
@@ -441,8 +440,9 @@ func DblsParetoMinProb(u, v []float64, φ float64) (u_dominates bool) {
 // the smaller value. φ ∃ [0,1] is a scaling factor that helps v win even if it's not smaller.
 // If φ==0, deterministic analysis is carried out. If φ==1, probabilistic analysis is carried out.
 // As φ → 1, v "gets more help".
-//  Note: this equation does NOT work for negative values
 func ProbContestSmall(u, v, φ float64) float64 {
+	u = math.Atan(u)/math.Pi + 1.5
+	v = math.Atan(v)/math.Pi + 1.5
 	if u < v {
 		return v / (v + φ*u)
 	}

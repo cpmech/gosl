@@ -126,6 +126,66 @@ func Test_pareto02(tst *testing.T) {
 	}
 }
 
+func Test_pareto03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("pareto03. probabilistic Pareto-optimal")
+
+	rand.Seed(time.Now().UnixNano())
+
+	Φ := []float64{0, 0.25, 0.5, 0.75, 1}
+	u := 0.4
+	v := 0.6
+	for _, φ := range Φ {
+		p := ProbContestSmall(u, v, φ)
+		io.Pf("u=%v v=%v p(u,v,%5.2f) = %.8f\n", u, v, φ, p)
+	}
+
+	ntrials := 1000
+	doplot := chk.Verbose
+	var buf bytes.Buffer
+	var Zu []float64
+
+	U := []float64{-1, -2, -3, -4, -5, -6}
+	V := []float64{-1, -2, -3, -4, -5, -6}
+	zu, _ := run_pareto_test(U, V, Φ, ntrials)
+	Zu = append(Zu, zu...)
+
+	U = []float64{-2, -2, -3, -4, -5, -6}
+	V = []float64{-1, -2, -3, -4, -5, -6}
+	zu, _ = run_pareto_test(U, V, Φ, ntrials)
+	Zu = append(Zu, zu...)
+
+	U = []float64{-2, -3, -3, -4, -5, -6}
+	V = []float64{-1, -2, -3, -4, -5, -6}
+	zu, _ = run_pareto_test(U, V, Φ, ntrials)
+	Zu = append(Zu, zu...)
+
+	U = []float64{-2, -3, -4, -4, -5, -6}
+	V = []float64{-1, -2, -3, -4, -5, -6}
+	zu, _ = run_pareto_test(U, V, Φ, ntrials)
+	Zu = append(Zu, zu...)
+
+	U = []float64{-2, -3, -4, -5, -5, -6}
+	V = []float64{-1, -2, -3, -4, -5, -6}
+	zu, _ = run_pareto_test(U, V, Φ, ntrials)
+	Zu = append(Zu, zu...)
+
+	U = []float64{-2, -3, -4, -5, -6, -6}
+	V = []float64{-1, -2, -3, -4, -5, -6}
+	zu, _ = run_pareto_test(U, V, Φ, ntrials)
+	Zu = append(Zu, zu...)
+
+	U = []float64{-2, -3, -4, -5, -6, -7}
+	V = []float64{-1, -2, -3, -4, -5, -6}
+	zu, _ = run_pareto_test(U, V, Φ, ntrials)
+	Zu = append(Zu, zu...)
+
+	if doplot {
+		plot_pareto_test(&buf, "test_pareto03", Φ, Zu, false, true)
+	}
+}
+
 func run_pareto_test(U, V, Φ []float64, ntrials int) (zu, zv []float64) {
 	io.Pforan("\nu = %v\n", U)
 	io.Pforan("v = %v\n", V)
@@ -180,7 +240,7 @@ func plot_pareto_test(buf *bytes.Buffer, fnkey string, Φ, Zu []float64, show, n
 		io.Ff(buf, "ax.set_yticklabels(['v=[1 2 3 4 5 6]', 'v=[2 2 3 4 5 6]', 'v=[2 3 3 4 5 6]', 'v=[2 3 4 4 5 6]', 'v=[2 3 4 5 5 6]', 'v=[2 3 4 5 6 6]', 'v=[2 3 4 5 6 7]'], rotation=-15,verticalalignment='baseline',horizontalalignment='left')\n")
 	}
 	io.Ff(buf, "import matplotlib.patheffects as path_effects\n")
-	io.Ff(buf, "for i, xval in enumerate(x): ax.text(xval,y[i],dz[i],'%%g'%%dz[i],color='#bf0000',fontsize=10, path_effects=[path_effects.withSimplePatchShadow(offset=(1,-1),shadow_rgbFace='white')])\n")
+	io.Ff(buf, "for i, xval in enumerate(x): ax.text(xval,y[i],dz[i],'%%.2f'%%dz[i],color='#bf0000',fontsize=10, path_effects=[path_effects.withSimplePatchShadow(offset=(1,-1),shadow_rgbFace='white')])\n")
 	if show {
 		io.Ff(buf, "plt.show()\n")
 	} else {
