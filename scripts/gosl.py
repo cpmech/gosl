@@ -240,7 +240,7 @@ def HideFrameLines(spines_to_remove=['top', 'right']):
         gca().spines[spine].set_visible(False)
 
 
-def PlotSurf(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111, rstride=1, cstride=1):
+def Surface(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111, rstride=1, cstride=1, *args, **kwargs):
     """
     Plot 3D surface
     ===============
@@ -250,7 +250,7 @@ def PlotSurf(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapid
     ax.set_xlabel(xlbl)
     ax.set_ylabel(ylbl)
     ax.set_zlabel(zlbl)
-    ax.plot_surface(X,Y,Z,rstride=rstride,cstride=cstride,cmap=Cmap(cmapidx))
+    ax.plot_surface(X,Y,Z,rstride=rstride,cstride=cstride,cmap=Cmap(cmapidx), *args, **kwargs)
     if zmin!=None and zmax!=None:
         ax.set_zlim(zmin,zmax)
     return ax

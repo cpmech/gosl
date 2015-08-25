@@ -214,6 +214,21 @@ func Hist(x [][]float64, labels []string, args string) {
 	}
 }
 
+func Surface(x, y, z [][]float64, args string) {
+	n := bb.Len()
+	sx := io.Sf("x%d", n)
+	sy := io.Sf("y%d", n)
+	sz := io.Sf("z%d", n)
+	GenMat(&bb, sx, x)
+	GenMat(&bb, sy, y)
+	GenMat(&bb, sz, z)
+	cmd := io.Sf("Surface(%s,%s,%s", sx, sy, sz)
+	if len(args) > 0 {
+		cmd += io.Sf(",%s", args)
+	}
+	io.Ff(&bb, "%s)\n", cmd)
+}
+
 func Contour(x, y, z [][]float64, args string) {
 	n := bb.Len()
 	sx := io.Sf("x%d", n)
