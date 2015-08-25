@@ -87,3 +87,43 @@ func FlipCoin(p float64) bool {
 	}
 	return false
 }
+
+// ParetoFront2D computes the Pareto optimal front
+//  Note: this function is slow for large sets
+//  Output:
+//   front -- indices of pareto front
+func ParetoFront2D(X, Y []float64) (front []int) {
+	dominated := map[int]bool{}
+	n := len(X)
+	for i := 0; i < n; i++ {
+		dominated[i] = false
+	}
+	for i := 0; i < n; i++ {
+		u := []float64{X[i], Y[i]}
+		for j := i + 1; j < n; j++ {
+			v := []float64{X[j], Y[j]}
+			u_dominates, v_dominates := DblsParetoMin(u, v)
+			if u_dominates {
+				dominated[j] = true
+			}
+			if v_dominates {
+				dominated[i] = true
+			}
+		}
+	}
+	ndom := 0
+	for i := 0; i < n; i++ {
+		if !dominated[i] {
+			ndom++
+		}
+	}
+	front = make([]int, ndom)
+	k := 0
+	for i := 0; i < n; i++ {
+		if !dominated[i] {
+			front[k] = i
+			k++
+		}
+	}
+	return
+}

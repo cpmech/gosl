@@ -249,3 +249,43 @@ func plot_pareto_test(buf *bytes.Buffer, fnkey string, Φ, Zu []float64, show, n
 	}
 	io.WriteFileVD("/tmp/gosl", io.Sf("%s.py", fnkey), buf)
 }
+
+func Test_pareto04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("pareto04. Pareto front")
+
+	//             0    1    2    3    4  5    6  7    8    9   10   11   12   13   14 15   16   17   18   19   20 21 22   23
+	X := []float64{1, 1.8, 2.2, 2.5, 2.8, 3, 3.1, 3, 3.5, 3.9, 4.0, 4.1, 4.3, 4.4, 4.5, 5, 5.1, 5.5, 6.0, 6.5, 6.5, 7, 7, 8.0}
+	Y := []float64{8, 7.0, 6.5, 6.0, 5.5, 6, 7.3, 6, 4.5, 6.8, 5.5, 3.8, 6.7, 3.6, 6.0, 3, 5.0, 2.8, 2.5, 7.4, 6.5, 4, 2, 1.8}
+
+	front := ParetoFront2D(X, Y)
+	chk.Ints(tst, "front", front, []int{0, 1, 2, 3, 4, 8, 11, 13, 15, 17, 18, 22, 23})
+
+	if chk.Verbose {
+
+		n := len(front)
+		Xp := make([]float64, n)
+		Yp := make([]float64, n)
+		for k, i := range front {
+			Xp[k] = X[i]
+			Yp[k] = Y[i]
+		}
+
+		var buf bytes.Buffer
+		io.Ff(&buf, "from gosl import SetForEps, Save, Gll\n")
+		io.Ff(&buf, "import matplotlib.pyplot as plt\n")
+		io.Ff(&buf, "import numpy as np\n")
+		io.Ff(&buf, "SetForEps(0.75, 355)\n")
+		write_python_array(&buf, "X", X)
+		write_python_array(&buf, "Y", Y)
+		write_python_array(&buf, "Xp", Xp)
+		write_python_array(&buf, "Yp", Yp)
+		io.Ff(&buf, "plt.plot(X,Y,'r.',clip_on=0)\n")
+		io.Ff(&buf, "plt.plot(Xp,Yp,'ko',markerfacecolor='none',ms=7,clip_on=0)\n")
+		io.Ff(&buf, "Gll('x','y','')\n")
+		io.Ff(&buf, "Save('/tmp/gosl/test_pareto04.eps')\n")
+		io.Ff(&buf, "print 'file </tmp/gosl/test_pareto04.eps> witten'\n")
+		io.WriteFileVD("/tmp/gosl", "test_pareto04.py", &buf)
+	}
+}
