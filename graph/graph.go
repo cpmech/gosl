@@ -265,3 +265,27 @@ func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64,
 	plt.AxisRange(xmin, xmax, ymin, ymax)
 	plt.SaveD(dirout, fname)
 }
+
+// ReadGraphTable reads data and allocate graph
+func ReadGraphTable(fname string) *Graph {
+
+	// read graph data
+	_, dat, err := io.ReadTable(fname)
+	if err != nil {
+		chk.Panic("cannot read datafile\n%v", err)
+	}
+
+	// graph
+	ne := len(dat["link"]) // number of edges
+	edges := make([][]int, ne)
+	weights := make([]float64, ne)
+	for i := 0; i < ne; i++ {
+		edges[i] = []int{int(dat["from"][i]) - 1, int(dat["to"][i]) - 1}
+		weights[i] = dat["cost"][i]
+	}
+
+	// graph
+	var G Graph
+	G.Init(edges, weights, nil, nil)
+	return &G
+}

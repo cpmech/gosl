@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 )
 
 func Test_graph01(tst *testing.T) {
@@ -186,4 +187,63 @@ func Test_graph02(tst *testing.T) {
 		{inf, inf, 10, 7, 0, 3},
 		{inf, inf, 7, 4, inf, 0},
 	})
+}
+
+func Test_graph03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("graph03. Sioux Falls")
+
+	G := ReadGraphTable("data/siouxfalls.dat")
+
+	columns := [][]int{
+		{1, 3, 12, 13},
+		{4, 11, 14, 23, 24},
+		{5, 9, 10, 15, 22, 21},
+		{2, 6, 8, 16, 17, 19, 20},
+		{7, 18},
+	}
+	Y := [][]float64{
+		{7, 6, 4, 0},          // col0
+		{6, 4, 2, 1, 0},       // col1
+		{6, 5, 4, 2, 1, 0},    // col2
+		{7, 6, 5, 4, 3, 2, 0}, // col3
+		{5, 4},                // col4
+	}
+
+	r := 0.25
+	W := 0.15
+	dwt := 0.12
+	aws := 12.0
+	scalex := 1.8
+	scaley := 1.3
+	nv := 24
+	G.Verts = make([][]float64, nv)
+	for j, col := range columns {
+		x := float64(j) * scalex
+		for i, vidp1 := range col {
+			vid := vidp1 - 1
+			G.Verts[vid] = []float64{x, Y[j][i] * scaley}
+		}
+	}
+
+	ne := 76
+	elabels := make(map[int]string)
+	for i := 0; i < ne; i++ {
+		elabels[i] = io.Sf("%d", i+1)
+	}
+
+	vlabels := make(map[int]string)
+	for i := 0; i < nv; i++ {
+		vlabels[i] = io.Sf("%d", i+1)
+	}
+
+	vfsz := 7.0
+	vclr := "red"
+	efsz := 7.0
+	eclr := "blue"
+	plt.SetForEps(1.2, 350)
+	if chk.Verbose {
+		G.Draw("/tmp/graph", "siouxfalls.eps", r, W, dwt, aws, vlabels, vfsz, vclr, elabels, efsz, eclr)
+	}
 }
