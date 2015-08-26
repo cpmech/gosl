@@ -89,7 +89,7 @@ func (o *Graph) ShortestPaths(method string) (err error) {
 	if method != "FW" {
 		chk.Panic("ShortestPaths works with FW (Floyd-Warshall) method only for now")
 	}
-	err = o.calc_dist_init_next()
+	err = o.CalcDist()
 	if err != nil {
 		return
 	}
@@ -124,8 +124,8 @@ func (o *Graph) Path(s, t int) (p []int) {
 	return
 }
 
-// calc_dist_init_next computes distances beetween all vertices and initialises 'next' matrix
-func (o *Graph) calc_dist_init_next() (err error) {
+// CalcDist computes distances beetween all vertices and initialises 'Next' matrix
+func (o *Graph) CalcDist() (err error) {
 	nv := len(o.Dist)
 	for i := 0; i < nv; i++ {
 		for j := 0; j < nv; j++ {
