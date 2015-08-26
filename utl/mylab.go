@@ -387,3 +387,12 @@ func GtePenalty(x, b, penaltyM float64) float64 {
 	}
 	return penaltyM * (b - x)
 }
+
+// DblsGetColumn returns the column of a matrix of reals numbers
+func DblsGetColumn(j int, v [][]float64) (x []float64) {
+	x = make([]float64, len(v))
+	for i := 0; i < len(v); i++ {
+		x[i] = v[i][j]
+	}
+	return
+}

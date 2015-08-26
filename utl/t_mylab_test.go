@@ -306,3 +306,30 @@ func Test_copy01(tst *testing.T) {
 	io.Pfblue2("v = %v\n", v)
 	chk.Vector(tst, "w==v", 1e-16, w, v)
 }
+
+func Test_mylab07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab07. get column")
+
+	v := [][]float64{
+		{1, 2, 3, 4},
+		{-1, 2, 3, 0},
+		{-1, 2, 1, 4},
+		{1, -2, 3, 8},
+		{1, 1, -3, 4},
+		{0, 2, 9, -4},
+	}
+
+	x := DblsGetColumn(0, v)
+	chk.Vector(tst, "v[:,0]", 1e-17, x, []float64{1, -1, -1, 1, 1, 0})
+
+	x = DblsGetColumn(1, v)
+	chk.Vector(tst, "v[:,1]", 1e-17, x, []float64{2, 2, 2, -2, 1, 2})
+
+	x = DblsGetColumn(2, v)
+	chk.Vector(tst, "v[:,2]", 1e-17, x, []float64{3, 3, 1, 3, -3, 9})
+
+	x = DblsGetColumn(3, v)
+	chk.Vector(tst, "v[:,3]", 1e-17, x, []float64{4, 0, 4, 8, 4, -4})
+}
