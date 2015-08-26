@@ -6,6 +6,7 @@ package graph
 
 import (
 	"math"
+	"strings"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -267,21 +268,55 @@ func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64,
 }
 
 // ReadGraphTable reads data and allocate graph
-func ReadGraphTable(fname string) *Graph {
+func ReadGraphTable(fname string, bargera bool) *Graph {
 
-	// read graph data
-	_, dat, err := io.ReadTable(fname)
-	if err != nil {
-		chk.Panic("cannot read datafile\n%v", err)
-	}
+	// data
+	var ne int
+	var edges [][]int
+	var weights []float64
 
-	// graph
-	ne := len(dat["link"]) // number of edges
-	edges := make([][]int, ne)
-	weights := make([]float64, ne)
-	for i := 0; i < ne; i++ {
-		edges[i] = []int{int(dat["from"][i]) - 1, int(dat["to"][i]) - 1}
-		weights[i] = dat["cost"][i]
+	// Bar-Gera format files from: http://www.bgu.ac.il/~bargera/tntp/
+	if bargera {
+		k := 0
+		reading_meta := true
+		io.ReadLines(fname, func(idx int, line string) (stop bool) {
+			if len(line) < 1 {
+				return false
+			}
+			line = strings.TrimSpace(line)
+			if line[0] == '~' {
+				return false
+			}
+			if reading_meta {
+				switch {
+				case strings.HasPrefix(line, "<NUMBER OF LINKS>"):
+					res := strings.Split(line, "<NUMBER OF LINKS>")
+					ne = io.Atoi(strings.TrimSpace(res[1]))
+					edges = make([][]int, ne)
+					weights = make([]float64, ne)
+				case strings.HasPrefix(line, "<END OF METADATA>"):
+					reading_meta = false
+				}
+				return false
+			}
+			l := strings.Fields(line)
+			edges[k] = []int{io.Atoi(l[0]) - 1, io.Atoi(l[1]) - 1}
+			weights[k] = io.Atof(l[4])
+			k++
+			return false
+		})
+	} else {
+		_, dat, err := io.ReadTable(fname)
+		if err != nil {
+			chk.Panic("cannot read datafile\n%v", err)
+		}
+		ne = len(dat["link"]) // number of edges
+		edges = make([][]int, ne)
+		weights = make([]float64, ne)
+		for i := 0; i < ne; i++ {
+			edges[i] = []int{int(dat["from"][i]) - 1, int(dat["to"][i]) - 1}
+			weights[i] = dat["cost"][i]
+		}
 	}
 
 	// graph

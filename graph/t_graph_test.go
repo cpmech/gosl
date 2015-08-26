@@ -191,10 +191,29 @@ func Test_graph02(tst *testing.T) {
 
 func Test_graph03(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("graph03. Sioux Falls")
 
-	G := ReadGraphTable("data/siouxfalls.dat")
+	//G := ReadGraphTable("data/SiouxFalls_net1.txt", true)
+	G := ReadGraphTable("data/SiouxFalls_net.txt", true)
+
+	err := G.ShortestPaths("FW")
+	if err != nil {
+		tst.Errorf("ShortestPaths failed:\n%v", err)
+		return
+	}
+
+	pth := G.Path(0, 22)
+	io.Pforan("1 → 23 = %v\n", pth)
+	chk.Ints(tst, "1 → 23", pth, []int{0, 2, 11, 12, 23, 22})
+
+	pth = G.Path(0, 20)
+	io.Pforan("1 → 21 = %v\n", pth)
+	chk.Ints(tst, "1 → 21", pth, []int{0, 2, 11, 12, 23, 20})
+
+	pth = G.Path(2, 21)
+	io.Pforan("3 → 22 = %v\n", pth)
+	chk.Ints(tst, "3 → 22", pth, []int{2, 11, 12, 23, 22, 21})
 
 	columns := [][]int{
 		{1, 3, 12, 13},
