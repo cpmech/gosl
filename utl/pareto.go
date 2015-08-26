@@ -88,21 +88,21 @@ func FlipCoin(p float64) bool {
 	return false
 }
 
-// ParetoFront2D computes the Pareto optimal front
-//  Note: this function is slow for large sets
+// ParetoFront computes the Pareto optimal front
+//  Input:
+//   Ovs -- [nsamples][ndim] objective values
 //  Output:
 //   front -- indices of pareto front
-func ParetoFront2D(X, Y []float64) (front []int) {
+//  Note: this function is slow for large sets
+func ParetoFront(Ovs [][]float64) (front []int) {
 	dominated := map[int]bool{}
-	n := len(X)
-	for i := 0; i < n; i++ {
+	nsamples := len(Ovs)
+	for i := 0; i < nsamples; i++ {
 		dominated[i] = false
 	}
-	for i := 0; i < n; i++ {
-		u := []float64{X[i], Y[i]}
-		for j := i + 1; j < n; j++ {
-			v := []float64{X[j], Y[j]}
-			u_dominates, v_dominates := DblsParetoMin(u, v)
+	for i := 0; i < nsamples; i++ {
+		for j := i + 1; j < nsamples; j++ {
+			u_dominates, v_dominates := DblsParetoMin(Ovs[i], Ovs[j])
 			if u_dominates {
 				dominated[j] = true
 			}
@@ -111,15 +111,15 @@ func ParetoFront2D(X, Y []float64) (front []int) {
 			}
 		}
 	}
-	ndom := 0
-	for i := 0; i < n; i++ {
+	nondom := 0
+	for i := 0; i < nsamples; i++ {
 		if !dominated[i] {
-			ndom++
+			nondom++
 		}
 	}
-	front = make([]int, ndom)
+	front = make([]int, nondom)
 	k := 0
-	for i := 0; i < n; i++ {
+	for i := 0; i < nsamples; i++ {
 		if !dominated[i] {
 			front[k] = i
 			k++
