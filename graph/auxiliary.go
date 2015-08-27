@@ -1,0 +1,73 @@
+// Copyright 2012 Dorival de Moraes Pedroso. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package graph
+
+import "github.com/cpmech/gosl/io"
+
+func PrintIndicatorMatrix(x [][]int) (l string) {
+	m, n := len(x), len(x[0])
+	w := 2*n + 6 + 13
+	l = io.Sf("%s i\\j |", io.StrThickLine(w))
+	for j := 0; j < n; j++ {
+		l += io.Sf("%2d", j)
+	}
+	l += io.Sf(" |        sum\n%s", io.StrThinLine(w))
+	S := make([]int, n)
+	for i := 0; i < m; i++ {
+		l += io.Sf(" %3d |", i)
+		s := 0
+		for j := 0; j < n; j++ {
+			l += io.Sf("%2d", x[i][j])
+			s += x[i][j]
+			S[j] += x[i][j]
+		}
+		l += io.Sf(" | Σ x%dj = %2d\n", i, s)
+	}
+	l += io.Sf("%s sum =", io.StrThinLine(w))
+	for j := 0; j < n; j++ {
+		l += io.Sf("%2d", S[j])
+	}
+	l += io.Sf("\n%s", io.StrThickLine(w))
+	return
+}
+
+func CheckIndicatorMatrix(source, target int, x [][]int, verbose bool) (errPath, errLoop int) {
+	nv := len(x)
+	var okPath, okLoop bool
+	var sij, sji int
+	for i := 0; i < nv; i++ {
+		sij, sji = 0, 0
+		for j := 0; j < nv; j++ {
+			sij += x[i][j]
+			sji += x[j][i]
+		}
+		d := sij - sji
+		if i == target {
+			okPath = d == -1
+			okLoop = sij == 0
+		} else {
+			if i == source {
+				okPath = d == 1
+			} else {
+				okPath = d == 0
+			}
+			okLoop = sij <= 1
+		}
+		if !okPath {
+			errPath++
+		}
+		if !okLoop {
+			errLoop++
+		}
+		if verbose {
+			sok := "ok"
+			if !okPath || !okLoop {
+				sok = "fail"
+			}
+			io.Pforan("i=%2d : Σxij - Σxji = %2d  (%s)\n", i, d, sok)
+		}
+	}
+	return
+}

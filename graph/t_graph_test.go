@@ -10,6 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 func Test_graph01(tst *testing.T) {
@@ -293,5 +294,56 @@ func Test_graph03(tst *testing.T) {
 		eclr := "blue"
 		plt.SetForEps(1.2, 350)
 		G.Draw("/tmp/graph", "siouxfalls.eps", r, W, dwt, aws, vlabels, vfsz, vclr, elabels, efsz, eclr)
+	}
+}
+
+func Test_graph04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("graph04")
+
+	//           [10]
+	//      0 ––––––––→ 3      numbers in parentheses
+	//      |    (1)    ↑      indicate edge ids
+	//   [5]|(0)        |
+	//      |        (3)|[1]
+	//      ↓    (2)    |      numbers in brackets
+	//      1 ––––––––→ 2      indicate weights
+	//           [3]
+
+	var G Graph
+	G.Init(
+		// edge:  0       1       2       3
+		[][]int{{0, 1}, {0, 3}, {1, 2}, {2, 3}},
+		[]float64{5, 10, 3, 1}, // weights
+		nil, nil,
+	)
+
+	err := G.ShortestPaths("FW")
+	if err != nil {
+		tst.Errorf("ShortestPaths failed:\n%v", err)
+		return
+	}
+
+	source, target := 0, 3
+	pth := G.Path(source, target)
+	io.Pforan("pth = %v\n", pth)
+
+	nv := len(G.Dist)
+	x := utl.IntsAlloc(nv, nv)
+	for k := 1; k < len(pth); k++ {
+		i, j := pth[k-1], pth[k]
+		io.Pforan("i=%d j=%v\n", i, j)
+		x[i][j] = 1
+	}
+	io.Pf("%s", PrintIndicatorMatrix(x))
+	errPath, errLoop := CheckIndicatorMatrix(source, target, x, chk.Verbose)
+	io.Pforan("errPath = %v\n", errPath)
+	io.Pforan("errLoop = %v\n", errLoop)
+	if errPath != 0 {
+		tst.Errorf("path is incorrect\n")
+	}
+	if errLoop != 0 {
+		tst.Errorf("path has loops\n")
 	}
 }
