@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 FILES="auxiliary.go graph.go t_graph_test.go"
 
 while true; do

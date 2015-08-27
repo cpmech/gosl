@@ -359,4 +359,27 @@ func Test_graph04(tst *testing.T) {
 	if errLoop != 0 {
 		tst.Errorf("path has loops\n")
 	}
+
+	x[0][0] = 1
+	x[2][1] = 1
+	x[3][3] = 1
+	xmat := make([]int, nv*nv)
+	for i := 0; i < nv; i++ {
+		for j := 0; j < nv; j++ {
+			xmat[i*nv+j] = x[i][j]
+		}
+	}
+	io.Pf("\n\n%s", PrintIndicatorMatrix(x))
+	errPath, errLoop = CheckIndicatorMatrix(source, target, x, chk.Verbose)
+	io.Pforan("errPath = %v\n", errPath)
+	io.Pforan("errLoop = %v\n", errLoop)
+	errPathRM, errLoopRM := CheckIndicatorMatrixRowMaj(source, target, nv, xmat)
+	io.Pfcyan("errPath = %v\n", errPathRM)
+	io.Pfcyan("errLoop = %v\n", errLoopRM)
+	if errPathRM != errPath {
+		tst.Errorf("row major function failed")
+	}
+	if errLoopRM != errLoop {
+		tst.Errorf("row major function failed")
+	}
 }

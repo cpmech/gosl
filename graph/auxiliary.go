@@ -83,3 +83,34 @@ func CheckIndicatorMatrix(source, target int, x [][]int, verbose bool) (errPath,
 	}
 	return
 }
+
+func CheckIndicatorMatrixRowMaj(source, target, nv int, xmat []int) (errPath, errLoop int) {
+	var okPath, okLoop bool
+	var sij, sji int
+	for i := 0; i < nv; i++ {
+		sij, sji = 0, 0
+		for j := 0; j < nv; j++ {
+			sij += xmat[i*nv+j]
+			sji += xmat[j*nv+i]
+		}
+		d := sij - sji
+		if i == target {
+			okPath = d == -1
+			okLoop = sij == 0
+		} else {
+			if i == source {
+				okPath = d == 1
+			} else {
+				okPath = d == 0
+			}
+			okLoop = sij <= 1
+		}
+		if !okPath {
+			errPath++
+		}
+		if !okLoop {
+			errLoop++
+		}
+	}
+	return
+}
