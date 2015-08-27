@@ -4,7 +4,10 @@
 
 package graph
 
-import "github.com/cpmech/gosl/io"
+import (
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
+)
 
 func PrintIndicatorMatrix(x [][]int) (l string) {
 	m, n := len(x), len(x[0])
@@ -23,13 +26,22 @@ func PrintIndicatorMatrix(x [][]int) (l string) {
 			s += x[i][j]
 			S[j] += x[i][j]
 		}
-		l += io.Sf(" | Σ x%dj = %2d\n", i, s)
+		l += io.Sf(" | Σ xij = %2d\n", s)
 	}
 	l += io.Sf("%s sum =", io.StrThinLine(w))
 	for j := 0; j < n; j++ {
 		l += io.Sf("%2d", S[j])
 	}
 	l += io.Sf("\n%s", io.StrThickLine(w))
+	return
+}
+
+func BuildIndicatorMatrix(nv int, pth []int) (x [][]int) {
+	x = utl.IntsAlloc(nv, nv)
+	for k := 1; k < len(pth); k++ {
+		i, j := pth[k-1], pth[k]
+		x[i][j] = 1
+	}
 	return
 }
 

@@ -207,8 +207,21 @@ func Test_graph03(tst *testing.T) {
 	io.Pforan("1 → 23 = %v\n", pth)
 	chk.Ints(tst, "1 → 23", pth, []int{0, 2, 11, 12, 23, 22})
 
+	nv := len(G.Dist)
+	x := BuildIndicatorMatrix(nv, pth)
+	io.Pf("%s", PrintIndicatorMatrix(x))
+	errPath, errLoop := CheckIndicatorMatrix(0, 22, x, chk.Verbose)
+	io.Pforan("errPath = %v\n", errPath)
+	io.Pforan("errLoop = %v\n", errLoop)
+	if errPath != 0 {
+		tst.Errorf("path is incorrect\n")
+	}
+	if errLoop != 0 {
+		tst.Errorf("path has loops\n")
+	}
+
 	pth = G.Path(0, 20)
-	io.Pforan("1 → 21 = %v\n", pth)
+	io.Pforan("1\n1 → 21 = %v\n", pth)
 	chk.Ints(tst, "1 → 21", pth, []int{0, 2, 11, 12, 23, 20})
 
 	pth = G.Path(2, 21)
