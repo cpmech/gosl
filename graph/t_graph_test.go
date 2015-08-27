@@ -191,11 +191,10 @@ func Test_graph02(tst *testing.T) {
 
 func Test_graph03(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("graph03. Sioux Falls")
 
-	//G := ReadGraphTable("data/SiouxFalls_net1.txt", true)
-	G := ReadGraphTable("data/SiouxFalls_net.txt", true)
+	G := ReadGraphTable("data/SiouxFalls.flow", false)
 
 	err := G.ShortestPaths("FW")
 	if err != nil {
@@ -215,54 +214,84 @@ func Test_graph03(tst *testing.T) {
 	io.Pforan("3 → 22 = %v\n", pth)
 	chk.Ints(tst, "3 → 22", pth, []int{2, 11, 12, 23, 22, 21})
 
-	columns := [][]int{
-		{1, 3, 12, 13},
-		{4, 11, 14, 23, 24},
-		{5, 9, 10, 15, 22, 21},
-		{2, 6, 8, 16, 17, 19, 20},
-		{7, 18},
-	}
-	Y := [][]float64{
-		{7, 6, 4, 0},          // col0
-		{6, 4, 2, 1, 0},       // col1
-		{6, 5, 4, 2, 1, 0},    // col2
-		{7, 6, 5, 4, 3, 2, 0}, // col3
-		{5, 4},                // col4
-	}
+	pth = G.Path(9, 15)
+	io.Pforan("10 → 16 = %v\n", pth)
+	chk.Ints(tst, "10 → 16", pth, []int{9, 15})
 
-	r := 0.25
-	W := 0.15
-	dwt := 0.12
-	aws := 12.0
-	scalex := 1.8
-	scaley := 1.3
-	nv := 24
-	G.Verts = make([][]float64, nv)
-	for j, col := range columns {
-		x := float64(j) * scalex
-		for i, vidp1 := range col {
-			vid := vidp1 - 1
-			G.Verts[vid] = []float64{x, Y[j][i] * scaley}
+	pth = G.Path(10, 11)
+	io.Pforan("11 → 12 = %v\n", pth)
+	chk.Ints(tst, "11 → 12", pth, []int{10, 11})
+
+	pth = G.Path(3, 20)
+	io.Pforan("4 → 21 = %v\n", pth)
+	chk.Ints(tst, "4 → 21", pth, []int{3, 2, 11, 12, 23, 20})
+
+	pth = G.Path(8, 10)
+	io.Pforan("9 → 11 = %v\n", pth)
+	chk.Ints(tst, "9 → 11", pth, []int{8, 9, 10})
+
+	pth = G.Path(11, 21)
+	io.Pforan("12 → 22 = %v\n", pth)
+	chk.Ints(tst, "12 → 22", pth, []int{11, 12, 23, 22, 21})
+
+	pth = G.Path(5, 16)
+	io.Pforan("6 → 17 = %v\n", pth)
+	chk.Ints(tst, "6 → 17", pth, []int{5, 7, 6, 17, 15, 16})
+
+	pth = G.Path(9, 11)
+	io.Pforan("10 → 12 = %v\n", pth)
+	chk.Ints(tst, "10 → 12", pth, []int{9, 10, 11})
+
+	// plotting
+	if chk.Verbose && false {
+
+		columns := [][]int{
+			{1, 3, 12, 13},
+			{4, 11, 14, 23, 24},
+			{5, 9, 10, 15, 22, 21},
+			{2, 6, 8, 16, 17, 19, 20},
+			{7, 18},
 		}
-	}
+		Y := [][]float64{
+			{7, 6, 4, 0},          // col0
+			{6, 4, 2, 1, 0},       // col1
+			{6, 5, 4, 2, 1, 0},    // col2
+			{7, 6, 5, 4, 3, 2, 0}, // col3
+			{5, 4},                // col4
+		}
 
-	ne := 76
-	elabels := make(map[int]string)
-	for i := 0; i < ne; i++ {
-		elabels[i] = io.Sf("%d", i+1)
-	}
+		r := 0.25
+		W := 0.15
+		dwt := 0.12
+		aws := 12.0
+		scalex := 1.8
+		scaley := 1.3
+		nv := 24
+		G.Verts = make([][]float64, nv)
+		for j, col := range columns {
+			x := float64(j) * scalex
+			for i, vidp1 := range col {
+				vid := vidp1 - 1
+				G.Verts[vid] = []float64{x, Y[j][i] * scaley}
+			}
+		}
 
-	vlabels := make(map[int]string)
-	for i := 0; i < nv; i++ {
-		vlabels[i] = io.Sf("%d", i+1)
-	}
+		ne := 76
+		elabels := make(map[int]string)
+		for i := 0; i < ne; i++ {
+			elabels[i] = io.Sf("%d", i+1)
+		}
 
-	vfsz := 7.0
-	vclr := "red"
-	efsz := 7.0
-	eclr := "blue"
-	plt.SetForEps(1.2, 350)
-	if chk.Verbose {
+		vlabels := make(map[int]string)
+		for i := 0; i < nv; i++ {
+			vlabels[i] = io.Sf("%d", i+1)
+		}
+
+		vfsz := 7.0
+		vclr := "red"
+		efsz := 7.0
+		eclr := "blue"
+		plt.SetForEps(1.2, 350)
 		G.Draw("/tmp/graph", "siouxfalls.eps", r, W, dwt, aws, vlabels, vfsz, vclr, elabels, efsz, eclr)
 	}
 }

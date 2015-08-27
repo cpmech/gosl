@@ -310,7 +310,7 @@ func ReadGraphTable(fname string, bargera bool) *Graph {
 		if err != nil {
 			chk.Panic("cannot read datafile\n%v", err)
 		}
-		ne = len(dat["link"]) // number of edges
+		ne = len(dat["from"]) // number of edges
 		edges = make([][]int, ne)
 		weights = make([]float64, ne)
 		for i := 0; i < ne; i++ {
