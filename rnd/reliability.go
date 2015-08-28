@@ -190,7 +190,7 @@ func (o *ReliabFORM) Run(βtrial float64, verbose bool, args ...interface{}) (β
 			}
 		}
 		plt.Contour(o.PlotU, o.PlotV, o.PlotZ, "")
-		plt.ContourSimple(o.PlotU, o.PlotV, o.PlotZ, "levels=[0], colors=['yellow']")
+		plt.ContourSimple(o.PlotU, o.PlotV, o.PlotZ, true, 8, "levels=[0], colors=['yellow']")
 		plt.PlotOne(x[0], x[1], "'ro', label='initial'")
 	}
 

@@ -315,7 +315,7 @@ func (o *IsoFun) PlotFfcn(dirout, fname string, pmin, pmax float64, np int, pq_p
 		}
 	}
 	plt.Contour(x, y, z, args_contour)
-	plt.ContourSimple(x, y, z, "levels=[0], colors=['yellow'], linewidths=[2]")
+	plt.ContourSimple(x, y, z, false, 8, "levels=[0], colors=['yellow'], linewidths=[2]")
 	if pq_point != nil {
 		plt.PlotOne(pq_point[0], pq_point[1], args_point)
 	}

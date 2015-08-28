@@ -136,7 +136,7 @@ func PlotX(o Func, dirout, fname string, tcte float64, xmin, xmax []float64, np 
 	}
 	plt.Contour(X, Y, F, args)
 	if hlZero {
-		plt.ContourSimple(X, Y, F, "levels=[0], linewidths=[2], colors=['yellow']")
+		plt.ContourSimple(X, Y, F, false, 8, "levels=[0], linewidths=[2], colors=['yellow']")
 	}
 	if axEqual {
 		plt.Equal()

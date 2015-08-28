@@ -62,7 +62,7 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 		plt.Contour(V0, V1, Zf, io.Sf("fsz=7, cmapidx=%d", cmapidx))
 	}
 	for k, _ := range gs {
-		plt.ContourSimple(V0, V1, Zg[k], "zorder=5, levels=[0], colors=['yellow'], linewidths=[2], clip_on=0")
+		plt.ContourSimple(V0, V1, Zg[k], false, 8, "zorder=5, levels=[0], colors=['yellow'], linewidths=[2], clip_on=0")
 	}
 	if x != nil {
 		plt.PlotOne(x[0], x[1], "'r*', label='optimum', zorder=10")

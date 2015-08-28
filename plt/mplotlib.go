@@ -244,7 +244,7 @@ func Contour(x, y, z [][]float64, args string) {
 	io.Ff(&bb, "%s)\n", cmd)
 }
 
-func ContourSimple(x, y, z [][]float64, args string) {
+func ContourSimple(x, y, z [][]float64, withClabel bool, clabelFsz float64, args string) {
 	n := bb.Len()
 	sx := io.Sf("x%d", n)
 	sy := io.Sf("y%d", n)
@@ -252,11 +252,14 @@ func ContourSimple(x, y, z [][]float64, args string) {
 	GenMat(&bb, sx, x)
 	GenMat(&bb, sy, y)
 	GenMat(&bb, sz, z)
-	cmd := io.Sf("contour(%s,%s,%s", sx, sy, sz)
+	cmd := io.Sf("ctour%d = contour(%s,%s,%s", n, sx, sy, sz)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
 	}
 	io.Ff(&bb, "%s)\n", cmd)
+	if withClabel {
+		io.Ff(&bb, "clabel(ctour%d,inline=1,fsz=%g)\n", n, clabelFsz)
+	}
 }
 
 func Quiver(x, y, gx, gy [][]float64, args string) {

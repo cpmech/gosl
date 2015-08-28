@@ -203,9 +203,9 @@ func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float6
 	}
 	if simplec {
 		if !only0 {
-			plt.ContourSimple(x, y, f, "")
+			plt.ContourSimple(x, y, f, false, 8, "")
 		}
-		plt.ContourSimple(x, y, f, "levels=[0], colors=['blue'], linewidths=[2]")
+		plt.ContourSimple(x, y, f, false, 8, "levels=[0], colors=['blue'], linewidths=[2]")
 	} else {
 		plt.Contour(x, y, f, "fsz=8")
 	}
