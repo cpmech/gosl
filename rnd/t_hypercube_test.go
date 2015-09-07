@@ -21,9 +21,9 @@ func Test_hc01(tst *testing.T) {
 	x := LatinIHS(2, 10, 5)
 	io.Pforan("x = %v\n", x)
 
-	xres := [][]float64{
+	xcor := [][]int{
 		{2, 9, 5, 8, 1, 4, 3, 10, 7, 6},
 		{3, 10, 1, 2, 7, 4, 9, 6, 5, 8},
 	}
-	_ = xres
+	chk.IntMat(tst, "x", x, xcor)
 }

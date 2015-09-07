@@ -4,7 +4,11 @@
 
 package rnd
 
-import "math"
+import (
+	"math"
+
+	"github.com/cpmech/gosl/utl"
+)
 
 // LatinIHS implements the improved distributed hypercube sampling algorithm.
 // Note: code developed by John Burkardt (GNU LGPL license) --  see source code
@@ -14,8 +18,8 @@ import "math"
 //   n   -- number of points to be generated
 //   d   -- duplication factor ≥ 1 (~ 5 is reasonable)
 //  Output:
-//   x   -- [dim*n] points
-func LatinIHS(dim, n, d int) (x []int) {
+//   x   -- [dim][n] points
+func LatinIHS(dim, n, d int) (x [][]int) {
 
 	//  Discussion:
 	//
@@ -62,13 +66,13 @@ func LatinIHS(dim, n, d int) (x []int) {
 	avail := make([]int, dim*n)
 	list := make([]int, d*n)
 	point := make([]int, dim*d*n)
-	x = make([]int, dim*n)
+	x = utl.IntsAlloc(dim, n)
 
 	opt := float64(n) / math.Pow(float64(n), float64(1.0/float64(dim)))
 
 	// pick the first point
 	for i = 0; i < dim; i++ {
-		x[i+(n-1)*dim] = Int(1, n) // i4_uniform_ab(1, n, seed)
+		x[i][n-1] = Int(1, n)
 	}
 
 	// initialize avail and set an entry in a random row of each column of avail to n
@@ -78,10 +82,10 @@ func LatinIHS(dim, n, d int) (x []int) {
 		}
 	}
 	for i = 0; i < dim; i++ {
-		avail[i+(x[i+(n-1)*dim]-1)*dim] = n
+		avail[i+(x[i][n-1]-1)*dim] = n
 	}
 
-	// main loop: assign a value to X(1:M,COUNT) for COUNT = N-1 down to 2.
+	// main loop: assign a value to x[1:m,count] for count = n-1 down to 2
 	for count = n - 1; 2 <= count; count-- {
 
 		// generate valid points.
@@ -93,14 +97,14 @@ func LatinIHS(dim, n, d int) (x []int) {
 			}
 
 			for k = count*d - 1; 0 <= k; k-- {
-				point_index = Int(0, k) // i4_uniform_ab(0, k, seed)
+				point_index = Int(0, k)
 				point[i+k*dim] = list[point_index]
 				list[point_index] = list[k]
 			}
 		}
 
 		// for each candidate, determine the distance to all the
-		// points that have already been selected, and save the minimum value.
+		// points that have already been selected, and save the minimum value
 		min_all = r8_huge
 		best = 0
 		for k = 0; k < d*count; k++ {
@@ -110,7 +114,7 @@ func LatinIHS(dim, n, d int) (x []int) {
 
 				dist = 0.0
 				for i = 0; i < dim; i++ {
-					dist = dist + math.Pow(float64(point[i+k*dim])-float64(x[i+j*dim]), 2.0)
+					dist = dist + math.Pow(float64(point[i+k*dim])-float64(x[i][j]), 2.0)
 				}
 				dist = math.Sqrt(dist)
 
@@ -126,22 +130,22 @@ func LatinIHS(dim, n, d int) (x []int) {
 
 		}
 		for i = 0; i < dim; i++ {
-			x[i+(count-1)*dim] = point[i+best*dim]
+			x[i][count-1] = point[i+best*dim]
 		}
 
-		// having chosen x[:,count], update avail.
+		// having chosen x[:,count], update avail
 		for i = 0; i < dim; i++ {
 			for j = 0; j < n; j++ {
-				if avail[i+j*dim] == x[i+(count-1)*dim] {
+				if avail[i+j*dim] == x[i][count-1] {
 					avail[i+j*dim] = avail[i+(count-1)*dim]
 				}
 			}
 		}
 	}
 
-	// for the last point, there's only one choice.
+	// for the last point, there's only one choice
 	for i = 0; i < dim; i++ {
-		x[i+0*dim] = avail[i+0*dim]
+		x[i][0] = avail[i+0*dim]
 	}
 	return
 }
