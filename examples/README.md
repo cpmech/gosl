@@ -1,17 +1,22 @@
 # Gosl &ndash; examples
 
 ## Summary
-1.  **la_umfpack01** -- Solution of linear system with Umfpack and sparse matrices.
-2.  **la_sparsecomplex01** -- Solution of linear system with complex/sparse matrix.
-3.  **num_deriv01** -- Numerical differentiation.
-4.  **vtk_isosurf01** -- Visualisatioin of iso-surface using VTK.
+1. **la_HLsparseReal01** -- Solution of real/sparse linear system using Umfpack and high-level routines
+2. **la_HLsparseComplex01** -- Solution of complex/sparse linear system using Umfpack and high-level routines
+3. **la_sparseReal01** -- Solution of real/sparse linear system using Umfpack and low-level routines
+4. **la_sparseComplex01** -- Solution of complex/sparse linear system using Umfpack and low-level routines
+5. **num_deriv01** -- Numerical differentiation
+6. **vtk_isosurf01** -- Visualisatioin of iso-surface using VTK
 
 
-# 1 la_umfpack01 &ndash; Linear Algebra: Umfpack01
+
+# 1 la_HLsparseReal01 &ndash; Linear Algebra
 
 A small linear system is solved with [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html). The sparse matrix representation is initialised with a triplet.
 
-Source code: <a href="la_umfpack01.go">la_umfpack01.go</a>
+Using high-level functions.
+
+Source code: <a href="la_HLsparseReal01.go">la_HLsparseReal01.go</a>
 
 Output:
 ```
@@ -27,7 +32,7 @@ x = 0.9999999999999998 2 3 4 4.999999999999998
 
 
 
-# 2 la_sparsecomplex01 &ndash; Linear Algebra: Complex/sparse matrix
+# 2 la_HLsparseComplex01 &ndash; Linear Algebra
 
 Given the following matrix of complex numbers:
 
@@ -68,11 +73,29 @@ solve:
      |_  10-17.75i _|
 ```
 
-Source code: <a href="la_sparsecomplex01.go">la_sparsecomplex01.go</a>
+Using high-level functions.
+
+Source code: <a href="la_HLsparseComplex01.go">la_HLsparseComplex01.go</a>
 
 
 
-# 3 num_deriv01 &ndash; Numerical: differentiation
+# 3 la_sparseReal01 &ndash; Linear Algebra
+
+Same problem as in Section 1; but using low-level routines.
+
+Source code: <a href="la_sparseReal01.go">la_sparseReal01.go</a>
+
+
+
+# 4 la_sparseComplex01 &ndash; Linear Algebra
+
+Same problem as in Section 2; but using low-level routines.
+
+Source code: <a href="la_sparseComplex01.go">la_sparseComplex01.go</a>
+
+
+
+# 5 num_deriv01 &ndash; Numerical
 
 Numerical differentiation is employed to check that the implementation of derivatives of the sin function is corrected.
 
@@ -112,7 +135,7 @@ d²y/dx² @ 6.283185   2.449293598294703e-16                       0   2.4492935
 
 
 
-# 4 vtk_isosurf01 &ndash; VTK: visualising iso-surfaces
+# 6 vtk_isosurf01 &ndash; VTK
 
 Two iso-surfaces are added to the 3D scene using VTK. One is a cone and the other an ellipsoid.
 
