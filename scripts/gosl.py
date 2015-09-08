@@ -240,6 +240,21 @@ def HideFrameLines(spines_to_remove=['top', 'right']):
         gca().spines[spine].set_visible(False)
 
 
+def Plot3dPoints(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, splot=111, *args, **kwargs):
+    """
+    Plot 3D points
+    ==============
+    """
+    ax = gcf().add_subplot(splot, projection='3d')
+    ax.set_xlabel(xlbl)
+    ax.set_ylabel(ylbl)
+    ax.set_zlabel(zlbl)
+    ax.scatter(X,Y,Z, *args, **kwargs)
+    if zmin!=None and zmax!=None:
+        ax.set_zlim(zmin,zmax)
+    return ax
+
+
 def Surface(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111, rstride=1, cstride=1, *args, **kwargs):
     """
     Plot 3D surface

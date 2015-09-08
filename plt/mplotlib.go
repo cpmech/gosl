@@ -214,6 +214,21 @@ func Hist(x [][]float64, labels []string, args string) {
 	}
 }
 
+func Plot3dPoints(x, y, z []float64, args string) {
+	n := bb.Len()
+	sx := io.Sf("x%d", n)
+	sy := io.Sf("y%d", n)
+	sz := io.Sf("z%d", n)
+	GenArray(&bb, sx, x)
+	GenArray(&bb, sy, y)
+	GenArray(&bb, sz, z)
+	cmd := io.Sf("Plot3dPoints(%s,%s,%s", sx, sy, sz)
+	if len(args) > 0 {
+		cmd += io.Sf(",%s", args)
+	}
+	io.Ff(&bb, "%s)\n", cmd)
+}
+
 func Surface(x, y, z [][]float64, args string) {
 	n := bb.Len()
 	sx := io.Sf("x%d", n)
