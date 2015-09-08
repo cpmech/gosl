@@ -368,6 +368,6 @@ func Test_linsol06(tst *testing.T) {
 		10 - 17.75i,
 	}
 
-	// run text
+	// run test
 	run_linsol_testC(tst, &t, 1e-3, 1e-12, b, x_correct, true)
 }
