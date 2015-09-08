@@ -7,6 +7,7 @@ package rnd
 import (
 	"math"
 
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -148,4 +149,25 @@ func LatinIHS(dim, n, d int) (x [][]int) {
 		x[i][0] = avail[i+0*dim]
 	}
 	return
+}
+
+// PlotHc2d plots 2D hypercube
+func PlotHc2d(dirout, fnkey string, x [][]int, xrange [][]float64) {
+	m := len(x)
+	n := len(x[0])
+	dx := make([]float64, m)
+	for i := 0; i < m; i++ {
+		dx[i] = (xrange[i][1] - xrange[i][0]) / float64(n-1)
+	}
+	X := utl.DblsAlloc(m, n)
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			X[i][j] = xrange[i][0] + float64(x[i][j]-1)*dx[i]
+		}
+	}
+	plt.SetForEps(0.8, 300)
+	plt.Plot(X[0], X[1], "'r.', clip_on=0, zorder=10")
+	plt.Equal()
+	plt.Gll("$x$", "$y$", "")
+	plt.SaveD(dirout, fnkey+".eps")
 }

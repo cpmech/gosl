@@ -18,7 +18,8 @@ func Test_hc01(tst *testing.T) {
 
 	Init(111)
 
-	x := LatinIHS(2, 10, 5)
+	n := 10
+	x := LatinIHS(2, n, 5)
 	io.Pforan("x = %v\n", x)
 
 	xcor := [][]int{
@@ -26,4 +27,32 @@ func Test_hc01(tst *testing.T) {
 		{3, 10, 1, 2, 7, 4, 9, 6, 5, 8},
 	}
 	chk.IntMat(tst, "x", x, xcor)
+
+	if chk.Verbose {
+		xrange := [][]float64{
+			{-1.0, 1.0},
+			{0.0, 2.0},
+		}
+		PlotHc2d("/tmp/gosl", "test_hc01", x, xrange)
+	}
+}
+
+func Test_hc02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("hc02. hypercube")
+
+	Init(0)
+
+	n := 36
+	x := LatinIHS(2, n, 5)
+	io.Pforan("x = %v\n", x)
+
+	if chk.Verbose {
+		xrange := [][]float64{
+			{-1.0, 1.0},
+			{0.0, 2.0},
+		}
+		PlotHc2d("/tmp/gosl", "test_hc02", x, xrange)
+	}
 }
