@@ -4,6 +4,7 @@ set -e
 
 examples="\
 la_umfpack01 \
+la_sparsecomplex01 \
 num_deriv01 \
 vtk_isosurf01 "
 

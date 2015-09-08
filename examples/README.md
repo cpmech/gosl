@@ -2,8 +2,9 @@
 
 ## Summary
 1.  **la_umfpack01** -- Solution of linear system with Umfpack and sparse matrices.
-2.  **num_deriv01** -- Numerical differentiation.
-3.  **vtk_isosurf01** -- Visualisatioin of iso-surface using VTK.
+2.  **la_sparsecomplex01** -- Solution of linear system with complex/sparse matrix.
+3.  **num_deriv01** -- Numerical differentiation.
+4.  **vtk_isosurf01** -- Visualisatioin of iso-surface using VTK.
 
 
 # 1 la_umfpack01 &ndash; Linear Algebra: Umfpack01
@@ -25,7 +26,53 @@ x = 0.9999999999999998 2 3 4 4.999999999999998
 ```
 
 
-# 2 num_deriv01 &ndash; Numerical: differentiation
+
+# 2 la_sparsecomplex01 &ndash; Linear Algebra: Complex/sparse matrix
+
+Given the following matrix of complex numbers:
+
+```
+      _                                                  _
+     |  19.73    12.11-i      5i        0          0      |
+     |  -0.51i   32.3+7i    23.07       i          0      |
+ A = |    0      -0.51i    70+7.3i     3.95    19+31.83i  |
+     |    0        0        1+1.1i    50.17      45.51    |
+     |_   0        0          0      -9.351i       55    _|
+```
+
+and the following vector:
+
+```
+      _                  _
+     |    77.38+8.82i     |
+     |   157.48+19.8i     |
+ b = |  1175.62+20.69i    |
+     |   912.12-801.75i   |
+     |_     550-1060.4i  _|
+```
+
+solve:
+
+```
+         A.x = b
+```
+
+ the solution is:
+
+```
+      _            _
+     |     3.3-i    |
+     |    1+0.17i   |
+ x = |      5.5     |
+     |       9      |
+     |_  10-17.75i _|
+```
+
+Source code: <a href="la_sparsecomplex01.go">la_sparsecomplex01.go</a>
+
+
+
+# 3 num_deriv01 &ndash; Numerical: differentiation
 
 Numerical differentiation is employed to check that the implementation of derivatives of the sin function is corrected.
 
@@ -65,7 +112,7 @@ d²y/dx² @ 6.283185   2.449293598294703e-16                       0   2.4492935
 
 
 
-# 3 vtk_isosurf01 &ndash; VTK: visualising iso-surfaces
+# 4 vtk_isosurf01 &ndash; VTK: visualising iso-surfaces
 
 Two iso-surfaces are added to the 3D scene using VTK. One is a cone and the other an ellipsoid.
 
