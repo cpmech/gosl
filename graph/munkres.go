@@ -30,6 +30,7 @@ const (
 //      Leela  |     3    [2]      3
 //      Bender |     3      3    [2]
 //      minimum cost = 6
+//  Note: costs must be positive
 type Munkres struct {
 
 	// main
@@ -51,8 +52,8 @@ type Munkres struct {
 
 // Init initialises Munkres' structure
 func (o *Munkres) Init(nrow, ncol int) {
-	chk.IntAssertLessThan(1, nrow) // nrow > 1
-	chk.IntAssertLessThan(1, ncol) // ncol > 1
+	chk.IntAssertLessThan(0, nrow) // nrow > 1
+	chk.IntAssertLessThan(0, ncol) // ncol > 1
 	o.nrow, o.ncol = nrow, ncol
 	o.C = utl.DblsAlloc(o.nrow, o.ncol)
 	o.M = make([][]Mask_t, o.nrow)
@@ -67,6 +68,7 @@ func (o *Munkres) Init(nrow, ncol int) {
 }
 
 // SetCostMatrix sets cost matrix by copying from C to internal o.C
+//  Note: costs must be positive
 func (o *Munkres) SetCostMatrix(C [][]float64) {
 	o.Cori = C
 	for i := 0; i < o.nrow; i++ {
@@ -83,6 +85,38 @@ func (o *Munkres) SetCostMatrix(C [][]float64) {
 //              -1 means no assignment/link
 //   o.Cost -- will have the total cost by following links
 func (o *Munkres) Run() {
+
+	// column matrix
+	if o.ncol == 1 {
+		o.Cost = o.C[0][0]
+		isel := 0
+		o.Links[0] = -1
+		for i := 1; i < o.nrow; i++ {
+			o.Links[i] = -1
+			if o.C[i][0] < o.Cost {
+				o.Cost = o.C[i][0]
+				isel = i
+			}
+		}
+		o.Links[isel] = 0
+		return
+	}
+
+	// row matrix
+	if o.nrow == 1 {
+		o.Cost = o.C[0][0]
+		jsel := 0
+		for j := 1; j < o.ncol; j++ {
+			if o.C[0][j] < o.Cost {
+				o.Cost = o.C[0][j]
+				jsel = j
+			}
+		}
+		o.Links[0] = jsel
+		return
+	}
+
+	// run Munkres algorithm
 	step := 1
 	done := false
 	for !done {
@@ -103,6 +137,8 @@ func (o *Munkres) Run() {
 			done = true
 		}
 	}
+
+	// compute cost and set links
 	o.Cost = 0
 	for i := 0; i < o.nrow; i++ {
 		o.Links[i] = -1

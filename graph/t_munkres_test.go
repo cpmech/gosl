@@ -406,3 +406,37 @@ func check_mask_matrix(tst *testing.T, msg string, res, correct [][]Mask_t) {
 	}
 	chk.PrintOk(msg)
 }
+
+func Test_munkres04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("munkres04. row and column matrices")
+
+	C := [][]float64{
+		{1.0},
+		{2.0},
+		{0.5},
+		{3.0},
+		{4.0},
+	}
+
+	var mnk Munkres
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
+	mnk.Run()
+	io.Pforan("links = %v\n", mnk.Links)
+	io.Pforan("cost = %v  (13938)\n", mnk.Cost)
+	chk.Ints(tst, "links", mnk.Links, []int{-1, -1, 0, -1, -1})
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 0.5)
+
+	C = [][]float64{
+		{1.0, 2.0, 0.5, 3.0, 4.0},
+	}
+	mnk.Init(len(C), len(C[0]))
+	mnk.SetCostMatrix(C)
+	mnk.Run()
+	io.Pforan("links = %v\n", mnk.Links)
+	io.Pforan("cost = %v  (13938)\n", mnk.Cost)
+	chk.Ints(tst, "links", mnk.Links, []int{2})
+	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 0.5)
+}
