@@ -12,10 +12,6 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-const (
-	NURBS_GEO = 18 // geometry type in geodefs
-)
-
 // WriteMshD writes .msh file
 // Input: vtagged maps hashed id of control point to vertex tag
 //        ctagged maps idOfNurbs_localIdOfElem to cell tag
@@ -102,7 +98,7 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 					tag = val
 				}
 			}
-			io.Ff(&buf, "    { \"id\":%3d, \"tag\":%2d, \"nrb\":%d, \"part\":0, \"geo\":%d,", cid, tag, sid, NURBS_GEO)
+			io.Ff(&buf, "    { \"id\":%3d, \"tag\":%2d, \"nrb\":%d, \"part\":0, \"geo\":\"nurbs\",", cid, tag, sid)
 			io.Ff(&buf, " \"span\":[")
 			for k, idx := range e {
 				if k > 0 {
