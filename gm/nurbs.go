@@ -516,6 +516,16 @@ func (o *Nurbs) Elements() (spans [][]int) {
 	return
 }
 
+// GetElemNumBasis returns the number of control points == basis functions needed for one element
+//  npts := Π_i (p[i] + 1)
+func (o *Nurbs) GetElemNumBasis() (npts int) {
+	npts = 1
+	for i := 0; i < o.gnd; i++ {
+		npts *= (o.p[i] + 1)
+	}
+	return
+}
+
 // IndBasis returns the indices of basis functions == local indices of control points
 func (o *Nurbs) IndBasis(span []int) (L []int) {
 	switch o.gnd {

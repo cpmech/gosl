@@ -105,12 +105,16 @@ func Test_nurbs01(tst *testing.T) {
 
 	b := get_nurbs_A()
 	elems := b.Elements()
+	nbasis := b.GetElemNumBasis()
+	io.Pforan("nbasis = %v\n", nbasis)
+	chk.IntAssert(nbasis, 6) // orders := (2,1) => nbasis = (2+1)*(1+1)
 	chk.Ints(tst, "elem[0]", elems[0], []int{2, 3, 1, 2})
 	chk.Ints(tst, "elem[1]", elems[1], []int{3, 4, 1, 2})
 	chk.Ints(tst, "elem[2]", elems[2], []int{4, 5, 1, 2})
 	chk.Ints(tst, "ibasis0", b.IndBasis(elems[0]), []int{0, 1, 2, 5, 6, 7})
 	chk.Ints(tst, "ibasis1", b.IndBasis(elems[1]), []int{1, 2, 3, 6, 7, 8})
 	chk.Ints(tst, "ibasis2", b.IndBasis(elems[2]), []int{2, 3, 4, 7, 8, 9})
+	chk.IntAssert(b.GetElemNumBasis(), len(b.IndBasis(elems[0])))
 
 	if chk.Verbose {
 		PlotNurbsBasis("/tmp/gosl", "t_nurbs01", b, 0, 7)
@@ -135,8 +139,12 @@ func Test_nurbs03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("nurbs03")
 
+	b := get_nurbs_B()
+	nbasis := b.GetElemNumBasis()
+	io.Pforan("nbasis = %v\n", nbasis)
+	chk.IntAssert(nbasis, 9) // orders := (2,1) => nbasis = (2+1)*(2+1)
+
 	if chk.Verbose {
-		b := get_nurbs_B()
 		la := 0 + 0*b.n[0]
 		lb := 2 + 1*b.n[0]
 		PlotNurbsBasis("/tmp/gosl", "t_nurbs03", b, la, lb)
@@ -282,6 +290,7 @@ func Test_nurbs08(tst *testing.T) {
 	chk.Ints(tst, "a_el[1]", a_el[1], []int{3, 4, 2, 3})
 	chk.Ints(tst, "a_ibasis0", a.IndBasis(a_el[0]), []int{0, 1, 2, 4, 5, 6, 8, 9, 10})
 	chk.Ints(tst, "a_ibasis1", a.IndBasis(a_el[1]), []int{1, 2, 3, 5, 6, 7, 9, 10, 11})
+	chk.IntAssert(a.GetElemNumBasis(), len(a.IndBasis(a_el[0])))
 
 	b := a.KrefineN(2, false)
 	b_el := b.Elements()
@@ -301,6 +310,7 @@ func Test_nurbs08(tst *testing.T) {
 	chk.Ints(tst, "b_ibasis5", b.IndBasis(b_el[5]), []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
 	chk.Ints(tst, "b_ibasis6", b.IndBasis(b_el[6]), []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
 	chk.Ints(tst, "b_ibasis7", b.IndBasis(b_el[7]), []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
+	chk.IntAssert(b.GetElemNumBasis(), len(b.IndBasis(b_el[0])))
 
 	c := a.KrefineN(4, false)
 
