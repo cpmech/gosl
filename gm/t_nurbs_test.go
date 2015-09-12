@@ -106,6 +106,9 @@ func Test_nurbs01(tst *testing.T) {
 	b := get_nurbs_A()
 	elems := b.Elements()
 	enodes := b.Enodes()
+	ibasis0 := b.IndBasis(elems[0])
+	ibasis1 := b.IndBasis(elems[1])
+	ibasis2 := b.IndBasis(elems[2])
 	io.PfYel("enodes = %v\n", enodes)
 	chk.Ints(tst, "elem[0]", elems[0], []int{2, 3, 1, 2})
 	chk.Ints(tst, "elem[1]", elems[1], []int{3, 4, 1, 2})
@@ -113,6 +116,9 @@ func Test_nurbs01(tst *testing.T) {
 	chk.Ints(tst, "enodes[0]", enodes[0], []int{0, 1, 2, 5, 6, 7})
 	chk.Ints(tst, "enodes[1]", enodes[1], []int{1, 2, 3, 6, 7, 8})
 	chk.Ints(tst, "enodes[2]", enodes[2], []int{2, 3, 4, 7, 8, 9})
+	chk.Ints(tst, "ibasis0", ibasis0, enodes[0])
+	chk.Ints(tst, "ibasis1", ibasis1, enodes[1])
+	chk.Ints(tst, "ibasis2", ibasis2, enodes[2])
 
 	if chk.Verbose {
 		PlotNurbsBasis("/tmp/gosl", "t_nurbs01", b, 0, 7)
@@ -138,6 +144,12 @@ func Test_nurbs03(tst *testing.T) {
 	chk.PrintTitle("nurbs03")
 
 	b := get_nurbs_B()
+	elems := b.Elements()
+	enodes := b.Enodes()
+	ibasis0 := b.IndBasis(elems[0])
+	ibasis1 := b.IndBasis(elems[1])
+	chk.Ints(tst, "ibasis0", ibasis0, enodes[0])
+	chk.Ints(tst, "ibasis1", ibasis1, enodes[1])
 
 	if chk.Verbose {
 		la := 0 + 0*b.n[0]
@@ -257,6 +269,11 @@ func Test_nurbs08(tst *testing.T) {
 	chk.Ints(tst, "a_el[1]", a_el[1], []int{3, 4, 2, 3})
 	chk.Ints(tst, "a_en[0]", a_en[0], []int{0, 1, 2, 4, 5, 6, 8, 9, 10})
 	chk.Ints(tst, "a_en[1]", a_en[1], []int{1, 2, 3, 5, 6, 7, 9, 10, 11})
+	for i, e := range a_el {
+		ib := a.IndBasis(e)
+		en := a_en[i]
+		chk.Ints(tst, "ibasis==enodes", ib, en)
+	}
 
 	b := a.KrefineN(2, false)
 	b_el := b.Elements()
@@ -277,8 +294,20 @@ func Test_nurbs08(tst *testing.T) {
 	chk.Ints(tst, "b_en[5]", b_en[5], []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
 	chk.Ints(tst, "b_en[6]", b_en[6], []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
 	chk.Ints(tst, "b_en[7]", b_en[7], []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
+	for i, e := range b_el {
+		ib := b.IndBasis(e)
+		en := b_en[i]
+		chk.Ints(tst, "ibasis==enodes", ib, en)
+	}
 
 	c := a.KrefineN(4, false)
+	c_el := c.Elements()
+	c_en := c.Enodes()
+	for i, e := range c_el {
+		ib := c.IndBasis(e)
+		en := c_en[i]
+		chk.Ints(tst, "ibasis==enodes", ib, en)
+	}
 
 	a_vt := tag_verts(a)
 	a_ct := map[string]int{
@@ -304,6 +333,7 @@ func Test_nurbs08(tst *testing.T) {
 
 	if chk.Verbose {
 		PlotNurbs("/tmp/gosl", "t_nurbs08_read", B[0])
-		PlotNurbsRefined("/tmp/gosl", "t_nurbs08_refined", a, c)
+		PlotNurbsRefined("/tmp/gosl", "t_nurbs08_ref2", a, b)
+		PlotNurbsRefined("/tmp/gosl", "t_nurbs08_ref4", a, c)
 	}
 }
