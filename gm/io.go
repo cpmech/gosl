@@ -87,8 +87,8 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 	cid := 0
 	for sid, o := range nurbss {
 		elems := o.Elements()
-		enodes := o.Enodes()
 		for eid, e := range elems {
+			ibasis := o.IndBasis(e)
 			if cid > 0 {
 				io.Ff(&buf, ",\n")
 			}
@@ -107,7 +107,7 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 				io.Ff(&buf, "%d", idx)
 			}
 			io.Ff(&buf, "], \"verts\":[")
-			for i, l := range enodes[eid] {
+			for i, l := range ibasis {
 				if i > 0 {
 					io.Ff(&buf, ",")
 				}

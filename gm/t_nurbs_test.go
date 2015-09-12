@@ -105,20 +105,12 @@ func Test_nurbs01(tst *testing.T) {
 
 	b := get_nurbs_A()
 	elems := b.Elements()
-	enodes := b.Enodes()
-	ibasis0 := b.IndBasis(elems[0])
-	ibasis1 := b.IndBasis(elems[1])
-	ibasis2 := b.IndBasis(elems[2])
-	io.PfYel("enodes = %v\n", enodes)
 	chk.Ints(tst, "elem[0]", elems[0], []int{2, 3, 1, 2})
 	chk.Ints(tst, "elem[1]", elems[1], []int{3, 4, 1, 2})
 	chk.Ints(tst, "elem[2]", elems[2], []int{4, 5, 1, 2})
-	chk.Ints(tst, "enodes[0]", enodes[0], []int{0, 1, 2, 5, 6, 7})
-	chk.Ints(tst, "enodes[1]", enodes[1], []int{1, 2, 3, 6, 7, 8})
-	chk.Ints(tst, "enodes[2]", enodes[2], []int{2, 3, 4, 7, 8, 9})
-	chk.Ints(tst, "ibasis0", ibasis0, enodes[0])
-	chk.Ints(tst, "ibasis1", ibasis1, enodes[1])
-	chk.Ints(tst, "ibasis2", ibasis2, enodes[2])
+	chk.Ints(tst, "ibasis0", b.IndBasis(elems[0]), []int{0, 1, 2, 5, 6, 7})
+	chk.Ints(tst, "ibasis1", b.IndBasis(elems[1]), []int{1, 2, 3, 6, 7, 8})
+	chk.Ints(tst, "ibasis2", b.IndBasis(elems[2]), []int{2, 3, 4, 7, 8, 9})
 
 	if chk.Verbose {
 		PlotNurbsBasis("/tmp/gosl", "t_nurbs01", b, 0, 7)
@@ -143,15 +135,8 @@ func Test_nurbs03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("nurbs03")
 
-	b := get_nurbs_B()
-	elems := b.Elements()
-	enodes := b.Enodes()
-	ibasis0 := b.IndBasis(elems[0])
-	ibasis1 := b.IndBasis(elems[1])
-	chk.Ints(tst, "ibasis0", ibasis0, enodes[0])
-	chk.Ints(tst, "ibasis1", ibasis1, enodes[1])
-
 	if chk.Verbose {
+		b := get_nurbs_B()
 		la := 0 + 0*b.n[0]
 		lb := 2 + 1*b.n[0]
 		PlotNurbsBasis("/tmp/gosl", "t_nurbs03", b, la, lb)
@@ -201,19 +186,18 @@ func Test_nurbs06(tst *testing.T) {
 
 	b := get_nurbs_C()
 	elems := b.Elements()
-	enodes := b.Enodes()
 	chk.Ints(tst, "elem[0]", elems[0], []int{3, 4})
 	chk.Ints(tst, "elem[1]", elems[1], []int{4, 5})
 	chk.Ints(tst, "elem[2]", elems[2], []int{5, 6})
-	chk.Ints(tst, "enodes[0]", enodes[0], []int{0, 1, 2, 3})
-	chk.Ints(tst, "enodes[1]", enodes[1], []int{1, 2, 3, 4})
-	chk.Ints(tst, "enodes[2]", enodes[2], []int{2, 3, 4, 5})
-	c := b.Krefine([][]float64{
-		//{0.15},
-		{0.15, 0.5, 0.85},
-	})
+	chk.Ints(tst, "ibasis0", b.IndBasis(elems[0]), []int{0, 1, 2, 3})
+	chk.Ints(tst, "ibasis1", b.IndBasis(elems[1]), []int{1, 2, 3, 4})
+	chk.Ints(tst, "ibasis2", b.IndBasis(elems[2]), []int{2, 3, 4, 5})
 
 	if chk.Verbose {
+		c := b.Krefine([][]float64{
+			//{0.15},
+			{0.15, 0.5, 0.85},
+		})
 		PlotNurbsRefined("/tmp/gosl", "t_nurbs06", b, c)
 	}
 }
@@ -228,6 +212,36 @@ func Test_nurbs07(tst *testing.T) {
 		{0.5, 1.5, 2.5},
 		{0.5},
 	})
+
+	elems := c.Elements()
+
+	chk.Ints(tst, "elem[0]", elems[0], []int{2, 3, 1, 2})
+	chk.Ints(tst, "elem[1]", elems[1], []int{3, 4, 1, 2})
+	chk.Ints(tst, "elem[2]", elems[2], []int{4, 5, 1, 2})
+	chk.Ints(tst, "elem[3]", elems[3], []int{5, 6, 1, 2})
+	chk.Ints(tst, "elem[4]", elems[4], []int{6, 7, 1, 2})
+	chk.Ints(tst, "elem[5]", elems[5], []int{7, 8, 1, 2})
+
+	chk.Ints(tst, "elem[ 6]", elems[6], []int{2, 3, 2, 3})
+	chk.Ints(tst, "elem[ 7]", elems[7], []int{3, 4, 2, 3})
+	chk.Ints(tst, "elem[ 8]", elems[8], []int{4, 5, 2, 3})
+	chk.Ints(tst, "elem[ 9]", elems[9], []int{5, 6, 2, 3})
+	chk.Ints(tst, "elem[10]", elems[10], []int{6, 7, 2, 3})
+	chk.Ints(tst, "elem[11]", elems[11], []int{7, 8, 2, 3})
+
+	chk.Ints(tst, "basis0", c.IndBasis(elems[0]), []int{0, 1, 2, 8, 9, 10})
+	chk.Ints(tst, "basis1", c.IndBasis(elems[1]), []int{1, 2, 3, 9, 10, 11})
+	chk.Ints(tst, "basis2", c.IndBasis(elems[2]), []int{2, 3, 4, 10, 11, 12})
+	chk.Ints(tst, "basis3", c.IndBasis(elems[3]), []int{3, 4, 5, 11, 12, 13})
+	chk.Ints(tst, "basis4", c.IndBasis(elems[4]), []int{4, 5, 6, 12, 13, 14})
+	chk.Ints(tst, "basis5", c.IndBasis(elems[5]), []int{5, 6, 7, 13, 14, 15})
+
+	chk.Ints(tst, "basis6", c.IndBasis(elems[6]), []int{8, 9, 10, 16, 17, 18})
+	chk.Ints(tst, "basis7", c.IndBasis(elems[7]), []int{9, 10, 11, 17, 18, 19})
+	chk.Ints(tst, "basis8", c.IndBasis(elems[8]), []int{10, 11, 12, 18, 19, 20})
+	chk.Ints(tst, "basis9", c.IndBasis(elems[9]), []int{11, 12, 13, 19, 20, 21})
+	chk.Ints(tst, "basis10", c.IndBasis(elems[10]), []int{12, 13, 14, 20, 21, 22})
+	chk.Ints(tst, "basis11", c.IndBasis(elems[11]), []int{13, 14, 15, 21, 22, 23})
 
 	if chk.Verbose {
 		PlotNurbsRefined("/tmp/gosl", "t_nurbs07", b, c)
@@ -264,20 +278,13 @@ func Test_nurbs08(tst *testing.T) {
 
 	a := get_nurbs_B()
 	a_el := a.Elements()
-	a_en := a.Enodes()
 	chk.Ints(tst, "a_el[0]", a_el[0], []int{2, 3, 2, 3})
 	chk.Ints(tst, "a_el[1]", a_el[1], []int{3, 4, 2, 3})
-	chk.Ints(tst, "a_en[0]", a_en[0], []int{0, 1, 2, 4, 5, 6, 8, 9, 10})
-	chk.Ints(tst, "a_en[1]", a_en[1], []int{1, 2, 3, 5, 6, 7, 9, 10, 11})
-	for i, e := range a_el {
-		ib := a.IndBasis(e)
-		en := a_en[i]
-		chk.Ints(tst, "ibasis==enodes", ib, en)
-	}
+	chk.Ints(tst, "a_ibasis0", a.IndBasis(a_el[0]), []int{0, 1, 2, 4, 5, 6, 8, 9, 10})
+	chk.Ints(tst, "a_ibasis1", a.IndBasis(a_el[1]), []int{1, 2, 3, 5, 6, 7, 9, 10, 11})
 
 	b := a.KrefineN(2, false)
 	b_el := b.Elements()
-	b_en := b.Enodes()
 	chk.Ints(tst, "b_el[0]", b_el[0], []int{2, 3, 2, 3})
 	chk.Ints(tst, "b_el[1]", b_el[1], []int{3, 4, 2, 3})
 	chk.Ints(tst, "b_el[2]", b_el[2], []int{4, 5, 2, 3})
@@ -286,28 +293,16 @@ func Test_nurbs08(tst *testing.T) {
 	chk.Ints(tst, "b_el[5]", b_el[5], []int{3, 4, 3, 4})
 	chk.Ints(tst, "b_el[6]", b_el[6], []int{4, 5, 3, 4})
 	chk.Ints(tst, "b_el[7]", b_el[7], []int{5, 6, 3, 4})
-	chk.Ints(tst, "b_en[0]", b_en[0], []int{0, 1, 2, 6, 7, 8, 12, 13, 14})
-	chk.Ints(tst, "b_en[1]", b_en[1], []int{1, 2, 3, 7, 8, 9, 13, 14, 15})
-	chk.Ints(tst, "b_en[2]", b_en[2], []int{2, 3, 4, 8, 9, 10, 14, 15, 16})
-	chk.Ints(tst, "b_en[3]", b_en[3], []int{3, 4, 5, 9, 10, 11, 15, 16, 17})
-	chk.Ints(tst, "b_en[4]", b_en[4], []int{6, 7, 8, 12, 13, 14, 18, 19, 20})
-	chk.Ints(tst, "b_en[5]", b_en[5], []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
-	chk.Ints(tst, "b_en[6]", b_en[6], []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
-	chk.Ints(tst, "b_en[7]", b_en[7], []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
-	for i, e := range b_el {
-		ib := b.IndBasis(e)
-		en := b_en[i]
-		chk.Ints(tst, "ibasis==enodes", ib, en)
-	}
+	chk.Ints(tst, "b_ibasis0", b.IndBasis(b_el[0]), []int{0, 1, 2, 6, 7, 8, 12, 13, 14})
+	chk.Ints(tst, "b_ibasis1", b.IndBasis(b_el[1]), []int{1, 2, 3, 7, 8, 9, 13, 14, 15})
+	chk.Ints(tst, "b_ibasis2", b.IndBasis(b_el[2]), []int{2, 3, 4, 8, 9, 10, 14, 15, 16})
+	chk.Ints(tst, "b_ibasis3", b.IndBasis(b_el[3]), []int{3, 4, 5, 9, 10, 11, 15, 16, 17})
+	chk.Ints(tst, "b_ibasis4", b.IndBasis(b_el[4]), []int{6, 7, 8, 12, 13, 14, 18, 19, 20})
+	chk.Ints(tst, "b_ibasis5", b.IndBasis(b_el[5]), []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
+	chk.Ints(tst, "b_ibasis6", b.IndBasis(b_el[6]), []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
+	chk.Ints(tst, "b_ibasis7", b.IndBasis(b_el[7]), []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
 
 	c := a.KrefineN(4, false)
-	c_el := c.Elements()
-	c_en := c.Enodes()
-	for i, e := range c_el {
-		ib := c.IndBasis(e)
-		en := c_en[i]
-		chk.Ints(tst, "ibasis==enodes", ib, en)
-	}
 
 	a_vt := tag_verts(a)
 	a_ct := map[string]int{
