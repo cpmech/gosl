@@ -7,16 +7,10 @@ package gm
 import (
 	"math"
 	"testing"
-	"time"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
-)
-
-const (
-	T_NURBS_SAVE = false
 )
 
 func get_nurbs_A() (b *Nurbs) {
@@ -84,117 +78,6 @@ func get_nurbs_C() (b *Nurbs) {
 	return
 }
 
-func do_plot_nurbs_basis(b *Nurbs, la, lb int) {
-	npts := 21
-	plt.SetForEps(1.2, 500)
-
-	plt.Subplot(3, 2, 1)
-	b.DrawCtrl2D(false)
-	b.DrawElems2D(npts, false, "", "")
-	t0 := time.Now()
-	b.PlotBasis(la, "", 11, 0) // 0 => CalcBasis
-	io.Pfcyan("time elapsed (calcbasis) = %v\n", time.Now().Sub(t0))
-	plt.Equal()
-
-	plt.Subplot(3, 2, 2)
-	b.DrawCtrl2D(false)
-	b.DrawElems2D(npts, false, "", "")
-	b.PlotBasis(lb, "", 11, 0) // 0 => CalcBasis
-	plt.Equal()
-
-	plt.Subplot(3, 2, 3)
-	b.DrawCtrl2D(false)
-	b.DrawElems2D(npts, false, "", "")
-	b.PlotBasis(la, "", 11, 1) // 1 => CalcBasisAndDerivs
-	plt.Equal()
-
-	plt.Subplot(3, 2, 4)
-	b.DrawCtrl2D(false)
-	b.DrawElems2D(npts, false, "", "")
-	b.PlotBasis(lb, "", 11, 1) // 1 => CalcBasisAndDerivs
-	plt.Equal()
-
-	plt.Subplot(3, 2, 5)
-	b.DrawCtrl2D(false)
-	b.DrawElems2D(npts, false, "", "")
-	t0 = time.Now()
-	b.PlotBasis(la, "", 11, 2) // 2 => RecursiveBasis
-	io.Pfcyan("time elapsed (recursive) = %v\n", time.Now().Sub(t0))
-	plt.Equal()
-
-	plt.Subplot(3, 2, 6)
-	b.DrawCtrl2D(false)
-	b.DrawElems2D(npts, false, "", "")
-	b.PlotBasis(lb, "", 11, 2) // 2 => RecursiveBasis
-	plt.Equal()
-}
-
-func do_plot_nurbs_derivs(b *Nurbs, la, lb int) {
-	np := 11
-	plt.SetForEps(1.5, 500)
-
-	plt.Subplot(4, 2, 1)
-	t0 := time.Now()
-	b.PlotDeriv(la, 0, "", np, 0) // 0 => CalcBasisAndDerivs
-	io.Pfcyan("time elapsed (calcbasis) = %v\n", time.Now().Sub(t0))
-	plt.Equal()
-
-	plt.Subplot(4, 2, 2)
-	t0 = time.Now()
-	b.PlotDeriv(la, 0, "", np, 1) // 1 => NumericalDeriv
-	io.Pfcyan("time elapsed (numerical) = %v\n", time.Now().Sub(t0))
-	plt.Equal()
-
-	plt.Subplot(4, 2, 3)
-	b.PlotDeriv(la, 1, "", np, 0) // 0 => CalcBasisAndDerivs
-	plt.Equal()
-
-	plt.Subplot(4, 2, 4)
-	b.PlotDeriv(la, 1, "", np, 1) // 0 => NumericalDeriv
-	plt.Equal()
-
-	plt.Subplot(4, 2, 5)
-	b.PlotDeriv(lb, 0, "", np, 0) // 0 => CalcBasisAndDerivs
-	plt.Equal()
-
-	plt.Subplot(4, 2, 6)
-	b.PlotDeriv(lb, 0, "", np, 1) // 0 => NumericalDeriv
-	plt.Equal()
-
-	plt.Subplot(4, 2, 7)
-	b.PlotDeriv(lb, 1, "", np, 0) // 0 => CalcBasisAndDerivs
-	plt.Equal()
-
-	plt.Subplot(4, 2, 8)
-	b.PlotDeriv(lb, 1, "", np, 1) // 0 => NumericalDeriv
-	plt.Equal()
-}
-
-func do_plot_nurbs(b *Nurbs) {
-	plt.SetForEps(0.75, 400)
-	b.DrawCtrl2D(true)
-	b.DrawElems2D(21, true, "", "")
-	plt.Equal()
-}
-
-func do_plot_nurbs_refined(b, c *Nurbs) {
-	plt.SetForEps(1.5, 400)
-	plt.Subplot(3, 1, 1)
-	b.DrawCtrl2D(true)
-	b.DrawElems2D(21, true, "", "")
-	plt.Equal()
-
-	plt.Subplot(3, 1, 2)
-	c.DrawCtrl2D(true)
-	c.DrawElems2D(21, true, "", "")
-	plt.Equal()
-
-	plt.Subplot(3, 1, 3)
-	b.DrawElems2D(21, true, ", lw=3", "")
-	c.DrawElems2D(21, true, ", color='red', marker='+', markevery=10", "color='magenta', size=8, va='bottom'")
-	plt.Equal()
-}
-
 func do_check_derivs(tst *testing.T, b *Nurbs, nn int, tol float64, ver bool) {
 	dana := make([]float64, 2)
 	dnum := make([]float64, 2)
@@ -231,9 +114,8 @@ func Test_nurbs01(tst *testing.T) {
 	chk.Ints(tst, "enodes[1]", enodes[1], []int{1, 2, 3, 6, 7, 8})
 	chk.Ints(tst, "enodes[2]", enodes[2], []int{2, 3, 4, 7, 8, 9})
 
-	if T_NURBS_SAVE {
-		do_plot_nurbs_basis(b, 0, 7)
-		plt.SaveD("/tmp/gosl", "t_nurbs01.eps")
+	if chk.Verbose {
+		PlotNurbsBasis("/tmp/gosl", "t_nurbs01", b, 0, 7)
 	}
 }
 
@@ -245,9 +127,8 @@ func Test_nurbs02(tst *testing.T) {
 	b := get_nurbs_A()
 	do_check_derivs(tst, b, 11, 1e-5, false)
 
-	if T_NURBS_SAVE {
-		do_plot_nurbs_derivs(b, 0, 7)
-		plt.SaveD("/tmp/gosl", "t_nurbs02.eps")
+	if chk.Verbose {
+		PlotNurbsDerivs("/tmp/gosl", "t_nurbs02", b, 0, 7)
 	}
 }
 
@@ -258,11 +139,10 @@ func Test_nurbs03(tst *testing.T) {
 
 	b := get_nurbs_B()
 
-	if T_NURBS_SAVE {
+	if chk.Verbose {
 		la := 0 + 0*b.n[0]
 		lb := 2 + 1*b.n[0]
-		do_plot_nurbs_basis(b, la, lb)
-		plt.SaveD("/tmp/gosl", "t_nurbs03.eps")
+		PlotNurbsBasis("/tmp/gosl", "t_nurbs03", b, la, lb)
 	}
 }
 
@@ -274,11 +154,10 @@ func Test_nurbs04(tst *testing.T) {
 	b := get_nurbs_B()
 	do_check_derivs(tst, b, 11, 1e-5, false)
 
-	if T_NURBS_SAVE {
+	if chk.Verbose {
 		la := 0 + 0*b.n[0]
 		lb := 2 + 1*b.n[0]
-		do_plot_nurbs_derivs(b, la, lb)
-		plt.SaveD("/tmp/gosl", "t_nurbs04.eps")
+		PlotNurbsDerivs("/tmp/gosl", "t_nurbs04", b, la, lb)
 	}
 }
 
@@ -298,12 +177,8 @@ func Test_nurbs05(tst *testing.T) {
 		chk.Ints(tst, "L", L, solL[k])
 	}
 
-	if T_NURBS_SAVE {
-		plt.SetForEps(0.7, 300)
-		b.DrawCtrl2D(true)
-		b.DrawElems2D(21, true, "", "")
-		plt.Equal()
-		plt.SaveD("/tmp/gosl", "t_nurbs05.eps")
+	if chk.Verbose {
+		PlotNurbs("/tmp/gosl", "t_nurbs05", b)
 	}
 }
 
@@ -326,9 +201,8 @@ func Test_nurbs06(tst *testing.T) {
 		{0.15, 0.5, 0.85},
 	})
 
-	if T_NURBS_SAVE {
-		do_plot_nurbs_refined(b, c)
-		plt.SaveD("/tmp/gosl", "t_nurbs06.eps")
+	if chk.Verbose {
+		PlotNurbsRefined("/tmp/gosl", "t_nurbs06", b, c)
 	}
 }
 
@@ -343,9 +217,8 @@ func Test_nurbs07(tst *testing.T) {
 		{0.5},
 	})
 
-	if T_NURBS_SAVE {
-		do_plot_nurbs_refined(b, c)
-		plt.SaveD("/tmp/gosl", "t_nurbs07.eps")
+	if chk.Verbose {
+		PlotNurbsRefined("/tmp/gosl", "t_nurbs07", b, c)
 	}
 }
 
@@ -429,10 +302,8 @@ func Test_nurbs08(tst *testing.T) {
 	chk.Deep4(tst, "Read: Q", 1.0e-17, a.Q, B[0].Q)
 	chk.IntMat(tst, "Read: l2i", a.l2i, B[0].l2i)
 
-	if T_NURBS_SAVE {
-		do_plot_nurbs_refined(a, c)
-		plt.SaveD("/tmp/gosl", "t_nurbs08.eps")
-		do_plot_nurbs(B[0])
-		plt.SaveD("/tmp/gosl", "t_nurbs08_read.eps")
+	if chk.Verbose {
+		PlotNurbs("/tmp/gosl", "t_nurbs08_read", B[0])
+		PlotNurbsRefined("/tmp/gosl", "t_nurbs08_refined", a, c)
 	}
 }
