@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -340,5 +341,70 @@ func Test_nurbs08(tst *testing.T) {
 		PlotNurbs("/tmp/gosl", "t_nurbs08_read", B[0])
 		PlotNurbsRefined("/tmp/gosl", "t_nurbs08_ref2", a, b)
 		PlotNurbsRefined("/tmp/gosl", "t_nurbs08_ref4", a, c)
+	}
+}
+
+func Test_nurbs09(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("nurbs09")
+
+	b := get_nurbs_A()
+	surfs := b.ExtractSurfaces()
+	chk.Deep4(tst, "surf0: Q", 1e-15, surfs[0].Q, [][][][]float64{
+		{{{0, 0, 0, 0.8}}},         // 0
+		{{{0, 0.4 * 0.9, 0, 0.9}}}, // 5
+	})
+	chk.Deep4(tst, "surf1: Q", 1e-15, surfs[1].Q, [][][][]float64{
+		{{{1.0 * 1.1, 0.1 * 1.1, 0, 1.1}}}, // 4
+		{{{1.0 * 0.5, 0.5 * 0.5, 0, 0.5}}}, // 9
+	})
+	chk.Deep4(tst, "surf2: Q", 1e-15, surfs[2].Q, [][][][]float64{
+		{{{0.00 * 0.80, 0.00 * 0.80, 0, 0.80}}}, // 0
+		{{{0.25 * 1.00, 0.15 * 1.00, 0, 1.00}}}, // 1
+		{{{0.50 * 0.70, 0.00 * 0.70, 0, 0.70}}}, // 2
+		{{{0.75 * 1.20, 0.00 * 1.20, 0, 1.20}}}, // 3
+		{{{1.00 * 1.10, 0.10 * 1.10, 0, 1.10}}}, // 4
+	})
+	chk.Deep4(tst, "surf3: Q", 1e-15, surfs[3].Q, [][][][]float64{
+		{{{0.00 * 0.90, 0.40 * 0.90, 0, 0.90}}}, // 5
+		{{{0.25 * 0.60, 0.55 * 0.60, 0, 0.60}}}, // 6
+		{{{0.50 * 1.50, 0.40 * 1.50, 0, 1.50}}}, // 7
+		{{{0.75 * 1.40, 0.40 * 1.40, 0, 1.40}}}, // 8
+		{{{1.00 * 0.50, 0.50 * 0.50, 0, 0.50}}}, // 9
+	})
+
+	if chk.Verbose {
+		I := [][]int{{2, 2, 1}, {2, 2, 2}, {2, 2, 3}, {2, 2, 4}}
+		plt.SetForEps(1, 500)
+		for k, surf := range surfs {
+			plt.SubplotI(I[k])
+			b.DrawElems2D(41, false, ", ls=':', lw=0.5", "")
+			surf.DrawCtrl2D(true)
+			surf.DrawElems2D(41, true, ", zorder=20, color='#e78005', lw=2", "")
+			plt.Equal()
+		}
+		plt.SaveD("/tmp/gosl", "test_nurbs09.eps")
+	}
+}
+
+func Test_nurbs10(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("nurbs10")
+
+	if chk.Verbose {
+		b := get_nurbs_B()
+		surfs := b.ExtractSurfaces()
+		I := [][]int{{2, 2, 1}, {2, 2, 2}, {2, 2, 3}, {2, 2, 4}}
+		plt.SetForEps(1, 500)
+		for k, surf := range surfs {
+			plt.SubplotI(I[k])
+			b.DrawElems2D(41, false, ", ls=':', lw=0.5", "")
+			surf.DrawCtrl2D(true)
+			surf.DrawElems2D(41, true, ", zorder=20, color='#e78005', lw=2", "")
+			plt.Equal()
+		}
+		plt.SaveD("/tmp/gosl", "test_nurbs10.eps")
 	}
 }

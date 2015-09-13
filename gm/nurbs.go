@@ -668,6 +668,56 @@ func (o *Nurbs) Krefine(X [][]float64) (O *Nurbs) {
 	return
 }
 
+// ExtractSurfaces returns a new NURBS representing a boundary of this NURBS
+func (o *Nurbs) ExtractSurfaces() (surfs []*Nurbs) {
+	if o.gnd == 1 {
+		return
+	}
+	nsurf := o.gnd * 2
+	surfs = make([]*Nurbs, nsurf)
+	var ords [][]int
+	var knots [][][]float64
+	if o.gnd == 2 {
+		ords = [][]int{
+			{o.p[1]}, // perpendicular to x
+			{o.p[0]}, // perpendicular to y
+		}
+		knots = [][][]float64{
+			{o.b[1].T}, // perpendicular to x
+			{o.b[0].T}, // perpendicular to y
+		}
+	} else {
+		ords = [][]int{
+			{o.p[1], o.p[2]}, // perpendicular to x
+			{o.p[2], o.p[0]}, // perpendicular to y
+			{o.p[0], o.p[1]}, // perpendicular to z
+		}
+		knots = [][][]float64{
+			{o.b[1].T, o.b[2].T}, // perpendicular to x
+			{o.b[2].T, o.b[0].T}, // perpendicular to y
+			{o.b[0].T, o.b[1].T}, // perpendicular to z
+		}
+	}
+	for i := 0; i < o.gnd; i++ {
+		a, b := i*o.gnd, i*o.gnd+1
+		surfs[a] = new(Nurbs) // surface perpendicular to i
+		surfs[b] = new(Nurbs) // opposite surface perpendicular to i
+		surfs[a].Init(o.gnd-1, ords[i], knots[i])
+		surfs[b].Init(o.gnd-1, ords[i], knots[i])
+		if o.gnd == 2 { // boundary is curve
+			j := (i + 1) % o.gnd // direction perpendicular to i
+			surfs[a].Q = o.clone_Q_along_curve(j, 0)
+			surfs[b].Q = o.clone_Q_along_curve(j, o.n[i]-1)
+		} else { // boundary is surface
+			j := (i + 1) % o.gnd // direction perpendicular to i
+			k := (i + 2) % o.gnd // other direction perpendicular to i
+			surfs[a].Q = o.clone_Q_along_surface(j, k, 0)
+			surfs[b].Q = o.clone_Q_along_surface(j, k, o.n[i]-1)
+		}
+	}
+	return
+}
+
 // auxiliary methods /////////////////////////////////////////////////////////////////////////////////
 
 // krefine refines a nurbs with new knots
@@ -770,6 +820,44 @@ func krefine(Unew [][]float64, Qnew, Qold [][][][]float64, dir int, X, U []float
 		Unew[dir][k] = X[j]
 		k -= 1
 	}
+}
+
+func (o *Nurbs) clone_Q_along_curve(iAlong, jAt int) (Qnew [][][][]float64) {
+	Qnew = utl.Deep4alloc(o.n[iAlong], 1, 1, 4)
+	var i, j int
+	for m := 0; m < o.n[iAlong]; m++ {
+		i, j = m, jAt
+		if iAlong == 1 {
+			i, j = jAt, m
+		}
+		for e := 0; e < 4; e++ {
+			Qnew[m][0][0][e] = o.Q[i][j][0][e]
+		}
+	}
+	return
+}
+
+func (o *Nurbs) clone_Q_along_surface(iAlong, jAlong, kAt int) (Qnew [][][][]float64) {
+	Qnew = utl.Deep4alloc(o.n[iAlong], o.n[jAlong], 1, 4)
+	var i, j, k int
+	for m := 0; m < o.n[iAlong]; m++ {
+		for n := 0; n < o.n[jAlong]; n++ {
+			switch {
+			case iAlong == 0 && jAlong == 1:
+				i, j, k = m, n, kAt
+			case iAlong == 1 && jAlong == 2:
+				i, j, k = kAt, m, n
+			case iAlong == 2 && jAlong == 0:
+				i, j, k = n, kAt, m
+			default:
+				chk.Panic("clone Q surface is specified by 'along' indices in (0,1) or (1,2) or (2,0). (%d,%d) is incorrect", iAlong, jAlong)
+			}
+			for e := 0; e < 4; e++ {
+				Qnew[m][n][0][e] = o.Q[i][j][k][e]
+			}
+		}
+	}
+	return
 }
 
 // error messages
