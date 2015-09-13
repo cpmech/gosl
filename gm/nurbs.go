@@ -860,6 +860,66 @@ func (o *Nurbs) clone_Q_along_surface(iAlong, jAlong, kAt int) (Qnew [][][][]flo
 	return
 }
 
+// LocalIndsAlongCurve returns the local control points indices along curve
+//  jAt -- use -1 to indicate last round
+func (o *Nurbs) LocalIndsAlongCurve(iAlong, jAt int, iSpan []int) (L []int) {
+	if jAt < 0 {
+		jAt = o.n[1] - 1
+		if iAlong == 1 {
+			jAt = o.n[0] - 1
+		}
+	}
+	nb := o.p[iAlong] + 1 // number of basis along i
+	L = make([]int, nb)
+	var i, j int
+	for m := 0; m < nb; m++ {
+		i, j = iSpan[0]-o.p[iAlong]+m, jAt
+		if iAlong == 1 {
+			i, j = j, i
+		}
+		L[m] = i + j*o.n[0]
+	}
+	return
+}
+
+// LocalIndsAlongSurface return the local control points indices along surface
+//  kAt -- use -1 to indicate last round
+func (o *Nurbs) LocalIndsAlongSurface(iAlong, jAlong, kAt int, iSpan, jSpan []int) (L []int) {
+	if kAt < 0 {
+		switch {
+		case iAlong == 0 && jAlong == 1: // k => 2
+			kAt = o.n[2] - 1
+		case iAlong == 1 && jAlong == 2: // k => 0
+			kAt = o.n[0] - 1
+		case iAlong == 2 && jAlong == 0: // k => 1
+			kAt = o.n[1] - 1
+		default:
+			chk.Panic("surface is specified by 'along' indices in (0,1) or (1,2) or (2,0). (%d,%d) is incorrect", iAlong, jAlong)
+		}
+	}
+	nbu := o.p[iAlong] + 1 // number of basis functions along i
+	nbv := o.p[jAlong] + 1 // number of basis functions along j
+	L = make([]int, nbu*nbv)
+	var c, r, s, i, j, k int
+	for m := 0; m < nbu; m++ {
+		for n := 0; n < nbv; n++ {
+			r = iSpan[0] - o.p[iAlong] + m
+			s = jSpan[0] - o.p[jAlong] + n
+			switch {
+			case iAlong == 0 && jAlong == 1:
+				i, j, k = r, s, kAt
+			case iAlong == 1 && jAlong == 2:
+				i, j, k = kAt, r, s
+			case iAlong == 2 && jAlong == 0:
+				i, j, k = s, kAt, r
+			}
+			L[c] = i + j*o.n[0] + k*o.n[1]*o.n[2]
+			c += 1
+		}
+	}
+	return
+}
+
 // error messages
 var (
 	_nurbs_err2 = "nurbs.go: Init: Number of knots is incorrect for dimension %d. n == %d is invalid"

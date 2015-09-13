@@ -195,12 +195,22 @@ func Test_nurbs06(tst *testing.T) {
 
 	b := get_nurbs_C()
 	elems := b.Elements()
+	ibasis0 := b.IndBasis(elems[0])
+	ibasis1 := b.IndBasis(elems[1])
+	ibasis2 := b.IndBasis(elems[2])
+
 	chk.Ints(tst, "elem[0]", elems[0], []int{3, 4})
 	chk.Ints(tst, "elem[1]", elems[1], []int{4, 5})
 	chk.Ints(tst, "elem[2]", elems[2], []int{5, 6})
-	chk.Ints(tst, "ibasis0", b.IndBasis(elems[0]), []int{0, 1, 2, 3})
-	chk.Ints(tst, "ibasis1", b.IndBasis(elems[1]), []int{1, 2, 3, 4})
-	chk.Ints(tst, "ibasis2", b.IndBasis(elems[2]), []int{2, 3, 4, 5})
+	chk.Ints(tst, "ibasis0", ibasis0, []int{0, 1, 2, 3})
+	chk.Ints(tst, "ibasis1", ibasis1, []int{1, 2, 3, 4})
+	chk.Ints(tst, "ibasis2", ibasis2, []int{2, 3, 4, 5})
+
+	u := []float64{0.5}
+	b.CalcBasis(u)
+	for _, l := range ibasis0 {
+		io.Pforan("N(l=%d) = %v\n", l, b.GetBasisL(l))
+	}
 
 	if chk.Verbose {
 		c := b.Krefine([][]float64{
@@ -374,7 +384,35 @@ func Test_nurbs09(tst *testing.T) {
 		{{{1.00 * 0.50, 0.50 * 0.50, 0, 0.50}}}, // 9
 	})
 
-	if chk.Verbose {
+	l00s23 := b.LocalIndsAlongCurve(0, 0, []int{2, 3})
+	l00s34 := b.LocalIndsAlongCurve(0, 0, []int{3, 4})
+	l00s45 := b.LocalIndsAlongCurve(0, 0, []int{4, 5})
+	l0ns23 := b.LocalIndsAlongCurve(0, -1, []int{2, 3})
+	l0ns34 := b.LocalIndsAlongCurve(0, -1, []int{3, 4})
+	l0ns45 := b.LocalIndsAlongCurve(0, -1, []int{4, 5})
+	l10s12 := b.LocalIndsAlongCurve(1, 0, []int{1, 2})
+	l11s12 := b.LocalIndsAlongCurve(1, 1, []int{1, 2})
+	l1ns12 := b.LocalIndsAlongCurve(1, -1, []int{1, 2})
+	io.Pforan("l00s23 = %v\n", l00s23)
+	io.Pforan("l00s34 = %v\n", l00s34)
+	io.Pforan("l00s45 = %v\n", l00s45)
+	io.Pforan("l0ns23 = %v\n", l0ns23)
+	io.Pforan("l0ns34 = %v\n", l0ns34)
+	io.Pforan("l0ns45 = %v\n", l0ns45)
+	io.Pfcyan("l10s12 = %v\n", l10s12)
+	io.Pfcyan("l11s12 = %v\n", l11s12)
+	io.Pfcyan("l1ns12 = %v\n", l1ns12)
+	chk.Ints(tst, "l00s23", l00s23, []int{0, 1, 2})
+	chk.Ints(tst, "l00s34", l00s34, []int{1, 2, 3})
+	chk.Ints(tst, "l00s45", l00s45, []int{2, 3, 4})
+	chk.Ints(tst, "l0ns23", l0ns23, []int{5, 6, 7})
+	chk.Ints(tst, "l0ns34", l0ns34, []int{6, 7, 8})
+	chk.Ints(tst, "l0ns45", l0ns45, []int{7, 8, 9})
+	chk.Ints(tst, "l10s12", l10s12, []int{0, 5})
+	chk.Ints(tst, "l11s12", l11s12, []int{1, 6})
+	chk.Ints(tst, "l1ns12", l1ns12, []int{4, 9})
+
+	if chk.Verbose && false {
 		I := [][]int{{2, 2, 1}, {2, 2, 2}, {2, 2, 3}, {2, 2, 4}}
 		plt.SetForEps(1, 500)
 		for k, surf := range surfs {
@@ -393,18 +431,20 @@ func Test_nurbs10(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("nurbs10")
 
-	if chk.Verbose {
-		b := get_nurbs_B()
-		surfs := b.ExtractSurfaces()
-		I := [][]int{{2, 2, 1}, {2, 2, 2}, {2, 2, 3}, {2, 2, 4}}
-		plt.SetForEps(1, 500)
-		for k, surf := range surfs {
-			plt.SubplotI(I[k])
-			b.DrawElems2D(41, false, ", ls=':', lw=0.5", "")
-			surf.DrawCtrl2D(true)
-			surf.DrawElems2D(41, true, ", zorder=20, color='#e78005', lw=2", "")
-			plt.Equal()
-		}
-		plt.SaveD("/tmp/gosl", "test_nurbs10.eps")
+	b := get_nurbs_A()
+	c := b.KrefineN(3, false)
+
+	l01s34 := c.LocalIndsAlongCurve(0, 1, []int{3, 4})
+	l02s34 := c.LocalIndsAlongCurve(0, 2, []int{3, 4})
+	l11s23 := c.LocalIndsAlongCurve(1, 1, []int{2, 3})
+	io.Pforan("l01s34 = %v\n", l01s34)
+	io.Pforan("l02s34 = %v\n", l02s34)
+	io.Pforan("l11s23 = %v\n", l11s23)
+	chk.Ints(tst, "l01s34", l01s34, []int{12, 13, 14})
+	chk.Ints(tst, "l02s34", l02s34, []int{23, 24, 25})
+	chk.Ints(tst, "l11s23", l11s23, []int{12, 23})
+
+	if chk.Verbose && false {
+		PlotNurbs("/tmp/gosl", "t_nurbs10", c)
 	}
 }
