@@ -5,7 +5,7 @@
 package vtk
 
 /*
-#cgo CXXFLAGS: -O3 -I. -I/usr/include/eigen3 -I/usr/include/vtk-5.8 -DVTK_EXCLUDE_STRSTREAM_HEADERS
+#cgo CXXFLAGS: -O3 -I. -I/usr/include/eigen3 -I/usr/include/vtk-5.10 -DVTK_EXCLUDE_STRSTREAM_HEADERS
 #cgo LDFLAGS: -lstdc++ -lm -lvtkRendering -lvtkHybrid -lvtkParallel -lvtkGraphics -lvtkImaging -lvtkIO -lvtkFiltering -lvtkCommon -lvtksys
 #include "connectgovtk.h"
 #include <stdlib.h>
