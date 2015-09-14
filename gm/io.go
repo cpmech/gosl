@@ -152,6 +152,16 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 					if bry[I] {
 						if ndim == 2 {
 							tag = ftags[fti2d[i]]
+
+							// TODO: replace this by a better approach
+							if i == 2 {
+								r := spanmin[0] + (spanmax[0]-spanmin[0])/2
+								//io.Pforan("e[0]=%v r=%v\n", e[0], r)
+								if e[0] >= r {
+									tag = -24
+								}
+							}
+
 						} else {
 							tag = ftags[i]
 						}
