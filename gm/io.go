@@ -84,8 +84,18 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 		io.Ff(&buf, "]\n    }")
 	}
 	io.Ff(&buf, "\n  ],\n  \"cells\" : [\n")
+	ndim := nurbss[0].gnd
+	bry := make([]bool, 2*ndim)
+	fti2d := []int{2, 1, 3, 0}
+	ftags := []int{-10, -11, -20, -21, -30, -31}
 	cid := 0
 	for sid, o := range nurbss {
+		spanmin := make([]int, ndim)
+		spanmax := make([]int, ndim)
+		for i := 0; i < ndim; i++ {
+			spanmin[i] = o.p[i]
+			spanmax[i] = o.n[i] // TODO: check this
+		}
 		elems := o.Elements()
 		for eid, e := range elems {
 			ibasis := o.IndBasis(e)
@@ -115,7 +125,45 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 				hsh := HashPoint(x[0], x[1], x[2])
 				io.Ff(&buf, "%d", verts[hsh])
 			}
-			io.Ff(&buf, "] }")
+			var onbry bool
+			for i := 0; i < 2*ndim; i++ {
+				bry[i] = false
+			}
+			for i := 0; i < ndim; i++ {
+				smin, smax := e[i*ndim], e[i*ndim+1]
+				if smin == spanmin[i] {
+					bry[i*ndim] = true
+					onbry = true
+				}
+				if smax == spanmax[i] {
+					bry[i*ndim+1] = true
+					onbry = true
+				}
+			}
+			io.Ff(&buf, "]")
+			if onbry && ndim > 1 {
+				io.Ff(&buf, ", \"ftags\":[")
+				for i := 0; i < 2*ndim; i++ {
+					tag := 0
+					I := i
+					if ndim == 2 {
+						I = fti2d[i]
+					}
+					if bry[I] {
+						if ndim == 2 {
+							tag = ftags[fti2d[i]]
+						} else {
+							tag = ftags[i]
+						}
+					}
+					if i > 0 {
+						io.Ff(&buf, ",")
+					}
+					io.Ff(&buf, "%d", tag)
+				}
+				io.Ff(&buf, "]")
+			}
+			io.Ff(&buf, " }")
 			cid += 1
 		}
 	}

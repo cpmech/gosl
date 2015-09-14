@@ -1,10 +1,10 @@
 #!/bin/bash
 
-FILES="nurbs.go t_nurbs_test.go"
+FILES="io.go nurbs.go t_nurbs_test.go"
 
 while true; do
     inotifywait -q -e modify $FILES
     echo
     echo
-    go test -test.run="nurbs10"
+    go test -test.run="nurbs08"
 done
