@@ -446,6 +446,15 @@ func Test_nurbs10(tst *testing.T) {
 	chk.Ints(tst, "l1s3a0", l1s3a0, []int{22, 33})
 	chk.Ints(tst, "l1s3a10", l1s3a10, []int{32, 43})
 
+	I := b.ElemBryLocalInds()
+	io.Pforan("I = %v\n", I)
+	chk.IntMat(tst, "I", I, [][]int{
+		{0, 1, 2},
+		{2, 5},
+		{3, 4, 5},
+		{0, 3},
+	})
+
 	if chk.Verbose && false {
 		PlotNurbs("/tmp/gosl", "t_nurbs10", c)
 	}

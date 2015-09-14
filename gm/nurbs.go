@@ -907,6 +907,26 @@ func (o *Nurbs) IndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kAt int) (L []i
 	return
 }
 
+// ElemBryLocalInds returns the local (element) indices of control points @ boundaries
+// (if element would have all surfaces @ boundaries)
+func (o *Nurbs) ElemBryLocalInds() (I [][]int) {
+	switch o.gnd {
+	case 1:
+		return
+	case 2:
+		I = make([][]int, 2*o.gnd)
+		nx, ny := o.p[0]+1, o.p[1]+1
+		I[3] = utl.IntRange3(0, nx*ny, nx)
+		I[1] = utl.IntAddScalar(I[3], nx-1)
+		I[0] = utl.IntRange(nx)
+		I[2] = utl.IntAddScalar(I[0], (ny-1)*nx)
+	case 3:
+		I = make([][]int, 2*o.gnd)
+		chk.Panic("3D NUTBS: ElemBryLocalInds: TODO") // TODO
+	}
+	return
+}
+
 // error messages
 var (
 	_nurbs_err2 = "nurbs.go: Init: Number of knots is incorrect for dimension %d. n == %d is invalid"
