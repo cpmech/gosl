@@ -860,8 +860,8 @@ func (o *Nurbs) clone_Q_along_surface(iAlong, jAlong, kAt int) (Qnew [][][][]flo
 	return
 }
 
-// LocalIndsAlongCurve returns the local control points indices along curve
-func (o *Nurbs) LocalIndsAlongCurve(iAlong, iSpan0, jAt int) (L []int) {
+// IndsAlongCurve returns the control points indices along curve
+func (o *Nurbs) IndsAlongCurve(iAlong, iSpan0, jAt int) (L []int) {
 	nb := o.p[iAlong] + 1 // number of basis along i
 	L = make([]int, nb)
 	var i, j int
@@ -878,8 +878,8 @@ func (o *Nurbs) LocalIndsAlongCurve(iAlong, iSpan0, jAt int) (L []int) {
 	return
 }
 
-// LocalIndsAlongSurface return the local control points indices along surface
-func (o *Nurbs) LocalIndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kAt int) (L []int) {
+// IndsAlongSurface return the control points indices along surface
+func (o *Nurbs) IndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kAt int) (L []int) {
 	nbu := o.p[iAlong] + 1 // number of basis functions along i
 	nbv := o.p[jAlong] + 1 // number of basis functions along j
 	L = make([]int, nbu*nbv)
