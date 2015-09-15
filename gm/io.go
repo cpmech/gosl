@@ -226,14 +226,14 @@ func ReadMsh(fnk string) (nurbss []*Nurbs) {
 	fn := fnk + ".msh"
 	buf, err := io.ReadFile(fn)
 	if err != nil {
-		chk.Panic(_io_err1, fn, err)
+		chk.Panic("ReadMsh cannot read file = '%s', %v'", fn, err)
 	}
 
 	// decode
 	var dat Data
 	err = json.Unmarshal(buf, &dat)
 	if err != nil {
-		chk.Panic(_io_err2, fn, err)
+		chk.Panic("ReadMsh cannot unmarshal file = '%s', %v'", fn, err)
 	}
 
 	// list of vertices
@@ -255,8 +255,25 @@ func ReadMsh(fnk string) (nurbss []*Nurbs) {
 	return
 }
 
-// error messages
-var (
-	_io_err1 = "ReadMsh cannot read file = '%s', %v'"
-	_io_err2 = "ReadMsh cannot unmarshal file = '%s', %v'"
-)
+func tag_verts(b *Nurbs) (vt map[int]int) {
+	vt = make(map[int]int)
+	n0, n1 := b.NumBasis(0), b.NumBasis(1)
+	for j := 0; j < n1; j++ {
+		for i := 0; i < n0; i++ {
+			x := b.GetQ(i, j, 0)
+			if math.Abs(x[0]) < 1e-7 { // right
+				vt[HashPoint(x[0], x[1], x[2])] = -1
+			}
+			if math.Abs(x[1]) < 1e-7 { // bottom
+				vt[HashPoint(x[0], x[1], x[2])] = -2
+			}
+			if math.Abs(x[0]+4.0) < 1e-7 { // left
+				vt[HashPoint(x[0], x[1], x[2])] = -3
+			}
+			if math.Abs(x[0]+4.0) < 1e-7 && math.Abs(x[1]) < 1e-7 { // left-bottom
+				vt[HashPoint(x[0], x[1], x[2])] = -4
+			}
+		}
+	}
+	return
+}
