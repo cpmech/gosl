@@ -108,6 +108,12 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 					tag = val
 				}
 			}
+
+			// TODO: find a better way to tag cells
+			if e[1] == spanmax[0] && e[2] == spanmin[1] {
+				tag = -2
+			}
+
 			io.Ff(&buf, "    { \"id\":%3d, \"tag\":%2d, \"nrb\":%d, \"part\":0, \"type\":\"nurbs\",", cid, tag, sid)
 			io.Ff(&buf, " \"span\":[")
 			for k, idx := range e {
