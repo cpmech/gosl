@@ -56,7 +56,7 @@ func (o *Nurbs) Init(gnd int, ords []int, knots [][]float64) {
 		o.b[d].Init(knots[d], o.p[d])
 		o.n[d] = o.b[d].NumBasis()
 		if o.n[d] < 2 {
-			chk.Panic(_nurbs_err2, d, o.n[d])
+			chk.Panic("number of knots is incorrect for dimension %d. n == %d is invalid", d, o.n[d])
 		}
 	}
 	for d := o.gnd; d < 3; d++ {
@@ -97,7 +97,7 @@ func (o *Nurbs) SetControl(verts [][]float64, ctrls []int) {
 	// check
 	nctrl := o.n[0] * o.n[1] * o.n[2]
 	if nctrl != len(ctrls) {
-		chk.Panic(_nurbs_err3, nctrl, len(ctrls))
+		chk.Panic("number of control points must be equal to %d. nctrl == %d is incorrect", nctrl, len(ctrls))
 	}
 
 	// set control points
@@ -316,7 +316,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 			den += o.b[0].RecursiveBasis(u[0], i) * o.Q[i][j][k][3]
 		}
 		if math.Abs(den) < ZTOL {
-			chk.Panic(_nurbs_err5, den, u, l)
+			chk.Panic("denominator is zero (%v) @ %v for point %d", den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.Q[I[0]][j][k][3] / den
 	// surface
@@ -328,7 +328,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 			}
 		}
 		if math.Abs(den) < ZTOL {
-			chk.Panic(_nurbs_err5, den, u, l)
+			chk.Panic("denominator is zero (%v) @ %v for point %d", den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.b[1].RecursiveBasis(u[1], I[1]) * o.Q[I[0]][I[1]][k][3] / den
 	// volume
@@ -341,7 +341,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 			}
 		}
 		if math.Abs(den) < ZTOL {
-			chk.Panic(_nurbs_err5, den, u, l)
+			chk.Panic("denominator is zero (%v) @ %v for point %d", den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.b[1].RecursiveBasis(u[1], I[1]) * o.b[2].RecursiveBasis(u[2], I[2]) * o.Q[I[0]][I[1]][I[2]][3] / den
 	}
@@ -355,7 +355,7 @@ func (o *Nurbs) NumericalDeriv(dRdu []float64, u []float64, l int) {
 	for d := 0; d < o.gnd; d++ {
 		f := func(x float64, args ...interface{}) (val float64) {
 			if x < o.b[d].tmin || x > o.b[d].tmax {
-				chk.Panic(_nurbs_err6, x, o.b[d].tmin, o.b[d].tmax)
+				chk.Panic("problem with numerical derivative: x=%v is invalid. xrange=[%v,%v]", x, o.b[d].tmin, o.b[d].tmax)
 			}
 			tmp = u[d]
 			u[d] = x
@@ -620,7 +620,7 @@ func (o *Nurbs) Krefine(X [][]float64) (O *Nurbs) {
 
 	// check
 	if len(X) != o.gnd {
-		chk.Panic(_nurbs_err7, o.gnd, len(X))
+		chk.Panic("size of new knots array X must be [gnd==%d][numNewKnots]. len==%d of first dimension is incorrect", o.gnd, len(X))
 	}
 
 	// number of new knots and first and last knots
@@ -926,13 +926,3 @@ func (o *Nurbs) ElemBryLocalInds() (I [][]int) {
 	}
 	return
 }
-
-// error messages
-var (
-	_nurbs_err2 = "nurbs.go: Init: Number of knots is incorrect for dimension %d. n == %d is invalid"
-	_nurbs_err3 = "nurbs.go: Init: Number of control points must be equal to %d. nctrl == %d is incorrect"
-	_nurbs_err4 = "nurbs.go: DRdu: analytical derivatives are not implemented yet"
-	_nurbs_err5 = "nurbs.go: R: denominator is zero (%v) @ %v for point %d"
-	_nurbs_err6 = "nurbs.go: DRdu: problem with numerical derivative: x=%v is invalid. xrange=[%v,%v]"
-	_nurbs_err7 = "nurbs.go: Krefine: size of new knots array X must be [gnd==%d][numNewKnots]. len==%d of first dimension is incorrect"
-)
