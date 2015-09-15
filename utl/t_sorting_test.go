@@ -34,6 +34,31 @@ func Test_sort01(tst *testing.T) {
 	}
 	chk.Ints(tst, "i", I, []int{7, 0, 8, 33})
 	chk.Vector(tst, "x", 1e-16, X, []float64{-77.7, 0.0, 88.8, 1000.33})
+
+	x = []float64{1000.33, 0, -77.7, 88.8}
+	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	io.Pforan("x = %v\n", x)
+	chk.Vector(tst, "x", 1e-16, x, []float64{-77.7, 0.0, 88.8, 1000.33})
+
+	x = []float64{1, 10.33, 0, -8.7}
+	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	io.Pforan("x = %v\n", x)
+	chk.Vector(tst, "x", 1e-16, x, []float64{-8.7, 0, 1, 10.33})
+
+	x = []float64{100.33, 10, -77.7, 8.8}
+	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	io.Pforan("x = %v\n", x)
+	chk.Vector(tst, "x", 1e-16, x, []float64{-77.7, 8.8, 10, 100.33})
+
+	x = []float64{-10.33, 0, 7.7, -8.8}
+	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	io.Pforan("x = %v\n", x)
+	chk.Vector(tst, "x", 1e-16, x, []float64{-10.33, -8.8, 0, 7.7})
+
+	x = []float64{-1000.33, 8, -177.7, 0.8}
+	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	io.Pforan("x = %v\n", x)
+	chk.Vector(tst, "x", 1e-16, x, []float64{-1000.33, -177.7, 0.8, 8})
 }
 
 func Test_sort02(tst *testing.T) {

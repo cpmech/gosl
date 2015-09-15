@@ -37,6 +37,28 @@ func DblDsort3(a, b, c *float64) {
 	}
 }
 
+// DblSort4 sort four values in ascending order
+func DblSort4(a, b, c, d *float64) {
+	if *b < *a {
+		*b, *a = *a, *b
+	}
+	if *c < *b {
+		*c, *b = *b, *c
+	}
+	if *d < *c {
+		*d, *c = *c, *d
+	}
+	if *b < *a {
+		*b, *a = *a, *b
+	}
+	if *c < *b {
+		*c, *b = *b, *c
+	}
+	if *b < *a {
+		*b, *a = *a, *b
+	}
+}
+
 // DblGetSorted returns a sorted (increasing) copy of 'A'
 func DblGetSorted(A []float64) (Asorted []float64) {
 	Asorted = make([]float64, len(A))
