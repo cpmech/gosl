@@ -31,7 +31,7 @@ func Test_bspline01(tst *testing.T) {
 
 	if chk.Verbose {
 		npts := 201
-		plt.SetForEps(1.5, 500)
+		plt.SetForPng(1.5, 600, 150)
 		plt.SplotGap(0.2, 0.4)
 
 		str0 := ",lw=2"
@@ -67,7 +67,7 @@ func Test_bspline01(tst *testing.T) {
 		s2.PlotDerivs("", npts, 0)   // 0 => CalcBasisAndDerivs
 		s2.PlotDerivs(str4, npts, 1) // 1 => NumericalDeriv
 
-		plt.SaveD("/tmp/gosl", "t_bspline01.eps")
+		plt.SaveD("/tmp/gosl/gm", "bspline01.png")
 	}
 }
 
@@ -109,13 +109,13 @@ func Test_bspline02(tst *testing.T) {
 
 	if chk.Verbose {
 		npts := 201
-		plt.SetForEps(0.75, 300)
+		plt.SetForPng(0.75, 300, 150)
 		str0 := ",lw=2"
 		str1 := ",ls='none',marker='+',color='cyan',markevery=10"
 		s.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
 		s.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
 		plt.Plot(xx, yy, "'bo', clip_on=0")
-		plt.SaveD("/tmp/gosl", "t_bspline02.eps")
+		plt.SaveD("/tmp/gosl/gm", "bspline02.png")
 	}
 }
 
@@ -172,7 +172,7 @@ func Test_bspline03(tst *testing.T) {
 	if chk.Verbose {
 
 		npts := 201
-		plt.SetForEps(1.5, 500)
+		plt.SetForPng(1.5, 600, 150)
 		plt.SplotGap(0, 0.3)
 
 		str0 := ",lw=2"
@@ -194,6 +194,6 @@ func Test_bspline03(tst *testing.T) {
 		s.PlotDerivs("", npts, 0)   // 0 => CalcBasisAndDerivs
 		s.PlotDerivs(str4, npts, 1) // 1 => NumericalDeriv
 
-		plt.SaveD("/tmp/gosl", "t_bspline03.eps")
+		plt.SaveD("/tmp/gosl/gm", "bspline03.png")
 	}
 }
