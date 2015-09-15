@@ -575,26 +575,35 @@ func (o *Nurbs) IndBasis(span []int) (L []int) {
 // manipulation methods //////////////////////////////////////////////////////////////////////////////
 
 // KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
-func (o *Nurbs) KrefineN(ndiv int, useCspace bool) *Nurbs {
+func (o *Nurbs) KrefineN(ndiv int, hughesEtAlPaper bool) *Nurbs {
 	X := make([][]float64, o.gnd)
-	if useCspace {
+	if hughesEtAlPaper {
 		elems := o.Elements()
-		for _, e := range elems {
-			switch o.gnd {
-			case 2:
+		switch o.gnd {
+		case 2:
+			for _, e := range elems {
 				umin, umax := o.b[0].T[e[0]], o.b[0].T[e[1]]
 				vmin, vmax := o.b[1].T[e[2]], o.b[1].T[e[3]]
 				xa := o.Point([]float64{umin, vmin})
 				xb := o.Point([]float64{umax, vmin})
 				xc := []float64{(xa[0] + xb[0]) / 2.0, (xa[1] + xb[1]) / 2.0}
-				io.Pforan("xa, xb, xc = %v, %v, %v\n", xa, xb, xc)
+
+				io.Pf("xa = %v\n", xa)
+				io.Pf("xb = %v\n", xb)
+				io.Pf("xc = %v\n", xc)
+
 				xa = o.Point([]float64{umin, vmax})
 				xb = o.Point([]float64{umax, vmax})
 				xc = []float64{(xa[0] + xb[0]) / 2.0, (xa[1] + xb[1]) / 2.0}
+
 				io.Pfpink("xa, xb, xc = %v, %v, %v\n", xa, xb, xc)
+				chk.Panic("KrefineN with hughesEtAlPaper==true is not implemented in 2D yet")
 			}
+		case 3:
+			chk.Panic("KrefineN with hughesEtAlPaper==true is not implemented in 3D yet")
 		}
-		chk.Panic("nurbs.go: KrefineN with useCspace==true => not implemented yet")
+		io.Pfgrey("KrefineN with hughesEtAlPaper==true => not implemented yet\n")
+		return nil
 	} else {
 		for d := 0; d < o.gnd; d++ {
 			nspans := o.b[d].m - 2*o.p[d] - 1
