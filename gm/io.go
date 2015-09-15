@@ -7,6 +7,7 @@ package gm
 import (
 	"bytes"
 	"encoding/json"
+	"math"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -33,6 +34,15 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 								tag = val
 							}
 						}
+
+						// TODO: remove this
+						if math.Abs(x[0]) < 1e-7 {
+							tag = -100 // vertical
+						}
+						if math.Abs(x[1]) < 1e-7 {
+							tag = -200 // horizontal
+						}
+
 						if len(verts) > 0 {
 							io.Ff(&buf, ",\n")
 						}
