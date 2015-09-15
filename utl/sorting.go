@@ -11,6 +11,41 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
+// IntSort3 sorts 3 values in ascending order
+func IntSort3(a, b, c *int) {
+	if *b < *a {
+		*a, *b = *b, *a
+	}
+	if *c < *b {
+		*b, *c = *c, *b
+	}
+	if *b < *a {
+		*a, *b = *b, *a
+	}
+}
+
+// IntSort4 sort four values in ascending order
+func IntSort4(a, b, c, d *int) {
+	if *b < *a {
+		*b, *a = *a, *b
+	}
+	if *c < *b {
+		*c, *b = *b, *c
+	}
+	if *d < *c {
+		*d, *c = *c, *d
+	}
+	if *b < *a {
+		*b, *a = *a, *b
+	}
+	if *c < *b {
+		*c, *b = *b, *c
+	}
+	if *b < *a {
+		*b, *a = *a, *b
+	}
+}
+
 // DblSort3 sorts 3 values in ascending order
 func DblSort3(a, b, c *float64) {
 	if *b < *a {

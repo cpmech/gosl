@@ -215,3 +215,17 @@ func Test_sort06(tst *testing.T) {
 	io.Pforan("sorted_keys(a) = %v\n", k)
 	chk.Ints(tst, "k", k, []int{0, 8, 9, 10, 100, 101, 102})
 }
+
+func Test_sort07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("sort07. sort 3 ints")
+
+	x := []int{0, 10, 1, 3}
+	IntSort3(&x[0], &x[1], &x[2])
+	chk.Ints(tst, "sort3(x)", x, []int{0, 1, 10, 3})
+
+	x = []int{0, 10, 1, 3}
+	IntSort4(&x[0], &x[1], &x[2], &x[3])
+	chk.Ints(tst, "sort4(x)", x, []int{0, 1, 3, 10})
+}
