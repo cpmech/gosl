@@ -14,10 +14,6 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-const (
-	T_BSPLINE_SAVE = false
-)
-
 func Test_bspline01(tst *testing.T) {
 
 	//verbose()
@@ -33,7 +29,7 @@ func Test_bspline01(tst *testing.T) {
 	s2.Init(T2, 2)
 	s2.SetControl([][]float64{{0, 0}, {0.25, 0.5}, {0.75, 0.5}, {1, 0}})
 
-	if T_BSPLINE_SAVE {
+	if chk.Verbose {
 		npts := 201
 		plt.SetForEps(1.5, 500)
 		plt.SplotGap(0.2, 0.4)
@@ -45,13 +41,13 @@ func Test_bspline01(tst *testing.T) {
 		str4 := ",ls='none',marker='4',markevery=10"
 
 		plt.Subplot(3, 2, 1)
-		s1.Draw2D(str0, "", npts, 0) // 0 => CalcBasis
-		s1.Draw2D(str1, "", npts, 1) // 1 => RecursiveBasis
+		s1.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
+		s1.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 2, 2)
 		plt.SetAxis(0, 1, 0, 1)
-		s2.Draw2D(str0, "", npts, 0) // 0 => CalcBasis
-		s2.Draw2D(str1, "", npts, 1) // 1 => RecursiveBasis
+		s2.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
+		s2.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 2, 3)
 		s1.PlotBasis("", npts, 0)   // 0 => CalcBasis
@@ -111,13 +107,13 @@ func Test_bspline02(tst *testing.T) {
 		chk.Vector(tst, "Point", tol, pa, pb)
 	}
 
-	if T_BSPLINE_SAVE {
+	if chk.Verbose {
 		npts := 201
 		plt.SetForEps(0.75, 300)
 		str0 := ",lw=2"
 		str1 := ",ls='none',marker='+',color='cyan',markevery=10"
-		s.Draw2D(str0, "", npts, 0) // 0 => CalcBasis
-		s.Draw2D(str1, "", npts, 1) // 1 => RecursiveBasis
+		s.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
+		s.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
 		plt.Plot(xx, yy, "'bo', clip_on=0")
 		plt.SaveD("/tmp/gosl", "t_bspline02.eps")
 	}
@@ -173,7 +169,7 @@ func Test_bspline03(tst *testing.T) {
 		chk.Vector(tst, io.Sf("derivs @ %v", t), tol, numd, anad)
 	}
 
-	if T_BSPLINE_SAVE {
+	if chk.Verbose {
 
 		npts := 201
 		plt.SetForEps(1.5, 500)
@@ -186,8 +182,8 @@ func Test_bspline03(tst *testing.T) {
 		str4 := ",ls='none',marker='4',markevery=10"
 
 		plt.Subplot(3, 1, 1)
-		s.Draw2D(str0, "", npts, 0) // 0 => CalcBasis
-		s.Draw2D(str1, "", npts, 1) // 1 => RecursiveBasis
+		s.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
+		s.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 1, 2)
 		s.PlotBasis("", npts, 0)   // 0 => CalcBasis

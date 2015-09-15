@@ -8,13 +8,10 @@ package gm
 
 import (
 	"math"
-	"strings"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -51,7 +48,7 @@ func (o *Bspline) Init(T []float64, p int) {
 
 	// check
 	if len(T) < 2*(p+1) {
-		chk.Panic(_bspline_err00, 2*(p+1), p, len(T))
+		chk.Panic("at least %d knots are required to define clamped B-spline of order p==%d. m==%d is invalid", 2*(p+1), p, len(T))
 	}
 
 	// essential
@@ -79,7 +76,7 @@ func (o *Bspline) NumBasis() int {
 // SetControl sets B-spline control points
 func (o *Bspline) SetControl(Q [][]float64) {
 	if len(Q) != o.NumBasis() {
-		chk.Panic(_bspline_err01, o.p, o.NumBasis())
+		chk.Panic("B-spline of order %d needs %d control points", o.p, o.NumBasis())
 	}
 	o.Q, o.okQ = Q, true
 }
@@ -89,7 +86,7 @@ func (o *Bspline) SetControl(Q [][]float64) {
 func (o *Bspline) CalcBasis(t float64) {
 	// check
 	if t < o.tmin || t > o.tmax {
-		chk.Panic(_bspline_err02, "CalcBasis", t, o.tmin, o.tmax)
+		chk.Panic("t must be within [%g, %g]. t=%g is incorrect", t, o.tmin, o.tmax)
 	}
 	// using basis_funs (Piegl & Tiller, algorithm A2.2)
 	o.span = o.find_span(t)
@@ -103,7 +100,7 @@ func (o *Bspline) CalcBasis(t float64) {
 func (o *Bspline) CalcBasisAndDerivs(t float64) {
 	// check
 	if t < o.tmin || t > o.tmax {
-		chk.Panic(_bspline_err02, "CalcBasisAndDerivs", t, o.tmin, o.tmax)
+		chk.Panic("t must be within [%g, %g]. t=%g is incorrect", t, o.tmin, o.tmax)
 	}
 	// using ders_basis_funs (Piegl & Tiller, algorithm A2.3)
 	o.span = o.find_span(t)
@@ -132,7 +129,7 @@ func (o *Bspline) GetDeriv(i int) float64 {
 func (o *Bspline) RecursiveBasis(t float64, i int) float64 {
 	// check
 	if t < o.tmin || t > o.tmax {
-		chk.Panic(_bspline_err02, "RecursiveBasis", t, o.tmin, o.tmax)
+		chk.Panic("t must be within [%g, %g]. t=%g is incorrect", t, o.tmin, o.tmax)
 	}
 	// using Cox-DeBoor formula
 	return o.recursiveN(t, i, o.p)
@@ -143,7 +140,7 @@ func (o *Bspline) RecursiveBasis(t float64, i int) float64 {
 func (o *Bspline) NumericalDeriv(t float64, i int) float64 {
 	// check
 	if t < o.tmin || t > o.tmax {
-		chk.Panic(_bspline_err02, "NumericalDeriv", t, o.tmin, o.tmax)
+		chk.Panic("t must be within [%g, %g]. t=%g is incorrect", t, o.tmin, o.tmax)
 	}
 	// derivatives
 	f := func(x float64, args ...interface{}) float64 {
@@ -158,7 +155,7 @@ func (o *Bspline) NumericalDeriv(t float64, i int) float64 {
 func (o *Bspline) Point(t float64, option int) (C []float64) {
 	// check
 	if !o.okQ {
-		chk.Panic(_bspline_err03, "Point")
+		chk.Panic("Q must be set before calling this method")
 	}
 	// compute point on curve
 	ncp := len(o.Q[0]) // number of components in Q
@@ -202,97 +199,6 @@ func (o *Bspline) Elements() (spans [][]int) {
 		}
 	}
 	return
-}
-
-// Draw draws curve and control points
-// option =  0 : use CalcBasis
-//           1 : use RecursiveBasis
-func (o *Bspline) Draw2D(curveArgs, ctrlArgs string, npts, option int) {
-	if !o.okQ {
-		chk.Panic(_bspline_err03, "Draw")
-	}
-	tt := utl.LinSpace(o.tmin, o.tmax, npts)
-	xx := make([]float64, npts)
-	yy := make([]float64, npts)
-	for i, t := range tt {
-		C := o.Point(t, option)
-		xx[i], yy[i] = C[0], C[1]
-	}
-	qx := make([]float64, o.NumBasis())
-	qy := make([]float64, o.NumBasis())
-	for i := 0; i < o.NumBasis(); i++ {
-		qx[i], qy[i] = o.Q[i][0], o.Q[i][1]
-	}
-	lbls := []string{"Nonly", "recN"}
-	plt.Plot(xx, yy, io.Sf("'k-', clip_on=0, label=r'%s'", lbls[option])+curveArgs)
-	plt.Plot(qx, qy, "'r-', clip_on=0, label=r'ctrl', marker='.'"+ctrlArgs)
-	plt.Gll("$x$", "$y$", "leg=1, leg_out=1, leg_ncol=2, leg_hlen=1.5, leg_fsz=7")
-}
-
-// PlotBasis plots basis functions in I
-// option =  0 : use CalcBasis
-//           1 : use CalcBasisAndDerivs
-//           2 : use RecursiveBasis
-func (o *Bspline) PlotBasis(args string, npts, option int) {
-	nmks := 10
-	tt := utl.LinSpace(o.tmin, o.tmax, npts)
-	I := utl.IntRange(o.NumBasis())
-	f := make([]float64, len(tt))
-	lbls := []string{"Nonly", "N\\&dN", "recN"}
-	var cmd string
-	for _, i := range I {
-		for j, t := range tt {
-			switch option {
-			case 0:
-				o.CalcBasis(t)
-				f[j] = o.GetBasis(i)
-			case 1:
-				o.CalcBasisAndDerivs(t)
-				f[j] = o.GetBasis(i)
-			case 2:
-				f[j] = o.RecursiveBasis(t, i)
-			}
-		}
-		if strings.Contains(args, "marker") {
-			cmd = io.Sf("label=r'%s:%d', color=GetClr(%d, 2) %s", lbls[option], i, i, args)
-		} else {
-			cmd = io.Sf("label=r'%s:%d', marker=(None if %d %%2 == 0 else GetMrk(%d/2,1)), markevery=(%d-1)/%d, clip_on=0, color=GetClr(%d, 2) %s", lbls[option], i, i, i, npts, nmks, i, args)
-		}
-		plt.Plot(tt, f, cmd)
-	}
-	plt.Gll("$t$", io.Sf("$N_{i,%d}$", o.p), io.Sf("leg=1, leg_out=1, leg_ncol=%d, leg_hlen=1.5, leg_fsz=7", o.NumBasis()))
-	o.plt_ticks_spans()
-}
-
-// PlotDerivs plots derivatives of basis functions in I
-// option =  0 : use CalcBasisAndDerivs
-//           1 : use NumericalDeriv
-func (o *Bspline) PlotDerivs(args string, npts, option int) {
-	nmks := 10
-	tt := utl.LinSpace(o.tmin, o.tmax, npts)
-	I := utl.IntRange(o.NumBasis())
-	f := make([]float64, len(tt))
-	lbls := []string{"N\\&dN", "numD"}
-	var cmd string
-	for _, i := range I {
-		for j, t := range tt {
-			switch option {
-			case 0:
-				o.CalcBasisAndDerivs(t)
-				f[j] = o.GetDeriv(i)
-			case 1:
-				f[j] = o.NumericalDeriv(t, i)
-			}
-		}
-		if strings.Contains(args, "marker") {
-			cmd = io.Sf("label=r'%s:%d', color=GetClr(%d, 2) %s", lbls[option], i, i, args)
-		} else {
-			cmd = io.Sf("label=r'%s:%d', marker=(None if %d %%2 == 0 else GetMrk(%d/2,1)), markevery=(%d-1)/%d, clip_on=0, color=GetClr(%d, 2) %s", lbls[option], i, i, i, npts, nmks, i, args)
-		}
-		plt.Plot(tt, f, cmd)
-	}
-	plt.Gll("$t$", io.Sf(`$\frac{\mathrm{d}N_{i,%d}}{\mathrm{d}t}$`, o.p), io.Sf("leg=1, leg_out=1, leg_ncol=%d, leg_hlen=1.5, leg_fsz=7", o.NumBasis()))
-	o.plt_ticks_spans()
 }
 
 // auxiliary methods /////////////////////////////////////////////////////////////////////////////////
@@ -421,26 +327,3 @@ func (o *Bspline) ders_basis_funs(t float64, span, upto int) {
 		d *= float64(o.p - k)
 	}
 }
-
-// plt_ticks_spans adds ticks indicating spans
-func (o *Bspline) plt_ticks_spans() {
-	lbls := make(map[float64]string, 0)
-	for i, t := range o.T {
-		if _, ok := lbls[t]; !ok {
-			lbls[t] = io.Sf("'[%d", i)
-		} else {
-			lbls[t] += io.Sf(",%d", i)
-		}
-	}
-	for t, l := range lbls {
-		plt.AnnotateXlabels(t, io.Sf("%s]'", l), "")
-	}
-}
-
-// error messages
-var (
-	_bspline_err00 = "bspline.go: Init: at least %d knots are required to define clamped B-spline of order p==%d. m==%d is invalid"
-	_bspline_err01 = "bspline.go: Set_Q: B-spline of order %d needs %d control points"
-	_bspline_err02 = "bspline.go: %s: t must be within [%g, %g]. t=%g is incorrect"
-	_bspline_err03 = "bspline.go: %s: Q must be set before calling this method"
-)

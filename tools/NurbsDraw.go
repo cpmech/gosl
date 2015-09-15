@@ -51,9 +51,9 @@ func main() {
 	plt.SetForEps(0.75, 500)
 	for _, b := range B {
 		if ctrl {
-			b.DrawCtrl2D(ids)
+			b.DrawCtrl2d(ids, "", "")
 		}
-		b.DrawElems2D(npts, ids, "", "")
+		b.DrawElems2d(npts, ids, "", "")
 	}
 	plt.Equal()
 	plt.Save(fnk + ".eps")
