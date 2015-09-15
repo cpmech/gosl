@@ -13,6 +13,16 @@ under the BSD-style license found in the LICENSE file.
 
 See examples here: https://github.com/cpmech/gosl/blob/master/examples/README.md
 
+<div id="container">
+<p><img src="doc/figs/bspline01.png" width="300"></p>
+B-spline of 2nd order. Knot insertion. Basis functions and derivatives.
+</div>
+
+<div id="container">
+<p><img src="doc/figs/bspline03.png" width="300"></p>
+B-spline of 2nd order. Basis functions and derivatives.
+</div>
+
 ## Installation and documentation
 
 http://cpmech.github.io/gosl
