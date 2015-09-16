@@ -30,7 +30,7 @@ func Keycode(String string, Type string) (keycode string, found bool) {
 		return "", false
 	}
 	if String[0] != '!' {
-		chk.Panic(_parsing_err3, "Keycode", String)
+		chk.Panic("first character in keycode string must be an exclamation mark !\nstring = \"%v\"", String)
 	}
 	for _, s := range strings.Split(String[1:], "!") { // [1:] => skip first "!"
 		ss := strings.TrimSpace(s)
@@ -56,7 +56,7 @@ func Keycodes(String string) (keycodes []string) {
 		return
 	}
 	if String[0] != '!' {
-		chk.Panic(_parsing_err3, "Keycodes", String)
+		chk.Panic("first character in keycode string must be an exclamation mark !\nstring = \"%v\"", String)
 	}
 	for _, s := range strings.Split(String[1:], "!") { // [1:] => skip first "!"
 		ss := strings.TrimSpace(s)
@@ -90,7 +90,7 @@ func JoinKeys3(k0, k1, k2 []string, sep string) (res string) {
 func SplitKeys3(res string) (k0, k1, k2 []string) {
 	sets := strings.Split(res, ",")
 	if len(sets) != 3 {
-		chk.Panic(_parsing_err1, res, sets)
+		chk.Panic("string '%s' does not contain 3 subsets separated by 2 commas. sets = %v", res, sets)
 	}
 	s0 := strings.TrimSpace(sets[0])
 	s1 := strings.TrimSpace(sets[1])
@@ -129,7 +129,7 @@ func JoinKeys4(k0, k1, k2, k3 []string, sep string) (res string) {
 func SplitKeys4(res string) (k0, k1, k2, k3 []string) {
 	sets := strings.Split(res, ",")
 	if len(sets) != 4 {
-		chk.Panic(_parsing_err2, res, sets)
+		chk.Panic("string '%s' does not contain 4 subsets separated by 3 commas. sets = %v", res, sets)
 	}
 	s0 := strings.TrimSpace(sets[0])
 	s1 := strings.TrimSpace(sets[1])
@@ -170,10 +170,3 @@ func JoinKeysPre(prefix string, keys []string) (res string) {
 func SplitKeys(keys string) []string {
 	return strings.Split(keys, " ")
 }
-
-// error messages
-var (
-	_parsing_err1 = "string '%s' does not contain 3 subsets separated by 2 commas. sets = %v"
-	_parsing_err2 = "string '%s' does not contain 4 subsets separated by 3 commas. sets = %v"
-	_parsing_err3 = "%s: first character in keycode string must be an exclamation mark !\nstring = \"%v\""
-)
