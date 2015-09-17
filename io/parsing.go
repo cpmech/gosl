@@ -213,6 +213,16 @@ func SplitWithinParentheses(s string) (res []string) {
 	return
 }
 
+// SplitInts splits space-separated integers
+func SplitInts(str string) (res []int) {
+	vals := strings.Fields(str)
+	res = make([]int, len(vals))
+	for i, v := range vals {
+		res[i] = Atoi(v)
+	}
+	return
+}
+
 // SplitFloats splits space-separated float numbers
 func SplitFloats(str string) (res []float64) {
 	vals := strings.Fields(str)
