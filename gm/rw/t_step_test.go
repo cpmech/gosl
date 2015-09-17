@@ -78,3 +78,27 @@ func Test_step01(tst *testing.T) {
 		plt.Show()
 	}
 }
+
+func Test_step02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("step02")
+
+	buf, err := io.ReadFile("data/beadpanel.step")
+	if err != nil {
+		tst.Errorf("cannot read file:\n%v", err)
+		return
+	}
+	dat := string(buf)
+
+	var stp STEP
+	err = stp.ParseDATA(dat)
+	if err != nil {
+		tst.Errorf("Parse filed:\n%v", err)
+		return
+	}
+
+	for _, c := range stp.BScurves {
+		io.Pforan("c = %v\n", c)
+	}
+}
