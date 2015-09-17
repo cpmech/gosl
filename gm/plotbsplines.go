@@ -40,6 +40,18 @@ func (o *Bspline) Draw2d(curveArgs, ctrlArgs string, npts, option int) {
 	plt.Gll("$x$", "$y$", "leg=1, leg_out=1, leg_ncol=2, leg_hlen=1.5, leg_fsz=7")
 }
 
+func (o *Bspline) Draw3d(curveArgs, ctrlArgs string, npts int, first bool) {
+	t := utl.LinSpace(o.tmin, o.tmax, npts)
+	x := make([]float64, npts)
+	y := make([]float64, npts)
+	z := make([]float64, npts)
+	for i, t := range t {
+		C := o.Point(t, 0)
+		x[i], y[i], z[i] = C[0], C[1], C[2]
+	}
+	plt.Plot3dLine(x, y, z, first, "")
+}
+
 // PlotBasis plots basis functions in I
 // option =  0 : use CalcBasis
 //           1 : use CalcBasisAndDerivs

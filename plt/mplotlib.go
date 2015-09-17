@@ -214,7 +214,7 @@ func Hist(x [][]float64, labels []string, args string) {
 	}
 }
 
-func Plot3dLine(x, y, z []float64, args string) {
+func Plot3dLine(x, y, z []float64, first bool, args string) {
 	n := bb.Len()
 	sx := io.Sf("x%d", n)
 	sy := io.Sf("y%d", n)
@@ -222,7 +222,11 @@ func Plot3dLine(x, y, z []float64, args string) {
 	GenArray(&bb, sx, x)
 	GenArray(&bb, sy, y)
 	GenArray(&bb, sz, z)
-	cmd := io.Sf("Plot3dLine(%s,%s,%s", sx, sy, sz)
+	ifirst := 0
+	if first {
+		ifirst = 1
+	}
+	cmd := io.Sf("Plot3dLine(%s,%s,%s,%d", sx, sy, sz, ifirst)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
 	}

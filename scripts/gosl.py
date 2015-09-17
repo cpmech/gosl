@@ -240,15 +240,17 @@ def HideFrameLines(spines_to_remove=['top', 'right']):
         gca().spines[spine].set_visible(False)
 
 
-def Plot3dLine(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, splot=111, *args, **kwargs):
+def Plot3dLine(X, Y, Z, first=True, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, splot=111, *args, **kwargs):
     """
     Plot 3D line
     ============
     """
-    ax = gcf().add_subplot(splot, projection='3d')
-    ax.set_xlabel(xlbl)
-    ax.set_ylabel(ylbl)
-    ax.set_zlabel(zlbl)
+    if first:
+        ax = gcf().add_subplot(splot, projection='3d')
+        ax.set_xlabel(xlbl)
+        ax.set_ylabel(ylbl)
+        ax.set_zlabel(zlbl)
+    else: ax = gca()
     ax.plot(X,Y,Z, *args, **kwargs)
     if zmin!=None and zmax!=None:
         ax.set_zlim(zmin,zmax)
