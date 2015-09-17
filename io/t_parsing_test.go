@@ -189,3 +189,47 @@ func Test_parsing04(tst *testing.T) {
 	Pforan("skeys = %q\n", skeys)
 	chk.String(tst, skeys, "Rux Ruy Ruz")
 }
+
+func Test_parsing05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("parsing05. split by spaces quoted")
+
+	str := " arg1 arg2 '   hello    world' '' \"  another hello world   \" "
+	res := SplitSpacesQuoted(str)
+	Pforan("res = %q\n", res)
+	chk.String(tst, res[0], "arg1")
+	chk.String(tst, res[1], "arg2")
+	chk.String(tst, res[2], "'   hello    world'")
+	chk.String(tst, res[3], "''")
+	chk.String(tst, res[4], "\"  another hello world   \"")
+}
+
+func Test_parsing06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("parsing06. extract within brackets")
+
+	str := "(arg1, (arg2.1, arg2.2),  arg3, arg4, (arg5.1,arg5.2,  arg5.3 ) )"
+	res := SplitWithinParentheses(str)
+	Pforan("%q\n", str)
+	for _, r := range res {
+		Pf("%q\n", r)
+	}
+	chk.String(tst, res[0], "arg1")
+	chk.String(tst, res[1], "arg2.1  arg2.2")
+	chk.String(tst, res[2], "arg3")
+	chk.String(tst, res[3], "arg4")
+	chk.String(tst, res[4], "arg5.1 arg5.2   arg5.3 ")
+}
+
+func Test_parsing07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("parsing07. float64 fields")
+
+	str := "1.0   1111.11 2.0   3.0"
+	res := SplitFloats(str)
+	Pforan("res = %v\n", res)
+	chk.Vector(tst, "res", 1e-17, res, []float64{1, 1111.11, 2, 3})
+}
