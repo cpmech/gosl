@@ -333,3 +333,25 @@ func Test_mylab07(tst *testing.T) {
 	x = DblsGetColumn(3, v)
 	chk.Vector(tst, "v[:,3]", 1e-17, x, []float64{4, 0, 4, 8, 4, -4})
 }
+
+func Test_mylab08(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab08. cross product")
+
+	u := []float64{3, -3, 1}
+	v := []float64{4, 9, 2}
+	w := make([]float64, 3)
+	CrossProduct3d(w, u, v) // w := u cross v
+	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{-15, -2, 39})
+
+	u = []float64{3, -3, 1}
+	v = []float64{-12, 12, -4}
+	CrossProduct3d(w, u, v) // w := u cross v
+	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{0, 0, 0})
+
+	u = []float64{3, 2, -2}
+	v = []float64{1, 0, -5}
+	CrossProduct3d(w, u, v) // w := u cross v
+	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{-10, 13, -2})
+}

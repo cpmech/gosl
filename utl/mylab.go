@@ -396,3 +396,12 @@ func DblsGetColumn(j int, v [][]float64) (x []float64) {
 	}
 	return
 }
+
+// CrossProduct3d computes the cross product of two 3D vectors u and w
+//  w = u cross v
+//  Note: w must be pre-allocated
+func CrossProduct3d(w, u, v []float64) {
+	w[0] = u[1]*v[2] - u[2]*v[1]
+	w[1] = u[2]*v[0] - u[0]*v[2]
+	w[2] = u[0]*v[1] - u[1]*v[0]
+}
