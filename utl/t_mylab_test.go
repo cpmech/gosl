@@ -355,3 +355,16 @@ func Test_mylab08(tst *testing.T) {
 	CrossProduct3d(w, u, v) // w := u cross v
 	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{-10, 13, -2})
 }
+
+func Test_mylab09(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab09. arg min and max")
+
+	u := []float64{1, 2, 3, -5, 60, -10, 8}
+	imin, imax := DblArgMinMax(u)
+	io.Pforan("imin = %v (5)\n", imin)
+	io.Pforan("imax = %v (4)\n", imax)
+	chk.IntAssert(imin, 5)
+	chk.IntAssert(imax, 4)
+}

@@ -405,3 +405,23 @@ func CrossProduct3d(w, u, v []float64) {
 	w[1] = u[2]*v[0] - u[0]*v[2]
 	w[2] = u[0]*v[1] - u[1]*v[0]
 }
+
+// DblArgMinMax finds the indices of min and max arguments
+func DblArgMinMax(v []float64) (imin, imax int) {
+	if len(v) < 1 {
+		return
+	}
+	vmin, vmax := v[0], v[0]
+	imin, imax = 0, 0
+	for i := 1; i < len(v); i++ {
+		if v[i] < vmin {
+			imin = i
+			vmin = v[i]
+		}
+		if v[i] > vmax {
+			imax = i
+			vmax = v[i]
+		}
+	}
+	return
+}
