@@ -76,6 +76,7 @@ func allocate(N, n int) {
 
 func TestLinAlg01(tst *testing.T) {
 
+	//verbose()
 	N, n := 100, 100
 	allocate(N, n)
 
@@ -85,6 +86,7 @@ func TestLinAlg01(tst *testing.T) {
 
 	chk.PrintTitle("TestLinAlg 01 (parallel)")
 	Pll = true
+	defer func() { Pll = false }()
 	_, msg := run_tests(N, n, true, tst)
 
 	chk.PrintTitle("TestLinAlg 02 (speed)")
@@ -117,8 +119,9 @@ func TestLinAlg01(tst *testing.T) {
 }
 
 func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg []string) {
+
 	// allocate
-	num_tests := 24
+	num_tests := 25
 	dt = make([]time.Duration, num_tests)
 	msg = make([]string, num_tests)
 
@@ -331,6 +334,14 @@ func run_tests(N, n int, do_check bool, tst *testing.T) (dt []time.Duration, msg
 	dt[23], msg[23] = time.Now().Sub(t0), "vector: rmserr    "
 	if do_check {
 		chk.Scalar(tst, msg[23], 1e-17, rmserr, 1.0+noise)
+	}
+
+	// 24: matrix: largest
+	t0 = time.Now()
+	largest := MatLargest(acorr0, 1)
+	dt[24], msg[24] = time.Now().Sub(t0), "matrix: largest   "
+	if do_check {
+		chk.Scalar(tst, msg[24], tol, largest, 666.0)
 	}
 
 	return

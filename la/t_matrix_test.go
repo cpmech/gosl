@@ -112,6 +112,13 @@ func Test_mat01(tst *testing.T) {
 	io.Pf("max(f-a) = %v\n", maxdiff)
 	chk.Scalar(tst, "maxdiff", 1e-17, maxdiff, 45)
 
+	// MatLargest
+	io.Pfblue2("\nfunc MatLargest(a [][]float64, den float64) (largest float64)\n")
+	PrintMat("a", a, "%5g", false)
+	largest := MatLargest(a, 1)
+	io.Pf("largest(a) = %v\n", largest)
+	chk.Scalar(tst, "largest(a)", 1e-17, largest, 50)
+
 	// MatGetCol
 	io.Pfblue2("\nfunc MatGetCol(j int, a [][]float64) (col []float64)\n")
 	col := MatGetCol(0, a)

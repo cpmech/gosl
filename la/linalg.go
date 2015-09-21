@@ -388,7 +388,7 @@ func VecMinMax(v []float64) (min, max float64) {
 	return
 }
 
-// VecLargest returns the largest component of a vector, normalised by den
+// VecLargest returns the largest component (abs(u_i)) of a vector, normalised by den
 func VecLargest(u []float64, den float64) (largest float64) {
 	if Pll {
 		ncpu := imin(len(u), NCPU)
@@ -845,6 +845,47 @@ func MatMaxDiff(a, b [][]float64) (maxdiff float64) {
 				diff := math.Abs(a[i][j] - b[i][j])
 				if diff > maxdiff {
 					maxdiff = diff
+				}
+			}
+		}
+	}
+	return
+}
+
+// MatLargest returns the largest component (abs(a_ij)) of a matrix, normalised by den
+func MatLargest(a [][]float64, den float64) (largest float64) {
+	if Pll {
+		ncpu := imin(len(a), NCPU)
+		ch := make(chan float64, ncpu)
+		for icpu := 0; icpu < ncpu; icpu++ {
+			start, endp1 := (icpu*len(a))/ncpu, ((icpu+1)*len(a))/ncpu
+			go func() {
+				mylargest := math.Abs(a[start][0])
+				for i := start; i < endp1; i++ {
+					for j := 0; j < len(a[i]); j++ {
+						tmp := math.Abs(a[i][j])
+						if tmp > mylargest {
+							mylargest = tmp
+						}
+					}
+				}
+				ch <- mylargest
+			}()
+		}
+		largest = <-ch
+		for icpu := 1; icpu < ncpu; icpu++ {
+			otherlargest := <-ch
+			if otherlargest > largest {
+				largest = otherlargest
+			}
+		}
+	} else {
+		largest = math.Abs(a[0][0])
+		for i := 0; i < len(a); i++ {
+			for j := 0; j < len(a[i]); j++ {
+				tmp := math.Abs(a[i][j])
+				if tmp > largest {
+					largest = tmp
 				}
 			}
 		}
