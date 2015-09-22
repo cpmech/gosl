@@ -134,14 +134,14 @@ func Test_bins02(tst *testing.T) {
 	}
 
 	// find points along diagonal
-	ids := bins.FindAlongLine([]float64{0.2, 0.2}, []float64{10, 10}, 1e-8)
+	ids := bins.FindAlongSegment([]float64{0.0, 0.0}, []float64{0.8, 0.8}, 1e-8)
 	io.Pforan("ids = %v\n", ids)
-	chk.Ints(tst, "check FindAlongLine", ids, ID)
+	chk.Ints(tst, "ids", ids, ID)
 
 	// find additional points
-	ids = bins.FindAlongLine([]float64{-0.2, 0.8}, []float64{0.8, 0.8}, 1e-8)
+	ids = bins.FindAlongSegment([]float64{-0.2, 0.8}, []float64{0.8, 0.8}, 1e-8)
 	io.Pfcyan("ids = %v\n", ids)
-	chk.Ints(tst, "check FindAlongLine", ids, []int{100, 101, 102, 103, 104, 4})
+	chk.Ints(tst, "ids", ids, []int{100, 101, 102, 103, 104, 4})
 
 	// draw
 	if chk.Verbose {
@@ -174,9 +174,9 @@ func Test_bins03(tst *testing.T) {
 	}
 
 	// find points along diagonal
-	ids := bins.FindAlongLine([]float64{0, 0, 0}, []float64{10, 10, 10}, 0.0000001)
+	ids := bins.FindAlongSegment([]float64{0, 0, 0}, []float64{10, 10, 10}, 0.0000001)
 	io.Pforan("ids = %v\n", ids)
-	chk.Ints(tst, "check FindAlongLine", ID, ids)
+	chk.Ints(tst, "ids", ID, ids)
 }
 
 func Test_bins04(tst *testing.T) {
@@ -210,7 +210,14 @@ func Test_bins04(tst *testing.T) {
 
 	// find points
 	x := 0.7886751345948129
-	ids := bins.FindAlongLine([]float64{x, 0}, []float64{x, 1}, 1.e-15)
+	ids := bins.FindAlongSegment([]float64{x, 0}, []float64{x, 2}, 1.e-15)
 	io.Pforan("ids = %v\n", ids)
-	chk.Ints(tst, "check FindAlongLine", []int{1, 3, 5, 7}, ids)
+	chk.Ints(tst, "ids", []int{1, 3, 5, 7}, ids)
+
+	// draw
+	if chk.Verbose {
+		plt.SetForPng(1, 500, 150)
+		bins.Draw2d(true)
+		plt.SaveD("/tmp/gosl/gm", "test_bins04.png")
+	}
 }

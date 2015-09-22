@@ -177,8 +177,9 @@ func (o Bins) CalcIdx(x []float64) int {
 	return idx
 }
 
-// FindAlongLine gets the ids of entries that lie close to a line
-func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
+// FindAlongSegment gets the ids of entries that lie close to a segment
+//  Note: the initial (xi) and final (xf) points on segment defined a bounding box of valid points
+func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 
 	// auxiliary variables
 	var sbins []*Bin  // selected bins
@@ -191,6 +192,9 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 	if o.Ndim == 3 {
 		pi.Z = xi[2]
 		pf.Z = xf[2]
+	} else {
+		xi = []float64{xi[0], xi[1], -1}
+		xf = []float64{xf[0], xf[1], 1}
 	}
 
 	// loop along all bins
@@ -239,7 +243,9 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 			p := Point{x, y, z}
 			d := DistPointLine(&p, &pi, &pf, tol, false)
 			if d <= tol {
-				ids = append(ids, entry.Id)
+				if IsPointIn(&p, xi, xf, tol) {
+					ids = append(ids, entry.Id)
+				}
 			}
 		}
 	}
