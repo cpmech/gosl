@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 )
 
 // HashPoint returns a unique id of a point
@@ -32,16 +33,19 @@ func HashPointC(c []float64) int {
 	return HashPoint(x, y, z)
 }
 
+// BinEntry holds data of an entry to bin
 type BinEntry struct {
 	Id int       // object Id
-	x  []float64 // entry coordinate
+	X  []float64 // entry coordinate (read only)
 }
 
+// Bin defines one bin in Bins (holds entries for search)
 type Bin struct {
 	Idx     int         // index of bin
 	Entries []*BinEntry // entries
 }
 
+// Bins defines bins to hold entries and speed up search
 type Bins struct {
 	Ndim int       // space dimension
 	Xi   []float64 // [ndim] left/lower-most point
@@ -49,7 +53,7 @@ type Bins struct {
 	L    []float64 // [ndim] whole box lengths
 	N    []int     // [ndim] number of divisions
 	S    float64   // size of bins
-	All  []*Bin    // [nbins] all bins
+	All  []*Bin    // [nbins] all bins (there will be an extra bin row along each dimension)
 	tmp  []int     // [ndim] temporary (auxiliary) slice
 }
 
@@ -66,7 +70,7 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 		return chk.Err("sizes of xi and l must be the same and equal to either 2 or 3")
 	}
 
-	// allocate lentgth and number of division slices
+	// allocate length and number of division slices
 	o.L = make([]float64, o.Ndim)
 	o.N = make([]int, o.Ndim)
 	for k := 0; k < o.Ndim; k++ {
@@ -131,7 +135,7 @@ func (o Bins) Find(x []float64) int {
 	for _, entry = range bin.Entries {
 		var d float64
 		for k := 0; k < o.Ndim; k++ {
-			d += math.Pow(x[k]-entry.x[k], 2)
+			d += math.Pow(x[k]-entry.X[k], 2)
 		}
 		if d < dmin {
 			dmin = d
@@ -141,6 +145,7 @@ func (o Bins) Find(x []float64) int {
 	return id_closest
 }
 
+// FindBinByIndex finds or allocate new bin corresponding to index idx
 func (o Bins) FindBinByIndex(idx int) *Bin {
 
 	// check
@@ -179,7 +184,6 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 	var sbins []*Bin  // selected bins
 	btol := 0.9 * o.S // tolerance for bins
 	var p, pi, pf Point
-	var x, y, z float64
 	pi.X = xi[0]
 	pf.X = xf[0]
 	pi.Y = xi[1]
@@ -190,23 +194,31 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 	}
 
 	// loop along all bins
-	for i, bin := range o.All {
+	var i, j, k int
+	var x, y, z float64
+	nxy := o.N[0] * o.N[1]
+	for idx, bin := range o.All {
+
+		// skip empty bins
 		if bin == nil {
 			continue
 		}
-		// coordinates of bin center
-		x = float64(i % o.N[0])
-		y = float64(i % (o.N[0] * o.N[1]) / o.N[0])
-		x = (x + 0.5) * o.S
-		y = (y + 0.5) * o.S
 
+		// coordinates of bin center
+		i = idx % o.N[0] // indices representing bin
+		j = (idx % nxy) / o.N[0]
+		x = o.Xi[0] + float64(i)*o.S // coordinates of bin corner
+		y = o.Xi[1] + float64(j)*o.S
+		x += o.S / 2.0
+		y += o.S / 2.0
 		if o.Ndim == 3 {
-			z = float64(i / (o.N[0] * o.N[1]))
-			z = (z + 0.5) * o.S
+			k = idx / nxy
+			z = o.Xi[2] + float64(k)*o.S
+			z += o.S / 2.0
 		}
 
+		// check if bin is near line
 		p = Point{x, y, z}
-
 		d := DistPointLine(&p, &pi, &pf, tol, false)
 		if d <= btol {
 			sbins = append(sbins, bin)
@@ -219,13 +231,12 @@ func (o Bins) FindAlongLine(xi, xf []float64, tol float64) []int {
 	// find closest points
 	for _, bin := range sbins {
 		for _, entry := range bin.Entries {
-			x = entry.x[0]
-			y = entry.x[1]
+			x = entry.X[0]
+			y = entry.X[1]
 			if o.Ndim == 3 {
-				z = entry.x[0]
+				z = entry.X[0]
 			}
 			p := Point{x, y, z}
-
 			d := DistPointLine(&p, &pi, &pf, tol, false)
 			if d <= tol {
 				ids = append(ids, entry.Id)
@@ -241,9 +252,9 @@ func (o Bin) String() string {
 		if i > 0 {
 			l += ", "
 		}
-		l += io.Sf("{\"id\":%d, \"x\":[%g,%g", entry.Id, entry.x[0], entry.x[1])
-		if len(entry.x) > 2 {
-			l += io.Sf(",%g", entry.x[2])
+		l += io.Sf("{\"id\":%d, \"x\":[%g,%g", entry.Id, entry.X[0], entry.X[1])
+		if len(entry.X) > 2 {
+			l += io.Sf(",%g", entry.X[2])
 		}
 		l += "]}"
 	}
@@ -265,4 +276,52 @@ func (o Bins) String() string {
 	}
 	l += "\n]"
 	return l
+}
+
+// Draw2d draws bins' grid
+func (o *Bins) Draw2d(withtxt bool) {
+
+	// horizontal lines
+	x := []float64{o.Xi[0], o.Xi[0] + o.L[0] + o.S}
+	y := make([]float64, 2)
+	for j := 0; j < o.N[1]+1; j++ {
+		y[0] = o.Xi[1] + float64(j)*o.S
+		y[1] = y[0]
+		plt.Plot(x, y, "'-', color='#4f3677', clip_on=0")
+	}
+
+	// vertical lines
+	y[0] = o.Xi[1]
+	y[1] = o.Xi[1] + o.L[1] + o.S
+	for i := 0; i < o.N[0]+1; i++ {
+		x[0] = o.Xi[0] + float64(i)*o.S
+		x[1] = x[0]
+		plt.Plot(x, y, "'k-', color='#4f3677', clip_on=0")
+	}
+
+	// plot items
+	for _, bin := range o.All {
+		if bin == nil {
+			continue
+		}
+		for _, entry := range bin.Entries {
+			plt.PlotOne(entry.X[0], entry.X[1], "'r.', clip_on=0")
+		}
+	}
+
+	// labels
+	if withtxt {
+		for j := 0; j < o.N[1]; j++ {
+			for i := 0; i < o.N[0]; i++ {
+				idx := i + j*o.N[0]
+				x := o.Xi[0] + float64(i)*o.S + 0.02*o.S
+				y := o.Xi[1] + float64(j)*o.S + 0.02*o.S
+				plt.Text(x, y, io.Sf("%d", idx), "size=7")
+			}
+		}
+	}
+
+	// setup
+	plt.Equal()
+	plt.AxisRange(o.Xi[0]-0.1, o.Xf[0]+o.S+0.1, o.Xi[1]-0.1, o.Xf[1]+o.S+0.1)
 }
