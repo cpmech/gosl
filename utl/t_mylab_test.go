@@ -337,22 +337,28 @@ func Test_mylab07(tst *testing.T) {
 func Test_mylab08(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mylab08. cross product")
+	chk.PrintTitle("mylab08. dot and cross products")
 
 	u := []float64{3, -3, 1}
 	v := []float64{4, 9, 2}
 	w := make([]float64, 3)
-	CrossProduct3d(w, u, v) // w := u cross v
+	s := Dot3d(u, v)
+	Cross3d(w, u, v) // w := u cross v
+	chk.Scalar(tst, "s = u dot v", 1e-17, s, -13)
 	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{-15, -2, 39})
 
 	u = []float64{3, -3, 1}
 	v = []float64{-12, 12, -4}
-	CrossProduct3d(w, u, v) // w := u cross v
+	s = Dot3d(u, v)
+	Cross3d(w, u, v) // w := u cross v
+	chk.Scalar(tst, "s = u dot v", 1e-17, s, -76)
 	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{0, 0, 0})
 
 	u = []float64{3, 2, -2}
 	v = []float64{1, 0, -5}
-	CrossProduct3d(w, u, v) // w := u cross v
+	s = Dot3d(u, v)
+	Cross3d(w, u, v) // w := u cross v
+	chk.Scalar(tst, "s = u dot v", 1e-17, s, 13)
 	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{-10, 13, -2})
 }
 
