@@ -193,6 +193,16 @@ func RemoveAll(key string) {
 	}
 }
 
+//  ReadTableOrPanic reads text file as ReadTable; but panic on errors
+func ReadTableOrPanic(fn string) (keys []string, T map[string][]float64) {
+	var err error
+	keys, T, err = ReadTable(fn)
+	if err != nil {
+		chk.Panic("cannot read table:\n%v", err)
+	}
+	return
+}
+
 // ReadTable reads a text file in which the first line contains the headers and the next lines the float64
 // type of numeric values. The number of columns must be equal, including for the headers
 func ReadTable(fn string) (keys []string, T map[string][]float64, err error) {

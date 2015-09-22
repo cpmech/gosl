@@ -15,10 +15,7 @@ func TestReadTable01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ReadTable 01")
 
-	keys, res, err := ReadTable("data/table01.dat")
-	if err != nil {
-		tst.Errorf("[1;31mfile cannot be read:[0m\n%v\n", err.Error())
-	}
+	keys, res := ReadTableOrPanic("data/table01.dat")
 
 	chk.Strings(tst, "keys", keys, []string{"a", "b", "c", "d"})
 	chk.Vector(tst, "a", 1.0e-17, res["a"], []float64{1, 4, 7})
