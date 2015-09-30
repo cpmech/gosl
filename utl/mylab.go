@@ -397,6 +397,14 @@ func DblsGetColumn(j int, v [][]float64) (x []float64) {
 	return
 }
 
+// L2norm returns the Euclidean distance between p and q
+func L2norm(p, q []float64) (dist float64) {
+	for i := 0; i < len(p); i++ {
+		dist += math.Pow(p[i]-q[i], 2.0)
+	}
+	return math.Sqrt(dist)
+}
+
 // Dot3d returns the dot product between two 3D vectors
 func Dot3d(u, v []float64) (s float64) {
 	return u[0]*v[0] + u[1]*v[1] + u[2]*v[2]

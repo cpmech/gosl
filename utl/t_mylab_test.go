@@ -365,7 +365,7 @@ func Test_mylab08(tst *testing.T) {
 func Test_mylab09(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mylab09. arg min and max")
+	chk.PrintTitle("mylab09. arg min and max and L2norm")
 
 	u := []float64{1, 2, 3, -5, 60, -10, 8}
 	imin, imax := DblArgMinMax(u)
@@ -373,4 +373,9 @@ func Test_mylab09(tst *testing.T) {
 	io.Pforan("imax = %v (4)\n", imax)
 	chk.IntAssert(imin, 5)
 	chk.IntAssert(imax, 4)
+
+	v := []float64{0, 1, 8, 0, -1, 3, 4}
+	d := L2norm(u, v)
+	io.Pforan("d = %v\n", d)
+	chk.Scalar(tst, "L2(u,v)", 1e-17, d, 62.912637840103322)
 }
