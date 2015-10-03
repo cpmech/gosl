@@ -11,8 +11,8 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// check_residR (real) calculates max |component| of resid: r = a*x - b
-func check_residR(tst *testing.T, tol float64, a [][]float64, x, b []float64) {
+// CheckResidR (real) calculates max |component| of resid: r = a*x - b
+func CheckResidR(tst *testing.T, tol float64, a [][]float64, x, b []float64) {
 	n := len(x)
 	r := make([]float64, n)
 	for i := 0; i < n; i++ {
@@ -34,8 +34,8 @@ func check_residR(tst *testing.T, tol float64, a [][]float64, x, b []float64) {
 	return
 }
 
-// check_residC (complex) calculates max |component| of resid: r = a*x - b
-func check_residC(tst *testing.T, tol float64, a [][]complex128, x, b []complex128) {
+// CheckResidC (complex) calculates max |component| of resid: r = a*x - b
+func CheckResidC(tst *testing.T, tol float64, a [][]complex128, x, b []complex128) {
 	n := len(x)
 	r := make([]complex128, n)
 	for i := 0; i < n; i++ {

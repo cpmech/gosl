@@ -52,7 +52,7 @@ func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x
 
 	// check
 	chk.Vector(tst, "x", tol_cmp, x, x_correct)
-	check_residR(tst, tol_res, A.ToDense(), x, b)
+	CheckResidR(tst, tol_res, A.ToDense(), x, b)
 }
 
 func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, x_correct []complex128, verbose bool) {
@@ -99,7 +99,7 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 
 	// check
 	chk.VectorC(tst, "x", tol_cmp, x, x_correct)
-	check_residC(tst, tol_res, A.ToDense(), x, b)
+	CheckResidC(tst, tol_res, A.ToDense(), x, b)
 }
 
 func Test_linsol01a(tst *testing.T) {

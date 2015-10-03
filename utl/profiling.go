@@ -67,6 +67,8 @@ func ProfMEM(dirout, filename string, silent bool) func() {
 //    2) returns a "stop()" function to be called before shutting down
 //    3) output files are saved to "/tmp/gosl/cpu.pprof"; or
 //                                 "/tmp/gosl/mem.pprof"
+//  Run analysis with (e.g.):
+//   go tool pprof binary /tmp/gosl/mem.pprof
 func DoProf(silent bool) func() {
 	if *do_prof_cpu {
 		return ProfCPU("/tmp/gosl/", "cpu.pprof", silent)

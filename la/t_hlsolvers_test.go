@@ -45,7 +45,7 @@ func Test_hlsolver01(tst *testing.T) {
 	// check
 	x_correct := []float64{1, 2, 3, 4, 5}
 	chk.Vector(tst, "x", 1e-14, x, x_correct)
-	check_residR(tst, 1e-13, A.ToMatrix(nil).ToDense(), x, b)
+	CheckResidR(tst, 1e-13, A.ToMatrix(nil).ToDense(), x, b)
 }
 
 func Test_hlsolver02(tst *testing.T) {
@@ -111,5 +111,5 @@ func Test_hlsolver02(tst *testing.T) {
 		10 - 17.75i,
 	}
 	chk.VectorC(tst, "x", 1e-3, x, x_correct)
-	check_residC(tst, 1e-12, A.ToMatrix(nil).ToDense(), x, b)
+	CheckResidC(tst, 1e-12, A.ToMatrix(nil).ToDense(), x, b)
 }

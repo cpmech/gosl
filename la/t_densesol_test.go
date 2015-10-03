@@ -85,7 +85,7 @@ func TestSPDsolve01(tst *testing.T) {
 	b := []float64{-2, 4, 3, -5, 1}
 	x := make([]float64, 5)
 	SPDsolve(x, a, b)
-	check_residR(tst, 1e-14, a, x, b)
+	CheckResidR(tst, 1e-14, a, x, b)
 	chk.Vector(tst, "x = inv(a) * b", 1e-13, x, []float64{
 		-629.0 / 98.0,
 		237.0 / 49.0,
@@ -112,8 +112,8 @@ func TestSPDsolve02(tst *testing.T) {
 	x := make([]float64, 5)
 	X := make([]float64, 5)
 	SPDsolve2(x, X, a, b, B)
-	check_residR(tst, 1e-14, a, x, b)
-	check_residR(tst, 1e-14, a, X, B)
+	CheckResidR(tst, 1e-14, a, x, b)
+	CheckResidR(tst, 1e-14, a, X, B)
 	chk.Vector(tst, "x = inv(a) * b", 1e-13, x, []float64{
 		-629.0 / 98.0,
 		237.0 / 49.0,
