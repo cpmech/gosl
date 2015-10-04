@@ -29,10 +29,13 @@ func PrintMemStat(msg string) {
 	var mem runtime.MemStats
 	runtime.ReadMemStats(&mem)
 	io.PfYel("%s\n", msg)
-	io.Pfyel("Alloc     = %v [KB]  %v [MB]  %v [GB]\n", mem.Alloc/KBSIZE, mem.Alloc/MBSIZE, mem.Alloc/GBSIZE)
-	io.Pfyel("HeapAlloc = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapAlloc/KBSIZE, mem.HeapAlloc/MBSIZE, mem.HeapAlloc/GBSIZE)
-	io.Pfyel("Sys       = %v [KB]  %v [MB]  %v [GB]\n", mem.Sys/KBSIZE, mem.Sys/MBSIZE, mem.Sys/GBSIZE)
-	io.Pfyel("HeapSys   = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapSys/KBSIZE, mem.HeapSys/MBSIZE, mem.HeapSys/GBSIZE)
+	io.Pfyel("Alloc      = %v [KB]  %v [MB]  %v [GB]\n", mem.Alloc/KBSIZE, mem.Alloc/MBSIZE, mem.Alloc/GBSIZE)
+	io.Pfyel("HeapAlloc  = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapAlloc/KBSIZE, mem.HeapAlloc/MBSIZE, mem.HeapAlloc/GBSIZE)
+	io.Pfyel("Sys        = %v [KB]  %v [MB]  %v [GB]\n", mem.Sys/KBSIZE, mem.Sys/MBSIZE, mem.Sys/GBSIZE)
+	io.Pfyel("HeapSys    = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapSys/KBSIZE, mem.HeapSys/MBSIZE, mem.HeapSys/GBSIZE)
+	io.Pfyel("TotalAlloc = %v [KB]  %v [MB]  %v [GB]\n", mem.TotalAlloc/KBSIZE, mem.TotalAlloc/MBSIZE, mem.TotalAlloc/GBSIZE)
+	io.Pfyel("Mallocs    = %v\n", mem.Mallocs)
+	io.Pfyel("Frees      = %v\n", mem.Frees)
 }
 
 // ProfCPU activates CPU profiling
