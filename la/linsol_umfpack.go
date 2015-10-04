@@ -335,22 +335,6 @@ func (o *LinSolUmfpack) SetOrdScal(ordering, scaling string) (err error) {
 	return
 }
 
-// variables required by Umfpack
-var (
-	_umfpctrl  [C.UMFPACK_CONTROL]float64 // Umfpack control array
-	_umfpctrlz [C.UMFPACK_CONTROL]float64 // Umfpack control array for complex matrices
-	_uctrl     *C.double                  // pointer to Umfpack control
-	_uctrlz    *C.double                  // pointer to Umfpack control for complex routines
-)
-
-// initialise Umfpack control arrays
-func init() {
-	_uctrl = (*C.double)(unsafe.Pointer(&_umfpctrl[0]))
-	_uctrlz = (*C.double)(unsafe.Pointer(&_umfpctrlz[0]))
-	C.umfpack_dl_defaults(_uctrl)
-	C.umfpack_zl_defaults(_uctrlz)
-}
-
 // Umfpack error codes
 var (
 	Uerr2Text = map[int]string{
