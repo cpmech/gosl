@@ -194,7 +194,7 @@ func Test_linsol02(tst *testing.T) {
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	x_correct := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
 	tol := 1e-9 // TODO: check why tests fails with 1e-10 @ office but not @ home
-	run_linsol_testR(tst, &t, 1e-4, tol, b, x_correct, true)
+	run_linsol_testR(tst, &t, 1e-4, tol, b, x_correct, false)
 }
 
 func Test_linsol03(tst *testing.T) {

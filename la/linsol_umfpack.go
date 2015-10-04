@@ -50,6 +50,7 @@ type LinSolUmfpack struct {
 
 	// derived
 	is_initialised bool
+	factorised     bool
 }
 
 // factory of allocators
@@ -175,6 +176,11 @@ func (o *LinSolUmfpack) Fact() (err error) {
 		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.Fact . . . . . . . . . . . . . . . \n\n")
 	}
 
+	// clean up
+	if o.factorised {
+		o.Clean()
+	}
+
 	// factorisation
 	if o.cmplx {
 
@@ -222,6 +228,9 @@ func (o *LinSolUmfpack) Fact() (err error) {
 			C.umfpack_dl_report_info(o.uctrl, o.uinfo)
 		}
 	}
+
+	// set flag
+	o.factorised = true
 
 	// duration
 	if o.ton {
