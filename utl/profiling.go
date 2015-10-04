@@ -8,14 +8,32 @@ import (
 	"flag"
 	"os"
 	"path/filepath"
+	"runtime"
 	"runtime/pprof"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 )
 
+const (
+	KBSIZE = 1024.0
+	MBSIZE = 1048576.0
+	GBSIZE = 1073741824.0
+)
+
 var do_prof_cpu = flag.Bool("cpuprof", false, "write cpu profile data to file")
 var do_prof_mem = flag.Bool("memprof", false, "write mem profile data to file")
+
+// PrintMemStat prints memory statistics
+func PrintMemStat(msg string) {
+	var mem runtime.MemStats
+	runtime.ReadMemStats(&mem)
+	io.PfYel("%s\n", msg)
+	io.Pfyel("Alloc     = %v [KB]  %v [MB]  %v [GB]\n", mem.Alloc/KBSIZE, mem.Alloc/MBSIZE, mem.Alloc/GBSIZE)
+	io.Pfyel("HeapAlloc = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapAlloc/KBSIZE, mem.HeapAlloc/MBSIZE, mem.HeapAlloc/GBSIZE)
+	io.Pfyel("Sys       = %v [KB]  %v [MB]  %v [GB]\n", mem.Sys/KBSIZE, mem.Sys/MBSIZE, mem.Sys/GBSIZE)
+	io.Pfyel("HeapSys   = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapSys/KBSIZE, mem.HeapSys/MBSIZE, mem.HeapSys/GBSIZE)
+}
 
 // ProfCPU activates CPU profiling
 //  Note: returns a "stop()" function to be called before shutting down
