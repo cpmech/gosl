@@ -5,7 +5,6 @@
 package utl
 
 import (
-	"flag"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -20,9 +19,6 @@ const (
 	MBSIZE = 1048576.0
 	GBSIZE = 1073741824.0
 )
-
-var do_prof_cpu = flag.Bool("cpuprof", false, "write cpu profile data to file")
-var do_prof_mem = flag.Bool("memprof", false, "write mem profile data to file")
 
 // PrintMemStat prints memory statistics
 func PrintMemStat(msg string) {
@@ -56,6 +52,7 @@ func ProfCPU(dirout, filename string, silent bool) func() {
 		f.Close()
 		if !silent {
 			io.Pfcyan("CPU profiling finished\n")
+			io.Pfcyan("run: go tool pprof <binary> %s/%s\n", dirout, filename)
 		}
 	}
 }
@@ -77,26 +74,26 @@ func ProfMEM(dirout, filename string, silent bool) func() {
 		f.Close()
 		if !silent {
 			io.Pfcyan("MEM profiling finished\n")
+			io.Pfcyan("run: go tool pprof <binary> %s/%s\n", dirout, filename)
 		}
 	}
 }
 
 // DoProf runs either CPU profiling or MEM profiling
-//  Notes:
-//    1) based on input flags: -cpuprof (preferred); or
-//                             -memprof
-//    2) returns a "stop()" function to be called before shutting down
-//    3) output files are saved to "/tmp/gosl/cpu.pprof"; or
+//  Input:
+//    silent -- show message
+//    option -- 1=CPU profiling, 2=memory profiling
+//  Output:
+//    1) returns a "stop()" function to be called before shutting down
+//    2) output files are saved to "/tmp/gosl/cpu.pprof"; or
 //                                 "/tmp/gosl/mem.pprof"
-//  Run analysis with (e.g.):
-//   go tool pprof binary /tmp/gosl/mem.pprof
-func DoProf(silent bool) func() {
-	if *do_prof_cpu {
-		return ProfCPU("/tmp/gosl/", "cpu.pprof", silent)
-	} else if *do_prof_mem {
-		return ProfMEM("/tmp/gosl/", "mem.pprof", silent)
+//    3) run analysis with (e.g.):
+//         go tool pprof binary /tmp/gosl/mem.pprof
+func DoProf(silent bool, option int) func() {
+	if option == 2 {
+		return ProfMEM("/tmp/gosl", "mem.pprof", silent)
 	}
-	return func() {}
+	return ProfCPU("/tmp/gosl", "cpu.pprof", silent)
 }
 
 // error messages
