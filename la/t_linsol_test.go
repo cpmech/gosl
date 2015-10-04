@@ -127,7 +127,7 @@ func Test_linsol01a(tst *testing.T) {
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 	x_correct := []float64{1, 2, 3, 4, 5}
-	run_linsol_testR(tst, &t, 1e-14, 1e-13, b, x_correct, true)
+	run_linsol_testR(tst, &t, 1e-14, 1e-13, b, x_correct, false)
 }
 
 func Test_linsol01b(tst *testing.T) {

@@ -33,6 +33,9 @@ type LinSolUmfpack struct {
 	linSolData
 
 	// umfpack data
+	info  []float64
+	ctrl  []float64
+	uinfo *C.double
 	uctrl *C.double
 	usymb unsafe.Pointer
 	unum  unsafe.Pointer
@@ -83,9 +86,15 @@ func (o *LinSolUmfpack) InitR(tR *Triplet, symmetric, verbose, timing bool) (err
 	o.ai = (*C.LONG)(unsafe.Pointer(&make([]int, o.tR.pos)[0]))
 	o.ax = (*C.double)(unsafe.Pointer(&make([]float64, o.tR.pos)[0]))
 
-	// control
-	o.uctrl = (*C.double)(unsafe.Pointer(&make([]float64, C.UMFPACK_CONTROL)[0]))
+	// control and info
+	o.ctrl = make([]float64, C.UMFPACK_CONTROL)
+	o.uctrl = (*C.double)(unsafe.Pointer(&o.ctrl[0]))
 	C.umfpack_dl_defaults(o.uctrl)
+	if o.verb {
+		o.info = make([]float64, C.UMFPACK_INFO)
+		o.uinfo = (*C.double)(unsafe.Pointer(&o.info[0]))
+		o.ctrl[C.UMFPACK_PRL] = 6 // change the default print level; otherwise, nothing will print
+	}
 
 	// duration
 	if o.ton {
@@ -196,19 +205,22 @@ func (o *LinSolUmfpack) Fact() (err error) {
 		}
 
 		// UMFPACK: symbolic factorisation
-		st = C.umfpack_dl_symbolic(C.LONG(o.tR.m), C.LONG(o.tR.n), o.ap, o.ai, o.ax, &o.usymb, o.uctrl, nil)
+		st = C.umfpack_dl_symbolic(C.LONG(o.tR.m), C.LONG(o.tR.n), o.ap, o.ai, o.ax, &o.usymb, o.uctrl, o.uinfo)
 		if st != C.UMFPACK_OK {
 			return chk.Err(_linsol_umfpack_err08, Uerr2Text[int(st)])
 		}
+		if o.verb {
+			C.umfpack_dl_report_info(o.uctrl, o.uinfo)
+		}
 
 		// UMFPACK: numeric factorisation
-		st = C.umfpack_dl_numeric(o.ap, o.ai, o.ax, o.usymb, &o.unum, o.uctrl, nil)
+		st = C.umfpack_dl_numeric(o.ap, o.ai, o.ax, o.usymb, &o.unum, o.uctrl, o.uinfo)
 		if st != C.UMFPACK_OK {
 			return chk.Err(_linsol_umfpack_err09, Uerr2Text[int(st)])
 		}
-
-		return
-
+		if o.verb {
+			C.umfpack_dl_report_info(o.uctrl, o.uinfo)
+		}
 	}
 
 	// duration
@@ -244,9 +256,12 @@ func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error) {
 	pbR := (*C.double)(unsafe.Pointer(&bR[0]))
 
 	// UMFPACK: solve
-	st := C.umfpack_dl_solve(C.UMFPACK_A, o.ap, o.ai, o.ax, pxR, pbR, o.unum, o.uctrl, nil)
+	st := C.umfpack_dl_solve(C.UMFPACK_A, o.ap, o.ai, o.ax, pxR, pbR, o.unum, o.uctrl, o.uinfo)
 	if st != C.UMFPACK_OK {
 		return chk.Err(_linsol_umfpack_err11, Uerr2Text[int(st)])
+	}
+	if o.verb {
+		C.umfpack_dl_report_info(o.uctrl, o.uinfo)
 	}
 
 	// duration
