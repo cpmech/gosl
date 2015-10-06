@@ -89,6 +89,9 @@
 				<dd><a href="#Int">func Int(low, high int) int</a></dd>
 			
 				
+				<dd><a href="#IntGetGroups">func IntGetGroups(groups [][]int, pool []int)</a></dd>
+			
+				
 				<dd><a href="#IntGetShuffled">func IntGetShuffled(values []int) (shuffled []int)</a></dd>
 			
 				
@@ -104,6 +107,9 @@
 				<dd><a href="#Ints">func Ints(values []int, low, high int)</a></dd>
 			
 				
+				<dd><a href="#LatinIHS">func LatinIHS(dim, n, d int) (x [][]int)</a></dd>
+			
+				
 				<dd><a href="#MTfloat64">func MTfloat64(low, high float64) float64</a></dd>
 			
 				
@@ -117,6 +123,12 @@
 			
 				
 				<dd><a href="#MTints">func MTints(values []int, low, high int)</a></dd>
+			
+				
+				<dd><a href="#PlotHc2d">func PlotHc2d(dirout, fnkey string, x [][]int, xrange [][]float64)</a></dd>
+			
+				
+				<dd><a href="#PlotHc3d">func PlotHc3d(dirout, fnkey string, x [][]int, xrange [][]float64, show bool)</a></dd>
 			
 				
 				<dd><a href="#StatAve">func StatAve(x []float64) (xave float64)</a></dd>
@@ -310,6 +322,8 @@
 			
 				<a href="/src/github.com/cpmech/gosl/rnd/histogram.go">histogram.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/rnd/hypercube.go">hypercube.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/rnd/ltqnorm.go">ltqnorm.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/rnd/random.go">random.go</a>
@@ -489,6 +503,24 @@ Output:
 		
 			
 			
+			<h2 id="IntGetGroups">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=5577:5622#L221">IntGetGroups</a></h2>
+			<pre>func IntGetGroups(groups [][]<a href="/pkg/builtin/#int">int</a>, pool []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+IntGetGroups randomly selects indices from pool separating them in groups
+</p>
+<pre>Input:
+  pool -- all ints.
+Output:
+  groups -- [ngroups][size_of_group] pre-allocated slices
+Note: pool will be shuffled
+</pre>
+
+			
+			
+
+		
+			
+			
 			<h2 id="IntGetShuffled">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4839:4889#L191">IntGetShuffled</a></h2>
 			<pre>func IntGetShuffled(values []<a href="/pkg/builtin/#int">int</a>) (shuffled []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
@@ -553,6 +585,27 @@ Ints generates pseudo random integers between low and high.
  high   -- upper limit
 Output:
  values -- slice to be filled with len(values) numbers
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="LatinIHS">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=640:680#L13">LatinIHS</a></h2>
+			<pre>func LatinIHS(dim, n, d <a href="/pkg/builtin/#int">int</a>) (x [][]<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+LatinIHS implements the improved distributed hypercube sampling algorithm.
+Note: code developed by John Burkardt (GNU LGPL license) --  see source code
+for further information.
+</p>
+<pre>Input:
+ dim -- spatial dimension
+ n   -- number of points to be generated
+ d   -- duplication factor ≥ 1 (~ 5 is reasonable)
+Output:
+ x   -- [dim][n] points
 </pre>
 
 			
@@ -640,6 +693,30 @@ MTints generates pseudo random integers between low and high using the Mersenne 
 Output:
  values -- slice to be filled with len(values) numbers
 </pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PlotHc2d">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=3833:3899#L145">PlotHc2d</a></h2>
+			<pre>func PlotHc2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, x [][]<a href="/pkg/builtin/#int">int</a>, xrange [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+PlotHc2d plots 2D hypercube
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PlotHc3d">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=4364:4441#L166">PlotHc3d</a></h2>
+			<pre>func PlotHc3d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, x [][]<a href="/pkg/builtin/#int">int</a>, xrange [][]<a href="/pkg/builtin/#float64">float64</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+PlotHc3d plots 3D hypercube
+</p>
 
 			
 			

@@ -246,6 +246,9 @@ parsing, handling files, directories, etc.
 				<dd><a href="#ReadTable">func ReadTable(fn string) (keys []string, T map[string][]float64, err error)</a></dd>
 			
 				
+				<dd><a href="#ReadTableOrPanic">func ReadTableOrPanic(fn string) (keys []string, T map[string][]float64)</a></dd>
+			
+				
 				<dd><a href="#RemoveAll">func RemoveAll(key string)</a></dd>
 			
 				
@@ -255,6 +258,12 @@ parsing, handling files, directories, etc.
 				<dd><a href="#Sf">func Sf(msg string, prm ...interface{}) string</a></dd>
 			
 				
+				<dd><a href="#SplitFloats">func SplitFloats(str string) (res []float64)</a></dd>
+			
+				
+				<dd><a href="#SplitInts">func SplitInts(str string) (res []int)</a></dd>
+			
+				
 				<dd><a href="#SplitKeys">func SplitKeys(keys string) []string</a></dd>
 			
 				
@@ -262,6 +271,12 @@ parsing, handling files, directories, etc.
 			
 				
 				<dd><a href="#SplitKeys4">func SplitKeys4(res string) (k0, k1, k2, k3 []string)</a></dd>
+			
+				
+				<dd><a href="#SplitSpacesQuoted">func SplitSpacesQuoted(str string) (res []string)</a></dd>
+			
+				
+				<dd><a href="#SplitWithinParentheses">func SplitWithinParentheses(s string) (res []string)</a></dd>
 			
 				
 				<dd><a href="#StrSpaces">func StrSpaces(n int) (l string)</a></dd>
@@ -585,7 +600,7 @@ CopyFileOver copies file (Linux only with cp), overwriting if it exists already
 		
 			
 			
-			<h2 id="ExtractStrPair">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=349:404#L5">ExtractStrPair</a></h2>
+			<h2 id="ExtractStrPair">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=360:415#L6">ExtractStrPair</a></h2>
 			<pre>func ExtractStrPair(pair, sep <a href="/pkg/builtin/#string">string</a>) (key, val <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 ExtractStrPair extracts the pair from, e.g., &#34;key:val&#34;
@@ -651,7 +666,7 @@ Itob converts from integer to bool
 		
 			
 			
-			<h2 id="JoinKeys">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=3778:3813#L144">JoinKeys</a></h2>
+			<h2 id="JoinKeys">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4024:4059#L145">JoinKeys</a></h2>
 			<pre>func JoinKeys(keys []<a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 JoinKeys join keys separeted by spaces
@@ -663,7 +678,7 @@ JoinKeys join keys separeted by spaces
 		
 			
 			
-			<h2 id="JoinKeys3">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=2017:2077#L67">JoinKeys3</a></h2>
+			<h2 id="JoinKeys3">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=2143:2203#L68">JoinKeys3</a></h2>
 			<pre>func JoinKeys3(k0, k1, k2 []<a href="/pkg/builtin/#string">string</a>, sep <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 JoinKeys3 joins keys from 3 slices into a string with sets separated by sep
@@ -676,7 +691,7 @@ and keys separeted by spaces
 		
 			
 			
-			<h2 id="JoinKeys4">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=2851:2915#L102">JoinKeys4</a></h2>
+			<h2 id="JoinKeys4">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=3037:3101#L103">JoinKeys4</a></h2>
 			<pre>func JoinKeys4(k0, k1, k2, k3 []<a href="/pkg/builtin/#string">string</a>, sep <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 JoinKeys4 joins keys from 4 slices into a string with sets separated by sep
@@ -689,7 +704,7 @@ and keys separeted by spaces
 		
 			
 			
-			<h2 id="JoinKeysPre">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=3910:3969#L149">JoinKeysPre</a></h2>
+			<h2 id="JoinKeysPre">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4156:4215#L150">JoinKeysPre</a></h2>
 			<pre>func JoinKeysPre(prefix <a href="/pkg/builtin/#string">string</a>, keys []<a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 JoinKeysPre join keys separeted by spaces with a prefix
@@ -701,7 +716,7 @@ JoinKeysPre join keys separeted by spaces with a prefix
 		
 			
 			
-			<h2 id="Keycode">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=718:787#L18">Keycode</a></h2>
+			<h2 id="Keycode">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=729:798#L19">Keycode</a></h2>
 			<pre>func Keycode(String <a href="/pkg/builtin/#string">string</a>, Type <a href="/pkg/builtin/#string">string</a>) (keycode <a href="/pkg/builtin/#string">string</a>, found <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 Keycode extracts a keycode from a string such as &#34;!typeA:keycodeA !typeB:keycodeB!typeC:keycodeC&#34;
@@ -715,7 +730,7 @@ Keycode extracts a keycode from a string such as &#34;!typeA:keycodeA !typeB:key
 		
 			
 			
-			<h2 id="Keycodes">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=1365:1413#L44">Keycodes</a></h2>
+			<h2 id="Keycodes">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=1434:1482#L45">Keycodes</a></h2>
 			<pre>func Keycodes(String <a href="/pkg/builtin/#string">string</a>) (keycodes []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Keycodes extracts keys from a keycode (extra) string
@@ -1045,7 +1060,7 @@ ReadLinesFile reads lines from a file and calls ReadLinesCallback to process eac
 		
 			
 			
-			<h2 id="ReadMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=6024:6077#L227">ReadMatrix</a></h2>
+			<h2 id="ReadMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=6289:6342#L237">ReadMatrix</a></h2>
 			<pre>func ReadMatrix(fn <a href="/pkg/builtin/#string">string</a>) (M [][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadMatrix reads a text file in which the float64 type of numeric values represent
@@ -1058,11 +1073,23 @@ a matrix of data. The number of columns must be equal, including for the headers
 		
 			
 			
-			<h2 id="ReadTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5087:5163#L188">ReadTable</a></h2>
+			<h2 id="ReadTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5352:5428#L198">ReadTable</a></h2>
 			<pre>func ReadTable(fn <a href="/pkg/builtin/#string">string</a>) (keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadTable reads a text file in which the first line contains the headers and the next lines the float64
 type of numeric values. The number of columns must be equal, including for the headers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadTableOrPanic">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4961:5033#L187">ReadTableOrPanic</a></h2>
+			<pre>func ReadTableOrPanic(fn <a href="/pkg/builtin/#string">string</a>) (keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+ReadTableOrPanic reads text file as ReadTable; but panic on errors
 </p>
 
 			
@@ -1107,7 +1134,31 @@ Sf wraps Sprintf
 		
 			
 			
-			<h2 id="SplitKeys">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4122:4158#L160">SplitKeys</a></h2>
+			<h2 id="SplitFloats">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=5774:5818#L217">SplitFloats</a></h2>
+			<pre>func SplitFloats(str <a href="/pkg/builtin/#string">string</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SplitFloats splits space-separated float numbers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitInts">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=5563:5601#L207">SplitInts</a></h2>
+			<pre>func SplitInts(str <a href="/pkg/builtin/#string">string</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+SplitInts splits space-separated integers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitKeys">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4368:4404#L161">SplitKeys</a></h2>
 			<pre>func SplitKeys(keys <a href="/pkg/builtin/#string">string</a>) []<a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 SplitKeys splits keys separeted by spaces
@@ -1119,7 +1170,7 @@ SplitKeys splits keys separeted by spaces
 		
 			
 			
-			<h2 id="SplitKeys3">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=2327:2376#L80">SplitKeys3</a></h2>
+			<h2 id="SplitKeys3">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=2453:2502#L81">SplitKeys3</a></h2>
 			<pre>func SplitKeys3(res <a href="/pkg/builtin/#string">string</a>) (k0, k1, k2 []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SplitKeys3 splits a string with three sets of keys separated by comma
@@ -1131,10 +1182,35 @@ SplitKeys3 splits a string with three sets of keys separated by comma
 		
 			
 			
-			<h2 id="SplitKeys4">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=3234:3287#L119">SplitKeys4</a></h2>
+			<h2 id="SplitKeys4">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=3420:3473#L120">SplitKeys4</a></h2>
 			<pre>func SplitKeys4(res <a href="/pkg/builtin/#string">string</a>) (k0, k1, k2, k3 []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 SplitKeys4 splits a string with four sets of keys separated by comma
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitSpacesQuoted">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4529:4578#L166">SplitSpacesQuoted</a></h2>
+			<pre>func SplitSpacesQuoted(str <a href="/pkg/builtin/#string">string</a>) (res []<a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+SplitSpacesQuoted splits string with quoted substrings. e.g. &#34;  a,b, &#39;c&#39;, \&#34;d\&#34;  &#34;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitWithinParentheses">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=5063:5115#L188">SplitWithinParentheses</a></h2>
+			<pre>func SplitWithinParentheses(s <a href="/pkg/builtin/#string">string</a>) (res []<a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+SplitWithinParentheses extracts arguments (substrings) within brackets
+e.g.: &#34;(arg1, (arg2.1, arg2.2),  arg3, arg4, (arg5.1,arg5.2,  arg5.3 ) )&#34;
 </p>
 
 			

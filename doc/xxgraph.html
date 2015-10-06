@@ -36,6 +36,8 @@
 			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
 			
 			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
 			</dl>
 		</div>
 		<!-- The package's Name is printed as title by the top-level template -->
@@ -65,13 +67,34 @@
 			
 			
 			
+				
+				<dd><a href="#BuildIndicatorMatrix">func BuildIndicatorMatrix(nv int, pth []int) (x [][]int)</a></dd>
+			
+				
+				<dd><a href="#CheckIndicatorMatrix">func CheckIndicatorMatrix(source, target int, x [][]int, verbose bool) (errPath, errLoop int)</a></dd>
+			
+				
+				<dd><a href="#CheckIndicatorMatrixRowMaj">func CheckIndicatorMatrixRowMaj(source, target, nv int, xmat []int) (errPath, errLoop int)</a></dd>
+			
+				
+				<dd><a href="#PrintIndicatorMatrix">func PrintIndicatorMatrix(x [][]int) (l string)</a></dd>
+			
 			
 				
 				<dd><a href="#Graph">type Graph</a></dd>
 				
+					
+					<dd>&nbsp; &nbsp; <a href="#ReadGraphTable">func ReadGraphTable(fname string, bargera bool) *Graph</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Graph.CalcDist">func (o *Graph) CalcDist() (err error)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Graph.Draw">func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64, verts_lbls map[int]string, verts_fsz float64, verts_clr string, edges_lbls map[int]string, edges_fsz float64, edges_clr string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Graph.GetEdge">func (o *Graph) GetEdge(i, j int) (k int, err error)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Graph.HashEdgeKey">func (o *Graph) HashEdgeKey(i, j int) (edge int)</a></dd>
@@ -89,6 +112,28 @@
 					<dd>&nbsp; &nbsp; <a href="#Graph.StrDistMatrix">func (o *Graph) StrDistMatrix() (l string)</a></dd>
 				
 			
+				
+				<dd><a href="#Mask_t">type Mask_t</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Munkres">type Munkres</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Munkres.Init">func (o *Munkres) Init(nrow, ncol int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Munkres.Run">func (o *Munkres) Run()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Munkres.SetCostMatrix">func (o *Munkres) SetCostMatrix(C [][]float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Munkres.StrCostMatrix">func (o *Munkres) StrCostMatrix() (l string)</a></dd>
+				
+			
 			
 			</dl>
 			</div><!-- #manual-nav -->
@@ -100,7 +145,11 @@
 			<p>
 			<span style="font-size:90%">
 			
+				<a href="/src/github.com/cpmech/gosl/graph/auxiliary.go">auxiliary.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/graph/graph.go">graph.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/graph/munkres.go">munkres.go</a>
 			
 			</span>
 			</p>
@@ -155,10 +204,46 @@
 		
 		
 		
+			
+			
+			<h2 id="BuildIndicatorMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/graph/auxiliary.go?s=868:924#L29">BuildIndicatorMatrix</a></h2>
+			<pre>func BuildIndicatorMatrix(nv <a href="/pkg/builtin/#int">int</a>, pth []<a href="/pkg/builtin/#int">int</a>) (x [][]<a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
 		
 			
 			
-			<h2 id="Graph">type <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=407:969#L9">Graph</a></h2>
+			<h2 id="CheckIndicatorMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/graph/auxiliary.go?s=1042:1135#L38">CheckIndicatorMatrix</a></h2>
+			<pre>func CheckIndicatorMatrix(source, target <a href="/pkg/builtin/#int">int</a>, x [][]<a href="/pkg/builtin/#int">int</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) (errPath, errLoop <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="CheckIndicatorMatrixRowMaj">func <a href="https://github.com/cpmech/gosl/blob/master/graph/auxiliary.go?s=1722:1812#L77">CheckIndicatorMatrixRowMaj</a></h2>
+			<pre>func CheckIndicatorMatrixRowMaj(source, target, nv <a href="/pkg/builtin/#int">int</a>, xmat []<a href="/pkg/builtin/#int">int</a>) (errPath, errLoop <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PrintIndicatorMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/graph/auxiliary.go?s=257:304#L2">PrintIndicatorMatrix</a></h2>
+			<pre>func PrintIndicatorMatrix(x [][]<a href="/pkg/builtin/#int">int</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Graph">type <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=418:980#L10">Graph</a></h2>
 			<pre>type Graph struct {
 
     <span class="comment">// input</span>
@@ -187,10 +272,31 @@ Graph defines a graph structure
 			
 
 			
+				
+				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=7303:7357#L261">ReadGraphTable</a></h3>
+				<pre>func ReadGraphTable(fname <a href="/pkg/builtin/#string">string</a>, bargera <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Graph">Graph</a></pre>
+				<p>
+ReadGraphTable reads data and allocate graph
+</p>
+
+				
+				
+			
 
 			
 				
-				<h3 id="Graph.Draw">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5039:5243#L180">Draw</a></h3>
+				<h3 id="Graph.CalcDist">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3694:3732#L119">CalcDist</a></h3>
+				<pre>func (o *<a href="#Graph">Graph</a>) CalcDist() (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+CalcDist computes distances beetween all vertices and initialises &#39;Next&#39; matrix
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Graph.Draw">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5315:5519#L192">Draw</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Draw(dirout, fname <a href="/pkg/builtin/#string">string</a>, r, W, dwt, arrow_scale <a href="/pkg/builtin/#float64">float64</a>,
     verts_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, verts_fsz <a href="/pkg/builtin/#float64">float64</a>, verts_clr <a href="/pkg/builtin/#string">string</a>,
     edges_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, edges_fsz <a href="/pkg/builtin/#float64">float64</a>, edges_clr <a href="/pkg/builtin/#string">string</a>)</pre>
@@ -208,7 +314,18 @@ arrow_scale -- scale for arrows. use 0 for default value
 				
 			
 				
-				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4181:4229#L144">HashEdgeKey</a></h3>
+				<h3 id="Graph.GetEdge">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1909:1961#L51">GetEdge</a></h3>
+				<pre>func (o *<a href="#Graph">Graph</a>) GetEdge(i, j <a href="/pkg/builtin/#int">int</a>) (k <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes ides
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4457:4505#L156">HashEdgeKey</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) HashEdgeKey(i, j <a href="/pkg/builtin/#int">int</a>) (edge <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 HashEdgeKey creates a unique hash key identifying an edge
@@ -219,7 +336,7 @@ HashEdgeKey creates a unique hash key identifying an edge
 				
 			
 				
-				<h3 id="Graph.Init">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1234:1328#L30">Init</a></h3>
+				<h3 id="Graph.Init">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1245:1339#L31">Init</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Init(edges [][]<a href="/pkg/builtin/#int">int</a>, weightsE []<a href="/pkg/builtin/#float64">float64</a>, verts [][]<a href="/pkg/builtin/#float64">float64</a>, weightsV []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises graph
@@ -236,7 +353,7 @@ Init initialises graph
 				
 			
 				
-				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3147:3187#L93">Path</a></h3>
+				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3445:3485#L105">Path</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Path(s, t <a href="/pkg/builtin/#int">int</a>) (p []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Path returns the path from source (s) to destination (t)
@@ -249,7 +366,7 @@ Path returns the path from source (s) to destination (t)
 				
 			
 				
-				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2540:2596#L67">ShortestPaths</a></h3>
+				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2849:2905#L79">ShortestPaths</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) ShortestPaths(method <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ShortestPaths computes the shortest paths in a graph defined as follows
@@ -277,10 +394,130 @@ Input:
 				
 			
 				
-				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4322:4364#L149">StrDistMatrix</a></h3>
+				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4598:4640#L161">StrDistMatrix</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) StrDistMatrix() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 StrDistMatrix returns a string representation of Dist matrix
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Mask_t">type <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=296:311#L5">Mask_t</a></h2>
+			<pre>type Mask_t <a href="/pkg/builtin/#int">int</a></pre>
+			
+
+			
+				<pre>const (
+    <span id="NONE">NONE</span> <a href="#Mask_t">Mask_t</a> = <a href="/pkg/builtin/#iota">iota</a>
+    <span id="STAR">STAR</span>
+    <span id="PRIM">PRIM</span>
+)</pre>
+				
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Munkres">type <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=883:1777#L24">Munkres</a></h2>
+			<pre>type Munkres struct {
+
+    <span class="comment">// main</span>
+    C     [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [nrow][ncol] cost matrix</span>
+    Cori  [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [nrow][ncol] original cost matrix</span>
+    Links []<a href="/pkg/builtin/#int">int</a>       <span class="comment">// [nrow] will contain links/assignments after Run(), where j := o.Links[i] means that i is assigned to j. -1 means no assignment/link</span>
+    Cost  <a href="/pkg/builtin/#float64">float64</a>     <span class="comment">// total cost after Run() and links are established</span>
+
+    <span class="comment">// auxiliary</span>
+    M [][]<a href="#Mask_t">Mask_t</a> <span class="comment">// [nrow][ncol] mask matrix. If Mij==1, then Cij is a starred zero. If Mij==2, then Cij is a primed zero</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Munkres (Hungarian algorithm) method to solve the assignment problem
+</p>
+<pre>based on code by Bob Pilgrim from <a href="http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html">http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html</a>
+Note: this method runs in O(n²), in the worst case; therefore is not efficient for large matrix
+ Example:
+         $ | Clean  Sweep   Wash
+    -------|--------------------
+    Fry    |   [2]      3      3
+    Leela  |     3    [2]      3
+    Bender |     3      3    [2]
+    minimum cost = 6
+Note: costs must be positive
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Munkres.Init">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=1818:1856#L44">Init</a></h3>
+				<pre>func (o *<a href="#Munkres">Munkres</a>) Init(nrow, ncol <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Init initialises Munkres&#39; structure
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Munkres.Run">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=2848:2871#L77">Run</a></h3>
+				<pre>func (o *<a href="#Munkres">Munkres</a>) Run()</pre>
+				<p>
+Run runs the iterative algorithm
+</p>
+<pre>Output:
+ o.Links -- will contain assignments, where len(assignments) == nrow and
+            j := o.Links[i] means that i is assigned to j
+            -1 means no assignment/link
+ o.Cost -- will have the total cost by following links
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Munkres.SetCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=2401:2447#L62">SetCostMatrix</a></h3>
+				<pre>func (o *<a href="#Munkres">Munkres</a>) SetCostMatrix(C [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+SetCostMatrix sets cost matrix by copying from C to internal o.C
+</p>
+<pre>Note: costs must be positive
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Munkres.StrCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=8797:8841#L329">StrCostMatrix</a></h3>
+				<pre>func (o *<a href="#Munkres">Munkres</a>) StrCostMatrix() (l <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+StrCostMatrix returns a representation of cost matrix with masks and covers
 </p>
 
 				
@@ -295,6 +532,35 @@ StrDistMatrix returns a string representation of Dist matrix
 
 
 
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+	<table class="dir">
+	<tr>
+	<th>Name</th>
+	<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+	<th style="text-align: left; width: auto">Synopsis</th>
+	</tr>
+	
+		<tr>
+		<td><a href="..">..</a></td>
+		</tr>
+	
+	
+		
+			<tr>
+			<td class="name"><a href="data/">data</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+	</table>
+
+	
 
 </div><!-- page -->
 <div id="footer">
