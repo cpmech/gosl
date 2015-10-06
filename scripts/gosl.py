@@ -588,7 +588,7 @@ def Quad(x0,y0, x1,y1, x2,y2, x3,y3, fc='#e1eeff', ec='black', zorder=0, alpha=1
     gca().add_patch(Polygon(array([[x0,y0],[x1,y1],[x2,y2],[x3,y3]]), ec=ec, fc=fc, ls=ls, zorder=zorder, alpha=alpha, lw=lw, clip_on=clip_on))
 
 
-def Contour(X,Y,Z, label='', nlevels=None, cmapidx=0, fmt='%g', fsz=10, inline=0, wire=True, cbar=True, zorder=None, markZero=''):
+def Contour(X,Y,Z, label='', nlevels=None, cmapidx=0, fmt='%g', fsz=10, inline=0, wire=True, cbar=True, zorder=None, markZero='', clabels=True):
     """
     Plot contour
     ============
@@ -603,13 +603,15 @@ def Contour(X,Y,Z, label='', nlevels=None, cmapidx=0, fmt='%g', fsz=10, inline=0
     c1 = contourf (X,Y,Z, cmap=Cmap(cmapidx), levels=L, zorder=None)
     if wire:
         c2 = contour (X,Y,Z, nlevels=nlevels, colors=('k'), levels=L, zorder=None)
-        clabel (c2, inline=inline, fontsize=fsz)
+        if clabels:
+            clabel (c2, inline=inline, fontsize=fsz)
     if cbar:
         cb = colorbar (c1, format=fmt)
         cb.ax.set_ylabel (label)
     if markZero:
         c3 = contour(X,Y,Z, levels=[0], colors=[markZero], linewidths=[2])
-        clabel(c3, inline=inline, fontsize=fsz)
+        if clabels:
+            clabel(c3, inline=inline, fontsize=fsz)
 
 
 def GetClr(idx=0, scheme=1): # color
