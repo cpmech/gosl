@@ -4,6 +4,11 @@
 
 package chk
 
+import (
+	"reflect"
+	"runtime"
+)
+
 // max returns the max between two floats
 func max(a, b float64) float64 {
 	if a > b {
@@ -18,4 +23,9 @@ func min(a, b float64) float64 {
 		return a
 	}
 	return b
+}
+
+// GetFunctionName returns the name of a function
+func GetFunctionName(i interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }

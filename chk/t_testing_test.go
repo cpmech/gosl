@@ -103,3 +103,28 @@ func Test_StrAssert(tst *testing.T) {
 	PrintOk("the next error message is")
 	StrAssert("rambo", "terminator")
 }
+
+func myfunction() {}
+
+func Test_FcnName(tst *testing.T) {
+
+	//Verbose = true
+	PrintTitle("FcnName")
+
+	name := GetFunctionName(myfunction)
+	if Verbose {
+		fmt.Printf("name = %v\n", name)
+	}
+	if name != "github.com/cpmech/gosl/chk.myfunction" {
+		tst.Errorf("function name is incorrect\n")
+	}
+
+	fcn := func() {}
+	name = GetFunctionName(fcn)
+	if Verbose {
+		fmt.Printf("name = %v\n", name)
+	}
+	if name != "github.com/cpmech/gosl/chk.Test_FcnName.func1" {
+		tst.Errorf("function name is incorrect\n")
+	}
+}
