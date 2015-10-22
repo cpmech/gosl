@@ -8,10 +8,10 @@ import "github.com/cpmech/gosl/io"
 
 // Sty holds data for drawing shapes
 type Sty struct {
-	Fc     string // face color
-	Ec     string // edge color
-	Lw     int    // linewidth
-	Closed bool   // closed shape
+	Fc     string  // face color
+	Ec     string  // edge color
+	Lw     float64 // linewidth
+	Closed bool    // closed shape
 }
 
 // Fmt holds data for ploting lines

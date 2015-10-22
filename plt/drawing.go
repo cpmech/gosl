@@ -47,7 +47,7 @@ func DrawPolyline(P [][]float64, sd *Sty, args string) {
 	io.Ff(&bb, "commands%d, vertices%d = zip(*dat%d)\n", n, n, n)
 	io.Ff(&bb, "ph%d = MPLPath(vertices%d, commands%d)\n", n, n, n)
 	io.Ff(&bb, "pc%d = PathPatch(ph%d", n, n)
-	io.Ff(&bb, ", fc='%s', ec='%s', lw=%d", sd.Fc, sd.Ec, sd.Lw)
+	io.Ff(&bb, ", fc='%s', ec='%s', lw=%g", sd.Fc, sd.Ec, sd.Lw)
 	if len(args) > 0 {
 		io.Ff(&bb, ", %s)\n", args)
 	} else {
