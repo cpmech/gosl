@@ -285,24 +285,26 @@ func (o Bins) String() string {
 }
 
 // Draw2d draws bins' grid
-func (o *Bins) Draw2d(withtxt, setup bool, selBins map[int]bool) {
+func (o *Bins) Draw2d(withtxt, withgrid, setup bool, selBins map[int]bool) {
 
-	// horizontal lines
-	x := []float64{o.Xi[0], o.Xi[0] + o.L[0] + o.S}
-	y := make([]float64, 2)
-	for j := 0; j < o.N[1]+1; j++ {
-		y[0] = o.Xi[1] + float64(j)*o.S
-		y[1] = y[0]
-		plt.Plot(x, y, "'-', color='#4f3677', clip_on=0")
-	}
+	if withgrid {
+		// horizontal lines
+		x := []float64{o.Xi[0], o.Xi[0] + o.L[0] + o.S}
+		y := make([]float64, 2)
+		for j := 0; j < o.N[1]+1; j++ {
+			y[0] = o.Xi[1] + float64(j)*o.S
+			y[1] = y[0]
+			plt.Plot(x, y, "'-', color='#4f3677', clip_on=0")
+		}
 
-	// vertical lines
-	y[0] = o.Xi[1]
-	y[1] = o.Xi[1] + o.L[1] + o.S
-	for i := 0; i < o.N[0]+1; i++ {
-		x[0] = o.Xi[0] + float64(i)*o.S
-		x[1] = x[0]
-		plt.Plot(x, y, "'k-', color='#4f3677', clip_on=0")
+		// vertical lines
+		y[0] = o.Xi[1]
+		y[1] = o.Xi[1] + o.L[1] + o.S
+		for i := 0; i < o.N[0]+1; i++ {
+			x[0] = o.Xi[0] + float64(i)*o.S
+			x[1] = x[0]
+			plt.Plot(x, y, "'k-', color='#4f3677', clip_on=0")
+		}
 	}
 
 	// selected bins
@@ -317,7 +319,7 @@ func (o *Bins) Draw2d(withtxt, setup bool, selBins map[int]bool) {
 			{x + o.S, y},
 			{x + o.S, y + o.S},
 			{x, y + o.S},
-		}, &plt.Sty{Fc: "#fbefdc", Ec: "k", Lw: 1.2, Closed: true}, "clip_on=0, zorder=10")
+		}, &plt.Sty{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true}, "clip_on=0")
 	}
 
 	// plot items
@@ -326,7 +328,7 @@ func (o *Bins) Draw2d(withtxt, setup bool, selBins map[int]bool) {
 			continue
 		}
 		for _, entry := range bin.Entries {
-			plt.PlotOne(entry.X[0], entry.X[1], "'r.', clip_on=0, zorder=20")
+			plt.PlotOne(entry.X[0], entry.X[1], "'r.', clip_on=0")
 		}
 	}
 
@@ -337,7 +339,7 @@ func (o *Bins) Draw2d(withtxt, setup bool, selBins map[int]bool) {
 				idx := i + j*o.N[0]
 				x := o.Xi[0] + float64(i)*o.S + 0.02*o.S
 				y := o.Xi[1] + float64(j)*o.S + 0.02*o.S
-				plt.Text(x, y, io.Sf("%d", idx), "size=7, zorder=30")
+				plt.Text(x, y, io.Sf("%d", idx), "size=7")
 			}
 		}
 	}
