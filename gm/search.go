@@ -287,7 +287,7 @@ func (o Bins) String() string {
 }
 
 // Draw2d draws bins' grid
-func (o *Bins) Draw2d(withtxt, withgrid, setup bool, selBins map[int]bool) {
+func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[int]bool) {
 
 	if withgrid {
 		// horizontal lines
@@ -325,12 +325,14 @@ func (o *Bins) Draw2d(withtxt, withgrid, setup bool, selBins map[int]bool) {
 	}
 
 	// plot items
-	for _, bin := range o.All {
-		if bin == nil {
-			continue
-		}
-		for _, entry := range bin.Entries {
-			plt.PlotOne(entry.X[0], entry.X[1], "'r.', clip_on=0")
+	if withentries {
+		for _, bin := range o.All {
+			if bin == nil {
+				continue
+			}
+			for _, entry := range bin.Entries {
+				plt.PlotOne(entry.X[0], entry.X[1], "'r.', clip_on=0")
+			}
 		}
 	}
 
