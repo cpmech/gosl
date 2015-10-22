@@ -10,6 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 // HashPoint returns a unique id of a point
@@ -107,7 +108,8 @@ func (o *Bins) Append(x []float64, id int) (err error) {
 	if bin == nil {
 		return chk.Err("bin index %v is out of range", idx)
 	}
-	entry := BinEntry{id, x}
+	xcopy := utl.DblCopy(x)
+	entry := BinEntry{id, xcopy}
 	bin.Entries = append(bin.Entries, &entry)
 	return
 }
