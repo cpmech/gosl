@@ -104,7 +104,7 @@ func Test_bins02(tst *testing.T) {
 
 	// bins
 	var bins Bins
-	bins.Init([]float64{-0.2, -0.2}, []float64{0.8, 0.8}, 5)
+	bins.Init([]float64{-0.2, -0.2}, []float64{0.8, 1.8}, 5)
 
 	// fill bins structure
 	maxit := 5 // number of entries
@@ -112,7 +112,7 @@ func Test_bins02(tst *testing.T) {
 	for k := 0; k < maxit; k++ {
 		x := float64(k) / float64(maxit)
 		ID[k] = k
-		err := bins.Append([]float64{x, x}, ID[k])
+		err := bins.Append([]float64{x, 2*x + 0.2}, ID[k])
 		if err != nil {
 			chk.Panic(err.Error())
 		}
@@ -120,7 +120,7 @@ func Test_bins02(tst *testing.T) {
 
 	// add more points to bins
 	for i := 0; i < 5; i++ {
-		err := bins.Append([]float64{float64(i) * 0.1, 0.8}, 100+i)
+		err := bins.Append([]float64{float64(i) * 0.1, 1.8}, 100+i)
 		if err != nil {
 			chk.Panic(err.Error())
 		}
@@ -134,12 +134,12 @@ func Test_bins02(tst *testing.T) {
 	}
 
 	// find points along diagonal
-	ids := bins.FindAlongSegment([]float64{0.0, 0.0}, []float64{0.8, 0.8}, 1e-8)
+	ids := bins.FindAlongSegment([]float64{0.0, 0.2}, []float64{0.8, 1.8}, 1e-8)
 	io.Pforan("ids = %v\n", ids)
 	chk.Ints(tst, "ids", ids, ID)
 
 	// find additional points
-	ids = bins.FindAlongSegment([]float64{-0.2, 0.8}, []float64{0.8, 0.8}, 1e-8)
+	ids = bins.FindAlongSegment([]float64{-0.2, 1.8}, []float64{0.8, 1.8}, 1e-8)
 	io.Pfcyan("ids = %v\n", ids)
 	chk.Ints(tst, "ids", ids, []int{100, 101, 102, 103, 104, 4})
 
@@ -147,6 +147,8 @@ func Test_bins02(tst *testing.T) {
 	if chk.Verbose {
 		plt.SetForPng(1, 500, 150)
 		bins.Draw2d(true, true, true, true, map[int]bool{8: true, 9: true, 10: true})
+		plt.SetXnticks(15)
+		plt.SetYnticks(15)
 		plt.SaveD("/tmp/gosl/gm", "test_bins02.png")
 	}
 }

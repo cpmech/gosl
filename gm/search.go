@@ -52,15 +52,15 @@ type Bins struct {
 	Xi   []float64 // [ndim] left/lower-most point
 	Xf   []float64 // [ndim] right/upper-most point
 	L    []float64 // [ndim] whole box lengths
+	S    []float64 // size of bins
 	N    []int     // [ndim] number of divisions
-	S    float64   // size of bins
 	All  []*Bin    // [nbins] all bins (there will be an extra bin row along each dimension)
 	tmp  []int     // [ndim] temporary (auxiliary) slice
 }
 
 // xi   -- [ndim] initial positions
 // xf   -- [ndim] final positions
-// ndiv -- number of divisions for the maximun length
+// ndiv -- number of divisions for the maximum length
 func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 
 	// check for out-of-range values
@@ -73,22 +73,17 @@ func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
 
 	// allocate length and number of division slices
 	o.L = make([]float64, o.Ndim)
-	o.N = make([]int, o.Ndim)
+	o.S = make([]float64, o.Ndim)
 	for k := 0; k < o.Ndim; k++ {
 		o.L[k] = o.Xf[k] - o.Xi[k]
+		o.S[k] = o.L[k] / float64(ndiv)
 	}
-
-	// maximun length
-	lmax := math.Max(o.L[0], o.L[1])
-	if o.Ndim == 3 {
-		lmax = math.Max(lmax, o.L[2])
-	}
-	o.S = lmax / float64(ndiv)
 
 	// number of divisions
+	o.N = make([]int, o.Ndim)
 	nbins := 1
 	for k := 0; k < o.Ndim; k++ {
-		o.N[k] = int(o.L[k]/o.S) + 1
+		o.N[k] = int(o.L[k]/o.S[k]) + 1
 		nbins *= o.N[k]
 	}
 
@@ -170,7 +165,7 @@ func (o Bins) CalcIdx(x []float64) int {
 		if x[k] < o.Xi[k] || x[k] > o.Xf[k] {
 			return -1
 		}
-		o.tmp[k] = int((x[k] - o.Xi[k]) / o.S)
+		o.tmp[k] = int((x[k] - o.Xi[k]) / o.S[k])
 	}
 	idx := o.tmp[0] + o.tmp[1]*o.N[0]
 	if o.Ndim > 2 {
@@ -184,8 +179,12 @@ func (o Bins) CalcIdx(x []float64) int {
 func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 
 	// auxiliary variables
-	var sbins []*Bin  // selected bins
-	btol := 0.9 * o.S // tolerance for bins
+	var sbins []*Bin // selected bins
+	lmax := utl.Max(o.S[0], o.S[1])
+	if o.Ndim == 3 {
+		lmax = utl.Max(lmax, o.S[2])
+	}
+	btol := 0.9 * lmax // tolerance for bins
 	var p, pi, pf Point
 	pi.X = xi[0]
 	pf.X = xf[0]
@@ -213,14 +212,14 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 		// coordinates of bin center
 		i = idx % o.N[0] // indices representing bin
 		j = (idx % nxy) / o.N[0]
-		x = o.Xi[0] + float64(i)*o.S // coordinates of bin corner
-		y = o.Xi[1] + float64(j)*o.S
-		x += o.S / 2.0
-		y += o.S / 2.0
+		x = o.Xi[0] + float64(i)*o.S[0] // coordinates of bin corner
+		y = o.Xi[1] + float64(j)*o.S[1]
+		x += o.S[0] / 2.0
+		y += o.S[1] / 2.0
 		if o.Ndim == 3 {
 			k = idx / nxy
-			z = o.Xi[2] + float64(k)*o.S
-			z += o.S / 2.0
+			z = o.Xi[2] + float64(k)*o.S[2]
+			z += o.S[2] / 2.0
 		}
 
 		// check if bin is near line
@@ -291,19 +290,19 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 
 	if withgrid {
 		// horizontal lines
-		x := []float64{o.Xi[0], o.Xi[0] + o.L[0] + o.S}
+		x := []float64{o.Xi[0], o.Xi[0] + o.L[0] + o.S[0]}
 		y := make([]float64, 2)
 		for j := 0; j < o.N[1]+1; j++ {
-			y[0] = o.Xi[1] + float64(j)*o.S
+			y[0] = o.Xi[1] + float64(j)*o.S[1]
 			y[1] = y[0]
 			plt.Plot(x, y, "'-', color='#4f3677', clip_on=0")
 		}
 
 		// vertical lines
 		y[0] = o.Xi[1]
-		y[1] = o.Xi[1] + o.L[1] + o.S
+		y[1] = o.Xi[1] + o.L[1] + o.S[1]
 		for i := 0; i < o.N[0]+1; i++ {
-			x[0] = o.Xi[0] + float64(i)*o.S
+			x[0] = o.Xi[0] + float64(i)*o.S[0]
 			x[1] = x[0]
 			plt.Plot(x, y, "'k-', color='#4f3677', clip_on=0")
 		}
@@ -314,13 +313,13 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 	for idx, _ := range selBins {
 		i := idx % o.N[0] // indices representing bin
 		j := (idx % nxy) / o.N[0]
-		x := o.Xi[0] + float64(i)*o.S // coordinates of bin corner
-		y := o.Xi[1] + float64(j)*o.S
+		x := o.Xi[0] + float64(i)*o.S[0] // coordinates of bin corner
+		y := o.Xi[1] + float64(j)*o.S[1]
 		plt.DrawPolyline([][]float64{
 			{x, y},
-			{x + o.S, y},
-			{x + o.S, y + o.S},
-			{x, y + o.S},
+			{x + o.S[0], y},
+			{x + o.S[0], y + o.S[1]},
+			{x, y + o.S[1]},
 		}, &plt.Sty{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true}, "clip_on=0")
 	}
 
@@ -341,8 +340,8 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 		for j := 0; j < o.N[1]; j++ {
 			for i := 0; i < o.N[0]; i++ {
 				idx := i + j*o.N[0]
-				x := o.Xi[0] + float64(i)*o.S + 0.02*o.S
-				y := o.Xi[1] + float64(j)*o.S + 0.02*o.S
+				x := o.Xi[0] + float64(i)*o.S[0] + 0.02*o.S[0]
+				y := o.Xi[1] + float64(j)*o.S[1] + 0.02*o.S[1]
 				plt.Text(x, y, io.Sf("%d", idx), "size=7")
 			}
 		}
@@ -351,6 +350,6 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 	// setup
 	if setup {
 		plt.Equal()
-		plt.AxisRange(o.Xi[0]-0.1, o.Xf[0]+o.S+0.1, o.Xi[1]-0.1, o.Xf[1]+o.S+0.1)
+		plt.AxisRange(o.Xi[0]-0.1, o.Xf[0]+o.S[0]+0.1, o.Xi[1]-0.1, o.Xf[1]+o.S[1]+0.1)
 	}
 }
