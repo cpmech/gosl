@@ -6,6 +6,7 @@ package rnd
 
 import (
 	"math"
+	"time"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
@@ -225,5 +226,24 @@ func StatTable(x [][]float64, std, withZ bool) (y, z [][]float64) {
 			z[0][i], z[1][i], z[2][i], z[3][i] = StatBasic(y[i], std)
 		}
 	}
+	return
+}
+
+// StatDur generates stat about duration
+func StatDur(durs []time.Duration) (min, ave, max, sum time.Duration) {
+	if len(durs) == 0 {
+		return
+	}
+	min, max = durs[0], durs[0]
+	for _, d := range durs {
+		if d < min {
+			min = d
+		}
+		if d > max {
+			max = d
+		}
+		sum += d
+	}
+	ave = sum / time.Duration(int64(len(durs)))
 	return
 }
