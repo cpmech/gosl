@@ -74,8 +74,15 @@ func (o *Munkres) SetCostMatrix(C [][]float64) {
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.ncol; j++ {
 			o.C[i][j] = C[i][j]
+			o.M[i][j] = NONE
 		}
+		o.row_covered[i] = false
 	}
+	for j := 0; j < o.ncol; j++ {
+		o.col_covered[j] = false
+	}
+	o.path_row_0 = 0
+	o.path_col_0 = 0
 }
 
 // Run runs the iterative algorithm
