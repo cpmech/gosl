@@ -75,6 +75,9 @@ func (o *Munkres) SetCostMatrix(C [][]float64) {
 		for j := 0; j < o.ncol; j++ {
 			o.C[i][j] = C[i][j]
 			o.M[i][j] = NONE
+			if math.IsNaN(o.C[i][j]) {
+				chk.Panic("cannot set cost matrix because of NaN value")
+			}
 		}
 		o.row_covered[i] = false
 	}
