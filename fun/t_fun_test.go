@@ -39,7 +39,7 @@ func Test_fun01(tst *testing.T) {
 
 	tmax := 3.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
 		PlotT(o, "/tmp/gosl", "ref-dec-gen-01.png", 0.0, tmax, xcte, 201, "", withG, withH, save, show, func() {
@@ -79,7 +79,7 @@ func Test_fun02(tst *testing.T) {
 	tmax := 300.0
 	//tmax := 140.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
 		PlotT(o, "/tmp/gosl", "ref-dec-sp1-01.png", tmin, tmax, xcte, 201, "lw=2,color='orange'", withG, withH, save, show, func() {
@@ -131,7 +131,7 @@ func Test_fun03(tst *testing.T) {
 	tmin := 0.0
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		withG, withH, save, show := true, true, false, true
 		plt.Reset()
 		PlotT(cte, "/tmp/gosl", "fun-cte-01.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
@@ -170,7 +170,7 @@ func Test_fun04(tst *testing.T) {
 	tmin := 0.0
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
 		PlotT(lin, "/tmp/gosl", "fun-lin-01.png", tmin, tmax, xcte, 11, "", withG, withH, save, show, nil)
@@ -215,8 +215,7 @@ func Test_fun06a(tst *testing.T) {
 	tmin := -1.0
 	tmax := 6.0
 	xcte := []float64{0, 0, 0}
-	//if true {
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, true, false
 		PlotT(fun, "/tmp/gosl", "fun-ptsA-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
@@ -248,8 +247,7 @@ func Test_fun06b(tst *testing.T) {
 	tmin := 0.0
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
-	//if true {
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, true, false
 		PlotT(fun, "/tmp/gosl", "fun-ptsB-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
@@ -281,8 +279,7 @@ func Test_fun06c(tst *testing.T) {
 	tmin := 0.0
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
-	//if true {
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, true, false
 		PlotT(fun, "/tmp/gosl", "fun-ptsC-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
@@ -314,7 +311,7 @@ func Test_fun07(tst *testing.T) {
 	tmin := 0.0
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
 		PlotT(fun, "/tmp/gosl", "fun-exc1-01.png", tmin, tmax, xcte, 41, "'o-'", withG, withH, save, show, nil)
@@ -345,7 +342,7 @@ func Test_fun08(tst *testing.T) {
 	tmin := 0.0
 	tmax := 7.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
 		PlotT(fun, "/tmp/gosl", "fun-exc2-01.png", tmin, tmax, xcte, 41, "'o-'", withG, withH, save, show, nil)
@@ -376,7 +373,7 @@ func Test_fun09(tst *testing.T) {
 	tmin := 0.0
 	tmax := 2.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
 		PlotT(fun, "/tmp/gosl", "fun-cos-01.png", tmin, tmax, xcte, 41, "'.-'", withG, withH, save, show, nil)
@@ -408,7 +405,7 @@ func Test_fun10(tst *testing.T) {
 	tmin := 0.0
 	tmax := 3.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
 		PlotT(fun, "/tmp/gosl", "fun-rmp-01.png", tmin, tmax, xcte, 4, "'.-'", withG, withH, save, show, nil)
@@ -440,7 +437,7 @@ func Test_fun11(tst *testing.T) {
 	tmin := 0.0
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
-	if false {
+	if chk.Verbose {
 		plt.Reset()
 		withG, withH, save, show := true, true, false, true
 		PlotT(fun, "/tmp/gosl", "fun-ref-inc-rl1-01.png", tmin, tmax, xcte, 41, "'.-'", withG, withH, save, show, nil)
@@ -489,8 +486,7 @@ func Test_fun12(tst *testing.T) {
 	tmin := 0.0
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
-	//if true {
-	if false {
+	if chk.Verbose {
 		withG, withH, save, show := true, true, false, true
 		plt.Reset()
 		PlotT(cos, "/tmp/gosl", "fun-cos-12.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
@@ -531,8 +527,7 @@ func Test_fun13(tst *testing.T) {
 	tmin := 0.0
 	tmax := 5.0
 	xcte := []float64{0, 0, 0}
-	//if true {
-	if false {
+	if chk.Verbose {
 		withG, withH, save, show := true, true, false, true
 		plt.Reset()
 		PlotT(pulse, "/tmp/gosl", "fun-pulse-13.png", tmin, tmax, xcte, 61, "", withG, withH, save, show, nil)
