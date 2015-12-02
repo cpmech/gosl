@@ -38,7 +38,7 @@ func bweuler_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr flo
 
 		// calculate f @ update y
 		o.nfeval += 1
-		err = o.fcn(o.f[0], x, y, args...)
+		err = o.fcn(o.f[0], o.h, x, y, args...)
 		if err != nil {
 			return
 		}
@@ -74,11 +74,11 @@ func bweuler_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr flo
 			// calculate Jacobian
 			if o.jac == nil { // numerical
 				err = num.Jacobian(&o.dfdyT, func(fy, yy []float64) (e error) {
-					e = o.fcn(fy, x, yy, args...)
+					e = o.fcn(fy, o.h, x, yy, args...)
 					return
 				}, y, o.f[0], o.δw[0], o.Distr) // δw works here as workspace variable
 			} else { // analytical
-				err = o.jac(&o.dfdyT, x, y, args...)
+				err = o.jac(&o.dfdyT, o.h, x, y, args...)
 			}
 			if err != nil {
 				return

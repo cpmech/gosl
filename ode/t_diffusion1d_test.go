@@ -47,7 +47,7 @@ func TestDiffusion1D(tst *testing.T) {
 	mol := []float64{kx / dxx, -2.0 * kx / dxx, kx / dxx}
 
 	// function
-	fcn := func(f []float64, t float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dt, t float64, y []float64, args ...interface{}) error {
 		for i := 0; i < N; i++ {
 			f[i] = 0
 			if i == 0 || i == N-1 {
@@ -69,7 +69,7 @@ func TestDiffusion1D(tst *testing.T) {
 	}
 
 	// Jacobian
-	jac := func(dfdy *la.Triplet, t float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dt, t float64, y []float64, args ...interface{}) error {
 		//chk.Panic("jac is not available")
 		if dfdy.Max() == 0 {
 			//dfdy.Init(Nb, Nb, 3*N)
@@ -105,12 +105,12 @@ func TestDiffusion1D(tst *testing.T) {
 	// debug
 	f0 := make([]float64, N)
 	//f0 := make([]float64, Nb)
-	fcn(f0, 0, y)
+	fcn(f0, 0, 0, y)
 	if false {
 		io.Pforan("y0 = %v\n", y)
 		io.Pforan("f0 = %v\n", f0)
 		var J la.Triplet
-		jac(&J, 0, y)
+		jac(&J, 0, 0, y)
 		la.PrintMat("J", J.ToMatrix(nil).ToDense(), "%8.3f", false)
 	}
 	//chk.Panic("stop")

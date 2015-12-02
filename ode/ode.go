@@ -15,9 +15,9 @@ import (
 )
 
 // callbacks
-type Cb_fcn func(f []float64, x float64, y []float64, args ...interface{}) error      // function
-type Cb_jac func(dfdy *la.Triplet, x float64, y []float64, args ...interface{}) error // Jacobian (must have at least all diagonal elements set)
-type Cb_out func(first bool, h, x float64, y []float64, args ...interface{}) error    // output
+type Cb_fcn func(f []float64, h, x float64, y []float64, args ...interface{}) error      // function
+type Cb_jac func(dfdy *la.Triplet, h, x float64, y []float64, args ...interface{}) error // Jacobian (must have at least all diagonal elements set)
+type Cb_out func(first bool, h, x float64, y []float64, args ...interface{}) error       // output
 
 // step function
 type stpfcn func(o *ODE, y []float64, x float64, args ...interface{}) (rerr float64, err error)
@@ -333,7 +333,7 @@ func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interf
 			if o.jac == nil { // numerical Jacobian
 				if o.method == "Radau5" {
 					o.nfeval += 1
-					o.fcn(o.f0, x, y, args...)
+					o.fcn(o.f0, o.h, x, y, args...)
 				}
 			}
 			o.reuseJdec = false
@@ -358,7 +358,7 @@ func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interf
 
 	// first function evaluation
 	o.nfeval += 1
-	o.fcn(o.f0, x, y, args...) // o.f0 := f(x,y)
+	o.fcn(o.f0, o.h, x, y, args...) // o.f0 := f(x,y)
 
 	// time loop
 	var dxmax, xstep, fac, div, dxnew, facgus, old_h, old_rerr float64
@@ -442,7 +442,7 @@ func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interf
 				// calc new scal and f0
 				la.VecScaleAbs(o.scal, o.Atol, o.Rtol, y) // o.scal := o.Atol + o.Rtol * abs(y)
 				o.nfeval += 1
-				o.fcn(o.f0, x, y, args...) // o.f0 := f(x,y)
+				o.fcn(o.f0, o.h, x, y, args...) // o.f0 := f(x,y)
 
 				// new step size
 				dxnew = min(dxnew, dxmax)

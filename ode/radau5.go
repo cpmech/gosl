@@ -69,12 +69,12 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 			if o.jac == nil { // numerical
 				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
 				err = num.Jacobian(&o.dfdyT, func(fy, y []float64) (e error) {
-					e = o.fcn(fy, x0, y, args...)
+					e = o.fcn(fy, o.h, x0, y, args...)
 					return
 				}, y0, o.f0, o.w[0], o.Distr) // w works here as workspace variable
 			} else { // analytical
 				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n") }
-				err = o.jac(&o.dfdyT, x0, y0, args...)
+				err = o.jac(&o.dfdyT, o.h, x0, y0, args...)
 			}
 			if err != nil {
 				return
@@ -179,7 +179,7 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 				o.v[i][m] = y0[m] + o.z[i][m]
 			}
 			o.nfeval += 1
-			err = o.fcn(o.f[i], o.u[i], o.v[i], args...)
+			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i], args...)
 			if err != nil {
 				return
 			}
@@ -355,7 +355,7 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 						o.v[0][m] = y0[m] + o.lerr[m] // y0perr
 					}
 					o.nfeval += 1
-					err = o.fcn(o.f[0], x0, o.v[0], args...) // f0perr
+					err = o.fcn(o.f[0], o.h, x0, o.v[0], args...) // f0perr
 					if err != nil {
 						return
 					}

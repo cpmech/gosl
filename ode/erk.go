@@ -35,7 +35,7 @@ func erk_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr float64
 			la.VecCopy(o.f[i], 1, o.f[o.nstg-1])
 		} else {
 			o.nfeval += 1
-			err = o.fcn(o.f[i], o.u[i], o.v[i], args...)
+			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i], args...)
 			if err != nil {
 				return
 			}

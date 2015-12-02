@@ -36,12 +36,12 @@ func TestODE01(tst *testing.T) {
 	ndim := len(ya)
 	y := make([]float64, ndim)
 
-	fcn := func(f []float64, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
 		f[0] = lam*y[0] - lam*math.Cos(x)
 		return nil
 	}
 
-	jac := func(dfdy *la.Triplet, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(1, 1, 1)
 		}
@@ -136,12 +136,12 @@ func TestODE02a(tst *testing.T) {
 	io.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation\n")
 
 	eps := 1.0e-6
-	fcn := func(f []float64, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
 		f[0] = y[1]
 		f[1] = ((1.0-y[0]*y[0])*y[1] - y[0]) / eps
 		return nil
 	}
-	jac := func(dfdy *la.Triplet, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(2, 2, 4)
 		}
@@ -215,13 +215,13 @@ func TestODE03(tst *testing.T) {
 	chk.PrintTitle("Test ODE 03")
 	io.Pfcyan("Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation\n")
 
-	fcn := func(f []float64, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
 		f[0] = -0.04*y[0] + 1.0e4*y[1]*y[2]
 		f[1] = 0.04*y[0] - 1.0e4*y[1]*y[2] - 3.0e7*y[1]*y[1]
 		f[2] = 3.0e7 * y[1] * y[1]
 		return nil
 	}
-	jac := func(dfdy *la.Triplet, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(3, 3, 9)
 		}
@@ -326,7 +326,7 @@ func TestODE04a(tst *testing.T) {
 	io.Pfcyan("(from E Hairer's website, not the system in the book)\n")
 
 	// RIGHT-HAND SIDE OF THE AMPLIFIER PROBLEM
-	fcn := func(f []float64, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
 		d := args[0].(*HWtransData)
 		UET := d.UE * math.Sin(d.W*x)
 		FAC1 := d.BETA * (math.Exp((y[3]-y[2])/d.UF) - 1.0)
@@ -343,7 +343,7 @@ func TestODE04a(tst *testing.T) {
 	}
 
 	// JACOBIAN OF THE AMPLIFIER PROBLEM
-	jac := func(dfdy *la.Triplet, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
 		d := args[0].(*HWtransData)
 		FAC14 := d.BETA * math.Exp((y[3]-y[2])/d.UF) / d.UF
 		FAC27 := d.BETA * math.Exp((y[6]-y[5])/d.UF) / d.UF
