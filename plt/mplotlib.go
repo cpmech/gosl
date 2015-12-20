@@ -48,6 +48,10 @@ func SetScientific(axis string, min_order, max_order int) {
 	io.Ff(&bb, "SetScientificFmt(axis='%s', min_order=%d, max_order=%d)\n", axis, min_order, max_order)
 }
 
+func TicksNoOffset() {
+	io.Ff(&bb, "gca().ticklabel_format(useOffset=False)\n")
+}
+
 func Arrow(xi, yi, xf, yf float64, args string) {
 	cmd := io.Sf("Arrow(%g,%g, %g,%g", xi, yi, xf, yf)
 	if len(args) > 0 {
