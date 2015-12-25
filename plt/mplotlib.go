@@ -48,7 +48,7 @@ func SetScientific(axis string, min_order, max_order int) {
 	io.Ff(&bb, "SetScientificFmt(axis='%s', min_order=%d, max_order=%d)\n", axis, min_order, max_order)
 }
 
-func TicksNoOffset() {
+func SetTicksNormal() {
 	io.Ff(&bb, "gca().ticklabel_format(useOffset=False)\n")
 }
 
