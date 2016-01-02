@@ -15,7 +15,7 @@ import (
 
 func Test_fun01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun01. Decreasing Reference Model")
 
 	ya := 1.0
@@ -40,12 +40,12 @@ func Test_fun01(tst *testing.T) {
 	tmax := 3.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(o, "/tmp/gosl", "ref-dec-gen-01.png", 0.0, tmax, xcte, 201, "", withG, withH, save, show, func() {
-			plt.Plot([]float64{0, tmax}, []float64{ya, ya - λ1*tmax}, "'k-'")
-			plt.Equal()
-		})
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(o, "", "", 0.0, tmax, xcte, 201, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.Subplot(3, 1, 1)
+		plt.Plot([]float64{0, tmax}, []float64{ya, ya - λ1*tmax}, "'k-'")
+		plt.Equal()
+		plt.SaveD("/tmp/gosl/fun", "ref-dec-gen.png")
 	}
 	//
 	sktol := 1e-10
@@ -57,7 +57,7 @@ func Test_fun01(tst *testing.T) {
 
 func Test_fun02(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun02. Dec Ref Model (specialised)")
 
 	ya := 1.0
@@ -80,12 +80,11 @@ func Test_fun02(tst *testing.T) {
 	//tmax := 140.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(o, "/tmp/gosl", "ref-dec-sp1-01.png", tmin, tmax, xcte, 201, "lw=2,color='orange'", withG, withH, save, show, func() {
-			plt.Plot([]float64{0, tmax}, []float64{ya, ya - λ1*tmax}, "'k--'")
-			plt.Equal()
-		})
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(o, "", "", tmin, tmax, xcte, 201, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.Plot([]float64{0, tmax}, []float64{ya, ya - λ1*tmax}, "'k--'")
+		plt.Equal()
+		plt.SaveD("/tmp/gosl/fun", "ref-dec-sp1.png")
 	}
 
 	sktol := 1e-10
@@ -97,7 +96,7 @@ func Test_fun02(tst *testing.T) {
 
 func Test_fun03(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun03. add, cte, srmps")
 
 	cte, err := New("cte", []*Prm{&Prm{N: "C", V: 30}})
@@ -132,13 +131,12 @@ func Test_fun03(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		withG, withH, save, show := true, true, false, true
-		plt.Reset()
-		PlotT(cte, "/tmp/gosl", "fun-cte-01.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
-		plt.Reset()
-		PlotT(srmps, "/tmp/gosl", "fun-srmps-01.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
-		plt.Reset()
-		PlotT(add, "/tmp/gosl", "fun-add-01.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(cte, "/tmp/gosl/fun", "cte.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.Clf()
+		PlotT(srmps, "/tmp/gosl/fun", "srmps.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.Clf()
+		PlotT(add, "/tmp/gosl/fun", "add.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -155,7 +153,7 @@ func Test_fun03(tst *testing.T) {
 
 func Test_fun04(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun04. lin")
 
 	lin, err := New("lin", []*Prm{
@@ -171,9 +169,8 @@ func Test_fun04(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(lin, "/tmp/gosl", "fun-lin-01.png", tmin, tmax, xcte, 11, "", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(lin, "/tmp/gosl/fun", "lin.png", tmin, tmax, xcte, 11, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -185,7 +182,7 @@ func Test_fun04(tst *testing.T) {
 
 func Test_fun05(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun05. zero and one")
 
 	io.Pforan("Zero(666,nil) = %v\n", Zero.F(666, nil))
@@ -196,7 +193,7 @@ func Test_fun05(tst *testing.T) {
 
 func Test_fun06a(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun06a. pts")
 
 	fun, err := New("pts", []*Prm{
@@ -216,9 +213,8 @@ func Test_fun06a(tst *testing.T) {
 	tmax := 6.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, true, false
-		PlotT(fun, "/tmp/gosl", "fun-ptsA-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "pts.png", tmin, tmax, xcte, 8, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	tmin = 0.01
@@ -232,7 +228,7 @@ func Test_fun06a(tst *testing.T) {
 
 func Test_fun06b(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun06b. pts")
 
 	fun, err := New("pts", []*Prm{
@@ -248,9 +244,8 @@ func Test_fun06b(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, true, false
-		PlotT(fun, "/tmp/gosl", "fun-ptsB-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "ptsB.png", tmin, tmax, xcte, 8, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	tmin = 0.01
@@ -264,7 +259,7 @@ func Test_fun06b(tst *testing.T) {
 
 func Test_fun06c(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun06c. pts")
 
 	fun, err := New("pts", []*Prm{
@@ -280,9 +275,8 @@ func Test_fun06c(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, true, false
-		PlotT(fun, "/tmp/gosl", "fun-ptsC-01.png", tmin, tmax, xcte, 8, "'o-', clip_on=0", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "ptsC.png", tmin, tmax, xcte, 8, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	tmin = 0.01
@@ -296,7 +290,7 @@ func Test_fun06c(tst *testing.T) {
 
 func Test_fun07(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun07. exc1")
 
 	fun, err := New("exc1", []*Prm{
@@ -312,9 +306,8 @@ func Test_fun07(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(fun, "/tmp/gosl", "fun-exc1-01.png", tmin, tmax, xcte, 41, "'o-'", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "exc1.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -326,7 +319,7 @@ func Test_fun07(tst *testing.T) {
 
 func Test_fun08(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun08. exc2")
 
 	fun, err := New("exc2", []*Prm{
@@ -343,9 +336,8 @@ func Test_fun08(tst *testing.T) {
 	tmax := 7.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(fun, "/tmp/gosl", "fun-exc2-01.png", tmin, tmax, xcte, 41, "'o-'", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "exc2.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -357,7 +349,7 @@ func Test_fun08(tst *testing.T) {
 
 func Test_fun09(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun09. cos")
 
 	fun, err := New("cos", []*Prm{
@@ -374,9 +366,8 @@ func Test_fun09(tst *testing.T) {
 	tmax := 2.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(fun, "/tmp/gosl", "fun-cos-01.png", tmin, tmax, xcte, 41, "'.-'", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "cos.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -388,7 +379,7 @@ func Test_fun09(tst *testing.T) {
 
 func Test_fun10(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun10. rmp")
 
 	fun, err := New("rmp", []*Prm{
@@ -406,9 +397,8 @@ func Test_fun10(tst *testing.T) {
 	tmax := 3.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(fun, "/tmp/gosl", "fun-rmp-01.png", tmin, tmax, xcte, 4, "'.-'", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "rmp.png", tmin, tmax, xcte, 4, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -420,7 +410,7 @@ func Test_fun10(tst *testing.T) {
 
 func Test_fun11(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun11. ref-inc-rl1")
 
 	fun, err := New("ref-inc-rl1", []*Prm{
@@ -438,9 +428,8 @@ func Test_fun11(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.Reset()
-		withG, withH, save, show := true, true, false, true
-		PlotT(fun, "/tmp/gosl", "fun-ref-inc-rl1-01.png", tmin, tmax, xcte, 41, "'.-'", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "ref-inc-rl1.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -452,7 +441,7 @@ func Test_fun11(tst *testing.T) {
 
 func Test_fun12(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("fun12. mul")
 
 	cos, err := New("cos", []*Prm{
@@ -487,13 +476,12 @@ func Test_fun12(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		withG, withH, save, show := true, true, false, true
-		plt.Reset()
-		PlotT(cos, "/tmp/gosl", "fun-cos-12.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
-		plt.Reset()
-		PlotT(lin, "/tmp/gosl", "fun-lin-12.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
-		plt.Reset()
-		PlotT(mul, "/tmp/gosl", "fun-mul-12.png", tmin, tmax, xcte, 41, "", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(cos, "/tmp/gosl/fun", "cosB.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.Clf()
+		PlotT(lin, "/tmp/gosl/fun", "linB.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.Clf()
+		PlotT(mul, "/tmp/gosl/fun", "mul.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -510,8 +498,8 @@ func Test_fun12(tst *testing.T) {
 
 func Test_fun13(tst *testing.T) {
 
-	//verbose()
-	chk.PrintTitle("fun13. mul")
+	verbose()
+	chk.PrintTitle("fun13. pulse")
 
 	pulse, err := New("pulse", []*Prm{
 		&Prm{N: "ca", V: 0.2},
@@ -528,9 +516,8 @@ func Test_fun13(tst *testing.T) {
 	tmax := 5.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		withG, withH, save, show := true, true, false, true
-		plt.Reset()
-		PlotT(pulse, "/tmp/gosl", "fun-pulse-13.png", tmin, tmax, xcte, 61, "", withG, withH, save, show, nil)
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(pulse, "/tmp/gosl/fun", "pulse.png", tmin, tmax, xcte, 61, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-17
