@@ -30,15 +30,14 @@ func Test_xfun01(tst *testing.T) {
 	xmin := []float64{-1, -1}
 	xmax := []float64{2, 2}
 	np := 21
-	if false {
-		//if true {
+	if chk.Verbose {
 		withGrad := true
 		hlZero := true
 		axEqual := true
 		save := true
 		show := false
 		plt.Reset()
-		PlotX(o, "/tmp/gosl", "xfun01.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
+		PlotX(o, "/tmp/gosl/fun", "halo.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
 			plt.Equal()
 		})
 	}
@@ -70,15 +69,14 @@ func Test_xfun02(tst *testing.T) {
 	xmin := []float64{-1, -1}
 	xmax := []float64{2, 2}
 	np := 21
-	if false {
-		//if true {
+	if chk.Verbose {
 		withGrad := false
 		hlZero := true
 		axEqual := true
 		save := true
 		show := false
 		plt.Reset()
-		PlotX(o, "/tmp/gosl", "xfun02.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
+		PlotX(o, "/tmp/gosl/fun", "cdist.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
 			plt.Equal()
 		})
 	}
