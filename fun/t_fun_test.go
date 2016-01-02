@@ -15,7 +15,7 @@ import (
 
 func Test_fun01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun01. Decreasing Reference Model")
 
 	ya := 1.0
@@ -57,7 +57,7 @@ func Test_fun01(tst *testing.T) {
 
 func Test_fun02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun02. Dec Ref Model (specialised)")
 
 	ya := 1.0
@@ -96,7 +96,7 @@ func Test_fun02(tst *testing.T) {
 
 func Test_fun03(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun03. add, cte, srmps")
 
 	cte, err := New("cte", []*Prm{&Prm{N: "C", V: 30}})
@@ -153,7 +153,7 @@ func Test_fun03(tst *testing.T) {
 
 func Test_fun04(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun04. lin")
 
 	lin, err := New("lin", []*Prm{
@@ -182,7 +182,7 @@ func Test_fun04(tst *testing.T) {
 
 func Test_fun05(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun05. zero and one")
 
 	io.Pforan("Zero(666,nil) = %v\n", Zero.F(666, nil))
@@ -193,7 +193,7 @@ func Test_fun05(tst *testing.T) {
 
 func Test_fun06a(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun06a. pts")
 
 	fun, err := New("pts", []*Prm{
@@ -228,7 +228,7 @@ func Test_fun06a(tst *testing.T) {
 
 func Test_fun06b(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun06b. pts")
 
 	fun, err := New("pts", []*Prm{
@@ -259,7 +259,7 @@ func Test_fun06b(tst *testing.T) {
 
 func Test_fun06c(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun06c. pts")
 
 	fun, err := New("pts", []*Prm{
@@ -290,7 +290,7 @@ func Test_fun06c(tst *testing.T) {
 
 func Test_fun07(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun07. exc1")
 
 	fun, err := New("exc1", []*Prm{
@@ -319,7 +319,7 @@ func Test_fun07(tst *testing.T) {
 
 func Test_fun08(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun08. exc2")
 
 	fun, err := New("exc2", []*Prm{
@@ -349,7 +349,7 @@ func Test_fun08(tst *testing.T) {
 
 func Test_fun09(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun09. cos")
 
 	fun, err := New("cos", []*Prm{
@@ -379,7 +379,7 @@ func Test_fun09(tst *testing.T) {
 
 func Test_fun10(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun10. rmp")
 
 	fun, err := New("rmp", []*Prm{
@@ -410,7 +410,7 @@ func Test_fun10(tst *testing.T) {
 
 func Test_fun11(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun11. ref-inc-rl1")
 
 	fun, err := New("ref-inc-rl1", []*Prm{
@@ -441,7 +441,7 @@ func Test_fun11(tst *testing.T) {
 
 func Test_fun12(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun12. mul")
 
 	cos, err := New("cos", []*Prm{
@@ -498,7 +498,7 @@ func Test_fun12(tst *testing.T) {
 
 func Test_fun13(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun13. pulse")
 
 	pulse, err := New("pulse", []*Prm{

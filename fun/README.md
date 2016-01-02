@@ -1,15 +1,15 @@
-# Gosl &ndash; fun -- functions
+# Gosl &ndash; fun (functions)
 
 ## Summary
- 1. add         -- addition
- 2. cdist       -- circle distance
- 3. cos         -- cosine
- 4. cte         -- constant
- 5. cyc1        -- cyclic 1
- 6. exc1        -- excitation 1
- 7. exc2        -- excitation 2
- 8. halo        -- halo
- 9. lin         -- linear
+1.  add         -- addition
+2.  cdist       -- circle distance
+3.  cos         -- cosine
+4.  cte         -- constant
+5.  cyc1        -- cyclic 1
+6.  exc1        -- excitation 1
+7.  exc2        -- excitation 2
+8.  halo        -- halo
+9.  lin         -- linear
 10. mul         -- multiplication
 11. pts         -- points
 12. pulse       -- pulse 1
