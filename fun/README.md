@@ -100,6 +100,6 @@
 </a>
 
 # 17. srmps &ndash; Smooth-ramp-smooth
-<a href="f_srmpso">
+<a href="f_srmps.go">
 <div id="container"><p><img src="figs/srmps.png" width="300"></p>Smooth-ramp-smooth</div>
 </a>
