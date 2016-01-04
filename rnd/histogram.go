@@ -53,7 +53,8 @@ func TextHist(labels []string, counts []int, barlen int) string {
 		l += "\n"
 		total += f
 	}
-	l += io.Sf("%"+sz+"s   %"+Sz+"d\n", "", total)
+	sz = io.Sf("%d", lmax+3)
+	l += io.Sf("%"+sz+"s %"+Sz+"d\n", "count =", total)
 	return l
 }
 
