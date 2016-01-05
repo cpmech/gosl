@@ -101,12 +101,14 @@ func ArgToString(idxArg int, defaultValue string) string {
 }
 
 // ArgsTable prints a nice table with input arguments
-//  Input: sets of THREE items in the following order:
-//   description, key, value, ...
-//   description, key, value, ...
-//        ...
-//   description, key, value, ...
-func ArgsTable(data ...interface{}) (table string) {
+//  Input:
+//   title -- title of table; e.g. INPUT ARGUMENTS
+//   data  -- sets of THREE items in the following order:
+//                 description, key, value, ...
+//                 description, key, value, ...
+//                      ...
+//                 description, key, value, ...
+func ArgsTable(title string, data ...interface{}) (table string) {
 	if len(data) < 3 {
 		return
 	}
@@ -126,9 +128,10 @@ func ArgsTable(data ...interface{}) (table string) {
 	}
 	strfmt := Sf("%%%dv  %%%dv   %%%dv\n", sizes[0]+1, sizes[1]+1, sizes[2]+1)
 	n := sizes[0] + sizes[1] + sizes[2] + 3 + 5
-	m := (n - 15) / 2
+	l := len(title)
+	m := (n - l) / 2
 	table += StrSpaces(m)
-	table += "INPUT ARGUMENTS\n"
+	table += title + "\n"
 	table += StrThickLine(n)
 	table += Sf(strfmt, "description", "key", "value")
 	table += StrThinLine(n)

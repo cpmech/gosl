@@ -39,10 +39,25 @@ func Test_args01(tst *testing.T) {
 	resString := ArgToString(1, "myname")
 	chk.String(tst, resString, "myname")
 
-	Pf("\n%v\n", ArgsTable(
+	tab := ArgsTable(
+		"1 2 3 INPUT PARAMETERS 3 2 1",
 		"first argument", "first", true,
 		"second argument", "second", "string",
 		"third argument", "third", 123,
 		"fourth argument", "fourth", 666.0,
-	))
+	)
+
+	Pf("\n%v\n", tab)
+
+	chk.String(tst, tab,
+		`   1 2 3 INPUT PARAMETERS 3 2 1
+===================================
+     description      key     value
+-----------------------------------
+  first argument    first      true
+ second argument   second    string
+  third argument    third       123
+ fourth argument   fourth       666
+===================================
+`)
 }
