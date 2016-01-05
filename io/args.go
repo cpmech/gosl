@@ -126,6 +126,7 @@ func ArgsTable(title string, data ...interface{}) (table string) {
 		sizes[1] = imax(sizes[1], len(Sf("%v", key)))
 		sizes[2] = imax(sizes[2], len(Sf("%v", val)))
 	}
+	sizes[2] = imax(sizes[2], 5) // 5 => 'value'
 	strfmt := Sf("%%%dv  %%%dv   %%%dv\n", sizes[0]+1, sizes[1]+1, sizes[2]+1)
 	n := sizes[0] + sizes[1] + sizes[2] + 3 + 5
 	l := len(title)
