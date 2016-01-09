@@ -12,7 +12,7 @@ from os import remove
 from os.path import basename, exists
 #from scipy.special import erfc
 from numpy.linalg import norm, eig, solve
-from numpy import cosh, sinh, polyfit
+from numpy import cosh, sinh, polyfit, NaN
 from numpy import pi, sin, cos, tan, arcsin, arccos, arctan, arctan2, log, log10, exp, sqrt
 from numpy import array, linspace, insert, repeat, zeros, matrix, ones, eye, arange, diag, dot
 from numpy import logical_or, logical_and, delete, hstack, vstack, meshgrid, vectorize, transpose
@@ -253,38 +253,58 @@ def Plot3dLine(X, Y, Z, first=True, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zma
     else: ax = gca()
     ax.plot(X,Y,Z, *args, **kwargs)
     if zmin!=None and zmax!=None:
-        ax.set_zlim(zmin,zmax)
+        ax.set_zlim3d(zmin,zmax)
     return ax
 
 
-def Plot3dPoints(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, splot=111, *args, **kwargs):
+def Plot3dPoints(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, splot=111,
+        preservePrev=False, *args, **kwargs):
     """
     Plot 3D points
     ==============
     """
-    ax = gcf().add_subplot(splot, projection='3d')
-    ax.set_xlabel(xlbl)
-    ax.set_ylabel(ylbl)
-    ax.set_zlabel(zlbl)
+    if preservePrev: ax = gca()
+    else: ax = gcf().add_subplot(splot, projection='3d')
+    if xlbl != "": ax.set_xlabel(xlbl)
+    if ylbl != "": ax.set_ylabel(ylbl)
+    if zlbl != "": ax.set_zlabel(zlbl)
     ax.scatter(X,Y,Z, *args, **kwargs)
     if zmin!=None and zmax!=None:
-        ax.set_zlim(zmin,zmax)
+        ax.set_zlim3d(zmin,zmax)
     return ax
 
 
-def Surface(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111, rstride=1, cstride=1, *args, **kwargs):
+def Wireframe(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111,
+        rstride=1, cstride=1, preservePrev=False, *args, **kwargs):
+    """
+    Plot 3D wireframe
+    =================
+    """
+    if preservePrev: ax = gca()
+    else: ax = gcf().add_subplot(splot, projection='3d')
+    if xlbl != "": ax.set_xlabel(xlbl)
+    if ylbl != "": ax.set_ylabel(ylbl)
+    if zlbl != "": ax.set_zlabel(zlbl)
+    ax.plot_wireframe(X,Y,Z,rstride=rstride,cstride=cstride,cmap=Cmap(cmapidx), *args, **kwargs)
+    if zmin!=None and zmax!=None:
+        ax.set_zlim3d(zmin,zmax)
+    return ax
+
+
+def Surface(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111,
+        rstride=1, cstride=1, preservePrev=False, *args, **kwargs):
     """
     Plot 3D surface
     ===============
     """
-    #ax = gcf().gca(projection='3d')
-    ax = gcf().add_subplot(splot, projection='3d')
-    ax.set_xlabel(xlbl)
-    ax.set_ylabel(ylbl)
-    ax.set_zlabel(zlbl)
+    if preservePrev: ax = gca()
+    else: ax = gcf().add_subplot(splot, projection='3d')
+    if xlbl != "": ax.set_xlabel(xlbl)
+    if ylbl != "": ax.set_ylabel(ylbl)
+    if zlbl != "": ax.set_zlabel(zlbl)
     ax.plot_surface(X,Y,Z,rstride=rstride,cstride=cstride,cmap=Cmap(cmapidx), *args, **kwargs)
     if zmin!=None and zmax!=None:
-        ax.set_zlim(zmin,zmax)
+        ax.set_zlim3d(zmin,zmax)
     return ax
 
 
