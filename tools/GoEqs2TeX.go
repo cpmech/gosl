@@ -55,15 +55,15 @@ func main() {
 
 		// constants
 		l = strings.Replace(l, "math.Sqrt2", "\\sqrt{2}", -1)
+		l = strings.Replace(l, "SQ2", "\\sqrt{2}", -1)
 
 		// functions
 		l = strings.Replace(l, "math.Sqrt", "\\sqrt", -1)
+		l = strings.Replace(l, "math.Pow", "\\pow", -1)
+		l = strings.Replace(l, "math.Exp", "\\exp", -1)
 
 		// star
 		l = strings.Replace(l, "*", " \\, ", -1)
-
-		// dot zero
-		l = strings.Replace(l, ".0", "", -1)
 
 		// colon-equal
 		l = strings.Replace(l, ":=", "=", -1)
