@@ -1,0 +1,26 @@
+
+// problem # 1: quadratic function with inequalities
+f[0] = x[0]*x[0]/2.0 + x[1]*x[1] - x[0]*x[1] - 2.0*x[0] - 6.0*x[1]
+g[0] = 2.0 - x[0] - x[1]     
+g[1] = 2.0 + x[0] - 2.0*x[1] 
+g[2] = 3.0 - 2.0*x[0] - x[1] 
+g[3] = x[0]                  
+g[4] = x[1]                  
+
+// problem # 2: circle with equality constraint
+xe := 1.0                      // centre of circle
+le := -0.4                     // selected level of f(x)
+ys := xe - (1.0+le)/math.Sqrt2 // coordinates of minimum point with level=le
+y0 := 2.0*ys + xe              // vertical axis intersect of straight line defined by c(x)
+xc := []float64{xe, xe}        // centre
+res := 0.0
+for i := 0; i < len(x); i++ {
+    res += (x[i] - xc[i]) * (x[i] - xc[i])
+}
+f[0] = math.Sqrt(res) - 1.0
+h[0] = x[0] + x[1] + xe - y0
+
+// problem # 3: Deb (2000) narrow crescent-shaped region
+f[0] = math.Pow(x[0]*x[0]+x[1]-11.0, 2.0) + math.Pow(x[0]+x[1]*x[1]-7.0, 2.0)
+g[0] = 4.84 - math.Pow(x[0]-0.05, 2.0) - math.Pow(x[1]-2.5, 2.0) 
+g[1] = x[0]*x[0] + math.Pow(x[1]-2.5, 2.0) - 4.84               
