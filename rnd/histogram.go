@@ -7,6 +7,7 @@ package rnd
 import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -153,6 +154,25 @@ func (o Histogram) GenLabels(numfmt string) (labels []string) {
 		labels[i] = io.Sf("["+numfmt+","+numfmt+")", o.Stations[i], o.Stations[i+1])
 	}
 	return
+}
+
+// PlotDensity plots histogram in density values
+//  sty -- style can be <nil>
+func (o Histogram) PlotDensity(sty *plt.Sty, args string) {
+	if sty == nil {
+		sty = &plt.Sty{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true}
+	}
+	nstations := len(o.Stations)
+	nsamples := 0
+	for _, cnt := range o.Counts {
+		nsamples += cnt
+	}
+	for i := 0; i < nstations-1; i++ {
+		xi, xf := o.Stations[i], o.Stations[i+1]
+		dx := xf - xi
+		prob := float64(o.Counts[i]) / (float64(nsamples) * dx)
+		plt.DrawPolyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, prob}, {xi, prob}}, sty, args)
+	}
 }
 
 // IntHistogram holds data for computing/plotting histograms with integers

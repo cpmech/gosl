@@ -182,7 +182,7 @@ func Test_lognorm03(tst *testing.T) {
 
 func Test_lognorm04(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("lognorm04. random numbers")
 
 	μ := 0.0
@@ -207,9 +207,11 @@ func Test_lognorm04(tst *testing.T) {
 	prob := make([]float64, nstations)
 	for i := 0; i < nstations-1; i++ {
 		prob[i] = float64(hist.Counts[i]) / (float64(nsamples) * dx)
+		io.Pfblue2("prob = %v\n", prob[i])
 	}
 
 	io.Pf(TextHist(hist.GenLabels("%.3f"), hist.Counts, 60))
+	io.Pforan("dx = %v\n", dx)
 
 	area := 0.0
 	for i := 0; i < nstations-1; i++ {
@@ -221,17 +223,7 @@ func Test_lognorm04(tst *testing.T) {
 	if chk.Verbose {
 		plot_lognormal(μ, σ, Pori)
 		plt.Subplot(2, 1, 1)
-		for i := 0; i < nstations-1; i++ {
-			xi, xf := hist.Stations[i], hist.Stations[i+1]
-			y := prob[i]
-			plt.DrawPolyline([][]float64{
-				{xi, 0},
-				{xf, 0},
-				{xf, y},
-				{xi, y},
-			}, &plt.Sty{Fc: "r", Ec: "k", Lw: 1, Closed: true}, "")
-		}
+		hist.PlotDensity(nil, "")
 		plt.SaveD("/tmp/gosl", "test_lognorm04.eps")
 	}
-
 }
