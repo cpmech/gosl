@@ -13,10 +13,10 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_lognormal(μ, σ float64) {
+func plot_lognormal(μ, σ float64, Pori bool) {
 
 	var dist DistLogNormal
-	dist.Init(&VarData{M: μ, S: σ, Pori: true})
+	dist.Init(&VarData{M: μ, S: σ, Pori: Pori})
 
 	n := 101
 	x := utl.LinSpace(0, 3, n)
@@ -100,7 +100,7 @@ func Test_lognorm02(tst *testing.T) {
 	if doplot {
 		plt.SetForEps(1.5, 300)
 		for _, σ := range []float64{1, 0.5, 0.25} {
-			plot_lognormal(0, σ)
+			plot_lognormal(0, σ, true)
 		}
 		plt.SaveD("/tmp/gosl", "test_lognorm02.eps")
 	}
@@ -178,4 +178,60 @@ func Test_lognorm03(tst *testing.T) {
 			//return
 		}
 	}
+}
+
+func Test_lognorm04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("lognorm04. random numbers")
+
+	μ := 0.0
+	σ := 0.25
+	Pori := true
+
+	nsamples := 1000
+	X := make([]float64, nsamples)
+	for i := 0; i < nsamples; i++ {
+		X[i] = Lognormal(μ, σ, Pori)
+	}
+
+	nstations := 51
+	xmin := 0.0
+	xmax := 3.0
+	dx := (xmax - xmin) / float64(nstations-1)
+
+	var hist Histogram
+	hist.Stations = utl.LinSpace(xmin, xmax, nstations)
+	hist.Count(X, true)
+
+	prob := make([]float64, nstations)
+	for i := 0; i < nstations-1; i++ {
+		prob[i] = float64(hist.Counts[i]) / (float64(nsamples) * dx)
+	}
+
+	io.Pf(TextHist(hist.GenLabels("%.3f"), hist.Counts, 60))
+
+	area := 0.0
+	for i := 0; i < nstations-1; i++ {
+		area += dx * prob[i]
+	}
+	io.Pforan("area = %v\n", area)
+	chk.Scalar(tst, "area", 1e-15, area, 1)
+
+	if chk.Verbose {
+		plot_lognormal(μ, σ, Pori)
+		plt.Subplot(2, 1, 1)
+		for i := 0; i < nstations-1; i++ {
+			xi, xf := hist.Stations[i], hist.Stations[i+1]
+			y := prob[i]
+			plt.DrawPolyline([][]float64{
+				{xi, 0},
+				{xf, 0},
+				{xf, y},
+				{xi, y},
+			}, &plt.Sty{Fc: "r", Ec: "k", Lw: 1, Closed: true}, "")
+		}
+		plt.SaveD("/tmp/gosl", "test_lognorm04.eps")
+	}
+
 }

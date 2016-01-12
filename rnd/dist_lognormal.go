@@ -4,16 +4,30 @@
 
 package rnd
 
-import "math"
+import (
+	"math"
+	"math/rand"
+)
 
 const TOLMINLOG = 1e-16
+
+// Lognormal returns a random number belonging to a lognormal distribution
+//  p.Pori -- if true, p.M and p.S are mean and deviation of the log(x) [default]
+func Lognormal(μ, σ float64, Pori bool) float64 {
+	if !Pori {
+		δ := σ / μ
+		σ = math.Sqrt(math.Log(1.0 + δ*δ))
+		μ = math.Log(μ) - σ*σ/2.0
+	}
+	return math.Exp(μ + σ*rand.NormFloat64())
+}
 
 // DistLogNormal implements the lognormal distribution
 type DistLogNormal struct {
 
 	// input
-	M float64 // location
-	S float64 // scale
+	M float64 // mean of log(x)
+	S float64 // standard deviation of log(x)
 
 	// auxiliary
 	A float64 // 1 / (s sqrt(2 π))
@@ -32,9 +46,7 @@ func (o *DistLogNormal) CalcDerived() {
 }
 
 // Init initialises lognormal distribution
-//  Note: if p.MSlog==true, M and S are parameters of lognormal distribution;
-//        otherwise, p.M and p.S are μ and σ standard parameters and
-//        hence m and s are computed from μ and σ
+//  p.Pori -- if true, p.M and p.S are mean and deviation of the log(x) [default]
 func (o *DistLogNormal) Init(p *VarData) error {
 	if p.Pori {
 		o.M, o.S = p.M, p.S
