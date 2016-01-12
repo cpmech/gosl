@@ -182,7 +182,7 @@ func Test_lognorm03(tst *testing.T) {
 
 func Test_lognorm04(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("lognorm04. random numbers")
 
 	μ := 0.0
