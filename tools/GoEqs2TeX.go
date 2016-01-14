@@ -61,6 +61,8 @@ func main() {
 		l = strings.Replace(l, "math.Sqrt", "\\sqrt", -1)
 		l = strings.Replace(l, "math.Pow", "\\pow", -1)
 		l = strings.Replace(l, "math.Exp", "\\exp", -1)
+		l = strings.Replace(l, "math.Sin", "\\sin", -1)
+		l = strings.Replace(l, "math.Cos", "\\cos", -1)
 
 		// star
 		l = strings.Replace(l, "*", " \\, ", -1)
