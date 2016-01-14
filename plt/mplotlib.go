@@ -315,6 +315,14 @@ func ContourSimple(x, y, z [][]float64, withClabel bool, clabelFsz float64, args
 	}
 }
 
+func Camera(elev, azim float64, args string) {
+	cmd := io.Sf("gca().view_init(elev=%g, azim=%g", elev, azim)
+	if len(args) > 0 {
+		cmd += io.Sf(",%s", args)
+	}
+	io.Ff(&bb, "%s)\n", cmd)
+}
+
 func Quiver(x, y, gx, gy [][]float64, args string) {
 	n := bb.Len()
 	sx := io.Sf("x%d", n)
