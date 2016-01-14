@@ -245,11 +245,12 @@ func Plot3dPoints(x, y, z []float64, args string) {
 	GenArray(&bb, sx, x)
 	GenArray(&bb, sy, y)
 	GenArray(&bb, sz, z)
-	cmd := io.Sf("Plot3dPoints(%s,%s,%s", sx, sy, sz)
+	cmd := io.Sf("ax%d = Plot3dPoints(%s,%s,%s", n, sx, sy, sz)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
 	}
 	io.Ff(&bb, "%s)\n", cmd)
+	io.Ff(&bb, "ea.append(ax%d)\n", n)
 }
 
 func Wireframe(x, y, z [][]float64, args string) {
@@ -260,11 +261,12 @@ func Wireframe(x, y, z [][]float64, args string) {
 	GenMat(&bb, sx, x)
 	GenMat(&bb, sy, y)
 	GenMat(&bb, sz, z)
-	cmd := io.Sf("Wireframe(%s,%s,%s", sx, sy, sz)
+	cmd := io.Sf("ax%d = Wireframe(%s,%s,%s", n, sx, sy, sz)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
 	}
 	io.Ff(&bb, "%s)\n", cmd)
+	io.Ff(&bb, "ea.append(ax%d)\n", n)
 }
 
 func Surface(x, y, z [][]float64, args string) {
@@ -321,6 +323,10 @@ func Camera(elev, azim float64, args string) {
 		cmd += io.Sf(",%s", args)
 	}
 	io.Ff(&bb, "%s)\n", cmd)
+}
+
+func AxDist(dist float64) {
+	io.Ff(&bb, "gca().dist = %g\n", dist)
 }
 
 func Quiver(x, y, gx, gy [][]float64, args string) {
