@@ -140,6 +140,7 @@ void Axes::Init(double Scale, bool DrawHydroLine, bool Reverse, bool Full, bool 
     _axes_actor  -> SetMapper       (_axes_mapper);
     _axes_actor  -> GetProperty     () -> SetColor       (0.0,0.0,0.0); 
     _axes_actor  -> GetProperty     () -> SetDiffuseColor(0.0,0.0,0.0); 
+    _axes_actor  -> GetProperty     () -> SetLineWidth   (2);
 
     // clean up
     points -> Delete();
