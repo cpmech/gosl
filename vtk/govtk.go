@@ -29,7 +29,8 @@ type Scene struct {
 	FullAxes   bool      // show negative and positive portions of axes
 	WithPlanes bool      // show transparent auxiliary planes
 	Interact   bool      // run interactive mode
-	SaveOnExit bool      // save figure upon exit
+	SavePng    bool      // save png figure upon exit
+	SaveEps    bool      // save eps figure upon exit
 	Fnk        string    // file name key (without .png)
 	LblX       string    // label for x-axis
 	LblY       string    // label for y-axis
@@ -245,7 +246,8 @@ func (o *Scene) Run() (err error) {
 	fullaxes := (C.long)(b2i(o.FullAxes))
 	withplanes := (C.long)(b2i(o.WithPlanes))
 	interact := (C.long)(b2i(o.Interact))
-	saveonexit := (C.long)(b2i(o.SaveOnExit))
+	savepng := (C.long)(b2i(o.SavePng))
+	saveeps := (C.long)(b2i(o.SaveEps))
 	fnk := C.CString(o.Fnk)
 	defer C.free(unsafe.Pointer(fnk))
 
@@ -353,9 +355,15 @@ func (o *Scene) Run() (err error) {
 	lblClr := (*C.double)(unsafe.Pointer(&o.LblClr))
 
 	// call C routine: end
-	status := C.scene_run(o.win, axeslen, hydroline, reverse, fullaxes, withplanes, interact, saveonexit, fnk, lblX, lblY, lblZ, lblSz, lblClr)
+	status := C.scene_run(o.win, axeslen, hydroline, reverse, fullaxes, withplanes, interact, savepng, saveeps, fnk, lblX, lblY, lblZ, lblSz, lblClr)
 	if status != 0 {
 		return chk.Err("C.scene_end failed\n")
+	}
+	if savepng > 0 {
+		io.Pfblue2("file <%s.png> written\n", o.Fnk)
+	}
+	if saveeps > 0 {
+		io.Pfblue2("file <%s.eps> written\n", o.Fnk)
 	}
 	return
 }

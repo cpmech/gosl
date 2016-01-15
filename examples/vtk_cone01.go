@@ -43,16 +43,16 @@ func main() {
 	cone.Ndiv = []int{21, 21, 41}
 	cone.OctRotate = true
 	cone.GridShowPts = false
-	cone.Color = []float64{0, 1, 1, 1}
-	//cone.CmapNclrs = 0 // use this to use specified color
-	cone.AddTo(scn) // remember to add to Scene
+	cone.Color = []float64{0, 1, 0, 1}
+	cone.CmapNclrs = 0 // use this to use specified color
+	cone.AddTo(scn)    // remember to add to Scene
 
 	// spheres
 	sset := vtk.NewSpheresFromFile("points.dat")
 	sset.AddTo(scn)
 
 	// start interactive mode
-	scn.SaveOnExit = false
+	scn.SavePng = false
 	scn.Fnk = "/tmp/gosl/vtk_cone01"
 	scn.Run()
 }

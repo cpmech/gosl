@@ -14,6 +14,7 @@
 #include <vtkActor.h>
 #include <vtkWindowToImageFilter.h>
 #include <vtkPNGWriter.h>
+#include <vtkGL2PSExporter.h>
 #include <vtkRenderLargeImage.h>
 
 // GoslVTK
@@ -39,6 +40,7 @@ public:
     void Render   ()                    { if (_initialized) _ren_win  -> Render();              }
     void Show     ();
     void WritePNG (char const * Filename, bool Large=false, int Magnification=1);
+    void WriteEPS (char const * Filename);
     void Camera   (double xUp, double yUp, double zUp, double xFoc, double yFoc, double zFoc, double xPos, double yPos, double zPos);
     void Parallel (bool ParallelProjection=true) { if (_initialized) _camera->SetParallelProjection(ParallelProjection); }
 
@@ -157,9 +159,27 @@ void Win::WritePNG(char const * Filekey, bool Large, int Magnification) {
 
     // clean up
     writer -> Delete();
+}
 
-    // Notification
-    printf("File <%s.png> written\n", Filekey);
+void Win::WriteEPS(char const * Filekey) {
+
+    if (!_initialized) return;
+
+    // re-render window
+    Render();
+
+    // eps writer
+    vtkGL2PSExporter * writer = vtkGL2PSExporter::New();
+    writer -> SetFilePrefix(Filekey);
+    writer -> SetRenderWindow(_ren_win);
+    writer -> SetFileFormatToEPS();
+    writer -> CompressOff();
+    writer -> SetSortToSimple();
+    //writer -> DrawBackgroundOn();
+    writer -> Write();
+
+    // clean up
+    writer -> Delete();
 }
 
 void Win::Camera(double xUp, double yUp, double zUp, double xFoc, double yFoc, double zFoc, double xPos, double yPos, double zPos) {
