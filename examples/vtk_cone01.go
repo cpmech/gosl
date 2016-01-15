@@ -20,14 +20,6 @@ func cone_angle(s []float64) float64 {
 	return math.Sqrt(math.Pow(s[0]-s[1], 2.0)+math.Pow(s[1]-s[2], 2.0)+math.Pow(s[2]-s[0], 2.0)) / den
 }
 
-func plot_cone(α float64, preservePrev bool) {
-	//pp := 0
-	//if preservePrev {
-	//pp = 1
-	//}
-	//plt.Wireframe(X, Y, Z, io.Sf("color='k', zmin=0, zmax=0.5, preservePrev=%d", pp))
-}
-
 func main() {
 
 	// create a new VTK Scene
@@ -55,11 +47,9 @@ func main() {
 	//cone.CmapNclrs = 0 // use this to use specified color
 	cone.AddTo(scn) // remember to add to Scene
 
-	// sphere
-	sph := vtk.NewSphere()
-	sph.Cen = []float64{0, 0, 0}
-	sph.R = 1
-	sph.AddTo(scn)
+	// spheres
+	sset := vtk.NewSpheresFromFile("points.dat")
+	sset.AddTo(scn)
 
 	// start interactive mode
 	scn.SaveOnExit = false

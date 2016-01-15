@@ -20,6 +20,7 @@
 #include "v_plane.h"
 #include "v_sgrid.h"
 #include "v_sphere.h"
+#include "v_spheres.h"
 #include "v_win.h"
 
 extern "C" {
@@ -40,6 +41,12 @@ void arrow_dealloc(void * input_arrow) {
 void sphere_dealloc(void * input_sphere) {
     GoslVTK::Sphere * sphere = (GoslVTK::Sphere*) input_sphere;
     if (sphere != NULL) delete sphere;
+}
+
+// deallocate memory
+void spheres_dealloc(void * input_sset) {
+    GoslVTK::Spheres * sset = (GoslVTK::Spheres*) input_sset;
+    if (sset != NULL) delete sset;
 }
 
 // deallocate memory
@@ -178,6 +185,36 @@ void * sphere_addto(
 
         // success
         return sph;
+    }
+
+    // fail
+    GOSLVTK_CATCH;
+    return NULL;
+}
+
+// returns non-NULL pointer on success
+void * spheres_addto(
+    void   * input_win,
+    long     nspheres,
+    double * x,
+    double * y,
+    double * z,
+    double * r,
+    double * color) {
+
+    try {
+
+        // window
+        GoslVTK::Win * win = (GoslVTK::Win*) input_win;
+
+        // spheres
+        GoslVTK::Spheres * S = new GoslVTK::Spheres();
+        S->Init(nspheres, x, y, z, r);
+        S->AddTo(*win);
+        S->SetColor(color[0], color[1], color[2], color[3]);
+
+        // success
+        return S;
     }
 
     // fail

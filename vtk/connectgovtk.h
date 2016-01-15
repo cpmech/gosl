@@ -20,6 +20,7 @@ long   *GOVTK_I;  // scalar
 void win_dealloc(void * win);
 void arrow_dealloc(void * arrow);
 void sphere_dealloc(void * sphere);
+void spheres_dealloc(void * sset);
 void isosurf_dealloc(void * isosurf);
 
 // return non-NULL pointer on success
@@ -53,6 +54,16 @@ void * sphere_addto(
     void   * input_win,
     double * cen,
     double   r,
+    double * color);
+
+// return non-NULL pointer on success
+void * spheres_addto(
+    void   * input_win,
+    long     nspheres,
+    double * x,
+    double * y,
+    double * z,
+    double * r,
     double * color);
 
 // return non-NULL pointer on success

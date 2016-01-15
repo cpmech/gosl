@@ -16,6 +16,7 @@ import (
 	"unsafe"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // Scene holds essential data to draw and interect with the x-y-z Cartesian system
@@ -32,9 +33,10 @@ type Scene struct {
 	Fnk        string  // file name key (without .png)
 
 	// vtk objects
-	arrows   []*Arrow
-	spheres  []*Sphere
-	isosurfs []*IsoSurf
+	arrows     []*Arrow
+	spheres    []*Sphere
+	spheresSet []*Spheres
+	isosurfs   []*IsoSurf
 
 	// c data
 	win unsafe.Pointer // GoslVTK::Win
@@ -66,6 +68,20 @@ type Sphere struct {
 
 	// c data
 	sph unsafe.Pointer // GoslVTK::Sphere
+}
+
+// Spheres adds a set of spheres (e.g. particles) to Scene
+type Spheres struct {
+
+	// options
+	X     []float64 // x coordinates
+	Y     []float64 // y coordinates
+	Z     []float64 // z coordinates
+	R     []float64 // radii
+	Color []float64 // {red, green, blue, opacity}
+
+	// c data
+	sset unsafe.Pointer // GoslVTK::Sphere
 }
 
 // Cb_fcn is a callback function to compute f, v := f(x) where v = dfdx
@@ -133,6 +149,36 @@ func NewSphere() *Sphere {
 	}
 }
 
+// NewSpheres allocates a new set of spheres structure
+func NewSpheres() *Spheres {
+	return &Spheres{
+		X:     []float64{0, 1, 1, 0, 0, 1, 1, 0},
+		Y:     []float64{0, 0, 1, 1, 0, 0, 1, 1},
+		Z:     []float64{0, 0, 0, 0, 1, 1, 1, 1},
+		R:     []float64{0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1},
+		Color: []float64{1, 0, 0, 1},
+	}
+}
+
+// NewSpheresFromFile add spheres (e.g. particles) by reading a file in the following format
+//   x    y    z    r
+//  0.0  0.0  0.0  0.1
+//  1.0  0.0  0.0  0.1
+//   ...
+func NewSpheresFromFile(filename string) *Spheres {
+	_, dat, err := io.ReadTable(filename)
+	if err != nil {
+		chk.Panic("NewSpheresFromFile failed:\n%v", err)
+	}
+	return &Spheres{
+		X:     dat["x"],
+		Y:     dat["y"],
+		Z:     dat["z"],
+		R:     dat["r"],
+		Color: []float64{1, 0, 0, 1},
+	}
+}
+
 // NewIsoSurf allocates a new IsoSurf structure
 func NewIsoSurf(f Cb_fcn) *IsoSurf {
 	return &IsoSurf{
@@ -157,6 +203,12 @@ func (o *Arrow) AddTo(scn *Scene) (err error) {
 // AddTo adds Sphere to Scene
 func (o *Sphere) AddTo(scn *Scene) (err error) {
 	scn.spheres = append(scn.spheres, o)
+	return
+}
+
+// AddTo adds Spheres to Scene
+func (o *Spheres) AddTo(scn *Scene) (err error) {
+	scn.spheresSet = append(scn.spheresSet, o)
 	return
 }
 
@@ -224,6 +276,24 @@ func (o *Scene) Run() (err error) {
 		color := (*C.double)(unsafe.Pointer(&O.Color[0]))
 		O.sph = C.sphere_addto(o.win, cen, r, color)
 		defer C.sphere_dealloc(O.sph)
+	}
+
+	// spheres set
+	for _, O := range o.spheresSet {
+		n := len(O.X)
+		if n < 1 {
+			continue
+		}
+		if len(O.Y) != n || len(O.Z) != n || len(O.R) != n {
+			return chk.Err("cannot add set of spheres because X,Y,Z,R have different dimensions")
+		}
+		x := (*C.double)(unsafe.Pointer(&O.X[0]))
+		y := (*C.double)(unsafe.Pointer(&O.Y[0]))
+		z := (*C.double)(unsafe.Pointer(&O.Z[0]))
+		r := (*C.double)(unsafe.Pointer(&O.R[0]))
+		color := (*C.double)(unsafe.Pointer(&O.Color[0]))
+		O.sset = C.spheres_addto(o.win, (C.long)(n), x, y, z, r, color)
+		defer C.spheres_dealloc(O.sset)
 	}
 
 	// isosurfs
