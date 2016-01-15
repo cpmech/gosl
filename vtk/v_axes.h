@@ -36,7 +36,6 @@ public:
 
     // Set Methods
     void SetLabels    (char const * X= "x", char const * Y= "y", char const * Z= "z", double r=0, double g=0, double b=1, int SizePt=22, bool Shadow=true);
-    void SetNegLabels (char const * X="-x", char const * Y="-y", char const * Z="-z", double r=1, double g=0, double b=0, int SizePt=22, bool Shadow=true);
     void SetWireWidth (int Width) { if (_initialized) _axes_actor->GetProperty()->SetLineWidth(Width); }
 
     // Methods
@@ -200,13 +199,10 @@ void Axes::Init(double Scale, bool DrawHydroLine, bool Reverse, bool Full, bool 
     _initialized = true;
 
     if (Reverse) {
-        if (Full) SetLabels ( "x",  "y",  "z");
-        else      SetLabels ("-x", "-y", "-z");
+        if (Full) SetLabels ( "X",  "Y",  "Z");
+        else      SetLabels ("-X", "-Y", "-Z");
     } else {
         SetLabels();
-    }
-    if (Full) {
-        SetNegLabels();
     }
 }
 
@@ -238,21 +234,32 @@ void Axes::SetLabels(char const * X, char const * Y, char const * Z, double r, d
     _text_prop     -> SetColor    (r, g, b);
     if (Shadow) _text_prop -> ShadowOn ();
     else        _text_prop -> ShadowOff();
-}
 
-void Axes::SetNegLabels(char const * X, char const * Y, char const * Z, double r, double g, double b, int SizePt, bool Shadow) {
+    char nX[100];
+    char nY[100];
+    char nZ[100];
+    snprintf(nX, 100, "-%s", X);
+    snprintf(nY, 100, "-%s", Y);
+    snprintf(nZ, 100, "-%s", Z);
 
-    if (!_initialized) return;
+    double nR = 1.0;
+    double nG = 0.0;
+    double nB = 0.0;
+    if (r==0 && g==0 && b==0) {
+        nR = 0;
+        nG = 0;
+        nB = 0;
+    }
 
     if (_negx_label_actor == NULL) return;
     if (_negy_label_actor == NULL) return;
     if (_negz_label_actor == NULL) return;
     if (_neg_text_prop    == NULL) return;
-    _negx_label_actor -> SetInput    (X);
-    _negy_label_actor -> SetInput    (Y);
-    _negz_label_actor -> SetInput    (Z);
+    _negx_label_actor -> SetInput    (nX);
+    _negy_label_actor -> SetInput    (nY);
+    _negz_label_actor -> SetInput    (nZ);
     _neg_text_prop    -> SetFontSize (SizePt);
-    _neg_text_prop    -> SetColor    (r, g, b);
+    _neg_text_prop    -> SetColor    (1, 0, 0);
     if (Shadow) _neg_text_prop -> ShadowOn ();
     else        _neg_text_prop -> ShadowOff();
 }

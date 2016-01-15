@@ -23,14 +23,19 @@ import (
 type Scene struct {
 
 	// options
-	AxesLen    float64 // length of x-y-z axes
-	HydroLine  bool    // show hydrostatic line
-	Reverse    bool    // reverse direction for default camera
-	FullAxes   bool    // show negative and positive portions of axes
-	WithPlanes bool    // show transparent auxiliary planes
-	Interact   bool    // run interactive mode
-	SaveOnExit bool    // save figure upon exit
-	Fnk        string  // file name key (without .png)
+	AxesLen    float64   // length of x-y-z axes
+	HydroLine  bool      // show hydrostatic line
+	Reverse    bool      // reverse direction for default camera
+	FullAxes   bool      // show negative and positive portions of axes
+	WithPlanes bool      // show transparent auxiliary planes
+	Interact   bool      // run interactive mode
+	SaveOnExit bool      // save figure upon exit
+	Fnk        string    // file name key (without .png)
+	LblX       string    // label for x-axis
+	LblY       string    // label for y-axis
+	LblZ       string    // label for z-axis
+	LblSz      int       // size of labels in points
+	LblClr     []float64 // r,g,b color components for labels
 
 	// vtk objects
 	arrows     []*Arrow
@@ -124,6 +129,10 @@ func NewScene() *Scene {
 		WithPlanes: true,
 		Interact:   true,
 		Fnk:        "tmp_gosl_vtk",
+		LblX:       "X",
+		LblY:       "Y",
+		LblZ:       "Z",
+		LblSz:      30,
 	}
 }
 
@@ -324,8 +333,27 @@ func (o *Scene) Run() (err error) {
 		defer C.isosurf_dealloc(O.isf)
 	}
 
+	// labels
+	if o.LblX == "" {
+		o.LblX = "X"
+	}
+	if o.LblY == "" {
+		o.LblY = "Y"
+	}
+	if o.LblZ == "" {
+		o.LblZ = "Z"
+	}
+	lblX := C.CString(o.LblX)
+	defer C.free(unsafe.Pointer(lblX))
+	lblY := C.CString(o.LblY)
+	defer C.free(unsafe.Pointer(lblY))
+	lblZ := C.CString(o.LblZ)
+	defer C.free(unsafe.Pointer(lblZ))
+	lblSz := (C.long)(o.LblSz)
+	lblClr := (*C.double)(unsafe.Pointer(&o.LblClr))
+
 	// call C routine: end
-	status := C.scene_run(o.win, axeslen, hydroline, reverse, fullaxes, withplanes, interact, saveonexit, fnk)
+	status := C.scene_run(o.win, axeslen, hydroline, reverse, fullaxes, withplanes, interact, saveonexit, fnk, lblX, lblY, lblZ, lblSz, lblClr)
 	if status != 0 {
 		return chk.Err("C.scene_end failed\n")
 	}

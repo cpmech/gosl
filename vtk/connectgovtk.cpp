@@ -83,7 +83,12 @@ int scene_run(
     long         withplanes,
     long         interact,
     long         saveonexit,
-    char const * fnk) {
+    char const * fnk,
+    char const * lblX,
+    char const * lblY,
+    char const * lblZ,
+    long         lblSz,
+    double     * lblClr) {
 
     try {
 
@@ -93,6 +98,7 @@ int scene_run(
         // axes
         GoslVTK::Axes axe;
         axe.Init(axeslen, hydroline>0, reverse>0, fullaxes>0);
+        axe.SetLabels(lblX, lblY, lblZ, lblClr[0], lblClr[1], lblClr[2], lblSz);
         axe.AddTo(*win);
 
         // auxiliary planes

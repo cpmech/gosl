@@ -36,7 +36,12 @@ int scene_run(
     long         withplanes,
     long         interact,
     long         saveonexit,
-    char const * fnk);
+    char const * fnk,
+    char const * lblX,
+    char const * lblY,
+    char const * lblZ,
+    long         lblSz,
+    double     * lblClr);
 
 // return non-NULL pointer on success
 void * arrow_addto(
