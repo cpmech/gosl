@@ -189,6 +189,10 @@ func AxisRange(xmin, xmax, ymin, ymax float64) {
 	io.Ff(&bb, "axis([%g, %g, %g, %g])\n", xmin, xmax, ymin, ymax)
 }
 
+func AxisRange3d(xmin, xmax, ymin, ymax, zmin, zmax float64) {
+	io.Ff(&bb, "gca().set_xlim3d(%g,%g)\ngca().set_ylim3d(%g,%g)\ngca().set_zlim3d(%g,%g)\n", xmin, xmax, ymin, ymax, zmin, zmax)
+}
+
 func AxisLims(lims []float64) {
 	io.Ff(&bb, "axis([%g, %g, %g, %g])\n", lims[0], lims[1], lims[2], lims[3])
 }
