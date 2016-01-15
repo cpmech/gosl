@@ -28,6 +28,14 @@ func Reset() {
 	io.Ff(&ea, "ea = []\n")
 }
 
+func PyFile(filename string) {
+	b, err := io.ReadFile(filename)
+	if err != nil {
+		chk.Panic("PyFile failed:\n%v", err)
+	}
+	io.Ff(&bb, string(b))
+}
+
 func SetXlog() {
 	io.Ff(&bb, "SetXlog()\n")
 }
