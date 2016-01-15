@@ -480,7 +480,6 @@ func (o IsoFun) View(l float64, L []float64, grads bool, gradsFtol float64, extr
 	scn := vtk.NewScene()
 	scn.AxesLen = l
 	scn.Reverse = o.a < 0
-	scn.SaveOnExit = false
 
 	// stress point
 	var sph *vtk.Sphere
