@@ -82,8 +82,9 @@ int scene_run(
     long         fullaxes,
     long         withplanes,
     long         interact,
-    long         savepng,
     long         saveeps,
+    long         savepng,
+    long         pngmag,
     char const * fnk,
     char const * lblX,
     char const * lblY,
@@ -129,7 +130,8 @@ int scene_run(
 
         // save figure
         if (savepng > 0) {
-            win->WritePNG(fnk);
+            bool large = (pngmag > 0 ? true : false);
+            win->WritePNG(fnk, large, pngmag);
         }
         if (saveeps > 0) {
             win->WriteEPS(fnk);
