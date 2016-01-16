@@ -28,6 +28,10 @@ func Reset() {
 	io.Ff(&ea, "ea = []\n")
 }
 
+func PyCmds(cmds string) {
+	io.Ff(&bb, cmds)
+}
+
 func PyFile(filename string) {
 	b, err := io.ReadFile(filename)
 	if err != nil {
