@@ -32,6 +32,13 @@ func PyCmds(cmds string) {
 	io.Ff(&bb, cmds)
 }
 
+func DoubleYscale(ylabelOrEmpty string) {
+	io.Ff(&bb, "gca().twinx()\n")
+	if ylabelOrEmpty != "" {
+		io.Ff(&bb, "gca().set_ylabel('%s')\n", ylabelOrEmpty)
+	}
+}
+
 func PyFile(filename string) {
 	b, err := io.ReadFile(filename)
 	if err != nil {
