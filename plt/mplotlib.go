@@ -391,10 +391,12 @@ func SetFontSize(args string) {
 }
 
 func SetForEps(prop, widpt float64) {
+	Reset()
 	io.Ff(&bb, "SetForEps(%g,%g)\n", prop, widpt)
 }
 
 func SetForPng(prop, widpt float64, dpi int) {
+	Reset()
 	io.Ff(&bb, "SetForPng(%g,%g,%d)\n", prop, widpt, dpi)
 }
 
