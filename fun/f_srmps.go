@@ -12,8 +12,8 @@ import (
 
 // Increasing or decreasing smooth-ramp-smooth function
 type Srmps struct {
-	ca, cb float64
-	ta, tb float64
+	Ca, Cb float64
+	Ta, Tb float64
 }
 
 // set allocators databse
@@ -26,13 +26,13 @@ func (o *Srmps) Init(prms Prms) (err error) {
 	for _, p := range prms {
 		switch p.N {
 		case "ca":
-			o.ca = p.V
+			o.Ca = p.V
 		case "cb":
-			o.cb = p.V
+			o.Cb = p.V
 		case "ta":
-			o.ta = p.V
+			o.Ta = p.V
 		case "tb":
-			o.tb = p.V
+			o.Tb = p.V
 		default:
 			return chk.Err("srmps: parameter named %q is invalid", p.N)
 		}
@@ -42,35 +42,35 @@ func (o *Srmps) Init(prms Prms) (err error) {
 
 // F returns y = F(t, x)
 func (o Srmps) F(t float64, x []float64) float64 {
-	if t < o.ta {
-		return o.ca
+	if t < o.Ta {
+		return o.Ca
 	}
-	if t > o.tb {
-		return o.cb
+	if t > o.Tb {
+		return o.Cb
 	}
-	return o.cb + (o.ca-o.cb)*(math.Cos(math.Pi*(t-o.ta)/(o.tb-o.ta))+1.0)/2.0
+	return o.Cb + (o.Ca-o.Cb)*(math.Cos(math.Pi*(t-o.Ta)/(o.Tb-o.Ta))+1.0)/2.0
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Srmps) G(t float64, x []float64) float64 {
-	if t < o.ta {
+	if t < o.Ta {
 		return 0
 	}
-	if t > o.tb {
+	if t > o.Tb {
 		return 0
 	}
-	return -math.Pi * (o.ca - o.cb) * math.Sin(math.Pi*(t-o.ta)/(o.tb-o.ta)) / (2.0 * (o.tb - o.ta))
+	return -math.Pi * (o.Ca - o.Cb) * math.Sin(math.Pi*(t-o.Ta)/(o.Tb-o.Ta)) / (2.0 * (o.Tb - o.Ta))
 }
 
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o Srmps) H(t float64, x []float64) float64 {
-	if t < o.ta {
+	if t < o.Ta {
 		return 0
 	}
-	if t > o.tb {
+	if t > o.Tb {
 		return 0
 	}
-	return -math.Pi * math.Pi * (o.ca - o.cb) * math.Cos(math.Pi*(t-o.ta)/(o.tb-o.ta)) / (2.0 * (o.tb - o.ta) * (o.tb - o.ta))
+	return -math.Pi * math.Pi * (o.Ca - o.Cb) * math.Cos(math.Pi*(t-o.Ta)/(o.Tb-o.Ta)) / (2.0 * (o.Tb - o.Ta) * (o.Tb - o.Ta))
 }
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)

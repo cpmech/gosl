@@ -114,6 +114,7 @@ func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64) {
 			}
 			if reading_z0 {
 				z0 = atof(s)
+				_ = z0
 				reading_z0 = false
 				reading_l = true
 				k = 0
