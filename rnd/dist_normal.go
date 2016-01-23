@@ -4,7 +4,15 @@
 
 package rnd
 
-import "math"
+import (
+	"math"
+	"math/rand"
+)
+
+// Normal returns a random number belonging to a normal distribution
+func Normal(μ, σ float64) float64 {
+	return μ + σ*rand.NormFloat64()
+}
 
 // Stdphi implements φ(x), the standard probability density function
 func Stdphi(x float64) float64 {
