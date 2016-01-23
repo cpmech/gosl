@@ -323,7 +323,7 @@ def Cmap(idx):
     Get colormap
     ============
     """
-    cmaps = [MPLcm.bwr, MPLcm.RdBu, MPLcm.hsv, MPLcm.jet, MPLcm.terrain, MPLcm.pink]
+    cmaps = [MPLcm.bwr, MPLcm.RdBu, MPLcm.hsv, MPLcm.jet, MPLcm.terrain, MPLcm.pink, MPLcm.Greys]
     return cmaps[idx % len(cmaps)]
 
 
@@ -608,7 +608,7 @@ def Quad(x0,y0, x1,y1, x2,y2, x3,y3, fc='#e1eeff', ec='black', zorder=0, alpha=1
     gca().add_patch(Polygon(array([[x0,y0],[x1,y1],[x2,y2],[x3,y3]]), ec=ec, fc=fc, ls=ls, zorder=zorder, alpha=alpha, lw=lw, clip_on=clip_on))
 
 
-def Contour(X,Y,Z, label='', levels=None, cmapidx=0, fmt='%g', fsz=10, inline=0, wire=True, cbar=True, zorder=None, markZero='', clabels=True):
+def Contour(X,Y,Z, label='', levels=None, cmapidx=0, fmt='%g', lwd=1, fsz=10, inline=0, wire=True, cbar=True, zorder=None, markZero='', clabels=True):
     """
     Plot contour
     ============
@@ -619,7 +619,7 @@ def Contour(X,Y,Z, label='', levels=None, cmapidx=0, fmt='%g', fsz=10, inline=0,
             levels = linspace(Z.min(), Z.max(), levels)
     c1 = contourf (X,Y,Z, cmap=Cmap(cmapidx), levels=levels, zorder=None)
     if wire:
-        c2 = contour (X,Y,Z, colors=('k'), levels=levels, zorder=None)
+        c2 = contour (X,Y,Z, colors=('k'), levels=levels, linewidths=[lwd], zorder=None)
         if clabels:
             clabel (c2, inline=inline, fontsize=fsz)
     if cbar:
