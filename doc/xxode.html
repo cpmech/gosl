@@ -252,8 +252,8 @@ work/correctness analysis
 		
 			
 			
-			<h2 id="Cb_fcn">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=349:429#L8">Cb_fcn</a></h2>
-			<pre>type Cb_fcn func(f []<a href="/pkg/builtin/#float64">float64</a>, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// function</span>
+			<h2 id="Cb_fcn">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=349:432#L8">Cb_fcn</a></h2>
+			<pre>type Cb_fcn func(f []<a href="/pkg/builtin/#float64">float64</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// function</span>
 </pre>
 			<p>
 callbacks
@@ -274,8 +274,8 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_jac">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=447:532#L9">Cb_jac</a></h2>
-			<pre>type Cb_jac func(dfdy *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// Jacobian (must have at least all diagonal elements set)</span>
+			<h2 id="Cb_jac">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=450:538#L9">Cb_jac</a></h2>
+			<pre>type Cb_jac func(dfdy *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// Jacobian (must have at least all diagonal elements set)</span>
 </pre>
 			
 
@@ -293,7 +293,7 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=592:674#L10">Cb_out</a></h2>
+			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=598:680#L10">Cb_out</a></h2>
 			<pre>type Cb_out func(first <a href="/pkg/builtin/#bool">bool</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// output</span>
 </pre>
 			
@@ -354,7 +354,7 @@ callbacks
 		
 			
 			
-			<h2 id="ODE">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=1043:4888#L21">ODE</a></h2>
+			<h2 id="ODE">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=1052:4897#L21">ODE</a></h2>
 			<pre>type ODE struct {
     ZeroTrial <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// always start iterations with zero trial values (instead of collocation interpolation)</span>
     Atol      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// absolute tolerance</span>
@@ -399,7 +399,7 @@ ODE structure
 
 			
 				
-				<h3 id="ODE.GetStat">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=13072:13106#L510">GetStat</a></h3>
+				<h3 id="ODE.GetStat">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=13096:13130#L510">GetStat</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) GetStat() (s <a href="/pkg/builtin/#string">string</a>)</pre>
 				
 				
@@ -407,7 +407,7 @@ ODE structure
 				
 			
 				
-				<h3 id="ODE.Init">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=4964:5071#L117">Init</a></h3>
+				<h3 id="ODE.Init">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=4973:5080#L117">Init</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) Init(method <a href="/pkg/builtin/#string">string</a>, ndim <a href="/pkg/builtin/#int">int</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, out <a href="#Cb_out">Cb_out</a>, silent <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Init initialises ODE structure with default values and allocate slices
@@ -418,7 +418,7 @@ Init initialises ODE structure with default values and allocate slices
 				
 			
 				
-				<h3 id="ODE.SetTol">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7399:7439#L228">SetTol</a></h3>
+				<h3 id="ODE.SetTol">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7408:7448#L228">SetTol</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) SetTol(atol, rtol <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetTol sets tolerances according to Hairer and Wanner suggestions. This routine also
@@ -430,7 +430,7 @@ checks for consistent values and only considers the case of scalars Atol and Rto
 				
 			
 				
-				<h3 id="ODE.Solve">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7776:7874#L242">Solve</a></h3>
+				<h3 id="ODE.Solve">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7785:7883#L242">Solve</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) Solve(y []<a href="/pkg/builtin/#float64">float64</a>, x, xb, Δx <a href="/pkg/builtin/#float64">float64</a>, fixstp <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
@@ -441,7 +441,7 @@ Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
 				
 			
 				
-				<h3 id="ODE.Stat">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12588:12608#L496">Stat</a></h3>
+				<h3 id="ODE.Stat">func (*ODE) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12612:12632#L496">Stat</a></h3>
 				<pre>func (o *<a href="#ODE">ODE</a>) Stat()</pre>
 				
 				

@@ -165,7 +165,7 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#Bins.Clear">func (o *Bins) Clear()</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bins.Draw2d">func (o *Bins) Draw2d(withtxt bool)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bins.Draw2d">func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[int]bool)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Bins.Find">func (o Bins) Find(x []float64) int</a></dd>
@@ -535,7 +535,7 @@ DistPointPoint computes the unsigned distance from a to b
 		
 			
 			
-			<h2 id="HashPoint">func <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=343:378#L6">HashPoint</a></h2>
+			<h2 id="HashPoint">func <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=373:408#L7">HashPoint</a></h2>
 			<pre>func HashPoint(x, y, z <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 HashPoint returns a unique id of a point
@@ -547,7 +547,7 @@ HashPoint returns a unique id of a point
 		
 			
 			
-			<h2 id="HashPointC">func <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=507:539#L11">HashPointC</a></h2>
+			<h2 id="HashPointC">func <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=537:569#L12">HashPointC</a></h2>
 			<pre>func HashPointC(c []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 HashPoint returns a unique id of a point (given slice of coordinates)
@@ -777,7 +777,7 @@ Point returns the x-y-z coordinates of a point on Bezier curve
 		
 			
 			
-			<h2 id="Bin">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=883:971#L33">Bin</a></h2>
+			<h2 id="Bin">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=913:1001#L34">Bin</a></h2>
 			<pre>type Bin struct {
     Idx     <a href="/pkg/builtin/#int">int</a>         <span class="comment">// index of bin</span>
     Entries []*<a href="#BinEntry">BinEntry</a> <span class="comment">// entries</span>
@@ -799,7 +799,7 @@ Bin defines one bin in Bins (holds entries for search)
 
 			
 				
-				<h3 id="Bin.String">func (Bin) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=5679:5707#L245">String</a></h3>
+				<h3 id="Bin.String">func (Bin) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=5777:5805#L246">String</a></h3>
 				<pre>func (o <a href="#Bin">Bin</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				
 				
@@ -809,7 +809,7 @@ Bin defines one bin in Bins (holds entries for search)
 		
 			
 			
-			<h2 id="BinEntry">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=726:823#L27">BinEntry</a></h2>
+			<h2 id="BinEntry">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=756:853#L28">BinEntry</a></h2>
 			<pre>type BinEntry struct {
     Id <a href="/pkg/builtin/#int">int</a>       <span class="comment">// object Id</span>
     X  []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// entry coordinate (read only)</span>
@@ -833,14 +833,14 @@ BinEntry holds data of an entry to bin
 		
 			
 			
-			<h2 id="Bins">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1030:1448#L39">Bins</a></h2>
+			<h2 id="Bins">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1060:1478#L40">Bins</a></h2>
 			<pre>type Bins struct {
     Ndim <a href="/pkg/builtin/#int">int</a>       <span class="comment">// space dimension</span>
     Xi   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] left/lower-most point</span>
     Xf   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] right/upper-most point</span>
     L    []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] whole box lengths</span>
+    S    []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// size of bins</span>
     N    []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// [ndim] number of divisions</span>
-    S    <a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// size of bins</span>
     All  []*<a href="#Bin">Bin</a>    <span class="comment">// [nbins] all bins (there will be an extra bin row along each dimension)</span>
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -861,7 +861,7 @@ Bins defines bins to hold entries and speed up search
 
 			
 				
-				<h3 id="Bins.Append">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2425:2479#L91">Append</a></h3>
+				<h3 id="Bins.Append">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2388:2442#L87">Append</a></h3>
 				<pre>func (o *<a href="#Bins">Bins</a>) Append(x []<a href="/pkg/builtin/#float64">float64</a>, id <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Append adds a new entry {x, id} to the bins structure
@@ -872,7 +872,7 @@ Append adds a new entry {x, id} to the bins structure
 				
 			
 				
-				<h3 id="Bins.CalcIdx">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3807:3845#L156">CalcIdx</a></h3>
+				<h3 id="Bins.CalcIdx">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3799:3837#L153">CalcIdx</a></h3>
 				<pre>func (o <a href="#Bins">Bins</a>) CalcIdx(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 CalcIdx calculates the bin index where the point x is
@@ -884,7 +884,7 @@ returns -1 if out-of-range
 				
 			
 				
-				<h3 id="Bins.Clear">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2777:2799#L106">Clear</a></h3>
+				<h3 id="Bins.Clear">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2769:2791#L103">Clear</a></h3>
 				<pre>func (o *<a href="#Bins">Bins</a>) Clear()</pre>
 				<p>
 Clear clears all bins
@@ -895,8 +895,8 @@ Clear clears all bins
 				
 			
 				
-				<h3 id="Bins.Draw2d">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=6228:6263#L278">Draw2d</a></h3>
-				<pre>func (o *<a href="#Bins">Bins</a>) Draw2d(withtxt <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<h3 id="Bins.Draw2d">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=6326:6413#L279">Draw2d</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Draw2d(withtxt, withgrid, withentries, setup <a href="/pkg/builtin/#bool">bool</a>, selBins map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Draw2d draws bins&#39; grid
 </p>
@@ -906,7 +906,7 @@ Draw2d draws bins&#39; grid
 				
 			
 				
-				<h3 id="Bins.Find">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2951:2986#L112">Find</a></h3>
+				<h3 id="Bins.Find">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2943:2978#L109">Find</a></h3>
 				<pre>func (o <a href="#Bins">Bins</a>) Find(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 Find returns the stored id of the entry whose coordinates are closest to x
@@ -918,7 +918,7 @@ returns -1 if out of range or not found
 				
 			
 				
-				<h3 id="Bins.FindAlongSegment">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=4257:4324#L172">FindAlongSegment</a></h3>
+				<h3 id="Bins.FindAlongSegment">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=4252:4319#L169">FindAlongSegment</a></h3>
 				<pre>func (o <a href="#Bins">Bins</a>) FindAlongSegment(xi, xf []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 FindAlongSegment gets the ids of entries that lie close to a segment
@@ -931,7 +931,7 @@ FindAlongSegment gets the ids of entries that lie close to a segment
 				
 			
 				
-				<h3 id="Bins.FindBinByIndex">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3482:3524#L139">FindBinByIndex</a></h3>
+				<h3 id="Bins.FindBinByIndex">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3474:3516#L136">FindBinByIndex</a></h3>
 				<pre>func (o <a href="#Bins">Bins</a>) FindBinByIndex(idx <a href="/pkg/builtin/#int">int</a>) *<a href="#Bin">Bin</a></pre>
 				<p>
 FindBinByIndex finds or allocate new bin corresponding to index idx
@@ -942,12 +942,12 @@ FindBinByIndex finds or allocate new bin corresponding to index idx
 				
 			
 				
-				<h3 id="Bins.Init">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1574:1633#L53">Init</a></h3>
+				<h3 id="Bins.Init">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1604:1663#L54">Init</a></h3>
 				<pre>func (o *<a href="#Bins">Bins</a>) Init(xi, xf []<a href="/pkg/builtin/#float64">float64</a>, ndiv <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 xi   -- [ndim] initial positions
 xf   -- [ndim] final positions
-ndiv -- number of divisions for the maximun length
+ndiv -- number of divisions for the maximum length
 </p>
 
 				
@@ -955,7 +955,7 @@ ndiv -- number of divisions for the maximun length
 				
 			
 				
-				<h3 id="Bins.String">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=5999:6028#L261">String</a></h3>
+				<h3 id="Bins.String">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=6097:6126#L262">String</a></h3>
 				<pre>func (o <a href="#Bins">Bins</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				
 				

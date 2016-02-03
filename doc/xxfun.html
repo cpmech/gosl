@@ -36,6 +36,8 @@
 			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
 			
 			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
 			</dl>
 		</div>
 		<!-- The package's Name is printed as title by the top-level template -->
@@ -84,7 +86,7 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#Heav">func Heav(x float64) float64</a></dd>
 			
 				
-				<dd><a href="#PlotT">func PlotT(o Func, dirout, fname string, t0, tf float64, xcte []float64, np int, args string, withG, withH, save, show bool, extra func())</a></dd>
+				<dd><a href="#PlotT">func PlotT(o Func, dirout, fname string, t0, tf float64, xcte []float64, np int, labelT, labelF, labelG, labelH, argsF, argsG, argsH string)</a></dd>
 			
 				
 				<dd><a href="#PlotX">func PlotX(o Func, dirout, fname string, tcte float64, xmin, xmax []float64, np int, args string, withGrad, hlZero, axEqual, save, show bool, extra func())</a></dd>
@@ -518,11 +520,11 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_pulse.go">f_pulse.go</a>
 			
-				<a href="/src/github.com/cpmech/gosl/fun/f_refdecgen.go">f_refdecgen.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_ref-dec-gen.go">f_ref-dec-gen.go</a>
 			
-				<a href="/src/github.com/cpmech/gosl/fun/f_refdecsp1.go">f_refdecsp1.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_ref-dec-sp1.go">f_ref-dec-sp1.go</a>
 			
-				<a href="/src/github.com/cpmech/gosl/fun/f_refincrl1.go">f_refincrl1.go</a>
+				<a href="/src/github.com/cpmech/gosl/fun/f_ref-inc-rl1.go">f_ref-inc-rl1.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_rmp.go">f_rmp.go</a>
 			
@@ -662,11 +664,15 @@ Heaviside step function (== derivative of Ramp(x))
 		
 			
 			
-			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1389:1527#L37">PlotT</a></h2>
-			<pre>func PlotT(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, withG, withH, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
+			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1532:1673#L40">PlotT</a></h2>
+			<pre>func PlotT(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>,
+    labelT, labelF, labelG, labelH, argsF, argsG, argsH <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 PlotT plots F, G and H for varying t and fixed coordinates x
 </p>
+<pre>fname       -- filename to safe figure
+args{F,G,H} -- if any is &#34;&#34;, the corresponding plot is not created
+</pre>
 
 			
 			
@@ -674,7 +680,7 @@ PlotT plots F, G and H for varying t and fixed coordinates x
 		
 			
 			
-			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=2487:2642#L91">PlotX</a></h2>
+			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=3284:3439#L134">PlotX</a></h2>
 			<pre>func PlotX(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, withGrad, hlZero, axEqual, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
 			<p>
 PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
@@ -1351,7 +1357,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="Func">type <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=484:864#L8">Func</a></h2>
+			<h2 id="Func">type <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=513:893#L9">Func</a></h2>
 			<pre>type Func interface {
     Init(prms <a href="#Prms">Prms</a>) <a href="/pkg/builtin/#error">error</a>                     <span class="comment">// initialise function parameters</span>
     F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// y = F(t, x)</span>
@@ -1374,7 +1380,7 @@ Func defines the interface for y(t, x) functions
 
 			
 				
-				<h3 id="New">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1028:1074#L20">New</a></h3>
+				<h3 id="New">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1057:1103#L21">New</a></h3>
 				<pre>func New(name <a href="/pkg/builtin/#string">string</a>, prms <a href="#Prms">Prms</a>) (<a href="#Func">Func</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 New allocates function by name
@@ -1877,7 +1883,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="RefDecGen">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecgen.go?s=505:769#L5">RefDecGen</a></h2>
+			<h2 id="RefDecGen">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=505:769#L5">RefDecGen</a></h2>
 			<pre>type RefDecGen struct {
     A, B <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// lambda function coeficients</span>
     <span class="comment">// contains filtered or unexported fields</span>
@@ -1901,7 +1907,7 @@ RefDecGen implements the reference decreasing model (general)
 
 			
 				
-				<h3 id="RefDecGen.F">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecgen.go?s=1544:1596#L56">F</a></h3>
+				<h3 id="RefDecGen.F">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=1544:1596#L56">F</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1912,7 +1918,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.G">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecgen.go?s=1711:1763#L61">G</a></h3>
+				<h3 id="RefDecGen.G">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=1711:1763#L61">G</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1923,7 +1929,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecgen.go?s=2112:2172#L72">Grad</a></h3>
+				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=2112:2172#L72">Grad</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1934,7 +1940,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.H">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecgen.go?s=1895:1947#L66">H</a></h3>
+				<h3 id="RefDecGen.H">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=1895:1947#L66">H</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1945,7 +1951,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecgen.go?s=915:962#L22">Init</a></h3>
+				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=915:962#L22">Init</a></h3>
 				<pre>func (o *<a href="#RefDecGen">RefDecGen</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1958,7 +1964,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="RefDecSp1">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecsp1.go?s=1102:1295#L26">RefDecSp1</a></h2>
+			<h2 id="RefDecSp1">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=1102:1295#L26">RefDecSp1</a></h2>
 			<pre>type RefDecSp1 struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -2002,7 +2008,7 @@ RefDecSp1 implements a specialisation of the reference decreasing model
 
 			
 				
-				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecsp1.go?s=2196:2248#L80">F</a></h3>
+				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2196:2248#L80">F</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2013,7 +2019,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecsp1.go?s=2401:2453#L88">G</a></h3>
+				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2401:2453#L88">G</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2024,7 +2030,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecsp1.go?s=2890:2950#L105">Grad</a></h3>
+				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2890:2950#L105">Grad</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2035,7 +2041,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecsp1.go?s=2633:2685#L96">H</a></h3>
+				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2633:2685#L96">H</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2046,7 +2052,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refdecsp1.go?s=1438:1485#L43">Init</a></h3>
+				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=1438:1485#L43">Init</a></h3>
 				<pre>func (o *<a href="#RefDecSp1">RefDecSp1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the model
@@ -2059,7 +2065,7 @@ Init initialises the model
 		
 			
 			
-			<h2 id="RefIncRL1">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refincrl1.go?s=507:831#L7">RefIncRL1</a></h2>
+			<h2 id="RefIncRL1">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=507:831#L7">RefIncRL1</a></h2>
 			<pre>type RefIncRL1 struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
@@ -2083,7 +2089,7 @@ Flipped model is also available if λ1 &lt; λ0 ( b == 1 )
 
 			
 				
-				<h3 id="RefIncRL1.F">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refincrl1.go?s=1553:1605#L60">F</a></h3>
+				<h3 id="RefIncRL1.F">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1553:1605#L60">F</a></h3>
 				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2094,7 +2100,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefIncRL1.G">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refincrl1.go?s=1715:1767#L65">G</a></h3>
+				<h3 id="RefIncRL1.G">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1715:1767#L65">G</a></h3>
 				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2105,7 +2111,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefIncRL1.Grad">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refincrl1.go?s=2114:2174#L75">Grad</a></h3>
+				<h3 id="RefIncRL1.Grad">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=2114:2174#L75">Grad</a></h3>
 				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2116,7 +2122,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefIncRL1.H">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refincrl1.go?s=1898:1950#L70">H</a></h3>
+				<h3 id="RefIncRL1.H">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1898:1950#L70">H</a></h3>
 				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2127,7 +2133,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefIncRL1.Init">func (*RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_refincrl1.go?s=974:1021#L28">Init</a></h3>
+				<h3 id="RefIncRL1.Init">func (*RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=974:1021#L28">Init</a></h3>
 				<pre>func (o *<a href="#RefIncRL1">RefIncRL1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the model
@@ -2223,7 +2229,8 @@ Init initialises the function
 			
 			<h2 id="Srmps">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=297:350#L4">Srmps</a></h2>
 			<pre>type Srmps struct {
-    <span class="comment">// contains filtered or unexported fields</span>
+    Ca, Cb <a href="/pkg/builtin/#float64">float64</a>
+    Ta, Tb <a href="/pkg/builtin/#float64">float64</a>
 }</pre>
 			<p>
 Increasing or decreasing smooth-ramp-smooth function
@@ -2304,6 +2311,35 @@ Init initialises the function
 
 
 
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+	<table class="dir">
+	<tr>
+	<th>Name</th>
+	<th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+	<th style="text-align: left; width: auto">Synopsis</th>
+	</tr>
+	
+		<tr>
+		<td><a href="..">..</a></td>
+		</tr>
+	
+	
+		
+			<tr>
+			<td class="name"><a href="figs/">figs</a></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td style="width: auto"></td>
+			</tr>
+		
+	
+	</table>
+
+	
 
 </div><!-- page -->
 <div id="footer">

@@ -90,7 +90,7 @@ parsing, handling files, directories, etc.
 				<dd><a href="#ArgToString">func ArgToString(idxArg int, defaultValue string) string</a></dd>
 			
 				
-				<dd><a href="#ArgsTable">func ArgsTable(data ...interface{}) (table string)</a></dd>
+				<dd><a href="#ArgsTable">func ArgsTable(title string, data ...interface{}) (table string)</a></dd>
 			
 				
 				<dd><a href="#Atob">func Atob(val string) (bres bool)</a></dd>
@@ -504,16 +504,18 @@ ArgToString parses an argument as a string
 		
 			
 			
-			<h2 id="ArgsTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=2931:2981#L99">ArgsTable</a></h2>
-			<pre>func ArgsTable(data ...interface{}) (table <a href="/pkg/builtin/#string">string</a>)</pre>
+			<h2 id="ArgsTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=3052:3116#L101">ArgsTable</a></h2>
+			<pre>func ArgsTable(title <a href="/pkg/builtin/#string">string</a>, data ...interface{}) (table <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 ArgsTable prints a nice table with input arguments
 </p>
-<pre>Input: sets of THREE items in the following order:
- description, key, value, ...
- description, key, value, ...
-      ...
- description, key, value, ...
+<pre>Input:
+ title -- title of table; e.g. INPUT ARGUMENTS
+ data  -- sets of THREE items in the following order:
+               description, key, value, ...
+               description, key, value, ...
+                    ...
+               description, key, value, ...
 </pre>
 
 			
