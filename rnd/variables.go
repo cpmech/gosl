@@ -10,8 +10,9 @@ import "github.com/cpmech/gosl/chk"
 type DistType int
 
 const (
-	D_Nrm DistType = iota + 1
-	D_Log
+	D_Nrm   DistType = iota + 1 // normal
+	D_Log                       // lognormal
+	D_TypeI                     // Type I Extreme Value
 )
 
 // VarData implements data defining one random variable
