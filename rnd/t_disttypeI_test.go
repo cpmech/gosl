@@ -112,3 +112,15 @@ func Test_typeI02(tst *testing.T) {
 		plt.SaveD("/tmp/gosl", "test_typeI02.eps")
 	}
 }
+
+func Test_typeI03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("typeI03")
+
+	var dist DistTypeI
+	dist.Init(&VarData{M: 61.3, S: 7.52}) // from Haldar & Mahadevan page 90
+	io.Pforan("dist = %+#v\n", dist)
+	chk.Scalar(tst, "u", 0.00011, dist.U, 57.9157)
+	chk.Scalar(tst, "β", 1e-4, dist.B, 1.0/0.17055)
+}
