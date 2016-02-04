@@ -5,6 +5,7 @@
 package rnd
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -13,10 +14,10 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_lognormal(μ, σ float64, Pori bool) {
+func plot_lognormal(μ, σ float64) {
 
 	var dist DistLogNormal
-	dist.Init(&VarData{M: μ, S: σ, Pori: Pori})
+	dist.Init(&VarData{M: μ, S: σ})
 
 	n := 101
 	x := utl.LinSpace(0, 3, n)
@@ -27,10 +28,10 @@ func plot_lognormal(μ, σ float64, Pori bool) {
 		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
+	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%.4f,\\;\\sigma=%.4f$'", μ, σ))
 	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=2")
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
+	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%.4f,\\;\\sigma=%.4f$'", μ, σ))
 	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
 }
 
@@ -50,14 +51,14 @@ func Test_lognorm01(tst *testing.T) {
 		tst.Errorf("cannot get x values\n")
 		return
 	}
-	Mu, ok := dat["mu"]
+	N, ok := dat["n"]
 	if !ok {
-		tst.Errorf("cannot get mu values\n")
+		tst.Errorf("cannot get n values\n")
 		return
 	}
-	Sig, ok := dat["sig"]
+	Z, ok := dat["z"]
 	if !ok {
-		tst.Errorf("cannot get sig values\n")
+		tst.Errorf("cannot get z values\n")
 		return
 	}
 	YpdfCmp, ok := dat["ypdf"]
@@ -73,9 +74,12 @@ func Test_lognorm01(tst *testing.T) {
 
 	var dist DistLogNormal
 
-	n := len(X)
-	for i := 0; i < n; i++ {
-		dist.Init(&VarData{M: Mu[i], S: Sig[i], Pori: true})
+	nx := len(X)
+	for i := 0; i < nx; i++ {
+		w := Z[i] * Z[i]
+		μ := math.Exp(N[i] + w/2.0)
+		σ := μ * math.Sqrt(math.Exp(w)-1.0)
+		dist.Init(&VarData{M: μ, S: σ})
 		Ypdf := dist.Pdf(X[i])
 		Ycdf := dist.Cdf(X[i])
 		err := chk.PrintAnaNum("ypdf", 1e-14, YpdfCmp[i], Ypdf, chk.Verbose)
@@ -99,8 +103,12 @@ func Test_lognorm02(tst *testing.T) {
 	doplot := chk.Verbose
 	if doplot {
 		plt.SetForEps(1.5, 300)
-		for _, σ := range []float64{1, 0.5, 0.25} {
-			plot_lognormal(0, σ, true)
+		n := 0.0
+		for _, z := range []float64{1, 0.5, 0.25} {
+			w := z * z
+			μ := math.Exp(n + w/2.0)
+			σ := μ * math.Sqrt(math.Exp(w)-1.0)
+			plot_lognormal(μ, σ)
 		}
 		plt.SaveD("/tmp/gosl", "test_lognorm02.eps")
 	}
@@ -109,93 +117,18 @@ func Test_lognorm02(tst *testing.T) {
 func Test_lognorm03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("lognorm03. Rackwitz-Fiessler conversion")
+	chk.PrintTitle("lognorm03. random numbers")
 
-	dat := &VarData{D: D_Log, M: 10, S: 2}
-	var dist DistLogNormal
-	dist.Init(dat)
-	dat.distr = &dist
-
-	doplot := false
-	if doplot {
-		plt.SetForEps(1.5, 300)
-		n := 101
-		x := utl.LinSpace(5, 15, n)
-		y := make([]float64, n)
-		Y := make([]float64, n)
-		for i := 0; i < n; i++ {
-			y[i] = dist.Pdf(x[i])
-			Y[i] = dist.Cdf(x[i])
-		}
-		plt.Subplot(2, 1, 1)
-		plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$m=%.3f,\\;s=%.3f$'", dist.M, dist.S))
-		plt.Gll("$x$", "$f(x)$", "leg_out=0, leg_ncol=2")
-		plt.Subplot(2, 1, 2)
-		plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$m=%.3f,\\;s=%.3f$'", dist.M, dist.S))
-		plt.Gll("$x$", "$F(x)$", "leg_out=0, leg_ncol=2")
-		plt.SaveD("/tmp/gosl", "test_lognorm03.eps")
-	}
-
-	for i, x := range []float64{10, 20, 50} {
-
-		// Rackwitz-Fiessler
-		f := dist.Pdf(x)
-		F := dist.Cdf(x)
-		io.Pforan("\nx=%g  f(x)=%v  F(x)=%v\n", x, f, F)
-		var σNrf, μNrf float64
-		if F == 0 || F == 1 { // z = Φ⁻¹(F) → -∞ or +∞
-			chk.Panic("cannot compute equivalent normal parameters @ %g because F=%g", x, F)
-		} else {
-			z := StdInvPhi(F)
-			σNrf = Stdphi(z) / f
-			μNrf = x - σNrf*z
-			if μNrf < 0 {
-				μNrf = 0
-				σNrf = x / z
-			}
-		}
-
-		// analytical solution for lognormal distribution
-		μN, σN, invalid := dat.CalcEquiv(x)
-		if invalid {
-			tst.Errorf("CalcEquiv failed\n")
-			return
-		}
-
-		// check
-		tol := 1e-10
-		if i > 0 {
-			tol = 1e-6
-		}
-		err := chk.PrintAnaNum("μN", tol, μN, μNrf, chk.Verbose)
-		if err != nil {
-			tst.Errorf("μN values are different: %v\n", err)
-			//return
-		}
-		err = chk.PrintAnaNum("σN", tol, σN, σNrf, chk.Verbose)
-		if err != nil {
-			tst.Errorf("σN values are different: %v\n", err)
-			//return
-		}
-	}
-}
-
-func Test_lognorm04(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("lognorm04. random numbers")
-
-	μ := 0.0
+	μ := 1.0
 	σ := 0.25
-	Pori := true
 
 	nsamples := 1000
 	X := make([]float64, nsamples)
 	for i := 0; i < nsamples; i++ {
-		X[i] = Lognormal(μ, σ, Pori)
+		X[i] = Lognormal(μ, σ)
 	}
 
-	nstations := 51
+	nstations := 41
 	xmin := 0.0
 	xmax := 3.0
 	dx := (xmax - xmin) / float64(nstations-1)
@@ -207,7 +140,6 @@ func Test_lognorm04(tst *testing.T) {
 	prob := make([]float64, nstations)
 	for i := 0; i < nstations-1; i++ {
 		prob[i] = float64(hist.Counts[i]) / (float64(nsamples) * dx)
-		io.Pfblue2("prob = %v\n", prob[i])
 	}
 
 	io.Pf(TextHist(hist.GenLabels("%.3f"), hist.Counts, 60))
@@ -221,9 +153,9 @@ func Test_lognorm04(tst *testing.T) {
 	chk.Scalar(tst, "area", 1e-15, area, 1)
 
 	if chk.Verbose {
-		plot_lognormal(μ, σ, Pori)
+		plot_lognormal(μ, σ)
 		plt.Subplot(2, 1, 1)
 		hist.PlotDensity(nil, "")
-		plt.SaveD("/tmp/gosl", "test_lognorm04.eps")
+		plt.SaveD("/tmp/gosl", "test_lognorm03.eps")
 	}
 }

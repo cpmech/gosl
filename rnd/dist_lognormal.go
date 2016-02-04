@@ -12,26 +12,24 @@ import (
 const TOLMINLOG = 1e-16
 
 // Lognormal returns a random number belonging to a lognormal distribution
-//  p.Pori -- if true, p.M and p.S are mean and deviation of the log(x) [default]
-func Lognormal(μ, σ float64, Pori bool) float64 {
-	if !Pori {
-		δ := σ / μ
-		σ = math.Sqrt(math.Log(1.0 + δ*δ))
-		μ = math.Log(μ) - σ*σ/2.0
-	}
-	return math.Exp(μ + σ*rand.NormFloat64())
+func Lognormal(μ, σ float64) float64 {
+	δ := σ / μ
+	v := math.Log(1.0 + δ*δ)
+	z := math.Sqrt(v)
+	n := math.Log(μ) - v/2.0
+	return math.Exp(n + z*rand.NormFloat64())
 }
 
 // DistLogNormal implements the lognormal distribution
 type DistLogNormal struct {
 
 	// input
-	M float64 // mean of log(x)
-	S float64 // standard deviation of log(x)
+	N float64 // mean of log(x)
+	Z float64 // standard deviation of log(x)
 
 	// auxiliary
-	A float64 // 1 / (s sqrt(2 π))
-	B float64 // -1 / (2 s²)
+	A float64 // 1 / (z sqrt(2 π))
+	B float64 // -1 / (2 z²)
 }
 
 // set factory
@@ -41,24 +39,17 @@ func init() {
 
 // CalcDerived computes derived/auxiliary quantities
 func (o *DistLogNormal) CalcDerived() {
-	o.A = 1.0 / (o.S * math.Sqrt2 * math.SqrtPi)
-	o.B = -1.0 / (2.0 * o.S * o.S)
+	o.A = 1.0 / (o.Z * math.Sqrt2 * math.SqrtPi)
+	o.B = -1.0 / (2.0 * o.Z * o.Z)
 }
 
 // Init initialises lognormal distribution
-//  p.Pori -- if true, p.M and p.S are mean and deviation of the log(x) [default]
 func (o *DistLogNormal) Init(p *VarData) error {
-	if p.Pori {
-		o.M, o.S = p.M, p.S
-		p.m, p.s = o.M, o.S
-		o.CalcDerived()
-		return nil
-	}
 	μ, σ := p.M, p.S
 	δ := σ / μ
-	o.S = math.Sqrt(math.Log(1.0 + δ*δ))
-	o.M = math.Log(μ) - o.S*o.S/2.0
-	p.m, p.s = o.M, o.S
+	v := math.Log(1.0 + δ*δ)
+	o.Z = math.Sqrt(v)
+	o.N = math.Log(μ) - v/2.0
 	o.CalcDerived()
 	return nil
 }
@@ -68,7 +59,7 @@ func (o DistLogNormal) Pdf(x float64) float64 {
 	if x < TOLMINLOG {
 		return 0
 	}
-	return o.A * math.Exp(o.B*math.Pow(math.Log(x)-o.M, 2.0)) / x
+	return o.A * math.Exp(o.B*math.Pow(math.Log(x)-o.N, 2.0)) / x
 }
 
 // Cdf computes the cumulative probability function @ x
@@ -76,5 +67,5 @@ func (o DistLogNormal) Cdf(x float64) float64 {
 	if x < TOLMINLOG {
 		return 0
 	}
-	return (1.0 + math.Erf((math.Log(x)-o.M)/(o.S*math.Sqrt2))) / 2.0
+	return (1.0 + math.Erf((math.Log(x)-o.N)/(o.Z*math.Sqrt2))) / 2.0
 }
