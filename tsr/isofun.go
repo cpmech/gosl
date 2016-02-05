@@ -5,15 +5,12 @@
 package tsr
 
 import (
-	"math"
-
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
-	"github.com/cpmech/gosl/vtk"
 )
 
 // Callbacks
@@ -473,6 +470,7 @@ func (o *IsoFun) FindIntersect(p0, k float64, ΔL []float64, usek, debug bool, a
 	return
 }
 
+/*
 // View visualises the isosurface with VTK
 func (o IsoFun) View(l float64, L []float64, grads bool, gradsFtol float64, extraconf func(is *vtk.IsoSurf), args ...interface{}) {
 
@@ -546,6 +544,7 @@ func (o IsoFun) View(l float64, L []float64, grads bool, gradsFtol float64, extr
 	// run visualisation
 	scn.Run()
 }
+*/
 
 // String returns information of this object
 func (o *IsoFun) String() (l string) {

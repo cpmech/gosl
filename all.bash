@@ -36,10 +36,11 @@ if [[ $platform == 'linux' ]]; then
     install_and_test mpi 0
 fi
 
-if [[ $platform == 'linux' ]]; then
-    install_and_test vtk 0
-fi
-
-for p in la plt fdm num fun ode gm tsr rnd opt graph; do
+for p in la plt fdm num fun ode gm rnd opt graph; do
     install_and_test $p 1
 done
+
+if [[ $platform == 'linux' ]]; then
+    install_and_test vtk 0
+    install_and_test tsr 1
+fi
