@@ -34,10 +34,10 @@ func plot_normal(μ, σ float64) {
 	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
 }
 
-func Test_norm01(tst *testing.T) {
+func Test_dist_normal_01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("norm01")
+	chk.PrintTitle("dist_normal_01")
 
 	_, dat, err := io.ReadTable("data/normal.dat")
 	if err != nil {
@@ -91,10 +91,10 @@ func Test_norm01(tst *testing.T) {
 	}
 }
 
-func Test_norm02(tst *testing.T) {
+func Test_dist_normal_02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("norm02")
+	chk.PrintTitle("dist_normal_02")
 
 	doplot := chk.Verbose
 	if doplot {
@@ -102,14 +102,14 @@ func Test_norm02(tst *testing.T) {
 		for _, σ := range []float64{1, 0.5, 0.25} {
 			plot_normal(0, σ)
 		}
-		plt.SaveD("/tmp/gosl", "test_norm02.eps")
+		plt.SaveD("/tmp/gosl", "nrd_dist_normal_02.eps")
 	}
 }
 
-func Test_norm03(tst *testing.T) {
+func Test_dist_normal_03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("norm03")
+	chk.PrintTitle("dist_normal_03")
 
 	chk.Scalar(tst, "φ(0)", 1e-16, Stdphi(0.0), 0.3989422804014327)
 	chk.Scalar(tst, "φ(2)", 1e-16, Stdphi(2.0), 0.053990966513188063)

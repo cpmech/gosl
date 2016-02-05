@@ -21,5 +21,5 @@ for (n in N) {
         }
     }
 }
-write.table(Y, "/tmp/gosl-rnd-log.dat", row.names=FALSE, col.names=c("x","n","z","ypdf","ycdf"), quote=FALSE)
-print("file </tmp/gosl-rnd-log.dat> written")
+write.table(Y, "/tmp/gosl-rnd-lognormal.dat", row.names=FALSE, col.names=c("x","n","z","ypdf","ycdf"), quote=FALSE)
+print("file </tmp/gosl-rnd-lognormal.dat> written")

@@ -10,18 +10,24 @@ import "github.com/cpmech/gosl/chk"
 type DistType int
 
 const (
-	D_Nrm   DistType = iota + 1 // normal
-	D_Log                       // lognormal
-	D_TypeI                     // Type I Extreme Value
+	D_Normal    DistType = iota + 1 // normal
+	D_Lognormal                     // lognormal
+	D_Gumbel                        // Type I Extreme Value
+	D_Frechet                       // Type II Extreme Value
 )
 
 // VarData implements data defining one random variable
 type VarData struct {
 
 	// input
-	D DistType // type of distribution: "nrm", "log"
+	D DistType // type of distribution
 	M float64  // mean
 	S float64  // standard deviation
+
+	// input: Frechet
+	L float64 // location
+	C float64 // scale
+	A float64 // shape
 
 	// derived
 	distr Distribution // pointer to distribution
@@ -29,7 +35,7 @@ type VarData struct {
 
 // Transform transform x into standard normal space
 func (o *VarData) Transform(x float64) (y float64, invalid bool) {
-	if o.D == D_Nrm {
+	if o.D == D_Normal {
 		y = (x - o.M) / o.S
 		return
 	}

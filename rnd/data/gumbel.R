@@ -25,5 +25,5 @@ for (u in U) {
         }
     }
 }
-write.table(Y, "/tmp/gosl-rnd-typeI.dat", row.names=FALSE, col.names=c("x","u","b","ypdf","ycdf"), quote=FALSE)
-print("file </tmp/gosl-rnd-typeI.dat> written")
+write.table(Y, "/tmp/gosl-rnd-gumbel.dat", row.names=FALSE, col.names=c("x","u","b","ypdf","ycdf"), quote=FALSE)
+print("file </tmp/gosl-rnd-gumbel.dat> written")

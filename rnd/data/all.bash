@@ -1,4 +1,6 @@
 #!/bin/bash
 
 Rscript normal.R
-Rscript log.R
+Rscript lognormal.R
+Rscript gumbel.R
+Rscript frechet.R

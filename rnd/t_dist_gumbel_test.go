@@ -14,13 +14,13 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_lognormal(μ, σ float64) {
+func plot_gumbel(μ, σ float64) {
 
-	var dist DistLogNormal
+	var dist DistGumbel
 	dist.Init(&VarData{M: μ, S: σ})
 
 	n := 101
-	x := utl.LinSpace(0, 3, n)
+	x := utl.LinSpace(-5, 20, n)
 	y := make([]float64, n)
 	Y := make([]float64, n)
 	for i := 0; i < n; i++ {
@@ -30,17 +30,18 @@ func plot_lognormal(μ, σ float64) {
 	plt.Subplot(2, 1, 1)
 	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%.4f,\\;\\sigma=%.4f$'", μ, σ))
 	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=2")
+	plt.SetYnticks(11)
 	plt.Subplot(2, 1, 2)
 	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%.4f,\\;\\sigma=%.4f$'", μ, σ))
 	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
 }
 
-func Test_lognorm01(tst *testing.T) {
+func Test_dist_gumbel_01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("lognorm01")
+	chk.PrintTitle("dist_gumbel_01")
 
-	_, dat, err := io.ReadTable("data/log.dat")
+	_, dat, err := io.ReadTable("data/gumbel.dat")
 	if err != nil {
 		tst.Errorf("cannot read comparison results:\n%v\n", err)
 		return
@@ -51,14 +52,14 @@ func Test_lognorm01(tst *testing.T) {
 		tst.Errorf("cannot get x values\n")
 		return
 	}
-	N, ok := dat["n"]
+	U, ok := dat["u"]
 	if !ok {
-		tst.Errorf("cannot get n values\n")
+		tst.Errorf("cannot get u values\n")
 		return
 	}
-	Z, ok := dat["z"]
+	B, ok := dat["b"]
 	if !ok {
-		tst.Errorf("cannot get z values\n")
+		tst.Errorf("cannot get b values\n")
 		return
 	}
 	YpdfCmp, ok := dat["ypdf"]
@@ -72,14 +73,12 @@ func Test_lognorm01(tst *testing.T) {
 		return
 	}
 
-	var dist DistLogNormal
+	var dist DistGumbel
 
 	nx := len(X)
 	for i := 0; i < nx; i++ {
-		w := Z[i] * Z[i]
-		μ := math.Exp(N[i] + w/2.0)
-		σ := μ * math.Sqrt(math.Exp(w)-1.0)
-		dist.Init(&VarData{M: μ, S: σ})
+		dist.U = U[i]
+		dist.B = B[i]
 		Ypdf := dist.Pdf(X[i])
 		Ycdf := dist.Cdf(X[i])
 		err := chk.PrintAnaNum("ypdf", 1e-14, YpdfCmp[i], Ypdf, chk.Verbose)
@@ -95,67 +94,33 @@ func Test_lognorm01(tst *testing.T) {
 	}
 }
 
-func Test_lognorm02(tst *testing.T) {
+func Test_dist_gumbel_02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("lognorm02")
+	chk.PrintTitle("dist_gumbel_02")
 
 	doplot := chk.Verbose
 	if doplot {
 		plt.SetForEps(1.5, 300)
-		n := 0.0
-		for _, z := range []float64{1, 0.5, 0.25} {
-			w := z * z
-			μ := math.Exp(n + w/2.0)
-			σ := μ * math.Sqrt(math.Exp(w)-1.0)
-			plot_lognormal(μ, σ)
+		U := []float64{1.5, 1.0, 0.5, 3.0}
+		B := []float64{3.0, 2.0, 2.0, 4.0}
+		for i, u := range U {
+			σ := B[i] * math.Pi / math.Sqrt(6.0)
+			μ := u + EULER*B[i]
+			plot_gumbel(μ, σ)
 		}
-		plt.SaveD("/tmp/gosl", "test_lognorm02.eps")
+		plt.SaveD("/tmp/gosl", "rnd_dist_gumbel_02.eps")
 	}
 }
 
-func Test_lognorm03(tst *testing.T) {
+func Test_gumbel_03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("lognorm03. random numbers")
+	chk.PrintTitle("dist_gumbel_03")
 
-	μ := 1.0
-	σ := 0.25
-
-	nsamples := 1000
-	X := make([]float64, nsamples)
-	for i := 0; i < nsamples; i++ {
-		X[i] = Lognormal(μ, σ)
-	}
-
-	nstations := 41
-	xmin := 0.0
-	xmax := 3.0
-	dx := (xmax - xmin) / float64(nstations-1)
-
-	var hist Histogram
-	hist.Stations = utl.LinSpace(xmin, xmax, nstations)
-	hist.Count(X, true)
-
-	prob := make([]float64, nstations)
-	for i := 0; i < nstations-1; i++ {
-		prob[i] = float64(hist.Counts[i]) / (float64(nsamples) * dx)
-	}
-
-	io.Pf(TextHist(hist.GenLabels("%.3f"), hist.Counts, 60))
-	io.Pforan("dx = %v\n", dx)
-
-	area := 0.0
-	for i := 0; i < nstations-1; i++ {
-		area += dx * prob[i]
-	}
-	io.Pforan("area = %v\n", area)
-	chk.Scalar(tst, "area", 1e-15, area, 1)
-
-	if chk.Verbose {
-		plot_lognormal(μ, σ)
-		plt.Subplot(2, 1, 1)
-		hist.PlotDensity(nil, "")
-		plt.SaveD("/tmp/gosl", "test_lognorm03.eps")
-	}
+	var dist DistGumbel
+	dist.Init(&VarData{M: 61.3, S: 7.52}) // from Haldar & Mahadevan page 90
+	io.Pforan("dist = %+#v\n", dist)
+	chk.Scalar(tst, "u", 0.00011, dist.U, 57.9157)
+	chk.Scalar(tst, "β", 1e-4, dist.B, 1.0/0.17055)
 }
