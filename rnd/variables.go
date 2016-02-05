@@ -67,3 +67,15 @@ func (o *Variables) Init() (err error) {
 	}
 	return
 }
+
+// Transform transforms all variables
+func (o Variables) Transform(x []float64) (y []float64, invalid bool) {
+	y = make([]float64, len(x))
+	for i, d := range o {
+		y[i], invalid = d.Transform(x[i])
+		if invalid {
+			return
+		}
+	}
+	return
+}
