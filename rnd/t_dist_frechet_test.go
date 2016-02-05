@@ -5,6 +5,7 @@
 package rnd
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -132,6 +133,29 @@ func Test_frechet_03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("dist_frechet_03")
 
+	μ := 10.0
+	σ := 5.0
+	δ := σ / μ
+	d := 1.0 + δ*δ
+	io.Pforan("μ=%v σ=%v δ=%v d=%v\n", μ, σ, δ, d)
+
+	if chk.Verbose {
+		plt.AxHline(d, "color='k'")
+		FrechetPlotCoef("/tmp/gosl", "fig_frechet_coef.eps", 3.0, 5.0)
+	}
+
+	k := 0.2441618
+	α := 1.0 / k
+	l := μ - math.Gamma(1.0-k)
+	io.Pfpink("l=%v α=%v\n", l, α)
+
+	l = 8.782275
+	α = 4.095645
+
 	var dist DistFrechet
+	dist.Init(&VarData{L: l, A: α})
 	io.Pforan("dist = %+#v\n", dist)
+	io.Pforan("mean = %v\n", dist.Mean())
+	io.Pforan("var  = %v\n", dist.Variance())
+	io.Pforan("σ    = %v\n", math.Sqrt(dist.Variance()))
 }
