@@ -30,6 +30,8 @@ func (o *DistFrechet) Init(p *VarData) error {
 	if math.Abs(o.C) < ZERO {
 		o.C = 1
 	}
+	p.M = o.Mean()
+	p.S = math.Sqrt(o.Variance())
 	return nil
 }
 
