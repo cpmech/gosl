@@ -14,13 +14,13 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_frechet(l, c, a float64) {
+func plot_frechet(l, c, a float64, xmin, xmax float64) {
 
 	var dist DistFrechet
 	dist.Init(&VarData{L: l, C: c, A: a})
 
 	n := 101
-	x := utl.LinSpace(0, 4, n)
+	x := utl.LinSpace(xmin, xmax, n)
 	y := make([]float64, n)
 	Y := make([]float64, n)
 	for i := 0; i < n; i++ {
@@ -111,7 +111,7 @@ func Test_dist_frechet_02(tst *testing.T) {
 		A := []float64{1, 2, 3} // shape
 		for _, c := range C {
 			for _, a := range A {
-				plot_frechet(l, c, a)
+				plot_frechet(l, c, a, 0, 4)
 			}
 		}
 		plt.SaveD("/tmp/gosl", "rnd_dist_frechet_02a.eps")
@@ -121,7 +121,7 @@ func Test_dist_frechet_02(tst *testing.T) {
 		A = []float64{1, 2, 3} // shape
 		for _, c := range C {
 			for _, a := range A {
-				plot_frechet(l, c, a)
+				plot_frechet(l, c, a, 0, 4)
 			}
 		}
 		plt.SaveD("/tmp/gosl", "rnd_dist_frechet_02b.eps")
@@ -158,4 +158,9 @@ func Test_frechet_03(tst *testing.T) {
 	io.Pforan("mean = %v\n", dist.Mean())
 	io.Pforan("var  = %v\n", dist.Variance())
 	io.Pforan("σ    = %v\n", math.Sqrt(dist.Variance()))
+
+	if chk.Verbose {
+		plot_frechet(l, 1, α, 8, 16)
+		plt.SaveD("/tmp/gosl", "rnd_dist_frechet_03.eps")
+	}
 }
