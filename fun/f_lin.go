@@ -21,7 +21,7 @@ func init() {
 // Init initialises the function
 func (o *Lin) Init(prms Prms) (err error) {
 	e := prms.Connect(&o.M, "m")
-	e += prms.Connect(&o.Ts, "ts")
+	prms.Connect(&o.Ts, "ts")
 	if e != "" {
 		err = chk.Err("%v\n", e)
 	}
