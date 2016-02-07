@@ -32,27 +32,17 @@ func init() {
 func (o *RefDecGen) Init(prms Prms) (err error) {
 
 	// parameters
-	for _, p := range prms {
-		switch p.N {
-		case "bet":
-			o.β = p.V
-		case "a":
-			o.a = p.V
-		case "b":
-			o.b = p.V
-		case "c":
-			o.c = p.V
-		case "A":
-			o.A = p.V
-		case "B":
-			o.B = p.V
-		case "xini":
-			o.xini = p.V
-		case "yini":
-			o.yini = p.V
-		default:
-			return chk.Err("ref-dec-gen: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.β, "bet")
+	e += prms.Connect(&o.a, "a")
+	e += prms.Connect(&o.b, "b")
+	e += prms.Connect(&o.c, "c")
+	e += prms.Connect(&o.A, "A")
+	e += prms.Connect(&o.B, "B")
+	e += prms.Connect(&o.xini, "xini")
+	e += prms.Connect(&o.yini, "yini")
+	if e != "" {
+		err = chk.Err("%v\n", e)
+		return
 	}
 
 	// constants

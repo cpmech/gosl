@@ -38,19 +38,13 @@ func init() {
 func (o *RefIncRL1) Init(prms Prms) (err error) {
 
 	// parameters
-	for _, p := range prms {
-		switch p.N {
-		case "lam0":
-			o.λ0 = p.V
-		case "lam1":
-			o.λ1 = p.V
-		case "alp":
-			o.α = p.V
-		case "bet":
-			o.β = p.V
-		default:
-			return chk.Err("ref-inc-rl1: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.λ0, "lam0")
+	e += prms.Connect(&o.λ1, "lam1")
+	e += prms.Connect(&o.α, "alp")
+	e += prms.Connect(&o.β, "bet")
+	if e != "" {
+		err = chk.Err("%v\n", e)
+		return
 	}
 
 	// set b

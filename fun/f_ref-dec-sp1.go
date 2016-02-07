@@ -53,19 +53,13 @@ func init() {
 func (o *RefDecSp1) Init(prms Prms) (err error) {
 
 	// parameters
-	for _, p := range prms {
-		switch p.N {
-		case "bet":
-			o.β = p.V
-		case "lam1":
-			o.λ1 = p.V
-		case "ya":
-			o.ya = p.V
-		case "yb":
-			o.yb = p.V
-		default:
-			return chk.Err("ref-dec-sp1: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.β, "bet")
+	e += prms.Connect(&o.λ1, "lam1")
+	e += prms.Connect(&o.ya, "ya")
+	e += prms.Connect(&o.yb, "yb")
+	if e != "" {
+		err = chk.Err("%v\n", e)
+		return
 	}
 
 	// check
