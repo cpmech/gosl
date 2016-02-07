@@ -20,20 +20,18 @@ func init() {
 
 // Init initialises the function
 func (o *Add) Init(prms Prms) (err error) {
-	o.A, o.B = 1, 1
+	e := prms.Connect(&o.A, "a")
+	e += prms.Connect(&o.B, "b")
 	for _, p := range prms {
 		switch p.N {
-		case "A", "a":
-			o.A = p.V
-		case "B", "b":
-			o.B = p.V
-		case "Fa", "fa":
+		case "fa":
 			o.Fa = p.Fcn
-		case "Fb", "fb":
+		case "fb":
 			o.Fb = p.Fcn
-		default:
-			return chk.Err("add: parameter named %q is invalid", p.N)
 		}
+	}
+	if e != "" {
+		err = chk.Err("%v\n", e)
 	}
 	return
 }

@@ -20,15 +20,10 @@ func init() {
 
 // Init initialises the function
 func (o *Lin) Init(prms Prms) (err error) {
-	for _, p := range prms {
-		switch p.N {
-		case "M", "m":
-			o.M = p.V
-		case "Ts", "ts":
-			o.Ts = p.V
-		default:
-			return chk.Err("lin: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.M, "m")
+	e += prms.Connect(&o.Ts, "ts")
+	if e != "" {
+		err = chk.Err("%v\n", e)
 	}
 	return
 }

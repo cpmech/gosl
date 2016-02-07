@@ -7,7 +7,7 @@ package fun
 import "github.com/cpmech/gosl/chk"
 
 // Mul implements the multiplication of two other functions.
-//  F(t, x) := Fa(t,x) * Fb(t,x)
+//  F(t, x) := fa(t,x) * fb(t,x)
 type Mul struct {
 	Fa, Fb Func
 }
@@ -21,12 +21,12 @@ func init() {
 func (o *Mul) Init(prms Prms) (err error) {
 	for _, p := range prms {
 		switch p.N {
-		case "Fa", "fa":
+		case "fa":
 			o.Fa = p.Fcn
-		case "Fb", "fb":
+		case "fb":
 			o.Fb = p.Fcn
 		default:
-			return chk.Err("add: parameter named %q is invalid", p.N)
+			return chk.Err("mul: parameter named %q is invalid", p.N)
 		}
 	}
 	return

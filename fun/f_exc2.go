@@ -10,11 +10,11 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Excitation # 2: y(t) = if t < ta A*sin(b*π*t), else 0
+// Excitation # 2: y(t) = if t < ta a*sin(b*π*t), else 0
 type Exc2 struct {
-	ta float64
+	Ta float64
 	A  float64
-	b  float64
+	B  float64
 }
 
 // set allocators databse
@@ -24,41 +24,35 @@ func init() {
 
 // Init initialises the function
 func (o *Exc2) Init(prms Prms) (err error) {
-	for _, p := range prms {
-		switch p.N {
-		case "ta":
-			o.ta = p.V
-		case "A":
-			o.A = p.V
-		case "b":
-			o.b = p.V
-		default:
-			return chk.Err("exc2: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.Ta, "ta")
+	e += prms.Connect(&o.A, "a")
+	e += prms.Connect(&o.B, "b")
+	if e != "" {
+		err = chk.Err("%v\n", e)
 	}
 	return
 }
 
 // F returns y = F(t, x)
 func (o Exc2) F(t float64, x []float64) float64 {
-	if t < o.ta {
-		return o.A * math.Sin(o.b*math.Pi*t)
+	if t < o.Ta {
+		return o.A * math.Sin(o.B*math.Pi*t)
 	}
 	return 0.0
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Exc2) G(t float64, x []float64) float64 {
-	if t < o.ta {
-		return o.A * o.b * math.Pi * math.Cos(o.b*math.Pi*t)
+	if t < o.Ta {
+		return o.A * o.B * math.Pi * math.Cos(o.B*math.Pi*t)
 	}
 	return 0.0
 }
 
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o Exc2) H(t float64, x []float64) float64 {
-	if t < o.ta {
-		return -o.A * o.b * o.b * math.Pi * math.Pi * math.Sin(o.b*math.Pi*t)
+	if t < o.Ta {
+		return -o.A * o.B * o.B * math.Pi * math.Pi * math.Sin(o.B*math.Pi*t)
 	}
 	return 0.0
 }

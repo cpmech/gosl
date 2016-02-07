@@ -24,13 +24,9 @@ func init() {
 
 // Init initialises the function
 func (o *Cte) Init(prms Prms) (err error) {
-	for _, p := range prms {
-		switch p.N {
-		case "C", "c":
-			o.C = p.V
-		default:
-			return chk.Err("cte: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.C, "c")
+	if e != "" {
+		err = chk.Err("%v\n", e)
 	}
 	return
 }

@@ -16,13 +16,37 @@ var (
 
 // Prm holds material parameter names and values
 type Prm struct {
+
+	// input
 	N      string  `json:"n"`      // name of parameter
 	V      float64 `json:"v"`      // value of parameter
+	Min    float64 `json:"min"`    // min value
+	Max    float64 `json:"max"`    // max value
+	S      float64 `json:"s"`      // standard deviation
+	D      string  `json:"d"`      // probability distribution type
 	U      string  `json:"u"`      // unit (not verified)
+	Adj    string  `json:"adj"`    // adjustable: search key
 	Extra  string  `json:"extra"`  // extra data
 	Inact  bool    `json:"inact"`  // parameter is inactive in optimisation
 	SetDef bool    `json:"setdef"` // tells model to use a default value
 	Fcn    Func    `json:"fcn"`    // a function y=f(t,x)
+
+	// derived
+	conn []*float64 // connected variables to V
+}
+
+// Connect connects parameter to variable
+func (o *Prm) Connect(V *float64) {
+	o.conn = append(o.conn, V)
+	*V = o.V
+}
+
+// Set sets parameter, including connected variables
+func (o *Prm) Set(V float64) {
+	o.V = V
+	for _, v := range o.conn {
+		*v = V
+	}
 }
 
 // Prms holds many parameters
@@ -30,8 +54,8 @@ type Prms []*Prm
 
 // Find finds a parameter by name
 //  Note: returns nil if not found
-func (o Prms) Find(name string) *Prm {
-	for _, p := range o {
+func (o *Prms) Find(name string) *Prm {
+	for _, p := range *o {
 		if p.N == name {
 			return p
 		}
@@ -39,58 +63,30 @@ func (o Prms) Find(name string) *Prm {
 	return nil
 }
 
-// String outputs a nice formatted representation of a parameter
-func (o *Prm) String() string {
-	sknam, skval := "%s", "%s"
-	ncom := 0
-	if o.U != "" {
-		ncom = 1
+// Connect connects parameter
+func (o *Prms) Connect(V *float64, name string) (err string) {
+	prm := o.Find(name)
+	if prm == nil {
+		return io.Sf("cannot find parameter named %q\n", name)
 	}
-	if g_largestname > 0 {
-		sknam = io.Sf("%%-%ds", g_largestname+3)
-	}
-	if g_largestsval > 0 {
-		skval = io.Sf("%%-%ds", g_largestsval+ncom)
-	}
-	l := ""
-	if o.U != "" {
-		l = io.Sf("{\"n\":"+sknam+" \"v\":"+skval+" \"u\":%q", "\""+o.N+"\",", io.Sf("%g", o.V)+",", o.U)
-	} else {
-		l = io.Sf("{\"n\":"+sknam+" \"v\":"+skval, "\""+o.N+"\",", io.Sf("%g", o.V))
-	}
-	if o.Extra != "" {
-		l += io.Sf(", \"extra\":%q", o.Extra)
-	}
-	if o.Inact {
-		l += ", \"inact\":true"
-	}
-	if o.SetDef {
-		l += ", \"setdef\":true"
-	}
-	l += "}"
-	return l
+	prm.Connect(V)
+	return
 }
 
-// String outputs all materials
-func (o Prms) String() string {
-	g_largestname, g_largestsval = 0, 0
+func (o Prms) String() (l string) {
 	for _, prm := range o {
-		g_largestname = imax(g_largestname, len(prm.N))
-		g_largestsval = imax(g_largestsval, len(io.Sf("%g", prm.V)))
+		l += io.Sf("\nN=%q, ", prm.N)
+		l += io.Sf("V=%v, ", prm.V)
+		l += io.Sf("Min=%v, ", prm.Min)
+		l += io.Sf("Max=%v, ", prm.Max)
+		l += io.Sf("S=%v, ", prm.S)
+		l += io.Sf("D=%q\n", prm.D)
+		l += io.Sf("U=%v, ", prm.U)
+		l += io.Sf("Adj=%q, ", prm.Adj)
+		l += io.Sf("Extra=%q, ", prm.Extra)
+		l += io.Sf("Inact=%v, ", prm.Inact)
+		l += io.Sf("SetDef=%v, ", prm.SetDef)
+		l += io.Sf("Fcn=%v\n", prm.Fcn)
 	}
-	l := ""
-	if G_openbrackets {
-		l += io.Sf("%s    [\n", G_extraindent)
-	}
-	for j, prm := range o {
-		if j > 0 {
-			l += ",\n"
-		}
-		l += io.Sf("%s      %v", G_extraindent, prm)
-	}
-	if len(o) > 0 {
-		l += io.Sf("\n")
-	}
-	l += io.Sf("%s    ]", G_extraindent)
-	return l
+	return
 }

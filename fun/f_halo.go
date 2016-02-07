@@ -24,31 +24,27 @@ func init() {
 
 // Init initialises the function
 func (o *Halo) Init(prms Prms) (err error) {
-	var xc, yc, zc float64
-	is3d := false
+	ndim := 2
 	for _, p := range prms {
-		switch p.N {
-		case "xc":
-			xc = p.V
-		case "yc":
-			yc = p.V
-		case "zc":
-			zc = p.V
-			is3d = true
-		case "r":
-			o.r = p.V
-		default:
-			return chk.Err("halo: parameter named %q is invalid", p.N)
+		if p.N == "zc" {
+			ndim = 3
+			break
 		}
+	}
+	o.xc = make([]float64, ndim)
+	e := prms.Connect(&o.r, "r")
+	e += prms.Connect(&o.xc[0], "xc")
+	e += prms.Connect(&o.xc[1], "yc")
+	if ndim == 3 {
+		e += prms.Connect(&o.xc[2], "zc")
+	}
+	if e != "" {
+		err = chk.Err("%v\n", e)
+		return
 	}
 	rtol := 1e-10
 	if o.r < rtol {
 		return chk.Err("halo: radius must be greater than %g", rtol)
-	}
-	if is3d {
-		o.xc = []float64{xc, yc, zc}
-	} else {
-		o.xc = []float64{xc, yc}
 	}
 	return
 }

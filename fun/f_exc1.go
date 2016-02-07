@@ -10,9 +10,9 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Excitation #1 y(t) = A * (1 - cos(b*π*t)) / 2
+// Excitation #1 y(t) = a * (1 - cos(b*π*t)) / 2
 type Exc1 struct {
-	A, b float64
+	A, B float64
 }
 
 // set allocators databse
@@ -22,32 +22,27 @@ func init() {
 
 // Init initialises the function
 func (o *Exc1) Init(prms Prms) (err error) {
-	for _, p := range prms {
-		switch p.N {
-		case "A":
-			o.A = p.V
-		case "b":
-			o.b = p.V
-		default:
-			return chk.Err("exc1: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.A, "a")
+	e += prms.Connect(&o.B, "b")
+	if e != "" {
+		err = chk.Err("%v\n", e)
 	}
 	return
 }
 
 // F returns y = F(t, x)
 func (o Exc1) F(t float64, x []float64) float64 {
-	return o.A * (1.0 - math.Cos(o.b*math.Pi*t)) / 2.0
+	return o.A * (1.0 - math.Cos(o.B*math.Pi*t)) / 2.0
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Exc1) G(t float64, x []float64) float64 {
-	return o.A * o.b * math.Pi * math.Sin(o.b*math.Pi*t) / 2.0
+	return o.A * o.B * math.Pi * math.Sin(o.B*math.Pi*t) / 2.0
 }
 
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o Exc1) H(t float64, x []float64) float64 {
-	return o.A * o.b * o.b * math.Pi * math.Pi * math.Cos(o.b*math.Pi*t) / 2.0
+	return o.A * o.B * o.B * math.Pi * math.Pi * math.Cos(o.B*math.Pi*t) / 2.0
 }
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)

@@ -12,9 +12,14 @@ import (
 
 // Cos implements y(t) = a * cos(b*t) + c
 type Cos struct {
-	a float64
-	b float64
-	c float64
+
+	// parameters
+	A float64
+	B float64
+	C float64
+
+	// derived
+	b_is_b_div_pi bool
 }
 
 // set allocators database
@@ -24,36 +29,46 @@ func init() {
 
 // Init initialises the function
 func (o *Cos) Init(prms Prms) (err error) {
-	for _, p := range prms {
-		switch p.N {
-		case "a":
-			o.a = p.V
-		case "b":
-			o.b = p.V
-		case "c":
-			o.c = p.V
-		case "b/pi": // b/π => b = b/pi * π
-			o.b = p.V * math.Pi
-		default:
-			return chk.Err("cos: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.A, "a")
+	e += prms.Connect(&o.C, "c")
+	p := prms.Find("b/pi")
+	if p == nil {
+		e += prms.Connect(&o.B, "b")
+	} else {
+		e += prms.Connect(&o.B, "b/pi")
+		o.b_is_b_div_pi = true
+	}
+	if e != "" {
+		err = chk.Err("%v\n", e)
 	}
 	return
 }
 
 // F returns y = F(t, x)
 func (o Cos) F(t float64, x []float64) float64 {
-	return o.a*math.Cos(o.b*t) + o.c
+	b := o.B
+	if o.b_is_b_div_pi {
+		b = o.B * math.Pi
+	}
+	return o.A*math.Cos(b*t) + o.C
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Cos) G(t float64, x []float64) float64 {
-	return -o.a * o.b * math.Sin(o.b*t)
+	b := o.B
+	if o.b_is_b_div_pi {
+		b = o.B * math.Pi
+	}
+	return -o.A * b * math.Sin(b*t)
 }
 
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o Cos) H(t float64, x []float64) float64 {
-	return -o.a * o.b * o.b * math.Cos(o.b*t)
+	b := o.B
+	if o.b_is_b_div_pi {
+		b = o.B * math.Pi
+	}
+	return -o.A * b * b * math.Cos(b*t)
 }
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)

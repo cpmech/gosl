@@ -21,19 +21,12 @@ func init() {
 
 // Init initialises the function
 func (o *Rmp) Init(prms Prms) (err error) {
-	for _, p := range prms {
-		switch p.N {
-		case "Ca", "ca":
-			o.Ca = p.V
-		case "Cb", "cb":
-			o.Cb = p.V
-		case "Ta", "ta":
-			o.Ta = p.V
-		case "Tb", "tb":
-			o.Tb = p.V
-		default:
-			return chk.Err("rmp: parameter named %q is invalid", p.N)
-		}
+	e := prms.Connect(&o.Ca, "ca")
+	e += prms.Connect(&o.Cb, "cb")
+	e += prms.Connect(&o.Ta, "ta")
+	e += prms.Connect(&o.Tb, "tb")
+	if e != "" {
+		err = chk.Err("%v\n", e)
 	}
 	return
 }

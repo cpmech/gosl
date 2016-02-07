@@ -99,7 +99,7 @@ func Test_fun03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("fun03. add, cte, srmps")
 
-	cte, err := New("cte", []*Prm{&Prm{N: "C", V: 30}})
+	cte, err := New("cte", []*Prm{&Prm{N: "c", V: 30}})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
 		return
@@ -294,7 +294,7 @@ func Test_fun07(tst *testing.T) {
 	chk.PrintTitle("fun07. exc1")
 
 	fun, err := New("exc1", []*Prm{
-		&Prm{N: "A", V: 200},
+		&Prm{N: "a", V: 200},
 		&Prm{N: "b", V: 2},
 	})
 	if err != nil {
@@ -324,7 +324,7 @@ func Test_fun08(tst *testing.T) {
 
 	fun, err := New("exc2", []*Prm{
 		&Prm{N: "ta", V: 5},
-		&Prm{N: "A", V: 3},
+		&Prm{N: "a", V: 3},
 		&Prm{N: "b", V: 0.2},
 	})
 	if err != nil {
