@@ -26,6 +26,7 @@ type Prm struct {
 	D      string  `json:"d"`      // probability distribution type
 	U      string  `json:"u"`      // unit (not verified)
 	Adj    string  `json:"adj"`    // adjustable: search key
+	Dep    string  `json:"dep"`    // depends on
 	Extra  string  `json:"extra"`  // extra data
 	Inact  bool    `json:"inact"`  // parameter is inactive in optimisation
 	SetDef bool    `json:"setdef"` // tells model to use a default value
@@ -83,6 +84,7 @@ func (o Prms) String() (l string) {
 		l += io.Sf("D=%q\n", prm.D)
 		l += io.Sf("U=%v, ", prm.U)
 		l += io.Sf("Adj=%q, ", prm.Adj)
+		l += io.Sf("Dep=%q, ", prm.Dep)
 		l += io.Sf("Extra=%q, ", prm.Extra)
 		l += io.Sf("Inact=%v, ", prm.Inact)
 		l += io.Sf("SetDef=%v, ", prm.SetDef)
