@@ -29,6 +29,11 @@ type VarData struct {
 	C float64 // scale
 	A float64 // shape
 
+	// optional
+	Name string  // name of this random variable; e.g. 'λ', 'κ', 'load', etc.
+	Min  float64 // min value
+	Max  float64 // max value
+
 	// derived
 	distr Distribution // pointer to distribution
 }
@@ -78,4 +83,21 @@ func (o Variables) Transform(x []float64) (y []float64, invalid bool) {
 		}
 	}
 	return
+}
+
+// GetDistribution returns distribution ID from name
+func GetDistribution(name string) DistType {
+	switch name {
+	case "normal":
+		return D_Normal
+	case "lognormal":
+		return D_Lognormal
+	case "gumbel":
+		return D_Gumbel
+	case "frechet":
+		return D_Frechet
+	default:
+		chk.Panic("cannot get distribution named %q", name)
+	}
+	return D_Normal
 }
