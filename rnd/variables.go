@@ -35,7 +35,7 @@ type VarData struct {
 	Max  float64 // max value
 
 	// derived
-	distr Distribution // pointer to distribution
+	Distr Distribution // pointer to distribution
 }
 
 // Transform transform x into standard normal space
@@ -44,7 +44,7 @@ func (o *VarData) Transform(x float64) (y float64, invalid bool) {
 		y = (x - o.M) / o.S
 		return
 	}
-	F := o.distr.Cdf(x)
+	F := o.Distr.Cdf(x)
 	if F == 0 || F == 1 { // y = Φ⁻¹(F) → -∞ or +∞
 		invalid = true
 		return
@@ -59,12 +59,12 @@ type Variables []*VarData
 // Init initialises distributions in Variables
 func (o *Variables) Init() (err error) {
 	for _, d := range *o {
-		d.distr, err = GetDistrib(d.D)
+		d.Distr, err = GetDistrib(d.D)
 		if err != nil {
 			chk.Err("cannot find distribution:\n%v", err)
 			return
 		}
-		err = d.distr.Init(d)
+		err = d.Distr.Init(d)
 		if err != nil {
 			chk.Err("cannot initialise variables:\n%v", err)
 			return
