@@ -439,9 +439,6 @@ tsr implements routines to conduct tensor operations
 					
 					<dd>&nbsp; &nbsp; <a href="#IsoFun.String">func (o *IsoFun) String() (l string)</a></dd>
 				
-					
-					<dd>&nbsp; &nbsp; <a href="#IsoFun.View">func (o IsoFun) View(l float64, L []float64, grads bool, gradsFtol float64, extraconf func(is *vtk.IsoSurf), args ...interface{})</a></dd>
-				
 			
 				
 				<dd><a href="#NcteM">type NcteM</a></dd>
@@ -1972,7 +1969,7 @@ Tr returns the trace of a second order tensor
 		
 			
 			
-			<h2 id="Cb_isofun_f">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=432:496#L10">Cb_isofun_f</a></h2>
+			<h2 id="Cb_isofun_f">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=393:457#L7">Cb_isofun_f</a></h2>
 			<pre>type Cb_isofun_f func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Callbacks
@@ -1993,7 +1990,7 @@ Callbacks
 		
 			
 			
-			<h2 id="Cb_isofun_g">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=497:574#L11">Cb_isofun_g</a></h2>
+			<h2 id="Cb_isofun_g">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=458:535#L8">Cb_isofun_g</a></h2>
 			<pre>type Cb_isofun_g func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (dfdp, dfdq <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 
@@ -2011,7 +2008,7 @@ Callbacks
 		
 			
 			
-			<h2 id="Cb_isofun_h">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=575:665#L12">Cb_isofun_h</a></h2>
+			<h2 id="Cb_isofun_h">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=536:626#L9">Cb_isofun_h</a></h2>
 			<pre>type Cb_isofun_h func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (d2fdp2, d2fdq2, d2fdpdq <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 
@@ -2029,7 +2026,7 @@ Callbacks
 		
 			
 			
-			<h2 id="IsoFun">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=727:2070#L15">IsoFun</a></h2>
+			<h2 id="IsoFun">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=688:2031#L12">IsoFun</a></h2>
 			<pre>type IsoFun struct {
 
     <span class="comment">// eigenvalues/projectors</span>
@@ -2075,7 +2072,7 @@ CheckDerivs check derivatives computed by isotropic function
 				
 			
 				
-				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14805:14849#L547">DebugOutput</a></h3>
+				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14772:14816#L546">DebugOutput</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) DebugOutput(princOnly <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 DebugOutput outputs debug information
@@ -2086,7 +2083,7 @@ DebugOutput outputs debug information
 				
 			
 				
-				<h3 id="IsoFun.Fa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=6029:6107#L187">Fa</a></h3>
+				<h3 id="IsoFun.Fa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=5990:6068#L184">Fa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Fa(A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Fa evaluates the isotropic function @ A (a second order tensor in Mandel&#39;s basis)
@@ -2097,7 +2094,7 @@ Fa evaluates the isotropic function @ A (a second order tensor in Mandel&#39;s b
 				
 			
 				
-				<h3 id="IsoFun.FindIntersect">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=9767:9887#L320">FindIntersect</a></h3>
+				<h3 id="IsoFun.FindIntersect">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=9728:9848#L317">FindIntersect</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) FindIntersect(p0, k <a href="/pkg/builtin/#float64">float64</a>, ΔL []<a href="/pkg/builtin/#float64">float64</a>, usek, debug <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (L_at_int []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 FindIntersect find point on surface using Newton&#39;s method
@@ -2108,7 +2105,7 @@ FindIntersect find point on surface using Newton&#39;s method
 				
 			
 				
-				<h3 id="IsoFun.Fp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=3706:3784#L105">Fp</a></h3>
+				<h3 id="IsoFun.Fp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=3667:3745#L102">Fp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Fp(L []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Fp evaluates the isotropic function @ L (principal values)
@@ -2119,7 +2116,7 @@ Fp evaluates the isotropic function @ L (principal values)
 				
 			
 				
-				<h3 id="IsoFun.Ga">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=6498:6583#L205">Ga</a></h3>
+				<h3 id="IsoFun.Ga">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=6459:6544#L202">Ga</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Ga(dfdA, A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Ga computes f and dfdA @ A (a second order tensor in Mandel&#39;s basis)
@@ -2134,7 +2131,7 @@ Ga computes f and dfdA @ A (a second order tensor in Mandel&#39;s basis)
 				
 			
 				
-				<h3 id="IsoFun.Get_bsmp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2085:2120#L57">Get_bsmp</a></h3>
+				<h3 id="IsoFun.Get_bsmp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2046:2081#L54">Get_bsmp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_bsmp() <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Accessors
@@ -2145,7 +2142,7 @@ Accessors
 				
 			
 				
-				<h3 id="IsoFun.Get_derivs_afterHa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8386:8445#L279">Get_derivs_afterHa</a></h3>
+				<h3 id="IsoFun.Get_derivs_afterHa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8347:8406#L276">Get_derivs_afterHa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_derivs_afterHa(dpdσ, dqdσ []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Get_derivs_afterHa returns the derivatives of SMP invariants after a call to HafterGa
@@ -2156,7 +2153,7 @@ Get_derivs_afterHa returns the derivatives of SMP invariants after a call to Haf
 				
 			
 				
-				<h3 id="IsoFun.Get_pq">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2194:2234#L59">Get_pq</a></h3>
+				<h3 id="IsoFun.Get_pq">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2155:2195#L56">Get_pq</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_pq() (p, q <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				
 				
@@ -2164,7 +2161,7 @@ Get_derivs_afterHa returns the derivatives of SMP invariants after a call to Haf
 				
 			
 				
-				<h3 id="IsoFun.Gp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=4272:4351#L129">Gp</a></h3>
+				<h3 id="IsoFun.Gp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=4233:4312#L126">Gp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Gp(L []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Gp computes f and DfdL @ L (principal values)
@@ -2179,7 +2176,7 @@ Notes:
 				
 			
 				
-				<h3 id="IsoFun.HafterGa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=7201:7280#L239">HafterGa</a></h3>
+				<h3 id="IsoFun.HafterGa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=7162:7241#L236">HafterGa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) HafterGa(d2fdAdA [][]<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 HafterGa computes d2fdada after G is called
@@ -2198,7 +2195,7 @@ Notes:
 				
 			
 				
-				<h3 id="IsoFun.HafterGp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=5119:5177#L160">HafterGp</a></h3>
+				<h3 id="IsoFun.HafterGp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=5080:5138#L157">HafterGp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) HafterGp(args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 HafterGp computes d2fdLdL == dgdL after Gp was called
@@ -2212,7 +2209,7 @@ Notes:
 				
 			
 				
-				<h3 id="IsoFun.Init">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2600:2713#L69">Init</a></h3>
+				<h3 id="IsoFun.Init">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2561:2674#L66">Init</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Init(a, b, β, ϵ, shift <a href="/pkg/builtin/#float64">float64</a>, ncp <a href="/pkg/builtin/#int">int</a>, ffcn <a href="#Cb_isofun_f">Cb_isofun_f</a>, gfcn <a href="#Cb_isofun_g">Cb_isofun_g</a>, hfcn <a href="#Cb_isofun_h">Cb_isofun_h</a>)</pre>
 				<p>
 Init initialises the isotropic function structure
@@ -2223,7 +2220,7 @@ Init initialises the isotropic function structure
 				
 			
 				
-				<h3 id="IsoFun.PlotFfcn">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8987:9170#L296">PlotFfcn</a></h3>
+				<h3 id="IsoFun.PlotFfcn">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8948:9131#L293">PlotFfcn</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) PlotFfcn(dirout, fname <a href="/pkg/builtin/#string">string</a>, pmin, pmax <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, pq_point []<a href="/pkg/builtin/#float64">float64</a>, args_contour, args_point <a href="/pkg/builtin/#string">string</a>, extra_before, extra_after func(), args ...interface{})</pre>
 				<p>
 Plots Ffcn
@@ -2234,7 +2231,7 @@ Plots Ffcn
 				
 			
 				
-				<h3 id="IsoFun.SetPrms">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2282:2389#L62">SetPrms</a></h3>
+				<h3 id="IsoFun.SetPrms">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2243:2350#L59">SetPrms</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) SetPrms(a, b, β, ϵ, shift <a href="/pkg/builtin/#float64">float64</a>, ffcn <a href="#Cb_isofun_f">Cb_isofun_f</a>, gfcn <a href="#Cb_isofun_g">Cb_isofun_g</a>, hfcn <a href="#Cb_isofun_h">Cb_isofun_h</a>)</pre>
 				<p>
 SetPrms set parameters
@@ -2245,7 +2242,7 @@ SetPrms set parameters
 				
 			
 				
-				<h3 id="IsoFun.Set_bsmp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2141:2177#L58">Set_bsmp</a></h3>
+				<h3 id="IsoFun.Set_bsmp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2102:2138#L55">Set_bsmp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Set_bsmp(b <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				
 				
@@ -2253,21 +2250,10 @@ SetPrms set parameters
 				
 			
 				
-				<h3 id="IsoFun.String">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14652:14688#L541">String</a></h3>
+				<h3 id="IsoFun.String">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14619:14655#L540">String</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) String() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 String returns information of this object
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="IsoFun.View">func (IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=13165:13294#L467">View</a></h3>
-				<pre>func (o <a href="#IsoFun">IsoFun</a>) View(l <a href="/pkg/builtin/#float64">float64</a>, L []<a href="/pkg/builtin/#float64">float64</a>, grads <a href="/pkg/builtin/#bool">bool</a>, gradsFtol <a href="/pkg/builtin/#float64">float64</a>, extraconf func(is *<a href="/pkg/github.com/cpmech/gosl/vtk/">vtk</a>.<a href="/pkg/github.com/cpmech/gosl/vtk/#IsoSurf">IsoSurf</a>), args ...interface{})</pre>
-				<p>
-View visualises the isosurface with VTK
 </p>
 
 				
