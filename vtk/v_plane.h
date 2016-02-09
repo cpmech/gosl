@@ -97,7 +97,7 @@ void Plane::Init(const double Ori[3], const double Pt1[3], const double Pt2[3], 
     // borders
     _wire_mapper = vtkPolyDataMapper    ::New();
     _wire_actor  = vtkActor             ::New();
-    _wire_mapper -> SetInput            (_plane->GetOutput());
+    _wire_mapper -> SetInputData        (_plane->GetOutput());
     _wire_mapper -> ScalarVisibilityOff ();
     _wire_actor  -> SetMapper           (_wire_mapper);
     _wire_actor  -> GetProperty         ()->SetRepresentationToWireframe();

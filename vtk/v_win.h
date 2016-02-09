@@ -5,6 +5,13 @@
 #ifndef GOSLVTK_WIN_H
 #define GOSLVTK_WIN_H
 
+// VTK 6.2
+#include <vtkAutoInit.h>
+VTK_MODULE_INIT(vtkInteractionStyle);
+VTK_MODULE_INIT(vtkRenderingFreeType);
+VTK_MODULE_INIT(vtkRenderingFreeTypeOpenGL);
+VTK_MODULE_INIT(vtkRenderingOpenGL);
+
 // VTK
 #include <vtkCamera.h>
 #include <vtkRenderer.h>
@@ -150,11 +157,11 @@ void Win::WritePNG(char const * Filekey, bool Large, int Magnification) {
         large_img -> Delete             ();
     } else {
         vtkWindowToImageFilter * win_to_img = vtkWindowToImageFilter::New();
-        win_to_img -> SetInput (_ren_win);
-        win_to_img -> Update   ();
-        writer     -> SetInput (win_to_img->GetOutput());
-        writer     -> Write    ();
-        win_to_img -> Delete   ();
+        win_to_img -> SetInput    (_ren_win);
+        win_to_img -> Update      ();
+        writer     -> SetInputData(win_to_img->GetOutput());
+        writer     -> Write       ();
+        win_to_img -> Delete      ();
     }
 
     // clean up

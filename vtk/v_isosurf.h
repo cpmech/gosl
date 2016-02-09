@@ -122,7 +122,7 @@ void IsoSurf::Init(int N[3], double L[6], GridCallBack Func, int index, bool oct
     _isosurf_mapper = vtkPolyDataMapper        ::New();
     _isosurf_actor  = vtkActor                 ::New();
     _isosurf_lt     = vtkLookupTable           ::New();
-    _isosurf        -> SetInput                (_sgrid->GetGrid());
+    _isosurf        -> SetInputData            (_sgrid->GetGrid());
     _isosurf        -> ComputeNormalsOff       ();
     _isosurf        -> ComputeGradientsOff     ();
     _isosurf_mapper -> SetInputConnection      (_isosurf->GetOutputPort());
@@ -134,7 +134,7 @@ void IsoSurf::Init(int N[3], double L[6], GridCallBack Func, int index, bool oct
     _hedgehog_mapper = vtkPolyDataMapper   ::New();
     _hedgehog_actor  = vtkActor            ::New();
     _hedgehog_lt     = vtkLookupTable      ::New();
-    _hedgehog        -> SetInput           (_sgrid->GetGrid());
+    _hedgehog        -> SetInputData       (_sgrid->GetGrid());
     _hedgehog_mapper -> SetInputConnection (_hedgehog->GetOutputPort());
     _hedgehog_mapper -> SetLookupTable     (_hedgehog_lt);
     _hedgehog_actor  -> SetMapper          (_hedgehog_mapper);
