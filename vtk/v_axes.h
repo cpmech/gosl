@@ -136,7 +136,7 @@ void Axes::Init(double Scale, bool DrawHydroLine, bool Reverse, bool Full, bool 
     // mapper and actor
     _axes_mapper = vtkDataSetMapper ::New();
     _axes_actor  = vtkActor         ::New();
-    _axes_mapper -> SetInputData    (_axes);
+    _axes_mapper -> SetInput        (_axes);
     _axes_actor  -> SetMapper       (_axes_mapper);
     _axes_actor  -> GetProperty     () -> SetColor       (0.0,0.0,0.0); 
     _axes_actor  -> GetProperty     () -> SetDiffuseColor(0.0,0.0,0.0); 

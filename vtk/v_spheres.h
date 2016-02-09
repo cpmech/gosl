@@ -105,8 +105,8 @@ void Spheres::Init(int N, double * X, double * Y, double * Z, double * R, int Th
     _spheres_mapper = vtkPolyDataMapper            ::New();
     _spheres_actor  = vtkLODActor                  ::New();
     _ltable         = vtkLookupTable               ::New();
-    _spheres        -> SetInputData                (polydata);
-    _spheres        -> SetSourceData               (_sphere->GetOutput());
+    _spheres        -> SetInput                    (polydata);
+    _spheres        -> SetSource                   (_sphere->GetOutput());
     _spheres        -> SetScaleModeToScaleByScalar ();
     _spheres        -> SetColorModeToColorByScalar ();
     _spheres        -> SetScaleFactor              (1.0);

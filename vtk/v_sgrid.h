@@ -139,7 +139,7 @@ void SGrid::Init(int N[3], double L[6], GridCallBack Func, int index, bool octro
     _sgrid_actor  = vtkActor                 ::New();
     _color_func   = vtkColorTransferFunction ::New();
     _sgrid        -> SetPoints        (_points);
-    _sgrid_mapper -> SetInputData     (_sgrid);
+    _sgrid_mapper -> SetInput         (_sgrid);
     _sgrid_mapper -> SetLookupTable   (_color_func);
     _sgrid_actor  -> SetMapper        (_sgrid_mapper);
     _sgrid_actor  -> GetProperty() -> SetPointSize (4);
@@ -267,7 +267,7 @@ void SGrid::WriteVTK(char const * Filekey) {
     String buf(Filekey);
     buf.append(".vtk");
     vtkStructuredGridWriter * writer = vtkStructuredGridWriter::New();
-    writer -> SetInputData(_sgrid);
+    writer -> SetInput    (_sgrid);
     writer -> SetFileName (buf.CStr());
     writer -> Write       ();
     writer -> Delete      ();
