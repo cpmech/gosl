@@ -118,10 +118,10 @@ void Arrow::Init(double const X0[3], double const V[3], double ConPct, double Co
     _arrow_mapper = vtkPolyDataMapper  ::New();
     _arrow_actor  = vtkActor           ::New();
     _cone         -> SetDirection      (0.0, 1.0, 0.0);
-    _arrow        -> AddInput          (_cone->GetOutput());
-    _arrow        -> AddInput          (_cylin->GetOutput());
-    _transform    -> SetInput          (_arrow->GetOutput());
-    _arrow_mapper -> SetInput          (_transform->GetPolyDataOutput());
+    _arrow        -> AddInputData      (_cone->GetOutput());
+    _arrow        -> AddInputData      (_cylin->GetOutput());
+    _transform    -> SetInputData      (_arrow->GetOutput());
+    _arrow_mapper -> SetInputData      (_transform->GetPolyDataOutput());
     _arrow_actor  -> SetMapper         (_arrow_mapper);
 
     _tot_len = 1.0;

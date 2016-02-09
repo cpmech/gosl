@@ -5,12 +5,14 @@
 package vtk
 
 /*
-#cgo CXXFLAGS: -O3 -I. -I/usr/include/eigen3 -I/usr/include/vtk-5.10 -DVTK_EXCLUDE_STRSTREAM_HEADERS
-#cgo LDFLAGS: -lstdc++ -lm -lvtkRendering -lvtkHybrid -lvtkParallel -lvtkGraphics -lvtkImaging -lvtkIO -lvtkFiltering -lvtkCommon -lvtksys
+#cgo CXXFLAGS: -O3 -I. -I/usr/include/vtk-6.2
+#cgo LDFLAGS: -lstdc++ -lm -lvtkCommonCore-6.2 -lvtkFiltersHybrid-6.2 -lvtkFiltersModeling-6.2 -lvtkFiltersSources-6.2 -lvtkFiltersGeneral-6.2 -lvtkCommonMisc-6.2 -lvtkCommonSystem-6.2 -lvtkCommonComputationalGeometry-6.2 -lvtkCommonMath-6.2 -lvtkCommonTransforms-6.2 -lvtkIOCore-6.2 -lvtkIOLegacy-6.2 -lvtkIOGeometry-6.2 -lvtkIOExport-6.2 -lvtkIOImage-6.2 -lvtkInteractionStyle-6.2 -lvtkRenderingAnnotation-6.2 -lvtkRenderingFreeType-6.2 -lvtkRenderingFreeTypeOpenGL-6.2 -lvtkRenderingOpenGL-6.2 -lvtkRenderingCore-6.2 -lvtkFiltersCore-6.2 -lvtkCommonExecutionModel-6.2 -lvtkCommonDataModel-6.2 -lvtkCommonTransforms-6.2 -lvtkRenderingGL2PS-6.2 -lvtkRenderingImage-6.2 -lvtkalglib-6.2 -lvtksys-6.2 -lvtkRenderingLOD-6.2 -lvtkViewsCore-6.2 -lvtkInteractionStyle-6.2
 #include "connectgovtk.h"
 #include <stdlib.h>
 */
 import "C"
+
+//-DVTK_EXCLUDE_STRSTREAM_HEADERS
 
 import (
 	"unsafe"

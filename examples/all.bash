@@ -3,10 +3,13 @@
 set -e
 
 examples="\
-la_umfpack01 \
-la_sparsecomplex01 \
+la_HLsparseComplex01 \
+la_HLsparseReal01 \
+la_sparseComplex01 \
+la_sparseReal01 \
 num_deriv01 \
-vtk_isosurf01 "
+vtk_cone01 \
+vtk_isosurf01"
 
 for ex in $examples; do
     echo
@@ -14,3 +17,4 @@ for ex in $examples; do
     echo "[1;32m>>> running $ex <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
     go run "$ex".go
 done
+
