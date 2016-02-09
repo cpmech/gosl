@@ -49,10 +49,12 @@ func main() {
 
 	// spheres
 	sset := vtk.NewSpheresFromFile("points.dat")
-	sset.AddTo(scn)
+	if true {
+		sset.AddTo(scn)
+	}
 
 	// start interactive mode
 	scn.SavePng = false
-	scn.Fnk = "/tmp/gosl/vtk_cone01"
+	scn.Fnk = "/tmp/vtk_cone01"
 	scn.Run()
 }

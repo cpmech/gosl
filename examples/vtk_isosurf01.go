@@ -77,6 +77,6 @@ func main() {
 
 	// start interactive mode
 	scn.SavePng = true
-	scn.Fnk = "/tmp/gosl/vtk_isosurf01"
+	scn.Fnk = "/tmp/vtk_isosurf01"
 	scn.Run()
 }
