@@ -4,7 +4,10 @@
 
 package rnd
 
-import "github.com/cpmech/gosl/chk"
+import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+)
 
 // DistType indicates the distribution to which a random variable appears to belong to
 type DistType int
@@ -30,9 +33,9 @@ type VarData struct {
 	A float64 // shape
 
 	// optional
-	Name string  // name of this random variable; e.g. 'λ', 'κ', 'load', etc.
-	Min  float64 // min value
-	Max  float64 // max value
+	Min float64  // min value
+	Max float64  // max value
+	Prm *fun.Prm // parameter connected to this random variable
 
 	// derived
 	Distr Distribution // pointer to distribution
