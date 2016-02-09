@@ -8,10 +8,7 @@ import "github.com/cpmech/gosl/io"
 
 // global auxiliary variables
 var (
-	g_largestname  int    // largest length of paramter name (to make a nice table)
-	g_largestsval  int    // largest length of paramter value string representation (to make a nice table)
-	G_extraindent  string // extra indentation
-	G_openbrackets bool   // add initial brackets
+	G_extraindent string // extra indentation
 )
 
 // Prm holds material parameter names and values
@@ -25,12 +22,15 @@ type Prm struct {
 	S      float64 `json:"s"`      // standard deviation
 	D      string  `json:"d"`      // probability distribution type
 	U      string  `json:"u"`      // unit (not verified)
-	Adj    string  `json:"adj"`    // adjustable: search key
-	Dep    string  `json:"dep"`    // depends on
+	Adj    int     `json:"adj"`    // adjustable: unique ID (greater than zero)
+	Dep    int     `json:"dep"`    // depends on "adj"
 	Extra  string  `json:"extra"`  // extra data
 	Inact  bool    `json:"inact"`  // parameter is inactive in optimisation
 	SetDef bool    `json:"setdef"` // tells model to use a default value
-	Fcn    Func    `json:"fcn"`    // a function y=f(t,x)
+
+	// auxiliary
+	Fcn   Func // a function y=f(t,x)
+	Other *Prm // dependency: connected parameter
 
 	// derived
 	conn []*float64 // connected variables to V
@@ -75,20 +75,24 @@ func (o *Prms) Connect(V *float64, name string) (err string) {
 }
 
 func (o Prms) String() (l string) {
-	for _, prm := range o {
-		l += io.Sf("\nN=%q, ", prm.N)
-		l += io.Sf("V=%v, ", prm.V)
-		l += io.Sf("Min=%v, ", prm.Min)
-		l += io.Sf("Max=%v, ", prm.Max)
-		l += io.Sf("S=%v, ", prm.S)
-		l += io.Sf("D=%q\n", prm.D)
-		l += io.Sf("U=%v, ", prm.U)
-		l += io.Sf("Adj=%q, ", prm.Adj)
-		l += io.Sf("Dep=%q, ", prm.Dep)
-		l += io.Sf("Extra=%q, ", prm.Extra)
-		l += io.Sf("Inact=%v, ", prm.Inact)
-		l += io.Sf("SetDef=%v, ", prm.SetDef)
-		l += io.Sf("Fcn=%v\n", prm.Fcn)
+	for i, prm := range o {
+		if i > 0 {
+			l += ",\n"
+		}
+		l += io.Sf(G_extraindent + "{")
+		l += io.Sf(`"n":%q, `, prm.N)
+		l += io.Sf(`"v":%v, `, prm.V)
+		l += io.Sf(`"min":%v, `, prm.Min)
+		l += io.Sf(`"max":%v, `, prm.Max)
+		l += io.Sf(`"s":%v, `, prm.S)
+		l += io.Sf(`"d":%q, `, prm.D)
+		l += io.Sf(`"u":%q, `, prm.U)
+		l += io.Sf(`"adj":%v, `, prm.Adj)
+		l += io.Sf(`"dep":%v, `, prm.Dep)
+		l += io.Sf(`"extra":%q, `, prm.Extra)
+		l += io.Sf(`"inact":%v, `, prm.Inact)
+		l += io.Sf(`"setdef":%v`, prm.SetDef)
+		l += io.Sf("}")
 	}
 	return
 }
