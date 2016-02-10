@@ -1408,7 +1408,7 @@ Pdf computes the probability density function @ x
 		
 			
 			
-			<h2 id="DistType">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=314:331#L1">DistType</a></h2>
+			<h2 id="DistType">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=349:366#L3">DistType</a></h2>
 			<pre>type DistType <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 DistType indicates the distribution to which a random variable appears to belong to
@@ -1433,7 +1433,7 @@ DistType indicates the distribution to which a random variable appears to belong
 
 			
 				
-				<h3 id="GetDistribution">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2049:2091#L79">GetDistribution</a></h3>
+				<h3 id="GetDistribution">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2068:2110#L82">GetDistribution</a></h3>
 				<pre>func GetDistribution(name <a href="/pkg/builtin/#string">string</a>) <a href="#DistType">DistType</a></pre>
 				<p>
 GetDistribution returns distribution ID from name
@@ -1623,7 +1623,7 @@ GenLabels generate nice labels identifying bins
 		
 			
 			
-			<h2 id="VarData">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=604:1016#L10">VarData</a></h2>
+			<h2 id="VarData">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=639:1035#L13">VarData</a></h2>
 			<pre>type VarData struct {
 
     <span class="comment">// input</span>
@@ -1637,9 +1637,9 @@ GenLabels generate nice labels identifying bins
     A <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// shape</span>
 
     <span class="comment">// optional</span>
-    Name <a href="/pkg/builtin/#string">string</a>  <span class="comment">// name of this random variable; e.g. &#39;λ&#39;, &#39;κ&#39;, &#39;load&#39;, etc.</span>
-    Min  <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// min value</span>
-    Max  <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// max value</span>
+    Min <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// min value</span>
+    Max <a href="/pkg/builtin/#float64">float64</a>  <span class="comment">// max value</span>
+    Prm *<a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Prm">Prm</a> <span class="comment">// parameter connected to this random variable</span>
 
     <span class="comment">// derived</span>
     Distr <a href="#Distribution">Distribution</a> <span class="comment">// pointer to distribution</span>
@@ -1672,7 +1672,7 @@ PlotPdf plots PDF
 				
 			
 				
-				<h3 id="VarData.Transform">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1070:1134#L32">Transform</a></h3>
+				<h3 id="VarData.Transform">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1089:1153#L35">Transform</a></h3>
 				<pre>func (o *<a href="#VarData">VarData</a>) Transform(x <a href="/pkg/builtin/#float64">float64</a>) (y <a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Transform transform x into standard normal space
@@ -1685,7 +1685,7 @@ Transform transform x into standard normal space
 		
 			
 			
-			<h2 id="Variables">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1380:1405#L47">Variables</a></h2>
+			<h2 id="Variables">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1399:1424#L50">Variables</a></h2>
 			<pre>type Variables []*<a href="#VarData">VarData</a></pre>
 			<p>
 Variables implements a set of random variables
@@ -1704,7 +1704,7 @@ Variables implements a set of random variables
 
 			
 				
-				<h3 id="Variables.Init">func (*Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1454:1492#L50">Init</a></h3>
+				<h3 id="Variables.Init">func (*Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1473:1511#L53">Init</a></h3>
 				<pre>func (o *<a href="#Variables">Variables</a>) Init() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises distributions in Variables
@@ -1715,7 +1715,7 @@ Init initialises distributions in Variables
 				
 			
 				
-				<h3 id="Variables.Transform">func (Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1793:1862#L67">Transform</a></h3>
+				<h3 id="Variables.Transform">func (Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1812:1881#L70">Transform</a></h3>
 				<pre>func (o <a href="#Variables">Variables</a>) Transform(x []<a href="/pkg/builtin/#float64">float64</a>) (y []<a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Transform transforms all variables

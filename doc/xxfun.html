@@ -570,8 +570,7 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			<h2 id="pkg-variables">Variables</h2>
 			
 				<pre>var (
-    <span id="G_extraindent">G_extraindent</span>  <a href="/pkg/builtin/#string">string</a> <span class="comment">// extra indentation</span>
-    <span id="G_openbrackets">G_openbrackets</span> <a href="/pkg/builtin/#bool">bool</a>   <span class="comment">// add initial brackets</span>
+    <span id="G_extraindent">G_extraindent</span> <a href="/pkg/builtin/#string">string</a> <span class="comment">// extra indentation</span>
 )</pre>
 				<p>
 global auxiliary variables
@@ -1550,7 +1549,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="Prm">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=590:1397#L8">Prm</a></h2>
+			<h2 id="Prm">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=357:1231#L5">Prm</a></h2>
 			<pre>type Prm struct {
 
     <span class="comment">// input</span>
@@ -1561,12 +1560,15 @@ Init initialises the function
     S      <a href="/pkg/builtin/#float64">float64</a> `json:&#34;s&#34;`      <span class="comment">// standard deviation</span>
     D      <a href="/pkg/builtin/#string">string</a>  `json:&#34;d&#34;`      <span class="comment">// probability distribution type</span>
     U      <a href="/pkg/builtin/#string">string</a>  `json:&#34;u&#34;`      <span class="comment">// unit (not verified)</span>
-    Adj    <a href="/pkg/builtin/#string">string</a>  `json:&#34;adj&#34;`    <span class="comment">// adjustable: search key</span>
-    Dep    <a href="/pkg/builtin/#string">string</a>  `json:&#34;dep&#34;`    <span class="comment">// depends on</span>
+    Adj    <a href="/pkg/builtin/#int">int</a>     `json:&#34;adj&#34;`    <span class="comment">// adjustable: unique ID (greater than zero)</span>
+    Dep    <a href="/pkg/builtin/#int">int</a>     `json:&#34;dep&#34;`    <span class="comment">// depends on &#34;adj&#34;</span>
     Extra  <a href="/pkg/builtin/#string">string</a>  `json:&#34;extra&#34;`  <span class="comment">// extra data</span>
     Inact  <a href="/pkg/builtin/#bool">bool</a>    `json:&#34;inact&#34;`  <span class="comment">// parameter is inactive in optimisation</span>
     SetDef <a href="/pkg/builtin/#bool">bool</a>    `json:&#34;setdef&#34;` <span class="comment">// tells model to use a default value</span>
-    Fcn    <a href="#Func">Func</a>    `json:&#34;fcn&#34;`    <span class="comment">// a function y=f(t,x)</span>
+
+    <span class="comment">// auxiliary</span>
+    Fcn   <a href="#Func">Func</a> <span class="comment">// a function y=f(t,x)</span>
+    Other *<a href="#Prm">Prm</a> <span class="comment">// dependency: connected parameter</span>
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
@@ -1586,7 +1588,7 @@ Prm holds material parameter names and values
 
 			
 				
-				<h3 id="Prm.Connect">func (*Prm) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1441:1474#L30">Connect</a></h3>
+				<h3 id="Prm.Connect">func (*Prm) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1275:1308#L30">Connect</a></h3>
 				<pre>func (o *<a href="#Prm">Prm</a>) Connect(V *<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Connect connects parameter to variable
@@ -1597,7 +1599,7 @@ Connect connects parameter to variable
 				
 			
 				
-				<h3 id="Prm.Set">func (*Prm) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1571:1599#L36">Set</a></h3>
+				<h3 id="Prm.Set">func (*Prm) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1405:1433#L36">Set</a></h3>
 				<pre>func (o *<a href="#Prm">Prm</a>) Set(V <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Set sets parameter, including connected variables
@@ -1610,7 +1612,7 @@ Set sets parameter, including connected variables
 		
 			
 			
-			<h2 id="Prms">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1684:1700#L44">Prms</a></h2>
+			<h2 id="Prms">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1518:1534#L44">Prms</a></h2>
 			<pre>type Prms []*<a href="#Prm">Prm</a></pre>
 			<p>
 Prms holds many parameters
@@ -1629,7 +1631,7 @@ Prms holds many parameters
 
 			
 				
-				<h3 id="Prms.Connect">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1918:1978#L58">Connect</a></h3>
+				<h3 id="Prms.Connect">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1752:1812#L58">Connect</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) Connect(V *<a href="/pkg/builtin/#float64">float64</a>, name <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 Connect connects parameter
@@ -1640,7 +1642,7 @@ Connect connects parameter
 				
 			
 				
-				<h3 id="Prms.Find">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1771:1808#L48">Find</a></h3>
+				<h3 id="Prms.Find">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1605:1642#L48">Find</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) Find(name <a href="/pkg/builtin/#string">string</a>) *<a href="#Prm">Prm</a></pre>
 				<p>
 Find finds a parameter by name
@@ -1653,7 +1655,7 @@ Find finds a parameter by name
 				
 			
 				
-				<h3 id="Prms.String">func (Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2106:2139#L67">String</a></h3>
+				<h3 id="Prms.String">func (Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1940:1973#L67">String</a></h3>
 				<pre>func (o <a href="#Prms">Prms</a>) String() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				
 				
