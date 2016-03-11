@@ -104,3 +104,20 @@ func GetDistribution(name string) DistType {
 	}
 	return D_Normal
 }
+
+// GetDistrName returns distribution name from ID
+func GetDistrName(typ DistType) (name string) {
+	switch typ {
+	case D_Normal:
+		return "normal"
+	case D_Lognormal:
+		return "lognormal"
+	case D_Gumbel:
+		return "gumbel"
+	case D_Frechet:
+		return "frechet"
+	default:
+		chk.Panic("cannot get distribution %v", typ)
+	}
+	return "<unknown>"
+}
