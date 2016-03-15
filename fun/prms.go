@@ -68,7 +68,7 @@ func (o *Prms) Find(name string) *Prm {
 func (o *Prms) Connect(V *float64, name, caller string) (err string) {
 	prm := o.Find(name)
 	if prm == nil {
-		return io.Sf("Cannot find parameter named %q as requested by %q\n", name, caller)
+		return io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
 	}
 	prm.Connect(V)
 	return
