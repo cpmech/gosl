@@ -25,10 +25,10 @@ func init() {
 
 // Init initialises the function
 func (o *Pulse) Init(prms Prms) (err error) {
-	e := prms.Connect(&o.Ca, "ca")
-	e += prms.Connect(&o.Cb, "cb")
-	e += prms.Connect(&o.Ta, "ta")
-	e += prms.Connect(&o.Tb, "tb")
+	e := prms.Connect(&o.Ca, "ca", "pulse function")
+	e += prms.Connect(&o.Cb, "cb", "pulse function")
+	e += prms.Connect(&o.Ta, "ta", "pulse function")
+	e += prms.Connect(&o.Tb, "tb", "pulse function")
 	if e != "" {
 		err = chk.Err("%v\n", e)
 	}

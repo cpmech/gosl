@@ -29,13 +29,13 @@ func init() {
 
 // Init initialises the function
 func (o *Cos) Init(prms Prms) (err error) {
-	e := prms.Connect(&o.A, "a")
-	e += prms.Connect(&o.C, "c")
+	e := prms.Connect(&o.A, "a", "cos function")
+	e += prms.Connect(&o.C, "c", "cos function")
 	p := prms.Find("b/pi")
 	if p == nil {
-		e += prms.Connect(&o.B, "b")
+		e += prms.Connect(&o.B, "b", "cos function")
 	} else {
-		e += prms.Connect(&o.B, "b/pi")
+		e += prms.Connect(&o.B, "b/pi", "cos function")
 		o.b_is_b_div_pi = true
 	}
 	if e != "" {

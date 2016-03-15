@@ -21,10 +21,10 @@ func init() {
 
 // Init initialises the function
 func (o *Rmp) Init(prms Prms) (err error) {
-	e := prms.Connect(&o.Ca, "ca")
-	e += prms.Connect(&o.Cb, "cb")
-	e += prms.Connect(&o.Ta, "ta")
-	e += prms.Connect(&o.Tb, "tb")
+	e := prms.Connect(&o.Ca, "ca", "rmp function")
+	e += prms.Connect(&o.Cb, "cb", "rmp function")
+	e += prms.Connect(&o.Ta, "ta", "rmp function")
+	e += prms.Connect(&o.Tb, "tb", "rmp function")
 	if e != "" {
 		err = chk.Err("%v\n", e)
 	}

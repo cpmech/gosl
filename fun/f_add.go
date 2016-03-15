@@ -20,8 +20,8 @@ func init() {
 
 // Init initialises the function
 func (o *Add) Init(prms Prms) (err error) {
-	e := prms.Connect(&o.A, "a")
-	e += prms.Connect(&o.B, "b")
+	e := prms.Connect(&o.A, "a", "add function")
+	e += prms.Connect(&o.B, "b", "add function")
 	for _, p := range prms {
 		switch p.N {
 		case "fa":

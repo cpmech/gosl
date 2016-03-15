@@ -32,14 +32,14 @@ func init() {
 func (o *RefDecGen) Init(prms Prms) (err error) {
 
 	// parameters
-	e := prms.Connect(&o.β, "bet")
-	e += prms.Connect(&o.a, "a")
-	e += prms.Connect(&o.b, "b")
-	e += prms.Connect(&o.c, "c")
-	e += prms.Connect(&o.A, "A")
-	e += prms.Connect(&o.B, "B")
-	e += prms.Connect(&o.xini, "xini")
-	e += prms.Connect(&o.yini, "yini")
+	e := prms.Connect(&o.β, "bet", "ref-dec-gen function")
+	e += prms.Connect(&o.a, "a", "ref-dec-gen function")
+	e += prms.Connect(&o.b, "b", "ref-dec-gen function")
+	e += prms.Connect(&o.c, "c", "ref-dec-gen function")
+	e += prms.Connect(&o.A, "A", "ref-dec-gen function")
+	e += prms.Connect(&o.B, "B", "ref-dec-gen function")
+	e += prms.Connect(&o.xini, "xini", "ref-dec-gen function")
+	e += prms.Connect(&o.yini, "yini", "ref-dec-gen function")
 	if e != "" {
 		err = chk.Err("%v\n", e)
 		return

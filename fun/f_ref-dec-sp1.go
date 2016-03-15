@@ -53,10 +53,10 @@ func init() {
 func (o *RefDecSp1) Init(prms Prms) (err error) {
 
 	// parameters
-	e := prms.Connect(&o.β, "bet")
-	e += prms.Connect(&o.λ1, "lam1")
-	e += prms.Connect(&o.ya, "ya")
-	e += prms.Connect(&o.yb, "yb")
+	e := prms.Connect(&o.β, "bet", "ref-dec-sp1 function")
+	e += prms.Connect(&o.λ1, "lam1", "ref-dec-sp1 function")
+	e += prms.Connect(&o.ya, "ya", "ref-dec-sp1 function")
+	e += prms.Connect(&o.yb, "yb", "ref-dec-sp1 function")
 	if e != "" {
 		err = chk.Err("%v\n", e)
 		return

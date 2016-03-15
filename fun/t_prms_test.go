@@ -25,11 +25,11 @@ func Test_prms01(tst *testing.T) {
 	io.Pforan("%v\n", prms)
 
 	var a, b, c, A, B float64
-	e := prms.Connect(&a, "a")
-	e += prms.Connect(&b, "b")
-	e += prms.Connect(&c, "c")
-	e += prms.Connect(&A, "a")
-	e += prms.Connect(&B, "b")
+	e := prms.Connect(&a, "a", "test call")
+	e += prms.Connect(&b, "b", "test call")
+	e += prms.Connect(&c, "c", "test call")
+	e += prms.Connect(&A, "a", "test call")
+	e += prms.Connect(&B, "b", "test call")
 	if e != "" {
 		tst.Error("connect failed: %v\n", e)
 		return

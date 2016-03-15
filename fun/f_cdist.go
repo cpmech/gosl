@@ -36,11 +36,11 @@ func (o *Cdist) Init(prms Prms) (err error) {
 		}
 	}
 	o.xc = make([]float64, ndim)
-	e := prms.Connect(&o.r, "r")
-	e += prms.Connect(&o.xc[0], "xc")
-	e += prms.Connect(&o.xc[1], "yc")
+	e := prms.Connect(&o.r, "r", "cdist function")
+	e += prms.Connect(&o.xc[0], "xc", "cdist function")
+	e += prms.Connect(&o.xc[1], "yc", "cdist function")
 	if ndim == 3 {
-		e += prms.Connect(&o.xc[2], "zc")
+		e += prms.Connect(&o.xc[2], "zc", "cdist function")
 	}
 	if e != "" {
 		err = chk.Err("%v\n", e)

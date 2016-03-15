@@ -38,10 +38,10 @@ func init() {
 func (o *RefIncRL1) Init(prms Prms) (err error) {
 
 	// parameters
-	e := prms.Connect(&o.λ0, "lam0")
-	e += prms.Connect(&o.λ1, "lam1")
-	e += prms.Connect(&o.α, "alp")
-	e += prms.Connect(&o.β, "bet")
+	e := prms.Connect(&o.λ0, "lam0", "ref-inc-rl1 function")
+	e += prms.Connect(&o.λ1, "lam1", "ref-inc-rl1 function")
+	e += prms.Connect(&o.α, "alp", "ref-inc-rl1 function")
+	e += prms.Connect(&o.β, "bet", "ref-inc-rl1 function")
 	if e != "" {
 		err = chk.Err("%v\n", e)
 		return
