@@ -438,3 +438,23 @@ func DblArgMinMax(v []float64) (imin, imax int) {
 	}
 	return
 }
+
+// BoolAllTrue returns true if all values are true
+func BoolAllTrue(values []bool) bool {
+	for _, v := range values {
+		if !v {
+			return false
+		}
+	}
+	return true
+}
+
+// BoolAllFalse returns true if all values are false
+func BoolAllFalse(values []bool) bool {
+	for _, v := range values {
+		if v {
+			return false
+		}
+	}
+	return true
+}

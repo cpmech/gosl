@@ -379,3 +379,21 @@ func Test_mylab09(tst *testing.T) {
 	io.Pforan("d = %v\n", d)
 	chk.Scalar(tst, "L2(u,v)", 1e-17, d, 62.912637840103322)
 }
+
+func Test_mylab10(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab10. bool all true and all false")
+
+	values := []bool{true, true, true}
+	if !BoolAllTrue(values) {
+		tst.Error("test failed: not all values are true\n")
+		return
+	}
+
+	values = []bool{false, false, false}
+	if !BoolAllFalse(values) {
+		tst.Error("test failed: not all values are false\n")
+		return
+	}
+}
