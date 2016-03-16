@@ -78,3 +78,25 @@ func Test_prms02(tst *testing.T) {
 	prms[1].Set(2.2)
 	chk.Scalar(tst, "kly", 1e-15, kly, 2.2)
 }
+
+func Test_prms03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("prms03")
+
+	var prms Prms
+	prms = []*Prm{
+		&Prm{N: "klx", V: 1.0},
+		&Prm{N: "kly", V: 2.0},
+		&Prm{N: "klz", V: 3.0},
+	}
+	io.Pforan("%v\n", prms)
+
+	values, found := prms.GetValues([]string{"klx", "kly", "klz"})
+	chk.Vector(tst, "values", 1e-15, values, []float64{1, 2, 3})
+	chk.Bools(tst, "found", found, []bool{true, true, true})
+
+	values, found = prms.GetValues([]string{"klx", "klY", "klz"})
+	chk.Vector(tst, "values", 1e-15, values, []float64{1, 0, 3})
+	chk.Bools(tst, "found", found, []bool{true, false, true})
+}

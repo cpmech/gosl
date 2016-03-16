@@ -67,6 +67,21 @@ func (o *Prms) Find(name string) *Prm {
 	return nil
 }
 
+// GetValues get parameter values
+func (o *Prms) GetValues(names []string) (values []float64, found []bool) {
+	n := len(names)
+	values = make([]float64, n)
+	found = make([]bool, n)
+	for i, name := range names {
+		prm := o.Find(name)
+		if prm != nil {
+			values[i] = prm.V
+			found[i] = true
+		}
+	}
+	return
+}
+
 // Connect connects parameter
 func (o *Prms) Connect(V *float64, name, caller string) (err string) {
 	prm := o.Find(name)
