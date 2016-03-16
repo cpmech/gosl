@@ -4,7 +4,10 @@
 
 package fun
 
-import "github.com/cpmech/gosl/io"
+import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+)
 
 // global auxiliary variables
 var (
@@ -71,6 +74,19 @@ func (o *Prms) Connect(V *float64, name, caller string) (err string) {
 		return io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
 	}
 	prm.Connect(V)
+	return
+}
+
+// ConnectSet connects set of parameters
+func (o *Prms) ConnectSet(V []*float64, names []string, caller string) (err string) {
+	chk.IntAssert(len(V), len(names))
+	for i, name := range names {
+		prm := o.Find(name)
+		if prm == nil {
+			return io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
+		}
+		prm.Connect(V[i])
+	}
 	return
 }
 
