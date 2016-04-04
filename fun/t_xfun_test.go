@@ -88,3 +88,43 @@ func Test_xfun02(tst *testing.T) {
 	ver := chk.Verbose
 	CheckDerivX(tst, o, tcte, xmin, xmax, np, xskip, sktol, dtol, ver)
 }
+
+func Test_xfun03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("xfun03. xpoly2: 2nd order polynomial with x coordinates")
+
+	o, err := New("xpoly2", []*Prm{
+		&Prm{N: "a0", V: 1.5}, &Prm{N: "a1", V: 0.5}, &Prm{N: "a2", V: -1.5},
+		&Prm{N: "b0", V: -1.5}, &Prm{N: "b1", V: -0.5}, &Prm{N: "b2", V: 1.5},
+		&Prm{N: "c01", V: 2.0}, &Prm{N: "c12", V: -2.0}, &Prm{N: "c20", V: 1.0},
+		//&Prm{N: "2D", V: 1},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n")
+		return
+	}
+
+	tcte := 0.0
+	xmin := []float64{-1, -1, -1}
+	xmax := []float64{2, 2, 2}
+	np := 21
+	if chk.Verbose && len(xmin) == 2 {
+		withGrad := false
+		hlZero := true
+		axEqual := true
+		save := true
+		show := false
+		plt.Reset()
+		PlotX(o, "/tmp/gosl/fun", "xpoly2.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
+			plt.Equal()
+		})
+	}
+
+	np = 3
+	sktol := 1e-10
+	xskip := [][]float64{}
+	dtol := 1e-10
+	ver := chk.Verbose
+	CheckDerivX(tst, o, tcte, xmin, xmax, np, xskip, sktol, dtol, ver)
+}
