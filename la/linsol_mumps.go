@@ -29,7 +29,6 @@ type LinSolMumps struct {
 	m      C.DMUMPS_STRUC_C
 	mz     C.ZMUMPS_STRUC_C
 	mi, mj []int32
-	ma     *C.ZMUMPS_COMPLEX
 	xRC    []float64
 
 	// derived
