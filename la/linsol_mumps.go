@@ -11,6 +11,8 @@ package la
 #cgo LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord
 #include <dmumps_c.h>
 #include <zmumps_c.h>
+DMUMPS_STRUC_C DMU_DAT;
+ZMUMPS_STRUC_C ZMU_DAT;
 */
 import "C"
 
@@ -26,8 +28,6 @@ import (
 // LinSolMumps holds MUMPS data
 type LinSolMumps struct {
 	linSolData
-	m      C.DMUMPS_STRUC_C
-	mz     C.ZMUMPS_STRUC_C
 	mi, mj []int32
 	xRC    []float64
 
@@ -66,16 +66,16 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	}
 
 	// initialise Mumps
-	o.m.comm_fortran = -987654 // use Fortran communicator by default
-	o.m.par = 1                // host also works
-	o.m.sym = 0                // 0=unsymmetric, 1=sym(pos-def), 2=symmetric(undef)
+	C.DMU_DAT.comm_fortran = -987654 // use Fortran communicator by default
+	C.DMU_DAT.par = 1                // host also works
+	C.DMU_DAT.sym = 0                // 0=unsymmetric, 1=sym(pos-def), 2=symmetric(undef)
 	if symmetric {
-		o.m.sym = 2
+		C.DMU_DAT.sym = 2
 	}
-	o.m.job = -1     // initialisation code
-	C.dmumps_c(&o.m) // initialise
-	if o.m.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err02, mumps_error(o.m.info[1-1], o.m.info[2-1]))
+	C.DMU_DAT.job = -1     // initialisation code
+	C.dmumps_c(&C.DMU_DAT) // initialise
+	if C.DMU_DAT.info[1-1] < 0 {
+		return chk.Err(_linsol_mumps_err02, mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
 	}
 
 	// convert indices to C.int (not C.long) and
@@ -87,39 +87,39 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	}
 
 	// set pointers
-	o.m.n = C.int(o.tR.m)
-	o.m.nz_loc = C.int(o.tR.pos)
-	o.m.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
-	o.m.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
-	o.m.a_loc = (*C.double)(unsafe.Pointer(&o.tR.x[0]))
+	C.DMU_DAT.n = C.int(o.tR.m)
+	C.DMU_DAT.nz_loc = C.int(o.tR.pos)
+	C.DMU_DAT.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
+	C.DMU_DAT.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
+	C.DMU_DAT.a_loc = (*C.double)(unsafe.Pointer(&o.tR.x[0]))
 
 	// control
 	if verbose {
 		if mpi.Rank() == 0 {
 			io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.InitR . . (MUMPS) . . . . . . . . . \n\n")
 		}
-		o.m.icntl[1-1] = 6 // output stream for error messages
-		o.m.icntl[2-1] = 0 // output stream for statistics and warnings
-		o.m.icntl[3-1] = 6 // output stream for global information
-		o.m.icntl[4-1] = 2 // message level: 2==errors and warnings
+		C.DMU_DAT.icntl[1-1] = 6 // output stream for error messages
+		C.DMU_DAT.icntl[2-1] = 0 // output stream for statistics and warnings
+		C.DMU_DAT.icntl[3-1] = 6 // output stream for global information
+		C.DMU_DAT.icntl[4-1] = 2 // message level: 2==errors and warnings
 	} else {
-		o.m.icntl[1-1] = -1 // no output messages
-		o.m.icntl[2-1] = -1 // no warnings
-		o.m.icntl[3-1] = -1 // no global information
-		o.m.icntl[4-1] = -1 // message level
+		C.DMU_DAT.icntl[1-1] = -1 // no output messages
+		C.DMU_DAT.icntl[2-1] = -1 // no warnings
+		C.DMU_DAT.icntl[3-1] = -1 // no global information
+		C.DMU_DAT.icntl[4-1] = -1 // message level
 	}
-	o.m.icntl[5-1] = 0     // assembled matrix (needed for distributed matrix)
-	o.m.icntl[6-1] = 7     // automatic (default) permuting strategy for diagonal terms
-	o.m.icntl[14-1] = 5000 // % increase of working space
-	o.m.icntl[18-1] = 3    // distributed matrix
-	o.m.icntl[23-1] = 2000 // max 2000Mb per processor // TODO: check this
+	C.DMU_DAT.icntl[5-1] = 0     // assembled matrix (needed for distributed matrix)
+	C.DMU_DAT.icntl[6-1] = 7     // automatic (default) permuting strategy for diagonal terms
+	C.DMU_DAT.icntl[14-1] = 5000 // % increase of working space
+	C.DMU_DAT.icntl[18-1] = 3    // distributed matrix
+	C.DMU_DAT.icntl[23-1] = 2000 // max 2000Mb per processor // TODO: check this
 	o.SetOrdScal("", "")
 
 	// analysis step
-	o.m.job = 1      // analysis code
-	C.dmumps_c(&o.m) // analyse
-	if o.m.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err03, mumps_error(o.m.info[1-1], o.m.info[2-1]))
+	C.DMU_DAT.job = 1      // analysis code
+	C.dmumps_c(&C.DMU_DAT) // analyse
+	if C.DMU_DAT.info[1-1] < 0 {
+		return chk.Err(_linsol_mumps_err03, mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
 	}
 
 	// duration
@@ -163,16 +163,16 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	}
 
 	// initialise Mumps
-	o.mz.comm_fortran = -987654 // use Fortran communicator by default
-	o.mz.par = 1                // host also works
-	o.mz.sym = 0                // 0=unsymmetric, 1=sym(pos-def), 2=symmetric(undef)
+	C.ZMU_DAT.comm_fortran = -987654 // use Fortran communicator by default
+	C.ZMU_DAT.par = 1                // host also works
+	C.ZMU_DAT.sym = 0                // 0=unsymmetric, 1=sym(pos-def), 2=symmetric(undef)
 	if symmetric {
-		o.mz.sym = 2
+		C.ZMU_DAT.sym = 2
 	}
-	o.mz.job = -1     // initialisation code
-	C.zmumps_c(&o.mz) // initialise
-	if o.mz.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err06, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
+	C.ZMU_DAT.job = -1     // initialisation code
+	C.zmumps_c(&C.ZMU_DAT) // initialise
+	if C.ZMU_DAT.info[1-1] < 0 {
+		return chk.Err(_linsol_mumps_err06, mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
 	}
 
 	// convert indices to C.int (not C.long) and
@@ -184,16 +184,16 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	}
 
 	// set pointers
-	o.mz.n = C.int(o.tC.m)
-	o.mz.nz_loc = C.int(o.tC.pos)
-	o.mz.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
-	o.mz.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
-	o.mz.a_loc = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.tC.xz[0]))
+	C.ZMU_DAT.n = C.int(o.tC.m)
+	C.ZMU_DAT.nz_loc = C.int(o.tC.pos)
+	C.ZMU_DAT.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
+	C.ZMU_DAT.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
+	C.ZMU_DAT.a_loc = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.tC.xz[0]))
 
 	// only proc # 0 needs the RHS
 	if mpi.Rank() == 0 {
 		o.xRC = make([]float64, 2*o.tC.n)
-		o.mz.rhs = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.xRC[0]))
+		C.ZMU_DAT.rhs = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.xRC[0]))
 	}
 
 	// control
@@ -201,27 +201,27 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 		if mpi.Rank() == 0 {
 			io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.InitC . . (MUMPS) . . . . . . . . . \n\n")
 		}
-		o.mz.icntl[1-1] = 6 // output stream for error messages
-		o.mz.icntl[2-1] = 0 // output stream for statistics and warnings
-		o.mz.icntl[3-1] = 6 // output stream for global information
-		o.mz.icntl[4-1] = 2 // message level: 2==errors and warnings
+		C.ZMU_DAT.icntl[1-1] = 6 // output stream for error messages
+		C.ZMU_DAT.icntl[2-1] = 0 // output stream for statistics and warnings
+		C.ZMU_DAT.icntl[3-1] = 6 // output stream for global information
+		C.ZMU_DAT.icntl[4-1] = 2 // message level: 2==errors and warnings
 	} else {
-		o.mz.icntl[1-1] = -1 // no output messages
-		o.mz.icntl[2-1] = -1 // no warnings
-		o.mz.icntl[3-1] = -1 // no global information
-		o.mz.icntl[4-1] = -1 // message level
+		C.ZMU_DAT.icntl[1-1] = -1 // no output messages
+		C.ZMU_DAT.icntl[2-1] = -1 // no warnings
+		C.ZMU_DAT.icntl[3-1] = -1 // no global information
+		C.ZMU_DAT.icntl[4-1] = -1 // message level
 	}
-	o.mz.icntl[5-1] = 0     // assembled matrix (needed for distributed matrix)
-	o.mz.icntl[6-1] = 7     // automatic (default) permuting strategy for diagonal terms
-	o.mz.icntl[14-1] = 5000 // % increase of working space
-	o.mz.icntl[18-1] = 3    // distributed matrix
+	C.ZMU_DAT.icntl[5-1] = 0     // assembled matrix (needed for distributed matrix)
+	C.ZMU_DAT.icntl[6-1] = 7     // automatic (default) permuting strategy for diagonal terms
+	C.ZMU_DAT.icntl[14-1] = 5000 // % increase of working space
+	C.ZMU_DAT.icntl[18-1] = 3    // distributed matrix
 	o.SetOrdScal("", "")
 
 	// analysis step
-	o.mz.job = 1      // analysis code
-	C.zmumps_c(&o.mz) // analyse
-	if o.mz.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err07, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
+	C.ZMU_DAT.job = 1      // analysis code
+	C.zmumps_c(&C.ZMU_DAT) // analyse
+	if C.ZMU_DAT.info[1-1] < 0 {
+		return chk.Err(_linsol_mumps_err07, mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
 	}
 
 	// duration
@@ -257,20 +257,20 @@ func (o *LinSolMumps) Fact() (err error) {
 	if o.cmplx {
 
 		// MUMPS: factorisation
-		o.mz.job = 2      // factorisation code
-		C.zmumps_c(&o.mz) // factorise
-		if o.mz.info[1-1] < 0 {
-			return chk.Err(_linsol_mumps_err08, "Real", mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
+		C.ZMU_DAT.job = 2      // factorisation code
+		C.zmumps_c(&C.ZMU_DAT) // factorise
+		if C.ZMU_DAT.info[1-1] < 0 {
+			return chk.Err(_linsol_mumps_err08, "Real", mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
 		}
 
 		// real
 	} else {
 
 		// MUMPS: factorisation
-		o.m.job = 2      // factorisation code
-		C.dmumps_c(&o.m) // factorise
-		if o.m.info[1-1] < 0 {
-			return chk.Err(_linsol_mumps_err08, "Complex", mumps_error(o.m.info[1-1], o.m.info[2-1]))
+		C.DMU_DAT.job = 2      // factorisation code
+		C.dmumps_c(&C.DMU_DAT) // factorise
+		if C.DMU_DAT.info[1-1] < 0 {
+			return chk.Err(_linsol_mumps_err08, "Complex", mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
 		}
 	}
 
@@ -315,14 +315,14 @@ func (o *LinSolMumps) SolveR(xR, bR []float64, sum_b_to_root bool) (err error) {
 
 	// only proc # 0 needs the RHS
 	if mpi.Rank() == 0 {
-		o.m.rhs = (*C.double)(unsafe.Pointer(&xR[0]))
+		C.DMU_DAT.rhs = (*C.double)(unsafe.Pointer(&xR[0]))
 	}
 
 	// MUMPS: solve
-	o.m.job = 3      // solution code
-	C.dmumps_c(&o.m) // solve
-	if o.m.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err10, mumps_error(o.m.info[1-1], o.m.info[2-1]))
+	C.DMU_DAT.job = 3      // solution code
+	C.dmumps_c(&C.DMU_DAT) // solve
+	if C.DMU_DAT.info[1-1] < 0 {
+		return chk.Err(_linsol_mumps_err10, mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
 	}
 	mpi.BcastFromRoot(xR) // broadcast from root
 
@@ -376,10 +376,10 @@ func (o *LinSolMumps) SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) (err 
 	}
 
 	// MUMPS: solve
-	o.mz.job = 3      // solution code
-	C.zmumps_c(&o.mz) // solve
-	if o.mz.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err12, mumps_error(o.mz.info[1-1], o.mz.info[2-1]))
+	C.ZMU_DAT.job = 3      // solution code
+	C.zmumps_c(&C.ZMU_DAT) // solve
+	if C.ZMU_DAT.info[1-1] < 0 {
+		return chk.Err(_linsol_mumps_err12, mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
 	}
 
 	// MUMPS: split complex values
@@ -420,11 +420,11 @@ func (o *LinSolMumps) Clean() {
 
 	// clean up
 	if o.cmplx {
-		o.mz.job = -2     // finalize code
-		C.zmumps_c(&o.mz) // do finalize
+		C.ZMU_DAT.job = -2     // finalize code
+		C.zmumps_c(&C.ZMU_DAT) // do finalize
 	} else {
-		o.m.job = -2     // finalize code
-		C.dmumps_c(&o.m) // do finalize
+		C.DMU_DAT.job = -2     // finalize code
+		C.dmumps_c(&C.DMU_DAT) // do finalize
 	}
 
 	// duration
@@ -475,11 +475,11 @@ func (o *LinSolMumps) SetOrdScal(ordering, scaling string) (err error) {
 		return chk.Err(_linsol_mumps_err14, scaling)
 	}
 	if o.cmplx {
-		o.mz.icntl[7-1] = C.int(ord) // ordering
-		o.mz.icntl[8-1] = C.int(sca) // scaling
+		C.ZMU_DAT.icntl[7-1] = C.int(ord) // ordering
+		C.ZMU_DAT.icntl[8-1] = C.int(sca) // scaling
 	} else {
-		o.m.icntl[7-1] = C.int(ord) // ordering
-		o.m.icntl[8-1] = C.int(sca) // scaling
+		C.DMU_DAT.icntl[7-1] = C.int(ord) // ordering
+		C.DMU_DAT.icntl[8-1] = C.int(sca) // scaling
 	}
 	return
 }
