@@ -75,16 +75,6 @@ const int TAG_SINGLEINTSENDRECV = 1000;
 const int TAG_INTSENDRECV       = 1001;
 const int TAG_DBLSENDRECV       = 1002;
 
-void singleintsend(int val, int to_proc) {
-    MPI::COMM_WORLD.Send(&val, 1, MPI::LONG, to_proc, TAG_SINGLEINTSENDRECV);
-}
-
-int singleintrecv(int from_proc) {
-    int val;
-    MPI::COMM_WORLD.Recv(&val, 1, MPI::LONG, from_proc, TAG_SINGLEINTSENDRECV);
-    return val;
-}
-
 void intsend(int *vals, int n, int to_proc) {
     MPI::COMM_WORLD.Send(vals, n, MPI::LONG, to_proc, TAG_INTSENDRECV);
 }

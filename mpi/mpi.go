@@ -158,13 +158,15 @@ func IntAllReduceMax(x, w []int) {
 
 // SingleIntSend sends a single integer 'val' to processor 'to_proc'
 func SingleIntSend(val, to_proc int) {
-	C.singleintsend(C.int(val), C.int(to_proc))
+	vals := []int{val}
+	IntSend(vals, to_proc)
 }
 
 // SingleIntRecv receives a single integer 'val' from processor 'to_proc'
 func SingleIntRecv(from_proc int) (val int) {
-	res := C.singleintrecv(C.int(from_proc))
-	return int(res)
+	vals := []int{0}
+	IntRecv(vals, from_proc)
+	return vals[0]
 }
 
 // IntSend sends a slice of integers to processor 'to_proc'

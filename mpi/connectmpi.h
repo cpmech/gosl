@@ -22,8 +22,6 @@ void allreducesum(double *dest, double *orig, int n);
 void allreducemin(double *dest, double *orig, int n);
 void allreducemax(double *dest, double *orig, int n);
 void intallreducemax(int *dest, int *orig, int n);
-void singleintsend(int val, int to_proc);
-int  singleintrecv(int from_proc);
 void intsend(int *vals, int n, int to_proc);
 void intrecv(int *vals, int n, int from_proc);
 void dblsend(double *vals, int n, int to_proc);
