@@ -8,6 +8,8 @@ if [[ "$unamestr" == 'Linux' ]]; then
    platform='linux'
 elif [[ "$unamestr" == 'MINGW32_NT-6.2' ]]; then
    platform='windows'
+elif [[ "$unamestr" == 'MINGW64_NT-10.0' ]]; then
+   platform='windows'
 fi
 
 echo "platform = $platform"
