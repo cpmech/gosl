@@ -5,8 +5,9 @@
 package fdm
 
 import (
-	"fmt"
 	"sort"
+
+	"github.com/cpmech/gosl/io"
 )
 
 /* Equations
@@ -94,9 +95,9 @@ func (e *Equations) Init(n int, peq_notsorted []int) {
 }
 
 func (e *Equations) Print() {
-	fmt.Printf("N1 = %v, N2 = %v, N = %v\n", e.N1, e.N2, e.N)
-	fmt.Printf("RF1 (unknown) =\n %v\n", e.RF1)
-	fmt.Printf("FR1 = \n%v\n", e.FR1)
-	fmt.Printf("RF2 (prescribed) =\n %v\n", e.RF2)
-	fmt.Printf("FR2 = \n%v\n", e.FR2)
+	io.Pf("N1 = %v, N2 = %v, N = %v\n", e.N1, e.N2, e.N)
+	io.Pf("RF1 (unknown) =\n %v\n", e.RF1)
+	io.Pf("FR1 = \n%v\n", e.FR1)
+	io.Pf("RF2 (prescribed) =\n %v\n", e.RF2)
+	io.Pf("FR2 = \n%v\n", e.FR2)
 }

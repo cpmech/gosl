@@ -6,7 +6,6 @@ package fdm
 
 import (
 	"bytes"
-	"fmt"
 	"os/exec"
 
 	"github.com/cpmech/gosl/chk"
@@ -37,28 +36,28 @@ func (g *Grid2D) Init(lx, ly float64, nx, ny int) {
 func (g *Grid2D) Draw(dirout, fnkey string, show bool) {
 	// write buffer
 	var b bytes.Buffer
-	fmt.Fprintf(&b, "from gosl import *\n")
-	fmt.Fprintf(&b, "XY = array([")
+	io.Ff(&b, "from gosl import *\n")
+	io.Ff(&b, "XY = array([")
 	for j := 0; j < g.Ny; j++ {
 		for i := 0; i < g.Nx; i++ {
 			x := float64(i) * g.Dx
 			y := float64(j) * g.Dy
-			fmt.Fprintf(&b, "(%g, %g),", x, y)
+			io.Ff(&b, "(%g, %g),", x, y)
 		}
 	}
-	fmt.Fprintf(&b, "],dtype=float)\n")
-	fmt.Fprintf(&b, "L = %v\n", utl.IntPy(g.L))
-	fmt.Fprintf(&b, "R = %v\n", utl.IntPy(g.R))
-	fmt.Fprintf(&b, "B = %v\n", utl.IntPy(g.B))
-	fmt.Fprintf(&b, "T = %v\n", utl.IntPy(g.T))
-	fmt.Fprintf(&b, "plot(XY[:,0], XY[:,1], 'ko', clip_on=False)\n")
-	fmt.Fprintf(&b, "plot(XY[L,0], XY[L,1], 'rs', ms=15, clip_on=False)\n")
-	fmt.Fprintf(&b, "plot(XY[R,0], XY[R,1], 'bs', ms=15, clip_on=False)\n")
-	fmt.Fprintf(&b, "plot(XY[B,0], XY[B,1], 'yo', ms=12, clip_on=False)\n")
-	fmt.Fprintf(&b, "plot(XY[T,0], XY[T,1], 'go', ms=12, clip_on=False)\n")
-	fmt.Fprintf(&b, "axis('equal')\n")
-	fmt.Fprintf(&b, "grid()\n")
-	fmt.Fprintf(&b, "show()\n")
+	io.Ff(&b, "],dtype=float)\n")
+	io.Ff(&b, "L = %v\n", utl.IntPy(g.L))
+	io.Ff(&b, "R = %v\n", utl.IntPy(g.R))
+	io.Ff(&b, "B = %v\n", utl.IntPy(g.B))
+	io.Ff(&b, "T = %v\n", utl.IntPy(g.T))
+	io.Ff(&b, "plot(XY[:,0], XY[:,1], 'ko', clip_on=False)\n")
+	io.Ff(&b, "plot(XY[L,0], XY[L,1], 'rs', ms=15, clip_on=False)\n")
+	io.Ff(&b, "plot(XY[R,0], XY[R,1], 'bs', ms=15, clip_on=False)\n")
+	io.Ff(&b, "plot(XY[B,0], XY[B,1], 'yo', ms=12, clip_on=False)\n")
+	io.Ff(&b, "plot(XY[T,0], XY[T,1], 'go', ms=12, clip_on=False)\n")
+	io.Ff(&b, "axis('equal')\n")
+	io.Ff(&b, "grid()\n")
+	io.Ff(&b, "show()\n")
 	// save file
 	io.WriteFileD(dirout, fnkey+".py", &b)
 	if show {
@@ -73,26 +72,26 @@ func (g *Grid2D) Draw(dirout, fnkey string, show bool) {
 func (g *Grid2D) Contour(dirout, fnkey string, fxy Cb_fxy, z []float64, nlevels int, show bool) {
 	// write buffer
 	var b bytes.Buffer
-	fmt.Fprintf(&b, "from gosl import *\n")
-	fmt.Fprintf(&b, "XYZ = array([")
+	io.Ff(&b, "from gosl import *\n")
+	io.Ff(&b, "XYZ = array([")
 	for j := 0; j < g.Ny; j++ {
 		for i := 0; i < g.Nx; i++ {
 			x := float64(i) * g.Dx
 			y := float64(j) * g.Dy
 			if fxy == nil {
-				fmt.Fprintf(&b, "(%g, %g, %g),", x, y, z[i+j*g.Nx])
+				io.Ff(&b, "(%g, %g, %g),", x, y, z[i+j*g.Nx])
 			} else {
-				fmt.Fprintf(&b, "(%g, %g, %g),", x, y, fxy(x, y))
+				io.Ff(&b, "(%g, %g, %g),", x, y, fxy(x, y))
 			}
 		}
 	}
-	fmt.Fprintf(&b, "],dtype=float)\n")
-	fmt.Fprintf(&b, "X = XYZ[:,0].reshape(%d,%d)\n", g.Ny, g.Nx)
-	fmt.Fprintf(&b, "Y = XYZ[:,1].reshape(%d,%d)\n", g.Ny, g.Nx)
-	fmt.Fprintf(&b, "Z = XYZ[:,2].reshape(%d,%d)\n", g.Ny, g.Nx)
-	fmt.Fprintf(&b, "Contour(X,Y,Z, nlevels=%d)\n", nlevels)
-	fmt.Fprintf(&b, "axis('equal')\n")
-	fmt.Fprintf(&b, "show()\n")
+	io.Ff(&b, "],dtype=float)\n")
+	io.Ff(&b, "X = XYZ[:,0].reshape(%d,%d)\n", g.Ny, g.Nx)
+	io.Ff(&b, "Y = XYZ[:,1].reshape(%d,%d)\n", g.Ny, g.Nx)
+	io.Ff(&b, "Z = XYZ[:,2].reshape(%d,%d)\n", g.Ny, g.Nx)
+	io.Ff(&b, "Contour(X,Y,Z, nlevels=%d)\n", nlevels)
+	io.Ff(&b, "axis('equal')\n")
+	io.Ff(&b, "show()\n")
 	// save file
 	io.WriteFileD(dirout, fnkey+".py", &b)
 	if show {
@@ -105,6 +104,3 @@ func (g *Grid2D) Contour(dirout, fnkey string, fxy Cb_fxy, z []float64, nlevels 
 
 // callbacks
 type Cb_fxy func(x, y float64) (z float64) // z = f(x,y)
-
-// auxiliary function
-func prin(msg string, prm ...interface{}) { fmt.Printf(msg, prm...) }
