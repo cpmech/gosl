@@ -38,7 +38,7 @@ func Test_pipe01(tst *testing.T) {
 	find := exec.Command("find", dir, "-type", "f")
 
 	// | grep -v '/[._]' # Ignore hidden/temporary files
-	egrep := exec.Command("egrep", "-v", `/[._]`)
+	egrep := exec.Command("grep", "-v", `/[._]`)
 
 	// | sort -t. -k2 # Sort by file extension
 	sort := exec.Command("sort", "-t.", "-k2")

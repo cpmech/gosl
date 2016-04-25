@@ -8,9 +8,9 @@ package la
 
 /*
 #cgo linux   CFLAGS: -O3 -I/usr/include/suitesparse
-#cgo windows CFLAGS: -O3 -IC:/Gosl/include
+#cgo windows CFLAGS: -O3 -IC:/GoslDeps/include
 #cgo linux   LDFLAGS: -llapack -lgfortran -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig
-#cgo windows LDFLAGS: -llapack -lgfortran -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -LC:/Gosl/lib
+#cgo windows LDFLAGS: -llapack -lgfortran -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -LC:/GoslDeps/lib
 #ifdef WIN32
 #define LONG long long
 #else

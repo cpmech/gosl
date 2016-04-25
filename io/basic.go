@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package io (input/output) implements auxiliary functions for printing,
+// Package io (input/output) implements auxiliary functions for printing,
 // parsing, handling files, directories, etc.
 package io
 
@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	Verbose  = true
-	ColorsOn = true
+	Verbose  = true // show messages on console
+	ColorsOn = true // use colors on console
 )
 
 // Sf wraps Sprintf

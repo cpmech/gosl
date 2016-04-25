@@ -9,7 +9,6 @@ package la
 /*
 #cgo CFLAGS: -O3
 #cgo linux   LDFLAGS: -lm -llapack -lgfortran -lblas
-#cgo windows LDFLAGS: -lm -llapack -lgfortran -lblas -LC:/Gosl/lib
 #include "connectlapack.h"
 */
 import "C"
