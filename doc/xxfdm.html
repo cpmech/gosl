@@ -8,6 +8,385 @@
 </head>
 <body>
 <div id="page"><h1>Gosl &ndash; <b>fdm</b> &ndash; A simple finite differences solver</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/fdm"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#Assemble">func Assemble(K11, K12 *la.Triplet, F1 []float64, src Cb_src, g *Grid2D, e *Equations)</a></dd>
+			
+				
+				<dd><a href="#InitK11andK12">func InitK11andK12(K11, K12 *la.Triplet, e *Equations)</a></dd>
+			
+				
+				<dd><a href="#JoinVecs">func JoinVecs(U, U1, U2 []float64, e *Equations)</a></dd>
+			
+			
+				
+				<dd><a href="#Cb_fxy">type Cb_fxy</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_src">type Cb_src</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Equations">type Equations</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Equations.Init">func (e *Equations) Init(n int, peq_notsorted []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Equations.Print">func (e *Equations) Print()</a></dd>
+				
+			
+				
+				<dd><a href="#Grid2D">type Grid2D</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Grid2D.Contour">func (g *Grid2D) Contour(dirout, fnkey string, fxy Cb_fxy, z []float64, nlevels int, show bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Grid2D.Draw">func (g *Grid2D) Draw(dirout, fnkey string, show bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Grid2D.Init">func (g *Grid2D) Init(lx, ly float64, nx, ny int)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/cpmech/gosl/fdm/assembly.go">assembly.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fdm/equations.go">equations.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fdm/grid2d.go">grid2d.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Assemble">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=391:477#L8">Assemble</a></h2>
+			<pre>func Assemble(K11, K12 *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, F1 []<a href="/pkg/builtin/#float64">float64</a>, src <a href="#Cb_src">Cb_src</a>, g *<a href="#Grid2D">Grid2D</a>, e *<a href="#Equations">Equations</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="InitK11andK12">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=271:325#L3">InitK11andK12</a></h2>
+			<pre>func InitK11andK12(K11, K12 *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, e *<a href="#Equations">Equations</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="JoinVecs">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=1273:1321#L46">JoinVecs</a></h2>
+			<pre>func JoinVecs(U, U1, U2 []<a href="/pkg/builtin/#float64">float64</a>, e *<a href="#Equations">Equations</a>)</pre>
+			
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Cb_fxy">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=2910:2952#L96">Cb_fxy</a></h2>
+			<pre>type Cb_fxy func(x, y <a href="/pkg/builtin/#float64">float64</a>) (z <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+callbacks
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_src">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=231:269#L1">Cb_src</a></h2>
+			<pre>type Cb_src func(x, y <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Equations">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=2546:2761#L53">Equations</a></h2>
+			<pre>type Equations struct {
+    N1, N2, N <a href="/pkg/builtin/#int">int</a>   <span class="comment">// unknowns, prescribed, total numbers</span>
+    RF1, FR1  []<a href="/pkg/builtin/#int">int</a> <span class="comment">// reduced=&gt;full/full=&gt;reduced maps for unknowns</span>
+    RF2, FR2  []<a href="/pkg/builtin/#int">int</a> <span class="comment">// reduced=&gt;full/full=&gt;reduced maps for prescribed</span>
+}</pre>
+			<p>
+Equations
+</p>
+<pre>=========
+K11 K12 =&gt; unknowns
+K21 K22 =&gt; prescribed
+ |   +---&gt; prescribed
+ +-------&gt; unknowns
+
+&#34;RF&#34; means &#34;reduced to full&#34;
+&#34;FR&#34; means &#34;full to reduced&#34;
+reduced 1: is a reduced system of equations where only unknown    equations are present
+reduced 2: is a reduced system of equations where only prescribed equations are present
+full     : corresponds to all equations, unknown and prescribed
+
+Example:
+
+N   = 9         =&gt; total number of equations
+peq = [0  3  6] =&gt; prescribed equations
+
+  0  1  2  3  4  5  6  7  8                       0   1  2   3   4  5   6   7  8
+0 +--------+--------+------ 0 -- prescribed -- 0 [22] 21 21 [22] 21 21 [22] 21 21 0
+1 |        |        |       1                  1  12  .. ..  12  .. ..  12  .. .. 1
+2 |        |        |       2                  2  12  .. ..  12  .. ..  12  .. .. 2
+3 +--------+--------+------ 3 -- prescribed -- 3 [22] 21 21 [22] 21 21 [22] 21 21 3
+4 |        |        |       4                  4  12  .. ..  12  .. ..  12  .. .. 4
+5 |        |        |       5                  5  12  .. ..  12  .. ..  12  .. .. 5
+6 +--------+--------+------ 6 -- prescribed -- 6 [22] 21 21 [22] 21 21 [22] 21 21 6
+7 |        |        |       7                  7  12  .. ..  12  .. ..  12  .. .. 7
+8 |        |        |       8                  8  12  .. ..  12  .. ..  12  .. .. 8
+  0  1  2  3  4  5  6  7  8                       0   1  2   3   4  5   6   7  8
+  |        |        |
+ pre      pre      pre                                 .. =&gt; 11 equations
+
+N1 = 6 =&gt; number of equations of type 1 (unknowns)
+N2 = 3 =&gt; number of equations of type 2 (prescribed)
+N1 + N2 == N
+
+       0  1  2  3  4  5
+RF1 = [1  2  4  5  7  8]           =&gt; ex:  RF1[3] = full system equation # 5
+
+       0  1  2  3  4  5  6  7  8
+FR1 = [   0  1     2  3     4  5]  =&gt; ex:  FR1[5] = reduced system equation # 3
+      -1       -1       -1         =&gt; indicates &#39;value not set&#39;
+
+       0  1  2
+RF2 = [0  3  6]                    =&gt; ex:  RF2[1] = full system equation # 3
+
+       0  1  2  3  4  5  6  7  8
+FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation # 1
+         -1 -1    -1 -1    -1 -1   =&gt; indicates &#39;value not set&#39;
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Equations.Init">func (*Equations) <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=2763:2815#L59">Init</a></h3>
+				<pre>func (e *<a href="#Equations">Equations</a>) Init(n <a href="/pkg/builtin/#int">int</a>, peq_notsorted []<a href="/pkg/builtin/#int">int</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Equations.Print">func (*Equations) <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=3390:3417#L87">Print</a></h3>
+				<pre>func (e *<a href="#Equations">Equations</a>) Print()</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Grid2D">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=312:428#L6">Grid2D</a></h2>
+			<pre>type Grid2D struct {
+    Lx, Ly     <a href="/pkg/builtin/#float64">float64</a>
+    Nx, Ny, N  <a href="/pkg/builtin/#int">int</a>
+    Dx, Dy     <a href="/pkg/builtin/#float64">float64</a>
+    Dxx, Dyy   <a href="/pkg/builtin/#float64">float64</a>
+    L, R, B, T []<a href="/pkg/builtin/#int">int</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Grid2D.Contour">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=1918:2013#L62">Contour</a></h3>
+				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Contour(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, fxy <a href="#Cb_fxy">Cb_fxy</a>, z []<a href="/pkg/builtin/#float64">float64</a>, nlevels <a href="/pkg/builtin/#int">int</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+fxy or z must be nil
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Grid2D.Draw">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=772:826#L26">Draw</a></h3>
+				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Draw(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Grid2D.Init">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=430:479#L14">Init</a></h3>
+				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Init(lx, ly <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>)</pre>
+				
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
 </div><!-- page -->
 <div id="footer">
 <br /><br />

@@ -8,6 +8,464 @@
 </head>
 <body>
 <div id="page"><h1>Gosl &ndash; <b>mpi</b> &ndash; A lightweight wrapper to MPI</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/mpi"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#Abort">func Abort()</a></dd>
+			
+				
+				<dd><a href="#AllReduceMax">func AllReduceMax(x, w []float64)</a></dd>
+			
+				
+				<dd><a href="#AllReduceMin">func AllReduceMin(x, w []float64)</a></dd>
+			
+				
+				<dd><a href="#AllReduceSum">func AllReduceSum(x, w []float64)</a></dd>
+			
+				
+				<dd><a href="#AllReduceSumAdd">func AllReduceSumAdd(y, x, w []float64)</a></dd>
+			
+				
+				<dd><a href="#Barrier">func Barrier()</a></dd>
+			
+				
+				<dd><a href="#BcastFromRoot">func BcastFromRoot(x []float64)</a></dd>
+			
+				
+				<dd><a href="#DblRecv">func DblRecv(vals []float64, from_proc int)</a></dd>
+			
+				
+				<dd><a href="#DblSend">func DblSend(vals []float64, to_proc int)</a></dd>
+			
+				
+				<dd><a href="#IntAllReduceMax">func IntAllReduceMax(x, w []int)</a></dd>
+			
+				
+				<dd><a href="#IntRecv">func IntRecv(vals []int, from_proc int)</a></dd>
+			
+				
+				<dd><a href="#IntSend">func IntSend(vals []int, to_proc int)</a></dd>
+			
+				
+				<dd><a href="#IsOn">func IsOn() bool</a></dd>
+			
+				
+				<dd><a href="#Rank">func Rank() int</a></dd>
+			
+				
+				<dd><a href="#SingleIntRecv">func SingleIntRecv(from_proc int) (val int)</a></dd>
+			
+				
+				<dd><a href="#SingleIntSend">func SingleIntSend(val, to_proc int)</a></dd>
+			
+				
+				<dd><a href="#Size">func Size() int</a></dd>
+			
+				
+				<dd><a href="#Start">func Start(debug bool)</a></dd>
+			
+				
+				<dd><a href="#Stop">func Stop(debug bool)</a></dd>
+			
+				
+				<dd><a href="#SumToRoot">func SumToRoot(dest, orig []float64)</a></dd>
+			
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/cpmech/gosl/mpi/mpi.go">mpi.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Abort">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=731:743#L18">Abort</a></h2>
+			<pre>func Abort()</pre>
+			<p>
+Abort aborts MPI
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="AllReduceMax">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=3705:3738#L124">AllReduceMax</a></h2>
+			<pre>func AllReduceMax(x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+AllReduceMax combines all values in &#39;x&#39; from all processors. When corresponding components (at the
+same position) exist in a number of processors, the maximum value is selected.
+&#39;w&#39; is a workspace with length = len(x). The operations are:
+</p>
+<pre>w := join_all_selecting_max(x)
+x := w
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="AllReduceMin">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=3174:3207#L109">AllReduceMin</a></h2>
+			<pre>func AllReduceMin(x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+AllReduceMin combines all values in &#39;x&#39; from all processors. When corresponding components (at the
+same position) exist in a number of processors, the minimum value is selected.
+&#39;w&#39; is a workspace with length = len(x). The operations are:
+</p>
+<pre>w := join_all_selecting_min(x)
+x := w
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="AllReduceSum">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=2125:2158#L79">AllReduceSum</a></h2>
+			<pre>func AllReduceSum(x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+AllReduceSum combines all values in &#39;x&#39; from all processors. Corresponding components in
+slice &#39;x&#39; are added together. &#39;w&#39; is a workspace with length = len(x). The operations are:
+</p>
+<pre>w := join_all_with_sum(x)
+x := w
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="AllReduceSumAdd">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=2636:2675#L94">AllReduceSumAdd</a></h2>
+			<pre>func AllReduceSumAdd(y, x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+AllReduceSumAdd combines all values in &#39;x&#39; from all processors and adds the result to another
+slice &#39;y&#39;. Corresponding components in slice &#39;x&#39; are added together.
+&#39;w&#39; is a workspace with length = len(x). The operations are:
+</p>
+<pre>w := join_all_with_sum(x)
+y += w
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Barrier">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1338:1352#L60">Barrier</a></h2>
+			<pre>func Barrier()</pre>
+			<p>
+Barrier forces synchronisation
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="BcastFromRoot">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1791:1822#L71">BcastFromRoot</a></h2>
+			<pre>func BcastFromRoot(x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+BcastFromRoot broadcasts &#39;x&#39; slice from root (Rank == 0) to all other processors
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DblRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5675:5718#L182">DblRecv</a></h2>
+			<pre>func DblRecv(vals []<a href="/pkg/builtin/#float64">float64</a>, from_proc <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+DblRecv receives a slice of floats from processor &#39;from_proc&#39;
+</p>
+<pre>NOTE: &#39;vals&#39; must be pre-allocated with the right number of values that will
+      be sent by &#39;from_proc&#39;
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DblSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5365:5406#L175">DblSend</a></h2>
+			<pre>func DblSend(vals []<a href="/pkg/builtin/#float64">float64</a>, to_proc <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+DblSend sends a slice of floats to processor &#39;to_proc&#39;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IntAllReduceMax">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4245:4277#L139">IntAllReduceMax</a></h2>
+			<pre>func IntAllReduceMax(x, w []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+IntAllReduceMax combines all (int) values in &#39;x&#39; from all processors. When corresponding components (at the
+same position) exist in a number of processors, the maximum value is selected.
+&#39;w&#39; is a workspace with length = len(x). The operations are:
+</p>
+<pre>w := join_all_selecting_max(x)
+x := w
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IntRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=5179:5218#L170">IntRecv</a></h2>
+			<pre>func IntRecv(vals []<a href="/pkg/builtin/#int">int</a>, from_proc <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+IntRecv receives a slice of integers from processor &#39;from_proc&#39;
+</p>
+<pre>NOTE: &#39;vals&#39; must be pre-allocated with the right number of values that will
+      be sent by &#39;from_proc&#39;
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IntSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4874:4911#L163">IntSend</a></h2>
+			<pre>func IntSend(vals []<a href="/pkg/builtin/#int">int</a>, to_proc <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+IntSend sends a slice of integers to processor &#39;to_proc&#39;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IsOn">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=846:862#L24">IsOn</a></h2>
+			<pre>func IsOn() <a href="/pkg/builtin/#bool">bool</a></pre>
+			<p>
+InOn tells whether MPI is on or not
+</p>
+<pre>NOTE: this returns true even after Stop
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Rank">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1171:1186#L50">Rank</a></h2>
+			<pre>func Rank() <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+Rank returns the processor rank/ID
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SingleIntRecv">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4705:4748#L156">SingleIntRecv</a></h2>
+			<pre>func SingleIntRecv(from_proc <a href="/pkg/builtin/#int">int</a>) (val <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+SingleIntRecv receives a single integer &#39;val&#39; from processor &#39;to_proc&#39;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SingleIntSend">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=4545:4581#L150">SingleIntSend</a></h2>
+			<pre>func SingleIntSend(val, to_proc <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+SingleIntSend sends a single integer &#39;val&#39; to processor &#39;to_proc&#39;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Size">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1258:1273#L55">Size</a></h2>
+			<pre>func Size() <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+Size returns the number of processors
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Start">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=944:966#L32">Start</a></h2>
+			<pre>func Start(debug <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+Start initialises MPI
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Stop">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1051:1072#L41">Stop</a></h2>
+			<pre>func Stop(debug <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+Stop finalises MPI
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SumToRoot">func <a href="https://github.com/cpmech/gosl/blob/master/mpi/mpi.go?s=1556:1592#L66">SumToRoot</a></h2>
+			<pre>func SumToRoot(dest, orig []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SumToRoot sums all values in &#39;orig&#39; to &#39;dest&#39; in root (Rank == 0) processor
+</p>
+<pre>NOTE: orig and dest must be different slices, i.e. not pointing to the same underlying data structure
+</pre>
+
+			
+			
+
+		
+		
+	
+
+	
+
+
+
+
+
 </div><!-- page -->
 <div id="footer">
 <br /><br />

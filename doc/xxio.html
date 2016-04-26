@@ -8,6 +8,1429 @@
 </head>
 <body>
 <div id="page"><h1>Gosl &ndash; <b>io</b> &ndash; Input and output of files and printing and parsing strings</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/io"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+Package io (input/output) implements auxiliary functions for printing,
+parsing, handling files, directories, etc.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="#AppendToFile">func AppendToFile(fn string, buffer ...*bytes.Buffer)</a></dd>
+			
+				
+				<dd><a href="#ArgToBool">func ArgToBool(idxArg int, defaultValue bool) bool</a></dd>
+			
+				
+				<dd><a href="#ArgToFilename">func ArgToFilename(idxArg int, fnDefault, ext string, check bool) (filename, fnkey string)</a></dd>
+			
+				
+				<dd><a href="#ArgToFloat">func ArgToFloat(idxArg int, defaultValue float64) float64</a></dd>
+			
+				
+				<dd><a href="#ArgToInt">func ArgToInt(idxArg int, defaultValue int) int</a></dd>
+			
+				
+				<dd><a href="#ArgToString">func ArgToString(idxArg int, defaultValue string) string</a></dd>
+			
+				
+				<dd><a href="#ArgsTable">func ArgsTable(title string, data ...interface{}) (table string)</a></dd>
+			
+				
+				<dd><a href="#Atob">func Atob(val string) (bres bool)</a></dd>
+			
+				
+				<dd><a href="#Atof">func Atof(val string) (res float64)</a></dd>
+			
+				
+				<dd><a href="#Atoi">func Atoi(val string) (res int)</a></dd>
+			
+				
+				<dd><a href="#Btoa">func Btoa(flag bool) string</a></dd>
+			
+				
+				<dd><a href="#Btoi">func Btoi(flag bool) int</a></dd>
+			
+				
+				<dd><a href="#CopyFileOver">func CopyFileOver(destination, source string) (err error)</a></dd>
+			
+				
+				<dd><a href="#ExtractStrPair">func ExtractStrPair(pair, sep string) (key, val string)</a></dd>
+			
+				
+				<dd><a href="#Ff">func Ff(b *bytes.Buffer, msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#FnExt">func FnExt(fn string) string</a></dd>
+			
+				
+				<dd><a href="#FnKey">func FnKey(fn string) string</a></dd>
+			
+				
+				<dd><a href="#Itob">func Itob(val int) bool</a></dd>
+			
+				
+				<dd><a href="#JoinKeys">func JoinKeys(keys []string) string</a></dd>
+			
+				
+				<dd><a href="#JoinKeys3">func JoinKeys3(k0, k1, k2 []string, sep string) (res string)</a></dd>
+			
+				
+				<dd><a href="#JoinKeys4">func JoinKeys4(k0, k1, k2, k3 []string, sep string) (res string)</a></dd>
+			
+				
+				<dd><a href="#JoinKeysPre">func JoinKeysPre(prefix string, keys []string) (res string)</a></dd>
+			
+				
+				<dd><a href="#Keycode">func Keycode(String string, Type string) (keycode string, found bool)</a></dd>
+			
+				
+				<dd><a href="#Keycodes">func Keycodes(String string) (keycodes []string)</a></dd>
+			
+				
+				<dd><a href="#OpenFileR">func OpenFileR(fn string) (fil *os.File, err error)</a></dd>
+			
+				
+				<dd><a href="#PathKey">func PathKey(fn string) string</a></dd>
+			
+				
+				<dd><a href="#Pf">func Pf(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#PfBlue">func PfBlue(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#PfCyan">func PfCyan(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#PfGreen">func PfGreen(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#PfMag">func PfMag(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#PfRed">func PfRed(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#PfWhite">func PfWhite(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#PfYel">func PfYel(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfblue">func Pfblue(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfblue2">func Pfblue2(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfcyan">func Pfcyan(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfcyan2">func Pfcyan2(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfdgreen">func Pfdgreen(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfdyel">func Pfdyel(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfdyel2">func Pfdyel2(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfgreen">func Pfgreen(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfgreen2">func Pfgreen2(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfgrey">func Pfgrey(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfgrey2">func Pfgrey2(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pflmag">func Pflmag(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfmag">func Pfmag(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pforan">func Pforan(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfpink">func Pfpink(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfpurple">func Pfpurple(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfred">func Pfred(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pfyel">func Pfyel(msg string, prm ...interface{})</a></dd>
+			
+				
+				<dd><a href="#Pipeline">func Pipeline(cmds ...*exec.Cmd) (pipeLineOutput, collectedStandardError []byte, pipeLineError error)</a></dd>
+			
+				
+				<dd><a href="#ReadFile">func ReadFile(fn string) (b []byte, err error)</a></dd>
+			
+				
+				<dd><a href="#ReadLines">func ReadLines(fn string, cb ReadLinesCallback)</a></dd>
+			
+				
+				<dd><a href="#ReadLinesFile">func ReadLinesFile(fil *os.File, cb ReadLinesCallback) (oserr error)</a></dd>
+			
+				
+				<dd><a href="#ReadMatrix">func ReadMatrix(fn string) (M [][]float64, err error)</a></dd>
+			
+				
+				<dd><a href="#ReadTable">func ReadTable(fn string) (keys []string, T map[string][]float64, err error)</a></dd>
+			
+				
+				<dd><a href="#ReadTableOrPanic">func ReadTableOrPanic(fn string) (keys []string, T map[string][]float64)</a></dd>
+			
+				
+				<dd><a href="#RemoveAll">func RemoveAll(key string)</a></dd>
+			
+				
+				<dd><a href="#RunCmd">func RunCmd(verbose bool, cmd string, args ...string) (string, error)</a></dd>
+			
+				
+				<dd><a href="#Sf">func Sf(msg string, prm ...interface{}) string</a></dd>
+			
+				
+				<dd><a href="#SplitFloats">func SplitFloats(str string) (res []float64)</a></dd>
+			
+				
+				<dd><a href="#SplitInts">func SplitInts(str string) (res []int)</a></dd>
+			
+				
+				<dd><a href="#SplitKeys">func SplitKeys(keys string) []string</a></dd>
+			
+				
+				<dd><a href="#SplitKeys3">func SplitKeys3(res string) (k0, k1, k2 []string)</a></dd>
+			
+				
+				<dd><a href="#SplitKeys4">func SplitKeys4(res string) (k0, k1, k2, k3 []string)</a></dd>
+			
+				
+				<dd><a href="#SplitSpacesQuoted">func SplitSpacesQuoted(str string) (res []string)</a></dd>
+			
+				
+				<dd><a href="#SplitWithinParentheses">func SplitWithinParentheses(s string) (res []string)</a></dd>
+			
+				
+				<dd><a href="#StrSpaces">func StrSpaces(n int) (l string)</a></dd>
+			
+				
+				<dd><a href="#StrThickLine">func StrThickLine(n int) (l string)</a></dd>
+			
+				
+				<dd><a href="#StrThinLine">func StrThinLine(n int) (l string)</a></dd>
+			
+				
+				<dd><a href="#UnColor">func UnColor(msg string) string</a></dd>
+			
+				
+				<dd><a href="#WriteBytesToFile">func WriteBytesToFile(fn string, b []byte)</a></dd>
+			
+				
+				<dd><a href="#WriteBytesToFileD">func WriteBytesToFileD(dirout, fn string, b []byte)</a></dd>
+			
+				
+				<dd><a href="#WriteFile">func WriteFile(fn string, buffer ...*bytes.Buffer)</a></dd>
+			
+				
+				<dd><a href="#WriteFileD">func WriteFileD(dirout, fn string, buffer ...*bytes.Buffer)</a></dd>
+			
+				
+				<dd><a href="#WriteFileS">func WriteFileS(fn, data string)</a></dd>
+			
+				
+				<dd><a href="#WriteFileSD">func WriteFileSD(dirout, fn, data string)</a></dd>
+			
+				
+				<dd><a href="#WriteFileV">func WriteFileV(fn string, buffer ...*bytes.Buffer)</a></dd>
+			
+				
+				<dd><a href="#WriteFileVD">func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer)</a></dd>
+			
+			
+				
+				<dd><a href="#ReadLinesCallback">type ReadLinesCallback</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/cpmech/gosl/io/args.go">args.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/io/auxiliary.go">auxiliary.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/io/basic.go">basic.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/io/external.go">external.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/io/fileio.go">fileio.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/io/parsing.go">parsing.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/io/printing.go">printing.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+    <span id="Verbose">Verbose</span>  = <a href="/pkg/builtin/#true">true</a> <span class="comment">// show messages on console</span>
+    <span id="ColorsOn">ColorsOn</span> = <a href="/pkg/builtin/#true">true</a> <span class="comment">// use colors on console</span>
+)</pre>
+				
+			
+		
+		
+			
+			
+			<h2 id="AppendToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=895:948#L27">AppendToFile</a></h2>
+			<pre>func AppendToFile(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
+			<p>
+AppendToFile appends data to an existent (or new) file
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToBool">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=2177:2227#L69">ArgToBool</a></h2>
+			<pre>func ArgToBool(idxArg <a href="/pkg/builtin/#int">int</a>, defaultValue <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+			<p>
+ArgToBool parses an argument as a boolean value
+</p>
+<pre>Input:
+ idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+ defaultValue -- default value
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToFilename">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=885:975#L17">ArgToFilename</a></h2>
+			<pre>func ArgToFilename(idxArg <a href="/pkg/builtin/#int">int</a>, fnDefault, ext <a href="/pkg/builtin/#string">string</a>, check <a href="/pkg/builtin/#bool">bool</a>) (filename, fnkey <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+ArgToFilename parses an argument as a filename
+</p>
+<pre>Input:
+ idxArg    -- index of argument; e.g. 0==first, 1==second, etc.
+ fnDefault -- default filename; can be &#34;&#34;
+ ext       -- the file extension to be added; e.g. &#34;.sim&#34;
+ check     -- check for null filename
+Output:
+ filename -- the filename with extension added
+ fnkey    -- filename key == filename without extension
+Notes:
+ The first first argument may be a file with extention or not.
+Examples:
+ If the first argument is &#34;simulation.sim&#34; or &#34;simulation&#34; (with ext=&#34;.sim&#34;)
+ then the results are: filename=&#34;simulation.sim&#34; and fnkey=&#34;simulation&#34;
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToFloat">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=1471:1528#L41">ArgToFloat</a></h2>
+			<pre>func ArgToFloat(idxArg <a href="/pkg/builtin/#int">int</a>, defaultValue <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+ArgToFloat parses an argument as a float64 value
+</p>
+<pre>Input:
+ idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+ defaultValue -- default value
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToInt">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=1829:1876#L55">ArgToInt</a></h2>
+			<pre>func ArgToInt(idxArg <a href="/pkg/builtin/#int">int</a>, defaultValue <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+ArgToInt parses an argument as an integer value
+</p>
+<pre>Input:
+ idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+ defaultValue -- default value
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgToString">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=2523:2579#L83">ArgToString</a></h2>
+			<pre>func ArgToString(idxArg <a href="/pkg/builtin/#int">int</a>, defaultValue <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+ArgToString parses an argument as a string
+</p>
+<pre>Input:
+ idxArg       -- index of argument; e.g. 0==first, 1==second, etc.
+ defaultValue -- default value
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ArgsTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/args.go?s=3052:3116#L101">ArgsTable</a></h2>
+			<pre>func ArgsTable(title <a href="/pkg/builtin/#string">string</a>, data ...interface{}) (table <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+ArgsTable prints a nice table with input arguments
+</p>
+<pre>Input:
+ title -- title of table; e.g. INPUT ARGUMENTS
+ data  -- sets of THREE items in the following order:
+               description, key, value, ...
+               description, key, value, ...
+                    ...
+               description, key, value, ...
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Atob">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=732:765#L24">Atob</a></h2>
+			<pre>func Atob(val <a href="/pkg/builtin/#string">string</a>) (bres <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+Atob converts string to bool
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Atof">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1275:1310#L51">Atof</a></h2>
+			<pre>func Atof(val <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Atof converts string to float64
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Atoi">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1072:1103#L42">Atoi</a></h2>
+			<pre>func Atoi(val <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+Atoi converts string to integer
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Btoa">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1865:1892#L82">Btoa</a></h2>
+			<pre>func Btoa(flag <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+Btoa converts flag to string
+</p>
+<pre>Note: true  =&gt; &#34;true&#34;
+      false =&gt; &#34;false&#34;
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Btoi">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1715:1739#L72">Btoi</a></h2>
+			<pre>func Btoi(flag <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+Btoi converts flag to interger
+</p>
+<pre>Note: true  =&gt; 1
+      false =&gt; 0
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CopyFileOver">func <a href="https://github.com/cpmech/gosl/blob/master/io/external.go?s=755:812#L23">CopyFileOver</a></h2>
+			<pre>func CopyFileOver(destination, source <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+CopyFileOver copies file (Linux only with cp), overwriting if it exists already
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ExtractStrPair">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=360:415#L6">ExtractStrPair</a></h2>
+			<pre>func ExtractStrPair(pair, sep <a href="/pkg/builtin/#string">string</a>) (key, val <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+ExtractStrPair extracts the pair from, e.g., &#34;key:val&#34;
+</p>
+<pre>Note: it returs empty strings if any is not found
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Ff">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=609:665#L19">Ff</a></h2>
+			<pre>func Ff(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			<p>
+Ff wraps Fprintf
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="FnExt">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=646:674#L17">FnExt</a></h2>
+			<pre>func FnExt(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+FnExt returns the extension of a file name.
+The extension is the suffix beginning at the final dot in the final element of path; it is empty if there is no dot.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="FnKey">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=369:397#L10">FnKey</a></h2>
+			<pre>func FnKey(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+FnKey returns the file name key (without path and extension, if any)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Itob">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=1564:1587#L62">Itob</a></h2>
+			<pre>func Itob(val <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+			<p>
+Itob converts from integer to bool
+</p>
+<pre>Note: only zero returns false
+      anything else returns true
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="JoinKeys">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4024:4059#L145">JoinKeys</a></h2>
+			<pre>func JoinKeys(keys []<a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+JoinKeys join keys separeted by spaces
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="JoinKeys3">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=2143:2203#L68">JoinKeys3</a></h2>
+			<pre>func JoinKeys3(k0, k1, k2 []<a href="/pkg/builtin/#string">string</a>, sep <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+JoinKeys3 joins keys from 3 slices into a string with sets separated by sep
+and keys separeted by spaces
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="JoinKeys4">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=3037:3101#L103">JoinKeys4</a></h2>
+			<pre>func JoinKeys4(k0, k1, k2, k3 []<a href="/pkg/builtin/#string">string</a>, sep <a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+JoinKeys4 joins keys from 4 slices into a string with sets separated by sep
+and keys separeted by spaces
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="JoinKeysPre">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4156:4215#L150">JoinKeysPre</a></h2>
+			<pre>func JoinKeysPre(prefix <a href="/pkg/builtin/#string">string</a>, keys []<a href="/pkg/builtin/#string">string</a>) (res <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+JoinKeysPre join keys separeted by spaces with a prefix
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Keycode">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=729:798#L19">Keycode</a></h2>
+			<pre>func Keycode(String <a href="/pkg/builtin/#string">string</a>, Type <a href="/pkg/builtin/#string">string</a>) (keycode <a href="/pkg/builtin/#string">string</a>, found <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+Keycode extracts a keycode from a string such as &#34;!typeA:keycodeA !typeB:keycodeB!typeC:keycodeC&#34;
+</p>
+<pre>Note: String == &#34;!keyA !typeB:valB&#34; is also valid
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Keycodes">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=1434:1482#L45">Keycodes</a></h2>
+			<pre>func Keycodes(String <a href="/pkg/builtin/#string">string</a>) (keycodes []<a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+Keycodes extracts keys from a keycode (extra) string
+</p>
+<pre>Example: &#34;!keyA !typeB:valB&#34; =&gt; keycodes = [keyA, typeB]
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="OpenFileR">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3258:3309#L113">OpenFileR</a></h2>
+			<pre>func OpenFileR(fn <a href="/pkg/builtin/#string">string</a>) (fil *<a href="/pkg/os/">os</a>.<a href="/pkg/os/#File">File</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+OpenFileR opens a file for reading data
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PathKey">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=758:788#L22">PathKey</a></h2>
+			<pre>func PathKey(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+PathKey returs the full path except the extension
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Pf">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2045:2084#L93">Pf</a></h2>
+			<pre>func Pf(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PfBlue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6008:6051#L344">PfBlue</a></h2>
+			<pre>func PfBlue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PfCyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5317:5360#L300">PfCyan</a></h2>
+			<pre>func PfCyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PfGreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5834:5878#L333">PfGreen</a></h2>
+			<pre>func PfGreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PfMag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6181:6223#L355">PfMag</a></h2>
+			<pre>func PfMag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PfRed">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5662:5704#L322">PfRed</a></h2>
+			<pre>func PfRed(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PfWhite">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6353:6397#L366">PfWhite</a></h2>
+			<pre>func PfWhite(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PfYel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5490:5532#L311">PfYel</a></h2>
+			<pre>func PfYel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfblue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2833:2876#L144">Pfblue</a></h2>
+			<pre>func Pfblue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfblue2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4767:4811#L265">Pfblue2</a></h2>
+			<pre>func Pfblue2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfcyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2142:2185#L100">Pfcyan</a></h2>
+			<pre>func Pfcyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfcyan2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4061:4105#L221">Pfcyan2</a></h2>
+			<pre>func Pfcyan2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfdgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3528:3573#L188">Pfdgreen</a></h2>
+			<pre>func Pfdgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfdyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4238:4281#L232">Pfdyel</a></h2>
+			<pre>func Pfdyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfdyel2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4414:4458#L243">Pfdyel2</a></h2>
+			<pre>func Pfdyel2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2659:2703#L133">Pfgreen</a></h2>
+			<pre>func Pfgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfgreen2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3706:3751#L199">Pfgreen2</a></h2>
+			<pre>func Pfgreen2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfgrey">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4591:4634#L254">Pfgrey</a></h2>
+			<pre>func Pfgrey(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfgrey2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4944:4988#L276">Pfgrey2</a></h2>
+			<pre>func Pfgrey2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pflmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3178:3221#L166">Pflmag</a></h2>
+			<pre>func Pflmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3006:3048#L155">Pfmag</a></h2>
+			<pre>func Pfmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pforan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5121:5164#L287">Pforan</a></h2>
+			<pre>func Pforan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfpink">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3351:3394#L177">Pfpink</a></h2>
+			<pre>func Pfpink(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfpurple">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3883:3928#L210">Pfpurple</a></h2>
+			<pre>func Pfpurple(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfred">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2487:2529#L122">Pfred</a></h2>
+			<pre>func Pfred(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pfyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2315:2357#L111">Pfyel</a></h2>
+			<pre>func Pfyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Pipeline">func <a href="https://github.com/cpmech/gosl/blob/master/io/external.go?s=1343:1444#L37">Pipeline</a></h2>
+			<pre>func Pipeline(cmds ...*<a href="/pkg/os/exec/">exec</a>.<a href="/pkg/os/exec/#Cmd">Cmd</a>) (pipeLineOutput, collectedStandardError []<a href="/pkg/builtin/#byte">byte</a>, pipeLineError <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Pipeline strings together the given exec.Cmd commands in a similar fashion
+to the Unix pipeline. Each command&#39;s standard output is connected to the
+standard input of the next command, and the output of the final command in
+the pipeline is returned, along with the collected standard error of all
+commands and the first error found (if any).
+</p>
+<p>
+by Kyle Lemons
+</p>
+<p>
+To provide input to the pipeline, assign an io.Reader to the first&#39;s Stdin.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3397:3443#L119">ReadFile</a></h2>
+			<pre>func ReadFile(fn <a href="/pkg/builtin/#string">string</a>) (b []<a href="/pkg/builtin/#byte">byte</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+ReadFile reads bytes from a file
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadLines">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3742:3789#L127">ReadLines</a></h2>
+			<pre>func ReadLines(fn <a href="/pkg/builtin/#string">string</a>, cb <a href="#ReadLinesCallback">ReadLinesCallback</a>)</pre>
+			<p>
+ReadLines reads lines from a file and calls ReadLinesCallback to process each line being read
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadLinesFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4292:4360#L155">ReadLinesFile</a></h2>
+			<pre>func ReadLinesFile(fil *<a href="/pkg/os/">os</a>.<a href="/pkg/os/#File">File</a>, cb <a href="#ReadLinesCallback">ReadLinesCallback</a>) (oserr <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+ReadLinesFile reads lines from a file and calls ReadLinesCallback to process each line being read
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=6289:6342#L237">ReadMatrix</a></h2>
+			<pre>func ReadMatrix(fn <a href="/pkg/builtin/#string">string</a>) (M [][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+ReadMatrix reads a text file in which the float64 type of numeric values represent
+a matrix of data. The number of columns must be equal, including for the headers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5352:5428#L198">ReadTable</a></h2>
+			<pre>func ReadTable(fn <a href="/pkg/builtin/#string">string</a>) (keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+ReadTable reads a text file in which the first line contains the headers and the next lines the float64
+type of numeric values. The number of columns must be equal, including for the headers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadTableOrPanic">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4961:5033#L187">ReadTableOrPanic</a></h2>
+			<pre>func ReadTableOrPanic(fn <a href="/pkg/builtin/#string">string</a>) (keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+ReadTableOrPanic reads text file as ReadTable; but panic on errors
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RemoveAll">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4766:4792#L179">RemoveAll</a></h2>
+			<pre>func RemoveAll(key <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+RemoveAll deletes all files matching filename specified by key (be careful)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="RunCmd">func <a href="https://github.com/cpmech/gosl/blob/master/io/external.go?s=278:347#L5">RunCmd</a></h2>
+			<pre>func RunCmd(verbose <a href="/pkg/builtin/#bool">bool</a>, cmd <a href="/pkg/builtin/#string">string</a>, args ...<a href="/pkg/builtin/#string">string</a>) (<a href="/pkg/builtin/#string">string</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+RunCmd runs external command
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sf">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=504:550#L14">Sf</a></h2>
+			<pre>func Sf(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{}) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+Sf wraps Sprintf
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitFloats">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=5774:5818#L217">SplitFloats</a></h2>
+			<pre>func SplitFloats(str <a href="/pkg/builtin/#string">string</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+SplitFloats splits space-separated float numbers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitInts">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=5563:5601#L207">SplitInts</a></h2>
+			<pre>func SplitInts(str <a href="/pkg/builtin/#string">string</a>) (res []<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+SplitInts splits space-separated integers
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitKeys">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4368:4404#L161">SplitKeys</a></h2>
+			<pre>func SplitKeys(keys <a href="/pkg/builtin/#string">string</a>) []<a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+SplitKeys splits keys separeted by spaces
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitKeys3">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=2453:2502#L81">SplitKeys3</a></h2>
+			<pre>func SplitKeys3(res <a href="/pkg/builtin/#string">string</a>) (k0, k1, k2 []<a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+SplitKeys3 splits a string with three sets of keys separated by comma
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitKeys4">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=3420:3473#L120">SplitKeys4</a></h2>
+			<pre>func SplitKeys4(res <a href="/pkg/builtin/#string">string</a>) (k0, k1, k2, k3 []<a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+SplitKeys4 splits a string with four sets of keys separated by comma
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitSpacesQuoted">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=4529:4578#L166">SplitSpacesQuoted</a></h2>
+			<pre>func SplitSpacesQuoted(str <a href="/pkg/builtin/#string">string</a>) (res []<a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+SplitSpacesQuoted splits string with quoted substrings. e.g. &#34;  a,b, &#39;c&#39;, \&#34;d\&#34;  &#34;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SplitWithinParentheses">func <a href="https://github.com/cpmech/gosl/blob/master/io/parsing.go?s=5063:5115#L188">SplitWithinParentheses</a></h2>
+			<pre>func SplitWithinParentheses(s <a href="/pkg/builtin/#string">string</a>) (res []<a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+SplitWithinParentheses extracts arguments (substrings) within brackets
+e.g.: &#34;(arg1, (arg2.1, arg2.2),  arg3, arg4, (arg5.1,arg5.2,  arg5.3 ) )&#34;
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StrSpaces">func <a href="https://github.com/cpmech/gosl/blob/master/io/printing.go?s=514:546#L14">StrSpaces</a></h2>
+			<pre>func StrSpaces(n <a href="/pkg/builtin/#int">int</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+StrSpaces returns a line with spaces
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StrThickLine">func <a href="https://github.com/cpmech/gosl/blob/master/io/printing.go?s=232:267#L1">StrThickLine</a></h2>
+			<pre>func StrThickLine(n <a href="/pkg/builtin/#int">int</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+StrThickLine returns a thick line (using &#39;=&#39;)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StrThinLine">func <a href="https://github.com/cpmech/gosl/blob/master/io/printing.go?s=377:411#L6">StrThinLine</a></h2>
+			<pre>func StrThinLine(n <a href="/pkg/builtin/#int">int</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+StrThinLine returns a thin line (using &#39;-&#39;)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="UnColor">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6668:6699#L380">UnColor</a></h2>
+			<pre>func UnColor(msg <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+UnColor removes console characters used to show colors
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteBytesToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2759:2801#L95">WriteBytesToFile</a></h2>
+			<pre>func WriteBytesToFile(fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
+			<p>
+WriteBytesToFile writes bytes to a new file
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteBytesToFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3095:3146#L107">WriteBytesToFileD</a></h2>
+			<pre>func WriteBytesToFileD(dirout, fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
+			<p>
+WriteBytesToFile writes bytes to a new file and create a directory to save the file within
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1240:1290#L41">WriteFile</a></h2>
+			<pre>func WriteFile(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
+			<p>
+WriteFile writes data to a new file
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1672:1731#L56">WriteFileD</a></h2>
+			<pre>func WriteFileD(dirout, fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
+			<p>
+WriteFileD writes data to a new file and create a directory to save the file within
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteFileS">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1848:1880#L62">WriteFileS</a></h2>
+			<pre>func WriteFileS(fn, data <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+WriteFileS writes data string to a new file
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteFileSD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2112:2153#L72">WriteFileSD</a></h2>
+			<pre>func WriteFileSD(dirout, fn, data <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+WriteFileSD writes data string to a new file after creating a directory to save the file
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteFileV">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2293:2344#L78">WriteFileV</a></h2>
+			<pre>func WriteFileV(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
+			<p>
+WriteFileV writes data to a new file (and shows message: file written)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteFileVD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2524:2584#L86">WriteFileVD</a></h2>
+			<pre>func WriteFileVD(dirout, fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
+			<p>
+WriteFileVD writes data to a new file (and shows message: file written), after creating a directory
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ReadLinesCallback">type <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3582:3643#L124">ReadLinesCallback</a></h2>
+			<pre>type ReadLinesCallback func(idx <a href="/pkg/builtin/#int">int</a>, line <a href="/pkg/builtin/#string">string</a>) (stop <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+ReadLinesCallback is used in ReadLines to process line by line during reading of a file
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="..">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="data/">data</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
 </div><!-- page -->
 <div id="footer">
 <br /><br />

@@ -8,6 +8,1961 @@
 </head>
 <body>
 <div id="page"><h1>Gosl &ndash; <b>gm</b> &ndash; Geometry routines</h1>
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/gm"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+gm (geometry and meshes) implements auxiliary functions for
+handling geometry and mesh structures
+</p>
+<p>
+gm (geometry and meshes) implements auxiliary functions for
+handling geometry and mesh structures
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="#DistPointLine">func DistPointLine(p, a, b *Point, tol float64, verbose bool) float64</a></dd>
+			
+				
+				<dd><a href="#DistPointPoint">func DistPointPoint(a, b *Point) float64</a></dd>
+			
+				
+				<dd><a href="#HashPoint">func HashPoint(x, y, z float64) int</a></dd>
+			
+				
+				<dd><a href="#HashPointC">func HashPointC(c []float64) int</a></dd>
+			
+				
+				<dd><a href="#IsPointIn">func IsPointIn(p *Point, cMin, cMax []float64, tol float64) bool</a></dd>
+			
+				
+				<dd><a href="#IsPointInLine">func IsPointInLine(p, a, b *Point, zero, told, tolin float64) bool</a></dd>
+			
+				
+				<dd><a href="#PlotNurbs">func PlotNurbs(dirout, fn string, b *Nurbs, npts int, ids bool, extra func())</a></dd>
+			
+				
+				<dd><a href="#PlotNurbsBasis">func PlotNurbsBasis(dirout, fn string, b *Nurbs, la, lb int)</a></dd>
+			
+				
+				<dd><a href="#PlotNurbsDerivs">func PlotNurbsDerivs(dirout, fn string, b *Nurbs, la, lb int)</a></dd>
+			
+				
+				<dd><a href="#PlotTwoNurbs">func PlotTwoNurbs(dirout, fn string, b, c *Nurbs, npts int, ids bool, extra func())</a></dd>
+			
+				
+				<dd><a href="#PointsLims">func PointsLims(pp []*Point) (cmin, cmax []float64)</a></dd>
+			
+				
+				<dd><a href="#ReadMsh">func ReadMsh(fnk string) (nurbss []*Nurbs)</a></dd>
+			
+				
+				<dd><a href="#VecDot">func VecDot(u, v []float64) float64</a></dd>
+			
+				
+				<dd><a href="#VecNew">func VecNew(m float64, u []float64) []float64</a></dd>
+			
+				
+				<dd><a href="#VecNewAdd">func VecNewAdd(α float64, u []float64, β float64, v []float64) []float64</a></dd>
+			
+				
+				<dd><a href="#VecNorm">func VecNorm(u []float64) float64</a></dd>
+			
+				
+				<dd><a href="#WriteMshD">func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int)</a></dd>
+			
+			
+				
+				<dd><a href="#BezierQuad">type BezierQuad</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#BezierQuad.DistPoint">func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#BezierQuad.Point">func (o *BezierQuad) Point(C []float64, t float64)</a></dd>
+				
+			
+				
+				<dd><a href="#Bin">type Bin</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bin.String">func (o Bin) String() string</a></dd>
+				
+			
+				
+				<dd><a href="#BinEntry">type BinEntry</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Bins">type Bins</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Append">func (o *Bins) Append(x []float64, id int) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.CalcIdx">func (o Bins) CalcIdx(x []float64) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Clear">func (o *Bins) Clear()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Draw2d">func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[int]bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Find">func (o Bins) Find(x []float64) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.FindAlongSegment">func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.FindBinByIndex">func (o Bins) FindBinByIndex(idx int) *Bin</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Init">func (o *Bins) Init(xi, xf []float64, ndiv int) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.String">func (o Bins) String() string</a></dd>
+				
+			
+				
+				<dd><a href="#Bspline">type Bspline</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.CalcBasis">func (o *Bspline) CalcBasis(t float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.CalcBasisAndDerivs">func (o *Bspline) CalcBasisAndDerivs(t float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.Draw2d">func (o *Bspline) Draw2d(curveArgs, ctrlArgs string, npts, option int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.Draw3d">func (o *Bspline) Draw3d(curveArgs, ctrlArgs string, npts int, first bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.Elements">func (o *Bspline) Elements() (spans [][]int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.GetBasis">func (o *Bspline) GetBasis(i int) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.GetDeriv">func (o *Bspline) GetDeriv(i int) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.Init">func (o *Bspline) Init(T []float64, p int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.NumBasis">func (o *Bspline) NumBasis() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.NumericalDeriv">func (o *Bspline) NumericalDeriv(t float64, i int) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.PlotBasis">func (o *Bspline) PlotBasis(args string, npts, option int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.PlotDerivs">func (o *Bspline) PlotDerivs(args string, npts, option int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.Point">func (o *Bspline) Point(t float64, option int) (C []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.RecursiveBasis">func (o *Bspline) RecursiveBasis(t float64, i int) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.SetControl">func (o *Bspline) SetControl(Q [][]float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bspline.SetOrder">func (o *Bspline) SetOrder(p int)</a></dd>
+				
+			
+				
+				<dd><a href="#Data">type Data</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Nurbs">type Nurbs</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs1dCurveA">func FactoryNurbs1dCurveA() (b *Nurbs)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs2dPlateHole">func FactoryNurbs2dPlateHole() (b *Nurbs)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs2dStrip">func FactoryNurbs2dStrip() (b *Nurbs)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.CalcBasis">func (o *Nurbs) CalcBasis(u []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.CalcBasisAndDerivs">func (o *Nurbs) CalcBasisAndDerivs(u []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.CheckDerivs">func (o *Nurbs) CheckDerivs(tst *testing.T, nn int, tol float64, ver bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.CloneCtrlsAlongCurve">func (o *Nurbs) CloneCtrlsAlongCurve(iAlong, jAt int) (Qnew [][][][]float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.CloneCtrlsAlongSurface">func (o *Nurbs) CloneCtrlsAlongSurface(iAlong, jAlong, kAt int) (Qnew [][][][]float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawCtrl2d">func (o *Nurbs) DrawCtrl2d(ids bool, args, idargs string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawEdge2d">func (o *Nurbs) DrawEdge2d(tmin, tmax, cte float64, along, npts int, args string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElem2d">func (o *Nurbs) DrawElem2d(span []int, npts int, ids bool, args, idargs string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElems2d">func (o *Nurbs) DrawElems2d(npts int, ids bool, args, idargs string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.ElemBryLocalInds">func (o *Nurbs) ElemBryLocalInds() (I [][]int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.Elements">func (o *Nurbs) Elements() (spans [][]int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.ExtractSurfaces">func (o *Nurbs) ExtractSurfaces() (surfs []*Nurbs)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetBasisI">func (o *Nurbs) GetBasisI(I []int) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetBasisL">func (o *Nurbs) GetBasisL(l int) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetDerivI">func (o *Nurbs) GetDerivI(dRdu []float64, I []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetDerivL">func (o *Nurbs) GetDerivL(dRdu []float64, l int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetElemNumBasis">func (o *Nurbs) GetElemNumBasis() (npts int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetQ">func (o *Nurbs) GetQ(i, j, k int) (x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetQl">func (o *Nurbs) GetQl(l int) (x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetU">func (o *Nurbs) GetU(dir int) []float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.Gnd">func (o *Nurbs) Gnd() int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.IndBasis">func (o *Nurbs) IndBasis(span []int) (L []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.IndsAlongCurve">func (o *Nurbs) IndsAlongCurve(iAlong, iSpan0, jAt int) (L []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.IndsAlongSurface">func (o *Nurbs) IndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kAt int) (L []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.Init">func (o *Nurbs) Init(gnd int, ords []int, knots [][]float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.Krefine">func (o *Nurbs) Krefine(X [][]float64) (O *Nurbs)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.KrefineN">func (o *Nurbs) KrefineN(ndiv int, hughesEtAlPaper bool) *Nurbs</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.NonZeroSpans">func (o *Nurbs) NonZeroSpans(dir int) [][]int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.NumBasis">func (o *Nurbs) NumBasis(dir int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.NumericalDeriv">func (o *Nurbs) NumericalDeriv(dRdu []float64, u []float64, l int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.Ord">func (o *Nurbs) Ord(dir int) int</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.PlotBasis">func (o *Nurbs) PlotBasis(l int, args string, npts, option int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.PlotDeriv">func (o *Nurbs) PlotDeriv(l, d int, args string, npts, option int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.Point">func (o *Nurbs) Point(u []float64) (C []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.RecursiveBasis">func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.SetControl">func (o *Nurbs) SetControl(verts [][]float64, ctrls []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.SetQ">func (o *Nurbs) SetQ(i, j, k int, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.SetQl">func (o *Nurbs) SetQl(l int, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.U">func (o *Nurbs) U(dir, idx int) float64</a></dd>
+				
+			
+				
+				<dd><a href="#NurbsD">type NurbsD</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Point">type Point</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Point.NewCopy">func (o *Point) NewCopy() *Point</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Point.NewDisp">func (o *Point) NewDisp(dx, dy, dz float64) *Point</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Point.String">func (o *Point) String() string</a></dd>
+				
+			
+				
+				<dd><a href="#Segment">type Segment</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewSegment">func NewSegment(a, b *Point) *Segment</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Segment.Len">func (o *Segment) Len() float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Segment.New">func (o *Segment) New(m float64) *Segment</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Segment.String">func (o *Segment) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Segment.Vector">func (o *Segment) Vector(m float64) []float64</a></dd>
+				
+			
+				
+				<dd><a href="#Vert">type Vert</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/cpmech/gosl/gm/basicgeom.go">basicgeom.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/bezier.go">bezier.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/bspline.go">bspline.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/factory.go">factory.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/io.go">io.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/nurbs.go">nurbs.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/plotbsplines.go">plotbsplines.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/plotnurbs.go">plotnurbs.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/search.go">search.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/testing.go">testing.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/topologynurbs.go">topologynurbs.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="ZTOL">ZTOL</span> = 1e-14
+    <span id="STOL">STOL</span> = 1e-14
+)</pre>
+				
+			
+				<pre>const (
+    <span id="ATOL">ATOL</span> = 1e-14 <span class="comment">// zero α for refinement</span>
+)</pre>
+				
+			
+		
+		
+		
+			
+			
+			<h2 id="DistPointLine">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=2967:3036#L94">DistPointLine</a></h2>
+			<pre>func DistPointLine(p, a, b *<a href="#Point">Point</a>, tol <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DistPointLine computes the distance from p to line passing through a -&gt; b
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DistPointPoint">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=976:1016#L31">DistPointPoint</a></h2>
+			<pre>func DistPointPoint(a, b *<a href="#Point">Point</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DistPointPoint computes the unsigned distance from a to b
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="HashPoint">func <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=373:408#L7">HashPoint</a></h2>
+			<pre>func HashPoint(x, y, z <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+HashPoint returns a unique id of a point
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="HashPointC">func <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=537:569#L12">HashPointC</a></h2>
+			<pre>func HashPointC(c []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+HashPoint returns a unique id of a point (given slice of coordinates)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IsPointIn">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=4219:4283#L144">IsPointIn</a></h2>
+			<pre>func IsPointIn(p *<a href="#Point">Point</a>, cMin, cMax []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+			<p>
+IsPointIn returns whether p is inside box with cMin and cMax
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="IsPointInLine">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=4565:4631#L158">IsPointInLine</a></h2>
+			<pre>func IsPointInLine(p, a, b *<a href="#Point">Point</a>, zero, told, tolin <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+			<p>
+IsPointInLine returns whether p is inside line passing through a and b
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PlotNurbs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=6665:6742#L233">PlotNurbs</a></h2>
+			<pre>func PlotNurbs(dirout, fn <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
+			<p>
+PlotNurbs plots a NURBS
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PlotNurbsBasis">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7720:7780#L280">PlotNurbsBasis</a></h2>
+			<pre>func PlotNurbsBasis(dirout, fn <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+PlotNurbsBasis plots basis functions la and lb
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PlotNurbsDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=9077:9138#L333">PlotNurbsDerivs</a></h2>
+			<pre>func PlotNurbsDerivs(dirout, fn <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+PlotNurbsDerivs plots derivatives of basis functions la and lb
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PlotTwoNurbs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7036:7119#L250">PlotTwoNurbs</a></h2>
+			<pre>func PlotTwoNurbs(dirout, fn <a href="/pkg/builtin/#string">string</a>, b, c *<a href="#Nurbs">Nurbs</a>, npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
+			<p>
+PlotTwoNurbs plots two NURBS for comparison
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="PointsLims">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=3596:3647#L114">PointsLims</a></h2>
+			<pre>func PointsLims(pp []*<a href="#Point">Point</a>) (cmin, cmax []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+PointsLims returns the limits of a set of points
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="ReadMsh">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=5199:5241#L213">ReadMsh</a></h2>
+			<pre>func ReadMsh(fnk <a href="/pkg/builtin/#string">string</a>) (nurbss []*<a href="#Nurbs">Nurbs</a>)</pre>
+			<p>
+ReadMsh reads .msh file
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecDot">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=2172:2207#L71">VecDot</a></h2>
+			<pre>func VecDot(u, v []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+VecDot returns the dot product between two vectors
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecNew">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=2449:2494#L81">VecNew</a></h2>
+			<pre>func VecNew(m <a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+VecNew returns a new vector scaled by m
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecNewAdd">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=2631:2705#L87">VecNewAdd</a></h2>
+			<pre>func VecNewAdd(α <a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+VecNewAdd returns a new vector by adding two other vectors
+</p>
+<pre>w := α*u + β*v
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecNorm">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=2314:2347#L76">VecNorm</a></h2>
+			<pre>func VecNorm(u []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+VecNorm returns the length (Euclidian norm) of a vector
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteMshD">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=448:544#L9">WriteMshD</a></h2>
+			<pre>func WriteMshD(dirout, fnk <a href="/pkg/builtin/#string">string</a>, nurbss []*<a href="#Nurbs">Nurbs</a>, vtagged map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#int">int</a>, ctagged map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+WriteMshD writes .msh file
+Input: vtagged maps hashed id of control point to vertex tag
+</p>
+<pre>ctagged maps idOfNurbs_localIdOfElem to cell tag
+</pre>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="BezierQuad">type <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=502:640#L11">BezierQuad</a></h2>
+			<pre>type BezierQuad struct {
+
+    <span class="comment">// input</span>
+    Q [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// control points; can be set outside</span>
+
+    <span class="comment">// auxiliary</span>
+    P []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// a point on curve</span>
+}</pre>
+			<p>
+BezierQuad implements a quadratic Bezier curve
+</p>
+<pre>C(t) = (1-t)² Q0  +  2 t (1-t) Q1  +  t² Q2
+     = t² A  +  2 t B  +  Q0
+A = Q2 - 2 Q1 + Q0
+B = Q1 - Q0
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="BezierQuad.DistPoint">func (*BezierQuad) <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=1167:1231#L35">DistPoint</a></h3>
+				<pre>func (o *<a href="#BezierQuad">BezierQuad</a>) DistPoint(X []<a href="/pkg/builtin/#float64">float64</a>, doplot <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+DistPoint returns the distance from a point to this Bezier curve
+It finds the closest projection which is stored in P
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BezierQuad.Point">func (*BezierQuad) <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=708:758#L21">Point</a></h3>
+				<pre>func (o *<a href="#BezierQuad">BezierQuad</a>) Point(C []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Point returns the x-y-z coordinates of a point on Bezier curve
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Bin">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=913:1001#L34">Bin</a></h2>
+			<pre>type Bin struct {
+    Idx     <a href="/pkg/builtin/#int">int</a>         <span class="comment">// index of bin</span>
+    Entries []*<a href="#BinEntry">BinEntry</a> <span class="comment">// entries</span>
+}</pre>
+			<p>
+Bin defines one bin in Bins (holds entries for search)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Bin.String">func (Bin) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=5777:5805#L246">String</a></h3>
+				<pre>func (o <a href="#Bin">Bin</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="BinEntry">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=756:853#L28">BinEntry</a></h2>
+			<pre>type BinEntry struct {
+    Id <a href="/pkg/builtin/#int">int</a>       <span class="comment">// object Id</span>
+    X  []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// entry coordinate (read only)</span>
+}</pre>
+			<p>
+BinEntry holds data of an entry to bin
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Bins">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1060:1478#L40">Bins</a></h2>
+			<pre>type Bins struct {
+    Ndim <a href="/pkg/builtin/#int">int</a>       <span class="comment">// space dimension</span>
+    Xi   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] left/lower-most point</span>
+    Xf   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] right/upper-most point</span>
+    L    []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] whole box lengths</span>
+    S    []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// size of bins</span>
+    N    []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// [ndim] number of divisions</span>
+    All  []*<a href="#Bin">Bin</a>    <span class="comment">// [nbins] all bins (there will be an extra bin row along each dimension)</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Bins defines bins to hold entries and speed up search
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Bins.Append">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2388:2442#L87">Append</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Append(x []<a href="/pkg/builtin/#float64">float64</a>, id <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Append adds a new entry {x, id} to the bins structure
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.CalcIdx">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3799:3837#L153">CalcIdx</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) CalcIdx(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+CalcIdx calculates the bin index where the point x is
+returns -1 if out-of-range
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Clear">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2769:2791#L103">Clear</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Clear()</pre>
+				<p>
+Clear clears all bins
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Draw2d">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=6326:6413#L279">Draw2d</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Draw2d(withtxt, withgrid, withentries, setup <a href="/pkg/builtin/#bool">bool</a>, selBins map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+Draw2d draws bins&#39; grid
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Find">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2943:2978#L109">Find</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) Find(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+Find returns the stored id of the entry whose coordinates are closest to x
+returns -1 if out of range or not found
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.FindAlongSegment">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=4252:4319#L169">FindAlongSegment</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) FindAlongSegment(xi, xf []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+FindAlongSegment gets the ids of entries that lie close to a segment
+</p>
+<pre>Note: the initial (xi) and final (xf) points on segment defined a bounding box of valid points
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.FindBinByIndex">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3474:3516#L136">FindBinByIndex</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) FindBinByIndex(idx <a href="/pkg/builtin/#int">int</a>) *<a href="#Bin">Bin</a></pre>
+				<p>
+FindBinByIndex finds or allocate new bin corresponding to index idx
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Init">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1604:1663#L54">Init</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Init(xi, xf []<a href="/pkg/builtin/#float64">float64</a>, ndiv <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+xi   -- [ndim] initial positions
+xf   -- [ndim] final positions
+ndiv -- number of divisions for the maximum length
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.String">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=6097:6126#L262">String</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Bspline">type <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=503:1262#L14">Bspline</a></h2>
+			<pre>type Bspline struct {
+
+    <span class="comment">// essential</span>
+    T []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// array of knots: e.g: T = [t_0, t_1, ..., t_{m-1}]</span>
+
+    <span class="comment">// optional</span>
+    Q [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// control points (has to call SetControl to change this)</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Bspline holds B-spline data
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Bspline.CalcBasis">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=2336:2374#L76">CalcBasis</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) CalcBasis(t <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+CalcBasis computes all non-zero basis functions N[i] @ t
+Note: use GetBasis to get a particular basis function value
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.CalcBasisAndDerivs">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=2875:2922#L90">CalcBasisAndDerivs</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) CalcBasisAndDerivs(t <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+CalcBasisAndDerivs computes all non-zero basis functions N[i] and corresponding
+first order derivatives of basis functions w.r.t t =&gt; dR[i]dt @ t
+Note: use GetBasis to get a particular basis function value
+</p>
+<pre>use GetDeriv to get a particular derivative
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.Draw2d">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=544:614#L11">Draw2d</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) Draw2d(curveArgs, ctrlArgs <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Draw2d draws curve and control points
+option =  0 : use CalcBasis
+</p>
+<pre>1 : use RecursiveBasis
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.Draw3d">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=1294:1368#L33">Draw3d</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) Draw3d(curveArgs, ctrlArgs <a href="/pkg/builtin/#string">string</a>, npts <a href="/pkg/builtin/#int">int</a>, first <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Bspline.Elements">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=5226:5270#L173">Elements</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) Elements() (spans [][]<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Elements returns the indices of nonzero spans
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.GetBasis">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=3261:3302#L101">GetBasis</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) GetBasis(i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+GetBasis returns the basis function N[i] just computed by CalcBasis or CalcBasisAndDerivs
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.GetDeriv">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=3471:3512#L110">GetDeriv</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) GetDeriv(i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+GetDeriv returns the derivative dN[i]dt just computed by CalcBasisAndDerivs
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.Init">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=1293:1335#L37">Init</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) Init(T []<a href="/pkg/builtin/#float64">float64</a>, p <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Init initialises B-spline
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.NumBasis">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=1928:1960#L62">NumBasis</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) NumBasis() <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+NumBasis returns the number (n) of basis functions == number of control points
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.NumericalDeriv">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=4103:4161#L130">NumericalDeriv</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) NumericalDeriv(t <a href="/pkg/builtin/#float64">float64</a>, i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+NumericalDeriv computes a particular derivative dN[i]dt @ t using numerical differentiation
+Note: it uses RecursiveBasis and therefore is highly non-efficient
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.PlotBasis">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=1767:1825#L49">PlotBasis</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) PlotBasis(args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+PlotBasis plots basis functions in I
+option =  0 : use CalcBasis
+</p>
+<pre>1 : use CalcBasisAndDerivs
+2 : use RecursiveBasis
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.PlotDerivs">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=2871:2930#L83">PlotDerivs</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) PlotDerivs(args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+PlotDerivs plots derivatives of basis functions in I
+option =  0 : use CalcBasisAndDerivs
+</p>
+<pre>1 : use NumericalDeriv
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.Point">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=4568:4628#L145">Point</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) Point(t <a href="/pkg/builtin/#float64">float64</a>, option <a href="/pkg/builtin/#int">int</a>) (C []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Point returns the x-y-z coordinates of a point on B-spline
+option =  0 : use CalcBasis
+</p>
+<pre>1 : use RecursiveBasis
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.RecursiveBasis">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=3690:3748#L119">RecursiveBasis</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) RecursiveBasis(t <a href="/pkg/builtin/#float64">float64</a>, i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+RecursiveBasis computes one particular basis function N[i] recursively (not efficient)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.SetControl">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=2031:2074#L67">SetControl</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) SetControl(Q [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+SetControl sets B-spline control points
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bspline.SetOrder">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=1798:1831#L57">SetOrder</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) SetOrder(p <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+SetOrder sets B-spline order (p)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Data">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=5094:5170#L207">Data</a></h2>
+			<pre>type Data struct {
+    Verts  []<a href="#Vert">Vert</a>   <span class="comment">// vertices</span>
+    Nurbss []<a href="#NurbsD">NurbsD</a> <span class="comment">// NURBSs</span>
+}</pre>
+			<p>
+Data holds all geometry data
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Nurbs">type <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=547:1497#L13">Nurbs</a></h2>
+			<pre>type Nurbs struct {
+    Q [][][][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// Qw: 4D control points [n[0]][n[1]][n[2]][4]</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Nurbs holds NURBS data
+Note: Control points must be set after a call to Init
+</p>
+<pre>Either SetControl must be called or the Q array must be directly specified
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="FactoryNurbs1dCurveA">func <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=2101:2139#L49">FactoryNurbs1dCurveA</a></h3>
+				<pre>func FactoryNurbs1dCurveA() (b *<a href="#Nurbs">Nurbs</a>)</pre>
+				<p>
+FactoryNurbs1dCurveA generates a NURBS 1D curve
+</p>
+
+				
+				
+			
+				
+				<h3 id="FactoryNurbs2dPlateHole">func <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=938:979#L24">FactoryNurbs2dPlateHole</a></h3>
+				<pre>func FactoryNurbs2dPlateHole() (b *<a href="#Nurbs">Nurbs</a>)</pre>
+				<p>
+FactoryNurbs2dPlateHole generates a NURBS of a 2D quarter of plate with hole (quadratic)
+</p>
+
+				
+				
+			
+				
+				<h3 id="FactoryNurbs2dStrip">func <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=305:342#L1">FactoryNurbs2dStrip</a></h3>
+				<pre>func FactoryNurbs2dStrip() (b *<a href="#Nurbs">Nurbs</a>)</pre>
+				<p>
+FactoryNurbs2dStrip generates a NURBS of a 2D strip (x-quadratic, y-linear)
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Nurbs.CalcBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=3686:3724#L113">CalcBasis</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CalcBasis(u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+CalcBasis computes all non-zero basis functions R[i][j][k] @ u.
+Note: use GetBasisI or GetBasisL to get a particular basis function value
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.CalcBasisAndDerivs">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=5260:5307#L173">CalcBasisAndDerivs</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CalcBasisAndDerivs(u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+CalcBasisAndDerivs computes all non-zero basis functions R[i][j][k] and corresponding
+first order derivatives of basis functions w.r.t u =&gt; dRdu[i][j][k] @ u
+Note: use GetBasisI or GetBasisL to get a particular basis function value
+</p>
+<pre>use GetDerivI or GetDerivL to get a particular derivative
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.CheckDerivs">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/testing.go?s=364:438#L6">CheckDerivs</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CheckDerivs(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, nn <a href="/pkg/builtin/#int">int</a>, tol <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+CheckDerivs compares analytical with numerical derivatives
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.CloneCtrlsAlongCurve">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/topologynurbs.go?s=1864:1940#L53">CloneCtrlsAlongCurve</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CloneCtrlsAlongCurve(iAlong, jAt <a href="/pkg/builtin/#int">int</a>) (Qnew [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+CloneCtrlsAlongCurve returns a copy of control points @ 2D boundary
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.CloneCtrlsAlongSurface">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/topologynurbs.go?s=2250:2336#L69">CloneCtrlsAlongSurface</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CloneCtrlsAlongSurface(iAlong, jAlong, kAt <a href="/pkg/builtin/#int">int</a>) (Qnew [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+CloneCtrlsAlongSurface returns a copy of control points @ 3D boundary
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawCtrl2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=462:519#L9">DrawCtrl2d</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawCtrl2d(ids <a href="/pkg/builtin/#bool">bool</a>, args, idargs <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+DrawCtrl2d draws control net
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawEdge2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=6134:6215#L213">DrawEdge2d</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawEdge2d(tmin, tmax, cte <a href="/pkg/builtin/#float64">float64</a>, along, npts <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+DrawEdge2d draws and edge from tmin to tmax
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawElem2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=1926:2005#L66">DrawElem2d</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElem2d(span []<a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, args, idargs <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+DrawElem2d draws element (non-zero span)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawElems2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=3263:3331#L105">DrawElems2d</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElems2d(npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, args, idargs <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+DrawElems2d draws all elements (non-zero spans)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.ElemBryLocalInds">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/topologynurbs.go?s=4221:4267#L141">ElemBryLocalInds</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) ElemBryLocalInds() (I [][]<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+ElemBryLocalInds returns the local (element) indices of control points @ boundaries
+(if element would have all surfaces @ boundaries)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.Elements">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14104:14146#L470">Elements</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Elements() (spans [][]<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Elements returns the indices of nonzero spans
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.ExtractSurfaces">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/topologynurbs.go?s=338:388#L3">ExtractSurfaces</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) ExtractSurfaces() (surfs []*<a href="#Nurbs">Nurbs</a>)</pre>
+				<p>
+ExtractSurfaces returns a new NURBS representing a boundary of this NURBS
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetBasisI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8090:8132#L251">GetBasisI</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetBasisI(I []<a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+GetBasisI returns the basis function R[i][j][k] just computed
+by CalcBasis or CalcBasisAndDerivs
+Note: I = [i,j,k]
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetBasisL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8451:8491#L264">GetBasisL</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetBasisL(l <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+GetBasisL returns the basis function R[i][j][k] just computed
+by CalcBasis or CalcBasisAndDerivs
+Note: l = i + j * n0 + k * n0 * n1
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetDerivI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8655:8705#L271">GetDerivI</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetDerivI(dRdu []<a href="/pkg/builtin/#float64">float64</a>, I []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+GetDerivI returns the derivative of basis function dR[i][j][k]du just computed
+by CalcBasisAndDerivs
+Note: I = [i,j,k]
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetDerivL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9133:9181#L291">GetDerivL</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetDerivL(dRdu []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+GetDerivL returns the derivative of basis function dR[i][j][k]du just computed
+by CalcBasisAndDerivs
+Note: l = i + j * n0 + k * n0 * n1
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetElemNumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15132:15176#L511">GetElemNumBasis</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetElemNumBasis() (npts <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+GetElemNumBasis returns the number of control points == basis functions needed for one element
+</p>
+<pre>npts := Π_i (p[i] + 1)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13411:13458#L442">GetQ</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetQ(i, j, k <a href="/pkg/builtin/#int">int</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+GetQ gets a control point x[i,j,k] (size==4)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13626:13668#L452">GetQl</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetQl(l <a href="/pkg/builtin/#int">int</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+GetQl gets a control point x[l] (size==4)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetU">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=12897:12936#L422">GetU</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetU(dir <a href="/pkg/builtin/#int">int</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+GetU returns the knots along direction dir
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.Gnd">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=12703:12728#L412">Gnd</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Gnd() <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+GetGnd returns the geometry dimension
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.IndBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15342:15388#L520">IndBasis</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) IndBasis(span []<a href="/pkg/builtin/#int">int</a>) (L []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+IndBasis returns the indices of basis functions == local indices of control points
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.IndsAlongCurve">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/topologynurbs.go?s=2978:3043#L93">IndsAlongCurve</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) IndsAlongCurve(iAlong, iSpan0, jAt <a href="/pkg/builtin/#int">int</a>) (L []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+IndsAlongCurve returns the control points indices along curve
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.IndsAlongSurface">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/topologynurbs.go?s=3372:3455#L111">IndsAlongSurface</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) IndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kAt <a href="/pkg/builtin/#int">int</a>) (L []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+IndsAlongSurface return the control points indices along surface
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.Init">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=1629:1689#L35">Init</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Init(gnd <a href="/pkg/builtin/#int">int</a>, ords []<a href="/pkg/builtin/#int">int</a>, knots [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Init initialises Nurbs
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.Krefine">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=18072:18121#L618">Krefine</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Krefine(X [][]<a href="/pkg/builtin/#float64">float64</a>) (O *<a href="#Nurbs">Nurbs</a>)</pre>
+				<p>
+Krefine returns a new Nurbs with knots refined
+Note: X[gnd][numNewKnots]
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.KrefineN">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=16586:16649#L568">KrefineN</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) KrefineN(ndiv <a href="/pkg/builtin/#int">int</a>, hughesEtAlPaper <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Nurbs">Nurbs</a></pre>
+				<p>
+KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.NonZeroSpans">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13284:13329#L437">NonZeroSpans</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NonZeroSpans(dir <a href="/pkg/builtin/#int">int</a>) [][]<a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+NonZeroSpans returns the &#39;elements&#39; along direction dir
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.NumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13154:13191#L432">NumBasis</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NumBasis(dir <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+NumBasis returns the number of basis (controls) along direction dir
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.NumericalDeriv">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=10929:10995#L343">NumericalDeriv</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NumericalDeriv(dRdu []<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+NumericalDeriv computes a particular derivative dR[i][j][k]du @ t using numerical differentiation
+Note: it uses RecursiveBasis and therefore is highly non-efficient
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.Ord">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=12796:12828#L417">Ord</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Ord(dir <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<p>
+GetOrd returns the order along direction dir
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.PlotBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=3584:3647#L116">PlotBasis</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotBasis(l <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+PlotBasis plots basis function (2D only)
+option =  0 : use CalcBasis
+</p>
+<pre>1 : use CalcBasisAndDerivs
+2 : use RecursiveBasis
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.PlotDeriv">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=5151:5217#L176">PlotDeriv</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotDeriv(l, d <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+PlotDeriv plots derivative dR[i][j][k]du[d] (2D only)
+option =  0 : use CalcBasisAndDerivs
+</p>
+<pre>1 : use NumericalDeriv
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.Point">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=11502:11550#L362">Point</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Point(u []<a href="/pkg/builtin/#float64">float64</a>) (C []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Point returns the x-y-z coordinates of a point on curve/surface/volume
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.RecursiveBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9412:9476#L298">RecursiveBasis</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) RecursiveBasis(u []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+RecursiveBasis implements basis functions by means of summing all terms
+in Bernstein polynomial using recursive Cox-DeBoor formula (very not efficient)
+Note: l = i + j * n0 + k * n0 * n1
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.SetControl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=2837:2895#L85">SetControl</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetControl(verts [][]<a href="/pkg/builtin/#float64">float64</a>, ctrls []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+SetControl sets control points from list of global vertices
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.SetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13776:13822#L457">SetQ</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetQ(i, j, k <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+SetQ sets a control point x[i,j,k] (size==4)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.SetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13958:13999#L465">SetQl</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetQl(l <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+SetQl sets a control point x[l] (size==4)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.U">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13014:13053#L427">U</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) U(dir, idx <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+U returns the value of a knot along direction dir
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="NurbsD">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=4755:5060#L198">NurbsD</a></h2>
+			<pre>type NurbsD struct {
+    Id    <a href="/pkg/builtin/#int">int</a>         <span class="comment">// id of Nurbs</span>
+    Gnd   <a href="/pkg/builtin/#int">int</a>         <span class="comment">// 1: curve, 2:surface, 3:volume (geometry dimension)</span>
+    Ords  []<a href="/pkg/builtin/#int">int</a>       <span class="comment">// order along each x-y-z direction [gnd]</span>
+    Knots [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// knots along each x-y-z direction [gnd][m]</span>
+    Ctrls []<a href="/pkg/builtin/#int">int</a>       <span class="comment">// global ids of control points</span>
+}</pre>
+			<p>
+NurbsD holds all data required to read/save a Nurbs to/from files
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Point">type <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=303:341#L4">Point</a></h2>
+			<pre>type Point struct {
+    X, Y, Z <a href="/pkg/builtin/#float64">float64</a>
+}</pre>
+			<p>
+Point holds the Cartesian coordinates of a point in 3D space
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Point.NewCopy">func (*Point) <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=577:609#L16">NewCopy</a></h3>
+				<pre>func (o *<a href="#Point">Point</a>) NewCopy() *<a href="#Point">Point</a></pre>
+				<p>
+NewCopy creates a new copy of Point
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Point.NewDisp">func (*Point) <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=708:758#L21">NewDisp</a></h3>
+				<pre>func (o *<a href="#Point">Point</a>) NewDisp(dx, dy, dz <a href="/pkg/builtin/#float64">float64</a>) *<a href="#Point">Point</a></pre>
+				<p>
+NewDisp creates a new copy of Point displaced by dx, dy, dz
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Point.String">func (*Point) <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=833:864#L26">String</a></h3>
+				<pre>func (o *<a href="#Point">Point</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+String outputs Point
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Segment">type <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=396:432#L9">Segment</a></h2>
+			<pre>type Segment struct {
+    A, B *<a href="#Point">Point</a>
+}</pre>
+			<p>
+Segment represents a directed segment from A to B
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewSegment">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=1948:1985#L64">NewSegment</a></h3>
+				<pre>func NewSegment(a, b *<a href="#Point">Point</a>) *<a href="#Segment">Segment</a></pre>
+				<p>
+NewSegment creates a new segment from a to b
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Segment.Len">func (*Segment) <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=1269:1300#L40">Len</a></h3>
+				<pre>func (o *<a href="#Segment">Segment</a>) Len() <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Len computes the length of Segment == Euclidian norm
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Segment.New">func (*Segment) <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=1406:1447#L45">New</a></h3>
+				<pre>func (o *<a href="#Segment">Segment</a>) New(m <a href="/pkg/builtin/#float64">float64</a>) *<a href="#Segment">Segment</a></pre>
+				<p>
+NewScaled creates a new Segment scaled by m and starting from A
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Segment.String">func (*Segment) <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=1810:1843#L59">String</a></h3>
+				<pre>func (o *<a href="#Segment">Segment</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+String outputs Segment
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Segment.Vector">func (*Segment) <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=1648:1693#L52">Vector</a></h3>
+				<pre>func (o *<a href="#Segment">Segment</a>) Vector(m <a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Vector returns the vector representing Segment from A to B (scaled by m)
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Vert">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=4581:4684#L191">Vert</a></h2>
+			<pre>type Vert struct {
+    Id  <a href="/pkg/builtin/#int">int</a>       <span class="comment">// id</span>
+    Tag <a href="/pkg/builtin/#int">int</a>       <span class="comment">// tag</span>
+    C   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// coordinates (size==4)</span>
+}</pre>
+			<p>
+Vert holds data for a vertex =&gt; control point
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="..">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="data/">data</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="rw/">rw</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
 </div><!-- page -->
 <div id="footer">
 <br /><br />
