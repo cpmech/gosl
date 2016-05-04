@@ -12,20 +12,19 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-/*  Jacobian
-    ========
-        Calculates (with N=n-1):
-            df0dx0, df0dx1, df0dx2, ... df0dxN
-            df1dx0, df1dx1, df1dx2, ... df1dxN
-                 . . . . . . . . . . . . .
-            dfNdx0, dfNdx1, dfNdx2, ... dfNdxN
-    INPUT:
-        ffcn : f(x) function
-        x    : station where dfdx has to be calculated
-        fx   : f @ x
-        w    : workspace with size == n == len(x)
-    RETURNS:
-        J : dfdx @ x [must be pre-allocated]        */
+// Jacobian computes Jacobian (sparse) matrix
+//      Calculates (with N=n-1):
+//          df0dx0, df0dx1, df0dx2, ... df0dxN
+//          df1dx0, df1dx1, df1dx2, ... df1dxN
+//               . . . . . . . . . . . . .
+//          dfNdx0, dfNdx1, dfNdx2, ... dfNdxN
+//  INPUT:
+//      ffcn : f(x) function
+//      x    : station where dfdx has to be calculated
+//      fx   : f @ x
+//      w    : workspace with size == n == len(x)
+//  RETURNS:
+//      J : dfdx @ x [must be pre-allocated]
 func Jacobian(J *la.Triplet, ffcn Cb_f, x, fx, w []float64) (err error) {
 	ndim := len(x)
 	start, endp1 := 0, ndim
@@ -51,6 +50,7 @@ func Jacobian(J *la.Triplet, ffcn Cb_f, x, fx, w []float64) (err error) {
 	return
 }
 
+// CompareJac compares Jacobian matrix (e.g. for testing)
 func CompareJac(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64) {
 
 	// numerical

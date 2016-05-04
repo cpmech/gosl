@@ -66,6 +66,7 @@ func JacobianMpi(J *la.Triplet, ffcn Cb_f, x, fx, w []float64, distr bool) (err 
 	return
 }
 
+// CompareJacMpi compares Jacobian matrix (e.g. for testing)
 func CompareJacMpi(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64, distr bool) {
 
 	// numerical
