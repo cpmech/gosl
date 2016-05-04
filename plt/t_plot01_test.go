@@ -13,7 +13,7 @@ import (
 
 func Test_plot01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("plot01")
 
 	x := utl.LinSpace(0.0, 1.0, 11)

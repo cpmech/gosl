@@ -35,7 +35,9 @@ func Test_draw01(tst *testing.T) {
 		Fmt{"green", "s", "-", 2, 0, "second", -1},
 		Fmt{"blue", "+", "-", 3, 10, "third", -1},
 	}, 10, "best", false, "")
-	//Show()
+	if chk.Verbose {
+		SaveD("/tmp/gosl", "draw01.eps")
+	}
 }
 
 func Test_draw02(tst *testing.T) {

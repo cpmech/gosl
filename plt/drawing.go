@@ -72,7 +72,7 @@ func DrawLegend(dat []Fmt, fs int, loc string, frame bool, args string) {
 	}
 	io.Ff(&bb, ")\n")
 	if !frame {
-		io.Ff(&bb, "lg%d.get_frame().set_linewidth(0.0)\n", n)
+		io.Ff(&bb, "if lg%d: lg%d.get_frame().set_linewidth(0.0)\n", n, n)
 	}
 	io.Ff(&bb, "ea.append(lg%d)\n", n)
 }
