@@ -8,7 +8,7 @@ package ode
 
 import "github.com/cpmech/gosl/mpi"
 
-func (o *ODE) init_mpi() {
+func (o *Solver) init_mpi() {
 	if mpi.IsOn() {
 		o.root = (mpi.Rank() == 0)
 		if mpi.Size() > 1 {

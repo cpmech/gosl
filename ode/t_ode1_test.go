@@ -5,8 +5,6 @@
 package ode
 
 import (
-	"bytes"
-	"fmt"
 	"math"
 	"testing"
 	"time"
@@ -19,11 +17,10 @@ import (
 )
 
 // Hairer-Wanner VII-p2 Eq.(1.1)
-func TestODE01(tst *testing.T) {
+func Test_ode01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Test ODE 01")
-	io.Pfcyan("Hairer-Wanner VII-p2 Eq.(1.1) and work/correctness analysis\n")
+	chk.PrintTitle("ode01: Hairer-Wanner VII-p2 Eq.(1.1)")
 
 	lam := -50.0
 	silent := false
@@ -66,7 +63,7 @@ func TestODE01(tst *testing.T) {
 	dx := 1.875 / 50.0
 	copy(y, ya)
 	k_FwEuler, X_FwEuler, Y_FwEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
-	var FwEuler ODE
+	var FwEuler Solver
 	FwEuler.Init("FwEuler", ndim, fcn, jac, nil, out, silent)
 	FwEuler.Solve(y, xa, xb, dx, true, &k_FwEuler, &X_FwEuler, &Y_FwEuler)
 
@@ -74,7 +71,7 @@ func TestODE01(tst *testing.T) {
 	io.Pforan(". . . BwEuler . . . \n")
 	copy(y, ya)
 	k_BwEuler, X_BwEuler, Y_BwEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
-	var BwEuler ODE
+	var BwEuler Solver
 	//BwEuler.Init("BwEuler", ndim, fcn, nil, nil, out, silent)
 	BwEuler.Init("BwEuler", ndim, fcn, jac, nil, out, silent)
 	BwEuler.Solve(y, xa, xb, dx, true, &k_BwEuler, &X_BwEuler, &Y_BwEuler)
@@ -83,7 +80,7 @@ func TestODE01(tst *testing.T) {
 	io.Pforan(". . . MoEuler . . . \n")
 	copy(y, ya)
 	k_MoEuler, X_MoEuler, Y_MoEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
-	var MoEuler ODE
+	var MoEuler Solver
 	MoEuler.Init("MoEuler", ndim, fcn, jac, nil, out, silent)
 	MoEuler.Solve(y, xa, xb, xb-xa, false, &k_MoEuler, &X_MoEuler, &Y_MoEuler)
 
@@ -91,7 +88,7 @@ func TestODE01(tst *testing.T) {
 	io.Pforan(". . . Dopri5 . . . \n")
 	copy(y, ya)
 	k_Dopri5, X_Dopri5, Y_Dopri5 := 0, make([]float64, MAXN), make([]float64, MAXN)
-	var Dopri5 ODE
+	var Dopri5 Solver
 	Dopri5.Init("Dopri5", ndim, fcn, jac, nil, out, silent)
 	Dopri5.Solve(y, xa, xb, xb-xa, false, &k_Dopri5, &X_Dopri5, &Y_Dopri5)
 
@@ -99,7 +96,7 @@ func TestODE01(tst *testing.T) {
 	io.Pforan(". . . Radau5 . . . \n")
 	copy(y, ya)
 	k_Radau5, X_Radau5, Y_Radau5 := 0, make([]float64, MAXN), make([]float64, MAXN)
-	var Radau5 ODE
+	var Radau5 Solver
 	Radau5.Init("Radau5", ndim, fcn, jac, nil, out, silent)
 	Radau5.Solve(y, xa, xb, xb-xa, false, &k_Radau5, &X_Radau5, &Y_Radau5)
 
@@ -125,12 +122,12 @@ func TestODE01(tst *testing.T) {
 }
 
 // Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation
-func TestODE02a(tst *testing.T) {
+func Test_ode02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Test ODE 02a")
-	io.Pfcyan("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation\n")
+	chk.PrintTitle("ode02: Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation")
 
+	// problem definition
 	eps := 1.0e-6
 	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
 		f[0] = y[1]
@@ -149,67 +146,67 @@ func TestODE02a(tst *testing.T) {
 		return nil
 	}
 
-	// data
+	// method and flags
 	silent := false
 	fixstp := false
 	//method := "Dopri5"
 	method := "Radau5"
+	numjac := false
 	xa, xb := 0.0, 2.0
 	ya := []float64{2.0, -0.6}
 	ndim := len(ya)
 
-	// output
-	var b bytes.Buffer
-	out := func(first bool, dx, x float64, y []float64, args ...interface{}) error {
-		if first {
-			fmt.Fprintf(&b, "%23s %23s %23s %23s\n", "dx", "x", "y0", "y1")
-		}
-		fmt.Fprintf(&b, "%23.15E %23.15E %23.15E %23.15E\n", dx, x, y[0], y[1])
-		return nil
-	}
-	defer func() {
-		extra := "d2 = Read('data/vdpol_radau5_for.dat')\n" +
-			"subplot(3,1,1)\n" +
-			"plot(d2['x'],d2['y0'],'k+',label='res',ms=10)\n" +
-			"subplot(3,1,2)\n" +
-			"plot(d2['x'],d2['y1'],'k+',label='res',ms=10)\n"
-		Plot("/tmp/gosl", "vdpolA", method, &b, []int{0, 1}, ndim, nil, xa, xb, true, false, extra)
-	}()
+	// structure to hold numerical results
+	res := Results{Method: method}
 
-	// one run
-	var o ODE
-	numjac := true
+	// allocate ODE object
+	var o Solver
 	if numjac {
-		o.Init(method, ndim, fcn, nil, nil, out, silent)
+		o.Init(method, ndim, fcn, nil, nil, SimpleOutput, silent)
 	} else {
-		o.Init(method, ndim, fcn, jac, nil, out, silent)
+		o.Init(method, ndim, fcn, jac, nil, SimpleOutput, silent)
 	}
 
 	// tolerances and initial step size
 	rtol := 1e-4
 	atol := rtol
-	o.SetTol(atol, rtol)
 	o.IniH = 1.0e-4
-
+	o.SetTol(atol, rtol)
 	//o.NmaxSS = 2
 
+	// solve problem
 	y := make([]float64, ndim)
 	copy(y, ya)
 	t0 := time.Now()
 	if fixstp {
-		o.Solve(y, xa, xb, 0.05, fixstp)
+		o.Solve(y, xa, xb, 0.05, fixstp, &res)
 	} else {
-		o.Solve(y, xa, xb, xb-xa, fixstp)
+		o.Solve(y, xa, xb, xb-xa, fixstp, &res)
 	}
 	io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
+
+	// plot
+	if chk.Verbose {
+		plt.SetForEps(1.5, 400)
+		args := "'b-', marker='.', lw=1, ms=4, clip_on=0"
+		Plot("/tmp/gosl/ode", "vdpolA.eps", &res, nil, xa, xb, "", args, func() {
+			_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
+			if err != nil {
+				chk.Panic("%v", err)
+			}
+			plt.Subplot(3, 1, 1)
+			plt.Plot(T["x"], T["y0"], "'k+',label='reference',ms=7")
+			plt.Subplot(3, 1, 2)
+			plt.Plot(T["x"], T["y1"], "'k+',label='reference',ms=7")
+		})
+	}
 }
 
 // Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation
-func TestODE03(tst *testing.T) {
+func Test_ode03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Test ODE 03")
-	io.Pfcyan("Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation\n")
+	chk.PrintTitle("ode03: Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation")
 
 	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
 		f[0] = -0.04*y[0] + 1.0e4*y[1]*y[2]
@@ -243,131 +240,120 @@ func TestODE03(tst *testing.T) {
 	ya := []float64{1.0, 0.0, 0.0}
 	ndim := len(ya)
 
-	// output
-	var b bytes.Buffer
-	out := func(first bool, dx, x float64, y []float64, args ...interface{}) error {
-		if first {
-			fmt.Fprintf(&b, "%23s %23s %23s %23s %23s\n", "dx", "x", "y0", "y1", "y2")
-		}
-		fmt.Fprintf(&b, "%23.15E %23.15E %23.15E %23.15E %23.15E\n", dx, x, y[0], y[1], y[2])
-		return nil
-	}
-	defer func() {
-		extra := "d2 = Read('data/rober_radau5_cpp.dat')\n" +
-			"subplot(4,1,1)\n" +
-			"plot(d2['x'],d2['y0'],'k+',label='res',ms=10)\n" +
-			"subplot(4,1,2)\n" +
-			"plot(d2['x'],d2['y1'],'k+',label='res',ms=10)\n" +
-			"subplot(4,1,3)\n" +
-			"plot(d2['x'],d2['y2'],'k+',label='res',ms=10)\n"
-		Plot("/tmp/gosl", "rober", method, &b, []int{0, 1, 2}, ndim, nil, xa, xb, true, false, extra)
-	}()
+	// structure to hold numerical results
+	res := Results{Method: method}
 
-	// one run
-	var o ODE
-	o.Init(method, ndim, fcn, jac, nil, out, silent)
+	// allocate ODE object
+	var o Solver
+	o.Init(method, ndim, fcn, jac, nil, SimpleOutput, silent)
+
+	// tolerances and initial step size
 	rtol := 1e-2
 	atol := rtol * 1e-6
 	o.SetTol(atol, rtol)
 	o.IniH = 1.0e-6
+
+	// solve problem
 	y := make([]float64, ndim)
 	copy(y, ya)
 	if fixstp {
-		o.Solve(y, xa, xb, 0.01, fixstp)
+		o.Solve(y, xa, xb, 0.01, fixstp, &res)
 	} else {
-		o.Solve(y, xa, xb, xb-xa, fixstp)
+		o.Solve(y, xa, xb, xb-xa, fixstp, &res)
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.SetForEps(1.5, 400)
+		args := "'b-', marker='.', lw=1, clip_on=0"
+		Plot("/tmp/gosl/ode", "rober.eps", &res, nil, xa, xb, "", args, func() {
+			_, T, err := io.ReadTable("data/rober_radau5_cpp.dat")
+			if err != nil {
+				chk.Panic("%v", err)
+			}
+			plt.Subplot(4, 1, 1)
+			plt.Plot(T["x"], T["y0"], "'k+',label='reference',ms=10")
+			plt.Subplot(4, 1, 2)
+			plt.Plot(T["x"], T["y1"], "'k+',label='reference',ms=10")
+			plt.Subplot(4, 1, 3)
+			plt.Plot(T["x"], T["y2"], "'k+',label='reference',ms=10")
+		})
 	}
 }
 
-// DATA STRUCTURE FOR HW TRANSISTOR PROBLEM
-type HWtransData struct {
-	UE, UB, UF, ALPHA, BETA                float64
-	R0, R1, R2, R3, R4, R5, R6, R7, R8, R9 float64
-	W                                      float64
-}
-
-// INITIAL DATA FOR THE AMPLIFIER PROBLEM
-func HWtransIni() (D HWtransData, xa, xb float64, ya []float64) {
-	// DATA
-	D.UE, D.UB, D.UF, D.ALPHA, D.BETA = 0.1, 6.0, 0.026, 0.99, 1.0e-6
-	D.R0, D.R1, D.R2, D.R3, D.R4, D.R5 = 1000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0
-	D.R6, D.R7, D.R8, D.R9 = 9000.0, 9000.0, 9000.0, 9000.0
-	D.W = 2.0 * 3.141592654 * 100.0
-
-	// INITIAL VALUES
-	xa = 0.0
-	ya = []float64{0.0,
-		D.UB,
-		D.UB / (D.R6/D.R5 + 1.0),
-		D.UB / (D.R6/D.R5 + 1.0),
-		D.UB,
-		D.UB / (D.R2/D.R1 + 1.0),
-		D.UB / (D.R2/D.R1 + 1.0),
-		0.0}
-
-	// ENDPOINT OF INTEGRATION
-	xb = 0.05
-	//xb = 0.0123 // OK
-	//xb = 0.01235 // !OK
-	return
-}
-
-// Hairer-Wanner VII-p376 Transistor Amplifier
-// (from E Hairer's website, not the system in the book)
-func TestODE04a(tst *testing.T) {
+func Test_ode04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Test ODE 04a")
-	io.Pfcyan("Hairer-Wanner VII-p376 Transistor Amplifier\n")
-	io.Pfcyan("(from E Hairer's website, not the system in the book)\n")
+	chk.PrintTitle("ode04: Hairer-Wanner VII-p376 Transistor Amplifier\n")
+	// NOTE: from E Hairer's website, not the system in the book
 
-	// RIGHT-HAND SIDE OF THE AMPLIFIER PROBLEM
+	// data
+	UE, UB, UF, ALPHA, BETA := 0.1, 6.0, 0.026, 0.99, 1.0e-6
+	R0, R1, R2, R3, R4, R5 := 1000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0
+	R6, R7, R8, R9 := 9000.0, 9000.0, 9000.0, 9000.0
+	W := 2.0 * 3.141592654 * 100.0
+
+	// initial values
+	xa := 0.0
+	ya := []float64{0.0,
+		UB,
+		UB / (R6/R5 + 1.0),
+		UB / (R6/R5 + 1.0),
+		UB,
+		UB / (R2/R1 + 1.0),
+		UB / (R2/R1 + 1.0),
+		0.0}
+
+	// endpoint of integration
+	xb := 0.05
+	//xb = 0.0123 // OK
+	//xb = 0.01235 // !OK
+
+	// right-hand side of the amplifier problem
 	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
-		d := args[0].(*HWtransData)
-		UET := d.UE * math.Sin(d.W*x)
-		FAC1 := d.BETA * (math.Exp((y[3]-y[2])/d.UF) - 1.0)
-		FAC2 := d.BETA * (math.Exp((y[6]-y[5])/d.UF) - 1.0)
-		f[0] = y[0] / d.R9
-		f[1] = (y[1]-d.UB)/d.R8 + d.ALPHA*FAC1
-		f[2] = y[2]/d.R7 - FAC1
-		f[3] = y[3]/d.R5 + (y[3]-d.UB)/d.R6 + (1.0-d.ALPHA)*FAC1
-		f[4] = (y[4]-d.UB)/d.R4 + d.ALPHA*FAC2
-		f[5] = y[5]/d.R3 - FAC2
-		f[6] = y[6]/d.R1 + (y[6]-d.UB)/d.R2 + (1.0-d.ALPHA)*FAC2
-		f[7] = (y[7] - UET) / d.R0
+		UET := UE * math.Sin(W*x)
+		FAC1 := BETA * (math.Exp((y[3]-y[2])/UF) - 1.0)
+		FAC2 := BETA * (math.Exp((y[6]-y[5])/UF) - 1.0)
+		f[0] = y[0] / R9
+		f[1] = (y[1]-UB)/R8 + ALPHA*FAC1
+		f[2] = y[2]/R7 - FAC1
+		f[3] = y[3]/R5 + (y[3]-UB)/R6 + (1.0-ALPHA)*FAC1
+		f[4] = (y[4]-UB)/R4 + ALPHA*FAC2
+		f[5] = y[5]/R3 - FAC2
+		f[6] = y[6]/R1 + (y[6]-UB)/R2 + (1.0-ALPHA)*FAC2
+		f[7] = (y[7] - UET) / R0
 		return nil
 	}
 
-	// JACOBIAN OF THE AMPLIFIER PROBLEM
+	// Jacobian of the amplifier problem
 	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
-		d := args[0].(*HWtransData)
-		FAC14 := d.BETA * math.Exp((y[3]-y[2])/d.UF) / d.UF
-		FAC27 := d.BETA * math.Exp((y[6]-y[5])/d.UF) / d.UF
+		FAC14 := BETA * math.Exp((y[3]-y[2])/UF) / UF
+		FAC27 := BETA * math.Exp((y[6]-y[5])/UF) / UF
 		if dfdy.Max() == 0 {
 			dfdy.Init(8, 8, 16)
 		}
 		NU := 2
 		dfdy.Start()
-		dfdy.Put(2+0-NU, 0, 1.0/d.R9)
-		dfdy.Put(2+1-NU, 1, 1.0/d.R8)
-		dfdy.Put(1+2-NU, 2, -d.ALPHA*FAC14)
-		dfdy.Put(0+3-NU, 3, d.ALPHA*FAC14)
-		dfdy.Put(2+2-NU, 2, 1.0/d.R7+FAC14)
+		dfdy.Put(2+0-NU, 0, 1.0/R9)
+		dfdy.Put(2+1-NU, 1, 1.0/R8)
+		dfdy.Put(1+2-NU, 2, -ALPHA*FAC14)
+		dfdy.Put(0+3-NU, 3, ALPHA*FAC14)
+		dfdy.Put(2+2-NU, 2, 1.0/R7+FAC14)
 		dfdy.Put(1+3-NU, 3, -FAC14)
-		dfdy.Put(2+3-NU, 3, 1.0/d.R5+1.0/d.R6+(1.0-d.ALPHA)*FAC14)
-		dfdy.Put(3+2-NU, 2, -(1.0-d.ALPHA)*FAC14)
-		dfdy.Put(2+4-NU, 4, 1.0/d.R4)
-		dfdy.Put(1+5-NU, 5, -d.ALPHA*FAC27)
-		dfdy.Put(0+6-NU, 6, d.ALPHA*FAC27)
-		dfdy.Put(2+5-NU, 5, 1.0/d.R3+FAC27)
+		dfdy.Put(2+3-NU, 3, 1.0/R5+1.0/R6+(1.0-ALPHA)*FAC14)
+		dfdy.Put(3+2-NU, 2, -(1.0-ALPHA)*FAC14)
+		dfdy.Put(2+4-NU, 4, 1.0/R4)
+		dfdy.Put(1+5-NU, 5, -ALPHA*FAC27)
+		dfdy.Put(0+6-NU, 6, ALPHA*FAC27)
+		dfdy.Put(2+5-NU, 5, 1.0/R3+FAC27)
 		dfdy.Put(1+6-NU, 6, -FAC27)
-		dfdy.Put(2+6-NU, 6, 1.0/d.R1+1.0/d.R2+(1.0-d.ALPHA)*FAC27)
-		dfdy.Put(3+5-NU, 5, -(1.0-d.ALPHA)*FAC27)
-		dfdy.Put(2+7-NU, 7, 1.0/d.R0)
+		dfdy.Put(2+6-NU, 6, 1.0/R1+1.0/R2+(1.0-ALPHA)*FAC27)
+		dfdy.Put(3+5-NU, 5, -(1.0-ALPHA)*FAC27)
+		dfdy.Put(2+7-NU, 7, 1.0/R0)
 		return nil
 	}
 
-	// MATRIX "M"
+	// matrix "M"
 	c1, c2, c3, c4, c5 := 1.0e-6, 2.0e-6, 3.0e-6, 4.0e-6, 5.0e-6
 	var M la.Triplet
 	M.Init(8, 8, 14)
@@ -388,56 +374,54 @@ func TestODE04a(tst *testing.T) {
 	M.Put(2+6-NU, 6, c1)
 	M.Put(1+7-NU, 7, -c1)
 
-	// WRITE FILE FUNCTION
-	idxstp := 1
-	var b bytes.Buffer
-	out := func(first bool, dx, x float64, y []float64, args ...interface{}) error {
-		if first {
-			fmt.Fprintf(&b, "%6s%23s%23s%23s%23s%23s%23s%23s%23s%23s\n", "ns", "x", "y0", "y1", "y2", "y3", "y4", "y5", "y6", "y7")
-		}
-		fmt.Fprintf(&b, "%6d%23.15E", idxstp, x)
-		for j := 0; j < len(y); j++ {
-			fmt.Fprintf(&b, "%23.15E", y[j])
-		}
-		fmt.Fprintf(&b, "\n")
-		idxstp += 1
-		return nil
-	}
-	defer func() {
-		io.WriteFileD("/tmp/gosl", "hwamplifierA.res", &b)
-	}()
-
-	// INITIAL DATA
-	D, xa, xb, ya := HWtransIni()
-
-	// SET ODE SOLVER
+	// flags
 	silent := false
 	fixstp := false
 	//method := "Dopri5"
 	method := "Radau5"
 	ndim := len(ya)
 	numjac := false
-	var osol ODE
 
+	// structure to hold numerical results
+	res := Results{Method: method}
+
+	// ODE solver
+	var osol Solver
 	osol.Pll = true
 
 	if numjac {
-		osol.Init(method, ndim, fcn, nil, &M, out, silent)
+		osol.Init(method, ndim, fcn, nil, &M, SimpleOutput, silent)
 	} else {
-		osol.Init(method, ndim, fcn, jac, &M, out, silent)
+		osol.Init(method, ndim, fcn, jac, &M, SimpleOutput, silent)
 	}
 	osol.IniH = 1.0e-6 // initial step size
 
-	// SET TOLERANCES
+	// set tolerances
 	atol, rtol := 1e-11, 1e-5
 	osol.SetTol(atol, rtol)
 
-	// RUN
+	// run
 	t0 := time.Now()
 	if fixstp {
-		osol.Solve(ya, xa, xb, 0.01, fixstp, &D)
+		osol.Solve(ya, xa, xb, 0.01, fixstp, &res)
 	} else {
-		osol.Solve(ya, xa, xb, xb-xa, fixstp, &D)
+		osol.Solve(ya, xa, xb, xb-xa, fixstp, &res)
 	}
 	io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
+
+	// plot
+	if chk.Verbose {
+		plt.SetForEps(2.0, 400)
+		args := "'b-', marker='.', lw=1, clip_on=0"
+		Plot("/tmp/gosl/ode", "hwamplifier.eps", &res, nil, xa, xb, "", args, func() {
+			_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
+			if err != nil {
+				chk.Panic("%v", err)
+			}
+			for j := 0; j < ndim; j++ {
+				plt.Subplot(ndim+1, 1, j+1)
+				plt.Plot(T["x"], T[io.Sf("y%d", j)], "'k+',label='reference',ms=10")
+			}
+		})
+	}
 }

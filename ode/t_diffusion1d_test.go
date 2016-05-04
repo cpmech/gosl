@@ -168,7 +168,7 @@ func TestDiffusion1D(tst *testing.T) {
 
 	// ode solver
 	var Jfcn Cb_jac
-	var osol ODE
+	var osol Solver
 	if !numjac {
 		Jfcn = jac
 	}

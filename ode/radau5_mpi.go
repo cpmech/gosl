@@ -18,7 +18,7 @@ import (
 )
 
 // Radau5 step function
-func radau5_step_mpi(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr float64, err error) {
+func radau5_step_mpi(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr float64, err error) {
 
 	// factors
 	α := r5.α_ / o.h

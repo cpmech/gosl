@@ -13,11 +13,11 @@ import (
 	"github.com/cpmech/gosl/num"
 )
 
-func bweuler_accept(o *ODE, y []float64) {
+func bweuler_accept(o *Solver, y []float64) {
 }
 
 // backward-Euler
-func bweuler_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr float64, err error) {
+func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr float64, err error) {
 
 	// new x
 	x += o.h

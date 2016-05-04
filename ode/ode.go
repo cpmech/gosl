@@ -13,21 +13,10 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// callbacks
-type Cb_fcn func(f []float64, h, x float64, y []float64, args ...interface{}) error      // function
-type Cb_jac func(dfdy *la.Triplet, h, x float64, y []float64, args ...interface{}) error // Jacobian (must have at least all diagonal elements set)
-type Cb_out func(first bool, h, x float64, y []float64, args ...interface{}) error       // output
-
-// step function
-type stpfcn func(o *ODE, y []float64, x float64, args ...interface{}) (rerr float64, err error)
-
-// accept update function
-type acptfcn func(o *ODE, y []float64)
-
-// ODE structure
+// Solver implements an ODE solver
 //  Note: Distr is automatically set ON by Init if mpi is on and there are more then one processor.
 //        However, it can be set OFF after calling Init.
-type ODE struct {
+type Solver struct {
 
 	// method
 	method string  // method name
@@ -123,7 +112,7 @@ type ODE struct {
 }
 
 // Init initialises ODE structure with default values and allocate slices
-func (o *ODE) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, out Cb_out, silent bool) {
+func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, out Cb_out, silent bool) {
 
 	// primary variables
 	o.method = method
@@ -234,7 +223,7 @@ func (o *ODE) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triple
 
 // SetTol sets tolerances according to Hairer and Wanner suggestions. This routine also
 // checks for consistent values and only considers the case of scalars Atol and Rtol.
-func (o *ODE) SetTol(atol, rtol float64) {
+func (o *Solver) SetTol(atol, rtol float64) {
 	o.Atol, o.Rtol = atol, rtol
 	// check and change the tolerances
 	β := 2.0 / 3.0
@@ -248,7 +237,7 @@ func (o *ODE) SetTol(atol, rtol float64) {
 }
 
 // Solve solves from (xa,ya) to (xb,yb) => find yb (stored in y)
-func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interface{}) (err error) {
+func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interface{}) (err error) {
 
 	// check
 	if xb < x {
@@ -502,7 +491,7 @@ func (o *ODE) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interf
 	return
 }
 
-func (o *ODE) Stat() {
+func (o *Solver) Stat() {
 	if !o.root {
 		return
 	}
@@ -516,7 +505,7 @@ func (o *ODE) Stat() {
 	io.Pf("max number of iterations  =%6d\n", o.nitmax)
 }
 
-func (o *ODE) GetStat() (s string) {
+func (o *Solver) GetStat() (s string) {
 	s = fmt.Sprintf("number of F evaluations   =%6d\n", o.nfeval)
 	s += fmt.Sprintf("number of J evaluations   =%6d\n", o.njeval)
 	s += fmt.Sprintf("total number of steps     =%6d\n", o.nsteps)

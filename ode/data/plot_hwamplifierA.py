@@ -5,7 +5,7 @@
 from pylab import subplot, plot, show
 from gosl  import Read, Gll
 
-go = Read('results/hwamplifierA.res')
+go = Read('/tmp/gosl/hwamplifierA.res')
 fo = Read('data/radau5_hwamplifier.dat') # HW Fortran code results
 
 for i in range(8):

@@ -6,107 +6,13 @@ package ode
 
 import (
 	"bytes"
-	"fmt"
 	"math"
-	"os"
 	"os/exec"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
-
-// callbacks
-type Cb_ycorr func(y []float64, x float64, args ...interface{}) // y(x) correct
-
-// plot results corresponding to one run
-func Plot(dirout, fnkey, method string, bres *bytes.Buffer, ycps []int, ndim int, ycfcn Cb_ycorr, xa, xb float64,
-	withdx, show bool, extra string) {
-
-	// save file with results
-	os.MkdirAll(dirout, 0777)
-	if bres != nil {
-		io.WriteFileD(dirout, fnkey+".res", bres)
-	}
-
-	// new python script
-	var b bytes.Buffer
-	fmt.Fprintf(&b, "from gosl import *\n")
-	fmt.Fprintf(&b, "d = Read('%s/%s.res')\n", dirout, fnkey)
-
-	// closed-form solution
-	var xc []float64
-	if ycfcn != nil {
-		np := 101
-		dx := (xb - xa) / float64(np-1)
-		fmt.Fprintf(&b, "yc = array([\n")
-		xc = make([]float64, np)
-		yc := make([]float64, ndim)
-		for i := 0; i < np; i++ {
-			xc[i] = xa + dx*float64(i)
-			ycfcn(yc, xc[i])
-			fmt.Fprintf(&b, "[")
-			for j := 0; j < ndim; j++ {
-				if j == ndim-1 {
-					fmt.Fprintf(&b, "%g", yc[j])
-				} else {
-					fmt.Fprintf(&b, "%g,", yc[j])
-				}
-			}
-			if i == np-1 {
-				fmt.Fprintf(&b, "]")
-			} else {
-				fmt.Fprintf(&b, "],\n")
-			}
-		}
-		fmt.Fprintf(&b, "])\n")
-		fmt.Fprintf(&b, "xc = array([")
-		for i := 0; i < np; i++ {
-			if i == np-1 {
-				fmt.Fprintf(&b, "%g", xc[i])
-			} else {
-				fmt.Fprintf(&b, "%g,", xc[i])
-			}
-		}
-		fmt.Fprintf(&b, "])\n")
-	}
-
-	// number of subplots
-	nplt := len(ycps)
-	if withdx {
-		nplt += 1
-	}
-
-	// plot
-	for i, cp := range ycps {
-		fmt.Fprintf(&b, "subplot(%d,1,%d)\n", nplt, i+1)
-		if ycfcn != nil {
-			fmt.Fprintf(&b, "plot(xc, yc[:,%d], 'y-', lw=6, clip_on=0, label='solution')\n", cp)
-		}
-		fmt.Fprintf(&b, "plot(d['x'], d['y%d'], 'b-', marker='.', lw=1, clip_on=0, label='%s')\n", cp, method)
-		fmt.Fprintf(&b, "Gll('x', 'y%d')\n", cp)
-	}
-	if withdx {
-		fmt.Fprintf(&b, "subplot(%d,1,%d)\n", nplt, len(ycps)+1)
-		fmt.Fprintf(&b, "plot(d['x'], d['dx'], 'b-', marker='.', lw=1, clip_on=0, label='%s')\n", method)
-		fmt.Fprintf(&b, "gca().set_yscale('log')\n")
-		fmt.Fprintf(&b, "Gll('x', 'step size')\n")
-	}
-	fmt.Fprintf(&b, extra)
-	fmt.Fprintf(&b, "show()\n")
-
-	// write file
-	fn := fmt.Sprintf("%s/%s.py", dirout, fnkey)
-	io.WriteFile(fn, &b)
-
-	// run script
-	if show {
-		_, err := exec.Command("python", fn).Output()
-		if err != nil {
-			chk.Panic("failed when calling python %s\n%v", fn, err)
-		}
-	}
-}
 
 // work/correctness analysis
 func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, ycfcn Cb_ycorr, ya []float64, xa, xb float64,
@@ -131,16 +37,16 @@ func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Trip
 	}
 
 	// initialise ode
-	var o ODE
+	var o Solver
 	o.Init(method, ndim, fcn, jac, M, out, true)
 	o.PredCtrl = true
 
 	// for python script
 	var b0, b1, b2, b3 bytes.Buffer
-	fmt.Fprintf(&b0, "from gosl import *\n")
-	fmt.Fprintf(&b0, "tols = array([")
-	fmt.Fprintf(&b1, "errs = array([")
-	fmt.Fprintf(&b2, "nfev = array([")
+	io.Ff(&b0, "from gosl import *\n")
+	io.Ff(&b0, "tols = array([")
+	io.Ff(&b1, "errs = array([")
+	io.Ff(&b2, "nfev = array([")
 
 	// run for a number of tolerances
 	nt := 13
@@ -166,33 +72,33 @@ func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Trip
 
 		// python script
 		if i == len(tols)-1 {
-			fmt.Fprintf(&b0, "%g", tol)
-			fmt.Fprintf(&b1, "%g", re.value)
-			fmt.Fprintf(&b2, "%d", o.nfeval)
+			io.Ff(&b0, "%g", tol)
+			io.Ff(&b1, "%g", re.value)
+			io.Ff(&b2, "%d", o.nfeval)
 		} else {
-			fmt.Fprintf(&b0, "%g,", tol)
-			fmt.Fprintf(&b1, "%g,", re.value)
-			fmt.Fprintf(&b2, "%d,", o.nfeval)
+			io.Ff(&b0, "%g,", tol)
+			io.Ff(&b1, "%g,", re.value)
+			io.Ff(&b2, "%d,", o.nfeval)
 		}
 	}
-	fmt.Fprintf(&b0, "])\n")
-	fmt.Fprintf(&b1, "])\n")
-	fmt.Fprintf(&b2, "], dtype=float)\n")
+	io.Ff(&b0, "])\n")
+	io.Ff(&b1, "])\n")
+	io.Ff(&b2, "], dtype=float)\n")
 
 	// python script
-	fmt.Fprintf(&b3, "X, Y = -log10(errs), log10(nfev)\n")
-	fmt.Fprintf(&b3, "plot(X, Y, clip_on=0)\n")
+	io.Ff(&b3, "X, Y = -log10(errs), log10(nfev)\n")
+	io.Ff(&b3, "plot(X, Y, clip_on=0)\n")
 	if len(orders) > 0 {
-		fmt.Fprintf(&b3, "dX = X[-1] - X[0]\n")
+		io.Ff(&b3, "dX = X[-1] - X[0]\n")
 	}
 	for _, ord := range orders {
-		fmt.Fprintf(&b3, "plot([X[0], X[0]+dX], [Y[0], Y[0] + dX/float(%g)], 'k--', clip_on=0)\n", ord)
+		io.Ff(&b3, "plot([X[0], X[0]+dX], [Y[0], Y[0] + dX/float(%g)], 'k--', clip_on=0)\n", ord)
 	}
-	fmt.Fprintf(&b3, "Gll('correctness = -log10(error)', 'work = log10(nfev)', leg=0)\n")
-	fmt.Fprintf(&b3, "show()\n")
+	io.Ff(&b3, "Gll('correctness = -log10(error)', 'work = log10(nfev)', leg=0)\n")
+	io.Ff(&b3, "show()\n")
 
 	// write file
-	fnpath := fmt.Sprintf("%s/%s_wc.py", dirout, fnkey)
+	fnpath := io.Sf("%s/%s_wc.py", dirout, fnkey)
 	io.WriteFileD(dirout, fnkey+"_wc.py", &b0, &b1, &b2, &b3)
 
 	// run script

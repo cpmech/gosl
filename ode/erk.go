@@ -18,12 +18,12 @@ type ERKdat struct {
 	c     []float64   // c coefficients
 }
 
-func erk_accept(o *ODE, y []float64) {
+func erk_accept(o *Solver, y []float64) {
 	la.VecCopy(y, 1, o.w[0]) // update y
 }
 
 // explicit Runge-Kutta step function
-func erk_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr float64, err error) {
+func erk_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr float64, err error) {
 
 	for i := 0; i < o.nstg; i++ {
 		o.u[i] = x + o.h*o.erkdat.c[i]

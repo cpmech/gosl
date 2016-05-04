@@ -35,7 +35,7 @@ type R5cte struct {
 // constants
 var r5 R5cte
 
-func radau5_accept(o *ODE, y []float64) {
+func radau5_accept(o *Solver, y []float64) {
 	for m := 0; m < o.ndim; m++ {
 		// update y
 		y[m] += o.z[2][m]
@@ -47,7 +47,7 @@ func radau5_accept(o *ODE, y []float64) {
 }
 
 // Radau5 step function
-func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr float64, err error) {
+func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr float64, err error) {
 
 	// factors
 	α := r5.α_ / o.h
@@ -355,7 +355,7 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 }
 
 // calc RMS norm
-func (o *ODE) rms_norm(diff []float64) (rms float64) {
+func (o *Solver) rms_norm(diff []float64) (rms float64) {
 	for m := 0; m < o.ndim; m++ {
 		rms += math.Pow(diff[m]/o.scal[m], 2.0)
 	}
