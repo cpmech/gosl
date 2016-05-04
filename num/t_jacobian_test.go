@@ -5,7 +5,6 @@
 package num
 
 import (
-	//"fmt"
 	"math"
 	"testing"
 
@@ -25,6 +24,7 @@ func cos(x float64) float64 { return math.Cos(x) }
 
 func TestJacobian01a(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("TestJacobian 01a")
 
 	ffcn := func(fx, x []float64) error {
@@ -41,11 +41,12 @@ func TestJacobian01a(tst *testing.T) {
 		return nil
 	}
 	x := []float64{0.5, 0.5}
-	CompareJac(tst, ffcn, Jfcn, x, 1e-8, false)
+	CompareJac(tst, ffcn, Jfcn, x, 1e-8)
 }
 
 func TestJacobian02a(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("TestJacobian 02a")
 
 	ffcn := func(fx, x []float64) error {
@@ -92,11 +93,12 @@ func TestJacobian02a(tst *testing.T) {
 		return nil
 	}
 	x := []float64{5.0, 5.0, pi, pi, pi, 5.0}
-	CompareJac(tst, ffcn, Jfcn, x, 1e-6, false)
+	CompareJac(tst, ffcn, Jfcn, x, 1e-6)
 }
 
 func TestJacobian03(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("TestJacobian 03")
 
 	// grid
@@ -147,7 +149,7 @@ func TestJacobian03(tst *testing.T) {
 		return nil
 	}
 	U1 := make([]float64, e.N1)
-	CompareJac(tst, ffcn, Jfcn, U1, 0.0075, false)
+	CompareJac(tst, ffcn, Jfcn, U1, 0.0075)
 
 	print_jac := false
 	if print_jac {
@@ -156,7 +158,7 @@ func TestJacobian03(tst *testing.T) {
 		ffcn(fU1, U1)
 		var Jnum la.Triplet
 		Jnum.Init(e.N1, e.N1, e.N1*e.N1)
-		Jacobian(&Jnum, ffcn, U1, fU1, W1, false)
+		Jacobian(&Jnum, ffcn, U1, fU1, W1)
 		la.PrintMat("K11 ", K11.ToMatrix(nil).ToDense(), "%g ", false)
 		la.PrintMat("Jnum", Jnum.ToMatrix(nil).ToDense(), "%g ", false)
 	}

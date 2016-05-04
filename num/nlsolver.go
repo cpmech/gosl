@@ -189,7 +189,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 				err = o.JfcnDn(o.J, x)
 			} else {
 				if o.numJ {
-					err = Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w, false)
+					err = Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
 					o.NFeval += o.neq
 				} else {
 					err = o.JfcnSp(&o.Jtri, x)
@@ -340,7 +340,7 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 		}
 	} else {
 		if o.numJ {
-			err = Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w, false)
+			err = Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
 			if err != nil {
 				return 0, chk.Err(_nls_err5, "sparse", err.Error())
 			}
@@ -374,7 +374,7 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 		return
 	}
 	Jtmp.Init(o.neq, o.neq, o.neq*o.neq)
-	Jacobian(&Jtmp, o.Ffcn, x, o.fx, ws, false)
+	Jacobian(&Jtmp, o.Ffcn, x, o.fx, ws)
 	Jnum := Jtmp.ToMatrix(nil).ToDense()
 	for i := 0; i < o.neq; i++ {
 		for j := 0; j < o.neq; j++ {

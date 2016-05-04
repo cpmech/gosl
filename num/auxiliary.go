@@ -7,10 +7,8 @@ package num
 import (
 	"math"
 	"os"
-	"testing"
 
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -98,32 +96,6 @@ func TestAbs(result, expected, absolute_error float64, test_description string) 
 		}
 	}
 	return
-}
-
-func CompareJac(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64, distr bool) {
-	n := len(x)
-	// numerical
-	fx := make([]float64, n)
-	w := make([]float64, n) // workspace
-	ffcn(fx, x)
-	var Jnum la.Triplet
-	Jnum.Init(n, n, n*n)
-	Jacobian(&Jnum, ffcn, x, fx, w, distr)
-	jn := Jnum.ToMatrix(nil)
-	// analytical
-	var Jana la.Triplet
-	Jana.Init(n, n, n*n)
-	Jfcn(&Jana, x)
-	ja := Jana.ToMatrix(nil)
-	// compare
-	//la.PrintMat(fmt.Sprintf("Jana(%d)",mpi.Rank()), ja.ToDense(), "%13.6f", false)
-	//la.PrintMat(fmt.Sprintf("Jnum(%d)",mpi.Rank()), jn.ToDense(), "%13.6f", false)
-	max_diff := la.MatMaxDiff(jn.ToDense(), ja.ToDense())
-	if max_diff > tol {
-		tst.Errorf("[1;31mmax_diff = %g[0m\n", max_diff)
-	} else {
-		io.Pf("[1;32mmax_diff = %g[0m\n", max_diff)
-	}
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////

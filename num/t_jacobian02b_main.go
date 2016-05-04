@@ -70,5 +70,5 @@ func main() {
 	}
 	x := []float64{5.0, 5.0, pi, pi, pi, 5.0}
 	var tst testing.T
-	num.CompareJac(&tst, ffcn, Jfcn, x, 1e-6, true)
+	num.CompareJacMpi(&tst, ffcn, Jfcn, x, 1e-6, true)
 }
