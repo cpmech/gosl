@@ -13,7 +13,7 @@ import (
 
 func Test_plot01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("plot01")
 
 	x := utl.LinSpace(0.0, 1.0, 11)
@@ -23,5 +23,7 @@ func Test_plot01(tst *testing.T) {
 	}
 	Plot(x, y, "'ro', ls='-', lw=2, clip_on=0")
 	Gll(`$\varepsilon$`, `$\sigma$`, "")
-	//Save("/tmp/gosl", "t_plot01.eps")
+	if chk.Verbose {
+		SaveD("/tmp/gosl", "t_plot01.eps")
+	}
 }
