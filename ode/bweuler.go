@@ -76,17 +76,13 @@ func bweuler_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr flo
 				err = num.Jacobian(&o.dfdyT, func(fy, yy []float64) (e error) {
 					e = o.fcn(fy, o.h, x, yy, args...)
 					return
-				}, y, o.f[0], o.δw[0], o.Distr) // δw works here as workspace variable
+				}, y, o.f[0], o.δw[0]) // δw works here as workspace variable
 			} else { // analytical
 				err = o.jac(&o.dfdyT, o.h, x, y, args...)
 			}
 			if err != nil {
 				return
 			}
-			// debug
-			//if true {
-			//io.Pfblue2("J = %v\n", o.dfdyT.ToMatrix(nil).ToDense()[0])
-			//}
 			if o.doinit {
 				o.rctriR = new(la.Triplet)
 				o.rctriR.Init(o.ndim, o.ndim, o.mTri.Len()+o.dfdyT.Len())
@@ -94,7 +90,6 @@ func bweuler_step(o *ODE, y []float64, x float64, args ...interface{}) (rerr flo
 
 			// calculate drdy matrix
 			la.SpTriAdd(o.rctriR, 1, o.mTri, -o.h, &o.dfdyT) // rctriR := I - h * dfdy
-			//la.PrintMat("rcmat", o.rctriR.ToMatrix(nil).ToDense(), "%8.3f", false)
 
 			// initialise linear solver
 			if o.doinit {

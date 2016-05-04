@@ -11,7 +11,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/mpi"
 )
 
 // callbacks
@@ -154,12 +153,8 @@ func (o *ODE) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triple
 
 	// derived variables
 	o.root = true
-	if mpi.IsOn() {
-		o.root = (mpi.Rank() == 0)
-		if mpi.Size() > 1 {
-			o.Distr = true
-		}
-	}
+	o.Distr = false
+	o.init_mpi()
 
 	// M matrix
 	if M != nil {
@@ -197,7 +192,11 @@ func (o *ODE) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triple
 		o.nstg = 7
 		o.erkdat = ERKdat{true, DP5_a, DP5_b, DP5_be, DP5_c}
 	case "Radau5":
-		o.step = radau5_step
+		if o.Distr {
+			o.step = radau5_step_mpi
+		} else {
+			o.step = radau5_step
+		}
 		o.accept = radau5_accept
 		o.nstg = 3
 	default:

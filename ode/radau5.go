@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// +build !windows,!darwin
+
 package ode
 
 import (
@@ -11,7 +13,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/num"
 )
 
@@ -71,7 +72,7 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 				err = num.Jacobian(&o.dfdyT, func(fy, y []float64) (e error) {
 					e = o.fcn(fy, o.h, x0, y, args...)
 					return
-				}, y0, o.f0, o.w[0], o.Distr) // w works here as workspace variable
+				}, y0, o.f0, o.w[0]) // w works here as workspace variable
 			} else { // analytical
 				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n") }
 				err = o.jac(&o.dfdyT, o.h, x0, y0, args...)
@@ -83,18 +84,9 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 			// create M matrix
 			if o.doinit && !o.hasM {
 				o.mTri = new(la.Triplet)
-				if o.Distr {
-					id, sz := mpi.Rank(), mpi.Size()
-					start, endp1 := (id*o.ndim)/sz, ((id+1)*o.ndim)/sz
-					o.mTri.Init(o.ndim, o.ndim, endp1-start)
-					for i := start; i < endp1; i++ {
-						o.mTri.Put(i, i, 1.0)
-					}
-				} else {
-					o.mTri.Init(o.ndim, o.ndim, o.ndim)
-					for i := 0; i < o.ndim; i++ {
-						o.mTri.Put(i, i, 1.0)
-					}
+				o.mTri.Init(o.ndim, o.ndim, o.ndim)
+				for i := 0; i < o.ndim; i++ {
+					o.mTri.Put(i, i, 1.0)
 				}
 			}
 			o.njeval += 1
@@ -191,11 +183,6 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 			la.SpMatVecMul(o.δw[0], 1, o.mMat, o.w[0]) // δw0 := M * w0
 			la.SpMatVecMul(o.δw[1], 1, o.mMat, o.w[1]) // δw1 := M * w1
 			la.SpMatVecMul(o.δw[2], 1, o.mMat, o.w[2]) // δw2 := M * w2
-			if o.Distr {
-				mpi.AllReduceSum(o.δw[0], o.v[0]) // v is used as workspace here
-				mpi.AllReduceSum(o.δw[1], o.v[1]) // v is used as workspace here
-				mpi.AllReduceSum(o.δw[2], o.v[2]) // v is used as workspace here
-			}
 			for m := 0; m < o.ndim; m++ {
 				o.v[0][m] = r5.Ti[0][0]*o.f[0][m] + r5.Ti[0][1]*o.f[1][m] + r5.Ti[0][2]*o.f[2][m] - γ*o.δw[0][m]
 				o.v[1][m] = r5.Ti[1][0]*o.f[0][m] + r5.Ti[1][1]*o.f[1][m] + r5.Ti[1][2]*o.f[2][m] - α*o.δw[1][m] + β*o.δw[2][m]
@@ -327,12 +314,7 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 				o.ez[m] = r5.e0*o.z[0][m] + r5.e1*o.z[1][m] + r5.e2*o.z[2][m]
 				o.rhs[m] = o.f0[m]
 			}
-			if o.Distr {
-				la.SpMatVecMul(o.δw[0], γ, o.mMat, o.ez)     // δw[0] = γ * M * ez (δw[0] is workspace)
-				mpi.AllReduceSumAdd(o.rhs, o.δw[0], o.δw[1]) // rhs += join_with_sum(δw[0]) (δw[1] is workspace)
-			} else {
-				la.SpMatVecMulAdd(o.rhs, γ, o.mMat, o.ez) // rhs += γ * M * ez
-			}
+			la.SpMatVecMulAdd(o.rhs, γ, o.mMat, o.ez) // rhs += γ * M * ez
 		} else {
 			for m := 0; m < o.ndim; m++ {
 				o.ez[m] = r5.e0*o.z[0][m] + r5.e1*o.z[1][m] + r5.e2*o.z[2][m]
@@ -360,13 +342,8 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 						return
 					}
 					if o.hasM {
-						la.VecCopy(o.rhs, 1, o.f[0]) // rhs := f0perr
-						if o.Distr {
-							la.SpMatVecMul(o.δw[0], γ, o.mMat, o.ez)     // δw[0] = γ * M * ez (δw[0] is workspace)
-							mpi.AllReduceSumAdd(o.rhs, o.δw[0], o.δw[1]) // rhs += join_with_sum(δw[0]) (δw[1] is workspace)
-						} else {
-							la.SpMatVecMulAdd(o.rhs, γ, o.mMat, o.ez) // rhs += γ * M * ez
-						}
+						la.VecCopy(o.rhs, 1, o.f[0])              // rhs := f0perr
+						la.SpMatVecMulAdd(o.rhs, γ, o.mMat, o.ez) // rhs += γ * M * ez
 					} else {
 						la.VecAdd2(o.rhs, 1, o.f[0], γ, o.ez) // rhs = f0perr + γ * ez
 					}
@@ -417,8 +394,3 @@ func init() {
 	r5.μ4 = r5.μ2 - 1.0
 	r5.μ5 = r5.μ1 - r5.μ2
 }
-
-// error messages
-var (
-	_radau5_err1 = "radau5.go: radau5_step: Jacobian sparse matrix must have all diagonal elements set; even if equal to zero"
-)

@@ -18,10 +18,6 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-const (
-	TEST_PLOT = false
-)
-
 // Hairer-Wanner VII-p2 Eq.(1.1)
 func TestODE01(tst *testing.T) {
 
@@ -107,7 +103,7 @@ func TestODE01(tst *testing.T) {
 	Radau5.Init("Radau5", ndim, fcn, jac, nil, out, silent)
 	Radau5.Solve(y, xa, xb, xb-xa, false, &k_Radau5, &X_Radau5, &Y_Radau5)
 
-	if TEST_PLOT {
+	if chk.Verbose {
 		X := utl.LinSpace(xa, xb, 101)
 		Y := make([]float64, len(X))
 		for i := 0; i < len(X); i++ {

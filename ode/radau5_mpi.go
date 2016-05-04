@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// +build !windows,!darwin
+
 package ode
 
 import (
@@ -15,40 +17,8 @@ import (
 	"github.com/cpmech/gosl/num"
 )
 
-type R5cte struct {
-	c  []float64   // c coefficients
-	T  [][]float64 // T matrix
-	Ti [][]float64 // inv(T) matrix
-	α_ float64     // alpha-hat
-	β_ float64     // beta-hat
-	γ_ float64     // gamma-hat
-	γ0 float64     // gamma0 coefficient
-	e0 float64     // e0 coefficient
-	e1 float64     // e1 coefficient
-	e2 float64     // e2 coefficient
-	μ1 float64     // collocation: C1    = (4.D0-SQ6)/10.D0
-	μ2 float64     // collocation: C2    = (4.D0+SQ6)/10.D0
-	μ3 float64     // collocation: C1M1  = C1-1.D0
-	μ4 float64     // collocation: C2M1  = C2-1.D0
-	μ5 float64     // collocation: C1MC2 = C1-C2
-}
-
-// constants
-var r5 R5cte
-
-func radau5_accept(o *ODE, y []float64) {
-	for m := 0; m < o.ndim; m++ {
-		// update y
-		y[m] += o.z[2][m]
-		// collocation polynomial values
-		o.ycol[0][m] = (o.z[1][m] - o.z[2][m]) / r5.μ4
-		o.ycol[1][m] = ((o.z[0][m]-o.z[1][m])/r5.μ5 - o.ycol[0][m]) / r5.μ3
-		o.ycol[2][m] = o.ycol[1][m] - ((o.z[0][m]-o.z[1][m])/r5.μ5-o.z[0][m]/r5.μ1)/r5.μ2
-	}
-}
-
 // Radau5 step function
-func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr float64, err error) {
+func radau5_step_mpi(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr float64, err error) {
 
 	// factors
 	α := r5.α_ / o.h
@@ -68,7 +38,7 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 			// Jacobian triplet
 			if o.jac == nil { // numerical
 				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
-				err = num.Jacobian(&o.dfdyT, func(fy, y []float64) (e error) {
+				err = num.JacobianMpi(&o.dfdyT, func(fy, y []float64) (e error) {
 					e = o.fcn(fy, o.h, x0, y, args...)
 					return
 				}, y0, o.f0, o.w[0], o.Distr) // w works here as workspace variable
@@ -378,47 +348,3 @@ func radau5_step(o *ODE, y0 []float64, x0 float64, args ...interface{}) (rerr fl
 	}
 	return
 }
-
-// calc RMS norm
-func (o *ODE) rms_norm(diff []float64) (rms float64) {
-	for m := 0; m < o.ndim; m++ {
-		rms += math.Pow(diff[m]/o.scal[m], 2.0)
-	}
-	rms = max(math.Sqrt(rms/float64(o.ndim)), 1.0e-10)
-	return
-}
-
-func init() {
-	r5.c = []float64{(4.0 - math.Sqrt(6.0)) / 10.0, (4.0 + math.Sqrt(6.0)) / 10.0, 1.0}
-
-	r5.T = [][]float64{{9.1232394870892942792e-02, -0.14125529502095420843, -3.0029194105147424492e-02},
-		{0.24171793270710701896, 0.20412935229379993199, 0.38294211275726193779},
-		{0.96604818261509293619, 1.0, 0.0}}
-
-	r5.Ti = [][]float64{{4.3255798900631553510, 0.33919925181580986954, 0.54177053993587487119},
-		{-4.1787185915519047273, -0.32768282076106238708, 0.47662355450055045196},
-		{-0.50287263494578687595, 2.5719269498556054292, -0.59603920482822492497}}
-
-	c1 := math.Pow(9.0, 1.0/3.0)
-	c2 := math.Pow(3.0, 3.0/2.0)
-	c3 := math.Pow(9.0, 2.0/3.0)
-
-	r5.α_ = -c1/2.0 + 3.0/(2.0*c1) + 3.0
-	r5.β_ = (math.Sqrt(3.0)*c1)/2.0 + c2/(2.0*c1)
-	r5.γ_ = c1 - 3.0/c1 + 3.0
-	r5.γ0 = c1 / (c3 + 3.0*c1 - 3.0)
-	r5.e0 = r5.γ0 * (-13.0 - 7.0*math.Sqrt(6.0)) / 3.0
-	r5.e1 = r5.γ0 * (-13.0 + 7.0*math.Sqrt(6.0)) / 3.0
-	r5.e2 = r5.γ0 * (-1.0) / 3.0
-
-	r5.μ1 = (4.0 - math.Sqrt(6.0)) / 10.0
-	r5.μ2 = (4.0 + math.Sqrt(6.0)) / 10.0
-	r5.μ3 = r5.μ1 - 1.0
-	r5.μ4 = r5.μ2 - 1.0
-	r5.μ5 = r5.μ1 - r5.μ2
-}
-
-// error messages
-var (
-	_radau5_err1 = "radau5.go: radau5_step: Jacobian sparse matrix must have all diagonal elements set; even if equal to zero"
-)
