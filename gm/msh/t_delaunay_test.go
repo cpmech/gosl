@@ -14,17 +14,28 @@ import (
 
 func Test_delaunay01(tst *testing.T) {
 
+	// header
 	//verbose()
 	chk.PrintTitle("delaunay01")
 
+	// points
 	X := []float64{0, 1, 1, 0, 0.5}
 	Y := []float64{0, 0, 1, 1, 0.5}
 
+	// generate
 	M, err := Delaunay2d(X, Y, chk.Verbose)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
 	}
+
+	// derived
+	err = M.CalcDerived(0)
+	if err != nil {
+		tst.Errorf("derived failed\n", err)
+	}
+
+	// check
 	xout := make([]float64, 5)
 	yout := make([]float64, 5)
 	for i, v := range M.Verts {

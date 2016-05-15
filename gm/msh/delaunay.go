@@ -67,8 +67,5 @@ func Delaunay2d(X, Y []float64, verbose bool) (M *Mesh, err error) {
 			},
 		}
 	}
-
-	// derived
-	M.CalcDerived(0)
 	return
 }
