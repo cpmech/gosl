@@ -44,12 +44,12 @@ func Delaunay2d(X, Y []float64, verbose bool) (M *Mesh, err error) {
 	nverts := int(T.numberofpoints)
 	ncells := int(T.numberoftriangles)
 	M = new(Mesh)
-	M.Verts = make([]*Vert, nverts)
+	M.Verts = make([]*Vertex, nverts)
 	M.Cells = make([]*Cell, ncells)
 	for i := 0; i < nverts; i++ {
-		M.Verts[i] = &Vert{
+		M.Verts[i] = &Vertex{
 			Id: i,
-			C: []float64{
+			X: []float64{
 				float64(C.getpoint((C.long)(i), 0, &T)),
 				float64(C.getpoint((C.long)(i), 1, &T)),
 			},
@@ -60,7 +60,7 @@ func Delaunay2d(X, Y []float64, verbose bool) (M *Mesh, err error) {
 			Id:   i,
 			Tag:  -1,
 			Type: "tri3",
-			Verts: []int{
+			V: []int{
 				int(C.getcorner((C.long)(i), 0, &T)),
 				int(C.getcorner((C.long)(i), 1, &T)),
 				int(C.getcorner((C.long)(i), 2, &T)),

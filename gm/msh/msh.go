@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"math"
 	"path/filepath"
-	"strings"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -22,76 +21,97 @@ const (
 	TOL_COINCIDENT_VERTS = 1e-5
 )
 
-// Vert holds vertex data
-type Vert struct {
+// Vertex holds vertex data (in .msh file)
+type Vertex struct {
 
 	// input
-	Id  int       // id
+	Id  int       // identifier
 	Tag int       // tag
-	C   []float64 // coordinates (size==2 or 3)
+	X   []float64 // coordinates (size==2 or 3)
 
 	// auxiliary
 	Entity interface{} // any entity attached to this vertex
 
 	// derived
-	SharedBy []int // cells sharing this vertex
+	C []int // cells sharing this vertex
 }
 
-// Cell holds cell data
+// Cell holds cell data (in .msh file)
 type Cell struct {
 
 	// input
-	Id       int    // id
+	Id       int    // identifier
 	Tag      int    // tag
-	Type     string // geometry type (string)
+	Type     string // geometry type
 	Part     int    // partition id
-	Verts    []int  // vertices
-	FTags    []int  // edge (2D) or face (3D) tags
-	STags    []int  // seam tags (for 3D only; it is actually a 3D edge tag)
-	JlinId   int    // joint line id
-	JsldId   int    // joint solid id
+	V        []int  // vertices
+	EdgeTags []int  // edge tags (2D or 3D)
+	FaceTags []int  // face tags (3D only)
 	Disabled bool   // cell is disabled
+
+	// auxiliary
+	Entity interface{} // any entity attached to this vertex
 
 	// derived
 	GoroutineId    int     // go routine id
-	FaceLocalVerts [][]int // local ids of face vertices [nfaces][...]
+	EdgeLocalVerts [][]int // local ids of vertices on edges [nedges][...]
 	Neighbours     []*Cell // neighbour cells
 }
 
-// Mesh holds a mesh for FE analyses
+// Mesh holds mesh data (in .msh file)
 type Mesh struct {
 
 	// input
-	Verts []*Vert // vertices
-	Cells []*Cell // cells
+	Verts []*Vertex // vertices
+	Cells []*Cell   // cells
 
 	// derived
 	FnamePath  string  // complete filename path
 	Ndim       int     // space dimension
 	Xmin, Xmax float64 // min and max x-coordinate
-	Ymin, Ymax float64 // min and max x-coordinate
-	Zmin, Zmax float64 // min and max x-coordinate
+	Ymin, Ymax float64 // min and max y-coordinate
+	Zmin, Zmax float64 // min and max z-coordinate
 
 	// derived: maps
-	VertTag2verts map[int][]*Vert      // vertex tag => set of vertices
-	CellTag2cells map[int][]*Cell      // cell tag => set of cells
-	FaceTag2cells map[int][]CellFaceId // face tag => set of cells
-	FaceTag2verts map[int][]int        // face tag => vertices on tagged face
-	SeamTag2cells map[int][]CellSeamId // seam tag => set of cells
-	Ctype2cells   map[string][]*Cell   // cell type => set of cells
+	Tag2verts     map[int][]*Vertex    // vertex tag => set of vertices
+	Tag2cells     map[int][]*Cell      // cell tag => set of cells
+	Type2cells    map[string][]*Cell   // cell type => set of cells
 	Part2cells    map[int][]*Cell      // partition number => set of cells
+	EdgeTag2cells map[int][]CellIdPair // edge tag => set of cells
+	EdgeTag2verts map[int][]int        // edge tag => vertices on tagged edge
+
+	// derived: sets
+	Edges EdgeSet // all edges
 }
 
-// CellFaceId structure
-type CellFaceId struct {
-	C   *Cell // cell
-	Fid int   // face id
+// Three holds 3 indices (for defining edges)
+type Three struct{ A, B, C int }
+
+// Four holds 4 indices (for defining faces)
+type Four struct{ A, B, C, D int }
+
+// Edge defines an edge
+type Edge struct {
+	V []int // vertices on edge
+	C []int // cells connected to this edge
 }
 
-// CellSeamId structure
-type CellSeamId struct {
-	C   *Cell // cell
-	Sid int   // seam id
+// Face defines a face
+type Face struct {
+	V []int // vertices on face
+	C []int // cells connected to this face
+}
+
+// EdgeSet defines a set of Edges
+type EdgeSet map[Three]*Edge
+
+// FaceSet defines a set of Faces
+type FaceSet map[Four]*Face
+
+// CellIdPair structure
+type CellIdPair struct {
+	C  *Cell
+	Id int
 }
 
 // ReadMsh reads mesh
@@ -133,15 +153,15 @@ func (o *Mesh) CalcDerived(goroutineId int) (err error) {
 
 	// vertex related derived data
 	o.Ndim = 2
-	o.Xmin = o.Verts[0].C[0]
-	o.Ymin = o.Verts[0].C[1]
-	if len(o.Verts[0].C) > 2 {
-		o.Zmin = o.Verts[0].C[2]
+	o.Xmin = o.Verts[0].X[0]
+	o.Ymin = o.Verts[0].X[1]
+	if len(o.Verts[0].X) > 2 {
+		o.Zmin = o.Verts[0].X[2]
 	}
 	o.Xmax = o.Xmin
 	o.Ymax = o.Ymin
 	o.Zmax = o.Zmin
-	o.VertTag2verts = make(map[int][]*Vert)
+	o.Tag2verts = make(map[int][]*Vertex)
 	for i, v := range o.Verts {
 
 		// check vertex id
@@ -151,41 +171,39 @@ func (o *Mesh) CalcDerived(goroutineId int) (err error) {
 		}
 
 		// ndim
-		nd := len(v.C)
+		nd := len(v.X)
 		if nd < 2 || nd > 4 {
 			err = chk.Err("number of space dimensions must be 2, 3 or 4 (NURBS). %d is invalid\n", nd)
 			return
 		}
 		if nd == 3 {
-			if math.Abs(v.C[2]) > TOL_ZMIN_FOR_3D {
+			if math.Abs(v.X[2]) > TOL_ZMIN_FOR_3D {
 				o.Ndim = 3
 			}
 		}
 
 		// tags
 		if v.Tag < 0 {
-			verts := o.VertTag2verts[v.Tag]
-			o.VertTag2verts[v.Tag] = append(verts, v)
+			o.Tag2verts[v.Tag] = append(o.Tag2verts[v.Tag], v)
 		}
 
 		// limits
-		o.Xmin = utl.Min(o.Xmin, v.C[0])
-		o.Xmax = utl.Max(o.Xmax, v.C[0])
-		o.Ymin = utl.Min(o.Ymin, v.C[1])
-		o.Ymax = utl.Max(o.Ymax, v.C[1])
+		o.Xmin = utl.Min(o.Xmin, v.X[0])
+		o.Xmax = utl.Max(o.Xmax, v.X[0])
+		o.Ymin = utl.Min(o.Ymin, v.X[1])
+		o.Ymax = utl.Max(o.Ymax, v.X[1])
 		if nd > 2 {
-			o.Zmin = utl.Min(o.Zmin, v.C[2])
-			o.Zmax = utl.Max(o.Zmax, v.C[2])
+			o.Zmin = utl.Min(o.Zmin, v.X[2])
+			o.Zmax = utl.Max(o.Zmax, v.X[2])
 		}
 	}
 
-	// derived: maps
-	o.CellTag2cells = make(map[int][]*Cell)
-	o.FaceTag2cells = make(map[int][]CellFaceId)
-	o.FaceTag2verts = make(map[int][]int)
-	o.SeamTag2cells = make(map[int][]CellSeamId)
-	o.Ctype2cells = make(map[string][]*Cell)
+	// derived: maps and sets
+	o.Tag2cells = make(map[int][]*Cell)
+	o.Type2cells = make(map[string][]*Cell)
 	o.Part2cells = make(map[int][]*Cell)
+	o.EdgeTag2cells = make(map[int][]CellIdPair)
+	o.Edges = make(map[Three]*Edge)
 	for i, c := range o.Cells {
 
 		// check id and tag
@@ -197,70 +215,73 @@ func (o *Mesh) CalcDerived(goroutineId int) (err error) {
 			err = chk.Err("cells tags must be negative. %d is incorrect\n", c.Tag)
 			return
 		}
-		c.GoroutineId = goroutineId
 
-		// face local vertices
+		// cell data
+		c.GoroutineId = goroutineId
+		o.Tag2cells[c.Tag] = append(o.Tag2cells[c.Tag], c)
+		o.Type2cells[c.Type] = append(o.Type2cells[c.Type], c)
+		o.Part2cells[c.Part] = append(o.Part2cells[c.Part], c)
+
+		// edge local vertices
 		var ok bool
-		c.FaceLocalVerts, ok = FaceLocalVerts[c.Type]
+		c.EdgeLocalVerts, ok = EdgeLocalVerts[c.Type]
 		if !ok {
 			err = chk.Err("cannot handle type %q\n", c.Type)
 			return
 		}
 
+		// edge tags
+		for i, tag := range c.EdgeTags {
+			if tag < 0 {
+				o.EdgeTag2cells[tag] = append(o.EdgeTag2cells[tag], CellIdPair{c, i})
+				for _, l := range c.EdgeLocalVerts[i] {
+					utl.IntIntsMapAppend(&o.EdgeTag2verts, tag, o.Verts[c.V[l]].Id)
+				}
+			}
+		}
+
 		// face tags
-		cells := o.CellTag2cells[c.Tag]
-		o.CellTag2cells[c.Tag] = append(cells, c)
-		for i, ftag := range c.FTags {
-			if ftag < 0 {
-				pairs := o.FaceTag2cells[ftag]
-				o.FaceTag2cells[ftag] = append(pairs, CellFaceId{c, i})
-				for _, l := range c.FaceLocalVerts[i] {
-					utl.IntIntsMapAppend(&o.FaceTag2verts, ftag, o.Verts[c.Verts[l]].Id)
-				}
+		//if o.Ndim == 3 {
+		//}
+
+		// set cells sharing this vertex
+		for _, vid := range c.V {
+			if utl.IntIndexSmall(o.Verts[vid].C, c.Id) < 0 {
+				o.Verts[vid].C = append(o.Verts[vid].C, c.Id)
 			}
 		}
 
-		// seam tags
-		if o.Ndim == 3 {
-			for i, stag := range c.STags {
-				if stag < 0 {
-					pairs := o.SeamTag2cells[stag]
-					o.SeamTag2cells[stag] = append(pairs, CellSeamId{c, i})
-				}
+		// edges
+		for _, L := range c.EdgeLocalVerts {
+			key := Three{-1, c.V[L[0]], c.V[L[1]]}
+			if len(L) > 2 {
+				key.A = c.V[L[2]]
 			}
-		}
-
-		// cell type => cells
-		cells = o.Ctype2cells[c.Type]
-		o.Ctype2cells[c.Type] = append(cells, c)
-
-		// partition => cells
-		cells = o.Part2cells[c.Part]
-		o.Part2cells[c.Part] = append(cells, c)
-
-		// set SharedBy information on vertices
-		for _, vid := range c.Verts {
-			if utl.IntIndexSmall(o.Verts[vid].SharedBy, c.Id) < 0 {
-				o.Verts[vid].SharedBy = append(o.Verts[vid].SharedBy, c.Id)
+			utl.IntSort3(&key.A, &key.B, &key.C)
+			if e, ok := o.Edges[key]; ok {
+				if utl.IntIndexSmall(e.C, c.Id) < 0 {
+					e.C = append(e.C, c.Id)
+				}
+			} else {
+				verts := []int{c.V[L[0]], c.V[L[1]]}
+				if len(L) > 2 {
+					verts = append(verts, c.V[L[2]])
+				}
+				o.Edges[key] = &Edge{verts, []int{c.Id}}
 			}
 		}
 	}
 
 	// remove duplicates
-	for ftag, verts := range o.FaceTag2verts {
-		o.FaceTag2verts[ftag] = utl.IntUnique(verts)
+	for tag, verts := range o.EdgeTag2verts {
+		o.EdgeTag2verts[tag] = utl.IntUnique(verts)
 	}
 	return
 }
 
 // Draw2d draws 2D mesh
 //  lwds -- linewidths: maps cid => lwd. Use <nil> for default lwd
-func (o *Mesh) Draw2d(onlyLin, setup bool, lwds map[int]float64, fmt *plt.Fmt) {
-
-	// auxiliary
-	type triple struct{ a, b, c int }   // points on edge
-	edgesdrawn := make(map[triple]bool) // edges drawn already
-	var tri triple
+func (o *Mesh) Draw2d(vids, setup bool, lwds map[int]float64, fmt *plt.Fmt) {
 
 	// format
 	if fmt == nil {
@@ -268,76 +289,23 @@ func (o *Mesh) Draw2d(onlyLin, setup bool, lwds map[int]float64, fmt *plt.Fmt) {
 	}
 	args := fmt.GetArgs("") + ",clip_on=0"
 
-	// loop over cells
-	for _, cell := range o.Cells {
-
-		// skip disabled cells
-		if cell.Disabled {
-			continue
+	// loop over edges
+	for _, e := range o.Edges {
+		X := make([]float64, len(e.V))
+		Y := make([]float64, len(e.V))
+		X[0] = o.Verts[e.V[0]].X[0]
+		Y[0] = o.Verts[e.V[0]].X[1]
+		for j, v := range e.V[1:] {
+			X[1+j] = o.Verts[v].X[0]
+			Y[1+j] = o.Verts[v].X[1]
 		}
+		plt.Plot(X, Y, args)
+	}
 
-		// lin cell
-		lincell := strings.HasPrefix(cell.Type, "lin")
-		if onlyLin && !lincell {
-			continue
-		}
-
-		// loop edges of cells
-		for _, lvids := range cell.FaceLocalVerts {
-
-			// set triple of nodes
-			tri.a = cell.Verts[lvids[0]]
-			tri.b = cell.Verts[lvids[1]]
-			nv := len(lvids)
-			if nv > 2 {
-				tri.c = cell.Verts[lvids[2]]
-			} else {
-				tri.c = len(o.Verts) + 1 // indicator of not-available
-			}
-			utl.IntSort3(&tri.a, &tri.b, &tri.c)
-
-			// draw edge if not drawn yet
-			if _, drawn := edgesdrawn[tri]; !drawn {
-				x := make([]float64, nv)
-				y := make([]float64, nv)
-				x[0] = o.Verts[tri.a].C[0]
-				y[0] = o.Verts[tri.a].C[1]
-				if nv == 3 {
-					x[1] = o.Verts[tri.c].C[0]
-					y[1] = o.Verts[tri.c].C[1]
-					x[2] = o.Verts[tri.b].C[0]
-					y[2] = o.Verts[tri.b].C[1]
-				} else {
-					x[1] = o.Verts[tri.b].C[0]
-					y[1] = o.Verts[tri.b].C[1]
-				}
-				plt.Plot(x, y, args)
-				edgesdrawn[tri] = true
-			}
-		}
-
-		// add middle node
-		if cell.Type == "qua9" {
-			vid := cell.Verts[8]
-			x := o.Verts[vid].C[0]
-			y := o.Verts[vid].C[1]
-			plt.PlotOne(x, y, args)
-		}
-
-		// linear cells
-		if lincell {
-			nv := len(cell.Verts)
-			x := make([]float64, nv)
-			y := make([]float64, nv)
-			for i, vid := range cell.Verts {
-				x[i] = o.Verts[vid].C[0]
-				y[i] = o.Verts[vid].C[1]
-			}
-			lw := 2.0
-			if lwd, ok := lwds[cell.Id]; ok {
-				lw = lwd
-			}
-			plt.Plot(x, y, io.Sf("'-o', ms=%d, clip_on=0, color='#41045a', lw=%g", fmt.Ms, lw))
+	// vertex ids
+	if vids {
+		for _, v := range o.Verts {
+			plt.Text(v.X[0], v.X[1], io.Sf("%d", v.Id), "")
 		}
 	}
 
