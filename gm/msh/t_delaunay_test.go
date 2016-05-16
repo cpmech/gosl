@@ -14,7 +14,6 @@ import (
 
 func Test_delaunay01(tst *testing.T) {
 
-	// header
 	//verbose()
 	chk.PrintTitle("delaunay01")
 
@@ -55,8 +54,8 @@ func Test_delaunay01(tst *testing.T) {
 
 	if chk.Verbose {
 		plt.SetForEps(1, 300)
-		M.Draw2d(false, false, nil, 1)
-		plt.Plot(X, Y, "'ro', clip_on=0")
+		M.Draw2d(false, false, nil, &plt.Fmt{C: "blue", M: "*"})
+		plt.Plot(X, Y, "'ro',markeredgecolor='r',markerfacecolor='none',clip_on=0")
 		plt.Gll("$x$", "$y$", "")
 		plt.Equal()
 		plt.SaveD("/tmp/gosl", "delaunay01.eps")

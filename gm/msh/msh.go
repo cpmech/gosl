@@ -255,13 +255,18 @@ func (o *Mesh) CalcDerived(goroutineId int) (err error) {
 
 // Draw2d draws 2D mesh
 //  lwds -- linewidths: maps cid => lwd. Use <nil> for default lwd
-//  ms   -- markersize for nodes
-func (o *Mesh) Draw2d(onlyLin, setup bool, lwds map[int]float64, ms int) {
+func (o *Mesh) Draw2d(onlyLin, setup bool, lwds map[int]float64, fmt *plt.Fmt) {
 
 	// auxiliary
 	type triple struct{ a, b, c int }   // points on edge
 	edgesdrawn := make(map[triple]bool) // edges drawn already
 	var tri triple
+
+	// format
+	if fmt == nil {
+		fmt = &plt.Fmt{C: "k", M: ".", Ms: 1}
+	}
+	args := fmt.GetArgs("") + ",clip_on=0"
 
 	// loop over cells
 	for _, cell := range o.Cells {
@@ -306,7 +311,7 @@ func (o *Mesh) Draw2d(onlyLin, setup bool, lwds map[int]float64, ms int) {
 					x[1] = o.Verts[tri.b].C[0]
 					y[1] = o.Verts[tri.b].C[1]
 				}
-				plt.Plot(x, y, io.Sf("'k-o', ms=%d, clip_on=0", ms))
+				plt.Plot(x, y, args)
 				edgesdrawn[tri] = true
 			}
 		}
@@ -316,7 +321,7 @@ func (o *Mesh) Draw2d(onlyLin, setup bool, lwds map[int]float64, ms int) {
 			vid := cell.Verts[8]
 			x := o.Verts[vid].C[0]
 			y := o.Verts[vid].C[1]
-			plt.PlotOne(x, y, io.Sf("'ko', ms=%d, clip_on=0", ms))
+			plt.PlotOne(x, y, args)
 		}
 
 		// linear cells
@@ -332,7 +337,7 @@ func (o *Mesh) Draw2d(onlyLin, setup bool, lwds map[int]float64, ms int) {
 			if lwd, ok := lwds[cell.Id]; ok {
 				lw = lwd
 			}
-			plt.Plot(x, y, io.Sf("'-o', ms=%d, clip_on=0, color='#41045a', lw=%g", ms, lw))
+			plt.Plot(x, y, io.Sf("'-o', ms=%d, clip_on=0, color='#41045a', lw=%g", fmt.Ms, lw))
 		}
 	}
 
