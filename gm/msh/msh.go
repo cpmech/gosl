@@ -30,6 +30,9 @@ type Vert struct {
 	Tag int       // tag
 	C   []float64 // coordinates (size==2 or 3)
 
+	// auxiliary
+	Entity interface{} // any entity attached to this vertex
+
 	// derived
 	SharedBy []int // cells sharing this vertex
 }
