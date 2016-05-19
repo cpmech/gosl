@@ -10,6 +10,10 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
+// TexNum returns a string representation in TeX format of a real number.
+// scientificNotation:
+//   peforms the conversion of numbers into scientific notation where
+//   the exponent notation with e{+-}{##} is converted into \cdot 10^{{+-}##}
 func TexNum(fmt string, num float64, scientificNotation bool) (l string) {
 	if fmt == "" {
 		fmt = "%g"
