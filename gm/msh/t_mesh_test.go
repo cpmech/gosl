@@ -68,7 +68,7 @@ func Test_singleq4(tst *testing.T) {
 	etagsVids := [][]int{{0, 1}, {1, 2}, {2, 3}, {0, 3}}
 
 	// check maps
-	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids)
+	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 }
 
 func Test_mesh01(tst *testing.T) {
@@ -145,7 +145,7 @@ func Test_mesh01(tst *testing.T) {
 	etagsVids := [][]int{{0, 1, 2}, {2, 3, 6, 7, 10}, {8, 9, 10}, {0, 4, 8}}
 
 	// check maps
-	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids)
+	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 }
 
 func Test_cubeandtet(tst *testing.T) {
@@ -202,6 +202,7 @@ func Test_cubeandtet(tst *testing.T) {
 	ctags := []int{-1}
 	cparts := []int{0}
 	etags := []int{-10, -11, -12, -13, -15, -66}
+	ftags := []int{-100, -101, -200, -300, -400}
 	ctypes := []string{"hex8", "tet4"}
 	vtagsVids := [][]int{{2}, {4}, {8}}
 	ctagsCids := [][]int{{0, 1}}
@@ -210,9 +211,12 @@ func Test_cubeandtet(tst *testing.T) {
 	etagsCids := [][]int{{0}, {0}, {0, 1, 1, 1}, {0}, {0}, {1}} // not unique
 	etagsLocEids := [][]int{{0}, {1}, {2, 0, 1, 2}, {3}, {10}, {4}}
 	etagsVids := [][]int{{0, 1}, {1, 2}, {2, 3, 8}, {0, 3}, {2, 6}, {2, 7}}
+	ftagsCids := [][]int{{0, 1}, {0}, {0}, {0, 1}, {1}}
+	ftagsLocEids := [][]int{{0, 0}, {1}, {2}, {4, 2}, {3}}
+	ftagsVids := [][]int{{0, 3, 4, 7, 8}, {1, 2, 5, 6}, {0, 1, 4, 5}, {0, 1, 2, 3, 8}, {2, 7, 8}}
 
 	// check maps
-	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids)
+	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ftags, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids)
 }
 
 func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtags, ctags, parts []int, types []string, V [][]int, etags, ftags [][]int) {
@@ -250,7 +254,7 @@ func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtag
 	}
 }
 
-func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags []int, ctypes []string, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids [][]int) {
+func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags, ftags []int, ctypes []string, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids [][]int) {
 
 	// VertTag2verts
 	io.Pfyel("\nVertTag2verts:\n")
@@ -403,5 +407,58 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 			return
 		}
 		chk.Ints(tst, io.Sf("%d edges => verts", tag), ids, etagsVids[i])
+	}
+
+	// FaceTag2cells
+	io.Pfyel("\nFaceTag2cells:\n")
+	for key, val := range tm.FaceTag2cells {
+		io.Pf("%v:\n", key)
+		for _, s := range val {
+			io.Pf("  cell: %v\n", s)
+		}
+	}
+	if len(tm.FaceTag2cells) != len(ftags) {
+		tst.Errorf("size of map of face tags (cells) is incorrect. %d != %d", len(tm.FaceTag2cells), len(ftags))
+		return
+	}
+	for i, tag := range ftags {
+		var cids []int
+		var bryids []int
+		if pairs, ok := tm.FaceTag2cells[tag]; ok {
+			for _, pair := range pairs {
+				cids = append(cids, pair.C.Id)
+				bryids = append(bryids, pair.BryId)
+			}
+		} else {
+			tst.Errorf("cannot find tag %d in FaceTag2cells map", tag)
+			return
+		}
+		chk.Ints(tst, io.Sf("%d faces => cells  ", tag), cids, ftagsCids[i])
+		chk.Ints(tst, io.Sf("%d faces => bry ids", tag), bryids, ftagsLocEids[i])
+	}
+
+	// FaceTag2verts
+	io.Pfyel("\nFaceTag2verts:\n")
+	for key, val := range tm.FaceTag2verts {
+		io.Pf("%v:\n", key)
+		for _, s := range val {
+			io.Pf("  vert: %v\n", s)
+		}
+	}
+	if len(tm.FaceTag2verts) != len(ftags) {
+		tst.Errorf("size of map of face tags (verts) is incorrect. %d != %d", len(tm.FaceTag2verts), len(ftags))
+		return
+	}
+	for i, tag := range ftags {
+		var ids []int
+		if verts, ok := tm.FaceTag2verts[tag]; ok {
+			for _, v := range verts {
+				ids = append(ids, v.Id)
+			}
+		} else {
+			tst.Errorf("cannot find tag %d in FaceTag2verts map", tag)
+			return
+		}
+		chk.Ints(tst, io.Sf("%d faces => verts", tag), ids, ftagsVids[i])
 	}
 }

@@ -122,6 +122,8 @@ type TagMaps struct {
 	CellPart2cells map[int]CellSet    // partition number => set of cells
 	EdgeTag2cells  map[int]BryPairSet // edge tag => set of cells {cell,boundaryId}
 	EdgeTag2verts  map[int]VertSet    // edge tag => vertices on tagged edge [unique]
+	FaceTag2cells  map[int]BryPairSet // face tag => set of cells {cell,boundaryId}
+	FaceTag2verts  map[int]VertSet    // face tag => vertices on tagged edge [unique]
 }
 
 // Read reads mesh
@@ -238,6 +240,8 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 	m.CellPart2cells = make(map[int]CellSet)
 	m.EdgeTag2cells = make(map[int]BryPairSet)
 	m.EdgeTag2verts = make(map[int]VertSet)
+	m.FaceTag2cells = make(map[int]BryPairSet)
+	m.FaceTag2verts = make(map[int]VertSet)
 
 	// loop over vertices
 	for _, vert := range o.Verts {
@@ -281,54 +285,26 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 		// check edge tags
 		if len(cell.EdgeTags) > 0 {
 			if len(cell.EdgeTags) != len(edgeLocVerts) {
-				err = chk.Err("number of tags in \"edgetags\" list for cell # %d is incorrect", cell.Id)
+				err = chk.Err("number of edge tags in \"et\" list for cell # %d is incorrect. %d != %d", cell.Id, len(cell.EdgeTags), len(edgeLocVerts))
 				return
 			}
 		}
 
-		// loop over each tag attached to a side of the cell
-		for edgeId, edgeTag := range cell.EdgeTags {
-
-			// there is a tag (i.e. it's negative)
-			if edgeTag < 0 {
-
-				// set edgeTag => cells map
-				m.EdgeTag2cells[edgeTag] = append(m.EdgeTag2cells[edgeTag], &BryPair{cell, edgeId})
-
-				// loop over local edges of cell
-				for _, locVid := range edgeLocVerts[edgeId] {
-
-					// find vertex
-					vid := cell.V[locVid] // local vertex id => global vertex id (vid)
-					vert := o.Verts[vid]  // pointer to vertex
-
-					// find whether this edgeTag is present in the map or not
-					if vertsOnEdge, ok := m.EdgeTag2verts[edgeTag]; ok {
-
-						// find whether this vertex is in the slice attached to edgeTag or not
-						found := false
-						for _, v := range vertsOnEdge {
-							if vert.Id == v.Id {
-								found = true
-								break
-							}
-						}
-
-						// add vertex to (unique) slice attached to edgeTag
-						if !found {
-							m.EdgeTag2verts[edgeTag] = append(vertsOnEdge, vert)
-						}
-
-						// edgeTag is not in the map => create new slice with the first vertex in it
-					} else {
-						m.EdgeTag2verts[edgeTag] = []*Vertex{vert}
-					}
-				}
+		// check face tags
+		if len(cell.FaceTags) > 0 {
+			if len(cell.FaceTags) != len(faceLocVerts) {
+				err = chk.Err("number of face tags in \"ft\" list for cell # %d is incorrect. %d != %d", cell.Id, len(cell.FaceTags), len(faceLocVerts))
+				return
 			}
 		}
 
-		// face tags
-		_ = faceLocVerts
+		// edge tags => cells, verts
+		o.setBryTagMaps(&m.EdgeTag2cells, &m.EdgeTag2verts, cell, cell.EdgeTags, edgeLocVerts)
+
+		// face tags => cells, verts
+		if len(faceLocVerts) > 0 {
+			o.setBryTagMaps(&m.FaceTag2cells, &m.FaceTag2verts, cell, cell.FaceTags, faceLocVerts)
+		}
 	}
 
 	// sort entries in EdgeTag2verts
@@ -336,5 +312,55 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 		sort.Sort(vertsOnEdge)
 		m.EdgeTag2verts[edgeTag] = vertsOnEdge
 	}
+
+	// sort entries in FaceTag2verts
+	for faceTag, vertsOnFace := range m.FaceTag2verts {
+		sort.Sort(vertsOnFace)
+		m.FaceTag2verts[faceTag] = vertsOnFace
+	}
 	return
+}
+
+func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BryPairSet, vertBryMap *map[int]VertSet, cell *Cell, tagList []int, locVerts [][]int) {
+
+	// loop over each tag attached to a side of the cell
+	for edgeId, edgeTag := range tagList {
+
+		// there is a tag (i.e. it's negative)
+		if edgeTag < 0 {
+
+			// set edgeTag => cells map
+			(*cellBryMap)[edgeTag] = append((*cellBryMap)[edgeTag], &BryPair{cell, edgeId})
+
+			// loop over local edges of cell
+			for _, locVid := range locVerts[edgeId] {
+
+				// find vertex
+				vid := cell.V[locVid] // local vertex id => global vertex id (vid)
+				vert := o.Verts[vid]  // pointer to vertex
+
+				// find whether this edgeTag is present in the map or not
+				if vertsOnEdge, ok := (*vertBryMap)[edgeTag]; ok {
+
+					// find whether this vertex is in the slice attached to edgeTag or not
+					found := false
+					for _, v := range vertsOnEdge {
+						if vert.Id == v.Id {
+							found = true
+							break
+						}
+					}
+
+					// add vertex to (unique) slice attached to edgeTag
+					if !found {
+						(*vertBryMap)[edgeTag] = append(vertsOnEdge, vert)
+					}
+
+					// edgeTag is not in the map => create new slice with the first vertex in it
+				} else {
+					(*vertBryMap)[edgeTag] = []*Vertex{vert}
+				}
+			}
+		}
+	}
 }
