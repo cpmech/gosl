@@ -1,7 +1,9 @@
 # Shapes: Definitions
 
+
 ## Quadrilaterals and Hexahedra
 
+```
   2D:
                 Vertices                              Edges
    y
@@ -54,9 +56,13 @@
        | ,'             | ,'
        +----------------+'
                1
+```
+
+
 
 ## Triangles and Tetrahedra
 
+```
   2D:
              Nodes                      Edges
                                
@@ -127,3 +133,4 @@
     |/      ,.-``
     /  _,-``
    +.'` 
+```
