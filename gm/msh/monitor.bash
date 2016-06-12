@@ -6,5 +6,5 @@ while true; do
     inotifywait -q -e modify $FILES
     echo
     echo
-    go test -test.run="singleq4"
+    go test -test.run="cubeandtet"
 done

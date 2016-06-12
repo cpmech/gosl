@@ -148,6 +148,73 @@ func Test_mesh01(tst *testing.T) {
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids)
 }
 
+func Test_cubeandtet(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("cubeandtet")
+
+	// load mesh
+	m, err := Read("data/cubeandtet.msh")
+	if err != nil {
+		tst.Errorf("Read failed:\n%v\n", err)
+		return
+	}
+
+	// correct data
+	nverts := 9
+	ncells := 2
+	allX := [][]float64{
+		{0.0, 0.0, 0.0},
+		{1.0, 0.0, 0.0},
+		{1.0, 1.0, 0.0},
+		{0.0, 1.0, 0.0},
+		{0.0, 0.0, 1.0},
+		{1.0, 0.0, 1.0},
+		{1.0, 0.0, 1.0},
+		{0.0, 1.0, 1.0},
+		{0.0, 2.0, 0.0},
+	}
+	allVtags := []int{0, 0, -12, 0, -14, 0, 0, 0, -18}
+	allCtags := []int{-1, -1}
+	allParts := []int{0, 0}
+	allTypes := []string{"hex8", "tet4"}
+	allV := [][]int{
+		{0, 1, 2, 3, 4, 5, 6, 7},
+		{3, 2, 8, 7},
+	}
+	allEtags := [][]int{
+		{-10, -11, -12, -13, 0, 0, 0, 0, 0, 0, -15, 0},
+		{-12, -12, -12, 0, -66, 0},
+	}
+
+	// check input data
+	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypes, allV, allEtags, nil)
+
+	// get map of tags
+	tm, err := m.GetTagMaps()
+	if err != nil {
+		tst.Errorf("GetTagMaps failed:\n%v\n", err)
+		return
+	}
+
+	// correct data
+	vtags := []int{-12, -14, -18}
+	ctags := []int{-1}
+	cparts := []int{0}
+	etags := []int{-10, -11, -12, -13, -15, -66}
+	ctypes := []string{"hex8", "tet4"}
+	vtagsVids := [][]int{{2}, {4}, {8}}
+	ctagsCids := [][]int{{0, 1}}
+	cpartsCids := [][]int{{0, 1}}
+	ctypesCids := [][]int{{0}, {1}}
+	etagsCids := [][]int{{0}, {0}, {0, 1, 1, 1}, {0}, {0}, {1}} // not unique
+	etagsLocEids := [][]int{{0}, {1}, {2, 0, 1, 2}, {3}, {10}, {4}}
+	etagsVids := [][]int{{0, 1}, {1, 2}, {2, 3, 8}, {0, 3}, {2, 6}, {2, 7}}
+
+	// check maps
+	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids)
+}
+
 func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtags, ctags, parts []int, types []string, V [][]int, etags, ftags [][]int) {
 	if len(m.Verts) != nverts {
 		tst.Errorf("nverts is incorrect: %d != %d", len(m.Verts), nverts)
