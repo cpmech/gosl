@@ -7,99 +7,121 @@ package msh
 
 import (
 	"encoding/json"
+	"sort"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 )
 
-// ThreeIds holds 3 indices (e.g. for defining edges)
-type ThreeIds struct{ A, B, C int }
-
-// FourIds holds 4 indices (e.g. for defining faces)
-type FourIds struct{ A, B, C, D int }
-
-// Edge defines an edge
-type Edge struct {
-	V []*Vertex // vertices on edge
-	C []*Cell   // cells connected to this edge
+// EdgeKey implements a key to identify edges
+type EdgeKey struct {
+	NumVerts int // number of vertices, from A to C
+	A, B, C  int // vertices
 }
 
-// Face defines a face
-type Face struct {
-	V []*Vertex // vertices on face
-	C []*Cell   // cells connected to this face
+// FaceKey implements a key to identify faces
+type FaceKey struct {
+	NumVerts   int // number of vertices, from A to D
+	A, B, C, D int // vertices
 }
 
-// EdgeSet defines a set of Edges
-type EdgeSet map[ThreeIds]*Edge
+// VertSet defines a set of vertices
+type VertSet []*Vertex
 
-// FaceSet defines a set of Faces
-type FaceSet map[FourIds]*Face
+// EdgeSet defines a set of edges
+type EdgeSet []*Edge
 
-// Vertex holds vertex data (in .msh file)
+// FaceSet defines a set of faces
+type FaceSet []*Face
+
+// CellSet defines a set of cells
+type CellSet []*Cell
+
+// EdgeSetMap defines a map of Edges
+type EdgesMap map[EdgeKey]*Edge
+
+// FaceSet defines a map of Faces
+type FacesMap map[FaceKey]*Face
+
+// Vertex holds vertex data (e.g. from msh file)
 type Vertex struct {
 
 	// input
-	Id  int       // identifier
-	Tag int       // tag
-	X   []float64 // coordinates (size==2 or 3)
+	Id  int       `json:"i"` // identifier
+	Tag int       `json:"t"` // tag
+	X   []float64 `json:"x"` // coordinates (size==2 or 3)
 
 	// auxiliary
 	Entity interface{} // any entity attached to this vertex
 
 	// derived
-	SharedByCells []*Cell   // cells sharing this vertex
-	Neighbours    []*Vertex // neighbour vertices
+	SharedByCells CellSet // cells sharing this vertex
+	Neighbours    VertSet // neighbour vertices
 }
 
 // Cell holds cell data (in .msh file)
 type Cell struct {
 
 	// input
-	Id       int    // identifier
-	Tag      int    // tag
-	Type     string // geometry type
-	Part     int    // partition id
-	V        []int  // vertices
-	EdgeTags []int  // edge tags (2D or 3D)
-	FaceTags []int  // face tags (3D only)
-	Disabled bool   // cell is disabled
+	Id       int    `json:"i"`  // identifier
+	Tag      int    `json:"t"`  // tag
+	Part     int    `json:"p"`  // partition id
+	Disabled bool   `json:"d"`  // cell is disabled
+	Type     string `json:"y"`  // geometry type
+	V        []int  `json:"v"`  // vertices
+	EdgeTags []int  `json:"et"` // edge tags (2D or 3D)
+	FaceTags []int  `json:"ft"` // face tags (3D only)
 
 	// auxiliary
 	Entity interface{} // any entity attached to this vertex
 
 	// derived
-	Edges      []*Edge // edges on this cell
-	Faces      []*Face // faces on this cell
-	Neighbours []*Cell // neighbour cells
+	Edges      EdgeSet // edges on this cell
+	Faces      FaceSet // faces on this cell
+	Neighbours CellSet // neighbour cells
 }
 
 // Mesh defines mesh data
 type Mesh struct {
 
 	// input
-	Verts []*Vertex // vertices
-	Cells []*Cell   // cells
+	Verts VertSet `json:"verts"` // vertices
+	Cells CellSet `json:"cells"` // cells
 
 	// derived
-	Edges EdgeSet // all edges
-	Faces FaceSet // all faces
+	EdgesMap EdgesMap // all edges
+	FacesMap FacesMap // all faces
 }
 
-// CellBryIdPair structure
-type CellBryIdPair struct {
+// Edge defines an edge
+type Edge struct {
+	V VertSet // vertices on edge
+	C CellSet // cells connected to this edge
+}
+
+// Face defines a face
+type Face struct {
+	V VertSet // vertices on face
+	C CellSet // cells connected to this face
+}
+
+// BryPair defines a structure to identify bryIds => cells pairs
+type BryPair struct {
 	C     *Cell // cell
 	BryId int   // edge local id (edgeId) OR face local id (faceId)
 }
 
+// BryPairSet defines a set of BryPair identifiers
+type BryPairSet []*BryPair
+
 // TagMaps holds data for finding information based on tags
 type TagMaps struct {
-	VertTag2verts  map[int][]*Vertex       // vertex tag => set of vertices
-	CellTag2cells  map[int][]*Cell         // cell tag => set of cells
-	CellType2cells map[string][]*Cell      // cell type => set of cells
-	CellPart2cells map[int][]*Cell         // partition number => set of cells
-	EdgeTag2cells  map[int][]CellBryIdPair // edge tag => set of cells {cell,boundaryId}
-	EdgeTag2verts  map[int][]*Vertex       // edge tag => vertices on tagged edge
+	VertTag2verts  map[int]VertSet    // vertex tag => set of vertices
+	CellTag2cells  map[int]CellSet    // cell tag => set of cells
+	CellType2cells map[string]CellSet // cell type => set of cells
+	CellPart2cells map[int]CellSet    // partition number => set of cells
+	EdgeTag2cells  map[int]BryPairSet // edge tag => set of cells {cell,boundaryId}
+	EdgeTag2verts  map[int]VertSet    // edge tag => vertices on tagged edge [unique]
 }
 
 // Read reads mesh
@@ -118,6 +140,59 @@ func Read(fn string) (o *Mesh, err error) {
 	err = json.Unmarshal(b, &o)
 	if err != nil {
 		return
+	}
+
+	// check
+	err = o.Check()
+	return
+}
+
+// Check checks whether input data is correct or not
+func (o *Mesh) Check() (err error) {
+
+	// check vertex data
+	for id, vert := range o.Verts {
+		if id != vert.Id {
+			err = chk.Err("vertex ids must be sequential. vertex %d must be %d", vert.Id, id)
+			return
+		}
+	}
+
+	// check cell data
+	for id, cell := range o.Cells {
+		if id != cell.Id {
+			err = chk.Err("cell ids must be sequential. cell %d must be %d", cell.Id, id)
+			return
+		}
+		if cell.Tag >= 0 {
+			err = chk.Err("cell tags must be negative. cell %d has incorrect tag %d", cell.Id, cell.Tag)
+			return
+		}
+		if _, ok := GeomNdim[cell.Type]; !ok {
+			err = chk.Err("cell type %q for cell %d is not available (in GeomNdim)", cell.Type, cell.Id)
+			return
+		}
+		if nv, ok := NumVerts[cell.Type]; !ok {
+			err = chk.Err("cell type %q for cell %d is not available (in NumVerts)", cell.Type, cell.Id)
+			return
+		} else {
+			if len(cell.V) != nv {
+				err = chk.Err("number of vertices for cell %d is incorrect. %d != %d", cell.Id, len(cell.V), nv)
+				return
+			}
+		}
+		nEtags := len(cell.EdgeTags)
+		if nEtags > 0 {
+			if lv, ok := EdgeLocalVerts[cell.Type]; !ok {
+				err = chk.Err("cell type %q for cell %d is not available (in EdgeLocalVerts)", cell.Type, cell.Id)
+				return
+			} else {
+				if nEtags != len(lv) {
+					err = chk.Err("number of edge tags for cell %d is incorrect. %d != %d", cell.Id, nEtags, len(lv))
+					return
+				}
+			}
+		}
 	}
 	return
 }
@@ -157,12 +232,12 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 
 	// new tag maps
 	m = new(TagMaps)
-	m.VertTag2verts = make(map[int][]*Vertex)
-	m.CellTag2cells = make(map[int][]*Cell)
-	m.CellType2cells = make(map[string][]*Cell)
-	m.CellPart2cells = make(map[int][]*Cell)
-	m.EdgeTag2cells = make(map[int][]CellBryIdPair)
-	m.EdgeTag2verts = make(map[int][]*Vertex)
+	m.VertTag2verts = make(map[int]VertSet)
+	m.CellTag2cells = make(map[int]CellSet)
+	m.CellType2cells = make(map[string]CellSet)
+	m.CellPart2cells = make(map[int]CellSet)
+	m.EdgeTag2cells = make(map[int]BryPairSet)
+	m.EdgeTag2verts = make(map[int]VertSet)
 
 	// loop over vertices
 	for _, vert := range o.Verts {
@@ -178,7 +253,7 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 		var ok bool
 		var geomNdim int
 		if geomNdim, ok = GeomNdim[cell.Type]; !ok {
-			err = chk.Err("cell type %q is not available in factory of shapes (in GeomNdim)")
+			err = chk.Err("cell type %q is not available in factory of shapes (in GeomNdim)", cell.Type)
 			return
 		}
 		var edgeLocVerts [][]int
@@ -203,21 +278,48 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 		m.CellType2cells[cell.Type] = append(m.CellType2cells[cell.Type], cell)
 		m.CellPart2cells[cell.Part] = append(m.CellPart2cells[cell.Part], cell)
 
-		// edge tags
+		// check edge tags
 		if len(cell.EdgeTags) > 0 {
 			if len(cell.EdgeTags) != len(edgeLocVerts) {
 				err = chk.Err("number of tags in \"edgetags\" list for cell # %d is incorrect", cell.Id)
 				return
 			}
 		}
+
+		// loop over each tag attached to a side of the cell
 		for edgeId, edgeTag := range cell.EdgeTags {
+
+			// there is a tag (i.e. it's negative)
 			if edgeTag < 0 {
-				m.EdgeTag2cells[edgeTag] = append(m.EdgeTag2cells[edgeTag], CellBryIdPair{cell, edgeId})
+
+				// set edgeTag => cells map
+				m.EdgeTag2cells[edgeTag] = append(m.EdgeTag2cells[edgeTag], &BryPair{cell, edgeId})
+
+				// loop over local edges of cell
 				for _, locVid := range edgeLocVerts[edgeId] {
-					vid := cell.V[locVid]
-					vert := o.Verts[vid]
+
+					// find vertex
+					vid := cell.V[locVid] // local vertex id => global vertex id (vid)
+					vert := o.Verts[vid]  // pointer to vertex
+
+					// find whether this edgeTag is present in the map or not
 					if vertsOnEdge, ok := m.EdgeTag2verts[edgeTag]; ok {
-						m.EdgeTag2verts[edgeTag] = append(vertsOnEdge, vert)
+
+						// find whether this vertex is in the slice attached to edgeTag or not
+						found := false
+						for _, v := range vertsOnEdge {
+							if vert.Id == v.Id {
+								found = true
+								break
+							}
+						}
+
+						// add vertex to (unique) slice attached to edgeTag
+						if !found {
+							m.EdgeTag2verts[edgeTag] = append(vertsOnEdge, vert)
+						}
+
+						// edgeTag is not in the map => create new slice with the first vertex in it
 					} else {
 						m.EdgeTag2verts[edgeTag] = []*Vertex{vert}
 					}
@@ -226,89 +328,13 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 		}
 
 		// face tags
-		//for faceId, faceTag := range cell.FaceTags {
-		//if faceTag < 0 {
-		//io.Pforan("locVid=%d faceTag=%d\n", locVid, faceTag)
-		//_ = faceLocVerts
-		//}
-		//}
 		_ = faceLocVerts
-		/*
-			// set cells sharing this vertex
-			for _, vid := range c.V {
-				if utl.IntIndexSmall(o.Verts[vid].C, c.Id) < 0 {
-					o.Verts[vid].C = append(o.Verts[vid].C, c.Id)
-				}
-			}
-
-			// edges
-			for _, L := range c.EdgeLocalVerts {
-				key := Three{-1, c.V[L[0]], c.V[L[1]]}
-				if len(L) > 2 {
-					key.A = c.V[L[2]]
-				}
-				utl.IntSort3(&key.A, &key.B, &key.C)
-				if e, ok := o.Edges[key]; ok {
-					if utl.IntIndexSmall(e.C, c.Id) < 0 {
-						e.C = append(e.C, c.Id)
-					}
-				} else {
-					verts := []int{c.V[L[0]], c.V[L[1]]}
-					if len(L) > 2 {
-						verts = append(verts, c.V[L[2]])
-					}
-					o.Edges[key] = &Edge{verts, []int{c.Id}}
-				}
-			}
-		*/
 	}
 
-	/*
-		// remove duplicates
-		for tag, verts := range o.EdgeTag2verts {
-			o.EdgeTag2verts[tag] = utl.IntUnique(verts)
-		}
-		return
-	*/
+	// sort entries in EdgeTag2verts
+	for edgeTag, vertsOnEdge := range m.EdgeTag2verts {
+		sort.Sort(vertsOnEdge)
+		m.EdgeTag2verts[edgeTag] = vertsOnEdge
+	}
 	return
 }
-
-/*
-// Draw2d draws 2D mesh
-//  lwds -- linewidths: maps cid => lwd. Use <nil> for default lwd
-func (o *Mesh) Draw2d(vids, setup bool, lwds map[int]float64, fmt *plt.Fmt) {
-
-	// format
-	if fmt == nil {
-		fmt = &plt.Fmt{C: "k", M: ".", Ms: 1}
-	}
-	args := fmt.GetArgs("") + ",clip_on=0"
-
-	// loop over edges
-	for _, e := range o.Edges {
-		X := make([]float64, len(e.V))
-		Y := make([]float64, len(e.V))
-		X[0] = o.Verts[e.V[0]].X[0]
-		Y[0] = o.Verts[e.V[0]].X[1]
-		for j, v := range e.V[1:] {
-			X[1+j] = o.Verts[v].X[0]
-			Y[1+j] = o.Verts[v].X[1]
-		}
-		plt.Plot(X, Y, args)
-	}
-
-	// vertex ids
-	if vids {
-		for _, v := range o.Verts {
-			plt.Text(v.X[0], v.X[1], io.Sf("%d", v.Id), "")
-		}
-	}
-
-	// set up
-	if setup {
-		plt.Equal()
-		plt.AxisRange(o.Xmin, o.Xmax, o.Ymin, o.Ymax)
-		plt.AxisOff()
-	}
-}
-*/

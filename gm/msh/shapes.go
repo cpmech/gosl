@@ -8,7 +8,7 @@ package msh
 type ShapeFunction func(S []float64, dSdR [][]float64, R []float64, derivs bool)
 
 var (
-	NumVertices    map[string]int         // number of vertices on shape
+	NumVerts       map[string]int         // number of vertices on shape
 	GeomNdim       map[string]int         // geometry number of space dimensions
 	EdgeLocalVerts map[string][][]int     // local indices of vertices on edges of shape
 	FaceLocalVerts map[string][][]int     // local indices of vertices on faces of shape
@@ -19,7 +19,7 @@ var Functions = make(map[string]ShapeFunction) // shape functions and derivative
 
 func init() {
 
-	NumVertices = map[string]int{
+	NumVerts = map[string]int{
 		"lin2":  2,
 		"lin3":  3,
 		"lin4":  4,

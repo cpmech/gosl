@@ -53,7 +53,7 @@ func checkShape(tst *testing.T, shape string, tol float64, verbose bool) {
 	// information
 	fcn := Functions[shape]
 	ndim := GeomNdim[shape]
-	nverts := NumVertices[shape]
+	nverts := NumVerts[shape]
 	coords := NatCoords[shape]
 
 	// allocate slices
@@ -105,7 +105,7 @@ func checkDerivs(tst *testing.T, shape string, r []float64, tol float64, verbose
 	// information
 	fcn := Functions[shape]
 	ndim := GeomNdim[shape]
-	nverts := NumVertices[shape]
+	nverts := NumVerts[shape]
 
 	// allocate slices
 	S := make([]float64, nverts)
