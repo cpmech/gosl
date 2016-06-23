@@ -33,6 +33,16 @@ func String(tst *testing.T, str, correct string) {
 	PrintOk(fmt.Sprintf("%s == %s", str, correct))
 }
 
+// Int compares two ints
+func Int(tst *testing.T, val, correct int) {
+	if val != correct {
+		fmt.Printf("[1;31merror %s != %d[0m\n", val, correct)
+		tst.Errorf("[1;31mstring failed with: %d != %d[0m", val, correct)
+		return
+	}
+	PrintOk(fmt.Sprintf("%d == %d", val, correct))
+}
+
 // Ints compares two slices of integers
 func Ints(tst *testing.T, msg string, a, b []int) {
 	if len(a) != len(b) {
