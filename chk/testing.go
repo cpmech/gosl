@@ -34,13 +34,13 @@ func String(tst *testing.T, str, correct string) {
 }
 
 // Int compares two ints
-func Int(tst *testing.T, val, correct int) {
+func Int(tst *testing.T, msg string, val, correct int) {
 	if val != correct {
-		fmt.Printf("[1;31merror %s != %d[0m\n", val, correct)
-		tst.Errorf("[1;31mstring failed with: %d != %d[0m", val, correct)
+		fmt.Printf("[1;31m%s: error %d != %d[0m\n", msg, val, correct)
+		tst.Errorf("[1;31m%s failed with: %d != %d[0m", msg, val, correct)
 		return
 	}
-	PrintOk(fmt.Sprintf("%d == %d", val, correct))
+	PrintOk(fmt.Sprintf("%s: %d == %d", msg, val, correct))
 }
 
 // Ints compares two slices of integers
