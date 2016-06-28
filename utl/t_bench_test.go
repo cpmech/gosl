@@ -1,4 +1,4 @@
-// Copyright 2012 Dorival de Moraes Pedroso. All rights reserved.
+// Copyright 2016 The Gosl Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -31,8 +31,8 @@ func init() {
 		___benchmarking_strindexsmall___[i] = answers[j]
 		___benchmarking_strindexmap___[io.Sf("%s_%d", answers[j], i)] = i
 		if i == m {
-			___benchmarking_strindexsmall___[i] = "dorival"
-			___benchmarking_strindexmap___["dorival"] = i
+			___benchmarking_strindexsmall___[i] = "user"
+			___benchmarking_strindexmap___["user"] = i
 		}
 	}
 	//io.Pforan("%v\n", ___benchmarking_strindexsmall___)
@@ -42,7 +42,7 @@ func init() {
 func BenchmarkStrIndexSmall(b *testing.B) {
 	var idx int
 	for i := 0; i < b.N; i++ {
-		idx = StrIndexSmall(___benchmarking_strindexsmall___, "dorival")
+		idx = StrIndexSmall(___benchmarking_strindexsmall___, "user")
 	}
 	___benchmarking_result___ = idx
 }
@@ -50,7 +50,7 @@ func BenchmarkStrIndexSmall(b *testing.B) {
 func BenchmarkStrIndexMap(b *testing.B) {
 	var idx int
 	for i := 0; i < b.N; i++ {
-		idx = ___benchmarking_strindexmap___["dorival"]
+		idx = ___benchmarking_strindexmap___["user"]
 	}
 	___benchmarking_result___ = idx
 }

@@ -1,4 +1,4 @@
-// Copyright 2012 Dorival de Moraes Pedroso. All rights reserved.
+// Copyright 2016 The Gosl Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -19,19 +19,19 @@ func Test_fileIO1(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("fileIO1")
 
-	fn := "test/dorival/file.sim"
+	fn := "test/user/file.sim"
 	chk.String(tst, "file.sim", filepath.Base(fn))
 	chk.String(tst, ".sim", filepath.Ext(fn))
 	chk.String(tst, "file", FnKey(fn))
 	chk.String(tst, ".sim", FnExt(fn))
-	chk.String(tst, "test/dorival/file", PathKey(fn))
+	chk.String(tst, "test/user/file", PathKey(fn))
 
-	gn := "test/dorival/file.h5"
+	gn := "test/user/file.h5"
 	chk.String(tst, "file.h5", filepath.Base(gn))
 	chk.String(tst, ".h5", filepath.Ext(gn))
 	chk.String(tst, "file", FnKey(gn))
 	chk.String(tst, ".h5", FnExt(gn))
-	chk.String(tst, "test/dorival/file", PathKey(gn))
+	chk.String(tst, "test/user/file", PathKey(gn))
 
 	Pf("\n")
 	Pf("fn   = %s\n", fn)
@@ -40,11 +40,11 @@ func Test_fileIO1(tst *testing.T) {
 	Pf("fnk  = %s\n", FnKey(fn))
 	Pf("\n")
 
-	fn = "test/dorival/file"
+	fn = "test/user/file"
 	chk.String(tst, "file", filepath.Base(fn))
 	chk.String(tst, "", filepath.Ext(fn))
 	chk.String(tst, "file", FnKey(fn))
-	chk.String(tst, "test/dorival/file", PathKey(fn))
+	chk.String(tst, "test/user/file", PathKey(fn))
 
 	Pf("\n")
 	Pf("fn   = %s\n", fn)
@@ -53,11 +53,11 @@ func Test_fileIO1(tst *testing.T) {
 	Pf("fnk  = %s\n", FnKey(fn))
 	Pf("\n")
 
-	fn = "test/dorival/file."
+	fn = "test/user/file."
 	chk.String(tst, "file.", filepath.Base(fn))
 	chk.String(tst, ".", filepath.Ext(fn))
 	chk.String(tst, "file", FnKey(fn))
-	chk.String(tst, "test/dorival/file", PathKey(fn))
+	chk.String(tst, "test/user/file", PathKey(fn))
 
 	Pf("\n")
 	Pf("fn   = %s\n", fn)
@@ -66,11 +66,11 @@ func Test_fileIO1(tst *testing.T) {
 	Pf("fnk  = %s\n", FnKey(fn))
 	Pf("\n")
 
-	fn = "test/dorival/f.extension"
+	fn = "test/user/f.extension"
 	chk.String(tst, "f.extension", filepath.Base(fn))
 	chk.String(tst, ".extension", filepath.Ext(fn))
 	chk.String(tst, "f", FnKey(fn))
-	chk.String(tst, "test/dorival/f", PathKey(fn))
+	chk.String(tst, "test/user/f", PathKey(fn))
 
 	Pf("\n")
 	Pf("fn   = %s\n", fn)
