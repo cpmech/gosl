@@ -1,0 +1,11 @@
+--- /home/dorival/pkg/metis-5.1.0/include/metis.h.ori	2014-11-11 12:33:21.884548374 +1000
++++ /home/dorival/pkg/metis-5.1.0/include/metis.h	2014-11-11 12:33:31.132787932 +1000
+@@ -40,7 +40,7 @@
+    32 : single precission floating point (float)
+    64 : double precission floating point (double)
+ --------------------------------------------------------------------------*/
+-#define REALTYPEWIDTH 32
++#define REALTYPEWIDTH 64
+ 
+ 
+ 

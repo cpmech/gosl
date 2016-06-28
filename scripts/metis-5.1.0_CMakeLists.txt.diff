@@ -1,0 +1,13 @@
+--- CMakeLists.txt.ori	2014-11-11 13:55:41.245283831 +1000
++++ CMakeLists.txt	2014-11-11 13:56:43.058925853 +1000
+@@ -1,8 +1,8 @@
+ cmake_minimum_required(VERSION 2.8)
+ project(METIS)
+ 
+-set(GKLIB_PATH "GKlib" CACHE PATH "path to GKlib")
+-set(SHARED FALSE CACHE BOOL "build a shared library")
++set(GKLIB_PATH "${CMAKE_SOURCE_DIR}/GKlib" CACHE PATH "path to GKlib")
++set(SHARED TRUE CACHE BOOL "build a shared library")
+ 
+ if(MSVC)
+   set(METIS_INSTALL FALSE)
