@@ -8,6 +8,315 @@
 </head>
 <body>
 <div id="page"><h1>Gosl &ndash; <b>gm/rw</b> &ndash; mesh generation: read/write</h1>
+use 'godoc cmd/github.com/cpmech/gosl/gm/rw' for documentation on the github.com/cpmech/gosl/gm/rw command 
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/gm/rw"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+package rw implements reader and writers for geometry files such
+as the STEP file format
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="#B_spline_curve_with_knots">type B_spline_curve_with_knots</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cartesian_point">type Cartesian_point</a></dd>
+				
+				
+			
+				
+				<dd><a href="#STEP">type STEP</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#STEP.ParseDATA">func (o *STEP) ParseDATA(dat string) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Surface_curve">type Surface_curve</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/cpmech/gosl/gm/rw/auxiliary.go">auxiliary.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/rw/io.go">io.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/gm/rw/step.go">step.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="B_spline_curve_with_knots">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=333:623#L9">B_spline_curve_with_knots</a>
+				<a class="permalink" href="#B_spline_curve_with_knots">&#xb6;</a>
+			</h2>
+			<pre>type B_spline_curve_with_knots struct {
+    Name                <a href="/pkg/builtin/#string">string</a>
+    Degree              <a href="/pkg/builtin/#int">int</a>
+    Control_points_list []<a href="/pkg/builtin/#string">string</a>
+    Curve_form          <a href="/pkg/builtin/#string">string</a>
+    Closed_curve        <a href="/pkg/builtin/#bool">bool</a>
+    Self_intersect      <a href="/pkg/builtin/#bool">bool</a>
+    Knot_multiplicities []<a href="/pkg/builtin/#int">int</a>
+    Knots               []<a href="/pkg/builtin/#float64">float64</a>
+    Knot_spec           <a href="/pkg/builtin/#string">string</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cartesian_point">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=257:331#L4">Cartesian_point</a>
+				<a class="permalink" href="#Cartesian_point">&#xb6;</a>
+			</h2>
+			<pre>type Cartesian_point struct {
+    Name        <a href="/pkg/builtin/#string">string</a>
+    Coordinates []<a href="/pkg/builtin/#float64">float64</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="STEP">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=778:920#L28">STEP</a>
+				<a class="permalink" href="#STEP">&#xb6;</a>
+			</h2>
+			<pre>type STEP struct {
+    Points   map[<a href="/pkg/builtin/#string">string</a>]*<a href="#Cartesian_point">Cartesian_point</a>
+    BScurves map[<a href="/pkg/builtin/#string">string</a>]*<a href="#B_spline_curve_with_knots">B_spline_curve_with_knots</a>
+    Scurves  map[<a href="/pkg/builtin/#string">string</a>]*<a href="#Surface_curve">Surface_curve</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="STEP.ParseDATA">func (*STEP) <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=922:970#L34">ParseDATA</a>
+					<a class="permalink" href="#STEP.ParseDATA">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#STEP">STEP</a>) ParseDATA(dat <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Surface_curve">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=625:776#L21">Surface_curve</a>
+				<a class="permalink" href="#Surface_curve">&#xb6;</a>
+			</h2>
+			<pre>type Surface_curve struct {
+    Name                  <a href="/pkg/builtin/#string">string</a>
+    Curve_3d              <a href="/pkg/builtin/#string">string</a>
+    Associated_geometry   []<a href="/pkg/builtin/#string">string</a>
+    Master_representation <a href="/pkg/builtin/#string">string</a>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="..">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="data/">data</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
 </div><!-- page -->
 <div id="footer">
 <br /><br />

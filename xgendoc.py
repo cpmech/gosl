@@ -72,14 +72,16 @@ def pkgheader(pkg):
     return header('Gosl &ndash; package '+pkg[0]) + '<h1>Gosl &ndash; <b>%s</b> &ndash; %s</h1>' % (pkg[0], pkg[1])
 
 def pkgitem(pkg):
-    return '<dd><a href=\\"xx%s.html\\"><b>%s</b>: %s</a></dd>' % (pkg[0], pkg[0], pkg[1])
+    fnk = pkg[0].replace("/","-")
+    return '<dd><a href=\\"xx%s.html\\"><b>%s</b>: %s</a></dd>' % (fnk, pkg[0], pkg[1])
 
 Cmd('echo "'+header('Gosl &ndash; Documentation')+'" > '+idxfn)
 Cmd('echo "<h1>Gosl &ndash; Documentation</h1>" >> '+idxfn)
 Cmd('echo "<h2 id=\\"pkg-index\\">Index</h2>\n<div id=\\"manual-nav\\">\n<dl>" >> '+idxfn)
 
 for pkg in pkgs:
-    fn = odir+'xx'+pkg[0].replace("/","-")+'.html'
+    fnk = pkg[0].replace("/","-")
+    fn = odir+'xx'+fnk+'.html'
     Cmd('echo "'+pkgheader(pkg)+'" > '+fn)
     Cmd('godoc -html github.com/cpmech/gosl/'+pkg[0]+' >> '+fn)
     Cmd('echo "'+footer()+'" >> '+fn)

@@ -8,6 +8,1312 @@
 </head>
 <body>
 <div id="page"><h1>Gosl &ndash; <b>num</b> &ndash; numerical methods</h1>
+use 'godoc cmd/github.com/cpmech/gosl/num' for documentation on the github.com/cpmech/gosl/num command 
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/num"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
+			
+			
+				
+				<dd><a href="#CompareJac">func CompareJac(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64)</a></dd>
+			
+				
+				<dd><a href="#CompareJacMpi">func CompareJacMpi(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64, distr bool)</a></dd>
+			
+				
+				<dd><a href="#DerivBackward">func DerivBackward(f Cb_fx, x, h float64, args ...interface{}) (result, abserr float64)</a></dd>
+			
+				
+				<dd><a href="#DerivBwd">func DerivBwd(f Cb_fx, x float64, args ...interface{}) float64</a></dd>
+			
+				
+				<dd><a href="#DerivCen">func DerivCen(f Cb_fx, x float64, args ...interface{}) float64</a></dd>
+			
+				
+				<dd><a href="#DerivCentral">func DerivCentral(f Cb_fx, x, h float64, args ...interface{}) (result, abserr float64)</a></dd>
+			
+				
+				<dd><a href="#DerivForward">func DerivForward(f Cb_fx, x, h float64, args ...interface{}) (result, abserr float64)</a></dd>
+			
+				
+				<dd><a href="#DerivFwd">func DerivFwd(f Cb_fx, x float64, args ...interface{}) float64</a></dd>
+			
+				
+				<dd><a href="#DerivRange">func DerivRange(f Cb_fx, x, xmin, xmax float64, args ...interface{}) float64</a></dd>
+			
+				
+				<dd><a href="#EqCubicSolveReal">func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int)</a></dd>
+			
+				
+				<dd><a href="#Jacobian">func Jacobian(J *la.Triplet, ffcn Cb_f, x, fx, w []float64) (err error)</a></dd>
+			
+				
+				<dd><a href="#JacobianMpi">func JacobianMpi(J *la.Triplet, ffcn Cb_f, x, fx, w []float64, distr bool) (err error)</a></dd>
+			
+				
+				<dd><a href="#LineSearch">func LineSearch(x, fx []float64, ffcn Cb_f, dx, x0, dφdx0 []float64, φ0 float64, max_it int, dx_is_mdx bool) (nFeval int, err error)</a></dd>
+			
+				
+				<dd><a href="#MinComp">func MinComp(tol, expected float64) float64</a></dd>
+			
+				
+				<dd><a href="#PlotYxe">func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error)</a></dd>
+			
+				
+				<dd><a href="#Simps2D">func Simps2D(dx, dy float64, f [][]float64) (V float64)</a></dd>
+			
+				
+				<dd><a href="#Simpson">func Simpson(f Fun0, a, b float64, n int) (float64, error)</a></dd>
+			
+				
+				<dd><a href="#TestAbs">func TestAbs(result, expected, absolute_error float64, test_description string) (status int)</a></dd>
+			
+				
+				<dd><a href="#Trapz">func Trapz(x, y []float64) (A float64)</a></dd>
+			
+				
+				<dd><a href="#Trapz2D">func Trapz2D(dx, dy float64, f [][]float64) (V float64)</a></dd>
+			
+				
+				<dd><a href="#TrapzF">func TrapzF(x []float64, y Cb_yx) (A float64)</a></dd>
+			
+				
+				<dd><a href="#TrapzRange">func TrapzRange(xa, xb float64, npts int, y Cb_yx) (A float64)</a></dd>
+			
+			
+				
+				<dd><a href="#Brent">type Brent</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Brent.Init">func (o *Brent) Init(ffcn Cb_yxe)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Brent.Min">func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Brent.Solve">func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Cb_J">type Cb_J</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_Jd">type Cb_Jd</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_f">type Cb_f</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_fx">type Cb_fx</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_out">type Cb_out</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_yx">type Cb_yx</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Cb_yxe">type Cb_yxe</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Fun0">type Fun0</a></dd>
+				
+				
+			
+				
+				<dd><a href="#NlSolver">type NlSolver</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.CheckJ">func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd float64, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.Clean">func (o *NlSolver) Clean()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.Init">func (o *NlSolver) Init(neq int, Ffcn Cb_f, JfcnSp Cb_J, JfcnDn Cb_Jd, useDn, numJ bool, prms map[string]float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.SetTols">func (o *NlSolver) SetTols(Atol, Rtol, Ftol, ϵ float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.Solve">func (o *NlSolver) Solve(x []float64, silent bool) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Quadrature">type Quadrature</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Simp">type Simp</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Simp.Init">func (o *Simp) Init(f fcn, a, b, eps float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Simp.Integrate">func (o *Simp) Integrate() (float64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Simp.Next">func (o *Simp) Next() float64</a></dd>
+				
+			
+				
+				<dd><a href="#Trap">type Trap</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Trap.Init">func (o *Trap) Init(f fcn, a, b, eps float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Trap.Integrate">func (o *Trap) Integrate() (float64, error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Trap.Next">func (o *Trap) Next() float64</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/github.com/cpmech/gosl/num/auxiliary.go">auxiliary.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/brent.go">brent.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/cubicequation.go">cubicequation.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/defs.go">defs.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/deriv.go">deriv.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/integration.go">integration.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/jacobian.go">jacobian.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/jacobian_mpi.go">jacobian_mpi.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/linesearch.go">linesearch.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/nlsolver.go">nlsolver.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/quadrature.go">quadrature.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/num/simpson.go">simpson.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="DBL_EPSILON">DBL_EPSILON</span> = 1.0e-15
+    <span id="DBL_MIN">DBL_MIN</span>     = <a href="/pkg/math/">math</a>.<a href="/pkg/math/#SmallestNonzeroFloat64">SmallestNonzeroFloat64</a>
+)</pre>
+				
+			
+				<pre>const (
+    <span id="NaN">NaN</span> = <a href="/pkg/builtin/#iota">iota</a>
+    <span id="Inf">Inf</span>
+    <span id="Equal">Equal</span>
+    <span id="NotEqual">NotEqual</span>
+)</pre>
+				
+			
+				<pre>const (
+    <span id="EPS">EPS</span>  = 1e-16 <span class="comment">// smallest number satisfying 1.0 + EPS &gt; 1.0</span>
+    <span id="CTE1">CTE1</span> = 1e-5  <span class="comment">// a minimum value to be used in Jacobian</span>
+)</pre>
+				<p>
+constants
+</p>
+
+			
+		
+		
+		
+			
+			
+			<h2 id="CompareJac">func <a href="https://github.com/cpmech/gosl/blob/master/num/jacobian.go?s=1342:1421#L44">CompareJac</a>
+				<a class="permalink" href="#CompareJac">&#xb6;</a>
+			</h2>
+			<pre>func CompareJac(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, ffcn <a href="#Cb_f">Cb_f</a>, Jfcn <a href="#Cb_J">Cb_J</a>, x []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+CompareJac compares Jacobian matrix (e.g. for testing)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CompareJacMpi">func <a href="https://github.com/cpmech/gosl/blob/master/num/jacobian_mpi.go?s=1914:2008#L60">CompareJacMpi</a>
+				<a class="permalink" href="#CompareJacMpi">&#xb6;</a>
+			</h2>
+			<pre>func CompareJacMpi(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, ffcn <a href="#Cb_f">Cb_f</a>, Jfcn <a href="#Cb_J">Cb_J</a>, x []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, distr <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<p>
+CompareJacMpi compares Jacobian matrix (e.g. for testing)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DerivBackward">func <a href="https://github.com/cpmech/gosl/blob/master/num/deriv.go?s=5231:5318#L147">DerivBackward</a>
+				<a class="permalink" href="#DerivBackward">&#xb6;</a>
+			</h2>
+			<pre>func DerivBackward(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DerivBwd">func <a href="https://github.com/cpmech/gosl/blob/master/num/deriv.go?s=565:627#L6">DerivBwd</a>
+				<a class="permalink" href="#DerivBwd">&#xb6;</a>
+			</h2>
+			<pre>func DerivBwd(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DerivBwd employs a 1st order backward difference to approximate the derivative of f(x) w.r.t x @ x
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DerivCen">func <a href="https://github.com/cpmech/gosl/blob/master/num/deriv.go?s=782:844#L12">DerivCen</a>
+				<a class="permalink" href="#DerivCen">&#xb6;</a>
+			</h2>
+			<pre>func DerivCen(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DerivCen uses a central difference method
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DerivCentral">func <a href="https://github.com/cpmech/gosl/blob/master/num/deriv.go?s=2462:2548#L61">DerivCentral</a>
+				<a class="permalink" href="#DerivCentral">&#xb6;</a>
+			</h2>
+			<pre>func DerivCentral(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DerivForward">func <a href="https://github.com/cpmech/gosl/blob/master/num/deriv.go?s=4421:4507#L119">DerivForward</a>
+				<a class="permalink" href="#DerivForward">&#xb6;</a>
+			</h2>
+			<pre>func DerivForward(f <a href="#Cb_fx">Cb_fx</a>, x, h <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (result, abserr <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="DerivFwd">func <a href="https://github.com/cpmech/gosl/blob/master/num/deriv.go?s=291:353#L1">DerivFwd</a>
+				<a class="permalink" href="#DerivFwd">&#xb6;</a>
+			</h2>
+			<pre>func DerivFwd(f <a href="#Cb_fx">Cb_fx</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DerivFwd employs a 1st order forward difference to approximate the derivative of f(x) w.r.t x @ x
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DerivRange">func <a href="https://github.com/cpmech/gosl/blob/master/num/deriv.go?s=996:1072#L18">DerivRange</a>
+				<a class="permalink" href="#DerivRange">&#xb6;</a>
+			</h2>
+			<pre>func DerivRange(f <a href="#Cb_fx">Cb_fx</a>, x, xmin, xmax <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+DerivRange chooses fwd, bwd or cen according to whether x is near the boundary or not
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="EqCubicSolveReal">func <a href="https://github.com/cpmech/gosl/blob/master/num/cubicequation.go?s=574:641#L9">EqCubicSolveReal</a>
+				<a class="permalink" href="#EqCubicSolveReal">&#xb6;</a>
+			</h2>
+			<pre>func EqCubicSolveReal(a, b, c <a href="/pkg/builtin/#float64">float64</a>) (x1, x2, x3 <a href="/pkg/builtin/#float64">float64</a>, nx <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+EqCubicSolveReal solves a cubic equation, ignoring the complex answers.
+</p>
+<pre>The equation is specified by:
+ x³ + a x² + b x + c = 0
+Notes:
+ 1) every cubic equation with real coefficients has at least one solution
+    x among the real numbers
+ 2) from Numerical Recipes 2007, page 228
+Output:
+ x[i] -- roots
+ nx   -- number of real roots: 1, 2 or 3
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Jacobian">func <a href="https://github.com/cpmech/gosl/blob/master/num/jacobian.go?s=752:823#L18">Jacobian</a>
+				<a class="permalink" href="#Jacobian">&#xb6;</a>
+			</h2>
+			<pre>func Jacobian(J *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, ffcn <a href="#Cb_f">Cb_f</a>, x, fx, w []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Jacobian computes Jacobian (sparse) matrix
+</p>
+<pre>    Calculates (with N=n-1):
+        df0dx0, df0dx1, df0dx2, ... df0dxN
+        df1dx0, df1dx1, df1dx2, ... df1dxN
+             . . . . . . . . . . . . .
+        dfNdx0, dfNdx1, dfNdx2, ... dfNdxN
+INPUT:
+    ffcn : f(x) function
+    x    : station where dfdx has to be calculated
+    fx   : f @ x
+    w    : workspace with size == n == len(x)
+RETURNS:
+    J : dfdx @ x [must be pre-allocated]
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="JacobianMpi">func <a href="https://github.com/cpmech/gosl/blob/master/num/jacobian_mpi.go?s=810:896#L21">JacobianMpi</a>
+				<a class="permalink" href="#JacobianMpi">&#xb6;</a>
+			</h2>
+			<pre>func JacobianMpi(J *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, ffcn <a href="#Cb_f">Cb_f</a>, x, fx, w []<a href="/pkg/builtin/#float64">float64</a>, distr <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Jacobian computes Jacobian (sparse) matrix
+</p>
+<pre>    Calculates (with N=n-1):
+        df0dx0, df0dx1, df0dx2, ... df0dxN
+        df1dx0, df1dx1, df1dx2, ... df1dxN
+             . . . . . . . . . . . . .
+        dfNdx0, dfNdx1, dfNdx2, ... dfNdxN
+INPUT:
+    ffcn : f(x) function
+    x    : station where dfdx has to be calculated
+    fx   : f @ x
+    w    : workspace with size == n == len(x)
+RETURNS:
+    J : dfdx @ x [must be pre-allocated]
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="LineSearch">func <a href="https://github.com/cpmech/gosl/blob/master/num/linesearch.go?s=1223:1357#L25">LineSearch</a>
+				<a class="permalink" href="#LineSearch">&#xb6;</a>
+			</h2>
+			<pre>func LineSearch(x, fx []<a href="/pkg/builtin/#float64">float64</a>, ffcn <a href="#Cb_f">Cb_f</a>, dx, x0, dφdx0 []<a href="/pkg/builtin/#float64">float64</a>, φ0 <a href="/pkg/builtin/#float64">float64</a>, max_it <a href="/pkg/builtin/#int">int</a>, dx_is_mdx <a href="/pkg/builtin/#bool">bool</a>) (nFeval <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+LineSearch finds a new point x along the direction dx, from x0, where the function
+has decreased sufficiently. The new function value is returned in fx
+</p>
+<pre>Input:
+    ffcn      -- f(x) callback
+    dx        -- direction vector
+    x0        -- initial x
+    dφdx0     -- initial dφdx0 = fx * dfdx
+    φ0        -- initial φ = 0.5 * dot(fx,fx)
+    max_it    -- max number of iterations
+    dx_is_mdx -- whether dx is actually -dx ==&gt; IMPORTANT: dx will then be changed dx := -dx
+Output:
+    x      -- updated x (along dx)
+    fx     -- updated f(x)
+    φ0     -- updated φ = 0.5 * dot(fx,fx)
+    dx     -- changed to -dx if dx_is_mdx == true
+    nFeval -- number of calls to f(x)
+Local constants:
+    tol_gra_min -- tolerance to consider local minimum
+    mul_dx_max  -- multiplier to control maximum dx
+    slope_max   -- ~0 but &lt; 0
+    α           -- Armijo coefficient
+    ε           -- machine epsilon
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MinComp">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1132:1175#L53">MinComp</a>
+				<a class="permalink" href="#MinComp">&#xb6;</a>
+			</h2>
+			<pre>func MinComp(tol, expected <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="PlotYxe">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=470:612#L19">PlotYxe</a>
+				<a class="permalink" href="#PlotYxe">&#xb6;</a>
+			</h2>
+			<pre>func PlotYxe(ffcn <a href="#Cb_yxe">Cb_yxe</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, xsol, xa, xb <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xsolLbl, args <a href="/pkg/builtin/#string">string</a>, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func()) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+PlotYxe plots the function y(x) implemented by Cb_yxe
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Simps2D">func <a href="https://github.com/cpmech/gosl/blob/master/num/integration.go?s=2230:2285#L71">Simps2D</a>
+				<a class="permalink" href="#Simps2D">&#xb6;</a>
+			</h2>
+			<pre>func Simps2D(dx, dy <a href="/pkg/builtin/#float64">float64</a>, f [][]<a href="/pkg/builtin/#float64">float64</a>) (V <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Simps2D computes a double integral over the x-y plane (Simpson&#39;s rule); thus resulting on
+the volume defined between the function f(x,y) and the plane ortogonal to z
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Simpson">func <a href="https://github.com/cpmech/gosl/blob/master/num/simpson.go?s=351:409#L3">Simpson</a>
+				<a class="permalink" href="#Simpson">&#xb6;</a>
+			</h2>
+			<pre>func Simpson(f <a href="#Fun0">Fun0</a>, a, b <a href="/pkg/builtin/#float64">float64</a>, n <a href="/pkg/builtin/#int">int</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Simpson integrates function f from x=a to x=b using n subintervals (n must be even)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TestAbs">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1232:1324#L57">TestAbs</a>
+				<a class="permalink" href="#TestAbs">&#xb6;</a>
+			</h2>
+			<pre>func TestAbs(result, expected, absolute_error <a href="/pkg/builtin/#float64">float64</a>, test_description <a href="/pkg/builtin/#string">string</a>) (status <a href="/pkg/builtin/#int">int</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="Trapz">func <a href="https://github.com/cpmech/gosl/blob/master/num/integration.go?s=342:380#L1">Trapz</a>
+				<a class="permalink" href="#Trapz">&#xb6;</a>
+			</h2>
+			<pre>func Trapz(x, y []<a href="/pkg/builtin/#float64">float64</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Trapz returns the area below the discrete curve defined by x and y.
+Computations are carried out with the trapezoidal rule.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Trapz2D">func <a href="https://github.com/cpmech/gosl/blob/master/num/integration.go?s=1519:1574#L38">Trapz2D</a>
+				<a class="permalink" href="#Trapz2D">&#xb6;</a>
+			</h2>
+			<pre>func Trapz2D(dx, dy <a href="/pkg/builtin/#float64">float64</a>, f [][]<a href="/pkg/builtin/#float64">float64</a>) (V <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Trapz2D computes a double integral over the x-y plane; thus resulting on
+the volume defined between the function f(x,y) and the plane ortogonal to z
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TrapzF">func <a href="https://github.com/cpmech/gosl/blob/master/num/integration.go?s=701:746#L13">TrapzF</a>
+				<a class="permalink" href="#TrapzF">&#xb6;</a>
+			</h2>
+			<pre>func TrapzF(x []<a href="/pkg/builtin/#float64">float64</a>, y <a href="#Cb_yx">Cb_yx</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+TrapzF (function callback version) returns the area below the discrete curve defined by x and y.
+Computations are carried out with the trapezoidal rule.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="TrapzRange">func <a href="https://github.com/cpmech/gosl/blob/master/num/integration.go?s=1055:1117#L22">TrapzRange</a>
+				<a class="permalink" href="#TrapzRange">&#xb6;</a>
+			</h2>
+			<pre>func TrapzRange(xa, xb <a href="/pkg/builtin/#float64">float64</a>, npts <a href="/pkg/builtin/#int">int</a>, y <a href="#Cb_yx">Cb_yx</a>) (A <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+TrapzRange (x-range and function callback version) returns the area below the discrete curve defined by x and y.
+Computations are carried out with the trapezoidal rule from xa to xb, with npts points
+</p>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Brent">type <a href="https://github.com/cpmech/gosl/blob/master/num/brent.go?s=327:645#L5">Brent</a>
+				<a class="permalink" href="#Brent">&#xb6;</a>
+			</h2>
+			<pre>type Brent struct {
+    MaxIt  <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max iterations</span>
+    Tol    <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// tolerance</span>
+    Ffcn   <a href="#Cb_yxe">Cb_yxe</a>  <span class="comment">// y = f(x) function</span>
+    NFeval <a href="/pkg/builtin/#int">int</a>     <span class="comment">// number of calls to Ffcn (function evaluations)</span>
+    It     <a href="/pkg/builtin/#int">int</a>     <span class="comment">// number of iterations from last call to Solve</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Brent implements Brent&#39;s method for finding the roots of an equation
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Brent.Init">func (*Brent) <a href="https://github.com/cpmech/gosl/blob/master/num/brent.go?s=682:715#L16">Init</a>
+					<a class="permalink" href="#Brent.Init">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Brent">Brent</a>) Init(ffcn <a href="#Cb_yxe">Cb_yxe</a>)</pre>
+				<p>
+Init intialises Brent structure
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Brent.Min">func (*Brent) <a href="https://github.com/cpmech/gosl/blob/master/num/brent.go?s=7150:7223#L209">Min</a>
+					<a class="permalink" href="#Brent.Min">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Brent">Brent</a>) Min(xa, xb <a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Min finds the minimum of f(x) in [xa, xb]
+</p>
+<pre>Based on ZEROIN C math library: <a href="http://www.netlib.org/c/">http://www.netlib.org/c/</a>
+By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
+
+ G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
+ computations. M., Mir, 1980, p.202 of the Russian edition
+
+ The function makes use of the &#34;gold section&#34; procedure combined with
+ the parabolic interpolation.
+ At every step program operates three abscissae - x,v, and w.
+ x - the last and the best approximation to the minimum location,
+     i.e. f(x) &lt;= f(a) or/and f(x) &lt;= f(b)
+     (if the function f has a local minimum in (a,b), then the both
+     conditions are fulfiled after one or two steps).
+ v,w are previous approximations to the minimum location. They may
+ coincide with a, b, or x (although the algorithm tries to make all
+ u, v, and w distinct). Points x, v, and w are used to construct
+ interpolating parabola whose minimum will be treated as a new
+ approximation to the minimum location if the former falls within
+ [a,b] and reduces the range enveloping minimum more efficient than
+ the gold section procedure.
+ When f(x) has a second derivative positive at the minimum location
+ (not coinciding with a or b) the procedure converges superlinearly
+ at a rate order about 1.324
+
+ The function always obtains a local minimum which coincides with
+ the global one only if a function under investigation being
+ unimodular. If a function being examined possesses no local minimum
+ within the given range, Fminbr returns &#39;a&#39; (if f(a) &lt; f(b)), otherwise
+ it returns the right range boundary value b.
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Brent.Solve">func (*Brent) <a href="https://github.com/cpmech/gosl/blob/master/num/brent.go?s=2267:2342#L51">Solve</a>
+					<a class="permalink" href="#Brent.Solve">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Brent">Brent</a>) Solve(xa, xb <a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Solve solves y(x) = 0 for x in [xa, xb] with f(xa) * f(xb) &lt; 0
+</p>
+<pre>Based on ZEROIN C math library: <a href="http://www.netlib.org/c/">http://www.netlib.org/c/</a>
+By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
+
+ G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
+ computations. M., Mir, 1980, p.180 of the Russian edition
+
+ The function makes use of the bissection procedure combined with
+ the linear or quadric inverse interpolation.
+ At every step program operates on three abscissae - a, b, and c.
+ b - the last and the best approximation to the root
+ a - the last but one approximation
+ c - the last but one or even earlier approximation than a that
+     1) |f(b)| &lt;= |f(c)|
+     2) f(b) and f(c) have opposite signs, i.e. b and c confine
+        the root
+ At every step Zeroin selects one of the two new approximations, the
+ former being obtained by the bissection procedure and the latter
+ resulting in the interpolation (if a,b, and c are all different
+ the quadric interpolation is utilized, otherwise the linear one).
+ If the latter (i.e. obtained by the interpolation) point is
+ reasonable (i.e. lies within the current interval [b,c] not being
+ too close to the boundaries) it is accepted. The bissection result
+ is used in the other case. Therefore, the range of uncertainty is
+ ensured to be reduced at least by the factor 1.6
+</pre>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Cb_J">type <a href="https://github.com/cpmech/gosl/blob/master/num/defs.go?s=449:500#L6">Cb_J</a>
+				<a class="permalink" href="#Cb_J">&#xb6;</a>
+			</h2>
+			<pre>type Cb_J func(dfdx *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// sparse version</span>
+</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_Jd">type <a href="https://github.com/cpmech/gosl/blob/master/num/defs.go?s=520:572#L7">Cb_Jd</a>
+				<a class="permalink" href="#Cb_Jd">&#xb6;</a>
+			</h2>
+			<pre>type Cb_Jd func(dfdx [][]<a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// dense version</span>
+</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_f">type <a href="https://github.com/cpmech/gosl/blob/master/num/defs.go?s=411:448#L5">Cb_f</a>
+				<a class="permalink" href="#Cb_f">&#xb6;</a>
+			</h2>
+			<pre>type Cb_f func(fx, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+callbacks (for systems)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_fx">type <a href="https://github.com/cpmech/gosl/blob/master/num/defs.go?s=327:382#L2">Cb_fx</a>
+				<a class="permalink" href="#Cb_fx">&#xb6;</a>
+			</h2>
+			<pre>type Cb_fx func(x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/num/defs.go?s=590:625#L8">Cb_out</a>
+				<a class="permalink" href="#Cb_out">&#xb6;</a>
+			</h2>
+			<pre>type Cb_out func(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// for output</span>
+</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_yx">type <a href="https://github.com/cpmech/gosl/blob/master/num/defs.go?s=247:281#L1">Cb_yx</a>
+				<a class="permalink" href="#Cb_yx">&#xb6;</a>
+			</h2>
+			<pre>type Cb_yx func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+callbacks (for single equations)
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Cb_yxe">type <a href="https://github.com/cpmech/gosl/blob/master/num/defs.go?s=282:326#L1">Cb_yxe</a>
+				<a class="permalink" href="#Cb_yxe">&#xb6;</a>
+			</h2>
+			<pre>type Cb_yxe func(x <a href="/pkg/builtin/#float64">float64</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Fun0">type <a href="https://github.com/cpmech/gosl/blob/master/num/simpson.go?s=231:262#L1">Fun0</a>
+				<a class="permalink" href="#Fun0">&#xb6;</a>
+			</h2>
+			<pre>type Fun0 func(<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+scalar function
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="NlSolver">type <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=284:1751#L5">NlSolver</a>
+				<a class="permalink" href="#NlSolver">&#xb6;</a>
+			</h2>
+			<pre>type NlSolver struct {
+    <span class="comment">// constants</span>
+    CteJac  <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// constant Jacobian (Modified Newton&#39;s method)</span>
+    Lsearch <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// use linear search</span>
+    LsMaxIt <a href="/pkg/builtin/#int">int</a>  <span class="comment">// linear solver maximum iterations</span>
+    MaxIt   <a href="/pkg/builtin/#int">int</a>  <span class="comment">// Newton&#39;s method maximum iterations</span>
+    ChkConv <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// check convergence</span>
+
+    <span class="comment">// callbacks</span>
+    Ffcn   <a href="#Cb_f">Cb_f</a>   <span class="comment">// f(x) function</span>
+    JfcnSp <a href="#Cb_J">Cb_J</a>   <span class="comment">// J(x)=dfdx Jacobian for sparse solver</span>
+    JfcnDn <a href="#Cb_Jd">Cb_Jd</a>  <span class="comment">// J(x)=dfdx Jacobian for dense solver</span>
+    Out    <a href="#Cb_out">Cb_out</a> <span class="comment">// for output</span>
+
+    <span class="comment">// data for Umfpack (sparse)</span>
+    Jtri <a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a> <span class="comment">// triplet</span>
+
+    <span class="comment">// data for dense solver (matrix inversion)</span>
+    J  [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// dense Jacobian matrix</span>
+    Ji [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// inverse of Jacobian matrix</span>
+
+    <span class="comment">// stat data</span>
+    It     <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of iterations from the last call to Solve</span>
+    NFeval <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of calls to Ffcn (function evaluations)</span>
+    NJeval <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of calls to Jfcn (Jacobian evaluations)</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="NlSolver.CheckJ">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=7665:7763#L321">CheckJ</a>
+					<a class="permalink" href="#NlSolver.CheckJ">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) CheckJ(x []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, chkJnum, silent <a href="/pkg/builtin/#bool">bool</a>) (cnd <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+CheckJ check Jacobian matrix
+</p>
+<pre>Ouptut: cnd -- condition number (with Frobenius norm)
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="NlSolver.Clean">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3323:3349#L121">Clean</a>
+					<a class="permalink" href="#NlSolver.Clean">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Clean()</pre>
+				<p>
+Clean performs clean ups
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NlSolver.Init">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=2010:2123#L57">Init</a>
+					<a class="permalink" href="#NlSolver.Init">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Init(neq <a href="/pkg/builtin/#int">int</a>, Ffcn <a href="#Cb_f">Cb_f</a>, JfcnSp <a href="#Cb_J">Cb_J</a>, JfcnDn <a href="#Cb_Jd">Cb_Jd</a>, useDn, numJ <a href="/pkg/builtin/#bool">bool</a>, prms map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Init initialises solver
+</p>
+<pre>Input:
+ useSp -- Use sparse solver with JfcnSp
+ useDn -- Use dense solver (matrix inversion) with JfcnDn
+ numJ  -- Use numeric Jacobian (sparse version only)
+ prms  -- atol, rtol, ftol, lSearch, lsMaxIt, maxIt
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="NlSolver.SetTols">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3415:3471#L128">SetTols</a>
+					<a class="permalink" href="#NlSolver.SetTols">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) SetTols(Atol, Rtol, Ftol, ϵ <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+SetTols set tolerances
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NlSolver.Solve">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3622:3684#L134">Solve</a>
+					<a class="permalink" href="#NlSolver.Solve">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Solve(x []<a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Solve solves non-linear problem f(x) == 0
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Quadrature">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=320:583#L6">Quadrature</a>
+				<a class="permalink" href="#Quadrature">&#xb6;</a>
+			</h2>
+			<pre>type Quadrature interface {
+    Init(f fcn, a, b, eps <a href="/pkg/builtin/#float64">float64</a>) <span class="comment">// The constructor takes as inputs fcn, the function or functor to be integrated between limits a and b, also input.</span>
+    Integrate() (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)   <span class="comment">// Returns the integral for the specified input data</span>
+}</pre>
+			<p>
+Abstract base class for elementary quadrature algorithms.
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Simp">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2116:2344#L74">Simp</a>
+				<a class="permalink" href="#Simp">&#xb6;</a>
+			</h2>
+			<pre>type Simp struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Then the Simp structure is derived from this as follows:
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Simp.Init">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2346:2391#L83">Init</a>
+					<a class="permalink" href="#Simp.Init">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Simp">Simp</a>) Init(f fcn, a, b, eps <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Simp.Integrate">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=3245:3288#L121">Integrate</a>
+					<a class="permalink" href="#Simp.Integrate">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Simp">Simp</a>) Integrate() (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Simp.Next">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2714:2743#L94">Next</a>
+					<a class="permalink" href="#Simp.Next">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Simp">Simp</a>) Next() <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Next returns the nth stage of refinement of the extended trapezoidal rule. On the first call (n=1),
+R b the routine returns the crudest estimate of a f .x/dx. Subsequent calls set n=2,3,... and
+improve the accuracy by adding 2 n-2 additional interior points.
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Trap">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=648:822#L12">Trap</a>
+				<a class="permalink" href="#Trap">&#xb6;</a>
+			</h2>
+			<pre>type Trap struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Trap structure is used for the trapezoidal integration rule
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Trap.Init">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=824:869#L20">Init</a>
+					<a class="permalink" href="#Trap.Init">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Trap">Trap</a>) Init(f fcn, a, b, eps <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Trap.Integrate">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=1723:1766#L58">Integrate</a>
+					<a class="permalink" href="#Trap.Integrate">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Trap">Trap</a>) Integrate() (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+				
+				
+				
+				
+			
+				
+				<h3 id="Trap.Next">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=1192:1221#L31">Next</a>
+					<a class="permalink" href="#Trap.Next">&#xb6;</a>
+				</h3>
+				<pre>func (o *<a href="#Trap">Trap</a>) Next() <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Next returns the nth stage of refinement of the extended trapezoidal rule. On the first call (n=1),
+R b the routine returns the crudest estimate of a f .x/dx. Subsequent calls set n=2,3,... and
+improve the accuracy by adding 2 n-2 additional interior points.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="..">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="cmp/">cmp</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
 </div><!-- page -->
 <div id="footer">
 <br /><br />
