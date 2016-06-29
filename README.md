@@ -11,22 +11,25 @@ with the development of the results presented in [1-5].
 
 ## Content
 
-1.  chk   &ndash; check and unit test
-2.  io    &ndash; input/output
-3.  utl   &ndash; utilities
-4.  plt   &ndash; plotting
-5.  mpi   &ndash; message passing interface
-6.  lla   &ndash; linear algebra
-7.  fdm   &ndash; finite differences method
-8.  num   &ndash; numerical methods
-9.  fun   &ndash; scalar functions of one scalar and one vector
-10. gm    &ndash; geometry
-11. graph &ndash; graph theory
-12. ode   &ndash; ordinary differential equations
-13. opt   &ndash; optimisation
-14. rnd   &ndash; random numbers and probability distributions
-15. tsr   &ndash; tensor algebra and definitions for continuum mechanics
-16. vtk   &ndash; visualisation tool kit
+1.  chk    &ndash; check and unit test
+2.  io     &ndash; input/output
+3.  utl    &ndash; utilities
+4.  plt    &ndash; plotting
+5.  mpi    &ndash; message passing interface
+6.  la     &ndash; linear algebra
+7.  fdm    &ndash; finite differences method
+8.  num    &ndash; numerical methods
+9.  fun    &ndash; scalar functions of one scalar and one vector
+10. gm     &ndash; geometry
+11. gm/msh &ndash; mesh generation
+12. gm/tri &ndash; mesh generation: triangles
+13. gm/rw  &ndash; mesh generation: read/write
+14. graph  &ndash; graph theory
+15. ode    &ndash; ordinary differential equations
+16. opt    &ndash; optimisation
+17. rnd    &ndash; random numbers and probability distributions
+18. tsr    &ndash; tensor algebra and definitions for continuum mechanics
+19. vtk    &ndash; visualisation tool kit
 
 
 

@@ -20,22 +20,25 @@ def Cmd(command, verbose=False, debug=False):
     return out, err
 
 pkgs = [
-    ("chk", "Checking numerical calculations and testing"),
-    ("io",  "Input and output of files and printing and parsing strings"),
-    ("utl", "Utilities such as IntRange and LinSpace and allocators"),
-    ("mpi", "A lightweight wrapper to MPI"),
-    ("la",  "Linear algebra routines"),
-    ("plt", "Plotting routines (wrapping matplotlib)"),
-    ("fdm", "A simple finite differences solver"),
-    ("num", "A few numerical methods"),
-    ("fun", "Functions such as y=f(t,x)"),
-    ("ode", "Solvers for ordinary differential equations"),
-    ("opt", "Optimisation algorithms"),
-    ("gm",  "Geometry routines"),
-    ("rnd", "Random numbers generator"),
-    ("tsr", "Tensor algebra and calculus"),
-    ("vtk", "3D visualisation with VTK"),
-    ("graph", "graph representation using nodes and links"),
+    ("chk"    , "check and unit test"),
+    ("io"     , "input/output"),
+    ("utl"    , "utilities"),
+    ("plt"    , "plotting"),
+    ("mpi"    , "message passing interface"),
+    ("la"     , "linear algebra"),
+    ("fdm"    , "finite differences method"),
+    ("num"    , "numerical methods"),
+    ("fun"    , "scalar functions of one scalar and one vector"),
+    ("gm"     , "geometry"),
+    ("gm/msh" , "mesh generation"),
+    ("gm/tri" , "mesh generation: triangles"),
+    ("gm/rw"  , "mesh generation: read/write"),
+    ("graph"  , "graph theory"),
+    ("ode"    , "ordinary differential equations"),
+    ("opt"    , "optimisation"),
+    ("rnd"    , "random numbers and probability distributions"),
+    ("tsr"    , "tensor algebra and definitions for continuum mechanics"),
+    ("vtk"    , "visualisation tool kit"),
 ]
 
 odir  = 'doc/'
@@ -76,7 +79,7 @@ Cmd('echo "<h1>Gosl &ndash; Documentation</h1>" >> '+idxfn)
 Cmd('echo "<h2 id=\\"pkg-index\\">Index</h2>\n<div id=\\"manual-nav\\">\n<dl>" >> '+idxfn)
 
 for pkg in pkgs:
-    fn = odir+'xx'+pkg[0]+'.html'
+    fn = odir+'xx'+pkg[0].replace("/","-")+'.html'
     Cmd('echo "'+pkgheader(pkg)+'" > '+fn)
     Cmd('godoc -html github.com/cpmech/gosl/'+pkg[0]+' >> '+fn)
     Cmd('echo "'+footer()+'" >> '+fn)
