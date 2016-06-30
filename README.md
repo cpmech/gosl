@@ -42,6 +42,8 @@ See examples here: https://github.com/cpmech/gosl/blob/master/examples/README.md
 ## Installation and documentation
 
 ```
+sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
+sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
 mkdir -p $GOPATH/src/github.com/cpmech
 cd $GOPATH/src/github.com/cpmech
 git clone https://github.com/cpmech/gosl.git
