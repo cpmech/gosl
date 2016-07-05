@@ -216,16 +216,17 @@ func AxisLims(lims []float64) {
 	io.Ff(&bb, "axis([%g, %g, %g, %g])\n", lims[0], lims[1], lims[2], lims[3])
 }
 
-func Plot(x, y []float64, args string) {
+func Plot(x, y []float64, args string) (sx, sy string) {
 	n := bb.Len()
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
+	sx = io.Sf("x%d", n)
+	sy = io.Sf("y%d", n)
 	Gen2Arrays(&bb, sx, sy, x, y)
 	if len(args) > 0 {
 		io.Ff(&bb, "plot(%s,%s,%s)\n", sx, sy, args)
 	} else {
 		io.Ff(&bb, "plot(%s,%s)\n", sx, sy)
 	}
+	return
 }
 
 func PlotOne(x, y float64, args string) {
