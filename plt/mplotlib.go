@@ -71,6 +71,14 @@ func SetTicksNormal() {
 	io.Ff(&bb, "gca().ticklabel_format(useOffset=False)\n")
 }
 
+func Axes(xi, yi, xf, yf float64, args string) {
+	cmd := io.Sf("Axes(%g,%g, %g,%g", xi, yi, xf, yf)
+	if len(args) > 0 {
+		cmd += io.Sf(",%s", args)
+	}
+	io.Ff(&bb, "%s)\n", cmd)
+}
+
 func Arrow(xi, yi, xf, yf float64, args string) {
 	cmd := io.Sf("Arrow(%g,%g, %g,%g", xi, yi, xf, yf)
 	if len(args) > 0 {
