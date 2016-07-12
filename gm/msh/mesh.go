@@ -52,11 +52,11 @@ type Vertex struct {
 	X   []float64 `json:"x"` // coordinates (size==2 or 3)
 
 	// auxiliary
-	Entity interface{} // any entity attached to this vertex
+	Entity interface{} `json:"-"` // any entity attached to this vertex
 
 	// derived
-	SharedByCells CellSet // cells sharing this vertex
-	Neighbours    VertSet // neighbour vertices
+	SharedByCells CellSet `json:"-"` // cells sharing this vertex
+	Neighbours    VertSet `json:"-"` // neighbour vertices
 }
 
 // Cell holds cell data (in .msh file)
@@ -76,9 +76,9 @@ type Cell struct {
 	Entity interface{} // any entity attached to this vertex
 
 	// derived
-	Edges      EdgeSet // edges on this cell
-	Faces      FaceSet // faces on this cell
-	Neighbours CellSet // neighbour cells
+	Edges      EdgeSet `json:"-"` // edges on this cell
+	Faces      FaceSet `json:"-"` // faces on this cell
+	Neighbours CellSet `json:"-"` // neighbour cells
 }
 
 // Mesh defines mesh data
@@ -89,8 +89,8 @@ type Mesh struct {
 	Cells CellSet `json:"cells"` // cells
 
 	// derived
-	EdgesMap EdgesMap // all edges
-	FacesMap FacesMap // all faces
+	EdgesMap EdgesMap `json:"-"` // all edges
+	FacesMap FacesMap `json:"-"` // all faces
 }
 
 // Edge defines an edge

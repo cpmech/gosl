@@ -6,5 +6,5 @@ while true; do
     inotifywait -q -e modify $FILE
     echo
     echo
-    go run GoEqs2TeX.go
+    go run OldMsh2NewMsh.go
 done
