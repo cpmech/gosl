@@ -9,8 +9,8 @@ import (
 	"encoding/json"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/gm/msh"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
 // OldVert holds vertex data
@@ -67,43 +67,86 @@ func main() {
 		chk.Panic("%v", err)
 	}
 
-	// new mesh
-	var m msh.Mesh
-	//var buf bytes.Buffer
-	nv := len(old.Verts)
-	nc := len(old.Cells)
-	m.Verts = make([]*msh.Vertex, nv)
-	m.Cells = make([]*msh.Cell, nc)
-	ndim := 2
-	for i, v := range old.Verts {
-		m.Verts[i] = new(msh.Vertex)
-		m.Verts[i].Id = v.Id
-		m.Verts[i].Tag = v.Tag
-		m.Verts[i].X = v.C
-		if len(v.C) == 3 {
-			ndim = 3
+	// verts: find largest strings
+	var ndim int
+	L := make([]int, 5)
+	for _, v := range old.Verts {
+		L[0] = utl.Imax(L[0], len(io.Sf("%d", v.Id)))
+		L[1] = utl.Imax(L[1], len(io.Sf("%d", v.Tag)))
+		for j, x := range v.C {
+			L[2+j] = utl.Imax(L[2+j], len(io.Sf("%g", x)))
 		}
+		ndim = len(v.C)
 	}
-	for i, c := range old.Cells {
-		m.Cells[i] = new(msh.Cell)
-		m.Cells[i].Id = c.Id
-		m.Cells[i].Tag = c.Tag
-		m.Cells[i].Part = c.Part
-		m.Cells[i].Disabled = false
-		m.Cells[i].Type = c.Type
-		m.Cells[i].V = c.Verts
-		if ndim == 2 {
-			m.Cells[i].EdgeTags = c.FTags
-		} else {
-			m.Cells[i].FaceTags = c.FTags
-		}
+	S := make([]string, 5)
+	for i, l := range L {
+		S[i] = io.Sf("%d", l)
 	}
 
-	// encode
-	res, err := json.Marshal(&m)
-	if err != nil {
-		chk.Panic("%v", err)
+	// write vertices
+	buf := new(bytes.Buffer)
+	io.Ff(buf, "{\n  \"verts\":[\n")
+	for i, v := range old.Verts {
+		if i > 0 {
+			io.Ff(buf, ",\n")
+		}
+		io.Ff(buf, "    {\"i\":%"+S[0]+"d, \"t\":%"+S[1]+"d, \"x\":[", v.Id, v.Tag)
+		for j, x := range v.C {
+			if j > 0 {
+				io.Ff(buf, ", ")
+			}
+			io.Ff(buf, "%"+S[2+j]+"g", x)
+		}
+		io.Ff(buf, "] }")
 	}
-	buf := bytes.NewBuffer(res)
+
+	// cells: find largest strings
+	n := 30
+	L = make([]int, n*2)
+	for _, c := range old.Cells {
+		L[0] = utl.Imax(L[0], len(io.Sf("%d", c.Id)))
+		L[1] = utl.Imax(L[1], len(io.Sf("%d", c.Tag)))
+		L[2] = utl.Imax(L[2], len(io.Sf("%d", c.Part)))
+		for j, v := range c.Verts {
+			L[3+j] = utl.Imax(L[3+j], len(io.Sf("%d", v)))
+		}
+	}
+	S = make([]string, n*2)
+	for i, l := range L {
+		S[i] = io.Sf("%d", l)
+	}
+
+	// write cells
+	io.Ff(buf, "\n  \"cells\":[\n")
+	for i, c := range old.Cells {
+		if i > 0 {
+			io.Ff(buf, ",\n")
+		}
+		io.Ff(buf, "    {\"i\":%"+S[0]+"d, \"t\":%"+S[1]+"d, \"p\":%"+S[2]+"d, \"y\":%q, \"v\":[", c.Id, c.Tag, c.Part, c.Type)
+		for j, v := range c.Verts {
+			if j > 0 {
+				io.Ff(buf, ", ")
+			}
+			io.Ff(buf, "%"+S[3+j]+"d", v)
+		}
+		io.Ff(buf, "]")
+		if len(c.FTags) > 0 {
+			io.Ff(buf, ", ")
+			if ndim == 2 {
+				io.Ff(buf, "\"et\":[")
+			} else {
+				io.Ff(buf, "\"ft\":[")
+			}
+			for j, t := range c.FTags {
+				if j > 0 {
+					io.Ff(buf, ", ")
+				}
+				io.Ff(buf, "%d", t)
+			}
+			io.Ff(buf, "]")
+		}
+		io.Ff(buf, " }")
+	}
+	io.Ff(buf, "\n  ]\n}")
 	io.WriteFileVD("/tmp/gosl", fnkey+"-new.msh", buf)
 }
