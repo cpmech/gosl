@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/gm/msh"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
@@ -115,6 +116,7 @@ func main() {
 	for i, l := range L {
 		S[i] = io.Sf("%d", l)
 	}
+	io.Ff(buf, "\n  ],")
 
 	// write cells
 	io.Ff(buf, "\n  \"cells\":[\n")
@@ -149,4 +151,11 @@ func main() {
 	}
 	io.Ff(buf, "\n  ]\n}")
 	io.WriteFileVD("/tmp/gosl", fnkey+"-new.msh", buf)
+
+	// check
+	m, err := msh.Read("/tmp/gosl/" + fnkey + "-new.msh")
+	if err != nil {
+		chk.Panic("cannot read new mesh:\n%v", err)
+	}
+	m.Check()
 }
