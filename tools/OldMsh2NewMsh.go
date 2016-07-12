@@ -98,7 +98,6 @@ func main() {
 			m.Cells[i].FaceTags = c.FTags
 		}
 	}
-	io.Pforan("m= %v\n", m)
 
 	// encode
 	res, err := json.Marshal(&m)
@@ -106,5 +105,5 @@ func main() {
 		chk.Panic("%v", err)
 	}
 	buf := bytes.NewBuffer(res)
-	io.WriteFileD("/tmp/gosl", fnkey+"-new.msh", buf)
+	io.WriteFileVD("/tmp/gosl", fnkey+"-new.msh", buf)
 }
