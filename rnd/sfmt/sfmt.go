@@ -8,6 +8,11 @@ package sfmt
 #cgo CFLAGS: -O3 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing --param max-inline-insns-single=1800 -std=c99 -msse2 -DHAVE_SSE2 -DSFMT_MEXP=19937
 // #cgo CFLAGS: -Wall // deactivated since cgo fails with Wunused-variable for SfmtPrintIdString
 #include "connectsfmt.h"
+#ifdef WIN32
+#define LONG long long
+#else
+#define LONG long
+#endif
 */
 import "C"
 
@@ -25,7 +30,7 @@ func Init(seed int) {
 	if seed <= 0 {
 		seed = int(time.Now().Unix())
 	}
-	C.SfmtInit(C.long(seed))
+	C.SfmtInit(C.LONG(seed))
 }
 
 // Rand generates pseudo random integer between low and high
@@ -35,12 +40,12 @@ func Init(seed int) {
 //  Output:
 //   random integer
 func Rand(low, high int) int {
-	return int(C.SfmtRand(C.long(low), C.long(high)))
+	return int(C.SfmtRand(C.LONG(low), C.LONG(high)))
 }
 
 // Shuffle shuffles slice of integers
 func Shuffle(values []int) {
-	C.SfmtShuffle((*C.long)(unsafe.Pointer(&values[0])), C.long(len(values)))
+	C.SfmtShuffle((*C.LONG)(unsafe.Pointer(&values[0])), C.LONG(len(values)))
 }
 
 // PrintIdString prints SFMT id string

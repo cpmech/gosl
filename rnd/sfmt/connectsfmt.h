@@ -5,9 +5,15 @@
 #ifndef GOSL_RANDOM_H
 #define GOSL_RANDOM_H
 
-void SfmtInit(long seed);
-long SfmtRand(long lo, long hi);
-void SfmtShuffle(long *values, long size);
+#ifdef WIN32
+#define LONG long long
+#else
+#define LONG long
+#endif
+
+void SfmtInit(LONG seed);
+LONG SfmtRand(LONG lo, LONG hi);
+void SfmtShuffle(LONG *values, LONG size);
 void SfmtPrintIdString();
 
 #endif // GOSL_RANDOM_H

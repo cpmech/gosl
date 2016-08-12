@@ -5,19 +5,25 @@
 #include "stdio.h"
 #include "SFMT.h"
 
+#ifdef WIN32
+#define LONG long long
+#else
+#define LONG long
+#endif
+
 sfmt_t GLOBAL_SFMT;
 
-void SfmtInit(long seed) {
+void SfmtInit(LONG seed) {
     sfmt_init_gen_rand(&GLOBAL_SFMT, seed);
 }
 
-long SfmtRand(long lo, long hi) {
+LONG SfmtRand(LONG lo, LONG hi) {
     return (sfmt_genrand_uint64(&GLOBAL_SFMT) % (hi-lo+1) + lo);
 }
 
-void SfmtShuffle(long *values, long size) {
+void SfmtShuffle(LONG *values, LONG size) {
     uint64_t j;
-    long tmp;
+    LONG tmp;
     for (uint64_t i=size-1; i>0; i--) {
         j = sfmt_genrand_uint64(&GLOBAL_SFMT) % i;
         tmp = values[j];
