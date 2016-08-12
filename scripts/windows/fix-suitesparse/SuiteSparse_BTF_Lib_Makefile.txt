@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------
 
 LIBRARY = libbtf
-VERSION = 1.2.5
+VERSION = 1.2.6
 SO_VERSION = 1
 
 default: library
@@ -32,6 +32,8 @@ all: library
 
 OBJ = btf_order.o btf_maxtrans.o btf_strongcomp.o \
     btf_l_order.o btf_l_maxtrans.o btf_l_strongcomp.o
+
+static: $(AR_TARGET)
 
 $(AR_TARGET): $(OBJ)
 	$(ARCHIVE) $@ $^

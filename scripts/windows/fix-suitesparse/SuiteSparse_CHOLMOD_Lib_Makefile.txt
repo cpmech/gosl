@@ -3,7 +3,7 @@
 #===============================================================================
 
 LIBRARY = libcholmod
-VERSION = 3.0.10
+VERSION = 3.0.11
 SO_VERSION = 3
 
 default: library
@@ -106,7 +106,7 @@ GPU =
 endif
 
 DI = $(CORE) $(CHECK) $(CHOLESKY) $(MATRIXOPS) $(MODIFY) $(SUPERNODAL) \
-	$(GPU) $(PARTITION)
+	$(GPU) $(PARTITION) 
 
 #-------------------------------------------------------------------------------
 # CHOLMOD library modules (long, double)
@@ -151,6 +151,8 @@ DL = $(LCORE) $(LCHECK) $(LCHOLESKY) $(LMATRIXOPS) $(LMODIFY) $(LSUPERNODAL) \
 
 # to compile just the double/int version, use OBJ = $(DI)
 OBJ = $(DI) $(DL)
+
+static: $(AR_TARGET)
 
 $(AR_TARGET): $(OBJ)
 	$(ARCHIVE) $@ $^
@@ -524,10 +526,10 @@ cholmod_l_super_solve.o: ../Supernodal/cholmod_super_solve.c \
 cholmod_gpu_kernels.o: ../GPU/cholmod_gpu_kernels.cu
 	$(NVCC) $(I) $(NVCCFLAGS) -c ../GPU/cholmod_gpu_kernels.cu
 
-cholmod_gpu.o: ../GPU/cholmod_gpu.c
+cholmod_gpu.o: ../GPU/cholmod_gpu.c 
 	$(C) -c $(I) $<
 
-cholmod_l_gpu.o: ../GPU/cholmod_gpu.c
+cholmod_l_gpu.o: ../GPU/cholmod_gpu.c 
 	$(C) -DDLONG -c $(I) $< -o $@
 
 #-------------------------------------------------------------------------------
@@ -565,3 +567,4 @@ uninstall:
 	$(RM) $(INSTALL_INCLUDE)/cholmod*.h
 	$(RM) $(INSTALL_DOC)/CHOLMOD_UserGuide.pdf
 	$(RM) $(INSTALL_DOC)/CHOLMOD_README.txt
+

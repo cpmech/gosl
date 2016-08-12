@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------
 
 LIBRARY = libcamd
-VERSION = 2.4.5
+VERSION = 2.4.6
 SO_VERSION = 2
 
 default: library
@@ -50,6 +50,8 @@ camd_l_%.o: ../Source/camd_%.c $(INC)
 #-------------------------------------------------------------------------------
 # Create the static and shared libraries (C versions only)
 #-------------------------------------------------------------------------------
+
+static: $(AR_TARGET)
 
 $(AR_TARGET): $(OBJ)
 	$(ARCHIVE) $@ $^
@@ -102,3 +104,4 @@ purge: distclean
 
 distclean: clean
 	- $(RM) -r $(PURGE)
+
