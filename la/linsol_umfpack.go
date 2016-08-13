@@ -9,10 +9,10 @@ package la
 /*
 #cgo linux   CFLAGS: -O3 -I/usr/include/suitesparse
 #cgo linux   CFLAGS: -O3 -I/usr/local/include/suitesparse
-#cgo windows CFLAGS: -O3 -IC:/GoslDeps/include
+#cgo windows CFLAGS: -O3 -IC:/Gosl/include
 #cgo linux   LDFLAGS: -llapack -lgfortran -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig
 #cgo darwin  LDFLAGS: -llapack -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -L/usr/local/lib
-#cgo windows LDFLAGS: -llapack -lgfortran -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -LC:/GoslDeps/lib
+#cgo windows LDFLAGS: -llapack -lgfortran -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -LC:/Gosl/lib
 #ifdef WIN32
 #define LONG long long
 #else
