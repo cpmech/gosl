@@ -4,7 +4,7 @@ Gosl (Go-Scientific Library) is a set of routines for computations involving num
 
 A number of existent tools are _wrapped_ by Gosl with the two most essential ones being *Lapack* and *Umfpack* (from SuiteSparse by Prof Tim Davis). The former is a _de facto_ set of routines for linear algebra and the latter is one of the most powerful set of tools for computations using sparse matrices and systems.
 
-*Lapack* and *SuiteSparse*  can be readily installed on Debian/Linux systems. On Windows, three ``compilation'' tools for building Lapack and Umfpack are required beforehand:
+*Lapack* and *SuiteSparse*  can be readily installed on Debian/Linux systems. On Windows, three (compilation) tools for building Lapack and Umfpack are required beforehand:
 
 1. Gcc and Gfortran for Windows.
 2. CMake for Windows.
@@ -22,14 +22,20 @@ This document is organised as follows:
     2. Create project with CMake
     3. Build Lapack
 3. COMPILE SUITESPARSE
+    1. Download
+    2. Build SuiteSparse
 4. INSTALL GO (GOLANG)
-5. INSTALL GOSL
+    1. Download Go 1.6.3 (or newer)
+    2. Install from source (patch and compile)
+    3. Set environment variables
+5. (OPTIONAL) INSTALL PYTHON
+6. INSTALL GOSL
 
 
 
 ## 1 INSTALL COMPILATION TOOLS
 
-The videos [published here](https://www.youtube.com/watch?v=9vFODRZTBcc&list=PLk1POg2YgVEI8OMZ-EOlfJGK0YWxY9-sL) may guide the steps listed below; but note that the directory *Gosl* has to be renamed as *Gosl*. Three videos are of relevance to this section:
+The videos [published here](https://www.youtube.com/watch?v=9vFODRZTBcc&list=PLk1POg2YgVEI8OMZ-EOlfJGK0YWxY9-sL) may guide the steps listed below; but note that the directory *GoslDeps* has to be renamed as *Gosl*. Three videos are of relevance to this section:
 
 1. YouTube [Download packages](https://youtu.be/9vFODRZTBcc)
 2. YouTube [Install tools](https://youtu.be/dLyoGflSFTI)
@@ -83,7 +89,6 @@ Continue on Git Bash:
 cd build-lapack
 mingw32-make.exe
 mingw32-make.exe test
-python lapack_testing.py
 mingw32-make.exe install
 ```
 
@@ -150,7 +155,15 @@ export GOROOT_BOOTSTRAP=/c/Go
 
 
 
-## 5 INSTALL GOSL
+## 5 (OPTIONAL) INSTALL PYTHON
+
+In Gosl, Python is used only for plotting; but the user does not need to explicitly call Python. It is run on the background to generate figures. In Windows, PythonXY is a convenient option because it has NumPy, SciPy and Matplotlib (all required) and is easy to install.
+
+Download and install Python(x,y)-2.7.10.0.exe from http://python-xy.github.io/downloads.html. Default options are OK.
+
+
+
+## 6 INSTALL GOSL
 
 Open Git Bash and type:
 
