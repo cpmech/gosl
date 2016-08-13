@@ -33,14 +33,3 @@ func Benchmark_go_int(b *testing.B) {
 	}
 	__bench_result = res
 }
-
-func Benchmark_mt_int(b *testing.B) {
-	var res int
-	lo, hi := 0, 50
-	for i := 0; i < b.N; i++ {
-		for j := 0; j < __bench_nsamples; j++ {
-			res = MTint(lo, hi)
-		}
-	}
-	__bench_result = res
-}
