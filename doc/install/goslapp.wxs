@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='Gosl 1.0' Id='{FD5661AB-A2F6-4848-AC24-86B1CB8F7476}' UpgradeCode='{AA385207-0193-48D8-92FE-1A35A9C62C1A}'
+    Language='1033' Codepage='1252' Version='1.0.0' Manufacturer='Cpmech'>
+
+    <Package Id='*' Keywords='Installer' Description="Gosl's 1.0 Installer"
+      Comments='Gosl Go Scientific Library.' Manufacturer='Cpmech'
+      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="Gosl's 1.0 Installation [1]" />
+
+    <Property Id="TARGETDIR" Value="C:\Gosl" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Component Id='Readme' Guid='{81A1EC89-2E90-49A5-987C-04276DF6A25D}'>
+        <File Id='Readme' Name='Readme.txt' DiskId='1' Source='Readme.txt' KeyPath='yes'></File>
+      </Component>
+      <!--<Directory Id='GoslDir' Name='AllFiles'></Directory>-->
+    </Directory>
+
+    <Feature Id='DefaultFeature' Title='Gosl 1.0' ConfigurableDirectory='TARGETDIR' Level='1'>
+      <Feature Id='Readme' Title='Readme' Description='Readme File.' Level='1'>
+        <ComponentRef Id='Readme' />
+      </Feature>
+      <Feature Id='AllFiles' Title='AllFiles' Description='All Files.' Level='1'>
+        <ComponentGroupRef Id='GoslComp' />
+      </Feature>
+    </Feature>
+
+    <UI Id="UserInterface">
+      <Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />
+      <Property Id="WixUI_Mode" Value="Custom" />
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="9" Bold="yes" />
+      <TextStyle Id="WixUI_Font_Title"  FaceName="Tahoma" Size="9" Bold="yes" />
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="UserExit" />
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="EndDialog" Value="Return" Order="2"></Publish>
+    </UI>
+    <UIRef Id="WixUI_Common" />
+    
+    <!--<Property Id="WIXUI_INSTALLDIR" Value="TARGETDIR" />
+    <UIRef Id="WixUI_InstallDir" />-->
+  </Product>
+</Wix>
