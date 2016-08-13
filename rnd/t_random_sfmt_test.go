@@ -21,7 +21,7 @@ func Test_MTint01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("MTint01. integers (Mersenne Twister)")
 
-	Init(1234)
+	MTinit(1234)
 
 	nints := 10
 	vals := make([]int, NSAMPLES)
@@ -51,7 +51,7 @@ func Test_MTflt01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("MTflt01. float64 (Mersenne Twister)")
 
-	Init(1234)
+	MTinit(1234)
 
 	xmin := 10.0
 	xmax := 20.0
@@ -82,7 +82,7 @@ func Test_MTshuffleInts01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("MTshuffleInts01. Mersenne Twister")
 
-	Init(0)
+	MTinit(0)
 
 	n := 10
 	nums := utl.IntRange(n)

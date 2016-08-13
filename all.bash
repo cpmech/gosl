@@ -22,7 +22,7 @@ install_and_test(){
     DOTEST=$2
     echo
     echo
-    echo "[1;32m>>> compiling $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
+    echo ">>> compiling $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
     cd $PKG
     touch *.go
     go install
@@ -40,9 +40,16 @@ if [[ $platform == 'linux' ]]; then
     install_and_test mpi 0
 fi
 
-for p in la fdm num fun gm/rw gm/msh gm graph ode opt rnd tsr; do
+for p in la fdm num fun gm/rw gm/msh gm graph ode opt tsr; do
     install_and_test $p 1
 done
+
+if [[ $platform != 'windows' ]]; then
+    install_and_test rnd/sfmt 1
+    install_and_test rnd/dsfmt 1
+fi
+
+install_and_test rnd 1
 
 if [[ $platform == 'linux' ]]; then
     install_and_test vtk 0
