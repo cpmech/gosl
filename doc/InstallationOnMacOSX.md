@@ -1,6 +1,7 @@
 # Installing Gosl on Mac OS X
 
 The instalation on OSX includes:
+
 1. Xcode
 2. MacPorts
 3. CMake and Lapack
