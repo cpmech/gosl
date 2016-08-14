@@ -41,6 +41,10 @@ See examples here: https://github.com/cpmech/gosl/blob/master/examples/README.md
 
 ## Installation and documentation
 
+1. To install on Windows, [see instructions for Windows here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
+2. To install on Mac OS X, [see instructions for Mac OS X here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOSX.md)
+3. To install on Debian/Ubuntu/Linux, type the following commands:
+
 ```
 sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
 sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
@@ -49,6 +53,12 @@ cd $GOPATH/src/github.com/cpmech
 git clone https://github.com/cpmech/gosl.git
 cd gosl
 ./all.bash
+```
+
+Make sure that the following environment variable is defined:
+
+```
+export PYTHONPATH=$PYTHONPATH:$GOPATH/src/github.com/cpmech/gosl/scripts
 ```
 
 The documentation for developers is available here: http://rawgit.com/cpmech/gosl/master/doc/index.html
