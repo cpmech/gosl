@@ -1,5 +1,7 @@
 # Installing Gosl on Windows
 
+A trial _installer_ is available here: [gosl-installer](https://sourceforge.net/projects/gosl-installer/files/gosl-installer.msi/download).
+
 Gosl (Go-Scientific Library) is a set of routines for computations involving numerical methods and other mathematical problems in science and engineering.
 
 A number of existent tools are _wrapped_ by Gosl with the two most essential ones being *Lapack* and *Umfpack* (from SuiteSparse by Prof Tim Davis). The former is a _de facto_ set of routines for linear algebra and the latter is one of the most powerful set of tools for computations using sparse matrices and systems.
