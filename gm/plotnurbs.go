@@ -147,7 +147,7 @@ func (o *Nurbs) PlotBasis(l int, args string, npts, option int) {
 				yy[m] = o.RecursiveBasis(u, l)
 			}
 		}
-		plt.Plot(xx, yy, "fsz=7")
+		plt.Plot(xx, yy, args)
 	// surface
 	case 2:
 		xx := la.MatAlloc(npts, npts)
