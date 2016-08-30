@@ -12,7 +12,7 @@ import (
 // HashPoint returns a unique id of a point
 func HashPoint(x, xmin, xdel []float64, tol float64) int {
 	if tol < 1e-15 {
-		chk.Panic("HashPoint: minimum tolerance must be 1e-16. %v is invalid", tol)
+		chk.Panic("HashPoint: minimum tolerance must be 1e-15. %v is invalid", tol)
 	}
 	coefs := []float64{11, 101, 1001}
 	n := utl.Imin(len(x), 3)
