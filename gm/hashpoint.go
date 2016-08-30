@@ -18,6 +18,12 @@ func HashPoint(x, xmin, xdel []float64, tol float64) int {
 	n := utl.Imin(len(x), 3)
 	var hash, xbar float64
 	for i := 0; i < n; i++ {
+		if x[i] < xmin[i] {
+			chk.Panic("HashPoint: coordinate is outside range: %v < %v", x[i], xmin[i])
+		}
+		if x[i] > xmin[i]+xdel[i] {
+			chk.Panic("HashPoint: coordinate is outside range: %v > %v", x[i], xmin[i]+xdel[i])
+		}
 		if xdel[i] > 0 {
 			xbar = (x[i] - xmin[i]) / xdel[i]
 			if xbar < 0 {
