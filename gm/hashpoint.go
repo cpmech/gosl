@@ -6,12 +6,13 @@ package gm
 
 import (
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
 // HashPoint returns a unique id of a point
 func HashPoint(x, xmin, xdel []float64, tol float64) int {
-	if tol < 1e-16 {
+	if tol < 1e-15 {
 		chk.Panic("HashPoint: minimum tolerance must be 1e-16. %v is invalid", tol)
 	}
 	coefs := []float64{11, 101, 1001}
@@ -26,7 +27,7 @@ func HashPoint(x, xmin, xdel []float64, tol float64) int {
 			if xbar > 1 {
 				xbar = 1
 			}
-			//io.Pfblue2("xbar=%20v  xbar/tol=%22v  hash=%22v\n", xbar, xbar/tol, (xbar/tol)*coefs[i])
+			io.Pfblue2("xbar=%20v  xbar/tol=%22v  hash=%22v\n", xbar, xbar/tol, (xbar/tol)*coefs[i])
 			hash += (xbar / tol) * coefs[i]
 		}
 	}
