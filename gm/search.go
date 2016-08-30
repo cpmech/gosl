@@ -13,27 +13,6 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// HashPoint returns a unique id of a point
-func HashPoint(x, y, z float64) int {
-	return int(x*100001 + y*10000001 + z*1000000001)
-}
-
-// HashPoint returns a unique id of a point (given slice of coordinates)
-func HashPointC(c []float64) int {
-	var x, y, z float64
-	n := len(c)
-	if n > 0 {
-		x = c[0]
-	}
-	if n > 1 {
-		y = c[1]
-	}
-	if n > 2 {
-		z = c[2]
-	}
-	return HashPoint(x, y, z)
-}
-
 // BinEntry holds data of an entry to bin
 type BinEntry struct {
 	Id int       // object Id

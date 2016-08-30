@@ -264,19 +264,22 @@ func Test_nurbs04(tst *testing.T) {
 	b := a.KrefineN(2, false)
 	c := a.KrefineN(4, false)
 
+	// tolerace for normalised space comparisons
+	tol := 1e-7
+
 	// tags
-	a_vt := tag_verts(a)
+	a_vt := tag_verts(a, tol)
 	a_ct := map[string]int{
 		"0_0": -1,
 		"0_1": -2,
 	}
-	b_vt := tag_verts(b)
-	c_vt := tag_verts(c)
+	b_vt := tag_verts(b, tol)
+	c_vt := tag_verts(c, tol)
 
 	// write .msh files
-	WriteMshD("/tmp/gosl/gm", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct)
-	WriteMshD("/tmp/gosl/gm", "m_nurbs04b", []*Nurbs{b}, b_vt, nil)
-	WriteMshD("/tmp/gosl/gm", "m_nurbs04c", []*Nurbs{c}, c_vt, nil)
+	WriteMshD("/tmp/gosl/gm", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct, tol)
+	WriteMshD("/tmp/gosl/gm", "m_nurbs04b", []*Nurbs{b}, b_vt, nil, tol)
+	WriteMshD("/tmp/gosl/gm", "m_nurbs04c", []*Nurbs{c}, c_vt, nil, tol)
 
 	// read .msh file back and check
 	a_read := ReadMsh("/tmp/gosl/gm/m_nurbs04a")[0]

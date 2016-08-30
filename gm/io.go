@@ -11,12 +11,57 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
+func GetLimits(o *Nurbs) (xmin, xmax, xdel []float64) {
+	xmin = []float64{math.Inf(+1), math.Inf(+1), math.Inf(+1)}
+	xmax = []float64{math.Inf(-1), math.Inf(-1), math.Inf(-1)}
+	xdel = []float64{0, 0, 0}
+	for k := 0; k < o.n[2]; k++ {
+		for j := 0; j < o.n[1]; j++ {
+			for i := 0; i < o.n[0]; i++ {
+				x := o.GetQ(i, j, k)
+				for r := 0; r < o.gnd; r++ {
+					xmin[r] = utl.Min(xmin[r], x[r])
+					xmax[r] = utl.Max(xmax[r], x[r])
+				}
+			}
+		}
+	}
+	for i := 0; i < 3; i++ {
+		xdel[i] = xmax[i] - xmin[i]
+	}
+	for i := o.gnd; i < 3; i++ {
+		xmin[i] = 0
+		xmax[i] = 0
+		xdel[i] = 0
+	}
+	return
+}
+
 // WriteMshD writes .msh file
-// Input: vtagged maps hashed id of control point to vertex tag
-//        ctagged maps idOfNurbs_localIdOfElem to cell tag
-func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int) {
+// Input:
+//   vtagged -- maps hashed id of control point to vertex tag
+//   ctagged -- maps idOfNurbs_localIdOfElem to cell tag
+//   tol     -- tolerance for normalized numbers comparison when generating hashes, e.g. 1e-7
+func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int, tol float64) {
+
+	// compute limits
+	xmin, xmax, xdel := GetLimits(nurbss[0])
+	for r := 1; r < len(nurbss); r++ {
+		xmi, xma, _ := GetLimits(nurbss[r])
+		for i := 0; i < 3; i++ {
+			xmin[i] = utl.Min(xmin[i], xmi[i])
+			xmax[i] = utl.Min(xmax[i], xma[i])
+		}
+	}
+	if len(nurbss) > 1 {
+		for i := 0; i < 3; i++ {
+			xdel[i] = xmax[i] - xmin[i]
+		}
+	}
+
 	var buf bytes.Buffer
 	io.Ff(&buf, "{\n  \"verts\" : [\n")
 	verts := make(map[int]int)
@@ -26,7 +71,7 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 			for j := 0; j < o.n[1]; j++ {
 				for i := 0; i < o.n[0]; i++ {
 					x := o.GetQ(i, j, k)
-					hsh := HashPoint(x[0], x[1], x[2])
+					hsh := HashPoint(x, xmin, xdel, tol)
 					if _, ok := verts[hsh]; !ok {
 						tag := 0
 						if vtagged != nil {
@@ -83,7 +128,7 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 						io.Ff(&buf, ",")
 					}
 					x := o.GetQ(i, j, k)
-					hsh := HashPoint(x[0], x[1], x[2])
+					hsh := HashPoint(x, xmin, xdel, tol)
 					io.Ff(&buf, "%d", verts[hsh])
 					if first {
 						first = false
@@ -138,7 +183,7 @@ func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged
 					io.Ff(&buf, ",")
 				}
 				x := o.GetQl(l)
-				hsh := HashPoint(x[0], x[1], x[2])
+				hsh := HashPoint(x, xmin, xdel, tol)
 				io.Ff(&buf, "%d", verts[hsh])
 			}
 			var onbry bool
@@ -255,23 +300,24 @@ func ReadMsh(fnk string) (nurbss []*Nurbs) {
 	return
 }
 
-func tag_verts(b *Nurbs) (vt map[int]int) {
+func tag_verts(b *Nurbs, tol float64) (vt map[int]int) {
+	xmin, _, xdel := GetLimits(b)
 	vt = make(map[int]int)
 	n0, n1 := b.NumBasis(0), b.NumBasis(1)
 	for j := 0; j < n1; j++ {
 		for i := 0; i < n0; i++ {
 			x := b.GetQ(i, j, 0)
 			if math.Abs(x[0]) < 1e-7 { // right
-				vt[HashPoint(x[0], x[1], x[2])] = -1
+				vt[HashPoint(x, xmin, xdel, tol)] = -1
 			}
 			if math.Abs(x[1]) < 1e-7 { // bottom
-				vt[HashPoint(x[0], x[1], x[2])] = -2
+				vt[HashPoint(x, xmin, xdel, tol)] = -2
 			}
 			if math.Abs(x[0]+4.0) < 1e-7 { // left
-				vt[HashPoint(x[0], x[1], x[2])] = -3
+				vt[HashPoint(x, xmin, xdel, tol)] = -3
 			}
 			if math.Abs(x[0]+4.0) < 1e-7 && math.Abs(x[1]) < 1e-7 { // left-bottom
-				vt[HashPoint(x[0], x[1], x[2])] = -4
+				vt[HashPoint(x, xmin, xdel, tol)] = -4
 			}
 		}
 	}
