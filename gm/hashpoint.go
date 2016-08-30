@@ -6,7 +6,6 @@ package gm
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -27,7 +26,6 @@ func HashPoint(x, xmin, xdel []float64, tol float64) int {
 			if xbar > 1 {
 				xbar = 1
 			}
-			io.Pfblue2("xbar=%20v  xbar/tol=%22v  hash=%22v\n", xbar, xbar/tol, (xbar/tol)*coefs[i])
 			hash += (xbar / tol) * coefs[i]
 		}
 	}
