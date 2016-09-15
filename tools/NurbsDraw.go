@@ -5,8 +5,6 @@
 package main
 
 import (
-	"flag"
-
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
@@ -14,41 +12,41 @@ import (
 
 func main() {
 
-	// default input data
-	fn := "nurbs01.msh"
-	ctrl := true
-	ids := true
-	npts := 41
+	// input data
+	fn, fnk := io.ArgToFilename(0, "nurbs01", ".msh", true)
+	ctrl := io.ArgToBool(1, true)
+	ids := io.ArgToBool(2, true)
+	useminmax := io.ArgToBool(3, false)
+	xmin := io.ArgToFloat(4, 0)
+	xmax := io.ArgToFloat(5, 0)
+	ymin := io.ArgToFloat(6, 0)
+	ymax := io.ArgToFloat(7, 0)
+	eps := io.ArgToBool(8, false)
+	npts := io.ArgToInt(9, 41)
 
-	// parse flags
-	flag.Parse()
-	if len(flag.Args()) > 0 {
-		fn = flag.Arg(0)
-	}
-	if len(flag.Args()) > 1 {
-		ctrl = io.Atob(flag.Arg(1))
-	}
-	if len(flag.Args()) > 2 {
-		ids = io.Atob(flag.Arg(2))
-	}
-	if len(flag.Args()) > 3 {
-		npts = io.Atoi(flag.Arg(3))
-	}
-
-	// print input data
-	io.Pforan("Input data\n")
-	io.Pforan("==========\n")
-	io.Pfblue2("  fn   = %v\n", fn)
-	io.Pfblue2("  ctrl = %v\n", ctrl)
-	io.Pfblue2("  ids  = %v\n", ids)
-	io.Pfblue2("  npts = %v\n", npts)
+	// print input table
+	io.Pf("\n%s\n", io.ArgsTable("INPUT ARGUMENTS",
+		"mesh filename", "fn", fn,
+		"show control points", "ctrl", ctrl,
+		"show ids", "ids", ids,
+		"use xmin,xmax,ymin,ymax", "useminmax", useminmax,
+		"min(x)", "xmin", xmin,
+		"max(x)", "xmax", xmax,
+		"min(y)", "ymin", ymin,
+		"max(y)", "ymax", ymax,
+		"generate eps instead of png", "eps", eps,
+		"number of divisions", "npts", npts,
+	))
 
 	// load nurbss
-	fnk := io.FnKey(fn)
 	B := gm.ReadMsh(fnk)
 
 	// plot
-	plt.SetForEps(0.75, 500)
+	if eps {
+		plt.SetForEps(0.75, 500)
+	} else {
+		plt.SetForPng(0.75, 500, 150)
+	}
 	for _, b := range B {
 		if ctrl {
 			b.DrawCtrl2d(ids, "", "")
@@ -56,5 +54,12 @@ func main() {
 		b.DrawElems2d(npts, ids, "", "")
 	}
 	plt.Equal()
-	plt.Save(fnk + ".eps")
+	if useminmax {
+		plt.AxisRange(xmin, xmax, ymin, ymax)
+	}
+	ext := ".png"
+	if eps {
+		ext = ".eps"
+	}
+	plt.Save(fnk + ext)
 }
