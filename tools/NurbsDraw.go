@@ -17,12 +17,13 @@ func main() {
 	ctrl := io.ArgToBool(1, true)
 	ids := io.ArgToBool(2, true)
 	useminmax := io.ArgToBool(3, false)
-	xmin := io.ArgToFloat(4, 0)
-	xmax := io.ArgToFloat(5, 0)
-	ymin := io.ArgToFloat(6, 0)
-	ymax := io.ArgToFloat(7, 0)
-	eps := io.ArgToBool(8, false)
-	npts := io.ArgToInt(9, 41)
+	axisequal := io.ArgToBool(4, true)
+	xmin := io.ArgToFloat(5, 0)
+	xmax := io.ArgToFloat(6, 0)
+	ymin := io.ArgToFloat(7, 0)
+	ymax := io.ArgToFloat(8, 0)
+	eps := io.ArgToBool(9, false)
+	npts := io.ArgToInt(10, 41)
 
 	// print input table
 	io.Pf("\n%s\n", io.ArgsTable("INPUT ARGUMENTS",
@@ -30,6 +31,7 @@ func main() {
 		"show control points", "ctrl", ctrl,
 		"show ids", "ids", ids,
 		"use xmin,xmax,ymin,ymax", "useminmax", useminmax,
+		"enforce axis.equal", "axisequal", axisequal,
 		"min(x)", "xmin", xmin,
 		"max(x)", "xmax", xmax,
 		"min(y)", "ymin", ymin,
@@ -53,7 +55,9 @@ func main() {
 		}
 		b.DrawElems2d(npts, ids, "", "")
 	}
-	plt.Equal()
+	if axisequal {
+		plt.Equal()
+	}
 	if useminmax {
 		plt.AxisRange(xmin, xmax, ymin, ymax)
 	}
