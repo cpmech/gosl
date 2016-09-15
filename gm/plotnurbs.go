@@ -128,26 +128,26 @@ func (o *Nurbs) PlotBasis(l int, args string, npts, option int) {
 	switch o.gnd {
 	// curve
 	case 1:
-		xx := make([]float64, npts)
-		yy := make([]float64, npts)
-		du0 := (o.b[0].tmax - o.b[0].tmin) / float64(npts-1)
+		U := make([]float64, npts)
+		S := make([]float64, npts)
+		du := (o.b[0].tmax - o.b[0].tmin) / float64(npts-1)
+		uvec := []float64{0}
 		for m := 0; m < npts; m++ {
-			u0 := o.b[0].tmin + float64(m)*du0
-			u := []float64{u0}
-			x := o.Point(u)
-			xx[m] = x[0]
+			U[m] = o.b[0].tmin + float64(m)*du
+			uvec[0] = U[m]
 			switch option {
 			case 0:
-				o.CalcBasis(u)
-				yy[m] = o.GetBasisL(l)
+				o.CalcBasis(uvec)
+				S[m] = o.GetBasisL(l)
 			case 1:
-				o.CalcBasisAndDerivs(u)
-				yy[m] = o.GetBasisL(l)
+				o.CalcBasisAndDerivs(uvec)
+				S[m] = o.GetBasisL(l)
 			case 2:
-				yy[m] = o.RecursiveBasis(u, l)
+				S[m] = o.RecursiveBasis(uvec, l)
 			}
 		}
-		plt.Plot(xx, yy, args)
+		plt.Plot(U, S, args)
+		plt.Gll("$u$", io.Sf("$S_%d$", l), "")
 	// surface
 	case 2:
 		xx := la.MatAlloc(npts, npts)
@@ -188,6 +188,25 @@ func (o *Nurbs) PlotDeriv(l, d int, args string, npts, option int) {
 	switch o.gnd {
 	// curve
 	case 1:
+		U := make([]float64, npts)
+		G := make([]float64, npts)
+		du := (o.b[0].tmax - o.b[0].tmin) / float64(npts-1)
+		uvec := []float64{0}
+		gvec := []float64{0}
+		for m := 0; m < npts; m++ {
+			U[m] = o.b[0].tmin + float64(m)*du
+			uvec[0] = U[m]
+			switch option {
+			case 0:
+				o.CalcBasisAndDerivs(uvec)
+				o.GetDerivL(gvec, l)
+			case 1:
+				o.NumericalDeriv(gvec, uvec, l)
+			}
+			G[m] = gvec[0]
+		}
+		plt.Plot(U, G, args)
+		plt.Gll("$u$", io.Sf("$G_%d$", l), "")
 	// surface
 	case 2:
 		xx := la.MatAlloc(npts, npts)
@@ -214,9 +233,9 @@ func (o *Nurbs) PlotDeriv(l, d int, args string, npts, option int) {
 				zz[m][n] = drdu[d]
 			}
 		}
-		plt.Title(io.Sf("%s @ %d,%d", lbls[option], l, d), "size=7")
 		plt.Contour(xx, yy, zz, "fsz=7")
 	}
+	plt.Title(io.Sf("%s @ %d,%d", lbls[option], l, d), "size=7")
 }
 
 // DrawEdge2d draws and edge from tmin to tmax
@@ -289,6 +308,10 @@ func PlotTwoNurbs(dirout, fn string, b, c *Nurbs, npts int, ids bool, extra func
 // PlotNurbsBasis plots basis functions la and lb
 func PlotNurbsBasis(dirout, fn string, b *Nurbs, la, lb int) {
 	npts := 41
+	ndiv := 11
+	if b.gnd == 1 {
+		ndiv = 101
+	}
 	plt.Reset()
 	if io.FnExt(fn) == ".eps" {
 		plt.SetForEps(1.5, 500)
@@ -297,51 +320,78 @@ func PlotNurbsBasis(dirout, fn string, b *Nurbs, la, lb int) {
 	}
 
 	plt.Subplot(3, 2, 1)
-	b.DrawCtrl2d(false, "", "")
-	b.DrawElems2d(npts, false, "", "")
+	if b.gnd == 2 {
+		b.DrawCtrl2d(false, "", "")
+		b.DrawElems2d(npts, false, "", "")
+	}
 	t0 := time.Now()
-	b.PlotBasis(la, "", 11, 0) // 0 => CalcBasis
+	b.PlotBasis(la, "clip_on=0", ndiv, 0) // 0 => CalcBasis
 	io.Pfcyan("time elapsed (calcbasis) = %v\n", time.Now().Sub(t0))
-	plt.Equal()
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(3, 2, 2)
-	b.DrawCtrl2d(false, "", "")
-	b.DrawElems2d(npts, false, "", "")
-	b.PlotBasis(lb, "", 11, 0) // 0 => CalcBasis
-	plt.Equal()
+	if b.gnd == 2 {
+		b.DrawCtrl2d(false, "", "")
+		b.DrawElems2d(npts, false, "", "")
+	}
+	b.PlotBasis(lb, "clip_on=0", ndiv, 0) // 0 => CalcBasis
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(3, 2, 3)
-	b.DrawCtrl2d(false, "", "")
-	b.DrawElems2d(npts, false, "", "")
-	b.PlotBasis(la, "", 11, 1) // 1 => CalcBasisAndDerivs
-	plt.Equal()
+	if b.gnd == 2 {
+		b.DrawCtrl2d(false, "", "")
+		b.DrawElems2d(npts, false, "", "")
+	}
+	b.PlotBasis(la, "clip_on=0", ndiv, 1) // 1 => CalcBasisAndDerivs
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(3, 2, 4)
-	b.DrawCtrl2d(false, "", "")
-	b.DrawElems2d(npts, false, "", "")
-	b.PlotBasis(lb, "", 11, 1) // 1 => CalcBasisAndDerivs
-	plt.Equal()
+	if b.gnd == 2 {
+		b.DrawCtrl2d(false, "", "")
+		b.DrawElems2d(npts, false, "", "")
+	}
+	b.PlotBasis(lb, "clip_on=0", ndiv, 1) // 1 => CalcBasisAndDerivs
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(3, 2, 5)
-	b.DrawCtrl2d(false, "", "")
-	b.DrawElems2d(npts, false, "", "")
+	if b.gnd == 2 {
+		b.DrawCtrl2d(false, "", "")
+		b.DrawElems2d(npts, false, "", "")
+	}
 	t0 = time.Now()
-	b.PlotBasis(la, "", 11, 2) // 2 => RecursiveBasis
+	b.PlotBasis(la, "clip_on=0", ndiv, 2) // 2 => RecursiveBasis
 	io.Pfcyan("time elapsed (recursive) = %v\n", time.Now().Sub(t0))
-	plt.Equal()
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(3, 2, 6)
-	b.DrawCtrl2d(false, "", "")
-	b.DrawElems2d(npts, false, "", "")
-	b.PlotBasis(lb, "", 11, 2) // 2 => RecursiveBasis
-	plt.Equal()
+	if b.gnd == 2 {
+		b.DrawCtrl2d(false, "", "")
+		b.DrawElems2d(npts, false, "", "")
+	}
+	b.PlotBasis(lb, "clip_on=0", ndiv, 2) // 2 => RecursiveBasis
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.SaveD(dirout, fn)
 }
 
 // PlotNurbsDerivs plots derivatives of basis functions la and lb
 func PlotNurbsDerivs(dirout, fn string, b *Nurbs, la, lb int) {
-	npts := 41
+	ndiv := 41
+	if b.gnd == 1 {
+		ndiv = 101
+	}
 	plt.Reset()
 	if io.FnExt(fn) == ".eps" {
 		plt.SetForEps(1.5, 500)
@@ -351,39 +401,55 @@ func PlotNurbsDerivs(dirout, fn string, b *Nurbs, la, lb int) {
 
 	plt.Subplot(4, 2, 1)
 	t0 := time.Now()
-	b.PlotDeriv(la, 0, "", npts, 0) // 0 => CalcBasisAndDerivs
+	b.PlotDeriv(la, 0, "clip_on=0", ndiv, 0) // 0 => CalcBasisAndDerivs
 	io.Pfcyan("time elapsed (calcbasis) = %v\n", time.Now().Sub(t0))
-	plt.Equal()
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(4, 2, 2)
 	t0 = time.Now()
-	b.PlotDeriv(la, 0, "", npts, 1) // 1 => NumericalDeriv
+	b.PlotDeriv(la, 0, "clip_on=0", ndiv, 1) // 1 => NumericalDeriv
 	io.Pfcyan("time elapsed (numerical) = %v\n", time.Now().Sub(t0))
-	plt.Equal()
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(4, 2, 3)
-	b.PlotDeriv(la, 1, "", npts, 0) // 0 => CalcBasisAndDerivs
-	plt.Equal()
+	b.PlotDeriv(la, 1, "clip_on=0", ndiv, 0) // 0 => CalcBasisAndDerivs
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(4, 2, 4)
-	b.PlotDeriv(la, 1, "", npts, 1) // 0 => NumericalDeriv
-	plt.Equal()
+	b.PlotDeriv(la, 1, "clip_on=0", ndiv, 1) // 0 => NumericalDeriv
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(4, 2, 5)
-	b.PlotDeriv(lb, 0, "", npts, 0) // 0 => CalcBasisAndDerivs
-	plt.Equal()
+	b.PlotDeriv(lb, 0, "clip_on=0", ndiv, 0) // 0 => CalcBasisAndDerivs
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(4, 2, 6)
-	b.PlotDeriv(lb, 0, "", npts, 1) // 0 => NumericalDeriv
-	plt.Equal()
+	b.PlotDeriv(lb, 0, "clip_on=0", ndiv, 1) // 0 => NumericalDeriv
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(4, 2, 7)
-	b.PlotDeriv(lb, 1, "", npts, 0) // 0 => CalcBasisAndDerivs
-	plt.Equal()
+	b.PlotDeriv(lb, 1, "clip_on=0", ndiv, 0) // 0 => CalcBasisAndDerivs
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.Subplot(4, 2, 8)
-	b.PlotDeriv(lb, 1, "", npts, 1) // 0 => NumericalDeriv
-	plt.Equal()
+	b.PlotDeriv(lb, 1, "clip_on=0", ndiv, 1) // 0 => NumericalDeriv
+	if b.gnd == 2 {
+		plt.Equal()
+	}
 
 	plt.SaveD(dirout, fn)
 }

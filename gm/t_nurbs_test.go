@@ -251,6 +251,8 @@ func Test_nurbs03(tst *testing.T) {
 	if chk.Verbose {
 		PlotNurbs("/tmp/gosl/gm", "nurbs03a.png", b, 41, true, nil)
 		PlotTwoNurbs("/tmp/gosl/gm", "nurbs03b.png", b, c, 41, true, nil)
+		PlotNurbsBasis("/tmp/gosl/gm", "nurbs03basis.png", b, 1, 2)
+		PlotNurbsDerivs("/tmp/gosl/gm", "nurbs03derivs.png", b, 1, 2)
 	}
 }
 
