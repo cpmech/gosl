@@ -17,6 +17,7 @@ const (
 	D_Lognormal                     // lognormal
 	D_Gumbel                        // Type I Extreme Value
 	D_Frechet                       // Type II Extreme Value
+	D_Uniform                       // uniform
 )
 
 // VarData implements data defining one random variable
