@@ -49,22 +49,29 @@ def header(title):
     return """<html>
 <head>
 <meta http-equiv=\\"Content-Type\\" content=\\"text/html; charset=utf-8\\">
+<meta name=\\"viewport\\" content=\\"width=device-width, initial-scale=1\\">
+<meta name=\\"theme-color\\" content=\\"#375EAB\\">
 <title>%s</title>
 <link type=\\"text/css\\" rel=\\"stylesheet\\" href=\\"static/style.css\\">
 <script type=\\"text/javascript\\" src=\\"static/godocs.js\\"></script>
 <style type=\\"text/css\\"></style>
 </head>
 <body>
-<div id=\\"page\\">""" % title
+<div id=\\"page\\" class=\\wide\\">
+<div class=\\"container\\">
+""" % title
 
 def footer():
-    return """</div><!-- page -->
+    return """
 <div id=\\"footer\\">
 <br /><br />
 <hr>
 <pre class=\\"copyright\\">
 %s</pre><!-- copyright -->
 </div><!-- footer -->
+
+</div><!-- container -->
+</div><!-- page -->
 </body>
 </html>""" % licen
 
