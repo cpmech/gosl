@@ -652,9 +652,7 @@ tsr implements routines to conduct tensor operations
 		
 			
 			
-			<h2 id="Add">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=1749:1826#L49">Add</a>
-				<a class="permalink" href="#Add">&#xb6;</a>
-			</h2>
+			<h2 id="Add">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=1749:1826#L49">Add</a></h2>
 			<pre>func Add(u [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Add adds two second order tensors according to:
@@ -668,9 +666,7 @@ Add adds two second order tensors according to:
 		
 			
 			
-			<h2 id="Alloc2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=3746:3780#L96">Alloc2</a>
-				<a class="permalink" href="#Alloc2">&#xb6;</a>
-			</h2>
+			<h2 id="Alloc2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=3746:3780#L96">Alloc2</a></h2>
 			<pre>func Alloc2() (tensor [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Alloc2 allocates a 3x3 2nd order tensor
@@ -682,9 +678,7 @@ Alloc2 allocates a 3x3 2nd order tensor
 		
 			
 			
-			<h2 id="Alloc4">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=3934:3972#L105">Alloc4</a>
-				<a class="permalink" href="#Alloc4">&#xb6;</a>
-			</h2>
+			<h2 id="Alloc4">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=3934:3972#L105">Alloc4</a></h2>
 			<pre>func Alloc4() (tensor [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Alloc4 allocates a 3x3x3x3 4th order tensor
@@ -696,9 +690,7 @@ Alloc4 allocates a 3x3x3x3 4th order tensor
 		
 			
 			
-			<h2 id="AlmansiStrain">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=1160:1197#L41">AlmansiStrain</a>
-				<a class="permalink" href="#AlmansiStrain">&#xb6;</a>
-			</h2>
+			<h2 id="AlmansiStrain">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=1160:1197#L41">AlmansiStrain</a></h2>
 			<pre>func AlmansiStrain(e, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Eulerian or Almansi strain tensor: e := 0.5 * (I - inv(F)^t * inv(F))
@@ -711,9 +703,7 @@ Symmetric
 		
 			
 			
-			<h2 id="CauchyToPK1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=1704:1757#L68">CauchyToPK1</a>
-				<a class="permalink" href="#CauchyToPK1">&#xb6;</a>
-			</h2>
+			<h2 id="CauchyToPK1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=1704:1757#L68">CauchyToPK1</a></h2>
 			<pre>func CauchyToPK1(P, σ, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cauchy stress =&gt; first Piola-Kirchhoff: P := σ * inv(F)^t * J
@@ -725,9 +715,7 @@ Cauchy stress =&gt; first Piola-Kirchhoff: P := σ * inv(F)^t * J
 		
 			
 			
-			<h2 id="CauchyToPK2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=2256:2309#L92">CauchyToPK2</a>
-				<a class="permalink" href="#CauchyToPK2">&#xb6;</a>
-			</h2>
+			<h2 id="CauchyToPK2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=2256:2309#L92">CauchyToPK2</a></h2>
 			<pre>func CauchyToPK2(S, σ, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cauchy stress =&gt; second Piola-Kirchhoff: S := inv(F) * σ * inv(F)^t * J
@@ -739,9 +727,7 @@ Cauchy stress =&gt; second Piola-Kirchhoff: S := inv(F) * σ * inv(F)^t * J
 		
 			
 			
-			<h2 id="CheckEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=7672:7756#L236">CheckEigenprojs</a>
-				<a class="permalink" href="#CheckEigenprojs">&#xb6;</a>
-			</h2>
+			<h2 id="CheckEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=7672:7756#L236">CheckEigenprojs</a></h2>
 			<pre>func CheckEigenprojs(a []<a href="/pkg/builtin/#float64">float64</a>, tolP, tolS <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>) (λsorted []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CheckEigenprojs checks eigen projectors
@@ -753,9 +739,7 @@ CheckEigenprojs checks eigen projectors
 		
 			
 			
-			<h2 id="CheckEigenprojsDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=9948:10024#L320">CheckEigenprojsDerivs</a>
-				<a class="permalink" href="#CheckEigenprojsDerivs">&#xb6;</a>
-			</h2>
+			<h2 id="CheckEigenprojsDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=9948:10024#L320">CheckEigenprojsDerivs</a></h2>
 			<pre>func CheckEigenprojsDerivs(a []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>, zero <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CheckEigenprojsDerivs checks the derivatives of eigen projectors w.r.t defining tensor
@@ -767,9 +751,7 @@ CheckEigenprojsDerivs checks the derivatives of eigen projectors w.r.t defining 
 		
 			
 			
-			<h2 id="Det">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=658:689#L20">Det</a>
-				<a class="permalink" href="#Det">&#xb6;</a>
-			</h2>
+			<h2 id="Det">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=658:689#L20">Det</a></h2>
 			<pre>func Det(a [][]<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Det computes the determinant of a second order tensor
@@ -781,9 +763,7 @@ Det computes the determinant of a second order tensor
 		
 			
 			
-			<h2 id="Dev">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=397:439#L9">Dev</a>
-				<a class="permalink" href="#Dev">&#xb6;</a>
-			</h2>
+			<h2 id="Dev">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=397:439#L9">Dev</a></h2>
 			<pre>func Dev(a [][]<a href="/pkg/builtin/#float64">float64</a>) (deva [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Dev returns the second order deviatoric tensor
@@ -795,9 +775,7 @@ Dev returns the second order deviatoric tensor
 		
 			
 			
-			<h2 id="GenInvs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=342:407#L6">GenInvs</a>
-				<a class="permalink" href="#GenInvs">&#xb6;</a>
-			</h2>
+			<h2 id="GenInvs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=342:407#L6">GenInvs</a></h2>
 			<pre>func GenInvs(L, n []<a href="/pkg/builtin/#float64">float64</a>, a <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 GenInvs returns the SMP invariants
@@ -811,9 +789,7 @@ GenInvs returns the SMP invariants
 		
 			
 			
-			<h2 id="GenInvsDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=1774:1885#L56">GenInvsDeriv1</a>
-				<a class="permalink" href="#GenInvsDeriv1">&#xb6;</a>
-			</h2>
+			<h2 id="GenInvsDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=1774:1885#L56">GenInvsDeriv1</a></h2>
 			<pre>func GenInvsDeriv1(dpdL, dqdL []<a href="/pkg/builtin/#float64">float64</a>, L, n []<a href="/pkg/builtin/#float64">float64</a>, dndL [][]<a href="/pkg/builtin/#float64">float64</a>, a <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 GenInvsDeriv1 computes the first order derivatives of p and q w.r.t L (shifted eigenvalues)
@@ -827,9 +803,7 @@ GenInvsDeriv1 computes the first order derivatives of p and q w.r.t L (shifted e
 		
 			
 			
-			<h2 id="GenInvsDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=2757:2899#L89">GenInvsDeriv2</a>
-				<a class="permalink" href="#GenInvsDeriv2">&#xb6;</a>
-			</h2>
+			<h2 id="GenInvsDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=2757:2899#L89">GenInvsDeriv2</a></h2>
 			<pre>func GenInvsDeriv2(d2pdLdL, d2qdLdL [][]<a href="/pkg/builtin/#float64">float64</a>, L, n, dpdL, dqdL []<a href="/pkg/builtin/#float64">float64</a>, p, q <a href="/pkg/builtin/#float64">float64</a>, dndL [][]<a href="/pkg/builtin/#float64">float64</a>, d2ndLdL [][][]<a href="/pkg/builtin/#float64">float64</a>, a <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenInvsDeriv2 computes the second order derivatives of p and q w.r.t L (shifted eigenvalues)
@@ -843,9 +817,7 @@ GenInvsDeriv2 computes the second order derivatives of p and q w.r.t L (shifted 
 		
 			
 			
-			<h2 id="GenTvec">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=912:943#L22">GenTvec</a>
-				<a class="permalink" href="#GenTvec">&#xb6;</a>
-			</h2>
+			<h2 id="GenTvec">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=912:943#L22">GenTvec</a></h2>
 			<pre>func GenTvec(t, L, n []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenTvec computes the t vector (stress vector on SMP via Cauchy&#39;s rule: t = L dot n)
@@ -859,9 +831,7 @@ GenTvec computes the t vector (stress vector on SMP via Cauchy&#39;s rule: t = L
 		
 			
 			
-			<h2 id="GenTvecDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=1101:1171#L30">GenTvecDeriv1</a>
-				<a class="permalink" href="#GenTvecDeriv1">&#xb6;</a>
-			</h2>
+			<h2 id="GenTvecDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=1101:1171#L30">GenTvecDeriv1</a></h2>
 			<pre>func GenTvecDeriv1(dtdL [][]<a href="/pkg/builtin/#float64">float64</a>, L, n []<a href="/pkg/builtin/#float64">float64</a>, dndL [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenTvecDeriv1 computes the first derivative dt/dL
@@ -875,9 +845,7 @@ GenTvecDeriv1 computes the first derivative dt/dL
 		
 			
 			
-			<h2 id="GenTvecDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=1421:1518#L43">GenTvecDeriv2</a>
-				<a class="permalink" href="#GenTvecDeriv2">&#xb6;</a>
-			</h2>
+			<h2 id="GenTvecDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=1421:1518#L43">GenTvecDeriv2</a></h2>
 			<pre>func GenTvecDeriv2(i, j, k <a href="/pkg/builtin/#int">int</a>, L []<a href="/pkg/builtin/#float64">float64</a>, dndL [][]<a href="/pkg/builtin/#float64">float64</a>, d2ndLdL_ijk <a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenTvecDeriv2 computes the second derivative d²t/dLdL
@@ -891,9 +859,7 @@ GenTvecDeriv2 computes the second derivative d²t/dLdL
 		
 			
 			
-			<h2 id="GreenStrain">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=846:880#L25">GreenStrain</a>
-				<a class="permalink" href="#GreenStrain">&#xb6;</a>
-			</h2>
+			<h2 id="GreenStrain">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=846:880#L25">GreenStrain</a></h2>
 			<pre>func GreenStrain(E, F [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Lagrangian or Green strain tensor: E := 0.5 * (Ft * F - I)
@@ -906,9 +872,7 @@ Symmetric
 		
 			
 			
-			<h2 id="Inv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=903:955#L26">Inv</a>
-				<a class="permalink" href="#Inv">&#xb6;</a>
-			</h2>
+			<h2 id="Inv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=903:955#L26">Inv</a></h2>
 			<pre>func Inv(ai, a [][]<a href="/pkg/builtin/#float64">float64</a>) (det <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 Inv computes the inverse of a second order tensor
@@ -922,9 +886,7 @@ Inv computes the inverse of a second order tensor
 		
 			
 			
-			<h2 id="L2O">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=396:451#L7">L2O</a>
-				<a class="permalink" href="#L2O">&#xb6;</a>
-			</h2>
+			<h2 id="L2O">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=396:451#L7">L2O</a></h2>
 			<pre>func L2O(σ1, σ2, σ3 <a href="/pkg/builtin/#float64">float64</a>) (σa, σb, σc <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 L2O converts principal values (σ1,σ2,σ3) to octahedral values (σa,σb,σc)
@@ -936,9 +898,7 @@ L2O converts principal values (σ1,σ2,σ3) to octahedral values (σa,σb,σc)
 		
 			
 			
-			<h2 id="L_strains">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=1242:1289#L33">L_strains</a>
-				<a class="permalink" href="#L_strains">&#xb6;</a>
-			</h2>
+			<h2 id="L_strains">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=1242:1289#L33">L_strains</a></h2>
 			<pre>func L_strains(ε []<a href="/pkg/builtin/#float64">float64</a>) (εv, εd <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 L_strains compute strain invariants given principal values
@@ -952,9 +912,7 @@ L_strains compute strain invariants given principal values
 		
 			
 			
-			<h2 id="LeftCauchyGreenDef">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=581:622#L12">LeftCauchyGreenDef</a>
-				<a class="permalink" href="#LeftCauchyGreenDef">&#xb6;</a>
-			</h2>
+			<h2 id="LeftCauchyGreenDef">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=581:622#L12">LeftCauchyGreenDef</a></h2>
 			<pre>func LeftCauchyGreenDef(b, F [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Left Cauchy-Green deformation tensor: b := F * Ft
@@ -967,9 +925,7 @@ Symmetric and positive definite: det(b) = det(F)^2
 		
 			
 			
-			<h2 id="LinStrain">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=1459:1492#L56">LinStrain</a>
-				<a class="permalink" href="#LinStrain">&#xb6;</a>
-			</h2>
+			<h2 id="LinStrain">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=1459:1492#L56">LinStrain</a></h2>
 			<pre>func LinStrain(ε, F [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Linear strain tensor: ε := 0.5 * (H + Ht) = 0.5 * (F + Ft) - I
@@ -981,9 +937,7 @@ Linear strain tensor: ε := 0.5 * (H + Ht) = 0.5 * (F + Ft) - I
 		
 			
 			
-			<h2 id="M2Phi">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/fcritcoef.go?s=1601:1642#L49">M2Phi</a>
-				<a class="permalink" href="#M2Phi">&#xb6;</a>
-			</h2>
+			<h2 id="M2Phi">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/fcritcoef.go?s=1601:1642#L49">M2Phi</a></h2>
 			<pre>func M2Phi(M <a href="/pkg/builtin/#float64">float64</a>, typ <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M2Phi calculates φ (friction angle at compression (degrees)) given M (max q/p at compression)
@@ -995,9 +949,7 @@ M2Phi calculates φ (friction angle at compression (degrees)) given M (max q/p a
 		
 			
 			
-			<h2 id="M2T">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4962:5018#L147">M2T</a>
-				<a class="permalink" href="#M2T">&#xb6;</a>
-			</h2>
+			<h2 id="M2T">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4962:5018#L147">M2T</a></h2>
 			<pre>func M2T(mandel []<a href="/pkg/builtin/#float64">float64</a>, i, j <a href="/pkg/builtin/#int">int</a>) (component <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M2T converts Mandel components to 3x3 second order tensor components,
@@ -1010,9 +962,7 @@ i.e. correcting off-diagonal values that were multiplied by SQ2
 		
 			
 			
-			<h2 id="M2TT">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5488:5541#L168">M2TT</a>
-				<a class="permalink" href="#M2TT">&#xb6;</a>
-			</h2>
+			<h2 id="M2TT">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5488:5541#L168">M2TT</a></h2>
 			<pre>func M2TT(mandel [][]<a href="/pkg/builtin/#float64">float64</a>, i, j, k, l <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M2TT converts Mandel components to 3x3x3x3 fourth order tensor components,
@@ -1025,9 +975,7 @@ i.e. correcting all values that were multiplied by 2 or SQ2
 		
 			
 			
-			<h2 id="M_Alloc2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4308:4345#L120">M_Alloc2</a>
-				<a class="permalink" href="#M_Alloc2">&#xb6;</a>
-			</h2>
+			<h2 id="M_Alloc2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4308:4345#L120">M_Alloc2</a></h2>
 			<pre>func M_Alloc2(ndim <a href="/pkg/builtin/#int">int</a>) (a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Alloc2 allocates a 2th order tensor in Mandel&#39;s representation (2*ndim)
@@ -1039,9 +987,7 @@ M_Alloc2 allocates a 2th order tensor in Mandel&#39;s representation (2*ndim)
 		
 			
 			
-			<h2 id="M_Alloc4">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4490:4529#L127">M_Alloc4</a>
-				<a class="permalink" href="#M_Alloc4">&#xb6;</a>
-			</h2>
+			<h2 id="M_Alloc4">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4490:4529#L127">M_Alloc4</a></h2>
 			<pre>func M_Alloc4(ndim <a href="/pkg/builtin/#int">int</a>) (A [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Alloc4 allocates a 4th order tensor in Mandel&#39;s representation ((2*ndim)x(2*ndim))
@@ -1053,9 +999,7 @@ M_Alloc4 allocates a 4th order tensor in Mandel&#39;s representation ((2*ndim)x(
 		
 			
 			
-			<h2 id="M_AllocEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1527:1574#L46">M_AllocEigenprojs</a>
-				<a class="permalink" href="#M_AllocEigenprojs">&#xb6;</a>
-			</h2>
+			<h2 id="M_AllocEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1527:1574#L46">M_AllocEigenprojs</a></h2>
 			<pre>func M_AllocEigenprojs(ncp <a href="/pkg/builtin/#int">int</a>) (P [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_AllocEigenprojs allocates new eigenprojectors P[3][ncp].
@@ -1071,9 +1015,7 @@ P[2] = {P2_0, P2_1, P2_2, P2_3, P2_4, P2_5}
 		
 			
 			
-			<h2 id="M_CharInvs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=7343:7392#L280">M_CharInvs</a>
-				<a class="permalink" href="#M_CharInvs">&#xb6;</a>
-			</h2>
+			<h2 id="M_CharInvs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=7343:7392#L280">M_CharInvs</a></h2>
 			<pre>func M_CharInvs(a []<a href="/pkg/builtin/#float64">float64</a>) (I1, I2, I3 <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_CharInvs computes the characteristic invariants of a 2nd order symmetric tensor
@@ -1085,9 +1027,7 @@ M_CharInvs computes the characteristic invariants of a 2nd order symmetric tenso
 		
 			
 			
-			<h2 id="M_CharInvsAndDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=7773:7862#L293">M_CharInvsAndDerivs</a>
-				<a class="permalink" href="#M_CharInvsAndDerivs">&#xb6;</a>
-			</h2>
+			<h2 id="M_CharInvsAndDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=7773:7862#L293">M_CharInvsAndDerivs</a></h2>
 			<pre>func M_CharInvsAndDerivs(a []<a href="/pkg/builtin/#float64">float64</a>) (I1, I2, I3 <a href="/pkg/builtin/#float64">float64</a>, dI1da, dI2da, dI3da []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_CharInvsAndDerivs computes the characteristic invariants of a
@@ -1100,9 +1040,7 @@ M_CharInvsAndDerivs computes the characteristic invariants of a
 		
 			
 			
-			<h2 id="M_Det">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=1059:1090#L27">M_Det</a>
-				<a class="permalink" href="#M_Det">&#xb6;</a>
-			</h2>
+			<h2 id="M_Det">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=1059:1090#L27">M_Det</a></h2>
 			<pre>func M_Det(a []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_Det calculates the determinant a 2nd order tensor represented in Mandel&#39;s basis
@@ -1116,9 +1054,7 @@ M_Det calculates the determinant a 2nd order tensor represented in Mandel&#39;s 
 		
 			
 			
-			<h2 id="M_DetDeriv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=1421:1452#L39">M_DetDeriv</a>
-				<a class="permalink" href="#M_DetDeriv">&#xb6;</a>
-			</h2>
+			<h2 id="M_DetDeriv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=1421:1452#L39">M_DetDeriv</a></h2>
 			<pre>func M_DetDeriv(d, a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_DetDeriv computes the derivative of the determinant of a w.r.t a
@@ -1132,9 +1068,7 @@ M_DetDeriv computes the derivative of the determinant of a w.r.t a
 		
 			
 			
-			<h2 id="M_Dev">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=745:782#L17">M_Dev</a>
-				<a class="permalink" href="#M_Dev">&#xb6;</a>
-			</h2>
+			<h2 id="M_Dev">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=745:782#L17">M_Dev</a></h2>
 			<pre>func M_Dev(a []<a href="/pkg/builtin/#float64">float64</a>) (s []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Dev calculates the deviator a 2nd order tensor represented in Mandel&#39;s basis
@@ -1146,9 +1080,7 @@ M_Dev calculates the deviator a 2nd order tensor represented in Mandel&#39;s bas
 		
 			
 			
-			<h2 id="M_Dot">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=4637:4707#L162">M_Dot</a>
-				<a class="permalink" href="#M_Dot">&#xb6;</a>
-			</h2>
+			<h2 id="M_Dot">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=4637:4707#L162">M_Dot</a></h2>
 			<pre>func M_Dot(c []<a href="/pkg/builtin/#float64">float64</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>, nonsymTol <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_Dot multiplies two second order symmetric tensors (the result may be non-symmetric)
@@ -1163,9 +1095,7 @@ An error is returned in case the result is non-symmetric
 		
 			
 			
-			<h2 id="M_Dy">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=3367:3408#L129">M_Dy</a>
-				<a class="permalink" href="#M_Dy">&#xb6;</a>
-			</h2>
+			<h2 id="M_Dy">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=3367:3408#L129">M_Dy</a></h2>
 			<pre>func M_Dy(a, b []<a href="/pkg/builtin/#float64">float64</a>) (c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Dy returns the dyadic product between a and b
@@ -1179,9 +1109,7 @@ M_Dy returns the dyadic product between a and b
 		
 			
 			
-			<h2 id="M_DyAdd">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=4288:4342#L150">M_DyAdd</a>
-				<a class="permalink" href="#M_DyAdd">&#xb6;</a>
-			</h2>
+			<h2 id="M_DyAdd">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=4288:4342#L150">M_DyAdd</a></h2>
 			<pre>func M_DyAdd(c [][]<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_DyAdd adds the dyadic product between a and b scaled by s
@@ -1195,9 +1123,7 @@ M_DyAdd adds the dyadic product between a and b scaled by s
 		
 			
 			
-			<h2 id="M_EigenProjsDerivAna">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=2934:3023#L95">M_EigenProjsDerivAna</a>
-				<a class="permalink" href="#M_EigenProjsDerivAna">&#xb6;</a>
-			</h2>
+			<h2 id="M_EigenProjsDerivAna">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=2934:3023#L95">M_EigenProjsDerivAna</a></h2>
 			<pre>func M_EigenProjsDerivAna(dPda [][][]<a href="/pkg/builtin/#float64">float64</a>, a, λ []<a href="/pkg/builtin/#float64">float64</a>, P [][]<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenProjsDerivAna returns the derivatives of the eigenprojectors w.r.t its defining tensor
@@ -1217,9 +1143,7 @@ Output:
 		
 			
 			
-			<h2 id="M_EigenProjsDerivAuto">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=6780:6870#L218">M_EigenProjsDerivAuto</a>
-				<a class="permalink" href="#M_EigenProjsDerivAuto">&#xb6;</a>
-			</h2>
+			<h2 id="M_EigenProjsDerivAuto">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=6780:6870#L218">M_EigenProjsDerivAuto</a></h2>
 			<pre>func M_EigenProjsDerivAuto(dPda [][][]<a href="/pkg/builtin/#float64">float64</a>, a, λ []<a href="/pkg/builtin/#float64">float64</a>, P [][]<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenProjsDerivAuto computes the derivatives of the eigenprojectors of tensor a
@@ -1242,9 +1166,7 @@ Output:
 		
 			
 			
-			<h2 id="M_EigenProjsDerivNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=4847:4928#L143">M_EigenProjsDerivNum</a>
-				<a class="permalink" href="#M_EigenProjsDerivNum">&#xb6;</a>
-			</h2>
+			<h2 id="M_EigenProjsDerivNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=4847:4928#L143">M_EigenProjsDerivNum</a></h2>
 			<pre>func M_EigenProjsDerivNum(dPda [][][]<a href="/pkg/builtin/#float64">float64</a>, a []<a href="/pkg/builtin/#float64">float64</a>, h <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenProjsDerivNum returns the derivatives of the eigenprojectors w.r.t its defining tensor
@@ -1263,9 +1185,7 @@ Output:
 		
 			
 			
-			<h2 id="M_EigenValsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=896:944#L25">M_EigenValsNum</a>
-				<a class="permalink" href="#M_EigenValsNum">&#xb6;</a>
-			</h2>
+			<h2 id="M_EigenValsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=896:944#L25">M_EigenValsNum</a></h2>
 			<pre>func M_EigenValsNum(λ, a []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenValsNum returns the eigenvalues of tensor &#39;a&#39; (2nd order symmetric tensor in Mandel&#39;s basis)
@@ -1278,9 +1198,7 @@ using Jacobi rotation
 		
 			
 			
-			<h2 id="M_EigenValsProjsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1830:1898#L56">M_EigenValsProjsNum</a>
-				<a class="permalink" href="#M_EigenValsProjsNum">&#xb6;</a>
-			</h2>
+			<h2 id="M_EigenValsProjsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1830:1898#L56">M_EigenValsProjsNum</a></h2>
 			<pre>func M_EigenValsProjsNum(P [][]<a href="/pkg/builtin/#float64">float64</a>, λ, a []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenValsProjsNum computes the eigenvalues and eigenprojectors of tensor &#39;a&#39; (2nd order symmetric tensor in Mandel&#39;s basis)
@@ -1293,9 +1211,7 @@ using Jacobi rotation.
 		
 			
 			
-			<h2 id="M_EigenValsVecsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1180:1247#L35">M_EigenValsVecsNum</a>
-				<a class="permalink" href="#M_EigenValsVecsNum">&#xb6;</a>
-			</h2>
+			<h2 id="M_EigenValsVecsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1180:1247#L35">M_EigenValsVecsNum</a></h2>
 			<pre>func M_EigenValsVecsNum(Q [][]<a href="/pkg/builtin/#float64">float64</a>, λ, a []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenValsVecs returns the eigenvalues and eigenvectors of tensor &#39;a&#39; (2nd order symmetric tensor in Mandel&#39;s basis)
@@ -1308,9 +1224,7 @@ using Jacobi rotation.
 		
 			
 			
-			<h2 id="M_Inv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=6140:6205#L200">M_Inv</a>
-				<a class="permalink" href="#M_Inv">&#xb6;</a>
-			</h2>
+			<h2 id="M_Inv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=6140:6205#L200">M_Inv</a></h2>
 			<pre>func M_Inv(ai, a []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) (det <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_Inv computes the inverse of a 2nd order symmetric tensor &#39;a&#39;
@@ -1322,9 +1236,7 @@ M_Inv computes the inverse of a 2nd order symmetric tensor &#39;a&#39;
 		
 			
 			
-			<h2 id="M_InvDeriv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=7069:7113#L228">M_InvDeriv</a>
-				<a class="permalink" href="#M_InvDeriv">&#xb6;</a>
-			</h2>
+			<h2 id="M_InvDeriv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=7069:7113#L228">M_InvDeriv</a></h2>
 			<pre>func M_InvDeriv(d [][]<a href="/pkg/builtin/#float64">float64</a>, ai []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_InvDeriv computes the derivative of the inverse of a tensor with respect to itself
@@ -1339,9 +1251,7 @@ d  := dai/da
 		
 			
 			
-			<h2 id="M_LodeDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=4433:4491#L171">M_LodeDeriv1</a>
-				<a class="permalink" href="#M_LodeDeriv1">&#xb6;</a>
-			</h2>
+			<h2 id="M_LodeDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=4433:4491#L171">M_LodeDeriv1</a></h2>
 			<pre>func M_LodeDeriv1(dwdσ, σ, s []<a href="/pkg/builtin/#float64">float64</a>, p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_LodeDeriv1 computes the first derivative of w w.r.t σ
@@ -1355,9 +1265,7 @@ M_LodeDeriv1 computes the first derivative of w w.r.t σ
 		
 			
 			
-			<h2 id="M_LodeDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=4932:5013#L189">M_LodeDeriv2</a>
-				<a class="permalink" href="#M_LodeDeriv2">&#xb6;</a>
-			</h2>
+			<h2 id="M_LodeDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=4932:5013#L189">M_LodeDeriv2</a></h2>
 			<pre>func M_LodeDeriv2(d2wdσdσ [][]<a href="/pkg/builtin/#float64">float64</a>, dwdσ, σ, s []<a href="/pkg/builtin/#float64">float64</a>, p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_LodeDeriv2 computes the first and second derivatives of w w.r.t. σ
@@ -1371,9 +1279,7 @@ M_LodeDeriv2 computes the first and second derivatives of w w.r.t. σ
 		
 			
 			
-			<h2 id="M_Norm">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=308:340#L4">M_Norm</a>
-				<a class="permalink" href="#M_Norm">&#xb6;</a>
-			</h2>
+			<h2 id="M_Norm">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=308:340#L4">M_Norm</a></h2>
 			<pre>func M_Norm(a []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_Norm calculates the norm of a 2nd order tensor represented in Mandel&#39;s basis
@@ -1385,9 +1291,7 @@ M_Norm calculates the norm of a 2nd order tensor represented in Mandel&#39;s bas
 		
 			
 			
-			<h2 id="M_PrincValsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=493:560#L9">M_PrincValsNum</a>
-				<a class="permalink" href="#M_PrincValsNum">&#xb6;</a>
-			</h2>
+			<h2 id="M_PrincValsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=493:560#L9">M_PrincValsNum</a></h2>
 			<pre>func M_PrincValsNum(a []<a href="/pkg/builtin/#float64">float64</a>) (λ0, λ1, λ2 <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_PrincValsNum returns the (sorted, ascending) eigenvalues of tensor &#39;a&#39; (2nd order symmetric tensor in Mandel&#39;s basis)
@@ -1400,9 +1304,7 @@ using Jacobi rotation.
 		
 			
 			
-			<h2 id="M_Sq">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=1738:1763#L51">M_Sq</a>
-				<a class="permalink" href="#M_Sq">&#xb6;</a>
-			</h2>
+			<h2 id="M_Sq">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=1738:1763#L51">M_Sq</a></h2>
 			<pre>func M_Sq(b, a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Sq returns the square of a tensor in Mandel&#39;s representation
@@ -1416,9 +1318,7 @@ M_Sq returns the square of a tensor in Mandel&#39;s representation
 		
 			
 			
-			<h2 id="M_SqDeriv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=2346:2388#L69">M_SqDeriv</a>
-				<a class="permalink" href="#M_SqDeriv">&#xb6;</a>
-			</h2>
+			<h2 id="M_SqDeriv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=2346:2388#L69">M_SqDeriv</a></h2>
 			<pre>func M_SqDeriv(d [][]<a href="/pkg/builtin/#float64">float64</a>, a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_SqDeriv (Mandel) derivative of square of a tensor
@@ -1432,9 +1332,7 @@ M_SqDeriv (Mandel) derivative of square of a tensor
 		
 			
 			
-			<h2 id="M_Tr">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=600:630#L12">M_Tr</a>
-				<a class="permalink" href="#M_Tr">&#xb6;</a>
-			</h2>
+			<h2 id="M_Tr">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/mandelops.go?s=600:630#L12">M_Tr</a></h2>
 			<pre>func M_Tr(a []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_Tr calculates the trace a 2nd order tensor represented in Mandel&#39;s basis
@@ -1446,9 +1344,7 @@ M_Tr calculates the trace a 2nd order tensor represented in Mandel&#39;s basis
 		
 			
 			
-			<h2 id="M_Ts">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=5792:5830#L221">M_Ts</a>
-				<a class="permalink" href="#M_Ts">&#xb6;</a>
-			</h2>
+			<h2 id="M_Ts">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=5792:5830#L221">M_Ts</a></h2>
 			<pre>func M_Ts(Ts [][]<a href="/pkg/builtin/#float64">float64</a>, s []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Ts computes Ts = Psd:(ds²/ds):Psd
@@ -1460,9 +1356,7 @@ M_Ts computes Ts = Psd:(ds²/ds):Psd
 		
 			
 			
-			<h2 id="M_devε">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=2052:2105#L54">M_devε</a>
-				<a class="permalink" href="#M_devε">&#xb6;</a>
-			</h2>
+			<h2 id="M_devε">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=2052:2105#L54">M_devε</a></h2>
 			<pre>func M_devε(e, ε []<a href="/pkg/builtin/#float64">float64</a>) (eno, εv, εd <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_devε returns the deviator of ε (e := dev(ε)), the norm of the deviator (eno) and the εv, εd invariants
@@ -1476,9 +1370,7 @@ M_devε returns the deviator of ε (e := dev(ε)), the norm of the deviator (eno
 		
 			
 			
-			<h2 id="M_devσ">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=1637:1686#L41">M_devσ</a>
-				<a class="permalink" href="#M_devσ">&#xb6;</a>
-			</h2>
+			<h2 id="M_devσ">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=1637:1686#L41">M_devσ</a></h2>
 			<pre>func M_devσ(s, σ []<a href="/pkg/builtin/#float64">float64</a>) (sno, p, q <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_devσ returns the deviator of σ (s := dev(σ)), the norm of the deviator (sno) and the p, q invariants
@@ -1492,9 +1384,7 @@ M_devσ returns the deviator of σ (s := dev(σ)), the norm of the deviator (sno
 		
 			
 			
-			<h2 id="M_oct">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=1553:1600#L45">M_oct</a>
-				<a class="permalink" href="#M_oct">&#xb6;</a>
-			</h2>
+			<h2 id="M_oct">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=1553:1600#L45">M_oct</a></h2>
 			<pre>func M_oct(a []<a href="/pkg/builtin/#float64">float64</a>) (σa, σb, σc <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_oct computes octahedral values of a 2nd order symmetric tensor with Mandel components
@@ -1509,9 +1399,7 @@ M_oct computes octahedral values of a 2nd order symmetric tensor with Mandel com
 		
 			
 			
-			<h2 id="M_p">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=388:418#L4">M_p</a>
-				<a class="permalink" href="#M_p">&#xb6;</a>
-			</h2>
+			<h2 id="M_p">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=388:418#L4">M_p</a></h2>
 			<pre>func M_p(σ []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_p returns the hydrostatic pressure == negative of the mean pressure == - tr(σ) / 3
@@ -1523,9 +1411,7 @@ M_p returns the hydrostatic pressure == negative of the mean pressure == - tr(σ
 		
 			
 			
-			<h2 id="M_pq_smp">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=8640:8715#L318">M_pq_smp</a>
-				<a class="permalink" href="#M_pq_smp">&#xb6;</a>
-			</h2>
+			<h2 id="M_pq_smp">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=8640:8715#L318">M_pq_smp</a></h2>
 			<pre>func M_pq_smp(σ []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_pq_smp computes p and q SMP invariants of 2nd order symmetric tensor (Mandel components)
@@ -1540,9 +1426,7 @@ M_pq_smp computes p and q SMP invariants of 2nd order symmetric tensor (Mandel c
 		
 			
 			
-			<h2 id="M_pqw">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=2916:2957#L94">M_pqw</a>
-				<a class="permalink" href="#M_pqw">&#xb6;</a>
-			</h2>
+			<h2 id="M_pqw">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=2916:2957#L94">M_pqw</a></h2>
 			<pre>func M_pqw(a []<a href="/pkg/builtin/#float64">float64</a>) (p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_pqw returns p, q and w invariants
@@ -1554,9 +1438,7 @@ M_pqw returns p, q and w invariants
 		
 			
 			
-			<h2 id="M_pqws">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=3966:4011#L146">M_pqws</a>
-				<a class="permalink" href="#M_pqws">&#xb6;</a>
-			</h2>
+			<h2 id="M_pqws">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=3966:4011#L146">M_pqws</a></h2>
 			<pre>func M_pqws(s, a []<a href="/pkg/builtin/#float64">float64</a>) (p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_pqws returns p, q, w invariants and the deviatoric stress s := dev(σ)
@@ -1570,9 +1452,7 @@ M_pqws returns p, q, w invariants and the deviatoric stress s := dev(σ)
 		
 			
 			
-			<h2 id="M_pqθ">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=3359:3402#L119">M_pqθ</a>
-				<a class="permalink" href="#M_pqθ">&#xb6;</a>
-			</h2>
+			<h2 id="M_pqθ">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=3359:3402#L119">M_pqθ</a></h2>
 			<pre>func M_pqθ(a []<a href="/pkg/builtin/#float64">float64</a>) (p, q, θ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_pqθ returns p, q and θ invariants
@@ -1584,9 +1464,7 @@ M_pqθ returns p, q and θ invariants
 		
 			
 			
-			<h2 id="M_q">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=507:537#L9">M_q</a>
-				<a class="permalink" href="#M_q">&#xb6;</a>
-			</h2>
+			<h2 id="M_q">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=507:537#L9">M_q</a></h2>
 			<pre>func M_q(σ []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_q returns von Mises&#39; equivalent stress
@@ -1598,9 +1476,7 @@ M_q returns von Mises&#39; equivalent stress
 		
 			
 			
-			<h2 id="M_w">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=2338:2371#L66">M_w</a>
-				<a class="permalink" href="#M_w">&#xb6;</a>
-			</h2>
+			<h2 id="M_w">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=2338:2371#L66">M_w</a></h2>
 			<pre>func M_w(a []<a href="/pkg/builtin/#float64">float64</a>) (w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_w returns the Lode invariant -1 ≤ w := sin(3θ) ≤ 1
@@ -1612,9 +1488,7 @@ M_w returns the Lode invariant -1 ≤ w := sin(3θ) ≤ 1
 		
 			
 			
-			<h2 id="M_εd">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=901:933#L23">M_εd</a>
-				<a class="permalink" href="#M_εd">&#xb6;</a>
-			</h2>
+			<h2 id="M_εd">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=901:933#L23">M_εd</a></h2>
 			<pre>func M_εd(ε []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_εd returns the deviatoric strain
@@ -1626,9 +1500,7 @@ M_εd returns the deviatoric strain
 		
 			
 			
-			<h2 id="M_εv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=794:826#L18">M_εv</a>
-				<a class="permalink" href="#M_εv">&#xb6;</a>
-			</h2>
+			<h2 id="M_εv">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=794:826#L18">M_εv</a></h2>
 			<pre>func M_εv(ε []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M_εv returns the volumetric strain
@@ -1640,9 +1512,7 @@ M_εv returns the volumetric strain
 		
 			
 			
-			<h2 id="M_θ">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=2781:2819#L89">M_θ</a>
-				<a class="permalink" href="#M_θ">&#xb6;</a>
-			</h2>
+			<h2 id="M_θ">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/invariants.go?s=2781:2819#L89">M_θ</a></h2>
 			<pre>func M_θ(a []<a href="/pkg/builtin/#float64">float64</a>) (θdeg <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_θ returns the Lode invariant -30° ≤ θ := asin(w) / 3 ≤ 30°
@@ -1654,9 +1524,7 @@ M_θ returns the Lode invariant -30° ≤ θ := asin(w) / 3 ≤ 30°
 		
 			
 			
-			<h2 id="Man2Ten">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5821:5871#L180">Man2Ten</a>
-				<a class="permalink" href="#Man2Ten">&#xb6;</a>
-			</h2>
+			<h2 id="Man2Ten">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5821:5871#L180">Man2Ten</a></h2>
 			<pre>func Man2Ten(tensor [][]<a href="/pkg/builtin/#float64">float64</a>, mandel []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Man2Ten returns the 3x3 2nd order tensor from its Mandel representation
@@ -1668,9 +1536,7 @@ Man2Ten returns the 3x3 2nd order tensor from its Mandel representation
 		
 			
 			
-			<h2 id="Mmatch">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/fcritcoef.go?s=575:631#L9">Mmatch</a>
-				<a class="permalink" href="#Mmatch">&#xb6;</a>
-			</h2>
+			<h2 id="Mmatch">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/fcritcoef.go?s=575:631#L9">Mmatch</a></h2>
 			<pre>func Mmatch(c, φ <a href="/pkg/builtin/#float64">float64</a>, cone <a href="/pkg/builtin/#string">string</a>) (M, qy0 <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Mmatch computes M=q/p and qy0 from c and φ corresponding to the strength that would
@@ -1688,9 +1554,7 @@ Note: p, q, and M are Cambridge (conventional) quantities
 		
 			
 			
-			<h2 id="O2L">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=639:694#L15">O2L</a>
-				<a class="permalink" href="#O2L">&#xb6;</a>
-			</h2>
+			<h2 id="O2L">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=639:694#L15">O2L</a></h2>
 			<pre>func O2L(σa, σb, σc <a href="/pkg/builtin/#float64">float64</a>) (σ1, σ2, σ3 <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 O2L converts octahedral values (σa,σb,σc) to principal values (σ1,σ2,σ3)
@@ -1702,9 +1566,7 @@ O2L converts octahedral values (σa,σb,σc) to principal values (σ1,σ2,σ3)
 		
 			
 			
-			<h2 id="O2Lmat">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=890:919#L23">O2Lmat</a>
-				<a class="permalink" href="#O2Lmat">&#xb6;</a>
-			</h2>
+			<h2 id="O2Lmat">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=890:919#L23">O2Lmat</a></h2>
 			<pre>func O2Lmat() (L [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 O2Lmat computes L[I:{1,2,3}][A:{a,b,c}] = dσI/dσA =&gt; σI = L * σA
@@ -1716,9 +1578,7 @@ O2Lmat computes L[I:{1,2,3}][A:{a,b,c}] = dσI/dσA =&gt; σI = L * σA
 		
 			
 			
-			<h2 id="PK1ToCauchy">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=1972:2025#L80">PK1ToCauchy</a>
-				<a class="permalink" href="#PK1ToCauchy">&#xb6;</a>
-			</h2>
+			<h2 id="PK1ToCauchy">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=1972:2025#L80">PK1ToCauchy</a></h2>
 			<pre>func PK1ToCauchy(σ, P, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 First Piola-Kirchhoff =&gt; Cauchy stress: σ := P * Ft / J
@@ -1730,9 +1590,7 @@ First Piola-Kirchhoff =&gt; Cauchy stress: σ := P * Ft / J
 		
 			
 			
-			<h2 id="PK2ToCauchy">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=2576:2629#L106">PK2ToCauchy</a>
-				<a class="permalink" href="#PK2ToCauchy">&#xb6;</a>
-			</h2>
+			<h2 id="PK2ToCauchy">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=2576:2629#L106">PK2ToCauchy</a></h2>
 			<pre>func PK2ToCauchy(σ, S, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Second Piola-Kirchhoff =&gt; Cauchy stress: σ := F * S * Ft / J
@@ -1744,9 +1602,7 @@ Second Piola-Kirchhoff =&gt; Cauchy stress: σ := F * S * Ft / J
 		
 			
 			
-			<h2 id="PQW2O">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=1118:1169#L32">PQW2O</a>
-				<a class="permalink" href="#PQW2O">&#xb6;</a>
-			</h2>
+			<h2 id="PQW2O">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=1118:1169#L32">PQW2O</a></h2>
 			<pre>func PQW2O(p, q, w <a href="/pkg/builtin/#float64">float64</a>) (σa, σb, σc <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PQW2O converts p,q,w to octahedral values (σa,σb,σc)
@@ -1758,9 +1614,7 @@ PQW2O converts p,q,w to octahedral values (σa,σb,σc)
 		
 			
 			
-			<h2 id="Phi2M">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/fcritcoef.go?s=1238:1280#L35">Phi2M</a>
-				<a class="permalink" href="#Phi2M">&#xb6;</a>
-			</h2>
+			<h2 id="Phi2M">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/fcritcoef.go?s=1238:1280#L35">Phi2M</a></h2>
 			<pre>func Phi2M(φ <a href="/pkg/builtin/#float64">float64</a>, typ <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Phi2M calculates M = max q/p at compression (φ: friction angle at compression (degrees)).
@@ -1773,9 +1627,7 @@ type = {&#34;oct&#34;, &#34;cam&#34;, &#34;smp&#34;}
 		
 			
 			
-			<h2 id="PlotOct">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=4721:4920#L121">PlotOct</a>
-				<a class="permalink" href="#PlotOct">&#xb6;</a>
-			</h2>
+			<h2 id="PlotOct">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=4721:4920#L121">PlotOct</a></h2>
 			<pre>func PlotOct(filename <a href="/pkg/builtin/#string">string</a>, σcCte, rmin, rmax <a href="/pkg/builtin/#float64">float64</a>, nr, nα <a href="/pkg/builtin/#int">int</a>, φ <a href="/pkg/builtin/#float64">float64</a>, F <a href="#Cb_F_t">Cb_F_t</a>, G <a href="#Cb_G_t">Cb_G_t</a>,
     notpolarc, simplec, only0, grads, showpts, first, last <a href="/pkg/builtin/#bool">bool</a>, ferr <a href="/pkg/builtin/#float64">float64</a>, args ...interface{})</pre>
 			<p>
@@ -1788,9 +1640,7 @@ PlotOct plots a function cross-section and gradients projections on octahedral p
 		
 			
 			
-			<h2 id="PlotRefOct">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=3876:3928#L97">PlotRefOct</a>
-				<a class="permalink" href="#PlotRefOct">&#xb6;</a>
-			</h2>
+			<h2 id="PlotRefOct">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=3876:3928#L97">PlotRefOct</a></h2>
 			<pre>func PlotRefOct(φ, σc <a href="/pkg/builtin/#float64">float64</a>, withExtCircle <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 PlotRefOct plots reference failure criterions in octahedral plane:
@@ -1804,9 +1654,7 @@ PlotRefOct plots reference failure criterions in octahedral plane:
 		
 			
 			
-			<h2 id="PlotRosette">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=1716:1787#L52">PlotRosette</a>
-				<a class="permalink" href="#PlotRosette">&#xb6;</a>
-			</h2>
+			<h2 id="PlotRosette">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=1716:1787#L52">PlotRosette</a></h2>
 			<pre>func PlotRosette(r <a href="/pkg/builtin/#float64">float64</a>, full, ref <a href="/pkg/builtin/#bool">bool</a>, withtext <a href="/pkg/builtin/#bool">bool</a>, fsz <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PlotRosette plots rosette in octahedral plane
@@ -1818,9 +1666,7 @@ PlotRosette plots rosette in octahedral plane
 		
 			
 			
-			<h2 id="PullBack">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=3211:3251#L134">PullBack</a>
-				<a class="permalink" href="#PullBack">&#xb6;</a>
-			</h2>
+			<h2 id="PullBack">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=3211:3251#L134">PullBack</a></h2>
 			<pre>func PullBack(res, a, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Pull-back (type A/cov): res := push-back(a) = Ft * a * F
@@ -1832,9 +1678,7 @@ Pull-back (type A/cov): res := push-back(a) = Ft * a * F
 		
 			
 			
-			<h2 id="PullBackB">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=3836:3877#L162">PullBackB</a>
-				<a class="permalink" href="#PullBackB">&#xb6;</a>
-			</h2>
+			<h2 id="PullBackB">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=3836:3877#L162">PullBackB</a></h2>
 			<pre>func PullBackB(res, a, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Pull-back (type B/contra): res := pull-back(a) = inv(F) * a * inv(F)^t
@@ -1846,9 +1690,7 @@ Pull-back (type B/contra): res := pull-back(a) = inv(F) * a * inv(F)^t
 		
 			
 			
-			<h2 id="PushForward">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=2907:2950#L120">PushForward</a>
-				<a class="permalink" href="#PushForward">&#xb6;</a>
-			</h2>
+			<h2 id="PushForward">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=2907:2950#L120">PushForward</a></h2>
 			<pre>func PushForward(res, a, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Push-forward (type A/cov): res := push-forward(a) = inv(F)^t * a * inv(F)
@@ -1860,9 +1702,7 @@ Push-forward (type A/cov): res := push-forward(a) = inv(F)^t * a * inv(F)
 		
 			
 			
-			<h2 id="PushForwardB">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=3519:3563#L148">PushForwardB</a>
-				<a class="permalink" href="#PushForwardB">&#xb6;</a>
-			</h2>
+			<h2 id="PushForwardB">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=3519:3563#L148">PushForwardB</a></h2>
 			<pre>func PushForwardB(res, a, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Push-forward (type B/contra): res := push-forward(a) = F * a * Ft
@@ -1874,9 +1714,7 @@ Push-forward (type B/contra): res := push-forward(a) = F * a * Ft
 		
 			
 			
-			<h2 id="RightCauchyGreenDef">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=283:325#L1">RightCauchyGreenDef</a>
-				<a class="permalink" href="#RightCauchyGreenDef">&#xb6;</a>
-			</h2>
+			<h2 id="RightCauchyGreenDef">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/contmech.go?s=283:325#L1">RightCauchyGreenDef</a></h2>
 			<pre>func RightCauchyGreenDef(C, F [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Right Cauchy-Green deformation tensor: C := Ft * F
@@ -1889,9 +1727,7 @@ Symmetric and positive definite: det(C) = det(F)^2
 		
 			
 			
-			<h2 id="SMPderivs1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=4170:4258#L128">SMPderivs1</a>
-				<a class="permalink" href="#SMPderivs1">&#xb6;</a>
-			</h2>
+			<h2 id="SMPderivs1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=4170:4258#L128">SMPderivs1</a></h2>
 			<pre>func SMPderivs1(dpdL, dqdL, L []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SMPderivs1 computes the 1st order derivatives of SMP invariants
@@ -1905,9 +1741,7 @@ SMPderivs1 computes the 1st order derivatives of SMP invariants
 		
 			
 			
-			<h2 id="SMPinvs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=3764:3837#L118">SMPinvs</a>
-				<a class="permalink" href="#SMPinvs">&#xb6;</a>
-			</h2>
+			<h2 id="SMPinvs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/generalinvs.go?s=3764:3837#L118">SMPinvs</a></h2>
 			<pre>func SMPinvs(L []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (p, q <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SMPinvs computes the SMP invariants, after the internal computation of the SMP unit director
@@ -1921,9 +1755,7 @@ SMPinvs computes the SMP invariants, after the internal computation of the SMP u
 		
 			
 			
-			<h2 id="SmpCalcμ">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=303:356#L4">SmpCalcμ</a>
-				<a class="permalink" href="#SmpCalcμ">&#xb6;</a>
-			</h2>
+			<h2 id="SmpCalcμ">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=303:356#L4">SmpCalcμ</a></h2>
 			<pre>func SmpCalcμ(φ, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (μ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpCalcμ computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
@@ -1935,9 +1767,7 @@ SmpCalcμ computes μ=q/p to satisfy Mohr-Coulomb criterion @ compression
 		
 			
 			
-			<h2 id="SmpDerivs1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=5118:5223#L137">SmpDerivs1</a>
-				<a class="permalink" href="#SmpDerivs1">&#xb6;</a>
-			</h2>
+			<h2 id="SmpDerivs1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=5118:5223#L137">SmpDerivs1</a></h2>
 			<pre>func SmpDerivs1(dndL [][]<a href="/pkg/builtin/#float64">float64</a>, dNdL, N, F, G []<a href="/pkg/builtin/#float64">float64</a>, L []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (m <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDerivs1 computes the first derivative and other variables
@@ -1951,9 +1781,7 @@ SmpDerivs1 computes the first derivative and other variables
 		
 			
 			
-			<h2 id="SmpDerivs2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=6245:6364#L176">SmpDerivs2</a>
-				<a class="permalink" href="#SmpDerivs2">&#xb6;</a>
-			</h2>
+			<h2 id="SmpDerivs2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=6245:6364#L176">SmpDerivs2</a></h2>
 			<pre>func SmpDerivs2(d2ndLdL [][][]<a href="/pkg/builtin/#float64">float64</a>, L []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ, m <a href="/pkg/builtin/#float64">float64</a>, N, F, G, dNdL []<a href="/pkg/builtin/#float64">float64</a>, dndL [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDerivs2 computes the second order derivative
@@ -1967,9 +1795,7 @@ SmpDerivs2 computes the second order derivative
 		
 			
 			
-			<h2 id="SmpDirector">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=933:999#L22">SmpDirector</a>
-				<a class="permalink" href="#SmpDirector">&#xb6;</a>
-			</h2>
+			<h2 id="SmpDirector">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=933:999#L22">SmpDirector</a></h2>
 			<pre>func SmpDirector(N, L []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>) (m <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDirector computes the director (normal vector) of the spatially mobilised plane
@@ -1985,9 +1811,7 @@ SmpDirector computes the director (normal vector) of the spatially mobilised pla
 		
 			
 			
-			<h2 id="SmpDirectorDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=1566:1639#L39">SmpDirectorDeriv1</a>
-				<a class="permalink" href="#SmpDirectorDeriv1">&#xb6;</a>
-			</h2>
+			<h2 id="SmpDirectorDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=1566:1639#L39">SmpDirectorDeriv1</a></h2>
 			<pre>func SmpDirectorDeriv1(dNdL []<a href="/pkg/builtin/#float64">float64</a>, L []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDirectorDeriv1 computes the first order derivative of the SMP director
@@ -2001,9 +1825,7 @@ SmpDirectorDeriv1 computes the first order derivative of the SMP director
 		
 			
 			
-			<h2 id="SmpDirectorDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=2375:2450#L54">SmpDirectorDeriv2</a>
-				<a class="permalink" href="#SmpDirectorDeriv2">&#xb6;</a>
-			</h2>
+			<h2 id="SmpDirectorDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=2375:2450#L54">SmpDirectorDeriv2</a></h2>
 			<pre>func SmpDirectorDeriv2(d2NdL2 []<a href="/pkg/builtin/#float64">float64</a>, L []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpDirectorDeriv2 computes the second order derivative of the SMP director
@@ -2017,9 +1839,7 @@ SmpDirectorDeriv2 computes the second order derivative of the SMP director
 		
 			
 			
-			<h2 id="SmpNormDirectorDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=3060:3132#L75">SmpNormDirectorDeriv1</a>
-				<a class="permalink" href="#SmpNormDirectorDeriv1">&#xb6;</a>
-			</h2>
+			<h2 id="SmpNormDirectorDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=3060:3132#L75">SmpNormDirectorDeriv1</a></h2>
 			<pre>func SmpNormDirectorDeriv1(dmdL []<a href="/pkg/builtin/#float64">float64</a>, m <a href="/pkg/builtin/#float64">float64</a>, N, dNdL []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpNormDirectorDeriv1 computes the first derivative of the norm of the SMP director
@@ -2033,9 +1853,7 @@ SmpNormDirectorDeriv1 computes the first derivative of the norm of the SMP direc
 		
 			
 			
-			<h2 id="SmpNormDirectorDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=3370:3488#L83">SmpNormDirectorDeriv2</a>
-				<a class="permalink" href="#SmpNormDirectorDeriv2">&#xb6;</a>
-			</h2>
+			<h2 id="SmpNormDirectorDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=3370:3488#L83">SmpNormDirectorDeriv2</a></h2>
 			<pre>func SmpNormDirectorDeriv2(d2mdLdL [][]<a href="/pkg/builtin/#float64">float64</a>, L []<a href="/pkg/builtin/#float64">float64</a>, a, b, β, ϵ, m <a href="/pkg/builtin/#float64">float64</a>, N, dNdL, d2NdL2, dmdL []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpNormDirectorDeriv2 computes the second order derivative of the norm of the SMP director
@@ -2049,9 +1867,7 @@ SmpNormDirectorDeriv2 computes the second order derivative of the norm of the SM
 		
 			
 			
-			<h2 id="SmpUnitDirector">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=3875:3932#L98">SmpUnitDirector</a>
-				<a class="permalink" href="#SmpUnitDirector">&#xb6;</a>
-			</h2>
+			<h2 id="SmpUnitDirector">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=3875:3932#L98">SmpUnitDirector</a></h2>
 			<pre>func SmpUnitDirector(n []<a href="/pkg/builtin/#float64">float64</a>, m <a href="/pkg/builtin/#float64">float64</a>, N []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpUnitDirector computed the unit normal of the SMP
@@ -2065,9 +1881,7 @@ SmpUnitDirector computed the unit normal of the SMP
 		
 			
 			
-			<h2 id="SmpUnitDirectorDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=4107:4187#L106">SmpUnitDirectorDeriv1</a>
-				<a class="permalink" href="#SmpUnitDirectorDeriv1">&#xb6;</a>
-			</h2>
+			<h2 id="SmpUnitDirectorDeriv1">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=4107:4187#L106">SmpUnitDirectorDeriv1</a></h2>
 			<pre>func SmpUnitDirectorDeriv1(dndL [][]<a href="/pkg/builtin/#float64">float64</a>, m <a href="/pkg/builtin/#float64">float64</a>, N, dNdL, dmdL []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpUnitDirectorDeriv1 computes the first derivative of the SMP unit normal
@@ -2081,9 +1895,7 @@ SmpUnitDirectorDeriv1 computes the first derivative of the SMP unit normal
 		
 			
 			
-			<h2 id="SmpUnitDirectorDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=4527:4650#L120">SmpUnitDirectorDeriv2</a>
-				<a class="permalink" href="#SmpUnitDirectorDeriv2">&#xb6;</a>
-			</h2>
+			<h2 id="SmpUnitDirectorDeriv2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go?s=4527:4650#L120">SmpUnitDirectorDeriv2</a></h2>
 			<pre>func SmpUnitDirectorDeriv2(d2ndLdL [][][]<a href="/pkg/builtin/#float64">float64</a>, m <a href="/pkg/builtin/#float64">float64</a>, N, dNdL, d2NdL2, dmdL, n []<a href="/pkg/builtin/#float64">float64</a>, d2mdLdL, dndL [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SmpUnitDirectorDeriv2 computes the second order derivative of the unit director of the SMP
@@ -2098,9 +1910,7 @@ d²n[i]/dL[j]dL[k]
 		
 			
 			
-			<h2 id="Ten2Man">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=6531:6581#L196">Ten2Man</a>
-				<a class="permalink" href="#Ten2Man">&#xb6;</a>
-			</h2>
+			<h2 id="Ten2Man">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=6531:6581#L196">Ten2Man</a></h2>
 			<pre>func Ten2Man(mandel []<a href="/pkg/builtin/#float64">float64</a>, tensor [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Ten2Man returns the Mandel representation of a 3x3 2nd order tensor
@@ -2112,9 +1922,7 @@ Ten2Man returns the Mandel representation of a 3x3 2nd order tensor
 		
 			
 			
-			<h2 id="Tr">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=275:305#L4">Tr</a>
-				<a class="permalink" href="#Tr">&#xb6;</a>
-			</h2>
+			<h2 id="Tr">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/operators.go?s=275:305#L4">Tr</a></h2>
 			<pre>func Tr(a [][]<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Tr returns the trace of a second order tensor
@@ -2127,9 +1935,7 @@ Tr returns the trace of a second order tensor
 		
 			
 			
-			<h2 id="Cb_F_t">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=4472:4548#L117">Cb_F_t</a>
-				<a class="permalink" href="#Cb_F_t">&#xb6;</a>
-			</h2>
+			<h2 id="Cb_F_t">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=4472:4548#L117">Cb_F_t</a></h2>
 			<pre>type Cb_F_t func(A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			
 
@@ -2147,9 +1953,7 @@ Tr returns the trace of a second order tensor
 		
 			
 			
-			<h2 id="Cb_G_t">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=4549:4631#L118">Cb_G_t</a>
-				<a class="permalink" href="#Cb_G_t">&#xb6;</a>
-			</h2>
+			<h2 id="Cb_G_t">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=4549:4631#L118">Cb_G_t</a></h2>
 			<pre>type Cb_G_t func(dfdA, A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			
 
@@ -2167,9 +1971,7 @@ Tr returns the trace of a second order tensor
 		
 			
 			
-			<h2 id="Cb_isofun_f">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=378:442#L7">Cb_isofun_f</a>
-				<a class="permalink" href="#Cb_isofun_f">&#xb6;</a>
-			</h2>
+			<h2 id="Cb_isofun_f">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=378:442#L7">Cb_isofun_f</a></h2>
 			<pre>type Cb_isofun_f func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Callbacks
@@ -2190,9 +1992,7 @@ Callbacks
 		
 			
 			
-			<h2 id="Cb_isofun_g">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=443:520#L8">Cb_isofun_g</a>
-				<a class="permalink" href="#Cb_isofun_g">&#xb6;</a>
-			</h2>
+			<h2 id="Cb_isofun_g">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=443:520#L8">Cb_isofun_g</a></h2>
 			<pre>type Cb_isofun_g func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (dfdp, dfdq <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 
@@ -2210,9 +2010,7 @@ Callbacks
 		
 			
 			
-			<h2 id="Cb_isofun_h">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=521:611#L9">Cb_isofun_h</a>
-				<a class="permalink" href="#Cb_isofun_h">&#xb6;</a>
-			</h2>
+			<h2 id="Cb_isofun_h">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=521:611#L9">Cb_isofun_h</a></h2>
 			<pre>type Cb_isofun_h func(p, q <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (d2fdp2, d2fdq2, d2fdpdq <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 
@@ -2230,9 +2028,7 @@ Callbacks
 		
 			
 			
-			<h2 id="IsoFun">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=673:2016#L12">IsoFun</a>
-				<a class="permalink" href="#IsoFun">&#xb6;</a>
-			</h2>
+			<h2 id="IsoFun">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=673:2016#L12">IsoFun</a></h2>
 			<pre>type IsoFun struct {
 
     <span class="comment">// eigenvalues/projectors</span>
@@ -2267,9 +2063,7 @@ IsoFun handles isotropic functions and their derivatives
 
 			
 				
-				<h3 id="IsoFun.CheckDerivs">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/testing.go?s=369:484#L5">CheckDerivs</a>
-					<a class="permalink" href="#IsoFun.CheckDerivs">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.CheckDerivs">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/testing.go?s=369:484#L5">CheckDerivs</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) CheckDerivs(A []<a href="/pkg/builtin/#float64">float64</a>, tol, tol2, tolq, tol3 <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 CheckDerivs check derivatives computed by isotropic function
@@ -2280,9 +2074,7 @@ CheckDerivs check derivatives computed by isotropic function
 				
 			
 				
-				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14757:14801#L546">DebugOutput</a>
-					<a class="permalink" href="#IsoFun.DebugOutput">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14757:14801#L546">DebugOutput</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) DebugOutput(princOnly <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 DebugOutput outputs debug information
@@ -2293,9 +2085,7 @@ DebugOutput outputs debug information
 				
 			
 				
-				<h3 id="IsoFun.Fa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=5975:6053#L184">Fa</a>
-					<a class="permalink" href="#IsoFun.Fa">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Fa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=5975:6053#L184">Fa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Fa(A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Fa evaluates the isotropic function @ A (a second order tensor in Mandel&#39;s basis)
@@ -2306,9 +2096,7 @@ Fa evaluates the isotropic function @ A (a second order tensor in Mandel&#39;s b
 				
 			
 				
-				<h3 id="IsoFun.FindIntersect">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=9713:9833#L317">FindIntersect</a>
-					<a class="permalink" href="#IsoFun.FindIntersect">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.FindIntersect">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=9713:9833#L317">FindIntersect</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) FindIntersect(p0, k <a href="/pkg/builtin/#float64">float64</a>, ΔL []<a href="/pkg/builtin/#float64">float64</a>, usek, debug <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (L_at_int []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 FindIntersect find point on surface using Newton&#39;s method
@@ -2319,9 +2107,7 @@ FindIntersect find point on surface using Newton&#39;s method
 				
 			
 				
-				<h3 id="IsoFun.Fp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=3652:3730#L102">Fp</a>
-					<a class="permalink" href="#IsoFun.Fp">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Fp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=3652:3730#L102">Fp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Fp(L []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Fp evaluates the isotropic function @ L (principal values)
@@ -2332,9 +2118,7 @@ Fp evaluates the isotropic function @ L (principal values)
 				
 			
 				
-				<h3 id="IsoFun.Ga">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=6444:6529#L202">Ga</a>
-					<a class="permalink" href="#IsoFun.Ga">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Ga">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=6444:6529#L202">Ga</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Ga(dfdA, A []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Ga computes f and dfdA @ A (a second order tensor in Mandel&#39;s basis)
@@ -2349,9 +2133,7 @@ Ga computes f and dfdA @ A (a second order tensor in Mandel&#39;s basis)
 				
 			
 				
-				<h3 id="IsoFun.Get_bsmp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2031:2066#L54">Get_bsmp</a>
-					<a class="permalink" href="#IsoFun.Get_bsmp">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Get_bsmp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2031:2066#L54">Get_bsmp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_bsmp() <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Accessors
@@ -2362,9 +2144,7 @@ Accessors
 				
 			
 				
-				<h3 id="IsoFun.Get_derivs_afterHa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8332:8391#L276">Get_derivs_afterHa</a>
-					<a class="permalink" href="#IsoFun.Get_derivs_afterHa">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Get_derivs_afterHa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8332:8391#L276">Get_derivs_afterHa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_derivs_afterHa(dpdσ, dqdσ []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Get_derivs_afterHa returns the derivatives of SMP invariants after a call to HafterGa
@@ -2375,9 +2155,7 @@ Get_derivs_afterHa returns the derivatives of SMP invariants after a call to Haf
 				
 			
 				
-				<h3 id="IsoFun.Get_pq">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2140:2180#L56">Get_pq</a>
-					<a class="permalink" href="#IsoFun.Get_pq">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Get_pq">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2140:2180#L56">Get_pq</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Get_pq() (p, q <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				
 				
@@ -2385,9 +2163,7 @@ Get_derivs_afterHa returns the derivatives of SMP invariants after a call to Haf
 				
 			
 				
-				<h3 id="IsoFun.Gp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=4218:4297#L126">Gp</a>
-					<a class="permalink" href="#IsoFun.Gp">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Gp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=4218:4297#L126">Gp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Gp(L []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (fval <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Gp computes f and DfdL @ L (principal values)
@@ -2402,9 +2178,7 @@ Notes:
 				
 			
 				
-				<h3 id="IsoFun.HafterGa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=7147:7226#L236">HafterGa</a>
-					<a class="permalink" href="#IsoFun.HafterGa">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.HafterGa">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=7147:7226#L236">HafterGa</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) HafterGa(d2fdAdA [][]<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 HafterGa computes d2fdada after G is called
@@ -2423,9 +2197,7 @@ Notes:
 				
 			
 				
-				<h3 id="IsoFun.HafterGp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=5065:5123#L157">HafterGp</a>
-					<a class="permalink" href="#IsoFun.HafterGp">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.HafterGp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=5065:5123#L157">HafterGp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) HafterGp(args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 HafterGp computes d2fdLdL == dgdL after Gp was called
@@ -2439,9 +2211,7 @@ Notes:
 				
 			
 				
-				<h3 id="IsoFun.Init">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2546:2659#L66">Init</a>
-					<a class="permalink" href="#IsoFun.Init">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Init">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2546:2659#L66">Init</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Init(a, b, β, ϵ, shift <a href="/pkg/builtin/#float64">float64</a>, ncp <a href="/pkg/builtin/#int">int</a>, ffcn <a href="#Cb_isofun_f">Cb_isofun_f</a>, gfcn <a href="#Cb_isofun_g">Cb_isofun_g</a>, hfcn <a href="#Cb_isofun_h">Cb_isofun_h</a>)</pre>
 				<p>
 Init initialises the isotropic function structure
@@ -2452,9 +2222,7 @@ Init initialises the isotropic function structure
 				
 			
 				
-				<h3 id="IsoFun.PlotFfcn">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8933:9116#L293">PlotFfcn</a>
-					<a class="permalink" href="#IsoFun.PlotFfcn">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.PlotFfcn">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8933:9116#L293">PlotFfcn</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) PlotFfcn(dirout, fname <a href="/pkg/builtin/#string">string</a>, pmin, pmax <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, pq_point []<a href="/pkg/builtin/#float64">float64</a>, args_contour, args_point <a href="/pkg/builtin/#string">string</a>, extra_before, extra_after func(), args ...interface{})</pre>
 				<p>
 Plots Ffcn
@@ -2465,9 +2233,7 @@ Plots Ffcn
 				
 			
 				
-				<h3 id="IsoFun.SetPrms">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2228:2335#L59">SetPrms</a>
-					<a class="permalink" href="#IsoFun.SetPrms">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.SetPrms">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2228:2335#L59">SetPrms</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) SetPrms(a, b, β, ϵ, shift <a href="/pkg/builtin/#float64">float64</a>, ffcn <a href="#Cb_isofun_f">Cb_isofun_f</a>, gfcn <a href="#Cb_isofun_g">Cb_isofun_g</a>, hfcn <a href="#Cb_isofun_h">Cb_isofun_h</a>)</pre>
 				<p>
 SetPrms set parameters
@@ -2478,9 +2244,7 @@ SetPrms set parameters
 				
 			
 				
-				<h3 id="IsoFun.Set_bsmp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2087:2123#L55">Set_bsmp</a>
-					<a class="permalink" href="#IsoFun.Set_bsmp">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.Set_bsmp">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=2087:2123#L55">Set_bsmp</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) Set_bsmp(b <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				
 				
@@ -2488,9 +2252,7 @@ SetPrms set parameters
 				
 			
 				
-				<h3 id="IsoFun.String">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14604:14640#L540">String</a>
-					<a class="permalink" href="#IsoFun.String">&#xb6;</a>
-				</h3>
+				<h3 id="IsoFun.String">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14604:14640#L540">String</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) String() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 String returns information of this object
@@ -2503,9 +2265,7 @@ String returns information of this object
 		
 			
 			
-			<h2 id="NcteM">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=327:455#L5">NcteM</a>
-				<a class="permalink" href="#NcteM">&#xb6;</a>
-			</h2>
+			<h2 id="NcteM">type <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=327:455#L5">NcteM</a></h2>
 			<pre>type NcteM struct {
     Mfix <a href="/pkg/builtin/#bool">bool</a>
     <span class="comment">// derived</span>
@@ -2531,9 +2291,7 @@ NcteM implements Argyris-Sheng et al M(w) non-constant M coefficient
 
 			
 				
-				<h3 id="NcteM.D2Mdw2">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1483:1524#L58">D2Mdw2</a>
-					<a class="permalink" href="#NcteM.D2Mdw2">&#xb6;</a>
-				</h3>
+				<h3 id="NcteM.D2Mdw2">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1483:1524#L58">D2Mdw2</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) D2Mdw2(w <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 D2Mdw2 implements d²M/dw²
@@ -2544,9 +2302,7 @@ D2Mdw2 implements d²M/dw²
 				
 			
 				
-				<h3 id="NcteM.DMdw">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1307:1346#L50">DMdw</a>
-					<a class="permalink" href="#NcteM.DMdw">&#xb6;</a>
-				</h3>
+				<h3 id="NcteM.DMdw">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1307:1346#L50">DMdw</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) DMdw(w <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 DMdw implements dM/dw
@@ -2557,9 +2313,7 @@ DMdw implements dM/dw
 				
 			
 				
-				<h3 id="NcteM.Deriv1">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1753:1816#L68">Deriv1</a>
-					<a class="permalink" href="#NcteM.Deriv1">&#xb6;</a>
-				</h3>
+				<h3 id="NcteM.Deriv1">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1753:1816#L68">Deriv1</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) Deriv1(dMdσ, σ, s []<a href="/pkg/builtin/#float64">float64</a>, p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Deriv1 returns the first derivative of M w.r.t σ
@@ -2572,9 +2326,7 @@ Deriv1 returns the first derivative of M w.r.t σ
 				
 			
 				
-				<h3 id="NcteM.Deriv2">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=2130:2216#L84">Deriv2</a>
-					<a class="permalink" href="#NcteM.Deriv2">&#xb6;</a>
-				</h3>
+				<h3 id="NcteM.Deriv2">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=2130:2216#L84">Deriv2</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) Deriv2(d2Mdσdσ [][]<a href="/pkg/builtin/#float64">float64</a>, dMdσ, σ, s []<a href="/pkg/builtin/#float64">float64</a>, p, q, w <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Deriv2 returns the first and second derivatives of M w.r.t σ
@@ -2587,9 +2339,7 @@ Deriv2 returns the first and second derivatives of M w.r.t σ
 				
 			
 				
-				<h3 id="NcteM.Init">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=489:540#L17">Init</a>
-					<a class="permalink" href="#NcteM.Init">&#xb6;</a>
-				</h3>
+				<h3 id="NcteM.Init">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=489:540#L17">Init</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) Init(prms []<a href="/pkg/builtin/#string">string</a>, vals []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises this object
@@ -2600,9 +2350,7 @@ Init initialises this object
 				
 			
 				
-				<h3 id="NcteM.M">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1138:1174#L42">M</a>
-					<a class="permalink" href="#NcteM.M">&#xb6;</a>
-				</h3>
+				<h3 id="NcteM.M">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1138:1174#L42">M</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) M(w <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 M implements M(w)
@@ -2613,9 +2361,7 @@ M implements M(w)
 				
 			
 				
-				<h3 id="NcteM.String">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1013:1048#L37">String</a>
-					<a class="permalink" href="#NcteM.String">&#xb6;</a>
-				</h3>
+				<h3 id="NcteM.String">func (*NcteM) <a href="https://github.com/cpmech/gosl/blob/master/tsr/nonctem.go?s=1013:1048#L37">String</a></h3>
 				<pre>func (o *<a href="#NcteM">NcteM</a>) String() (s <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 String returns a string representing this structure

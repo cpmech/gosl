@@ -132,6 +132,9 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 				<dd><a href="#MTfloat64s">func MTfloat64s(values []float64, low, high float64)</a></dd>
 			
 				
+				<dd><a href="#MTinit">func MTinit(seed int)</a></dd>
+			
+				
 				<dd><a href="#MTint">func MTint(low, high int) int</a></dd>
 			
 				
@@ -181,6 +184,9 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 			
 				
 				<dd><a href="#TextHist">func TextHist(labels []string, counts []int, barlen int) string</a></dd>
+			
+				
+				<dd><a href="#Uniform">func Uniform(min, max float64) float64</a></dd>
 			
 				
 				<dd><a href="#UnitVectors">func UnitVectors(n int) (U [][]float64)</a></dd>
@@ -260,6 +266,20 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 					
 					<dd>&nbsp; &nbsp; <a href="#GetDistribution">func GetDistribution(name string) DistType</a></dd>
 				
+				
+			
+				
+				<dd><a href="#DistUniform">type DistUniform</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistUniform.Cdf">func (o DistUniform) Cdf(x float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistUniform.Init">func (o *DistUniform) Init(p *VarData) error</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#DistUniform.Pdf">func (o DistUniform) Pdf(x float64) float64</a></dd>
 				
 			
 				
@@ -346,6 +366,8 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 			
 				<a href="/src/github.com/cpmech/gosl/rnd/dist_normal.go">dist_normal.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/rnd/dist_uniform.go">dist_uniform.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/rnd/distribution.go">distribution.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/rnd/halton.go">halton.go</a>
@@ -361,6 +383,8 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 				<a href="/src/github.com/cpmech/gosl/rnd/primes.go">primes.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/rnd/random.go">random.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/rnd/random_sfmt.go">random_sfmt.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/rnd/rotations.go">rotations.go</a>
 			
@@ -534,9 +558,7 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 		
 			
 			
-			<h2 id="BuildTextHist">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=1555:1660#L60">BuildTextHist</a>
-				<a class="permalink" href="#BuildTextHist">&#xb6;</a>
-			</h2>
+			<h2 id="BuildTextHist">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=1555:1660#L60">BuildTextHist</a></h2>
 			<pre>func BuildTextHist(xmin, xmax <a href="/pkg/builtin/#float64">float64</a>, nstations <a href="/pkg/builtin/#int">int</a>, values []<a href="/pkg/builtin/#float64">float64</a>, numfmt <a href="/pkg/builtin/#string">string</a>, barlen <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 BuildTextHist builds a text histogram
@@ -556,9 +578,7 @@ BuildTextHist builds a text histogram
 		
 			
 			
-			<h2 id="DblShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=5153:5186#L204">DblShuffle</a>
-				<a class="permalink" href="#DblShuffle">&#xb6;</a>
-			</h2>
+			<h2 id="DblShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3550:3583#L146">DblShuffle</a></h2>
 			<pre>func DblShuffle(values []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblShuffle shuffles a slice of float point numbers
@@ -570,9 +590,7 @@ DblShuffle shuffles a slice of float point numbers
 		
 			
 			
-			<h2 id="FlipCoin">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3243:3272#L115">FlipCoin</a>
-				<a class="permalink" href="#FlipCoin">&#xb6;</a>
-			</h2>
+			<h2 id="FlipCoin">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1768:1797#L62">FlipCoin</a></h2>
 			<pre>func FlipCoin(p <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 FlipCoin generates a Bernoulli variable; throw a coin with probability p
@@ -584,9 +602,7 @@ FlipCoin generates a Bernoulli variable; throw a coin with probability p
 		
 			
 			
-			<h2 id="Float64">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1971:2010#L74">Float64</a>
-				<a class="permalink" href="#Float64">&#xb6;</a>
-			</h2>
+			<h2 id="Float64">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1226:1265#L45">Float64</a></h2>
 			<pre>func Float64(low, high <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Float64 generates a pseudo random real number between low and high; i.e. in [low, right)
@@ -604,9 +620,7 @@ Output:
 		
 			
 			
-			<h2 id="Float64s">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2296:2346#L84">Float64s</a>
-				<a class="permalink" href="#Float64s">&#xb6;</a>
-			</h2>
+			<h2 id="Float64s">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1551:1601#L55">Float64s</a></h2>
 			<pre>func Float64s(values []<a href="/pkg/builtin/#float64">float64</a>, low, high <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Float64s generates pseudo random real numbers between low and high; i.e. in [low, right)
@@ -624,9 +638,7 @@ Output:
 		
 			
 			
-			<h2 id="FrechetPlotCoef">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=1689:1748#L63">FrechetPlotCoef</a>
-				<a class="permalink" href="#FrechetPlotCoef">&#xb6;</a>
-			</h2>
+			<h2 id="FrechetPlotCoef">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=1689:1748#L63">FrechetPlotCoef</a></h2>
 			<pre>func FrechetPlotCoef(dirout, fn <a href="/pkg/builtin/#string">string</a>, amin, amax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 FrechetPlotCoef plots coefficients for Frechet parameter&#39;s estimation
@@ -638,9 +650,7 @@ FrechetPlotCoef plots coefficients for Frechet parameter&#39;s estimation
 		
 			
 			
-			<h2 id="GetDistrName">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2394:2439#L99">GetDistrName</a>
-				<a class="permalink" href="#GetDistrName">&#xb6;</a>
-			</h2>
+			<h2 id="GetDistrName">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2438:2483#L100">GetDistrName</a></h2>
 			<pre>func GetDistrName(typ <a href="#DistType">DistType</a>) (name <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 GetDistrName returns distribution name from ID
@@ -652,9 +662,7 @@ GetDistrName returns distribution name from ID
 		
 			
 			
-			<h2 id="HaltonPoints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/halton.go?s=322:367#L4">HaltonPoints</a>
-				<a class="permalink" href="#HaltonPoints">&#xb6;</a>
-			</h2>
+			<h2 id="HaltonPoints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/halton.go?s=322:367#L4">HaltonPoints</a></h2>
 			<pre>func HaltonPoints(dim, n <a href="/pkg/builtin/#int">int</a>) (x [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 HaltonPoints generates randomly spaced points
@@ -668,9 +676,7 @@ HaltonPoints generates randomly spaced points
 		
 			
 			
-			<h2 id="Init">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=426:445#L9">Init</a>
-				<a class="permalink" href="#Init">&#xb6;</a>
-			</h2>
+			<h2 id="Init">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=355:374#L7">Init</a></h2>
 			<pre>func Init(seed <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Init initialises random numbers generators
@@ -685,9 +691,7 @@ Init initialises random numbers generators
 		
 			
 			
-			<h2 id="Int">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=715:742#L24">Int</a>
-				<a class="permalink" href="#Int">&#xb6;</a>
-			</h2>
+			<h2 id="Int">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=609:636#L20">Int</a></h2>
 			<pre>func Int(low, high <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 Int generates pseudo random integer between low and high.
@@ -705,9 +709,7 @@ Output:
 		
 			
 			
-			<h2 id="IntGetGroups">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=5562:5607#L221">IntGetGroups</a>
-				<a class="permalink" href="#IntGetGroups">&#xb6;</a>
-			</h2>
+			<h2 id="IntGetGroups">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3959:4004#L163">IntGetGroups</a></h2>
 			<pre>func IntGetGroups(groups [][]<a href="/pkg/builtin/#int">int</a>, pool []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetGroups randomly selects indices from pool separating them in groups
@@ -725,9 +727,7 @@ Note: pool will be shuffled
 		
 			
 			
-			<h2 id="IntGetShuffled">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4824:4874#L191">IntGetShuffled</a>
-				<a class="permalink" href="#IntGetShuffled">&#xb6;</a>
-			</h2>
+			<h2 id="IntGetShuffled">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3349:3399#L138">IntGetShuffled</a></h2>
 			<pre>func IntGetShuffled(values []<a href="/pkg/builtin/#int">int</a>) (shuffled []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetShuffled returns a shufled slice of integers
@@ -739,9 +739,7 @@ IntGetShuffled returns a shufled slice of integers
 		
 			
 			
-			<h2 id="IntGetUnique">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3594:3649#L131">IntGetUnique</a>
-				<a class="permalink" href="#IntGetUnique">&#xb6;</a>
-			</h2>
+			<h2 id="IntGetUnique">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2119:2174#L78">IntGetUnique</a></h2>
 			<pre>func IntGetUnique(values []<a href="/pkg/builtin/#int">int</a>, n <a href="/pkg/builtin/#int">int</a>) (selected []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetUnique randomly selects n items in a list avoiding duplicates
@@ -756,9 +754,7 @@ IntGetUnique randomly selects n items in a list avoiding duplicates
 		
 			
 			
-			<h2 id="IntGetUniqueN">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4151:4207#L155">IntGetUniqueN</a>
-				<a class="permalink" href="#IntGetUniqueN">&#xb6;</a>
-			</h2>
+			<h2 id="IntGetUniqueN">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2676:2732#L102">IntGetUniqueN</a></h2>
 			<pre>func IntGetUniqueN(start, endp1, n <a href="/pkg/builtin/#int">int</a>) (selected []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetUniqueN randomly selects n items from start to endp1-1 avoiding duplicates
@@ -773,9 +769,7 @@ IntGetUniqueN randomly selects n items from start to endp1-1 avoiding duplicates
 		
 			
 			
-			<h2 id="IntShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4595:4624#L180">IntShuffle</a>
-				<a class="permalink" href="#IntShuffle">&#xb6;</a>
-			</h2>
+			<h2 id="IntShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3120:3149#L127">IntShuffle</a></h2>
 			<pre>func IntShuffle(values []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntShuffle shuffles a slice of integers
@@ -787,9 +781,7 @@ IntShuffle shuffles a slice of integers
 		
 			
 			
-			<h2 id="Ints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=985:1023#L34">Ints</a>
-				<a class="permalink" href="#Ints">&#xb6;</a>
-			</h2>
+			<h2 id="Ints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=879:917#L30">Ints</a></h2>
 			<pre>func Ints(values []<a href="/pkg/builtin/#int">int</a>, low, high <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Ints generates pseudo random integers between low and high.
@@ -807,9 +799,7 @@ Output:
 		
 			
 			
-			<h2 id="LatinIHS">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=625:665#L13">LatinIHS</a>
-				<a class="permalink" href="#LatinIHS">&#xb6;</a>
-			</h2>
+			<h2 id="LatinIHS">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=625:665#L13">LatinIHS</a></h2>
 			<pre>func LatinIHS(dim, n, d <a href="/pkg/builtin/#int">int</a>) (x [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 LatinIHS implements the improved distributed hypercube sampling algorithm.
@@ -830,9 +820,7 @@ Output:
 		
 			
 			
-			<h2 id="Lognormal">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=283:321#L3">Lognormal</a>
-				<a class="permalink" href="#Lognormal">&#xb6;</a>
-			</h2>
+			<h2 id="Lognormal">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=283:321#L3">Lognormal</a></h2>
 			<pre>func Lognormal(μ, σ <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Lognormal returns a random number belonging to a lognormal distribution
@@ -844,9 +832,7 @@ Lognormal returns a random number belonging to a lognormal distribution
 		
 			
 			
-			<h2 id="MTfloat64">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2677:2718#L97">MTfloat64</a>
-				<a class="permalink" href="#MTfloat64">&#xb6;</a>
-			</h2>
+			<h2 id="MTfloat64">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random_sfmt.go?s=1421:1462#L49">MTfloat64</a></h2>
 			<pre>func MTfloat64(low, high <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 MTfloat64 generates pseudo random real numbers between low and high; i.e. in [low, right)
@@ -865,9 +851,7 @@ Output:
 		
 			
 			
-			<h2 id="MTfloat64s">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3034:3086#L108">MTfloat64s</a>
-				<a class="permalink" href="#MTfloat64s">&#xb6;</a>
-			</h2>
+			<h2 id="MTfloat64s">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random_sfmt.go?s=1778:1830#L60">MTfloat64s</a></h2>
 			<pre>func MTfloat64s(values []<a href="/pkg/builtin/#float64">float64</a>, low, high <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MTfloat64s generates pseudo random real numbers between low and high; i.e. in [low, right)
@@ -886,9 +870,22 @@ Output:
 		
 			
 			
-			<h2 id="MTint">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1321:1350#L49">MTint</a>
-				<a class="permalink" href="#MTint">&#xb6;</a>
-			</h2>
+			<h2 id="MTinit">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random_sfmt.go?s=429:450#L9">MTinit</a></h2>
+			<pre>func MTinit(seed <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+MTinit initialises random numbers generators (Mersenne Twister code)
+</p>
+<pre>Input:
+ seed -- seed value; use seed &lt;= 0 to use current time
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MTint">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random_sfmt.go?s=732:761#L23">MTint</a></h2>
 			<pre>func MTint(low, high <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 MTint generates pseudo random integer between low and high using the Mersenne Twister method.
@@ -906,9 +903,7 @@ Output:
 		
 			
 			
-			<h2 id="MTintShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=5050:5076#L199">MTintShuffle</a>
-				<a class="permalink" href="#MTintShuffle">&#xb6;</a>
-			</h2>
+			<h2 id="MTintShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random_sfmt.go?s=1990:2016#L67">MTintShuffle</a></h2>
 			<pre>func MTintShuffle(v []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 MTintShuffle shuffles a slice of integers using Mersenne Twister algorithm.
@@ -920,9 +915,7 @@ MTintShuffle shuffles a slice of integers using Mersenne Twister algorithm.
 		
 			
 			
-			<h2 id="MTints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1620:1660#L59">MTints</a>
-				<a class="permalink" href="#MTints">&#xb6;</a>
-			</h2>
+			<h2 id="MTints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random_sfmt.go?s=1031:1071#L33">MTints</a></h2>
 			<pre>func MTints(values []<a href="/pkg/builtin/#int">int</a>, low, high <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 MTints generates pseudo random integers between low and high using the Mersenne Twister method.
@@ -940,9 +933,7 @@ Output:
 		
 			
 			
-			<h2 id="Normal">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=277:312#L3">Normal</a>
-				<a class="permalink" href="#Normal">&#xb6;</a>
-			</h2>
+			<h2 id="Normal">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=277:312#L3">Normal</a></h2>
 			<pre>func Normal(μ, σ <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Normal returns a random number belonging to a normal distribution
@@ -954,9 +945,7 @@ Normal returns a random number belonging to a normal distribution
 		
 			
 			
-			<h2 id="PlotHc2d">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=3818:3884#L145">PlotHc2d</a>
-				<a class="permalink" href="#PlotHc2d">&#xb6;</a>
-			</h2>
+			<h2 id="PlotHc2d">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=3818:3884#L145">PlotHc2d</a></h2>
 			<pre>func PlotHc2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, x [][]<a href="/pkg/builtin/#int">int</a>, xrange [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PlotHc2d plots 2D hypercube
@@ -968,9 +957,7 @@ PlotHc2d plots 2D hypercube
 		
 			
 			
-			<h2 id="PlotHc3d">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=4349:4426#L166">PlotHc3d</a>
-				<a class="permalink" href="#PlotHc3d">&#xb6;</a>
-			</h2>
+			<h2 id="PlotHc3d">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=4349:4426#L166">PlotHc3d</a></h2>
 			<pre>func PlotHc3d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, x [][]<a href="/pkg/builtin/#int">int</a>, xrange [][]<a href="/pkg/builtin/#float64">float64</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 PlotHc3d plots 3D hypercube
@@ -982,9 +969,7 @@ PlotHc3d plots 3D hypercube
 		
 			
 			
-			<h2 id="StatAve">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=368:408#L10">StatAve</a>
-				<a class="permalink" href="#StatAve">&#xb6;</a>
-			</h2>
+			<h2 id="StatAve">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=368:408#L10">StatAve</a></h2>
 			<pre>func StatAve(x []<a href="/pkg/builtin/#float64">float64</a>) (xave <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StatAve computes the average of x values
@@ -1001,9 +986,7 @@ Output:
 		
 			
 			
-			<h2 id="StatBasic">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=2377:2447#L95">StatBasic</a>
-				<a class="permalink" href="#StatBasic">&#xb6;</a>
-			</h2>
+			<h2 id="StatBasic">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=2377:2447#L95">StatBasic</a></h2>
 			<pre>func StatBasic(x []<a href="/pkg/builtin/#float64">float64</a>, std <a href="/pkg/builtin/#bool">bool</a>) (xmin, xave, xmax, xdev <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StatBasic performs some basic statistics
@@ -1024,9 +1007,7 @@ Output:
 		
 			
 			
-			<h2 id="StatDev">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=1787:1837#L68">StatDev</a>
-				<a class="permalink" href="#StatDev">&#xb6;</a>
-			</h2>
+			<h2 id="StatDev">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=1787:1837#L68">StatDev</a></h2>
 			<pre>func StatDev(x []<a href="/pkg/builtin/#float64">float64</a>, std <a href="/pkg/builtin/#bool">bool</a>) (xdev <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StatDev computes the average deviation or standard deviation (σ)
@@ -1044,9 +1025,7 @@ Output:
 		
 			
 			
-			<h2 id="StatDevFirst">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=905:974#L30">StatDevFirst</a>
-				<a class="permalink" href="#StatDevFirst">&#xb6;</a>
-			</h2>
+			<h2 id="StatDevFirst">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=905:974#L30">StatDevFirst</a></h2>
 			<pre>func StatDevFirst(x []<a href="/pkg/builtin/#float64">float64</a>, xave <a href="/pkg/builtin/#float64">float64</a>, std <a href="/pkg/builtin/#bool">bool</a>) (xdev <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StatDevFirst computes the average deviation or standard deviation (σ)
@@ -1066,9 +1045,7 @@ Output:
 		
 			
 			
-			<h2 id="StatDur">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=6397:6466#L223">StatDur</a>
-				<a class="permalink" href="#StatDur">&#xb6;</a>
-			</h2>
+			<h2 id="StatDur">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=6397:6466#L223">StatDur</a></h2>
 			<pre>func StatDur(durs []<a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>) (min, ave, max, sum <a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>)</pre>
 			<p>
 StatDur generates stat about duration
@@ -1080,9 +1057,7 @@ StatDur generates stat about duration
 		
 			
 			
-			<h2 id="StatMoments">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=3193:3283#L129">StatMoments</a>
-				<a class="permalink" href="#StatMoments">&#xb6;</a>
-			</h2>
+			<h2 id="StatMoments">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=3193:3283#L129">StatMoments</a></h2>
 			<pre>func StatMoments(x []<a href="/pkg/builtin/#float64">float64</a>) (sum, mean, adev, sdev, vari, skew, kurt <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 StatMoments computes the 4th moments of a data set
@@ -1108,9 +1083,7 @@ Based on:
 		
 			
 			
-			<h2 id="StatTable">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=5911:5976#L194">StatTable</a>
-				<a class="permalink" href="#StatTable">&#xb6;</a>
-			</h2>
+			<h2 id="StatTable">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=5911:5976#L194">StatTable</a></h2>
 			<pre>func StatTable(x [][]<a href="/pkg/builtin/#float64">float64</a>, std, withZ <a href="/pkg/builtin/#bool">bool</a>) (y, z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StatTable computes the min, ave, max, and dev of values organised in a table
@@ -1144,9 +1117,7 @@ Output:                        min          ave          max          dev
 		
 			
 			
-			<h2 id="StdInvPhi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=758:791#L18">StdInvPhi</a>
-				<a class="permalink" href="#StdInvPhi">&#xb6;</a>
-			</h2>
+			<h2 id="StdInvPhi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=758:791#L18">StdInvPhi</a></h2>
 			<pre>func StdInvPhi(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 StdInvPhi implements Φ⁻¹(x), the inverse standard cumulative distribution function
@@ -1158,9 +1129,7 @@ StdInvPhi implements Φ⁻¹(x), the inverse standard cumulative distribution fu
 		
 			
 			
-			<h2 id="StdPhi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=587:617#L13">StdPhi</a>
-				<a class="permalink" href="#StdPhi">&#xb6;</a>
-			</h2>
+			<h2 id="StdPhi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=587:617#L13">StdPhi</a></h2>
 			<pre>func StdPhi(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 StdPhi implements Φ(x), the standard cumulative distribution function
@@ -1172,9 +1141,7 @@ StdPhi implements Φ(x), the standard cumulative distribution function
 		
 			
 			
-			<h2 id="Stdphi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=423:453#L8">Stdphi</a>
-				<a class="permalink" href="#Stdphi">&#xb6;</a>
-			</h2>
+			<h2 id="Stdphi">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=423:453#L8">Stdphi</a></h2>
 			<pre>func Stdphi(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Stdphi implements φ(x), the standard probability density function
@@ -1186,9 +1153,7 @@ Stdphi implements φ(x), the standard probability density function
 		
 			
 			
-			<h2 id="TextHist">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=402:465#L8">TextHist</a>
-				<a class="permalink" href="#TextHist">&#xb6;</a>
-			</h2>
+			<h2 id="TextHist">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=402:465#L8">TextHist</a></h2>
 			<pre>func TextHist(labels []<a href="/pkg/builtin/#string">string</a>, counts []<a href="/pkg/builtin/#int">int</a>, barlen <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 TextHist prints a text histogram
@@ -1204,9 +1169,19 @@ TextHist prints a text histogram
 		
 			
 			
-			<h2 id="UnitVectors">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/rotations.go?s=289:328#L5">UnitVectors</a>
-				<a class="permalink" href="#UnitVectors">&#xb6;</a>
-			</h2>
+			<h2 id="Uniform">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_uniform.go?s=266:304#L1">Uniform</a></h2>
+			<pre>func Uniform(min, max <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Uniform returns a random number belonging to a uniform distribution
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="UnitVectors">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/rotations.go?s=289:328#L5">UnitVectors</a></h2>
 			<pre>func UnitVectors(n <a href="/pkg/builtin/#int">int</a>) (U [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 UnitVectors generates random unit vectors in 3D
@@ -1219,9 +1194,7 @@ UnitVectors generates random unit vectors in 3D
 		
 			
 			
-			<h2 id="DistFrechet">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=376:492#L6">DistFrechet</a>
-				<a class="permalink" href="#DistFrechet">&#xb6;</a>
-			</h2>
+			<h2 id="DistFrechet">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=376:492#L6">DistFrechet</a></h2>
 			<pre>type DistFrechet struct {
     L <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// location. default = 0</span>
     C <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// scale. default = 1</span>
@@ -1244,9 +1217,7 @@ DistFrechet implements the Frechet / Type II Extreme Value Distribution (largest
 
 			
 				
-				<h3 id="DistFrechet.Cdf">func (DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=1112:1155#L38">Cdf</a>
-					<a class="permalink" href="#DistFrechet.Cdf">&#xb6;</a>
-				</h3>
+				<h3 id="DistFrechet.Cdf">func (DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=1112:1155#L38">Cdf</a></h3>
 				<pre>func (o <a href="#DistFrechet">DistFrechet</a>) Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Cdf computes the cumulative probability function @ x
@@ -1257,9 +1228,7 @@ Cdf computes the cumulative probability function @ x
 				
 			
 				
-				<h3 id="DistFrechet.Init">func (*DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=646:690#L18">Init</a>
-					<a class="permalink" href="#DistFrechet.Init">&#xb6;</a>
-				</h3>
+				<h3 id="DistFrechet.Init">func (*DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=646:690#L18">Init</a></h3>
 				<pre>func (o *<a href="#DistFrechet">DistFrechet</a>) Init(p *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a></pre>
 				<p>
 Init initialises lognormal distribution
@@ -1270,9 +1239,7 @@ Init initialises lognormal distribution
 				
 			
 				
-				<h3 id="DistFrechet.Mean">func (DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=1288:1323#L47">Mean</a>
-					<a class="permalink" href="#DistFrechet.Mean">&#xb6;</a>
-				</h3>
+				<h3 id="DistFrechet.Mean">func (DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=1288:1323#L47">Mean</a></h3>
 				<pre>func (o <a href="#DistFrechet">DistFrechet</a>) Mean() <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Mean returns the expected value
@@ -1283,9 +1250,7 @@ Mean returns the expected value
 				
 			
 				
-				<h3 id="DistFrechet.Pdf">func (DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=879:922#L29">Pdf</a>
-					<a class="permalink" href="#DistFrechet.Pdf">&#xb6;</a>
-				</h3>
+				<h3 id="DistFrechet.Pdf">func (DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=879:922#L29">Pdf</a></h3>
 				<pre>func (o <a href="#DistFrechet">DistFrechet</a>) Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Pdf computes the probability density function @ x
@@ -1296,9 +1261,7 @@ Pdf computes the probability density function @ x
 				
 			
 				
-				<h3 id="DistFrechet.Variance">func (DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=1444:1483#L55">Variance</a>
-					<a class="permalink" href="#DistFrechet.Variance">&#xb6;</a>
-				</h3>
+				<h3 id="DistFrechet.Variance">func (DistFrechet) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_frechet.go?s=1444:1483#L55">Variance</a></h3>
 				<pre>func (o <a href="#DistFrechet">DistFrechet</a>) Variance() <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Variance returns the variance
@@ -1311,9 +1274,7 @@ Variance returns the variance
 		
 			
 			
-			<h2 id="DistGumbel">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gumbel.go?s=278:421#L1">DistGumbel</a>
-				<a class="permalink" href="#DistGumbel">&#xb6;</a>
-			</h2>
+			<h2 id="DistGumbel">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gumbel.go?s=278:421#L1">DistGumbel</a></h2>
 			<pre>type DistGumbel struct {
     U <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// location: characteristic largest value</span>
     B <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// scale: measure of dispersion of the largest value</span>
@@ -1335,9 +1296,7 @@ DistGumbel implements the Gumbel / Type I Extreme Value Distribution (largest va
 
 			
 				
-				<h3 id="DistGumbel.Cdf">func (DistGumbel) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gumbel.go?s=946:988#L25">Cdf</a>
-					<a class="permalink" href="#DistGumbel.Cdf">&#xb6;</a>
-				</h3>
+				<h3 id="DistGumbel.Cdf">func (DistGumbel) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gumbel.go?s=946:988#L25">Cdf</a></h3>
 				<pre>func (o <a href="#DistGumbel">DistGumbel</a>) Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Cdf computes the cumulative probability function @ x
@@ -1348,9 +1307,7 @@ Cdf computes the cumulative probability function @ x
 				
 			
 				
-				<h3 id="DistGumbel.Init">func (*DistGumbel) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gumbel.go?s=573:616#L11">Init</a>
-					<a class="permalink" href="#DistGumbel.Init">&#xb6;</a>
-				</h3>
+				<h3 id="DistGumbel.Init">func (*DistGumbel) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gumbel.go?s=573:616#L11">Init</a></h3>
 				<pre>func (o *<a href="#DistGumbel">DistGumbel</a>) Init(p *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a></pre>
 				<p>
 Init initialises lognormal distribution
@@ -1361,9 +1318,7 @@ Init initialises lognormal distribution
 				
 			
 				
-				<h3 id="DistGumbel.Pdf">func (DistGumbel) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gumbel.go?s=766:808#L19">Pdf</a>
-					<a class="permalink" href="#DistGumbel.Pdf">&#xb6;</a>
-				</h3>
+				<h3 id="DistGumbel.Pdf">func (DistGumbel) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_gumbel.go?s=766:808#L19">Pdf</a></h3>
 				<pre>func (o <a href="#DistGumbel">DistGumbel</a>) Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Pdf computes the probability density function @ x
@@ -1376,9 +1331,7 @@ Pdf computes the probability density function @ x
 		
 			
 			
-			<h2 id="DistLogNormal">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=514:701#L12">DistLogNormal</a>
-				<a class="permalink" href="#DistLogNormal">&#xb6;</a>
-			</h2>
+			<h2 id="DistLogNormal">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=514:701#L12">DistLogNormal</a></h2>
 			<pre>type DistLogNormal struct {
 
     <span class="comment">// input</span>
@@ -1406,9 +1359,7 @@ DistLogNormal implements the lognormal distribution
 
 			
 				
-				<h3 id="DistLogNormal.CalcDerived">func (*DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=869:906#L29">CalcDerived</a>
-					<a class="permalink" href="#DistLogNormal.CalcDerived">&#xb6;</a>
-				</h3>
+				<h3 id="DistLogNormal.CalcDerived">func (*DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=869:906#L29">CalcDerived</a></h3>
 				<pre>func (o *<a href="#DistLogNormal">DistLogNormal</a>) CalcDerived()</pre>
 				<p>
 CalcDerived computes derived/auxiliary quantities
@@ -1419,9 +1370,7 @@ CalcDerived computes derived/auxiliary quantities
 				
 			
 				
-				<h3 id="DistLogNormal.Cdf">func (DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=1477:1522#L54">Cdf</a>
-					<a class="permalink" href="#DistLogNormal.Cdf">&#xb6;</a>
-				</h3>
+				<h3 id="DistLogNormal.Cdf">func (DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=1477:1522#L54">Cdf</a></h3>
 				<pre>func (o <a href="#DistLogNormal">DistLogNormal</a>) Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Cdf computes the cumulative probability function @ x
@@ -1432,9 +1381,7 @@ Cdf computes the cumulative probability function @ x
 				
 			
 				
-				<h3 id="DistLogNormal.Init">func (*DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=1033:1079#L35">Init</a>
-					<a class="permalink" href="#DistLogNormal.Init">&#xb6;</a>
-				</h3>
+				<h3 id="DistLogNormal.Init">func (*DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=1033:1079#L35">Init</a></h3>
 				<pre>func (o *<a href="#DistLogNormal">DistLogNormal</a>) Init(p *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a></pre>
 				<p>
 Init initialises lognormal distribution
@@ -1445,9 +1392,7 @@ Init initialises lognormal distribution
 				
 			
 				
-				<h3 id="DistLogNormal.Pdf">func (DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=1278:1323#L46">Pdf</a>
-					<a class="permalink" href="#DistLogNormal.Pdf">&#xb6;</a>
-				</h3>
+				<h3 id="DistLogNormal.Pdf">func (DistLogNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_lognormal.go?s=1278:1323#L46">Pdf</a></h3>
 				<pre>func (o <a href="#DistLogNormal">DistLogNormal</a>) Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Pdf computes the probability density function @ x
@@ -1460,9 +1405,7 @@ Pdf computes the probability density function @ x
 		
 			
 			
-			<h2 id="DistNormal">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=865:1038#L23">DistNormal</a>
-				<a class="permalink" href="#DistNormal">&#xb6;</a>
-			</h2>
+			<h2 id="DistNormal">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=865:1038#L23">DistNormal</a></h2>
 			<pre>type DistNormal struct {
 
     <span class="comment">// input</span>
@@ -1487,9 +1430,7 @@ DistNormal implements the normal distribution
 
 			
 				
-				<h3 id="DistNormal.CalcDerived">func (*DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1199:1233#L40">CalcDerived</a>
-					<a class="permalink" href="#DistNormal.CalcDerived">&#xb6;</a>
-				</h3>
+				<h3 id="DistNormal.CalcDerived">func (*DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1199:1233#L40">CalcDerived</a></h3>
 				<pre>func (o *<a href="#DistNormal">DistNormal</a>) CalcDerived()</pre>
 				<p>
 CalcDerived compute derived/auxiliary quantities
@@ -1500,9 +1441,7 @@ CalcDerived compute derived/auxiliary quantities
 				
 			
 				
-				<h3 id="DistNormal.Cdf">func (DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1672:1714#L58">Cdf</a>
-					<a class="permalink" href="#DistNormal.Cdf">&#xb6;</a>
-				</h3>
+				<h3 id="DistNormal.Cdf">func (DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1672:1714#L58">Cdf</a></h3>
 				<pre>func (o <a href="#DistNormal">DistNormal</a>) Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Cdf computes the cumulative probability function @ x
@@ -1513,9 +1452,7 @@ Cdf computes the cumulative probability function @ x
 				
 			
 				
-				<h3 id="DistNormal.Init">func (*DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1363:1406#L46">Init</a>
-					<a class="permalink" href="#DistNormal.Init">&#xb6;</a>
-				</h3>
+				<h3 id="DistNormal.Init">func (*DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1363:1406#L46">Init</a></h3>
 				<pre>func (o *<a href="#DistNormal">DistNormal</a>) Init(p *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a></pre>
 				<p>
 Init initialises normal distribution
@@ -1526,9 +1463,7 @@ Init initialises normal distribution
 				
 			
 				
-				<h3 id="DistNormal.Pdf">func (DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1518:1560#L53">Pdf</a>
-					<a class="permalink" href="#DistNormal.Pdf">&#xb6;</a>
-				</h3>
+				<h3 id="DistNormal.Pdf">func (DistNormal) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_normal.go?s=1518:1560#L53">Pdf</a></h3>
 				<pre>func (o <a href="#DistNormal">DistNormal</a>) Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Pdf computes the probability density function @ x
@@ -1541,9 +1476,7 @@ Pdf computes the probability density function @ x
 		
 			
 			
-			<h2 id="DistType">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=334:351#L3">DistType</a>
-				<a class="permalink" href="#DistType">&#xb6;</a>
-			</h2>
+			<h2 id="DistType">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=334:351#L3">DistType</a></h2>
 			<pre>type DistType <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 DistType indicates the distribution to which a random variable appears to belong to
@@ -1556,6 +1489,7 @@ DistType indicates the distribution to which a random variable appears to belong
     <span id="D_Lognormal">D_Lognormal</span>                     <span class="comment">// lognormal</span>
     <span id="D_Gumbel">D_Gumbel</span>                        <span class="comment">// Type I Extreme Value</span>
     <span id="D_Frechet">D_Frechet</span>                       <span class="comment">// Type II Extreme Value</span>
+    <span id="D_Uniform">D_Uniform</span>                       <span class="comment">// uniform</span>
 )</pre>
 				
 			
@@ -1568,9 +1502,7 @@ DistType indicates the distribution to which a random variable appears to belong
 
 			
 				
-				<h3 id="GetDistribution">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2053:2095#L82">GetDistribution</a>
-					<a class="permalink" href="#GetDistribution">&#xb6;</a>
-				</h3>
+				<h3 id="GetDistribution">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2097:2139#L83">GetDistribution</a></h3>
 				<pre>func GetDistribution(name <a href="/pkg/builtin/#string">string</a>) <a href="#DistType">DistType</a></pre>
 				<p>
 GetDistribution returns distribution ID from name
@@ -1584,9 +1516,66 @@ GetDistribution returns distribution ID from name
 		
 			
 			
-			<h2 id="Distribution">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/distribution.go?s=263:369#L1">Distribution</a>
-				<a class="permalink" href="#Distribution">&#xb6;</a>
-			</h2>
+			<h2 id="DistUniform">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_uniform.go?s=399:485#L5">DistUniform</a></h2>
+			<pre>type DistUniform struct {
+
+    <span class="comment">// input</span>
+    A <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// min value</span>
+    B <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// max value</span>
+}</pre>
+			<p>
+DistUniform implements the normal distribution
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="DistUniform.Cdf">func (DistUniform) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_uniform.go?s=967:1010#L35">Cdf</a></h3>
+				<pre>func (o <a href="#DistUniform">DistUniform</a>) Cdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Cdf computes the cumulative probability function @ x
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistUniform.Init">func (*DistUniform) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_uniform.go?s=636:680#L18">Init</a></h3>
+				<pre>func (o *<a href="#DistUniform">DistUniform</a>) Init(p *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a></pre>
+				<p>
+Init initialises normal distribution
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="DistUniform.Pdf">func (DistUniform) <a href="https://github.com/cpmech/gosl/blob/master/rnd/dist_uniform.go?s=776:819#L24">Pdf</a></h3>
+				<pre>func (o <a href="#DistUniform">DistUniform</a>) Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+Pdf computes the probability density function @ x
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Distribution">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/distribution.go?s=263:369#L1">Distribution</a></h2>
 			<pre>type Distribution interface {
     Init(prms *<a href="#VarData">VarData</a>) <a href="/pkg/builtin/#error">error</a>
     Pdf(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>
@@ -1607,9 +1596,7 @@ Distribution defines a probability distribution
 
 			
 				
-				<h3 id="GetDistrib">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/distribution.go?s=493:552#L10">GetDistrib</a>
-					<a class="permalink" href="#GetDistrib">&#xb6;</a>
-				</h3>
+				<h3 id="GetDistrib">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/distribution.go?s=493:552#L10">GetDistrib</a></h3>
 				<pre>func GetDistrib(dtype <a href="#DistType">DistType</a>) (d <a href="#Distribution">Distribution</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 GetDistrib returns a distribution from factory
@@ -1623,9 +1610,7 @@ GetDistrib returns a distribution from factory
 		
 			
 			
-			<h2 id="Histogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2133:2220#L74">Histogram</a>
-				<a class="permalink" href="#Histogram">&#xb6;</a>
-			</h2>
+			<h2 id="Histogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2133:2220#L74">Histogram</a></h2>
 			<pre>type Histogram struct {
     Stations []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// stations</span>
     Counts   []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// counts</span>
@@ -1653,9 +1638,7 @@ Histogram holds data for computing/plotting histograms
 
 			
 				
-				<h3 id="Histogram.Count">func (*Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2801:2854#L110">Count</a>
-					<a class="permalink" href="#Histogram.Count">&#xb6;</a>
-				</h3>
+				<h3 id="Histogram.Count">func (*Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2801:2854#L110">Count</a></h3>
 				<pre>func (o *<a href="#Histogram">Histogram</a>) Count(vals []<a href="/pkg/builtin/#float64">float64</a>, clear <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Count counts how many items fall within each bin
@@ -1666,9 +1649,7 @@ Count counts how many items fall within each bin
 				
 			
 				
-				<h3 id="Histogram.FindBin">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2296:2337#L81">FindBin</a>
-					<a class="permalink" href="#Histogram.FindBin">&#xb6;</a>
-				</h3>
+				<h3 id="Histogram.FindBin">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2296:2337#L81">FindBin</a></h3>
 				<pre>func (o <a href="#Histogram">Histogram</a>) FindBin(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 FindBin finds where x falls in
@@ -1680,9 +1661,7 @@ returns -1 if x is outside the range
 				
 			
 				
-				<h3 id="Histogram.GenLabels">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3318:3379#L137">GenLabels</a>
-					<a class="permalink" href="#Histogram.GenLabels">&#xb6;</a>
-				</h3>
+				<h3 id="Histogram.GenLabels">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3318:3379#L137">GenLabels</a></h3>
 				<pre>func (o <a href="#Histogram">Histogram</a>) GenLabels(numfmt <a href="/pkg/builtin/#string">string</a>) (labels []<a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 GenLabels generate nice labels identifying bins
@@ -1693,9 +1672,7 @@ GenLabels generate nice labels identifying bins
 				
 			
 				
-				<h3 id="Histogram.PlotDensity">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3730:3787#L151">PlotDensity</a>
-					<a class="permalink" href="#Histogram.PlotDensity">&#xb6;</a>
-				</h3>
+				<h3 id="Histogram.PlotDensity">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3730:3787#L151">PlotDensity</a></h3>
 				<pre>func (o <a href="#Histogram">Histogram</a>) PlotDensity(sty *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#Sty">Sty</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 PlotDensity plots histogram in density values
@@ -1710,9 +1687,7 @@ PlotDensity plots histogram in density values
 		
 			
 			
-			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4548:4630#L176">IntHistogram</a>
-				<a class="permalink" href="#IntHistogram">&#xb6;</a>
-			</h2>
+			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4548:4630#L176">IntHistogram</a></h2>
 			<pre>type IntHistogram struct {
     Stations []<a href="/pkg/builtin/#int">int</a> <span class="comment">// stations</span>
     Counts   []<a href="/pkg/builtin/#int">int</a> <span class="comment">// counts</span>
@@ -1740,9 +1715,7 @@ IntHistogram holds data for computing/plotting histograms with integers
 
 			
 				
-				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5213:5265#L212">Count</a>
-					<a class="permalink" href="#IntHistogram.Count">&#xb6;</a>
-				</h3>
+				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5213:5265#L212">Count</a></h3>
 				<pre>func (o *<a href="#IntHistogram">IntHistogram</a>) Count(vals []<a href="/pkg/builtin/#int">int</a>, clear <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Count counts how many items fall within each bin
@@ -1753,9 +1726,7 @@ Count counts how many items fall within each bin
 				
 			
 				
-				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4706:4746#L183">FindBin</a>
-					<a class="permalink" href="#IntHistogram.FindBin">&#xb6;</a>
-				</h3>
+				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4706:4746#L183">FindBin</a></h3>
 				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) FindBin(x <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 FindBin finds where x falls in
@@ -1767,9 +1738,7 @@ returns -1 if x is outside the range
 				
 			
 				
-				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5732:5796#L239">GenLabels</a>
-					<a class="permalink" href="#IntHistogram.GenLabels">&#xb6;</a>
-				</h3>
+				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5732:5796#L239">GenLabels</a></h3>
 				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) GenLabels(numfmt <a href="/pkg/builtin/#string">string</a>) (labels []<a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 GenLabels generate nice labels identifying bins
@@ -1782,9 +1751,7 @@ GenLabels generate nice labels identifying bins
 		
 			
 			
-			<h2 id="VarData">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=624:1020#L13">VarData</a>
-				<a class="permalink" href="#VarData">&#xb6;</a>
-			</h2>
+			<h2 id="VarData">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=668:1064#L14">VarData</a></h2>
 			<pre>type VarData struct {
 
     <span class="comment">// input</span>
@@ -1822,9 +1789,7 @@ VarData implements data defining one random variable
 
 			
 				
-				<h3 id="VarData.PlotPdf">func (VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/plotting.go?s=268:313#L3">PlotPdf</a>
-					<a class="permalink" href="#VarData.PlotPdf">&#xb6;</a>
-				</h3>
+				<h3 id="VarData.PlotPdf">func (VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/plotting.go?s=268:313#L3">PlotPdf</a></h3>
 				<pre>func (o <a href="#VarData">VarData</a>) PlotPdf(np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 PlotPdf plots PDF
@@ -1835,9 +1800,7 @@ PlotPdf plots PDF
 				
 			
 				
-				<h3 id="VarData.Transform">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1074:1138#L35">Transform</a>
-					<a class="permalink" href="#VarData.Transform">&#xb6;</a>
-				</h3>
+				<h3 id="VarData.Transform">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1118:1182#L36">Transform</a></h3>
 				<pre>func (o *<a href="#VarData">VarData</a>) Transform(x <a href="/pkg/builtin/#float64">float64</a>) (y <a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Transform transform x into standard normal space
@@ -1850,9 +1813,7 @@ Transform transform x into standard normal space
 		
 			
 			
-			<h2 id="Variables">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1384:1409#L50">Variables</a>
-				<a class="permalink" href="#Variables">&#xb6;</a>
-			</h2>
+			<h2 id="Variables">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1428:1453#L51">Variables</a></h2>
 			<pre>type Variables []*<a href="#VarData">VarData</a></pre>
 			<p>
 Variables implements a set of random variables
@@ -1871,9 +1832,7 @@ Variables implements a set of random variables
 
 			
 				
-				<h3 id="Variables.Init">func (*Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1458:1496#L53">Init</a>
-					<a class="permalink" href="#Variables.Init">&#xb6;</a>
-				</h3>
+				<h3 id="Variables.Init">func (*Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1502:1540#L54">Init</a></h3>
 				<pre>func (o *<a href="#Variables">Variables</a>) Init() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises distributions in Variables
@@ -1884,9 +1843,7 @@ Init initialises distributions in Variables
 				
 			
 				
-				<h3 id="Variables.Transform">func (Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1797:1866#L70">Transform</a>
-					<a class="permalink" href="#Variables.Transform">&#xb6;</a>
-				</h3>
+				<h3 id="Variables.Transform">func (Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1841:1910#L71">Transform</a></h3>
 				<pre>func (o <a href="#Variables">Variables</a>) Transform(x []<a href="/pkg/builtin/#float64">float64</a>) (y []<a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Transform transforms all variables

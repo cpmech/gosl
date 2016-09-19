@@ -163,9 +163,7 @@ package opt implements routines for solving optimisation problems
 		
 			
 			
-			<h2 id="PlotTwoVarsContour">func <a href="https://github.com/cpmech/gosl/blob/master/opt/plotting.go?s=962:1117#L20">PlotTwoVarsContour</a>
-				<a class="permalink" href="#PlotTwoVarsContour">&#xb6;</a>
-			</h2>
+			<h2 id="PlotTwoVarsContour">func <a href="https://github.com/cpmech/gosl/blob/master/opt/plotting.go?s=962:1117#L20">PlotTwoVarsContour</a></h2>
 			<pre>func PlotTwoVarsContour(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, x []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, extra func(), axequal <a href="/pkg/builtin/#bool">bool</a>,
     vmin, vmax []<a href="/pkg/builtin/#float64">float64</a>, f <a href="#TwoVarsFunc_t">TwoVarsFunc_t</a>, gs ...<a href="#TwoVarsFunc_t">TwoVarsFunc_t</a>)</pre>
 			<p>
@@ -190,9 +188,7 @@ PlotTwoVarsContour plots contour for two variables problem. len(x) == 2
 		
 			
 			
-			<h2 id="ReadLPfortran">func <a href="https://github.com/cpmech/gosl/blob/master/opt/readproblem.go?s=833:901#L15">ReadLPfortran</a>
-				<a class="permalink" href="#ReadLPfortran">&#xb6;</a>
-			</h2>
+			<h2 id="ReadLPfortran">func <a href="https://github.com/cpmech/gosl/blob/master/opt/readproblem.go?s=833:901#L15">ReadLPfortran</a></h2>
 			<pre>func ReadLPfortran(fn <a href="/pkg/builtin/#string">string</a>) (A *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#CCMatrix">CCMatrix</a>, b, c, l, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ReadLPfortran reads linear program from particular fortran file
@@ -216,9 +212,7 @@ Output:
 		
 			
 			
-			<h2 id="LinIpm">type <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=642:1509#L16">LinIpm</a>
-				<a class="permalink" href="#LinIpm">&#xb6;</a>
-			</h2>
+			<h2 id="LinIpm">type <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=642:1509#L16">LinIpm</a></h2>
 			<pre>type LinIpm struct {
 
     <span class="comment">// problem</span>
@@ -281,9 +275,7 @@ or the dual problem:
 
 			
 				
-				<h3 id="LinIpm.Clean">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1544:1568#L54">Clean</a>
-					<a class="permalink" href="#LinIpm.Clean">&#xb6;</a>
-				</h3>
+				<h3 id="LinIpm.Clean">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1544:1568#L54">Clean</a></h3>
 				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Clean()</pre>
 				<p>
 Clean cleans allocated memory
@@ -294,9 +286,7 @@ Clean cleans allocated memory
 				
 			
 				
-				<h3 id="LinIpm.Init">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1616:1684#L59">Init</a>
-					<a class="permalink" href="#LinIpm.Init">&#xb6;</a>
-				</h3>
+				<h3 id="LinIpm.Init">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1616:1684#L59">Init</a></h3>
 				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Init(A *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#CCMatrix">CCMatrix</a>, b, c []<a href="/pkg/builtin/#float64">float64</a>, prms <a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Prms">Prms</a>)</pre>
 				<p>
 Init initialises LinIpm
@@ -307,9 +297,7 @@ Init initialises LinIpm
 				
 			
 				
-				<h3 id="LinIpm.Solve">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=2487:2535#L106">Solve</a>
-					<a class="permalink" href="#LinIpm.Solve">&#xb6;</a>
-				</h3>
+				<h3 id="LinIpm.Solve">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=2487:2535#L106">Solve</a></h3>
 				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Solve(verbose <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves linear programming problem
@@ -322,9 +310,7 @@ Solve solves linear programming problem
 		
 			
 			
-			<h2 id="TwoVarsFunc_t">type <a href="https://github.com/cpmech/gosl/blob/master/opt/plotting.go?s=400:444#L6">TwoVarsFunc_t</a>
-				<a class="permalink" href="#TwoVarsFunc_t">&#xb6;</a>
-			</h2>
+			<h2 id="TwoVarsFunc_t">type <a href="https://github.com/cpmech/gosl/blob/master/opt/plotting.go?s=400:444#L6">TwoVarsFunc_t</a></h2>
 			<pre>type TwoVarsFunc_t func(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 TwoVarsFunc_t defines a function to plot contours (len(x)==2)

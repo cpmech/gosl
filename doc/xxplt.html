@@ -90,6 +90,9 @@ plt contains functions for plotting
 				<dd><a href="#AxVline">func AxVline(x float64, args string)</a></dd>
 			
 				
+				<dd><a href="#Axes">func Axes(xi, yi, xf, yf float64, args string)</a></dd>
+			
+				
 				<dd><a href="#AxisLims">func AxisLims(lims []float64)</a></dd>
 			
 				
@@ -177,7 +180,7 @@ plt contains functions for plotting
 				<dd><a href="#Hist">func Hist(x [][]float64, labels []string, args string)</a></dd>
 			
 				
-				<dd><a href="#Plot">func Plot(x, y []float64, args string)</a></dd>
+				<dd><a href="#Plot">func Plot(x, y []float64, args string) (sx, sy string)</a></dd>
 			
 				
 				<dd><a href="#Plot3dLine">func Plot3dLine(x, y, z []float64, first bool, args string)</a></dd>
@@ -356,9 +359,7 @@ plt contains functions for plotting
 		
 			
 			
-			<h2 id="Annotate">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1887:1939#L92">Annotate</a>
-				<a class="permalink" href="#Annotate">&#xb6;</a>
-			</h2>
+			<h2 id="Annotate">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2067:2119#L100">Annotate</a></h2>
 			<pre>func Annotate(x, y <a href="/pkg/builtin/#float64">float64</a>, txt <a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -367,9 +368,7 @@ plt contains functions for plotting
 		
 			
 			
-			<h2 id="AnnotateXlabels">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2074:2130#L100">AnnotateXlabels</a>
-				<a class="permalink" href="#AnnotateXlabels">&#xb6;</a>
-			</h2>
+			<h2 id="AnnotateXlabels">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2254:2310#L108">AnnotateXlabels</a></h2>
 			<pre>func AnnotateXlabels(x <a href="/pkg/builtin/#float64">float64</a>, txt <a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -378,9 +377,7 @@ plt contains functions for plotting
 		
 			
 			
-			<h2 id="Arrow">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1347:1394#L64">Arrow</a>
-				<a class="permalink" href="#Arrow">&#xb6;</a>
-			</h2>
+			<h2 id="Arrow">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1527:1574#L72">Arrow</a></h2>
 			<pre>func Arrow(xi, yi, xf, yf <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -389,9 +386,7 @@ plt contains functions for plotting
 		
 			
 			
-			<h2 id="AutoScale">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=243:272#L1">AutoScale</a>
-				<a class="permalink" href="#AutoScale">&#xb6;</a>
-			</h2>
+			<h2 id="AutoScale">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=243:272#L1">AutoScale</a></h2>
 			<pre>func AutoScale(P [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AutoScale rescales plot area
@@ -403,9 +398,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxDist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7566:7591#L341">AxDist</a>
-				<a class="permalink" href="#AxDist">&#xb6;</a>
-			</h2>
+			<h2 id="AxDist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7768:7793#L350">AxDist</a></h2>
 			<pre>func AxDist(dist <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -414,9 +407,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxHline">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1529:1565#L72">AxHline</a>
-				<a class="permalink" href="#AxHline">&#xb6;</a>
-			</h2>
+			<h2 id="AxHline">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1709:1745#L80">AxHline</a></h2>
 			<pre>func AxHline(y <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -425,9 +416,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxVline">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1679:1715#L80">AxVline</a>
-				<a class="permalink" href="#AxVline">&#xb6;</a>
-			</h2>
+			<h2 id="AxVline">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1859:1895#L88">AxVline</a></h2>
 			<pre>func AxVline(x <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -436,9 +425,16 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisLims">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4294:4323#L197">AxisLims</a>
-				<a class="permalink" href="#AxisLims">&#xb6;</a>
-			</h2>
+			<h2 id="Axes">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1347:1393#L64">Axes</a></h2>
+			<pre>func Axes(xi, yi, xf, yf <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			
+			
+			
+
+		
+			
+			
+			<h2 id="AxisLims">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4474:4503#L205">AxisLims</a></h2>
 			<pre>func AxisLims(lims []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -447,9 +443,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisOff">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9000:9014#L410">AxisOff</a>
-				<a class="permalink" href="#AxisOff">&#xb6;</a>
-			</h2>
+			<h2 id="AxisOff">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9202:9216#L419">AxisOff</a></h2>
 			<pre>func AxisOff()</pre>
 			
 			
@@ -458,9 +452,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisRange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3985:4031#L189">AxisRange</a>
-				<a class="permalink" href="#AxisRange">&#xb6;</a>
-			</h2>
+			<h2 id="AxisRange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4165:4211#L197">AxisRange</a></h2>
 			<pre>func AxisRange(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -469,9 +461,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisRange3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4101:4161#L193">AxisRange3d</a>
-				<a class="permalink" href="#AxisRange3d">&#xb6;</a>
-			</h2>
+			<h2 id="AxisRange3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4281:4341#L201">AxisRange3d</a></h2>
 			<pre>func AxisRange3d(xmin, xmax, ymin, ymax, zmin, zmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -480,9 +470,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisXmax">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3471:3498#L169">AxisXmax</a>
-				<a class="permalink" href="#AxisXmax">&#xb6;</a>
-			</h2>
+			<h2 id="AxisXmax">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3651:3678#L177">AxisXmax</a></h2>
 			<pre>func AxisXmax(xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -491,9 +479,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisXmin">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3371:3398#L165">AxisXmin</a>
-				<a class="permalink" href="#AxisXmin">&#xb6;</a>
-			</h2>
+			<h2 id="AxisXmin">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3551:3578#L173">AxisXmin</a></h2>
 			<pre>func AxisXmin(xmin <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -502,9 +488,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisXrange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3771:3806#L181">AxisXrange</a>
-				<a class="permalink" href="#AxisXrange">&#xb6;</a>
-			</h2>
+			<h2 id="AxisXrange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3951:3986#L189">AxisXrange</a></h2>
 			<pre>func AxisXrange(xmin, xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -513,9 +497,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisYmax">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3671:3698#L177">AxisYmax</a>
-				<a class="permalink" href="#AxisYmax">&#xb6;</a>
-			</h2>
+			<h2 id="AxisYmax">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3851:3878#L185">AxisYmax</a></h2>
 			<pre>func AxisYmax(ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -524,9 +506,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisYmin">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3571:3598#L173">AxisYmin</a>
-				<a class="permalink" href="#AxisYmin">&#xb6;</a>
-			</h2>
+			<h2 id="AxisYmin">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3751:3778#L181">AxisYmin</a></h2>
 			<pre>func AxisYmin(ymin <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -535,9 +515,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxisYrange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3878:3913#L185">AxisYrange</a>
-				<a class="permalink" href="#AxisYrange">&#xb6;</a>
-			</h2>
+			<h2 id="AxisYrange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4058:4093#L193">AxisYrange</a></h2>
 			<pre>func AxisYrange(ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -546,9 +524,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Camera">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7377:7421#L333">Camera</a>
-				<a class="permalink" href="#Camera">&#xb6;</a>
-			</h2>
+			<h2 id="Camera">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7579:7623#L342">Camera</a></h2>
 			<pre>func Camera(elev, azim <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -557,9 +533,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Circle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9149:9192#L423">Circle</a>
-				<a class="permalink" href="#Circle">&#xb6;</a>
-			</h2>
+			<h2 id="Circle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9351:9394#L432">Circle</a></h2>
 			<pre>func Circle(xc, yc, r <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -568,9 +542,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Clf">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8283:8293#L375">Clf</a>
-				<a class="permalink" href="#Clf">&#xb6;</a>
-			</h2>
+			<h2 id="Clf">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8485:8495#L384">Clf</a></h2>
 			<pre>func Clf()</pre>
 			
 			
@@ -579,9 +551,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Contour">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6600:6646#L300">Contour</a>
-				<a class="permalink" href="#Contour">&#xb6;</a>
-			</h2>
+			<h2 id="Contour">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6802:6848#L309">Contour</a></h2>
 			<pre>func Contour(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -590,9 +560,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="ContourSimple">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6919:7007#L315">ContourSimple</a>
-				<a class="permalink" href="#ContourSimple">&#xb6;</a>
-			</h2>
+			<h2 id="ContourSimple">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7121:7209#L324">ContourSimple</a></h2>
 			<pre>func ContourSimple(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, withClabel <a href="/pkg/builtin/#bool">bool</a>, clabelFsz <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -601,9 +569,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="Cross">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2814:2837#L134">Cross</a>
-				<a class="permalink" href="#Cross">&#xb6;</a>
-			</h2>
+			<h2 id="Cross">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2994:3017#L142">Cross</a></h2>
 			<pre>func Cross(args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -612,9 +578,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="DoubleYscale">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=561:600#L25">DoubleYscale</a>
-				<a class="permalink" href="#DoubleYscale">&#xb6;</a>
-			</h2>
+			<h2 id="DoubleYscale">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=561:600#L25">DoubleYscale</a></h2>
 			<pre>func DoubleYscale(ylabelOrEmpty <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -623,9 +587,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="DrawLegend">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=1406:1477#L50">DrawLegend</a>
-				<a class="permalink" href="#DrawLegend">&#xb6;</a>
-			</h2>
+			<h2 id="DrawLegend">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=1406:1477#L50">DrawLegend</a></h2>
 			<pre>func DrawLegend(dat []<a href="#Fmt">Fmt</a>, fs <a href="/pkg/builtin/#int">int</a>, loc <a href="/pkg/builtin/#string">string</a>, frame <a href="/pkg/builtin/#bool">bool</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 DrawLegend draws legend with given lines data. fs == fontsize
@@ -637,9 +599,7 @@ DrawLegend draws legend with given lines data. fs == fontsize
 		
 			
 			
-			<h2 id="DrawPolyline">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=640:694#L24">DrawPolyline</a>
-				<a class="permalink" href="#DrawPolyline">&#xb6;</a>
-			</h2>
+			<h2 id="DrawPolyline">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=640:694#L24">DrawPolyline</a></h2>
 			<pre>func DrawPolyline(P [][]<a href="/pkg/builtin/#float64">float64</a>, sd *<a href="#Sty">Sty</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 DrawPolyline draws a polyline
@@ -651,9 +611,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Equal">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9049:9061#L414">Equal</a>
-				<a class="permalink" href="#Equal">&#xb6;</a>
-			</h2>
+			<h2 id="Equal">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9251:9263#L423">Equal</a></h2>
 			<pre>func Equal()</pre>
 			
 			
@@ -662,9 +620,7 @@ DrawPolyline draws a polyline
 		
 			
 			
-			<h2 id="Gen2Arrays">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10594:10665#L485">Gen2Arrays</a>
-				<a class="permalink" href="#Gen2Arrays">&#xb6;</a>
-			</h2>
+			<h2 id="Gen2Arrays">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10796:10867#L494">Gen2Arrays</a></h2>
 			<pre>func Gen2Arrays(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, nameA, nameB <a href="/pkg/builtin/#string">string</a>, a, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Gen2Arrays generates the NumPy text in &#39;b&#39; corresponding to 2 arrays of float point numbers
@@ -676,9 +632,7 @@ Gen2Arrays generates the NumPy text in &#39;b&#39; corresponding to 2 arrays of 
 		
 			
 			
-			<h2 id="GenArray">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10327:10383#L476">GenArray</a>
-				<a class="permalink" href="#GenArray">&#xb6;</a>
-			</h2>
+			<h2 id="GenArray">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10529:10585#L485">GenArray</a></h2>
 			<pre>func GenArray(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenArray generates the NumPy text in &#39;b&#39; corresponding to an array of float point numbers
@@ -690,9 +644,7 @@ GenArray generates the NumPy text in &#39;b&#39; corresponding to an array of fl
 		
 			
 			
-			<h2 id="GenList">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10000:10059#L463">GenList</a>
-				<a class="permalink" href="#GenList">&#xb6;</a>
-			</h2>
+			<h2 id="GenList">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10202:10261#L472">GenList</a></h2>
 			<pre>func GenList(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenList generates list
@@ -704,9 +656,7 @@ GenList generates list
 		
 			
 			
-			<h2 id="GenMat">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9722:9780#L450">GenMat</a>
-				<a class="permalink" href="#GenMat">&#xb6;</a>
-			</h2>
+			<h2 id="GenMat">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9924:9982#L459">GenMat</a></h2>
 			<pre>func GenMat(buf *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GenMat generates matrix
@@ -718,9 +668,7 @@ GenMat generates matrix
 		
 			
 			
-			<h2 id="GenStrArray">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10805:10863#L491">GenStrArray</a>
-				<a class="permalink" href="#GenStrArray">&#xb6;</a>
-			</h2>
+			<h2 id="GenStrArray">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11007:11065#L500">GenStrArray</a></h2>
 			<pre>func GenStrArray(b *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>, name <a href="/pkg/builtin/#string">string</a>, u []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of strings
@@ -732,9 +680,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Gll">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8078:8114#L366">Gll</a>
-				<a class="permalink" href="#Gll">&#xb6;</a>
-			</h2>
+			<h2 id="Gll">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8280:8316#L375">Gll</a></h2>
 			<pre>func Gll(xl, yl <a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -743,9 +689,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Grid">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8018:8040#L362">Grid</a>
-				<a class="permalink" href="#Grid">&#xb6;</a>
-			</h2>
+			<h2 id="Grid">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8220:8242#L371">Grid</a></h2>
 			<pre>func Grid(args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -754,9 +698,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="HideTRframe">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1829:1847#L88">HideTRframe</a>
-				<a class="permalink" href="#HideTRframe">&#xb6;</a>
-			</h2>
+			<h2 id="HideTRframe">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2009:2027#L96">HideTRframe</a></h2>
 			<pre>func HideTRframe()</pre>
 			
 			
@@ -765,9 +707,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Hist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4838:4892#L221">Hist</a>
-				<a class="permalink" href="#Hist">&#xb6;</a>
-			</h2>
+			<h2 id="Hist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5040:5094#L230">Hist</a></h2>
 			<pre>func Hist(x [][]<a href="/pkg/builtin/#float64">float64</a>, labels []<a href="/pkg/builtin/#string">string</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -776,10 +716,8 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Plot">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4405:4443#L201">Plot</a>
-				<a class="permalink" href="#Plot">&#xb6;</a>
-			</h2>
-			<pre>func Plot(x, y []<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+			<h2 id="Plot">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4585:4639#L209">Plot</a></h2>
+			<pre>func Plot(x, y []<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>) (sx, sy <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
 			
@@ -787,9 +725,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Plot3dLine">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5140:5199#L234">Plot3dLine</a>
-				<a class="permalink" href="#Plot3dLine">&#xb6;</a>
-			</h2>
+			<h2 id="Plot3dLine">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5342:5401#L243">Plot3dLine</a></h2>
 			<pre>func Plot3dLine(x, y, z []<a href="/pkg/builtin/#float64">float64</a>, first <a href="/pkg/builtin/#bool">bool</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -798,9 +734,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Plot3dPoints">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5533:5582#L253">Plot3dPoints</a>
-				<a class="permalink" href="#Plot3dPoints">&#xb6;</a>
-			</h2>
+			<h2 id="Plot3dPoints">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5735:5784#L262">Plot3dPoints</a></h2>
 			<pre>func Plot3dPoints(x, y, z []<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -809,9 +743,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="PlotOne">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4659:4698#L213">PlotOne</a>
-				<a class="permalink" href="#PlotOne">&#xb6;</a>
-			</h2>
+			<h2 id="PlotOne">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=4861:4900#L222">PlotOne</a></h2>
 			<pre>func PlotOne(x, y <a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -820,9 +752,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="PyCmds">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=513:537#L21">PyCmds</a>
-				<a class="permalink" href="#PyCmds">&#xb6;</a>
-			</h2>
+			<h2 id="PyCmds">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=513:537#L21">PyCmds</a></h2>
 			<pre>func PyCmds(cmds <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -831,9 +761,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="PyFile">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=722:750#L32">PyFile</a>
-				<a class="permalink" href="#PyFile">&#xb6;</a>
-			</h2>
+			<h2 id="PyFile">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=722:750#L32">PyFile</a></h2>
 			<pre>func PyFile(filename <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -842,9 +770,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Quiver">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7636:7686#L345">Quiver</a>
-				<a class="permalink" href="#Quiver">&#xb6;</a>
-			</h2>
+			<h2 id="Quiver">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=7838:7888#L354">Quiver</a></h2>
 			<pre>func Quiver(x, y, gx, gy [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -853,9 +779,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Reset">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=410:422#L14">Reset</a>
-				<a class="permalink" href="#Reset">&#xb6;</a>
-			</h2>
+			<h2 id="Reset">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=410:422#L14">Reset</a></h2>
 			<pre>func Reset()</pre>
 			
 			
@@ -864,9 +788,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Save">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8607:8630#L393">Save</a>
-				<a class="permalink" href="#Save">&#xb6;</a>
-			</h2>
+			<h2 id="Save">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8809:8832#L402">Save</a></h2>
 			<pre>func Save(fname <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -875,9 +797,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SaveD">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8723:8755#L399">SaveD</a>
-				<a class="permalink" href="#SaveD">&#xb6;</a>
-			</h2>
+			<h2 id="SaveD">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8925:8957#L408">SaveD</a></h2>
 			<pre>func SaveD(dirout, fname <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -886,9 +806,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetAxis">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8886:8930#L406">SetAxis</a>
-				<a class="permalink" href="#SetAxis">&#xb6;</a>
-			</h2>
+			<h2 id="SetAxis">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9088:9132#L415">SetAxis</a></h2>
 			<pre>func SetAxis(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -897,9 +815,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetFontSize">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8322:8351#L379">SetFontSize</a>
-				<a class="permalink" href="#SetFontSize">&#xb6;</a>
-			</h2>
+			<h2 id="SetFontSize">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8524:8553#L388">SetFontSize</a></h2>
 			<pre>func SetFontSize(args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -908,9 +824,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetForEps">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8396:8431#L383">SetForEps</a>
-				<a class="permalink" href="#SetForEps">&#xb6;</a>
-			</h2>
+			<h2 id="SetForEps">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8598:8633#L392">SetForEps</a></h2>
 			<pre>func SetForEps(prop, widpt <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -919,9 +833,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetForPng">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8493:8537#L388">SetForPng</a>
-				<a class="permalink" href="#SetForPng">&#xb6;</a>
-			</h2>
+			<h2 id="SetForPng">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=8695:8739#L397">SetForPng</a></h2>
 			<pre>func SetForPng(prop, widpt <a href="/pkg/builtin/#float64">float64</a>, dpi <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -930,9 +842,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetHspace">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3195:3225#L157">SetHspace</a>
-				<a class="permalink" href="#SetHspace">&#xb6;</a>
-			</h2>
+			<h2 id="SetHspace">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3375:3405#L165">SetHspace</a></h2>
 			<pre>func SetHspace(hspace <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -941,9 +851,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetScientific">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1099:1156#L56">SetScientific</a>
-				<a class="permalink" href="#SetScientific">&#xb6;</a>
-			</h2>
+			<h2 id="SetScientific">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1099:1156#L56">SetScientific</a></h2>
 			<pre>func SetScientific(axis <a href="/pkg/builtin/#string">string</a>, min_order, max_order <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -952,9 +860,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetTicksNormal">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1263:1284#L60">SetTicksNormal</a>
-				<a class="permalink" href="#SetTicksNormal">&#xb6;</a>
-			</h2>
+			<h2 id="SetTicksNormal">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1263:1284#L60">SetTicksNormal</a></h2>
 			<pre>func SetTicksNormal()</pre>
 			
 			
@@ -963,9 +869,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetVspace">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3283:3313#L161">SetVspace</a>
-				<a class="permalink" href="#SetVspace">&#xb6;</a>
-			</h2>
+			<h2 id="SetVspace">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3463:3493#L169">SetVspace</a></h2>
 			<pre>func SetVspace(vspace <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -974,9 +878,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetXlog">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=871:885#L40">SetXlog</a>
-				<a class="permalink" href="#SetXlog">&#xb6;</a>
-			</h2>
+			<h2 id="SetXlog">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=871:885#L40">SetXlog</a></h2>
 			<pre>func SetXlog()</pre>
 			
 			
@@ -985,9 +887,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetXnticks">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=965:989#L48">SetXnticks</a>
-				<a class="permalink" href="#SetXnticks">&#xb6;</a>
-			</h2>
+			<h2 id="SetXnticks">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=965:989#L48">SetXnticks</a></h2>
 			<pre>func SetXnticks(num <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -996,9 +896,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetYlog">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=918:932#L44">SetYlog</a>
-				<a class="permalink" href="#SetYlog">&#xb6;</a>
-			</h2>
+			<h2 id="SetYlog">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=918:932#L44">SetYlog</a></h2>
 			<pre>func SetYlog()</pre>
 			
 			
@@ -1007,9 +905,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SetYnticks">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1032:1056#L52">SetYnticks</a>
-				<a class="permalink" href="#SetYnticks">&#xb6;</a>
-			</h2>
+			<h2 id="SetYnticks">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=1032:1056#L52">SetYnticks</a></h2>
 			<pre>func SetYnticks(num <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -1018,9 +914,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Show">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9098:9109#L418">Show</a>
-				<a class="permalink" href="#Show">&#xb6;</a>
-			</h2>
+			<h2 id="Show">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9300:9311#L427">Show</a></h2>
 			<pre>func Show()</pre>
 			
 			
@@ -1029,9 +923,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SplotGap">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2936:2963#L142">SplotGap</a>
-				<a class="permalink" href="#SplotGap">&#xb6;</a>
-			</h2>
+			<h2 id="SplotGap">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3116:3143#L150">SplotGap</a></h2>
 			<pre>func SplotGap(w, h <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			
 			
@@ -1040,9 +932,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Subplot">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3009:3034#L146">Subplot</a>
-				<a class="permalink" href="#Subplot">&#xb6;</a>
-			</h2>
+			<h2 id="Subplot">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3189:3214#L154">Subplot</a></h2>
 			<pre>func Subplot(i, j, k <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -1051,9 +941,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SubplotI">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3084:3106#L150">SubplotI</a>
-				<a class="permalink" href="#SubplotI">&#xb6;</a>
-			</h2>
+			<h2 id="SubplotI">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=3264:3286#L158">SubplotI</a></h2>
 			<pre>func SubplotI(I []<a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -1062,9 +950,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="SupTitle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2261:2292#L108">SupTitle</a>
-				<a class="permalink" href="#SupTitle">&#xb6;</a>
-			</h2>
+			<h2 id="SupTitle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2441:2472#L116">SupTitle</a></h2>
 			<pre>func SupTitle(txt, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -1073,9 +959,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="Surface">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6281:6327#L285">Surface</a>
-				<a class="permalink" href="#Surface">&#xb6;</a>
-			</h2>
+			<h2 id="Surface">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6483:6529#L294">Surface</a></h2>
 			<pre>func Surface(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -1084,9 +968,7 @@ GenStrArray generates the NumPy text in &#39;b&#39; corresponding to an array of
 		
 			
 			
-			<h2 id="TexPiRadFmt">func <a href="https://github.com/cpmech/gosl/blob/master/plt/numformatting.go?s=278:312#L4">TexPiRadFmt</a>
-				<a class="permalink" href="#TexPiRadFmt">&#xb6;</a>
-			</h2>
+			<h2 id="TexPiRadFmt">func <a href="https://github.com/cpmech/gosl/blob/master/plt/numformatting.go?s=278:312#L4">TexPiRadFmt</a></h2>
 			<pre>func TexPiRadFmt(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 TexPiRadFmt formats number in radians/pi notation
@@ -1098,9 +980,7 @@ TexPiRadFmt formats number in radians/pi notation
 		
 			
 			
-			<h2 id="Text">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2633:2674#L126">Text</a>
-				<a class="permalink" href="#Text">&#xb6;</a>
-			</h2>
+			<h2 id="Text">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2813:2854#L134">Text</a></h2>
 			<pre>func Text(x, y <a href="/pkg/builtin/#float64">float64</a>, txt, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -1109,9 +989,7 @@ TexPiRadFmt formats number in radians/pi notation
 		
 			
 			
-			<h2 id="Title">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2487:2515#L118">Title</a>
-				<a class="permalink" href="#Title">&#xb6;</a>
-			</h2>
+			<h2 id="Title">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=2667:2695#L126">Title</a></h2>
 			<pre>func Title(txt, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -1120,9 +998,7 @@ TexPiRadFmt formats number in radians/pi notation
 		
 			
 			
-			<h2 id="Wireframe">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=5912:5960#L269">Wireframe</a>
-				<a class="permalink" href="#Wireframe">&#xb6;</a>
-			</h2>
+			<h2 id="Wireframe">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=6114:6162#L278">Wireframe</a></h2>
 			<pre>func Wireframe(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 			
 			
@@ -1132,9 +1008,7 @@ TexPiRadFmt formats number in radians/pi notation
 		
 			
 			
-			<h2 id="Fmt">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=426:657#L8">Fmt</a>
-				<a class="permalink" href="#Fmt">&#xb6;</a>
-			</h2>
+			<h2 id="Fmt">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=426:657#L8">Fmt</a></h2>
 			<pre>type Fmt struct {
     C  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// color</span>
     M  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// marker</span>
@@ -1161,9 +1035,7 @@ Fmt holds data for ploting lines
 
 			
 				
-				<h3 id="Fmt.GetArgs">func (Fmt) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=811:852#L26">GetArgs</a>
-					<a class="permalink" href="#Fmt.GetArgs">&#xb6;</a>
-				</h3>
+				<h3 id="Fmt.GetArgs">func (Fmt) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=811:852#L26">GetArgs</a></h3>
 				<pre>func (o <a href="#Fmt">Fmt</a>) GetArgs(start <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 GetArgs returns arguments for Plot
@@ -1176,9 +1048,7 @@ GetArgs returns arguments for Plot
 		
 			
 			
-			<h2 id="Sty">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=248:388#L1">Sty</a>
-				<a class="permalink" href="#Sty">&#xb6;</a>
-			</h2>
+			<h2 id="Sty">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=248:388#L1">Sty</a></h2>
 			<pre>type Sty struct {
     Fc     <a href="/pkg/builtin/#string">string</a>  <span class="comment">// face color</span>
     Ec     <a href="/pkg/builtin/#string">string</a>  <span class="comment">// edge color</span>
@@ -1202,9 +1072,7 @@ Sty holds data for drawing shapes
 
 			
 				
-				<h3 id="Sty.Init">func (*Sty) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=703:723#L19">Init</a>
-					<a class="permalink" href="#Sty.Init">&#xb6;</a>
-				</h3>
+				<h3 id="Sty.Init">func (*Sty) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=703:723#L19">Init</a></h3>
 				<pre>func (o *<a href="#Sty">Sty</a>) Init()</pre>
 				<p>
 Init initialises Fmt with default values

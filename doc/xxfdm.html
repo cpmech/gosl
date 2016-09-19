@@ -175,9 +175,7 @@ use 'godoc cmd/github.com/cpmech/gosl/fdm' for documentation on the github.com/c
 		
 			
 			
-			<h2 id="Assemble">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=376:462#L8">Assemble</a>
-				<a class="permalink" href="#Assemble">&#xb6;</a>
-			</h2>
+			<h2 id="Assemble">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=376:462#L8">Assemble</a></h2>
 			<pre>func Assemble(K11, K12 *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, F1 []<a href="/pkg/builtin/#float64">float64</a>, src <a href="#Cb_src">Cb_src</a>, g *<a href="#Grid2D">Grid2D</a>, e *<a href="#Equations">Equations</a>)</pre>
 			
 			
@@ -186,9 +184,7 @@ use 'godoc cmd/github.com/cpmech/gosl/fdm' for documentation on the github.com/c
 		
 			
 			
-			<h2 id="InitK11andK12">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=256:310#L3">InitK11andK12</a>
-				<a class="permalink" href="#InitK11andK12">&#xb6;</a>
-			</h2>
+			<h2 id="InitK11andK12">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=256:310#L3">InitK11andK12</a></h2>
 			<pre>func InitK11andK12(K11, K12 *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, e *<a href="#Equations">Equations</a>)</pre>
 			
 			
@@ -197,9 +193,7 @@ use 'godoc cmd/github.com/cpmech/gosl/fdm' for documentation on the github.com/c
 		
 			
 			
-			<h2 id="JoinVecs">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=1258:1306#L46">JoinVecs</a>
-				<a class="permalink" href="#JoinVecs">&#xb6;</a>
-			</h2>
+			<h2 id="JoinVecs">func <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=1258:1306#L46">JoinVecs</a></h2>
 			<pre>func JoinVecs(U, U1, U2 []<a href="/pkg/builtin/#float64">float64</a>, e *<a href="#Equations">Equations</a>)</pre>
 			
 			
@@ -209,9 +203,7 @@ use 'godoc cmd/github.com/cpmech/gosl/fdm' for documentation on the github.com/c
 		
 			
 			
-			<h2 id="Cb_fxy">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=2895:2937#L96">Cb_fxy</a>
-				<a class="permalink" href="#Cb_fxy">&#xb6;</a>
-			</h2>
+			<h2 id="Cb_fxy">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=2895:2937#L96">Cb_fxy</a></h2>
 			<pre>type Cb_fxy func(x, y <a href="/pkg/builtin/#float64">float64</a>) (z <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 callbacks
@@ -232,9 +224,7 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_src">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=216:254#L1">Cb_src</a>
-				<a class="permalink" href="#Cb_src">&#xb6;</a>
-			</h2>
+			<h2 id="Cb_src">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/assembly.go?s=216:254#L1">Cb_src</a></h2>
 			<pre>type Cb_src func(x, y <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			
 
@@ -252,9 +242,7 @@ callbacks
 		
 			
 			
-			<h2 id="Equations">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=2531:2746#L53">Equations</a>
-				<a class="permalink" href="#Equations">&#xb6;</a>
-			</h2>
+			<h2 id="Equations">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=2531:2746#L53">Equations</a></h2>
 			<pre>type Equations struct {
     N1, N2, N <a href="/pkg/builtin/#int">int</a>   <span class="comment">// unknowns, prescribed, total numbers</span>
     RF1, FR1  []<a href="/pkg/builtin/#int">int</a> <span class="comment">// reduced=&gt;full/full=&gt;reduced maps for unknowns</span>
@@ -326,9 +314,7 @@ FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation #
 
 			
 				
-				<h3 id="Equations.Init">func (*Equations) <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=2748:2800#L59">Init</a>
-					<a class="permalink" href="#Equations.Init">&#xb6;</a>
-				</h3>
+				<h3 id="Equations.Init">func (*Equations) <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=2748:2800#L59">Init</a></h3>
 				<pre>func (e *<a href="#Equations">Equations</a>) Init(n <a href="/pkg/builtin/#int">int</a>, peq_notsorted []<a href="/pkg/builtin/#int">int</a>)</pre>
 				
 				
@@ -336,9 +322,7 @@ FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation #
 				
 			
 				
-				<h3 id="Equations.Print">func (*Equations) <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=3375:3402#L87">Print</a>
-					<a class="permalink" href="#Equations.Print">&#xb6;</a>
-				</h3>
+				<h3 id="Equations.Print">func (*Equations) <a href="https://github.com/cpmech/gosl/blob/master/fdm/equations.go?s=3375:3402#L87">Print</a></h3>
 				<pre>func (e *<a href="#Equations">Equations</a>) Print()</pre>
 				
 				
@@ -348,9 +332,7 @@ FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation #
 		
 			
 			
-			<h2 id="Grid2D">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=297:413#L6">Grid2D</a>
-				<a class="permalink" href="#Grid2D">&#xb6;</a>
-			</h2>
+			<h2 id="Grid2D">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=297:413#L6">Grid2D</a></h2>
 			<pre>type Grid2D struct {
     Lx, Ly     <a href="/pkg/builtin/#float64">float64</a>
     Nx, Ny, N  <a href="/pkg/builtin/#int">int</a>
@@ -372,9 +354,7 @@ FR2 = [0        1        2      ]  =&gt; ex:  FR2[3] = reduced system equation #
 
 			
 				
-				<h3 id="Grid2D.Contour">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=1903:1998#L62">Contour</a>
-					<a class="permalink" href="#Grid2D.Contour">&#xb6;</a>
-				</h3>
+				<h3 id="Grid2D.Contour">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=1903:1998#L62">Contour</a></h3>
 				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Contour(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, fxy <a href="#Cb_fxy">Cb_fxy</a>, z []<a href="/pkg/builtin/#float64">float64</a>, nlevels <a href="/pkg/builtin/#int">int</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 fxy or z must be nil
@@ -385,9 +365,7 @@ fxy or z must be nil
 				
 			
 				
-				<h3 id="Grid2D.Draw">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=757:811#L26">Draw</a>
-					<a class="permalink" href="#Grid2D.Draw">&#xb6;</a>
-				</h3>
+				<h3 id="Grid2D.Draw">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=757:811#L26">Draw</a></h3>
 				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Draw(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				
 				
@@ -395,9 +373,7 @@ fxy or z must be nil
 				
 			
 				
-				<h3 id="Grid2D.Init">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=415:464#L14">Init</a>
-					<a class="permalink" href="#Grid2D.Init">&#xb6;</a>
-				</h3>
+				<h3 id="Grid2D.Init">func (*Grid2D) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=415:464#L14">Init</a></h3>
 				<pre>func (g *<a href="#Grid2D">Grid2D</a>) Init(lx, ly <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>)</pre>
 				
 				
