@@ -102,7 +102,7 @@ func Test_dist_normal_02(tst *testing.T) {
 		for _, σ := range []float64{1, 0.5, 0.25} {
 			plot_normal(0, σ)
 		}
-		plt.SaveD("/tmp/gosl", "nrd_dist_normal_02.eps")
+		plt.SaveD("/tmp/gosl", "rnd_dist_normal_02.eps")
 	}
 }
 
@@ -126,4 +126,23 @@ func Test_dist_normal_03(tst *testing.T) {
 	chk.Scalar(tst, "Φ⁻¹(Φ(0))", 1e-16, StdInvPhi(0.5), 0.0)
 	chk.Scalar(tst, "Φ⁻¹(Φ(2))", 1e-9, StdInvPhi(0.97724986805182079), 2.0)
 	chk.Scalar(tst, "Φ⁻¹(Φ(4))", 1e-8, StdInvPhi(0.99996832875816688), 4.0)
+}
+
+func Test_dist_normal_04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("dist_normal_04. problem with Φ")
+
+	if chk.Verbose {
+		np := 101
+		x := utl.LinSpace(0, 8.2, np)
+		y := make([]float64, np)
+		for i := 0; i < np; i++ {
+			//io.Pforan("x=%v Φ(x)=%v Φ⁻¹(Φ(x))=%v\n", x[i], StdPhi(x[i]), StdInvPhi(StdPhi(x[i])))
+			y[i] = StdInvPhi(StdPhi(x[i]))
+		}
+		plt.Plot(x, y, "'b-'")
+		plt.Gll("$x$", "$\\Phi^{-1}(\\Phi(x))$", "")
+		plt.SaveD("/tmp/gosl", "rnd_dist_normal_04.eps")
+	}
 }
