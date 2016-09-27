@@ -116,7 +116,7 @@ func HideTRframe() {
 }
 
 func Annotate(x, y float64, txt string, args string) {
-	cmd := io.Sf("annotate(%s, xy=(%g,%g)", txt, x, y)
+	cmd := io.Sf("annotate(%q, xy=(%g,%g)", txt, x, y)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
 	}
@@ -124,7 +124,7 @@ func Annotate(x, y float64, txt string, args string) {
 }
 
 func AnnotateXlabels(x float64, txt string, args string) {
-	cmd := io.Sf("AnnotateXlabels(%g, %s", x, txt)
+	cmd := io.Sf("AnnotateXlabels(%g, %q", x, txt)
 	if len(args) > 0 {
 		cmd += io.Sf(",%s", args)
 	}
@@ -134,26 +134,26 @@ func AnnotateXlabels(x float64, txt string, args string) {
 func SupTitle(txt, args string) {
 	n := bb.Len()
 	if len(args) > 0 {
-		io.Ff(&bb, "st%d = suptitle('%s',%s)\n", n, txt, args)
+		io.Ff(&bb, "st%d = suptitle(%q,%s)\n", n, txt, args)
 	} else {
-		io.Ff(&bb, "st%d = suptitle('%s')\n", n, txt)
+		io.Ff(&bb, "st%d = suptitle(%q)\n", n, txt)
 	}
 	io.Ff(&bb, "ea.append(st%d)\n", n)
 }
 
 func Title(txt, args string) {
 	if len(args) > 0 {
-		io.Ff(&bb, "title('%s',%s)\n", txt, args)
+		io.Ff(&bb, "title(%q,%s)\n", txt, args)
 	} else {
-		io.Ff(&bb, "title('%s')\n", txt)
+		io.Ff(&bb, "title(%q)\n", txt)
 	}
 }
 
 func Text(x, y float64, txt, args string) {
 	if len(args) > 0 {
-		io.Ff(&bb, "text(%g,%g,'%s',%s)\n", x, y, txt, args)
+		io.Ff(&bb, "text(%g,%g,%q,%s)\n", x, y, txt, args)
 	} else {
-		io.Ff(&bb, "text(%g,%g,'%s')\n", x, y, txt)
+		io.Ff(&bb, "text(%g,%g,%q)\n", x, y, txt)
 	}
 }
 
