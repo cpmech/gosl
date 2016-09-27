@@ -32,7 +32,7 @@ from matplotlib.font_manager    import FontProperties
 from matplotlib.ticker          import FuncFormatter
 from mpl_toolkits.mplot3d       import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-from matplotlib.ticker          import MaxNLocator
+from matplotlib.ticker          import MaxNLocator, MultipleLocator, FormatStrFormatter
 #from scipy.interpolate          import UnivariateSpline
 from matplotlib.patheffects     import Stroke # for fixing arrow tips
 from matplotlib.gridspec        import GridSpec
@@ -109,6 +109,24 @@ def SetXnticks(num):
 def SetYnticks(num):
     if num == 0: gca().get_yaxis().set_ticks([])
     else:        gca().get_yaxis().set_major_locator(MaxNLocator(num))
+
+
+def SetTicksX(majorEvery=0.1, minorEvery=0.01, majorFmt='%g'):
+    majorLocator = MultipleLocator(majorEvery)
+    minorLocator = MultipleLocator(minorEvery)
+    majorFormatter = FormatStrFormatter(majorFmt)
+    gca().xaxis.set_major_locator(majorLocator)
+    gca().xaxis.set_minor_locator(minorLocator)
+    gca().xaxis.set_major_formatter(majorFormatter)
+
+
+def SetTicksY(majorEvery=0.1, minorEvery=0.01, majorFmt='%g'):
+    majorLocator = MultipleLocator(majorEvery)
+    minorLocator = MultipleLocator(minorEvery)
+    majorFormatter = FormatStrFormatter(majorFmt)
+    gca().yaxis.set_major_locator(majorLocator)
+    gca().yaxis.set_minor_locator(minorLocator)
+    gca().yaxis.set_major_formatter(majorFormatter)
 
 
 def TgLine(m0, n0, dm, slope, both=True):

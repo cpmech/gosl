@@ -63,6 +63,14 @@ func SetYnticks(num int) {
 	io.Ff(&bb, "SetYnticks(%d)\n", num)
 }
 
+func SetTicksX(majorEvery, minorEvery float64, majorFmt string) {
+	io.Ff(&bb, "SetTicksX(%g, %g, %q)\n", majorEvery, minorEvery, majorFmt)
+}
+
+func SetTicksY(majorEvery, minorEvery float64, majorFmt string) {
+	io.Ff(&bb, "SetTicksY(%g, %g, %q)\n", majorEvery, minorEvery, majorFmt)
+}
+
 func SetScientific(axis string, min_order, max_order int) {
 	io.Ff(&bb, "SetScientificFmt(axis='%s', min_order=%d, max_order=%d)\n", axis, min_order, max_order)
 }
