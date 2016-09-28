@@ -40,7 +40,7 @@ func TexNum(fmt string, num float64, scientificNotation bool) (l string) {
 			if e[0] == '0' {
 				e = string(e[1])
 			}
-			l = s[0] + "\\cdot 10^{+" + e + "}"
+			l = s[0] + "\\cdot 10^{" + e + "}"
 		}
 	}
 	return

@@ -25,6 +25,6 @@ func Test_texreport01(tst *testing.T) {
 	Pforan("l4 = %v\n", l4)
 	chk.String(tst, l1, "123.456")
 	chk.String(tst, l2, "1.23456\\cdot 10^{-6}")
-	chk.String(tst, l3, "1.2\\cdot 10^{+10}")
+	chk.String(tst, l3, "1.2\\cdot 10^{10}")
 	chk.String(tst, l4, "1.23e-06")
 }
