@@ -2,12 +2,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package utl
+package io
 
 import (
 	"strings"
-
-	"github.com/cpmech/gosl/io"
 )
 
 // TexNum returns a string representation in TeX format of a real number.
@@ -18,7 +16,7 @@ func TexNum(fmt string, num float64, scientificNotation bool) (l string) {
 	if fmt == "" {
 		fmt = "%g"
 	}
-	l = io.Sf(fmt, num)
+	l = Sf(fmt, num)
 	if scientificNotation {
 		s := strings.Split(l, "e-")
 		if len(s) == 2 {
