@@ -26,8 +26,8 @@ func AnaNum(tst *testing.T, msg string, tol, ana, num float64, verbose bool) {
 // String compares two strings
 func String(tst *testing.T, str, correct string) {
 	if str != correct {
-		fmt.Printf("[1;31merror %s != %s[0m\n", str, correct)
-		tst.Errorf("[1;31mstring failed with: %s != %s[0m", str, correct)
+		fmt.Printf("[1;31merror %q != %q[0m\n", str, correct)
+		tst.Errorf("[1;31mstring failed with: %q != %q[0m", str, correct)
 		return
 	}
 	PrintOk(fmt.Sprintf("%s == %s", str, correct))
