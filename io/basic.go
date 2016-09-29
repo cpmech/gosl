@@ -20,6 +20,21 @@ var (
 	ColorsOn = true // use colors on console
 )
 
+// IntSf is the Sprintf for a slice of integers (without brackets)
+func IntSf(msg string, slice []int) string {
+	return strings.Trim(fmt.Sprintf(msg, slice), "[]")
+}
+
+// DblSf is the Sprintf for a slice of float64 (without brackets)
+func DblSf(msg string, slice []float64) string {
+	return strings.Trim(fmt.Sprintf(msg, slice), "[]")
+}
+
+// StrSf is the Sprintf for a slice of string (without brackets)
+func StrSf(msg string, slice []string) string {
+	return strings.Trim(fmt.Sprintf(msg, slice), "[]")
+}
+
 // Sf wraps Sprintf
 func Sf(msg string, prm ...interface{}) string {
 	return fmt.Sprintf(msg, prm...)

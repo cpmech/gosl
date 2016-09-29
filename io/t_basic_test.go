@@ -60,3 +60,21 @@ func Test_basic01(tst *testing.T) {
 		chk.Panic("Btoa failed: v8")
 	}
 }
+
+func Test_basic02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("basic02")
+
+	res := IntSf("%4d", []int{1, 2, 3}) // note that an inner space is always added
+	Pforan("res = %q\n", res)
+	chk.String(tst, res, "   1    2    3")
+
+	res = DblSf("%8.3f", []float64{1, 2, 3}) // note that an inner space is always added
+	Pforan("res = %q\n", res)
+	chk.String(tst, res, "   1.000    2.000    3.000")
+
+	res = StrSf("%s", []string{"a", "b", "c"}) // note that an inner space is always added
+	Pforan("res = %q\n", res)
+	chk.String(tst, res, "a b c")
+}
