@@ -996,7 +996,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="Cos">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=268:369#L4">Cos</a></h2>
+			<h2 id="Cos">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=404:505#L7">Cos</a></h2>
 			<pre>type Cos struct {
 
     <span class="comment">// parameters</span>
@@ -1007,7 +1007,11 @@ Init initialises the function
 }</pre>
 			<p>
 Cos implements y(t) = a * cos(b*t) + c
+Input:
 </p>
+<pre>b/pi -- is a flag that says that b is in fact b divided by π
+        thus, the code will multiply b by π internally
+</pre>
 
 
 			
@@ -1022,7 +1026,7 @@ Cos implements y(t) = a * cos(b*t) + c
 
 			
 				
-				<h3 id="Cos.F">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=891:937#L38">F</a></h3>
+				<h3 id="Cos.F">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1027:1073#L41">F</a></h3>
 				<pre>func (o <a href="#Cos">Cos</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1033,7 +1037,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Cos.G">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1068:1114#L47">G</a></h3>
+				<h3 id="Cos.G">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1204:1250#L50">G</a></h3>
 				<pre>func (o <a href="#Cos">Cos</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1044,7 +1048,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Cos.Grad">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1440:1494#L65">Grad</a></h3>
+				<h3 id="Cos.Grad">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1576:1630#L68">Grad</a></h3>
 				<pre>func (o <a href="#Cos">Cos</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1055,7 +1059,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Cos.H">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1250:1296#L56">H</a></h3>
+				<h3 id="Cos.H">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1386:1432#L59">H</a></h3>
 				<pre>func (o <a href="#Cos">Cos</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1066,7 +1070,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Cos.Init">func (*Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=501:542#L21">Init</a></h3>
+				<h3 id="Cos.Init">func (*Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=637:678#L24">Init</a></h3>
 				<pre>func (o *<a href="#Cos">Cos</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function

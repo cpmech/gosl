@@ -338,9 +338,6 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				
 				<dd><a href="#StrsAlloc">func StrsAlloc(m, n int) (mat [][]string)</a></dd>
 			
-				
-				<dd><a href="#TexNum">func TexNum(fmt string, num float64, scientificNotation bool) (l string)</a></dd>
-			
 			
 				
 				<dd><a href="#DblList">type DblList</a></dd>
@@ -479,8 +476,6 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<a href="/src/github.com/cpmech/gosl/utl/serialize.go">serialize.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/utl/sorting.go">sorting.go</a>
-			
-				<a href="/src/github.com/cpmech/gosl/utl/texreport.go">texreport.go</a>
 			
 			</span>
 			</p>
@@ -1669,22 +1664,6 @@ StrVals allocates a slice of strings with size==n, filled with val
 			<p>
 StrsAlloc allocates a matrix of strings
 </p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="TexNum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/texreport.go?s=473:545#L7">TexNum</a></h2>
-			<pre>func TexNum(fmt <a href="/pkg/builtin/#string">string</a>, num <a href="/pkg/builtin/#float64">float64</a>, scientificNotation <a href="/pkg/builtin/#bool">bool</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-TexNum returns a string representation in TeX format of a real number.
-scientificNotation:
-</p>
-<pre>peforms the conversion of numbers into scientific notation where
-the exponent notation with e{+-}{##} is converted into \cdot 10^{{+-}##}
-</pre>
 
 			
 			
