@@ -20,7 +20,7 @@ import (
 // Input:
 //  b/pi -- is a flag that says that b is in fact b divided by π
 //          thus, the code will multiply b by π internally
-type Cutsin struct {
+type CutSin struct {
 
 	// parameters
 	A float64
@@ -34,18 +34,18 @@ type Cutsin struct {
 
 // set allocators database
 func init() {
-	allocators["sin-cut"] = func() Func { return new(Cutsin) }
+	allocators["cut-sin"] = func() Func { return new(CutSin) }
 }
 
 // Init initialises the function
-func (o *Cutsin) Init(prms Prms) (err error) {
-	e := prms.Connect(&o.A, "a", "sin-cut function")
-	e += prms.Connect(&o.C, "c", "sin-cut function")
+func (o *CutSin) Init(prms Prms) (err error) {
+	e := prms.Connect(&o.A, "a", "cut-sin function")
+	e += prms.Connect(&o.C, "c", "cut-sin function")
 	p := prms.Find("b/pi")
 	if p == nil {
-		e += prms.Connect(&o.B, "b", "sin-cut function")
+		e += prms.Connect(&o.B, "b", "cut-sin function")
 	} else {
-		e += prms.Connect(&o.B, "b/pi", "sin-cut function")
+		e += prms.Connect(&o.B, "b/pi", "cut-sin function")
 		o.b_is_b_div_pi = true
 	}
 	p = prms.Find("cps")
@@ -61,7 +61,7 @@ func (o *Cutsin) Init(prms Prms) (err error) {
 }
 
 // F returns y = F(t, x)
-func (o Cutsin) F(t float64, x []float64) float64 {
+func (o CutSin) F(t float64, x []float64) float64 {
 	b := o.B
 	if o.b_is_b_div_pi {
 		b = o.B * math.Pi
@@ -82,7 +82,7 @@ func (o Cutsin) F(t float64, x []float64) float64 {
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
-func (o Cutsin) G(t float64, x []float64) float64 {
+func (o CutSin) G(t float64, x []float64) float64 {
 	b := o.B
 	if o.b_is_b_div_pi {
 		b = o.B * math.Pi
@@ -103,7 +103,7 @@ func (o Cutsin) G(t float64, x []float64) float64 {
 }
 
 // H returns ∂²y/∂t²_cteX = H(t, x)
-func (o Cutsin) H(t float64, x []float64) float64 {
+func (o CutSin) H(t float64, x []float64) float64 {
 	b := o.B
 	if o.b_is_b_div_pi {
 		b = o.B * math.Pi
@@ -124,7 +124,7 @@ func (o Cutsin) H(t float64, x []float64) float64 {
 }
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
-func (o Cutsin) Grad(v []float64, t float64, x []float64) {
+func (o CutSin) Grad(v []float64, t float64, x []float64) {
 	setvzero(v)
 	return
 }
