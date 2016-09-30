@@ -527,3 +527,94 @@ func Test_fun13(tst *testing.T) {
 	tskip := []float64{1, 4}
 	CheckDerivT(tst, pulse, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 }
+
+func Test_fun14(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("fun14. sin")
+
+	fun, err := New("sin", []*Prm{
+		&Prm{N: "a", V: 10},
+		&Prm{N: "b", V: math.Pi},
+		&Prm{N: "c", V: 1.0},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n", err)
+		return
+	}
+
+	tmin := 0.0
+	tmax := 2.0
+	xcte := []float64{0, 0, 0}
+	if chk.Verbose {
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "sin.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+	}
+
+	sktol := 1e-10
+	dtol := 1e-8
+	dtol2 := 1e-7
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+}
+
+func Test_fun15(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("fun15. sin_neg")
+
+	fun, err := New("sin_neg", []*Prm{
+		&Prm{N: "a", V: 10},
+		&Prm{N: "b", V: math.Pi},
+		&Prm{N: "c", V: 1.0},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n", err)
+		return
+	}
+
+	tmin := 0.0
+	tmax := 2.0
+	xcte := []float64{0, 0, 0}
+	if chk.Verbose {
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "sin_neg.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+	}
+
+	sktol := 1e-10
+	dtol := 1e-8
+	dtol2 := 1e-7
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+}
+
+func Test_fun16(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("fun16. sin_clip")
+
+	fun, err := New("sin_clip", []*Prm{
+		&Prm{N: "a", V: 10},
+		&Prm{N: "b", V: math.Pi},
+		&Prm{N: "c", V: 1.0},
+		&Prm{N: "pos", V: 0.0},
+	})
+	if err != nil {
+		tst.Errorf("test failed: %v\n", err)
+		return
+	}
+
+	tmin := 0.0
+	tmax := 2.0
+	xcte := []float64{0, 0, 0}
+	if chk.Verbose {
+		plt.SetForPng(1.2, 400, 150)
+		PlotT(fun, "/tmp/gosl/fun", "sin_clip.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+	}
+
+	sktol := 1e-10
+	dtol := 1e-8
+	dtol2 := 1e-7
+	ver := chk.Verbose
+	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
+}
