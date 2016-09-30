@@ -1,6 +1,6 @@
 # Installing Gosl on Mac OS X
 
-The instalation on OSX includes:
+The installation on OSX includes:
 
 1. Xcode
 2. MacPorts
