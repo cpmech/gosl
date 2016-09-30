@@ -11,6 +11,9 @@ import (
 )
 
 // Cos implements y(t) = a * cos(b*t) + c
+// Input:
+//  b/pi -- is a flag that says that b is in fact b divided by π
+//          thus, the code will multiply b by π internally
 type Cos struct {
 
 	// parameters
