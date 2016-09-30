@@ -560,13 +560,14 @@ func Test_fun14(tst *testing.T) {
 
 func Test_fun15(tst *testing.T) {
 
-	//verbose()
-	chk.PrintTitle("fun15. sin_neg")
+	verbose()
+	chk.PrintTitle("fun15. sin-cut; test cut positive values.")
 
-	fun, err := New("sin_neg", []*Prm{
+	fun, err := New("sin-cut", []*Prm{
 		&Prm{N: "a", V: 10},
 		&Prm{N: "b", V: math.Pi},
 		&Prm{N: "c", V: 1.0},
+		&Prm{N: "cps", V: 0.0},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -578,7 +579,7 @@ func Test_fun15(tst *testing.T) {
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
 		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "sin_neg.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		PlotT(fun, "/tmp/gosl/fun", "sin-cut-positive.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10
@@ -591,13 +592,12 @@ func Test_fun15(tst *testing.T) {
 func Test_fun16(tst *testing.T) {
 
 	verbose()
-	chk.PrintTitle("fun16. sin_clip")
+	chk.PrintTitle("fun16. sin-cut; test cut negative values.")
 
-	fun, err := New("sin_clip", []*Prm{
+	fun, err := New("sin-cut", []*Prm{
 		&Prm{N: "a", V: 10},
 		&Prm{N: "b", V: math.Pi},
 		&Prm{N: "c", V: 1.0},
-		&Prm{N: "pos", V: 0.0},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -609,7 +609,7 @@ func Test_fun16(tst *testing.T) {
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
 		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "sin_clip.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		PlotT(fun, "/tmp/gosl/fun", "sin-cut-negative.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
 	}
 
 	sktol := 1e-10

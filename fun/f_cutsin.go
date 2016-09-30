@@ -10,8 +10,17 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Sin_clip implements if y < 0: y(t) = a * sin(b*t) + c
-type Sin_clip struct {
+// Cutsin implements
+// 	if find["cps"]: # means cut_positive is True
+//		if y < 0: y(t) = a * sin(b*t) + c
+//	 	else: y(t) = 0
+//	else:			# means cut_positive is False so cut negative values
+//		if y > 0: y(t) = a * sin(b*t) + c
+//	 	else: y(t) = 0
+// Input:
+//  b/pi -- is a flag that says that b is in fact b divided by π
+//          thus, the code will multiply b by π internally
+type Cutsin struct {
 
 	// parameters
 	A float64
@@ -20,30 +29,30 @@ type Sin_clip struct {
 
 	// derived
 	b_is_b_div_pi bool
-	pos_is_zero   bool
+	cut_positive  bool
 }
 
 // set allocators database
 func init() {
-	allocators["sin_clip"] = func() Func { return new(Sin_clip) }
+	allocators["sin-cut"] = func() Func { return new(Cutsin) }
 }
 
 // Init initialises the function
-func (o *Sin_clip) Init(prms Prms) (err error) {
-	e := prms.Connect(&o.A, "a", "sin_clip function")
-	e += prms.Connect(&o.C, "c", "sin_clip function")
+func (o *Cutsin) Init(prms Prms) (err error) {
+	e := prms.Connect(&o.A, "a", "sin-cut function")
+	e += prms.Connect(&o.C, "c", "sin-cut function")
 	p := prms.Find("b/pi")
 	if p == nil {
-		e += prms.Connect(&o.B, "b", "sin_clip function")
+		e += prms.Connect(&o.B, "b", "sin-cut function")
 	} else {
-		e += prms.Connect(&o.B, "b/pi", "sin_clip function")
+		e += prms.Connect(&o.B, "b/pi", "sin-cut function")
 		o.b_is_b_div_pi = true
 	}
-	p = prms.Find("pos")
+	p = prms.Find("cps")
 	if p == nil {
-		o.pos_is_zero = false
+		o.cut_positive = false
 	} else {
-		o.pos_is_zero = true
+		o.cut_positive = true
 	}
 	if e != "" {
 		err = chk.Err("%v\n", e)
@@ -52,12 +61,12 @@ func (o *Sin_clip) Init(prms Prms) (err error) {
 }
 
 // F returns y = F(t, x)
-func (o Sin_clip) F(t float64, x []float64) float64 {
+func (o Cutsin) F(t float64, x []float64) float64 {
 	b := o.B
 	if o.b_is_b_div_pi {
 		b = o.B * math.Pi
 	}
-	if o.pos_is_zero {
+	if o.cut_positive {
 		if o.A*math.Sin(b*t)+o.C <= 0.0 {
 			return o.A*math.Sin(b*t) + o.C
 		} else {
@@ -73,12 +82,12 @@ func (o Sin_clip) F(t float64, x []float64) float64 {
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
-func (o Sin_clip) G(t float64, x []float64) float64 {
+func (o Cutsin) G(t float64, x []float64) float64 {
 	b := o.B
 	if o.b_is_b_div_pi {
 		b = o.B * math.Pi
 	}
-	if o.pos_is_zero {
+	if o.cut_positive {
 		if o.A*math.Sin(b*t)+o.C <= 0.0 {
 			return o.A * b * math.Cos(b*t)
 		} else {
@@ -94,12 +103,12 @@ func (o Sin_clip) G(t float64, x []float64) float64 {
 }
 
 // H returns ∂²y/∂t²_cteX = H(t, x)
-func (o Sin_clip) H(t float64, x []float64) float64 {
+func (o Cutsin) H(t float64, x []float64) float64 {
 	b := o.B
 	if o.b_is_b_div_pi {
 		b = o.B * math.Pi
 	}
-	if o.pos_is_zero {
+	if o.cut_positive {
 		if o.A*math.Sin(b*t)+o.C <= 0.0 {
 			return -o.A * b * b * math.Sin(b*t)
 		} else {
@@ -115,7 +124,7 @@ func (o Sin_clip) H(t float64, x []float64) float64 {
 }
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)
-func (o Sin_clip) Grad(v []float64, t float64, x []float64) {
+func (o Cutsin) Grad(v []float64, t float64, x []float64) {
 	setvzero(v)
 	return
 }
