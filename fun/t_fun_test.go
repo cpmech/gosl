@@ -560,7 +560,7 @@ func Test_fun14(tst *testing.T) {
 
 func Test_fun15(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun15. sin-cut; test cut positive values.")
 
 	fun, err := New("sin-cut", []*Prm{
@@ -591,7 +591,7 @@ func Test_fun15(tst *testing.T) {
 
 func Test_fun16(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("fun16. sin-cut; test cut negative values.")
 
 	fun, err := New("sin-cut", []*Prm{
