@@ -88,6 +88,12 @@ func (o Fmt) GetArgs(start string) string {
 		}
 		l += io.Sf("zorder=%d", o.Z)
 	}
+	if o.Mec != "" {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += io.Sf("markeredgecolor='%s'", o.Mec)
+	}
 	if o.Mew > 0 {
 		if len(l) > 0 {
 			l += ","
@@ -98,10 +104,9 @@ func (o Fmt) GetArgs(start string) string {
 		if len(l) > 0 {
 			l += ","
 		}
+		l += "markerfacecolor='none'"
 		if o.Mec == "" {
-			l += io.Sf("markeredgecolor='%s',markerfacecolor='none'", o.C)
-		} else {
-			l += io.Sf("markeredgecolor='%s',markerfacecolor='none'", o.Mec)
+			l += io.Sf(",markeredgecolor='%s'", o.C)
 		}
 	}
 	if o.Clip {

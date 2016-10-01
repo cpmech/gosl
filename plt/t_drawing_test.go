@@ -48,5 +48,5 @@ func Test_draw02(tst *testing.T) {
 	d := Fmt{"red", "o", "--", 1.2, -1, "gofem", 2, 10, "blue", 0.3, true, true}
 	l := d.GetArgs("clip_on=0")
 	io.Pforan("l = %q\n", l)
-	chk.String(tst, l, "clip_on=0,color='red',marker='o',ls='--',lw=1.2,label='gofem',markevery=2,zorder=10,mew=0.3,markeredgecolor='blue',markerfacecolor='none',clip_on=1")
+	chk.String(tst, l, "clip_on=0,color='red',marker='o',ls='--',lw=1.2,label='gofem',markevery=2,zorder=10,markeredgecolor='blue',mew=0.3,markerfacecolor='none',clip_on=1")
 }
