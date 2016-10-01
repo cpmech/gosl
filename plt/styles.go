@@ -23,7 +23,11 @@ type Fmt struct {
 	Ms   int     // marker size; -1 => default
 	L    string  // label
 	Me   int     // mark-every; -1 => default
+	Z    int     // z-order
+	Mec  string  // marker edge color
+	Mew  float64 // marker edge width
 	Void bool    // void marker => markeredgecolor='C', markerfacecolor='none'
+	Clip bool    // turn clip => clip_on=True
 }
 
 // Init initialises Fmt with default values
@@ -78,11 +82,38 @@ func (o Fmt) GetArgs(start string) string {
 		}
 		l += io.Sf("markevery=%d", o.Me)
 	}
+	if o.Z > 0 {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += io.Sf("zorder=%d", o.Z)
+	}
+	if o.Mew > 0 {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += io.Sf("mew=%g", o.Mew)
+	}
 	if o.Void {
 		if len(l) > 0 {
 			l += ","
 		}
-		l += io.Sf("markeredgecolor='%s',markerfacecolor='none'", o.C)
+		if o.Mec == "" {
+			l += io.Sf("markeredgecolor='%s',markerfacecolor='none'", o.C)
+		} else {
+			l += io.Sf("markeredgecolor='%s',markerfacecolor='none'", o.Mec)
+		}
+	}
+	if o.Clip {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += "clip_on=1"
+	} else {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += "clip_on=0"
 	}
 	return l
 }

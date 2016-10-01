@@ -31,9 +31,9 @@ func Test_draw01(tst *testing.T) {
 	AutoScale(P)
 	Equal()
 	DrawLegend([]Fmt{
-		Fmt{"red", "o", "-", 1, -1, "first", -1, false},
-		Fmt{"green", "s", "-", 2, 0, "second", -1, false},
-		Fmt{"blue", "+", "-", 3, 10, "third", -1, false},
+		Fmt{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
+		Fmt{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
+		Fmt{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
 	}, 10, "best", false, "")
 	if chk.Verbose {
 		SaveD("/tmp/gosl", "draw01.eps")
@@ -45,8 +45,8 @@ func Test_draw02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("draw02")
 
-	d := Fmt{"red", "o", "--", 1.2, -1, "gofem", 2, true}
+	d := Fmt{"red", "o", "--", 1.2, -1, "gofem", 2, 10, "blue", 0.3, true, true}
 	l := d.GetArgs("clip_on=0")
 	io.Pforan("l = %q\n", l)
-	chk.String(tst, l, "clip_on=0,color='red',marker='o',ls='--',lw=1.2,label='gofem',markevery=2,markeredgecolor='red',markerfacecolor='none'")
+	chk.String(tst, l, "clip_on=0,color='red',marker='o',ls='--',lw=1.2,label='gofem',markevery=2,zorder=10,mew=0.3,markeredgecolor='blue',markerfacecolor='none',clip_on=1")
 }
