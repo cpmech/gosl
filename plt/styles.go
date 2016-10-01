@@ -16,13 +16,14 @@ type Sty struct {
 
 // Fmt holds data for ploting lines
 type Fmt struct {
-	C  string  // color
-	M  string  // marker
-	Ls string  // linestyle
-	Lw float64 // linewidth; -1 => default
-	Ms int     // marker size; -1 => default
-	L  string  // label
-	Me int     // mark-every; -1 => default
+	C    string  // color
+	M    string  // marker
+	Ls   string  // linestyle
+	Lw   float64 // linewidth; -1 => default
+	Ms   int     // marker size; -1 => default
+	L    string  // label
+	Me   int     // mark-every; -1 => default
+	Void bool    // void marker => markeredgecolor='C', markerfacecolor='none'
 }
 
 // Init initialises Fmt with default values
@@ -76,6 +77,12 @@ func (o Fmt) GetArgs(start string) string {
 			l += ","
 		}
 		l += io.Sf("markevery=%d", o.Me)
+	}
+	if o.Void {
+		if len(l) > 0 {
+			l += ","
+		}
+		l += io.Sf("markeredgecolor='%s',markerfacecolor='none'", o.C)
 	}
 	return l
 }
