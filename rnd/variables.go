@@ -33,9 +33,12 @@ type VarData struct {
 	C float64 // scale
 	A float64 // shape
 
+	// input: uniform
+	Min float64 // min value
+	Max float64 // max value
+
 	// optional
-	Min float64  // min value
-	Max float64  // max value
+	Key string   // auxiliary indentifier
 	Prm *fun.Prm // parameter connected to this random variable
 
 	// derived
