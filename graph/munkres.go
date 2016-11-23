@@ -44,6 +44,8 @@ type Munkres struct {
 	path        [][]int    // path
 	row_covered []bool     // indicates whether a row is covered or not
 	col_covered []bool     // indicates whether a column is covered or not
+	nrow_ori    int        // (original) number of rows in cost matrix
+	ncol_ori    int        // (original) number of column in cost matrix
 	nrow        int        // number of rows in cost/mask matrix
 	ncol        int        // number of column in cost/mask matrix
 	path_row_0  int        // first row in path
@@ -55,12 +57,17 @@ func (o *Munkres) Init(nrow, ncol int) {
 	chk.IntAssertLessThan(0, nrow) // nrow > 1
 	chk.IntAssertLessThan(0, ncol) // ncol > 1
 	o.nrow, o.ncol = nrow, ncol
+	o.nrow_ori, o.ncol_ori = nrow, ncol
+	if o.nrow != o.ncol { // make it square. padded entries will have zero cost
+		o.nrow = utl.Imax(o.nrow, o.ncol)
+		o.ncol = o.nrow
+	}
 	o.C = utl.DblsAlloc(o.nrow, o.ncol)
 	o.M = make([][]Mask_t, o.nrow)
 	for i := 0; i < o.nrow; i++ {
 		o.M[i] = make([]Mask_t, o.ncol)
 	}
-	o.Links = make([]int, o.nrow)
+	o.Links = make([]int, o.nrow_ori)
 	npath := 2*o.nrow + 1 // TODO: check this
 	o.path = utl.IntsAlloc(npath, 2)
 	o.row_covered = make([]bool, o.nrow)
@@ -71,8 +78,8 @@ func (o *Munkres) Init(nrow, ncol int) {
 //  Note: costs must be positive
 func (o *Munkres) SetCostMatrix(C [][]float64) {
 	o.Cori = C
-	for i := 0; i < o.nrow; i++ {
-		for j := 0; j < o.ncol; j++ {
+	for i := 0; i < o.nrow_ori; i++ {
+		for j := 0; j < o.ncol_ori; j++ {
 			o.C[i][j] = C[i][j]
 			o.M[i][j] = NONE
 			if math.IsNaN(o.C[i][j]) {
@@ -150,9 +157,9 @@ func (o *Munkres) Run() {
 
 	// compute cost and set links
 	o.Cost = 0
-	for i := 0; i < o.nrow; i++ {
+	for i := 0; i < o.nrow_ori; i++ {
 		o.Links[i] = -1
-		for j := 0; j < o.ncol; j++ {
+		for j := 0; j < o.ncol_ori; j++ {
 			if o.M[i][j] == STAR {
 				o.Links[i] = j
 				o.Cost += o.Cori[i][j]
