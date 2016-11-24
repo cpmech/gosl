@@ -627,7 +627,7 @@ def Quad(x0,y0, x1,y1, x2,y2, x3,y3, fc='#e1eeff', ec='black', zorder=0, alpha=1
 
 
 def Contour(X,Y,Z, label='', levels=None, cmapidx=0, colors=None, fmt='%g', lwd=1, fsz=10,
-        inline=0, wire=True, cbar=True, zorder=None, markZero='', clabels=True):
+        inline=0, wire=True, cbar=True, zorder=None, markZero='', markZeroLWD=3, clabels=True):
     """
     Plot contour
     ============
@@ -648,7 +648,7 @@ def Contour(X,Y,Z, label='', levels=None, cmapidx=0, colors=None, fmt='%g', lwd=
         cb = colorbar (c1, format=fmt)
         cb.ax.set_ylabel (label)
     if markZero:
-        c3 = contour(X,Y,Z, levels=[0], colors=[markZero], linewidths=[2])
+        c3 = contour(X,Y,Z, levels=[0], colors=[markZero], linewidths=[markZeroLWD])
         if clabels:
             clabel(c3, inline=inline, fontsize=fsz)
 
