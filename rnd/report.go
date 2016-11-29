@@ -53,6 +53,7 @@ name & var & $\mu$ & $\sigma$ & D$^{\star}$ & min & max \\ \hline
 		}
 		if i < len(sets)-1 {
 			io.Ff(buf, `\multicolumn{7}{l}{} \\`)
+			io.Ff(buf, "\n")
 		} else {
 			io.Ff(buf, " \\hline\n\n")
 		}
