@@ -46,7 +46,7 @@ name & var & $\mu$ & $\sigma$ & distr$^{\star}$ & min & max \\ \hline
 				txtM = "$" + io.TexNum("", v.M, true) + "$"
 				txtS = "$" + io.TexNum("", v.S, true) + "$"
 			}
-			io.Ff(buf, `%s & $x_%d$ & %s & %s & %s & $%s$ & $%s$ \\`, key, j, txtM, txtS, GetDistrKey(v.D), io.TexNum("", v.Min, true), io.TexNum("", v.Max, true))
+			io.Ff(buf, `%s & $x_{%d}$ & %s & %s & %s & $%s$ & $%s$ \\`, key, j, txtM, txtS, GetDistrKey(v.D), io.TexNum("", v.Min, true), io.TexNum("", v.Max, true))
 			io.Ff(buf, "\n")
 		}
 		io.Ff(buf, " \\hline\n\n")
