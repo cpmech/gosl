@@ -129,3 +129,22 @@ func GetDistrName(typ DistType) (name string) {
 	}
 	return "<unknown>"
 }
+
+// GetDistrKey returns distribution key from ID
+func GetDistrKey(typ DistType) (name string) {
+	switch typ {
+	case D_Normal:
+		return "N"
+	case D_Lognormal:
+		return "L"
+	case D_Gumbel:
+		return "G"
+	case D_Frechet:
+		return "F"
+	case D_Uniform:
+		return "U"
+	default:
+		chk.Panic("cannot get distribution %v", typ)
+	}
+	return "<unknown>"
+}
