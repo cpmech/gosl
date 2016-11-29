@@ -103,6 +103,8 @@ func GetDistribution(name string) DistType {
 		return D_Gumbel
 	case "frechet":
 		return D_Frechet
+	case "uniform":
+		return D_Uniform
 	default:
 		chk.Panic("cannot get distribution named %q", name)
 	}
@@ -120,6 +122,8 @@ func GetDistrName(typ DistType) (name string) {
 		return "gumbel"
 	case D_Frechet:
 		return "frechet"
+	case D_Uniform:
+		return "uniform"
 	default:
 		chk.Panic("cannot get distribution %v", typ)
 	}
