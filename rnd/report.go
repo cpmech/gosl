@@ -29,12 +29,14 @@ func ReportVariables(dirout, fnkey string, sets SetsOfVars, genPDF bool) {
 \begin{table} \centering
 \caption{Random variables.}
 
+\scriptsize
+
 \begin{tabular}[c]{ccccccc} \toprule
-name & var & $\mu$ & $\sigma$ & distr$^{\star}$ & min & max \\ \hline
+name & var & $\mu$ & $\sigma$ & D$^{\star}$ & min & max \\ \hline
 `)
 
 	// generate table
-	for _, set := range sets {
+	for i, set := range sets {
 		for j, v := range set.Vars {
 			key := ""
 			if j == 0 {
@@ -49,12 +51,16 @@ name & var & $\mu$ & $\sigma$ & distr$^{\star}$ & min & max \\ \hline
 			io.Ff(buf, `%s & $x_{%d}$ & %s & %s & %s & $%s$ & $%s$ \\`, key, j, txtM, txtS, GetDistrKey(v.D), io.TexNum("", v.Min, true), io.TexNum("", v.Max, true))
 			io.Ff(buf, "\n")
 		}
-		io.Ff(buf, " \\hline\n\n")
+		if i < len(sets)-1 {
+			io.Ff(buf, `\multicolumn{7}{l}{} \\`)
+		} else {
+			io.Ff(buf, " \\hline\n\n")
+		}
 	}
 
 	// table footer
 	io.Ff(buf, `
-\multicolumn{7}{p{\linewidth}}{
+\multicolumn{7}{p{7cm}}{
 	\scriptsize
 	$^{\star}$N:Normal, L:Lognormal, G:Gumbel, F:Frechet, U:Uniform
 } \\
