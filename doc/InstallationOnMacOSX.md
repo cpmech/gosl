@@ -70,7 +70,7 @@ Type the following commands:
 
 ```
 cd mygo
-mkdir -p src/github.com/cpmech.com
+mkdir -p src/github.com/cpmech
 cd src/github.com/cpmech/
 git clone https://github.com/cpmech/gosl.git
 cd gosl
