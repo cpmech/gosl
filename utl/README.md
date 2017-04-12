@@ -5,6 +5,11 @@ and minimum of lists (i.e. slices), allocation of _deep_ structures such as slic
 generation of _arrays_. It also contains functions for sorting quantities and updating dictionaries
 (i.e. maps).
 
+This package does not aim for high performance linear algebra computations. For that purpose, we
+have the `la` and a future `lax` packages. Nonetheless, `utl` package is OK for _small computations_
+such as for vectors in the 3D space. It also tries to use the best algorithms for sorting that were
+implemented in the standard Go library.
+
 Some _numerical_ functions are (a few were inspired by [NumPy](http://www.numpy.org)):
 1. `IntRange` to generate slices of integers
 2. `IntFill` `IntVals`, `IntsAlloc`, `IntsClone` for slices of integers
