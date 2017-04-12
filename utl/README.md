@@ -204,11 +204,13 @@ chk.Vector(tst, "m[\"e\"]", 1e-16, m["e"], nil)
 
 ### Other
 
+
+Finding the _best square_ for given `size = numberOfRows * numberOfColumns`
 ```
-for i := 1; i <= 12; i++ {
-    nrow, ncol := utl.BestSquare(i)
+for size := 1; size <= 12; size++ {
+    nrow, ncol := utl.BestSquare(size)
     io.Pforan("nrow, ncol, nrow*ncol = %2d, %2d, %2d\n", nrow, ncol, nrow*ncol)
-    if nrow*ncol != i {
+    if nrow*ncol != size {
         chk.Panic("BestSquare failed")
     }
 }
