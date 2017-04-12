@@ -11,8 +11,8 @@ with the development of the results presented in [1-5].
 
 ## Content
 
-1.  chk    &ndash; check and unit test
-2.  io     &ndash; input/output
+1.  chk    &ndash; Check code and unit test tools
+2.  io     &ndash; Input/output, read/write files, and print commands
 3.  utl    &ndash; utilities
 4.  plt    &ndash; plotting
 5.  mpi    &ndash; message passing interface
