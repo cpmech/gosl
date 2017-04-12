@@ -38,6 +38,11 @@ with the development of the results presented in [1-5].
 See examples here: https://github.com/cpmech/gosl/blob/master/examples/README.md
 
 
+<div id="container">
+<p><img src="examples/figs/rnd_normalDistribution.png" width="400"></p>
+Normally distributed pseudo-random numbers. Using sub-package `rnd`
+</div>
+
 
 ## Installation and documentation
 
@@ -65,16 +70,6 @@ The documentation for developers is available here: http://rawgit.com/cpmech/gos
 
 
 
-## References
-
-1. Pedroso DM (2015) A consistent u-p formulation for porous media with hysteresis. Int Journal for Numerical Methods in Engineering, 101(8) 606-634 http://dx.doi.org/10.1002/nme.4808
-2. Pedroso DM (2015) A solution to transient seepage in unsaturated porous media. Computer Methods in Applied Mechanics and Engineering, 285 791-816 http://dx.doi.org/10.1016/j.cma.2014.12.009
-
-
-
-## Acknowledgements
-
-Funding from the Australian Research Council is gratefully acknowledged.
 
 
 
