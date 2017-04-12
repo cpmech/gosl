@@ -5,7 +5,6 @@
 package rnd
 
 import (
-	"math/rand"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -159,7 +158,7 @@ func Test_dist_normal_05(tst *testing.T) {
 	nsamples := 10000
 	X := make([]float64, nsamples)
 	for i := 0; i < nsamples; i++ {
-		X[i] = μ + σ*rand.NormFloat64()
+		X[i] = Normal(μ, σ)
 	}
 
 	nstations := 41
