@@ -48,14 +48,14 @@ func main() {
 	html = strings.Replace(html, "a href=\"", io.Sf("a href=\"%s", path), -1)
 
 	// set path of figures
-	path = os.ExpandEnv("${GOPATH}/src/github.com/cpmech/gosl/examples/")
+	path = os.ExpandEnv("${HOME}/10.go/src/github.com/cpmech/gosl/examples/")
 	html = strings.Replace(html, "img src=\"", io.Sf("img src=\"%s", path), -1)
 
 	// set header and footer
 	html = `<!DOCTYPE HTML>
 <html>
 <head>
-<title>Gosl &ndash; Examples</title>
+<title>Gosl Examples</title>
 <meta charset="utf-8" />
 
 <style>

@@ -5,7 +5,9 @@ GOCODE="README-to-html.go"
 
 refresh(){
     CURRENT=`xdotool getwindowfocus`
-    BROWSER=`xdotool search --name "Google Chrome"`
+    BROWSER=`xdotool search --name "Gosl Examples - Google Chrome"`
+    echo "CURRENT = $CURRENT"
+    echo "BROWSER = $BROWSER"
     go run $GOCODE
     xdotool windowactivate $BROWSER
     xdotool key "CTRL+R"

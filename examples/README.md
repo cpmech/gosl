@@ -1,22 +1,92 @@
-# Gosl &ndash; examples
+# Gosl Examples
 
 ## Summary
-1. **la_HLsparseReal01** -- Solution of real/sparse linear system using Umfpack and high-level routines
-2. **la_HLsparseComplex01** -- Solution of complex/sparse linear system using Umfpack and high-level routines
-3. **la_sparseReal01** -- Solution of real/sparse linear system using Umfpack and low-level routines
-4. **la_sparseComplex01** -- Solution of complex/sparse linear system using Umfpack and low-level routines
-5. **num_deriv01** -- Numerical differentiation
-6. **vtk_isosurf01** -- Visualisatioin of iso-surface using VTK
+1. Generating normally distributed pseudo-random numbers
+2. Solution of sparse linear system
+3. Solution of sparse linear system with complex numbers
+4. Numerical differentiation
+5. Drawing iso-surfaces with VTK
 
+# 1 Generating normally distributed pseudo-random numbers
 
+The `rnd` package is a wrapper to Go `rand` package but has some more _high level_ functions to
+assist on works involving random numbers and probability distributions.
 
-# 1 la_HLsparseReal01 &ndash; Linear Algebra
+By using the package `rnd`, it's very easy to generate pseudo-random numbers sampled from a normal
+distribution.
 
-A small linear system is solved with [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html). The sparse matrix representation is initialised with a triplet.
+Source code: <a href="rnd_normalDistribution.go">rnd_normalDistribution.go</a>
 
-Using high-level functions.
+<div id="container">
+<p><img src="figs/rnd_normalDistribution.png" width="400"></p>
+Sin function
+</div>
 
-Source code: <a href="la_HLsparseReal01.go">la_HLsparseReal01.go</a>
+# 2 Solution of sparse linear system
+
+Solution of real and sparse linear system using Umfpack and high-level routines.
+
+A small linear system is solved with [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html).
+The sparse matrix representation is initialised with a triplet.
+
+Given the following matrix:
+
+```
+      _                      _
+     |  2   3    0    0    0  |
+     |  3   0    4    0    6  |
+ A = |  0  -1   -3    2    0  |
+     |  0   0    1    0    0  |
+     |_ 0   4    2    0    1 _|
+```
+
+and the following vector:
+
+```
+      _      _
+     |    8   |
+     |   45   |
+ b = |   -3   |
+     |    3   |
+     |_  19  _|
+```
+
+solve:
+
+```
+         A.x = b
+```
+
+Truncated code:
+```go
+// input matrix in Triplet format
+// including repeated positions. e.g. (0,0)
+var A la.Triplet
+A.Init(5, 5, 13)
+A.Put(0, 0, 1.0) // << repeated
+A.Put(0, 0, 1.0) // << repeated
+A.Put(1, 0, 3.0)
+A.Put(0, 1, 3.0)
+A.Put(2, 1, -1.0)
+A.Put(4, 1, 4.0)
+A.Put(1, 2, 4.0)
+A.Put(2, 2, -3.0)
+A.Put(3, 2, 1.0)
+A.Put(4, 2, 2.0)
+A.Put(2, 3, 2.0)
+A.Put(1, 4, 6.0)
+A.Put(4, 4, 1.0)
+
+// right-hand-side
+b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
+
+// solve
+x, err := la.SolveRealLinSys(&A, b)
+if err != nil {
+    io.Pfred("solver failed:\n%v", err)
+    return
+}
+```
 
 Output:
 ```
@@ -30,9 +100,23 @@ b = 8 45 -3 3 19
 x = 0.9999999999999998 2 3 4 4.999999999999998 
 ```
 
+Source code: <a href="la_HLsparseReal01.go">la_HLsparseReal01.go</a>
+
+## Alternatively, the _low-level_ routines can be used.
+
+In this case, three steps must be taken:
+
+1. Initialise solver
+2. Perform factorisation
+3. Solve problem
+
+See: <a href="la_sparseReal01.go">la_sparseReal01.go</a>
 
 
-# 2 la_HLsparseComplex01 &ndash; Linear Algebra
+
+# 3 Solution of sparse linear system with complex numbers
+
+Solution of complex and sparse linear system using Umfpack and high-level routines.
 
 Given the following matrix of complex numbers:
 
@@ -73,31 +157,20 @@ solve:
      |_  10-17.75i _|
 ```
 
-Using high-level functions.
-
 Source code: <a href="la_HLsparseComplex01.go">la_HLsparseComplex01.go</a>
 
+## Alternatively, the _low-level_ routines can be used.
 
-
-# 3 la_sparseReal01 &ndash; Linear Algebra
-
-Same problem as in Section 1; but using low-level routines.
-
-Source code: <a href="la_sparseReal01.go">la_sparseReal01.go</a>
+See: <a href="la_sparseComplex01.go">la_sparseComplex01.go</a>
 
 
 
-# 4 la_sparseComplex01 &ndash; Linear Algebra
+# 4 Numerical differentiation
 
-Same problem as in Section 2; but using low-level routines.
+There are numerous uses for numerical differentiation.
 
-Source code: <a href="la_sparseComplex01.go">la_sparseComplex01.go</a>
-
-
-
-# 5 num_deriv01 &ndash; Numerical
-
-Numerical differentiation is employed to check that the implementation of derivatives of the sin function is corrected.
+In this example, numerical differentiation is employed to check that the implementation of the
+derivatives of the sin function is corrected.
 
 Source code: <a href="num_deriv01.go">num_deriv01.go</a>
 
@@ -135,11 +208,19 @@ d²y/dx² @ 6.283185   2.449293598294703e-16                       0   2.4492935
 
 
 
-# 6 vtk_isosurf01 &ndash; VTK
+# 5 Drawing iso-surfaces with VTK
 
-Two iso-surfaces are added to the 3D scene using VTK. One is a cone and the other an ellipsoid.
+An isosurface is a geometric construction representing a 2D region containing equal values. This
+surface is drawn in the 3D space (although the concept can be extended to hyperisosurfaces too) for
+a given scalar field (i.e. a _level_).
+
+In this example, the functions to generate families of surfaces resembling a cone and an ellipse are
+developed. These functions are computed over a 3D grid that is used by VTK to locate the regions of
+equal values. Two auxiliary scalars fields, p and q, are firstly defined.
 
 Source code: <a href="vtk_isosurf01.go">vtk_isosurf01.go</a>
+
+The output looks like:
 
 <div id="container">
 <p><img src="figs/vtk_isosurf01.png" width="400"></p>
