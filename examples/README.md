@@ -19,7 +19,7 @@ Source code: <a href="rnd_normalDistribution.go">rnd_normalDistribution.go</a>
 
 <div id="container">
 <p><img src="figs/rnd_normalDistribution.png" width="400"></p>
-Sin function
+Normally distributed pseudo-random numbers
 </div>
 
 # 2 Solution of sparse linear system
