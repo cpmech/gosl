@@ -1,5 +1,7 @@
 # Gosl. ode. Ordinary differential equations
 
+More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxode.html).
+
 Package `ode` implements solution techniques to ordinary differential equations. Initially,
 only algorithms based on the Runge-Kutta method are impelmented; i.e. the multisteps and others are
 not available.
