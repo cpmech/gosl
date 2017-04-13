@@ -13,6 +13,7 @@ import (
 
 func Test_assemb01(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("assemb01")
 
 	// grid
@@ -28,8 +29,9 @@ func Test_assemb01(tst *testing.T) {
 	InitK11andK12(&K11, &K12, &e)
 
 	// assembly
+	kx, ky := 1.0, 1.0
 	F1 := make([]float64, e.N1)
-	Assemble(&K11, &K12, F1, nil, &g, &e)
+	AssemblePoisson2d(&K11, &K12, F1, kx, ky, nil, &g, &e)
 
 	// check
 	K11d := K11.ToMatrix(nil).ToDense()

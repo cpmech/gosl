@@ -118,7 +118,7 @@ func TestJacobian03(tst *testing.T) {
 
 	// assembly
 	F1 := make([]float64, e.N1)
-	fdm.Assemble(&K11, &K12, F1, nil, &g, &e)
+	fdm.AssemblePoisson2d(&K11, &K12, F1, 1, 1, nil, &g, &e)
 
 	// prescribed values
 	U2 := make([]float64, e.N2)
@@ -145,7 +145,7 @@ func TestJacobian03(tst *testing.T) {
 		return nil
 	}
 	Jfcn := func(dfU1dU1 *la.Triplet, U1 []float64) error {
-		fdm.Assemble(dfU1dU1, &K12, F1, nil, &g, &e)
+		fdm.AssemblePoisson2d(dfU1dU1, &K12, F1, 1, 1, nil, &g, &e)
 		return nil
 	}
 	U1 := make([]float64, e.N1)
