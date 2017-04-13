@@ -10,13 +10,13 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Quadrature defines the interface for elementary quadrature algorithms.
+// Quadrature defines the interface for quadrature algorithms with refinement.
 type Quadrature interface {
 	Init(f Cb_yx, a, b, eps float64) // The constructor takes as inputs f, the function or functor to be integrated between limits a and b, also input.
 	Integrate() (float64, error)     // Returns the integral for the specified input data
 }
 
-// Trap structure is used for the trapezoidal integration rule
+// Trap structure is used for the trapezoidal integration rule with refinement.
 type Trap struct {
 	n    int     // current level of refinement.
 	a, b float64 // limits
@@ -80,7 +80,7 @@ func (o *Trap) Integrate() (float64, error) {
 	return 0, chk.Err("achieved maximum number of iterations (n=%d)", jmax)
 }
 
-// Simp structure implements the Simpson's method for quadrature
+// Simp structure implements the Simpson's method for quadrature with refinement.
 type Simp struct {
 	n    int     // current level of refinement.
 	a, b float64 // limits
