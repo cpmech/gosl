@@ -16,9 +16,7 @@ import (
 func main() {
 
 	mpi.Start(false)
-	defer func() {
-		mpi.Stop(false)
-	}()
+	defer mpi.Stop(false)
 
 	if mpi.Rank() == 0 {
 		io.PfYel("\nTest MPI 04\n")
