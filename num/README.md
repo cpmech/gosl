@@ -32,7 +32,7 @@ within [0, 0.11]. We have to make sure that the root is bounded otherwise Brent'
 work.
 
 
-Using Brent's method:
+### Using Brent's method:
 
 ```go
 // y(x) function
@@ -84,7 +84,7 @@ Simple root finding problem solved by Brent's method.
 </div>
 
 
-Using Newton's method:
+### Using Newton's method:
 
 ```go
 // Function: y(x) = fx[0] with x = xvec[0]
@@ -256,7 +256,7 @@ chk.Scalar(tst, "A", 1e-11, A, Acor)
 
 ## Numerical differentiation
 
-Source code: <a href="../examples/num_deriv01">num_deriv01.go</a>
+Source code: <a href="../examples/num_deriv01.go">num_deriv01.go</a>
 
 Check first and second derivative of `y(x) = sin(x)`
 
