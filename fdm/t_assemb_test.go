@@ -17,7 +17,7 @@ func Test_assemb01(tst *testing.T) {
 	chk.PrintTitle("assemb01")
 
 	// grid
-	var g Grid2D
+	var g Grid2d
 	g.Init(1.0, 1.0, 3, 3)
 
 	// equations numbering

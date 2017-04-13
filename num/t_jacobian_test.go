@@ -102,7 +102,7 @@ func TestJacobian03(tst *testing.T) {
 	chk.PrintTitle("TestJacobian 03")
 
 	// grid
-	var g fdm.Grid2D
+	var g fdm.Grid2d
 	//g.Init(1.0, 1.0, 4, 4)
 	g.Init(1.0, 1.0, 6, 6)
 	//g.Init(1.0, 1.0, 11, 11)

@@ -324,7 +324,7 @@ func Test_nls04(tst *testing.T) {
 	chk.PrintTitle("nls04. finite differences problem")
 
 	// grid
-	var g fdm.Grid2D
+	var g fdm.Grid2d
 	g.Init(1.0, 1.0, 6, 6)
 
 	// equations numbering
@@ -417,11 +417,6 @@ func Test_nls04(tst *testing.T) {
 	// check
 	fdm.JoinVecs(Usps, U1sps, U2, &e)
 	chk.Vector(tst, "Usps", 1e-14, Usps, Uc)
-
-	// plot
-	if false {
-		g.Contour("results", "fig_t_heat_square", nil, Usps, 11, false)
-	}
 
 	io.PfYel("\n---- dense -------- Analytical Jacobian -------------------\n")
 

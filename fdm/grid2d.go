@@ -4,103 +4,63 @@
 
 package fdm
 
-import (
-	"bytes"
-	"os/exec"
+import "github.com/cpmech/gosl/utl"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
-)
-
-type Grid2D struct {
-	Lx, Ly     float64
-	Nx, Ny, N  int
-	Dx, Dy     float64
-	Dxx, Dyy   float64
-	L, R, B, T []int
+// Grid2d holds data representing a 2D grid
+type Grid2d struct {
+	Lx  float64 // length along x
+	Ly  float64 // length along y
+	Nx  int     // number of divisions along x. Number of spacings = Nx - 1
+	Ny  int     // number of divisions along y. Number of spacings = Ny - 1
+	N   int     // total number of points
+	Dx  float64 // increments along x
+	Dy  float64 // increments along y
+	Dxx float64 // squared x-increment
+	Dyy float64 // squared y-increment
+	L   []int   // indices of points along Left edge
+	R   []int   // indices of points along Right edge
+	B   []int   // indices of points along Bottom edge
+	T   []int   // indices of points along Top edge
 }
 
-func (g *Grid2D) Init(lx, ly float64, nx, ny int) {
-	g.Lx, g.Ly = lx, ly
-	g.Nx, g.Ny, g.N = nx, ny, nx*ny
-	g.Dx, g.Dy = g.Lx/float64(nx-1), g.Ly/float64(ny-1)
-	g.Dxx, g.Dyy = g.Dx*g.Dx, g.Dy*g.Dy
+// Init initialises the grid
+func (o *Grid2d) Init(lx, ly float64, nx, ny int) {
+	o.Lx, o.Ly = lx, ly
+	o.Nx, o.Ny, o.N = nx, ny, nx*ny
+	o.Dx, o.Dy = o.Lx/float64(nx-1), o.Ly/float64(ny-1)
+	o.Dxx, o.Dyy = o.Dx*o.Dx, o.Dy*o.Dy
 
-	g.L = utl.IntRange3(0, g.N, g.Nx)
-	g.R = utl.IntAddScalar(g.L, g.Nx-1)
-	g.B = utl.IntRange(g.Nx)
-	g.T = utl.IntAddScalar(g.B, (g.Ny-1)*g.Nx)
+	o.L = utl.IntRange3(0, o.N, o.Nx)
+	o.R = utl.IntAddScalar(o.L, o.Nx-1)
+	o.B = utl.IntRange(o.Nx)
+	o.T = utl.IntAddScalar(o.B, (o.Ny-1)*o.Nx)
 }
 
-func (g *Grid2D) Draw(dirout, fnkey string, show bool) {
-	// write buffer
-	var b bytes.Buffer
-	io.Ff(&b, "from gosl import *\n")
-	io.Ff(&b, "XY = array([")
-	for j := 0; j < g.Ny; j++ {
-		for i := 0; i < g.Nx; i++ {
-			x := float64(i) * g.Dx
-			y := float64(j) * g.Dy
-			io.Ff(&b, "(%g, %g),", x, y)
-		}
+// Generate generates coordinates and may evaluate a function over the grid
+//   Input:
+//     fcn -- function f(x,y) to compute F matrix (may be nil)
+//       or
+//     Fserial -- serialized f values F[i+j*Nx] (may be nil)
+//   Output:
+//     X, Y, F(optional) -- matrices of coordinates and f(x,y) values
+func (o *Grid2d) Generate(fcn Cb_fxy, Fserial []float64) (X, Y, F [][]float64) {
+	X = utl.DblsAlloc(o.Nx, o.Ny)
+	Y = utl.DblsAlloc(o.Nx, o.Ny)
+	if fcn != nil || Fserial != nil {
+		F = utl.DblsAlloc(o.Nx, o.Ny)
 	}
-	io.Ff(&b, "],dtype=float)\n")
-	io.Ff(&b, "L = %v\n", utl.IntPy(g.L))
-	io.Ff(&b, "R = %v\n", utl.IntPy(g.R))
-	io.Ff(&b, "B = %v\n", utl.IntPy(g.B))
-	io.Ff(&b, "T = %v\n", utl.IntPy(g.T))
-	io.Ff(&b, "plot(XY[:,0], XY[:,1], 'ko', clip_on=False)\n")
-	io.Ff(&b, "plot(XY[L,0], XY[L,1], 'rs', ms=15, clip_on=False)\n")
-	io.Ff(&b, "plot(XY[R,0], XY[R,1], 'bs', ms=15, clip_on=False)\n")
-	io.Ff(&b, "plot(XY[B,0], XY[B,1], 'yo', ms=12, clip_on=False)\n")
-	io.Ff(&b, "plot(XY[T,0], XY[T,1], 'go', ms=12, clip_on=False)\n")
-	io.Ff(&b, "axis('equal')\n")
-	io.Ff(&b, "grid()\n")
-	io.Ff(&b, "show()\n")
-	// save file
-	io.WriteFileD(dirout, fnkey+".py", &b)
-	if show {
-		_, err := exec.Command("python", dirout+"/"+fnkey+".py").Output()
-		if err != nil {
-			chk.Panic("Grid2D:Draw failed when calling python\n%v", err)
-		}
-	}
-}
-
-// fxy or z must be nil
-func (g *Grid2D) Contour(dirout, fnkey string, fxy Cb_fxy, z []float64, nlevels int, show bool) {
-	// write buffer
-	var b bytes.Buffer
-	io.Ff(&b, "from gosl import *\n")
-	io.Ff(&b, "XYZ = array([")
-	for j := 0; j < g.Ny; j++ {
-		for i := 0; i < g.Nx; i++ {
-			x := float64(i) * g.Dx
-			y := float64(j) * g.Dy
-			if fxy == nil {
-				io.Ff(&b, "(%g, %g, %g),", x, y, z[i+j*g.Nx])
-			} else {
-				io.Ff(&b, "(%g, %g, %g),", x, y, fxy(x, y))
+	for i := 0; i < o.Nx; i++ {
+		x := float64(i) * o.Dx
+		for j := 0; j < o.Ny; j++ {
+			X[i][j] = x
+			Y[i][j] = float64(j) * o.Dy
+			if fcn != nil {
+				F[i][j] = fcn(X[i][j], Y[i][j])
+			}
+			if Fserial != nil {
+				F[i][j] = Fserial[i+j*o.Nx]
 			}
 		}
 	}
-	io.Ff(&b, "],dtype=float)\n")
-	io.Ff(&b, "X = XYZ[:,0].reshape(%d,%d)\n", g.Ny, g.Nx)
-	io.Ff(&b, "Y = XYZ[:,1].reshape(%d,%d)\n", g.Ny, g.Nx)
-	io.Ff(&b, "Z = XYZ[:,2].reshape(%d,%d)\n", g.Ny, g.Nx)
-	io.Ff(&b, "Contour(X,Y,Z, nlevels=%d)\n", nlevels)
-	io.Ff(&b, "axis('equal')\n")
-	io.Ff(&b, "show()\n")
-	// save file
-	io.WriteFileD(dirout, fnkey+".py", &b)
-	if show {
-		_, err := exec.Command("python", dirout+"/"+fnkey+".py").Output()
-		if err != nil {
-			chk.Panic("Grid2D:Draw failed when calling python\n%v", err)
-		}
-	}
+	return
 }
-
-// callbacks
-type Cb_fxy func(x, y float64) (z float64) // z = f(x,y)

@@ -8,9 +8,6 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// Cb_src defines the callback function type for the "source" term
-type Cb_src func(x, y float64, args ...interface{}) float64
-
 // InitK11andK12 initialises the two triplets
 func InitK11andK12(K11, K12 *la.Triplet, e *Equations) {
 	K11.Init(e.N1, e.N1, e.N1*5)
@@ -29,7 +26,7 @@ func InitK11andK12(K11, K12 *la.Triplet, e *Equations) {
 //    e -- the Equation numbers
 //  Output:
 //    K11, K12 and F1 are assembled (must be pre-allocated)
-func AssemblePoisson2d(K11, K12 *la.Triplet, F1 []float64, kx, ky float64, src Cb_src, g *Grid2D, e *Equations) {
+func AssemblePoisson2d(K11, K12 *la.Triplet, F1 []float64, kx, ky float64, src Cb_src, g *Grid2d, e *Equations) {
 	K11.Start()
 	K12.Start()
 	la.VecFill(F1, 0.0)

@@ -94,7 +94,7 @@ FR2 = [0        1        2      ]  => ex:  FR2[3] = reduced system equation # 1
 
 ## Examples
 
-```
+```go
 // grid
 var g fdm.Grid2D
 g.Init(1.0, 1.0, 3, 3)
