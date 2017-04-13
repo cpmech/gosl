@@ -82,8 +82,8 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 
 	// message
 	if !silent {
-		io.Pfpink("%4s%23s%23s%23s\n", "it", "x", "f(x)", "err")
-		io.Pfpink("%50s%23.1e\n", "", o.Tol)
+		io.Pf("%4s%23s%23s%23s\n", "it", "x", "f(x)", "err")
+		io.Pf("%50s%23.1e\n", "", o.Tol)
 	}
 
 	// solve
@@ -111,7 +111,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 
 		// converged?
 		if !silent {
-			io.Pfyel("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(new_step))
+			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(new_step))
 		}
 		if math.Abs(new_step) <= tol_act || fb == 0.0 {
 			return b, nil
@@ -248,7 +248,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 
 		// converged?
 		if !silent {
-			io.Pfyel("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-mid_rng)+rng/2.0)
+			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-mid_rng)+rng/2.0)
 		}
 		if math.Abs(x-mid_rng)+rng/2.0 <= 2.0*tol_act {
 			return x, nil

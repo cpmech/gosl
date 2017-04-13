@@ -247,9 +247,6 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			}
 		}
 
-		//io.Pforan("φ    = %v\n", o.φ)
-		//io.Pforan("dφdx = %v\n", o.dφdx)
-
 		// update x
 		Ldx = 0.0
 		for i := 0; i < o.neq; i++ {
@@ -391,13 +388,13 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 // msg prints information on residuals
 func (o *NlSolver) msg(typ string, it int, Ldx, fx_max float64, first, last bool) {
 	if first {
-		io.Pfpink("\n%4s%23s%23s\n", "it", "Ldx", "fx_max")
-		io.Pfpink("%4s%23s%23s\n", "", io.Sf("(%7.1e)", o.fnewt), io.Sf("(%7.1e)", o.ftol))
+		io.Pf("\n%4s%23s%23s\n", "it", "Ldx", "fx_max")
+		io.Pf("%4s%23s%23s\n", "", io.Sf("(%7.1e)", o.fnewt), io.Sf("(%7.1e)", o.ftol))
 		return
 	}
-	io.Pfyel("%4d%23.15e%23.15e\n", it, Ldx, fx_max)
+	io.Pf("%4d%23.15e%23.15e\n", it, Ldx, fx_max)
 	if last {
-		io.Pfgrey(". . . converged with %s. nit=%d, nFeval=%d, nJeval=%d\n", typ, it, o.NFeval, o.NJeval)
+		io.Pf(". . . converged with %s. nit=%d, nFeval=%d, nJeval=%d\n", typ, it, o.NFeval, o.NJeval)
 	}
 }
 
