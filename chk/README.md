@@ -9,7 +9,7 @@ This package also contains `assert` functions.
 ## Examples
 
 Checking that a matrix, allocated in the `la` package, is correct.
-```
+```go
 a := la.MatAlloc(3, 5)
 a[0][0] = 1
 a[0][1] = 2

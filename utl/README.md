@@ -42,7 +42,7 @@ Other functions help with CPU and memory profiling, such as:
 ### Numerical functions
 
 Generate lists of integers
-```
+```go
 I := make([]int, 5)
 utl.IntFill(I, 666)
 J := utl.IntVals(5, 666)
@@ -62,7 +62,7 @@ H := utl.IntUnique(D, C, G, []int{16, 39})
 ```
 
 Generate lists of doubles (float64)
-```
+```go
 N := utl.DblsAlloc(3, 4)
 f := utl.DblOnes(5)
 ff := utl.DblVals(5, 666)
@@ -71,7 +71,7 @@ b := utl.LinSpaceOpen(2.0, 3.0, n)
 ```
 
 Cumulative sums
-```
+```go
 p := []float64{1, 2, 3, 4, 5}
 cs := make([]float64, len(p))
 utl.CumSum(cs, p)
@@ -80,7 +80,7 @@ chk.Vector(tst, "cumsum", 1e-17, cs, []float64{1, 3, 6, 10, 15})
 ```
 
 Handling tables of doubles (float64)
-```
+```go
 v := [][]float64{
     {1, 2, 3, 4},
     {-1, 2, 3, 0},
@@ -104,7 +104,7 @@ chk.Vector(tst, "v[:,3]", 1e-17, x, []float64{4, 0, 4, 8, 4, -4})
 ```
 
 Pareto fronts
-```
+```go
 u := []float64{1, 2, 3, 4, 5, 6}
 v := []float64{1, 2, 3, 4, 5, 6}
 io.Pforan("u = %v\n", u)
@@ -118,7 +118,7 @@ io.Pfpink("v_dominates = %v\n", v_dominates)
 ### Slices and deep slices
 
 Allocate deep slices
-```
+```go
 a := utl.Deep3alloc(3, 2, 4)
 utl.Deep3set(a, 666)
 chk.Deep3(tst, "a", 1e-16, a, [][][]float64{
@@ -139,7 +139,7 @@ io.Pf("b = %v\n", b)
 ```
 
 Serialization
-```
+```go
 A := [][][]float64{
     {{100, 101, 102}, {103}, {104, 105}},
     {{106}, {107}},
@@ -159,7 +159,7 @@ chk.Ints(tst, "P", P, []int{0, 3, 4, 6, 7, 8, 9, 11, 12, 16, 17, 19, 22})
 ```
 
 Sorting
-```
+```go
 i := []int{33, 0, 7, 8}
 x := []float64{1000.33, 0, -77.7, 88.8}
 y := []float64{1e-5, 1e-7, 1e-2, 1e-9}
@@ -179,7 +179,7 @@ chk.Vector(tst, "z", 1e-16, Z, []float64{-7000, 0, -1, -8000})
 ### Maps and dictionaries
 
 Appending to maps of slices of float64
-```
+```go
 m := map[string][]float64{
     "a": []float64{100, 101},
     "b": []float64{1000},
@@ -208,7 +208,7 @@ chk.Vector(tst, "m[\"e\"]", 1e-16, m["e"], nil)
 
 
 Finding the _best square_ for given `size = numberOfRows * numberOfColumns`
-```
+```go
 for size := 1; size <= 12; size++ {
     nrow, ncol := utl.BestSquare(size)
     io.Pforan("nrow, ncol, nrow*ncol = %2d, %2d, %2d\n", nrow, ncol, nrow*ncol)

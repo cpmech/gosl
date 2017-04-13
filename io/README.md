@@ -8,7 +8,7 @@ colours), and parsing strings.
 ## Examples
 
 To write and read a file:
-```
+```go
 theline := "Hello World !!!"
 io.WriteFileSD("/tmp/gosl", "filestring.txt", theline)
 

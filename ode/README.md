@@ -30,7 +30,7 @@ script.
 From Hairer-Wanner VII-p3 Eq.(1.4) [2].
 
 
-```code
+```go
 // problem definition
 fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
     f[0] = -0.04*y[0] + 1.0e4*y[1]*y[2]

@@ -46,7 +46,7 @@ following commands allow this:
 ## Examples
 
 ### Drawing a polygon
-```
+```go
 // points
 P := [][]float64{
     {-2.5, 0.0},
@@ -81,7 +81,7 @@ Polygon
 </div>
 
 ### Plotting a contour
-```
+```go
 // scalar field
 fcn := func(x, y float64) float64 {
     return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
