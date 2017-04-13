@@ -4,7 +4,7 @@ This package provides several functions to draw figures, plot results and annota
 been largelly based on [matplotlib](https://matplotlib.org) and is, currently, a sort of wrapper to
 Python/pyplot in the sense that it generates python scripts to be run by an external `os` call.
 
-A future implementation will add an option to draw directly on an web browser, after generating
+A future implementation will add an option to draw directly to the web browser, after generating
 JavaScript codes. We also plan for a [QT](https://www.qt.io) version.
 
 Many pyplot functions are _wrapped_. For instance:
@@ -43,7 +43,7 @@ following commands allow this:
 
 ## Examples
 
-Drawing a polygon
+### Drawing a polygon
 ```
 // points
 P := [][]float64{
@@ -78,7 +78,7 @@ plt.SaveD("/tmp/gosl", "draw01.png")
 Polygon
 </div>
 
-Plotting a contour
+### Plotting a contour
 ```
 // scalar field
 fcn := func(x, y float64) float64 {
