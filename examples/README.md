@@ -296,7 +296,7 @@ finite differences method (FDM).
 Solving:
 
 ```
-                ∂u²        ∂u²
+                ∂²u        ∂²u
            - kx ———  -  ky ———  =  1
                 ∂x²        ∂y²
 ```
@@ -390,7 +390,7 @@ Solution of Poisson's equation 01
 Solving:
 
 ```
-                ∂u²        ∂u²
+                ∂²u        ∂²u
            - kx ———  -  ky ———  =  0
                 ∂x²        ∂y²
 ```

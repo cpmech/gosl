@@ -16,7 +16,7 @@ func InitK11andK12(K11, K12 *la.Triplet, e *Equations) {
 
 // AssemblePoisson2d assembles K11 and K12 corresponding to the Poisson problem in 2D
 //   Solving:
-//                 ∂u²        ∂u²
+//                 ∂²u        ∂²u
 //            - kx ———  -  ky ———  =  s(x,y)
 //                 ∂x²        ∂y²
 //  Input:

@@ -17,7 +17,7 @@ import (
 func main() {
 
 	// Solving:
-	//                 ∂u²        ∂u²
+	//                 ∂²u        ∂²u
 	//            - kx ———  -  ky ———  =  0
 	//                 ∂x²        ∂y²
 	//

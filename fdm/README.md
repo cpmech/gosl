@@ -124,7 +124,7 @@ Contour with Grid2d
 Solving:
 
 ```
-                ∂u²        ∂u²
+                ∂²u        ∂²u
            - kx ———  -  ky ———  =  1
                 ∂x²        ∂y²
 ```
