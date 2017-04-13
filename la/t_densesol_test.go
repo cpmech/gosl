@@ -34,7 +34,7 @@ func TestCholesky01(tst *testing.T) {
 	}
 
 	L := MatAlloc(3, 3)
-	Cholesky(L, a) // L is such as A = L * transp(L)
+	Cholesky(L, a) // L is such that: A = L * transp(L)
 	PrintMat("a", a, "%6g", false)
 	PrintMat("L", L, "%6g", false)
 	LLt := calc_LLt(L)

@@ -165,7 +165,7 @@ a := [][]float64{
 }
 
 L := la.MatAlloc(3, 3)
-la.Cholesky(L, a) // L is such as A = L * transp(L)
+la.Cholesky(L, a) // L is such that: A = L * transp(L)
 la.PrintMat("a", a, "%6g", false)
 la.PrintMat("L", L, "%6g", false)
 chk.Matrix(tst, "L", 1e-17, L, [][]float64{
