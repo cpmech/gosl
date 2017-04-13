@@ -1048,13 +1048,13 @@ Solve solves non-linear problem f(x) == 0
 		
 			
 			
-			<h2 id="Quadrature">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=300:565#L4">Quadrature</a></h2>
+			<h2 id="Quadrature">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=305:570#L4">Quadrature</a></h2>
 			<pre>type Quadrature interface {
     Init(f <a href="#Cb_yx">Cb_yx</a>, a, b, eps <a href="/pkg/builtin/#float64">float64</a>) <span class="comment">// The constructor takes as inputs f, the function or functor to be integrated between limits a and b, also input.</span>
     Integrate() (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)     <span class="comment">// Returns the integral for the specified input data</span>
 }</pre>
 			<p>
-Quadrature defines the interface for elementary quadrature algorithms.
+Quadrature defines the interface for quadrature algorithms with refinement.
 </p>
 
 
@@ -1072,12 +1072,12 @@ Quadrature defines the interface for elementary quadrature algorithms.
 		
 			
 			
-			<h2 id="Simp">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2208:2402#L74">Simp</a></h2>
+			<h2 id="Simp">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2247:2441#L74">Simp</a></h2>
 			<pre>type Simp struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
-Simp structure implements the Simpson&#39;s method for quadrature
+Simp structure implements the Simpson&#39;s method for quadrature with refinement.
 </p>
 
 
@@ -1093,7 +1093,7 @@ Simp structure implements the Simpson&#39;s method for quadrature
 
 			
 				
-				<h3 id="Simp.Init">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2439:2486#L83">Init</a></h3>
+				<h3 id="Simp.Init">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2478:2525#L83">Init</a></h3>
 				<pre>func (o *<a href="#Simp">Simp</a>) Init(f <a href="#Cb_yx">Cb_yx</a>, a, b, eps <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises Simp structure
@@ -1104,7 +1104,7 @@ Init initialises Simp structure
 				
 			
 				
-				<h3 id="Simp.Integrate">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=3388:3431#L122">Integrate</a></h3>
+				<h3 id="Simp.Integrate">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=3427:3470#L122">Integrate</a></h3>
 				<pre>func (o *<a href="#Simp">Simp</a>) Integrate() (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Integrate performs the numerical integration
@@ -1115,7 +1115,7 @@ Integrate performs the numerical integration
 				
 			
 				
-				<h3 id="Simp.Next">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2809:2838#L94">Next</a></h3>
+				<h3 id="Simp.Next">func (*Simp) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=2848:2877#L94">Next</a></h3>
 				<pre>func (o *<a href="#Simp">Simp</a>) Next() <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Next returns the nth stage of refinement of the extended trapezoidal rule. On the first call (n=1),
@@ -1130,12 +1130,12 @@ improve the accuracy by adding 2 n-2 additional interior points.
 		
 			
 			
-			<h2 id="Trap">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=630:824#L10">Trap</a></h2>
+			<h2 id="Trap">type <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=652:846#L10">Trap</a></h2>
 			<pre>type Trap struct {
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
-Trap structure is used for the trapezoidal integration rule
+Trap structure is used for the trapezoidal integration rule with refinement.
 </p>
 
 
@@ -1151,7 +1151,7 @@ Trap structure is used for the trapezoidal integration rule
 
 			
 				
-				<h3 id="Trap.Init">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=861:908#L19">Init</a></h3>
+				<h3 id="Trap.Init">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=883:930#L19">Init</a></h3>
 				<pre>func (o *<a href="#Trap">Trap</a>) Init(f <a href="#Cb_yx">Cb_yx</a>, a, b, eps <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises Trap structure
@@ -1162,7 +1162,7 @@ Init initialises Trap structure
 				
 			
 				
-				<h3 id="Trap.Integrate">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=1810:1853#L58">Integrate</a></h3>
+				<h3 id="Trap.Integrate">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=1832:1875#L58">Integrate</a></h3>
 				<pre>func (o *<a href="#Trap">Trap</a>) Integrate() (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Integrate performs the numerical integration
@@ -1173,7 +1173,7 @@ Integrate performs the numerical integration
 				
 			
 				
-				<h3 id="Trap.Next">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=1231:1260#L30">Next</a></h3>
+				<h3 id="Trap.Next">func (*Trap) <a href="https://github.com/cpmech/gosl/blob/master/num/quadrature.go?s=1253:1282#L30">Next</a></h3>
 				<pre>func (o *<a href="#Trap">Trap</a>) Next() <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 Next returns the nth stage of refinement of the extended trapezoidal rule. On the first call (n=1),
