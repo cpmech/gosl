@@ -7,6 +7,7 @@
 4. Numerical differentiation
 5. Drawing iso-surfaces with VTK
 6. Plotting a contour
+7. Solution of Poisson's equation using finite differences
 
 # 1 Generating normally distributed pseudo-random numbers
 
@@ -235,7 +236,7 @@ Iso-surface
 The `plt` subpackage is a convenient wrapper to python.matplotlib/pyplot that can generate nice
 graphs. For example:
 
-```
+```go
 // scalar field
 fcn := func(x, y float64) float64 {
     return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
@@ -277,7 +278,191 @@ plt.SaveD("/tmp/gosl", "plt_contour01.png")
 
 Source code: <a href="plt_contour01.go">plt_contour01.go</a>
 
+Output:
 <div id="container">
-<p><img src="../plt/figs/plt_contour01.png" width="400"></p>
+<p><img src="../plt/figs/plt_contour01.png" width="500"></p>
 Contour
+</div>
+
+
+
+# 7 Solution of Poisson's equation using finite differences
+
+Package `fdm` can help with the solution (approximation) of partial differential equations using the
+finite differences method (FDM).
+
+## First example
+
+Solving:
+
+```
+                ∂u²        ∂u²
+           - kx ———  -  ky ———  =  1
+                ∂x²        ∂y²
+```
+
+with zero Dirichlet boundary conditions around [-1, 1] x [-1, 1] and with kx=1 and ky=1.
+
+Solution with `fdm` and plotting with `plt`:
+
+```go
+// material data
+kx, ky := 1.0, 1.0
+source := func(x, y float64, args ...interface{}) float64 {
+    return 1.0
+}
+
+// closed-form solution (for reference)
+π, π3, N := math.Pi, math.Pow(math.Pi, 3.0), 50
+solution := func(x, y float64) (res float64) {
+    res = (1.0 - x*x) / 2.0
+    for i := 1; i < N; i += 2 {
+        k := float64(i)
+        a := k * π * (1.0 + x) / 2.0
+        b := k * π * (1.0 + y) / 2.0
+        c := k * π * (1.0 - y) / 2.0
+        d := k * k * k * math.Sinh(k*π)
+        res -= (16.0 / π3) * (math.Sin(a) / d) * (math.Sinh(b) + math.Sinh(c))
+    }
+    return
+}
+
+// allocate grid
+var g fdm.Grid2d
+g.Init(-1.0, 1.0, -1.0, 1.0, 11, 11)
+
+// ids of equations with prescribed (known, given) U values
+// all around the square domain
+peq := utl.IntUnique(g.B, g.R, g.T, g.L)
+
+// structure to hold equations ids.
+// each grid node corresponds to one equation
+// i.e. number of equations == g.N
+var e fdm.Equations
+e.Init(g.N, peq)
+
+// set K11 and K12 => corresponding to unknown eqs
+var K11, K12 la.Triplet
+fdm.InitK11andK12(&K11, &K12, &e)
+
+// assemble system
+F1 := make([]float64, e.N1)
+fdm.AssemblePoisson2d(&K11, &K12, F1, kx, ky, source, &g, &e)
+
+// set prescribed values (default == 0.0)
+U2 := make([]float64, e.N2)
+
+// solve linear problem:
+//   K11 * U1 = F1
+U1, err := la.SolveRealLinSys(&K11, F1)
+if err != nil {
+    chk.Panic("solve failed: %v", err)
+}
+
+// merge solution with known values
+U := make([]float64, g.N)
+fdm.JoinVecs(U, U1, U2, &e)
+
+// plotting
+X, Y, F := g.Generate(nil, U)
+var gsol fdm.Grid2d
+gsol.Init(-1.0, 1.0, -1.0, 1.0, 101, 101)
+Xsol, Ysol, Fsol := gsol.Generate(solution, nil)
+plt.SetForPng(0.8, 600, 150)
+plt.Contour(X, Y, F, "cmapidx=1")
+plt.ContourSimple(Xsol, Ysol, Fsol, true, 0.7, "colors='yellow', linewidths=2")
+plt.Equal()
+plt.Gll("x", "y", "")
+plt.SaveD("/tmp/gosl", "fdm_problem01.png")
+```
+
+Source code: <a href="fdm_problem01.go">fdm_problem01.go</a>
+
+Output:
+<div id="container">
+<p><img src="figs/fdm_problem01.png" width="500"></p>
+Solution of Poisson's equation 01
+</div>
+
+
+## Second example
+
+Solving:
+
+```
+                ∂u²        ∂u²
+           - kx ———  -  ky ———  =  0
+                ∂x²        ∂y²
+```
+
+in the domain [0, 1] x [0, 1] with u = 50 @ the top and left boundaries. The other Dirichlet
+boundary conditions are zero. The material data are: kx = 1 and ky = 1.
+
+Solution with `fdm` and plotting with `plt`:
+
+```go
+// material data
+kx, ky := 1.0, 1.0
+
+// allocate grid
+var g fdm.Grid2d
+g.Init(0.0, 1.0, 0.0, 1.0, 101, 101)
+
+// ids of equations with prescribed (known, given) U values
+// all around the square domain
+peq := utl.IntUnique(g.L, g.T, g.B, g.R)
+
+// structure to hold equations ids.
+// each grid node corresponds to one equation
+// i.e. number of equations == g.N
+var e fdm.Equations
+e.Init(g.N, peq)
+
+// set K11 and K12 => corresponding to unknown eqs
+var K11, K12 la.Triplet
+fdm.InitK11andK12(&K11, &K12, &e)
+
+// assemble system
+F1 := make([]float64, e.N1)
+fdm.AssemblePoisson2d(&K11, &K12, F1, kx, ky, nil, &g, &e)
+
+// set prescribed values (default is 0.0)
+U2 := make([]float64, e.N2)
+for _, eq := range g.L {
+    U2[e.FR2[eq]] = 50.0
+}
+for _, eq := range g.T {
+    U2[e.FR2[eq]] = 50.0
+}
+
+// prepare right-hand-side
+//   F1 = F1 - K12 * U2
+la.SpMatVecMulAdd(F1, -1, K12.ToMatrix(nil), U2)
+
+// solve linear problem:
+//   K11 * U1 = F1
+U1, err := la.SolveRealLinSys(&K11, F1)
+if err != nil {
+    chk.Panic("solve failed: %v", err)
+}
+
+// merge solution with known values
+U := make([]float64, g.N)
+fdm.JoinVecs(U, U1, U2, &e)
+
+// plotting
+X, Y, F := g.Generate(nil, U)
+plt.SetForPng(0.8, 600, 150)
+plt.Contour(X, Y, F, "cmapidx=0")
+plt.Equal()
+plt.Gll("x", "y", "")
+plt.SaveD("/tmp/gosl", "fdm_problem02.png")
+```
+
+Source code: <a href="fdm_problem02.go">fdm_problem02.go</a>
+
+Output:
+<div id="container">
+<p><img src="figs/fdm_problem02.png" width="500"></p>
+Solution of Poisson's equation 02
 </div>
