@@ -400,8 +400,8 @@ func (o *LinSolMumps) SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) (err 
 	return
 }
 
-// Clean deletes temporary data structures
-func (o *LinSolMumps) Clean() {
+// Free deletes temporary data structures
+func (o *LinSolMumps) Free() {
 
 	// exit if not initialised
 	if !o.is_initialised {
@@ -415,10 +415,10 @@ func (o *LinSolMumps) Clean() {
 
 	// message
 	if o.verb {
-		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.Clean . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolMumps.Free . . . . . . . . . . . . . . . \n\n")
 	}
 
-	// clean up
+	// free memory
 	if o.cmplx {
 		C.ZMU_DAT.job = -2     // finalize code
 		C.zmumps_c(&C.ZMU_DAT) // do finalize
@@ -429,7 +429,7 @@ func (o *LinSolMumps) Clean() {
 
 	// duration
 	if o.ton {
-		io.Pfcyan("%s: Time spent in LinSolMumps.Clean   = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolMumps.Free   = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 }
 
@@ -511,7 +511,7 @@ func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct []float64, sum_b_to
 
 	// allocate solver
 	lis := GetSolver("mumps")
-	defer lis.Clean()
+	defer lis.Free()
 
 	// initialise solver
 	err := lis.InitR(t, symmetric, verbose, timing)
@@ -558,7 +558,7 @@ func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct []complex128, sum_
 
 	// allocate solver
 	lis := GetSolver("mumps")
-	defer lis.Clean()
+	defer lis.Free()
 
 	// initialise solver
 	err := lis.InitC(t, symmetric, verbose, timing)

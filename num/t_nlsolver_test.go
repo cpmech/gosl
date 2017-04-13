@@ -51,7 +51,7 @@ func Test_nls01(tst *testing.T) {
 	// init
 	var nls_ana NlSolver
 	nls_ana.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-	defer nls_ana.Clean()
+	defer nls_ana.Free()
 
 	// solve
 	err := nls_ana.Solve(x, false)
@@ -78,7 +78,7 @@ func Test_nls01(tst *testing.T) {
 	// init
 	var nls_num NlSolver
 	nls_num.Init(neq, ffcn, nil, nil, false, true, prms)
-	defer nls_num.Clean()
+	defer nls_num.Free()
 
 	// solve
 	err = nls_num.Solve(xx, false)
@@ -137,7 +137,7 @@ func Test_nls02(tst *testing.T) {
 	// init
 	var nls_ana NlSolver
 	nls_ana.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-	defer nls_ana.Clean()
+	defer nls_ana.Free()
 
 	// solve
 	err := nls_ana.Solve(x, false)
@@ -164,7 +164,7 @@ func Test_nls02(tst *testing.T) {
 	// init
 	var nls_num NlSolver
 	nls_num.Init(neq, ffcn, nil, nil, false, true, prms)
-	defer nls_num.Clean()
+	defer nls_num.Free()
 
 	// solve
 	err = nls_num.Solve(xx, false)
@@ -233,8 +233,8 @@ func Test_nls03(tst *testing.T) {
 	var nls_den NlSolver // dense
 	nls_sps.Init(neq, ffcn, Jfcn, nil, false, false, prms)
 	nls_den.Init(neq, ffcn, nil, JfcnD, true, false, prms)
-	defer nls_sps.Clean()
-	defer nls_den.Clean()
+	defer nls_sps.Free()
+	defer nls_den.Free()
 
 	io.PfMag("\n/////////////////////// sparse //////////////////////////////////////////\n")
 
@@ -387,9 +387,9 @@ func Test_nls04(tst *testing.T) {
 	nls_sps.Init(e.N1, ffcn, Jfcn, nil, false, false, prms)
 	nls_num.Init(e.N1, ffcn, nil, nil, false, true, prms)
 	nls_den.Init(e.N1, ffcn, nil, JfcnD, true, false, prms)
-	defer nls_sps.Clean()
-	defer nls_num.Clean()
-	defer nls_den.Clean()
+	defer nls_sps.Free()
+	defer nls_num.Free()
+	defer nls_den.Free()
 
 	// results
 	U1sps := make([]float64, e.N1)

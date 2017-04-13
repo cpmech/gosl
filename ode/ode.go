@@ -298,10 +298,10 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 	o.lsolR = la.GetSolver(lsname)
 	o.lsolC = la.GetSolver(lsname)
 
-	// clean up and show stat before leaving
+	// free memory and show stat before leaving
 	defer func() {
-		o.lsolR.Clean()
-		o.lsolC.Clean()
+		o.lsolR.Free()
+		o.lsolC.Free()
 		if !o.silent {
 			o.Stat()
 		}

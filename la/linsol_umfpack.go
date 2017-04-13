@@ -178,9 +178,9 @@ func (o *LinSolUmfpack) Fact() (err error) {
 		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.Fact . . . . . . . . . . . . . . . \n\n")
 	}
 
-	// clean up
+	// free memory
 	if o.factorised {
-		o.Clean()
+		o.Free()
 	}
 
 	// factorisation
@@ -322,8 +322,8 @@ func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC []float64, dummy bool) (err error)
 	return
 }
 
-// Clean deletes temporary data structures
-func (o *LinSolUmfpack) Clean() {
+// Free deletes temporary data structures
+func (o *LinSolUmfpack) Free() {
 
 	// exit if not initialised
 	if !o.is_initialised {
@@ -337,10 +337,10 @@ func (o *LinSolUmfpack) Clean() {
 
 	// message
 	if o.verb {
-		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.Clean . . . . . . . . . . . . . . . \n\n")
+		io.Pfgreen("\n . . . . . . . . . . . . . . LinSolUmfpack.Free . . . . . . . . . . . . . . . \n\n")
 	}
 
-	// clean up
+	// free memory
 	if o.cmplx {
 		C.umfpack_zl_free_symbolic(&o.usymb)
 		C.umfpack_zl_free_numeric(&o.unum)
@@ -351,7 +351,7 @@ func (o *LinSolUmfpack) Clean() {
 
 	// duration
 	if o.ton {
-		io.Pfcyan("%s: Time spent in LinSolUmfpack.Clean   = %v\n", o.name, time.Now().Sub(o.tini))
+		io.Pfcyan("%s: Time spent in LinSolUmfpack.Free   = %v\n", o.name, time.Now().Sub(o.tini))
 	}
 }
 

@@ -16,7 +16,7 @@ func SolveRealLinSys(A *Triplet, b []float64) (x []float64, err error) {
 
 	// allocate solver
 	lis := GetSolver("umfpack")
-	defer lis.Clean()
+	defer lis.Free()
 
 	// info
 	symmetric := false
@@ -54,7 +54,7 @@ func SolveComplexLinSys(A *TripletC, b []complex128) (x []complex128, err error)
 
 	// allocate solver
 	lis := GetSolver("umfpack")
-	defer lis.Clean()
+	defer lis.Free()
 
 	// info
 	symmetric := false

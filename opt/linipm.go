@@ -60,9 +60,9 @@ type LinIpm struct {
 	Lis la.LinSol // linear solver
 }
 
-// Clean cleans allocated memory
-func (o *LinIpm) Clean() {
-	o.Lis.Clean()
+// Free frees allocated memory
+func (o *LinIpm) Free() {
+	o.Lis.Free()
 }
 
 // Init initialises LinIpm

@@ -127,10 +127,10 @@ func (o *NlSolver) Init(neq int, Ffcn Cb_f, JfcnSp Cb_J, JfcnDn Cb_Jd, useDn, nu
 	o.x0 = make([]float64, o.neq)
 }
 
-// Clean performs clean ups
-func (o *NlSolver) Clean() {
+// Free frees memory
+func (o *NlSolver) Free() {
 	if !o.useDn {
-		o.lis.Clean()
+		o.lis.Free()
 	}
 }
 

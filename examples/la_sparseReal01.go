@@ -36,7 +36,7 @@ func main() {
 
 	// allocate solver
 	lis := la.GetSolver("umfpack")
-	defer lis.Clean()
+	defer lis.Free()
 
 	// info
 	symmetric := false

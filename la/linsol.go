@@ -16,7 +16,7 @@ type LinSol interface {
 	Fact() error                                               // factorise
 	SolveR(xR, bR []float64, sum_b_to_root bool) error         // solve Real problem. x = inv(A) * b
 	SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) error // solve Complex problem x = inv(A) * b
-	Clean()                                                    // deallocate memory
+	Free()                                                     // free memory
 	SetOrdScal(ordering, scaling string) error                 // set ordering and scaling method
 }
 

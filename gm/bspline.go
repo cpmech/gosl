@@ -228,7 +228,7 @@ func (o *Bspline) find_span(t float64) int {
 // recursiveN computes basis functions using Cox-DeBoors recursive formula
 func (o *Bspline) recursiveN(t float64, i int, p int) float64 {
 	if math.Abs(t-o.tmax) < ZTOL {
-		t = o.tmax - ZTOL // clean rubbish. e.g. 1.000000000000002
+		t = o.tmax - ZTOL // remove noise. e.g. 1.000000000000002
 	}
 	if p == 0 {
 		if t < o.T[i] {

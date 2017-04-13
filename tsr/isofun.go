@@ -436,7 +436,7 @@ func (o *IsoFun) FindIntersect(p0, k float64, ΔL []float64, usek, debug bool, a
 	}
 	var nls num.NlSolver
 	nls.Init(neq, intersect_ffcn, jacfcn, nil, false, numjac, prms)
-	defer nls.Clean()
+	defer nls.Free()
 	err = nls.Solve(xsol, !debug)
 	if err != nil {
 		chk.Panic("nonlinear solver failed:\n%v", err)

@@ -49,7 +49,7 @@ func Test_linipm01(tst *testing.T) {
 
 	// solve LP
 	var ipm LinIpm
-	defer ipm.Clean()
+	defer ipm.Free()
 	ipm.Init(Am, b, c, nil)
 	err := ipm.Solve(chk.Verbose)
 	if err != nil {
@@ -136,7 +136,7 @@ func Test_linipm02(tst *testing.T) {
 
 	// solve LP
 	var ipm LinIpm
-	defer ipm.Clean()
+	defer ipm.Free()
 	ipm.Init(Am, b, c, nil)
 	err := ipm.Solve(chk.Verbose)
 	if err != nil {
@@ -200,7 +200,7 @@ func Test_linipm03(tst *testing.T) {
 
 	// solve LP
 	var ipm LinIpm
-	defer ipm.Clean()
+	defer ipm.Free()
 	ipm.Init(A, b, c, nil)
 	err := ipm.Solve(chk.Verbose)
 	if err != nil {

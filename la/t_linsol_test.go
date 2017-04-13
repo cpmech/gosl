@@ -19,7 +19,7 @@ func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x
 
 	// allocate solver
 	lis := GetSolver("umfpack")
-	defer lis.Clean()
+	defer lis.Free()
 
 	// initialise solver
 	err := lis.InitR(t, symmetric, verbose, timing)
@@ -63,7 +63,7 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 
 	// allocate solver
 	lis := GetSolver("umfpack")
-	defer lis.Clean()
+	defer lis.Free()
 
 	// initialise solver
 	err := lis.InitC(t, symmetric, verbose, timing)
