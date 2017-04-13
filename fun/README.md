@@ -1,4 +1,6 @@
-# Gosl &ndash; fun (functions)
+# Gosl. fun. Scalar functions of one scalar and one vector
+
+More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfun.html).
 
 ## Summary
 1.  add         -- addition

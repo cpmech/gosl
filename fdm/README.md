@@ -1,5 +1,7 @@
 # Gosl. fdm. Simple finite differences method
 
+More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfdm.html).
+
 This package implements few routines to help with the implementation of the finite differences
 method (FDM).
 
@@ -207,5 +209,3 @@ Output:
 <p><img src="../examples/figs/fdm_problem01.png" width="500"></p>
 Solution of Poisson's equation
 </div>
-
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfdm.html).

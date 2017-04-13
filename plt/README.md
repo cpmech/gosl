@@ -1,5 +1,7 @@
 # Gosl. plt. Plotting and drawing (png and eps)
 
+More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxplt.html).
+
 This package provides several functions to draw figures, plot results and annotate graphs. `plt` has
 been largelly based on [matplotlib](https://matplotlib.org) and is, currently, a sort of wrapper to
 Python/pyplot in the sense that it generates python scripts to be run by an external `os` call.
@@ -123,5 +125,3 @@ plt.SaveD("/tmp/gosl", "plt_contour01.png")
 <p><img src="figs/plt_contour01.png" width="400"></p>
 Contour and vector field
 </div>
-
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxplt.html).

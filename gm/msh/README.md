@@ -1,7 +1,11 @@
-# Shapes: Definitions
+# Gosl. gm/msh. Mesh generation and Delaunay triangulation
+
+More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxgm-msh.html).
+
+## Shapes: Definitions
 
 
-## Quadrilaterals and Hexahedra
+### Quadrilaterals and Hexahedra
 
 ```
   2D:
@@ -60,7 +64,7 @@
 
 
 
-## Triangles and Tetrahedra
+### Triangles and Tetrahedra
 
 ```
   2D:

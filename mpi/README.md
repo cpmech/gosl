@@ -1,5 +1,7 @@
 # Gosl. mpi. Message Passing Interface for parallel computing
 
+More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxmpi.html).
+
 The `mpi` package is a light wrapper to the [OpenMPI](https://www.open-mpi.org) C++ library designed
 to develop algorithms for parallel computing.
 
@@ -90,5 +92,3 @@ func main() {
 	chk.Vector(&tst, fmt.Sprintf("AllReduceMax:    x @ proc # %d", id), 1e-17, x, []float64{100, 100, 100, 1000, 1000, 1000, 2000, 2000, 2000, 3000, 3000})
 }
 ```
-
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxmpi.html).

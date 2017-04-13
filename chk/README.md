@@ -1,5 +1,7 @@
 # Gosl. chk. Check code and unit test tools
 
+More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxchk.html).
+
 Package `chk` provides tools to check numerical results and to perform unit tests.
 
 This package also contains `assert` functions.
@@ -30,5 +32,3 @@ chk.Matrix(tst, "a", 1e-17, a, [][]float64{
     {10, 20, 30, 40, 50},
 })
 ```
-
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxchk.html).

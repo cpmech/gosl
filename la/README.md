@@ -1,5 +1,7 @@
 # Gosl. la. Linear Algebra and efficient sparse solvers
 
+More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxla.html).
+
 The `la` subpackage implements functions to perform linear algebra operations such as vector
 addition or matrix-vector multiplications. It also wraps some efficient sparse linear systems
 solvers such as [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html) and
@@ -130,4 +132,4 @@ is better to call the `LinSol` methods directly.
 
 ## Examples
 
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxla.html).
+**TODO**
