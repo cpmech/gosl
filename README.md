@@ -51,14 +51,12 @@ Normally distributed pseudo-random numbers. Using sub-package `rnd`
 1. To install on Windows, [see instructions for Windows here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
 2. To install on macOS, [see instructions for macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
 3. To install on Debian/Ubuntu/Linux, type the following commands:
-
-Install dependencies:
+    1. Install dependencies:
 ```
 sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
 sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
 ```
-
-Clone and install Gosl
+    2. Clone and install Gosl
 ```
 mkdir -p ${GOPATH%:*}/src/github.com/cpmech
 cd ${GOPATH%:*}/src/github.com/cpmech
@@ -66,6 +64,8 @@ git clone https://github.com/cpmech/gosl.git
 cd gosl
 ./all.bash
 ```
+
+### Python dependencies
 
 For the `plt` subpackage, make sure that the following environment variable is defined:
 ```
