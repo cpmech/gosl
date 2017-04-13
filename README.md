@@ -16,7 +16,7 @@ with the development of the results presented in [1-5].
 3.  [utl](https://github.com/cpmech/gosl/tree/master/utl)       &ndash; Utilities. Lists. Dictionaries. Simple Numerics
 4.  [plt](https://github.com/cpmech/gosl/tree/master/plt)       &ndash; Plotting and drawing (png and eps)
 5.  [mpi](https://github.com/cpmech/gosl/tree/master/mpi)       &ndash; Message Passing Interface for parallel computing
-6.  [la](https://github.com/cpmech/gosl/tree/master/la)         &ndash; linear algebra
+6.  [la](https://github.com/cpmech/gosl/tree/master/la)         &ndash; Linear Algebra and efficient sparse solvers
 7.  [fdm](https://github.com/cpmech/gosl/tree/master/fdm)       &ndash; finite differences method
 8.  [num](https://github.com/cpmech/gosl/tree/master/num)       &ndash; numerical methods
 9.  [fun](https://github.com/cpmech/gosl/tree/master/fun)       &ndash; scalar functions of one scalar and one vector
