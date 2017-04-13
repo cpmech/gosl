@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func f1(x float64, args ...interface{}) float64    { return math.Exp(x) }
@@ -57,6 +58,7 @@ func check(tst *testing.T, deriv NumDerivFunc, f Cb_fx, dfdx Cb_fx, x float64, d
 
 func TestDeriv01(tst *testing.T) {
 
+	//verbose()
 	chk.PrintTitle("TestDeriv 01")
 
 	check(tst, DerivCentral, f1, df1dx, 1.0, "exp(x), x=1, central deriv")
@@ -82,4 +84,70 @@ func TestDeriv01(tst *testing.T) {
 	check(tst, DerivCentral, f6, df6dx, 10.0, "1/x, x=10, central deriv")
 	check(tst, DerivForward, f6, df6dx, 10.0, "1/x, x=10, forward deriv")
 	check(tst, DerivBackward, f6, df6dx, 10.0, "1/x, x=10, backward deriv")
+}
+
+func TestDeriv02(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("TestDeriv 01")
+
+	// scalar field
+	fcn := func(x, y float64) float64 {
+		return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
+	}
+
+	// gradient. u=dfdx, v=dfdy
+	grad := func(x, y float64) (u, v float64) {
+		m := math.Pow(math.Cos(x), 2.0) + math.Pow(math.Cos(y), 2.0)
+		u = 4.0 * math.Cos(x) * math.Sin(x) * m
+		v = 4.0 * math.Cos(y) * math.Sin(y) * m
+		return
+	}
+
+	// grid size
+	xmin, xmax, N := -math.Pi/2.0, math.Pi/2.0, 7
+	dx := (xmax - xmin) / float64(N-1)
+
+	// step size for numerical differentiation
+	h := 0.01
+
+	// tolerance
+	tol := 1e-9
+
+	// loop over grid points
+	for i := 0; i < N; i++ {
+		x := xmin + float64(i)*dx
+		for j := 0; j < N; j++ {
+			y := xmin + float64(i)*dx
+
+			// scalar and vector field
+			f := fcn(x, y)
+			u, v := grad(x, y)
+
+			// numerical dfdx @ (x,y)
+			unum, _ := DerivCentral(func(xvar float64, a ...interface{}) float64 {
+				return fcn(xvar, y)
+			}, x, h)
+
+			// numerical dfdy @ (x,y)
+			vnum, _ := DerivCentral(func(yvar float64, a ...interface{}) float64 {
+				return fcn(x, yvar)
+			}, y, h)
+
+			// output
+			if chk.Verbose {
+				io.Pforan("x=%+.3f y=%+.3f f=%+.3f u=%+.3f v=%+.3f unum=%+.3f vnum=%+.3f\n", x, y, f, u, v, unum, vnum)
+			}
+
+			// check
+			if math.Abs(unum-u) > tol {
+				tst.Errorf("x=%v y=%v f=%v u=%v v=%v unum=%v vnum=%v error=%v\n", x, y, f, u, v, unum, vnum, math.Abs(unum-u))
+				return
+			}
+			if math.Abs(vnum-v) > tol {
+				tst.Errorf("x=%v y=%v f=%v u=%v v=%v unum=%v vnum=%v error=%v\n", x, y, f, u, v, unum, vnum, math.Abs(vnum-v))
+				return
+			}
+		}
+	}
 }
