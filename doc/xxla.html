@@ -392,10 +392,10 @@ matrices and vectors in dense and sparse formats (including complex)
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.Clean">func (o *LinSolMumps) Clean()</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.Fact">func (o *LinSolMumps) Fact() (err error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.Fact">func (o *LinSolMumps) Fact() (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.Free">func (o *LinSolMumps) Free()</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#LinSolMumps.InitC">func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err error)</a></dd>
@@ -418,10 +418,10 @@ matrices and vectors in dense and sparse formats (including complex)
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.Clean">func (o *LinSolUmfpack) Clean()</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.Fact">func (o *LinSolUmfpack) Fact() (err error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.Fact">func (o *LinSolUmfpack) Fact() (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.Free">func (o *LinSolUmfpack) Free()</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#LinSolUmfpack.InitC">func (o *LinSolUmfpack) InitC(tC *TripletC, symmetric, verbose, timing bool) (err error)</a></dd>
@@ -1160,7 +1160,7 @@ RCtoComplex converts two slices into a slice of complex numbers
 		
 			
 			
-			<h2 id="RunMumpsTestC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=13966:14061#L542">RunMumpsTestC</a></h2>
+			<h2 id="RunMumpsTestC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=13964:14059#L542">RunMumpsTestC</a></h2>
 			<pre>func RunMumpsTestC(t *<a href="#TripletC">TripletC</a>, tol_cmp <a href="/pkg/builtin/#float64">float64</a>, b, x_correct []<a href="/pkg/builtin/#complex128">complex128</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 			
@@ -1169,7 +1169,7 @@ RCtoComplex converts two slices into a slice of complex numbers
 		
 			
 			
-			<h2 id="RunMumpsTestR">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=13027:13118#L495">RunMumpsTestR</a></h2>
+			<h2 id="RunMumpsTestR">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=13026:13117#L495">RunMumpsTestR</a></h2>
 			<pre>func RunMumpsTestR(t *<a href="#Triplet">Triplet</a>, tol_cmp <a href="/pkg/builtin/#float64">float64</a>, b, x_correct []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			
 			
@@ -1235,7 +1235,7 @@ SmatTriplet writes a &#34;.smat&#34; file that can be visualised with vismatrix
 		
 			
 			
-			<h2 id="SolveComplexLinSys">func <a href="https://github.com/cpmech/gosl/blob/master/la/hlsolvers.go?s=1234:1314#L43">SolveComplexLinSys</a></h2>
+			<h2 id="SolveComplexLinSys">func <a href="https://github.com/cpmech/gosl/blob/master/la/hlsolvers.go?s=1233:1313#L43">SolveComplexLinSys</a></h2>
 			<pre>func SolveComplexLinSys(A *<a href="#TripletC">TripletC</a>, b []<a href="/pkg/builtin/#complex128">complex128</a>) (x []<a href="/pkg/builtin/#complex128">complex128</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SolveComplexLinSys is a high-level function to generically solve a linear system with
@@ -2042,14 +2042,14 @@ ToDense converts a column-compressed matrix (complex) to dense form
 		
 			
 			
-			<h2 id="LinSol">type <a href="https://github.com/cpmech/gosl/blob/master/la/linsol.go?s=225:872#L3">LinSol</a></h2>
+			<h2 id="LinSol">type <a href="https://github.com/cpmech/gosl/blob/master/la/linsol.go?s=225:866#L3">LinSol</a></h2>
 			<pre>type LinSol interface {
     InitR(tR *<a href="#Triplet">Triplet</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a>  <span class="comment">// init for Real solution</span>
     InitC(tC *<a href="#TripletC">TripletC</a>, symmetric, verbose, timing <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// init for Complex solution</span>
     Fact() <a href="/pkg/builtin/#error">error</a>                                               <span class="comment">// factorise</span>
     SolveR(xR, bR []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a>         <span class="comment">// solve Real problem. x = inv(A) * b</span>
     SolveC(xR, xC, bR, bC []<a href="/pkg/builtin/#float64">float64</a>, sum_b_to_root <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// solve Complex problem x = inv(A) * b</span>
-    Clean()                                                    <span class="comment">// deallocate memory</span>
+    Free()                                                     <span class="comment">// free memory</span>
     SetOrdScal(ordering, scaling <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#error">error</a>                 <span class="comment">// set ordering and scaling method</span>
 }</pre>
 			
@@ -2064,7 +2064,7 @@ ToDense converts a column-compressed matrix (complex) to dense form
 
 			
 				
-				<h3 id="GetSolver">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol.go?s=1090:1124#L17">GetSolver</a></h3>
+				<h3 id="GetSolver">func <a href="https://github.com/cpmech/gosl/blob/master/la/linsol.go?s=1084:1118#L17">GetSolver</a></h3>
 				<pre>func GetSolver(name <a href="/pkg/builtin/#string">string</a>) <a href="#LinSol">LinSol</a></pre>
 				<p>
 GetSolver returns a linear solver by name. e.g. &#34;umfpack&#34; or &#34;mumps&#34;
@@ -2099,10 +2099,11 @@ LinSolMumps holds MUMPS data
 
 			
 				
-				<h3 id="LinSolMumps.Clean">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=10793:10822#L394">Clean</a></h3>
-				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) Clean()</pre>
+				<h3 id="LinSolMumps.Fact">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=6945:6985#L229">Fact</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) Fact() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
-Clean deletes temporary data structures
+Fact performs symbolic/numeric factorisation. This method also converts the triplet form
+to the column-compressed form, including the summation of duplicated entries
 </p>
 
 				
@@ -2110,11 +2111,10 @@ Clean deletes temporary data structures
 				
 			
 				
-				<h3 id="LinSolMumps.Fact">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=6945:6985#L229">Fact</a></h3>
-				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) Fact() (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<h3 id="LinSolMumps.Free">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=10792:10820#L394">Free</a></h3>
+				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) Free()</pre>
 				<p>
-Fact performs symbolic/numeric factorisation. This method also converts the triplet form
-to the column-compressed form, including the summation of duplicated entries
+Free deletes temporary data structures
 </p>
 
 				
@@ -2144,7 +2144,7 @@ InitR initialises a LinSolMumps data structure for Real systems. It also perform
 				
 			
 				
-				<h3 id="LinSolMumps.SetOrdScal">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=11463:11533#L427">SetOrdScal</a></h3>
+				<h3 id="LinSolMumps.SetOrdScal">func (*LinSolMumps) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_mumps.go?s=11462:11532#L427">SetOrdScal</a></h3>
 				<pre>func (o *<a href="#LinSolMumps">LinSolMumps</a>) SetOrdScal(ordering, scaling <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SetOrdScal sets the ordering and scaling methods for MUMPS
@@ -2206,10 +2206,11 @@ LinSolUmfpack holds UMFPACK data
 
 			
 				
-				<h3 id="LinSolUmfpack.Clean">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=8415:8446#L316">Clean</a></h3>
-				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) Clean()</pre>
+				<h3 id="LinSolUmfpack.Fact">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=4208:4250#L154">Fact</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) Fact() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
-Clean deletes temporary data structures
+Fact performs symbolic/numeric factorisation. This method also converts the triplet form
+to the column-compressed form, including the summation of duplicated entries
 </p>
 
 				
@@ -2217,11 +2218,10 @@ Clean deletes temporary data structures
 				
 			
 				
-				<h3 id="LinSolUmfpack.Fact">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=4208:4250#L154">Fact</a></h3>
-				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) Fact() (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<h3 id="LinSolUmfpack.Free">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=8416:8446#L316">Free</a></h3>
+				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) Free()</pre>
 				<p>
-Fact performs symbolic/numeric factorisation. This method also converts the triplet form
-to the column-compressed form, including the summation of duplicated entries
+Free deletes temporary data structures
 </p>
 
 				
@@ -2251,7 +2251,7 @@ InitR initialises a LinSolUmfpack data structure for Real systems. It also perfo
 				
 			
 				
-				<h3 id="LinSolUmfpack.SetOrdScal">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=9120:9192#L350">SetOrdScal</a></h3>
+				<h3 id="LinSolUmfpack.SetOrdScal">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=9121:9193#L350">SetOrdScal</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SetOrdScal(ordering, scaling <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SetOrdScal sets the ordering and scaling methods
@@ -2264,7 +2264,7 @@ SetOrdScal sets the ordering and scaling methods
 				
 			
 				
-				<h3 id="LinSolUmfpack.SolveC">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=7409:7489#L276">SolveC</a></h3>
+				<h3 id="LinSolUmfpack.SolveC">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=7411:7491#L276">SolveC</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SolveC(xR, xC, bR, bC []<a href="/pkg/builtin/#float64">float64</a>, dummy <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SolveC solves the linear Complex system A.x = b
@@ -2275,7 +2275,7 @@ SolveC solves the linear Complex system A.x = b
 				
 			
 				
-				<h3 id="LinSolUmfpack.SolveR">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=6436:6508#L235">SolveR</a></h3>
+				<h3 id="LinSolUmfpack.SolveR">func (*LinSolUmfpack) <a href="https://github.com/cpmech/gosl/blob/master/la/linsol_umfpack.go?s=6438:6510#L235">SolveR</a></h3>
 				<pre>func (o *<a href="#LinSolUmfpack">LinSolUmfpack</a>) SolveR(xR, bR []<a href="/pkg/builtin/#float64">float64</a>, dummy <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SolveR solves the linear Real system A.x = b

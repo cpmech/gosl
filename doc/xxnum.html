@@ -202,7 +202,7 @@ use 'godoc cmd/github.com/cpmech/gosl/num' for documentation on the github.com/c
 					<dd>&nbsp; &nbsp; <a href="#NlSolver.CheckJ">func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd float64, err error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#NlSolver.Clean">func (o *NlSolver) Clean()</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#NlSolver.Free">func (o *NlSolver) Free()</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#NlSolver.Init">func (o *NlSolver) Init(neq int, Ffcn Cb_f, JfcnSp Cb_J, JfcnDn Cb_Jd, useDn, numJ bool, prms map[string]float64)</a></dd>
@@ -983,7 +983,7 @@ scalar function
 
 			
 				
-				<h3 id="NlSolver.CheckJ">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=7665:7763#L321">CheckJ</a></h3>
+				<h3 id="NlSolver.CheckJ">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=7656:7754#L321">CheckJ</a></h3>
 				<pre>func (o *<a href="#NlSolver">NlSolver</a>) CheckJ(x []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, chkJnum, silent <a href="/pkg/builtin/#bool">bool</a>) (cnd <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 CheckJ check Jacobian matrix
@@ -996,10 +996,10 @@ CheckJ check Jacobian matrix
 				
 			
 				
-				<h3 id="NlSolver.Clean">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3323:3349#L121">Clean</a></h3>
-				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Clean()</pre>
+				<h3 id="NlSolver.Free">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3316:3341#L121">Free</a></h3>
+				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Free()</pre>
 				<p>
-Clean performs clean ups
+Free frees memory
 </p>
 
 				
@@ -1024,7 +1024,7 @@ Init initialises solver
 				
 			
 				
-				<h3 id="NlSolver.SetTols">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3415:3471#L128">SetTols</a></h3>
+				<h3 id="NlSolver.SetTols">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3406:3462#L128">SetTols</a></h3>
 				<pre>func (o *<a href="#NlSolver">NlSolver</a>) SetTols(Atol, Rtol, Ftol, ϵ <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetTols set tolerances
@@ -1035,7 +1035,7 @@ SetTols set tolerances
 				
 			
 				
-				<h3 id="NlSolver.Solve">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3622:3684#L134">Solve</a></h3>
+				<h3 id="NlSolver.Solve">func (*NlSolver) <a href="https://github.com/cpmech/gosl/blob/master/num/nlsolver.go?s=3613:3675#L134">Solve</a></h3>
 				<pre>func (o *<a href="#NlSolver">NlSolver</a>) Solve(x []<a href="/pkg/builtin/#float64">float64</a>, silent <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves non-linear problem f(x) == 0

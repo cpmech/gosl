@@ -86,7 +86,7 @@ package opt implements routines for solving optimisation problems
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#LinIpm.Clean">func (o *LinIpm) Clean()</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#LinIpm.Free">func (o *LinIpm) Free()</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#LinIpm.Init">func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms fun.Prms)</a></dd>
@@ -279,10 +279,10 @@ or the dual problem:
 
 			
 				
-				<h3 id="LinIpm.Clean">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1544:1568#L54">Clean</a></h3>
-				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Clean()</pre>
+				<h3 id="LinIpm.Free">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1542:1565#L54">Free</a></h3>
+				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Free()</pre>
 				<p>
-Clean cleans allocated memory
+Free frees allocated memory
 </p>
 
 				
@@ -290,7 +290,7 @@ Clean cleans allocated memory
 				
 			
 				
-				<h3 id="LinIpm.Init">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1616:1684#L59">Init</a></h3>
+				<h3 id="LinIpm.Init">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1612:1680#L59">Init</a></h3>
 				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Init(A *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#CCMatrix">CCMatrix</a>, b, c []<a href="/pkg/builtin/#float64">float64</a>, prms <a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Prms">Prms</a>)</pre>
 				<p>
 Init initialises LinIpm
@@ -301,7 +301,7 @@ Init initialises LinIpm
 				
 			
 				
-				<h3 id="LinIpm.Solve">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=2487:2535#L106">Solve</a></h3>
+				<h3 id="LinIpm.Solve">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=2483:2531#L106">Solve</a></h3>
 				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Solve(verbose <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves linear programming problem
