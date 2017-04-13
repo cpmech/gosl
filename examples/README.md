@@ -8,6 +8,7 @@
 5. Drawing iso-surfaces with VTK
 6. Plotting a contour
 7. Solution of Poisson's equation using finite differences
+8. Root finding problems
 
 # 1 Generating normally distributed pseudo-random numbers
 
@@ -57,37 +58,6 @@ solve:
 
 ```
          A.x = b
-```
-
-Truncated code:
-```go
-// input matrix in Triplet format
-// including repeated positions. e.g. (0,0)
-var A la.Triplet
-A.Init(5, 5, 13)
-A.Put(0, 0, 1.0) // << repeated
-A.Put(0, 0, 1.0) // << repeated
-A.Put(1, 0, 3.0)
-A.Put(0, 1, 3.0)
-A.Put(2, 1, -1.0)
-A.Put(4, 1, 4.0)
-A.Put(1, 2, 4.0)
-A.Put(2, 2, -3.0)
-A.Put(3, 2, 1.0)
-A.Put(4, 2, 2.0)
-A.Put(2, 3, 2.0)
-A.Put(1, 4, 6.0)
-A.Put(4, 4, 1.0)
-
-// right-hand-side
-b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
-
-// solve
-x, err := la.SolveRealLinSys(&A, b)
-if err != nil {
-    io.Pfred("solver failed:\n%v", err)
-    return
-}
 ```
 
 Output:
@@ -177,7 +147,7 @@ derivatives of the sin function is corrected.
 Source code: <a href="num_deriv01.go">num_deriv01.go</a>
 
 <div id="container">
-<p><img src="figs/num_deriv01.png" width="400"></p>
+<p><img src="figs/num_deriv01.png" width="300"></p>
 Sin function
 </div>
 
@@ -222,8 +192,6 @@ equal values. Two auxiliary scalars fields, p and q, are firstly defined.
 
 Source code: <a href="vtk_isosurf01.go">vtk_isosurf01.go</a>
 
-The output looks like:
-
 <div id="container">
 <p><img src="figs/vtk_isosurf01.png" width="400"></p>
 Iso-surface
@@ -236,49 +204,8 @@ Iso-surface
 The `plt` subpackage is a convenient wrapper to python.matplotlib/pyplot that can generate nice
 graphs. For example:
 
-```go
-// scalar field
-fcn := func(x, y float64) float64 {
-    return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
-}
-
-// gradient. u=dfdx, v=dfdy
-grad := func(x, y float64) (u, v float64) {
-    m := math.Pow(math.Cos(x), 2.0) + math.Pow(math.Cos(y), 2.0)
-    u = 4.0 * math.Cos(x) * math.Sin(x) * m
-    v = 4.0 * math.Cos(y) * math.Sin(y) * m
-    return
-}
-
-// grid size
-xmin, xmax, N := -math.Pi/2.0+0.1, math.Pi/2.0-0.1, 21
-
-// mesh grid
-X, Y := utl.MeshGrid2D(xmin, xmax, xmin, xmax, N, N)
-
-// compute f(x,y) and components of gradient
-F := utl.DblsAlloc(N, N)
-U := utl.DblsAlloc(N, N)
-V := utl.DblsAlloc(N, N)
-for i := 0; i < N; i++ {
-    for j := 0; j < N; j++ {
-        F[i][j] = fcn(X[i][j], Y[i][j])
-        U[i][j], V[i][j] = grad(X[i][j], Y[i][j])
-    }
-}
-
-// plot
-plt.SetForPng(0.75, 600, 150)
-plt.Contour(X, Y, F, "levels=20, cmapidx=4")
-plt.Quiver(X, Y, U, V, "color='red'")
-plt.Gll("x", "y", "")
-plt.Equal()
-plt.SaveD("/tmp/gosl", "plt_contour01.png")
-```
-
 Source code: <a href="plt_contour01.go">plt_contour01.go</a>
 
-Output:
 <div id="container">
 <p><img src="../plt/figs/plt_contour01.png" width="500"></p>
 Contour
@@ -303,82 +230,8 @@ Solving:
 
 with zero Dirichlet boundary conditions around [-1, 1] x [-1, 1] and with kx=1 and ky=1.
 
-Solution with `fdm` and plotting with `plt`:
+Solution with `fdm` and plotting with `plt`: <a href="fdm_problem01.go">fdm_problem01.go</a>
 
-```go
-// material data
-kx, ky := 1.0, 1.0
-source := func(x, y float64, args ...interface{}) float64 {
-    return 1.0
-}
-
-// closed-form solution (for reference)
-π, π3, N := math.Pi, math.Pow(math.Pi, 3.0), 50
-solution := func(x, y float64) (res float64) {
-    res = (1.0 - x*x) / 2.0
-    for i := 1; i < N; i += 2 {
-        k := float64(i)
-        a := k * π * (1.0 + x) / 2.0
-        b := k * π * (1.0 + y) / 2.0
-        c := k * π * (1.0 - y) / 2.0
-        d := k * k * k * math.Sinh(k*π)
-        res -= (16.0 / π3) * (math.Sin(a) / d) * (math.Sinh(b) + math.Sinh(c))
-    }
-    return
-}
-
-// allocate grid
-var g fdm.Grid2d
-g.Init(-1.0, 1.0, -1.0, 1.0, 11, 11)
-
-// ids of equations with prescribed (known, given) U values
-// all around the square domain
-peq := utl.IntUnique(g.B, g.R, g.T, g.L)
-
-// structure to hold equations ids.
-// each grid node corresponds to one equation
-// i.e. number of equations == g.N
-var e fdm.Equations
-e.Init(g.N, peq)
-
-// set K11 and K12 => corresponding to unknown eqs
-var K11, K12 la.Triplet
-fdm.InitK11andK12(&K11, &K12, &e)
-
-// assemble system
-F1 := make([]float64, e.N1)
-fdm.AssemblePoisson2d(&K11, &K12, F1, kx, ky, source, &g, &e)
-
-// set prescribed values (default == 0.0)
-U2 := make([]float64, e.N2)
-
-// solve linear problem:
-//   K11 * U1 = F1
-U1, err := la.SolveRealLinSys(&K11, F1)
-if err != nil {
-    chk.Panic("solve failed: %v", err)
-}
-
-// merge solution with known values
-U := make([]float64, g.N)
-fdm.JoinVecs(U, U1, U2, &e)
-
-// plotting
-X, Y, F := g.Generate(nil, U)
-var gsol fdm.Grid2d
-gsol.Init(-1.0, 1.0, -1.0, 1.0, 101, 101)
-Xsol, Ysol, Fsol := gsol.Generate(solution, nil)
-plt.SetForPng(0.8, 600, 150)
-plt.Contour(X, Y, F, "cmapidx=1")
-plt.ContourSimple(Xsol, Ysol, Fsol, true, 0.7, "colors='yellow', linewidths=2")
-plt.Equal()
-plt.Gll("x", "y", "")
-plt.SaveD("/tmp/gosl", "fdm_problem01.png")
-```
-
-Source code: <a href="fdm_problem01.go">fdm_problem01.go</a>
-
-Output:
 <div id="container">
 <p><img src="figs/fdm_problem01.png" width="500"></p>
 Solution of Poisson's equation 01
@@ -398,71 +251,69 @@ Solving:
 in the domain [0, 1] x [0, 1] with u = 50 @ the top and left boundaries. The other Dirichlet
 boundary conditions are zero. The material data are: kx = 1 and ky = 1.
 
-Solution with `fdm` and plotting with `plt`:
+Solution with `fdm` and plotting with `plt`: <a href="fdm_problem02.go">fdm_problem02.go</a>
 
-```go
-// material data
-kx, ky := 1.0, 1.0
-
-// allocate grid
-var g fdm.Grid2d
-g.Init(0.0, 1.0, 0.0, 1.0, 101, 101)
-
-// ids of equations with prescribed (known, given) U values
-// all around the square domain
-peq := utl.IntUnique(g.L, g.T, g.B, g.R)
-
-// structure to hold equations ids.
-// each grid node corresponds to one equation
-// i.e. number of equations == g.N
-var e fdm.Equations
-e.Init(g.N, peq)
-
-// set K11 and K12 => corresponding to unknown eqs
-var K11, K12 la.Triplet
-fdm.InitK11andK12(&K11, &K12, &e)
-
-// assemble system
-F1 := make([]float64, e.N1)
-fdm.AssemblePoisson2d(&K11, &K12, F1, kx, ky, nil, &g, &e)
-
-// set prescribed values (default is 0.0)
-U2 := make([]float64, e.N2)
-for _, eq := range g.L {
-    U2[e.FR2[eq]] = 50.0
-}
-for _, eq := range g.T {
-    U2[e.FR2[eq]] = 50.0
-}
-
-// prepare right-hand-side
-//   F1 = F1 - K12 * U2
-la.SpMatVecMulAdd(F1, -1, K12.ToMatrix(nil), U2)
-
-// solve linear problem:
-//   K11 * U1 = F1
-U1, err := la.SolveRealLinSys(&K11, F1)
-if err != nil {
-    chk.Panic("solve failed: %v", err)
-}
-
-// merge solution with known values
-U := make([]float64, g.N)
-fdm.JoinVecs(U, U1, U2, &e)
-
-// plotting
-X, Y, F := g.Generate(nil, U)
-plt.SetForPng(0.8, 600, 150)
-plt.Contour(X, Y, F, "cmapidx=0")
-plt.Equal()
-plt.Gll("x", "y", "")
-plt.SaveD("/tmp/gosl", "fdm_problem02.png")
-```
-
-Source code: <a href="fdm_problem02.go">fdm_problem02.go</a>
-
-Output:
 <div id="container">
 <p><img src="figs/fdm_problem02.png" width="500"></p>
 Solution of Poisson's equation 02
+</div>
+
+
+
+# 8 Root finding problems
+
+Example: find the root of
+```
+    y(x) = x³ - 0.165 x² + 3.993e-4
+```
+within [0, 0.11]. We have to make sure that the root is bounded otherwise Brent's method doesn't
+work.
+
+Using Brent's method: <a href="num_brent01.go">num_brent01.go</a>
+
+Output:
+```
+  it                      x                   f(x)                    err
+                                                                  1.0e-14
+   0  1.100000000000000e-01 -2.662000000000001e-04  5.500000000000000e-02
+   1  6.600000000000000e-02 -3.194400000000011e-05  3.300000000000000e-02
+   2  6.044444444444443e-02  1.730305075445823e-05  2.777777777777785e-03
+   3  6.239640011030302e-02 -1.676981032316081e-07  9.759778329292944e-04
+   4  6.237766369176578e-02 -7.323468182796403e-10  9.666096236606754e-04
+   5  6.237758151338346e-02  3.262039076357137e-15  4.108919116063703e-08
+   6  6.237758151374950e-02  0.000000000000000e+00  4.108900814037142e-08
+
+x      = 0.0623775815137495
+f(x)   = 0
+nfeval = 8
+niter. = 6
+```
+
+<div id="container">
+<p><img src="figs/num_brent01.png" width="400"></p>
+Simple root finding problem solved by Brent's method.
+</div>
+
+
+Using Newton's method: <a href="num_newton01.go">num_newton01.go</a>
+
+Output:
+```
+  it                    Ldx                 fx_max
+                  (1.0e-04)              (1.0e-09)
+   0  0.000000000000000e+00  2.778000000000000e-04
+   1  3.745954692556634e+06  5.421253067129628e-05
+   2  6.176571448942142e+05  1.391803634400563e-06
+   2  1.515117884960284e+04  5.314115983194589e-10
+. . . converged with fx_max. nit=2, nFeval=4, nJeval=3
+
+x      = 0.062377521883073835
+f(x)   = 5.314115983194589e-10
+nfeval = 4
+niter. = 2
+```
+
+<div id="container">
+<p><img src="figs/num_newton01.png" width="400"></p>
+Simple root finding problem solved by Newton's method.
 </div>
