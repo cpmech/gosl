@@ -15,9 +15,7 @@ import (
 func main() {
 
 	mpi.Start(false)
-	defer func() {
-		mpi.Stop(false)
-	}()
+	defer mpi.Stop(false)
 
 	myrank := mpi.Rank()
 	if myrank == 0 {
