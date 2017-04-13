@@ -47,7 +47,7 @@ Normally distributed pseudo-random numbers. Using sub-package `rnd`
 ## Installation and documentation
 
 1. To install on Windows, [see instructions for Windows here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
-2. To install on Mac OS X, [see instructions for Mac OS X here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOSX.md)
+2. To install on macOS, [see instructions for macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
 3. To install on Debian/Ubuntu/Linux, type the following commands:
 
 ```

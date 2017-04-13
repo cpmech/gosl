@@ -1,4 +1,4 @@
-# Installing Gosl on Mac OS X
+# Installing Gosl on macOS
 
 The installation on OSX includes:
 
@@ -55,7 +55,7 @@ sudo cp include/*.h /usr/local/include/
 
 ## 5 Go (golang)
 
-Install Go (golang) for Mac OS X from https://golang.org
+Install Go (golang) for macOS from https://golang.org
 
 Edit `/Users/name/.profile` and add:
 
