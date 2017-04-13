@@ -112,7 +112,7 @@ plt.SaveD("/tmp/gosl", "fig_grid2d_03.png")
 
 Output:
 <div id="container">
-<p><img src="figs/fdm_grid2d_03.png" width="500"></p>
+<p><img src="figs/fig_grid2d_03.png" width="500"></p>
 Contour with Grid2d
 </div>
 
