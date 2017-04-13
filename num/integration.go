@@ -10,7 +10,7 @@ import "github.com/cpmech/gosl/chk"
 // Computations are carried out with the trapezoidal rule.
 func Trapz(x, y []float64) (A float64) {
 	if len(x) != len(y) {
-		chk.Panic(_trapz_err1, len(x), len(y))
+		chk.Panic("length of x and y must be the same. %d != %d", len(x), len(y))
 	}
 	for i := 1; i < len(x); i++ {
 		A += (x[i] - x[i-1]) * (y[i] + y[i-1]) / 2.0
@@ -31,7 +31,7 @@ func TrapzF(x []float64, y Cb_yx) (A float64) {
 // Computations are carried out with the trapezoidal rule from xa to xb, with npts points
 func TrapzRange(xa, xb float64, npts int, y Cb_yx) (A float64) {
 	if npts < 2 {
-		chk.Panic(_trapz_err2, npts)
+		chk.Panic("number of points must be at least 2", npts)
 	}
 	dx := (xb - xa) / float64(npts-1)
 	var x0, x1 float64
@@ -133,9 +133,3 @@ func Simps2D(dx, dy float64, f [][]float64) (V float64) {
 	V *= dx * dy / 9.0
 	return
 }
-
-// error messages
-var (
-	_trapz_err1 = "trapz.go: Trapz: length of x and y must be the same. %d != %d"
-	_trapz_err2 = "trapz.go: TrapzRange: number of points must be at least 2"
-)

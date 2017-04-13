@@ -10,24 +10,23 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-type fcn func(x float64) float64
-
-//Abstract base class for elementary quadrature algorithms.
+// Quadrature defines the interface for elementary quadrature algorithms.
 type Quadrature interface {
-	Init(f fcn, a, b, eps float64) // The constructor takes as inputs fcn, the function or functor to be integrated between limits a and b, also input.
-	Integrate() (float64, error)   // Returns the integral for the specified input data
+	Init(f Cb_yx, a, b, eps float64) // The constructor takes as inputs f, the function or functor to be integrated between limits a and b, also input.
+	Integrate() (float64, error)     // Returns the integral for the specified input data
 }
 
 // Trap structure is used for the trapezoidal integration rule
 type Trap struct {
-	n    int     // Current level of refinement.
+	n    int     // current level of refinement.
 	a, b float64 // limits
 	s    float64 // current value of the integral
-	eps  float64 // presicion
-	f    fcn
+	eps  float64 // precision
+	f    Cb_yx   // the function
 }
 
-func (o *Trap) Init(f fcn, a, b, eps float64) {
+// Init initialises Trap structure
+func (o *Trap) Init(f Cb_yx, a, b, eps float64) {
 	o.n = 0
 	o.f = f
 	o.a = a
@@ -65,6 +64,7 @@ func (o *Trap) Next() float64 {
 	}
 }
 
+// Integrate performs the numerical integration
 func (o *Trap) Integrate() (float64, error) {
 	jmax := 20
 	var olds float64
@@ -77,20 +77,20 @@ func (o *Trap) Integrate() (float64, error) {
 		}
 		olds = o.s
 	}
-	return 0, chk.Err("achieved maximun number of iterations (n=%d)", jmax)
+	return 0, chk.Err("achieved maximum number of iterations (n=%d)", jmax)
 }
 
-// Then the Simp structure is derived from this as follows:
+// Simp structure implements the Simpson's method for quadrature
 type Simp struct {
-	n    int     // Current level of refinement.
+	n    int     // current level of refinement.
 	a, b float64 // limits
 	s    float64 // current value of the integral
-	eps  float64 // presicion
-	// Limits of integration and current value of integral.
-	f fcn
+	eps  float64 // precision
+	f    Cb_yx   // the function
 }
 
-func (o *Simp) Init(f fcn, a, b, eps float64) {
+// Init initialises Simp structure
+func (o *Simp) Init(f Cb_yx, a, b, eps float64) {
 	o.n = 0
 	o.f = f
 	o.a = a
@@ -128,6 +128,7 @@ func (o *Simp) Next() float64 {
 	}
 }
 
+// Integrate performs the numerical integration
 func (o *Simp) Integrate() (float64, error) {
 	jmax := 20
 	var s, st, ost, os float64
@@ -142,5 +143,5 @@ func (o *Simp) Integrate() (float64, error) {
 		os = s
 		ost = st
 	}
-	return 0, chk.Err("achieved maximun number of interatios (n=%d)", jmax)
+	return 0, chk.Err("achieved maximum number of iterations (n=%d)", jmax)
 }
