@@ -15,7 +15,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Func defines the interface for y(t, x) functions
+// Func defines the interface for simple functions
 type Func interface {
 	Init(prms Prms) error                     // initialise function parameters
 	F(t float64, x []float64) float64         // y = F(t, x)
