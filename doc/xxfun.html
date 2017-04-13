@@ -747,7 +747,7 @@ Heaviside step function (== derivative of Ramp(x))
 		
 			
 			
-			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1517:1658#L40">PlotT</a></h2>
+			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1516:1657#L40">PlotT</a></h2>
 			<pre>func PlotT(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>,
     labelT, labelF, labelG, labelH, argsF, argsG, argsH <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
@@ -763,7 +763,7 @@ args{F,G,H} -- if any is &#34;&#34;, the corresponding plot is not created
 		
 			
 			
-			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=3269:3424#L134">PlotX</a></h2>
+			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=3268:3423#L134">PlotX</a></h2>
 			<pre>func PlotX(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, withGrad, hlZero, axEqual, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
 			<p>
 PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
@@ -1467,7 +1467,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="Func">type <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=498:878#L9">Func</a></h2>
+			<h2 id="Func">type <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=497:877#L9">Func</a></h2>
 			<pre>type Func interface {
     Init(prms <a href="#Prms">Prms</a>) <a href="/pkg/builtin/#error">error</a>                     <span class="comment">// initialise function parameters</span>
     F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// y = F(t, x)</span>
@@ -1476,7 +1476,7 @@ Init initialises the function
     Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <span class="comment">// ∇F = ∂y/∂x = Grad(t, x)</span>
 }</pre>
 			<p>
-Func defines the interface for y(t, x) functions
+Func defines the interface for simple functions
 </p>
 
 
@@ -1490,7 +1490,7 @@ Func defines the interface for y(t, x) functions
 
 			
 				
-				<h3 id="New">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1042:1088#L21">New</a></h3>
+				<h3 id="New">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1041:1087#L21">New</a></h3>
 				<pre>func New(name <a href="/pkg/builtin/#string">string</a>, prms <a href="#Prms">Prms</a>) (<a href="#Func">Func</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 New allocates function by name
