@@ -88,7 +88,7 @@ func TestDeriv01(tst *testing.T) {
 
 func TestDeriv02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("TestDeriv 01")
 
 	// scalar field
