@@ -18,12 +18,14 @@ func Test_grid2d_01(tst *testing.T) {
 	chk.PrintTitle("grid2d. test 01")
 
 	var g Grid2d
-	g.Init(12.0, 6.0, 5, 4)
+	g.Init(-6.0, 6.0, -3.0, 3.0, 5, 4)
 
 	chk.Int(tst, "N", g.N, 20)
 	chk.Int(tst, "Nx", g.Nx, 5)
 	chk.Int(tst, "Ny", g.Ny, 4)
 
+	chk.Scalar(tst, "Lx", 1e-15, g.Lx, 12.0)
+	chk.Scalar(tst, "Ly", 1e-15, g.Ly, 6.0)
 	chk.Scalar(tst, "Dx", 1e-15, g.Dx, 3.0)
 	chk.Scalar(tst, "Dy", 1e-15, g.Dy, 2.0)
 
@@ -39,33 +41,36 @@ func Test_grid2d_02(tst *testing.T) {
 	chk.PrintTitle("grid2d. test 02")
 
 	var g Grid2d
-	g.Init(12.0, 6.0, 4, 3)
+	g.Init(-6.0, 6.0, -3.0, 3.0, 4, 3)
 
 	dx, dy := 4.0, 3.0
 	chk.Scalar(tst, "Dx", 1e-15, g.Dx, dx)
 	chk.Scalar(tst, "Dy", 1e-15, g.Dy, dy)
 
+	S := func(v float64) float64 { return v * v }
+
 	Fserial := []float64{
-		0, dx * dx, 4 * dx * dx, 9 * dx * dx,
-		0 + dy*dy, dx*dx + dy*dy, 4*dx*dx + dy*dy, 9*dx*dx + dy*dy,
-		0 + 4*dy*dy, dx*dx + 4*dy*dy, 4*dx*dx + 4*dy*dy, 9*dx*dx + 4*dy*dy,
+		S(-6) + S(-3), S(-6+dx) + S(-3), S(-6+2*dx) + S(-3), S(-6+3*dx) + S(-3),
+		S(-6) + S(-3+dy), S(-6+dx) + S(-3+dy), S(-6+2*dx) + S(-3+dy), S(-6+3*dx) + S(-3+dy),
+		S(-6) + S(-3+2*dy), S(-6+dx) + S(-3+2*dy), S(-6+2*dx) + S(-3+2*dy), S(-6+3*dx) + S(-3+2*dy),
 	}
 
-	X, Y, F := g.Generate(nil, Fserial)
+	fxy := func(x, y float64) float64 { return x*x + y*y }
+	X, Y, F := g.Generate(fxy, nil)
 	io.Pforan("X = %v\n", X)
 	io.Pforan("Y = %v\n", Y)
 	io.Pforan("F = %v\n", F)
 	chk.Matrix(tst, "X", 1e-15, X, [][]float64{
-		{0, 0, 0},
-		{dx, dx, dx},
-		{2 * dx, 2 * dx, 2 * dx},
-		{3 * dx, 3 * dx, 3 * dx},
+		{-6, -6, -6},
+		{-6 + dx, -6 + dx, -6 + dx},
+		{-6 + 2*dx, -6 + 2*dx, -6 + 2*dx},
+		{-6 + 3*dx, -6 + 3*dx, -6 + 3*dx},
 	})
 	chk.Matrix(tst, "Y", 1e-15, Y, [][]float64{
-		{0, dy, 2 * dy},
-		{0, dy, 2 * dy},
-		{0, dy, 2 * dy},
-		{0, dy, 2 * dy},
+		{-3, -3 + dy, -3 + 2*dy},
+		{-3, -3 + dy, -3 + 2*dy},
+		{-3, -3 + dy, -3 + 2*dy},
+		{-3, -3 + dy, -3 + 2*dy},
 	})
 	for i := 0; i < g.Nx; i++ {
 		for j := 0; j < g.Ny; j++ {
@@ -80,7 +85,7 @@ func Test_grid2d_03(tst *testing.T) {
 	chk.PrintTitle("grid2d. test 03")
 
 	var g Grid2d
-	g.Init(12.0, 6.0, 21, 11)
+	g.Init(2.0, 14.0, 2.0, 8.0, 21, 11)
 
 	if chk.Verbose {
 		fxy := func(x, y float64) float64 { return x*x + y*y }

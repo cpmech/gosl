@@ -325,7 +325,7 @@ func Test_nls04(tst *testing.T) {
 
 	// grid
 	var g fdm.Grid2d
-	g.Init(1.0, 1.0, 6, 6)
+	g.Init(0.0, 1.0, 0.0, 1.0, 6, 6)
 
 	// equations numbering
 	var e fdm.Equations

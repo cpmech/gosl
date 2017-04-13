@@ -18,7 +18,7 @@ func Test_assemb01(tst *testing.T) {
 
 	// grid
 	var g Grid2d
-	g.Init(1.0, 1.0, 3, 3)
+	g.Init(0.0, 1.0, 0.0, 1.0, 3, 3)
 
 	// equations numbering
 	var e Equations
