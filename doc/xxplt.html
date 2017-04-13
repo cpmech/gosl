@@ -11,7 +11,7 @@
 <body>
 <div id="page" class=\wide">
 <div class="container">
-<h1>Gosl &ndash; <b>plt</b> &ndash; plotting</h1>
+<h1>Gosl &ndash; <b>plt</b> &ndash; Plotting and drawing (png and eps)</h1>
 use 'godoc cmd/github.com/cpmech/gosl/plt' for documentation on the github.com/cpmech/gosl/plt command 
 
 <!--
@@ -41,6 +41,8 @@ use 'godoc cmd/github.com/cpmech/gosl/plt' for documentation on the github.com/c
 			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
 			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
 			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
 			
 			</dl>
 		</div>
@@ -1036,15 +1038,20 @@ TexPiRadFmt formats number in radians/pi notation
 		
 			
 			
-			<h2 id="Fmt">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=426:657#L8">Fmt</a></h2>
+			<h2 id="Fmt">type <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=426:885#L8">Fmt</a></h2>
 			<pre>type Fmt struct {
-    C  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// color</span>
-    M  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// marker</span>
-    Ls <a href="/pkg/builtin/#string">string</a>  <span class="comment">// linestyle</span>
-    Lw <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// linewidth; -1 =&gt; default</span>
-    Ms <a href="/pkg/builtin/#int">int</a>     <span class="comment">// marker size; -1 =&gt; default</span>
-    L  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// label</span>
-    Me <a href="/pkg/builtin/#int">int</a>     <span class="comment">// mark-every; -1 =&gt; default</span>
+    C    <a href="/pkg/builtin/#string">string</a>  <span class="comment">// color</span>
+    M    <a href="/pkg/builtin/#string">string</a>  <span class="comment">// marker</span>
+    Ls   <a href="/pkg/builtin/#string">string</a>  <span class="comment">// linestyle</span>
+    Lw   <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// linewidth; -1 =&gt; default</span>
+    Ms   <a href="/pkg/builtin/#int">int</a>     <span class="comment">// marker size; -1 =&gt; default</span>
+    L    <a href="/pkg/builtin/#string">string</a>  <span class="comment">// label</span>
+    Me   <a href="/pkg/builtin/#int">int</a>     <span class="comment">// mark-every; -1 =&gt; default</span>
+    Z    <a href="/pkg/builtin/#int">int</a>     <span class="comment">// z-order</span>
+    Mec  <a href="/pkg/builtin/#string">string</a>  <span class="comment">// marker edge color</span>
+    Mew  <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// marker edge width</span>
+    Void <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// void marker =&gt; markeredgecolor=&#39;C&#39;, markerfacecolor=&#39;none&#39;</span>
+    Clip <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// turn clip =&gt; clip_on=True</span>
 }</pre>
 			<p>
 Fmt holds data for ploting lines
@@ -1063,7 +1070,7 @@ Fmt holds data for ploting lines
 
 			
 				
-				<h3 id="Fmt.GetArgs">func (Fmt) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=811:852#L26">GetArgs</a></h3>
+				<h3 id="Fmt.GetArgs">func (Fmt) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=1039:1080#L31">GetArgs</a></h3>
 				<pre>func (o <a href="#Fmt">Fmt</a>) GetArgs(start <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 GetArgs returns arguments for Plot
@@ -1100,7 +1107,7 @@ Sty holds data for drawing shapes
 
 			
 				
-				<h3 id="Sty.Init">func (*Sty) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=703:723#L19">Init</a></h3>
+				<h3 id="Sty.Init">func (*Sty) <a href="https://github.com/cpmech/gosl/blob/master/plt/styles.go?s=931:951#L24">Init</a></h3>
 				<pre>func (o *<a href="#Sty">Sty</a>) Init()</pre>
 				<p>
 Init initialises Fmt with default values
@@ -1118,6 +1125,44 @@ Init initialises Fmt with default values
 
 
 
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td colspan="2"><a href="..">..</a></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="figs/">figs</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
 
 
 <div id="footer">

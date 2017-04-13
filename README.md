@@ -17,19 +17,19 @@ with the development of the results presented in [1-5].
 4.  [plt](https://github.com/cpmech/gosl/tree/master/plt)       &ndash; Plotting and drawing (png and eps)
 5.  [mpi](https://github.com/cpmech/gosl/tree/master/mpi)       &ndash; Message Passing Interface for parallel computing
 6.  [la](https://github.com/cpmech/gosl/tree/master/la)         &ndash; Linear Algebra and efficient sparse solvers
-7.  [fdm](https://github.com/cpmech/gosl/tree/master/fdm)       &ndash; finite differences method
-8.  [num](https://github.com/cpmech/gosl/tree/master/num)       &ndash; numerical methods
-9.  [fun](https://github.com/cpmech/gosl/tree/master/fun)       &ndash; scalar functions of one scalar and one vector
-10. [gm](https://github.com/cpmech/gosl/tree/master/gm)         &ndash; geometry
-11. [gm/msh](https://github.com/cpmech/gosl/tree/master/gm/msh) &ndash; mesh generation
-12. [gm/tri](https://github.com/cpmech/gosl/tree/master/gm/tri) &ndash; mesh generation: triangles
-13. [gm/rw](https://github.com/cpmech/gosl/tree/master/gm/rw)   &ndash; mesh generation: read/write
-14. [graph](https://github.com/cpmech/gosl/tree/master/graph)   &ndash; graph theory
-15. [ode](https://github.com/cpmech/gosl/tree/master/ode)       &ndash; ordinary differential equations
-16. [opt](https://github.com/cpmech/gosl/tree/master/opt)       &ndash; optimisation
-17. [rnd](https://github.com/cpmech/gosl/tree/master/rnd)       &ndash; random numbers and probability distributions
-18. [tsr](https://github.com/cpmech/gosl/tree/master/tsr)       &ndash; tensor algebra and definitions for continuum mechanics
-19. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)       &ndash; visualisation tool kit
+7.  [fdm](https://github.com/cpmech/gosl/tree/master/fdm)       &ndash; Simple finite differences method
+8.  [num](https://github.com/cpmech/gosl/tree/master/num)       &ndash; Fundamental numerical methods
+9.  [fun](https://github.com/cpmech/gosl/tree/master/fun)       &ndash; Scalar functions of one scalar and one vector
+10. [gm](https://github.com/cpmech/gosl/tree/master/gm)         &ndash; Geometry algorithms and structures
+11. [gm/msh](https://github.com/cpmech/gosl/tree/master/gm/msh) &ndash; Mesh generation and Delaunay triangulation
+12. [gm/tri](https://github.com/cpmech/gosl/tree/master/gm/tri) &ndash; Mesh generation: triangles
+13. [gm/rw](https://github.com/cpmech/gosl/tree/master/gm/rw)   &ndash; Mesh generation: read/write
+14. [graph](https://github.com/cpmech/gosl/tree/master/graph)   &ndash; Graph theory structures and algorithms
+15. [ode](https://github.com/cpmech/gosl/tree/master/ode)       &ndash; Ordinary differential equations
+16. [opt](https://github.com/cpmech/gosl/tree/master/opt)       &ndash; Optimisation problem solvers
+17. [rnd](https://github.com/cpmech/gosl/tree/master/rnd)       &ndash; Random numbers and probability distributions
+18. [tsr](https://github.com/cpmech/gosl/tree/master/tsr)       &ndash; Tensor algebra and definitions for continuum mechanics
+19. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)       &ndash; 3D Visualisation with the VTK tool kit
 
 
 

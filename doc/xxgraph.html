@@ -11,7 +11,7 @@
 <body>
 <div id="page" class=\wide">
 <div class="container">
-<h1>Gosl &ndash; <b>graph</b> &ndash; graph theory</h1>
+<h1>Gosl &ndash; <b>graph</b> &ndash; Graph theory structures and algorithms</h1>
 use 'godoc cmd/github.com/cpmech/gosl/graph' for documentation on the github.com/cpmech/gosl/graph command 
 
 <!--
@@ -438,7 +438,7 @@ StrDistMatrix returns a string representation of Dist matrix
 		
 			
 			
-			<h2 id="Munkres">type <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=874:1768#L24">Munkres</a></h2>
+			<h2 id="Munkres">type <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=874:1906#L24">Munkres</a></h2>
 			<pre>type Munkres struct {
 
     <span class="comment">// main</span>
@@ -479,7 +479,7 @@ Note: costs must be positive
 
 			
 				
-				<h3 id="Munkres.Init">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=1809:1847#L44">Init</a></h3>
+				<h3 id="Munkres.Init">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=1947:1985#L46">Init</a></h3>
 				<pre>func (o *<a href="#Munkres">Munkres</a>) Init(nrow, ncol <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Init initialises Munkres&#39; structure
@@ -490,7 +490,7 @@ Init initialises Munkres&#39; structure
 				
 			
 				
-				<h3 id="Munkres.Run">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=3079:3102#L87">Run</a></h3>
+				<h3 id="Munkres.Run">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=3400:3423#L94">Run</a></h3>
 				<pre>func (o *<a href="#Munkres">Munkres</a>) Run()</pre>
 				<p>
 Run runs the iterative algorithm
@@ -507,7 +507,7 @@ Run runs the iterative algorithm
 				
 			
 				
-				<h3 id="Munkres.SetCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=2392:2438#L62">SetCostMatrix</a></h3>
+				<h3 id="Munkres.SetCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=2705:2751#L69">SetCostMatrix</a></h3>
 				<pre>func (o *<a href="#Munkres">Munkres</a>) SetCostMatrix(C [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetCostMatrix sets cost matrix by copying from C to internal o.C
@@ -520,7 +520,7 @@ SetCostMatrix sets cost matrix by copying from C to internal o.C
 				
 			
 				
-				<h3 id="Munkres.StrCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=9028:9072#L339">StrCostMatrix</a></h3>
+				<h3 id="Munkres.StrCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=9357:9401#L346">StrCostMatrix</a></h3>
 				<pre>func (o *<a href="#Munkres">Munkres</a>) StrCostMatrix() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 StrCostMatrix returns a representation of cost matrix with masks and covers

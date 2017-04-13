@@ -11,7 +11,7 @@
 <body>
 <div id="page" class=\wide">
 <div class="container">
-<h1>Gosl &ndash; <b>fun</b> &ndash; scalar functions of one scalar and one vector</h1>
+<h1>Gosl &ndash; <b>fun</b> &ndash; Scalar functions of one scalar and one vector</h1>
 use 'godoc cmd/github.com/cpmech/gosl/fun' for documentation on the github.com/cpmech/gosl/fun command 
 
 <!--
@@ -200,6 +200,26 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Cte.Init">func (o *Cte) Init(prms Prms) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#CutSin">type CutSin</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#CutSin.F">func (o CutSin) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#CutSin.G">func (o CutSin) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#CutSin.Grad">func (o CutSin) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#CutSin.H">func (o CutSin) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#CutSin.Init">func (o *CutSin) Init(prms Prms) (err error)</a></dd>
 				
 			
 				
@@ -462,6 +482,26 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 			
 				
+				<dd><a href="#Sin">type Sin</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sin.F">func (o Sin) F(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sin.G">func (o Sin) G(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sin.Grad">func (o Sin) Grad(v []float64, t float64, x []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sin.H">func (o Sin) H(t float64, x []float64) float64</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sin.Init">func (o *Sin) Init(prms Prms) (err error)</a></dd>
+				
+			
+				
 				<dd><a href="#Srmps">type Srmps</a></dd>
 				
 				
@@ -542,6 +582,8 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_cte.go">f_cte.go</a>
 			
+				<a href="/src/github.com/cpmech/gosl/fun/f_cutsin.go">f_cutsin.go</a>
+			
 				<a href="/src/github.com/cpmech/gosl/fun/f_exc1.go">f_exc1.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_exc2.go">f_exc2.go</a>
@@ -563,6 +605,8 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<a href="/src/github.com/cpmech/gosl/fun/f_ref-inc-rl1.go">f_ref-inc-rl1.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_rmp.go">f_rmp.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fun/f_sin.go">f_sin.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_srmps.go">f_srmps.go</a>
 			
@@ -1158,6 +1202,102 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 				<h3 id="Cte.Init">func (*Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=598:639#L16">Init</a></h3>
 				<pre>func (o *<a href="#Cte">Cte</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="CutSin">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=612:736#L13">CutSin</a></h2>
+			<pre>type CutSin struct {
+
+    <span class="comment">// parameters</span>
+    A <a href="/pkg/builtin/#float64">float64</a>
+    B <a href="/pkg/builtin/#float64">float64</a>
+    C <a href="/pkg/builtin/#float64">float64</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Cutsin implements
+</p>
+<pre>if find[&#34;cps&#34;]: # means cut_positive is True
+	if y &lt; 0: y(t) = a * sin(b*t) + c
+ 	else: y(t) = 0
+else:			# means cut_positive is False so cut negative values
+	if y &gt; 0: y(t) = a * sin(b*t) + c
+ 	else: y(t) = 0
+</pre>
+<p>
+Input:
+</p>
+<pre>b/pi -- is a flag that says that b is in fact b divided by π
+        thus, the code will multiply b by π internally
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="CutSin.F">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=1383:1432#L54">F</a></h3>
+				<pre>func (o <a href="#CutSin">CutSin</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CutSin.G">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=1763:1812#L75">G</a></h3>
+				<pre>func (o <a href="#CutSin">CutSin</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CutSin.Grad">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=2545:2602#L117">Grad</a></h3>
+				<pre>func (o <a href="#CutSin">CutSin</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CutSin.H">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=2147:2196#L96">H</a></h3>
+				<pre>func (o <a href="#CutSin">CutSin</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="CutSin.Init">func (*CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=875:919#L31">Init</a></h3>
+				<pre>func (o *<a href="#CutSin">CutSin</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>
@@ -2239,6 +2379,93 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 				<h3 id="Rmp.Init">func (*Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=445:486#L13">Init</a></h3>
 				<pre>func (o *<a href="#Rmp">Rmp</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialises the function
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Sin">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=404:505#L7">Sin</a></h2>
+			<pre>type Sin struct {
+
+    <span class="comment">// parameters</span>
+    A <a href="/pkg/builtin/#float64">float64</a>
+    B <a href="/pkg/builtin/#float64">float64</a>
+    C <a href="/pkg/builtin/#float64">float64</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Sin implements y(t) = a * sin(b*t) + c
+Input:
+</p>
+<pre>b/pi -- is a flag that says that b is in fact b divided by π
+        thus, the code will multiply b by π internally
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Sin.F">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1027:1073#L41">F</a></h3>
+				<pre>func (o <a href="#Sin">Sin</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+F returns y = F(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sin.G">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1204:1250#L50">G</a></h3>
+				<pre>func (o <a href="#Sin">Sin</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+G returns ∂y/∂t_cteX = G(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sin.Grad">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1575:1629#L68">Grad</a></h3>
+				<pre>func (o <a href="#Sin">Sin</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Grad returns ∇F = ∂y/∂x = Grad(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sin.H">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1385:1431#L59">H</a></h3>
+				<pre>func (o <a href="#Sin">Sin</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+				<p>
+H returns ∂²y/∂t²_cteX = H(t, x)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sin.Init">func (*Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=637:678#L24">Init</a></h3>
+				<pre>func (o *<a href="#Sin">Sin</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
 </p>
