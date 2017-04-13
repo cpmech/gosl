@@ -123,6 +123,11 @@ b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 x, _ := SolveRealLinSys(&A, b)
 ```
 
+Note however that the functions `SolveRealLinSys` and `SolveComplexLinSys` shouldn't be used for
+repeated executions because memory would be constantly allocated and deallocated. In this case, it
+is better to call the `LinSol` methods directly.
+
+
 ## Examples
 
 More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxla.html).
