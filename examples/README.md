@@ -6,6 +6,7 @@
 3. Solution of sparse linear system with complex numbers
 4. Numerical differentiation
 5. Drawing iso-surfaces with VTK
+6. Plotting a contour
 
 # 1 Generating normally distributed pseudo-random numbers
 
@@ -225,4 +226,58 @@ The output looks like:
 <div id="container">
 <p><img src="figs/vtk_isosurf01.png" width="400"></p>
 Iso-surface
+</div>
+
+
+
+# 6 Plotting a contour
+
+The `plt` subpackage is a convenient wrapper to python.matplotlib/pyplot that can generate nice
+graphs. For example:
+
+```
+// scalar field
+fcn := func(x, y float64) float64 {
+    return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
+}
+
+// gradient. u=dfdx, v=dfdy
+grad := func(x, y float64) (u, v float64) {
+    m := math.Pow(math.Cos(x), 2.0) + math.Pow(math.Cos(y), 2.0)
+    u = 4.0 * math.Cos(x) * math.Sin(x) * m
+    v = 4.0 * math.Cos(y) * math.Sin(y) * m
+    return
+}
+
+// grid size
+xmin, xmax, N := -math.Pi/2.0+0.1, math.Pi/2.0-0.1, 21
+
+// mesh grid
+X, Y := utl.MeshGrid2D(xmin, xmax, xmin, xmax, N, N)
+
+// compute f(x,y) and components of gradient
+F := utl.DblsAlloc(N, N)
+U := utl.DblsAlloc(N, N)
+V := utl.DblsAlloc(N, N)
+for i := 0; i < N; i++ {
+    for j := 0; j < N; j++ {
+        F[i][j] = fcn(X[i][j], Y[i][j])
+        U[i][j], V[i][j] = grad(X[i][j], Y[i][j])
+    }
+}
+
+// plot
+plt.SetForPng(0.75, 600, 150)
+plt.Contour(X, Y, F, "levels=20, cmapidx=4")
+plt.Quiver(X, Y, U, V, "color='red'")
+plt.Gll("x", "y", "")
+plt.Equal()
+plt.SaveD("/tmp/gosl", "plt_contour01.png")
+```
+
+Source code: <a href="plt_contour01.go">plt_contour01.go</a>
+
+<div id="container">
+<p><img src="../plt/figs/plt_contour01.png" width="400"></p>
+Contour
 </div>
