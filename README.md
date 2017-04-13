@@ -14,8 +14,8 @@ with the development of the results presented in [1-5].
 1.  [chk](https://github.com/cpmech/gosl/tree/master/chk)       &ndash; Check code and unit test tools
 2.  [io](https://github.com/cpmech/gosl/tree/master/io)         &ndash; Input/output, read/write files, and print commands
 3.  [utl](https://github.com/cpmech/gosl/tree/master/utl)       &ndash; Utilities. Lists. Dictionaries. Simple Numerics
-4.  [plt](https://github.com/cpmech/gosl/tree/master/plt)       &ndash; plotting
-5.  [mpi](https://github.com/cpmech/gosl/tree/master/mpi)       &ndash; message passing interface
+4.  [plt](https://github.com/cpmech/gosl/tree/master/plt)       &ndash; Plotting and drawing (png and eps)
+5.  [mpi](https://github.com/cpmech/gosl/tree/master/mpi)       &ndash; Message Passing Interface for parallel computing
 6.  [la](https://github.com/cpmech/gosl/tree/master/la)         &ndash; linear algebra
 7.  [fdm](https://github.com/cpmech/gosl/tree/master/fdm)       &ndash; finite differences method
 8.  [num](https://github.com/cpmech/gosl/tree/master/num)       &ndash; numerical methods
