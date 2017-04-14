@@ -36,7 +36,7 @@ Gosl comprises several _subpackages_ as listed below:
 
 ## Examples
 
-See examples here: https://github.com/cpmech/gosl/blob/master/examples/README.md
+[Check out examples here](https://github.com/cpmech/gosl/blob/master/examples/README.md)
 
 
 <div id="container">
@@ -78,11 +78,11 @@ export PYTHONPATH=$PYTHONPATH:${GOPATH%:*}/src/github.com/cpmech/gosl/scripts
 ## Documentation
 
 Here, we call _user-defined_ types as _structures_. These are simply Go `types` defined as `struct`.
-Some may think of these _structures_ as _classes_. `Gosl` has several _global_ functions as well and
+Some may think of these _structures_ as _classes_. Gosl has several _global_ functions as well and
 tries to avoid complicated (unnecessary?) programming techniques.
 
 An allocated structure is called here an **object** and functions attached to this object are called
-**methods**. The variable holding the pointer to an object is always named **o** in `Gosl` (e.g.
+**methods**. The variable holding the pointer to an object is always named **o** in Gosl (e.g.
 like `self` or `this`).
 
 Some objects need to be initialised before usage. In this case, functions named `Init` have to be
@@ -93,7 +93,7 @@ are prefixed with `New`; for instance: `NewIsoSurf`.
 The directories corresponding to each package has a README.md file that should help with
 understanding the library, including functions and structures.
 
-`Gosl` has several functions and _structures_. Check the **[developer's
+Gosl has several functions and _structures_. Check the **[developer's
 documentation](http://rawgit.com/cpmech/gosl/master/doc/index.html)** to see what's available and
 how to call functions and methods.
 
@@ -102,6 +102,8 @@ how to call functions and methods.
 
 
 
-## License
+## Authors and license
+
+See the AUTHORS file.
 
 Unless otherwise noted, the Gosl source files are distributed under the BSD-style license found in the LICENSE file.
