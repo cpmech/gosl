@@ -113,8 +113,14 @@ func Btoa(flag bool) string {
 
 // PrintFormat commands ---------------------------------------------------------
 
+// Pl prints new line
+func Pl() {
+	fmt.Println()
+}
+
 // low intensity
 
+// Pf prints formatted string
 func Pf(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -122,6 +128,7 @@ func Pf(msg string, prm ...interface{}) {
 	fmt.Printf(msg, prm...)
 }
 
+// Pfcyan prints formatted string in cyan
 func Pfcyan(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -133,116 +140,7 @@ func Pfcyan(msg string, prm ...interface{}) {
 	}
 }
 
-func Pfyel(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[0;33m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pfred(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[0;31m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pfgreen(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[0;32m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pfblue(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[0;34m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pfmag(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[0;35m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pflmag(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[0;95m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pfpink(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[38;5;205m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pfdgreen(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[38;5;22m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pfgreen2(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[38;5;2m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
-func Pfpurple(msg string, prm ...interface{}) {
-	if !Verbose {
-		return
-	}
-	if ColorsOn {
-		fmt.Printf("[38;5;55m"+msg+"[0m", prm...)
-	} else {
-		fmt.Printf(msg, prm...)
-	}
-}
-
+// Pfcyan2 prints formatted string in another shade of cyan
 func Pfcyan2(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -254,6 +152,19 @@ func Pfcyan2(msg string, prm ...interface{}) {
 	}
 }
 
+// Pfyel prints formatted string in yellow
+func Pfyel(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[0;33m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfdyel prints formatted string in dark yellow
 func Pfdyel(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -265,6 +176,7 @@ func Pfdyel(msg string, prm ...interface{}) {
 	}
 }
 
+// Pfdyel2 prints formatted string in another shade of dark yellow
 func Pfdyel2(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -276,6 +188,115 @@ func Pfdyel2(msg string, prm ...interface{}) {
 	}
 }
 
+// Pfred prints formatted string in red
+func Pfred(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[0;31m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfgreen prints formatted string in green
+func Pfgreen(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[0;32m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfblue prints formatted string in blue
+func Pfblue(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[0;34m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfmag prints formatted string in magenta
+func Pfmag(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[0;35m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pflmag prints formatted string in light magenta
+func Pflmag(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[0;95m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfpink prints formatted string in pink
+func Pfpink(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[38;5;205m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfdgreen prints formatted string in dark green
+func Pfdgreen(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[38;5;22m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfgreen2 prints formatted string in another shade of green
+func Pfgreen2(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[38;5;2m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfpurple prints formatted string in purple
+func Pfpurple(msg string, prm ...interface{}) {
+	if !Verbose {
+		return
+	}
+	if ColorsOn {
+		fmt.Printf("[38;5;55m"+msg+"[0m", prm...)
+	} else {
+		fmt.Printf(msg, prm...)
+	}
+}
+
+// Pfgrey prints formatted string in grey
 func Pfgrey(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -287,6 +308,7 @@ func Pfgrey(msg string, prm ...interface{}) {
 	}
 }
 
+// Pfblue2 prints formatted string in another shade of blue
 func Pfblue2(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -298,6 +320,7 @@ func Pfblue2(msg string, prm ...interface{}) {
 	}
 }
 
+// Pfgrey2 prints formatted string in another shade of grey
 func Pfgrey2(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -309,6 +332,7 @@ func Pfgrey2(msg string, prm ...interface{}) {
 	}
 }
 
+// Pforan prints formatted string in orange
 func Pforan(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -322,6 +346,7 @@ func Pforan(msg string, prm ...interface{}) {
 
 // high intensity
 
+// PfCyan prints formatted string in high intensity cyan
 func PfCyan(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -333,6 +358,7 @@ func PfCyan(msg string, prm ...interface{}) {
 	}
 }
 
+// PfYel prints formatted string in high intensity yello
 func PfYel(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -344,6 +370,7 @@ func PfYel(msg string, prm ...interface{}) {
 	}
 }
 
+// PfRed prints formatted string in high intensity red
 func PfRed(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -355,6 +382,7 @@ func PfRed(msg string, prm ...interface{}) {
 	}
 }
 
+// PfGreen prints formatted string in high intensity green
 func PfGreen(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -366,6 +394,7 @@ func PfGreen(msg string, prm ...interface{}) {
 	}
 }
 
+// PfBlue prints formatted string in high intensity blue
 func PfBlue(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -377,6 +406,7 @@ func PfBlue(msg string, prm ...interface{}) {
 	}
 }
 
+// PfMag prints formatted string in high intensity magenta
 func PfMag(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -388,6 +418,7 @@ func PfMag(msg string, prm ...interface{}) {
 	}
 }
 
+// PfWhite prints formatted string in high intensity white
 func PfWhite(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
