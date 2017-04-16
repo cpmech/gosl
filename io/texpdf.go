@@ -21,10 +21,10 @@ type Report struct {
 	Landscape bool   // to format paper
 
 	// default options
-	DefaultTablePos    string  // default table positioning key; e.g. !t (to be written as [!t])
-	DefaultNumFmt      string  // default number formatting string; e.g. "%v", "%g" or "%.3f"
-	DefaultTableFontSz string  // default table fontsize string; e.g. \scriptsize
-	DefaultTableColSep float64 // default table column separation in 'em'; e.g. 0.5 => \setlength{\tabcolsep}{0.5em}
+	TablePos    string  // default table positioning key; e.g. !t (to be written as [!t])
+	NumFmt      string  // default number formatting string; e.g. "%v", "%g" or "%.3f"
+	TableFontSz string  // default table fontsize string; e.g. \scriptsize
+	TableColSep float64 // default table column separation in 'em'; e.g. 0.5 => \setlength{\tabcolsep}{0.5em}
 
 	// options
 	DoNotAlignTable   bool // align coluns in TeX table (has to loop over rows first...)
@@ -89,7 +89,7 @@ func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label 
 			}
 			for i, v := range T[key] {
 				if key2numfmt == nil {
-					widths[j] = imax(widths[j], len(Sf(o.DefaultNumFmt, v)))
+					widths[j] = imax(widths[j], len(Sf(o.NumFmt, v)))
 				} else {
 					widths[j] = imax(widths[j], len(Sf(key2numfmt[key](i, v))))
 				}
@@ -106,12 +106,12 @@ func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label 
 
 	// start table
 	Ff(o.buffer, "\n")
-	Ff(o.buffer, "\\begin{table*} [%s] \\centering\n", o.DefaultTablePos)
+	Ff(o.buffer, "\\begin{table*} [%s] \\centering\n", o.TablePos)
 	Ff(o.buffer, "\\caption{%s}\n", caption)
 
 	// set fontsize and column separation
-	Ff(o.buffer, o.DefaultTableFontSz)
-	Ff(o.buffer, " \\setlength{\\tabcolsep}{%gem}\n", o.DefaultTableColSep)
+	Ff(o.buffer, o.TableFontSz)
+	Ff(o.buffer, " \\setlength{\\tabcolsep}{%gem}\n", o.TableColSep)
 
 	// start tabular
 	cc := ""
@@ -144,7 +144,7 @@ func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label 
 				Ff(o.buffer, " & ")
 			}
 			if key2numfmt == nil {
-				Ff(o.buffer, strfmt[j], Sf(o.DefaultNumFmt, T[key][i]))
+				Ff(o.buffer, strfmt[j], Sf(o.NumFmt, T[key][i]))
 			} else {
 				Ff(o.buffer, strfmt[j], key2numfmt[key](i, T[key][i]))
 			}
@@ -236,23 +236,23 @@ func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err err
 func (o *Report) fixDefaults() {
 
 	// default table positioning key
-	if o.DefaultTablePos == "" {
-		o.DefaultTablePos = "h"
+	if o.TablePos == "" {
+		o.TablePos = "h"
 	}
 
 	// default number formatting string
-	if o.DefaultNumFmt == "" {
-		o.DefaultNumFmt = "%g"
+	if o.NumFmt == "" {
+		o.NumFmt = "%g"
 	}
 
 	// default table fontsize string
-	if o.DefaultTableFontSz == "" {
-		//o.DefaultTableFontSz = "\\scriptsize"
+	if o.TableFontSz == "" {
+		//o.TableFontSz = "\\scriptsize"
 	}
 
 	// default table column separation in 'em'; e.g. 0.5 =>
-	if o.DefaultTableColSep <= 0 {
-		o.DefaultTableColSep = 0.5
+	if o.TableColSep <= 0 {
+		o.TableColSep = 0.5
 	}
 }
 

@@ -52,9 +52,8 @@ func Test_texpdf02(tst *testing.T) {
 	}
 
 	rpt := Report{
-		Title:           "Gosl test",
-		Author:          "Gosl authors",
-		DefaultTablePos: "h",
+		Title:  "Gosl test",
+		Author: "Gosl authors",
 	}
 
 	if !chk.Verbose {
