@@ -243,6 +243,9 @@ parsing, handling files, directories, etc.
 				<dd><a href="#Pipeline">func Pipeline(cmds ...*exec.Cmd) (pipeLineOutput, collectedStandardError []byte, pipeLineError error)</a></dd>
 			
 				
+				<dd><a href="#Pl">func Pl()</a></dd>
+			
+				
 				<dd><a href="#ReadFile">func ReadFile(fn string) (b []byte, err error)</a></dd>
 			
 				
@@ -334,8 +337,33 @@ parsing, handling files, directories, etc.
 			
 			
 				
+				<dd><a href="#FcnConvertNum">type FcnConvertNum</a></dd>
+				
+				
+			
+				
 				<dd><a href="#ReadLinesCallback">type ReadLinesCallback</a></dd>
 				
+				
+			
+				
+				<dd><a href="#Report">type Report</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Report.AddSection">func (o *Report) AddSection(name string, level int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Report.AddTable">func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label string, key2tex map[string]string, key2numfmt map[string]FcnConvertNum)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Report.AddTex">func (o *Report) AddTex(commands string)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Report.Reset">func (o *Report) Reset()</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Report.WriteTexPdf">func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err error)</a></dd>
 				
 			
 			
@@ -363,7 +391,7 @@ parsing, handling files, directories, etc.
 			
 				<a href="/src/github.com/cpmech/gosl/io/printing.go">printing.go</a>
 			
-				<a href="/src/github.com/cpmech/gosl/io/texreport.go">texreport.go</a>
+				<a href="/src/github.com/cpmech/gosl/io/texpdf.go">texpdf.go</a>
 			
 			</span>
 			</p>
@@ -814,234 +842,312 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pf">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2537:2576#L108">Pf</a></h2>
+			<h2 id="Pf">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2619:2658#L114">Pf</a></h2>
 			<pre>func Pf(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pf prints formatted string
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="PfBlue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6500:6543#L359">PfBlue</a></h2>
+			<h2 id="PfBlue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7755:7798#L388">PfBlue</a></h2>
 			<pre>func PfBlue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+PfBlue prints formatted string in high intensity blue
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="PfCyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5809:5852#L315">PfCyan</a></h2>
+			<h2 id="PfCyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6836:6879#L340">PfCyan</a></h2>
 			<pre>func PfCyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+PfCyan prints formatted string in high intensity cyan
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="PfGreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6326:6370#L348">PfGreen</a></h2>
+			<h2 id="PfGreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7524:7568#L376">PfGreen</a></h2>
 			<pre>func PfGreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+PfGreen prints formatted string in high intensity green
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="PfMag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6673:6715#L370">PfMag</a></h2>
+			<h2 id="PfMag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7987:8029#L400">PfMag</a></h2>
 			<pre>func PfMag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+PfMag prints formatted string in high intensity magenta
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="PfRed">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6154:6196#L337">PfRed</a></h2>
+			<h2 id="PfRed">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7293:7335#L364">PfRed</a></h2>
 			<pre>func PfRed(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+PfRed prints formatted string in high intensity red
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="PfWhite">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6845:6889#L381">PfWhite</a></h2>
+			<h2 id="PfWhite">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=8218:8262#L412">PfWhite</a></h2>
 			<pre>func PfWhite(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+PfWhite prints formatted string in high intensity white
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="PfYel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5982:6024#L326">PfYel</a></h2>
+			<h2 id="PfYel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7066:7108#L352">PfYel</a></h2>
 			<pre>func PfYel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+PfYel prints formatted string in high intensity yello
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfblue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3325:3368#L159">Pfblue</a></h2>
+			<h2 id="Pfblue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4324:4367#L206">Pfblue</a></h2>
 			<pre>func Pfblue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfblue prints formatted string in blue
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfblue2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5259:5303#L280">Pfblue2</a></h2>
+			<h2 id="Pfblue2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6125:6169#L302">Pfblue2</a></h2>
 			<pre>func Pfblue2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfblue2 prints formatted string in another shade of blue
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfcyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2634:2677#L115">Pfcyan</a></h2>
+			<h2 id="Pfcyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2758:2801#L122">Pfcyan</a></h2>
 			<pre>func Pfcyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfcyan prints formatted string in cyan
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfcyan2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4553:4597#L236">Pfcyan2</a></h2>
+			<h2 id="Pfcyan2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2991:3035#L134">Pfcyan2</a></h2>
 			<pre>func Pfcyan2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfcyan2 prints formatted string in another shade of cyan
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfdgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4020:4065#L203">Pfdgreen</a></h2>
+			<h2 id="Pfdgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5206:5251#L254">Pfdgreen</a></h2>
 			<pre>func Pfdgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfdgreen prints formatted string in dark green
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfdyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4730:4773#L247">Pfdyel</a></h2>
+			<h2 id="Pfdyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3432:3475#L158">Pfdyel</a></h2>
 			<pre>func Pfdyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfdyel prints formatted string in dark yellow
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfdyel2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4906:4950#L258">Pfdyel2</a></h2>
+			<h2 id="Pfdyel2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3675:3719#L170">Pfdyel2</a></h2>
 			<pre>func Pfdyel2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfdyel2 prints formatted string in another shade of dark yellow
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3151:3195#L148">Pfgreen</a></h2>
+			<h2 id="Pfgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4108:4152#L194">Pfgreen</a></h2>
 			<pre>func Pfgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfgreen prints formatted string in green
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfgreen2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4198:4243#L214">Pfgreen2</a></h2>
+			<h2 id="Pfgreen2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5446:5491#L266">Pfgreen2</a></h2>
 			<pre>func Pfgreen2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfgreen2 prints formatted string in another shade of green
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfgrey">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5083:5126#L269">Pfgrey</a></h2>
+			<h2 id="Pfgrey">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5889:5932#L290">Pfgrey</a></h2>
 			<pre>func Pfgrey(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfgrey prints formatted string in grey
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfgrey2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5436:5480#L291">Pfgrey2</a></h2>
+			<h2 id="Pfgrey2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6362:6406#L314">Pfgrey2</a></h2>
 			<pre>func Pfgrey2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfgrey2 prints formatted string in another shade of grey
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pflmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3670:3713#L181">Pflmag</a></h2>
+			<h2 id="Pflmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4764:4807#L230">Pflmag</a></h2>
 			<pre>func Pflmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pflmag prints formatted string in light magenta
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3498:3540#L170">Pfmag</a></h2>
+			<h2 id="Pfmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4541:4583#L218">Pfmag</a></h2>
 			<pre>func Pfmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfmag prints formatted string in magenta
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pforan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5613:5656#L302">Pforan</a></h2>
+			<h2 id="Pforan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6583:6626#L326">Pforan</a></h2>
 			<pre>func Pforan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pforan prints formatted string in orange
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfpink">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3843:3886#L192">Pfpink</a></h2>
+			<h2 id="Pfpink">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4979:5022#L242">Pfpink</a></h2>
 			<pre>func Pfpink(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfpink prints formatted string in pink
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfpurple">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4375:4420#L225">Pfpurple</a></h2>
+			<h2 id="Pfpurple">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5669:5714#L278">Pfpurple</a></h2>
 			<pre>func Pfpurple(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfpurple prints formatted string in purple
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfred">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2979:3021#L137">Pfred</a></h2>
+			<h2 id="Pfred">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3892:3934#L182">Pfred</a></h2>
 			<pre>func Pfred(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfred prints formatted string in red
+</p>
+
 			
 			
 
 		
 			
 			
-			<h2 id="Pfyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2807:2849#L126">Pfyel</a></h2>
+			<h2 id="Pfyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3211:3253#L146">Pfyel</a></h2>
 			<pre>func Pfyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
-			
+			<p>
+Pfyel prints formatted string in yellow
+</p>
+
 			
 			
 
@@ -1062,6 +1168,18 @@ by Kyle Lemons
 </p>
 <p>
 To provide input to the pipeline, assign an io.Reader to the first&#39;s Stdin.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Pl">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2541:2550#L107">Pl</a></h2>
+			<pre>func Pl()</pre>
+			<p>
+Pl prints new line
 </p>
 
 			
@@ -1313,7 +1431,7 @@ StrThinLine returns a thin line (using &#39;-&#39;)
 		
 			
 			
-			<h2 id="TexNum">func <a href="https://github.com/cpmech/gosl/blob/master/io/texreport.go?s=442:514#L5">TexNum</a></h2>
+			<h2 id="TexNum">func <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=5903:5975#L228">TexNum</a></h2>
 			<pre>func TexNum(fmt <a href="/pkg/builtin/#string">string</a>, num <a href="/pkg/builtin/#float64">float64</a>, scientificNotation <a href="/pkg/builtin/#bool">bool</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 TexNum returns a string representation in TeX format of a real number.
@@ -1329,7 +1447,7 @@ the exponent notation with e{+-}{##} is converted into \cdot 10^{{+-}##}
 		
 			
 			
-			<h2 id="UnColor">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7160:7191#L395">UnColor</a></h2>
+			<h2 id="UnColor">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=8533:8564#L426">UnColor</a></h2>
 			<pre>func UnColor(msg <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 UnColor removes console characters used to show colors
@@ -1438,6 +1556,27 @@ WriteFileVD writes data to a new file (and shows message: file written), after c
 		
 			
 			
+			<h2 id="FcnConvertNum">type <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=265:306#L3">FcnConvertNum</a></h2>
+			<pre>type FcnConvertNum func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+FcnConvertNum is a function to convert number to string
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
 			<h2 id="ReadLinesCallback">type <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3573:3634#L124">ReadLinesCallback</a></h2>
 			<pre>type ReadLinesCallback func(idx <a href="/pkg/builtin/#int">int</a>, line <a href="/pkg/builtin/#string">string</a>) (stop <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
@@ -1455,6 +1594,104 @@ ReadLinesCallback is used in ReadLines to process line by line during reading of
 
 			
 
+			
+		
+			
+			
+			<h2 id="Report">type <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=361:1026#L6">Report</a></h2>
+			<pre>type Report struct {
+
+    <span class="comment">// configuration</span>
+    Title     <a href="/pkg/builtin/#string">string</a> <span class="comment">// title of pdf</span>
+    Author    <a href="/pkg/builtin/#string">string</a> <span class="comment">// author of pdf</span>
+    Landscape <a href="/pkg/builtin/#bool">bool</a>   <span class="comment">// to format paper</span>
+
+    <span class="comment">// default options</span>
+    DefaultTablePos <a href="/pkg/builtin/#string">string</a> <span class="comment">// default table positioning key; e.g. !t (to be written as [!t])</span>
+    DefaultNumFmt   <a href="/pkg/builtin/#string">string</a> <span class="comment">// default number formatting string; e.g. &#34;%v&#34;, &#34;%g&#34; or &#34;%.3f&#34;</span>
+
+    <span class="comment">// options</span>
+    DoNotAlignTable   <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// align coluns in TeX table (has to loop over rows first...)</span>
+    DoNotUseGeomPkg   <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// do not use package geometry for margins</span>
+    DoNotGeneratePDF  <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// do not generate pdf when writing tex files</span>
+    DoNotShowMessages <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// do not show messages</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Report holds data to generate LaTeX and PDF files
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Report.AddSection">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1152:1203#L33">AddSection</a></h3>
+				<pre>func (o *<a href="#Report">Report</a>) AddSection(name <a href="/pkg/builtin/#string">string</a>, level <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+AddSection adds section and subsections to report
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Report.AddTable">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1796:1947#L58">AddTable</a></h3>
+				<pre>func (o *<a href="#Report">Report</a>) AddTable(keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, caption, label <a href="/pkg/builtin/#string">string</a>, key2tex map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#string">string</a>, key2numfmt map[<a href="/pkg/builtin/#string">string</a>]<a href="#FcnConvertNum">FcnConvertNum</a>)</pre>
+				<p>
+AddTable adds tex table to report
+</p>
+<pre>key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
+key2convert -- maps key to function to convert numbers to string in that column. may be nil
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Report.AddTex">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1441:1481#L48">AddTex</a></h3>
+				<pre>func (o *<a href="#Report">Report</a>) AddTex(commands <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+AddTex adds TeX commands
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Report.Reset">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1051:1075#L28">Reset</a></h3>
+				<pre>func (o *<a href="#Report">Report</a>) Reset()</pre>
+				<p>
+Reset clears report
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Report.WriteTexPdf">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=4061:4144#L154">WriteTexPdf</a></h3>
+				<pre>func (o *<a href="#Report">Report</a>) WriteTexPdf(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, extra *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+WriteTexPdf writes tex file and generates pdf file
+</p>
+<pre>extra -- extra LaTeX commands; may be nil
+</pre>
+
+				
+				
+				
 			
 		
 	
