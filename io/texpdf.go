@@ -67,7 +67,7 @@ func (o *Report) AddTex(commands string) {
 // AddTable adds tex table to report
 //  key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
 //  key2convert -- maps key to function to convert numbers to string in that column. may be nil
-func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label string, key2tex map[string]string, key2numfmt map[string]FcnConvertNum) {
+func (o *Report) AddTable(caption, label string, keys []string, T map[string][]float64, key2tex map[string]string, key2numfmt map[string]FcnConvertNum) {
 
 	// new buffer
 	if o.buffer == nil {

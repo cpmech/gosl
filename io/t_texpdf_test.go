@@ -66,7 +66,7 @@ func Test_texpdf02(tst *testing.T) {
 	rpt.AddTex("The numbers in the rows of the table have a fancy format.")
 
 	rpt.AddSection("MyTable", 1)
-	rpt.AddTable(keys, res, "Results from simulation.", "results", key2tex, key2convert)
+	rpt.AddTable("Results from simulation.", "results", keys, res, key2tex, key2convert)
 
 	rpt.AddSection("Extra", 3)
 	extra := new(bytes.Buffer)
