@@ -39,7 +39,7 @@ type Report struct {
 
 	// internal
 	buffers []*bytes.Buffer // buffers created by add commands
-	bufType []string        // type of buffer; e.g. "table", "section", "tex"
+	tables  map[string]int  // maps table label to index in buffers
 }
 
 // Reset clears report
@@ -63,7 +63,6 @@ func (o *Report) AddSection(name string, level int) {
 	Ff(buffer, "\n")
 	Ff(buffer, "\\%s{%s}\n", sec, name)
 	o.buffers = append(o.buffers, buffer)
-	o.bufType = append(o.bufType, sec)
 }
 
 // AddTex adds TeX commands
@@ -71,7 +70,6 @@ func (o *Report) AddTex(commands string) {
 	buffer := new(bytes.Buffer)
 	Ff(buffer, "\n%s\n", commands)
 	o.buffers = append(o.buffers, buffer)
-	o.bufType = append(o.bufType, "tex")
 }
 
 // AddTable adds tex table to report
@@ -154,8 +152,13 @@ func (o *Report) AddTable(caption, label, notes string, keys []string, T map[str
 
 	// end tabular and table
 	o.endTableAndTabular(buffer, ncols, label, notes)
+
+	// map with labels and buffers
+	if o.tables == nil {
+		o.tables = make(map[string]int)
+	}
+	o.tables[label] = len(o.buffers)
 	o.buffers = append(o.buffers, buffer)
-	o.bufType = append(o.bufType, "table")
 }
 
 // AddTableF adds tex table to report by using a map of functions to extract row values
@@ -229,8 +232,13 @@ func (o *Report) AddTableF(caption, label, notes string, keys []string, nrows in
 
 	// end tabular and table
 	o.endTableAndTabular(buffer, ncols, label, notes)
+
+	// map with labels and buffers
+	if o.tables == nil {
+		o.tables = make(map[string]int)
+	}
+	o.tables[label] = len(o.buffers)
 	o.buffers = append(o.buffers, buffer)
-	o.bufType = append(o.bufType, "table")
 }
 
 // WriteTexPdf writes tex file and generates pdf file
@@ -302,6 +310,20 @@ func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err err
 		}
 		if !o.DoNotShowMessages {
 			PfBlue("file <%s/%s.pdf> generated\n", dirout, fnkey)
+		}
+	}
+	return
+}
+
+// WriteTexTables writes tables to tex file
+func (o *Report) WriteTexTables(dirout string, label2fnkey map[string]string) (err error) {
+	for label, fnkey := range label2fnkey {
+		fn := fnkey + ".tex"
+		if idx, ok := o.tables[label]; ok {
+			WriteFileD(dirout, fn, o.buffers[idx])
+			if !o.DoNotShowMessages {
+				PfBlue("file <%s/%s> generated\n", dirout, fn)
+			}
 		}
 	}
 	return

@@ -115,8 +115,15 @@ func Test_texpdf03(tst *testing.T) {
 
 	nrows := len(T["a"])
 	rpt.AddTableF("Results from simulation.", "results", notes, keys, nrows, F, key2tex)
+	rpt.AddTableF("Results from simulation (again).", "resultsAgain", notes, keys, nrows, F, key2tex)
 
 	err := rpt.WriteTexPdf("/tmp/gosl", "test_texpdf03", nil)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+
+	err = rpt.WriteTexTables("/tmp/gosl", map[string]string{"resultsAgain": "test_texpdf03_results"})
 	if err != nil {
 		tst.Errorf("%v", err)
 	}
