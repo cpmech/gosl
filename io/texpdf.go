@@ -12,6 +12,9 @@ import (
 // FcnConvertNum is a function to convert number to string
 type FcnConvertNum func(row int, x float64) string
 
+// FcnRow is a function that returns the row value as string
+type FcnRow func(row int) string
+
 // Report holds data to generate LaTeX and PDF files
 type Report struct {
 
@@ -65,8 +68,12 @@ func (o *Report) AddTex(commands string) {
 }
 
 // AddTable adds tex table to report
-//  key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
-//  key2convert -- maps key to function to convert numbers to string in that column. may be nil
+//   caption -- caption of table
+//   label -- label of table
+//   keys -- column keys
+//   T -- table values
+//   key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
+//   key2convert -- maps key to function to convert numbers to string in that column. may be nil
 func (o *Report) AddTable(caption, label string, keys []string, T map[string][]float64, key2tex map[string]string, key2numfmt map[string]FcnConvertNum) {
 
 	// new buffer
