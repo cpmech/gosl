@@ -21,8 +21,10 @@ type Report struct {
 	Landscape bool   // to format paper
 
 	// default options
-	DefaultTablePos string // default table positioning key; e.g. !t (to be written as [!t])
-	DefaultNumFmt   string // default number formatting string; e.g. "%v", "%g" or "%.3f"
+	DefaultTablePos    string  // default table positioning key; e.g. !t (to be written as [!t])
+	DefaultNumFmt      string  // default number formatting string; e.g. "%v", "%g" or "%.3f"
+	DefaultTableFontSz string  // default table fontsize string; e.g. \scriptsize
+	DefaultTableColSep float64 // default table column separation in 'em'; e.g. 0.5 => \setlength{\tabcolsep}{0.5em}
 
 	// options
 	DoNotAlignTable   bool // align coluns in TeX table (has to loop over rows first...)
@@ -72,15 +74,8 @@ func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label 
 		o.buffer = new(bytes.Buffer)
 	}
 
-	// default table positioning key
-	if o.DefaultTablePos == "" {
-		o.DefaultTablePos = "h"
-	}
-
-	// default number formatting string
-	if o.DefaultNumFmt == "" {
-		o.DefaultNumFmt = "%g"
-	}
+	// fix default parameters
+	o.fixDefaults()
 
 	// find column widths and set formatting string
 	strfmt := make([]string, len(keys)) // for each column
@@ -109,10 +104,16 @@ func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label 
 		}
 	}
 
-	// start table and tabular
+	// start table
 	Ff(o.buffer, "\n")
 	Ff(o.buffer, "\\begin{table*} [%s] \\centering\n", o.DefaultTablePos)
 	Ff(o.buffer, "\\caption{%s}\n", caption)
+
+	// set fontsize and column separation
+	Ff(o.buffer, o.DefaultTableFontSz)
+	Ff(o.buffer, " \\setlength{\\tabcolsep}{%gem}\n", o.DefaultTableColSep)
+
+	// start tabular
 	cc := ""
 	for range keys {
 		cc += "c"
@@ -229,6 +230,30 @@ func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err err
 		}
 	}
 	return
+}
+
+// fixDefaults fix default values
+func (o *Report) fixDefaults() {
+
+	// default table positioning key
+	if o.DefaultTablePos == "" {
+		o.DefaultTablePos = "h"
+	}
+
+	// default number formatting string
+	if o.DefaultNumFmt == "" {
+		o.DefaultNumFmt = "%g"
+	}
+
+	// default table fontsize string
+	if o.DefaultTableFontSz == "" {
+		//o.DefaultTableFontSz = "\\scriptsize"
+	}
+
+	// default table column separation in 'em'; e.g. 0.5 =>
+	if o.DefaultTableColSep <= 0 {
+		o.DefaultTableColSep = 0.5
+	}
 }
 
 // TexNum returns a string representation in TeX format of a real number.
