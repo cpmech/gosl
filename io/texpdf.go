@@ -38,12 +38,17 @@ type Report struct {
 	DoNotShowMessages bool // do not show messages
 
 	// internal
-	buffer *bytes.Buffer
+	buffers []*bytes.Buffer // buffers created by add commands
+	bufType []string        // type of buffer; e.g. "table", "section", "tex"
 }
 
 // Reset clears report
 func (o *Report) Reset() {
-	o.buffer.Reset()
+	for _, buffer := range o.buffers {
+		if buffer != nil {
+			buffer.Reset()
+		}
+	}
 }
 
 // AddSection adds section and subsections to report
@@ -54,19 +59,19 @@ func (o *Report) AddSection(name string, level int) {
 			sec = "sub" + sec
 		}
 	}
-	if o.buffer == nil {
-		o.buffer = new(bytes.Buffer)
-	}
-	Ff(o.buffer, "\n")
-	Ff(o.buffer, "\\%s{%s}\n", sec, name)
+	buffer := new(bytes.Buffer)
+	Ff(buffer, "\n")
+	Ff(buffer, "\\%s{%s}\n", sec, name)
+	o.buffers = append(o.buffers, buffer)
+	o.bufType = append(o.bufType, sec)
 }
 
 // AddTex adds TeX commands
 func (o *Report) AddTex(commands string) {
-	if o.buffer == nil {
-		o.buffer = new(bytes.Buffer)
-	}
-	Ff(o.buffer, "\n%s\n", commands)
+	buffer := new(bytes.Buffer)
+	Ff(buffer, "\n%s\n", commands)
+	o.buffers = append(o.buffers, buffer)
+	o.bufType = append(o.bufType, "tex")
 }
 
 // AddTable adds tex table to report
@@ -79,9 +84,7 @@ func (o *Report) AddTex(commands string) {
 func (o *Report) AddTable(caption, label, notes string, keys []string, T map[string][]float64, key2tex map[string]string, key2numfmt map[string]FcnConvertNum) {
 
 	// new buffer
-	if o.buffer == nil {
-		o.buffer = new(bytes.Buffer)
-	}
+	buffer := new(bytes.Buffer)
 
 	// fix default parameters
 	o.fixDefaults()
@@ -115,42 +118,44 @@ func (o *Report) AddTable(caption, label, notes string, keys []string, T map[str
 
 	// start table and tabular
 	ncols := len(keys)
-	o.startTableAndTabular(ncols, caption)
+	o.startTableAndTabular(buffer, ncols, caption)
 
 	// header
 	for j, key := range keys {
 		if j > 0 {
-			Ff(o.buffer, " & ")
+			Ff(buffer, " & ")
 		}
 		if key2tex == nil {
-			Ff(o.buffer, strfmt[j], key)
+			Ff(buffer, strfmt[j], key)
 		} else {
-			Ff(o.buffer, strfmt[j], key2tex[key])
+			Ff(buffer, strfmt[j], key2tex[key])
 		}
 	}
-	Ff(o.buffer, " \\\\ \\hline\n")
+	Ff(buffer, " \\\\ \\hline\n")
 
 	// rows
 	nrows := len(T[keys[0]])
 	for i := 0; i < nrows; i++ {
 		if i > 0 {
-			Ff(o.buffer, "\n")
+			Ff(buffer, "\n")
 		}
 		for j, key := range keys {
 			if j > 0 {
-				Ff(o.buffer, " & ")
+				Ff(buffer, " & ")
 			}
 			if key2numfmt == nil {
-				Ff(o.buffer, strfmt[j], Sf(o.NumFmt, T[key][i]))
+				Ff(buffer, strfmt[j], Sf(o.NumFmt, T[key][i]))
 			} else {
-				Ff(o.buffer, strfmt[j], key2numfmt[key](i, T[key][i]))
+				Ff(buffer, strfmt[j], key2numfmt[key](i, T[key][i]))
 			}
 		}
-		Ff(o.buffer, " \\\\")
+		Ff(buffer, " \\\\")
 	}
 
 	// end tabular and table
-	o.endTableAndTabular(ncols, label, notes)
+	o.endTableAndTabular(buffer, ncols, label, notes)
+	o.buffers = append(o.buffers, buffer)
+	o.bufType = append(o.bufType, "table")
 }
 
 // AddTableF adds tex table to report by using a map of functions to extract row values
@@ -163,9 +168,7 @@ func (o *Report) AddTable(caption, label, notes string, keys []string, T map[str
 func (o *Report) AddTableF(caption, label, notes string, keys []string, nrows int, F map[string]FcnRow, key2tex map[string]string) {
 
 	// new buffer
-	if o.buffer == nil {
-		o.buffer = new(bytes.Buffer)
-	}
+	buffer := new(bytes.Buffer)
 
 	// fix default parameters
 	o.fixDefaults()
@@ -195,37 +198,39 @@ func (o *Report) AddTableF(caption, label, notes string, keys []string, nrows in
 
 	// start table and tabular
 	ncols := len(keys)
-	o.startTableAndTabular(ncols, caption)
+	o.startTableAndTabular(buffer, ncols, caption)
 
 	// header
 	for j, key := range keys {
 		if j > 0 {
-			Ff(o.buffer, " & ")
+			Ff(buffer, " & ")
 		}
 		if key2tex == nil {
-			Ff(o.buffer, strfmt[j], key)
+			Ff(buffer, strfmt[j], key)
 		} else {
-			Ff(o.buffer, strfmt[j], key2tex[key])
+			Ff(buffer, strfmt[j], key2tex[key])
 		}
 	}
-	Ff(o.buffer, " \\\\ \\hline\n")
+	Ff(buffer, " \\\\ \\hline\n")
 
 	// rows
 	for i := 0; i < nrows; i++ {
 		if i > 0 {
-			Ff(o.buffer, "\n")
+			Ff(buffer, "\n")
 		}
 		for j, key := range keys {
 			if j > 0 {
-				Ff(o.buffer, " & ")
+				Ff(buffer, " & ")
 			}
-			Ff(o.buffer, strfmt[j], F[key](i))
+			Ff(buffer, strfmt[j], F[key](i))
 		}
-		Ff(o.buffer, " \\\\")
+		Ff(buffer, " \\\\")
 	}
 
 	// end tabular and table
-	o.endTableAndTabular(ncols, label, notes)
+	o.endTableAndTabular(buffer, ncols, label, notes)
+	o.buffers = append(o.buffers, buffer)
+	o.bufType = append(o.bufType, "table")
 }
 
 // WriteTexPdf writes tex file and generates pdf file
@@ -265,12 +270,14 @@ func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err err
 		Ff(pdf, "\\maketitle\n")
 	}
 
-	// buffer
-	if o.buffer != nil {
-		Ff(pdf, "%v\n", o.buffer)
+	// write buffers
+	for _, buffer := range o.buffers {
+		if buffer != nil {
+			Ff(pdf, "%v\n", buffer)
+		}
 	}
 
-	// extra LaTeX commands
+	// write extra LaTeX commands
 	if extra != nil {
 		Ff(pdf, "\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% extra commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n")
 		Ff(pdf, "%v\n", extra)
@@ -341,39 +348,39 @@ func TexNum(fmt string, num float64, scientificNotation bool) (l string) {
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 // startTableAndTabular starts table and tabular
-func (o *Report) startTableAndTabular(ncols int, caption string) {
+func (o *Report) startTableAndTabular(buffer *bytes.Buffer, ncols int, caption string) {
 
 	// start table
-	Ff(o.buffer, "\n")
-	Ff(o.buffer, "\\begin{table*} [%s] \\centering\n", o.TablePos)
-	Ff(o.buffer, "\\caption{%s}\n", caption)
+	Ff(buffer, "\n")
+	Ff(buffer, "\\begin{table*} [%s] \\centering\n", o.TablePos)
+	Ff(buffer, "\\caption{%s}\n", caption)
 
 	// set fontsize and column separation
-	Ff(o.buffer, o.TableFontSz)
-	Ff(o.buffer, "\\setlength{\\tabcolsep}{%gem}\n", o.TableColSep)
+	Ff(buffer, o.TableFontSz)
+	Ff(buffer, "\\setlength{\\tabcolsep}{%gem}\n", o.TableColSep)
 
 	// start tabular
 	cc := ""
 	for i := 0; i < ncols; i++ {
 		cc += "c"
 	}
-	Ff(o.buffer, "\\begin{tabular}[c]{%s} \\toprule\n", cc)
+	Ff(buffer, "\\begin{tabular}[c]{%s} \\toprule\n", cc)
 }
 
 // endTableAndTabular ends table and tabular
-func (o *Report) endTableAndTabular(ncols int, label, notes string) {
-	Ff(o.buffer, "\n")
+func (o *Report) endTableAndTabular(buffer *bytes.Buffer, ncols int, label, notes string) {
+	Ff(buffer, "\n")
 	if notes != "" {
-		Ff(o.buffer, "\\hline\n")
-		Ff(o.buffer, "\\multicolumn{%d}{%s}{\n", ncols, o.NotesFmt)
-		Ff(o.buffer, "%s\n", o.NotesFontSz)
-		Ff(o.buffer, "%s\n", notes)
-		Ff(o.buffer, "} \\\\\n")
+		Ff(buffer, "\\hline\n")
+		Ff(buffer, "\\multicolumn{%d}{%s}{\n", ncols, o.NotesFmt)
+		Ff(buffer, "%s\n", o.NotesFontSz)
+		Ff(buffer, "%s\n", notes)
+		Ff(buffer, "} \\\\\n")
 	}
-	Ff(o.buffer, "\\bottomrule\n")
-	Ff(o.buffer, "\\end{tabular}\n")
-	Ff(o.buffer, "\\label{tab:%s}\n", label)
-	Ff(o.buffer, "\\end{table*}")
+	Ff(buffer, "\\bottomrule\n")
+	Ff(buffer, "\\end{tabular}\n")
+	Ff(buffer, "\\label{tab:%s}\n", label)
+	Ff(buffer, "\\end{table*}")
 }
 
 // fixDefaults fix default values
