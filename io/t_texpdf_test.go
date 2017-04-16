@@ -45,10 +45,10 @@ func Test_texpdf02(tst *testing.T) {
 	}
 
 	key2convert := map[string]FcnConvertNum{
-		"a": func(x float64) string { return Sf("a:%g", x) },
-		"b": func(x float64) string { return Sf("b:%g", x) },
-		"c": func(x float64) string { return Sf("c:%g", x) },
-		"d": func(x float64) string { return Sf("d:%g", x) },
+		"a": func(i int, x float64) string { return Sf("a:%g", x) },
+		"b": func(i int, x float64) string { return Sf("b:%g", x) },
+		"c": func(i int, x float64) string { return Sf("c:%g", x) },
+		"d": func(i int, x float64) string { return Sf("d:%g", x) },
 	}
 
 	rpt := Report{

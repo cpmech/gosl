@@ -10,7 +10,7 @@ import (
 )
 
 // FcnConvertNum is a function to convert number to string
-type FcnConvertNum func(x float64) string
+type FcnConvertNum func(row int, x float64) string
 
 // Report holds data to generate LaTeX and PDF files
 type Report struct {
@@ -74,7 +74,7 @@ func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label 
 
 	// default table positioning key
 	if o.DefaultTablePos == "" {
-		o.DefaultTablePos = "!t"
+		o.DefaultTablePos = "h"
 	}
 
 	// default number formatting string
@@ -92,11 +92,11 @@ func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label 
 			} else {
 				widths[j] = imax(widths[j], len(key2tex[key]))
 			}
-			for _, v := range T[key] {
+			for i, v := range T[key] {
 				if key2numfmt == nil {
 					widths[j] = imax(widths[j], len(Sf(o.DefaultNumFmt, v)))
 				} else {
-					widths[j] = imax(widths[j], len(Sf(key2numfmt[key](v))))
+					widths[j] = imax(widths[j], len(Sf(key2numfmt[key](i, v))))
 				}
 			}
 		}
@@ -145,7 +145,7 @@ func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label 
 			if key2numfmt == nil {
 				Ff(o.buffer, strfmt[j], Sf(o.DefaultNumFmt, T[key][i]))
 			} else {
-				Ff(o.buffer, strfmt[j], key2numfmt[key](T[key][i]))
+				Ff(o.buffer, strfmt[j], key2numfmt[key](i, T[key][i]))
 			}
 		}
 		Ff(o.buffer, " \\\\")
@@ -185,7 +185,7 @@ func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err err
 		hasTitleOrAuthor = true
 	}
 	if o.Author != "" {
-		Ff(pdf, "\\title{%s}\n", o.Author)
+		Ff(pdf, "\\author{%s}\n", o.Author)
 		hasTitleOrAuthor = true
 	}
 
