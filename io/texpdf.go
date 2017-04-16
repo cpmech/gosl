@@ -28,6 +28,8 @@ type Report struct {
 	NumFmt      string  // default number formatting string; e.g. "%v", "%g" or "%.3f"
 	TableFontSz string  // default table fontsize string; e.g. \scriptsize
 	TableColSep float64 // default table column separation in 'em'; e.g. 0.5 => \setlength{\tabcolsep}{0.5em}
+	NotesFmt    string  // default table notes format; e.g. 'c' or 'p{7cm}'
+	NotesFontSz string  // default table notes font size; e.g. \scriptsize
 
 	// options
 	DoNotAlignTable   bool // align coluns in TeX table (has to loop over rows first...)
@@ -71,10 +73,10 @@ func (o *Report) AddTex(commands string) {
 //   caption -- caption of table
 //   label -- label of table
 //   keys -- column keys
-//   T -- table values
+//   T -- table of values: key => row value
 //   key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
 //   key2convert -- maps key to function to convert numbers to string in that column. may be nil
-func (o *Report) AddTable(caption, label string, keys []string, T map[string][]float64, key2tex map[string]string, key2numfmt map[string]FcnConvertNum) {
+func (o *Report) AddTable(caption, label, notes string, keys []string, T map[string][]float64, key2tex map[string]string, key2numfmt map[string]FcnConvertNum) {
 
 	// new buffer
 	if o.buffer == nil {
@@ -98,7 +100,7 @@ func (o *Report) AddTable(caption, label string, keys []string, T map[string][]f
 				if key2numfmt == nil {
 					widths[j] = imax(widths[j], len(Sf(o.NumFmt, v)))
 				} else {
-					widths[j] = imax(widths[j], len(Sf(key2numfmt[key](i, v))))
+					widths[j] = imax(widths[j], len(key2numfmt[key](i, v)))
 				}
 			}
 		}
@@ -111,21 +113,9 @@ func (o *Report) AddTable(caption, label string, keys []string, T map[string][]f
 		}
 	}
 
-	// start table
-	Ff(o.buffer, "\n")
-	Ff(o.buffer, "\\begin{table*} [%s] \\centering\n", o.TablePos)
-	Ff(o.buffer, "\\caption{%s}\n", caption)
-
-	// set fontsize and column separation
-	Ff(o.buffer, o.TableFontSz)
-	Ff(o.buffer, " \\setlength{\\tabcolsep}{%gem}\n", o.TableColSep)
-
-	// start tabular
-	cc := ""
-	for range keys {
-		cc += "c"
-	}
-	Ff(o.buffer, "\\begin{tabular}[c]{%s} \\toprule\n", cc)
+	// start table and tabular
+	ncols := len(keys)
+	o.startTableAndTabular(ncols, caption)
 
 	// header
 	for j, key := range keys {
@@ -160,11 +150,82 @@ func (o *Report) AddTable(caption, label string, keys []string, T map[string][]f
 	}
 
 	// end tabular and table
-	Ff(o.buffer, "\n")
-	Ff(o.buffer, "\\bottomrule\n")
-	Ff(o.buffer, "\\end{tabular}\n")
-	Ff(o.buffer, "\\label{tab:%s}\n", label)
-	Ff(o.buffer, "\\end{table*}")
+	o.endTableAndTabular(ncols, label, notes)
+}
+
+// AddTableF adds tex table to report by using a map of functions to extract row values
+//   caption -- caption of table
+//   label -- label of table
+//   keys -- column keys
+//   nrows -- number of rows
+//   F -- map of functions: key => function returning formatted row value
+//   key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
+func (o *Report) AddTableF(caption, label, notes string, keys []string, nrows int, F map[string]FcnRow, key2tex map[string]string) {
+
+	// new buffer
+	if o.buffer == nil {
+		o.buffer = new(bytes.Buffer)
+	}
+
+	// fix default parameters
+	o.fixDefaults()
+
+	// find column widths and set formatting string
+	strfmt := make([]string, len(keys)) // for each column
+	if !o.DoNotAlignTable {
+		widths := make([]int, len(keys)) // column widths
+		for j, key := range keys {
+			if key2tex == nil {
+				widths[j] = imax(widths[j], len(key))
+			} else {
+				widths[j] = imax(widths[j], len(key2tex[key]))
+			}
+			for i := 0; i < nrows; i++ {
+				widths[j] = imax(widths[j], len(F[key](i)))
+			}
+		}
+		for j, width := range widths {
+			strfmt[j] = "%" + Sf("%d", width) + "s"
+		}
+	} else {
+		for j := 0; j < len(keys); j++ {
+			strfmt[j] = "%s"
+		}
+	}
+
+	// start table and tabular
+	ncols := len(keys)
+	o.startTableAndTabular(ncols, caption)
+
+	// header
+	for j, key := range keys {
+		if j > 0 {
+			Ff(o.buffer, " & ")
+		}
+		if key2tex == nil {
+			Ff(o.buffer, strfmt[j], key)
+		} else {
+			Ff(o.buffer, strfmt[j], key2tex[key])
+		}
+	}
+	Ff(o.buffer, " \\\\ \\hline\n")
+
+	// rows
+	for i := 0; i < nrows; i++ {
+		if i > 0 {
+			Ff(o.buffer, "\n")
+		}
+		for j, key := range keys {
+			if j > 0 {
+				Ff(o.buffer, " & ")
+			}
+			Ff(o.buffer, strfmt[j], F[key](i))
+		}
+		Ff(o.buffer, " \\\\")
+	}
+
+	// end tabular and table
+	o.endTableAndTabular(ncols, label, notes)
 }
 
 // WriteTexPdf writes tex file and generates pdf file
@@ -239,30 +300,6 @@ func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err err
 	return
 }
 
-// fixDefaults fix default values
-func (o *Report) fixDefaults() {
-
-	// default table positioning key
-	if o.TablePos == "" {
-		o.TablePos = "h"
-	}
-
-	// default number formatting string
-	if o.NumFmt == "" {
-		o.NumFmt = "%g"
-	}
-
-	// default table fontsize string
-	if o.TableFontSz == "" {
-		//o.TableFontSz = "\\scriptsize"
-	}
-
-	// default table column separation in 'em'; e.g. 0.5 =>
-	if o.TableColSep <= 0 {
-		o.TableColSep = 0.5
-	}
-}
-
 // TexNum returns a string representation in TeX format of a real number.
 // scientificNotation:
 //   peforms the conversion of numbers into scientific notation where
@@ -302,3 +339,73 @@ func TexNum(fmt string, num float64, scientificNotation bool) (l string) {
 }
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
+
+// startTableAndTabular starts table and tabular
+func (o *Report) startTableAndTabular(ncols int, caption string) {
+
+	// start table
+	Ff(o.buffer, "\n")
+	Ff(o.buffer, "\\begin{table*} [%s] \\centering\n", o.TablePos)
+	Ff(o.buffer, "\\caption{%s}\n", caption)
+
+	// set fontsize and column separation
+	Ff(o.buffer, o.TableFontSz)
+	Ff(o.buffer, " \\setlength{\\tabcolsep}{%gem}\n", o.TableColSep)
+
+	// start tabular
+	cc := ""
+	for i := 0; i < ncols; i++ {
+		cc += "c"
+	}
+	Ff(o.buffer, "\\begin{tabular}[c]{%s} \\toprule\n", cc)
+}
+
+// endTableAndTabular ends table and tabular
+func (o *Report) endTableAndTabular(ncols int, label, notes string) {
+	Ff(o.buffer, "\n")
+	if notes != "" {
+		Ff(o.buffer, "\\hline\n")
+		Ff(o.buffer, "\\multicolumn{%d}{%s}{\n", ncols, o.NotesFmt)
+		Ff(o.buffer, "%s\n", o.NotesFontSz)
+		Ff(o.buffer, "%s\n", notes)
+		Ff(o.buffer, "} \\\\\n")
+	}
+	Ff(o.buffer, "\\bottomrule\n")
+	Ff(o.buffer, "\\end{tabular}\n")
+	Ff(o.buffer, "\\label{tab:%s}\n", label)
+	Ff(o.buffer, "\\end{table*}")
+}
+
+// fixDefaults fix default values
+func (o *Report) fixDefaults() {
+
+	// default table positioning key
+	if o.TablePos == "" {
+		o.TablePos = "h"
+	}
+
+	// default number formatting string
+	if o.NumFmt == "" {
+		o.NumFmt = "%g"
+	}
+
+	// default table fontsize string
+	if o.TableFontSz == "" {
+		//o.TableFontSz = "\\scriptsize"
+	}
+
+	// default table column separation in 'em'; e.g. 0.5 =>
+	if o.TableColSep <= 0 {
+		o.TableColSep = 0.5
+	}
+
+	// default table notes format
+	if o.NotesFmt == "" {
+		o.NotesFmt = "l"
+	}
+
+	// default table notes font size
+	if o.NotesFontSz == "" {
+		o.NotesFontSz = "\\scriptsize"
+	}
+}

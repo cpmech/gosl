@@ -35,7 +35,7 @@ func Test_texpdf02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("texpdf02")
 
-	keys, res := ReadTableOrPanic("data/table01.dat")
+	keys, T := ReadTableOrPanic("data/table01.dat")
 
 	key2tex := map[string]string{
 		"a": `$a = \int x \, \mathrm{d}x$`,
@@ -66,7 +66,7 @@ func Test_texpdf02(tst *testing.T) {
 	rpt.AddTex("The numbers in the rows of the table have a fancy format.")
 
 	rpt.AddSection("MyTable", 1)
-	rpt.AddTable("Results from simulation.", "results", keys, res, key2tex, key2convert)
+	rpt.AddTable("Results from simulation.", "results", "", keys, T, key2tex, key2convert)
 
 	rpt.AddSection("Extra", 3)
 	extra := new(bytes.Buffer)
@@ -75,6 +75,48 @@ func Test_texpdf02(tst *testing.T) {
 	Ff(extra, `\end{equation}`)
 
 	err := rpt.WriteTexPdf("/tmp/gosl", "test_texpdf02", extra)
+	if err != nil {
+		tst.Errorf("%v", err)
+	}
+}
+
+func Test_texpdf03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("texpdf03")
+
+	keys, T := ReadTableOrPanic("data/table01.dat")
+
+	key2tex := map[string]string{
+		"a": `$a^\star$`,
+		"b": `$b$`,
+		"c": `cval`,
+		"d": `$d^\circ$`,
+	}
+
+	F := map[string]FcnRow{
+		"a": func(i int) string { return Sf("a:%g", T["a"][i]) },
+		"b": func(i int) string { return Sf("b:%g", T["b"][i]) },
+		"c": func(i int) string { return Sf("c:%g", T["c"][i]) },
+		"d": func(i int) string { return Sf("d:%g", T["d"][i]) },
+	}
+
+	rpt := Report{
+		Title:  "Gosl test",
+		Author: "Gosl authors",
+	}
+
+	if !chk.Verbose {
+		rpt.DoNotGeneratePDF = true
+	}
+
+	notes := "$^\\star$First value\n"
+	notes += "$^\\circ$Last value"
+
+	nrows := len(T["a"])
+	rpt.AddTableF("Results from simulation.", "results", notes, keys, nrows, F, key2tex)
+
+	err := rpt.WriteTexPdf("/tmp/gosl", "test_texpdf03", nil)
 	if err != nil {
 		tst.Errorf("%v", err)
 	}
