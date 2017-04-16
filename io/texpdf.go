@@ -30,6 +30,8 @@ type Report struct {
 	TableColSep float64 // default table column separation in 'em'; e.g. 0.5 => \setlength{\tabcolsep}{0.5em}
 	NotesFmt    string  // default table notes format; e.g. 'c' or 'p{7cm}'
 	NotesFontSz string  // default table notes font size; e.g. \scriptsize
+	RowGapStep  int     // step when looping over rows to add an extra gap; e.g. 2 => after every two rows
+	RowGapPt    int     // row gap in points; e.g. 12 => 12 pt. 0 means no gap
 
 	// options
 	DoNotAlignTable   bool // align coluns in TeX table (has to loop over rows first...)
@@ -129,7 +131,7 @@ func (o *Report) AddTable(caption, label, notes string, keys []string, T map[str
 			Ff(buffer, strfmt[j], key2tex[key])
 		}
 	}
-	Ff(buffer, " \\\\ \\hline\n")
+	Ff(buffer, " \\\\ \\midrule\n")
 
 	// rows
 	nrows := len(T[keys[0]])
@@ -148,6 +150,11 @@ func (o *Report) AddTable(caption, label, notes string, keys []string, T map[str
 			}
 		}
 		Ff(buffer, " \\\\")
+		if o.RowGapPt > 0 && o.RowGapStep > 0 {
+			if (i+1)%o.RowGapStep == 0 && i < nrows-1 {
+				Ff(buffer, " \\rule{0pt}{%dpt}", o.RowGapPt)
+			}
+		}
 	}
 
 	// end tabular and table
@@ -214,7 +221,7 @@ func (o *Report) AddTableF(caption, label, notes string, keys []string, nrows in
 			Ff(buffer, strfmt[j], key2tex[key])
 		}
 	}
-	Ff(buffer, " \\\\ \\hline\n")
+	Ff(buffer, " \\\\ \\midrule\n")
 
 	// rows
 	for i := 0; i < nrows; i++ {
@@ -228,6 +235,11 @@ func (o *Report) AddTableF(caption, label, notes string, keys []string, nrows in
 			Ff(buffer, strfmt[j], F[key](i))
 		}
 		Ff(buffer, " \\\\")
+		if o.RowGapPt > 0 && o.RowGapStep > 0 {
+			if (i+1)%o.RowGapStep == 0 && i < nrows-1 {
+				Ff(buffer, " \\rule{0pt}{%dpt}", o.RowGapPt)
+			}
+		}
 	}
 
 	// end tabular and table
@@ -393,7 +405,7 @@ func (o *Report) startTableAndTabular(buffer *bytes.Buffer, ncols int, caption s
 func (o *Report) endTableAndTabular(buffer *bytes.Buffer, ncols int, label, notes string) {
 	Ff(buffer, "\n")
 	if notes != "" {
-		Ff(buffer, "\\hline\n")
+		Ff(buffer, "\\midrule\n")
 		Ff(buffer, "\\multicolumn{%d}{%s}{\n", ncols, o.NotesFmt)
 		Ff(buffer, "%s\n", o.NotesFontSz)
 		Ff(buffer, "%s\n", notes)

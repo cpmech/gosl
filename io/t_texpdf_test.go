@@ -115,6 +115,15 @@ func Test_texpdf03(tst *testing.T) {
 
 	nrows := len(T["a"])
 	rpt.AddTableF("Results from simulation.", "results", notes, keys, nrows, F, key2tex)
+
+	T["a"] = append(T["a"], -1)
+	T["b"] = append(T["b"], -2)
+	T["c"] = append(T["c"], -3)
+	T["d"] = append(T["d"], -4)
+	nrows = len(T["a"])
+
+	rpt.RowGapPt = 20
+	rpt.RowGapStep = 2
 	rpt.AddTableF("Results from simulation (again).", "resultsAgain", notes, keys, nrows, F, key2tex)
 
 	err := rpt.WriteTexPdf("/tmp/gosl", "test_texpdf03", nil)
