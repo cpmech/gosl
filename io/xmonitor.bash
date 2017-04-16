@@ -1,10 +1,10 @@
 #!/bin/bash
 
-FILES="parsing.go t_parsing_test.go"
+FILES="*.go"
 
 while true; do
     inotifywait -q -e modify $FILES
     echo
     echo
-    go test -test.run="parsing07"
+    go test -test.run="texpdf02"
 done
