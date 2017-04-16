@@ -350,7 +350,7 @@ func (o *Report) startTableAndTabular(ncols int, caption string) {
 
 	// set fontsize and column separation
 	Ff(o.buffer, o.TableFontSz)
-	Ff(o.buffer, " \\setlength{\\tabcolsep}{%gem}\n", o.TableColSep)
+	Ff(o.buffer, "\\setlength{\\tabcolsep}{%gem}\n", o.TableColSep)
 
 	// start tabular
 	cc := ""
