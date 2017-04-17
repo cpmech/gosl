@@ -13,10 +13,10 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
-func Test_fun01(tst *testing.T) {
+func Test_ts01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun01. Decreasing Reference Model")
+	chk.PrintTitle("ts01. Decreasing Reference Model")
 
 	ya := 1.0
 	yb := -0.5
@@ -55,10 +55,10 @@ func Test_fun01(tst *testing.T) {
 	CheckDerivT(tst, o, 0.0, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun02(tst *testing.T) {
+func Test_ts02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun02. Dec Ref Model (specialised)")
+	chk.PrintTitle("ts02. Dec Ref Model (specialised)")
 
 	ya := 1.0
 	yb := -50.0
@@ -94,10 +94,10 @@ func Test_fun02(tst *testing.T) {
 	CheckDerivT(tst, o, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun03(tst *testing.T) {
+func Test_ts03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun03. add, cte, srmps")
+	chk.PrintTitle("ts03. add, cte, srmps")
 
 	cte, err := New("cte", []*Prm{&Prm{N: "c", V: 30}})
 	if err != nil {
@@ -151,10 +151,10 @@ func Test_fun03(tst *testing.T) {
 	CheckDerivT(tst, add, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun04(tst *testing.T) {
+func Test_ts04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun04. lin")
+	chk.PrintTitle("ts04. lin")
 
 	lin, err := New("lin", []*Prm{
 		&Prm{N: "m", V: 0.5},
@@ -180,10 +180,10 @@ func Test_fun04(tst *testing.T) {
 	CheckDerivT(tst, lin, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun05(tst *testing.T) {
+func Test_ts05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun05. zero and one")
+	chk.PrintTitle("ts05. zero and one")
 
 	io.Pforan("Zero(666,nil) = %v\n", Zero.F(666, nil))
 	io.Pforan("One(666,nil)  = %v\n", One.F(666, nil))
@@ -191,10 +191,10 @@ func Test_fun05(tst *testing.T) {
 	chk.Scalar(tst, "one ", 1e-17, One.F(666, nil), 1)
 }
 
-func Test_fun06a(tst *testing.T) {
+func Test_ts06a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun06a. pts")
+	chk.PrintTitle("ts06a. pts")
 
 	fun, err := New("pts", []*Prm{
 		&Prm{N: "t", V: 0.00}, {N: "y", V: 0.50},
@@ -226,10 +226,10 @@ func Test_fun06a(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun06b(tst *testing.T) {
+func Test_ts06b(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun06b. pts")
+	chk.PrintTitle("ts06b. pts")
 
 	fun, err := New("pts", []*Prm{
 		&Prm{N: "t0", V: 0.0}, {N: "y0", V: 0.50},
@@ -257,10 +257,10 @@ func Test_fun06b(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun06c(tst *testing.T) {
+func Test_ts06c(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun06c. pts")
+	chk.PrintTitle("ts06c. pts")
 
 	fun, err := New("pts", []*Prm{
 		// T =                     0 0.05 0.1 0.2 0.3 0.5  0.75 1
@@ -288,10 +288,10 @@ func Test_fun06c(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 10, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun07(tst *testing.T) {
+func Test_ts07(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun07. exc1")
+	chk.PrintTitle("ts07. exc1")
 
 	fun, err := New("exc1", []*Prm{
 		&Prm{N: "a", V: 200},
@@ -317,10 +317,10 @@ func Test_fun07(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun08(tst *testing.T) {
+func Test_ts08(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun08. exc2")
+	chk.PrintTitle("ts08. exc2")
 
 	fun, err := New("exc2", []*Prm{
 		&Prm{N: "ta", V: 5},
@@ -347,10 +347,10 @@ func Test_fun08(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun09(tst *testing.T) {
+func Test_ts09(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun09. cos")
+	chk.PrintTitle("ts09. cos")
 
 	fun, err := New("cos", []*Prm{
 		&Prm{N: "a", V: 10},
@@ -377,10 +377,10 @@ func Test_fun09(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun10(tst *testing.T) {
+func Test_ts10(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun10. rmp")
+	chk.PrintTitle("ts10. rmp")
 
 	fun, err := New("rmp", []*Prm{
 		&Prm{N: "ta", V: 1},
@@ -408,10 +408,10 @@ func Test_fun10(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun11(tst *testing.T) {
+func Test_ts11(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun11. ref-inc-rl1")
+	chk.PrintTitle("ts11. ref-inc-rl1")
 
 	fun, err := New("ref-inc-rl1", []*Prm{
 		&Prm{N: "lam0", V: 0.001},
@@ -439,10 +439,10 @@ func Test_fun11(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun12(tst *testing.T) {
+func Test_ts12(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun12. mul")
+	chk.PrintTitle("ts12. mul")
 
 	cos, err := New("cos", []*Prm{
 		&Prm{N: "a", V: 1},
@@ -496,10 +496,10 @@ func Test_fun12(tst *testing.T) {
 	CheckDerivT(tst, mul, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun13(tst *testing.T) {
+func Test_ts13(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun13. pulse")
+	chk.PrintTitle("ts13. pulse")
 
 	pulse, err := New("pulse", []*Prm{
 		&Prm{N: "ca", V: 0.2},
@@ -528,10 +528,10 @@ func Test_fun13(tst *testing.T) {
 	CheckDerivT(tst, pulse, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun14(tst *testing.T) {
+func Test_ts14(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun14. sin")
+	chk.PrintTitle("ts14. sin")
 
 	fun, err := New("sin", []*Prm{
 		&Prm{N: "a", V: 10},
@@ -558,10 +558,10 @@ func Test_fun14(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun15(tst *testing.T) {
+func Test_ts15(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun15. cut-sin; test cut positive values.")
+	chk.PrintTitle("ts15. cut-sin; test cut positive values.")
 
 	fun, err := New("cut-sin", []*Prm{
 		&Prm{N: "a", V: 10},
@@ -589,10 +589,10 @@ func Test_fun15(tst *testing.T) {
 	CheckDerivT(tst, fun, tmin, tmax, xcte, 11, nil, sktol, dtol, dtol2, ver)
 }
 
-func Test_fun16(tst *testing.T) {
+func Test_ts16(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("fun16. cut-sin; test cut negative values.")
+	chk.PrintTitle("ts16. cut-sin; test cut negative values.")
 
 	fun, err := New("cut-sin", []*Prm{
 		&Prm{N: "a", V: 10},
