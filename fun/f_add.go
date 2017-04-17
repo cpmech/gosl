@@ -9,13 +9,13 @@ import "github.com/cpmech/gosl/chk"
 // Add implements the addition of two other functions.
 //  F(t, x) := A*Fa(t,x) + B*Fb(t,x)
 type Add struct {
-	Fa, Fb Func
+	Fa, Fb TimeSpace
 	A, B   float64
 }
 
 // set allocators database
 func init() {
-	allocators["add"] = func() Func { return new(Add) }
+	allocators["add"] = func() TimeSpace { return new(Add) }
 }
 
 // Init initialises the function

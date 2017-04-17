@@ -17,7 +17,7 @@ type Exc1 struct {
 
 // set allocators databse
 func init() {
-	allocators["exc1"] = func() Func { return new(Exc1) }
+	allocators["exc1"] = func() TimeSpace { return new(Exc1) }
 }
 
 // Init initialises the function

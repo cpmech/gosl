@@ -25,7 +25,7 @@ type RefDecGen struct {
 
 // set allocators database
 func init() {
-	allocators["ref-dec-gen"] = func() Func { return new(RefDecGen) }
+	allocators["ref-dec-gen"] = func() TimeSpace { return new(RefDecGen) }
 }
 
 // Init initialises the function

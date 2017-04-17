@@ -27,7 +27,7 @@ type Xpoly2 struct {
 
 // set allocators database
 func init() {
-	allocators["xpoly2"] = func() Func { return new(Xpoly2) }
+	allocators["xpoly2"] = func() TimeSpace { return new(Xpoly2) }
 }
 
 // Init initialises the function

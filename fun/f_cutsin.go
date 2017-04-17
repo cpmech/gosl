@@ -34,7 +34,7 @@ type CutSin struct {
 
 // set allocators database
 func init() {
-	allocators["cut-sin"] = func() Func { return new(CutSin) }
+	allocators["cut-sin"] = func() TimeSpace { return new(CutSin) }
 }
 
 // Init initialises the function

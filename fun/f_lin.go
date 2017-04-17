@@ -15,7 +15,7 @@ type Lin struct {
 
 // set allocators database
 func init() {
-	allocators["lin"] = func() Func { return new(Lin) }
+	allocators["lin"] = func() TimeSpace { return new(Lin) }
 }
 
 // Init initialises the function

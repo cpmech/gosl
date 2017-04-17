@@ -19,7 +19,7 @@ type Cte struct {
 
 // set allocators database
 func init() {
-	allocators["cte"] = func() Func { return new(Cte) }
+	allocators["cte"] = func() TimeSpace { return new(Cte) }
 }
 
 // Init initialises the function

@@ -27,7 +27,7 @@ type Cos struct {
 
 // set allocators database
 func init() {
-	allocators["cos"] = func() Func { return new(Cos) }
+	allocators["cos"] = func() TimeSpace { return new(Cos) }
 }
 
 // Init initialises the function

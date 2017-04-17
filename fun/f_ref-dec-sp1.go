@@ -46,7 +46,7 @@ type RefDecSp1 struct {
 
 // set allocators database
 func init() {
-	allocators["ref-dec-sp1"] = func() Func { return new(RefDecSp1) }
+	allocators["ref-dec-sp1"] = func() TimeSpace { return new(RefDecSp1) }
 }
 
 // Init initialises the model

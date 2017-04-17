@@ -31,7 +31,7 @@ type RefIncRL1 struct {
 
 // set allocators database
 func init() {
-	allocators["ref-inc-rl1"] = func() Func { return new(RefIncRL1) }
+	allocators["ref-inc-rl1"] = func() TimeSpace { return new(RefIncRL1) }
 }
 
 // Init initialises the model

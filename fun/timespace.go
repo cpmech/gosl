@@ -15,8 +15,8 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Func defines the interface for simple functions
-type Func interface {
+// TimeSpace defines the interface for simple functions
+type TimeSpace interface {
 	Init(prms Prms) error                     // initialise function parameters
 	F(t float64, x []float64) float64         // y = F(t, x)
 	G(t float64, x []float64) float64         // ∂y/∂t_cteX = G(t, x)
@@ -25,10 +25,10 @@ type Func interface {
 }
 
 // allocators maps function type to function allocator
-var allocators = map[string]func() Func{} // type => function allocator
+var allocators = map[string]func() TimeSpace{} // type => function allocator
 
 // New allocates function by name
-func New(name string, prms Prms) (Func, error) {
+func New(name string, prms Prms) (TimeSpace, error) {
 	if name == "zero" {
 		return &Zero, nil
 	}
@@ -47,7 +47,7 @@ func New(name string, prms Prms) (Func, error) {
 // PlotT plots F, G and H for varying t and fixed coordinates x
 //  fname       -- filename to safe figure
 //  args{F,G,H} -- if any is "", the corresponding plot is not created
-func PlotT(o Func, dirout, fname string, t0, tf float64, xcte []float64, np int,
+func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np int,
 	labelT, labelF, labelG, labelH, argsF, argsG, argsH string) {
 
 	// variables
@@ -141,7 +141,7 @@ func PlotT(o Func, dirout, fname string, t0, tf float64, xcte []float64, np int,
 // PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
 //  hlZero  -- highlight F(t,x) = 0
 //  axEqual -- use axis['equal']
-func PlotX(o Func, dirout, fname string, tcte float64, xmin, xmax []float64, np int, args string, withGrad, hlZero, axEqual, save, show bool, extra func()) {
+func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64, np int, args string, withGrad, hlZero, axEqual, save, show bool, extra func()) {
 	if len(xmin) == 3 {
 		chk.Panic("PlotX works in 2D only")
 	}

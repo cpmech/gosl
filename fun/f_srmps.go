@@ -18,7 +18,7 @@ type Srmps struct {
 
 // set allocators databse
 func init() {
-	allocators["srmps"] = func() Func { return new(Srmps) }
+	allocators["srmps"] = func() TimeSpace { return new(Srmps) }
 }
 
 // Init initialises the function

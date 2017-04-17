@@ -27,7 +27,7 @@ type Sin struct {
 
 // set allocators database
 func init() {
-	allocators["sin"] = func() Func { return new(Sin) }
+	allocators["sin"] = func() TimeSpace { return new(Sin) }
 }
 
 // Init initialises the function

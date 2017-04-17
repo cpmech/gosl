@@ -21,7 +21,7 @@ type Pts struct {
 
 // set allocators databse
 func init() {
-	allocators["pts"] = func() Func { return new(Pts) }
+	allocators["pts"] = func() TimeSpace { return new(Pts) }
 }
 
 // Init initialises the function

@@ -9,12 +9,12 @@ import "github.com/cpmech/gosl/chk"
 // Mul implements the multiplication of two other functions.
 //  F(t, x) := fa(t,x) * fb(t,x)
 type Mul struct {
-	Fa, Fb Func
+	Fa, Fb TimeSpace
 }
 
 // set allocators database
 func init() {
-	allocators["mul"] = func() Func { return new(Mul) }
+	allocators["mul"] = func() TimeSpace { return new(Mul) }
 }
 
 // Init initialises the function

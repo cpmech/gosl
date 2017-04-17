@@ -23,7 +23,7 @@ type Cdist struct {
 
 // set allocators database
 func init() {
-	allocators["cdist"] = func() Func { return new(Cdist) }
+	allocators["cdist"] = func() TimeSpace { return new(Cdist) }
 }
 
 // Init initialises the function

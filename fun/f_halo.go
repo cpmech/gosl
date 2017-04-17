@@ -19,7 +19,7 @@ type Halo struct {
 
 // set allocators database
 func init() {
-	allocators["halo"] = func() Func { return new(Halo) }
+	allocators["halo"] = func() TimeSpace { return new(Halo) }
 }
 
 // Init initialises the function

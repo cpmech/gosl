@@ -20,7 +20,7 @@ type Pulse struct {
 
 // set allocators database
 func init() {
-	allocators["pulse"] = func() Func { return new(Pulse) }
+	allocators["pulse"] = func() TimeSpace { return new(Pulse) }
 }
 
 // Init initialises the function

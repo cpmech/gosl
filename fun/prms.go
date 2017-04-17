@@ -32,8 +32,8 @@ type Prm struct {
 	SetDef bool    `json:"setdef"` // tells model to use a default value
 
 	// auxiliary
-	Fcn   Func // a function y=f(t,x)
-	Other *Prm // dependency: connected parameter
+	Fcn   TimeSpace // a function y=f(t,x)
+	Other *Prm      // dependency: connected parameter
 
 	// derived
 	conn []*float64 // connected variables to V

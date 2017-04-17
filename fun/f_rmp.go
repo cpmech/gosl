@@ -16,7 +16,7 @@ type Rmp struct {
 
 // set allocators database
 func init() {
-	allocators["rmp"] = func() Func { return new(Rmp) }
+	allocators["rmp"] = func() TimeSpace { return new(Rmp) }
 }
 
 // Init initialises the function
