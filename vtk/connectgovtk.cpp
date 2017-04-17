@@ -74,6 +74,26 @@ void * win_alloc(long reverse) {
 }
 
 // returns 0 on success
+int set_camera(void * input_win, double * data) {
+
+    try {
+
+        // window
+        GoslVTK::Win * win = (GoslVTK::Win*) input_win;
+
+        // set camera
+        win->Camera(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]);
+
+        // success
+        return 0;
+    }
+
+    // fail
+    GOSLVTK_CATCH;
+    return 1;
+}
+
+// returns 0 on success
 int scene_run(
     void       * input_win,
     double       axeslen,

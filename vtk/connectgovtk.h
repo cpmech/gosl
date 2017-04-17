@@ -27,6 +27,9 @@ void isosurf_dealloc(void * isosurf);
 void * win_alloc(long reverse);
 
 // return 0 on success
+int set_camera(void * input_win, double * data);
+
+// return 0 on success
 int scene_run(
     void       * input_win,
     double       axeslen,

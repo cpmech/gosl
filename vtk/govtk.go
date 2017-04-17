@@ -41,6 +41,9 @@ type Scene struct {
 	LblSz      int       // size of labels in points
 	LblClr     []float64 // r,g,b color components for labels
 
+	// camera
+	camData []float64 // camera data
+
 	// vtk objects
 	arrows     []*Arrow
 	spheres    []*Sphere
@@ -239,6 +242,11 @@ func b2i(b bool) (i int) {
 	return 0
 }
 
+// SetCamera sets camera
+func (o *Scene) SetCamera(xUp, yUp, zUp, xFoc, yFoc, zFoc, xPos, yPos, zPos float64) {
+	o.camData = []float64{xUp, yUp, zUp, xFoc, yFoc, zFoc, xPos, yPos, zPos}
+}
+
 // Run shows Scene in interactive mode or saving a .png file
 func (o *Scene) Run() (err error) {
 
@@ -269,6 +277,14 @@ func (o *Scene) Run() (err error) {
 	defer C.win_dealloc(o.win)
 	if o.win == nil {
 		return chk.Err("C.scene_begin failed\n")
+	}
+
+	// set camera
+	if len(o.camData) == 9 {
+		status := C.set_camera(o.win, (*C.double)(unsafe.Pointer(&o.camData[0])))
+		if status != 0 {
+			return chk.Err("C.set_camera failed\n")
+		}
 	}
 
 	// arrows
