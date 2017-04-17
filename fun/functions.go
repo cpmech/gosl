@@ -6,6 +6,16 @@ package fun
 
 import "math"
 
+// CosX implements the extended cosine function (for superquadrics)
+func CosX(w, m float64) float64 {
+	return Sign(math.Cos(w)) * math.Pow(math.Abs(math.Cos(w)), m)
+}
+
+// SinX implements the extended sine function (for superquadrics)
+func SinX(w, m float64) float64 {
+	return Sign(math.Sin(w)) * math.Pow(math.Abs(math.Sin(w)), m)
+}
+
 // Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 2π
 func Atan2p(y, x float64) (αrad float64) {
 	αrad = math.Atan2(y, x)
