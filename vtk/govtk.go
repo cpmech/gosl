@@ -41,6 +41,10 @@ type Scene struct {
 	LblSz      int       // size of labels in points
 	LblClr     []float64 // r,g,b color components for labels
 
+	// window
+	Width  int // width of window
+	Height int // height of window
+
 	// camera
 	camData []float64 // camera data
 
@@ -273,7 +277,13 @@ func (o *Scene) Run() (err error) {
 	C.GOVTK_I = (*C.long)(unsafe.Pointer(&GOVTK_I))
 
 	// alloc win
-	o.win = C.win_alloc(reverse)
+	if o.Width == 0 {
+		o.Width = 600
+	}
+	if o.Height == 0 {
+		o.Height = 600
+	}
+	o.win = C.win_alloc(C.long(o.Width), C.long(o.Height), reverse)
 	defer C.win_dealloc(o.win)
 	if o.win == nil {
 		return chk.Err("C.scene_begin failed\n")

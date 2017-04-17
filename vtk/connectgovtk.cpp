@@ -56,12 +56,12 @@ void isosurf_dealloc(void * input_isosurf) {
 }
 
 // returns non-NULL pointer on success
-void * win_alloc(long reverse) {
+void * win_alloc(long width, long height, long reverse) {
     try {
 
         // window
         GoslVTK::Win * win = new GoslVTK::Win();
-        win->Init();
+        win->Init(width, height);
         win->SetViewDefault(reverse>0);
 
         // success

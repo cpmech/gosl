@@ -24,7 +24,7 @@ void spheres_dealloc(void * sset);
 void isosurf_dealloc(void * isosurf);
 
 // return non-NULL pointer on success
-void * win_alloc(long reverse);
+void * win_alloc(long width, long height, long reverse);
 
 // return 0 on success
 int set_camera(void * input_win, double * data);
