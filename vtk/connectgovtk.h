@@ -46,7 +46,8 @@ int scene_run(
     char const * lblY,
     char const * lblZ,
     long         lblSz,
-    double     * lblClr);
+    double     * lblClr,
+    double       zoom);
 
 // return non-NULL pointer on success
 void * arrow_addto(

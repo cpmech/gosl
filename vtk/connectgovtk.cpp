@@ -75,22 +75,13 @@ void * win_alloc(long width, long height, long reverse) {
 
 // returns 0 on success
 int set_camera(void * input_win, double * data) {
-
     try {
-
-        // window
         GoslVTK::Win * win = (GoslVTK::Win*) input_win;
-
-        // set camera
         win->Camera(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]);
-
-        // success
-        return 0;
+        return 0; // success
     }
-
-    // fail
     GOSLVTK_CATCH;
-    return 1;
+    return 1; // fail
 }
 
 // returns 0 on success
@@ -110,7 +101,8 @@ int scene_run(
     char const * lblY,
     char const * lblZ,
     long         lblSz,
-    double     * lblClr) {
+    double     * lblClr,
+    double       zoom) {
 
     try {
 
@@ -142,6 +134,9 @@ int scene_run(
             pyz.AddTo(*win);
             pzx.AddTo(*win);
         }
+
+        // set zoom
+        win->Zoom(zoom);
 
         // interact
         if (interact > 0) {

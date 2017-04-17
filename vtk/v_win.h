@@ -50,6 +50,7 @@ public:
     void WriteEPS (char const * Filename);
     void Camera   (double xUp, double yUp, double zUp, double xFoc, double yFoc, double zFoc, double xPos, double yPos, double zPos);
     void Parallel (bool ParallelProjection=true) { if (_initialized) _camera->SetParallelProjection(ParallelProjection); }
+    void Zoom     (double factor) { if (_initialized) _camera->Zoom(factor); }
 
     // Set methods
     void SetViewDefault (bool RevCam=false);

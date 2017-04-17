@@ -42,8 +42,9 @@ type Scene struct {
 	LblClr     []float64 // r,g,b color components for labels
 
 	// window
-	Width  int // width of window
-	Height int // height of window
+	Zoom   float64 // zoom
+	Width  int     // width of window
+	Height int     // height of window
 
 	// camera
 	camData []float64 // camera data
@@ -361,7 +362,8 @@ func (o *Scene) Run() (err error) {
 
 		// call C routine: add isosurf
 		index := (C.long)(idx)
-		O.isf = C.isosurf_addto(o.win, index, limits, ndiv, frange, octrotate, nlevels, cmaptype, cmapnclrs, cmaprangetype, cmapfrange, color, showwire, gridshowpts)
+		O.isf = C.isosurf_addto(o.win, index, limits, ndiv, frange, octrotate, nlevels,
+			cmaptype, cmapnclrs, cmaprangetype, cmapfrange, color, showwire, gridshowpts)
 		defer C.isosurf_dealloc(O.isf)
 	}
 
@@ -385,7 +387,9 @@ func (o *Scene) Run() (err error) {
 	lblClr := (*C.double)(unsafe.Pointer(&o.LblClr))
 
 	// call C routine: end
-	status := C.scene_run(o.win, axeslen, hydroline, reverse, fullaxes, withplanes, interact, saveeps, savepng, pngmag, fnk, lblX, lblY, lblZ, lblSz, lblClr)
+	status := C.scene_run(o.win, axeslen, hydroline, reverse, fullaxes, withplanes,
+		interact, saveeps, savepng, pngmag, fnk, lblX, lblY, lblZ, lblSz, lblClr,
+		C.double(o.Zoom))
 	if status != 0 {
 		return chk.Err("C.scene_end failed\n")
 	}
