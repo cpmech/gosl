@@ -74,7 +74,7 @@ use 'godoc cmd/github.com/cpmech/gosl/ode' for documentation on the github.com/c
 			
 			
 				
-				<dd><a href="#Plot">func Plot(dirout, fn string, res *Results, yfcn Cb_ycorr, xa, xb float64, argsAna, argsNum string, extra func())</a></dd>
+				<dd><a href="#Plot">func Plot(dirout, fn string, res *Results, yfcn Cb_ycorr, xa, xb float64, extra func())</a></dd>
 			
 				
 				<dd><a href="#SimpleOutput">func SimpleOutput(first bool, dx, x float64, y []float64, args ...interface{}) (err error)</a></dd>
@@ -247,8 +247,8 @@ constants
 		
 			
 			
-			<h2 id="Plot">func <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=977:1089#L29">Plot</a></h2>
-			<pre>func Plot(dirout, fn <a href="/pkg/builtin/#string">string</a>, res *<a href="#Results">Results</a>, yfcn <a href="#Cb_ycorr">Cb_ycorr</a>, xa, xb <a href="/pkg/builtin/#float64">float64</a>, argsAna, argsNum <a href="/pkg/builtin/#string">string</a>, extra func())</pre>
+			<h2 id="Plot">func <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=948:1035#L28">Plot</a></h2>
+			<pre>func Plot(dirout, fn <a href="/pkg/builtin/#string">string</a>, res *<a href="#Results">Results</a>, yfcn <a href="#Cb_ycorr">Cb_ycorr</a>, xa, xb <a href="/pkg/builtin/#float64">float64</a>, extra func())</pre>
 			<p>
 Plot plot results
 </p>
@@ -259,7 +259,7 @@ Plot plot results
 		
 			
 			
-			<h2 id="SimpleOutput">func <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=599:689#L13">SimpleOutput</a></h2>
+			<h2 id="SimpleOutput">func <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=570:660#L12">SimpleOutput</a></h2>
 			<pre>func SimpleOutput(first <a href="/pkg/builtin/#bool">bool</a>, dx, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SimpleOutput implements a simple output function
@@ -409,7 +409,7 @@ callbacks
 		
 			
 			
-			<h2 id="Results">type <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=353:545#L5">Results</a></h2>
+			<h2 id="Results">type <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=324:516#L4">Results</a></h2>
 			<pre>type Results struct {
     Method <a href="/pkg/builtin/#string">string</a>      <span class="comment">// method name</span>
     Dx     []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// step sizes [Noutput]</span>

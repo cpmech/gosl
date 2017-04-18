@@ -314,7 +314,7 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 					<dd>&nbsp; &nbsp; <a href="#Histogram.GenLabels">func (o Histogram) GenLabels(numfmt string) (labels []string)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Histogram.PlotDensity">func (o Histogram) PlotDensity(sty *plt.Sty, args string)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Histogram.PlotDensity">func (o Histogram) PlotDensity(sty *plt.A, args string)</a></dd>
 				
 			
 				
@@ -346,7 +346,7 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#VarData.PlotPdf">func (o VarData) PlotPdf(np int, args string)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#VarData.PlotPdf">func (o VarData) PlotPdf(np int, args *plt.A)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#VarData.Transform">func (o *VarData) Transform(x float64) (y float64, invalid bool)</a></dd>
@@ -1717,8 +1717,8 @@ GenLabels generate nice labels identifying bins
 				
 			
 				
-				<h3 id="Histogram.PlotDensity">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3730:3787#L151">PlotDensity</a></h3>
-				<pre>func (o <a href="#Histogram">Histogram</a>) PlotDensity(sty *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#Sty">Sty</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+				<h3 id="Histogram.PlotDensity">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3730:3785#L151">PlotDensity</a></h3>
+				<pre>func (o <a href="#Histogram">Histogram</a>) PlotDensity(sty *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 PlotDensity plots histogram in density values
 </p>
@@ -1732,7 +1732,7 @@ PlotDensity plots histogram in density values
 		
 			
 			
-			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4548:4630#L176">IntHistogram</a></h2>
+			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4534:4616#L176">IntHistogram</a></h2>
 			<pre>type IntHistogram struct {
     Stations []<a href="/pkg/builtin/#int">int</a> <span class="comment">// stations</span>
     Counts   []<a href="/pkg/builtin/#int">int</a> <span class="comment">// counts</span>
@@ -1760,7 +1760,7 @@ IntHistogram holds data for computing/plotting histograms with integers
 
 			
 				
-				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5213:5265#L212">Count</a></h3>
+				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5199:5251#L212">Count</a></h3>
 				<pre>func (o *<a href="#IntHistogram">IntHistogram</a>) Count(vals []<a href="/pkg/builtin/#int">int</a>, clear <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Count counts how many items fall within each bin
@@ -1771,7 +1771,7 @@ Count counts how many items fall within each bin
 				
 			
 				
-				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4706:4746#L183">FindBin</a></h3>
+				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4692:4732#L183">FindBin</a></h3>
 				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) FindBin(x <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 FindBin finds where x falls in
@@ -1783,7 +1783,7 @@ returns -1 if x is outside the range
 				
 			
 				
-				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5732:5796#L239">GenLabels</a></h3>
+				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5718:5782#L239">GenLabels</a></h3>
 				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) GenLabels(numfmt <a href="/pkg/builtin/#string">string</a>) (labels []<a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 GenLabels generate nice labels identifying bins
@@ -1883,7 +1883,7 @@ VarData implements data defining one random variable
 			
 				
 				<h3 id="VarData.PlotPdf">func (VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/plotting.go?s=268:313#L3">PlotPdf</a></h3>
-				<pre>func (o <a href="#VarData">VarData</a>) PlotPdf(np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+				<pre>func (o <a href="#VarData">VarData</a>) PlotPdf(np <a href="/pkg/builtin/#int">int</a>, args *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 PlotPdf plots PDF
 </p>

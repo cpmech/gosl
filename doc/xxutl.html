@@ -270,7 +270,13 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#Max">func Max(a, b float64) float64</a></dd>
 			
 				
-				<dd><a href="#MeshGrid2D">func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (x, y [][]float64)</a></dd>
+				<dd><a href="#MeshGrid2d">func MeshGrid2d(xmin, xmax, ymin, ymax float64, nx, ny int) (X, Y [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MeshGrid2dF">func MeshGrid2dF(xmin, xmax, ymin, ymax float64, nx, ny int, f func(x, y float64) float64) (X, Y, Z [][]float64)</a></dd>
+			
+				
+				<dd><a href="#MeshGrid2dFG">func MeshGrid2dFG(xmin, xmax, ymin, ymax float64, nx, ny int, fg func(x, y float64) (z, u, v float64)) (X, Y, Z, U, V [][]float64)</a></dd>
 			
 				
 				<dd><a href="#Min">func Min(a, b float64) float64</a></dd>
@@ -550,7 +556,7 @@ BestSquare finds the best square for given size=Nrows * Ncolumns
 		
 			
 			
-			<h2 id="BoolAllFalse">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9997:10034#L443">BoolAllFalse</a></h2>
+			<h2 id="BoolAllFalse">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11524:11561#L493">BoolAllFalse</a></h2>
 			<pre>func BoolAllFalse(values []<a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 BoolAllFalse returns true if all values are false
@@ -562,7 +568,7 @@ BoolAllFalse returns true if all values are false
 		
 			
 			
-			<h2 id="BoolAllTrue">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9828:9864#L433">BoolAllTrue</a></h2>
+			<h2 id="BoolAllTrue">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11355:11391#L483">BoolAllTrue</a></h2>
 			<pre>func BoolAllTrue(values []<a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 BoolAllTrue returns true if all values are true
@@ -574,7 +580,7 @@ BoolAllTrue returns true if all values are true
 		
 			
 			
-			<h2 id="Cross3d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9322:9353#L406">Cross3d</a></h2>
+			<h2 id="Cross3d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10849:10880#L456">Cross3d</a></h2>
 			<pre>func Cross3d(w, u, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cross3d computes the cross product of two 3D vectors u and w
@@ -589,7 +595,7 @@ Note: w must be pre-allocated
 		
 			
 			
-			<h2 id="CumSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7930:7958#L352">CumSum</a></h2>
+			<h2 id="CumSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9457:9485#L402">CumSum</a></h2>
 			<pre>func CumSum(cs, p []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CumSum returns the cumulative sum of the elements in p
@@ -618,7 +624,7 @@ Dbl2Str converts a slice of doubles (float64) to a slice of strings
 		
 			
 			
-			<h2 id="DblArgMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9508:9555#L413">DblArgMinMax</a></h2>
+			<h2 id="DblArgMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11035:11082#L463">DblArgMinMax</a></h2>
 			<pre>func DblArgMinMax(v []<a href="/pkg/builtin/#float64">float64</a>) (imin, imax <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 DblArgMinMax finds the indices of min and max arguments
@@ -790,7 +796,7 @@ DblsAlloc allocates a matrix of float64
 		
 			
 			
-			<h2 id="DblsGetColumn">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=8718:8772#L382">DblsGetColumn</a></h2>
+			<h2 id="DblsGetColumn">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10245:10299#L432">DblsGetColumn</a></h2>
 			<pre>func DblsGetColumn(j <a href="/pkg/builtin/#int">int</a>, v [][]<a href="/pkg/builtin/#float64">float64</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblsGetColumn returns the column of a matrix of reals numbers
@@ -958,7 +964,7 @@ Output:
 		
 			
 			
-			<h2 id="Dot3d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9120:9158#L399">Dot3d</a></h2>
+			<h2 id="Dot3d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10647:10685#L449">Dot3d</a></h2>
 			<pre>func Dot3d(u, v []<a href="/pkg/builtin/#float64">float64</a>) (s <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Dot3d returns the dot product between two 3D vectors
@@ -1030,7 +1036,7 @@ Notes:
 		
 			
 			
-			<h2 id="GtPenalty">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=8224:8270#L365">GtPenalty</a></h2>
+			<h2 id="GtPenalty">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9751:9797#L415">GtPenalty</a></h2>
 			<pre>func GtPenalty(x, b, penaltyM <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 GtPenalty implements a &#39;greater than&#39; penalty function where
@@ -1043,7 +1049,7 @@ x must be greater than b; otherwise the error is magnified
 		
 			
 			
-			<h2 id="GtePenalty">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=8544:8591#L374">GtePenalty</a></h2>
+			<h2 id="GtePenalty">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10071:10118#L424">GtePenalty</a></h2>
 			<pre>func GtePenalty(x, b, penaltyM <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 GtePenalty implements a &#39;greater than or equal&#39; penalty function where
@@ -1329,7 +1335,7 @@ IntsClone allocates and clones a matrix of integers
 		
 			
 			
-			<h2 id="L2norm">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=8923:8965#L391">L2norm</a></h2>
+			<h2 id="L2norm">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10450:10492#L441">L2norm</a></h2>
 			<pre>func L2norm(p, q []<a href="/pkg/builtin/#float64">float64</a>) (dist <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 L2norm returns the Euclidean distance between p and q
@@ -1377,13 +1383,40 @@ Max returns the maximum between two float point numbers
 		
 			
 			
-			<h2 id="MeshGrid2D">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6023:6101#L268">MeshGrid2D</a></h2>
-			<pre>func MeshGrid2D(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>) (x, y [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="MeshGrid2d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6008:6086#L267">MeshGrid2d</a></h2>
+			<pre>func MeshGrid2d(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>) (X, Y [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
-MeshGrid2D creates a grid with x-y coordinates
+MeshGrid2d creates a grid with x-y coordinates
 </p>
-<pre>x -- [ny][nx]
-y -- [ny][nx]
+<pre>X, Y -- [ny][nx]
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MeshGrid2dF">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6549:6661#L288">MeshGrid2dF</a></h2>
+			<pre>func MeshGrid2dF(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>, f func(x, y <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MeshGrid2dF creates a grid with x-y coordinates and evaluates z=f(x,y)
+</p>
+<pre>X, Y, Z -- [ny][nx]
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="MeshGrid2dFG">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7227:7357#L312">MeshGrid2dFG</a></h2>
+			<pre>func MeshGrid2dFG(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>, fg func(x, y <a href="/pkg/builtin/#float64">float64</a>) (z, u, v <a href="/pkg/builtin/#float64">float64</a>)) (X, Y, Z, U, V [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+MeshGrid2dFG creates a grid with x-y coordinates and evaluates (z,u,v)=fg(x,y)
+</p>
+<pre>X, Y, Z, U, V -- [ny][nx]
 </pre>
 
 			
@@ -1501,7 +1534,7 @@ ProfMEM activates memory profiling
 		
 			
 			
-			<h2 id="Scaling">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7018:7107#L300">Scaling</a></h2>
+			<h2 id="Scaling">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=8545:8634#L350">Scaling</a></h2>
 			<pre>func Scaling(s, x []<a href="/pkg/builtin/#float64">float64</a>, ds, tol <a href="/pkg/builtin/#float64">float64</a>, reverse, useinds <a href="/pkg/builtin/#bool">bool</a>) (xmin, xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Scaling computes a scaled version of the input slice with results in [0.0, 1.0]

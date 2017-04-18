@@ -196,10 +196,10 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#Bspline.CalcBasisAndDerivs">func (o *Bspline) CalcBasisAndDerivs(t float64)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bspline.Draw2d">func (o *Bspline) Draw2d(curveArgs, ctrlArgs string, npts, option int)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bspline.Draw2d">func (o *Bspline) Draw2d(npts, option int)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bspline.Draw3d">func (o *Bspline) Draw3d(curveArgs, ctrlArgs string, npts int, first bool)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bspline.Draw3d">func (o *Bspline) Draw3d(npts int, first bool)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Bspline.Elements">func (o *Bspline) Elements() (spans [][]int)</a></dd>
@@ -220,10 +220,10 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#Bspline.NumericalDeriv">func (o *Bspline) NumericalDeriv(t float64, i int) float64</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bspline.PlotBasis">func (o *Bspline) PlotBasis(args string, npts, option int)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bspline.PlotBasis">func (o *Bspline) PlotBasis(npts, option int)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bspline.PlotDerivs">func (o *Bspline) PlotDerivs(args string, npts, option int)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bspline.PlotDerivs">func (o *Bspline) PlotDerivs(npts, option int)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Bspline.Point">func (o *Bspline) Point(t float64, option int) (C []float64)</a></dd>
@@ -584,7 +584,7 @@ IsPointInLine returns whether p is inside line passing through a and b
 		
 			
 			
-			<h2 id="PlotNurbs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7140:7217#L252">PlotNurbs</a></h2>
+			<h2 id="PlotNurbs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7125:7202#L252">PlotNurbs</a></h2>
 			<pre>func PlotNurbs(dirout, fn <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
 			<p>
 PlotNurbs plots a NURBS
@@ -596,7 +596,7 @@ PlotNurbs plots a NURBS
 		
 			
 			
-			<h2 id="PlotNurbsBasis">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=8195:8255#L299">PlotNurbsBasis</a></h2>
+			<h2 id="PlotNurbsBasis">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=8200:8260#L299">PlotNurbsBasis</a></h2>
 			<pre>func PlotNurbsBasis(dirout, fn <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 PlotNurbsBasis plots basis functions la and lb
@@ -608,7 +608,7 @@ PlotNurbsBasis plots basis functions la and lb
 		
 			
 			
-			<h2 id="PlotNurbsDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=9921:9982#L380">PlotNurbsDerivs</a></h2>
+			<h2 id="PlotNurbsDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=9936:9997#L380">PlotNurbsDerivs</a></h2>
 			<pre>func PlotNurbsDerivs(dirout, fn <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 PlotNurbsDerivs plots derivatives of basis functions la and lb
@@ -620,7 +620,7 @@ PlotNurbsDerivs plots derivatives of basis functions la and lb
 		
 			
 			
-			<h2 id="PlotTwoNurbs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7511:7594#L269">PlotTwoNurbs</a></h2>
+			<h2 id="PlotTwoNurbs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7506:7589#L269">PlotTwoNurbs</a></h2>
 			<pre>func PlotTwoNurbs(dirout, fn <a href="/pkg/builtin/#string">string</a>, b, c *<a href="#Nurbs">Nurbs</a>, npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
 			<p>
 PlotTwoNurbs plots two NURBS for comparison
@@ -1022,8 +1022,8 @@ Note: use GetBasis to get a particular basis function value
 				
 			
 				
-				<h3 id="Bspline.Draw2d">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=425:495#L9">Draw2d</a></h3>
-				<pre>func (o *<a href="#Bspline">Bspline</a>) Draw2d(curveArgs, ctrlArgs <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
+				<h3 id="Bspline.Draw2d">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=413:455#L7">Draw2d</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) Draw2d(npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Draw2d draws curve and control points
 option =  0 : use CalcBasis
@@ -1036,8 +1036,8 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Bspline.Draw3d">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=1175:1249#L31">Draw3d</a></h3>
-				<pre>func (o *<a href="#Bspline">Bspline</a>) Draw3d(curveArgs, ctrlArgs <a href="/pkg/builtin/#string">string</a>, npts <a href="/pkg/builtin/#int">int</a>, first <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<h3 id="Bspline.Draw3d">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=1105:1151#L29">Draw3d</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) Draw3d(npts <a href="/pkg/builtin/#int">int</a>, first <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				
 				
 				
@@ -1111,8 +1111,8 @@ Note: it uses RecursiveBasis and therefore is highly non-efficient
 				
 			
 				
-				<h3 id="Bspline.PlotBasis">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=1648:1706#L47">PlotBasis</a></h3>
-				<pre>func (o *<a href="#Bspline">Bspline</a>) PlotBasis(args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
+				<h3 id="Bspline.PlotBasis">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=1551:1596#L45">PlotBasis</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) PlotBasis(npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotBasis plots basis functions in I
 option =  0 : use CalcBasis
@@ -1126,8 +1126,8 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Bspline.PlotDerivs">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=2752:2811#L81">PlotDerivs</a></h3>
-				<pre>func (o *<a href="#Bspline">Bspline</a>) PlotDerivs(args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
+				<h3 id="Bspline.PlotDerivs">func (*Bspline) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go?s=2598:2644#L79">PlotDerivs</a></h3>
+				<pre>func (o *<a href="#Bspline">Bspline</a>) PlotDerivs(npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotDerivs plots derivatives of basis functions in I
 option =  0 : use CalcBasisAndDerivs
@@ -1339,7 +1339,7 @@ DrawCtrl2d draws control net
 				
 			
 				
-				<h3 id="Nurbs.DrawEdge2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=6609:6690#L232">DrawEdge2d</a></h3>
+				<h3 id="Nurbs.DrawEdge2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=6593:6674#L232">DrawEdge2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawEdge2d(tmin, tmax, cte <a href="/pkg/builtin/#float64">float64</a>, along, npts <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 DrawEdge2d draws and edge from tmin to tmax
@@ -1350,7 +1350,7 @@ DrawEdge2d draws and edge from tmin to tmax
 				
 			
 				
-				<h3 id="Nurbs.DrawElem2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=1911:1990#L66">DrawElem2d</a></h3>
+				<h3 id="Nurbs.DrawElem2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=1929:2008#L66">DrawElem2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElem2d(span []<a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, ids <a href="/pkg/builtin/#bool">bool</a>, args, idargs <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 DrawElem2d draws element (non-zero span)
@@ -1642,7 +1642,7 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Nurbs.PlotDeriv">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=5159:5225#L176">PlotDeriv</a></h3>
+				<h3 id="Nurbs.PlotDeriv">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=5151:5217#L176">PlotDeriv</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotDeriv(l, d <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotDeriv plots derivative dR[i][j][k]du[d] (2D only)
