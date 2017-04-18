@@ -273,23 +273,48 @@ func Expon(val float64) (ndigits int) {
 }
 
 // MeshGrid2D creates a grid with x-y coordinates
-//  x -- [ny][nx]
-//  y -- [ny][nx]
-func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (x, y [][]float64) {
-	if nx < 2 {
-		return
-	}
-	if ny < 2 {
+//  X -- [ny][nx]
+//  Y -- [ny][nx]
+func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (X, Y [][]float64) {
+	if nx < 2 || ny < 2 {
 		return
 	}
 	dx := (xmax - xmin) / float64(nx-1)
 	dy := (ymax - ymin) / float64(ny-1)
-	x = DblsAlloc(ny, nx)
-	y = DblsAlloc(ny, nx)
+	X = make([][]float64, ny)
+	Y = make([][]float64, ny)
 	for i := 0; i < ny; i++ {
+		X[i] = make([]float64, nx)
+		Y[i] = make([]float64, nx)
 		for j := 0; j < nx; j++ {
-			x[i][j] = xmin + float64(j)*dx
-			y[i][j] = ymin + float64(i)*dy
+			X[i][j] = xmin + float64(j)*dx
+			Y[i][j] = ymin + float64(i)*dy
+		}
+	}
+	return
+}
+
+// MeshGrid2Deval creates a grid with x-y coordinates and evaluates z=f(x,y)
+//  x -- [ny][nx]
+//  y -- [ny][nx]
+//  z -- [ny][nx]
+func MeshGrid2Deval(xmin, xmax, ymin, ymax float64, nx, ny int, f func(x, y float64) float64) (X, Y, Z [][]float64) {
+	if nx < 2 || ny < 2 {
+		return
+	}
+	dx := (xmax - xmin) / float64(nx-1)
+	dy := (ymax - ymin) / float64(ny-1)
+	X = make([][]float64, ny)
+	Y = make([][]float64, ny)
+	Z = make([][]float64, ny)
+	for i := 0; i < ny; i++ {
+		X[i] = make([]float64, nx)
+		Y[i] = make([]float64, nx)
+		Z[i] = make([]float64, nx)
+		for j := 0; j < nx; j++ {
+			X[i][j] = xmin + float64(j)*dx
+			Y[i][j] = ymin + float64(i)*dy
+			Z[i][j] = f(X[i][j], Y[i][j])
 		}
 	}
 	return
