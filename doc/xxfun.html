@@ -83,19 +83,22 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#Atan2pDeg">func Atan2pDeg(y, x float64) (αdeg float64)</a></dd>
 			
 				
-				<dd><a href="#CheckDerivT">func CheckDerivT(tst *testing.T, o Func, t0, tf float64, xcte []float64, np int, tskip []float64, sktol, dtol, dtol2 float64, ver bool)</a></dd>
+				<dd><a href="#CheckDerivT">func CheckDerivT(tst *testing.T, o TimeSpace, t0, tf float64, xcte []float64, np int, tskip []float64, sktol, dtol, dtol2 float64, ver bool)</a></dd>
 			
 				
-				<dd><a href="#CheckDerivX">func CheckDerivX(tst *testing.T, o Func, tcte float64, xmin, xmax []float64, np int, xskip [][]float64, sktol, dtol float64, ver bool)</a></dd>
+				<dd><a href="#CheckDerivX">func CheckDerivX(tst *testing.T, o TimeSpace, tcte float64, xmin, xmax []float64, np int, xskip [][]float64, sktol, dtol float64, ver bool)</a></dd>
+			
+				
+				<dd><a href="#CosX">func CosX(w, m float64) float64</a></dd>
 			
 				
 				<dd><a href="#Heav">func Heav(x float64) float64</a></dd>
 			
 				
-				<dd><a href="#PlotT">func PlotT(o Func, dirout, fname string, t0, tf float64, xcte []float64, np int, labelT, labelF, labelG, labelH, argsF, argsG, argsH string)</a></dd>
+				<dd><a href="#PlotT">func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np int, labelT, labelF, labelG, labelH, argsF, argsG, argsH string)</a></dd>
 			
 				
-				<dd><a href="#PlotX">func PlotX(o Func, dirout, fname string, tcte float64, xmin, xmax []float64, np int, args string, withGrad, hlZero, axEqual, save, show bool, extra func())</a></dd>
+				<dd><a href="#PlotX">func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64, np int, args string, withGrad, hlZero, axEqual, save, show bool, extra func())</a></dd>
 			
 				
 				<dd><a href="#Ramp">func Ramp(x float64) float64</a></dd>
@@ -111,6 +114,9 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				
 				<dd><a href="#Sign">func Sign(x float64) float64</a></dd>
+			
+				
+				<dd><a href="#SinX">func SinX(w, m float64) float64</a></dd>
 			
 				
 				<dd><a href="#Sramp">func Sramp(x, β float64) float64</a></dd>
@@ -260,14 +266,6 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Exc2.Init">func (o *Exc2) Init(prms Prms) (err error)</a></dd>
-				
-			
-				
-				<dd><a href="#Func">type Func</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#New">func New(name string, prms Prms) (Func, error)</a></dd>
-				
 				
 			
 				
@@ -522,6 +520,14 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 			
 				
+				<dd><a href="#TimeSpace">type TimeSpace</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(name string, prms Prms) (TimeSpace, error)</a></dd>
+				
+				
+			
+				
 				<dd><a href="#Xpoly1">type Xpoly1</a></dd>
 				
 				
@@ -614,13 +620,13 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				<a href="/src/github.com/cpmech/gosl/fun/f_xpoly2.go">f_xpoly2.go</a>
 			
-				<a href="/src/github.com/cpmech/gosl/fun/func.go">func.go</a>
-			
 				<a href="/src/github.com/cpmech/gosl/fun/functions.go">functions.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/prms.go">prms.go</a>
 			
 				<a href="/src/github.com/cpmech/gosl/fun/testing.go">testing.go</a>
+			
+				<a href="/src/github.com/cpmech/gosl/fun/timespace.go">timespace.go</a>
 			
 			</span>
 			</p>
@@ -687,7 +693,7 @@ One implements an specialisation of Cte function that always returns one
 		
 			
 			
-			<h2 id="Atan2p">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=277:318#L1">Atan2p</a></h2>
+			<h2 id="Atan2p">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=611:652#L10">Atan2p</a></h2>
 			<pre>func Atan2p(y, x <a href="/pkg/builtin/#float64">float64</a>) (αrad <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 2π
@@ -699,7 +705,7 @@ Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 
 		
 			
 			
-			<h2 id="Atan2pDeg">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=494:538#L9">Atan2pDeg</a></h2>
+			<h2 id="Atan2pDeg">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=828:872#L19">Atan2pDeg</a></h2>
 			<pre>func Atan2pDeg(y, x <a href="/pkg/builtin/#float64">float64</a>) (αdeg <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atan2pDeg implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 360
@@ -711,8 +717,8 @@ Atan2pDeg implements a positive version of atan2, in such a way that: 0 ≤ α �
 		
 			
 			
-			<h2 id="CheckDerivT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=395:530#L8">CheckDerivT</a></h2>
-			<pre>func CheckDerivT(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, o <a href="#Func">Func</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, tskip []<a href="/pkg/builtin/#float64">float64</a>, sktol, dtol, dtol2 <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<h2 id="CheckDerivT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=395:535#L8">CheckDerivT</a></h2>
+			<pre>func CheckDerivT(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, o <a href="#TimeSpace">TimeSpace</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, tskip []<a href="/pkg/builtin/#float64">float64</a>, sktol, dtol, dtol2 <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 CheckDerivT checks derivatives w.r.t to t for fixed coordinates x
 </p>
@@ -723,8 +729,8 @@ CheckDerivT checks derivatives w.r.t to t for fixed coordinates x
 		
 			
 			
-			<h2 id="CheckDerivX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=1191:1325#L35">CheckDerivX</a></h2>
-			<pre>func CheckDerivX(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, o <a href="#Func">Func</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xskip [][]<a href="/pkg/builtin/#float64">float64</a>, sktol, dtol <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
+			<h2 id="CheckDerivX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=1196:1335#L35">CheckDerivX</a></h2>
+			<pre>func CheckDerivX(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, o <a href="#TimeSpace">TimeSpace</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xskip [][]<a href="/pkg/builtin/#float64">float64</a>, sktol, dtol <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 CheckDerivX checks derivatives w.r.t to x for fixed t
 </p>
@@ -735,7 +741,19 @@ CheckDerivX checks derivatives w.r.t to x for fixed t
 		
 			
 			
-			<h2 id="Heav">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=800:828#L26">Heav</a></h2>
+			<h2 id="CosX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=258:289#L1">CosX</a></h2>
+			<pre>func CosX(w, m <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+CosX implements the extended cosine function (for superquadrics)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Heav">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1134:1162#L36">Heav</a></h2>
 			<pre>func Heav(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Heaviside step function (== derivative of Ramp(x))
@@ -747,8 +765,8 @@ Heaviside step function (== derivative of Ramp(x))
 		
 			
 			
-			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1516:1657#L40">PlotT</a></h2>
-			<pre>func PlotT(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>,
+			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=1536:1682#L40">PlotT</a></h2>
+			<pre>func PlotT(o <a href="#TimeSpace">TimeSpace</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>,
     labelT, labelF, labelG, labelH, argsF, argsG, argsH <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 PlotT plots F, G and H for varying t and fixed coordinates x
@@ -763,8 +781,8 @@ args{F,G,H} -- if any is &#34;&#34;, the corresponding plot is not created
 		
 			
 			
-			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=3268:3423#L134">PlotX</a></h2>
-			<pre>func PlotX(o <a href="#Func">Func</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, withGrad, hlZero, axEqual, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
+			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=3293:3453#L134">PlotX</a></h2>
+			<pre>func PlotX(o <a href="#TimeSpace">TimeSpace</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, args <a href="/pkg/builtin/#string">string</a>, withGrad, hlZero, axEqual, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func())</pre>
 			<p>
 PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
 </p>
@@ -778,7 +796,7 @@ axEqual -- use axis[&#39;equal&#39;]
 		
 			
 			
-			<h2 id="Ramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=672:700#L18">Ramp</a></h2>
+			<h2 id="Ramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1006:1034#L28">Ramp</a></h2>
 			<pre>func Ramp(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Ramp function =&gt; MacAulay brackets
@@ -790,7 +808,7 @@ Ramp function =&gt; MacAulay brackets
 		
 			
 			
-			<h2 id="Sabs">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1629:1662#L72">Sabs</a></h2>
+			<h2 id="Sabs">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1963:1996#L82">Sabs</a></h2>
 			<pre>func Sabs(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
@@ -802,7 +820,7 @@ Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
 		
 			
 			
-			<h2 id="SabsD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1812:1847#L83">SabsD1</a></h2>
+			<h2 id="SabsD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2146:2181#L93">SabsD1</a></h2>
 			<pre>func SabsD1(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SabsD1 returns the first derivative of Sabs
@@ -814,7 +832,7 @@ SabsD1 returns the first derivative of Sabs
 		
 			
 			
-			<h2 id="SabsD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2027:2062#L96">SabsD2</a></h2>
+			<h2 id="SabsD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2361:2396#L106">SabsD2</a></h2>
 			<pre>func SabsD2(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SabsD2 returns the first derivative of Sabs
@@ -826,7 +844,7 @@ SabsD2 returns the first derivative of Sabs
 		
 			
 			
-			<h2 id="Sign">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=923:951#L37">Sign</a></h2>
+			<h2 id="Sign">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1257:1285#L47">Sign</a></h2>
 			<pre>func Sign(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sign function
@@ -838,7 +856,19 @@ Sign function
 		
 			
 			
-			<h2 id="Sramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1079:1112#L48">Sramp</a></h2>
+			<h2 id="SinX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=424:455#L5">SinX</a></h2>
+			<pre>func SinX(w, m <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+SinX implements the extended sine function (for superquadrics)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1413:1446#L58">Sramp</a></h2>
 			<pre>func Sramp(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sramp implements a smooth ramp function. Ramp
@@ -850,7 +880,7 @@ Sramp implements a smooth ramp function. Ramp
 		
 			
 			
-			<h2 id="SrampD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1248:1283#L56">SrampD1</a></h2>
+			<h2 id="SrampD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1582:1617#L66">SrampD1</a></h2>
 			<pre>func SrampD1(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SrampD1 returns the first derivative of Sramp
@@ -862,7 +892,7 @@ SrampD1 returns the first derivative of Sramp
 		
 			
 			
-			<h2 id="SrampD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1413:1448#L64">SrampD2</a></h2>
+			<h2 id="SrampD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1747:1782#L74">SrampD2</a></h2>
 			<pre>func SrampD2(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SrampD2 returns the second derivative of Sramp
@@ -875,9 +905,9 @@ SrampD2 returns the second derivative of Sramp
 		
 			
 			
-			<h2 id="Add">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=304:352#L1">Add</a></h2>
+			<h2 id="Add">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=304:357#L1">Add</a></h2>
 			<pre>type Add struct {
-    Fa, Fb <a href="#Func">Func</a>
+    Fa, Fb <a href="#TimeSpace">TimeSpace</a>
     A, B   <a href="/pkg/builtin/#float64">float64</a>
 }</pre>
 			<p>
@@ -899,7 +929,7 @@ Add implements the addition of two other functions.
 
 			
 				
-				<h3 id="Add.F">func (Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=806:852#L30">F</a></h3>
+				<h3 id="Add.F">func (Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=816:862#L30">F</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -910,7 +940,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Add.G">func (Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=987:1033#L38">G</a></h3>
+				<h3 id="Add.G">func (Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=997:1043#L38">G</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -921,7 +951,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Add.Grad">func (Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=1361:1415#L54">Grad</a></h3>
+				<h3 id="Add.Grad">func (Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=1371:1425#L54">Grad</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -932,7 +962,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Add.H">func (Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=1172:1218#L46">H</a></h3>
+				<h3 id="Add.H">func (Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=1182:1228#L46">H</a></h3>
 				<pre>func (o <a href="#Add">Add</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -943,7 +973,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Add.Init">func (*Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=484:525#L12">Init</a></h3>
+				<h3 id="Add.Init">func (*Add) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go?s=494:535#L12">Init</a></h3>
 				<pre>func (o *<a href="#Add">Add</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -983,7 +1013,7 @@ Thus F &gt; 0 is outside and F &lt; 0 is inside the circle/sphere
 
 			
 				
-				<h3 id="Cdist.F">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1402:1450#L47">F</a></h3>
+				<h3 id="Cdist.F">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1407:1455#L47">F</a></h3>
 				<pre>func (o <a href="#Cdist">Cdist</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -994,7 +1024,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Cdist.G">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1653:1701#L56">G</a></h3>
+				<h3 id="Cdist.G">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1658:1706#L56">G</a></h3>
 				<pre>func (o <a href="#Cdist">Cdist</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1005,7 +1035,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Cdist.Grad">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1869:1925#L66">Grad</a></h3>
+				<h3 id="Cdist.Grad">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1874:1930#L66">Grad</a></h3>
 				<pre>func (o <a href="#Cdist">Cdist</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1016,7 +1046,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Cdist.H">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1759:1807#L61">H</a></h3>
+				<h3 id="Cdist.H">func (Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=1764:1812#L61">H</a></h3>
 				<pre>func (o <a href="#Cdist">Cdist</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1027,7 +1057,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Cdist.Init">func (*Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=827:870#L20">Init</a></h3>
+				<h3 id="Cdist.Init">func (*Cdist) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go?s=832:875#L20">Init</a></h3>
 				<pre>func (o *<a href="#Cdist">Cdist</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1070,7 +1100,7 @@ Input:
 
 			
 				
-				<h3 id="Cos.F">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1027:1073#L41">F</a></h3>
+				<h3 id="Cos.F">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1032:1078#L41">F</a></h3>
 				<pre>func (o <a href="#Cos">Cos</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1081,7 +1111,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Cos.G">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1204:1250#L50">G</a></h3>
+				<h3 id="Cos.G">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1209:1255#L50">G</a></h3>
 				<pre>func (o <a href="#Cos">Cos</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1092,7 +1122,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Cos.Grad">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1576:1630#L68">Grad</a></h3>
+				<h3 id="Cos.Grad">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1581:1635#L68">Grad</a></h3>
 				<pre>func (o <a href="#Cos">Cos</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1103,7 +1133,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Cos.H">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1386:1432#L59">H</a></h3>
+				<h3 id="Cos.H">func (Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=1391:1437#L59">H</a></h3>
 				<pre>func (o <a href="#Cos">Cos</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1114,7 +1144,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Cos.Init">func (*Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=637:678#L24">Init</a></h3>
+				<h3 id="Cos.Init">func (*Cos) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cos.go?s=642:683#L24">Init</a></h3>
 				<pre>func (o *<a href="#Cos">Cos</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1154,7 +1184,7 @@ Zero implements an specialisation of Cte function that always returns zero
 
 			
 				
-				<h3 id="Cte.F">func (Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=768:814#L25">F</a></h3>
+				<h3 id="Cte.F">func (Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=773:819#L25">F</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1165,7 +1195,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Cte.G">func (Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=890:936#L31">G</a></h3>
+				<h3 id="Cte.G">func (Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=895:941#L31">G</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 first derivative
@@ -1177,7 +1207,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Cte.Grad">func (Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=1127:1181#L42">Grad</a></h3>
+				<h3 id="Cte.Grad">func (Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=1132:1186#L42">Grad</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1188,7 +1218,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Cte.H">func (Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=1017:1063#L37">H</a></h3>
+				<h3 id="Cte.H">func (Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=1022:1068#L37">H</a></h3>
 				<pre>func (o <a href="#Cte">Cte</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 second derivative
@@ -1200,7 +1230,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Cte.Init">func (*Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=598:639#L16">Init</a></h3>
+				<h3 id="Cte.Init">func (*Cte) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cte.go?s=603:644#L16">Init</a></h3>
 				<pre>func (o *<a href="#Cte">Cte</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1252,7 +1282,7 @@ Input:
 
 			
 				
-				<h3 id="CutSin.F">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=1383:1432#L54">F</a></h3>
+				<h3 id="CutSin.F">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=1388:1437#L54">F</a></h3>
 				<pre>func (o <a href="#CutSin">CutSin</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1263,7 +1293,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="CutSin.G">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=1763:1812#L75">G</a></h3>
+				<h3 id="CutSin.G">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=1768:1817#L75">G</a></h3>
 				<pre>func (o <a href="#CutSin">CutSin</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1274,7 +1304,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="CutSin.Grad">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=2545:2602#L117">Grad</a></h3>
+				<h3 id="CutSin.Grad">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=2550:2607#L117">Grad</a></h3>
 				<pre>func (o <a href="#CutSin">CutSin</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1285,7 +1315,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="CutSin.H">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=2147:2196#L96">H</a></h3>
+				<h3 id="CutSin.H">func (CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=2152:2201#L96">H</a></h3>
 				<pre>func (o <a href="#CutSin">CutSin</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1296,7 +1326,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="CutSin.Init">func (*CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=875:919#L31">Init</a></h3>
+				<h3 id="CutSin.Init">func (*CutSin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_cutsin.go?s=880:924#L31">Init</a></h3>
 				<pre>func (o *<a href="#CutSin">CutSin</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1330,7 +1360,7 @@ Excitation #1 y(t) = a * (1 - cos(b*π*t)) / 2
 
 			
 				
-				<h3 id="Exc1.F">func (Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=662:709#L24">F</a></h3>
+				<h3 id="Exc1.F">func (Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=667:714#L24">F</a></h3>
 				<pre>func (o <a href="#Exc1">Exc1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1341,7 +1371,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Exc1.G">func (Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=805:852#L29">G</a></h3>
+				<h3 id="Exc1.G">func (Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=810:857#L29">G</a></h3>
 				<pre>func (o <a href="#Exc1">Exc1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1352,7 +1382,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Exc1.Grad">func (Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=1135:1190#L39">Grad</a></h3>
+				<h3 id="Exc1.Grad">func (Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=1140:1195#L39">Grad</a></h3>
 				<pre>func (o <a href="#Exc1">Exc1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1363,7 +1393,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Exc1.H">func (Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=960:1007#L34">H</a></h3>
+				<h3 id="Exc1.H">func (Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=965:1012#L34">H</a></h3>
 				<pre>func (o <a href="#Exc1">Exc1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1374,7 +1404,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Exc1.Init">func (*Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=443:485#L14">Init</a></h3>
+				<h3 id="Exc1.Init">func (*Exc1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc1.go?s=448:490#L14">Init</a></h3>
 				<pre>func (o *<a href="#Exc1">Exc1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1410,7 +1440,7 @@ Excitation # 2: y(t) = if t &lt; ta a*sin(b*π*t), else 0
 
 			
 				
-				<h3 id="Exc2.F">func (Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=741:788#L27">F</a></h3>
+				<h3 id="Exc2.F">func (Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=746:793#L27">F</a></h3>
 				<pre>func (o <a href="#Exc2">Exc2</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1421,7 +1451,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Exc2.G">func (Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=901:948#L35">G</a></h3>
+				<h3 id="Exc2.G">func (Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=906:953#L35">G</a></h3>
 				<pre>func (o <a href="#Exc2">Exc2</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1432,7 +1462,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Exc2.Grad">func (Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=1282:1337#L51">Grad</a></h3>
+				<h3 id="Exc2.Grad">func (Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=1287:1342#L51">Grad</a></h3>
 				<pre>func (o <a href="#Exc2">Exc2</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1443,7 +1473,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Exc2.H">func (Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=1081:1128#L43">H</a></h3>
+				<h3 id="Exc2.H">func (Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=1086:1133#L43">H</a></h3>
 				<pre>func (o <a href="#Exc2">Exc2</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1454,7 +1484,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Exc2.Init">func (*Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=473:515#L16">Init</a></h3>
+				<h3 id="Exc2.Init">func (*Exc2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_exc2.go?s=478:520#L16">Init</a></h3>
 				<pre>func (o *<a href="#Exc2">Exc2</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1463,43 +1493,6 @@ Init initialises the function
 				
 				
 				
-			
-		
-			
-			
-			<h2 id="Func">type <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=497:877#L9">Func</a></h2>
-			<pre>type Func interface {
-    Init(prms <a href="#Prms">Prms</a>) <a href="/pkg/builtin/#error">error</a>                     <span class="comment">// initialise function parameters</span>
-    F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// y = F(t, x)</span>
-    G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// ∂y/∂t_cteX = G(t, x)</span>
-    H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// ∂²y/∂t²_cteX = H(t, x)</span>
-    Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <span class="comment">// ∇F = ∂y/∂x = Grad(t, x)</span>
-}</pre>
-			<p>
-Func defines the interface for simple functions
-</p>
-
-
-			
-
-			
-
-			
-			
-			
-
-			
-				
-				<h3 id="New">func <a href="https://github.com/cpmech/gosl/blob/master/fun/func.go?s=1041:1087#L21">New</a></h3>
-				<pre>func New(name <a href="/pkg/builtin/#string">string</a>, prms <a href="#Prms">Prms</a>) (<a href="#Func">Func</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
-				<p>
-New allocates function by name
-</p>
-
-				
-				
-			
-
 			
 		
 			
@@ -1531,7 +1524,7 @@ Thus F &gt; 0 is outside and F &lt; 0 is inside the circle/sphere
 
 			
 				
-				<h3 id="Halo.F">func (Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=1346:1393#L43">F</a></h3>
+				<h3 id="Halo.F">func (Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=1351:1398#L43">F</a></h3>
 				<pre>func (o <a href="#Halo">Halo</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1542,7 +1535,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Halo.G">func (Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=1589:1636#L52">G</a></h3>
+				<h3 id="Halo.G">func (Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=1594:1641#L52">G</a></h3>
 				<pre>func (o <a href="#Halo">Halo</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1553,7 +1546,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Halo.Grad">func (Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=1803:1858#L62">Grad</a></h3>
+				<h3 id="Halo.Grad">func (Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=1808:1863#L62">Grad</a></h3>
 				<pre>func (o <a href="#Halo">Halo</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1564,7 +1557,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Halo.H">func (Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=1694:1741#L57">H</a></h3>
+				<h3 id="Halo.H">func (Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=1699:1746#L57">H</a></h3>
 				<pre>func (o <a href="#Halo">Halo</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1575,7 +1568,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Halo.Init">func (*Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=777:819#L16">Init</a></h3>
+				<h3 id="Halo.Init">func (*Halo) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_halo.go?s=782:824#L16">Init</a></h3>
 				<pre>func (o *<a href="#Halo">Halo</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1612,7 +1605,7 @@ Lin implements a linear function w.r.t t
 
 			
 				
-				<h3 id="Lin.F">func (Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=683:729#L22">F</a></h3>
+				<h3 id="Lin.F">func (Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=688:734#L22">F</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1623,7 +1616,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Lin.G">func (Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=798:844#L27">G</a></h3>
+				<h3 id="Lin.G">func (Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=803:849#L27">G</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1634,7 +1627,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Lin.Grad">func (Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=1012:1066#L37">Grad</a></h3>
+				<h3 id="Lin.Grad">func (Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=1017:1071#L37">Grad</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1645,7 +1638,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Lin.H">func (Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=904:950#L32">H</a></h3>
+				<h3 id="Lin.H">func (Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=909:955#L32">H</a></h3>
 				<pre>func (o <a href="#Lin">Lin</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1656,7 +1649,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Lin.Init">func (*Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=470:511#L12">Init</a></h3>
+				<h3 id="Lin.Init">func (*Lin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_lin.go?s=475:516#L12">Init</a></h3>
 				<pre>func (o *<a href="#Lin">Lin</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1669,9 +1662,9 @@ Init initialises the function
 		
 			
 			
-			<h2 id="Mul">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=306:338#L1">Mul</a></h2>
+			<h2 id="Mul">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=306:343#L1">Mul</a></h2>
 			<pre>type Mul struct {
-    Fa, Fb <a href="#Func">Func</a>
+    Fa, Fb <a href="#TimeSpace">TimeSpace</a>
 }</pre>
 			<p>
 Mul implements the multiplication of two other functions.
@@ -1692,7 +1685,7 @@ Mul implements the multiplication of two other functions.
 
 			
 				
-				<h3 id="Mul.F">func (Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=728:774#L26">F</a></h3>
+				<h3 id="Mul.F">func (Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=738:784#L26">F</a></h3>
 				<pre>func (o <a href="#Mul">Mul</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1703,7 +1696,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Mul.G">func (Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=952:998#L35">G</a></h3>
+				<h3 id="Mul.G">func (Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=962:1008#L35">G</a></h3>
 				<pre>func (o <a href="#Mul">Mul</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1714,7 +1707,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Mul.Grad">func (Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=1496:1550#L53">Grad</a></h3>
+				<h3 id="Mul.Grad">func (Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=1506:1560#L53">Grad</a></h3>
 				<pre>func (o <a href="#Mul">Mul</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1725,7 +1718,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Mul.H">func (Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=1206:1252#L44">H</a></h3>
+				<h3 id="Mul.H">func (Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=1216:1262#L44">H</a></h3>
 				<pre>func (o <a href="#Mul">Mul</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1736,7 +1729,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Mul.Init">func (*Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=470:511#L11">Init</a></h3>
+				<h3 id="Mul.Init">func (*Mul) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=480:521#L11">Init</a></h3>
 				<pre>func (o *<a href="#Mul">Mul</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1749,7 +1742,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="Prm">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=377:1251#L8">Prm</a></h2>
+			<h2 id="Prm">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=377:1261#L8">Prm</a></h2>
 			<pre>type Prm struct {
 
     <span class="comment">// input</span>
@@ -1767,8 +1760,8 @@ Init initialises the function
     SetDef <a href="/pkg/builtin/#bool">bool</a>    `json:&#34;setdef&#34;` <span class="comment">// tells model to use a default value</span>
 
     <span class="comment">// auxiliary</span>
-    Fcn   <a href="#Func">Func</a> <span class="comment">// a function y=f(t,x)</span>
-    Other *<a href="#Prm">Prm</a> <span class="comment">// dependency: connected parameter</span>
+    Fcn   <a href="#TimeSpace">TimeSpace</a> <span class="comment">// a function y=f(t,x)</span>
+    Other *<a href="#Prm">Prm</a>      <span class="comment">// dependency: connected parameter</span>
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
@@ -1788,7 +1781,7 @@ Prm holds material parameter names and values
 
 			
 				
-				<h3 id="Prm.Connect">func (*Prm) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1295:1328#L33">Connect</a></h3>
+				<h3 id="Prm.Connect">func (*Prm) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1305:1338#L33">Connect</a></h3>
 				<pre>func (o *<a href="#Prm">Prm</a>) Connect(V *<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Connect connects parameter to variable
@@ -1799,7 +1792,7 @@ Connect connects parameter to variable
 				
 			
 				
-				<h3 id="Prm.Set">func (*Prm) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1425:1453#L39">Set</a></h3>
+				<h3 id="Prm.Set">func (*Prm) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1435:1463#L39">Set</a></h3>
 				<pre>func (o *<a href="#Prm">Prm</a>) Set(V <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Set sets parameter, including connected variables
@@ -1812,7 +1805,7 @@ Set sets parameter, including connected variables
 		
 			
 			
-			<h2 id="Prms">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1538:1554#L47">Prms</a></h2>
+			<h2 id="Prms">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1548:1564#L47">Prms</a></h2>
 			<pre>type Prms []*<a href="#Prm">Prm</a></pre>
 			<p>
 Prms holds many parameters
@@ -1831,7 +1824,7 @@ Prms holds many parameters
 
 			
 				
-				<h3 id="Prms.Connect">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2081:2149#L76">Connect</a></h3>
+				<h3 id="Prms.Connect">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2091:2159#L76">Connect</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) Connect(V *<a href="/pkg/builtin/#float64">float64</a>, name, caller <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 Connect connects parameter
@@ -1842,7 +1835,7 @@ Connect connects parameter
 				
 			
 				
-				<h3 id="Prms.ConnectSet">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2345:2428#L86">ConnectSet</a></h3>
+				<h3 id="Prms.ConnectSet">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2355:2438#L86">ConnectSet</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) ConnectSet(V []*<a href="/pkg/builtin/#float64">float64</a>, names []<a href="/pkg/builtin/#string">string</a>, caller <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 ConnectSet connects set of parameters
@@ -1853,7 +1846,7 @@ ConnectSet connects set of parameters
 				
 			
 				
-				<h3 id="Prms.Find">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1625:1662#L51">Find</a></h3>
+				<h3 id="Prms.Find">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1635:1672#L51">Find</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) Find(name <a href="/pkg/builtin/#string">string</a>) *<a href="#Prm">Prm</a></pre>
 				<p>
 Find finds a parameter by name
@@ -1866,7 +1859,7 @@ Find finds a parameter by name
 				
 			
 				
-				<h3 id="Prms.GetValues">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1776:1849#L61">GetValues</a></h3>
+				<h3 id="Prms.GetValues">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1786:1859#L61">GetValues</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) GetValues(names []<a href="/pkg/builtin/#string">string</a>) (values []<a href="/pkg/builtin/#float64">float64</a>, found []<a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 GetValues get parameter values
@@ -1877,7 +1870,7 @@ GetValues get parameter values
 				
 			
 				
-				<h3 id="Prms.String">func (Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2659:2692#L98">String</a></h3>
+				<h3 id="Prms.String">func (Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2669:2702#L98">String</a></h3>
 				<pre>func (o <a href="#Prms">Prms</a>) String() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				
 				
@@ -1908,7 +1901,7 @@ Pts is a function based on a linear interpolation over a set of points
 
 			
 				
-				<h3 id="Pts.F">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2160:2206#L103">F</a></h3>
+				<h3 id="Pts.F">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2165:2211#L103">F</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1919,7 +1912,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Pts.G">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2488:2534#L119">G</a></h3>
+				<h3 id="Pts.G">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2493:2539#L119">G</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1930,7 +1923,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Pts.Grad">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2866:2920#L137">Grad</a></h3>
+				<h3 id="Pts.Grad">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2871:2925#L137">Grad</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1941,7 +1934,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Pts.H">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2758:2804#L132">H</a></h3>
+				<h3 id="Pts.H">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2763:2809#L132">H</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -1952,7 +1945,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Pts.Init">func (*Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=529:570#L18">Init</a></h3>
+				<h3 id="Pts.Init">func (*Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=534:575#L18">Init</a></h3>
 				<pre>func (o *<a href="#Pts">Pts</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -1989,7 +1982,7 @@ Pulse implements a ramp function
 
 			
 				
-				<h3 id="Pulse.F">func (Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=793:841#L29">F</a></h3>
+				<h3 id="Pulse.F">func (Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=798:846#L29">F</a></h3>
 				<pre>func (o <a href="#Pulse">Pulse</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2000,7 +1993,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Pulse.G">func (Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=1036:1084#L40">G</a></h3>
+				<h3 id="Pulse.G">func (Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=1041:1089#L40">G</a></h3>
 				<pre>func (o <a href="#Pulse">Pulse</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2011,7 +2004,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Pulse.Grad">func (Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=1592:1648#L62">Grad</a></h3>
+				<h3 id="Pulse.Grad">func (Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=1597:1653#L62">Grad</a></h3>
 				<pre>func (o <a href="#Pulse">Pulse</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2022,7 +2015,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Pulse.H">func (Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=1299:1347#L51">H</a></h3>
+				<h3 id="Pulse.H">func (Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=1304:1352#L51">H</a></h3>
 				<pre>func (o <a href="#Pulse">Pulse</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2033,7 +2026,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Pulse.Init">func (*Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=467:510#L17">Init</a></h3>
+				<h3 id="Pulse.Init">func (*Pulse) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pulse.go?s=472:515#L17">Init</a></h3>
 				<pre>func (o *<a href="#Pulse">Pulse</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -2070,7 +2063,7 @@ RefDecGen implements the reference decreasing model (general)
 
 			
 				
-				<h3 id="RefDecGen.F">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=1686:1738#L46">F</a></h3>
+				<h3 id="RefDecGen.F">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=1691:1743#L46">F</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2081,7 +2074,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.G">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=1853:1905#L51">G</a></h3>
+				<h3 id="RefDecGen.G">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=1858:1910#L51">G</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2092,7 +2085,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=2254:2314#L62">Grad</a></h3>
+				<h3 id="RefDecGen.Grad">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=2259:2319#L62">Grad</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2103,7 +2096,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.H">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=2037:2089#L56">H</a></h3>
+				<h3 id="RefDecGen.H">func (RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=2042:2094#L56">H</a></h3>
 				<pre>func (o <a href="#RefDecGen">RefDecGen</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2114,7 +2107,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=900:947#L22">Init</a></h3>
+				<h3 id="RefDecGen.Init">func (*RefDecGen) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-gen.go?s=905:952#L22">Init</a></h3>
 				<pre>func (o *<a href="#RefDecGen">RefDecGen</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -2171,7 +2164,7 @@ RefDecSp1 implements a specialisation of the reference decreasing model
 
 			
 				
-				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2222:2274#L74">F</a></h3>
+				<h3 id="RefDecSp1.F">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2227:2279#L74">F</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2182,7 +2175,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2427:2479#L82">G</a></h3>
+				<h3 id="RefDecSp1.G">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2432:2484#L82">G</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2193,7 +2186,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2916:2976#L99">Grad</a></h3>
+				<h3 id="RefDecSp1.Grad">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2921:2981#L99">Grad</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2204,7 +2197,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2659:2711#L90">H</a></h3>
+				<h3 id="RefDecSp1.H">func (RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=2664:2716#L90">H</a></h3>
 				<pre>func (o <a href="#RefDecSp1">RefDecSp1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2215,7 +2208,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=1423:1470#L43">Init</a></h3>
+				<h3 id="RefDecSp1.Init">func (*RefDecSp1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-dec-sp1.go?s=1428:1475#L43">Init</a></h3>
 				<pre>func (o *<a href="#RefDecSp1">RefDecSp1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the model
@@ -2252,7 +2245,7 @@ Flipped model is also available if λ1 &lt; λ0 ( b == 1 )
 
 			
 				
-				<h3 id="RefIncRL1.F">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1579:1631#L54">F</a></h3>
+				<h3 id="RefIncRL1.F">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1584:1636#L54">F</a></h3>
 				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2263,7 +2256,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="RefIncRL1.G">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1741:1793#L59">G</a></h3>
+				<h3 id="RefIncRL1.G">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1746:1798#L59">G</a></h3>
 				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2274,7 +2267,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="RefIncRL1.Grad">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=2140:2200#L69">Grad</a></h3>
+				<h3 id="RefIncRL1.Grad">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=2145:2205#L69">Grad</a></h3>
 				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2285,7 +2278,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="RefIncRL1.H">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1924:1976#L64">H</a></h3>
+				<h3 id="RefIncRL1.H">func (RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=1929:1981#L64">H</a></h3>
 				<pre>func (o <a href="#RefIncRL1">RefIncRL1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2296,7 +2289,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="RefIncRL1.Init">func (*RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=959:1006#L28">Init</a></h3>
+				<h3 id="RefIncRL1.Init">func (*RefIncRL1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_ref-inc-rl1.go?s=964:1011#L28">Init</a></h3>
 				<pre>func (o *<a href="#RefIncRL1">RefIncRL1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the model
@@ -2333,7 +2326,7 @@ Rmp implements a ramp function
 
 			
 				
-				<h3 id="Rmp.F">func (Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=761:807#L25">F</a></h3>
+				<h3 id="Rmp.F">func (Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=766:812#L25">F</a></h3>
 				<pre>func (o <a href="#Rmp">Rmp</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2344,7 +2337,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Rmp.G">func (Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=963:1009#L36">G</a></h3>
+				<h3 id="Rmp.G">func (Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=968:1014#L36">G</a></h3>
 				<pre>func (o <a href="#Rmp">Rmp</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2355,7 +2348,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Rmp.Grad">func (Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=1262:1316#L52">Grad</a></h3>
+				<h3 id="Rmp.Grad">func (Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=1267:1321#L52">Grad</a></h3>
 				<pre>func (o <a href="#Rmp">Rmp</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2366,7 +2359,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Rmp.H">func (Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=1154:1200#L47">H</a></h3>
+				<h3 id="Rmp.H">func (Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=1159:1205#L47">H</a></h3>
 				<pre>func (o <a href="#Rmp">Rmp</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2377,7 +2370,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Rmp.Init">func (*Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=445:486#L13">Init</a></h3>
+				<h3 id="Rmp.Init">func (*Rmp) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_rmp.go?s=450:491#L13">Init</a></h3>
 				<pre>func (o *<a href="#Rmp">Rmp</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -2420,7 +2413,7 @@ Input:
 
 			
 				
-				<h3 id="Sin.F">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1027:1073#L41">F</a></h3>
+				<h3 id="Sin.F">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1032:1078#L41">F</a></h3>
 				<pre>func (o <a href="#Sin">Sin</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2431,7 +2424,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Sin.G">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1204:1250#L50">G</a></h3>
+				<h3 id="Sin.G">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1209:1255#L50">G</a></h3>
 				<pre>func (o <a href="#Sin">Sin</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2442,7 +2435,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Sin.Grad">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1575:1629#L68">Grad</a></h3>
+				<h3 id="Sin.Grad">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1580:1634#L68">Grad</a></h3>
 				<pre>func (o <a href="#Sin">Sin</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2453,7 +2446,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Sin.H">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1385:1431#L59">H</a></h3>
+				<h3 id="Sin.H">func (Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=1390:1436#L59">H</a></h3>
 				<pre>func (o <a href="#Sin">Sin</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2464,7 +2457,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Sin.Init">func (*Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=637:678#L24">Init</a></h3>
+				<h3 id="Sin.Init">func (*Sin) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_sin.go?s=642:683#L24">Init</a></h3>
 				<pre>func (o *<a href="#Sin">Sin</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -2499,7 +2492,7 @@ Increasing or decreasing smooth-ramp-smooth function
 
 			
 				
-				<h3 id="Srmps.F">func (Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=796:844#L27">F</a></h3>
+				<h3 id="Srmps.F">func (Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=801:849#L27">F</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2510,7 +2503,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Srmps.G">func (Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=1028:1076#L38">G</a></h3>
+				<h3 id="Srmps.G">func (Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=1033:1081#L38">G</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2521,7 +2514,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Srmps.Grad">func (Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=1562:1618#L60">Grad</a></h3>
+				<h3 id="Srmps.Grad">func (Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=1567:1623#L60">Grad</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2532,7 +2525,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Srmps.H">func (Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=1280:1328#L49">H</a></h3>
+				<h3 id="Srmps.H">func (Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=1285:1333#L49">H</a></h3>
 				<pre>func (o <a href="#Srmps">Srmps</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2543,7 +2536,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Srmps.Init">func (*Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=470:513#L15">Init</a></h3>
+				<h3 id="Srmps.Init">func (*Srmps) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_srmps.go?s=475:518#L15">Init</a></h3>
 				<pre>func (o *<a href="#Srmps">Srmps</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -2552,6 +2545,43 @@ Init initialises the function
 				
 				
 				
+			
+		
+			
+			
+			<h2 id="TimeSpace">type <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=502:887#L9">TimeSpace</a></h2>
+			<pre>type TimeSpace interface {
+    Init(prms <a href="#Prms">Prms</a>) <a href="/pkg/builtin/#error">error</a>                     <span class="comment">// initialise function parameters</span>
+    F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// y = F(t, x)</span>
+    G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// ∂y/∂t_cteX = G(t, x)</span>
+    H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// ∂²y/∂t²_cteX = H(t, x)</span>
+    Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <span class="comment">// ∇F = ∂y/∂x = Grad(t, x)</span>
+}</pre>
+			<p>
+TimeSpace defines the interface for simple functions
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=1056:1107#L21">New</a></h3>
+				<pre>func New(name <a href="/pkg/builtin/#string">string</a>, prms <a href="#Prms">Prms</a>) (<a href="#TimeSpace">TimeSpace</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+New allocates function by name
+</p>
+
+				
+				
+			
+
 			
 		
 			
@@ -2585,7 +2615,7 @@ or, if &#39;2D = true&#39;:
 
 			
 				
-				<h3 id="Xpoly1.F">func (Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=902:951#L35">F</a></h3>
+				<h3 id="Xpoly1.F">func (Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=907:956#L35">F</a></h3>
 				<pre>func (o <a href="#Xpoly1">Xpoly1</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2596,7 +2626,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Xpoly1.G">func (Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=1089:1138#L43">G</a></h3>
+				<h3 id="Xpoly1.G">func (Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=1094:1143#L43">G</a></h3>
 				<pre>func (o <a href="#Xpoly1">Xpoly1</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2607,7 +2637,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Xpoly1.Grad">func (Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=1307:1364#L53">Grad</a></h3>
+				<h3 id="Xpoly1.Grad">func (Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=1312:1369#L53">Grad</a></h3>
 				<pre>func (o <a href="#Xpoly1">Xpoly1</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2618,7 +2648,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Xpoly1.H">func (Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=1196:1245#L48">H</a></h3>
+				<h3 id="Xpoly1.H">func (Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=1201:1250#L48">H</a></h3>
 				<pre>func (o <a href="#Xpoly1">Xpoly1</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2629,7 +2659,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Xpoly1.Init">func (*Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=572:616#L18">Init</a></h3>
+				<h3 id="Xpoly1.Init">func (*Xpoly1) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly1.go?s=577:621#L18">Init</a></h3>
 				<pre>func (o *<a href="#Xpoly1">Xpoly1</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function
@@ -2675,7 +2705,7 @@ or, if &#39;2D = true&#39;:
 
 			
 				
-				<h3 id="Xpoly2.F">func (Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=1398:1447#L47">F</a></h3>
+				<h3 id="Xpoly2.F">func (Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=1403:1452#L47">F</a></h3>
 				<pre>func (o <a href="#Xpoly2">Xpoly2</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -2686,7 +2716,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Xpoly2.G">func (Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=1756:1805#L59">G</a></h3>
+				<h3 id="Xpoly2.G">func (Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=1761:1810#L59">G</a></h3>
 				<pre>func (o <a href="#Xpoly2">Xpoly2</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -2697,7 +2727,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Xpoly2.Grad">func (Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=1974:2031#L69">Grad</a></h3>
+				<h3 id="Xpoly2.Grad">func (Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=1979:2036#L69">Grad</a></h3>
 				<pre>func (o <a href="#Xpoly2">Xpoly2</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -2708,7 +2738,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Xpoly2.H">func (Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=1863:1912#L64">H</a></h3>
+				<h3 id="Xpoly2.H">func (Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=1868:1917#L64">H</a></h3>
 				<pre>func (o <a href="#Xpoly2">Xpoly2</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)
@@ -2719,7 +2749,7 @@ H returns ∂²y/∂t²_cteX = H(t, x)
 				
 			
 				
-				<h3 id="Xpoly2.Init">func (*Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=783:827#L24">Init</a></h3>
+				<h3 id="Xpoly2.Init">func (*Xpoly2) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_xpoly2.go?s=788:832#L24">Init</a></h3>
 				<pre>func (o *<a href="#Xpoly2">Xpoly2</a>) Init(prms <a href="#Prms">Prms</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises the function

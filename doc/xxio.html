@@ -342,6 +342,11 @@ parsing, handling files, directories, etc.
 				
 			
 				
+				<dd><a href="#FcnRow">type FcnRow</a></dd>
+				
+				
+			
+				
 				<dd><a href="#ReadLinesCallback">type ReadLinesCallback</a></dd>
 				
 				
@@ -354,7 +359,10 @@ parsing, handling files, directories, etc.
 					<dd>&nbsp; &nbsp; <a href="#Report.AddSection">func (o *Report) AddSection(name string, level int)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Report.AddTable">func (o *Report) AddTable(keys []string, T map[string][]float64, caption, label string, key2tex map[string]string, key2numfmt map[string]FcnConvertNum)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Report.AddTable">func (o *Report) AddTable(caption, label, notes string, keys []string, T map[string][]float64, key2tex map[string]string, key2numfmt map[string]FcnConvertNum)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Report.AddTableF">func (o *Report) AddTableF(caption, label, notes string, keys []string, nrows int, F map[string]FcnRow, key2tex map[string]string)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Report.AddTex">func (o *Report) AddTex(commands string)</a></dd>
@@ -364,6 +372,9 @@ parsing, handling files, directories, etc.
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Report.WriteTexPdf">func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Report.WriteTexTables">func (o *Report) WriteTexTables(dirout string, label2fnkey map[string]string) (err error)</a></dd>
 				
 			
 			
@@ -1431,7 +1442,7 @@ StrThinLine returns a thin line (using &#39;-&#39;)
 		
 			
 			
-			<h2 id="TexNum">func <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=5903:5975#L228">TexNum</a></h2>
+			<h2 id="TexNum">func <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=9201:9273#L338">TexNum</a></h2>
 			<pre>func TexNum(fmt <a href="/pkg/builtin/#string">string</a>, num <a href="/pkg/builtin/#float64">float64</a>, scientificNotation <a href="/pkg/builtin/#bool">bool</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 TexNum returns a string representation in TeX format of a real number.
@@ -1556,10 +1567,31 @@ WriteFileVD writes data to a new file (and shows message: file written), after c
 		
 			
 			
-			<h2 id="FcnConvertNum">type <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=265:306#L3">FcnConvertNum</a></h2>
-			<pre>type FcnConvertNum func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<h2 id="FcnConvertNum">type <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=265:315#L3">FcnConvertNum</a></h2>
+			<pre>type FcnConvertNum func(row <a href="/pkg/builtin/#int">int</a>, x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 FcnConvertNum is a function to convert number to string
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="FcnRow">type <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=378:410#L6">FcnRow</a></h2>
+			<pre>type FcnRow func(row <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#string">string</a></pre>
+			<p>
+FcnRow is a function that returns the row value as string
 </p>
 
 
@@ -1598,7 +1630,7 @@ ReadLinesCallback is used in ReadLines to process line by line during reading of
 		
 			
 			
-			<h2 id="Report">type <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=361:1026#L6">Report</a></h2>
+			<h2 id="Report">type <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=465:1731#L9">Report</a></h2>
 			<pre>type Report struct {
 
     <span class="comment">// configuration</span>
@@ -1607,8 +1639,14 @@ ReadLinesCallback is used in ReadLines to process line by line during reading of
     Landscape <a href="/pkg/builtin/#bool">bool</a>   <span class="comment">// to format paper</span>
 
     <span class="comment">// default options</span>
-    DefaultTablePos <a href="/pkg/builtin/#string">string</a> <span class="comment">// default table positioning key; e.g. !t (to be written as [!t])</span>
-    DefaultNumFmt   <a href="/pkg/builtin/#string">string</a> <span class="comment">// default number formatting string; e.g. &#34;%v&#34;, &#34;%g&#34; or &#34;%.3f&#34;</span>
+    TablePos    <a href="/pkg/builtin/#string">string</a>  <span class="comment">// default table positioning key; e.g. !t (to be written as [!t])</span>
+    NumFmt      <a href="/pkg/builtin/#string">string</a>  <span class="comment">// default number formatting string; e.g. &#34;%v&#34;, &#34;%g&#34; or &#34;%.3f&#34;</span>
+    TableFontSz <a href="/pkg/builtin/#string">string</a>  <span class="comment">// default table fontsize string; e.g. \scriptsize</span>
+    TableColSep <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// default table column separation in &#39;em&#39;; e.g. 0.5 =&gt; \setlength{\tabcolsep}{0.5em}</span>
+    NotesFmt    <a href="/pkg/builtin/#string">string</a>  <span class="comment">// default table notes format; e.g. &#39;c&#39; or &#39;p{7cm}&#39;</span>
+    NotesFontSz <a href="/pkg/builtin/#string">string</a>  <span class="comment">// default table notes font size; e.g. \scriptsize</span>
+    RowGapStep  <a href="/pkg/builtin/#int">int</a>     <span class="comment">// step when looping over rows to add an extra gap; e.g. 2 =&gt; after every two rows</span>
+    RowGapPt    <a href="/pkg/builtin/#int">int</a>     <span class="comment">// row gap in points; e.g. 12 =&gt; 12 pt. 0 means no gap</span>
 
     <span class="comment">// options</span>
     DoNotAlignTable   <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// align coluns in TeX table (has to loop over rows first...)</span>
@@ -1634,7 +1672,7 @@ Report holds data to generate LaTeX and PDF files
 
 			
 				
-				<h3 id="Report.AddSection">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1152:1203#L33">AddSection</a></h3>
+				<h3 id="Report.AddSection">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1921:1972#L47">AddSection</a></h3>
 				<pre>func (o *<a href="#Report">Report</a>) AddSection(name <a href="/pkg/builtin/#string">string</a>, level <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 AddSection adds section and subsections to report
@@ -1645,12 +1683,16 @@ AddSection adds section and subsections to report
 				
 			
 				
-				<h3 id="Report.AddTable">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1796:1947#L58">AddTable</a></h3>
-				<pre>func (o *<a href="#Report">Report</a>) AddTable(keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, caption, label <a href="/pkg/builtin/#string">string</a>, key2tex map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#string">string</a>, key2numfmt map[<a href="/pkg/builtin/#string">string</a>]<a href="#FcnConvertNum">FcnConvertNum</a>)</pre>
+				<h3 id="Report.AddTable">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=2716:2874#L74">AddTable</a></h3>
+				<pre>func (o *<a href="#Report">Report</a>) AddTable(caption, label, notes <a href="/pkg/builtin/#string">string</a>, keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, key2tex map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#string">string</a>, key2numfmt map[<a href="/pkg/builtin/#string">string</a>]<a href="#FcnConvertNum">FcnConvertNum</a>)</pre>
 				<p>
 AddTable adds tex table to report
 </p>
-<pre>key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
+<pre>caption -- caption of table
+label -- label of table
+keys -- column keys
+T -- table of values: key =&gt; row value
+key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
 key2convert -- maps key to function to convert numbers to string in that column. may be nil
 </pre>
 
@@ -1659,7 +1701,25 @@ key2convert -- maps key to function to convert numbers to string in that column.
 				
 			
 				
-				<h3 id="Report.AddTex">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1441:1481#L48">AddTex</a></h3>
+				<h3 id="Report.AddTableF">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=5093:5223#L168">AddTableF</a></h3>
+				<pre>func (o *<a href="#Report">Report</a>) AddTableF(caption, label, notes <a href="/pkg/builtin/#string">string</a>, keys []<a href="/pkg/builtin/#string">string</a>, nrows <a href="/pkg/builtin/#int">int</a>, F map[<a href="/pkg/builtin/#string">string</a>]<a href="#FcnRow">FcnRow</a>, key2tex map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+AddTableF adds tex table to report by using a map of functions to extract row values
+</p>
+<pre>caption -- caption of table
+label -- label of table
+keys -- column keys
+nrows -- number of rows
+F -- map of functions: key =&gt; function returning formatted row value
+key2tex -- maps key to tex formatted text of this key (i.e. equation). may be nil
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Report.AddTex">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=2218:2258#L61">AddTex</a></h3>
 				<pre>func (o *<a href="#Report">Report</a>) AddTex(commands <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 AddTex adds TeX commands
@@ -1670,7 +1730,7 @@ AddTex adds TeX commands
 				
 			
 				
-				<h3 id="Report.Reset">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1051:1075#L28">Reset</a></h3>
+				<h3 id="Report.Reset">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=1756:1780#L38">Reset</a></h3>
 				<pre>func (o *<a href="#Report">Report</a>) Reset()</pre>
 				<p>
 Reset clears report
@@ -1681,13 +1741,24 @@ Reset clears report
 				
 			
 				
-				<h3 id="Report.WriteTexPdf">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=4061:4144#L154">WriteTexPdf</a></h3>
+				<h3 id="Report.WriteTexPdf">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=6924:7007#L248">WriteTexPdf</a></h3>
 				<pre>func (o *<a href="#Report">Report</a>) WriteTexPdf(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, extra *<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 WriteTexPdf writes tex file and generates pdf file
 </p>
 <pre>extra -- extra LaTeX commands; may be nil
 </pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Report.WriteTexTables">func (*Report) <a href="https://github.com/cpmech/gosl/blob/master/io/texpdf.go?s=8617:8706#L321">WriteTexTables</a></h3>
+				<pre>func (o *<a href="#Report">Report</a>) WriteTexTables(dirout <a href="/pkg/builtin/#string">string</a>, label2fnkey map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+WriteTexTables writes tables to tex file
+</p>
 
 				
 				
