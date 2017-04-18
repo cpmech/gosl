@@ -37,8 +37,9 @@ func Test_mylab01(tst *testing.T) {
 	h := IntUnique(g)
 	G := []int{1, 2, 3, 38, 3, 5, 3, 1, 2, 15, 38, 1, 11}
 	H := IntUnique(D, C, G, []int{16, 39})
-	X, Y := MeshGrid2D(3, 6, 10, 20, 4, 3)
-	U, V, W := MeshGrid2Deval(-1, 1, -2, 2, 3, 3, func(x, y float64) float64 { return x + y })
+	X, Y := MeshGrid2d(3, 6, 10, 20, 4, 3)
+	U, V, W := MeshGrid2dF(-1, 1, -2, 2, 3, 3, func(x, y float64) float64 { return x + y })
+	XX, YY, ZZ, UU, VV := MeshGrid2dFG(-1, 1, -2, 2, 3, 3, func(x, y float64) (z, u, v float64) { return x + 2*y, 1, 2 })
 	P := [][]int{
 		{1, 2, 3, 4, 5},
 		{-1, -2, -3, -4, -5},
@@ -67,6 +68,11 @@ func Test_mylab01(tst *testing.T) {
 	chk.Matrix(tst, "U", 1e-17, U, [][]float64{{-1, 0, 1}, {-1, 0, 1}, {-1, 0, 1}})
 	chk.Matrix(tst, "V", 1e-17, V, [][]float64{{-2, -2, -2}, {0, 0, 0}, {2, 2, 2}})
 	chk.Matrix(tst, "W", 1e-17, W, [][]float64{{-3, -2, -1}, {-1, 0, 1}, {1, 2, 3}})
+	chk.Matrix(tst, "XX", 1e-17, XX, [][]float64{{-1, 0, 1}, {-1, 0, 1}, {-1, 0, 1}})
+	chk.Matrix(tst, "YY", 1e-17, YY, [][]float64{{-2, -2, -2}, {0, 0, 0}, {2, 2, 2}})
+	chk.Matrix(tst, "ZZ", 1e-17, ZZ, [][]float64{{-5, -4, -3}, {-1, 0, 1}, {3, 4, 5}})
+	chk.Matrix(tst, "UU", 1e-17, UU, [][]float64{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}})
+	chk.Matrix(tst, "VV", 1e-17, VV, [][]float64{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}})
 	chk.StrMat(tst, "S", S, [][]string{{"", "", ""}, {"", "", ""}})
 	chk.IntMat(tst, "Pc", Pc, P)
 }

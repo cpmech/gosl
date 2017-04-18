@@ -272,10 +272,9 @@ func Expon(val float64) (ndigits int) {
 	return
 }
 
-// MeshGrid2D creates a grid with x-y coordinates
-//  X -- [ny][nx]
-//  Y -- [ny][nx]
-func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (X, Y [][]float64) {
+// MeshGrid2d creates a grid with x-y coordinates
+//  X, Y -- [ny][nx]
+func MeshGrid2d(xmin, xmax, ymin, ymax float64, nx, ny int) (X, Y [][]float64) {
 	if nx < 2 || ny < 2 {
 		return
 	}
@@ -294,11 +293,9 @@ func MeshGrid2D(xmin, xmax, ymin, ymax float64, nx, ny int) (X, Y [][]float64) {
 	return
 }
 
-// MeshGrid2Deval creates a grid with x-y coordinates and evaluates z=f(x,y)
-//  x -- [ny][nx]
-//  y -- [ny][nx]
-//  z -- [ny][nx]
-func MeshGrid2Deval(xmin, xmax, ymin, ymax float64, nx, ny int, f func(x, y float64) float64) (X, Y, Z [][]float64) {
+// MeshGrid2dF creates a grid with x-y coordinates and evaluates z=f(x,y)
+//  X, Y, Z -- [ny][nx]
+func MeshGrid2dF(xmin, xmax, ymin, ymax float64, nx, ny int, f func(x, y float64) float64) (X, Y, Z [][]float64) {
 	if nx < 2 || ny < 2 {
 		return
 	}
@@ -315,6 +312,34 @@ func MeshGrid2Deval(xmin, xmax, ymin, ymax float64, nx, ny int, f func(x, y floa
 			X[i][j] = xmin + float64(j)*dx
 			Y[i][j] = ymin + float64(i)*dy
 			Z[i][j] = f(X[i][j], Y[i][j])
+		}
+	}
+	return
+}
+
+// MeshGrid2dFG creates a grid with x-y coordinates and evaluates (z,u,v)=fg(x,y)
+//  X, Y, Z, U, V -- [ny][nx]
+func MeshGrid2dFG(xmin, xmax, ymin, ymax float64, nx, ny int, fg func(x, y float64) (z, u, v float64)) (X, Y, Z, U, V [][]float64) {
+	if nx < 2 || ny < 2 {
+		return
+	}
+	dx := (xmax - xmin) / float64(nx-1)
+	dy := (ymax - ymin) / float64(ny-1)
+	X = make([][]float64, ny)
+	Y = make([][]float64, ny)
+	Z = make([][]float64, ny)
+	U = make([][]float64, ny)
+	V = make([][]float64, ny)
+	for i := 0; i < ny; i++ {
+		X[i] = make([]float64, nx)
+		Y[i] = make([]float64, nx)
+		Z[i] = make([]float64, nx)
+		U[i] = make([]float64, nx)
+		V[i] = make([]float64, nx)
+		for j := 0; j < nx; j++ {
+			X[i][j] = xmin + float64(j)*dx
+			Y[i][j] = ymin + float64(i)*dy
+			Z[i][j], U[i][j], V[i][j] = fg(X[i][j], Y[i][j])
 		}
 	}
 	return
