@@ -299,7 +299,7 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 			{x + o.S[0], y},
 			{x + o.S[0], y + o.S[1]},
 			{x, y + o.S[1]},
-		}, &plt.Sty{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true}, "clip_on=0")
+		}, &plt.S{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true}, "clip_on=0")
 	}
 
 	// plot items

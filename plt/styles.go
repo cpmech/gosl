@@ -6,39 +6,40 @@ package plt
 
 import "github.com/cpmech/gosl/io"
 
-// Sty holds data for drawing shapes
-type Sty struct {
+// S holds "style" data for drawing polygons or other shapes
+type S struct {
 	Fc     string  // face color
 	Ec     string  // edge color
 	Lw     float64 // linewidth
 	Closed bool    // closed shape
 }
 
-// Fmt holds data for ploting lines
-type Fmt struct {
-	C    string  // color
-	M    string  // marker
-	Ls   string  // linestyle
-	Lw   float64 // linewidth; -1 => default
-	Ms   int     // marker size; -1 => default
-	L    string  // label
-	Me   int     // mark-every; -1 => default
-	Z    int     // z-order
-	Mec  string  // marker edge color
-	Mew  float64 // marker edge width
-	Void bool    // void marker => markeredgecolor='C', markerfacecolor='none'
-	Clip bool    // turn clip => clip_on=True
+// A holds "arguments" to configure plots
+type A struct {
+	C     string  // color
+	M     string  // marker
+	Ls    string  // linestyle
+	Lw    float64 // linewidth; -1 => default
+	Ms    int     // marker size; -1 => default
+	L     string  // label
+	Me    int     // mark-every; -1 => default
+	Z     int     // z-order
+	Mec   string  // marker edge color
+	Mew   float64 // marker edge width
+	Void  bool    // void marker => markeredgecolor='C', markerfacecolor='none'
+	Clip  bool    // turn clip => clip_on=True
+	Extra string  // extra arguments
 }
 
-// Init initialises Fmt with default values
-func (o *Sty) Init() {
+// Init initialises S (style) with default values
+func (o *S) Init() {
 	o.Fc = "#edf5ff"
 	o.Ec = "black"
 	o.Lw = 1
 }
 
-// GetArgs returns arguments for Plot
-func (o Fmt) GetArgs(start string) string {
+// String returns a string representation of arguments
+func (o A) String(start string) string {
 	l := start
 	if o.C != "" {
 		if len(l) > 0 {
@@ -119,6 +120,9 @@ func (o Fmt) GetArgs(start string) string {
 			l += ","
 		}
 		l += "clip_on=0"
+	}
+	if o.Extra != "" {
+		l += o.Extra
 	}
 	return l
 }

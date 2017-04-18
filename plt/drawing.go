@@ -31,7 +31,7 @@ func AutoScale(P [][]float64) {
 }
 
 // DrawPolyline draws a polyline
-func DrawPolyline(P [][]float64, sd *Sty, args string) {
+func DrawPolyline(P [][]float64, sd *S, args string) {
 	if len(P) < 1 {
 		return
 	}
@@ -57,14 +57,14 @@ func DrawPolyline(P [][]float64, sd *Sty, args string) {
 }
 
 // DrawLegend draws legend with given lines data. fs == fontsize
-func DrawLegend(dat []Fmt, fs int, loc string, frame bool, args string) {
+func DrawLegend(dat []A, fs int, loc string, frame bool, args string) {
 	n := bb.Len()
 	io.Ff(&bb, "handles%d = [", n)
 	for i, d := range dat {
 		if i > 0 {
 			io.Ff(&bb, ",\n")
 		}
-		io.Ff(&bb, "Line2D([], [], %s)", d.GetArgs(""))
+		io.Ff(&bb, "Line2D([], [], %s)", d.String(""))
 	}
 	io.Ff(&bb, "]\nlg%d=legend(handles=handles%d, fontsize=%d, loc='%s'", n, n, fs, loc)
 	if len(args) > 0 {

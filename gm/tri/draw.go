@@ -6,9 +6,9 @@ package tri
 
 import "github.com/cpmech/gosl/plt"
 
-func Draw(V [][]float64, C [][]int, style *plt.Fmt) {
+func Draw(V [][]float64, C [][]int, style *plt.A) {
 	if style == nil {
-		style = &plt.Fmt{C: "b", M: "o", Ms: 2}
+		style = &plt.A{C: "b", M: "o", Ms: 2}
 	}
 	type edgeType struct{ A, B int }
 	drawnEdges := make(map[edgeType]bool)
@@ -22,7 +22,7 @@ func Draw(V [][]float64, C [][]int, style *plt.Fmt) {
 			if _, found := drawnEdges[edge]; !found {
 				x := []float64{V[a][0], V[b][0]}
 				y := []float64{V[a][1], V[b][1]}
-				plt.Plot(x, y, style.GetArgs(""))
+				plt.Plot(x, y, style.String(""))
 				drawnEdges[edge] = true
 			}
 		}

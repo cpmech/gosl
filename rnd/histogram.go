@@ -158,9 +158,9 @@ func (o Histogram) GenLabels(numfmt string) (labels []string) {
 
 // PlotDensity plots histogram in density values
 //  sty -- style can be <nil>
-func (o Histogram) PlotDensity(sty *plt.Sty, args string) {
+func (o Histogram) PlotDensity(sty *plt.S, args string) {
 	if sty == nil {
-		sty = &plt.Sty{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true}
+		sty = &plt.S{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true}
 	}
 	nstations := len(o.Stations)
 	nsamples := 0
