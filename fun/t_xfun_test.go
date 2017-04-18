@@ -31,15 +31,8 @@ func Test_xfun01(tst *testing.T) {
 	xmax := []float64{2, 2}
 	np := 21
 	if chk.Verbose {
-		withGrad := true
-		hlZero := true
-		axEqual := true
-		save := true
-		show := false
 		plt.Reset()
-		PlotX(o, "/tmp/gosl/fun", "halo.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
-			plt.Equal()
-		})
+		PlotX(o, "/tmp/gosl", "t_halo.png", tcte, xmin, xmax, np)
 	}
 
 	np = 4
@@ -70,15 +63,8 @@ func Test_xfun02(tst *testing.T) {
 	xmax := []float64{2, 2}
 	np := 21
 	if chk.Verbose {
-		withGrad := false
-		hlZero := true
-		axEqual := true
-		save := true
-		show := false
 		plt.Reset()
-		PlotX(o, "/tmp/gosl/fun", "cdist.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
-			plt.Equal()
-		})
+		PlotX(o, "/tmp/gosl", "t_cdist.png", tcte, xmin, xmax, np)
 	}
 
 	np = 5
@@ -110,15 +96,8 @@ func Test_xfun03(tst *testing.T) {
 	xmax := []float64{2, 2, 2}
 	np := 21
 	if chk.Verbose && len(xmin) == 2 {
-		withGrad := false
-		hlZero := true
-		axEqual := true
-		save := true
-		show := false
 		plt.Reset()
-		PlotX(o, "/tmp/gosl/fun", "xpoly2.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
-			plt.Equal()
-		})
+		PlotX(o, "/tmp/gosl", "t_xpoly2.png", tcte, xmin, xmax, np)
 	}
 
 	np = 3
@@ -148,15 +127,8 @@ func Test_xfun04(tst *testing.T) {
 	xmax := []float64{2, 2, 2}
 	np := 21
 	if chk.Verbose && len(xmin) == 2 {
-		withGrad := false
-		hlZero := true
-		axEqual := true
-		save := true
-		show := false
 		plt.Reset()
-		PlotX(o, "/tmp/gosl/fun", "xpoly2.png", tcte, xmin, xmax, np, "", withGrad, hlZero, axEqual, save, show, func() {
-			plt.Equal()
-		})
+		PlotX(o, "/tmp/gosl", "t_xpoly2.png", tcte, xmin, xmax, np)
 	}
 
 	np = 3

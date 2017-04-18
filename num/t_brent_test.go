@@ -70,7 +70,7 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA Cb_y
 
 	// compare Brent's and Newton's solutions
 	PlotYxe(ffcnA, "results", fname, xbrent, xa, xb, 101, "Brent", "'b-'", save, show, func() {
-		plt.PlotOne(xnewt[0], ynewt, "'g+', ms=15, label='Newton'")
+		plt.PlotOne(xnewt[0], ynewt, &plt.A{C: "g", M: "+", Ms: 15, L: "Newton"})
 	})
 	chk.Scalar(tst, "xbrent - xnewt", tolcmp, xbrent, xnewt[0])
 	return

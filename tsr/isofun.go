@@ -304,19 +304,18 @@ func (o *IsoFun) PlotFfcn(dirout, fname string, pmin, pmax float64, np int, pq_p
 	if extra_before != nil {
 		extra_before()
 	}
-	x, y := utl.MeshGrid2D(pmin, pmax, pmin, pmax, np, np)
+	x, y := utl.MeshGrid2d(pmin, pmax, pmin, pmax, np, np)
 	z := la.MatAlloc(np, np)
 	for i := 0; i < np; i++ {
 		for j := 0; j < np; j++ {
 			z[i][j] = o.ffcn(x[i][j], y[i][j], args...)
 		}
 	}
-	plt.Contour(x, y, z, args_contour)
-	plt.ContourSimple(x, y, z, false, 8, "levels=[0], colors=['yellow'], linewidths=[2]")
+	plt.ContourF(x, y, z, nil) // TODO:args_contour
 	if pq_point != nil {
-		plt.PlotOne(pq_point[0], pq_point[1], args_point)
+		plt.PlotOne(pq_point[0], pq_point[1], nil) // TODO:args_point)
 	}
-	plt.Gll("p", "q", "")
+	plt.Gll("p", "q", nil)
 	if extra_after != nil {
 		extra_after()
 	}

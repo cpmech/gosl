@@ -27,11 +27,11 @@ func plot_normal(μ, σ, xmin, xmax float64) {
 		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
-	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=2")
+	plt.Plot(x, y, nil)
+	plt.Gll("$x$", "$f(x)$", nil)
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%g,\\;\\sigma=%g$'", μ, σ))
-	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
+	plt.Plot(x, Y, nil)
+	plt.Gll("$x$", "$F(x)$", nil)
 }
 
 func Test_dist_normal_01(tst *testing.T) {
@@ -98,7 +98,7 @@ func Test_dist_normal_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300)
+		plt.SetForEps(1.5, 300, nil)
 		for _, σ := range []float64{1, 0.5, 0.25} {
 			plot_normal(0, σ, -2, 2)
 		}
@@ -141,8 +141,8 @@ func Test_dist_normal_04(tst *testing.T) {
 			//io.Pforan("x=%v Φ(x)=%v Φ⁻¹(Φ(x))=%v\n", x[i], StdPhi(x[i]), StdInvPhi(StdPhi(x[i])))
 			y[i] = StdInvPhi(StdPhi(x[i]))
 		}
-		plt.Plot(x, y, "'b-'")
-		plt.Gll("$x$", "$\\Phi^{-1}(\\Phi(x))$", "")
+		plt.Plot(x, y, nil)
+		plt.Gll("$x$", "$\\Phi^{-1}(\\Phi(x))$", nil)
 		plt.SaveD("/tmp/gosl", "rnd_dist_normal_04.eps")
 	}
 }
@@ -186,7 +186,7 @@ func Test_dist_normal_05(tst *testing.T) {
 	chk.Scalar(tst, "area", 1e-15, area, 1)
 
 	if chk.Verbose {
-		plt.SetForEps(1.5, 300)
+		plt.SetForEps(1.5, 300, nil)
 		plot_normal(μ, σ, 0, 2)
 		plt.Subplot(2, 1, 1)
 		hist.PlotDensity(nil, "")

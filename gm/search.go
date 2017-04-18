@@ -274,7 +274,7 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 		for j := 0; j < o.N[1]+1; j++ {
 			y[0] = o.Xi[1] + float64(j)*o.S[1]
 			y[1] = y[0]
-			plt.Plot(x, y, "'-', color='#4f3677', clip_on=0")
+			plt.Plot(x, y, &plt.A{C: "#4f3677"})
 		}
 
 		// vertical lines
@@ -283,7 +283,7 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 		for i := 0; i < o.N[0]+1; i++ {
 			x[0] = o.Xi[0] + float64(i)*o.S[0]
 			x[1] = x[0]
-			plt.Plot(x, y, "'k-', color='#4f3677', clip_on=0")
+			plt.Plot(x, y, &plt.A{C: "#4f3677"})
 		}
 	}
 
@@ -294,12 +294,12 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 		j := (idx % nxy) / o.N[0]
 		x := o.Xi[0] + float64(i)*o.S[0] // coordinates of bin corner
 		y := o.Xi[1] + float64(j)*o.S[1]
-		plt.DrawPolyline([][]float64{
+		plt.Polyline([][]float64{
 			{x, y},
 			{x + o.S[0], y},
 			{x + o.S[0], y + o.S[1]},
 			{x, y + o.S[1]},
-		}, &plt.S{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true}, "clip_on=0")
+		}, &plt.A{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true})
 	}
 
 	// plot items
@@ -309,7 +309,7 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 				continue
 			}
 			for _, entry := range bin.Entries {
-				plt.PlotOne(entry.X[0], entry.X[1], "'r.', clip_on=0")
+				plt.PlotOne(entry.X[0], entry.X[1], &plt.A{C: "r", M: "."})
 			}
 		}
 	}
@@ -321,7 +321,7 @@ func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[in
 				idx := i + j*o.N[0]
 				x := o.Xi[0] + float64(i)*o.S[0] + 0.02*o.S[0]
 				y := o.Xi[1] + float64(j)*o.S[1] + 0.02*o.S[1]
-				plt.Text(x, y, io.Sf("%d", idx), "size=7")
+				plt.Text(x, y, io.Sf("%d", idx), nil)
 			}
 		}
 	}

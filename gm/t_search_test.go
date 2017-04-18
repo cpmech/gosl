@@ -102,7 +102,7 @@ func Test_bins02(tst *testing.T) {
 
 	// draw
 	if chk.Verbose {
-		plt.SetForPng(1, 500, 150)
+		plt.SetForPng(1, 500, 150, nil)
 		bins.Draw2d(true, true, true, true, map[int]bool{8: true, 9: true, 10: true})
 		plt.SetXnticks(15)
 		plt.SetYnticks(15)
@@ -175,7 +175,7 @@ func Test_bins04(tst *testing.T) {
 
 	// draw
 	if chk.Verbose {
-		plt.SetForPng(1, 500, 150)
+		plt.SetForPng(1, 500, 150, nil)
 		bins.Draw2d(true, true, true, true, nil)
 		plt.SaveD("/tmp/gosl/gm", "test_bins04.png")
 	}

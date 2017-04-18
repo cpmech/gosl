@@ -47,15 +47,14 @@ func New(name string, prms Prms) (TimeSpace, error) {
 // PlotT plots F, G and H for varying t and fixed coordinates x
 //  fname       -- filename to safe figure
 //  args{F,G,H} -- if any is "", the corresponding plot is not created
-func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np int,
-	labelT, labelF, labelG, labelH, argsF, argsG, argsH string) {
+func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np int) {
 
 	// variables
 	t := utl.LinSpace(t0, tf, np)
 	var f, g, h []float64
-	withF := argsF != ""
-	withG := argsG != ""
-	withH := argsH != ""
+	withF := true
+	withG := true
+	withH := true
 	nrow := 0
 
 	// y-values
@@ -85,22 +84,14 @@ func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np
 	}
 
 	// labels
-	if labelT == "" {
-		labelT = "$t$"
-	}
+	labelT := "$t$"
 	labelX := ""
 	for _, x := range xcte {
 		labelX += io.Sf(",%g", x)
 	}
-	if labelF == "" {
-		labelF = "$f(t" + labelX + ")$"
-	}
-	if labelG == "" {
-		labelG = "$g(t" + labelX + ")=\\frac{\\mathrm{d}f}{\\mathrm{d}t}$"
-	}
-	if labelH == "" {
-		labelH = "$h(t" + labelX + ")=\\frac{\\mathrm{d}^2f}{\\mathrm{d}t^2}$"
-	}
+	labelF := "$f(t" + labelX + ")$"
+	labelG := "$g(t" + labelX + ")=\\frac{\\mathrm{d}f}{\\mathrm{d}t}$"
+	labelH := "$h(t" + labelX + ")=\\frac{\\mathrm{d}^2f}{\\mathrm{d}t^2}$"
 
 	// plot F
 	pidx := 1
@@ -108,8 +99,8 @@ func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np
 		if nrow > 1 {
 			plt.Subplot(nrow, 1, pidx)
 		}
-		plt.Plot(t, f, argsF+",clip_on=0")
-		plt.Gll(labelT, labelF, "")
+		plt.Plot(t, f, nil)
+		plt.Gll(labelT, labelF, nil)
 		pidx += 1
 	}
 
@@ -118,8 +109,8 @@ func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np
 		if nrow > 1 {
 			plt.Subplot(nrow, 1, pidx)
 		}
-		plt.Plot(t, g, argsG+",clip_on=0")
-		plt.Gll(labelT, labelG, "")
+		plt.Plot(t, g, nil)
+		plt.Gll(labelT, labelG, nil)
 		pidx += 1
 	}
 
@@ -128,8 +119,8 @@ func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np
 		if nrow > 1 {
 			plt.Subplot(nrow, 1, pidx)
 		}
-		plt.Plot(t, h, argsH+",clip_on=0")
-		plt.Gll(labelT, labelH, "")
+		plt.Plot(t, h, nil)
+		plt.Gll(labelT, labelH, nil)
 	}
 
 	// save figure
@@ -141,11 +132,14 @@ func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np
 // PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
 //  hlZero  -- highlight F(t,x) = 0
 //  axEqual -- use axis['equal']
-func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64, np int, args string, withGrad, hlZero, axEqual, save, show bool, extra func()) {
+func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64, np int) {
+	withGrad := true
+	hlZero := true
+	axEqual := true
 	if len(xmin) == 3 {
 		chk.Panic("PlotX works in 2D only")
 	}
-	X, Y := utl.MeshGrid2D(xmin[0], xmax[0], xmin[1], xmax[1], np, np)
+	X, Y := utl.MeshGrid2d(xmin[0], xmax[0], xmin[1], xmax[1], np, np)
 	F := la.MatAlloc(np, np)
 	var Gx, Gy [][]float64
 	nrow := 1
@@ -171,36 +165,30 @@ func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64
 	os.MkdirAll(dirout, 0777)
 	if withGrad {
 		prop = 2
-		plt.SetForPng(prop, wid, dpi)
+		plt.SetForPng(prop, wid, dpi, nil)
 		plt.Subplot(nrow, 1, 1)
-		plt.Title("F(t,x)", "")
+		plt.Title("F(t,x)", nil)
 	} else {
-		plt.SetForPng(prop, wid, dpi)
+		plt.SetForPng(prop, wid, dpi, nil)
 	}
-	plt.Contour(X, Y, F, args)
+	plt.ContourF(X, Y, F, nil)
 	if hlZero {
-		plt.ContourSimple(X, Y, F, false, 8, "levels=[0], linewidths=[2], colors=['yellow']")
+		plt.ContourL(X, Y, F, &plt.A{Ulevels: []float64{0}, Lw: 2, Colors: []string{"yellow"}})
 	}
 	if axEqual {
 		plt.Equal()
 	}
-	if extra != nil {
-		extra()
-	}
-	plt.Gll("x", "y", "")
+	plt.Gll("x", "y", nil)
 	if withGrad {
 		plt.Subplot(2, 1, 2)
-		plt.Title("gradient", "")
-		plt.Quiver(X, Y, Gx, Gy, args)
+		plt.Title("gradient", nil)
+		plt.Quiver(X, Y, Gx, Gy, nil)
 		if axEqual {
 			plt.Equal()
 		}
-		plt.Gll("x", "y", "")
+		plt.Gll("x", "y", nil)
 	}
-	if save {
-		plt.Save(dirout + "/" + fname)
-	}
-	if show {
-		plt.Show()
+	if fname != "" {
+		plt.SaveD(dirout, fname)
 	}
 }

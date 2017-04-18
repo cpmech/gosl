@@ -96,9 +96,9 @@ func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64 {
 			if ok[i] {
 				o.Point(o.P, t)
 				if doplot {
-					plt.PlotOne(X[0], X[1], "'ko'")
-					plt.PlotOne(o.P[0], o.P[1], "'k.'")
-					plt.Arrow(X[0], X[1], o.P[0], o.P[1], "ec='none'")
+					plt.PlotOne(X[0], X[1], &plt.A{C: "k", M: "o"})
+					plt.PlotOne(o.P[0], o.P[1], &plt.A{C: "k", M: "."})
+					plt.Arrow(X[0], X[1], o.P[0], o.P[1], &plt.A{Ec: "none"})
 				}
 				D[i] = ppdist(X, o.P)
 			}

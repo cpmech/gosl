@@ -146,7 +146,7 @@ func Test_Mw02(tst *testing.T) {
 			//plt.Text(X[i], Y[i], io.Sf("$\\\\theta=%.2f$", θ*180.0/math.Pi), "size=8, ha='center', color='red'")
 			//plt.Text(X[i], Y[i], io.Sf("$w=%.2f$", w), "size=8, ha='center', color='red'")
 		}
-		plt.Plot(X, Y, "'b-'")
+		plt.Plot(X, Y, &plt.A{C: "b"})
 
 		// MC
 		g := func(θ float64) float64 {
@@ -160,7 +160,7 @@ func Test_Mw02(tst *testing.T) {
 			X[i] = -r * math.Sin(math.Pi/6.0-θ)
 			Y[i] = r * math.Cos(math.Pi/6.0-θ)
 		}
-		plt.Plot(X, Y, "'k-'")
+		plt.Plot(X, Y, &plt.A{C: "k"})
 
 		// save
 		plt.Equal()

@@ -6,7 +6,6 @@ package ode
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -36,7 +35,7 @@ func SimpleOutput(first bool, dx, x float64, y []float64, args ...interface{}) (
 }
 
 // Plot plot results
-func Plot(dirout, fn string, res *Results, yfcn Cb_ycorr, xa, xb float64, argsAna, argsNum string, extra func()) {
+func Plot(dirout, fn string, res *Results, yfcn Cb_ycorr, xa, xb float64, extra func()) {
 
 	// data
 	if res == nil {
@@ -62,24 +61,18 @@ func Plot(dirout, fn string, res *Results, yfcn Cb_ycorr, xa, xb float64, argsAn
 	}
 
 	// plot
-	if argsAna == "" {
-		argsAna = "'y-', lw=6, label='analytical', clip_on=0"
-	}
-	if argsNum == "" {
-		argsNum = "'b-', marker='.', lw=1, clip_on=0"
-	}
 	for j := 0; j < ndim; j++ {
 		plt.Subplot(ndim+1, 1, j+1)
 		if yfcn != nil {
-			plt.Plot(xc, Yc[j], argsAna)
+			plt.Plot(xc, Yc[j], &plt.A{C: "y", Ls: "-", Lw: 6, L: "analytical"})
 		}
-		plt.Plot(res.X, res.Y[j], argsNum+","+io.Sf("label='%s'", res.Method))
-		plt.Gll("$x$", "$y$", "")
+		plt.Plot(res.X, res.Y[j], &plt.A{C: "b", Ls: "-", M: ".", Lw: 1, L: res.Method})
+		plt.Gll("$x$", "$y$", nil)
 	}
 	plt.Subplot(ndim+1, 1, ndim+1)
-	plt.Plot(res.X, res.Dx, io.Sf("'b-', marker='.', lw=1, clip_on=0, label='%s'", res.Method))
+	plt.Plot(res.X, res.Dx, &plt.A{C: "b", Ls: "-", M: ".", Lw: 1, L: res.Method})
 	plt.SetYlog()
-	plt.Gll("$x$", "$\\log(\\delta x)$", "")
+	plt.Gll("$x$", "$\\log(\\delta x)$", nil)
 
 	// write file
 	if extra != nil {

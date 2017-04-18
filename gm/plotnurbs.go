@@ -30,12 +30,12 @@ func (o *Nurbs) DrawCtrl2d(ids bool, args, idargs string) {
 			xa[i] = o.Q[i][j][k][0] / o.Q[i][j][k][3]
 			ya[i] = o.Q[i][j][k][1] / o.Q[i][j][k][3]
 		}
-		plt.Plot(xa, ya, "'k.--', clip_on=0"+args)
+		plt.Plot(xa, ya, &plt.A{C: "k", M: ".", Ls: "--"})
 		if ids {
 			for i := 0; i < o.n[0]; i++ {
 				x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
 				y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
-				plt.Text(x, y, io.Sf("%d", i), idargs)
+				plt.Text(x, y, io.Sf("%d", i), nil)
 			}
 		}
 	// surface
@@ -48,7 +48,7 @@ func (o *Nurbs) DrawCtrl2d(ids bool, args, idargs string) {
 				xa[j] = o.Q[i][j][k][0] / o.Q[i][j][k][3]
 				ya[j] = o.Q[i][j][k][1] / o.Q[i][j][k][3]
 			}
-			plt.Plot(xa, ya, "'k.--', clip_on=0"+args)
+			plt.Plot(xa, ya, &plt.A{C: "k", M: ".", Ls: "--"})
 		}
 		xb := make([]float64, o.n[0])
 		yb := make([]float64, o.n[0])
@@ -57,7 +57,7 @@ func (o *Nurbs) DrawCtrl2d(ids bool, args, idargs string) {
 				xb[i] = o.Q[i][j][k][0] / o.Q[i][j][k][3]
 				yb[i] = o.Q[i][j][k][1] / o.Q[i][j][k][3]
 			}
-			plt.Plot(xb, yb, "'k.--', clip_on=0"+args)
+			plt.Plot(xb, yb, &plt.A{C: "k", M: ".", Ls: "--"})
 		}
 		if ids {
 			for i := 0; i < o.n[0]; i++ {
@@ -65,7 +65,7 @@ func (o *Nurbs) DrawCtrl2d(ids bool, args, idargs string) {
 					x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
 					y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
 					l := i + j*o.n[0]
-					plt.Text(x, y, io.Sf("%d", l), idargs)
+					plt.Text(x, y, io.Sf("%d", l), nil)
 				}
 			}
 		}
@@ -84,10 +84,10 @@ func (o *Nurbs) DrawElem2d(span []int, npts int, ids bool, args, idargs string) 
 		o.DrawEdge2d(umin, umax, 0.0, 0, npts, args)
 		if ids {
 			c := o.Point([]float64{umin})
-			plt.Text(c[0], c[1], io.Sf("(%d)", span[0]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d)", span[0]), nil)
 			if span[1] == o.b[0].m-o.p[0]-1 {
 				c := o.Point([]float64{umax})
-				plt.Text(c[0], c[1], io.Sf("(%d)", span[1]), idargs)
+				plt.Text(c[0], c[1], io.Sf("(%d)", span[1]), nil)
 			}
 		}
 	// surface
@@ -100,13 +100,13 @@ func (o *Nurbs) DrawElem2d(span []int, npts int, ids bool, args, idargs string) 
 		o.DrawEdge2d(vmin, vmax, umax, 1, npts, args)
 		if ids {
 			c := o.Point([]float64{umin, vmin})
-			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[0], span[2]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[0], span[2]), nil)
 			c = o.Point([]float64{umin, vmax})
-			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[0], span[3]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[0], span[3]), nil)
 			c = o.Point([]float64{umax, vmin})
-			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[1], span[2]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[1], span[2]), nil)
 			c = o.Point([]float64{umax, vmax})
-			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[1], span[3]), idargs)
+			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[1], span[3]), nil)
 		}
 	}
 }
@@ -146,8 +146,8 @@ func (o *Nurbs) PlotBasis(l int, args string, npts, option int) {
 				S[m] = o.RecursiveBasis(uvec, l)
 			}
 		}
-		plt.Plot(U, S, args)
-		plt.Gll("$u$", io.Sf("$S_%d$", l), "")
+		plt.Plot(U, S, nil)
+		plt.Gll("$u$", io.Sf("$S_%d$", l), nil)
 	// surface
 	case 2:
 		xx := la.MatAlloc(npts, npts)
@@ -175,9 +175,9 @@ func (o *Nurbs) PlotBasis(l int, args string, npts, option int) {
 				}
 			}
 		}
-		plt.Contour(xx, yy, zz, "fsz=7")
+		plt.ContourF(xx, yy, zz, nil)
 	}
-	plt.Title(io.Sf("%s @ %d", lbls[option], l), "size=7")
+	plt.Title(io.Sf("%s @ %d", lbls[option], l), nil)
 }
 
 // PlotDeriv plots derivative dR[i][j][k]du[d] (2D only)
@@ -205,8 +205,8 @@ func (o *Nurbs) PlotDeriv(l, d int, args string, npts, option int) {
 			}
 			G[m] = gvec[0]
 		}
-		plt.Plot(U, G, args)
-		plt.Gll("$u$", io.Sf("$G_%d$", l), "")
+		plt.Plot(U, G, nil)
+		plt.Gll("$u$", io.Sf("$G_%d$", l), nil)
 	// surface
 	case 2:
 		xx := la.MatAlloc(npts, npts)
@@ -233,9 +233,9 @@ func (o *Nurbs) PlotDeriv(l, d int, args string, npts, option int) {
 				zz[m][n] = drdu[d]
 			}
 		}
-		plt.Contour(xx, yy, zz, "fsz=7")
+		plt.ContourF(xx, yy, zz, nil)
 	}
-	plt.Title(io.Sf("%s @ %d,%d", lbls[option], l, d), "size=7")
+	plt.Title(io.Sf("%s @ %d,%d", lbls[option], l, d), nil)
 }
 
 // DrawEdge2d draws and edge from tmin to tmax
@@ -253,7 +253,7 @@ func (o *Nurbs) DrawEdge2d(tmin, tmax, cte float64, along, npts int, args string
 		x := o.Point(u)
 		xx[i], yy[i] = x[0], x[1]
 	}
-	plt.Plot(xx, yy, "'k-', clip_on=0"+args)
+	plt.Plot(xx, yy, &plt.A{C: "k", Ls: "-"})
 }
 
 // global functions ////////////////////////////////////////////////////////////////////////////////
@@ -262,9 +262,9 @@ func (o *Nurbs) DrawEdge2d(tmin, tmax, cte float64, along, npts int, args string
 func PlotNurbs(dirout, fn string, b *Nurbs, npts int, ids bool, extra func()) {
 	plt.Reset()
 	if io.FnExt(fn) == ".eps" {
-		plt.SetForEps(1.0, 500)
+		plt.SetForEps(1.0, 500, nil)
 	} else {
-		plt.SetForPng(1.0, 500, 150)
+		plt.SetForPng(1.0, 500, 150, nil)
 	}
 	b.DrawCtrl2d(ids, "", "")
 	b.DrawElems2d(npts, ids, "", "")
@@ -279,9 +279,9 @@ func PlotNurbs(dirout, fn string, b *Nurbs, npts int, ids bool, extra func()) {
 func PlotTwoNurbs(dirout, fn string, b, c *Nurbs, npts int, ids bool, extra func()) {
 	plt.Reset()
 	if io.FnExt(fn) == ".eps" {
-		plt.SetForEps(1.5, 500)
+		plt.SetForEps(1.5, 500, nil)
 	} else {
-		plt.SetForPng(1.5, 500, 150)
+		plt.SetForPng(1.5, 500, 150, nil)
 	}
 
 	plt.Subplot(3, 1, 1)
@@ -314,9 +314,9 @@ func PlotNurbsBasis(dirout, fn string, b *Nurbs, la, lb int) {
 	}
 	plt.Reset()
 	if io.FnExt(fn) == ".eps" {
-		plt.SetForEps(1.5, 500)
+		plt.SetForEps(1.5, 500, nil)
 	} else {
-		plt.SetForPng(1.5, 600, 150)
+		plt.SetForPng(1.5, 600, 150, nil)
 	}
 
 	plt.Subplot(3, 2, 1)
@@ -394,9 +394,9 @@ func PlotNurbsDerivs(dirout, fn string, b *Nurbs, la, lb int) {
 	}
 	plt.Reset()
 	if io.FnExt(fn) == ".eps" {
-		plt.SetForEps(1.5, 500)
+		plt.SetForEps(1.5, 500, nil)
 	} else {
-		plt.SetForPng(1.5, 600, 150)
+		plt.SetForPng(1.5, 600, 150, nil)
 	}
 
 	plt.Subplot(4, 2, 1)

@@ -31,43 +31,37 @@ func Test_bspline01(tst *testing.T) {
 
 	if chk.Verbose {
 		npts := 201
-		plt.SetForPng(1.5, 600, 150)
+		plt.SetForPng(1.5, 600, 150, nil)
 		plt.SplotGap(0.2, 0.4)
 
-		str0 := ",lw=2"
-		str1 := ",ls='none',marker='+',color='cyan',markevery=10"
-		str2 := ",ls='none',marker='x',markevery=10"
-		str3 := ",ls='none',marker='+',markevery=10"
-		str4 := ",ls='none',marker='4',markevery=10"
-
 		plt.Subplot(3, 2, 1)
-		s1.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
-		s1.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
+		s1.Draw2d(npts, 0) // 0 => CalcBasis
+		s1.Draw2d(npts, 1) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 2, 2)
 		plt.SetAxis(0, 1, 0, 1)
-		s2.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
-		s2.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
+		s2.Draw2d(npts, 0) // 0 => CalcBasis
+		s2.Draw2d(npts, 1) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 2, 3)
-		s1.PlotBasis("", npts, 0)   // 0 => CalcBasis
-		s1.PlotBasis(str2, npts, 1) // 1 => CalcBasisAndDerivs
-		s1.PlotBasis(str3, npts, 2) // 2 => RecursiveBasis
+		s1.PlotBasis(npts, 0) // 0 => CalcBasis
+		s1.PlotBasis(npts, 1) // 1 => CalcBasisAndDerivs
+		s1.PlotBasis(npts, 2) // 2 => RecursiveBasis
 
 		plt.Subplot(3, 2, 4)
-		s2.PlotBasis("", npts, 0)   // 0 => CalcBasis
-		s2.PlotBasis(str2, npts, 1) // 1 => CalcBasisAndDerivs
-		s2.PlotBasis(str3, npts, 2) // 2 => RecursiveBasis
+		s2.PlotBasis(npts, 0) // 0 => CalcBasis
+		s2.PlotBasis(npts, 1) // 1 => CalcBasisAndDerivs
+		s2.PlotBasis(npts, 2) // 2 => RecursiveBasis
 
 		plt.Subplot(3, 2, 5)
-		s1.PlotDerivs("", npts, 0)   // 0 => CalcBasisAndDerivs
-		s1.PlotDerivs(str4, npts, 1) // 1 => NumericalDeriv
+		s1.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
+		s1.PlotDerivs(npts, 1) // 1 => NumericalDeriv
 
 		plt.Subplot(3, 2, 6)
-		s2.PlotDerivs("", npts, 0)   // 0 => CalcBasisAndDerivs
-		s2.PlotDerivs(str4, npts, 1) // 1 => NumericalDeriv
+		s2.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
+		s2.PlotDerivs(npts, 1) // 1 => NumericalDeriv
 
-		plt.SaveD("/tmp/gosl/gm", "bspline01.png")
+		plt.SaveD("/tmp/gosl", "bspline01.png")
 	}
 }
 
@@ -109,13 +103,11 @@ func Test_bspline02(tst *testing.T) {
 
 	if chk.Verbose {
 		npts := 201
-		plt.SetForPng(0.75, 300, 150)
-		str0 := ",lw=2"
-		str1 := ",ls='none',marker='+',color='cyan',markevery=10"
-		s.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
-		s.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
-		plt.Plot(xx, yy, "'bo', clip_on=0")
-		plt.SaveD("/tmp/gosl/gm", "bspline02.png")
+		plt.SetForPng(0.75, 300, 150, nil)
+		s.Draw2d(npts, 0) // 0 => CalcBasis
+		s.Draw2d(npts, 1) // 1 => RecursiveBasis
+		plt.Plot(xx, yy, nil)
+		plt.SaveD("/tmp/gosl", "bspline02.png")
 	}
 }
 
@@ -172,28 +164,22 @@ func Test_bspline03(tst *testing.T) {
 	if chk.Verbose {
 
 		npts := 201
-		plt.SetForPng(1.5, 600, 150)
+		plt.SetForPng(1.5, 600, 150, nil)
 		plt.SplotGap(0, 0.3)
 
-		str0 := ",lw=2"
-		str1 := ",ls='none',marker='+',color='cyan',markevery=10"
-		str2 := ",ls='none',marker='x',markevery=10"
-		str3 := ",ls='none',marker='+',markevery=10"
-		str4 := ",ls='none',marker='4',markevery=10"
-
 		plt.Subplot(3, 1, 1)
-		s.Draw2d(str0, "", npts, 0) // 0 => CalcBasis
-		s.Draw2d(str1, "", npts, 1) // 1 => RecursiveBasis
+		s.Draw2d(npts, 0) // 0 => CalcBasis
+		s.Draw2d(npts, 1) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 1, 2)
-		s.PlotBasis("", npts, 0)   // 0 => CalcBasis
-		s.PlotBasis(str2, npts, 1) // 1 => CalcBasisAndDerivs
-		s.PlotBasis(str3, npts, 2) // 2 => RecursiveBasis
+		s.PlotBasis(npts, 0) // 0 => CalcBasis
+		s.PlotBasis(npts, 1) // 1 => CalcBasisAndDerivs
+		s.PlotBasis(npts, 2) // 2 => RecursiveBasis
 
 		plt.Subplot(3, 1, 3)
-		s.PlotDerivs("", npts, 0)   // 0 => CalcBasisAndDerivs
-		s.PlotDerivs(str4, npts, 1) // 1 => NumericalDeriv
+		s.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
+		s.PlotDerivs(npts, 1) // 1 => NumericalDeriv
 
-		plt.SaveD("/tmp/gosl/gm", "bspline03.png")
+		plt.SaveD("/tmp/gosl", "bspline03.png")
 	}
 }

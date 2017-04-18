@@ -42,8 +42,8 @@ def SplotGap(w, h):
     subplots_adjust(wspace=w, hspace=h)
 
 
-def AnnotateXlabels(x, txt, fs=7):
-    annotate(txt, xy=(x, -fs-3), xycoords=('data', 'axes points'), va='top', ha='center', size=fs, clip_on=False)
+def AnnotateXlabels(x, txt, fontsize=7):
+    annotate(txt, xy=(x, -fontsize-3), xycoords=('data', 'axes points'), va='top', ha='center', size=fontsize, clip_on=False)
 
 
 def Remove(filename):
@@ -162,7 +162,7 @@ def DrawPath(dat, with_points=True, doshow=True, dolims=True, fc='#edf5ff', ec='
     gca().add_patch(pc)
 
 
-def DrawSlope(X, Y, numfmt='%.3f', div=4.0, fsz=8, datline=True, updown=False, label=None, lbHa='left', lbVa='center', *args, **kwargs):
+def DrawSlope(X, Y, numfmt='%.3f', div=4.0, fontsize=8, datline=True, updown=False, label=None, lbHa='left', lbVa='center', *args, **kwargs):
     """
     Find slope and draw icon
     ========================
@@ -184,13 +184,13 @@ def DrawSlope(X, Y, numfmt='%.3f', div=4.0, fsz=8, datline=True, updown=False, l
     lb = r'$%s$'%(numfmt%m) if label==None else label
     if updown:
         plot([xa,xa,xb], [ya,yb,yb], *args, **kwargs)
-        text(xa, yc, lb, fontsize=fsz, color=kwargs['color'], ha=lbHa, va=lbVa)
+        text(xa, yc, lb, fontsize=fontsize, color=kwargs['color'], ha=lbHa, va=lbVa)
     else:
         plot([xa,xb,xb], [ya,ya,yb], *args, **kwargs)
-        text(xb, yc, lb, fontsize=fsz, color=kwargs['color'], ha=lbHa, va=lbVa)
+        text(xb, yc, lb, fontsize=fontsize, color=kwargs['color'], ha=lbHa, va=lbVa)
 
 
-def ConvIndicator(X, Y, pct=0.1, fs=14, eqaxis=False):
+def ConvIndicator(X, Y, pct=0.1, fontsize=14, eqaxis=False):
     """
     Convergence indicator icon
     ==========================
@@ -216,7 +216,7 @@ def ConvIndicator(X, Y, pct=0.1, fs=14, eqaxis=False):
     gca().add_patch(Polygon(points, ec='k', fc='None'))
     xxR = xxm+1.2*pct*dxx
     xR  = 10.0**xxR
-    text(xR, ym, '%g'%m, ha='left', va='center', fontsize=fs)
+    text(xR, ym, '%g'%m, ha='left', va='center', fontsize=fontsize)
     if eqaxis: axis('equal')
     return m
 
@@ -275,7 +275,7 @@ def Plot3dLine(X, Y, Z, first=True, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zma
     return ax
 
 
-def Plot3dPoints(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, splot=111,
+def Plot3dPoints(X, Y, Z, first=True, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, splot=111,
         preservePrev=False, *args, **kwargs):
     """
     Plot 3D points
@@ -292,7 +292,7 @@ def Plot3dPoints(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, sp
     return ax
 
 
-def Wireframe(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111,
+def Wireframe(X, Y, Z, first=True, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111,
         rstride=1, cstride=1, preservePrev=False, *args, **kwargs):
     """
     Plot 3D wireframe
@@ -309,7 +309,7 @@ def Wireframe(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapi
     return ax
 
 
-def Surface(X, Y, Z, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111,
+def Surface(X, Y, Z, first=True, xlbl='X', ylbl='Y', zlbl='Z', zmin=None, zmax=None, cmapidx=0, splot=111,
         rstride=1, cstride=1, preservePrev=False, *args, **kwargs):
     """
     Plot 3D surface
@@ -345,22 +345,24 @@ def Cmap(idx):
     return cmaps[idx % len(cmaps)]
 
 
-def SetFontSize(xylabel_fs=9, leg_fs=8, text_fs=9, xtick_fs=7, ytick_fs=7):
+def SetFontSize(
+        xylabel_fontsize=9, leg_fontsize=8, text_fontsize=9, xtick_fontsize=7, ytick_fontsize=7):
     """
     Set font sizes
     ==============
     """
     params = {
-        'axes.labelsize'  : xylabel_fs,
-        'legend.fontsize' : leg_fs,
-        'font.size'       : text_fs,
-        'xtick.labelsize' : xtick_fs,
-        'ytick.labelsize' : ytick_fs,
+        'axes.labelsize'  : xylabel_fontsize,
+        'legend.fontsize' : leg_fontsize,
+        'font.size'       : text_fontsize,
+        'xtick.labelsize' : xtick_fontsize,
+        'ytick.labelsize' : ytick_fontsize,
     }
     rcParams.update(params)
 
 
-def SetForPng(proport=0.75, fig_width_pt=455.24, dpi=150, xylabel_fs=9, leg_fs=8, text_fs=9, xtick_fs=7, ytick_fs=7):
+def SetForPng(proport=0.75, fig_width_pt=455.24, dpi=150, xylabel_fontsize=9,
+        leg_fontsize=8, text_fontsize=9, xtick_fontsize=7, ytick_fontsize=7):
     """
     Set figure proportions
     ======================
@@ -370,11 +372,11 @@ def SetForPng(proport=0.75, fig_width_pt=455.24, dpi=150, xylabel_fs=9, leg_fs=8
     fig_height    = fig_width*proport           # height in inches
     fig_size      = [fig_width,fig_height]
     params = {
-        'axes.labelsize'  : xylabel_fs,
-        'font.size'       : text_fs,
-        'legend.fontsize' : leg_fs,
-        'xtick.labelsize' : xtick_fs,
-        'ytick.labelsize' : ytick_fs,
+        'axes.labelsize'  : xylabel_fontsize,
+        'font.size'       : text_fontsize,
+        'legend.fontsize' : leg_fontsize,
+        'xtick.labelsize' : xtick_fontsize,
+        'ytick.labelsize' : ytick_fontsize,
         'figure.figsize'  : fig_size,
         'savefig.dpi'     : dpi,
     }
@@ -385,8 +387,8 @@ def SetForPng(proport=0.75, fig_width_pt=455.24, dpi=150, xylabel_fs=9, leg_fs=8
     rcParams.update(params)
 
 
-def SetForEps(proport=0.75, fig_width_pt=455.24, xylabel_fs=9, leg_fs=8, text_fs=9, xtick_fs=7,
-        ytick_fs=7, text_usetex=True, mplclose=True):
+def SetForEps(proport=0.75, fig_width_pt=455.24, xylabel_fontsize=9, leg_fontsize=8,
+        text_fontsize=9, xtick_fontsize=7, ytick_fontsize=7, text_usetex=True, mplclose=True):
     """
     Set figure proportions
     ======================
@@ -399,11 +401,11 @@ def SetForEps(proport=0.75, fig_width_pt=455.24, xylabel_fs=9, leg_fs=8, text_fs
     #params = {'mathtext.fontset':'stix', # 'cm', 'stix', 'stixsans', 'custom'
     params = {
         'backend'            : 'ps',
-        'axes.labelsize'     : xylabel_fs,
-        'font.size'          : text_fs,
-        'legend.fontsize'    : leg_fs,
-        'xtick.labelsize'    : xtick_fs,
-        'ytick.labelsize'    : ytick_fs,
+        'axes.labelsize'     : xylabel_fontsize,
+        'font.size'          : text_fontsize,
+        'legend.fontsize'    : leg_fontsize,
+        'xtick.labelsize'    : xtick_fontsize,
+        'ytick.labelsize'    : ytick_fontsize,
         'text.usetex'        : text_usetex, # very IMPORTANT to avoid Type 3 fonts
         'ps.useafm'          : True, # very IMPORTANT to avoid Type 3 fonts
         'pdf.use14corefonts' : True, # very IMPORTANT to avoid Type 3 fonts
@@ -440,7 +442,7 @@ def Save(filename, ea=None, verbose=True):
         print('File <[1;34m%s[0m> written'%filename)
 
 
-def Leg(fsz=8, ncol=1, loc='best', out=False, hlen=3, out_dims=None, frameon=False, *args, **kwargs):
+def Leg(fontsize=8, ncol=1, loc='best', out=False, hlen=3, out_dims=None, frameon=False, *args, **kwargs):
     """
     Legend
     ======
@@ -451,10 +453,10 @@ def Leg(fsz=8, ncol=1, loc='best', out=False, hlen=3, out_dims=None, frameon=Fal
     if out:
         dims = out_dims if out_dims else (0.,1.02,1.,.102)
         l = legend(bbox_to_anchor=dims, loc=3, ncol=ncol, mode='expand',
-                       borderaxespad=0., handlelength=hlen, prop={'size':fsz},
+                       borderaxespad=0., handlelength=hlen, prop={'size':fontsize},
                        columnspacing=1, handletextpad=0.05, *args, **kwargs) # , frameon=frameon
     else:
-        l = legend(loc=loc, prop={'size':fsz}, ncol=ncol, handlelength=hlen, *args, **kwargs) # , frameon=frameon
+        l = legend(loc=loc, prop={'size':fontsize}, ncol=ncol, handlelength=hlen, *args, **kwargs) # , frameon=frameon
     if not frameon:
         l.get_frame().set_linewidth(0.0)
     return l
@@ -468,7 +470,8 @@ def FigGrid(color='grey', zorder=-100):
     grid (color=color, zorder=zorder)
 
 
-def Gll(xl, yl, leg=True, grd=True, leg_ncol=1, leg_loc='best', leg_out=False, leg_hlen=3, leg_fsz=8, leg_out_dims=None, leg_frameon=False, hide_trframe=True, *args, **kwargs):
+def Gll(xl, yl, leg=True, grd=True, leg_ncol=1, leg_loc='best', leg_out=False, leg_hlen=3,
+        leg_fontsize=8, leg_out_dims=None, leg_frameon=False, hide_trframe=True, *args, **kwargs):
     """
     FigGrid, labels and legend
     ==========================
@@ -477,7 +480,7 @@ def Gll(xl, yl, leg=True, grd=True, leg_ncol=1, leg_loc='best', leg_out=False, l
     ylabel(yl)
     if hide_trframe: HideFrameLines()
     if grd: FigGrid()
-    if leg: return Leg(frameon=leg_frameon, fsz=leg_fsz, ncol=leg_ncol, loc=leg_loc, out=leg_out, hlen=leg_hlen, out_dims=leg_out_dims, *args, **kwargs)
+    if leg: return Leg(frameon=leg_frameon, fontsize=leg_fontsize, ncol=leg_ncol, loc=leg_loc, out=leg_out, hlen=leg_hlen, out_dims=leg_out_dims, *args, **kwargs)
 
 
 def Cross(x0=0.0, y0=0.0, clr='black', ls='dashed', lw=1, zorder=0):
@@ -521,12 +524,12 @@ def Text(x, y, txt, x_offset=0, y_offset=0, units='points', va='bottom', ha='lef
     text(x, y, txt, transform=trans, va=va, ha=ha, color=color, fontsize=fontsize)
 
 
-def TextBox(x, y, txt, fsz=10, ha='left'):
+def TextBox(x, y, txt, fontsize=10, ha='left'):
     """
     Add text inside box
     ===================
     """
-    text(x, y, txt, bbox={'facecolor':'white'}, fontsize=fsz, ha=ha)
+    text(x, y, txt, bbox={'facecolor':'white'}, fontsize=fontsize, ha=ha)
 
 
 def Circle(xc,yc,R, ec='red', fc='None', lw=1, ls='solid', zorder=None, clip_on=False):
@@ -545,7 +548,9 @@ def Arc(xc,yc,R, alp_min=0.0, alp_max=pi, clr='red', lw=1, ls='solid', zorder=No
     gca().add_patch(MPLArc((xc,yc), 2.*R,2.*R, clip_on=False, angle=0, theta1=alp_min*180.0/pi, theta2=alp_max*180.0/pi, ls=ls, color=clr, lw=lw, zorder=zorder))
 
 
-def Arrow(xi,yi, xf,yf, sc=20, fc='#a2e3a2', ec='black', zo=0, st='simple', label=None, lbHa='left', lbVa='center', lbPos='cen', lbFs=10, lbRot=0, lbDx=0, lbDy=0, *args, **kwargs):
+def Arrow(xi,yi, xf,yf, sc=20, fc='#a2e3a2', ec='black', zo=0, st='simple',
+        label=None, lbHa='left', lbVa='center', lbPos='cen', lbFs=10,
+        lbRot=0, lbDx=0, lbDy=0, *args, **kwargs):
     """
     Draw arrow
     ==========
@@ -626,8 +631,8 @@ def Quad(x0,y0, x1,y1, x2,y2, x3,y3, fc='#e1eeff', ec='black', zorder=0, alpha=1
     gca().add_patch(Polygon(array([[x0,y0],[x1,y1],[x2,y2],[x3,y3]]), ec=ec, fc=fc, ls=ls, zorder=zorder, alpha=alpha, lw=lw, clip_on=clip_on))
 
 
-def Contour(X,Y,Z, label='', levels=None, cmapidx=0, colors=None, fmt='%g', lwd=1, fsz=10,
-        inline=0, wire=True, cbar=True, zorder=None, markZero='', markZeroLWD=3, clabels=True):
+def Contour(X,Y,Z, label='', levels=None, cmapidx=0, colors=None, fmt='%g', lwd=1, fontsize=10,
+        inline=1, lines=True, cbar=True, zorder=None, colorZero='', markZeroLWD=3, clabels=True):
     """
     Plot contour
     ============
@@ -640,17 +645,17 @@ def Contour(X,Y,Z, label='', levels=None, cmapidx=0, colors=None, fmt='%g', lwd=
         c1 = contourf (X,Y,Z, cmap=Cmap(cmapidx), levels=levels, zorder=None)
     else:
         c1 = contourf (X,Y,Z, colors=colors, levels=levels, zorder=None)
-    if wire:
+    if lines:
         c2 = contour (X,Y,Z, colors=('k'), levels=levels, linewidths=[lwd], zorder=None)
         if clabels:
-            clabel (c2, inline=inline, fontsize=fsz)
+            clabel (c2, inline=inline, fontsize=fontsize)
     if cbar:
         cb = colorbar (c1, format=fmt)
         cb.ax.set_ylabel (label)
-    if markZero:
-        c3 = contour(X,Y,Z, levels=[0], colors=[markZero], linewidths=[markZeroLWD])
+    if colorZero:
+        c3 = contour(X,Y,Z, levels=[0], colors=[colorZero], linewidths=[markZeroLWD])
         if clabels:
-            clabel(c3, inline=inline, fontsize=fsz)
+            clabel(c3, inline=inline, fontsize=fontsize)
 
 
 def GetClr(idx=0, scheme=1): # color

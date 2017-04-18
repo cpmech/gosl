@@ -261,13 +261,13 @@ func Test_invs05(tst *testing.T) {
 
 	if SAVEPLOT {
 		plt.Reset()
-		plt.SetForPng(1, 500, 125)
+		plt.SetForPng(1, 500, 125, nil)
 		PlotRosette(1.1, true, true, true, 7)
 	}
 
 	addtoplot := func(σa, σb float64, σ []float64) {
-		plt.PlotOne(σa, σb, "'ro', ms=5")
-		plt.Text(σa, σb, io.Sf("$\\sigma_{123}=(%g,%g,%g)$", σ[0], σ[1], σ[2]), "size=8")
+		plt.PlotOne(σa, σb, &plt.A{C: "r", M: "o", Ms: 5})
+		plt.Text(σa, σb, io.Sf("$\\sigma_{123}=(%g,%g,%g)$", σ[0], σ[1], σ[2]), nil)
 	}
 
 	dotest := func(σ []float64, σacor, σbcor, σccor, θcor, tolσ float64) {
@@ -300,7 +300,7 @@ func Test_invs05(tst *testing.T) {
 	dotest([]float64{0, 0, -1, 0}, -1.0/SQ2, -1.0/SQ6, 1.0/SQ3, 30, 1e-15)
 
 	if SAVEPLOT {
-		plt.Gll("$\\sigma_a$", "$\\sigma_b$", "")
+		plt.Gll("$\\sigma_a$", "$\\sigma_b$", nil)
 		plt.Equal()
 		plt.SaveD("/tmp/gosl", "fig_invs05.png")
 	}

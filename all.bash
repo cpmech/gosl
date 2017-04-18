@@ -52,5 +52,5 @@ fi
 install_and_test rnd 1
 
 #if [[ $platform == 'linux' ]]; then
-#    install_and_test vtk 0
+    #install_and_test vtk 0
 #fi

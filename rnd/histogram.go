@@ -158,9 +158,9 @@ func (o Histogram) GenLabels(numfmt string) (labels []string) {
 
 // PlotDensity plots histogram in density values
 //  sty -- style can be <nil>
-func (o Histogram) PlotDensity(sty *plt.S, args string) {
+func (o Histogram) PlotDensity(sty *plt.A, args string) {
 	if sty == nil {
-		sty = &plt.S{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true}
+		sty = &plt.A{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true}
 	}
 	nstations := len(o.Stations)
 	nsamples := 0
@@ -171,7 +171,7 @@ func (o Histogram) PlotDensity(sty *plt.S, args string) {
 		xi, xf := o.Stations[i], o.Stations[i+1]
 		dx := xf - xi
 		prob := float64(o.Counts[i]) / (float64(nsamples) * dx)
-		plt.DrawPolyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, prob}, {xi, prob}}, sty, args)
+		plt.Polyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, prob}, {xi, prob}}, sty)
 	}
 }
 

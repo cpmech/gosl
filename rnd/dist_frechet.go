@@ -85,9 +85,9 @@ func FrechetPlotCoef(dirout, fn string, amin, amax float64) {
 		Y[i] = 1.0 + δ2
 	}
 	k := np - 1
-	plt.Plot(X, Y, "'b-'")
-	plt.Text(X[k], Y[k], io.Sf("(%.4f,%.4f)", X[k], Y[k]), "")
-	plt.Text(X[0], Y[0], io.Sf("(%.4f,%.4f)", X[0], Y[0]), "ha='right'")
-	plt.Gll("$1/\\alpha$", "$1+\\delta^2$", "")
+	plt.Plot(X, Y, nil)
+	plt.Text(X[k], Y[k], io.Sf("(%.4f,%.4f)", X[k], Y[k]), nil)
+	plt.Text(X[0], Y[0], io.Sf("(%.4f,%.4f)", X[0], Y[0]), nil)
+	plt.Gll("$1/\\alpha$", "$1+\\delta^2$", nil)
 	plt.SaveD(dirout, fn)
 }

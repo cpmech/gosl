@@ -45,9 +45,9 @@ func main() {
 
 	// plot
 	if eps {
-		plt.SetForEps(0.75, 500)
+		plt.SetForEps(0.75, 500, nil)
 	} else {
-		plt.SetForPng(0.75, 500, 150)
+		plt.SetForPng(0.75, 500, 150, nil)
 	}
 	for _, b := range B {
 		if ctrl {

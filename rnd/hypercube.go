@@ -165,10 +165,10 @@ func PlotHc2d(dirout, fnkey string, x [][]int, xrange [][]float64) {
 			X[i][j] = xrange[i][0] + float64(x[i][j]-1)*dx[i]
 		}
 	}
-	plt.SetForEps(0.8, 300)
-	plt.Plot(X[0], X[1], "'r.', clip_on=0, zorder=10")
+	plt.SetForEps(0.8, 300, nil)
+	plt.Plot(X[0], X[1], &plt.A{C: "r", M: "."})
 	plt.Equal()
-	plt.Gll("$x$", "$y$", "")
+	plt.Gll("$x$", "$y$", nil)
 	plt.SaveD(dirout, fnkey+".eps")
 }
 
@@ -187,9 +187,9 @@ func PlotHc3d(dirout, fnkey string, x [][]int, xrange [][]float64, show bool) {
 		}
 	}
 	if !show {
-		plt.SetForEps(0.8, 455)
+		plt.SetForEps(0.8, 455, nil)
 	}
-	plt.Plot3dPoints(X[0], X[1], X[2], "clip_on=0, zorder=10")
+	plt.Plot3dPoints(X[0], X[1], X[2], true, nil)
 	if show {
 		plt.Show()
 	} else {

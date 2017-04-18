@@ -28,12 +28,12 @@ func plot_gumbel(μ, σ float64) {
 		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%.4f,\\;\\sigma=%.4f$'", μ, σ))
-	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=2")
+	plt.Plot(x, y, nil)
+	plt.Gll("$x$", "$f(x)$", nil)
 	plt.SetYnticks(11)
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%.4f,\\;\\sigma=%.4f$'", μ, σ))
-	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
+	plt.Plot(x, Y, nil)
+	plt.Gll("$x$", "$F(x)$", nil)
 }
 
 func Test_dist_gumbel_01(tst *testing.T) {
@@ -101,7 +101,7 @@ func Test_dist_gumbel_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300)
+		plt.SetForEps(1.5, 300, nil)
 		U := []float64{1.5, 1.0, 0.5, 3.0}
 		B := []float64{3.0, 2.0, 2.0, 4.0}
 		for i, u := range U {

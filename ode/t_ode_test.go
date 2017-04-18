@@ -106,14 +106,14 @@ func Test_ode01(tst *testing.T) {
 		for i := 0; i < len(X); i++ {
 			Y[i] = -lam * (math.Sin(X[i]) - lam*math.Cos(X[i]) + lam*math.Exp(lam*X[i])) / (lam*lam + 1.0)
 		}
-		plt.SetForEps(0.75, 500)
-		plt.Plot(X, Y, "'y.-', label='solution', lw=5")
-		plt.Plot(X_FwEuler[:k_FwEuler], Y_FwEuler[:k_FwEuler], "'k.:',  label='FwEuler'")
-		plt.Plot(X_BwEuler[:k_BwEuler], Y_BwEuler[:k_BwEuler], "'r.:',  label='BwEuler'")
-		plt.Plot(X_MoEuler[:k_MoEuler], Y_MoEuler[:k_MoEuler], "'c+:',  label='MoEuler'")
-		plt.Plot(X_Dopri5[:k_Dopri5], Y_Dopri5[:k_Dopri5], "'m.--', label='Dopri5'")
-		plt.Plot(X_Radau5[:k_Radau5], Y_Radau5[:k_Radau5], "'bo-',  label='Radau5'")
-		plt.Gll("$x$", "$y$", "")
+		plt.SetForEps(0.75, 500, nil)
+		plt.Plot(X, Y, &plt.A{C: "y", Ls: "-", Lw: 6, L: "solution"})
+		plt.Plot(X_FwEuler[:k_FwEuler], Y_FwEuler[:k_FwEuler], &plt.A{C: "k", M: ".", Ls: ":", L: "FwEuler"})
+		plt.Plot(X_BwEuler[:k_BwEuler], Y_BwEuler[:k_BwEuler], &plt.A{C: "r", M: ".", Ls: ":", L: "BwEuler"})
+		plt.Plot(X_MoEuler[:k_MoEuler], Y_MoEuler[:k_MoEuler], &plt.A{C: "c", M: "+", Ls: ":", L: "MoEuler"})
+		plt.Plot(X_Dopri5[:k_Dopri5], Y_Dopri5[:k_Dopri5], &plt.A{C: "m", M: ".", Ls: "--", L: "Dopri5"})
+		plt.Plot(X_Radau5[:k_Radau5], Y_Radau5[:k_Radau5], &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5"})
+		plt.Gll("$x$", "$y$", nil)
 		plt.SaveD("/tmp/gosl", "ode1.eps")
 	}
 
@@ -187,17 +187,16 @@ func Test_ode02(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.SetForEps(1.5, 400)
-		args := "'b-', marker='.', lw=1, ms=4, clip_on=0"
-		Plot("/tmp/gosl/ode", "vdpolA.eps", &res, nil, xa, xb, "", args, func() {
+		plt.SetForEps(1.5, 400, nil)
+		Plot("/tmp/gosl/ode", "vdpolA.eps", &res, nil, xa, xb, func() {
 			_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
 			if err != nil {
 				chk.Panic("%v", err)
 			}
 			plt.Subplot(3, 1, 1)
-			plt.Plot(T["x"], T["y0"], "'k+',label='reference',ms=7")
+			plt.Plot(T["x"], T["y0"], &plt.A{C: "k", M: "+", L: "reference"})
 			plt.Subplot(3, 1, 2)
-			plt.Plot(T["x"], T["y1"], "'k+',label='reference',ms=7")
+			plt.Plot(T["x"], T["y1"], &plt.A{C: "k", M: "+", L: "reference"})
 		})
 	}
 }
@@ -264,19 +263,18 @@ func Test_ode03(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.SetForEps(1.5, 400)
-		args := "'b-', marker='.', lw=1, clip_on=0"
-		Plot("/tmp/gosl/ode", "rober.eps", &res, nil, xa, xb, "", args, func() {
+		plt.SetForEps(1.5, 400, nil)
+		Plot("/tmp/gosl/ode", "rober.eps", &res, nil, xa, xb, func() {
 			_, T, err := io.ReadTable("data/rober_radau5_cpp.dat")
 			if err != nil {
 				chk.Panic("%v", err)
 			}
 			plt.Subplot(4, 1, 1)
-			plt.Plot(T["x"], T["y0"], "'k+',label='reference',ms=10")
+			plt.Plot(T["x"], T["y0"], &plt.A{C: "k", M: "+", L: "reference"})
 			plt.Subplot(4, 1, 2)
-			plt.Plot(T["x"], T["y1"], "'k+',label='reference',ms=10")
+			plt.Plot(T["x"], T["y1"], &plt.A{C: "k", M: "+", L: "reference"})
 			plt.Subplot(4, 1, 3)
-			plt.Plot(T["x"], T["y2"], "'k+',label='reference',ms=10")
+			plt.Plot(T["x"], T["y2"], &plt.A{C: "k", M: "+", L: "reference"})
 		})
 	}
 }
@@ -411,16 +409,15 @@ func Test_ode04(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.SetForEps(2.0, 400)
-		args := "'b-', marker='.', lw=1, clip_on=0"
-		Plot("/tmp/gosl/ode", "hwamplifier.eps", &res, nil, xa, xb, "", args, func() {
+		plt.SetForEps(2.0, 400, nil)
+		Plot("/tmp/gosl/ode", "hwamplifier.eps", &res, nil, xa, xb, func() {
 			_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
 			if err != nil {
 				chk.Panic("%v", err)
 			}
 			for j := 0; j < ndim; j++ {
 				plt.Subplot(ndim+1, 1, j+1)
-				plt.Plot(T["x"], T[io.Sf("y%d", j)], "'k+',label='reference',ms=10")
+				plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: "reference"})
 			}
 		})
 	}

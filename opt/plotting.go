@@ -6,7 +6,6 @@ package opt
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -34,7 +33,7 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 	}
 	chk.IntAssert(len(vmin), 2)
 	chk.IntAssert(len(vmax), 2)
-	V0, V1 := utl.MeshGrid2D(vmin[0], vmax[0], vmin[1], vmax[1], np, np)
+	V0, V1 := utl.MeshGrid2d(vmin[0], vmax[0], vmin[1], vmax[1], np, np)
 	var Zf [][]float64
 	var Zg [][][]float64
 	if f != nil {
@@ -56,16 +55,15 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 		}
 	}
 	plt.Reset()
-	plt.SetForEps(0.8, 350)
+	plt.SetForEps(0.8, 350, nil)
 	if f != nil {
-		cmapidx := 0
-		plt.Contour(V0, V1, Zf, io.Sf("fsz=7, cmapidx=%d", cmapidx))
+		plt.ContourF(V0, V1, Zf, nil)
 	}
 	for k, _ := range gs {
-		plt.ContourSimple(V0, V1, Zg[k], false, 8, "zorder=5, levels=[0], colors=['yellow'], linewidths=[2], clip_on=0")
+		plt.ContourL(V0, V1, Zg[k], &plt.A{Ulevels: []float64{0}, Colors: []string{"yellow"}, Lw: 2})
 	}
 	if x != nil {
-		plt.PlotOne(x[0], x[1], "'r*', label='optimum', zorder=10")
+		plt.PlotOne(x[0], x[1], &plt.A{C: "r", M: "*", L: "optimum", Z: 10})
 	}
 	if extra != nil {
 		extra()
@@ -73,14 +71,13 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 	if dirout == "" {
 		dirout = "."
 	}
-	plt.Cross("clr='grey'")
+	plt.Cross(0, 0, &plt.A{C: "grey"})
 	plt.SetXnticks(11)
 	plt.SetYnticks(11)
 	if axequal {
 		plt.Equal()
 	}
 	plt.AxisRange(vmin[0], vmax[0], vmin[1], vmax[1])
-	args := "leg_out='1', leg_ncol=4, leg_hlen=1.5"
-	plt.Gll("$x_0$", "$x_1$", args)
+	plt.Gll("$x_0$", "$x_1$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 1.5})
 	plt.SaveD(dirout, fnkey+".eps")
 }

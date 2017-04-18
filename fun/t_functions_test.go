@@ -132,17 +132,17 @@ func Test_functions03(tst *testing.T) {
 	if false {
 		//if true {
 		plt.Subplot(3, 1, 1)
-		plt.Plot(x, y, "'k--', label='abs'")
-		plt.Plot(x, y, "'b-', label='sabs'")
-		plt.Gll("x", "y", "")
+		plt.Plot(x, y, &plt.A{C: "k", Ls: "--", L: "abs"})
+		plt.Plot(x, y, &plt.A{C: "b", Ls: "-", L: "sabs"})
+		plt.Gll("x", "y", nil)
 
 		plt.Subplot(3, 1, 2)
-		plt.Plot(x, g, "'b-', label='sabs'")
-		plt.Gll("x", "dy/dx", "")
+		plt.Plot(x, g, &plt.A{C: "b", Ls: "-", L: "sabs"})
+		plt.Gll("x", "dy/dx", nil)
 
 		plt.Subplot(3, 1, 3)
-		plt.Plot(x, h, "'b-', label='sabs'")
-		plt.Gll("x", "d2y/dx2", "")
+		plt.Plot(x, h, &plt.A{C: "b", Ls: "-", L: "sabs"})
+		plt.Gll("x", "d2y/dx2", nil)
 
 		plt.Show()
 	}

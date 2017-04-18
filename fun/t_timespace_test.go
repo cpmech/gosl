@@ -40,10 +40,10 @@ func Test_ts01(tst *testing.T) {
 	tmax := 3.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(o, "", "", 0.0, tmax, xcte, 201, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(o, "", "", 0.0, tmax, xcte, 201)
 		plt.Subplot(3, 1, 1)
-		plt.Plot([]float64{0, tmax}, []float64{ya, ya - λ1*tmax}, "'k-'")
+		plt.Plot([]float64{0, tmax}, []float64{ya, ya - λ1*tmax}, &plt.A{C: "k", Ls: "--"})
 		plt.Equal()
 		plt.SaveD("/tmp/gosl/fun", "ref-dec-gen.png")
 	}
@@ -80,9 +80,9 @@ func Test_ts02(tst *testing.T) {
 	//tmax := 140.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(o, "", "", tmin, tmax, xcte, 201, "", "", "", "", "label='f'", "label='g'", "label='h'")
-		plt.Plot([]float64{0, tmax}, []float64{ya, ya - λ1*tmax}, "'k--'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(o, "", "", tmin, tmax, xcte, 201)
+		plt.Plot([]float64{0, tmax}, []float64{ya, ya - λ1*tmax}, &plt.A{C: "k", Ls: "--"})
 		plt.Equal()
 		plt.SaveD("/tmp/gosl/fun", "ref-dec-sp1.png")
 	}
@@ -131,12 +131,12 @@ func Test_ts03(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(cte, "/tmp/gosl/fun", "cte.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(cte, "/tmp/gosl/fun", "cte.png", tmin, tmax, xcte, 41)
 		plt.Clf()
-		PlotT(srmps, "/tmp/gosl/fun", "srmps.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		PlotT(srmps, "/tmp/gosl/fun", "srmps.png", tmin, tmax, xcte, 41)
 		plt.Clf()
-		PlotT(add, "/tmp/gosl/fun", "add.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		PlotT(add, "/tmp/gosl/fun", "add.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10
@@ -169,8 +169,8 @@ func Test_ts04(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(lin, "/tmp/gosl/fun", "lin.png", tmin, tmax, xcte, 11, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(lin, "/tmp/gosl/fun", "lin.png", tmin, tmax, xcte, 11)
 	}
 
 	sktol := 1e-10
@@ -213,8 +213,8 @@ func Test_ts06a(tst *testing.T) {
 	tmax := 6.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "pts.png", tmin, tmax, xcte, 8, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "pts.png", tmin, tmax, xcte, 8)
 	}
 
 	tmin = 0.01
@@ -244,8 +244,8 @@ func Test_ts06b(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "ptsB.png", tmin, tmax, xcte, 8, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "ptsB.png", tmin, tmax, xcte, 8)
 	}
 
 	tmin = 0.01
@@ -275,8 +275,8 @@ func Test_ts06c(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "ptsC.png", tmin, tmax, xcte, 8, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "ptsC.png", tmin, tmax, xcte, 8)
 	}
 
 	tmin = 0.01
@@ -306,8 +306,8 @@ func Test_ts07(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "exc1.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "exc1.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10
@@ -336,8 +336,8 @@ func Test_ts08(tst *testing.T) {
 	tmax := 7.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "exc2.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "exc2.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10
@@ -366,8 +366,8 @@ func Test_ts09(tst *testing.T) {
 	tmax := 2.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "cos.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "cos.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10
@@ -397,8 +397,8 @@ func Test_ts10(tst *testing.T) {
 	tmax := 3.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "rmp.png", tmin, tmax, xcte, 4, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "rmp.png", tmin, tmax, xcte, 4)
 	}
 
 	sktol := 1e-10
@@ -428,8 +428,8 @@ func Test_ts11(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "ref-inc-rl1.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "ref-inc-rl1.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10
@@ -476,12 +476,12 @@ func Test_ts12(tst *testing.T) {
 	tmax := 1.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(cos, "/tmp/gosl/fun", "cosB.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(cos, "/tmp/gosl/fun", "cosB.png", tmin, tmax, xcte, 41)
 		plt.Clf()
-		PlotT(lin, "/tmp/gosl/fun", "linB.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		PlotT(lin, "/tmp/gosl/fun", "linB.png", tmin, tmax, xcte, 41)
 		plt.Clf()
-		PlotT(mul, "/tmp/gosl/fun", "mul.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		PlotT(mul, "/tmp/gosl/fun", "mul.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10
@@ -516,8 +516,8 @@ func Test_ts13(tst *testing.T) {
 	tmax := 5.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(pulse, "/tmp/gosl/fun", "pulse.png", tmin, tmax, xcte, 61, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(pulse, "/tmp/gosl/fun", "pulse.png", tmin, tmax, xcte, 61)
 	}
 
 	sktol := 1e-17
@@ -547,8 +547,8 @@ func Test_ts14(tst *testing.T) {
 	tmax := 2.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "sin.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "sin.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10
@@ -578,8 +578,8 @@ func Test_ts15(tst *testing.T) {
 	tmax := 2.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "cut-sin-positive.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "cut-sin-positive.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10
@@ -608,8 +608,8 @@ func Test_ts16(tst *testing.T) {
 	tmax := 2.0
 	xcte := []float64{0, 0, 0}
 	if chk.Verbose {
-		plt.SetForPng(1.2, 400, 150)
-		PlotT(fun, "/tmp/gosl/fun", "cut-sin-negative.png", tmin, tmax, xcte, 41, "", "", "", "", "label='f'", "label='g'", "label='h'")
+		plt.SetForPng(1.2, 400, 150, nil)
+		PlotT(fun, "/tmp/gosl/fun", "cut-sin-negative.png", tmin, tmax, xcte, 41)
 	}
 
 	sktol := 1e-10

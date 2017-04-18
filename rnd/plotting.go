@@ -10,15 +10,15 @@ import (
 )
 
 // PlotPdf plots PDF
-func (o VarData) PlotPdf(np int, args string) {
+func (o VarData) PlotPdf(np int, args *plt.A) {
 	X := utl.LinSpace(o.Min, o.Max, np)
 	Y := make([]float64, np)
 	for i := 0; i < np; i++ {
 		Y[i] = o.Distr.Pdf(X[i])
 	}
-	if args == "" {
-		args = "'b-'"
+	if args == nil {
+		args = &plt.A{C: "b"}
 	}
 	plt.Plot(X, Y, args)
-	plt.Gll("$x$", "$f(x)$", "")
+	plt.Gll("$x$", "$f(x)$", nil)
 }

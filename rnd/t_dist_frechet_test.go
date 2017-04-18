@@ -28,12 +28,12 @@ func plot_frechet(l, c, a float64, xmin, xmax float64) {
 		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$(%g,%g,%g)$'", l, c, a))
-	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=4, leg_hlen=1")
+	plt.Plot(x, y, nil)
+	plt.Gll("$x$", "$f(x)$", nil)
 	plt.SetYnticks(11)
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$(%g,%g,%g)$'", l, c, a))
-	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=4, leg_hlen=1")
+	plt.Plot(x, Y, nil)
+	plt.Gll("$x$", "$F(x)$", nil)
 }
 
 func Test_dist_frechet_01(tst *testing.T) {
@@ -105,7 +105,7 @@ func Test_dist_frechet_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300)
+		plt.SetForEps(1.5, 300, nil)
 		l := 0.0                // location
 		C := []float64{1, 2.0}  // scale
 		A := []float64{1, 2, 3} // shape
@@ -115,7 +115,7 @@ func Test_dist_frechet_02(tst *testing.T) {
 			}
 		}
 		plt.SaveD("/tmp/gosl", "rnd_dist_frechet_02a.eps")
-		plt.SetForEps(1.5, 300)
+		plt.SetForEps(1.5, 300, nil)
 		l = 0.5                // location
 		C = []float64{1, 2.0}  // scale
 		A = []float64{1, 2, 3} // shape
@@ -140,7 +140,7 @@ func Test_frechet_03(tst *testing.T) {
 	io.Pforan("μ=%v σ=%v δ=%v d=%v\n", μ, σ, δ, d)
 
 	if chk.Verbose {
-		plt.AxHline(d, "color='k'")
+		plt.AxHline(d, nil)
 		FrechetPlotCoef("/tmp/gosl", "fig_frechet_coef.eps", 3.0, 5.0)
 	}
 

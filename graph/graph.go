@@ -214,8 +214,8 @@ func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64,
 		} else {
 			lbl = verts_lbls[i]
 		}
-		plt.Text(v[0], v[1], lbl, io.Sf("clip_on=0, color='%s', fontsize=%g, ha='center', va='center'", verts_clr, verts_fsz))
-		plt.Circle(v[0], v[1], r, "clip_on=0, ec='k', lw=0.8")
+		plt.Text(v[0], v[1], lbl, &plt.A{C: verts_clr, Fsz: verts_fsz, Va: "center", Ha: "center"})
+		plt.Circle(v[0], v[1], r, &plt.A{Fc: "none", Ec: "k", Lw: 0.8, NoClip: true})
 		xmin, ymin = utl.Min(xmin, v[0]), utl.Min(ymin, v[1])
 		xmax, ymax = utl.Max(xmax, v[0]), utl.Max(ymax, v[1])
 	}
@@ -249,13 +249,13 @@ func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64,
 			xj[i] = xb[i] - l*mu[i] - w*nu[i]
 			xc[i] = (xi[i]+xj[i])/2.0 - dwt*nu[i]
 		}
-		plt.Arrow(xi[0], xi[1], xj[0], xj[1], io.Sf("st='->', sc=%g", arrow_scale))
+		plt.Arrow(xi[0], xi[1], xj[0], xj[1], &plt.A{Style: "->", Scale: arrow_scale})
 		if edges_lbls == nil {
 			lbl = io.Sf("%d", k)
 		} else {
 			lbl = edges_lbls[k]
 		}
-		plt.Text(xc[0], xc[1], lbl, io.Sf("clip_on=0, color='%s', fontsize=%g, ha='center', va='center'", edges_clr, edges_fsz))
+		plt.Text(xc[0], xc[1], lbl, &plt.A{C: edges_clr, Fsz: edges_fsz, Va: "center", Ha: "center"})
 	}
 	xmin -= r
 	xmax += r

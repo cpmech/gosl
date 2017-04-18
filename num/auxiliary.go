@@ -43,13 +43,13 @@ func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xs
 	if err != nil {
 		return
 	}
-	plt.Cross("")
-	plt.Plot(x, y, args)
-	plt.PlotOne(xsol, ysol, io.Sf("'ro', label='%s'", xsolLbl))
+	plt.Cross(0, 0, nil)
+	plt.Plot(x, y, nil)
+	plt.PlotOne(xsol, ysol, &plt.A{C: "r", M: "o", L: xsolLbl})
 	if extra != nil {
 		extra()
 	}
-	plt.Gll("x", "y(x)", "")
+	plt.Gll("x", "y(x)", nil)
 	if save {
 		os.MkdirAll(dirout, 0777)
 		plt.Save(dirout + "/" + fname)

@@ -8,7 +8,6 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
@@ -73,31 +72,31 @@ func PlotRosette(r float64, full, ref bool, withtext bool, fsz float64) {
 	lo := []float64{-cr * r * math.Cos(math.Pi/3.0), cr * r * math.Sin(math.Pi/3.0)}  // line: origin of cylindrical system
 
 	// main lines
-	plt.Plot([]float64{0.0, l1[0]}, []float64{0.0, l1[1]}, "'k-', color='grey', zorder=0")
-	plt.Plot([]float64{0.0, l2[0]}, []float64{0.0, l2[1]}, "'k-', color='grey', zorder=0")
-	plt.Plot([]float64{0.0, l3[0]}, []float64{0.0, l3[1]}, "'k-', color='grey', zorder=0")
+	plt.Plot([]float64{0.0, l1[0]}, []float64{0.0, l1[1]}, &plt.A{C: "grey", Ls: "-", Z: 0})
+	plt.Plot([]float64{0.0, l2[0]}, []float64{0.0, l2[1]}, &plt.A{C: "grey", Ls: "-", Z: 0})
+	plt.Plot([]float64{0.0, l3[0]}, []float64{0.0, l3[1]}, &plt.A{C: "grey", Ls: "-", Z: 0})
 
 	// reference
-	plt.Plot([]float64{0.0, l4[0]}, []float64{0.0, l4[1]}, "'--', color='grey', zorder=-1")
+	plt.Plot([]float64{0.0, l4[0]}, []float64{0.0, l4[1]}, &plt.A{C: "grey", Ls: "--", Z: 0})
 	if full {
-		plt.Plot([]float64{0.0, -l4[0]}, []float64{0.0, l4[1]}, "'--', color='grey', zorder=-1")
-		plt.Plot([]float64{0.0, 0.0}, []float64{0.0, -l1[1]}, "'--', color='grey', zorder=-1")
+		plt.Plot([]float64{0.0, -l4[0]}, []float64{0.0, l4[1]}, &plt.A{C: "grey", Ls: "--", Z: 0})
+		plt.Plot([]float64{0.0, 0.0}, []float64{0.0, -l1[1]}, &plt.A{C: "grey", Ls: "--", Z: 0})
 	}
 	if ref {
-		plt.Plot([]float64{0.0, lo[0]}, []float64{0.0, lo[1]}, "'--', color='grey', zorder=-1")
+		plt.Plot([]float64{0.0, lo[0]}, []float64{0.0, lo[1]}, &plt.A{C: "grey", Ls: "--", Z: 0})
 		if full {
-			plt.Plot([]float64{0.0, -lo[0]}, []float64{0.0, lo[1]}, "'--', color='grey', zorder=-1")
-			plt.Plot([]float64{-cr * r, cr * r}, []float64{0.0, 0.0}, "'--', color='grey', zorder=-1")
+			plt.Plot([]float64{0.0, -lo[0]}, []float64{0.0, lo[1]}, &plt.A{C: "grey", Ls: "--", Z: 0})
+			plt.Plot([]float64{-cr * r, cr * r}, []float64{0.0, 0.0}, &plt.A{C: "grey", Ls: "--", Z: 0})
 		}
 	}
 
 	// text
 	if withtext {
-		plt.Text(l1[0], l1[1], "$-\\sigma_1,\\\\theta=+30^\\circ$", io.Sf("ha='center', fontsize=%g", fsz))
-		plt.Text(l2[0], l2[1], "$-\\sigma_3$", io.Sf("ha='right',  fontsize=%g", fsz))
-		plt.Text(l3[0], l3[1], "$-\\sigma_2$", io.Sf("ha='left',   fontsize=%g", fsz))
-		plt.Text(lo[0], lo[1], "$\\\\theta=0^\\circ$", io.Sf("ha='center', fontsize=%g", fsz))
-		plt.Text(l4[0], l4[1], "$\\\\theta=-30^\\circ$", io.Sf("ha='center', fontsize=%g", fsz))
+		plt.Text(l1[0], l1[1], "$-\\sigma_1,\\\\theta=+30^\\circ$", &plt.A{Ha: "center", Fsz: fsz})
+		plt.Text(l2[0], l2[1], "$-\\sigma_3$", &plt.A{Ha: "right", Fsz: fsz})
+		plt.Text(l3[0], l3[1], "$-\\sigma_2$", &plt.A{Ha: "left", Fsz: fsz})
+		plt.Text(lo[0], lo[1], "$\\\\theta=0^\\circ$", &plt.A{Ha: "center", Fsz: fsz})
+		plt.Text(l4[0], l4[1], "$\\\\theta=-30^\\circ$", &plt.A{Ha: "center", Fsz: fsz})
 	}
 	plt.Equal()
 }
@@ -116,11 +115,11 @@ func PlotRefOct(φ, σc float64, withExtCircle bool) {
 		ya := Rmin * math.Sin(d30)
 		xb := -Rmax * math.Cos(d30)
 		yb := -Rmax * math.Sin(d30)
-		plt.Plot([]float64{xb, xa, 0, -xa, -xb, 0, xb}, []float64{yb, ya, Rmax, ya, yb, -Rmin, yb}, "'grey', ls='-'")
+		plt.Plot([]float64{xb, xa, 0, -xa, -xb, 0, xb}, []float64{yb, ya, Rmax, ya, yb, -Rmin, yb}, &plt.A{C: "grey", Ls: "-"})
 		if withExtCircle {
-			plt.Circle(0, 0, Rmin, "ec='grey'")
+			plt.Circle(0, 0, Rmin, &plt.A{Ec: "grey"})
 		}
-		plt.Circle(0, 0, Rmax, "ec='grey'")
+		plt.Circle(0, 0, Rmax, &plt.A{Ec: "grey"})
 	}
 }
 
@@ -194,23 +193,23 @@ func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float6
 	}
 	if first {
 		plt.Reset()
-		plt.SetForPng(1, 500, 125)
+		plt.SetForPng(1, 500, 125, nil)
 		PlotRosette(1.1*rmax, true, true, true, 7)
 		PlotRefOct(φ, σcCte, false)
 		if showpts {
-			plt.Plot(σa, σb, "'k.', ms=5")
+			plt.Plot(σa, σb, &plt.A{C: "k", M: ".", Ms: 5})
 		}
 	}
 	if simplec {
 		if !only0 {
-			plt.ContourSimple(x, y, f, false, 8, "")
+			plt.ContourL(x, y, f, nil)
 		}
-		plt.ContourSimple(x, y, f, false, 8, "levels=[0], colors=['blue'], linewidths=[2]")
+		plt.ContourL(x, y, f, &plt.A{Ulevels: []float64{0}, Colors: []string{"blue"}, Lw: 2})
 	} else {
-		plt.Contour(x, y, f, "fsz=8")
+		plt.ContourF(x, y, f, nil)
 	}
 	if grads {
-		plt.Quiver(x, y, gx, gy, "")
+		plt.Quiver(x, y, gx, gy, nil)
 	}
 	if last {
 		plt.AxisOff()

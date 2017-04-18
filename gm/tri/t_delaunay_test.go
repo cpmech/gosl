@@ -48,11 +48,11 @@ func Test_delaunay01(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.SetForPng(1, 300, 150)
+		plt.SetForPng(1, 300, 150, nil)
 		Draw(V, C, nil)
 		plt.Equal()
 		plt.AxisRange(-0.1, 1.1, -0.1, 1.1)
-		plt.Gll("x", "y", "")
-		plt.SaveD("/tmp/gosl/tri", "delaunay01.png")
+		plt.Gll("x", "y", nil)
+		plt.SaveD("/tmp/gosl", "t_delaunay01.png")
 	}
 }

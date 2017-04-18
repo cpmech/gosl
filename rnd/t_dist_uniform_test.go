@@ -27,12 +27,12 @@ func plot_uniform(A, B float64, xmin, xmax float64) {
 		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$(%g,%g)$'", A, B))
-	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=4, leg_hlen=1")
+	plt.Plot(x, y, nil)
+	plt.Gll("$x$", "$f(x)$", nil)
 	plt.SetYnticks(11)
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$(%g,%g)$'", A, B))
-	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=4, leg_hlen=1")
+	plt.Plot(x, Y, nil)
+	plt.Gll("$x$", "$F(x)$", nil)
 }
 
 func Test_dist_uniform_01(tst *testing.T) {
@@ -99,7 +99,7 @@ func Test_dist_uniform_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300)
+		plt.SetForEps(1.5, 300, nil)
 		A := 1.5 // min
 		B := 2.5 // max
 		plot_uniform(A, B, 1.0, 3.0)

@@ -50,13 +50,13 @@ func Test_cubiceq03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("cubiceq03. y(x) = x³ + c")
 
-	doplot := false
+	doplot := chk.Verbose
 	np := 41
 	var X, Y []float64
 	if doplot {
 		X = utl.LinSpace(-2, 2, np)
 		Y = make([]float64, np)
-		plt.SetForPng(0.8, 400, 200)
+		plt.SetForPng(0.8, 400, 200, nil)
 	}
 
 	a, b := 0.0, 0.0
@@ -72,14 +72,14 @@ func Test_cubiceq03(tst *testing.T) {
 			for i, x := range X {
 				Y[i] = x*x*x + a*x*x + b*x + c
 			}
-			plt.Plot(X, Y, io.Sf("color='%s', label='c=%g'", colors[k], c))
-			plt.PlotOne(x1, 0, io.Sf("'ko', color='%s'", colors[k]))
-			plt.Cross("")
-			plt.Gll("x", "y", "")
+			plt.Plot(X, Y, &plt.A{C: colors[k], L: io.Sf("c=%g", c)})
+			plt.PlotOne(x1, 0, &plt.A{C: colors[k], M: "o"})
+			plt.Cross(0, 0, nil)
+			plt.Gll("x", "y", nil)
 		}
 	}
 	if doplot {
-		plt.SaveD("/tmp", "fig_cubiceq03.png")
+		plt.SaveD("/tmp/gosl", "fig_cubiceq03.png")
 	}
 }
 
@@ -88,14 +88,14 @@ func Test_cubiceq04(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("cubiceq03. y(x) = x³ - 3xr²/4 - r³cos(3α)/4")
 
-	doplot := false
+	doplot := chk.Verbose
 	r := 1.0
 	np := 41
 	var X, Y []float64
 	if doplot {
 		X = utl.LinSpace(-1.2*r, 1.2*r, np)
 		Y = make([]float64, np)
-		plt.SetForPng(0.8, 400, 200)
+		plt.SetForPng(0.8, 400, 200, nil)
 	}
 
 	π := math.Pi
@@ -130,19 +130,19 @@ func Test_cubiceq04(tst *testing.T) {
 		if doplot {
 			switch nx {
 			case 1:
-				plt.Plot([]float64{x1}, []float64{0}, io.Sf("'ko', color='%s'", colors[k]))
+				plt.Plot([]float64{x1}, []float64{0}, &plt.A{C: colors[k], M: "o"})
 			case 2:
-				plt.Plot([]float64{x1, x2}, []float64{0, 0}, io.Sf("'ko', color='%s'", colors[k]))
+				plt.Plot([]float64{x1, x2}, []float64{0, 0}, &plt.A{C: colors[k], M: "o"})
 			case 3:
-				plt.Plot([]float64{x1, x2, x3}, []float64{0, 0, 0}, io.Sf("'ko', color='%s'", colors[k]))
+				plt.Plot([]float64{x1, x2, x3}, []float64{0, 0, 0}, &plt.A{C: colors[k], M: "o"})
 			}
-			plt.Plot(X, Y, io.Sf("color='%s', label='%s'", colors[k], plt.TexPiRadFmt(α)))
+			plt.Plot(X, Y, &plt.A{C: colors[k], L: plt.TexPiRadFmt(α)})
 		}
 	}
 	if doplot {
-		plt.Circle(0, 0, r, "ec='black'")
+		plt.Circle(0, 0, r, &plt.A{Ec: "black", Fc: "none"})
 		plt.Equal()
-		plt.Gll("x", "y", "")
-		plt.SaveD("/tmp", "fig_cubiceq04.png")
+		plt.Gll("x", "y", nil)
+		plt.SaveD("/tmp/gosl", "fig_cubiceq04.png")
 	}
 }

@@ -42,12 +42,12 @@ func Test_bezier01(tst *testing.T) {
 	}
 
 	if false {
-		plt.SetForPng(1, 400, 200)
-		plt.Plot(X2, Y2, "'y-', lw=4,label='y=x*x'")
-		plt.Plot(X, Y, "'b-', marker='.', label='Bezier'")
-		plt.Gll("x", "y", "")
+		plt.SetForPng(1, 400, 200, nil)
+		plt.Plot(X2, Y2, &plt.A{C: "y", Ls: "-", Lw: 4, L: "y=x*x"})
+		plt.Plot(X, Y, &plt.A{C: "b", Ls: "-", M: ".", L: "Bezier"})
+		plt.Gll("x", "y", nil)
 		plt.Equal()
-		plt.SaveD("/tmp", "fig_gm_bezier01.png")
+		plt.SaveD("/tmp/gosl", "fig_gm_bezier01.png")
 	}
 }
 
@@ -65,14 +65,14 @@ func Test_bezier02(tst *testing.T) {
 	}
 
 	nx, ny := 5, 5
-	xx, yy := utl.MeshGrid2D(-1.5, 2.5, -0.5, 4.5, nx, ny)
+	xx, yy := utl.MeshGrid2d(-1.5, 2.5, -0.5, 4.5, nx, ny)
 	//zz := la.MatAlloc(nx, ny)
 
 	// TODO: finish this test
 
 	doplot := false
 	if doplot {
-		plt.SetForPng(1, 400, 200)
+		plt.SetForPng(1, 400, 200, nil)
 	}
 
 	C := make([]float64, 2)
@@ -94,9 +94,9 @@ func Test_bezier02(tst *testing.T) {
 	}
 
 	if doplot {
-		plt.Plot(X, Y, "'b-', label='Bezier'")
-		plt.Gll("x", "y", "")
+		plt.Plot(X, Y, &plt.A{C: "b", Ls: "-", M: ".", L: "Bezier"})
+		plt.Gll("x", "y", nil)
 		plt.Equal()
-		plt.SaveD("/tmp", "fig_gm_bezier02.png")
+		plt.SaveD("/tmp/gosl", "fig_gm_bezier02.png")
 	}
 }

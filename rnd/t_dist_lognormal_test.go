@@ -28,11 +28,11 @@ func plot_lognormal(μ, σ float64) {
 		Y[i] = dist.Cdf(x[i])
 	}
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%.4f,\\;\\sigma=%.4f$'", μ, σ))
-	plt.Gll("$x$", "$f(x)$", "leg_out=1, leg_ncol=2")
+	plt.Plot(x, y, nil)
+	plt.Gll("$x$", "$f(x)$", nil)
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label=r'$\\mu=%.4f,\\;\\sigma=%.4f$'", μ, σ))
-	plt.Gll("$x$", "$F(x)$", "leg_out=1, leg_ncol=2")
+	plt.Plot(x, Y, nil)
+	plt.Gll("$x$", "$F(x)$", nil)
 }
 
 func Test_dist_lognormal_01(tst *testing.T) {
@@ -102,7 +102,7 @@ func Test_dist_lognormal_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300)
+		plt.SetForEps(1.5, 300, nil)
 		n := 0.0
 		for _, z := range []float64{1, 0.5, 0.25} {
 			w := z * z
@@ -153,7 +153,7 @@ func Test_dist_lognormal_03(tst *testing.T) {
 	chk.Scalar(tst, "area", 1e-15, area, 1)
 
 	if chk.Verbose {
-		plt.SetForEps(1.5, 300)
+		plt.SetForEps(1.5, 300, nil)
 		plot_lognormal(μ, σ)
 		plt.Subplot(2, 1, 1)
 		hist.PlotDensity(nil, "")
