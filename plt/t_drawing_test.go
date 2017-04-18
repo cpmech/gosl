@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 )
 
 func Test_draw01(tst *testing.T) {
@@ -24,29 +23,24 @@ func Test_draw01(tst *testing.T) {
 		{2.5, 0.0},
 	}
 
-	var sd S
-	sd.Init()
-	sd.Closed = true
-	DrawPolyline(P, &sd, "")
+	Reset()
+	Polyline(P, &A{Fc: "#c1d7cf", Ec: "#4db38e", Lw: 4.5, Closed: true, NoClip: true})
+	Circle(0, 4, 2.0, &A{Fc: "#b2cfa5", Ec: "#5dba35", Z: 1})
+	Arrow(-4, 2, 4, 7, &A{Fc: "cyan", Ec: "blue", Z: 2, Scale: 50, Style: "fancy"})
+	Arc(0, 4, 3, 0, 90, nil)
 	AutoScale(P)
 	Equal()
-	DrawLegend([]A{
-		A{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
-		A{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
-		A{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
-	}, 10, "best", false, "")
+
+	LegendX([]*A{
+		&A{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
+		&A{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
+		&A{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
+	}, 10, "best", false, nil)
+
 	if chk.Verbose {
-		SaveD("/tmp/gosl", "draw01.eps")
+		err := SaveD("/tmp/gosl", "t_draw01.png")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
 	}
-}
-
-func Test_draw02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("draw02")
-
-	d := A{"red", "o", "--", 1.2, -1, "gofem", 2, 10, "blue", 0.3, true, true, ""}
-	l := d.String("clip_on=0")
-	io.Pforan("l = %q\n", l)
-	chk.String(tst, l, "clip_on=0,color='red',marker='o',ls='--',lw=1.2,label='gofem',markevery=2,zorder=10,markeredgecolor='blue',mew=0.3,markerfacecolor='none',clip_on=1")
 }
