@@ -14,7 +14,7 @@ import (
 
 func Test_args01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("args01")
 
 	var a A
@@ -48,7 +48,7 @@ func Test_args01(tst *testing.T) {
 
 func Test_args02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("args02")
 
 	a := &A{
@@ -66,7 +66,7 @@ func Test_args02(tst *testing.T) {
 
 func Test_plot01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("plot01")
 
 	if chk.Verbose {
@@ -77,8 +77,7 @@ func Test_plot01(tst *testing.T) {
 			y[i] = x[i] * x[i]
 		}
 
-		// no need to call Reset
-
+		Reset(false, nil)
 		SetFontSizes(&A{Fsz: 20, FszLbl: 20, FszXtck: 10, FszYtck: 10})
 		Plot(x, y, &A{L: "first", C: "r", M: "o", Ls: "-", Lw: 2, NoClip: true})
 		Plot(y, x, &A{L: "second", C: "b", M: ".", Ls: ":", Lw: 40})
@@ -100,7 +99,7 @@ func Test_plot01(tst *testing.T) {
 	}
 }
 
-func test_plot02(tst *testing.T) {
+func Test_plot02(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("plot02")
@@ -127,7 +126,7 @@ func test_plot02(tst *testing.T) {
 	}
 }
 
-func test_plot03(tst *testing.T) {
+func Test_plot03(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("plot03")
@@ -164,9 +163,9 @@ func test_plot03(tst *testing.T) {
 	}
 }
 
-func test_plot04(tst *testing.T) {
+func Test_plot04(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("plot04")
 
 	if chk.Verbose {
@@ -216,9 +215,9 @@ func test_plot04(tst *testing.T) {
 	}
 }
 
-func test_plot05(tst *testing.T) {
+func Test_plot05(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("plot05")
 
 	if chk.Verbose {
@@ -254,9 +253,9 @@ func test_plot05(tst *testing.T) {
 	}
 }
 
-func test_plot06(tst *testing.T) {
+func Test_plot06(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("plot06")
 
 	if chk.Verbose {

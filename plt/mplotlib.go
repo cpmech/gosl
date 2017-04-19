@@ -145,23 +145,43 @@ func SetYnticks(num int) {
 // SetTicksX sets ticks along x
 func SetTicksX(majorEvery, minorEvery float64, majorFmt string) {
 	n := bufferPy.Len()
-	io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", n, majorEvery)
-	io.Ff(&bufferPy, "minorLocator%d = tck.MultipleLocator(%g)\n", n, minorEvery)
-	io.Ff(&bufferPy, "majorFormatter%d = tck.FormatStrFormatter('%s')\n", n, majorFmt)
-	io.Ff(&bufferPy, "plt.gca().xaxis.set_major_locator(majorLocator%d)\n", n)
-	io.Ff(&bufferPy, "plt.gca().xaxis.set_minor_locator(minorLocator%d)\n", n)
-	io.Ff(&bufferPy, "plt.gca().xaxis.set_major_formatter(majorFormatter%d)\n", n)
+	if majorEvery > 0 {
+		io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", n, majorEvery)
+		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", n, majorEvery)
+		io.Ff(&bufferPy, "if nticks%d < majorLocator%d.MAXTICKS * 0.9:\n", n, n)
+		io.Ff(&bufferPy, "    plt.gca().xaxis.set_major_locator(majorLocator%d)\n", n)
+	}
+	if minorEvery > 0 {
+		io.Ff(&bufferPy, "minorLocator%d = tck.MultipleLocator(%g)\n", n, minorEvery)
+		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", n, minorEvery)
+		io.Ff(&bufferPy, "if nticks%d < minorLocator%d.MAXTICKS * 0.9:\n", n, n)
+		io.Ff(&bufferPy, "    plt.gca().xaxis.set_minor_locator(minorLocator%d)\n", n)
+	}
+	if majorFmt != "" {
+		io.Ff(&bufferPy, "majorFormatter%d = tck.FormatStrFormatter(r'%s')\n", n, majorFmt)
+		io.Ff(&bufferPy, "plt.gca().xaxis.set_major_formatter(majorFormatter%d)\n", n)
+	}
 }
 
 // SetTicksY sets ticks along y
 func SetTicksY(majorEvery, minorEvery float64, majorFmt string) {
 	n := bufferPy.Len()
-	io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", n, majorEvery)
-	io.Ff(&bufferPy, "minorLocator%d = tck.MultipleLocator(%g)\n", n, minorEvery)
-	io.Ff(&bufferPy, "majorFormatter%d = tck.FormatStrFormatter('%s')\n", n, majorFmt)
-	io.Ff(&bufferPy, "plt.gca().yaxis.set_major_locator(majorLocator%d)\n", n)
-	io.Ff(&bufferPy, "plt.gca().yaxis.set_minor_locator(minorLocator%d)\n", n)
-	io.Ff(&bufferPy, "plt.gca().yaxis.set_major_formatter(majorFormatter%d)\n", n)
+	if majorEvery > 0 {
+		io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", n, majorEvery)
+		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", n, majorEvery)
+		io.Ff(&bufferPy, "if nticks%d < majorLocator%d.MAXTICKS * 0.9:\n", n, n)
+		io.Ff(&bufferPy, "    plt.gca().yaxis.set_major_locator(majorLocator%d)\n", n)
+	}
+	if minorEvery > 0 {
+		io.Ff(&bufferPy, "minorLocator%d = tck.MultipleLocator(%g)\n", n, minorEvery)
+		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", n, minorEvery)
+		io.Ff(&bufferPy, "if nticks%d < minorLocator%d.MAXTICKS * 0.9:\n", n, n)
+		io.Ff(&bufferPy, "    plt.gca().yaxis.set_minor_locator(minorLocator%d)\n", n)
+	}
+	if majorFmt != "" {
+		io.Ff(&bufferPy, "majorFormatter%d = tck.FormatStrFormatter(r'%s')\n", n, majorFmt)
+		io.Ff(&bufferPy, "plt.gca().yaxis.set_major_formatter(majorFormatter%d)\n", n)
+	}
 }
 
 // SetScientificX sets scientific notation for ticks along x-axis

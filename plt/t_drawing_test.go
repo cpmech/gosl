@@ -12,7 +12,7 @@ import (
 
 func Test_draw01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("draw01")
 
 	P := [][]float64{
