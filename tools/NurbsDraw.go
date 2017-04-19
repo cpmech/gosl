@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// +build ignore
+
 package main
 
 import (
@@ -22,7 +24,6 @@ func main() {
 	xmax := io.ArgToFloat(6, 0)
 	ymin := io.ArgToFloat(7, 0)
 	ymax := io.ArgToFloat(8, 0)
-	eps := io.ArgToBool(9, false)
 	npts := io.ArgToInt(10, 41)
 
 	// print input table
@@ -36,7 +37,6 @@ func main() {
 		"max(x)", "xmax", xmax,
 		"min(y)", "ymin", ymin,
 		"max(y)", "ymax", ymax,
-		"generate eps instead of png", "eps", eps,
 		"number of divisions", "npts", npts,
 	))
 
@@ -44,11 +44,7 @@ func main() {
 	B := gm.ReadMsh(fnk)
 
 	// plot
-	if eps {
-		plt.SetForEps(0.75, 500, nil)
-	} else {
-		plt.SetForPng(0.75, 500, 150, nil)
-	}
+	plt.Reset(false, nil)
 	for _, b := range B {
 		if ctrl {
 			b.DrawCtrl2d(ids, "", "")
@@ -61,9 +57,5 @@ func main() {
 	if useminmax {
 		plt.AxisRange(xmin, xmax, ymin, ymax)
 	}
-	ext := ".png"
-	if eps {
-		ext = ".eps"
-	}
-	plt.Save(fnk + ext)
+	plt.Save("/tmp/gosl", fnk)
 }
