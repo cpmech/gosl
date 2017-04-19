@@ -73,7 +73,8 @@ cd gosl
 
 ### Python dependencies
 
-At the moment, the `plt` subpackage requires `python-scipy python-matplotlib`.
+At the moment, the `plt` subpackage requires `python-scipy` and `python-matplotlib` (installed as
+above).
 
 
 
