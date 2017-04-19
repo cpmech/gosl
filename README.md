@@ -45,6 +45,7 @@ Normally distributed pseudo-random numbers. Using sub-package `rnd`
 </div>
 
 
+
 ## Installation
 
 1 To install on Windows, [see instructions for Windows here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
@@ -68,12 +69,13 @@ cd gosl
 ./all.bash
 ```
 
+
+
 ### Python dependencies
 
-For the `plt` subpackage, make sure that the following environment variable is defined:
-```
-export PYTHONPATH=$PYTHONPATH:${GOPATH%:*}/src/github.com/cpmech/gosl/scripts
-```
+At the moment, the `plt` subpackage requires `python-scipy python-matplotlib`.
+
+
 
 ## Documentation
 

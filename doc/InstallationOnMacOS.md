@@ -61,7 +61,6 @@ Edit `/Users/name/.profile` and add:
 
 ```
 export GOPATH=/Users/name/mygo
-export PYTHONPATH=$PYTHONPATH:$GOPATH/src/github.com/cpmech/gosl/scripts
 ```
 
 ## 6 Gosl

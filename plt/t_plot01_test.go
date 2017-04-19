@@ -81,7 +81,7 @@ func Test_nlevels01(tst *testing.T) {
 
 func Test_plot01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("plot01")
 
 	if chk.Verbose {
