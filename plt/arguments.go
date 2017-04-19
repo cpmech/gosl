@@ -48,6 +48,9 @@ type A struct {
 	HideB   bool    // hide bottom frame border
 	HideT   bool    // hide top frame border
 
+	// other options
+	FigFraction bool // the given x-y coordinates correspond to figure coords  "xycoords='figure fraction'") }
+
 	// legend
 	LegLoc   string    // legend: location
 	LegNcol  int       // legend: number of columns
@@ -106,6 +109,9 @@ func (o A) String(forHistogram bool) (l string) {
 	addToCmd(&l, o.Ha != "", io.Sf("ha='%s'", o.Ha))
 	addToCmd(&l, o.Va != "", io.Sf("va='%s'", o.Va))
 	addToCmd(&l, o.Fsz > 0, io.Sf("fontsize=%g", o.Fsz))
+
+	// other options
+	addToCmd(&l, o.FigFraction, "xycoords='figure fraction'")
 
 	// histograms
 	if forHistogram {
