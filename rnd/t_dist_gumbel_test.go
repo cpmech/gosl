@@ -101,7 +101,7 @@ func Test_dist_gumbel_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300, nil)
+		plt.Reset(false, nil)
 		U := []float64{1.5, 1.0, 0.5, 3.0}
 		B := []float64{3.0, 2.0, 2.0, 4.0}
 		for i, u := range U {
@@ -109,7 +109,7 @@ func Test_dist_gumbel_02(tst *testing.T) {
 			μ := u + EULER*B[i]
 			plot_gumbel(μ, σ)
 		}
-		plt.SaveD("/tmp/gosl", "rnd_dist_gumbel_02.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_gumbel_02")
 	}
 }
 

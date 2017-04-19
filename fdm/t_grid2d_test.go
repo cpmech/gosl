@@ -90,10 +90,10 @@ func Test_grid2d_03(tst *testing.T) {
 	if chk.Verbose {
 		fxy := func(x, y float64) float64 { return x*x + y*y }
 		X, Y, F := g.Generate(fxy, nil)
-		plt.SetForPng(0.4, 500, 150, nil)
+		plt.Reset(false, nil)
 		plt.ContourF(X, Y, F, nil)
 		plt.Equal()
 		plt.Gll("x", "y", nil)
-		plt.SaveD("/tmp/gosl", "fig_grid2d_03.png")
+		plt.Save("/tmp/gosl", "fig_grid2d_03")
 	}
 }

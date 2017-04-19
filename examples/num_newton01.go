@@ -68,10 +68,10 @@ func main() {
 		X[i] = xvec[0]
 		Y[i] = fx[0]
 	}
-	plt.SetForPng(0.75, 300, 150)
-	plt.AxHline(0, "color='k'")
-	plt.Plot(X, Y, "")
-	plt.PlotOne(xo, yo, "'r.'")
-	plt.Gll("x", "y(x)", "")
-	plt.SaveD("/tmp/gosl", "num_newton01.png")
+	plt.Reset(false, nil)
+	plt.AxHline(0, nil)
+	plt.Plot(X, Y, nil)
+	plt.PlotOne(xo, yo, &plt.A{C: "r", M: "."})
+	plt.Gll("x", "y(x)", nil)
+	plt.Save("/tmp/gosl", "num_newton01")
 }

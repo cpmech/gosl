@@ -260,8 +260,7 @@ func Test_invs05(tst *testing.T) {
 	chk.PrintTitle("invs05")
 
 	if SAVEPLOT {
-		plt.Reset()
-		plt.SetForPng(1, 500, 125, nil)
+		plt.Reset(false, nil)
 		PlotRosette(1.1, true, true, true, 7)
 	}
 
@@ -302,7 +301,7 @@ func Test_invs05(tst *testing.T) {
 	if SAVEPLOT {
 		plt.Gll("$\\sigma_a$", "$\\sigma_b$", nil)
 		plt.Equal()
-		plt.SaveD("/tmp/gosl", "fig_invs05.png")
+		plt.Save("/tmp/gosl", "fig_invs05")
 	}
 }
 

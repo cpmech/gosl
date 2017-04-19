@@ -105,7 +105,7 @@ func Test_dist_frechet_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300, nil)
+		plt.Reset(false, nil)
 		l := 0.0                // location
 		C := []float64{1, 2.0}  // scale
 		A := []float64{1, 2, 3} // shape
@@ -114,8 +114,8 @@ func Test_dist_frechet_02(tst *testing.T) {
 				plot_frechet(l, c, a, 0, 4)
 			}
 		}
-		plt.SaveD("/tmp/gosl", "rnd_dist_frechet_02a.eps")
-		plt.SetForEps(1.5, 300, nil)
+		plt.Save("/tmp/gosl", "rnd_dist_frechet_02a")
+		plt.Reset(false, nil)
 		l = 0.5                // location
 		C = []float64{1, 2.0}  // scale
 		A = []float64{1, 2, 3} // shape
@@ -124,7 +124,7 @@ func Test_dist_frechet_02(tst *testing.T) {
 				plot_frechet(l, c, a, 0, 4)
 			}
 		}
-		plt.SaveD("/tmp/gosl", "rnd_dist_frechet_02b.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_frechet_02b")
 	}
 }
 
@@ -161,6 +161,6 @@ func Test_frechet_03(tst *testing.T) {
 
 	if chk.Verbose {
 		plot_frechet(l, 1, α, 8, 16)
-		plt.SaveD("/tmp/gosl", "rnd_dist_frechet_03.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_frechet_03")
 	}
 }

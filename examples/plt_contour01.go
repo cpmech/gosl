@@ -32,7 +32,7 @@ func main() {
 	xmin, xmax, N := -math.Pi/2.0+0.1, math.Pi/2.0-0.1, 21
 
 	// mesh grid
-	X, Y := utl.MeshGrid2D(xmin, xmax, xmin, xmax, N, N)
+	X, Y := utl.MeshGrid2d(xmin, xmax, xmin, xmax, N, N)
 
 	// compute f(x,y) and components of gradient
 	F := utl.DblsAlloc(N, N)
@@ -46,10 +46,10 @@ func main() {
 	}
 
 	// plot
-	plt.SetForPng(0.75, 600, 150)
-	plt.Contour(X, Y, F, "levels=20, cmapidx=4")
-	plt.Quiver(X, Y, U, V, "color='red'")
-	plt.Gll("x", "y", "")
+	plt.Reset(false, nil)
+	plt.ContourF(X, Y, F, &plt.A{CmapIdx: 4}) // "levels=20, cmapidx=4")
+	plt.Quiver(X, Y, U, V, &plt.A{C: "r"})
+	plt.Gll("x", "y", nil)
 	plt.Equal()
-	plt.SaveD("/tmp/gosl", "plt_contour01.png")
+	plt.Save("/tmp/gosl", "plt_contour01")
 }

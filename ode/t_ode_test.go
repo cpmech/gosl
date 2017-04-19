@@ -106,7 +106,7 @@ func Test_ode01(tst *testing.T) {
 		for i := 0; i < len(X); i++ {
 			Y[i] = -lam * (math.Sin(X[i]) - lam*math.Cos(X[i]) + lam*math.Exp(lam*X[i])) / (lam*lam + 1.0)
 		}
-		plt.SetForEps(0.75, 500, nil)
+		plt.Reset(false, nil)
 		plt.Plot(X, Y, &plt.A{C: "y", Ls: "-", Lw: 6, L: "solution"})
 		plt.Plot(X_FwEuler[:k_FwEuler], Y_FwEuler[:k_FwEuler], &plt.A{C: "k", M: ".", Ls: ":", L: "FwEuler"})
 		plt.Plot(X_BwEuler[:k_BwEuler], Y_BwEuler[:k_BwEuler], &plt.A{C: "r", M: ".", Ls: ":", L: "BwEuler"})
@@ -114,7 +114,7 @@ func Test_ode01(tst *testing.T) {
 		plt.Plot(X_Dopri5[:k_Dopri5], Y_Dopri5[:k_Dopri5], &plt.A{C: "m", M: ".", Ls: "--", L: "Dopri5"})
 		plt.Plot(X_Radau5[:k_Radau5], Y_Radau5[:k_Radau5], &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5"})
 		plt.Gll("$x$", "$y$", nil)
-		plt.SaveD("/tmp/gosl", "ode1.eps")
+		plt.Save("/tmp/gosl", "ode1")
 	}
 
 	// work/correctness analysis
@@ -187,8 +187,8 @@ func Test_ode02(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.SetForEps(1.5, 400, nil)
-		Plot("/tmp/gosl/ode", "vdpolA.eps", &res, nil, xa, xb, func() {
+		plt.Reset(false, nil)
+		Plot("/tmp/gosl/ode", "vdpolA", &res, nil, xa, xb, func() {
 			_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
 			if err != nil {
 				chk.Panic("%v", err)
@@ -263,8 +263,8 @@ func Test_ode03(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.SetForEps(1.5, 400, nil)
-		Plot("/tmp/gosl/ode", "rober.eps", &res, nil, xa, xb, func() {
+		plt.Reset(false, nil)
+		Plot("/tmp/gosl/ode", "rober", &res, nil, xa, xb, func() {
 			_, T, err := io.ReadTable("data/rober_radau5_cpp.dat")
 			if err != nil {
 				chk.Panic("%v", err)
@@ -409,8 +409,8 @@ func Test_ode04(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.SetForEps(2.0, 400, nil)
-		Plot("/tmp/gosl/ode", "hwamplifier.eps", &res, nil, xa, xb, func() {
+		plt.Reset(false, nil)
+		Plot("/tmp/gosl/ode", "hwamplifier", &res, nil, xa, xb, func() {
 			_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
 			if err != nil {
 				chk.Panic("%v", err)

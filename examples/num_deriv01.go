@@ -55,8 +55,8 @@ func main() {
 	}
 
 	// plot
-	plt.SetForPng(0.75, 300, 150)
-	plt.Plot(X, Y, "'b.-', clip_on=0, markevery=10, label='y(x)=sin(x)'")
-	plt.Gll("x", "y", "")
-	plt.SaveD("/tmp/gosl", "num_deriv01.png")
+	plt.Reset(false, nil)
+	plt.Plot(X, Y, &plt.A{C: "b", M: ".", Me: 10, L: "y(x)=sin(x)"})
+	plt.Gll("x", "y", nil)
+	plt.Save("/tmp/gosl", "num_deriv01")
 }

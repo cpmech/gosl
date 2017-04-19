@@ -54,8 +54,7 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 			}
 		}
 	}
-	plt.Reset()
-	plt.SetForEps(0.8, 350, nil)
+	plt.Reset(false, nil)
 	if f != nil {
 		plt.ContourF(V0, V1, Zf, nil)
 	}
@@ -79,5 +78,5 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 	}
 	plt.AxisRange(vmin[0], vmax[0], vmin[1], vmax[1])
 	plt.Gll("$x_0$", "$x_1$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 1.5})
-	plt.SaveD(dirout, fnkey+".eps")
+	plt.Save(dirout, fnkey)
 }

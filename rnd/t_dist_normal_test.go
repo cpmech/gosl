@@ -98,11 +98,11 @@ func Test_dist_normal_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300, nil)
+		plt.Reset(false, nil)
 		for _, σ := range []float64{1, 0.5, 0.25} {
 			plot_normal(0, σ, -2, 2)
 		}
-		plt.SaveD("/tmp/gosl", "rnd_dist_normal_02.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_normal_02")
 	}
 }
 
@@ -143,7 +143,7 @@ func Test_dist_normal_04(tst *testing.T) {
 		}
 		plt.Plot(x, y, nil)
 		plt.Gll("$x$", "$\\Phi^{-1}(\\Phi(x))$", nil)
-		plt.SaveD("/tmp/gosl", "rnd_dist_normal_04.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_normal_04")
 	}
 }
 
@@ -186,10 +186,10 @@ func Test_dist_normal_05(tst *testing.T) {
 	chk.Scalar(tst, "area", 1e-15, area, 1)
 
 	if chk.Verbose {
-		plt.SetForEps(1.5, 300, nil)
+		plt.Reset(false, nil)
 		plot_normal(μ, σ, 0, 2)
 		plt.Subplot(2, 1, 1)
 		hist.PlotDensity(nil, "")
-		plt.SaveD("/tmp/gosl", "rnd_dist_normal_05.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_normal_05")
 	}
 }

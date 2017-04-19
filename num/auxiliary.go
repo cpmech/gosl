@@ -26,7 +26,7 @@ const (
 )
 
 // PlotYxe plots the function y(x) implemented by Cb_yxe
-func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error) {
+func PlotYxe(ffcn Cb_yxe, dirout, fnkey string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error) {
 	if !save && !show {
 		return
 	}
@@ -52,7 +52,7 @@ func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xs
 	plt.Gll("x", "y(x)", nil)
 	if save {
 		os.MkdirAll(dirout, 0777)
-		plt.Save(dirout + "/" + fname)
+		plt.Save(dirout, fnkey)
 	}
 	if show {
 		plt.Show()

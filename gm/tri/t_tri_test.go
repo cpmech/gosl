@@ -32,11 +32,11 @@ func Test_tri01(tst *testing.T) {
 	}
 
 	if chk.Verbose {
-		plt.SetForPng(1, 300, 150, nil)
+		plt.Reset(false, nil)
 		Draw(V, C, nil)
 		plt.Equal()
 		plt.AxisRange(-0.1, 1.1, -0.1, 1.1)
 		plt.Gll("x", "y", nil)
-		plt.SaveD("/tmp/gosl", "t_tri01.png")
+		plt.Save("/tmp/gosl", "t_tri01")
 	}
 }

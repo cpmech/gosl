@@ -73,9 +73,9 @@ func main() {
 
 	// plotting
 	X, Y, F := g.Generate(nil, U)
-	plt.SetForPng(0.8, 600, 150)
-	plt.Contour(X, Y, F, "cmapidx=0")
+	plt.Reset(false, nil)
+	plt.ContourF(X, Y, F, &plt.A{CmapIdx: 0})
 	plt.Equal()
-	plt.Gll("x", "y", "")
-	plt.SaveD("/tmp/gosl", "fdm_problem02.png")
+	plt.Gll("x", "y", nil)
+	plt.Save("/tmp/gosl", "fdm_problem02")
 }

@@ -31,8 +31,8 @@ func Test_xfun01(tst *testing.T) {
 	xmax := []float64{2, 2}
 	np := 21
 	if chk.Verbose {
-		plt.Reset()
-		PlotX(o, "/tmp/gosl", "t_halo.png", tcte, xmin, xmax, np)
+		plt.Reset(false, nil)
+		PlotX(o, "/tmp/gosl", "t_halo", tcte, xmin, xmax, np)
 	}
 
 	np = 4
@@ -63,8 +63,8 @@ func Test_xfun02(tst *testing.T) {
 	xmax := []float64{2, 2}
 	np := 21
 	if chk.Verbose {
-		plt.Reset()
-		PlotX(o, "/tmp/gosl", "t_cdist.png", tcte, xmin, xmax, np)
+		plt.Reset(false, nil)
+		PlotX(o, "/tmp/gosl", "t_cdist", tcte, xmin, xmax, np)
 	}
 
 	np = 5
@@ -96,8 +96,8 @@ func Test_xfun03(tst *testing.T) {
 	xmax := []float64{2, 2, 2}
 	np := 21
 	if chk.Verbose && len(xmin) == 2 {
-		plt.Reset()
-		PlotX(o, "/tmp/gosl", "t_xpoly2.png", tcte, xmin, xmax, np)
+		plt.Reset(false, nil)
+		PlotX(o, "/tmp/gosl", "t_xpoly2", tcte, xmin, xmax, np)
 	}
 
 	np = 3
@@ -127,8 +127,8 @@ func Test_xfun04(tst *testing.T) {
 	xmax := []float64{2, 2, 2}
 	np := 21
 	if chk.Verbose && len(xmin) == 2 {
-		plt.Reset()
-		PlotX(o, "/tmp/gosl", "t_xpoly2.png", tcte, xmin, xmax, np)
+		plt.Reset(false, nil)
+		PlotX(o, "/tmp/gosl", "t_xpoly2", tcte, xmin, xmax, np)
 	}
 
 	np = 3

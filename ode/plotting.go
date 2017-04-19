@@ -35,7 +35,7 @@ func SimpleOutput(first bool, dx, x float64, y []float64, args ...interface{}) (
 }
 
 // Plot plot results
-func Plot(dirout, fn string, res *Results, yfcn Cb_ycorr, xa, xb float64, extra func()) {
+func Plot(dirout, fnkey string, res *Results, yfcn Cb_ycorr, xa, xb float64, extra func()) {
 
 	// data
 	if res == nil {
@@ -78,5 +78,5 @@ func Plot(dirout, fn string, res *Results, yfcn Cb_ycorr, xa, xb float64, extra 
 	if extra != nil {
 		extra()
 	}
-	plt.SaveD(dirout, fn)
+	plt.Save(dirout, fnkey)
 }

@@ -70,7 +70,7 @@ func (o DistFrechet) Variance() float64 {
 }
 
 // FrechetPlotCoef plots coefficients for Frechet parameter's estimation
-func FrechetPlotCoef(dirout, fn string, amin, amax float64) {
+func FrechetPlotCoef(dirout, fnkey string, amin, amax float64) {
 	np := 201
 	A := utl.LinSpace(amin, amax, np)
 	X := make([]float64, np)
@@ -89,5 +89,5 @@ func FrechetPlotCoef(dirout, fn string, amin, amax float64) {
 	plt.Text(X[k], Y[k], io.Sf("(%.4f,%.4f)", X[k], Y[k]), nil)
 	plt.Text(X[0], Y[0], io.Sf("(%.4f,%.4f)", X[0], Y[0]), nil)
 	plt.Gll("$1/\\alpha$", "$1+\\delta^2$", nil)
-	plt.SaveD(dirout, fn)
+	plt.Save(dirout, fnkey)
 }

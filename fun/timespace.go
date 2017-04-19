@@ -45,9 +45,9 @@ func New(name string, prms Prms) (TimeSpace, error) {
 }
 
 // PlotT plots F, G and H for varying t and fixed coordinates x
-//  fname       -- filename to safe figure
+//  fnkey       -- filename key (without extension)
 //  args{F,G,H} -- if any is "", the corresponding plot is not created
-func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np int) {
+func PlotT(o TimeSpace, dirout, fnkey string, t0, tf float64, xcte []float64, np int) {
 
 	// variables
 	t := utl.LinSpace(t0, tf, np)
@@ -124,15 +124,15 @@ func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np
 	}
 
 	// save figure
-	if fname != "" {
-		plt.SaveD(dirout, fname)
+	if fnkey != "" {
+		plt.Save(dirout, fnkey)
 	}
 }
 
 // PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
 //  hlZero  -- highlight F(t,x) = 0
 //  axEqual -- use axis['equal']
-func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64, np int) {
+func PlotX(o TimeSpace, dirout, fnkey string, tcte float64, xmin, xmax []float64, np int) {
 	withGrad := true
 	hlZero := true
 	axEqual := true
@@ -161,15 +161,15 @@ func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64
 			}
 		}
 	}
-	prop, wid, dpi := 1.0, 600.0, 200
+	figsize := &plt.A{Prop: 1, WidthPt: 600, Dpi: 200}
 	os.MkdirAll(dirout, 0777)
 	if withGrad {
-		prop = 2
-		plt.SetForPng(prop, wid, dpi, nil)
+		figsize.Prop = 2
+		plt.Reset(true, figsize)
 		plt.Subplot(nrow, 1, 1)
 		plt.Title("F(t,x)", nil)
 	} else {
-		plt.SetForPng(prop, wid, dpi, nil)
+		plt.Reset(true, figsize)
 	}
 	plt.ContourF(X, Y, F, nil)
 	if hlZero {
@@ -188,7 +188,7 @@ func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64
 		}
 		plt.Gll("x", "y", nil)
 	}
-	if fname != "" {
-		plt.SaveD(dirout, fname)
+	if fnkey != "" {
+		plt.Save(dirout, fnkey)
 	}
 }

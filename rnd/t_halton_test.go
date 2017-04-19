@@ -23,9 +23,9 @@ func Test_halton01(tst *testing.T) {
 	Y := P[1]
 
 	if chk.Verbose {
-		plt.SetForEps(1, 400, nil)
+		plt.Reset(false, nil)
 		plt.Plot(X, Y, nil)
 		plt.Equal()
-		plt.SaveD("/tmp/gosl", "halton01.eps")
+		plt.Save("/tmp/gosl", "halton01")
 	}
 }

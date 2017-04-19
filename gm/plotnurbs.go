@@ -260,29 +260,19 @@ func (o *Nurbs) DrawEdge2d(tmin, tmax, cte float64, along, npts int, args string
 
 // PlotNurbs plots a NURBS
 func PlotNurbs(dirout, fn string, b *Nurbs, npts int, ids bool, extra func()) {
-	plt.Reset()
-	if io.FnExt(fn) == ".eps" {
-		plt.SetForEps(1.0, 500, nil)
-	} else {
-		plt.SetForPng(1.0, 500, 150, nil)
-	}
+	plt.Reset(true, &plt.A{WidthPt: 500, Eps: io.FnExt(fn) == ".eps"})
 	b.DrawCtrl2d(ids, "", "")
 	b.DrawElems2d(npts, ids, "", "")
 	if extra != nil {
 		extra()
 	}
 	plt.Equal()
-	plt.SaveD(dirout, fn)
+	plt.Save(dirout, io.FnKey(fn))
 }
 
 // PlotTwoNurbs plots two NURBS for comparison
 func PlotTwoNurbs(dirout, fn string, b, c *Nurbs, npts int, ids bool, extra func()) {
-	plt.Reset()
-	if io.FnExt(fn) == ".eps" {
-		plt.SetForEps(1.5, 500, nil)
-	} else {
-		plt.SetForPng(1.5, 500, 150, nil)
-	}
+	plt.Reset(true, &plt.A{WidthPt: 500, Eps: io.FnExt(fn) == ".eps"})
 
 	plt.Subplot(3, 1, 1)
 	b.DrawCtrl2d(ids, "", "")
@@ -302,7 +292,7 @@ func PlotTwoNurbs(dirout, fn string, b, c *Nurbs, npts int, ids bool, extra func
 	c.DrawElems2d(npts, ids, ", color='red', marker='+', markevery=10", "color='green', size=7, va='bottom'")
 	plt.Equal()
 
-	plt.SaveD(dirout, fn)
+	plt.Save(dirout, io.FnKey(fn))
 }
 
 // PlotNurbsBasis plots basis functions la and lb
@@ -312,12 +302,7 @@ func PlotNurbsBasis(dirout, fn string, b *Nurbs, la, lb int) {
 	if b.gnd == 1 {
 		ndiv = 101
 	}
-	plt.Reset()
-	if io.FnExt(fn) == ".eps" {
-		plt.SetForEps(1.5, 500, nil)
-	} else {
-		plt.SetForPng(1.5, 600, 150, nil)
-	}
+	plt.Reset(true, &plt.A{WidthPt: 500, Eps: io.FnExt(fn) == ".eps"})
 
 	plt.Subplot(3, 2, 1)
 	if b.gnd == 2 {
@@ -383,7 +368,7 @@ func PlotNurbsBasis(dirout, fn string, b *Nurbs, la, lb int) {
 		plt.Equal()
 	}
 
-	plt.SaveD(dirout, fn)
+	plt.Save(dirout, io.FnKey(fn))
 }
 
 // PlotNurbsDerivs plots derivatives of basis functions la and lb
@@ -392,12 +377,7 @@ func PlotNurbsDerivs(dirout, fn string, b *Nurbs, la, lb int) {
 	if b.gnd == 1 {
 		ndiv = 101
 	}
-	plt.Reset()
-	if io.FnExt(fn) == ".eps" {
-		plt.SetForEps(1.5, 500, nil)
-	} else {
-		plt.SetForPng(1.5, 600, 150, nil)
-	}
+	plt.Reset(true, &plt.A{WidthPt: 500, Eps: io.FnExt(fn) == ".eps"})
 
 	plt.Subplot(4, 2, 1)
 	t0 := time.Now()
@@ -451,5 +431,5 @@ func PlotNurbsDerivs(dirout, fn string, b *Nurbs, la, lb int) {
 		plt.Equal()
 	}
 
-	plt.SaveD(dirout, fn)
+	plt.Save(dirout, io.FnKey(fn))
 }

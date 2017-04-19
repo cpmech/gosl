@@ -42,12 +42,12 @@ func Test_bezier01(tst *testing.T) {
 	}
 
 	if false {
-		plt.SetForPng(1, 400, 200, nil)
+		plt.Reset(false, nil)
 		plt.Plot(X2, Y2, &plt.A{C: "y", Ls: "-", Lw: 4, L: "y=x*x"})
 		plt.Plot(X, Y, &plt.A{C: "b", Ls: "-", M: ".", L: "Bezier"})
 		plt.Gll("x", "y", nil)
 		plt.Equal()
-		plt.SaveD("/tmp/gosl", "fig_gm_bezier01.png")
+		plt.Save("/tmp/gosl", "fig_gm_bezier01")
 	}
 }
 
@@ -72,7 +72,7 @@ func Test_bezier02(tst *testing.T) {
 
 	doplot := false
 	if doplot {
-		plt.SetForPng(1, 400, 200, nil)
+		plt.Reset(false, nil)
 	}
 
 	C := make([]float64, 2)
@@ -97,6 +97,6 @@ func Test_bezier02(tst *testing.T) {
 		plt.Plot(X, Y, &plt.A{C: "b", Ls: "-", M: ".", L: "Bezier"})
 		plt.Gll("x", "y", nil)
 		plt.Equal()
-		plt.SaveD("/tmp/gosl", "fig_gm_bezier02.png")
+		plt.Save("/tmp/gosl", "fig_gm_bezier02")
 	}
 }

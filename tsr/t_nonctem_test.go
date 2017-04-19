@@ -164,6 +164,6 @@ func Test_Mw02(tst *testing.T) {
 
 		// save
 		plt.Equal()
-		plt.SaveD("/tmp/gosl", "mw02.eps")
+		plt.Save("/tmp/gosl", "mw02")
 	}
 }

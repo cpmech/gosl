@@ -56,7 +56,7 @@ func Test_cubiceq03(tst *testing.T) {
 	if doplot {
 		X = utl.LinSpace(-2, 2, np)
 		Y = make([]float64, np)
-		plt.SetForPng(0.8, 400, 200, nil)
+		plt.Reset(false, nil)
 	}
 
 	a, b := 0.0, 0.0
@@ -79,7 +79,7 @@ func Test_cubiceq03(tst *testing.T) {
 		}
 	}
 	if doplot {
-		plt.SaveD("/tmp/gosl", "fig_cubiceq03.png")
+		plt.Save("/tmp/gosl", "fig_cubiceq03")
 	}
 }
 
@@ -95,7 +95,7 @@ func Test_cubiceq04(tst *testing.T) {
 	if doplot {
 		X = utl.LinSpace(-1.2*r, 1.2*r, np)
 		Y = make([]float64, np)
-		plt.SetForPng(0.8, 400, 200, nil)
+		plt.Reset(false, nil)
 	}
 
 	π := math.Pi
@@ -143,6 +143,6 @@ func Test_cubiceq04(tst *testing.T) {
 		plt.Circle(0, 0, r, &plt.A{Ec: "black", Fc: "none"})
 		plt.Equal()
 		plt.Gll("x", "y", nil)
-		plt.SaveD("/tmp/gosl", "fig_cubiceq04.png")
+		plt.Save("/tmp/gosl", "fig_cubiceq04")
 	}
 }

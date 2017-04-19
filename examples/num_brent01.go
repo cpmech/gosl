@@ -52,10 +52,10 @@ func main() {
 		X[i] = xa + float64(i)*(xb-xa)/float64(npts-1)
 		Y[i], _ = yx(X[i])
 	}
-	plt.SetForPng(0.75, 300, 150)
-	plt.AxHline(0, "color='k'")
-	plt.Plot(X, Y, "'g-'")
-	plt.PlotOne(xo, yo, "'r.'")
-	plt.Gll("x", "y(x)", "")
-	plt.SaveD("/tmp/gosl", "num_brent01.png")
+	plt.Reset(false, nil)
+	plt.AxHline(0, nil)
+	plt.Plot(X, Y, &plt.A{C: "g"})
+	plt.PlotOne(xo, yo, &plt.A{C: "r", M: "."})
+	plt.Gll("x", "y(x)", nil)
+	plt.Save("/tmp/gosl", "num_brent01")
 }

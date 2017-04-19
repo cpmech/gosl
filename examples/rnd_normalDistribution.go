@@ -26,12 +26,16 @@ func plot_normal(μ, σ, xmin, xmax float64) {
 		y[i] = dist.Pdf(x[i])
 		Y[i] = dist.Cdf(x[i])
 	}
+
+	args1 := &plt.A{L: io.Sf("mu=%g, sigma=%g", μ, σ)}
+	args2 := &plt.A{LegOut: true, LegNcol: 2}
+
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, io.Sf("clip_on=0,zorder=10,label=r'mu=%g, sigma=%g'", μ, σ))
-	plt.Gll("x", "f(x)", "leg_out=1, leg_ncol=2")
+	plt.Plot(x, y, args1)
+	plt.Gll("x", "f(x)", args2)
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, io.Sf("clip_on=0,zorder=10,label='mu=%g, sigma=%g'", μ, σ))
-	plt.Gll("x", "F(x)", "leg_out=1, leg_ncol=2")
+	plt.Plot(x, Y, args1)
+	plt.Gll("x", "F(x)", args2)
 }
 
 func main() {
@@ -68,9 +72,9 @@ func main() {
 	}
 	io.Pforan("area = %v\n", area)
 
-	plt.SetForPng(1.5, 300, 150)
+	plt.Reset(false, nil)
 	plot_normal(μ, σ, xmin, xmax)
 	plt.Subplot(2, 1, 1)
 	hist.PlotDensity(nil, "")
-	plt.SaveD("/tmp/gosl", "rnd_normalDistribution.png")
+	plt.Save("/tmp/gosl", "rnd_normalDistribution")
 }

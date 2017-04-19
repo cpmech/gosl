@@ -300,7 +300,7 @@ func (o *IsoFun) apply_shift(Lshifted, Loriginal []float64) {
 // auxiliary /////////////////////////////////////////////////////////////////////////////////////
 
 // Plots Ffcn
-func (o *IsoFun) PlotFfcn(dirout, fname string, pmin, pmax float64, np int, pq_point []float64, args_contour, args_point string, extra_before, extra_after func(), args ...interface{}) {
+func (o *IsoFun) PlotFfcn(dirout, fnkey string, pmin, pmax float64, np int, pq_point []float64, args_contour, args_point string, extra_before, extra_after func(), args ...interface{}) {
 	if extra_before != nil {
 		extra_before()
 	}
@@ -319,7 +319,7 @@ func (o *IsoFun) PlotFfcn(dirout, fname string, pmin, pmax float64, np int, pq_p
 	if extra_after != nil {
 		extra_after()
 	}
-	plt.SaveD(dirout, fname)
+	plt.Save(dirout, fnkey)
 }
 
 // FindIntersect find point on surface using Newton's method

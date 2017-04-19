@@ -199,7 +199,7 @@ func (o *Graph) StrDistMatrix() (l string) {
 //  W   -- width of paths
 //  dwt -- δwt for positioning text (w = W/2)
 //  arrow_scale -- scale for arrows. use 0 for default value
-func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64,
+func (o *Graph) Draw(dirout, fnkey string, r, W, dwt, arrow_scale float64,
 	verts_lbls map[int]string, verts_fsz float64, verts_clr string,
 	edges_lbls map[int]string, edges_fsz float64, edges_clr string) {
 	if len(o.Verts) < 1 {
@@ -264,7 +264,7 @@ func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64,
 	plt.AxisOff()
 	plt.Equal()
 	plt.AxisRange(xmin, xmax, ymin, ymax)
-	plt.SaveD(dirout, fname)
+	plt.Save(dirout, fnkey)
 }
 
 // ReadGraphTable reads data and allocate graph

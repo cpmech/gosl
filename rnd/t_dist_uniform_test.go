@@ -99,10 +99,10 @@ func Test_dist_uniform_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300, nil)
+		plt.Reset(false, nil)
 		A := 1.5 // min
 		B := 2.5 // max
 		plot_uniform(A, B, 1.0, 3.0)
-		plt.SaveD("/tmp/gosl", "rnd_dist_uniform_02a.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_uniform_02a")
 	}
 }

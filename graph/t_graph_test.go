@@ -305,8 +305,8 @@ func Test_graph03(tst *testing.T) {
 		vclr := "red"
 		efsz := 7.0
 		eclr := "blue"
-		plt.SetForEps(1.2, 350, nil)
-		G.Draw("/tmp/graph", "siouxfalls.eps", r, W, dwt, aws, vlabels, vfsz, vclr, elabels, efsz, eclr)
+		plt.Reset(false, nil)
+		G.Draw("/tmp/graph", "siouxfalls", r, W, dwt, aws, vlabels, vfsz, vclr, elabels, efsz, eclr)
 	}
 }
 

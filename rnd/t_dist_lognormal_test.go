@@ -102,7 +102,7 @@ func Test_dist_lognormal_02(tst *testing.T) {
 
 	doplot := chk.Verbose
 	if doplot {
-		plt.SetForEps(1.5, 300, nil)
+		plt.Reset(false, nil)
 		n := 0.0
 		for _, z := range []float64{1, 0.5, 0.25} {
 			w := z * z
@@ -110,7 +110,7 @@ func Test_dist_lognormal_02(tst *testing.T) {
 			σ := μ * math.Sqrt(math.Exp(w)-1.0)
 			plot_lognormal(μ, σ)
 		}
-		plt.SaveD("/tmp/gosl", "rnd_dist_lognormal_02.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_lognormal_02")
 	}
 }
 
@@ -153,10 +153,10 @@ func Test_dist_lognormal_03(tst *testing.T) {
 	chk.Scalar(tst, "area", 1e-15, area, 1)
 
 	if chk.Verbose {
-		plt.SetForEps(1.5, 300, nil)
+		plt.Reset(false, nil)
 		plot_lognormal(μ, σ)
 		plt.Subplot(2, 1, 1)
 		hist.PlotDensity(nil, "")
-		plt.SaveD("/tmp/gosl", "rnd_dist_lognormal_03.eps")
+		plt.Save("/tmp/gosl", "rnd_dist_lognormal_03")
 	}
 }

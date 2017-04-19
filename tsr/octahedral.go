@@ -127,7 +127,7 @@ type Cb_F_t func(A []float64, args ...interface{}) (fval float64, err error)
 type Cb_G_t func(dfdA, A []float64, args ...interface{}) (fval float64, err error)
 
 // PlotOct plots a function cross-section and gradients projections on octahedral plane
-func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float64, F Cb_F_t, G Cb_G_t,
+func PlotOct(fnkey string, σcCte, rmin, rmax float64, nr, nα int, φ float64, F Cb_F_t, G Cb_G_t,
 	notpolarc, simplec, only0, grads, showpts, first, last bool, ferr float64, args ...interface{}) {
 	A := make([]float64, 6)
 	dfdA := make([]float64, 6)
@@ -192,8 +192,7 @@ func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float6
 		}
 	}
 	if first {
-		plt.Reset()
-		plt.SetForPng(1, 500, 125, nil)
+		plt.Reset(false, nil)
 		PlotRosette(1.1*rmax, true, true, true, 7)
 		PlotRefOct(φ, σcCte, false)
 		if showpts {
@@ -214,7 +213,7 @@ func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float6
 	if last {
 		plt.AxisOff()
 		plt.Equal()
-		plt.SaveD("/tmp", filename)
+		plt.Save("/tmp/gosl", fnkey)
 	}
 }
 
