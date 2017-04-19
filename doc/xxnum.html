@@ -116,7 +116,7 @@ use 'godoc cmd/github.com/cpmech/gosl/num' for documentation on the github.com/c
 				<dd><a href="#MinComp">func MinComp(tol, expected float64) float64</a></dd>
 			
 				
-				<dd><a href="#PlotYxe">func PlotYxe(ffcn Cb_yxe, dirout, fname string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error)</a></dd>
+				<dd><a href="#PlotYxe">func PlotYxe(ffcn Cb_yxe, dirout, fnkey string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error)</a></dd>
 			
 				
 				<dd><a href="#Simps2D">func Simps2D(dx, dy float64, f [][]float64) (V float64)</a></dd>
@@ -561,7 +561,7 @@ Local constants:
 		
 			
 			
-			<h2 id="MinComp">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1139:1182#L53">MinComp</a></h2>
+			<h2 id="MinComp">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1132:1175#L53">MinComp</a></h2>
 			<pre>func MinComp(tol, expected <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			
 			
@@ -571,7 +571,7 @@ Local constants:
 			
 			
 			<h2 id="PlotYxe">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=470:612#L19">PlotYxe</a></h2>
-			<pre>func PlotYxe(ffcn <a href="#Cb_yxe">Cb_yxe</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, xsol, xa, xb <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xsolLbl, args <a href="/pkg/builtin/#string">string</a>, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func()) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<pre>func PlotYxe(ffcn <a href="#Cb_yxe">Cb_yxe</a>, dirout, fnkey <a href="/pkg/builtin/#string">string</a>, xsol, xa, xb <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xsolLbl, args <a href="/pkg/builtin/#string">string</a>, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func()) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 PlotYxe plots the function y(x) implemented by Cb_yxe
 </p>
@@ -607,7 +607,7 @@ Simpson integrates function f from x=a to x=b using n subintervals (n must be ev
 		
 			
 			
-			<h2 id="TestAbs">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1239:1331#L57">TestAbs</a></h2>
+			<h2 id="TestAbs">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1232:1324#L57">TestAbs</a></h2>
 			<pre>func TestAbs(result, expected, absolute_error <a href="/pkg/builtin/#float64">float64</a>, test_description <a href="/pkg/builtin/#string">string</a>) (status <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			

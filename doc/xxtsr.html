@@ -296,7 +296,7 @@ tsr implements routines to conduct tensor operations
 				<dd><a href="#Phi2M">func Phi2M(φ float64, typ string) float64</a></dd>
 			
 				
-				<dd><a href="#PlotOct">func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float64, F Cb_F_t, G Cb_G_t, notpolarc, simplec, only0, grads, showpts, first, last bool, ferr float64, args ...interface{})</a></dd>
+				<dd><a href="#PlotOct">func PlotOct(fnkey string, σcCte, rmin, rmax float64, nr, nα int, φ float64, F Cb_F_t, G Cb_G_t, notpolarc, simplec, only0, grads, showpts, first, last bool, ferr float64, args ...interface{})</a></dd>
 			
 				
 				<dd><a href="#PlotRefOct">func PlotRefOct(φ, σc float64, withExtCircle bool)</a></dd>
@@ -434,7 +434,7 @@ tsr implements routines to conduct tensor operations
 					<dd>&nbsp; &nbsp; <a href="#IsoFun.Init">func (o *IsoFun) Init(a, b, β, ϵ, shift float64, ncp int, ffcn Cb_isofun_f, gfcn Cb_isofun_g, hfcn Cb_isofun_h)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#IsoFun.PlotFfcn">func (o *IsoFun) PlotFfcn(dirout, fname string, pmin, pmax float64, np int, pq_point []float64, args_contour, args_point string, extra_before, extra_after func(), args ...interface{})</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#IsoFun.PlotFfcn">func (o *IsoFun) PlotFfcn(dirout, fnkey string, pmin, pmax float64, np int, pq_point []float64, args_contour, args_point string, extra_before, extra_after func(), args ...interface{})</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#IsoFun.SetPrms">func (o *IsoFun) SetPrms(a, b, β, ϵ, shift float64, ffcn Cb_isofun_f, gfcn Cb_isofun_g, hfcn Cb_isofun_h)</a></dd>
@@ -1631,8 +1631,8 @@ type = {&#34;oct&#34;, &#34;cam&#34;, &#34;smp&#34;}
 		
 			
 			
-			<h2 id="PlotOct">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=4691:4890#L120">PlotOct</a></h2>
-			<pre>func PlotOct(filename <a href="/pkg/builtin/#string">string</a>, σcCte, rmin, rmax <a href="/pkg/builtin/#float64">float64</a>, nr, nα <a href="/pkg/builtin/#int">int</a>, φ <a href="/pkg/builtin/#float64">float64</a>, F <a href="#Cb_F_t">Cb_F_t</a>, G <a href="#Cb_G_t">Cb_G_t</a>,
+			<h2 id="PlotOct">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/octahedral.go?s=4691:4887#L120">PlotOct</a></h2>
+			<pre>func PlotOct(fnkey <a href="/pkg/builtin/#string">string</a>, σcCte, rmin, rmax <a href="/pkg/builtin/#float64">float64</a>, nr, nα <a href="/pkg/builtin/#int">int</a>, φ <a href="/pkg/builtin/#float64">float64</a>, F <a href="#Cb_F_t">Cb_F_t</a>, G <a href="#Cb_G_t">Cb_G_t</a>,
     notpolarc, simplec, only0, grads, showpts, first, last <a href="/pkg/builtin/#bool">bool</a>, ferr <a href="/pkg/builtin/#float64">float64</a>, args ...interface{})</pre>
 			<p>
 PlotOct plots a function cross-section and gradients projections on octahedral plane
@@ -2078,7 +2078,7 @@ CheckDerivs check derivatives computed by isotropic function
 				
 			
 				
-				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14696:14740#L545">DebugOutput</a></h3>
+				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14695:14739#L545">DebugOutput</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) DebugOutput(princOnly <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 DebugOutput outputs debug information
@@ -2100,7 +2100,7 @@ Fa evaluates the isotropic function @ A (a second order tensor in Mandel&#39;s b
 				
 			
 				
-				<h3 id="IsoFun.FindIntersect">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=9653:9773#L316">FindIntersect</a></h3>
+				<h3 id="IsoFun.FindIntersect">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=9652:9772#L316">FindIntersect</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) FindIntersect(p0, k <a href="/pkg/builtin/#float64">float64</a>, ΔL []<a href="/pkg/builtin/#float64">float64</a>, usek, debug <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (L_at_int []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 FindIntersect find point on surface using Newton&#39;s method
@@ -2227,7 +2227,7 @@ Init initialises the isotropic function structure
 			
 				
 				<h3 id="IsoFun.PlotFfcn">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=8933:9116#L293">PlotFfcn</a></h3>
-				<pre>func (o *<a href="#IsoFun">IsoFun</a>) PlotFfcn(dirout, fname <a href="/pkg/builtin/#string">string</a>, pmin, pmax <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, pq_point []<a href="/pkg/builtin/#float64">float64</a>, args_contour, args_point <a href="/pkg/builtin/#string">string</a>, extra_before, extra_after func(), args ...interface{})</pre>
+				<pre>func (o *<a href="#IsoFun">IsoFun</a>) PlotFfcn(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, pmin, pmax <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, pq_point []<a href="/pkg/builtin/#float64">float64</a>, args_contour, args_point <a href="/pkg/builtin/#string">string</a>, extra_before, extra_after func(), args ...interface{})</pre>
 				<p>
 Plots Ffcn
 </p>
@@ -2256,7 +2256,7 @@ SetPrms set parameters
 				
 			
 				
-				<h3 id="IsoFun.String">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14543:14579#L539">String</a></h3>
+				<h3 id="IsoFun.String">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14542:14578#L539">String</a></h3>
 				<pre>func (o *<a href="#IsoFun">IsoFun</a>) String() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 String returns information of this object

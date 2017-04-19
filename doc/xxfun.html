@@ -95,10 +95,10 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#Heav">func Heav(x float64) float64</a></dd>
 			
 				
-				<dd><a href="#PlotT">func PlotT(o TimeSpace, dirout, fname string, t0, tf float64, xcte []float64, np int)</a></dd>
+				<dd><a href="#PlotT">func PlotT(o TimeSpace, dirout, fnkey string, t0, tf float64, xcte []float64, np int)</a></dd>
 			
 				
-				<dd><a href="#PlotX">func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64, np int)</a></dd>
+				<dd><a href="#PlotX">func PlotX(o TimeSpace, dirout, fnkey string, tcte float64, xmin, xmax []float64, np int)</a></dd>
 			
 				
 				<dd><a href="#Ramp">func Ramp(x float64) float64</a></dd>
@@ -765,12 +765,12 @@ Heaviside step function (== derivative of Ramp(x))
 		
 			
 			
-			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=1536:1621#L40">PlotT</a></h2>
-			<pre>func PlotT(o <a href="#TimeSpace">TimeSpace</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>)</pre>
+			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=1545:1630#L40">PlotT</a></h2>
+			<pre>func PlotT(o <a href="#TimeSpace">TimeSpace</a>, dirout, fnkey <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 PlotT plots F, G and H for varying t and fixed coordinates x
 </p>
-<pre>fname       -- filename to safe figure
+<pre>fnkey       -- filename key (without extension)
 args{F,G,H} -- if any is &#34;&#34;, the corresponding plot is not created
 </pre>
 
@@ -780,8 +780,8 @@ args{F,G,H} -- if any is &#34;&#34;, the corresponding plot is not created
 		
 			
 			
-			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=3081:3170#L125">PlotX</a></h2>
-			<pre>func PlotX(o <a href="#TimeSpace">TimeSpace</a>, dirout, fname <a href="/pkg/builtin/#string">string</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>)</pre>
+			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=3089:3178#L125">PlotX</a></h2>
+			<pre>func PlotX(o <a href="#TimeSpace">TimeSpace</a>, dirout, fnkey <a href="/pkg/builtin/#string">string</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
 </p>

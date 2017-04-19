@@ -97,7 +97,7 @@ use 'godoc cmd/github.com/cpmech/gosl/graph' for documentation on the github.com
 					<dd>&nbsp; &nbsp; <a href="#Graph.CalcDist">func (o *Graph) CalcDist() (err error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Graph.Draw">func (o *Graph) Draw(dirout, fname string, r, W, dwt, arrow_scale float64, verts_lbls map[int]string, verts_fsz float64, verts_clr string, edges_lbls map[int]string, edges_fsz float64, edges_clr string)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Graph.Draw">func (o *Graph) Draw(dirout, fnkey string, r, W, dwt, arrow_scale float64, verts_lbls map[int]string, verts_fsz float64, verts_clr string, edges_lbls map[int]string, edges_fsz float64, edges_clr string)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Graph.GetEdge">func (o *Graph) GetEdge(i, j int) (k int, err error)</a></dd>
@@ -279,7 +279,7 @@ Graph defines a graph structure
 
 			
 				
-				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=7266:7320#L261">ReadGraphTable</a></h3>
+				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=7265:7319#L261">ReadGraphTable</a></h3>
 				<pre>func ReadGraphTable(fname <a href="/pkg/builtin/#string">string</a>, bargera <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Graph">Graph</a></pre>
 				<p>
 ReadGraphTable reads data and allocate graph
@@ -303,7 +303,7 @@ CalcDist computes distances beetween all vertices and initialises &#39;Next&#39;
 			
 				
 				<h3 id="Graph.Draw">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5306:5510#L192">Draw</a></h3>
-				<pre>func (o *<a href="#Graph">Graph</a>) Draw(dirout, fname <a href="/pkg/builtin/#string">string</a>, r, W, dwt, arrow_scale <a href="/pkg/builtin/#float64">float64</a>,
+				<pre>func (o *<a href="#Graph">Graph</a>) Draw(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, r, W, dwt, arrow_scale <a href="/pkg/builtin/#float64">float64</a>,
     verts_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, verts_fsz <a href="/pkg/builtin/#float64">float64</a>, verts_clr <a href="/pkg/builtin/#string">string</a>,
     edges_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, edges_fsz <a href="/pkg/builtin/#float64">float64</a>, edges_clr <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
