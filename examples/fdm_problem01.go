@@ -85,10 +85,10 @@ func main() {
 	var gsol fdm.Grid2d
 	gsol.Init(-1.0, 1.0, -1.0, 1.0, 101, 101)
 	Xsol, Ysol, Fsol := gsol.Generate(solution, nil)
-	plt.SetForPng(0.8, 600, 150)
-	plt.Contour(X, Y, F, "cmapidx=1")
-	plt.ContourSimple(Xsol, Ysol, Fsol, true, 0.7, "colors='yellow', linewidths=2")
+	plt.SetForPng(0.8, 600, 150, nil)
+	plt.ContourF(X, Y, F, &plt.A{UcmapIdx: 1})
+	plt.ContourL(Xsol, Ysol, Fsol, &plt.A{Colors: []string{"yellow"}, Lw: 20})
 	plt.Equal()
-	plt.Gll("x", "y", "")
+	plt.Gll("x", "y", nil)
 	plt.SaveD("/tmp/gosl", "fdm_problem01.png")
 }

@@ -111,7 +111,7 @@ func Polyline(P [][]float64, args *A) {
 }
 
 // LegendX draws legend with given lines data. fs == fontsize
-func LegendX(dat []*A, fs int, loc string, frame bool, args *A) {
+func LegendX(dat []*A, args *A) {
 	n := bufferPy.Len()
 	io.Ff(&bufferPy, "handles%d = [", n)
 	for i, d := range dat {
@@ -122,7 +122,12 @@ func LegendX(dat []*A, fs int, loc string, frame bool, args *A) {
 			io.Ff(&bufferPy, "lns.Line2D([], [], %s)", d.String(false))
 		}
 	}
-	io.Ff(&bufferPy, "]\nl%d=plt.legend(handles=handles%d, fontsize=%d, loc='%s'", n, n, fs, loc)
+	fs, loc, frame := 9.0, "best", false
+	if args != nil {
+		fs = args.FszLeg
+		loc = args.LegLoc
+	}
+	io.Ff(&bufferPy, "]\nl%d=plt.legend(handles=handles%d, fontsize=%g, loc='%s'", n, n, fs, loc)
 	updateBufferAndClose(&bufferPy, args, false)
 	if !frame {
 		io.Ff(&bufferPy, "if l%d: l%d.get_frame().set_linewidth(0.0)\n", n, n)

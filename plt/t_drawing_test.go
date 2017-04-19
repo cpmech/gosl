@@ -35,7 +35,7 @@ func Test_draw01(tst *testing.T) {
 		&A{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
 		&A{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
 		&A{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
-	}, 10, "best", false, nil)
+	}, nil)
 
 	if chk.Verbose {
 		err := SaveD("/tmp/gosl", "t_draw01.png")
