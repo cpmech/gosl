@@ -12,7 +12,7 @@ import (
 
 func Test_draw01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("draw01")
 
 	P := [][]float64{
@@ -23,7 +23,7 @@ func Test_draw01(tst *testing.T) {
 		{2.5, 0.0},
 	}
 
-	Reset()
+	Reset(true, nil)
 	Polyline(P, &A{Fc: "#c1d7cf", Ec: "#4db38e", Lw: 4.5, Closed: true, NoClip: true})
 	Circle(0, 4, 2.0, &A{Fc: "#b2cfa5", Ec: "#5dba35", Z: 1})
 	Arrow(-4, 2, 4, 7, &A{Fc: "cyan", Ec: "blue", Z: 2, Scale: 50, Style: "fancy"})
@@ -38,7 +38,7 @@ func Test_draw01(tst *testing.T) {
 	}, nil)
 
 	if chk.Verbose {
-		err := SaveD("/tmp/gosl", "t_draw01.png")
+		err := Save("/tmp/gosl", "t_draw01")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}

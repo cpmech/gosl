@@ -75,12 +75,19 @@ type A struct {
 	SelectC  string    // contour: color to mark selected level. empty means no selected line
 	SelectLw float64   // contour: zero level linewidth
 
-	// Histograms
+	// histograms
 	Type    string // histogram: type; e.g. "bar"
 	Stacked bool   // histogram: stacked
 	NoFill  bool   // histogram: do not fill bars
 	Nbins   int    // histogram: number of bins
 	Normed  bool   // histogram: normed
+
+	// figures
+	Dpi     int     // figure: dpi to be used when saving figure. default = 96
+	Png     bool    // figure: save png file
+	Eps     bool    // figure: save eps file
+	Prop    float64 // figure: proportion: height = width * prop
+	WidthPt float64 // figure: width in points. Get this from LaTeX using \showthe\columnwidth
 }
 
 // String returns a string representation of arguments
@@ -254,6 +261,31 @@ func argsFsz(args *A) (txt, lbl, leg, xtck, ytck float64) {
 	return
 }
 
+// argsFigsize returns figure size data. Defaults are selected if args == nil
+func argsFigData(args *A) (figType string, dpi, width, height int) {
+	figType, dpi = "png", 150
+	prop := 0.75
+	widthPt := 400.0
+	if args != nil {
+		if args.Dpi > 0 {
+			dpi = args.Dpi
+		}
+		if args.Eps {
+			figType = "eps"
+		}
+		if args.Prop > 0 {
+			prop = args.Prop
+		}
+		if args.WidthPt > 0 {
+			widthPt = args.WidthPt
+		}
+	}
+	w := widthPt / 72.27 // width in inches
+	h := w * prop
+	width, height = int(w), int(h)
+	return
+}
+
 // argsContour allocates args if nil, sets default parameters, and return formatted arguments
 func argsContour(in *A) (out *A, colors, levels string) {
 	out = in
@@ -270,7 +302,7 @@ func argsContour(in *A) (out *A, colors, levels string) {
 		out.Lw = 1.0
 	}
 	if out.Fsz < 0.01 {
-		out.Fsz = 10.0
+		out.Fsz = 8.0
 	}
 	if len(out.Colors) > 0 {
 		colors = io.Sf(",colors=%s", strings2list(out.Colors))

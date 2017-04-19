@@ -12,7 +12,7 @@ refresh(){
     echo
     echo
     echo
-    go test -test.run="plot01"
+    go test -test.run="plot04"
     #go test -test.run="draw01"
 }
 

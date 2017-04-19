@@ -14,7 +14,7 @@ import (
 
 func Test_args01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("args01")
 
 	var a A
@@ -48,7 +48,7 @@ func Test_args01(tst *testing.T) {
 
 func Test_args02(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("args02")
 
 	a := &A{
@@ -66,7 +66,7 @@ func Test_args02(tst *testing.T) {
 
 func Test_plot01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("plot01")
 
 	if chk.Verbose {
@@ -77,8 +77,8 @@ func Test_plot01(tst *testing.T) {
 			y[i] = x[i] * x[i]
 		}
 
-		SetForPng(0.75, 600, 100, nil)
-		//SetForEps(0.75, 600, nil)
+		// no need to call Reset
+
 		SetFontSizes(&A{Fsz: 20, FszLbl: 20, FszXtck: 10, FszYtck: 10})
 		Plot(x, y, &A{L: "first", C: "r", M: "o", Ls: "-", Lw: 2, NoClip: true})
 		Plot(y, x, &A{L: "second", C: "b", M: ".", Ls: ":", Lw: 40})
@@ -93,42 +93,41 @@ func Test_plot01(tst *testing.T) {
 			HideR:   true,
 		})
 
-		err := SaveD("/tmp/gosl", "t_plot01.png")
-		//err := SaveD("/tmp/gosl", "t_plot01.eps")
+		err := Save("/tmp/gosl", "t_plot01")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
 	}
 }
 
-func Test_plot02(tst *testing.T) {
+func test_plot02(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("plot02")
 
 	if chk.Verbose {
 
-		Reset()
-		ReplaceAxes(0, 0, 1, 1, 0.04, 0.04, "the x", "the y", &A{}, &A{})
-		Arrow(0, 0, 1, 1, &A{})
+		Reset(true, &A{Eps: true, WidthPt: 380})
+		ReplaceAxes(0, 0, 1, 1, 0.04, 0.04, "the x", "the y", &A{Style: "->"}, &A{})
+		Arrow(0, 0, 1, 1, &A{C: "orange"})
 		AxHline(0, &A{C: "red"})
 		AxVline(0, &A{C: "blue"})
-		Annotate(0, 0, "TEST", &A{C: "green"})
+		Annotate(0, 0, "TEST", &A{C: "green", FigFraction: true})
 		AnnotateXlabels(0, "HERE", &A{Fsz: 10})
 		SupTitle("suptitle goes here", &A{C: "red"})
-		Title("title goes here", &A{C: "yellow"})
-		Text(0, 0, "TEXT", &A{C: "blue"})
+		Title("title goes here", &A{C: "cyan"})
+		Text(0.5, 0.5, "TEXT", &A{C: "orange", Va: "top"})
 		Cross(0.5, 0.5, nil)
 		PlotOne(0, 0, &A{M: "*"})
 
-		err := SaveD("/tmp/gosl", "t_plot02.png")
+		err := Save("/tmp/gosl", "t_plot02")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
 	}
 }
 
-func Test_plot03(tst *testing.T) {
+func test_plot03(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("plot03")
@@ -148,26 +147,26 @@ func Test_plot03(tst *testing.T) {
 		// configuration
 		a := &A{
 			NumFmt:  "%.1f",
-			Lw:      1.5,
+			Lw:      0.8,
 			CbarLbl: "NICE",
 			SelectC: "yellow",
 			SelectV: -2.5,
 		}
 
-		Reset()
+		Reset(true, nil)
 		Equal()
 		ContourF(X, Y, F, a)
 
-		err := SaveD("/tmp/gosl", "t_plot03.png")
+		err := Save("/tmp/gosl", "t_plot03")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
 	}
 }
 
-func Test_plot04(tst *testing.T) {
+func test_plot04(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("plot04")
 
 	if chk.Verbose {
@@ -204,22 +203,22 @@ func Test_plot04(tst *testing.T) {
 			SelectV: -2.5,
 		}
 
-		Reset()
+		Reset(true, nil)
 		Equal()
 		ContourF(X, Y, F, a)
 		ContourL(X, Y, F, b)
 		Quiver(X, Y, U, V, nil)
 
-		err := SaveD("/tmp/gosl", "t_plot04.png")
+		err := Save("/tmp/gosl", "t_plot04")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
 	}
 }
 
-func Test_plot05(tst *testing.T) {
+func test_plot05(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("plot05")
 
 	if chk.Verbose {
@@ -244,20 +243,20 @@ func Test_plot05(tst *testing.T) {
 			Stacked: true,
 		}
 
-		Reset()
+		Reset(true, nil)
 		Hist(X, L, a)
 		Gll("series", "count", nil)
 
-		err := SaveD("/tmp/gosl", "t_plot05.png")
+		err := Save("/tmp/gosl", "t_plot05")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
 	}
 }
 
-func Test_plot06(tst *testing.T) {
+func test_plot06(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("plot06")
 
 	if chk.Verbose {
@@ -276,14 +275,14 @@ func Test_plot06(tst *testing.T) {
 			return u*u + v*v
 		})
 
-		Reset()
+		Reset(true, nil)
 		Plot3dLine(x, y, z, true, nil)
 		Plot3dPoints(x, y, z, false, nil)
 		Wireframe(X, Y, Z, false, nil)
 		Surface(U, V, W, false, nil)
 		//Camera(elev, azim float64, args *A)
 
-		err := SaveD("/tmp/gosl", "t_plot06.png")
+		err := Save("/tmp/gosl", "t_plot06")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}

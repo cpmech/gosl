@@ -16,7 +16,7 @@ import (
 )
 
 // default directory and temporary file name for python commands
-const TEMPORARY = "/tmp/pltgosl.py"
+var TEMPORARY = "/tmp/pltgosl.py"
 
 // buffer holding Python commands
 var bufferPy bytes.Buffer
@@ -24,16 +24,71 @@ var bufferPy bytes.Buffer
 // buffer holding Python extra artists commands
 var bufferEa bytes.Buffer
 
-// init resets the buffers, in case the user doesn't do this
+// init resets the buffers => ready to go
 func init() {
-	Reset()
+	Reset(false, nil)
 }
 
-// Reset resets drawing buffer (i.e. Python temporary file data)
-func Reset() {
+// fileExt holds the file extension, in case the user called Reset. Otherwise, a default is selected.
+var fileExt string
+
+// Reset resets drawing buffer (i.e. Python temporary file data) and sets figure data.
+//
+//   NOTE: This function is optional; i.e. plt works without calling this function.
+//         Nonetheless, if fontsizes or figure sizes need to be specified, Reset can be called.
+//
+//   Input:
+//     setDefault -- sets default values
+//     args -- optional data (may be nil)
+//
+//   NOTE: Default values are selected if setDefault == true.
+//         Otherwise, Python (matplotlib) will choose defaults.
+//         Also, if args != nil, some values are set based on data in args.
+//
+//   The following data is set:
+//     fontsizes:
+//        args.Fsz     float64 // font size
+//        args.FszLbl  float64 // font size of labels
+//        args.FszLeg  float64 // font size of legend
+//        args.FszXtck float64 // font size of x-ticks
+//        args.FszYtck float64 // font size of y-ticks
+//     figure data:
+//        args.Dpi     int     // dpi to be used when saving figure. default = 96
+//        args.Png     bool    // save png file
+//        args.Eps     bool    // save eps file
+//        args.Prop    float64 // proportion: height = width * prop
+//        args.WidthPt float64 // width in points. Get this from LaTeX using \showthe\columnwidth
+func Reset(setDefault bool, args *A) {
+
+	// clear buffer and start python code
 	bufferPy.Reset()
 	bufferEa.Reset()
 	io.Ff(&bufferPy, pythonHeader)
+
+	// set figure data
+	if setDefault {
+		txt, lbl, leg, xtck, ytck := argsFsz(args)
+		figType, dpi, width, height := argsFigData(args)
+		io.Ff(&bufferPy, "plt.rcdefaults()\n")
+		io.Ff(&bufferPy, "plt.rcParams.update({\n")
+		io.Ff(&bufferPy, "    'font.size'       : %g,\n", txt)
+		io.Ff(&bufferPy, "    'axes.labelsize'  : %g,\n", lbl)
+		io.Ff(&bufferPy, "    'legend.fontsize' : %g,\n", leg)
+		io.Ff(&bufferPy, "    'xtick.labelsize' : %g,\n", xtck)
+		io.Ff(&bufferPy, "    'ytick.labelsize' : %g,\n", ytck)
+		io.Ff(&bufferPy, "    'figure.figsize'  : [%d,%d],\n", width, height)
+		switch figType {
+		case "eps":
+			io.Ff(&bufferPy, "    'backend'            : 'ps',\n")
+			io.Ff(&bufferPy, "    'text.usetex'        : True,\n")  // very IMPORTANT to avoid Type 3 fonts
+			io.Ff(&bufferPy, "    'ps.useafm'          : True,\n")  // very IMPORTANT to avoid Type 3 fonts
+			io.Ff(&bufferPy, "    'pdf.use14corefonts' : True})\n") // very IMPORTANT to avoid Type 3 fonts
+			fileExt = ".eps"
+		default:
+			io.Ff(&bufferPy, "    'savefig.dpi'     : %d})\n", dpi)
+			fileExt = ".png"
+		}
+	}
 }
 
 // PyCmds adds Python commands to be called when plotting
@@ -162,7 +217,7 @@ func HideBorders(args *A) {
 
 // Annotate adds annotation to plot
 func Annotate(x, y float64, txt string, args *A) {
-	io.Ff(&bufferPy, "plt.annotate(%q, xy=(%g,%g)", txt, x, y)
+	io.Ff(&bufferPy, "plt.annotate(r'%s', xy=(%g,%g)", txt, x, y)
 	updateBufferAndClose(&bufferPy, args, false)
 }
 
@@ -181,20 +236,20 @@ func AnnotateXlabels(x float64, txt string, args *A) {
 // SupTitle sets subplot title
 func SupTitle(txt string, args *A) {
 	n := bufferPy.Len()
-	io.Ff(&bufferPy, "st%d = plt.suptitle(%q", n, txt)
+	io.Ff(&bufferPy, "st%d = plt.suptitle(r'%s'", n, txt)
 	updateBufferAndClose(&bufferPy, args, false)
 	io.Ff(&bufferPy, "addToEA(st%d)\n", n)
 }
 
 // Title sets title
 func Title(txt string, args *A) {
-	io.Ff(&bufferPy, "plt.title(%q", txt)
+	io.Ff(&bufferPy, "plt.title(r'%s'", txt)
 	updateBufferAndClose(&bufferPy, args, false)
 }
 
 // Text adds text to plot
 func Text(x, y float64, txt string, args *A) {
-	io.Ff(&bufferPy, "plt.text(%g,%g,%q", x, y, txt)
+	io.Ff(&bufferPy, "plt.text(%g,%g,r'%s'", x, y, txt)
 	updateBufferAndClose(&bufferPy, args, false)
 }
 
@@ -331,7 +386,7 @@ func Hist(x [][]float64, labels []string, args *A) {
 	sy := io.Sf("y%d", n)
 	genList(&bufferPy, sx, x)
 	genStrArray(&bufferPy, sy, labels)
-	io.Ff(&bufferPy, "plt.hist(%s,label=%s", sx, sy)
+	io.Ff(&bufferPy, "plt.hist(%s,label=r'%s'", sx, sy)
 	updateBufferAndClose(&bufferPy, args, true)
 }
 
@@ -355,7 +410,7 @@ func ContourF(x, y, z [][]float64, args *A) {
 	if !a.NoCbar {
 		io.Ff(&bufferPy, "cb%d = plt.colorbar(c%d, format='%s')\n", n, n, a.NumFmt)
 		if a.CbarLbl != "" {
-			io.Ff(&bufferPy, "cb%d.ax.set_ylabel('%s')\n", n, a.CbarLbl)
+			io.Ff(&bufferPy, "cb%d.ax.set_ylabel(r'%s')\n", n, a.CbarLbl)
 		}
 	}
 	if a.SelectC != "" {
@@ -426,7 +481,7 @@ func Legend(args *A) {
 func Gll(xl, yl string, args *A) {
 	hide := getHideList(args)
 	if hide != "" {
-		io.Ff(&bufferPy, "for spine in %s: plt.gca().spines[spine].set_visible(False)\n", hide)
+		io.Ff(&bufferPy, "for spine in %s: plt.gca().spines[spine].set_visible(0)\n", hide)
 	}
 	io.Ff(&bufferPy, "plt.grid(color='grey', zorder=-1000)\n")
 	io.Ff(&bufferPy, "plt.xlabel(r'%s')\n", xl)
@@ -528,56 +583,17 @@ func AxDist(dist float64) {
 
 // functions to save figure ///////////////////////////////////////////////////////////////////////
 
-// SetForPng prepares plot for saving PNG figure
-func SetForPng(prop, widpt float64, dpi int, args *A) {
-	txt, lbl, leg, xtck, ytck := argsFsz(args)
-	Reset()
-	width := widpt / 72.27 // width in inches
-	height := width * prop // height in inches
-	io.Ff(&bufferPy, "plt.rcdefaults()\n")
-	io.Ff(&bufferPy, "plt.rcParams.update({\n")
-	io.Ff(&bufferPy, "    'figure.figsize'  : [%d,%d],\n", int(width), int(height))
-	io.Ff(&bufferPy, "    'savefig.dpi'     : %d,\n", dpi)
-	io.Ff(&bufferPy, "    'font.size'       : %g,\n", txt)
-	io.Ff(&bufferPy, "    'axes.labelsize'  : %g,\n", lbl)
-	io.Ff(&bufferPy, "    'legend.fontsize' : %g,\n", leg)
-	io.Ff(&bufferPy, "    'xtick.labelsize' : %g,\n", xtck)
-	io.Ff(&bufferPy, "    'ytick.labelsize' : %g})\n", ytck)
-}
-
-// SetForEps prepares plot for saving EPS figure
-func SetForEps(prop, widpt float64, args *A) {
-	txt, lbl, leg, xtck, ytck := argsFsz(args)
-	Reset()
-	width := widpt / 72.27 // width in inches
-	height := width * prop // height in inches
-	io.Ff(&bufferPy, "plt.rcdefaults()\n")
-	io.Ff(&bufferPy, "plt.rcParams.update({\n")
-	io.Ff(&bufferPy, "    'figure.figsize'     : [%d,%d],\n", int(width), int(height))
-	io.Ff(&bufferPy, "    'font.size'          : %g,\n", txt)
-	io.Ff(&bufferPy, "    'axes.labelsize'     : %g,\n", lbl)
-	io.Ff(&bufferPy, "    'legend.fontsize'    : %g,\n", leg)
-	io.Ff(&bufferPy, "    'xtick.labelsize'    : %g,\n", xtck)
-	io.Ff(&bufferPy, "    'ytick.labelsize'    : %g,\n", ytck)
-	io.Ff(&bufferPy, "    'backend'            : 'ps',\n")
-	io.Ff(&bufferPy, "    'text.usetex'        : True,\n")  // very IMPORTANT to avoid Type 3 fonts
-	io.Ff(&bufferPy, "    'ps.useafm'          : True,\n")  // very IMPORTANT to avoid Type 3 fonts
-	io.Ff(&bufferPy, "    'pdf.use14corefonts' : True})\n") // very IMPORTANT to avoid Type 3 fonts
-}
-
-// Save saves figure
-func Save(fname string) error {
-	io.Ff(&bufferPy, "plt.savefig(r'%s', bbox_inches='tight', bbox_extra_artists=EXTRA_ARTISTS)\n", fname)
-	return run(fname)
-}
-
-// SaveD saves figure after creating a directory
-func SaveD(dirout, fname string) (err error) {
+// Save saves figure after creating a directory
+//  NOTE: the file name will be fnkey + .png (default) or .eps depending on the Reset function
+func Save(dirout, fnkey string) (err error) {
 	err = os.MkdirAll(dirout, 0777)
 	if err != nil {
 		return chk.Err("cannot create directory to save figure file:\n%v\n", err)
 	}
-	fn := filepath.Join(dirout, fname)
+	if fileExt == "" {
+		fileExt = ".png"
+	}
+	fn := filepath.Join(dirout, fnkey+fileExt)
 	io.Ff(&bufferPy, "plt.savefig(r'%s', bbox_inches='tight', bbox_extra_artists=EXTRA_ARTISTS)\n", fn)
 	return run(fn)
 }
@@ -635,7 +651,7 @@ func gen2Arrays(buf *bytes.Buffer, nameA, nameB string, a, b []float64) {
 func genStrArray(buf *bytes.Buffer, name string, u []string) {
 	io.Ff(buf, "%s=[", name)
 	for i, _ := range u {
-		io.Ff(buf, "%q,", u[i])
+		io.Ff(buf, "r'%s',", u[i])
 	}
 	io.Ff(buf, "]\n")
 }
