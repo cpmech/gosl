@@ -15,39 +15,25 @@ import (
 
 func main() {
 
-	// scalar field
-	fcn := func(x, y float64) float64 {
-		return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
-	}
-
-	// gradient. u=dfdx, v=dfdy
-	grad := func(x, y float64) (u, v float64) {
-		m := math.Pow(math.Cos(x), 2.0) + math.Pow(math.Cos(y), 2.0)
-		u = 4.0 * math.Cos(x) * math.Sin(x) * m
-		v = 4.0 * math.Cos(y) * math.Sin(y) * m
-		return
-	}
-
 	// grid size
 	xmin, xmax, N := -math.Pi/2.0+0.1, math.Pi/2.0-0.1, 21
 
-	// mesh grid
-	X, Y := utl.MeshGrid2d(xmin, xmax, xmin, xmax, N, N)
+	// mesh grid, scalar and vector field
+	X, Y, F, U, V := utl.MeshGrid2dFG(xmin, xmax, xmin, xmax, N, N, func(x, y float64) (f, u, v float64) {
 
-	// compute f(x,y) and components of gradient
-	F := utl.DblsAlloc(N, N)
-	U := utl.DblsAlloc(N, N)
-	V := utl.DblsAlloc(N, N)
-	for i := 0; i < N; i++ {
-		for j := 0; j < N; j++ {
-			F[i][j] = fcn(X[i][j], Y[i][j])
-			U[i][j], V[i][j] = grad(X[i][j], Y[i][j])
-		}
-	}
+		// scalar field
+		m := math.Pow(math.Cos(x), 2.0) + math.Pow(math.Cos(y), 2.0)
+		f = -math.Pow(m, 2.0)
+
+		// gradient. u=dfdx, v=dfdy
+		u = 4.0 * math.Cos(x) * math.Sin(x) * m
+		v = 4.0 * math.Cos(y) * math.Sin(y) * m
+		return
+	})
 
 	// plot
 	plt.Reset(false, nil)
-	plt.ContourF(X, Y, F, &plt.A{CmapIdx: 4}) // "levels=20, cmapidx=4")
+	plt.ContourF(X, Y, F, &plt.A{CmapIdx: 4, Nlevels: 15})
 	plt.Quiver(X, Y, U, V, &plt.A{C: "r"})
 	plt.Gll("x", "y", nil)
 	plt.Equal()
