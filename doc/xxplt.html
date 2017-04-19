@@ -170,7 +170,7 @@ plt contains functions for plotting
 				<dd><a href="#Legend">func Legend(args *A)</a></dd>
 			
 				
-				<dd><a href="#LegendX">func LegendX(dat []*A, fs int, loc string, frame bool, args *A)</a></dd>
+				<dd><a href="#LegendX">func LegendX(dat []*A, args *A)</a></dd>
 			
 				
 				<dd><a href="#Plot">func Plot(x, y []float64, args *A) (sx, sy string)</a></dd>
@@ -758,8 +758,8 @@ Legend adds legend to plot
 		
 			
 			
-			<h2 id="LegendX">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=3608:3671#L104">LegendX</a></h2>
-			<pre>func LegendX(dat []*<a href="#A">A</a>, fs <a href="/pkg/builtin/#int">int</a>, loc <a href="/pkg/builtin/#string">string</a>, frame <a href="/pkg/builtin/#bool">bool</a>, args *<a href="#A">A</a>)</pre>
+			<h2 id="LegendX">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=3608:3639#L104">LegendX</a></h2>
+			<pre>func LegendX(dat []*<a href="#A">A</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 LegendX draws legend with given lines data. fs == fontsize
 </p>
@@ -1217,7 +1217,7 @@ Wireframe draws wireframe
 		
 			
 			
-			<h2 id="A">type <a href="https://github.com/cpmech/gosl/blob/master/plt/arguments.go?s=321:2858#L4">A</a></h2>
+			<h2 id="A">type <a href="https://github.com/cpmech/gosl/blob/master/plt/arguments.go?s=321:2851#L4">A</a></h2>
 			<pre>type A struct {
 
     <span class="comment">// plot and basic options</span>
@@ -1244,12 +1244,12 @@ Wireframe draws wireframe
     <span class="comment">// text and extra arguments</span>
     Ha      <a href="/pkg/builtin/#string">string</a>  <span class="comment">// horizontal alignment; e.g. &#39;center&#39;</span>
     Va      <a href="/pkg/builtin/#string">string</a>  <span class="comment">// vertical alignment; e.g. &#39;center&#39;</span>
+    Rot     <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// rotation</span>
     Fsz     <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// font size</span>
     FszLbl  <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// font size of labels</span>
     FszLeg  <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// font size of legend</span>
     FszXtck <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// font size of x-ticks</span>
     FszYtck <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// font size of y-ticks</span>
-    Extra   <a href="/pkg/builtin/#string">string</a>  <span class="comment">// extra arguments</span>
     HideL   <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// hide left frame border</span>
     HideR   <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// hide right frame border</span>
     HideB   <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// hide bottom frame border</span>
@@ -1303,7 +1303,7 @@ Wireframe draws wireframe
 
 			
 				
-				<h3 id="A.String">func (A) <a href="https://github.com/cpmech/gosl/blob/master/plt/arguments.go?s=2915:2962#L74">String</a></h3>
+				<h3 id="A.String">func (A) <a href="https://github.com/cpmech/gosl/blob/master/plt/arguments.go?s=2908:2955#L74">String</a></h3>
 				<pre>func (o <a href="#A">A</a>) String(forHistogram <a href="/pkg/builtin/#bool">bool</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 String returns a string representation of arguments
