@@ -37,12 +37,12 @@ type A struct {
 	// text and extra arguments
 	Ha      string  // horizontal alignment; e.g. 'center'
 	Va      string  // vertical alignment; e.g. 'center'
+	Rot     float64 // rotation
 	Fsz     float64 // font size
 	FszLbl  float64 // font size of labels
 	FszLeg  float64 // font size of legend
 	FszXtck float64 // font size of x-ticks
 	FszYtck float64 // font size of y-ticks
-	Extra   string  // extra arguments
 	HideL   bool    // hide left frame border
 	HideR   bool    // hide right frame border
 	HideB   bool    // hide bottom frame border
@@ -106,7 +106,6 @@ func (o A) String(forHistogram bool) (l string) {
 	addToCmd(&l, o.Ha != "", io.Sf("ha='%s'", o.Ha))
 	addToCmd(&l, o.Va != "", io.Sf("va='%s'", o.Va))
 	addToCmd(&l, o.Fsz > 0, io.Sf("fontsize=%g", o.Fsz))
-	addToCmd(&l, o.Extra != "", o.Extra)
 
 	// histograms
 	if forHistogram {

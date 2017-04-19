@@ -41,10 +41,9 @@ func Test_args01(tst *testing.T) {
 
 	// text and extra arguments
 	a.Fsz = 7
-	a.Extra = "style='something'"
 
 	l := a.String(false)
-	chk.String(tst, l, "color='red',marker='o',ls='--',lw=1.2,label='gosl',markevery=2,zorder=123,markeredgecolor='blue',mew=0.3,markerfacecolor='none',clip_on=0,facecolor='magenta',edgecolor='yellow',ha='center',va='center',fontsize=7,style='something'")
+	chk.String(tst, l, "color='red',marker='o',ls='--',lw=1.2,label='gosl',markevery=2,zorder=123,markeredgecolor='blue',mew=0.3,markerfacecolor='none',clip_on=0,facecolor='magenta',edgecolor='yellow',ha='center',va='center',fontsize=7")
 }
 
 func Test_args02(tst *testing.T) {
