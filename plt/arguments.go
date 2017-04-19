@@ -63,24 +63,24 @@ type A struct {
 	Colors []string // contour or histogram: colors
 
 	// contours
-	Ulevels   []float64 // contour: levels
-	UcmapIdx  int       // contour: colormap index
-	UnumFmt   string    // contour: number format; e.g. "%g" or "%.2f"
-	UnoLines  bool      // contour: do not add lines on top of filled contour
-	UnoLabels bool      // contour: do not add labels
-	UnoInline bool      // contour: do not draw labels 'inline'
-	UnoCbar   bool      // contour: do not add colorbar
-	UcbarLbl  string    // contour: colorbar label
-	UselectV  float64   // contour: selected value
-	UselectC  string    // contour: color to mark selected level. empty means no selected line
-	UselectLw float64   // contour: zero level linewidth
+	Levels   []float64 // contour: levels
+	CmapIdx  int       // contour: colormap index
+	NumFmt   string    // contour: number format; e.g. "%g" or "%.2f"
+	NoLines  bool      // contour: do not add lines on top of filled contour
+	NoLabels bool      // contour: do not add labels
+	NoInline bool      // contour: do not draw labels 'inline'
+	NoCbar   bool      // contour: do not add colorbar
+	CbarLbl  string    // contour: colorbar label
+	SelectV  float64   // contour: selected value
+	SelectC  string    // contour: color to mark selected level. empty means no selected line
+	SelectLw float64   // contour: zero level linewidth
 
 	// Histograms
-	Htype    string // histogram: type; e.g. "bar"
-	Hstacked bool   // histogram: stacked
-	Hvoid    bool   // histogram: not filled
-	Hnbins   int    // histogram: number of bins
-	Hnormed  bool   // histogram: normed
+	Type    string // histogram: type; e.g. "bar"
+	Stacked bool   // histogram: stacked
+	NoFill  bool   // histogram: do not fill bars
+	Nbins   int    // histogram: number of bins
+	Normed  bool   // histogram: normed
 }
 
 // String returns a string representation of arguments
@@ -116,11 +116,11 @@ func (o A) String(forHistogram bool) (l string) {
 	// histograms
 	if forHistogram {
 		addToCmd(&l, len(o.Colors) > 0, io.Sf("color=%s", strings2list(o.Colors)))
-		addToCmd(&l, len(o.Htype) > 0, io.Sf("histtype='%s'", o.Htype))
-		addToCmd(&l, o.Hstacked, "stacked=1")
-		addToCmd(&l, o.Hvoid, "fill=0")
-		addToCmd(&l, o.Hnbins > 0, io.Sf("bins=%d", o.Hnbins))
-		addToCmd(&l, o.Hnormed, "normed=1")
+		addToCmd(&l, len(o.Type) > 0, io.Sf("histtype='%s'", o.Type))
+		addToCmd(&l, o.Stacked, "stacked=1")
+		addToCmd(&l, o.NoFill, "fill=0")
+		addToCmd(&l, o.Nbins > 0, io.Sf("bins=%d", o.Nbins))
+		addToCmd(&l, o.Normed, "normed=1")
 	}
 	return
 }
@@ -260,11 +260,11 @@ func argsContour(in *A) (out *A, colors, levels string) {
 	if out == nil {
 		out = new(A)
 	}
-	if out.UnumFmt == "" {
-		out.UnumFmt = "%g"
+	if out.NumFmt == "" {
+		out.NumFmt = "%g"
 	}
-	if out.UselectLw < 0.01 {
-		out.UselectLw = 3.0
+	if out.SelectLw < 0.01 {
+		out.SelectLw = 3.0
 	}
 	if out.Lw < 0.01 {
 		out.Lw = 1.0
@@ -275,10 +275,10 @@ func argsContour(in *A) (out *A, colors, levels string) {
 	if len(out.Colors) > 0 {
 		colors = io.Sf(",colors=%s", strings2list(out.Colors))
 	} else {
-		colors = io.Sf(",cmap=getCmap(%d)", out.UcmapIdx)
+		colors = io.Sf(",cmap=getCmap(%d)", out.CmapIdx)
 	}
-	if len(out.Ulevels) > 0 {
-		levels = io.Sf(",levels=%s", floats2list(out.Ulevels))
+	if len(out.Levels) > 0 {
+		levels = io.Sf(",levels=%s", floats2list(out.Levels))
 	}
 	return
 }

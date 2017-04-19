@@ -173,7 +173,7 @@ func PlotX(o TimeSpace, dirout, fname string, tcte float64, xmin, xmax []float64
 	}
 	plt.ContourF(X, Y, F, nil)
 	if hlZero {
-		plt.ContourL(X, Y, F, &plt.A{Ulevels: []float64{0}, Lw: 2, Colors: []string{"yellow"}})
+		plt.ContourL(X, Y, F, &plt.A{Levels: []float64{0}, Lw: 2, Colors: []string{"yellow"}})
 	}
 	if axEqual {
 		plt.Equal()

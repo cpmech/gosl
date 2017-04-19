@@ -60,7 +60,7 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 		plt.ContourF(V0, V1, Zf, nil)
 	}
 	for k, _ := range gs {
-		plt.ContourL(V0, V1, Zg[k], &plt.A{Ulevels: []float64{0}, Colors: []string{"yellow"}, Lw: 2})
+		plt.ContourL(V0, V1, Zg[k], &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2})
 	}
 	if x != nil {
 		plt.PlotOne(x[0], x[1], &plt.A{C: "r", M: "*", L: "optimum", Z: 10})

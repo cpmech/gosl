@@ -204,7 +204,7 @@ func PlotOct(filename string, σcCte, rmin, rmax float64, nr, nα int, φ float6
 		if !only0 {
 			plt.ContourL(x, y, f, nil)
 		}
-		plt.ContourL(x, y, f, &plt.A{Ulevels: []float64{0}, Colors: []string{"blue"}, Lw: 2})
+		plt.ContourL(x, y, f, &plt.A{Levels: []float64{0}, Colors: []string{"blue"}, Lw: 2})
 	} else {
 		plt.ContourF(x, y, f, nil)
 	}

@@ -52,12 +52,12 @@ func Test_args02(tst *testing.T) {
 	chk.PrintTitle("args02")
 
 	a := &A{
-		Colors:   []string{"red", "tan", "lime"},
-		Htype:    "bar",
-		Hstacked: true,
-		Hvoid:    true,
-		Hnbins:   10,
-		Hnormed:  true,
+		Colors:  []string{"red", "tan", "lime"},
+		Type:    "bar",
+		Stacked: true,
+		NoFill:  true,
+		Nbins:   10,
+		Normed:  true,
 	}
 
 	l := a.String(true)
@@ -147,11 +147,11 @@ func Test_plot03(tst *testing.T) {
 
 		// configuration
 		a := &A{
-			UnumFmt:  "%.1f",
-			Lw:       1.5,
-			UcbarLbl: "NICE",
-			UselectC: "yellow",
-			UselectV: -2.5,
+			NumFmt:  "%.1f",
+			Lw:      1.5,
+			CbarLbl: "NICE",
+			SelectC: "yellow",
+			SelectV: -2.5,
 		}
 
 		Reset()
@@ -186,22 +186,22 @@ func Test_plot04(tst *testing.T) {
 
 		// configuration
 		a := &A{
-			Colors:    []string{"cyan", "blue", "yellow", "green"},
-			Ulevels:   []float64{-4, -3, -2, -1, 0},
-			UnumFmt:   "%.1f",
-			UnoLines:  true,
-			UnoLabels: true,
-			UnoInline: true,
-			UnoCbar:   true,
-			Lw:        1.5,
-			UselectC:  "white",
-			UselectV:  -2.5,
+			Colors:   []string{"cyan", "blue", "yellow", "green"},
+			Levels:   []float64{-4, -3, -2, -1, 0},
+			NumFmt:   "%.1f",
+			NoLines:  true,
+			NoLabels: true,
+			NoInline: true,
+			NoCbar:   true,
+			Lw:       1.5,
+			SelectC:  "white",
+			SelectV:  -2.5,
 		}
 
 		b := &A{
-			UcmapIdx: 4,
-			UselectC: "black",
-			UselectV: -2.5,
+			CmapIdx: 4,
+			SelectC: "black",
+			SelectV: -2.5,
 		}
 
 		Reset()
@@ -237,14 +237,11 @@ func Test_plot05(tst *testing.T) {
 		}
 
 		a := &A{
-			Colors:   []string{"red", "tan", "lime"},
-			Ec:       "black",
-			Lw:       0.5,
-			Htype:    "bar",
-			Hstacked: true,
-			//Hvoid:    true,
-			//Hnbins:   10,
-			//Hnormed: true,
+			Colors:  []string{"red", "tan", "lime"},
+			Ec:      "black",
+			Lw:      0.5,
+			Type:    "bar",
+			Stacked: true,
 		}
 
 		Reset()
@@ -285,8 +282,6 @@ func Test_plot06(tst *testing.T) {
 		Wireframe(X, Y, Z, false, nil)
 		Surface(U, V, W, false, nil)
 		//Camera(elev, azim float64, args *A)
-		//SetFontSize(args *A) {
-		//Circle(xc, yc, r float64, args *A)
 
 		err := SaveD("/tmp/gosl", "t_plot06.png")
 		if err != nil {

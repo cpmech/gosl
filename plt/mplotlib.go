@@ -346,20 +346,20 @@ func ContourF(x, y, z [][]float64, args *A) {
 	genMat(&bufferPy, sz, z)
 	a, colors, levels := argsContour(args)
 	io.Ff(&bufferPy, "c%d = plt.contourf(%s,%s,%s%s%s)\n", n, sx, sy, sz, colors, levels)
-	if !a.UnoLines {
+	if !a.NoLines {
 		io.Ff(&bufferPy, "cc%d = plt.contour(%s,%s,%s,colors=['k']%s,linewidths=[%g])\n", n, sx, sy, sz, levels, a.Lw)
-		if !a.UnoLabels {
-			io.Ff(&bufferPy, "plt.clabel(cc%d,inline=%d,fontsize=%g)\n", n, pyBool(!a.UnoInline), a.Fsz)
+		if !a.NoLabels {
+			io.Ff(&bufferPy, "plt.clabel(cc%d,inline=%d,fontsize=%g)\n", n, pyBool(!a.NoInline), a.Fsz)
 		}
 	}
-	if !a.UnoCbar {
-		io.Ff(&bufferPy, "cb%d = plt.colorbar(c%d, format='%s')\n", n, n, a.UnumFmt)
-		if a.UcbarLbl != "" {
-			io.Ff(&bufferPy, "cb%d.ax.set_ylabel('%s')\n", n, a.UcbarLbl)
+	if !a.NoCbar {
+		io.Ff(&bufferPy, "cb%d = plt.colorbar(c%d, format='%s')\n", n, n, a.NumFmt)
+		if a.CbarLbl != "" {
+			io.Ff(&bufferPy, "cb%d.ax.set_ylabel('%s')\n", n, a.CbarLbl)
 		}
 	}
-	if a.UselectC != "" {
-		io.Ff(&bufferPy, "ccc%d = plt.contour(%s,%s,%s,colors=['%s'],levels=[%g],linewidths=[%g],linestyles=['-'])\n", n, sx, sy, sz, a.UselectC, a.UselectV, a.UselectLw)
+	if a.SelectC != "" {
+		io.Ff(&bufferPy, "ccc%d = plt.contour(%s,%s,%s,colors=['%s'],levels=[%g],linewidths=[%g],linestyles=['-'])\n", n, sx, sy, sz, a.SelectC, a.SelectV, a.SelectLw)
 	}
 }
 
@@ -374,11 +374,11 @@ func ContourL(x, y, z [][]float64, args *A) {
 	genMat(&bufferPy, sz, z)
 	a, colors, levels := argsContour(args)
 	io.Ff(&bufferPy, "c%d = plt.contour(%s,%s,%s%s%s)\n", n, sx, sy, sz, colors, levels)
-	if !a.UnoLabels {
-		io.Ff(&bufferPy, "plt.clabel(c%d,inline=%d,fontsize=%g)\n", n, pyBool(!a.UnoInline), a.Fsz)
+	if !a.NoLabels {
+		io.Ff(&bufferPy, "plt.clabel(c%d,inline=%d,fontsize=%g)\n", n, pyBool(!a.NoInline), a.Fsz)
 	}
-	if a.UselectC != "" {
-		io.Ff(&bufferPy, "cc%d = plt.contour(%s,%s,%s,colors=['%s'],levels=[%g],linewidths=[%g],linestyles=['-'])\n", n, sx, sy, sz, a.UselectC, a.UselectV, a.UselectLw)
+	if a.SelectC != "" {
+		io.Ff(&bufferPy, "cc%d = plt.contour(%s,%s,%s,colors=['%s'],levels=[%g],linewidths=[%g],linestyles=['-'])\n", n, sx, sy, sz, a.SelectC, a.SelectV, a.SelectLw)
 	}
 }
 
