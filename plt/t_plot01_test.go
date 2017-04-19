@@ -64,6 +64,21 @@ func Test_args02(tst *testing.T) {
 	chk.String(tst, l, "color=['red','tan','lime'],histtype='bar',stacked=1,fill=0,bins=10,normed=1")
 }
 
+func Test_nlevels01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("nlevels01")
+
+	nlevels := 3
+	Z := [][]float64{
+		{0, 1}, {0, 1},
+		{0, 1}, {0, 1},
+	}
+
+	l := getContourLevels(nlevels, Z)
+	chk.String(tst, l, "[0,0.5,1]")
+}
+
 func Test_plot01(tst *testing.T) {
 
 	//verbose()
@@ -150,6 +165,7 @@ func Test_plot03(tst *testing.T) {
 			CbarLbl: "NICE",
 			SelectC: "yellow",
 			SelectV: -2.5,
+			Nlevels: 10,
 		}
 
 		Reset(true, nil)

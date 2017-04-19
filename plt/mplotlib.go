@@ -419,7 +419,7 @@ func ContourF(x, y, z [][]float64, args *A) {
 	genMat(&bufferPy, sx, x)
 	genMat(&bufferPy, sy, y)
 	genMat(&bufferPy, sz, z)
-	a, colors, levels := argsContour(args)
+	a, colors, levels := argsContour(args, z)
 	io.Ff(&bufferPy, "c%d = plt.contourf(%s,%s,%s%s%s)\n", n, sx, sy, sz, colors, levels)
 	if !a.NoLines {
 		io.Ff(&bufferPy, "cc%d = plt.contour(%s,%s,%s,colors=['k']%s,linewidths=[%g])\n", n, sx, sy, sz, levels, a.Lw)
@@ -447,7 +447,7 @@ func ContourL(x, y, z [][]float64, args *A) {
 	genMat(&bufferPy, sx, x)
 	genMat(&bufferPy, sy, y)
 	genMat(&bufferPy, sz, z)
-	a, colors, levels := argsContour(args)
+	a, colors, levels := argsContour(args, z)
 	io.Ff(&bufferPy, "c%d = plt.contour(%s,%s,%s%s%s)\n", n, sx, sy, sz, colors, levels)
 	if !a.NoLabels {
 		io.Ff(&bufferPy, "plt.clabel(c%d,inline=%d,fontsize=%g)\n", n, pyBool(!a.NoInline), a.Fsz)

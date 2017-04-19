@@ -63,7 +63,8 @@ type A struct {
 	Colors []string // contour or histogram: colors
 
 	// contours
-	Levels   []float64 // contour: levels
+	Nlevels  int       // contour: number of levels (overridden by Levels when it's not nil)
+	Levels   []float64 // contour: levels (may be nil)
 	CmapIdx  int       // contour: colormap index
 	NumFmt   string    // contour: number format; e.g. "%g" or "%.2f"
 	NoLines  bool      // contour: do not add lines on top of filled contour
@@ -287,7 +288,7 @@ func argsFigData(args *A) (figType string, dpi, width, height int) {
 }
 
 // argsContour allocates args if nil, sets default parameters, and return formatted arguments
-func argsContour(in *A) (out *A, colors, levels string) {
+func argsContour(in *A, Z [][]float64) (out *A, colors, levels string) {
 	out = in
 	if out == nil {
 		out = new(A)
@@ -311,7 +312,46 @@ func argsContour(in *A) (out *A, colors, levels string) {
 	}
 	if len(out.Levels) > 0 {
 		levels = io.Sf(",levels=%s", floats2list(out.Levels))
+	} else {
+		if out.Nlevels > 1 {
+			levels = ",levels=" + getContourLevels(out.Nlevels, Z)
+		}
 	}
+	return
+}
+
+// getContourLevels computes the list of levels based on min and max values in Z
+//  Note: the search for min and max is not very efficient for very large matrix
+func getContourLevels(nlevels int, Z [][]float64) (l string) {
+	if nlevels < 2 {
+		return
+	}
+	if len(Z) < 1 {
+		return
+	}
+	if len(Z[0]) < 1 {
+		return
+	}
+	minZ, maxZ := Z[0][0], Z[0][0]
+	for i := 0; i < len(Z); i++ {
+		for j := 0; j < len(Z[i]); j++ {
+			if Z[i][j] < minZ {
+				minZ = Z[i][j]
+			}
+			if Z[i][j] > maxZ {
+				maxZ = Z[i][j]
+			}
+		}
+	}
+	delZ := (maxZ - minZ) / float64(nlevels-1)
+	l = "["
+	for i := 0; i < nlevels; i++ {
+		if i > 0 {
+			l += ","
+		}
+		l += io.Sf("%g", minZ+float64(i)*delZ)
+	}
+	l += "]"
 	return
 }
 
