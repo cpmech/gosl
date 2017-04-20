@@ -675,6 +675,7 @@ import matplotlib.path as pth
 import matplotlib.patheffects as pff
 import matplotlib.lines as lns
 import mpl_toolkits.mplot3d as m3d
+NaN = np.NaN
 EXTRA_ARTISTS = []
 def addToEA(obj):
     if obj!=None: EXTRA_ARTISTS.append(obj)
