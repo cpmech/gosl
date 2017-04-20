@@ -21,8 +21,14 @@ var TEMPORARY = "/tmp/pltgosl.py"
 // buffer holding Python commands
 var bufferPy bytes.Buffer
 
+// genUid returns an unique id for python variables
+func genUid() int { return bufferPy.Len() }
+
 // buffer holding Python extra artists commands
 var bufferEa bytes.Buffer
+
+// flag indicating that Python axes3d ('AX3D') has been created
+var axes3dCreated bool
 
 // init resets the buffers => ready to go
 func init() {
@@ -64,6 +70,7 @@ func Reset(setDefault bool, args *A) {
 	bufferPy.Reset()
 	bufferEa.Reset()
 	io.Ff(&bufferPy, pythonHeader)
+	axes3dCreated = false
 
 	// set figure data
 	if setDefault {
@@ -144,60 +151,60 @@ func SetYnticks(num int) {
 
 // SetTicksX sets ticks along x
 func SetTicksX(majorEvery, minorEvery float64, majorFmt string) {
-	n := bufferPy.Len()
+	uid := genUid()
 	if majorEvery > 0 {
-		io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", n, majorEvery)
-		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", n, majorEvery)
-		io.Ff(&bufferPy, "if nticks%d < majorLocator%d.MAXTICKS * 0.9:\n", n, n)
-		io.Ff(&bufferPy, "    plt.gca().xaxis.set_major_locator(majorLocator%d)\n", n)
+		io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", uid, majorEvery)
+		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", uid, majorEvery)
+		io.Ff(&bufferPy, "if nticks%d < majorLocator%d.MAXTICKS * 0.9:\n", uid, uid)
+		io.Ff(&bufferPy, "    plt.gca().xaxis.set_major_locator(majorLocator%d)\n", uid)
 	}
 	if minorEvery > 0 {
-		io.Ff(&bufferPy, "minorLocator%d = tck.MultipleLocator(%g)\n", n, minorEvery)
-		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", n, minorEvery)
-		io.Ff(&bufferPy, "if nticks%d < minorLocator%d.MAXTICKS * 0.9:\n", n, n)
-		io.Ff(&bufferPy, "    plt.gca().xaxis.set_minor_locator(minorLocator%d)\n", n)
+		io.Ff(&bufferPy, "minorLocator%d = tck.MultipleLocator(%g)\n", uid, minorEvery)
+		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", uid, minorEvery)
+		io.Ff(&bufferPy, "if nticks%d < minorLocator%d.MAXTICKS * 0.9:\n", uid, uid)
+		io.Ff(&bufferPy, "    plt.gca().xaxis.set_minor_locator(minorLocator%d)\n", uid)
 	}
 	if majorFmt != "" {
-		io.Ff(&bufferPy, "majorFormatter%d = tck.FormatStrFormatter(r'%s')\n", n, majorFmt)
-		io.Ff(&bufferPy, "plt.gca().xaxis.set_major_formatter(majorFormatter%d)\n", n)
+		io.Ff(&bufferPy, "majorFormatter%d = tck.FormatStrFormatter(r'%s')\n", uid, majorFmt)
+		io.Ff(&bufferPy, "plt.gca().xaxis.set_major_formatter(majorFormatter%d)\n", uid)
 	}
 }
 
 // SetTicksY sets ticks along y
 func SetTicksY(majorEvery, minorEvery float64, majorFmt string) {
-	n := bufferPy.Len()
+	uid := genUid()
 	if majorEvery > 0 {
-		io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", n, majorEvery)
-		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", n, majorEvery)
-		io.Ff(&bufferPy, "if nticks%d < majorLocator%d.MAXTICKS * 0.9:\n", n, n)
-		io.Ff(&bufferPy, "    plt.gca().yaxis.set_major_locator(majorLocator%d)\n", n)
+		io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", uid, majorEvery)
+		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", uid, majorEvery)
+		io.Ff(&bufferPy, "if nticks%d < majorLocator%d.MAXTICKS * 0.9:\n", uid, uid)
+		io.Ff(&bufferPy, "    plt.gca().yaxis.set_major_locator(majorLocator%d)\n", uid)
 	}
 	if minorEvery > 0 {
-		io.Ff(&bufferPy, "minorLocator%d = tck.MultipleLocator(%g)\n", n, minorEvery)
-		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", n, minorEvery)
-		io.Ff(&bufferPy, "if nticks%d < minorLocator%d.MAXTICKS * 0.9:\n", n, n)
-		io.Ff(&bufferPy, "    plt.gca().yaxis.set_minor_locator(minorLocator%d)\n", n)
+		io.Ff(&bufferPy, "minorLocator%d = tck.MultipleLocator(%g)\n", uid, minorEvery)
+		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", uid, minorEvery)
+		io.Ff(&bufferPy, "if nticks%d < minorLocator%d.MAXTICKS * 0.9:\n", uid, uid)
+		io.Ff(&bufferPy, "    plt.gca().yaxis.set_minor_locator(minorLocator%d)\n", uid)
 	}
 	if majorFmt != "" {
-		io.Ff(&bufferPy, "majorFormatter%d = tck.FormatStrFormatter(r'%s')\n", n, majorFmt)
-		io.Ff(&bufferPy, "plt.gca().yaxis.set_major_formatter(majorFormatter%d)\n", n)
+		io.Ff(&bufferPy, "majorFormatter%d = tck.FormatStrFormatter(r'%s')\n", uid, majorFmt)
+		io.Ff(&bufferPy, "plt.gca().yaxis.set_major_formatter(majorFormatter%d)\n", uid)
 	}
 }
 
 // SetScientificX sets scientific notation for ticks along x-axis
 func SetScientificX(minOrder, maxOrder int) {
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "fmt%d = plt.ScalarFormatter(useOffset=True)\n", n)
-	io.Ff(&bufferPy, "fmt%d.set_powerlimits((%d,%d))\n", n, minOrder, maxOrder)
-	io.Ff(&bufferPy, "plt.gca().xaxis.set_major_formatter(fmt%d)\n", n)
+	uid := genUid()
+	io.Ff(&bufferPy, "fmt%d = plt.ScalarFormatter(useOffset=True)\n", uid)
+	io.Ff(&bufferPy, "fmt%d.set_powerlimits((%d,%d))\n", uid, minOrder, maxOrder)
+	io.Ff(&bufferPy, "plt.gca().xaxis.set_major_formatter(fmt%d)\n", uid)
 }
 
 // SetScientificY sets scientific notation for ticks along y-axis
 func SetScientificY(minOrder, maxOrder int) {
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "fmt%d = plt.ScalarFormatter(useOffset=True)\n", n)
-	io.Ff(&bufferPy, "fmt%d.set_powerlimits((%d,%d))\n", n, minOrder, maxOrder)
-	io.Ff(&bufferPy, "plt.gca().yaxis.set_major_formatter(fmt%d)\n", n)
+	uid := genUid()
+	io.Ff(&bufferPy, "fmt%d = plt.ScalarFormatter(useOffset=True)\n", uid)
+	io.Ff(&bufferPy, "fmt%d.set_powerlimits((%d,%d))\n", uid, minOrder, maxOrder)
+	io.Ff(&bufferPy, "plt.gca().yaxis.set_major_formatter(fmt%d)\n", uid)
 }
 
 // SetTicksNormal sets normal ticks
@@ -255,10 +262,10 @@ func AnnotateXlabels(x float64, txt string, args *A) {
 
 // SupTitle sets subplot title
 func SupTitle(txt string, args *A) {
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "st%d = plt.suptitle(r'%s'", n, txt)
+	uid := genUid()
+	io.Ff(&bufferPy, "st%d = plt.suptitle(r'%s'", uid, txt)
 	updateBufferAndClose(&bufferPy, args, false, false)
-	io.Ff(&bufferPy, "addToEA(st%d)\n", n)
+	io.Ff(&bufferPy, "addToEA(st%d)\n", uid)
 }
 
 // Title sets title
@@ -379,9 +386,9 @@ func AxisLims(lims []float64) {
 
 // Plot plots x-y series
 func Plot(x, y []float64, args *A) (sx, sy string) {
-	n := bufferPy.Len()
-	sx = io.Sf("x%d", n)
-	sy = io.Sf("y%d", n)
+	uid := genUid()
+	sx = io.Sf("x%d", uid)
+	sy = io.Sf("y%d", uid)
 	gen2Arrays(&bufferPy, sx, sy, x, y)
 	io.Ff(&bufferPy, "plt.plot(%s,%s", sx, sy)
 	updateBufferAndClose(&bufferPy, args, false, false)
@@ -396,9 +403,9 @@ func PlotOne(x, y float64, args *A) {
 
 // Hist draws histogram
 func Hist(x [][]float64, labels []string, args *A) {
-	n := bufferPy.Len()
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
+	uid := genUid()
+	sx := io.Sf("x%d", uid)
+	sy := io.Sf("y%d", uid)
 	genList(&bufferPy, sx, x)
 	genStrArray(&bufferPy, sy, labels)
 	io.Ff(&bufferPy, "plt.hist(%s,label=r'%s'", sx, sy)
@@ -407,58 +414,58 @@ func Hist(x [][]float64, labels []string, args *A) {
 
 // ContourF draws filled contour and possibly with a contour of lines (if args.UnoLines=false)
 func ContourF(x, y, z [][]float64, args *A) {
-	n := bufferPy.Len()
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
-	sz := io.Sf("z%d", n)
+	uid := genUid()
+	sx := io.Sf("x%d", uid)
+	sy := io.Sf("y%d", uid)
+	sz := io.Sf("z%d", uid)
 	genMat(&bufferPy, sx, x)
 	genMat(&bufferPy, sy, y)
 	genMat(&bufferPy, sz, z)
 	a, colors, levels := argsContour(args, z)
-	io.Ff(&bufferPy, "c%d = plt.contourf(%s,%s,%s%s%s)\n", n, sx, sy, sz, colors, levels)
+	io.Ff(&bufferPy, "c%d = plt.contourf(%s,%s,%s%s%s)\n", uid, sx, sy, sz, colors, levels)
 	if !a.NoLines {
-		io.Ff(&bufferPy, "cc%d = plt.contour(%s,%s,%s,colors=['k']%s,linewidths=[%g])\n", n, sx, sy, sz, levels, a.Lw)
+		io.Ff(&bufferPy, "cc%d = plt.contour(%s,%s,%s,colors=['k']%s,linewidths=[%g])\n", uid, sx, sy, sz, levels, a.Lw)
 		if !a.NoLabels {
-			io.Ff(&bufferPy, "plt.clabel(cc%d,inline=%d,fontsize=%g)\n", n, pyBool(!a.NoInline), a.Fsz)
+			io.Ff(&bufferPy, "plt.clabel(cc%d,inline=%d,fontsize=%g)\n", uid, pyBool(!a.NoInline), a.Fsz)
 		}
 	}
 	if !a.NoCbar {
-		io.Ff(&bufferPy, "cb%d = plt.colorbar(c%d, format='%s')\n", n, n, a.NumFmt)
+		io.Ff(&bufferPy, "cb%d = plt.colorbar(c%d, format='%s')\n", uid, uid, a.NumFmt)
 		if a.CbarLbl != "" {
-			io.Ff(&bufferPy, "cb%d.ax.set_ylabel(r'%s')\n", n, a.CbarLbl)
+			io.Ff(&bufferPy, "cb%d.ax.set_ylabel(r'%s')\n", uid, a.CbarLbl)
 		}
 	}
 	if a.SelectC != "" {
-		io.Ff(&bufferPy, "ccc%d = plt.contour(%s,%s,%s,colors=['%s'],levels=[%g],linewidths=[%g],linestyles=['-'])\n", n, sx, sy, sz, a.SelectC, a.SelectV, a.SelectLw)
+		io.Ff(&bufferPy, "ccc%d = plt.contour(%s,%s,%s,colors=['%s'],levels=[%g],linewidths=[%g],linestyles=['-'])\n", uid, sx, sy, sz, a.SelectC, a.SelectV, a.SelectLw)
 	}
 }
 
 // ContourL draws a contour with lines only
 func ContourL(x, y, z [][]float64, args *A) {
-	n := bufferPy.Len()
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
-	sz := io.Sf("z%d", n)
+	uid := genUid()
+	sx := io.Sf("x%d", uid)
+	sy := io.Sf("y%d", uid)
+	sz := io.Sf("z%d", uid)
 	genMat(&bufferPy, sx, x)
 	genMat(&bufferPy, sy, y)
 	genMat(&bufferPy, sz, z)
 	a, colors, levels := argsContour(args, z)
-	io.Ff(&bufferPy, "c%d = plt.contour(%s,%s,%s%s%s)\n", n, sx, sy, sz, colors, levels)
+	io.Ff(&bufferPy, "c%d = plt.contour(%s,%s,%s%s%s)\n", uid, sx, sy, sz, colors, levels)
 	if !a.NoLabels {
-		io.Ff(&bufferPy, "plt.clabel(c%d,inline=%d,fontsize=%g)\n", n, pyBool(!a.NoInline), a.Fsz)
+		io.Ff(&bufferPy, "plt.clabel(c%d,inline=%d,fontsize=%g)\n", uid, pyBool(!a.NoInline), a.Fsz)
 	}
 	if a.SelectC != "" {
-		io.Ff(&bufferPy, "cc%d = plt.contour(%s,%s,%s,colors=['%s'],levels=[%g],linewidths=[%g],linestyles=['-'])\n", n, sx, sy, sz, a.SelectC, a.SelectV, a.SelectLw)
+		io.Ff(&bufferPy, "cc%d = plt.contour(%s,%s,%s,colors=['%s'],levels=[%g],linewidths=[%g],linestyles=['-'])\n", uid, sx, sy, sz, a.SelectC, a.SelectV, a.SelectLw)
 	}
 }
 
 // Quiver draws vector field
 func Quiver(x, y, gx, gy [][]float64, args *A) {
-	n := bufferPy.Len()
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
-	sgx := io.Sf("gx%d", n)
-	sgy := io.Sf("gy%d", n)
+	uid := genUid()
+	sx := io.Sf("x%d", uid)
+	sy := io.Sf("y%d", uid)
+	sgx := io.Sf("gx%d", uid)
+	sgy := io.Sf("gy%d", uid)
 	genMat(&bufferPy, sx, x)
 	genMat(&bufferPy, sy, y)
 	genMat(&bufferPy, sgx, gx)
@@ -476,19 +483,19 @@ func Grid(args *A) {
 // Legend adds legend to plot
 func Legend(args *A) {
 	loc, ncol, hlen, fsz, frame, out, outX := argsLeg(args)
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "h%d, l%d = plt.gca().get_legend_handles_labels()\n", n, n)
-	io.Ff(&bufferPy, "if len(h%d) > 0 and len(l%d) > 0:\n", n, n)
+	uid := genUid()
+	io.Ff(&bufferPy, "h%d, l%d = plt.gca().get_legend_handles_labels()\n", uid, uid)
+	io.Ff(&bufferPy, "if len(h%d) > 0 and len(l%d) > 0:\n", uid, uid)
 	if out == 1 {
-		io.Ff(&bufferPy, "    d%d = %s\n", n, outX)
-		io.Ff(&bufferPy, "    l%d = plt.legend(bbox_to_anchor=d%d, ncol=%d, handlelength=%g, prop={'size':%g}, loc=3, mode='expand', borderaxespad=0.0, columnspacing=1, handletextpad=0.05)\n", n, n, ncol, hlen, fsz)
-		io.Ff(&bufferPy, "    addToEA(l%d)\n", n)
+		io.Ff(&bufferPy, "    d%d = %s\n", uid, outX)
+		io.Ff(&bufferPy, "    l%d = plt.legend(bbox_to_anchor=d%d, ncol=%d, handlelength=%g, prop={'size':%g}, loc=3, mode='expand', borderaxespad=0.0, columnspacing=1, handletextpad=0.05)\n", uid, uid, ncol, hlen, fsz)
+		io.Ff(&bufferPy, "    addToEA(l%d)\n", uid)
 	} else {
-		io.Ff(&bufferPy, "    l%d = plt.legend(loc=%s, ncol=%d, handlelength=%g, prop={'size':%g})\n", n, loc, ncol, hlen, fsz)
-		io.Ff(&bufferPy, "    addToEA(l%d)\n", n)
+		io.Ff(&bufferPy, "    l%d = plt.legend(loc=%s, ncol=%d, handlelength=%g, prop={'size':%g})\n", uid, loc, ncol, hlen, fsz)
+		io.Ff(&bufferPy, "    addToEA(l%d)\n", uid)
 	}
 	if frame == 0 {
-		io.Ff(&bufferPy, "    l%d.get_frame().set_linewidth(0.0)\n", n)
+		io.Ff(&bufferPy, "    l%d.get_frame().set_linewidth(0.0)\n", uid)
 	}
 }
 
@@ -553,8 +560,8 @@ func ShowSave(dirout, fnkey string) (err error) {
 	if empty {
 		return chk.Err("directory and filename key must not be empty\n")
 	}
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "fig%d = plt.gcf()\n", n)
+	uid := genUid()
+	io.Ff(&bufferPy, "fig%d = plt.gcf()\n", uid)
 	io.Ff(&bufferPy, "plt.show()\n")
 	err = os.MkdirAll(dirout, 0777)
 	if err != nil {
@@ -564,7 +571,7 @@ func ShowSave(dirout, fnkey string) (err error) {
 		fileExt = ".png"
 	}
 	fn := filepath.Join(dirout, fnkey+fileExt)
-	io.Ff(&bufferPy, "fig%d.savefig(r'%s', bbox_inches='tight', bbox_extra_artists=EXTRA_ARTISTS)\n", n, fn)
+	io.Ff(&bufferPy, "fig%d.savefig(r'%s', bbox_inches='tight', bbox_extra_artists=EXTRA_ARTISTS)\n", uid, fn)
 	return run("")
 }
 

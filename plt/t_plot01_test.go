@@ -292,13 +292,13 @@ func Test_plot06(tst *testing.T) {
 
 		Reset(true, nil)
 
-		Triad(1.3, true, true, nil, nil)
+		Triad(1.3, true, nil, nil)
 
-		Plot3dLine(x, y, z, false, nil)
-		Plot3dPoints(x, y, z, false, nil)
-		Surface(U, V, W, false, &A{CmapIdx: 4, Rstride: 1, Cstride: 1})
+		Plot3dLine(x, y, z, nil)
+		Plot3dPoints(x, y, z, nil)
+		Surface(U, V, W, &A{CmapIdx: 4, Rstride: 1, Cstride: 1})
 
-		Wireframe(X, Y, Z, false, &A{C: "orange", Lw: 0.4})
+		Wireframe(X, Y, Z, &A{C: "orange", Lw: 0.4})
 
 		elev, azim := 30.0, 20.0
 		Camera(elev, azim, nil)
@@ -333,8 +333,8 @@ func Test_plot07(tst *testing.T) {
 
 		// draw
 		Reset(true, nil)
-		Triad(1.0, true, true, &A{C: "orange"}, &A{C: "red"})
-		PlaneZ(p, n, xmin, xmax, ymin, ymax, nu, nv, true, false, nil)
+		Triad(1.0, true, &A{C: "orange"}, &A{C: "red"})
+		PlaneZ(p, n, xmin, xmax, ymin, ymax, nu, nv, true, nil)
 		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
 
 		// save
@@ -355,13 +355,13 @@ func Test_plot08(tst *testing.T) {
 
 		// draw
 		Reset(true, nil)
-		Triad(1.0, true, true, &A{C: "orange"}, &A{C: "red"})
+		Triad(1.0, true, &A{C: "orange"}, &A{C: "red"})
 
 		alpha, height := 15.0, 1.0
 		nu, nv := 7, 11
-		ConeZ(alpha, height, nu, nv, false, &A{C: "orange"})
-		ConeDiag(alpha, height, nu, nv, false, nil)
-		Diag3d(1, false, nil)
+		ConeZ(alpha, height, nu, nv, &A{C: "orange"})
+		ConeDiag(alpha, height, nu, nv, nil)
+		Diag3d(1, nil)
 		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
 
 		// save

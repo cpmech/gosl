@@ -11,72 +11,73 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// handle to Axes3D in Python
-var axes3dHandle string
-
 // AxisRange3d sets x, y, and z ranges (i.e. limits)
 func AxisRange3d(xmin, xmax, ymin, ymax, zmin, zmax float64) {
 	io.Ff(&bufferPy, "plt.gca().set_xlim3d(%g,%g)\ngca().set_ylim3d(%g,%g)\ngca().set_zlim3d(%g,%g)\n", xmin, xmax, ymin, ymax, zmin, zmax)
 }
 
 // Plot3dLine plots 3d line
-func Plot3dLine(X, Y, Z []float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	sx := io.Sf("X%d", n)
-	sy := io.Sf("Y%d", n)
-	sz := io.Sf("Z%d", n)
+func Plot3dLine(X, Y, Z []float64, args *A) {
+	createAxes3d()
+	uid := genUid()
+	sx := io.Sf("X%d", uid)
+	sy := io.Sf("Y%d", uid)
+	sz := io.Sf("Z%d", uid)
 	genArray(&bufferPy, sx, X)
 	genArray(&bufferPy, sy, Y)
 	genArray(&bufferPy, sz, Z)
-	io.Ff(&bufferPy, "p%d = ax%d.plot(%s,%s,%s", n, n, sx, sy, sz)
+	io.Ff(&bufferPy, "p%d = AX3D.plot(%s,%s,%s", uid, sx, sy, sz)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // Plot3dPoint plot 3d point
-func Plot3dPoint(x, y, z float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	io.Ff(&bufferPy, "p%d = ax%d.scatter(%g,%g,%g", n, n, x, y, z)
+func Plot3dPoint(x, y, z float64, args *A) {
+	createAxes3d()
+	io.Ff(&bufferPy, "p%d = AX3D.scatter(%g,%g,%g", genUid(), x, y, z)
 	updateBufferAndClose(&bufferPy, args, false, true)
 }
 
 // Plot3dPoints plots 3d points
-func Plot3dPoints(X, Y, Z []float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	sx := io.Sf("X%d", n)
-	sy := io.Sf("Y%d", n)
-	sz := io.Sf("Z%d", n)
+func Plot3dPoints(X, Y, Z []float64, args *A) {
+	createAxes3d()
+	uid := genUid()
+	sx := io.Sf("X%d", uid)
+	sy := io.Sf("Y%d", uid)
+	sz := io.Sf("Z%d", uid)
 	genArray(&bufferPy, sx, X)
 	genArray(&bufferPy, sy, Y)
 	genArray(&bufferPy, sz, Z)
-	io.Ff(&bufferPy, "p%d = ax%d.scatter(%s,%s,%s", n, n, sx, sy, sz)
+	io.Ff(&bufferPy, "p%d = AX3D.scatter(%s,%s,%s", uid, sx, sy, sz)
 	updateBufferAndClose(&bufferPy, args, false, true)
 }
 
 // Wireframe draws wireframe
-func Wireframe(X, Y, Z [][]float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	sx := io.Sf("X%d", n)
-	sy := io.Sf("Y%d", n)
-	sz := io.Sf("Z%d", n)
+func Wireframe(X, Y, Z [][]float64, args *A) {
+	createAxes3d()
+	uid := genUid()
+	sx := io.Sf("X%d", uid)
+	sy := io.Sf("Y%d", uid)
+	sz := io.Sf("Z%d", uid)
 	genMat(&bufferPy, sx, X)
 	genMat(&bufferPy, sy, Y)
 	genMat(&bufferPy, sz, Z)
 	_, rs, cs := args3d(args)
-	io.Ff(&bufferPy, "p%d = ax%d.plot_wireframe(%s,%s,%s,rstride=%d,cstride=%d", n, n, sx, sy, sz, rs, cs)
+	io.Ff(&bufferPy, "p%d = AX3D.plot_wireframe(%s,%s,%s,rstride=%d,cstride=%d", uid, sx, sy, sz, rs, cs)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // Surface draws surface
-func Surface(X, Y, Z [][]float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	sx := io.Sf("X%d", n)
-	sy := io.Sf("Y%d", n)
-	sz := io.Sf("Z%d", n)
+func Surface(X, Y, Z [][]float64, args *A) {
+	createAxes3d()
+	uid := genUid()
+	sx := io.Sf("X%d", uid)
+	sy := io.Sf("Y%d", uid)
+	sz := io.Sf("Z%d", uid)
 	genMat(&bufferPy, sx, X)
 	genMat(&bufferPy, sy, Y)
 	genMat(&bufferPy, sz, Z)
 	cmapIdx, rs, cs := args3d(args)
-	io.Ff(&bufferPy, "p%d = ax%d.plot_surface(%s,%s,%s,cmap=getCmap(%d),rstride=%d,cstride=%d", n, n, sx, sy, sz, cmapIdx, rs, cs)
+	io.Ff(&bufferPy, "p%d = AX3D.plot_surface(%s,%s,%s,cmap=getCmap(%d),rstride=%d,cstride=%d", uid, sx, sy, sz, cmapIdx, rs, cs)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
@@ -94,30 +95,30 @@ func AxDist(dist float64) {
 }
 
 // Text3d adds text to 3d plot
-func Text3d(x, y, z float64, txt string, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	io.Ff(&bufferPy, "t%d = ax%d.text(%g,%g,%g,r'%s'", n, n, x, y, z, txt)
+func Text3d(x, y, z float64, txt string, args *A) {
+	createAxes3d()
+	io.Ff(&bufferPy, "t%d = AX3D.text(%g,%g,%g,r'%s'", genUid(), x, y, z, txt)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // Triad draws icon indicating x-y-z origin and direction
-func Triad(length float64, doInit, labels bool, argsLines, argsText *A) {
+func Triad(length float64, labels bool, argsLines, argsText *A) {
 	a := argsLines
 	if a == nil {
 		a = &A{C: "black", Lw: 1.2}
 	}
-	Plot3dLine([]float64{0, length}, []float64{0, 0}, []float64{0, 0}, doInit, a)
-	Plot3dLine([]float64{0, 0}, []float64{0, length}, []float64{0, 0}, false, a)
-	Plot3dLine([]float64{0, 0}, []float64{0, 0}, []float64{0, length}, false, a)
+	Plot3dLine([]float64{0, length}, []float64{0, 0}, []float64{0, 0}, a)
+	Plot3dLine([]float64{0, 0}, []float64{0, length}, []float64{0, 0}, a)
+	Plot3dLine([]float64{0, 0}, []float64{0, 0}, []float64{0, length}, a)
 	if labels {
 		b := argsText
 		if b == nil {
 			b = &A{C: "black", Fsz: 10, Ha: "center", Va: "center"}
 		}
 		g := 0.05 * length
-		Text3d(length+g, 0, 0, "x", false, b)
-		Text3d(0, length+g, 0, "y", false, b)
-		Text3d(0, 0, length+g, "z", false, b)
+		Text3d(length+g, 0, 0, "x", b)
+		Text3d(0, length+g, 0, "y", b)
+		Text3d(0, 0, length+g, "z", b)
 	}
 }
 
@@ -165,7 +166,7 @@ func Default3dView(xmin, xmax, ymin, ymax, zmin, zmax float64, equal bool) {
 //   v -- vector
 //   sf -- scale factor
 //   normed -- normalised
-func Draw3dVector(p, v []float64, sf float64, normed, doInit bool, args *A) {
+func Draw3dVector(p, v []float64, sf float64, normed bool, args *A) {
 	scale := sf
 	if normed {
 		norm := math.Sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2])
@@ -173,8 +174,8 @@ func Draw3dVector(p, v []float64, sf float64, normed, doInit bool, args *A) {
 			scale = sf / norm
 		}
 	}
-	n := get3daxes(doInit)
-	io.Ff(&bufferPy, "p%d = ax%d.plot([%g,%g],[%g,%g],[%g,%g]", n, n,
+	createAxes3d()
+	io.Ff(&bufferPy, "p%d = AX3D.plot([%g,%g],[%g,%g],[%g,%g]", genUid(),
 		p[0], p[0]+v[0]*scale,
 		p[1], p[1]+v[1]*scale,
 		p[2], p[2]+v[2]*scale)
@@ -188,7 +189,7 @@ func Draw3dVector(p, v []float64, sf float64, normed, doInit bool, args *A) {
 //   nu -- number of divisions along one direction on plane
 //   nv -- number of divisions along the orther direction on plane
 //   showPN -- show point and normal
-func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN, doInit bool, args *A) {
+func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN bool, args *A) {
 	if math.Abs(n[2]) < 1e-10 {
 		return
 	}
@@ -196,12 +197,12 @@ func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN, 
 	X, Y, Z := utl.MeshGrid2dF(xmin, xmax, ymin, ymax, nu, nv, func(x, y float64) float64 {
 		return (-d - n[0]*x - n[1]*y) / n[2]
 	})
-	Wireframe(X, Y, Z, doInit, args)
+	Wireframe(X, Y, Z, args)
 	if showPN {
 		a := &A{C: "k", Ec: "k", M: "."}
-		Plot3dPoint(p[0], p[1], p[2], false, a)
+		Plot3dPoint(p[0], p[1], p[2], a)
 		a.M, a.Ec = "", ""
-		Draw3dVector(p, n, 1.0, true, false, a)
+		Draw3dVector(p, n, 1.0, true, a)
 	}
 }
 
@@ -221,7 +222,7 @@ func CalcDiagAngle(p []float64) (alphaRad float64) {
 //   height -- height of cone
 //   nu -- number of divisions along the height of cone; e.g. 11
 //   nv -- number of divisions along circumference of cone; e.g. 21
-func ConeZ(alphaDeg float64, height float64, nu, nv int, doInit bool, args *A) {
+func ConeZ(alphaDeg float64, height float64, nu, nv int, args *A) {
 	r := math.Tan(alphaDeg*math.Pi/180.0) * height
 	X := make([][]float64, nu)
 	Y := make([][]float64, nu)
@@ -238,17 +239,17 @@ func ConeZ(alphaDeg float64, height float64, nu, nv int, doInit bool, args *A) {
 			Z[i][j] = h
 		}
 	}
-	Wireframe(X, Y, Z, doInit, args)
+	Wireframe(X, Y, Z, args)
 }
 
 // Diag3d draws diagonal of 3d space
-func Diag3d(scale float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
+func Diag3d(scale float64, args *A) {
+	createAxes3d()
 	a := args
 	if a == nil {
 		a = &A{C: "k"}
 	}
-	io.Ff(&bufferPy, "p%d = ax%d.plot([0,%g],[0,%g],[0,%g]", n, n, scale, scale, scale)
+	io.Ff(&bufferPy, "p%d = AX3D.plot([0,%g],[0,%g],[0,%g]", genUid(), scale, scale, scale)
 	updateBufferAndClose(&bufferPy, a, false, false)
 }
 
@@ -257,7 +258,7 @@ func Diag3d(scale float64, doInit bool, args *A) {
 //   height -- height of cone; i.e. length along space diagonal
 //   nu -- number of divisions along the height of cone; e.g. 11
 //   nv -- number of divisions along circumference of cone; e.g. 21
-func ConeDiag(alphaDeg float64, height float64, nu, nv int, doInit bool, args *A) {
+func ConeDiag(alphaDeg float64, height float64, nu, nv int, args *A) {
 	r := math.Tan(alphaDeg*math.Pi/180.0) * height
 	SQ2, SQ3, SQ6 := math.Sqrt2, math.Sqrt(3.0), math.Sqrt(6.0)
 	X := make([][]float64, nu)
@@ -277,19 +278,16 @@ func ConeDiag(alphaDeg float64, height float64, nu, nv int, doInit bool, args *A
 			Z[i][j] = (h + SQ2*b) / SQ3
 		}
 	}
-	Wireframe(X, Y, Z, doInit, args)
+	Wireframe(X, Y, Z, args)
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
-func get3daxes(doInit bool) (n int) {
-	n = bufferPy.Len()
-	if doInit {
-		io.Ff(&bufferPy, "ax%d = plt.gcf().add_subplot(111, projection='3d')\n", n)
-		io.Ff(&bufferPy, "ax%d.set_xlabel('x');ax%d.set_ylabel('y');ax%d.set_zlabel('z')\n", n, n, n)
-		io.Ff(&bufferPy, "addToEA(ax%d)\n", n)
-	} else {
-		io.Ff(&bufferPy, "ax%d = plt.gca()\n", n)
+func createAxes3d() {
+	if !axes3dCreated {
+		io.Ff(&bufferPy, "AX3D = plt.gcf().add_subplot(111, projection='3d')\n")
+		io.Ff(&bufferPy, "AX3D.set_xlabel('x');AX3D.set_ylabel('y');AX3D.set_zlabel('z')\n")
+		io.Ff(&bufferPy, "addToEA(AX3D)\n")
+		axes3dCreated = true
 	}
-	return
 }
