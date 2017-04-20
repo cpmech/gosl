@@ -76,6 +76,10 @@ type A struct {
 	SelectC  string    // contour: color to mark selected level. empty means no selected line
 	SelectLw float64   // contour: zero level linewidth
 
+	// 3d graphs
+	Rstride int // 3d: row stride
+	Cstride int // 3d: column stride
+
 	// histograms
 	Type    string // histogram: type; e.g. "bar"
 	Stacked bool   // histogram: stacked
@@ -284,6 +288,21 @@ func argsFigData(args *A) (figType string, dpi, width, height int) {
 	w := widthPt / 72.27 // width in inches
 	h := w * prop
 	width, height = int(w), int(h)
+	return
+}
+
+// args3d collects arguments for 3d plots (e.g. Surface and Wireframe)
+func args3d(args *A) (cmapIdx, rstride, cstride int) {
+	cmapIdx, rstride, cstride = 0, 1, 1
+	if args != nil {
+		cmapIdx = args.CmapIdx
+		if args.Rstride > 0 {
+			rstride = args.Rstride
+		}
+		if args.Cstride > 0 {
+			cstride = args.Cstride
+		}
+	}
 	return
 }
 

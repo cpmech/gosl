@@ -525,87 +525,15 @@ func SetFontSizes(args *A) {
 	io.Ff(&bufferPy, "    'ytick.labelsize' : %g})\n", ytck)
 }
 
-// 3D /////////////////////////////////////////////////////////////////////////////////////////////
-
-func get3daxes(doInit bool) (n int) {
-	n = bufferPy.Len()
-	if doInit {
-		io.Ff(&bufferPy, "ax%d = plt.gcf().add_subplot(111, projection='3d')\n", n)
-		io.Ff(&bufferPy, "ax%d.set_xlabel('x');ax%d.set_ylabel('y');ax%d.set_zlabel('z')\n", n, n, n)
-	} else {
-		io.Ff(&bufferPy, "ax%d = plt.gca()\n", n)
-	}
-	return
-}
-
-// Plot3dLine plots 3d line
-func Plot3dLine(x, y, z []float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
-	sz := io.Sf("z%d", n)
-	genArray(&bufferPy, sx, x)
-	genArray(&bufferPy, sy, y)
-	genArray(&bufferPy, sz, z)
-	io.Ff(&bufferPy, "p%d = ax%d.plot(%s,%s,%s", n, n, sx, sy, sz)
-	updateBufferAndClose(&bufferPy, args, false)
-}
-
-// Plot3dPoints plots 3d points
-func Plot3dPoints(x, y, z []float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
-	sz := io.Sf("z%d", n)
-	genArray(&bufferPy, sx, x)
-	genArray(&bufferPy, sy, y)
-	genArray(&bufferPy, sz, z)
-	io.Ff(&bufferPy, "p%d = ax%d.scatter(%s,%s,%s", n, n, sx, sy, sz)
-	updateBufferAndClose(&bufferPy, args, false)
-}
-
-// Wireframe draws wireframe
-func Wireframe(x, y, z [][]float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
-	sz := io.Sf("z%d", n)
-	genMat(&bufferPy, sx, x)
-	genMat(&bufferPy, sy, y)
-	genMat(&bufferPy, sz, z)
-	io.Ff(&bufferPy, "p%d = ax%d.plot_wireframe(%s,%s,%s", n, n, sx, sy, sz)
-	updateBufferAndClose(&bufferPy, args, false)
-}
-
-// Surface draws surface
-func Surface(x, y, z [][]float64, doInit bool, args *A) {
-	n := get3daxes(doInit)
-	sx := io.Sf("x%d", n)
-	sy := io.Sf("y%d", n)
-	sz := io.Sf("z%d", n)
-	genMat(&bufferPy, sx, x)
-	genMat(&bufferPy, sy, y)
-	genMat(&bufferPy, sz, z)
-	io.Ff(&bufferPy, "p%d = ax%d.plot_surface(%s,%s,%s", n, n, sx, sy, sz)
-	updateBufferAndClose(&bufferPy, args, false)
-}
-
-// Camera sets camera in 3d graph
-func Camera(elev, azim float64, args *A) {
-	io.Ff(&bufferPy, "plt.gca().view_init(elev=%g, azim=%g", elev, azim)
-	updateBufferAndClose(&bufferPy, args, false)
-}
-
-// AxDist sets distance in 3d graph
-func AxDist(dist float64) {
-	io.Ff(&bufferPy, "plt.gca().dist = %g\n", dist)
-}
-
 // functions to save figure ///////////////////////////////////////////////////////////////////////
 
 // Save saves figure after creating a directory
 //  NOTE: the file name will be fnkey + .png (default) or .eps depending on the Reset function
 func Save(dirout, fnkey string) (err error) {
+	empty := dirout == "" || fnkey == ""
+	if empty {
+		return chk.Err("directory and filename key must not be empty\n")
+	}
 	err = os.MkdirAll(dirout, 0777)
 	if err != nil {
 		return chk.Err("cannot create directory to save figure file:\n%v\n", err)
@@ -621,6 +549,27 @@ func Save(dirout, fnkey string) (err error) {
 // Show shows figure
 func Show() error {
 	io.Ff(&bufferPy, "plt.show()\n")
+	return run("")
+}
+
+// ShowSave shows figure and/or save figure
+func ShowSave(dirout, fnkey string) (err error) {
+	empty := dirout == "" || fnkey == ""
+	if empty {
+		return chk.Err("directory and filename key must not be empty\n")
+	}
+	n := bufferPy.Len()
+	io.Ff(&bufferPy, "fig%d = plt.gcf()\n", n)
+	io.Ff(&bufferPy, "plt.show()\n")
+	err = os.MkdirAll(dirout, 0777)
+	if err != nil {
+		return chk.Err("cannot create directory to save figure file:\n%v\n", err)
+	}
+	if fileExt == "" {
+		fileExt = ".png"
+	}
+	fn := filepath.Join(dirout, fnkey+fileExt)
+	io.Ff(&bufferPy, "fig%d.savefig(r'%s', bbox_inches='tight', bbox_extra_artists=EXTRA_ARTISTS)\n", n, fn)
 	return run("")
 }
 

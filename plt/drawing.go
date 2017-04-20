@@ -85,7 +85,7 @@ func Arc(xc, yc, r, minAlpha, maxAlpha float64, args *A) {
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
 }
 
-// Polyline draws a polyline
+// Polyline draws a polyline. P[npts][2]
 func Polyline(P [][]float64, args *A) {
 	if len(P) < 1 {
 		return

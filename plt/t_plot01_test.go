@@ -280,7 +280,7 @@ func Test_plot06(tst *testing.T) {
 		y := []float64{0, 0, 1, 1}
 		z := []float64{0, 0, 0, 1}
 
-		np := 3
+		np := 5
 
 		X, Y, Z := utl.MeshGrid2dF(0, 1, 0, 1, np, np, func(x, y float64) float64 {
 			return x + y
@@ -291,12 +291,21 @@ func Test_plot06(tst *testing.T) {
 		})
 
 		Reset(true, nil)
-		Plot3dLine(x, y, z, true, nil)
-		Plot3dPoints(x, y, z, false, nil)
-		Wireframe(X, Y, Z, false, nil)
-		Surface(U, V, W, false, nil)
-		//Camera(elev, azim float64, args *A)
 
+		Triad(1.3, true, nil, nil)
+
+		Plot3dLine(x, y, z, false, nil)
+		Plot3dPoints(x, y, z, false, nil)
+		Surface(U, V, W, false, &A{CmapIdx: 4, Rstride: 1, Cstride: 1})
+
+		Wireframe(X, Y, Z, false, &A{C: "orange", Lw: 0.4})
+
+		elev, azim := 30.0, 20.0
+		Camera(elev, azim, nil)
+		AxDist(10.5)
+		Scale3d(0, 1.5, 0, 1.5, 0, 1.5, true)
+
+		//err := ShowSave("/tmp/gosl", "t_plot06")
 		err := Save("/tmp/gosl", "t_plot06")
 		if err != nil {
 			tst.Errorf("%v", err)
