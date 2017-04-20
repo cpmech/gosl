@@ -357,8 +357,9 @@ func Test_plot08(tst *testing.T) {
 		Reset(true, nil)
 		Triad(1.0, true, &A{C: "orange"}, &A{C: "red"})
 
-		alpha, height := 15.0, 1.0
+		alpha, height, radius := 15.0, 1.0, 0.5
 		nu, nv := 7, 11
+		CylinderZ(radius, height, nu, nv, &A{C: "r"})
 		ConeZ(alpha, height, nu, nv, &A{C: "orange"})
 		ConeDiag(alpha, height, nu, nv, nil)
 		Diag3d(1, nil)

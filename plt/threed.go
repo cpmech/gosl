@@ -217,6 +217,30 @@ func CalcDiagAngle(p []float64) (alphaRad float64) {
 	return math.Sqrt(math.Pow(p[0]-p[1], 2.0)+math.Pow(p[1]-p[2], 2.0)+math.Pow(p[2]-p[0], 2.0)) / den
 }
 
+// CylinderZ draws cylinder aligned with the z axis
+//   alphaDeg -- half opening angle in degrees
+//   height -- height of cone
+//   nu -- number of divisions along the height of cone; e.g. 11
+//   nv -- number of divisions along circumference of cone; e.g. 21
+func CylinderZ(radius, height float64, nu, nv int, args *A) {
+	X := make([][]float64, nu)
+	Y := make([][]float64, nu)
+	Z := make([][]float64, nu)
+	for i := 0; i < nu; i++ {
+		X[i] = make([]float64, nv+1)
+		Y[i] = make([]float64, nv+1)
+		Z[i] = make([]float64, nv+1)
+		for j := 0; j < nv+1; j++ {
+			h := height * float64(i) / float64(nu-1)
+			θ := 2.0 * math.Pi * float64(j) / float64(nv)
+			X[i][j] = radius * math.Cos(θ)
+			Y[i][j] = radius * math.Sin(θ)
+			Z[i][j] = h
+		}
+	}
+	Wireframe(X, Y, Z, args)
+}
+
 // ConeZ draws cone aligned with the z axis
 //   alphaDeg -- half opening angle in degrees
 //   height -- height of cone
