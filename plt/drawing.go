@@ -61,7 +61,7 @@ func Arrow(xi, yi, xf, yf float64, args *A) {
 	}
 	n := bufferPy.Len()
 	io.Ff(&bufferPy, "pc%d = pat.FancyArrowPatch((%g,%g),(%g,%g),shrinkA=0,shrinkB=0,path_effects=[pff.Stroke(joinstyle='miter')],arrowstyle='%s',mutation_scale=%g", n, xi, yi, xf, yf, style, scale)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
 }
 
@@ -69,7 +69,7 @@ func Arrow(xi, yi, xf, yf float64, args *A) {
 func Circle(xc, yc, r float64, args *A) {
 	n := bufferPy.Len()
 	io.Ff(&bufferPy, "pc%d = pat.Circle((%g,%g), %g", n, xc, yc, r)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
 }
 
@@ -81,7 +81,7 @@ func Arc(xc, yc, r, minAlpha, maxAlpha float64, args *A) {
 	θ1 := minAlpha * 180.0 / math.Pi
 	θ2 := maxAlpha * 180.0 / math.Pi
 	io.Ff(&bufferPy, "pc%d = pat.Arc((%g,%g),%g,%g,angle=0,theta1=%g,theta2=%g", n, xc, yc, r2, r2, θ1, θ2)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
 }
 
@@ -106,7 +106,7 @@ func Polyline(P [][]float64, args *A) {
 	io.Ff(&bufferPy, "commands%d, vertices%d = zip(*dat%d)\n", n, n, n)
 	io.Ff(&bufferPy, "ph%d = pth.Path(vertices%d, commands%d)\n", n, n, n)
 	io.Ff(&bufferPy, "pc%d = pat.PathPatch(ph%d", n, n)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
 }
 
@@ -119,7 +119,7 @@ func LegendX(dat []*A, args *A) {
 			io.Ff(&bufferPy, ",\n")
 		}
 		if d != nil {
-			io.Ff(&bufferPy, "lns.Line2D([], [], %s)", d.String(false))
+			io.Ff(&bufferPy, "lns.Line2D([], [], %s)", d.String(false, false))
 		}
 	}
 	fs, loc, frame := 9.0, "best", false
@@ -128,7 +128,7 @@ func LegendX(dat []*A, args *A) {
 		loc = args.LegLoc
 	}
 	io.Ff(&bufferPy, "]\nl%d=plt.legend(handles=handles%d, fontsize=%g, loc='%s'", n, n, fs, loc)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	if !frame {
 		io.Ff(&bufferPy, "if l%d: l%d.get_frame().set_linewidth(0.0)\n", n, n)
 	}

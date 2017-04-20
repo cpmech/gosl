@@ -96,10 +96,14 @@ type A struct {
 }
 
 // String returns a string representation of arguments
-func (o A) String(forHistogram bool) (l string) {
+func (o A) String(forHistogram, for3dPoints bool) (l string) {
 
 	// plot and basic options
-	addToCmd(&l, o.C != "", io.Sf("color='%s'", o.C))
+	if for3dPoints {
+		addToCmd(&l, o.C != "", io.Sf("c='%s'", o.C))
+	} else {
+		addToCmd(&l, o.C != "", io.Sf("color='%s'", o.C))
+	}
 	addToCmd(&l, o.M != "", io.Sf("marker='%s'", o.M))
 	addToCmd(&l, o.Ls != "", io.Sf("ls='%s'", o.Ls))
 	addToCmd(&l, o.Lw > 0, io.Sf("lw=%g", o.Lw))
@@ -148,7 +152,7 @@ func addToCmd(line *string, condition bool, delta string) {
 }
 
 // updateBufferWithArgsAndClose updates buffer with arguments and close with ")\n". See updateBufferWithArgs too.
-func updateBufferAndClose(buf *bytes.Buffer, args *A, forHistogram bool) {
+func updateBufferAndClose(buf *bytes.Buffer, args *A, forHistogram, for3dPoints bool) {
 	if buf == nil {
 		return
 	}
@@ -156,7 +160,7 @@ func updateBufferAndClose(buf *bytes.Buffer, args *A, forHistogram bool) {
 		io.Ff(buf, ")\n")
 		return
 	}
-	txt := args.String(forHistogram)
+	txt := args.String(forHistogram, for3dPoints)
 	if txt == "" {
 		io.Ff(buf, ")\n")
 		return

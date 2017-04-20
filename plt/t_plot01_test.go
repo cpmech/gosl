@@ -42,7 +42,7 @@ func Test_args01(tst *testing.T) {
 	// text and extra arguments
 	a.Fsz = 7
 
-	l := a.String(false)
+	l := a.String(false, false)
 	chk.String(tst, l, "color='red',marker='o',ls='--',lw=1.2,label='gosl',markevery=2,zorder=123,markeredgecolor='blue',mew=0.3,markerfacecolor='none',clip_on=0,facecolor='magenta',edgecolor='yellow',ha='center',va='center',fontsize=7")
 }
 
@@ -60,7 +60,7 @@ func Test_args02(tst *testing.T) {
 		Normed:  true,
 	}
 
-	l := a.String(true)
+	l := a.String(true, false)
 	chk.String(tst, l, "color=['red','tan','lime'],histtype='bar',stacked=1,fill=0,bins=10,normed=1")
 }
 
@@ -292,7 +292,7 @@ func Test_plot06(tst *testing.T) {
 
 		Reset(true, nil)
 
-		Triad(1.3, true, nil, nil)
+		Triad(1.3, true, true, nil, nil)
 
 		Plot3dLine(x, y, z, false, nil)
 		Plot3dPoints(x, y, z, false, nil)
@@ -307,6 +307,39 @@ func Test_plot06(tst *testing.T) {
 
 		//err := ShowSave("/tmp/gosl", "t_plot06")
 		err := Save("/tmp/gosl", "t_plot06")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}
+
+func Test_plot07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot07")
+
+	if chk.Verbose {
+
+		// point on plane
+		p := []float64{0.5, 0.5, 0.5}
+
+		// normal vector
+		n := []float64{1, 0, 1}
+
+		// limits and divisions
+		xmin, xmax := 0.0, 1.0
+		ymin, ymax := 0.0, 1.0
+		nu, nv := 5, 5
+
+		// draw
+		Reset(true, nil)
+		Triad(1.0, true, true, &A{C: "orange"}, &A{C: "red"})
+		PlaneZ(p, n, xmin, xmax, ymin, ymax, nu, nv, true, false, nil)
+		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
+
+		// save
+		//err := ShowSave("/tmp/gosl", "t_plot07")
+		err := Save("/tmp/gosl", "t_plot07")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}

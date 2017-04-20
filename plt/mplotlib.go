@@ -218,13 +218,13 @@ func ReplaceAxes(xi, yi, xf, yf, xDel, yDel float64, xLab, yLab string, argsArro
 // AxHline adds horizontal line to axis
 func AxHline(y float64, args *A) {
 	io.Ff(&bufferPy, "plt.axhline(%g", y)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // AxVline adds vertical line to axis
 func AxVline(x float64, args *A) {
 	io.Ff(&bufferPy, "plt.axvline(%g", x)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // HideBorders hides frame borders
@@ -238,7 +238,7 @@ func HideBorders(args *A) {
 // Annotate adds annotation to plot
 func Annotate(x, y float64, txt string, args *A) {
 	io.Ff(&bufferPy, "plt.annotate(r'%s', xy=(%g,%g)", txt, x, y)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // AnnotateXlabels sets text of xlabels
@@ -250,27 +250,27 @@ func AnnotateXlabels(x float64, txt string, args *A) {
 		}
 	}
 	io.Ff(&bufferPy, "plt.annotate('%s', xy=(%g, -%g-3), xycoords=('data', 'axes points'), va='top', ha='center', size=%g", txt, x, fsz, fsz)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // SupTitle sets subplot title
 func SupTitle(txt string, args *A) {
 	n := bufferPy.Len()
 	io.Ff(&bufferPy, "st%d = plt.suptitle(r'%s'", n, txt)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "addToEA(st%d)\n", n)
 }
 
 // Title sets title
 func Title(txt string, args *A) {
 	io.Ff(&bufferPy, "plt.title(r'%s'", txt)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // Text adds text to plot
 func Text(x, y float64, txt string, args *A) {
 	io.Ff(&bufferPy, "plt.text(%g,%g,r'%s'", x, y, txt)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // Cross adds a vertical and horizontal lines @ (x0,y0) to plot (i.e. large cross)
@@ -389,14 +389,14 @@ func Plot(x, y []float64, args *A) (sx, sy string) {
 	sy = io.Sf("y%d", n)
 	gen2Arrays(&bufferPy, sx, sy, x, y)
 	io.Ff(&bufferPy, "plt.plot(%s,%s", sx, sy)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	return
 }
 
 // PlotOne plots one point @ (x,y)
 func PlotOne(x, y float64, args *A) {
 	io.Ff(&bufferPy, "plt.plot(%23.15e,%23.15e", x, y)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // Hist draws histogram
@@ -407,7 +407,7 @@ func Hist(x [][]float64, labels []string, args *A) {
 	genList(&bufferPy, sx, x)
 	genStrArray(&bufferPy, sy, labels)
 	io.Ff(&bufferPy, "plt.hist(%s,label=r'%s'", sx, sy)
-	updateBufferAndClose(&bufferPy, args, true)
+	updateBufferAndClose(&bufferPy, args, true, false)
 }
 
 // ContourF draws filled contour and possibly with a contour of lines (if args.UnoLines=false)
@@ -469,13 +469,13 @@ func Quiver(x, y, gx, gy [][]float64, args *A) {
 	genMat(&bufferPy, sgx, gx)
 	genMat(&bufferPy, sgy, gy)
 	io.Ff(&bufferPy, "plt.quiver(%s,%s,%s,%s", sx, sy, sgx, sgy)
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // Grid adds grid to plot
 func Grid(args *A) {
 	io.Ff(&bufferPy, "plt.grid(")
-	updateBufferAndClose(&bufferPy, args, false)
+	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
 // Legend adds legend to plot
