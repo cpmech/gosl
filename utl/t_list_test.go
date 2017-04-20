@@ -15,14 +15,14 @@ import (
 func Test_list01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("list01. DblList.Append")
+	chk.PrintTitle("list01. List.Append")
 
-	var m DblList
+	var m List
 	m.Append(2, 2.0)
 	io.Pforan("m = %v\n", m)
 	equal := reflect.DeepEqual(m.Vals, [][]float64{{}, {}, {2}})
 	if !equal {
-		chk.PrintFail("DblList Append")
+		chk.PrintFail("List Append")
 	}
 
 	m.Append(0, 0.0)
@@ -30,16 +30,16 @@ func Test_list01(tst *testing.T) {
 	io.Pforan("m = %v\n", m)
 	equal = reflect.DeepEqual(m.Vals, [][]float64{{0}, {1}, {2}})
 	if !equal {
-		chk.PrintFail("DblList Append")
+		chk.PrintFail("List Append")
 	}
 }
 
 func Test_list02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("list02. DblSlist.Append")
+	chk.PrintTitle("list02. SerialList.Append")
 
-	var L DblSlist
+	var L SerialList
 
 	L.Append(true, 0.0)
 	io.Pforan("L.Vals = %v\n", L.Vals)

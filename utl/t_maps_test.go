@@ -47,12 +47,12 @@ func Test_map02(tst *testing.T) {
 		"c": []float64{200, 300, 400},
 	}
 	io.Pforan("m (before) = %v\n", m)
-	StrDblsMapAppend(&m, "a", 102)
+	StrFltsMapAppend(&m, "a", 102)
 	io.Pfpink("m (after) = %v\n", m)
 	chk.Vector(tst, "m[\"a\"]", 1e-16, m["a"], []float64{100, 101, 102})
 	chk.Vector(tst, "m[\"b\"]", 1e-16, m["b"], []float64{1000})
 	chk.Vector(tst, "m[\"c\"]", 1e-16, m["c"], []float64{200, 300, 400})
-	StrDblsMapAppend(&m, "d", 666)
+	StrFltsMapAppend(&m, "d", 666)
 	io.Pfcyan("m (after) = %v\n", m)
 	chk.Vector(tst, "m[\"a\"]", 1e-16, m["a"], []float64{100, 101, 102})
 	chk.Vector(tst, "m[\"b\"]", 1e-16, m["b"], []float64{1000})

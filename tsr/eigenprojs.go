@@ -26,7 +26,7 @@ func M_PrincValsNum(a []float64) (λ0, λ1, λ2 float64, err error) {
 		return
 	}
 	λ0, λ1, λ2 = v[0], v[1], v[2]
-	utl.DblSort3(&λ0, &λ1, &λ2)
+	utl.Sort3(&λ0, &λ1, &λ2)
 	return
 }
 

@@ -68,10 +68,10 @@ func (o *Grid2d) Init(xmin, xmax, ymin, ymax float64, nx, ny int) {
 //   Output:
 //     X, Y, F(optional) -- matrices of coordinates and f(x,y) values
 func (o *Grid2d) Generate(fcn Cb_fxy, Fserial []float64) (X, Y, F [][]float64) {
-	X = utl.DblsAlloc(o.Nx, o.Ny)
-	Y = utl.DblsAlloc(o.Nx, o.Ny)
+	X = utl.Alloc(o.Nx, o.Ny)
+	Y = utl.Alloc(o.Nx, o.Ny)
 	if fcn != nil || Fserial != nil {
-		F = utl.DblsAlloc(o.Nx, o.Ny)
+		F = utl.Alloc(o.Nx, o.Ny)
 	}
 	for i := 0; i < o.Nx; i++ {
 		x := o.Xmin + float64(i)*o.Dx

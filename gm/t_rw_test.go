@@ -42,7 +42,7 @@ func test_rwstep01(tst *testing.T) {
 
 		// collect vertices
 		nv := len(curve.Control_points_list)
-		verts := utl.DblsAlloc(nv, 4)
+		verts := utl.Alloc(nv, 4)
 		for i, key := range curve.Control_points_list {
 			if p, ok := stp.Points[key]; ok {
 				for j := 0; j < 3; j++ {

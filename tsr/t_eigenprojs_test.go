@@ -56,7 +56,7 @@ func Test_eigenp01(tst *testing.T) {
 		io.Pforan("\neigenprojectors\n")
 		λsorted := CheckEigenprojs(a, tolP, tolS, ver)
 		io.Pfyel("λsorted = %v\n", λsorted)
-		λchk := utl.DblGetSorted(test_λ[idxA])
+		λchk := utl.GetSorted(test_λ[idxA])
 		chk.Vector(tst, "λchk", 1e-12, λsorted, λchk)
 
 		// check derivatives of eigenprojectors

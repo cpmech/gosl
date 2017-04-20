@@ -82,7 +82,7 @@ func (o *Bins) Append(x []float64, id int) (err error) {
 	if bin == nil {
 		return chk.Err("bin index %v is out of range", idx)
 	}
-	xcopy := utl.DblCopy(x)
+	xcopy := utl.GetCopy(x)
 	entry := BinEntry{id, xcopy}
 	bin.Entries = append(bin.Entries, &entry)
 	return

@@ -36,27 +36,27 @@ func Test_sort01(tst *testing.T) {
 	chk.Vector(tst, "x", 1e-16, X, []float64{-77.7, 0.0, 88.8, 1000.33})
 
 	x = []float64{1000.33, 0, -77.7, 88.8}
-	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	Sort4(&x[0], &x[1], &x[2], &x[3])
 	io.Pforan("x = %v\n", x)
 	chk.Vector(tst, "x", 1e-16, x, []float64{-77.7, 0.0, 88.8, 1000.33})
 
 	x = []float64{1, 10.33, 0, -8.7}
-	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	Sort4(&x[0], &x[1], &x[2], &x[3])
 	io.Pforan("x = %v\n", x)
 	chk.Vector(tst, "x", 1e-16, x, []float64{-8.7, 0, 1, 10.33})
 
 	x = []float64{100.33, 10, -77.7, 8.8}
-	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	Sort4(&x[0], &x[1], &x[2], &x[3])
 	io.Pforan("x = %v\n", x)
 	chk.Vector(tst, "x", 1e-16, x, []float64{-77.7, 8.8, 10, 100.33})
 
 	x = []float64{-10.33, 0, 7.7, -8.8}
-	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	Sort4(&x[0], &x[1], &x[2], &x[3])
 	io.Pforan("x = %v\n", x)
 	chk.Vector(tst, "x", 1e-16, x, []float64{-10.33, -8.8, 0, 7.7})
 
 	x = []float64{-1000.33, 8, -177.7, 0.8}
-	DblSort4(&x[0], &x[1], &x[2], &x[3])
+	Sort4(&x[0], &x[1], &x[2], &x[3])
 	io.Pforan("x = %v\n", x)
 	chk.Vector(tst, "x", 1e-16, x, []float64{-1000.33, -177.7, 0.8, 8})
 }
@@ -118,42 +118,42 @@ func Test_sort03(tst *testing.T) {
 	chk.PrintTitle("sort03")
 
 	a, b, c := 8.0, -5.5, 4.0
-	DblSort3(&a, &b, &c)
+	Sort3(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{-5.5, 4, 8})
-	DblDsort3(&a, &b, &c)
+	Sort3Desc(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{8, 4, -5.5})
 
 	a, b, c = -18.0, -5.5, 4.0
-	DblSort3(&a, &b, &c)
+	Sort3(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{-18, -5.5, 4})
-	DblDsort3(&a, &b, &c)
+	Sort3Desc(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{4, -5.5, -18})
 
 	a, b, c = 1.0, 2.0, 3.0
-	DblSort3(&a, &b, &c)
+	Sort3(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{1, 2, 3})
-	DblDsort3(&a, &b, &c)
+	Sort3Desc(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{3, 2, 1})
 
 	a, b, c = 1.0, 3.0, 2.0
-	DblSort3(&a, &b, &c)
+	Sort3(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{1, 2, 3})
-	DblDsort3(&a, &b, &c)
+	Sort3Desc(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{3, 2, 1})
 
 	a, b, c = 3.0, 2.0, 1.0
-	DblSort3(&a, &b, &c)
+	Sort3(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{1, 2, 3})
-	DblDsort3(&a, &b, &c)
+	Sort3Desc(&a, &b, &c)
 	io.Pforan("a b c = %v %v %v\n", a, b, c)
 	chk.Vector(tst, "a b c", 1e-16, []float64{a, b, c}, []float64{3, 2, 1})
 }
@@ -164,7 +164,7 @@ func Test_sort04(tst *testing.T) {
 	chk.PrintTitle("sort04")
 
 	a := []float64{-3, -7, 8, 11, 3, 0, -11, 8}
-	b := DblGetSorted(a)
+	b := GetSorted(a)
 	chk.Vector(tst, "a(sorted)", 1e-16, b, []float64{-11, -7, -3, 0, 3, 8, 8, 11})
 }
 
@@ -177,7 +177,7 @@ func Test_sort05(tst *testing.T) {
 	b := map[string]float64{"a": 1, "z": 2, "c": 3, "y": 4, "d": 5, "b": 6, "x": 7}
 	c := map[string]bool{"a": false, "z": true, "c": false, "y": true, "d": true, "b": false, "x": true}
 	ka := StrIntMapSort(a)
-	kb := StrDblMapSort(b)
+	kb := StrFltMapSort(b)
 	kc := StrBoolMapSort(c)
 	io.Pforan("sorted_keys(a) = %v\n", ka)
 	io.Pforan("sorted_keys(b) = %v\n", kb)
@@ -192,7 +192,7 @@ func Test_sort05(tst *testing.T) {
 	chk.Strings(tst, "ka", ka, []string{"a", "b", "c", "d", "x", "y", "z"})
 	chk.Ints(tst, "va", va, []int{1, 6, 3, 5, 7, 4, 2})
 
-	kb, vb := StrDblMapSortSplit(b)
+	kb, vb := StrFltMapSortSplit(b)
 	io.Pfcyan("sorted_keys(b) = %v\n", kb)
 	io.Pfcyan("sorted_vals(b) = %v\n", vb)
 	chk.Strings(tst, "kb", kb, []string{"a", "b", "c", "d", "x", "y", "z"})

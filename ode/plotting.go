@@ -26,7 +26,7 @@ func SimpleOutput(first bool, dx, x float64, y []float64, args ...interface{}) (
 	res.X = append(res.X, x)
 	ndim := len(y)
 	if len(res.Y) == 0 {
-		res.Y = utl.DblsAlloc(ndim, 0)
+		res.Y = utl.Alloc(ndim, 0)
 	}
 	for j := 0; j < ndim; j++ {
 		res.Y[j] = append(res.Y[j], y[j])
@@ -53,7 +53,7 @@ func Plot(dirout, fnkey string, res *Results, yfcn Cb_ycorr, xa, xb float64, ext
 		np := 101
 		dx := (xb - xa) / float64(np-1)
 		xc = make([]float64, np)
-		Yc = utl.DblsAlloc(np, ndim)
+		Yc = utl.Alloc(np, ndim)
 		for i := 0; i < np; i++ {
 			xc[i] = xa + dx*float64(i)
 			yfcn(Yc[i], xc[i])

@@ -23,7 +23,7 @@ func Test_pareto01(tst *testing.T) {
 	v := []float64{1, 2, 3, 4, 5, 6}
 	io.Pforan("u = %v\n", u)
 	io.Pfblue2("v = %v\n", v)
-	u_dominates, v_dominates := DblsParetoMin(u, v)
+	u_dominates, v_dominates := ParetoMin(u, v)
 	io.Pfpink("u_dominates = %v\n", u_dominates)
 	io.Pfpink("v_dominates = %v\n", v_dominates)
 	if u_dominates {
@@ -38,7 +38,7 @@ func Test_pareto01(tst *testing.T) {
 	v = []float64{1, 1.8, 3, 4, 5, 6}
 	io.Pforan("\nu = %v\n", u)
 	io.Pfblue2("v = %v\n", v)
-	u_dominates, v_dominates = DblsParetoMin(u, v)
+	u_dominates, v_dominates = ParetoMin(u, v)
 	io.Pfpink("u_dominates = %v\n", u_dominates)
 	io.Pfpink("v_dominates = %v\n", v_dominates)
 	if u_dominates {
@@ -53,7 +53,7 @@ func Test_pareto01(tst *testing.T) {
 	v = []float64{1, 2.1, 3, 4, 5, 6}
 	io.Pforan("\nu = %v\n", u)
 	io.Pfblue2("v = %v\n", v)
-	u_dominates, v_dominates = DblsParetoMin(u, v)
+	u_dominates, v_dominates = ParetoMin(u, v)
 	io.Pfpink("u_dominates = %v\n", u_dominates)
 	io.Pfpink("v_dominates = %v\n", v_dominates)
 	if !u_dominates {
@@ -196,7 +196,7 @@ func run_pareto_test(U, V, Φ []float64, ntrials int) (zu, zv []float64) {
 		u_wins := 0
 		v_wins := 0
 		for j := 0; j < ntrials; j++ {
-			u_dominates := DblsParetoMinProb(U, V, φ)
+			u_dominates := ParetoMinProb(U, V, φ)
 			if u_dominates {
 				u_wins++
 			} else {

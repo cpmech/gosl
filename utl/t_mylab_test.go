@@ -20,9 +20,9 @@ func Test_mylab01(tst *testing.T) {
 	IntFill(I, 666)
 	J := IntVals(5, 666)
 	Js := StrVals(5, "666")
-	M := IntsAlloc(3, 4)
-	N := DblsAlloc(3, 4)
-	S := StrsAlloc(2, 3)
+	M := IntAlloc(3, 4)
+	N := Alloc(3, 4)
+	S := StrAlloc(2, 3)
 	A := IntRange(-1)
 	a := IntRange2(0, 0)
 	b := IntRange2(0, 1)
@@ -31,8 +31,8 @@ func Test_mylab01(tst *testing.T) {
 	d := IntRange2(2, 5)
 	D := IntRange2(-2, 5)
 	e := IntAddScalar(D, 2)
-	f := DblOnes(5)
-	ff := DblVals(5, 666)
+	f := Ones(5)
+	ff := Vals(5, 666)
 	g := []int{1, 2, 3, 4, 3, 4, 2, 1, 1, 2, 3, 4, 4, 2, 3, 7, 8, 3, 8, 3, 9, 0, 11, 23, 1, 2, 32, 12, 4, 32, 4, 11, 37}
 	h := IntUnique(g)
 	G := []int{1, 2, 3, 38, 3, 5, 3, 1, 2, 15, 38, 1, 11}
@@ -45,7 +45,7 @@ func Test_mylab01(tst *testing.T) {
 		{-1, -2, -3, -4, -5},
 		{6, 7, 8, 9, 10},
 	}
-	Pc := IntsClone(P)
+	Pc := IntClone(P)
 	chk.Ints(tst, "I", I, []int{666, 666, 666, 666, 666})
 	chk.Ints(tst, "J", J, []int{666, 666, 666, 666, 666})
 	chk.Strings(tst, "Js", Js, []string{"666", "666", "666", "666", "666"})
@@ -80,7 +80,7 @@ func Test_mylab01(tst *testing.T) {
 func Test_mylab03a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mylab03a. ints: min and max. dbls: min and max")
+	chk.PrintTitle("mylab03a. ints: min and max. min and max")
 
 	A := []int{1, 2, 3, -1, -2, 0, 8, -3}
 	mi, ma := IntMinMax(A)
@@ -111,7 +111,7 @@ func Test_mylab03a(tst *testing.T) {
 func Test_mylab03b(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mylab03b. ints: neg out and dbls min and max")
+	chk.PrintTitle("mylab03b. ints: neg out and min and max")
 
 	a := []int{1, 2, 3, -1, -2, 0, 8, -3}
 	b := IntFilter(a, func(i int) bool {
@@ -128,8 +128,8 @@ func Test_mylab03b(tst *testing.T) {
 	chk.Ints(tst, "c", c, []int{1, 2, 3, 0, 8})
 
 	A := []float64{1, 2, 3, -1, -2, 0, 8, -3}
-	s := DblSum(A)
-	mi, ma := DblMinMax(A)
+	s := Sum(A)
+	mi, ma := MinMax(A)
 	io.Pf("A      = %v\n", A)
 	io.Pf("sum(A) = %v\n", s)
 	io.Pf("min(A) = %v\n", mi)
@@ -274,7 +274,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, 88.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, DblVals(len(x), 88))
+	chk.Vector(tst, "s", 1e-15, s, Vals(len(x), 88))
 
 	// |dx|=0: reverse (not using indices)
 	io.Pfblue2("\n|dx|=0: reverse (not using indices)\n")
@@ -282,7 +282,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, 88.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, DblVals(len(x), 88))
+	chk.Vector(tst, "s", 1e-15, s, Vals(len(x), 88))
 }
 
 func Test_conversions01(tst *testing.T) {
@@ -291,8 +291,8 @@ func Test_conversions01(tst *testing.T) {
 	chk.PrintTitle("conversions01")
 
 	v := []float64{2.48140019424242e-08, 0.0014621532754275238, 5.558773630697262e-09, 3.0581358492226644e-08, 0.001096211253647636}
-	s := Dbl2Str(v, "%.17e")
-	w := Str2Dbl(s)
+	s := ToStrings(v, "%.17e")
+	w := FromStrings(s)
 	chk.Vector(tst, "v => s => w", 1e-17, v, w)
 }
 
@@ -301,7 +301,7 @@ func Test_split01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("split01")
 
-	r := DblSplit(" 1e4 1 3   8   88   ")
+	r := FromString(" 1e4 1 3   8   88   ")
 	io.Pfblue2("r = %v\n", r)
 	chk.Vector(tst, "r", 1e-16, r, []float64{1e4, 1, 3, 8, 88})
 }
@@ -312,7 +312,7 @@ func Test_copy01(tst *testing.T) {
 	chk.PrintTitle("copy01")
 
 	v := []float64{1, 2, 3, 4, 4, 5, 5, 6, 6, 6}
-	w := DblCopy(v)
+	w := GetCopy(v)
 	io.Pfblue2("v = %v\n", v)
 	chk.Vector(tst, "w==v", 1e-16, w, v)
 }
@@ -331,16 +331,16 @@ func Test_mylab07(tst *testing.T) {
 		{0, 2, 9, -4},
 	}
 
-	x := DblsGetColumn(0, v)
+	x := GetColumn(0, v)
 	chk.Vector(tst, "v[:,0]", 1e-17, x, []float64{1, -1, -1, 1, 1, 0})
 
-	x = DblsGetColumn(1, v)
+	x = GetColumn(1, v)
 	chk.Vector(tst, "v[:,1]", 1e-17, x, []float64{2, 2, 2, -2, 1, 2})
 
-	x = DblsGetColumn(2, v)
+	x = GetColumn(2, v)
 	chk.Vector(tst, "v[:,2]", 1e-17, x, []float64{3, 3, 1, 3, -3, 9})
 
-	x = DblsGetColumn(3, v)
+	x = GetColumn(3, v)
 	chk.Vector(tst, "v[:,3]", 1e-17, x, []float64{4, 0, 4, 8, 4, -4})
 }
 
@@ -378,7 +378,7 @@ func Test_mylab09(tst *testing.T) {
 	chk.PrintTitle("mylab09. arg min and max and L2norm")
 
 	u := []float64{1, 2, 3, -5, 60, -10, 8}
-	imin, imax := DblArgMinMax(u)
+	imin, imax := ArgMinMax(u)
 	io.Pforan("imin = %v (5)\n", imin)
 	io.Pforan("imax = %v (4)\n", imax)
 	chk.IntAssert(imin, 5)
@@ -396,13 +396,13 @@ func Test_mylab10(tst *testing.T) {
 	chk.PrintTitle("mylab10. bool all true and all false")
 
 	values := []bool{true, true, true}
-	if !BoolAllTrue(values) {
+	if !AllTrue(values) {
 		tst.Error("test failed: not all values are true\n")
 		return
 	}
 
 	values = []bool{false, false, false}
-	if !BoolAllFalse(values) {
+	if !AllFalse(values) {
 		tst.Error("test failed: not all values are false\n")
 		return
 	}

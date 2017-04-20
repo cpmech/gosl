@@ -188,7 +188,7 @@ func (o *Bspline) Elements() (spans [][]int) {
 			nspans += 1
 		}
 	}
-	spans = utl.IntsAlloc(nspans, 2)
+	spans = utl.IntAlloc(nspans, 2)
 	ispan := 0
 	for i := 0; i < o.m-1; i++ {
 		l := o.T[i+1] - o.T[i]

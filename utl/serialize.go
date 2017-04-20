@@ -6,8 +6,8 @@ package utl
 
 import "github.com/cpmech/gosl/io"
 
-// DblMatToArray converts a matrix into a column-major array
-func DblMatToArray(a [][]float64) (v []float64) {
+// MatToArray converts a matrix into a column-major array
+func MatToArray(a [][]float64) (v []float64) {
 	m, n, k := len(a), len(a[0]), 0
 	v = make([]float64, m*n)
 	for j := 0; j < n; j++ {
@@ -19,8 +19,8 @@ func DblMatToArray(a [][]float64) (v []float64) {
 	return
 }
 
-// DblArrayToMat converts a column-major array to a matrix
-func DblArrayToMat(v []float64, m, n int) (a [][]float64) {
+// ArrayToMat converts a column-major array to a matrix
+func ArrayToMat(v []float64, m, n int) (a [][]float64) {
 	a = make([][]float64, m)
 	for i := 0; i < m; i++ {
 		a[i] = make([]float64, n)

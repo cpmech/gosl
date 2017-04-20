@@ -26,9 +26,9 @@ func IntMinMax(v []int) (mi, ma int) {
 	return
 }
 
-// DblMinMax returns the maximum and minimum elements in v
+// MinMax returns the maximum and minimum elements in v
 //  NOTE: this is not efficient and should be used for small slices only
-func DblMinMax(v []float64) (mi, ma float64) {
+func MinMax(v []float64) (mi, ma float64) {
 	mi, ma = v[0], v[0]
 	for i := 1; i < len(v); i++ {
 		if v[i] < mi {
@@ -41,9 +41,9 @@ func DblMinMax(v []float64) (mi, ma float64) {
 	return
 }
 
-// DblSum sums all items in v
+// Sum sums all items in v
 //  NOTE: this is not efficient and should be used for small slices only
-func DblSum(v []float64) (sum float64) {
+func Sum(v []float64) (sum float64) {
 	for i := 0; i < len(v); i++ {
 		sum += v[i]
 	}

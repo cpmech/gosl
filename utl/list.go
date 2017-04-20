@@ -6,7 +6,7 @@ package utl
 
 import "github.com/cpmech/gosl/io"
 
-// DblList implements a tabular list with variable number of columns
+// List implements a tabular list with variable number of columns
 //  Example:
 //    Vals = [][]float64{
 //             {0.0},
@@ -14,12 +14,12 @@ import "github.com/cpmech/gosl/io"
 //             {2.0, 2.1},
 //             {3.0, 3.1, 3.2},
 //           }
-type DblList struct {
+type List struct {
 	Vals [][]float64 // values
 }
 
-// Append appends items to DblList
-func (o *DblList) Append(rowidx int, value float64) {
+// Append appends items to List
+func (o *List) Append(rowidx int, value float64) {
 	size := len(o.Vals)
 
 	// fill new rows if necessary
@@ -33,7 +33,7 @@ func (o *DblList) Append(rowidx int, value float64) {
 	o.Vals[rowidx] = append(o.Vals[rowidx], value)
 }
 
-// DblSlist implements a tabular list with variable number of columns
+// SerialList implements a tabular list with variable number of columns
 // using a serial representation
 //  Example:
 //      0.0
@@ -47,13 +47,13 @@ func (o *DblList) Append(rowidx int, value float64) {
 //  Notes:
 //      len(Ptrs) = nrows + 1
 //      Ptrs[len(Ptrs)-1] = len(Vals)
-type DblSlist struct {
+type SerialList struct {
 	Vals []float64 // values
 	Ptrs []int     // pointers
 }
 
-// Append appends item to DblSlist
-func (o *DblSlist) Append(startRow bool, value float64) {
+// Append appends item to SerialList
+func (o *SerialList) Append(startRow bool, value float64) {
 	if startRow {
 		if len(o.Ptrs) == 0 {
 			o.Ptrs = []int{0, 0}
@@ -67,7 +67,7 @@ func (o *DblSlist) Append(startRow bool, value float64) {
 }
 
 // Print prints the souble-serial-list
-func (o DblSlist) Print(fmt string) {
+func (o SerialList) Print(fmt string) {
 	for i := 0; i < len(o.Ptrs)-1; i++ {
 		for j := o.Ptrs[i]; j < o.Ptrs[i+1]; j++ {
 			io.Pf(fmt, o.Vals[j])

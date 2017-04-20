@@ -62,14 +62,14 @@ func (o *Munkres) Init(nrow, ncol int) {
 		o.nrow = utl.Imax(o.nrow, o.ncol)
 		o.ncol = o.nrow
 	}
-	o.C = utl.DblsAlloc(o.nrow, o.ncol)
+	o.C = utl.Alloc(o.nrow, o.ncol)
 	o.M = make([][]Mask_t, o.nrow)
 	for i := 0; i < o.nrow; i++ {
 		o.M[i] = make([]Mask_t, o.ncol)
 	}
 	o.Links = make([]int, o.nrow_ori)
 	npath := 2*o.nrow + 1 // TODO: check this
-	o.path = utl.IntsAlloc(npath, 2)
+	o.path = utl.IntAlloc(npath, 2)
 	o.row_covered = make([]bool, o.nrow)
 	o.col_covered = make([]bool, o.ncol)
 }

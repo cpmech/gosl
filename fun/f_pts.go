@@ -34,11 +34,11 @@ func (o *Pts) Init(prms Prms) (err error) {
 	for _, p := range prms {
 		switch p.N {
 		case "dt":
-			dT = utl.DblSplit(p.Extra)
+			dT = utl.FromString(p.Extra)
 		case "dy":
-			dY = utl.DblSplit(p.Extra)
+			dY = utl.FromString(p.Extra)
 		case "y=dt":
-			Y = utl.DblSplit(p.Extra)
+			Y = utl.FromString(p.Extra)
 			y_equal_dt = true
 		default:
 			switch p.N[:1] {

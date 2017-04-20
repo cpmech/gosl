@@ -11,9 +11,9 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// DblsParetoMin compares two vectors using Pareto's optimal criterion
+// ParetoMin compares two vectors using Pareto's optimal criterion
 //  Note: minimum dominates (is better)
-func DblsParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
+func ParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
 	chk.IntAssert(len(u), len(v))
 	u_has_all_leq := true // all u values are less-than or equal-to v values
 	u_has_one_le := false // u has at least one value less-than v
@@ -38,13 +38,13 @@ func DblsParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
 	return
 }
 
-// DblsParetoMinProb compares two vectors using Pareto's optimal criterion
+// ParetoMinProb compares two vectors using Pareto's optimal criterion
 // φ ∃ [0,1] is a scaling factor that helps v win even if it's not smaller.
 // If φ==0, deterministic analysis is carried out. If φ==1, probabilistic analysis is carried out.
 // As φ → 1, v "gets more help".
 //  Note: (1) minimum dominates (is better)
 //        (2) v dominates if !u_dominates
-func DblsParetoMinProb(u, v []float64, φ float64) (u_dominates bool) {
+func ParetoMinProb(u, v []float64, φ float64) (u_dominates bool) {
 	chk.IntAssert(len(u), len(v))
 	var pu, pv float64
 	for i := 0; i < len(u); i++ {
@@ -102,7 +102,7 @@ func ParetoFront(Ovs [][]float64) (front []int) {
 	}
 	for i := 0; i < nsamples; i++ {
 		for j := i + 1; j < nsamples; j++ {
-			u_dominates, v_dominates := DblsParetoMin(Ovs[i], Ovs[j])
+			u_dominates, v_dominates := ParetoMin(Ovs[i], Ovs[j])
 			if u_dominates {
 				dominated[j] = true
 			}

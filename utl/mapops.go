@@ -26,9 +26,9 @@ func StrIntsMapAppend(m *map[string][]int, key string, item int) {
 	}
 }
 
-// StrDblsMapAppend appends a new item to a map of slice.
+// StrFltsMapAppend appends a new item to a map of slice.
 //  Note: this function creates a new slice in the map if key is not found.
-func StrDblsMapAppend(m *map[string][]float64, key string, item float64) {
+func StrFltsMapAppend(m *map[string][]float64, key string, item float64) {
 	if slice, ok := (*m)[key]; ok {
 		slice = append(slice, item)
 		(*m)[key] = slice

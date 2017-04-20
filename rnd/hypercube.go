@@ -67,7 +67,7 @@ func LatinIHS(dim, n, d int) (x [][]int) {
 	avail := make([]int, dim*n)
 	list := make([]int, d*n)
 	point := make([]int, dim*d*n)
-	x = utl.IntsAlloc(dim, n)
+	x = utl.IntAlloc(dim, n)
 
 	opt := float64(n) / math.Pow(float64(n), float64(1.0/float64(dim)))
 
@@ -159,7 +159,7 @@ func PlotHc2d(dirout, fnkey string, x [][]int, xrange [][]float64) {
 	for i := 0; i < m; i++ {
 		dx[i] = (xrange[i][1] - xrange[i][0]) / float64(n-1)
 	}
-	X := utl.DblsAlloc(m, n)
+	X := utl.Alloc(m, n)
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
 			X[i][j] = xrange[i][0] + float64(x[i][j]-1)*dx[i]
@@ -180,7 +180,7 @@ func PlotHc3d(dirout, fnkey string, x [][]int, xrange [][]float64, show bool) {
 	for i := 0; i < m; i++ {
 		dx[i] = (xrange[i][1] - xrange[i][0]) / float64(n-1)
 	}
-	X := utl.DblsAlloc(m, n)
+	X := utl.Alloc(m, n)
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
 			X[i][j] = xrange[i][0] + float64(x[i][j]-1)*dx[i]

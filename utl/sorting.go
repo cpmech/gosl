@@ -46,8 +46,8 @@ func IntSort4(a, b, c, d *int) {
 	}
 }
 
-// DblSort3 sorts 3 values in ascending order
-func DblSort3(a, b, c *float64) {
+// Sort3 sorts 3 values in ascending order
+func Sort3(a, b, c *float64) {
 	if *b < *a {
 		*a, *b = *b, *a
 	}
@@ -59,8 +59,8 @@ func DblSort3(a, b, c *float64) {
 	}
 }
 
-// DblDsort3 sorts 3 values in descending order
-func DblDsort3(a, b, c *float64) {
+// Sort3Desc sorts 3 values in descending order
+func Sort3Desc(a, b, c *float64) {
 	if *b > *a {
 		*a, *b = *b, *a
 	}
@@ -72,8 +72,8 @@ func DblDsort3(a, b, c *float64) {
 	}
 }
 
-// DblSort4 sort four values in ascending order
-func DblSort4(a, b, c, d *float64) {
+// Sort4 sort four values in ascending order
+func Sort4(a, b, c, d *float64) {
 	if *b < *a {
 		*b, *a = *a, *b
 	}
@@ -94,8 +94,8 @@ func DblSort4(a, b, c, d *float64) {
 	}
 }
 
-// DblGetSorted returns a sorted (increasing) copy of 'A'
-func DblGetSorted(A []float64) (Asorted []float64) {
+// GetSorted returns a sorted (increasing) copy of 'A'
+func GetSorted(A []float64) (Asorted []float64) {
 	Asorted = make([]float64, len(A))
 	copy(Asorted, A)
 	sort.Float64s(Asorted)
@@ -246,6 +246,7 @@ func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []f
 
 // Str => ??? maps /////////////////////////////////////////////////////////////////////////////////
 
+// StrIntMapSort returns sorted keys of map[string]int
 func StrIntMapSort(m map[string]int) (sorted_keys []string) {
 	sorted_keys = make([]string, len(m))
 	i := 0
@@ -257,7 +258,8 @@ func StrIntMapSort(m map[string]int) (sorted_keys []string) {
 	return
 }
 
-func StrDblMapSort(m map[string]float64) (sorted_keys []string) {
+// StrFltMapSort returns sorted keys of map[string]float64
+func StrFltMapSort(m map[string]float64) (sorted_keys []string) {
 	sorted_keys = make([]string, len(m))
 	i := 0
 	for key, _ := range m {
@@ -268,6 +270,7 @@ func StrDblMapSort(m map[string]float64) (sorted_keys []string) {
 	return
 }
 
+// StrBoolMapSort returns sorted keys of map[string]bool
 func StrBoolMapSort(m map[string]bool) (sorted_keys []string) {
 	sorted_keys = make([]string, len(m))
 	i := 0
@@ -279,6 +282,7 @@ func StrBoolMapSort(m map[string]bool) (sorted_keys []string) {
 	return
 }
 
+// StrIntMapSortSplit returns sorted keys of map[string]int and sorted values
 func StrIntMapSortSplit(m map[string]int) (sorted_keys []string, sorted_vals []int) {
 	sorted_keys = make([]string, len(m))
 	sorted_vals = make([]int, len(m))
@@ -294,7 +298,8 @@ func StrIntMapSortSplit(m map[string]int) (sorted_keys []string, sorted_vals []i
 	return
 }
 
-func StrDblMapSortSplit(m map[string]float64) (sorted_keys []string, sorted_vals []float64) {
+// StrFltMapSortSplit returns sorted keys of map[string]float64 and sorted values
+func StrFltMapSortSplit(m map[string]float64) (sorted_keys []string, sorted_vals []float64) {
 	sorted_keys = make([]string, len(m))
 	sorted_vals = make([]float64, len(m))
 	i := 0
@@ -309,6 +314,7 @@ func StrDblMapSortSplit(m map[string]float64) (sorted_keys []string, sorted_vals
 	return
 }
 
+// StrBoolMapSortSplit returns sorted keys of map[string]bool and sorted values
 func StrBoolMapSortSplit(m map[string]bool) (sorted_keys []string, sorted_vals []bool) {
 	sorted_keys = make([]string, len(m))
 	sorted_vals = make([]bool, len(m))
@@ -326,6 +332,7 @@ func StrBoolMapSortSplit(m map[string]bool) (sorted_keys []string, sorted_vals [
 
 // Int => ??? maps /////////////////////////////////////////////////////////////////////////////////
 
+// IntBoolMapSort returns sorted keys of map[int]bool
 func IntBoolMapSort(m map[int]bool) (sorted_keys []int) {
 	sorted_keys = make([]int, len(m))
 	i := 0

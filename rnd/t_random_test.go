@@ -182,7 +182,7 @@ func Test_groups01(tst *testing.T) {
 	nints := 12        // number of integers
 	size := nints / ng // groups size
 	ints := utl.IntRange(nints)
-	groups := utl.IntsAlloc(ng, size)
+	groups := utl.IntAlloc(ng, size)
 	hists := make([]*IntHistogram, ng)
 	for i := 0; i < ng; i++ {
 		hists[i] = &IntHistogram{Stations: utl.IntRange(nints + 1)}

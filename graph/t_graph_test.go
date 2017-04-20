@@ -343,7 +343,7 @@ func Test_graph04(tst *testing.T) {
 	io.Pforan("pth = %v\n", pth)
 
 	nv := len(G.Dist)
-	x := utl.IntsAlloc(nv, nv)
+	x := utl.IntAlloc(nv, nv)
 	for k := 1; k < len(pth); k++ {
 		i, j := pth[k-1], pth[k]
 		io.Pforan("i=%d j=%v\n", i, j)

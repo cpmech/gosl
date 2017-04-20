@@ -83,8 +83,8 @@ func Test_serial03(tst *testing.T) {
 		{5, 6, 7, 8},
 		{9, 0, -1, -2},
 	}
-	v := DblMatToArray(a)
-	b := DblArrayToMat(v, 3, 4)
+	v := MatToArray(a)
+	b := ArrayToMat(v, 3, 4)
 	io.Pforan("a => v = %v\n", v)
 	io.Pforan("v => a = %v\n", b)
 	chk.Vector(tst, "a => v", 1e-15, v, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})

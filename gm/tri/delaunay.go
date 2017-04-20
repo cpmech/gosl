@@ -51,8 +51,8 @@ func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int, err error
 	// output
 	nverts := int(T.numberofpoints)
 	ncells := int(T.numberoftriangles)
-	V = utl.DblsAlloc(nverts, 2)
-	C = utl.IntsAlloc(ncells, 3)
+	V = utl.Alloc(nverts, 2)
+	C = utl.IntAlloc(ncells, 3)
 	for i := 0; i < nverts; i++ {
 		V[i][0] = float64(C.getpoint((C.long)(i), 0, &T))
 		V[i][1] = float64(C.getpoint((C.long)(i), 1, &T))

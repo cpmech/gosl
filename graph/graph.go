@@ -53,8 +53,8 @@ func (o *Graph) Init(edges [][]int, weightsE []float64, verts [][]float64, weigh
 		chk.IntAssert(len(o.Verts), len(o.Shares))
 	}
 	nv := len(o.Shares)
-	o.Dist = utl.DblsAlloc(nv, nv)
-	o.Next = utl.IntsAlloc(nv, nv)
+	o.Dist = utl.Alloc(nv, nv)
+	o.Next = utl.IntAlloc(nv, nv)
 }
 
 // GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes ides

@@ -12,7 +12,7 @@ import (
 // HaltonPoints generates randomly spaced points
 //   x -- [dim][n] points
 func HaltonPoints(dim, n int) (x [][]float64) {
-	x = utl.DblsAlloc(dim, n)
+	x = utl.Alloc(dim, n)
 	for j := 0; j < dim; j++ {
 		for i := 0; i < n; i++ {
 			x[j][i] = halton(i, j)

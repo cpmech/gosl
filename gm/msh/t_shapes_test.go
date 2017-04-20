@@ -58,7 +58,7 @@ func checkShape(tst *testing.T, shape string, tol float64, verbose bool) {
 
 	// allocate slices
 	S := make([]float64, nverts)
-	dSdR := utl.DblsAlloc(nverts, ndim)
+	dSdR := utl.Alloc(nverts, ndim)
 
 	// loop over all vertices
 	errS := 0.0
@@ -109,7 +109,7 @@ func checkDerivs(tst *testing.T, shape string, r []float64, tol float64, verbose
 
 	// allocate slices
 	S := make([]float64, nverts)
-	dSdR := utl.DblsAlloc(nverts, ndim)
+	dSdR := utl.Alloc(nverts, ndim)
 
 	// auxiliary
 	r_tmp := make([]float64, len(r))

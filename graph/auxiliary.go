@@ -37,7 +37,7 @@ func PrintIndicatorMatrix(x [][]int) (l string) {
 }
 
 func BuildIndicatorMatrix(nv int, pth []int) (x [][]int) {
-	x = utl.IntsAlloc(nv, nv)
+	x = utl.IntAlloc(nv, nv)
 	for k := 1; k < len(pth); k++ {
 		i, j := pth[k-1], pth[k]
 		x[i][j] = 1

@@ -16,6 +16,46 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
+// functions /////////////////////////////////////////////////////////////////////////////////////
+
+// Digits returns the nubmer of digits
+func Digits(maxint int) (ndigits int, format string) {
+	ndigits = int(math.Log10(float64(maxint))) + 1
+	format = io.Sf("%%%dd", ndigits)
+	return
+}
+
+// Expon returns the exponent
+func Expon(val float64) (ndigits int) {
+	if val == 0.0 {
+		return
+	}
+	ndigits = int(math.Log10(math.Abs(val)))
+	return
+}
+
+// slices of string //////////////////////////////////////////////////////////////////////////////
+
+// StrVals allocates a slice of strings with size==n, filled with val
+func StrVals(n int, val string) (s []string) {
+	s = make([]string, n)
+	for i := 0; i < n; i++ {
+		s[i] = val
+	}
+	return
+}
+
+// StrsAlloc allocates a matrix of strings
+func StrAlloc(m, n int) (mat [][]string) {
+	mat = make([][]string, m)
+	for i := 0; i < m; i++ {
+		mat[i] = make([]string, n)
+	}
+	return
+}
+
+// slices of int /////////////////////////////////////////////////////////////////////////////////
+
 // IntFill fills a slice of integers
 func IntFill(s []int, val int) {
 	for i := 0; i < len(s); i++ {
@@ -32,35 +72,8 @@ func IntVals(n int, val int) (s []int) {
 	return
 }
 
-// StrVals allocates a slice of strings with size==n, filled with val
-func StrVals(n int, val string) (s []string) {
-	s = make([]string, n)
-	for i := 0; i < n; i++ {
-		s[i] = val
-	}
-	return
-}
-
-// DblsAlloc allocates a matrix of float64
-func DblsAlloc(m, n int) (mat [][]float64) {
-	mat = make([][]float64, m)
-	for i := 0; i < m; i++ {
-		mat[i] = make([]float64, n)
-	}
-	return
-}
-
-// StrsAlloc allocates a matrix of strings
-func StrsAlloc(m, n int) (mat [][]string) {
-	mat = make([][]string, m)
-	for i := 0; i < m; i++ {
-		mat[i] = make([]string, n)
-	}
-	return
-}
-
-// IntsAlloc allocates a matrix of integers
-func IntsAlloc(m, n int) (mat [][]int) {
+// IntAlloc allocates a matrix of integers
+func IntAlloc(m, n int) (mat [][]int) {
 	mat = make([][]int, m)
 	for i := 0; i < m; i++ {
 		mat[i] = make([]int, n)
@@ -69,7 +82,7 @@ func IntsAlloc(m, n int) (mat [][]int) {
 }
 
 // IntsClone allocates and clones a matrix of integers
-func IntsClone(a [][]int) (b [][]int) {
+func IntClone(a [][]int) (b [][]int) {
 	b = make([][]int, len(a))
 	for i := 0; i < len(a); i++ {
 		b[i] = make([]int, len(a[i]))
@@ -173,8 +186,19 @@ func IntPy(a []int) (res string) {
 	return
 }
 
-// DblOnes generates a slice of double precision '1s'
-func DblOnes(n int) (res []float64) {
+// slices of float64 /////////////////////////////////////////////////////////////////////////////
+
+// Alloc allocates a slice of slices of float64
+func Alloc(m, n int) (mat [][]float64) {
+	mat = make([][]float64, m)
+	for i := 0; i < m; i++ {
+		mat[i] = make([]float64, n)
+	}
+	return
+}
+
+// Ones generates a slice of float64 with ones
+func Ones(n int) (res []float64) {
 	res = make([]float64, n)
 	for i := 0; i < n; i++ {
 		res[i] = 1.0
@@ -182,8 +206,8 @@ func DblOnes(n int) (res []float64) {
 	return
 }
 
-// DblVals generates a slice of double precision values
-func DblVals(n int, v float64) (res []float64) {
+// Vals generates a slice of float64 filled with v
+func Vals(n int, v float64) (res []float64) {
 	res = make([]float64, n)
 	for i := 0; i < n; i++ {
 		res[i] = v
@@ -191,8 +215,8 @@ func DblVals(n int, v float64) (res []float64) {
 	return
 }
 
-// DblCopy gets a copy of slice of doubles
-func DblCopy(in []float64) (out []float64) {
+// GetCopy gets a copy of slice of float64
+func GetCopy(in []float64) (out []float64) {
 	out = make([]float64, len(in))
 	copy(out, in)
 	return
@@ -228,8 +252,8 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 	return
 }
 
-// Dbl2Str converts a slice of doubles (float64) to a slice of strings
-func Dbl2Str(v []float64, format string) (s []string) {
+// ToStrings converts a slice of float64 to a slice of strings
+func ToStrings(v []float64, format string) (s []string) {
 	s = make([]string, len(v))
 	for i := 0; i < len(v); i++ {
 		s[i] = io.Sf(format, v[i])
@@ -237,8 +261,8 @@ func Dbl2Str(v []float64, format string) (s []string) {
 	return
 }
 
-// Str2Dbl converts a slice of strings to a slice of doubles (float64)
-func Str2Dbl(s []string) (v []float64) {
+// FromStrings converts a slice of strings to a slice of float64
+func FromStrings(s []string) (v []float64) {
 	v = make([]float64, len(s))
 	for i := 0; i < len(s); i++ {
 		v[i] = io.Atof(s[i])
@@ -246,8 +270,8 @@ func Str2Dbl(s []string) (v []float64) {
 	return
 }
 
-// DblSplit splits a string into floats
-func DblSplit(s string) (r []float64) {
+// FromString splits a string with numbers separeted by spaces into float64
+func FromString(s string) (r []float64) {
 	ss := strings.Fields(s)
 	r = make([]float64, len(ss))
 	for i, v := range ss {
@@ -256,21 +280,7 @@ func DblSplit(s string) (r []float64) {
 	return
 }
 
-// Digits returns the nubmer of digits
-func Digits(maxint int) (ndigits int, format string) {
-	ndigits = int(math.Log10(float64(maxint))) + 1
-	format = io.Sf("%%%dd", ndigits)
-	return
-}
-
-// Expon returns the exponent
-func Expon(val float64) (ndigits int) {
-	if val == 0.0 {
-		return
-	}
-	ndigits = int(math.Log10(math.Abs(val)))
-	return
-}
+// meshgrid //////////////////////////////////////////////////////////////////////////////////////
 
 // MeshGrid2d creates a grid with x-y coordinates
 //  X, Y -- [ny][nx]
@@ -344,6 +354,8 @@ func MeshGrid2dFG(xmin, xmax, ymin, ymax float64, nx, ny int, fg func(x, y float
 	}
 	return
 }
+
+// more functions ////////////////////////////////////////////////////////////////////////////////
 
 // Scaling computes a scaled version of the input slice with results in [0.0, 1.0]
 //  Input:
@@ -438,8 +450,8 @@ func GtePenalty(x, b, penaltyM float64) float64 {
 	return penaltyM * (b - x)
 }
 
-// DblsGetColumn returns the column of a matrix of reals numbers
-func DblsGetColumn(j int, v [][]float64) (x []float64) {
+// GetColumn returns the column of a matrix of float64
+func GetColumn(j int, v [][]float64) (x []float64) {
 	x = make([]float64, len(v))
 	for i := 0; i < len(v); i++ {
 		x[i] = v[i][j]
@@ -469,8 +481,8 @@ func Cross3d(w, u, v []float64) {
 	w[2] = u[0]*v[1] - u[1]*v[0]
 }
 
-// DblArgMinMax finds the indices of min and max arguments
-func DblArgMinMax(v []float64) (imin, imax int) {
+// ArgMinMax finds the indices of min and max arguments
+func ArgMinMax(v []float64) (imin, imax int) {
 	if len(v) < 1 {
 		return
 	}
@@ -489,8 +501,10 @@ func DblArgMinMax(v []float64) (imin, imax int) {
 	return
 }
 
+// bool //////////////////////////////////////////////////////////////////////////////////////////
+
 // BoolAllTrue returns true if all values are true
-func BoolAllTrue(values []bool) bool {
+func AllTrue(values []bool) bool {
 	for _, v := range values {
 		if !v {
 			return false
@@ -500,7 +514,7 @@ func BoolAllTrue(values []bool) bool {
 }
 
 // BoolAllFalse returns true if all values are false
-func BoolAllFalse(values []bool) bool {
+func AllFalse(values []bool) bool {
 	for _, v := range values {
 		if v {
 			return false
