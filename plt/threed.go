@@ -182,28 +182,61 @@ func Draw3dVector(p, v []float64, sf float64, normed bool, args *A) {
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
+// Diag3d draws diagonal of 3d space
+func Diag3d(scale float64, args *A) {
+	createAxes3d()
+	a := args
+	if a == nil {
+		a = &A{C: "k"}
+	}
+	io.Ff(&bufferPy, "p%d = AX3D.plot([0,%g],[0,%g],[0,%g]", genUid(), scale, scale, scale)
+	updateBufferAndClose(&bufferPy, a, false, false)
+}
+
+// 3d shapes using meshgrid ///////////////////////////////////////////////////////////////////////
+
+func addSurfAndOrWire(X, Y, Z [][]float64, args *A) {
+	if args == nil {
+		Wireframe(X, Y, Z, nil)
+		return
+	}
+	if !args.Surf && !args.Wire {
+		Wireframe(X, Y, Z, args)
+	}
+	if args.Surf {
+		Surface(X, Y, Z, args)
+	}
+	if args.Wire {
+		Wireframe(X, Y, Z, args)
+	}
+}
+
 // PlaneZ draws a plane that has a normal vector with non-zero z component.
 // The plane may be perpendicular to z.
-//   p -- point on plane
-//   n -- normal vector
-//   nu -- number of divisions along one direction on plane
-//   nv -- number of divisions along the orther direction on plane
-//   showPN -- show point and normal
-func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN bool, args *A) {
+//  Input:
+//     p -- point on plane
+//     n -- normal vector
+//     nu -- number of divisions along one direction on plane
+//     nv -- number of divisions along the orther direction on plane
+//     showPN -- show point and normal
+//   Output:
+//     X, Y, Z -- the coordinages of all points as in a meshgrid
+func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN bool, args *A) (X, Y, Z [][]float64) {
 	if math.Abs(n[2]) < 1e-10 {
 		return
 	}
 	d := -n[0]*p[0] - n[1]*p[1] - n[2]*p[2]
-	X, Y, Z := utl.MeshGrid2dF(xmin, xmax, ymin, ymax, nu, nv, func(x, y float64) float64 {
+	X, Y, Z = utl.MeshGrid2dF(xmin, xmax, ymin, ymax, nu, nv, func(x, y float64) float64 {
 		return (-d - n[0]*x - n[1]*y) / n[2]
 	})
-	Wireframe(X, Y, Z, args)
+	addSurfAndOrWire(X, Y, Z, args)
 	if showPN {
 		a := &A{C: "k", Ec: "k", M: "."}
 		Plot3dPoint(p[0], p[1], p[2], a)
 		a.M, a.Ec = "", ""
 		Draw3dVector(p, n, 1.0, true, a)
 	}
+	return
 }
 
 // Hemisphere draws Hemisphere
@@ -219,7 +252,7 @@ func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN b
 //     wireframe -- generate wireframe
 //   Output:
 //     X, Y, Z -- the coordinages of all points as in a meshgrid
-func Hemisphere(c []float64, r, alphaMin, alphaMax float64, nu, nv int, cup, surface, wireframe bool, args *A) (X, Y, Z [][]float64) {
+func Hemisphere(c []float64, r, alphaMin, alphaMax float64, nu, nv int, cup bool, args *A) (X, Y, Z [][]float64) {
 	if c == nil {
 		c = []float64{0, 0, 0}
 	}
@@ -248,35 +281,22 @@ func Hemisphere(c []float64, r, alphaMin, alphaMax float64, nu, nv int, cup, sur
 			}
 		}
 	}
-	if surface {
-		Surface(X, Y, Z, args)
-	}
-	if wireframe {
-		Wireframe(X, Y, Z, args)
-	}
+	addSurfAndOrWire(X, Y, Z, args)
 	return
 }
 
-// CalcDiagAngle computes the angle between a point and the diagonal of the 3d space
-//   p -- point coordinates
-//   returns the angle in radians
-func CalcDiagAngle(p []float64) (alphaRad float64) {
-	den := p[0] + p[1] + p[2]
-	if den < 1e-10 {
-		return 0.0
-	}
-	return math.Sqrt(math.Pow(p[0]-p[1], 2.0)+math.Pow(p[1]-p[2], 2.0)+math.Pow(p[2]-p[0], 2.0)) / den
-}
-
 // CylinderZ draws cylinder aligned with the z axis
-//   alphaDeg -- half opening angle in degrees
-//   height -- height of cone
-//   nu -- number of divisions along the height of cone; e.g. 11
-//   nv -- number of divisions along circumference of cone; e.g. 21
-func CylinderZ(radius, height float64, nu, nv int, args *A) {
-	X := make([][]float64, nu)
-	Y := make([][]float64, nu)
-	Z := make([][]float64, nu)
+//  Input:
+//     alphaDeg -- half opening angle in degrees
+//     height -- height of cone
+//     nu -- number of divisions along the height of cone; e.g. 11
+//     nv -- number of divisions along circumference of cone; e.g. 21
+//   Output:
+//     X, Y, Z -- the coordinages of all points as in a meshgrid
+func CylinderZ(radius, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
+	X = make([][]float64, nu)
+	Y = make([][]float64, nu)
+	Z = make([][]float64, nu)
 	for i := 0; i < nu; i++ {
 		X[i] = make([]float64, nv+1)
 		Y[i] = make([]float64, nv+1)
@@ -289,19 +309,23 @@ func CylinderZ(radius, height float64, nu, nv int, args *A) {
 			Z[i][j] = h
 		}
 	}
-	Wireframe(X, Y, Z, args)
+	addSurfAndOrWire(X, Y, Z, args)
+	return
 }
 
 // ConeZ draws cone aligned with the z axis
-//   alphaDeg -- half opening angle in degrees
-//   height -- height of cone
-//   nu -- number of divisions along the height of cone; e.g. 11
-//   nv -- number of divisions along circumference of cone; e.g. 21
-func ConeZ(alphaDeg float64, height float64, nu, nv int, args *A) {
+//  Input:
+//     alphaDeg -- half opening angle in degrees
+//     height -- height of cone
+//     nu -- number of divisions along the height of cone; e.g. 11
+//     nv -- number of divisions along circumference of cone; e.g. 21
+//   Output:
+//     X, Y, Z -- the coordinages of all points as in a meshgrid
+func ConeZ(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
 	r := math.Tan(alphaDeg*math.Pi/180.0) * height
-	X := make([][]float64, nu)
-	Y := make([][]float64, nu)
-	Z := make([][]float64, nu)
+	X = make([][]float64, nu)
+	Y = make([][]float64, nu)
+	Z = make([][]float64, nu)
 	for i := 0; i < nu; i++ {
 		X[i] = make([]float64, nv+1)
 		Y[i] = make([]float64, nv+1)
@@ -314,31 +338,24 @@ func ConeZ(alphaDeg float64, height float64, nu, nv int, args *A) {
 			Z[i][j] = h
 		}
 	}
-	Wireframe(X, Y, Z, args)
-}
-
-// Diag3d draws diagonal of 3d space
-func Diag3d(scale float64, args *A) {
-	createAxes3d()
-	a := args
-	if a == nil {
-		a = &A{C: "k"}
-	}
-	io.Ff(&bufferPy, "p%d = AX3D.plot([0,%g],[0,%g],[0,%g]", genUid(), scale, scale, scale)
-	updateBufferAndClose(&bufferPy, a, false, false)
+	addSurfAndOrWire(X, Y, Z, args)
+	return
 }
 
 // ConeDiag draws cone parallel to the diagonal of the 3d space
-//   alphaDeg -- half opening angle in degrees
-//   height -- height of cone; i.e. length along space diagonal
-//   nu -- number of divisions along the height of cone; e.g. 11
-//   nv -- number of divisions along circumference of cone; e.g. 21
-func ConeDiag(alphaDeg float64, height float64, nu, nv int, args *A) {
+//  Input:
+//     alphaDeg -- half opening angle in degrees
+//     height -- height of cone; i.e. length along space diagonal
+//     nu -- number of divisions along the height of cone; e.g. 11
+//     nv -- number of divisions along circumference of cone; e.g. 21
+//   Output:
+//     X, Y, Z -- the coordinages of all points as in a meshgrid
+func ConeDiag(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
 	r := math.Tan(alphaDeg*math.Pi/180.0) * height
 	SQ2, SQ3, SQ6 := math.Sqrt2, math.Sqrt(3.0), math.Sqrt(6.0)
-	X := make([][]float64, nu)
-	Y := make([][]float64, nu)
-	Z := make([][]float64, nu)
+	X = make([][]float64, nu)
+	Y = make([][]float64, nu)
+	Z = make([][]float64, nu)
 	for i := 0; i < nu; i++ {
 		X[i] = make([]float64, nv+1)
 		Y[i] = make([]float64, nv+1)
@@ -353,11 +370,24 @@ func ConeDiag(alphaDeg float64, height float64, nu, nv int, args *A) {
 			Z[i][j] = (h + SQ2*b) / SQ3
 		}
 	}
-	Wireframe(X, Y, Z, args)
+	addSurfAndOrWire(X, Y, Z, args)
+	return
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
+// CalcDiagAngle computes the angle between a point and the diagonal of the 3d space
+//   p -- point coordinates
+//   returns the angle in radians
+func CalcDiagAngle(p []float64) (alphaRad float64) {
+	den := p[0] + p[1] + p[2]
+	if den < 1e-10 {
+		return 0.0
+	}
+	return math.Sqrt(math.Pow(p[0]-p[1], 2.0)+math.Pow(p[1]-p[2], 2.0)+math.Pow(p[2]-p[0], 2.0)) / den
+}
+
+// createAxes3d creates Python Axes3D if not yet created
 func createAxes3d() {
 	if !axes3dCreated {
 		io.Ff(&bufferPy, "AX3D = plt.gcf().add_subplot(111, projection='3d')\n")

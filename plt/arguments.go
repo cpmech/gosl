@@ -77,8 +77,10 @@ type A struct {
 	SelectLw float64   // contour: zero level linewidth
 
 	// 3d graphs
-	Rstride int // 3d: row stride
-	Cstride int // 3d: column stride
+	Rstride int  // 3d: row stride
+	Cstride int  // 3d: column stride
+	Surf    bool // 3d: generate surface
+	Wire    bool // 3d: generate wireframe
 
 	// histograms
 	Type    string // histogram: type; e.g. "bar"

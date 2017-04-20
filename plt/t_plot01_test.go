@@ -359,16 +359,18 @@ func Test_plot08(tst *testing.T) {
 
 		alpha, height, radius := 15.0, 1.0, 0.5
 		nu, nv := 7, 11
-		CylinderZ(radius, height, nu, nv, &A{C: "r"})
-		ConeZ(alpha, height, nu, nv, &A{C: "orange"})
-		ConeDiag(alpha, height, nu, nv, nil)
-		Diag3d(1, nil)
+		if true {
+			CylinderZ(radius, height, nu, nv, &A{C: "grey"})
+			ConeZ(alpha, height, nu, nv, &A{C: "green"})
+			ConeDiag(alpha, height, nu, nv, nil)
+			Diag3d(1, nil)
+		}
 
-		centre := []float64{0.5, 0.5, 0.0}
-		radius, amin, amax := 0.5, 0.0, 180.0
+		centre := []float64{0.7, 0.7, 0.0}
+		radius, amin, amax := 0.3, 0.0, 180.0
 		nu, nv = 21, 5
-		cup, surface, wireframe := false, true, false
-		Hemisphere(centre, radius, amin, amax, nu, nv, cup, surface, wireframe, &A{C: "k"})
+		cup := false
+		Hemisphere(centre, radius, amin, amax, nu, nv, cup, &A{C: "k", Surf: true, Wire: false})
 
 		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
 
