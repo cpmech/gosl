@@ -112,7 +112,8 @@ func Text3d(x, y, z float64, txt string, args *A) {
 }
 
 // Triad draws icon indicating x-y-z origin and direction
-func Triad(length float64, labels bool, argsLines, argsText *A) {
+//   xLab, yLab, zLab -- labels. may be empty
+func Triad(length float64, xLab, yLab, zLab string, argsLines, argsText *A) {
 	a := argsLines
 	if a == nil {
 		a = &A{C: "black", Lw: 1.2}
@@ -120,15 +121,15 @@ func Triad(length float64, labels bool, argsLines, argsText *A) {
 	Plot3dLine([]float64{0, length}, []float64{0, 0}, []float64{0, 0}, a)
 	Plot3dLine([]float64{0, 0}, []float64{0, length}, []float64{0, 0}, a)
 	Plot3dLine([]float64{0, 0}, []float64{0, 0}, []float64{0, length}, a)
-	if labels {
+	if xLab != "" && yLab != "" && zLab != "" {
 		b := argsText
 		if b == nil {
 			b = &A{C: "black", Fsz: 10, Ha: "center", Va: "center"}
 		}
 		g := 0.05 * length
-		Text3d(length+g, 0, 0, "x", b)
-		Text3d(0, length+g, 0, "y", b)
-		Text3d(0, 0, length+g, "z", b)
+		Text3d(length+g, 0, 0, xLab, b)
+		Text3d(0, length+g, 0, yLab, b)
+		Text3d(0, 0, length+g, zLab, b)
 	}
 }
 

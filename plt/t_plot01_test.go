@@ -293,7 +293,7 @@ func Test_plot06(tst *testing.T) {
 
 		Reset(true, nil)
 
-		Triad(1.3, true, nil, nil)
+		Triad(1.3, "x", "y", "z", nil, nil)
 
 		Plot3dLine(x, y, z, nil)
 		Plot3dPoints(x, y, z, nil)
@@ -334,7 +334,7 @@ func Test_plot07(tst *testing.T) {
 
 		// draw
 		Reset(true, nil)
-		Triad(1.0, true, &A{C: "orange"}, &A{C: "red"})
+		Triad(1.0, "x", "y", "z", &A{C: "orange"}, &A{C: "red"})
 		PlaneZ(p, n, xmin, xmax, ymin, ymax, nu, nv, true, nil)
 		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
 
@@ -356,7 +356,7 @@ func Test_plot08(tst *testing.T) {
 
 		// draw
 		Reset(true, nil)
-		Triad(1.0, true, &A{C: "orange"}, &A{C: "red"})
+		Triad(1.0, "x", "y", "z", &A{C: "orange"}, &A{C: "red"})
 
 		alpha, height, radius := 15.0, 1.0, 0.5
 		nu, nv := 7, 11
@@ -398,7 +398,7 @@ func Test_plot09(tst *testing.T) {
 
 		// draw
 		Reset(true, nil)
-		Triad(1.0, true, &A{C: "orange"}, &A{C: "orange"})
+		Triad(1.0, "$x_{axis}$", "$y_{axis}$", "$z_{axis}$", &A{C: "orange"}, &A{C: "orange"})
 
 		// centre and radii
 		c := []float64{0, 0, 0}
