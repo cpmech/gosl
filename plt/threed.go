@@ -287,10 +287,16 @@ func Hemisphere(c []float64, r, alphaMin, alphaMax float64, nu, nv int, cup bool
 }
 
 // Superquadric draws superquadric (i.e. superellipsoid)
-//   alpMin -- min alp angle. in [-180, 180) degrees
-//   alpMax -- max alp angle. in (-180, 180] degrees
-//   etaMin -- min eta angle. in [-90, 90) degrees
-//   etaMax -- max eta angle. in (-90, 90] degrees
+//   Input:
+//     c -- centre coordinates. may be nil
+//     r -- radii [3]
+//     a -- exponents [3]
+//     alpMin -- min alp angle. in [-180, 180) degrees
+//     alpMax -- max alp angle. in (-180, 180] degrees
+//     etaMin -- min eta angle. in [-90, 90) degrees
+//     etaMax -- max eta angle. in (-90, 90] degrees
+//   Output:
+//     X, Y, Z -- the coordinages of all points as in a meshgrid
 func Superquadric(c, r, a []float64, alpMin, alpMax, etaMin, etaMax float64, nalp, neta int, args *A) (X, Y, Z [][]float64) {
 	if c == nil {
 		c = []float64{0, 0, 0}
@@ -323,13 +329,17 @@ func Superquadric(c, r, a []float64, alpMin, alpMax, etaMin, etaMax float64, nal
 
 // CylinderZ draws cylinder aligned with the z axis
 //  Input:
+//     c -- centre coordinates. may be nil
 //     alphaDeg -- half opening angle in degrees
 //     height -- height of cone
 //     nu -- number of divisions along the height of cone; e.g. 11
 //     nv -- number of divisions along circumference of cone; e.g. 21
 //   Output:
 //     X, Y, Z -- the coordinages of all points as in a meshgrid
-func CylinderZ(radius, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
+func CylinderZ(c []float64, radius, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
+	if c == nil {
+		c = []float64{0, 0, 0}
+	}
 	X = make([][]float64, nu)
 	Y = make([][]float64, nu)
 	Z = make([][]float64, nu)
@@ -340,9 +350,9 @@ func CylinderZ(radius, height float64, nu, nv int, args *A) (X, Y, Z [][]float64
 		for j := 0; j < nv+1; j++ {
 			h := height * float64(i) / float64(nu-1)
 			θ := 2.0 * math.Pi * float64(j) / float64(nv)
-			X[i][j] = radius * math.Cos(θ)
-			Y[i][j] = radius * math.Sin(θ)
-			Z[i][j] = h
+			X[i][j] = c[0] + radius*math.Cos(θ)
+			Y[i][j] = c[1] + radius*math.Sin(θ)
+			Z[i][j] = c[2] + h
 		}
 	}
 	addSurfAndOrWire(X, Y, Z, args)
@@ -351,13 +361,17 @@ func CylinderZ(radius, height float64, nu, nv int, args *A) (X, Y, Z [][]float64
 
 // ConeZ draws cone aligned with the z axis
 //  Input:
+//     c -- centre coordinates. may be nil
 //     alphaDeg -- half opening angle in degrees
 //     height -- height of cone
 //     nu -- number of divisions along the height of cone; e.g. 11
 //     nv -- number of divisions along circumference of cone; e.g. 21
 //   Output:
 //     X, Y, Z -- the coordinages of all points as in a meshgrid
-func ConeZ(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
+func ConeZ(c []float64, alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
+	if c == nil {
+		c = []float64{0, 0, 0}
+	}
 	r := math.Tan(alphaDeg*math.Pi/180.0) * height
 	X = make([][]float64, nu)
 	Y = make([][]float64, nu)
@@ -369,9 +383,9 @@ func ConeZ(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]f
 		for j := 0; j < nv+1; j++ {
 			h := height * float64(i) / float64(nu-1)
 			θ := 2.0 * math.Pi * float64(j) / float64(nv)
-			X[i][j] = h * r * math.Cos(θ)
-			Y[i][j] = h * r * math.Sin(θ)
-			Z[i][j] = h
+			X[i][j] = c[0] + h*r*math.Cos(θ)
+			Y[i][j] = c[1] + h*r*math.Sin(θ)
+			Z[i][j] = c[2] + h
 		}
 	}
 	addSurfAndOrWire(X, Y, Z, args)
@@ -380,13 +394,17 @@ func ConeZ(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]f
 
 // ConeDiag draws cone parallel to the diagonal of the 3d space
 //  Input:
+//     c -- centre coordinates. may be nil
 //     alphaDeg -- half opening angle in degrees
 //     height -- height of cone; i.e. length along space diagonal
 //     nu -- number of divisions along the height of cone; e.g. 11
 //     nv -- number of divisions along circumference of cone; e.g. 21
 //   Output:
 //     X, Y, Z -- the coordinages of all points as in a meshgrid
-func ConeDiag(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
+func ConeDiag(c []float64, alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
+	if c == nil {
+		c = []float64{0, 0, 0}
+	}
 	r := math.Tan(alphaDeg*math.Pi/180.0) * height
 	SQ2, SQ3, SQ6 := math.Sqrt2, math.Sqrt(3.0), math.Sqrt(6.0)
 	X = make([][]float64, nu)
@@ -401,9 +419,9 @@ func ConeDiag(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z []
 			θ := 2.0 * math.Pi * float64(j) / float64(nv)
 			a := h * r * math.Cos(θ)
 			b := h * r * math.Sin(θ)
-			X[i][j] = (SQ2*h - b + SQ3*a) / SQ6
-			Y[i][j] = (SQ2*h - b - SQ3*a) / SQ6
-			Z[i][j] = (h + SQ2*b) / SQ3
+			X[i][j] = c[0] + (SQ2*h-b+SQ3*a)/SQ6
+			Y[i][j] = c[1] + (SQ2*h-b-SQ3*a)/SQ6
+			Z[i][j] = c[2] + (h+SQ2*b)/SQ3
 		}
 	}
 	addSurfAndOrWire(X, Y, Z, args)

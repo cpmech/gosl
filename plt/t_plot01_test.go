@@ -360,9 +360,12 @@ func Test_plot08(tst *testing.T) {
 		alpha, height, radius := 15.0, 1.0, 0.5
 		nu, nv := 7, 11
 		if true {
-			CylinderZ(radius, height, nu, nv, &A{C: "grey"})
-			ConeZ(alpha, height, nu, nv, &A{C: "green"})
-			ConeDiag(alpha, height, nu, nv, nil)
+			c1 := []float64{0.5, -0.5, 0}
+			c2 := []float64{0, 1, 0}
+			c3 := []float64{0, 0, 0}
+			CylinderZ(c1, radius, height, nu, nv, &A{C: "grey"})
+			ConeZ(c2, alpha, height, nu, nv, &A{C: "green"})
+			ConeDiag(c3, alpha, height, nu, nv, nil)
 			Diag3d(1, nil)
 		}
 
