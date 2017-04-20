@@ -122,10 +122,10 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#SrampD2">func SrampD2(x, β float64) float64</a></dd>
 			
 				
-				<dd><a href="#SuqCos">func SuqCos(w, m float64) float64</a></dd>
+				<dd><a href="#SuqCos">func SuqCos(angle, expon float64) float64</a></dd>
 			
 				
-				<dd><a href="#SuqSin">func SuqSin(w, m float64) float64</a></dd>
+				<dd><a href="#SuqSin">func SuqSin(angle, expon float64) float64</a></dd>
 			
 			
 				
@@ -693,7 +693,7 @@ One implements an specialisation of Cte function that always returns one
 		
 			
 			
-			<h2 id="Atan2p">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=629:670#L10">Atan2p</a></h2>
+			<h2 id="Atan2p">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=669:710#L10">Atan2p</a></h2>
 			<pre>func Atan2p(y, x <a href="/pkg/builtin/#float64">float64</a>) (αrad <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 2π
@@ -705,7 +705,7 @@ Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 
 		
 			
 			
-			<h2 id="Atan2pDeg">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=846:890#L19">Atan2pDeg</a></h2>
+			<h2 id="Atan2pDeg">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=886:930#L19">Atan2pDeg</a></h2>
 			<pre>func Atan2pDeg(y, x <a href="/pkg/builtin/#float64">float64</a>) (αdeg <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atan2pDeg implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 360
@@ -741,7 +741,7 @@ CheckDerivX checks derivatives w.r.t to x for fixed t
 		
 			
 			
-			<h2 id="Heav">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1152:1180#L36">Heav</a></h2>
+			<h2 id="Heav">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1192:1220#L36">Heav</a></h2>
 			<pre>func Heav(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Heaviside step function (== derivative of Ramp(x))
@@ -783,7 +783,7 @@ axEqual -- use axis[&#39;equal&#39;]
 		
 			
 			
-			<h2 id="Ramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1024:1052#L28">Ramp</a></h2>
+			<h2 id="Ramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1064:1092#L28">Ramp</a></h2>
 			<pre>func Ramp(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Ramp function =&gt; MacAulay brackets
@@ -795,7 +795,7 @@ Ramp function =&gt; MacAulay brackets
 		
 			
 			
-			<h2 id="Sabs">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1981:2014#L82">Sabs</a></h2>
+			<h2 id="Sabs">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2021:2054#L82">Sabs</a></h2>
 			<pre>func Sabs(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
@@ -807,7 +807,7 @@ Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
 		
 			
 			
-			<h2 id="SabsD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2164:2199#L93">SabsD1</a></h2>
+			<h2 id="SabsD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2204:2239#L93">SabsD1</a></h2>
 			<pre>func SabsD1(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SabsD1 returns the first derivative of Sabs
@@ -819,7 +819,7 @@ SabsD1 returns the first derivative of Sabs
 		
 			
 			
-			<h2 id="SabsD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2379:2414#L106">SabsD2</a></h2>
+			<h2 id="SabsD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2419:2454#L106">SabsD2</a></h2>
 			<pre>func SabsD2(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SabsD2 returns the first derivative of Sabs
@@ -831,7 +831,7 @@ SabsD2 returns the first derivative of Sabs
 		
 			
 			
-			<h2 id="Sign">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1275:1303#L47">Sign</a></h2>
+			<h2 id="Sign">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1315:1343#L47">Sign</a></h2>
 			<pre>func Sign(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sign function
@@ -843,7 +843,7 @@ Sign function
 		
 			
 			
-			<h2 id="Sramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1431:1464#L58">Sramp</a></h2>
+			<h2 id="Sramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1471:1504#L58">Sramp</a></h2>
 			<pre>func Sramp(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sramp implements a smooth ramp function. Ramp
@@ -855,7 +855,7 @@ Sramp implements a smooth ramp function. Ramp
 		
 			
 			
-			<h2 id="SrampD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1600:1635#L66">SrampD1</a></h2>
+			<h2 id="SrampD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1640:1675#L66">SrampD1</a></h2>
 			<pre>func SrampD1(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SrampD1 returns the first derivative of Sramp
@@ -867,7 +867,7 @@ SrampD1 returns the first derivative of Sramp
 		
 			
 			
-			<h2 id="SrampD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1765:1800#L74">SrampD2</a></h2>
+			<h2 id="SrampD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1805:1840#L74">SrampD2</a></h2>
 			<pre>func SrampD2(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SrampD2 returns the second derivative of Sramp
@@ -879,8 +879,8 @@ SrampD2 returns the second derivative of Sramp
 		
 			
 			
-			<h2 id="SuqCos">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=264:297#L1">SuqCos</a></h2>
-			<pre>func SuqCos(w, m <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<h2 id="SuqCos">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=264:305#L1">SuqCos</a></h2>
+			<pre>func SuqCos(angle, expon <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SuqCos implements the superquadric auxiliary function that uses cos(x)
 </p>
@@ -891,8 +891,8 @@ SuqCos implements the superquadric auxiliary function that uses cos(x)
 		
 			
 			
-			<h2 id="SuqSin">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=440:473#L5">SuqSin</a></h2>
-			<pre>func SuqSin(w, m <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<h2 id="SuqSin">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=460:501#L5">SuqSin</a></h2>
+			<pre>func SuqSin(angle, expon <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SuqSin implements the superquadric auxiliary function that uses sin(x)
 </p>

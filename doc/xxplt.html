@@ -143,10 +143,10 @@ plt contains functions for plotting
 				<dd><a href="#Clf">func Clf()</a></dd>
 			
 				
-				<dd><a href="#ConeDiag">func ConeDiag(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64)</a></dd>
+				<dd><a href="#ConeDiag">func ConeDiag(c []float64, alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64)</a></dd>
 			
 				
-				<dd><a href="#ConeZ">func ConeZ(alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64)</a></dd>
+				<dd><a href="#ConeZ">func ConeZ(c []float64, alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64)</a></dd>
 			
 				
 				<dd><a href="#ContourF">func ContourF(x, y, z [][]float64, args *A)</a></dd>
@@ -158,7 +158,7 @@ plt contains functions for plotting
 				<dd><a href="#Cross">func Cross(x0, y0 float64, args *A)</a></dd>
 			
 				
-				<dd><a href="#CylinderZ">func CylinderZ(radius, height float64, nu, nv int, args *A) (X, Y, Z [][]float64)</a></dd>
+				<dd><a href="#CylinderZ">func CylinderZ(c []float64, radius, height float64, nu, nv int, args *A) (X, Y, Z [][]float64)</a></dd>
 			
 				
 				<dd><a href="#Default3dView">func Default3dView(xmin, xmax, ymin, ymax, zmin, zmax float64, equal bool)</a></dd>
@@ -294,6 +294,9 @@ plt contains functions for plotting
 			
 				
 				<dd><a href="#SupTitle">func SupTitle(txt string, args *A)</a></dd>
+			
+				
+				<dd><a href="#Superquadric">func Superquadric(c, r, a []float64, alpMin, alpMax, etaMin, etaMax float64, nalp, neta int, args *A) (X, Y, Z [][]float64)</a></dd>
 			
 				
 				<dd><a href="#Surface">func Surface(X, Y, Z [][]float64, args *A)</a></dd>
@@ -637,7 +640,7 @@ AxisYrange sets y-range (i.e. limits)
 		
 			
 			
-			<h2 id="CalcDiagAngle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=11700:11750#L373">CalcDiagAngle</a></h2>
+			<h2 id="CalcDiagAngle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=13451:13501#L426">CalcDiagAngle</a></h2>
 			<pre>func CalcDiagAngle(p []<a href="/pkg/builtin/#float64">float64</a>) (alphaRad <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CalcDiagAngle computes the angle between a point and the diagonal of the 3d space
@@ -691,12 +694,13 @@ Clf clears current figure
 		
 			
 			
-			<h2 id="ConeDiag">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=10706:10796#L344">ConeDiag</a></h2>
-			<pre>func ConeDiag(alphaDeg <a href="/pkg/builtin/#float64">float64</a>, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="ConeDiag">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=12396:12499#L394">ConeDiag</a></h2>
+			<pre>func ConeDiag(c []<a href="/pkg/builtin/#float64">float64</a>, alphaDeg <a href="/pkg/builtin/#float64">float64</a>, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ConeDiag draws cone parallel to the diagonal of the 3d space
 </p>
 <pre>Input:
+   c -- centre coordinates. may be nil
    alphaDeg -- half opening angle in degrees
    height -- height of cone; i.e. length along space diagonal
    nu -- number of divisions along the height of cone; e.g. 11
@@ -711,12 +715,13 @@ ConeDiag draws cone parallel to the diagonal of the 3d space
 		
 			
 			
-			<h2 id="ConeZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=9704:9791#L315">ConeZ</a></h2>
-			<pre>func ConeZ(alphaDeg <a href="/pkg/builtin/#float64">float64</a>, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="ConeZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=11282:11382#L361">ConeZ</a></h2>
+			<pre>func ConeZ(c []<a href="/pkg/builtin/#float64">float64</a>, alphaDeg <a href="/pkg/builtin/#float64">float64</a>, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ConeZ draws cone aligned with the z axis
 </p>
 <pre>Input:
+   c -- centre coordinates. may be nil
    alphaDeg -- half opening angle in degrees
    height -- height of cone
    nu -- number of divisions along the height of cone; e.g. 11
@@ -767,12 +772,13 @@ Cross adds a vertical and horizontal lines @ (x0,y0) to plot (i.e. large cross)
 		
 			
 			
-			<h2 id="CylinderZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=8808:8889#L287">CylinderZ</a></h2>
-			<pre>func CylinderZ(radius, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="CylinderZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=10270:10364#L329">CylinderZ</a></h2>
+			<pre>func CylinderZ(c []<a href="/pkg/builtin/#float64">float64</a>, radius, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CylinderZ draws cylinder aligned with the z axis
 </p>
 <pre>Input:
+   c -- centre coordinates. may be nil
    alphaDeg -- half opening angle in degrees
    height -- height of cone
    nu -- number of divisions along the height of cone; e.g. 11
@@ -1377,6 +1383,29 @@ Subplot adds/sets a subplot with given indices in I
 			<p>
 SupTitle sets subplot title
 </p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Superquadric">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=8903:9026#L290">Superquadric</a></h2>
+			<pre>func Superquadric(c, r, a []<a href="/pkg/builtin/#float64">float64</a>, alpMin, alpMax, etaMin, etaMax <a href="/pkg/builtin/#float64">float64</a>, nalp, neta <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Superquadric draws superquadric (i.e. superellipsoid)
+</p>
+<pre>Input:
+  c -- centre coordinates. may be nil
+  r -- radii [3]
+  a -- exponents [3]
+  alpMin -- min alp angle. in [-180, 180) degrees
+  alpMax -- max alp angle. in (-180, 180] degrees
+  etaMin -- min eta angle. in [-90, 90) degrees
+  etaMax -- max eta angle. in (-90, 90] degrees
+Output:
+  X, Y, Z -- the coordinages of all points as in a meshgrid
+</pre>
 
 			
 			
