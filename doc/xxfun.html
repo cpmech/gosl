@@ -89,9 +89,6 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#CheckDerivX">func CheckDerivX(tst *testing.T, o TimeSpace, tcte float64, xmin, xmax []float64, np int, xskip [][]float64, sktol, dtol float64, ver bool)</a></dd>
 			
 				
-				<dd><a href="#CosX">func CosX(w, m float64) float64</a></dd>
-			
-				
 				<dd><a href="#Heav">func Heav(x float64) float64</a></dd>
 			
 				
@@ -116,9 +113,6 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#Sign">func Sign(x float64) float64</a></dd>
 			
 				
-				<dd><a href="#SinX">func SinX(w, m float64) float64</a></dd>
-			
-				
 				<dd><a href="#Sramp">func Sramp(x, β float64) float64</a></dd>
 			
 				
@@ -126,6 +120,12 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				
 				<dd><a href="#SrampD2">func SrampD2(x, β float64) float64</a></dd>
+			
+				
+				<dd><a href="#SuqCos">func SuqCos(w, m float64) float64</a></dd>
+			
+				
+				<dd><a href="#SuqSin">func SuqSin(w, m float64) float64</a></dd>
 			
 			
 				
@@ -693,7 +693,7 @@ One implements an specialisation of Cte function that always returns one
 		
 			
 			
-			<h2 id="Atan2p">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=611:652#L10">Atan2p</a></h2>
+			<h2 id="Atan2p">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=629:670#L10">Atan2p</a></h2>
 			<pre>func Atan2p(y, x <a href="/pkg/builtin/#float64">float64</a>) (αrad <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 2π
@@ -705,7 +705,7 @@ Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 
 		
 			
 			
-			<h2 id="Atan2pDeg">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=828:872#L19">Atan2pDeg</a></h2>
+			<h2 id="Atan2pDeg">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=846:890#L19">Atan2pDeg</a></h2>
 			<pre>func Atan2pDeg(y, x <a href="/pkg/builtin/#float64">float64</a>) (αdeg <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atan2pDeg implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 360
@@ -741,19 +741,7 @@ CheckDerivX checks derivatives w.r.t to x for fixed t
 		
 			
 			
-			<h2 id="CosX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=258:289#L1">CosX</a></h2>
-			<pre>func CosX(w, m <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
-			<p>
-CosX implements the extended cosine function (for superquadrics)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Heav">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1134:1162#L36">Heav</a></h2>
+			<h2 id="Heav">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1152:1180#L36">Heav</a></h2>
 			<pre>func Heav(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Heaviside step function (== derivative of Ramp(x))
@@ -795,7 +783,7 @@ axEqual -- use axis[&#39;equal&#39;]
 		
 			
 			
-			<h2 id="Ramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1006:1034#L28">Ramp</a></h2>
+			<h2 id="Ramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1024:1052#L28">Ramp</a></h2>
 			<pre>func Ramp(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Ramp function =&gt; MacAulay brackets
@@ -807,7 +795,7 @@ Ramp function =&gt; MacAulay brackets
 		
 			
 			
-			<h2 id="Sabs">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1963:1996#L82">Sabs</a></h2>
+			<h2 id="Sabs">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1981:2014#L82">Sabs</a></h2>
 			<pre>func Sabs(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
@@ -819,7 +807,7 @@ Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
 		
 			
 			
-			<h2 id="SabsD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2146:2181#L93">SabsD1</a></h2>
+			<h2 id="SabsD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2164:2199#L93">SabsD1</a></h2>
 			<pre>func SabsD1(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SabsD1 returns the first derivative of Sabs
@@ -831,7 +819,7 @@ SabsD1 returns the first derivative of Sabs
 		
 			
 			
-			<h2 id="SabsD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2361:2396#L106">SabsD2</a></h2>
+			<h2 id="SabsD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2379:2414#L106">SabsD2</a></h2>
 			<pre>func SabsD2(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SabsD2 returns the first derivative of Sabs
@@ -843,7 +831,7 @@ SabsD2 returns the first derivative of Sabs
 		
 			
 			
-			<h2 id="Sign">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1257:1285#L47">Sign</a></h2>
+			<h2 id="Sign">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1275:1303#L47">Sign</a></h2>
 			<pre>func Sign(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sign function
@@ -855,19 +843,7 @@ Sign function
 		
 			
 			
-			<h2 id="SinX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=424:455#L5">SinX</a></h2>
-			<pre>func SinX(w, m <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
-			<p>
-SinX implements the extended sine function (for superquadrics)
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="Sramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1413:1446#L58">Sramp</a></h2>
+			<h2 id="Sramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1431:1464#L58">Sramp</a></h2>
 			<pre>func Sramp(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sramp implements a smooth ramp function. Ramp
@@ -879,7 +855,7 @@ Sramp implements a smooth ramp function. Ramp
 		
 			
 			
-			<h2 id="SrampD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1582:1617#L66">SrampD1</a></h2>
+			<h2 id="SrampD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1600:1635#L66">SrampD1</a></h2>
 			<pre>func SrampD1(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SrampD1 returns the first derivative of Sramp
@@ -891,10 +867,34 @@ SrampD1 returns the first derivative of Sramp
 		
 			
 			
-			<h2 id="SrampD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1747:1782#L74">SrampD2</a></h2>
+			<h2 id="SrampD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1765:1800#L74">SrampD2</a></h2>
 			<pre>func SrampD2(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SrampD2 returns the second derivative of Sramp
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SuqCos">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=264:297#L1">SuqCos</a></h2>
+			<pre>func SuqCos(w, m <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+SuqCos implements the superquadric auxiliary function that uses cos(x)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="SuqSin">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=440:473#L5">SuqSin</a></h2>
+			<pre>func SuqSin(w, m <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+SuqSin implements the superquadric auxiliary function that uses sin(x)
 </p>
 
 			
@@ -1900,7 +1900,7 @@ Pts is a function based on a linear interpolation over a set of points
 
 			
 				
-				<h3 id="Pts.F">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2165:2211#L103">F</a></h3>
+				<h3 id="Pts.F">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2171:2217#L103">F</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 F returns y = F(t, x)
@@ -1911,7 +1911,7 @@ F returns y = F(t, x)
 				
 			
 				
-				<h3 id="Pts.G">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2493:2539#L119">G</a></h3>
+				<h3 id="Pts.G">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2499:2545#L119">G</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) G(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 G returns ∂y/∂t_cteX = G(t, x)
@@ -1922,7 +1922,7 @@ G returns ∂y/∂t_cteX = G(t, x)
 				
 			
 				
-				<h3 id="Pts.Grad">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2871:2925#L137">Grad</a></h3>
+				<h3 id="Pts.Grad">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2877:2931#L137">Grad</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) Grad(v []<a href="/pkg/builtin/#float64">float64</a>, t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Grad returns ∇F = ∂y/∂x = Grad(t, x)
@@ -1933,7 +1933,7 @@ Grad returns ∇F = ∂y/∂x = Grad(t, x)
 				
 			
 				
-				<h3 id="Pts.H">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2763:2809#L132">H</a></h3>
+				<h3 id="Pts.H">func (Pts) <a href="https://github.com/cpmech/gosl/blob/master/fun/f_pts.go?s=2769:2815#L132">H</a></h3>
 				<pre>func (o <a href="#Pts">Pts</a>) H(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 H returns ∂²y/∂t²_cteX = H(t, x)

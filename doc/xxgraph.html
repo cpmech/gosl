@@ -221,7 +221,7 @@ use 'godoc cmd/github.com/cpmech/gosl/graph' for documentation on the github.com
 		
 			
 			
-			<h2 id="CheckIndicatorMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/graph/auxiliary.go?s=1033:1126#L38">CheckIndicatorMatrix</a></h2>
+			<h2 id="CheckIndicatorMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/graph/auxiliary.go?s=1032:1125#L38">CheckIndicatorMatrix</a></h2>
 			<pre>func CheckIndicatorMatrix(source, target <a href="/pkg/builtin/#int">int</a>, x [][]<a href="/pkg/builtin/#int">int</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) (errPath, errLoop <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -230,7 +230,7 @@ use 'godoc cmd/github.com/cpmech/gosl/graph' for documentation on the github.com
 		
 			
 			
-			<h2 id="CheckIndicatorMatrixRowMaj">func <a href="https://github.com/cpmech/gosl/blob/master/graph/auxiliary.go?s=1713:1803#L77">CheckIndicatorMatrixRowMaj</a></h2>
+			<h2 id="CheckIndicatorMatrixRowMaj">func <a href="https://github.com/cpmech/gosl/blob/master/graph/auxiliary.go?s=1712:1802#L77">CheckIndicatorMatrixRowMaj</a></h2>
 			<pre>func CheckIndicatorMatrixRowMaj(source, target, nv <a href="/pkg/builtin/#int">int</a>, xmat []<a href="/pkg/builtin/#int">int</a>) (errPath, errLoop <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -279,7 +279,7 @@ Graph defines a graph structure
 
 			
 				
-				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=7265:7319#L261">ReadGraphTable</a></h3>
+				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=7260:7314#L261">ReadGraphTable</a></h3>
 				<pre>func ReadGraphTable(fname <a href="/pkg/builtin/#string">string</a>, bargera <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Graph">Graph</a></pre>
 				<p>
 ReadGraphTable reads data and allocate graph
@@ -291,7 +291,7 @@ ReadGraphTable reads data and allocate graph
 
 			
 				
-				<h3 id="Graph.CalcDist">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3685:3723#L119">CalcDist</a></h3>
+				<h3 id="Graph.CalcDist">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3680:3718#L119">CalcDist</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) CalcDist() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 CalcDist computes distances beetween all vertices and initialises &#39;Next&#39; matrix
@@ -302,7 +302,7 @@ CalcDist computes distances beetween all vertices and initialises &#39;Next&#39;
 				
 			
 				
-				<h3 id="Graph.Draw">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5306:5510#L192">Draw</a></h3>
+				<h3 id="Graph.Draw">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5301:5505#L192">Draw</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Draw(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, r, W, dwt, arrow_scale <a href="/pkg/builtin/#float64">float64</a>,
     verts_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, verts_fsz <a href="/pkg/builtin/#float64">float64</a>, verts_clr <a href="/pkg/builtin/#string">string</a>,
     edges_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, edges_fsz <a href="/pkg/builtin/#float64">float64</a>, edges_clr <a href="/pkg/builtin/#string">string</a>)</pre>
@@ -320,7 +320,7 @@ arrow_scale -- scale for arrows. use 0 for default value
 				
 			
 				
-				<h3 id="Graph.GetEdge">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1900:1952#L51">GetEdge</a></h3>
+				<h3 id="Graph.GetEdge">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1895:1947#L51">GetEdge</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) GetEdge(i, j <a href="/pkg/builtin/#int">int</a>) (k <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes ides
@@ -331,7 +331,7 @@ GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes 
 				
 			
 				
-				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4448:4496#L156">HashEdgeKey</a></h3>
+				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4443:4491#L156">HashEdgeKey</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) HashEdgeKey(i, j <a href="/pkg/builtin/#int">int</a>) (edge <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 HashEdgeKey creates a unique hash key identifying an edge
@@ -359,7 +359,7 @@ Init initialises graph
 				
 			
 				
-				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3436:3476#L105">Path</a></h3>
+				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3431:3471#L105">Path</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Path(s, t <a href="/pkg/builtin/#int">int</a>) (p []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Path returns the path from source (s) to destination (t)
@@ -372,7 +372,7 @@ Path returns the path from source (s) to destination (t)
 				
 			
 				
-				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2840:2896#L79">ShortestPaths</a></h3>
+				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2835:2891#L79">ShortestPaths</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) ShortestPaths(method <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ShortestPaths computes the shortest paths in a graph defined as follows
@@ -400,7 +400,7 @@ Input:
 				
 			
 				
-				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4589:4631#L161">StrDistMatrix</a></h3>
+				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4584:4626#L161">StrDistMatrix</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) StrDistMatrix() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 StrDistMatrix returns a string representation of Dist matrix
@@ -490,7 +490,7 @@ Init initialises Munkres&#39; structure
 				
 			
 				
-				<h3 id="Munkres.Run">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=3400:3423#L94">Run</a></h3>
+				<h3 id="Munkres.Run">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=3395:3418#L94">Run</a></h3>
 				<pre>func (o *<a href="#Munkres">Munkres</a>) Run()</pre>
 				<p>
 Run runs the iterative algorithm
@@ -507,7 +507,7 @@ Run runs the iterative algorithm
 				
 			
 				
-				<h3 id="Munkres.SetCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=2705:2751#L69">SetCostMatrix</a></h3>
+				<h3 id="Munkres.SetCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=2700:2746#L69">SetCostMatrix</a></h3>
 				<pre>func (o *<a href="#Munkres">Munkres</a>) SetCostMatrix(C [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetCostMatrix sets cost matrix by copying from C to internal o.C
@@ -520,7 +520,7 @@ SetCostMatrix sets cost matrix by copying from C to internal o.C
 				
 			
 				
-				<h3 id="Munkres.StrCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=9357:9401#L346">StrCostMatrix</a></h3>
+				<h3 id="Munkres.StrCostMatrix">func (*Munkres) <a href="https://github.com/cpmech/gosl/blob/master/graph/munkres.go?s=9352:9396#L346">StrCostMatrix</a></h3>
 				<pre>func (o *<a href="#Munkres">Munkres</a>) StrCostMatrix() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 StrCostMatrix returns a representation of cost matrix with masks and covers

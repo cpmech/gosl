@@ -731,7 +731,7 @@ Cauchy stress =&gt; second Piola-Kirchhoff: S := inv(F) * σ * inv(F)^t * J
 		
 			
 			
-			<h2 id="CheckEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=7672:7756#L236">CheckEigenprojs</a></h2>
+			<h2 id="CheckEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=7669:7753#L236">CheckEigenprojs</a></h2>
 			<pre>func CheckEigenprojs(a []<a href="/pkg/builtin/#float64">float64</a>, tolP, tolS <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>) (λsorted []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CheckEigenprojs checks eigen projectors
@@ -743,7 +743,7 @@ CheckEigenprojs checks eigen projectors
 		
 			
 			
-			<h2 id="CheckEigenprojsDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=9948:10024#L320">CheckEigenprojsDerivs</a></h2>
+			<h2 id="CheckEigenprojsDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=9945:10021#L320">CheckEigenprojsDerivs</a></h2>
 			<pre>func CheckEigenprojsDerivs(a []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>, zero <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CheckEigenprojsDerivs checks the derivatives of eigen projectors w.r.t defining tensor
@@ -1003,7 +1003,7 @@ M_Alloc4 allocates a 4th order tensor in Mandel&#39;s representation ((2*ndim)x(
 		
 			
 			
-			<h2 id="M_AllocEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1527:1574#L46">M_AllocEigenprojs</a></h2>
+			<h2 id="M_AllocEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1524:1571#L46">M_AllocEigenprojs</a></h2>
 			<pre>func M_AllocEigenprojs(ncp <a href="/pkg/builtin/#int">int</a>) (P [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_AllocEigenprojs allocates new eigenprojectors P[3][ncp].
@@ -1127,7 +1127,7 @@ M_DyAdd adds the dyadic product between a and b scaled by s
 		
 			
 			
-			<h2 id="M_EigenProjsDerivAna">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=2934:3023#L95">M_EigenProjsDerivAna</a></h2>
+			<h2 id="M_EigenProjsDerivAna">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=2931:3020#L95">M_EigenProjsDerivAna</a></h2>
 			<pre>func M_EigenProjsDerivAna(dPda [][][]<a href="/pkg/builtin/#float64">float64</a>, a, λ []<a href="/pkg/builtin/#float64">float64</a>, P [][]<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenProjsDerivAna returns the derivatives of the eigenprojectors w.r.t its defining tensor
@@ -1147,7 +1147,7 @@ Output:
 		
 			
 			
-			<h2 id="M_EigenProjsDerivAuto">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=6780:6870#L218">M_EigenProjsDerivAuto</a></h2>
+			<h2 id="M_EigenProjsDerivAuto">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=6777:6867#L218">M_EigenProjsDerivAuto</a></h2>
 			<pre>func M_EigenProjsDerivAuto(dPda [][][]<a href="/pkg/builtin/#float64">float64</a>, a, λ []<a href="/pkg/builtin/#float64">float64</a>, P [][]<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenProjsDerivAuto computes the derivatives of the eigenprojectors of tensor a
@@ -1170,7 +1170,7 @@ Output:
 		
 			
 			
-			<h2 id="M_EigenProjsDerivNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=4847:4928#L143">M_EigenProjsDerivNum</a></h2>
+			<h2 id="M_EigenProjsDerivNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=4844:4925#L143">M_EigenProjsDerivNum</a></h2>
 			<pre>func M_EigenProjsDerivNum(dPda [][][]<a href="/pkg/builtin/#float64">float64</a>, a []<a href="/pkg/builtin/#float64">float64</a>, h <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenProjsDerivNum returns the derivatives of the eigenprojectors w.r.t its defining tensor
@@ -1189,7 +1189,7 @@ Output:
 		
 			
 			
-			<h2 id="M_EigenValsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=896:944#L25">M_EigenValsNum</a></h2>
+			<h2 id="M_EigenValsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=893:941#L25">M_EigenValsNum</a></h2>
 			<pre>func M_EigenValsNum(λ, a []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenValsNum returns the eigenvalues of tensor &#39;a&#39; (2nd order symmetric tensor in Mandel&#39;s basis)
@@ -1202,7 +1202,7 @@ using Jacobi rotation
 		
 			
 			
-			<h2 id="M_EigenValsProjsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1830:1898#L56">M_EigenValsProjsNum</a></h2>
+			<h2 id="M_EigenValsProjsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1827:1895#L56">M_EigenValsProjsNum</a></h2>
 			<pre>func M_EigenValsProjsNum(P [][]<a href="/pkg/builtin/#float64">float64</a>, λ, a []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenValsProjsNum computes the eigenvalues and eigenprojectors of tensor &#39;a&#39; (2nd order symmetric tensor in Mandel&#39;s basis)
@@ -1215,7 +1215,7 @@ using Jacobi rotation.
 		
 			
 			
-			<h2 id="M_EigenValsVecsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1180:1247#L35">M_EigenValsVecsNum</a></h2>
+			<h2 id="M_EigenValsVecsNum">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=1177:1244#L35">M_EigenValsVecsNum</a></h2>
 			<pre>func M_EigenValsVecsNum(Q [][]<a href="/pkg/builtin/#float64">float64</a>, λ, a []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenValsVecs returns the eigenvalues and eigenvectors of tensor &#39;a&#39; (2nd order symmetric tensor in Mandel&#39;s basis)
