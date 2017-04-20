@@ -6,13 +6,13 @@ package fun
 
 import "math"
 
-// CosX implements the extended cosine function (for superquadrics)
-func CosX(w, m float64) float64 {
+// SuqCos implements the superquadric auxiliary function that uses cos(x)
+func SuqCos(w, m float64) float64 {
 	return Sign(math.Cos(w)) * math.Pow(math.Abs(math.Cos(w)), m)
 }
 
-// SinX implements the extended sine function (for superquadrics)
-func SinX(w, m float64) float64 {
+// SuqSin implements the superquadric auxiliary function that uses sin(x)
+func SuqSin(w, m float64) float64 {
 	return Sign(math.Sin(w)) * math.Pow(math.Abs(math.Sin(w)), m)
 }
 

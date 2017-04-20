@@ -147,3 +147,21 @@ func Test_functions03(tst *testing.T) {
 		plt.Show()
 	}
 }
+
+func Test_suq01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("suq01. superquadric functions")
+
+	if chk.Verbose {
+		np := 101
+		X := utl.LinSpace(0, math.Pi, np)
+		Y := make([]float64, np)
+		for i := 0; i < np; i++ {
+			Y[i] = SuqCos(X[i], 4)
+		}
+		plt.Plot(X, Y, nil)
+		plt.Gll("x", "y", nil)
+		plt.Save("/tmp/gosl", "t_suq01")
+	}
+}
