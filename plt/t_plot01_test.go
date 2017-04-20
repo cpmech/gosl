@@ -162,7 +162,7 @@ func Test_plot03(tst *testing.T) {
 		a := &A{
 			NumFmt:  "%.1f",
 			Lw:      0.8,
-			CbarLbl: "NICE",
+			CbarLbl: "$f(x,y)$",
 			SelectC: "yellow",
 			SelectV: -2.5,
 			Nlevels: 10,
@@ -171,6 +171,7 @@ func Test_plot03(tst *testing.T) {
 		Reset(true, nil)
 		Equal()
 		ContourF(X, Y, F, a)
+		SetLabels("$x$", "$y$", nil)
 
 		err := Save("/tmp/gosl", "t_plot03")
 		if err != nil {
@@ -376,6 +377,8 @@ func Test_plot08(tst *testing.T) {
 		Hemisphere(centre, radius, amin, amax, nu, nv, cup, &A{C: "k", Surf: true, Wire: false})
 
 		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
+
+		SetLabels3d(`$x_{axis}$`, `$y_{axis}$`, `$z_{axis}$`, &A{C: "r", Fsz: 14})
 
 		// save
 		err := Save("/tmp/gosl", "t_plot08")

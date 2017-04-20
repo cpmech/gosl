@@ -11,6 +11,16 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+// SetLabels3d sets x-y-z axes labels
+func SetLabels3d(x, y, z string, args *A) {
+	createAxes3d()
+	a := ""
+	if args != nil {
+		a = "," + args.String(false, false)
+	}
+	io.Ff(&bufferPy, "AX3D.set_xlabel(r'%s'%s);AX3D.set_ylabel(r'%s'%s);AX3D.set_zlabel(r'%s'%s)\n", x, a, y, a, z, a)
+}
+
 // AxisRange3d sets x, y, and z ranges (i.e. limits)
 func AxisRange3d(xmin, xmax, ymin, ymax, zmin, zmax float64) {
 	io.Ff(&bufferPy, "plt.gca().set_xlim3d(%g,%g)\ngca().set_ylim3d(%g,%g)\ngca().set_zlim3d(%g,%g)\n", xmin, xmax, ymin, ymax, zmin, zmax)

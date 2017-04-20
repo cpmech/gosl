@@ -511,6 +511,15 @@ func Gll(xl, yl string, args *A) {
 	Legend(args)
 }
 
+// SetLabels sets x-y axes labels
+func SetLabels(x, y string, args *A) {
+	a := ""
+	if args != nil {
+		a = "," + args.String(false, false)
+	}
+	io.Ff(&bufferPy, "plt.xlabel(r'%s'%s);plt.ylabel(r'%s'%s)\n", x, a, y, a)
+}
+
 // Clf clears current figure
 func Clf() {
 	io.Ff(&bufferPy, "plt.clf()\n")
