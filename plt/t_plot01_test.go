@@ -345,3 +345,30 @@ func Test_plot07(tst *testing.T) {
 		}
 	}
 }
+
+func Test_plot08(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot08")
+
+	if chk.Verbose {
+
+		// draw
+		Reset(true, nil)
+		Triad(1.0, true, true, &A{C: "orange"}, &A{C: "red"})
+
+		alpha, height := 15.0, 1.0
+		nu, nv := 7, 11
+		ConeZ(alpha, height, nu, nv, false, &A{C: "orange"})
+		ConeDiag(alpha, height, nu, nv, false, nil)
+		Diag3d(1, false, nil)
+		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
+
+		// save
+		err := Save("/tmp/gosl", "t_plot08")
+		//err := ShowSave("/tmp/gosl", "t_plot08")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}
