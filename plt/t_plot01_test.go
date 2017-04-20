@@ -382,3 +382,58 @@ func Test_plot08(tst *testing.T) {
 		}
 	}
 }
+
+func Test_plot09(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot09")
+
+	if chk.Verbose {
+
+		// draw
+		Reset(true, nil)
+		Triad(1.0, true, &A{C: "orange"}, &A{C: "orange"})
+
+		// centre and radii
+		c := []float64{0, 0, 0}
+		r := []float64{1, 1, 1}
+		a := []float64{2, 2, 2}
+
+		// cup
+		//alpMin, alpMax := -180.0, 180.0
+		//etaMin, etaMax := -90.0, 0.0
+
+		// hemisphere
+		//alpMin, alpMax := -180.0, 180.0
+		//etaMin, etaMax := 0.0, 90.0
+
+		// sphere
+		alpMin, alpMax := -180.0, 180.0
+		etaMin, etaMax := -90.0, 90.0
+
+		// rounded cube
+		//a = []float64{10, 10, 10}
+
+		// star
+		//a = []float64{0.5, 0.5, 0.5}
+
+		// blob
+		a = []float64{2.0, 1.5, 1.0}
+
+		// divisions
+		nalp, neta := 30, 30
+
+		// generate
+		Superquadric(c, r, a, alpMin, alpMax, etaMin, etaMax, nalp, neta, &A{Surf: true})
+
+		//Default3dView(-2.1, 2.1, -2.1, 2.1, -2.1, 2.1, true)
+		Default3dView(-1.1, 1.1, -1.1, 1.1, -1.1, 1.1, true)
+
+		// save
+		err := Save("/tmp/gosl", "t_plot09")
+		//err := ShowSave("/tmp/gosl", "t_plot09")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}

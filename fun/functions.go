@@ -7,13 +7,13 @@ package fun
 import "math"
 
 // SuqCos implements the superquadric auxiliary function that uses cos(x)
-func SuqCos(w, m float64) float64 {
-	return Sign(math.Cos(w)) * math.Pow(math.Abs(math.Cos(w)), m)
+func SuqCos(angle, expon float64) float64 {
+	return Sign(math.Cos(angle)) * math.Pow(math.Abs(math.Cos(angle)), expon)
 }
 
 // SuqSin implements the superquadric auxiliary function that uses sin(x)
-func SuqSin(w, m float64) float64 {
-	return Sign(math.Sin(w)) * math.Pow(math.Abs(math.Sin(w)), m)
+func SuqSin(angle, expon float64) float64 {
+	return Sign(math.Sin(angle)) * math.Pow(math.Abs(math.Sin(angle)), expon)
 }
 
 // Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 2π

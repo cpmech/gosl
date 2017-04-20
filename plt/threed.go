@@ -286,6 +286,41 @@ func Hemisphere(c []float64, r, alphaMin, alphaMax float64, nu, nv int, cup bool
 	return
 }
 
+// Superquadric draws superquadric (i.e. superellipsoid)
+//   alpMin -- min alp angle. in [-180, 180) degrees
+//   alpMax -- max alp angle. in (-180, 180] degrees
+//   etaMin -- min eta angle. in [-90, 90) degrees
+//   etaMax -- max eta angle. in (-90, 90] degrees
+func Superquadric(c, r, a []float64, alpMin, alpMax, etaMin, etaMax float64, nalp, neta int, args *A) (X, Y, Z [][]float64) {
+	if c == nil {
+		c = []float64{0, 0, 0}
+	}
+	A, B, C := 2.0/a[0], 2.0/a[1], 2.0/a[2]
+	alpmin := alpMin * math.Pi / 180.0
+	alpmax := alpMax * math.Pi / 180.0
+	etamin := etaMin * math.Pi / 180.0
+	etamax := etaMax * math.Pi / 180.0
+	dalp := (alpmax - alpmin) / float64(nalp)
+	deta := (etamax - etamin) / float64(neta)
+	X = make([][]float64, nalp+1)
+	Y = make([][]float64, nalp+1)
+	Z = make([][]float64, nalp+1)
+	for i := 0; i < nalp+1; i++ {
+		X[i] = make([]float64, neta+1)
+		Y[i] = make([]float64, neta+1)
+		Z[i] = make([]float64, neta+1)
+		alp := alpmin + float64(i)*dalp
+		for j := 0; j < neta+1; j++ {
+			eta := etamin + float64(j)*deta
+			X[i][j] = c[0] + r[0]*suqCos(eta, A)*suqCos(alp, A)
+			Y[i][j] = c[1] + r[1]*suqCos(eta, B)*suqSin(alp, B)
+			Z[i][j] = c[2] + r[2]*suqSin(eta, C)
+		}
+	}
+	addSurfAndOrWire(X, Y, Z, args)
+	return
+}
+
 // CylinderZ draws cylinder aligned with the z axis
 //  Input:
 //     alphaDeg -- half opening angle in degrees
@@ -396,4 +431,25 @@ func createAxes3d() {
 		io.Ff(&bufferPy, "addToEA(AX3D)\n")
 		axes3dCreated = true
 	}
+}
+
+// sign function
+func sign(x float64) float64 {
+	if x < 0.0 {
+		return -1.0
+	}
+	if x > 0.0 {
+		return 1.0
+	}
+	return 0.0
+}
+
+// suqCos implements the superquadric auxiliary function that uses cos(x)
+func suqCos(angle, expon float64) float64 {
+	return sign(math.Cos(angle)) * math.Pow(math.Abs(math.Cos(angle)), expon)
+}
+
+// suqSin implements the superquadric auxiliary function that uses sin(x)
+func suqSin(angle, expon float64) float64 {
+	return sign(math.Sin(angle)) * math.Pow(math.Abs(math.Sin(angle)), expon)
 }
