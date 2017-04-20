@@ -206,6 +206,57 @@ func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN b
 	}
 }
 
+// Hemisphere draws Hemisphere
+//   Input:
+//     c -- centre coordinates. may be nil
+//     r -- radius
+//     alphaMin -- minimum circumference angle (degrees)
+//     alphaMax -- minimum circumference angle (degrees)
+//     nu -- number of divisions along one direction on plane
+//     nv -- number of divisions along the orther direction on plane
+//     cup -- upside-down; like a cup
+//     surface -- generate surface
+//     wireframe -- generate wireframe
+//   Output:
+//     X, Y, Z -- the coordinages of all points as in a meshgrid
+func Hemisphere(c []float64, r, alphaMin, alphaMax float64, nu, nv int, cup, surface, wireframe bool, args *A) (X, Y, Z [][]float64) {
+	if c == nil {
+		c = []float64{0, 0, 0}
+	}
+	amin := alphaMin * math.Pi / 180.0
+	amax := alphaMax * math.Pi / 180.0
+	da := (amax - amin) / float64(nu)
+	db := (math.Pi / 2.0) / float64(nv)
+	X = make([][]float64, nu+1)
+	Y = make([][]float64, nu+1)
+	Z = make([][]float64, nu+1)
+	for i := 0; i < nu+1; i++ {
+		X[i] = make([]float64, nv+1)
+		Y[i] = make([]float64, nv+1)
+		Z[i] = make([]float64, nv+1)
+		a := amin + float64(i)*da
+		for j := 0; j < nv+1; j++ {
+			b := float64(j) * db
+			if cup {
+				X[i][j] = c[0] + r*math.Cos(a)*math.Sin(b)
+				Y[i][j] = c[1] + r*math.Sin(a)*math.Sin(b)
+				Z[i][j] = c[2] - r*math.Cos(b)
+			} else {
+				X[i][j] = c[0] + r*math.Cos(a)*math.Sin(b)
+				Y[i][j] = c[1] + r*math.Sin(a)*math.Sin(b)
+				Z[i][j] = c[2] + r*math.Cos(b)
+			}
+		}
+	}
+	if surface {
+		Surface(X, Y, Z, args)
+	}
+	if wireframe {
+		Wireframe(X, Y, Z, args)
+	}
+	return
+}
+
 // CalcDiagAngle computes the angle between a point and the diagonal of the 3d space
 //   p -- point coordinates
 //   returns the angle in radians

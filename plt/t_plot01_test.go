@@ -363,6 +363,13 @@ func Test_plot08(tst *testing.T) {
 		ConeZ(alpha, height, nu, nv, &A{C: "orange"})
 		ConeDiag(alpha, height, nu, nv, nil)
 		Diag3d(1, nil)
+
+		centre := []float64{0.5, 0.5, 0.0}
+		radius, amin, amax := 0.5, 0.0, 180.0
+		nu, nv = 21, 5
+		cup, surface, wireframe := false, true, false
+		Hemisphere(centre, radius, amin, amax, nu, nv, cup, surface, wireframe, &A{C: "k"})
+
 		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
 
 		// save
