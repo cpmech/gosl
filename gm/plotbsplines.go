@@ -36,7 +36,7 @@ func (o *Bspline) Draw2d(npts, option int) {
 	plt.Gll("$x$", "$y$", &plt.A{LegOut: true, LegNcol: 2, LegHlen: 1.5, FszLeg: 7})
 }
 
-func (o *Bspline) Draw3d(npts int, first bool) {
+func (o *Bspline) Draw3d(npts int) {
 	t := utl.LinSpace(o.tmin, o.tmax, npts)
 	x := make([]float64, npts)
 	y := make([]float64, npts)
@@ -45,7 +45,7 @@ func (o *Bspline) Draw3d(npts int, first bool) {
 		C := o.Point(t, 0)
 		x[i], y[i], z[i] = C[0], C[1], C[2]
 	}
-	plt.Plot3dLine(x, y, z, first, nil)
+	plt.Plot3dLine(x, y, z, nil)
 }
 
 // PlotBasis plots basis functions in I

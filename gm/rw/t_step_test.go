@@ -74,7 +74,7 @@ func Test_step01(tst *testing.T) {
 	}
 
 	if false {
-		plt.Plot3dPoints(x, y, z, true, nil)
+		plt.Plot3dPoints(x, y, z, nil)
 		plt.Show()
 	}
 }

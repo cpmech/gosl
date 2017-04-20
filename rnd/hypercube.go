@@ -189,7 +189,7 @@ func PlotHc3d(dirout, fnkey string, x [][]int, xrange [][]float64, show bool) {
 	if !show {
 		plt.Reset(false, nil)
 	}
-	plt.Plot3dPoints(X[0], X[1], X[2], true, nil)
+	plt.Plot3dPoints(X[0], X[1], X[2], nil)
 	if show {
 		plt.Show()
 	} else {

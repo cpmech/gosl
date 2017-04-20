@@ -195,6 +195,7 @@ func Diag3d(scale float64, args *A) {
 
 // 3d shapes using meshgrid ///////////////////////////////////////////////////////////////////////
 
+// addSurfAndOrWire adds surface and or wireframe
 func addSurfAndOrWire(X, Y, Z [][]float64, args *A) {
 	if args == nil {
 		Wireframe(X, Y, Z, nil)
