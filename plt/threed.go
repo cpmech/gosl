@@ -11,6 +11,14 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+// handle to Axes3D in Python
+var axes3dHandle string
+
+// AxisRange3d sets x, y, and z ranges (i.e. limits)
+func AxisRange3d(xmin, xmax, ymin, ymax, zmin, zmax float64) {
+	io.Ff(&bufferPy, "plt.gca().set_xlim3d(%g,%g)\ngca().set_ylim3d(%g,%g)\ngca().set_zlim3d(%g,%g)\n", xmin, xmax, ymin, ymax, zmin, zmax)
+}
+
 // Plot3dLine plots 3d line
 func Plot3dLine(X, Y, Z []float64, doInit bool, args *A) {
 	n := get3daxes(doInit)
