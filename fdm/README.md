@@ -217,7 +217,7 @@ plt.Gll("x", "y", nil)
 plt.Save("/tmp/gosl", "fdm_problem01")
 ```
 
-Source code: <a href="../examples/fdm_problems01.go">../examples/fdm_problems01.go</a>
+Source code: <a href="../examples/fdm_problem01.go">../examples/fdm_problem01.go</a>
 
 Output:
 <div id="container">
