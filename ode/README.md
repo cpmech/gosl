@@ -94,7 +94,7 @@ max number of iterations  =     2
 ```
 
 <div id="container">
-<p><img src="figs/rober.png" width="400"></p>
+<p><img src="../examples/figs/rober.png" width="400"></p>
 Solution of Robertson's equation
 </div>
 
