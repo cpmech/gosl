@@ -136,5 +136,9 @@ for pkg in pkgs:
     for subdir in subdirs:
         Cmd("sed -i -e 's@<a href=\""+subdir+"/\">@<a href=\"https://github.com/cpmech/gosl/tree/master/"+pkg[0]+"/"+subdir+"\">@g' "+fn)
 
+
+    # remove link to parent directory
+    Cmd("sed -i -e 's@<td colspan=\"2\"><a href=\"..\">..</a></td>@<td></td>@g' "+fn)
+
 Cmd('echo "</dl>\n</div><!-- manual-nav -->" >> '+idxfn)
 Cmd('echo "'+footer()+'" >> '+idxfn)
