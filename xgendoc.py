@@ -118,6 +118,9 @@ for pkg in pkgs:
     if pkg[0] == "io":
         subdirs = ["data"]
 
+    if pkg[0] == "num":
+        subdirs = ["data"]
+
     if pkg[0] == "ode":
         subdirs = ["data"]
 
