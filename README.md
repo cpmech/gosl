@@ -83,8 +83,8 @@ above).
 ## Documentation
 
 Here, we call _user-defined_ types as _structures_. These are simply Go `types` defined as `struct`.
-Some may think of these _structures_ as _classes_. Gosl has several _global_ functions as well and
-tries to avoid complicated (unnecessary?) programming techniques.
+Some may think of these _structures_ as _classes_. Gosl has several global functions as well and
+tries to avoid complicated constructions.
 
 An allocated structure is called here an **object** and functions attached to this object are called
 **methods**. The variable holding the pointer to an object is always named **o** in Gosl (e.g.
