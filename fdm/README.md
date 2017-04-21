@@ -101,20 +101,33 @@ FR2 = [0        1        2      ]  => ex:  FR2[3] = reduced system equation # 1
 Grid2d can be used to plot a contour. Example:
 
 ```go
-var g Grid2d
+// create grid
+var g fdm.Grid2d
 g.Init(2.0, 14.0, 2.0, 8.0, 21, 11)
+
+// callback function
 fxy := func(x, y float64) float64 { return x*x + y*y }
+
+// generate data
 X, Y, F := g.Generate(fxy, nil)
-plt.SetForPng(0.4, 500, 150)
-plt.Contour(X, Y, F, "")
+
+// clear figure, apply default configuration values,
+// and set height/width proportion to 0.5
+plt.Reset(true, &plt.A{Prop: 0.5})
+
+// draw contour
+plt.ContourF(X, Y, F, nil)
+
+// setup axes and save figure as PNG file
 plt.Equal()
-plt.Gll("x", "y", "")
-plt.SaveD("/tmp/gosl", "fig_grid2d_03.png")
+plt.Gll("x", "y", nil)
+plt.Save("/tmp/gosl", "fdm_grid2d")
 ```
+Source code: <a href="../examples/fdm_grid2d.go">../examples/fdm_grid2d.go</a>
 
 Output:
 <div id="container">
-<p><img src="figs/fig_grid2d_03.png" width="500"></p>
+<p><img src="../examples/figs/fdm_grid2d.png" width="500"></p>
 Contour with Grid2d
 </div>
 
@@ -196,13 +209,15 @@ X, Y, F := g.Generate(nil, U)
 var gsol fdm.Grid2d
 gsol.Init(-1.0, 1.0, -1.0, 1.0, 101, 101)
 Xsol, Ysol, Fsol := gsol.Generate(solution, nil)
-plt.SetForPng(0.8, 600, 150)
-plt.Contour(X, Y, F, "cmapidx=1")
-plt.ContourSimple(Xsol, Ysol, Fsol, true, 0.7, "colors='yellow', linewidths=2")
+plt.Reset(false, nil)
+plt.ContourF(X, Y, F, &plt.A{CmapIdx: 1})
+plt.ContourL(Xsol, Ysol, Fsol, &plt.A{Colors: []string{"yellow"}, Lw: 20})
 plt.Equal()
-plt.Gll("x", "y", "")
-plt.SaveD("/tmp/gosl", "fdm_problem01.png")
+plt.Gll("x", "y", nil)
+plt.Save("/tmp/gosl", "fdm_problem01")
 ```
+
+Source code: <a href="../examples/fdm_problems01.go">../examples/fdm_problems01.go</a>
 
 Output:
 <div id="container">
