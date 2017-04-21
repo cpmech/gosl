@@ -207,7 +207,7 @@ graphs. For example:
 Source code: <a href="plt_contour01.go">plt_contour01.go</a>
 
 <div id="container">
-<p><img src="../plt/figs/plt_contour01.png" width="500"></p>
+<p><img src="figs/plt_contour01.png" width="500"></p>
 Contour
 </div>
 

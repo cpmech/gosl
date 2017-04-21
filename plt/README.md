@@ -45,9 +45,12 @@ following commands allow this:
 
 ## Examples
 
+
+
 ### Drawing a polygon
+
 ```go
-// points
+// point coordinates
 P := [][]float64{
     {-2.5, 0.0},
     {-5.5, 4.0},
@@ -56,72 +59,83 @@ P := [][]float64{
     {2.5, 0.0},
 }
 
-// style
-var sd plt.Sty
-sd.Init()
-sd.Closed = true
+// formatting/styling data
+// Fc: face color, Ec: edge color, Lw: linewidth
+stPlines := &plt.A{Fc: "#c1d7cf", Ec: "#4db38e", Lw: 4.5, Closed: true, NoClip: true}
+stCircles := &plt.A{Fc: "#b2cfa5", Ec: "#5dba35", Z: 1}
+stArrows := &plt.A{Fc: "cyan", Ec: "blue", Z: 2, Scale: 50, Style: "fancy"}
 
-// draw
-plt.DrawPolyline(P, &sd, "")
+// clear drawing area, with defaults
+setDefault := true
+plt.Reset(setDefault, nil)
+
+// draw polyline
+plt.Polyline(P, stPlines)
+
+// draw circle
+plt.Circle(0, 4, 2.0, stCircles)
+
+// draw arrow
+plt.Arrow(-4, 2, 4, 7, stArrows)
+
+// draw arc
+plt.Arc(0, 4, 3, 0, 90, nil)
+
+// autoscale axes
 plt.AutoScale(P)
-plt.Equal()
-plt.DrawLegend([]plt.Fmt{
-    plt.Fmt{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
-    plt.Fmt{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
-    plt.Fmt{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
-}, 10, "best", false, "")
 
-// save figure
-plt.SaveD("/tmp/gosl", "draw01.png")
+// enforce same scales
+plt.Equal()
+
+// draw a _posteriori_ legend
+plt.LegendX([]*plt.A{
+    &plt.A{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
+    &plt.A{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
+    &plt.A{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
+}, nil)
+
+// save figure (default is PNG)
+err := plt.Save("/tmp/gosl", "plt_polygon01")
+if err != nil {
+    io.Pf("error: %v\n", err)
+}
 ```
 
 <div id="container">
-<p><img src="figs/draw01.png" width="400"></p>
+<p><img src="../examples/figs/plt_polygon01.png" width="400"></p>
 Polygon
 </div>
 
+
+
 ### Plotting a contour
 ```go
-// scalar field
-fcn := func(x, y float64) float64 {
-    return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
-}
-
-// gradient. u=dfdx, v=dfdy
-grad := func(x, y float64) (u, v float64) {
-    m := math.Pow(math.Cos(x), 2.0) + math.Pow(math.Cos(y), 2.0)
-    u = 4.0 * math.Cos(x) * math.Sin(x) * m
-    v = 4.0 * math.Cos(y) * math.Sin(y) * m
-    return
-}
-
 // grid size
 xmin, xmax, N := -math.Pi/2.0+0.1, math.Pi/2.0-0.1, 21
 
-// mesh grid
-X, Y := utl.MeshGrid2D(xmin, xmax, xmin, xmax, N, N)
+// mesh grid, scalar and vector field
+X, Y, F, U, V := utl.MeshGrid2dFG(xmin, xmax, xmin, xmax, N, N, func(x, y float64) (f, u, v float64) {
 
-// compute f(x,y) and components of gradient
-F := utl.DblsAlloc(N, N)
-U := utl.DblsAlloc(N, N)
-V := utl.DblsAlloc(N, N)
-for i := 0; i < N; i++ {
-    for j := 0; j < N; j++ {
-        F[i][j] = fcn(X[i][j], Y[i][j])
-        U[i][j], V[i][j] = grad(X[i][j], Y[i][j])
-    }
-}
+    // scalar field
+    m := math.Pow(math.Cos(x), 2.0) + math.Pow(math.Cos(y), 2.0)
+    f = -math.Pow(m, 2.0)
+
+    // gradient. u=dfdx, v=dfdy
+    u = 4.0 * math.Cos(x) * math.Sin(x) * m
+    v = 4.0 * math.Cos(y) * math.Sin(y) * m
+    return
+})
 
 // plot
-plt.SetForPng(0.75, 600, 150)
-plt.Contour(X, Y, F, "levels=20, cmapidx=4")
-plt.Quiver(X, Y, U, V, "color='red'")
-plt.Gll("x", "y", "")
+plt.Reset(false, nil)
+plt.ContourF(X, Y, F, &plt.A{CmapIdx: 4, Nlevels: 15})
+plt.Quiver(X, Y, U, V, &plt.A{C: "r"})
+plt.Gll("x", "y", nil)
 plt.Equal()
-plt.SaveD("/tmp/gosl", "plt_contour01.png")
+plt.Save("/tmp/gosl", "plt_contour01")
 ```
 
 <div id="container">
-<p><img src="figs/plt_contour01.png" width="400"></p>
+<p><img src="../examples/figs/plt_contour01.png" width="400"></p>
 Contour and vector field
 </div>
