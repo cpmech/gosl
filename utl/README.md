@@ -15,7 +15,7 @@ implemented in the standard Go library.
 Some _numerical_ functions are (a few were inspired by [NumPy](http://www.numpy.org)):
 1. `IntRange` to generate slices of integers
 2. `IntFill` `IntVals`, `IntsAlloc`, `IntsClone` for slices of integers
-3. `DblArgMinMax`, `DblCopy`, `DblGetSorted` for slices of _doubles_ (double precision, i.e.  Float64)
+3. `ArgMinMax`, `Copy`, `GetSorted` for slices of _Float64_
 4. `Imin`, `Imax`, `Min`, `Max` to find minima and maxima of integers and doubles
 5. `ParetoFront` to generate the Pareto front
 6. `Cross3d` to compute the cross product
@@ -30,7 +30,7 @@ Some functions to deal with slices of slices (of slices... of slices..), i.e. _d
 
 Some functions to deal with maps (dictionaries) are:
 1. `StrBoolMapSort` to sort the keys of a `string=>bool` map
-2. `StrDblMapAppend` to append an item to a slice mapped to a key in a `string=>slice` map
+2. `StrFltMapAppend` to append an item to a slice mapped to a key in a `string=>slice` map
 3. `StrIntMapSortSplit` to extract the keys and values form a `string=>int` into sorted slices
 
 Other functions help with CPU and memory profiling, such as:
@@ -63,9 +63,9 @@ H := utl.IntUnique(D, C, G, []int{16, 39})
 
 Generate lists of doubles (float64)
 ```go
-N := utl.DblsAlloc(3, 4)
-f := utl.DblOnes(5)
-ff := utl.DblVals(5, 666)
+N := utl.Alloc(3, 4)
+f := utl.Ones(5)
+ff := utl.Vals(5, 666)
 X, Y := utl.MeshGrid2D(3, 6, 10, 20, 4, 3)
 b := utl.LinSpaceOpen(2.0, 3.0, n)
 ```
@@ -90,16 +90,16 @@ v := [][]float64{
     {0, 2, 9, -4},
 }
 
-x := utl.DblsGetColumn(0, v)
+x := utl.GetColumn(0, v)
 chk.Vector(tst, "v[:,0]", 1e-17, x, []float64{1, -1, -1, 1, 1, 0})
 
-x = utl.DblsGetColumn(1, v)
+x = utl.GetColumn(1, v)
 chk.Vector(tst, "v[:,1]", 1e-17, x, []float64{2, 2, 2, -2, 1, 2})
 
-x = utl.DblsGetColumn(2, v)
+x = utl.GetColumn(2, v)
 chk.Vector(tst, "v[:,2]", 1e-17, x, []float64{3, 3, 1, 3, -3, 9})
 
-x = utl.DblsGetColumn(3, v)
+x = utl.GetColumn(3, v)
 chk.Vector(tst, "v[:,3]", 1e-17, x, []float64{4, 0, 4, 8, 4, -4})
 ```
 
@@ -110,7 +110,7 @@ v := []float64{1, 2, 3, 4, 5, 6}
 io.Pforan("u = %v\n", u)
 io.Pfblue2("v = %v\n", v)
 
-u_dominates, v_dominates := utl.DblsParetoMin(u, v)
+u_dominates, v_dominates := utl.ParetoMin(u, v)
 io.Pfpink("u_dominates = %v\n", u_dominates)
 io.Pfpink("v_dominates = %v\n", v_dominates)
 ```
@@ -187,14 +187,14 @@ m := map[string][]float64{
 }
 io.Pforan("m (before) = %v\n", m)
 
-utl.StrDblsMapAppend(&m, "a", 102)
+utl.StrMapAppend(&m, "a", 102)
 io.Pfpink("m (after) = %v\n", m)
 
 chk.Vector(tst, "m[\"a\"]", 1e-16, m["a"], []float64{100, 101, 102})
 chk.Vector(tst, "m[\"b\"]", 1e-16, m["b"], []float64{1000})
 chk.Vector(tst, "m[\"c\"]", 1e-16, m["c"], []float64{200, 300, 400})
 
-utl.StrDblsMapAppend(&m, "d", 666)
+utl.StrFltsMapAppend(&m, "d", 666)
 io.Pfcyan("m (after) = %v\n", m)
 
 chk.Vector(tst, "m[\"a\"]", 1e-16, m["a"], []float64{100, 101, 102})
