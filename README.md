@@ -32,6 +32,8 @@ Gosl comprises several _subpackages_ as listed below:
 18. [tsr](https://github.com/cpmech/gosl/tree/master/tsr)       &ndash; Tensor algebra and definitions for continuum mechanics
 19. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)       &ndash; 3D Visualisation with the VTK tool kit
 
+Check the **[developer's documentation](http://rawgit.com/cpmech/gosl/master/doc/index.html)** to
+see what's available and how to call functions and methods.
 
 
 ## Examples
@@ -96,7 +98,7 @@ are prefixed with `New`; for instance: `NewIsoSurf`.
 The directories corresponding to each package has a README.md file that should help with
 understanding the library, including functions and structures.
 
-Gosl has several functions and _structures_. Check the **[developer's
+Again, Gosl has several functions and _structures_. Check the **[developer's
 documentation](http://rawgit.com/cpmech/gosl/master/doc/index.html)** to see what's available and
 how to call functions and methods.
 
