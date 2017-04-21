@@ -9,42 +9,36 @@ Python/pyplot in the sense that it generates python scripts to be run by an exte
 A future implementation will add an option to draw directly to the web browser, after generating
 JavaScript codes. We also plan for a [QT](https://www.qt.io) version.
 
-Many pyplot functions are _wrapped_. For instance:
-1. `Axes`, `Clf`
+Some basic functions are (some are very similar to matplotlib ones):
+1. `ReplaceAxes`, `Clf`
 2. `Hist`, `Plot`, `Text`
 3. `Show`, `Grid`
 4. `Contour`, `Quiver`
 
 The `plt` package is in fact somewhat **more convenient** than the analogue pyplot because it comes
 with a number of _higher level_ functions such as:
-1. `Arrow`, `Circle`, `DrawPolyline`
+1. `Arrow`, `Circle`, `Polyline`
 2. `AutoScale`, `AxisOff`, `AxisRange`
-3. `AxisXmin`, `AxisXmax`, `AxisYmin`, `AxisYmax`
 4. `Camera`, `Cross` (indicating the origin)
-5.  `SetScientific`, `SetTicksX`, `SetTicksY`, `SetXlog`, `SetYlog`
+5.  `SetScientificX`, `SetTicksX`, `SetTicksY`, `SetXlog`, `SetYlog`
 6. `Gll` (grid-labels-legend)
 
 Functions to draw and handle 3D graphs are also available:
-1. `Plot3dLine`, `Plot3dPoints`
-2. `Wireframe`, `Surface`
-3. `AxisRange3d` 
-Nonetheless fancier graphs are better developed with the `vtk` subpackage.
+1. `Plot3dLine`, `Plot3dPoint`, `Plot3dPoints`
+2. `Wireframe`, `Surface`, `Hemisphere`, `Superquadric`
+3. `AxisRange3d`, `CylinderZ`, `ConeZ`
+Nonetheless, fancier graphs can also be developed with the `vtk` subpackage.
 
-To view and save figures, the following commands are available:
-1. `SetForEps` prepares figure for generating an eps file, e.g. by giving the proportion and size
-2. `SetForPng` prepares figure for generating a png file, e.g. by giving the proportion, size and resolution
-3. `Save` and `SaveD` that saves the figure and save after creating a directory, respectively.
+To initialise the figure, view and save figures, the following commands are available:
+1. `Reset` initialises drawing space (optional)
+2. `Show` show figure
+3. `Save` saves the figure, after creating a directory.
 
-Most functions take an extra argument that is passed to python for further customisation.
+All functions take a pointer to a structure holding optional arguments, the `A` structure that
+belongs to the `plt` package, i.e. `plt.A`.
 
-In fact, you can do everything here (in Go) as you would do in python, because, if needed, you can
-write python scripts of even load a python file to be run when showing or saving figures. The
-following commands allow this:
-1. `PyCmds` run python commands
-2. `PyFile` load and run a python file
 
 ## Examples
-
 
 
 ### Drawing a polygon
