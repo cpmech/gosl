@@ -95,8 +95,43 @@ for pkg in pkgs:
     Cmd('echo "'+pkgitem(pkg)+'" >> '+idxfn)
 
     # fix links
-    Cmd("sed -i -e 's@/src/target@https://github.com/cpmech/gosl/blob/master/"+pkg[0]+"@g' "+fn+"")
-    Cmd("sed -i -e 's@/src/github.com/cpmech/gosl/@https://github.com/cpmech/gosl/blob/master/@g' "+fn+"")
+    Cmd("sed -i -e 's@/src/target@https://github.com/cpmech/gosl/blob/master/"+pkg[0]+"@g' "+fn)
+    Cmd("sed -i -e 's@/src/github.com/cpmech/gosl/@https://github.com/cpmech/gosl/blob/master/@g' "+fn)
+
+    # fix links to subdirectories (harder to automate)
+    subdirs = []
+    if pkg[0] == "fun":
+        subdirs = ["figs"]
+
+    if pkg[0] == "gm":
+        subdirs = ["data", "msh", "rw", "tri"]
+
+    if pkg[0] == "gm/msh":
+        subdirs = ["data"]
+
+    if pkg[0] == "gm/rw":
+        subdirs = ["data"]
+
+    if pkg[0] == "graph":
+        subdirs = ["data"]
+
+    if pkg[0] == "io":
+        subdirs = ["data"]
+
+    if pkg[0] == "ode":
+        subdirs = ["data"]
+
+    if pkg[0] == "opt":
+        subdirs = ["data"]
+
+    if pkg[0] == "rnd":
+        subdirs = ["data", "dsfmt", "sfmt"]
+
+    if pkg[0] == "utl":
+        subdirs = ["data"]
+
+    for subdir in subdirs:
+        Cmd("sed -i -e 's@<a href=\""+subdir+"/\">@<a href=\"https://github.com/cpmech/gosl/tree/master/"+pkg[0]+"/"+subdir+"\">@g' "+fn)
 
 Cmd('echo "</dl>\n</div><!-- manual-nav -->" >> '+idxfn)
 Cmd('echo "'+footer()+'" >> '+idxfn)
