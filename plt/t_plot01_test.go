@@ -443,3 +443,50 @@ func Test_plot09(tst *testing.T) {
 		}
 	}
 }
+
+func Test_plot10(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot10")
+
+	if chk.Verbose {
+
+		// data
+		x := utl.LinSpace(0.0, 100.0, 11)
+		y1 := make([]float64, len(x))
+		y2 := make([]float64, len(x))
+		y3 := make([]float64, len(x))
+		y4 := make([]float64, len(x))
+		for i := 0; i < len(x); i++ {
+			y1[i] = x[i] * x[i]
+			y2[i] = x[i]
+			y3[i] = x[i] * 100
+			y4[i] = x[i] * 2
+		}
+
+		// clear figure
+		Reset(false, nil)
+
+		// plot curve on main figure
+		Plot(x, y1, &A{L: "curve on old"})
+
+		// plot curve on zoom window
+		old, new := ZoomWindow(0.25, 0.5, 0.3, 0.3, nil)
+		Plot(x, y2, &A{C: "r", L: "curve on new"})
+
+		// activate main figure
+		Sca(old)
+		Plot(x, y3, &A{C: "orange", L: "curve ond old again"})
+		Gll("x", "y", &A{LegLoc: "lower right"})
+
+		// activate zoom window
+		Sca(new)
+		Plot(x, y4, &A{C: "cyan", L: "curve ond new again"})
+		Gll("xnew", "ynew", nil)
+
+		err := Save("/tmp/gosl", "t_plot10")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}

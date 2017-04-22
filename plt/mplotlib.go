@@ -536,6 +536,28 @@ func SetFontSizes(args *A) {
 	io.Ff(&bufferPy, "    'ytick.labelsize' : %g})\n", ytck)
 }
 
+// ZoomWindow adds another axes to plot a figure within the figure; e.g. a zoom window
+//  lef, bot, wid, hei -- normalised figure coordinates: left,bottom,width,height
+//  asOld -- handle to the previous axes
+//  axNew -- handle to the new axes
+func ZoomWindow(lef, bot, wid, hei float64, args *A) (axOld, axNew string) {
+	uid := genUid()
+	clr := "#dcdcdc"
+	if args != nil {
+		clr = args.C
+	}
+	axOld = io.Sf("axOld%d", uid)
+	io.Ff(&bufferPy, "%s = plt.gca()\n", axOld)
+	axNew = io.Sf("axNew%d", uid)
+	io.Ff(&bufferPy, "%s = plt.axes([%g,%g,%g,%g], axisbg='%s')\n", axNew, lef, bot, wid, hei, clr)
+	return
+}
+
+// Sca sets current axes
+func Sca(axName string) {
+	io.Ff(&bufferPy, "plt.sca(%s)\n", axName)
+}
+
 // functions to save figure ///////////////////////////////////////////////////////////////////////
 
 // Save saves figure after creating a directory

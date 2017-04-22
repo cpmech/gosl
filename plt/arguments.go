@@ -52,7 +52,7 @@ type A struct {
 	FigFraction bool // the given x-y coordinates correspond to figure coords  "xycoords='figure fraction'") }
 
 	// legend
-	LegLoc   string    // legend: location
+	LegLoc   string    // legend: location. e.g.: right, center left, upper right, lower right, best, center, lower left, center right, upper left, upper center, lower center
 	LegNcol  int       // legend: number of columns
 	LegHlen  float64   // legend: handle length
 	LegFrame bool      // legend: frame on
