@@ -14,14 +14,16 @@ The vector and matrix operations implemented in the `la` package do not take adv
 capabilities of the computer hardware as in other libraries such as
 [OpenBlas](http://www.openblas.net) or [IntelMKL](https://software.intel.com/en-us/intel-mkl).
 
-Therefore, `la` should be used for _small_ to _normal-sized_ vectors and matrices. The other
-subpackage `lax` provides a wrapper to [OpenBlas](http://www.openblas.net) and should be used for
-_very-large_ or _large_ vectors and matrices (TODO).
+Therefore, `la` should be used for _small_ to _normal-sized_ vectors and matrices.
 
-TODO: The reason for having these two packages is that `la` is probably more efficient for smaller systems
+The other subpackage [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas) provides a
+wrapper to [OpenBlas](http://www.openblas.net) and should be used for _very-large_ or _large_
+vectors and matrices.
+
+The reason for having these two packages is that `la` is probably more efficient for smaller systems
 such as the assemblage of stiffness matrices in finite element computations. On the other hand,
-`lax` involves copies of data to be passed to the lower level routines and might add some overhead;
-however the greater efficiency compensates this overhead in the end.
+`la/oblas` may require copying data when connecting with the lower level routines, hence adding some
+overhead. However its greater efficiency compensates the overhead for large arrays.
 
 There is only one type of integer and one type of real number (float point number, FPN) in this package.
 Integers are `Int` and FPNs are `float64` (i.e. doubles). Also, there is only one type of complex

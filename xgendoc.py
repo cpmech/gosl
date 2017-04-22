@@ -20,25 +20,26 @@ def Cmd(command, verbose=False, debug=False):
     return out, err
 
 pkgs = [
-    ("chk"    , "Check code and unit test tools"),
-    ("io"     , "Input/output, read/write files, and print commands"),
-    ("utl"    , "Utilities. Lists. Dictionaries. Simple Numerics"),
-    ("plt"    , "Plotting and drawing (png and eps)"),
-    ("mpi"    , "Message Passing Interface for parallel computing"),
-    ("la"     , "Linear Algebra and efficient sparse solvers"),
-    ("fdm"    , "Simple finite differences method"),
-    ("num"    , "Fundamental Numerical methods"),
-    ("fun"    , "Scalar functions of one scalar and one vector"),
-    ("gm"     , "Geometry algorithms and structures"),
-    ("gm/msh" , "Mesh generation and Delaunay triangulation"),
-    ("gm/tri" , "Mesh generation: triangles"),
-    ("gm/rw"  , "Mesh generation: read/write"),
-    ("graph"  , "Graph theory structures and algorithms"),
-    ("ode"    , "Ordinary differential equations"),
-    ("opt"    , "Optimisation problem solvers"),
-    ("rnd"    , "Random numbers and probability distributions"),
-    ("tsr"    , "Tensor algebra and definitions for Continuum Mechanics"),
-    ("vtk"    , "3D Visualisation with the VTK tool kit"),
+    ("chk"     , "Check code and unit test tools"),
+    ("io"      , "Input/output, read/write files, and print commands"),
+    ("utl"     , "Utilities. Lists. Dictionaries. Simple Numerics"),
+    ("plt"     , "Plotting and drawing (png and eps)"),
+    ("mpi"     , "Message Passing Interface for parallel computing"),
+    ("la"      , "Linear Algebra and efficient sparse solvers"),
+    ("la/oblas", "Lower level linear algebra using OpenBLAS"),
+    ("fdm"     , "Simple finite differences method"),
+    ("num"     , "Fundamental Numerical methods"),
+    ("fun"     , "Scalar functions of one scalar and one vector"),
+    ("gm"      , "Geometry algorithms and structures"),
+    ("gm/msh"  , "Mesh generation and Delaunay triangulation"),
+    ("gm/tri"  , "Mesh generation: triangles"),
+    ("gm/rw"   , "Mesh generation: read/write"),
+    ("graph"   , "Graph theory structures and algorithms"),
+    ("ode"     , "Ordinary differential equations"),
+    ("opt"     , "Optimisation problem solvers"),
+    ("rnd"     , "Random numbers and probability distributions"),
+    ("tsr"     , "Tensor algebra and definitions for Continuum Mechanics"),
+    ("vtk"     , "3D Visualisation with the VTK tool kit"),
 ]
 
 odir  = 'doc/'
@@ -117,6 +118,9 @@ for pkg in pkgs:
 
     if pkg[0] == "io":
         subdirs = ["data"]
+
+    if pkg[0] == "la":
+        subdirs = ["oblas"]
 
     if pkg[0] == "num":
         subdirs = ["data"]
