@@ -71,7 +71,7 @@ cd gosl
 ./all.bash
 ```
 
-3.2 Optional: OpenBLAS
+3.3 Optional: OpenBLAS
 ```
 mkdir -p $HOME/xpkg && cd $HOME/xpkg
 git clone https://github.com/xianyi/OpenBLAS.git
