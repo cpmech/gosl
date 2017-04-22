@@ -1,6 +1,6 @@
 # Gosl. fun. Scalar functions of one scalar and one vector
 
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfun.html).
+More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfun.html).**
 
 This package defines and implements simple scalar functions. The derivatives and gradients of these
 functions are also implemented.

@@ -1,6 +1,6 @@
 # Gosl. io. Input/output, read/write files, and print commands
 
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxio.html).
+More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxio.html).**
 
 This subpackage helps with reading and writing files, printing nice formatted messages (with
 colours), and parsing strings.

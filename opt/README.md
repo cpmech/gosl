@@ -1,3 +1,3 @@
 # Gosl. opt. Ordinary differential equations
 
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxopt.html).
+More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxopt.html).**

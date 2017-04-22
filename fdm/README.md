@@ -1,6 +1,6 @@
 # Gosl. fdm. Simple finite differences method
 
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfdm.html).
+More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfdm.html).**
 
 This package implements few routines to help with the implementation of the finite differences
 method (FDM).

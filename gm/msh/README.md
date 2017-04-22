@@ -1,6 +1,6 @@
 # Gosl. gm/msh. Mesh generation and Delaunay triangulation
 
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxgm-msh.html).
+More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxgm-msh.html).**
 
 ## Shapes: Definitions
 

@@ -1,6 +1,6 @@
 # Gosl. plt. Plotting and drawing (png and eps)
 
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxplt.html).
+More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxplt.html).**
 
 This package provides several functions to draw figures, plot results and annotate graphs. `plt` has
 been largelly based on [matplotlib](https://matplotlib.org) and is, currently, a sort of wrapper to
