@@ -81,13 +81,15 @@ sudo make PREFIX=/usr/local NO_SHARED=true install
 ```
 
 **Note**: Make sure to use the `NO_SHARED` flag (as above) to avoid installing the shared libraries.
-Alternatively, set the `/usr/local/lib` directory as a searchable LD\_LIBRARY\_path. Otherwise, the
+Alternatively, set the `/usr/local/lib` directory as a searchable LD\_LIBRARY\_PATH. Otherwise, the
 following error may happen:
 ```
 [...] libopenblas.so.0: cannot open shared object file: [...]
 ```
 **Optional**: Add the following line to .bashrc or .bash\_aliases:
-`export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib`
+```
+export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
+```
 or set `/etc/ld.so.conf` file as appropriate.
 
 
