@@ -99,7 +99,9 @@ func Test_plot01(tst *testing.T) {
 		Text(0.2, 0.8, "HERE", &A{Fsz: 20, Ha: "center", Va: "center"})
 		SetTicksX(0.1, 0.01, "%.3f")
 		SetTicksY(0.2, 0.1, "%.2f")
+		SetTicksYlist(utl.LinSpace(-0.1, 1.1, 11))
 		HideBorders(&A{HideR: true, HideT: true})
+		//HideAllBorders()
 		Gll(`$\varepsilon$`, `$\sigma$`, &A{
 			LegOut:  true,
 			LegNcol: 3,

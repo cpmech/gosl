@@ -131,6 +131,16 @@ func SetYlog() {
 	io.Ff(&bufferPy, "plt.gca().set_yscale('log')\n")
 }
 
+// SetTicksXlist sets x-axis ticks with given list
+func SetTicksXlist(values []float64) {
+	io.Ff(&bufferPy, "plt.xticks(%v)\n", floats2list(values))
+}
+
+// SetTicksYlist sets y-ayis ticks with given list
+func SetTicksYlist(values []float64) {
+	io.Ff(&bufferPy, "plt.yticks(%v)\n", floats2list(values))
+}
+
 // SetXnticks sets number of ticks along x
 func SetXnticks(num int) {
 	if num == 0 {
@@ -240,6 +250,11 @@ func HideBorders(args *A) {
 	if hide != "" {
 		io.Ff(&bufferPy, "for spine in %s: plt.gca().spines[spine].set_visible(0)\n", hide)
 	}
+}
+
+// HideAllBorders hides all frame borders
+func HideAllBorders() {
+	io.Ff(&bufferPy, "for spine in ['left','right','bottom','top']: plt.gca().spines[spine].set_visible(0)\n")
 }
 
 // Annotate adds annotation to plot
