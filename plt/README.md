@@ -95,6 +95,8 @@ if err != nil {
 }
 ```
 
+Source code: <a href="../examples/plt_polygon01.go">../examples/plt_polygon01.go</a>
+
 <div id="container">
 <p><img src="../examples/figs/plt_polygon01.png" width="400"></p>
 Polygon
@@ -128,6 +130,8 @@ plt.Gll("x", "y", nil)
 plt.Equal()
 plt.Save("/tmp/gosl", "plt_contour01")
 ```
+
+Source code: <a href="../examples/plt_contour01.go">../examples/plt_contour01.go</a>
 
 <div id="container">
 <p><img src="../examples/figs/plt_contour01.png" width="400"></p>
@@ -178,6 +182,8 @@ if err != nil {
 }
 ```
 
+Source code: <a href="../examples/plt_zoomwindow01.go">../examples/plt_zoomwindow01.go</a>
+
 <div id="container">
-<p><img src="t_plot01_test.go" width="400"></p>
+<p><img src="../examples/figs/plt_zoomwindow01.png" width="400"></p>
 </div>
