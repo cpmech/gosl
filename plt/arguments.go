@@ -153,7 +153,24 @@ func addToCmd(line *string, condition bool, delta string) {
 	}
 }
 
-// updateBufferWithArgsAndClose updates buffer with arguments and close with ")\n". See updateBufferWithArgs too.
+// updateBufferFirstArgsAndClose updates buffer with the first arguments and close with ")\n"
+func updateBufferFirstArgsAndClose(buf *bytes.Buffer, args *A, forHistogram, for3dPoints bool) {
+	if buf == nil {
+		return
+	}
+	if args == nil {
+		io.Ff(buf, ")\n")
+		return
+	}
+	txt := args.String(forHistogram, for3dPoints)
+	if txt == "" {
+		io.Ff(buf, ")\n")
+		return
+	}
+	io.Ff(buf, txt+")\n")
+}
+
+// updateBufferWithArgsAndClose updates buffer with arguments and close with ")\n".
 func updateBufferAndClose(buf *bytes.Buffer, args *A, forHistogram, for3dPoints bool) {
 	if buf == nil {
 		return

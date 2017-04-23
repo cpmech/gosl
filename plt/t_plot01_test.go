@@ -226,6 +226,7 @@ func Test_plot04(tst *testing.T) {
 		ContourF(X, Y, F, a)
 		ContourL(X, Y, F, b)
 		Quiver(X, Y, U, V, nil)
+		Grid(&A{C: "white"})
 
 		err := Save("/tmp/gosl", "t_plot04")
 		if err != nil {

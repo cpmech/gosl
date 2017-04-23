@@ -492,7 +492,7 @@ func Quiver(x, y, gx, gy [][]float64, args *A) {
 // Grid adds grid to plot
 func Grid(args *A) {
 	io.Ff(&bufferPy, "plt.grid(")
-	updateBufferAndClose(&bufferPy, args, false, false)
+	updateBufferFirstArgsAndClose(&bufferPy, args, false, false)
 }
 
 // Legend adds legend to plot

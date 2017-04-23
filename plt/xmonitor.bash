@@ -12,7 +12,7 @@ refresh(){
     echo
     echo
     echo
-    go test -test.run="plot10"
+    go test -test.run="plot04"
 }
 
 while true; do
