@@ -176,5 +176,5 @@ plt.Save("/tmp/gosl", "gm_nurbs01")
 Source code: <a href="../examples/gm_nurbs01.go">../examples/gm_nurbs01.go</a>
 
 <div id="container">
-<p><img src="../examples/figs/gm_nurbs01.png"></p>
+<p><img src="../examples/figs/gm_nurbs01.png" width="500"></p>
 </div>
