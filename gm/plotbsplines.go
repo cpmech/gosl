@@ -14,7 +14,7 @@ import (
 // Draw2d draws curve and control points
 // option =  0 : use CalcBasis
 //           1 : use RecursiveBasis
-func (o *Bspline) Draw2d(npts, option int) {
+func (o *Bspline) Draw2d(npts, option int, withCtrl bool, argsCurve, argsCtrl *plt.A) {
 	if !o.okQ {
 		chk.Panic("Q must be set before calling this method")
 	}
@@ -25,15 +25,24 @@ func (o *Bspline) Draw2d(npts, option int) {
 		C := o.Point(t, option)
 		xx[i], yy[i] = C[0], C[1]
 	}
-	qx := make([]float64, o.NumBasis())
-	qy := make([]float64, o.NumBasis())
-	for i := 0; i < o.NumBasis(); i++ {
-		qx[i], qy[i] = o.Q[i][0], o.Q[i][1]
+	aCurve := argsCurve
+	if aCurve == nil {
+		lbls := []string{"non-recursive", "recursive"}
+		aCurve = &plt.A{C: "k", Ls: "-", L: lbls[option], NoClip: true}
 	}
-	lbls := []string{"Nonly", "recN"}
-	plt.Plot(xx, yy, &plt.A{C: "k", Ls: "-", L: lbls[option]})
-	plt.Plot(qx, qy, &plt.A{C: "r", Ls: "-", L: "ctrl", M: "."})
-	plt.Gll("$x$", "$y$", &plt.A{LegOut: true, LegNcol: 2, LegHlen: 1.5, FszLeg: 7})
+	plt.Plot(xx, yy, aCurve)
+	if withCtrl {
+		qx := make([]float64, o.NumBasis())
+		qy := make([]float64, o.NumBasis())
+		for i := 0; i < o.NumBasis(); i++ {
+			qx[i], qy[i] = o.Q[i][0], o.Q[i][1]
+		}
+		aCtrl := argsCtrl
+		if aCtrl == nil {
+			aCtrl = &plt.A{C: "r", Ls: "-", L: "ctrl", M: ".", NoClip: true}
+		}
+		plt.Plot(qx, qy, aCtrl)
+	}
 }
 
 func (o *Bspline) Draw3d(npts int) {

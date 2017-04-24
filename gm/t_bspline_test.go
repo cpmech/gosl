@@ -30,18 +30,21 @@ func Test_bspline01(tst *testing.T) {
 	s2.SetControl([][]float64{{0, 0}, {0.25, 0.5}, {0.75, 0.5}, {1, 0}})
 
 	if chk.Verbose {
+
+		argsRec := &plt.A{C: "k", M: "+", Me: 15, Ls: "none", L: "recursive"}
+
 		npts := 201
-		plt.Reset(false, nil)
+		plt.Reset(true, &plt.A{Prop: 1.5})
 		plt.SplotGap(0.2, 0.4)
 
 		plt.Subplot(3, 2, 1)
-		s1.Draw2d(npts, 0) // 0 => CalcBasis
-		s1.Draw2d(npts, 1) // 1 => RecursiveBasis
+		s1.Draw2d(npts, 0, true, nil, nil)      // 0 => CalcBasis
+		s1.Draw2d(npts, 1, false, argsRec, nil) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 2, 2)
 		plt.SetAxis(0, 1, 0, 1)
-		s2.Draw2d(npts, 0) // 0 => CalcBasis
-		s2.Draw2d(npts, 1) // 1 => RecursiveBasis
+		s2.Draw2d(npts, 0, true, nil, nil)      // 0 => CalcBasis
+		s2.Draw2d(npts, 1, false, argsRec, nil) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 2, 3)
 		s1.PlotBasis(npts, 0) // 0 => CalcBasis
@@ -61,7 +64,10 @@ func Test_bspline01(tst *testing.T) {
 		s2.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
 		s2.PlotDerivs(npts, 1) // 1 => NumericalDeriv
 
-		plt.Save("/tmp/gosl", "bspline01")
+		err := plt.Save("/tmp/gosl", "bspline01")
+		if err != nil {
+			tst.Error("%v", err)
+		}
 	}
 }
 
@@ -102,11 +108,14 @@ func Test_bspline02(tst *testing.T) {
 	}
 
 	if chk.Verbose {
+		argsRec := &plt.A{C: "k", M: "+", Me: 15, Ls: "none", L: "recursive"}
 		npts := 201
 		plt.Reset(false, nil)
-		s.Draw2d(npts, 0) // 0 => CalcBasis
-		s.Draw2d(npts, 1) // 1 => RecursiveBasis
-		plt.Plot(xx, yy, nil)
+		s.Draw2d(npts, 0, true, nil, nil)      // 0 => CalcBasis
+		s.Draw2d(npts, 1, false, argsRec, nil) // 1 => RecursiveBasis
+		plt.Plot(xx, yy, &plt.A{C: "b", L: "check"})
+		plt.Gll("x", "y", nil)
+		plt.HideAllBorders()
 		plt.Save("/tmp/gosl", "bspline02")
 	}
 }
@@ -163,13 +172,15 @@ func Test_bspline03(tst *testing.T) {
 
 	if chk.Verbose {
 
+		argsRec := &plt.A{C: "k", M: "+", Me: 15, Ls: "none", L: "recursive"}
+
 		npts := 201
-		plt.Reset(false, nil)
+		plt.Reset(true, &plt.A{Prop: 1.5})
 		plt.SplotGap(0, 0.3)
 
 		plt.Subplot(3, 1, 1)
-		s.Draw2d(npts, 0) // 0 => CalcBasis
-		s.Draw2d(npts, 1) // 1 => RecursiveBasis
+		s.Draw2d(npts, 0, true, nil, nil)      // 0 => CalcBasis
+		s.Draw2d(npts, 1, false, argsRec, nil) // 1 => RecursiveBasis
 
 		plt.Subplot(3, 1, 2)
 		s.PlotBasis(npts, 0) // 0 => CalcBasis
