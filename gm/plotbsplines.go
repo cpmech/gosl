@@ -118,12 +118,12 @@ func (o *Bspline) plt_ticks_spans() {
 	lbls := make(map[float64]string, 0)
 	for i, t := range o.T {
 		if _, ok := lbls[t]; !ok {
-			lbls[t] = io.Sf("'[%d", i)
+			lbls[t] = io.Sf("[%d", i)
 		} else {
 			lbls[t] += io.Sf(",%d", i)
 		}
 	}
 	for t, l := range lbls {
-		plt.AnnotateXlabels(t, io.Sf("%s]'", l), nil)
+		plt.AnnotateXlabels(t, io.Sf("%s]", l), nil)
 	}
 }
