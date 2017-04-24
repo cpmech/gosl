@@ -154,8 +154,8 @@ refined := curve.Krefine([][]float64{
 
 // configuration
 argsCtrlA := &plt.A{C: "k", Ls: "--", L: "control"}
-argsCtrlB := &plt.A{C: "green", L: "curve"}
-argsElemsA := &plt.A{C: "b", L: "refined: control"}
+argsCtrlB := &plt.A{C: "green", L: "refined: control"}
+argsElemsA := &plt.A{C: "b", L: "curve"}
 argsElemsB := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: "refined: curve"}
 argsIdsA := &plt.A{C: "k", Fsz: 7}
 argsIdsB := &plt.A{C: "green", Fsz: 7}
