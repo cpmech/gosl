@@ -57,7 +57,28 @@ func (o *BezierQuad) GetPoints(T []float64) (X, Y, Z []float64) {
 		X[i] = C[0]
 		Y[i] = C[1]
 		if ndim > 2 {
-			Z[i] = C[1]
+			Z[i] = C[2]
+		}
+	}
+	return
+}
+
+// GetControlCoords returns the coordiantes of control points as 1D arrays (e.g. for plotting)
+func (o *BezierQuad) GetControlCoords() (X, Y, Z []float64) {
+	if len(o.Q) != 3 {
+		chk.Panic("GetControlCoords: quadratic Bezier must be initialised first (with 3 control points)")
+	}
+	ndim := len(o.Q[0])
+	X = make([]float64, len(o.Q))
+	Y = make([]float64, len(o.Q))
+	if ndim > 2 {
+		Z = make([]float64, len(o.Q))
+	}
+	for i := 0; i < len(o.Q); i++ {
+		X[i] = o.Q[i][0]
+		Y[i] = o.Q[i][1]
+		if ndim > 2 {
+			Z[i] = o.Q[i][2]
 		}
 	}
 	return

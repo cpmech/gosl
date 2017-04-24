@@ -137,6 +137,9 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#BezierQuad.DistPoint">func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64</a></dd>
 				
 					
+					<dd>&nbsp; &nbsp; <a href="#BezierQuad.GetControlCoords">func (o *BezierQuad) GetControlCoords() (X, Y, Z []float64)</a></dd>
+				
+					
 					<dd>&nbsp; &nbsp; <a href="#BezierQuad.GetPoints">func (o *BezierQuad) GetPoints(T []float64) (X, Y, Z []float64)</a></dd>
 				
 					
@@ -758,11 +761,22 @@ B = Q1 - Q0
 
 			
 				
-				<h3 id="BezierQuad.DistPoint">func (*BezierQuad) <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=1687:1751#L58">DistPoint</a></h3>
+				<h3 id="BezierQuad.DistPoint">func (*BezierQuad) <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=2225:2289#L79">DistPoint</a></h3>
 				<pre>func (o *<a href="#BezierQuad">BezierQuad</a>) DistPoint(X []<a href="/pkg/builtin/#float64">float64</a>, doplot <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 DistPoint returns the distance from a point to this Bezier curve
 It finds the closest projection which is stored in P
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BezierQuad.GetControlCoords">func (*BezierQuad) <a href="https://github.com/cpmech/gosl/blob/master/gm/bezier.go?s=1658:1717#L57">GetControlCoords</a></h3>
+				<pre>func (o *<a href="#BezierQuad">BezierQuad</a>) GetControlCoords() (X, Y, Z []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+GetControlCoords returns the coordiantes of control points as 1D arrays (e.g. for plotting)
 </p>
 
 				

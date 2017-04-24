@@ -45,6 +45,10 @@ func Test_bezier01(tst *testing.T) {
 	chk.Vector(tst, "X", 1e-15, X, XX)
 	chk.Vector(tst, "Y", 1e-15, Y, YY)
 
+	Xq, Yq, _ := bez.GetControlCoords()
+	chk.Vector(tst, "Xq", 1e-15, Xq, []float64{-1, 0.5, 2})
+	chk.Vector(tst, "Yq", 1e-15, Yq, []float64{1, -2, 4})
+
 	if false {
 		plt.Reset(false, nil)
 		plt.Plot(X2, Y2, &plt.A{C: "y", Ls: "-", Lw: 4, L: "y=x*x"})
