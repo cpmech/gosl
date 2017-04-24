@@ -40,6 +40,29 @@ func (o *BezierQuad) Point(C []float64, t float64) {
 	return
 }
 
+// GetPoints returns points along the curve for given parameter values
+func (o *BezierQuad) GetPoints(T []float64) (X, Y, Z []float64) {
+	if len(o.Q) != 3 {
+		chk.Panic("GetPoints: quadratic Bezier must be initialised first (with 3 control points)")
+	}
+	ndim := len(o.Q[0])
+	C := make([]float64, ndim)
+	X = make([]float64, len(T))
+	Y = make([]float64, len(T))
+	if ndim > 2 {
+		Z = make([]float64, len(T))
+	}
+	for i := 0; i < len(T); i++ {
+		o.Point(C, T[i])
+		X[i] = C[0]
+		Y[i] = C[1]
+		if ndim > 2 {
+			Z[i] = C[1]
+		}
+	}
+	return
+}
+
 // DistPoint returns the distance from a point to this Bezier curve
 // It finds the closest projection which is stored in P
 func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64 {
