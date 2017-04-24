@@ -13,6 +13,30 @@ import (
 type FactoryNurbs struct {
 }
 
+// CircleCurve generates a NURBS representing the circle curve
+func (o FactoryNurbs) CircleCurve(xc, yc, r float64) (b *Nurbs) {
+	xa, xb := xc-r, xc+r
+	ya, yb := yc-r, yc+r
+	verts := [][]float64{
+		{xb, yc, 0, 1.0},
+		{xb, yb, 0, 1.0 / math.Sqrt2},
+		{xc, yb, 0, 1.0},
+		{xa, yb, 0, 1.0 / math.Sqrt2},
+		{xa, yc, 0, 1.0},
+		{xa, ya, 0, 1.0 / math.Sqrt2},
+		{xc, ya, 0, 1.0},
+		{xb, ya, 0, 1.0 / math.Sqrt2},
+		{xb, yc, 0, 1.0},
+	}
+	knots := [][]float64{
+		{0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4}, // only along first dimension
+	}
+	b = new(Nurbs)
+	b.Init(1, []int{2}, knots)
+	b.SetControl(verts, utl.IntRange(len(verts)))
+	return
+}
+
 // QuarterCircleCurve generates a quarter of circle (circumference)
 func (o FactoryNurbs) QuarterCircleCurve(radius float64) (b *Nurbs) {
 	verts := [][]float64{

@@ -352,7 +352,7 @@ func Test_nurbs04(tst *testing.T) {
 func Test_nurbs05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs05. circle and related geometries")
+	chk.PrintTitle("nurbs05. quarter circle")
 
 	radius := 2.0
 	b := FactoryNurbs{}.QuarterCircleCurve(radius)
@@ -376,5 +376,59 @@ func Test_nurbs05(tst *testing.T) {
 		plt.Equal()
 		plt.HideAllBorders()
 		PlotNurbs2d("/tmp/gosl", "nurbs05", b, 11, true, true, argsCurve, argsCtrl, argsIds, extra)
+	}
+}
+
+func Test_nurbs06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("nurbs06. circle")
+
+	// geometry
+	xc, yc, r := 0.5, 0.25, 1.75
+
+	// function to check circle
+	npcheck := 11
+	checkCircle := func(nurbs *Nurbs) {
+		U := utl.LinSpace(nurbs.b[0].tmin, nurbs.b[0].tmax, npcheck)
+		x := make([]float64, 2)
+		for _, u := range U {
+			nurbs.Point(x, []float64{u}, 2)
+			e := math.Sqrt(math.Pow(x[0]-xc, 2)+math.Pow(x[1]-yc, 2)) - r
+			chk.Scalar(tst, io.Sf("error @ (%.8f,%8f) == 0?", x[0], x[1]), 1e-15, e, 0)
+		}
+	}
+
+	// original curve
+	curve := FactoryNurbs{}.CircleCurve(xc, yc, r)
+	checkCircle(curve)
+	io.Pl()
+
+	// refine NURBS
+	refined := curve.Krefine([][]float64{{0.5, 1.5, 2.5, 3.5}})
+	checkCircle(refined)
+
+	if chk.Verbose {
+
+		argsIdsA := &plt.A{C: "b", Fsz: 10}
+		argsCtrlA := &plt.A{C: "k", M: ".", Ls: "--", L: "control", NoClip: true}
+		argsCurveA := &plt.A{C: "orange", M: "+", Mec: "k", Lw: 4, L: "curve", NoClip: true}
+
+		argsIdsB := &plt.A{C: "green", Fsz: 7}
+		argsCtrlB := &plt.A{C: "green", L: "refined: control"}
+		argsElemsB := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: "refined: curve"}
+
+		np := 11
+		extra := func() {
+			plt.Circle(xc, yc, r, &plt.A{C: "#478275", Lw: 1})
+			refined.DrawCtrl2d(true, argsCtrlB, argsIdsB)
+			refined.DrawElems2d(np, false, argsElemsB, nil)
+		}
+
+		plt.Reset(false, nil)
+		plt.Equal()
+		plt.HideAllBorders()
+		plt.AxisRange(-3, 3, -3, 3)
+		PlotNurbs2d("/tmp/gosl", "nurbs06", curve, np, true, true, argsCurveA, argsCtrlA, argsIdsA, extra)
 	}
 }

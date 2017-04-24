@@ -6,5 +6,6 @@ while true; do
     inotifywait -q -e modify $FILES
     echo
     echo
-    go test -test.run="nurbs05"
+    go install
+    go test -test.run="nurbs06"
 done
