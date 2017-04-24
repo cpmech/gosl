@@ -270,20 +270,11 @@ func Test_nurbs03(tst *testing.T) {
 	if chk.Verbose {
 
 		// geometry
-		argsCtrlB := &plt.A{C: "k", Ls: "--", L: "control"}
-		argsCtrlC := &plt.A{C: "green", L: "curve"}
-		argsElemsB := &plt.A{C: "b", L: "refined: control"}
-		argsElemsC := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: "refined: curve"}
-		npts := 41
 		plt.Reset(true, &plt.A{WidthPt: 450})
-		b.DrawCtrl2d(true, argsCtrlB, &plt.A{C: "k", Fsz: 7})
-		b.DrawElems2d(npts, true, argsElemsB, nil)
-		c.DrawCtrl2d(true, argsCtrlC, &plt.A{C: "green", Fsz: 7})
-		c.DrawElems2d(npts, false, argsElemsC, nil)
-		plt.AxisOff()
-		plt.Equal()
-		plt.LegendX([]*plt.A{argsCtrlB, argsCtrlC, argsElemsB, argsElemsC}, &plt.A{LegOut: true, LegNcol: 2})
-		plt.Save("/tmp/gosl", "nurbs03a")
+		plotTwoNurbs("/tmp/gosl", "nurbs03a", b, c, "original", "refined", func() {
+			plt.AxisOff()
+			plt.Equal()
+		})
 
 		// basis
 		plt.Reset(true, &plt.A{Prop: 1.2})
@@ -335,9 +326,26 @@ func Test_nurbs04(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		//PlotNurbs("/tmp/gosl", "nurbs04a", a_read, 41, true, nil)
-		//PlotTwoNurbs("/tmp/gosl", "nurbs04b", a, b, 41, true, nil)
-		//PlotTwoNurbs("/tmp/gosl", "nurbs04c", a, c, 41, true, nil)
+		plt.Reset(true, nil)
+		PlotNurbs2d("/tmp/gosl", "nurbs04a", b, 41, true, true, nil, nil, nil, func() {
+			plt.AxisOff()
+			plt.Equal()
+		})
+		plt.Reset(true, nil)
+		plotTwoNurbs("/tmp/gosl", "nurbs04b", a, a_read, "original", "from file", func() {
+			plt.AxisOff()
+			plt.Equal()
+		})
+		plt.Reset(true, nil)
+		plotTwoNurbs("/tmp/gosl", "nurbs04c", a, b, "original", "refined", func() {
+			plt.AxisOff()
+			plt.Equal()
+		})
+		plt.Reset(true, nil)
+		plotTwoNurbs("/tmp/gosl", "nurbs04d", a, c, "original", "refined", func() {
+			plt.AxisOff()
+			plt.Equal()
+		})
 	}
 }
 

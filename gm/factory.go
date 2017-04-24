@@ -29,6 +29,11 @@ func (o FactoryNurbs) QuarterCircleCurve(radius float64) (b *Nurbs) {
 	return
 }
 
+// HalfCircleCurve generates a curve representing half-cicle
+func (o FactoryNurbs) HalfCircleCurve(radius float64) (b *Nurbs) {
+	return
+}
+
 // ExampleStrip1 generates a NURBS of a 2D strip (x-quadratic, y-linear)
 func (o FactoryNurbs) ExampleStrip1() (b *Nurbs) {
 	verts := [][]float64{

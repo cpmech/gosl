@@ -5,6 +5,7 @@
 package gm
 
 import (
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -491,4 +492,33 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	}
 
 	plt.Save(dirout, fnkey)
+}
+
+// for debugging //////////////////////////////////////////////////////////////////////////////////
+
+func plotTwoNurbs(dirout, fnkey string, a, b *Nurbs, labelA, labelB string, extra func()) {
+	str := "curve: "
+	if a.gnd > 1 {
+		str = "elems: "
+	}
+	argsCtrlA := &plt.A{C: "k", Ls: "--", L: "control: " + labelA, NoClip: true}
+	argsCtrlB := &plt.A{C: "green", L: "control: " + labelB, NoClip: true}
+	argsElemsA := &plt.A{C: "b", L: str + labelA, NoClip: true}
+	argsElemsB := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: str + labelB, NoClip: true}
+	argsIdsCtrlA := &plt.A{C: "k", Fsz: 7, NoClip: true}
+	argsIdsCtrlB := &plt.A{C: "green", Fsz: 7, NoClip: true}
+	argsIdsA := &plt.A{C: "r", Fsz: 7, NoClip: true}
+	npts := 41
+	a.DrawCtrl2d(true, argsCtrlA, argsIdsCtrlA)
+	a.DrawElems2d(npts, true, argsElemsA, argsIdsA)
+	b.DrawCtrl2d(true, argsCtrlB, argsIdsCtrlB)
+	b.DrawElems2d(npts, false, argsElemsB, nil)
+	if extra != nil {
+		extra()
+	}
+	plt.LegendX([]*plt.A{argsCtrlA, argsCtrlB, argsElemsA, argsElemsB}, &plt.A{LegOut: true, LegNcol: 2})
+	err := plt.Save(dirout, fnkey)
+	if err != nil {
+		chk.Panic("%v\n", err)
+	}
 }
