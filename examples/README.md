@@ -9,6 +9,7 @@
 6. Plotting a contour
 7. Solution of Poisson's equation using finite differences
 8. Root finding problems
+9. B-splines: curve, control, and basis
 
 # 1 Generating normally distributed pseudo-random numbers
 
@@ -316,4 +317,14 @@ niter. = 2
 <div id="container">
 <p><img src="figs/num_newton01.png" width="400"></p>
 Simple root finding problem solved by Newton's method.
+</div>
+
+
+
+# 9 B-splines: curve, control, and basis
+
+Source code: <a href="gm_bspline02.go">gm_bspline02.go</a>
+
+<div id="container">
+<p><img src="figs/gm_bspline02.png" width="400"></p>
 </div>
