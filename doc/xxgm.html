@@ -251,10 +251,16 @@ handling geometry and mesh structures
 				
 				
 					
+					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.CircleCurve">func (o FactoryNurbs) CircleCurve(xc, yc, r float64) (b *Nurbs)</a></dd>
+				
+					
 					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.ExampleCurve1">func (o FactoryNurbs) ExampleCurve1() (b *Nurbs)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.ExampleStrip1">func (o FactoryNurbs) ExampleStrip1() (b *Nurbs)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.HalfCircleCurve">func (o FactoryNurbs) HalfCircleCurve(radius float64) (b *Nurbs)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.QuarterCircleCurve">func (o FactoryNurbs) QuarterCircleCurve(radius float64) (b *Nurbs)</a></dd>
@@ -595,7 +601,7 @@ IsPointInLine returns whether p is inside line passing through a and b
 		
 			
 			
-			<h2 id="PlotNurbs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7421:7554#L264">PlotNurbs2d</a></h2>
+			<h2 id="PlotNurbs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7451:7584#L265">PlotNurbs2d</a></h2>
 			<pre>func PlotNurbs2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func())</pre>
 			<p>
 PlotNurbs plots a NURBS
@@ -607,7 +613,7 @@ PlotNurbs plots a NURBS
 		
 			
 			
-			<h2 id="PlotNurbsBasis2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7877:8024#L279">PlotNurbsBasis2d</a></h2>
+			<h2 id="PlotNurbsBasis2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7907:8054#L280">PlotNurbsBasis2d</a></h2>
 			<pre>func PlotNurbsBasis2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>, withElems, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func(idxSubplot <a href="/pkg/builtin/#int">int</a>))</pre>
 			<p>
 PlotNurbsBasis plots basis functions la and lb
@@ -623,7 +629,7 @@ Third row == RecursiveBasis
 		
 			
 			
-			<h2 id="PlotNurbsDerivs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=9816:9964#L375">PlotNurbsDerivs2d</a></h2>
+			<h2 id="PlotNurbsDerivs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=9846:9994#L376">PlotNurbsDerivs2d</a></h2>
 			<pre>func PlotNurbsDerivs2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>, withElems, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func(idxSubplot <a href="/pkg/builtin/#int">int</a>))</pre>
 			<p>
 PlotNurbsDerivs2d plots derivatives of basis functions la and lb
@@ -1258,7 +1264,18 @@ Data holds all geometry data
 
 			
 				
-				<h3 id="FactoryNurbs.ExampleCurve1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=2569:2617#L72">ExampleCurve1</a></h3>
+				<h3 id="FactoryNurbs.CircleCurve">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=318:381#L7">CircleCurve</a></h3>
+				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) CircleCurve(xc, yc, r <a href="/pkg/builtin/#float64">float64</a>) (b *<a href="#Nurbs">Nurbs</a>)</pre>
+				<p>
+CircleCurve generates a NURBS representing the circle curve
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FactoryNurbs.ExampleCurve1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=3337:3385#L101">ExampleCurve1</a></h3>
 				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) ExampleCurve1() (b *<a href="#Nurbs">Nurbs</a>)</pre>
 				<p>
 ExampleCurve1 generates a NURBS 1D curve
@@ -1269,7 +1286,7 @@ ExampleCurve1 generates a NURBS 1D curve
 				
 			
 				
-				<h3 id="FactoryNurbs.ExampleStrip1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=764:812#L23">ExampleStrip1</a></h3>
+				<h3 id="FactoryNurbs.ExampleStrip1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=1532:1580#L52">ExampleStrip1</a></h3>
 				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) ExampleStrip1() (b *<a href="#Nurbs">Nurbs</a>)</pre>
 				<p>
 ExampleStrip1 generates a NURBS of a 2D strip (x-quadratic, y-linear)
@@ -1280,7 +1297,18 @@ ExampleStrip1 generates a NURBS of a 2D strip (x-quadratic, y-linear)
 				
 			
 				
-				<h3 id="FactoryNurbs.QuarterCircleCurve">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=323:390#L7">QuarterCircleCurve</a></h3>
+				<h3 id="FactoryNurbs.HalfCircleCurve">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=1381:1445#L47">HalfCircleCurve</a></h3>
+				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) HalfCircleCurve(radius <a href="/pkg/builtin/#float64">float64</a>) (b *<a href="#Nurbs">Nurbs</a>)</pre>
+				<p>
+HalfCircleCurve generates a curve representing half-cicle
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="FactoryNurbs.QuarterCircleCurve">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=952:1019#L31">QuarterCircleCurve</a></h3>
 				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) QuarterCircleCurve(radius <a href="/pkg/builtin/#float64">float64</a>) (b *<a href="#Nurbs">Nurbs</a>)</pre>
 				<p>
 QuarterCircleCurve generates a quarter of circle (circumference)
@@ -1291,7 +1319,7 @@ QuarterCircleCurve generates a quarter of circle (circumference)
 				
 			
 				
-				<h3 id="FactoryNurbs.QuarterPlateHole1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=1402:1454#L47">QuarterPlateHole1</a></h3>
+				<h3 id="FactoryNurbs.QuarterPlateHole1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=2170:2222#L76">QuarterPlateHole1</a></h3>
 				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) QuarterPlateHole1() (b *<a href="#Nurbs">Nurbs</a>)</pre>
 				<p>
 QuarterPlateHole1 generates a NURBS of a 2D quarter of plate with hole (quadratic)
@@ -1389,7 +1417,7 @@ CloneCtrlsAlongSurface returns a copy of control points @ 3D boundary
 				
 			
 				
-				<h3 id="Nurbs.DrawCtrl2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=438:500#L7">DrawCtrl2d</a></h3>
+				<h3 id="Nurbs.DrawCtrl2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=468:530#L8">DrawCtrl2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawCtrl2d(withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawCtrl2d draws control net
@@ -1400,7 +1428,7 @@ DrawCtrl2d draws control net
 				
 			
 				
-				<h3 id="Nurbs.DrawEdge2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=1953:2034#L67">DrawEdge2d</a></h3>
+				<h3 id="Nurbs.DrawEdge2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=1983:2064#L68">DrawEdge2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawEdge2d(tmin, tmax, cte <a href="/pkg/builtin/#float64">float64</a>, along, npts <a href="/pkg/builtin/#int">int</a>, args *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawEdge2d draws and edge from tmin to tmax
@@ -1411,7 +1439,7 @@ DrawEdge2d draws and edge from tmin to tmax
 				
 			
 				
-				<h3 id="Nurbs.DrawElem2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=2475:2559#L89">DrawElem2d</a></h3>
+				<h3 id="Nurbs.DrawElem2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=2505:2589#L90">DrawElem2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElem2d(span []<a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawElem2d draws element (non-zero span)
@@ -1422,7 +1450,7 @@ DrawElem2d draws element (non-zero span)
 				
 			
 				
-				<h3 id="Nurbs.DrawElems2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=3857:3930#L129">DrawElems2d</a></h3>
+				<h3 id="Nurbs.DrawElems2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=3887:3960#L130">DrawElems2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElems2d(npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawElems2d draws all elements (non-zero spans)
@@ -1688,7 +1716,7 @@ GetOrd returns the order along direction dir
 				
 			
 				
-				<h3 id="Nurbs.PlotBasis2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=4190:4242#L140">PlotBasis2d</a></h3>
+				<h3 id="Nurbs.PlotBasis2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=4220:4272#L141">PlotBasis2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotBasis2d(l <a href="/pkg/builtin/#int">int</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotBasis2d plots basis function (2D only)
@@ -1703,7 +1731,7 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Nurbs.PlotDeriv2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=5827:5882#L203">PlotDeriv2d</a></h3>
+				<h3 id="Nurbs.PlotDeriv2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=5857:5912#L204">PlotDeriv2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotDeriv2d(l, d <a href="/pkg/builtin/#int">int</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotDeriv2d plots derivative dR[i][j][k]du[d] (2D only)
