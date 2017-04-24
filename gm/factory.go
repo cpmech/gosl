@@ -4,10 +4,33 @@
 
 package gm
 
-import "github.com/cpmech/gosl/utl"
+import (
+	"math"
 
-// FactoryNurbs2dStrip generates a NURBS of a 2D strip (x-quadratic, y-linear)
-func FactoryNurbs2dStrip() (b *Nurbs) {
+	"github.com/cpmech/gosl/utl"
+)
+
+type FactoryNurbs struct {
+}
+
+// QuarterCircleCurve generates a quarter of circle (circumference)
+func (o FactoryNurbs) QuarterCircleCurve(radius float64) (b *Nurbs) {
+	verts := [][]float64{
+		{radius, 0.0, 0, math.Sqrt2},
+		{radius, radius, 0, 1.0},
+		{0.0, radius, 0, math.Sqrt2},
+	}
+	knots := [][]float64{
+		{0, 0, 0, 1, 1, 1}, // only along first dimension
+	}
+	b = new(Nurbs)
+	b.Init(1, []int{2}, knots)
+	b.SetControl(verts, utl.IntRange(len(verts)))
+	return
+}
+
+// ExampleStrip1 generates a NURBS of a 2D strip (x-quadratic, y-linear)
+func (o FactoryNurbs) ExampleStrip1() (b *Nurbs) {
 	verts := [][]float64{
 		{0.00, 0.00, 0, 0.80}, // 0
 		{0.25, 0.15, 0, 1.00}, // 1
@@ -30,8 +53,8 @@ func FactoryNurbs2dStrip() (b *Nurbs) {
 	return
 }
 
-// FactoryNurbs2dPlateHole generates a NURBS of a 2D quarter of plate with hole (quadratic)
-func FactoryNurbs2dPlateHole() (b *Nurbs) {
+// QuarterPlateHole1 generates a NURBS of a 2D quarter of plate with hole (quadratic)
+func (o FactoryNurbs) QuarterPlateHole1() (b *Nurbs) {
 	verts := [][]float64{
 		{-1.000000000000000e+00, 0.000000000000000e+00, 0, 1.000000000000000e+00},
 		{-1.000000000000000e+00, 4.142135623730951e-01, 0, 8.535533905932737e-01},
@@ -55,8 +78,8 @@ func FactoryNurbs2dPlateHole() (b *Nurbs) {
 	return
 }
 
-// FactoryNurbs1dCurveA generates a NURBS 1D curve
-func FactoryNurbs1dCurveA() (b *Nurbs) {
+// ExampleCurve1 generates a NURBS 1D curve
+func (o FactoryNurbs) ExampleCurve1() (b *Nurbs) {
 	verts := [][]float64{
 		{0.0, 0.0, 0, 1},
 		{1.0, 0.2, 0, 1},

@@ -369,8 +369,11 @@ func (o *Nurbs) NumericalDeriv(dRdu []float64, u []float64, l int) {
 }
 
 // Point returns the x-y-z coordinates of a point on curve/surface/volume
-func (o *Nurbs) Point(u []float64) (C []float64) {
-	C = make([]float64, 3)
+//   Input:
+//     u -- [gnd] knot values
+//   Output:
+//     C -- [ndim] coordinates
+func (o *Nurbs) Point(C, u []float64, ndim int) {
 	for d := 0; d < o.gnd; d++ {
 		o.span[d] = o.b[d].find_span(u[d])
 		o.b[d].basis_funs(u[d], o.span[d])
@@ -410,7 +413,7 @@ func (o *Nurbs) Point(u []float64) (C []float64) {
 			}
 		}
 	}
-	for e := 0; e < 3; e++ {
+	for e := 0; e < ndim; e++ {
 		C[e] = o.cw[e] / o.cw[3]
 	}
 	return
@@ -577,6 +580,8 @@ func (o *Nurbs) IndBasis(span []int) (L []int) {
 // KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
 func (o *Nurbs) KrefineN(ndiv int, hughesEtAlPaper bool) *Nurbs {
 	X := make([][]float64, o.gnd)
+	xa := make([]float64, 3)
+	xb := make([]float64, 3)
 	if hughesEtAlPaper {
 		elems := o.Elements()
 		switch o.gnd {
@@ -584,16 +589,16 @@ func (o *Nurbs) KrefineN(ndiv int, hughesEtAlPaper bool) *Nurbs {
 			for _, e := range elems {
 				umin, umax := o.b[0].T[e[0]], o.b[0].T[e[1]]
 				vmin, vmax := o.b[1].T[e[2]], o.b[1].T[e[3]]
-				xa := o.Point([]float64{umin, vmin})
-				xb := o.Point([]float64{umax, vmin})
+				o.Point(xa, []float64{umin, vmin}, 3)
+				o.Point(xb, []float64{umax, vmin}, 3)
 				xc := []float64{(xa[0] + xb[0]) / 2.0, (xa[1] + xb[1]) / 2.0}
 
 				io.Pf("xa = %v\n", xa)
 				io.Pf("xb = %v\n", xb)
 				io.Pf("xc = %v\n", xc)
 
-				xa = o.Point([]float64{umin, vmax})
-				xb = o.Point([]float64{umax, vmax})
+				o.Point(xa, []float64{umin, vmax}, 3)
+				o.Point(xb, []float64{umax, vmax}, 3)
 				xc = []float64{(xa[0] + xb[0]) / 2.0, (xa[1] + xb[1]) / 2.0}
 
 				io.Pfpink("xa, xb, xc = %v, %v, %v\n", xa, xb, xc)

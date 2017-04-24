@@ -5,10 +5,13 @@
 package gm
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 func Test_nurbs01(tst *testing.T) {
@@ -17,7 +20,7 @@ func Test_nurbs01(tst *testing.T) {
 	chk.PrintTitle("nurbs01")
 
 	// NURBS
-	b := FactoryNurbs2dStrip()
+	b := FactoryNurbs{}.ExampleStrip1()
 	elems := b.Elements()
 	nbasis := b.GetElemNumBasis()
 	io.Pforan("nbasis = %v\n", nbasis)
@@ -149,16 +152,21 @@ func Test_nurbs01(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		io.Pf("\n------------ plot -------------\n")
-		PlotNurbs("/tmp/gosl/gm", "nurbs01a.png", b, 41, true, func() {
-			colors := []string{"#e78005", "#3944db", "#983cc3", "#529174"}
-			for k, surf := range surfs {
-				surf.DrawCtrl2d(true, io.Sf(", ls='none', marker='o', ms=4, zorder=20, color='%s'", colors[k]), "va='top', size=7")
-				surf.DrawElems2d(21, true, io.Sf(", ls='none', marker='o', ms=4, zorder=20, color='%s'", colors[k]), "va='top', size=7")
-			}
+		plt.Reset(true, nil)
+		PlotNurbs2d("/tmp/gosl", "nurbs01a", b, 41, true, true, nil, nil, nil, func() {
+			plt.AxisOff()
+			plt.Equal()
 		})
-		PlotNurbsBasis("/tmp/gosl/gm", "nurbs01b.png", b, 0, 7)
-		PlotNurbsDerivs("/tmp/gosl/gm", "nurbs01c.png", b, 0, 7)
-		PlotTwoNurbs("/tmp/gosl/gm", "nurbs01d.png", b, c, 41, true, nil)
+		plt.Reset(true, nil)
+		PlotNurbsBasis2d("/tmp/gosl", "nurbs01b", b, 0, 7, true, true, nil, nil, func(idx int) {
+			plt.AxisOff()
+			plt.Equal()
+		})
+		plt.Reset(true, &plt.A{Prop: 1.2})
+		PlotNurbsDerivs2d("/tmp/gosl", "nurbs01c", b, 0, 7, false, false, nil, nil, func(idx int) {
+			plt.AxisOff()
+			plt.Equal()
+		})
 	}
 }
 
@@ -168,7 +176,7 @@ func Test_nurbs02(tst *testing.T) {
 	chk.PrintTitle("nurbs02")
 
 	// NURBS
-	b := FactoryNurbs2dPlateHole()
+	b := FactoryNurbs{}.QuarterPlateHole1()
 	elems := b.Elements()
 	nbasis := b.GetElemNumBasis()
 	io.Pforan("nbasis = %v\n", nbasis)
@@ -215,10 +223,21 @@ func Test_nurbs02(tst *testing.T) {
 		io.Pf("\n------------ plot -------------\n")
 		la := 0 + 0*b.n[0]
 		lb := 2 + 1*b.n[0]
-		PlotNurbs("/tmp/gosl/gm", "nurbs02a.png", b, 41, true, nil)
-		PlotNurbsBasis("/tmp/gosl/gm", "nurbs02b.png", b, la, lb)
-		PlotNurbsDerivs("/tmp/gosl/gm", "nurbs02c.png", b, la, lb)
-		PlotTwoNurbs("/tmp/gosl/gm", "nurbs02d.png", b, c, 41, true, nil)
+		plt.Reset(true, nil)
+		PlotNurbs2d("/tmp/gosl", "nurbs02a", b, 41, true, true, nil, nil, nil, func() {
+			plt.AxisOff()
+			plt.Equal()
+		})
+		plt.Reset(true, &plt.A{Prop: 1.5})
+		PlotNurbsBasis2d("/tmp/gosl", "nurbs02b", b, la, lb, false, false, nil, nil, func(idx int) {
+			plt.AxisOff()
+			plt.Equal()
+		})
+		plt.Reset(true, &plt.A{Prop: 1.7})
+		PlotNurbsDerivs2d("/tmp/gosl", "nurbs02c", b, la, lb, false, false, nil, nil, func(idx int) {
+			plt.AxisOff()
+			plt.Equal()
+		})
 	}
 }
 
@@ -228,7 +247,7 @@ func Test_nurbs03(tst *testing.T) {
 	chk.PrintTitle("nurbs03")
 
 	// NURBS
-	b := FactoryNurbs1dCurveA()
+	b := FactoryNurbs{}.ExampleCurve1()
 	elems := b.Elements()
 	nbasis := b.GetElemNumBasis()
 	io.Pforan("nbasis = %v\n", nbasis)
@@ -249,10 +268,33 @@ func Test_nurbs03(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		PlotNurbs("/tmp/gosl/gm", "nurbs03a.png", b, 41, true, nil)
-		PlotTwoNurbs("/tmp/gosl/gm", "nurbs03b.png", b, c, 41, true, nil)
-		PlotNurbsBasis("/tmp/gosl/gm", "nurbs03basis.png", b, 1, 2)
-		PlotNurbsDerivs("/tmp/gosl/gm", "nurbs03derivs.png", b, 1, 2)
+
+		// geometry
+		argsCtrlB := &plt.A{C: "k", Ls: "--", L: "control"}
+		argsCtrlC := &plt.A{C: "green", L: "curve"}
+		argsElemsB := &plt.A{C: "b", L: "refined: control"}
+		argsElemsC := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: "refined: curve"}
+		npts := 41
+		plt.Reset(true, &plt.A{WidthPt: 450})
+		b.DrawCtrl2d(true, argsCtrlB, &plt.A{C: "k", Fsz: 7})
+		b.DrawElems2d(npts, true, argsElemsB, nil)
+		c.DrawCtrl2d(true, argsCtrlC, &plt.A{C: "green", Fsz: 7})
+		c.DrawElems2d(npts, false, argsElemsC, nil)
+		plt.AxisOff()
+		plt.Equal()
+		plt.LegendX([]*plt.A{argsCtrlB, argsCtrlC, argsElemsB, argsElemsC}, &plt.A{LegOut: true, LegNcol: 2})
+		plt.Save("/tmp/gosl", "nurbs03a")
+
+		// basis
+		plt.Reset(true, &plt.A{Prop: 1.2})
+		PlotNurbsBasis2d("/tmp/gosl", "nurbs03b", b, 0, 1, false, false, nil, nil, func(idx int) {
+			plt.HideBorders(&plt.A{HideR: true, HideT: true})
+		})
+		plt.Reset(true, &plt.A{Prop: 1.2})
+		plt.HideBorders(&plt.A{HideR: true, HideT: true})
+		PlotNurbsDerivs2d("/tmp/gosl", "nurbs03c", b, 0, 1, false, false, nil, nil, func(idx int) {
+			plt.HideBorders(&plt.A{HideR: true, HideT: true})
+		})
 	}
 }
 
@@ -262,7 +304,7 @@ func Test_nurbs04(tst *testing.T) {
 	chk.PrintTitle("nurbs04")
 
 	// NURBS
-	a := FactoryNurbs2dPlateHole()
+	a := FactoryNurbs{}.QuarterPlateHole1()
 	b := a.KrefineN(2, false)
 	c := a.KrefineN(4, false)
 
@@ -279,12 +321,12 @@ func Test_nurbs04(tst *testing.T) {
 	c_vt := tag_verts(c, tol)
 
 	// write .msh files
-	WriteMshD("/tmp/gosl/gm", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct, tol)
-	WriteMshD("/tmp/gosl/gm", "m_nurbs04b", []*Nurbs{b}, b_vt, nil, tol)
-	WriteMshD("/tmp/gosl/gm", "m_nurbs04c", []*Nurbs{c}, c_vt, nil, tol)
+	WriteMshD("/tmp/gosl", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct, tol)
+	WriteMshD("/tmp/gosl", "m_nurbs04b", []*Nurbs{b}, b_vt, nil, tol)
+	WriteMshD("/tmp/gosl", "m_nurbs04c", []*Nurbs{c}, c_vt, nil, tol)
 
 	// read .msh file back and check
-	a_read := ReadMsh("/tmp/gosl/gm/m_nurbs04a")[0]
+	a_read := ReadMsh("/tmp/gosl/m_nurbs04a")[0]
 	chk.IntAssert(a_read.gnd, a.gnd)
 	chk.Ints(tst, "p", a.p, a_read.p)
 	chk.Ints(tst, "n", a.n, a_read.n)
@@ -293,8 +335,38 @@ func Test_nurbs04(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		PlotNurbs("/tmp/gosl/gm", "nurbs04a.png", a_read, 41, true, nil)
-		PlotTwoNurbs("/tmp/gosl/gm", "nurbs04b.png", a, b, 41, true, nil)
-		PlotTwoNurbs("/tmp/gosl/gm", "nurbs04c.png", a, c, 41, true, nil)
+		//PlotNurbs("/tmp/gosl", "nurbs04a", a_read, 41, true, nil)
+		//PlotTwoNurbs("/tmp/gosl", "nurbs04b", a, b, 41, true, nil)
+		//PlotTwoNurbs("/tmp/gosl", "nurbs04c", a, c, 41, true, nil)
+	}
+}
+
+func Test_nurbs05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("nurbs05. circle and related geometries")
+
+	radius := 2.0
+	b := FactoryNurbs{}.QuarterCircleCurve(radius)
+
+	U := utl.LinSpace(b.b[0].tmin, b.b[0].tmax, 5)
+	x := make([]float64, 2)
+	for _, u := range U {
+		b.Point(x, []float64{u}, 2)
+		e := math.Sqrt(x[0]*x[0]+x[1]*x[1]) - radius
+		chk.Scalar(tst, io.Sf("error @ (%.8f,%8f) == 0?", x[0], x[1]), 1e-15, e, 0)
+	}
+
+	if chk.Verbose {
+		extra := func() {
+			plt.Circle(0, 0, radius, &plt.A{C: "#478275", Lw: 1})
+		}
+		argsCurve := &plt.A{C: "orange", M: "+", Mec: "k", Lw: 4, L: "curve", NoClip: true}
+		argsCtrl := &plt.A{C: "k", M: ".", Ls: "--", L: "control", NoClip: true}
+		argsIds := &plt.A{C: "b", Fsz: 10}
+		plt.Reset(false, nil)
+		plt.Equal()
+		plt.HideAllBorders()
+		PlotNurbs2d("/tmp/gosl", "nurbs05", b, 11, true, true, argsCurve, argsCtrl, argsIds, extra)
 	}
 }
