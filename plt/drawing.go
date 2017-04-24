@@ -59,30 +59,30 @@ func Arrow(xi, yi, xf, yf float64, args *A) {
 	if args.Scale > 0 {
 		scale = args.Scale
 	}
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "pc%d = pat.FancyArrowPatch((%g,%g),(%g,%g),shrinkA=0,shrinkB=0,path_effects=[pff.Stroke(joinstyle='miter')],arrowstyle='%s',mutation_scale=%g", n, xi, yi, xf, yf, style, scale)
+	uid := genUid()
+	io.Ff(&bufferPy, "pc%d = pat.FancyArrowPatch((%g,%g),(%g,%g),shrinkA=0,shrinkB=0,path_effects=[pff.Stroke(joinstyle='miter')],arrowstyle='%s',mutation_scale=%g", uid, xi, yi, xf, yf, style, scale)
 	updateBufferAndClose(&bufferPy, args, false, false)
-	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
+	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", uid)
 }
 
 // Circle adds circle to plot
 func Circle(xc, yc, r float64, args *A) {
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "pc%d = pat.Circle((%g,%g), %g", n, xc, yc, r)
+	uid := genUid()
+	io.Ff(&bufferPy, "pc%d = pat.Circle((%g,%g), %g", uid, xc, yc, r)
 	updateBufferAndClose(&bufferPy, args, false, false)
-	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
+	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", uid)
 }
 
 // Arc adds arc to plot
 //  minAlpha and maxAlpha are in degrees
 func Arc(xc, yc, r, minAlpha, maxAlpha float64, args *A) {
-	n := bufferPy.Len()
+	uid := genUid()
 	r2 := 2.0 * r
 	θ1 := minAlpha * 180.0 / math.Pi
 	θ2 := maxAlpha * 180.0 / math.Pi
-	io.Ff(&bufferPy, "pc%d = pat.Arc((%g,%g),%g,%g,angle=0,theta1=%g,theta2=%g", n, xc, yc, r2, r2, θ1, θ2)
+	io.Ff(&bufferPy, "pc%d = pat.Arc((%g,%g),%g,%g,angle=0,theta1=%g,theta2=%g", uid, xc, yc, r2, r2, θ1, θ2)
 	updateBufferAndClose(&bufferPy, args, false, false)
-	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
+	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", uid)
 }
 
 // Polyline draws a polyline. P[npts][2]
@@ -90,8 +90,8 @@ func Polyline(P [][]float64, args *A) {
 	if len(P) < 1 {
 		return
 	}
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "dat%d = [[pth.Path.MOVETO, [%g, %g]]", n, P[0][0], P[0][1])
+	uid := genUid()
+	io.Ff(&bufferPy, "dat%d = [[pth.Path.MOVETO, [%g, %g]]", uid, P[0][0], P[0][1])
 	for _, p := range P {
 		io.Ff(&bufferPy, ", [pth.Path.LINETO, [%g, %g]]", p[0], p[1])
 	}
@@ -103,34 +103,9 @@ func Polyline(P [][]float64, args *A) {
 		io.Ff(&bufferPy, ", [pth.Path.CLOSEPOLY, [0, 0]]")
 	}
 	io.Ff(&bufferPy, "]\n")
-	io.Ff(&bufferPy, "commands%d, vertices%d = zip(*dat%d)\n", n, n, n)
-	io.Ff(&bufferPy, "ph%d = pth.Path(vertices%d, commands%d)\n", n, n, n)
-	io.Ff(&bufferPy, "pc%d = pat.PathPatch(ph%d", n, n)
+	io.Ff(&bufferPy, "commands%d, vertices%d = zip(*dat%d)\n", uid, uid, uid)
+	io.Ff(&bufferPy, "ph%d = pth.Path(vertices%d, commands%d)\n", uid, uid, uid)
+	io.Ff(&bufferPy, "pc%d = pat.PathPatch(ph%d", uid, uid)
 	updateBufferAndClose(&bufferPy, args, false, false)
-	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", n)
-}
-
-// LegendX draws legend with given lines data. fs == fontsize
-func LegendX(dat []*A, args *A) {
-	n := bufferPy.Len()
-	io.Ff(&bufferPy, "handles%d = [", n)
-	for i, d := range dat {
-		if i > 0 {
-			io.Ff(&bufferPy, ",\n")
-		}
-		if d != nil {
-			io.Ff(&bufferPy, "lns.Line2D([], [], %s)", d.String(false, false))
-		}
-	}
-	fs, loc, frame := 9.0, "best", false
-	if args != nil {
-		fs = args.FszLeg
-		loc = args.LegLoc
-	}
-	io.Ff(&bufferPy, "]\nl%d=plt.legend(handles=handles%d, fontsize=%g, loc='%s'", n, n, fs, loc)
-	updateBufferAndClose(&bufferPy, args, false, false)
-	if !frame {
-		io.Ff(&bufferPy, "if l%d: l%d.get_frame().set_linewidth(0.0)\n", n, n)
-	}
-	io.Ff(&bufferPy, "addToEA(l%d)\n", n)
+	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", uid)
 }

@@ -31,12 +31,6 @@ func Test_draw01(tst *testing.T) {
 	AutoScale(P)
 	Equal()
 
-	LegendX([]*A{
-		&A{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
-		&A{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
-		&A{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
-	}, nil)
-
 	if chk.Verbose {
 		err := Save("/tmp/gosl", "t_draw01")
 		if err != nil {

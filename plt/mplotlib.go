@@ -514,6 +514,34 @@ func Legend(args *A) {
 	}
 }
 
+// LegendX adds legend to plot with given data instead of relying on labels
+func LegendX(dat []*A, args *A) {
+	loc, ncol, hlen, fsz, frame, out, outX := argsLeg(args)
+	uid := genUid()
+	io.Ff(&bufferPy, "h%d = [", uid)
+	for i, d := range dat {
+		if i > 0 {
+			io.Ff(&bufferPy, ",\n")
+		}
+		if d != nil {
+			io.Ff(&bufferPy, "lns.Line2D([], [], %s)", d.String(false, false))
+		}
+	}
+	io.Ff(&bufferPy, "]\n")
+	io.Ff(&bufferPy, "if len(h%d) > 0:\n", uid)
+	if out == 1 {
+		io.Ff(&bufferPy, "    d%d = %s\n", uid, outX)
+		io.Ff(&bufferPy, "    l%d = plt.legend(handles=h%d, bbox_to_anchor=d%d, ncol=%d, handlelength=%g, prop={'size':%g}, loc=3, mode='expand', borderaxespad=0.0, columnspacing=1, handletextpad=0.05)\n", uid, uid, uid, ncol, hlen, fsz)
+		io.Ff(&bufferPy, "    addToEA(l%d)\n", uid)
+	} else {
+		io.Ff(&bufferPy, "    l%d = plt.legend(handles=h%d, loc=%s, ncol=%d, handlelength=%g, prop={'size':%g})\n", uid, uid, loc, ncol, hlen, fsz)
+		io.Ff(&bufferPy, "    addToEA(l%d)\n", uid)
+	}
+	if frame == 0 {
+		io.Ff(&bufferPy, "    l%d.get_frame().set_linewidth(0.0)\n", uid)
+	}
+}
+
 // Gll adds grid, labels, and legend to plot
 func Gll(xl, yl string, args *A) {
 	hide := getHideList(args)

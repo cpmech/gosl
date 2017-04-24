@@ -493,3 +493,34 @@ func Test_plot10(tst *testing.T) {
 		}
 	}
 }
+
+func Test_plot11(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot11")
+
+	if chk.Verbose {
+
+		x := utl.LinSpace(0.0, 1.0, 11)
+		y := make([]float64, len(x))
+		for i := 0; i < len(x); i++ {
+			y[i] = x[i] * x[i]
+		}
+
+		Reset(false, nil)
+		Plot(x, y, nil)
+
+		LegendX([]*A{
+			&A{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
+			&A{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
+			&A{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
+		},
+			&A{LegOut: true, LegNcol: 3},
+		)
+
+		err := Save("/tmp/gosl", "t_plot11")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}
