@@ -156,6 +156,12 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#GetITout">func GetITout(all_output_times, time_stations_out []float64, tol float64) (I []int, T []float64)</a></dd>
 			
 				
+				<dd><a href="#GetMapped">func GetMapped(X []float64, filter func(x float64) float64) (Y []float64)</a></dd>
+			
+				
+				<dd><a href="#GetMapped2">func GetMapped2(X [][]float64, filter func(x float64) float64) (Y [][]float64)</a></dd>
+			
+				
 				<dd><a href="#GetSorted">func GetSorted(A []float64) (Asorted []float64)</a></dd>
 			
 				
@@ -544,7 +550,7 @@ such as slices and slices of slices. It also contains functions for sorting quan
 		
 			
 			
-			<h2 id="AllFalse">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=12209:12242#L507">AllFalse</a></h2>
+			<h2 id="AllFalse">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=12883:12916#L529">AllFalse</a></h2>
 			<pre>func AllFalse(values []<a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 BoolAllFalse returns true if all values are false
@@ -556,7 +562,7 @@ BoolAllFalse returns true if all values are false
 		
 			
 			
-			<h2 id="AllTrue">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=12044:12076#L497">AllTrue</a></h2>
+			<h2 id="AllTrue">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=12718:12750#L519">AllTrue</a></h2>
 			<pre>func AllTrue(values []<a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 BoolAllTrue returns true if all values are true
@@ -568,7 +574,7 @@ BoolAllTrue returns true if all values are true
 		
 			
 			
-			<h2 id="Alloc">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4348:4386#L182">Alloc</a></h2>
+			<h2 id="Alloc">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5022:5060#L204">Alloc</a></h2>
 			<pre>func Alloc(m, n <a href="/pkg/builtin/#int">int</a>) (mat [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Alloc allocates a slice of slices of float64
@@ -580,7 +586,7 @@ Alloc allocates a slice of slices of float64
 		
 			
 			
-			<h2 id="ArgMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11627:11671#L475">ArgMinMax</a></h2>
+			<h2 id="ArgMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=12301:12345#L497">ArgMinMax</a></h2>
 			<pre>func ArgMinMax(v []<a href="/pkg/builtin/#float64">float64</a>) (imin, imax <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 ArgMinMax finds the indices of min and max arguments
@@ -616,7 +622,7 @@ BestSquare finds the best square for given size=Nrows * Ncolumns
 		
 			
 			
-			<h2 id="Cross3d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11444:11475#L468">Cross3d</a></h2>
+			<h2 id="Cross3d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=12118:12149#L490">Cross3d</a></h2>
 			<pre>func Cross3d(w, u, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cross3d computes the cross product of two 3D vectors u and w
@@ -631,7 +637,7 @@ Note: w must be pre-allocated
 		
 			
 			
-			<h2 id="CumSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10066:10094#L414">CumSum</a></h2>
+			<h2 id="CumSum">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10740:10768#L436">CumSum</a></h2>
 			<pre>func CumSum(cs, p []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CumSum returns the cumulative sum of the elements in p
@@ -772,7 +778,7 @@ Output:
 		
 			
 			
-			<h2 id="Dot3d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11242:11280#L461">Dot3d</a></h2>
+			<h2 id="Dot3d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11916:11954#L483">Dot3d</a></h2>
 			<pre>func Dot3d(u, v []<a href="/pkg/builtin/#float64">float64</a>) (s <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Dot3d returns the dot product between two 3D vectors
@@ -822,7 +828,7 @@ FlipCoin generates a Bernoulli variable; throw a coin with probability p
 		
 			
 			
-			<h2 id="FromString">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6191:6230#L264">FromString</a></h2>
+			<h2 id="FromString">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6865:6904#L286">FromString</a></h2>
 			<pre>func FromString(s <a href="/pkg/builtin/#string">string</a>) (r []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 FromString splits a string with numbers separeted by spaces into float64
@@ -834,7 +840,7 @@ FromString splits a string with numbers separeted by spaces into float64
 		
 			
 			
-			<h2 id="FromStrings">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5973:6015#L255">FromStrings</a></h2>
+			<h2 id="FromStrings">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6647:6689#L277">FromStrings</a></h2>
 			<pre>func FromStrings(s []<a href="/pkg/builtin/#string">string</a>) (v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 FromStrings converts a slice of strings to a slice of float64
@@ -846,7 +852,7 @@ FromStrings converts a slice of strings to a slice of float64
 		
 			
 			
-			<h2 id="GetColumn">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10844:10894#L444">GetColumn</a></h2>
+			<h2 id="GetColumn">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11518:11568#L466">GetColumn</a></h2>
 			<pre>func GetColumn(j <a href="/pkg/builtin/#int">int</a>, v [][]<a href="/pkg/builtin/#float64">float64</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GetColumn returns the column of a matrix of float64
@@ -858,7 +864,7 @@ GetColumn returns the column of a matrix of float64
 		
 			
 			
-			<h2 id="GetCopy">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4869:4911#L209">GetCopy</a></h2>
+			<h2 id="GetCopy">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5543:5585#L231">GetCopy</a></h2>
 			<pre>func GetCopy(in []<a href="/pkg/builtin/#float64">float64</a>) (out []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 GetCopy gets a copy of slice of float64
@@ -892,6 +898,32 @@ Notes:
 		
 			
 			
+			<h2 id="GetMapped">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4364:4437#L182">GetMapped</a></h2>
+			<pre>func GetMapped(X []<a href="/pkg/builtin/#float64">float64</a>, filter func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>) (Y []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+GetMapped returns a new slice such that: Y[i] = filter(X[i])
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="GetMapped2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4713:4791#L192">GetMapped2</a></h2>
+			<pre>func GetMapped2(X [][]<a href="/pkg/builtin/#float64">float64</a>, filter func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>) (Y [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+GetMapped2 returns a new slice of slice such that: Y[i][j] = filter(X[i][j])
+</p>
+<pre>NOTE: each row in X may have different number of columns; i.e. len(X[0]) may be != len(X[1])
+</pre>
+
+			
+			
+
+		
+			
+			
 			<h2 id="GetSorted">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1453:1500#L88">GetSorted</a></h2>
 			<pre>func GetSorted(A []<a href="/pkg/builtin/#float64">float64</a>) (Asorted []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
@@ -904,7 +936,7 @@ GetSorted returns a sorted (increasing) copy of &#39;A&#39;
 		
 			
 			
-			<h2 id="GtPenalty">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10360:10406#L427">GtPenalty</a></h2>
+			<h2 id="GtPenalty">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11034:11080#L449">GtPenalty</a></h2>
 			<pre>func GtPenalty(x, b, penaltyM <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 GtPenalty implements a &#39;greater than&#39; penalty function where
@@ -917,7 +949,7 @@ x must be greater than b; otherwise the error is magnified
 		
 			
 			
-			<h2 id="GtePenalty">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=10680:10727#L436">GtePenalty</a></h2>
+			<h2 id="GtePenalty">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11354:11401#L458">GtePenalty</a></h2>
 			<pre>func GtePenalty(x, b, penaltyM <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 GtePenalty implements a &#39;greater than or equal&#39; penalty function where
@@ -1206,7 +1238,7 @@ IntVals allocates a slice of integers with size==n, filled with val
 		
 			
 			
-			<h2 id="L2norm">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11045:11087#L453">L2norm</a></h2>
+			<h2 id="L2norm">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=11719:11761#L475">L2norm</a></h2>
 			<pre>func L2norm(p, q []<a href="/pkg/builtin/#float64">float64</a>) (dist <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 L2norm returns the Euclidean distance between p and q
@@ -1218,7 +1250,7 @@ L2norm returns the Euclidean distance between p and q
 		
 			
 			
-			<h2 id="LinSpace">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5048:5107#L216">LinSpace</a></h2>
+			<h2 id="LinSpace">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5722:5781#L238">LinSpace</a></h2>
 			<pre>func LinSpace(start, stop <a href="/pkg/builtin/#float64">float64</a>, num <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 LinSpace returns evenly spaced numbers over a specified closed interval.
@@ -1230,7 +1262,7 @@ LinSpace returns evenly spaced numbers over a specified closed interval.
 		
 			
 			
-			<h2 id="LinSpaceOpen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5436:5499#L233">LinSpaceOpen</a></h2>
+			<h2 id="LinSpaceOpen">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6110:6173#L255">LinSpaceOpen</a></h2>
 			<pre>func LinSpaceOpen(start, stop <a href="/pkg/builtin/#float64">float64</a>, num <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 LinSpaceOpen returns evenly spaced numbers over a specified open interval.
@@ -1266,7 +1298,7 @@ Max returns the maximum between two float point numbers
 		
 			
 			
-			<h2 id="MeshGrid2d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6517:6595#L277">MeshGrid2d</a></h2>
+			<h2 id="MeshGrid2d">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7191:7269#L299">MeshGrid2d</a></h2>
 			<pre>func MeshGrid2d(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>) (X, Y [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MeshGrid2d creates a grid with x-y coordinates
@@ -1280,7 +1312,7 @@ MeshGrid2d creates a grid with x-y coordinates
 		
 			
 			
-			<h2 id="MeshGrid2dF">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7058:7170#L298">MeshGrid2dF</a></h2>
+			<h2 id="MeshGrid2dF">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7732:7844#L320">MeshGrid2dF</a></h2>
 			<pre>func MeshGrid2dF(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>, f func(x, y <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MeshGrid2dF creates a grid with x-y coordinates and evaluates z=f(x,y)
@@ -1294,7 +1326,7 @@ MeshGrid2dF creates a grid with x-y coordinates and evaluates z=f(x,y)
 		
 			
 			
-			<h2 id="MeshGrid2dFG">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=7736:7866#L322">MeshGrid2dFG</a></h2>
+			<h2 id="MeshGrid2dFG">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=8410:8540#L344">MeshGrid2dFG</a></h2>
 			<pre>func MeshGrid2dFG(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>, fg func(x, y <a href="/pkg/builtin/#float64">float64</a>) (z, u, v <a href="/pkg/builtin/#float64">float64</a>)) (X, Y, Z, U, V [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MeshGrid2dFG creates a grid with x-y coordinates and evaluates (z,u,v)=fg(x,y)
@@ -1334,7 +1366,7 @@ MinMax returns the maximum and minimum elements in v
 		
 			
 			
-			<h2 id="Ones">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4534:4566#L191">Ones</a></h2>
+			<h2 id="Ones">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5208:5240#L213">Ones</a></h2>
 			<pre>func Ones(n <a href="/pkg/builtin/#int">int</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Ones generates a slice of float64 with ones
@@ -1475,7 +1507,7 @@ ProfMEM activates memory profiling
 		
 			
 			
-			<h2 id="Scaling">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9154:9243#L362">Scaling</a></h2>
+			<h2 id="Scaling">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9828:9917#L384">Scaling</a></h2>
 			<pre>func Scaling(s, x []<a href="/pkg/builtin/#float64">float64</a>, ds, tol <a href="/pkg/builtin/#float64">float64</a>, reverse, useinds <a href="/pkg/builtin/#bool">bool</a>) (xmin, xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Scaling computes a scaled version of the input slice with results in [0.0, 1.0]
@@ -1701,7 +1733,7 @@ Sum sums all items in v
 		
 			
 			
-			<h2 id="ToStrings">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5748:5803#L246">ToStrings</a></h2>
+			<h2 id="ToStrings">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=6422:6477#L268">ToStrings</a></h2>
 			<pre>func ToStrings(v []<a href="/pkg/builtin/#float64">float64</a>, format <a href="/pkg/builtin/#string">string</a>) (s []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 ToStrings converts a slice of float64 to a slice of strings
@@ -1713,7 +1745,7 @@ ToStrings converts a slice of float64 to a slice of strings
 		
 			
 			
-			<h2 id="Vals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=4701:4744#L200">Vals</a></h2>
+			<h2 id="Vals">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=5375:5418#L222">Vals</a></h2>
 			<pre>func Vals(n <a href="/pkg/builtin/#int">int</a>, v <a href="/pkg/builtin/#float64">float64</a>) (res []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Vals generates a slice of float64 filled with v

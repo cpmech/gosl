@@ -5,6 +5,7 @@
 package utl
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -406,4 +407,22 @@ func Test_mylab10(tst *testing.T) {
 		tst.Error("test failed: not all values are false\n")
 		return
 	}
+}
+
+func Test_mylab11(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab11. GetMapped and GetMapped2")
+
+	X := []float64{1, 10, 100, 1000}
+	Y := GetMapped(X, func(x float64) float64 { return math.Log10(x) })
+	chk.Vector(tst, "Y", 1e-15, Y, []float64{0, 1, 2, 3})
+
+	A := [][]float64{
+		{1, 10, 100, 1000},
+		{2, 10},
+		{3, 300, -3},
+	}
+	B := GetMapped2(A, func(x float64) float64 { return x / 10.0 })
+	chk.Matrix(tst, "B", 1e-15, B, [][]float64{{0.1, 1, 10, 100}, {0.2, 1}, {0.3, 30, -0.3}})
 }

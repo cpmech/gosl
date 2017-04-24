@@ -12,7 +12,7 @@ refresh(){
     echo
     echo
     echo
-    go test -test.run="mylab01"
+    go test -test.run="mylab11"
 }
 
 while true; do

@@ -188,6 +188,28 @@ func IntPy(a []int) (res string) {
 
 // slices of float64 /////////////////////////////////////////////////////////////////////////////
 
+// GetMapped returns a new slice such that: Y[i] = filter(X[i])
+func GetMapped(X []float64, filter func(x float64) float64) (Y []float64) {
+	Y = make([]float64, len(X))
+	for i := 0; i < len(X); i++ {
+		Y[i] = filter(X[i])
+	}
+	return
+}
+
+// GetMapped2 returns a new slice of slice such that: Y[i][j] = filter(X[i][j])
+//  NOTE: each row in X may have different number of columns; i.e. len(X[0]) may be != len(X[1])
+func GetMapped2(X [][]float64, filter func(x float64) float64) (Y [][]float64) {
+	Y = make([][]float64, len(X))
+	for i := 0; i < len(X); i++ {
+		Y[i] = make([]float64, len(X[i]))
+		for j := 0; j < len(X[i]); j++ {
+			Y[i][j] = filter(X[i][j])
+		}
+	}
+	return
+}
+
 // Alloc allocates a slice of slices of float64
 func Alloc(m, n int) (mat [][]float64) {
 	mat = make([][]float64, m)
