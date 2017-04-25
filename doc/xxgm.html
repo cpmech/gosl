@@ -547,9 +547,12 @@ DistPointPoint computes the unsigned distance from a to b
 		
 			
 			
-			<h2 id="GetLimits">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=310:363#L7">GetLimits</a></h2>
+			<h2 id="GetLimits">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=389:442#L8">GetLimits</a></h2>
 			<pre>func GetLimits(o *<a href="#Nurbs">Nurbs</a>) (xmin, xmax, xdel []<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			
+			<p>
+GetLimits computes the limits of all coordinates of control points in NURBS
+</p>
+
 			
 			
 
@@ -649,7 +652,7 @@ PointsLims returns the limits of a set of points
 		
 			
 			
-			<h2 id="ReadMsh">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=6263:6305#L258">ReadMsh</a></h2>
+			<h2 id="ReadMsh">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=6342:6384#L259">ReadMsh</a></h2>
 			<pre>func ReadMsh(fnk <a href="/pkg/builtin/#string">string</a>) (nurbss []*<a href="#Nurbs">Nurbs</a>)</pre>
 			<p>
 ReadMsh reads .msh file
@@ -711,7 +714,7 @@ VecNorm returns the length (Euclidian norm) of a vector
 		
 			
 			
-			<h2 id="WriteMshD">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=1159:1268#L38">WriteMshD</a></h2>
+			<h2 id="WriteMshD">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=1238:1347#L39">WriteMshD</a></h2>
 			<pre>func WriteMshD(dirout, fnk <a href="/pkg/builtin/#string">string</a>, nurbss []*<a href="#Nurbs">Nurbs</a>, vtagged map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#int">int</a>, ctagged map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>, tol <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 WriteMshD writes .msh file
@@ -1216,7 +1219,7 @@ SetOrder sets B-spline order (p)
 		
 			
 			
-			<h2 id="Data">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=6158:6234#L252">Data</a></h2>
+			<h2 id="Data">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=6237:6313#L253">Data</a></h2>
 			<pre>type Data struct {
     Verts  []<a href="#Vert">Vert</a>   <span class="comment">// vertices</span>
     Nurbss []<a href="#NurbsD">NurbsD</a> <span class="comment">// NURBSs</span>
@@ -1749,7 +1752,7 @@ U returns the value of a knot along direction dir
 		
 			
 			
-			<h2 id="NurbsD">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=5819:6124#L243">NurbsD</a></h2>
+			<h2 id="NurbsD">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=5898:6203#L244">NurbsD</a></h2>
 			<pre>type NurbsD struct {
     Id    <a href="/pkg/builtin/#int">int</a>         <span class="comment">// id of Nurbs</span>
     Gnd   <a href="/pkg/builtin/#int">int</a>         <span class="comment">// 1: curve, 2:surface, 3:volume (geometry dimension)</span>
@@ -1909,7 +1912,7 @@ Vector returns the vector representing Segment from A to B (scaled by m)
 		
 			
 			
-			<h2 id="Vert">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=5645:5748#L236">Vert</a></h2>
+			<h2 id="Vert">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=5724:5827#L237">Vert</a></h2>
 			<pre>type Vert struct {
     Id  <a href="/pkg/builtin/#int">int</a>       <span class="comment">// id</span>
     Tag <a href="/pkg/builtin/#int">int</a>       <span class="comment">// tag</span>

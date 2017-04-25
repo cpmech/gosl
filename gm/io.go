@@ -14,6 +14,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+// GetLimits computes the limits of all coordinates of control points in NURBS
 func GetLimits(o *Nurbs) (xmin, xmax, xdel []float64) {
 	xmin = []float64{math.Inf(+1), math.Inf(+1), math.Inf(+1)}
 	xmax = []float64{math.Inf(-1), math.Inf(-1), math.Inf(-1)}
