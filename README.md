@@ -41,6 +41,10 @@ see what's available and how to call functions and methods.
 
 [Check out examples here](https://github.com/cpmech/gosl/blob/master/examples/README.md)
 
+<div id="container">
+<p><img src="examples/figs/gm_nurbs03.png" width="400"></p>
+Construction of NURBS surfaces with the `gm` package.
+</div>
 
 <div id="container">
 <p><img src="examples/figs/rnd_normalDistribution.png" width="400"></p>
