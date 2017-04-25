@@ -98,7 +98,7 @@ handling geometry and mesh structures
 				<dd><a href="#IsPointInLine">func IsPointInLine(p, a, b *Point, zero, told, tolin float64) bool</a></dd>
 			
 				
-				<dd><a href="#PlotNurbs2d">func PlotNurbs2d(dirout, fnkey string, b *Nurbs, npts int, withIds, withCtrl bool, argsElems, argsCtrl, argsIds *plt.A, extra func())</a></dd>
+				<dd><a href="#PlotNurbs">func PlotNurbs(dirout, fnkey string, b *Nurbs, ndim, npts int, withIds, withCtrl bool, argsElems, argsCtrl, argsIds *plt.A, extra func())</a></dd>
 			
 				
 				<dd><a href="#PlotNurbsBasis2d">func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, withCtrl bool, argsElems, argsCtrl *plt.A, extra func(idxSubplot int))</a></dd>
@@ -271,25 +271,13 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawCtrl">func (o *Nurbs) DrawCtrl(ndim int, withIds bool, args, argsIds *plt.A)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawCtrl2d">func (o *Nurbs) DrawCtrl2d(withIds bool, args, argsIds *plt.A)</a></dd>
-				
-					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawEdge">func (o *Nurbs) DrawEdge(ndim int, tmin, tmax, cte float64, along, npts int, args *plt.A)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawEdge2d">func (o *Nurbs) DrawEdge2d(tmin, tmax, cte float64, along, npts int, args *plt.A)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElem">func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, argsIds *plt.A)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElem2d">func (o *Nurbs) DrawElem2d(span []int, npts int, withIds bool, args, argsIds *plt.A)</a></dd>
-				
-					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElems">func (o *Nurbs) DrawElems(ndim int, npts int, withIds bool, args, argsIds *plt.A)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElems2d">func (o *Nurbs) DrawElems2d(npts int, withIds bool, args, argsIds *plt.A)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawSurface">func (o *Nurbs) DrawSurface(ndim int, nu, nv int, withSurf, withWire bool, argsSurf, argsWire *plt.A)</a></dd>
@@ -604,11 +592,13 @@ IsPointInLine returns whether p is inside line passing through a and b
 		
 			
 			
-			<h2 id="PlotNurbs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7511:7644#L265">PlotNurbs2d</a></h2>
-			<pre>func PlotNurbs2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func())</pre>
+			<h2 id="PlotNurbs">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=3554:3691#L128">PlotNurbs</a></h2>
+			<pre>func PlotNurbs(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, ndim, npts <a href="/pkg/builtin/#int">int</a>, withIds, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func())</pre>
 			<p>
-PlotNurbs plots a NURBS in 2D space
+PlotNurbs plots a NURBS
 </p>
+<pre>ndim -- 2 or 3 =&gt; to plot in a 2D or 3D space
+</pre>
 
 			
 			
@@ -616,10 +606,10 @@ PlotNurbs plots a NURBS in 2D space
 		
 			
 			
-			<h2 id="PlotNurbsBasis2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7981:8128#L280">PlotNurbsBasis2d</a></h2>
+			<h2 id="PlotNurbsBasis2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=4024:4171#L143">PlotNurbsBasis2d</a></h2>
 			<pre>func PlotNurbsBasis2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>, withElems, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func(idxSubplot <a href="/pkg/builtin/#int">int</a>))</pre>
 			<p>
-PlotNurbsBasis2d plots basis functions la and lb in 2D space
+PlotNurbsBasis2d plots basis functions la and lb
 </p>
 <pre>First row == CalcBasis
 Second row == CalcBasisAndDerivs
@@ -632,7 +622,7 @@ Third row == RecursiveBasis
 		
 			
 			
-			<h2 id="PlotNurbsDerivs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=9932:10080#L376">PlotNurbsDerivs2d</a></h2>
+			<h2 id="PlotNurbsDerivs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=6034:6182#L240">PlotNurbsDerivs2d</a></h2>
 			<pre>func PlotNurbsDerivs2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>, withElems, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func(idxSubplot <a href="/pkg/builtin/#int">int</a>))</pre>
 			<p>
 PlotNurbsDerivs2d plots derivatives of basis functions la and lb in 2D space
@@ -1335,99 +1325,65 @@ CloneCtrlsAlongSurface returns a copy of control points @ 3D boundary
 				
 			
 				
-				<h3 id="Nurbs.DrawCtrl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=13442:13512#L520">DrawCtrl</a></h3>
+				<h3 id="Nurbs.DrawCtrl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=8495:8565#L356">DrawCtrl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawCtrl(ndim <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawCtrl draws control net in 2D or 3D space
 </p>
+<pre>ndim -- 2 or 3 =&gt; to plot in a 2D or 3D space
+</pre>
 
 				
 				
 				
 			
 				
-				<h3 id="Nurbs.DrawCtrl2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=480:542#L8">DrawCtrl2d</a></h3>
-				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawCtrl2d(withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
-				<p>
-DrawCtrl2d draws control net in 2D space
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="Nurbs.DrawEdge">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=15694:15783#L608">DrawEdge</a></h3>
+				<h3 id="Nurbs.DrawEdge">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=10797:10886#L445">DrawEdge</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawEdge(ndim <a href="/pkg/builtin/#int">int</a>, tmin, tmax, cte <a href="/pkg/builtin/#float64">float64</a>, along, npts <a href="/pkg/builtin/#int">int</a>, args *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawEdge draws edge from tmin to tmax in 2D or 3D space
 </p>
+<pre>ndim -- 2 or 3 =&gt; to plot in a 2D or 3D space
+</pre>
 
 				
 				
 				
 			
 				
-				<h3 id="Nurbs.DrawEdge2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=2007:2088#L68">DrawEdge2d</a></h3>
-				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawEdge2d(tmin, tmax, cte <a href="/pkg/builtin/#float64">float64</a>, along, npts <a href="/pkg/builtin/#int">int</a>, args *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
-				<p>
-DrawEdge2d draws and edge from tmin to tmax in 2D space
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="Nurbs.DrawElem">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=16424:16516#L638">DrawElem</a></h3>
+				<h3 id="Nurbs.DrawElem">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=11577:11669#L476">DrawElem</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElem(ndim <a href="/pkg/builtin/#int">int</a>, span []<a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawElem draws element (non-zero span) in 2D or 3D space
 </p>
+<pre>ndim -- 2 or 3 =&gt; to plot in a 2D or 3D space
+</pre>
 
 				
 				
 				
 			
 				
-				<h3 id="Nurbs.DrawElem2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=2541:2625#L90">DrawElem2d</a></h3>
-				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElem2d(span []<a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
-				<p>
-DrawElem2d draws element (non-zero span) in 2D space
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="Nurbs.DrawElems">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=17748:17829#L676">DrawElems</a></h3>
+				<h3 id="Nurbs.DrawElems">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=12951:13032#L515">DrawElems</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElems(ndim <a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawElems draws all elements (non-zero spans) in 2D or 3D space
 </p>
+<pre>ndim -- 2 or 3 =&gt; to plot in a 2D or 3D space
+</pre>
 
 				
 				
 				
 			
 				
-				<h3 id="Nurbs.DrawElems2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=3935:4008#L130">DrawElems2d</a></h3>
-				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElems2d(npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
-				<p>
-DrawElems2d draws all elements (non-zero spans) in 2D space
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="Nurbs.DrawSurface">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=17969:18070#L684">DrawSurface</a></h3>
+				<h3 id="Nurbs.DrawSurface">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=13222:13323#L524">DrawSurface</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawSurface(ndim <a href="/pkg/builtin/#int">int</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, withSurf, withWire <a href="/pkg/builtin/#bool">bool</a>, argsSurf, argsWire *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 DrawSurface draws surface
 </p>
+<pre>ndim -- 2 or 3 =&gt; to plot in a 2D or 3D space
+</pre>
 
 				
 				
@@ -1689,7 +1645,7 @@ GetOrd returns the order along direction dir
 				
 			
 				
-				<h3 id="Nurbs.PlotBasis2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=4268:4320#L141">PlotBasis2d</a></h3>
+				<h3 id="Nurbs.PlotBasis2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=589:641#L11">PlotBasis2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotBasis2d(l <a href="/pkg/builtin/#int">int</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotBasis2d plots basis function (2D only)
@@ -1704,7 +1660,7 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Nurbs.PlotDeriv2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=5905:5960#L204">PlotDeriv2d</a></h3>
+				<h3 id="Nurbs.PlotDeriv2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=2060:2115#L70">PlotDeriv2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotDeriv2d(l, d <a href="/pkg/builtin/#int">int</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotDeriv2d plots derivative dR[i][j][k]du[d] (2D only)
