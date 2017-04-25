@@ -524,3 +524,46 @@ func Test_plot11(tst *testing.T) {
 		}
 	}
 }
+
+func Test_plot12(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot12")
+
+	if chk.Verbose {
+
+		X := [][]float64{
+			{0, 0.5, 1},
+			{0, 0.5, 1},
+		}
+
+		Y := [][]float64{
+			{0, 0, 0},
+			{1, 1, 1},
+		}
+
+		dx, dy := 1.1, 1.1
+		U := [][]float64{
+			{dx + 0.0, dx + 0.0},
+			{dx + 0.5, dx + 0.5},
+			{dx + 1.0, dx + 1.0},
+		}
+
+		V := [][]float64{
+			{dy, dy + 1},
+			{dy, dy + 1},
+			{dy, dy + 1},
+		}
+
+		Reset(false, nil)
+		Grid2d(X, Y, true, &A{C: "r", NoClip: true}, nil)
+		Grid2d(U, V, true, &A{C: "b"}, nil)
+		HideAllBorders()
+		Equal()
+
+		err := Save("/tmp/gosl", "t_plot12")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}

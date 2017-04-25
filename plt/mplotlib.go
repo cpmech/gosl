@@ -427,6 +427,34 @@ func Hist(x [][]float64, labels []string, args *A) {
 	updateBufferAndClose(&bufferPy, args, true, false)
 }
 
+// Grid2d draws grid lines of 2D grid
+func Grid2d(X, Y [][]float64, withPoints bool, argsLines, argsPoints *A) {
+	if argsLines == nil {
+		argsLines = &A{C: "k", NoClip: true}
+	}
+	if argsPoints == nil {
+		argsPoints = &A{C: "k", M: ".", Ls: "none", NoClip: true}
+	}
+	for i := 0; i < len(X); i++ {
+		Plot(X[i], Y[i], argsLines)
+	}
+	nrows := len(X)
+	if nrows < 1 {
+		return
+	}
+	ncols := len(X[0])
+	x, y := make([]float64, nrows), make([]float64, nrows)
+	for j := 0; j < ncols; j++ {
+		for i := 0; i < nrows; i++ {
+			x[i], y[i] = X[i][j], Y[i][j]
+			if withPoints {
+				PlotOne(X[i][j], Y[i][j], argsPoints)
+			}
+		}
+		Plot(x, y, argsLines)
+	}
+}
+
 // ContourF draws filled contour and possibly with a contour of lines (if args.UnoLines=false)
 func ContourF(x, y, z [][]float64, args *A) {
 	uid := genUid()
