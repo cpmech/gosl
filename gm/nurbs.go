@@ -92,12 +92,18 @@ func (o *Nurbs) Init(gnd int, ords []int, knots [][]float64) {
 }
 
 // SetControl sets control points from list of global vertices
-func (o *Nurbs) SetControl(verts [][]float64, ctrls []int) {
+func (o *Nurbs) SetControl(verts [][]float64, ctrls []int) (err error) {
 
 	// check
 	nctrl := o.n[0] * o.n[1] * o.n[2]
 	if nctrl != len(ctrls) {
-		chk.Panic("number of control points must be equal to %d. nctrl == %d is incorrect", nctrl, len(ctrls))
+		return chk.Err("number of indices of control points must be equal to %d. len(ctrls)=%d is incorrect.\n", nctrl, len(ctrls))
+	}
+	if len(verts) < 2 {
+		return chk.Err("number of vertices must be greater than 1")
+	}
+	if len(verts[0]) != 4 {
+		return chk.Err("number of components of a control point must be 4 (x,y,z and weight), even if x and y are not used; e.g. curve and surface, respectively.\n")
 	}
 
 	// set control points
@@ -114,6 +120,7 @@ func (o *Nurbs) SetControl(verts [][]float64, ctrls []int) {
 			}
 		}
 	}
+	return
 }
 
 // essential methods /////////////////////////////////////////////////////////////////////////////////
