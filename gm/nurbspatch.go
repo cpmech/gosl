@@ -26,38 +26,11 @@ type NurbsExchangeData struct {
 // NurbsExchangeDataSet defines a set of nurbs exchange data
 type NurbsExchangeDataSet []*NurbsExchangeData
 
-// NurbsPatch patch of many NURBS'
+// NurbsPatch defines a patch of many NURBS'
 type NurbsPatch struct {
 
 	// input
 	Data NurbsExchangeDataSet `json:"patch"`
-}
-
-// GetLimits computes the limits of all coordinates of control points in NURBS
-func GetLimits(o *Nurbs) (xmin, xmax, xdel []float64) {
-	xmin = []float64{math.Inf(+1), math.Inf(+1), math.Inf(+1)}
-	xmax = []float64{math.Inf(-1), math.Inf(-1), math.Inf(-1)}
-	xdel = []float64{0, 0, 0}
-	for k := 0; k < o.n[2]; k++ {
-		for j := 0; j < o.n[1]; j++ {
-			for i := 0; i < o.n[0]; i++ {
-				x := o.GetQ(i, j, k)
-				for r := 0; r < o.gnd; r++ {
-					xmin[r] = utl.Min(xmin[r], x[r])
-					xmax[r] = utl.Max(xmax[r], x[r])
-				}
-			}
-		}
-	}
-	for i := 0; i < 3; i++ {
-		xdel[i] = xmax[i] - xmin[i]
-	}
-	for i := o.gnd; i < 3; i++ {
-		xmin[i] = 0
-		xmax[i] = 0
-		xdel[i] = 0
-	}
-	return
 }
 
 // WriteMsh writes .msh file
@@ -68,9 +41,9 @@ func GetLimits(o *Nurbs) (xmin, xmax, xdel []float64) {
 func WriteMsh(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int, tol float64) {
 
 	// compute limits
-	xmin, xmax, xdel := GetLimits(nurbss[0])
+	xmin, xmax, xdel := nurbss[0].GetLimitsQ()
 	for r := 1; r < len(nurbss); r++ {
-		xmi, xma, _ := GetLimits(nurbss[r])
+		xmi, xma, _ := nurbss[r].GetLimitsQ()
 		for i := 0; i < 3; i++ {
 			xmin[i] = utl.Min(xmin[i], xmi[i])
 			xmax[i] = utl.Min(xmax[i], xma[i])
@@ -312,7 +285,7 @@ func ReadMsh(fnk string) (nurbss []*Nurbs) {
 }
 
 func tag_verts(b *Nurbs, tol float64) (vt map[int]int) {
-	xmin, _, xdel := GetLimits(b)
+	xmin, _, xdel := b.GetLimitsQ()
 	vt = make(map[int]int)
 	n0, n1 := b.NumBasis(0), b.NumBasis(1)
 	for j := 0; j < n1; j++ {
