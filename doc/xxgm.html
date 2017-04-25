@@ -76,6 +76,8 @@ handling geometry and mesh structures
 				<dd><a href="#pkg-constants">Constants</a></dd>
 			
 			
+				<dd><a href="#pkg-variables">Variables</a></dd>
+			
 			
 				
 				<dd><a href="#DistPointLine">func DistPointLine(p, a, b *Point, tol float64, verbose bool) float64</a></dd>
@@ -247,29 +249,6 @@ handling geometry and mesh structures
 				
 			
 				
-				<dd><a href="#FactoryNurbs">type FactoryNurbs</a></dd>
-				
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.CircleCurve">func (o FactoryNurbs) CircleCurve(xc, yc, r float64) (b *Nurbs)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.ExampleCurve1">func (o FactoryNurbs) ExampleCurve1() (b *Nurbs)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.ExampleStrip1">func (o FactoryNurbs) ExampleStrip1() (b *Nurbs)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.HalfCircleCurve">func (o FactoryNurbs) HalfCircleCurve(radius float64) (b *Nurbs)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.QuarterCircleCurve">func (o FactoryNurbs) QuarterCircleCurve(radius float64) (b *Nurbs)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#FactoryNurbs.QuarterPlateHole1">func (o FactoryNurbs) QuarterPlateHole1() (b *Nurbs)</a></dd>
-				
-			
-				
 				<dd><a href="#Nurbs">type Nurbs</a></dd>
 				
 				
@@ -289,16 +268,31 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.CloneCtrlsAlongSurface">func (o *Nurbs) CloneCtrlsAlongSurface(iAlong, jAlong, kAt int) (Qnew [][][][]float64)</a></dd>
 				
 					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawCtrl">func (o *Nurbs) DrawCtrl(ndim int, withIds bool, args, argsIds *plt.A)</a></dd>
+				
+					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawCtrl2d">func (o *Nurbs) DrawCtrl2d(withIds bool, args, argsIds *plt.A)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawEdge">func (o *Nurbs) DrawEdge(ndim int, tmin, tmax, cte float64, along, npts int, args *plt.A)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawEdge2d">func (o *Nurbs) DrawEdge2d(tmin, tmax, cte float64, along, npts int, args *plt.A)</a></dd>
 				
 					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElem">func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, argsIds *plt.A)</a></dd>
+				
+					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElem2d">func (o *Nurbs) DrawElem2d(span []int, npts int, withIds bool, args, argsIds *plt.A)</a></dd>
 				
 					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElems">func (o *Nurbs) DrawElems(ndim int, npts int, withIds bool, args, argsIds *plt.A)</a></dd>
+				
+					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawElems2d">func (o *Nurbs) DrawElems2d(npts int, withIds bool, args, argsIds *plt.A)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.DrawSurface">func (o *Nurbs) DrawSurface(ndim int, nu, nv int, withSurf, withWire bool, argsSurf, argsWire *plt.A)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.ElemBryLocalInds">func (o *Nurbs) ElemBryLocalInds() (I [][]int)</a></dd>
@@ -379,7 +373,7 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.RecursiveBasis">func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Nurbs.SetControl">func (o *Nurbs) SetControl(verts [][]float64, ctrls []int)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.SetControl">func (o *Nurbs) SetControl(verts [][]float64, ctrls []int) (err error)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.SetQ">func (o *Nurbs) SetQ(i, j, k int, x []float64)</a></dd>
@@ -529,6 +523,15 @@ handling geometry and mesh structures
 			
 		
 		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var <span id="FactoryNurbs">FactoryNurbs</span> = facNurbsT{}</pre>
+				<p>
+FactoryNurbs generates NURBS&#39;
+</p>
+
+			
+		
 		
 			
 			
@@ -601,10 +604,10 @@ IsPointInLine returns whether p is inside line passing through a and b
 		
 			
 			
-			<h2 id="PlotNurbs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7451:7584#L265">PlotNurbs2d</a></h2>
+			<h2 id="PlotNurbs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7511:7644#L265">PlotNurbs2d</a></h2>
 			<pre>func PlotNurbs2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func())</pre>
 			<p>
-PlotNurbs plots a NURBS
+PlotNurbs plots a NURBS in 2D space
 </p>
 
 			
@@ -613,10 +616,10 @@ PlotNurbs plots a NURBS
 		
 			
 			
-			<h2 id="PlotNurbsBasis2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7907:8054#L280">PlotNurbsBasis2d</a></h2>
+			<h2 id="PlotNurbsBasis2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=7981:8128#L280">PlotNurbsBasis2d</a></h2>
 			<pre>func PlotNurbsBasis2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>, withElems, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func(idxSubplot <a href="/pkg/builtin/#int">int</a>))</pre>
 			<p>
-PlotNurbsBasis plots basis functions la and lb
+PlotNurbsBasis2d plots basis functions la and lb in 2D space
 </p>
 <pre>First row == CalcBasis
 Second row == CalcBasisAndDerivs
@@ -629,10 +632,10 @@ Third row == RecursiveBasis
 		
 			
 			
-			<h2 id="PlotNurbsDerivs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=9846:9994#L376">PlotNurbsDerivs2d</a></h2>
+			<h2 id="PlotNurbsDerivs2d">func <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=9932:10080#L376">PlotNurbsDerivs2d</a></h2>
 			<pre>func PlotNurbsDerivs2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, b *<a href="#Nurbs">Nurbs</a>, la, lb <a href="/pkg/builtin/#int">int</a>, withElems, withCtrl <a href="/pkg/builtin/#bool">bool</a>, argsElems, argsCtrl *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, extra func(idxSubplot <a href="/pkg/builtin/#int">int</a>))</pre>
 			<p>
-PlotNurbsDerivs2d plots derivatives of basis functions la and lb
+PlotNurbsDerivs2d plots derivatives of basis functions la and lb in 2D space
 </p>
 <pre>Left column == Analytical
 Right column == Numerical
@@ -1247,91 +1250,6 @@ Data holds all geometry data
 		
 			
 			
-			<h2 id="FactoryNurbs">type <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=225:253#L3">FactoryNurbs</a></h2>
-			<pre>type FactoryNurbs struct {
-}</pre>
-			
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-				
-				<h3 id="FactoryNurbs.CircleCurve">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=318:381#L7">CircleCurve</a></h3>
-				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) CircleCurve(xc, yc, r <a href="/pkg/builtin/#float64">float64</a>) (b *<a href="#Nurbs">Nurbs</a>)</pre>
-				<p>
-CircleCurve generates a NURBS representing the circle curve
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="FactoryNurbs.ExampleCurve1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=3337:3385#L101">ExampleCurve1</a></h3>
-				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) ExampleCurve1() (b *<a href="#Nurbs">Nurbs</a>)</pre>
-				<p>
-ExampleCurve1 generates a NURBS 1D curve
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="FactoryNurbs.ExampleStrip1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=1532:1580#L52">ExampleStrip1</a></h3>
-				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) ExampleStrip1() (b *<a href="#Nurbs">Nurbs</a>)</pre>
-				<p>
-ExampleStrip1 generates a NURBS of a 2D strip (x-quadratic, y-linear)
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="FactoryNurbs.HalfCircleCurve">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=1381:1445#L47">HalfCircleCurve</a></h3>
-				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) HalfCircleCurve(radius <a href="/pkg/builtin/#float64">float64</a>) (b *<a href="#Nurbs">Nurbs</a>)</pre>
-				<p>
-HalfCircleCurve generates a curve representing half-cicle
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="FactoryNurbs.QuarterCircleCurve">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=952:1019#L31">QuarterCircleCurve</a></h3>
-				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) QuarterCircleCurve(radius <a href="/pkg/builtin/#float64">float64</a>) (b *<a href="#Nurbs">Nurbs</a>)</pre>
-				<p>
-QuarterCircleCurve generates a quarter of circle (circumference)
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="FactoryNurbs.QuarterPlateHole1">func (FactoryNurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go?s=2170:2222#L76">QuarterPlateHole1</a></h3>
-				<pre>func (o <a href="#FactoryNurbs">FactoryNurbs</a>) QuarterPlateHole1() (b *<a href="#Nurbs">Nurbs</a>)</pre>
-				<p>
-QuarterPlateHole1 generates a NURBS of a 2D quarter of plate with hole (quadratic)
-</p>
-
-				
-				
-				
-			
-		
-			
-			
 			<h2 id="Nurbs">type <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=532:1482#L13">Nurbs</a></h2>
 			<pre>type Nurbs struct {
     Q [][][][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// Qw: 4D control points [n[0]][n[1]][n[2]][4]</span>
@@ -1357,7 +1275,7 @@ Note: Control points must be set after a call to Init
 
 			
 				
-				<h3 id="Nurbs.CalcBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=3671:3709#L113">CalcBasis</a></h3>
+				<h3 id="Nurbs.CalcBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=3986:4024#L120">CalcBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CalcBasis(u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 CalcBasis computes all non-zero basis functions R[i][j][k] @ u.
@@ -1369,7 +1287,7 @@ Note: use GetBasisI or GetBasisL to get a particular basis function value
 				
 			
 				
-				<h3 id="Nurbs.CalcBasisAndDerivs">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=5245:5292#L173">CalcBasisAndDerivs</a></h3>
+				<h3 id="Nurbs.CalcBasisAndDerivs">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=5560:5607#L180">CalcBasisAndDerivs</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CalcBasisAndDerivs(u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 CalcBasisAndDerivs computes all non-zero basis functions R[i][j][k] and corresponding
@@ -1417,10 +1335,21 @@ CloneCtrlsAlongSurface returns a copy of control points @ 3D boundary
 				
 			
 				
-				<h3 id="Nurbs.DrawCtrl2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=468:530#L8">DrawCtrl2d</a></h3>
+				<h3 id="Nurbs.DrawCtrl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=13442:13512#L520">DrawCtrl</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawCtrl(ndim <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
+				<p>
+DrawCtrl draws control net in 2D or 3D space
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawCtrl2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=480:542#L8">DrawCtrl2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawCtrl2d(withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
-DrawCtrl2d draws control net
+DrawCtrl2d draws control net in 2D space
 </p>
 
 				
@@ -1428,10 +1357,21 @@ DrawCtrl2d draws control net
 				
 			
 				
-				<h3 id="Nurbs.DrawEdge2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=1983:2064#L68">DrawEdge2d</a></h3>
+				<h3 id="Nurbs.DrawEdge">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=15694:15783#L608">DrawEdge</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawEdge(ndim <a href="/pkg/builtin/#int">int</a>, tmin, tmax, cte <a href="/pkg/builtin/#float64">float64</a>, along, npts <a href="/pkg/builtin/#int">int</a>, args *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
+				<p>
+DrawEdge draws edge from tmin to tmax in 2D or 3D space
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawEdge2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=2007:2088#L68">DrawEdge2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawEdge2d(tmin, tmax, cte <a href="/pkg/builtin/#float64">float64</a>, along, npts <a href="/pkg/builtin/#int">int</a>, args *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
-DrawEdge2d draws and edge from tmin to tmax
+DrawEdge2d draws and edge from tmin to tmax in 2D space
 </p>
 
 				
@@ -1439,10 +1379,21 @@ DrawEdge2d draws and edge from tmin to tmax
 				
 			
 				
-				<h3 id="Nurbs.DrawElem2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=2505:2589#L90">DrawElem2d</a></h3>
+				<h3 id="Nurbs.DrawElem">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=16424:16516#L638">DrawElem</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElem(ndim <a href="/pkg/builtin/#int">int</a>, span []<a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
+				<p>
+DrawElem draws element (non-zero span) in 2D or 3D space
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawElem2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=2541:2625#L90">DrawElem2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElem2d(span []<a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
-DrawElem2d draws element (non-zero span)
+DrawElem2d draws element (non-zero span) in 2D space
 </p>
 
 				
@@ -1450,10 +1401,32 @@ DrawElem2d draws element (non-zero span)
 				
 			
 				
-				<h3 id="Nurbs.DrawElems2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=3887:3960#L130">DrawElems2d</a></h3>
+				<h3 id="Nurbs.DrawElems">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=17748:17829#L676">DrawElems</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElems(ndim <a href="/pkg/builtin/#int">int</a>, npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
+				<p>
+DrawElems draws all elements (non-zero spans) in 2D or 3D space
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawElems2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=3935:4008#L130">DrawElems2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawElems2d(npts <a href="/pkg/builtin/#int">int</a>, withIds <a href="/pkg/builtin/#bool">bool</a>, args, argsIds *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
-DrawElems2d draws all elements (non-zero spans)
+DrawElems2d draws all elements (non-zero spans) in 2D space
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.DrawSurface">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=17969:18070#L684">DrawSurface</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) DrawSurface(ndim <a href="/pkg/builtin/#int">int</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, withSurf, withWire <a href="/pkg/builtin/#bool">bool</a>, argsSurf, argsWire *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
+				<p>
+DrawSurface draws surface
 </p>
 
 				
@@ -1473,7 +1446,7 @@ ElemBryLocalInds returns the local (element) indices of control points @ boundar
 				
 			
 				
-				<h3 id="Nurbs.Elements">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14153:14195#L473">Elements</a></h3>
+				<h3 id="Nurbs.Elements">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14468:14510#L480">Elements</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Elements() (spans [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Elements returns the indices of nonzero spans
@@ -1495,7 +1468,7 @@ ExtractSurfaces returns a new NURBS representing a boundary of this NURBS
 				
 			
 				
-				<h3 id="Nurbs.GetBasisI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8075:8117#L251">GetBasisI</a></h3>
+				<h3 id="Nurbs.GetBasisI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8390:8432#L258">GetBasisI</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetBasisI(I []<a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetBasisI returns the basis function R[i][j][k] just computed
@@ -1508,7 +1481,7 @@ Note: I = [i,j,k]
 				
 			
 				
-				<h3 id="Nurbs.GetBasisL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8436:8476#L264">GetBasisL</a></h3>
+				<h3 id="Nurbs.GetBasisL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8751:8791#L271">GetBasisL</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetBasisL(l <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetBasisL returns the basis function R[i][j][k] just computed
@@ -1521,7 +1494,7 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.GetDerivI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8640:8690#L271">GetDerivI</a></h3>
+				<h3 id="Nurbs.GetDerivI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8955:9005#L278">GetDerivI</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetDerivI(dRdu []<a href="/pkg/builtin/#float64">float64</a>, I []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 GetDerivI returns the derivative of basis function dR[i][j][k]du just computed
@@ -1534,7 +1507,7 @@ Note: I = [i,j,k]
 				
 			
 				
-				<h3 id="Nurbs.GetDerivL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9118:9166#L291">GetDerivL</a></h3>
+				<h3 id="Nurbs.GetDerivL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9433:9481#L298">GetDerivL</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetDerivL(dRdu []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 GetDerivL returns the derivative of basis function dR[i][j][k]du just computed
@@ -1547,7 +1520,7 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.GetElemNumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15181:15225#L514">GetElemNumBasis</a></h3>
+				<h3 id="Nurbs.GetElemNumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15496:15540#L521">GetElemNumBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetElemNumBasis() (npts <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 GetElemNumBasis returns the number of control points == basis functions needed for one element
@@ -1560,7 +1533,7 @@ GetElemNumBasis returns the number of control points == basis functions needed f
 				
 			
 				
-				<h3 id="Nurbs.GetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13460:13507#L445">GetQ</a></h3>
+				<h3 id="Nurbs.GetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13775:13822#L452">GetQ</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetQ(i, j, k <a href="/pkg/builtin/#int">int</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 GetQ gets a control point x[i,j,k] (size==4)
@@ -1571,7 +1544,7 @@ GetQ gets a control point x[i,j,k] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.GetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13675:13717#L455">GetQl</a></h3>
+				<h3 id="Nurbs.GetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13990:14032#L462">GetQl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetQl(l <a href="/pkg/builtin/#int">int</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 GetQl gets a control point x[l] (size==4)
@@ -1582,7 +1555,7 @@ GetQl gets a control point x[l] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.GetU">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=12946:12985#L425">GetU</a></h3>
+				<h3 id="Nurbs.GetU">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13261:13300#L432">GetU</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetU(dir <a href="/pkg/builtin/#int">int</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetU returns the knots along direction dir
@@ -1593,7 +1566,7 @@ GetU returns the knots along direction dir
 				
 			
 				
-				<h3 id="Nurbs.Gnd">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=12752:12777#L415">Gnd</a></h3>
+				<h3 id="Nurbs.Gnd">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13067:13092#L422">Gnd</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Gnd() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 GetGnd returns the geometry dimension
@@ -1604,7 +1577,7 @@ GetGnd returns the geometry dimension
 				
 			
 				
-				<h3 id="Nurbs.IndBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15391:15437#L523">IndBasis</a></h3>
+				<h3 id="Nurbs.IndBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15706:15752#L530">IndBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) IndBasis(span []<a href="/pkg/builtin/#int">int</a>) (L []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 IndBasis returns the indices of basis functions == local indices of control points
@@ -1648,7 +1621,7 @@ Init initialises Nurbs
 				
 			
 				
-				<h3 id="Nurbs.Krefine">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=18179:18228#L623">Krefine</a></h3>
+				<h3 id="Nurbs.Krefine">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=18494:18543#L630">Krefine</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Krefine(X [][]<a href="/pkg/builtin/#float64">float64</a>) (O *<a href="#Nurbs">Nurbs</a>)</pre>
 				<p>
 Krefine returns a new Nurbs with knots refined
@@ -1660,7 +1633,7 @@ Note: X[gnd][numNewKnots]
 				
 			
 				
-				<h3 id="Nurbs.KrefineN">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=16635:16698#L571">KrefineN</a></h3>
+				<h3 id="Nurbs.KrefineN">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=16950:17013#L578">KrefineN</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) KrefineN(ndiv <a href="/pkg/builtin/#int">int</a>, hughesEtAlPaper <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Nurbs">Nurbs</a></pre>
 				<p>
 KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
@@ -1671,7 +1644,7 @@ KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
 				
 			
 				
-				<h3 id="Nurbs.NonZeroSpans">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13333:13378#L440">NonZeroSpans</a></h3>
+				<h3 id="Nurbs.NonZeroSpans">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13648:13693#L447">NonZeroSpans</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NonZeroSpans(dir <a href="/pkg/builtin/#int">int</a>) [][]<a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 NonZeroSpans returns the &#39;elements&#39; along direction dir
@@ -1682,7 +1655,7 @@ NonZeroSpans returns the &#39;elements&#39; along direction dir
 				
 			
 				
-				<h3 id="Nurbs.NumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13203:13240#L435">NumBasis</a></h3>
+				<h3 id="Nurbs.NumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13518:13555#L442">NumBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NumBasis(dir <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 NumBasis returns the number of basis (controls) along direction dir
@@ -1693,7 +1666,7 @@ NumBasis returns the number of basis (controls) along direction dir
 				
 			
 				
-				<h3 id="Nurbs.NumericalDeriv">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=10914:10980#L343">NumericalDeriv</a></h3>
+				<h3 id="Nurbs.NumericalDeriv">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=11229:11295#L350">NumericalDeriv</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NumericalDeriv(dRdu []<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 NumericalDeriv computes a particular derivative dR[i][j][k]du @ t using numerical differentiation
@@ -1705,7 +1678,7 @@ Note: it uses RecursiveBasis and therefore is highly non-efficient
 				
 			
 				
-				<h3 id="Nurbs.Ord">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=12845:12877#L420">Ord</a></h3>
+				<h3 id="Nurbs.Ord">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13160:13192#L427">Ord</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Ord(dir <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 GetOrd returns the order along direction dir
@@ -1716,7 +1689,7 @@ GetOrd returns the order along direction dir
 				
 			
 				
-				<h3 id="Nurbs.PlotBasis2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=4220:4272#L141">PlotBasis2d</a></h3>
+				<h3 id="Nurbs.PlotBasis2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=4268:4320#L141">PlotBasis2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotBasis2d(l <a href="/pkg/builtin/#int">int</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotBasis2d plots basis function (2D only)
@@ -1731,7 +1704,7 @@ option =  0 : use CalcBasis
 				
 			
 				
-				<h3 id="Nurbs.PlotDeriv2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=5857:5912#L204">PlotDeriv2d</a></h3>
+				<h3 id="Nurbs.PlotDeriv2d">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/plotnurbs.go?s=5905:5960#L204">PlotDeriv2d</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) PlotDeriv2d(l, d <a href="/pkg/builtin/#int">int</a>, npts, option <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 PlotDeriv2d plots derivative dR[i][j][k]du[d] (2D only)
@@ -1745,7 +1718,7 @@ option =  0 : use CalcBasisAndDerivs
 				
 			
 				
-				<h3 id="Nurbs.Point">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=11573:11620#L366">Point</a></h3>
+				<h3 id="Nurbs.Point">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=11888:11935#L373">Point</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Point(C, u []<a href="/pkg/builtin/#float64">float64</a>, ndim <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Point returns the x-y-z coordinates of a point on curve/surface/volume
@@ -1761,7 +1734,7 @@ Output:
 				
 			
 				
-				<h3 id="Nurbs.RecursiveBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9397:9461#L298">RecursiveBasis</a></h3>
+				<h3 id="Nurbs.RecursiveBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9712:9776#L305">RecursiveBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) RecursiveBasis(u []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 RecursiveBasis implements basis functions by means of summing all terms
@@ -1774,8 +1747,8 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.SetControl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=2822:2880#L85">SetControl</a></h3>
-				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetControl(verts [][]<a href="/pkg/builtin/#float64">float64</a>, ctrls []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<h3 id="Nurbs.SetControl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=2822:2892#L85">SetControl</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetControl(verts [][]<a href="/pkg/builtin/#float64">float64</a>, ctrls []<a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SetControl sets control points from list of global vertices
 </p>
@@ -1785,7 +1758,7 @@ SetControl sets control points from list of global vertices
 				
 			
 				
-				<h3 id="Nurbs.SetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13825:13871#L460">SetQ</a></h3>
+				<h3 id="Nurbs.SetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14140:14186#L467">SetQ</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetQ(i, j, k <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetQ sets a control point x[i,j,k] (size==4)
@@ -1796,7 +1769,7 @@ SetQ sets a control point x[i,j,k] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.SetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14007:14048#L468">SetQl</a></h3>
+				<h3 id="Nurbs.SetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14322:14363#L475">SetQl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetQl(l <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetQl sets a control point x[l] (size==4)
@@ -1807,7 +1780,7 @@ SetQl sets a control point x[l] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.U">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13063:13102#L430">U</a></h3>
+				<h3 id="Nurbs.U">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13378:13417#L437">U</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) U(dir, idx <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 U returns the value of a knot along direction dir
