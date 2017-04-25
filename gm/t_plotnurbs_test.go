@@ -38,13 +38,8 @@ func Test_plotnurbs01(tst *testing.T) {
 
 		// plot
 		plt.Reset(false, nil)
-		if true {
-			curve.DrawCtrl(ndim, false, nil, argsIdsC)
-			curve.DrawElems(ndim, npts, withIds, nil, argsIds)
-		} else {
-			curve.DrawCtrl2d(false, nil, argsIdsC)
-			curve.DrawElems2d(npts, withIds, nil, argsIds)
-		}
+		curve.DrawCtrl(ndim, false, nil, argsIdsC)
+		curve.DrawElems(ndim, npts, withIds, nil, argsIds)
 		plt.HideAllBorders()
 		plt.Equal()
 		plt.Save("/tmp/gosl", "t_plotnurbs01")
@@ -118,6 +113,7 @@ func Test_plotnurbs04(tst *testing.T) {
 		// configurations
 		ndim := 3
 		npts := 21
+		nu, nv := 21, 11
 		withIds := true
 		argsIds := &plt.A{C: "r", Fsz: 10}
 		argsIdsC := &plt.A{C: "k", Fsz: 10}
@@ -129,6 +125,7 @@ func Test_plotnurbs04(tst *testing.T) {
 		plt.Reset(false, nil)
 		surf.DrawCtrl(ndim, false, nil, argsIdsC)
 		surf.DrawElems(ndim, npts, withIds, nil, argsIds)
+		surf.DrawSurface(ndim, nu, nv, false, true, nil, &plt.A{C: "orange", Lw: 0.7})
 		plt.Save("/tmp/gosl", "t_plotnurbs04")
 	}
 }

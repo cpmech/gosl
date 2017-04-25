@@ -163,12 +163,13 @@ argsIdsA := &plt.A{C: "k", Fsz: 7}
 argsIdsB := &plt.A{C: "green", Fsz: 7}
 
 // plot
+ndim := 2
 npts := 41
 plt.Reset(true, &plt.A{WidthPt: 400})
-curve.DrawCtrl2d(true, argsCtrlA, argsIdsA)
-curve.DrawElems2d(npts, true, argsElemsA, nil)
-refined.DrawCtrl2d(true, argsCtrlB, argsIdsB)
-refined.DrawElems2d(npts, false, argsElemsB, nil)
+curve.DrawCtrl(ndim, true, argsCtrlA, argsIdsA)
+curve.DrawElems(ndim, npts, true, argsElemsA, nil)
+refined.DrawCtrl(ndim, true, argsCtrlB, argsIdsB)
+refined.DrawElems(ndim, npts, false, argsElemsB, nil)
 plt.AxisOff()
 plt.Equal()
 plt.LegendX([]*plt.A{argsCtrlA, argsCtrlB, argsElemsA, argsElemsB}, &plt.A{LegOut: true, LegNcol: 2})
@@ -182,12 +183,13 @@ Source code: <a href="../examples/gm_nurbs01.go">../examples/gm_nurbs01.go</a>
 </div>
 
 
+
 **Circle Curve using Factory**
 
 ```go
 // curve
 xc, yc, r := 0.5, 0.5, 1.5
-curve := gm.FactoryNurbs{}.CircleCurve(xc, yc, r)
+curve := gm.FactoryNurbs.Curve2dCircle(xc, yc, r)
 
 // configuration
 argsIdsA := &plt.A{C: "k", Fsz: 7}
@@ -195,10 +197,11 @@ argsCtrlA := &plt.A{C: "k", M: ".", Ls: "--", L: "control"}
 argsElemsA := &plt.A{C: "b", L: "curve"}
 
 // plot
+ndim := 2
 npts := 41
 plt.Reset(true, &plt.A{WidthPt: 400})
-curve.DrawCtrl2d(true, argsCtrlA, argsIdsA)
-curve.DrawElems2d(npts, true, argsElemsA, nil)
+curve.DrawCtrl(ndim, true, argsCtrlA, argsIdsA)
+curve.DrawElems(ndim, npts, true, argsElemsA, nil)
 plt.HideAllBorders()
 plt.Equal()
 plt.AxisRange(-2.5, 2.5, -2.5, 2.5)

@@ -38,6 +38,7 @@ func Test_factory01(tst *testing.T) {
 		extra := func() {
 			plt.Circle(xc, yc, r, &plt.A{C: "#478275", Lw: 1})
 		}
+		ndim := 2
 		argsCurve := &plt.A{C: "orange", M: "+", Mec: "k", Lw: 4, L: "curve", NoClip: true}
 		argsCtrl := &plt.A{C: "k", M: ".", Ls: "--", L: "control", NoClip: true}
 		argsIds := &plt.A{C: "b", Fsz: 10}
@@ -45,7 +46,7 @@ func Test_factory01(tst *testing.T) {
 		plt.Equal()
 		plt.HideAllBorders()
 		plt.PlotOne(xc, yc, &plt.A{C: "k", M: "+", Ms: 20})
-		PlotNurbs2d("/tmp/gosl", "t_factory01", curve, 11, true, true, argsCurve, argsCtrl, argsIds, extra)
+		PlotNurbs("/tmp/gosl", "t_factory01", curve, ndim, 11, true, true, argsCurve, argsCtrl, argsIds, extra)
 	}
 }
 
@@ -88,18 +89,19 @@ func Test_factory02(tst *testing.T) {
 		argsCtrlB := &plt.A{C: "green", L: "refined: control"}
 		argsElemsB := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: "refined: curve"}
 
+		ndim := 2
 		np := 11
 		extra := func() {
 			plt.Circle(xc, yc, r, &plt.A{C: "#478275", Lw: 1})
-			refined.DrawCtrl2d(true, argsCtrlB, argsIdsB)
-			refined.DrawElems2d(np, false, argsElemsB, nil)
+			refined.DrawCtrl(ndim, true, argsCtrlB, argsIdsB)
+			refined.DrawElems(ndim, np, false, argsElemsB, nil)
 		}
 
 		plt.Reset(false, nil)
 		plt.Equal()
 		plt.HideAllBorders()
 		plt.AxisRange(-3, 3, -3, 3)
-		PlotNurbs2d("/tmp/gosl", "t_factory02", curve, np, true, true, argsCurveA, argsCtrlA, argsIdsA, extra)
+		PlotNurbs("/tmp/gosl", "t_factory02", curve, ndim, np, true, true, argsCurveA, argsCtrlA, argsIdsA, extra)
 	}
 }
 

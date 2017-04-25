@@ -50,12 +50,13 @@ func main() {
 	argsIdsB := &plt.A{C: "green", Fsz: 7}
 
 	// plot
+	ndim := 2
 	npts := 41
 	plt.Reset(true, &plt.A{WidthPt: 400})
-	curve.DrawCtrl2d(true, argsCtrlA, argsIdsA)
-	curve.DrawElems2d(npts, true, argsElemsA, nil)
-	refined.DrawCtrl2d(true, argsCtrlB, argsIdsB)
-	refined.DrawElems2d(npts, false, argsElemsB, nil)
+	curve.DrawCtrl(ndim, true, argsCtrlA, argsIdsA)
+	curve.DrawElems(ndim, npts, true, argsElemsA, nil)
+	refined.DrawCtrl(ndim, true, argsCtrlB, argsIdsB)
+	refined.DrawElems(ndim, npts, false, argsElemsB, nil)
 	plt.AxisOff()
 	plt.Equal()
 	plt.LegendX([]*plt.A{argsCtrlA, argsCtrlB, argsElemsA, argsElemsB}, &plt.A{LegOut: true, LegNcol: 2})

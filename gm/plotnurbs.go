@@ -12,137 +12,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// NURBS methods ///////////////////////////////////////////////////////////////////////////////////
-
-// DrawCtrl2d draws control net in 2D space
-func (o *Nurbs) DrawCtrl2d(withIds bool, args, argsIds *plt.A) {
-	if args == nil {
-		args = &plt.A{C: "k", M: ".", Ls: "--", NoClip: true}
-	}
-	if argsIds == nil {
-		argsIds = &plt.A{C: "r", Fsz: 7, NoClip: true}
-	}
-	switch o.gnd {
-	// curve
-	case 1:
-		xa := make([]float64, o.n[0])
-		ya := make([]float64, o.n[0])
-		j, k := 0, 0
-		for i := 0; i < o.n[0]; i++ {
-			xa[i] = o.Q[i][j][k][0] / o.Q[i][j][k][3]
-			ya[i] = o.Q[i][j][k][1] / o.Q[i][j][k][3]
-		}
-		plt.Plot(xa, ya, args)
-		if withIds {
-			for i := 0; i < o.n[0]; i++ {
-				x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
-				y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
-				plt.Text(x, y, io.Sf("%d", i), argsIds)
-			}
-		}
-	// surface
-	case 2:
-		xa := make([]float64, o.n[1])
-		ya := make([]float64, o.n[1])
-		k := 0
-		for i := 0; i < o.n[0]; i++ {
-			for j := 0; j < o.n[1]; j++ {
-				xa[j] = o.Q[i][j][k][0] / o.Q[i][j][k][3]
-				ya[j] = o.Q[i][j][k][1] / o.Q[i][j][k][3]
-			}
-			plt.Plot(xa, ya, args)
-		}
-		xb := make([]float64, o.n[0])
-		yb := make([]float64, o.n[0])
-		for j := 0; j < o.n[1]; j++ {
-			for i := 0; i < o.n[0]; i++ {
-				xb[i] = o.Q[i][j][k][0] / o.Q[i][j][k][3]
-				yb[i] = o.Q[i][j][k][1] / o.Q[i][j][k][3]
-			}
-			plt.Plot(xb, yb, args)
-		}
-		if withIds {
-			for i := 0; i < o.n[0]; i++ {
-				for j := 0; j < o.n[1]; j++ {
-					x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
-					y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
-					l := i + j*o.n[0]
-					plt.Text(x, y, io.Sf("%d", l), argsIds)
-				}
-			}
-		}
-	}
-}
-
-// DrawEdge2d draws and edge from tmin to tmax in 2D space
-func (o *Nurbs) DrawEdge2d(tmin, tmax, cte float64, along, npts int, args *plt.A) {
-	if args == nil {
-		args = &plt.A{C: "b", Ls: "-", NoClip: true}
-	}
-	tt := utl.LinSpace(tmin, tmax, npts)
-	xx := make([]float64, npts)
-	yy := make([]float64, npts)
-	x := make([]float64, 2)
-	u := make([]float64, 2)
-	for i, t := range tt {
-		if along == 0 {
-			u[0], u[1] = t, cte
-		} else {
-			u[0], u[1] = cte, t
-		}
-		o.Point(x, u, 2)
-		xx[i], yy[i] = x[0], x[1]
-	}
-	plt.Plot(xx, yy, args)
-}
-
-// DrawElem2d draws element (non-zero span) in 2D space
-func (o *Nurbs) DrawElem2d(span []int, npts int, withIds bool, args, argsIds *plt.A) {
-	if argsIds == nil {
-		argsIds = &plt.A{C: "r", Fsz: 7}
-	}
-	c := make([]float64, 2)
-	switch o.gnd {
-	// curve
-	case 1:
-		umin, umax := o.b[0].T[span[0]], o.b[0].T[span[1]]
-		o.DrawEdge2d(umin, umax, 0.0, 0, npts, args)
-		if withIds {
-			o.Point(c, []float64{umin}, 2)
-			plt.Text(c[0], c[1], io.Sf("(%d)", span[0]), argsIds)
-			if span[1] == o.b[0].m-o.p[0]-1 {
-				o.Point(c, []float64{umax}, 2)
-				plt.Text(c[0], c[1], io.Sf("(%d)", span[1]), argsIds)
-			}
-		}
-	// surface
-	case 2:
-		umin, umax := o.b[0].T[span[0]], o.b[0].T[span[1]]
-		vmin, vmax := o.b[1].T[span[2]], o.b[1].T[span[3]]
-		o.DrawEdge2d(umin, umax, vmin, 0, npts, args)
-		o.DrawEdge2d(umin, umax, vmax, 0, npts, args)
-		o.DrawEdge2d(vmin, vmax, umin, 1, npts, args)
-		o.DrawEdge2d(vmin, vmax, umax, 1, npts, args)
-		if withIds {
-			o.Point(c, []float64{umin, vmin}, 2)
-			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[0], span[2]), argsIds)
-			o.Point(c, []float64{umin, vmax}, 2)
-			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[0], span[3]), argsIds)
-			o.Point(c, []float64{umax, vmin}, 2)
-			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[1], span[2]), argsIds)
-			o.Point(c, []float64{umax, vmax}, 2)
-			plt.Text(c[0], c[1], io.Sf("(%d,%d)", span[1], span[3]), argsIds)
-		}
-	}
-}
-
-// DrawElems2d draws all elements (non-zero spans) in 2D space
-func (o *Nurbs) DrawElems2d(npts int, withIds bool, args, argsIds *plt.A) {
-	elems := o.Elements()
-	for _, e := range elems {
-		o.DrawElem2d(e, npts, withIds, args, argsIds)
-	}
-}
+// basis and derivatives ///////////////////////////////////////////////////////////////////////////
 
 // PlotBasis2d plots basis function (2D only)
 // option =  0 : use CalcBasis
@@ -202,10 +72,6 @@ func (o *Nurbs) PlotBasis2d(l int, npts, option int) {
 		}
 		plt.ContourF(xx, yy, zz, &plt.A{NoCbar: true})
 	}
-	if false {
-		lbls := []string{"CalcBasis function", "CalcBasisAndDerivs function", "RecursiveBasis function"}
-		plt.Title(io.Sf("%s @ %d", lbls[option], l), nil)
-	}
 }
 
 // PlotDeriv2d plots derivative dR[i][j][k]du[d] (2D only)
@@ -263,33 +129,31 @@ func (o *Nurbs) PlotDeriv2d(l, d int, npts, option int) {
 		}
 		plt.ContourF(xx, yy, zz, &plt.A{NoCbar: true})
 	}
-	if false {
-		lbls := []string{"CalcBasisAndDerivs function", "NumericalDeriv function"}
-		plt.Title(io.Sf("%s @ %d,%d", lbls[option], l, d), nil)
-	}
 }
 
 // global functions ////////////////////////////////////////////////////////////////////////////////
 
-// PlotNurbs plots a NURBS in 2D space
-func PlotNurbs2d(dirout, fnkey string, b *Nurbs, npts int, withIds, withCtrl bool, argsElems, argsCtrl, argsIds *plt.A, extra func()) {
+// PlotNurbs plots a NURBS
+//  ndim -- 2 or 3 => to plot in a 2D or 3D space
+func PlotNurbs(dirout, fnkey string, b *Nurbs, ndim, npts int, withIds, withCtrl bool, argsElems, argsCtrl, argsIds *plt.A, extra func()) {
 	if withCtrl {
-		b.DrawCtrl2d(withIds, argsCtrl, argsIds)
+		b.DrawCtrl(ndim, withIds, argsCtrl, argsIds)
 	}
-	b.DrawElems2d(npts, withIds, argsElems, argsIds)
+	b.DrawElems(ndim, npts, withIds, argsElems, argsIds)
 	if extra != nil {
 		extra()
 	}
 	plt.Save(dirout, fnkey)
 }
 
-// PlotNurbsBasis2d plots basis functions la and lb in 2D space
+// PlotNurbsBasis2d plots basis functions la and lb
 //   First row == CalcBasis
 //   Second row == CalcBasisAndDerivs
 //   Third row == RecursiveBasis
 func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, withCtrl bool, argsElems, argsCtrl *plt.A, extra func(idxSubplot int)) {
 
 	// configuration
+	ndim := 2
 	npts := 41
 	ndiv := 11
 	if b.gnd == 1 {
@@ -303,10 +167,10 @@ func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wit
 
 	plt.Subplot(3, 2, 1)
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	b.PlotBasis2d(la, ndiv, 0) // 0 => CalcBasis
 	if extra != nil {
@@ -315,10 +179,10 @@ func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wit
 
 	plt.Subplot(3, 2, 2)
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	b.PlotBasis2d(lb, ndiv, 0) // 0 => CalcBasis
 	if extra != nil {
@@ -329,10 +193,10 @@ func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wit
 
 	plt.Subplot(3, 2, 3)
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	b.PlotBasis2d(la, ndiv, 1) // 1 => CalcBasisAndDerivs
 	if extra != nil {
@@ -341,10 +205,10 @@ func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wit
 
 	plt.Subplot(3, 2, 4)
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	b.PlotBasis2d(lb, ndiv, 1) // 1 => CalcBasisAndDerivs
 	if extra != nil {
@@ -355,10 +219,10 @@ func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wit
 
 	plt.Subplot(3, 2, 5)
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	b.PlotBasis2d(la, ndiv, 2) // 2 => RecursiveBasis
 	if extra != nil {
@@ -367,10 +231,10 @@ func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wit
 
 	plt.Subplot(3, 2, 6)
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	b.PlotBasis2d(lb, ndiv, 2) // 2 => RecursiveBasis
 	if extra != nil {
@@ -386,6 +250,7 @@ func PlotNurbsBasis2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wit
 func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, withCtrl bool, argsElems, argsCtrl *plt.A, extra func(idxSubplot int)) {
 
 	// configuration
+	ndim := 2
 	npts := 41
 	ndiv := 41
 	if b.gnd == 1 {
@@ -398,10 +263,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Subplot(4, 2, 1)
 	b.PlotDeriv2d(la, 0, ndiv, 0) // 0 => CalcBasisAndDerivs
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	if extra != nil {
 		extra(1)
@@ -410,10 +275,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Subplot(4, 2, 2)
 	b.PlotDeriv2d(la, 0, ndiv, 1) // 1 => NumericalDeriv
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	if extra != nil {
 		extra(2)
@@ -422,10 +287,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Subplot(4, 2, 3)
 	b.PlotDeriv2d(la, 1, ndiv, 0) // 0 => CalcBasisAndDerivs
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	if extra != nil {
 		extra(3)
@@ -434,10 +299,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Subplot(4, 2, 4)
 	b.PlotDeriv2d(la, 1, ndiv, 1) // 1 => NumericalDeriv
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	if extra != nil {
 		extra(4)
@@ -446,10 +311,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Subplot(4, 2, 5)
 	b.PlotDeriv2d(lb, 0, ndiv, 0) // 0 => CalcBasisAndDerivs
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	if extra != nil {
 		extra(5)
@@ -458,10 +323,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Subplot(4, 2, 6)
 	b.PlotDeriv2d(lb, 0, ndiv, 1) // 1 => NumericalDeriv
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	if extra != nil {
 		extra(6)
@@ -470,10 +335,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Subplot(4, 2, 7)
 	b.PlotDeriv2d(lb, 1, ndiv, 0) // 0 => CalcBasisAndDerivs
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	if extra != nil {
 		extra(7)
@@ -482,10 +347,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Subplot(4, 2, 8)
 	b.PlotDeriv2d(lb, 1, ndiv, 1) // 1 => NumericalDeriv
 	if withCtrl {
-		b.DrawCtrl2d(false, argsCtrl, nil)
+		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
 	if withElems {
-		b.DrawElems2d(npts, false, argsElems, nil)
+		b.DrawElems(ndim, npts, false, argsElems, nil)
 	}
 	if extra != nil {
 		extra(8)
@@ -494,39 +359,10 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	plt.Save(dirout, fnkey)
 }
 
-// for debugging //////////////////////////////////////////////////////////////////////////////////
-
-// plotTwoNurbs2d plots two NURBS in 2d space
-func plotTwoNurbs2d(dirout, fnkey string, a, b *Nurbs, labelA, labelB string, extra func()) {
-	str := "curve: "
-	if a.gnd > 1 {
-		str = "elems: "
-	}
-	argsCtrlA := &plt.A{C: "k", Ls: "--", L: "control: " + labelA, NoClip: true}
-	argsCtrlB := &plt.A{C: "green", L: "control: " + labelB, NoClip: true}
-	argsElemsA := &plt.A{C: "b", L: str + labelA, NoClip: true}
-	argsElemsB := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: str + labelB, NoClip: true}
-	argsIdsCtrlA := &plt.A{C: "k", Fsz: 7, NoClip: true}
-	argsIdsCtrlB := &plt.A{C: "green", Fsz: 7, NoClip: true}
-	argsIdsA := &plt.A{C: "r", Fsz: 7, NoClip: true}
-	npts := 41
-	a.DrawCtrl2d(true, argsCtrlA, argsIdsCtrlA)
-	a.DrawElems2d(npts, true, argsElemsA, argsIdsA)
-	b.DrawCtrl2d(true, argsCtrlB, argsIdsCtrlB)
-	b.DrawElems2d(npts, false, argsElemsB, nil)
-	if extra != nil {
-		extra()
-	}
-	plt.LegendX([]*plt.A{argsCtrlA, argsCtrlB, argsElemsA, argsElemsB}, &plt.A{LegOut: true, LegNcol: 2})
-	err := plt.Save(dirout, fnkey)
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
-}
-
-// 3D NURBS methods ////////////////////////////////////////////////////////////////////////////////
+// draw NURBS methods //////////////////////////////////////////////////////////////////////////////
 
 // DrawCtrl draws control net in 2D or 3D space
+//  ndim -- 2 or 3 => to plot in a 2D or 3D space
 func (o *Nurbs) DrawCtrl(ndim int, withIds bool, args, argsIds *plt.A) {
 	if args == nil {
 		args = &plt.A{C: "k", M: ".", Ls: "--", NoClip: true}
@@ -615,6 +451,7 @@ func (o *Nurbs) DrawCtrl(ndim int, withIds bool, args, argsIds *plt.A) {
 }
 
 // DrawEdge draws edge from tmin to tmax in 2D or 3D space
+//  ndim -- 2 or 3 => to plot in a 2D or 3D space
 func (o *Nurbs) DrawEdge(ndim int, tmin, tmax, cte float64, along, npts int, args *plt.A) {
 	if args == nil {
 		args = &plt.A{C: "b", Ls: "-", NoClip: true}
@@ -645,6 +482,7 @@ func (o *Nurbs) DrawEdge(ndim int, tmin, tmax, cte float64, along, npts int, arg
 }
 
 // DrawElem draws element (non-zero span) in 2D or 3D space
+//  ndim -- 2 or 3 => to plot in a 2D or 3D space
 func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, argsIds *plt.A) {
 	if argsIds == nil {
 		argsIds = &plt.A{C: "r", Fsz: 7}
@@ -683,6 +521,7 @@ func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, arg
 }
 
 // DrawElems draws all elements (non-zero spans) in 2D or 3D space
+//  ndim -- 2 or 3 => to plot in a 2D or 3D space
 func (o *Nurbs) DrawElems(ndim int, npts int, withIds bool, args, argsIds *plt.A) {
 	elems := o.Elements()
 	for _, e := range elems {
@@ -691,6 +530,7 @@ func (o *Nurbs) DrawElems(ndim int, npts int, withIds bool, args, argsIds *plt.A
 }
 
 // DrawSurface draws surface
+//  ndim -- 2 or 3 => to plot in a 2D or 3D space
 func (o *Nurbs) DrawSurface(ndim int, nu, nv int, withSurf, withWire bool, argsSurf, argsWire *plt.A) {
 	if o.gnd != 2 {
 		return
@@ -738,6 +578,7 @@ func (o *Nurbs) DrawSurface(ndim int, nu, nv int, withSurf, withWire bool, argsS
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
+// drawElemId draws element id
 func drawElemId(c []float64, ndim, i, j, k int, args *plt.A) {
 	txt := io.Sf("(%d", i)
 	if j >= 0 {
@@ -751,5 +592,34 @@ func drawElemId(c []float64, ndim, i, j, k int, args *plt.A) {
 		plt.Text(c[0], c[1], txt, args)
 	} else {
 		plt.Text3d(c[0], c[1], c[2], txt, args)
+	}
+}
+
+// plotTwoNurbs2d plots two NURBS in 2d space
+func plotTwoNurbs2d(dirout, fnkey string, a, b *Nurbs, labelA, labelB string, extra func()) {
+	str := "curve: "
+	if a.gnd > 1 {
+		str = "elems: "
+	}
+	argsCtrlA := &plt.A{C: "k", Ls: "--", L: "control: " + labelA, NoClip: true}
+	argsCtrlB := &plt.A{C: "green", L: "control: " + labelB, NoClip: true}
+	argsElemsA := &plt.A{C: "b", L: str + labelA, NoClip: true}
+	argsElemsB := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: str + labelB, NoClip: true}
+	argsIdsCtrlA := &plt.A{C: "k", Fsz: 7, NoClip: true}
+	argsIdsCtrlB := &plt.A{C: "green", Fsz: 7, NoClip: true}
+	argsIdsA := &plt.A{C: "r", Fsz: 7, NoClip: true}
+	ndim := 2
+	npts := 41
+	a.DrawCtrl(ndim, true, argsCtrlA, argsIdsCtrlA)
+	a.DrawElems(ndim, npts, true, argsElemsA, argsIdsA)
+	b.DrawCtrl(ndim, true, argsCtrlB, argsIdsCtrlB)
+	b.DrawElems(ndim, npts, false, argsElemsB, nil)
+	if extra != nil {
+		extra()
+	}
+	plt.LegendX([]*plt.A{argsCtrlA, argsCtrlB, argsElemsA, argsElemsB}, &plt.A{LegOut: true, LegNcol: 2})
+	err := plt.Save(dirout, fnkey)
+	if err != nil {
+		chk.Panic("%v\n", err)
 	}
 }

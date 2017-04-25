@@ -23,10 +23,11 @@ func main() {
 	argsElemsA := &plt.A{C: "b", L: "curve"}
 
 	// plot
+	ndim := 2
 	npts := 41
 	plt.Reset(true, &plt.A{WidthPt: 400})
-	curve.DrawCtrl2d(true, argsCtrlA, argsIdsA)
-	curve.DrawElems2d(npts, true, argsElemsA, nil)
+	curve.DrawCtrl(ndim, true, argsCtrlA, argsIdsA)
+	curve.DrawElems(ndim, npts, true, argsElemsA, nil)
 	plt.HideAllBorders()
 	plt.Equal()
 	plt.AxisRange(-2.5, 2.5, -2.5, 2.5)

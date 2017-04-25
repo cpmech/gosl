@@ -150,8 +150,9 @@ func Test_nurbs01(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		io.Pf("\n------------ plot -------------\n")
+		ndim := 2
 		plt.Reset(true, nil)
-		PlotNurbs2d("/tmp/gosl", "t_nurbs01a", surf, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs("/tmp/gosl", "t_nurbs01a", surf, ndim, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
@@ -219,10 +220,11 @@ func Test_nurbs02(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		io.Pf("\n------------ plot -------------\n")
+		ndim := 2
 		la := 0 + 0*surf.n[0]
 		lb := 2 + 1*surf.n[0]
 		plt.Reset(true, nil)
-		PlotNurbs2d("/tmp/gosl", "t_nurbs02a", surf, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs("/tmp/gosl", "t_nurbs02a", surf, ndim, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
@@ -324,8 +326,9 @@ func Test_nurbs04(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
+		ndim := 2
 		plt.Reset(true, nil)
-		PlotNurbs2d("/tmp/gosl", "t_nurbs04a", b, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs("/tmp/gosl", "t_nurbs04a", b, ndim, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
