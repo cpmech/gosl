@@ -15,7 +15,7 @@ func main() {
 
 	// curve
 	xc, yc, r := 0.5, 0.5, 1.5
-	curve := gm.FactoryNurbs{}.CircleCurve(xc, yc, r)
+	curve := gm.FactoryNurbs.Curve2dCircle(xc, yc, r)
 
 	// configuration
 	argsIdsA := &plt.A{C: "k", Fsz: 7}

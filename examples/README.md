@@ -1,17 +1,31 @@
 # Gosl Examples
 
 ## Summary
-1. Generating normally distributed pseudo-random numbers
-2. Solution of sparse linear system
-3. Solution of sparse linear system with complex numbers
-4. Numerical differentiation
-5. Drawing iso-surfaces with VTK
-6. Plotting a contour
-7. Solution of Poisson's equation using finite differences
-8. Root finding problems
-9. B-splines: curve, control, and basis
 
-# 1 Generating normally distributed pseudo-random numbers
+1. Generate and draw a NURBS toroidal surface
+2. Generating normally distributed pseudo-random numbers
+3. Solution of sparse linear system
+4. Solution of sparse linear system with complex numbers
+5. Numerical differentiation
+6. Drawing iso-surfaces with VTK
+7. Plotting a contour
+8. Solution of Poisson's equation using finite differences
+9. Root finding problems
+10. B-splines: curve, control, and basis
+
+
+
+# 1 Generate and draw a NURBS toroidal surface
+
+Source code: <a href="gm_nurbs03.go">gm_nurbs03.go</a>
+
+<div id="container">
+<p><img src="figs/gm_nurbs03.png" width="500"></p>
+</div>
+
+
+
+# 2 Generating normally distributed pseudo-random numbers
 
 The `rnd` package is a wrapper to Go `rand` package but has some more _high level_ functions to
 assist on works involving random numbers and probability distributions.
@@ -26,7 +40,7 @@ Source code: <a href="rnd_normalDistribution.go">rnd_normalDistribution.go</a>
 Normally distributed pseudo-random numbers
 </div>
 
-# 2 Solution of sparse linear system
+# 3 Solution of sparse linear system
 
 Solution of real and sparse linear system using Umfpack and high-level routines.
 
@@ -87,7 +101,7 @@ See: <a href="la_sparseReal01.go">la_sparseReal01.go</a>
 
 
 
-# 3 Solution of sparse linear system with complex numbers
+# 4 Solution of sparse linear system with complex numbers
 
 Solution of complex and sparse linear system using Umfpack and high-level routines.
 
@@ -138,7 +152,7 @@ See: <a href="la_sparseComplex01.go">la_sparseComplex01.go</a>
 
 
 
-# 4 Numerical differentiation
+# 5 Numerical differentiation
 
 There are numerous uses for numerical differentiation.
 
@@ -181,7 +195,7 @@ d²y/dx² @ 6.283185   2.449293598294703e-16                       0   2.4492935
 
 
 
-# 5 Drawing iso-surfaces with VTK
+# 6 Drawing iso-surfaces with VTK
 
 An isosurface is a geometric construction representing a 2D region containing equal values. This
 surface is drawn in the 3D space (although the concept can be extended to hyperisosurfaces too) for
@@ -200,7 +214,7 @@ Iso-surface
 
 
 
-# 6 Plotting a contour
+# 7 Plotting a contour
 
 The `plt` subpackage is a convenient wrapper to python.matplotlib/pyplot that can generate nice
 graphs. For example:
@@ -214,7 +228,7 @@ Contour
 
 
 
-# 7 Solution of Poisson's equation using finite differences
+# 8 Solution of Poisson's equation using finite differences
 
 Package `fdm` can help with the solution (approximation) of partial differential equations using the
 finite differences method (FDM).
@@ -261,7 +275,7 @@ Solution of Poisson's equation 02
 
 
 
-# 8 Root finding problems
+# 9 Root finding problems
 
 Example: find the root of
 ```
@@ -321,7 +335,7 @@ Simple root finding problem solved by Newton's method.
 
 
 
-# 9 B-splines: curve, control, and basis
+# 10 B-splines: curve, control, and basis
 
 Source code: <a href="gm_bspline02.go">gm_bspline02.go</a>
 
