@@ -71,9 +71,11 @@ type Cell struct {
 	V        []int  `json:"v"`  // vertices
 	EdgeTags []int  `json:"et"` // edge tags (2D or 3D)
 	FaceTags []int  `json:"ft"` // face tags (3D only)
+	NurbsId  int    `json:"b"`  // id of NURBS (or something else) that this cell belongs to
+	Span     []int  `json:"s"`  // span in NURBS
 
 	// auxiliary
-	Entity interface{} `json:"-"` // any entity attached to this vertex
+	Entity interface{} `json:"-"` // any entity attached to this cell
 
 	// derived
 	Edges      EdgeSet `json:"-"` // edges on this cell
