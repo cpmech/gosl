@@ -312,9 +312,9 @@ func Test_nurbs04(tst *testing.T) {
 	c_vt := tag_verts(c, tol)
 
 	// write .msh files
-	WriteMshD("/tmp/gosl", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct, tol)
-	WriteMshD("/tmp/gosl", "m_nurbs04b", []*Nurbs{b}, b_vt, nil, tol)
-	WriteMshD("/tmp/gosl", "m_nurbs04c", []*Nurbs{c}, c_vt, nil, tol)
+	WriteMsh("/tmp/gosl", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct, tol)
+	WriteMsh("/tmp/gosl", "m_nurbs04b", []*Nurbs{b}, b_vt, nil, tol)
+	WriteMsh("/tmp/gosl", "m_nurbs04c", []*Nurbs{c}, c_vt, nil, tol)
 
 	// read .msh file back and check
 	a_read := ReadMsh("/tmp/gosl/m_nurbs04a")[0]

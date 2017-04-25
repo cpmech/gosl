@@ -41,12 +41,12 @@ func GetLimits(o *Nurbs) (xmin, xmax, xdel []float64) {
 	return
 }
 
-// WriteMshD writes .msh file
+// WriteMsh writes .msh file
 // Input:
 //   vtagged -- maps hashed id of control point to vertex tag
 //   ctagged -- maps idOfNurbs_localIdOfElem to cell tag
 //   tol     -- tolerance for normalized numbers comparison when generating hashes, e.g. 1e-7
-func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int, tol float64) {
+func WriteMsh(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int, tol float64) {
 
 	// compute limits
 	xmin, xmax, xdel := GetLimits(nurbss[0])

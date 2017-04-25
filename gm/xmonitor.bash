@@ -7,5 +7,5 @@ while true; do
     echo
     echo
     go install
-    go test -test.run="factory03"
+    go test -test.run="io01"
 done
