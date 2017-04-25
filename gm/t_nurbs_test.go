@@ -5,24 +5,22 @@
 package gm
 
 import (
-	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
 )
 
 func Test_nurbs01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs01")
+	chk.PrintTitle("nurbs01. Elements, IndBasis, and ExtractSurfaces")
 
 	// NURBS
-	b := FactoryNurbs{}.ExampleStrip1()
-	elems := b.Elements()
-	nbasis := b.GetElemNumBasis()
+	surf := FactoryNurbs.Surf2dExample1()
+	elems := surf.Elements()
+	nbasis := surf.GetElemNumBasis()
 	io.Pforan("nbasis = %v\n", nbasis)
 	chk.IntAssert(nbasis, 6) // orders := (2,1) => nbasis = (2+1)*(1+1) = 6
 
@@ -30,19 +28,19 @@ func Test_nurbs01(tst *testing.T) {
 	chk.Ints(tst, "elem[0]", elems[0], []int{2, 3, 1, 2})
 	chk.Ints(tst, "elem[1]", elems[1], []int{3, 4, 1, 2})
 	chk.Ints(tst, "elem[2]", elems[2], []int{4, 5, 1, 2})
-	chk.Ints(tst, "ibasis0", b.IndBasis(elems[0]), []int{0, 1, 2, 5, 6, 7})
-	chk.Ints(tst, "ibasis1", b.IndBasis(elems[1]), []int{1, 2, 3, 6, 7, 8})
-	chk.Ints(tst, "ibasis2", b.IndBasis(elems[2]), []int{2, 3, 4, 7, 8, 9})
-	chk.IntAssert(b.GetElemNumBasis(), len(b.IndBasis(elems[0])))
+	chk.Ints(tst, "ibasis0", surf.IndBasis(elems[0]), []int{0, 1, 2, 5, 6, 7})
+	chk.Ints(tst, "ibasis1", surf.IndBasis(elems[1]), []int{1, 2, 3, 6, 7, 8})
+	chk.Ints(tst, "ibasis2", surf.IndBasis(elems[2]), []int{2, 3, 4, 7, 8, 9})
+	chk.IntAssert(surf.GetElemNumBasis(), len(surf.IndBasis(elems[0])))
 
 	// check derivatives
-	b.CheckDerivs(tst, 11, 1e-5, false)
+	surf.CheckDerivs(tst, 11, 1e-5, false)
 
 	// check spans
 	solE := [][]int{{2, 3, 1, 2}, {3, 4, 1, 2}, {4, 5, 1, 2}}
 	solL := [][]int{{0, 1, 2, 5, 6, 7}, {1, 2, 3, 6, 7, 8}, {2, 3, 4, 7, 8, 9}}
 	for k, e := range elems {
-		L := b.IndBasis(e)
+		L := surf.IndBasis(e)
 		io.Pforan("e=%v: L=%v\n", e, L)
 		chk.Ints(tst, "span", e, solE[k])
 		chk.Ints(tst, "L", L, solL[k])
@@ -50,21 +48,21 @@ func Test_nurbs01(tst *testing.T) {
 
 	// check indices along curve
 	io.Pf("\n------------ indices along curve -------------\n")
-	chk.Ints(tst, "l0s2a0", b.IndsAlongCurve(0, 2, 0), []int{0, 1, 2})
-	chk.Ints(tst, "l0s3a0", b.IndsAlongCurve(0, 3, 0), []int{1, 2, 3})
-	chk.Ints(tst, "l0s4a0", b.IndsAlongCurve(0, 4, 0), []int{2, 3, 4})
-	chk.Ints(tst, "l0s2a1", b.IndsAlongCurve(0, 2, 1), []int{5, 6, 7})
-	chk.Ints(tst, "l0s3a1", b.IndsAlongCurve(0, 3, 1), []int{6, 7, 8})
-	chk.Ints(tst, "l0s4a1", b.IndsAlongCurve(0, 4, 1), []int{7, 8, 9})
-	chk.Ints(tst, "l1s1a0", b.IndsAlongCurve(1, 1, 0), []int{0, 5})
-	chk.Ints(tst, "l1s1a1", b.IndsAlongCurve(1, 1, 1), []int{1, 6})
-	chk.Ints(tst, "l1s1a2", b.IndsAlongCurve(1, 1, 2), []int{2, 7})
-	chk.Ints(tst, "l1s1a3", b.IndsAlongCurve(1, 1, 3), []int{3, 8})
-	chk.Ints(tst, "l1s1a4", b.IndsAlongCurve(1, 1, 4), []int{4, 9})
+	chk.Ints(tst, "l0s2a0", surf.IndsAlongCurve(0, 2, 0), []int{0, 1, 2})
+	chk.Ints(tst, "l0s3a0", surf.IndsAlongCurve(0, 3, 0), []int{1, 2, 3})
+	chk.Ints(tst, "l0s4a0", surf.IndsAlongCurve(0, 4, 0), []int{2, 3, 4})
+	chk.Ints(tst, "l0s2a1", surf.IndsAlongCurve(0, 2, 1), []int{5, 6, 7})
+	chk.Ints(tst, "l0s3a1", surf.IndsAlongCurve(0, 3, 1), []int{6, 7, 8})
+	chk.Ints(tst, "l0s4a1", surf.IndsAlongCurve(0, 4, 1), []int{7, 8, 9})
+	chk.Ints(tst, "l1s1a0", surf.IndsAlongCurve(1, 1, 0), []int{0, 5})
+	chk.Ints(tst, "l1s1a1", surf.IndsAlongCurve(1, 1, 1), []int{1, 6})
+	chk.Ints(tst, "l1s1a2", surf.IndsAlongCurve(1, 1, 2), []int{2, 7})
+	chk.Ints(tst, "l1s1a3", surf.IndsAlongCurve(1, 1, 3), []int{3, 8})
+	chk.Ints(tst, "l1s1a4", surf.IndsAlongCurve(1, 1, 4), []int{4, 9})
 
 	// extract surfaces and check
 	io.Pf("\n------------ extract surfaces -------------\n")
-	surfs := b.ExtractSurfaces()
+	surfs := surf.ExtractSurfaces()
 	chk.Deep4(tst, "surf0: Q", 1e-15, surfs[0].Q, [][][][]float64{
 		{{{0, 0, 0, 0.8}}},         // 0
 		{{{0, 0.4 * 0.9, 0, 0.9}}}, // 5
@@ -89,7 +87,7 @@ func Test_nurbs01(tst *testing.T) {
 	})
 
 	io.Pf("\n------------ elem bry local inds -----------\n")
-	elembryinds := b.ElemBryLocalInds()
+	elembryinds := surf.ElemBryLocalInds()
 	io.Pforan("elembryinds = %v\n", elembryinds)
 	chk.IntMat(tst, "elembryinds", elembryinds, [][]int{
 		{0, 1, 2},
@@ -99,7 +97,7 @@ func Test_nurbs01(tst *testing.T) {
 	})
 
 	// refine NURBS
-	c := b.Krefine([][]float64{
+	c := surf.Krefine([][]float64{
 		{0.5, 1.5, 2.5},
 		{0.5},
 	})
@@ -153,17 +151,17 @@ func Test_nurbs01(tst *testing.T) {
 	if chk.Verbose {
 		io.Pf("\n------------ plot -------------\n")
 		plt.Reset(true, nil)
-		PlotNurbs2d("/tmp/gosl", "nurbs01a", b, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs2d("/tmp/gosl", "t_nurbs01a", surf, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, nil)
-		PlotNurbsBasis2d("/tmp/gosl", "nurbs01b", b, 0, 7, true, true, nil, nil, func(idx int) {
+		PlotNurbsBasis2d("/tmp/gosl", "t_nurbs01b", surf, 0, 7, true, true, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, &plt.A{Prop: 1.2})
-		PlotNurbsDerivs2d("/tmp/gosl", "nurbs01c", b, 0, 7, false, false, nil, nil, func(idx int) {
+		PlotNurbsDerivs2d("/tmp/gosl", "t_nurbs01c", surf, 0, 7, false, false, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
 		})
@@ -173,29 +171,29 @@ func Test_nurbs01(tst *testing.T) {
 func Test_nurbs02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs02")
+	chk.PrintTitle("nurbs02. Elements and IndBasis")
 
 	// NURBS
-	b := FactoryNurbs{}.QuarterPlateHole1()
-	elems := b.Elements()
-	nbasis := b.GetElemNumBasis()
+	surf := FactoryNurbs.Surf2dQuarterPlateHole1()
+	elems := surf.Elements()
+	nbasis := surf.GetElemNumBasis()
 	io.Pforan("nbasis = %v\n", nbasis)
 	chk.IntAssert(nbasis, 9) // orders := (2,2) => nbasis = (2+1)*(2+1) = 9
 
 	// check basis and elements
 	chk.Ints(tst, "elem[0]", elems[0], []int{2, 3, 2, 3})
 	chk.Ints(tst, "elem[1]", elems[1], []int{3, 4, 2, 3})
-	chk.Ints(tst, "ibasis0", b.IndBasis(elems[0]), []int{0, 1, 2, 4, 5, 6, 8, 9, 10})
-	chk.Ints(tst, "ibasis1", b.IndBasis(elems[1]), []int{1, 2, 3, 5, 6, 7, 9, 10, 11})
-	chk.IntAssert(b.GetElemNumBasis(), len(b.IndBasis(elems[0])))
+	chk.Ints(tst, "ibasis0", surf.IndBasis(elems[0]), []int{0, 1, 2, 4, 5, 6, 8, 9, 10})
+	chk.Ints(tst, "ibasis1", surf.IndBasis(elems[1]), []int{1, 2, 3, 5, 6, 7, 9, 10, 11})
+	chk.IntAssert(surf.GetElemNumBasis(), len(surf.IndBasis(elems[0])))
 
 	// check derivatives
-	b.CheckDerivs(tst, 11, 1e-5, false)
+	surf.CheckDerivs(tst, 11, 1e-5, false)
 
 	// refine NURBS
-	c := b.KrefineN(2, false)
-	elems = c.Elements()
-	chk.IntAssert(c.GetElemNumBasis(), len(c.IndBasis(elems[0])))
+	refined := surf.KrefineN(2, false)
+	elems = refined.Elements()
+	chk.IntAssert(refined.GetElemNumBasis(), len(refined.IndBasis(elems[0])))
 
 	// check refined elements
 	io.Pf("\n------------ refined -------------\n")
@@ -209,32 +207,32 @@ func Test_nurbs02(tst *testing.T) {
 	chk.Ints(tst, "elem[7]", elems[7], []int{5, 6, 3, 4})
 
 	// check refined basis
-	chk.Ints(tst, "ibasis0", c.IndBasis(elems[0]), []int{0, 1, 2, 6, 7, 8, 12, 13, 14})
-	chk.Ints(tst, "ibasis1", c.IndBasis(elems[1]), []int{1, 2, 3, 7, 8, 9, 13, 14, 15})
-	chk.Ints(tst, "ibasis2", c.IndBasis(elems[2]), []int{2, 3, 4, 8, 9, 10, 14, 15, 16})
-	chk.Ints(tst, "ibasis3", c.IndBasis(elems[3]), []int{3, 4, 5, 9, 10, 11, 15, 16, 17})
-	chk.Ints(tst, "ibasis4", c.IndBasis(elems[4]), []int{6, 7, 8, 12, 13, 14, 18, 19, 20})
-	chk.Ints(tst, "ibasis5", c.IndBasis(elems[5]), []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
-	chk.Ints(tst, "ibasis6", c.IndBasis(elems[6]), []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
-	chk.Ints(tst, "ibasis7", c.IndBasis(elems[7]), []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
+	chk.Ints(tst, "ibasis0", refined.IndBasis(elems[0]), []int{0, 1, 2, 6, 7, 8, 12, 13, 14})
+	chk.Ints(tst, "ibasis1", refined.IndBasis(elems[1]), []int{1, 2, 3, 7, 8, 9, 13, 14, 15})
+	chk.Ints(tst, "ibasis2", refined.IndBasis(elems[2]), []int{2, 3, 4, 8, 9, 10, 14, 15, 16})
+	chk.Ints(tst, "ibasis3", refined.IndBasis(elems[3]), []int{3, 4, 5, 9, 10, 11, 15, 16, 17})
+	chk.Ints(tst, "ibasis4", refined.IndBasis(elems[4]), []int{6, 7, 8, 12, 13, 14, 18, 19, 20})
+	chk.Ints(tst, "ibasis5", refined.IndBasis(elems[5]), []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
+	chk.Ints(tst, "ibasis6", refined.IndBasis(elems[6]), []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
+	chk.Ints(tst, "ibasis7", refined.IndBasis(elems[7]), []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
 
 	// plot
 	if chk.Verbose {
 		io.Pf("\n------------ plot -------------\n")
-		la := 0 + 0*b.n[0]
-		lb := 2 + 1*b.n[0]
+		la := 0 + 0*surf.n[0]
+		lb := 2 + 1*surf.n[0]
 		plt.Reset(true, nil)
-		PlotNurbs2d("/tmp/gosl", "nurbs02a", b, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs2d("/tmp/gosl", "t_nurbs02a", surf, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, &plt.A{Prop: 1.5})
-		PlotNurbsBasis2d("/tmp/gosl", "nurbs02b", b, la, lb, false, false, nil, nil, func(idx int) {
+		PlotNurbsBasis2d("/tmp/gosl", "t_nurbs02b", surf, la, lb, false, false, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, &plt.A{Prop: 1.7})
-		PlotNurbsDerivs2d("/tmp/gosl", "nurbs02c", b, la, lb, false, false, nil, nil, func(idx int) {
+		PlotNurbsDerivs2d("/tmp/gosl", "t_nurbs02c", surf, la, lb, false, false, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
 		})
@@ -244,12 +242,12 @@ func Test_nurbs02(tst *testing.T) {
 func Test_nurbs03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs03")
+	chk.PrintTitle("nurbs03. Elements and Krefine")
 
 	// NURBS
-	b := FactoryNurbs{}.ExampleCurve1()
-	elems := b.Elements()
-	nbasis := b.GetElemNumBasis()
+	surf := FactoryNurbs.Curve2dExample1()
+	elems := surf.Elements()
+	nbasis := surf.GetElemNumBasis()
 	io.Pforan("nbasis = %v\n", nbasis)
 	chk.IntAssert(nbasis, 4) // orders := (3,) => nbasis = (3+1) = 4
 
@@ -257,12 +255,12 @@ func Test_nurbs03(tst *testing.T) {
 	chk.Ints(tst, "elem[0]", elems[0], []int{3, 4})
 	chk.Ints(tst, "elem[1]", elems[1], []int{4, 5})
 	chk.Ints(tst, "elem[2]", elems[2], []int{5, 6})
-	chk.Ints(tst, "ibasis0", b.IndBasis(elems[0]), []int{0, 1, 2, 3})
-	chk.Ints(tst, "ibasis1", b.IndBasis(elems[1]), []int{1, 2, 3, 4})
-	chk.Ints(tst, "ibasis2", b.IndBasis(elems[2]), []int{2, 3, 4, 5})
+	chk.Ints(tst, "ibasis0", surf.IndBasis(elems[0]), []int{0, 1, 2, 3})
+	chk.Ints(tst, "ibasis1", surf.IndBasis(elems[1]), []int{1, 2, 3, 4})
+	chk.Ints(tst, "ibasis2", surf.IndBasis(elems[2]), []int{2, 3, 4, 5})
 
 	// refine NURBS
-	c := b.Krefine([][]float64{
+	refined := surf.Krefine([][]float64{
 		{0.15, 0.5, 0.85},
 	})
 
@@ -271,19 +269,19 @@ func Test_nurbs03(tst *testing.T) {
 
 		// geometry
 		plt.Reset(true, &plt.A{WidthPt: 450})
-		plotTwoNurbs("/tmp/gosl", "nurbs03a", b, c, "original", "refined", func() {
+		plotTwoNurbs2d("/tmp/gosl", "t_nurbs03a", surf, refined, "original", "refined", func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 
 		// basis
 		plt.Reset(true, &plt.A{Prop: 1.2})
-		PlotNurbsBasis2d("/tmp/gosl", "nurbs03b", b, 0, 1, false, false, nil, nil, func(idx int) {
+		PlotNurbsBasis2d("/tmp/gosl", "t_nurbs03b", surf, 0, 1, false, false, nil, nil, func(idx int) {
 			plt.HideBorders(&plt.A{HideR: true, HideT: true})
 		})
 		plt.Reset(true, &plt.A{Prop: 1.2})
 		plt.HideBorders(&plt.A{HideR: true, HideT: true})
-		PlotNurbsDerivs2d("/tmp/gosl", "nurbs03c", b, 0, 1, false, false, nil, nil, func(idx int) {
+		PlotNurbsDerivs2d("/tmp/gosl", "t_nurbs03c", surf, 0, 1, false, false, nil, nil, func(idx int) {
 			plt.HideBorders(&plt.A{HideR: true, HideT: true})
 		})
 	}
@@ -292,10 +290,10 @@ func Test_nurbs03(tst *testing.T) {
 func Test_nurbs04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs04")
+	chk.PrintTitle("nurbs04. KrefineN and file read-write")
 
 	// NURBS
-	a := FactoryNurbs{}.QuarterPlateHole1()
+	a := FactoryNurbs.Surf2dQuarterPlateHole1()
 	b := a.KrefineN(2, false)
 	c := a.KrefineN(4, false)
 
@@ -327,108 +325,24 @@ func Test_nurbs04(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		PlotNurbs2d("/tmp/gosl", "nurbs04a", b, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs2d("/tmp/gosl", "t_nurbs04a", b, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, nil)
-		plotTwoNurbs("/tmp/gosl", "nurbs04b", a, a_read, "original", "from file", func() {
+		plotTwoNurbs2d("/tmp/gosl", "t_nurbs04b", a, a_read, "original", "from file", func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, nil)
-		plotTwoNurbs("/tmp/gosl", "nurbs04c", a, b, "original", "refined", func() {
+		plotTwoNurbs2d("/tmp/gosl", "t_nurbs04c", a, b, "original", "refined", func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, nil)
-		plotTwoNurbs("/tmp/gosl", "nurbs04d", a, c, "original", "refined", func() {
+		plotTwoNurbs2d("/tmp/gosl", "t_nurbs04d", a, c, "original", "refined", func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
-	}
-}
-
-func Test_nurbs05(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("nurbs05. quarter circle")
-
-	radius := 2.0
-	b := FactoryNurbs{}.QuarterCircleCurve(radius)
-
-	U := utl.LinSpace(b.b[0].tmin, b.b[0].tmax, 5)
-	x := make([]float64, 2)
-	for _, u := range U {
-		b.Point(x, []float64{u}, 2)
-		e := math.Sqrt(x[0]*x[0]+x[1]*x[1]) - radius
-		chk.Scalar(tst, io.Sf("error @ (%.8f,%8f) == 0?", x[0], x[1]), 1e-15, e, 0)
-	}
-
-	if chk.Verbose {
-		extra := func() {
-			plt.Circle(0, 0, radius, &plt.A{C: "#478275", Lw: 1})
-		}
-		argsCurve := &plt.A{C: "orange", M: "+", Mec: "k", Lw: 4, L: "curve", NoClip: true}
-		argsCtrl := &plt.A{C: "k", M: ".", Ls: "--", L: "control", NoClip: true}
-		argsIds := &plt.A{C: "b", Fsz: 10}
-		plt.Reset(false, nil)
-		plt.Equal()
-		plt.HideAllBorders()
-		PlotNurbs2d("/tmp/gosl", "nurbs05", b, 11, true, true, argsCurve, argsCtrl, argsIds, extra)
-	}
-}
-
-func Test_nurbs06(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("nurbs06. circle")
-
-	// geometry
-	xc, yc, r := 0.5, 0.25, 1.75
-
-	// function to check circle
-	npcheck := 11
-	checkCircle := func(nurbs *Nurbs) {
-		U := utl.LinSpace(nurbs.b[0].tmin, nurbs.b[0].tmax, npcheck)
-		x := make([]float64, 2)
-		for _, u := range U {
-			nurbs.Point(x, []float64{u}, 2)
-			e := math.Sqrt(math.Pow(x[0]-xc, 2)+math.Pow(x[1]-yc, 2)) - r
-			chk.Scalar(tst, io.Sf("error @ (%.8f,%8f) == 0?", x[0], x[1]), 1e-15, e, 0)
-		}
-	}
-
-	// original curve
-	curve := FactoryNurbs{}.CircleCurve(xc, yc, r)
-	checkCircle(curve)
-	io.Pl()
-
-	// refine NURBS
-	refined := curve.Krefine([][]float64{{0.5, 1.5, 2.5, 3.5}})
-	checkCircle(refined)
-
-	if chk.Verbose {
-
-		argsIdsA := &plt.A{C: "b", Fsz: 10}
-		argsCtrlA := &plt.A{C: "k", M: ".", Ls: "--", L: "control", NoClip: true}
-		argsCurveA := &plt.A{C: "orange", M: "+", Mec: "k", Lw: 4, L: "curve", NoClip: true}
-
-		argsIdsB := &plt.A{C: "green", Fsz: 7}
-		argsCtrlB := &plt.A{C: "green", L: "refined: control"}
-		argsElemsB := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: "refined: curve"}
-
-		np := 11
-		extra := func() {
-			plt.Circle(xc, yc, r, &plt.A{C: "#478275", Lw: 1})
-			refined.DrawCtrl2d(true, argsCtrlB, argsIdsB)
-			refined.DrawElems2d(np, false, argsElemsB, nil)
-		}
-
-		plt.Reset(false, nil)
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.AxisRange(-3, 3, -3, 3)
-		PlotNurbs2d("/tmp/gosl", "nurbs06", curve, np, true, true, argsCurveA, argsCtrlA, argsIdsA, extra)
 	}
 }
