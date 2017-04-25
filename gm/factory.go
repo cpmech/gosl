@@ -62,30 +62,6 @@ func (o facNurbsT) Curve2dExample2() (curve *Nurbs) {
 	return
 }
 
-// Curve2dRectangleQL generates a 2D NURBS surface with x being quadratic and y being linear
-func (o facNurbsT) Curve2dRectangleQL(x0, y0, dx, dy float64) (curve *Nurbs) {
-	xm, xf, yf := x0+dx/2.0, x0+dx, y0+dy
-	verts := [][]float64{
-		{x0, y0, 0.0, 1.0},
-		{xm, y0, 0.0, 1.0},
-		{xf, y0, 0.0, 1.0},
-		{x0, yf, 0.0, 1.0},
-		{xm, yf, 0.0, 1.0},
-		{xf, yf, 0.0, 1.0},
-	}
-	knots := [][]float64{
-		{0, 0, 0, 1, 1, 1},
-		{0, 0, 1, 1},
-	}
-	curve = new(Nurbs)
-	curve.Init(2, []int{2, 1}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
-	return
-}
-
 // Curve2dCircle generates a 1D NURBS representing the circle curve
 func (o facNurbsT) Curve2dCircle(xc, yc, r float64) (curve *Nurbs) {
 	xa, xb := xc-r, xc+r
@@ -133,6 +109,30 @@ func (o facNurbsT) Curve2dQuarterCircle(xc, yc, r float64) (curve *Nurbs) {
 }
 
 // 2D surfaces ////////////////////////////////////////////////////////////////////////////////////
+
+// Surf2dRectangleQL generates a 2D NURBS surface with x being quadratic and y being linear
+func (o facNurbsT) Surf2dRectangleQL(x0, y0, dx, dy float64) (curve *Nurbs) {
+	xm, xf, yf := x0+dx/2.0, x0+dx, y0+dy
+	verts := [][]float64{
+		{x0, y0, 0.0, 1.0},
+		{xm, y0, 0.0, 1.0},
+		{xf, y0, 0.0, 1.0},
+		{x0, yf, 0.0, 1.0},
+		{xm, yf, 0.0, 1.0},
+		{xf, yf, 0.0, 1.0},
+	}
+	knots := [][]float64{
+		{0, 0, 0, 1, 1, 1},
+		{0, 0, 1, 1},
+	}
+	curve = new(Nurbs)
+	curve.Init(2, []int{2, 1}, knots)
+	err := curve.SetControl(verts, utl.IntRange(len(verts)))
+	if err != nil {
+		chk.Panic("%v", err)
+	}
+	return
+}
 
 // Surf2dExample1 generates a 2D NURBS of a 2D strip (x-quadratic, y-linear) (example 1)
 func (o facNurbsT) Surf2dExample1() (surf *Nurbs) {

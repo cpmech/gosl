@@ -14,6 +14,25 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+// NurbsExchangeData holds all data required to exchange NURBS; e.g. read/save files
+type NurbsExchangeData struct {
+	Id    int         `json:"i"` // id of Nurbs
+	Gnd   int         `json:"g"` // 1: curve, 2:surface, 3:volume (geometry dimension)
+	Ords  []int       `json:"o"` // order along each x-y-z direction [gnd]
+	Knots [][]float64 `json:"k"` // knots along each x-y-z direction [gnd][m]
+	Ctrls []int       `json:"c"` // global ids of control points
+}
+
+// NurbsExchangeDataSet defines a set of nurbs exchange data
+type NurbsExchangeDataSet []*NurbsExchangeData
+
+// NurbsPatch patch of many NURBS'
+type NurbsPatch struct {
+
+	// input
+	Data NurbsExchangeDataSet `json:"patch"`
+}
+
 // GetLimits computes the limits of all coordinates of control points in NURBS
 func GetLimits(o *Nurbs) (xmin, xmax, xdel []float64) {
 	xmin = []float64{math.Inf(+1), math.Inf(+1), math.Inf(+1)}
@@ -250,19 +269,10 @@ type Vert struct {
 	C   []float64 // coordinates (size==4)
 }
 
-// NurbsD holds all data required to read/save a Nurbs to/from files
-type NurbsD struct {
-	Id    int         // id of Nurbs
-	Gnd   int         // 1: curve, 2:surface, 3:volume (geometry dimension)
-	Ords  []int       // order along each x-y-z direction [gnd]
-	Knots [][]float64 // knots along each x-y-z direction [gnd][m]
-	Ctrls []int       // global ids of control points
-}
-
 // Data holds all geometry data
 type Data struct {
-	Verts  []Vert   // vertices
-	Nurbss []NurbsD // NURBSs
+	Verts  []Vert              // vertices
+	Nurbss []NurbsExchangeData // NURBSs
 }
 
 // ReadMsh reads .msh file

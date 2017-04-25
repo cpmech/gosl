@@ -299,30 +299,32 @@ func Test_nurbs04(tst *testing.T) {
 	b := a.KrefineN(2, false)
 	c := a.KrefineN(4, false)
 
-	// tolerace for normalised space comparisons
-	tol := 1e-7
-
 	// tags
-	a_vt := tag_verts(a, tol)
-	a_ct := map[string]int{
-		"0_0": -1,
-		"0_1": -2,
-	}
-	b_vt := tag_verts(b, tol)
-	c_vt := tag_verts(c, tol)
+	/*
+		// tolerace for normalised space comparisons
+		tol := 1e-7
 
-	// write .msh files
-	WriteMsh("/tmp/gosl", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct, tol)
-	WriteMsh("/tmp/gosl", "m_nurbs04b", []*Nurbs{b}, b_vt, nil, tol)
-	WriteMsh("/tmp/gosl", "m_nurbs04c", []*Nurbs{c}, c_vt, nil, tol)
+		a_vt := tag_verts(a, tol)
+		a_ct := map[string]int{
+			"0_0": -1,
+			"0_1": -2,
+		}
+		b_vt := tag_verts(b, tol)
+		c_vt := tag_verts(c, tol)
 
-	// read .msh file back and check
-	a_read := ReadMsh("/tmp/gosl/m_nurbs04a")[0]
-	chk.IntAssert(a_read.gnd, a.gnd)
-	chk.Ints(tst, "p", a.p, a_read.p)
-	chk.Ints(tst, "n", a.n, a_read.n)
-	chk.Deep4(tst, "Q", 1.0e-17, a.Q, a_read.Q)
-	chk.IntMat(tst, "l2i", a.l2i, a_read.l2i)
+		// write .msh files
+		WriteMsh("/tmp/gosl", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct, tol)
+		WriteMsh("/tmp/gosl", "m_nurbs04b", []*Nurbs{b}, b_vt, nil, tol)
+		WriteMsh("/tmp/gosl", "m_nurbs04c", []*Nurbs{c}, c_vt, nil, tol)
+
+		// read .msh file back and check
+		a_read := ReadMsh("/tmp/gosl/m_nurbs04a")[0]
+		chk.IntAssert(a_read.gnd, a.gnd)
+		chk.Ints(tst, "p", a.p, a_read.p)
+		chk.Ints(tst, "n", a.n, a_read.n)
+		chk.Deep4(tst, "Q", 1.0e-17, a.Q, a_read.Q)
+		chk.IntMat(tst, "l2i", a.l2i, a_read.l2i)
+	*/
 
 	// plot
 	if chk.Verbose {
@@ -333,10 +335,10 @@ func Test_nurbs04(tst *testing.T) {
 			plt.Equal()
 		})
 		plt.Reset(true, nil)
-		plotTwoNurbs2d("/tmp/gosl", "t_nurbs04b", a, a_read, "original", "from file", func() {
-			plt.AxisOff()
-			plt.Equal()
-		})
+		//plotTwoNurbs2d("/tmp/gosl", "t_nurbs04b", a, a_read, "original", "from file", func() {
+		//plt.AxisOff()
+		//plt.Equal()
+		//})
 		plt.Reset(true, nil)
 		plotTwoNurbs2d("/tmp/gosl", "t_nurbs04c", a, b, "original", "refined", func() {
 			plt.AxisOff()
