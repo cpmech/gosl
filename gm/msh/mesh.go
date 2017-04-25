@@ -73,7 +73,7 @@ type Cell struct {
 	FaceTags []int  `json:"ft"` // face tags (3D only)
 
 	// auxiliary
-	Entity interface{} // any entity attached to this vertex
+	Entity interface{} `json:"-"` // any entity attached to this vertex
 
 	// derived
 	Edges      EdgeSet `json:"-"` // edges on this cell
@@ -149,7 +149,7 @@ func Read(fn string) (o *Mesh, err error) {
 	return
 }
 
-// Check checks whether input data is correct or not
+// Check checks whether input data is consistent or not
 func (o *Mesh) Check() (err error) {
 
 	// check vertex data
@@ -321,6 +321,7 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 	return
 }
 
+// setBryTagMaps sets maps of boundary tags
 func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BryPairSet, vertBryMap *map[int]VertSet, cell *Cell, tagList []int, locVerts [][]int) {
 
 	// loop over each tag attached to a side of the cell
