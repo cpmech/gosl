@@ -37,7 +37,7 @@ func PathKey(fn string) string {
 func AppendToFile(fn string, buffer ...*bytes.Buffer) {
 	fil, err := os.OpenFile(os.ExpandEnv(fn), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		chk.Panic(_fileio_err01, fn)
+		chk.Panic("cannot create file <%s>", fn)
 	}
 	defer fil.Close()
 	for k, _ := range buffer {
@@ -49,10 +49,9 @@ func AppendToFile(fn string, buffer ...*bytes.Buffer) {
 
 // WriteFile writes data to a new file
 func WriteFile(fn string, buffer ...*bytes.Buffer) {
-	//fil, err := os.OpenFile(os.ExpandEnv(fn), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
-		chk.Panic(_fileio_err02, fn)
+		chk.Panic("cannot create file <%s>", fn)
 	}
 	defer fil.Close()
 	for k, _ := range buffer {
@@ -72,7 +71,7 @@ func WriteFileD(dirout, fn string, buffer ...*bytes.Buffer) {
 func WriteFileS(fn, data string) {
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
-		chk.Panic(_fileio_err02, fn)
+		chk.Panic("cannot create file <%s>", fn)
 	}
 	defer fil.Close()
 	fil.WriteString(data)
@@ -87,9 +86,7 @@ func WriteFileSD(dirout, fn, data string) {
 // WriteFileV writes data to a new file (and shows message: file written)
 func WriteFileV(fn string, buffer ...*bytes.Buffer) {
 	WriteFile(fn, buffer...)
-	Pf("File <")
-	PfBlue(fn)
-	Pf("> written\n")
+	Pf("file <%s> written\n", fn)
 }
 
 // WriteFileVD writes data to a new file (and shows message: file written), after creating a directory
@@ -102,11 +99,11 @@ func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer) {
 func WriteBytesToFile(fn string, b []byte) {
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
-		chk.Panic(_fileio_err03, fn)
+		chk.Panic("cannot create file <%s>", fn)
 	}
 	defer fil.Close()
 	if _, err = fil.Write(b); err != nil {
-		chk.Panic(_fileio_err04, err.Error())
+		chk.Panic("%v", err)
 	}
 }
 
@@ -134,7 +131,7 @@ type ReadLinesCallback func(idx int, line string) (stop bool)
 func ReadLines(fn string, cb ReadLinesCallback) {
 	fil, err := os.Open(os.ExpandEnv(fn))
 	if err != nil {
-		chk.Panic(_fileio_err05, fn)
+		chk.Panic("could not open file <%s>", fn)
 	}
 	defer fil.Close()
 	r := bufio.NewReader(fil)
@@ -142,13 +139,13 @@ func ReadLines(fn string, cb ReadLinesCallback) {
 	for {
 		lin, prefix, errl := r.ReadLine()
 		if prefix {
-			chk.Panic(_fileio_err06, fn)
+			chk.Panic("cannot read long line. file = <%s>", fn)
 		}
 		if errl == io.EOF {
 			break
 		}
 		if errl != nil {
-			chk.Panic(_fileio_err07, fn)
+			chk.Panic("cannot read line. file = <%s>", fn)
 		}
 		stop := cb(idx, string(lin))
 		if stop {
@@ -165,13 +162,13 @@ func ReadLinesFile(fil *os.File, cb ReadLinesCallback) (oserr error) {
 	for {
 		lin, prefix, errl := r.ReadLine()
 		if prefix {
-			return chk.Err(_fileio_err08, fil.Name())
+			return chk.Err("cannot read long line. file = <%s>", fil.Name())
 		}
 		if errl == io.EOF {
 			break
 		}
 		if errl != nil {
-			return chk.Err(_fileio_err09, fil.Name())
+			return chk.Err("cannot read line. file = <%s>", fil.Name())
 		}
 		stop := cb(idx, string(lin))
 		if stop {
@@ -277,16 +274,3 @@ func ReadMatrix(fn string) (M [][]float64, err error) {
 	})
 	return
 }
-
-// error messages
-var (
-	_fileio_err01 = "cannot create file <%s>"
-	_fileio_err02 = "cannot create file <%s>"
-	_fileio_err03 = "cannot create file <%s>"
-	_fileio_err04 = "failed with error: %s"
-	_fileio_err05 = "could not open file <%s>"
-	_fileio_err06 = "cannot read long line yet. file = <%s>"
-	_fileio_err07 = "cannot read line. file = <%s>"
-	_fileio_err08 = "cannot read long line yet. file = <%s>"
-	_fileio_err09 = "cannot read line. file = <%s>"
-)
