@@ -56,11 +56,15 @@ func (o *Bins) Init(xmin, xmax []float64, ndiv int) (err error) {
 	}
 
 	// allocate slices with max lengths and number of division
+	zero := 1e-10
 	o.Xdel = make([]float64, o.Ndim)
 	o.Size = make([]float64, o.Ndim)
 	for k := 0; k < o.Ndim; k++ {
 		o.Xdel[k] = o.Xmax[k] - o.Xmin[k]
 		o.Size[k] = o.Xdel[k] / float64(ndiv)
+		if o.Xdel[k] < zero {
+			return chk.Err("xmax[%d]-xmin[%d]=%g must be greater than %g", k, k, o.Xdel[k], zero)
+		}
 	}
 
 	// number of divisions
@@ -72,6 +76,7 @@ func (o *Bins) Init(xmin, xmax []float64, ndiv int) (err error) {
 	}
 
 	// other slices
+	io.Pforan("nbins = %v\n", nbins)
 	o.All = make([]*Bin, nbins)
 	o.tmp = make([]int, o.Ndim)
 	return
