@@ -65,7 +65,7 @@ func WriteFile(fn string, buffer ...*bytes.Buffer) {
 // WriteFileD writes data to a new file and create a directory to save the file within
 func WriteFileD(dirout, fn string, buffer ...*bytes.Buffer) {
 	os.MkdirAll(dirout, 0777)
-	WriteFile(dirout+"/"+fn, buffer...)
+	WriteFile(filepath.Join(dirout, fn), buffer...)
 }
 
 // WriteFileS writes data string to a new file
@@ -81,7 +81,7 @@ func WriteFileS(fn, data string) {
 // WriteFileSD writes data string to a new file after creating a directory to save the file
 func WriteFileSD(dirout, fn, data string) {
 	os.MkdirAll(dirout, 0777)
-	WriteFileS(dirout+"/"+fn, data)
+	WriteFileS(filepath.Join(dirout, fn), data)
 }
 
 // WriteFileV writes data to a new file (and shows message: file written)
@@ -94,11 +94,8 @@ func WriteFileV(fn string, buffer ...*bytes.Buffer) {
 
 // WriteFileVD writes data to a new file (and shows message: file written), after creating a directory
 func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer) {
-	os.MkdirAll(dirout, 0777)
 	WriteFileD(dirout, fn, buffer...)
-	Pf("File <")
-	PfBlue(dirout + "/" + fn)
-	Pf("> written\n")
+	Pf("file <%s> written\n", filepath.Join(dirout, fn))
 }
 
 // WriteBytesToFile writes bytes to a new file
@@ -116,7 +113,7 @@ func WriteBytesToFile(fn string, b []byte) {
 // WriteBytesToFile writes bytes to a new file and create a directory to save the file within
 func WriteBytesToFileD(dirout, fn string, b []byte) {
 	os.MkdirAll(dirout, 0777)
-	WriteBytesToFile(dirout+"/"+fn, b)
+	WriteBytesToFile(filepath.Join(dirout, fn), b)
 }
 
 // OpenFileR opens a file for reading data
