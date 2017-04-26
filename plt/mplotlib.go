@@ -427,7 +427,7 @@ func Hist(x [][]float64, labels []string, args *A) {
 	updateBufferAndClose(&bufferPy, args, true, false)
 }
 
-// Grid2d draws grid lines of 2D grid
+// Grid2d draws grid lines (and points) of 2D grid
 func Grid2d(X, Y [][]float64, withPoints bool, argsLines, argsPoints *A) {
 	if argsLines == nil {
 		argsLines = &A{C: "k", NoClip: true}
