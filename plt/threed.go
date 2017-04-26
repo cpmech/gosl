@@ -133,6 +133,11 @@ func Triad(length float64, xLab, yLab, zLab string, argsLines, argsText *A) {
 	}
 }
 
+// DefaultTriad adds triad with default colors and labels
+func DefaultTriad(length float64) {
+	Triad(length, "x", "y", "z", &A{C: "orange"}, &A{C: "green"})
+}
+
 // Scale3d scales 3d axes
 func Scale3d(xmin, xmax, ymin, ymax, zmin, zmax float64, equal bool) {
 	dx := xmax - xmin
@@ -204,24 +209,38 @@ func Diag3d(scale float64, args *A) {
 	updateBufferAndClose(&bufferPy, a, false, false)
 }
 
-// 3d shapes using meshgrid ///////////////////////////////////////////////////////////////////////
-
-// addSurfAndOrWire adds surface and or wireframe
-func addSurfAndOrWire(X, Y, Z [][]float64, args *A) {
-	if args == nil {
-		Wireframe(X, Y, Z, nil)
+// Grid3d draws grid lines (and points) of 3D grid
+func Grid3d(X, Y [][]float64, Zlevels []float64, argsLines *A) {
+	if len(X) < 2 || len(Y) < 2 || len(Zlevels) < 2 {
 		return
 	}
-	if !args.Surf && !args.Wire {
-		Wireframe(X, Y, Z, args)
+	if argsLines == nil {
+		argsLines = &A{C: "k", NoClip: true}
 	}
-	if args.Surf {
-		Surface(X, Y, Z, args)
-	}
-	if args.Wire {
-		Wireframe(X, Y, Z, args)
+	n0 := len(X)
+	n1 := len(X[0])
+	n2 := len(Zlevels)
+	xx := make([]float64, 2) // min,max
+	yy := make([]float64, 2) // min,max
+	zz := make([]float64, 2) // min,max
+	Z := utl.Alloc(n0, n1)
+	for k := 0; k < n2; k++ {
+		for i := 0; i < n0; i++ {
+			for j := 0; j < n1; j++ {
+				Z[i][j] = Zlevels[k]
+				if k > 0 { // vertical lines
+					xx[0], xx[1] = X[i][j], X[i][j]
+					yy[0], yy[1] = Y[i][j], Y[i][j]
+					zz[0], zz[1] = Zlevels[k], Zlevels[k-1]
+					Plot3dLine(xx, yy, zz, argsLines)
+				}
+			}
+		}
+		Wireframe(X, Y, Z, argsLines)
 	}
 }
+
+// 3d shapes using meshgrid ///////////////////////////////////////////////////////////////////////
 
 // PlaneZ draws a plane that has a normal vector with non-zero z component.
 // The plane may be perpendicular to z.
@@ -439,7 +458,7 @@ func ConeDiag(c []float64, alphaDeg float64, height float64, nu, nv int, args *A
 	return
 }
 
-// auxiliary ///////////////////////////////////////////////////////////////////////////////////////
+// auxiliary functions /////////////////////////////////////////////////////////////////////////////
 
 // CalcDiagAngle computes the angle between a point and the diagonal of the 3d space
 //   p -- point coordinates
@@ -450,6 +469,25 @@ func CalcDiagAngle(p []float64) (alphaRad float64) {
 		return 0.0
 	}
 	return math.Sqrt(math.Pow(p[0]-p[1], 2.0)+math.Pow(p[1]-p[2], 2.0)+math.Pow(p[2]-p[0], 2.0)) / den
+}
+
+// internal: auxiliary /////////////////////////////////////////////////////////////////////////////
+
+// addSurfAndOrWire adds surface and or wireframe
+func addSurfAndOrWire(X, Y, Z [][]float64, args *A) {
+	if args == nil {
+		Wireframe(X, Y, Z, nil)
+		return
+	}
+	if !args.Surf && !args.Wire {
+		Wireframe(X, Y, Z, args)
+	}
+	if args.Surf {
+		Surface(X, Y, Z, args)
+	}
+	if args.Wire {
+		Wireframe(X, Y, Z, args)
+	}
 }
 
 // createAxes3d creates Python Axes3D if not yet created

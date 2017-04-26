@@ -15,7 +15,7 @@ import (
 func Test_args01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("args01")
+	chk.PrintTitle("args01. arguments")
 
 	var a A
 
@@ -49,7 +49,7 @@ func Test_args01(tst *testing.T) {
 func Test_args02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("args02")
+	chk.PrintTitle("args02. more arguments")
 
 	a := &A{
 		Colors:  []string{"red", "tan", "lime"},
@@ -67,7 +67,7 @@ func Test_args02(tst *testing.T) {
 func Test_nlevels01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nlevels01")
+	chk.PrintTitle("nlevels01. contour levels")
 
 	nlevels := 3
 	Z := [][]float64{
@@ -82,7 +82,7 @@ func Test_nlevels01(tst *testing.T) {
 func Test_plot01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot01")
+	chk.PrintTitle("plot01. Basic")
 
 	if chk.Verbose {
 
@@ -109,7 +109,7 @@ func Test_plot01(tst *testing.T) {
 			HideR:   true,
 		})
 
-		err := Save("/tmp/gosl", "t_plot01")
+		err := Save("/tmp/gosl/plt", "t_plot01")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -119,7 +119,7 @@ func Test_plot01(tst *testing.T) {
 func Test_plot02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot02")
+	chk.PrintTitle("plot02. More Basic")
 
 	if chk.Verbose {
 
@@ -136,7 +136,7 @@ func Test_plot02(tst *testing.T) {
 		Cross(0.5, 0.5, nil)
 		PlotOne(0, 0, &A{M: "*"})
 
-		err := Save("/tmp/gosl", "t_plot02")
+		err := Save("/tmp/gosl/plt", "t_plot02")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -146,7 +146,7 @@ func Test_plot02(tst *testing.T) {
 func Test_plot03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot03")
+	chk.PrintTitle("plot03. Contour")
 
 	if chk.Verbose {
 
@@ -175,7 +175,7 @@ func Test_plot03(tst *testing.T) {
 		ContourF(X, Y, F, a)
 		SetLabels("$x$", "$y$", nil)
 
-		err := Save("/tmp/gosl", "t_plot03")
+		err := Save("/tmp/gosl/plt", "t_plot03")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -185,7 +185,7 @@ func Test_plot03(tst *testing.T) {
 func Test_plot04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot04")
+	chk.PrintTitle("plot04. Contour and Quiver")
 
 	if chk.Verbose {
 
@@ -228,7 +228,7 @@ func Test_plot04(tst *testing.T) {
 		Quiver(X, Y, U, V, nil)
 		Grid(&A{C: "white"})
 
-		err := Save("/tmp/gosl", "t_plot04")
+		err := Save("/tmp/gosl/plt", "t_plot04")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -238,7 +238,7 @@ func Test_plot04(tst *testing.T) {
 func Test_plot05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot05")
+	chk.PrintTitle("plot05. Hist")
 
 	if chk.Verbose {
 
@@ -266,7 +266,7 @@ func Test_plot05(tst *testing.T) {
 		Hist(X, L, a)
 		Gll("series", "count", nil)
 
-		err := Save("/tmp/gosl", "t_plot05")
+		err := Save("/tmp/gosl/plt", "t_plot05")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -276,7 +276,7 @@ func Test_plot05(tst *testing.T) {
 func Test_plot06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot06")
+	chk.PrintTitle("plot06. Plot3dLine, Plot3dPoints, Surface and Wireframe")
 
 	if chk.Verbose {
 
@@ -309,8 +309,8 @@ func Test_plot06(tst *testing.T) {
 		AxDist(10.5)
 		Scale3d(0, 1.5, 0, 1.5, 0, 1.5, true)
 
-		//err := ShowSave("/tmp/gosl", "t_plot06")
-		err := Save("/tmp/gosl", "t_plot06")
+		//err := ShowSave("/tmp/gosl/plt", "t_plot06")
+		err := Save("/tmp/gosl/plt", "t_plot06")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -320,7 +320,7 @@ func Test_plot06(tst *testing.T) {
 func Test_plot07(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot07")
+	chk.PrintTitle("plot07. Triad, PlaneZ and Default3dView")
 
 	if chk.Verbose {
 
@@ -342,8 +342,8 @@ func Test_plot07(tst *testing.T) {
 		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
 
 		// save
-		//err := ShowSave("/tmp/gosl", "t_plot07")
-		err := Save("/tmp/gosl", "t_plot07")
+		//err := ShowSave("/tmp/gosl/plt", "t_plot07")
+		err := Save("/tmp/gosl/plt", "t_plot07")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -353,7 +353,7 @@ func Test_plot07(tst *testing.T) {
 func Test_plot08(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot08")
+	chk.PrintTitle("plot08. Hemisphere")
 
 	if chk.Verbose {
 
@@ -384,8 +384,8 @@ func Test_plot08(tst *testing.T) {
 		SetLabels3d(`$x_{axis}$`, `$y_{axis}$`, `$z_{axis}$`, &A{C: "r", Fsz: 14})
 
 		// save
-		err := Save("/tmp/gosl", "t_plot08")
-		//err := ShowSave("/tmp/gosl", "t_plot08")
+		err := Save("/tmp/gosl/plt", "t_plot08")
+		//err := ShowSave("/tmp/gosl/plt", "t_plot08")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -395,7 +395,7 @@ func Test_plot08(tst *testing.T) {
 func Test_plot09(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot09")
+	chk.PrintTitle("plot09. Superquadric")
 
 	if chk.Verbose {
 
@@ -439,8 +439,8 @@ func Test_plot09(tst *testing.T) {
 		Default3dView(-1.1, 1.1, -1.1, 1.1, -1.1, 1.1, true)
 
 		// save
-		err := Save("/tmp/gosl", "t_plot09")
-		//err := ShowSave("/tmp/gosl", "t_plot09")
+		err := Save("/tmp/gosl/plt", "t_plot09")
+		//err := ShowSave("/tmp/gosl/plt", "t_plot09")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -450,7 +450,7 @@ func Test_plot09(tst *testing.T) {
 func Test_plot10(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot10")
+	chk.PrintTitle("plot10. ZoomWindow")
 
 	if chk.Verbose {
 
@@ -487,7 +487,7 @@ func Test_plot10(tst *testing.T) {
 		Plot(x, y4, &A{C: "cyan", L: "curve ond new again"})
 		Gll("xnew", "ynew", nil)
 
-		err := Save("/tmp/gosl", "t_plot10")
+		err := Save("/tmp/gosl/plt", "t_plot10")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -497,7 +497,7 @@ func Test_plot10(tst *testing.T) {
 func Test_plot11(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot11")
+	chk.PrintTitle("plot11. LegendX")
 
 	if chk.Verbose {
 
@@ -518,7 +518,7 @@ func Test_plot11(tst *testing.T) {
 			&A{LegOut: true, LegNcol: 3},
 		)
 
-		err := Save("/tmp/gosl", "t_plot11")
+		err := Save("/tmp/gosl/plt", "t_plot11")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -528,7 +528,7 @@ func Test_plot11(tst *testing.T) {
 func Test_plot12(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot12")
+	chk.PrintTitle("plot12. Grid2d")
 
 	if chk.Verbose {
 
@@ -561,7 +561,52 @@ func Test_plot12(tst *testing.T) {
 		HideAllBorders()
 		Equal()
 
-		err := Save("/tmp/gosl", "t_plot12")
+		err := Save("/tmp/gosl/plt", "t_plot12")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}
+
+func Test_plot13(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot13. Grid3d")
+
+	if chk.Verbose {
+
+		X := [][]float64{
+			{0, 0.5, 1},
+			{0, 0.5, 1},
+		}
+
+		Y := [][]float64{
+			{0, 0, 0},
+			{1, 1, 1},
+		}
+
+		Zlevels := []float64{0, 1}
+
+		dx, dy := 1.1, 1.1
+		U := [][]float64{
+			{dx + 0.0, dx + 0.0},
+			{dx + 0.5, dx + 0.5},
+			{dx + 1.0, dx + 1.0},
+		}
+
+		V := [][]float64{
+			{dy, dy + 1},
+			{dy, dy + 1},
+			{dy, dy + 1},
+		}
+
+		Reset(false, nil)
+		Grid3d(X, Y, Zlevels, &A{C: "b", NoClip: true})
+		Grid3d(U, V, Zlevels, &A{C: "r", NoClip: true})
+		DefaultTriad(1.1)
+		Default3dView(0, 1.1+dx, 0, 1.1+dy, 0, 1.1, true)
+
+		err := Save("/tmp/gosl/plt", "t_plot13")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
