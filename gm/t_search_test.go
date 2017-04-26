@@ -124,21 +124,33 @@ func Test_bins02(tst *testing.T) {
 	chk.Scalar(tst, "closest 7: sqDist", 1e-15, sqDist, math.Pow(0.1-0.01, 2))
 
 	// append more points
+	nextId := bins.Nentries()
 	tolerance := 1e-2
-	nextId := bins.FindClosestAndAppend(bins.Nentries(), []float64{1.0, 1.5}, nil, tolerance)
+	currentId := bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance)
 	io.Pf("\n")
+	chk.Int(tst, "currentId 8", currentId, 8)
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
-	nextId = bins.FindClosestAndAppend(nextId, []float64{1.0, 1.5}, nil, tolerance) // repeated, no change
+	io.Pf("\n")
+	currentId = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance) // repeated, no change
+	chk.Int(tst, "currentId 8", currentId, 8)
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
+	io.Pf("\n")
 	tolerance = 0.1
-	nextId = bins.FindClosestAndAppend(nextId, []float64{1.0, 1.59999}, nil, tolerance)
+	currentId = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.59999}, nil, tolerance) // very close
+	chk.Int(tst, "currentId 8", currentId, 8)
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
+	io.Pf("\n")
+	currentId = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.6}, nil, tolerance) // new
+	chk.Int(tst, "currentId 9", currentId, 9)
+	chk.Int(tst, "nextId 10", nextId, 10)
+	chk.Int(tst, "Nactive", bins.Nactive(), 7)
+	chk.Int(tst, "Nentries", bins.Nentries(), 10)
 
 	// draw
 	if chk.Verbose {
