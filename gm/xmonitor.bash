@@ -9,5 +9,5 @@ while true; do
     echo
     echo
     go install
-    go test -test.run="npatch01"
+    go test -test.run="npatch02"
 done

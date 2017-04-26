@@ -174,6 +174,11 @@ func Test_bins02(tst *testing.T) {
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 10)
 
+	// check entries
+	io.Pf("\n")
+	entries := map[int][]int{0: []int{0}, 1: []int{1}, 2: []int{2}, 8: []int{3}, 13: []int{8, 9}, 20: []int{4, 6, 7}, 21: []int{5}}
+	checkBinsEntries(tst, bins.All, entries)
+
 	// draw
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 500})
@@ -274,24 +279,10 @@ func Test_bins03(tst *testing.T) {
 		}
 	}
 
-	// check again
+	// check entries
 	io.Pf("\n")
-	nonEmpty := map[int]bool{7: true, 14: true, 15: true, 28: true, 35: true}
-	for idx, bin := range bins.All {
-		txt := io.Sf("N%d", idx)
-		if nonEmpty[idx] {
-			if bin == nil {
-				tst.Errorf("bin " + txt + " should not be nil\n")
-				return
-			}
-			chk.Int(tst, txt, len(bin.Entries), 1)
-		} else {
-			if bin != nil {
-				tst.Errorf("bin " + txt + " should be nil\n")
-				return
-			}
-		}
-	}
+	entries := map[int][]int{7: []int{0}, 14: []int{1}, 15: []int{2}, 28: []int{3}, 35: []int{4}}
+	checkBinsEntries(tst, bins.All, entries)
 	chk.Int(tst, "Nactive", bins.Nactive(), 5)
 	chk.Int(tst, "Nentries", bins.Nentries(), 5)
 
@@ -510,6 +501,32 @@ func Test_bins06(tst *testing.T) {
 		}
 		if err != nil {
 			tst.Errorf("%v", err)
+		}
+	}
+}
+
+// auxiliary /////////////////////////////////////////////////////////////////////////////////////
+
+// entries is a map with the ids of each entry in each bin: maps binId => entries ids
+func checkBinsEntries(tst *testing.T, bins []*Bin, entries map[int][]int) {
+	for idx, bin := range bins {
+		txt := io.Sf("N%d", idx)
+		if e, ok := entries[idx]; ok {
+			if bin == nil {
+				tst.Errorf("bin " + txt + " should not be nil\n")
+				return
+			}
+			chk.Int(tst, txt, len(bin.Entries), len(e))
+			ee := make([]int, len(bin.Entries))
+			for k, entry := range bin.Entries {
+				ee[k] = entry.Id
+			}
+			chk.Ints(tst, txt, ee, e)
+		} else {
+			if bin != nil {
+				tst.Errorf("bin " + txt + " should be nil\n")
+				return
+			}
 		}
 	}
 }

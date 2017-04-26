@@ -5,9 +5,11 @@
 package gm
 
 import (
+	"encoding/json"
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -15,7 +17,7 @@ import (
 type PointExchangeData struct {
 	Id  int       `json:"i"` // id
 	Tag int       `json:"t"` // tag
-	Q   []float64 `json:"q"` // coordinates (size==4)
+	X   []float64 `json:"x"` // coordinates (size==4)
 }
 
 // NurbsExchangeData holds all data required to exchange NURBS; e.g. read/save files
@@ -125,14 +127,55 @@ func NewNurbsPatch(binsNdiv int, tolerance float64, entities ...*Nurbs) (o *Nurb
 
 					// get point Id
 					x := entity.GetQ(i, j, k)
-					id := o.Bins.FindClosestAndAppend(&nextId, x, nil, tolerance)
+					id, existent := o.Bins.FindClosestAndAppend(&nextId, x, nil, tolerance)
+
+					// existent point => check weights
+					if existent {
+
+						// add new point @ same location but with different weight
+						weight := o.ControlPoints[id].X[3]
+						if math.Abs(x[3]-weight) > 1e-15 {
+							id = nextId
+							nextId++
+
+						}
+					}
 
 					// set control point id
 					o.ExchangeData[e].Ctrls[idxCtrl] = id
 					idxCtrl++
+
+					// set list of points
+					o.ControlPoints = append(o.ControlPoints, &PointExchangeData{Id: id, X: x})
 				}
 			}
 		}
 	}
+	return
+}
+
+// Write writes ExchangeData to json file
+func (o NurbsPatch) Write(dirout, fnkey string) (err error) {
+	b, err := json.Marshal(o)
+	if err != nil {
+		return
+	}
+	io.WriteBytesToFileVD(dirout, fnkey+".json", b)
+	return
+}
+
+// NewNurbsPatchFromFile allocates a NurbsPatch with data from file
+func NewNurbsPatchFromFile(filename string, binsNdiv int, tolerance float64) (o *NurbsPatch, err error) {
+
+	// read exchange data
+	b, err := io.ReadFile(filename)
+	if err != nil {
+		return
+	}
+	o = new(NurbsPatch)
+	err = json.Unmarshal(b, o)
+
+	// allocate nurbs
+
 	return
 }
