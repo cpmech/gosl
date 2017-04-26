@@ -106,34 +106,6 @@ func (o *Bins) Clear() {
 	o.All = make([]*Bin, 0)
 }
 
-// Find returns the id of the entry whose coordinates are closest to x
-// returns -1 if out-of-range or not found
-func (o Bins) Find(x []float64) (idClosest int) {
-
-	// index and check
-	idx := o.CalcIndex(x)
-	if idx < 0 {
-		return -1 // out-of-range
-	}
-
-	// search for the closest point
-	bin := o.FindBinByIndex(idx)
-	dmin := math.MaxFloat64
-	idClosest = -1
-	var entry *BinEntry
-	for _, entry = range bin.Entries {
-		var d float64
-		for k := 0; k < o.Ndim; k++ {
-			d += math.Pow(x[k]-entry.X[k], 2)
-		}
-		if d < dmin {
-			dmin = d
-			idClosest = entry.Id
-		}
-	}
-	return idClosest
-}
-
 // FindBinByIndex finds or allocate new bin corresponding to index idx
 func (o Bins) FindBinByIndex(idx int) *Bin {
 
@@ -164,6 +136,40 @@ func (o Bins) CalcIndex(x []float64) int {
 		idx += o.tmp[2] * o.Npts[0] * o.Npts[1]
 	}
 	return idx
+}
+
+// high-level functions ///////////////////////////////////////////////////////////////////////////
+
+// FindClosest returns the id of the entry whose coordinates are closest to x
+//   idClosest -- the id of the closest entity. return -1 if out-of-range or not found
+//   sqDistMin -- the minimum distance (squared) between x and the closest entity in the same bin
+func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
+
+	// set "not-found" results
+	idClosest = -1
+	sqDistMin = math.Inf(+1)
+
+	// index and check
+	idx := o.CalcIndex(x)
+	if idx < 0 { // out-of-range
+		return
+	}
+
+	// search for the closest point
+	bin := o.FindBinByIndex(idx)
+	idClosest = -1
+	var entry *BinEntry
+	for _, entry = range bin.Entries {
+		var d float64
+		for k := 0; k < o.Ndim; k++ {
+			d += math.Pow(x[k]-entry.X[k], 2)
+		}
+		if d < sqDistMin {
+			idClosest = entry.Id
+			sqDistMin = d
+		}
+	}
+	return
 }
 
 // FindAlongSegment gets the ids of entries that lie close to a segment
@@ -248,10 +254,10 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 // plotting ///////////////////////////////////////////////////////////////////////////////////////
 
 // Draw draws bins; i.e. grid
-func (o *Bins) Draw(withtxt, withgrid, withentries bool, selBins map[int]bool, argsTxt, argsGrid, argsEntries *plt.A) {
+func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEntry, argsGrid, argsTxtEntry, argsTxtGrid *plt.A, selBins map[int]bool) {
 
 	// grid
-	if withgrid {
+	if withGrid {
 
 		// configuration
 		if argsGrid == nil {
@@ -300,12 +306,19 @@ func (o *Bins) Draw(withtxt, withgrid, withentries bool, selBins map[int]bool, a
 	}
 
 	// plot items
-	if withentries {
+	if withEntry {
 
 		// configuration
-		if argsEntries == nil {
-			argsEntries = &plt.A{C: "r", M: "o", NoClip: true}
+		if argsEntry == nil {
+			argsEntry = &plt.A{C: "r", M: ".", NoClip: true}
+			if o.Ndim == 3 {
+				argsEntry.M = "o"
+			}
 		}
+		if argsTxtEntry == nil {
+			argsTxtEntry = &plt.A{C: "g", Fsz: 8}
+		}
+		argsTxtEntry.Ha = "right"
 
 		// draw markers indicating entries
 		nentries := o.Nentries()
@@ -323,25 +336,32 @@ func (o *Bins) Draw(withtxt, withgrid, withentries bool, selBins map[int]bool, a
 					Y[k] = entry.X[1]
 					if o.Ndim == 3 {
 						Z[k] = entry.X[2]
+						if withEntryTxt {
+							plt.Text3d(X[k], Y[k], Z[k], io.Sf("%d", entry.Id), argsTxtEntry)
+						}
+					} else {
+						if withEntryTxt {
+							plt.Text(X[k], Y[k], io.Sf("%d", entry.Id), argsTxtEntry)
+						}
 					}
 					k++
 				}
 			}
 		}
 		if o.Ndim == 2 {
-			argsEntries.Ls = "none"
-			plt.Plot(X, Y, argsEntries)
+			argsEntry.Ls = "none"
+			plt.Plot(X, Y, argsEntry)
 		} else {
-			plt.Plot3dPoints(X, Y, Z, argsEntries)
+			plt.Plot3dPoints(X, Y, Z, argsEntry)
 		}
 	}
 
-	// labels
-	if withtxt {
+	// grid txt
+	if withGridTxt {
 
 		// configuration
-		if argsTxt == nil {
-			argsTxt = &plt.A{C: "k", Fsz: 8}
+		if argsTxtGrid == nil {
+			argsTxtGrid = &plt.A{C: "orange", Fsz: 8}
 		}
 
 		// add text
@@ -364,17 +384,14 @@ func (o *Bins) Draw(withtxt, withgrid, withentries bool, selBins map[int]bool, a
 					y := o.Xmin[1] + float64(j)*o.Size[1] + 0.02*o.Size[1]
 					txt := io.Sf("%d", idx)
 					if o.Ndim == 3 {
-						plt.Text3d(x, y, z, txt, argsTxt)
+						plt.Text3d(x, y, z, txt, argsTxtGrid)
 					} else {
-						plt.Text(x, y, txt, argsTxt)
+						plt.Text(x, y, txt, argsTxtGrid)
 					}
 				}
 			}
 		}
 	}
-
-	// setup
-	//plt.AxisRange(o.Xmin[0]-0.1, o.Xmax[0]+o.Size[0]+0.1, o.Xmin[1]-0.1, o.Xmax[1]+o.Size[1]+0.1)
 }
 
 // information ////////////////////////////////////////////////////////////////////////////////////

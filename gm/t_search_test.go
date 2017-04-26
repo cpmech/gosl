@@ -5,6 +5,7 @@
 package gm
 
 import (
+	"math"
 	"testing"
 
 	"math/rand"
@@ -23,7 +24,7 @@ func Test_bins01(tst *testing.T) {
 	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 100)
 
 	// fill bins structure
-	maxit := 10000 // number of entries
+	maxit := 1000 // number of entries
 	X := make([]float64, maxit)
 	Y := make([]float64, maxit)
 	Z := make([]float64, maxit)
@@ -49,17 +50,97 @@ func Test_bins01(tst *testing.T) {
 		x := X[k]
 		y := Y[k]
 		z := Z[k]
-		id := bins.Find([]float64{x, y, z})
+		id, sqDist := bins.FindClosest([]float64{x, y, z})
 		IDchk[k] = id
+		if sqDist > 0 {
+			tst.Errorf("sqDist is incorrect: %g", sqDist)
+			return
+		}
 	}
 	chk.Ints(tst, "check ids", ID, IDchk)
 
+	// plot
+	if chk.Verbose {
+
+		// draw
+		plt.Reset(false, nil)
+		bins.Draw(true, false, false, false, nil, nil, nil, nil, nil)
+		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
+		var err error
+		if false {
+			err = plt.ShowSave("/tmp/gosl/gm", "t_bins01")
+		} else {
+			err = plt.Save("/tmp/gosl/gm", "t_bins01")
+		}
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
 }
 
 func Test_bins02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("bins02. find along line (2D)")
+	chk.PrintTitle("bins02. find closest")
+
+	// bins
+	var bins Bins
+	bins.Init([]float64{0, 0}, []float64{4, 3}, 5)
+
+	// append points
+	X := []float64{0.5, 1.0, 2.0, 2.0, 2.1, 3.0, 2.1, 2.2}
+	Y := []float64{0.0, 0.5, 0.5, 1.0, 2.0, 2.0, 2.1, 2.1}
+	for i := 0; i < len(X); i++ {
+		err := bins.Append([]float64{X[i], Y[i]}, i, nil)
+		if err != nil {
+			tst.Errorf("%v", err)
+			return
+		}
+	}
+
+	// check
+	io.Pf(bins.Summary())
+	io.Pf("\n")
+	chk.Int(tst, "Ndim", bins.Ndim, 2)
+	chk.Vector(tst, "Xmin", 1e-15, bins.Xmin, []float64{0, 0})
+	chk.Vector(tst, "Xmax", 1e-15, bins.Xmax, []float64{4, 3})
+	chk.Vector(tst, "Xdel", 1e-15, bins.Xdel, []float64{4, 3})
+	chk.Vector(tst, "Size", 1e-15, bins.Size, []float64{4.0 / 5.0, 3.0 / 5.0})
+	chk.Ints(tst, "Npts", bins.Npts, []int{6, 6})
+	chk.Int(tst, "Nall", len(bins.All), 6*6) // there are ghost bins along each direction
+	chk.Int(tst, "Nactive", bins.Nactive(), 6)
+	chk.Int(tst, "Nentries", bins.Nentries(), 8)
+
+	// find closest
+	id, sqDist := bins.FindClosest([]float64{2.2, 2.0})
+	io.Pforan("\nid=%v  sqDist=%v\n", id, sqDist)
+	chk.Int(tst, "closest 4: id", id, 4)
+	chk.Scalar(tst, "closest 4: sqDist", 1e-15, sqDist, 0.1*0.1)
+
+	// find closest again
+	id, sqDist = bins.FindClosest([]float64{2.2, 2.01})
+	io.Pforan("\nid=%v  sqDist=%v\n", id, sqDist)
+	chk.Int(tst, "closest 7: id", id, 7)
+	chk.Scalar(tst, "closest 7: sqDist", 1e-15, sqDist, math.Pow(0.1-0.01, 2))
+
+	// draw
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 500})
+		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
+		plt.Grid(&plt.A{C: "grey"})
+		plt.Equal()
+		plt.HideAllBorders()
+		err := plt.Save("/tmp/gosl/gm", "t_bins02")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}
+
+func Test_bins03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("bins03. find along line (2D)")
 
 	// bins
 	var bins Bins
@@ -187,25 +268,24 @@ func Test_bins02(tst *testing.T) {
 	// draw
 	if chk.Verbose {
 		selBins := map[int]bool{8: true, 9: true, 10: true}
-		withtxt, withgrid, withentries := true, true, true
 		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(withtxt, withgrid, withentries, selBins, nil, nil, nil)
+		bins.Draw(true, true, true, true, nil, nil, nil, nil, selBins)
 		plt.SetXnticks(15)
 		plt.SetYnticks(12)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.HideAllBorders()
-		err := plt.Save("/tmp/gosl/gm", "t_bins02")
+		err := plt.Save("/tmp/gosl/gm", "t_bins03")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
 	}
 }
 
-func Test_bins03(tst *testing.T) {
+func Test_bins04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("bins03. find along line (3D)")
+	chk.PrintTitle("bins04. find along line (3D)")
 
 	// bins
 	var bins Bins
@@ -232,24 +312,22 @@ func Test_bins03(tst *testing.T) {
 
 	// draw
 	if chk.Verbose {
-		argsTxt := &plt.A{Fsz: 5}
 		argsGrid := &plt.A{C: "#427ce5", Lw: 0.1}
-		withtxt, withgrid, withentries := false, true, true
 		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(withtxt, withgrid, withentries, nil, argsTxt, argsGrid, nil)
+		bins.Draw(true, true, false, false, nil, argsGrid, nil, nil, nil)
 		plt.DefaultTriad(10.1)
 		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
-		err := plt.Save("/tmp/gosl/gm", "t_bins03")
+		err := plt.Save("/tmp/gosl/gm", "t_bins04")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
 	}
 }
 
-func Test_bins04(tst *testing.T) {
+func Test_bins05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("bins04. find along line (2D)")
+	chk.PrintTitle("bins05. find along line (2D)")
 
 	// bins
 	var bins Bins
@@ -284,23 +362,21 @@ func Test_bins04(tst *testing.T) {
 
 	// draw
 	if chk.Verbose {
-		argsTxt := &plt.A{Fsz: 5}
-		withtxt, withgrid, withentries := false, true, true
 		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(withtxt, withgrid, withentries, nil, argsTxt, nil, nil)
+		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
-		err = plt.Save("/tmp/gosl/gm", "t_bins04")
+		err = plt.Save("/tmp/gosl/gm", "t_bins05")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
 	}
 }
 
-func Test_bins05(tst *testing.T) {
+func Test_bins06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("bins05. 3D grid")
+	chk.PrintTitle("bins06. 3D grid")
 
 	// bins
 	var bins Bins
@@ -373,19 +449,13 @@ func Test_bins05(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-
-		// selected entries
-		selBins := map[int]bool{2: true, 5: true}
-
-		// draw
-		withtxt, withgrid, withentries := true, true, true
 		plt.Reset(false, nil)
-		bins.Draw(withtxt, withgrid, withentries, selBins, nil, nil, nil)
+		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
 		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
 		if false {
-			err = plt.ShowSave("/tmp/gosl/gm", "t_bins05")
+			err = plt.ShowSave("/tmp/gosl/gm", "t_bins06")
 		} else {
-			err = plt.Save("/tmp/gosl/gm", "t_bins05")
+			err = plt.Save("/tmp/gosl/gm", "t_bins06")
 		}
 		if err != nil {
 			tst.Errorf("%v", err)
