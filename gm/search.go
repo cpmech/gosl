@@ -177,7 +177,8 @@ func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
 //   radTol -- is the tolerance for the radial distance (i.e. NOT squared) to decide
 //             whether a new point will be appended or not.
 //   id -- return the id attached to x
-func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{}, radTol float64) (id int) {
+//   existent -- return flag telling if x was found, based on given tolerance
+func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{}, radTol float64) (id int, existent bool) {
 
 	// try to find another close point
 	idClosest, sqDistMin := o.FindClosest(x)
@@ -201,6 +202,7 @@ func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{},
 
 	// existent point
 	id = idClosest
+	existent = true
 	return
 }
 

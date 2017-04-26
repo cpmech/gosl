@@ -126,27 +126,49 @@ func Test_bins02(tst *testing.T) {
 	// append more points
 	nextId := bins.Nentries()
 	tolerance := 1e-2
-	currentId := bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance)
+	currentId, ex := bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance)
 	io.Pf("\n")
+	if ex {
+		tst.Errorf("existent flag is incorrect")
+		return
+	}
 	chk.Int(tst, "currentId 8", currentId, 8)
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
+
+	// add point: repeated, no change
 	io.Pf("\n")
-	currentId = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance) // repeated, no change
+	currentId, ex = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance)
+	if !ex {
+		tst.Errorf("existent flag is incorrect")
+		return
+	}
 	chk.Int(tst, "currentId 8", currentId, 8)
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
+
+	// add point: very close
 	io.Pf("\n")
 	tolerance = 0.1
-	currentId = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.59999}, nil, tolerance) // very close
+	currentId, ex = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.59999}, nil, tolerance)
+	if !ex {
+		tst.Errorf("existent flag is incorrect")
+		return
+	}
 	chk.Int(tst, "currentId 8", currentId, 8)
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
+
+	// add point: new
 	io.Pf("\n")
-	currentId = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.6}, nil, tolerance) // new
+	currentId, ex = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.6}, nil, tolerance)
+	if ex {
+		tst.Errorf("existent flag is incorrect")
+		return
+	}
 	chk.Int(tst, "currentId 9", currentId, 9)
 	chk.Int(tst, "nextId 10", nextId, 10)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
