@@ -173,31 +173,45 @@ func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
 }
 
 // FindClosestAndAppend finds closest point and, if not found, append to bins with a new Id
-//   nextId -- is the Id of the next point. Will be incremented if x is a new point to be added.
-//   radTol -- is the tolerance for the radial distance (i.e. NOT squared) to decide
-//             whether a new point will be appended or not.
-//   id -- return the id attached to x
-//   existent -- return flag telling if x was found, based on given tolerance
-func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{}, radTol float64) (id int, existent bool) {
+//   Input:
+//     nextId -- is the Id of the next point. Will be incremented if x is a new point to be added.
+//     x      -- is the point to be added
+//     extra  -- extra information attached to point
+//     radTol -- is the tolerance for the radial distance (i.e. NOT squared) to decide
+//               whether a new point will be appended or not.
+//     diff   -- [optional] a function for further check that the new and an eventual existent
+//               points are really different, even after finding that they coincide (within tol)
+//   Output:
+//     id       -- the id attached to x
+//     existent -- flag telling if x was found, based on given tolerance
+func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{}, radTol float64, diff func(idOld int, xNew []float64) bool) (id int, existent bool) {
 
 	// try to find another close point
 	idClosest, sqDistMin := o.FindClosest(x)
 
 	// new point for sure; i.e no other point was found
+	id = *nextId
 	if idClosest < 0 {
-		id = *nextId
 		o.Append(x, id, extra)
 		(*nextId)++
 		return
 	}
 
-	// new point, distant from found one by radTol
+	// new point, distant from the point just found
 	dist := math.Sqrt(sqDistMin)
 	if dist > radTol {
-		id = *nextId
 		o.Append(x, id, extra)
 		(*nextId)++
 		return
+	}
+
+	// further check
+	if diff != nil {
+		if diff(idClosest, x) {
+			o.Append(x, id, extra)
+			(*nextId)++
+			return
+		}
 	}
 
 	// existent point
