@@ -6,6 +6,8 @@ while true; do
     inotifywait -q -e modify $FILES
     echo
     echo
+    echo
+    echo
     go install
-    go test -test.run="io01"
+    go test -test.run="npatch01"
 done
