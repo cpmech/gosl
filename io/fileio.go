@@ -16,6 +16,8 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
+// functions to handle filenames //////////////////////////////////////////////////////////////////
+
 // FnKey returns the file name key (without path and extension, if any)
 func FnKey(fn string) string {
 	base := filepath.Base(fn)
@@ -33,6 +35,16 @@ func PathKey(fn string) string {
 	return fn[:len(fn)-len(filepath.Ext(fn))]
 }
 
+// RemoveAll deletes all files matching filename specified by key (be careful)
+func RemoveAll(key string) {
+	fns, _ := filepath.Glob(os.ExpandEnv(key))
+	for _, fn := range fns {
+		os.RemoveAll(fn)
+	}
+}
+
+// functions to write files ///////////////////////////////////////////////////////////////////////
+
 // AppendToFile appends data to an existent (or new) file
 func AppendToFile(fn string, buffer ...*bytes.Buffer) {
 	fil, err := os.OpenFile(os.ExpandEnv(fn), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
@@ -47,7 +59,7 @@ func AppendToFile(fn string, buffer ...*bytes.Buffer) {
 	}
 }
 
-// WriteFile writes data to a new file
+// WriteFile writes data to a new file with given bytes.Buffer(s)
 func WriteFile(fn string, buffer ...*bytes.Buffer) {
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
@@ -61,14 +73,26 @@ func WriteFile(fn string, buffer ...*bytes.Buffer) {
 	}
 }
 
-// WriteFileD writes data to a new file and create a directory to save the file within
+// WriteFileD writes data to a new file after creating a directory
 func WriteFileD(dirout, fn string, buffer ...*bytes.Buffer) {
 	os.MkdirAll(dirout, 0777)
 	WriteFile(filepath.Join(dirout, fn), buffer...)
 }
 
-// WriteFileS writes data string to a new file
-func WriteFileS(fn, data string) {
+// WriteFileV writes data to a new file, and shows message
+func WriteFileV(fn string, buffer ...*bytes.Buffer) {
+	WriteFile(fn, buffer...)
+	Pf("file <%s> written\n", fn)
+}
+
+// WriteFileVD writes data to a new file, and shows message after creating a directory
+func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer) {
+	WriteFileD(dirout, fn, buffer...)
+	Pf("file <%s> written\n", filepath.Join(dirout, fn))
+}
+
+// WriteStringToFile writes string to a new file
+func WriteStringToFile(fn, data string) {
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
 		chk.Panic("cannot create file <%s>", fn)
@@ -77,25 +101,13 @@ func WriteFileS(fn, data string) {
 	fil.WriteString(data)
 }
 
-// WriteFileSD writes data string to a new file after creating a directory to save the file
-func WriteFileSD(dirout, fn, data string) {
+// WriteStringToFileD writes string to a new file after creating a directory
+func WriteStringToFileD(dirout, fn, data string) {
 	os.MkdirAll(dirout, 0777)
-	WriteFileS(filepath.Join(dirout, fn), data)
+	WriteStringToFile(filepath.Join(dirout, fn), data)
 }
 
-// WriteFileV writes data to a new file (and shows message: file written)
-func WriteFileV(fn string, buffer ...*bytes.Buffer) {
-	WriteFile(fn, buffer...)
-	Pf("file <%s> written\n", fn)
-}
-
-// WriteFileVD writes data to a new file (and shows message: file written), after creating a directory
-func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer) {
-	WriteFileD(dirout, fn, buffer...)
-	Pf("file <%s> written\n", filepath.Join(dirout, fn))
-}
-
-// WriteBytesToFile writes bytes to a new file
+// WriteBytesToFile writes slice of bytes to a new file
 func WriteBytesToFile(fn string, b []byte) {
 	fil, err := os.Create(os.ExpandEnv(fn))
 	if err != nil {
@@ -107,11 +119,20 @@ func WriteBytesToFile(fn string, b []byte) {
 	}
 }
 
-// WriteBytesToFile writes bytes to a new file and create a directory to save the file within
+// WriteBytesToFileD writes slice of bytes to a new file after creating a directory
 func WriteBytesToFileD(dirout, fn string, b []byte) {
 	os.MkdirAll(dirout, 0777)
 	WriteBytesToFile(filepath.Join(dirout, fn), b)
 }
+
+// WriteBytesToFileVD writes slice of bytes to a new file, and print message, after creating a directory
+func WriteBytesToFileVD(dirout, fn string, b []byte) {
+	os.MkdirAll(dirout, 0777)
+	WriteBytesToFile(filepath.Join(dirout, fn), b)
+	Pf("file <%s> written\n", filepath.Join(dirout, fn))
+}
+
+// functions to read files ////////////////////////////////////////////////////////////////////////
 
 // OpenFileR opens a file for reading data
 func OpenFileR(fn string) (fil *os.File, err error) {
@@ -177,14 +198,6 @@ func ReadLinesFile(fil *os.File, cb ReadLinesCallback) (oserr error) {
 		idx++
 	}
 	return
-}
-
-// RemoveAll deletes all files matching filename specified by key (be careful)
-func RemoveAll(key string) {
-	fns, _ := filepath.Glob(os.ExpandEnv(key))
-	for _, fn := range fns {
-		os.RemoveAll(fn)
-	}
 }
 
 //  ReadTableOrPanic reads text file as ReadTable; but panic on errors

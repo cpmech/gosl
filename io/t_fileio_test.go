@@ -129,7 +129,7 @@ func Test_fileIO4(tst *testing.T) {
 	chk.PrintTitle("fileIO4")
 
 	theline := "Hello World !!!"
-	WriteFileSD("/tmp/gosl", "filestring.txt", theline)
+	WriteStringToFileD("/tmp/gosl", "filestring.txt", theline)
 
 	f, err := OpenFileR("/tmp/gosl/filestring.txt")
 	if err != nil {
