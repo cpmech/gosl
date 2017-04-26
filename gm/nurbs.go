@@ -583,10 +583,9 @@ func (o *Nurbs) IndBasis(span []int) (L []int) {
 }
 
 // GetLimitsQ computes the limits of all coordinates of control points in NURBS
-func (o *Nurbs) GetLimitsQ() (xmin, xmax, xdel []float64) {
+func (o *Nurbs) GetLimitsQ() (xmin, xmax []float64) {
 	xmin = []float64{math.Inf(+1), math.Inf(+1), math.Inf(+1)}
 	xmax = []float64{math.Inf(-1), math.Inf(-1), math.Inf(-1)}
-	xdel = []float64{0, 0, 0}
 	for k := 0; k < o.n[2]; k++ {
 		for j := 0; j < o.n[1]; j++ {
 			for i := 0; i < o.n[0]; i++ {
@@ -598,13 +597,9 @@ func (o *Nurbs) GetLimitsQ() (xmin, xmax, xdel []float64) {
 			}
 		}
 	}
-	for i := 0; i < 3; i++ {
-		xdel[i] = xmax[i] - xmin[i]
-	}
 	for i := o.gnd; i < 3; i++ {
 		xmin[i] = 0
 		xmax[i] = 0
-		xdel[i] = 0
 	}
 	return
 }
