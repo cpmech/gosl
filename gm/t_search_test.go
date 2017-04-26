@@ -125,18 +125,17 @@ func Test_bins02(tst *testing.T) {
 
 	// append more points
 	tolerance := 1e-2
-	nextId := bins.Nentries()
-	bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance)
+	nextId := bins.FindClosestAndAppend(bins.Nentries(), []float64{1.0, 1.5}, nil, tolerance)
 	io.Pf("\n")
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
-	bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance) // repeated, no change
+	nextId = bins.FindClosestAndAppend(nextId, []float64{1.0, 1.5}, nil, tolerance) // repeated, no change
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
 	tolerance = 0.1
-	bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.59999}, nil, tolerance)
+	nextId = bins.FindClosestAndAppend(nextId, []float64{1.0, 1.59999}, nil, tolerance)
 	chk.Int(tst, "nextId 9", nextId, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
