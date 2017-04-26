@@ -15,75 +15,80 @@ import (
 
 // BinEntry holds data of an entry to bin
 type BinEntry struct {
-	Id int       // object Id
-	X  []float64 // entry coordinate (read only)
+	Id    int         // object Id
+	X     []float64   // entry coordinate (read only)
+	Extra interface{} // any entity attached to this entry
 }
 
 // Bin defines one bin in Bins (holds entries for search)
 type Bin struct {
-	Idx     int         // index of bin
+	Index   int         // index of bin
 	Entries []*BinEntry // entries
 }
 
-// Bins defines bins to hold entries and speed up search
+// Bins implements a set of bins holding entries and is used to fast search entries by given coordinates.
 type Bins struct {
 	Ndim int       // space dimension
-	Xi   []float64 // [ndim] left/lower-most point
-	Xf   []float64 // [ndim] right/upper-most point
-	L    []float64 // [ndim] whole box lengths
-	S    []float64 // size of bins
-	N    []int     // [ndim] number of divisions
-	All  []*Bin    // [nbins] all bins (there will be an extra bin row along each dimension)
+	Xmin []float64 // [ndim] left/lower-most point
+	Xmax []float64 // [ndim] right/upper-most point
+	Xdel []float64 // [ndim] the lengths along each direction (whole box)
+	Size []float64 // size of bins
+	Npts []int     // [ndim] number of points along each direction; i.e. ndiv + 1
+	All  []*Bin    // [nbins] all bins (there will be an extra "ghost" bin along each dimension)
 	tmp  []int     // [ndim] temporary (auxiliary) slice
 }
 
-// xi   -- [ndim] initial positions
-// xf   -- [ndim] final positions
-// ndiv -- number of divisions for the maximum length
-func (o *Bins) Init(xi, xf []float64, ndiv int) (err error) {
+// Init initialise Bins structure
+//   xmin -- [ndim] min/initial coordinates of the whole space (box/cube)
+//   xmax -- [ndim] max/final coordinates of the whole space (box/cube)
+//   ndiv -- number of divisions for xmax-xmin
+func (o *Bins) Init(xmin, xmax []float64, ndiv int) (err error) {
 
 	// check for out-of-range values
-	o.Ndim = len(xi)
-	o.Xi = xi
-	o.Xf = xf
-	if len(xi) != len(xf) || len(xi) < 2 || len(xi) > 3 {
-		return chk.Err("sizes of xi and l must be the same and equal to either 2 or 3")
+	o.Ndim = len(xmin)
+	o.Xmin = xmin
+	o.Xmax = xmax
+	if len(xmin) != len(xmax) || len(xmin) < 2 || len(xmin) > 3 {
+		return chk.Err("sizes of xmin and xmax must be the same and equal to either 2 or 3")
+	}
+	if ndiv < 1 {
+		ndiv = 1
 	}
 
-	// allocate length and number of division slices
-	o.L = make([]float64, o.Ndim)
-	o.S = make([]float64, o.Ndim)
+	// allocate slices with max lengths and number of division
+	o.Xdel = make([]float64, o.Ndim)
+	o.Size = make([]float64, o.Ndim)
 	for k := 0; k < o.Ndim; k++ {
-		o.L[k] = o.Xf[k] - o.Xi[k]
-		o.S[k] = o.L[k] / float64(ndiv)
+		o.Xdel[k] = o.Xmax[k] - o.Xmin[k]
+		o.Size[k] = o.Xdel[k] / float64(ndiv)
 	}
 
 	// number of divisions
-	o.N = make([]int, o.Ndim)
+	o.Npts = make([]int, o.Ndim)
 	nbins := 1
 	for k := 0; k < o.Ndim; k++ {
-		o.N[k] = int(o.L[k]/o.S[k]) + 1
-		nbins *= o.N[k]
+		o.Npts[k] = int(o.Xdel[k]/o.Size[k]) + 1
+		nbins *= o.Npts[k]
 	}
 
-	// allocate slices
+	// other slices
 	o.All = make([]*Bin, nbins)
 	o.tmp = make([]int, o.Ndim)
 	return
 }
 
-// Append adds a new entry {x, id} to the bins structure
-func (o *Bins) Append(x []float64, id int) (err error) {
-	idx := o.CalcIdx(x)
+// Append adds a new entry {x, id, something} into the Bins structure
+func (o *Bins) Append(x []float64, id int, extra interface{}) (err error) {
+	idx := o.CalcIndex(x)
 	if idx < 0 {
-		return chk.Err("point %v is out of range", x)
+		return chk.Err("coordinates %v are out of range", x)
 	}
 	bin := o.FindBinByIndex(idx)
 	if bin == nil {
 		return chk.Err("bin index %v is out of range", idx)
 	}
 	xcopy := utl.GetCopy(x)
-	entry := BinEntry{id, xcopy}
+	entry := BinEntry{id, xcopy, extra}
 	bin.Entries = append(bin.Entries, &entry)
 	return
 }
@@ -93,12 +98,12 @@ func (o *Bins) Clear() {
 	o.All = make([]*Bin, 0)
 }
 
-// Find returns the stored id of the entry whose coordinates are closest to x
-// returns -1 if out of range or not found
-func (o Bins) Find(x []float64) int {
+// Find returns the id of the entry whose coordinates are closest to x
+// returns -1 if out-of-range or not found
+func (o Bins) Find(x []float64) (idClosest int) {
 
 	// index and check
-	idx := o.CalcIdx(x)
+	idx := o.CalcIndex(x)
 	if idx < 0 {
 		return -1 // out-of-range
 	}
@@ -106,7 +111,7 @@ func (o Bins) Find(x []float64) int {
 	// search for the closest point
 	bin := o.FindBinByIndex(idx)
 	dmin := math.MaxFloat64
-	id_closest := -1
+	idClosest = -1
 	var entry *BinEntry
 	for _, entry = range bin.Entries {
 		var d float64
@@ -115,10 +120,10 @@ func (o Bins) Find(x []float64) int {
 		}
 		if d < dmin {
 			dmin = d
-			id_closest = entry.Id
+			idClosest = entry.Id
 		}
 	}
-	return id_closest
+	return idClosest
 }
 
 // FindBinByIndex finds or allocate new bin corresponding to index idx
@@ -132,36 +137,36 @@ func (o Bins) FindBinByIndex(idx int) *Bin {
 	// allocate new bin if necessary
 	if o.All[idx] == nil {
 		o.All[idx] = new(Bin)
-		o.All[idx].Idx = idx
+		o.All[idx].Index = idx
 	}
 	return o.All[idx]
 }
 
 // CalcIdx calculates the bin index where the point x is
 // returns -1 if out-of-range
-func (o Bins) CalcIdx(x []float64) int {
+func (o Bins) CalcIndex(x []float64) int {
 	for k := 0; k < o.Ndim; k++ {
-		if x[k] < o.Xi[k] || x[k] > o.Xf[k] {
+		if x[k] < o.Xmin[k] || x[k] > o.Xmax[k] {
 			return -1
 		}
-		o.tmp[k] = int((x[k] - o.Xi[k]) / o.S[k])
+		o.tmp[k] = int((x[k] - o.Xmin[k]) / o.Size[k])
 	}
-	idx := o.tmp[0] + o.tmp[1]*o.N[0]
+	idx := o.tmp[0] + o.tmp[1]*o.Npts[0]
 	if o.Ndim > 2 {
-		idx += o.tmp[2] * o.N[0] * o.N[1]
+		idx += o.tmp[2] * o.Npts[0] * o.Npts[1]
 	}
 	return idx
 }
 
 // FindAlongSegment gets the ids of entries that lie close to a segment
-//  Note: the initial (xi) and final (xf) points on segment defined a bounding box of valid points
+//  Note: the initial (xi) and final (xf) points on segment define a bounding box to filter points
 func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 
 	// auxiliary variables
 	var sbins []*Bin // selected bins
-	lmax := utl.Max(o.S[0], o.S[1])
+	lmax := utl.Max(o.Size[0], o.Size[1])
 	if o.Ndim == 3 {
-		lmax = utl.Max(lmax, o.S[2])
+		lmax = utl.Max(lmax, o.Size[2])
 	}
 	btol := 0.9 * lmax // tolerance for bins
 	var p, pi, pf Point
@@ -180,7 +185,7 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 	// loop along all bins
 	var i, j, k int
 	var x, y, z float64
-	nxy := o.N[0] * o.N[1]
+	nxy := o.Npts[0] * o.Npts[1]
 	for idx, bin := range o.All {
 
 		// skip empty bins
@@ -189,16 +194,16 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 		}
 
 		// coordinates of bin center
-		i = idx % o.N[0] // indices representing bin
-		j = (idx % nxy) / o.N[0]
-		x = o.Xi[0] + float64(i)*o.S[0] // coordinates of bin corner
-		y = o.Xi[1] + float64(j)*o.S[1]
-		x += o.S[0] / 2.0
-		y += o.S[1] / 2.0
+		i = idx % o.Npts[0] // indices representing bin
+		j = (idx % nxy) / o.Npts[0]
+		x = o.Xmin[0] + float64(i)*o.Size[0] // coordinates of bin corner
+		y = o.Xmin[1] + float64(j)*o.Size[1]
+		x += o.Size[0] / 2.0
+		y += o.Size[1] / 2.0
 		if o.Ndim == 3 {
 			k = idx / nxy
-			z = o.Xi[2] + float64(k)*o.S[2]
-			z += o.S[2] / 2.0
+			z = o.Xmin[2] + float64(k)*o.Size[2]
+			z += o.Size[2] / 2.0
 		}
 
 		// check if bin is near line
@@ -232,8 +237,177 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 	return ids
 }
 
+// plotting ///////////////////////////////////////////////////////////////////////////////////////
+
+// Draw draws bins; i.e. grid
+func (o *Bins) Draw(withtxt, withgrid, withentries bool, selBins map[int]bool, argsTxt, argsGrid, argsEntries *plt.A) {
+
+	// grid
+	if withgrid {
+
+		// configuration
+		if argsGrid == nil {
+			argsGrid = &plt.A{C: "#427ce5", Lw: 0.8, NoClip: true}
+		}
+
+		// x-y coordinates
+		X := make([][]float64, o.Npts[0])
+		Y := make([][]float64, o.Npts[0])
+		for i := 0; i < o.Npts[0]; i++ {
+			X[i] = make([]float64, o.Npts[1])
+			Y[i] = make([]float64, o.Npts[1])
+			for j := 0; j < o.Npts[1]; j++ {
+				X[i][j] = o.Xmin[0] + float64(i)*o.Size[0]
+				Y[i][j] = o.Xmin[1] + float64(j)*o.Size[1]
+			}
+		}
+
+		// draw grid
+		if o.Ndim == 2 {
+			plt.Grid2d(X, Y, false, argsGrid, nil)
+		} else {
+			Zlevels := make([]float64, o.Npts[2])
+			for k := 0; k < o.Npts[2]; k++ {
+				Zlevels[k] = o.Xmin[2] + float64(k)*o.Size[2]
+			}
+			plt.Grid3d(X, Y, Zlevels, argsGrid)
+		}
+	}
+
+	// selected bins
+	if o.Ndim == 2 {
+		nxy := o.Npts[0] * o.Npts[1]
+		for idx, _ := range selBins {
+			i := idx % o.Npts[0] // indices representing bin
+			j := (idx % nxy) / o.Npts[0]
+			x := o.Xmin[0] + float64(i)*o.Size[0] // coordinates of bin corner
+			y := o.Xmin[1] + float64(j)*o.Size[1]
+			plt.Polyline([][]float64{
+				{x, y},
+				{x + o.Size[0], y},
+				{x + o.Size[0], y + o.Size[1]},
+				{x, y + o.Size[1]},
+			}, &plt.A{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true, NoClip: true})
+		}
+	}
+
+	// plot items
+	if withentries {
+
+		// configuration
+		if argsEntries == nil {
+			argsEntries = &plt.A{C: "r", M: "o", NoClip: true}
+		}
+
+		// draw markers indicating entries
+		nentries := o.Nentries()
+		X := make([]float64, nentries)
+		Y := make([]float64, nentries)
+		var Z []float64
+		if o.Ndim == 3 {
+			Z = make([]float64, nentries)
+		}
+		k := 0
+		for _, bin := range o.All {
+			if bin != nil {
+				for _, entry := range bin.Entries {
+					X[k] = entry.X[0]
+					Y[k] = entry.X[1]
+					if o.Ndim == 3 {
+						Z[k] = entry.X[2]
+					}
+					k++
+				}
+			}
+		}
+		if o.Ndim == 2 {
+			argsEntries.Ls = "none"
+			plt.Plot(X, Y, argsEntries)
+		} else {
+			plt.Plot3dPoints(X, Y, Z, argsEntries)
+		}
+	}
+
+	// labels
+	if withtxt {
+
+		// configuration
+		if argsTxt == nil {
+			argsTxt = &plt.A{C: "k", Fsz: 8}
+		}
+
+		// add text
+		n2 := 1
+		if o.Ndim == 3 {
+			n2 = o.Npts[2]
+		}
+		for k := 0; k < n2; k++ {
+			z := 0.0
+			if o.Ndim == 3 {
+				z = o.Xmin[2] + float64(k)*o.Size[2] + 0.02*o.Size[2]
+			}
+			for j := 0; j < o.Npts[1]; j++ {
+				for i := 0; i < o.Npts[0]; i++ {
+					idx := i + j*o.Npts[0]
+					if o.Ndim == 3 {
+						idx += k * o.Npts[0] * o.Npts[1]
+					}
+					x := o.Xmin[0] + float64(i)*o.Size[0] + 0.02*o.Size[0]
+					y := o.Xmin[1] + float64(j)*o.Size[1] + 0.02*o.Size[1]
+					txt := io.Sf("%d", idx)
+					if o.Ndim == 3 {
+						plt.Text3d(x, y, z, txt, argsTxt)
+					} else {
+						plt.Text(x, y, txt, argsTxt)
+					}
+				}
+			}
+		}
+	}
+
+	// setup
+	//plt.AxisRange(o.Xmin[0]-0.1, o.Xmax[0]+o.Size[0]+0.1, o.Xmin[1]-0.1, o.Xmax[1]+o.Size[1]+0.1)
+}
+
+// information ////////////////////////////////////////////////////////////////////////////////////
+
+// Nactive returns the number of active bins; i.e. non-nil bins
+func (o *Bins) Nactive() (nactive int) {
+	for _, bin := range o.All {
+		if bin != nil {
+			nactive++
+		}
+	}
+	return
+}
+
+// Nentries returns the total number of entries (in active bins)
+func (o *Bins) Nentries() (nentries int) {
+	for _, bin := range o.All {
+		if bin != nil {
+			nentries += len(bin.Entries)
+		}
+	}
+	return
+}
+
+// Summary returns the summary of this Bins' data
+func (o *Bins) Summary() (l string) {
+	l += io.Sf("Ndim        = %v\n", o.Ndim)
+	l += io.Sf("Xmin        = %v\n", o.Xmin)
+	l += io.Sf("Xmax        = %v\n", o.Xmax)
+	l += io.Sf("Xdel        = %v\n", o.Xdel)
+	l += io.Sf("Size        = %v\n", o.Size)
+	l += io.Sf("Npts        = %v\n", o.Npts)
+	l += io.Sf("Nalll(+ext) = %d\n", len(o.All))
+	l += io.Sf("NactiveBins = %d\n", o.Nactive())
+	l += io.Sf("Nentries    = %d\n", o.Nentries())
+	return
+}
+
+// String returns the string representation of one Bin
 func (o Bin) String() string {
-	l := io.Sf("{\"idx\":%d, \"entries\":[", o.Idx)
+	l := io.Sf("{\"idx\":%d, \"entries\":[", o.Index)
 	for i, entry := range o.Entries {
 		if i > 0 {
 			l += ", "
@@ -242,12 +416,17 @@ func (o Bin) String() string {
 		if len(entry.X) > 2 {
 			l += io.Sf(",%g", entry.X[2])
 		}
-		l += "]}"
+		l += "]"
+		if entry.Extra != nil {
+			l += io.Sf(", \"extra\":true")
+		}
+		l += "}"
 	}
 	l += "]}"
 	return l
 }
 
+// String returns the string representation of a set of Bins
 func (o Bins) String() string {
 	l := "[\n"
 	k := 0
@@ -262,73 +441,4 @@ func (o Bins) String() string {
 	}
 	l += "\n]"
 	return l
-}
-
-// Draw2d draws bins' grid
-func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[int]bool) {
-
-	if withgrid {
-		// horizontal lines
-		x := []float64{o.Xi[0], o.Xi[0] + o.L[0] + o.S[0]}
-		y := make([]float64, 2)
-		for j := 0; j < o.N[1]+1; j++ {
-			y[0] = o.Xi[1] + float64(j)*o.S[1]
-			y[1] = y[0]
-			plt.Plot(x, y, &plt.A{C: "#4f3677"})
-		}
-
-		// vertical lines
-		y[0] = o.Xi[1]
-		y[1] = o.Xi[1] + o.L[1] + o.S[1]
-		for i := 0; i < o.N[0]+1; i++ {
-			x[0] = o.Xi[0] + float64(i)*o.S[0]
-			x[1] = x[0]
-			plt.Plot(x, y, &plt.A{C: "#4f3677"})
-		}
-	}
-
-	// selected bins
-	nxy := o.N[0] * o.N[1]
-	for idx, _ := range selBins {
-		i := idx % o.N[0] // indices representing bin
-		j := (idx % nxy) / o.N[0]
-		x := o.Xi[0] + float64(i)*o.S[0] // coordinates of bin corner
-		y := o.Xi[1] + float64(j)*o.S[1]
-		plt.Polyline([][]float64{
-			{x, y},
-			{x + o.S[0], y},
-			{x + o.S[0], y + o.S[1]},
-			{x, y + o.S[1]},
-		}, &plt.A{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true})
-	}
-
-	// plot items
-	if withentries {
-		for _, bin := range o.All {
-			if bin == nil {
-				continue
-			}
-			for _, entry := range bin.Entries {
-				plt.PlotOne(entry.X[0], entry.X[1], &plt.A{C: "r", M: "."})
-			}
-		}
-	}
-
-	// labels
-	if withtxt {
-		for j := 0; j < o.N[1]; j++ {
-			for i := 0; i < o.N[0]; i++ {
-				idx := i + j*o.N[0]
-				x := o.Xi[0] + float64(i)*o.S[0] + 0.02*o.S[0]
-				y := o.Xi[1] + float64(j)*o.S[1] + 0.02*o.S[1]
-				plt.Text(x, y, io.Sf("%d", idx), nil)
-			}
-		}
-	}
-
-	// setup
-	if setup {
-		plt.Equal()
-		plt.AxisRange(o.Xi[0]-0.1, o.Xf[0]+o.S[0]+0.1, o.Xi[1]-0.1, o.Xf[1]+o.S[1]+0.1)
-	}
 }
