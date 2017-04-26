@@ -172,6 +172,31 @@ func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
 	return
 }
 
+// FindClosestAndAppend finds closest point and, if not found, append to bins with a new Id
+//   nextId -- is the Id of the next point. Will be incremented if x is a new point to be added.
+//   radTol -- is the tolerance for the radial distance (i.e. NOT squared) to decide
+//             whether a new point will be appended or not.
+func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{}, radTol float64) {
+
+	// try to find another close point
+	idClosest, sqDistMin := o.FindClosest(x)
+
+	// new point for sure; i.e no other point was found
+	if idClosest < 0 {
+		o.Append(x, *nextId, extra)
+		(*nextId)++
+		return
+	}
+
+	// new point, distant from found one by radTol
+	dist := math.Sqrt(sqDistMin)
+	if dist > radTol {
+		o.Append(x, *nextId, extra)
+		(*nextId)++
+		return
+	}
+}
+
 // FindAlongSegment gets the ids of entries that lie close to a segment
 //  Note: the initial (xi) and final (xf) points on segment define a bounding box to filter points
 func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {

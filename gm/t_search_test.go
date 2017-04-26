@@ -123,6 +123,24 @@ func Test_bins02(tst *testing.T) {
 	chk.Int(tst, "closest 7: id", id, 7)
 	chk.Scalar(tst, "closest 7: sqDist", 1e-15, sqDist, math.Pow(0.1-0.01, 2))
 
+	// append more points
+	tolerance := 1e-2
+	nextId := bins.Nentries()
+	bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance)
+	io.Pf("\n")
+	chk.Int(tst, "nextId 9", nextId, 9)
+	chk.Int(tst, "Nactive", bins.Nactive(), 7)
+	chk.Int(tst, "Nentries", bins.Nentries(), 9)
+	bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance) // repeated, no change
+	chk.Int(tst, "nextId 9", nextId, 9)
+	chk.Int(tst, "Nactive", bins.Nactive(), 7)
+	chk.Int(tst, "Nentries", bins.Nentries(), 9)
+	tolerance = 0.1
+	bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.59999}, nil, tolerance)
+	chk.Int(tst, "nextId 9", nextId, 9)
+	chk.Int(tst, "Nactive", bins.Nactive(), 7)
+	chk.Int(tst, "Nentries", bins.Nentries(), 9)
+
 	// draw
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 500})
