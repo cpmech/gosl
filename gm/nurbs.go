@@ -27,7 +27,7 @@ type Nurbs struct {
 	p   []int           // orders [3]
 	b   []Bspline       // B-splines [gnd]
 	n   []int           // number of basis functions along each direction [3]
-	Q   [][][][]float64 // Qw: 4D control points [n[0]][n[1]][n[2]][4]
+	Q   [][][][]float64 // Qw: weighted control points and weights [n[0]][n[1]][n[2]][4] (Piegl p120)
 	l2i [][]int         // local ids of ctrl points => indices of basis functions [nctrl][3]
 
 	// auxiliary
