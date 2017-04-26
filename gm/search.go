@@ -76,7 +76,6 @@ func (o *Bins) Init(xmin, xmax []float64, ndiv int) (err error) {
 	}
 
 	// other slices
-	io.Pforan("nbins = %v\n", nbins)
 	o.All = make([]*Bin, nbins)
 	o.tmp = make([]int, o.Ndim)
 	return
