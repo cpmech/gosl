@@ -88,7 +88,7 @@ func Test_npatch01(tst *testing.T) {
 
 func Test_npatch02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("npatch02. write NURBS patch to json file")
 
 	// NURBS patch
@@ -117,12 +117,20 @@ func Test_npatch02(tst *testing.T) {
 		7:  []int{24, 31},
 		8:  []int{18, 19, 20},
 		9:  []int{8, 11, 12, 17},
-		10: []int{9, 10, 13, 26},
+		10: []int{9, 10, 13, 26, 27},
 		11: []int{25},
 		13: []int{14, 15},
 		14: []int{16},
 	}
 	checkBinsEntries(tst, patch.Bins.All, entries)
+
+	// check control points
+	for i, cp := range patch.ControlPoints {
+		if i != cp.Id {
+			tst.Errorf("control point id is incorrect")
+			return
+		}
+	}
 
 	// check exchange data
 	chk.Ints(tst, "0: Ctrls", patch.ExchangeData[0].Ctrls, []int{0, 1, 2, 3, 4, 5})
@@ -144,7 +152,15 @@ func Test_npatch02(tst *testing.T) {
 		return
 	}
 
-	// check read dataa
+	// check read control points
+	for i, cp := range pp.ControlPoints {
+		if i != cp.Id {
+			tst.Errorf("read control point id is incorrect")
+			return
+		}
+	}
+
+	// check read data
 	io.Pf("\n")
 	chk.Int(tst, "0: Id", pp.ExchangeData[0].Id, 0)
 	chk.Int(tst, "1: Id", pp.ExchangeData[1].Id, 1)
@@ -162,15 +178,49 @@ func Test_npatch02(tst *testing.T) {
 	chk.Ints(tst, "3: Ctrls", pp.ExchangeData[3].Ctrls, []int{11, 17, 18, 19, 20, 21, 22, 23, 11})
 	chk.Ints(tst, "4: Ctrls", pp.ExchangeData[4].Ctrls, []int{24, 25, 26, 27, 28, 29, 30, 31, 24})
 
+	// check read bins
+	io.Pf("\n")
+	checkBinsEntries(tst, pp.Bins.All, entries)
+
+	// check read nurbs
+	io.Pf("\n")
+	chk.Int(tst, "0: Gnd", pp.Entities[0].Gnd(), 2)
+	chk.Int(tst, "1: Gnd", pp.Entities[1].Gnd(), 2)
+	chk.Int(tst, "2: Gnd", pp.Entities[2].Gnd(), 2)
+	chk.Int(tst, "3: Gnd", pp.Entities[3].Gnd(), 1)
+	chk.Int(tst, "4: Gnd", pp.Entities[4].Gnd(), 1)
+	chk.Ints(tst, "0: Ord", []int{pp.Entities[0].Ord(0), pp.Entities[0].Ord(1)}, []int{2, 1})
+	chk.Ints(tst, "1: Ord", []int{pp.Entities[1].Ord(0), pp.Entities[1].Ord(1)}, []int{2, 1})
+	chk.Ints(tst, "2: Ord", []int{pp.Entities[2].Ord(0), pp.Entities[2].Ord(1)}, []int{2, 1})
+	chk.Ints(tst, "3: Ord", []int{pp.Entities[3].Ord(0)}, []int{2})
+	chk.Ints(tst, "4: Ord", []int{pp.Entities[4].Ord(0)}, []int{2})
+	chk.Ints(tst, "0: Nbasis", pp.Entities[0].n, []int{3, 2, 1})
+	chk.Ints(tst, "1: Nbasis", pp.Entities[1].n, []int{3, 2, 1})
+	chk.Ints(tst, "2: Nbasis", pp.Entities[2].n, []int{3, 2, 1})
+	chk.Ints(tst, "3: Nbasis", pp.Entities[3].n, []int{9, 1, 1})
+	chk.Ints(tst, "4: Nbasis", pp.Entities[4].n, []int{9, 1, 1})
+
 	// plot
 	if chk.Verbose {
 		ndim := 2
 		plt.Reset(false, nil)
+
+		// original patch
 		for _, surf := range patch.Entities {
 			surf.DrawCtrl(ndim, false, nil, nil)
-			surf.DrawElems(ndim, 11, false, nil, nil)
+			surf.DrawElems(ndim, 11, false, &plt.A{C: "blue", Z: 10}, nil)
 		}
 		patch.Bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
+
+		// read patch
+		for _, surf := range pp.Entities {
+			//surf.DrawCtrl(ndim, false, &plt.A{C: "g"}, nil)
+			surf.DrawElems(ndim, 11, false, &plt.A{C: "#f1e09a", Lw: 10, NoClip: true}, nil)
+		}
+		argsEntry := &plt.A{C: "k", M: "o", Ms: 10, Void: true, NoClip: true}
+		pp.Bins.Draw(true, false, false, false, argsEntry, nil, nil, nil, nil)
+
+		// save
 		plt.Equal()
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/gm", "t_npatch02")

@@ -46,43 +46,28 @@ type NurbsPatch struct {
 	Bins Bins `json:"-"` // auxiliary structure to locate points
 }
 
+// initialisation functions ///////////////////////////////////////////////////////////////////////
+
 // NewNurbsPatch returns new patch of NURBS
 //   tolerance -- tolerance to assume that two control points are the same
 func NewNurbsPatch(binsNdiv int, tolerance float64, entities ...*Nurbs) (o *NurbsPatch, err error) {
-
-	// allocate
 	o = new(NurbsPatch)
-	if len(entities) < 1 {
+	o.Entities = entities
+	err = o.ResetFromEntities(binsNdiv, tolerance)
+	return
+}
+
+// ResetFromEntities will reset all exchange data with information from Entities slice
+func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err error) {
+
+	// limits and ndim
+	xmin, xmax, ndim, err := o.LimitsAndNdim()
+	if err != nil {
 		return
 	}
 
-	// find limits
-	xmin, xmax := entities[0].GetLimitsQ()
-	for i := entities[0].gnd; i < 3; i++ {
-		xmin[i] = math.Inf(+1)
-		xmax[i] = math.Inf(-1)
-	}
-	for i := 1; i < len(entities); i++ {
-		xmi, xma := entities[i].GetLimitsQ()
-		for i := 0; i < 3; i++ {
-			xmin[i] = utl.Min(xmin[i], xmi[i])
-			xmax[i] = utl.Max(xmax[i], xma[i])
-		}
-	}
-
-	// find max space dimension; e.g. we may have curves and surfaces at the same time
-	ndim := 0
-	for i := 0; i < 3; i++ {
-		if xmax[i]-xmin[i] > XDELZERO {
-			ndim++
-		}
-	}
-	if ndim < 1 {
-		err = chk.Err("ndim=%d is invalid", ndim)
-		return
-	}
-
-	// allocate auxiliary structure to locate points
+	// reset bins
+	o.Bins.Clear()
 	err = o.Bins.Init(xmin[:ndim], xmax[:ndim], binsNdiv)
 	if err != nil {
 		return
@@ -92,12 +77,10 @@ func NewNurbsPatch(binsNdiv int, tolerance float64, entities ...*Nurbs) (o *Nurb
 	nextId := 0
 
 	// set exchange data
-	o.Entities = make([]*Nurbs, len(entities))
-	o.ExchangeData = make([]*NurbsExchangeData, len(entities))
-	for e, entity := range entities {
+	o.ExchangeData = make([]*NurbsExchangeData, len(o.Entities))
+	for e, entity := range o.Entities {
 
 		// set entity and compute number of control points
-		o.Entities[e] = entity
 		nctrls := entity.n[0] * entity.n[1] * entity.n[2]
 
 		// new data structure
@@ -127,32 +110,79 @@ func NewNurbsPatch(binsNdiv int, tolerance float64, entities ...*Nurbs) (o *Nurb
 
 					// get point Id
 					x := entity.GetQ(i, j, k)
-					id, existent := o.Bins.FindClosestAndAppend(&nextId, x, nil, tolerance)
-
-					// existent point => check weights
-					if existent {
-
-						// add new point @ same location but with different weight
-						weight := o.ControlPoints[id].X[3]
-						if math.Abs(x[3]-weight) > 1e-15 {
-							id = nextId
-							nextId++
-
-						}
-					}
+					id, existent := o.Bins.FindClosestAndAppend(&nextId, x, nil, tolerance, o.diffPoints)
 
 					// set control point id
 					o.ExchangeData[e].Ctrls[idxCtrl] = id
 					idxCtrl++
 
 					// set list of points
-					o.ControlPoints = append(o.ControlPoints, &PointExchangeData{Id: id, X: x})
+					if !existent {
+						o.ControlPoints = append(o.ControlPoints, &PointExchangeData{Id: id, X: x})
+					}
 				}
 			}
 		}
 	}
 	return
 }
+
+// ResetFromExchangeData will reset all Entities with information from ExchangeData (and ControlPoints)
+func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err error) {
+
+	// check
+	if len(o.ExchangeData) < 1 || len(o.ControlPoints) < 1 {
+		return chk.Err("there are no ExchangeData or ControlPoints")
+	}
+
+	// collect vertices
+	verts := make([][]float64, len(o.ControlPoints))
+	for i, cp := range o.ControlPoints {
+		verts[i] = cp.X
+	}
+
+	// allocate nurbs
+	o.Entities = make([]*Nurbs, len(o.ExchangeData))
+	for i, ed := range o.ExchangeData {
+		o.Entities[i] = new(Nurbs)
+		o.Entities[i].Init(ed.Gnd, ed.Ords, ed.Knots)
+		err = o.Entities[i].SetControl(verts, ed.Ctrls)
+		if err != nil {
+			return
+		}
+	}
+
+	// limits and ndim
+	xmin, xmax, ndim, err := o.LimitsAndNdim()
+	if err != nil {
+		return
+	}
+
+	// reset bins
+	o.Bins.Clear()
+	err = o.Bins.Init(xmin[:ndim], xmax[:ndim], binsNdiv)
+	if err != nil {
+		return
+	}
+
+	// global index of control point
+	nextId := 0
+
+	// set bins
+	for _, entity := range o.Entities {
+		for k := 0; k < entity.n[2]; k++ {
+			for j := 0; j < entity.n[1]; j++ {
+				for i := 0; i < entity.n[0]; i++ {
+					x := entity.GetQ(i, j, k)
+					o.Bins.FindClosestAndAppend(&nextId, x, nil, tolerance, o.diffPoints)
+				}
+			}
+		}
+	}
+	return
+}
+
+// read/write function ////////////////////////////////////////////////////////////////////////////
 
 // Write writes ExchangeData to json file
 func (o NurbsPatch) Write(dirout, fnkey string) (err error) {
@@ -174,8 +204,59 @@ func NewNurbsPatchFromFile(filename string, binsNdiv int, tolerance float64) (o 
 	}
 	o = new(NurbsPatch)
 	err = json.Unmarshal(b, o)
+	if err != nil {
+		return
+	}
 
 	// allocate nurbs
-
+	err = o.ResetFromExchangeData(binsNdiv, tolerance)
 	return
+}
+
+// auxiliary //////////////////////////////////////////////////////////////////////////////////////
+
+// LimitsAndNdim computes the limits of the patch and max dimension by looping over all Entities
+func (o NurbsPatch) LimitsAndNdim() (xmin, xmax []float64, ndim int, err error) {
+
+	// check
+	if len(o.Entities) < 1 {
+		err = chk.Err("there are no Entities")
+		return
+	}
+
+	// find limits
+	xmin, xmax = o.Entities[0].GetLimitsQ()
+	for i := o.Entities[0].gnd; i < 3; i++ {
+		xmin[i] = math.Inf(+1)
+		xmax[i] = math.Inf(-1)
+	}
+	for i := 1; i < len(o.Entities); i++ {
+		xmi, xma := o.Entities[i].GetLimitsQ()
+		for i := 0; i < 3; i++ {
+			xmin[i] = utl.Min(xmin[i], xmi[i])
+			xmax[i] = utl.Max(xmax[i], xma[i])
+		}
+	}
+
+	// find max space dimension; e.g. we may have curves and surfaces at the same time
+	ndim = 0
+	for i := 0; i < 3; i++ {
+		if xmax[i]-xmin[i] > XDELZERO {
+			ndim++
+		}
+	}
+	if ndim < 1 {
+		err = chk.Err("ndim=%d is invalid", ndim)
+	}
+	return
+}
+
+// auxiliary internal /////////////////////////////////////////////////////////////////////////////
+
+// diffPoints returns true if two control points are different, considering the weights
+func (o NurbsPatch) diffPoints(idOld int, xNew []float64) bool {
+	if math.Abs(xNew[3]-o.ControlPoints[idOld].X[3]) > 0 {
+		return true
+	}
+	return false
 }
