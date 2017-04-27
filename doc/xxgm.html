@@ -86,12 +86,6 @@ handling geometry and mesh structures
 				<dd><a href="#DistPointPoint">func DistPointPoint(a, b *Point) float64</a></dd>
 			
 				
-				<dd><a href="#GetLimits">func GetLimits(o *Nurbs) (xmin, xmax, xdel []float64)</a></dd>
-			
-				
-				<dd><a href="#HashPoint">func HashPoint(x, xmin, xdel []float64, tol float64) int</a></dd>
-			
-				
 				<dd><a href="#IsPointIn">func IsPointIn(p *Point, cMin, cMax []float64, tol float64) bool</a></dd>
 			
 				
@@ -110,9 +104,6 @@ handling geometry and mesh structures
 				<dd><a href="#PointsLims">func PointsLims(pp []*Point) (cmin, cmax []float64)</a></dd>
 			
 				
-				<dd><a href="#ReadMsh">func ReadMsh(fnk string) (nurbss []*Nurbs)</a></dd>
-			
-				
 				<dd><a href="#VecDot">func VecDot(u, v []float64) float64</a></dd>
 			
 				
@@ -123,9 +114,6 @@ handling geometry and mesh structures
 			
 				
 				<dd><a href="#VecNorm">func VecNorm(u []float64) float64</a></dd>
-			
-				
-				<dd><a href="#WriteMshD">func WriteMshD(dirout, fnk string, nurbss []*Nurbs, vtagged map[int]int, ctagged map[string]int, tol float64)</a></dd>
 			
 			
 				
@@ -163,19 +151,16 @@ handling geometry and mesh structures
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bins.Append">func (o *Bins) Append(x []float64, id int) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bins.Append">func (o *Bins) Append(x []float64, id int, extra interface{}) (err error)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bins.CalcIdx">func (o Bins) CalcIdx(x []float64) int</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bins.CalcIndex">func (o Bins) CalcIndex(x []float64) int</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Bins.Clear">func (o *Bins) Clear()</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bins.Draw2d">func (o *Bins) Draw2d(withtxt, withgrid, withentries, setup bool, selBins map[int]bool)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#Bins.Find">func (o Bins) Find(x []float64) int</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bins.Draw">func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEntry, argsGrid, argsTxtEntry, argsTxtGrid *plt.A, selBins map[int]bool)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Bins.FindAlongSegment">func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int</a></dd>
@@ -184,10 +169,25 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#Bins.FindBinByIndex">func (o Bins) FindBinByIndex(idx int) *Bin</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Bins.Init">func (o *Bins) Init(xi, xf []float64, ndiv int) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Bins.FindClosest">func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.FindClosestAndAppend">func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{}, radTol float64, diff func(idOld int, xNew []float64) bool) (id int, existent bool)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Init">func (o *Bins) Init(xmin, xmax []float64, ndiv int) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Nactive">func (o *Bins) Nactive() (nactive int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Nentries">func (o *Bins) Nentries() (nentries int)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Bins.String">func (o Bins) String() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Bins.Summary">func (o *Bins) Summary() (l string)</a></dd>
 				
 			
 				
@@ -241,11 +241,6 @@ handling geometry and mesh structures
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Bspline.SetOrder">func (o *Bspline) SetOrder(p int)</a></dd>
-				
-			
-				
-				<dd><a href="#Data">type Data</a></dd>
-				
 				
 			
 				
@@ -305,6 +300,9 @@ handling geometry and mesh structures
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetElemNumBasis">func (o *Nurbs) GetElemNumBasis() (npts int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetLimitsQ">func (o *Nurbs) GetLimitsQ() (xmin, xmax []float64)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Nurbs.GetQ">func (o *Nurbs) GetQ(i, j, k int) (x []float64)</a></dd>
@@ -374,8 +372,36 @@ handling geometry and mesh structures
 				
 			
 				
-				<dd><a href="#NurbsD">type NurbsD</a></dd>
+				<dd><a href="#NurbsExchangeData">type NurbsExchangeData</a></dd>
 				
+				
+			
+				
+				<dd><a href="#NurbsExchangeDataSet">type NurbsExchangeDataSet</a></dd>
+				
+				
+			
+				
+				<dd><a href="#NurbsPatch">type NurbsPatch</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewNurbsPatch">func NewNurbsPatch(binsNdiv int, tolerance float64, entities ...*Nurbs) (o *NurbsPatch, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewNurbsPatchFromFile">func NewNurbsPatchFromFile(filename string, binsNdiv int, tolerance float64) (o *NurbsPatch, err error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NurbsPatch.LimitsAndNdim">func (o NurbsPatch) LimitsAndNdim() (xmin, xmax []float64, ndim int, err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NurbsPatch.ResetFromEntities">func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NurbsPatch.ResetFromExchangeData">func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NurbsPatch.Write">func (o NurbsPatch) Write(dirout, fnkey string) (err error)</a></dd>
 				
 			
 				
@@ -390,6 +416,11 @@ handling geometry and mesh structures
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Point.String">func (o *Point) String() string</a></dd>
+				
+			
+				
+				<dd><a href="#PointExchangeData">type PointExchangeData</a></dd>
+				
 				
 			
 				
@@ -412,11 +443,6 @@ handling geometry and mesh structures
 					<dd>&nbsp; &nbsp; <a href="#Segment.Vector">func (o *Segment) Vector(m float64) []float64</a></dd>
 				
 			
-				
-				<dd><a href="#Vert">type Vert</a></dd>
-				
-				
-			
 			
 			</dl>
 			</div><!-- #manual-nav -->
@@ -436,11 +462,9 @@ handling geometry and mesh structures
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/factory.go">factory.go</a>
 			
-				<a href="https://github.com/cpmech/gosl/blob/master/gm/hashpoint.go">hashpoint.go</a>
-			
-				<a href="https://github.com/cpmech/gosl/blob/master/gm/io.go">io.go</a>
-			
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go">nurbs.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go">nurbspatch.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go">plotbsplines.go</a>
 			
@@ -519,6 +543,14 @@ FactoryNurbs generates NURBS&#39;
 </p>
 
 			
+				<pre>var (
+    <span id="XDELZERO">XDELZERO</span> = 1e-10 <span class="comment">// minimum distance between coordinates; i.e. xmax[i]-xmin[i] mininum</span>
+)</pre>
+				<p>
+consts
+</p>
+
+			
 		
 		
 			
@@ -539,30 +571,6 @@ DistPointLine computes the distance from p to line passing through a -&gt; b
 			<pre>func DistPointPoint(a, b *<a href="#Point">Point</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 DistPointPoint computes the unsigned distance from a to b
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="GetLimits">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=389:442#L8">GetLimits</a></h2>
-			<pre>func GetLimits(o *<a href="#Nurbs">Nurbs</a>) (xmin, xmax, xdel []<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-GetLimits computes the limits of all coordinates of control points in NURBS
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="HashPoint">func <a href="https://github.com/cpmech/gosl/blob/master/gm/hashpoint.go?s=290:346#L3">HashPoint</a></h2>
-			<pre>func HashPoint(x, xmin, xdel []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
-			<p>
-HashPoint returns a unique id of a point
 </p>
 
 			
@@ -652,18 +660,6 @@ PointsLims returns the limits of a set of points
 		
 			
 			
-			<h2 id="ReadMsh">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=6342:6384#L259">ReadMsh</a></h2>
-			<pre>func ReadMsh(fnk <a href="/pkg/builtin/#string">string</a>) (nurbss []*<a href="#Nurbs">Nurbs</a>)</pre>
-			<p>
-ReadMsh reads .msh file
-</p>
-
-			
-			
-
-		
-			
-			
 			<h2 id="VecDot">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=2157:2192#L71">VecDot</a></h2>
 			<pre>func VecDot(u, v []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
@@ -707,23 +703,6 @@ VecNewAdd returns a new vector by adding two other vectors
 			<p>
 VecNorm returns the length (Euclidian norm) of a vector
 </p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteMshD">func <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=1238:1347#L39">WriteMshD</a></h2>
-			<pre>func WriteMshD(dirout, fnk <a href="/pkg/builtin/#string">string</a>, nurbss []*<a href="#Nurbs">Nurbs</a>, vtagged map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#int">int</a>, ctagged map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>, tol <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-WriteMshD writes .msh file
-Input:
-</p>
-<pre>vtagged -- maps hashed id of control point to vertex tag
-ctagged -- maps idOfNurbs_localIdOfElem to cell tag
-tol     -- tolerance for normalized numbers comparison when generating hashes, e.g. 1e-7
-</pre>
 
 			
 			
@@ -810,9 +789,9 @@ Point returns the x-y-z coordinates of a point on Bezier curve
 		
 			
 			
-			<h2 id="Bin">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=513:601#L13">Bin</a></h2>
+			<h2 id="Bin">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=686:774#L19">Bin</a></h2>
 			<pre>type Bin struct {
-    Idx     <a href="/pkg/builtin/#int">int</a>         <span class="comment">// index of bin</span>
+    Index   <a href="/pkg/builtin/#int">int</a>         <span class="comment">// index of bin</span>
     Entries []*<a href="#BinEntry">BinEntry</a> <span class="comment">// entries</span>
 }</pre>
 			<p>
@@ -832,9 +811,12 @@ Bin defines one bin in Bins (holds entries for search)
 
 			
 				
-				<h3 id="Bin.String">func (Bin) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=5377:5405#L225">String</a></h3>
+				<h3 id="Bin.String">func (Bin) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=12308:12336#L472">String</a></h3>
 				<pre>func (o <a href="#Bin">Bin</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
-				
+				<p>
+String returns the string representation of one Bin
+</p>
+
 				
 				
 				
@@ -842,10 +824,11 @@ Bin defines one bin in Bins (holds entries for search)
 		
 			
 			
-			<h2 id="BinEntry">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=356:453#L7">BinEntry</a></h2>
+			<h2 id="BinEntry">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=463:626#L12">BinEntry</a></h2>
 			<pre>type BinEntry struct {
-    Id <a href="/pkg/builtin/#int">int</a>       <span class="comment">// object Id</span>
-    X  []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// entry coordinate (read only)</span>
+    Id    <a href="/pkg/builtin/#int">int</a>         <span class="comment">// object Id</span>
+    X     []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// entry coordinate (read only)</span>
+    Extra interface{} <span class="comment">// any entity attached to this entry</span>
 }</pre>
 			<p>
 BinEntry holds data of an entry to bin
@@ -866,19 +849,19 @@ BinEntry holds data of an entry to bin
 		
 			
 			
-			<h2 id="Bins">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=660:1078#L19">Bins</a></h2>
+			<h2 id="Bins">type <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=882:1364#L25">Bins</a></h2>
 			<pre>type Bins struct {
     Ndim <a href="/pkg/builtin/#int">int</a>       <span class="comment">// space dimension</span>
-    Xi   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] left/lower-most point</span>
-    Xf   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] right/upper-most point</span>
-    L    []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] whole box lengths</span>
-    S    []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// size of bins</span>
-    N    []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// [ndim] number of divisions</span>
-    All  []*<a href="#Bin">Bin</a>    <span class="comment">// [nbins] all bins (there will be an extra bin row along each dimension)</span>
+    Xmin []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] left/lower-most point</span>
+    Xmax []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] right/upper-most point</span>
+    Xdel []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// [ndim] the lengths along each direction (whole box)</span>
+    Size []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// size of bins</span>
+    Npts []<a href="/pkg/builtin/#int">int</a>     <span class="comment">// [ndim] number of points along each direction; i.e. ndiv + 1</span>
+    All  []*<a href="#Bin">Bin</a>    <span class="comment">// [nbins] all bins (there will be an extra &#34;ghost&#34; bin along each dimension)</span>
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
-Bins defines bins to hold entries and speed up search
+Bins implements a set of bins holding entries and is used to fast search entries by given coordinates.
 </p>
 
 
@@ -894,10 +877,10 @@ Bins defines bins to hold entries and speed up search
 
 			
 				
-				<h3 id="Bins.Append">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1988:2042#L66">Append</a></h3>
-				<pre>func (o *<a href="#Bins">Bins</a>) Append(x []<a href="/pkg/builtin/#float64">float64</a>, id <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<h3 id="Bins.Append">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2612:2685#L79">Append</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Append(x []<a href="/pkg/builtin/#float64">float64</a>, id <a href="/pkg/builtin/#int">int</a>, extra interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
-Append adds a new entry {x, id} to the bins structure
+Append adds a new entry {x, id, something} into the Bins structure
 </p>
 
 				
@@ -905,8 +888,8 @@ Append adds a new entry {x, id} to the bins structure
 				
 			
 				
-				<h3 id="Bins.CalcIdx">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3399:3437#L132">CalcIdx</a></h3>
-				<pre>func (o <a href="#Bins">Bins</a>) CalcIdx(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
+				<h3 id="Bins.CalcIndex">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3479:3519#L117">CalcIndex</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) CalcIndex(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 CalcIdx calculates the bin index where the point x is
 returns -1 if out-of-range
@@ -917,7 +900,7 @@ returns -1 if out-of-range
 				
 			
 				
-				<h3 id="Bins.Clear">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2369:2391#L82">Clear</a></h3>
+				<h3 id="Bins.Clear">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3028:3050#L95">Clear</a></h3>
 				<pre>func (o *<a href="#Bins">Bins</a>) Clear()</pre>
 				<p>
 Clear clears all bins
@@ -928,10 +911,10 @@ Clear clears all bins
 				
 			
 				
-				<h3 id="Bins.Draw2d">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=5926:6013#L258">Draw2d</a></h3>
-				<pre>func (o *<a href="#Bins">Bins</a>) Draw2d(withtxt, withgrid, withentries, setup <a href="/pkg/builtin/#bool">bool</a>, selBins map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<h3 id="Bins.Draw">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=8041:8190#L295">Draw</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Draw(withEntry, withGrid, withEntryTxt, withGridTxt <a href="/pkg/builtin/#bool">bool</a>, argsEntry, argsGrid, argsTxtEntry, argsTxtGrid *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, selBins map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
-Draw2d draws bins&#39; grid
+Draw draws bins; i.e. grid
 </p>
 
 				
@@ -939,24 +922,12 @@ Draw2d draws bins&#39; grid
 				
 			
 				
-				<h3 id="Bins.Find">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=2543:2578#L88">Find</a></h3>
-				<pre>func (o <a href="#Bins">Bins</a>) Find(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
-				<p>
-Find returns the stored id of the entry whose coordinates are closest to x
-returns -1 if out of range or not found
-</p>
-
-				
-				
-				
-			
-				
-				<h3 id="Bins.FindAlongSegment">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3852:3919#L148">FindAlongSegment</a></h3>
+				<h3 id="Bins.FindAlongSegment">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=6340:6407#L215">FindAlongSegment</a></h3>
 				<pre>func (o <a href="#Bins">Bins</a>) FindAlongSegment(xi, xf []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>) []<a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 FindAlongSegment gets the ids of entries that lie close to a segment
 </p>
-<pre>Note: the initial (xi) and final (xf) points on segment defined a bounding box of valid points
+<pre>Note: the initial (xi) and final (xf) points on segment define a bounding box to filter points
 </pre>
 
 				
@@ -964,7 +935,7 @@ FindAlongSegment gets the ids of entries that lie close to a segment
 				
 			
 				
-				<h3 id="Bins.FindBinByIndex">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3074:3116#L115">FindBinByIndex</a></h3>
+				<h3 id="Bins.FindBinByIndex">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=3152:3194#L100">FindBinByIndex</a></h3>
 				<pre>func (o <a href="#Bins">Bins</a>) FindBinByIndex(idx <a href="/pkg/builtin/#int">int</a>) *<a href="#Bin">Bin</a></pre>
 				<p>
 FindBinByIndex finds or allocate new bin corresponding to index idx
@@ -975,12 +946,62 @@ FindBinByIndex finds or allocate new bin corresponding to index idx
 				
 			
 				
-				<h3 id="Bins.Init">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1204:1263#L33">Init</a></h3>
-				<pre>func (o *<a href="#Bins">Bins</a>) Init(xi, xf []<a href="/pkg/builtin/#float64">float64</a>, ndiv <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<h3 id="Bins.FindClosest">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=4145:4218#L136">FindClosest</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) FindClosest(x []<a href="/pkg/builtin/#float64">float64</a>) (idClosest <a href="/pkg/builtin/#int">int</a>, sqDistMin <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
-xi   -- [ndim] initial positions
-xf   -- [ndim] final positions
-ndiv -- number of divisions for the maximum length
+FindClosest returns the id of the entry whose coordinates are closest to x
+</p>
+<pre>idClosest -- the id of the closest entity. return -1 if out-of-range or not found
+sqDistMin -- the minimum distance (squared) between x and the closest entity in the same bin
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.FindClosestAndAppend">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=5449:5612#L177">FindClosestAndAppend</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) FindClosestAndAppend(nextId *<a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>, extra interface{}, radTol <a href="/pkg/builtin/#float64">float64</a>, diff func(idOld <a href="/pkg/builtin/#int">int</a>, xNew []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a>) (id <a href="/pkg/builtin/#int">int</a>, existent <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+FindClosestAndAppend finds closest point and, if not found, append to bins with a new Id
+</p>
+<pre>Input:
+  nextId -- is the Id of the next point. Will be incremented if x is a new point to be added.
+  x      -- is the point to be added
+  extra  -- extra information attached to point
+  radTol -- is the tolerance for the radial distance (i.e. NOT squared) to decide
+            whether a new point will be appended or not.
+  diff   -- [optional] a function for further check that the new and an eventual existent
+            points are really different, even after finding that they coincide (within tol)
+Output:
+  id       -- the id attached to x
+  existent -- flag telling if x was found, based on given tolerance
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Init">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=1593:1656#L40">Init</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Init(xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, ndiv <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Init initialise Bins structure
+</p>
+<pre>xmin -- [ndim] min/initial coordinates of the whole space (box/cube)
+xmax -- [ndim] max/final coordinates of the whole space (box/cube)
+ndiv -- number of divisions for xmax-xmin
+</pre>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Nactive">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=11437:11475#L438">Nactive</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Nactive() (nactive <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Nactive returns the number of active bins; i.e. non-nil bins
 </p>
 
 				
@@ -988,9 +1009,34 @@ ndiv -- number of divisions for the maximum length
 				
 			
 				
-				<h3 id="Bins.String">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=5697:5726#L241">String</a></h3>
-				<pre>func (o <a href="#Bins">Bins</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				<h3 id="Bins.Nentries">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=11621:11661#L448">Nentries</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Nentries() (nentries <a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+Nentries returns the total number of entries (in active bins)
+</p>
+
 				
+				
+				
+			
+				
+				<h3 id="Bins.String">func (Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=12765:12794#L493">String</a></h3>
+				<pre>func (o <a href="#Bins">Bins</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+String returns the string representation of a set of Bins
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Bins.Summary">func (*Bins) <a href="https://github.com/cpmech/gosl/blob/master/gm/search.go?s=11811:11846#L458">Summary</a></h3>
+				<pre>func (o *<a href="#Bins">Bins</a>) Summary() (l <a href="/pkg/builtin/#string">string</a>)</pre>
+				<p>
+Summary returns the summary of this Bins&#39; data
+</p>
+
 				
 				
 				
@@ -1219,33 +1265,9 @@ SetOrder sets B-spline order (p)
 		
 			
 			
-			<h2 id="Data">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=6237:6313#L253">Data</a></h2>
-			<pre>type Data struct {
-    Verts  []<a href="#Vert">Vert</a>   <span class="comment">// vertices</span>
-    Nurbss []<a href="#NurbsD">NurbsD</a> <span class="comment">// NURBSs</span>
-}</pre>
-			<p>
-Data holds all geometry data
-</p>
-
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="Nurbs">type <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=532:1482#L13">Nurbs</a></h2>
+			<h2 id="Nurbs">type <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=532:1513#L13">Nurbs</a></h2>
 			<pre>type Nurbs struct {
-    Q [][][][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// Qw: 4D control points [n[0]][n[1]][n[2]][4]</span>
+    Q [][][][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// Qw: weighted control points and weights [n[0]][n[1]][n[2]][4] (Piegl p120)</span>
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
@@ -1268,7 +1290,7 @@ Note: Control points must be set after a call to Init
 
 			
 				
-				<h3 id="Nurbs.CalcBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=3986:4024#L120">CalcBasis</a></h3>
+				<h3 id="Nurbs.CalcBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=4017:4055#L120">CalcBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CalcBasis(u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 CalcBasis computes all non-zero basis functions R[i][j][k] @ u.
@@ -1280,7 +1302,7 @@ Note: use GetBasisI or GetBasisL to get a particular basis function value
 				
 			
 				
-				<h3 id="Nurbs.CalcBasisAndDerivs">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=5560:5607#L180">CalcBasisAndDerivs</a></h3>
+				<h3 id="Nurbs.CalcBasisAndDerivs">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=5591:5638#L180">CalcBasisAndDerivs</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) CalcBasisAndDerivs(u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 CalcBasisAndDerivs computes all non-zero basis functions R[i][j][k] and corresponding
@@ -1405,7 +1427,7 @@ ElemBryLocalInds returns the local (element) indices of control points @ boundar
 				
 			
 				
-				<h3 id="Nurbs.Elements">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14468:14510#L480">Elements</a></h3>
+				<h3 id="Nurbs.Elements">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14499:14541#L480">Elements</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Elements() (spans [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Elements returns the indices of nonzero spans
@@ -1427,7 +1449,7 @@ ExtractSurfaces returns a new NURBS representing a boundary of this NURBS
 				
 			
 				
-				<h3 id="Nurbs.GetBasisI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8390:8432#L258">GetBasisI</a></h3>
+				<h3 id="Nurbs.GetBasisI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8421:8463#L258">GetBasisI</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetBasisI(I []<a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetBasisI returns the basis function R[i][j][k] just computed
@@ -1440,7 +1462,7 @@ Note: I = [i,j,k]
 				
 			
 				
-				<h3 id="Nurbs.GetBasisL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8751:8791#L271">GetBasisL</a></h3>
+				<h3 id="Nurbs.GetBasisL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8782:8822#L271">GetBasisL</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetBasisL(l <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetBasisL returns the basis function R[i][j][k] just computed
@@ -1453,7 +1475,7 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.GetDerivI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8955:9005#L278">GetDerivI</a></h3>
+				<h3 id="Nurbs.GetDerivI">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=8986:9036#L278">GetDerivI</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetDerivI(dRdu []<a href="/pkg/builtin/#float64">float64</a>, I []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 GetDerivI returns the derivative of basis function dR[i][j][k]du just computed
@@ -1466,7 +1488,7 @@ Note: I = [i,j,k]
 				
 			
 				
-				<h3 id="Nurbs.GetDerivL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9433:9481#L298">GetDerivL</a></h3>
+				<h3 id="Nurbs.GetDerivL">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9464:9512#L298">GetDerivL</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetDerivL(dRdu []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 GetDerivL returns the derivative of basis function dR[i][j][k]du just computed
@@ -1479,7 +1501,7 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.GetElemNumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15496:15540#L521">GetElemNumBasis</a></h3>
+				<h3 id="Nurbs.GetElemNumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15527:15571#L521">GetElemNumBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetElemNumBasis() (npts <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 GetElemNumBasis returns the number of control points == basis functions needed for one element
@@ -1492,7 +1514,18 @@ GetElemNumBasis returns the number of control points == basis functions needed f
 				
 			
 				
-				<h3 id="Nurbs.GetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13775:13822#L452">GetQ</a></h3>
+				<h3 id="Nurbs.GetLimitsQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=16873:16924#L576">GetLimitsQ</a></h3>
+				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetLimitsQ() (xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+GetLimitsQ computes the limits of all coordinates of control points in NURBS
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Nurbs.GetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13806:13853#L452">GetQ</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetQ(i, j, k <a href="/pkg/builtin/#int">int</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 GetQ gets a control point x[i,j,k] (size==4)
@@ -1503,7 +1536,7 @@ GetQ gets a control point x[i,j,k] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.GetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13990:14032#L462">GetQl</a></h3>
+				<h3 id="Nurbs.GetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14021:14063#L462">GetQl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetQl(l <a href="/pkg/builtin/#int">int</a>) (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 GetQl gets a control point x[l] (size==4)
@@ -1514,7 +1547,7 @@ GetQl gets a control point x[l] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.GetU">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13261:13300#L432">GetU</a></h3>
+				<h3 id="Nurbs.GetU">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13292:13331#L432">GetU</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) GetU(dir <a href="/pkg/builtin/#int">int</a>) []<a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 GetU returns the knots along direction dir
@@ -1525,7 +1558,7 @@ GetU returns the knots along direction dir
 				
 			
 				
-				<h3 id="Nurbs.Gnd">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13067:13092#L422">Gnd</a></h3>
+				<h3 id="Nurbs.Gnd">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13098:13123#L422">Gnd</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Gnd() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 GetGnd returns the geometry dimension
@@ -1536,7 +1569,7 @@ GetGnd returns the geometry dimension
 				
 			
 				
-				<h3 id="Nurbs.IndBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15706:15752#L530">IndBasis</a></h3>
+				<h3 id="Nurbs.IndBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=15737:15783#L530">IndBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) IndBasis(span []<a href="/pkg/builtin/#int">int</a>) (L []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 IndBasis returns the indices of basis functions == local indices of control points
@@ -1569,7 +1602,7 @@ IndsAlongSurface return the control points indices along surface
 				
 			
 				
-				<h3 id="Nurbs.Init">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=1614:1674#L35">Init</a></h3>
+				<h3 id="Nurbs.Init">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=1645:1705#L35">Init</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Init(gnd <a href="/pkg/builtin/#int">int</a>, ords []<a href="/pkg/builtin/#int">int</a>, knots [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises Nurbs
@@ -1580,7 +1613,7 @@ Init initialises Nurbs
 				
 			
 				
-				<h3 id="Nurbs.Krefine">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=18494:18543#L630">Krefine</a></h3>
+				<h3 id="Nurbs.Krefine">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=19099:19148#L652">Krefine</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Krefine(X [][]<a href="/pkg/builtin/#float64">float64</a>) (O *<a href="#Nurbs">Nurbs</a>)</pre>
 				<p>
 Krefine returns a new Nurbs with knots refined
@@ -1592,7 +1625,7 @@ Note: X[gnd][numNewKnots]
 				
 			
 				
-				<h3 id="Nurbs.KrefineN">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=16950:17013#L578">KrefineN</a></h3>
+				<h3 id="Nurbs.KrefineN">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=17555:17618#L600">KrefineN</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) KrefineN(ndiv <a href="/pkg/builtin/#int">int</a>, hughesEtAlPaper <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Nurbs">Nurbs</a></pre>
 				<p>
 KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
@@ -1603,7 +1636,7 @@ KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
 				
 			
 				
-				<h3 id="Nurbs.NonZeroSpans">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13648:13693#L447">NonZeroSpans</a></h3>
+				<h3 id="Nurbs.NonZeroSpans">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13679:13724#L447">NonZeroSpans</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NonZeroSpans(dir <a href="/pkg/builtin/#int">int</a>) [][]<a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 NonZeroSpans returns the &#39;elements&#39; along direction dir
@@ -1614,7 +1647,7 @@ NonZeroSpans returns the &#39;elements&#39; along direction dir
 				
 			
 				
-				<h3 id="Nurbs.NumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13518:13555#L442">NumBasis</a></h3>
+				<h3 id="Nurbs.NumBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13549:13586#L442">NumBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NumBasis(dir <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 NumBasis returns the number of basis (controls) along direction dir
@@ -1625,7 +1658,7 @@ NumBasis returns the number of basis (controls) along direction dir
 				
 			
 				
-				<h3 id="Nurbs.NumericalDeriv">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=11229:11295#L350">NumericalDeriv</a></h3>
+				<h3 id="Nurbs.NumericalDeriv">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=11260:11326#L350">NumericalDeriv</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) NumericalDeriv(dRdu []<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 NumericalDeriv computes a particular derivative dR[i][j][k]du @ t using numerical differentiation
@@ -1637,7 +1670,7 @@ Note: it uses RecursiveBasis and therefore is highly non-efficient
 				
 			
 				
-				<h3 id="Nurbs.Ord">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13160:13192#L427">Ord</a></h3>
+				<h3 id="Nurbs.Ord">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13191:13223#L427">Ord</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Ord(dir <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 GetOrd returns the order along direction dir
@@ -1677,7 +1710,7 @@ option =  0 : use CalcBasisAndDerivs
 				
 			
 				
-				<h3 id="Nurbs.Point">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=11888:11935#L373">Point</a></h3>
+				<h3 id="Nurbs.Point">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=11919:11966#L373">Point</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) Point(C, u []<a href="/pkg/builtin/#float64">float64</a>, ndim <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Point returns the x-y-z coordinates of a point on curve/surface/volume
@@ -1693,7 +1726,7 @@ Output:
 				
 			
 				
-				<h3 id="Nurbs.RecursiveBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9712:9776#L305">RecursiveBasis</a></h3>
+				<h3 id="Nurbs.RecursiveBasis">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=9743:9807#L305">RecursiveBasis</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) RecursiveBasis(u []<a href="/pkg/builtin/#float64">float64</a>, l <a href="/pkg/builtin/#int">int</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 RecursiveBasis implements basis functions by means of summing all terms
@@ -1706,7 +1739,7 @@ Note: l = i + j * n0 + k * n0 * n1
 				
 			
 				
-				<h3 id="Nurbs.SetControl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=2822:2892#L85">SetControl</a></h3>
+				<h3 id="Nurbs.SetControl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=2853:2923#L85">SetControl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetControl(verts [][]<a href="/pkg/builtin/#float64">float64</a>, ctrls []<a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 SetControl sets control points from list of global vertices
@@ -1717,7 +1750,7 @@ SetControl sets control points from list of global vertices
 				
 			
 				
-				<h3 id="Nurbs.SetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14140:14186#L467">SetQ</a></h3>
+				<h3 id="Nurbs.SetQ">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14171:14217#L467">SetQ</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetQ(i, j, k <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetQ sets a control point x[i,j,k] (size==4)
@@ -1728,7 +1761,7 @@ SetQ sets a control point x[i,j,k] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.SetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14322:14363#L475">SetQl</a></h3>
+				<h3 id="Nurbs.SetQl">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=14353:14394#L475">SetQl</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) SetQl(l <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetQl sets a control point x[l] (size==4)
@@ -1739,7 +1772,7 @@ SetQl sets a control point x[l] (size==4)
 				
 			
 				
-				<h3 id="Nurbs.U">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13378:13417#L437">U</a></h3>
+				<h3 id="Nurbs.U">func (*Nurbs) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go?s=13409:13448#L437">U</a></h3>
 				<pre>func (o *<a href="#Nurbs">Nurbs</a>) U(dir, idx <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 				<p>
 U returns the value of a knot along direction dir
@@ -1752,16 +1785,16 @@ U returns the value of a knot along direction dir
 		
 			
 			
-			<h2 id="NurbsD">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=5898:6203#L244">NurbsD</a></h2>
-			<pre>type NurbsD struct {
-    Id    <a href="/pkg/builtin/#int">int</a>         <span class="comment">// id of Nurbs</span>
-    Gnd   <a href="/pkg/builtin/#int">int</a>         <span class="comment">// 1: curve, 2:surface, 3:volume (geometry dimension)</span>
-    Ords  []<a href="/pkg/builtin/#int">int</a>       <span class="comment">// order along each x-y-z direction [gnd]</span>
-    Knots [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// knots along each x-y-z direction [gnd][m]</span>
-    Ctrls []<a href="/pkg/builtin/#int">int</a>       <span class="comment">// global ids of control points</span>
+			<h2 id="NurbsExchangeData">type <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=599:970#L14">NurbsExchangeData</a></h2>
+			<pre>type NurbsExchangeData struct {
+    Id    <a href="/pkg/builtin/#int">int</a>         `json:&#34;i&#34;` <span class="comment">// id of Nurbs</span>
+    Gnd   <a href="/pkg/builtin/#int">int</a>         `json:&#34;g&#34;` <span class="comment">// 1: curve, 2:surface, 3:volume (geometry dimension)</span>
+    Ords  []<a href="/pkg/builtin/#int">int</a>       `json:&#34;o&#34;` <span class="comment">// order along each x-y-z direction [gnd]</span>
+    Knots [][]<a href="/pkg/builtin/#float64">float64</a> `json:&#34;k&#34;` <span class="comment">// knots along each x-y-z direction [gnd][m]</span>
+    Ctrls []<a href="/pkg/builtin/#int">int</a>       `json:&#34;c&#34;` <span class="comment">// global ids of control points</span>
 }</pre>
 			<p>
-NurbsD holds all data required to read/save a Nurbs to/from files
+NurbsExchangeData holds all data required to exchange NURBS; e.g. read/save files
 </p>
 
 
@@ -1775,6 +1808,125 @@ NurbsD holds all data required to read/save a Nurbs to/from files
 
 			
 
+			
+		
+			
+			
+			<h2 id="NurbsExchangeDataSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=1033:1079#L23">NurbsExchangeDataSet</a></h2>
+			<pre>type NurbsExchangeDataSet []*<a href="#NurbsExchangeData">NurbsExchangeData</a></pre>
+			<p>
+NurbsExchangeDataSet defines a set of nurbs exchange data
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="NurbsPatch">type <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=1126:1487#L26">NurbsPatch</a></h2>
+			<pre>type NurbsPatch struct {
+
+    <span class="comment">// input/output data</span>
+    ControlPoints []*<a href="#PointExchangeData">PointExchangeData</a> `json:&#34;points&#34;` <span class="comment">// input/output control points</span>
+    ExchangeData  <a href="#NurbsExchangeDataSet">NurbsExchangeDataSet</a> `json:&#34;patch&#34;`  <span class="comment">// input/output nurbs data</span>
+
+    <span class="comment">// Nurbs structures</span>
+    Entities []*<a href="#Nurbs">Nurbs</a> `json:&#34;-&#34;` <span class="comment">// pointers to NURBS</span>
+
+    <span class="comment">// auxiliary</span>
+    Bins <a href="#Bins">Bins</a> `json:&#34;-&#34;` <span class="comment">// auxiliary structure to locate points</span>
+}</pre>
+			<p>
+NurbsPatch defines a patch of many NURBS&#39;
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewNurbsPatch">func <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=1709:1807#L43">NewNurbsPatch</a></h3>
+				<pre>func NewNurbsPatch(binsNdiv <a href="/pkg/builtin/#int">int</a>, tolerance <a href="/pkg/builtin/#float64">float64</a>, entities ...*<a href="#Nurbs">Nurbs</a>) (o *<a href="#NurbsPatch">NurbsPatch</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+NewNurbsPatch returns new patch of NURBS
+</p>
+<pre>tolerance -- tolerance to assume that two control points are the same
+</pre>
+
+				
+				
+			
+				
+				<h3 id="NewNurbsPatchFromFile">func <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=5291:5394#L188">NewNurbsPatchFromFile</a></h3>
+				<pre>func NewNurbsPatchFromFile(filename <a href="/pkg/builtin/#string">string</a>, binsNdiv <a href="/pkg/builtin/#int">int</a>, tolerance <a href="/pkg/builtin/#float64">float64</a>) (o *<a href="#NurbsPatch">NurbsPatch</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+NewNurbsPatchFromFile allocates a NurbsPatch with data from file
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="NurbsPatch.LimitsAndNdim">func (NurbsPatch) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=5842:5921#L209">LimitsAndNdim</a></h3>
+				<pre>func (o <a href="#NurbsPatch">NurbsPatch</a>) LimitsAndNdim() (xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, ndim <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+LimitsAndNdim computes the limits of the patch and max dimension by looping over all Entities
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NurbsPatch.ResetFromEntities">func (*NurbsPatch) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=2000:2083#L51">ResetFromEntities</a></h3>
+				<pre>func (o *<a href="#NurbsPatch">NurbsPatch</a>) ResetFromEntities(binsNdiv <a href="/pkg/builtin/#int">int</a>, tolerance <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ResetFromEntities will reset all exchange data with information from Entities slice
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NurbsPatch.ResetFromExchangeData">func (*NurbsPatch) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=3719:3806#L121">ResetFromExchangeData</a></h3>
+				<pre>func (o *<a href="#NurbsPatch">NurbsPatch</a>) ResetFromExchangeData(binsNdiv <a href="/pkg/builtin/#int">int</a>, tolerance <a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ResetFromExchangeData will reset all Entities with information from ExchangeData (and ControlPoints)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="NurbsPatch.Write">func (NurbsPatch) <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=5045:5104#L178">Write</a></h3>
+				<pre>func (o <a href="#NurbsPatch">NurbsPatch</a>) Write(dirout, fnkey <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+Write writes ExchangeData to json file
+</p>
+
+				
+				
+				
 			
 		
 			
@@ -1831,6 +1983,31 @@ String outputs Point
 				
 				
 				
+			
+		
+			
+			
+			<h2 id="PointExchangeData">type <a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go?s=363:512#L7">PointExchangeData</a></h2>
+			<pre>type PointExchangeData struct {
+    Id  <a href="/pkg/builtin/#int">int</a>       `json:&#34;i&#34;` <span class="comment">// id</span>
+    Tag <a href="/pkg/builtin/#int">int</a>       `json:&#34;t&#34;` <span class="comment">// tag</span>
+    X   []<a href="/pkg/builtin/#float64">float64</a> `json:&#34;x&#34;` <span class="comment">// coordinates (size==4)</span>
+}</pre>
+			<p>
+PointExchangeData holds data for exchanging control points
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
 			
 		
 			
@@ -1908,31 +2085,6 @@ Vector returns the vector representing Segment from A to B (scaled by m)
 				
 				
 				
-			
-		
-			
-			
-			<h2 id="Vert">type <a href="https://github.com/cpmech/gosl/blob/master/gm/io.go?s=5724:5827#L237">Vert</a></h2>
-			<pre>type Vert struct {
-    Id  <a href="/pkg/builtin/#int">int</a>       <span class="comment">// id</span>
-    Tag <a href="/pkg/builtin/#int">int</a>       <span class="comment">// tag</span>
-    C   []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// coordinates (size==4)</span>
-}</pre>
-			<p>
-Vert holds data for a vertex =&gt; control point
-</p>
-
-
-			
-
-			
-
-			
-			
-			
-
-			
-
 			
 		
 	

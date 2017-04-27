@@ -318,22 +318,25 @@ parsing, handling files, directories, etc.
 				<dd><a href="#WriteBytesToFileD">func WriteBytesToFileD(dirout, fn string, b []byte)</a></dd>
 			
 				
+				<dd><a href="#WriteBytesToFileVD">func WriteBytesToFileVD(dirout, fn string, b []byte)</a></dd>
+			
+				
 				<dd><a href="#WriteFile">func WriteFile(fn string, buffer ...*bytes.Buffer)</a></dd>
 			
 				
 				<dd><a href="#WriteFileD">func WriteFileD(dirout, fn string, buffer ...*bytes.Buffer)</a></dd>
 			
 				
-				<dd><a href="#WriteFileS">func WriteFileS(fn, data string)</a></dd>
-			
-				
-				<dd><a href="#WriteFileSD">func WriteFileSD(dirout, fn, data string)</a></dd>
-			
-				
 				<dd><a href="#WriteFileV">func WriteFileV(fn string, buffer ...*bytes.Buffer)</a></dd>
 			
 				
 				<dd><a href="#WriteFileVD">func WriteFileVD(dirout, fn string, buffer ...*bytes.Buffer)</a></dd>
+			
+				
+				<dd><a href="#WriteStringToFile">func WriteStringToFile(fn, data string)</a></dd>
+			
+				
+				<dd><a href="#WriteStringToFileD">func WriteStringToFileD(dirout, fn, data string)</a></dd>
 			
 			
 				
@@ -461,7 +464,7 @@ parsing, handling files, directories, etc.
 		
 			
 			
-			<h2 id="AppendToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=886:939#L27">AppendToFile</a></h2>
+			<h2 id="AppendToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1291:1344#L39">AppendToFile</a></h2>
 			<pre>func AppendToFile(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
 			<p>
 AppendToFile appends data to an existent (or new) file
@@ -699,7 +702,7 @@ Ff wraps Fprintf
 		
 			
 			
-			<h2 id="FnExt">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=637:665#L17">FnExt</a></h2>
+			<h2 id="FnExt">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=738:766#L19">FnExt</a></h2>
 			<pre>func FnExt(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 FnExt returns the extension of a file name.
@@ -712,7 +715,7 @@ The extension is the suffix beginning at the final dot in the final element of p
 		
 			
 			
-			<h2 id="FnKey">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=360:388#L10">FnKey</a></h2>
+			<h2 id="FnKey">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=461:489#L12">FnKey</a></h2>
 			<pre>func FnKey(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 FnKey returns the file name key (without path and extension, if any)
@@ -829,7 +832,7 @@ Keycodes extracts keys from a keycode (extra) string
 		
 			
 			
-			<h2 id="OpenFileR">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3249:3300#L113">OpenFileR</a></h2>
+			<h2 id="OpenFileR">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3963:4014#L128">OpenFileR</a></h2>
 			<pre>func OpenFileR(fn <a href="/pkg/builtin/#string">string</a>) (fil *<a href="/pkg/os/">os</a>.<a href="/pkg/os/#File">File</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 OpenFileR opens a file for reading data
@@ -841,7 +844,7 @@ OpenFileR opens a file for reading data
 		
 			
 			
-			<h2 id="PathKey">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=749:779#L22">PathKey</a></h2>
+			<h2 id="PathKey">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=850:880#L24">PathKey</a></h2>
 			<pre>func PathKey(fn <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 PathKey returs the full path except the extension
@@ -1199,7 +1202,7 @@ Pl prints new line
 		
 			
 			
-			<h2 id="ReadFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3388:3434#L119">ReadFile</a></h2>
+			<h2 id="ReadFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4102:4148#L134">ReadFile</a></h2>
 			<pre>func ReadFile(fn <a href="/pkg/builtin/#string">string</a>) (b []<a href="/pkg/builtin/#byte">byte</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadFile reads bytes from a file
@@ -1211,7 +1214,7 @@ ReadFile reads bytes from a file
 		
 			
 			
-			<h2 id="ReadLines">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3733:3780#L127">ReadLines</a></h2>
+			<h2 id="ReadLines">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4447:4494#L142">ReadLines</a></h2>
 			<pre>func ReadLines(fn <a href="/pkg/builtin/#string">string</a>, cb <a href="#ReadLinesCallback">ReadLinesCallback</a>)</pre>
 			<p>
 ReadLines reads lines from a file and calls ReadLinesCallback to process each line being read
@@ -1223,7 +1226,7 @@ ReadLines reads lines from a file and calls ReadLinesCallback to process each li
 		
 			
 			
-			<h2 id="ReadLinesFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4283:4351#L155">ReadLinesFile</a></h2>
+			<h2 id="ReadLinesFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5051:5119#L170">ReadLinesFile</a></h2>
 			<pre>func ReadLinesFile(fil *<a href="/pkg/os/">os</a>.<a href="/pkg/os/#File">File</a>, cb <a href="#ReadLinesCallback">ReadLinesCallback</a>) (oserr <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadLinesFile reads lines from a file and calls ReadLinesCallback to process each line being read
@@ -1235,7 +1238,7 @@ ReadLinesFile reads lines from a file and calls ReadLinesCallback to process eac
 		
 			
 			
-			<h2 id="ReadMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=6280:6333#L237">ReadMatrix</a></h2>
+			<h2 id="ReadMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=6886:6939#L244">ReadMatrix</a></h2>
 			<pre>func ReadMatrix(fn <a href="/pkg/builtin/#string">string</a>) (M [][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadMatrix reads a text file in which the float64 type of numeric values represent
@@ -1248,7 +1251,7 @@ a matrix of data. The number of columns must be equal, including for the headers
 		
 			
 			
-			<h2 id="ReadTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5343:5419#L198">ReadTable</a></h2>
+			<h2 id="ReadTable">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5949:6025#L205">ReadTable</a></h2>
 			<pre>func ReadTable(fn <a href="/pkg/builtin/#string">string</a>) (keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ReadTable reads a text file in which the first line contains the headers and the next lines the float64
@@ -1261,7 +1264,7 @@ type of numeric values. The number of columns must be equal, including for the h
 		
 			
 			
-			<h2 id="ReadTableOrPanic">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4952:5024#L187">ReadTableOrPanic</a></h2>
+			<h2 id="ReadTableOrPanic">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=5558:5630#L194">ReadTableOrPanic</a></h2>
 			<pre>func ReadTableOrPanic(fn <a href="/pkg/builtin/#string">string</a>) (keys []<a href="/pkg/builtin/#string">string</a>, T map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ReadTableOrPanic reads text file as ReadTable; but panic on errors
@@ -1273,7 +1276,7 @@ ReadTableOrPanic reads text file as ReadTable; but panic on errors
 		
 			
 			
-			<h2 id="RemoveAll">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4757:4783#L179">RemoveAll</a></h2>
+			<h2 id="RemoveAll">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1008:1034#L29">RemoveAll</a></h2>
 			<pre>func RemoveAll(key <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 RemoveAll deletes all files matching filename specified by key (be careful)
@@ -1470,10 +1473,10 @@ UnColor removes console characters used to show colors
 		
 			
 			
-			<h2 id="WriteBytesToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2750:2792#L95">WriteBytesToFile</a></h2>
+			<h2 id="WriteBytesToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3074:3116#L101">WriteBytesToFile</a></h2>
 			<pre>func WriteBytesToFile(fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
 			<p>
-WriteBytesToFile writes bytes to a new file
+WriteBytesToFile writes slice of bytes to a new file
 </p>
 
 			
@@ -1482,10 +1485,10 @@ WriteBytesToFile writes bytes to a new file
 		
 			
 			
-			<h2 id="WriteBytesToFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3086:3137#L107">WriteBytesToFileD</a></h2>
+			<h2 id="WriteBytesToFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3395:3446#L113">WriteBytesToFileD</a></h2>
 			<pre>func WriteBytesToFileD(dirout, fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
 			<p>
-WriteBytesToFile writes bytes to a new file and create a directory to save the file within
+WriteBytesToFileD writes slice of bytes to a new file after creating a directory
 </p>
 
 			
@@ -1494,10 +1497,22 @@ WriteBytesToFile writes bytes to a new file and create a directory to save the f
 		
 			
 			
-			<h2 id="WriteFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1231:1281#L41">WriteFile</a></h2>
+			<h2 id="WriteBytesToFileVD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3632:3684#L119">WriteBytesToFileVD</a></h2>
+			<pre>func WriteBytesToFileVD(dirout, fn <a href="/pkg/builtin/#string">string</a>, b []<a href="/pkg/builtin/#byte">byte</a>)</pre>
+			<p>
+WriteBytesToFileVD writes slice of bytes to a new file, and print message, after creating a directory
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1675:1725#L53">WriteFile</a></h2>
 			<pre>func WriteFile(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
 			<p>
-WriteFile writes data to a new file
+WriteFile writes data to a new file with given bytes.Buffer(s)
 </p>
 
 			
@@ -1506,10 +1521,10 @@ WriteFile writes data to a new file
 		
 			
 			
-			<h2 id="WriteFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1663:1722#L56">WriteFileD</a></h2>
+			<h2 id="WriteFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2012:2071#L67">WriteFileD</a></h2>
 			<pre>func WriteFileD(dirout, fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
 			<p>
-WriteFileD writes data to a new file and create a directory to save the file within
+WriteFileD writes data to a new file after creating a directory
 </p>
 
 			
@@ -1518,34 +1533,10 @@ WriteFileD writes data to a new file and create a directory to save the file wit
 		
 			
 			
-			<h2 id="WriteFileS">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=1839:1871#L62">WriteFileS</a></h2>
-			<pre>func WriteFileS(fn, data <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-WriteFileS writes data string to a new file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteFileSD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2103:2144#L72">WriteFileSD</a></h2>
-			<pre>func WriteFileSD(dirout, fn, data <a href="/pkg/builtin/#string">string</a>)</pre>
-			<p>
-WriteFileSD writes data string to a new file after creating a directory to save the file
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WriteFileV">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2284:2335#L78">WriteFileV</a></h2>
+			<h2 id="WriteFileV">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2212:2263#L73">WriteFileV</a></h2>
 			<pre>func WriteFileV(fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
 			<p>
-WriteFileV writes data to a new file (and shows message: file written)
+WriteFileV writes data to a new file, and shows message
 </p>
 
 			
@@ -1554,10 +1545,34 @@ WriteFileV writes data to a new file (and shows message: file written)
 		
 			
 			
-			<h2 id="WriteFileVD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2515:2575#L86">WriteFileVD</a></h2>
+			<h2 id="WriteFileVD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2413:2473#L79">WriteFileVD</a></h2>
 			<pre>func WriteFileVD(dirout, fn <a href="/pkg/builtin/#string">string</a>, buffer ...*<a href="/pkg/bytes/">bytes</a>.<a href="/pkg/bytes/#Buffer">Buffer</a>)</pre>
 			<p>
-WriteFileVD writes data to a new file (and shows message: file written), after creating a directory
+WriteFileVD writes data to a new file, and shows message after creating a directory
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteStringToFile">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2617:2656#L85">WriteStringToFile</a></h2>
+			<pre>func WriteStringToFile(fn, data <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+WriteStringToFile writes string to a new file
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WriteStringToFileD">func <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=2885:2933#L95">WriteStringToFileD</a></h2>
+			<pre>func WriteStringToFileD(dirout, fn, data <a href="/pkg/builtin/#string">string</a>)</pre>
+			<p>
+WriteStringToFileD writes string to a new file after creating a directory
 </p>
 
 			
@@ -1609,7 +1624,7 @@ FcnRow is a function that returns the row value as string
 		
 			
 			
-			<h2 id="ReadLinesCallback">type <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=3573:3634#L124">ReadLinesCallback</a></h2>
+			<h2 id="ReadLinesCallback">type <a href="https://github.com/cpmech/gosl/blob/master/io/fileio.go?s=4287:4348#L139">ReadLinesCallback</a></h2>
 			<pre>type ReadLinesCallback func(idx <a href="/pkg/builtin/#int">int</a>, line <a href="/pkg/builtin/#string">string</a>) (stop <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 ReadLinesCallback is used in ReadLines to process line by line during reading of a file
