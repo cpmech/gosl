@@ -20,10 +20,14 @@ install_and_test(){
     HERE=`pwd`
     PKG=$1
     DOTEST=$2
+    HASALLBASH=$3
     echo
     echo
     echo ">>> compiling $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
     cd $PKG
+    if [[ ! -z $HASALLBASH ]]; then
+        ./all.bash
+    fi
     touch *.go
     go install
     if [ "$DOTEST" -eq 1 ]; then
@@ -51,6 +55,9 @@ fi
 
 install_and_test rnd 1
 
-#if [[ $platform == 'linux' ]]; then
-    #install_and_test vtk 0
-#fi
+if [[ $platform == 'linux' ]]; then
+    install_and_test vtk 0 1
+fi
+
+echo
+echo ">>> SUCCESS! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
