@@ -1,6 +1,6 @@
 goslfrags.wxs
 
-cxxflags_and_ldflags.go
+autogencgoflags.go
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o

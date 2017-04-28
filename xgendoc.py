@@ -88,12 +88,22 @@ Cmd('echo "<h1>Gosl &ndash; Documentation</h1>" >> '+idxfn)
 Cmd('echo "<h2 id=\\"pkg-index\\">Index</h2>\n<div id=\\"manual-nav\\">\n<dl>" >> '+idxfn)
 
 for pkg in pkgs:
+
     fnk = pkg[0].replace("/","-")
     fn = odir+'xx'+fnk+'.html'
+
+    # skip some files in subpackage
+    if pkg[0] == "vtk":
+        Cmd('mv vtk/autogencgoflags.go /tmp/')
+
     Cmd('echo "'+pkgheader(pkg)+'" > '+fn)
     Cmd('godoc -html github.com/cpmech/gosl/'+pkg[0]+' >> '+fn)
     Cmd('echo "'+footer()+'" >> '+fn)
     Cmd('echo "'+pkgitem(pkg)+'" >> '+idxfn)
+
+    # copy some files bakc to subpackage
+    if pkg[0] == "vtk":
+        Cmd('mv /tmp/autogencgoflags.go vtk/')
 
     # fix links
     Cmd("sed -i -e 's@/src/target@https://github.com/cpmech/gosl/blob/master/"+pkg[0]+"@g' "+fn)
