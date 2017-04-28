@@ -31,7 +31,7 @@ where `V` is the list of vertices (there are Nvertices vertices) and `C` is the 
 ## Draw mesh
 
 <div id="container">
-<p><img src="../../examples/figs/tri_draw01.png" width="300"></p>
+<p><img src="../../examples/figs/tri_draw01.png" width="350"></p>
 </div>
 
 For example, the set of triangles in the above figure are defined (and drawn) with:
