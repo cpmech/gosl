@@ -31,7 +31,7 @@ where `V` is the list of vertices (there are Nvertices vertices) and `C` is the 
 ## Draw mesh
 
 <div id="container">
-<p><img src="../examples/figs/tri_draw01.png"></p>
+<p><img src="../../examples/figs/tri_draw01.png"></p>
 </div>
 
 For example, the set of triangles in the above figure are defined (and drawn) with:
@@ -61,7 +61,7 @@ plt.HideAllBorders()
 plt.Save("/tmp/gosl", "tri_draw01")
 ```
 
-Source code: <a href="../examples/tri_draw01.go">../examples/tri_draw01.go</a>
+Source code: <a href="../../examples/tri_draw01.go">../../examples/tri_draw01.go</a>
 
 
 
@@ -111,7 +111,7 @@ plt.Save("/tmp/gosl", "tri_delaunay01")
 will produce the following figure:
 
 <div id="container">
-<p><img src="../examples/figs/tri_delaunay01.png"></p>
+<p><img src="../../examples/figs/tri_delaunay01.png"></p>
 </div>
 
-Source code: <a href="../examples/tri_delaunay01.go">../examples/tri_delaunay01.go</a>
+Source code: <a href="../../examples/tri_delaunay01.go">../../examples/tri_delaunay01.go</a>
