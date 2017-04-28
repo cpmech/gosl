@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// package vtk wraps the visualisation tool kit (VTK) for drawing 3D surfaces (scalar fields, vector
+// fields, etc.)
 package vtk
 
 /*

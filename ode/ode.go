@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// package ode implements solvers for ordinary differential equations, such as the ones based on the
+// Runge-Kutta method; e.g. Radau5
 package ode
 
 import (

@@ -53,7 +53,11 @@ use 'godoc cmd/github.com/cpmech/gosl/num' for documentation on the github.com/c
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+package num implements fundamental numerical methods such as numerical derivative and quadrature,
+root finding solvers (Brent&#39;s and Newton&#39;s methods), among others.
+</p>
+
 			</div>
 		</div>
 		
@@ -785,7 +789,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_J">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=449:500#L6">Cb_J</a></h2>
+			<h2 id="Cb_J">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=620:671#L8">Cb_J</a></h2>
 			<pre>type Cb_J func(dfdx *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// sparse version</span>
 </pre>
 			
@@ -804,7 +808,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_Jd">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=520:572#L7">Cb_Jd</a></h2>
+			<h2 id="Cb_Jd">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=691:743#L9">Cb_Jd</a></h2>
 			<pre>type Cb_Jd func(dfdx [][]<a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// dense version</span>
 </pre>
 			
@@ -823,7 +827,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_f">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=411:448#L5">Cb_f</a></h2>
+			<h2 id="Cb_f">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=582:619#L7">Cb_f</a></h2>
 			<pre>type Cb_f func(fx, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 callbacks (for systems)
@@ -844,7 +848,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_fx">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=327:382#L2">Cb_fx</a></h2>
+			<h2 id="Cb_fx">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=498:553#L4">Cb_fx</a></h2>
 			<pre>type Cb_fx func(x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			
 
@@ -862,7 +866,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=590:625#L8">Cb_out</a></h2>
+			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=761:796#L10">Cb_out</a></h2>
 			<pre>type Cb_out func(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// for output</span>
 </pre>
 			
@@ -881,7 +885,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_yx">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=247:281#L1">Cb_yx</a></h2>
+			<h2 id="Cb_yx">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=418:452#L2">Cb_yx</a></h2>
 			<pre>type Cb_yx func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 callbacks (for single equations)
@@ -902,7 +906,7 @@ callbacks (for single equations)
 		
 			
 			
-			<h2 id="Cb_yxe">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=282:326#L1">Cb_yxe</a></h2>
+			<h2 id="Cb_yxe">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=453:497#L3">Cb_yxe</a></h2>
 			<pre>type Cb_yxe func(x <a href="/pkg/builtin/#float64">float64</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			
 

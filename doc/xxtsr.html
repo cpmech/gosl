@@ -52,7 +52,7 @@ use 'godoc cmd/github.com/cpmech/gosl/tsr' for documentation on the github.com/c
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
 				<p>
-tsr implements routines to conduct tensor operations
+tsr implements routines to conduct tensor operations and solve problems in Continuum Mechanics
 </p>
 
 			</div>
@@ -670,7 +670,7 @@ Add adds two second order tensors according to:
 		
 			
 			
-			<h2 id="Alloc2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=3746:3780#L96">Alloc2</a></h2>
+			<h2 id="Alloc2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=3788:3822#L96">Alloc2</a></h2>
 			<pre>func Alloc2() (tensor [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Alloc2 allocates a 3x3 2nd order tensor
@@ -682,7 +682,7 @@ Alloc2 allocates a 3x3 2nd order tensor
 		
 			
 			
-			<h2 id="Alloc4">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=3934:3972#L105">Alloc4</a></h2>
+			<h2 id="Alloc4">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=3976:4014#L105">Alloc4</a></h2>
 			<pre>func Alloc4() (tensor [][][][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Alloc4 allocates a 3x3x3x3 4th order tensor
@@ -953,7 +953,7 @@ M2Phi calculates φ (friction angle at compression (degrees)) given M (max q/p a
 		
 			
 			
-			<h2 id="M2T">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4962:5018#L147">M2T</a></h2>
+			<h2 id="M2T">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5004:5060#L147">M2T</a></h2>
 			<pre>func M2T(mandel []<a href="/pkg/builtin/#float64">float64</a>, i, j <a href="/pkg/builtin/#int">int</a>) (component <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M2T converts Mandel components to 3x3 second order tensor components,
@@ -966,7 +966,7 @@ i.e. correcting off-diagonal values that were multiplied by SQ2
 		
 			
 			
-			<h2 id="M2TT">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5488:5541#L168">M2TT</a></h2>
+			<h2 id="M2TT">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5530:5583#L168">M2TT</a></h2>
 			<pre>func M2TT(mandel [][]<a href="/pkg/builtin/#float64">float64</a>, i, j, k, l <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 M2TT converts Mandel components to 3x3x3x3 fourth order tensor components,
@@ -979,7 +979,7 @@ i.e. correcting all values that were multiplied by 2 or SQ2
 		
 			
 			
-			<h2 id="M_Alloc2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4308:4345#L120">M_Alloc2</a></h2>
+			<h2 id="M_Alloc2">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4350:4387#L120">M_Alloc2</a></h2>
 			<pre>func M_Alloc2(ndim <a href="/pkg/builtin/#int">int</a>) (a []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Alloc2 allocates a 2th order tensor in Mandel&#39;s representation (2*ndim)
@@ -991,7 +991,7 @@ M_Alloc2 allocates a 2th order tensor in Mandel&#39;s representation (2*ndim)
 		
 			
 			
-			<h2 id="M_Alloc4">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4490:4529#L127">M_Alloc4</a></h2>
+			<h2 id="M_Alloc4">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=4532:4571#L127">M_Alloc4</a></h2>
 			<pre>func M_Alloc4(ndim <a href="/pkg/builtin/#int">int</a>) (A [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 M_Alloc4 allocates a 4th order tensor in Mandel&#39;s representation ((2*ndim)x(2*ndim))
@@ -1528,7 +1528,7 @@ M_θ returns the Lode invariant -30° ≤ θ := asin(w) / 3 ≤ 30°
 		
 			
 			
-			<h2 id="Man2Ten">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5821:5871#L180">Man2Ten</a></h2>
+			<h2 id="Man2Ten">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=5863:5913#L180">Man2Ten</a></h2>
 			<pre>func Man2Ten(tensor [][]<a href="/pkg/builtin/#float64">float64</a>, mandel []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Man2Ten returns the 3x3 2nd order tensor from its Mandel representation
@@ -1914,7 +1914,7 @@ d²n[i]/dL[j]dL[k]
 		
 			
 			
-			<h2 id="Ten2Man">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=6531:6581#L196">Ten2Man</a></h2>
+			<h2 id="Ten2Man">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go?s=6573:6623#L196">Ten2Man</a></h2>
 			<pre>func Ten2Man(mandel []<a href="/pkg/builtin/#float64">float64</a>, tensor [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Ten2Man returns the Mandel representation of a 3x3 2nd order tensor

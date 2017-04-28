@@ -53,7 +53,11 @@ use 'godoc cmd/github.com/cpmech/gosl/ode' for documentation on the github.com/c
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+package ode implements solvers for ordinary differential equations, such as the ones based on the
+Runge-Kutta method; e.g. Radau5
+</p>
+
 			</div>
 		</div>
 		
@@ -435,7 +439,7 @@ Results structure to hold numerical results
 		
 			
 			
-			<h2 id="Solver">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=483:4331#L9">Solver</a></h2>
+			<h2 id="Solver">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=619:4467#L11">Solver</a></h2>
 			<pre>type Solver struct {
     ZeroTrial <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// always start iterations with zero trial values (instead of collocation interpolation)</span>
     Atol      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// absolute tolerance</span>
@@ -480,7 +484,7 @@ Solver implements an ODE solver
 
 			
 				
-				<h3 id="Solver.GetStat">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12540:12577#L498">GetStat</a></h3>
+				<h3 id="Solver.GetStat">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12676:12713#L500">GetStat</a></h3>
 				<pre>func (o *<a href="#Solver">Solver</a>) GetStat() (s <a href="/pkg/builtin/#string">string</a>)</pre>
 				
 				
@@ -488,7 +492,7 @@ Solver implements an ODE solver
 				
 			
 				
-				<h3 id="Solver.Init">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=4407:4517#L105">Init</a></h3>
+				<h3 id="Solver.Init">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=4543:4653#L107">Init</a></h3>
 				<pre>func (o *<a href="#Solver">Solver</a>) Init(method <a href="/pkg/builtin/#string">string</a>, ndim <a href="/pkg/builtin/#int">int</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, out <a href="#Cb_out">Cb_out</a>, silent <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Init initialises ODE structure with default values and allocate slices
@@ -499,7 +503,7 @@ Init initialises ODE structure with default values and allocate slices
 				
 			
 				
-				<h3 id="Solver.SetTol">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=6842:6885#L216">SetTol</a></h3>
+				<h3 id="Solver.SetTol">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=6978:7021#L218">SetTol</a></h3>
 				<pre>func (o *<a href="#Solver">Solver</a>) SetTol(atol, rtol <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetTol sets tolerances according to Hairer and Wanner suggestions. This routine also
@@ -511,7 +515,7 @@ checks for consistent values and only considers the case of scalars Atol and Rto
 				
 			
 				
-				<h3 id="Solver.Solve">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7222:7323#L230">Solve</a></h3>
+				<h3 id="Solver.Solve">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7358:7459#L232">Solve</a></h3>
 				<pre>func (o *<a href="#Solver">Solver</a>) Solve(y []<a href="/pkg/builtin/#float64">float64</a>, x, xb, Δx <a href="/pkg/builtin/#float64">float64</a>, fixstp <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
@@ -522,7 +526,7 @@ Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
 				
 			
 				
-				<h3 id="Solver.Stat">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12053:12076#L484">Stat</a></h3>
+				<h3 id="Solver.Stat">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12189:12212#L486">Stat</a></h3>
 				<pre>func (o *<a href="#Solver">Solver</a>) Stat()</pre>
 				
 				

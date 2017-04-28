@@ -11,7 +11,7 @@
 <body>
 <div id="page" class=\wide">
 <div class="container">
-<h1>Gosl &ndash; <b>gm/tri</b> &ndash; Mesh generation: triangles</h1>
+<h1>Gosl &ndash; <b>gm/tri</b> &ndash; Mesh generation: triangles and Delaunay triangulation</h1>
 use 'godoc cmd/github.com/cpmech/gosl/gm/tri' for documentation on the github.com/cpmech/gosl/gm/tri command 
 
 <!--
@@ -156,7 +156,7 @@ Delaunay computes 2D Delaunay triangulation using Triangle
   X = { x0, x1, x2, ... Npoints }
   Y = { y0, y1, y2, ... Npoints }
 Ouptut:
-  V = { { x0, y0 }, { x0, y0 }, { x0, y0 } ... Nvertices }
+  V = { { x0, y0 }, { x1, y1 }, { x2, y2 } ... Nvertices }
   C = { { id0, id1, id2 }, { id0, id1, id2 } ... Ncellls }
 </pre>
 

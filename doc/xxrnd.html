@@ -53,7 +53,11 @@ use 'godoc cmd/github.com/cpmech/gosl/rnd' for documentation on the github.com/c
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+package rnd implements random numbers generators (wrapping the standard functions or the Mersenne
+Twister library). It also implements probability distribution functions.
+</p>
+
 			</div>
 		</div>
 		
@@ -600,7 +604,7 @@ BuildTextHist builds a text histogram
 		
 			
 			
-			<h2 id="DblShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3550:3583#L146">DblShuffle</a></h2>
+			<h2 id="DblShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3727:3760#L148">DblShuffle</a></h2>
 			<pre>func DblShuffle(values []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DblShuffle shuffles a slice of float point numbers
@@ -612,7 +616,7 @@ DblShuffle shuffles a slice of float point numbers
 		
 			
 			
-			<h2 id="FlipCoin">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1768:1797#L62">FlipCoin</a></h2>
+			<h2 id="FlipCoin">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1945:1974#L64">FlipCoin</a></h2>
 			<pre>func FlipCoin(p <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
 FlipCoin generates a Bernoulli variable; throw a coin with probability p
@@ -624,7 +628,7 @@ FlipCoin generates a Bernoulli variable; throw a coin with probability p
 		
 			
 			
-			<h2 id="Float64">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1226:1265#L45">Float64</a></h2>
+			<h2 id="Float64">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1403:1442#L47">Float64</a></h2>
 			<pre>func Float64(low, high <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Float64 generates a pseudo random real number between low and high; i.e. in [low, right)
@@ -642,7 +646,7 @@ Output:
 		
 			
 			
-			<h2 id="Float64s">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1551:1601#L55">Float64s</a></h2>
+			<h2 id="Float64s">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1728:1778#L57">Float64s</a></h2>
 			<pre>func Float64s(values []<a href="/pkg/builtin/#float64">float64</a>, low, high <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Float64s generates pseudo random real numbers between low and high; i.e. in [low, right)
@@ -710,7 +714,7 @@ HaltonPoints generates randomly spaced points
 		
 			
 			
-			<h2 id="Init">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=355:374#L7">Init</a></h2>
+			<h2 id="Init">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=532:551#L9">Init</a></h2>
 			<pre>func Init(seed <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Init initialises random numbers generators
@@ -725,7 +729,7 @@ Init initialises random numbers generators
 		
 			
 			
-			<h2 id="Int">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=609:636#L20">Int</a></h2>
+			<h2 id="Int">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=786:813#L22">Int</a></h2>
 			<pre>func Int(low, high <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 			<p>
 Int generates pseudo random integer between low and high.
@@ -743,7 +747,7 @@ Output:
 		
 			
 			
-			<h2 id="IntGetGroups">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3927:3972#L162">IntGetGroups</a></h2>
+			<h2 id="IntGetGroups">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4104:4149#L164">IntGetGroups</a></h2>
 			<pre>func IntGetGroups(groups [][]<a href="/pkg/builtin/#int">int</a>, pool []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetGroups randomly selects indices from pool separating them in groups
@@ -760,7 +764,7 @@ Output:
 		
 			
 			
-			<h2 id="IntGetShuffled">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3349:3399#L138">IntGetShuffled</a></h2>
+			<h2 id="IntGetShuffled">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3526:3576#L140">IntGetShuffled</a></h2>
 			<pre>func IntGetShuffled(values []<a href="/pkg/builtin/#int">int</a>) (shuffled []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetShuffled returns a shufled slice of integers
@@ -772,7 +776,7 @@ IntGetShuffled returns a shufled slice of integers
 		
 			
 			
-			<h2 id="IntGetUnique">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2119:2174#L78">IntGetUnique</a></h2>
+			<h2 id="IntGetUnique">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2296:2351#L80">IntGetUnique</a></h2>
 			<pre>func IntGetUnique(values []<a href="/pkg/builtin/#int">int</a>, n <a href="/pkg/builtin/#int">int</a>) (selected []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetUnique randomly selects n items in a list avoiding duplicates
@@ -787,7 +791,7 @@ IntGetUnique randomly selects n items in a list avoiding duplicates
 		
 			
 			
-			<h2 id="IntGetUniqueN">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2676:2732#L102">IntGetUniqueN</a></h2>
+			<h2 id="IntGetUniqueN">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=2853:2909#L104">IntGetUniqueN</a></h2>
 			<pre>func IntGetUniqueN(start, endp1, n <a href="/pkg/builtin/#int">int</a>) (selected []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetUniqueN randomly selects n items from start to endp1-1 avoiding duplicates
@@ -802,7 +806,7 @@ IntGetUniqueN randomly selects n items from start to endp1-1 avoiding duplicates
 		
 			
 			
-			<h2 id="IntShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3120:3149#L127">IntShuffle</a></h2>
+			<h2 id="IntShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3297:3326#L129">IntShuffle</a></h2>
 			<pre>func IntShuffle(values []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntShuffle shuffles a slice of integers
@@ -814,7 +818,7 @@ IntShuffle shuffles a slice of integers
 		
 			
 			
-			<h2 id="Ints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=879:917#L30">Ints</a></h2>
+			<h2 id="Ints">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1056:1094#L32">Ints</a></h2>
 			<pre>func Ints(values []<a href="/pkg/builtin/#int">int</a>, low, high <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Ints generates pseudo random integers between low and high.

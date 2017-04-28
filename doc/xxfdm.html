@@ -51,7 +51,11 @@ use 'godoc cmd/github.com/cpmech/gosl/fdm' for documentation on the github.com/c
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+package fdm implements functions and structures to assist on the development of finite difference
+solutions of problems involving partial differential equations
+</p>
+
 			</div>
 		</div>
 		
@@ -364,7 +368,7 @@ Print prints information about Equations
 		
 			
 			
-			<h2 id="Grid2d">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=256:1056#L1">Grid2d</a></h2>
+			<h2 id="Grid2d">type <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=423:1223#L2">Grid2d</a></h2>
 			<pre>type Grid2d struct {
 
     <span class="comment">// input</span>
@@ -407,7 +411,7 @@ Grid2d holds data representing a 2D grid
 
 			
 				
-				<h3 id="Grid2d.Generate">func (*Grid2d) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=1893:1971#L60">Generate</a></h3>
+				<h3 id="Grid2d.Generate">func (*Grid2d) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=2060:2138#L62">Generate</a></h3>
 				<pre>func (o *<a href="#Grid2d">Grid2d</a>) Generate(fcn <a href="#Cb_fxy">Cb_fxy</a>, Fserial []<a href="/pkg/builtin/#float64">float64</a>) (X, Y, F [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Generate generates coordinates and may evaluate a function over the grid
@@ -425,7 +429,7 @@ Output:
 				
 			
 				
-				<h3 id="Grid2d.Init">func (*Grid2d) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=1087:1152#L27">Init</a></h3>
+				<h3 id="Grid2d.Init">func (*Grid2d) <a href="https://github.com/cpmech/gosl/blob/master/fdm/grid2d.go?s=1254:1319#L29">Init</a></h3>
 				<pre>func (o *<a href="#Grid2d">Grid2d</a>) Init(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nx, ny <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Init initialises the grid

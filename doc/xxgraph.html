@@ -53,7 +53,10 @@ use 'godoc cmd/github.com/cpmech/gosl/graph' for documentation on the github.com
 			</div>
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
-				
+				<p>
+package graph implements solvers based on Graph theory
+</p>
+
 			</div>
 		</div>
 		
@@ -249,7 +252,7 @@ use 'godoc cmd/github.com/cpmech/gosl/graph' for documentation on the github.com
 		
 			
 			
-			<h2 id="Graph">type <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=409:971#L10">Graph</a></h2>
+			<h2 id="Graph">type <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=467:1029#L11">Graph</a></h2>
 			<pre>type Graph struct {
 
     <span class="comment">// input</span>
@@ -279,7 +282,7 @@ Graph defines a graph structure
 
 			
 				
-				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=7260:7314#L261">ReadGraphTable</a></h3>
+				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=7318:7372#L262">ReadGraphTable</a></h3>
 				<pre>func ReadGraphTable(fname <a href="/pkg/builtin/#string">string</a>, bargera <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Graph">Graph</a></pre>
 				<p>
 ReadGraphTable reads data and allocate graph
@@ -291,7 +294,7 @@ ReadGraphTable reads data and allocate graph
 
 			
 				
-				<h3 id="Graph.CalcDist">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3680:3718#L119">CalcDist</a></h3>
+				<h3 id="Graph.CalcDist">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3738:3776#L120">CalcDist</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) CalcDist() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 CalcDist computes distances beetween all vertices and initialises &#39;Next&#39; matrix
@@ -302,7 +305,7 @@ CalcDist computes distances beetween all vertices and initialises &#39;Next&#39;
 				
 			
 				
-				<h3 id="Graph.Draw">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5301:5505#L192">Draw</a></h3>
+				<h3 id="Graph.Draw">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5359:5563#L193">Draw</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Draw(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, r, W, dwt, arrow_scale <a href="/pkg/builtin/#float64">float64</a>,
     verts_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, verts_fsz <a href="/pkg/builtin/#float64">float64</a>, verts_clr <a href="/pkg/builtin/#string">string</a>,
     edges_lbls map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#string">string</a>, edges_fsz <a href="/pkg/builtin/#float64">float64</a>, edges_clr <a href="/pkg/builtin/#string">string</a>)</pre>
@@ -320,7 +323,7 @@ arrow_scale -- scale for arrows. use 0 for default value
 				
 			
 				
-				<h3 id="Graph.GetEdge">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1895:1947#L51">GetEdge</a></h3>
+				<h3 id="Graph.GetEdge">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1953:2005#L52">GetEdge</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) GetEdge(i, j <a href="/pkg/builtin/#int">int</a>) (k <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes ides
@@ -331,7 +334,7 @@ GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes 
 				
 			
 				
-				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4443:4491#L156">HashEdgeKey</a></h3>
+				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4501:4549#L157">HashEdgeKey</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) HashEdgeKey(i, j <a href="/pkg/builtin/#int">int</a>) (edge <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 HashEdgeKey creates a unique hash key identifying an edge
@@ -342,7 +345,7 @@ HashEdgeKey creates a unique hash key identifying an edge
 				
 			
 				
-				<h3 id="Graph.Init">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1236:1330#L31">Init</a></h3>
+				<h3 id="Graph.Init">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1294:1388#L32">Init</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Init(edges [][]<a href="/pkg/builtin/#int">int</a>, weightsE []<a href="/pkg/builtin/#float64">float64</a>, verts [][]<a href="/pkg/builtin/#float64">float64</a>, weightsV []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Init initialises graph
@@ -359,7 +362,7 @@ Init initialises graph
 				
 			
 				
-				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3431:3471#L105">Path</a></h3>
+				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3489:3529#L106">Path</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Path(s, t <a href="/pkg/builtin/#int">int</a>) (p []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Path returns the path from source (s) to destination (t)
@@ -372,7 +375,7 @@ Path returns the path from source (s) to destination (t)
 				
 			
 				
-				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2835:2891#L79">ShortestPaths</a></h3>
+				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2893:2949#L80">ShortestPaths</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) ShortestPaths(method <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ShortestPaths computes the shortest paths in a graph defined as follows
@@ -400,7 +403,7 @@ Input:
 				
 			
 				
-				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4584:4626#L161">StrDistMatrix</a></h3>
+				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4642:4684#L162">StrDistMatrix</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) StrDistMatrix() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 StrDistMatrix returns a string representation of Dist matrix

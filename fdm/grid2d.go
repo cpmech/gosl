@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// package fdm implements functions and structures to assist on the development of finite difference
+// solutions of problems involving partial differential equations
 package fdm
 
 import "github.com/cpmech/gosl/utl"

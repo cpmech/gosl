@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// tsr implements routines to conduct tensor operations
+// tsr implements routines to conduct tensor operations and solve problems in Continuum Mechanics
 package tsr
 
 import (

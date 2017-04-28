@@ -11,7 +11,7 @@
 <body>
 <div id="page" class=\wide">
 <div class="container">
-<h1>Gosl &ndash; <b>gm/msh</b> &ndash; Mesh generation and Delaunay triangulation</h1>
+<h1>Gosl &ndash; <b>gm/msh</b> &ndash; Mesh structures and interpolation functions for FEA</h1>
 use 'godoc cmd/github.com/cpmech/gosl/gm/msh' for documentation on the github.com/cpmech/gosl/gm/msh command 
 
 <!--
@@ -54,7 +54,8 @@ use 'godoc cmd/github.com/cpmech/gosl/gm/msh' for documentation on the github.co
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
 				<p>
-package msh implements functions to generate meshes
+package msh defines mesh data structures and implements interpolation functions for finite
+element analyses (FEA)
 </p>
 
 			</div>
@@ -567,7 +568,7 @@ elements at {r,s,t} natural coordinates. The derivatives are calculated only if 
 		
 			
 			
-			<h2 id="BryPair">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2785:2894#L101">BryPair</a></h2>
+			<h2 id="BryPair">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2850:2959#L102">BryPair</a></h2>
 			<pre>type BryPair struct {
     C     *<a href="#Cell">Cell</a> <span class="comment">// cell</span>
     BryId <a href="/pkg/builtin/#int">int</a>   <span class="comment">// edge local id (edgeId) OR face local id (faceId)</span>
@@ -591,7 +592,7 @@ BryPair defines a structure to identify bryIds =&gt; cells pairs
 		
 			
 			
-			<h2 id="BryPairSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2947:2973#L107">BryPairSet</a></h2>
+			<h2 id="BryPairSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=3012:3038#L108">BryPairSet</a></h2>
 			<pre>type BryPairSet []*<a href="#BryPair">BryPair</a></pre>
 			<p>
 BryPairSet defines a set of BryPair identifiers
@@ -612,7 +613,7 @@ BryPairSet defines a set of BryPair identifiers
 		
 			
 			
-			<h2 id="Cell">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=1457:2240#L53">Cell</a></h2>
+			<h2 id="Cell">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=1522:2305#L54">Cell</a></h2>
 			<pre>type Cell struct {
 
     <span class="comment">// input</span>
@@ -665,7 +666,7 @@ String returns a JSON representation of *Cell
 		
 			
 			
-			<h2 id="CellSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=830:850#L28">CellSet</a></h2>
+			<h2 id="CellSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=895:915#L29">CellSet</a></h2>
 			<pre>type CellSet []*<a href="#Cell">Cell</a></pre>
 			<p>
 CellSet defines a set of cells
@@ -713,7 +714,7 @@ Functions to sort CellSet
 		
 			
 			
-			<h2 id="Edge">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2505:2599#L89">Edge</a></h2>
+			<h2 id="Edge">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2570:2664#L90">Edge</a></h2>
 			<pre>type Edge struct {
     V <a href="#VertSet">VertSet</a> <span class="comment">// vertices on edge</span>
     C <a href="#CellSet">CellSet</a> <span class="comment">// cells connected to this edge</span>
@@ -737,7 +738,7 @@ Edge defines an edge
 		
 			
 			
-			<h2 id="EdgeKey">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=373:471#L7">EdgeKey</a></h2>
+			<h2 id="EdgeKey">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=438:536#L8">EdgeKey</a></h2>
 			<pre>type EdgeKey struct {
     NumVerts <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of vertices, from A to C</span>
     A, B, C  <a href="/pkg/builtin/#int">int</a> <span class="comment">// vertices</span>
@@ -761,7 +762,7 @@ EdgeKey implements a key to identify edges
 		
 			
 			
-			<h2 id="EdgeSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=718:738#L22">EdgeSet</a></h2>
+			<h2 id="EdgeSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=783:803#L23">EdgeSet</a></h2>
 			<pre>type EdgeSet []*<a href="#Edge">Edge</a></pre>
 			<p>
 EdgeSet defines a set of edges
@@ -782,7 +783,7 @@ EdgeSet defines a set of edges
 		
 			
 			
-			<h2 id="EdgesMap">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=889:920#L31">EdgesMap</a></h2>
+			<h2 id="EdgesMap">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=954:985#L32">EdgesMap</a></h2>
 			<pre>type EdgesMap map[<a href="#EdgeKey">EdgeKey</a>]*<a href="#Edge">Edge</a></pre>
 			<p>
 EdgeSetMap defines a map of Edges
@@ -816,7 +817,7 @@ Find finds an edge
 		
 			
 			
-			<h2 id="Face">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2624:2718#L95">Face</a></h2>
+			<h2 id="Face">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2689:2783#L96">Face</a></h2>
 			<pre>type Face struct {
     V <a href="#VertSet">VertSet</a> <span class="comment">// vertices on face</span>
     C <a href="#CellSet">CellSet</a> <span class="comment">// cells connected to this face</span>
@@ -840,7 +841,7 @@ Face defines a face
 		
 			
 			
-			<h2 id="FaceKey">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=519:621#L13">FaceKey</a></h2>
+			<h2 id="FaceKey">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=584:686#L14">FaceKey</a></h2>
 			<pre>type FaceKey struct {
     NumVerts   <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of vertices, from A to D</span>
     A, B, C, D <a href="/pkg/builtin/#int">int</a> <span class="comment">// vertices</span>
@@ -864,7 +865,7 @@ FaceKey implements a key to identify faces
 		
 			
 			
-			<h2 id="FaceSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=774:794#L25">FaceSet</a></h2>
+			<h2 id="FaceSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=839:859#L26">FaceSet</a></h2>
 			<pre>type FaceSet []*<a href="#Face">Face</a></pre>
 			<p>
 FaceSet defines a set of faces
@@ -885,7 +886,7 @@ FaceSet defines a set of faces
 		
 			
 			
-			<h2 id="FacesMap">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=956:987#L34">FacesMap</a></h2>
+			<h2 id="FacesMap">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=1021:1052#L35">FacesMap</a></h2>
 			<pre>type FacesMap map[<a href="#FaceKey">FaceKey</a>]*<a href="#Face">Face</a></pre>
 			<p>
 FaceSet defines a map of Faces
@@ -906,7 +907,7 @@ FaceSet defines a map of Faces
 		
 			
 			
-			<h2 id="Mesh">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2268:2479#L77">Mesh</a></h2>
+			<h2 id="Mesh">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=2333:2544#L78">Mesh</a></h2>
 			<pre>type Mesh struct {
 
     <span class="comment">// input</span>
@@ -932,7 +933,7 @@ Mesh defines mesh data
 
 			
 				
-				<h3 id="Read">func <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=3673:3714#L122">Read</a></h3>
+				<h3 id="Read">func <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=3738:3779#L123">Read</a></h3>
 				<pre>func Read(fn <a href="/pkg/builtin/#string">string</a>) (o *<a href="#Mesh">Mesh</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Read reads mesh
@@ -944,7 +945,7 @@ Read reads mesh
 
 			
 				
-				<h3 id="Mesh.CalcLimits">func (*Mesh) <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=5403:5482#L195">CalcLimits</a></h3>
+				<h3 id="Mesh.CalcLimits">func (*Mesh) <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=5468:5547#L196">CalcLimits</a></h3>
 				<pre>func (o *<a href="#Mesh">Mesh</a>) CalcLimits() (Ndim <a href="/pkg/builtin/#int">int</a>, Min []<a href="/pkg/builtin/#float64">float64</a>, Max []<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 CalcLimits calculates limits and space dimension
@@ -955,7 +956,7 @@ CalcLimits calculates limits and space dimension
 				
 			
 				
-				<h3 id="Mesh.Check">func (*Mesh) <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=3982:4016#L145">Check</a></h3>
+				<h3 id="Mesh.Check">func (*Mesh) <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=4047:4081#L146">Check</a></h3>
 				<pre>func (o *<a href="#Mesh">Mesh</a>) Check() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Check checks whether input data is consistent or not
@@ -966,7 +967,7 @@ Check checks whether input data is consistent or not
 				
 			
 				
-				<h3 id="Mesh.GetTagMaps">func (*Mesh) <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=5993:6044#L225">GetTagMaps</a></h3>
+				<h3 id="Mesh.GetTagMaps">func (*Mesh) <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=6058:6109#L226">GetTagMaps</a></h3>
 				<pre>func (o *<a href="#Mesh">Mesh</a>) GetTagMaps() (m *<a href="#TagMaps">TagMaps</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 GetTagMaps finds tagged entities
@@ -1000,7 +1001,7 @@ ShapeFunction computes the shape function and derivatives
 		
 			
 			
-			<h2 id="TagMaps">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=3035:3652#L110">TagMaps</a></h2>
+			<h2 id="TagMaps">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=3100:3717#L111">TagMaps</a></h2>
 			<pre>type TagMaps struct {
     VertTag2verts  map[<a href="/pkg/builtin/#int">int</a>]<a href="#VertSet">VertSet</a>    <span class="comment">// vertex tag =&gt; set of vertices</span>
     CellTag2cells  map[<a href="/pkg/builtin/#int">int</a>]<a href="#CellSet">CellSet</a>    <span class="comment">// cell tag =&gt; set of cells</span>
@@ -1030,7 +1031,7 @@ TagMaps holds data for finding information based on tags
 		
 			
 			
-			<h2 id="VertSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=660:682#L19">VertSet</a></h2>
+			<h2 id="VertSet">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=725:747#L20">VertSet</a></h2>
 			<pre>type VertSet []*<a href="#Vertex">Vertex</a></pre>
 			<p>
 VertSet defines a set of vertices
@@ -1078,7 +1079,7 @@ Functions to sort VertSet
 		
 			
 			
-			<h2 id="Vertex">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=1038:1416#L37">Vertex</a></h2>
+			<h2 id="Vertex">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go?s=1103:1481#L38">Vertex</a></h2>
 			<pre>type Vertex struct {
 
     <span class="comment">// input</span>
