@@ -5,8 +5,6 @@
 package vtk
 
 /*
-#cgo CXXFLAGS: -O3 -I. CHANGE_HERE_WITH_VTK_CXXFLAGS
-#cgo LDFLAGS: -lstdc++ -lm CHANGE_HERE_WITH_VTK_LDFLAGS
 #include "connectgovtk.h"
 #include <stdlib.h>
 */
