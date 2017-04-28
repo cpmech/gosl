@@ -217,7 +217,7 @@ global variables for communication with C
 		
 			
 			
-			<h2 id="Arrow">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=2398:2820#L53">Arrow</a></h2>
+			<h2 id="Arrow">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=1586:2008#L51">Arrow</a></h2>
 			<pre>type Arrow struct {
 
     <span class="comment">// options</span>
@@ -245,7 +245,7 @@ Arrow adds an arrow to Scene
 
 			
 				
-				<h3 id="NewArrow">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=4939:4961#L142">NewArrow</a></h3>
+				<h3 id="NewArrow">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=4127:4149#L140">NewArrow</a></h3>
 				<pre>func NewArrow() *<a href="#Arrow">Arrow</a></pre>
 				<p>
 NewArrow allocates a new Arrow structure
@@ -257,7 +257,7 @@ NewArrow allocates a new Arrow structure
 
 			
 				
-				<h3 id="Arrow.AddTo">func (*Arrow) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=6526:6571#L209">AddTo</a></h3>
+				<h3 id="Arrow.AddTo">func (*Arrow) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=5714:5759#L207">AddTo</a></h3>
 				<pre>func (o *<a href="#Arrow">Arrow</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 AddTo adds Arrow to Scene
@@ -270,7 +270,7 @@ AddTo adds Arrow to Scene
 		
 			
 			
-			<h2 id="Cb_fcn">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=3460:3516#L95">Cb_fcn</a></h2>
+			<h2 id="Cb_fcn">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=2648:2704#L93">Cb_fcn</a></h2>
 			<pre>type Cb_fcn func(x []<a href="/pkg/builtin/#float64">float64</a>) (fval, vx, vy, vz <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cb_fcn is a callback function to compute f, v := f(x) where v = dfdx
@@ -291,7 +291,7 @@ Cb_fcn is a callback function to compute f, v := f(x) where v = dfdx
 		
 			
 			
-			<h2 id="IsoSurf">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=3737:4598#L104">IsoSurf</a></h2>
+			<h2 id="IsoSurf">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=2925:3786#L102">IsoSurf</a></h2>
 			<pre>type IsoSurf struct {
 
     <span class="comment">// options</span>
@@ -331,7 +331,7 @@ CmapRangeType:
 
 			
 				
-				<h3 id="NewIsoSurf">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=6184:6218#L194">NewIsoSurf</a></h3>
+				<h3 id="NewIsoSurf">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=5372:5406#L192">NewIsoSurf</a></h3>
 				<pre>func NewIsoSurf(f <a href="#Cb_fcn">Cb_fcn</a>) *<a href="#IsoSurf">IsoSurf</a></pre>
 				<p>
 NewIsoSurf allocates a new IsoSurf structure
@@ -343,7 +343,7 @@ NewIsoSurf allocates a new IsoSurf structure
 
 			
 				
-				<h3 id="IsoSurf.AddTo">func (*IsoSurf) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=6916:6963#L227">AddTo</a></h3>
+				<h3 id="IsoSurf.AddTo">func (*IsoSurf) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=6104:6151#L225">AddTo</a></h3>
 				<pre>func (o *<a href="#IsoSurf">IsoSurf</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 AddTo adds IsoSurf to Scene
@@ -356,7 +356,7 @@ AddTo adds IsoSurf to Scene
 		
 			
 			
-			<h2 id="Scene">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=1251:2364#L15">Scene</a></h2>
+			<h2 id="Scene">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=439:1552#L13">Scene</a></h2>
 			<pre>type Scene struct {
 
     <span class="comment">// options</span>
@@ -397,7 +397,7 @@ Scene holds essential data to draw and interect with the x-y-z Cartesian system
 
 			
 				
-				<h3 id="NewScene">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=4644:4666#L126">NewScene</a></h3>
+				<h3 id="NewScene">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=3832:3854#L124">NewScene</a></h3>
 				<pre>func NewScene() *<a href="#Scene">Scene</a></pre>
 				<p>
 NewScene allocates a new Scene structure
@@ -409,7 +409,7 @@ NewScene allocates a new Scene structure
 
 			
 				
-				<h3 id="Scene.Run">func (*Scene) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=7357:7390#L246">Run</a></h3>
+				<h3 id="Scene.Run">func (*Scene) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=6545:6578#L244">Run</a></h3>
 				<pre>func (o *<a href="#Scene">Scene</a>) Run() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Run shows Scene in interactive mode or saving a .png file
@@ -420,7 +420,7 @@ Run shows Scene in interactive mode or saving a .png file
 				
 			
 				
-				<h3 id="Scene.SetCamera">func (*Scene) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=7132:7216#L241">SetCamera</a></h3>
+				<h3 id="Scene.SetCamera">func (*Scene) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=6320:6404#L239">SetCamera</a></h3>
 				<pre>func (o *<a href="#Scene">Scene</a>) SetCamera(xUp, yUp, zUp, xFoc, yFoc, zFoc, xPos, yPos, zPos <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetCamera sets camera
@@ -433,7 +433,7 @@ SetCamera sets camera
 		
 			
 			
-			<h2 id="Sphere">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=2855:3061#L69">Sphere</a></h2>
+			<h2 id="Sphere">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=2043:2249#L67">Sphere</a></h2>
 			<pre>type Sphere struct {
 
     <span class="comment">// options</span>
@@ -457,7 +457,7 @@ Sphere adds a sphere to Scene
 
 			
 				
-				<h3 id="NewSphere">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=5215:5239#L155">NewSphere</a></h3>
+				<h3 id="NewSphere">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=4403:4427#L153">NewSphere</a></h3>
 				<pre>func NewSphere() *<a href="#Sphere">Sphere</a></pre>
 				<p>
 NewSphere allocates a new Sphere structure
@@ -469,7 +469,7 @@ NewSphere allocates a new Sphere structure
 
 			
 				
-				<h3 id="Sphere.AddTo">func (*Sphere) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=6651:6697#L215">AddTo</a></h3>
+				<h3 id="Sphere.AddTo">func (*Sphere) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=5839:5885#L213">AddTo</a></h3>
 				<pre>func (o *<a href="#Sphere">Sphere</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 AddTo adds Sphere to Scene
@@ -482,7 +482,7 @@ AddTo adds Sphere to Scene
 		
 			
 			
-			<h2 id="Spheres">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=3122:3386#L81">Spheres</a></h2>
+			<h2 id="Spheres">type <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=2310:2574#L79">Spheres</a></h2>
 			<pre>type Spheres struct {
 
     <span class="comment">// options</span>
@@ -508,7 +508,7 @@ Spheres adds a set of spheres (e.g. particles) to Scene
 
 			
 				
-				<h3 id="NewSpheres">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=5395:5421#L164">NewSpheres</a></h3>
+				<h3 id="NewSpheres">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=4583:4609#L162">NewSpheres</a></h3>
 				<pre>func NewSpheres() *<a href="#Spheres">Spheres</a></pre>
 				<p>
 NewSpheres allocates a new set of spheres structure
@@ -518,7 +518,7 @@ NewSpheres allocates a new set of spheres structure
 				
 			
 				
-				<h3 id="NewSpheresFromFile">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=5842:5891#L179">NewSpheresFromFile</a></h3>
+				<h3 id="NewSpheresFromFile">func <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=5030:5079#L177">NewSpheresFromFile</a></h3>
 				<pre>func NewSpheresFromFile(filename <a href="/pkg/builtin/#string">string</a>) *<a href="#Spheres">Spheres</a></pre>
 				<p>
 NewSpheresFromFile add spheres (e.g. particles) by reading a file in the following format
@@ -535,7 +535,7 @@ NewSpheresFromFile add spheres (e.g. particles) by reading a file in the followi
 
 			
 				
-				<h3 id="Spheres.AddTo">func (*Spheres) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=6780:6827#L221">AddTo</a></h3>
+				<h3 id="Spheres.AddTo">func (*Spheres) <a href="https://github.com/cpmech/gosl/blob/master/vtk/govtk.go?s=5968:6015#L219">AddTo</a></h3>
 				<pre>func (o *<a href="#Spheres">Spheres</a>) AddTo(scn *<a href="#Scene">Scene</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 AddTo adds Spheres to Scene
