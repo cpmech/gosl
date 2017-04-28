@@ -23,9 +23,9 @@ Gosl comprises several _subpackages_ as listed below:
 9.  [num](https://github.com/cpmech/gosl/tree/master/num)       &ndash; Fundamental numerical methods
 10. [fun](https://github.com/cpmech/gosl/tree/master/fun)       &ndash; Scalar functions of one scalar and one vector
 11. [gm](https://github.com/cpmech/gosl/tree/master/gm)         &ndash; Geometry algorithms and structures
-12. [gm/msh](https://github.com/cpmech/gosl/tree/master/gm/msh) &ndash; Mesh generation and Delaunay triangulation
-13. [gm/tri](https://github.com/cpmech/gosl/tree/master/gm/tri) &ndash; Mesh generation: triangles
-14. [gm/rw](https://github.com/cpmech/gosl/tree/master/gm/rw)   &ndash; Mesh generation: read/write
+12. [gm/msh](https://github.com/cpmech/gosl/tree/master/gm/msh) &ndash; Mesh structures and interpolation functions for FEA
+13. [gm/tri](https://github.com/cpmech/gosl/tree/master/gm/tri) &ndash; Mesh generation: triangles and Delaunay triangulation
+14. [gm/rw](https://github.com/cpmech/gosl/tree/master/gm/rw)   &ndash; Mesh generation: read/write routines
 15. [graph](https://github.com/cpmech/gosl/tree/master/graph)   &ndash; Graph theory structures and algorithms
 16. [ode](https://github.com/cpmech/gosl/tree/master/ode)       &ndash; Ordinary differential equations
 17. [opt](https://github.com/cpmech/gosl/tree/master/opt)       &ndash; Optimisation problem solvers
