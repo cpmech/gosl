@@ -28,5 +28,5 @@ while true; do
     echo
     echo
     echo
-    go run gm_nurbs02.go
+    go run tri_draw01.go
 done

@@ -22,7 +22,7 @@ import (
 //    X = { x0, x1, x2, ... Npoints }
 //    Y = { y0, y1, y2, ... Npoints }
 //  Ouptut:
-//    V = { { x0, y0 }, { x0, y0 }, { x0, y0 } ... Nvertices }
+//    V = { { x0, y0 }, { x1, y1 }, { x2, y2 } ... Nvertices }
 //    C = { { id0, id1, id2 }, { id0, id1, id2 } ... Ncellls }
 func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int, err error) {
 
