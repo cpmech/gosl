@@ -22,7 +22,7 @@ func Draw(V [][]float64, C [][]int, style *plt.A) {
 			if _, found := drawnEdges[edge]; !found {
 				x := []float64{V[a][0], V[b][0]}
 				y := []float64{V[a][1], V[b][1]}
-				plt.Plot(x, y, nil)
+				plt.Plot(x, y, style)
 				drawnEdges[edge] = true
 			}
 		}
