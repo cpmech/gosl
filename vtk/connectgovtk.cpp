@@ -292,7 +292,7 @@ void * isosurf_addto(
         GoslVTK::Win * win = (GoslVTK::Win*) input_win;
 
         // isosurface
-        int N[3] = {ndiv[0], ndiv[1], ndiv[2]};
+        int N[3] = {(int)ndiv[0], (int)ndiv[1], (int)ndiv[2]};
         GoslVTK::IsoSurf * isf = new GoslVTK::IsoSurf();
         isf->Init(N, limits, &isosurf_fcn, index, octrotate>0);
         isf->AddTo(*win);
