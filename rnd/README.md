@@ -89,6 +89,37 @@ Source code: <a href="../examples/rnd_ints01.go">../examples/rnd_ints01.go</a>
 
 ## Probability distributions
 
+The probability distributions in the `rnd` package are initialised with the help of the `VarData`
+structure that contains the following main fields:
+```go
+// input
+D DistType // type of distribution
+M float64  // mean
+S float64  // standard deviation
+
+// input: Frechet
+L float64 // location
+C float64 // scale
+A float64 // shape
+
+// input: uniform
+Min float64 // min value
+Max float64 // max value
+
+... // others
+```
+
+The currently available distributions are:
+1. `rnd.D_Normal`    Normal distribution
+2. `rnd.D_Lognormal` Lognormal distribution
+3. `rnd.D_Gumbel`    Type I Extreme Value distribution
+4. `rnd.D_Frechet`   Type II Extreme Value distribution
+5. `rnd.D_Uniform`   Uniform distribution
+
+
+
+### Examples
+
 **Generate samples based on the Lognormal distribution**
 
 ```go
@@ -153,9 +184,49 @@ plt.Save("/tmp/gosl", "rnd_lognormalDistribution")
 Source code: <a href="../examples/rnd_lognormalDistribution.go">../examples/rnd_lognormalDistribution.go</a>
 
 <div id="container">
-<p><img src="../examples/figs/rnd_lognormalDistribution.png" width="400"></p>
+<p><img src="../examples/figs/rnd_lognormalDistribution.png" width="500"></p>
 </div>
 
-## Sampling algorithm: Halton points
 
-## Sampling algorithm: Latin hypercube
+
+## Sampling algorithms: Halton and Latin Hypercube methods
+
+The `HaltonPoints` function is a simple way to generate combinations of point coordinates in a
+hypercube.
+
+The `LatinIHS` function implements the Latin improved distributed hypercube sampling method. The
+results are the indices of points. The point coordinates can be computed with the `HypercubeCoords`
+function.
+
+### Example
+
+```go
+// initialise generator
+rnd.Init(1234)
+
+// Halton points
+ndim := 2
+npts := 100
+Xhps := rnd.HaltonPoints(ndim, npts)
+
+// Latin Hypercube
+dupfactor := 5
+lhs := rnd.LatinIHS(ndim, npts, dupfactor)
+xmin := []float64{0, 0}
+xmax := []float64{1, 1}
+Xlhs := rnd.HypercubeCoords(lhs, xmin, xmax)
+
+// plot
+plt.Reset(true, &plt.A{WidthPt: 300})
+plt.Plot(Xhps[0], Xhps[1], &plt.A{C: "b", M: ".", Ls: "none", L: "Halton"})
+plt.Plot(Xlhs[0], Xlhs[1], &plt.A{C: "r", M: "o", Ls: "none", L: "LHS", Void: true})
+plt.Equal()
+plt.Gll("$x_0$", "$x_1$", &plt.A{LegOut: true, LegNcol: 2})
+plt.Save("/tmp/gosl", "rnd_haltonAndLatin01")
+```
+
+Source code: <a href="../examples/rnd_haltonAndLatin01.go">../examples/rnd_haltonAndLatin01.go</a>
+
+<div id="container">
+<p><img src="../examples/figs/rnd_haltonAndLatin01.png" width="300"></p>
+</div>

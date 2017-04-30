@@ -32,5 +32,6 @@ while true; do
     #go run graph_shortestpaths01.go
     #go run graph_siouxfalls01.go
     #go run rnd_ints01.go
-    go run rnd_lognormalDistribution.go
+    #go run rnd_lognormalDistribution.go
+    go run rnd_haltonAndLatin01.go
 done

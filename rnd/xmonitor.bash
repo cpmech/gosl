@@ -7,5 +7,5 @@ while true; do
     echo
     echo
     go install
-    go test -test.run="lognormal_03"
+    go test -test.run="hc01"
 done
