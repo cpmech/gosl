@@ -15,7 +15,7 @@ import (
 
 func main() {
 
-	// linear programming problem
+	// linear programming problem:
 	//
 	//   min cᵀx   s.t.   Aᵀx = b, x ≥ 0
 	//    x

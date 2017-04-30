@@ -10,6 +10,7 @@ be implemented directly in Go.
 
 ```
 LinIpm solves:
+
         min cᵀx   s.t.   Aᵀx = b, x ≥ 0
          x
 
@@ -30,7 +31,7 @@ The matrix `A` is given as compressed-column sparse for efficiency purposes.
 Simple linear problem:
 
 ```
-linear programming problem
+linear programming problem:
 
   min cᵀx   s.t.   Aᵀx = b, x ≥ 0
    x
@@ -127,6 +128,30 @@ plt.Equal()
 plt.HideAllBorders()
 plt.Gll("$x$", "$y$", &plt.A{LegOut: true})
 plt.Save("/tmp/gosl", "opt_ipm01")
+```
+
+Output:
+```
+A =
+     2     1     1     0
+     1     2     0     1
+
+b =      3     3
+
+c =     -4    -5     0     0
+
+ it            f(x)           error
+  0 -9.99000000e+00  1.71974522e-01
+  1 -8.65656141e+00  3.63052829e-02
+  2 -8.99639576e+00  3.78555516e-04
+  3 -8.99996396e+00  3.78424585e-06
+  4 -8.99999964e+00  3.78423235e-08
+  5 -9.00000000e+00  3.78423337e-10
+
+x = [0.9999999990004347 1.000000000078799 1.9203318816792844e-09 8.419670861842801e-10]
+λ = [-1.0000000003319234 -1.9999999997280653]
+s = [7.256799795925211e-10 1.218218347079067e-10 1.0000000006656913 2.000000000061833]
+b(check) = [2.9999999980796686 2.9999999991580326]
 ```
 
 Source code: <a href="../examples/opt_ipm01.go">../examples/opt_ipm01.go</a>
