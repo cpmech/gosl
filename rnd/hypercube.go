@@ -7,7 +7,6 @@ package rnd
 import (
 	"math"
 
-	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -152,47 +151,23 @@ func LatinIHS(dim, n, d int) (x [][]int) {
 }
 
 // PlotHc2d plots 2D hypercube
-func PlotHc2d(dirout, fnkey string, x [][]int, xrange [][]float64) {
-	m := len(x)
-	n := len(x[0])
-	dx := make([]float64, m)
-	for i := 0; i < m; i++ {
-		dx[i] = (xrange[i][1] - xrange[i][0]) / float64(n-1)
+//   Input:
+//     sample -- the hypercube sampling indices; e.g. from LatinIHS [ndim][npoints]
+//     xmin -- min limit of coordinates [ndim]
+//     xmax -- max limit of coordinates [ndim]
+//   Output:
+//     X -- coordinates [ndim][npoints]
+func HypercubeCoords(sample [][]int, xmin, xmax []float64) (X [][]float64) {
+	m := len(sample)
+	if m < 1 {
+		return
 	}
-	X := utl.Alloc(m, n)
-	for i := 0; i < m; i++ {
-		for j := 0; j < n; j++ {
-			X[i][j] = xrange[i][0] + float64(x[i][j]-1)*dx[i]
-		}
-	}
-	plt.Reset(false, nil)
-	plt.Plot(X[0], X[1], &plt.A{C: "r", M: "."})
-	plt.Equal()
-	plt.Gll("$x$", "$y$", nil)
-	plt.Save(dirout, fnkey)
-}
-
-// PlotHc3d plots 3D hypercube
-func PlotHc3d(dirout, fnkey string, x [][]int, xrange [][]float64, show bool) {
-	m := len(x)
-	n := len(x[0])
-	dx := make([]float64, m)
-	for i := 0; i < m; i++ {
-		dx[i] = (xrange[i][1] - xrange[i][0]) / float64(n-1)
-	}
-	X := utl.Alloc(m, n)
+	n := len(sample[0])
+	X = utl.Alloc(m, n)
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
-			X[i][j] = xrange[i][0] + float64(x[i][j]-1)*dx[i]
+			X[i][j] = xmin[i] + float64(sample[i][j]-1)*(xmax[i]-xmin[i])/float64(n-1)
 		}
 	}
-	if !show {
-		plt.Reset(false, nil)
-	}
-	plt.Plot3dPoints(X[0], X[1], X[2], nil)
-	if show {
-		plt.Show()
-	} else {
-		plt.Save(dirout, fnkey)
-	}
+	return
 }

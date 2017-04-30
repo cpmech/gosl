@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 )
 
 func Test_hc01(tst *testing.T) {
@@ -20,20 +20,30 @@ func Test_hc01(tst *testing.T) {
 
 	n := 10
 	x := LatinIHS(2, n, 5)
-	io.Pforan("x = %v\n", x)
 
-	xcor := [][]int{
+	xchk := [][]int{
 		{2, 9, 5, 8, 1, 4, 3, 10, 7, 6},
 		{3, 10, 1, 2, 7, 4, 9, 6, 5, 8},
 	}
-	chk.IntMat(tst, "x", x, xcor)
+	chk.IntMat(tst, "x", x, xchk)
+
+	xmin := []float64{-1.0, 0.0}
+	xmax := []float64{1.0, 2.0}
+	dx := (xmax[0] - xmin[0]) / float64(n-1)
+	dy := (xmax[1] - xmin[1]) / float64(n-1)
+	X := HypercubeCoords(x, xmin, xmax)
+	chk.Vector(tst, "x0", 1e-15, X[0], []float64{-1 + dx, -1 + 8*dx, -1 + 4*dx, -1 + 7*dx, -1, -1 + 3*dx, -1 + 2*dx, -1 + 9*dx, -1 + 6*dx, -1 + 5*dx})
+	chk.Vector(tst, "x1", 1e-15, X[1], []float64{2 * dy, 9 * dy, 0, dy, 6 * dy, 3 * dy, 8 * dy, 5 * dy, 4 * dy, 7 * dy})
 
 	if chk.Verbose {
-		xrange := [][]float64{
-			{-1.0, 1.0},
-			{0.0, 2.0},
+		plt.Reset(true, nil)
+		plt.Plot(X[0], X[1], &plt.A{C: "r", M: "o", Ls: "none", NoClip: true})
+		plt.Equal()
+		plt.Gll("$x_0$", "$x_1$", nil)
+		err := plt.Save("/tmp/gosl/rnd", "t_hc01")
+		if err != nil {
+			tst.Errorf("%v", err)
 		}
-		PlotHc2d("/tmp/gosl", "test_hc01", x, xrange)
 	}
 }
 
@@ -42,18 +52,23 @@ func Test_hc02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("hc02. hypercube")
 
-	Init(0)
-
-	n := 36
-	x := LatinIHS(2, n, 5)
-	io.Pforan("x = %v\n", x)
+	Init(111)
 
 	if chk.Verbose {
-		xrange := [][]float64{
-			{-1.0, 1.0},
-			{0.0, 2.0},
+		n := 36
+		x := LatinIHS(2, n, 5)
+
+		xmin := []float64{-1.0, 0.0}
+		xmax := []float64{1.0, 2.0}
+		X := HypercubeCoords(x, xmin, xmax)
+		plt.Reset(true, nil)
+		plt.Plot(X[0], X[1], &plt.A{C: "r", M: "o", Ls: "none", NoClip: true})
+		plt.Equal()
+		plt.Gll("$x_0$", "$x_1$", nil)
+		err := plt.Save("/tmp/gosl/rnd", "t_hc02")
+		if err != nil {
+			tst.Errorf("%v", err)
 		}
-		PlotHc2d("/tmp/gosl", "test_hc02", x, xrange)
 	}
 }
 
@@ -62,18 +77,22 @@ func Test_hc03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("hc03. hypercube (3D)")
 
-	Init(0)
-
-	n := 100
-	x := LatinIHS(3, n, 5)
-	io.Pforan("x = %v\n", x)
+	Init(111)
 
 	if chk.Verbose {
-		xrange := [][]float64{
-			{-1.0, 1.0},
-			{0.0, 2.0},
-			{-2.0, 0.0},
+		n := 100
+		x := LatinIHS(3, n, 5)
+
+		xmin := []float64{-1.0, 0.0, -2.0}
+		xmax := []float64{1.0, 2.0, 0.0}
+		X := HypercubeCoords(x, xmin, xmax)
+		plt.Reset(true, nil)
+		plt.Plot3dPoints(X[0], X[1], X[2], &plt.A{C: "r", M: "o"})
+		plt.SetLabels3d("$x_0$", "$x_1$", "$x_2$", nil)
+		plt.Default3dView(xmin[0], xmax[0], xmin[1], xmax[1], xmin[2], xmax[2], true)
+		err := plt.Save("/tmp/gosl/rnd", "t_hc03")
+		if err != nil {
+			tst.Errorf("%v", err)
 		}
-		PlotHc3d("/tmp/gosl", "test_hc03", x, xrange, false)
 	}
 }
