@@ -25,8 +25,8 @@ func test_rwstep01(tst *testing.T) {
 	}
 	dat := string(buf)
 
-	var stp rw.STEP
-	err = stp.ParseDATA(dat)
+	var stp rw.StepFile
+	err = stp.ParseData(dat)
 	if err != nil {
 		tst.Errorf("Parse filed:\n%v", err)
 		return
@@ -34,16 +34,16 @@ func test_rwstep01(tst *testing.T) {
 
 	var bsplines []*Bspline
 
-	for _, scurve := range stp.Scurves {
-		curve := stp.BScurves[scurve.Curve_3d]
+	for _, scurve := range stp.SurfaceCurves {
+		curve := stp.BsplineCurves[scurve.Curve3d]
 		if curve == nil {
 			continue
 		}
 
 		// collect vertices
-		nv := len(curve.Control_points_list)
+		nv := len(curve.ControlPointsList)
 		verts := utl.Alloc(nv, 4)
-		for i, key := range curve.Control_points_list {
+		for i, key := range curve.ControlPointsList {
 			if p, ok := stp.Points[key]; ok {
 				for j := 0; j < 3; j++ {
 					verts[i][j] = p.Coordinates[j]
@@ -56,13 +56,13 @@ func test_rwstep01(tst *testing.T) {
 
 		// collect knots
 		nk := 0
-		for _, m := range curve.Knot_multiplicities {
+		for _, m := range curve.KnotMultiplicities {
 			nk += m
 		}
 		knots := make([]float64, nk)
 		k := 0
 		for i, u := range curve.Knots {
-			m := curve.Knot_multiplicities[i]
+			m := curve.KnotMultiplicities[i]
 			for j := 0; j < m; j++ {
 				knots[k] = u
 				k++

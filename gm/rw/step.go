@@ -11,60 +11,74 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-type Cartesian_point struct {
+// CartesianPoint holds Cartesian point data
+type CartesianPoint struct {
 	Name        string
 	Coordinates []float64
 }
 
-type B_spline_curve_with_knots struct {
-	Name                string
-	Degree              int
-	Control_points_list []string
-	Curve_form          string
-	Closed_curve        bool
-	Self_intersect      bool
-	Knot_multiplicities []int
-	Knots               []float64
-	Knot_spec           string
+// BsplineCurveWithKnots holds data representing B-splines
+type BsplineCurveWithKnots struct {
+	Name               string
+	Degree             int
+	ControlPointsList  []string
+	CurveForm          string
+	ClosedCurve        bool
+	SelfIntersect      bool
+	KnotMultiplicities []int
+	Knots              []float64
+	Knot_spec          string
 }
 
-type Surface_curve struct {
-	Name                  string
-	Curve_3d              string
-	Associated_geometry   []string
-	Master_representation string
+// SurfaceCurve represents a surface curve
+type SurfaceCurve struct {
+	Name                 string
+	Curve3d              string
+	AssociatedGeometry   []string
+	MasterRepresentation string
 }
 
-type STEP struct {
-	Points   map[string]*Cartesian_point
-	BScurves map[string]*B_spline_curve_with_knots
-	Scurves  map[string]*Surface_curve
+// StepFile holds information to read/write STEP files
+type StepFile struct {
+	Points        map[string]*CartesianPoint
+	BsplineCurves map[string]*BsplineCurveWithKnots
+	SurfaceCurves map[string]*SurfaceCurve
 }
 
-func (o *STEP) ParseDATA(dat string) (err error) {
+// ParseDataFile parses data section from file
+func (o *StepFile) ParseDataFile(filename string) (err error) {
+	buf, err := io.ReadFile(filename)
+	if err != nil {
+		return
+	}
+	return o.ParseData(string(buf))
+}
+
+// ParseData parses data section of Step file
+func (o *StepFile) ParseData(dat string) (err error) {
 
 	// remove newlines and split commands
 	sdat := strings.Replace(dat, "\n", "", -1)
 	res := strings.Split(sdat, ";")
 
 	// allocate maps
-	o.Points = make(map[string]*Cartesian_point)
-	o.BScurves = make(map[string]*B_spline_curve_with_knots)
-	o.Scurves = make(map[string]*Surface_curve)
+	o.Points = make(map[string]*CartesianPoint)
+	o.BsplineCurves = make(map[string]*BsplineCurveWithKnots)
+	o.SurfaceCurves = make(map[string]*SurfaceCurve)
 
 	// for each line
-	reading_data := false
+	readingData := false
 	for _, lin := range res {
 
 		// activate data reading
 		lin = strings.TrimSpace(strings.ToLower(lin))
-		if reading_data {
+		if readingData {
 			if strings.HasPrefix(lin, "endsec") {
 				return
 			}
 		} else {
 			if strings.HasPrefix(lin, "data") {
-				reading_data = true
+				readingData = true
 			}
 			continue
 		}
@@ -89,13 +103,20 @@ func (o *STEP) ParseDATA(dat string) (err error) {
 			sargs := strings.TrimPrefix(rhs, "cartesian_point")
 			args := io.SplitWithinParentheses(sargs)
 			n := len(args)
-			if n != 2 {
-				err = chk.Err("cartesian_point has the wrong number of arguments. %d != %d", n, 2)
+			var name, strFloats string
+			switch n {
+			case 1:
+				strFloats = args[0]
+			case 2:
+				name = args[0]
+				strFloats = args[1]
+			default:
+				err = chk.Err("cartesian_point has the wrong number of arguments. n=%d is invalid", n)
 				return
 			}
-			p := Cartesian_point{
-				Name:        args[0],
-				Coordinates: io.SplitFloats(args[1]),
+			p := CartesianPoint{
+				Name:        name,
+				Coordinates: io.SplitFloats(strFloats),
 			}
 			o.Points[lhs] = &p
 
@@ -108,19 +129,19 @@ func (o *STEP) ParseDATA(dat string) (err error) {
 				err = chk.Err("b_spline_curve_with_knots has the wrong number of arguments. %d != %d", n, 9)
 				return
 			}
-			b := B_spline_curve_with_knots{
-				Name:                args[0],
-				Degree:              io.Atoi(args[1]),
-				Control_points_list: strings.Fields(args[2]),
-				Curve_form:          args[3],
-				Closed_curve:        atob(args[4]),
-				Self_intersect:      atob(args[5]),
-				Knot_multiplicities: io.SplitInts(args[6]),
-				Knots:               io.SplitFloats(args[7]),
-				Knot_spec:           args[8],
+			b := BsplineCurveWithKnots{
+				Name:               args[0],
+				Degree:             io.Atoi(args[1]),
+				ControlPointsList:  strings.Fields(args[2]),
+				CurveForm:          args[3],
+				ClosedCurve:        atob(args[4]),
+				SelfIntersect:      atob(args[5]),
+				KnotMultiplicities: io.SplitInts(args[6]),
+				Knots:              io.SplitFloats(args[7]),
+				Knot_spec:          args[8],
 			}
-			chk.IntAssert(len(b.Knot_multiplicities), len(b.Knots))
-			o.BScurves[lhs] = &b
+			chk.IntAssert(len(b.KnotMultiplicities), len(b.Knots))
+			o.BsplineCurves[lhs] = &b
 
 		// surface curve
 		case strings.HasPrefix(rhs, "surface_curve"):
@@ -131,13 +152,13 @@ func (o *STEP) ParseDATA(dat string) (err error) {
 				err = chk.Err("surface_curve has the wrong number of arguments. %d != %d", n, 4)
 				return
 			}
-			b := Surface_curve{
-				Name:                  args[0],
-				Curve_3d:              args[1],
-				Associated_geometry:   io.SplitWithinParentheses(args[2]),
-				Master_representation: args[3],
+			b := SurfaceCurve{
+				Name:                 args[0],
+				Curve3d:              args[1],
+				AssociatedGeometry:   io.SplitWithinParentheses(args[2]),
+				MasterRepresentation: args[3],
 			}
-			o.Scurves[lhs] = &b
+			o.SurfaceCurves[lhs] = &b
 		}
 	}
 	return

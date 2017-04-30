@@ -1,10 +1,13 @@
 #!/bin/bash
 
-FILES="io.go step.go t_step_test.go"
+FILES="*.go"
 
 while true; do
     inotifywait -q -e modify $FILES
     echo
     echo
-    go test -test.run="step02"
+    echo
+    echo
+    go install
+    go test -test.run="step01"
 done

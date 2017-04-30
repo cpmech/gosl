@@ -17,7 +17,7 @@ func Test_step01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("step01")
 
-	dat := `
+	dat := `DATA;
 #94 = B_SPLINE_CURVE_WITH_KNOTS('',3,(#95,#96,#97,#98,#99,#100,#101,#102
     ,#103,#104,#105,#106,#107,#108,#109,#110,#111,#112,#113,#114,#115,
     #116,#117,#118),.UNSPECIFIED.,.F.,.F.,(4,2,2,2,2,2,2,2,2,2,2,4),(0.,
@@ -47,12 +47,12 @@ func Test_step01(tst *testing.T) {
 #116 = CARTESIAN_POINT('',(-103.990686794,-22.157275434,10.));
 #117 = CARTESIAN_POINT('',(-102.821037828,-22.574321695,10.));
 #118 = CARTESIAN_POINT('',(-101.6,-22.574321695,10.));
-`
+ENDSEC;`
 
-	var stp STEP
-	err := stp.ParseDATA(dat)
+	var stp StepFile
+	err := stp.ParseData(dat)
 	if err != nil {
-		tst.Errorf("Parse filed:\n%v", err)
+		tst.Errorf("Parse failed:\n%v", err)
 		return
 	}
 
@@ -62,20 +62,20 @@ func Test_step01(tst *testing.T) {
 	z := make([]float64, np)
 	i := 0
 	for _, p := range stp.Points {
-		io.Pforan("p = %#v\n", p)
 		x[i] = p.Coordinates[0]
 		y[i] = p.Coordinates[1]
 		z[i] = p.Coordinates[2]
 		i++
 	}
 
-	for _, c := range stp.BScurves {
+	for _, c := range stp.BsplineCurves {
 		io.Pf("c = %#v\n", c)
 	}
 
-	if false {
+	if chk.Verbose {
+		plt.Reset(false, nil)
 		plt.Plot3dPoints(x, y, z, nil)
-		plt.Show()
+		plt.Save("/tmp/gosl/gm", "t_step01")
 	}
 }
 
@@ -91,14 +91,14 @@ func Test_step02(tst *testing.T) {
 	}
 	dat := string(buf)
 
-	var stp STEP
-	err = stp.ParseDATA(dat)
+	var stp StepFile
+	err = stp.ParseData(dat)
 	if err != nil {
 		tst.Errorf("Parse filed:\n%v", err)
 		return
 	}
 
-	for _, c := range stp.BScurves {
+	for _, c := range stp.BsplineCurves {
 		io.Pforan("c = %v\n", c)
 	}
 }

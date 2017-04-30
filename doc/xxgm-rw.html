@@ -77,25 +77,28 @@ as the STEP file format
 			
 			
 				
-				<dd><a href="#B_spline_curve_with_knots">type B_spline_curve_with_knots</a></dd>
+				<dd><a href="#BsplineCurveWithKnots">type BsplineCurveWithKnots</a></dd>
 				
 				
 			
 				
-				<dd><a href="#Cartesian_point">type Cartesian_point</a></dd>
+				<dd><a href="#CartesianPoint">type CartesianPoint</a></dd>
 				
 				
 			
 				
-				<dd><a href="#STEP">type STEP</a></dd>
+				<dd><a href="#StepFile">type StepFile</a></dd>
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#STEP.ParseDATA">func (o *STEP) ParseDATA(dat string) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#StepFile.ParseData">func (o *StepFile) ParseData(dat string) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#StepFile.ParseDataFile">func (o *StepFile) ParseDataFile(filename string) (err error)</a></dd>
 				
 			
 				
-				<dd><a href="#Surface_curve">type Surface_curve</a></dd>
+				<dd><a href="#SurfaceCurve">type SurfaceCurve</a></dd>
 				
 				
 			
@@ -165,19 +168,22 @@ as the STEP file format
 		
 			
 			
-			<h2 id="B_spline_curve_with_knots">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=333:623#L9">B_spline_curve_with_knots</a></h2>
-			<pre>type B_spline_curve_with_knots struct {
-    Name                <a href="/pkg/builtin/#string">string</a>
-    Degree              <a href="/pkg/builtin/#int">int</a>
-    Control_points_list []<a href="/pkg/builtin/#string">string</a>
-    Curve_form          <a href="/pkg/builtin/#string">string</a>
-    Closed_curve        <a href="/pkg/builtin/#bool">bool</a>
-    Self_intersect      <a href="/pkg/builtin/#bool">bool</a>
-    Knot_multiplicities []<a href="/pkg/builtin/#int">int</a>
-    Knots               []<a href="/pkg/builtin/#float64">float64</a>
-    Knot_spec           <a href="/pkg/builtin/#string">string</a>
+			<h2 id="BsplineCurveWithKnots">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=436:713#L11">BsplineCurveWithKnots</a></h2>
+			<pre>type BsplineCurveWithKnots struct {
+    Name               <a href="/pkg/builtin/#string">string</a>
+    Degree             <a href="/pkg/builtin/#int">int</a>
+    ControlPointsList  []<a href="/pkg/builtin/#string">string</a>
+    CurveForm          <a href="/pkg/builtin/#string">string</a>
+    ClosedCurve        <a href="/pkg/builtin/#bool">bool</a>
+    SelfIntersect      <a href="/pkg/builtin/#bool">bool</a>
+    KnotMultiplicities []<a href="/pkg/builtin/#int">int</a>
+    Knots              []<a href="/pkg/builtin/#float64">float64</a>
+    Knot_spec          <a href="/pkg/builtin/#string">string</a>
 }</pre>
-			
+			<p>
+BsplineCurveWithKnots holds data representing B-splines
+</p>
+
 
 			
 
@@ -193,12 +199,15 @@ as the STEP file format
 		
 			
 			
-			<h2 id="Cartesian_point">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=257:331#L4">Cartesian_point</a></h2>
-			<pre>type Cartesian_point struct {
+			<h2 id="CartesianPoint">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=302:375#L5">CartesianPoint</a></h2>
+			<pre>type CartesianPoint struct {
     Name        <a href="/pkg/builtin/#string">string</a>
     Coordinates []<a href="/pkg/builtin/#float64">float64</a>
 }</pre>
-			
+			<p>
+CartesianPoint holds Cartesian point data
+</p>
+
 
 			
 
@@ -214,13 +223,16 @@ as the STEP file format
 		
 			
 			
-			<h2 id="STEP">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=778:920#L28">STEP</a></h2>
-			<pre>type STEP struct {
-    Points   map[<a href="/pkg/builtin/#string">string</a>]*<a href="#Cartesian_point">Cartesian_point</a>
-    BScurves map[<a href="/pkg/builtin/#string">string</a>]*<a href="#B_spline_curve_with_knots">B_spline_curve_with_knots</a>
-    Scurves  map[<a href="/pkg/builtin/#string">string</a>]*<a href="#Surface_curve">Surface_curve</a>
+			<h2 id="StepFile">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=961:1116#L32">StepFile</a></h2>
+			<pre>type StepFile struct {
+    Points        map[<a href="/pkg/builtin/#string">string</a>]*<a href="#CartesianPoint">CartesianPoint</a>
+    BsplineCurves map[<a href="/pkg/builtin/#string">string</a>]*<a href="#BsplineCurveWithKnots">BsplineCurveWithKnots</a>
+    SurfaceCurves map[<a href="/pkg/builtin/#string">string</a>]*<a href="#SurfaceCurve">SurfaceCurve</a>
 }</pre>
-			
+			<p>
+StepFile holds information to read/write STEP files
+</p>
+
 
 			
 
@@ -234,9 +246,23 @@ as the STEP file format
 
 			
 				
-				<h3 id="STEP.ParseDATA">func (*STEP) <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=922:970#L34">ParseDATA</a></h3>
-				<pre>func (o *<a href="#STEP">STEP</a>) ParseDATA(dat <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<h3 id="StepFile.ParseData">func (*StepFile) <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=1375:1427#L48">ParseData</a></h3>
+				<pre>func (o *<a href="#StepFile">StepFile</a>) ParseData(dat <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ParseData parses data section of Step file
+</p>
+
 				
+				
+				
+			
+				
+				<h3 id="StepFile.ParseDataFile">func (*StepFile) <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=1165:1226#L39">ParseDataFile</a></h3>
+				<pre>func (o *<a href="#StepFile">StepFile</a>) ParseDataFile(filename <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ParseDataFile parses data section from file
+</p>
+
 				
 				
 				
@@ -244,14 +270,17 @@ as the STEP file format
 		
 			
 			
-			<h2 id="Surface_curve">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=625:776#L21">Surface_curve</a></h2>
-			<pre>type Surface_curve struct {
-    Name                  <a href="/pkg/builtin/#string">string</a>
-    Curve_3d              <a href="/pkg/builtin/#string">string</a>
-    Associated_geometry   []<a href="/pkg/builtin/#string">string</a>
-    Master_representation <a href="/pkg/builtin/#string">string</a>
+			<h2 id="SurfaceCurve">type <a href="https://github.com/cpmech/gosl/blob/master/gm/rw/step.go?s=758:904#L24">SurfaceCurve</a></h2>
+			<pre>type SurfaceCurve struct {
+    Name                 <a href="/pkg/builtin/#string">string</a>
+    Curve3d              <a href="/pkg/builtin/#string">string</a>
+    AssociatedGeometry   []<a href="/pkg/builtin/#string">string</a>
+    MasterRepresentation <a href="/pkg/builtin/#string">string</a>
 }</pre>
-			
+			<p>
+SurfaceCurve represents a surface curve
+</p>
+
 
 			
 
