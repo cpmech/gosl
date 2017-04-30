@@ -48,7 +48,7 @@ func main() {
 	cone.AddTo(scn)    // remember to add to Scene
 
 	// spheres
-	sset := vtk.NewSpheresFromFile("points.dat")
+	sset := vtk.NewSpheresFromFile("data/points.dat")
 	if true {
 		sset.AddTo(scn)
 	}
