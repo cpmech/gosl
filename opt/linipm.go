@@ -14,7 +14,7 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// LinIpm implements the interior-point mehtods for linear programming problems
+// LinIpm implements the interior-point methods for linear programming problems
 //  Solve:
 //          min cᵀx   s.t.   Aᵀx = b, x ≥ 0
 //           x

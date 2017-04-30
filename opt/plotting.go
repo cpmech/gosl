@@ -61,7 +61,7 @@ func PlotTwoVarsContour(x []float64, np int, extra func(), axequal bool,
 		plt.ContourL(V0, V1, Zg[k], argsG)
 	}
 	if x != nil {
-		plt.PlotOne(x[0], x[1], &plt.A{C: "r", M: "*", L: "optimum", Z: 10})
+		plt.PlotOne(x[0], x[1], &plt.A{C: "r", Ls: "none", M: "*", L: "optimum", Z: 10})
 	}
 	if extra != nil {
 		extra()
