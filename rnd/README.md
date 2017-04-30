@@ -228,5 +228,5 @@ plt.Save("/tmp/gosl", "rnd_haltonAndLatin01")
 Source code: <a href="../examples/rnd_haltonAndLatin01.go">../examples/rnd_haltonAndLatin01.go</a>
 
 <div id="container">
-<p><img src="../examples/figs/rnd_haltonAndLatin01.png" width="300"></p>
+<p><img src="../examples/figs/rnd_haltonAndLatin01.png" width="400"></p>
 </div>
