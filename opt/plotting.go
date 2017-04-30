@@ -16,8 +16,6 @@ type TwoVarsFunc_t func(x []float64) float64
 
 // PlotTwoVarsContour plots contour for two variables problem. len(x) == 2
 //  Input
-//   dirout  -- directory to save files
-//   fnkey   -- file name key for eps figure
 //   x       -- solution. can be <nil>
 //   np      -- number of points for contour
 //   extra   -- called just before saving figure
@@ -26,11 +24,10 @@ type TwoVarsFunc_t func(x []float64) float64
 //   vmax    -- max 1 values
 //   f       -- function to plot filled contour. can be <nil>
 //   gs      -- functions to plot contour @ level 0. can be <nil>
-func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(), axequal bool,
-	vmin, vmax []float64, f TwoVarsFunc_t, gs ...TwoVarsFunc_t) {
-	if fnkey == "" {
-		return
-	}
+//   argsF   -- plot arguments for f function. can be nil
+//   argsG   -- plot arguments for gs functions. can be nil
+func PlotTwoVarsContour(x []float64, np int, extra func(), axequal bool,
+	vmin, vmax []float64, argsF, argsG *plt.A, f TwoVarsFunc_t, gs ...TwoVarsFunc_t) {
 	chk.IntAssert(len(vmin), 2)
 	chk.IntAssert(len(vmax), 2)
 	V0, V1 := utl.MeshGrid2d(vmin[0], vmax[0], vmin[1], vmax[1], np, np)
@@ -54,12 +51,14 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 			}
 		}
 	}
-	plt.Reset(false, nil)
 	if f != nil {
-		plt.ContourF(V0, V1, Zf, nil)
+		plt.ContourF(V0, V1, Zf, argsF)
 	}
 	for k, _ := range gs {
-		plt.ContourL(V0, V1, Zg[k], &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2})
+		if argsG == nil {
+			argsG = &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2}
+		}
+		plt.ContourL(V0, V1, Zg[k], argsG)
 	}
 	if x != nil {
 		plt.PlotOne(x[0], x[1], &plt.A{C: "r", M: "*", L: "optimum", Z: 10})
@@ -67,16 +66,10 @@ func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(),
 	if extra != nil {
 		extra()
 	}
-	if dirout == "" {
-		dirout = "."
-	}
 	plt.Cross(0, 0, &plt.A{C: "grey"})
 	plt.SetXnticks(11)
 	plt.SetYnticks(11)
 	if axequal {
 		plt.Equal()
 	}
-	plt.AxisRange(vmin[0], vmax[0], vmin[1], vmax[1])
-	plt.Gll("$x_0$", "$x_1$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 1.5})
-	plt.Save(dirout, fnkey)
 }

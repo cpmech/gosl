@@ -28,5 +28,5 @@ while true; do
     echo
     echo
     echo
-    go run tri_draw01.go
+    go run opt_ipm01.go
 done

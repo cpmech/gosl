@@ -12,6 +12,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/plt"
 )
 
 func Test_linipm01(tst *testing.T) {
@@ -70,19 +71,18 @@ func Test_linipm01(tst *testing.T) {
 	chk.Vector(tst, "A*x=b", 1e-8, bres, b)
 
 	// plot
-	if true && chk.Verbose {
-		f := func(x []float64) float64 {
-			return c[0]*x[0] + c[1]*x[1]
-		}
-		g := func(x []float64, i int) float64 {
-			return A[i][0]*x[0] + A[i][1]*x[1] - b[i]
-		}
+	if chk.Verbose {
 		np := 41
+		f := func(x []float64) float64 { return c[0]*x[0] + c[1]*x[1] }
+		g := func(x []float64, i int) float64 { return A[i][0]*x[0] + A[i][1]*x[1] - b[i] }
 		vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
-		PlotTwoVarsContour("/tmp/gosl", "test_linipm01", x, np, nil, true, vmin, vmax, f,
+		plt.Reset(false, nil)
+		argsG := &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2, Fsz: 10}
+		PlotTwoVarsContour(x, np, nil, true, vmin, vmax, nil, argsG, f,
 			func(x []float64) float64 { return g(x, 0) },
 			func(x []float64) float64 { return g(x, 1) },
 		)
+		plt.Save("/tmp/gosl/opt", "t_linipm01")
 	}
 }
 
@@ -158,16 +158,12 @@ func Test_linipm02(tst *testing.T) {
 	chk.Vector(tst, "x", 1e-8, x, []float64{0.5, 1.5})
 
 	// plot
-	if true && chk.Verbose {
-		f := func(x []float64) float64 {
-			return c[0]*x[0] + c[1]*x[1]
-		}
-		g := func(x []float64, i int) float64 {
-			return A[i][0]*x[0] + A[i][1]*x[1] - b[i]
-		}
+	if chk.Verbose {
 		np := 41
+		f := func(x []float64) float64 { return c[0]*x[0] + c[1]*x[1] }
+		g := func(x []float64, i int) float64 { return A[i][0]*x[0] + A[i][1]*x[1] - b[i] }
 		vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
-		PlotTwoVarsContour("/tmp/gosl", "test_linipm02", x, np, nil, true, vmin, vmax, f,
+		PlotTwoVarsContour(x, np, nil, true, vmin, vmax, nil, nil, f,
 			func(x []float64) float64 { return g(x, 0) },
 			func(x []float64) float64 { return g(x, 1) },
 		)

@@ -28,7 +28,7 @@ Gosl comprises several _subpackages_ as listed below:
 14. [gm/rw](https://github.com/cpmech/gosl/tree/master/gm/rw)   &ndash; Mesh generation: read/write routines
 15. [graph](https://github.com/cpmech/gosl/tree/master/graph)   &ndash; Graph theory structures and algorithms
 16. [ode](https://github.com/cpmech/gosl/tree/master/ode)       &ndash; Ordinary differential equations
-17. [opt](https://github.com/cpmech/gosl/tree/master/opt)       &ndash; Optimisation problem solvers
+17. [opt](https://github.com/cpmech/gosl/tree/master/opt)       &ndash; Solvers for optimisation problems
 18. [rnd](https://github.com/cpmech/gosl/tree/master/rnd)       &ndash; Random numbers and probability distributions
 19. [tsr](https://github.com/cpmech/gosl/tree/master/tsr)       &ndash; Tensor algebra and definitions for continuum mechanics
 20. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)       &ndash; 3D Visualisation with the VTK tool kit
