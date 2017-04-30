@@ -75,6 +75,6 @@ func main() {
 	plt.Reset(false, nil)
 	plot_normal(μ, σ, xmin, xmax)
 	plt.Subplot(2, 1, 1)
-	hist.PlotDensity(nil, "")
+	hist.PlotDensity(nil)
 	plt.Save("/tmp/gosl", "rnd_normalDistribution")
 }
