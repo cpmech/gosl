@@ -126,7 +126,7 @@ plt.Save("/tmp/gosl/graph", "shortestpath01")
 Source code: <a href="../examples/graph_shortestpaths01.go">../examples/graph_shortestpaths01.go</a>
 
 <div id="container">
-<p><img src="../examples/figs/graph_shortestpath01.png" width="300"></p>
+<p><img src="../examples/figs/graph_shortestpath01.png" width="250"></p>
 </div>
 
 
@@ -202,7 +202,7 @@ plt.Save("/tmp/gosl/graph", "graph_siouxfalls01")
 Source code: <a href="../examples/graph_siouxfalls01.go">../examples/graph_siouxfalls01.go</a>
 
 <div id="container">
-<p><img src="../examples/figs/graph_siouxfalls01.png" width="300"></p>
+<p><img src="../examples/figs/graph_siouxfalls01.png" width="500"></p>
 </div>
 
 
