@@ -13,43 +13,76 @@ import (
 )
 
 // Draw draws grid
-//  r   -- radius of circles
-//  W   -- width of paths
-//  dwt -- δwt for positioning text (w = W/2)
-//  arrow_scale -- scale for arrows. use 0 for default value
-func (o *Graph) Draw(r, W, dwt, arrow_scale float64,
-	verts_lbls map[int]string, verts_fsz float64, verts_clr string,
-	edges_lbls map[int]string, edges_fsz float64, edges_clr string) {
+//  vertsLabels -- labels of vertices. may be nil
+//  edgesLabels -- labels of edges. may be nil
+//  radius -- radius of circles. can be 0
+//  width -- distance between two edges. can be 0
+//  gap -- gap between text and edges; e.g. width/2. can be 0
+//  argsVertsTxt -- plt arguments for vertex ids. may be nil
+//  argsEdgesTxt -- plt arguments for edge ids. may be nil
+//  argsVerts -- plt arguments for vertices. may be nil
+//  argsEdges -- plt arguments for edges. may be nil
+func (o *Graph) Draw(vertsLabels map[int]string, edgesLabels map[int]string, radius, width, gap float64, argsVertsTxt, argsEdgesTxt, argsVerts, argsEdges *plt.A) {
+
+	// check
 	if len(o.Verts) < 1 {
 		return
 	}
+
+	// plot arguments
+	if argsVertsTxt == nil {
+		argsVertsTxt = &plt.A{C: "#d70d0d", Fsz: 8, Va: "center", Ha: "center"}
+	}
+	if argsEdgesTxt == nil {
+		argsEdgesTxt = &plt.A{C: "#2732c6", Fsz: 7, Va: "center", Ha: "center"}
+	}
+	if argsVerts == nil {
+		argsVerts = &plt.A{Fc: "none", Ec: "k", Lw: 0.8, NoClip: true}
+	}
+	if argsEdges == nil {
+		argsEdges = &plt.A{Style: "->", Scale: 12}
+	}
+
+	// constants
+	if radius < 1e-10 {
+		radius = 0.25
+	}
+	if width < 1e-10 {
+		width = 0.15
+	}
+	if gap < 1e-10 {
+		gap = 0.12
+	}
+
+	// draw vertex data and find limits
 	xmin, ymin := o.Verts[0][0], o.Verts[0][1]
 	xmax, ymax := xmin, ymin
 	var lbl string
 	for i, v := range o.Verts {
-		if verts_lbls == nil {
+		if vertsLabels == nil {
 			lbl = io.Sf("%d", i)
 		} else {
-			lbl = verts_lbls[i]
+			lbl = vertsLabels[i]
 		}
-		plt.Text(v[0], v[1], lbl, &plt.A{C: verts_clr, Fsz: verts_fsz, Va: "center", Ha: "center"})
-		plt.Circle(v[0], v[1], r, &plt.A{Fc: "none", Ec: "k", Lw: 0.8, NoClip: true})
+		plt.Text(v[0], v[1], lbl, argsVertsTxt)
+		plt.Circle(v[0], v[1], radius, argsVerts)
 		xmin, ymin = utl.Min(xmin, v[0]), utl.Min(ymin, v[1])
 		xmax, ymax = utl.Max(xmax, v[0]), utl.Max(ymax, v[1])
 	}
-	if W > 2*r {
-		W = 1.8 * r
+
+	// distance between edges
+	if width > 2*radius {
+		width = 1.8 * radius
 	}
-	w := W / 2.0
+	w := width / 2.0
+	l := math.Sqrt(radius*radius - w*w)
+
+	// draw edges
 	xa, xb := make([]float64, 2), make([]float64, 2)
 	xc, dx := make([]float64, 2), make([]float64, 2)
 	mu, nu := make([]float64, 2), make([]float64, 2)
 	xi, xj := make([]float64, 2), make([]float64, 2)
-	l := math.Sqrt(r*r - w*w)
 	var L float64
-	if arrow_scale <= 0 {
-		arrow_scale = 20
-	}
 	for k, e := range o.Edges {
 		L = 0.0
 		for i := 0; i < 2; i++ {
@@ -65,20 +98,20 @@ func (o *Graph) Draw(r, W, dwt, arrow_scale float64,
 		for i := 0; i < 2; i++ {
 			xi[i] = xa[i] + l*mu[i] - w*nu[i]
 			xj[i] = xb[i] - l*mu[i] - w*nu[i]
-			xc[i] = (xi[i]+xj[i])/2.0 - dwt*nu[i]
+			xc[i] = (xi[i]+xj[i])/2.0 - gap*nu[i]
 		}
-		plt.Arrow(xi[0], xi[1], xj[0], xj[1], &plt.A{Style: "->", Scale: arrow_scale})
-		if edges_lbls == nil {
+		plt.Arrow(xi[0], xi[1], xj[0], xj[1], argsEdges)
+		if edgesLabels == nil {
 			lbl = io.Sf("%d", k)
 		} else {
-			lbl = edges_lbls[k]
+			lbl = edgesLabels[k]
 		}
-		plt.Text(xc[0], xc[1], lbl, &plt.A{C: edges_clr, Fsz: edges_fsz, Va: "center", Ha: "center"})
+		plt.Text(xc[0], xc[1], lbl, argsEdgesTxt)
 	}
-	xmin -= r
-	xmax += r
-	ymin -= r
-	ymax += r
+	xmin -= radius
+	xmax += radius
+	ymin -= radius
+	ymax += radius
 	plt.AxisRange(xmin, xmax, ymin, ymax)
 	return
 }

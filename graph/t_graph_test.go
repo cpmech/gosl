@@ -257,7 +257,7 @@ func Test_graph03(tst *testing.T) {
 	chk.Ints(tst, "10 → 12", pth, []int{9, 10, 11})
 
 	// plotting
-	if chk.Verbose && false {
+	if chk.Verbose {
 
 		columns := [][]int{
 			{1, 3, 12, 13},
@@ -274,10 +274,6 @@ func Test_graph03(tst *testing.T) {
 			{5, 4},                // col4
 		}
 
-		r := 0.25
-		W := 0.15
-		dwt := 0.12
-		aws := 12.0
 		scalex := 1.8
 		scaley := 1.3
 		nv := 24
@@ -301,12 +297,11 @@ func Test_graph03(tst *testing.T) {
 			vlabels[i] = io.Sf("%d", i+1)
 		}
 
-		vfsz := 7.0
-		vclr := "red"
-		efsz := 7.0
-		eclr := "blue"
-		plt.Reset(false, nil)
-		G.Draw("/tmp/graph", "siouxfalls", r, W, dwt, aws, vlabels, vfsz, vclr, elabels, efsz, eclr)
+		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150, Prop: 1.2})
+		G.Draw(vlabels, elabels, 0, 0, 0, nil, nil, nil, nil)
+		plt.Equal()
+		plt.AxisOff()
+		plt.Save("/tmp/graph", "siouxfalls")
 	}
 }
 
