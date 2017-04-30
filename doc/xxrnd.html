@@ -107,6 +107,9 @@ Twister library). It also implements probability distribution functions.
 				<dd><a href="#HaltonPoints">func HaltonPoints(dim, n int) (x [][]float64)</a></dd>
 			
 				
+				<dd><a href="#HypercubeCoords">func HypercubeCoords(sample [][]int, xmin, xmax []float64) (X [][]float64)</a></dd>
+			
+				
 				<dd><a href="#Init">func Init(seed int)</a></dd>
 			
 				
@@ -156,12 +159,6 @@ Twister library). It also implements probability distribution functions.
 			
 				
 				<dd><a href="#Normal">func Normal(μ, σ float64) float64</a></dd>
-			
-				
-				<dd><a href="#PlotHc2d">func PlotHc2d(dirout, fnkey string, x [][]int, xrange [][]float64)</a></dd>
-			
-				
-				<dd><a href="#PlotHc3d">func PlotHc3d(dirout, fnkey string, x [][]int, xrange [][]float64, show bool)</a></dd>
 			
 				
 				<dd><a href="#ReportVariables">func ReportVariables(dirout, fnkey string, sets SetsOfVars, genPDF bool)</a></dd>
@@ -312,13 +309,16 @@ Twister library). It also implements probability distribution functions.
 					<dd>&nbsp; &nbsp; <a href="#Histogram.Count">func (o *Histogram) Count(vals []float64, clear bool)</a></dd>
 				
 					
+					<dd>&nbsp; &nbsp; <a href="#Histogram.DensityArea">func (o Histogram) DensityArea(nsamples int) (area float64)</a></dd>
+				
+					
 					<dd>&nbsp; &nbsp; <a href="#Histogram.FindBin">func (o Histogram) FindBin(x float64) int</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Histogram.GenLabels">func (o Histogram) GenLabels(numfmt string) (labels []string)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Histogram.PlotDensity">func (o Histogram) PlotDensity(sty *plt.A, args string)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Histogram.PlotDensity">func (o Histogram) PlotDensity(args *plt.A)</a></dd>
 				
 			
 				
@@ -714,6 +714,25 @@ HaltonPoints generates randomly spaced points
 		
 			
 			
+			<h2 id="HypercubeCoords">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=4030:4104#L150">HypercubeCoords</a></h2>
+			<pre>func HypercubeCoords(sample [][]<a href="/pkg/builtin/#int">int</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>) (X [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+PlotHc2d plots 2D hypercube
+</p>
+<pre>Input:
+  sample -- the hypercube sampling indices; e.g. from LatinIHS [ndim][npoints]
+  xmin -- min limit of coordinates [ndim]
+  xmax -- max limit of coordinates [ndim]
+Output:
+  X -- coordinates [ndim][npoints]
+</pre>
+
+			
+			
+
+		
+			
+			
 			<h2 id="Init">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=532:551#L9">Init</a></h2>
 			<pre>func Init(seed <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
@@ -836,7 +855,7 @@ Output:
 		
 			
 			
-			<h2 id="LatinIHS">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=625:665#L13">LatinIHS</a></h2>
+			<h2 id="LatinIHS">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=595:635#L12">LatinIHS</a></h2>
 			<pre>func LatinIHS(dim, n, d <a href="/pkg/builtin/#int">int</a>) (x [][]<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 LatinIHS implements the improved distributed hypercube sampling algorithm.
@@ -974,30 +993,6 @@ Output:
 			<pre>func Normal(μ, σ <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Normal returns a random number belonging to a normal distribution
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="PlotHc2d">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=3817:3883#L145">PlotHc2d</a></h2>
-			<pre>func PlotHc2d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, x [][]<a href="/pkg/builtin/#int">int</a>, xrange [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-PlotHc2d plots 2D hypercube
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="PlotHc3d">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=4329:4406#L166">PlotHc3d</a></h2>
-			<pre>func PlotHc3d(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, x [][]<a href="/pkg/builtin/#int">int</a>, xrange [][]<a href="/pkg/builtin/#float64">float64</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
-			<p>
-PlotHc3d plots 3D hypercube
 </p>
 
 			
@@ -1698,6 +1693,19 @@ Count counts how many items fall within each bin
 				
 			
 				
+				<h3 id="Histogram.DensityArea">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4537:4596#L177">DensityArea</a></h3>
+				<pre>func (o <a href="#Histogram">Histogram</a>) DensityArea(nsamples <a href="/pkg/builtin/#int">int</a>) (area <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+DensityArea computes the area of the density diagram
+</p>
+<pre>nsamples -- number of samples used when generating pseudo-random numbers
+</pre>
+
+				
+				
+				
+			
+				
 				<h3 id="Histogram.FindBin">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=2296:2337#L81">FindBin</a></h3>
 				<pre>func (o <a href="#Histogram">Histogram</a>) FindBin(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
@@ -1721,12 +1729,12 @@ GenLabels generate nice labels identifying bins
 				
 			
 				
-				<h3 id="Histogram.PlotDensity">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3730:3785#L151">PlotDensity</a></h3>
-				<pre>func (o <a href="#Histogram">Histogram</a>) PlotDensity(sty *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, args <a href="/pkg/builtin/#string">string</a>)</pre>
+				<h3 id="Histogram.PlotDensity">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=3739:3782#L151">PlotDensity</a></h3>
+				<pre>func (o <a href="#Histogram">Histogram</a>) PlotDensity(args *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
 				<p>
 PlotDensity plots histogram in density values
 </p>
-<pre>sty -- style can be &lt;nil&gt;
+<pre>args -- plot arguments. may be nil
 </pre>
 
 				
@@ -1736,7 +1744,7 @@ PlotDensity plots histogram in density values
 		
 			
 			
-			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4534:4616#L176">IntHistogram</a></h2>
+			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5330:5412#L201">IntHistogram</a></h2>
 			<pre>type IntHistogram struct {
     Stations []<a href="/pkg/builtin/#int">int</a> <span class="comment">// stations</span>
     Counts   []<a href="/pkg/builtin/#int">int</a> <span class="comment">// counts</span>
@@ -1764,7 +1772,7 @@ IntHistogram holds data for computing/plotting histograms with integers
 
 			
 				
-				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5199:5251#L212">Count</a></h3>
+				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5995:6047#L237">Count</a></h3>
 				<pre>func (o *<a href="#IntHistogram">IntHistogram</a>) Count(vals []<a href="/pkg/builtin/#int">int</a>, clear <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Count counts how many items fall within each bin
@@ -1775,7 +1783,7 @@ Count counts how many items fall within each bin
 				
 			
 				
-				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4692:4732#L183">FindBin</a></h3>
+				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5488:5528#L208">FindBin</a></h3>
 				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) FindBin(x <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 FindBin finds where x falls in
@@ -1787,7 +1795,7 @@ returns -1 if x is outside the range
 				
 			
 				
-				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5718:5782#L239">GenLabels</a></h3>
+				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=6514:6578#L264">GenLabels</a></h3>
 				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) GenLabels(numfmt <a href="/pkg/builtin/#string">string</a>) (labels []<a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 GenLabels generate nice labels identifying bins
