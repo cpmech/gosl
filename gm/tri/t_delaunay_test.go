@@ -14,7 +14,7 @@ import (
 
 func Test_delaunay01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("delaunay01")
 
 	// points
