@@ -10,6 +10,44 @@ from Go. Some few structures are defined, including:
 
 ## Examples
 
+### Drawing spheres
+
+The `Sphere` structure draws one sphere whereas the `Spheres` structure draws many spheres at once.
+A data file with the spheres coordinates and radii is considered.
+
+```go
+// create a new VTK Scene
+scn := vtk.NewScene()
+scn.HydroLine = true
+scn.FullAxes = true
+scn.AxesLen = 1.5
+
+// sphere
+sphere := &vtk.Sphere{
+    Cen:   []float64{0, 0, 0},
+    R:     1.0,
+    Color: []float64{85.0 / 255.0, 128.0 / 255.0, 225.0 / 255.0, 1},
+}
+sphere.AddTo(scn)
+
+// spheres
+sset := vtk.NewSpheresFromFile("data/points.dat")
+sset.AddTo(scn)
+
+// start interactive mode
+scn.SavePng = true
+scn.Fnk = "/tmp/gosl/vtk_spheres01"
+scn.Run()
+```
+
+Source code: <a href="../examples/vtk_spheres01.go">../examples/vtk_spheres01.go</a>
+
+<div id="container">
+<p><img src="../examples/figs/vtk_spheres01.png" width="400"></p>
+</div>
+
+
+
 ### Drawing an isosurface
 
 ```go
@@ -74,49 +112,4 @@ Source code: <a href="../examples/vtk_isosurf01.go">../examples/vtk_isosurf01.go
 
 <div id="container">
 <p><img src="../examples/figs/vtk_isosurf01.png" width="400"></p>
-</div>
-
-
-### Drawing a cone and spheres
-
-```go
-// create a new VTK Scene
-scn := vtk.NewScene()
-scn.HydroLine = true
-scn.FullAxes = true
-scn.AxesLen = 1.5
-
-// parameters
-α = 15.0
-kα := math.Tan(α * math.Pi / 180.0)
-
-// cone
-cone := vtk.NewIsoSurf(func(x []float64) (f, vx, vy, vz float64) {
-    f = cone_angle(x) - kα
-    return
-})
-cone.Limits = []float64{0, -1, 0, 1, 0, 360}
-cone.Ndiv = []int{21, 21, 41}
-cone.OctRotate = true
-cone.GridShowPts = false
-cone.Color = []float64{0, 1, 0, 1}
-cone.CmapNclrs = 0 // use this to use specified color
-cone.AddTo(scn)    // remember to add to Scene
-
-// spheres
-sset := vtk.NewSpheresFromFile("data/points.dat")
-if true {
-    sset.AddTo(scn)
-}
-
-// start interactive mode
-scn.SavePng = false
-scn.Fnk = "/tmp/vtk_cone01"
-scn.Run()
-```
-
-Source code: <a href="../examples/vtk_cone01.go">../examples/vtk_cone01.go</a>
-
-<div id="container">
-<p><img src="../examples/figs/vtk_cone01.png" width="400"></p>
 </div>
