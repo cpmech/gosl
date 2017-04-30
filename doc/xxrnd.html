@@ -83,9 +83,6 @@ Twister library). It also implements probability distribution functions.
 				<dd><a href="#BuildTextHist">func BuildTextHist(xmin, xmax float64, nstations int, values []float64, numfmt string, barlen int) string</a></dd>
 			
 				
-				<dd><a href="#DblShuffle">func DblShuffle(values []float64)</a></dd>
-			
-				
 				<dd><a href="#FlipCoin">func FlipCoin(p float64) bool</a></dd>
 			
 				
@@ -162,6 +159,9 @@ Twister library). It also implements probability distribution functions.
 			
 				
 				<dd><a href="#ReportVariables">func ReportVariables(dirout, fnkey string, sets SetsOfVars, genPDF bool)</a></dd>
+			
+				
+				<dd><a href="#Shuffle">func Shuffle(values []float64)</a></dd>
 			
 				
 				<dd><a href="#StatAve">func StatAve(x []float64) (xave float64)</a></dd>
@@ -604,18 +604,6 @@ BuildTextHist builds a text histogram
 		
 			
 			
-			<h2 id="DblShuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3727:3760#L148">DblShuffle</a></h2>
-			<pre>func DblShuffle(values []<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-DblShuffle shuffles a slice of float point numbers
-</p>
-
-			
-			
-
-		
-			
-			
 			<h2 id="FlipCoin">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=1945:1974#L64">FlipCoin</a></h2>
 			<pre>func FlipCoin(p <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 			<p>
@@ -714,10 +702,10 @@ HaltonPoints generates randomly spaced points
 		
 			
 			
-			<h2 id="HypercubeCoords">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=4030:4104#L150">HypercubeCoords</a></h2>
+			<h2 id="HypercubeCoords">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/hypercube.go?s=4060:4134#L150">HypercubeCoords</a></h2>
 			<pre>func HypercubeCoords(sample [][]<a href="/pkg/builtin/#int">int</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>) (X [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
-PlotHc2d plots 2D hypercube
+HypercubeCoords computes the coordinates in the hypercube
 </p>
 <pre>Input:
   sample -- the hypercube sampling indices; e.g. from LatinIHS [ndim][npoints]
@@ -766,7 +754,7 @@ Output:
 		
 			
 			
-			<h2 id="IntGetGroups">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4104:4149#L164">IntGetGroups</a></h2>
+			<h2 id="IntGetGroups">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=4098:4143#L164">IntGetGroups</a></h2>
 			<pre>func IntGetGroups(groups [][]<a href="/pkg/builtin/#int">int</a>, pool []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntGetGroups randomly selects indices from pool separating them in groups
@@ -1005,6 +993,18 @@ Normal returns a random number belonging to a normal distribution
 			<pre>func ReportVariables(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, sets <a href="#SetsOfVars">SetsOfVars</a>, genPDF <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 ReportVariables generates TeX report of sets of variables
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Shuffle">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/random.go?s=3724:3754#L148">Shuffle</a></h2>
+			<pre>func Shuffle(values []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Shuffle shuffles a slice of float point numbers
 </p>
 
 			
