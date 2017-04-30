@@ -13,7 +13,7 @@ Both `goroutines` and MPI calls can co-exist to assist on High Performance Compu
 
 ### Communication between 3 processors
 
-The following code can be executed with the following command:
+The next code can be executed with the following command:
 ```bash
 mpirun -np 3 go run my_mpi_code.go
 ```
