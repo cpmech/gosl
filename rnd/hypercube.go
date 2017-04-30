@@ -150,7 +150,7 @@ func LatinIHS(dim, n, d int) (x [][]int) {
 	return
 }
 
-// PlotHc2d plots 2D hypercube
+// HypercubeCoords computes the coordinates in the hypercube
 //   Input:
 //     sample -- the hypercube sampling indices; e.g. from LatinIHS [ndim][npoints]
 //     xmin -- min limit of coordinates [ndim]

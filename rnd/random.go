@@ -154,8 +154,8 @@ func IntGetShuffled(values []int) (shuffled []int) {
 	return
 }
 
-// DblShuffle shuffles a slice of float point numbers
-func DblShuffle(values []float64) {
+// Shuffle shuffles a slice of float point numbers
+func Shuffle(values []float64) {
 	var tmp float64
 	var j int
 	for i := len(values) - 1; i > 0; i-- {
