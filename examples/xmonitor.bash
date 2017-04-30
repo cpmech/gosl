@@ -28,5 +28,6 @@ while true; do
     echo
     echo
     echo
-    go run graph_munkres01.go
+    #go run graph_munkres01.go
+    go run graph_shortestpaths01.go
 done

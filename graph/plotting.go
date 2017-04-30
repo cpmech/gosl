@@ -7,6 +7,7 @@ package graph
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -22,10 +23,12 @@ import (
 //  argsEdgesTxt -- plt arguments for edge ids. may be nil
 //  argsVerts -- plt arguments for vertices. may be nil
 //  argsEdges -- plt arguments for edges. may be nil
-func (o *Graph) Draw(vertsLabels map[int]string, edgesLabels map[int]string, radius, width, gap float64, argsVertsTxt, argsEdgesTxt, argsVerts, argsEdges *plt.A) {
+func (o *Graph) Draw(vertsLabels map[int]string, edgesLabels map[int]string, radius, width, gap float64,
+	argsVertsTxt, argsEdgesTxt, argsVerts, argsEdges *plt.A) (err error) {
 
 	// check
 	if len(o.Verts) < 1 {
+		err = chk.Err("vertices are required to draw graph")
 		return
 	}
 
