@@ -189,7 +189,7 @@ func Test_dist_normal_05(tst *testing.T) {
 		plt.Reset(false, nil)
 		plot_normal(μ, σ, 0, 2)
 		plt.Subplot(2, 1, 1)
-		hist.PlotDensity(nil, "")
+		hist.PlotDensity(nil)
 		plt.Save("/tmp/gosl", "rnd_dist_normal_05")
 	}
 }

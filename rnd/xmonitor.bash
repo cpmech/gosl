@@ -6,5 +6,6 @@ while true; do
     inotifywait -q -e modify $FILE
     echo
     echo
-    go test -test.run="report01"
+    go install
+    go test -test.run="lognormal_03"
 done

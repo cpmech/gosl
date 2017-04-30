@@ -131,24 +131,14 @@ func Test_dist_lognormal_03(tst *testing.T) {
 	nstations := 41
 	xmin := 0.0
 	xmax := 3.0
-	dx := (xmax - xmin) / float64(nstations-1)
 
 	var hist Histogram
 	hist.Stations = utl.LinSpace(xmin, xmax, nstations)
 	hist.Count(X, true)
 
-	prob := make([]float64, nstations)
-	for i := 0; i < nstations-1; i++ {
-		prob[i] = float64(hist.Counts[i]) / (float64(nsamples) * dx)
-	}
-
 	io.Pf(TextHist(hist.GenLabels("%.3f"), hist.Counts, 60))
-	io.Pforan("dx = %v\n", dx)
 
-	area := 0.0
-	for i := 0; i < nstations-1; i++ {
-		area += dx * prob[i]
-	}
+	area := hist.DensityArea(nsamples)
 	io.Pforan("area = %v\n", area)
 	chk.Scalar(tst, "area", 1e-15, area, 1)
 
@@ -156,7 +146,7 @@ func Test_dist_lognormal_03(tst *testing.T) {
 		plt.Reset(false, nil)
 		plot_lognormal(μ, σ)
 		plt.Subplot(2, 1, 1)
-		hist.PlotDensity(nil, "")
+		hist.PlotDensity(nil)
 		plt.Save("/tmp/gosl", "rnd_dist_lognormal_03")
 	}
 }

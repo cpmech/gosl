@@ -157,22 +157,47 @@ func (o Histogram) GenLabels(numfmt string) (labels []string) {
 }
 
 // PlotDensity plots histogram in density values
-//  sty -- style can be <nil>
-func (o Histogram) PlotDensity(sty *plt.A, args string) {
-	if sty == nil {
-		sty = &plt.A{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true}
+//  args -- plot arguments. may be nil
+func (o Histogram) PlotDensity(args *plt.A) {
+	if args == nil {
+		args = &plt.A{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true}
 	}
 	nstations := len(o.Stations)
+	if nstations < 2 {
+		chk.Panic("histogram density graph needs at least two stations")
+	}
 	nsamples := 0
 	for _, cnt := range o.Counts {
 		nsamples += cnt
 	}
+	ymax := 0.0
 	for i := 0; i < nstations-1; i++ {
 		xi, xf := o.Stations[i], o.Stations[i+1]
 		dx := xf - xi
 		prob := float64(o.Counts[i]) / (float64(nsamples) * dx)
-		plt.Polyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, prob}, {xi, prob}}, sty)
+		plt.Polyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, prob}, {xi, prob}}, args)
+		ymax = max(ymax, prob)
 	}
+	plt.AxisRange(o.Stations[0], o.Stations[nstations-1], 0, ymax)
+	return
+}
+
+// DensityArea computes the area of the density diagram
+//  nsamples -- number of samples used when generating pseudo-random numbers
+func (o Histogram) DensityArea(nsamples int) (area float64) {
+	nstations := len(o.Stations)
+	if nstations < 2 {
+		chk.Panic("density area computation needs at least two stations")
+	}
+	dx := (o.Stations[nstations-1] - o.Stations[0]) / float64(nstations-1)
+	prob := make([]float64, nstations)
+	for i := 0; i < nstations-1; i++ {
+		prob[i] = float64(o.Counts[i]) / (float64(nsamples) * dx)
+	}
+	for i := 0; i < nstations-1; i++ {
+		area += dx * prob[i]
+	}
+	return
 }
 
 // IntHistogram holds data for computing/plotting histograms with integers
