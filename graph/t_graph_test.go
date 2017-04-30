@@ -192,7 +192,7 @@ func Test_graph02(tst *testing.T) {
 
 func Test_graph03(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("graph03. Sioux Falls")
 
 	G := ReadGraphTable("data/SiouxFalls.flow", false)
