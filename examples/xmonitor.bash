@@ -28,5 +28,5 @@ while true; do
     echo
     echo
     echo
-    go run opt_ipm02.go
+    go run graph_munkres01.go
 done

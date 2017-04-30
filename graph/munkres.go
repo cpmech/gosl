@@ -30,7 +30,9 @@ const (
 //      Leela  |     3    [2]      3
 //      Bender |     3      3    [2]
 //      minimum cost = 6
-//  Note: costs must be positive
+//
+//  Note: cost will be minimised
+//
 type Munkres struct {
 
 	// main
