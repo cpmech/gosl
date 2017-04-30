@@ -29,5 +29,6 @@ while true; do
     echo
     echo
     #go run graph_munkres01.go
-    go run graph_shortestpaths01.go
+    #go run graph_shortestpaths01.go
+    go run graph_siouxfalls01.go
 done

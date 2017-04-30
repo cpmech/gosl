@@ -192,7 +192,7 @@ func Test_graph02(tst *testing.T) {
 
 func Test_graph03(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("graph03. Sioux Falls")
 
 	G := ReadGraphTable("data/SiouxFalls.flow", false)
@@ -260,11 +260,11 @@ func Test_graph03(tst *testing.T) {
 	if chk.Verbose {
 
 		columns := [][]int{
-			{1, 3, 12, 13},
-			{4, 11, 14, 23, 24},
-			{5, 9, 10, 15, 22, 21},
-			{2, 6, 8, 16, 17, 19, 20},
-			{7, 18},
+			{0, 2, 11, 12},
+			{3, 10, 13, 22, 23},
+			{4, 8, 9, 14, 21, 20},
+			{1, 5, 7, 15, 16, 18, 19},
+			{6, 17},
 		}
 		Y := [][]float64{
 			{7, 6, 4, 0},          // col0
@@ -280,8 +280,7 @@ func Test_graph03(tst *testing.T) {
 		G.Verts = make([][]float64, nv)
 		for j, col := range columns {
 			x := float64(j) * scalex
-			for i, vidp1 := range col {
-				vid := vidp1 - 1
+			for i, vid := range col {
 				G.Verts[vid] = []float64{x, Y[j][i] * scaley}
 			}
 		}
@@ -289,12 +288,12 @@ func Test_graph03(tst *testing.T) {
 		ne := 76
 		elabels := make(map[int]string)
 		for i := 0; i < ne; i++ {
-			elabels[i] = io.Sf("%d", i+1)
+			elabels[i] = io.Sf("%d", i)
 		}
 
 		vlabels := make(map[int]string)
 		for i := 0; i < nv; i++ {
-			vlabels[i] = io.Sf("%d", i+1)
+			vlabels[i] = io.Sf("%d", i)
 		}
 
 		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150, Prop: 1.2})
