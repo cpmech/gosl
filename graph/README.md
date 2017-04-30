@@ -126,7 +126,7 @@ plt.Save("/tmp/gosl/graph", "shortestpath01")
 Source code: <a href="../examples/graph_shortestpaths01.go">../examples/graph_shortestpaths01.go</a>
 
 <div id="container">
-<p><img src="../examples/figs/graph_shortestpaths01.png" width="300"></p>
+<p><img src="../examples/figs/graph_shortestpath01.png" width="300"></p>
 </div>
 
 
