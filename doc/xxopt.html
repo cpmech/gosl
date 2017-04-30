@@ -75,7 +75,7 @@ package opt implements routines for solving optimisation problems
 			
 			
 				
-				<dd><a href="#PlotTwoVarsContour">func PlotTwoVarsContour(dirout, fnkey string, x []float64, np int, extra func(), axequal bool, vmin, vmax []float64, f TwoVarsFunc_t, gs ...TwoVarsFunc_t)</a></dd>
+				<dd><a href="#PlotTwoVarsContour">func PlotTwoVarsContour(x []float64, np int, extra func(), axequal bool, vmin, vmax []float64, argsF, argsG *plt.A, f TwoVarsFunc_t, gs ...TwoVarsFunc_t)</a></dd>
 			
 				
 				<dd><a href="#ReadLPfortran">func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64)</a></dd>
@@ -167,15 +167,13 @@ package opt implements routines for solving optimisation problems
 		
 			
 			
-			<h2 id="PlotTwoVarsContour">func <a href="https://github.com/cpmech/gosl/blob/master/opt/plotting.go?s=933:1088#L19">PlotTwoVarsContour</a></h2>
-			<pre>func PlotTwoVarsContour(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, x []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, extra func(), axequal <a href="/pkg/builtin/#bool">bool</a>,
-    vmin, vmax []<a href="/pkg/builtin/#float64">float64</a>, f <a href="#TwoVarsFunc_t">TwoVarsFunc_t</a>, gs ...<a href="#TwoVarsFunc_t">TwoVarsFunc_t</a>)</pre>
+			<h2 id="PlotTwoVarsContour">func <a href="https://github.com/cpmech/gosl/blob/master/opt/plotting.go?s=966:1120#L19">PlotTwoVarsContour</a></h2>
+			<pre>func PlotTwoVarsContour(x []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, extra func(), axequal <a href="/pkg/builtin/#bool">bool</a>,
+    vmin, vmax []<a href="/pkg/builtin/#float64">float64</a>, argsF, argsG *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>, f <a href="#TwoVarsFunc_t">TwoVarsFunc_t</a>, gs ...<a href="#TwoVarsFunc_t">TwoVarsFunc_t</a>)</pre>
 			<p>
 PlotTwoVarsContour plots contour for two variables problem. len(x) == 2
 </p>
 <pre>Input
- dirout  -- directory to save files
- fnkey   -- file name key for eps figure
  x       -- solution. can be &lt;nil&gt;
  np      -- number of points for contour
  extra   -- called just before saving figure
@@ -184,6 +182,8 @@ PlotTwoVarsContour plots contour for two variables problem. len(x) == 2
  vmax    -- max 1 values
  f       -- function to plot filled contour. can be &lt;nil&gt;
  gs      -- functions to plot contour @ level 0. can be &lt;nil&gt;
+ argsF   -- plot arguments for f function. can be nil
+ argsG   -- plot arguments for gs functions. can be nil
 </pre>
 
 			
@@ -254,7 +254,7 @@ Output:
     Lis <a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#LinSol">LinSol</a> <span class="comment">// linear solver</span>
 }</pre>
 			<p>
-LinIpm implements the interior-point mehtods for linear programming problems
+LinIpm implements the interior-point methods for linear programming problems
 </p>
 <pre>Solve:
         min cᵀx   s.t.   Aᵀx = b, x ≥ 0
