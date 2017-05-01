@@ -1,0 +1,576 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+<title>Gosl &ndash; package img/ocv</title>
+<link type="text/css" rel="stylesheet" href="static/style.css">
+<script type="text/javascript" src="static/godocs.js"></script>
+<style type="text/css"></style>
+</head>
+<body>
+<div id="page" class=\wide">
+<div class="container">
+<h1>Gosl &ndash; <b>img/ocv</b> &ndash; Go wrapper to OpenCV</h1>
+use 'godoc cmd/github.com/cpmech/gosl/img/ocv' for documentation on the github.com/cpmech/gosl/img/ocv command 
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/img/ocv"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+				<dd><a href="#pkg-subdirectories">Subdirectories</a></dd>
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+package ocv connects with the OpenCV library for image analyses and machine learning, in
+particular for computer vision algorithms.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+				<dd><a href="#pkg-variables">Variables</a></dd>
+			
+			
+				
+				<dd><a href="#CreateTrackbar">func CreateTrackbar(trackbarName, winName string, value *int, count int, onChange TrackbarCallback)</a></dd>
+			
+				
+				<dd><a href="#Imshow">func Imshow(winName string, mat *Mat)</a></dd>
+			
+				
+				<dd><a href="#NamedWindow">func NamedWindow(winName string, flags int)</a></dd>
+			
+				
+				<dd><a href="#WaitKey">func WaitKey(delay int)</a></dd>
+			
+			
+				
+				<dd><a href="#ButtonCallback">type ButtonCallback</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Mat">type Mat</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewMat">func NewMat() (o *Mat)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewMatFromFile">func NewMatFromFile(filename string) (o *Mat)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewSimilarMat">func NewSimilarMat(mat *Mat) (o *Mat)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewZerosMat">func NewZerosMat(rows, cols, Type int) (o *Mat)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Mat.Free">func (o *Mat) Free()</a></dd>
+				
+			
+				
+				<dd><a href="#MouseCallback">type MouseCallback</a></dd>
+				
+				
+			
+				
+				<dd><a href="#OpenGlDrawCallback">type OpenGlDrawCallback</a></dd>
+				
+				
+			
+				
+				<dd><a href="#TrackbarCallback">type TrackbarCallback</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/img/ocv/auxiliary.go">auxiliary.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/img/ocv/flags.go">flags.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go">opencv.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+			<h2 id="pkg-variables">Variables</h2>
+			
+				<pre>var (
+
+    <span class="comment">// WindowFlags</span>
+    <span id="WINDOW_NORMAL">WINDOW_NORMAL</span>       <a href="/pkg/builtin/#int">int</a> <span class="comment">// the user can resize the window (no constraint) / also use to switch a fullscreen window to a normal size.</span>
+    <span id="WINDOW_AUTOSIZE">WINDOW_AUTOSIZE</span>     <a href="/pkg/builtin/#int">int</a> <span class="comment">// the user cannot resize the window, the size is constrained by the image displayed.</span>
+    <span id="WINDOW_OPENGL">WINDOW_OPENGL</span>       <a href="/pkg/builtin/#int">int</a> <span class="comment">// window with opengl support.</span>
+    <span id="WINDOW_FULLSCREEN">WINDOW_FULLSCREEN</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// change the window to fullscreen.</span>
+    <span id="WINDOW_FREERATIO">WINDOW_FREERATIO</span>    <a href="/pkg/builtin/#int">int</a> <span class="comment">// the image expends as much as it can (no ratio constraint).</span>
+    <span id="WINDOW_KEEPRATIO">WINDOW_KEEPRATIO</span>    <a href="/pkg/builtin/#int">int</a> <span class="comment">// the ratio of the image is respected.</span>
+    <span id="WINDOW_GUI_EXPANDED">WINDOW_GUI_EXPANDED</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// status bar and tool bar</span>
+    <span id="WINDOW_GUI_NORMAL">WINDOW_GUI_NORMAL</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// old fashion way</span>
+
+    <span class="comment">// WindowPropertyFlags</span>
+    <span id="WND_PROP_FULLSCREEN">WND_PROP_FULLSCREEN</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// fullscreen property    (can be WINDOW_NORMAL or WINDOW_FULLSCREEN).</span>
+    <span id="WND_PROP_AUTOSIZE">WND_PROP_AUTOSIZE</span>     <a href="/pkg/builtin/#int">int</a> <span class="comment">// autosize property      (can be WINDOW_NORMAL or WINDOW_AUTOSIZE).</span>
+    <span id="WND_PROP_ASPECT_RATIO">WND_PROP_ASPECT_RATIO</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// window&#39;s aspect ration (can be set to WINDOW_FREERATIO or WINDOW_KEEPRATIO).</span>
+    <span id="WND_PROP_OPENGL">WND_PROP_OPENGL</span>       <a href="/pkg/builtin/#int">int</a> <span class="comment">// opengl support.</span>
+    <span id="WND_PROP_VISIBLE">WND_PROP_VISIBLE</span>      <a href="/pkg/builtin/#int">int</a> <span class="comment">// checks whether the window exists and is visible</span>
+
+    <span class="comment">// MouseEventTypes</span>
+    <span id="EVENT_MOUSEMOVE">EVENT_MOUSEMOVE</span>     <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that the mouse pointer has moved over the window.</span>
+    <span id="EVENT_LBUTTONDOWN">EVENT_LBUTTONDOWN</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that the left mouse button is pressed.</span>
+    <span id="EVENT_RBUTTONDOWN">EVENT_RBUTTONDOWN</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that the right mouse button is pressed.</span>
+    <span id="EVENT_MBUTTONDOWN">EVENT_MBUTTONDOWN</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that the middle mouse button is pressed.</span>
+    <span id="EVENT_LBUTTONUP">EVENT_LBUTTONUP</span>     <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that left mouse button is released.</span>
+    <span id="EVENT_RBUTTONUP">EVENT_RBUTTONUP</span>     <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that right mouse button is released.</span>
+    <span id="EVENT_MBUTTONUP">EVENT_MBUTTONUP</span>     <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that middle mouse button is released.</span>
+    <span id="EVENT_LBUTTONDBLCLK">EVENT_LBUTTONDBLCLK</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that left mouse button is double clicked.</span>
+    <span id="EVENT_RBUTTONDBLCLK">EVENT_RBUTTONDBLCLK</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that right mouse button is double clicked.</span>
+    <span id="EVENT_MBUTTONDBLCLK">EVENT_MBUTTONDBLCLK</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that middle mouse button is double clicked.</span>
+    <span id="EVENT_MOUSEWHEEL">EVENT_MOUSEWHEEL</span>    <a href="/pkg/builtin/#int">int</a> <span class="comment">// positive and negative values mean forward and backward scrolling, respectively.</span>
+    <span id="EVENT_MOUSEHWHEEL">EVENT_MOUSEHWHEEL</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// positive and negative values mean right and left scrolling, respectively.</span>
+
+    <span class="comment">// MouseEventFlags</span>
+    <span id="EVENT_FLAG_LBUTTON">EVENT_FLAG_LBUTTON</span>  <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that the left mouse button is down.</span>
+    <span id="EVENT_FLAG_RBUTTON">EVENT_FLAG_RBUTTON</span>  <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that the right mouse button is down.</span>
+    <span id="EVENT_FLAG_MBUTTON">EVENT_FLAG_MBUTTON</span>  <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that the middle mouse button is down.</span>
+    <span id="EVENT_FLAG_CTRLKEY">EVENT_FLAG_CTRLKEY</span>  <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that CTRL Key is pressed.</span>
+    <span id="EVENT_FLAG_SHIFTKEY">EVENT_FLAG_SHIFTKEY</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that SHIFT Key is pressed.</span>
+    <span id="EVENT_FLAG_ALTKEY">EVENT_FLAG_ALTKEY</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// indicates that ALT Key is pressed.</span>
+
+    <span class="comment">// QtFontWeights</span>
+    <span id="QT_FONT_LIGHT">QT_FONT_LIGHT</span>    <a href="/pkg/builtin/#int">int</a> <span class="comment">// Weight of 25</span>
+    <span id="QT_FONT_NORMAL">QT_FONT_NORMAL</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// Weight of 50</span>
+    <span id="QT_FONT_DEMIBOLD">QT_FONT_DEMIBOLD</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// Weight of 63</span>
+    <span id="QT_FONT_BOLD">QT_FONT_BOLD</span>     <a href="/pkg/builtin/#int">int</a> <span class="comment">// Weight of 75</span>
+    <span id="QT_FONT_BLACK">QT_FONT_BLACK</span>    <a href="/pkg/builtin/#int">int</a> <span class="comment">// Weight of 87</span>
+
+    <span class="comment">// QtFontStyles</span>
+    <span id="QT_STYLE_NORMAL">QT_STYLE_NORMAL</span>  <a href="/pkg/builtin/#int">int</a> <span class="comment">// Normal font.</span>
+    <span id="QT_STYLE_ITALIC">QT_STYLE_ITALIC</span>  <a href="/pkg/builtin/#int">int</a> <span class="comment">// Italic font.</span>
+    <span id="QT_STYLE_OBLIQUE">QT_STYLE_OBLIQUE</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// Oblique font.</span>
+
+    <span class="comment">// QtButtonTypes</span>
+    <span id="QT_PUSH_BUTTON">QT_PUSH_BUTTON</span>   <a href="/pkg/builtin/#int">int</a> <span class="comment">// Push button.</span>
+    <span id="QT_CHECKBOX">QT_CHECKBOX</span>      <a href="/pkg/builtin/#int">int</a> <span class="comment">// Checkbox button.</span>
+    <span id="QT_RADIOBOX">QT_RADIOBOX</span>      <a href="/pkg/builtin/#int">int</a> <span class="comment">// Radiobox button.</span>
+    <span id="QT_NEW_BUTTONBAR">QT_NEW_BUTTONBAR</span> <a href="/pkg/builtin/#int">int</a> <span class="comment">// Button should create a new buttonbar</span>
+)</pre>
+				<p>
+constants
+</p>
+
+			
+		
+		
+			
+			
+			<h2 id="CreateTrackbar">func <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=3986:4085#L144">CreateTrackbar</a></h2>
+			<pre>func CreateTrackbar(trackbarName, winName <a href="/pkg/builtin/#string">string</a>, value *<a href="/pkg/builtin/#int">int</a>, count <a href="/pkg/builtin/#int">int</a>, onChange <a href="#TrackbarCallback">TrackbarCallback</a>)</pre>
+			<p>
+CreateTrackbar creates a trackbar and attaches it to the specified window.
+</p>
+<pre>trackbarName -- Name of the created trackbar.
+winName -- Name of the window that will be used as a parent of the created trackbar.
+value -- Optional pointer to an integer variable whose value reflects the position of the slider. Upon creation, the slider position is defined by this variable.
+count -- Maximum position of the slider. The minimal position is always 0.
+onChange -- Pointer to the function to be called every time the slider changes position.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Imshow">func <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=2869:2906#L114">Imshow</a></h2>
+			<pre>func Imshow(winName <a href="/pkg/builtin/#string">string</a>, mat *<a href="#Mat">Mat</a>)</pre>
+			<p>
+Imshow Displays an image in the specified window.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="NamedWindow">func <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=2486:2529#L98">NamedWindow</a></h2>
+			<pre>func NamedWindow(winName <a href="/pkg/builtin/#string">string</a>, flags <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+NamedWindow creates a window
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="WaitKey">func <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=3217:3240#L127">WaitKey</a></h2>
+			<pre>func WaitKey(delay <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+WaitKey waits for a pressed key.
+</p>
+<pre>delay -- Delay in milliseconds. 0 is the special value that means &#34;forever&#34;.
+</pre>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="ButtonCallback">type <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=6224:6259#L208">ButtonCallback</a></h2>
+			<pre>type ButtonCallback func(state <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+Callback function for a button created by cv::createButton
+</p>
+<pre>state current state of the button. It could be -1 for a push button, 0 or 1 for a check/radio box button.
+userdata The optional parameter.
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Mat">type <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=825:937#L24">Mat</a></h2>
+			<pre>type Mat struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Mat implements the OpenCV Mat structure
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewMat">func <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=986:1008#L30">NewMat</a></h3>
+				<pre>func NewMat() (o *<a href="#Mat">Mat</a>)</pre>
+				<p>
+NewMat allocates a new OpenCV Mat structure
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewMatFromFile">func <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=1331:1376#L50">NewMatFromFile</a></h3>
+				<pre>func NewMatFromFile(filename <a href="/pkg/builtin/#string">string</a>) (o *<a href="#Mat">Mat</a>)</pre>
+				<p>
+NewMatFromFile creates a new Mat with image data from file
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewSimilarMat">func <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=2107:2144#L82">NewSimilarMat</a></h3>
+				<pre>func NewSimilarMat(mat *<a href="#Mat">Mat</a>) (o *<a href="#Mat">Mat</a>)</pre>
+				<p>
+NewSimilarMat creates a new Mat with the same size and type as &#39;mat&#39;, but filled with zeros
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewZerosMat">func <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=1727:1774#L68">NewZerosMat</a></h3>
+				<pre>func NewZerosMat(rows, cols, Type <a href="/pkg/builtin/#int">int</a>) (o *<a href="#Mat">Mat</a>)</pre>
+				<p>
+NewZerosMat creates a new Mat filled with zeros
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Mat.Free">func (*Mat) <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=1131:1151#L38">Free</a></h3>
+				<pre>func (o *<a href="#Mat">Mat</a>) Free()</pre>
+				<p>
+Free deallocates Mat object
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="MouseCallback">type <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=5624:5671#L194">MouseCallback</a></h2>
+			<pre>type MouseCallback func(event, x, y, flags <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+Callback function for mouse events. see cv::setMouseCallback
+</p>
+<pre>event one of the cv::MouseEventTypes constants.
+x The x-coordinate of the mouse event.
+y The y-coordinate of the mouse event.
+flags one of the cv::MouseEventFlags constants.
+userdata The optional parameter.
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="OpenGlDrawCallback">type <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=5981:6011#L203">OpenGlDrawCallback</a></h2>
+			<pre>type OpenGlDrawCallback func()</pre>
+			<p>
+Callback function defined to be called every frame. See cv::setOpenGlDrawCallback
+</p>
+<pre>userdata The optional parameter.
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="TrackbarCallback">type <a href="https://github.com/cpmech/gosl/blob/master/img/ocv/opencv.go?s=5821:5856#L199">TrackbarCallback</a></h2>
+			<pre>type TrackbarCallback func(pos <a href="/pkg/builtin/#int">int</a>)</pre>
+			<p>
+Callback function for Trackbar see cv::createTrackbar
+</p>
+<pre>pos current position of the specified trackbar.
+userdata The optional parameter.
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
+	
+	
+		<h2 id="pkg-subdirectories">Subdirectories</h2>
+	
+	
+
+
+	<div class="pkg-dir">
+		<table>
+			<tr>
+				<th class="pkg-name">Name</th>
+				<th class="pkg-synopsis">Synopsis</th>
+			</tr>
+
+			
+			<tr>
+				<td></td>
+			</tr>
+			
+
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="https://github.com/cpmech/gosl/tree/master/img/ocv/data">data</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
+			
+		</table>
+	</div>
+
+
+	
+
+
+<div id="footer">
+<br /><br />
+<hr>
+<pre class="copyright">
+Copyright (c) 2016, The Gosl Authors. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of Gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+</pre><!-- copyright -->
+</div><!-- footer -->
+
+</div><!-- container -->
+</div><!-- page -->
+</body>
+</html>

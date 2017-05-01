@@ -40,6 +40,8 @@ pkgs = [
     ("rnd"     , "Random numbers and probability distributions"),
     ("tsr"     , "Tensor algebra and definitions for Continuum Mechanics"),
     ("vtk"     , "3D Visualisation with the VTK tool kit"),
+    ("img"     , "Image and machine learning algorithms for images"),
+    ("img/ocv" , "Go wrapper to OpenCV"),
 ]
 
 odir  = 'doc/'
@@ -145,6 +147,9 @@ for pkg in pkgs:
         subdirs = ["data", "dsfmt", "sfmt"]
 
     if pkg[0] == "utl":
+        subdirs = ["data"]
+
+    if pkg[0] == "img/ocv":
         subdirs = ["data"]
 
     for subdir in subdirs:

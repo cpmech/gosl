@@ -32,6 +32,8 @@ Gosl comprises several _subpackages_ as listed below:
 18. [rnd](https://github.com/cpmech/gosl/tree/master/rnd)       &ndash; Random numbers and probability distributions
 19. [tsr](https://github.com/cpmech/gosl/tree/master/tsr)       &ndash; Tensor algebra and definitions for continuum mechanics
 20. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)       &ndash; 3D Visualisation with the VTK tool kit
+21. [img](https://github.com/cpmech/gosl/tree/master/img)       &ndash; Image and machine learning algorithms for images
+22. [img/ocv](https://github.com/cpmech/gosl/tree/master/img/ocv) &ndash; Go wrapper to OpenCV
 
 Check the **[developer's documentation](http://rawgit.com/cpmech/gosl/master/doc/index.html)** to
 see what's available and how to call functions and methods.
