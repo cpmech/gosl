@@ -55,21 +55,26 @@ Normally distributed pseudo-random numbers. Using sub-package rnd
 
 
 
-## Installation
+## 1 Installation on Windows
 
-1 To install on Windows, [see instructions for Windows here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
+To install on Windows, [see instructions for Windows here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
 
-2 To install on macOS, [see instructions for macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
+## 2 Installation on macOS
 
-3 To install on Debian/Ubuntu/Linux, type the following commands:
+To install on macOS, [see instructions for macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
 
-3.1. Install dependencies:
+## 3 Installation on Linux (Debian/Ubuntu)
+
+To install on Debian/Ubuntu/Linux, type the following commands:
+
+### 3.1. Install dependencies:
 ```
 sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
 sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
 ```
 
-3.2. Clone and install Gosl
+
+### 3.2. Clone and install Gosl
 ```
 mkdir -p ${GOPATH%:*}/src/github.com/cpmech
 cd ${GOPATH%:*}/src/github.com/cpmech
@@ -78,33 +83,71 @@ cd gosl
 ./all.bash
 ```
 
-3.3 Optional: OpenBLAS
+
+### 3.3 Set dynamic library flags if installing the next tools
+
+To set LD\_LIBRARY\_PATH, add the following line to `.bashrc` or `.bash_aliases`:
+```
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+```
+Alternatively, change `/etc/ld.so.conf` file as appropriate.
+
+
+### 3.4 Optional: Install OpenBLAS
 ```
 mkdir -p $HOME/xpkg && cd $HOME/xpkg
 git clone https://github.com/xianyi/OpenBLAS.git
 cd OpenBLAS
-make
-sudo make PREFIX=/usr/local NO_SHARED=true install
+make -j4
+sudo make PREFIX=/usr/local install
 ```
 
-**Note**: Make sure to use the `NO_SHARED` flag (as above) to avoid installing the shared libraries.
-Alternatively, set the `/usr/local/lib` directory as a searchable LD\_LIBRARY\_PATH. Otherwise, the
-following error may happen:
+**Note**: Make sure to set the `/usr/local/lib` directory as a searchable LD\_LIBRARY\_PATH.
+Otherwise, the following error may happen:
 ```
 [...] libopenblas.so.0: cannot open shared object file: [...]
 ```
-**Optional**: Add the following line to .bashrc or .bash\_aliases:
+(see Section 3.3 above to fix this problem)
+
+Now, install and test subpackage `la/oblas`:
 ```
-export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
+cd ${GOPATH%:*}/src/github.com/cpmech/la/oblas
+go install
+go test
 ```
-or set `/etc/ld.so.conf` file as appropriate.
+
+
+### 3.5 Optional: Install Intel MKL
+
+
+### 3.6 Optional: Install OpenCV
+```
+sudo apt-get install libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+mkdir -p $HOME/xpkg && cd $HOME/xpkg
+git clone https://github.com/opencv/opencv.git
+mkdir build_opencv
+cd build_opencv
+ccmake ../opencv
+```
+press `[c][c][g]`
+```
+make -j4
+sudo make install
+```
+
+Now, install and test subpackge `img/ocv`:
+```
+cd ${GOPATH%:*}/src/github.com/cpmech/img/ocv
+go install
+go test
+```
 
 
 
 ### Python dependencies
 
 At the moment, the `plt` subpackage requires `python-scipy` and `python-matplotlib` (installed as
-above).
+above in Section 3.1).
 
 
 
