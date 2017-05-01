@@ -150,6 +150,9 @@ for pkg in pkgs:
     if pkg[0] == "utl":
         subdirs = ["data"]
 
+    if pkg[0] == "img":
+        subdirs = ["ocv"]
+
     if pkg[0] == "img/ocv":
         subdirs = ["data"]
 
