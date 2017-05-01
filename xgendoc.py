@@ -26,6 +26,7 @@ pkgs = [
     ("plt"     , "Plotting and drawing (png and eps)"),
     ("mpi"     , "Message Passing Interface for parallel computing"),
     ("la"      , "Linear Algebra and efficient sparse solvers"),
+    ("la/mkl"  , "Lower level linear algebra using Intel MKL"),
     ("la/oblas", "Lower level linear algebra using OpenBLAS"),
     ("fdm"     , "Simple finite differences method"),
     ("num"     , "Fundamental Numerical methods"),
@@ -132,7 +133,7 @@ for pkg in pkgs:
         subdirs = ["data"]
 
     if pkg[0] == "la":
-        subdirs = ["oblas"]
+        subdirs = ["mkl", "oblas"]
 
     if pkg[0] == "num":
         subdirs = ["data"]

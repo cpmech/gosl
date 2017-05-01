@@ -1,0 +1,722 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#375EAB">
+<title>Gosl &ndash; package la/mkl</title>
+<link type="text/css" rel="stylesheet" href="static/style.css">
+<script type="text/javascript" src="static/godocs.js"></script>
+<style type="text/css"></style>
+</head>
+<body>
+<div id="page" class=\wide">
+<div class="container">
+<h1>Gosl &ndash; <b>la/mkl</b> &ndash; Lower level linear algebra using Intel MKL</h1>
+use 'godoc cmd/github.com/cpmech/gosl/la/mkl' for documentation on the github.com/cpmech/gosl/la/mkl command 
+
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "github.com/cpmech/gosl/la/mkl"</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+package mkl implements lower level linear algebra using Intel MKL for max efficiency
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+				
+				<dd><a href="#Daxpy">func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Dcholesky">func Dcholesky() (err error)</a></dd>
+			
+				
+				<dd><a href="#Dgemv">func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64, incx int, beta float64, y []float64, incy int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Dgesv">func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int, b []float64, ldb int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Dgesvd">func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s, u []float64, ldu int, vt []float64, ldvt int, work []float64, lwork int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Dgetrf">func Dgetrf(m, n int, a []float64, lda int, ipiv []int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Dgetri">func Dgetri(n int, a []float64, lda int, ipiv []int, work []float64, lwork int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Dpotrf">func Dpotrf(up bool, n int, a []float64, lda int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Dsyrk">func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta float64, c []float64, ldc int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zaxpy">func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, incy int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zgemv">func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zgesv">func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int, b []complex128, ldb int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zgesvd">func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s, u []complex128, ldu int, vt []complex128, ldvt int, work []complex128, lwork int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zgetrf">func Zgetrf(m, n int, a []complex128, lda int, ipiv []int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zgetri">func Zgetri(n int, a []complex128, lda int, ipiv []int, work []complex128, lwork int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zherk">func Zherk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zpotrf">func Zpotrf(up bool, n int, a []complex128, lda int) (err error)</a></dd>
+			
+				
+				<dd><a href="#Zsyrk">func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) (err error)</a></dd>
+			
+			
+				
+				<dd><a href="#Matrix">type Matrix</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewMatrix">func NewMatrix(m, n int) (o *Matrix)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Matrix.GetMat">func (o Matrix) GetMat() (M [][]float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Matrix.Set">func (o *Matrix) Set(i, j int, val float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Matrix.SetFromMat">func (o *Matrix) SetFromMat(a [][]float64)</a></dd>
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/la/mkl/auxiliary.go">auxiliary.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/la/mkl/flags.go">flags.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/la/mkl/matrix.go">matrix.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go">mkl.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+			
+			
+			<h2 id="Daxpy">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=690:780#L24">Daxpy</a></h2>
+			<pre>func Daxpy(n <a href="/pkg/builtin/#int">int</a>, alpha <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>, incx <a href="/pkg/builtin/#int">int</a>, y []<a href="/pkg/builtin/#float64">float64</a>, incy <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Daxpy computes constant times a vector plus a vector.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html">http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html</a>
+
+y += alpha*x + y
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Dcholesky">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=11522:11550#L328">Dcholesky</a></h2>
+			<pre>func Dcholesky() (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Dcholesky performs the Cholesky factorization
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Dgemv">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=2065:2204#L71">Dgemv</a></h2>
+			<pre>func Dgemv(trans <a href="/pkg/builtin/#bool">bool</a>, m, n <a href="/pkg/builtin/#int">int</a>, alpha <a href="/pkg/builtin/#float64">float64</a>, a *<a href="#Matrix">Matrix</a>, lda <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#float64">float64</a>, incx <a href="/pkg/builtin/#int">int</a>, beta <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, incy <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Dgemv performs one of the matrix-vector operations
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/dc/da8/dgemv_8f.html">http://www.netlib.org/lapack/explore-html/dc/da8/dgemv_8f.html</a>
+
+   y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,
+
+where alpha and beta are scalars, x and y are vectors and A is an
+m by n matrix.
+   trans=false     y := alpha*A*x + beta*y.
+
+   trans=true      y := alpha*A**T*x + beta*y.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Dgesv">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=3991:4082#L134">Dgesv</a></h2>
+			<pre>func Dgesv(n, nrhs <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#float64">float64</a>, lda <a href="/pkg/builtin/#int">int</a>, ipiv []<a href="/pkg/builtin/#int">int</a>, b []<a href="/pkg/builtin/#float64">float64</a>, ldb <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Dgesv computes the solution to a real system of linear equations.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d8/d72/dgesv_8f.html">http://www.netlib.org/lapack/explore-html/d8/d72/dgesv_8f.html</a>
+The system is:
+
+   A * X = B,
+
+where A is an N-by-N matrix and X and B are N-by-NRHS matrices.
+
+The LU decomposition with partial pivoting and row interchanges is
+used to factor A as
+
+   A = P * L * U,
+
+where P is a permutation matrix, L is unit lower triangular, and U is
+upper triangular.  The factored form of A is then used to solve the
+system of equations A * X = B.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Dgesvd">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=5559:5708#L174">Dgesvd</a></h2>
+			<pre>func Dgesvd(jobu, jobvt <a href="/pkg/builtin/#rune">rune</a>, m, n <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#float64">float64</a>, lda <a href="/pkg/builtin/#int">int</a>, s, u []<a href="/pkg/builtin/#float64">float64</a>, ldu <a href="/pkg/builtin/#int">int</a>, vt []<a href="/pkg/builtin/#float64">float64</a>, ldvt <a href="/pkg/builtin/#int">int</a>, work []<a href="/pkg/builtin/#float64">float64</a>, lwork <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Dgesvd computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and/or right singular vectors.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d8/d2d/dgesvd_8f.html">http://www.netlib.org/lapack/explore-html/d8/d2d/dgesvd_8f.html</a>
+The SVD is written
+
+     A = U * SIGMA * transpose(V)
+
+where SIGMA is an M-by-N matrix which is zero except for its
+min(m,n) diagonal elements, U is an M-by-M orthogonal matrix, and
+V is an N-by-N orthogonal matrix.  The diagonal elements of SIGMA
+are the singular values of A; they are real and non-negative, and
+are returned in descending order.  The first min(m,n) columns of
+U and V are the left and right singular vectors of A.
+
+Note that the routine returns V**T, not V.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Dgetrf">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=7195:7262#L208">Dgetrf</a></h2>
+			<pre>func Dgetrf(m, n <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#float64">float64</a>, lda <a href="/pkg/builtin/#int">int</a>, ipiv []<a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Dgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d3/d6a/dgetrf_8f.html">http://www.netlib.org/lapack/explore-html/d3/d6a/dgetrf_8f.html</a>
+
+The factorization has the form
+   A = P * L * U
+where P is a permutation matrix, L is lower triangular with unit
+diagonal elements (lower trapezoidal if m &gt; n), and U is upper
+triangular (upper trapezoidal if m &lt; n).
+
+This is the right-looking Level 3 BLAS version of the algorithm.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Dgetri">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=8186:8277#L233">Dgetri</a></h2>
+			<pre>func Dgetri(n <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#float64">float64</a>, lda <a href="/pkg/builtin/#int">int</a>, ipiv []<a href="/pkg/builtin/#int">int</a>, work []<a href="/pkg/builtin/#float64">float64</a>, lwork <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Dgetri computes the inverse of a matrix using the LU factorization computed by DGETRF.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/df/da4/dgetri_8f.html">http://www.netlib.org/lapack/explore-html/df/da4/dgetri_8f.html</a>
+
+This method inverts U and then computes inv(A) by solving the system
+inv(A)*L = inv(U) for inv(A).
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Dpotrf">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=10838:10899#L308">Dpotrf</a></h2>
+			<pre>func Dpotrf(up <a href="/pkg/builtin/#bool">bool</a>, n <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#float64">float64</a>, lda <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Dpotrf computes the Cholesky factorization of a real symmetric positive definite matrix A.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d0/d8a/dpotrf_8f.html">http://www.netlib.org/lapack/explore-html/d0/d8a/dpotrf_8f.html</a>
+
+The factorization has the form
+   A = U**T * U,  if UPLO = &#39;U&#39;, or
+   A = L  * L**T,  if UPLO = &#39;L&#39;,
+where U is an upper triangular matrix and L is lower triangular.
+
+This is the block version of the algorithm, calling Level 3 BLAS.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Dsyrk">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=9119:9240#L260">Dsyrk</a></h2>
+			<pre>func Dsyrk(up, trans <a href="/pkg/builtin/#bool">bool</a>, n, k <a href="/pkg/builtin/#int">int</a>, alpha <a href="/pkg/builtin/#float64">float64</a>, a []<a href="/pkg/builtin/#float64">float64</a>, lda <a href="/pkg/builtin/#int">int</a>, beta <a href="/pkg/builtin/#float64">float64</a>, c []<a href="/pkg/builtin/#float64">float64</a>, ldc <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Dsyrk performs one of the symmetric rank k operations
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/dc/d05/dsyrk_8f.html">http://www.netlib.org/lapack/explore-html/dc/d05/dsyrk_8f.html</a>
+
+   C := alpha*A*A**T + beta*C,
+
+or
+
+   C := alpha*A**T*A + beta*C,
+
+where  alpha and beta  are scalars, C is an  n by n  symmetric matrix
+and  A  is an  n by k  matrix in the first case and a  k by n  matrix
+in the second case.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zaxpy">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=1225:1324#L45">Zaxpy</a></h2>
+			<pre>func Zaxpy(n <a href="/pkg/builtin/#int">int</a>, alpha <a href="/pkg/builtin/#complex128">complex128</a>, x []<a href="/pkg/builtin/#complex128">complex128</a>, incx <a href="/pkg/builtin/#int">int</a>, y []<a href="/pkg/builtin/#complex128">complex128</a>, incy <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zaxpy computes constant times a vector plus a vector.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d7/db2/zaxpy_8f.html">http://www.netlib.org/lapack/explore-html/d7/db2/zaxpy_8f.html</a>
+
+y += alpha*x + y
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zgemv">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=3236:3392#L113">Zgemv</a></h2>
+			<pre>func Zgemv(trans <a href="/pkg/builtin/#bool">bool</a>, m, n <a href="/pkg/builtin/#int">int</a>, alpha <a href="/pkg/builtin/#complex128">complex128</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, lda <a href="/pkg/builtin/#int">int</a>, x []<a href="/pkg/builtin/#complex128">complex128</a>, incx <a href="/pkg/builtin/#int">int</a>, beta <a href="/pkg/builtin/#complex128">complex128</a>, y []<a href="/pkg/builtin/#complex128">complex128</a>, incy <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zgemv performs one of the matrix-vector operations.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/db/d40/zgemv_8f.html">http://www.netlib.org/lapack/explore-html/db/d40/zgemv_8f.html</a>
+
+   y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
+
+   y := alpha*A**H*x + beta*y,
+
+where alpha and beta are scalars, x and y are vectors and A is an
+m by n matrix.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zgesv">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=4684:4781#L155">Zgesv</a></h2>
+			<pre>func Zgesv(n, nrhs <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, lda <a href="/pkg/builtin/#int">int</a>, ipiv []<a href="/pkg/builtin/#int">int</a>, b []<a href="/pkg/builtin/#complex128">complex128</a>, ldb <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zgesv computes the solution to a complex system of linear equations.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d1/ddc/zgesv_8f.html">http://www.netlib.org/lapack/explore-html/d1/ddc/zgesv_8f.html</a>
+The system is:
+
+   A * X = B,
+
+where A is an N-by-N matrix and X and B are N-by-NRHS matrices.
+
+The LU decomposition with partial pivoting and row interchanges is
+used to factor A as
+
+   A = P * L * U,
+
+where P is a permutation matrix, L is unit lower triangular, and U is
+upper triangular.  The factored form of A is then used to solve the
+system of equations A * X = B.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zgesvd">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=6494:6655#L193">Zgesvd</a></h2>
+			<pre>func Zgesvd(jobu, jobvt <a href="/pkg/builtin/#rune">rune</a>, m, n <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, lda <a href="/pkg/builtin/#int">int</a>, s, u []<a href="/pkg/builtin/#complex128">complex128</a>, ldu <a href="/pkg/builtin/#int">int</a>, vt []<a href="/pkg/builtin/#complex128">complex128</a>, ldvt <a href="/pkg/builtin/#int">int</a>, work []<a href="/pkg/builtin/#complex128">complex128</a>, lwork <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zgesvd computes the singular value decomposition (SVD) of a complex M-by-N matrix A, optionally computing the left and/or right singular vectors.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d6/d42/zgesvd_8f.html">http://www.netlib.org/lapack/explore-html/d6/d42/zgesvd_8f.html</a>
+The SVD is written
+
+     A = U * SIGMA * conjugate-transpose(V)
+
+where SIGMA is an M-by-N matrix which is zero except for its
+min(m,n) diagonal elements, U is an M-by-M unitary matrix, and
+V is an N-by-N unitary matrix.  The diagonal elements of SIGMA
+are the singular values of A; they are real and non-negative, and
+are returned in descending order.  The first min(m,n) columns of
+U and V are the left and right singular vectors of A.
+
+Note that the routine returns V**H, not V.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zgetrf">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=7802:7872#L223">Zgetrf</a></h2>
+			<pre>func Zgetrf(m, n <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, lda <a href="/pkg/builtin/#int">int</a>, ipiv []<a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/dd/dd1/zgetrf_8f.html">http://www.netlib.org/lapack/explore-html/dd/dd1/zgetrf_8f.html</a>
+
+The factorization has the form
+   A = P * L * U
+where P is a permutation matrix, L is lower triangular with unit
+diagonal elements (lower trapezoidal if m &gt; n), and U is upper
+triangular (upper trapezoidal if m &lt; n).
+
+This is the right-looking Level 3 BLAS version of the algorithm.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zgetri">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=8591:8688#L243">Zgetri</a></h2>
+			<pre>func Zgetri(n <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, lda <a href="/pkg/builtin/#int">int</a>, ipiv []<a href="/pkg/builtin/#int">int</a>, work []<a href="/pkg/builtin/#complex128">complex128</a>, lwork <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zgetri computes the inverse of a matrix using the LU factorization computed by Zgetrf.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d0/db3/zgetri_8f.html">http://www.netlib.org/lapack/explore-html/d0/db3/zgetri_8f.html</a>
+
+This method inverts U and then computes inv(A) by solving the system
+inv(A)*L = inv(U) for inv(A).
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zherk">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=10240:10373#L294">Zherk</a></h2>
+			<pre>func Zherk(up, trans <a href="/pkg/builtin/#bool">bool</a>, n, k <a href="/pkg/builtin/#int">int</a>, alpha <a href="/pkg/builtin/#complex128">complex128</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, lda <a href="/pkg/builtin/#int">int</a>, beta <a href="/pkg/builtin/#complex128">complex128</a>, c []<a href="/pkg/builtin/#complex128">complex128</a>, ldc <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zherk performs one of the hermitian rank k operations
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d1/db1/zherk_8f.html">http://www.netlib.org/lapack/explore-html/d1/db1/zherk_8f.html</a>
+
+   C := alpha*A*A**H + beta*C,
+
+or
+
+   C := alpha*A**H*A + beta*C,
+
+where  alpha and beta  are  real scalars,  C is an  n by n  hermitian
+matrix and  A  is an  n by k  matrix in the  first case and a  k by n
+matrix in the second case.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zpotrf">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=11368:11432#L322">Zpotrf</a></h2>
+			<pre>func Zpotrf(up <a href="/pkg/builtin/#bool">bool</a>, n <a href="/pkg/builtin/#int">int</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, lda <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zpotrf computes the Cholesky factorization of a complex Hermitian positive definite matrix A.
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/d1/db9/zpotrf_8f.html">http://www.netlib.org/lapack/explore-html/d1/db9/zpotrf_8f.html</a>
+
+The factorization has the form
+   A = U**H * U,  if UPLO = &#39;U&#39;, or
+   A = L  * L**H,  if UPLO = &#39;L&#39;,
+where U is an upper triangular matrix and L is lower triangular.
+
+This is the block version of the algorithm, calling Level 3 BLAS.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Zsyrk">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/mkl.go?s=9670:9803#L277">Zsyrk</a></h2>
+			<pre>func Zsyrk(up, trans <a href="/pkg/builtin/#bool">bool</a>, n, k <a href="/pkg/builtin/#int">int</a>, alpha <a href="/pkg/builtin/#complex128">complex128</a>, a []<a href="/pkg/builtin/#complex128">complex128</a>, lda <a href="/pkg/builtin/#int">int</a>, beta <a href="/pkg/builtin/#complex128">complex128</a>, c []<a href="/pkg/builtin/#complex128">complex128</a>, ldc <a href="/pkg/builtin/#int">int</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Zsyrk performs one of the symmetric rank k operations
+</p>
+<pre>See: <a href="http://www.netlib.org/lapack/explore-html/de/d54/zsyrk_8f.html">http://www.netlib.org/lapack/explore-html/de/d54/zsyrk_8f.html</a>
+
+   C := alpha*A*A**T + beta*C,
+
+or
+
+   C := alpha*A**T*A + beta*C,
+
+where  alpha and beta  are scalars,  C is an  n by n symmetric matrix
+and  A  is an  n by k  matrix in the first case and a  k by n  matrix
+in the second case.
+</pre>
+
+			
+			
+
+		
+		
+			
+			
+			<h2 id="Matrix">type <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/matrix.go?s=576:683#L9">Matrix</a></h2>
+			<pre>type Matrix struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Matrix implements a column-major representation of a matrix by using a linear array that can be passed to Fortran code
+</p>
+<pre>NOTE: the functions related to Matrix do not check for the limits of indices and dimensions. Panic may occur then.
+
+Example:
+           _      _
+          |  0  3  |
+      M = |  1  4  |
+          |_ 2  5 _|(m x n)
+
+   data[i+j*m] = M[i][j]
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewMatrix">func <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/matrix.go?s=721:757#L15">NewMatrix</a></h3>
+				<pre>func NewMatrix(m, n <a href="/pkg/builtin/#int">int</a>) (o *<a href="#Matrix">Matrix</a>)</pre>
+				<p>
+NewMatrix allocates a new Matrix
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Matrix.GetMat">func (Matrix) <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/matrix.go?s=1252:1292#L39">GetMat</a></h3>
+				<pre>func (o <a href="#Matrix">Matrix</a>) GetMat() (M [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+GetMat returns nested slice representation; i.e. a la.Mat structure
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Matrix.Set">func (*Matrix) <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/matrix.go?s=1096:1139#L34">Set</a></h3>
+				<pre>func (o *<a href="#Matrix">Matrix</a>) Set(i, j <a href="/pkg/builtin/#int">int</a>, val <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+Sets value
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Matrix.SetFromMat">func (*Matrix) <a href="https://github.com/cpmech/gosl/blob/master/la/mkl/matrix.go?s=929:971#L23">SetFromMat</a></h3>
+				<pre>func (o *<a href="#Matrix">Matrix</a>) SetFromMat(a [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+SetFromMat sets matrix with data from a nested slice structure; i.e. form a given la.Mat.
+</p>
+
+				
+				
+				
+			
+		
+	
+
+	
+
+
+
+
+
+
+<div id="footer">
+<br /><br />
+<hr>
+<pre class="copyright">
+Copyright (c) 2016, The Gosl Authors. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of Gosl nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AS IS
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+</pre><!-- copyright -->
+</div><!-- footer -->
+
+</div><!-- container -->
+</div><!-- page -->
+</body>
+</html>

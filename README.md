@@ -18,8 +18,8 @@ Gosl comprises several _subpackages_ as listed below:
 4.  [plt](https://github.com/cpmech/gosl/tree/master/plt)           &ndash; Plotting and drawing (png and eps)
 5.  [mpi](https://github.com/cpmech/gosl/tree/master/mpi)           &ndash; Message Passing Interface for parallel computing
 6.  [la](https://github.com/cpmech/gosl/tree/master/la)             &ndash; Linear Algebra and efficient sparse solvers
-7.  [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas) &ndash; Lower level linear algebra using OpenBLAS
-8.  [la/mkl](https://github.com/cpmech/gosl/tree/master/la/mkl)     &ndash; Lower level linear algebra using Intel MKL
+7.  [la/mkl](https://github.com/cpmech/gosl/tree/master/la/mkl)     &ndash; Lower level linear algebra using Intel MKL
+8.  [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas) &ndash; Lower level linear algebra using OpenBLAS
 9.  [fdm](https://github.com/cpmech/gosl/tree/master/fdm)           &ndash; Simple finite differences method
 10. [num](https://github.com/cpmech/gosl/tree/master/num)           &ndash; Fundamental numerical methods
 11. [fun](https://github.com/cpmech/gosl/tree/master/fun)           &ndash; Scalar functions of one scalar and one vector
