@@ -76,6 +76,7 @@ sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
 ```
 
 
+
 ### 3.2. Clone and install Gosl
 ```
 mkdir -p ${GOPATH%:*}/src/github.com/cpmech
@@ -86,6 +87,7 @@ cd gosl
 ```
 
 
+
 ### 3.3 Set dynamic library flags if installing the next tools
 
 To set LD\_LIBRARY\_PATH, add the following line to `.bashrc` or `.bash_aliases`:
@@ -93,6 +95,7 @@ To set LD\_LIBRARY\_PATH, add the following line to `.bashrc` or `.bash_aliases`
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
 Alternatively, change `/etc/ld.so.conf` file as appropriate.
+
 
 
 ### 3.4 Optional: Install OpenBLAS
@@ -119,7 +122,25 @@ go test
 ```
 
 
+
 ### 3.5 Optional: Install Intel MKL
+Download MKL from [the intel MKL website](https://software.intel.com/en-us/intel-mkl), then:
+```
+mkdir -p $HOME/xpkg && cd $HOME/xpkg
+tar xzvf l_mkl_2017.2.174.tgz
+bash install_GUI.sh
+```
+and follow the instructions. These options have been tested:
+1. Choose _Install as root using sudo_
+2. Keep default install location: **/opt/intel**
+
+Now, install and test subpackage `la/mkl`:
+```
+cd ${GOPATH%:*}/src/github.com/cpmech/la/mkl
+go install
+go test
+```
+
 
 
 ### 3.6 Optional: Install OpenCV
