@@ -299,6 +299,9 @@ matrices and vectors in dense and sparse formats (including complex)
 				<dd><a href="#VecAdd2">func VecAdd2(u []float64, α float64, a []float64, β float64, b []float64)</a></dd>
 			
 				
+				<dd><a href="#VecApplyFunc">func VecApplyFunc(v []float64, f func(i int, x float64) float64)</a></dd>
+			
+				
 				<dd><a href="#VecClone">func VecClone(a []float64) (b []float64)</a></dd>
 			
 				
@@ -312,6 +315,9 @@ matrices and vectors in dense and sparse formats (including complex)
 			
 				
 				<dd><a href="#VecFillC">func VecFillC(v []complex128, s complex128)</a></dd>
+			
+				
+				<dd><a href="#VecGetMapped">func VecGetMapped(dim int, f func(i int) float64) (v []float64)</a></dd>
 			
 				
 				<dd><a href="#VecLargest">func VecLargest(u []float64, den float64) (largest float64)</a></dd>
@@ -734,7 +740,7 @@ by a significant constant factor, than the QR method.   A = Q * L * Q.T
 		
 			
 			
-			<h2 id="MatAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=15749:15790#L662">MatAlloc</a></h2>
+			<h2 id="MatAlloc">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=16888:16929#L714">MatAlloc</a></h2>
 			<pre>func MatAlloc(m, n <a href="/pkg/builtin/#int">int</a>) (mat [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatAlloc allocates a matrix with size m,n:
@@ -748,7 +754,7 @@ MatAlloc allocates a matrix with size m,n:
 		
 			
 			
-			<h2 id="MatClone">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=15948:15992#L672">MatClone</a></h2>
+			<h2 id="MatClone">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=17087:17131#L724">MatClone</a></h2>
 			<pre>func MatClone(a [][]<a href="/pkg/builtin/#float64">float64</a>) (b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatClone allocates and clones a matrix
@@ -779,7 +785,7 @@ it is not as efficient as it could be, e.g. by using the SV decomposition.
 		
 			
 			
-			<h2 id="MatCopy">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=17443:17497#L743">MatCopy</a></h2>
+			<h2 id="MatCopy">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=18582:18636#L795">MatCopy</a></h2>
 			<pre>func MatCopy(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatCopy copies to matrix &#34;a&#34;, another matrix &#34;b&#34; (scaled):
@@ -793,7 +799,7 @@ MatCopy copies to matrix &#34;a&#34;, another matrix &#34;b&#34; (scaled):
 		
 			
 			
-			<h2 id="MatFill">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=16230:16268#L685">MatFill</a></h2>
+			<h2 id="MatFill">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=17369:17407#L737">MatFill</a></h2>
 			<pre>func MatFill(a [][]<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatFill fills a matrix with a single number s:
@@ -807,7 +813,7 @@ MatFill fills a matrix with a single number s:
 		
 			
 			
-			<h2 id="MatGetCol">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=20675:20727#L888">MatGetCol</a></h2>
+			<h2 id="MatGetCol">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=21814:21866#L940">MatGetCol</a></h2>
 			<pre>func MatGetCol(j <a href="/pkg/builtin/#int">int</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>) (col []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatGetCol returns a column of matrix a into vector col:
@@ -846,7 +852,7 @@ even non-square; in this case, the pseudo-inverse is returned
 		
 			
 			
-			<h2 id="MatLargest">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=19743:19804#L846">MatLargest</a></h2>
+			<h2 id="MatLargest">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=20882:20943#L898">MatLargest</a></h2>
 			<pre>func MatLargest(a [][]<a href="/pkg/builtin/#float64">float64</a>, den <a href="/pkg/builtin/#float64">float64</a>) (largest <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatLargest returns the largest component (abs(a_ij)) of a matrix, normalised by den
@@ -858,7 +864,7 @@ MatLargest returns the largest component (abs(a_ij)) of a matrix, normalised by 
 		
 			
 			
-			<h2 id="MatMaxDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=18762:18813#L805">MatMaxDiff</a></h2>
+			<h2 id="MatMaxDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=19901:19952#L857">MatMaxDiff</a></h2>
 			<pre>func MatMaxDiff(a, b [][]<a href="/pkg/builtin/#float64">float64</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatMaxDiff returns the maximum difference between components of two matrices
@@ -870,7 +876,7 @@ MatMaxDiff returns the maximum difference between components of two matrices
 		
 			
 			
-			<h2 id="MatMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25815:25871#L1075">MatMul</a></h2>
+			<h2 id="MatMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=26954:27010#L1127">MatMul</a></h2>
 			<pre>func MatMul(c [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatMul returns the matrix multiplication (scaled):
@@ -885,7 +891,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatMul3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=26221:26281#L1089">MatMul3</a></h2>
+			<h2 id="MatMul3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=27360:27420#L1141">MatMul3</a></h2>
 			<pre>func MatMul3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatMul3 returns the triple matrix multiplication:
@@ -900,7 +906,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatNormF">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=21258:21300#L915">MatNormF</a></h2>
+			<h2 id="MatNormF">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=22397:22439#L967">MatNormF</a></h2>
 			<pre>func MatNormF(a [][]<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatNormF returns the Frobenious norm of a matrix:
@@ -914,7 +920,7 @@ MatNormF returns the Frobenious norm of a matrix:
 		
 			
 			
-			<h2 id="MatNormI">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=21948:21990#L946">MatNormI</a></h2>
+			<h2 id="MatNormI">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=23087:23129#L998">MatNormI</a></h2>
 			<pre>func MatNormI(a [][]<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatNormI returns the infinite norm of a matrix:
@@ -928,7 +934,7 @@ MatNormI returns the infinite norm of a matrix:
 		
 			
 			
-			<h2 id="MatScale">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=16824:16864#L714">MatScale</a></h2>
+			<h2 id="MatScale">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=17963:18003#L766">MatScale</a></h2>
 			<pre>func MatScale(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatScale scales a matrix by a scalar s:
@@ -942,7 +948,7 @@ MatScale scales a matrix by a scalar s:
 		
 			
 			
-			<h2 id="MatSetDiag">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=18077:18118#L771">MatSetDiag</a></h2>
+			<h2 id="MatSetDiag">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=19216:19257#L823">MatSetDiag</a></h2>
 			<pre>func MatSetDiag(a [][]<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatSetDiag sets a diagonal matrix where the diagonal components are equal to s
@@ -982,7 +988,7 @@ MatToColMaj returns a vector representation of a column-major matrix
 		
 			
 			
-			<h2 id="MatTrMul3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=26713:26775#L1105">MatTrMul3</a></h2>
+			<h2 id="MatTrMul3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=27852:27914#L1157">MatTrMul3</a></h2>
 			<pre>func MatTrMul3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatTrMul3 returns the triple matrix multiplication with tranposed &#34;a&#34;:
@@ -997,7 +1003,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatTrMulAdd3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=27223:27288#L1121">MatTrMulAdd3</a></h2>
+			<h2 id="MatTrMulAdd3">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=28362:28427#L1173">MatTrMulAdd3</a></h2>
 			<pre>func MatTrMulAdd3(d [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a, b, c [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatTrMulAdd3 returns the triple matrix multiplication with addition and tranposed &#34;a&#34;:
@@ -1012,7 +1018,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatTrVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=24621:24690#L1040">MatTrVecMul</a></h2>
+			<h2 id="MatTrVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25760:25829#L1092">MatTrVecMul</a></h2>
 			<pre>func MatTrVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatTrVecMult returns the matrix-vector multiplication with &#34;a&#34; transposed (scaled):
@@ -1027,7 +1033,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatTrVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25033:25105#L1052">MatTrVecMulAdd</a></h2>
+			<h2 id="MatTrVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=26172:26244#L1104">MatTrVecMulAdd</a></h2>
 			<pre>func MatTrVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatTrVecMulAdd returns the matrix-vector multiplication with addition and &#34;a&#34; transposed (scaled):
@@ -1042,7 +1048,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=23470:23537#L1006">MatVecMul</a></h2>
+			<h2 id="MatVecMul">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=24609:24676#L1058">MatVecMul</a></h2>
 			<pre>func MatVecMul(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatVecMul returns the matrix-vector multiplication (scaled):
@@ -1057,7 +1063,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=23848:23918#L1018">MatVecMulAdd</a></h2>
+			<h2 id="MatVecMulAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=24987:25057#L1070">MatVecMulAdd</a></h2>
 			<pre>func MatVecMulAdd(v []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatVecMulAdd returns the matrix-vector multiplication with addition (scaled):
@@ -1072,7 +1078,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatVecMulAddC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=24227:24310#L1029">MatVecMulAddC</a></h2>
+			<h2 id="MatVecMulAddC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25366:25449#L1081">MatVecMulAddC</a></h2>
 			<pre>func MatVecMulAddC(v []<a href="/pkg/builtin/#complex128">complex128</a>, α <a href="/pkg/builtin/#complex128">complex128</a>, a [][]<a href="/pkg/builtin/#complex128">complex128</a>, u []<a href="/pkg/builtin/#complex128">complex128</a>)</pre>
 			<p>
 MatVecMulAddC (complex) returns the matrix-vector multiplication with addition (scaled):
@@ -1087,7 +1093,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="MatVecMulCopyAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=25424:25523#L1063">MatVecMulCopyAdd</a></h2>
+			<h2 id="MatVecMulCopyAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=26563:26662#L1115">MatVecMulCopyAdd</a></h2>
 			<pre>func MatVecMulCopyAdd(w []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, a [][]<a href="/pkg/builtin/#float64">float64</a>, u []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 MatVecMulCopyAdd returns the matrix-vector multiplication with copy and addition (scaled):
@@ -1638,7 +1644,7 @@ SpTriSumToRoot join (MPI) parallel triplets to root (Rank == 0) processor.
 		
 			
 			
-			<h2 id="VecAccum">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2284:2324#L79">VecAccum</a></h2>
+			<h2 id="VecAccum">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=3423:3463#L131">VecAccum</a></h2>
 			<pre>func VecAccum(v []<a href="/pkg/builtin/#float64">float64</a>) (sum <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecAccum sum/accumulates all components in a vector
@@ -1652,7 +1658,7 @@ VecAccum sum/accumulates all components in a vector
 		
 			
 			
-			<h2 id="VecAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=5271:5320#L218">VecAdd</a></h2>
+			<h2 id="VecAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=6410:6459#L270">VecAdd</a></h2>
 			<pre>func VecAdd(a []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecAdd adds to vector &#34;a&#34;, another vector &#34;b&#34; (scaled):
@@ -1666,7 +1672,7 @@ VecAdd adds to vector &#34;a&#34;, another vector &#34;b&#34; (scaled):
 		
 			
 			
-			<h2 id="VecAdd2">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=5804:5879#L243">VecAdd2</a></h2>
+			<h2 id="VecAdd2">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=6943:7018#L295">VecAdd2</a></h2>
 			<pre>func VecAdd2(u []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, a []<a href="/pkg/builtin/#float64">float64</a>, β <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecAdd2 adds two vectors (scaled):
@@ -1680,7 +1686,21 @@ VecAdd2 adds two vectors (scaled):
 		
 			
 			
-			<h2 id="VecClone">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2077:2117#L69">VecClone</a></h2>
+			<h2 id="VecApplyFunc">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2105:2169#L69">VecApplyFunc</a></h2>
+			<pre>func VecApplyFunc(v []<a href="/pkg/builtin/#float64">float64</a>, f func(i <a href="/pkg/builtin/#int">int</a>, x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecApplyFunc runs a function over all components of a vector
+</p>
+<pre>vi = f(i,vi)
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecClone">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=3216:3256#L121">VecClone</a></h2>
 			<pre>func VecClone(a []<a href="/pkg/builtin/#float64">float64</a>) (b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecClone allocates a clone of a vector
@@ -1694,7 +1714,7 @@ VecClone allocates a clone of a vector
 		
 			
 			
-			<h2 id="VecCopy">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=4729:4779#L193">VecCopy</a></h2>
+			<h2 id="VecCopy">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=5868:5918#L245">VecCopy</a></h2>
 			<pre>func VecCopy(a []<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecCopy copies a vector &#34;b&#34; into vector &#34;a&#34; (scaled):
@@ -1708,7 +1728,7 @@ VecCopy copies a vector &#34;b&#34; into vector &#34;a&#34; (scaled):
 		
 			
 			
-			<h2 id="VecDot">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=4119:4160#L165">VecDot</a></h2>
+			<h2 id="VecDot">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=5258:5299#L217">VecDot</a></h2>
 			<pre>func VecDot(u, v []<a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecDot returns the dot product between two vectors:
@@ -1750,7 +1770,21 @@ VecFillC fills a complex vector with a single number s:
 		
 			
 			
-			<h2 id="VecLargest">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=8674:8733#L382">VecLargest</a></h2>
+			<h2 id="VecGetMapped">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2678:2741#L94">VecGetMapped</a></h2>
+			<pre>func VecGetMapped(dim <a href="/pkg/builtin/#int">int</a>, f func(i <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a>) (v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+VecGetMapped returns a new vector after applying a function over all of its components
+</p>
+<pre>new: vi = f(i)
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="VecLargest">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=9813:9872#L434">VecLargest</a></h2>
 			<pre>func VecLargest(u []<a href="/pkg/builtin/#float64">float64</a>, den <a href="/pkg/builtin/#float64">float64</a>) (largest <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecLargest returns the largest component (abs(u_i)) of a vector, normalised by den
@@ -1762,7 +1796,7 @@ VecLargest returns the largest component (abs(u_i)) of a vector, normalised by d
 		
 			
 			
-			<h2 id="VecMax">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=7018:7056#L302">VecMax</a></h2>
+			<h2 id="VecMax">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=8157:8195#L354">VecMax</a></h2>
 			<pre>func VecMax(v []<a href="/pkg/builtin/#float64">float64</a>) (max <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMax returns the maximum component of a vector
@@ -1774,7 +1808,7 @@ VecMax returns the maximum component of a vector
 		
 			
 			
-			<h2 id="VecMaxDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=9527:9576#L419">VecMaxDiff</a></h2>
+			<h2 id="VecMaxDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=10666:10715#L471">VecMaxDiff</a></h2>
 			<pre>func VecMaxDiff(a, b []<a href="/pkg/builtin/#float64">float64</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMaxDiff returns the maximum difference between components of two vectors
@@ -1786,7 +1820,7 @@ VecMaxDiff returns the maximum difference between components of two vectors
 		
 			
 			
-			<h2 id="VecMaxDiffC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=10393:10446#L456">VecMaxDiffC</a></h2>
+			<h2 id="VecMaxDiffC">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=11532:11585#L508">VecMaxDiffC</a></h2>
 			<pre>func VecMaxDiffC(a, b []<a href="/pkg/builtin/#complex128">complex128</a>) (maxdiff <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMaxDiffC returns the maximum difference between components of two complex vectors
@@ -1798,7 +1832,7 @@ VecMaxDiffC returns the maximum difference between components of two complex vec
 		
 			
 			
-			<h2 id="VecMin">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=6345:6383#L267">VecMin</a></h2>
+			<h2 id="VecMin">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=7484:7522#L319">VecMin</a></h2>
 			<pre>func VecMin(v []<a href="/pkg/builtin/#float64">float64</a>) (min <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMin returns the minimum component of a vector
@@ -1810,7 +1844,7 @@ VecMin returns the minimum component of a vector
 		
 			
 			
-			<h2 id="VecMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=7699:7745#L337">VecMinMax</a></h2>
+			<h2 id="VecMinMax">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=8838:8884#L389">VecMinMax</a></h2>
 			<pre>func VecMinMax(v []<a href="/pkg/builtin/#float64">float64</a>) (min, max <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecMinMax returns the min and max components of a vector
@@ -1822,7 +1856,7 @@ VecMinMax returns the min and max components of a vector
 		
 			
 			
-			<h2 id="VecNorm">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=2852:2891#L107">VecNorm</a></h2>
+			<h2 id="VecNorm">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=3991:4030#L159">VecNorm</a></h2>
 			<pre>func VecNorm(v []<a href="/pkg/builtin/#float64">float64</a>) (nrm <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecNorm returns the Euclidian norm of a vector:
@@ -1836,7 +1870,7 @@ VecNorm returns the Euclidian norm of a vector:
 		
 			
 			
-			<h2 id="VecNormDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=3469:3515#L136">VecNormDiff</a></h2>
+			<h2 id="VecNormDiff">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=4608:4654#L188">VecNormDiff</a></h2>
 			<pre>func VecNormDiff(u, v []<a href="/pkg/builtin/#float64">float64</a>) (nrm <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecNormDiff returns the Euclidian norm of the difference:
@@ -1850,7 +1884,7 @@ VecNormDiff returns the Euclidian norm of the difference:
 		
 			
 			
-			<h2 id="VecOuterAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=27678:27737#L1136">VecOuterAdd</a></h2>
+			<h2 id="VecOuterAdd">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=28817:28876#L1188">VecOuterAdd</a></h2>
 			<pre>func VecOuterAdd(a [][]<a href="/pkg/builtin/#float64">float64</a>, α <a href="/pkg/builtin/#float64">float64</a>, u, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecOuterAdd returns the outer product between two vectors, with addition (scaled)
@@ -1865,7 +1899,7 @@ NOTE: not efficient implementation =&gt; use for small matrices
 		
 			
 			
-			<h2 id="VecRms">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=12982:13020#L561">VecRms</a></h2>
+			<h2 id="VecRms">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=14121:14159#L613">VecRms</a></h2>
 			<pre>func VecRms(u []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecRms returns the root-mean-square of a vector u:
@@ -1879,7 +1913,7 @@ VecRms returns the root-mean-square of a vector u:
 		
 			
 			
-			<h2 id="VecRmsErr">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=13704:13778#L591">VecRmsErr</a></h2>
+			<h2 id="VecRmsErr">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=14843:14917#L643">VecRmsErr</a></h2>
 			<pre>func VecRmsErr(u []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecRmsErr returns the root-mean-square of a vector u normalised by scal[i] = Atol + Rtol * |vi|
@@ -1894,7 +1928,7 @@ scal[i] := Atol + Rtol * |v[i]|
 		
 			
 			
-			<h2 id="VecRmsError">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=14604:14683#L624">VecRmsError</a></h2>
+			<h2 id="VecRmsError">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=15743:15822#L676">VecRmsError</a></h2>
 			<pre>func VecRmsError(u, w []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) (rms <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecRmsError returns the root-mean-square of a vector u normalised by scal[i] = Atol + Rtol * |vi|
@@ -1909,7 +1943,7 @@ scal[i] := Atol + Rtol * |v[i]|
 		
 			
 			
-			<h2 id="VecScale">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=11781:11842#L511">VecScale</a></h2>
+			<h2 id="VecScale">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=12920:12981#L563">VecScale</a></h2>
 			<pre>func VecScale(res []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecScale scales vector &#34;v&#34; using an absolute value (Atol) and a multiplier (Rtol)
@@ -1923,7 +1957,7 @@ VecScale scales vector &#34;v&#34; using an absolute value (Atol) and a multipli
 		
 			
 			
-			<h2 id="VecScaleAbs">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=12378:12442#L536">VecScaleAbs</a></h2>
+			<h2 id="VecScaleAbs">func <a href="https://github.com/cpmech/gosl/blob/master/la/linalg.go?s=13517:13581#L588">VecScaleAbs</a></h2>
 			<pre>func VecScaleAbs(res []<a href="/pkg/builtin/#float64">float64</a>, Atol, Rtol <a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 VecScaleAbs scales vector abs(v) using an absolute value (Atol) and a multiplier (Rtol)
