@@ -178,13 +178,13 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 		// calc rhs
 		if o.hasM {
 			// using δw as workspace here
-			la.SpMatVecMul(o.δw[0], 1, o.mMat, o.w[0]) // δw0 := M * w0
-			la.SpMatVecMul(o.δw[1], 1, o.mMat, o.w[1]) // δw1 := M * w1
-			la.SpMatVecMul(o.δw[2], 1, o.mMat, o.w[2]) // δw2 := M * w2
+			la.SpMatVecMul(o.dw[0], 1, o.mMat, o.w[0]) // δw0 := M * w0
+			la.SpMatVecMul(o.dw[1], 1, o.mMat, o.w[1]) // δw1 := M * w1
+			la.SpMatVecMul(o.dw[2], 1, o.mMat, o.w[2]) // δw2 := M * w2
 			for m := 0; m < o.ndim; m++ {
-				o.v[0][m] = r5.Ti[0][0]*o.f[0][m] + r5.Ti[0][1]*o.f[1][m] + r5.Ti[0][2]*o.f[2][m] - γ*o.δw[0][m]
-				o.v[1][m] = r5.Ti[1][0]*o.f[0][m] + r5.Ti[1][1]*o.f[1][m] + r5.Ti[1][2]*o.f[2][m] - α*o.δw[1][m] + β*o.δw[2][m]
-				o.v[2][m] = r5.Ti[2][0]*o.f[0][m] + r5.Ti[2][1]*o.f[1][m] + r5.Ti[2][2]*o.f[2][m] - β*o.δw[1][m] - α*o.δw[2][m]
+				o.v[0][m] = r5.Ti[0][0]*o.f[0][m] + r5.Ti[0][1]*o.f[1][m] + r5.Ti[0][2]*o.f[2][m] - γ*o.dw[0][m]
+				o.v[1][m] = r5.Ti[1][0]*o.f[0][m] + r5.Ti[1][1]*o.f[1][m] + r5.Ti[1][2]*o.f[2][m] - α*o.dw[1][m] + β*o.dw[2][m]
+				o.v[2][m] = r5.Ti[2][0]*o.f[0][m] + r5.Ti[2][1]*o.f[1][m] + r5.Ti[2][2]*o.f[2][m] - β*o.dw[1][m] - α*o.dw[2][m]
 			}
 		} else {
 			for m := 0; m < o.ndim; m++ {
@@ -201,17 +201,17 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 			wg := new(sync.WaitGroup)
 			wg.Add(2)
 			go func() {
-				errR = o.lsolR.SolveR(o.δw[0], o.v[0], false)
+				errR = o.lsolR.SolveR(o.dw[0], o.v[0], false)
 				wg.Done()
 			}()
 			go func() {
-				errC = o.lsolC.SolveC(o.δw[1], o.δw[2], o.v[1], o.v[2], false)
+				errC = o.lsolC.SolveC(o.dw[1], o.dw[2], o.v[1], o.v[2], false)
 				wg.Done()
 			}()
 			wg.Wait()
 		} else {
-			errR = o.lsolR.SolveR(o.δw[0], o.v[0], false)
-			errC = o.lsolC.SolveC(o.δw[1], o.δw[2], o.v[1], o.v[2], false)
+			errR = o.lsolR.SolveR(o.dw[0], o.v[0], false)
+			errC = o.lsolC.SolveC(o.dw[1], o.dw[2], o.v[1], o.v[2], false)
 		}
 
 		// check for errors from linear solution
@@ -232,9 +232,9 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 
 		// update w and z
 		for m := 0; m < o.ndim; m++ {
-			o.w[0][m] += o.δw[0][m]
-			o.w[1][m] += o.δw[1][m]
-			o.w[2][m] += o.δw[2][m]
+			o.w[0][m] += o.dw[0][m]
+			o.w[1][m] += o.dw[1][m]
+			o.w[2][m] += o.dw[2][m]
 			o.z[0][m] = r5.T[0][0]*o.w[0][m] + r5.T[0][1]*o.w[1][m] + r5.T[0][2]*o.w[2][m]
 			o.z[1][m] = r5.T[1][0]*o.w[0][m] + r5.T[1][1]*o.w[1][m] + r5.T[1][2]*o.w[2][m]
 			o.z[2][m] = r5.T[2][0]*o.w[0][m] + r5.T[2][1]*o.w[1][m] + r5.T[2][2]*o.w[2][m]
@@ -243,7 +243,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 		// rms norm of δw
 		Lδw = 0.0
 		for m := 0; m < o.ndim; m++ {
-			Lδw += math.Pow(o.δw[0][m]/o.scal[m], 2.0) + math.Pow(o.δw[1][m]/o.scal[m], 2.0) + math.Pow(o.δw[2][m]/o.scal[m], 2.0)
+			Lδw += math.Pow(o.dw[0][m]/o.scal[m], 2.0) + math.Pow(o.dw[1][m]/o.scal[m], 2.0) + math.Pow(o.dw[2][m]/o.scal[m], 2.0)
 		}
 		Lδw = math.Sqrt(Lδw / float64(3*o.ndim))
 

@@ -76,7 +76,7 @@ func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr 
 				err = num.Jacobian(&o.dfdyT, func(fy, yy []float64) (e error) {
 					e = o.fcn(fy, o.h, x, yy, args...)
 					return
-				}, y, o.f[0], o.δw[0]) // δw works here as workspace variable
+				}, y, o.f[0], o.dw[0]) // δw works here as workspace variable
 			} else { // analytical
 				err = o.jac(&o.dfdyT, o.h, x, y, args...)
 			}
@@ -106,11 +106,11 @@ func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr 
 
 		// solve linear system
 		o.Nlinsol += 1
-		o.lsolR.SolveR(o.δw[0], o.w[0], false) // δw := inv(rcmat) * residual
+		o.lsolR.SolveR(o.dw[0], o.w[0], false) // δw := inv(rcmat) * residual
 
 		// update y
 		for i := 0; i < o.ndim; i++ {
-			y[i] -= o.δw[0][i]
+			y[i] -= o.dw[0][i]
 		}
 	}
 

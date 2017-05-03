@@ -99,7 +99,7 @@ type Solver struct {
 	// rk variables
 	u     []float64   // u[stg]      = x + h*c[stg]
 	v     [][]float64 // v[stg][dim] = ya[dim] + h*sum(a[stg][j]*f[j][dim], j, nstg)
-	w, δw [][]float64 // workspace
+	w, dw [][]float64 // workspace
 	f     [][]float64 // f[stg][dim] = f(u[stg], v[stg][dim])
 
 	// explicit rk variables
@@ -207,7 +207,7 @@ func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Tri
 	o.u = make([]float64, o.nstg)
 	o.v = make([][]float64, o.nstg)
 	o.w = make([][]float64, o.nstg)
-	o.δw = make([][]float64, o.nstg)
+	o.dw = make([][]float64, o.nstg)
 	o.f = make([][]float64, o.nstg)
 	if method == "Radau5" {
 		o.z = make([][]float64, o.nstg)
@@ -219,7 +219,7 @@ func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Tri
 	for i := 0; i < o.nstg; i++ {
 		o.v[i] = make([]float64, o.ndim)
 		o.w[i] = make([]float64, o.ndim)
-		o.δw[i] = make([]float64, o.ndim)
+		o.dw[i] = make([]float64, o.ndim)
 		o.f[i] = make([]float64, o.ndim)
 		if method == "Radau5" {
 			o.z[i] = make([]float64, o.ndim)
