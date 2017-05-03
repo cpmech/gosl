@@ -74,6 +74,31 @@ func VecFillC(v []complex128, s complex128) {
 	}
 }
 
+// VecApplyFunc runs a function over all components of a vector
+//  vi = f(i,vi)
+func VecApplyFunc(v []float64, f func(i int, x float64) float64) {
+	if Pll {
+		ncpu := imin(len(v), NCPU)
+		ch := make(chan int, ncpu)
+		for icpu := 0; icpu < ncpu; icpu++ {
+			start, endp1 := (icpu*len(v))/ncpu, ((icpu+1)*len(v))/ncpu
+			go func() {
+				for i := start; i < endp1; i++ {
+					v[i] = f(i, v[i])
+				}
+				ch <- 1
+			}()
+		}
+		for icpu := 0; icpu < ncpu; icpu++ {
+			<-ch
+		}
+	} else {
+		for i := 0; i < len(v); i++ {
+			v[i] = f(i, v[i])
+		}
+	}
+}
+
 // VecClone allocates a clone of a vector
 //  b := a
 func VecClone(a []float64) (b []float64) {

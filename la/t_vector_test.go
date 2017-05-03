@@ -29,6 +29,12 @@ func TestVector01(tst *testing.T) {
 	PrintVecC("vc", vc, "(%2g +", "%4gi) ", false)
 	chk.VectorC(tst, "vc", 1e-17, vc, []complex128{666 + 666i, 666 + 666i, 666 + 666i, 666 + 666i, 666 + 666i})
 
+	io.Pfyel("func VecApplyFunc(v []float64, f func(i int, x float64) float64)\n")
+	vf := []float64{123, 120, 666}
+	VecApplyFunc(vf, func(i int, x float64) float64 { return float64(i+1) + x/3 })
+	PrintVec("vf", vf, "%5g", false)
+	chk.Vector(tst, "vf", 1e-17, vf, []float64{42, 42, 225})
+
 	io.Pfyel("func VecClone(a []float64) (b []float64)\n")
 	va := []float64{1, 2, 3, 4, 5, 6}
 	vb := VecClone(va)
