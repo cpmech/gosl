@@ -77,15 +77,6 @@ Runge-Kutta method; e.g. Radau5
 				<dd><a href="#pkg-variables">Variables</a></dd>
 			
 			
-				
-				<dd><a href="#Plot">func Plot(dirout, fnkey string, res *Results, yfcn Cb_ycorr, xa, xb float64, extra func())</a></dd>
-			
-				
-				<dd><a href="#SimpleOutput">func SimpleOutput(first bool, dx, x float64, y []float64, args ...interface{}) (err error)</a></dd>
-			
-				
-				<dd><a href="#WcAnalysis">func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, ycfcn Cb_ycorr, ya []float64, xa, xb float64, orders []float64, show bool)</a></dd>
-			
 			
 				
 				<dd><a href="#Cb_fcn">type Cb_fcn</a></dd>
@@ -118,25 +109,17 @@ Runge-Kutta method; e.g. Radau5
 				
 			
 				
-				<dd><a href="#Results">type Results</a></dd>
-				
-				
-			
-				
 				<dd><a href="#Solver">type Solver</a></dd>
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Solver.GetStat">func (o *Solver) GetStat() (s string)</a></dd>
-				
-					
-					<dd>&nbsp; &nbsp; <a href="#Solver.Init">func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, out Cb_out, silent bool)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Solver.Init">func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, out Cb_out)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Solver.SetTol">func (o *Solver) SetTol(atol, rtol float64)</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#Solver.Solve">func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interface{}) (err error)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#Solver.Solve">func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool) (err error)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Solver.Stat">func (o *Solver) Stat()</a></dd>
@@ -153,8 +136,6 @@ Runge-Kutta method; e.g. Radau5
 			<p>
 			<span style="font-size:90%">
 			
-				<a href="https://github.com/cpmech/gosl/blob/master/ode/auxiliary.go">auxiliary.go</a>
-			
 				<a href="https://github.com/cpmech/gosl/blob/master/ode/bweuler.go">bweuler.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/ode/dbg.go">dbg.go</a>
@@ -168,8 +149,6 @@ Runge-Kutta method; e.g. Radau5
 				<a href="https://github.com/cpmech/gosl/blob/master/ode/mpiaux_linux.go">mpiaux_linux.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go">ode.go</a>
-			
-				<a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go">plotting.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/ode/radau5.go">radau5.go</a>
 			
@@ -249,48 +228,11 @@ constants
 			
 		
 		
-			
-			
-			<h2 id="Plot">func <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=944:1034#L28">Plot</a></h2>
-			<pre>func Plot(dirout, fnkey <a href="/pkg/builtin/#string">string</a>, res *<a href="#Results">Results</a>, yfcn <a href="#Cb_ycorr">Cb_ycorr</a>, xa, xb <a href="/pkg/builtin/#float64">float64</a>, extra func())</pre>
-			<p>
-Plot plot results
-</p>
-
-			
-			
-
 		
 			
 			
-			<h2 id="SimpleOutput">func <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=570:660#L12">SimpleOutput</a></h2>
-			<pre>func SimpleOutput(first <a href="/pkg/builtin/#bool">bool</a>, dx, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
-			<p>
-SimpleOutput implements a simple output function
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="WcAnalysis">func <a href="https://github.com/cpmech/gosl/blob/master/ode/auxiliary.go?s=333:493#L8">WcAnalysis</a></h2>
-			<pre>func WcAnalysis(dirout, fnkey, method <a href="/pkg/builtin/#string">string</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, ycfcn <a href="#Cb_ycorr">Cb_ycorr</a>, ya []<a href="/pkg/builtin/#float64">float64</a>, xa, xb <a href="/pkg/builtin/#float64">float64</a>,
-    orders []<a href="/pkg/builtin/#float64">float64</a>, show <a href="/pkg/builtin/#bool">bool</a>)</pre>
-			<p>
-work/correctness analysis
-</p>
-
-			
-			
-
-		
-		
-			
-			
-			<h2 id="Cb_fcn">type <a href="https://github.com/cpmech/gosl/blob/master/ode/defs.go?s=224:307#L1">Cb_fcn</a></h2>
-			<pre>type Cb_fcn func(f []<a href="/pkg/builtin/#float64">float64</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// function</span>
+			<h2 id="Cb_fcn">type <a href="https://github.com/cpmech/gosl/blob/master/ode/defs.go?s=224:286#L1">Cb_fcn</a></h2>
+			<pre>type Cb_fcn func(f []<a href="/pkg/builtin/#float64">float64</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// function</span>
 </pre>
 			<p>
 callbacks
@@ -311,8 +253,8 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_jac">type <a href="https://github.com/cpmech/gosl/blob/master/ode/defs.go?s=325:413#L1">Cb_jac</a></h2>
-			<pre>type Cb_jac func(dfdy *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// Jacobian (must have at least all diagonal elements set)</span>
+			<h2 id="Cb_jac">type <a href="https://github.com/cpmech/gosl/blob/master/ode/defs.go?s=304:371#L1">Cb_jac</a></h2>
+			<pre>type Cb_jac func(dfdy *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// Jacobian (must have at least all diagonal elements set)</span>
 </pre>
 			
 
@@ -330,8 +272,8 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/ode/defs.go?s=473:555#L2">Cb_out</a></h2>
-			<pre>type Cb_out func(first <a href="/pkg/builtin/#bool">bool</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#error">error</a> <span class="comment">// output</span>
+			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/ode/defs.go?s=431:492#L2">Cb_out</a></h2>
+			<pre>type Cb_out func(first <a href="/pkg/builtin/#bool">bool</a>, h, x <a href="/pkg/builtin/#float64">float64</a>, y []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// output</span>
 </pre>
 			
 
@@ -349,8 +291,8 @@ callbacks
 		
 			
 			
-			<h2 id="Cb_ycorr">type <a href="https://github.com/cpmech/gosl/blob/master/ode/defs.go?s=586:649#L5">Cb_ycorr</a></h2>
-			<pre>type Cb_ycorr func(y []<a href="/pkg/builtin/#float64">float64</a>, x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <span class="comment">// y(x) correct</span>
+			<h2 id="Cb_ycorr">type <a href="https://github.com/cpmech/gosl/blob/master/ode/defs.go?s=523:565#L5">Cb_ycorr</a></h2>
+			<pre>type Cb_ycorr func(y []<a href="/pkg/builtin/#float64">float64</a>, x <a href="/pkg/builtin/#float64">float64</a>) <span class="comment">// y(x) correct</span>
 </pre>
 			<p>
 callbacks
@@ -413,45 +355,22 @@ callbacks
 		
 			
 			
-			<h2 id="Results">type <a href="https://github.com/cpmech/gosl/blob/master/ode/plotting.go?s=324:516#L4">Results</a></h2>
-			<pre>type Results struct {
-    Method <a href="/pkg/builtin/#string">string</a>      <span class="comment">// method name</span>
-    Dx     []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// step sizes [Noutput]</span>
-    X      []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// x values [Noutput]</span>
-    Y      [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// y values [ndim][Noutput]</span>
-}</pre>
-			<p>
-Results structure to hold numerical results
-</p>
-
-
-			
-
-			
-
-			
-			
-			
-
-			
-
-			
-		
-			
-			
-			<h2 id="Solver">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=619:4467#L11">Solver</a></h2>
+			<h2 id="Solver">type <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=612:4635#L10">Solver</a></h2>
 			<pre>type Solver struct {
-    ZeroTrial <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// always start iterations with zero trial values (instead of collocation interpolation)</span>
-    Atol      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// absolute tolerance</span>
-    Rtol      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// relative tolerance</span>
-    IniH      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// initial H</span>
-    NmaxIt    <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max num iterations (allowed)</span>
-    NmaxSS    <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max num substeps</span>
-    Mmin      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// min step multiplier</span>
-    Mmax      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// max step multiplier</span>
-    Mfac      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// step multiplier factor</span>
-    PredCtrl  <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// use Gustafsson&#39;s predictive controller</span>
 
+    <span class="comment">// flags</span>
+    ZeroTrial  <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// always start iterations with zero trial values (instead of collocation interpolation)</span>
+    Atol       <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// absolute tolerance</span>
+    Rtol       <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// relative tolerance</span>
+    IniH       <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// initial H</span>
+    NmaxIt     <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max num iterations (allowed)</span>
+    NmaxSS     <a href="/pkg/builtin/#int">int</a>     <span class="comment">// max num substeps</span>
+    Mmin       <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// min step multiplier</span>
+    Mmax       <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// max step multiplier</span>
+    Mfac       <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// step multiplier factor</span>
+    PredCtrl   <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// use Gustafsson&#39;s predictive controller</span>
+    Eps        <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// smallest number satisfying 1.0 + ϵ &gt; 1.0</span>
+    ThetaMax   <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// max theta to decide whether the Jacobian should be recomputed or not</span>
     C1h        <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// c1 of HW-VII p124 =&gt; min ratio to retain previous h</span>
     C2h        <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// c2 of HW-VII p124 =&gt; max ratio to retain previous h</span>
     LerrStrat  <a href="/pkg/builtin/#int">int</a>     <span class="comment">// strategy to select local error computation method</span>
@@ -459,9 +378,26 @@ Results structure to hold numerical results
     CteTg      <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// use constant tangent (Jacobian) in BwEuler</span>
     UseRmsNorm <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// use RMS norm instead of Euclidian in BwEuler</span>
     Verbose    <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// be more verbose, e.g. during iterations</span>
+    SaveXY     <a href="/pkg/builtin/#bool">bool</a>    <span class="comment">// save X values in an array (e.g. for plotting)</span>
+
+    <span class="comment">// output</span>
+    IdxSave <a href="/pkg/builtin/#int">int</a>         <span class="comment">// current index in Xvalues and Yvalues == last output</span>
+    Hvalues []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// h values if SaveXY is true [IdxSave]</span>
+    Xvalues []<a href="/pkg/builtin/#float64">float64</a>   <span class="comment">// X values if SaveXY is true [IdxSave]</span>
+    Yvalues [][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// Y values if SaveXY is true [ndim][IdxSave]</span>
 
     <span class="comment">// derived variables</span>
     Distr <a href="/pkg/builtin/#bool">bool</a> <span class="comment">// MPI distributed execution. automatically set ON in Init if mpi is on and there are more then one processor.</span>
+
+    <span class="comment">// stat variables</span>
+    Nfeval    <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of calls to fcn</span>
+    Njeval    <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of Jacobian matrix evaluations</span>
+    Nsteps    <a href="/pkg/builtin/#int">int</a> <span class="comment">// total number of substeps</span>
+    Naccepted <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of accepted substeps</span>
+    Nrejected <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of rejected substeps</span>
+    Ndecomp   <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of matrix decompositions</span>
+    Nlinsol   <a href="/pkg/builtin/#int">int</a> <span class="comment">// number of calls to linsolver</span>
+    Nitmax    <a href="/pkg/builtin/#int">int</a> <span class="comment">// number max of iterations</span>
     <span class="comment">// contains filtered or unexported fields</span>
 }</pre>
 			<p>
@@ -484,16 +420,8 @@ Solver implements an ODE solver
 
 			
 				
-				<h3 id="Solver.GetStat">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12676:12713#L500">GetStat</a></h3>
-				<pre>func (o *<a href="#Solver">Solver</a>) GetStat() (s <a href="/pkg/builtin/#string">string</a>)</pre>
-				
-				
-				
-				
-			
-				
-				<h3 id="Solver.Init">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=4543:4653#L107">Init</a></h3>
-				<pre>func (o *<a href="#Solver">Solver</a>) Init(method <a href="/pkg/builtin/#string">string</a>, ndim <a href="/pkg/builtin/#int">int</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, out <a href="#Cb_out">Cb_out</a>, silent <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<h3 id="Solver.Init">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=4711:4808#L114">Init</a></h3>
+				<pre>func (o *<a href="#Solver">Solver</a>) Init(method <a href="/pkg/builtin/#string">string</a>, ndim <a href="/pkg/builtin/#int">int</a>, fcn <a href="#Cb_fcn">Cb_fcn</a>, jac <a href="#Cb_jac">Cb_jac</a>, M *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, out <a href="#Cb_out">Cb_out</a>)</pre>
 				<p>
 Init initialises ODE structure with default values and allocate slices
 </p>
@@ -503,7 +431,7 @@ Init initialises ODE structure with default values and allocate slices
 				
 			
 				
-				<h3 id="Solver.SetTol">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=6978:7021#L218">SetTol</a></h3>
+				<h3 id="Solver.SetTol">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7116:7159#L224">SetTol</a></h3>
 				<pre>func (o *<a href="#Solver">Solver</a>) SetTol(atol, rtol <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 SetTol sets tolerances according to Hairer and Wanner suggestions. This routine also
@@ -515,8 +443,8 @@ checks for consistent values and only considers the case of scalars Atol and Rto
 				
 			
 				
-				<h3 id="Solver.Solve">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7358:7459#L232">Solve</a></h3>
-				<pre>func (o *<a href="#Solver">Solver</a>) Solve(y []<a href="/pkg/builtin/#float64">float64</a>, x, xb, Δx <a href="/pkg/builtin/#float64">float64</a>, fixstp <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<h3 id="Solver.Solve">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=7497:7577#L238">Solve</a></h3>
+				<pre>func (o *<a href="#Solver">Solver</a>) Solve(y []<a href="/pkg/builtin/#float64">float64</a>, x, xb, Δx <a href="/pkg/builtin/#float64">float64</a>, fixstp <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
 </p>
@@ -526,7 +454,7 @@ Solve solves from (xa,ya) to (xb,yb) =&gt; find yb (stored in y)
 				
 			
 				
-				<h3 id="Solver.Stat">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12189:12212#L486">Stat</a></h3>
+				<h3 id="Solver.Stat">func (*Solver) <a href="https://github.com/cpmech/gosl/blob/master/ode/ode.go?s=12927:12950#L522">Stat</a></h3>
 				<pre>func (o *<a href="#Solver">Solver</a>) Stat()</pre>
 				
 				
