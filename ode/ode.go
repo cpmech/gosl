@@ -58,8 +58,9 @@ type Solver struct {
 
 	// output
 	IdxSave int         // current index in Xvalues and Yvalues == last output
-	Xvalues []float64   // X values if SaveXY is true [idxOutput]
-	Yvalues [][]float64 // Y values if SaveXY is true [ndim][idxOutput]
+	Hvalues []float64   // h values if SaveXY is true [IdxSave]
+	Xvalues []float64   // X values if SaveXY is true [IdxSave]
+	Yvalues [][]float64 // Y values if SaveXY is true [ndim][IdxSave]
 
 	// derived variables
 	Distr bool    // MPI distributed execution. automatically set ON in Init if mpi is on and there are more then one processor.
@@ -244,7 +245,7 @@ func (o *Solver) SetTol(atol, rtol float64) {
 }
 
 // Solve solves from (xa,ya) to (xb,yb) => find yb (stored in y)
-func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...interface{}) (err error) {
+func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool) (err error) {
 
 	// check
 	if xb < x {
@@ -266,12 +267,13 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 
 	// output initial state
 	if o.out != nil {
-		o.out(true, o.h, x, y, args...)
+		o.out(true, o.h, x, y)
 	}
 
 	// save X
 	o.IdxSave = 0
 	if o.SaveXY {
+		o.Hvalues = make([]float64, o.NmaxSS+1)
 		o.Xvalues = make([]float64, o.NmaxSS+1)
 		o.Yvalues = la.MatAlloc(o.ndim, o.NmaxSS+1)
 		o.Xvalues[o.IdxSave] = x
@@ -337,13 +339,13 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 			if o.jac == nil { // numerical Jacobian
 				if o.method == "Radau5" {
 					o.Nfeval += 1
-					o.fcn(o.f0, o.h, x, y, args...)
+					o.fcn(o.f0, o.h, x, y)
 				}
 			}
 			o.reuseJdec = false
 			o.reuseJ = false
 			o.jacIsOK = false
-			o.step(o, y, x, args...)
+			o.step(o, y, x)
 			o.Nsteps += 1
 			o.doinit = false
 			o.first = false
@@ -351,10 +353,11 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 			x += o.h
 			o.accept(o, y)
 			if o.out != nil {
-				o.out(false, o.h, x, y, args...)
+				o.out(false, o.h, x, y)
 			}
 			if o.SaveXY {
 				if o.IdxSave < o.NmaxSS {
+					o.Hvalues[o.IdxSave] = o.h
 					o.Xvalues[o.IdxSave] = x
 					for i := 0; i < o.ndim; i++ {
 						o.Yvalues[i][o.IdxSave] = y[i]
@@ -371,7 +374,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 
 	// first function evaluation
 	o.Nfeval += 1
-	o.fcn(o.f0, o.h, x, y, args...) // o.f0 := f(x,y)
+	o.fcn(o.f0, o.h, x, y) // o.f0 := f(x,y)
 
 	// time loop
 	var dxmax, xstep, fac, div, dxnew, facgus, old_h, old_rerr float64
@@ -397,7 +400,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 			}
 
 			// step update
-			rerr, err = o.step(o, y, x, args...)
+			rerr, err = o.step(o, y, x)
 
 			// initialise only once
 			o.doinit = false
@@ -431,11 +434,12 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 
 				// output
 				if o.out != nil {
-					o.out(false, o.h, x, y, args...)
+					o.out(false, o.h, x, y)
 				}
 
 				// save X value
 				if o.SaveXY {
+					o.Hvalues[o.IdxSave] = o.h
 					o.Xvalues[o.IdxSave] = x
 					for i := 0; i < o.ndim; i++ {
 						o.Yvalues[i][o.IdxSave] = y[i]
@@ -464,7 +468,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 				// calc new scal and f0
 				la.VecScaleAbs(o.scal, o.Atol, o.Rtol, y) // o.scal := o.Atol + o.Rtol * abs(y)
 				o.Nfeval += 1
-				o.fcn(o.f0, o.h, x, y, args...) // o.f0 := f(x,y)
+				o.fcn(o.f0, o.h, x, y) // o.f0 := f(x,y)
 
 				// new step size
 				dxnew = min(dxnew, dxmax)

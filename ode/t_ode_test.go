@@ -28,12 +28,12 @@ func Test_ode01(tst *testing.T) {
 	ndim := len(ya)
 	y := make([]float64, ndim)
 
-	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64) error {
 		f[0] = lam*y[0] - lam*math.Cos(x)
 		return nil
 	}
 
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(1, 1, 1)
 		}
@@ -146,9 +146,6 @@ func Test_ode01(tst *testing.T) {
 		plt.Gll("$x$", "$y$", nil)
 		plt.Save("/tmp/gosl/ode", "ode1")
 	}
-
-	// work/correctness analysis
-	//WcAnalysis("/tmp/gosl", "ode1", method, fcn, jac, nil, ycfcn, ya, xa, xb, []float64{5}, false)
 }
 
 // Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation
@@ -159,12 +156,12 @@ func Test_ode02(tst *testing.T) {
 
 	// problem definition
 	eps := 1.0e-6
-	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64) error {
 		f[0] = y[1]
 		f[1] = ((1.0-y[0]*y[0])*y[1] - y[0]) / eps
 		return nil
 	}
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(2, 2, 4)
 		}
@@ -185,15 +182,12 @@ func Test_ode02(tst *testing.T) {
 	ya := []float64{2.0, -0.6}
 	ndim := len(ya)
 
-	// structure to hold numerical results
-	res := Results{Method: method}
-
 	// allocate ODE object
 	var o Solver
 	if numjac {
-		o.Init(method, ndim, fcn, nil, nil, SimpleOutput)
+		o.Init(method, ndim, fcn, nil, nil, nil)
 	} else {
-		o.Init(method, ndim, fcn, jac, nil, SimpleOutput)
+		o.Init(method, ndim, fcn, jac, nil, nil)
 	}
 
 	// tolerances and initial step size
@@ -202,15 +196,16 @@ func Test_ode02(tst *testing.T) {
 	o.IniH = 1.0e-4
 	o.SetTol(atol, rtol)
 	//o.NmaxSS = 2
+	o.SaveXY = true
 
 	// solve problem
 	y := make([]float64, ndim)
 	copy(y, ya)
 	t0 := time.Now()
 	if fixstp {
-		o.Solve(y, xa, xb, 0.05, fixstp, &res)
+		o.Solve(y, xa, xb, 0.05, fixstp)
 	} else {
-		o.Solve(y, xa, xb, xb-xa, fixstp, &res)
+		o.Solve(y, xa, xb, xb-xa, fixstp)
 	}
 	chk.Int(tst, "number of F evaluations ", o.Nfeval, 2233)
 	chk.Int(tst, "number of J evaluations ", o.Njeval, 160)
@@ -224,17 +219,27 @@ func Test_ode02(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.Reset(false, nil)
-		Plot("/tmp/gosl/ode", "vdpolA", &res, nil, xa, xb, func() {
-			_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
-			if err != nil {
-				chk.Panic("%v", err)
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
+		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
+		if err != nil {
+			chk.Panic("%v", err)
+		}
+		s := o.IdxSave
+		for j := 0; j < ndim; j++ {
+			labelA, labelB := "", ""
+			if j == 2 {
+				labelA, labelB = "reference", "gosl"
 			}
-			plt.Subplot(3, 1, 1)
-			plt.Plot(T["x"], T["y0"], &plt.A{C: "k", M: "+", L: "reference"})
-			plt.Subplot(3, 1, 2)
-			plt.Plot(T["x"], T["y1"], &plt.A{C: "k", M: "+", L: "reference"})
-		})
+			plt.Subplot(ndim+1, 1, j+1)
+			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
+			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
+			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
+		}
+		plt.Subplot(ndim+1, 1, ndim+1)
+		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
+		plt.SetYlog()
+		plt.Gll("$x$", "$\\log{(h)}$", nil)
+		plt.Save("/tmp/gosl", "vdpolA")
 	}
 }
 
@@ -244,13 +249,13 @@ func Test_ode03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ode03: Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation")
 
-	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64) error {
 		f[0] = -0.04*y[0] + 1.0e4*y[1]*y[2]
 		f[1] = 0.04*y[0] - 1.0e4*y[1]*y[2] - 3.0e7*y[1]*y[1]
 		f[2] = 3.0e7 * y[1] * y[1]
 		return nil
 	}
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(3, 3, 9)
 		}
@@ -275,12 +280,10 @@ func Test_ode03(tst *testing.T) {
 	ya := []float64{1.0, 0.0, 0.0}
 	ndim := len(ya)
 
-	// structure to hold numerical results
-	res := Results{Method: method}
-
 	// allocate ODE object
 	var o Solver
-	o.Init(method, ndim, fcn, jac, nil, SimpleOutput)
+	o.Init(method, ndim, fcn, jac, nil, nil)
+	o.SaveXY = true
 
 	// tolerances and initial step size
 	rtol := 1e-2
@@ -292,9 +295,9 @@ func Test_ode03(tst *testing.T) {
 	y := make([]float64, ndim)
 	copy(y, ya)
 	if fixstp {
-		o.Solve(y, xa, xb, 0.01, fixstp, &res)
+		o.Solve(y, xa, xb, 0.01, fixstp)
 	} else {
-		o.Solve(y, xa, xb, xb-xa, fixstp, &res)
+		o.Solve(y, xa, xb, xb-xa, fixstp)
 	}
 	chk.Int(tst, "number of F evaluations ", o.Nfeval, 87)
 	chk.Int(tst, "number of J evaluations ", o.Njeval, 8)
@@ -307,19 +310,27 @@ func Test_ode03(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.Reset(false, nil)
-		Plot("/tmp/gosl/ode", "rober", &res, nil, xa, xb, func() {
-			_, T, err := io.ReadTable("data/rober_radau5_cpp.dat")
-			if err != nil {
-				chk.Panic("%v", err)
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
+		_, T, err := io.ReadTable("data/rober_radau5_cpp.dat")
+		if err != nil {
+			chk.Panic("%v", err)
+		}
+		s := o.IdxSave
+		for j := 0; j < ndim; j++ {
+			labelA, labelB := "", ""
+			if j == 2 {
+				labelA, labelB = "reference", "gosl"
 			}
-			plt.Subplot(4, 1, 1)
-			plt.Plot(T["x"], T["y0"], &plt.A{C: "k", M: "+", L: "reference"})
-			plt.Subplot(4, 1, 2)
-			plt.Plot(T["x"], T["y1"], &plt.A{C: "k", M: "+", L: "reference"})
-			plt.Subplot(4, 1, 3)
-			plt.Plot(T["x"], T["y2"], &plt.A{C: "k", M: "+", L: "reference"})
-		})
+			plt.Subplot(ndim+1, 1, j+1)
+			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
+			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
+			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
+		}
+		plt.Subplot(ndim+1, 1, ndim+1)
+		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
+		plt.SetYlog()
+		plt.Gll("$x$", "$\\log{(h)}$", nil)
+		plt.Save("/tmp/gosl", "rober")
 	}
 }
 
@@ -352,7 +363,7 @@ func Test_ode04(tst *testing.T) {
 	//xb = 0.01235 // !OK
 
 	// right-hand side of the amplifier problem
-	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64) error {
 		UET := UE * math.Sin(W*x)
 		FAC1 := BETA * (math.Exp((y[3]-y[2])/UF) - 1.0)
 		FAC2 := BETA * (math.Exp((y[6]-y[5])/UF) - 1.0)
@@ -368,7 +379,7 @@ func Test_ode04(tst *testing.T) {
 	}
 
 	// Jacobian of the amplifier problem
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
 		FAC14 := BETA * math.Exp((y[3]-y[2])/UF) / UF
 		FAC27 := BETA * math.Exp((y[6]-y[5])/UF) / UF
 		if dfdy.Max() == 0 {
@@ -423,17 +434,15 @@ func Test_ode04(tst *testing.T) {
 	ndim := len(ya)
 	numjac := false
 
-	// structure to hold numerical results
-	res := Results{Method: method}
-
 	// ODE solver
 	var o Solver
 	o.Pll = true
+	o.SaveXY = true
 
 	if numjac {
-		o.Init(method, ndim, fcn, nil, &M, SimpleOutput)
+		o.Init(method, ndim, fcn, nil, &M, nil)
 	} else {
-		o.Init(method, ndim, fcn, jac, &M, SimpleOutput)
+		o.Init(method, ndim, fcn, jac, &M, nil)
 	}
 	o.IniH = 1.0e-6 // initial step size
 
@@ -444,9 +453,9 @@ func Test_ode04(tst *testing.T) {
 	// run
 	t0 := time.Now()
 	if fixstp {
-		o.Solve(ya, xa, xb, 0.01, fixstp, &res)
+		o.Solve(ya, xa, xb, 0.01, fixstp)
 	} else {
-		o.Solve(ya, xa, xb, xb-xa, fixstp, &res)
+		o.Solve(ya, xa, xb, xb-xa, fixstp)
 	}
 	chk.Int(tst, "number of F evaluations ", o.Nfeval, 2599)
 	chk.Int(tst, "number of J evaluations ", o.Njeval, 216)
@@ -460,16 +469,28 @@ func Test_ode04(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.Reset(false, nil)
-		Plot("/tmp/gosl/ode", "hwamplifier", &res, nil, xa, xb, func() {
-			_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
-			if err != nil {
-				chk.Panic("%v", err)
+		plt.Reset(true, &plt.A{WidthPt: 450, Dpi: 150, Prop: 1.8, FszXtck: 6, FszYtck: 6})
+		_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
+		if err != nil {
+			chk.Panic("%v", err)
+		}
+		s := o.IdxSave
+		for j := 0; j < ndim; j++ {
+			labelA, labelB := "", ""
+			if j == 4 {
+				labelA, labelB = "reference", "gosl"
 			}
-			for j := 0; j < ndim; j++ {
-				plt.Subplot(ndim+1, 1, j+1)
-				plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: "reference"})
-			}
-		})
+			plt.Subplot(ndim+1, 1, j+1)
+			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
+			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB})
+			plt.AxisXmax(0.05)
+			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
+		}
+		plt.Subplot(ndim+1, 1, ndim+1)
+		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
+		plt.SetYlog()
+		plt.AxisXmax(0.05)
+		plt.Gll("$x$", "$\\log{(h)}$", nil)
+		plt.Save("/tmp/gosl", "hwamplifier")
 	}
 }

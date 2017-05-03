@@ -47,7 +47,7 @@ func radau5_accept(o *Solver, y []float64) {
 }
 
 // Radau5 step function
-func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr float64, err error) {
+func radau5_step(o *Solver, y0 []float64, x0 float64) (rerr float64, err error) {
 
 	// factors
 	α := r5.α_ / o.h
@@ -68,12 +68,12 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 			if o.jac == nil { // numerical
 				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
 				err = num.Jacobian(&o.dfdyT, func(fy, y []float64) (e error) {
-					e = o.fcn(fy, o.h, x0, y, args...)
+					e = o.fcn(fy, o.h, x0, y)
 					return
 				}, y0, o.f0, o.w[0]) // w works here as workspace variable
 			} else { // analytical
 				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n") }
-				err = o.jac(&o.dfdyT, o.h, x0, y0, args...)
+				err = o.jac(&o.dfdyT, o.h, x0, y0)
 			}
 			if err != nil {
 				return
@@ -169,7 +169,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 				o.v[i][m] = y0[m] + o.z[i][m]
 			}
 			o.Nfeval += 1
-			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i], args...)
+			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i])
 			if err != nil {
 				return
 			}
@@ -335,7 +335,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 						o.v[0][m] = y0[m] + o.lerr[m] // y0perr
 					}
 					o.Nfeval += 1
-					err = o.fcn(o.f[0], o.h, x0, o.v[0], args...) // f0perr
+					err = o.fcn(o.f[0], o.h, x0, o.v[0]) // f0perr
 					if err != nil {
 						return
 					}

@@ -23,7 +23,7 @@ func erk_accept(o *Solver, y []float64) {
 }
 
 // explicit Runge-Kutta step function
-func erk_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr float64, err error) {
+func erk_step(o *Solver, y []float64, x float64) (rerr float64, err error) {
 
 	for i := 0; i < o.nstg; i++ {
 		o.u[i] = x + o.h*o.erkdat.c[i]
@@ -35,7 +35,7 @@ func erk_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr floa
 			la.VecCopy(o.f[i], 1, o.f[o.nstg-1])
 		} else {
 			o.Nfeval += 1
-			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i], args...)
+			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i])
 			if err != nil {
 				return
 			}

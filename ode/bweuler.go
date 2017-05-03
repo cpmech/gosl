@@ -17,7 +17,7 @@ func bweuler_accept(o *Solver, y []float64) {
 }
 
 // backward-Euler
-func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr float64, err error) {
+func bweuler_step(o *Solver, y []float64, x float64) (rerr float64, err error) {
 
 	// new x
 	x += o.h
@@ -38,7 +38,7 @@ func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr 
 
 		// calculate f @ update y
 		o.Nfeval += 1
-		err = o.fcn(o.f[0], o.h, x, y, args...)
+		err = o.fcn(o.f[0], o.h, x, y)
 		if err != nil {
 			return
 		}
@@ -74,11 +74,11 @@ func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr 
 			// calculate Jacobian
 			if o.jac == nil { // numerical
 				err = num.Jacobian(&o.dfdyT, func(fy, yy []float64) (e error) {
-					e = o.fcn(fy, o.h, x, yy, args...)
+					e = o.fcn(fy, o.h, x, yy)
 					return
 				}, y, o.f[0], o.dw[0]) // δw works here as workspace variable
 			} else { // analytical
-				err = o.jac(&o.dfdyT, o.h, x, y, args...)
+				err = o.jac(&o.dfdyT, o.h, x, y)
 			}
 			if err != nil {
 				return

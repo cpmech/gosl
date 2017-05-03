@@ -34,7 +34,7 @@ func main() {
 
 	eps := 1.0e-6
 	w := make([]float64, 2) // workspace
-	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64) error {
 		f[0], f[1] = 0, 0
 		switch mpi.Rank() {
 		case 0:
@@ -46,7 +46,7 @@ func main() {
 		mpi.AllReduceSum(f, w)
 		return nil
 	}
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(2, 2, 4)
 		}
@@ -74,7 +74,6 @@ func main() {
 	}
 
 	// method and flags
-	silent := false
 	fixstp := false
 	//method := "Dopri5"
 	method := "Radau5"
@@ -83,16 +82,13 @@ func main() {
 	ya := []float64{2.0, -0.6}
 	ndim := len(ya)
 
-	// structure to hold numerical results
-	res := ode.Results{Method: method}
-
 	// allocate ODE object
 	var o ode.Solver
 	o.Distr = true
 	if numjac {
-		o.Init(method, ndim, fcn, nil, nil, ode.SimpleOutput, silent)
+		o.Init(method, ndim, fcn, nil, nil, nil)
 	} else {
-		o.Init(method, ndim, fcn, jac, nil, ode.SimpleOutput, silent)
+		o.Init(method, ndim, fcn, jac, nil, nil)
 	}
 
 	// tolerances and initial step size
@@ -107,23 +103,34 @@ func main() {
 	copy(y, ya)
 	t0 := time.Now()
 	if fixstp {
-		o.Solve(y, xa, xb, 0.05, fixstp, &res)
+		o.Solve(y, xa, xb, 0.05, fixstp)
 	} else {
-		o.Solve(y, xa, xb, xb-xa, fixstp, &res)
+		o.Solve(y, xa, xb, xb-xa, fixstp)
 	}
 
 	// plot
 	if mpi.Rank() == 0 {
 		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
-		ode.Plot("/tmp/gosl/ode", "vdpolA_mpi", &res, nil, xa, xb, func() {
-			_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
-			if err != nil {
-				chk.Panic("%v", err)
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
+		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
+		if err != nil {
+			chk.Panic("%v", err)
+		}
+		s := o.IdxSave
+		for j := 0; j < ndim; j++ {
+			labelA, labelB := "", ""
+			if j == 2 {
+				labelA, labelB = "reference", "gosl"
 			}
-			plt.Subplot(3, 1, 1)
-			plt.Plot(T["x"], T["y0"], &plt.A{C: "k", M: "+", L: "reference"})
-			plt.Subplot(3, 1, 2)
-			plt.Plot(T["x"], T["y1"], &plt.A{C: "k", M: "+", L: "reference"})
-		})
+			plt.Subplot(ndim+1, 1, j+1)
+			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
+			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
+			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
+		}
+		plt.Subplot(ndim+1, 1, ndim+1)
+		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
+		plt.SetYlog()
+		plt.Gll("$x$", "$\\log{(h)}$", nil)
+		plt.Save("/tmp/gosl", "vdpolA_mpi")
 	}
 }
