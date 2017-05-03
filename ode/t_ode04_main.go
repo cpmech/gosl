@@ -176,16 +176,14 @@ func main() {
 	// plot
 	if mpi.Rank() == 0 {
 		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
-		plt.SetForEps(2.0, 400)
-		args := "'b-', marker='.', lw=1, clip_on=0"
-		ode.Plot("/tmp/gosl/ode", "hwamplifier_mpi.eps", &res, nil, xa, xb, "", args, func() {
+		ode.Plot("/tmp/gosl/ode", "hwamplifier_mpi", &res, nil, xa, xb, func() {
 			_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
 			if err != nil {
 				chk.Panic("%v", err)
 			}
 			for j := 0; j < ndim; j++ {
 				plt.Subplot(ndim+1, 1, j+1)
-				plt.Plot(T["x"], T[io.Sf("y%d", j)], "'k+',label='reference',ms=10")
+				plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: "reference"})
 			}
 		})
 	}

@@ -115,17 +115,15 @@ func main() {
 	// plot
 	if mpi.Rank() == 0 {
 		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
-		plt.SetForEps(1.5, 400)
-		args := "'b-', marker='.', lw=1, ms=4, clip_on=0"
-		ode.Plot("/tmp/gosl/ode", "vdpolA_mpi.eps", &res, nil, xa, xb, "", args, func() {
+		ode.Plot("/tmp/gosl/ode", "vdpolA_mpi", &res, nil, xa, xb, func() {
 			_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
 			if err != nil {
 				chk.Panic("%v", err)
 			}
 			plt.Subplot(3, 1, 1)
-			plt.Plot(T["x"], T["y0"], "'k+',label='reference',ms=7")
+			plt.Plot(T["x"], T["y0"], &plt.A{C: "k", M: "+", L: "reference"})
 			plt.Subplot(3, 1, 2)
-			plt.Plot(T["x"], T["y1"], "'k+',label='reference',ms=7")
+			plt.Plot(T["x"], T["y1"], &plt.A{C: "k", M: "+", L: "reference"})
 		})
 	}
 }
