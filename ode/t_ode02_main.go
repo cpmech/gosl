@@ -7,6 +7,7 @@
 package main
 
 import (
+	"testing"
 	"time"
 
 	"github.com/cpmech/gosl/chk"
@@ -20,9 +21,7 @@ import (
 func main() {
 
 	mpi.Start(false)
-	defer func() {
-		mpi.Stop(false)
-	}()
+	defer mpi.Stop(false)
 
 	if mpi.Rank() == 0 {
 		chk.PrintTitle("ode02: Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation")
@@ -84,6 +83,7 @@ func main() {
 
 	// allocate ODE object
 	var o ode.Solver
+	o.SaveXY = true
 	o.Distr = true
 	if numjac {
 		o.Init(method, ndim, fcn, nil, nil, nil)
@@ -106,6 +106,19 @@ func main() {
 		o.Solve(y, xa, xb, 0.05, fixstp)
 	} else {
 		o.Solve(y, xa, xb, xb-xa, fixstp)
+	}
+
+	// check
+	if mpi.Rank() == 0 {
+		tst := new(testing.T)
+		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2233)
+		chk.Int(tst, "number of J evaluations ", o.Njeval, 160)
+		chk.Int(tst, "total number of steps   ", o.Nsteps, 280)
+		chk.Int(tst, "number of accepted steps", o.Naccepted, 241)
+		chk.Int(tst, "number of rejected steps", o.Nrejected, 7)
+		chk.Int(tst, "number of decompositions", o.Ndecomp, 251)
+		chk.Int(tst, "number of lin solutions ", o.Nlinsol, 663)
+		chk.Int(tst, "max number of iterations", o.Nitmax, 6)
 	}
 
 	// plot

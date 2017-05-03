@@ -8,6 +8,7 @@ package main
 
 import (
 	"math"
+	"testing"
 	"time"
 
 	"github.com/cpmech/gosl/chk"
@@ -57,7 +58,7 @@ func main() {
 
 	// right-hand side of the amplifier problem
 	w := make([]float64, 8) // workspace
-	fcn := func(f []float64, dx, x float64, y []float64, args ...interface{}) error {
+	fcn := func(f []float64, dx, x float64, y []float64) error {
 		UET := UE * math.Sin(W*x)
 		FAC1 := BETA * (math.Exp((y[3]-y[2])/UF) - 1.0)
 		FAC2 := BETA * (math.Exp((y[6]-y[5])/UF) - 1.0)
@@ -80,7 +81,7 @@ func main() {
 	}
 
 	// Jacobian of the amplifier problem
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64, args ...interface{}) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
 		FAC14 := BETA * math.Exp((y[3]-y[2])/UF) / UF
 		FAC27 := BETA * math.Exp((y[6]-y[5])/UF) / UF
 		if dfdy.Max() == 0 {
@@ -139,52 +140,75 @@ func main() {
 	}
 
 	// flags
-	silent := false
 	fixstp := false
 	//method := "Dopri5"
 	method := "Radau5"
 	ndim := len(ya)
 	numjac := false
 
-	// structure to hold numerical results
-	res := ode.Results{Method: method}
-
 	// ODE solver
-	var osol ode.Solver
-	osol.Pll = true
+	var o ode.Solver
+	o.SaveXY = true
+	o.Pll = true
 
 	// solve problem
 	if numjac {
-		osol.Init(method, ndim, fcn, nil, &M, ode.SimpleOutput, silent)
+		o.Init(method, ndim, fcn, nil, &M, nil)
 	} else {
-		osol.Init(method, ndim, fcn, jac, &M, ode.SimpleOutput, silent)
+		o.Init(method, ndim, fcn, jac, &M, nil)
 	}
-	osol.IniH = 1.0e-6 // initial step size
+	o.IniH = 1.0e-6 // initial step size
 
 	// set tolerances
 	atol, rtol := 1e-11, 1e-5
-	osol.SetTol(atol, rtol)
+	o.SetTol(atol, rtol)
 
 	// run
 	t0 := time.Now()
 	if fixstp {
-		osol.Solve(ya, xa, xb, 0.01, fixstp, &res)
+		o.Solve(ya, xa, xb, 0.01, fixstp)
 	} else {
-		osol.Solve(ya, xa, xb, xb-xa, fixstp, &res)
+		o.Solve(ya, xa, xb, xb-xa, fixstp)
+	}
+
+	// check
+	if mpi.Rank() == 0 {
+		tst := new(testing.T)
+		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2609)
+		chk.Int(tst, "number of J evaluations ", o.Njeval, 215)
+		chk.Int(tst, "total number of steps   ", o.Nsteps, 278)
+		chk.Int(tst, "number of accepted steps", o.Naccepted, 221)
+		chk.Int(tst, "number of rejected steps", o.Nrejected, 18)
+		chk.Int(tst, "number of decompositions", o.Ndecomp, 276)
+		chk.Int(tst, "number of lin solutions ", o.Nlinsol, 795)
+		chk.Int(tst, "max number of iterations", o.Nitmax, 5)
 	}
 
 	// plot
 	if mpi.Rank() == 0 {
 		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
-		ode.Plot("/tmp/gosl/ode", "hwamplifier_mpi", &res, nil, xa, xb, func() {
-			_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
-			if err != nil {
-				chk.Panic("%v", err)
+		plt.Reset(true, &plt.A{WidthPt: 450, Dpi: 150, Prop: 1.8, FszXtck: 6, FszYtck: 6})
+		_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
+		if err != nil {
+			chk.Panic("%v", err)
+		}
+		s := o.IdxSave
+		for j := 0; j < ndim; j++ {
+			labelA, labelB := "", ""
+			if j == 4 {
+				labelA, labelB = "reference", "gosl"
 			}
-			for j := 0; j < ndim; j++ {
-				plt.Subplot(ndim+1, 1, j+1)
-				plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: "reference"})
-			}
-		})
+			plt.Subplot(ndim+1, 1, j+1)
+			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
+			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB})
+			plt.AxisXmax(0.05)
+			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
+		}
+		plt.Subplot(ndim+1, 1, ndim+1)
+		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
+		plt.SetYlog()
+		plt.AxisXmax(0.05)
+		plt.Gll("$x$", "$\\log{(h)}$", nil)
+		plt.Save("/tmp/gosl", "hwamplifier_mpi")
 	}
 }
