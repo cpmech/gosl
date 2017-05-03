@@ -22,7 +22,6 @@ func TestDiffusion1D(tst *testing.T) {
 	chk.PrintTitle("Test Diffusion 1D (cooling)")
 
 	// solution parameters
-	silent := false
 	fixstp := true
 	//fixstp := false
 	//method := "FwEuler"
@@ -172,8 +171,8 @@ func TestDiffusion1D(tst *testing.T) {
 	if !numjac {
 		Jfcn = jac
 	}
-	osol.Init(method, N, fcn, Jfcn, nil, out, silent)
-	//osol.Init(method, Nb, fcn, Jfcn, &M, out, silent)
+	osol.Init(method, N, fcn, Jfcn, nil, out)
+	//osol.Init(method, Nb, fcn, Jfcn, &M, out)
 	osol.SetTol(atol, rtol)
 
 	// constant Jacobian

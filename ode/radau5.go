@@ -87,7 +87,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 					o.mTri.Put(i, i, 1.0)
 				}
 			}
-			o.njeval += 1
+			o.Njeval += 1
 			o.jacIsOK = true
 		}
 
@@ -119,7 +119,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 		// perform factorisation
 		o.lsolR.Fact()
 		o.lsolC.Fact()
-		o.ndecomp += 1
+		o.Ndecomp += 1
 	}
 
 	// updated u[i]
@@ -150,8 +150,8 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 
 	// iterations
 	o.nit = 0
-	o.η = math.Pow(max(o.η, o.ϵ), 0.8)
-	o.θ = o.θmax
+	o.eta = math.Pow(max(o.eta, o.Eps), 0.8)
+	o.theta = o.ThetaMax
 	o.diverg = false
 	var Lδw, oLδw, thq, othq, iterr, itRerr, qnewt float64
 	var it int
@@ -159,8 +159,8 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 
 		// max iterations ?
 		o.nit = it + 1
-		if o.nit > o.nitmax {
-			o.nitmax = o.nit
+		if o.nit > o.Nitmax {
+			o.Nitmax = o.nit
 		}
 
 		// evaluate f(x,y) at (u[i],v[i]=y0+z[i])
@@ -168,7 +168,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 			for m := 0; m < o.ndim; m++ {
 				o.v[i][m] = y0[m] + o.z[i][m]
 			}
-			o.nfeval += 1
+			o.Nfeval += 1
 			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i], args...)
 			if err != nil {
 				return
@@ -195,7 +195,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 		}
 
 		// solve linear system
-		o.nlinsol += 1
+		o.Nlinsol += 1
 		var errR, errC error
 		if !o.Distr && o.Pll {
 			wg := new(sync.WaitGroup)
@@ -251,14 +251,14 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 		if it > 0 {
 			thq = Lδw / oLδw
 			if it == 1 {
-				o.θ = thq
+				o.theta = thq
 			} else {
-				o.θ = math.Sqrt(thq * othq)
+				o.theta = math.Sqrt(thq * othq)
 			}
 			othq = thq
-			if o.θ < 0.99 {
-				o.η = o.θ / (1.0 - o.θ)
-				iterr = Lδw * math.Pow(o.θ, float64(o.NmaxIt-o.nit)) / (1.0 - o.θ)
+			if o.theta < 0.99 {
+				o.eta = o.theta / (1.0 - o.theta)
+				iterr = Lδw * math.Pow(o.theta, float64(o.NmaxIt-o.nit)) / (1.0 - o.theta)
 				itRerr = iterr / o.fnewt
 				if itRerr >= 1.0 { // diverging
 					qnewt = max(1.0e-4, min(20.0, itRerr))
@@ -277,7 +277,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 		oLδw = Lδw
 
 		// converged
-		if o.η*Lδw < o.fnewt {
+		if o.eta*Lδw < o.fnewt {
 			break
 		}
 	}
@@ -334,7 +334,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr
 					for m := 0; m < o.ndim; m++ {
 						o.v[0][m] = y0[m] + o.lerr[m] // y0perr
 					}
-					o.nfeval += 1
+					o.Nfeval += 1
 					err = o.fcn(o.f[0], o.h, x0, o.v[0], args...) // f0perr
 					if err != nil {
 						return

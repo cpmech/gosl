@@ -38,7 +38,7 @@ func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Trip
 
 	// initialise ode
 	var o Solver
-	o.Init(method, ndim, fcn, jac, M, out, true)
+	o.Init(method, ndim, fcn, jac, M, out)
 	o.PredCtrl = true
 
 	// for python script
@@ -68,17 +68,17 @@ func WcAnalysis(dirout, fnkey, method string, fcn Cb_fcn, jac Cb_jac, M *la.Trip
 		var re RmsErr
 		o.Solve(y, xa, xb, xb-xa, false, &re)
 		re.value = math.Sqrt(re.value / float64(re.count))
-		io.Pf("tol = %e  =>  err = %e  =>  feval = %d\n", tol, re.value, o.nfeval)
+		io.Pf("tol = %e  =>  err = %e  =>  feval = %d\n", tol, re.value, o.Nfeval)
 
 		// python script
 		if i == len(tols)-1 {
 			io.Ff(&b0, "%g", tol)
 			io.Ff(&b1, "%g", re.value)
-			io.Ff(&b2, "%d", o.nfeval)
+			io.Ff(&b2, "%d", o.Nfeval)
 		} else {
 			io.Ff(&b0, "%g,", tol)
 			io.Ff(&b1, "%g,", re.value)
-			io.Ff(&b2, "%d,", o.nfeval)
+			io.Ff(&b2, "%d,", o.Nfeval)
 		}
 	}
 	io.Ff(&b0, "])\n")

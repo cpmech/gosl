@@ -34,7 +34,7 @@ func erk_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr floa
 		if i == 0 && o.erkdat.usefp && !o.first {
 			la.VecCopy(o.f[i], 1, o.f[o.nstg-1])
 		} else {
-			o.nfeval += 1
+			o.Nfeval += 1
 			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i], args...)
 			if err != nil {
 				return

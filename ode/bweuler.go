@@ -32,12 +32,12 @@ func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr 
 
 		// max iterations ?
 		o.nit = it + 1
-		if o.nit > o.nitmax {
-			o.nitmax = o.nit
+		if o.nit > o.Nitmax {
+			o.Nitmax = o.nit
 		}
 
 		// calculate f @ update y
-		o.nfeval += 1
+		o.Nfeval += 1
 		err = o.fcn(o.f[0], o.h, x, y, args...)
 		if err != nil {
 			return
@@ -69,7 +69,7 @@ func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr 
 
 		// Jacobian matrix
 		if o.doinit || !o.CteTg {
-			o.njeval += 1
+			o.Njeval += 1
 
 			// calculate Jacobian
 			if o.jac == nil { // numerical
@@ -100,12 +100,12 @@ func bweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr 
 			}
 
 			// perform factorisation
-			o.ndecomp += 1
+			o.Ndecomp += 1
 			o.lsolR.Fact()
 		}
 
 		// solve linear system
-		o.nlinsol += 1
+		o.Nlinsol += 1
 		o.lsolR.SolveR(o.δw[0], o.w[0], false) // δw := inv(rcmat) * residual
 
 		// update y

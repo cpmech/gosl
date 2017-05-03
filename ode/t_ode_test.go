@@ -23,7 +23,6 @@ func Test_ode01(tst *testing.T) {
 	chk.PrintTitle("ode01: Hairer-Wanner VII-p2 Eq.(1.1)")
 
 	lam := -50.0
-	silent := false
 	xa, xb := 0.0, 1.5
 	ya := []float64{0.0}
 	ndim := len(ya)
@@ -43,62 +42,92 @@ func Test_ode01(tst *testing.T) {
 		return nil
 	}
 
-	MAXN := 1000 // maximum number of points for output
-
-	out := func(first bool, dx, x float64, y []float64, args ...interface{}) error {
-		k := args[0].(*int)
-		X := args[1].(*[]float64)
-		Y := args[2].(*[]float64)
-		i := *k
-		if i >= MAXN-1 {
-			chk.Panic("cannot add more than %d points in slice", MAXN)
-		}
-		(*X)[i], (*Y)[i] = x, y[0]
-		*k = i + 1
-		return nil
-	}
-
 	// FwEuler
 	io.Pforan(". . . FwEuler . . . \n")
 	dx := 1.875 / 50.0
 	copy(y, ya)
-	k_FwEuler, X_FwEuler, Y_FwEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var FwEuler Solver
-	FwEuler.Init("FwEuler", ndim, fcn, jac, nil, out, silent)
-	FwEuler.Solve(y, xa, xb, dx, true, &k_FwEuler, &X_FwEuler, &Y_FwEuler)
+	FwEuler.Init("FwEuler", ndim, fcn, jac, nil, nil)
+	FwEuler.SaveXY = true
+	FwEuler.Solve(y, xa, xb, dx, true)
+	chk.Int(tst, "number of F evaluations ", FwEuler.Nfeval, 40)
+	chk.Int(tst, "number of J evaluations ", FwEuler.Njeval, 0)
+	chk.Int(tst, "total number of steps   ", FwEuler.Nsteps, 40)
+	chk.Int(tst, "number of accepted steps", FwEuler.Naccepted, 0)
+	chk.Int(tst, "number of rejected steps", FwEuler.Nrejected, 0)
+	chk.Int(tst, "number of decompositions", FwEuler.Ndecomp, 0)
+	chk.Int(tst, "number of lin solutions ", FwEuler.Nlinsol, 0)
+	chk.Int(tst, "max number of iterations", FwEuler.Nitmax, 0)
+	chk.Int(tst, "IdxSave", FwEuler.IdxSave, FwEuler.Nsteps+1)
 
 	// BwEuler
 	io.Pforan(". . . BwEuler . . . \n")
 	copy(y, ya)
-	k_BwEuler, X_BwEuler, Y_BwEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var BwEuler Solver
-	//BwEuler.Init("BwEuler", ndim, fcn, nil, nil, out, silent)
-	BwEuler.Init("BwEuler", ndim, fcn, jac, nil, out, silent)
-	BwEuler.Solve(y, xa, xb, dx, true, &k_BwEuler, &X_BwEuler, &Y_BwEuler)
+	//BwEuler.Init("BwEuler", ndim, fcn, nil, nil, out)
+	BwEuler.Init("BwEuler", ndim, fcn, jac, nil, nil)
+	BwEuler.SaveXY = true
+	BwEuler.Solve(y, xa, xb, dx, true)
+	chk.Int(tst, "number of F evaluations ", BwEuler.Nfeval, 80)
+	chk.Int(tst, "number of J evaluations ", BwEuler.Njeval, 40)
+	chk.Int(tst, "total number of steps   ", BwEuler.Nsteps, 40)
+	chk.Int(tst, "number of accepted steps", BwEuler.Naccepted, 0)
+	chk.Int(tst, "number of rejected steps", BwEuler.Nrejected, 0)
+	chk.Int(tst, "number of decompositions", BwEuler.Ndecomp, 40)
+	chk.Int(tst, "number of lin solutions ", BwEuler.Nlinsol, 40)
+	chk.Int(tst, "max number of iterations", BwEuler.Nitmax, 2)
+	chk.Int(tst, "IdxSave", BwEuler.IdxSave, BwEuler.Nsteps+1)
 
 	// MoEuler
 	io.Pforan(". . . MoEuler . . . \n")
 	copy(y, ya)
-	k_MoEuler, X_MoEuler, Y_MoEuler := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var MoEuler Solver
-	MoEuler.Init("MoEuler", ndim, fcn, jac, nil, out, silent)
-	MoEuler.Solve(y, xa, xb, xb-xa, false, &k_MoEuler, &X_MoEuler, &Y_MoEuler)
+	MoEuler.Init("MoEuler", ndim, fcn, jac, nil, nil)
+	MoEuler.SaveXY = true
+	MoEuler.Solve(y, xa, xb, xb-xa, false)
+	chk.Int(tst, "number of F evaluations ", MoEuler.Nfeval, 379)
+	chk.Int(tst, "number of J evaluations ", MoEuler.Njeval, 0)
+	chk.Int(tst, "total number of steps   ", MoEuler.Nsteps, 189)
+	chk.Int(tst, "number of accepted steps", MoEuler.Naccepted, 189)
+	chk.Int(tst, "number of rejected steps", MoEuler.Nrejected, 0)
+	chk.Int(tst, "number of decompositions", MoEuler.Ndecomp, 0)
+	chk.Int(tst, "number of lin solutions ", MoEuler.Nlinsol, 0)
+	chk.Int(tst, "max number of iterations", MoEuler.Nitmax, 0)
+	chk.Int(tst, "IdxSave", MoEuler.IdxSave, MoEuler.Naccepted+1)
 
 	// Dopri5
 	io.Pforan(". . . Dopri5 . . . \n")
 	copy(y, ya)
-	k_Dopri5, X_Dopri5, Y_Dopri5 := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var Dopri5 Solver
-	Dopri5.Init("Dopri5", ndim, fcn, jac, nil, out, silent)
-	Dopri5.Solve(y, xa, xb, xb-xa, false, &k_Dopri5, &X_Dopri5, &Y_Dopri5)
+	Dopri5.Init("Dopri5", ndim, fcn, jac, nil, nil)
+	Dopri5.SaveXY = true
+	Dopri5.Solve(y, xa, xb, xb-xa, false)
+	chk.Int(tst, "number of F evaluations ", Dopri5.Nfeval, 1132)
+	chk.Int(tst, "number of J evaluations ", Dopri5.Njeval, 0)
+	chk.Int(tst, "total number of steps   ", Dopri5.Nsteps, 172)
+	chk.Int(tst, "number of accepted steps", Dopri5.Naccepted, 99)
+	chk.Int(tst, "number of rejected steps", Dopri5.Nrejected, 73)
+	chk.Int(tst, "number of decompositions", Dopri5.Ndecomp, 0)
+	chk.Int(tst, "number of lin solutions ", Dopri5.Nlinsol, 0)
+	chk.Int(tst, "max number of iterations", Dopri5.Nitmax, 0)
+	chk.Int(tst, "IdxSave", Dopri5.IdxSave, Dopri5.Naccepted+1)
 
 	// Radau5
 	io.Pforan(". . . Radau5 . . . \n")
 	copy(y, ya)
-	k_Radau5, X_Radau5, Y_Radau5 := 0, make([]float64, MAXN), make([]float64, MAXN)
 	var Radau5 Solver
-	Radau5.Init("Radau5", ndim, fcn, jac, nil, out, silent)
-	Radau5.Solve(y, xa, xb, xb-xa, false, &k_Radau5, &X_Radau5, &Y_Radau5)
+	Radau5.Init("Radau5", ndim, fcn, jac, nil, nil)
+	Radau5.SaveXY = true
+	Radau5.Solve(y, xa, xb, xb-xa, false)
+	chk.Int(tst, "number of F evaluations ", Radau5.Nfeval, 66)
+	chk.Int(tst, "number of J evaluations ", Radau5.Njeval, 1)
+	chk.Int(tst, "total number of steps   ", Radau5.Nsteps, 15)
+	chk.Int(tst, "number of accepted steps", Radau5.Naccepted, 15)
+	chk.Int(tst, "number of rejected steps", Radau5.Nrejected, 0)
+	chk.Int(tst, "number of decompositions", Radau5.Ndecomp, 13)
+	chk.Int(tst, "number of lin solutions ", Radau5.Nlinsol, 17)
+	chk.Int(tst, "max number of iterations", Radau5.Nitmax, 2)
+	chk.Int(tst, "IdxSave", Radau5.IdxSave, Radau5.Naccepted+1)
 
 	if chk.Verbose {
 		X := utl.LinSpace(xa, xb, 101)
@@ -106,15 +135,16 @@ func Test_ode01(tst *testing.T) {
 		for i := 0; i < len(X); i++ {
 			Y[i] = -lam * (math.Sin(X[i]) - lam*math.Cos(X[i]) + lam*math.Exp(lam*X[i])) / (lam*lam + 1.0)
 		}
+		a, b, c, d, e := FwEuler.IdxSave, BwEuler.IdxSave, MoEuler.IdxSave, Dopri5.IdxSave, Radau5.IdxSave
 		plt.Reset(false, nil)
-		plt.Plot(X, Y, &plt.A{C: "y", Ls: "-", Lw: 6, L: "solution"})
-		plt.Plot(X_FwEuler[:k_FwEuler], Y_FwEuler[:k_FwEuler], &plt.A{C: "k", M: ".", Ls: ":", L: "FwEuler"})
-		plt.Plot(X_BwEuler[:k_BwEuler], Y_BwEuler[:k_BwEuler], &plt.A{C: "r", M: ".", Ls: ":", L: "BwEuler"})
-		plt.Plot(X_MoEuler[:k_MoEuler], Y_MoEuler[:k_MoEuler], &plt.A{C: "c", M: "+", Ls: ":", L: "MoEuler"})
-		plt.Plot(X_Dopri5[:k_Dopri5], Y_Dopri5[:k_Dopri5], &plt.A{C: "m", M: ".", Ls: "--", L: "Dopri5"})
-		plt.Plot(X_Radau5[:k_Radau5], Y_Radau5[:k_Radau5], &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5"})
+		plt.Plot(X, Y, &plt.A{C: "grey", Ls: "-", Lw: 10, L: "solution"})
+		plt.Plot(FwEuler.Xvalues[:a], FwEuler.Yvalues[0][:a], &plt.A{C: "k", M: ".", Ls: ":", L: "FwEuler"})
+		plt.Plot(BwEuler.Xvalues[:b], BwEuler.Yvalues[0][:b], &plt.A{C: "r", M: ".", Ls: ":", L: "BwEuler"})
+		plt.Plot(MoEuler.Xvalues[:c], MoEuler.Yvalues[0][:c], &plt.A{C: "c", M: "+", Ls: ":", L: "MoEuler"})
+		plt.Plot(Dopri5.Xvalues[:d], Dopri5.Yvalues[0][:d], &plt.A{C: "m", M: ".", Ls: "--", L: "Dopri5"})
+		plt.Plot(Radau5.Xvalues[:e], Radau5.Yvalues[0][:e], &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5"})
 		plt.Gll("$x$", "$y$", nil)
-		plt.Save("/tmp/gosl", "ode1")
+		plt.Save("/tmp/gosl/ode", "ode1")
 	}
 
 	// work/correctness analysis
@@ -147,7 +177,6 @@ func Test_ode02(tst *testing.T) {
 	}
 
 	// method and flags
-	silent := false
 	fixstp := false
 	//method := "Dopri5"
 	method := "Radau5"
@@ -162,9 +191,9 @@ func Test_ode02(tst *testing.T) {
 	// allocate ODE object
 	var o Solver
 	if numjac {
-		o.Init(method, ndim, fcn, nil, nil, SimpleOutput, silent)
+		o.Init(method, ndim, fcn, nil, nil, SimpleOutput)
 	} else {
-		o.Init(method, ndim, fcn, jac, nil, SimpleOutput, silent)
+		o.Init(method, ndim, fcn, jac, nil, SimpleOutput)
 	}
 
 	// tolerances and initial step size
@@ -183,6 +212,14 @@ func Test_ode02(tst *testing.T) {
 	} else {
 		o.Solve(y, xa, xb, xb-xa, fixstp, &res)
 	}
+	chk.Int(tst, "number of F evaluations ", o.Nfeval, 2233)
+	chk.Int(tst, "number of J evaluations ", o.Njeval, 160)
+	chk.Int(tst, "total number of steps   ", o.Nsteps, 280)
+	chk.Int(tst, "number of accepted steps", o.Naccepted, 241)
+	chk.Int(tst, "number of rejected steps", o.Nrejected, 7)
+	chk.Int(tst, "number of decompositions", o.Ndecomp, 251)
+	chk.Int(tst, "number of lin solutions ", o.Nlinsol, 663)
+	chk.Int(tst, "max number of iterations", o.Nitmax, 6)
 	io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 
 	// plot
@@ -231,7 +268,6 @@ func Test_ode03(tst *testing.T) {
 	}
 
 	// data
-	silent := false
 	fixstp := false
 	//method := "Dopri5"
 	method := "Radau5"
@@ -244,7 +280,7 @@ func Test_ode03(tst *testing.T) {
 
 	// allocate ODE object
 	var o Solver
-	o.Init(method, ndim, fcn, jac, nil, SimpleOutput, silent)
+	o.Init(method, ndim, fcn, jac, nil, SimpleOutput)
 
 	// tolerances and initial step size
 	rtol := 1e-2
@@ -260,6 +296,14 @@ func Test_ode03(tst *testing.T) {
 	} else {
 		o.Solve(y, xa, xb, xb-xa, fixstp, &res)
 	}
+	chk.Int(tst, "number of F evaluations ", o.Nfeval, 87)
+	chk.Int(tst, "number of J evaluations ", o.Njeval, 8)
+	chk.Int(tst, "total number of steps   ", o.Nsteps, 17)
+	chk.Int(tst, "number of accepted steps", o.Naccepted, 15)
+	chk.Int(tst, "number of rejected steps", o.Nrejected, 1)
+	chk.Int(tst, "number of decompositions", o.Ndecomp, 15)
+	chk.Int(tst, "number of lin solutions ", o.Nlinsol, 24)
+	chk.Int(tst, "max number of iterations", o.Nitmax, 2)
 
 	// plot
 	if chk.Verbose {
@@ -373,7 +417,6 @@ func Test_ode04(tst *testing.T) {
 	M.Put(1+7-NU, 7, -c1)
 
 	// flags
-	silent := false
 	fixstp := false
 	//method := "Dopri5"
 	method := "Radau5"
@@ -384,27 +427,35 @@ func Test_ode04(tst *testing.T) {
 	res := Results{Method: method}
 
 	// ODE solver
-	var osol Solver
-	osol.Pll = true
+	var o Solver
+	o.Pll = true
 
 	if numjac {
-		osol.Init(method, ndim, fcn, nil, &M, SimpleOutput, silent)
+		o.Init(method, ndim, fcn, nil, &M, SimpleOutput)
 	} else {
-		osol.Init(method, ndim, fcn, jac, &M, SimpleOutput, silent)
+		o.Init(method, ndim, fcn, jac, &M, SimpleOutput)
 	}
-	osol.IniH = 1.0e-6 // initial step size
+	o.IniH = 1.0e-6 // initial step size
 
 	// set tolerances
 	atol, rtol := 1e-11, 1e-5
-	osol.SetTol(atol, rtol)
+	o.SetTol(atol, rtol)
 
 	// run
 	t0 := time.Now()
 	if fixstp {
-		osol.Solve(ya, xa, xb, 0.01, fixstp, &res)
+		o.Solve(ya, xa, xb, 0.01, fixstp, &res)
 	} else {
-		osol.Solve(ya, xa, xb, xb-xa, fixstp, &res)
+		o.Solve(ya, xa, xb, xb-xa, fixstp, &res)
 	}
+	chk.Int(tst, "number of F evaluations ", o.Nfeval, 2599)
+	chk.Int(tst, "number of J evaluations ", o.Njeval, 216)
+	chk.Int(tst, "total number of steps   ", o.Nsteps, 275)
+	chk.Int(tst, "number of accepted steps", o.Naccepted, 219)
+	chk.Int(tst, "number of rejected steps", o.Nrejected, 20)
+	chk.Int(tst, "number of decompositions", o.Ndecomp, 274)
+	chk.Int(tst, "number of lin solutions ", o.Nlinsol, 792)
+	chk.Int(tst, "max number of iterations", o.Nitmax, 6)
 	io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 
 	// plot

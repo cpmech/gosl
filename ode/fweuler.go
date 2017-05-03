@@ -9,7 +9,7 @@ func fweuler_accept(o *Solver, y []float64) {
 
 // forward-Euler
 func fweuler_step(o *Solver, y []float64, x float64, args ...interface{}) (rerr float64, err error) {
-	o.nfeval += 1
+	o.Nfeval += 1
 	err = o.fcn(o.f[0], o.h, x, y, args...)
 	if err != nil {
 		return

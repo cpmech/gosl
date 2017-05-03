@@ -7,7 +7,6 @@
 package ode
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/cpmech/gosl/chk"
@@ -27,33 +26,40 @@ type Solver struct {
 	nstg   int     // number of stages
 
 	// primary variables
-	ndim       int          // size of y
-	fcn        Cb_fcn       // dydx := f(x,y)
-	jac        Cb_jac       // Jacobian: dfdy
-	out        Cb_out       // output function
-	hasM       bool         // has M matrix
-	mTri       *la.Triplet  // M matrix in Triplet form
-	mMat       *la.CCMatrix // M matrix
-	silent     bool         // silent mode
-	ZeroTrial  bool         // always start iterations with zero trial values (instead of collocation interpolation)
-	Atol       float64      // absolute tolerance
-	Rtol       float64      // relative tolerance
-	IniH       float64      // initial H
-	NmaxIt     int          // max num iterations (allowed)
-	NmaxSS     int          // max num substeps
-	Mmin       float64      // min step multiplier
-	Mmax       float64      // max step multiplier
-	Mfac       float64      // step multiplier factor
-	PredCtrl   bool         // use Gustafsson's predictive controller
-	ϵ          float64      // smallest number satisfying 1.0 + ϵ > 1.0
-	θmax       float64      // max theta to decide whether the Jacobian should be recomputed or not
-	C1h        float64      // c1 of HW-VII p124 => min ratio to retain previous h
-	C2h        float64      // c2 of HW-VII p124 => max ratio to retain previous h
-	LerrStrat  int          // strategy to select local error computation method
-	Pll        bool         // parallel (threaded) execution
-	CteTg      bool         // use constant tangent (Jacobian) in BwEuler
-	UseRmsNorm bool         // use RMS norm instead of Euclidian in BwEuler
-	Verbose    bool         // be more verbose, e.g. during iterations
+	ndim int          // size of y
+	fcn  Cb_fcn       // dydx := f(x,y)
+	jac  Cb_jac       // Jacobian: dfdy
+	out  Cb_out       // output function
+	hasM bool         // has M matrix
+	mTri *la.Triplet  // M matrix in Triplet form
+	mMat *la.CCMatrix // M matrix
+
+	// flags
+	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
+	Atol       float64 // absolute tolerance
+	Rtol       float64 // relative tolerance
+	IniH       float64 // initial H
+	NmaxIt     int     // max num iterations (allowed)
+	NmaxSS     int     // max num substeps
+	Mmin       float64 // min step multiplier
+	Mmax       float64 // max step multiplier
+	Mfac       float64 // step multiplier factor
+	PredCtrl   bool    // use Gustafsson's predictive controller
+	Eps        float64 // smallest number satisfying 1.0 + ϵ > 1.0
+	ThetaMax   float64 // max theta to decide whether the Jacobian should be recomputed or not
+	C1h        float64 // c1 of HW-VII p124 => min ratio to retain previous h
+	C2h        float64 // c2 of HW-VII p124 => max ratio to retain previous h
+	LerrStrat  int     // strategy to select local error computation method
+	Pll        bool    // parallel (threaded) execution
+	CteTg      bool    // use constant tangent (Jacobian) in BwEuler
+	UseRmsNorm bool    // use RMS norm instead of Euclidian in BwEuler
+	Verbose    bool    // be more verbose, e.g. during iterations
+	SaveXY     bool    // save X values in an array (e.g. for plotting)
+
+	// output
+	IdxSave int         // current index in Xvalues and Yvalues == last output
+	Xvalues []float64   // X values if SaveXY is true [idxOutput]
+	Yvalues [][]float64 // Y values if SaveXY is true [ndim][idxOutput]
 
 	// derived variables
 	Distr bool    // MPI distributed execution. automatically set ON in Init if mpi is on and there are more then one processor.
@@ -61,14 +67,14 @@ type Solver struct {
 	fnewt float64 // Newton's iterations tolerance
 
 	// stat variables
-	nfeval    int // number of calls to fcn
-	njeval    int // number of Jacobian matrix evaluations
-	nsteps    int // total number of substeps
-	naccepted int // number of accepted substeps
-	nrejected int // number of rejected substeps
-	ndecomp   int // number of matrix decompositions
-	nlinsol   int // number of calls to linsolver
-	nitmax    int // number max of iterations
+	Nfeval    int // number of calls to fcn
+	Njeval    int // number of Jacobian matrix evaluations
+	Nsteps    int // total number of substeps
+	Naccepted int // number of accepted substeps
+	Nrejected int // number of rejected substeps
+	Ndecomp   int // number of matrix decompositions
+	Nlinsol   int // number of calls to linsolver
+	Nitmax    int // number max of iterations
 
 	// control variables
 	doinit    bool    // flag indicating 'do initialisation' within step function
@@ -77,13 +83,13 @@ type Solver struct {
 	reject    bool    // reject step
 	diverg    bool    // flag diverging step
 	dvfac     float64 // dv factor
-	η         float64 // eta tolerance
+	eta       float64 // eta tolerance
 	jacIsOK   bool    // Jacobian is OK
 	reuseJdec bool    // reuse current Jacobian and current decomposition
 	reuseJ    bool    // reuse last Jacobian (only)
 	nit       int     // current number of iterations
 	hopt      float64 // optimal h after successful substepping
-	θ         float64 // theta variable
+	theta     float64 // theta variable
 
 	// step variables
 	h, hprev float64   // step-size and previous step-size
@@ -114,7 +120,7 @@ type Solver struct {
 }
 
 // Init initialises ODE structure with default values and allocate slices
-func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, out Cb_out, silent bool) {
+func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, out Cb_out) {
 
 	// primary variables
 	o.method = method
@@ -122,7 +128,6 @@ func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Tri
 	o.fcn = fcn
 	o.jac = jac
 	o.out = out
-	o.silent = silent
 	o.ZeroTrial = false
 	o.Atol = 1.0e-4
 	o.Rtol = 1.0e-4
@@ -133,8 +138,8 @@ func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Tri
 	o.Mmax = 5.0
 	o.Mfac = 0.9
 	o.PredCtrl = true
-	o.ϵ = 1.0e-16
-	o.θmax = 1.0e-3
+	o.Eps = 1.0e-16
+	o.ThetaMax = 1.0e-3
 	o.C1h = 1.0
 	o.C2h = 1.2
 	o.LerrStrat = 3
@@ -229,7 +234,7 @@ func (o *Solver) SetTol(atol, rtol float64) {
 	o.Atol, o.Rtol = atol, rtol
 	// check and change the tolerances
 	β := 2.0 / 3.0
-	if o.Atol <= 0.0 || o.Rtol <= 10.0*o.ϵ {
+	if o.Atol <= 0.0 || o.Rtol <= 10.0*o.Eps {
 		chk.Panic(_ode_err4, o.Atol, o.Rtol)
 	} else {
 		quot := o.Atol / o.Rtol
@@ -248,7 +253,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 	}
 
 	// derived variables
-	o.fnewt = max(10.0*o.ϵ/o.Rtol, min(0.03, math.Sqrt(o.Rtol)))
+	o.fnewt = max(10.0*o.Eps/o.Rtol, min(0.03, math.Sqrt(o.Rtol)))
 
 	// initial step size
 	Δx = min(Δx, xb-x)
@@ -264,15 +269,27 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 		o.out(true, o.h, x, y, args...)
 	}
 
+	// save X
+	o.IdxSave = 0
+	if o.SaveXY {
+		o.Xvalues = make([]float64, o.NmaxSS+1)
+		o.Yvalues = la.MatAlloc(o.ndim, o.NmaxSS+1)
+		o.Xvalues[o.IdxSave] = x
+		for i := 0; i < o.ndim; i++ {
+			o.Yvalues[i][o.IdxSave] = y[i]
+		}
+		o.IdxSave++
+	}
+
 	// stat variables
-	o.nfeval = 0
-	o.njeval = 0
-	o.nsteps = 0
-	o.naccepted = 0
-	o.nrejected = 0
-	o.ndecomp = 0
-	o.nlinsol = 0
-	o.nitmax = 0
+	o.Nfeval = 0
+	o.Njeval = 0
+	o.Nsteps = 0
+	o.Naccepted = 0
+	o.Nrejected = 0
+	o.Ndecomp = 0
+	o.Nlinsol = 0
+	o.Nitmax = 0
 
 	// control variables
 	o.doinit = true
@@ -281,13 +298,13 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 	o.reject = false
 	o.diverg = false
 	o.dvfac = 0
-	o.η = 1.0
+	o.eta = 1.0
 	o.jacIsOK = false
 	o.reuseJdec = false
 	o.reuseJ = false
 	o.nit = 0
 	o.hopt = o.h
-	o.θ = o.θmax
+	o.theta = o.ThetaMax
 
 	// local error indicator
 	var rerr float64
@@ -304,9 +321,6 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 	defer func() {
 		o.lsolR.Free()
 		o.lsolC.Free()
-		if !o.silent {
-			o.Stat()
-		}
 	}()
 
 	// first scaling variable
@@ -322,7 +336,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 			//if x + o.h > xb { o.h = xb - x }
 			if o.jac == nil { // numerical Jacobian
 				if o.method == "Radau5" {
-					o.nfeval += 1
+					o.Nfeval += 1
 					o.fcn(o.f0, o.h, x, y, args...)
 				}
 			}
@@ -330,7 +344,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 			o.reuseJ = false
 			o.jacIsOK = false
 			o.step(o, y, x, args...)
-			o.nsteps += 1
+			o.Nsteps += 1
 			o.doinit = false
 			o.first = false
 			o.hprev = o.h
@@ -338,6 +352,15 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 			o.accept(o, y)
 			if o.out != nil {
 				o.out(false, o.h, x, y, args...)
+			}
+			if o.SaveXY {
+				if o.IdxSave < o.NmaxSS {
+					o.Xvalues[o.IdxSave] = x
+					for i := 0; i < o.ndim; i++ {
+						o.Yvalues[i][o.IdxSave] = y[i]
+					}
+					o.IdxSave++
+				}
 			}
 			if o.Verbose {
 				io.Pfgreen("x = %v\n", x)
@@ -347,7 +370,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 	}
 
 	// first function evaluation
-	o.nfeval += 1
+	o.Nfeval += 1
 	o.fcn(o.f0, o.h, x, y, args...) // o.f0 := f(x,y)
 
 	// time loop
@@ -360,7 +383,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 		for iss := 0; iss < o.NmaxSS+1; iss++ {
 
 			// total number of substeps
-			o.nsteps += 1
+			o.Nsteps += 1
 
 			// error: did not converge
 			if iss == o.NmaxSS {
@@ -397,7 +420,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 			if rerr < 1.0 {
 
 				// set flags
-				o.naccepted += 1
+				o.Naccepted += 1
 				o.first = false
 				o.jacIsOK = false
 
@@ -411,6 +434,15 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 					o.out(false, o.h, x, y, args...)
 				}
 
+				// save X value
+				if o.SaveXY {
+					o.Xvalues[o.IdxSave] = x
+					for i := 0; i < o.ndim; i++ {
+						o.Yvalues[i][o.IdxSave] = y[i]
+					}
+					o.IdxSave++
+				}
+
 				// converged ?
 				if o.last {
 					o.hopt = o.h // optimal h
@@ -419,7 +451,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 
 				// predictive controller of Gustafsson
 				if o.PredCtrl {
-					if o.naccepted > 1 {
+					if o.Naccepted > 1 {
 						facgus = (old_h / o.h) * math.Pow(math.Pow(rerr, 2.0)/old_rerr, 0.25) / o.Mfac
 						facgus = max(o.Mmin, min(o.Mmax, facgus))
 						div = max(div, facgus)
@@ -431,7 +463,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 
 				// calc new scal and f0
 				la.VecScaleAbs(o.scal, o.Atol, o.Rtol, y) // o.scal := o.Atol + o.Rtol * abs(y)
-				o.nfeval += 1
+				o.Nfeval += 1
 				o.fcn(o.f0, o.h, x, y, args...) // o.f0 := f(x,y)
 
 				// new step size
@@ -450,7 +482,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 					o.h = xstep - x
 				} else {
 					dxratio = dxnew / o.h
-					o.reuseJdec = (o.θ <= o.θmax && dxratio >= o.C1h && dxratio <= o.C2h)
+					o.reuseJdec = (o.theta <= o.ThetaMax && dxratio >= o.C1h && dxratio <= o.C2h)
 					if !o.reuseJdec {
 						o.h = dxnew
 					}
@@ -458,14 +490,14 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 
 				// check θ to decide if at least the Jacobian can be reused
 				if !o.reuseJdec {
-					o.reuseJ = (o.θ <= o.θmax)
+					o.reuseJ = (o.theta <= o.ThetaMax)
 				}
 
 				// rejected
 			} else {
 				// set flags
-				if o.naccepted > 0 {
-					o.nrejected += 1
+				if o.Naccepted > 0 {
+					o.Nrejected += 1
 				}
 				o.reject = true
 				o.last = false
@@ -494,29 +526,14 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool, args ...int
 }
 
 func (o *Solver) Stat() {
-	if !o.root {
-		return
-	}
-	io.Pf("number of F evaluations   =%6d\n", o.nfeval)
-	io.Pf("number of J evaluations   =%6d\n", o.njeval)
-	io.Pf("total number of steps     =%6d\n", o.nsteps)
-	io.Pf("number of accepted steps  =%6d\n", o.naccepted)
-	io.Pf("number of rejected steps  =%6d\n", o.nrejected)
-	io.Pf("number of decompositions  =%6d\n", o.ndecomp)
-	io.Pf("number of lin solutions   =%6d\n", o.nlinsol)
-	io.Pf("max number of iterations  =%6d\n", o.nitmax)
-}
-
-func (o *Solver) GetStat() (s string) {
-	s = fmt.Sprintf("number of F evaluations   =%6d\n", o.nfeval)
-	s += fmt.Sprintf("number of J evaluations   =%6d\n", o.njeval)
-	s += fmt.Sprintf("total number of steps     =%6d\n", o.nsteps)
-	s += fmt.Sprintf("number of accepted steps  =%6d\n", o.naccepted)
-	s += fmt.Sprintf("number of rejected steps  =%6d\n", o.nrejected)
-	s += fmt.Sprintf("number of decompositions  =%6d\n", o.ndecomp)
-	s += fmt.Sprintf("number of lin solutions   =%6d\n", o.nlinsol)
-	s += fmt.Sprintf("max number of iterations  =%6d\n", o.nitmax)
-	return
+	io.Pf("number of F evaluations   =%6d\n", o.Nfeval)
+	io.Pf("number of J evaluations   =%6d\n", o.Njeval)
+	io.Pf("total number of steps     =%6d\n", o.Nsteps)
+	io.Pf("number of accepted steps  =%6d\n", o.Naccepted)
+	io.Pf("number of rejected steps  =%6d\n", o.Nrejected)
+	io.Pf("number of decompositions  =%6d\n", o.Ndecomp)
+	io.Pf("number of lin solutions   =%6d\n", o.Nlinsol)
+	io.Pf("max number of iterations  =%6d\n", o.Nitmax)
 }
 
 // auxiliary functions
