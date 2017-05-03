@@ -99,6 +99,33 @@ func VecApplyFunc(v []float64, f func(i int, x float64) float64) {
 	}
 }
 
+// VecGetMapped returns a new vector after applying a function over all of its components
+//  new: vi = f(i)
+func VecGetMapped(dim int, f func(i int) float64) (v []float64) {
+	v = make([]float64, dim)
+	if Pll {
+		ncpu := imin(len(v), NCPU)
+		ch := make(chan int, ncpu)
+		for icpu := 0; icpu < ncpu; icpu++ {
+			start, endp1 := (icpu*len(v))/ncpu, ((icpu+1)*len(v))/ncpu
+			go func() {
+				for i := start; i < endp1; i++ {
+					v[i] = f(i)
+				}
+				ch <- 1
+			}()
+		}
+		for icpu := 0; icpu < ncpu; icpu++ {
+			<-ch
+		}
+	} else {
+		for i := 0; i < len(v); i++ {
+			v[i] = f(i)
+		}
+	}
+	return
+}
+
 // VecClone allocates a clone of a vector
 //  b := a
 func VecClone(a []float64) (b []float64) {

@@ -35,6 +35,11 @@ func TestVector01(tst *testing.T) {
 	PrintVec("vf", vf, "%5g", false)
 	chk.Vector(tst, "vf", 1e-17, vf, []float64{42, 42, 225})
 
+	io.Pfyel("func VecGetMapped(v []float64, f func(i int) float64) (v []float64)\n")
+	vg := VecGetMapped(3, func(i int) float64 { return float64(i + 1) })
+	PrintVec("vg", vg, "%5g", false)
+	chk.Vector(tst, "vg", 1e-17, vg, []float64{1, 2, 3})
+
 	io.Pfyel("func VecClone(a []float64) (b []float64)\n")
 	va := []float64{1, 2, 3, 4, 5, 6}
 	vb := VecClone(va)
