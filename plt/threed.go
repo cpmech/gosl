@@ -23,7 +23,7 @@ func SetLabels3d(x, y, z string, args *A) {
 
 // AxisRange3d sets x, y, and z ranges (i.e. limits)
 func AxisRange3d(xmin, xmax, ymin, ymax, zmin, zmax float64) {
-	io.Ff(&bufferPy, "plt.gca().set_xlim3d(%g,%g)\ngca().set_ylim3d(%g,%g)\ngca().set_zlim3d(%g,%g)\n", xmin, xmax, ymin, ymax, zmin, zmax)
+	io.Ff(&bufferPy, "plt.gca().set_xlim3d(%g,%g)\nplt.gca().set_ylim3d(%g,%g)\nplt.gca().set_zlim3d(%g,%g)\n", xmin, xmax, ymin, ymax, zmin, zmax)
 }
 
 // Plot3dLine plots 3d line
