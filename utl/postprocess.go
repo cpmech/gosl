@@ -4,9 +4,7 @@
 
 package utl
 
-import (
-	"math"
-)
+import "math"
 
 // GetITout returns indices and output times
 //  Input:
@@ -40,6 +38,27 @@ func GetITout(all_output_times, time_stations_out []float64, tol float64) (I []i
 				break           // skip this 't' and try the next one
 			}
 		}
+	}
+	return
+}
+
+// GetStrides returns nReq indices from 0 (inclusive) to nTotal (inclusive)
+//   Input:
+//     nTotal -- total number of intices
+//     nReq -- required indices
+//   Example:
+//     GetStrides(2001, 5) => [0 400 800 1200 1600 2000 2001]
+func GetStrides(nTotal, nReq int) (I []int) {
+	if nReq > nTotal {
+		nReq = nTotal
+	}
+	lt := nTotal / nReq
+	if lt < 1 {
+		lt = 1
+	}
+	I = IntRange3(0, nTotal, lt)
+	if I[len(I)-1] != nTotal {
+		I = append(I, nTotal)
 	}
 	return
 }
