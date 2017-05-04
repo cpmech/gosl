@@ -939,7 +939,7 @@ GetSorted returns a sorted (increasing) copy of &#39;A&#39;
 		
 			
 			
-			<h2 id="GetStrides">func <a href="https://github.com/cpmech/gosl/blob/master/utl/postprocess.go?s=2044:2087#L41">GetStrides</a></h2>
+			<h2 id="GetStrides">func <a href="https://github.com/cpmech/gosl/blob/master/utl/postprocess.go?s=2121:2164#L44">GetStrides</a></h2>
 			<pre>func GetStrides(nTotal, nReq <a href="/pkg/builtin/#int">int</a>) (I []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 GetStrides returns nReq indices from 0 (inclusive) to nTotal (inclusive)
@@ -949,6 +949,8 @@ GetStrides returns nReq indices from 0 (inclusive) to nTotal (inclusive)
   nReq -- required indices
 Example:
   GetStrides(2001, 5) =&gt; [0 400 800 1200 1600 2000 2001]
+
+NOTE: GetStrides will always include nTotal as the last item in I
 </pre>
 
 			

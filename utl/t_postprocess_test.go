@@ -38,10 +38,12 @@ func Test_postp02(tst *testing.T) {
 	nTotal := 2000
 	nRequired := 5
 	I := GetStrides(nTotal, nRequired)
+	io.Pf("I = %v\n", I)
 	chk.Ints(tst, "I", I, []int{0, 400, 800, 1200, 1600, 2000})
 
 	nTotal = 2001
 	nRequired = 5
 	I = GetStrides(nTotal, nRequired)
+	io.Pf("I = %v\n", I)
 	chk.Ints(tst, "I", I, []int{0, 400, 800, 1200, 1600, 2001})
 }

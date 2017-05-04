@@ -48,6 +48,9 @@ func GetITout(all_output_times, time_stations_out []float64, tol float64) (I []i
 //     nReq -- required indices
 //   Example:
 //     GetStrides(2001, 5) => [0 400 800 1200 1600 2000 2001]
+//
+//   NOTE: GetStrides will always include nTotal as the last item in I
+//
 func GetStrides(nTotal, nReq int) (I []int) {
 	if nReq > nTotal {
 		nReq = nTotal
