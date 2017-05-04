@@ -198,6 +198,9 @@ plt contains functions for plotting, drawing in 2D or 3D, and generationg PNG an
 				<dd><a href="#HideBorders">func HideBorders(args *A)</a></dd>
 			
 				
+				<dd><a href="#HideTRborders">func HideTRborders()</a></dd>
+			
+				
 				<dd><a href="#Hist">func Hist(x [][]float64, labels []string, args *A)</a></dd>
 			
 				
@@ -434,7 +437,7 @@ default directory and temporary file name for python commands
 		
 			
 			
-			<h2 id="Annotate">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9137:9185#L251">Annotate</a></h2>
+			<h2 id="Annotate">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9300:9348#L256">Annotate</a></h2>
 			<pre>func Annotate(x, y <a href="/pkg/builtin/#float64">float64</a>, txt <a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Annotate adds annotation to plot
@@ -446,7 +449,7 @@ Annotate adds annotation to plot
 		
 			
 			
-			<h2 id="AnnotateXlabels">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9347:9399#L257">AnnotateXlabels</a></h2>
+			<h2 id="AnnotateXlabels">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9510:9562#L262">AnnotateXlabels</a></h2>
 			<pre>func AnnotateXlabels(x <a href="/pkg/builtin/#float64">float64</a>, txt <a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 AnnotateXlabels sets text of xlabels
@@ -512,7 +515,7 @@ AutoScale rescales plot area
 		
 			
 			
-			<h2 id="AxDist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=3135:3160#L93">AxDist</a></h2>
+			<h2 id="AxDist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=3143:3168#L93">AxDist</a></h2>
 			<pre>func AxDist(dist <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxDist sets distance in 3d graph. e.g. to avoid clipping due to tight bbox
@@ -548,7 +551,7 @@ AxVline adds vertical line to axis
 		
 			
 			
-			<h2 id="AxisLims">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13008:13037#L388">AxisLims</a></h2>
+			<h2 id="AxisLims">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13171:13200#L393">AxisLims</a></h2>
 			<pre>func AxisLims(lims []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxisLims sets x and y limits
@@ -560,7 +563,7 @@ AxisLims sets x and y limits
 		
 			
 			
-			<h2 id="AxisOff">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11664:11678#L343">AxisOff</a></h2>
+			<h2 id="AxisOff">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11827:11841#L348">AxisOff</a></h2>
 			<pre>func AxisOff()</pre>
 			<p>
 AxisOff hides axes
@@ -572,7 +575,7 @@ AxisOff hides axes
 		
 			
 			
-			<h2 id="AxisRange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12850:12896#L383">AxisRange</a></h2>
+			<h2 id="AxisRange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13013:13059#L388">AxisRange</a></h2>
 			<pre>func AxisRange(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxisRange sets x and y ranges (i.e. limits)
@@ -596,7 +599,7 @@ AxisRange3d sets x, y, and z ranges (i.e. limits)
 		
 			
 			
-			<h2 id="AxisXmax">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12051:12078#L358">AxisXmax</a></h2>
+			<h2 id="AxisXmax">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12214:12241#L363">AxisXmax</a></h2>
 			<pre>func AxisXmax(xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxisXmax sets maximum x
@@ -608,7 +611,7 @@ AxisXmax sets maximum x
 		
 			
 			
-			<h2 id="AxisXmin">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11902:11929#L353">AxisXmin</a></h2>
+			<h2 id="AxisXmin">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12065:12092#L358">AxisXmin</a></h2>
 			<pre>func AxisXmin(xmin <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxisXmin sets minimum x
@@ -620,7 +623,7 @@ AxisXmin sets minimum x
 		
 			
 			
-			<h2 id="AxisXrange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12512:12547#L373">AxisXrange</a></h2>
+			<h2 id="AxisXrange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12675:12710#L378">AxisXrange</a></h2>
 			<pre>func AxisXrange(xmin, xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxisXrange sets x-range (i.e. limits)
@@ -632,7 +635,7 @@ AxisXrange sets x-range (i.e. limits)
 		
 			
 			
-			<h2 id="AxisYmax">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12349:12376#L368">AxisYmax</a></h2>
+			<h2 id="AxisYmax">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12512:12539#L373">AxisYmax</a></h2>
 			<pre>func AxisYmax(ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxisYmax sets maximum y
@@ -644,7 +647,7 @@ AxisYmax sets maximum y
 		
 			
 			
-			<h2 id="AxisYmin">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12200:12227#L363">AxisYmin</a></h2>
+			<h2 id="AxisYmin">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12363:12390#L368">AxisYmin</a></h2>
 			<pre>func AxisYmin(ymin <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxisYmin sets minimum y
@@ -656,7 +659,7 @@ AxisYmin sets minimum y
 		
 			
 			
-			<h2 id="AxisYrange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12678:12713#L378">AxisYrange</a></h2>
+			<h2 id="AxisYrange">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=12841:12876#L383">AxisYrange</a></h2>
 			<pre>func AxisYrange(ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 AxisYrange sets y-range (i.e. limits)
@@ -668,7 +671,7 @@ AxisYrange sets y-range (i.e. limits)
 		
 			
 			
-			<h2 id="CalcDiagAngle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=14458:14508#L456">CalcDiagAngle</a></h2>
+			<h2 id="CalcDiagAngle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=14466:14516#L456">CalcDiagAngle</a></h2>
 			<pre>func CalcDiagAngle(p []<a href="/pkg/builtin/#float64">float64</a>) (alphaRad <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CalcDiagAngle computes the angle between a point and the diagonal of the 3d space
@@ -683,7 +686,7 @@ returns the angle in radians
 		
 			
 			
-			<h2 id="Camera">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=2888:2928#L87">Camera</a></h2>
+			<h2 id="Camera">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=2896:2936#L87">Camera</a></h2>
 			<pre>func Camera(elev, azim <a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Camera sets camera in 3d graph. Sets the elevation and azimuth of the axes.
@@ -710,7 +713,7 @@ Circle adds circle to plot
 		
 			
 			
-			<h2 id="Clf">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=19505:19515#L585">Clf</a></h2>
+			<h2 id="Clf">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=19668:19678#L590">Clf</a></h2>
 			<pre>func Clf()</pre>
 			<p>
 Clf clears current figure
@@ -722,7 +725,7 @@ Clf clears current figure
 		
 			
 			
-			<h2 id="ConeDiag">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=13403:13506#L424">ConeDiag</a></h2>
+			<h2 id="ConeDiag">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=13411:13514#L424">ConeDiag</a></h2>
 			<pre>func ConeDiag(c []<a href="/pkg/builtin/#float64">float64</a>, alphaDeg <a href="/pkg/builtin/#float64">float64</a>, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ConeDiag draws cone parallel to the diagonal of the 3d space
@@ -743,7 +746,7 @@ ConeDiag draws cone parallel to the diagonal of the 3d space
 		
 			
 			
-			<h2 id="ConeZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=12289:12389#L391">ConeZ</a></h2>
+			<h2 id="ConeZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=12297:12397#L391">ConeZ</a></h2>
 			<pre>func ConeZ(c []<a href="/pkg/builtin/#float64">float64</a>, alphaDeg <a href="/pkg/builtin/#float64">float64</a>, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 ConeZ draws cone aligned with the z axis
@@ -764,7 +767,7 @@ ConeZ draws cone aligned with the z axis
 		
 			
 			
-			<h2 id="ContourF">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=14665:14708#L449">ContourF</a></h2>
+			<h2 id="ContourF">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=14828:14871#L454">ContourF</a></h2>
 			<pre>func ContourF(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 ContourF draws filled contour and possibly with a contour of lines (if args.UnoLines=false)
@@ -776,7 +779,7 @@ ContourF draws filled contour and possibly with a contour of lines (if args.UnoL
 		
 			
 			
-			<h2 id="ContourL">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=15699:15742#L477">ContourL</a></h2>
+			<h2 id="ContourL">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=15862:15905#L482">ContourL</a></h2>
 			<pre>func ContourL(x, y, z [][]<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 ContourL draws a contour with lines only
@@ -788,7 +791,7 @@ ContourL draws a contour with lines only
 		
 			
 			
-			<h2 id="Cross">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10329:10364#L289">Cross</a></h2>
+			<h2 id="Cross">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10492:10527#L294">Cross</a></h2>
 			<pre>func Cross(x0, y0 <a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Cross adds a vertical and horizontal lines @ (x0,y0) to plot (i.e. large cross)
@@ -800,7 +803,7 @@ Cross adds a vertical and horizontal lines @ (x0,y0) to plot (i.e. large cross)
 		
 			
 			
-			<h2 id="CylinderZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=11277:11371#L359">CylinderZ</a></h2>
+			<h2 id="CylinderZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=11285:11379#L359">CylinderZ</a></h2>
 			<pre>func CylinderZ(c []<a href="/pkg/builtin/#float64">float64</a>, radius, height <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 CylinderZ draws cylinder aligned with the z axis
@@ -821,7 +824,7 @@ CylinderZ draws cylinder aligned with the z axis
 		
 			
 			
-			<h2 id="Default3dView">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=5132:5206#L163">Default3dView</a></h2>
+			<h2 id="Default3dView">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=5140:5214#L163">Default3dView</a></h2>
 			<pre>func Default3dView(xmin, xmax, ymin, ymax, zmin, zmax <a href="/pkg/builtin/#float64">float64</a>, equal <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 Default3dView sets default 3d view (camera and scale)
@@ -833,7 +836,7 @@ Default3dView sets default 3d view (camera and scale)
 		
 			
 			
-			<h2 id="DefaultTriad">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=4232:4265#L127">DefaultTriad</a></h2>
+			<h2 id="DefaultTriad">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=4240:4273#L127">DefaultTriad</a></h2>
 			<pre>func DefaultTriad(length <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 DefaultTriad adds triad with default colors and labels
@@ -845,7 +848,7 @@ DefaultTriad adds triad with default colors and labels
 		
 			
 			
-			<h2 id="Diag3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=5914:5949#L192">Diag3d</a></h2>
+			<h2 id="Diag3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=5922:5957#L192">Diag3d</a></h2>
 			<pre>func Diag3d(scale <a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Diag3d draws diagonal of 3d space
@@ -869,7 +872,7 @@ DoubleYscale duplicates y-scale
 		
 			
 			
-			<h2 id="Draw3dVector">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=5460:5527#L175">Draw3dVector</a></h2>
+			<h2 id="Draw3dVector">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=5468:5535#L175">Draw3dVector</a></h2>
 			<pre>func Draw3dVector(p, v []<a href="/pkg/builtin/#float64">float64</a>, sf <a href="/pkg/builtin/#float64">float64</a>, normed <a href="/pkg/builtin/#bool">bool</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Draw3dVector adds segment to figure
@@ -886,7 +889,7 @@ normed -- normalised
 		
 			
 			
-			<h2 id="Equal">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11583:11595#L338">Equal</a></h2>
+			<h2 id="Equal">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11746:11758#L343">Equal</a></h2>
 			<pre>func Equal()</pre>
 			<p>
 Equal sets same scale for both axes
@@ -898,7 +901,7 @@ Equal sets same scale for both axes
 		
 			
 			
-			<h2 id="Gll">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=18922:18954#L564">Gll</a></h2>
+			<h2 id="Gll">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=19085:19117#L569">Gll</a></h2>
 			<pre>func Gll(xl, yl <a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Gll adds grid, labels, and legend to plot
@@ -910,7 +913,7 @@ Gll adds grid, labels, and legend to plot
 		
 			
 			
-			<h2 id="Grid">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=16804:16822#L511">Grid</a></h2>
+			<h2 id="Grid">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=16967:16985#L516">Grid</a></h2>
 			<pre>func Grid(args *<a href="#A">A</a>)</pre>
 			<p>
 Grid adds grid to plot
@@ -922,7 +925,7 @@ Grid adds grid to plot
 		
 			
 			
-			<h2 id="Grid2d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13964:14036#L421">Grid2d</a></h2>
+			<h2 id="Grid2d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=14127:14199#L426">Grid2d</a></h2>
 			<pre>func Grid2d(X, Y [][]<a href="/pkg/builtin/#float64">float64</a>, withPoints <a href="/pkg/builtin/#bool">bool</a>, argsLines, argsPoints *<a href="#A">A</a>)</pre>
 			<p>
 Grid2d draws grid lines (and points) of 2D grid
@@ -934,7 +937,7 @@ Grid2d draws grid lines (and points) of 2D grid
 		
 			
 			
-			<h2 id="Grid3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=6207:6269#L203">Grid3d</a></h2>
+			<h2 id="Grid3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=6215:6277#L203">Grid3d</a></h2>
 			<pre>func Grid3d(X, Y [][]<a href="/pkg/builtin/#float64">float64</a>, Zlevels []<a href="/pkg/builtin/#float64">float64</a>, argsLines *<a href="#A">A</a>)</pre>
 			<p>
 Grid3d draws grid lines (and points) of 3D grid
@@ -946,7 +949,7 @@ Grid3d draws grid lines (and points) of 3D grid
 		
 			
 			
-			<h2 id="Hemisphere">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=8525:8637#L276">Hemisphere</a></h2>
+			<h2 id="Hemisphere">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=8533:8645#L276">Hemisphere</a></h2>
 			<pre>func Hemisphere(c []<a href="/pkg/builtin/#float64">float64</a>, r, alphaMin, alphaMax <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, cup <a href="/pkg/builtin/#bool">bool</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Hemisphere draws Hemisphere
@@ -995,7 +998,19 @@ HideBorders hides frame borders
 		
 			
 			
-			<h2 id="Hist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13622:13672#L410">Hist</a></h2>
+			<h2 id="HideTRborders">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9146:9166#L251">HideTRborders</a></h2>
+			<pre>func HideTRborders()</pre>
+			<p>
+HideTRborders hides top and right borders
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Hist">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13785:13835#L415">Hist</a></h2>
 			<pre>func Hist(x [][]<a href="/pkg/builtin/#float64">float64</a>, labels []<a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Hist draws histogram
@@ -1007,7 +1022,7 @@ Hist draws histogram
 		
 			
 			
-			<h2 id="Legend">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=16951:16971#L517">Legend</a></h2>
+			<h2 id="Legend">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=17114:17134#L522">Legend</a></h2>
 			<pre>func Legend(args *<a href="#A">A</a>)</pre>
 			<p>
 Legend adds legend to plot
@@ -1019,7 +1034,7 @@ Legend adds legend to plot
 		
 			
 			
-			<h2 id="LegendX">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=17870:17901#L536">LegendX</a></h2>
+			<h2 id="LegendX">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=18033:18064#L541">LegendX</a></h2>
 			<pre>func LegendX(dat []*<a href="#A">A</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 LegendX adds legend to plot with given data instead of relying on labels
@@ -1031,7 +1046,7 @@ LegendX adds legend to plot with given data instead of relying on labels
 		
 			
 			
-			<h2 id="PlaneZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=7468:7583#L245">PlaneZ</a></h2>
+			<h2 id="PlaneZ">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=7476:7591#L245">PlaneZ</a></h2>
 			<pre>func PlaneZ(p, n []<a href="/pkg/builtin/#float64">float64</a>, xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>, nu, nv <a href="/pkg/builtin/#int">int</a>, showPN <a href="/pkg/builtin/#bool">bool</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 PlaneZ draws a plane that has a normal vector with non-zero z component.
@@ -1053,7 +1068,7 @@ The plane may be perpendicular to z.
 		
 			
 			
-			<h2 id="Plot">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13154:13204#L393">Plot</a></h2>
+			<h2 id="Plot">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13317:13367#L398">Plot</a></h2>
 			<pre>func Plot(x, y []<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>) (sx, sy <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Plot plots x-y series
@@ -1065,7 +1080,7 @@ Plot plots x-y series
 		
 			
 			
-			<h2 id="Plot3dLine">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=824:867#L20">Plot3dLine</a></h2>
+			<h2 id="Plot3dLine">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=832:875#L20">Plot3dLine</a></h2>
 			<pre>func Plot3dLine(X, Y, Z []<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Plot3dLine plots 3d line
@@ -1077,7 +1092,7 @@ Plot3dLine plots 3d line
 		
 			
 			
-			<h2 id="Plot3dPoint">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=1210:1252#L34">Plot3dPoint</a></h2>
+			<h2 id="Plot3dPoint">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=1218:1260#L34">Plot3dPoint</a></h2>
 			<pre>func Plot3dPoint(x, y, z <a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Plot3dPoint plot 3d point
@@ -1089,7 +1104,7 @@ Plot3dPoint plot 3d point
 		
 			
 			
-			<h2 id="Plot3dPoints">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=1426:1471#L41">Plot3dPoints</a></h2>
+			<h2 id="Plot3dPoints">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=1434:1479#L41">Plot3dPoints</a></h2>
 			<pre>func Plot3dPoints(X, Y, Z []<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Plot3dPoints plots 3d points
@@ -1101,7 +1116,7 @@ Plot3dPoints plots 3d points
 		
 			
 			
-			<h2 id="PlotOne">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13452:13487#L404">PlotOne</a></h2>
+			<h2 id="PlotOne">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=13615:13650#L409">PlotOne</a></h2>
 			<pre>func PlotOne(x, y <a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 PlotOne plots one point @ (x,y)
@@ -1149,7 +1164,7 @@ PyFile loads Python file and copy its contents to temporary buffer
 		
 			
 			
-			<h2 id="Quiver">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=16382:16428#L496">Quiver</a></h2>
+			<h2 id="Quiver">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=16545:16591#L501">Quiver</a></h2>
 			<pre>func Quiver(x, y, gx, gy [][]<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Quiver draws vector field
@@ -1212,7 +1227,7 @@ The following data is set:
 		
 			
 			
-			<h2 id="Save">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=20940:20983#L626">Save</a></h2>
+			<h2 id="Save">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=21103:21146#L631">Save</a></h2>
 			<pre>func Save(dirout, fnkey <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 Save saves figure after creating a directory
@@ -1226,7 +1241,7 @@ Save saves figure after creating a directory
 		
 			
 			
-			<h2 id="Sca">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=20624:20647#L618">Sca</a></h2>
+			<h2 id="Sca">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=20787:20810#L623">Sca</a></h2>
 			<pre>func Sca(axName <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 Sca sets current axes
@@ -1238,7 +1253,7 @@ Sca sets current axes
 		
 			
 			
-			<h2 id="Scale3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=4360:4428#L132">Scale3d</a></h2>
+			<h2 id="Scale3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=4368:4436#L132">Scale3d</a></h2>
 			<pre>func Scale3d(xmin, xmax, ymin, ymax, zmin, zmax <a href="/pkg/builtin/#float64">float64</a>, equal <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 Scale3d scales 3d axes
@@ -1250,7 +1265,7 @@ Scale3d scales 3d axes
 		
 			
 			
-			<h2 id="SetAxis">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11751:11795#L348">SetAxis</a></h2>
+			<h2 id="SetAxis">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11914:11958#L353">SetAxis</a></h2>
 			<pre>func SetAxis(xmin, xmax, ymin, ymax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SetAxis sets axes limits
@@ -1262,7 +1277,7 @@ SetAxis sets axes limits
 		
 			
 			
-			<h2 id="SetFontSizes">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=19586:19612#L590">SetFontSizes</a></h2>
+			<h2 id="SetFontSizes">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=19749:19775#L595">SetFontSizes</a></h2>
 			<pre>func SetFontSizes(args *<a href="#A">A</a>)</pre>
 			<p>
 SetFontSizes sets font sizes
@@ -1274,7 +1289,7 @@ SetFontSizes sets font sizes
 		
 			
 			
-			<h2 id="SetHspace">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11298:11328#L328">SetHspace</a></h2>
+			<h2 id="SetHspace">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11461:11491#L333">SetHspace</a></h2>
 			<pre>func SetHspace(hspace <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SetHspace sets horizontal space between subplots
@@ -1286,7 +1301,7 @@ SetHspace sets horizontal space between subplots
 		
 			
 			
-			<h2 id="SetLabels">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=19291:19327#L576">SetLabels</a></h2>
+			<h2 id="SetLabels">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=19454:19490#L581">SetLabels</a></h2>
 			<pre>func SetLabels(x, y <a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 SetLabels sets x-y axes labels
@@ -1394,7 +1409,7 @@ SetTicksYlist sets y-ayis ticks with given list
 		
 			
 			
-			<h2 id="SetVspace">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11446:11476#L333">SetVspace</a></h2>
+			<h2 id="SetVspace">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11609:11639#L338">SetVspace</a></h2>
 			<pre>func SetVspace(vspace <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SetVspace sets vertical space between subplots
@@ -1454,7 +1469,7 @@ SetYnticks sets number of ticks along y
 		
 			
 			
-			<h2 id="Show">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=21462:21479#L644">Show</a></h2>
+			<h2 id="Show">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=21625:21642#L649">Show</a></h2>
 			<pre>func Show() <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 Show shows figure
@@ -1466,7 +1481,7 @@ Show shows figure
 		
 			
 			
-			<h2 id="ShowSave">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=21579:21626#L650">ShowSave</a></h2>
+			<h2 id="ShowSave">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=21742:21789#L655">ShowSave</a></h2>
 			<pre>func ShowSave(dirout, fnkey <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 ShowSave shows figure and/or save figure
@@ -1478,7 +1493,7 @@ ShowSave shows figure and/or save figure
 		
 			
 			
-			<h2 id="SplotGap">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10850:10877#L310">SplotGap</a></h2>
+			<h2 id="SplotGap">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11013:11040#L315">SplotGap</a></h2>
 			<pre>func SplotGap(w, h <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 SplotGap sets gap between subplots
@@ -1490,7 +1505,7 @@ SplotGap sets gap between subplots
 		
 			
 			
-			<h2 id="Subplot">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10985:11010#L315">Subplot</a></h2>
+			<h2 id="Subplot">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11148:11173#L320">Subplot</a></h2>
 			<pre>func Subplot(i, j, k <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Subplot adds/sets a subplot
@@ -1502,7 +1517,7 @@ Subplot adds/sets a subplot
 		
 			
 			
-			<h2 id="SubplotI">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11125:11147#L320">SubplotI</a></h2>
+			<h2 id="SubplotI">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=11288:11310#L325">SubplotI</a></h2>
 			<pre>func SubplotI(I []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 Subplot adds/sets a subplot with given indices in I
@@ -1514,7 +1529,7 @@ Subplot adds/sets a subplot with given indices in I
 		
 			
 			
-			<h2 id="SupTitle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9703:9737#L269">SupTitle</a></h2>
+			<h2 id="SupTitle">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9866:9900#L274">SupTitle</a></h2>
 			<pre>func SupTitle(txt <a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 SupTitle sets subplot title
@@ -1526,7 +1541,7 @@ SupTitle sets subplot title
 		
 			
 			
-			<h2 id="Superquadric">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=9910:10033#L320">Superquadric</a></h2>
+			<h2 id="Superquadric">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=9918:10041#L320">Superquadric</a></h2>
 			<pre>func Superquadric(c, r, a []<a href="/pkg/builtin/#float64">float64</a>, alpMin, alpMax, etaMin, etaMax <a href="/pkg/builtin/#float64">float64</a>, nalp, neta <a href="/pkg/builtin/#int">int</a>, args *<a href="#A">A</a>) (X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Superquadric draws superquadric (i.e. superellipsoid)
@@ -1549,7 +1564,7 @@ Output:
 		
 			
 			
-			<h2 id="Surface">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=2260:2302#L70">Surface</a></h2>
+			<h2 id="Surface">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=2268:2310#L70">Surface</a></h2>
 			<pre>func Surface(X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Surface draws surface
@@ -1573,7 +1588,7 @@ TexPiRadFmt formats number in radians/pi notation
 		
 			
 			
-			<h2 id="Text">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10090:10134#L283">Text</a></h2>
+			<h2 id="Text">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10253:10297#L288">Text</a></h2>
 			<pre>func Text(x, y <a href="/pkg/builtin/#float64">float64</a>, txt <a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Text adds text to plot
@@ -1585,7 +1600,7 @@ Text adds text to plot
 		
 			
 			
-			<h2 id="Text3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=3246:3295#L98">Text3d</a></h2>
+			<h2 id="Text3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=3254:3303#L98">Text3d</a></h2>
 			<pre>func Text3d(x, y, z <a href="/pkg/builtin/#float64">float64</a>, txt <a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Text3d adds text to 3d plot
@@ -1597,7 +1612,7 @@ Text3d adds text to 3d plot
 		
 			
 			
-			<h2 id="Title">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=9932:9963#L277">Title</a></h2>
+			<h2 id="Title">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=10095:10126#L282">Title</a></h2>
 			<pre>func Title(txt <a href="/pkg/builtin/#string">string</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Title sets title
@@ -1609,7 +1624,7 @@ Title sets title
 		
 			
 			
-			<h2 id="Triad">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=3550:3625#L106">Triad</a></h2>
+			<h2 id="Triad">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=3558:3633#L106">Triad</a></h2>
 			<pre>func Triad(length <a href="/pkg/builtin/#float64">float64</a>, xLab, yLab, zLab <a href="/pkg/builtin/#string">string</a>, argsLines, argsText *<a href="#A">A</a>)</pre>
 			<p>
 Triad draws icon indicating x-y-z origin and direction
@@ -1623,7 +1638,7 @@ Triad draws icon indicating x-y-z origin and direction
 		
 			
 			
-			<h2 id="Wireframe">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=1816:1860#L55">Wireframe</a></h2>
+			<h2 id="Wireframe">func <a href="https://github.com/cpmech/gosl/blob/master/plt/threed.go?s=1824:1868#L55">Wireframe</a></h2>
 			<pre>func Wireframe(X, Y, Z [][]<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 Wireframe draws wireframe
@@ -1635,7 +1650,7 @@ Wireframe draws wireframe
 		
 			
 			
-			<h2 id="ZoomWindow">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=20236:20310#L604">ZoomWindow</a></h2>
+			<h2 id="ZoomWindow">func <a href="https://github.com/cpmech/gosl/blob/master/plt/mplotlib.go?s=20399:20473#L609">ZoomWindow</a></h2>
 			<pre>func ZoomWindow(lef, bot, wid, hei <a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>) (axOld, axNew <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 ZoomWindow adds another axes to plot a figure within the figure; e.g. a zoom window
