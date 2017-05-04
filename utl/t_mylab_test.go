@@ -426,3 +426,17 @@ func Test_mylab11(tst *testing.T) {
 	B := GetMapped2(A, func(x float64) float64 { return x / 10.0 })
 	chk.Matrix(tst, "B", 1e-15, B, [][]float64{{0.1, 1, 10, 100}, {0.2, 1}, {0.3, 30, -0.3}})
 }
+
+func Test_mylab12(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab12. IntRange3")
+
+	I := IntRange3(0, 21, 5)
+	io.Pforan("I = %v\n", I)
+	chk.Ints(tst, "I", I, []int{0, 5, 10, 15})
+
+	J := IntRange3(0, -21, -5)
+	io.Pf("J = %v\n", J)
+	chk.Ints(tst, "J", J, []int{0, -5, -10, -15})
+}

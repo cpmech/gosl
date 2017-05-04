@@ -117,6 +117,7 @@ func IntRange3(start, stop, step int) (res []int) {
 		return
 	case stop > start:
 		n := (stop - start) / step
+		stop = start + step*n
 		res = make([]int, n)
 		for i, v := 0, start; v < stop; i, v = i+1, v+step {
 			res[i] = v
@@ -126,6 +127,7 @@ func IntRange3(start, stop, step int) (res []int) {
 			return
 		}
 		n := (stop - start) / step
+		stop = start + step*n
 		res = make([]int, n)
 		for i, v := 0, start; v > stop; i, v = i+1, v+step {
 			res[i] = v
