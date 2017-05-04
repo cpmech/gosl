@@ -257,6 +257,11 @@ func HideAllBorders() {
 	io.Ff(&bufferPy, "for spine in ['left','right','bottom','top']: plt.gca().spines[spine].set_visible(0)\n")
 }
 
+// HideTRborders hides top and right borders
+func HideTRborders() {
+	io.Ff(&bufferPy, "for spine in ['right','top']: plt.gca().spines[spine].set_visible(0)\n")
+}
+
 // Annotate adds annotation to plot
 func Annotate(x, y float64, txt string, args *A) {
 	io.Ff(&bufferPy, "plt.annotate(r'%s', xy=(%g,%g)", txt, x, y)
