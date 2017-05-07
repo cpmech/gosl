@@ -187,3 +187,81 @@ Source code: <a href="../examples/plt_zoomwindow01.go">../examples/plt_zoomwindo
 <div id="container">
 <p><img src="../examples/figs/plt_zoomwindow01.png" width="400"></p>
 </div>
+
+
+
+### Drawing a box and 3D points
+
+```go
+plt.Reset(true, nil)
+plt.Plot3dPoint(0, -1.5, -0.9, &plt.A{C: "grey", M: "o", Ms: 3000, Mec: "orange"})
+plt.Plot3dPoint(-2, 0.5, -0.9, &plt.A{C: "r", M: "*", Ms: 5000, Mec: "green", Void: true})
+plt.Plot3dPoint(2.5, 1.5, -0.9, &plt.A{C: "r", M: "s", Ms: 1000, Mec: "k", Void: false})
+plt.Box(-0.5, 1, -1, 2, -3, 0, &plt.A{A: 0.5, Lw: 3, Fc: "#5294ed", Ec: "#ffec4f", Wire: true})
+plt.Triad(1.5, "x", "y", "z", nil, nil)
+plt.Default3dView(-1, 1.5, -1.5, 2.5, -3.5, 0.5, true)
+err := plt.Save("/tmp/gosl", "plt_boxandpoints")
+if err != nil {
+    io.PfRed("%v", err)
+}
+```
+
+Source code: <a href="../examples/plt_boxandpoints.go">../examples/plt_boxandpoints.go</a>
+
+<div id="container">
+<p><img src="../examples/figs/plt_boxandpoints.png" width="450"></p>
+</div>
+
+
+
+
+## Output of Tests
+
+Below, you will find some figures produced by the tests in <a href="t_plot01_test.go">t_plot01_test.go</a>.
+
+**Test\_plot01**
+
+<div id="container">
+<p><img src="../examples/figs/t_plot01.png" width="400"></p>
+</div>
+
+**Test\_plot03**
+
+<div id="container">
+<p><img src="../examples/figs/t_plot03.png" width="400"></p>
+</div>
+
+**Test\_plot04**
+
+<div id="container">
+<p><img src="../examples/figs/t_plot04.png" width="400"></p>
+</div>
+
+**Test\_plot05**
+
+<div id="container">
+<p><img src="../examples/figs/t_plot05.png" width="400"></p>
+</div>
+
+**Test\_plot06**
+
+<div id="container">
+<p><img src="../examples/figs/t_plot06.png" width="450"></p>
+</div>
+
+**Test\_plot07**
+
+<div id="container">
+<p><img src="../examples/figs/t_plot07.png" width="450"></p>
+</div>
+
+**Test\_plot08**
+
+<div id="container">
+<p><img src="../examples/figs/t_plot08.png" width="450"></p>
+</div>
+
+**Test\_plot09**
+<div id="container">
+<p><img src="../examples/figs/t_plot09.png" width="450"></p>
+</div>
