@@ -72,13 +72,17 @@ func Test_draw02(tst *testing.T) {
 func Test_draw03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("draw02. box")
+	chk.PrintTitle("draw02. box and 3d points")
 
 	Reset(true, nil)
-	Box(-0.5, 1, -1, 2, -3, 0, &A{Lw: 3, Fc: "#5294ed", Ec: "#ffec4f", Wire: true})
+	Plot3dPoint(0, -1.5, -0.9, &A{C: "grey", M: "o", Ms: 3000, Mec: "orange"})
+	Plot3dPoint(-2, 0.5, -0.9, &A{C: "r", M: "*", Ms: 5000, Mec: "green", Void: true})
+	Plot3dPoint(2.5, 1.5, -0.9, &A{C: "r", M: "s", Ms: 1000, Mec: "k", Void: false})
+	Box(-0.5, 1, -1, 2, -3, 0, &A{A: 0.5, Lw: 3, Fc: "#5294ed", Ec: "#ffec4f", Wire: true})
 	if chk.Verbose {
 		Triad(1.5, "x", "y", "z", nil, nil)
 		Default3dView(-1, 1.5, -1.5, 2.5, -3.5, 0.5, true)
+		//err := ShowSave("/tmp/gosl", "t_draw03")
 		err := Save("/tmp/gosl", "t_draw03")
 		if err != nil {
 			tst.Errorf("%v", err)

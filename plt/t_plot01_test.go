@@ -21,6 +21,7 @@ func Test_args01(tst *testing.T) {
 
 	// plot and basic options
 	a.C = "red"
+	a.A = 0.5
 	a.M = "o"
 	a.Ls = "--"
 	a.Lw = 1.2
@@ -43,7 +44,7 @@ func Test_args01(tst *testing.T) {
 	a.Fsz = 7
 
 	l := a.String(false, false)
-	chk.String(tst, l, "color='red',marker='o',ls='--',lw=1.2,label='gosl',markevery=2,zorder=123,markeredgecolor='blue',mew=0.3,markerfacecolor='none',clip_on=0,facecolor='magenta',edgecolor='yellow',ha='center',va='center',fontsize=7")
+	chk.String(tst, l, "color='red',markeredgecolor='blue',markerfacecolor='none',mew=0.3,alpha=0.5,marker='o',ls='--',lw=1.2,label='gosl',markevery=2,zorder=123,clip_on=0,facecolor='magenta',edgecolor='yellow',ha='center',va='center',fontsize=7")
 }
 
 func Test_args02(tst *testing.T) {
@@ -94,7 +95,7 @@ func Test_plot01(tst *testing.T) {
 
 		Reset(false, nil)
 		SetFontSizes(&A{Fsz: 20, FszLbl: 20, FszXtck: 10, FszYtck: 10})
-		Plot(x, y, &A{L: "first", C: "r", M: "o", Ls: "-", Lw: 2, NoClip: true})
+		Plot(x, y, &A{L: "first", A: 0.5, C: "r", M: "o", Ls: "-", Lw: 2, NoClip: true})
 		Plot(y, x, &A{L: "second", C: "b", M: ".", Ls: ":", Lw: 40})
 		Text(0.2, 0.8, "HERE", &A{Fsz: 20, Ha: "center", Va: "center"})
 		SetTicksX(0.1, 0.01, "%.3f")

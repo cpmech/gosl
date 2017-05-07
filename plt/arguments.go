@@ -15,6 +15,7 @@ type A struct {
 
 	// plot and basic options
 	C      string  // color
+	A      float64 // transparency coefficient
 	M      string  // marker
 	Ls     string  // linestyle
 	Lw     float64 // linewidth; -1 => default
@@ -102,21 +103,29 @@ func (o A) String(forHistogram, for3dPoints bool) (l string) {
 
 	// plot and basic options
 	if for3dPoints {
-		addToCmd(&l, o.C != "", io.Sf("c='%s'", o.C))
+		addToCmd(&l, o.Ms > 0, io.Sf("s=%d", o.Ms))
+		addToCmd(&l, o.Mec != "", io.Sf("edgecolor='%s'", o.Mec))
+		if o.Void {
+			addToCmd(&l, o.Void, "c='none'")
+		} else {
+			addToCmd(&l, o.C != "", io.Sf("c='%s'", o.C))
+		}
+		addToCmd(&l, o.Void && o.Mec == "", io.Sf("edgecolor='%s'", o.C))
 	} else {
 		addToCmd(&l, o.C != "", io.Sf("color='%s'", o.C))
+		addToCmd(&l, o.Ms > 0, io.Sf("ms=%d", o.Ms))
+		addToCmd(&l, o.Mec != "", io.Sf("markeredgecolor='%s'", o.Mec))
+		addToCmd(&l, o.Void, "markerfacecolor='none'")
+		addToCmd(&l, o.Void && o.Mec == "", io.Sf("markeredgecolor='%s'", o.C))
+		addToCmd(&l, o.Mew > 0, io.Sf("mew=%g", o.Mew))
 	}
+	addToCmd(&l, o.A > 0, io.Sf("alpha=%g", o.A))
 	addToCmd(&l, o.M != "", io.Sf("marker='%s'", o.M))
 	addToCmd(&l, o.Ls != "", io.Sf("ls='%s'", o.Ls))
 	addToCmd(&l, o.Lw > 0, io.Sf("lw=%g", o.Lw))
-	addToCmd(&l, o.Ms > 0, io.Sf("ms=%d", o.Ms))
 	addToCmd(&l, o.L != "", io.Sf("label='%s'", o.L))
 	addToCmd(&l, o.Me > 0, io.Sf("markevery=%d", o.Me))
 	addToCmd(&l, o.Z > 0, io.Sf("zorder=%d", o.Z))
-	addToCmd(&l, o.Mec != "", io.Sf("markeredgecolor='%s'", o.Mec))
-	addToCmd(&l, o.Mew > 0, io.Sf("mew=%g", o.Mew))
-	addToCmd(&l, o.Void, "markerfacecolor='none'")
-	addToCmd(&l, o.Void && o.Mec == "", io.Sf("markeredgecolor='%s'", o.C))
 	addToCmd(&l, o.NoClip, "clip_on=0")
 
 	// shapes
