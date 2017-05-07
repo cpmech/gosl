@@ -109,3 +109,67 @@ func Polyline(P [][]float64, args *A) {
 	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", uid)
 }
+
+// Polygon3d draws a polygon in 3D. P[npts][3]
+func Polygon3d(P [][]float64, args *A) {
+	if len(P) < 1 {
+		return
+	}
+	if args == nil {
+		args = &A{Fc: "#5294ed", Ec: "#ffec4f"}
+	}
+	createAxes3d()
+	uid := genUid()
+	io.Ff(&bufferPy, "verts%d = [[", uid)
+	for i, p := range P {
+		if i > 0 {
+			io.Ff(&bufferPy, ",")
+		}
+		io.Ff(&bufferPy, "(")
+		for j, x := range p {
+			if j > 0 {
+				io.Ff(&bufferPy, ",")
+			}
+			io.Ff(&bufferPy, "%g", x)
+		}
+		io.Ff(&bufferPy, ")")
+	}
+	io.Ff(&bufferPy, "]]\n")
+	io.Ff(&bufferPy, "poly%d = m3d.art3d.Poly3DCollection(verts%d)\n", uid, uid)
+	io.Ff(&bufferPy, "poly%d.set_color('%s')\n", uid, args.Fc)
+	io.Ff(&bufferPy, "poly%d.set_edgecolor('%s')\n", uid, args.Ec)
+	io.Ff(&bufferPy, "plt.gca().add_collection3d(poly%d)\n", uid)
+}
+
+// Box draws box
+//   NOTE: args.Wire and args.Ls are used to draw a wire around the edges of the box
+func Box(xmin, xmax, ymin, ymax, zmin, zmax float64, args *A) {
+	if args == nil {
+		args = &A{Fc: "#5294ed", Ec: "#ffec4f", Lw: 3}
+	}
+	createAxes3d()
+	uid := genUid()
+	io.Ff(&bufferPy, "verts%d = [\n", uid)
+	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)],\n", xmin, ymin, zmin, xmin, ymax, zmin, xmin, ymax, zmax, xmin, ymin, zmax)
+	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)],\n", xmax, ymin, zmin, xmax, ymax, zmin, xmax, ymax, zmax, xmax, ymin, zmax)
+	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)],\n", xmin, ymin, zmin, xmin, ymin, zmax, xmax, ymin, zmax, xmax, ymin, zmin)
+	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)],\n", xmin, ymax, zmin, xmin, ymax, zmax, xmax, ymax, zmax, xmax, ymax, zmin)
+	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)],\n", xmin, ymin, zmin, xmin, ymax, zmin, xmax, ymax, zmin, xmax, ymin, zmin)
+	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)]\n", xmin, ymin, zmax, xmin, ymax, zmax, xmax, ymax, zmax, xmax, ymin, zmax)
+	io.Ff(&bufferPy, "]\n")
+	io.Ff(&bufferPy, "poly%d = m3d.art3d.Poly3DCollection(verts%d)\n", uid, uid)
+	io.Ff(&bufferPy, "poly%d.set_color('%s')\n", uid, args.Fc)
+	io.Ff(&bufferPy, "poly%d.set_edgecolor('%s')\n", uid, args.Ec)
+	if args.Lw > 0 {
+		io.Ff(&bufferPy, "poly%d.set_linewidth(%g)\n", uid, args.Lw)
+	}
+	io.Ff(&bufferPy, "plt.gca().add_collection3d(poly%d)\n", uid)
+	if args.Wire {
+		ls := "--"
+		if args.Ls != "" {
+			ls = args.Ls
+		}
+		io.Ff(&bufferPy, "verts%d.append([(%g,%g,%g),(%g,%g,%g)])\n", uid, xmin, ymin, zmin, xmax, ymin, zmin)
+		io.Ff(&bufferPy, "plt.gca().add_collection3d(m3d.art3d.Line3DCollection(verts%d, colors='k', linewidth=0.7, linestyles='%s'))\n", uid, ls)
+	}
+}

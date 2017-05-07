@@ -8,14 +8,11 @@ echo $FILES
 echo
 echo
 
-refresh(){
-    echo
-    echo
-    echo
-    go test -test.run="plot13"
-}
-
 while true; do
     inotifywait -q -e modify $FILES
-    refresh
+    echo
+    echo
+    echo
+    echo
+    go test -test.run="draw03"
 done
