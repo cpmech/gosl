@@ -129,6 +129,9 @@ plt contains functions for plotting, drawing in 2D or 3D, and generationg PNG an
 				<dd><a href="#AxisYrange">func AxisYrange(ymin, ymax float64)</a></dd>
 			
 				
+				<dd><a href="#Box">func Box(xmin, xmax, ymin, ymax, zmin, zmax float64, args *A)</a></dd>
+			
+				
 				<dd><a href="#CalcDiagAngle">func CalcDiagAngle(p []float64) (alphaRad float64)</a></dd>
 			
 				
@@ -226,6 +229,9 @@ plt contains functions for plotting, drawing in 2D or 3D, and generationg PNG an
 			
 				
 				<dd><a href="#PlotOne">func PlotOne(x, y float64, args *A)</a></dd>
+			
+				
+				<dd><a href="#Polygon3d">func Polygon3d(P [][]float64, args *A)</a></dd>
 			
 				
 				<dd><a href="#Polyline">func Polyline(P [][]float64, args *A)</a></dd>
@@ -664,6 +670,20 @@ AxisYmin sets minimum y
 			<p>
 AxisYrange sets y-range (i.e. limits)
 </p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Box">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=4468:4529#L136">Box</a></h2>
+			<pre>func Box(xmin, xmax, ymin, ymax, zmin, zmax <a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
+			<p>
+Box draws box
+</p>
+<pre>NOTE: args.Wire and args.Ls are used to draw a wire around the edges of the box
+</pre>
 
 			
 			
@@ -1120,6 +1140,18 @@ Plot3dPoints plots 3d points
 			<pre>func PlotOne(x, y <a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
 			<p>
 PlotOne plots one point @ (x,y)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Polygon3d">func <a href="https://github.com/cpmech/gosl/blob/master/plt/drawing.go?s=3649:3687#L104">Polygon3d</a></h2>
+			<pre>func Polygon3d(P [][]<a href="/pkg/builtin/#float64">float64</a>, args *<a href="#A">A</a>)</pre>
+			<p>
+Polygon3d draws a polygon in 3D. P[npts][3]
 </p>
 
 			
@@ -1667,11 +1699,12 @@ axNew -- handle to the new axes
 		
 			
 			
-			<h2 id="A">type <a href="https://github.com/cpmech/gosl/blob/master/plt/arguments.go?s=321:3690#L4">A</a></h2>
+			<h2 id="A">type <a href="https://github.com/cpmech/gosl/blob/master/plt/arguments.go?s=321:3734#L4">A</a></h2>
 			<pre>type A struct {
 
     <span class="comment">// plot and basic options</span>
     C      <a href="/pkg/builtin/#string">string</a>  <span class="comment">// color</span>
+    A      <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// transparency coefficient</span>
     M      <a href="/pkg/builtin/#string">string</a>  <span class="comment">// marker</span>
     Ls     <a href="/pkg/builtin/#string">string</a>  <span class="comment">// linestyle</span>
     Lw     <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// linewidth; -1 =&gt; default</span>
@@ -1770,7 +1803,7 @@ axNew -- handle to the new axes
 
 			
 				
-				<h3 id="A.String">func (A) <a href="https://github.com/cpmech/gosl/blob/master/plt/arguments.go?s=3747:3807#L91">String</a></h3>
+				<h3 id="A.String">func (A) <a href="https://github.com/cpmech/gosl/blob/master/plt/arguments.go?s=3791:3851#L92">String</a></h3>
 				<pre>func (o <a href="#A">A</a>) String(forHistogram, for3dPoints <a href="/pkg/builtin/#bool">bool</a>) (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 String returns a string representation of arguments
