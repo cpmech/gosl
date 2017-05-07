@@ -80,10 +80,16 @@ handling geometry and mesh structures
 			
 			
 				
+				<dd><a href="#DistPointBoxN">func DistPointBoxN(p *PointN, b *BoxN) (dist float64)</a></dd>
+			
+				
 				<dd><a href="#DistPointLine">func DistPointLine(p, a, b *Point, tol float64, verbose bool) float64</a></dd>
 			
 				
 				<dd><a href="#DistPointPoint">func DistPointPoint(a, b *Point) float64</a></dd>
+			
+				
+				<dd><a href="#DistPointPointN">func DistPointPointN(p *PointN, q *PointN) (dist float64)</a></dd>
 			
 				
 				<dd><a href="#IsPointIn">func IsPointIn(p *Point, cMin, cMax []float64, tol float64) bool</a></dd>
@@ -191,6 +197,26 @@ handling geometry and mesh structures
 				
 			
 				
+				<dd><a href="#BoxN">type BoxN</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewBoxN">func NewBoxN(L ...float64) *BoxN</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#BoxN.Draw">func (o BoxN) Draw(withTxt bool, args, argsTxt *plt.A)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#BoxN.GetMid">func (o *BoxN) GetMid() (mid []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#BoxN.GetSize">func (o *BoxN) GetSize() (delta []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#BoxN.IsInside">func (o BoxN) IsInside(p *PointN) bool</a></dd>
+				
+			
+				
 				<dd><a href="#Bspline">type Bspline</a></dd>
 				
 				
@@ -241,6 +267,11 @@ handling geometry and mesh structures
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Bspline.SetOrder">func (o *Bspline) SetOrder(p int)</a></dd>
+				
+			
+				
+				<dd><a href="#Entity">type Entity</a></dd>
+				
 				
 			
 				
@@ -405,6 +436,14 @@ handling geometry and mesh structures
 				
 			
 				
+				<dd><a href="#Octree">type Octree</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewOctree">func NewOctree(L ...float64) (o *Octree)</a></dd>
+				
+				
+			
+				
 				<dd><a href="#Point">type Point</a></dd>
 				
 				
@@ -421,6 +460,26 @@ handling geometry and mesh structures
 				
 				<dd><a href="#PointExchangeData">type PointExchangeData</a></dd>
 				
+				
+			
+				
+				<dd><a href="#PointN">type PointN</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewPointN">func NewPointN(X ...float64) (o *PointN)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewPointNdim">func NewPointNdim(ndim uint32) (o *PointN)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#PointN.AlmostTheSameX">func (o PointN) AlmostTheSameX(p *PointN, tol float64) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#PointN.ExactlyTheSameX">func (o PointN) ExactlyTheSameX(p *PointN) bool</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#PointN.GetCloneX">func (o PointN) GetCloneX() (p *PointN)</a></dd>
 				
 			
 				
@@ -465,6 +524,8 @@ handling geometry and mesh structures
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/nurbs.go">nurbs.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/nurbspatch.go">nurbspatch.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go">octree.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/plotbsplines.go">plotbsplines.go</a>
 			
@@ -555,6 +616,21 @@ consts
 		
 			
 			
+			<h2 id="DistPointBoxN">func <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=4531:4584#L161">DistPointBoxN</a></h2>
+			<pre>func DistPointBoxN(p *<a href="#PointN">PointN</a>, b *<a href="#BoxN">BoxN</a>) (dist <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+DistPointBoxN returns the distance of a point to the box
+</p>
+<pre>NOTE: If point p lies outside box b, the distance to the nearest point on b is returned.
+      If p is inside b or on its surface, zero is returned.
+</pre>
+
+			
+			
+
+		
+			
+			
 			<h2 id="DistPointLine">func <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=2952:3021#L94">DistPointLine</a></h2>
 			<pre>func DistPointLine(p, a, b *<a href="#Point">Point</a>, tol <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
@@ -571,6 +647,18 @@ DistPointLine computes the distance from p to line passing through a -&gt; b
 			<pre>func DistPointPoint(a, b *<a href="#Point">Point</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 DistPointPoint computes the unsigned distance from a to b
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="DistPointPointN">func <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=1676:1733#L60">DistPointPointN</a></h2>
+			<pre>func DistPointPointN(p *<a href="#PointN">PointN</a>, q *<a href="#PointN">PointN</a>) (dist <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+DistPointPointN returns the distance between two PointN
 </p>
 
 			
@@ -1044,6 +1132,90 @@ Summary returns the summary of this Bins&#39; data
 		
 			
 			
+			<h2 id="BoxN">type <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=1991:2141#L70">BoxN</a></h2>
+			<pre>type BoxN struct {
+    <span class="comment">// essential</span>
+    Lo *<a href="#PointN">PointN</a> <span class="comment">// lower point</span>
+    Hi *<a href="#PointN">PointN</a> <span class="comment">// higher point</span>
+
+    <span class="comment">// auxiliary</span>
+    Id <a href="/pkg/builtin/#int">int</a> <span class="comment">// an auxiliary identification number</span>
+}</pre>
+			<p>
+BoxN implements a box int he N-dimensional space
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewBoxN">func <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=2276:2308#L81">NewBoxN</a></h3>
+				<pre>func NewBoxN(L ...<a href="/pkg/builtin/#float64">float64</a>) *<a href="#BoxN">BoxN</a></pre>
+				<p>
+NewBoxN creates a new box with given limiting coordinates
+</p>
+<pre>L -- limits [4] or [6]: xmin,xmax, ymin,ymax, {zmin,zmax} optional
+</pre>
+
+				
+				
+			
+
+			
+				
+				<h3 id="BoxN.Draw">func (BoxN) <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=3324:3378#L124">Draw</a></h3>
+				<pre>func (o <a href="#BoxN">BoxN</a>) Draw(withTxt <a href="/pkg/builtin/#bool">bool</a>, args, argsTxt *<a href="/pkg/github.com/cpmech/gosl/plt/">plt</a>.<a href="/pkg/github.com/cpmech/gosl/plt/#A">A</a>)</pre>
+				<p>
+Draw draws box
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoxN.GetMid">func (*BoxN) <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=3137:3176#L115">GetMid</a></h3>
+				<pre>func (o *<a href="#BoxN">BoxN</a>) GetMid() (mid []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+GetMid gets the centre coordinates of box
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoxN.GetSize">func (*BoxN) <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=2924:2966#L106">GetSize</a></h3>
+				<pre>func (o *<a href="#BoxN">BoxN</a>) GetSize() (delta []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+GetSize returns the size of box (deltas)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="BoxN.IsInside">func (BoxN) <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=2695:2733#L93">IsInside</a></h3>
+				<pre>func (o <a href="#BoxN">BoxN</a>) IsInside(p *<a href="#PointN">PointN</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				<p>
+IsInside tells whether a PointN is inside box or not
+</p>
+
+				
+				
+				
+			
+		
+			
+			
 			<h2 id="Bspline">type <a href="https://github.com/cpmech/gosl/blob/master/gm/bspline.go?s=488:1247#L14">Bspline</a></h2>
 			<pre>type Bspline struct {
 
@@ -1261,6 +1433,28 @@ SetOrder sets B-spline order (p)
 				
 				
 				
+			
+		
+			
+			
+			<h2 id="Entity">type <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=4980:5005#L176">Entity</a></h2>
+			<pre>type Entity interface {
+}</pre>
+			<p>
+Entity defines the geometric (or not) entity/element to be stored in the Octree
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
 			
 		
 			
@@ -1931,6 +2125,48 @@ Write writes ExchangeData to json file
 		
 			
 			
+			<h2 id="Octree">type <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=5128:5637#L181">Octree</a></h2>
+			<pre>type Octree struct {
+
+    <span class="comment">// constants</span>
+    DIM  <a href="/pkg/builtin/#uint32">uint32</a> <span class="comment">// dimension</span>
+    PMAX <a href="/pkg/builtin/#uint32">uint32</a> <span class="comment">// roughly how many levels fit in 32 bits</span>
+    QO   <a href="/pkg/builtin/#uint32">uint32</a> <span class="comment">// 4 for quadtree, 8 for octree</span>
+    QL   <a href="/pkg/builtin/#uint32">uint32</a> <span class="comment">// offset constant to leftmost daughter</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Octree implements a Quad-Tree or an Oct-Tree to assist in fast-searching elements (entities) in
+the 2D or 3D space
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewOctree">func <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=5745:5785#L199">NewOctree</a></h3>
+				<pre>func NewOctree(L ...<a href="/pkg/builtin/#float64">float64</a>) (o *<a href="#Octree">Octree</a>)</pre>
+				<p>
+NewOctree creates a new Octree
+</p>
+<pre>L -- limits [4] or [6]: xmin,xmax, ymin,ymax, {zmin,zmax} optional
+</pre>
+
+				
+				
+			
+
+			
+		
+			
+			
 			<h2 id="Point">type <a href="https://github.com/cpmech/gosl/blob/master/gm/basicgeom.go?s=288:326#L4">Point</a></h2>
 			<pre>type Point struct {
     X, Y, Z <a href="/pkg/builtin/#float64">float64</a>
@@ -2008,6 +2244,87 @@ PointExchangeData holds data for exchanging control points
 
 			
 
+			
+		
+			
+			
+			<h2 id="PointN">type <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=429:547#L8">PointN</a></h2>
+			<pre>type PointN struct {
+
+    <span class="comment">// esssential</span>
+    X []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// coordinates</span>
+
+    <span class="comment">// optional</span>
+    Id <a href="/pkg/builtin/#int">int</a> <span class="comment">// some identification number</span>
+}</pre>
+			<p>
+PointN implements a point in N-dim space
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewPointN">func <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=779:819#L23">NewPointN</a></h3>
+				<pre>func NewPointN(X ...<a href="/pkg/builtin/#float64">float64</a>) (o *<a href="#PointN">PointN</a>)</pre>
+				<p>
+NewPointN creats a new PointN with given coordinates; can be any number
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewPointNdim">func <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=614:656#L18">NewPointNdim</a></h3>
+				<pre>func NewPointNdim(ndim <a href="/pkg/builtin/#uint32">uint32</a>) (o *<a href="#PointN">PointN</a>)</pre>
+				<p>
+NewPointNdim creates a new PointN with given dimension (ndim)
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="PointN.AlmostTheSameX">func (PointN) <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=1446:1505#L50">AlmostTheSameX</a></h3>
+				<pre>func (o <a href="#PointN">PointN</a>) AlmostTheSameX(p *<a href="#PointN">PointN</a>, tol <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				<p>
+AlmostTheSameX returns true if the X slices of two points have almost the same values, for given tolerance
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PointN.ExactlyTheSameX">func (PointN) <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=1190:1237#L40">ExactlyTheSameX</a></h3>
+				<pre>func (o <a href="#PointN">PointN</a>) ExactlyTheSameX(p *<a href="#PointN">PointN</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
+				<p>
+ExactlyTheSameX returns true if the X slices of two points have exactly the same values
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="PointN.GetCloneX">func (PointN) <a href="https://github.com/cpmech/gosl/blob/master/gm/octree.go?s=980:1019#L32">GetCloneX</a></h3>
+				<pre>func (o <a href="#PointN">PointN</a>) GetCloneX() (p *<a href="#PointN">PointN</a>)</pre>
+				<p>
+GetCloneX returns a new point with X cloned, but not the other data
+</p>
+
+				
+				
+				
 			
 		
 			

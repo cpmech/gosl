@@ -9,5 +9,5 @@ while true; do
     echo
     echo
     go install
-    go test -test.run="octree03"
+    go test -test.run="octree02"
 done

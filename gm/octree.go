@@ -21,16 +21,15 @@ type PointN struct {
 	X []float64 // coordinates
 
 	// optional
-	Id    int         // some identification number
-	Extra interface{} // some extra data
+	Id int // some identification number
 }
 
-// TODO: test
+// NewPointNdim creates a new PointN with given dimension (ndim)
 func NewPointNdim(ndim uint32) (o *PointN) {
 	return &PointN{X: make([]float64, ndim)}
 }
 
-// TODO: test
+// NewPointN creats a new PointN with given coordinates; can be any number
 func NewPointN(X ...float64) (o *PointN) {
 	ndim := len(X)
 	o = new(PointN)
@@ -47,6 +46,7 @@ func (o PointN) GetCloneX() (p *PointN) {
 	return
 }
 
+// ExactlyTheSameX returns true if the X slices of two points have exactly the same values
 func (o PointN) ExactlyTheSameX(p *PointN) bool {
 	for i := 0; i < len(o.X); i++ {
 		if o.X[i] != p.X[i] {
@@ -56,6 +56,7 @@ func (o PointN) ExactlyTheSameX(p *PointN) bool {
 	return true
 }
 
+// AlmostTheSameX returns true if the X slices of two points have almost the same values, for given tolerance
 func (o PointN) AlmostTheSameX(p *PointN, tol float64) bool {
 	for i := 0; i < len(o.X); i++ {
 		if math.Abs(o.X[i]-p.X[i]) > tol {
@@ -65,6 +66,7 @@ func (o PointN) AlmostTheSameX(p *PointN, tol float64) bool {
 	return true
 }
 
+// DistPointPointN returns the distance between two PointN
 func DistPointPointN(p *PointN, q *PointN) (dist float64) {
 	for i := 0; i < len(p.X); i++ {
 		dist += math.Pow(q.X[i]-p.X[i], 2.0)
@@ -74,28 +76,30 @@ func DistPointPointN(p *PointN, q *PointN) (dist float64) {
 
 // BoxN ///////////////////////////////////////////////////////////////////////////////////////////
 
+// BoxN implements a box int he N-dimensional space
 type BoxN struct {
 	// essential
-	Lo *PointN
-	Hi *PointN
+	Lo *PointN // lower point
+	Hi *PointN // higher point
 
 	// auxiliary
-	Id int
+	Id int // an auxiliary identification number
 }
 
-// TODO: test
-// L -- limits
+// NewBoxN creates a new box with given limiting coordinates
+//   L -- limits [4] or [6]: xmin,xmax, ymin,ymax, {zmin,zmax} optional
 func NewBoxN(L ...float64) *BoxN {
 	if len(L) == 4 { // 2D
-		return &BoxN{Lo: NewPointN(L[0], L[1]), Hi: NewPointN(L[2], L[3])}
+		return &BoxN{Lo: NewPointN(L[0], L[2]), Hi: NewPointN(L[1], L[3])}
 	} else if len(L) == 6 { // 3D
-		return &BoxN{Lo: NewPointN(L[0], L[1], L[2]), Hi: NewPointN(L[3], L[4], L[5])}
+		return &BoxN{Lo: NewPointN(L[0], L[2], L[4]), Hi: NewPointN(L[1], L[3], L[5])}
 	} else {
 		chk.Panic("NewBoxN requires 4 (2D) or 6 (3D) numbers; e.g. xmin,xmax, ymin,ymax, zmin,zmax")
 	}
 	return nil
 }
 
+// IsInside tells whether a PointN is inside box or not
 func (o BoxN) IsInside(p *PointN) bool {
 	for i := 0; i < len(p.X); i++ {
 		if p.X[i] < o.Lo.X[i] {
@@ -108,6 +112,7 @@ func (o BoxN) IsInside(p *PointN) bool {
 	return true
 }
 
+// GetSize returns the size of box (deltas)
 func (o *BoxN) GetSize() (delta []float64) {
 	delta = make([]float64, len(o.Lo.X))
 	for i := 0; i < len(o.Lo.X); i++ {
@@ -116,6 +121,7 @@ func (o *BoxN) GetSize() (delta []float64) {
 	return
 }
 
+// GetMid gets the centre coordinates of box
 func (o *BoxN) GetMid() (mid []float64) {
 	mid = make([]float64, len(o.Lo.X))
 	for i := 0; i < len(o.Lo.X); i++ {
@@ -124,6 +130,7 @@ func (o *BoxN) GetMid() (mid []float64) {
 	return
 }
 
+// Draw draws box
 func (o BoxN) Draw(withTxt bool, args, argsTxt *plt.A) {
 	if argsTxt == nil {
 		argsTxt = &plt.A{C: "k", Fsz: 8, Ha: "center", Va: "center"}
@@ -158,8 +165,9 @@ func (o BoxN) Draw(withTxt bool, args, argsTxt *plt.A) {
 	}
 }
 
-// If point p lies outside box b, the distance to the nearest point on b is returned.
-// If p is inside b or on its surface, zero is returned.
+// DistPointBoxN returns the distance of a point to the box
+//   NOTE: If point p lies outside box b, the distance to the nearest point on b is returned.
+//         If p is inside b or on its surface, zero is returned.
 func DistPointBoxN(p *PointN, b *BoxN) (dist float64) {
 	for i := 0; i < len(p.X); i++ {
 		if p.X[i] < b.Lo.X[i] {
@@ -174,9 +182,12 @@ func DistPointBoxN(p *PointN, b *BoxN) (dist float64) {
 
 // Octree /////////////////////////////////////////////////////////////////////////////////////////
 
+// Entity defines the geometric (or not) entity/element to be stored in the Octree
 type Entity interface {
 }
 
+// Octree implements a Quad-Tree or an Oct-Tree to assist in fast-searching elements (entities) in
+// the 2D or 3D space
 type Octree struct {
 
 	// constants
@@ -193,8 +204,8 @@ type Octree struct {
 	pophash map[uint32]uint32 // contains node population info
 }
 
-// NewOctree creates an Octree
-//   ndim -- dimension
+// NewOctree creates a new Octree
+//   L -- limits [4] or [6]: xmin,xmax, ymin,ymax, {zmin,zmax} optional
 func NewOctree(L ...float64) (o *Octree) {
 
 	// allocate object

@@ -50,6 +50,17 @@ func Test_octree01(tst *testing.T) {
 
 	dpq := DistPointPointN(p, q)
 	chk.Scalar(tst, "dist(p,q)", 1e-15, dpq, math.Sqrt(5.0))
+
+	c1 := NewPointNdim(2)
+	c1.X[0] = 1
+	c1.X[1] = 2
+	chk.Vector(tst, "c1", 1e-15, c1.X, []float64{1, 2})
+
+	c2 := NewPointN(1, 2)
+	chk.Vector(tst, "c2", 1e-15, c2.X, []float64{1, 2})
+
+	c3 := NewPointN(1, 2, 3)
+	chk.Vector(tst, "c3", 1e-15, c3.X, []float64{1, 2, 3})
 }
 
 func Test_octree02(tst *testing.T) {
@@ -58,7 +69,9 @@ func Test_octree02(tst *testing.T) {
 	chk.PrintTitle("octree02. BoxN and DistPointPointN")
 
 	b := &BoxN{&PointN{X: []float64{-1, -2, -3}}, &PointN{X: []float64{3, 2, 1}}, 0}
+	mid := b.GetMid()
 	delta := b.GetSize()
+	chk.Vector(tst, "mid", 1e-15, mid, []float64{1, 0, -1})
 	chk.Vector(tst, "delta", 1e-15, delta, []float64{4, 4, 4})
 
 	p := &PointN{X: []float64{-2, 0, 0}}
@@ -110,6 +123,13 @@ func Test_octree02(tst *testing.T) {
 		tst.Errorf("is inside box failed")
 		return
 	}
+
+	b1 := NewBoxN(0, 1, 2, 3)       // xmin,xmax, ymin,ymax
+	b2 := NewBoxN(0, 1, 2, 3, 4, 5) // xmin,xmax, ymin,ymax
+	chk.Vector(tst, "b1.Lo", 1e-15, b1.Lo.X, []float64{0, 2})
+	chk.Vector(tst, "b1.Hi", 1e-15, b1.Hi.X, []float64{1, 3})
+	chk.Vector(tst, "b2.Lo", 1e-15, b2.Lo.X, []float64{0, 2, 4})
+	chk.Vector(tst, "b2.Hi", 1e-15, b2.Hi.X, []float64{1, 3, 5})
 
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
