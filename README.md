@@ -6,6 +6,9 @@ multi-threaded applications and message passing for parallel computations are co
 and structures for geometry calculations, random numbers generation and probability distributions,
 optimisation algorithms, and plotting and visualisation are implemented as well.
 
+<div id="container">
+<p><img src="examples/figs/gosl-collage1-sml.png"></p>
+</div>
 
 
 ## Content
