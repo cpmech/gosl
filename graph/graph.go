@@ -45,8 +45,8 @@ func (o *Graph) Init(edges [][]int, weightsE []float64, verts [][]float64, weigh
 	o.Key2edge = make(map[int]int)
 	for k, edge := range o.Edges {
 		i, j := edge[0], edge[1]
-		utl.IntIntsMapAppend(&o.Shares, i, k)
-		utl.IntIntsMapAppend(&o.Shares, j, k)
+		utl.IntIntsMapAppend(o.Shares, i, k)
+		utl.IntIntsMapAppend(o.Shares, j, k)
 		o.Key2edge[o.HashEdgeKey(i, j)] = k
 	}
 	if o.Verts != nil {
