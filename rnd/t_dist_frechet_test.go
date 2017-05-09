@@ -141,7 +141,7 @@ func Test_frechet_03(tst *testing.T) {
 
 	if chk.Verbose {
 		plt.AxHline(d, nil)
-		FrechetPlotCoef("/tmp/gosl", "fig_frechet_coef.eps", 3.0, 5.0)
+		FrechetPlotCoef("/tmp/gosl", "fig_frechet_coef", 3.0, 5.0)
 	}
 
 	k := 0.2441618
@@ -162,5 +162,52 @@ func Test_frechet_03(tst *testing.T) {
 	if chk.Verbose {
 		plot_frechet(l, 1, α, 8, 16)
 		plt.Save("/tmp/gosl", "rnd_dist_frechet_03")
+	}
+}
+
+func Test_dist_frechet_04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("dist_frechet_04. transformation")
+
+	doplot := chk.Verbose
+	if doplot {
+
+		l := 8.782275
+		α := 4.095645
+
+		vard := &VarData{L: l, A: α}
+		vard.Distr = new(DistFrechet)
+		vard.Distr.Init(vard)
+
+		npts := 1001
+		X := utl.LinSpace(8.5, 12, npts)
+		F, Y := make([]float64, npts), make([]float64, npts)
+		for i := 0; i < npts; i++ {
+			y, invalid := vard.Transform(X[i])
+			if invalid {
+				io.Pf("invalid: x=%g\n", X[i])
+				y = math.NaN()
+			}
+			Y[i] = y
+			F[i] = vard.Distr.Pdf(X[i])
+		}
+
+		plt.Reset(true, &plt.A{Prop: 1})
+
+		plt.Subplot(2, 1, 1)
+		plt.Plot(X, F, &plt.A{C: "#0046ba", Lw: 2, NoClip: true})
+		plt.HideTRborders()
+		plt.Gll("$x$", "$f(x)$", nil)
+
+		plt.Subplot(2, 1, 2)
+		plt.Plot(X, Y, &plt.A{C: "b", Lw: 2, NoClip: true})
+		plt.HideTRborders()
+		plt.Gll("$x$", "$y=T(x)$", nil)
+
+		err := plt.Save("/tmp/gosl", "rnd_dist_frechet_04")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
 	}
 }

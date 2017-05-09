@@ -5,6 +5,7 @@
 package rnd
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -191,5 +192,53 @@ func Test_dist_normal_05(tst *testing.T) {
 		plt.Subplot(2, 1, 1)
 		hist.PlotDensity(nil)
 		plt.Save("/tmp/gosl", "rnd_dist_normal_05")
+	}
+}
+
+func Test_dist_normal_06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("dist_normal_06. transformation")
+
+	doplot := chk.Verbose
+	if doplot {
+
+		vard := &VarData{M: 1.5, S: 0.1}
+		vard.Distr = new(DistNormal)
+		vard.Distr.Init(vard)
+
+		npts := 1001
+		X := utl.LinSpace(1, 2, npts)
+		F, Y := make([]float64, npts), make([]float64, npts)
+		for i := 0; i < npts; i++ {
+			y, invalid := vard.Transform(X[i])
+			if invalid {
+				io.Pf("invalid: x=%g\n", X[i])
+				y = math.NaN()
+			}
+			Y[i] = y
+			F[i] = vard.Distr.Pdf(X[i])
+		}
+
+		plt.Reset(true, &plt.A{Prop: 1})
+
+		plt.Subplot(2, 1, 1)
+		plt.Plot(X, F, &plt.A{C: "#0046ba", Lw: 2, NoClip: true})
+		plt.HideTRborders()
+		plt.Gll("$x$", "$f(x)$", nil)
+		plt.AxisXmin(1)
+
+		plt.Subplot(2, 1, 2)
+		plt.Plot(X, Y, &plt.A{C: "b", Lw: 2, NoClip: true})
+		plt.HideTRborders()
+		plt.SetYnticks(12)
+		plt.AxisYrange(-5, 5)
+		plt.Gll("$x$", "$y=T(x)$", nil)
+		plt.AxisXmin(1)
+
+		err := plt.Save("/tmp/gosl", "rnd_dist_normal_06")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
 	}
 }
