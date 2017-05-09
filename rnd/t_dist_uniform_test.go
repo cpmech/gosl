@@ -5,6 +5,7 @@
 package rnd
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -99,7 +100,7 @@ func Test_dist_uniform_01(tst *testing.T) {
 func Test_dist_uniform_02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("dist_uniform_02")
+	chk.PrintTitle("dist_uniform_02. density and cumulative distr.")
 
 	doplot := chk.Verbose
 	if doplot {
@@ -108,5 +109,38 @@ func Test_dist_uniform_02(tst *testing.T) {
 		B := 2.5 // max
 		plot_uniform(A, B, 1.0, 3.0)
 		plt.Save("/tmp/gosl", "rnd_dist_uniform_02a")
+	}
+}
+
+func Test_dist_uniform_03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("dist_uniform_03. transformation")
+
+	doplot := chk.Verbose
+	if doplot {
+
+		vard := &VarData{D: D_Uniform, Min: 1.5, Max: 2.5}
+		vard.Distr = new(DistUniform)
+		vard.Distr.Init(vard)
+
+		X := utl.LinSpace(vard.Min, vard.Max, 10001)
+		Y := utl.GetMapped(X, func(x float64) float64 {
+			y, invalid := vard.Transform(x)
+			if invalid {
+				io.Pf("invalid: x=%g\n", x)
+				y = math.NaN()
+			}
+			return y
+		})
+
+		plt.Reset(true, &plt.A{Prop: 0.75})
+		plt.AxVline(1.5, &plt.A{C: "k", Ls: "--"})
+		plt.AxVline(2.5, &plt.A{C: "k", Ls: "--"})
+		plt.Plot(X, Y, &plt.A{C: "b", Lw: 2, NoClip: true})
+		plt.SetTicksXlist([]float64{1.4, 1.5, 1.6, 1.8, 2.0, 2.2, 2.4, 2.5, 2.6})
+		plt.HideTRborders()
+		plt.Gll("$x$", "$y=T(x)$", nil)
+		plt.Save("/tmp/gosl", "rnd_dist_uniform_03")
 	}
 }
