@@ -7,5 +7,5 @@ while true; do
     echo
     echo
     go install
-    go test -test.run="hc01"
+    go test -test.run="uniform_02"
 done

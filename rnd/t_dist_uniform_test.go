@@ -26,12 +26,16 @@ func plot_uniform(A, B float64, xmin, xmax float64) {
 		y[i] = dist.Pdf(x[i])
 		Y[i] = dist.Cdf(x[i])
 	}
+
 	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, nil)
-	plt.Gll("$x$", "$f(x)$", nil)
+	plt.Plot(x, y, &plt.A{Lw: 2, NoClip: true})
+	plt.HideAllBorders()
 	plt.SetYnticks(11)
+	plt.Gll("$x$", "$f(x)$", nil)
+
 	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, nil)
+	plt.Plot(x, Y, &plt.A{Lw: 2, NoClip: true})
+	plt.HideAllBorders()
 	plt.Gll("$x$", "$F(x)$", nil)
 }
 
