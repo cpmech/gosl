@@ -204,7 +204,7 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#IntIndexSorted">func IntIndexSorted(a []int, val int, aSortedIn []int) (idx int, aSortedOut []int)</a></dd>
 			
 				
-				<dd><a href="#IntIntsMapAppend">func IntIntsMapAppend(m *map[int][]int, key int, item int)</a></dd>
+				<dd><a href="#IntIntsMapAppend">func IntIntsMapAppend(m map[int][]int, key int, item int)</a></dd>
 			
 				
 				<dd><a href="#IntMinMax">func IntMinMax(v []int) (mi, ma int)</a></dd>
@@ -327,7 +327,7 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#StrFltMapSortSplit">func StrFltMapSortSplit(m map[string]float64) (sorted_keys []string, sorted_vals []float64)</a></dd>
 			
 				
-				<dd><a href="#StrFltsMapAppend">func StrFltsMapAppend(m *map[string][]float64, key string, item float64)</a></dd>
+				<dd><a href="#StrFltsMapAppend">func StrFltsMapAppend(m map[string][]float64, key string, item float64)</a></dd>
 			
 				
 				<dd><a href="#StrIndexSmall">func StrIndexSmall(a []string, val string) int</a></dd>
@@ -339,7 +339,7 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#StrIntMapSortSplit">func StrIntMapSortSplit(m map[string]int) (sorted_keys []string, sorted_vals []int)</a></dd>
 			
 				
-				<dd><a href="#StrIntsMapAppend">func StrIntsMapAppend(m *map[string][]int, key string, item int)</a></dd>
+				<dd><a href="#StrIntsMapAppend">func StrIntsMapAppend(m map[string][]int, key string, item int)</a></dd>
 			
 				
 				<dd><a href="#StrVals">func StrVals(n int, val string) (s []string)</a></dd>
@@ -1123,8 +1123,8 @@ TODO: this function is finished yet
 		
 			
 			
-			<h2 id="IntIntsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=309:367#L1">IntIntsMapAppend</a></h2>
-			<pre>func IntIntsMapAppend(m *map[<a href="/pkg/builtin/#int">int</a>][]<a href="/pkg/builtin/#int">int</a>, key <a href="/pkg/builtin/#int">int</a>, item <a href="/pkg/builtin/#int">int</a>)</pre>
+			<h2 id="IntIntsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=520:577#L3">IntIntsMapAppend</a></h2>
+			<pre>func IntIntsMapAppend(m map[<a href="/pkg/builtin/#int">int</a>][]<a href="/pkg/builtin/#int">int</a>, key <a href="/pkg/builtin/#int">int</a>, item <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntIntsMapAppend appends a new item to a map of slice.
 </p>
@@ -1664,8 +1664,8 @@ StrFltMapSortSplit returns sorted keys of map[string]float64 and sorted values
 		
 			
 			
-			<h2 id="StrFltsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=955:1027#L21">StrFltsMapAppend</a></h2>
-			<pre>func StrFltsMapAppend(m *map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, key <a href="/pkg/builtin/#string">string</a>, item <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="StrFltsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=1146:1217#L25">StrFltsMapAppend</a></h2>
+			<pre>func StrFltsMapAppend(m map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#float64">float64</a>, key <a href="/pkg/builtin/#string">string</a>, item <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StrFltsMapAppend appends a new item to a map of slice.
 </p>
@@ -1716,8 +1716,8 @@ StrIntMapSortSplit returns sorted keys of map[string]int and sorted values
 		
 			
 			
-			<h2 id="StrIntsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=629:693#L10">StrIntsMapAppend</a></h2>
-			<pre>func StrIntsMapAppend(m *map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#int">int</a>, key <a href="/pkg/builtin/#string">string</a>, item <a href="/pkg/builtin/#int">int</a>)</pre>
+			<h2 id="StrIntsMapAppend">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mapops.go?s=830:893#L14">StrIntsMapAppend</a></h2>
+			<pre>func StrIntsMapAppend(m map[<a href="/pkg/builtin/#string">string</a>][]<a href="/pkg/builtin/#int">int</a>, key <a href="/pkg/builtin/#string">string</a>, item <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 StrIntsMapAppend appends a new item to a map of slice.
 </p>

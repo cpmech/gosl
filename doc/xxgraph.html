@@ -284,7 +284,7 @@ Graph defines a graph structure
 
 			
 				
-				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5195:5249#L188">ReadGraphTable</a></h3>
+				<h3 id="ReadGraphTable">func <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=5193:5247#L188">ReadGraphTable</a></h3>
 				<pre>func ReadGraphTable(fname <a href="/pkg/builtin/#string">string</a>, bargera <a href="/pkg/builtin/#bool">bool</a>) *<a href="#Graph">Graph</a></pre>
 				<p>
 ReadGraphTable reads data and allocate graph
@@ -296,7 +296,7 @@ ReadGraphTable reads data and allocate graph
 
 			
 				
-				<h3 id="Graph.CalcDist">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3708:3746#L119">CalcDist</a></h3>
+				<h3 id="Graph.CalcDist">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3706:3744#L119">CalcDist</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) CalcDist() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 CalcDist computes distances beetween all vertices and initialises &#39;Next&#39; matrix
@@ -329,7 +329,7 @@ argsEdges -- plt arguments for edges. may be nil
 				
 			
 				
-				<h3 id="Graph.GetEdge">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1923:1975#L51">GetEdge</a></h3>
+				<h3 id="Graph.GetEdge">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=1921:1973#L51">GetEdge</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) GetEdge(i, j <a href="/pkg/builtin/#int">int</a>) (k <a href="/pkg/builtin/#int">int</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes ides
@@ -340,7 +340,7 @@ GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes 
 				
 			
 				
-				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4471:4519#L156">HashEdgeKey</a></h3>
+				<h3 id="Graph.HashEdgeKey">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4469:4517#L156">HashEdgeKey</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) HashEdgeKey(i, j <a href="/pkg/builtin/#int">int</a>) (edge <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 HashEdgeKey creates a unique hash key identifying an edge
@@ -368,7 +368,7 @@ Init initialises graph
 				
 			
 				
-				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3459:3499#L105">Path</a></h3>
+				<h3 id="Graph.Path">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=3457:3497#L105">Path</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) Path(s, t <a href="/pkg/builtin/#int">int</a>) (p []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Path returns the path from source (s) to destination (t)
@@ -381,7 +381,7 @@ Path returns the path from source (s) to destination (t)
 				
 			
 				
-				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2863:2919#L79">ShortestPaths</a></h3>
+				<h3 id="Graph.ShortestPaths">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=2861:2917#L79">ShortestPaths</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) ShortestPaths(method <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 ShortestPaths computes the shortest paths in a graph defined as follows
@@ -409,7 +409,7 @@ Input:
 				
 			
 				
-				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4612:4654#L161">StrDistMatrix</a></h3>
+				<h3 id="Graph.StrDistMatrix">func (*Graph) <a href="https://github.com/cpmech/gosl/blob/master/graph/graph.go?s=4610:4652#L161">StrDistMatrix</a></h3>
 				<pre>func (o *<a href="#Graph">Graph</a>) StrDistMatrix() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 StrDistMatrix returns a string representation of Dist matrix
