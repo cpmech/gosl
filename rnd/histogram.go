@@ -160,7 +160,7 @@ func (o Histogram) GenLabels(numfmt string) (labels []string) {
 //  args -- plot arguments. may be nil
 func (o Histogram) PlotDensity(args *plt.A) {
 	if args == nil {
-		args = &plt.A{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true}
+		args = &plt.A{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true, NoClip: true}
 	}
 	nstations := len(o.Stations)
 	if nstations < 2 {
