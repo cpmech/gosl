@@ -178,7 +178,6 @@ func (o Histogram) PlotDensity(args *plt.A) {
 		plt.Polyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, prob}, {xi, prob}}, args)
 		ymax = max(ymax, prob)
 	}
-	plt.AxisRange(o.Stations[0], o.Stations[nstations-1], 0, ymax)
 	return
 }
 
