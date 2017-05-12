@@ -44,6 +44,7 @@ type A struct {
 	FszLeg  float64 // font size of legend
 	FszXtck float64 // font size of x-ticks
 	FszYtck float64 // font size of y-ticks
+	FontSet string  // font set: e.g. 'stix', 'stixsans' [default]
 	HideL   bool    // hide left frame border
 	HideR   bool    // hide right frame border
 	HideB   bool    // hide bottom frame border
@@ -275,8 +276,8 @@ func argsLeg(args *A) (loc string, ncol int, hlen, fsz float64, frame int, out i
 }
 
 // argsFsz allocates args if nil, and sets default fontsizes
-func argsFsz(args *A) (txt, lbl, leg, xtck, ytck float64) {
-	txt, lbl, leg, xtck, ytck = 11, 10, 9, 8, 8
+func argsFsz(args *A) (txt, lbl, leg, xtck, ytck float64, fontset string) {
+	txt, lbl, leg, xtck, ytck, fontset = 11, 10, 9, 8, 8, "stixsans"
 	if args == nil {
 		return
 	}
@@ -294,6 +295,9 @@ func argsFsz(args *A) (txt, lbl, leg, xtck, ytck float64) {
 	}
 	if args.FszYtck > 0 {
 		ytck = args.FszYtck
+	}
+	if args.FontSet != "" {
+		fontset = args.FontSet
 	}
 	return
 }

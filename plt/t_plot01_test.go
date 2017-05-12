@@ -94,7 +94,7 @@ func Test_plot01(tst *testing.T) {
 		}
 
 		Reset(false, nil)
-		SetFontSizes(&A{Fsz: 20, FszLbl: 20, FszXtck: 10, FszYtck: 10})
+		SetFontSizes(&A{Fsz: 20, FszLbl: 20, FszXtck: 10, FszYtck: 10, FontSet: "stix"})
 		Plot(x, y, &A{L: "first", A: 0.5, C: "r", M: "o", Ls: "-", Lw: 2, NoClip: true})
 		Plot(y, x, &A{L: "second", C: "b", M: ".", Ls: ":", Lw: 40})
 		Text(0.2, 0.8, "HERE", &A{Fsz: 20, Ha: "center", Va: "center"})

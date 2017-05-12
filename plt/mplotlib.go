@@ -74,7 +74,7 @@ func Reset(setDefault bool, args *A) {
 
 	// set figure data
 	if setDefault {
-		txt, lbl, leg, xtck, ytck := argsFsz(args)
+		txt, lbl, leg, xtck, ytck, fontset := argsFsz(args)
 		figType, dpi, width, height := argsFigData(args)
 		io.Ff(&bufferPy, "plt.rcdefaults()\n")
 		io.Ff(&bufferPy, "plt.rcParams.update({\n")
@@ -83,6 +83,7 @@ func Reset(setDefault bool, args *A) {
 		io.Ff(&bufferPy, "    'legend.fontsize' : %g,\n", leg)
 		io.Ff(&bufferPy, "    'xtick.labelsize' : %g,\n", xtck)
 		io.Ff(&bufferPy, "    'ytick.labelsize' : %g,\n", ytck)
+		io.Ff(&bufferPy, "    'mathtext.fontset': '%s',\n", fontset)
 		io.Ff(&bufferPy, "    'figure.figsize'  : [%d,%d],\n", width, height)
 		switch figType {
 		case "eps":
@@ -602,14 +603,16 @@ func Clf() {
 }
 
 // SetFontSizes sets font sizes
+//   NOTE: this function also sets the FontSet, if not ""
 func SetFontSizes(args *A) {
-	txt, lbl, leg, xtck, ytck := argsFsz(args)
+	txt, lbl, leg, xtck, ytck, fontset := argsFsz(args)
 	io.Ff(&bufferPy, "plt.rcParams.update({\n")
 	io.Ff(&bufferPy, "    'font.size'       : %g,\n", txt)
 	io.Ff(&bufferPy, "    'axes.labelsize'  : %g,\n", lbl)
 	io.Ff(&bufferPy, "    'legend.fontsize' : %g,\n", leg)
 	io.Ff(&bufferPy, "    'xtick.labelsize' : %g,\n", xtck)
-	io.Ff(&bufferPy, "    'ytick.labelsize' : %g})\n", ytck)
+	io.Ff(&bufferPy, "    'ytick.labelsize' : %g,\n", ytck)
+	io.Ff(&bufferPy, "    'mathtext.fontset': '%s'})\n", fontset)
 }
 
 // ZoomWindow adds another axes to plot a figure within the figure; e.g. a zoom window
