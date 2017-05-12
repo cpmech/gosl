@@ -24,6 +24,8 @@ func Test_stat01(tst *testing.T) {
 	xdevS1 := StatDev(x, true)
 	xdevA1 := StatDev(x, false)
 	xave1 := StatAve(x)
+	xave2a, xdev2a := StatAveDev(x, true)
+	xave2b, xdev2b := StatAveDev(x, false)
 
 	sum, mean, adev, sdev, vari, skew, kurt, err := StatMoments(x)
 	if err != nil {
@@ -49,6 +51,10 @@ func Test_stat01(tst *testing.T) {
 	chk.Scalar(tst, "xdevS", 1e-17, xdevS, 12.134661099511597)
 	chk.Scalar(tst, "xdevA1", 1e-17, xdevA1, adev)
 	chk.Scalar(tst, "xdevS1", 1e-17, xdevS1, 12.134661099511597)
+	chk.Scalar(tst, "xave2a", 1e-17, xave2a, xave)
+	chk.Scalar(tst, "xdev2a", 1e-17, xdev2a, xdevS)
+	chk.Scalar(tst, "xave2b", 1e-17, xave2b, xave)
+	chk.Scalar(tst, "xdev2b", 1e-17, xdev2b, xdevA)
 	// TODO: add checks for adev, skew and kurt
 }
 
