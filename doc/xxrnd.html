@@ -167,6 +167,9 @@ Twister library). It also implements probability distribution functions.
 				<dd><a href="#StatAve">func StatAve(x []float64) (xave float64)</a></dd>
 			
 				
+				<dd><a href="#StatAveDev">func StatAveDev(x []float64, std bool) (xave, xdev float64)</a></dd>
+			
+				
 				<dd><a href="#StatBasic">func StatBasic(x []float64, std bool) (xmin, xave, xmax, xdev float64)</a></dd>
 			
 				
@@ -1030,7 +1033,25 @@ Output:
 		
 			
 			
-			<h2 id="StatBasic">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=2377:2447#L95">StatBasic</a></h2>
+			<h2 id="StatAveDev">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=2332:2391#L92">StatAveDev</a></h2>
+			<pre>func StatAveDev(x []<a href="/pkg/builtin/#float64">float64</a>, std <a href="/pkg/builtin/#bool">bool</a>) (xave, xdev <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+StatAvedDev computes the average of x and the average deviation or standard deviation (σ)
+</p>
+<pre>Input:
+ x   -- sample
+ std -- compute standard deviation (σ) instead of average deviation (adev)
+Output:
+ xdev -- average deviation; if std==true, computes standard deviation (σ) instead
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="StatBasic">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=2913:2983#L118">StatBasic</a></h2>
 			<pre>func StatBasic(x []<a href="/pkg/builtin/#float64">float64</a>, std <a href="/pkg/builtin/#bool">bool</a>) (xmin, xave, xmax, xdev <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StatBasic performs some basic statistics
@@ -1089,7 +1110,7 @@ Output:
 		
 			
 			
-			<h2 id="StatDur">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=6397:6466#L223">StatDur</a></h2>
+			<h2 id="StatDur">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=6933:7002#L246">StatDur</a></h2>
 			<pre>func StatDur(durs []<a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>) (min, ave, max, sum <a href="/pkg/time/">time</a>.<a href="/pkg/time/#Duration">Duration</a>)</pre>
 			<p>
 StatDur generates stat about duration
@@ -1101,7 +1122,7 @@ StatDur generates stat about duration
 		
 			
 			
-			<h2 id="StatMoments">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=3193:3283#L129">StatMoments</a></h2>
+			<h2 id="StatMoments">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=3729:3819#L152">StatMoments</a></h2>
 			<pre>func StatMoments(x []<a href="/pkg/builtin/#float64">float64</a>) (sum, mean, adev, sdev, vari, skew, kurt <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 StatMoments computes the 4th moments of a data set
@@ -1127,7 +1148,7 @@ Based on:
 		
 			
 			
-			<h2 id="StatTable">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=5911:5976#L194">StatTable</a></h2>
+			<h2 id="StatTable">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/stat.go?s=6447:6512#L217">StatTable</a></h2>
 			<pre>func StatTable(x [][]<a href="/pkg/builtin/#float64">float64</a>, std, withZ <a href="/pkg/builtin/#bool">bool</a>) (y, z [][]<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StatTable computes the min, ave, max, and dev of values organised in a table
@@ -1693,7 +1714,7 @@ Count counts how many items fall within each bin
 				
 			
 				
-				<h3 id="Histogram.DensityArea">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4537:4596#L177">DensityArea</a></h3>
+				<h3 id="Histogram.DensityArea">func (Histogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=4487:4546#L176">DensityArea</a></h3>
 				<pre>func (o <a href="#Histogram">Histogram</a>) DensityArea(nsamples <a href="/pkg/builtin/#int">int</a>) (area <a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 DensityArea computes the area of the density diagram
@@ -1744,7 +1765,7 @@ PlotDensity plots histogram in density values
 		
 			
 			
-			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5330:5412#L201">IntHistogram</a></h2>
+			<h2 id="IntHistogram">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5280:5362#L200">IntHistogram</a></h2>
 			<pre>type IntHistogram struct {
     Stations []<a href="/pkg/builtin/#int">int</a> <span class="comment">// stations</span>
     Counts   []<a href="/pkg/builtin/#int">int</a> <span class="comment">// counts</span>
@@ -1772,7 +1793,7 @@ IntHistogram holds data for computing/plotting histograms with integers
 
 			
 				
-				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5995:6047#L237">Count</a></h3>
+				<h3 id="IntHistogram.Count">func (*IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5945:5997#L236">Count</a></h3>
 				<pre>func (o *<a href="#IntHistogram">IntHistogram</a>) Count(vals []<a href="/pkg/builtin/#int">int</a>, clear <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Count counts how many items fall within each bin
@@ -1783,7 +1804,7 @@ Count counts how many items fall within each bin
 				
 			
 				
-				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5488:5528#L208">FindBin</a></h3>
+				<h3 id="IntHistogram.FindBin">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=5438:5478#L207">FindBin</a></h3>
 				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) FindBin(x <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 FindBin finds where x falls in
@@ -1795,7 +1816,7 @@ returns -1 if x is outside the range
 				
 			
 				
-				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=6514:6578#L264">GenLabels</a></h3>
+				<h3 id="IntHistogram.GenLabels">func (IntHistogram) <a href="https://github.com/cpmech/gosl/blob/master/rnd/histogram.go?s=6464:6528#L263">GenLabels</a></h3>
 				<pre>func (o <a href="#IntHistogram">IntHistogram</a>) GenLabels(numfmt <a href="/pkg/builtin/#string">string</a>) (labels []<a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 GenLabels generate nice labels identifying bins
