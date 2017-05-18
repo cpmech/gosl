@@ -26,18 +26,17 @@ This document is organised as follows:
 3. COMPILE SUITESPARSE
     1. Download
     2. Build SuiteSparse
-4. INSTALL GO (GOLANG)
-    1. Download Go 1.6.3 (or newer)
-    2. Install from source (patch and compile)
-    3. Set environment variables
-5. (OPTIONAL) INSTALL PYTHON
+4. INSTALL PYTHON-XY
+5. INSTALL GO (GOLANG)
+    1. Download Go
+    2. Set environment variables
 6. INSTALL GOSL
 
 
 
 ## 1 INSTALL COMPILATION TOOLS
 
-The videos [published here](https://www.youtube.com/watch?v=9vFODRZTBcc&list=PLk1POg2YgVEI8OMZ-EOlfJGK0YWxY9-sL) may guide the steps listed below; but note that the directory *GoslDeps* has to be renamed as *Gosl*. Three videos are of relevance to this section:
+The videos [published here](https://www.youtube.com/watch?v=9vFODRZTBcc&list=PLk1POg2YgVEI8OMZ-EOlfJGK0YWxY9-sL) may guide the steps listed below; but note that the directory *GoslDeps* has to be renamed as *Gosl*. Three videos are of relevance to this section (note that the videos show the old path for Gosl; `C:\Gosl` must be used now):
 
 1. YouTube [Download packages](https://youtu.be/9vFODRZTBcc)
 2. YouTube [Install tools](https://youtu.be/dLyoGflSFTI)
@@ -45,21 +44,21 @@ The videos [published here](https://www.youtube.com/watch?v=9vFODRZTBcc&list=PLk
 
 Steps:
 
-1. TDM GCC AND GFORTRAN: From http://tdm-gcc.tdragon.net/download download and install *tdm64-gcc-5.1.0-2.exe* (or newer). Make sure to select *fortran* and Keep other default options.
-2. CMAKE: From https://cmake.org/download/ download and install *cmake-3.6.1-win64-x64.msi*. Keep default options.
-3. GIT AND GIT BASH: From https://git-scm.com/download/ download and install *Git-2.8.1-64-bit.exe*. Keep default options.
+1. TDM GCC AND GFORTRAN: From http://tdm-gcc.tdragon.net/download download and install *tdm64-gcc-5.1.0-2.exe* (or newer, as long as it is 64-bit). Make sure to select *fortran* and Keep other default options. Click on [Create] and leave the Installation Directory as `C:\TDM-GCC-64`
+2. CMAKE: From https://cmake.org/download/ download and install *cmake-3.8.1-win64-x64.msi*. Keep default options.
+3. GIT AND GIT BASH: From https://git-scm.com/download/ download and install *Git-2.13.0-64-bit.exe*. Keep default options.
 
 
 
 ## 2 COMPILE LAPACK
 
-Lapack and SuiteSparse will be compiled and installed in a directory named *C:\Gosl*; thus, create this directory first and download lapack-3.6.1.tgz and SuiteSparse-4.5.3.tag.gz into it.
+Lapack and SuiteSparse will be compiled and installed in a directory named *C:\Gosl*; thus, create this directory first and download lapack-3.7.0.tgz and SuiteSparse-4.5.5.tag.gz into it.
 
 Lapack is one of the earliest _package_ of routines to perform computations in _linear algebra_ (e.g. matrix factorizations, eigenvalues/vectors, linear systems, etc.) and has a widespread usage in computer science. It is for instace called within [Matlab](http://au.mathworks.com/company/newsletters/articles/matlab-incorporates-lapack.html), [Julia](http://docs.julialang.org/en/release-0.4/stdlib/linalg/) and [Numpy](http://docs.scipy.org/doc/numpy-1.10.1/user/install.html). Lapack is also used in several other applications and inspired other tools such as the MKL by Intel. Therefore, calling Lapack from Go is very useful!
 
 ### 2.1 Download and uncompress
 
-1. Get *lapack-3.6.1.tgz* from http://www.netlib.org/lapack/lapack-3.6.1.tgz.
+1. Get *lapack-3.7.0.tgz* from http://www.netlib.org/lapack/
 2. Save file into *C:\Gosl*
 3. Extract files (see commands below)
 
@@ -67,7 +66,7 @@ Start Git Bash and type:
 
 ```
 cd /c/Gosl
-tar xzvf lapack-3.6.1.tgz
+tar xzvf lapack-3.7.0.tgz
 mkdir build-lapack
 ```
 
@@ -75,7 +74,7 @@ mkdir build-lapack
 
 Start CMake (cmake-gui) and select:
 
-1. Where is the source code = `C:/Gosl/lapack-3.6.1`
+1. Where is the source code = `C:/Gosl/lapack-3.7.0`
 2. Where to build the binaries = `C:/Gosl/build-lapack`
 3. Hit `[Configure]`
 4. Select *MinGW Makefiles* under Specify the generator for this project (leave Use default native compilers on). Hit `[Finish]`
@@ -104,7 +103,7 @@ mingw32-make.exe install
 
 ### 3.1 Download
 
-1. Get SuiteSparse-4.5.3.tar.gz from http://faculty.cse.tamu.edu/davis/SuiteSparse/ and save it into C:\Gosl
+1. Get SuiteSparse-4.5.5.tar.gz from http://faculty.cse.tamu.edu/davis/SuiteSparse/ and save it into C:\Gosl
 2. Get https://github.com/cpmech/gosl/raw/master/scripts/windows/fix-suitesparse.tar.gz and save it into C:\Gosl
 
 ### 3.2. Build SuiteSparse
@@ -113,7 +112,7 @@ Start Git Bash and type:
 
 ```
 cd /c/Gosl
-tar xzvf SuiteSparse-4.5.3.tar.gz
+tar xzvf SuiteSparse-4.5.5.tar.gz
 tar xzvf fix-suitesparse.tar.gz
 bash fix-suitesparse/replace-files.bash
 cd SuiteSparse
@@ -122,46 +121,32 @@ cd UMFPACK/Demo
 mingw32-make.exe
 ```
 
-(the small difference causing an error after m test is ok).
+(the small difference causing an error after mingw32-make.exe test is ok).
 
 
 
 
-## 4 INSTALL GO (GOLANG)
+## 4 INSTALL PYTHON-XY
 
-### 4.1 Download Go 1.6.3 (or newer)
-
-Download go1.6.3.windows-amd64.msi from https://golang.org/dl/ and run it. Install into *C:\Go*.
-
-### 4.2 Install from source (patch and compile)
-
-Download, patch and compile Go:
-
-```
-cd /c/Gosl
-git clone https://go.googlesource.com/go
-cd go/src
-git fetch https://go.googlesource.com/go refs/changes/70/26670/1
-git checkout FETCH_HEAD
-export GOROOT_BOOTSTRAP=/c/Go
-./all.bat
-```
-
-### 4.3 Set environment variables
-
-*Uninstall* go1.6.3, then set the following environment variables:
-
-1. `GOPATH = C:\MyGo`
-2. `GOROOT = C:\Gosl\go`
-3. Add `C:\Gosl\go\bin` to the `PATH` variable
-
-
-
-## 5 (OPTIONAL) INSTALL PYTHON
-
-In Gosl, Python is used only for plotting; but the user does not need to explicitly call Python. It is run on the background to generate figures. In Windows, PythonXY is a convenient option because it has NumPy, SciPy and Matplotlib (all required) and is easy to install.
+In Gosl, Python is used only for plotting; but the user does not need to explicitly call Python. It is run on the background to generate figures. In Windows, PythonXY is convenient because it has NumPy, SciPy and Matplotlib (all required) and is easy to install.
 
 Download and install Python(x,y)-2.7.10.0.exe from http://python-xy.github.io/downloads.html. Default options are OK.
+
+
+
+## 5 INSTALL GO (GOLANG)
+
+### 4.1 Download Go 1.8.1 (or newer)
+
+Download go1.8.1.windows-amd64.msi from https://golang.org/dl/ and run it. Install into *C:\Go*. Remember to close any Git Bash window.
+
+### 4.2 Set environment variables
+
+Create `C:\MyGo` directory (or any other to be set as GOPATH).
+
+Set the following environment variables (press `Windows key + R` to run `sysdm.cpl` then choose Advanced to set Environment Variables):
+
+1. `GOPATH = C:\MyGo`
 
 
 
@@ -170,9 +155,9 @@ Download and install Python(x,y)-2.7.10.0.exe from http://python-xy.github.io/do
 Open Git Bash and type:
 
 ```
-cd /c/Gosl/go/src
-mkdir -p github.com/cpmech
-cd github.com/cpmech
+cd $GOPATH
+mkdir -p src/github.com/cpmech
+cd src/github.com/cpmech
 git clone https://github.com/cpmech/gosl.git
 cd gosl
 ./all.bash
