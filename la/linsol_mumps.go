@@ -7,8 +7,6 @@
 package la
 
 /*
-#cgo CFLAGS: -O3
-#cgo LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord
 #include <dmumps_c.h>
 #include <zmumps_c.h>
 DMUMPS_STRUC_C DMU_DAT;
