@@ -1,5 +1,4 @@
 goslfrags.wxs
-
 autogencgoflags.go
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
@@ -30,3 +29,65 @@ _testmain.go
 
 # Temporary files
 *.goa
+
+# include files on Windows
+Gosl-extra-files-windows.tar.gz
+amd.h
+btf.h
+camd.h
+ccolamd.h
+cholmod.h
+cholmod_blas.h
+cholmod_camd.h
+cholmod_check.h
+cholmod_cholesky.h
+cholmod_complexity.h
+cholmod_config.h
+cholmod_core.h
+cholmod_function.h
+cholmod_gpu.h
+cholmod_gpu_kernels.h
+cholmod_io64.h
+cholmod_matrixops.h
+cholmod_modify.h
+cholmod_partition.h
+cholmod_supernodal.h
+cholmod_template.h
+colamd.h
+cs.h
+klu.h
+ldl.h
+SuiteSparse_config.h
+umfpack.h
+umfpack_col_to_triplet.h
+umfpack_defaults.h
+umfpack_free_numeric.h
+umfpack_free_symbolic.h
+umfpack_get_determinant.h
+umfpack_get_lunz.h
+umfpack_get_numeric.h
+umfpack_get_symbolic.h
+umfpack_global.h
+umfpack_load_numeric.h
+umfpack_load_symbolic.h
+umfpack_numeric.h
+umfpack_qsymbolic.h
+umfpack_report_control.h
+umfpack_report_info.h
+umfpack_report_matrix.h
+umfpack_report_numeric.h
+umfpack_report_perm.h
+umfpack_report_status.h
+umfpack_report_symbolic.h
+umfpack_report_triplet.h
+umfpack_report_vector.h
+umfpack_save_numeric.h
+umfpack_save_symbolic.h
+umfpack_scale.h
+umfpack_solve.h
+umfpack_symbolic.h
+umfpack_tictoc.h
+umfpack_timer.h
+umfpack_transpose.h
+umfpack_triplet_to_col.h
+umfpack_wsolve.h
