@@ -61,7 +61,7 @@ fi
 #echo "VTK_CXXFLAGS = $VTK_CXXFLAGS"
 #echo "VTK_LDFLAGS = $VTK_LDFLAGS"
 
-FLAGS_FILE="autogencgoflags.go"
+FLAGS_FILE="xautogencgoflags.go"
 
 echo "// Copyright 2016 The Gosl Authors. All rights reserved." > $FLAGS_FILE
 echo "// Use of this source code is governed by a BSD-style" >> $FLAGS_FILE

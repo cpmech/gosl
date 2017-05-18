@@ -1,5 +1,5 @@
-goslfrags.wxs
-autogencgoflags.go
+# auto-generated file
+xautogencgoflags.go
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o

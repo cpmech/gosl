@@ -20,13 +20,13 @@ install_and_test(){
     HERE=`pwd`
     PKG=$1
     DOTEST=$2
-    HASALLBASH=$3
+    HASGENBASH=$3
     echo
     echo
     echo ">>> compiling $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
     cd $PKG
-    if [[ ! -z $HASALLBASH ]]; then
-        ./all.bash
+    if [[ ! -z $HASGENBASH ]]; then
+        ./xgenflagsfile.bash
     fi
     touch *.go
     go install
@@ -44,7 +44,9 @@ if [[ $platform == 'linux' ]]; then
     install_and_test mpi 0
 fi
 
-for p in la fdm num fun gm/rw gm/msh gm graph ode opt tsr; do
+install_and_test la 1 1
+
+for p in fdm num fun gm/rw gm/msh gm graph ode opt tsr; do
     install_and_test $p 1
 done
 
