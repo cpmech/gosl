@@ -2,17 +2,6 @@
 
 set -e
 
-# find GOPATH
-GP1="${GOPATH%:*}"
-GP2="${GOPATH#*:}"
-GP=$GP2
-if [[ -z "${GP// }" ]]; then
-    GP=$GP1
-fi
-GOSL="$GP/github.com/cpmech/gosl/"
-echo "   GOPATH = $GP"
-echo "   GOSL = $GOSL"
-
 # find platform
 platform='unknown'
 unamestr=`uname`
@@ -26,6 +15,21 @@ elif [[ "$unamestr" == 'Darwin' ]]; then
    platform='darwin'
 fi
 echo "   platform = $platform"
+
+# find GOPATH
+if [[ $platform == 'windows' ]]; then
+    GP=${GOPATH//\\//}
+else
+    GP1="${GOPATH%:*}"
+    GP2="${GOPATH#*:}"
+    GP=$GP2
+    if [[ -z "${GP// }" ]]; then
+        GP=$GP1
+    fi
+fi
+GOSL="$GP/src/github.com/cpmech/gosl"
+echo "   GOPATH = $GP"
+echo "   GOSL = $GOSL"
 
 # default flags (linux)
 CFLAGS="-O2 -I/usr/include/suitesparse"

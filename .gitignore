@@ -32,6 +32,8 @@ _testmain.go
 
 # include files on Windows
 Gosl-extra-files-windows.tar.gz
+*.pc
+*.cmake
 amd.h
 btf.h
 camd.h
@@ -90,4 +92,5 @@ umfpack_tictoc.h
 umfpack_timer.h
 umfpack_transpose.h
 umfpack_triplet_to_col.h
+A
 umfpack_wsolve.h
