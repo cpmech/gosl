@@ -9,6 +9,6 @@ package ode
 func (o *Solver) init_mpi() {
 }
 
-func radau5_step_mpi(o *Solver, y0 []float64, x0 float64, args ...interface{}) (rerr float64, err error) {
+func radau5_step_mpi(o *Solver, y0 []float64, x0 float64) (rerr float64, err error) {
 	return
 }
