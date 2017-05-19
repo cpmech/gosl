@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='Gosl 1.0' Id='{FD5661AB-A2F6-4848-AC24-86B1CB8F7476}' UpgradeCode='{AA385207-0193-48D8-92FE-1A35A9C62C1A}'
+    Language='1033' Codepage='1252' Version='1.0.0' Manufacturer='Cpmech'>
+
+    <Package Id='*' Keywords='Installer' Description="Gosl's 1.0 Installer"
+      Comments='Gosl Go Scientific Library.' Manufacturer='Cpmech'
+      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="Gosl's 1.0 Installation [1]" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='GOSLDIR' Name='Gosl'>
+        <Component Id='Readme' Guid='{81A1EC89-2E90-49A5-987C-04276DF6A25D}'>
+          <File Id='Readme' Name='Readme.txt' DiskId='1' Source='Readme.txt' KeyPath='yes'></File>
+        </Component>
+      </Directory>
+      <Component Id='evGOSLDIR' Guid='{7C0329B6-A6F4-4C9A-9147-6351965DE4DF}' KeyPath='yes'>
+        <Environment Id='SetGOSLDIR' Action='set' Part='all' Name='GOSLDIR'
+                     Permanent='no' System='no' Value='[GOSLDIR]' />
+      </Component>
+      <Component Id='evGOROOT' Guid='{0782275C-F208-43CA-8E27-3AABE0386456}' KeyPath='yes'>
+        <Environment Id='SetGOROOT' Action='set' Part='all' Name='GOROOT'
+                     Permanent='no' System='yes' Value='[GOSLDIR]go' />
+      </Component>
+      <Component Id='evPATH1' Guid='{6547E092-FFD2-4FF2-B905-7128725EC68A}' KeyPath='yes'>
+        <Environment Id='SetPATH1' Action='set' Part='last' Name='PATH'
+                     Permanent='no' System='yes' Value='[GOSLDIR]go\bin' />
+      </Component>
+      <Component Id='evPATH2' Guid='{789D88B8-6495-4CFC-B28F-5EDD599BABA1}' KeyPath='yes'>
+        <Environment Id='SetPATH2' Action='set' Part='last' Name='PATH'
+                     Permanent='no' System='yes' Value='[GOSLDIR]TDM-GCC-64\bin' />
+      </Component>
+      <Directory Id='GOPATH' Name='MyGo'>
+        <!--<Directory Id='GOPATHSRC' Name='src'>
+          <Directory Id='HELLOWORLD' Name='HelloWorld'>
+            <Component Id='HelloWorld' Guid='{315297C9-2726-4FDC-809B-ABE7FE8E37FD}'>
+              <File Id='HelloWorld' Name='HelloWorld.go' DiskId='1' Source='HelloWorld.go' KeyPath='yes'></File>
+            </Component>
+          </Directory>
+        </Directory>-->
+      </Directory>
+      <Component Id='evGOPATH' Guid='{99FDA28D-53BB-42D5-B6C9-D0B7F74410E0}' KeyPath='yes'>
+        <Environment Id='SetGOPATH' Action='set' Part='all' Name='GOPATH'
+                     Permanent='no' System='no' Value='[GOPATH]' />
+      </Component>
+    </Directory>
+
+    <Feature Id='DefaultFeature' Title='Gosl 1.0' ConfigurableDirectory='GOSLDIR' Level='1'>
+      <Feature Id='Readme' Title='Readme' Description='Readme File.' Level='1'>
+        <ComponentRef Id='Readme' />
+      </Feature>
+      <Feature Id='AllFiles' Title='AllFiles' Description='All Files.' Level='1'>
+        <ComponentGroupRef Id='GoslComp' />
+      </Feature>
+      <Feature Id='ftGOSLDIR' Title='Set GOSLDIR variable' Level='1'>
+        <ComponentRef Id='evGOSLDIR' />
+      </Feature>
+      <Feature Id='ftGOPATH' Title='Set GOPATH variable' Level='1'>
+        <ComponentRef Id='evGOPATH' />
+      </Feature>
+      <Feature Id='ftGOROOT' Title='Set GOROOT variable' Level='1'>
+        <ComponentRef Id='evGOROOT' />
+      </Feature>
+      <Feature Id='ftPATH1' Title='Set PATH variable 1' Level='1'>
+        <ComponentRef Id='evPATH1' />
+      </Feature>
+      <Feature Id='ftPATH2' Title='Set PATH variable 2' Level='1'>
+        <ComponentRef Id='evPATH2' />
+      </Feature>
+      <!--<Feature Id='HelloWorld' Title='HelloWrold file' Level='1'>
+        <ComponentRef Id='HelloWorld' />
+      </Feature>-->
+    </Feature>
+
+    <UIRef Id="MyUI" />
+    <Property Id="WIXUI_INSTALLDIR" Value="GOSLDIR" />
+  </Product>
+</Wix>
