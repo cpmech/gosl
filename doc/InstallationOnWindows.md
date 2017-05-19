@@ -56,7 +56,7 @@ Remember to close any Git Bash window.
 Using Git Bash, open a terminal and type:
 ```bash
 mkdir -p /c/MyGo/src/github.com/cpmech
-cd $GOPATH/src/github.com/cpmech
+cd /c/MyGo/src/github.com/cpmech
 git clone https://github.com/cpmech/gosl.git
 ```
 
@@ -70,7 +70,7 @@ into **C:\MyGo\src\github.com\cpmech\gosl**
 
 The, using Git Bash, type:
 ```bash
-cd $GOPATH/src/github.com/cpmech/gosl
+cd /c/MyGo/src/github.com/cpmech/gosl
 tar xzvf Gosl-extra-files-windows.tar.gz
 ./all.bash
 ```
@@ -89,25 +89,26 @@ On Windows, the following tools for building Lapack and Umfpack are required:
    `C:\TDM-GCC-64`
 2. CMake for Windows from https://cmake.org/download. Download and install
    *cmake-3.8.1-win64-x64.msi*. Keep default options.
+3. Download *lapack-3.7.0.tgz* from http://www.netlib.org/lapack and save into `C:\TDM-GCC-64`
+4. Download *SuiteSparse-4.5.5.tar.gz* from http://faculty.cse.tamu.edu/davis/SuiteSparse/ and save
+   it into `C:\TDM-GCC-64`
 
 ### Compile Lapack
 
-Download *lapack-3.7.0.tgz* from http://www.netlib.org/lapack and save into `C:\Temp`
-
 Start Git Bash and type:
 ```bash
-cd /c/Temp
+cd /c/TDM-GCC-64
 tar xzf lapack-3.7.0.tgz
 mkdir build-lapack
 ```
 
 Start CMake (cmake-gui) and select:
 
-1. Where is the source code = `C:/Temp/lapack-3.7.0`
-2. Where to build the binaries = `C:/Temp/build-lapack`
+1. Where is the source code = `C:/TDM-GCC-64/lapack-3.7.0`
+2. Where to build the binaries = `C:/TDM-GCC-64/build-lapack`
 3. Hit `[Configure]`
 4. Select *MinGW Makefiles* under Specify the generator for this project (leave Use default native compilers on). Hit `[Finish]`
-5. Change `CMAKE_INSTALL_PREFIX` = `C:/MyGo/src/github.com/cpmech/gosl` (replace C:/MyGo with the GOPATH you have selected)
+5. Change `CMAKE_INSTALL_PREFIX` = `C:/TDM-GCC-64`
 6. Hit `[Configure]` again
 7. Hit `[Generate]` (and close window)
 
@@ -122,26 +123,23 @@ mingw32-make.exe install
 
 ### Compile SuiteSparse
 
-Download *SuiteSparse-4.5.5.tar.gz* from http://faculty.cse.tamu.edu/davis/SuiteSparse/ and save it into `C:\Temp`
 
-Start Git Bash and type (replace C:/MyGo with the GOPATH you have selected):
+Start Git Bash and type:
 ```bash
-cd /c/Temp
+cd /c/TDM-GCC-64
 tar xzf SuiteSparse-4.5.5.tar.gz
-bash C:/MyGo/src/github.com/cpmech/gosl/scripts/windows/fix-suitesparse/replace-files.bash
+bash /c/MyGo/src/github.com/cpmech/gosl/scripts/windows/fix-suitesparse/replace-files.bash
 cd SuiteSparse
-mingw32-make.exe INSTALL=C:/MyGo/src/github.com/cpmech/gosl install
-cd UMFPACK/Demo
-mingw32-make.exe
+mingw32-make.exe install
 ```
 
-(the small difference causing an error after mingw32-make.exe test is ok).
+TODO: Fix comparison files and check in `cd UMFPACK/Demo` with `mingw32-make.exe`
 
 ### Build Gosl
 
 Open Git Bash and type:
 ```bash
-cd C:/MyGo/src/github.com/cpmech/gosl
+cd /c/MyGo/src/github.com/cpmech/gosl
 ./all.bash
 ```
 
