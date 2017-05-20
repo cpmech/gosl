@@ -1,43 +1,51 @@
 # Installing Gosl on Windows
 
-Gosl (Go Scientific Library) is a set of routines for computations involving numerical methods and
-other mathematical problems in science and engineering.
+Four tools are neccessary/recommended to work with Go/Gosl:
+* Python is used for plotting but the user does not need to explicitly call Python; it
+  is run on the background to generate figures.
+* Lapack and SuiteSparse are required by the Linear Algebra package.
+* Git/Bash is convenient to work with Git Version Control System
+* Visual Studio Code (VS-Code) is a great tool to develop Go code (and more).
 
-A number of existent tools are _wrapped_ by Gosl with the two most essential ones being *Lapack* and
-*Umfpack* (from SuiteSparse by Prof Tim Davis). The former is a _de facto_ set of routines for
-linear algebra and the latter is one of the most powerful tool for computations using sparse
-matrices and systems.
+Below, two options to install Gosl (and Gcc) are presented:
+* __Option A__: Quick install using pre-compiled code
+* __Option B__: Installing from sources (i.e. compiling Lapack and SuiteSparse)
+
+## [Strongly Recommended] Install PythonXY
+
+1. Download and install *Python(x,y)-2.7.10.0.exe* from http://python-xy.github.io/downloads.html
+
+## [Recommended] Install Git and Bash
+
+2. Download and install *Git-2.13.0-64-bit.exe* from https://git-scm.com/download/
+
+## [Recommended] Install Visual Studio Code
+
+3. Download and install VS-Code from https://code.visualstudio.com/docs/?dv=win
+
+Steps to Install [Go extension for VS Code](https://marketplace.visualstudio.com/items?itemName=lukehoban.Go):
+* Press Ctrl+P
+* Type `ext install Go`
+* Select the version by *lukehoban*, click install, and click reload
+
+## [Option A] Quick Install (Win10 Installer)
+
+An _installer_ is availble for Windows (tested on Windows 10) to install Gosl, Gcc64, and to set the required
+environment variables automatically. After the installation, the Gosl code can be updated with the current version
+from GitHub. Also the environment variables can be replaced as desired.
+
+4. Download and install *go1.8.1.windows-amd64.msi* (or newer) from https://golang.org/dl/
+5. Download and install *gosl-4.1-installer.msi* (or newer) from https://sourceforge.net/projects/gosl-installer/files/
+
+*Finished!*
 
 
 
-## 1 Install PythonXY
+## [Option B] Installing from Sources
 
-In Gosl, Python is used for plotting; but the user does not need to explicitly call Python. Python
-is run on the background to generate figures. In Windows, PythonXY is convenient because it has
-NumPy, SciPy and Matplotlib (all required) and is easy to install.
+Skip these steps if you have used the _installer_ already.
 
-Download and install Python(x,y)-2.7.10.0.exe from http://python-xy.github.io/downloads.html. The
-default options are OK.
-
-
-
-## 2 Install Git and Bash
-
-Install Git and Git Bash from https://git-scm.com/download/
-
-Download and install *Git-2.13.0-64-bit.exe*. Keep default options.
-
-
-
-## 3 Install Go Language
-
-### 3.1 Download Go 1.8.1 (or newer)
-
-Download go1.8.1.windows-amd64.msi from https://golang.org/dl/ and proceed with the installation.
-
-Install Go into *C:\Go*.
-
-### 3.2 Set environment variables
+### Set Environment Variable
 
 Create `C:\MyGo` directory (or any other to be set as `GOPATH`).
 
@@ -50,8 +58,7 @@ GOPATH = C:\MyGo
 
 Remember to close any Git Bash window.
 
-
-## 4 Download Gosl
+### Download Gosl
 
 Using Git Bash, open a terminal and type:
 ```bash
@@ -60,40 +67,19 @@ cd /c/MyGo/src/github.com/cpmech
 git clone https://github.com/cpmech/gosl.git
 ```
 
+### Download and Install Compilation Tools
 
+Download and Install:
+1. TDM-GCC-64 with Gcc and Gfortran for Windows from http://tdm-gcc.tdragon.net/download
+   1. Download and install *tdm64-gcc-5.1.0-2.exe* (or newer, as long as it is 64-bit)
+   2. Make sure to select *fortran* and keep other default options
+   3. Click on [Create] and leave the Installation Directory as `C:\TDM-GCC-64`
+2. CMake for Windows from https://cmake.org/download
+   1. Download and install *cmake-3.8.1-win64-x64.msi*. Keep default options
 
-## 5a Using Pre-compiled Lapack and SuiteSparse binaries
+### Download and Compile Lapack
 
-Download
-[Gosl-extra-files-windows.tar.gz](https://sourceforge.net/projects/gosl-installer/files/Gosl-extra-files-windows.tar.gz/download)
-into **C:\MyGo\src\github.com\cpmech\gosl**
-
-The, using Git Bash, type:
-```bash
-cd /c/MyGo/src/github.com/cpmech/gosl
-tar xzvf Gosl-extra-files-windows.tar.gz
-./all.bash
-```
-
-*Finished!*
-
-
-
-## 5b [alternative] Compiling Lapack and SuiteSparse from source
-
-On Windows, the following tools for building Lapack and Umfpack are required:
-
-1. Gcc and Gfortran for Windows from http://tdm-gcc.tdragon.net/download. Download and install
-   *tdm64-gcc-5.1.0-2.exe* (or newer, as long as it is 64-bit). Make sure to select *fortran* and
-   Keep other default options. Click on [Create] and leave the Installation Directory as
-   `C:\TDM-GCC-64`
-2. CMake for Windows from https://cmake.org/download. Download and install
-   *cmake-3.8.1-win64-x64.msi*. Keep default options.
-3. Download *lapack-3.7.0.tgz* from http://www.netlib.org/lapack and save into `C:\TDM-GCC-64`
-4. Download *SuiteSparse-4.5.5.tar.gz* from http://faculty.cse.tamu.edu/davis/SuiteSparse/ and save
-   it into `C:\TDM-GCC-64`
-
-### Compile Lapack
+Download *lapack-3.7.0.tgz* from http://www.netlib.org/lapack and save it into `C:\TDM-GCC-64`
 
 Start Git Bash and type:
 ```bash
@@ -121,8 +107,9 @@ mingw32-make.exe test
 mingw32-make.exe install
 ```
 
-### Compile SuiteSparse
+### Download and Compile SuiteSparse
 
+Download *SuiteSparse-4.5.5.tar.gz* from http://faculty.cse.tamu.edu/davis/SuiteSparse/ and save it into `C:\TDM-GCC-64`
 
 Start Git Bash and type:
 ```bash
