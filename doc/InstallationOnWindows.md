@@ -4,11 +4,11 @@ Four tools are neccessary/recommended to work with Go/Gosl:
 * Python is used for plotting but the user does not need to explicitly call Python; it
   is run on the background to generate figures.
 * Lapack and SuiteSparse are required by the Linear Algebra package.
-* Git/Bash is convenient to work with Git Version Control System
+* Git and Git Bash are convenient to work with Git Version Control System
 * Visual Studio Code (VS-Code) is a great tool to develop Go code (and more).
 
 Below, two options to install Gosl (and Gcc) are presented:
-* __Option A__: Quick install using pre-compiled code
+* __Option A__: Quick install using pre-compiled code (Windows 10 Installer)
 * __Option B__: Installing from sources (i.e. compiling Lapack and SuiteSparse)
 
 ## [Strongly Recommended] Install PythonXY
@@ -28,14 +28,16 @@ Steps to Install [Go extension for VS Code](https://marketplace.visualstudio.com
 * Type `ext install Go`
 * Select the version by *lukehoban*, click install, and click reload
 
-## [Option A] Quick Install (Win10 Installer)
+## [Option A] Quick Install (Windows 10 Installer)
 
-An _installer_ is availble for Windows (tested on Windows 10) to install Gosl, Gcc64, and to set the required
-environment variables automatically. After the installation, the Gosl code can be updated with the current version
-from GitHub. Also the environment variables can be replaced as desired.
+The _Windows 10 Installer_ will install Gosl, TDM Gcc64, compiled Lapack and SuiteSparse,
+and will set the required environment variables automatically.
 
 4. Download and install *go1.8.1.windows-amd64.msi* (or newer) from https://golang.org/dl/
 5. Download and install *gosl-4.1-installer.msi* (or newer) from https://sourceforge.net/projects/gosl-installer/files/
+
+After the installation, the Gosl code can be updated with the current version from GitHub.
+Also the environment variables can be replaced as desired.
 
 *Finished!*
 
