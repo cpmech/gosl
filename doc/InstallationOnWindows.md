@@ -34,7 +34,7 @@ The _Windows 10 Installer_ will install Gosl, TDM Gcc64, compiled Lapack and Sui
 and will set the required environment variables automatically.
 
 4. Download and install *go1.8.1.windows-amd64.msi* (or newer) from https://golang.org/dl/
-5. Download and install *gosl-4.1-installer.msi* (or newer) from https://sourceforge.net/projects/gosl-installer/files/
+5. Download and install the [gosl-installer.msi](https://sourceforge.net/projects/gosl-installer/files/gosl-installer.msi/download)
 
 After the installation, the Gosl code can be updated with the current version from GitHub.
 Also the environment variables can be replaced as desired.
