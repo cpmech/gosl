@@ -47,7 +47,9 @@ Also the environment variables can be replaced as desired.
 
 Skip these steps if you have used the _installer_ already.
 
-### Set Environment Variable
+### Install Go and Set Environment Variable
+
+Download and install *go1.8.1.windows-amd64.msi* (or newer) from https://golang.org/dl/
 
 Create `C:\MyGo` directory (or any other to be set as `GOPATH`).
 
