@@ -14,6 +14,22 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+func Test_DiscSimpson01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("DiscSimpson01. Simple function")
+
+	y := func(x float64) float64 {
+		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
+	}
+
+	n := 1000
+	A, _ := QuadDiscreteSimpsonRF(0, 1, n, y)
+	io.Pforan("A  = %v\n", A)
+	Acor := 1.08268158558
+	chk.Scalar(tst, "A", 1e-11, A, Acor)
+}
+
 func Test_DiscTrapz01(tst *testing.T) {
 
 	//verbose()
