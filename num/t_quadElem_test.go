@@ -1,7 +1,6 @@
 // Copyright 2016 The Gosl Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
-
 package num
 
 import (
@@ -12,26 +11,10 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func Test_simpson01(tst *testing.T) {
+func Test_QuadElem01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("simpson01")
-
-	y := func(x float64) float64 {
-		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
-	}
-
-	n := 1000
-	A, _ := QuadDiscreteSimpsonRF(0, 1, n, y)
-	io.Pforan("A  = %v\n", A)
-	Acor := 1.08268158558
-	chk.Scalar(tst, "A", 1e-11, A, Acor)
-}
-
-func Test_quad01(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("quad01")
+	chk.PrintTitle("QuadElem01. Trapz and Simpson Elementary")
 
 	y := func(x float64) float64 {
 		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
