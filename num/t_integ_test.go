@@ -61,7 +61,7 @@ func Test_2dinteg01(tst *testing.T) {
 	}
 	dx, dy := x[1]-x[0], y[1]-y[0]
 	Vt := QuadDiscreteTrapz2d(dx, dy, f)
-	Vs := Simps2D(dx, dy, f)
+	Vs := QuadDiscreteSimps2d(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
 	chk.Scalar(tst, "Vt", 1e-14, Vt, 24.0)
@@ -87,7 +87,7 @@ func Test_2dinteg02(tst *testing.T) {
 	}
 	dx, dy := x[1]-x[0], y[1]-y[0]
 	Vt := QuadDiscreteTrapz2d(dx, dy, f)
-	Vs := Simps2D(dx, dy, f)
+	Vs := QuadDiscreteSimps2d(dx, dy, f)
 	Vc := math.Sqrt(math.Pi) * math.Erf(1) * (math.Gamma(1.0/4.0) - gamma_1div4_1)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
@@ -113,7 +113,7 @@ func Test_2dinteg03(tst *testing.T) {
 	}
 	dx, dy := x[1]-x[0], y[1]-y[0]
 	Vt := QuadDiscreteTrapz2d(dx, dy, f)
-	Vs := Simps2D(dx, dy, f)
+	Vs := QuadDiscreteSimps2d(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
 	chk.Scalar(tst, "Vt", 1e-13, Vt, 57.0)
@@ -136,7 +136,7 @@ func Test_2dinteg04(tst *testing.T) {
 	}
 	dx, dy := x[1]-x[0], y[1]-y[0]
 	Vt := QuadDiscreteTrapz2d(dx, dy, f)
-	Vs := Simps2D(dx, dy, f)
+	Vs := QuadDiscreteSimps2d(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
 	chk.Scalar(tst, "Vt", 0.00103, Vt, 0.5)

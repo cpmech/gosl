@@ -6,11 +6,10 @@ package num
 
 import "github.com/cpmech/gosl/chk"
 
-// scalar function
-type Fun0 func(float64) float64
-
-// Simpson integrates function f from x=a to x=b using n subintervals (n must be even)
-func Simpson(f Fun0, a, b float64, n int) (float64, error) {
+// QuadDiscreteSimpsonRF approximates the area below the discrete curve defined by [xa,xy] range and
+// y function. Computations are carried out with the (very simple) Simpson method from xa to xb,
+// with npts points
+func QuadDiscreteSimpsonRF(a, b float64, n int, f Cb_yx) (float64, error) {
 	if n < 2 || n%2 > 0 {
 		return 0, chk.Err("number of subintervas should be even (n=%d)", n)
 	}
@@ -33,9 +32,13 @@ func Simpson(f Fun0, a, b float64, n int) (float64, error) {
 	return sum, nil
 }
 
-// Simps2D computes a double integral over the x-y plane (Simpson's rule); thus resulting on
-// the volume defined between the function f(x,y) and the plane ortogonal to z
-func Simps2D(dx, dy float64, f [][]float64) (V float64) {
+// QuadDiscreteSimps2d approximates a double integral over the x-y plane with the elevation given by
+// data points f[npts][npts]. Thus, the result is an estimate of the volume below the f[][] opints
+// and the plane ortogonal to z @ x=0. The very simple Simpson's method is used here.
+//  Lx -- total length of plane along x
+//  Ly -- total length of plane along y
+//  f  -- elevations f(x,y)
+func QuadDiscreteSimps2d(Lx, Ly float64, f [][]float64) (V float64) {
 
 	// check
 	if len(f) < 2 {
@@ -87,6 +90,6 @@ func Simps2D(dx, dy float64, f [][]float64) (V float64) {
 	}
 
 	// final result
-	V *= dx * dy / 9.0
+	V *= Lx * Ly / 9.0
 	return
 }

@@ -22,7 +22,7 @@ func Test_simpson01(tst *testing.T) {
 	}
 
 	n := 1000
-	A, _ := Simpson(y, 0, 1, n)
+	A, _ := QuadDiscreteSimpsonRF(0, 1, n, y)
 	io.Pforan("A  = %v\n", A)
 	Acor := 1.08268158558
 	chk.Scalar(tst, "A", 1e-11, A, Acor)
