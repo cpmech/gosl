@@ -14,10 +14,10 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func Test_trapz01(tst *testing.T) {
+func Test_DiscTrapz01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("trapz01")
+	chk.PrintTitle("DiscTrapz01. Discrete trapezoidal XY")
 
 	x := []float64{4, 6, 8}
 	y := []float64{1, 2, 3}
@@ -25,10 +25,10 @@ func Test_trapz01(tst *testing.T) {
 	chk.Scalar(tst, "A", 1e-17, A, 8)
 }
 
-func Test_trapz02(tst *testing.T) {
+func Test_DiscTrapz02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("trapz02")
+	chk.PrintTitle("DiscTrapz02. Discrete trapezoidal XF and RF")
 
 	y := func(x float64) float64 {
 		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
@@ -45,10 +45,10 @@ func Test_trapz02(tst *testing.T) {
 	chk.Scalar(tst, "A_", 1e-15, A_, Acor)
 }
 
-func Test_2dinteg01(tst *testing.T) {
+func Test_Disc2dInteg01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("2dinteg01. volume of box")
+	chk.PrintTitle("Disc2dInteg01. Discrete 2D. Volume of box")
 
 	x := utl.LinSpace(-1, 1, 7)
 	y := utl.LinSpace(-2, 2, 9)
@@ -68,10 +68,10 @@ func Test_2dinteg01(tst *testing.T) {
 	chk.Scalar(tst, "Vs", 1e-14, Vs, 24.0)
 }
 
-func Test_2dinteg02(tst *testing.T) {
+func Test_Disc2dInteg02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("2dinteg02. bidimensional integral")
+	chk.PrintTitle("Disc2dInteg02. Discrete 2D. Exp function")
 
 	// Γ(1/4, 1)
 	gamma_1div4_1 := 0.2462555291934987088744974330686081384629028737277219
@@ -97,10 +97,10 @@ func Test_2dinteg02(tst *testing.T) {
 
 }
 
-func Test_2dinteg03(tst *testing.T) {
+func Test_Disc2dInteg03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("2dinteg03. ∫∫(1+8xy)dxdy")
+	chk.PrintTitle("Disc2dInteg03. Discrete 2D. ∫∫(1+8xy)dxdy")
 
 	x := utl.LinSpace(0, 3, 5)
 	y := utl.LinSpace(1, 2, 5)
@@ -120,10 +120,10 @@ func Test_2dinteg03(tst *testing.T) {
 	chk.Scalar(tst, "Vs", 1e-13, Vs, 57.0)
 }
 
-func Test_2dinteg04(tst *testing.T) {
+func Test_Disc2dInteg04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("2dinteg04. ∫∫y・sin(x)")
+	chk.PrintTitle("Disc2dInteg04. Discrete 2D. ∫∫y・sin(x)")
 
 	x := utl.LinSpace(0, math.Pi/2.0, 11)
 	y := utl.LinSpace(0, 1, 11)
