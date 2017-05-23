@@ -10,14 +10,14 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Quadrature defines the interface for quadrature algorithms with refinement.
-type Quadrature interface {
+// QuadElementary defines the interface for elementary quadrature algorithms with refinement.
+type QuadElementary interface {
 	Init(f Cb_yx, a, b, eps float64) // The constructor takes as inputs f, the function or functor to be integrated between limits a and b, also input.
 	Integrate() (float64, error)     // Returns the integral for the specified input data
 }
 
 // Trap structure is used for the trapezoidal integration rule with refinement.
-type Trap struct {
+type ElementaryTrapz struct {
 	n    int     // current level of refinement.
 	a, b float64 // limits
 	s    float64 // current value of the integral
@@ -26,7 +26,7 @@ type Trap struct {
 }
 
 // Init initialises Trap structure
-func (o *Trap) Init(f Cb_yx, a, b, eps float64) {
+func (o *ElementaryTrapz) Init(f Cb_yx, a, b, eps float64) {
 	o.n = 0
 	o.f = f
 	o.a = a
@@ -37,7 +37,7 @@ func (o *Trap) Init(f Cb_yx, a, b, eps float64) {
 // Next returns the nth stage of refinement of the extended trapezoidal rule. On the first call (n=1),
 // R b the routine returns the crudest estimate of a f .x/dx. Subsequent calls set n=2,3,... and
 // improve the accuracy by adding 2 n-2 additional interior points.
-func (o *Trap) Next() float64 {
+func (o *ElementaryTrapz) Next() float64 {
 	var x, sum, del float64
 	var it, j, tnm int
 	o.n += 1
@@ -65,7 +65,7 @@ func (o *Trap) Next() float64 {
 }
 
 // Integrate performs the numerical integration
-func (o *Trap) Integrate() (float64, error) {
+func (o *ElementaryTrapz) Integrate() (float64, error) {
 	jmax := 20
 	var olds float64
 	for j := 0; j < jmax; j++ {
@@ -81,7 +81,7 @@ func (o *Trap) Integrate() (float64, error) {
 }
 
 // Simp structure implements the Simpson's method for quadrature with refinement.
-type Simp struct {
+type ElementarySimpson struct {
 	n    int     // current level of refinement.
 	a, b float64 // limits
 	s    float64 // current value of the integral
@@ -90,7 +90,7 @@ type Simp struct {
 }
 
 // Init initialises Simp structure
-func (o *Simp) Init(f Cb_yx, a, b, eps float64) {
+func (o *ElementarySimpson) Init(f Cb_yx, a, b, eps float64) {
 	o.n = 0
 	o.f = f
 	o.a = a
@@ -101,7 +101,7 @@ func (o *Simp) Init(f Cb_yx, a, b, eps float64) {
 // Next returns the nth stage of refinement of the extended trapezoidal rule. On the first call (n=1),
 // R b the routine returns the crudest estimate of a f .x/dx. Subsequent calls set n=2,3,... and
 // improve the accuracy by adding 2 n-2 additional interior points.
-func (o *Simp) Next() float64 {
+func (o *ElementarySimpson) Next() float64 {
 	var x, sum, del float64
 	var it, j, tnm int
 	o.n += 1
@@ -129,7 +129,7 @@ func (o *Simp) Next() float64 {
 }
 
 // Integrate performs the numerical integration
-func (o *Simp) Integrate() (float64, error) {
+func (o *ElementarySimpson) Integrate() (float64, error) {
 	jmax := 20
 	var s, st, ost, os float64
 	for j := 0; j < jmax; j++ {

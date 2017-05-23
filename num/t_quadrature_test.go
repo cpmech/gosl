@@ -40,8 +40,8 @@ func Test_quad01(tst *testing.T) {
 	Acor := 1.08268158558
 
 	// trapezoidal rule
-	var T Quadrature
-	T = new(Trap)
+	var T QuadElementary
+	T = new(ElementaryTrapz)
 	T.Init(y, 0, 1, 1e-11)
 	A, err := T.Integrate()
 	if err != nil {
@@ -51,8 +51,8 @@ func Test_quad01(tst *testing.T) {
 	chk.Scalar(tst, "A", 1e-11, A, Acor)
 
 	// Simpson's rule
-	var S Quadrature
-	S = new(Simp)
+	var S QuadElementary
+	S = new(ElementarySimpson)
 	S.Init(y, 0, 1, 1e-11)
 	A, err = S.Integrate()
 	if err != nil {
