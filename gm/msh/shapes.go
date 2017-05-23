@@ -13,6 +13,9 @@ var (
 	EdgeLocalVerts map[string][][]int     // local indices of vertices on edges of shape
 	FaceLocalVerts map[string][][]int     // local indices of vertices on faces of shape
 	NatCoords      map[string][][]float64 // natural coordinates of vertices on shape
+
+	// integration points [type][numberOfPts]; NOTE: type = "lin", "tri", "qua", "tet", "hex"
+	IntPoints map[string]map[int]QuadPoints
 )
 
 var Functions = make(map[string]ShapeFunction) // shape functions and derivatives
