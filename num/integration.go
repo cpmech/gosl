@@ -6,9 +6,9 @@ package num
 
 import "github.com/cpmech/gosl/chk"
 
-// Trapz returns the area below the discrete curve defined by x and y.
+// QuadDiscreteTrapzXY approximates the area below the discrete curve defined by x and y points.
 // Computations are carried out with the trapezoidal rule.
-func Trapz(x, y []float64) (A float64) {
+func QuadDiscreteTrapzXY(x, y []float64) (A float64) {
 	if len(x) != len(y) {
 		chk.Panic("length of x and y must be the same. %d != %d", len(x), len(y))
 	}
@@ -18,18 +18,19 @@ func Trapz(x, y []float64) (A float64) {
 	return
 }
 
-// TrapzF (function callback version) returns the area below the discrete curve defined by x and y.
-// Computations are carried out with the trapezoidal rule.
-func TrapzF(x []float64, y Cb_yx) (A float64) {
+// QuadDiscreteTrapzXF approximates the area below the discrete curve defined by x points and y
+// function. Computations are carried out with the (very simple) trapezoidal rule.
+func QuadDiscreteTrapzXF(x []float64, y Cb_yx) (A float64) {
 	for i := 1; i < len(x); i++ {
 		A += (x[i] - x[i-1]) * (y(x[i]) + y(x[i-1])) / 2.0
 	}
 	return A
 }
 
-// TrapzRange (x-range and function callback version) returns the area below the discrete curve defined by x and y.
-// Computations are carried out with the trapezoidal rule from xa to xb, with npts points
-func TrapzRange(xa, xb float64, npts int, y Cb_yx) (A float64) {
+// QuadDiscreteTrapzRF approximates the area below the discrete curve defined by [xa,xy] range and y
+// function. Computations are carried out with the (very simple) trapezoidal rule from xa to xb,
+// with npts points
+func QuadDiscreteTrapzRF(xa, xb float64, npts int, y Cb_yx) (A float64) {
 	if npts < 2 {
 		chk.Panic("number of points must be at least 2", npts)
 	}
@@ -43,9 +44,13 @@ func TrapzRange(xa, xb float64, npts int, y Cb_yx) (A float64) {
 	return A
 }
 
-// Trapz2D computes a double integral over the x-y plane; thus resulting on
-// the volume defined between the function f(x,y) and the plane ortogonal to z
-func Trapz2D(dx, dy float64, f [][]float64) (V float64) {
+// QuadDiscreteTrapz2d approximates a double integral over the x-y plane with the elevation given by
+// data points f[npts][npts]. Thus, the result is an estimate of the volume below the f[][] opints
+// and the plane ortogonal to z @ x=0. The very simple trapezoidal method is used here.
+//  Lx -- total length of plane along x
+//  Ly -- total length of plane along y
+//  f  -- elevations f(x,y)
+func QuadDiscreteTrapz2d(Lx, Ly float64, f [][]float64) (V float64) {
 
 	// check
 	if len(f) < 2 {
@@ -72,6 +77,6 @@ func Trapz2D(dx, dy float64, f [][]float64) (V float64) {
 	}
 
 	// final result
-	V *= dx * dy / 4.0
+	V *= Lx * Ly / 4.0
 	return
 }

@@ -21,7 +21,7 @@ func Test_trapz01(tst *testing.T) {
 
 	x := []float64{4, 6, 8}
 	y := []float64{1, 2, 3}
-	A := Trapz(x, y)
+	A := QuadDiscreteTrapzXY(x, y)
 	chk.Scalar(tst, "A", 1e-17, A, 8)
 }
 
@@ -36,8 +36,8 @@ func Test_trapz02(tst *testing.T) {
 
 	n := 11
 	x := utl.LinSpace(0, 1, n)
-	A := TrapzF(x, y)
-	A_ := TrapzRange(0, 1, n, y)
+	A := QuadDiscreteTrapzXF(x, y)
+	A_ := QuadDiscreteTrapzRF(0, 1, n, y)
 	io.Pforan("A  = %v\n", A)
 	io.Pforan("A_ = %v\n", A_)
 	Acor := 1.08306090851465 // right value is Acor := 1.08268158558
@@ -60,7 +60,7 @@ func Test_2dinteg01(tst *testing.T) {
 		}
 	}
 	dx, dy := x[1]-x[0], y[1]-y[0]
-	Vt := Trapz2D(dx, dy, f)
+	Vt := QuadDiscreteTrapz2d(dx, dy, f)
 	Vs := Simps2D(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
@@ -86,7 +86,7 @@ func Test_2dinteg02(tst *testing.T) {
 		}
 	}
 	dx, dy := x[1]-x[0], y[1]-y[0]
-	Vt := Trapz2D(dx, dy, f)
+	Vt := QuadDiscreteTrapz2d(dx, dy, f)
 	Vs := Simps2D(dx, dy, f)
 	Vc := math.Sqrt(math.Pi) * math.Erf(1) * (math.Gamma(1.0/4.0) - gamma_1div4_1)
 	io.Pforan("Vt = %v\n", Vt)
@@ -112,7 +112,7 @@ func Test_2dinteg03(tst *testing.T) {
 		}
 	}
 	dx, dy := x[1]-x[0], y[1]-y[0]
-	Vt := Trapz2D(dx, dy, f)
+	Vt := QuadDiscreteTrapz2d(dx, dy, f)
 	Vs := Simps2D(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
@@ -135,7 +135,7 @@ func Test_2dinteg04(tst *testing.T) {
 		}
 	}
 	dx, dy := x[1]-x[0], y[1]-y[0]
-	Vt := Trapz2D(dx, dy, f)
+	Vt := QuadDiscreteTrapz2d(dx, dy, f)
 	Vs := Simps2D(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
