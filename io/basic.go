@@ -115,6 +115,9 @@ func Btoa(flag bool) string {
 
 // Pl prints new line
 func Pl() {
+	if !Verbose {
+		return
+	}
 	fmt.Println()
 }
 
