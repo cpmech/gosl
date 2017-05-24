@@ -66,6 +66,69 @@ func Factorial100(n int) big.Float {
 	return factorialTableBig[n]
 }
 
+// Beta computes the beta function by calling the Lgamma function
+func Beta(a, b float64) float64 {
+	la, _ := math.Lgamma(a)
+	lb, _ := math.Lgamma(b)
+	lc, _ := math.Lgamma(a + b)
+	return math.Exp(la + lb - lc)
+}
+
+// Binomial comptues the binomial coefficient (n k)^T
+func Binomial(n, k int) float64 {
+	if n < 0 || k < 0 || k > n {
+		chk.Panic("Binomial function requires that k <= n (both positive). Incorrect values: n=%v, k=%v", n, k)
+	}
+	if k == 0 || k == n {
+		return 1
+	}
+	if k == 1 || k == n-1 {
+		return float64(n)
+	}
+	// use fast table lookup. See [1] page 258
+	if n <= 22 {
+		// the floor function cleans up roundoff error for smaller values of n and k.
+		return math.Floor(0.5 + Factorial22(n)/(Factorial22(k)*Factorial22(n-k)))
+	}
+	// use beta function
+	if k > n-k {
+		k = n - k // take advantage of symmetry
+	}
+	res := float64(k) * Beta(float64(k), float64(n-k+1))
+	if res == 0 {
+		chk.Panic("Binomial function failed with n=%v, k=%v", n, k)
+	}
+	return math.Floor(0.5 + 1.0/res)
+}
+
+// UintBinomial implements the Binomial coefficient using uint64. Panic happens on overflow
+// Also, this function uses a loop so it may not be very efficient for large k
+// The code below comes from https://en.wikipedia.org/wiki/Binomial_coefficient
+// [cannot find a reference to cite]
+func UintBinomial(n, k uint64) uint64 {
+	if k > n {
+		chk.Panic("UintBinomial function requires that k <= n. Incorrect values: n=%v, k=%v", n, k)
+	}
+	if k == 0 || k == n {
+		return 1
+	}
+	if k == 1 || k == n-1 {
+		return n
+	}
+	if k > n-k {
+		k = n - k // take advantage of symmetry
+	}
+	var c uint64 = 1
+	var i uint64
+	for i = 1; i <= k; i, n = i+1, n-1 {
+		if c/i > math.MaxUint64/n {
+			chk.Panic("Overflow in UintBinomial: %v > %v", c/i, math.MaxUint64/n)
+		}
+		c = c/i*n + c%i*n/i // split c*n/i into (c/i*i + c%i)*n/i
+	}
+	return c
+}
+
 // SuqCos implements the superquadric auxiliary function that uses cos(x)
 func SuqCos(angle, expon float64) float64 {
 	return Sign(math.Cos(angle)) * math.Pow(math.Abs(math.Cos(angle)), expon)

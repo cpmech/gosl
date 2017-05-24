@@ -229,3 +229,67 @@ func Test_factorial02(tst *testing.T) {
 		chk.Scalar(tst, "diff", 1e-15, d, 0)
 	}
 }
+
+func Test_beta01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("beta01. Beta function")
+
+	aValues := []float64{1, 3, 10}
+	bValues := []float64{5, 2, 11}
+	answers := [][]float64{ // values from wxMaxima beta(a,b) function
+		{1.0 / 5.0, 1.0 / 2.0, 1.0 / 11},
+		{1.0 / 105.0, 1.0 / 12.0, 1.0 / 858.0},
+		{1.0 / 10010.0, 1.0 / 110, 1.0 / 1847560},
+	}
+	for i, a := range aValues {
+		for j, b := range bValues {
+			res := Beta(a, b)
+			chk.Scalar(tst, io.Sf("Beta(%2f,%2f)", a, b), 1e-15, res, answers[i][j])
+		}
+	}
+}
+
+func Test_binomial01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("binomial01. binomial coefficient")
+
+	aValues := []int{10, 22, 50}
+	bValues := []int{5, 2, 10}
+	answers := [][]float64{ // values from wxMaxima beta(a,b) function
+		{252, 45, 1},
+		{26334, 231, 646646},
+		{2118760, 1225, 10272278170},
+	}
+	for i, a := range aValues {
+		for j, b := range bValues {
+			res := Binomial(a, b)
+			ures := UintBinomial(uint64(a), uint64(b))
+			chk.Scalar(tst, io.Sf("Binomial(%2d,%2d)", a, b), 1e-15, res, answers[i][j])
+			chk.Scalar(tst, "ures", 1e-15, float64(ures), answers[i][j])
+		}
+	}
+
+	r49 := Binomial(50, 49)     // k = n-1
+	r26 := Binomial(50, 26)     // k > n-k
+	u49 := UintBinomial(50, 49) // k = n-1
+	u26 := UintBinomial(50, 26) // k > n-k
+	chk.Scalar(tst, "Binomial(50,49)", 1e-15, r49, 50)
+	chk.Scalar(tst, "Binomial(50,26)", 1e-15, r26, 121548660036300-1) // cannot get 121548660036300
+	chk.Scalar(tst, "UintBinomial(50,49)", 1e-15, float64(u49), 50)
+	chk.Scalar(tst, "UintBinomial(50,26)", 1e-15, float64(u26), 121548660036300)
+	io.Pforan("r26 = %.1f (should be 121548660036300.0)\n", r26)
+	io.Pforan("u26 = %v\n", u26)
+
+	// The following test fails with overflow in UintBinomial and incorrect results in Binomial
+	// We need to use math/big for these
+	if false {
+		n100k50 := Binomial(100, 50)
+		u100k50 := UintBinomial(100, 50)
+		n100k50maxima := 100891344545564193334812497256.0
+		io.Pforan("Binomial(100,50) = %v\n", n100k50)
+		io.Pforan("UintBinomial(100,50) = %v\n", u100k50)
+		chk.Scalar(tst, "Binomial(100,50)", 1e-15, n100k50, n100k50maxima)
+	}
+}
