@@ -24,7 +24,7 @@ func init() {
 
 	IntPoints = make(map[string]map[int]QuadPoints)
 
-	IntPoints["lin2"] = map[int]QuadPoints{
+	IntPoints["lin"] = map[int]QuadPoints{
 		2: []QuadPoint{
 			QuadPoint{-utl.SQ3 / 3.0, 0.0, 0.0, 1.0},
 			QuadPoint{utl.SQ3 / 3.0, 0.0, 0.0, 1.0},
