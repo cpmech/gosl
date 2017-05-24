@@ -6,6 +6,7 @@ package fun
 
 import (
 	"math"
+	"math/big"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -163,5 +164,68 @@ func Test_suq01(tst *testing.T) {
 		plt.Plot(X, Y, nil)
 		plt.Gll("x", "y", nil)
 		plt.Save("/tmp/gosl", "t_suq01")
+	}
+}
+
+func Test_factorial01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("factorial01. Factorial22")
+
+	n0 := Factorial22(0)
+	n1 := Factorial22(1)
+	n2 := Factorial22(2)
+	n3 := Factorial22(3)
+	n10 := Factorial22(10)
+	n22 := Factorial22(22)
+
+	chk.Scalar(tst, "0!", 1e-15, n0, 1)
+	chk.Scalar(tst, "1!", 1e-15, n1, 1)
+	chk.Scalar(tst, "2!", 1e-15, n2, 2)
+	chk.Scalar(tst, "3!", 1e-15, n3, 6)
+	chk.Scalar(tst, "10!", 1e-15, n10, 3628800)
+	chk.Scalar(tst, "22!", 1e-15, n22, 1124000727777607680000)
+
+	// printing max int sizes, out of curiosity
+	MaxUint := ^uint(0)
+	MaxInt := int(MaxUint >> 1)
+	MinInt := -MaxInt - 1
+	io.Pl()
+	io.Pf("MaxUint = %v  %v\n", MaxUint, uint64(math.MaxUint64))
+	io.Pf("MaxInt  = %v  %v\n", MaxInt, math.MaxInt64)
+	io.Pf("MinInt  = %v  %v\n", MinInt, math.MinInt64)
+}
+
+func Test_factorial02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("factorial02. Factorial100")
+
+	values := []int{22, 23, 50, 100}
+	answers := []string{ // from http://www.tsm-resources.com/alists/fact.html
+		"1124000727777607680000",
+		"25852016738884976640000",
+		"30414093201713378043612608166064768844377641568960512000000000000",
+		"93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000",
+	}
+	for idx, value := range values {
+
+		// compute factorial using big.Int and convert to big.Float
+		ibig := new(big.Int)
+		fbig := new(big.Float)
+		ibig.MulRange(1, int64(value))
+		fbig.SetPrec(big.MaxPrec)
+		fbig.SetInt(ibig)
+		txt := fbig.Text('f', 0)
+		chk.String(tst, txt, answers[idx])
+
+		// compute factorial using Factorial100
+		f := Factorial100(value)
+		diff := new(big.Float)
+		diff.SetPrec(big.MaxPrec)
+		diff.Sub(fbig, &f)
+		d, a := diff.Float64()
+		chk.String(tst, a.String(), "Exact")
+		chk.Scalar(tst, "diff", 1e-15, d, 0)
 	}
 }
