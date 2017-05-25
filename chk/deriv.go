@@ -20,9 +20,9 @@ const (
 //   msg     -- message about this test
 //   tol     -- tolerance to compare dfdxAna with dfdxNum
 //   dfdxAna -- [vector] analytical (or other kind) derivative dfdx
-//   xAt     -- position to compute dfdx
+//   xAt     -- [scalar] position to compute dfdx
 //   dx      -- stepsize; e.g. 1e-3
-//   f       -- [vector] function f(x)
+//   fcn     -- [vector] function f(x). x is scalar
 func DerivVecScaCen(tst *testing.T, msg string, tol float64, dfdxAna []float64, xAt, dx float64, verbose bool, fcn func(f []float64, x float64)) {
 	res := make([]float64, len(dfdxAna))
 	for i, ana := range dfdxAna {
@@ -34,19 +34,45 @@ func DerivVecScaCen(tst *testing.T, msg string, tol float64, dfdxAna []float64, 
 	}
 }
 
+// DerivScaVecCen checks the derivative of scalar w.r.t vector by comparing with numerical solution
+// obtained with central differences (5-point rule)
+//   tst     -- testing.T structure
+//   msg     -- message about this test
+//   tol     -- tolerance to compare dfdxAna with dfdxNum
+//   dfdxAna -- [vector] analytical (or other kind) derivative dfdx
+//   xAt     -- [vector] position to compute dfdx
+//   dx      -- stepsize; e.g. 1e-3
+//   fcn     -- [scalar] function f(x). x is vector
+func DerivScaVecCen(tst *testing.T, msg string, tol float64, dfdxAna, xAt []float64, dx float64, verbose bool, fcn func(x []float64) float64) {
+	ndim := len(xAt)
+	if len(dfdxAna) != ndim {
+		tst.Errorf("len(dfdxAna) != len(xAt)\n")
+		return
+	}
+	xTmp := make([]float64, ndim)
+	for i := 0; i < ndim; i++ {
+		copy(xTmp, xAt)
+		fi := func(x float64) float64 {
+			xTmp[i] = x
+			return fcn(xTmp)
+		}
+		DerivScaScaCen(tst, fmt.Sprintf("%s%d", msg, i), tol, dfdxAna[i], xAt[i], dx, verbose, fi)
+	}
+}
+
 // DerivScaScaCen checks the derivative of scalar w.r.t scalar by comparing with numerical solution
 // obtained with central differences (5-point rule)
 //   tst     -- testing.T structure
 //   msg     -- message about this test
 //   tol     -- tolerance to compare dfdxAna with dfdxNum
 //   dfdxAna -- [scalar] analytical (or other kind) derivative dfdx
-//   xAt     -- position to compute dfdx
+//   xAt     -- [scalar] position to compute dfdx
 //   dx      -- stepsize; e.g. 1e-3
-//   f       -- [scalar] function f(x)
-func DerivScaScaCen(tst *testing.T, msg string, tol, dfdxAna, xAt, dx float64, verbose bool, f func(x float64) float64) {
+//   fcn     -- [scalar] function f(x). x is scalar
+func DerivScaScaCen(tst *testing.T, msg string, tol, dfdxAna, xAt, dx float64, verbose bool, fcn func(x float64) float64) {
 
 	// call centralDeriv first
-	r_0, round, trunc := centralDeriv(f, xAt, dx)
+	r_0, round, trunc := centralDeriv(fcn, xAt, dx)
 	err := round + trunc
 
 	// check rounding error
@@ -55,7 +81,7 @@ func DerivScaScaCen(tst *testing.T, msg string, tol, dfdxAna, xAt, dx float64, v
 		// compute an optimised stepsize to minimize the total error, using the scaling of the
 		// truncation error (O(h^2)) and rounding error (O(1/h)).
 		h_opt := dx * math.Pow(round/(2.0*trunc), 1.0/3.0)
-		r_opt, round_opt, trunc_opt := centralDeriv(f, xAt, h_opt)
+		r_opt, round_opt, trunc_opt := centralDeriv(fcn, xAt, h_opt)
 		error_opt := round_opt + trunc_opt
 
 		// check that the new error is smaller, and that the new derivative is consistent with the

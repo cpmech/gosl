@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="deriv02"
+    go test -test.run="deriv03"
 done
