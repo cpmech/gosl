@@ -6,5 +6,7 @@ while true; do
     inotifywait -q -e modify $FILE
     echo
     echo
-    go test -test.run="binomial01"
+    echo
+    echo
+    go test -test.run="xfun"
 done
