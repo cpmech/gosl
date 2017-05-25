@@ -28,11 +28,6 @@ while true; do
     echo
     echo
     echo
-    #go run graph_munkres01.go
-    #go run graph_shortestpaths01.go
-    #go run graph_siouxfalls01.go
-    #go run rnd_ints01.go
-    #go run rnd_lognormalDistribution.go
-    #go run rnd_haltonAndLatin01.go
-    go run vtk_spheres01.go
+    echo
+    go run fun_orthopoly01.go
 done

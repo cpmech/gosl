@@ -2,20 +2,21 @@
 
 ## Summary
 
-1. Generate and draw a NURBS toroidal surface
-2. Generating normally distributed pseudo-random numbers
-3. Solution of sparse linear system
-4. Solution of sparse linear system with complex numbers
-5. Numerical differentiation
-6. Drawing iso-surfaces with VTK
-7. Plotting a contour
-8. Solution of Poisson's equation using finite differences
-9. Root finding problems
-10. B-splines: curve, control, and basis
+* Generate and draw a NURBS toroidal surface
+* Generating normally distributed pseudo-random numbers
+* Solution of sparse linear system
+* Solution of sparse linear system with complex numbers
+* Numerical differentiation
+* Drawing iso-surfaces with VTK
+* Plotting a contour
+* Solution of Poisson's equation using finite differences
+* Root finding problems
+* B-splines: curve, control, and basis
+* Orthogonal polynomials
 
 
 
-# 1 Generate and draw a NURBS toroidal surface
+# Generate and draw a NURBS toroidal surface
 
 Source code: <a href="gm_nurbs03.go">gm_nurbs03.go</a>
 
@@ -25,7 +26,7 @@ Source code: <a href="gm_nurbs03.go">gm_nurbs03.go</a>
 
 
 
-# 2 Generating normally distributed pseudo-random numbers
+# Generating normally distributed pseudo-random numbers
 
 The `rnd` package is a wrapper to Go `rand` package but has some more _high level_ functions to
 assist on works involving random numbers and probability distributions.
@@ -40,7 +41,9 @@ Source code: <a href="rnd_normalDistribution.go">rnd_normalDistribution.go</a>
 Normally distributed pseudo-random numbers
 </div>
 
-# 3 Solution of sparse linear system
+
+
+# Solution of sparse linear system
 
 Solution of real and sparse linear system using Umfpack and high-level routines.
 
@@ -101,7 +104,7 @@ See: <a href="la_sparseReal01.go">la_sparseReal01.go</a>
 
 
 
-# 4 Solution of sparse linear system with complex numbers
+# Solution of sparse linear system with complex numbers
 
 Solution of complex and sparse linear system using Umfpack and high-level routines.
 
@@ -152,7 +155,7 @@ See: <a href="la_sparseComplex01.go">la_sparseComplex01.go</a>
 
 
 
-# 5 Numerical differentiation
+# Numerical differentiation
 
 There are numerous uses for numerical differentiation.
 
@@ -195,7 +198,7 @@ d²y/dx² @ 6.283185   2.449293598294703e-16                       0   2.4492935
 
 
 
-# 6 Drawing iso-surfaces with VTK
+# Drawing iso-surfaces with VTK
 
 An isosurface is a geometric construction representing a 2D region containing equal values. This
 surface is drawn in the 3D space (although the concept can be extended to hyperisosurfaces too) for
@@ -214,7 +217,7 @@ Iso-surface
 
 
 
-# 7 Plotting a contour
+# Plotting a contour
 
 The `plt` subpackage is a convenient wrapper to python.matplotlib/pyplot that can generate nice
 graphs. For example:
@@ -228,7 +231,7 @@ Contour
 
 
 
-# 8 Solution of Poisson's equation using finite differences
+# Solution of Poisson's equation using finite differences
 
 Package `fdm` can help with the solution (approximation) of partial differential equations using the
 finite differences method (FDM).
@@ -275,7 +278,7 @@ Solution of Poisson's equation 02
 
 
 
-# 9 Root finding problems
+# Root finding problems
 
 Example: find the root of
 ```
@@ -335,10 +338,63 @@ Simple root finding problem solved by Newton's method.
 
 
 
-# 10 B-splines: curve, control, and basis
+# B-splines: curve, control, and basis
 
 Source code: <a href="gm_bspline02.go">gm_bspline02.go</a>
 
 <div id="container">
 <p><img src="figs/gm_bspline02.png" width="400"></p>
 </div>
+
+
+
+# Orthogonal polynomials
+
+This example generates the following orthogonal polynomials and plot according to figures in [1]
+
+* Jacobi
+* Chebyshev First Kind
+* Chebyshev Second Kind
+* Legendre
+* Hermite
+
+Source code: <a href="fun_orthopoly01.go">fun_orthopoly01.go</a>
+
+## Jacobi: Figure 22.1
+
+<div id="container">
+<p><img src="figs/as-fig-22-1.png" width="450"></p>
+Jacobi orthogonal polynomials. Figure 22.1 of [1]
+</div>
+
+## Chebyshev1: Figure 22.6
+
+<div id="container">
+<p><img src="figs/as-fig-22-6.png" width="450"></p>
+Chebyshev 1st kind orthogonal polynomials. Figure 22.6 of [1]
+</div>
+
+## Chebyshev2: Figure 22.7
+
+<div id="container">
+<p><img src="figs/as-fig-22-7.png" width="450"></p>
+Chebyshev 2nd kind orthogonal polynomials. Figure 22.7 of [1]
+</div>
+
+## Legendre: Figure 22.8
+
+<div id="container">
+<p><img src="figs/as-fig-22-8.png" width="450"></p>
+Legendre orthogonal polynomials. Figure 22.8 of [1]
+</div>
+
+## Hermite: Figure 22.10
+
+<div id="container">
+<p><img src="figs/as-fig-22-10.png" width="450"></p>
+Hermite orthogonal polynomials. Figure 22.10 of [1]
+</div>
+
+## Reference:
+[1] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas,
+    Graphs, and Mathematical Tables. U.S. Department of Commerce, NIST
