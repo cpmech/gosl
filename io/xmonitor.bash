@@ -6,5 +6,7 @@ while true; do
     inotifywait -q -e modify $FILES
     echo
     echo
-    go test -test.run="file"
+    echo
+    echo
+    go test -test.run="enums01"
 done
