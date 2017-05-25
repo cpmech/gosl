@@ -293,3 +293,27 @@ func Test_binomial01(tst *testing.T) {
 		chk.Scalar(tst, "Binomial(100,50)", 1e-15, n100k50, n100k50maxima)
 	}
 }
+
+func Test_binomial02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("binomial02. binomial with real arguments")
+
+	aValues := []float64{10, 22, 50}
+	bValues := []float64{5, 2, 10}
+	answers := [][]float64{ // values from wxMaxima beta(a,b) function
+		{252, 45, 1},
+		{26334, 231, 646646},
+		{2118760, 1225, 10272278170},
+	}
+	for i, a := range aValues {
+		for j, b := range bValues {
+			res := Rbinomial(a, b)
+			tol := 1e-15
+			if i == 2 && j == 0 {
+				tol = 1e-9
+			}
+			chk.Scalar(tst, io.Sf("Rbinomial(%g,%g)", a, b), tol, res, answers[i][j])
+		}
+	}
+}

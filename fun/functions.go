@@ -129,6 +129,17 @@ func UintBinomial(n, k uint64) uint64 {
 	return c
 }
 
+// Rbinomial computes the binomial coefficient with real (non-negative) arguments by calling the Gamma function
+func Rbinomial(x, y float64) float64 {
+	if x < 0 || y < 0 {
+		chk.Panic("Rbinomial requires x and y to be non-negative, at this moment")
+	}
+	a := math.Gamma(x + 1.0)
+	b := math.Gamma(y + 1.0)
+	c := math.Gamma(x - y + 1.0)
+	return a / (b * c)
+}
+
 // SuqCos implements the superquadric auxiliary function that uses cos(x)
 func SuqCos(angle, expon float64) float64 {
 	return Sign(math.Cos(angle)) * math.Pow(math.Abs(math.Cos(angle)), expon)
