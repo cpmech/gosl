@@ -67,6 +67,19 @@ func (o *Prms) Find(name string) *Prm {
 	return nil
 }
 
+// CheckLimits check limits of variables given in Min/Max
+// Will panic if values are outside corresponding Min/Max range.
+func (o *Prms) CheckLimits() {
+	for _, p := range *o {
+		if p.V < p.Min {
+			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not aceptable", p.N, p.V, p.Min)
+		}
+		if p.V > p.Max {
+			chk.Panic("parameter %q has value greater than maximum. %v > %v is not aceptable", p.N, p.V, p.Max)
+		}
+	}
+}
+
 // GetValues get parameter values
 func (o *Prms) GetValues(names []string) (values []float64, found []bool) {
 	n := len(names)
@@ -78,6 +91,55 @@ func (o *Prms) GetValues(names []string) (values []float64, found []bool) {
 			values[i] = prm.V
 			found[i] = true
 		}
+	}
+	return
+}
+
+// CheckAndGetValues check min/max limits and return values.
+// Will panic if values are outside corresponding min/max range.
+// Will also panic if a parameter name is not found.
+func (o *Prms) CheckAndGetValues(names []string) (values []float64) {
+	n := len(names)
+	values = make([]float64, n)
+	for i, name := range names {
+		prm := o.Find(name)
+		if prm == nil {
+			chk.Panic("cannot find parameter named %q", name)
+		}
+		if prm.V < prm.Min {
+			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not aceptable", name, prm.V, prm.Min)
+		}
+		if prm.V > prm.Max {
+			chk.Panic("parameter %q has value greater than maximum. %v > %v is not aceptable", name, prm.V, prm.Max)
+		}
+		values[i] = prm.V
+	}
+	return
+}
+
+// CheckAndSetVars get parameter values and check limits defined in Min and Max
+// Will panic if values are outside corresponding Min/Max range.
+// Will also panic if a parameter name is not found.
+func (o *Prms) CheckAndSetVars(names []string, variables []*float64) {
+	n := len(names)
+	if len(variables) != n {
+		chk.Panic("array of variables must have the same size as the slice of names. %d != %d", len(variables), n)
+	}
+	for i, name := range names {
+		prm := o.Find(name)
+		if prm == nil {
+			chk.Panic("cannot find parameter named %q", name)
+		}
+		if prm.V < prm.Min {
+			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not aceptable", name, prm.V, prm.Min)
+		}
+		if prm.V > prm.Max {
+			chk.Panic("parameter %q has value greater than maximum. %v > %v is not aceptable", name, prm.V, prm.Max)
+		}
+		if variables[i] == nil {
+			chk.Panic("array of variables must not have nil entries")
+		}
+		*variables[i] = prm.V
 	}
 	return
 }

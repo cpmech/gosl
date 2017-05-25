@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="xfun"
+    go test -test.run="prms04"
 done

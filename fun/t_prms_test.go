@@ -5,6 +5,7 @@
 package fun
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -99,4 +100,26 @@ func Test_prms03(tst *testing.T) {
 	values, found = prms.GetValues([]string{"klx", "klY", "klz"})
 	chk.Vector(tst, "values", 1e-15, values, []float64{1, 0, 3})
 	chk.Bools(tst, "found", found, []bool{true, false, true})
+}
+
+func Test_prms04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("prms04")
+
+	var prms Prms
+	prms = []*Prm{
+		&Prm{N: "a", V: 123, Min: 0, Max: math.MaxFloat64},
+		&Prm{N: "b", V: 456, Min: 0, Max: math.MaxFloat64},
+	}
+
+	prms.CheckLimits()
+
+	values := prms.CheckAndGetValues([]string{"a", "b"})
+	chk.Vector(tst, "values", 1e-15, values, []float64{123, 456})
+
+	var a, b float64
+	prms.CheckAndSetVars([]string{"a", "b"}, []*float64{&a, &b})
+	chk.Scalar(tst, "a", 1e-15, a, 123)
+	chk.Scalar(tst, "b", 1e-15, b, 456)
 }
