@@ -13,18 +13,6 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-const (
-	DBL_EPSILON = 1.0e-15
-	DBL_MIN     = math.SmallestNonzeroFloat64
-)
-
-const (
-	NaN = iota
-	Inf
-	Equal
-	NotEqual
-)
-
 // PlotYxe plots the function y(x) implemented by Cb_yxe
 func PlotYxe(ffcn Cb_yxe, dirout, fnkey string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error) {
 	if !save && !show {

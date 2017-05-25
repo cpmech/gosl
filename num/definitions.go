@@ -6,7 +6,11 @@
 // root finding solvers (Brent's and Newton's methods), among others.
 package num
 
-import "github.com/cpmech/gosl/la"
+import (
+	"math"
+
+	"github.com/cpmech/gosl/la"
+)
 
 // callbacks (for single equations)
 type Cb_yx func(x float64) float64
@@ -21,6 +25,16 @@ type Cb_out func(x []float64) error                  // for output
 
 // constants
 const (
-	EPS  = 1e-16 // smallest number satisfying 1.0 + EPS > 1.0
-	CTE1 = 1e-5  // a minimum value to be used in Jacobian
+	EPS         = 1e-16 // smallest number satisfying 1.0 + EPS > 1.0
+	CTE1        = 1e-5  // a minimum value to be used in Jacobian
+	DBL_EPSILON = 1.0e-15
+	DBL_MIN     = math.SmallestNonzeroFloat64
+)
+
+// flags
+const (
+	NaN = iota
+	Inf
+	Equal
+	NotEqual
 )
