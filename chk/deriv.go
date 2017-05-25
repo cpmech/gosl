@@ -60,6 +60,40 @@ func DerivScaVecCen(tst *testing.T, msg string, tol float64, dfdxAna, xAt []floa
 	}
 }
 
+// DerivVecVecCen checks the derivative of scalar w.r.t vector by comparing with numerical solution
+// obtained with central differences (5-point rule)
+//   tst     -- testing.T structure
+//   msg     -- message about this test
+//   tol     -- tolerance to compare dfdxAna with dfdxNum
+//   dfdxAna -- [matrix] analytical (or other kind) derivative dfdx
+//   xAt     -- [vector] position to compute dfdx
+//   dx      -- stepsize; e.g. 1e-3
+//   fcn     -- [vector] function f(x). x is vector
+func DerivVecVecCen(tst *testing.T, msg string, tol float64, dfdxAna [][]float64, xAt []float64, dx float64, verbose bool, fcn func(f, x []float64)) {
+	ndim := len(xAt)
+	if len(dfdxAna) != ndim {
+		tst.Errorf("len(dfdxAna) != len(xAt)\n")
+		return
+	}
+	res := make([]float64, ndim)
+	xTmp := make([]float64, ndim)
+	for i := 0; i < ndim; i++ {
+		if len(dfdxAna[i]) != ndim {
+			tst.Errorf("len(dfdxAna[i]) != len(xAt)\n")
+			return
+		}
+		for j := 0; j < ndim; j++ {
+			copy(xTmp, xAt)
+			fij := func(x float64) float64 {
+				xTmp[j] = x
+				fcn(res, xTmp)
+				return res[i]
+			}
+			DerivScaScaCen(tst, fmt.Sprintf("%s%d%d", msg, i, j), tol, dfdxAna[i][j], xAt[j], dx, verbose, fij)
+		}
+	}
+}
+
 // DerivScaScaCen checks the derivative of scalar w.r.t scalar by comparing with numerical solution
 // obtained with central differences (5-point rule)
 //   tst     -- testing.T structure
