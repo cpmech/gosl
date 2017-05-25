@@ -340,6 +340,29 @@ parsing, handling files, directories, etc.
 			
 			
 				
+				<dd><a href="#Enum">type Enum</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#EnumsFind">func EnumsFind(prefix, name string) (enum Enum)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewEnum">func NewEnum(arguments ...string) Enum</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Enum.Desc">func (o Enum) Desc() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Enum.Key">func (o Enum) Key() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Enum.Prefix">func (o Enum) Prefix() string</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Enum.String">func (o Enum) String() string</a></dd>
+				
+			
+				
 				<dd><a href="#FcnConvertNum">type FcnConvertNum</a></dd>
 				
 				
@@ -396,6 +419,8 @@ parsing, handling files, directories, etc.
 				<a href="https://github.com/cpmech/gosl/blob/master/io/auxiliary.go">auxiliary.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/io/basic.go">basic.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/io/enums.go">enums.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/io/external.go">external.go</a>
 			
@@ -856,7 +881,7 @@ PathKey returs the full path except the extension
 		
 			
 			
-			<h2 id="Pf">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2619:2658#L114">Pf</a></h2>
+			<h2 id="Pf">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2646:2685#L117">Pf</a></h2>
 			<pre>func Pf(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pf prints formatted string
@@ -868,7 +893,7 @@ Pf prints formatted string
 		
 			
 			
-			<h2 id="PfBlue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7755:7798#L388">PfBlue</a></h2>
+			<h2 id="PfBlue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7782:7825#L391">PfBlue</a></h2>
 			<pre>func PfBlue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 PfBlue prints formatted string in high intensity blue
@@ -880,7 +905,7 @@ PfBlue prints formatted string in high intensity blue
 		
 			
 			
-			<h2 id="PfCyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6836:6879#L340">PfCyan</a></h2>
+			<h2 id="PfCyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6863:6906#L343">PfCyan</a></h2>
 			<pre>func PfCyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 PfCyan prints formatted string in high intensity cyan
@@ -892,7 +917,7 @@ PfCyan prints formatted string in high intensity cyan
 		
 			
 			
-			<h2 id="PfGreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7524:7568#L376">PfGreen</a></h2>
+			<h2 id="PfGreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7551:7595#L379">PfGreen</a></h2>
 			<pre>func PfGreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 PfGreen prints formatted string in high intensity green
@@ -904,7 +929,7 @@ PfGreen prints formatted string in high intensity green
 		
 			
 			
-			<h2 id="PfMag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7987:8029#L400">PfMag</a></h2>
+			<h2 id="PfMag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=8014:8056#L403">PfMag</a></h2>
 			<pre>func PfMag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 PfMag prints formatted string in high intensity magenta
@@ -916,7 +941,7 @@ PfMag prints formatted string in high intensity magenta
 		
 			
 			
-			<h2 id="PfRed">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7293:7335#L364">PfRed</a></h2>
+			<h2 id="PfRed">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7320:7362#L367">PfRed</a></h2>
 			<pre>func PfRed(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 PfRed prints formatted string in high intensity red
@@ -928,7 +953,7 @@ PfRed prints formatted string in high intensity red
 		
 			
 			
-			<h2 id="PfWhite">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=8218:8262#L412">PfWhite</a></h2>
+			<h2 id="PfWhite">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=8245:8289#L415">PfWhite</a></h2>
 			<pre>func PfWhite(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 PfWhite prints formatted string in high intensity white
@@ -940,7 +965,7 @@ PfWhite prints formatted string in high intensity white
 		
 			
 			
-			<h2 id="PfYel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7066:7108#L352">PfYel</a></h2>
+			<h2 id="PfYel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=7093:7135#L355">PfYel</a></h2>
 			<pre>func PfYel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 PfYel prints formatted string in high intensity yello
@@ -952,7 +977,7 @@ PfYel prints formatted string in high intensity yello
 		
 			
 			
-			<h2 id="Pfblue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4324:4367#L206">Pfblue</a></h2>
+			<h2 id="Pfblue">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4351:4394#L209">Pfblue</a></h2>
 			<pre>func Pfblue(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfblue prints formatted string in blue
@@ -964,7 +989,7 @@ Pfblue prints formatted string in blue
 		
 			
 			
-			<h2 id="Pfblue2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6125:6169#L302">Pfblue2</a></h2>
+			<h2 id="Pfblue2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6152:6196#L305">Pfblue2</a></h2>
 			<pre>func Pfblue2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfblue2 prints formatted string in another shade of blue
@@ -976,7 +1001,7 @@ Pfblue2 prints formatted string in another shade of blue
 		
 			
 			
-			<h2 id="Pfcyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2758:2801#L122">Pfcyan</a></h2>
+			<h2 id="Pfcyan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2785:2828#L125">Pfcyan</a></h2>
 			<pre>func Pfcyan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfcyan prints formatted string in cyan
@@ -988,7 +1013,7 @@ Pfcyan prints formatted string in cyan
 		
 			
 			
-			<h2 id="Pfcyan2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=2991:3035#L134">Pfcyan2</a></h2>
+			<h2 id="Pfcyan2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3018:3062#L137">Pfcyan2</a></h2>
 			<pre>func Pfcyan2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfcyan2 prints formatted string in another shade of cyan
@@ -1000,7 +1025,7 @@ Pfcyan2 prints formatted string in another shade of cyan
 		
 			
 			
-			<h2 id="Pfdgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5206:5251#L254">Pfdgreen</a></h2>
+			<h2 id="Pfdgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5233:5278#L257">Pfdgreen</a></h2>
 			<pre>func Pfdgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfdgreen prints formatted string in dark green
@@ -1012,7 +1037,7 @@ Pfdgreen prints formatted string in dark green
 		
 			
 			
-			<h2 id="Pfdyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3432:3475#L158">Pfdyel</a></h2>
+			<h2 id="Pfdyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3459:3502#L161">Pfdyel</a></h2>
 			<pre>func Pfdyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfdyel prints formatted string in dark yellow
@@ -1024,7 +1049,7 @@ Pfdyel prints formatted string in dark yellow
 		
 			
 			
-			<h2 id="Pfdyel2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3675:3719#L170">Pfdyel2</a></h2>
+			<h2 id="Pfdyel2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3702:3746#L173">Pfdyel2</a></h2>
 			<pre>func Pfdyel2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfdyel2 prints formatted string in another shade of dark yellow
@@ -1036,7 +1061,7 @@ Pfdyel2 prints formatted string in another shade of dark yellow
 		
 			
 			
-			<h2 id="Pfgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4108:4152#L194">Pfgreen</a></h2>
+			<h2 id="Pfgreen">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4135:4179#L197">Pfgreen</a></h2>
 			<pre>func Pfgreen(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfgreen prints formatted string in green
@@ -1048,7 +1073,7 @@ Pfgreen prints formatted string in green
 		
 			
 			
-			<h2 id="Pfgreen2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5446:5491#L266">Pfgreen2</a></h2>
+			<h2 id="Pfgreen2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5473:5518#L269">Pfgreen2</a></h2>
 			<pre>func Pfgreen2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfgreen2 prints formatted string in another shade of green
@@ -1060,7 +1085,7 @@ Pfgreen2 prints formatted string in another shade of green
 		
 			
 			
-			<h2 id="Pfgrey">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5889:5932#L290">Pfgrey</a></h2>
+			<h2 id="Pfgrey">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5916:5959#L293">Pfgrey</a></h2>
 			<pre>func Pfgrey(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfgrey prints formatted string in grey
@@ -1072,7 +1097,7 @@ Pfgrey prints formatted string in grey
 		
 			
 			
-			<h2 id="Pfgrey2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6362:6406#L314">Pfgrey2</a></h2>
+			<h2 id="Pfgrey2">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6389:6433#L317">Pfgrey2</a></h2>
 			<pre>func Pfgrey2(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfgrey2 prints formatted string in another shade of grey
@@ -1084,7 +1109,7 @@ Pfgrey2 prints formatted string in another shade of grey
 		
 			
 			
-			<h2 id="Pflmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4764:4807#L230">Pflmag</a></h2>
+			<h2 id="Pflmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4791:4834#L233">Pflmag</a></h2>
 			<pre>func Pflmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pflmag prints formatted string in light magenta
@@ -1096,7 +1121,7 @@ Pflmag prints formatted string in light magenta
 		
 			
 			
-			<h2 id="Pfmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4541:4583#L218">Pfmag</a></h2>
+			<h2 id="Pfmag">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4568:4610#L221">Pfmag</a></h2>
 			<pre>func Pfmag(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfmag prints formatted string in magenta
@@ -1108,7 +1133,7 @@ Pfmag prints formatted string in magenta
 		
 			
 			
-			<h2 id="Pforan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6583:6626#L326">Pforan</a></h2>
+			<h2 id="Pforan">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=6610:6653#L329">Pforan</a></h2>
 			<pre>func Pforan(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pforan prints formatted string in orange
@@ -1120,7 +1145,7 @@ Pforan prints formatted string in orange
 		
 			
 			
-			<h2 id="Pfpink">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=4979:5022#L242">Pfpink</a></h2>
+			<h2 id="Pfpink">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5006:5049#L245">Pfpink</a></h2>
 			<pre>func Pfpink(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfpink prints formatted string in pink
@@ -1132,7 +1157,7 @@ Pfpink prints formatted string in pink
 		
 			
 			
-			<h2 id="Pfpurple">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5669:5714#L278">Pfpurple</a></h2>
+			<h2 id="Pfpurple">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=5696:5741#L281">Pfpurple</a></h2>
 			<pre>func Pfpurple(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfpurple prints formatted string in purple
@@ -1144,7 +1169,7 @@ Pfpurple prints formatted string in purple
 		
 			
 			
-			<h2 id="Pfred">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3892:3934#L182">Pfred</a></h2>
+			<h2 id="Pfred">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3919:3961#L185">Pfred</a></h2>
 			<pre>func Pfred(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfred prints formatted string in red
@@ -1156,7 +1181,7 @@ Pfred prints formatted string in red
 		
 			
 			
-			<h2 id="Pfyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3211:3253#L146">Pfyel</a></h2>
+			<h2 id="Pfyel">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=3238:3280#L149">Pfyel</a></h2>
 			<pre>func Pfyel(msg <a href="/pkg/builtin/#string">string</a>, prm ...interface{})</pre>
 			<p>
 Pfyel prints formatted string in yellow
@@ -1461,7 +1486,7 @@ the exponent notation with e{+-}{##} is converted into \cdot 10^{{+-}##}
 		
 			
 			
-			<h2 id="UnColor">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=8533:8564#L426">UnColor</a></h2>
+			<h2 id="UnColor">func <a href="https://github.com/cpmech/gosl/blob/master/io/basic.go?s=8560:8591#L429">UnColor</a></h2>
 			<pre>func UnColor(msg <a href="/pkg/builtin/#string">string</a>) <a href="/pkg/builtin/#string">string</a></pre>
 			<p>
 UnColor removes console characters used to show colors
@@ -1579,6 +1604,96 @@ WriteStringToFileD writes string to a new file after creating a directory
 			
 
 		
+		
+			
+			
+			<h2 id="Enum">type <a href="https://github.com/cpmech/gosl/blob/master/io/enums.go?s=249:262#L1">Enum</a></h2>
+			<pre>type Enum <a href="/pkg/builtin/#int">int</a></pre>
+			<p>
+Enum defines enumeration constants
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="EnumsFind">func <a href="https://github.com/cpmech/gosl/blob/master/io/enums.go?s=1266:1313#L38">EnumsFind</a></h3>
+				<pre>func EnumsFind(prefix, name <a href="/pkg/builtin/#string">string</a>) (enum <a href="#Enum">Enum</a>)</pre>
+				<p>
+EnumsFind finds enum by &#34;Prefix.Name&#34;
+returns -1 if not found
+</p>
+
+				
+				
+			
+				
+				<h3 id="NewEnum">func <a href="https://github.com/cpmech/gosl/blob/master/io/enums.go?s=1586:1624#L50">NewEnum</a></h3>
+				<pre>func NewEnum(arguments ...<a href="/pkg/builtin/#string">string</a>) <a href="#Enum">Enum</a></pre>
+				<p>
+NewEnum sets a new enumeration
+</p>
+<pre>arguments -- Name, Prefix [optional], Key [optional], Desc [optional]
+Prefix is used to generate a unique map key such as:
+   &#34;Prefix.Name&#34;
+</pre>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Enum.Desc">func (Enum) <a href="https://github.com/cpmech/gosl/blob/master/io/enums.go?s=1138:1165#L32">Desc</a></h3>
+				<pre>func (o <a href="#Enum">Enum</a>) Desc() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+Desc prints the description about an enumeration constant
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Enum.Key">func (Enum) <a href="https://github.com/cpmech/gosl/blob/master/io/enums.go?s=1019:1045#L27">Key</a></h3>
+				<pre>func (o <a href="#Enum">Enum</a>) Key() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+Key prints the short key corresponding to an enumeration constant
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Enum.Prefix">func (Enum) <a href="https://github.com/cpmech/gosl/blob/master/io/enums.go?s=886:915#L22">Prefix</a></h3>
+				<pre>func (o <a href="#Enum">Enum</a>) Prefix() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+Prefix prints the prefix string of an enumeration constant
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Enum.String">func (Enum) <a href="https://github.com/cpmech/gosl/blob/master/io/enums.go?s=762:791#L17">String</a></h3>
+				<pre>func (o <a href="#Enum">Enum</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
+				<p>
+String prints the name of an enumeration constant
+</p>
+
+				
+				
+				
+			
 		
 			
 			

@@ -83,10 +83,22 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#Atan2pDeg">func Atan2pDeg(y, x float64) (αdeg float64)</a></dd>
 			
 				
+				<dd><a href="#Beta">func Beta(a, b float64) float64</a></dd>
+			
+				
+				<dd><a href="#Binomial">func Binomial(n, k int) float64</a></dd>
+			
+				
 				<dd><a href="#CheckDerivT">func CheckDerivT(tst *testing.T, o TimeSpace, t0, tf float64, xcte []float64, np int, tskip []float64, sktol, dtol, dtol2 float64, ver bool)</a></dd>
 			
 				
 				<dd><a href="#CheckDerivX">func CheckDerivX(tst *testing.T, o TimeSpace, tcte float64, xmin, xmax []float64, np int, xskip [][]float64, sktol, dtol float64, ver bool)</a></dd>
+			
+				
+				<dd><a href="#Factorial100">func Factorial100(n int) big.Float</a></dd>
+			
+				
+				<dd><a href="#Factorial22">func Factorial22(n int) float64</a></dd>
 			
 				
 				<dd><a href="#Heav">func Heav(x float64) float64</a></dd>
@@ -99,6 +111,9 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				
 				<dd><a href="#Ramp">func Ramp(x float64) float64</a></dd>
+			
+				
+				<dd><a href="#Rbinomial">func Rbinomial(x, y float64) float64</a></dd>
 			
 				
 				<dd><a href="#Sabs">func Sabs(x, eps float64) float64</a></dd>
@@ -126,6 +141,9 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				
 				<dd><a href="#SuqSin">func SuqSin(angle, expon float64) float64</a></dd>
+			
+				
+				<dd><a href="#UintBinomial">func UintBinomial(n, k uint64) uint64</a></dd>
 			
 			
 				
@@ -329,6 +347,20 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 			
 				
+				<dd><a href="#OrthoPolynomial">type OrthoPolynomial</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#NewOrthoPolynomial">func NewOrthoPolynomial(Type io.Enum, N int, prms Prms) (o *OrthoPolynomial)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#OrthoPolynomial.F">func (o *OrthoPolynomial) F(x float64) (res float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#OrthoPolynomial.P">func (o *OrthoPolynomial) P(n int, x float64) (res float64)</a></dd>
+				
+			
+				
 				<dd><a href="#Prm">type Prm</a></dd>
 				
 				
@@ -342,6 +374,15 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				
 				<dd><a href="#Prms">type Prms</a></dd>
 				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Prms.CheckAndGetValues">func (o *Prms) CheckAndGetValues(names []string) (values []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Prms.CheckAndSetVars">func (o *Prms) CheckAndSetVars(names []string, variables []*float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Prms.CheckLimits">func (o *Prms) CheckLimits()</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Prms.Connect">func (o *Prms) Connect(V *float64, name, caller string) (err string)</a></dd>
@@ -622,6 +663,8 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go">functions.go</a>
 			
+				<a href="https://github.com/cpmech/gosl/blob/master/fun/orthopoly.go">orthopoly.go</a>
+			
 				<a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go">prms.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go">testing.go</a>
@@ -676,6 +719,18 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			<h2 id="pkg-variables">Variables</h2>
 			
 				<pre>var (
+    <span id="OP_JACOBI">OP_JACOBI</span>     = <a href="/pkg/github.com/cpmech/gosl/io/">io</a>.<a href="/pkg/github.com/cpmech/gosl/io/#NewEnum">NewEnum</a>(&#34;Jacobi&#34;, &#34;num.op&#34;, &#34;J&#34;, &#34;Jacobi OrthoPolynomial&#34;)     <span class="comment">// Jacobi OrthoPolynomial</span>
+    <span id="OP_LEGENDRE">OP_LEGENDRE</span>   = <a href="/pkg/github.com/cpmech/gosl/io/">io</a>.<a href="/pkg/github.com/cpmech/gosl/io/#NewEnum">NewEnum</a>(&#34;Legendre&#34;, &#34;num.op&#34;, &#34;L&#34;, &#34;Legendre OrthoPolynomial&#34;) <span class="comment">// Legendre OrthoPolynomial</span>
+    <span id="OP_HERMITE">OP_HERMITE</span>    = <a href="/pkg/github.com/cpmech/gosl/io/">io</a>.<a href="/pkg/github.com/cpmech/gosl/io/#NewEnum">NewEnum</a>(&#34;Hermite&#34;, &#34;num.op&#34;, &#34;H&#34;, &#34;Hermite OrthoPolynomial&#34;)   <span class="comment">// Hermite OrthoPolynomial</span>
+    <span id="OP_CHEBYSHEV1">OP_CHEBYSHEV1</span> = <a href="/pkg/github.com/cpmech/gosl/io/">io</a>.<a href="/pkg/github.com/cpmech/gosl/io/#NewEnum">NewEnum</a>(&#34;Chebyshev1&#34;, &#34;num.op&#34;, &#34;T&#34;, &#34;Chebyshev First Kind&#34;)   <span class="comment">// Chebyshev1 OrthoPolynomial</span>
+    <span id="OP_CHEBYSHEV2">OP_CHEBYSHEV2</span> = <a href="/pkg/github.com/cpmech/gosl/io/">io</a>.<a href="/pkg/github.com/cpmech/gosl/io/#NewEnum">NewEnum</a>(&#34;Chebyshev2&#34;, &#34;num.op&#34;, &#34;U&#34;, &#34;Chebyshev Second Kind&#34;)  <span class="comment">// Chebyshev2 OrthoPolynomial</span>
+)</pre>
+				<p>
+enums
+</p>
+
+			
+				<pre>var (
     <span id="G_extraindent">G_extraindent</span> <a href="/pkg/builtin/#string">string</a> <span class="comment">// extra indentation</span>
 )</pre>
 				<p>
@@ -693,7 +748,7 @@ One implements an specialisation of Cte function that always returns one
 		
 			
 			
-			<h2 id="Atan2p">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=669:710#L10">Atan2p</a></h2>
+			<h2 id="Atan2p">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=4810:4851#L144">Atan2p</a></h2>
 			<pre>func Atan2p(y, x <a href="/pkg/builtin/#float64">float64</a>) (αrad <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 2π
@@ -705,7 +760,7 @@ Atan2p implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 
 		
 			
 			
-			<h2 id="Atan2pDeg">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=886:930#L19">Atan2pDeg</a></h2>
+			<h2 id="Atan2pDeg">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=5027:5071#L153">Atan2pDeg</a></h2>
 			<pre>func Atan2pDeg(y, x <a href="/pkg/builtin/#float64">float64</a>) (αdeg <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Atan2pDeg implements a positive version of atan2, in such a way that: 0 ≤ α ≤ 360
@@ -717,7 +772,31 @@ Atan2pDeg implements a positive version of atan2, in such a way that: 0 ≤ α �
 		
 			
 			
-			<h2 id="CheckDerivT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=395:535#L8">CheckDerivT</a></h2>
+			<h2 id="Beta">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2221:2252#L60">Beta</a></h2>
+			<pre>func Beta(a, b <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Beta computes the beta function by calling the Lgamma function
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Binomial">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2422:2453#L68">Binomial</a></h2>
+			<pre>func Binomial(n, k <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Binomial comptues the binomial coefficient (n k)^T
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CheckDerivT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=365:505#L7">CheckDerivT</a></h2>
 			<pre>func CheckDerivT(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, o <a href="#TimeSpace">TimeSpace</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, tskip []<a href="/pkg/builtin/#float64">float64</a>, sktol, dtol, dtol2 <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 CheckDerivT checks derivatives w.r.t to t for fixed coordinates x
@@ -729,7 +808,7 @@ CheckDerivT checks derivatives w.r.t to t for fixed coordinates x
 		
 			
 			
-			<h2 id="CheckDerivX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=1196:1335#L35">CheckDerivX</a></h2>
+			<h2 id="CheckDerivX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=1084:1223#L32">CheckDerivX</a></h2>
 			<pre>func CheckDerivX(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, o <a href="#TimeSpace">TimeSpace</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xskip [][]<a href="/pkg/builtin/#float64">float64</a>, sktol, dtol <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 CheckDerivX checks derivatives w.r.t to x for fixed t
@@ -741,7 +820,37 @@ CheckDerivX checks derivatives w.r.t to x for fixed t
 		
 			
 			
-			<h2 id="Heav">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1192:1220#L36">Heav</a></h2>
+			<h2 id="Factorial100">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1317:1351#L31">Factorial100</a></h2>
+			<pre>func Factorial100(n <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/math/big/">big</a>.<a href="/pkg/math/big/#Float">Float</a></pre>
+			<p>
+Factorial100 returns the factorial n! up to 100! using the math/big package
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Factorial22">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=897:928#L16">Factorial22</a></h2>
+			<pre>func Factorial22(n <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Factorial22 implements the factorial function; i.e. computes n! up to 22!  According to [1],
+factorials up to 22! have exact double precision representations (52 bits of mantissa, not
+counting powers of two that are absorbed into the exponent)
+</p>
+<pre>References
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+     Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Heav">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=5333:5361#L170">Heav</a></h2>
 			<pre>func Heav(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Heaviside step function (== derivative of Ramp(x))
@@ -783,7 +892,7 @@ axEqual -- use axis[&#39;equal&#39;]
 		
 			
 			
-			<h2 id="Ramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1064:1092#L28">Ramp</a></h2>
+			<h2 id="Ramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=5205:5233#L162">Ramp</a></h2>
 			<pre>func Ramp(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Ramp function =&gt; MacAulay brackets
@@ -795,7 +904,19 @@ Ramp function =&gt; MacAulay brackets
 		
 			
 			
-			<h2 id="Sabs">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2021:2054#L82">Sabs</a></h2>
+			<h2 id="Rbinomial">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=4086:4122#L123">Rbinomial</a></h2>
+			<pre>func Rbinomial(x, y <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Rbinomial computes the binomial coefficient with real (non-negative) arguments by calling the Gamma function
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Sabs">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=6162:6195#L216">Sabs</a></h2>
 			<pre>func Sabs(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
@@ -807,7 +928,7 @@ Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
 		
 			
 			
-			<h2 id="SabsD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2204:2239#L93">SabsD1</a></h2>
+			<h2 id="SabsD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=6345:6380#L227">SabsD1</a></h2>
 			<pre>func SabsD1(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SabsD1 returns the first derivative of Sabs
@@ -819,7 +940,7 @@ SabsD1 returns the first derivative of Sabs
 		
 			
 			
-			<h2 id="SabsD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=2419:2454#L106">SabsD2</a></h2>
+			<h2 id="SabsD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=6560:6595#L240">SabsD2</a></h2>
 			<pre>func SabsD2(x, eps <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SabsD2 returns the first derivative of Sabs
@@ -831,7 +952,7 @@ SabsD2 returns the first derivative of Sabs
 		
 			
 			
-			<h2 id="Sign">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1315:1343#L47">Sign</a></h2>
+			<h2 id="Sign">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=5456:5484#L181">Sign</a></h2>
 			<pre>func Sign(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sign function
@@ -843,7 +964,7 @@ Sign function
 		
 			
 			
-			<h2 id="Sramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1471:1504#L58">Sramp</a></h2>
+			<h2 id="Sramp">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=5612:5645#L192">Sramp</a></h2>
 			<pre>func Sramp(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 Sramp implements a smooth ramp function. Ramp
@@ -855,7 +976,7 @@ Sramp implements a smooth ramp function. Ramp
 		
 			
 			
-			<h2 id="SrampD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1640:1675#L66">SrampD1</a></h2>
+			<h2 id="SrampD1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=5781:5816#L200">SrampD1</a></h2>
 			<pre>func SrampD1(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SrampD1 returns the first derivative of Sramp
@@ -867,7 +988,7 @@ SrampD1 returns the first derivative of Sramp
 		
 			
 			
-			<h2 id="SrampD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=1805:1840#L74">SrampD2</a></h2>
+			<h2 id="SrampD2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=5946:5981#L208">SrampD2</a></h2>
 			<pre>func SrampD2(x, β <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SrampD2 returns the second derivative of Sramp
@@ -879,7 +1000,7 @@ SrampD2 returns the second derivative of Sramp
 		
 			
 			
-			<h2 id="SuqCos">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=264:305#L1">SuqCos</a></h2>
+			<h2 id="SuqCos">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=4405:4446#L134">SuqCos</a></h2>
 			<pre>func SuqCos(angle, expon <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SuqCos implements the superquadric auxiliary function that uses cos(x)
@@ -891,10 +1012,25 @@ SuqCos implements the superquadric auxiliary function that uses cos(x)
 		
 			
 			
-			<h2 id="SuqSin">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=460:501#L5">SuqSin</a></h2>
+			<h2 id="SuqSin">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=4601:4642#L139">SuqSin</a></h2>
 			<pre>func SuqSin(angle, expon <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 SuqSin implements the superquadric auxiliary function that uses sin(x)
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="UintBinomial">func <a href="https://github.com/cpmech/gosl/blob/master/fun/functions.go?s=3437:3474#L98">UintBinomial</a></h2>
+			<pre>func UintBinomial(n, k <a href="/pkg/builtin/#uint64">uint64</a>) <a href="/pkg/builtin/#uint64">uint64</a></pre>
+			<p>
+UintBinomial implements the Binomial coefficient using uint64. Panic happens on overflow
+Also, this function uses a loop so it may not be very efficient for large k
+The code below comes from <a href="https://en.wikipedia.org/wiki/Binomial_coefficient">https://en.wikipedia.org/wiki/Binomial_coefficient</a>
+[cannot find a reference to cite]
 </p>
 
 			
@@ -1741,6 +1877,71 @@ Init initialises the function
 		
 			
 			
+			<h2 id="OrthoPolynomial">type <a href="https://github.com/cpmech/gosl/blob/master/fun/orthopoly.go?s=984:1307#L16">OrthoPolynomial</a></h2>
+			<pre>type OrthoPolynomial struct {
+
+    <span class="comment">// input</span>
+    Type <a href="/pkg/github.com/cpmech/gosl/io/">io</a>.<a href="/pkg/github.com/cpmech/gosl/io/#Enum">Enum</a> <span class="comment">// type of orthogonal polynomial</span>
+    N    <a href="/pkg/builtin/#int">int</a>     <span class="comment">// (max) degree of polynomial. Lower order can be quickly obtained after this polynomial with max(N) is generated</span>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+OrthoPolynomial implements orthogonal polynomials
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="NewOrthoPolynomial">func <a href="https://github.com/cpmech/gosl/blob/master/fun/orthopoly.go?s=1652:1728#L35">NewOrthoPolynomial</a></h3>
+				<pre>func NewOrthoPolynomial(Type <a href="/pkg/github.com/cpmech/gosl/io/">io</a>.<a href="/pkg/github.com/cpmech/gosl/io/#Enum">Enum</a>, N <a href="/pkg/builtin/#int">int</a>, prms <a href="#Prms">Prms</a>) (o *<a href="#OrthoPolynomial">OrthoPolynomial</a>)</pre>
+				<p>
+NewOrthoPolynomial creates a new orthogonal polynomial
+</p>
+<pre>Type -- is the type: e.g. OP_JACOBI, OP_LEGENDRE, OP_HERMITE
+N    -- is the (max) degree of the polynomial.
+        Lower order can later be quickly obtained after this
+        polynomial with max(N) is created
+Prms -- parameters to each particular polynomial
+</pre>
+
+				
+				
+			
+
+			
+				
+				<h3 id="OrthoPolynomial.F">func (*OrthoPolynomial) <a href="https://github.com/cpmech/gosl/blob/master/fun/orthopoly.go?s=2048:2100#L52">F</a></h3>
+				<pre>func (o *<a href="#OrthoPolynomial">OrthoPolynomial</a>) F(x <a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+F computes P(n,x) with n=N (max)
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="OrthoPolynomial.P">func (*OrthoPolynomial) <a href="https://github.com/cpmech/gosl/blob/master/fun/orthopoly.go?s=2169:2228#L57">P</a></h3>
+				<pre>func (o *<a href="#OrthoPolynomial">OrthoPolynomial</a>) P(n <a href="/pkg/builtin/#int">int</a>, x <a href="/pkg/builtin/#float64">float64</a>) (res <a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+P computes P(n,x) where n must be ≤ N
+</p>
+
+				
+				
+				
+			
+		
+			
+			
 			<h2 id="Prm">type <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=377:1261#L8">Prm</a></h2>
 			<pre>type Prm struct {
 
@@ -1823,7 +2024,45 @@ Prms holds many parameters
 
 			
 				
-				<h3 id="Prms.Connect">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2091:2159#L76">Connect</a></h3>
+				<h3 id="Prms.CheckAndGetValues">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2676:2743#L91">CheckAndGetValues</a></h3>
+				<pre>func (o *<a href="#Prms">Prms</a>) CheckAndGetValues(names []<a href="/pkg/builtin/#string">string</a>) (values []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+CheckAndGetValues check min/max limits and return values.
+Will panic if values are outside corresponding min/max range.
+Will also panic if a parameter name is not found.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Prms.CheckAndSetVars">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=3421:3489#L113">CheckAndSetVars</a></h3>
+				<pre>func (o *<a href="#Prms">Prms</a>) CheckAndSetVars(names []<a href="/pkg/builtin/#string">string</a>, variables []*<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+CheckAndSetVars get parameter values and check limits defined in Min and Max
+Will panic if values are outside corresponding Min/Max range.
+Will also panic if a parameter name is not found.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Prms.CheckLimits">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1875:1903#L62">CheckLimits</a></h3>
+				<pre>func (o *<a href="#Prms">Prms</a>) CheckLimits()</pre>
+				<p>
+CheckLimits check limits of variables given in Min/Max
+Will panic if values are outside corresponding Min/Max range.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Prms.Connect">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=4204:4272#L138">Connect</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) Connect(V *<a href="/pkg/builtin/#float64">float64</a>, name, caller <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 Connect connects parameter
@@ -1834,7 +2073,7 @@ Connect connects parameter
 				
 			
 				
-				<h3 id="Prms.ConnectSet">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2355:2438#L86">ConnectSet</a></h3>
+				<h3 id="Prms.ConnectSet">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=4468:4551#L148">ConnectSet</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) ConnectSet(V []*<a href="/pkg/builtin/#float64">float64</a>, names []<a href="/pkg/builtin/#string">string</a>, caller <a href="/pkg/builtin/#string">string</a>) (err <a href="/pkg/builtin/#string">string</a>)</pre>
 				<p>
 ConnectSet connects set of parameters
@@ -1858,7 +2097,7 @@ Find finds a parameter by name
 				
 			
 				
-				<h3 id="Prms.GetValues">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=1786:1859#L61">GetValues</a></h3>
+				<h3 id="Prms.GetValues">func (*Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2222:2295#L74">GetValues</a></h3>
 				<pre>func (o *<a href="#Prms">Prms</a>) GetValues(names []<a href="/pkg/builtin/#string">string</a>) (values []<a href="/pkg/builtin/#float64">float64</a>, found []<a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 GetValues get parameter values
@@ -1869,7 +2108,7 @@ GetValues get parameter values
 				
 			
 				
-				<h3 id="Prms.String">func (Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=2669:2702#L98">String</a></h3>
+				<h3 id="Prms.String">func (Prms) <a href="https://github.com/cpmech/gosl/blob/master/fun/prms.go?s=4782:4815#L160">String</a></h3>
 				<pre>func (o <a href="#Prms">Prms</a>) String() (l <a href="/pkg/builtin/#string">string</a>)</pre>
 				
 				

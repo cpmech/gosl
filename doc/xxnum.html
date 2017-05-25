@@ -328,10 +328,15 @@ root finding solvers (Brent&#39;s and Newton&#39;s methods), among others.
 			<h2 id="pkg-constants">Constants</h2>
 			
 				<pre>const (
+    <span id="EPS">EPS</span>         = 1e-16 <span class="comment">// smallest number satisfying 1.0 + EPS &gt; 1.0</span>
+    <span id="CTE1">CTE1</span>        = 1e-5  <span class="comment">// a minimum value to be used in Jacobian</span>
     <span id="DBL_EPSILON">DBL_EPSILON</span> = 1.0e-15
     <span id="DBL_MIN">DBL_MIN</span>     = <a href="/pkg/math/">math</a>.<a href="/pkg/math/#SmallestNonzeroFloat64">SmallestNonzeroFloat64</a>
 )</pre>
-				
+				<p>
+constants
+</p>
+
 			
 				<pre>const (
     <span id="NaN">NaN</span> = <a href="/pkg/builtin/#iota">iota</a>
@@ -339,14 +344,8 @@ root finding solvers (Brent&#39;s and Newton&#39;s methods), among others.
     <span id="Equal">Equal</span>
     <span id="NotEqual">NotEqual</span>
 )</pre>
-				
-			
-				<pre>const (
-    <span id="EPS">EPS</span>  = 1e-16 <span class="comment">// smallest number satisfying 1.0 + EPS &gt; 1.0</span>
-    <span id="CTE1">CTE1</span> = 1e-5  <span class="comment">// a minimum value to be used in Jacobian</span>
-)</pre>
 				<p>
-constants
+flags
 </p>
 
 			
@@ -560,7 +559,7 @@ Local constants:
 		
 			
 			
-			<h2 id="MinComp">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1132:1175#L53">MinComp</a></h2>
+			<h2 id="MinComp">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1010:1053#L41">MinComp</a></h2>
 			<pre>func MinComp(tol, expected <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			
 			
@@ -569,7 +568,7 @@ Local constants:
 		
 			
 			
-			<h2 id="PlotYxe">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=470:612#L19">PlotYxe</a></h2>
+			<h2 id="PlotYxe">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=348:490#L7">PlotYxe</a></h2>
 			<pre>func PlotYxe(ffcn <a href="#Cb_yxe">Cb_yxe</a>, dirout, fnkey <a href="/pkg/builtin/#string">string</a>, xsol, xa, xb <a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, xsolLbl, args <a href="/pkg/builtin/#string">string</a>, save, show <a href="/pkg/builtin/#bool">bool</a>, extra func()) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 PlotYxe plots the function y(x) implemented by Cb_yxe
@@ -671,7 +670,7 @@ Computations are carried out with the trapezoidal rule.
 		
 			
 			
-			<h2 id="TestAbs">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1232:1324#L57">TestAbs</a></h2>
+			<h2 id="TestAbs">func <a href="https://github.com/cpmech/gosl/blob/master/num/auxiliary.go?s=1110:1202#L45">TestAbs</a></h2>
 			<pre>func TestAbs(result, expected, absolute_error <a href="/pkg/builtin/#float64">float64</a>, test_description <a href="/pkg/builtin/#string">string</a>) (status <a href="/pkg/builtin/#int">int</a>)</pre>
 			
 			
@@ -797,7 +796,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_J">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=620:671#L8">Cb_J</a></h2>
+			<h2 id="Cb_J">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=634:685#L12">Cb_J</a></h2>
 			<pre>type Cb_J func(dfdx *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// sparse version</span>
 </pre>
 			
@@ -816,7 +815,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_Jd">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=691:743#L9">Cb_Jd</a></h2>
+			<h2 id="Cb_Jd">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=705:757#L13">Cb_Jd</a></h2>
 			<pre>type Cb_Jd func(dfdx [][]<a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// dense version</span>
 </pre>
 			
@@ -835,7 +834,7 @@ By: Oleg Keselyov &lt;oleg@ponder.csci.unt.edu, oleg@unt.edu&gt; May 23, 1991
 		
 			
 			
-			<h2 id="Cb_f">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=582:619#L7">Cb_f</a></h2>
+			<h2 id="Cb_f">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=596:633#L11">Cb_f</a></h2>
 			<pre>type Cb_f func(fx, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
 			<p>
 callbacks (for systems)
@@ -856,7 +855,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_fx">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=498:553#L4">Cb_fx</a></h2>
+			<h2 id="Cb_fx">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=512:567#L8">Cb_fx</a></h2>
 			<pre>type Cb_fx func(x <a href="/pkg/builtin/#float64">float64</a>, args ...interface{}) <a href="/pkg/builtin/#float64">float64</a></pre>
 			
 
@@ -874,7 +873,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=761:796#L10">Cb_out</a></h2>
+			<h2 id="Cb_out">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=775:810#L14">Cb_out</a></h2>
 			<pre>type Cb_out func(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a> <span class="comment">// for output</span>
 </pre>
 			
@@ -893,7 +892,7 @@ callbacks (for systems)
 		
 			
 			
-			<h2 id="Cb_yx">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=418:452#L2">Cb_yx</a></h2>
+			<h2 id="Cb_yx">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=432:466#L6">Cb_yx</a></h2>
 			<pre>type Cb_yx func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 callbacks (for single equations)
@@ -914,7 +913,7 @@ callbacks (for single equations)
 		
 			
 			
-			<h2 id="Cb_yxe">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=453:497#L3">Cb_yxe</a></h2>
+			<h2 id="Cb_yxe">type <a href="https://github.com/cpmech/gosl/blob/master/num/definitions.go?s=467:511#L7">Cb_yxe</a></h2>
 			<pre>type Cb_yxe func(x <a href="/pkg/builtin/#float64">float64</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 			
 

@@ -73,6 +73,8 @@ element analyses (FEA)
 			<div id="manual-nav">
 			<dl>
 			
+				<dd><a href="#pkg-constants">Constants</a></dd>
+			
 			
 				<dd><a href="#pkg-variables">Variables</a></dd>
 			
@@ -222,6 +224,16 @@ element analyses (FEA)
 				
 			
 				
+				<dd><a href="#QuadPoint">type QuadPoint</a></dd>
+				
+				
+			
+				
+				<dd><a href="#QuadPoints">type QuadPoints</a></dd>
+				
+				
+			
+				
 				<dd><a href="#ShapeFunction">type ShapeFunction</a></dd>
 				
 				
@@ -267,6 +279,8 @@ element analyses (FEA)
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/msh/mesh.go">mesh.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/msh/output.go">output.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/gm/msh/quadpoints.go">quadpoints.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/gm/msh/s_hexs.go">s_hexs.go</a>
 			
@@ -326,6 +340,19 @@ element analyses (FEA)
 		</div> <!-- #pkg-callgraph -->
 
 		
+			<h2 id="pkg-constants">Constants</h2>
+			
+				<pre>const (
+    <span id="SQ3by5">SQ3by5</span>   = 0.7745966692414834 <span class="comment">// sqrt(3.0 / 5.0)</span>
+    <span id="SQ19by30">SQ19by30</span> = 0.7958224257542215 <span class="comment">// sqrt(19.0 / 30.0)</span>
+    <span id="SQ19by33">SQ19by33</span> = 0.7587869106393281 <span class="comment">// sqrt(19.0 / 33.0)</span>
+)</pre>
+				<p>
+Numeric constants
+</p>
+
+			
+		
 		
 			<h2 id="pkg-variables">Variables</h2>
 			
@@ -335,6 +362,9 @@ element analyses (FEA)
     <span id="EdgeLocalVerts">EdgeLocalVerts</span> map[<a href="/pkg/builtin/#string">string</a>][][]<a href="/pkg/builtin/#int">int</a>     <span class="comment">// local indices of vertices on edges of shape</span>
     <span id="FaceLocalVerts">FaceLocalVerts</span> map[<a href="/pkg/builtin/#string">string</a>][][]<a href="/pkg/builtin/#int">int</a>     <span class="comment">// local indices of vertices on faces of shape</span>
     <span id="NatCoords">NatCoords</span>      map[<a href="/pkg/builtin/#string">string</a>][][]<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// natural coordinates of vertices on shape</span>
+
+    <span class="comment">// integration points [type][numberOfPts]; NOTE: type = &#34;lin&#34;, &#34;tri&#34;, &#34;qua&#34;, &#34;tet&#34;, &#34;hex&#34;</span>
+    <span id="IntPoints">IntPoints</span> map[<a href="/pkg/builtin/#string">string</a>]map[<a href="/pkg/builtin/#int">int</a>]<a href="#QuadPoints">QuadPoints</a>
 )</pre>
 				
 			
@@ -976,6 +1006,49 @@ GetTagMaps finds tagged entities
 				
 				
 				
+			
+		
+			
+			
+			<h2 id="QuadPoint">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/quadpoints.go?s=454:478#L7">QuadPoint</a></h2>
+			<pre>type QuadPoint []<a href="/pkg/builtin/#float64">float64</a> <span class="comment">// length=4: [r, s, t, weight]</span>
+</pre>
+			<p>
+QuadPoint implements a quadrature (e.g. Gauss) point
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="QuadPoints">type <a href="https://github.com/cpmech/gosl/blob/master/gm/msh/quadpoints.go?s=555:582#L10">QuadPoints</a></h2>
+			<pre>type QuadPoints []<a href="#QuadPoint">QuadPoint</a></pre>
+			<p>
+QuadPoints is a set of quadrature points
+</p>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
 			
 		
 			
