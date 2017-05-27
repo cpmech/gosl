@@ -2,14 +2,21 @@
 
 More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfun.html).**
 
-This package defines and implements simple scalar functions. The derivatives and gradients of these
-functions are also implemented.
+This package implements _special_ functions such as orthogonal polynomials and elliptical functions
+of first, second and third kind. For example, these orthogonal polynomial functions are defined:
+1. Jacobi
+2. Legendre
+3. Hermite
+4. Chebyshev (first and second kind)
+All functions are fully tested.
 
-The main interface in this package is `Func` which defines the F, G, H (mathematical) functions.
-The `Func` interface is:
+In this package, the interface `TimeSpace` defines simple scalar functions that depend on both a
+scalar and a vector; e.g. f(t,[x]). Several instances of `TimeSpace` are then provided and are very
+convenient because their derivatives and gradients are also fully tested.
 
+The interface `TimeSpace` requires F, G, H (mathematical) functions according to:
 ```go
-type Func interface {
+type TimeSpace interface {
 	Init(prms Prms) error                     // initialise function parameters
 	F(t float64, x []float64) float64         // y = F(t, x)
 	G(t float64, x []float64) float64         // ∂y/∂t_cteX = G(t, x)
@@ -18,7 +25,7 @@ type Func interface {
 }
 ```
 
-The other important structure is `Prm` which holds control parameters (e.g. function constants).
+The other useful structure is `Prm` which holds control parameters (e.g. function constants).
 This structure is defined as follows:
 
 ```go
