@@ -89,10 +89,31 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#Binomial">func Binomial(n, k int) float64</a></dd>
 			
 				
+				<dd><a href="#CarlsonRc">func CarlsonRc(x, y float64) float64</a></dd>
+			
+				
+				<dd><a href="#CarlsonRd">func CarlsonRd(x, y, z float64) float64</a></dd>
+			
+				
+				<dd><a href="#CarlsonRf">func CarlsonRf(x, y, z float64) float64</a></dd>
+			
+				
+				<dd><a href="#CarlsonRj">func CarlsonRj(x, y, z, p float64) float64</a></dd>
+			
+				
 				<dd><a href="#CheckDerivT">func CheckDerivT(tst *testing.T, o TimeSpace, t0, tf float64, xcte []float64, np int, tskip []float64, sktol, dtol, dtol2 float64, ver bool)</a></dd>
 			
 				
 				<dd><a href="#CheckDerivX">func CheckDerivX(tst *testing.T, o TimeSpace, tcte float64, xmin, xmax []float64, np int, xskip [][]float64, sktol, dtol float64, ver bool)</a></dd>
+			
+				
+				<dd><a href="#Elliptic1">func Elliptic1(φ, k float64) float64</a></dd>
+			
+				
+				<dd><a href="#Elliptic2">func Elliptic2(φ, k float64) float64</a></dd>
+			
+				
+				<dd><a href="#Elliptic3">func Elliptic3(φ, n, k float64) float64</a></dd>
 			
 				
 				<dd><a href="#Factorial100">func Factorial100(n int) big.Float</a></dd>
@@ -621,6 +642,8 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/fun/auxiliary.go">auxiliary.go</a>
 			
+				<a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go">ellipticintegral.go</a>
+			
 				<a href="https://github.com/cpmech/gosl/blob/master/fun/f_add.go">f_add.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/fun/f_cdist.go">f_cdist.go</a>
@@ -796,6 +819,71 @@ Binomial comptues the binomial coefficient (n k)^T
 		
 			
 			
+			<h2 id="CarlsonRc">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=10235:10271#L288">CarlsonRc</a></h2>
+			<pre>func CarlsonRc(x, y <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+CarlsonRc computes Carlson’s degenerate elliptic integral according to [1]
+Computes Rc(x,y) where x must be nonnegative and y must be nonzero.
+If y &lt; 0, the Cauchy principal value is returned.
+</p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CarlsonRd">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=6166:6205#L160">CarlsonRd</a></h2>
+			<pre>func CarlsonRd(x, y, z <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+CarlsonRd computes Carlson’s elliptic integral of the second kind according to [1]
+Computes Rf(x,y,z) where x,y must be non-negative and at most one can be zero.
+z must be positive.
+</p>
+<pre>References:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CarlsonRf">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=4470:4509#L113">CarlsonRf</a></h2>
+			<pre>func CarlsonRf(x, y, z <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+CarlsonRf computes Carlson&#39;s elliptic integral of the first kind according to [1]. See also [2]
+Computes Rf(x,y,z) where x,y,z must be non-negative and at most one can be zero.
+</p>
+<pre>References:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+[2] Carlson BC (1977) Elliptic Integrals of the First Kind, SIAM Journal on Mathematical
+    Analysis, vol. 8, pp. 231-242.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="CarlsonRj">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=7860:7902#L212">CarlsonRj</a></h2>
+			<pre>func CarlsonRj(x, y, z, p <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+CarlsonRj computes Carlson’s elliptic integral of the third kind according to [1]
+Computes Rj(x,y,z,p) where x,y,z must be nonnegative, and at most one can be zero.
+p must be nonzero. If p &lt; 0, the Cauchy principal value is returned.
+</p>
+
+			
+			
+
+		
+			
+			
 			<h2 id="CheckDerivT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/testing.go?s=365:505#L7">CheckDerivT</a></h2>
 			<pre>func CheckDerivT(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, o <a href="#TimeSpace">TimeSpace</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>, tskip []<a href="/pkg/builtin/#float64">float64</a>, sktol, dtol, dtol2 <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
@@ -813,6 +901,95 @@ CheckDerivT checks derivatives w.r.t to t for fixed coordinates x
 			<p>
 CheckDerivX checks derivatives w.r.t to x for fixed t
 </p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Elliptic1">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=959:996#L21">Elliptic1</a></h2>
+			<pre>func Elliptic1(φ, k <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Elliptic1 computes Legendre elliptic integral of the first kind F(φ,k),
+evaluated using Carlson’s function Rf [1].
+The argument ranges are  0 ≤ φ ≤ π/2  and  0 ≤ k·sin(φ) ≤ 1
+</p>
+<pre>Computes:
+                   φ
+                  ⌠          dt
+      F(φ, k)  =  │  ___________________
+                  │     _______________
+                  ⌡   \╱ 1 - k² sin²(t)
+                 0
+where:
+         0 ≤ φ ≤ π/2
+         0 ≤ k·sin(φ) ≤ 1
+
+References:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Elliptic2">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=2147:2184#L58">Elliptic2</a></h2>
+			<pre>func Elliptic2(φ, k <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Elliptic2 computes Legendre elliptic integral of the second kind E(φ,k),
+evaluated using Carlson&#39;s functions Rf and Rd [1].
+The argument ranges are  0 ≤ φ ≤ π/2  and  0 ≤ k⋅sin(φ) ≤ 1
+</p>
+<pre>Computes:
+                   φ
+                  ⌠     _______________
+      E(φ, k)  =  │   \╱ 1 - k² sin²(t)  dt
+                  ⌡
+                 0
+where:
+         0 ≤ φ ≤ π/2
+         0 ≤ k·sin(φ) ≤ 1
+
+References:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Elliptic3">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=3737:3777#L98">Elliptic3</a></h2>
+			<pre>func Elliptic3(φ, n, k <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<p>
+Elliptic3 computes Legendre elliptic integral of the third kind Π(φ,n,k),
+evaluated using Carlson&#39;s functions Rf and Rj.
+NOTE that the sign convention on n is opposite to that of Abramowitz and Stegun [2]
+The argument ranges are  0 ≤ φ ≤ π/2  and  0 ≤ k⋅sin(φ) ≤ 1
+</p>
+<pre>Computes:
+                      φ
+                     ⌠                  dt
+      Π(φ, n, k)  =  │  ___________________________________
+                     │                     _______________
+                     ⌡   (1 + n sin²(t)) \╱ 1 - k² sin²(t)
+                    0
+where:
+         0 ≤ φ ≤ π/2
+         0 ≤ k·sin(φ) ≤ 1
+
+References:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+[2] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas, Graphs,
+    and Mathematical Tables. U.S. Department of Commerce, NIST
+</pre>
 
 			
 			
@@ -3026,6 +3203,17 @@ Init initialises the function
 			</tr>
 			
 
+			
+				
+					<tr>
+						<td class="pkg-name" style="padding-left: 0px;">
+							<a href="https://github.com/cpmech/gosl/tree/master/fun/data">data</a>
+						</td>
+						<td class="pkg-synopsis">
+							
+						</td>
+					</tr>
+				
 			
 				
 					<tr>
