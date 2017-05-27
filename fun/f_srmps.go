@@ -22,7 +22,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Srmps) Init(prms Prms) (err error) {
+func (o *Srmps) Init(prms Params) (err error) {
 	e := prms.Connect(&o.Ca, "ca", "srmps function")
 	e += prms.Connect(&o.Cb, "cb", "srmps function")
 	e += prms.Connect(&o.Ta, "ta", "srmps function")

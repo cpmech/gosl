@@ -66,7 +66,7 @@ func (o *LinIpm) Free() {
 }
 
 // Init initialises LinIpm
-func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms fun.Prms) {
+func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms fun.Params) {
 
 	// problem
 	o.A, o.B, o.C = A, b, c

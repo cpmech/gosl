@@ -16,10 +16,10 @@ func Test_xfun01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("xfun01. 2D halo => circle")
 
-	o, err := New("halo", []*Prm{
-		&Prm{N: "r", V: 0.5},
-		&Prm{N: "xc", V: 0.5},
-		&Prm{N: "yc", V: 0.5},
+	o, err := New("halo", []*P{
+		&P{N: "r", V: 0.5},
+		&P{N: "xc", V: 0.5},
+		&P{N: "yc", V: 0.5},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n")
@@ -48,10 +48,10 @@ func Test_xfun02(tst *testing.T) {
 	chk.PrintTitle("xfun02. 2D circle distance")
 
 	xc := []float64{0.5, 0.5}
-	o, err := New("cdist", []*Prm{
-		&Prm{N: "r", V: 0.5},
-		&Prm{N: "xc", V: xc[0]},
-		&Prm{N: "yc", V: xc[1]},
+	o, err := New("cdist", []*P{
+		&P{N: "r", V: 0.5},
+		&P{N: "xc", V: xc[0]},
+		&P{N: "yc", V: xc[1]},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n")
@@ -80,10 +80,10 @@ func Test_xfun03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("xfun03. xpoly2: 2nd order polynomial with x coordinates")
 
-	o, err := New("xpoly2", []*Prm{
-		&Prm{N: "a0", V: 1.5}, &Prm{N: "a1", V: 0.5}, &Prm{N: "a2", V: -1.5},
-		&Prm{N: "b0", V: -1.5}, &Prm{N: "b1", V: -0.5}, &Prm{N: "b2", V: 1.5},
-		&Prm{N: "c01", V: 2.0}, &Prm{N: "c12", V: -2.0}, &Prm{N: "c20", V: 1.0},
+	o, err := New("xpoly2", []*P{
+		&P{N: "a0", V: 1.5}, &P{N: "a1", V: 0.5}, &P{N: "a2", V: -1.5},
+		&P{N: "b0", V: -1.5}, &P{N: "b1", V: -0.5}, &P{N: "b2", V: 1.5},
+		&P{N: "c01", V: 2.0}, &P{N: "c12", V: -2.0}, &P{N: "c20", V: 1.0},
 		//&Prm{N: "2D", V: 1},
 	})
 	if err != nil {
@@ -113,9 +113,9 @@ func Test_xfun04(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("xfun04. xpoly1: 1st order polynomial with x coordinates")
 
-	o, err := New("xpoly2", []*Prm{
-		&Prm{N: "a0", V: 1.5}, &Prm{N: "a1", V: 0.5}, &Prm{N: "a2", V: -1.5},
-		&Prm{N: "2D", V: 1},
+	o, err := New("xpoly2", []*P{
+		&P{N: "a0", V: 1.5}, &P{N: "a1", V: 0.5}, &P{N: "a2", V: -1.5},
+		&P{N: "2D", V: 1},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n")

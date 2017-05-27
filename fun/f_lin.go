@@ -19,7 +19,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Lin) Init(prms Prms) (err error) {
+func (o *Lin) Init(prms Params) (err error) {
 	e := prms.Connect(&o.M, "m", "lin function")
 	prms.Connect(&o.Ts, "ts", "lin function")
 	if e != "" {

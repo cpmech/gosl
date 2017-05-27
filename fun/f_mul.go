@@ -18,7 +18,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Mul) Init(prms Prms) (err error) {
+func (o *Mul) Init(prms Params) (err error) {
 	for _, p := range prms {
 		switch p.N {
 		case "fa":

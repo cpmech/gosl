@@ -23,7 +23,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Halo) Init(prms Prms) (err error) {
+func (o *Halo) Init(prms Params) (err error) {
 	ndim := 2
 	for _, p := range prms {
 		if p.N == "zc" {

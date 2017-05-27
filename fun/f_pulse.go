@@ -24,7 +24,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Pulse) Init(prms Prms) (err error) {
+func (o *Pulse) Init(prms Params) (err error) {
 	e := prms.Connect(&o.Ca, "ca", "pulse function")
 	e += prms.Connect(&o.Cb, "cb", "pulse function")
 	e += prms.Connect(&o.Ta, "ta", "pulse function")

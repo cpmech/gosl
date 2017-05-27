@@ -35,7 +35,7 @@ func init() {
 }
 
 // Init initialises the model
-func (o *RefIncRL1) Init(prms Prms) (err error) {
+func (o *RefIncRL1) Init(prms Params) (err error) {
 
 	// parameters
 	e := prms.Connect(&o.λ0, "lam0", "ref-inc-rl1 function")

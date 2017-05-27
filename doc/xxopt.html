@@ -89,7 +89,7 @@ package opt implements routines for solving optimisation problems
 					<dd>&nbsp; &nbsp; <a href="#LinIpm.Free">func (o *LinIpm) Free()</a></dd>
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#LinIpm.Init">func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms fun.Prms)</a></dd>
+					<dd>&nbsp; &nbsp; <a href="#LinIpm.Init">func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms fun.Params)</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#LinIpm.Solve">func (o *LinIpm) Solve(verbose bool) (err error)</a></dd>
@@ -290,8 +290,8 @@ Free frees allocated memory
 				
 			
 				
-				<h3 id="LinIpm.Init">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1612:1680#L59">Init</a></h3>
-				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Init(A *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#CCMatrix">CCMatrix</a>, b, c []<a href="/pkg/builtin/#float64">float64</a>, prms <a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Prms">Prms</a>)</pre>
+				<h3 id="LinIpm.Init">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=1612:1682#L59">Init</a></h3>
+				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Init(A *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#CCMatrix">CCMatrix</a>, b, c []<a href="/pkg/builtin/#float64">float64</a>, prms <a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Params">Params</a>)</pre>
 				<p>
 Init initialises LinIpm
 </p>
@@ -301,7 +301,7 @@ Init initialises LinIpm
 				
 			
 				
-				<h3 id="LinIpm.Solve">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=2483:2531#L106">Solve</a></h3>
+				<h3 id="LinIpm.Solve">func (*LinIpm) <a href="https://github.com/cpmech/gosl/blob/master/opt/linipm.go?s=2485:2533#L106">Solve</a></h3>
 				<pre>func (o *<a href="#LinIpm">LinIpm</a>) Solve(verbose <a href="/pkg/builtin/#bool">bool</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Solve solves linear programming problem

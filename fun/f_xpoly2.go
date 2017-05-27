@@ -31,7 +31,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Xpoly2) Init(prms Prms) (err error) {
+func (o *Xpoly2) Init(prms Params) (err error) {
 	o.ndim = 3
 	for _, p := range prms {
 		if p.N == "2D" {

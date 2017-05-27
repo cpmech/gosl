@@ -31,7 +31,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Sin) Init(prms Prms) (err error) {
+func (o *Sin) Init(prms Params) (err error) {
 	e := prms.Connect(&o.A, "a", "sin function")
 	e += prms.Connect(&o.C, "c", "sin function")
 	p := prms.Find("b/pi")

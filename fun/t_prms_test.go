@@ -17,11 +17,11 @@ func Test_prms01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("prms01")
 
-	var prms Prms
-	prms = []*Prm{
-		&Prm{N: "a", V: 1.0},
-		&Prm{N: "b", V: 2.0},
-		&Prm{N: "c", V: 3.0},
+	var prms Params
+	prms = []*P{
+		&P{N: "a", V: 1.0},
+		&P{N: "b", V: 2.0},
+		&P{N: "c", V: 3.0},
 	}
 	io.Pforan("%v\n", prms)
 
@@ -57,11 +57,11 @@ func Test_prms02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("prms02")
 
-	var prms Prms
-	prms = []*Prm{
-		&Prm{N: "klx", V: 1.0},
-		&Prm{N: "kly", V: 2.0},
-		&Prm{N: "klz", V: 3.0},
+	var prms Params
+	prms = []*P{
+		&P{N: "klx", V: 1.0},
+		&P{N: "kly", V: 2.0},
+		&P{N: "klz", V: 3.0},
 	}
 	io.Pforan("%v\n", prms)
 
@@ -85,11 +85,11 @@ func Test_prms03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("prms03")
 
-	var prms Prms
-	prms = []*Prm{
-		&Prm{N: "klx", V: 1.0},
-		&Prm{N: "kly", V: 2.0},
-		&Prm{N: "klz", V: 3.0},
+	var prms Params
+	prms = []*P{
+		&P{N: "klx", V: 1.0},
+		&P{N: "kly", V: 2.0},
+		&P{N: "klz", V: 3.0},
 	}
 	io.Pforan("%v\n", prms)
 
@@ -107,10 +107,10 @@ func Test_prms04(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("prms04")
 
-	var prms Prms
-	prms = []*Prm{
-		&Prm{N: "a", V: 123, Min: 0, Max: math.MaxFloat64},
-		&Prm{N: "b", V: 456, Min: 0, Max: math.MaxFloat64},
+	var prms Params
+	prms = []*P{
+		&P{N: "a", V: 123, Min: 0, Max: math.MaxFloat64},
+		&P{N: "b", V: 456, Min: 0, Max: math.MaxFloat64},
 	}
 
 	prms.CheckLimits()

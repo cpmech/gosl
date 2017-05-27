@@ -29,7 +29,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *RefDecGen) Init(prms Prms) (err error) {
+func (o *RefDecGen) Init(prms Params) (err error) {
 
 	// parameters
 	e := prms.Connect(&o.β, "bet", "ref-dec-gen function")

@@ -667,7 +667,7 @@ FrechetPlotCoef plots coefficients for Frechet parameter&#39;s estimation
 		
 			
 			
-			<h2 id="GetDistrKey">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2904:2948#L124">GetDistrKey</a></h2>
+			<h2 id="GetDistrKey">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2900:2944#L124">GetDistrKey</a></h2>
 			<pre>func GetDistrKey(typ <a href="#DistType">DistType</a>) (name <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 GetDistrKey returns distribution key from ID
@@ -679,7 +679,7 @@ GetDistrKey returns distribution key from ID
 		
 			
 			
-			<h2 id="GetDistrName">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2531:2576#L105">GetDistrName</a></h2>
+			<h2 id="GetDistrName">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2527:2572#L105">GetDistrName</a></h2>
 			<pre>func GetDistrName(typ <a href="#DistType">DistType</a>) (name <a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 GetDistrName returns distribution name from ID
@@ -1567,7 +1567,7 @@ DistType indicates the distribution to which a random variable appears to belong
 
 			
 				
-				<h3 id="GetDistribution">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2154:2196#L86">GetDistribution</a></h3>
+				<h3 id="GetDistribution">func <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=2150:2192#L86">GetDistribution</a></h3>
 				<pre>func GetDistribution(name <a href="/pkg/builtin/#string">string</a>) <a href="#DistType">DistType</a></pre>
 				<p>
 GetDistribution returns distribution ID from name
@@ -1874,7 +1874,7 @@ SetsOfVars defines a set of sets of random variables
 		
 			
 			
-			<h2 id="VarData">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=668:1121#L14">VarData</a></h2>
+			<h2 id="VarData">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=668:1117#L14">VarData</a></h2>
 			<pre>type VarData struct {
 
     <span class="comment">// input</span>
@@ -1892,8 +1892,8 @@ SetsOfVars defines a set of sets of random variables
     Max <a href="/pkg/builtin/#float64">float64</a> <span class="comment">// max value</span>
 
     <span class="comment">// optional</span>
-    Key <a href="/pkg/builtin/#string">string</a>   <span class="comment">// auxiliary indentifier</span>
-    Prm *<a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Prm">Prm</a> <span class="comment">// parameter connected to this random variable</span>
+    Key <a href="/pkg/builtin/#string">string</a> <span class="comment">// auxiliary indentifier</span>
+    Prm *<a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#P">P</a> <span class="comment">// parameter connected to this random variable</span>
 
     <span class="comment">// derived</span>
     Distr <a href="#Distribution">Distribution</a> <span class="comment">// pointer to distribution</span>
@@ -1926,7 +1926,7 @@ PlotPdf plots PDF
 				
 			
 				
-				<h3 id="VarData.Transform">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1175:1239#L39">Transform</a></h3>
+				<h3 id="VarData.Transform">func (*VarData) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1171:1235#L39">Transform</a></h3>
 				<pre>func (o *<a href="#VarData">VarData</a>) Transform(x <a href="/pkg/builtin/#float64">float64</a>) (y <a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Transform transform x into standard normal space
@@ -1939,7 +1939,7 @@ Transform transform x into standard normal space
 		
 			
 			
-			<h2 id="Variables">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1485:1510#L54">Variables</a></h2>
+			<h2 id="Variables">type <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1481:1506#L54">Variables</a></h2>
 			<pre>type Variables []*<a href="#VarData">VarData</a></pre>
 			<p>
 Variables implements a set of random variables
@@ -1958,7 +1958,7 @@ Variables implements a set of random variables
 
 			
 				
-				<h3 id="Variables.Init">func (*Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1559:1597#L57">Init</a></h3>
+				<h3 id="Variables.Init">func (*Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1555:1593#L57">Init</a></h3>
 				<pre>func (o *<a href="#Variables">Variables</a>) Init() (err <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 Init initialises distributions in Variables
@@ -1969,7 +1969,7 @@ Init initialises distributions in Variables
 				
 			
 				
-				<h3 id="Variables.Transform">func (Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1898:1967#L74">Transform</a></h3>
+				<h3 id="Variables.Transform">func (Variables) <a href="https://github.com/cpmech/gosl/blob/master/rnd/variables.go?s=1894:1963#L74">Transform</a></h3>
 				<pre>func (o <a href="#Variables">Variables</a>) Transform(x []<a href="/pkg/builtin/#float64">float64</a>) (y []<a href="/pkg/builtin/#float64">float64</a>, invalid <a href="/pkg/builtin/#bool">bool</a>)</pre>
 				<p>
 Transform transforms all variables

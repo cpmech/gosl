@@ -22,15 +22,15 @@ func Test_ts01(tst *testing.T) {
 	yb := -0.5
 	λ1 := 1.0
 
-	o, err := New("ref-dec-gen", []*Prm{
-		&Prm{N: "bet", V: 5.0},
-		&Prm{N: "a", V: -λ1},
-		&Prm{N: "b", V: -1.0},
-		&Prm{N: "c", V: ya},
-		&Prm{N: "A", V: 0.0},
-		&Prm{N: "B", V: λ1},
-		&Prm{N: "xini", V: 0.0},
-		&Prm{N: "yini", V: yb},
+	o, err := New("ref-dec-gen", []*P{
+		&P{N: "bet", V: 5.0},
+		&P{N: "a", V: -λ1},
+		&P{N: "b", V: -1.0},
+		&P{N: "c", V: ya},
+		&P{N: "A", V: 0.0},
+		&P{N: "B", V: λ1},
+		&P{N: "xini", V: 0.0},
+		&P{N: "yini", V: yb},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -64,11 +64,11 @@ func Test_ts02(tst *testing.T) {
 	yb := -50.0
 	λ1 := 1.0
 
-	o, err := New("ref-dec-sp1", []*Prm{
-		&Prm{N: "bet", V: 5.0},
-		&Prm{N: "lam1", V: λ1},
-		&Prm{N: "ya", V: ya},
-		&Prm{N: "yb", V: yb},
+	o, err := New("ref-dec-sp1", []*P{
+		&P{N: "bet", V: 5.0},
+		&P{N: "lam1", V: λ1},
+		&P{N: "ya", V: ya},
+		&P{N: "yb", V: yb},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -99,28 +99,28 @@ func Test_ts03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts03. add, cte, srmps")
 
-	cte, err := New("cte", []*Prm{&Prm{N: "c", V: 30}})
+	cte, err := New("cte", []*P{&P{N: "c", V: 30}})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
-	srmps, err := New("srmps", []*Prm{
-		&Prm{N: "ca", V: 0},
-		&Prm{N: "cb", V: 1},
-		&Prm{N: "ta", V: 0},
-		&Prm{N: "tb", V: 1},
+	srmps, err := New("srmps", []*P{
+		&P{N: "ca", V: 0},
+		&P{N: "cb", V: 1},
+		&P{N: "ta", V: 0},
+		&P{N: "tb", V: 1},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
-	add, err := New("add", []*Prm{
-		&Prm{N: "a", V: 1},
-		&Prm{N: "b", V: 1},
-		&Prm{N: "fa", Fcn: cte},
-		&Prm{N: "fb", Fcn: srmps},
+	add, err := New("add", []*P{
+		&P{N: "a", V: 1},
+		&P{N: "b", V: 1},
+		&P{N: "fa", Fcn: cte},
+		&P{N: "fb", Fcn: srmps},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -156,9 +156,9 @@ func Test_ts04(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts04. lin")
 
-	lin, err := New("lin", []*Prm{
-		&Prm{N: "m", V: 0.5},
-		&Prm{N: "ts", V: 0},
+	lin, err := New("lin", []*P{
+		&P{N: "m", V: 0.5},
+		&P{N: "ts", V: 0},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -196,13 +196,13 @@ func Test_ts06a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts06a. pts")
 
-	fun, err := New("pts", []*Prm{
-		&Prm{N: "t", V: 0.00}, {N: "y", V: 0.50},
-		&Prm{N: "t", V: 1.00}, {N: "y", V: 0.20},
-		&Prm{N: "t", V: 2.00}, {N: "y", V: 0.20},
-		&Prm{N: "t", V: 3.00}, {N: "y", V: 0.05},
-		&Prm{N: "t", V: 4.00}, {N: "y", V: 0.01},
-		&Prm{N: "t", V: 5.00}, {N: "y", V: 0.00},
+	fun, err := New("pts", []*P{
+		&P{N: "t", V: 0.00}, {N: "y", V: 0.50},
+		&P{N: "t", V: 1.00}, {N: "y", V: 0.20},
+		&P{N: "t", V: 2.00}, {N: "y", V: 0.20},
+		&P{N: "t", V: 3.00}, {N: "y", V: 0.05},
+		&P{N: "t", V: 4.00}, {N: "y", V: 0.01},
+		&P{N: "t", V: 5.00}, {N: "y", V: 0.00},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -231,9 +231,9 @@ func Test_ts06b(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts06b. pts")
 
-	fun, err := New("pts", []*Prm{
-		&Prm{N: "t0", V: 0.0}, {N: "y0", V: 0.50},
-		&Prm{N: "dy", Extra: "-0.3  0  -0.15  -0.04  -0.01"},
+	fun, err := New("pts", []*P{
+		&P{N: "t0", V: 0.0}, {N: "y0", V: 0.50},
+		&P{N: "dy", Extra: "-0.3  0  -0.15  -0.04  -0.01"},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -262,9 +262,9 @@ func Test_ts06c(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts06c. pts")
 
-	fun, err := New("pts", []*Prm{
+	fun, err := New("pts", []*P{
 		// T =                     0 0.05 0.1 0.2 0.3 0.5  0.75 1
-		&Prm{N: "y=dt", Extra: "0.05 0.05 0.1 0.1 0.2 0.25 0.25 0"},
+		&P{N: "y=dt", Extra: "0.05 0.05 0.1 0.1 0.2 0.25 0.25 0"},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -293,9 +293,9 @@ func Test_ts07(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts07. exc1")
 
-	fun, err := New("exc1", []*Prm{
-		&Prm{N: "a", V: 200},
-		&Prm{N: "b", V: 2},
+	fun, err := New("exc1", []*P{
+		&P{N: "a", V: 200},
+		&P{N: "b", V: 2},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -322,10 +322,10 @@ func Test_ts08(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts08. exc2")
 
-	fun, err := New("exc2", []*Prm{
-		&Prm{N: "ta", V: 5},
-		&Prm{N: "a", V: 3},
-		&Prm{N: "b", V: 0.2},
+	fun, err := New("exc2", []*P{
+		&P{N: "ta", V: 5},
+		&P{N: "a", V: 3},
+		&P{N: "b", V: 0.2},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -352,10 +352,10 @@ func Test_ts09(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts09. cos")
 
-	fun, err := New("cos", []*Prm{
-		&Prm{N: "a", V: 10},
-		&Prm{N: "b", V: math.Pi},
-		&Prm{N: "c", V: 1.0},
+	fun, err := New("cos", []*P{
+		&P{N: "a", V: 10},
+		&P{N: "b", V: math.Pi},
+		&P{N: "c", V: 1.0},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -382,11 +382,11 @@ func Test_ts10(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts10. rmp")
 
-	fun, err := New("rmp", []*Prm{
-		&Prm{N: "ta", V: 1},
-		&Prm{N: "tb", V: 2},
-		&Prm{N: "ca", V: 0.5},
-		&Prm{N: "cb", V: -1.5},
+	fun, err := New("rmp", []*P{
+		&P{N: "ta", V: 1},
+		&P{N: "tb", V: 2},
+		&P{N: "ca", V: 0.5},
+		&P{N: "cb", V: -1.5},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -413,11 +413,11 @@ func Test_ts11(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts11. ref-inc-rl1")
 
-	fun, err := New("ref-inc-rl1", []*Prm{
-		&Prm{N: "lam0", V: 0.001},
-		&Prm{N: "lam1", V: 1.2},
-		&Prm{N: "alp", V: 0.01},
-		&Prm{N: "bet", V: 10},
+	fun, err := New("ref-inc-rl1", []*P{
+		&P{N: "lam0", V: 0.001},
+		&P{N: "lam1", V: 1.2},
+		&P{N: "alp", V: 0.01},
+		&P{N: "bet", V: 10},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -444,28 +444,28 @@ func Test_ts12(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts12. mul")
 
-	cos, err := New("cos", []*Prm{
-		&Prm{N: "a", V: 1},
-		&Prm{N: "b/pi", V: 2},
-		&Prm{N: "c", V: 1},
+	cos, err := New("cos", []*P{
+		&P{N: "a", V: 1},
+		&P{N: "b/pi", V: 2},
+		&P{N: "c", V: 1},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
-	lin, err := New("lin", []*Prm{
-		&Prm{N: "m", V: 0.5},
-		&Prm{N: "ts", V: 0},
+	lin, err := New("lin", []*P{
+		&P{N: "m", V: 0.5},
+		&P{N: "ts", V: 0},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
 		return
 	}
 
-	mul, err := New("mul", []*Prm{
-		&Prm{N: "fa", Fcn: cos},
-		&Prm{N: "fb", Fcn: lin},
+	mul, err := New("mul", []*P{
+		&P{N: "fa", Fcn: cos},
+		&P{N: "fb", Fcn: lin},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -501,11 +501,11 @@ func Test_ts13(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts13. pulse")
 
-	pulse, err := New("pulse", []*Prm{
-		&Prm{N: "ca", V: 0.2},
-		&Prm{N: "cb", V: 2.0},
-		&Prm{N: "ta", V: 1.0},
-		&Prm{N: "tb", V: 2.5},
+	pulse, err := New("pulse", []*P{
+		&P{N: "ca", V: 0.2},
+		&P{N: "cb", V: 2.0},
+		&P{N: "ta", V: 1.0},
+		&P{N: "tb", V: 2.5},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -533,10 +533,10 @@ func Test_ts14(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts14. sin")
 
-	fun, err := New("sin", []*Prm{
-		&Prm{N: "a", V: 10},
-		&Prm{N: "b", V: math.Pi},
-		&Prm{N: "c", V: 1.0},
+	fun, err := New("sin", []*P{
+		&P{N: "a", V: 10},
+		&P{N: "b", V: math.Pi},
+		&P{N: "c", V: 1.0},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -563,11 +563,11 @@ func Test_ts15(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts15. cut-sin; test cut positive values.")
 
-	fun, err := New("cut-sin", []*Prm{
-		&Prm{N: "a", V: 10},
-		&Prm{N: "b", V: math.Pi},
-		&Prm{N: "c", V: 1.0},
-		&Prm{N: "cps", V: 0.0},
+	fun, err := New("cut-sin", []*P{
+		&P{N: "a", V: 10},
+		&P{N: "b", V: math.Pi},
+		&P{N: "c", V: 1.0},
+		&P{N: "cps", V: 0.0},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
@@ -594,10 +594,10 @@ func Test_ts16(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ts16. cut-sin; test cut negative values.")
 
-	fun, err := New("cut-sin", []*Prm{
-		&Prm{N: "a", V: 10},
-		&Prm{N: "b", V: math.Pi},
-		&Prm{N: "c", V: 1.0},
+	fun, err := New("cut-sin", []*P{
+		&P{N: "a", V: 10},
+		&P{N: "b", V: math.Pi},
+		&P{N: "c", V: 1.0},
 	})
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)

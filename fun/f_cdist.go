@@ -27,7 +27,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Cdist) Init(prms Prms) (err error) {
+func (o *Cdist) Init(prms Params) (err error) {
 	ndim := 2
 	for _, p := range prms {
 		if p.N == "zc" {

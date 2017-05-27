@@ -50,7 +50,7 @@ func init() {
 }
 
 // Init initialises the model
-func (o *RefDecSp1) Init(prms Prms) (err error) {
+func (o *RefDecSp1) Init(prms Params) (err error) {
 
 	// parameters
 	e := prms.Connect(&o.β, "bet", "ref-dec-sp1 function")

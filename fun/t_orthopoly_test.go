@@ -24,9 +24,9 @@ func Test_orthopoly01(tst *testing.T) {
 	chk.PrintTitle("orthopoly01. Jacobi P5(1,1)")
 
 	N, α, β := 5, 1.0, 1.0
-	op := NewOrthoPolynomial(OP_JACOBI, N, []*Prm{
-		&Prm{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
-		&Prm{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
+	op := NewOrthoPolynomial(OP_JACOBI, N, []*P{
+		&P{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
+		&P{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
 	})
 
 	xx := utl.LinSpace(-1, 1, 5)
@@ -47,9 +47,9 @@ func Test_orthopoly02(tst *testing.T) {
 	chk.PrintTitle("orthopoly02. Jacobi polynomials Fig 22.1 [1]")
 
 	N, α, β := 5, 1.5, -0.5
-	op := NewOrthoPolynomial(OP_JACOBI, N, []*Prm{
-		&Prm{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
-		&Prm{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
+	op := NewOrthoPolynomial(OP_JACOBI, N, []*P{
+		&P{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
+		&P{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
 	})
 
 	xx := utl.LinSpace(-1, 1, 5)
@@ -86,9 +86,9 @@ func Test_orthopoly03(tst *testing.T) {
 
 	N := 5
 	op := NewOrthoPolynomial(OP_LEGENDRE, N, nil)
-	opj := NewOrthoPolynomial(OP_JACOBI, N, []*Prm{
-		&Prm{N: "alpha", V: 0, Min: -1, Max: math.MaxFloat64},
-		&Prm{N: "beta", V: 0, Min: -1, Max: math.MaxFloat64},
+	opj := NewOrthoPolynomial(OP_JACOBI, N, []*P{
+		&P{N: "alpha", V: 0, Min: -1, Max: math.MaxFloat64},
+		&P{N: "beta", V: 0, Min: -1, Max: math.MaxFloat64},
 	})
 
 	xx := utl.LinSpace(-1, 1, 5)

@@ -25,7 +25,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Pts) Init(prms Prms) (err error) {
+func (o *Pts) Init(prms Params) (err error) {
 
 	// read parameters
 	var T, Y []float64

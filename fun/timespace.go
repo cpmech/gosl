@@ -19,7 +19,7 @@ import (
 
 // TimeSpace defines the interface for simple functions
 type TimeSpace interface {
-	Init(prms Prms) error                     // initialise function parameters
+	Init(prms Params) error                   // initialise function parameters
 	F(t float64, x []float64) float64         // y = F(t, x)
 	G(t float64, x []float64) float64         // ∂y/∂t_cteX = G(t, x)
 	H(t float64, x []float64) float64         // ∂²y/∂t²_cteX = H(t, x)
@@ -30,7 +30,7 @@ type TimeSpace interface {
 var allocators = map[string]func() TimeSpace{} // type => function allocator
 
 // New allocates function by name
-func New(name string, prms Prms) (TimeSpace, error) {
+func New(name string, prms Params) (TimeSpace, error) {
 	if name == "zero" {
 		return &Zero, nil
 	}

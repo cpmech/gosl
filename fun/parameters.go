@@ -14,8 +14,8 @@ var (
 	G_extraindent string // extra indentation
 )
 
-// Prm holds material parameter names and values
-type Prm struct {
+// P holds material parameter names and values
+type P struct {
 
 	// input
 	N      string  `json:"n"`      // name of parameter
@@ -33,32 +33,32 @@ type Prm struct {
 
 	// auxiliary
 	Fcn   TimeSpace // a function y=f(t,x)
-	Other *Prm      // dependency: connected parameter
+	Other *P        // dependency: connected parameter
 
 	// derived
 	conn []*float64 // connected variables to V
 }
 
 // Connect connects parameter to variable
-func (o *Prm) Connect(V *float64) {
+func (o *P) Connect(V *float64) {
 	o.conn = append(o.conn, V)
 	*V = o.V
 }
 
 // Set sets parameter, including connected variables
-func (o *Prm) Set(V float64) {
+func (o *P) Set(V float64) {
 	o.V = V
 	for _, v := range o.conn {
 		*v = V
 	}
 }
 
-// Prms holds many parameters
-type Prms []*Prm
+// Params holds many parameters
+type Params []*P
 
 // Find finds a parameter by name
 //  Note: returns nil if not found
-func (o *Prms) Find(name string) *Prm {
+func (o *Params) Find(name string) *P {
 	for _, p := range *o {
 		if p.N == name {
 			return p
@@ -69,7 +69,7 @@ func (o *Prms) Find(name string) *Prm {
 
 // CheckLimits check limits of variables given in Min/Max
 // Will panic if values are outside corresponding Min/Max range.
-func (o *Prms) CheckLimits() {
+func (o *Params) CheckLimits() {
 	for _, p := range *o {
 		if p.V < p.Min {
 			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not aceptable", p.N, p.V, p.Min)
@@ -81,7 +81,7 @@ func (o *Prms) CheckLimits() {
 }
 
 // GetValues get parameter values
-func (o *Prms) GetValues(names []string) (values []float64, found []bool) {
+func (o *Params) GetValues(names []string) (values []float64, found []bool) {
 	n := len(names)
 	values = make([]float64, n)
 	found = make([]bool, n)
@@ -98,7 +98,7 @@ func (o *Prms) GetValues(names []string) (values []float64, found []bool) {
 // CheckAndGetValues check min/max limits and return values.
 // Will panic if values are outside corresponding min/max range.
 // Will also panic if a parameter name is not found.
-func (o *Prms) CheckAndGetValues(names []string) (values []float64) {
+func (o *Params) CheckAndGetValues(names []string) (values []float64) {
 	n := len(names)
 	values = make([]float64, n)
 	for i, name := range names {
@@ -120,7 +120,7 @@ func (o *Prms) CheckAndGetValues(names []string) (values []float64) {
 // CheckAndSetVars get parameter values and check limits defined in Min and Max
 // Will panic if values are outside corresponding Min/Max range.
 // Will also panic if a parameter name is not found.
-func (o *Prms) CheckAndSetVars(names []string, variables []*float64) {
+func (o *Params) CheckAndSetVars(names []string, variables []*float64) {
 	n := len(names)
 	if len(variables) != n {
 		chk.Panic("array of variables must have the same size as the slice of names. %d != %d", len(variables), n)
@@ -145,7 +145,7 @@ func (o *Prms) CheckAndSetVars(names []string, variables []*float64) {
 }
 
 // Connect connects parameter
-func (o *Prms) Connect(V *float64, name, caller string) (err string) {
+func (o *Params) Connect(V *float64, name, caller string) (err string) {
 	prm := o.Find(name)
 	if prm == nil {
 		return io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
@@ -155,7 +155,7 @@ func (o *Prms) Connect(V *float64, name, caller string) (err string) {
 }
 
 // ConnectSet connects set of parameters
-func (o *Prms) ConnectSet(V []*float64, names []string, caller string) (err string) {
+func (o *Params) ConnectSet(V []*float64, names []string, caller string) (err string) {
 	chk.IntAssert(len(V), len(names))
 	for i, name := range names {
 		prm := o.Find(name)
@@ -167,7 +167,7 @@ func (o *Prms) ConnectSet(V []*float64, names []string, caller string) (err stri
 	return
 }
 
-func (o Prms) String() (l string) {
+func (o Params) String() (l string) {
 	for i, prm := range o {
 		if i > 0 {
 			l += ",\n"

@@ -38,8 +38,8 @@ type VarData struct {
 	Max float64 // max value
 
 	// optional
-	Key string   // auxiliary indentifier
-	Prm *fun.Prm // parameter connected to this random variable
+	Key string // auxiliary indentifier
+	Prm *fun.P // parameter connected to this random variable
 
 	// derived
 	Distr Distribution // pointer to distribution

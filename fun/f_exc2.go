@@ -23,7 +23,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Exc2) Init(prms Prms) (err error) {
+func (o *Exc2) Init(prms Params) (err error) {
 	e := prms.Connect(&o.Ta, "ta", "exc2 function")
 	e += prms.Connect(&o.A, "a", "exc2 function")
 	e += prms.Connect(&o.B, "b", "exc2 function")

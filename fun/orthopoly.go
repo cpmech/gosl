@@ -42,7 +42,7 @@ type OrthoPolynomial struct {
 //           Lower order can later be quickly obtained after this
 //           polynomial with max(N) is created
 //   Prms -- parameters to each particular polynomial
-func NewOrthoPolynomial(Type io.Enum, N int, prms Prms) (o *OrthoPolynomial) {
+func NewOrthoPolynomial(Type io.Enum, N int, prms Params) (o *OrthoPolynomial) {
 	o = new(OrthoPolynomial)
 	o.Type = Type
 	o.N = N
@@ -89,13 +89,13 @@ type oPoly interface {
 }
 
 // oPolyMaker defines a function that makes new oPolys
-type oPolyMaker func(prms Prms) oPoly
+type oPolyMaker func(prms Params) oPoly
 
 // oPolyDB implements a database of oPoly makers
 var oPolyDB map[io.Enum]oPolyMaker = make(map[io.Enum]oPolyMaker)
 
 // newopoly finds oPoly or panic
-func newopoly(code io.Enum, prms Prms) oPoly {
+func newopoly(code io.Enum, prms Params) oPoly {
 	if maker, ok := oPolyDB[code]; ok {
 		return maker(prms)
 	}
@@ -130,7 +130,7 @@ func (o *opJacobi) g(n, m int, x float64) float64 {
 	return math.Pow(x-1, float64(n-m)) * math.Pow(x+1, float64(m))
 }
 
-func newJacobi(prms Prms) oPoly {
+func newJacobi(prms Params) oPoly {
 	o := new(opJacobi)
 	prms.CheckLimits()
 	prms.ConnectSet([]*float64{&o.alpha, &o.beta}, []string{"alpha", "beta"}, "newJacobi")
@@ -160,7 +160,7 @@ func (o *opLegendre) g(n, m int, x float64) float64 {
 	return math.Pow(x, float64(n-2*m))
 }
 
-func newLegendre(prms Prms) oPoly {
+func newLegendre(prms Params) oPoly {
 	return new(opLegendre)
 }
 
@@ -186,7 +186,7 @@ func (o *opHermite) g(n, m int, x float64) float64 {
 	return math.Pow(2*x, float64(n-2*m))
 }
 
-func newHermite(prms Prms) oPoly {
+func newHermite(prms Params) oPoly {
 	return new(opHermite)
 }
 
@@ -213,7 +213,7 @@ func (o *opChebyshev1) g(n, m int, x float64) float64 {
 	return math.Pow(2*x, float64(n-2*m))
 }
 
-func newChebyshev1(prms Prms) oPoly {
+func newChebyshev1(prms Params) oPoly {
 	return new(opChebyshev1)
 }
 
@@ -240,7 +240,7 @@ func (o *opChebyshev2) g(n, m int, x float64) float64 {
 	return math.Pow(2*x, float64(n-2*m))
 }
 
-func newChebyshev2(prms Prms) oPoly {
+func newChebyshev2(prms Params) oPoly {
 	return new(opChebyshev2)
 }
 
