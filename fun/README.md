@@ -17,7 +17,7 @@ convenient because their derivatives and gradients are also fully tested.
 The interface `TimeSpace` requires F, G, H (mathematical) functions according to:
 ```go
 type TimeSpace interface {
-	Init(prms Prms) error                     // initialise function parameters
+	Init(prms Params) error                   // initialise function parameters
 	F(t float64, x []float64) float64         // y = F(t, x)
 	G(t float64, x []float64) float64         // ∂y/∂t_cteX = G(t, x)
 	H(t float64, x []float64) float64         // ∂²y/∂t²_cteX = H(t, x)
@@ -25,11 +25,11 @@ type TimeSpace interface {
 }
 ```
 
-The other useful structure is `Prm` which holds control parameters (e.g. function constants).
+The other useful structure is `P` which holds control parameters (e.g. function constants).
 This structure is defined as follows:
 
 ```go
-type Prm struct {
+type P struct {
 
 	// input
 	N      string  `json:"n"`      // name of parameter
@@ -47,7 +47,7 @@ type Prm struct {
 
 	// auxiliary
 	Fcn   Func // a function y=f(t,x)
-	Other *Prm // dependency: connected parameter
+	Other *P   // dependency: connected parameter
 
 	// derived
 	conn []*float64 // connected variables to V
