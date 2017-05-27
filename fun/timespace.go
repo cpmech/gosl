@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// fun (functions) implements a number of y(t,x) functions and their first and second order derivatives
+// fun (functions) implements special functions such as elliptical, orthogonal polynomials, and a
+// structure called TimeSpace defining scalar functions of one scalar and a vector such as f(t,[x]).
+// Several TimeSpace functions are defined as well.
 package fun
 
 import (

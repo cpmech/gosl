@@ -25,7 +25,7 @@ Gosl comprises several _subpackages_ as listed below:
 8.  [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas) &ndash; Lower level linear algebra using OpenBLAS
 9.  [fdm](https://github.com/cpmech/gosl/tree/master/fdm)           &ndash; Simple finite differences method
 10. [num](https://github.com/cpmech/gosl/tree/master/num)           &ndash; Fundamental numerical methods
-11. [fun](https://github.com/cpmech/gosl/tree/master/fun)           &ndash; Scalar functions of one scalar and one vector
+11. [fun](https://github.com/cpmech/gosl/tree/master/fun)           &ndash; Special functions and functions of scalar/vector
 12. [gm](https://github.com/cpmech/gosl/tree/master/gm)             &ndash; Geometry algorithms and structures
 13. [gm/msh](https://github.com/cpmech/gosl/tree/master/gm/msh)     &ndash; Mesh structures and interpolation functions for FEA
 14. [gm/tri](https://github.com/cpmech/gosl/tree/master/gm/tri)     &ndash; Mesh generation: triangles and Delaunay triangulation

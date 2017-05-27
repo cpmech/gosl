@@ -30,7 +30,7 @@ pkgs = [
     ("la/oblas", "Lower level linear algebra using OpenBLAS"),
     ("fdm"     , "Simple finite differences method"),
     ("num"     , "Fundamental Numerical methods"),
-    ("fun"     , "Scalar functions of one scalar and one vector"),
+    ("fun"     , "Special functions and functions of scalar/vector"),
     ("gm"      , "Geometry algorithms and structures"),
     ("gm/msh"  , "Mesh structures and interpolation functions for FEA"),
     ("gm/tri"  , "Mesh generation: triangles and Delaunay triangulation"),

@@ -11,7 +11,7 @@
 <body>
 <div id="page" class=\wide">
 <div class="container">
-<h1>Gosl &ndash; <b>fun</b> &ndash; Scalar functions of one scalar and one vector</h1>
+<h1>Gosl &ndash; <b>fun</b> &ndash; Special functions and functions of scalar/vector</h1>
 use 'godoc cmd/github.com/cpmech/gosl/fun' for documentation on the github.com/cpmech/gosl/fun command 
 
 <!--
@@ -54,7 +54,9 @@ use 'godoc cmd/github.com/cpmech/gosl/fun' for documentation on the github.com/c
 			<div class="expanded">
 				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
 				<p>
-fun (functions) implements a number of y(t,x) functions and their first and second order derivatives
+fun (functions) implements special functions such as elliptical, orthogonal polynomials, and a
+structure called TimeSpace defining scalar functions of one scalar and a vector such as f(t,[x]).
+Several TimeSpace functions are defined as well.
 </p>
 
 			</div>
@@ -1039,7 +1041,7 @@ Heaviside step function (== derivative of Ramp(x))
 		
 			
 			
-			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=1545:1630#L40">PlotT</a></h2>
+			<h2 id="PlotT">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=1692:1777#L42">PlotT</a></h2>
 			<pre>func PlotT(o <a href="#TimeSpace">TimeSpace</a>, dirout, fnkey <a href="/pkg/builtin/#string">string</a>, t0, tf <a href="/pkg/builtin/#float64">float64</a>, xcte []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 PlotT plots F, G and H for varying t and fixed coordinates x
@@ -1054,7 +1056,7 @@ args{F,G,H} -- if any is &#34;&#34;, the corresponding plot is not created
 		
 			
 			
-			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=3089:3178#L125">PlotX</a></h2>
+			<h2 id="PlotX">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=3236:3325#L127">PlotX</a></h2>
 			<pre>func PlotX(o <a href="#TimeSpace">TimeSpace</a>, dirout, fnkey <a href="/pkg/builtin/#string">string</a>, tcte <a href="/pkg/builtin/#float64">float64</a>, xmin, xmax []<a href="/pkg/builtin/#float64">float64</a>, np <a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
@@ -2964,7 +2966,7 @@ Init initialises the function
 		
 			
 			
-			<h2 id="TimeSpace">type <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=502:887#L9">TimeSpace</a></h2>
+			<h2 id="TimeSpace">type <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=649:1034#L11">TimeSpace</a></h2>
 			<pre>type TimeSpace interface {
     Init(prms <a href="#Prms">Prms</a>) <a href="/pkg/builtin/#error">error</a>                     <span class="comment">// initialise function parameters</span>
     F(t <a href="/pkg/builtin/#float64">float64</a>, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>         <span class="comment">// y = F(t, x)</span>
@@ -2987,7 +2989,7 @@ TimeSpace defines the interface for simple functions
 
 			
 				
-				<h3 id="New">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=1056:1107#L21">New</a></h3>
+				<h3 id="New">func <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=1203:1254#L23">New</a></h3>
 				<pre>func New(name <a href="/pkg/builtin/#string">string</a>, prms <a href="#Prms">Prms</a>) (<a href="#TimeSpace">TimeSpace</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
 				<p>
 New allocates function by name
