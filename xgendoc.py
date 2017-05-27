@@ -115,7 +115,7 @@ for pkg in pkgs:
     # fix links to subdirectories (harder to automate)
     subdirs = []
     if pkg[0] == "fun":
-        subdirs = ["figs"]
+        subdirs = ["figs", "data"]
 
     if pkg[0] == "gm":
         subdirs = ["data", "msh", "rw", "tri"]

@@ -10,6 +10,41 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
+// Elliptic1 computes Legendre elliptic integral of the first kind F(φ,k),
+// evaluated using Carlson’s function Rf [1].
+// The argument ranges are 0 ≤ φ ≤ π/2  and  0 ≤ k·sin(φ) ≤ 1
+//
+//   Computes:
+//                      φ
+//                     ⌠         dt
+//         F(φ, k)  =  │  _________________
+//                     │    _______________
+//                     ⌡  \╱ 1 - k² sin²(t)
+//                    0
+//   where:
+//            0 ≤ φ ≤ π/2
+//            0 ≤ k·sin(φ) ≤ 1
+//
+func Elliptic1(φ, k float64) float64 {
+	if φ < 0 || k < 0 {
+		chk.Panic("φ and k must be non-negative. φ=%g, k=%g is invalid", φ, k)
+	}
+	if φ > math.Pi/2.0+1e-15 {
+		chk.Panic("φ must be in 0 ≤ φ ≤ π/2. φ=%g is invalid", φ)
+	}
+	if φ < math.SmallestNonzeroFloat64 {
+		return 0
+	}
+	if k < math.SmallestNonzeroFloat64 {
+		return φ
+	}
+	s := math.Sin(φ)
+	if math.Abs(k*s-1.0) < 1e-15 {
+		return math.Inf(1)
+	}
+	return s * CarlsonRf(math.Pow(math.Cos(φ), 2.0), (1.0-s*k)*(1.0+s*k), 1.0)
+}
+
 // CarlsonRf computes Carlson's elliptic integral of the first kind according to [1]. See also [2]
 // Computes Rf(x,y,z) where x,y,z must be non-negative and at most one can be zero.
 //   References:
@@ -18,7 +53,7 @@ import (
 //   [2] Carlson BC (1977) Elliptic Integrals of the First Kind, SIAM Journal on Mathematical
 //       Analysis, vol. 8, pp. 231–242.
 func CarlsonRf(x, y, z float64) float64 {
-	ERRTOL := 0.0025
+	ERRTOL := 0.0025 // a value of 0.0025 for the error tolerance parameter gives full double precision (16 sig ant digits) [1]
 	THIRD := 1.0 / 3.0
 	C1 := 1.0 / 24.0
 	C2 := 0.1
@@ -56,39 +91,4 @@ func CarlsonRf(x, y, z float64) float64 {
 	e2 := delx*dely - delz*delz
 	e3 := delx * dely * delz
 	return (1.0 + (C1*e2-C2-C3*e3)*e2 + C4*e3) / math.Sqrt(ave)
-}
-
-// Elliptic1 computes Legendre elliptic integral of the first kind F(φ,k),
-// evaluated using Carlson’s function Rf.
-// The argument ranges are 0 ≤ φ ≤ π/2  and  0 ≤ k·sin(φ) ≤ 1
-//
-//   Computes:
-//                      φ
-//                     ⌠         dt
-//         F(φ, k)  =  │  _________________
-//                     │    _______________
-//                     ⌡  \╱ 1 - k² sin²(t)
-//                    0
-//   where:
-//            0 ≤ φ ≤ π/2
-//            0 ≤ k·sin(φ) ≤ 1
-//
-func Elliptic1(φ, k float64) float64 {
-	if φ < 0 || k < 0 {
-		chk.Panic("φ and k must be non-negative. φ=%g, k=%g is invalid", φ, k)
-	}
-	if φ > math.Pi/2.0+1e-15 {
-		chk.Panic("φ must be in 0 ≤ φ ≤ π/2. φ=%g is invalid", φ)
-	}
-	if φ < math.SmallestNonzeroFloat64 {
-		return 0
-	}
-	if k < math.SmallestNonzeroFloat64 {
-		return φ
-	}
-	s := math.Sin(φ)
-	if math.Abs(k*s-1.0) < 1e-15 {
-		return math.Inf(1)
-	}
-	return s * CarlsonRf(math.Pow(math.Cos(φ), 2.0), (1.0-s*k)*(1.0+s*k), 1.0)
 }
