@@ -84,17 +84,17 @@ func Elliptic2(φ, k float64) float64 {
 	return s * (CarlsonRf(cc, q, 1.0) - (math.Pow(s*k, 2.0))*CarlsonRd(cc, q, 1.0)/3.0)
 }
 
-// Elliptic3 computes Legendre elliptic integral of the third kind Π(φ,n,k),
+// Elliptic3 computes Legendre elliptic integral of the third kind Π(n,φ,k),
 // evaluated using Carlson's functions Rf and Rj.
-// NOTE that the sign convention on n is opposite to that of Abramowitz and Stegun [2]
+// NOTE that the sign convention on n corresponds to that of Abramowitz and Stegun [2] and not to [1].
 // The argument ranges are  0 ≤ φ ≤ π/2  and  0 ≤ k⋅sin(φ) ≤ 1
 //
 //   Computes:
 //                         φ
 //                        ⌠                  dt
-//         Π(φ, n, k)  =  │  ___________________________________
+//         Π(n, φ, k)  =  │  ___________________________________
 //                        │                     _______________
-//                        ⌡   (1 + n sin²(t)) \╱ 1 - k² sin²(t)
+//                        ⌡   (1 - n sin²(t)) \╱ 1 - k² sin²(t)
 //                       0
 //   where:
 //            0 ≤ φ ≤ π/2
@@ -105,9 +105,25 @@ func Elliptic2(φ, k float64) float64 {
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 //   [2] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas, Graphs,
 //       and Mathematical Tables. U.S. Department of Commerce, NIST
-func Elliptic3(φ, n, k float64) float64 {
+func Elliptic3(n, φ, k float64) float64 {
+	if φ < 0 || k < 0 {
+		chk.Panic("φ and k must be non-negative. φ=%g, k=%g is invalid", φ, k)
+	}
+	if φ > math.Pi/2.0+1e-15 {
+		chk.Panic("φ must be in 0 ≤ φ ≤ π/2. φ=%g is invalid", φ)
+	}
+	if φ < math.SmallestNonzeroFloat64 {
+		return 0
+	}
+	N := -n
 	s := math.Sin(φ)
-	t := n * s * s
+	if math.Abs(k*s-1.0) < 1e-15 {
+		return math.Inf(1)
+	}
+	if math.Abs(n*s-1.0) < 1e-15 {
+		return math.Inf(1)
+	}
+	t := N * s * s
 	cc := math.Pow(math.Cos(φ), 2.0)
 	q := (1.0 - s*k) * (1.0 + s*k)
 	return s * (CarlsonRf(cc, q, 1.0) - t*CarlsonRj(cc, q, 1.0, 1.0+t)/3.0)

@@ -60,7 +60,7 @@ func Test_elliptic01(tst *testing.T) {
 		F := Elliptic1(p, k)
 		if math.Abs(k-1.0) < 1e-15 && math.Abs(p-p90) < 1e-15 {
 			if F != math.Inf(1) {
-				tst.Errorf("F(90°,90°) should be +Inf")
+				tst.Errorf("F(90°,1) should be +Inf")
 				return
 			}
 		} else {
@@ -111,5 +111,48 @@ func Test_elliptic02(tst *testing.T) {
 		k := dat["k"][i]
 		E := Elliptic2(p, k)
 		chk.Scalar(tst, io.Sf("E(%.8f,%.8f)=%23.15e", p, k, E), 1e-14, E, dat["E"][i])
+	}
+}
+
+func Test_elliptic03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("elliptic03")
+
+	n, φ, k := 0.1, d2r(0), 0.0
+	P := Elliptic3(n, φ, k)
+	io.Pf("Π(0,15°,0) = %v\n", P)
+	chk.Scalar(tst, "Π(0,15°,0)", 1e-15, P, 0)
+
+	n, φ, k = 0.1, d2r(15), 0.0
+	P = Elliptic3(n, φ, k)
+	io.Pf("Π(0,90°,0) = %v\n", P)
+	chk.Scalar(tst, "Π(0,90°,0)", 1e-5, P, 0.26239)
+
+	// load data
+	_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.9-small.cmp")
+	//_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.9-big.cmp")
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	for i, n := range dat["n"] {
+		p := dat["phi"][i]
+		k := dat["k"][i]
+		P := Elliptic3(n, p, k)
+		s := math.Sin(p)
+		if math.Abs(k*s-1.0) < 1e-15 {
+			if P != math.Inf(1) {
+				tst.Errorf("Π(n,90°,1) should be +Inf")
+				return
+			}
+		} else if math.Abs(n*s-1.0) < 1e-15 {
+			if P != math.Inf(1) {
+				tst.Errorf("Π(1,90°,k) should be +Inf")
+				return
+			}
+		} else {
+			chk.Scalar(tst, io.Sf("Π(%.2f,%.8f,%.8f)=%23.15e", n, p, k, P), 1e-14, P, dat["PI"][i])
+		}
 	}
 }

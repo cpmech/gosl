@@ -113,7 +113,7 @@ fun (functions) implements a number of y(t,x) functions and their first and seco
 				<dd><a href="#Elliptic2">func Elliptic2(φ, k float64) float64</a></dd>
 			
 				
-				<dd><a href="#Elliptic3">func Elliptic3(φ, n, k float64) float64</a></dd>
+				<dd><a href="#Elliptic3">func Elliptic3(n, φ, k float64) float64</a></dd>
 			
 				
 				<dd><a href="#Factorial100">func Factorial100(n int) big.Float</a></dd>
@@ -819,7 +819,7 @@ Binomial comptues the binomial coefficient (n k)^T
 		
 			
 			
-			<h2 id="CarlsonRc">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=10235:10271#L288">CarlsonRc</a></h2>
+			<h2 id="CarlsonRc">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=10627:10663#L304">CarlsonRc</a></h2>
 			<pre>func CarlsonRc(x, y <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 CarlsonRc computes Carlson’s degenerate elliptic integral according to [1]
@@ -833,7 +833,7 @@ If y &lt; 0, the Cauchy principal value is returned.
 		
 			
 			
-			<h2 id="CarlsonRd">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=6166:6205#L160">CarlsonRd</a></h2>
+			<h2 id="CarlsonRd">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=6558:6597#L176">CarlsonRd</a></h2>
 			<pre>func CarlsonRd(x, y, z <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 CarlsonRd computes Carlson’s elliptic integral of the second kind according to [1]
@@ -851,7 +851,7 @@ z must be positive.
 		
 			
 			
-			<h2 id="CarlsonRf">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=4470:4509#L113">CarlsonRf</a></h2>
+			<h2 id="CarlsonRf">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=4862:4901#L129">CarlsonRf</a></h2>
 			<pre>func CarlsonRf(x, y, z <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 CarlsonRf computes Carlson&#39;s elliptic integral of the first kind according to [1]. See also [2]
@@ -870,7 +870,7 @@ Computes Rf(x,y,z) where x,y,z must be non-negative and at most one can be zero.
 		
 			
 			
-			<h2 id="CarlsonRj">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=7860:7902#L212">CarlsonRj</a></h2>
+			<h2 id="CarlsonRj">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=8252:8294#L228">CarlsonRj</a></h2>
 			<pre>func CarlsonRj(x, y, z, p <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
 CarlsonRj computes Carlson’s elliptic integral of the third kind according to [1]
@@ -965,20 +965,20 @@ References:
 		
 			
 			
-			<h2 id="Elliptic3">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=3737:3777#L98">Elliptic3</a></h2>
-			<pre>func Elliptic3(φ, n, k <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
+			<h2 id="Elliptic3">func <a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go?s=3753:3793#L98">Elliptic3</a></h2>
+			<pre>func Elliptic3(n, φ, k <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a></pre>
 			<p>
-Elliptic3 computes Legendre elliptic integral of the third kind Π(φ,n,k),
+Elliptic3 computes Legendre elliptic integral of the third kind Π(n,φ,k),
 evaluated using Carlson&#39;s functions Rf and Rj.
-NOTE that the sign convention on n is opposite to that of Abramowitz and Stegun [2]
+NOTE that the sign convention on n corresponds to that of Abramowitz and Stegun [2] and not to [1].
 The argument ranges are  0 ≤ φ ≤ π/2  and  0 ≤ k⋅sin(φ) ≤ 1
 </p>
 <pre>Computes:
                       φ
                      ⌠                  dt
-      Π(φ, n, k)  =  │  ___________________________________
+      Π(n, φ, k)  =  │  ___________________________________
                      │                     _______________
-                     ⌡   (1 + n sin²(t)) \╱ 1 - k² sin²(t)
+                     ⌡   (1 - n sin²(t)) \╱ 1 - k² sin²(t)
                     0
 where:
          0 ≤ φ ≤ π/2
