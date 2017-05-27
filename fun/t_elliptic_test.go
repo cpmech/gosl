@@ -12,12 +12,12 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
+func d2r(deg float64) float64 { return deg * math.Pi / 180.0 }
+
 func Test_elliptic01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("elliptic01")
-
-	d2r := func(deg float64) float64 { return deg * math.Pi / 180.0 }
 
 	φ, k := d2r(5), 0.0
 	F := Elliptic1(φ, k)
@@ -49,15 +49,11 @@ func Test_elliptic01(tst *testing.T) {
 	}
 
 	// load data
-	keys, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.5-small.cmp")
-	//keys, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.5-big.cmp")
+	_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.5-small.cmp")
+	//_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.5-big.cmp")
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
-	}
-	if false {
-		io.Pf("Keys = %v\n", keys)
-		io.Pf("dat = %v\n", dat["F"])
 	}
 	for i, p := range dat["phi"] {
 		k := dat["k"][i]
@@ -70,5 +66,50 @@ func Test_elliptic01(tst *testing.T) {
 		} else {
 			chk.Scalar(tst, io.Sf("F(%.8f,%.8f)=%23.15e", p, k, F), 1e-14, F, dat["F"][i])
 		}
+	}
+}
+
+func Test_elliptic02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("elliptic02")
+
+	φ, k := d2r(5), 0.0
+	E := Elliptic2(φ, k)
+	io.Pf("E(5°,0) = %v\n", E)
+	chk.Scalar(tst, "E(5°,0)", 1e-15, E, φ)
+
+	φ, k = d2r(30), math.Sin(d2r(68))
+	E = Elliptic2(φ, k)
+	io.Pf("E(30°,68°) = %v\n", E)
+	chk.Scalar(tst, "E(30°,68°)", 1e-9, E, 0.50343686)
+
+	φ, k = d2r(65), math.Sin(d2r(88))
+	E = Elliptic2(φ, k)
+	io.Pf("E(65°,88°) = %v\n", E)
+	chk.Scalar(tst, "E(65°,88°)", 1e-8, E, 0.90667305)
+
+	φ, k = d2r(85), math.Sin(d2r(90))
+	E = Elliptic2(φ, k)
+	io.Pf("E(85°,90°) = %v\n", E)
+	chk.Scalar(tst, "E(85°,90°)", 1e-8, E, 0.99619470)
+
+	p90 := d2r(90)
+	φ, k = p90, math.Sin(d2r(90))
+	E = Elliptic2(φ, k)
+	io.Pf("E(90°,90°) = %v\n", E)
+	chk.Scalar(tst, "E(85°,90°)", 1e-8, E, 1)
+
+	// load data
+	_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.6-small.cmp")
+	//_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.6-big.cmp")
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	for i, p := range dat["phi"] {
+		k := dat["k"][i]
+		E := Elliptic2(p, k)
+		chk.Scalar(tst, io.Sf("E(%.8f,%.8f)=%23.15e", p, k, E), 1e-14, E, dat["E"][i])
 	}
 }
