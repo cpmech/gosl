@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/num"
 )
 
 var (
@@ -211,7 +210,7 @@ func Test_ops01(tst *testing.T) {
 	dtol := 1e-5
 
 	// invariants derivatives
-	dveri := false
+	dveri := chk.Verbose
 	dtoli1 := []float64{1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6}
 	dtoli2 := []float64{1e-6, 1e-5, 1e-6, 1e-4, 1e-5, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6}
 	dtoli3 := []float64{1e-6, 1e-3, 1e-6, 1e-3, 1e-3, 1e-6, 1e-6, 1e-6, 1e-5, 1e-6}
@@ -286,20 +285,12 @@ func Test_ops01(tst *testing.T) {
 		}
 		// check derivatives
 		da2da := M_Alloc4(nd[m])
-		a2tmp := M_Alloc2(nd[m]) // a2tmp == a²
 		M_SqDeriv(da2da, a)
-		var tmp float64
-		for i := 0; i < len(a); i++ {
-			for j := 0; j < len(a); j++ {
-				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-					tmp, a[j] = a[j], x
-					M_Sq(a2tmp, a)
-					a[j] = tmp
-					return a2tmp[i]
-				}, a[j], 1e-6)
-				chk.AnaNum(tst, io.Sf("da²/da[%d][%d]", i, j), dtol, da2da[i][j], dnum, dver)
-			}
-		}
+		chk.DerivVecVec(tst, "da²/da", dtol, da2da, a, 1e-6, dver, func(f, x []float64) error {
+			M_Sq(f, x) // f := da²
+			return nil
+		})
+
 		// characteristic invariants
 		I1, I2, I3 := M_CharInvs(a)
 		I2a := 0.5 * (tra*tra - M_Tr(a2))
@@ -323,35 +314,20 @@ func Test_ops01(tst *testing.T) {
 			chk.Panic("I3 failed (b). error = %v", I3-I3_)
 		}
 		// dI1da
-		for j := 0; j < len(a); j++ {
-			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-				tmp, a[j] = a[j], x
-				i1, _, _ := M_CharInvs(a)
-				a[j] = tmp
-				return i1
-			}, a[j], 1e-6)
-			chk.AnaNum(tst, io.Sf("dI1/da[%d]", j), dtoli1[m], dI1da[j], dnum, dveri)
-		}
+		chk.DerivScaVec(tst, "dI1/da", dtoli1[m], dI1da, a, 1e-6, dveri, func(x []float64) (float64, error) {
+			i1, _, _ := M_CharInvs(x)
+			return i1, nil
+		})
 		// dI2da
-		for j := 0; j < len(a); j++ {
-			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-				tmp, a[j] = a[j], x
-				_, i2, _ := M_CharInvs(a)
-				a[j] = tmp
-				return i2
-			}, a[j], 1e-6)
-			chk.AnaNum(tst, io.Sf("dI2/da[%d]", j), dtoli2[m], dI2da[j], dnum, dveri)
-		}
+		chk.DerivScaVec(tst, "dI2/da", dtoli2[m], dI2da, a, 1e-6, dveri, func(x []float64) (float64, error) {
+			_, i2, _ := M_CharInvs(x)
+			return i2, nil
+		})
 		// dI3da
-		for j := 0; j < len(a); j++ {
-			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-				tmp, a[j] = a[j], x
-				_, _, i3 := M_CharInvs(a)
-				a[j] = tmp
-				return i3
-			}, a[j], 1e-6)
-			chk.AnaNum(tst, io.Sf("dI3/da[%d]", j), dtoli3[m], dI3da[j], dnum, dveri)
-		}
+		chk.DerivScaVec(tst, "dI3/da", dtoli3[m], dI3da, a, 1e-6, dveri, func(x []float64) (float64, error) {
+			_, _, i3 := M_CharInvs(x)
+			return i3, nil
+		})
 		// dDet(a)/da
 		DdetaDa := make([]float64, len(a))
 		M_DetDeriv(DdetaDa, a)
@@ -370,30 +346,16 @@ func Test_ops01(tst *testing.T) {
 			chk.Vector(tst, "s", 1e-13, deva, s)
 			chk.Vector(tst, "dwda", 1e-13, dwda, dwda_)
 			// dwda
-			for j := 0; j < len(a); j++ {
-				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-					tmp, a[j] = a[j], x
-					res = M_w(a)
-					a[j] = tmp
-					return res
-				}, a[j], 1e-6)
-				chk.AnaNum(tst, io.Sf("dw/da[%d]", j), dtolw, dwda[j], dnum, dverw)
-			}
+			chk.DerivScaVec(tst, "dw/da", dtolw, dwda, a, 1e-6, dverw, func(x []float64) (float64, error) {
+				return M_w(x), nil
+			})
 			// d2wdada
 			s_tmp := M_Alloc2(nd[m])
-			dwda_tmp := M_Alloc2(nd[m])
-			for i := 0; i < len(a); i++ {
-				for j := 0; j < len(a); j++ {
-					dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-						tmp, a[j] = a[j], x
-						p_tmp, q_tmp, w_tmp := M_pqws(s_tmp, a)
-						M_LodeDeriv1(dwda_tmp, a, s_tmp, p_tmp, q_tmp, w_tmp)
-						a[j] = tmp
-						return dwda_tmp[i]
-					}, a[j], 1e-6)
-					chk.AnaNum(tst, io.Sf("d2w/dada[%d][%d]", i, j), dtolw, d2wdada[i][j], dnum, dverw)
-				}
-			}
+			chk.DerivVecVec(tst, "d²w/dada", dtolw, d2wdada, a, 1e-6, dverw, func(f, x []float64) error {
+				p_tmp, q_tmp, w_tmp := M_pqws(s_tmp, x)
+				M_LodeDeriv1(f, x, s_tmp, p_tmp, q_tmp, w_tmp) // f := dwda
+				return nil
+			})
 		}
 	}
 }
@@ -588,26 +550,13 @@ func Test_ops03(tst *testing.T) {
 		if idxA == 5 {
 			dtol = 1e-8
 		}
-		var tmp float64
-		ai_tmp := M_Alloc2(nd[idxA])
 		daida := M_Alloc4(nd[idxA])
 		M_InvDeriv(daida, ai)
 		io.Pforan("ai = %v\n", ai)
-		for i := 0; i < len(a); i++ {
-			for j := 0; j < len(a); j++ {
-				//dnum, _ := num.DerivForward(func(x float64, args ...interface{}) (res float64) {
-				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-					tmp, a[j] = a[j], x
-					_, err := M_Inv(ai_tmp, a, MINDET)
-					a[j] = tmp
-					if err != nil {
-						chk.Panic("daida failed:\n%v", err)
-					}
-					return ai_tmp[i]
-				}, a[j], 1e-6)
-				chk.AnaNum(tst, io.Sf("dai/da[%d][%d]", i, j), dtol, daida[i][j], dnum, dver)
-			}
-		}
+		chk.DerivVecVec(tst, "dai/da", dtol, daida, a, 1e-6, dver, func(f, x []float64) error {
+			_, err := M_Inv(f, x, MINDET) // f := ai
+			return err
+		})
 		dtol = dtol_tmp
 	}
 }
