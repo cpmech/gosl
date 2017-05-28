@@ -12,23 +12,23 @@ import (
 func Test_deriv01(tst *testing.T) {
 
 	//Verbose = true
-	PrintTitle("deriv01. DerivScaScaCen")
+	PrintTitle("deriv01. DerivScaSca")
 
-	f := func(x float64) float64 { return math.Cos(math.Pi * x / 2.0) }
+	f := func(x float64) (float64, error) { return math.Cos(math.Pi * x / 2.0), nil }
 
 	dfdxAna := -1.0 * math.Pi / 2.0
 	xAt := 1.0
 	dx := 1e-3
 
 	t1 := new(testing.T)
-	DerivScaScaCen(t1, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, f)
+	DerivScaSca(t1, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, f)
 	if !t1.Failed() {
 		tst.Errorf("t1 should have failed\n")
 		return
 	}
 
 	t2 := new(testing.T)
-	DerivScaScaCen(t2, "dfdx", 1.5e-11, dfdxAna, xAt, dx, Verbose, f)
+	DerivScaSca(t2, "dfdx", 1.5e-11, dfdxAna, xAt, dx, Verbose, f)
 	if t2.Failed() {
 		tst.Errorf("t2 should not have failed\n")
 		return
@@ -38,9 +38,9 @@ func Test_deriv01(tst *testing.T) {
 func Test_deriv02(tst *testing.T) {
 
 	//Verbose = true
-	PrintTitle("deriv02. DerivVecScaCen")
+	PrintTitle("deriv02. DerivVecSca")
 
-	fcn := func(f []float64, x float64) {
+	fcn := func(f []float64, x float64) (err error) {
 		f[0] = math.Cos(math.Pi * x / 2.0)
 		f[1] = math.Sin(math.Pi * x / 2.0)
 		return
@@ -58,14 +58,14 @@ func Test_deriv02(tst *testing.T) {
 	dfdxAna := dfdx(xAt)
 
 	t1 := new(testing.T)
-	DerivVecScaCen(t1, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivVecSca(t1, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
 	if !t1.Failed() {
 		tst.Errorf("t1 should have failed\n")
 		return
 	}
 
 	t2 := new(testing.T)
-	DerivVecScaCen(t2, "dfdx", 1.5e-11, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivVecSca(t2, "dfdx", 1.5e-11, dfdxAna, xAt, dx, Verbose, fcn)
 	if t2.Failed() {
 		tst.Errorf("t2 should not have failed\n")
 		return
@@ -76,7 +76,7 @@ func Test_deriv02(tst *testing.T) {
 	dfdxAna[0] += 0.0001
 
 	t3 := new(testing.T)
-	DerivVecScaCen(t3, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivVecSca(t3, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
 	if !t3.Failed() {
 		tst.Errorf("t3 should have failed\n")
 		return
@@ -84,7 +84,7 @@ func Test_deriv02(tst *testing.T) {
 
 	dfdxAna = dfdx(xAt)
 	t4 := new(testing.T)
-	DerivVecScaCen(t4, "dfdx", 1.5e-11, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivVecSca(t4, "dfdx", 1.5e-11, dfdxAna, xAt, dx, Verbose, fcn)
 	if t4.Failed() {
 		tst.Errorf("t4 should not have failed\n")
 		return
@@ -94,10 +94,10 @@ func Test_deriv02(tst *testing.T) {
 func Test_deriv03(tst *testing.T) {
 
 	//Verbose = true
-	PrintTitle("deriv03. DerivScaVecCen")
+	PrintTitle("deriv03. DerivScaVec")
 
-	fcn := func(x []float64) float64 {
-		return x[0]*x[0]*x[0] + x[1]*x[1] + x[0]*x[1] + x[0] - x[1]
+	fcn := func(x []float64) (float64, error) {
+		return x[0]*x[0]*x[0] + x[1]*x[1] + x[0]*x[1] + x[0] - x[1], nil
 	}
 
 	dfdx := func(x []float64) []float64 {
@@ -112,14 +112,14 @@ func Test_deriv03(tst *testing.T) {
 	dfdxAna := dfdx(xAt)
 
 	t1 := new(testing.T)
-	DerivScaVecCen(t1, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivScaVec(t1, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
 	if !t1.Failed() {
 		tst.Errorf("t1 should have failed\n")
 		return
 	}
 
 	t2 := new(testing.T)
-	DerivScaVecCen(t2, "dfdx", 2.0e-11, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivScaVec(t2, "dfdx", 2.0e-11, dfdxAna, xAt, dx, Verbose, fcn)
 	if t2.Failed() {
 		tst.Errorf("t2 should not have failed\n")
 		return
@@ -129,7 +129,7 @@ func Test_deriv03(tst *testing.T) {
 	dfdxAna = dfdx(xAt)
 
 	t3 := new(testing.T)
-	DerivScaVecCen(t3, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivScaVec(t3, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
 	if t3.Failed() {
 		tst.Errorf("t3 should not have failed\n")
 		return
@@ -139,11 +139,12 @@ func Test_deriv03(tst *testing.T) {
 func Test_deriv04(tst *testing.T) {
 
 	//Verbose = true
-	PrintTitle("deriv04. DerivVecVecCen")
+	PrintTitle("deriv04. DerivVecVec")
 
-	fcn := func(f, x []float64) {
+	fcn := func(f, x []float64) (err error) {
 		f[0] = x[0]*x[0]*x[0] + x[1]*x[1] + x[0]*x[1] + x[0] - x[1]
 		f[1] = math.Cos(math.Pi*x[0]/2.0) * math.Sin(math.Pi*x[1]/2.0)
+		return
 	}
 
 	dfdx := func(x []float64) [][]float64 {
@@ -158,14 +159,14 @@ func Test_deriv04(tst *testing.T) {
 	dfdxAna := dfdx(xAt)
 
 	t1 := new(testing.T)
-	DerivVecVecCen(t1, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivVecVec(t1, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
 	if !t1.Failed() {
 		tst.Errorf("t1 should have failed\n")
 		return
 	}
 
 	t2 := new(testing.T)
-	DerivVecVecCen(t2, "dfdx", 2.0e-11, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivVecVec(t2, "dfdx", 2.0e-11, dfdxAna, xAt, dx, Verbose, fcn)
 	if t2.Failed() {
 		tst.Errorf("t2 should not have failed\n")
 		return
@@ -175,7 +176,7 @@ func Test_deriv04(tst *testing.T) {
 	dfdxAna = dfdx(xAt)
 
 	t3 := new(testing.T)
-	DerivVecVecCen(t3, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
+	DerivVecVec(t3, "dfdx", 1e-15, dfdxAna, xAt, dx, Verbose, fcn)
 	if t3.Failed() {
 		tst.Errorf("t3 should not have failed\n")
 		return

@@ -10,149 +10,212 @@ import (
 	"testing"
 )
 
-const (
-	DBL_EPSILON = 1.0e-15 // smallest number satisfying 1.0 + EPS > 1.0
-)
-
-// DerivVecScaCen checks the derivative of vector w.r.t scalar by comparing with numerical solution
+// DerivVecSca checks the derivative of vector w.r.t scalar by comparing with numerical solution
 // obtained with central differences (5-point rule)
-//   tst     -- testing.T structure
-//   msg     -- message about this test
-//   tol     -- tolerance to compare dfdxAna with dfdxNum
-//   dfdxAna -- [vector] analytical (or other kind) derivative dfdx
-//   xAt     -- [scalar] position to compute dfdx
-//   dx      -- stepsize; e.g. 1e-3
-//   fcn     -- [vector] function f(x). x is scalar
-func DerivVecScaCen(tst *testing.T, msg string, tol float64, dfdxAna []float64, xAt, dx float64, verbose bool, fcn func(f []float64, x float64)) {
-	res := make([]float64, len(dfdxAna))
-	for i, ana := range dfdxAna {
-		fi := func(x float64) float64 {
-			fcn(res, x)
-			return res[i]
+//   Check:
+//              d{f} │             {f}:vector   x:scalar
+//        {g} = ———— │      with   {g}:vector
+//               dx  │xAt          len(g) == len(f)
+//   Input:
+//     tst  -- testing.T structure
+//     msg  -- message about this test
+//     tol  -- tolerance to compare gAna with gNum
+//     gAna -- [vector] analytical (or other kind) derivative dfdx. size=len(f)
+//     xAt  -- [scalar] position to compute dfdx
+//     dx   -- stepsize; e.g. 1e-3
+//     verb -- verbose: show messages
+//     fcn  -- [vector] function f(x). x is scalar
+func DerivVecSca(tst *testing.T, msg string, tol float64, gAna []float64, xAt, dx float64,
+	verb bool, fcn func(f []float64, x float64) error) {
+
+	// run test
+	f := make([]float64, len(gAna))
+	for i, ana := range gAna {
+		fi := func(x float64) (fres float64, ferr error) {
+			ferr = fcn(f, x)
+			fres = f[i]
+			return
 		}
-		DerivScaScaCen(tst, fmt.Sprintf("%s%d", msg, i), tol, ana, xAt, dx, verbose, fi)
+		DerivScaSca(tst, fmt.Sprintf("%s%d", msg, i), tol, ana, xAt, dx, verb, fi)
 	}
 }
 
-// DerivScaVecCen checks the derivative of scalar w.r.t vector by comparing with numerical solution
+// DerivScaVec checks the derivative of scalar w.r.t vector by comparing with numerical solution
 // obtained with central differences (5-point rule)
-//   tst     -- testing.T structure
-//   msg     -- message about this test
-//   tol     -- tolerance to compare dfdxAna with dfdxNum
-//   dfdxAna -- [vector] analytical (or other kind) derivative dfdx
-//   xAt     -- [vector] position to compute dfdx
-//   dx      -- stepsize; e.g. 1e-3
-//   fcn     -- [scalar] function f(x). x is vector
-func DerivScaVecCen(tst *testing.T, msg string, tol float64, dfdxAna, xAt []float64, dx float64, verbose bool, fcn func(x []float64) float64) {
+//   Check:
+//               df  │               f:scalar   {x}:vector
+//        {g} = ———— │        with   {g}:vector
+//              d{x} │{xAt}          len(g) == len(x) == len(xAt)
+//   Input:
+//     tst  -- testing.T structure
+//     msg  -- message about this test
+//     tol  -- tolerance to compare gAna with gNum
+//     gAna -- [vector] analytical (or other kind) derivative dfdx. size=len(x)=len(xAt)
+//     xAt  -- [vector] position to compute dfdx
+//     dx   -- stepsize; e.g. 1e-3
+//     verb -- verbose: show messages
+//     fcn  -- [scalar] function f(x). x is vector
+func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, dx float64,
+	verb bool, fcn func(x []float64) (float64, error)) {
+
+	// check input
 	ndim := len(xAt)
-	if len(dfdxAna) != ndim {
-		tst.Errorf("len(dfdxAna) != len(xAt)\n")
+	if len(gAna) != ndim {
+		tst.Errorf("length of gAna vector must be equal to the length of xAt vector. %d != %d", len(gAna), ndim)
 		return
 	}
+
+	// run test
 	xTmp := make([]float64, ndim)
 	for i := 0; i < ndim; i++ {
 		copy(xTmp, xAt)
-		fi := func(x float64) float64 {
+		fi := func(x float64) (fres float64, ferr error) {
 			xTmp[i] = x
 			return fcn(xTmp)
 		}
-		DerivScaScaCen(tst, fmt.Sprintf("%s%d", msg, i), tol, dfdxAna[i], xAt[i], dx, verbose, fi)
+		DerivScaSca(tst, fmt.Sprintf("%s%d", msg, i), tol, gAna[i], xAt[i], dx, verb, fi)
 	}
 }
 
-// DerivVecVecCen checks the derivative of scalar w.r.t vector by comparing with numerical solution
+// DerivVecVec checks the derivative of vector w.r.t vector by comparing with numerical solution
 // obtained with central differences (5-point rule)
-//   tst     -- testing.T structure
-//   msg     -- message about this test
-//   tol     -- tolerance to compare dfdxAna with dfdxNum
-//   dfdxAna -- [matrix] analytical (or other kind) derivative dfdx
-//   xAt     -- [vector] position to compute dfdx
-//   dx      -- stepsize; e.g. 1e-3
-//   fcn     -- [vector] function f(x). x is vector
-func DerivVecVecCen(tst *testing.T, msg string, tol float64, dfdxAna [][]float64, xAt []float64, dx float64, verbose bool, fcn func(f, x []float64)) {
-	ndim := len(xAt)
-	if len(dfdxAna) != ndim {
-		tst.Errorf("len(dfdxAna) != len(xAt)\n")
+//   Checks:
+//              d{f} │               {f}:vector   {x}:vector
+//        [g] = ———— │        with   [g]:matrix
+//              d{x} │{xAt}          rows(g)==len(f)  cols(g)==len(x)==len(xAt)
+//   Input:
+//     tst  -- testing.T structure
+//     msg  -- message about this test
+//     tol  -- tolerance to compare gAna with gNum
+//     gAna -- [matrix] analytical (or other kind) derivative dfdx. size=(len(f),len(x))
+//     xAt  -- [vector] position to compute dfdx
+//     dx   -- stepsize; e.g. 1e-3
+//     verb -- verbose: show messages
+//     fcn  -- [vector] function f(x). x is vector
+func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt []float64, dx float64,
+	verb bool, fcn func(f, x []float64) error) {
+
+	// check input
+	nrow := len(gAna)
+	if nrow < 1 {
+		tst.Errorf("number of rows of gAna matrix must be greater than or equal to 1\n")
 		return
 	}
-	res := make([]float64, ndim)
+	ncol := len(gAna[0])
+	ndim := len(xAt)
+	if ncol != ndim {
+		tst.Errorf("number of columns in gAna matrix must be equal to len(xAt). %d != %d\n", ncol, ndim)
+		return
+	}
+
+	// run test
+	f := make([]float64, nrow)
 	xTmp := make([]float64, ndim)
-	for i := 0; i < ndim; i++ {
-		if len(dfdxAna[i]) != ndim {
-			tst.Errorf("len(dfdxAna[i]) != len(xAt)\n")
+	for i := 0; i < nrow; i++ {
+		ncol = len(gAna[i])
+		if ncol != ndim {
+			tst.Errorf("number of columns in gAna matrix must be equal to len(xAt). %d != %d\n", ncol, ndim)
 			return
 		}
 		for j := 0; j < ndim; j++ {
 			copy(xTmp, xAt)
-			fij := func(x float64) float64 {
+			fij := func(x float64) (fres float64, ferr error) {
 				xTmp[j] = x
-				fcn(res, xTmp)
-				return res[i]
+				ferr = fcn(f, xTmp)
+				fres = f[i]
+				return
 			}
-			DerivScaScaCen(tst, fmt.Sprintf("%s%d%d", msg, i, j), tol, dfdxAna[i][j], xAt[j], dx, verbose, fij)
+			DerivScaSca(tst, fmt.Sprintf("%s%d%d", msg, i, j), tol, gAna[i][j], xAt[j], dx, verb, fij)
 		}
 	}
 }
 
-// DerivScaScaCen checks the derivative of scalar w.r.t scalar by comparing with numerical solution
+// DerivScaSca checks the derivative of scalar w.r.t scalar by comparing with numerical solution
 // obtained with central differences (5-point rule)
-//   tst     -- testing.T structure
-//   msg     -- message about this test
-//   tol     -- tolerance to compare dfdxAna with dfdxNum
-//   dfdxAna -- [scalar] analytical (or other kind) derivative dfdx
-//   xAt     -- [scalar] position to compute dfdx
-//   dx      -- stepsize; e.g. 1e-3
-//   fcn     -- [scalar] function f(x). x is scalar
-func DerivScaScaCen(tst *testing.T, msg string, tol, dfdxAna, xAt, dx float64, verbose bool, fcn func(x float64) float64) {
+//   Checks:
+//             df │
+//         g = —— │      with   f:scalar,  x:scalar
+//             dx │xAt          g:scalar
+//   Input:
+//     tst  -- testing.T structure
+//     msg  -- message about this test
+//     tol  -- tolerance to compare gAna with gNum
+//     gAna -- [scalar] analytical (or other kind) derivative dfdx
+//     xAt  -- [scalar] position to compute dfdx
+//     dx   -- stepsize; e.g. 1e-3
+//     verb -- verbose: show messages
+//     fcn  -- [scalar] function f(x). x is scalar
+func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, dx float64, verb bool, fcn func(x float64) (float64, error)) {
 
 	// call centralDeriv first
-	r_0, round, trunc := centralDeriv(fcn, xAt, dx)
-	err := round + trunc
+	res, round, trunc, err := centralDeriv(fcn, xAt, dx)
+	if err != nil {
+		tst.Errorf("function call failed:\n%v\n", err)
+		return
+	}
+	numerr := round + trunc
 
 	// check rounding error
 	if round < trunc && (round > 0 && trunc > 0) {
 
 		// compute an optimised stepsize to minimize the total error, using the scaling of the
 		// truncation error (O(h^2)) and rounding error (O(1/h)).
-		h_opt := dx * math.Pow(round/(2.0*trunc), 1.0/3.0)
-		r_opt, round_opt, trunc_opt := centralDeriv(fcn, xAt, h_opt)
-		error_opt := round_opt + trunc_opt
+		hOpt := dx * math.Pow(round/(2.0*trunc), 1.0/3.0)
+		rOpt, roundOpt, truncOpt, err := centralDeriv(fcn, xAt, hOpt)
+		if err != nil {
+			tst.Errorf("function call failed:\n%v\n", err)
+			return
+		}
+		errorOpt := roundOpt + truncOpt
 
 		// check that the new error is smaller, and that the new derivative is consistent with the
 		// error bounds of the original estimate.
-		if error_opt < err && math.Abs(r_opt-r_0) < 4.0*err {
-			r_0 = r_opt
-			err = error_opt
+		if errorOpt < numerr && math.Abs(rOpt-res) < 4.0*numerr {
+			res = rOpt
 		}
 	}
 
 	// compare
-	AnaNum(tst, msg, tol, dfdxAna, r_0, verbose)
+	AnaNum(tst, msg, tol, gAna, res, verb)
 }
 
 // centralDeriv Computes the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
-func centralDeriv(f func(x float64) float64, x float64, h float64) (result, abserr_round, abserr_trunc float64) {
+func centralDeriv(f func(x float64) (float64, error), x float64, h float64) (res, absErrRound, absErrTrunc float64, err error) {
 
-	// compute the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).  Note that the
-	// central point is not used.  Compute the error using the difference between the 5-point and the
-	// 3-point rule (x-h,x,x+h).  Again the central point is not used.
-	fm1 := f(x - h)
-	fp1 := f(x + h)
-	fmh := f(x - h/2)
-	fph := f(x + h/2)
+	// Compute the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
+	// Note that the central point is not used.
+	// Compute the error using the difference between the 5-point and the 3-point rule (x-h,x,x+h).
+	// Again the central point is not used.
+	fm1, err := f(x - h)
+	if err != nil {
+		return
+	}
+	fp1, err := f(x + h)
+	if err != nil {
+		return
+	}
+	fmh, err := f(x - h/2.0)
+	if err != nil {
+		return
+	}
+	fph, err := f(x + h/2.0)
+	if err != nil {
+		return
+	}
+	EPS := 1.0e-15 // smallest number satisfying 1.0 + EPS > 1.0
 	r3 := 0.5 * (fp1 - fm1)
 	r5 := (4.0/3.0)*(fph-fmh) - (1.0/3.0)*r3
-	e3 := (math.Abs(fp1) + math.Abs(fm1)) * DBL_EPSILON
-	e5 := 2.0*(math.Abs(fph)+math.Abs(fmh))*DBL_EPSILON + e3
+	e3 := (math.Abs(fp1) + math.Abs(fm1)) * EPS
+	e5 := 2.0*(math.Abs(fph)+math.Abs(fmh))*EPS + e3
 
-	// the next term is due to finite precision in x+h = O (eps * x)
-	dy := max(math.Abs(r3/h), math.Abs(r5/h)) * (math.Abs(x) / h) * DBL_EPSILON
+	// The next term is due to finite precision in x+h = O (eps * x)
+	dy := max(math.Abs(r3/h), math.Abs(r5/h)) * (math.Abs(x) / h) * EPS
 
-	// the truncation error in the r5 approximation itself is O(h^4).  However, for safety, we estimate
-	// the error from r5-r3, which is O(h^2).  By scaling h we will minimise this estimated error, not
-	// the actual truncation error in r5.
-	result = r5 / h
-	abserr_trunc = math.Abs((r5 - r3) / h) // Estimated truncation error O(h^2)
-	abserr_round = math.Abs(e5/h) + dy     // Rounding error (cancellations)
+	// The truncation error in the r5 approximation itself is O(h^4).
+	// However, for safety, we estimate the error from r5-r3, which is O(h^2).
+	// By scaling h we will minimise this estimated error, not the actual truncation error in r5.
+	res = r5 / h
+	absErrTrunc = math.Abs((r5 - r3) / h) // Estimated truncation error O(h^2)
+	absErrRound = math.Abs(e5/h) + dy     // Rounding error (cancellations)
 	return
 }
