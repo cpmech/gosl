@@ -350,6 +350,11 @@ Several TimeSpace functions are defined as well.
 				
 			
 				
+				<dd><a href="#Mm">type Mm</a></dd>
+				
+				
+			
+				
 				<dd><a href="#Mul">type Mul</a></dd>
 				
 				
@@ -367,6 +372,11 @@ Several TimeSpace functions are defined as well.
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#Mul.Init">func (o *Mul) Init(prms Params) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Mv">type Mv</a></dd>
+				
 				
 			
 				
@@ -584,10 +594,35 @@ Several TimeSpace functions are defined as well.
 				
 			
 				
+				<dd><a href="#Ss">type Ss</a></dd>
+				
+				
+			
+				
 				<dd><a href="#TimeSpace">type TimeSpace</a></dd>
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#New">func New(name string, prms Params) (TimeSpace, error)</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Tt">type Tt</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Tv">type Tv</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Vs">type Vs</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Vv">type Vv</a></dd>
 				
 				
 			
@@ -643,6 +678,8 @@ Several TimeSpace functions are defined as well.
 			<span style="font-size:90%">
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/fun/auxiliary.go">auxiliary.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/fun/definitions.go">definitions.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/fun/ellipticintegral.go">ellipticintegral.go</a>
 			
@@ -1976,6 +2013,29 @@ Init initialises the function
 		
 			
 			
+			<h2 id="Mm">type <a href="https://github.com/cpmech/gosl/blob/master/fun/definitions.go?s=876:912#L17">Mm</a></h2>
+			<pre>type Mm func(f, m [][]<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+Mm defines a matrix function f(m) of a matrix argument m. Also returns error
+</p>
+<pre>Matrix matrix
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
 			<h2 id="Mul">type <a href="https://github.com/cpmech/gosl/blob/master/fun/f_mul.go?s=306:343#L1">Mul</a></h2>
 			<pre>type Mul struct {
     Fa, Fb <a href="#TimeSpace">TimeSpace</a>
@@ -2052,6 +2112,29 @@ Init initialises the function
 				
 				
 				
+			
+		
+			
+			
+			<h2 id="Mv">type <a href="https://github.com/cpmech/gosl/blob/master/fun/definitions.go?s=729:775#L13">Mv</a></h2>
+			<pre>type Mv func(f [][]<a href="/pkg/builtin/#float64">float64</a>, v []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+Mv defines a matrix function f(v) of a vector argument v. Also returns error
+</p>
+<pre>Matrix vector
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
 			
 		
 			
@@ -2966,6 +3049,29 @@ Init initialises the function
 		
 			
 			
+			<h2 id="Ss">type <a href="https://github.com/cpmech/gosl/blob/master/fun/definitions.go?s=310:350#L1">Ss</a></h2>
+			<pre>type Ss func(s <a href="/pkg/builtin/#float64">float64</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+Ss defines a scalar function f(s) of a scalar argument s. Also returns error
+</p>
+<pre>Scalar scalar
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
 			<h2 id="TimeSpace">type <a href="https://github.com/cpmech/gosl/blob/master/fun/timespace.go?s=649:1034#L11">TimeSpace</a></h2>
 			<pre>type TimeSpace interface {
     Init(prms <a href="#Params">Params</a>) <a href="/pkg/builtin/#error">error</a>                   <span class="comment">// initialise function parameters</span>
@@ -2997,6 +3103,98 @@ New allocates function by name
 
 				
 				
+			
+
+			
+		
+			
+			
+			<h2 id="Tt">type <a href="https://github.com/cpmech/gosl/blob/master/fun/definitions.go?s=1193:1229#L25">Tt</a></h2>
+			<pre>type Tt func(f, t *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+Tt defines a triplet (matrix) function f(t) of a triplet (matrix) argument t. Also returns error
+</p>
+<pre>Triplet triplet
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Tv">type <a href="https://github.com/cpmech/gosl/blob/master/fun/definitions.go?s=1024:1070#L21">Tv</a></h2>
+			<pre>type Tv func(f *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, v []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+Tv defines a triplet (matrix) function f(v) of a vector argument v. Also returns error
+</p>
+<pre>Triplet vector
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Vs">type <a href="https://github.com/cpmech/gosl/blob/master/fun/definitions.go?s=451:493#L5">Vs</a></h2>
+			<pre>type Vs func(f []<a href="/pkg/builtin/#float64">float64</a>, s <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+Vs defines a vector function f(s) of a scalar argument s. Also returns error
+</p>
+<pre>Vector scalar
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Vv">type <a href="https://github.com/cpmech/gosl/blob/master/fun/definitions.go?s=594:628#L9">Vv</a></h2>
+			<pre>type Vv func(f, v []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a></pre>
+			<p>
+Vv defines a vector function f(v) of a vector argument v. Also returns error
+</p>
+<pre>Vector vector
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
 			
 
 			
