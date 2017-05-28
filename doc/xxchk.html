@@ -70,8 +70,6 @@ package chk contains functions for checking and testing computations
 			<div id="manual-nav">
 			<dl>
 			
-				<dd><a href="#pkg-constants">Constants</a></dd>
-			
 			
 				<dd><a href="#pkg-variables">Variables</a></dd>
 			
@@ -98,16 +96,16 @@ package chk contains functions for checking and testing computations
 				<dd><a href="#Deep4">func Deep4(tst *testing.T, msg string, tol float64, a, b [][][][]float64)</a></dd>
 			
 				
-				<dd><a href="#DerivScaScaCen">func DerivScaScaCen(tst *testing.T, msg string, tol, dfdxAna, xAt, dx float64, verbose bool, fcn func(x float64) float64)</a></dd>
+				<dd><a href="#DerivScaSca">func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, dx float64, verb bool, fcn func(x float64) (float64, error))</a></dd>
 			
 				
-				<dd><a href="#DerivScaVecCen">func DerivScaVecCen(tst *testing.T, msg string, tol float64, dfdxAna, xAt []float64, dx float64, verbose bool, fcn func(x []float64) float64)</a></dd>
+				<dd><a href="#DerivScaVec">func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, dx float64, verb bool, fcn func(x []float64) (float64, error))</a></dd>
 			
 				
-				<dd><a href="#DerivVecScaCen">func DerivVecScaCen(tst *testing.T, msg string, tol float64, dfdxAna []float64, xAt, dx float64, verbose bool, fcn func(f []float64, x float64))</a></dd>
+				<dd><a href="#DerivVecSca">func DerivVecSca(tst *testing.T, msg string, tol float64, gAna []float64, xAt, dx float64, verb bool, fcn func(f []float64, x float64) error)</a></dd>
 			
 				
-				<dd><a href="#DerivVecVecCen">func DerivVecVecCen(tst *testing.T, msg string, tol float64, dfdxAna [][]float64, xAt []float64, dx float64, verbose bool, fcn func(f, x []float64))</a></dd>
+				<dd><a href="#DerivVecVec">func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt []float64, dx float64, verb bool, fcn func(f, x []float64) error)</a></dd>
 			
 				
 				<dd><a href="#Err">func Err(msg string, prm ...interface{}) error</a></dd>
@@ -244,14 +242,6 @@ package chk contains functions for checking and testing computations
 		</div> <!-- #pkg-callgraph -->
 
 		
-			<h2 id="pkg-constants">Constants</h2>
-			
-				<pre>const (
-    <span id="DBL_EPSILON">DBL_EPSILON</span> = 1.0e-15 <span class="comment">// smallest number satisfying 1.0 + EPS &gt; 1.0</span>
-)</pre>
-				
-			
-		
 		
 			<h2 id="pkg-variables">Variables</h2>
 			
@@ -352,19 +342,25 @@ Deep4 compares two deep4 slices
 		
 			
 			
-			<h2 id="DerivScaScaCen">func <a href="https://github.com/cpmech/gosl/blob/master/chk/deriv.go?s=3819:3940#L96">DerivScaScaCen</a></h2>
-			<pre>func DerivScaScaCen(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, dfdxAna, xAt, dx <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>, fcn func(x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="DerivScaSca">func <a href="https://github.com/cpmech/gosl/blob/master/chk/deriv.go?s=5111:5232#L138">DerivScaSca</a></h2>
+			<pre>func DerivScaSca(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol, gAna, xAt, dx <a href="/pkg/builtin/#float64">float64</a>, verb <a href="/pkg/builtin/#bool">bool</a>, fcn func(x <a href="/pkg/builtin/#float64">float64</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>))</pre>
 			<p>
-DerivScaScaCen checks the derivative of scalar w.r.t scalar by comparing with numerical solution
+DerivScaSca checks the derivative of scalar w.r.t scalar by comparing with numerical solution
 obtained with central differences (5-point rule)
 </p>
-<pre>tst     -- testing.T structure
-msg     -- message about this test
-tol     -- tolerance to compare dfdxAna with dfdxNum
-dfdxAna -- [scalar] analytical (or other kind) derivative dfdx
-xAt     -- [scalar] position to compute dfdx
-dx      -- stepsize; e.g. 1e-3
-fcn     -- [scalar] function f(x). x is scalar
+<pre>Checks:
+          df │
+      g = —— │      with   f:scalar,  x:scalar
+          dx │xAt          g:scalar
+Input:
+  tst  -- testing.T structure
+  msg  -- message about this test
+  tol  -- tolerance to compare gAna with gNum
+  gAna -- [scalar] analytical (or other kind) derivative dfdx
+  xAt  -- [scalar] position to compute dfdx
+  dx   -- stepsize; e.g. 1e-3
+  verb -- verbose: show messages
+  fcn  -- [scalar] function f(x). x is scalar
 </pre>
 
 			
@@ -373,19 +369,26 @@ fcn     -- [scalar] function f(x). x is scalar
 		
 			
 			
-			<h2 id="DerivScaVecCen">func <a href="https://github.com/cpmech/gosl/blob/master/chk/deriv.go?s=1652:1793#L36">DerivScaVecCen</a></h2>
-			<pre>func DerivScaVecCen(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, dfdxAna, xAt []<a href="/pkg/builtin/#float64">float64</a>, dx <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>, fcn func(x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<h2 id="DerivScaVec">func <a href="https://github.com/cpmech/gosl/blob/master/chk/deriv.go?s=2085:2227#L48">DerivScaVec</a></h2>
+			<pre>func DerivScaVec(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, gAna, xAt []<a href="/pkg/builtin/#float64">float64</a>, dx <a href="/pkg/builtin/#float64">float64</a>,
+    verb <a href="/pkg/builtin/#bool">bool</a>, fcn func(x []<a href="/pkg/builtin/#float64">float64</a>) (<a href="/pkg/builtin/#float64">float64</a>, <a href="/pkg/builtin/#error">error</a>))</pre>
 			<p>
-DerivScaVecCen checks the derivative of scalar w.r.t vector by comparing with numerical solution
+DerivScaVec checks the derivative of scalar w.r.t vector by comparing with numerical solution
 obtained with central differences (5-point rule)
 </p>
-<pre>tst     -- testing.T structure
-msg     -- message about this test
-tol     -- tolerance to compare dfdxAna with dfdxNum
-dfdxAna -- [vector] analytical (or other kind) derivative dfdx
-xAt     -- [vector] position to compute dfdx
-dx      -- stepsize; e.g. 1e-3
-fcn     -- [scalar] function f(x). x is vector
+<pre>Check:
+            df  │               f:scalar   {x}:vector
+     {g} = ———— │        with   {g}:vector
+           d{x} │{xAt}          len(g) == len(x) == len(xAt)
+Input:
+  tst  -- testing.T structure
+  msg  -- message about this test
+  tol  -- tolerance to compare gAna with gNum
+  gAna -- [vector] analytical (or other kind) derivative dfdx. size=len(x)=len(xAt)
+  xAt  -- [vector] position to compute dfdx
+  dx   -- stepsize; e.g. 1e-3
+  verb -- verbose: show messages
+  fcn  -- [scalar] function f(x). x is vector
 </pre>
 
 			
@@ -394,19 +397,26 @@ fcn     -- [scalar] function f(x). x is vector
 		
 			
 			
-			<h2 id="DerivVecScaCen">func <a href="https://github.com/cpmech/gosl/blob/master/chk/deriv.go?s=785:929#L16">DerivVecScaCen</a></h2>
-			<pre>func DerivVecScaCen(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, dfdxAna []<a href="/pkg/builtin/#float64">float64</a>, xAt, dx <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>, fcn func(f []<a href="/pkg/builtin/#float64">float64</a>, x <a href="/pkg/builtin/#float64">float64</a>))</pre>
+			<h2 id="DerivVecSca">func <a href="https://github.com/cpmech/gosl/blob/master/chk/deriv.go?s=933:1075#L18">DerivVecSca</a></h2>
+			<pre>func DerivVecSca(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, gAna []<a href="/pkg/builtin/#float64">float64</a>, xAt, dx <a href="/pkg/builtin/#float64">float64</a>,
+    verb <a href="/pkg/builtin/#bool">bool</a>, fcn func(f []<a href="/pkg/builtin/#float64">float64</a>, x <a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
-DerivVecScaCen checks the derivative of vector w.r.t scalar by comparing with numerical solution
+DerivVecSca checks the derivative of vector w.r.t scalar by comparing with numerical solution
 obtained with central differences (5-point rule)
 </p>
-<pre>tst     -- testing.T structure
-msg     -- message about this test
-tol     -- tolerance to compare dfdxAna with dfdxNum
-dfdxAna -- [vector] analytical (or other kind) derivative dfdx
-xAt     -- [scalar] position to compute dfdx
-dx      -- stepsize; e.g. 1e-3
-fcn     -- [vector] function f(x). x is scalar
+<pre>Check:
+           d{f} │             {f}:vector   x:scalar
+     {g} = ———— │      with   {g}:vector
+            dx  │xAt          len(g) == len(f)
+Input:
+  tst  -- testing.T structure
+  msg  -- message about this test
+  tol  -- tolerance to compare gAna with gNum
+  gAna -- [vector] analytical (or other kind) derivative dfdx. size=len(f)
+  xAt  -- [scalar] position to compute dfdx
+  dx   -- stepsize; e.g. 1e-3
+  verb -- verbose: show messages
+  fcn  -- [vector] function f(x). x is scalar
 </pre>
 
 			
@@ -415,19 +425,26 @@ fcn     -- [vector] function f(x). x is scalar
 		
 			
 			
-			<h2 id="DerivVecVecCen">func <a href="https://github.com/cpmech/gosl/blob/master/chk/deriv.go?s=2638:2786#L62">DerivVecVecCen</a></h2>
-			<pre>func DerivVecVecCen(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, dfdxAna [][]<a href="/pkg/builtin/#float64">float64</a>, xAt []<a href="/pkg/builtin/#float64">float64</a>, dx <a href="/pkg/builtin/#float64">float64</a>, verbose <a href="/pkg/builtin/#bool">bool</a>, fcn func(f, x []<a href="/pkg/builtin/#float64">float64</a>))</pre>
+			<h2 id="DerivVecVec">func <a href="https://github.com/cpmech/gosl/blob/master/chk/deriv.go?s=3446:3592#L85">DerivVecVec</a></h2>
+			<pre>func DerivVecVec(tst *<a href="/pkg/testing/">testing</a>.<a href="/pkg/testing/#T">T</a>, msg <a href="/pkg/builtin/#string">string</a>, tol <a href="/pkg/builtin/#float64">float64</a>, gAna [][]<a href="/pkg/builtin/#float64">float64</a>, xAt []<a href="/pkg/builtin/#float64">float64</a>, dx <a href="/pkg/builtin/#float64">float64</a>,
+    verb <a href="/pkg/builtin/#bool">bool</a>, fcn func(f, x []<a href="/pkg/builtin/#float64">float64</a>) <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
-DerivVecVecCen checks the derivative of scalar w.r.t vector by comparing with numerical solution
+DerivVecVec checks the derivative of vector w.r.t vector by comparing with numerical solution
 obtained with central differences (5-point rule)
 </p>
-<pre>tst     -- testing.T structure
-msg     -- message about this test
-tol     -- tolerance to compare dfdxAna with dfdxNum
-dfdxAna -- [matrix] analytical (or other kind) derivative dfdx
-xAt     -- [vector] position to compute dfdx
-dx      -- stepsize; e.g. 1e-3
-fcn     -- [vector] function f(x). x is vector
+<pre>Checks:
+           d{f} │               {f}:vector   {x}:vector
+     [g] = ———— │        with   [g]:matrix
+           d{x} │{xAt}          rows(g)==len(f)  cols(g)==len(x)==len(xAt)
+Input:
+  tst  -- testing.T structure
+  msg  -- message about this test
+  tol  -- tolerance to compare gAna with gNum
+  gAna -- [matrix] analytical (or other kind) derivative dfdx. size=(len(f),len(x))
+  xAt  -- [vector] position to compute dfdx
+  dx   -- stepsize; e.g. 1e-3
+  verb -- verbose: show messages
+  fcn  -- [vector] function f(x). x is vector
 </pre>
 
 			
