@@ -6,6 +6,7 @@ package tsr
 
 import (
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
@@ -333,8 +334,8 @@ func (o *IsoFun) FindIntersect(p0, k float64, ΔL []float64, usek, debug bool, a
 		"lSearch": 0.0,
 		"maxIt":   20,
 	}
-	var intersect_ffcn num.Cb_f
-	var intersect_Jfcn num.Cb_J
+	var intersect_ffcn fun.Vv
+	var intersect_Jfcn fun.Tv
 	var xsol []float64
 	var neq int
 

@@ -8,6 +8,7 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
@@ -25,7 +26,7 @@ import (
 //      w    : workspace with size == n == len(x)
 //  RETURNS:
 //      J : dfdx @ x [must be pre-allocated]
-func Jacobian(J *la.Triplet, ffcn Cb_f, x, fx, w []float64) (err error) {
+func Jacobian(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64) (err error) {
 	ndim := len(x)
 	start, endp1 := 0, ndim
 	if J.Max() == 0 {
@@ -51,7 +52,7 @@ func Jacobian(J *la.Triplet, ffcn Cb_f, x, fx, w []float64) (err error) {
 }
 
 // CompareJac compares Jacobian matrix (e.g. for testing)
-func CompareJac(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64) {
+func CompareJac(tst *testing.T, ffcn fun.Vv, Jfcn fun.Tv, x []float64, tol float64) {
 
 	// numerical
 	n := len(x)

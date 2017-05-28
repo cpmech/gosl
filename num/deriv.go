@@ -6,6 +6,8 @@ package num
 
 import "math"
 
+type Cb_fx func(x float64, args ...interface{}) float64
+
 // DerivFwd employs a 1st order forward difference to approximate the derivative of f(x) w.r.t x @ x
 func DerivFwd(f Cb_fx, x float64, args ...interface{}) float64 {
 	delta := math.Sqrt(EPS * max(CTE1, math.Abs(x)))

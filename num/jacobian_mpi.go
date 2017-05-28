@@ -10,6 +10,7 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
@@ -28,7 +29,7 @@ import (
 //      w    : workspace with size == n == len(x)
 //  RETURNS:
 //      J : dfdx @ x [must be pre-allocated]
-func JacobianMpi(J *la.Triplet, ffcn Cb_f, x, fx, w []float64, distr bool) (err error) {
+func JacobianMpi(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64, distr bool) (err error) {
 	ndim := len(x)
 	start, endp1 := 0, ndim
 	if distr {
@@ -67,7 +68,7 @@ func JacobianMpi(J *la.Triplet, ffcn Cb_f, x, fx, w []float64, distr bool) (err 
 }
 
 // CompareJacMpi compares Jacobian matrix (e.g. for testing)
-func CompareJacMpi(tst *testing.T, ffcn Cb_f, Jfcn Cb_J, x []float64, tol float64, distr bool) {
+func CompareJacMpi(tst *testing.T, ffcn fun.Vv, Jfcn fun.Tv, x []float64, tol float64, distr bool) {
 
 	// numerical
 	n := len(x)

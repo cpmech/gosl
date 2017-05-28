@@ -9,13 +9,14 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 )
 
 // run_rootsol_test runs root solution test
 //  Note: xguess is the trial solution for Newton's method (not Brent's)
-func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA Cb_yxe, ffcnB Cb_f, JfcnB Cb_Jd, fname string, save, show bool) (xbrent float64) {
+func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, ffcnB fun.Vv, JfcnB fun.Mv, fname string, save, show bool) (xbrent float64) {
 
 	// Brent
 	io.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")

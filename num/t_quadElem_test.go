@@ -16,8 +16,9 @@ func Test_QuadElem01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("QuadElem01. Trapz and Simpson Elementary")
 
-	y := func(x float64) float64 {
-		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
+	y := func(x float64) (res float64, err error) {
+		res = math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
+		return
 	}
 	var err error
 	Acor := 1.08268158558

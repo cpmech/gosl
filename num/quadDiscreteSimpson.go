@@ -4,32 +4,45 @@
 
 package num
 
-import "github.com/cpmech/gosl/chk"
+import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+)
 
 // QuadDiscreteSimpsonRF approximates the area below the discrete curve defined by [xa,xy] range and
 // y function. Computations are carried out with the (very simple) Simpson method from xa to xb,
 // with npts points
-func QuadDiscreteSimpsonRF(a, b float64, n int, f Cb_yx) (float64, error) {
+func QuadDiscreteSimpsonRF(a, b float64, n int, f fun.Ss) (res float64, err error) {
 	if n < 2 || n%2 > 0 {
-		return 0, chk.Err("number of subintervas should be even (n=%d)", n)
+		err = chk.Err("number of subintervas should be even (n=%d)", n)
+		return
 	}
-
-	h := (b - a) / float64(n)
-	sum := f(a) + f(b)
-
+	fa, err := f(a)
+	if err != nil {
+		return
+	}
+	fb, err := f(b)
+	if err != nil {
+		return
+	}
+	var fx float64
 	x := a
+	h := (b - a) / float64(n)
+	sum := fa + fb
 	for i := 1; i < n; i++ {
 		x += h
+		fx, err = f(x)
+		if err != nil {
+			return
+		}
 		if i%2 == 1 { // i is odd
-			sum += 4 * f(x)
+			sum += 4 * fx
 		} else { // i is even
-			sum += 2 * f(x)
+			sum += 2 * fx
 		}
 	}
-
-	sum = sum * h / 3
-
-	return sum, nil
+	res = sum * h / 3.0
+	return
 }
 
 // QuadDiscreteSimps2d approximates a double integral over the x-y plane with the elevation given by

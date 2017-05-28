@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 )
 
 // LineSearch finds a new point x along the direction dx, from x0, where the function
@@ -32,7 +33,7 @@ import (
 //      slope_max   -- ~0 but < 0
 //      α           -- Armijo coefficient
 //      ε           -- machine epsilon
-func LineSearch(x, fx []float64, ffcn Cb_f, dx, x0, dφdx0 []float64, φ0 float64, max_it int, dx_is_mdx bool) (nFeval int, err error) {
+func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 float64, max_it int, dx_is_mdx bool) (nFeval int, err error) {
 
 	// tolerances
 	tol_gra_min := 1e-12

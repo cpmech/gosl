@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
@@ -33,10 +34,12 @@ type NlSolver struct {
 	numJ  bool      // use numerical Jacobian (with sparse solver)
 
 	// callbacks
-	Ffcn   Cb_f   // f(x) function
-	JfcnSp Cb_J   // J(x)=dfdx Jacobian for sparse solver
-	JfcnDn Cb_Jd  // J(x)=dfdx Jacobian for dense solver
-	Out    Cb_out // for output
+	Ffcn   fun.Vv // f(x) function f:vector, x:vector
+	JfcnSp fun.Tv // J(x)=dfdx Jacobian for sparse solver
+	JfcnDn fun.Mv // J(x)=dfdx Jacobian for dense solver
+
+	// output callback
+	Out func(x []float64) error // output callback function
 
 	// data for Umfpack (sparse)
 	Jtri la.Triplet // triplet
@@ -64,7 +67,7 @@ type NlSolver struct {
 //   useDn -- Use dense solver (matrix inversion) with JfcnDn
 //   numJ  -- Use numeric Jacobian (sparse version only)
 //   prms  -- atol, rtol, ftol, lSearch, lsMaxIt, maxIt
-func (o *NlSolver) Init(neq int, Ffcn Cb_f, JfcnSp Cb_J, JfcnDn Cb_Jd, useDn, numJ bool, prms map[string]float64) {
+func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useDn, numJ bool, prms map[string]float64) {
 
 	// set default values
 	atol, rtol, ftol := 1e-8, 1e-8, 1e-9

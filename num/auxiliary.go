@@ -8,26 +8,27 @@ import (
 	"math"
 	"os"
 
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
-// PlotYxe plots the function y(x) implemented by Cb_yxe
-func PlotYxe(ffcn Cb_yxe, dirout, fnkey string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error) {
+// PlotYxe plots the function y(x) implemented
+func PlotYxe(f fun.Ss, dirout, fnkey string, xsol, xa, xb float64, np int, xsolLbl, args string, save, show bool, extra func()) (err error) {
 	if !save && !show {
 		return
 	}
 	x := utl.LinSpace(xa, xb, np)
 	y := make([]float64, np)
 	for i := 0; i < np; i++ {
-		y[i], err = ffcn(x[i])
+		y[i], err = f(x[i])
 		if err != nil {
 			return
 		}
 	}
 	var ysol float64
-	ysol, err = ffcn(xsol)
+	ysol, err = f(xsol)
 	if err != nil {
 		return
 	}

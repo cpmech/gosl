@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 )
 
@@ -15,7 +16,7 @@ import (
 type Brent struct {
 	MaxIt  int     // max iterations
 	Tol    float64 // tolerance
-	Ffcn   Cb_yxe  // y = f(x) function
+	Ffcn   fun.Ss  // y = f(x) function
 	NFeval int     // number of calls to Ffcn (function evaluations)
 	It     int     // number of iterations from last call to Solve
 	sqeps  float64 // sqrt(EPS)
@@ -23,7 +24,7 @@ type Brent struct {
 }
 
 // Init intialises Brent structure
-func (o *Brent) Init(ffcn Cb_yxe) {
+func (o *Brent) Init(ffcn fun.Ss) {
 	o.MaxIt = 30
 	o.Tol = 1e-14
 	o.Ffcn = ffcn

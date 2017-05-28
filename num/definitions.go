@@ -6,22 +6,7 @@
 // root finding solvers (Brent's and Newton's methods), among others.
 package num
 
-import (
-	"math"
-
-	"github.com/cpmech/gosl/la"
-)
-
-// callbacks (for single equations)
-type Cb_yx func(x float64) float64
-type Cb_yxe func(x float64) (float64, error)
-type Cb_fx func(x float64, args ...interface{}) float64
-
-// callbacks (for systems)
-type Cb_f func(fx, x []float64) error
-type Cb_J func(dfdx *la.Triplet, x []float64) error  // sparse version
-type Cb_Jd func(dfdx [][]float64, x []float64) error // dense version
-type Cb_out func(x []float64) error                  // for output
+import "math"
 
 // constants
 const (
