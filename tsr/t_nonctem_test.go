@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -46,22 +45,15 @@ func Test_noncteM01(tst *testing.T) {
 	}
 
 	ver, tol := chk.Verbose, 1e-9
-	var tmp float64
 	for _, w := range utl.LinSpace(-1, 1, 11) {
 		dMdw := o.DMdw(w)
 		d2Mdw2 := o.D2Mdw2(w)
-		dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-			tmp, w = w, x
-			res, w = o.M(w), tmp
-			return
-		}, w, 1e-6)
-		chk.AnaNum(tst, "dM/dw  ", tol, dMdw, dnum, ver)
-		dnum, _ = num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-			tmp, w = w, x
-			res, w = o.DMdw(w), tmp
-			return
-		}, w, 1e-6)
-		chk.AnaNum(tst, "d²M/dw²", tol, d2Mdw2, dnum, ver)
+		chk.DerivScaSca(tst, "dM/dw  ", tol, dMdw, w, 1e-1, ver, func(x float64) (float64, error) {
+			return o.M(x), nil
+		})
+		chk.DerivScaSca(tst, "dM²/dw²", tol, d2Mdw2, w, 1e-1, ver, func(x float64) (float64, error) {
+			return o.DMdw(x), nil
+		})
 	}
 
 	ver, tol = chk.Verbose, 1e-9
@@ -89,31 +81,19 @@ func Test_noncteM01(tst *testing.T) {
 		}
 		//io.Pfblue2("I_dc_d2Mdσdσ = %v\n", I_dc_d2Mdσdσ)
 		chk.Vector(tst, "I_dc_d2Mdσdσ", 1e-15, I_dc_d2Mdσdσ, nil)
-		// dMdσ
-		for j := 0; j < len(σ); j++ {
-			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-				tmp, σ[j] = σ[j], x
-				w := M_w(σ)
-				σ[j] = tmp
-				return o.M(w)
-			}, σ[j], 1e-6)
-			chk.AnaNum(tst, io.Sf("dM/dσ[%d]", j), tol, dMdσ[j], dnum, ver)
-		}
-		// d²Mdσdσ
+
+		// check dMdσ
+		chk.DerivScaVec(tst, "dM/dσ", tol, dMdσ, σ, 1e-1, ver, func(x []float64) (float64, error) {
+			return o.M(M_w(x)), nil
+		})
+
+		// check d²Mdσdσ
 		s_tmp := M_Alloc2(nd[m])
-		dMdσ_tmp := M_Alloc2(nd[m])
-		for i := 0; i < len(σ); i++ {
-			for j := 0; j < len(σ); j++ {
-				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-					tmp, σ[j] = σ[j], x
-					p_tmp, q_tmp, w_tmp := M_pqws(s_tmp, σ)
-					o.Deriv1(dMdσ_tmp, σ, s_tmp, p_tmp, q_tmp, w_tmp)
-					σ[j] = tmp
-					return dMdσ_tmp[i]
-				}, σ[j], 1e-6)
-				chk.AnaNum(tst, io.Sf("d²M/dσdσ[%d][%d]", i, j), tol, d2Mdσdσ[i][j], dnum, ver)
-			}
-		}
+		chk.DerivVecVec(tst, "d²M/dσdσ", tol, d2Mdσdσ, σ, 1e-1, ver, func(f, x []float64) error {
+			p_tmp, q_tmp, w_tmp := M_pqws(s_tmp, x)
+			o.Deriv1(f, x, s_tmp, p_tmp, q_tmp, w_tmp) // f := dMdσ
+			return nil
+		})
 	}
 }
 
