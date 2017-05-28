@@ -11,7 +11,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -133,20 +132,6 @@ func (o *Bspline) RecursiveBasis(t float64, i int) float64 {
 	}
 	// using Cox-DeBoor formula
 	return o.recursiveN(t, i, o.p)
-}
-
-// NumericalDeriv computes a particular derivative dN[i]dt @ t using numerical differentiation
-// Note: it uses RecursiveBasis and therefore is highly non-efficient
-func (o *Bspline) NumericalDeriv(t float64, i int) float64 {
-	// check
-	if t < o.tmin || t > o.tmax {
-		chk.Panic("t must be within [%g, %g]. t=%g is incorrect", t, o.tmin, o.tmax)
-	}
-	// derivatives
-	f := func(x float64, args ...interface{}) float64 {
-		return o.RecursiveBasis(x, i)
-	}
-	return num.DerivRange(f, t, o.tmin, o.tmax)
 }
 
 // Point returns the x-y-z coordinates of a point on B-spline

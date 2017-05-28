@@ -75,9 +75,7 @@ func (o *Nurbs) PlotBasis2d(l int, npts, option int) {
 }
 
 // PlotDeriv2d plots derivative dR[i][j][k]du[d] (2D only)
-// option =  0 : use CalcBasisAndDerivs
-//           1 : use NumericalDeriv
-func (o *Nurbs) PlotDeriv2d(l, d int, npts, option int) {
+func (o *Nurbs) PlotDeriv2d(l, d int, npts int) {
 	x := make([]float64, o.gnd)
 	switch o.gnd {
 	// curve
@@ -90,13 +88,8 @@ func (o *Nurbs) PlotDeriv2d(l, d int, npts, option int) {
 		for m := 0; m < npts; m++ {
 			U[m] = o.b[0].tmin + float64(m)*du
 			uvec[0] = U[m]
-			switch option {
-			case 0:
-				o.CalcBasisAndDerivs(uvec)
-				o.GetDerivL(gvec, l)
-			case 1:
-				o.NumericalDeriv(gvec, uvec, l)
-			}
+			o.CalcBasisAndDerivs(uvec)
+			o.GetDerivL(gvec, l)
 			G[m] = gvec[0]
 		}
 		plt.Plot(U, G, &plt.A{NoClip: true})
@@ -117,13 +110,8 @@ func (o *Nurbs) PlotDeriv2d(l, d int, npts, option int) {
 				o.Point(x, u, 2)
 				xx[m][n] = x[0]
 				yy[m][n] = x[1]
-				switch option {
-				case 0:
-					o.CalcBasisAndDerivs(u)
-					o.GetDerivL(drdu, l)
-				case 1:
-					o.NumericalDeriv(drdu, u, l)
-				}
+				o.CalcBasisAndDerivs(u)
+				o.GetDerivL(drdu, l)
 				zz[m][n] = drdu[d]
 			}
 		}
@@ -260,8 +248,8 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 		argsElems = &plt.A{C: "green", Ls: "-", NoClip: true}
 	}
 
-	plt.Subplot(4, 2, 1)
-	b.PlotDeriv2d(la, 0, ndiv, 0) // 0 => CalcBasisAndDerivs
+	plt.Subplot(2, 2, 1)
+	b.PlotDeriv2d(la, 0, ndiv)
 	if withCtrl {
 		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
@@ -272,8 +260,8 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 		extra(1)
 	}
 
-	plt.Subplot(4, 2, 2)
-	b.PlotDeriv2d(la, 0, ndiv, 1) // 1 => NumericalDeriv
+	plt.Subplot(2, 2, 2)
+	b.PlotDeriv2d(la, 1, ndiv)
 	if withCtrl {
 		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
@@ -284,8 +272,8 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 		extra(2)
 	}
 
-	plt.Subplot(4, 2, 3)
-	b.PlotDeriv2d(la, 1, ndiv, 0) // 0 => CalcBasisAndDerivs
+	plt.Subplot(2, 2, 3)
+	b.PlotDeriv2d(lb, 0, ndiv)
 	if withCtrl {
 		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
@@ -296,8 +284,8 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 		extra(3)
 	}
 
-	plt.Subplot(4, 2, 4)
-	b.PlotDeriv2d(la, 1, ndiv, 1) // 1 => NumericalDeriv
+	plt.Subplot(2, 2, 4)
+	b.PlotDeriv2d(lb, 1, ndiv)
 	if withCtrl {
 		b.DrawCtrl(ndim, false, argsCtrl, nil)
 	}
@@ -306,54 +294,6 @@ func PlotNurbsDerivs2d(dirout, fnkey string, b *Nurbs, la, lb int, withElems, wi
 	}
 	if extra != nil {
 		extra(4)
-	}
-
-	plt.Subplot(4, 2, 5)
-	b.PlotDeriv2d(lb, 0, ndiv, 0) // 0 => CalcBasisAndDerivs
-	if withCtrl {
-		b.DrawCtrl(ndim, false, argsCtrl, nil)
-	}
-	if withElems {
-		b.DrawElems(ndim, npts, false, argsElems, nil)
-	}
-	if extra != nil {
-		extra(5)
-	}
-
-	plt.Subplot(4, 2, 6)
-	b.PlotDeriv2d(lb, 0, ndiv, 1) // 1 => NumericalDeriv
-	if withCtrl {
-		b.DrawCtrl(ndim, false, argsCtrl, nil)
-	}
-	if withElems {
-		b.DrawElems(ndim, npts, false, argsElems, nil)
-	}
-	if extra != nil {
-		extra(6)
-	}
-
-	plt.Subplot(4, 2, 7)
-	b.PlotDeriv2d(lb, 1, ndiv, 0) // 0 => CalcBasisAndDerivs
-	if withCtrl {
-		b.DrawCtrl(ndim, false, argsCtrl, nil)
-	}
-	if withElems {
-		b.DrawElems(ndim, npts, false, argsElems, nil)
-	}
-	if extra != nil {
-		extra(7)
-	}
-
-	plt.Subplot(4, 2, 8)
-	b.PlotDeriv2d(lb, 1, ndiv, 1) // 1 => NumericalDeriv
-	if withCtrl {
-		b.DrawCtrl(ndim, false, argsCtrl, nil)
-	}
-	if withElems {
-		b.DrawElems(ndim, npts, false, argsElems, nil)
-	}
-	if extra != nil {
-		extra(8)
 	}
 
 	plt.Save(dirout, fnkey)

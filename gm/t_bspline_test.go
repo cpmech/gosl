@@ -57,12 +57,10 @@ func Test_bspline01(tst *testing.T) {
 		s2.PlotBasis(npts, 2) // 2 => RecursiveBasis
 
 		plt.Subplot(3, 2, 5)
-		s1.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
-		s1.PlotDerivs(npts, 1) // 1 => NumericalDeriv
+		s1.PlotDerivs(npts) // 0 => CalcBasisAndDerivs
 
 		plt.Subplot(3, 2, 6)
-		s2.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
-		s2.PlotDerivs(npts, 1) // 1 => NumericalDeriv
+		s2.PlotDerivs(npts) // 0 => CalcBasisAndDerivs
 
 		err := plt.Save("/tmp/gosl", "bspline01")
 		if err != nil {
@@ -141,33 +139,19 @@ func Test_bspline03(tst *testing.T) {
 	io.Pforan("ana: dNdt(t=4.00, i=6) = %v\n", s.GetDeriv(6))
 	io.Pforan("ana: dNdt(t=4.00, i=7) = %v\n", s.GetDeriv(7))
 
-	// numerical derivatives
-	io.Pfcyan("num: dNdt(t=3.99, i=5) = %v\n", s.NumericalDeriv(3.99, 5))
-	io.Pfcyan("num: dNdt(t=3.99, i=6) = %v\n", s.NumericalDeriv(3.99, 6))
-	io.Pfcyan("num: dNdt(t=3.99, i=7) = %v\n", s.NumericalDeriv(3.99, 7))
-	io.Pfblue2("num: dNdt(t=4.00, i=5) = %v\n", s.NumericalDeriv(4.00, 5))
-	io.Pfblue2("num: dNdt(t=4.00, i=6) = %v\n", s.NumericalDeriv(4.00, 6))
-	io.Pfblue2("num: dNdt(t=4.00, i=7) = %v\n", s.NumericalDeriv(4.00, 7))
-
-	ver := false
+	δ := 1e-1 // used to avoid using central differences @ boundaries of t in [0,5]
+	ver := chk.Verbose
 	tol := 1e-5
-	tt := utl.LinSpace(0, 5, 11)
-	numd := make([]float64, s.NumBasis())
+	tt := utl.LinSpace(δ, 5.0-δ, 11)
 	anad := make([]float64, s.NumBasis())
 	for _, t := range tt {
 		for i := 0; i < s.NumBasis(); i++ {
 			s.CalcBasisAndDerivs(t)
 			anad[i] = s.GetDeriv(i)
-			numd[i] = s.NumericalDeriv(t, i)
-			// numerical fails @ 4 [4,5,6]
-			if t == 4 {
-				numd[4] = anad[4]
-				numd[5] = anad[5]
-				numd[6] = anad[6]
-			}
-			chk.PrintAnaNum(io.Sf("i=%d t=%v", i, t), tol, anad[i], numd[i], ver)
+			chk.DerivScaSca(tst, io.Sf("i=%d t=%.3f", i, t), tol, anad[i], t, 1e-1, ver, func(x float64) (float64, error) {
+				return s.RecursiveBasis(x, i), nil
+			})
 		}
-		chk.Vector(tst, io.Sf("derivs @ %v", t), tol, numd, anad)
 	}
 
 	if chk.Verbose {
@@ -188,8 +172,7 @@ func Test_bspline03(tst *testing.T) {
 		s.PlotBasis(npts, 2) // 2 => RecursiveBasis
 
 		plt.Subplot(3, 1, 3)
-		s.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
-		s.PlotDerivs(npts, 1) // 1 => NumericalDeriv
+		s.PlotDerivs(npts) // 0 => CalcBasisAndDerivs
 
 		plt.Save("/tmp/gosl", "bspline03")
 	}

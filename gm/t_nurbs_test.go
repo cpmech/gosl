@@ -10,7 +10,29 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
+
+func checkDerivs(tst *testing.T, b *Nurbs, npts int, tol float64, verb bool) {
+	δ := 1e-1 // used to avoid using central differences @ boundaries of t in [0,5]
+	dana := make([]float64, 2)
+	uu := make([]float64, 2)
+	for _, u := range utl.LinSpace(b.b[0].tmin+δ, b.b[0].tmax-δ, npts) {
+		for _, v := range utl.LinSpace(b.b[1].tmin+δ, b.b[1].tmax-δ, npts) {
+			uu[0], uu[1] = u, v
+			b.CalcBasisAndDerivs(uu)
+			for i := 0; i < b.n[0]; i++ {
+				for j := 0; j < b.n[1]; j++ {
+					l := i + j*b.n[0]
+					b.GetDerivL(dana, l)
+					chk.DerivScaVec(tst, io.Sf("dR%d(%.3f,%.3f)", l, uu[0], uu[1]), tol, dana, uu, 1e-1, verb, func(x []float64) (float64, error) {
+						return b.RecursiveBasis(x, l), nil
+					})
+				}
+			}
+		}
+	}
+}
 
 func Test_nurbs01(tst *testing.T) {
 
@@ -34,7 +56,12 @@ func Test_nurbs01(tst *testing.T) {
 	chk.IntAssert(surf.GetElemNumBasis(), len(surf.IndBasis(elems[0])))
 
 	// check derivatives
-	surf.CheckDerivs(tst, 11, 1e-5, false)
+	many := false
+	if many {
+		checkDerivs(tst, surf, 21, 1e-9, chk.Verbose) // many points
+	} else {
+		checkDerivs(tst, surf, 5, 1e-9, chk.Verbose)
+	}
 
 	// check spans
 	solE := [][]int{{2, 3, 1, 2}, {3, 4, 1, 2}, {4, 5, 1, 2}}
@@ -161,7 +188,7 @@ func Test_nurbs01(tst *testing.T) {
 			plt.AxisOff()
 			plt.Equal()
 		})
-		plt.Reset(true, &plt.A{Prop: 1.2})
+		plt.Reset(true, &plt.A{Prop: 1.0})
 		PlotNurbsDerivs2d("/tmp/gosl", "t_nurbs01c", surf, 0, 7, false, false, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
@@ -189,7 +216,12 @@ func Test_nurbs02(tst *testing.T) {
 	chk.IntAssert(surf.GetElemNumBasis(), len(surf.IndBasis(elems[0])))
 
 	// check derivatives
-	surf.CheckDerivs(tst, 11, 1e-5, false)
+	many := false
+	if many {
+		checkDerivs(tst, surf, 21, 1e-5, chk.Verbose)
+	} else {
+		checkDerivs(tst, surf, 5, 1e-5, chk.Verbose)
+	}
 
 	// refine NURBS
 	refined := surf.KrefineN(2, false)

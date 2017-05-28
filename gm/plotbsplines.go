@@ -93,21 +93,14 @@ func (o *Bspline) PlotBasis(npts, option int) {
 }
 
 // PlotDerivs plots derivatives of basis functions in I
-// option =  0 : use CalcBasisAndDerivs
-//           1 : use NumericalDeriv
-func (o *Bspline) PlotDerivs(npts, option int) {
+func (o *Bspline) PlotDerivs(npts int) {
 	tt := utl.LinSpace(o.tmin, o.tmax, npts)
 	I := utl.IntRange(o.NumBasis())
 	f := make([]float64, len(tt))
 	for _, i := range I {
 		for j, t := range tt {
-			switch option {
-			case 0:
-				o.CalcBasisAndDerivs(t)
-				f[j] = o.GetDeriv(i)
-			case 1:
-				f[j] = o.NumericalDeriv(t, i)
-			}
+			o.CalcBasisAndDerivs(t)
+			f[j] = o.GetDeriv(i)
 		}
 		/* TODO
 		if strings.Contains(args, "marker") {

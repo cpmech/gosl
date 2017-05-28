@@ -9,7 +9,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -351,26 +350,6 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 			chk.Panic("denominator is zero (%v) @ %v for point %d", den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.b[1].RecursiveBasis(u[1], I[1]) * o.b[2].RecursiveBasis(u[2], I[2]) * o.Q[I[0]][I[1]][I[2]][3] / den
-	}
-	return
-}
-
-// NumericalDeriv computes a particular derivative dR[i][j][k]du @ t using numerical differentiation
-// Note: it uses RecursiveBasis and therefore is highly non-efficient
-func (o *Nurbs) NumericalDeriv(dRdu []float64, u []float64, l int) {
-	var tmp float64
-	for d := 0; d < o.gnd; d++ {
-		f := func(x float64, args ...interface{}) (val float64) {
-			if x < o.b[d].tmin || x > o.b[d].tmax {
-				chk.Panic("problem with numerical derivative: x=%v is invalid. xrange=[%v,%v]", x, o.b[d].tmin, o.b[d].tmax)
-			}
-			tmp = u[d]
-			u[d] = x
-			val = o.RecursiveBasis(u, l)
-			u[d] = tmp
-			return
-		}
-		dRdu[d] = num.DerivRange(f, u[d], o.b[d].tmin, o.b[d].tmax)
 	}
 	return
 }
