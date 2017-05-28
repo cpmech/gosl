@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -21,7 +20,6 @@ func Test_shp01(tst *testing.T) {
 
 	r := []float64{0, 0, 0}
 
-	verb := true
 	for name, _ := range Functions {
 
 		io.Pfyel("--------------------------------- %-6s---------------------------------\n", name)
@@ -31,7 +29,7 @@ func Test_shp01(tst *testing.T) {
 		if name == "tri10" {
 			tol = 1e-14
 		}
-		checkShape(tst, name, tol, verb)
+		checkShape(tst, name, tol, chk.Verbose)
 
 		// check dSdR
 		tol = 1e-14
@@ -41,7 +39,7 @@ func Test_shp01(tst *testing.T) {
 		if name == "tri15" {
 			tol = 1e-9
 		}
-		checkDerivs(tst, name, r, tol, verb)
+		checkDerivs(tst, name, r, tol, chk.Verbose)
 
 		io.PfGreen("OK\n")
 	}
@@ -111,30 +109,11 @@ func checkDerivs(tst *testing.T, shape string, r []float64, tol float64, verbose
 	S := make([]float64, nverts)
 	dSdR := utl.Alloc(nverts, ndim)
 
-	// auxiliary
-	r_tmp := make([]float64, len(r))
-	S_tmp := make([]float64, nverts)
-
 	// analytical
 	fcn(S, dSdR, r, true)
 
-	// numerical
-	for n := 0; n < nverts; n++ {
-		for i := 0; i < ndim; i++ {
-			dSndRi, _ := num.DerivCentral(func(t float64, args ...interface{}) (Sn float64) {
-				copy(r_tmp, r)
-				r_tmp[i] = t
-				fcn(S_tmp, nil, r_tmp, false)
-				Sn = S_tmp[n]
-				return
-			}, r[i], 1e-1)
-			if verbose {
-				io.Pfgrey2("  dS%ddR%d @ %5.2f = %v (num: %v)\n", n, i, r, dSdR[n][i], dSndRi)
-			}
-			if math.Abs(dSdR[n][i]-dSndRi) > tol {
-				tst.Errorf("nurbs dS%ddR%d failed with err = %g\n", n, i, math.Abs(dSdR[n][i]-dSndRi))
-				return
-			}
-		}
-	}
+	chk.DerivVecVec(tst, "dSdR", tol, dSdR, r[:ndim], 1e-1, verbose, func(f, x []float64) error {
+		fcn(f, nil, x, false)
+		return nil
+	})
 }
