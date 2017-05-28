@@ -22,10 +22,10 @@ import (
 //     tol  -- tolerance to compare gAna with gNum
 //     gAna -- [vector] analytical (or other kind) derivative dfdx. size=len(f)
 //     xAt  -- [scalar] position to compute dfdx
-//     dx   -- stepsize; e.g. 1e-3
+//     h    -- initial stepsize; e.g. 1e-1
 //     verb -- verbose: show messages
 //     fcn  -- [vector] function f(x). x is scalar
-func DerivVecSca(tst *testing.T, msg string, tol float64, gAna []float64, xAt, dx float64,
+func DerivVecSca(tst *testing.T, msg string, tol float64, gAna []float64, xAt, h float64,
 	verb bool, fcn func(f []float64, x float64) error) {
 
 	// run test
@@ -36,7 +36,7 @@ func DerivVecSca(tst *testing.T, msg string, tol float64, gAna []float64, xAt, d
 			fres = f[i]
 			return
 		}
-		DerivScaSca(tst, fmt.Sprintf("%s%d", msg, i), tol, ana, xAt, dx, verb, fi)
+		DerivScaSca(tst, fmt.Sprintf("%s%d", msg, i), tol, ana, xAt, h, verb, fi)
 	}
 }
 
@@ -52,10 +52,10 @@ func DerivVecSca(tst *testing.T, msg string, tol float64, gAna []float64, xAt, d
 //     tol  -- tolerance to compare gAna with gNum
 //     gAna -- [vector] analytical (or other kind) derivative dfdx. size=len(x)=len(xAt)
 //     xAt  -- [vector] position to compute dfdx
-//     dx   -- stepsize; e.g. 1e-3
+//     h    -- initial stepsize; e.g. 1e-1
 //     verb -- verbose: show messages
 //     fcn  -- [scalar] function f(x). x is vector
-func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, dx float64,
+func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, h float64,
 	verb bool, fcn func(x []float64) (float64, error)) {
 
 	// check input
@@ -73,7 +73,7 @@ func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, d
 			xTmp[i] = x
 			return fcn(xTmp)
 		}
-		DerivScaSca(tst, fmt.Sprintf("%s%d", msg, i), tol, gAna[i], xAt[i], dx, verb, fi)
+		DerivScaSca(tst, fmt.Sprintf("%s%d", msg, i), tol, gAna[i], xAt[i], h, verb, fi)
 	}
 }
 
@@ -89,10 +89,10 @@ func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, d
 //     tol  -- tolerance to compare gAna with gNum
 //     gAna -- [matrix] analytical (or other kind) derivative dfdx. size=(len(f),len(x))
 //     xAt  -- [vector] position to compute dfdx
-//     dx   -- stepsize; e.g. 1e-3
+//     h    -- initial stepsize; e.g. 1e-1
 //     verb -- verbose: show messages
 //     fcn  -- [vector] function f(x). x is vector
-func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt []float64, dx float64,
+func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt []float64, h float64,
 	verb bool, fcn func(f, x []float64) error) {
 
 	// check input
@@ -125,7 +125,7 @@ func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt 
 				fres = f[i]
 				return
 			}
-			DerivScaSca(tst, fmt.Sprintf("%s%d%d", msg, i, j), tol, gAna[i][j], xAt[j], dx, verb, fij)
+			DerivScaSca(tst, fmt.Sprintf("%s%d%d", msg, i, j), tol, gAna[i][j], xAt[j], h, verb, fij)
 		}
 	}
 }
@@ -142,13 +142,13 @@ func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt 
 //     tol  -- tolerance to compare gAna with gNum
 //     gAna -- [scalar] analytical (or other kind) derivative dfdx
 //     xAt  -- [scalar] position to compute dfdx
-//     dx   -- stepsize; e.g. 1e-3
+//     h    -- initial stepsize; e.g. 1e-1
 //     verb -- verbose: show messages
 //     fcn  -- [scalar] function f(x). x is scalar
-func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, dx float64, verb bool, fcn func(x float64) (float64, error)) {
+func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb bool, fcn func(x float64) (float64, error)) {
 
 	// call centralDeriv first
-	res, round, trunc, err := centralDeriv(fcn, xAt, dx)
+	res, round, trunc, err := centralDeriv(fcn, xAt, h)
 	if err != nil {
 		tst.Errorf("function call failed:\n%v\n", err)
 		return
@@ -160,7 +160,7 @@ func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, dx float64, verb bo
 
 		// compute an optimised stepsize to minimize the total error, using the scaling of the
 		// truncation error (O(h^2)) and rounding error (O(1/h)).
-		hOpt := dx * math.Pow(round/(2.0*trunc), 1.0/3.0)
+		hOpt := h * math.Pow(round/(2.0*trunc), 1.0/3.0)
 		rOpt, roundOpt, truncOpt, err := centralDeriv(fcn, xAt, hOpt)
 		if err != nil {
 			tst.Errorf("function call failed:\n%v\n", err)
