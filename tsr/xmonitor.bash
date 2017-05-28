@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="noncteM01"
+    go test -test.run="eigenp01"
 done

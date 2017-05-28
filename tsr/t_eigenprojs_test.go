@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -54,14 +55,14 @@ func Test_eigenp01(tst *testing.T) {
 
 		// check eigenprojectors
 		io.Pforan("\neigenprojectors\n")
-		λsorted := CheckEigenprojs(a, tolP, tolS, ver)
+		λsorted := checkEigenprojs(tst, a, tolP, tolS, ver)
 		io.Pfyel("λsorted = %v\n", λsorted)
 		λchk := utl.GetSorted(test_λ[idxA])
 		chk.Vector(tst, "λchk", 1e-12, λsorted, λchk)
 
 		// check derivatives of eigenprojectors
 		io.Pforan("\nderivatives\n")
-		CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
+		checkEigenprojsDerivs(tst, a, toldP, verdP, EV_ZERO)
 
 	}
 }
@@ -88,10 +89,10 @@ func Test_eigenp02(tst *testing.T) {
 
 	// run test
 	io.Pforan("\neigenprojectors\n")
-	CheckEigenprojs(a, tolP, tolS, ver)
+	checkEigenprojs(tst, a, tolP, tolS, ver)
 
 	io.Pforan("\nderivatives\n")
-	CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
+	checkEigenprojsDerivs(tst, a, toldP, verdP, EV_ZERO)
 }
 
 func Test_eigenp03(tst *testing.T) {
@@ -118,11 +119,11 @@ func Test_eigenp03(tst *testing.T) {
 
 		// run test
 		io.Pforan("\neigenprojectors (num)\n")
-		CheckEigenprojs(a, tolP, tolS, ver)
+		checkEigenprojs(tst, a, tolP, tolS, ver)
 
 		// check derivatives
 		io.Pforan("\nderivatives\n")
-		CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
+		checkEigenprojsDerivs(tst, a, toldP, verdP, EV_ZERO)
 	}
 }
 
@@ -155,10 +156,122 @@ func Test_eigenp04(tst *testing.T) {
 
 		// run test
 		io.Pforan("\neigenprojectors\n")
-		CheckEigenprojs(a, tolP, tolS, ver)
+		checkEigenprojs(tst, a, tolP, tolS, ver)
 
 		// check derivatives
 		io.Pforan("\nderivatives\n")
-		CheckEigenprojsDerivs(a, toldP, verdP, EV_ZERO)
+		checkEigenprojsDerivs(tst, a, toldP, verdP, EV_ZERO)
+	}
+}
+
+// auxiliary /////////////////////////////////////////////////////////////////////////////////////////
+
+// checkEigenprojs checks eigen projectors
+func checkEigenprojs(tst *testing.T, a []float64, tolP, tolS float64, ver bool) (λsorted []float64) {
+
+	// compute eigenvalues and eigenprojectors
+	ncp := len(a)
+	λ := make([]float64, 3)
+	P := la.MatAlloc(3, ncp)
+	err := M_EigenValsProjsNum(P, λ, a)
+	if err != nil {
+		chk.Panic("eigenprojs.go: CheckEigenprojs failed:\n %v", err.Error())
+	}
+
+	// print projectors
+	if ver {
+		la.PrintVec("P0", P[0], "%14.6e", false)
+		la.PrintVec("P1", P[1], "%14.6e", false)
+		la.PrintVec("P2", P[2], "%14.6e", false)
+	}
+
+	// check P dot P
+	PdotP := make([]float64, ncp)
+	Z := make([]float64, ncp)
+	for i := 0; i < 3; i++ {
+		for j := 0; j < 3; j++ {
+			err := M_Dot(PdotP, P[i], P[j], 1e-14)
+			if err != nil {
+				chk.Panic("%v", err)
+			}
+			if i == j {
+				diff := la.VecMaxDiff(PdotP, P[i])
+				if diff > tolP {
+					chk.Panic("eigenprojs.go: CheckEigenprojs failed: P%d dot P%d != P%d (diff=%g)", i, j, i, diff)
+				} else if ver {
+					io.Pf("P%d dot P%d == P%d [1;32mOK[0m (diff=%g)\n", i, j, i, diff)
+				}
+			} else {
+				diff := la.VecMaxDiff(PdotP, Z)
+				if diff > tolP {
+					chk.Panic("eigenprojs.go: CheckEigenprojs failed: P%d dot P%d !=  0 (diff=%g)", i, j, diff)
+				} else if ver {
+					io.Pf("P%d dot P%d ==  0 [1;32mOK[0m (diff=%g)\n", i, j, diff)
+				}
+			}
+		}
+	}
+
+	// check sum of eigenprojectors
+	sumP := make([]float64, ncp)
+	for k := 0; k < 3; k++ {
+		for i := 0; i < ncp; i++ {
+			sumP[i] += P[k][i]
+		}
+	}
+	diff := la.VecMaxDiff(sumP, Im[:ncp])
+	if diff > tolP {
+		chk.Panic("eigenprojs.go: CheckEigenprojs failed: sumP != I (diff=%g)", diff)
+	} else if ver {
+		io.Pf("sum(P) [1;32mOK[0m (diff=%g)\n", diff)
+	}
+
+	// check spectral decomposition
+	as := make([]float64, len(a))
+	for k := 0; k < 3; k++ {
+		for i := 0; i < len(a); i++ {
+			as[i] += λ[k] * P[k][i]
+		}
+	}
+	diff = la.VecMaxDiff(as, a)
+	if diff > tolS {
+		chk.Panic("eigenprojs.go: CheckEigenprojs failed: a(spectral) != a (diff=%g)", diff)
+	} else if ver {
+		io.Pf("a(spectral) == a [1;32mOK[0m (diff=%g)\n", diff)
+	}
+
+	// sort eigenvalues
+	λsorted = make([]float64, 3)
+	I := []int{0, 1, 2}
+	I, λsorted, _, _, err = utl.SortQuadruples(I, λ, nil, nil, "x")
+	if err != nil {
+		chk.Panic("%v", err)
+	}
+	return
+}
+
+// checkEigenprojsDerivs checks the derivatives of eigen projectors w.r.t defining tensor
+func checkEigenprojsDerivs(tst *testing.T, a []float64, tol float64, ver bool, zero float64) {
+
+	// variables
+	ncp := len(a)
+	λ := make([]float64, 3)
+	P := la.MatAlloc(3, ncp)
+
+	// compute derivatives of eigenprojectors
+	dPda := utl.Deep3alloc(3, ncp, ncp)
+	err := M_EigenProjsDerivAuto(dPda, a, λ, P)
+	if err != nil {
+		tst.Errorf("M_EigenProjsDerivAuto failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	for k := 0; k < 3; k++ {
+		chk.DerivVecVec(tst, io.Sf("dP%d/da", k), tol, dPda[k], a, 1e-6, ver, func(f, x []float64) error {
+			err := M_EigenValsProjsNum(P, λ, x)
+			copy(f, P[k])
+			return err
+		})
 	}
 }
