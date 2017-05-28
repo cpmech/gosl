@@ -11,7 +11,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -99,46 +98,31 @@ func Test_smpinvs02(tst *testing.T) {
 		SmpDirectorDeriv1(dNdL, L, smp_a, smp_b, smp_β, smp_ϵ)
 		io.Pfpink("\ndNdL = %v\n", dNdL)
 		for i := 0; i < 3; i++ {
-			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
+			chk.DerivScaSca(tst, io.Sf("dN%d/dL%d", i, i), dtol, dNdL[i], L[i], 1e-1, dver, func(x float64) (float64, error) {
 				tmp, L[i] = L[i], x
 				SmpDirector(N_tmp, L, smp_a, smp_b, smp_β, smp_ϵ)
 				L[i] = tmp
-				return N_tmp[i]
-			}, L[i], 1e-6)
-			chk.AnaNum(tst, io.Sf("dN/dL[%d][%d]", i, i), dtol, dNdL[i], dnum, dver)
+				return N_tmp[i], nil
+			})
 		}
 
 		// dm/dL
-		n_tmp := make([]float64, 3)
 		dmdL := make([]float64, 3)
 		SmpNormDirectorDeriv1(dmdL, m, N, dNdL)
 		io.Pfpink("\ndmdL = %v\n", dmdL)
-		for j := 0; j < 3; j++ {
-			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-				tmp, L[j] = L[j], x
-				m_tmp := SmpDirector(N_tmp, L, smp_a, smp_b, smp_β, smp_ϵ)
-				L[j] = tmp
-				return m_tmp
-			}, L[j], 1e-6)
-			chk.AnaNum(tst, io.Sf("dm/dL[%d]", j), dtol, dmdL[j], dnum, dver)
-		}
+		chk.DerivScaVec(tst, "dm/dL", dtol, dmdL, L, 1e-1, dver, func(x []float64) (float64, error) {
+			return SmpDirector(N_tmp, x, smp_a, smp_b, smp_β, smp_ϵ), nil
+		})
 
 		// dn/dL
 		dndL := la.MatAlloc(3, 3)
 		SmpUnitDirectorDeriv1(dndL, m, N, dNdL, dmdL)
 		io.Pfpink("\ndndL = %v\n", dndL)
-		for i := 0; i < 3; i++ {
-			for j := 0; j < 3; j++ {
-				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-					tmp, L[j] = L[j], x
-					m_tmp := SmpDirector(N_tmp, L, smp_a, smp_b, smp_β, smp_ϵ)
-					SmpUnitDirector(n_tmp, m_tmp, N_tmp)
-					L[j] = tmp
-					return n_tmp[i]
-				}, L[j], 1e-6)
-				chk.AnaNum(tst, io.Sf("dn/dL[%d][%d]", i, j), dtol, dndL[i][j], dnum, dver)
-			}
-		}
+		chk.DerivVecVec(tst, "dn/dL", dtol, dndL, L, 1e-1, dver, func(f, x []float64) error {
+			m_tmp := SmpDirector(N_tmp, x, smp_a, smp_b, smp_β, smp_ϵ)
+			SmpUnitDirector(f, m_tmp, N_tmp) // f := n
+			return nil
+		})
 
 		// change tolerance
 		dtol2_tmp := dtol2
@@ -154,30 +138,22 @@ func Test_smpinvs02(tst *testing.T) {
 		SmpDirectorDeriv2(d2NdL2, L, smp_a, smp_b, smp_β, smp_ϵ)
 		SmpNormDirectorDeriv2(d2mdLdL, L, smp_a, smp_b, smp_β, smp_ϵ, m, N, dNdL, d2NdL2, dmdL)
 		io.Pfpink("\nd2mdLdL = %v\n", d2mdLdL)
-		for i := 0; i < 3; i++ {
-			for j := 0; j < 3; j++ {
-				dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-					tmp, L[j] = L[j], x
-					m_tmp := SmpDirector(N_tmp, L, smp_a, smp_b, smp_β, smp_ϵ)
-					SmpDirectorDeriv1(dNdL_tmp, L, smp_a, smp_b, smp_β, smp_ϵ)
-					SmpNormDirectorDeriv1(dmdL_tmp, m_tmp, N_tmp, dNdL_tmp)
-					L[j] = tmp
-					return dmdL_tmp[i]
-				}, L[j], 1e-6)
-				chk.AnaNum(tst, io.Sf("d2m/dL[%d]dL[%d]", i, j), dtol2, d2mdLdL[i][j], dnum, dver)
-			}
-		}
+		chk.DerivVecVec(tst, "d2m/dLdL", dtol2, d2mdLdL, L, 1e-6, dver, func(f, x []float64) error {
+			m_tmp := SmpDirector(N_tmp, x, smp_a, smp_b, smp_β, smp_ϵ)
+			SmpDirectorDeriv1(dNdL_tmp, x, smp_a, smp_b, smp_β, smp_ϵ)
+			SmpNormDirectorDeriv1(f, m_tmp, N_tmp, dNdL_tmp) // f := dmdL
+			return nil
+		})
 
 		// d²N/dLdL
 		io.Pfpink("\nd²N/dLdL\n")
 		for i := 0; i < 3; i++ {
-			dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
+			chk.DerivScaSca(tst, io.Sf("d²N%d/dL%ddL%d", i, i, i), dtol2, d2NdL2[i], L[i], 1e-6, dver, func(x float64) (float64, error) {
 				tmp, L[i] = L[i], x
 				SmpDirectorDeriv1(dNdL_tmp, L, smp_a, smp_b, smp_β, smp_ϵ)
 				L[i] = tmp
-				return dNdL_tmp[i]
-			}, L[i], 1e-6)
-			chk.AnaNum(tst, io.Sf("d²N[%d]/dL[%d]dL[%d]", i, i, i), dtol2, d2NdL2[i], dnum, dver)
+				return dNdL_tmp[i], nil
+			})
 		}
 
 		// d²n/dLdL
@@ -186,20 +162,14 @@ func Test_smpinvs02(tst *testing.T) {
 		d2ndLdL := utl.Deep3alloc(3, 3, 3)
 		SmpUnitDirectorDeriv2(d2ndLdL, m, N, dNdL, d2NdL2, dmdL, n, d2mdLdL, dndL)
 		for i := 0; i < 3; i++ {
-			for j := 0; j < 3; j++ {
-				for k := 0; k < 3; k++ {
-					dnum, _ := num.DerivCentral(func(x float64, args ...interface{}) (res float64) {
-						tmp, L[k] = L[k], x
-						m_tmp := SmpDirector(N_tmp, L, smp_a, smp_b, smp_β, smp_ϵ)
-						SmpDirectorDeriv1(dNdL_tmp, L, smp_a, smp_b, smp_β, smp_ϵ)
-						SmpNormDirectorDeriv1(dmdL_tmp, m_tmp, N_tmp, dNdL_tmp)
-						SmpUnitDirectorDeriv1(dndL_tmp, m_tmp, N_tmp, dNdL_tmp, dmdL_tmp)
-						L[k] = tmp
-						return dndL_tmp[i][j]
-					}, L[k], 1e-6)
-					chk.AnaNum(tst, io.Sf("d²n[%d]/dL[%d]dL[%d]", i, j, k), dtol2, d2ndLdL[i][j][k], dnum, dver)
-				}
-			}
+			chk.DerivVecVec(tst, io.Sf("d²n%d/dLdL", i), dtol2, d2ndLdL[i], L, 1e-6, dver, func(f, x []float64) error {
+				m_tmp := SmpDirector(N_tmp, x, smp_a, smp_b, smp_β, smp_ϵ)
+				SmpDirectorDeriv1(dNdL_tmp, x, smp_a, smp_b, smp_β, smp_ϵ)
+				SmpNormDirectorDeriv1(dmdL_tmp, m_tmp, N_tmp, dNdL_tmp)
+				SmpUnitDirectorDeriv1(dndL_tmp, m_tmp, N_tmp, dNdL_tmp, dmdL_tmp)
+				copy(f, dndL_tmp[i])
+				return nil
+			})
 		}
 
 		// recover tolerance
