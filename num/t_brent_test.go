@@ -11,7 +11,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
 )
 
 // run_rootsol_test runs root solution test
@@ -70,9 +69,6 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.
 	}
 
 	// compare Brent's and Newton's solutions
-	PlotYxe(ffcnA, "results", fname, xbrent, xa, xb, 101, "Brent", "'b-'", save, show, func() {
-		plt.PlotOne(xnewt[0], ynewt, &plt.A{C: "g", M: "+", Ms: 15, L: "Newton"})
-	})
 	chk.Scalar(tst, "xbrent - xnewt", tolcmp, xbrent, xnewt[0])
 	return
 }
@@ -159,7 +155,5 @@ func Test_brent03(tst *testing.T) {
 	io.Pforan("nit    = %v\n", o.It)
 
 	//save := true
-	save := false
-	PlotYxe(ffcn, "results", "brent03.png", x, -1, 3, 101, "Brent", "'b-'", save, false, nil)
 	chk.Scalar(tst, "xcorrect", 1e-8, x, xcor)
 }
