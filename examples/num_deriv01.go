@@ -33,14 +33,14 @@ func main() {
 		d2ydx2_ana := d2ydx2_fcn(x)
 
 		// numerical derivative: dydx
-		dydx_num, _ := num.DerivCentral(func(t float64, args ...interface{}) float64 {
-			return y_fcn(t)
-		}, x, 1e-3)
+		dydx_num, _ := num.DerivCen5(x, 1e-3, func(t float64) (float64, error) {
+			return y_fcn(t), nil
+		})
 
 		// numerical derivative d2ydx2
-		d2ydx2_num, _ := num.DerivCentral(func(t float64, args ...interface{}) float64 {
-			return dydx_fcn(t)
-		}, x, 1e-3)
+		d2ydx2_num, _ := num.DerivCen5(x, 1e-3, func(t float64) (float64, error) {
+			return dydx_fcn(t), nil
+		})
 
 		// check
 		chk.PrintAnaNum(io.Sf("dy/dx   @ %.6f", x), 1e-10, dydx_ana, dydx_num, true)

@@ -44,10 +44,10 @@ func main() {
 	s2.PlotBasis(npts, 0) // 0 => CalcBasis
 
 	plt.Subplot(3, 2, 5)
-	s1.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
+	s1.PlotDerivs(npts)
 
 	plt.Subplot(3, 2, 6)
-	s2.PlotDerivs(npts, 0) // 0 => CalcBasisAndDerivs
+	s2.PlotDerivs(npts)
 
 	err := plt.Save("/tmp/gosl", "gm_bspline02")
 	if err != nil {
