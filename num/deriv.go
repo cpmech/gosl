@@ -4,15 +4,17 @@
 
 package num
 
-import "math"
+import (
+	"math"
 
-type Cb_fx func(x float64) float64
+	"github.com/cpmech/gosl/fun"
+)
 
 // DerivCen5 approximates the derivative of f w.r.t x using central differences with 5 points.
-func DerivCen5(f Cb_fx, x, h float64) (res float64, err error) {
+func DerivCen5(x, h float64, f fun.Ss) (res float64, err error) {
 
 	// first estimate
-	res, round, trunc, err := centralDeriv5(f, x, h)
+	res, round, trunc, err := centralDeriv5(x, h, f)
 	if err != nil {
 		return
 	}
@@ -24,7 +26,7 @@ func DerivCen5(f Cb_fx, x, h float64) (res float64, err error) {
 		// Compute an optimised stepsize to minimize the total error,
 		// using the scaling of the truncation error (O(h^2)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(2.0*trunc), 1.0/3.0)
-		rOpt, roundOpt, truncOpt, err2 := centralDeriv5(f, x, hOpt)
+		rOpt, roundOpt, truncOpt, err2 := centralDeriv5(x, hOpt, f)
 		if err2 != nil {
 			return 0, err2
 		}
@@ -40,10 +42,10 @@ func DerivCen5(f Cb_fx, x, h float64) (res float64, err error) {
 }
 
 // DerivFwd4 approximates the derivative of f w.r.t x using forward differences with 4 points.
-func DerivFwd4(f Cb_fx, x, h float64) (res float64, err error) {
+func DerivFwd4(x, h float64, f fun.Ss) (res float64, err error) {
 
 	// first estimate
-	res, round, trunc, err := forwardDeriv4(f, x, h)
+	res, round, trunc, err := forwardDeriv4(x, h, f)
 	if err != nil {
 		return
 	}
@@ -55,7 +57,7 @@ func DerivFwd4(f Cb_fx, x, h float64) (res float64, err error) {
 		// Compute an optimised stepsize to minimize the total error,
 		// using the scaling of the estimated truncation error (O(h)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(trunc), 1.0/2.0)
-		rOpt, roundOpt, truncOpt, err2 := forwardDeriv4(f, x, hOpt)
+		rOpt, roundOpt, truncOpt, err2 := forwardDeriv4(x, hOpt, f)
 		if err2 != nil {
 			return 0, err2
 		}
@@ -71,14 +73,14 @@ func DerivFwd4(f Cb_fx, x, h float64) (res float64, err error) {
 }
 
 // DerivBwd4 approximates the derivative of f w.r.t x using backward differences with 4 points.
-func DerivBwd4(f Cb_fx, x, h float64) (res float64, err error) {
-	return DerivFwd4(f, x, -h)
+func DerivBwd4(x, h float64, f fun.Ss) (res float64, err error) {
+	return DerivFwd4(x, -h, f)
 }
 
 // lower level functions //////////////////////////////////////////////////////////////////////////
 
 // centralDeriv5 computes the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
-func centralDeriv5(f Cb_fx, x float64, h float64) (res, absErrRound, absErrTrunc float64, err error) {
+func centralDeriv5(x float64, h float64, f fun.Ss) (res, absErrRound, absErrTrunc float64, err error) {
 
 	// constants
 	EPS := 1e-15 // cannot be machine epsilon
@@ -87,10 +89,22 @@ func centralDeriv5(f Cb_fx, x float64, h float64) (res, absErrRound, absErrTrunc
 	// Note that the central point is not used.
 	// Compute the error using the difference between the 5-point and the 3-point rule (x-h,x,x+h).
 	// Again the central point is not used.
-	fm1 := f(x - h)
-	fp1 := f(x + h)
-	fmh := f(x - h/2)
-	fph := f(x + h/2)
+	fm1, err := f(x - h)
+	if err != nil {
+		return
+	}
+	fp1, err := f(x + h)
+	if err != nil {
+		return
+	}
+	fmh, err := f(x - h/2)
+	if err != nil {
+		return
+	}
+	fph, err := f(x + h/2)
+	if err != nil {
+		return
+	}
 	r3 := 0.5 * (fp1 - fm1)
 	r5 := (4.0/3.0)*(fph-fmh) - (1.0/3.0)*r3
 	e3 := (math.Abs(fp1) + math.Abs(fm1)) * EPS
@@ -109,17 +123,29 @@ func centralDeriv5(f Cb_fx, x float64, h float64) (res, absErrRound, absErrTrunc
 }
 
 // forwardDeriv4 compute the derivative using the 4-point rule (x+h/4, x+h/2, x+3h/4, x+h).
-func forwardDeriv4(f Cb_fx, x, h float64) (res, absErrRound, absErrTrunc float64, err error) {
+func forwardDeriv4(x, h float64, f fun.Ss) (res, absErrRound, absErrTrunc float64, err error) {
 
 	// constants
 	EPS := 1e-15 // cannot be machine epsilon
 
 	// Compute the derivative using the 4-point rule (x+h/4, x+h/2, x+3h/4, x+h).
 	// Compute the error using the difference between the 4-point and the 2-point rule (x+h/2,x+h).
-	f1 := f(x + h/4.0)
-	f2 := f(x + h/2.0)
-	f3 := f(x + (3.0/4.0)*h)
-	f4 := f(x + h)
+	f1, err := f(x + h/4.0)
+	if err != nil {
+		return
+	}
+	f2, err := f(x + h/2.0)
+	if err != nil {
+		return
+	}
+	f3, err := f(x + (3.0/4.0)*h)
+	if err != nil {
+		return
+	}
+	f4, err := f(x + h)
+	if err != nil {
+		return
+	}
 	r2 := 2.0 * (f4 - f2)
 	r4 := (22.0/3.0)*(f4-f3) - (62.0/3.0)*(f3-f2) + (52.0/3.0)*(f2-f1)
 

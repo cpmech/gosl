@@ -188,23 +188,21 @@ func M_EigenProjsDerivNum(dPda [][][]float64, a []float64, h float64) (err error
 		}
 	}
 	var tmp float64
-	failed := false
 	for k := 0; k < 3; k++ {
 		for i := 0; i < ncp; i++ {
 			for j := 0; j < ncp; j++ {
-				dPda[k][i][j], err = num.DerivCen5(func(x float64) float64 {
+				dPda[k][i][j], err = num.DerivCen5(a[j], h, func(x float64) (float64, error) {
 					tmp, a[j] = a[j], x
-					defer func() { a[j] = tmp }()
 					Man2Ten(A, a)
-					_, err = la.Jacobi(Q, λ, A)
-					if err != nil {
-						failed = true
-						return 0
+					a[j] = tmp
+					_, e := la.Jacobi(Q, λ, A)
+					if e != nil {
+						return 0, e
 					}
 					q2p(k)
-					return P[k][i]
-				}, a[j], h)
-				if failed || err != nil {
+					return P[k][i], nil
+				})
+				if err != nil {
 					return
 				}
 			}

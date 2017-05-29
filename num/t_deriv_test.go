@@ -9,81 +9,107 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 )
-
-func f1(x float64) float64    { return math.Exp(x) }
-func df1dx(x float64) float64 { return math.Exp(x) }
-func f2(x float64) float64 {
-	if x >= 0.0 {
-		return x * math.Sqrt(x)
-	}
-	return 0.0
-}
-func df2dx(x float64) float64 {
-	if x >= 0.0 {
-		return 1.5 * math.Sqrt(x)
-	}
-	return 0.0
-}
-func f3(x float64) float64 {
-	if x != 0.0 {
-		return math.Sin(1 / x)
-	}
-	return 0.0
-}
-func df3dx(x float64) float64 {
-	if x != 0.0 {
-		return -math.Cos(1/x) / (x * x)
-	}
-	return 0.0
-}
-func f4(x float64) float64    { return math.Exp(-x * x) }
-func df4dx(x float64) float64 { return -2.0 * x * math.Exp(-x*x) }
-func f5(x float64) float64    { return x * x }
-func df5dx(x float64) float64 { return 2.0 * x }
-func f6(x float64) float64    { return 1.0 / x }
-func df6dx(x float64) float64 { return -1.0 / (x * x) }
-
-type NumDerivFunc func(f Cb_fx, x float64, h float64) (result float64, err error)
-
-func check(tst *testing.T, deriv NumDerivFunc, f Cb_fx, dfdx Cb_fx, x float64, desc string) {
-	var tol float64 = 1.0e-6
-	expected := dfdx(x)
-	result, _ := deriv(f, x, tol)
-	if TestAbs(result, expected, MinComp(tol, expected), desc) != Equal {
-		tst.Errorf("TestDeriv01 failed with abserr = [1;31m%g[0m", 666)
-	}
-}
 
 func Test_deriv01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("deriv01")
 
-	check(tst, DerivCen5, f1, df1dx, 1.0, "exp(x), x=1, central deriv")
-	check(tst, DerivFwd4, f1, df1dx, 1.0, "exp(x), x=1, forward deriv")
-	check(tst, DerivBwd4, f1, df1dx, 1.0, "exp(x), x=1, backward deriv")
+	names := []string{
+		"x²",       // 1
+		"exp(x)",   // 2
+		"exp(-x²)", // 3
+		"1/x",      // 4
+		"x⋅√x",     // 5
+		"sin(1/x)", // 6
+	}
 
-	check(tst, DerivCen5, f2, df2dx, 0.1, "x^(3/2), x=0.1, central deriv")
-	check(tst, DerivFwd4, f2, df2dx, 0.1, "x^(3/2), x=0.1, forward deriv")
-	check(tst, DerivBwd4, f2, df2dx, 0.1, "x^(3/2), x=0.1, backward deriv")
+	fcns := []fun.Ss{
+		func(x float64) (float64, error) { // 1
+			return x * x, nil
+		},
+		func(x float64) (float64, error) { // 2
+			return math.Exp(x), nil
+		},
+		func(x float64) (float64, error) { // 3
+			return math.Exp(-x * x), nil
+		},
+		func(x float64) (float64, error) { // 4
+			return 1.0 / x, nil
+		},
+		func(x float64) (float64, error) { // 5
+			return x * math.Sqrt(x), nil
+		},
+		func(x float64) (float64, error) { // 6
+			return math.Sin(1.0 / x), nil
+		},
+	}
 
-	check(tst, DerivCen5, f3, df3dx, 0.45, "sin(1/x), x=0.45, central deriv")
-	check(tst, DerivFwd4, f3, df3dx, 0.45, "sin(1/x), x=0.45, forward deriv")
-	check(tst, DerivBwd4, f3, df3dx, 0.45, "sin(1/x), x=0.45, backward deriv")
+	danas := []fun.Ss{
+		func(x float64) (float64, error) { // 1
+			return 2 * x, nil
+		},
+		func(x float64) (float64, error) { // 2
+			return math.Exp(x), nil
+		},
+		func(x float64) (float64, error) { // 3
+			return -2 * x * math.Exp(-x*x), nil
+		},
+		func(x float64) (float64, error) { // 4
+			return -1.0 / (x * x), nil
+		},
+		func(x float64) (float64, error) { // 5
+			return 1.5 * math.Sqrt(x), nil
+		},
+		func(x float64) (float64, error) { // 6
+			return -math.Cos(1.0/x) / (x * x), nil
+		},
+	}
 
-	check(tst, DerivCen5, f4, df4dx, 0.5, "exp(-x^2), x=0.5, central deriv")
-	check(tst, DerivFwd4, f4, df4dx, 0.5, "exp(-x^2), x=0.5, forward deriv")
-	check(tst, DerivBwd4, f4, df4dx, 0.5, "exp(-x^2), x=0.5, backward deriv")
+	xvals := [][]float64{
+		{-0.5, 0, 0.5},   // 1
+		{-0.5, 0, 0.5},   // 2
+		{-0.5, 0, 0.5},   // 3
+		{-0.5, 0.2, 0.5}, // 4
+		{0.2, 0.5, 1.0},  // 5
+		{-0.5, 0.2, 0.5}, // 6
+	}
 
-	check(tst, DerivCen5, f5, df5dx, 0.0, "x^2, x=0, central deriv")
-	check(tst, DerivFwd4, f5, df5dx, 0.0, "x^2, x=0, forward deriv")
-	check(tst, DerivBwd4, f5, df5dx, 0.0, "x^2, x=0, backward deriv")
+	//                    1      2      3     4      5      6
+	tols := []float64{1e-15, 1e-11, 1e-11, 1e-9, 1e-11, 1e-10}
 
-	check(tst, DerivCen5, f6, df6dx, 10.0, "1/x, x=10, central deriv")
-	check(tst, DerivFwd4, f6, df6dx, 10.0, "1/x, x=10, forward deriv")
-	check(tst, DerivBwd4, f6, df6dx, 10.0, "1/x, x=10, backward deriv")
+	//                 1     2     3     4     5     6
+	hs := []float64{1e-1, 1e-1, 1e-1, 1e-1, 1e-1, 1e-1}
+
+	// check
+	smethods := []string{"DerivCen5", "DerivFwd4", "DerivBwd4"}
+	methods := []func(float64, float64, fun.Ss) (float64, error){
+		DerivCen5, DerivFwd4, DerivBwd4,
+	}
+	for idx, method := range methods {
+		if idx > 0 {
+			tols = []float64{1e-7, 1e-7, 1e-7, 1e-7, 1e-7, 1e-6}
+		}
+		io.Pf("\ncheck %s:\n", smethods[idx])
+		for i, f := range fcns {
+			for _, x := range xvals[i] {
+				dnum, err := method(x, hs[i], f)
+				if err != nil {
+					tst.Errorf("%v\n", err)
+					return
+				}
+				dana, err := danas[i](x)
+				if err != nil {
+					tst.Errorf("%v\n", err)
+					return
+				}
+				chk.Scalar(tst, "    "+names[i], tols[i], dnum, dana)
+			}
+		}
+	}
 }
 
 func Test_deriv02(tst *testing.T) {
@@ -92,8 +118,8 @@ func Test_deriv02(tst *testing.T) {
 	chk.PrintTitle("deriv02")
 
 	// scalar field
-	fcn := func(x, y float64) float64 {
-		return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
+	fcn := func(x, y float64) (float64, error) {
+		return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0), nil
 	}
 
 	// gradient. u=dfdx, v=dfdy
@@ -121,22 +147,22 @@ func Test_deriv02(tst *testing.T) {
 			y := xmin + float64(i)*dx
 
 			// scalar and vector field
-			f := fcn(x, y)
+			f, _ := fcn(x, y)
 			u, v := grad(x, y)
 
 			// numerical dfdx @ (x,y)
-			unum, err := DerivCen5(func(xvar float64) float64 {
+			unum, err := DerivCen5(x, h, func(xvar float64) (float64, error) {
 				return fcn(xvar, y)
-			}, x, h)
+			})
 			if err != nil {
 				tst.Errorf("%v\n", err)
 				return
 			}
 
 			// numerical dfdy @ (x,y)
-			vnum, err := DerivCen5(func(yvar float64) float64 {
+			vnum, err := DerivCen5(y, h, func(yvar float64) (float64, error) {
 				return fcn(x, yvar)
-			}, y, h)
+			})
 			if err != nil {
 				tst.Errorf("%v\n", err)
 				return
