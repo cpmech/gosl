@@ -453,8 +453,8 @@ func Qsort(arr []float64) {
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func Qsort2(arr, brr []float64) {
-	M := 7
-	NSTACK := 64
+	M := 7       // size of subarrays sorted by straight insertion
+	NSTACK := 64 // required auxiliary storage.
 	istack := make([]int, NSTACK)
 	var i, ir, j, k int
 	jstack := -1
@@ -567,8 +567,8 @@ type Sorter struct {
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func (o *Sorter) Build(arr interface{}, n int, less func(i, j int) bool) {
-	M := 7
-	NSTACK := 64
+	M := 7       // size of subarrays sorted by straight insertion
+	NSTACK := 64 // required auxiliary storage.
 	istack := make([]int, NSTACK)
 	o.indx = make([]int, n)
 	var i, indxt, ir, j, k int
@@ -578,7 +578,7 @@ func (o *Sorter) Build(arr interface{}, n int, less func(i, j int) bool) {
 	for j = 0; j < n; j++ {
 		o.indx[j] = j
 	}
-	for {
+	for { // Insertion sort when subarray small enough.
 		if ir-l < M {
 			for j = l + 1; j <= ir; j++ {
 				indxt = o.indx[j]
@@ -593,12 +593,12 @@ func (o *Sorter) Build(arr interface{}, n int, less func(i, j int) bool) {
 			if jstack < 0 {
 				break
 			}
-			ir = istack[jstack]
+			ir = istack[jstack] // Pop stack and begin a new round of partitioning.
 			jstack--
 			l = istack[jstack]
 			jstack--
 		} else {
-			k = (l + ir) >> 1
+			k = (l + ir) >> 1 // Choose median of left, center, and right elements as partitioning element a. Also rearrange so that a[l] ≤ a[l+1] ≤ a[ir].
 			iswap(&o.indx[k], &o.indx[l+1])
 			if !less(o.indx[l], o.indx[ir]) {
 				iswap(&o.indx[l], &o.indx[ir])
@@ -609,19 +609,19 @@ func (o *Sorter) Build(arr interface{}, n int, less func(i, j int) bool) {
 			if !less(o.indx[l], o.indx[l+1]) {
 				iswap(&o.indx[l], &o.indx[l+1])
 			}
-			i = l + 1
+			i = l + 1 // Initialize pointers for partitioning.
 			j = ir
 			indxt = o.indx[l+1]
 			for {
-				// do i++; while (arr[indx[i]] < a);
-				for {
+				// Scan up to find element > a.
+				for { // do i++; while (arr[indx[i]] < a);
 					i++
 					if !less(o.indx[i], indxt) {
 						break
 					}
 				}
-				// do j--; while (arr[o.indx[j]] > a);
-				for {
+				// Scan down to find element < a.
+				for { // do j--; while (arr[o.indx[j]] > a);
 					j--
 					if less(o.indx[j], indxt) {
 						break
@@ -630,11 +630,13 @@ func (o *Sorter) Build(arr interface{}, n int, less func(i, j int) bool) {
 				if j < i {
 					break
 				}
+				// Pointers crossed. Partitioning complete.
 				iswap(&o.indx[i], &o.indx[j])
 			}
-			o.indx[l+1] = o.indx[j]
+			o.indx[l+1] = o.indx[j] // Insert partitioning element.
 			o.indx[j] = indxt
 			jstack += 2
+			// Push pointers to larger subarray on stack; process smaller subarray immediately.
 			if jstack >= NSTACK {
 				chk.Panic("NSTACK=%d too small in IndexSort.Build.", NSTACK)
 			}
