@@ -122,6 +122,9 @@ root finding solvers (Brent&#39;s and Newton&#39;s methods), among others.
 				
 				<dd><a href="#QuadDiscreteTrapzXY">func QuadDiscreteTrapzXY(x, y []float64) (A float64)</a></dd>
 			
+				
+				<dd><a href="#QuadGaussL10">func QuadGaussL10(a, b float64, f fun.Ss) (res float64, err error)</a></dd>
+			
 			
 				
 				<dd><a href="#Brent">type Brent</a></dd>
@@ -224,6 +227,8 @@ root finding solvers (Brent&#39;s and Newton&#39;s methods), among others.
 				<a href="https://github.com/cpmech/gosl/blob/master/num/quadDiscreteTrapz.go">quadDiscreteTrapz.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/num/quadElementary.go">quadElementary.go</a>
+			
+				<a href="https://github.com/cpmech/gosl/blob/master/num/quadGauss.go">quadGauss.go</a>
 			
 			</span>
 			</p>
@@ -533,6 +538,24 @@ function. Computations are carried out with the (very simple) trapezoidal rule.
 QuadDiscreteTrapzXY approximates the area below the discrete curve defined by x and y points.
 Computations are carried out with the trapezoidal rule.
 </p>
+
+			
+			
+
+		
+			
+			
+			<h2 id="QuadGaussL10">func <a href="https://github.com/cpmech/gosl/blob/master/num/quadGauss.go?s=646:712#L5">QuadGaussL10</a></h2>
+			<pre>func QuadGaussL10(a, b <a href="/pkg/builtin/#float64">float64</a>, f <a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Ss">Ss</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+			<p>
+QuadGaussL10 approximates the integral of the function f(x) between a and b, by ten-point
+Gauss-Legendre integration. The function is evaluated exactly ten times at interior points
+in the range of integration. See page 180 of [1].
+</p>
+<pre>Reference:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
 
 			
 			
