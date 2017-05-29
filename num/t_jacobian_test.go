@@ -41,7 +41,7 @@ func TestJacobian01a(tst *testing.T) {
 		return nil
 	}
 	x := []float64{0.5, 0.5}
-	CompareJac(tst, ffcn, Jfcn, x, 1e-8)
+	CompareJac(tst, ffcn, Jfcn, x, 1e-7)
 }
 
 func TestJacobian02a(tst *testing.T) {

@@ -149,7 +149,7 @@ func Test_nls02(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
 	io.Pf("f(x) = %v\n", fx)
-	chk.Vector(tst, "f(x) = 0? ", 1e-15, fx, []float64{})
+	chk.Vector(tst, "f(x) = 0? ", 1e-14, fx, []float64{})
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
@@ -176,7 +176,7 @@ func Test_nls02(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("xx    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
 	io.Pf("f(xx) = %v\n", fx)
-	chk.Vector(tst, "f(x) = 0? ", 1e-15, fx, []float64{})
+	chk.Vector(tst, "f(x) = 0? ", 1e-14, fx, []float64{})
 	chk.Vector(tst, "x == xx", 1e-15, x, xx)
 
 	// check Jacobian
