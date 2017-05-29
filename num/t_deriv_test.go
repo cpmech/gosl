@@ -45,14 +45,14 @@ func df5dx(x float64) float64 { return 2.0 * x }
 func f6(x float64) float64    { return 1.0 / x }
 func df6dx(x float64) float64 { return -1.0 / (x * x) }
 
-type NumDerivFunc func(f Cb_fx, x float64, h float64) (result, abserr float64)
+type NumDerivFunc func(f Cb_fx, x float64, h float64) (result float64)
 
 func check(tst *testing.T, deriv NumDerivFunc, f Cb_fx, dfdx Cb_fx, x float64, desc string) {
 	var tol float64 = 1.0e-6
 	expected := dfdx(x)
-	result, abserr := deriv(f, x, tol)
+	result := deriv(f, x, tol)
 	if TestAbs(result, expected, MinComp(tol, expected), desc) != Equal {
-		tst.Errorf("TestDeriv01 failed with abserr = [1;31m%g[0m", abserr)
+		tst.Errorf("TestDeriv01 failed with abserr = [1;31m%g[0m", 666)
 	}
 }
 
@@ -125,12 +125,12 @@ func Test_deriv02(tst *testing.T) {
 			u, v := grad(x, y)
 
 			// numerical dfdx @ (x,y)
-			unum, _ := DerivCen5(func(xvar float64) float64 {
+			unum := DerivCen5(func(xvar float64) float64 {
 				return fcn(xvar, y)
 			}, x, h)
 
 			// numerical dfdy @ (x,y)
-			vnum, _ := DerivCen5(func(yvar float64) float64 {
+			vnum := DerivCen5(func(yvar float64) float64 {
 				return fcn(x, yvar)
 			}, y, h)
 

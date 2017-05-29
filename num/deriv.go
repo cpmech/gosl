@@ -9,7 +9,7 @@ import "math"
 type Cb_fx func(x float64) float64
 
 // DerivCen5 approximates the derivative of f w.r.t x using central differences with 5 points.
-func DerivCen5(f Cb_fx, x, h float64) (res, abserr float64) {
+func DerivCen5(f Cb_fx, x, h float64) (res float64) {
 
 	// first estimate
 	res, round, trunc := centralDeriv5(f, x, h)
@@ -31,13 +31,11 @@ func DerivCen5(f Cb_fx, x, h float64) (res, abserr float64) {
 			err = error_opt
 		}
 	}
-
-	abserr = err
 	return
 }
 
 // DerivFwd4 approximates the derivative of f w.r.t x using forward differences with 4 points.
-func DerivFwd4(f Cb_fx, x, h float64) (res, abserr float64) {
+func DerivFwd4(f Cb_fx, x, h float64) (res float64) {
 
 	// first estimate
 	res, round, trunc := forwardDeriv4(f, x, h)
@@ -59,13 +57,11 @@ func DerivFwd4(f Cb_fx, x, h float64) (res, abserr float64) {
 			err = error_opt
 		}
 	}
-
-	abserr = err
 	return
 }
 
 // DerivBwd4 approximates the derivative of f w.r.t x using backward differences with 4 points.
-func DerivBwd4(f Cb_fx, x, h float64) (res, abserr float64) {
+func DerivBwd4(f Cb_fx, x, h float64) (res float64) {
 	return DerivFwd4(f, x, -h)
 }
 
