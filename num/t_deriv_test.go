@@ -63,27 +63,27 @@ func Test_deriv01(tst *testing.T) {
 
 	check(tst, DerivCen5, f1, df1dx, 1.0, "exp(x), x=1, central deriv")
 	check(tst, DerivFwd4, f1, df1dx, 1.0, "exp(x), x=1, forward deriv")
-	check(tst, DerivBackward, f1, df1dx, 1.0, "exp(x), x=1, backward deriv")
+	check(tst, DerivBwd4, f1, df1dx, 1.0, "exp(x), x=1, backward deriv")
 
 	check(tst, DerivCen5, f2, df2dx, 0.1, "x^(3/2), x=0.1, central deriv")
 	check(tst, DerivFwd4, f2, df2dx, 0.1, "x^(3/2), x=0.1, forward deriv")
-	check(tst, DerivBackward, f2, df2dx, 0.1, "x^(3/2), x=0.1, backward deriv")
+	check(tst, DerivBwd4, f2, df2dx, 0.1, "x^(3/2), x=0.1, backward deriv")
 
 	check(tst, DerivCen5, f3, df3dx, 0.45, "sin(1/x), x=0.45, central deriv")
 	check(tst, DerivFwd4, f3, df3dx, 0.45, "sin(1/x), x=0.45, forward deriv")
-	check(tst, DerivBackward, f3, df3dx, 0.45, "sin(1/x), x=0.45, backward deriv")
+	check(tst, DerivBwd4, f3, df3dx, 0.45, "sin(1/x), x=0.45, backward deriv")
 
 	check(tst, DerivCen5, f4, df4dx, 0.5, "exp(-x^2), x=0.5, central deriv")
 	check(tst, DerivFwd4, f4, df4dx, 0.5, "exp(-x^2), x=0.5, forward deriv")
-	check(tst, DerivBackward, f4, df4dx, 0.5, "exp(-x^2), x=0.5, backward deriv")
+	check(tst, DerivBwd4, f4, df4dx, 0.5, "exp(-x^2), x=0.5, backward deriv")
 
 	check(tst, DerivCen5, f5, df5dx, 0.0, "x^2, x=0, central deriv")
 	check(tst, DerivFwd4, f5, df5dx, 0.0, "x^2, x=0, forward deriv")
-	check(tst, DerivBackward, f5, df5dx, 0.0, "x^2, x=0, backward deriv")
+	check(tst, DerivBwd4, f5, df5dx, 0.0, "x^2, x=0, backward deriv")
 
 	check(tst, DerivCen5, f6, df6dx, 10.0, "1/x, x=10, central deriv")
 	check(tst, DerivFwd4, f6, df6dx, 10.0, "1/x, x=10, forward deriv")
-	check(tst, DerivBackward, f6, df6dx, 10.0, "1/x, x=10, backward deriv")
+	check(tst, DerivBwd4, f6, df6dx, 10.0, "1/x, x=10, backward deriv")
 }
 
 func Test_deriv02(tst *testing.T) {
