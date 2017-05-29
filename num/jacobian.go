@@ -36,7 +36,7 @@ func Jacobian(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64) (err error) {
 	var df float64
 	for col := 0; col < ndim; col++ {
 		xsafe := x[col]
-		delta := math.Sqrt(EPS * max(CTE1, math.Abs(xsafe)))
+		delta := math.Sqrt(MACHEPS * max(CTE1, math.Abs(xsafe)))
 		x[col] = xsafe + delta
 		err = ffcn(w, x) // w := f(x+δx[col])
 		if err != nil {

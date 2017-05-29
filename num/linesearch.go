@@ -38,7 +38,7 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 	// tolerances
 	tol_gra_min := 1e-12
 	mul_dx_max := 100.0
-	slope_max := -EPS
+	slope_max := -MACHEPS
 	slope_max = 0.0
 
 	// constants

@@ -94,7 +94,7 @@ func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useD
 	}
 
 	// set tolerances
-	o.SetTols(atol, rtol, ftol, EPS)
+	o.SetTols(atol, rtol, ftol, MACHEPS)
 
 	// auxiliary data
 	o.neq = neq

@@ -10,7 +10,7 @@ import "math"
 
 // constants
 const (
-	EPS         = 1e-16 // smallest number satisfying 1.0 + EPS > 1.0
+	MACHEPS     = 1e-16 // smallest number satisfying 1.0 + EPS > 1.0
 	CTE1        = 1e-5  // a minimum value to be used in Jacobian
 	DBL_EPSILON = 1.0e-15
 	DBL_MIN     = math.SmallestNonzeroFloat64

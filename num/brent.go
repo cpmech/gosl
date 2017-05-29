@@ -29,7 +29,7 @@ func (o *Brent) Init(ffcn fun.Ss) {
 	o.Tol = 1e-14
 	o.Ffcn = ffcn
 	o.gsr = (3.0 - math.Sqrt(5.0)) / 2.0
-	o.sqeps = math.Sqrt(EPS)
+	o.sqeps = math.Sqrt(MACHEPS)
 }
 
 // Solve solves y(x) = 0 for x in [xa, xb] with f(xa) * f(xb) < 0
@@ -77,7 +77,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 	fc := fa
 
 	// check input
-	if fa*fb >= -EPS {
+	if fa*fb >= -MACHEPS {
 		return 0, chk.Err(_brent_err2, xa, xb, fa, fb)
 	}
 
@@ -107,7 +107,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 			fb = fc
 			fc = fa
 		}
-		tol_act = 2.0*EPS*math.Abs(b) + o.Tol/2.0
+		tol_act = 2.0*MACHEPS*math.Abs(b) + o.Tol/2.0
 		new_step = (c - b) / 2.0
 
 		// converged?

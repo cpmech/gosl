@@ -35,7 +35,7 @@ func Test_nls01(tst *testing.T) {
 	}
 
 	x := []float64{0.5, 0.5}
-	atol, rtol, ftol := 1e-10, 1e-10, 10*EPS
+	atol, rtol, ftol := 1e-10, 1e-10, 10*MACHEPS
 	fx := make([]float64, len(x))
 	neq := len(x)
 
@@ -121,7 +121,7 @@ func Test_nls02(tst *testing.T) {
 	}
 
 	x := []float64{5.0, 5.0}
-	atol, rtol, ftol := 1e-10, 1e-10, 10*EPS
+	atol, rtol, ftol := 1e-10, 1e-10, 10*MACHEPS
 	fx := make([]float64, len(x))
 	neq := len(x)
 
@@ -218,7 +218,7 @@ func Test_nls03(tst *testing.T) {
 	fx := make([]float64, len(x))
 	atol := 1e-6
 	rtol := 1e-3
-	ftol := 10 * EPS
+	ftol := 10 * MACHEPS
 	neq := len(x)
 
 	prms := map[string]float64{
