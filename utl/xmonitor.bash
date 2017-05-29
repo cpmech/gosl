@@ -14,5 +14,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="postp02"
+    go test -test.run="sort08"
 done

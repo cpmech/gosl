@@ -362,8 +362,8 @@ func iswap(a, b *int) { *a, *b = *b, *a }
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func Qsort(arr []float64) {
-	M := 7 // Here M is the size of subarrays sorted by straight insertion and NSTACK is the required auxiliary storage.
-	NSTACK := 64
+	M := 7       // size of subarrays sorted by straight insertion
+	NSTACK := 64 // required auxiliary storage.
 	istack := make([]int, NSTACK)
 	var i, j, k int
 	jstack := -1
@@ -557,23 +557,23 @@ type Sorter struct {
 	indx []int
 }
 
-// Build builds an index indx[0..n-1] to sort an array arr[0..n-1] such that arr[indx[j]] is in
-// ascending order for j=0,1,...,n-1. The input array arr is not changed.  Implementation from [1].
+// Init builds an index indx[0..n-1] to sort an array a[0..n-1] such that a[indx[j]] is in
+// ascending order for j=0,1,...,n-1.
 //   Input:
-//     n    -- number of items in arr to be sorted. n must be ≤ len(arr)
-//     less -- a function that returns true if arr[i] < arr[j]
+//     n    -- number of items in the array to be sorted. n must be ≤ len(a)
+//     less -- a function that returns true if a[i] < a[j]
 //   Reference:
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-func (o *Sorter) Build(n int, less func(i, j int) bool) {
+func (o *Sorter) Init(n int, less func(i, j int) bool) {
 	M := 7       // size of subarrays sorted by straight insertion
 	NSTACK := 64 // required auxiliary storage.
 	istack := make([]int, NSTACK)
 	o.indx = make([]int, n)
-	var i, indxt, ir, j, k int
 	jstack := -1
 	l := 0
-	ir = n - 1
+	ir := n - 1
+	var i, j, k, indxt int
 	for j = 0; j < n; j++ {
 		o.indx[j] = j
 	}
@@ -650,4 +650,24 @@ func (o *Sorter) Build(n int, less func(i, j int) bool) {
 			}
 		}
 	}
+}
+
+// GetSorted returns a copy of array 'a' sorted according to the previously built index.
+// NOTE: the copy may be smaller if the index was built with a smaller set
+func (o *Sorter) GetSorted(a []float64) (b []float64) {
+	b = make([]float64, len(o.indx))
+	for i := 0; i < len(o.indx); i++ {
+		b[i] = a[o.indx[i]]
+	}
+	return
+}
+
+// GetSortedI returns a copy of array 'a' sorted according to the previously built index.
+// NOTE: the copy may be smaller if the index was built with a smaller set
+func (o *Sorter) GetSortedI(a []int) (b []int) {
+	b = make([]int, len(o.indx))
+	for i := 0; i < len(o.indx); i++ {
+		b[i] = a[o.indx[i]]
+	}
+	return
 }

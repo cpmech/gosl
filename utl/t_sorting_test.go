@@ -258,14 +258,33 @@ func Test_sort08(tst *testing.T) {
 	var s Sorter
 
 	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
-	s.Build(a, 3, func(i, j int) bool { return a[i] < a[j] })
-	chk.Ints(tst, "indx", s.indx, []int{0, 2, 1})
-
-	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
-	s.Build(b, 5, func(i, j int) bool { return b[i] < b[j] })
-	chk.Ints(tst, "indx", s.indx, []int{3, 4, 2, 1, 0})
+	s.Init(3, func(i, j int) bool { return a[i] < a[j] })
+	chk.Ints(tst, "indx", s.indx, []int{0, 2, 1}) // 3 => smaller set
 
 	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
-	s.Build(a, len(a), func(i, j int) bool { return a[i] < a[j] })
+	as := s.GetSorted(a)
+	chk.Vector(tst, "as", 1e-15, as, []float64{1, 2, 5}) // smaller set
+
+	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
+	s.Init(5, func(i, j int) bool { return b[i] < b[j] }) // 5 => smaller set
+	chk.Ints(tst, "indx", s.indx, []int{3, 4, 2, 1, 0})
+
+	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
+	bs := s.GetSorted(b)
+	chk.Vector(tst, "bs", 1e-15, bs, []float64{0, 3, 7, 8, 9}) // smaller set
+
+	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
+	s.Init(len(a), func(i, j int) bool { return a[i] < a[j] })
 	chk.Ints(tst, "indx", s.indx, []int{8, 7, 0, 4, 2, 6, 1, 3, 5})
+
+	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
+	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
+	as = s.GetSorted(a)
+	bs = s.GetSorted(b)
+	chk.Vector(tst, "as", 1e-15, as, []float64{-2, 0, 1, 2, 2, 4, 5, 8, 9})
+	chk.Vector(tst, "bs", 1e-15, bs, []float64{-1, 1, 9, 3, 7, 6, 8, 0, -7})
+
+	c := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	cs := s.GetSortedI(c)
+	chk.Ints(tst, "cs", cs, []int{9, 8, 1, 5, 3, 7, 2, 4, 6})
 }
