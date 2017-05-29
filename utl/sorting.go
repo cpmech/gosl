@@ -560,13 +560,12 @@ type Sorter struct {
 // Build builds an index indx[0..n-1] to sort an array arr[0..n-1] such that arr[indx[j]] is in
 // ascending order for j=0,1,...,n-1. The input array arr is not changed.  Implementation from [1].
 //   Input:
-//     arr  -- a slice type; e.g. []float64 or []int
 //     n    -- number of items in arr to be sorted. n must be ≤ len(arr)
 //     less -- a function that returns true if arr[i] < arr[j]
 //   Reference:
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-func (o *Sorter) Build(arr interface{}, n int, less func(i, j int) bool) {
+func (o *Sorter) Build(n int, less func(i, j int) bool) {
 	M := 7       // size of subarrays sorted by straight insertion
 	NSTACK := 64 // required auxiliary storage.
 	istack := make([]int, NSTACK)
@@ -614,14 +613,14 @@ func (o *Sorter) Build(arr interface{}, n int, less func(i, j int) bool) {
 			indxt = o.indx[l+1]
 			for {
 				// Scan up to find element > a.
-				for { // do i++; while (arr[indx[i]] < a);
+				for { // do i++; while (a[indx[i]] < a[indxt]);
 					i++
 					if !less(o.indx[i], indxt) {
 						break
 					}
 				}
 				// Scan down to find element < a.
-				for { // do j--; while (arr[o.indx[j]] > a);
+				for { // do j--; while (a[o.indx[j]] > a[indxt]);
 					j--
 					if less(o.indx[j], indxt) {
 						break
