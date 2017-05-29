@@ -155,154 +155,25 @@ Simple root finding problem solved by Newton's method.
 
 `num` package implements a number of methods to compute numerical integrals; i.e. quadrature.
 
-There are two kinds of functions/structures: (1) elementary ones; and (2) more advanced ones with
-refinement.
+There are two kinds of algorithms: (1) basic methods for discrete data; and (2) using refinment for
+integrating general functions.
 
-The elementary methods are:
-1. `Trapz` trapezoidal method for given discrete points
-2. `TrapzF` trapezoidal method with given function
-3. `TrapzRange` trapezoidal method with given function and x-range
-4. `Trapz2D` trapezoidal method in 2D
-5. `Simpson` Simpson's method
-6. `Simps2D` Simpson's method in 2D
+### Examples. Basic methods for discrete data
 
-The structures using refinement are:
-1. `Quadrature` is the interface
-2. `Trap` implements the trapezoidal rule with refinement
-3. `Simp` implements the Simpson's rule with refinement
-
-### Examples. Elementary methods
-
-Source code: <a href="t_integ_test.go">t_integ_test.go</a>
-
-Discrete:
-```go
-x := []float64{4, 6, 8}
-y := []float64{1, 2, 3}
-A := Trapz(x, y) // should be 8.0
-```
-
-Function and range:
-```go
-y := func(x float64) float64 {
-    return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
-}
-n := 11
-x := utl.LinSpace(0, 1, n)
-A := TrapzF(x, y)
-A_ := TrapzRange(0, 1, n, y)
-Acor := 1.08306090851465 // correct value
-chk.Scalar(tst, "A", 1e-15, A, Acor)
-chk.Scalar(tst, "A_", 1e-15, A_, Acor)
-```
-
-Volume:
-```go
-// Γ(1/4, 1)
-gamma_1div4_1 := 0.2462555291934987088744974330686081384629028737277219
-
-x := utl.LinSpace(0, 1, 11)
-y := utl.LinSpace(0, 1, 11)
-m, n := len(x), len(y)
-f := la.MatAlloc(m, n)
-for i := 0; i < m; i++ {
-    for j := 0; j < n; j++ {
-        f[i][j] = 8.0 * math.Exp(-math.Pow(x[i], 2)-math.Pow(y[j], 4))
-    }
-}
-dx, dy := x[1]-x[0], y[1]-y[0]
-Vt := Trapz2D(dx, dy, f)
-Vs := Simps2D(dx, dy, f)
-Vc := math.Sqrt(math.Pi) * math.Erf(1) * (math.Gamma(1.0/4.0) - gamma_1div4_1)
-chk.Scalar(tst, "Vt", 0.0114830435645548, Vt, Vc)
-chk.Scalar(tst, "Vs", 1e-4, Vs, Vc)
-```
+Source code: <a href="t_quadDisc_test.go">t_quadDisc_test.go</a>
 
 ### Examples. Methods with refinement
 
-Source code: <a href="t_quadrature_test.go">t_quadrature_test.go</a>
+Source code: <a href="t_quadElem_test.go">t_quadElem_test.go</a>
 
-```go
-// problem
-y := func(x float64) float64 {
-    return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
-}
-var err error
-Acor := 1.08268158558
-
-// trapezoidal rule
-var T Quadrature
-T = new(Trap)
-T.Init(y, 0, 1, 1e-11)
-A, err := T.Integrate()
-if err != nil {
-    io.Pforan(err.Error())
-}
-io.Pforan("A  = %v\n", A)
-chk.Scalar(tst, "A", 1e-11, A, Acor)
-
-// Simpson's rule
-var S Quadrature
-S = new(Simp)
-S.Init(y, 0, 1, 1e-11)
-A, err = S.Integrate()
-if err != nil {
-    io.Pforan(err.Error())
-}
-io.Pforan("A  = %v\n", A)
-chk.Scalar(tst, "A", 1e-11, A, Acor)
-```
 
 
 ## Numerical differentiation
 
-Source code: <a href="../examples/num_deriv01.go">num_deriv01.go</a>
-
 Check first and second derivative of `y(x) = sin(x)`
 
-```go
-// define function and derivative function
-y_fcn := func(x float64) float64 { return math.Sin(x) }
-dydx_fcn := func(x float64) float64 { return math.Cos(x) }
-d2ydx2_fcn := func(x float64) float64 { return -math.Sin(x) }
+See source code: <a href="../examples/num_deriv01.go">num_deriv01.go</a>
 
-// run test for 11 points
-X := utl.LinSpace(0, 2*math.Pi, 11)
-io.Pf("          %8s %23s %23s %23s\n", "x", "analytical", "numerical", "error")
-for _, x := range X {
-
-    // analytical derivatives
-    dydx_ana := dydx_fcn(x)
-    d2ydx2_ana := d2ydx2_fcn(x)
-
-    // numerical derivative: dydx
-    dydx_num, _ := num.DerivCentral(func(t float64, args ...interface{}) float64 {
-        return y_fcn(t)
-    }, x, 1e-3)
-
-    // numerical derivative d2ydx2
-    d2ydx2_num, _ := num.DerivCentral(func(t float64, args ...interface{}) float64 {
-        return dydx_fcn(t)
-    }, x, 1e-3)
-
-    // check
-    chk.PrintAnaNum(io.Sf("dy/dx   @ %.6f", x), 1e-10, dydx_ana, dydx_num, true)
-    chk.PrintAnaNum(io.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2_ana, d2ydx2_num, true)
-}
-
-// generate 101 points for plotting
-X = utl.LinSpace(0, 2*math.Pi, 101)
-Y := make([]float64, len(X))
-for i, x := range X {
-    Y[i] = y_fcn(x)
-}
-
-// plot
-plt.Reset(false, nil)
-plt.Plot(X, Y, &plt.A{C: "b", M: ".", Me: 10, L: "y(x)=sin(x)"})
-plt.Gll("x", "y", nil)
-plt.Save("/tmp/gosl", "num_deriv01")
-```
 
 
 ## Nonlinear problems
