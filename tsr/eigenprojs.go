@@ -192,7 +192,7 @@ func M_EigenProjsDerivNum(dPda [][][]float64, a []float64, h float64) (err error
 	for k := 0; k < 3; k++ {
 		for i := 0; i < ncp; i++ {
 			for j := 0; j < ncp; j++ {
-				dPda[k][i][j], _ = num.DerivCentral(func(x float64, args ...interface{}) float64 {
+				dPda[k][i][j], _ = num.DerivCen5(func(x float64) float64 {
 					tmp, a[j] = a[j], x
 					defer func() { a[j] = tmp }()
 					Man2Ten(A, a)

@@ -12,84 +12,84 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func f1(x float64, args ...interface{}) float64    { return math.Exp(x) }
-func df1dx(x float64, args ...interface{}) float64 { return math.Exp(x) }
-func f2(x float64, args ...interface{}) float64 {
+func f1(x float64) float64    { return math.Exp(x) }
+func df1dx(x float64) float64 { return math.Exp(x) }
+func f2(x float64) float64 {
 	if x >= 0.0 {
 		return x * math.Sqrt(x)
 	}
 	return 0.0
 }
-func df2dx(x float64, args ...interface{}) float64 {
+func df2dx(x float64) float64 {
 	if x >= 0.0 {
 		return 1.5 * math.Sqrt(x)
 	}
 	return 0.0
 }
-func f3(x float64, args ...interface{}) float64 {
+func f3(x float64) float64 {
 	if x != 0.0 {
 		return math.Sin(1 / x)
 	}
 	return 0.0
 }
-func df3dx(x float64, args ...interface{}) float64 {
+func df3dx(x float64) float64 {
 	if x != 0.0 {
 		return -math.Cos(1/x) / (x * x)
 	}
 	return 0.0
 }
-func f4(x float64, args ...interface{}) float64    { return math.Exp(-x * x) }
-func df4dx(x float64, args ...interface{}) float64 { return -2.0 * x * math.Exp(-x*x) }
-func f5(x float64, args ...interface{}) float64    { return x * x }
-func df5dx(x float64, args ...interface{}) float64 { return 2.0 * x }
-func f6(x float64, args ...interface{}) float64    { return 1.0 / x }
-func df6dx(x float64, args ...interface{}) float64 { return -1.0 / (x * x) }
+func f4(x float64) float64    { return math.Exp(-x * x) }
+func df4dx(x float64) float64 { return -2.0 * x * math.Exp(-x*x) }
+func f5(x float64) float64    { return x * x }
+func df5dx(x float64) float64 { return 2.0 * x }
+func f6(x float64) float64    { return 1.0 / x }
+func df6dx(x float64) float64 { return -1.0 / (x * x) }
 
-type NumDerivFunc func(f Cb_fx, x float64, h float64, args ...interface{}) (result, abserr float64)
+type NumDerivFunc func(f Cb_fx, x float64, h float64) (result, abserr float64)
 
-func check(tst *testing.T, deriv NumDerivFunc, f Cb_fx, dfdx Cb_fx, x float64, desc string, args ...interface{}) {
+func check(tst *testing.T, deriv NumDerivFunc, f Cb_fx, dfdx Cb_fx, x float64, desc string) {
 	var tol float64 = 1.0e-6
 	expected := dfdx(x)
-	result, abserr := deriv(f, x, tol, args)
+	result, abserr := deriv(f, x, tol)
 	if TestAbs(result, expected, MinComp(tol, expected), desc) != Equal {
 		tst.Errorf("TestDeriv01 failed with abserr = [1;31m%g[0m", abserr)
 	}
 }
 
-func TestDeriv01(tst *testing.T) {
+func Test_deriv01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("TestDeriv 01")
+	chk.PrintTitle("deriv01")
 
-	check(tst, DerivCentral, f1, df1dx, 1.0, "exp(x), x=1, central deriv")
-	check(tst, DerivForward, f1, df1dx, 1.0, "exp(x), x=1, forward deriv")
+	check(tst, DerivCen5, f1, df1dx, 1.0, "exp(x), x=1, central deriv")
+	check(tst, DerivFwd4, f1, df1dx, 1.0, "exp(x), x=1, forward deriv")
 	check(tst, DerivBackward, f1, df1dx, 1.0, "exp(x), x=1, backward deriv")
 
-	check(tst, DerivCentral, f2, df2dx, 0.1, "x^(3/2), x=0.1, central deriv")
-	check(tst, DerivForward, f2, df2dx, 0.1, "x^(3/2), x=0.1, forward deriv")
+	check(tst, DerivCen5, f2, df2dx, 0.1, "x^(3/2), x=0.1, central deriv")
+	check(tst, DerivFwd4, f2, df2dx, 0.1, "x^(3/2), x=0.1, forward deriv")
 	check(tst, DerivBackward, f2, df2dx, 0.1, "x^(3/2), x=0.1, backward deriv")
 
-	check(tst, DerivCentral, f3, df3dx, 0.45, "sin(1/x), x=0.45, central deriv")
-	check(tst, DerivForward, f3, df3dx, 0.45, "sin(1/x), x=0.45, forward deriv")
+	check(tst, DerivCen5, f3, df3dx, 0.45, "sin(1/x), x=0.45, central deriv")
+	check(tst, DerivFwd4, f3, df3dx, 0.45, "sin(1/x), x=0.45, forward deriv")
 	check(tst, DerivBackward, f3, df3dx, 0.45, "sin(1/x), x=0.45, backward deriv")
 
-	check(tst, DerivCentral, f4, df4dx, 0.5, "exp(-x^2), x=0.5, central deriv")
-	check(tst, DerivForward, f4, df4dx, 0.5, "exp(-x^2), x=0.5, forward deriv")
+	check(tst, DerivCen5, f4, df4dx, 0.5, "exp(-x^2), x=0.5, central deriv")
+	check(tst, DerivFwd4, f4, df4dx, 0.5, "exp(-x^2), x=0.5, forward deriv")
 	check(tst, DerivBackward, f4, df4dx, 0.5, "exp(-x^2), x=0.5, backward deriv")
 
-	check(tst, DerivCentral, f5, df5dx, 0.0, "x^2, x=0, central deriv")
-	check(tst, DerivForward, f5, df5dx, 0.0, "x^2, x=0, forward deriv")
+	check(tst, DerivCen5, f5, df5dx, 0.0, "x^2, x=0, central deriv")
+	check(tst, DerivFwd4, f5, df5dx, 0.0, "x^2, x=0, forward deriv")
 	check(tst, DerivBackward, f5, df5dx, 0.0, "x^2, x=0, backward deriv")
 
-	check(tst, DerivCentral, f6, df6dx, 10.0, "1/x, x=10, central deriv")
-	check(tst, DerivForward, f6, df6dx, 10.0, "1/x, x=10, forward deriv")
+	check(tst, DerivCen5, f6, df6dx, 10.0, "1/x, x=10, central deriv")
+	check(tst, DerivFwd4, f6, df6dx, 10.0, "1/x, x=10, forward deriv")
 	check(tst, DerivBackward, f6, df6dx, 10.0, "1/x, x=10, backward deriv")
 }
 
-func TestDeriv02(tst *testing.T) {
+func Test_deriv02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("TestDeriv 01")
+	chk.PrintTitle("deriv02")
 
 	// scalar field
 	fcn := func(x, y float64) float64 {
@@ -125,12 +125,12 @@ func TestDeriv02(tst *testing.T) {
 			u, v := grad(x, y)
 
 			// numerical dfdx @ (x,y)
-			unum, _ := DerivCentral(func(xvar float64, a ...interface{}) float64 {
+			unum, _ := DerivCen5(func(xvar float64) float64 {
 				return fcn(xvar, y)
 			}, x, h)
 
 			// numerical dfdy @ (x,y)
-			vnum, _ := DerivCentral(func(yvar float64, a ...interface{}) float64 {
+			vnum, _ := DerivCen5(func(yvar float64) float64 {
 				return fcn(x, yvar)
 			}, y, h)
 
