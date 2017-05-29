@@ -192,7 +192,7 @@ func M_EigenProjsDerivNum(dPda [][][]float64, a []float64, h float64) (err error
 	for k := 0; k < 3; k++ {
 		for i := 0; i < ncp; i++ {
 			for j := 0; j < ncp; j++ {
-				dPda[k][i][j] = num.DerivCen5(func(x float64) float64 {
+				dPda[k][i][j], err = num.DerivCen5(func(x float64) float64 {
 					tmp, a[j] = a[j], x
 					defer func() { a[j] = tmp }()
 					Man2Ten(A, a)
@@ -204,7 +204,7 @@ func M_EigenProjsDerivNum(dPda [][][]float64, a []float64, h float64) (err error
 					q2p(k)
 					return P[k][i]
 				}, a[j], h)
-				if failed {
+				if failed || err != nil {
 					return
 				}
 			}

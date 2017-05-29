@@ -9,10 +9,13 @@ import "math"
 type Cb_fx func(x float64) float64
 
 // DerivCen5 approximates the derivative of f w.r.t x using central differences with 5 points.
-func DerivCen5(f Cb_fx, x, h float64) (res float64) {
+func DerivCen5(f Cb_fx, x, h float64) (res float64, err error) {
 
 	// first estimate
-	res, round, trunc := centralDeriv5(f, x, h)
+	res, round, trunc, err := centralDeriv5(f, x, h)
+	if err != nil {
+		return
+	}
 	errFirst := round + trunc
 
 	// second estimate
@@ -21,7 +24,10 @@ func DerivCen5(f Cb_fx, x, h float64) (res float64) {
 		// Compute an optimised stepsize to minimize the total error,
 		// using the scaling of the truncation error (O(h^2)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(2.0*trunc), 1.0/3.0)
-		rOpt, roundOpt, truncOpt := centralDeriv5(f, x, hOpt)
+		rOpt, roundOpt, truncOpt, err2 := centralDeriv5(f, x, hOpt)
+		if err2 != nil {
+			return 0, err2
+		}
 		errorOpt := roundOpt + truncOpt
 
 		// Check that the new error is smaller, and that the new derivative
@@ -34,10 +40,13 @@ func DerivCen5(f Cb_fx, x, h float64) (res float64) {
 }
 
 // DerivFwd4 approximates the derivative of f w.r.t x using forward differences with 4 points.
-func DerivFwd4(f Cb_fx, x, h float64) (res float64) {
+func DerivFwd4(f Cb_fx, x, h float64) (res float64, err error) {
 
 	// first estimate
-	res, round, trunc := forwardDeriv4(f, x, h)
+	res, round, trunc, err := forwardDeriv4(f, x, h)
+	if err != nil {
+		return
+	}
 	errFirst := round + trunc
 
 	// second estimate
@@ -46,7 +55,10 @@ func DerivFwd4(f Cb_fx, x, h float64) (res float64) {
 		// Compute an optimised stepsize to minimize the total error,
 		// using the scaling of the estimated truncation error (O(h)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(trunc), 1.0/2.0)
-		rOpt, roundOpt, truncOpt := forwardDeriv4(f, x, hOpt)
+		rOpt, roundOpt, truncOpt, err2 := forwardDeriv4(f, x, hOpt)
+		if err2 != nil {
+			return 0, err2
+		}
 		errorOpt := roundOpt + truncOpt
 
 		// Check that the new error is smaller, and that the new derivative
@@ -59,14 +71,14 @@ func DerivFwd4(f Cb_fx, x, h float64) (res float64) {
 }
 
 // DerivBwd4 approximates the derivative of f w.r.t x using backward differences with 4 points.
-func DerivBwd4(f Cb_fx, x, h float64) (res float64) {
+func DerivBwd4(f Cb_fx, x, h float64) (res float64, err error) {
 	return DerivFwd4(f, x, -h)
 }
 
 // lower level functions //////////////////////////////////////////////////////////////////////////
 
 // centralDeriv5 computes the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
-func centralDeriv5(f Cb_fx, x float64, h float64) (res, absErrRound, absErrTrunc float64) {
+func centralDeriv5(f Cb_fx, x float64, h float64) (res, absErrRound, absErrTrunc float64, err error) {
 
 	// constants
 	EPS := 1e-15 // cannot be machine epsilon
@@ -97,7 +109,7 @@ func centralDeriv5(f Cb_fx, x float64, h float64) (res, absErrRound, absErrTrunc
 }
 
 // forwardDeriv4 compute the derivative using the 4-point rule (x+h/4, x+h/2, x+3h/4, x+h).
-func forwardDeriv4(f Cb_fx, x, h float64) (res, absErrRound, absErrTrunc float64) {
+func forwardDeriv4(f Cb_fx, x, h float64) (res, absErrRound, absErrTrunc float64, err error) {
 
 	// constants
 	EPS := 1e-15 // cannot be machine epsilon
