@@ -229,3 +229,43 @@ func Test_sort07(tst *testing.T) {
 	IntSort4(&x[0], &x[1], &x[2], &x[3])
 	chk.Ints(tst, "sort4(x)", x, []int{0, 1, 3, 10})
 }
+
+func Test_sort08(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("sort08. sort pair of slices")
+
+	a := []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
+	Qsort(a)
+	chk.Vector(tst, "a", 1e-15, a, []float64{-2, 0, 1, 2, 2, 4, 5, 8, 9})
+
+	b := []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
+	Qsort(b)
+	chk.Vector(tst, "b", 1e-15, b, []float64{-7, -1, 0, 1, 3, 6, 7, 8, 9})
+
+	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
+	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
+	Qsort2(a, b)
+	chk.Vector(tst, "a", 1e-15, a, []float64{-2, 0, 1, 2, 2, 4, 5, 8, 9})
+	chk.Vector(tst, "b", 1e-15, b, []float64{-1, 1, 9, 7, 3, 6, 8, 0, -7})
+
+	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
+	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
+	Qsort2(b, a)
+	chk.Vector(tst, "a", 1e-15, a, []float64{9, -2, 8, 0, 2, 4, 2, 5, 1})
+	chk.Vector(tst, "b", 1e-15, b, []float64{-7, -1, 0, 1, 3, 6, 7, 8, 9})
+
+	var s Sorter
+
+	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
+	s.Build(a, 3, func(i, j int) bool { return a[i] < a[j] })
+	chk.Ints(tst, "indx", s.indx, []int{0, 2, 1})
+
+	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
+	s.Build(b, 5, func(i, j int) bool { return b[i] < b[j] })
+	chk.Ints(tst, "indx", s.indx, []int{3, 4, 2, 1, 0})
+
+	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
+	s.Build(a, len(a), func(i, j int) bool { return a[i] < a[j] })
+	chk.Ints(tst, "indx", s.indx, []int{8, 7, 0, 4, 2, 6, 1, 3, 5})
+}
