@@ -297,6 +297,12 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				<dd><a href="#ProfMEM">func ProfMEM(dirout, filename string, silent bool) func()</a></dd>
 			
 				
+				<dd><a href="#Qsort">func Qsort(arr []float64)</a></dd>
+			
+				
+				<dd><a href="#Qsort2">func Qsort2(arr, brr []float64)</a></dd>
+			
+				
 				<dd><a href="#Scaling">func Scaling(s, x []float64, ds, tol float64, reverse, useinds bool) (xmin, xmax float64)</a></dd>
 			
 				
@@ -453,6 +459,20 @@ such as slices and slices of slices. It also contains functions for sorting quan
 				
 					
 					<dd>&nbsp; &nbsp; <a href="#SerialList.Print">func (o SerialList) Print(fmt string)</a></dd>
+				
+			
+				
+				<dd><a href="#Sorter">type Sorter</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sorter.GetSorted">func (o *Sorter) GetSorted(a []float64) (b []float64)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sorter.GetSortedI">func (o *Sorter) GetSortedI(a []int) (b []int)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Sorter.Init">func (o *Sorter) Init(n int, less func(i, j int) bool)</a></dd>
 				
 			
 			
@@ -1056,7 +1076,7 @@ IntAlloc allocates a matrix of integers
 		
 			
 			
-			<h2 id="IntBoolMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=7042:7097#L326">IntBoolMapSort</a></h2>
+			<h2 id="IntBoolMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=7143:7198#L328">IntBoolMapSort</a></h2>
 			<pre>func IntBoolMapSort(m map[<a href="/pkg/builtin/#int">int</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 IntBoolMapSort returns sorted keys of map[int]bool
@@ -1553,6 +1573,42 @@ ProfMEM activates memory profiling
 		
 			
 			
+			<h2 id="Qsort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=8112:8137#L354">Qsort</a></h2>
+			<pre>func Qsort(arr []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Qsort sort an array arr[0..n-1] into ascending numerical order using the Quicksort algorithm.
+arr is replaced on output by its sorted rearrangement. Normally, the optional argument m should
+be omitted, but if it is set to a positive value, then only the first m elements of arr are
+sorted. Implementation from [1]
+</p>
+<pre>Reference:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="Qsort2">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=10505:10536#L445">Qsort2</a></h2>
+			<pre>func Qsort2(arr, brr []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+Qsort2 sorts an array arr[0..n-1] into ascending order using Quicksort, while making the
+corresponding rearrangment of the array brr[0..n-1]. Implementation from [1]
+</p>
+<pre>Reference:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+			
+			
+
+		
+			
+			
 			<h2 id="Scaling">func <a href="https://github.com/cpmech/gosl/blob/master/utl/mylab.go?s=9876:9965#L386">Scaling</a></h2>
 			<pre>func Scaling(s, x []<a href="/pkg/builtin/#float64">float64</a>, ds, tol <a href="/pkg/builtin/#float64">float64</a>, reverse, useinds <a href="/pkg/builtin/#bool">bool</a>) (xmin, xmax <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
@@ -1613,7 +1669,7 @@ Sort4 sort four values in ascending order
 		
 			
 			
-			<h2 id="SortQuadruples">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4187:4285#L208">SortQuadruples</a></h2>
+			<h2 id="SortQuadruples">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4288:4386#L210">SortQuadruples</a></h2>
 			<pre>func SortQuadruples(i []<a href="/pkg/builtin/#int">int</a>, x, y, z []<a href="/pkg/builtin/#float64">float64</a>, by <a href="/pkg/builtin/#string">string</a>) (I []<a href="/pkg/builtin/#int">int</a>, X, Y, Z []<a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 SortQuadruples sorts i, x, y, and z by &#34;i&#34;, &#34;x&#34;, &#34;y&#34;, or &#34;z&#34;
@@ -1639,7 +1695,7 @@ StrsAlloc allocates a matrix of strings
 		
 			
 			
-			<h2 id="StrBoolMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5447:5508#L264">StrBoolMapSort</a></h2>
+			<h2 id="StrBoolMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5548:5609#L266">StrBoolMapSort</a></h2>
 			<pre>func StrBoolMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 StrBoolMapSort returns sorted keys of map[string]bool
@@ -1651,7 +1707,7 @@ StrBoolMapSort returns sorted keys of map[string]bool
 		
 			
 			
-			<h2 id="StrBoolMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=6556:6642#L308">StrBoolMapSortSplit</a></h2>
+			<h2 id="StrBoolMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=6657:6743#L310">StrBoolMapSortSplit</a></h2>
 			<pre>func StrBoolMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#bool">bool</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#bool">bool</a>)</pre>
 			<p>
 StrBoolMapSortSplit returns sorted keys of map[string]bool and sorted values
@@ -1663,7 +1719,7 @@ StrBoolMapSortSplit returns sorted keys of map[string]bool and sorted values
 		
 			
 			
-			<h2 id="StrFltMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5183:5246#L252">StrFltMapSort</a></h2>
+			<h2 id="StrFltMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5284:5347#L254">StrFltMapSort</a></h2>
 			<pre>func StrFltMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 StrFltMapSort returns sorted keys of map[string]float64
@@ -1675,7 +1731,7 @@ StrFltMapSort returns sorted keys of map[string]float64
 		
 			
 			
-			<h2 id="StrFltMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=6138:6229#L292">StrFltMapSortSplit</a></h2>
+			<h2 id="StrFltMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=6239:6330#L294">StrFltMapSortSplit</a></h2>
 			<pre>func StrFltMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#float64">float64</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 StrFltMapSortSplit returns sorted keys of map[string]float64 and sorted values
@@ -1715,7 +1771,7 @@ StrIndexSmall finds the index of an item in a slice of strings
 		
 			
 			
-			<h2 id="StrIntMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4921:4980#L240">StrIntMapSort</a></h2>
+			<h2 id="StrIntMapSort">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5022:5081#L242">StrIntMapSort</a></h2>
 			<pre>func StrIntMapSort(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>)</pre>
 			<p>
 StrIntMapSort returns sorted keys of map[string]int
@@ -1727,7 +1783,7 @@ StrIntMapSort returns sorted keys of map[string]int
 		
 			
 			
-			<h2 id="StrIntMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5730:5813#L276">StrIntMapSortSplit</a></h2>
+			<h2 id="StrIntMapSortSplit">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=5831:5914#L278">StrIntMapSortSplit</a></h2>
 			<pre>func StrIntMapSortSplit(m map[<a href="/pkg/builtin/#string">string</a>]<a href="/pkg/builtin/#int">int</a>) (sorted_keys []<a href="/pkg/builtin/#string">string</a>, sorted_vals []<a href="/pkg/builtin/#int">int</a>)</pre>
 			<p>
 StrIntMapSortSplit returns sorted keys of map[string]int and sorted values
@@ -1912,7 +1968,7 @@ Append appends items to List
 		
 			
 			
-			<h2 id="Quadruple">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1654:1719#L96">Quadruple</a></h2>
+			<h2 id="Quadruple">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1755:1820#L98">Quadruple</a></h2>
 			<pre>type Quadruple struct {
     I <a href="/pkg/builtin/#int">int</a>
     X <a href="/pkg/builtin/#float64">float64</a>
@@ -1938,7 +1994,7 @@ Quadruple helps to sort a quadruple of 1 int and 3 float64s
 		
 			
 			
-			<h2 id="Quadruples">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1760:1788#L104">Quadruples</a></h2>
+			<h2 id="Quadruples">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1861:1889#L106">Quadruples</a></h2>
 			<pre>type Quadruples []*<a href="#Quadruple">Quadruple</a></pre>
 			<p>
 Quadruples helps to sort quadruples
@@ -1955,7 +2011,7 @@ Quadruples helps to sort quadruples
 
 			
 				
-				<h3 id="BuildQuadruples">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=1917:1980#L108">BuildQuadruples</a></h3>
+				<h3 id="BuildQuadruples">func <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2018:2081#L110">BuildQuadruples</a></h3>
 				<pre>func BuildQuadruples(i []<a href="/pkg/builtin/#int">int</a>, x, y, z []<a href="/pkg/builtin/#float64">float64</a>) (q <a href="#Quadruples">Quadruples</a>)</pre>
 				<p>
 Init initialise Quadruples with i, x, y, and z
@@ -1969,7 +2025,7 @@ Init initialise Quadruples with i, x, y, and z
 
 			
 				
-				<h3 id="Quadruples.I">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2403:2436#L136">I</a></h3>
+				<h3 id="Quadruples.I">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2504:2537#L138">I</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) I() (i []<a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 I returns the &#39;i&#39; in quadruples
@@ -1980,7 +2036,7 @@ I returns the &#39;i&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Len">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3060:3089#L172">Len</a></h3>
+				<h3 id="Quadruples.Len">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3161:3190#L174">Len</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Len() <a href="/pkg/builtin/#int">int</a></pre>
 				<p>
 Len returns the length of Quadruples
@@ -1991,7 +2047,7 @@ Len returns the length of Quadruples
 				
 			
 				
-				<h3 id="Quadruples.String">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3260:3295#L178">String</a></h3>
+				<h3 id="Quadruples.String">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3361:3396#L180">String</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) String() <a href="/pkg/builtin/#string">string</a></pre>
 				<p>
 String returns the string representation of Quadruples
@@ -2002,7 +2058,7 @@ String returns the string representation of Quadruples
 				
 			
 				
-				<h3 id="Quadruples.Swap">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3138:3172#L175">Swap</a></h3>
+				<h3 id="Quadruples.Swap">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3239:3273#L177">Swap</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Swap(i, j <a href="/pkg/builtin/#int">int</a>)</pre>
 				<p>
 Swap swaps two quadruples
@@ -2013,7 +2069,7 @@ Swap swaps two quadruples
 				
 			
 				
-				<h3 id="Quadruples.X">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2560:2597#L145">X</a></h3>
+				<h3 id="Quadruples.X">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2661:2698#L147">X</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) X() (x []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 X returns the &#39;x&#39; in quadruples
@@ -2024,7 +2080,7 @@ X returns the &#39;x&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Y">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2725:2762#L154">Y</a></h3>
+				<h3 id="Quadruples.Y">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2826:2863#L156">Y</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Y() (y []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Y returns the &#39;y&#39; in quadruples
@@ -2035,7 +2091,7 @@ Y returns the &#39;y&#39; in quadruples
 				
 			
 				
-				<h3 id="Quadruples.Z">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2890:2927#L163">Z</a></h3>
+				<h3 id="Quadruples.Z">func (Quadruples) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=2991:3028#L165">Z</a></h3>
 				<pre>func (o <a href="#Quadruples">Quadruples</a>) Z() (z []<a href="/pkg/builtin/#float64">float64</a>)</pre>
 				<p>
 Z returns the &#39;z&#39; in quadruples
@@ -2048,7 +2104,7 @@ Z returns the &#39;z&#39; in quadruples
 		
 			
 			
-			<h2 id="QuadruplesByI">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3430:3469#L187">QuadruplesByI</a></h2>
+			<h2 id="QuadruplesByI">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3531:3570#L189">QuadruplesByI</a></h2>
 			<pre>type QuadruplesByI struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by I
@@ -2067,7 +2123,7 @@ Sort Quadruples by I
 
 			
 				
-				<h3 id="QuadruplesByI.Less">func (QuadruplesByI) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3471:3513#L189">Less</a></h3>
+				<h3 id="QuadruplesByI.Less">func (QuadruplesByI) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3572:3614#L191">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByI">QuadruplesByI</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -2077,7 +2133,7 @@ Sort Quadruples by I
 		
 			
 			
-			<h2 id="QuadruplesByX">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3588:3627#L192">QuadruplesByX</a></h2>
+			<h2 id="QuadruplesByX">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3689:3728#L194">QuadruplesByX</a></h2>
 			<pre>type QuadruplesByX struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by X
@@ -2096,7 +2152,7 @@ Sort Quadruples by X
 
 			
 				
-				<h3 id="QuadruplesByX.Less">func (QuadruplesByX) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3629:3671#L194">Less</a></h3>
+				<h3 id="QuadruplesByX.Less">func (QuadruplesByX) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3730:3772#L196">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByX">QuadruplesByX</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -2106,7 +2162,7 @@ Sort Quadruples by X
 		
 			
 			
-			<h2 id="QuadruplesByY">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3746:3785#L197">QuadruplesByY</a></h2>
+			<h2 id="QuadruplesByY">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3847:3886#L199">QuadruplesByY</a></h2>
 			<pre>type QuadruplesByY struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by Y
@@ -2125,7 +2181,7 @@ Sort Quadruples by Y
 
 			
 				
-				<h3 id="QuadruplesByY.Less">func (QuadruplesByY) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3787:3829#L199">Less</a></h3>
+				<h3 id="QuadruplesByY.Less">func (QuadruplesByY) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3888:3930#L201">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByY">QuadruplesByY</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -2135,7 +2191,7 @@ Sort Quadruples by Y
 		
 			
 			
-			<h2 id="QuadruplesByZ">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3904:3943#L202">QuadruplesByZ</a></h2>
+			<h2 id="QuadruplesByZ">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4005:4044#L204">QuadruplesByZ</a></h2>
 			<pre>type QuadruplesByZ struct{ <a href="#Quadruples">Quadruples</a> }</pre>
 			<p>
 Sort Quadruples by Z
@@ -2154,7 +2210,7 @@ Sort Quadruples by Z
 
 			
 				
-				<h3 id="QuadruplesByZ.Less">func (QuadruplesByZ) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=3945:3987#L204">Less</a></h3>
+				<h3 id="QuadruplesByZ.Less">func (QuadruplesByZ) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=4046:4088#L206">Less</a></h3>
 				<pre>func (o <a href="#QuadruplesByZ">QuadruplesByZ</a>) Less(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a></pre>
 				
 				
@@ -2216,6 +2272,76 @@ Append appends item to SerialList
 				<p>
 Print prints the souble-serial-list
 </p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Sorter">type <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=13140:13174#L546">Sorter</a></h2>
+			<pre>type Sorter struct {
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+			<p>
+Sorter builds an index list to sort arrays of any type.
+</p>
+<pre>Reference:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+				
+				<h3 id="Sorter.GetSorted">func (*Sorter) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=15982:16035#L647">GetSorted</a></h3>
+				<pre>func (o *<a href="#Sorter">Sorter</a>) GetSorted(a []<a href="/pkg/builtin/#float64">float64</a>) (b []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+				<p>
+GetSorted returns a copy of array &#39;a&#39; sorted according to the previously built index.
+NOTE: the copy may be smaller if the index was built with a smaller set
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sorter.GetSortedI">func (*Sorter) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=16309:16355#L657">GetSortedI</a></h3>
+				<pre>func (o *<a href="#Sorter">Sorter</a>) GetSortedI(a []<a href="/pkg/builtin/#int">int</a>) (b []<a href="/pkg/builtin/#int">int</a>)</pre>
+				<p>
+GetSortedI returns a copy of array &#39;a&#39; sorted according to the previously built index.
+NOTE: the copy may be smaller if the index was built with a smaller set
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Sorter.Init">func (*Sorter) <a href="https://github.com/cpmech/gosl/blob/master/utl/sorting.go?s=13649:13703#L558">Init</a></h3>
+				<pre>func (o *<a href="#Sorter">Sorter</a>) Init(n <a href="/pkg/builtin/#int">int</a>, less func(i, j <a href="/pkg/builtin/#int">int</a>) <a href="/pkg/builtin/#bool">bool</a>)</pre>
+				<p>
+Init builds an index indx[0..n-1] to sort an array a[0..n-1] such that a[indx[j]] is in
+ascending order for j=0,1,...,n-1.
+</p>
+<pre>Input:
+  n    -- number of items in the array to be sorted. n must be ≤ len(a)
+  less -- a function that returns true if a[i] &lt; a[j]
+Reference:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
 
 				
 				

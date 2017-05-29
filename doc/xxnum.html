@@ -96,6 +96,12 @@ root finding solvers (Brent&#39;s and Newton&#39;s methods), among others.
 				<dd><a href="#EqCubicSolveReal">func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int)</a></dd>
 			
 				
+				<dd><a href="#GaussJacobiXW">func GaussJacobiXW(alf, bet float64, n int) (x, w []float64)</a></dd>
+			
+				
+				<dd><a href="#GaussLegendreXW">func GaussLegendreXW(x1, x2 float64, n int) (x, w []float64)</a></dd>
+			
+				
 				<dd><a href="#Jacobian">func Jacobian(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64) (err error)</a></dd>
 			
 				
@@ -371,6 +377,48 @@ Output:
 		
 			
 			
+			<h2 id="GaussJacobiXW">func <a href="https://github.com/cpmech/gosl/blob/master/num/quadGauss.go?s=4067:4127#L97">GaussJacobiXW</a></h2>
+			<pre>func GaussJacobiXW(alf, bet <a href="/pkg/builtin/#float64">float64</a>, n <a href="/pkg/builtin/#int">int</a>) (x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+GaussLegendreXW computes positions (xi) and weights (wi) to perform Gauss-Jacobi integrations.
+The largest abscissa is returned in x[0], the smallest in x[n-1].
+The interval of integration is x ϵ [-1, 1]
+</p>
+<pre>Input:
+  alp -- coefficient of the Jacobi polynomial
+  bet -- coefficient of the Jacobi polynomial
+  n   -- number of points for quadrature formula
+Reference:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+			
+			
+
+		
+			
+			
+			<h2 id="GaussLegendreXW">func <a href="https://github.com/cpmech/gosl/blob/master/num/quadGauss.go?s=1967:2027#L48">GaussLegendreXW</a></h2>
+			<pre>func GaussLegendreXW(x1, x2 <a href="/pkg/builtin/#float64">float64</a>, n <a href="/pkg/builtin/#int">int</a>) (x, w []<a href="/pkg/builtin/#float64">float64</a>)</pre>
+			<p>
+GaussLegendreXW computes positions (xi) and weights (wi) to perform Gauss-Legendre integrations
+</p>
+<pre>Input:
+  x1 -- lower limit of integration
+  x2 -- upper limit of integration
+  n  -- number of points for quadrature formula
+Reference:
+[1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+</pre>
+
+			
+			
+
+		
+			
+			
 			<h2 id="Jacobian">func <a href="https://github.com/cpmech/gosl/blob/master/num/jacobian.go?s=782:855#L19">Jacobian</a></h2>
 			<pre>func Jacobian(J *<a href="/pkg/github.com/cpmech/gosl/la/">la</a>.<a href="/pkg/github.com/cpmech/gosl/la/#Triplet">Triplet</a>, ffcn <a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Vv">Vv</a>, x, fx, w []<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
@@ -545,7 +593,7 @@ Computations are carried out with the trapezoidal rule.
 		
 			
 			
-			<h2 id="QuadGaussL10">func <a href="https://github.com/cpmech/gosl/blob/master/num/quadGauss.go?s=646:712#L5">QuadGaussL10</a></h2>
+			<h2 id="QuadGaussL10">func <a href="https://github.com/cpmech/gosl/blob/master/num/quadGauss.go?s=720:786#L11">QuadGaussL10</a></h2>
 			<pre>func QuadGaussL10(a, b <a href="/pkg/builtin/#float64">float64</a>, f <a href="/pkg/github.com/cpmech/gosl/fun/">fun</a>.<a href="/pkg/github.com/cpmech/gosl/fun/#Ss">Ss</a>) (res <a href="/pkg/builtin/#float64">float64</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 QuadGaussL10 approximates the integral of the function f(x) between a and b, by ten-point
