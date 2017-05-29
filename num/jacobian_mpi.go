@@ -52,7 +52,7 @@ func JacobianMpi(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64, distr bool) (er
 	var df float64
 	for col := 0; col < ndim; col++ {
 		xsafe := x[col]
-		delta := math.Sqrt(MACHEPS * max(CTE1, math.Abs(xsafe)))
+		delta := math.Sqrt(MACHEPS * max(1e-5, math.Abs(xsafe)))
 		x[col] = xsafe + delta
 		err = ffcn(w, x) // w := f(x+δx[col])
 		if err != nil {

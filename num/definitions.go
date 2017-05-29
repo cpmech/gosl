@@ -14,7 +14,6 @@ var (
 )
 
 const (
-	CTE1        = 1e-5 // a minimum value to be used in Jacobian
 	DBL_EPSILON = 1.0e-15
 	DBL_MIN     = math.SmallestNonzeroFloat64
 )
