@@ -95,12 +95,6 @@ tsr implements routines to conduct tensor operations and solve problems in Conti
 				<dd><a href="#CauchyToPK2">func CauchyToPK2(S, σ, F, Fi [][]float64, J float64)</a></dd>
 			
 				
-				<dd><a href="#CheckEigenprojs">func CheckEigenprojs(a []float64, tolP, tolS float64, ver bool) (λsorted []float64)</a></dd>
-			
-				
-				<dd><a href="#CheckEigenprojsDerivs">func CheckEigenprojsDerivs(a []float64, tol float64, ver bool, zero float64)</a></dd>
-			
-				
 				<dd><a href="#Det">func Det(a [][]float64) float64</a></dd>
 			
 				
@@ -395,9 +389,6 @@ tsr implements routines to conduct tensor operations and solve problems in Conti
 				
 				
 					
-					<dd>&nbsp; &nbsp; <a href="#IsoFun.CheckDerivs">func (o *IsoFun) CheckDerivs(A []float64, tol, tol2, tolq, tol3 float64, ver bool, args ...interface{}) (err error)</a></dd>
-				
-					
 					<dd>&nbsp; &nbsp; <a href="#IsoFun.DebugOutput">func (o *IsoFun) DebugOutput(princOnly bool)</a></dd>
 				
 					
@@ -506,8 +497,6 @@ tsr implements routines to conduct tensor operations and solve problems in Conti
 				<a href="https://github.com/cpmech/gosl/blob/master/tsr/smpinvs.go">smpinvs.go</a>
 			
 				<a href="https://github.com/cpmech/gosl/blob/master/tsr/tensor.go">tensor.go</a>
-			
-				<a href="https://github.com/cpmech/gosl/blob/master/tsr/testing.go">testing.go</a>
 			
 			</span>
 			</p>
@@ -723,30 +712,6 @@ Cauchy stress =&gt; first Piola-Kirchhoff: P := σ * inv(F)^t * J
 			<pre>func CauchyToPK2(S, σ, F, Fi [][]<a href="/pkg/builtin/#float64">float64</a>, J <a href="/pkg/builtin/#float64">float64</a>)</pre>
 			<p>
 Cauchy stress =&gt; second Piola-Kirchhoff: S := inv(F) * σ * inv(F)^t * J
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckEigenprojs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=7669:7753#L236">CheckEigenprojs</a></h2>
-			<pre>func CheckEigenprojs(a []<a href="/pkg/builtin/#float64">float64</a>, tolP, tolS <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>) (λsorted []<a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-CheckEigenprojs checks eigen projectors
-</p>
-
-			
-			
-
-		
-			
-			
-			<h2 id="CheckEigenprojsDerivs">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=9945:10021#L320">CheckEigenprojsDerivs</a></h2>
-			<pre>func CheckEigenprojsDerivs(a []<a href="/pkg/builtin/#float64">float64</a>, tol <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>, zero <a href="/pkg/builtin/#float64">float64</a>)</pre>
-			<p>
-CheckEigenprojsDerivs checks the derivatives of eigen projectors w.r.t defining tensor
 </p>
 
 			
@@ -1147,7 +1112,7 @@ Output:
 		
 			
 			
-			<h2 id="M_EigenProjsDerivAuto">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=6777:6867#L218">M_EigenProjsDerivAuto</a></h2>
+			<h2 id="M_EigenProjsDerivAuto">func <a href="https://github.com/cpmech/gosl/blob/master/tsr/eigenprojs.go?s=6717:6807#L216">M_EigenProjsDerivAuto</a></h2>
 			<pre>func M_EigenProjsDerivAuto(dPda [][][]<a href="/pkg/builtin/#float64">float64</a>, a, λ []<a href="/pkg/builtin/#float64">float64</a>, P [][]<a href="/pkg/builtin/#float64">float64</a>) (err <a href="/pkg/builtin/#error">error</a>)</pre>
 			<p>
 M_EigenProjsDerivAuto computes the derivatives of the eigenprojectors of tensor a
@@ -2065,17 +2030,6 @@ IsoFun handles isotropic functions and their derivatives
 
 			
 
-			
-				
-				<h3 id="IsoFun.CheckDerivs">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/testing.go?s=369:484#L5">CheckDerivs</a></h3>
-				<pre>func (o *<a href="#IsoFun">IsoFun</a>) CheckDerivs(A []<a href="/pkg/builtin/#float64">float64</a>, tol, tol2, tolq, tol3 <a href="/pkg/builtin/#float64">float64</a>, ver <a href="/pkg/builtin/#bool">bool</a>, args ...interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
-				<p>
-CheckDerivs check derivatives computed by isotropic function
-</p>
-
-				
-				
-				
 			
 				
 				<h3 id="IsoFun.DebugOutput">func (*IsoFun) <a href="https://github.com/cpmech/gosl/blob/master/tsr/isofun.go?s=14721:14765#L546">DebugOutput</a></h3>

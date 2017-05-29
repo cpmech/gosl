@@ -12,16 +12,3 @@ import "math"
 var (
 	MACHEPS = math.Nextafter(1, 2) - 1.0 // smallest number satisfying 1 + EPS > 1
 )
-
-const (
-	DBL_EPSILON = 1.0e-15
-	DBL_MIN     = math.SmallestNonzeroFloat64
-)
-
-// flags
-const (
-	NaN = iota
-	Inf
-	Equal
-	NotEqual
-)
