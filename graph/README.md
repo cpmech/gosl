@@ -1,6 +1,6 @@
 # Gosl. gm. Graph theory structures and algorithms
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxgraph.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/graph).**
 
 This package implements algorithms for handling graphs and solving problems such as shortest path
 finding. It also implements an algorithm to solve the assignment problem.

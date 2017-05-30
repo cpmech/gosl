@@ -1,6 +1,6 @@
 # Gosl. gm. Geometry algorithms and structures
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxgm.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/gm).**
 
 The package `gm` provides some functions to help with the solution of geometry problems or simply to
 perform computations with structures at least loosely related with geometry.

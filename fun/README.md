@@ -1,6 +1,6 @@
 # Gosl. fun. Scalar functions of one scalar and one vector
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxfun.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/fun).**
 
 This package implements _special_ functions such as orthogonal polynomials and elliptical functions
 of first, second and third kind. For example, these orthogonal polynomial functions are defined:

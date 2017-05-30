@@ -1,6 +1,6 @@
 # Gosl. tsr. Tensor algebra and definitions for continuum mechanics
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxtsr.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/tsr).**
 
 Package `tsr` implements several functions to assist in the implementation of tensor algebra and
 calculus with some focus on continuum mechanics. Basic and advanced features are available. For

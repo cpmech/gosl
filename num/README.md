@@ -1,6 +1,6 @@
 # Gosl. num. Fundamental numerical methods
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxnum.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/num).**
 
 This package implements basic numerical methods such as for root finding, numerical quadrature,
 numerical differentiation, and solution of simple nonlinear problems.

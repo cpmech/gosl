@@ -1,6 +1,6 @@
 # Gosl. img. Image and machine learning algorithms for images
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xximg.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/img).**
 
 The `img` subpackage implements functions to manipulate images and perform analyses.
 

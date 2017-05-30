@@ -1,6 +1,6 @@
 # Gosl. rnd. Random numbers and probability distributions
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxrnd.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/rnd).**
 
 The `rnd` package assists on computations involving stochastic processes. The package has many
 functions to generate pseudo-random numbers, probability distributions, and sampling techniques such

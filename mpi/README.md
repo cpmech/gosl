@@ -1,6 +1,6 @@
 # Gosl. mpi. Message Passing Interface for parallel computing
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxmpi.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/mpi).**
 
 The `mpi` package is a light wrapper to the [OpenMPI](https://www.open-mpi.org) C++ library designed
 to develop algorithms for parallel computing.

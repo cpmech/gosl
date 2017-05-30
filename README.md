@@ -10,6 +10,9 @@ optimisation algorithms, and plotting and visualisation are implemented as well.
 <p><img src="examples/figs/gosl-collage1-sml.png"></p>
 </div>
 
+[See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
+functions and use structures).
+
 
 ## Content
 
@@ -40,9 +43,6 @@ Gosl comprises several _subpackages_ as listed below:
 23. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)             &ndash; 3D Visualisation with the VTK tool kit
 24. [img](https://github.com/cpmech/gosl/tree/master/img)             &ndash; Image and machine learning algorithms for images
 25. [img/ocv](https://github.com/cpmech/gosl/tree/master/img/ocv)     &ndash; Go wrapper to OpenCV
-
-Check the **[developer's documentation](http://rawgit.com/cpmech/gosl/master/doc/index.html)** to
-see what's available and how to call functions and methods.
 
 
 ## Examples

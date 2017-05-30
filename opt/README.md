@@ -1,6 +1,6 @@
 # Gosl. opt. Solvers for optimisation problems
 
-More information is available in **[the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxopt.html).**
+More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/opt).**
 
 This package provides routines to solve optimisation problems. Currently, linear programming
 problems can be solved with the interior-point method. In the future, more solution techniques will
