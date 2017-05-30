@@ -1,6 +1,6 @@
 # Gosl. chk. Check code and unit test tools
 
-More information is available in [the documentation of this package](http://rawgit.com/cpmech/gosl/master/doc/xxchk.html).
+More information is available in [the documentation of this package](https://godoc.org/github.com/cpmech/gosl/chk).
 
 Package `chk` provides tools to check numerical results and to perform unit tests.
 
