@@ -13,6 +13,9 @@ optimisation algorithms, and plotting and visualisation are implemented as well.
 [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
 functions and use structures).
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl?status.svg)](https://godoc.org/github.com/cpmech/gosl)
+
+
 
 ## Content
 
