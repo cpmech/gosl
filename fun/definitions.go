@@ -10,6 +10,9 @@ import "github.com/cpmech/gosl/la"
 //   Scalar scalar
 type Ss func(s float64) (float64, error)
 
+// Sv defines a scalar functioin f(v) of a vector argument v. Also returns error
+type Sv func(v []float64) (float64, error)
+
 // Vs defines a vector function f(s) of a scalar argument s. Also returns error
 //   Vector scalar
 type Vs func(f []float64, s float64) error
