@@ -58,7 +58,7 @@ func QuadGaussL10(a, b float64, f fun.Ss) (res float64, err error) {
 func GaussLegendreXW(x1, x2 float64, n int) (x, w []float64) {
 	x = make([]float64, n)
 	w = make([]float64, n)
-	EPS := 1.0e-15 // relative precision.
+	EPS := MACHEPS // relative precision.
 	var z1, z, xm, xl, pp, p3, p2, p1 float64
 	m := (n + 1) / 2 // The roots are symmetric in the interval, so we only have to find half of them.
 	xm = 0.5 * (x2 + x1)
@@ -107,7 +107,7 @@ func GaussLegendreXW(x1, x2 float64, n int) (x, w []float64) {
 func GaussJacobiXW(alf, bet float64, n int) (x, w []float64) {
 	x = make([]float64, n)
 	w = make([]float64, n)
-	EPS := 1.0e-15 // relative precision.
+	EPS := MACHEPS // relative precision.
 	N := float64(n)
 	var alfbet, an, bn, r1, r2, r3 float64
 	var a, b, c, p1, p2, p3, pp, temp, z, z1 float64
