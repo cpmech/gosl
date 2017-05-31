@@ -52,7 +52,7 @@ func QuadPointsWilson5(w0input float64, p4stable bool) (pts [][]float64) {
 	a := 1.0
 	if w0input > 0 {
 		w0 = w0input
-		wa = (4.0 - w0) / 4.0
+		wa = 1.0 - w0/4.0
 		a = math.Sqrt(1.0 / (3.0 * wa))
 	}
 	if p4stable {
@@ -96,17 +96,47 @@ func QuadPointsWilson8(wbinput float64) (pts [][]float64) {
 	return
 }
 
+// QuadPointsWilson9 computes the 9-points for hexahedra according to Wilson's Appendix G-7 formulae
+//    w0input  -- if w0input > 0, use this value instead of default w0=16/3 (corner)
+//    p8stable -- if true, use w0=0.008 and wa=0.999 to mimic 8-point rule
+func QuadPointsWilson9(w0input float64, p8stable bool) (pts [][]float64) {
+	w0 := 16.0 / 3.0
+	wa := 1.0 / 3.0
+	a := 1.0
+	if w0input > 0 {
+		w0 = w0input
+		wa = 1.0 - w0/8.0
+		a = math.Sqrt(1.0 / (3.0 * wa))
+	}
+	if p8stable {
+		w0 = 0.008
+		wa = 0.999
+		a = 0.5776391
+	}
+	return [][]float64{
+		{-a, -a, -a, wa},
+		{+a, -a, -a, wa},
+		{-a, +a, -a, wa},
+		{+a, +a, -a, wa},
+		{+0, +0, +0, w0},
+		{-a, -a, +a, wa},
+		{+a, -a, +a, wa},
+		{-a, +a, +a, wa},
+		{+a, +a, +a, wa},
+	}
+}
+
 // QuadPointDraw draws quadrature point within standard rectangle or box
 //   dx -- can be used to displace box; may be nil
 func QuadPointDraw(pts [][]float64, ndim int, triOrTet bool, dx []float64, args *plt.A) {
 	if args == nil {
 		args = &plt.A{C: "r", M: "*", Mec: "r", NoClip: true}
 	}
-	if dx == nil {
+	if len(dx) != ndim {
 		dx = []float64{0, 0, 0}
 	}
+	argsPoly := &plt.A{Fc: "none", Ec: "#2645cb", Closed: true, NoClip: true}
 	if ndim == 2 {
-		argsPoly := &plt.A{Fc: "none", Ec: "#2645cb", Closed: true, NoClip: true}
 		if triOrTet {
 			plt.Polyline([][]float64{
 				{dx[0], dx[1]}, {dx[0] + 1, dx[1]}, {dx[0] + 0, dx[1] + 1},
@@ -118,6 +148,14 @@ func QuadPointDraw(pts [][]float64, ndim int, triOrTet bool, dx []float64, args 
 		}
 		for _, p := range pts {
 			plt.PlotOne(dx[0]+p[0], dx[1]+p[1], args)
+		}
+	} else {
+		if triOrTet {
+		} else {
+			plt.Box(dx[0]-1, dx[0]+1, dx[1]-1, dx[1]+1, dx[2]-1, dx[2]+1, &plt.A{Wire: true, Ls: "-", Ec: "#2645cb", Lw: 3})
+		}
+		for _, p := range pts {
+			plt.Plot3dPoint(dx[0]+p[0], dx[1]+p[1], dx[2]+p[2], args)
 		}
 	}
 }
@@ -193,6 +231,16 @@ func init() {
 			{+0.5773502691896257, -0.5773502691896257, +0.5773502691896257, 1},
 			{-0.5773502691896257, +0.5773502691896257, +0.5773502691896257, 1},
 			{+0.5773502691896257, +0.5773502691896257, +0.5773502691896257, 1},
+		},
+		"wilson9corner_9": QuadPointsWilson9(0, false),
+		"wilson9stable_9": QuadPointsWilson9(0, true),
+		"irons_6": [][]float64{
+			{-1, +0, +0, 4.0 / 3.0},
+			{+1, +0, +0, 4.0 / 3.0},
+			{+0, -1, +0, 4.0 / 3.0},
+			{+0, +1, +0, 4.0 / 3.0},
+			{+0, +0, -1, 4.0 / 3.0},
+			{+0, +0, +1, 4.0 / 3.0},
 		},
 		"irons_14": [][]float64{
 			{+SQ19by30, 0.0, 0.0, 320.0 / 361.0},

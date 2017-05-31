@@ -64,17 +64,19 @@ func TestQuadpts01(tst *testing.T) {
 
 		switch name {
 		case "lin":
-			continue
 			for key, pts := range allPts {
 				res := strings.Split(key, "_")
 				rule, n := res[0], io.Atoi(res[1])
 				x := make([]float64, n)
 				w := make([]float64, n)
+				sumW := 0.0
 				for i := 0; i < n; i++ {
 					x[i] = pts[i][0]
 					w[i] = pts[i][3]
+					sumW += pts[i][3]
 				}
 				io.Pfblue2("\nrule = %v\n", rule)
+				chk.Scalar(tst, "sumW", 1e-15, sumW, 2)
 				io.Pf("x = %v\n", x)
 				io.Pfgreen("    %v\n", xref[n])
 				io.Pf("w = %v\n", w)
@@ -87,7 +89,12 @@ func TestQuadpts01(tst *testing.T) {
 			for key, pts := range allPts {
 				res := strings.Split(key, "_")
 				rule, n := res[0], io.Atoi(res[1])
+				sumW := 0.0
+				for _, p := range pts {
+					sumW += p[3]
+				}
 				io.Pfblue2("\nrule = %v\n", rule)
+				chk.Scalar(tst, "sumW", 1e-15, sumW, 4)
 				switch rule {
 				case "legendre":
 					n1d := int(math.Sqrt(float64(n)))
@@ -125,29 +132,33 @@ func TestQuadpts01(tst *testing.T) {
 			}
 
 		case "hex":
-			continue
 			for key, pts := range allPts {
 				res := strings.Split(key, "_")
 				rule, n := res[0], io.Atoi(res[1])
-				if n == 14 {
-					continue
+				sumW := 0.0
+				for _, p := range pts {
+					sumW += p[3]
 				}
 				io.Pfblue2("\nrule = %v\n", rule)
-				n1d := int(math.Floor(math.Pow(float64(n), 1.0/3.0) + 0.5))
-				x1d := xref[n1d]
-				w1d := wref[n1d]
-				for k := 0; k < n1d; k++ {
-					for j := 0; j < n1d; j++ {
-						for i := 0; i < n1d; i++ {
-							m := i + n1d*j + (n1d*n1d)*k
-							x := pts[m][:3]
-							v := pts[m][3]
-							y := []float64{x1d[i], x1d[j], x1d[k]}
-							w := w1d[i] * w1d[j] * w1d[k]
-							io.Pf("%d%d x=%18v w=%18v\n", i, j, x, v)
-							io.Pfgreen("     %18v   %18v\n", y, w)
-							chk.Vector(tst, "x", 1e-15, x, y)
-							chk.Scalar(tst, "w", 1e-14, v, w)
+				chk.Scalar(tst, "sumW", 1e-14, sumW, 8)
+				switch rule {
+				case "legendre":
+					n1d := int(math.Floor(math.Pow(float64(n), 1.0/3.0) + 0.5))
+					x1d := xref[n1d]
+					w1d := wref[n1d]
+					for k := 0; k < n1d; k++ {
+						for j := 0; j < n1d; j++ {
+							for i := 0; i < n1d; i++ {
+								m := i + n1d*j + (n1d*n1d)*k
+								x := pts[m][:3]
+								v := pts[m][3]
+								y := []float64{x1d[i], x1d[j], x1d[k]}
+								w := w1d[i] * w1d[j] * w1d[k]
+								io.Pf("%d%d x=%18v w=%18v\n", i, j, x, v)
+								io.Pfgreen("     %18v   %18v\n", y, w)
+								chk.Vector(tst, "x", 1e-15, x, y)
+								chk.Scalar(tst, "w", 1e-14, v, w)
+							}
 						}
 					}
 				}
@@ -185,5 +196,15 @@ func TestQuadpts01(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.Gll("x", "y", nil)
 		plt.Save("/tmp/gosl", "quadpts01b")
+
+		plt.Reset(true, &plt.A{WidthPt: 500})
+		QuadPointDraw(IntPoints["hex"]["legendre_8"], 3, false, nil, nil)
+		QuadPointDraw(IntPoints["hex"]["wilson9corner_9"], 3, false, []float64{0.0, 2.5, 0.0}, nil)
+		QuadPointDraw(IntPoints["hex"]["wilson9stable_9"], 3, false, []float64{0.0, 0.0, 2.5}, nil)
+		QuadPointDraw(IntPoints["hex"]["irons_6"], 3, false, []float64{0.0, 2.5, 2.5}, nil)
+		plt.Triad(0.5, "", "", "", &plt.A{C: "g"}, nil)
+		plt.Default3dView(-2, 2, -2, 4, -2, 2, true)
+		//plt.ShowSave("/tmp/gosl", "quadpts01c")
+		plt.Save("/tmp/gosl", "quadpts01c")
 	}
 }
