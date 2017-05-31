@@ -4,6 +4,7 @@
 
 // +build !windows
 
+// package dsfmt wraps the dSFMT Double precision SIMD-oriented Fast Mersenne Twister
 package dsfmt
 
 /*

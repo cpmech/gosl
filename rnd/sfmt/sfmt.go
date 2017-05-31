@@ -4,6 +4,7 @@
 
 // +build !windows
 
+// package sfmt wraps the SFMT SIMD-oriented Fast Mersenne Twister
 package sfmt
 
 /*

@@ -4,6 +4,7 @@
 
 // +build !windows,!appengine,!heroku
 
+// package mpi wraps the Message Passing Interface for parallel computations
 package mpi
 
 /*
