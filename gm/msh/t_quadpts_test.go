@@ -8,60 +8,10 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
 )
 
-func Test_legendre(tst *testing.T) {
-	//verbose()
-	chk.PrintTitle("legendre. Legendre polynomials")
-	return
-
-	P := func(x float64, n uint64) (sum float64) {
-		if n == 0 {
-			return 1
-		}
-		if n == 1 {
-			return x
-		}
-		var k uint64
-		for k = 0; k <= n; k++ {
-			r := float64(fun.UintBinomial(n, k))
-			t := fun.UintBinomial((n+k-1)/2, n)
-			io.Pforan("n=%v  k=%v  t=%v  r = %v\n", n, k, t, r)
-		}
-		return
-	}
-
-	if chk.Verbose {
-		plt.Reset(true, nil)
-	}
-
-	X := utl.LinSpace(-1, 1, 1)
-	Y := make([]float64, len(X))
-	var n uint64
-	for n = 2; n < 3; n++ {
-		for j := 0; j < len(X); j++ {
-			Y[j] = P(X[j], n)
-		}
-		if chk.Verbose {
-			plt.Plot(X, Y, &plt.A{Lw: 2, L: io.Sf("n=%d", n)})
-		}
-	}
-
-	if chk.Verbose {
-		plt.AxisYrange(-1.1, 1.1)
-		plt.Gll("$x$", io.Sf("$P_{%d}(x)$", n), nil)
-		err := plt.Save("/tmp/gosl", "legendre01")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
-	}
-}
-
-func Test_quadpts01(tst *testing.T) {
+func TestQuadpts01(tst *testing.T) {
 
 	// TODO: implement this test
 
