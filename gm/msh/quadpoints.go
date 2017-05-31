@@ -207,8 +207,8 @@ var IntPointsOld map[string]map[int]QuadPoints
 // constants
 func init() {
 
-	SQ19by30 := 0.7958224257542215 // sqrt(19.0 / 30.0)
-	SQ19by33 := 0.7587869106393281 // sqrt(19.0 / 33.0)
+	SQ19by30 := math.Sqrt(19.0 / 30.0)
+	SQ19by33 := math.Sqrt(19.0 / 33.0)
 
 	IntPointsOld = make(map[string]map[int]QuadPoints)
 
@@ -380,12 +380,12 @@ func init() {
 			QuadPoint{1.0 / 2.0, 1.0 / 6.0, 1.0 / 6.0, 3.0 / 40.0},
 		},
 		6: []QuadPoint{
-			QuadPoint{1.0, 0.0, 0.0, 4.0 / 3.0},
-			QuadPoint{-1.0, 0.0, 0.0, 4.0 / 3.0},
-			QuadPoint{0.0, 1.0, 0.0, 4.0 / 3.0},
-			QuadPoint{0.0, -1.0, 0.0, 4.0 / 3.0},
-			QuadPoint{0.0, 0.0, 1.0, 4.0 / 3.0},
-			QuadPoint{0.0, 0.0, -1.0, 4.0 / 3.0},
+			QuadPoint{+1.0, +0.0, +0.0, 4.0 / 3.0},
+			QuadPoint{-1.0, +0.0, +0.0, 4.0 / 3.0},
+			QuadPoint{+0.0, +1.0, +0.0, 4.0 / 3.0},
+			QuadPoint{+0.0, -1.0, +0.0, 4.0 / 3.0},
+			QuadPoint{+0.0, +0.0, +1.0, 4.0 / 3.0},
+			QuadPoint{+0.0, +0.0, -1.0, 4.0 / 3.0},
 		},
 	}
 }
