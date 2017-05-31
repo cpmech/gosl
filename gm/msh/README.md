@@ -4,6 +4,11 @@ More information is available in **[the documentation of this package](https://g
 
 ## Shapes: Definitions
 
+<div id="container">
+<p><img src="data/meshelems1.png"></p>
+Nodes, edges and faces numbering convention.
+</div>
+
 
 ### Quadrilaterals and Hexahedra
 
