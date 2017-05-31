@@ -4,14 +4,197 @@
 
 package msh
 
-import "github.com/cpmech/gosl/utl"
+import (
+	"math"
 
-// Numeric constants
-const (
-	SQ3by5   = 0.7745966692414834 // sqrt(3.0 / 5.0)
-	SQ19by30 = 0.7958224257542215 // sqrt(19.0 / 30.0)
-	SQ19by33 = 0.7587869106393281 // sqrt(19.0 / 33.0)
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/num"
+	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
+
+// IntPoint holds data of one integration (quadrature) point
+type IntPoint struct {
+	X []float64 // coordinates [ndim]
+	W float64   // weight
+}
+
+// IntPoints implements integration points generate according to some rule; e.g. Gauss-Legendre
+type IntPoints struct {
+	Rule   string      // the rule; e.g. LE, LO, W5
+	Ndim   int         // space dimension
+	Npts   int         // number of points
+	Points []*IntPoint // quadrature points
+}
+
+// rules:
+//    LE -- Gauss-Legendre
+//    LO -- Gauss-Lobatto
+//    W5 -- Gauss-Legendre, Wilson's method with 5 points and variable weight
+func NewIntPoints(rule string, ndim, npts int, prms fun.Params) (o *IntPoints) {
+
+	o = new(IntPoints)
+	o.Rule = rule
+	o.Ndim = ndim
+	o.Npts = npts
+	o.Points = make([]*IntPoint, npts)
+
+	switch rule {
+
+	case "LE":
+		n1d := int(math.Floor(math.Pow(float64(npts), 1.0/float64(ndim)) + 0.5))
+		x, w := num.GaussLegendreXW(-1, 1, n1d)
+		switch ndim {
+		case 1:
+			for i := 0; i < npts; i++ {
+				o.Points[i] = &IntPoint{X: []float64{x[i]}, W: w[i]}
+			}
+		case 2:
+			for j := 0; j < n1d; j++ {
+				for i := 0; i < n1d; i++ {
+					m := i + n1d*j
+					o.Points[m] = &IntPoint{X: []float64{x[i], x[j]}, W: w[i] * w[j]}
+				}
+			}
+		case 3:
+			for k := 0; k < n1d; k++ {
+				for j := 0; j < n1d; j++ {
+					for i := 0; i < n1d; i++ {
+						m := i + n1d*j + (n1d*n1d)*k
+						o.Points[m] = &IntPoint{X: []float64{x[i], x[j], x[k]}, W: w[i] * w[j] * w[k]}
+					}
+				}
+			}
+		}
+
+	case "W5corner", "W4stable", "W5":
+		if ndim != 2 || npts != 5 {
+			chk.Panic("rule %q works only with ndim=2 and npts=5. ndim=%d or npts=%d is invalid", ndim, npts)
+		}
+		w0 := 8.0 / 3.0
+		wa := 1.0 / 3.0
+		a := 1.0
+		if rule == "W4stable" {
+			w0 = 0.004
+			wa = 0.999
+			a = 0.5776391
+		}
+		if rule == "W5" {
+			w0prm := prms.Find("w0")
+			if w0prm == nil {
+				chk.Panic("rule %q requires parameter w0 in prms", rule)
+			}
+			w0 = w0prm.V
+			wa = (4.0 - w0) / 4.0
+			a = math.Sqrt(1.0 / (3.0 * wa))
+		}
+		o.Points = []*IntPoint{
+			{X: []float64{-a, -a}, W: wa},
+			{X: []float64{+a, -a}, W: wa},
+			{X: []float64{+0, +0}, W: w0},
+			{X: []float64{-a, +a}, W: wa},
+			{X: []float64{+a, +a}, W: wa},
+		}
+
+	case "W8fixed", "W8": // Appendix G-6, Eqs. (G.20)
+		if ndim != 2 || npts != 8 {
+			chk.Panic("rule %q works only with ndim=2 and npts=8. ndim=%d or npts=%d is invalid", ndim, npts)
+		}
+		a := math.Sqrt(7.0 / 9.0)
+		b := math.Sqrt(7.0 / 15.0)
+		wa := 9.0 / 49.0
+		wb := 40.0 / 49.0
+		if rule == "W8" {
+			wbPrm := prms.Find("wb")
+			if wbPrm == nil {
+				chk.Panic("rule %q requires parameter wb in prms", rule)
+			}
+			wb = wbPrm.V
+			wa = 1.0 - wb
+			swa := math.Sqrt(wa)
+			a = 1.0 / math.Sqrt(3.0*swa)
+			b = math.Sqrt((2.0 - 2.0*swa) / (3.0 * wb))
+		}
+		o.Points = []*IntPoint{
+			{X: []float64{-a, -a}, W: wa},
+			{X: []float64{+0, -b}, W: wb},
+			{X: []float64{+a, -a}, W: wa},
+			{X: []float64{-b, +0}, W: wb},
+			{X: []float64{+b, +0}, W: wb},
+			{X: []float64{-a, +a}, W: wa},
+			{X: []float64{+0, +b}, W: wb},
+			{X: []float64{+a, +a}, W: wa},
+		}
+
+	default:
+		chk.Panic("rule %q is not available", rule)
+	}
+	return
+}
+
+func (o IntPoints) Draw(dx []float64, args *plt.A) {
+	if args == nil {
+		args = &plt.A{C: "r", M: "*", Mec: "r", NoClip: true}
+	}
+	if dx == nil {
+		dx = []float64{0, 0}
+	}
+	if o.Ndim == 2 {
+		plt.Polyline([][]float64{
+			{dx[0] - 1, dx[1] - 1}, {dx[0] + 1, dx[1] - 1}, {dx[0] + 1, dx[1] + 1}, {dx[0] - 1, dx[1] + 1},
+		}, &plt.A{Fc: "none", Ec: "#2645cb", Closed: true, NoClip: true})
+		for _, pts := range o.Points {
+			plt.PlotOne(dx[0]+pts.X[0], dx[1]+pts.X[1], args)
+		}
+	}
+}
+
+// sets of integration points /////////////////////////////////////////////////////////////////////
+
+// IntPointsSet implements a set of IntPoints (integration points); e.g. for "lin"
+type IntPointsSet []*IntPoints
+
+// Find finds sets of integration points
+func (o *IntPointsSet) Find(rule string, npts int) (pts *IntPoints) {
+	for _, pts = range *o {
+		if pts.Rule == rule && pts.Npts == npts {
+			return
+		}
+	}
+	return nil
+}
+
+// linIntPoints holds all integration points currently generated for "lin" elements
+var linIntPointsSet IntPointsSet
+
+// quaIntPoints holds all integration points currently generated for "qua" elements
+var quaIntPointsSet IntPointsSet
+
+// hexIntPoints holds all integration points currently generated for "hex" elements
+var hexIntPointsSet IntPointsSet
+
+// initialise variables
+func init() {
+
+	// lin
+	for n := 1; n <= 5; n++ {
+		linIntPointsSet = append(linIntPointsSet, NewIntPoints("LE", 1, n, nil))
+	}
+
+	// qua
+	quaIntPointsSet = append(quaIntPointsSet, NewIntPoints("LE", 2, 4, nil))
+	quaIntPointsSet = append(quaIntPointsSet, NewIntPoints("LE", 2, 9, nil))
+	quaIntPointsSet = append(quaIntPointsSet, NewIntPoints("W5corner", 2, 5, nil))
+	quaIntPointsSet = append(quaIntPointsSet, NewIntPoints("W4stable", 2, 5, nil))
+	quaIntPointsSet = append(quaIntPointsSet, NewIntPoints("W8fixed", 2, 8, nil))
+
+	// hex
+	hexIntPointsSet = append(hexIntPointsSet, NewIntPoints("LE", 3, 8, nil))
+	hexIntPointsSet = append(hexIntPointsSet, NewIntPoints("LE", 3, 27, nil))
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
 
 // QuadPoint implements a quadrature (e.g. Gauss) point
 type QuadPoint []float64 // length=4: [r, s, t, weight]
@@ -19,12 +202,17 @@ type QuadPoint []float64 // length=4: [r, s, t, weight]
 // QuadPoints is a set of quadrature points
 type QuadPoints []QuadPoint
 
+var IntPointsOld map[string]map[int]QuadPoints
+
 // constants
 func init() {
 
-	IntPoints = make(map[string]map[int]QuadPoints)
+	SQ19by30 := 0.7958224257542215 // sqrt(19.0 / 30.0)
+	SQ19by33 := 0.7587869106393281 // sqrt(19.0 / 33.0)
 
-	IntPoints["lin"] = map[int]QuadPoints{
+	IntPointsOld = make(map[string]map[int]QuadPoints)
+
+	IntPointsOld["lin"] = map[int]QuadPoints{
 		1: []QuadPoint{
 			QuadPoint{0, 0, 0, 2},
 		},
@@ -52,7 +240,7 @@ func init() {
 		},
 	}
 
-	IntPoints["qua"] = map[int]QuadPoints{
+	IntPointsOld["qua"] = map[int]QuadPoints{
 		4: []QuadPoint{
 			QuadPoint{-0.5773502691896257, -0.5773502691896257, 0, 1},
 			QuadPoint{+0.5773502691896257, -0.5773502691896257, 0, 1},
@@ -72,7 +260,7 @@ func init() {
 		},
 	}
 
-	IntPoints["hex"] = map[int]QuadPoints{
+	IntPointsOld["hex"] = map[int]QuadPoints{
 		8: []QuadPoint{
 			QuadPoint{-0.5773502691896257, -0.5773502691896257, -0.5773502691896257, 1},
 			QuadPoint{+0.5773502691896257, -0.5773502691896257, -0.5773502691896257, 1},
@@ -130,7 +318,7 @@ func init() {
 		},
 	}
 
-	IntPoints["tri"] = map[int]QuadPoints{
+	IntPointsOld["tri"] = map[int]QuadPoints{
 		1: []QuadPoint{
 			QuadPoint{1.0 / 3.0, 1.0 / 3.0, 0.0, 1.0 / 2.0},
 		},
@@ -174,7 +362,7 @@ func init() {
 		},
 	}
 
-	IntPoints["tet"] = map[int]QuadPoints{
+	IntPointsOld["tet"] = map[int]QuadPoints{
 		1: []QuadPoint{
 			QuadPoint{1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0, 1.0 / 6.0},
 		},
