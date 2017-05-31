@@ -5,58 +5,94 @@
 package msh
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/num"
 )
 
 func TestQuadpts01(tst *testing.T) {
 
-	// TODO: implement this test
-
 	//verbose()
 	chk.PrintTitle("quadpts01. quadrature points")
 
-	/*
-		// 1D Gaussian rules: xi and wi
-		C13 := math.Sqrt(1.0 / 3.0)
-		C35 := math.Sqrt(3.0 / 5.0)
-		C37 := math.Sqrt(3.0/7.0 + 2.0*math.Sqrt(6.0/5.0)/7.0)
-		C73 := math.Sqrt(3.0/7.0 - 2.0*math.Sqrt(6.0/5.0)/7.0)
-		C30 := math.Sqrt(30.0) / 36.0
-		C57 := math.Sqrt(5.0+2.0*math.Sqrt(10.0/7.0)) / 3.0
-		C75 := math.Sqrt(5.0-2.0*math.Sqrt(10.0/7.0)) / 3.0
-		rule2 := [][]float64{
-			{-C13, 1.0},
-			{+C13, 1.0},
-		}
-		rule3 := [][]float64{
-			{-C35, 5.0 / 9.0},
-			{+0.0, 8.0 / 9.0},
-			{+C35, 5.0 / 9.0},
-		}
-		rule4 := [][]float64{
-			{-C37, 18.0 - C30},
-			{+C37, 18.0 - C30},
-			{+C73, 18.0 + C30},
-			{-C73, 18.0 + C30},
-		}
-		rule5 := [][]float64{
-			{-C57, (322.0 - 13.0*SQ70) / 900.0},
-			{+C57, (322.0 - 13.0*SQ70) / 900.0},
-			{+0.0, (322.0 - 13.0*SQ70) / 900.0},
-			{+C75, (322.0 + 13.0*SQ70) / 900.0},
-			{-C75, (322.0 + 13.0*SQ70) / 900.0},
-		}
-	*/
+	degreeMax := 5
+	glX := make([][]float64, degreeMax+1)
+	glW := make([][]float64, degreeMax+1)
+	for n := 1; n <= degreeMax; n++ {
+		glX[n], glW[n] = num.GaussLegendreXW(-1, 1, n)
+	}
 
-	for name, pts := range IntPoints {
+	for name, allPts := range IntPoints {
 
-		io.Pfyel("--------------------------------- %-6s---------------------------------\n", name)
+		io.PfYel("\n--------------------------------- %-6s---------------------------------\n", name)
 
-		for n, p := range pts {
-			io.Pforan("%2d: %v\n\n", n, p)
+		switch name {
+		case "lin":
+			for n, pts := range allPts {
+				x := make([]float64, n)
+				w := make([]float64, n)
+				for i := 0; i < n; i++ {
+					x[i] = pts[i][0]
+					w[i] = pts[i][3]
+				}
+				io.Pf("\nx = %v\n", x)
+				io.Pfgreen("    %v\n", glX[n])
+				io.Pf("w = %v\n", w)
+				io.Pfgreen("    %v\n", glW[n])
+				chk.Vector(tst, io.Sf("lin:%d x", n), 1e-15, x, glX[n])
+				chk.Vector(tst, io.Sf("lin:%d w", n), 1e-15, w, glW[n])
+			}
+
+		case "qua":
+			for n, pts := range allPts {
+				io.Pl()
+				n1d := int(math.Sqrt(float64(n)))
+				x1d := glX[n1d]
+				w1d := glW[n1d]
+				for j := 0; j < n1d; j++ {
+					for i := 0; i < n1d; i++ {
+						m := i + n1d*j
+						x := pts[m][:2]
+						v := pts[m][3]
+						y := []float64{x1d[i], x1d[j]}
+						w := w1d[i] * w1d[j]
+						io.Pf("  %d%d x = %23v  w = %23v\n", i, j, x, v)
+						io.Pfgreen("         %23v      %23v\n", y, w)
+						chk.Vector(tst, "x", 1e-15, x, y)
+						chk.Scalar(tst, "w", 1e-15, v, w)
+					}
+				}
+			}
+
+		case "hex":
+			for n, pts := range allPts {
+				if n == 14 {
+					continue
+				}
+				io.Pl()
+				n1d := int(math.Floor(math.Pow(float64(n), 1.0/3.0) + 0.5))
+				x1d := glX[n1d]
+				w1d := glW[n1d]
+				for k := 0; k < n1d; k++ {
+					for j := 0; j < n1d; j++ {
+						for i := 0; i < n1d; i++ {
+							m := i + n1d*j + (n1d*n1d)*k
+							x := pts[m][:3]
+							v := pts[m][3]
+							y := []float64{x1d[i], x1d[j], x1d[k]}
+							w := w1d[i] * w1d[j] * w1d[k]
+							io.Pf("%d%d x=%18v w=%18v\n", i, j, x, v)
+							io.Pfgreen("     %18v   %18v\n", y, w)
+							chk.Vector(tst, "x", 1e-15, x, y)
+							chk.Scalar(tst, "w", 1e-14, v, w)
+						}
+					}
+				}
+			}
 		}
+
 	}
 }
