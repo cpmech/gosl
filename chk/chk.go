@@ -2,11 +2,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package chk contains functions for checking and testing computations
+// Package chk contains functions for checking and testing computations
 package chk
 
 import (
-	"errors"
 	"fmt"
 	"math"
 	"runtime"
@@ -14,8 +13,13 @@ import (
 )
 
 var (
-	AssertOn = true // activates/deactivates asserts
-	Verbose  = false
+	// AssertOn activates or deactivates asserts
+	AssertOn = true
+
+	// Verbose turn on verbose mode
+	Verbose = false
+
+	// ColorsOn turn on use of colours on console
 	ColorsOn = true
 )
 
@@ -52,9 +56,10 @@ func Panic(msg string, prm ...interface{}) {
 
 // Err returns a new error
 func Err(msg string, prm ...interface{}) error {
-	return errors.New(fmt.Sprintf(msg, prm...))
+	return fmt.Errorf(msg, prm...)
 }
 
+// PrintOk prints "OK" in green (if ColorsOn==true)
 func PrintOk(msg string, prm ...interface{}) {
 	if Verbose {
 		fmt.Printf(msg, prm...)
@@ -66,6 +71,7 @@ func PrintOk(msg string, prm ...interface{}) {
 	}
 }
 
+// PrintFail prints "FAIL" in red (if ColorsOn==true)
 func PrintFail(msg string, prm ...interface{}) {
 	if Verbose {
 		fmt.Printf(msg, prm...)
@@ -86,7 +92,7 @@ func PrintTitle(title string) {
 	fmt.Printf("   . . . testing . . .   %s\n", title)
 }
 
-// PrintMsg returns a formatted error message
+// CheckAndPrint returns a formatted error message
 func CheckAndPrint(tst *testing.T, msg string, tol, diff float64) {
 	if math.IsNaN(diff) || math.IsInf(diff, 0) {
 		tst.Errorf("[1;31m%s failed with NaN or Inf: %v[0m", msg, diff)
