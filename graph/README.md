@@ -1,5 +1,7 @@
 # Gosl. gm. Graph theory structures and algorithms
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/graph?status.svg)](https://godoc.org/github.com/cpmech/gosl/graph) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/graph).**
 
 This package implements algorithms for handling graphs and solving problems such as shortest path

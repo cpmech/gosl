@@ -1,5 +1,7 @@
 # Gosl. gm/tri. Mesh generation: triangles
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/gm/tri?status.svg)](https://godoc.org/github.com/cpmech/gosl/gm/tri) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/gm/tri).**
 
 The `tri` package has functions go generate meshes of triangular elements and Delaunay

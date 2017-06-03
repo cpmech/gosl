@@ -1,5 +1,7 @@
 # Gosl. ode. Ordinary differential equations
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/ode?status.svg)](https://godoc.org/github.com/cpmech/gosl/ode) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/ode).**
 
 Package `ode` implements solution techniques to ordinary differential equations. Initially,

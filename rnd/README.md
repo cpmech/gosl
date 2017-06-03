@@ -1,5 +1,7 @@
 # Gosl. rnd. Random numbers and probability distributions
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/rnd?status.svg)](https://godoc.org/github.com/cpmech/gosl/rnd) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/rnd).**
 
 The `rnd` package assists on computations involving stochastic processes. The package has many

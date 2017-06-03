@@ -1,5 +1,7 @@
 # Gosl. fdm. Simple finite differences method
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/fdm?status.svg)](https://godoc.org/github.com/cpmech/gosl/fdm) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/fdm).**
 
 This package implements few routines to help with the implementation of the finite differences

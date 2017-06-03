@@ -1,5 +1,7 @@
 # Gosl. utl. Utilities. Lists. Dictionaries. Simple Numerics
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/utl?status.svg)](https://godoc.org/github.com/cpmech/gosl/utl) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/utl).**
 
 This package implements functions for simplifying numeric calculations such as finding the maximum

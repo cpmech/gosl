@@ -1,5 +1,7 @@
 # Gosl. img. Image and machine learning algorithms for images
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/img?status.svg)](https://godoc.org/github.com/cpmech/gosl/img) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/img).**
 
 The `img` subpackage implements functions to manipulate images and perform analyses.

@@ -1,5 +1,7 @@
 # Gosl. rnd/sfmt. Light wrapper to the dSFMT library
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/rnd/dsfmt?status.svg)](https://godoc.org/github.com/cpmech/gosl/rnd/dsfmt) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/rnd/dsfmt).**
 
 dSFMT is the [Double precision SIMD-oriented Fast Mersenne Twister](http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/) developed by Mutsuo Saito and Makoto

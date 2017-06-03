@@ -89,9 +89,14 @@ depgraph(){
 
 fixreadme() {
     pkg=$1
-    old="http://rawgit.com/cpmech/gosl/master/doc/xx${pkg/\//-}.html"
-    new="https://godoc.org/github.com/cpmech/gosl/${pkg}"
-    sed -i 's,'"$old"','"$new"',' README.md
+    #old="http://rawgit.com/cpmech/gosl/master/doc/xx${pkg/\//-}.html"
+    #new="https://godoc.org/github.com/cpmech/gosl/${pkg}"
+    #sed -i 's,'"$old"','"$new"',' README.md
+    key="More information is available in"
+    lnk="[![GoDoc](https://godoc.org/github.com/cpmech/gosl/${pkg}?status.svg)](https://godoc.org/github.com/cpmech/gosl/${pkg})"
+    lnk=$(echo "$lnk" | sed 's/\//\\\//g')
+    # prepend
+    sed -i "/More information is available in/i $lnk \n" README.md
 }
 
 if [[ $JOB == 1 ]]; then

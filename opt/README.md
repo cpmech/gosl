@@ -1,5 +1,7 @@
 # Gosl. opt. Solvers for optimisation problems
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/opt?status.svg)](https://godoc.org/github.com/cpmech/gosl/opt) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/opt).**
 
 This package provides routines to solve optimisation problems. Currently, linear programming

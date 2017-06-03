@@ -1,5 +1,7 @@
 # Gosl. io. Input/output, read/write files, and print commands
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl/io?status.svg)](https://godoc.org/github.com/cpmech/gosl/io) 
+
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/io).**
 
 This subpackage helps with reading and writing files, printing nice formatted messages (with
