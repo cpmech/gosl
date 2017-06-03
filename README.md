@@ -69,7 +69,7 @@ Normally distributed pseudo-random numbers. Using sub-package rnd
 ## 1 Installation on Windows
 
 1. Download and install *go1.8.3.windows-amd64.msi* (or newer) from https://golang.org/dl/
-2. Download and run the [Windows 10 Installer](https://sourceforge.net/projects/gosl-installer/files/gosl-installer.msi/download)
+2. Download and run the [Windows 10 Installer](https://sourceforge.net/projects/gosl-installer/files/)
 
 We also recommend to install [PythonXY](http://python-xy.github.io/downloads.html),
 [Git+Bash](https://git-scm.com/download/) and

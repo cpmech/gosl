@@ -4,14 +4,22 @@
 GP=${GOPATH//\\//}
 SS="$GP/src/github.com/cpmech/gosl/scripts/windows/gen-installer"
 
+# variables
+TMPDIR=$TEMP/GOSLWIX
+SRCDIR=$TMPDIR/SourceDir
+CPMPTH=MyGo/src/github.com/cpmech
+echo "TMPDIR=$TMPDIR"
+echo "SRCDIR=$SRCDIR"
+echo "CPMPTH=$CPMPTH"
+
 # create SourceDir in TEMP directory
-rm -rf $TEMP/GOSLWIX
-mkdir -p $TEMP/GOSLWIX/SourceDir
-cmd //c 'mklink /J %TEMP%\GOSLWIX\SourceDir\MyGo C:\MyGo'
-cmd //c 'mklink /J %TEMP%\GOSLWIX\SourceDir\Gcc64 C:\TDM-GCC-64'
+rm -rf $TMPDIR
+mkdir -p $SRCDIR/$CPMPTH
+cmd //c "mklink /J %TEMP%\GOSLWIX\SourceDir\Gcc64 C:\TDM-GCC-64"
+cmd //c "mklink /J %TEMP%\GOSLWIX\SourceDir\MyGo\src\github.com\cpmech\gosl C:\MyGo\src\github.com\cpmech\gosl"
 
 # generate frags file
-cd $TEMP/GOSLWIX
+cd $TMPDIR
 heat.exe dir SourceDir -gg -sfrag -sreg -srd -dr TARGETDIR -t $SS/trn.xslt -out frags.wxs
 
 # compile wxs files
@@ -22,3 +30,6 @@ light.exe -ext WixUIExtension -ext WixUtilExtension -out gosl-installer.msi frag
 
 # remove object files
 rm *.wixobj *.wixpdb
+
+# message
+echo "file <$TMPDIR/gosl-installer.msi> generated"
