@@ -91,7 +91,7 @@ func Test_singleq4(tst *testing.T) {
 	// draw
 	if chk.Verbose {
 		args := NewArgs()
-		args.IdsCells = true
+		args.WithIdsCells = true
 		plt.Reset(true, nil)
 		m.Draw(args)
 		plt.HideAllBorders()
@@ -223,7 +223,7 @@ func Test_mesh01(tst *testing.T) {
 	// draw
 	if chk.Verbose {
 		args := NewArgs()
-		args.IdsCells = true
+		args.WithIdsCells = true
 		plt.Reset(true, nil)
 		m.Draw(args)
 		plt.HideAllBorders()
@@ -331,7 +331,7 @@ func Test_cubeandtet(tst *testing.T) {
 	// draw
 	if chk.Verbose {
 		args := NewArgs()
-		args.IdsCells = true
+		args.WithIdsCells = true
 		args.WithEdges = true
 		plt.Reset(true, nil)
 		m.Draw(args)
