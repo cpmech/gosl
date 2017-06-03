@@ -19,15 +19,16 @@ type DrawArgs struct {
 	WithEdges    bool           // draw edges
 	WithCells    bool           // draw cells
 	WithFaces    bool           // draw faces
-	IdsNodes     bool           // with ids of nodes
-	IdsCells     bool           // with ids of cells
-	IdsEdges     bool           // with ids of edges
-	IdsFaces     bool           // with ids of faces
-	ArgsNodes    *plt.A         // arguments for nodes
+	WithIdsVerts bool           // with ids of nodes
+	WithIdsCells bool           // with ids of cells
+	WithIdsEdges bool           // with ids of edges
+	WithIdsFaces bool           // with ids of faces
+	ArgsVerts    *plt.A         // arguments for nodes
 	ArgsEdges    *plt.A         // arguments for edges
 	ArgsCells    map[int]*plt.A // arguments for cells [cellId] => A; if len==1, use the same for all
 	ArgsLins     map[int]*plt.A // arguments for lins [cellId] => A; if len==1, use the same for all
 	ArgsIdsCells *plt.A         // arguments for the ids of cells
+	ArgsIdsVerts *plt.A         // arguments for the ids of vertices
 }
 
 // NewArgs returns a new set of drawing arguments
@@ -41,11 +42,12 @@ func NewArgs() (o *DrawArgs) {
 func (o *DrawArgs) Default() {
 	o.WithCells = true
 	o.WithEdges = false
-	o.ArgsNodes = &plt.A{C: "k", NoClip: true}
+	o.ArgsVerts = &plt.A{C: "k", NoClip: true}
 	o.ArgsEdges = &plt.A{C: "#480085", NoClip: true}
 	o.ArgsCells = map[int]*plt.A{-1: &plt.A{Fc: "#dce1f4", Ec: "k", Closed: true, NoClip: true}}
 	o.ArgsLins = map[int]*plt.A{-1: &plt.A{C: "#41045a", NoClip: true}}
 	o.ArgsIdsCells = &plt.A{C: "k", Fsz: 7, Ha: "center", Va: "center", NoClip: true}
+	o.ArgsIdsVerts = &plt.A{C: "r", Fsz: 7, Ha: "left", Va: "bottom", NoClip: true}
 }
 
 // Draw draws mesh. Arguments A may be nil (defaults will be selected)
@@ -147,7 +149,7 @@ func (o *Mesh) Draw(a *DrawArgs) {
 				vid := cell.V[8]
 				x := o.Verts[vid].X[0]
 				y := o.Verts[vid].X[1]
-				plt.PlotOne(x, y, a.ArgsNodes)
+				plt.PlotOne(x, y, a.ArgsVerts)
 			}
 		}
 
@@ -167,7 +169,7 @@ func (o *Mesh) Draw(a *DrawArgs) {
 		}
 
 		// cell ids
-		if a.IdsCells {
+		if a.WithIdsCells {
 			if X == nil {
 				X = o.ExtractCellCoords(cell.Id)
 			}
@@ -189,6 +191,24 @@ func (o *Mesh) Draw(a *DrawArgs) {
 				plt.Text3d(xc[0], xc[1], z, txt, a.ArgsIdsCells)
 			} else {
 				plt.Text(xc[0], xc[1], txt, a.ArgsIdsCells)
+			}
+		}
+	}
+
+	// loop over vertices
+	if a.WithIdsVerts {
+		for _, v := range o.Verts {
+			if a.WithIdsVerts {
+				txt := io.Sf("%d", v.Id)
+				if o.Ndim > 2 {
+					z := 0.0
+					if len(v.X) > 2 {
+						z = v.X[2]
+					}
+					plt.Text3d(v.X[0], v.X[1], z, txt, a.ArgsIdsVerts)
+				} else {
+					plt.Text(v.X[0], v.X[1], txt, a.ArgsIdsVerts)
+				}
 			}
 		}
 	}
