@@ -8,6 +8,7 @@ package msh
 
 import (
 	"encoding/json"
+	"math"
 	"sort"
 
 	"github.com/cpmech/gosl/chk"
@@ -82,6 +83,7 @@ type Cell struct {
 	Edges      EdgeSet `json:"-"` // edges on this cell
 	Faces      FaceSet `json:"-"` // faces on this cell
 	Neighbours CellSet `json:"-"` // neighbour cells
+	Gndim      int     `json:"-"` // geometry ndim
 }
 
 // Mesh defines mesh data
@@ -94,6 +96,11 @@ type Mesh struct {
 	// derived
 	EdgesMap EdgesMap `json:"-"` // all edges
 	FacesMap FacesMap `json:"-"` // all faces
+
+	// calculated by CalcDerived
+	Ndim int       // max space dimension among all vertices
+	Xmin []float64 // min(x) among all vertices [ndim]
+	Xmax []float64 // max(x) among all vertices [ndim]
 }
 
 // Edge defines an edge
@@ -129,7 +136,7 @@ type TagMaps struct {
 	FaceTag2verts  map[int]VertSet    // face tag => vertices on tagged edge [unique]
 }
 
-// Read reads mesh
+// Read reads mesh and call CheckAndDerivedVars
 func Read(fn string) (o *Mesh, err error) {
 
 	// new mesh
@@ -148,22 +155,51 @@ func Read(fn string) (o *Mesh, err error) {
 	}
 
 	// check
-	err = o.Check()
+	err = o.CheckAndCalcDerivedVars()
 	return
 }
 
-// Check checks whether input data is consistent or not
-func (o *Mesh) Check() (err error) {
+// CheckAndCalcDerivedVars checks input data and computes derived quantities such as the max space
+// dimension, min(x) and max(x) among all vertices, cells' gndim, etc.
+// This function will set o.Ndim, o.Xmin and o.Xmax
+func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 
-	// check vertex data
+	// check for at least one vertex
+	if len(o.Verts) < 1 {
+		err = chk.Err("at least 1 vertex is required in mesh\n")
+		return
+	}
+
+	// check vertex data and find max(ndim), Xmin, and Xmax
+	o.Xmin = make([]float64, 4)
+	o.Xmax = make([]float64, 4)
+	for i := 0; i < 4; i++ {
+		o.Xmin[i] = math.MaxFloat64
+		o.Xmax[i] = math.SmallestNonzeroFloat64
+	}
+	o.Ndim = len(o.Verts[0].X)
 	for id, vert := range o.Verts {
 		if id != vert.Id {
 			err = chk.Err("vertex ids must be sequential. vertex %d must be %d", vert.Id, id)
 			return
 		}
+		ndim := len(vert.X)
+		if ndim > o.Ndim {
+			o.Ndim = ndim
+		}
+		for i := 0; i < ndim; i++ {
+			if vert.X[i] < o.Xmin[i] {
+				o.Xmin[i] = vert.X[i]
+			}
+			if vert.X[i] > o.Xmax[i] {
+				o.Xmax[i] = vert.X[i]
+			}
+		}
 	}
+	o.Xmin = o.Xmin[0:o.Ndim] // re-slice
+	o.Xmax = o.Xmax[0:o.Ndim] // re-slice
 
-	// check cell data
+	// check cell data and find gndims
 	for id, cell := range o.Cells {
 		if id != cell.Id {
 			err = chk.Err("cell ids must be sequential. cell %d must be %d", cell.Id, id)
@@ -173,9 +209,11 @@ func (o *Mesh) Check() (err error) {
 			err = chk.Err("cell tags must be negative. cell %d has incorrect tag %d", cell.Id, cell.Tag)
 			return
 		}
-		if _, ok := GeomNdim[cell.Type]; !ok {
+		if gndim, ok := GeomNdim[cell.Type]; !ok {
 			err = chk.Err("cell type %q for cell %d is not available (in GeomNdim)", cell.Type, cell.Id)
 			return
+		} else {
+			cell.Gndim = gndim
 		}
 		if nv, ok := NumVerts[cell.Type]; !ok {
 			err = chk.Err("cell type %q for cell %d is not available (in NumVerts)", cell.Type, cell.Id)
@@ -196,36 +234,6 @@ func (o *Mesh) Check() (err error) {
 					err = chk.Err("number of edge tags for cell %d is incorrect. %d != %d", cell.Id, nEtags, len(lv))
 					return
 				}
-			}
-		}
-	}
-	return
-}
-
-// CalcLimits calculates limits and space dimension
-func (o *Mesh) CalcLimits() (Ndim int, Min []float64, Max []float64, err error) {
-
-	// check
-	if len(o.Verts) < 1 {
-		err = chk.Err("at least 1 vertex is required in mesh\n")
-		return
-	}
-
-	// allocate slices
-	Ndim = len(o.Verts[0].X)
-	for i := 0; i < Ndim; i++ {
-		Min = append(Min, o.Verts[0].X[i])
-		Max = append(Max, o.Verts[0].X[i])
-	}
-
-	// loop over vertices
-	for _, vert := range o.Verts {
-		for i := 0; i < Ndim; i++ {
-			if vert.X[i] < Min[i] {
-				Min[i] = vert.X[i]
-			}
-			if vert.X[i] > Max[i] {
-				Max[i] = vert.X[i]
 			}
 		}
 	}
@@ -323,6 +331,24 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 	}
 	return
 }
+
+// methods ////////////////////////////////////////////////////////////////////////////////////////
+
+// ExtractCellCoords extracts cell coordinates
+//   X -- matrix with coordinates [nverts][gndim]
+func (o *Mesh) ExtractCellCoords(cellId int) (X [][]float64) {
+	c := o.Cells[cellId]
+	X = make([][]float64, len(c.V))
+	for m, v := range c.V {
+		X[m] = make([]float64, c.Gndim)
+		for i := 0; i < c.Gndim; i++ {
+			X[m][i] = o.Verts[v].X[i]
+		}
+	}
+	return
+}
+
+// auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 // setBryTagMaps sets maps of boundary tags
 func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BryPairSet, vertBryMap *map[int]VertSet, cell *Cell, tagList []int, locVerts [][]int) {

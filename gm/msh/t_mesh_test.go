@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 )
 
 func Test_singleq4(tst *testing.T) {
@@ -46,6 +47,23 @@ func Test_singleq4(tst *testing.T) {
 	// check input data
 	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypes, allV, allEtags, nil)
 
+	// derived data
+	ndim := 2
+	xmin := []float64{0.0, 0.0}
+	xmax := []float64{1.0, 1.0}
+	allGndim := []int{2}
+	allCoords := [][][]float64{
+		[][]float64{
+			{0.0, 0.0},
+			{1.0, 0.0},
+			{1.0, 1.0},
+			{0.0, 1.0},
+		},
+	}
+
+	// check derived data
+	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
+
 	// get map of tags
 	tm, err := m.GetTagMaps()
 	if err != nil {
@@ -69,6 +87,16 @@ func Test_singleq4(tst *testing.T) {
 
 	// check maps
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
+
+	// draw
+	if chk.Verbose {
+		args := NewArgs()
+		args.IdsCells = true
+		plt.Reset(true, nil)
+		m.Draw(args)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/gm", "singleq4")
+	}
 }
 
 func Test_mesh01(tst *testing.T) {
@@ -123,6 +151,51 @@ func Test_mesh01(tst *testing.T) {
 	// check input data
 	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypes, allV, allEtags, nil)
 
+	// derived data
+	ndim := 2
+	xmin := []float64{0.0, 0.0}
+	xmax := []float64{1.4, 1.0}
+	allGndim := []int{2, 2, 2, 2, 2, 2}
+	allCoords := [][][]float64{
+		[][]float64{
+			{0.0, 0.0},
+			{0.5, 0.0},
+			{0.5, 0.5},
+			{0.0, 0.5},
+		},
+		[][]float64{
+			{0.5, 0.0},
+			{1.0, 0.0},
+			{1.0, 0.5},
+			{0.5, 0.5},
+		},
+		[][]float64{
+			{1.0, 0.0},
+			{1.4, 0.25},
+			{1.0, 0.5},
+		},
+		[][]float64{
+			{0.0, 0.5},
+			{0.5, 0.5},
+			{0.5, 1.0},
+			{0.0, 1.0},
+		},
+		[][]float64{
+			{0.5, 0.5},
+			{1.0, 0.5},
+			{1.0, 1.0},
+			{0.5, 1.0},
+		},
+		[][]float64{
+			{1.0, 0.5},
+			{1.4, 0.75},
+			{1.0, 1.0},
+		},
+	}
+
+	// check derived data
+	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
+
 	// get map of tags
 	tm, err := m.GetTagMaps()
 	if err != nil {
@@ -146,6 +219,16 @@ func Test_mesh01(tst *testing.T) {
 
 	// check maps
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
+
+	// draw
+	if chk.Verbose {
+		args := NewArgs()
+		args.IdsCells = true
+		plt.Reset(true, nil)
+		m.Draw(args)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/gm", "mesh01")
+	}
 }
 
 func Test_cubeandtet(tst *testing.T) {
@@ -170,7 +253,7 @@ func Test_cubeandtet(tst *testing.T) {
 		{0.0, 1.0, 0.0},
 		{0.0, 0.0, 1.0},
 		{1.0, 0.0, 1.0},
-		{1.0, 0.0, 1.0},
+		{1.0, 1.0, 1.0},
 		{0.0, 1.0, 1.0},
 		{0.0, 2.0, 0.0},
 	}
@@ -189,6 +272,33 @@ func Test_cubeandtet(tst *testing.T) {
 
 	// check input data
 	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypes, allV, allEtags, nil)
+
+	// derived data
+	ndim := 3
+	xmin := []float64{0, 0, 0}
+	xmax := []float64{1, 2, 1}
+	allGndim := []int{3, 3}
+	allCoords := [][][]float64{
+		[][]float64{
+			{0.0, 0.0, 0.0},
+			{1.0, 0.0, 0.0},
+			{1.0, 1.0, 0.0},
+			{0.0, 1.0, 0.0},
+			{0.0, 0.0, 1.0},
+			{1.0, 0.0, 1.0},
+			{1.0, 1.0, 1.0},
+			{0.0, 1.0, 1.0},
+		},
+		[][]float64{
+			{0.0, 1.0, 0.0},
+			{1.0, 1.0, 0.0},
+			{0.0, 2.0, 0.0},
+			{0.0, 1.0, 1.0},
+		},
+	}
+
+	// check derived data
+	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
 
 	// get map of tags
 	tm, err := m.GetTagMaps()
@@ -217,6 +327,17 @@ func Test_cubeandtet(tst *testing.T) {
 
 	// check maps
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ftags, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids)
+
+	// draw
+	if chk.Verbose {
+		args := NewArgs()
+		args.IdsCells = true
+		args.WithEdges = true
+		plt.Reset(true, nil)
+		m.Draw(args)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/gm", "cubeandtet")
+	}
 }
 
 func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtags, ctags, parts []int, types []string, V [][]int, etags, ftags [][]int) {
@@ -251,6 +372,18 @@ func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtag
 		chk.String(tst, types[i], c.Type)
 		chk.Ints(tst, io.Sf("cell %2d : V", c.Id), c.V, V[c.Id])
 		chk.Ints(tst, io.Sf("cell %2d : edgetags", c.Id), c.EdgeTags, etags[c.Id])
+	}
+}
+
+func checkderived(tst *testing.T, m *Mesh, ndim int, xmin, xmax []float64, allGndim []int, allCoords [][][]float64) {
+	io.Pfyel("\nderived data:\n")
+	chk.Int(tst, "Ndim", m.Ndim, ndim)
+	chk.Vector(tst, "Xmin", 1e-15, m.Xmin, xmin)
+	chk.Vector(tst, "Xmax", 1e-15, m.Xmax, xmax)
+	for i, c := range m.Cells {
+		X := m.ExtractCellCoords(i)
+		chk.Matrix(tst, io.Sf("Cell %d: X", i), 1e-15, X, allCoords[i])
+		chk.Int(tst, io.Sf("Cell %d: Gndim", i), c.Gndim, allGndim[i])
 	}
 }
 
