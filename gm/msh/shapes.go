@@ -6,11 +6,12 @@ package msh
 
 // cell kinds
 const (
-	KindLin = 0 // "lin" cell kind
-	KindTri = 1 // "tri" cell kind
-	KindQua = 2 // "qua" cell kind
-	KindTet = 3 // "tet" cell kind
-	KindHex = 4 // "hex" cell kind
+	KindLin    = 0 // "lin" cell kind
+	KindTri    = 1 // "tri" cell kind
+	KindQua    = 2 // "qua" cell kind
+	KindTet    = 3 // "tet" cell kind
+	KindHex    = 4 // "hex" cell kind
+	KindNumMax = 5 // max number of kinds
 )
 
 // cell types
