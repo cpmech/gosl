@@ -19,13 +19,11 @@ type Integrator struct {
 	Nverts int         // number of vertices = len(X)
 	Ndim   int         // space dimension = len(X[0]) == len(P[0])
 	Npts   int         // number of integration points = len(P)
-	X      [][]float64 // polyhedron/polygon vertex coordinates [nverts][ndim]
 	P      [][]float64 // (Gauss) integration points [npts][ndim]
 
 	// slices related to integration points
 	ShapeFcns [][]float64   // shape functions Sm @ all integ points [npts][nverts]
 	RefGrads  [][][]float64 // reference gradients gm = dSm(r)/dr @ all integ points [npts][nverts][ndim]
-	Xip       [][]float64   // general (non-reference) coordinate of integ points [npts][ndim]
 
 	// mutable-data (scratchpad)
 	JacobianMat [][]float64 // jacobian matrix Jr of the mapping reference to general coords [ndim][ndim]
@@ -35,10 +33,9 @@ type Integrator struct {
 
 // NewIntegrator returns a new object to integrate over polyhedra/polygons (cells)
 //   ctype -- index of cell type; e.g. TypeQuad4
-//   X     -- coordinates of vertices of cell (polyhedron/polygon) [nverts][ndim]
 //   P     -- integration points [npoints][ndim]. may be nil => default will be selected
 //   pName -- use integration points from database instead of P or default ones. may be ""
-func NewIntegrator(ctype int, X, P [][]float64, pName string) (o *Integrator, err error) {
+func NewIntegrator(ctype int, P [][]float64, pName string) (o *Integrator, err error) {
 
 	// check
 	if ctype < 0 || ctype > TypeNumMax {
@@ -51,17 +48,6 @@ func NewIntegrator(ctype int, X, P [][]float64, pName string) (o *Integrator, er
 	o.Ctype = ctype
 	o.Nverts = NumVerts[ctype]
 	o.Ndim = GeomNdim[ctype]
-
-	// set vertex coordinates
-	if len(X) != o.Nverts {
-		err = chk.Err("size of X does not correspond to the number of vertices. %d != %d\n", len(X), o.Nverts)
-		return
-	}
-	if len(X[0]) != o.Ndim {
-		err = chk.Err("X entries does not have the right number of dimensions. %d != %d\n", len(X[0]), o.Ndim)
-		return
-	}
-	o.X = X
 
 	// set integration points and related slices
 	err = o.ResetP(P, pName)
@@ -94,46 +80,33 @@ func (o *Integrator) ResetP(P [][]float64, pName string) (err error) {
 	o.Npts = len(o.P)
 
 	// allocate slices related to integration points
-	if len(o.Xip) != o.Npts {
+	if len(o.ShapeFcns) != o.Npts {
 		o.ShapeFcns = la.MatAlloc(o.Npts, o.Nverts)
 		o.RefGrads = utl.Deep3alloc(o.Npts, o.Nverts, o.Ndim)
-		o.Xip = la.MatAlloc(o.Npts, o.Ndim)
 	}
 
 	// compute shape and reference gradient @ all integ points
 	for ip, point := range o.P {
 		Functions[o.Ctype](o.ShapeFcns[ip], o.RefGrads[ip], point, true)
 	}
-
-	// compute Xip
-	o.recomputeXip()
 	return
 }
 
-// recomputeXip re-computes Xip from X and P
-func (o *Integrator) recomputeXip() {
+// GetXip calculates coordinates Xip of integration points from X and P
+//   Input:
+//     X -- coordinates of vertices of cell (polyhedron/polygon) [nverts][ndim]
+//   Output:
+//     Xip -- general (non-reference) coordinate of integ points [npts][ndim]
+func (o *Integrator) GetXip(X [][]float64) (Xip [][]float64) {
+	Xip = make([][]float64, o.Npts)
 	for i := 0; i < o.Npts; i++ {
+		Xip[i] = make([]float64, o.Ndim)
 		for j := 0; j < o.Ndim; j++ {
-			o.Xip[i][j] = 0
 			for m := 0; m < o.Nverts; m++ {
-				o.Xip[i][j] += o.ShapeFcns[i][m] * o.X[m][j]
+				Xip[i][j] += o.ShapeFcns[i][m] * X[m][j]
 			}
 		}
 	}
-}
-
-// ResetX resets vertex coordinates of polyhedron(gon)
-func (o *Integrator) ResetX(X [][]float64) (err error) {
-	if len(X) != o.Nverts {
-		err = chk.Err("size of X does not correspond to the number of vertices. %d != %d\n", len(X), o.Nverts)
-		return
-	}
-	if len(X[0]) != o.Ndim {
-		err = chk.Err("X entries does not have the right number of dimensions. %d != %d\n", len(X[0]), o.Ndim)
-		return
-	}
-	o.X = X
-	o.recomputeXip()
 	return
 }
 
@@ -153,15 +126,23 @@ func (o *Integrator) ResetX(X [][]float64) (err error) {
 //            m -- number of cell nodes
 //            n -- number of integration points
 //   Input:
-//     pts -- (Gauss) integration points. May be nil => a default set will be selected then
-func (o *Integrator) IntegrateSv(f fun.Sv) (res float64, err error) {
+//     X  -- coordinates of vertices of cell (polyhedron/polygon) [nverts][ndim]
+//     f  -- integrand function
+func (o *Integrator) IntegrateSv(X [][]float64, f fun.Sv) (res float64, err error) {
+	xip := make([]float64, o.Ndim)
 	var fx float64
 	for ip, point := range o.P {
-		err = o.EvalJacobian(ip)
+		for j := 0; j < o.Ndim; j++ {
+			xip[j] = 0
+			for m := 0; m < o.Nverts; m++ {
+				xip[j] += o.ShapeFcns[ip][m] * X[m][j]
+			}
+		}
+		err = o.EvalJacobian(X, ip)
 		if err != nil {
 			return
 		}
-		fx, err = f(o.Xip[ip])
+		fx, err = f(xip)
 		if err != nil {
 			return
 		}
@@ -180,12 +161,13 @@ func (o *Integrator) IntegrateSv(f fun.Sv) (res float64, err error) {
 //          dr
 //
 //   Input:
+//     X  -- coordinates of vertices of cell (polyhedron/polygon) [nverts][ndim]
 //     ip -- index of integration point
 //   Computed (stored):
 //     JacobianMat -- reference Jacobian matrix [ndim][ndim]
 //     InvJacobMat -- inverse of Jmat [ndim][ndim]
 //     DetJacobian -- determinat of the reference Jacobian matrix
-func (o *Integrator) EvalJacobian(ip int) (err error) {
+func (o *Integrator) EvalJacobian(X [][]float64, ip int) (err error) {
 	if ip < 0 || ip > o.Npts {
 		chk.Err("index of integration point %d is invalid. ip must be in [0,%d]\n", ip, o.Npts)
 		return
@@ -198,50 +180,10 @@ func (o *Integrator) EvalJacobian(ip int) (err error) {
 		for j := 0; j < o.Ndim; j++ {
 			o.JacobianMat[i][j] = 0
 			for m := 0; m < o.Nverts; m++ {
-				o.JacobianMat[i][j] += o.X[m][i] * o.RefGrads[ip][m][j]
+				o.JacobianMat[i][j] += X[m][i] * o.RefGrads[ip][m][j]
 			}
 		}
 	}
 	o.DetJacobian, err = la.MatInv(o.InvJacobMat, o.JacobianMat, 1e-14)
-	return
-}
-
-// mesh integrator ////////////////////////////////////////////////////////////////////////////////
-
-// MeshIntegrator implements methods to perform numerical integration over a mesh
-type MeshIntegrator struct {
-	GoroutineId int             // index of go routine that will use this Integrator
-	Ngoroutines int             // total number of go routines
-	Integrators [][]*Integrator // all integrators [Ngoroutines][TypeNumMax]
-}
-
-// NewMeshIntegrator returns a new MeshIntegrator
-func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator, err error) {
-
-	/*
-		// check
-		if goroutineId < 0 || Ngoroutines < 1 || goroutineId > Ngoroutines {
-			err = chk.Err("goroutineId=%d or Ngoroutines=%d is invalid\n", goroutineId, Ngoroutines)
-			return
-		}
-	*/
-
-	/*
-		if Ngoroutines < 1 {
-			err = chk.Err("number of goroutines must be at least 1\n")
-			return
-		}
-		o = new(MeshIntegrator)
-		o.Integrators = make([][]*Integrator, Ngoroutines)
-		for i := 0; i < Ngoroutines; i++ {
-			o.Integrators[i] = make([]*Integrator, TypeNumMax)
-			for j := 0; j < TypeNumMax; j++ {
-				o.Integrators[i][j], err = NewIntegrator(j)
-				if err != nil {
-					return
-				}
-			}
-		}
-	*/
 	return
 }

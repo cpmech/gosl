@@ -16,7 +16,7 @@ import (
 func TestInteg01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Integ01. integration of scalar function")
+	chk.PrintTitle("Integ01. integration over rotated square")
 
 	// vertices (diamond shape)
 	X := [][]float64{
@@ -27,7 +27,7 @@ func TestInteg01(tst *testing.T) {
 	}
 
 	// allocate cell integrator with default integration points
-	o, err := NewIntegrator(TypeQua4, X, nil, "")
+	o, err := NewIntegrator(TypeQua4, nil, "")
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -43,7 +43,7 @@ func TestInteg01(tst *testing.T) {
 	}
 
 	// perform integration
-	res, err := o.IntegrateSv(fcn)
+	res, err := o.IntegrateSv(X, fcn)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -59,7 +59,7 @@ func TestInteg01(tst *testing.T) {
 	}
 
 	// perform integration again
-	res, err = o.IntegrateSv(fcn)
+	res, err = o.IntegrateSv(X, fcn)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -75,7 +75,7 @@ func TestInteg01(tst *testing.T) {
 	}
 
 	// perform integration again
-	res, err = o.IntegrateSv(fcn)
+	res, err = o.IntegrateSv(X, fcn)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -87,7 +87,8 @@ func TestInteg01(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
 		plt.Polyline(X, &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
-		for _, x := range o.Xip {
+		Xip := o.GetXip(X)
+		for _, x := range Xip {
 			plt.PlotOne(x[0], x[1], &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
 		}
 		plt.Gll("x", "y", nil)
@@ -101,7 +102,7 @@ func TestInteg01(tst *testing.T) {
 func TestInteg02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Integ02. integration of scalar function")
+	chk.PrintTitle("Integ02. integration over trapezium")
 
 	// vertices (trapezium)
 	a, b, h := 3.0, 0.5, 1.0
@@ -113,7 +114,7 @@ func TestInteg02(tst *testing.T) {
 	}
 
 	// allocate cell integrator with default integration points
-	o, err := NewIntegrator(TypeQua4, X, nil, "legendre_4")
+	o, err := NewIntegrator(TypeQua4, nil, "legendre_4")
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -144,7 +145,7 @@ func TestInteg02(tst *testing.T) {
 	anaI0 := anaIx + anaIy
 
 	// compute Ix
-	Ix, err := o.IntegrateSv(fcnIx)
+	Ix, err := o.IntegrateSv(X, fcnIx)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -153,7 +154,7 @@ func TestInteg02(tst *testing.T) {
 	chk.Scalar(tst, "Ix", 1e-15, Ix, anaIx)
 
 	// compute Iy
-	Iy, err := o.IntegrateSv(fcnIy)
+	Iy, err := o.IntegrateSv(X, fcnIy)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -162,7 +163,7 @@ func TestInteg02(tst *testing.T) {
 	chk.Scalar(tst, "Iy", 1e-15, Iy, anaIy)
 
 	// compute I0
-	I0, err := o.IntegrateSv(fcnI0)
+	I0, err := o.IntegrateSv(X, fcnI0)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -174,7 +175,8 @@ func TestInteg02(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
 		plt.Polyline(X, &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
-		for _, x := range o.Xip {
+		Xip := o.GetXip(X)
+		for _, x := range Xip {
 			plt.PlotOne(x[0], x[1], &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
 		}
 		plt.Gll("x", "y", nil)
