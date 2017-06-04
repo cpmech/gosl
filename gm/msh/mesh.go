@@ -247,7 +247,7 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 
 	// loop over vertices
 	for _, vert := range o.Verts {
-		if vert.Tag < 0 {
+		if vert.Tag != 0 {
 			m.VertTag2verts[vert.Tag] = append(m.VertTag2verts[vert.Tag], vert)
 		}
 	}
@@ -327,8 +327,8 @@ func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BryPairSet, vertBryMap *map[int
 	// loop over each tag attached to a side of the cell
 	for edgeId, edgeTag := range tagList {
 
-		// there is a tag (i.e. it's negative)
-		if edgeTag < 0 {
+		// there is a tag (i.e. it's nonzero)
+		if edgeTag != 0 {
 
 			// set edgeTag => cells map
 			(*cellBryMap)[edgeTag] = append((*cellBryMap)[edgeTag], &BryPair{cell, edgeId})

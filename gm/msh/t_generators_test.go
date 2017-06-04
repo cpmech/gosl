@@ -18,20 +18,34 @@ func TestGen01(tst *testing.T) {
 	chk.PrintTitle("Gen01. 2D ring")
 
 	r, R := 1.0, 3.0
-	mesh, err := GenRing2d(5, 4, r, R, math.Pi/4.0)
+	mesh, err := GenRing2d(4, 5, r, R, math.Pi/4.0)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
 	}
 
-	for i := 0; i < 7; i++ {
-		v := mesh.Verts[i]
+	tm, err := mesh.GetTagMaps()
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+
+	vset := tm.VertTag2verts[4]
+	vset = append(vset, tm.VertTag2verts[41]...)
+	vset = append(vset, tm.VertTag2verts[43]...)
+	chk.Int(tst, "len(vset)", len(vset), 11)
+
+	for _, v := range vset {
 		rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 		chk.Scalar(tst, "r", 1e-15, r, rm)
 	}
 
-	for i := 44; i < 51; i++ {
-		v := mesh.Verts[i]
+	vset = tm.VertTag2verts[2]
+	vset = append(vset, tm.VertTag2verts[21]...)
+	vset = append(vset, tm.VertTag2verts[23]...)
+	chk.Int(tst, "len(vset)", len(vset), 11)
+
+	for _, v := range vset {
 		Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 		chk.Scalar(tst, "R", 1e-15, R, Rm)
 	}
@@ -42,9 +56,12 @@ func TestGen01(tst *testing.T) {
 		args.WithEdges = true
 		args.WithCells = true
 		args.WithVerts = true
-		args.WithIdsVerts = true
 		args.WithIdsCells = true
+		args.WithIdsVerts = true
+		args.WithTagsVerts = true
+		args.WithTagsEdges = true
 		mesh.Draw(args)
+		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/gm", "ring2d")
 	}
 }

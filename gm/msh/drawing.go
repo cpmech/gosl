@@ -12,21 +12,25 @@ import (
 
 // DrawArgs holds drawing arguments
 type DrawArgs struct {
-	OnlyLins     bool           // only 'lin' cells
-	WithVerts    bool           // draw vertices
-	WithEdges    bool           // draw edges
-	WithCells    bool           // draw cells
-	WithFaces    bool           // draw faces
-	WithIdsVerts bool           // with ids of vertices
-	WithIdsCells bool           // with ids of cells
-	WithIdsEdges bool           // with ids of edges
-	WithIdsFaces bool           // with ids of faces
-	ArgsVerts    *plt.A         // arguments for vertices
-	ArgsEdges    *plt.A         // arguments for edges
-	ArgsCells    map[int]*plt.A // arguments for cells [cellId] => A; if len==1, use the same for all
-	ArgsLins     map[int]*plt.A // arguments for lins [cellId] => A; if len==1, use the same for all
-	ArgsIdsCells *plt.A         // arguments for the ids of cells
-	ArgsIdsVerts *plt.A         // arguments for the ids of vertices
+	OnlyLins      bool           // only 'lin' cells
+	WithVerts     bool           // draw vertices
+	WithEdges     bool           // draw edges
+	WithCells     bool           // draw cells
+	WithFaces     bool           // draw faces
+	WithIdsVerts  bool           // with ids of vertices
+	WithIdsCells  bool           // with ids of cells
+	WithIdsEdges  bool           // with ids of edges
+	WithIdsFaces  bool           // with ids of faces
+	WithTagsVerts bool           // with tags of vertices
+	WithTagsEdges bool           // with tags of edges
+	ArgsVerts     *plt.A         // arguments for vertices
+	ArgsEdges     *plt.A         // arguments for edges
+	ArgsCells     map[int]*plt.A // arguments for cells [cellId] => A; if len==1, use the same for all
+	ArgsLins      map[int]*plt.A // arguments for lins [cellId] => A; if len==1, use the same for all
+	ArgsIdsCells  *plt.A         // arguments for the ids of cells
+	ArgsIdsVerts  *plt.A         // arguments for the ids of vertices
+	ArgsTagsVerts *plt.A         // arguments for the tags of vertices
+	ArgsTagsEdges *plt.A         // arguments for the tags of edges
 }
 
 // NewArgs returns a new set of drawing arguments
@@ -44,8 +48,10 @@ func (o *DrawArgs) Default() {
 	o.ArgsEdges = &plt.A{C: "#480085", NoClip: true}
 	o.ArgsCells = map[int]*plt.A{-1: &plt.A{Fc: "#dce1f4", Ec: "k", Closed: true, NoClip: true}}
 	o.ArgsLins = map[int]*plt.A{-1: &plt.A{C: "#41045a", NoClip: true}}
-	o.ArgsIdsCells = &plt.A{C: "k", Fsz: 7, Ha: "center", Va: "center", NoClip: true}
-	o.ArgsIdsVerts = &plt.A{C: "r", Fsz: 7, Ha: "left", Va: "bottom", NoClip: true}
+	o.ArgsIdsCells = &plt.A{C: "k", Fsz: 6, Ha: "center", Va: "center", NoClip: true}
+	o.ArgsIdsVerts = &plt.A{C: "r", Fsz: 6, Ha: "left", Va: "bottom", NoClip: true}
+	o.ArgsTagsVerts = &plt.A{C: "g", Fsz: 6, Ha: "right", Va: "bottom", NoClip: true}
+	o.ArgsTagsEdges = &plt.A{C: "m", Fsz: 6, Ha: "center", Va: "center", NoClip: true}
 }
 
 // Draw draws mesh. Arguments A may be nil (defaults will be selected)
@@ -95,8 +101,8 @@ func (o *Mesh) Draw(args *DrawArgs) {
 		}
 
 		// draw edges
-		if args.WithEdges {
-			for _, lvids := range EdgeLocalVertsD[cell.TypeIndex] {
+		if args.WithEdges || args.WithIdsEdges {
+			for iedge, lvids := range EdgeLocalVertsD[cell.TypeIndex] {
 
 				// set triple of vertices
 				tri.a = cell.V[lvids[0]]
@@ -126,9 +132,43 @@ func (o *Mesh) Draw(args *DrawArgs) {
 						}
 					}
 					if ndim > 2 {
-						plt.Plot3dLine(x, y, z, args.ArgsEdges)
+						if args.WithEdges {
+							plt.Plot3dLine(x, y, z, args.ArgsEdges)
+						}
+						if args.WithTagsEdges && len(cell.EdgeTags) > 0 {
+							tag := cell.EdgeTags[iedge]
+							if tag != 0 {
+								txt := io.Sf("%d", tag)
+								xc, yc, zc := 0.0, 0.0, 0.0
+								for i := 0; i < len(x); i++ {
+									xc += x[i]
+									yc += y[i]
+									zc += z[i]
+								}
+								xc /= float64(len(x))
+								yc /= float64(len(x))
+								zc /= float64(len(x))
+								plt.Text3d(xc, yc, zc, txt, args.ArgsTagsEdges)
+							}
+						}
 					} else {
-						plt.Plot(x, y, args.ArgsEdges)
+						if args.WithEdges {
+							plt.Plot(x, y, args.ArgsEdges)
+						}
+						if args.WithTagsEdges && len(cell.EdgeTags) > 0 {
+							tag := cell.EdgeTags[iedge]
+							if tag != 0 {
+								txt := io.Sf("%d", tag)
+								xc, yc := 0.0, 0.0
+								for i := 0; i < len(x); i++ {
+									xc += x[i]
+									yc += y[i]
+								}
+								xc /= float64(len(x))
+								yc /= float64(len(x))
+								plt.Text(xc, yc, txt, args.ArgsTagsEdges)
+							}
+						}
 					}
 					edgesdrawn[tri] = true
 				}
@@ -185,18 +225,26 @@ func (o *Mesh) Draw(args *DrawArgs) {
 	}
 
 	// loop over vertices
-	if args.WithIdsVerts {
+	if args.WithIdsVerts || args.WithTagsVerts {
 		for _, v := range o.Verts {
+			x, y, z := v.X[0], v.X[1], 0.0
+			if len(v.X) > 2 {
+				z = v.X[2]
+			}
 			if args.WithIdsVerts {
 				txt := io.Sf("%d", v.Id)
 				if o.Ndim > 2 {
-					z := 0.0
-					if len(v.X) > 2 {
-						z = v.X[2]
-					}
-					plt.Text3d(v.X[0], v.X[1], z, txt, args.ArgsIdsVerts)
+					plt.Text3d(x, y, z, txt, args.ArgsIdsVerts)
 				} else {
-					plt.Text(v.X[0], v.X[1], txt, args.ArgsIdsVerts)
+					plt.Text(x, y, txt, args.ArgsIdsVerts)
+				}
+			}
+			if args.WithTagsVerts && v.Tag != 0 {
+				txt := io.Sf("%d", v.Tag)
+				if o.Ndim > 2 {
+					plt.Text3d(x, y, z, txt, args.ArgsTagsVerts)
+				} else {
+					plt.Text(x, y, txt, args.ArgsTagsVerts)
 				}
 			}
 		}

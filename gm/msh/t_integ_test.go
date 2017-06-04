@@ -120,22 +120,21 @@ func TestInteg02(tst *testing.T) {
 		return
 	}
 
-	// integrand function for moment of inertia about x-axis: Ix
-	ρ := 1.0 // density distribution; could be a function ρ(x,y)
+	// integrand function for second moment of inertia about x-axis: Ix
 	fcnIx := func(x []float64) (f float64, e error) {
-		f = x[1] * x[1] * ρ
+		f = x[1] * x[1]
 		return
 	}
 
-	// integrand function for moment of inertia about y-axis: Iy
+	// integrand function for second moment of inertia about y-axis: Iy
 	fcnIy := func(x []float64) (f float64, e error) {
-		f = x[0] * x[0] * ρ
+		f = x[0] * x[0]
 		return
 	}
 
-	// integrand function for moment of inertia about the origin: I0
+	// integrand function for second moment of inertia about the origin: I0
 	fcnI0 := func(x []float64) (f float64, e error) {
-		f = (x[0]*x[0] + x[1]*x[1]) * ρ
+		f = (x[0]*x[0] + x[1]*x[1])
 		return
 	}
 
@@ -190,7 +189,7 @@ func TestInteg02(tst *testing.T) {
 func TestInteg03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Integ03. integration of scalar function")
+	chk.PrintTitle("Integ03. 2nd mom inertia: quarter of circle")
 
 	r, R := 0.0, 1.0
 	mesh, err := GenRing2d(11, 11, r, R, math.Pi/2.0)
@@ -206,10 +205,9 @@ func TestInteg03(tst *testing.T) {
 		return
 	}
 
-	// integrand function for moment of inertia about x-axis: Ix
-	ρ := 1.0 // density distribution; could be a function ρ(x,y)
+	// integrand function for second moment of inertia about x-axis: Ix
 	fcnIx := func(x []float64) (f float64, e error) {
-		f = x[1] * x[1] * ρ
+		f = x[1] * x[1]
 		return
 	}
 
@@ -231,5 +229,54 @@ func TestInteg03(tst *testing.T) {
 		args.WithCells = false
 		mesh.Draw(args)
 		plt.Save("/tmp/gosl/gm", "integ03")
+	}
+}
+
+func TestInteg04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Integ04. 2nd mom inergia: ring")
+
+	r, R := 1.0, 3.0
+	//mesh, err := GenRing2d(14, 101, r, R, 2.0*math.Pi)
+	mesh, err := GenRing2d(5, 21, r, R, 2.0*math.Pi)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+
+	// allocate cell integrator with default integration points
+	o, err := NewMeshIntegrator(mesh, 1)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+
+	// integrand function for second moment of inertia about x-axis: Ix
+	fcnIx := func(x []float64) (f float64, e error) {
+		f = x[1] * x[1]
+		return
+	}
+
+	// compute Ix
+	Ix, err := o.IntegrateSv(0, fcnIx)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+	anaIx := math.Pi * (math.Pow(R, 4) - math.Pow(r, 4)) / 4.0
+	io.Pf("Ix = %v\n", Ix)
+	io.Pfgreen("     %v\n", anaIx)
+	chk.Scalar(tst, "Ix", 0.0021, Ix, anaIx)
+
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		args := NewArgs()
+		//args.WithIdsVerts = true
+		args.WithCells = false
+		args.WithEdges = true
+		mesh.Draw(args)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/gm", "integ04")
 	}
 }
