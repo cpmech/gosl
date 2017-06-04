@@ -17,37 +17,82 @@ func TestInteg01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Integ01. integration of scalar function")
 
-	// load mesh
-	m, err := Read("data/mesh01.msh")
+	// vertices (diamond shape)
+	X := [][]float64{
+		{0.0, +0.0},
+		{1.0, -1.0},
+		{2.0, +0.0},
+		{1.0, +1.0},
+	}
+
+	// allocate cell integrator with default integration points
+	o, err := NewIntegrator(TypeQua4, X, nil, "")
 	if err != nil {
-		tst.Errorf("Read failed:\n%v\n", err)
+		tst.Errorf("%v", err)
+		return
+	}
+	chk.Int(tst, "Nverts", o.Nverts, 4)
+	chk.Int(tst, "Ndim", o.Ndim, 2)
+	chk.Int(tst, "Npts", o.Npts, 4)
+
+	// integrand function
+	fcn := func(x []float64) (f float64, e error) {
+		f = x[0]*x[0] + x[1]*x[1]
 		return
 	}
 
-	o, err := NewIntegrator(4, m)
+	// perform integration
+	res, err := o.IntegrateSv(fcn)
 	if err != nil {
-		tst.Errorf("%v\n", err)
+		tst.Errorf("%v", err)
 		return
 	}
-	chk.Int(tst, "Nv", o.Nv, 4)
-	chk.Int(tst, "Dim", o.Dim, 2)
-	chk.Matrix(tst, "X", 1e-15, o.X, [][]float64{
-		{0.5, 0.5},
-		{1.0, 0.5},
-		{1.0, 1.0},
-		{0.5, 1.0},
-	})
-	io.Pforan("o = %+v\n", o)
+	io.Pforan("1: res = %v\n", res)
+	chk.Scalar(tst, "∫(x²+y²)dxdy (default)", 1e-15, res, 8.0/3.0)
 
-	// TODO
+	// reset integration points
+	err = o.ResetP(nil, "legendre_9")
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
 
-	if chk.Verbose && false {
-		args := NewArgs()
-		args.WithIdsCells = true
-		args.WithIdsVerts = true
-		plt.Reset(true, nil)
-		m.Draw(args)
-		plt.HideAllBorders()
+	// perform integration again
+	res, err = o.IntegrateSv(fcn)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+	io.Pforan("2: res = %v\n", res)
+	chk.Scalar(tst, "∫(x²+y²)dxdy (legendre 9)", 1e-15, res, 8.0/3.0)
+
+	// reset integration points
+	err = o.ResetP(nil, "wilson5corner_5")
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+
+	// perform integration again
+	res, err = o.IntegrateSv(fcn)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+	io.Pforan("3: res = %v\n", res)
+	chk.Scalar(tst, "∫(x²+y²)dxdy (wilson5corner)", 1e-15, res, 8.0/3.0)
+
+	// draw polygon
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		plt.Polyline(X, &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
+		for _, x := range o.Xip {
+			plt.PlotOne(x[0], x[1], &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
+		}
+		plt.Gll("x", "y", nil)
+		plt.AxisRange(0, 2, -1, 1)
+		plt.Equal()
+		plt.HideTRborders()
 		plt.Save("/tmp/gosl/gm", "integ01")
 	}
 }

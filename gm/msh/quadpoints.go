@@ -228,6 +228,9 @@ func init() {
 
 	// set integration points for "qua" kind
 	IntPoints[KindQua] = map[string][][]float64{
+		"legendre_1": [][]float64{
+			{0, 0, 0, 4},
+		},
 		"legendre_4": [][]float64{
 			{-0.5773502691896257, -0.5773502691896257, 0, 1},
 			{+0.5773502691896257, -0.5773502691896257, 0, 1},
