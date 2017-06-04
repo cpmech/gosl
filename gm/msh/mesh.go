@@ -80,10 +80,11 @@ type Cell struct {
 	TypeIndex int `json:"-"` // type index of cell. converted from TypeKey
 
 	// derived
-	Edges      EdgeSet `json:"-"` // edges on this cell
-	Faces      FaceSet `json:"-"` // faces on this cell
-	Neighbours CellSet `json:"-"` // neighbour cells
-	Gndim      int     `json:"-"` // geometry ndim
+	Edges      EdgeSet     `json:"-"` // edges on this cell
+	Faces      FaceSet     `json:"-"` // faces on this cell
+	Neighbours CellSet     `json:"-"` // neighbour cells
+	Gndim      int         `json:"-"` // geometry ndim
+	X          [][]float64 `json:"-"` // all vertex coordinates
 }
 
 // Mesh defines mesh data
@@ -199,7 +200,7 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 	o.Xmin = o.Xmin[0:o.Ndim] // re-slice
 	o.Xmax = o.Xmax[0:o.Ndim] // re-slice
 
-	// check cell data, set TypeIndex and find gndims
+	// check cell data, set TypeIndex, gndim, and coordinates X
 	for id, cell := range o.Cells {
 		if id != cell.Id {
 			err = chk.Err("cell ids must be sequential. cell %d must be %d", cell.Id, id)
@@ -225,6 +226,7 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 				return
 			}
 		}
+		cell.X = o.ExtractCellCoords(cell.Id)
 	}
 	return
 }
