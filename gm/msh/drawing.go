@@ -13,15 +13,15 @@ import (
 // DrawArgs holds drawing arguments
 type DrawArgs struct {
 	OnlyLins     bool           // only 'lin' cells
-	WithNodes    bool           // draw nodes
+	WithVerts    bool           // draw vertices
 	WithEdges    bool           // draw edges
 	WithCells    bool           // draw cells
 	WithFaces    bool           // draw faces
-	WithIdsVerts bool           // with ids of nodes
+	WithIdsVerts bool           // with ids of vertices
 	WithIdsCells bool           // with ids of cells
 	WithIdsEdges bool           // with ids of edges
 	WithIdsFaces bool           // with ids of faces
-	ArgsVerts    *plt.A         // arguments for nodes
+	ArgsVerts    *plt.A         // arguments for vertices
 	ArgsEdges    *plt.A         // arguments for edges
 	ArgsCells    map[int]*plt.A // arguments for cells [cellId] => A; if len==1, use the same for all
 	ArgsLins     map[int]*plt.A // arguments for lins [cellId] => A; if len==1, use the same for all
@@ -49,7 +49,7 @@ func (o *DrawArgs) Default() {
 }
 
 // Draw draws mesh. Arguments A may be nil (defaults will be selected)
-func (o *Mesh) Draw(a *DrawArgs) {
+func (o *Mesh) Draw(args *DrawArgs) {
 
 	// auxiliary
 	type triple struct{ a, b, c int }   // points on edge
@@ -57,8 +57,8 @@ func (o *Mesh) Draw(a *DrawArgs) {
 	var tri triple
 
 	// arguments
-	if a == nil {
-		a = NewArgs()
+	if args == nil {
+		args = NewArgs()
 	}
 
 	// loop over cells
@@ -71,26 +71,34 @@ func (o *Mesh) Draw(a *DrawArgs) {
 
 		// lin cell
 		lincell := TypeIndexToKind[cell.TypeIndex] == KindLin
-		if !lincell && a.OnlyLins {
+		if !lincell && args.OnlyLins {
 			continue
 		}
 
 		// draw cells
-		if a.WithCells {
-			aa := getargs(cell.Id, a.ArgsCells)
+		if args.WithCells {
+			aa := getargs(cell.Id, args.ArgsCells)
 			if cell.Gndim > 2 {
 				// TODO
 			} else {
-				plt.Polyline(cell.X, aa)
+				k := 0
+				xx := make([][]float64, len(cell.V))
+				for _, lvids := range EdgeLocalVertsD[cell.TypeIndex] { // loop over edges
+					for ivert := 0; ivert < len(lvids)-1; ivert++ { // loop over verts on edge
+						lv := lvids[ivert]
+						xx[k] = o.Verts[cell.V[lv]].X
+						k++
+					}
+				}
+				plt.Polyline(xx, aa)
 			}
 		}
 
 		// draw edges
-		if a.WithEdges {
-			elv := EdgeLocalVerts[cell.TypeIndex]
-			for _, lvids := range elv {
+		if args.WithEdges {
+			for _, lvids := range EdgeLocalVertsD[cell.TypeIndex] {
 
-				// set triple of nodes
+				// set triple of vertices
 				tri.a = cell.V[lvids[0]]
 				tri.b = cell.V[lvids[1]]
 				nv := len(lvids)
@@ -105,34 +113,22 @@ func (o *Mesh) Draw(a *DrawArgs) {
 				if _, drawn := edgesdrawn[tri]; !drawn {
 					x := make([]float64, nv)
 					y := make([]float64, nv)
-					x[0] = o.Verts[tri.a].X[0]
-					y[0] = o.Verts[tri.a].X[1]
 					var z []float64
 					ndim := len(o.Verts[tri.a].X)
 					if ndim > 2 {
 						z = make([]float64, nv)
-						z[0] = o.Verts[tri.a].X[2]
 					}
-					if nv > 2 {
-						x[1] = o.Verts[tri.c].X[0]
-						y[1] = o.Verts[tri.c].X[1]
-						x[2] = o.Verts[tri.b].X[0]
-						y[2] = o.Verts[tri.b].X[1]
+					for i, lv := range lvids {
+						v := o.Verts[cell.V[lv]]
+						x[i], y[i] = v.X[0], v.X[1]
 						if ndim > 2 {
-							z[1] = o.Verts[tri.c].X[2]
-							z[2] = o.Verts[tri.b].X[2]
-						}
-					} else {
-						x[1] = o.Verts[tri.b].X[0]
-						y[1] = o.Verts[tri.b].X[1]
-						if ndim > 2 {
-							z[1] = o.Verts[tri.b].X[2]
+							z[i] = v.X[2]
 						}
 					}
 					if ndim > 2 {
-						plt.Plot3dLine(x, y, z, a.ArgsEdges)
+						plt.Plot3dLine(x, y, z, args.ArgsEdges)
 					} else {
-						plt.Plot(x, y, a.ArgsEdges)
+						plt.Plot(x, y, args.ArgsEdges)
 					}
 					edgesdrawn[tri] = true
 				}
@@ -140,12 +136,12 @@ func (o *Mesh) Draw(a *DrawArgs) {
 		}
 
 		// add middle node
-		if a.WithNodes {
+		if args.WithVerts {
 			if cell.TypeKey == "qua9" {
 				vid := cell.V[8]
 				x := o.Verts[vid].X[0]
 				y := o.Verts[vid].X[1]
-				plt.PlotOne(x, y, a.ArgsVerts)
+				plt.PlotOne(x, y, args.ArgsVerts)
 			}
 		}
 
@@ -160,12 +156,12 @@ func (o *Mesh) Draw(a *DrawArgs) {
 				x[i] = o.Verts[vid].X[0]
 				y[i] = o.Verts[vid].X[1]
 			}
-			aa := getargs(cell.Id, a.ArgsLins)
+			aa := getargs(cell.Id, args.ArgsLins)
 			plt.Plot(x, y, aa)
 		}
 
 		// cell ids
-		if a.WithIdsCells {
+		if args.WithIdsCells {
 			xc := make([]float64, cell.Gndim)
 			for _, x := range cell.X {
 				for i := 0; i < cell.Gndim; i++ {
@@ -181,26 +177,26 @@ func (o *Mesh) Draw(a *DrawArgs) {
 				if cell.Gndim > 2 {
 					z = xc[2]
 				}
-				plt.Text3d(xc[0], xc[1], z, txt, a.ArgsIdsCells)
+				plt.Text3d(xc[0], xc[1], z, txt, args.ArgsIdsCells)
 			} else {
-				plt.Text(xc[0], xc[1], txt, a.ArgsIdsCells)
+				plt.Text(xc[0], xc[1], txt, args.ArgsIdsCells)
 			}
 		}
 	}
 
 	// loop over vertices
-	if a.WithIdsVerts {
+	if args.WithIdsVerts {
 		for _, v := range o.Verts {
-			if a.WithIdsVerts {
+			if args.WithIdsVerts {
 				txt := io.Sf("%d", v.Id)
 				if o.Ndim > 2 {
 					z := 0.0
 					if len(v.X) > 2 {
 						z = v.X[2]
 					}
-					plt.Text3d(v.X[0], v.X[1], z, txt, a.ArgsIdsVerts)
+					plt.Text3d(v.X[0], v.X[1], z, txt, args.ArgsIdsVerts)
 				} else {
-					plt.Text(v.X[0], v.X[1], txt, a.ArgsIdsVerts)
+					plt.Text(v.X[0], v.X[1], txt, args.ArgsIdsVerts)
 				}
 			}
 		}

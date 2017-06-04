@@ -48,6 +48,8 @@ var (
 	GeomNdim        []int           // geometry number of space dimensions [TypeNumMax]
 	EdgeLocalVerts  [][][]int       // local indices of vertices on edges of shape [TypeNumMax][nedges][nverts]
 	FaceLocalVerts  [][][]int       // local indices of vertices on faces of shape [TypeNumMax][nfaces][nverts]
+	EdgeLocalVertsD [][][]int       // for drawing: local indices of vertices on edges of shape [TypeNumMax][nedges][nverts]
+	FaceLocalVertsD [][][][]int     // for drawing: local indices of vertices on faces of shape [TypeNumMax][nfaces][nverts]
 	NatCoords       [][][]float64   // natural coordinates of vertices on shape [TypeNumMax][nverts][gndim]
 )
 
@@ -195,6 +197,28 @@ func init() {
 	FaceLocalVerts[TypeTet10] = [][]int{{0, 3, 2, 7, 9, 6}, {0, 1, 3, 4, 8, 7}, {0, 2, 1, 6, 5, 4}, {1, 2, 3, 5, 9, 8}}
 	FaceLocalVerts[TypeHex8] = [][]int{{0, 4, 7, 3}, {1, 2, 6, 5}, {0, 1, 5, 4}, {2, 3, 7, 6}, {0, 3, 2, 1}, {4, 5, 6, 7}}
 	FaceLocalVerts[TypeHex20] = [][]int{{0, 4, 7, 3, 16, 15, 19, 11}, {1, 2, 6, 5, 9, 18, 13, 17}, {0, 1, 5, 4, 8, 17, 12, 16}, {2, 3, 7, 6, 10, 19, 14, 18}, {0, 3, 2, 1, 11, 10, 9, 8}, {4, 5, 6, 7, 12, 13, 14, 15}}
+
+	// set EdgeLocalVertsD
+	EdgeLocalVertsD = make([][][]int, TypeNumMax)
+	EdgeLocalVertsD[TypeTri3] = [][]int{{0, 1}, {1, 2}, {2, 0}}
+	EdgeLocalVertsD[TypeTri6] = [][]int{{0, 3, 1}, {1, 4, 2}, {2, 5, 0}}
+	EdgeLocalVertsD[TypeTri10] = [][]int{{0, 3, 6, 1}, {1, 4, 7, 2}, {2, 5, 8, 0}}
+	EdgeLocalVertsD[TypeTri15] = [][]int{{0, 6, 3, 7, 1}, {1, 8, 4, 9, 2}, {2, 10, 5, 11, 0}}
+	EdgeLocalVertsD[TypeQua4] = [][]int{{0, 1}, {1, 2}, {2, 3}, {3, 0}}
+	EdgeLocalVertsD[TypeQua8] = [][]int{{0, 4, 1}, {1, 5, 2}, {2, 6, 3}, {3, 7, 0}}
+	EdgeLocalVertsD[TypeQua9] = [][]int{{0, 4, 1}, {1, 5, 2}, {2, 6, 3}, {3, 7, 0}}
+	EdgeLocalVertsD[TypeQua12] = [][]int{{0, 4, 8, 1}, {1, 5, 9, 2}, {2, 6, 10, 3}, {3, 7, 11, 0}}
+	EdgeLocalVertsD[TypeQua16] = [][]int{{0, 4, 8, 1}, {1, 5, 9, 2}, {2, 6, 10, 3}, {3, 7, 11, 0}}
+	EdgeLocalVertsD[TypeTet4] = [][]int{{0, 1}, {1, 2}, {2, 0}, {0, 3}, {1, 3}, {2, 3}}
+	EdgeLocalVertsD[TypeTet10] = [][]int{{0, 4, 1}, {1, 5, 2}, {2, 6, 0}, {0, 7, 3}, {1, 8, 3}, {2, 9, 3}}
+	EdgeLocalVertsD[TypeHex8] = [][]int{{0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7}}
+	EdgeLocalVertsD[TypeHex20] = [][]int{{0, 8, 1}, {1, 9, 2}, {2, 10, 3}, {3, 11, 0}, {4, 12, 5}, {5, 13, 6}, {6, 14, 7}, {7, 15, 4}, {0, 16, 4}, {1, 17, 5}, {2, 18, 6}, {3, 19, 7}}
+
+	// set FaceLocalVertsD
+	FaceLocalVertsD = make([][][][]int, TypeNumMax)
+	FaceLocalVertsD[TypeTet4] = [][][]int{{{0, 3, 2}}, {{0, 1, 3}}, {{0, 2, 1}}, {{1, 2, 3}}}
+	FaceLocalVertsD[TypeTet10] = [][][]int{{{0, 7, 6}, {6, 7, 9}, {6, 9, 2}, {7, 3, 9}}, {{0, 4, 7}, {4, 8, 7}, {4, 1, 8}, {7, 8, 3}}, {{0, 6, 4}, {4, 6, 5}, {4, 5, 1}, {6, 2, 5}}, {{1, 5, 8}, {5, 9, 8}, {5, 2, 9}, {8, 9, 3}}}
+	FaceLocalVertsD[TypeHex8] = [][][]int{{{0, 4, 7}, {0, 7, 3}}, {{1, 6, 5}, {1, 2, 6}}, {{0, 1, 5}, {0, 5, 4}}, {{2, 3, 7}, {2, 7, 6}}, {{0, 3, 2}, {0, 2, 1}}, {{4, 5, 6}, {4, 6, 7}}}
 
 	// set NatCoords
 	NatCoords = make([][][]float64, TypeNumMax)
