@@ -205,3 +205,43 @@ func (o *Integrator) EvalJacobian(ip int) (err error) {
 	o.DetJacobian, err = la.MatInv(o.InvJacobMat, o.JacobianMat, 1e-14)
 	return
 }
+
+// mesh integrator ////////////////////////////////////////////////////////////////////////////////
+
+// MeshIntegrator implements methods to perform numerical integration over a mesh
+type MeshIntegrator struct {
+	GoroutineId int             // index of go routine that will use this Integrator
+	Ngoroutines int             // total number of go routines
+	Integrators [][]*Integrator // all integrators [Ngoroutines][TypeNumMax]
+}
+
+// NewMeshIntegrator returns a new MeshIntegrator
+func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator, err error) {
+
+	/*
+		// check
+		if goroutineId < 0 || Ngoroutines < 1 || goroutineId > Ngoroutines {
+			err = chk.Err("goroutineId=%d or Ngoroutines=%d is invalid\n", goroutineId, Ngoroutines)
+			return
+		}
+	*/
+
+	/*
+		if Ngoroutines < 1 {
+			err = chk.Err("number of goroutines must be at least 1\n")
+			return
+		}
+		o = new(MeshIntegrator)
+		o.Integrators = make([][]*Integrator, Ngoroutines)
+		for i := 0; i < Ngoroutines; i++ {
+			o.Integrators[i] = make([]*Integrator, TypeNumMax)
+			for j := 0; j < TypeNumMax; j++ {
+				o.Integrators[i][j], err = NewIntegrator(j)
+				if err != nil {
+					return
+				}
+			}
+		}
+	*/
+	return
+}

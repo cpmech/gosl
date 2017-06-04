@@ -5,6 +5,7 @@
 package msh
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -94,5 +95,92 @@ func TestInteg01(tst *testing.T) {
 		plt.Equal()
 		plt.HideTRborders()
 		plt.Save("/tmp/gosl/gm", "integ01")
+	}
+}
+
+func TestInteg02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Integ02. integration of scalar function")
+
+	// vertices (trapezium)
+	a, b, h := 3.0, 0.5, 1.0
+	X := [][]float64{
+		{-a / 2.0, -h / 2.0},
+		{+a / 2.0, -h / 2.0},
+		{+b / 2.0, +h / 2.0},
+		{-b / 2.0, +h / 2.0},
+	}
+
+	// allocate cell integrator with default integration points
+	o, err := NewIntegrator(TypeQua4, X, nil, "legendre_4")
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+
+	// integrand function for moment of inertia about x-axis: Ix
+	ρ := 1.0 // density distribution; could be a function ρ(x,y)
+	fcnIx := func(x []float64) (f float64, e error) {
+		f = x[1] * x[1] * ρ
+		return
+	}
+
+	// integrand function for moment of inertia about y-axis: Iy
+	fcnIy := func(x []float64) (f float64, e error) {
+		f = x[0] * x[0] * ρ
+		return
+	}
+
+	// integrand function for moment of inertia about the origin: I0
+	fcnI0 := func(x []float64) (f float64, e error) {
+		f = (x[0]*x[0] + x[1]*x[1]) * ρ
+		return
+	}
+
+	// analytical solutions
+	anaIx := (a + b) * math.Pow(h, 3) / 24.0
+	anaIy := h * (math.Pow(a, 4) - math.Pow(b, 4)) / (48.0 * (a - b))
+	anaI0 := anaIx + anaIy
+
+	// compute Ix
+	Ix, err := o.IntegrateSv(fcnIx)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+	io.Pforan("Ix = %v\n", Ix)
+	chk.Scalar(tst, "Ix", 1e-15, Ix, anaIx)
+
+	// compute Iy
+	Iy, err := o.IntegrateSv(fcnIy)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+	io.Pforan("Iy = %v\n", Iy)
+	chk.Scalar(tst, "Iy", 1e-15, Iy, anaIy)
+
+	// compute I0
+	I0, err := o.IntegrateSv(fcnI0)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+	io.Pforan("I0 = %v\n", I0)
+	chk.Scalar(tst, "I0", 1e-15, I0, anaI0)
+
+	// draw polygon
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		plt.Polyline(X, &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
+		for _, x := range o.Xip {
+			plt.PlotOne(x[0], x[1], &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
+		}
+		plt.Gll("x", "y", nil)
+		plt.AxisRange(0, 2, -1, 1)
+		plt.Equal()
+		plt.HideTRborders()
+		plt.Save("/tmp/gosl/gm", "integ02")
 	}
 }
