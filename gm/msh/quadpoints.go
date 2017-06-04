@@ -7,6 +7,7 @@ package msh
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -173,6 +174,25 @@ var (
 	//       thus the default number may not be optimal.
 	DefaultIntPoints [][][]float64
 )
+
+// IntPointsFindSet finds set of integration points by cell kind and set name
+func IntPointsFindSet(cellKind int, setName string) (P [][]float64, err error) {
+	if cellKind < 0 || cellKind > KindNumMax {
+		err = chk.Err("cellKind = %d is invalid\n", cellKind)
+		return
+	}
+	if db, ok := IntPoints[cellKind]; !ok {
+		err = chk.Err("integration points set for cellKind = %d is not implemented yet\n", cellKind)
+		return
+	} else {
+		var ok bool
+		if P, ok = db[setName]; !ok {
+			err = chk.Err("cannot find integration points set named = %q for cellKind = %d\n", setName, cellKind)
+			return
+		}
+	}
+	return
+}
 
 func init() {
 

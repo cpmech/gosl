@@ -94,7 +94,7 @@ func TestQuadpts01(tst *testing.T) {
 					sumW += p[3]
 				}
 				io.Pfblue2("\nrule = %v\n", rule)
-				chk.Scalar(tst, "sumW", 1e-15, sumW, 4)
+				chk.Scalar(tst, "sumW", 1e-14, sumW, 4)
 				switch rule {
 				case "legendre":
 					n1d := int(math.Sqrt(float64(n)))
