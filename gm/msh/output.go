@@ -21,7 +21,7 @@ func (o *Vertex) String() string {
 
 // String returns a JSON representation of *Cell
 func (o *Cell) String() string {
-	l := io.Sf("{\"i\":%d, \"t\":%d, \"p\":%d, \"y\":%q, \"v\":[", o.Id, o.Tag, o.Part, o.Type)
+	l := io.Sf("{\"i\":%d, \"t\":%d, \"p\":%d, \"y\":%q, \"v\":[", o.Id, o.Tag, o.Part, o.TypeKey)
 	for i, x := range o.V {
 		if i > 0 {
 			l += ", "

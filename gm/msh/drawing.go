@@ -72,7 +72,7 @@ func (o *Mesh) Draw(a *DrawArgs) {
 		}
 
 		// lin cell
-		lincell := strings.HasPrefix(cell.Type, "lin")
+		lincell := strings.HasPrefix(cell.TypeKey, "lin")
 		if !lincell && a.OnlyLins {
 			continue
 		}
@@ -91,7 +91,7 @@ func (o *Mesh) Draw(a *DrawArgs) {
 
 		// draw edges
 		if a.WithEdges {
-			elv := EdgeLocalVerts[cell.Type]
+			elv := EdgeLocalVerts[cell.TypeIndex]
 			for _, lvids := range elv {
 
 				// set triple of nodes
@@ -145,7 +145,7 @@ func (o *Mesh) Draw(a *DrawArgs) {
 
 		// add middle node
 		if a.WithNodes {
-			if cell.Type == "qua9" {
+			if cell.TypeKey == "qua9" {
 				vid := cell.V[8]
 				x := o.Verts[vid].X[0]
 				y := o.Verts[vid].X[1]

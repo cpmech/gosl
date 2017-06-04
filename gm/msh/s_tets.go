@@ -4,14 +4,9 @@
 
 package msh
 
-func init() {
-	Functions["tet4"] = Tet4
-	Functions["tet10"] = Tet10
-}
-
-// Tet4 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tet4
+// FuncTet4 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tet4
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Tet4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncTet4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*                    t
 	              |
 	              3
@@ -67,9 +62,9 @@ func Tet4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[3][2] = 1.0
 }
 
-// Tet10 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tet10
+// FuncTet10 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tet10
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Tet10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncTet10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*                    t
 	              |
 	              3

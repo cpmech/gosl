@@ -4,14 +4,9 @@
 
 package msh
 
-func init() {
-	Functions["hex8"] = Hex8
-	Functions["hex20"] = Hex20
-}
-
-// Hex8 calculates the shape functions (S) and derivatives of shape functions (dSdR) of hex8
+// FuncHex8 calculates the shape functions (S) and derivatives of shape functions (dSdR) of hex8
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Hex8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncHex8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*
 	             4________________7
 	           ,'|              ,'|
@@ -75,9 +70,9 @@ func Hex8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[7][2] = (+1.0 - r + s - r*s) / 8.0
 }
 
-// Hex20 calculates the shape functions (S) and derivatives of shape functions (dSdR) of hex20
+// FuncHex20 calculates the shape functions (S) and derivatives of shape functions (dSdR) of hex20
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Hex20(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncHex20(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*
 	              4_______15_______7
 	            ,'|              ,'|

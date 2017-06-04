@@ -69,7 +69,7 @@ type Cell struct {
 	Tag      int    `json:"t"`  // tag
 	Part     int    `json:"p"`  // partition id
 	Disabled bool   `json:"d"`  // cell is disabled
-	Type     string `json:"y"`  // geometry type
+	TypeKey  string `json:"y"`  // geometry type; e.g. "lin2"
 	V        []int  `json:"v"`  // vertices
 	EdgeTags []int  `json:"et"` // edge tags (2D or 3D)
 	FaceTags []int  `json:"ft"` // face tags (3D only)
@@ -77,7 +77,7 @@ type Cell struct {
 	Span     []int  `json:"s"`  // span in NURBS
 
 	// auxiliary
-	Entity interface{} `json:"-"` // any entity attached to this cell
+	TypeIndex int `json:"-"` // type index of cell. converted from TypeKey
 
 	// derived
 	Edges      EdgeSet `json:"-"` // edges on this cell
@@ -128,7 +128,7 @@ type BryPairSet []*BryPair
 type TagMaps struct {
 	VertTag2verts  map[int]VertSet    // vertex tag => set of vertices
 	CellTag2cells  map[int]CellSet    // cell tag => set of cells
-	CellType2cells map[string]CellSet // cell type => set of cells
+	CellType2cells map[int]CellSet    // cell type => set of cells
 	CellPart2cells map[int]CellSet    // partition number => set of cells
 	EdgeTag2cells  map[int]BryPairSet // edge tag => set of cells {cell,boundaryId}
 	EdgeTag2verts  map[int]VertSet    // edge tag => vertices on tagged edge [unique]
@@ -199,41 +199,30 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 	o.Xmin = o.Xmin[0:o.Ndim] // re-slice
 	o.Xmax = o.Xmax[0:o.Ndim] // re-slice
 
-	// check cell data and find gndims
+	// check cell data, set TypeIndex and find gndims
 	for id, cell := range o.Cells {
 		if id != cell.Id {
 			err = chk.Err("cell ids must be sequential. cell %d must be %d", cell.Id, id)
 			return
 		}
-		if cell.Tag >= 0 {
-			err = chk.Err("cell tags must be negative. cell %d has incorrect tag %d", cell.Id, cell.Tag)
-			return
-		}
-		if gndim, ok := GeomNdim[cell.Type]; !ok {
-			err = chk.Err("cell type %q for cell %d is not available (in GeomNdim)", cell.Type, cell.Id)
+		if tindex, ok := TypeKeyToIndex[cell.TypeKey]; !ok {
+			err = chk.Err("cannot find cell type ken %q in database\n", cell.TypeKey)
 			return
 		} else {
-			cell.Gndim = gndim
+			cell.TypeIndex = tindex
 		}
-		if nv, ok := NumVerts[cell.Type]; !ok {
-			err = chk.Err("cell type %q for cell %d is not available (in NumVerts)", cell.Type, cell.Id)
+		cell.Gndim = GeomNdim[cell.TypeIndex]
+		nv := NumVerts[cell.TypeIndex]
+		if len(cell.V) != nv {
+			err = chk.Err("number of vertices for cell %d is incorrect. %d != %d", cell.Id, len(cell.V), nv)
 			return
-		} else {
-			if len(cell.V) != nv {
-				err = chk.Err("number of vertices for cell %d is incorrect. %d != %d", cell.Id, len(cell.V), nv)
-				return
-			}
 		}
 		nEtags := len(cell.EdgeTags)
 		if nEtags > 0 {
-			if lv, ok := EdgeLocalVerts[cell.Type]; !ok {
-				err = chk.Err("cell type %q for cell %d is not available (in EdgeLocalVerts)", cell.Type, cell.Id)
+			lv := EdgeLocalVerts[cell.TypeIndex]
+			if nEtags != len(lv) {
+				err = chk.Err("number of edge tags for cell %d is incorrect. %d != %d", cell.Id, nEtags, len(lv))
 				return
-			} else {
-				if nEtags != len(lv) {
-					err = chk.Err("number of edge tags for cell %d is incorrect. %d != %d", cell.Id, nEtags, len(lv))
-					return
-				}
 			}
 		}
 	}
@@ -247,7 +236,7 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 	m = new(TagMaps)
 	m.VertTag2verts = make(map[int]VertSet)
 	m.CellTag2cells = make(map[int]CellSet)
-	m.CellType2cells = make(map[string]CellSet)
+	m.CellType2cells = make(map[int]CellSet)
 	m.CellPart2cells = make(map[int]CellSet)
 	m.EdgeTag2cells = make(map[int]BryPairSet)
 	m.EdgeTag2verts = make(map[int]VertSet)
@@ -265,32 +254,12 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 	for _, cell := range o.Cells {
 
 		// basic data
-		var ok bool
-		var geomNdim int
-		if geomNdim, ok = GeomNdim[cell.Type]; !ok {
-			err = chk.Err("cell type %q is not available in factory of shapes (in GeomNdim)", cell.Type)
-			return
-		}
-		var edgeLocVerts [][]int
-		if edgeLocVerts, ok = EdgeLocalVerts[cell.Type]; !ok {
-			err = chk.Err("cell type %q is not available in factory of shapes (in EdgeLocalVerts)")
-			return
-		}
-		var faceLocVerts [][]int
-		if geomNdim == 3 {
-			if faceLocVerts, ok = FaceLocalVerts[cell.Type]; !ok {
-				err = chk.Err("cell type %q is not available in factory of shapes (in FaceLocalVerts)")
-				return
-			}
-		}
-		if cell.Tag >= 0 {
-			err = chk.Err("cells tags must be negative. %d is incorrect\n", cell.Tag)
-			return
-		}
+		edgeLocVerts := EdgeLocalVerts[cell.TypeIndex]
+		faceLocVerts := FaceLocalVerts[cell.TypeIndex]
 
 		// cell data
 		m.CellTag2cells[cell.Tag] = append(m.CellTag2cells[cell.Tag], cell)
-		m.CellType2cells[cell.Type] = append(m.CellType2cells[cell.Type], cell)
+		m.CellType2cells[cell.TypeIndex] = append(m.CellType2cells[cell.TypeIndex], cell)
 		m.CellPart2cells[cell.Part] = append(m.CellPart2cells[cell.Part], cell)
 
 		// check edge tags

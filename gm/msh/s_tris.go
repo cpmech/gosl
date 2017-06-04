@@ -4,16 +4,9 @@
 
 package msh
 
-func init() {
-	Functions["tri3"] = Tri3
-	Functions["tri6"] = Tri6
-	Functions["tri10"] = Tri10
-	Functions["tri15"] = Tri15
-}
-
-// Tri3 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri3
+// FuncTri3 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri3
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Tri3(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncTri3(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*      s
 	        |
 	        2, (0,1)
@@ -46,9 +39,9 @@ func Tri3(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[2][1] = 1.0
 }
 
-// Tri6 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri6
+// FuncTri6 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri6
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Tri6(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncTri6(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*      s
 	        |
 	        2, (0,1)
@@ -90,9 +83,9 @@ func Tri6(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[5][1] = 4.0 - 4.0*r - 8.0*s
 }
 
-// Tri10 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri10
+// FuncTri10 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri10
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Tri10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncTri10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*
 	   s
 	   |
@@ -164,9 +157,9 @@ func Tri10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[9][1] = 27.0 * r * (z - s)
 }
 
-// Tri15 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri15
+// FuncTri15 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri15
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Tri15(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncTri15(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*      s
 	           ^
 	           |

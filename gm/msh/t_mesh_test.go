@@ -36,7 +36,8 @@ func Test_singleq4(tst *testing.T) {
 	allVtags := []int{-1, 0, -1, 0}
 	allCtags := []int{-1}
 	allParts := []int{0}
-	allTypes := []string{"qua4"}
+	allTypeKeys := []string{"qua4"}
+	allTypeIndices := []int{TypeQua4}
 	allV := [][]int{
 		{0, 1, 2, 3},
 	}
@@ -45,7 +46,7 @@ func Test_singleq4(tst *testing.T) {
 	}
 
 	// check input data
-	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypes, allV, allEtags, nil)
+	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypeKeys, allTypeIndices, allV, allEtags, nil)
 
 	// derived data
 	ndim := 2
@@ -76,7 +77,7 @@ func Test_singleq4(tst *testing.T) {
 	ctags := []int{-1}
 	cparts := []int{0}
 	etags := []int{-10, -11, -12, -13}
-	ctypes := []string{"qua4"}
+	ctypeinds := []int{TypeQua4}
 	vtagsVids := [][]int{{0, 2}}
 	ctagsCids := [][]int{{0}}
 	cpartsCids := [][]int{{0}}
@@ -86,7 +87,7 @@ func Test_singleq4(tst *testing.T) {
 	etagsVids := [][]int{{0, 1}, {1, 2}, {2, 3}, {0, 3}}
 
 	// check maps
-	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
+	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 
 	// draw
 	if chk.Verbose {
@@ -130,7 +131,8 @@ func Test_mesh01(tst *testing.T) {
 	allVtags := []int{-1, -1, -1, -2, -3, -3, -3, -4, -5, -5, -5}
 	allCtags := []int{-1, -1, -1, -2, -2, -2}
 	allParts := []int{0, 1, 2, 0, 1, 2}
-	allTypes := []string{"qua4", "qua4", "tri3", "qua4", "qua4", "tri3"}
+	allTypeKeys := []string{"qua4", "qua4", "tri3", "qua4", "qua4", "tri3"}
+	allTypeIndices := []int{TypeQua4, TypeQua4, TypeTri3, TypeQua4, TypeQua4, TypeTri3}
 	allV := [][]int{
 		{0, 1, 5, 4},
 		{1, 2, 6, 5},
@@ -149,7 +151,7 @@ func Test_mesh01(tst *testing.T) {
 	}
 
 	// check input data
-	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypes, allV, allEtags, nil)
+	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypeKeys, allTypeIndices, allV, allEtags, nil)
 
 	// derived data
 	ndim := 2
@@ -208,7 +210,7 @@ func Test_mesh01(tst *testing.T) {
 	ctags := []int{-1, -2}
 	cparts := []int{0, 1, 2}
 	etags := []int{-10, -11, -12, -13}
-	ctypes := []string{"qua4", "tri3"}
+	ctypeinds := []int{TypeQua4, TypeTri3}
 	vtagsVids := [][]int{{0, 1, 2}, {3}, {4, 5, 6}, {7}, {8, 9, 10}}
 	ctagsCids := [][]int{{0, 1, 2}, {3, 4, 5}}
 	cpartsCids := [][]int{{0, 3}, {1, 4}, {2, 5}}
@@ -218,7 +220,7 @@ func Test_mesh01(tst *testing.T) {
 	etagsVids := [][]int{{0, 1, 2}, {2, 3, 6, 7, 10}, {8, 9, 10}, {0, 4, 8}}
 
 	// check maps
-	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
+	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 
 	// draw
 	if chk.Verbose {
@@ -260,7 +262,8 @@ func Test_cubeandtet(tst *testing.T) {
 	allVtags := []int{0, 0, -12, 0, -14, 0, 0, 0, -18}
 	allCtags := []int{-1, -1}
 	allParts := []int{0, 0}
-	allTypes := []string{"hex8", "tet4"}
+	allTypeKeys := []string{"hex8", "tet4"}
+	allTypeIndices := []int{TypeHex8, TypeTet4}
 	allV := [][]int{
 		{0, 1, 2, 3, 4, 5, 6, 7},
 		{3, 2, 8, 7},
@@ -271,7 +274,7 @@ func Test_cubeandtet(tst *testing.T) {
 	}
 
 	// check input data
-	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypes, allV, allEtags, nil)
+	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypeKeys, allTypeIndices, allV, allEtags, nil)
 
 	// derived data
 	ndim := 3
@@ -313,7 +316,7 @@ func Test_cubeandtet(tst *testing.T) {
 	cparts := []int{0}
 	etags := []int{-10, -11, -12, -13, -15, -66}
 	ftags := []int{-100, -101, -200, -300, -400}
-	ctypes := []string{"hex8", "tet4"}
+	ctypeinds := []int{TypeHex8, TypeTet4}
 	vtagsVids := [][]int{{2}, {4}, {8}}
 	ctagsCids := [][]int{{0, 1}}
 	cpartsCids := [][]int{{0, 1}}
@@ -326,7 +329,7 @@ func Test_cubeandtet(tst *testing.T) {
 	ftagsVids := [][]int{{0, 3, 4, 7, 8}, {1, 2, 5, 6}, {0, 1, 4, 5}, {0, 1, 2, 3, 8}, {2, 7, 8}}
 
 	// check maps
-	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ftags, ctypes, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids)
+	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ftags, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids)
 
 	// draw
 	if chk.Verbose {
@@ -340,7 +343,7 @@ func Test_cubeandtet(tst *testing.T) {
 	}
 }
 
-func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtags, ctags, parts []int, types []string, V [][]int, etags, ftags [][]int) {
+func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtags, ctags, parts []int, typekeys []string, typeindices []int, V [][]int, etags, ftags [][]int) {
 	if len(m.Verts) != nverts {
 		tst.Errorf("nverts is incorrect: %d != %d", len(m.Verts), nverts)
 		return
@@ -369,7 +372,8 @@ func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtag
 			tst.Errorf("part is incorrect: %d != %d", c.Part, parts[i])
 			return
 		}
-		chk.String(tst, types[i], c.Type)
+		chk.String(tst, typekeys[i], c.TypeKey)
+		chk.Int(tst, "cell type index", typeindices[i], c.TypeIndex)
 		chk.Ints(tst, io.Sf("cell %2d : V", c.Id), c.V, V[c.Id])
 		chk.Ints(tst, io.Sf("cell %2d : edgetags", c.Id), c.EdgeTags, etags[c.Id])
 	}
@@ -387,7 +391,7 @@ func checkderived(tst *testing.T, m *Mesh, ndim int, xmin, xmax []float64, allGn
 	}
 }
 
-func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags, ftags []int, ctypes []string, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids [][]int) {
+func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags, ftags []int, ctypeinds []int, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids [][]int) {
 
 	// VertTag2verts
 	io.Pfyel("\nVertTag2verts:\n")
@@ -472,18 +476,18 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 			io.Pf("  cell: %v\n", s)
 		}
 	}
-	if len(tm.CellType2cells) != len(ctypes) {
-		tst.Errorf("size of map of cell tags is incorrect. %d != %d", len(tm.CellType2cells), len(ctypes))
+	if len(tm.CellType2cells) != len(ctypeinds) {
+		tst.Errorf("size of map of cell tags is incorrect. %d != %d", len(tm.CellType2cells), len(ctypeinds))
 		return
 	}
-	for i, typ := range ctypes {
+	for i, typ := range ctypeinds {
 		var ids []int
 		if cells, ok := tm.CellType2cells[typ]; ok {
 			for _, v := range cells {
 				ids = append(ids, v.Id)
 			}
 		} else {
-			tst.Errorf("cannot find type %q in CellType2cells map", typ)
+			tst.Errorf("cannot find type %q in CellType2cells map", TypeIndexToKey[typ])
 			return
 		}
 		chk.Ints(tst, io.Sf("%q cells", typ), ids, ctypesCids[i])

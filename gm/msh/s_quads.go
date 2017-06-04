@@ -4,17 +4,9 @@
 
 package msh
 
-func init() {
-	Functions["qua4"] = Qua4
-	Functions["qua8"] = Qua8
-	Functions["qua9"] = Qua9
-	Functions["qua12"] = Qua12
-	Functions["qua16"] = Qua16
-}
-
-// Qua4 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua4
+// FuncQua4 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua4
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Qua4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncQua4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*
 	   3-----------2
 	   |     s     |
@@ -44,9 +36,9 @@ func Qua4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[3][1] = (+1.0 - r) / 4.0
 }
 
-// Qua8 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua8
+// FuncQua8 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua8
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Qua8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncQua8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*
 	   3-----6-----2
 	   |     s     |
@@ -89,9 +81,9 @@ func Qua8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[7][1] = -(1.0 - r) * s
 }
 
-// Qua9 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua9
+// FuncQua9 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua9
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Qua9(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncQua9(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*
 	   3-----6-----2
 	   |     s     |
@@ -142,9 +134,9 @@ func Qua9(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[8][1] = 2.0 * s * (r*r - 1.0)
 }
 
-// Qua12 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua12
+// FuncQua12 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua12
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Qua12(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncQua12(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*
 	    3      10       6        2
 	      @-----@-------@------@
@@ -210,9 +202,9 @@ func Qua12(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	dSdR[11][1] = 9.0 * rm * (9.0*s*s - 2.0*s - 3.0) / 32.0
 }
 
-// Qua16 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua16
+// FuncQua16 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua16
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
-func Qua16(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncQua16(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 	/*
 	    3      10       6        2
 	      @-----@-------@------@
@@ -238,8 +230,8 @@ func Qua16(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 		}
 	}
 
-	Lin4(sr, dr, []float64{r}, derivs)
-	Lin4(ss, ds, []float64{s}, derivs)
+	FuncLin4(sr, dr, []float64{r}, derivs)
+	FuncLin4(ss, ds, []float64{s}, derivs)
 
 	S[0] = sr[0] * ss[0]
 	S[1] = sr[1] * ss[0]

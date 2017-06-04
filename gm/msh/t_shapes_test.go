@@ -13,46 +13,46 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func Test_shp01(tst *testing.T) {
+func TestShp01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("shp01")
+	chk.PrintTitle("Shp01")
 
 	r := []float64{0, 0, 0}
 
-	for name, _ := range Functions {
+	for ctypeindex, _ := range Functions {
 
-		io.Pfyel("--------------------------------- %-6s---------------------------------\n", name)
+		io.Pfyel("--------------------------------- %-6s---------------------------------\n", TypeIndexToKey[ctypeindex])
 
 		// check S
 		tol := 1e-17
-		if name == "tri10" {
+		if ctypeindex == TypeTri10 {
 			tol = 1e-14
 		}
-		checkShape(tst, name, tol, chk.Verbose)
+		checkShape(tst, ctypeindex, tol, chk.Verbose)
 
 		// check dSdR
 		tol = 1e-14
-		if name == "lin5" || name == "lin4" || name == "tri10" || name == "qua12" || name == "qua16" {
+		if ctypeindex == TypeLin5 || ctypeindex == TypeLin4 || ctypeindex == TypeTri10 || ctypeindex == TypeQua12 || ctypeindex == TypeQua16 {
 			tol = 1e-10
 		}
-		if name == "tri15" {
+		if ctypeindex == TypeTri15 {
 			tol = 1e-9
 		}
-		checkDerivs(tst, name, r, tol, chk.Verbose)
+		checkDerivs(tst, ctypeindex, r, tol, chk.Verbose)
 
 		io.PfGreen("OK\n")
 	}
 }
 
 // checkShape checks that shape functions result in 1.0 @ nodes
-func checkShape(tst *testing.T, shape string, tol float64, verbose bool) {
+func checkShape(tst *testing.T, ctypeindex int, tol float64, verbose bool) {
 
 	// information
-	fcn := Functions[shape]
-	ndim := GeomNdim[shape]
-	nverts := NumVerts[shape]
-	coords := NatCoords[shape]
+	fcn := Functions[ctypeindex]
+	ndim := GeomNdim[ctypeindex]
+	nverts := NumVerts[ctypeindex]
+	coords := NatCoords[ctypeindex]
 
 	// allocate slices
 	S := make([]float64, nverts)
@@ -92,18 +92,18 @@ func checkShape(tst *testing.T, shape string, tol float64, verbose bool) {
 
 	// error
 	if errS > tol {
-		tst.Errorf("%s failed with err = %g\n", shape, errS)
+		tst.Errorf("%s failed with err = %g\n", TypeIndexToKey[ctypeindex], errS)
 		return
 	}
 }
 
 // checkDerivs checks dSdR derivatives of shape structures
-func checkDerivs(tst *testing.T, shape string, r []float64, tol float64, verbose bool) {
+func checkDerivs(tst *testing.T, ctypeindex int, r []float64, tol float64, verbose bool) {
 
 	// information
-	fcn := Functions[shape]
-	ndim := GeomNdim[shape]
-	nverts := NumVerts[shape]
+	fcn := Functions[ctypeindex]
+	ndim := GeomNdim[ctypeindex]
+	nverts := NumVerts[ctypeindex]
 
 	// allocate slices
 	S := make([]float64, nverts)
@@ -112,6 +112,7 @@ func checkDerivs(tst *testing.T, shape string, r []float64, tol float64, verbose
 	// analytical
 	fcn(S, dSdR, r, true)
 
+	// check
 	chk.DerivVecVec(tst, "dSdR", tol, dSdR, r[:ndim], 1e-1, verbose, func(f, x []float64) error {
 		fcn(f, nil, x, false)
 		return nil
