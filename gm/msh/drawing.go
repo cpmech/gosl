@@ -5,8 +5,6 @@
 package msh
 
 import (
-	"strings"
-
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -72,7 +70,7 @@ func (o *Mesh) Draw(a *DrawArgs) {
 		}
 
 		// lin cell
-		lincell := strings.HasPrefix(cell.TypeKey, "lin")
+		lincell := TypeIndexToKind[cell.TypeIndex] == KindLin
 		if !lincell && a.OnlyLins {
 			continue
 		}

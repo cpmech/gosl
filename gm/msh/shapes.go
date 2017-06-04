@@ -4,7 +4,16 @@
 
 package msh
 
-// constants
+// cell kinds
+const (
+	KindLin = 0 // "lin" cell kind
+	KindTri = 1 // "tri" cell kind
+	KindQua = 2 // "qua" cell kind
+	KindTet = 3 // "tet" cell kind
+	KindHex = 4 // "hex" cell kind
+)
+
+// cell types
 const (
 	TypeLin2   = 0  // Lin2 cell type index
 	TypeLin3   = 1  // Lin3 cell type index
@@ -30,14 +39,15 @@ const (
 type ShapeFunction func(S []float64, dSdR [][]float64, R []float64, derivs bool)
 
 var (
-	Functions      []ShapeFunction // shape functions and derivatives [TypeNumMax]
-	TypeKeyToIndex map[string]int  // converts type key (e.g. "lin2") to index (e.g. TypeLin2)
-	TypeIndexToKey map[int]string  // converts type index (e.g. TypeLin2) to key (e.g. "lin2")
-	NumVerts       []int           // number of vertices on shape [TypeNumMax]
-	GeomNdim       []int           // geometry number of space dimensions [TypeNumMax]
-	EdgeLocalVerts [][][]int       // local indices of vertices on edges of shape [TypeNumMax][nedges][nverts]
-	FaceLocalVerts [][][]int       // local indices of vertices on faces of shape [TypeNumMax][nfaces][nverts]
-	NatCoords      [][][]float64   // natural coordinates of vertices on shape [TypeNumMax][nverts][gndim]
+	Functions       []ShapeFunction // shape functions and derivatives [TypeNumMax]
+	TypeKeyToIndex  map[string]int  // converts type key (e.g. "lin2") to index (e.g. TypeLin2)
+	TypeIndexToKey  []string        // converts type index (e.g. TypeLin2) to key (e.g. "lin2")
+	TypeIndexToKind []int           // converts type index (e.g. TypeLin2) to cell kind (e.g. KindLin)
+	NumVerts        []int           // number of vertices on shape [TypeNumMax]
+	GeomNdim        []int           // geometry number of space dimensions [TypeNumMax]
+	EdgeLocalVerts  [][][]int       // local indices of vertices on edges of shape [TypeNumMax][nedges][nverts]
+	FaceLocalVerts  [][][]int       // local indices of vertices on faces of shape [TypeNumMax][nfaces][nverts]
+	NatCoords       [][][]float64   // natural coordinates of vertices on shape [TypeNumMax][nverts][gndim]
 )
 
 func init() {
@@ -83,7 +93,7 @@ func init() {
 	TypeKeyToIndex["hex20"] = TypeHex20
 
 	// set TypeIndexToKey
-	TypeIndexToKey = make(map[int]string)
+	TypeIndexToKey = make([]string, TypeNumMax)
 	TypeIndexToKey[TypeLin2] = "lin2"
 	TypeIndexToKey[TypeLin3] = "lin3"
 	TypeIndexToKey[TypeLin4] = "lin4"
@@ -101,6 +111,26 @@ func init() {
 	TypeIndexToKey[TypeTet10] = "tet10"
 	TypeIndexToKey[TypeHex8] = "hex8"
 	TypeIndexToKey[TypeHex20] = "hex20"
+
+	// set TypeIndexToKind
+	TypeIndexToKind = make([]int, TypeNumMax)
+	TypeIndexToKind[TypeLin2] = KindLin
+	TypeIndexToKind[TypeLin3] = KindLin
+	TypeIndexToKind[TypeLin4] = KindLin
+	TypeIndexToKind[TypeLin5] = KindLin
+	TypeIndexToKind[TypeTri3] = KindTri
+	TypeIndexToKind[TypeTri6] = KindTri
+	TypeIndexToKind[TypeTri10] = KindTri
+	TypeIndexToKind[TypeTri15] = KindTri
+	TypeIndexToKind[TypeQua4] = KindQua
+	TypeIndexToKind[TypeQua8] = KindQua
+	TypeIndexToKind[TypeQua9] = KindQua
+	TypeIndexToKind[TypeQua12] = KindQua
+	TypeIndexToKind[TypeQua16] = KindQua
+	TypeIndexToKind[TypeTet4] = KindTet
+	TypeIndexToKind[TypeTet10] = KindTet
+	TypeIndexToKind[TypeHex8] = KindHex
+	TypeIndexToKind[TypeHex20] = KindHex
 
 	// set NumVerts
 	NumVerts = make([]int, TypeNumMax)
