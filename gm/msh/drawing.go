@@ -76,14 +76,12 @@ func (o *Mesh) Draw(a *DrawArgs) {
 		}
 
 		// draw cells
-		var X [][]float64 // all coordinates
 		if a.WithCells {
 			aa := getargs(cell.Id, a.ArgsCells)
-			X = o.ExtractCellCoords(cell.Id)
 			if cell.Gndim > 2 {
 				// TODO
 			} else {
-				plt.Polyline(X, aa)
+				plt.Polyline(cell.X, aa)
 			}
 		}
 
@@ -168,17 +166,14 @@ func (o *Mesh) Draw(a *DrawArgs) {
 
 		// cell ids
 		if a.WithIdsCells {
-			if X == nil {
-				X = o.ExtractCellCoords(cell.Id)
-			}
 			xc := make([]float64, cell.Gndim)
-			for _, x := range X {
+			for _, x := range cell.X {
 				for i := 0; i < cell.Gndim; i++ {
 					xc[i] += x[i]
 				}
 			}
 			for i := 0; i < cell.Gndim; i++ {
-				xc[i] /= float64(len(X))
+				xc[i] /= float64(len(cell.X))
 			}
 			txt := io.Sf("%d", cell.Id)
 			if o.Ndim > 2 {
