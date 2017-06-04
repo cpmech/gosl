@@ -162,12 +162,23 @@ func QuadPointDraw(pts [][]float64, ndim int, triOrTet bool, dx []float64, args 
 
 /// map of integration points //////////////////////////////////////////////////////////////////////
 
-var IntPoints = make(map[string]map[string][][]float64)
+var (
+	// IntPoints holds integration points for all kinds of cells: lin,qua,hex,tri,tet
+	// It maps [cellKind] => [options][npts][4] where 4 means r,s,t,w
+	IntPoints map[int]map[string][][]float64
 
-// constants
+	// DefaultIntPoints holds the default integration points for all cell types
+	// It maps [cellTypeIndex] => [npts][4] where 4 means r,s,t,w
+	// NOTE: the highest number of integration points is selected,
+	//       thus the default number may not be optimal.
+	DefaultIntPoints [][][]float64
+)
+
 func init() {
 
-	IntPoints["lin"] = map[string][][]float64{
+	// set integration points for "lin" kind
+	IntPoints = make(map[int]map[string][][]float64)
+	IntPoints[KindLin] = map[string][][]float64{
 		"legendre_1": [][]float64{
 			{0, 0, 0, 2},
 		},
@@ -195,7 +206,8 @@ func init() {
 		},
 	}
 
-	IntPoints["qua"] = map[string][][]float64{
+	// set integration points for "qua" kind
+	IntPoints[KindQua] = map[string][][]float64{
 		"legendre_4": [][]float64{
 			{-0.5773502691896257, -0.5773502691896257, 0, 1},
 			{+0.5773502691896257, -0.5773502691896257, 0, 1},
@@ -213,15 +225,18 @@ func init() {
 			{+0.0000000000000000, +0.7745966692414834, 0, 40.0 / 81.0},
 			{+0.7745966692414834, +0.7745966692414834, 0, 25.0 / 81.0},
 		},
+		"legendre_16":      QuadPointsGaussLegendre(2, 16),
 		"wilson5corner_5":  QuadPointsWilson5(0, false),
 		"wilson5stable_5":  QuadPointsWilson5(0, true),
 		"wilson8default_8": QuadPointsWilson8(0),
 	}
 
+	// auxiliary constants
 	SQ19by30 := math.Sqrt(19.0 / 30.0)
 	SQ19by33 := math.Sqrt(19.0 / 33.0)
 
-	IntPoints["hex"] = map[string][][]float64{
+	// set integration points for "hex" kind
+	IntPoints[KindHex] = map[string][][]float64{
 		"legendre_8": [][]float64{
 			{-0.5773502691896257, -0.5773502691896257, -0.5773502691896257, 1},
 			{+0.5773502691896257, -0.5773502691896257, -0.5773502691896257, 1},
@@ -289,7 +304,8 @@ func init() {
 		},
 	}
 
-	IntPoints["tri"] = map[string][][]float64{
+	// set integration points for "tri" kind
+	IntPoints[KindTri] = map[string][][]float64{
 		"internal_1": [][]float64{
 			{1.0 / 3.0, 1.0 / 3.0, 0, 1.0 / 2.0},
 		},
@@ -343,7 +359,8 @@ func init() {
 		},
 	}
 
-	IntPoints["tet"] = map[string][][]float64{
+	// set integration points for "tet" kind
+	IntPoints[KindTet] = map[string][][]float64{
 		"internal_1": [][]float64{
 			{1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0, 1.0 / 6.0},
 		},
@@ -369,4 +386,24 @@ func init() {
 			{+0.0, +0.0, -1.0, 4.0 / 3.0},
 		},
 	}
+
+	// set default integration points
+	DefaultIntPoints = make([][][]float64, TypeNumMax)
+	DefaultIntPoints[TypeLin2] = IntPoints[KindLin]["legendre_2"]
+	DefaultIntPoints[TypeLin3] = IntPoints[KindLin]["legendre_3"]
+	DefaultIntPoints[TypeLin4] = IntPoints[KindLin]["legendre_4"]
+	DefaultIntPoints[TypeLin5] = IntPoints[KindLin]["legendre_5"]
+	DefaultIntPoints[TypeTri3] = IntPoints[KindTri]["internal_3"]
+	DefaultIntPoints[TypeTri6] = IntPoints[KindTri]["internal_4"]
+	DefaultIntPoints[TypeTri10] = IntPoints[KindTri]["internal_12"]
+	DefaultIntPoints[TypeTri15] = IntPoints[KindTri]["internal_16"]
+	DefaultIntPoints[TypeQua4] = IntPoints[KindQua]["legendre_4"]
+	DefaultIntPoints[TypeQua8] = IntPoints[KindQua]["legendre_9"]
+	DefaultIntPoints[TypeQua9] = IntPoints[KindQua]["legendre_9"]
+	DefaultIntPoints[TypeQua12] = IntPoints[KindQua]["legendre_16"]
+	DefaultIntPoints[TypeQua16] = IntPoints[KindQua]["legendre_16"]
+	DefaultIntPoints[TypeTet4] = IntPoints[KindTet]["internal_4"]
+	DefaultIntPoints[TypeTet10] = IntPoints[KindTet]["internal_6"]
+	DefaultIntPoints[TypeHex8] = IntPoints[KindHex]["legendre_8"]
+	DefaultIntPoints[TypeHex20] = IntPoints[KindHex]["legendre_27"]
 }

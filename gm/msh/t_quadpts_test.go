@@ -58,12 +58,12 @@ func TestQuadpts01(tst *testing.T) {
 		{+a, +a, 0, wa},
 	}
 
-	for name, allPts := range IntPoints {
+	for kind, allPts := range IntPoints {
 
-		io.PfYel("\n--------------------------------- %s ---------------------------------\n", name)
+		io.PfYel("\n--------------------------------- %d ---------------------------------\n", kind)
 
-		switch name {
-		case "lin":
+		switch kind {
+		case KindLin:
 			for key, pts := range allPts {
 				res := strings.Split(key, "_")
 				rule, n := res[0], io.Atoi(res[1])
@@ -85,7 +85,7 @@ func TestQuadpts01(tst *testing.T) {
 				chk.Vector(tst, io.Sf("lin:%d w", n), 1e-15, w, wref[n])
 			}
 
-		case "qua":
+		case KindQua:
 			for key, pts := range allPts {
 				res := strings.Split(key, "_")
 				rule, n := res[0], io.Atoi(res[1])
@@ -131,7 +131,7 @@ func TestQuadpts01(tst *testing.T) {
 				}
 			}
 
-		case "hex":
+		case KindHex:
 			for key, pts := range allPts {
 				res := strings.Split(key, "_")
 				rule, n := res[0], io.Atoi(res[1])
@@ -168,10 +168,10 @@ func TestQuadpts01(tst *testing.T) {
 
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		QuadPointDraw(IntPoints["qua"]["legendre_9"], 2, false, nil, nil)
-		QuadPointDraw(IntPoints["qua"]["wilson5corner_5"], 2, false, []float64{2.5, 0.0}, nil)
-		QuadPointDraw(IntPoints["qua"]["wilson5stable_5"], 2, false, []float64{0.0, 2.5}, nil)
-		QuadPointDraw(IntPoints["qua"]["wilson8default_8"], 2, false, []float64{2.5, 2.5}, nil)
+		QuadPointDraw(IntPoints[KindQua]["legendre_9"], 2, false, nil, nil)
+		QuadPointDraw(IntPoints[KindQua]["wilson5corner_5"], 2, false, []float64{2.5, 0.0}, nil)
+		QuadPointDraw(IntPoints[KindQua]["wilson5stable_5"], 2, false, []float64{0.0, 2.5}, nil)
+		QuadPointDraw(IntPoints[KindQua]["wilson8default_8"], 2, false, []float64{2.5, 2.5}, nil)
 		plt.Text(0.0, 1.05, "legendre9", &plt.A{Ha: "center", Fsz: 7})
 		plt.Text(2.5, 1.05, "wilson5corner", &plt.A{Ha: "center", Fsz: 7})
 		plt.Text(0.0, 3.55, "wilson5stable", &plt.A{Ha: "center", Fsz: 7})
@@ -183,10 +183,10 @@ func TestQuadpts01(tst *testing.T) {
 		plt.Save("/tmp/gosl", "quadpts01a")
 
 		plt.Reset(true, nil)
-		QuadPointDraw(IntPoints["tri"]["internal_3"], 2, true, nil, nil)
-		QuadPointDraw(IntPoints["tri"]["edge_3"], 2, true, []float64{1.5, 0.0}, nil)
-		QuadPointDraw(IntPoints["tri"]["internal_4"], 2, true, []float64{0.0, 1.5}, nil)
-		QuadPointDraw(IntPoints["tri"]["internal_12"], 2, true, []float64{1.5, 1.5}, nil)
+		QuadPointDraw(IntPoints[KindTri]["internal_3"], 2, true, nil, nil)
+		QuadPointDraw(IntPoints[KindTri]["edge_3"], 2, true, []float64{1.5, 0.0}, nil)
+		QuadPointDraw(IntPoints[KindTri]["internal_4"], 2, true, []float64{0.0, 1.5}, nil)
+		QuadPointDraw(IntPoints[KindTri]["internal_12"], 2, true, []float64{1.5, 1.5}, nil)
 		plt.Text(0.5, 1.05, "internal_3", &plt.A{Ha: "center", Fsz: 7})
 		plt.Text(2.0, 1.05, "edge_3", &plt.A{Ha: "center", Fsz: 7})
 		plt.Text(0.5, 2.55, "internal_4", &plt.A{Ha: "center", Fsz: 7})
@@ -198,10 +198,10 @@ func TestQuadpts01(tst *testing.T) {
 		plt.Save("/tmp/gosl", "quadpts01b")
 
 		plt.Reset(true, &plt.A{WidthPt: 500})
-		QuadPointDraw(IntPoints["hex"]["legendre_8"], 3, false, nil, nil)
-		QuadPointDraw(IntPoints["hex"]["wilson9corner_9"], 3, false, []float64{0.0, 2.5, 0.0}, nil)
-		QuadPointDraw(IntPoints["hex"]["wilson9stable_9"], 3, false, []float64{0.0, 0.0, 2.5}, nil)
-		QuadPointDraw(IntPoints["hex"]["irons_6"], 3, false, []float64{0.0, 2.5, 2.5}, nil)
+		QuadPointDraw(IntPoints[KindHex]["legendre_8"], 3, false, nil, nil)
+		QuadPointDraw(IntPoints[KindHex]["wilson9corner_9"], 3, false, []float64{0.0, 2.5, 0.0}, nil)
+		QuadPointDraw(IntPoints[KindHex]["wilson9stable_9"], 3, false, []float64{0.0, 0.0, 2.5}, nil)
+		QuadPointDraw(IntPoints[KindHex]["irons_6"], 3, false, []float64{0.0, 2.5, 2.5}, nil)
 		plt.Triad(0.5, "", "", "", &plt.A{C: "g"}, nil)
 		plt.Default3dView(-2, 2, -2, 4, -2, 2, true)
 		//plt.ShowSave("/tmp/gosl", "quadpts01c")
