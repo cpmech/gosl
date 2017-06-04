@@ -187,3 +187,57 @@ func (o *Integrator) EvalJacobian(X [][]float64, ip int) (err error) {
 	o.DetJacobian, err = la.MatInv(o.InvJacobMat, o.JacobianMat, 1e-14)
 	return
 }
+
+// mesh integrator ////////////////////////////////////////////////////////////////////////////////
+
+// MeshIntegrator implements methods to perform numerical integration over a mesh
+type MeshIntegrator struct {
+	M           *Mesh           // the mesh
+	Ngoroutines int             // total number of go routines
+	Integrators [][]*Integrator // all integrators [Ngoroutines][TypeNumMax]
+}
+
+// NewMeshIntegrator returns a new MeshIntegrator
+func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator, err error) {
+
+	// check
+	if Ngoroutines < 1 {
+		err = chk.Err("number of goroutines must be at least 1\n")
+		return
+	}
+
+	// allocate integrators
+	o = new(MeshIntegrator)
+	o.M = mesh
+	o.Integrators = make([][]*Integrator, Ngoroutines)
+	for i := 0; i < Ngoroutines; i++ {
+		o.Integrators[i] = make([]*Integrator, TypeNumMax)
+		for j := 0; j < TypeNumMax; j++ {
+			o.Integrators[i][j], err = NewIntegrator(j, nil, "")
+			if err != nil {
+				return
+			}
+		}
+	}
+	return
+}
+
+// IntegrateSv integrates scalar function of vector argument over mesh
+//
+//           ⌠⌠⌠   →
+//     res = │││ f(x) dΩ
+//           ⌡⌡⌡
+//              Ω
+//   Input:
+//     goroutineId -- go routine id to use when performing optimisation (not to partition mesh)
+func (o *MeshIntegrator) IntegrateSv(goroutineId int, f fun.Sv) (res float64, err error) {
+	for _, c := range o.M.Cells {
+		r, e := o.Integrators[goroutineId][c.TypeIndex].IntegrateSv(c.X, f)
+		if e != nil {
+			err = e
+			return
+		}
+		res += r
+	}
+	return
+}

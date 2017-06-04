@@ -186,3 +186,50 @@ func TestInteg02(tst *testing.T) {
 		plt.Save("/tmp/gosl/gm", "integ02")
 	}
 }
+
+func TestInteg03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Integ03. integration of scalar function")
+
+	r, R := 0.0, 1.0
+	mesh, err := GenRing2d(11, 11, r, R, math.Pi/2.0)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+
+	// allocate cell integrator with default integration points
+	o, err := NewMeshIntegrator(mesh, 1)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+
+	// integrand function for moment of inertia about x-axis: Ix
+	ρ := 1.0 // density distribution; could be a function ρ(x,y)
+	fcnIx := func(x []float64) (f float64, e error) {
+		f = x[1] * x[1] * ρ
+		return
+	}
+
+	// compute Ix
+	Ix, err := o.IntegrateSv(0, fcnIx)
+	if err != nil {
+		tst.Errorf("%v", err)
+		return
+	}
+	anaIx := math.Pi / 16.0
+	io.Pf("Ix = %v\n", Ix)
+	io.Pfgreen("     %v\n", anaIx)
+	chk.Scalar(tst, "Ix", 1e-6, Ix, anaIx)
+
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		args := NewArgs()
+		args.WithEdges = true
+		args.WithCells = false
+		mesh.Draw(args)
+		plt.Save("/tmp/gosl/gm", "integ03")
+	}
+}
