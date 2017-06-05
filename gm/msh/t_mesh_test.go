@@ -225,6 +225,7 @@ func Test_mesh01(tst *testing.T) {
 	// draw
 	if chk.Verbose {
 		args := NewArgs()
+		args.WithEdges = true
 		args.WithIdsCells = true
 		plt.Reset(true, nil)
 		m.Draw(args)

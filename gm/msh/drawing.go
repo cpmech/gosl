@@ -44,7 +44,7 @@ func NewArgs() (o *DrawArgs) {
 func (o *DrawArgs) Default() {
 	o.WithCells = true
 	o.WithEdges = false
-	o.ArgsVerts = &plt.A{C: "k", NoClip: true}
+	o.ArgsVerts = &plt.A{C: "k", M: ".", Ls: "none", NoClip: true}
 	o.ArgsEdges = &plt.A{C: "#480085", NoClip: true}
 	o.ArgsCells = map[int]*plt.A{-1: &plt.A{Fc: "#dce1f4", Ec: "k", Closed: true, NoClip: true}}
 	o.ArgsLins = map[int]*plt.A{-1: &plt.A{C: "#41045a", NoClip: true}}
@@ -83,13 +83,17 @@ func (o *Mesh) Draw(args *DrawArgs) {
 
 		// draw cells
 		if args.WithCells {
+			ct := cell.TypeIndex
+			nEdges := len(EdgeLocalVertsD[ct])
+			nvEdge := len(EdgeLocalVertsD[ct][0]) // number of vertices along edge of cell
+			nvEtot := nvEdge*nEdges - nEdges      // total number of vertices along all edges
 			aa := getargs(cell.Id, args.ArgsCells)
 			if cell.Gndim > 2 {
 				// TODO
 			} else {
 				k := 0
-				xx := make([][]float64, len(cell.V))
-				for _, lvids := range EdgeLocalVertsD[cell.TypeIndex] { // loop over edges
+				xx := make([][]float64, nvEtot)
+				for _, lvids := range EdgeLocalVertsD[ct] { // loop over edges
 					for ivert := 0; ivert < len(lvids)-1; ivert++ { // loop over verts on edge
 						lv := lvids[ivert]
 						xx[k] = o.Verts[cell.V[lv]].X
@@ -225,28 +229,43 @@ func (o *Mesh) Draw(args *DrawArgs) {
 	}
 
 	// loop over vertices
-	if args.WithIdsVerts || args.WithTagsVerts {
-		for _, v := range o.Verts {
-			x, y, z := v.X[0], v.X[1], 0.0
+	var xv, yv, zv []float64
+	if args.WithVerts || args.WithIdsVerts || args.WithTagsVerts {
+		xv = make([]float64, len(o.Verts))
+		yv = make([]float64, len(o.Verts))
+		if o.Ndim > 2 {
+			zv = make([]float64, len(o.Verts))
+		}
+		for i, v := range o.Verts {
+			xv[i], yv[i] = v.X[0], v.X[1]
 			if len(v.X) > 2 {
-				z = v.X[2]
+				zv[i] = v.X[2]
 			}
 			if args.WithIdsVerts {
 				txt := io.Sf("%d", v.Id)
 				if o.Ndim > 2 {
-					plt.Text3d(x, y, z, txt, args.ArgsIdsVerts)
+					plt.Text3d(xv[i], yv[i], zv[i], txt, args.ArgsIdsVerts)
 				} else {
-					plt.Text(x, y, txt, args.ArgsIdsVerts)
+					plt.Text(xv[i], yv[i], txt, args.ArgsIdsVerts)
 				}
 			}
 			if args.WithTagsVerts && v.Tag != 0 {
 				txt := io.Sf("%d", v.Tag)
 				if o.Ndim > 2 {
-					plt.Text3d(x, y, z, txt, args.ArgsTagsVerts)
+					plt.Text3d(xv[i], yv[i], zv[i], txt, args.ArgsTagsVerts)
 				} else {
-					plt.Text(x, y, txt, args.ArgsTagsVerts)
+					plt.Text(xv[i], yv[i], txt, args.ArgsTagsVerts)
 				}
 			}
+		}
+	}
+
+	// draw vertices
+	if args.WithVerts {
+		if o.Ndim > 2 {
+			plt.Plot3dPoints(xv, yv, zv, args.ArgsVerts)
+		} else {
+			plt.Plot(xv, yv, args.ArgsVerts)
 		}
 	}
 

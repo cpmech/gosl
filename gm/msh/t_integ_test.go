@@ -192,7 +192,7 @@ func TestInteg03(tst *testing.T) {
 	chk.PrintTitle("Integ03. 2nd mom inertia: quarter of circle")
 
 	r, R := 0.0, 1.0
-	mesh, err := GenRing2d(11, 11, r, R, math.Pi/2.0)
+	mesh, err := GenRing2d(TypeQua8, 11, 11, r, R, math.Pi/2.0)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
@@ -238,8 +238,8 @@ func TestInteg04(tst *testing.T) {
 	chk.PrintTitle("Integ04. 2nd mom inergia: ring")
 
 	r, R := 1.0, 3.0
-	//mesh, err := GenRing2d(14, 101, r, R, 2.0*math.Pi)
-	mesh, err := GenRing2d(5, 21, r, R, 2.0*math.Pi)
+	//mesh, err := GenRing2d(TypeQua8,14, 101, r, R, 2.0*math.Pi)
+	mesh, err := GenRing2d(TypeQua8, 5, 21, r, R, 2.0*math.Pi)
 	if err != nil {
 		tst.Errorf("%v", err)
 		return
