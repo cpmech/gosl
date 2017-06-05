@@ -6,21 +6,23 @@ package msh
 
 // FuncTri3 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri3
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//      s
+//      |
+//      2, (0,1)
+//      | ',
+//      |   ',
+//      |     ',
+//      |       ',
+//      |         ',
+//      |           ',
+//      |             ',
+//      |               ',
+//      | (0,0)           ', (1,0)
+//      0-------------------1 ---- r
+//
 func FuncTri3(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*      s
-	        |
-	        2, (0,1)
-	        | ',
-	        |   ',
-	        |     ',
-	        |       ',
-	        |         ',
-	        |           ',
-	        |             ',
-	        |               ',
-	        | (0,0)           ', (1,0)
-	        0-------------------1 ---- r
-	*/
+
 	r, s := R[0], R[1]
 	S[0] = 1.0 - r - s
 	S[1] = r
@@ -41,21 +43,23 @@ func FuncTri3(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncTri6 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri6
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//     s
+//     |
+//     2, (0,1)
+//     | ',
+//     |   ',
+//     |     ',
+//     |       ',
+//     5         '4
+//     |           ',
+//     |             ',
+//     |               ',
+//     | (0,0)           ', (1,0)
+//     0---------3---------1 ---- r
+//
 func FuncTri6(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*      s
-	        |
-	        2, (0,1)
-	        | ',
-	        |   ',
-	        |     ',
-	        |       ',
-	        5         '4
-	        |           ',
-	        |             ',
-	        |               ',
-	        | (0,0)           ', (1,0)
-	        0---------3---------1 ---- r
-	*/
+
 	r, s := R[0], R[1]
 	S[0] = 1.0 - (r+s)*(3.0-2.0*(r+s))
 	S[1] = r * (2.0*r - 1.0)
@@ -85,21 +89,21 @@ func FuncTri6(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncTri10 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri10
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//     s
+//     |
+//     2, (0,1)
+//     | ',
+//     |   ',
+//     5     '7
+//     |       ',
+//     |         ',
+//     8      9    '4
+//     |             ',
+//     | (0,0)         ', (1,0)
+//     0-----3-----6-----1 ---- r
+//
 func FuncTri10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-	   s
-	   |
-	   2, (0,1)
-	   | ',
-	   |   ',
-	   5     '7
-	   |       ',
-	   |         ',
-	   8      9    '4
-	   |             ',
-	   | (0,0)         ', (1,0)
-	   0-----3-----6-----1 ---- r
-	*/
 
 	r, s := R[0], R[1]
 	z := 1.0 - r - s
@@ -159,24 +163,26 @@ func FuncTri10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncTri15 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri15
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//      s
+//       ^
+//       |
+//     2
+//       @,(0,1)
+//       | ',
+//       |   ', 9
+//    10 @     @,
+//       |  14   ',   4
+//     5 @    @     @
+//       |           ',  8
+//    11 @  12@   @    '@
+//       |       13      ',
+//       |(0,0)            ', (1,0)
+//       @----@----@----@----@  --> r
+//     0      6    3    7     1
+//
 func FuncTri15(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*      s
-	           ^
-	           |
-	         2
-	           @,(0,1)
-	           | ',
-	           |   ', 9
-	        10 @     @,
-	           |  14   ',   4
-	         5 @    @     @
-	           |           ',  8
-	        11 @  12@   @    '@
-	           |       13      ',
-	           |(0,0)            ', (1,0)
-	           @----@----@----@----@  --> r
-	         0      6    3    7     1
-	*/
+
 	r, s := R[0], R[1]
 	pt1 := 128.0 / 3.0
 	pt2 := 32.0 / 3.0

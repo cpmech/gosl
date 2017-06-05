@@ -6,16 +6,17 @@ package msh
 
 // FuncQua4 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua4
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//    3-----------2
+//    |     s     |
+//    |     |     |
+//    |     +--r  |
+//    |           |
+//    |           |
+//    0-----------1
+//
 func FuncQua4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-	   3-----------2
-	   |     s     |
-	   |     |     |
-	   |     +--r  |
-	   |           |
-	   |           |
-	   0-----------1
-	*/
+
 	r, s := R[0], R[1]
 	S[0] = (1.0 - r - s + r*s) / 4.0
 	S[1] = (1.0 + r - s - r*s) / 4.0
@@ -38,16 +39,17 @@ func FuncQua4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncQua8 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua8
 // (serendipity) elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//    3-----6-----2
+//    |     s     |
+//    |     |     |
+//    7     +--r  5
+//    |           |
+//    |           |
+//    0-----4-----1
+//
 func FuncQua8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-	   3-----6-----2
-	   |     s     |
-	   |     |     |
-	   7     +--r  5
-	   |           |
-	   |           |
-	   0-----4-----1
-	*/
+
 	r, s := R[0], R[1]
 	S[0] = (1.0 - r) * (1.0 - s) * (-r - s - 1.0) / 4.0
 	S[1] = (1.0 + r) * (1.0 - s) * (r - s - 1.0) / 4.0
@@ -83,16 +85,17 @@ func FuncQua8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncQua9 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua9
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//    3-----6-----2
+//    |     s     |
+//    |     |     |
+//    7     8--r  5
+//    |           |
+//    |           |
+//    0-----4-----1
+//
 func FuncQua9(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-	   3-----6-----2
-	   |     s     |
-	   |     |     |
-	   7     8--r  5
-	   |           |
-	   |           |
-	   0-----4-----1
-	*/
+
 	r, s := R[0], R[1]
 	S[0] = r * (r - 1.0) * s * (s - 1.0) / 4.0
 	S[1] = r * (r + 1.0) * s * (s - 1.0) / 4.0
@@ -136,22 +139,23 @@ func FuncQua9(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncQua12 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua12
 // (serendipity) elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//     3      10       6        2
+//       @-----@-------@------@
+//       |               (1,1)|
+//       |       s ^          |
+//     7 @         |          @ 9
+//       |         |          |
+//       |         +----> r   |
+//       |       (0,0)        |
+//    11 @                    @ 5
+//       |                    |
+//       |(-1,-1)             |
+//       @-----@-------@------@
+//     0       4       8        1
+//
 func FuncQua12(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-	    3      10       6        2
-	      @-----@-------@------@
-	      |               (1,1)|
-	      |       s ^          |
-	    7 @         |          @ 9
-	      |         |          |
-	      |         +----> r   |
-	      |       (0,0)        |
-	   11 @                    @ 5
-	      |                    |
-	      |(-1,-1)             |
-	      @-----@-------@------@
-	    0       4       8        1
-	*/
+
 	r, s := R[0], R[1]
 	rm := 1.0 - r
 	rp := 1.0 + r
@@ -204,22 +208,23 @@ func FuncQua12(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncQua16 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua16
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//     3      10       6        2
+//       @-----@-------@------@
+//       |               (1,1)|
+//       |       s ^          |
+//     7 @   15@   |    @14   @ 9
+//       |         |          |
+//       |         +----> r   |
+//       |       (0,0)        |
+//    11 @   12@       @13    @ 5
+//       |                    |
+//       |(-1,-1)             |
+//       @-----@-------@------@
+//     0       4       8        1
+//
 func FuncQua16(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-	    3      10       6        2
-	      @-----@-------@------@
-	      |               (1,1)|
-	      |       s ^          |
-	    7 @   15@   |    @14   @ 9
-	      |         |          |
-	      |         +----> r   |
-	      |       (0,0)        |
-	   11 @   12@       @13    @ 5
-	      |                    |
-	      |(-1,-1)             |
-	      @-----@-------@------@
-	    0       4       8        1
-	*/
+
 	r, s := R[0], R[1]
 	sr, ss := make([]float64, 4), make([]float64, 4)
 	var dr, ds [][]float64
@@ -291,24 +296,24 @@ func FuncQua16(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncQua17 calculates the shape functions (S) and derivatives of shape functions (dSdR) of qua17
 // (serendipity) elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//     3      14    10     6     2
+//       @-----@-----@-----@-----@
+//       |                  (1,1)|
+//       |                       |
+// 	7 @                       @ 13
+//       |         s ^           |
+//       |           |           |
+//    11 @           |16         @ 9
+//       |           @----> r    |
+//       |         (0,0)         |
+//    15 @                       @ 5
+//       |                       |
+//       |(-1,-1)                |
+//       @-----@-----@-----@-----@
+//     0       4     8    12       1
+//
 func FuncQua17(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-		    3      14    10     6     2
-		      @-----@-----@-----@-----@
-		      |                  (1,1)|
-		      |                       |
-			7 @                       @ 13
-		      |         s ^           |
-		      |           |           |
-		   11 @           |16         @ 9
-		      |           @----> r    |
-		      |         (0,0)         |
-		   15 @                       @ 5
-		      |                       |
-		      |(-1,-1)                |
-		      @-----@-----@-----@-----@
-		    0       4     8    12       1
-	*/
 
 	r, s := R[0], R[1]
 	a := 2.0 / 3.0

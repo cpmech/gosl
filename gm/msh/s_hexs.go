@@ -6,23 +6,24 @@ package msh
 
 // FuncHex8 calculates the shape functions (S) and derivatives of shape functions (dSdR) of hex8
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//              4________________7
+//            ,'|              ,'|
+//          ,'  |            ,'  |
+//        ,'    |          ,'    |
+//      ,'      |        ,'      |
+//    5'===============6'        |
+//    |         |      |         |
+//    |         |      |         |
+//    |         0_____ | ________3
+//    |       ,'       |       ,'
+//    |     ,'         |     ,'
+//    |   ,'           |   ,'
+//    | ,'             | ,'
+//    1________________2'
+//
 func FuncHex8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-	             4________________7
-	           ,'|              ,'|
-	         ,'  |            ,'  |
-	       ,'    |          ,'    |
-	     ,'      |        ,'      |
-	   5'===============6'        |
-	   |         |      |         |
-	   |         |      |         |
-	   |         0_____ | ________3
-	   |       ,'       |       ,'
-	   |     ,'         |     ,'
-	   |   ,'           |   ,'
-	   | ,'             | ,'
-	   1________________2'
-	*/
+
 	r, s, t := R[0], R[1], R[2]
 	S[0] = (1.0 - r - s + r*s - t + s*t + r*t - r*s*t) / 8.0
 	S[1] = (1.0 + r - s - r*s - t + s*t - r*t + r*s*t) / 8.0
@@ -72,23 +73,24 @@ func FuncHex8(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncHex20 calculates the shape functions (S) and derivatives of shape functions (dSdR) of hex20
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//                4_______15_______7
+//              ,'|              ,'|
+//           12'  |            ,'  |
+//          ,'    16         ,14   |
+//        ,'      |        ,'      19
+//      5'=====13========6'        |
+//      |         |      |         |
+//      |         |      |         |
+//      |         0_____ | _11_____3
+//     17       ,'       |       ,'
+//      |     8'        18     ,'
+//      |   ,'           |   ,10
+//      | ,'             | ,'
+//      1_______9________2'
+//
 func FuncHex20(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*
-	              4_______15_______7
-	            ,'|              ,'|
-	         12'  |            ,'  |
-	        ,'    16         ,14   |
-	      ,'      |        ,'      19
-	    5'=====13========6'        |
-	    |         |      |         |
-	    |         |      |         |
-	    |         0_____ | _11_____3
-	   17       ,'       |       ,'
-	    |     8'        18     ,'
-	    |   ,'           |   ,10
-	    | ,'             | ,'
-	    1_______9________2'
-	*/
+
 	r, s, t := R[0], R[1], R[2]
 	rp1 := 1.0 + r
 	rm1 := 1.0 - r

@@ -6,36 +6,38 @@ package msh
 
 // FuncTet4 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tet4
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//                  t
+//                  |
+//                  3
+//                 /|`.
+//                 ||  `,
+//                / |    ',
+//                | |      \
+//               /  |       `.
+//               |  |         `,
+//              /   |           `,
+//              |   |             \
+//             /    |              `.
+//             |    |                ',
+//            /     |                  \
+//            |     0.,,_               `.
+//           |     /     ``'-.,,__        `.
+//           |    /              ``''-.,,_  ',
+//          |    /                        `` 2 ,,s
+//          |  ,'                       ,.-``
+//         |  ,                    _,-'`
+//         ' /                 ,.'`
+//        | /             _.-``
+//        '/          ,-'`
+//       |/      ,.-``
+//       /  _,-``
+//      1 '`
+//     /
+//    r
+//
 func FuncTet4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*                    t
-	              |
-	              3
-	             /|`.
-	             ||  `,
-	            / |    ',
-	            | |      \
-	           /  |       `.
-	           |  |         `,
-	          /   |           `,
-	          |   |             \
-	         /    |              `.
-	         |    |                ',
-	        /     |                  \
-	        |     0.,,_               `.
-	       |     /     ``'-.,,__        `.
-	       |    /              ``''-.,,_  ',
-	      |    /                        `` 2 ,,s
-	      |  ,'                       ,.-``
-	     |  ,                    _,-'`
-	     ' /                 ,.'`
-	    | /             _.-``
-	    '/          ,-'`
-	   |/      ,.-``
-	   /  _,-``
-	  1 '`
-	 /
-	r
-	*/
+
 	r, s, t := R[0], R[1], R[2]
 	S[0] = 1.0 - r - s - t
 	S[1] = r
@@ -64,36 +66,38 @@ func FuncTet4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 
 // FuncTet10 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tet10
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
+//
+//                  t
+//                  |
+//                  3
+//                 /|`.
+//                 ||  `,
+//                / |    ',
+//                | |      \
+//               /  |       `.
+//               |  |         `,
+//              /   7            9
+//              |   |             \
+//             /    |              `.
+//             |    |                ',
+//            8     |                  \
+//            |     0 ,,_               `.
+//           |     /     ``'-., 6         `.
+//           |    /               `''-.,,_  ',
+//          |    /                        ``'2 ,,s
+//          |   '                       ,.-``
+//         |   4                   _,-'`
+//         ' /                 ,.'`
+//        | /             _ 5 `
+//        '/          ,-'`
+//       |/      ,.-``
+//       /  _,-``
+//      1 '`
+//     /
+//    r
+//
 func FuncTet10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
-	/*                    t
-	              |
-	              3
-	             /|`.
-	             ||  `,
-	            / |    ',
-	            | |      \
-	           /  |       `.
-	           |  |         `,
-	          /   7            9
-	          |   |             \
-	         /    |              `.
-	         |    |                ',
-	        8     |                  \
-	        |     0 ,,_               `.
-	       |     /     ``'-., 6         `.
-	       |    /               `''-.,,_  ',
-	      |    /                        ``'2 ,,s
-	      |   '                       ,.-``
-	     |   4                   _,-'`
-	     ' /                 ,.'`
-	    | /             _ 5 `
-	    '/          ,-'`
-	   |/      ,.-``
-	   /  _,-``
-	  1 '`
-	 /
-	r
-	*/
+
 	r, s, t := R[0], R[1], R[2]
 	u := 1.0 - r - s - t
 	S[0] = u * (2.0*u - 1.0)
