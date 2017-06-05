@@ -425,6 +425,7 @@ func init() {
 	DefaultIntPoints[TypeQua9] = IntPoints[KindQua]["legendre_9"]
 	DefaultIntPoints[TypeQua12] = IntPoints[KindQua]["legendre_16"]
 	DefaultIntPoints[TypeQua16] = IntPoints[KindQua]["legendre_16"]
+	DefaultIntPoints[TypeQua17] = IntPoints[KindQua]["legendre_16"]
 	DefaultIntPoints[TypeTet4] = IntPoints[KindTet]["internal_4"]
 	DefaultIntPoints[TypeTet10] = IntPoints[KindTet]["internal_6"]
 	DefaultIntPoints[TypeHex8] = IntPoints[KindHex]["legendre_8"]

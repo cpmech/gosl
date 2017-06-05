@@ -29,11 +29,12 @@ const (
 	TypeQua9   = 10 // Qua9 cell type index
 	TypeQua12  = 11 // Qua12 cell type index
 	TypeQua16  = 12 // Qua16 cell type index
-	TypeTet4   = 13 // Tet4 cell type index
-	TypeTet10  = 14 // Tet10 cell type index
-	TypeHex8   = 15 // Hex8 cell type index
-	TypeHex20  = 16 // Hex20 cell type index
-	TypeNumMax = 17 // max number of types
+	TypeQua17  = 13 // Qua17 cell type index
+	TypeTet4   = 14 // Tet4 cell type index
+	TypeTet10  = 15 // Tet10 cell type index
+	TypeHex8   = 16 // Hex8 cell type index
+	TypeHex20  = 17 // Hex20 cell type index
+	TypeNumMax = 18 // max number of types
 )
 
 // ShapeFunction computes the shape function and derivatives
@@ -70,6 +71,7 @@ func init() {
 	Functions[TypeQua9] = FuncQua9
 	Functions[TypeQua12] = FuncQua12
 	Functions[TypeQua16] = FuncQua16
+	Functions[TypeQua17] = FuncQua17
 	Functions[TypeTet4] = FuncTet4
 	Functions[TypeTet10] = FuncTet10
 	Functions[TypeHex8] = FuncHex8
@@ -90,6 +92,7 @@ func init() {
 	TypeKeyToIndex["qua9"] = TypeQua9
 	TypeKeyToIndex["qua12"] = TypeQua12
 	TypeKeyToIndex["qua16"] = TypeQua16
+	TypeKeyToIndex["qua17"] = TypeQua17
 	TypeKeyToIndex["tet4"] = TypeTet4
 	TypeKeyToIndex["tet10"] = TypeTet10
 	TypeKeyToIndex["hex8"] = TypeHex8
@@ -110,6 +113,7 @@ func init() {
 	TypeIndexToKey[TypeQua9] = "qua9"
 	TypeIndexToKey[TypeQua12] = "qua12"
 	TypeIndexToKey[TypeQua16] = "qua16"
+	TypeIndexToKey[TypeQua17] = "qua17"
 	TypeIndexToKey[TypeTet4] = "tet4"
 	TypeIndexToKey[TypeTet10] = "tet10"
 	TypeIndexToKey[TypeHex8] = "hex8"
@@ -130,6 +134,7 @@ func init() {
 	TypeIndexToKind[TypeQua9] = KindQua
 	TypeIndexToKind[TypeQua12] = KindQua
 	TypeIndexToKind[TypeQua16] = KindQua
+	TypeIndexToKind[TypeQua17] = KindQua
 	TypeIndexToKind[TypeTet4] = KindTet
 	TypeIndexToKind[TypeTet10] = KindTet
 	TypeIndexToKind[TypeHex8] = KindHex
@@ -150,6 +155,7 @@ func init() {
 	NumVerts[TypeQua9] = 9
 	NumVerts[TypeQua12] = 12
 	NumVerts[TypeQua16] = 16
+	NumVerts[TypeQua17] = 17
 	NumVerts[TypeTet4] = 4
 	NumVerts[TypeTet10] = 10
 	NumVerts[TypeHex8] = 8
@@ -170,6 +176,7 @@ func init() {
 	GeomNdim[TypeQua9] = 2
 	GeomNdim[TypeQua12] = 2
 	GeomNdim[TypeQua16] = 2
+	GeomNdim[TypeQua17] = 2
 	GeomNdim[TypeTet4] = 3
 	GeomNdim[TypeTet10] = 3
 	GeomNdim[TypeHex8] = 3
@@ -186,6 +193,7 @@ func init() {
 	EdgeLocalVerts[TypeQua9] = [][]int{{0, 1, 4}, {1, 2, 5}, {2, 3, 6}, {3, 0, 7}}
 	EdgeLocalVerts[TypeQua12] = [][]int{{0, 1, 4, 8}, {1, 2, 5, 9}, {2, 3, 6, 10}, {3, 0, 7, 11}}
 	EdgeLocalVerts[TypeQua16] = [][]int{{0, 1, 4, 8}, {1, 2, 5, 9}, {2, 3, 6, 10}, {3, 0, 7, 11}}
+	EdgeLocalVerts[TypeQua17] = [][]int{{0, 1, 8, 4, 12}, {1, 2, 9, 5, 13}, {2, 3, 10, 6, 14}, {3, 0, 11, 7, 15}}
 	EdgeLocalVerts[TypeTet4] = [][]int{{0, 1}, {1, 2}, {2, 0}, {0, 3}, {1, 3}, {2, 3}}
 	EdgeLocalVerts[TypeTet10] = [][]int{{0, 1, 4}, {1, 2, 5}, {2, 0, 6}, {0, 3, 7}, {1, 3, 8}, {2, 3, 9}}
 	EdgeLocalVerts[TypeHex8] = [][]int{{0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7}}
@@ -209,6 +217,7 @@ func init() {
 	EdgeLocalVertsD[TypeQua9] = [][]int{{0, 4, 1}, {1, 5, 2}, {2, 6, 3}, {3, 7, 0}}
 	EdgeLocalVertsD[TypeQua12] = [][]int{{0, 4, 8, 1}, {1, 5, 9, 2}, {2, 6, 10, 3}, {3, 7, 11, 0}}
 	EdgeLocalVertsD[TypeQua16] = [][]int{{0, 4, 8, 1}, {1, 5, 9, 2}, {2, 6, 10, 3}, {3, 7, 11, 0}}
+	EdgeLocalVertsD[TypeQua17] = [][]int{{0, 4, 8, 12, 1}, {1, 5, 9, 13, 2}, {2, 6, 10, 14, 3}, {3, 7, 11, 15, 0}}
 	EdgeLocalVertsD[TypeTet4] = [][]int{{0, 1}, {1, 2}, {2, 0}, {0, 3}, {1, 3}, {2, 3}}
 	EdgeLocalVertsD[TypeTet10] = [][]int{{0, 4, 1}, {1, 5, 2}, {2, 6, 0}, {0, 7, 3}, {1, 8, 3}, {2, 9, 3}}
 	EdgeLocalVertsD[TypeHex8] = [][]int{{0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7}}
@@ -269,6 +278,10 @@ func init() {
 	NatCoords[TypeQua16] = [][]float64{
 		{-1, 1, 1, -1, -1.0 / 3.0, 1, 1.0 / 3.0, -1, 1.0 / 3.0, 1, -1.0 / 3.0, -1, -1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0, -1.0 / 3.0},
 		{-1, -1, 1, 1, -1, -1.0 / 3.0, 1, 1.0 / 3.0, -1, 1.0 / 3.0, 1, -1.0 / 3.0, -1.0 / 3.0, -1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0},
+	}
+	NatCoords[TypeQua17] = [][]float64{
+		{-1, +1, +1, -1, -0.5, +1.0, 0.5, -1.0, +0, 1, 0, -1, +0.5, 1.0, -0.5, -1.0, 0},
+		{-1, -1, +1, +1, -1.0, -0.5, 1.0, +0.5, -1, 0, 1, +0, -1.0, 0.5, +1.0, -0.5, 0},
 	}
 	NatCoords[TypeTet4] = [][]float64{
 		{0, 1, 0, 0},
