@@ -191,44 +191,54 @@ func TestInteg03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Integ03. 2nd mom inertia: quarter of circle")
 
-	r, R := 0.0, 1.0
-	mesh, err := GenRing2d(TypeQua8, 11, 11, r, R, math.Pi/2.0)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-
-	// allocate cell integrator with default integration points
-	o, err := NewMeshIntegrator(mesh, 1)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-
 	// integrand function for second moment of inertia about x-axis: Ix
 	fcnIx := func(x []float64) (f float64, e error) {
 		f = x[1] * x[1]
 		return
 	}
 
-	// compute Ix
-	Ix, err := o.IntegrateSv(0, fcnIx)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-	anaIx := math.Pi / 16.0
-	io.Pf("Ix = %v\n", Ix)
-	io.Pfgreen("     %v\n", anaIx)
-	chk.Scalar(tst, "Ix", 1e-6, Ix, anaIx)
+	// constants
+	anaIx := math.Pi / 16.0 // analytical solution
+	r, R := 0.0, 1.0
+	nr, na := 5, 5
 
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		args := NewArgs()
-		args.WithEdges = true
-		args.WithCells = false
-		mesh.Draw(args)
-		plt.Save("/tmp/gosl/gm", "integ03")
+	// run for many quads
+	//tols := []float64{0.0014, 1e-6, 1e-6, 1e-7, 1e-7, 1e-10} // 11 x 11
+	tols := []float64{0.007, 1e-5, 1e-5, 1e-5, 1e-5, 1e-8} // 5 x 5
+	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
+	for i, ctype := range ctypes {
+		mesh, err := GenRing2d(ctype, nr, na, r, R, math.Pi/2.0)
+		if err != nil {
+			tst.Errorf("%v", err)
+			return
+		}
+
+		// allocate cell integrator with default integration points
+		o, err := NewMeshIntegrator(mesh, 1)
+		if err != nil {
+			tst.Errorf("%v", err)
+			return
+		}
+
+		// compute Ix
+		Ix, err := o.IntegrateSv(0, fcnIx)
+		if err != nil {
+			tst.Errorf("%v", err)
+			return
+		}
+		typekey := TypeIndexToKey[ctype]
+		io.Pf("%s : Ix = %v  error = %v\n", typekey, Ix, math.Abs(Ix-anaIx))
+		chk.Scalar(tst, "Ix", tols[i], Ix, anaIx)
+
+		if chk.Verbose {
+			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+			args := NewArgs()
+			args.WithEdges = true
+			args.WithVerts = true
+			args.WithCells = false
+			mesh.Draw(args)
+			plt.Save("/tmp/gosl/gm", io.Sf("integ03-%s", typekey))
+		}
 	}
 }
 
@@ -237,46 +247,54 @@ func TestInteg04(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Integ04. 2nd mom inergia: ring")
 
-	r, R := 1.0, 3.0
-	//mesh, err := GenRing2d(TypeQua8,14, 101, r, R, 2.0*math.Pi)
-	mesh, err := GenRing2d(TypeQua8, 5, 21, r, R, 2.0*math.Pi)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-
-	// allocate cell integrator with default integration points
-	o, err := NewMeshIntegrator(mesh, 1)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-
 	// integrand function for second moment of inertia about x-axis: Ix
 	fcnIx := func(x []float64) (f float64, e error) {
 		f = x[1] * x[1]
 		return
 	}
 
-	// compute Ix
-	Ix, err := o.IntegrateSv(0, fcnIx)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	// constants
+	r, R := 1.0, 3.0
+	nr, na := 4, 13
 	anaIx := math.Pi * (math.Pow(R, 4) - math.Pow(r, 4)) / 4.0
-	io.Pf("Ix = %v\n", Ix)
-	io.Pfgreen("     %v\n", anaIx)
-	chk.Scalar(tst, "Ix", 0.0021, Ix, anaIx)
 
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		args := NewArgs()
-		//args.WithIdsVerts = true
-		args.WithCells = false
-		args.WithEdges = true
-		mesh.Draw(args)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "integ04")
+	// run for many quads
+	//tols := []float64{2.0, 0.003, 0.003, 0.004, 0.004, 1e-6} // 5 x 21
+	tols := []float64{5, 0.02, 0.02, 0.003, 0.003, 1e-5} // 4 x 13
+	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
+	for i, ctype := range ctypes {
+		mesh, err := GenRing2d(ctype, nr, na, r, R, 2.0*math.Pi)
+		if err != nil {
+			tst.Errorf("%v", err)
+			return
+		}
+
+		// allocate cell integrator with default integration points
+		o, err := NewMeshIntegrator(mesh, 1)
+		if err != nil {
+			tst.Errorf("%v", err)
+			return
+		}
+
+		// compute Ix
+		Ix, err := o.IntegrateSv(0, fcnIx)
+		if err != nil {
+			tst.Errorf("%v", err)
+			return
+		}
+		typekey := TypeIndexToKey[ctype]
+		io.Pf("%s : Ix = %v  error = %v\n", typekey, Ix, math.Abs(Ix-anaIx))
+		chk.Scalar(tst, "Ix", tols[i], Ix, anaIx)
+
+		if chk.Verbose {
+			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+			args := NewArgs()
+			args.WithEdges = true
+			args.WithVerts = true
+			args.WithCells = false
+			mesh.Draw(args)
+			plt.HideAllBorders()
+			plt.Save("/tmp/gosl/gm", io.Sf("integ04-%s", typekey))
+		}
 	}
 }

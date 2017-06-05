@@ -44,7 +44,7 @@ func NewArgs() (o *DrawArgs) {
 func (o *DrawArgs) Default() {
 	o.WithCells = true
 	o.WithEdges = false
-	o.ArgsVerts = &plt.A{C: "k", M: ".", Ls: "none", NoClip: true}
+	o.ArgsVerts = &plt.A{C: "k", M: ".", Ms: 3, Ls: "none", NoClip: true}
 	o.ArgsEdges = &plt.A{C: "#480085", NoClip: true}
 	o.ArgsCells = map[int]*plt.A{-1: &plt.A{Fc: "#dce1f4", Ec: "k", Closed: true, NoClip: true}}
 	o.ArgsLins = map[int]*plt.A{-1: &plt.A{C: "#41045a", NoClip: true}}
