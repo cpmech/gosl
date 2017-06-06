@@ -44,7 +44,7 @@ func ColMajToMat(a [][]float64, am []float64) {
 // RCtoComplex converts two slices into a slice of complex numbers
 func RCtoComplex(r, c []float64) (rc []complex128) {
 	if len(r) != len(c) {
-		chk.Panic(_conversions_err1, len(r), len(c))
+		chk.Panic("length of r and c slices must be equal to each other. %d != %d", len(r), len(c))
 	}
 	rc = make([]complex128, len(r))
 	for i := 0; i < len(r); i++ {
@@ -64,7 +64,27 @@ func ComplexToRC(rc []complex128) (r, c []float64) {
 	return
 }
 
-// error messages
-var (
-	_conversions_err1 = "conversions.go: RCtoComplex: length of r and c slices must be equal to each other. %d != %d"
-)
+// RCpairsToComplex converts pairs such as [real,imag, real,imag, real,imag, ...] to slice of complex numbers
+//   Note: len(pairs) must be even
+func RCpairsToComplex(pairs []float64) (v []complex128) {
+	n := len(pairs)
+	if n%2 != 0 {
+		chk.Panic("len(pairs) must be even. %d is invalid", n)
+	}
+	v = make([]complex128, n/2)
+	for i := 0; i < n/2; i++ {
+		v[i] = complex(pairs[i*2], pairs[i*2+1])
+	}
+	return
+}
+
+// ComplexToRCpairs converts slice of complex numbers to pairs such as [real,imag, real,imag, real,imag, ...]
+func ComplexToRCpairs(v []complex128) (pairs []float64) {
+	n := len(v)
+	pairs = make([]float64, n*2)
+	for i := 0; i < n; i++ {
+		pairs[i*2] = real(v[i])
+		pairs[i*2+1] = imag(v[i])
+	}
+	return
+}

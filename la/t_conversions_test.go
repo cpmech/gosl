@@ -235,6 +235,13 @@ func Test_conv07(tst *testing.T) {
 	R, C := ComplexToRC(rc)
 	chk.Vector(tst, "r", 1e-17, R, r)
 	chk.Vector(tst, "c", 1e-17, C, c)
+
+	pa := []float64{1, 0.1, 2, 0.2, 3, 0.3, 4, 0.4, 5, 0.5, 6, 0.6}
+	v := RCpairsToComplex(pa)
+	chk.VectorC(tst, "p→v", 1e-17, v, []complex128{1 + 0.1i, 2 + 0.2i, 3 + 0.3i, 4 + 0.4i, 5 + 0.5i, 6 + 0.6i})
+
+	pb := ComplexToRCpairs(v)
+	chk.Vector(tst, "v→p", 1e-17, pb, pa)
 }
 
 func Test_spset01(tst *testing.T) {
