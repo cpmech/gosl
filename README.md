@@ -1,10 +1,15 @@
 # Gosl &ndash; Go scientific library
 
-Gosl is a computing library written in go language (golang) to help with the development of software
-for scientific research. The library tries to be as general as possible. The use of concurrency for
-multi-threaded applications and message passing for parallel computations are considered. Functions
-and structures for geometry calculations, random numbers generation and probability distributions,
-optimisation algorithms, and plotting and visualisation are implemented as well.
+Gosl is a library written in Go (golang) to develop high-performance scientific computing with ease.
+The library tries to be as general and _easy_ as possible. Gosl considers the use of both Go
+concurrency routines and parallel computing using the message passing interface. Gosl has several
+modules (sub-libraries/sub-packages) for a variety of tasks in scientific computing, image analysis,
+and data post-processing. For example, it includes high-performant linear algebra functions (e.g.
+wrapping MKL/OpenBLAS/LAPACK/SuiteSparse/UMFPACK etc.), fast Fourier transform algorithms (e.g.
+wrapping FFTW), functions and structures for geometry calculations, random numbers generation and
+probability distributions, optimisation algorithms, plotting and visualisation using the VTK, and
+much more. Gosl has also solvers to (stiff or not) ordinary differential equations and several tools
+for mesh generation to assist on the development of finite element solvers.
 
 <div id="container">
 <p><img src="examples/figs/gosl-collage1-sml.png"></p>
@@ -30,15 +35,15 @@ Gosl comprises several _subpackages_ as listed below:
 7.  [la/mkl](https://github.com/cpmech/gosl/tree/master/la/mkl)       &ndash; Lower level linear algebra using Intel MKL
 8.  [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas)   &ndash; Lower level linear algebra using OpenBLAS
 9.  [fdm](https://github.com/cpmech/gosl/tree/master/fdm)             &ndash; Simple finite differences method
-10. [num](https://github.com/cpmech/gosl/tree/master/num)             &ndash; Fundamental numerical methods
-11. [fun](https://github.com/cpmech/gosl/tree/master/fun)             &ndash; Special functions and functions of scalar/vector
+10. [num](https://github.com/cpmech/gosl/tree/master/num)             &ndash; Fundamental numerical methods such as root solvers, non-linear solvers, numerical derivatives and quadrature
+11. [fun](https://github.com/cpmech/gosl/tree/master/fun)             &ndash; Special functions, DFT, FFT using FFTW, elliptical integrals, orthogonal polynomials, and functions of scalar/vector
 12. [gm](https://github.com/cpmech/gosl/tree/master/gm)               &ndash; Geometry algorithms and structures
-13. [gm/msh](https://github.com/cpmech/gosl/tree/master/gm/msh)       &ndash; Mesh structures and interpolation functions for FEA
-14. [gm/tri](https://github.com/cpmech/gosl/tree/master/gm/tri)       &ndash; Mesh generation: triangles and Delaunay triangulation
+13. [gm/msh](https://github.com/cpmech/gosl/tree/master/gm/msh)       &ndash; Mesh structures and interpolation functions for FEA, including quadrature over polyhedra
+14. [gm/tri](https://github.com/cpmech/gosl/tree/master/gm/tri)       &ndash; Mesh generation: triangles and Delaunay triangulation (wrapping Triangle)
 15. [gm/rw](https://github.com/cpmech/gosl/tree/master/gm/rw)         &ndash; Mesh generation: read/write routines
 16. [graph](https://github.com/cpmech/gosl/tree/master/graph)         &ndash; Graph theory structures and algorithms
-17. [ode](https://github.com/cpmech/gosl/tree/master/ode)             &ndash; Ordinary differential equations
-18. [opt](https://github.com/cpmech/gosl/tree/master/opt)             &ndash; Solvers for optimisation problems
+17. [ode](https://github.com/cpmech/gosl/tree/master/ode)             &ndash; Ordinary differential equations (stiff/non-stiff RK methods)
+18. [opt](https://github.com/cpmech/gosl/tree/master/opt)             &ndash; Solvers for optimisation problems (e.g. interior point method)
 19. [rnd](https://github.com/cpmech/gosl/tree/master/rnd)             &ndash; Random numbers and probability distributions
 20. [rnd/dsfmt](https://github.com/cpmech/gosl/tree/master/rnd/dsfmt) &ndash; Go wrapper to dSIMD-oriented Fast Mersenne Twister
 21. [rnd/sfmt](https://github.com/cpmech/gosl/tree/master/rnd/sfmt)   &ndash; Go wrapper to SIMD-oriented Fast Mersenne Twister
