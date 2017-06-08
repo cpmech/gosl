@@ -14,10 +14,17 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-func TestFourierTrans01(tst *testing.T) {
+var dataOneDrefer []float64 // reference results
+
+func init() {
+	x := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
+	dataOneDrefer = la.ComplexToRCpairs(dft1d(x))
+}
+
+func TestOneDver01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("FourierTrans01. allocate Xin internally")
+	chk.PrintTitle("OneDver01. allocate Xin internally")
 
 	// flags
 	inverse := false
@@ -51,15 +58,13 @@ func TestFourierTrans01(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	Y := la.ComplexToRCpairs(dft(y))
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, Y)
+	chk.Vector(tst, "output: X", 1e-14, plan.Xout, dataOneDrefer)
 }
 
-func TestFourierTrans02(tst *testing.T) {
+func TestOneDver02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("FourierTrans02. using Xin externally")
+	chk.PrintTitle("OneDver02. using Xin externally")
 
 	// flags
 	inverse := false
@@ -90,15 +95,13 @@ func TestFourierTrans02(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	Y := la.ComplexToRCpairs(dft(y))
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, Y)
+	chk.Vector(tst, "output: X", 1e-14, plan.Xout, dataOneDrefer)
 }
 
-func TestFourierTrans03(tst *testing.T) {
+func TestOneDver03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("FourierTrans03. using Xin externally and 'in-place'")
+	chk.PrintTitle("OneDver03. using Xin externally and 'in-place'")
 
 	// flags
 	inverse := false
@@ -136,15 +139,13 @@ func TestFourierTrans03(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	Y := la.ComplexToRCpairs(dft(y))
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, Y)
+	chk.Vector(tst, "output: X", 1e-14, plan.Xout, dataOneDrefer)
 }
 
-func TestFourierTrans04(tst *testing.T) {
+func TestOneDver04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("FourierTrans04. using Xin externally and 'measure'")
+	chk.PrintTitle("OneDver04. using Xin externally and 'measure'")
 
 	// flags
 	inverse := false
@@ -175,13 +176,11 @@ func TestFourierTrans04(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	Y := la.ComplexToRCpairs(dft(y))
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, Y)
+	chk.Vector(tst, "output: X", 1e-14, plan.Xout, dataOneDrefer)
 }
 
-// dft compute the discrete Fourier Transform of x (very slow: for testing only)
-func dft(x []complex128) (X []complex128) {
+// dft1d compute the discrete Fourier Transform of x (very slow: for testing only)
+func dft1d(x []complex128) (X []complex128) {
 	N := len(x)
 	X = make([]complex128, N)
 	for n := 0; n < N; n++ {
