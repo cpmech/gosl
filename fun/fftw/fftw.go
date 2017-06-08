@@ -19,7 +19,6 @@ import (
 	"unsafe"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 )
 
 // Plan1d implements the FFTW3 plan structure; i.e. a "plan" to compute direct or inverse 1D FTs
@@ -114,7 +113,6 @@ func NewPlan1d(data []float64, N int, inverse, inplace, measure bool) (o *Plan1d
 func (o *Plan1d) Free() {
 	if o.p != nil {
 		C.fftw_destroy_plan(o.p)
-		io.PfYel("destroy!\n")
 	}
 }
 

@@ -6,6 +6,7 @@ package fun
 
 import (
 	"math"
+	"math/cmplx"
 
 	"github.com/cpmech/gosl/chk"
 )
@@ -29,6 +30,9 @@ import (
 //   References:
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//   NOTE: if possible, use the fun/fftw package that may be up to 5 times faster than this function
+//
 func FourierTransLL(data []float64, inverse bool) (err error) {
 
 	// check length of data
@@ -118,4 +122,19 @@ func IsPowerOfTwo(n int) bool {
 // Swap swaps two float64 numbers
 func Swap(a, b *float64) {
 	*a, *b = *b, *a
+}
+
+// DftSlow computes the discrete Fourier transform of x (complex) by using the "slow" method; i.e.
+// by directly computing the summation with N² operations
+// NOTE: This function is mostly useful for verifications only.
+func DftSlow(x []complex128) (X []complex128) {
+	N := len(x)
+	X = make([]complex128, N)
+	for n := 0; n < N; n++ {
+		for k := 0; k < N; k++ {
+			a := 2.0 * math.Pi * float64(k*n) / float64(N)
+			X[n] += x[k] * cmplx.Exp(-1i*complex(a, 0))
+		}
+	}
+	return
 }
