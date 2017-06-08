@@ -147,10 +147,12 @@ go test
 
 
 ### 3.5 Optional: Install Intel MKL
-Download MKL from [the intel MKL website](https://software.intel.com/en-us/intel-mkl), then:
+Download MKL (~900Mb) from [the intel MKL website](https://software.intel.com/en-us/intel-mkl)
+(click on Free Download; need to sign-in), then:
 ```
 mkdir -p $HOME/xpkg && cd $HOME/xpkg
 tar xzvf l_mkl_2017.2.174.tgz
+cd l_mkl_2017.2.174/
 bash install_GUI.sh
 ```
 and follow the instructions. These options have been tested:
