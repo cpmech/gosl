@@ -14,11 +14,11 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-var dataOneDrefer []float64 // reference results
+var data1dRef []float64 // reference results
 
 func init() {
 	x := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	dataOneDrefer = la.ComplexToRCpairs(dft1d(x))
+	data1dRef = la.ComplexToRCpairs(dft1d(x))
 }
 
 func TestOneDver01(tst *testing.T) {
@@ -58,7 +58,7 @@ func TestOneDver01(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, dataOneDrefer)
+	chk.Vector(tst, "output: X", 1e-14, plan.Xout, data1dRef)
 }
 
 func TestOneDver02(tst *testing.T) {
@@ -95,7 +95,7 @@ func TestOneDver02(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, dataOneDrefer)
+	chk.Vector(tst, "output: X", 1e-14, plan.Xout, data1dRef)
 }
 
 func TestOneDver03(tst *testing.T) {
@@ -139,7 +139,7 @@ func TestOneDver03(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, dataOneDrefer)
+	chk.Vector(tst, "output: X", 1e-14, plan.Xout, data1dRef)
 }
 
 func TestOneDver04(tst *testing.T) {
@@ -176,7 +176,7 @@ func TestOneDver04(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, dataOneDrefer)
+	chk.Vector(tst, "output: X", 1e-14, plan.Xout, data1dRef)
 }
 
 // dft1d compute the discrete Fourier Transform of x (very slow: for testing only)

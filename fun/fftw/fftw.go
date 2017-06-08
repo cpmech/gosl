@@ -30,6 +30,10 @@ type Plan1d struct {
 
 // NewPlan1d allocates a new "plan" to compute 1D Fourier Transforms
 //
+//   Computes:
+//                      N-1         -i 2 π k l / N
+//               X[l] =  Σ  x[k] ⋅ e
+//                      k=0
 //   INPUT:
 //
 //     data -- is a complex array stored as a real array of length 2*n. [real,imag, real,imag, ...]
@@ -130,4 +134,152 @@ func (o *Plan1d) Output(i int) (v complex128) {
 // Execute performs the Fourier transform
 func (o *Plan1d) Execute() {
 	C.fftw_execute(o.p)
+}
+
+// 2d ////////////////////////////////////////////////////////////////////////////////////////////
+
+// Plan2d implements the FFTW3 plan structure; i.e. a "plan" to compute direct or inverse 2D FTs
+type Plan2d struct {
+	p    C.fftw_plan // FFTW "plan" structure
+	n0   int         // length along first dimension
+	n1   int         // length along second dimension
+	Xin  []float64   // input: complex pairs len=2*N
+	Xout []float64   // output: complex pairs len=2*N
+}
+
+// NewPlan2d allocates a new "plan" to compute 2D Fourier Transforms
+//
+//   Computes:
+//                      N1-1 N0-1             -i 2 π k1 l1 / N1    -i 2 π k0 l0 / N0
+//           X[l0,l1] =   Σ    Σ  x[k0,k1] ⋅ e                  ⋅ e
+//                      k1=0 k0=0
+//   INPUT:
+//
+//   TODO: explain the input data better
+//
+//     N0, N1 -- must not be zero, even if data is provided
+//
+//   NOTE: the user must remember to call Free to deallocate FFTW data
+//
+//        _                          _
+//   A = |   A00→a0  A01→a1  A02→a2   |  ⇒ A[i][j]
+//       |_  A10→a3  A11→a4  A12→a5  _|
+//                                    (n0,n1)=(2,3)
+//
+//       l = 0      1      2        3      4      5
+//   a = [  A00    A01    A02      A10    A11    A12 ]  ⇒ a[l]
+//         3⋅0+0  3⋅0+1  3⋅0+2    3⋅1+0  3⋅1+1  3⋅1+2
+//
+//   l = n1⋅i + j       i = l // n1      j = l % n1
+//
+//   data = [ a0.R a0.I  a1.R a1.I  a2.R a2.I  a3.R a3.I  a4.R a4.I  a5.R a5.I ]  ⇒ data[r]
+//
+//        ⇒ len(data) = 2⋅len(a) = 2⋅n0⋅n1
+//
+//          l =    0            1            2            3            4            5
+//          r = 0     1      2     3      4     5      6     7      8     9      10    11
+//   data = [ a00.R a00.I  a01.R a01.I  a02.R a02.I  a10.R a10.I  a11.R a11.I  a12.R a12.I ]
+//            2⋅l   2⋅l+1  2⋅l   2⋅l+1  2⋅l   2⋅l+1  2⋅l   2⋅l+1  2⋅l   2⋅l+1  2⋅l   2⋅l+1
+//
+func NewPlan2d(data []float64, N0, N1 int, inverse, inplace, measure bool) (o *Plan2d, err error) {
+
+	// check N0 and N1
+	if N0 < 2 || N0%2 > 0 {
+		err = chk.Err("N0 must be even and greater than 1. N0=%d is invalid\n", N0)
+		return
+	}
+	if N1 < 2 || N1%2 > 0 {
+		err = chk.Err("N1 must be even and greater than 1. N1=%d is invalid\n", N1)
+		return
+	}
+
+	// allocate new object and set/allocate input array
+	usingData := false
+	if len(data) < 4 {
+		o = new(Plan2d)
+		o.Xin = make([]float64, 2*N0*N1)
+	} else {
+		ldata := len(data)
+		if ldata != 2*N0*N1 || ldata%2 > 0 {
+			err = chk.Err("len(data) must be even and equal to 2*N0*N1. %d is invalid (should be %d)\n", ldata, 2*N0*N1)
+			return
+		}
+		o = new(Plan2d)
+		o.Xin = data
+		usingData = true
+	}
+	o.n0 = N0
+	o.n1 = N1
+
+	// set or allocate output array
+	if inplace {
+		o.Xout = o.Xin
+	} else {
+		o.Xout = make([]float64, 2*N0*N1)
+	}
+
+	// set flags
+	var sign C.int = C.FFTW_FORWARD
+	var flag C.uint = C.FFTW_ESTIMATE
+	if inverse {
+		sign = C.FFTW_BACKWARD
+	}
+	if measure {
+		flag = C.FFTW_MEASURE
+	}
+
+	// the measure flag will change the input; thus a temporary is required if "data" is being used
+	var temp []float64
+	if usingData && measure {
+		temp = make([]float64, len(data))
+		copy(temp, data)
+	}
+
+	// set FFTW plan
+	in := (*C.fftw_complex)(unsafe.Pointer(&o.Xin[0]))
+	out := (*C.fftw_complex)(unsafe.Pointer(&o.Xout[0]))
+	o.p = C.fftw_plan_dft_2d(C.int(N0), C.int(N1), in, out, sign, flag)
+
+	// fix data
+	if usingData && measure {
+		copy(data, temp)
+	}
+	return
+}
+
+// Free frees internal FFTW data
+func (o *Plan2d) Free() {
+	if o.p != nil {
+		C.fftw_destroy_plan(o.p)
+	}
+}
+
+// Input sets input value located at "i,j". NOTE: this method does not check for out-of-range indices
+func (o *Plan2d) Input(i, j int, v complex128) {
+	l := o.n1*i + j
+	o.Xin[2*l] = real(v)
+	o.Xin[2*l+1] = imag(v)
+}
+
+// Output gets output value located at "i,j". NOTE: this method does not check for out-of-range indices
+func (o *Plan2d) Output(i, j int) (v complex128) {
+	l := o.n1*i + j
+	return complex(o.Xout[2*l], o.Xout[2*l+1])
+}
+
+// Execute performs the Fourier transform
+func (o *Plan2d) Execute() {
+	C.fftw_execute(o.p)
+}
+
+// GetOutMatrixC gets the output array as a matrix of complex numbers
+func (o *Plan2d) GetOutMatrixC() (out [][]complex128) {
+	out = make([][]complex128, o.n0)
+	for i := 0; i < o.n0; i++ {
+		out[i] = make([]complex128, o.n1)
+		for j := 0; j < o.n1; j++ {
+			out[i][j] = o.Output(i, j)
+		}
+	}
+	return
 }
