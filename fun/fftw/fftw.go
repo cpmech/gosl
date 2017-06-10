@@ -23,12 +23,13 @@ import (
 
 // Plan1d implements the FFTW3 plan structure; i.e. a "plan" to compute direct or inverse 1D FTs
 type Plan1d struct {
-	p    C.fftw_plan // FFTW "plan" structure
-	Xin  []float64   // input: complex pairs len=2*N
-	Xout []float64   // output: complex pairs len=2*N
+	p      C.fftw_plan // FFTW "plan" structure
+	Xin    []float64   // input: complex pairs len=2*N
+	Xout   []float64   // output: complex pairs len=2*N
+	realIn bool        // set with real input?
 }
 
-// NewPlan1d allocates a new "plan" to compute 1D Fourier Transforms
+// NewPlan1d allocates a new "plan" to compute 1D Fourier Transforms with complex numbers input
 //
 //   Computes:
 //                      N-1         -i 2 π k l / N
@@ -106,7 +107,65 @@ func NewPlan1d(data []float64, N int, inverse, inplace, measure bool) (o *Plan1d
 	out := (*C.fftw_complex)(unsafe.Pointer(&o.Xout[0]))
 	o.p = C.fftw_plan_dft_1d(C.int(N), in, out, sign, flag)
 
-	// fix data
+	// fix data (changed by 'measure')
+	if usingData && measure {
+		copy(data, temp)
+	}
+	return
+}
+
+// NewPlan1dReal allocates a new "plan" to compute 1D Fourier Transforms with real numbers input
+//   INPUT:
+//     data -- is a real array of length N and may be nil, in this case N must be non-zero
+//   NOTE: (1) see NewPlan1d for further information on the input
+//         (2) the user must remember to call Free to deallocate FFTW data
+func NewPlan1dReal(data []float64, N int, inverse, measure bool) (o *Plan1d, err error) {
+
+	// allocate new object and set/allocate input array
+	usingData := false
+	if len(data) < 2 {
+		if N < 2 {
+			err = chk.Err("N must be greater than 1 when data==nil or len(data)<2. N=%d is invalid\n", N)
+			return
+		}
+		o = new(Plan1d)
+		o.Xin = make([]float64, N)
+	} else {
+		N = len(data)
+		o = new(Plan1d)
+		o.Xin = data
+		usingData = true
+	}
+	o.realIn = true
+
+	// allocate output array
+	o.Xout = make([]float64, 2*(N/2+1)) // ×2 => complex128
+
+	// set flags
+	var flag C.uint = C.FFTW_ESTIMATE
+	if measure {
+		flag = C.FFTW_MEASURE
+	}
+
+	// the measure flag will change the input; thus a temporary is required if "data" is being used
+	var temp []float64
+	if usingData && measure {
+		temp = make([]float64, len(data))
+		copy(temp, data)
+	}
+
+	// set FFTW plan
+	if inverse {
+		in := (*C.fftw_complex)(unsafe.Pointer(&o.Xin[0]))
+		out := (*C.double)(unsafe.Pointer(&o.Xout[0]))
+		o.p = C.fftw_plan_dft_c2r_1d(C.int(N), in, out, flag)
+	} else {
+		in := (*C.double)(unsafe.Pointer(&o.Xin[0]))
+		out := (*C.fftw_complex)(unsafe.Pointer(&o.Xout[0]))
+		o.p = C.fftw_plan_dft_r2c_1d(C.int(N), in, out, flag)
+	}
+
+	// fix data (changed by 'measure')
 	if usingData && measure {
 		copy(data, temp)
 	}
@@ -120,15 +179,44 @@ func (o *Plan1d) Free() {
 	}
 }
 
-// Input sets input value located at "i". NOTE: this method does not check for out-of-range indices
+// Input sets input value located at "i". Complex numbers input.
+//   NOTE: (1) this method does not check for out-of-range indices
+//         (2) this method must not be used when the input is initalised as "real"
 func (o *Plan1d) Input(i int, v complex128) {
 	o.Xin[i*2] = real(v)
 	o.Xin[i*2+1] = imag(v)
 }
 
-// Output gets output value located at "i". NOTE: this method does not check for out-of-range indices
+// InputReal sets input value located at "i". Real numbers input.
+//   NOTE: (1) this method does not check for out-of-range indices
+//         (2) this method must not be used when the input is initalised as "complex"
+func (o *Plan1d) InputReal(i int, v float64) {
+	o.Xin[i] = v
+}
+
+// Output gets output value located at "i". Complex numbers input.
+//   NOTE: this method does not check for out-of-range indices
 func (o *Plan1d) Output(i int) (v complex128) {
+	if o.realIn {
+		N := len(o.Xin)
+		if i < N/2+1 {
+			return complex(o.Xout[i*2], o.Xout[i*2+1])
+		} else { // complex conjugate (reversed)
+			j := N - i
+			return complex(o.Xout[j*2], -o.Xout[j*2+1])
+		}
+		return
+	}
 	return complex(o.Xout[i*2], o.Xout[i*2+1])
+}
+
+// GetOutput returns a new slice with the output, for real-input or not
+func (o *Plan1d) GetOutput() (res []complex128) {
+	res = make([]complex128, len(o.Xin))
+	for i := 0; i < len(o.Xin); i++ {
+		res[i] = o.Output(i)
+	}
+	return
 }
 
 // Execute performs the Fourier transform
@@ -272,8 +360,8 @@ func (o *Plan2d) Execute() {
 	C.fftw_execute(o.p)
 }
 
-// GetOutMatrixC gets the output array as a matrix of complex numbers
-func (o *Plan2d) GetOutMatrixC() (out [][]complex128) {
+// GetOutput gets the output array as a matrix of complex numbers
+func (o *Plan2d) GetOutput() (out [][]complex128) {
 	out = make([][]complex128, o.n0)
 	for i := 0; i < o.n0; i++ {
 		out[i] = make([]complex128, o.n1)

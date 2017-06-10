@@ -66,7 +66,7 @@ func TestTwoDver01(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	X := plan.GetOutMatrixC()
+	X := plan.GetOutput()
 	chk.MatrixC(tst, "X", 1e-13, X, data2dRef)
 }
 
