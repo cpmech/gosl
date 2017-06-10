@@ -136,6 +136,7 @@ func (o A) String(forHistogram, for3dPoints bool) (l string) {
 	// text and extra arguments
 	addToCmd(&l, o.Ha != "", io.Sf("ha='%s'", o.Ha))
 	addToCmd(&l, o.Va != "", io.Sf("va='%s'", o.Va))
+	addToCmd(&l, o.Rot > 0, io.Sf("rotation=%g", o.Rot))
 	addToCmd(&l, o.Fsz > 0, io.Sf("fontsize=%g", o.Fsz))
 
 	// other options
