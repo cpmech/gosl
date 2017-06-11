@@ -212,8 +212,12 @@ func (o *Plan1d) Output(i int) (v complex128) {
 
 // GetOutput returns a new slice with the output, for real-input or not
 func (o *Plan1d) GetOutput() (res []complex128) {
-	res = make([]complex128, len(o.Xin))
-	for i := 0; i < len(o.Xin); i++ {
+	N := len(o.Xin) / 2
+	if o.realIn {
+		N = len(o.Xin)
+	}
+	res = make([]complex128, N)
+	for i := 0; i < N; i++ {
 		res[i] = o.Output(i)
 	}
 	return

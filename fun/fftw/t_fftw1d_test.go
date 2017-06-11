@@ -14,14 +14,18 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-var data1dRefA []float64    // reference results A
-var data1dRefB []complex128 // reference results B
+var test1XrefRc []float64    // test # 1: reference results: RC pairs
+var test1XrefCc []complex128 // test # 1: reference results: complex array
+var test2XrefCc []complex128 // test # 2: reference results: complex array
 
 func init() {
-	xA := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	xB := []complex128{1 + 0i, 2 + 0i, 3 + 0i, 4 + 0i, 5 + 0i, 6 + 0i, 7 + 0i, 8 + 0i}
-	data1dRefA = la.ComplexToRCpairs(dft1d(xA))
-	data1dRefB = dft1d(xB)
+
+	x1 := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
+	test1XrefCc = dft1d(x1)
+	test1XrefRc = la.ComplexToRCpairs(test1XrefCc)
+
+	x2 := []complex128{1 + 0i, 2 + 0i, 3 + 0i, 4 + 0i, 5 + 0i, 6 + 0i, 7 + 0i, 8 + 0i}
+	test2XrefCc = dft1d(x2)
 }
 
 func TestOneDver01(tst *testing.T) {
@@ -61,7 +65,8 @@ func TestOneDver01(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, data1dRefA)
+	chk.Vector(tst, "output: Xrc", 1e-14, plan.Xout, test1XrefRc)
+	chk.VectorC(tst, "output: Xcc", 1e-14, plan.GetOutput(), test1XrefCc)
 }
 
 func TestOneDver02(tst *testing.T) {
@@ -98,7 +103,8 @@ func TestOneDver02(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, data1dRefA)
+	chk.Vector(tst, "output: Xrc", 1e-14, plan.Xout, test1XrefRc)
+	chk.VectorC(tst, "output: Xcc", 1e-14, plan.GetOutput(), test1XrefCc)
 }
 
 func TestOneDver03(tst *testing.T) {
@@ -142,7 +148,8 @@ func TestOneDver03(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, data1dRefA)
+	chk.Vector(tst, "output: Xrc", 1e-14, plan.Xout, test1XrefRc)
+	chk.VectorC(tst, "output: Xcc", 1e-14, plan.GetOutput(), test1XrefCc)
 }
 
 func TestOneDver04(tst *testing.T) {
@@ -179,7 +186,8 @@ func TestOneDver04(tst *testing.T) {
 	io.Pl()
 
 	// check output
-	chk.Vector(tst, "output: X", 1e-14, plan.Xout, data1dRefA)
+	chk.Vector(tst, "output: Xrc", 1e-14, plan.Xout, test1XrefRc)
+	chk.VectorC(tst, "output: Xcc", 1e-14, plan.GetOutput(), test1XrefCc)
 }
 
 func TestOneDver05(tst *testing.T) {
@@ -222,17 +230,26 @@ func TestOneDver05(tst *testing.T) {
 	X := plan.GetOutput()
 	for i := 0; i < len(X); i++ {
 		io.Pf("X: %+15.11f", X[i])
-		io.Pf(" ⇒ %+15.11f", data1dRefB[i])
-		if math.Abs(real(X[i])-real(data1dRefB[i])) < 1e-13 ||
-			math.Abs(imag(X[i])-imag(data1dRefB[i])) < 1e-13 {
+		io.Pf(" ⇒ %+15.11f", test2XrefCc[i])
+		if math.Abs(real(X[i])-real(test2XrefCc[i])) < 1e-13 ||
+			math.Abs(imag(X[i])-imag(test2XrefCc[i])) < 1e-13 {
 			io.PfGreen(" OK\n")
 		} else {
 			io.PfRed(" fail\n")
 		}
 	}
 
-	// check output
-	chk.VectorC(tst, "output: X", 1e-13, X, data1dRefB)
+	// compare with complex version
+	xx := []float64{1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0}
+	planx, err := NewPlan1d(xx, 0, false, false, false)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	defer planx.Free()
+	planx.Execute()
+	XX := planx.GetOutput()
+	chk.VectorC(tst, "output: XX", 1e-13, X, XX)
 }
 
 // dft1d compute the discrete Fourier Transform of x (very slow: for testing only)
