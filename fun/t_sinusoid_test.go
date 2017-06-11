@@ -22,9 +22,9 @@ func TestSinusoid01(tst *testing.T) {
 	// data
 	π := math.Pi // 3.14159265359...
 	T := 1.5     // period [s]
-	θ := π / 3.0 // phase shift [rad]
 	A0 := 1.7    // mean value
 	C1 := 1.0    // amplitude
+	θ := π / 3.0 // phase shift [rad]
 	sa := NewSinusoidEssential(T, A0, C1, θ)
 	sb := NewSinusoidBasis(T, A0, sa.A[1], sa.B[1])
 
@@ -77,9 +77,9 @@ func TestSinusoid02(tst *testing.T) {
 	chk.PrintTitle("Sinusoid02. Fourier approx of square wave")
 
 	T := 1.0  // period [s]
-	θ := 0.0  // phase shift [rad]
 	A0 := 0.5 // mean value
 	C1 := 1.0 // amplitude
+	θ := 0.0  // phase shift [rad]
 	ss := NewSinusoidEssential(T, A0, C1, θ)
 
 	square := func(t float64) float64 {
