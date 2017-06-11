@@ -2,6 +2,7 @@
 
 ## Summary
 
+* Compute (fast) discrete Fourier transform
 * Generate and draw a NURBS toroidal surface
 * Generating normally distributed pseudo-random numbers
 * Solution of sparse linear system
@@ -13,6 +14,16 @@
 * Root finding problems
 * B-splines: curve, control, and basis
 * Orthogonal polynomials
+
+
+
+# Compute (fast) discrete Fourier transform
+
+Source code: <a href="fun_fft01.go">fun_fft01.go</a>
+
+<div id="container">
+<p><img src="figs/fun_fft01.png" width="500"></p>
+</div>
 
 
 

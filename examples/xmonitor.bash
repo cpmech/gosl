@@ -29,5 +29,5 @@ while true; do
     echo
     echo
     echo
-    go run fun_orthopoly01.go
+    go run fun_fft01.go
 done
