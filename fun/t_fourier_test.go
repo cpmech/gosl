@@ -5,8 +5,6 @@
 package fun
 
 import (
-	"math"
-	"math/cmplx"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -79,21 +77,8 @@ func TestFourierTrans01(tst *testing.T) {
 	io.Pf("X = %v\n", X)
 
 	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	Y := dft(y)
+	Y := DftSlow(y)
 	io.Pf("Y = %v\n", Y)
 
 	chk.VectorC(tst, "X", 1e-14, Y, X)
-}
-
-// dft compute the discrete Fourier Transform of x (very slow: for testing only)
-func dft(x []complex128) (X []complex128) {
-	N := len(x)
-	X = make([]complex128, N)
-	for n := 0; n < N; n++ {
-		for k := 0; k < N; k++ {
-			a := 2.0 * math.Pi * float64(k*n) / float64(N)
-			X[n] += x[k] * cmplx.Exp(-1i*complex(a, 0))
-		}
-	}
-	return
 }

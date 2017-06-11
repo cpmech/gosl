@@ -4,22 +4,17 @@
 
 package fun
 
-import "github.com/cpmech/gosl/chk"
-
-// imax returns the max between two integers
-func imax(a, b int) int {
-	if a > b {
-		return a
+// IsPowerOfTwo checks if n is power of 2; i.e. 2⁰, 2¹, 2², 2³, 2⁴, ...
+func IsPowerOfTwo(n int) bool {
+	if n < 1 {
+		return false
 	}
-	return b
+	return n&(n-1) == 0
 }
 
-// imin returns the min between two integers
-func imin(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
+// Swap swaps two float64 numbers
+func Swap(a, b *float64) {
+	*a, *b = *b, *a
 }
 
 // max returns the max between two floats
@@ -36,21 +31,6 @@ func min(a, b float64) float64 {
 		return a
 	}
 	return b
-}
-
-// checkprm checks if parameter value is correct
-func checkprm(name string, val, minval, maxval float64, usemin, usemax bool) (err error) {
-	if usemin {
-		if val < minval {
-			return chk.Err("%q parameter: wrong value: %g < %g", name, val, minval)
-		}
-	}
-	if usemax {
-		if val > maxval {
-			return chk.Err("%q parameter: wrong value: %g > %g", name, val, maxval)
-		}
-	}
-	return
 }
 
 // setvzero sets v := 0

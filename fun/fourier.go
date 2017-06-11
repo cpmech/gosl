@@ -111,19 +111,6 @@ func FourierTransLL(data []float64, inverse bool) (err error) {
 	return
 }
 
-// IsPowerOfTwo checks if n is power of 2; i.e. 2⁰, 2¹, 2², 2³, 2⁴, ...
-func IsPowerOfTwo(n int) bool {
-	if n < 1 {
-		return false
-	}
-	return n&(n-1) == 0
-}
-
-// Swap swaps two float64 numbers
-func Swap(a, b *float64) {
-	*a, *b = *b, *a
-}
-
 // DftSlow computes the discrete Fourier transform of x (complex) by using the "slow" method; i.e.
 // by directly computing the summation with N² operations
 // NOTE: This function is mostly useful for verifications only.
