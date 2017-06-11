@@ -19,7 +19,7 @@ import (
 func TestBessel01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Bessel01")
+	chk.PrintTitle("Bessel01. Standard Bessel functions")
 
 	// load data
 	_, dat, err := io.ReadTable("data/as-9-bessel-integer-sml.cmp")
@@ -100,6 +100,82 @@ func TestBessel01(tst *testing.T) {
 			}
 		} else {
 			chk.Scalar(tst, io.Sf("Y2(%11.8f)=%23.15e", x, y0), 1e-15, y0, dat["Y2"][i])
+		}
+	}
+}
+
+func TestBessel02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Bessel02. Modified Bessel functions")
+
+	// load data
+	_, dat, err := io.ReadTable("data/as-9-modbessel-integer-sml.cmp")
+	//_, dat, err := io.ReadTable("data/as-9-modbessel-integer-big.cmp")
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+
+	// check I0
+	for i, x := range dat["x"] {
+		I0 := ModBesselI0(x)
+		chk.Scalar(tst, io.Sf("I0(%11.8f)=%23.15e", x, I0), 1e-8, I0, dat["I0"][i])
+	}
+
+	// check I1
+	io.Pl()
+	for i, x := range dat["x"] {
+		I1 := ModBesselI1(x)
+		chk.Scalar(tst, io.Sf("I1(%11.8f)=%23.15e", x, I1), 1e-7, I1, dat["I1"][i])
+	}
+
+	// check I2
+	io.Pl()
+	for i, x := range dat["x"] {
+		I2 := ModBesselIn(2, x)
+		chk.Scalar(tst, io.Sf("I2(%11.8f)=%23.15e", x, I2), 1e-7, I2, dat["I2"][i])
+	}
+
+	// check K0
+	io.Pl()
+	for i, x := range dat["x"] {
+		K0 := ModBesselK0(x)
+		if math.Abs(x) < 1e-14 {
+			if !math.IsInf(K0, +1) {
+				tst.Errorf("K0(0) should be +Inf. %v is incorrect\n", K0)
+				return
+			}
+		} else {
+			chk.Scalar(tst, io.Sf("K0(%11.8f)=%23.15e", x, K0), 1e-15, K0, dat["K0"][i])
+		}
+	}
+
+	// check K1
+	io.Pl()
+	for i, x := range dat["x"] {
+		K1 := ModBesselK1(x)
+		if math.Abs(x) < 1e-14 {
+			if !math.IsInf(K1, +1) {
+				tst.Errorf("K1(0) should be +Inf. %v is incorrect\n", K1)
+				return
+			}
+		} else {
+			chk.Scalar(tst, io.Sf("K1(%11.8f)=%23.15e", x, K1), 1e-15, K1, dat["K1"][i])
+		}
+	}
+
+	// check K2
+	io.Pl()
+	for i, x := range dat["x"] {
+		K2 := ModBesselKn(2, x)
+		if math.Abs(x) < 1e-14 {
+			if !math.IsInf(K2, +1) {
+				tst.Errorf("K2(0) should be +Inf. %v is incorrect\n", K2)
+				return
+			}
+		} else {
+			chk.Scalar(tst, io.Sf("K2(%11.8f)=%23.15e", x, K2), 1e-15, K2, dat["K2"][i])
 		}
 	}
 }
