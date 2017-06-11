@@ -18,7 +18,7 @@ func TestFourierTrans01(tst *testing.T) {
 	chk.PrintTitle("FourierTrans01. FFT")
 
 	x := []float64{1, 2, 3, 4, 5, 6, 7, 8}
-	err := FourierTransLL(x, false)
+	err := Dft1d(x, false)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
@@ -27,7 +27,7 @@ func TestFourierTrans01(tst *testing.T) {
 	io.Pf("X = %v\n", X)
 
 	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	Y := DftSlow(y)
+	Y := dft1dslow(y)
 	io.Pf("Y = %v\n", Y)
 
 	chk.VectorC(tst, "X", 1e-14, Y, X)

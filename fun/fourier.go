@@ -12,7 +12,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// FourierTransLL (LL:low-level) computes the discrete Fourier transform.
+// Dft1d computes the discrete Fourier transform (DFT) in 1D.
 // It replaces data[0..2*n-1] by its discrete Fourier transform, if inverse==false
 // or replaces data[0..2*n-1] by its inverse discrete Fourier transform, if inverse==true
 //
@@ -34,7 +34,7 @@ import (
 //
 //   NOTE: if possible, use the fun/fftw package that may be up to 5 times faster than this function
 //
-func FourierTransLL(data []float64, inverse bool) (err error) {
+func Dft1d(data []float64, inverse bool) (err error) {
 
 	// check length of data
 	ldata := len(data)
@@ -112,10 +112,10 @@ func FourierTransLL(data []float64, inverse bool) (err error) {
 	return
 }
 
-// DftSlow computes the discrete Fourier transform of x (complex) by using the "slow" method; i.e.
-// by directly computing the summation with N² operations
-// NOTE: This function is mostly useful for verifications only.
-func DftSlow(x []complex128) (X []complex128) {
+// dft1dslow computes the discrete Fourier transform of x (complex) by using the "slow" method; i.e.
+// by directly computing the DFT summation using N² operations.
+//   NOTE: This function is useful for verifications (testing) only.
+func dft1dslow(x []complex128) (X []complex128) {
 	N := len(x)
 	X = make([]complex128, N)
 	for n := 0; n < N; n++ {

@@ -36,6 +36,6 @@ func BenchmarkFourierTransLL01(b *testing.B) {
 	x := make([]float64, len(benchmarkingData))
 	copy(x, benchmarkingData)
 	for i := 0; i < b.N; i++ {
-		FourierTransLL(x, inverse)
+		Dft1d(x, inverse)
 	}
 }
