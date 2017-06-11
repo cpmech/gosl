@@ -347,10 +347,10 @@ func (o *Plan2d) Free() {
 }
 
 // Input sets input value located at "i,j". NOTE: this method does not check for out-of-range indices
-func (o *Plan2d) Input(i, j int, v complex128) {
+func (o *Plan2d) Input(i, j int, vReal, vImag float64) {
 	l := o.n1*i + j
-	o.Xin[2*l] = real(v)
-	o.Xin[2*l+1] = imag(v)
+	o.Xin[2*l] = vReal
+	o.Xin[2*l+1] = vImag
 }
 
 // Output gets output value located at "i,j". NOTE: this method does not check for out-of-range indices

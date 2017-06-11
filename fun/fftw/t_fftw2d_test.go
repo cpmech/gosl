@@ -14,14 +14,14 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-var data2dRef [][]complex128 // reference results
+var test2d1XrefCc [][]complex128 // reference results
 
 func init() {
-	x := [][]complex128{
+	x1 := [][]complex128{
 		{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i},
 		{8 + 9i, 10 + 11i, 12 + 13i, 14 + 15i},
 	}
-	data2dRef = dft2d(x)
+	test2d1XrefCc = dft2d(x1)
 }
 
 func TestTwoDver01(tst *testing.T) {
@@ -47,7 +47,7 @@ func TestTwoDver01(tst *testing.T) {
 	k := 0
 	for i := 0; i < N0; i++ {
 		for j := 0; j < N1; j++ {
-			plan.Input(i, j, complex(float64(k), float64(k+1)))
+			plan.Input(i, j, float64(k), float64(k+1))
 			k += 2
 		}
 	}
@@ -67,7 +67,7 @@ func TestTwoDver01(tst *testing.T) {
 
 	// check output
 	X := plan.GetOutput()
-	chk.MatrixC(tst, "X", 1e-13, X, data2dRef)
+	chk.MatrixC(tst, "X", 1e-13, X, test2d1XrefCc)
 }
 
 // dft2d compute the discrete Fourier Transform of x (very slow: for testing only)
