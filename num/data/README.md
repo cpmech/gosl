@@ -1,3 +1,3 @@
 # Gosl. num. data directory
 
-This dicrectory contains auxiliary data files for testing and examples.
+This directory contains auxiliary data files for testing and examples.
