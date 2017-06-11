@@ -9,6 +9,7 @@ import (
 	"math/cmplx"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 // FourierTransLL (LL:low-level) computes the discrete Fourier transform.
@@ -44,7 +45,7 @@ func FourierTransLL(data []float64, inverse bool) (err error) {
 
 	// check for power of two
 	n := ldata / 2
-	if n < 2 || !IsPowerOfTwo(n) {
+	if n < 2 || !utl.IsPowerOfTwo(n) {
 		err = chk.Err("n=len(data)/2 must be power of 2. n=%d is invalid\n", n)
 		return
 	}
@@ -55,8 +56,8 @@ func FourierTransLL(data []float64, inverse bool) (err error) {
 	j := 1
 	for i := 1; i < nn; i += 2 {
 		if j > i {
-			Swap(&data[j-1], &data[i-1]) // Exchange the two complex numbers.
-			Swap(&data[j], &data[i])
+			utl.Swap(&data[j-1], &data[i-1]) // Exchange the two complex numbers.
+			utl.Swap(&data[j], &data[i])
 		}
 		m = n
 		for m >= 2 && j > m {
