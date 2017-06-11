@@ -56,6 +56,20 @@ Gosl comprises several _subpackages_ as listed below:
 
 ## Examples
 
+* [Compute (fast) discrete Fourier transform](examples/fun_fft01.go)
+* [Generate and draw a NURBS toroidal surface](examples/gm_nurbs03.go)
+* [Generating normally distributed pseudo-random numbers](examples/rnd_normalDistribution.go)
+* [Solution of sparse linear system](examples/la_HLsparseReal01.go)
+* [Solution of sparse linear system with complex numbers](examples/la_HLsparseComplex01.go)
+* [Numerical differentiation](examples/num_deriv01.go)
+* [Drawing iso-surfaces with VTK](examples/vtk_isosurf01.go)
+* [Plotting a contour](examples/plt_contour01.go)
+* [Solution of Poisson's equation using finite differences](examples/fdm_problem01.go)
+* [Root finding problems](examples/num_brent01.go)
+* [B-splines: curve, control, and basis](examples/gm_bspline02.go)
+* [Orthogonal polynomials](examples/fun_orthopoly01.go)
+
+
 [Check out more examples here](https://github.com/cpmech/gosl/blob/master/examples/README.md)
 
 <div id="container">
