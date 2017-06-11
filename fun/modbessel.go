@@ -67,7 +67,7 @@ func ModBesselIn(n int, x float64) (ans float64) {
 		}
 	}
 	ans *= ModBesselI0(x) / bi // Normalize with I0.
-	if x < 0.0 && (n&1) != 0 { // TODO check this
+	if x < 0.0 && (n&1) != 0 { // n&1 != 0   ⇒  is odd
 		return -ans
 	}
 	return

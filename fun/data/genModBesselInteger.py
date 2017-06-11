@@ -24,9 +24,16 @@ def gentable(X):
 
 # generate data for comparison
 def gendata(X):
-    l = '%5s%23s%23s%23s%23s%23s%23s\n' % ('x', 'I0', 'I1', 'I2', 'K0', 'K1', 'K2')
+    l = '%5s%23s%23s%23s%23s%23s%23s%23s%23s\n' % ('x', 'I0', 'I1', 'I2', 'I3', 'K0', 'K1', 'K2', 'K3')
     for i, x in enumerate(X):
-        l += '%5.2f%23.15e%23.15e%23.15e%23.15e%23.15e%23.15e\n' % (x, sp.i0(x), sp.i1(x), sp.iv(2,x), sp.k0(x), sp.k1(x), sp.kn(2,x))
+        l += '%5.2f%23.15e%23.15e%23.15e%23.15e%23.15e%23.15e%23.15e%23.15e\n' % (x, sp.i0(x), sp.i1(x), sp.iv(2,x), sp.iv(3,x), sp.k0(x), sp.k1(x), sp.kn(2,x), sp.kn(3,x))
+    return l
+
+# generate data for comparison
+def gendataNeg(X):
+    l = '%6s%23s%23s%23s%23s\n' % ('x', 'I0', 'I1', 'I2', 'I3')
+    for i, x in enumerate(X):
+        l += '%6.2f%23.15e%23.15e%23.15e%23.15e\n' % (x, sp.i0(x), sp.i1(x), sp.iv(2,x), sp.iv(3,x))
     return l
 
 # write file
@@ -49,3 +56,8 @@ savefile(l, '/tmp/as-9-modbessel-integer-sml.cmp')
 X = np.linspace(0,20,201)
 l = gendata(X)
 savefile(l, '/tmp/as-9-modbessel-integer-big.cmp')
+
+# data for comparison---negative
+X = np.linspace(-10,0,41)
+l = gendataNeg(X)
+savefile(l, '/tmp/as-9-modbessel-integer-neg.cmp')
