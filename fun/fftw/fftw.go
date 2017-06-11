@@ -121,6 +121,10 @@ func NewPlan1d(data []float64, N int, inverse, inplace, measure bool) (o *Plan1d
 //         (2) the user must remember to call Free to deallocate FFTW data
 func NewPlan1dReal(data []float64, N int, inverse, measure bool) (o *Plan1d, err error) {
 
+	if inverse {
+		chk.Panic("TODO: need to implement the inverse FFT using NewPlan1dReal")
+	}
+
 	// allocate new object and set/allocate input array
 	usingData := false
 	if len(data) < 2 {
