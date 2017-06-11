@@ -59,8 +59,19 @@ type P struct {
 The **connected variables to V** data holds pointers to other scalars that need to be updated when
 the paramter is changed. For instance, when running simulations with variable parameters.
 
-
 ## Implemented functions
+
+1. Beta                         -- beta function
+2. Binomial                     -- binomial coefficient
+3. Elliptic{1,2,3}              -- Legendre elliptical integrals
+4. ModBessel{I0,I1,In,K0,K1,Kn} -- modified Bessel functions
+5. Factorial100                 -- Factorial function with big.Float up to 100!
+6. Factorial22                  -- Factorial function up to 22!
+7. Heav                         -- Heaviside step function
+8. Ramp                         -- Ramp function
+9. [more functions](https://godoc.org/github.com/cpmech/gosl/fun)
+
+## Implemented functions of scalar and vector
 1.  add         -- addition
 2.  cdist       -- circle distance
 3.  cos         -- cosine
