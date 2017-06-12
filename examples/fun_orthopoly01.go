@@ -26,9 +26,9 @@ func main() {
 
 	// Jacobi polynomials Fig 22.1
 	N, α, β := 5, 1.5, -0.5
-	jacobi := fun.NewOrthoPolynomial(fun.OP_JACOBI, N, []*fun.Prm{
-		&fun.Prm{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
-		&fun.Prm{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
+	jacobi := fun.NewOrthoPolynomial(fun.OP_JACOBI, N, []*fun.P{
+		&fun.P{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
+		&fun.P{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
 	})
 	plt.Reset(true, &plt.A{Prop: 1.5})
 	X := utl.LinSpace(-1, 1, npts)
