@@ -7,12 +7,18 @@ package chk
 import (
 	"fmt"
 	"math"
+	"math/cmplx"
 	"testing"
 )
 
 // Scalar compares two scalars
 func Scalar(tst *testing.T, msg string, tol, res, correct float64) {
 	CheckAndPrint(tst, msg, tol, math.Abs(res-correct))
+}
+
+// ScalarC compares two scalars (complex version)
+func ScalarC(tst *testing.T, msg string, tolNorm float64, res, correct complex128) {
+	CheckAndPrint(tst, msg, tolNorm, cmplx.Abs(res-correct))
 }
 
 // AnaNum compares analytical versus numerical values

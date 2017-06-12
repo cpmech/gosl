@@ -129,3 +129,27 @@ func test_FcnName(tst *testing.T) {
 	//tst.Errorf("function name is incorrect\n")
 	//}
 }
+
+func TestScalarC(tst *testing.T) {
+
+	//Verbose = true
+
+	PrintTitle("ScalarC")
+
+	a := 123.123 + 456.456i
+	b := 123.123 + 456.456i
+	t1 := new(testing.T)
+	ScalarC(t1, "|a-b|", 1e-17, a, b)
+	if t1.Failed() {
+		tst.Errorf("t1 should not have failed\n")
+		return
+	}
+
+	b = 123.1231 + 456.456i
+	t2 := new(testing.T)
+	ScalarC(t2, "|a-b|", 1e-17, a, b)
+	if !t2.Failed() {
+		tst.Errorf("t2 should have failed\n")
+		return
+	}
+}
