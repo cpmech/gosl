@@ -27,9 +27,9 @@ type Solver struct {
 
 	// primary variables
 	ndim int          // size of y
-	fcn  Cb_fcn       // dydx := f(x,y)
-	jac  Cb_jac       // Jacobian: dfdy
-	out  Cb_out       // output function
+	fcn  Func         // dydx := f(x,y)
+	jac  JacF         // Jacobian: dfdy
+	out  OutF         // output function
 	hasM bool         // has M matrix
 	mTri *la.Triplet  // M matrix in Triplet form
 	mMat *la.CCMatrix // M matrix
@@ -121,7 +121,7 @@ type Solver struct {
 }
 
 // Init initialises ODE structure with default values and allocate slices
-func (o *Solver) Init(method string, ndim int, fcn Cb_fcn, jac Cb_jac, M *la.Triplet, out Cb_out) {
+func (o *Solver) Init(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out OutF) {
 
 	// primary variables
 	o.method = method
