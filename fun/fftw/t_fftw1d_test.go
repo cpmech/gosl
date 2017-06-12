@@ -6,12 +6,12 @@ package fftw
 
 import (
 	"math"
-	"math/cmplx"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 var test1XrefRc []float64    // test # 1: reference results: RC pairs
@@ -259,7 +259,7 @@ func dft1d(x []complex128) (X []complex128) {
 	for n := 0; n < N; n++ {
 		for k := 0; k < N; k++ {
 			a := 2.0 * math.Pi * float64(k*n) / float64(N)
-			X[n] += x[k] * cmplx.Exp(-1i*complex(a, 0))
+			X[n] += x[k] * utl.ExpMix(a) // x[k]⋅exp(-a)
 		}
 	}
 	return
