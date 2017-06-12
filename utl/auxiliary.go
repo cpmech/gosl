@@ -4,6 +4,18 @@
 
 package utl
 
+import "math"
+
+// ExpPix uses Euler's formula to compute exp(+i⋅x) = cos(x) + i⋅sin(x)
+func ExpPix(x float64) complex128 {
+	return complex(math.Cos(x), math.Sin(x))
+}
+
+// ExpMix uses Euler's formula to compute exp(-i⋅x) = cos(x) - i⋅sin(x)
+func ExpMix(x float64) complex128 {
+	return complex(math.Cos(x), -math.Sin(x))
+}
+
 // BestSquare finds the best square for given size=Nrows * Ncolumns
 func BestSquare(size int) (nrow, ncol int) {
 	nrow = -1 // not found

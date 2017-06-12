@@ -14,5 +14,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="sort08"
+    go test -test.run="AuxFuncs02"
 done
