@@ -365,3 +365,60 @@ func TestSinc01(tst *testing.T) {
 		plt.Save("/tmp/gosl/fun", "sinc01")
 	}
 }
+
+func TestBoxcar01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Boxcar01. boxcar function")
+
+	a, b := 0.5, 1.0
+
+	chk.Scalar(tst, "boxcar(a)", 1e-17, Boxcar(a, a, b), 0.5)
+	chk.Scalar(tst, "boxcar(b)", 1e-17, Boxcar(b, a, b), 0.5)
+	chk.Scalar(tst, "boxcar((a+b)/2)", 1e-17, Boxcar((a+b)/2, a, b), 1)
+	chk.Scalar(tst, "boxcar(a-1)", 1e-17, Boxcar(a-1, a, b), 0)
+	chk.Scalar(tst, "boxcar(b+1)", 1e-17, Boxcar(b+1, a, b), 0)
+	for _, x := range []float64{-1, 0, 0.5, 0.7, 1.0, 1.5} {
+		chk.Scalar(tst, "H(x-a)-H(x-b)", 1e-17, Boxcar(x, a, b), Heav(x-a)-Heav(x-b))
+	}
+
+	if chk.Verbose {
+		Xa := utl.LinSpace(-1.0, 1.5, 201)
+		Xb := utl.LinSpace(-1.0, 1.5, 16)
+		Ya := utl.GetMapped(Xa, func(x float64) float64 { return Boxcar(x, a, b) })
+		Yb := utl.GetMapped(Xb, func(x float64) float64 { return Boxcar(x, a, b) })
+		plt.Reset(true, nil)
+		plt.Plot(Xa, Ya, &plt.A{C: "b", NoClip: true})
+		plt.Plot(Xb, Yb, &plt.A{C: "r", Ls: "none", M: ".", NoClip: true})
+		plt.Gll("x", "sinc(x)", nil)
+		plt.Cross(0, 0, nil)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/fun", "boxcar01")
+	}
+}
+
+func TestRect01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Rect01. rectangular function")
+
+	chk.Scalar(tst, "rect(-0.5)", 1e-17, Rect(-0.5), 0.5)
+	chk.Scalar(tst, "rect(+0.5)", 1e-17, Rect(+0.5), 0.5)
+	chk.Scalar(tst, "rect(0)", 1e-17, Rect(0), 1)
+	chk.Scalar(tst, "rect(-0.7)", 1e-17, Rect(-0.7), 0)
+	chk.Scalar(tst, "rect(+0.7)", 1e-17, Rect(+0.7), 0)
+
+	if chk.Verbose {
+		Xa := utl.LinSpace(-1.5, 1.5, 201)
+		Xb := utl.LinSpace(-1.5, 1.5, 16)
+		Ya := utl.GetMapped(Xa, func(x float64) float64 { return Rect(x) })
+		Yb := utl.GetMapped(Xb, func(x float64) float64 { return Rect(x) })
+		plt.Reset(true, nil)
+		plt.Plot(Xa, Ya, &plt.A{C: "b", NoClip: true})
+		plt.Plot(Xb, Yb, &plt.A{C: "r", Ls: "none", M: ".", NoClip: true})
+		plt.Gll("x", "sinc(x)", nil)
+		plt.Cross(0, 0, nil)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/fun", "rect01")
+	}
+}

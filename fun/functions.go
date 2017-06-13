@@ -177,6 +177,11 @@ func Ramp(x float64) float64 {
 }
 
 // Heaviside step function (== derivative of Ramp(x))
+//
+//             │ 0    if x < 0
+//   Heav(x) = ┤ 1/2  if x = 0
+//             │ 1    if x > 0
+//
 func Heav(x float64) float64 {
 	if x < 0.0 {
 		return 0.0
@@ -187,7 +192,12 @@ func Heav(x float64) float64 {
 	return 0.5
 }
 
-// Sign function
+// Sign implements the sign function
+//
+//             │ -1   if x < 0
+//   Sign(x) = ┤  0   if x = 0
+//             │  1   if x > 0
+//
 func Sign(x float64) float64 {
 	if x < 0.0 {
 		return -1.0
@@ -196,6 +206,44 @@ func Sign(x float64) float64 {
 		return 1.0
 	}
 	return 0.0
+}
+
+// Boxcar implements the boxcar function
+//
+//   Boxcar(x;a,b) = Heav(x-a) - Heav(x-b)
+//
+//                   │ 0    if x < a or  x > b
+//   Boxcar(x;a,b) = ┤ 1/2  if x = a or  x = b
+//                   │ 1    if x > a and x < b
+//
+//   Note: a ≤ x ≤ b; i.e. b ≥ a (not checked)
+//
+func Boxcar(x, a, b float64) float64 {
+	if x < a || x > b {
+		return 0
+	}
+	if x > a && x < b {
+		return 1
+	}
+	return 0.5
+}
+
+// Rect implements the rectangular function
+//
+//   Rect(x) = Boxcar(x;-0.5,0.5)
+//
+//             │ 0    if |x| > 1/2
+//   Rect(x) = ┤ 1/2  if |x| = 1/2
+//             │ 1    if |x| < 1/2
+//
+func Rect(x float64) float64 {
+	if x < -0.5 || x > +0.5 {
+		return 0
+	}
+	if x > -0.5 && x < +0.5 {
+		return 1
+	}
+	return 0.5
 }
 
 // Sramp implements a smooth ramp function. Ramp
@@ -270,7 +318,11 @@ func ExpMix(x float64) complex128 {
 	return complex(math.Cos(x), -math.Sin(x))
 }
 
-// Sinc computes the sine cardinal (sinc) function: sinc(x)=1 if x==0; sinc(x)=sin(x)/x otherwise
+// Sinc computes the sine cardinal (sinc) function
+//
+//   Sinc(x) = |     1      if x = 0
+//             | sin(x)/x   otherwise
+//
 func Sinc(x float64) float64 {
 	if x == 0 {
 		return 1
