@@ -343,3 +343,25 @@ func TestEuler01(tst *testing.T) {
 	chk.Scalar(tst, "imag(exp(i))", 1e-17, imag(c), math.Sin(1))
 	chk.ScalarC(tst, "c == C", 1e-17, c, C)
 }
+
+func TestSinc01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Sinc01. sine cardinal function")
+
+	chk.Scalar(tst, "sinc(0)", 1e-17, Sinc(0), 1)
+	chk.Scalar(tst, "sinc(π)", 1e-16, Sinc(math.Pi), 0)
+	chk.Scalar(tst, "sinc(π/2)", 1e-17, Sinc(math.Pi/2), 2.0/math.Pi)
+	chk.Scalar(tst, "sinc(3π/2)", 1e-17, Sinc(3*math.Pi/2), -2.0/(3.0*math.Pi))
+
+	if chk.Verbose {
+		X := utl.LinSpace(-15, 15, 201)
+		Y := utl.GetMapped(X, func(x float64) float64 { return Sinc(x) })
+		plt.Reset(true, nil)
+		plt.Plot(X, Y, &plt.A{C: "r", NoClip: true})
+		plt.Gll("x", "sinc(x)", nil)
+		plt.Cross(0, 0, nil)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/fun", "sinc01")
+	}
+}

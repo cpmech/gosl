@@ -269,3 +269,11 @@ func ExpPix(x float64) complex128 {
 func ExpMix(x float64) complex128 {
 	return complex(math.Cos(x), -math.Sin(x))
 }
+
+// Sinc computes the sine cardinal (sinc) function: sinc(x)=1 if x==0; sinc(x)=sin(x)/x otherwise
+func Sinc(x float64) float64 {
+	if x == 0 {
+		return 1
+	}
+	return math.Sin(x) / x
+}
