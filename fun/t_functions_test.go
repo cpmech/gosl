@@ -7,6 +7,7 @@ package fun
 import (
 	"math"
 	"math/big"
+	"math/cmplx"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -316,4 +317,29 @@ func Test_binomial02(tst *testing.T) {
 			chk.Scalar(tst, io.Sf("Rbinomial(%g,%g)", a, b), tol, res, answers[i][j])
 		}
 	}
+}
+
+func TestEuler01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Euler01. Euler's formula")
+
+	a := ExpPix(math.Pi)
+	A := cmplx.Exp(complex(0, math.Pi))
+	io.Pforan("exp(+i⋅π) = %v  (%v)\n", a, A)
+	chk.ScalarC(tst, "exp(+i⋅π) == -1", 1e-15, a, -1)
+	chk.ScalarC(tst, "a == A", 1e-17, a, A)
+
+	b := ExpMix(math.Pi)
+	B := cmplx.Exp(complex(0, -math.Pi))
+	io.Pforan("exp(-i⋅π) = %v  (%v)\n", b, B)
+	chk.ScalarC(tst, "exp(-i⋅π) == -1", 1e-15, b, -1)
+	chk.ScalarC(tst, "b == B", 1e-17, b, B)
+
+	c := ExpPix(1)
+	C := cmplx.Exp(1i)
+	io.Pforan("exp(i) = %v  (%v)\n", c, C)
+	chk.Scalar(tst, "real(exp(i))", 1e-17, real(c), math.Cos(1))
+	chk.Scalar(tst, "imag(exp(i))", 1e-17, imag(c), math.Sin(1))
+	chk.ScalarC(tst, "c == C", 1e-17, c, C)
 }

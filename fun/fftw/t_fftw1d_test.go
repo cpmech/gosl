@@ -11,7 +11,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
 )
 
 var test1XrefRc []float64    // test # 1: reference results: RC pairs
@@ -252,6 +251,11 @@ func TestOneDver05(tst *testing.T) {
 	chk.VectorC(tst, "output: XX", 1e-13, X, XX)
 }
 
+// expmix uses Euler's formula to compute exp(-i⋅x) = cos(x) - i⋅sin(x)
+func expmix(x float64) complex128 {
+	return complex(math.Cos(x), -math.Sin(x))
+}
+
 // dft1d compute the discrete Fourier Transform of x (very slow: for testing only)
 func dft1d(x []complex128) (X []complex128) {
 	N := len(x)
@@ -259,7 +263,7 @@ func dft1d(x []complex128) (X []complex128) {
 	for n := 0; n < N; n++ {
 		for k := 0; k < N; k++ {
 			a := 2.0 * math.Pi * float64(k*n) / float64(N)
-			X[n] += x[k] * utl.ExpMix(a) // x[k]⋅exp(-a)
+			X[n] += x[k] * expmix(a) // x[k]⋅exp(-a)
 		}
 	}
 	return

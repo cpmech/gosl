@@ -81,7 +81,7 @@ func dft2d(x [][]complex128) (X [][]complex128) {
 				for k1 := 0; k1 < N1; k1++ {
 					a := 2.0 * math.Pi * float64(k0*l0) / float64(N0)
 					b := 2.0 * math.Pi * float64(k1*l1) / float64(N1)
-					X[l0][l1] += x[k0][k1] * utl.ExpMix(a) * utl.ExpMix(b)
+					X[l0][l1] += x[k0][k1] * expmix(a) * expmix(b)
 				}
 			}
 		}

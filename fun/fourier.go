@@ -120,7 +120,7 @@ func dft1dslow(x []complex128) (X []complex128) {
 	for n := 0; n < N; n++ {
 		for k := 0; k < N; k++ {
 			a := 2.0 * math.Pi * float64(k*n) / float64(N)
-			X[n] += x[k] * utl.ExpMix(a) // x[k]⋅exp(-a)
+			X[n] += x[k] * ExpMix(a) // x[k]⋅exp(-a)
 		}
 	}
 	return
