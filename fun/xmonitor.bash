@@ -8,6 +8,5 @@ while true; do
     echo
     echo
     echo
-    #go test -test.run="Rect01"
-    go test -test.run="Boxcar01"
+    go test -test.run="orthopoly05"
 done

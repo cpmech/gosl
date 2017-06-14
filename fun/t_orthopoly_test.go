@@ -180,7 +180,7 @@ func Test_orthopoly05(tst *testing.T) {
 	N := 5
 	op := NewOrthoPolynomial(OP_CHEBYSHEV1, N, nil)
 
-	xx := utl.LinSpace(-1, 1, 5)
+	xx := []float64{-2, -1.5, -1, -0.5, -1.0 / 3.0, 0, 1.0 / 3.0, 0.5, 1, 1.5, 2}
 	for _, x := range xx {
 		y := op.P(0, x)
 		chk.Scalar(tst, "T0", 1e-15, y, 1)
@@ -194,6 +194,30 @@ func Test_orthopoly05(tst *testing.T) {
 		chk.Scalar(tst, "T4", 1e-13, y, 1-8*x*x+8*math.Pow(x, 4))
 		y = op.P(5, x)
 		chk.Scalar(tst, "T5", 1e-13, y, 5*x-20*x*x*x+16*math.Pow(x, 5))
+	}
+
+	io.Pl()
+	var yref float64
+	for _, x := range xx {
+		for n := 0; n < 5; n++ {
+			nn := float64(n)
+			if x < -1 {
+				yref = math.Pow(-1, nn) * math.Cosh(nn*math.Acosh(-x))
+			} else if x > 1 {
+				yref = math.Cosh(nn * math.Acosh(x))
+			} else {
+				yref = math.Cos(nn * math.Acos(x))
+			}
+			y := op.P(n, x)
+			tol := 1e-15
+			if math.Abs(y) > 8 {
+				tol = 1e-14
+			}
+			if math.Abs(y) > 20 {
+				tol = 1e-13
+			}
+			chk.AnaNum(tst, io.Sf("p%d(%+.2f)", n, x), tol, y, yref, chk.Verbose)
+		}
 	}
 
 	if chk.Verbose {
