@@ -192,6 +192,24 @@ func newHermite(prms Params) oPoly {
 
 // Chebyshev1 //////////////////////////////////////////////////////////////////////////////////////////
 
+// ChebyshevT directly computes the Chebyshev polynomial of first kind Tn(x) using the trigonometric
+// functions.
+//
+//           │ (-1)ⁿ cosh[n⋅acosh(-x)]   if x < -1
+//   Tn(x) = ┤       cosh[n⋅acosh( x)]   if x > 1
+//           │       cos [n⋅acos ( x)]   if |x| ≤ 1
+//
+func ChebyshevT(n int, x float64) float64 {
+	nn := float64(n)
+	if x < -1 {
+		return math.Pow(-1, nn) * math.Cosh(nn*math.Acosh(-x))
+	}
+	if x > 1 {
+		return math.Cosh(nn * math.Acosh(x))
+	}
+	return math.Cos(nn * math.Acos(x))
+}
+
 type opChebyshev1 struct{}
 
 func (o *opChebyshev1) M(n int) int {

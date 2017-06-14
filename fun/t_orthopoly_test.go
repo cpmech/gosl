@@ -197,17 +197,9 @@ func Test_orthopoly05(tst *testing.T) {
 	}
 
 	io.Pl()
-	var yref float64
 	for _, x := range xx {
 		for n := 0; n < 5; n++ {
-			nn := float64(n)
-			if x < -1 {
-				yref = math.Pow(-1, nn) * math.Cosh(nn*math.Acosh(-x))
-			} else if x > 1 {
-				yref = math.Cosh(nn * math.Acosh(x))
-			} else {
-				yref = math.Cos(nn * math.Acos(x))
-			}
+			yref := ChebyshevT(n, x)
 			y := op.P(n, x)
 			tol := 1e-15
 			if math.Abs(y) > 8 {
