@@ -13,11 +13,11 @@ import (
 
 // enums
 var (
-	OP_JACOBI     = io.NewEnum("Jacobi", "num.op", "J", "Jacobi OrthoPolynomial")     // Jacobi OrthoPolynomial
-	OP_LEGENDRE   = io.NewEnum("Legendre", "num.op", "L", "Legendre OrthoPolynomial") // Legendre OrthoPolynomial
-	OP_HERMITE    = io.NewEnum("Hermite", "num.op", "H", "Hermite OrthoPolynomial")   // Hermite OrthoPolynomial
-	OP_CHEBYSHEV1 = io.NewEnum("Chebyshev1", "num.op", "T", "Chebyshev First Kind")   // Chebyshev1 OrthoPolynomial
-	OP_CHEBYSHEV2 = io.NewEnum("Chebyshev2", "num.op", "U", "Chebyshev Second Kind")  // Chebyshev2 OrthoPolynomial
+	OP_JACOBI     = io.NewEnum("Jacobi", "fun.op", "J", "Jacobi OrthoPolynomial")     // Jacobi OrthoPolynomial
+	OP_LEGENDRE   = io.NewEnum("Legendre", "fun.op", "L", "Legendre OrthoPolynomial") // Legendre OrthoPolynomial
+	OP_HERMITE    = io.NewEnum("Hermite", "fun.op", "H", "Hermite OrthoPolynomial")   // Hermite OrthoPolynomial
+	OP_CHEBYSHEV1 = io.NewEnum("Chebyshev1", "fun.op", "T", "Chebyshev First Kind")   // Chebyshev1 OrthoPolynomial
+	OP_CHEBYSHEV2 = io.NewEnum("Chebyshev2", "fun.op", "U", "Chebyshev Second Kind")  // Chebyshev2 OrthoPolynomial
 )
 
 // OrthoPolynomial (main) structure ////////////////////////////////////////////////////////////////
