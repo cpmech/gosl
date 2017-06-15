@@ -16,6 +16,9 @@ var (
 
 	// LinearInterpKind defines the linear interpolator kind
 	LinearInterpKind = io.NewEnum("Linear", "fun.interp", "L", "Linear Interpolator")
+
+	// PolyInterpKind defines the polynomial interpolator kind
+	PolyInterpKind = io.NewEnum("Polynomial", "fun.interp", "L", "Polynomial Interpolator")
 )
 
 // Interpolator implements numeric interpolators
@@ -23,6 +26,9 @@ type Interpolator struct {
 
 	// configuration data
 	DisableHunt bool // do not use hunt code at all
+
+	// output data
+	Dy float64 // error estimate
 
 	// input data
 	itype io.Enum   // type of interpolator
@@ -42,13 +48,21 @@ type Interpolator struct {
 }
 
 // NewInterpolator creates new interpolator of type=Type for data point sets xx and yy (with same lengths)
-func NewInterpolator(Type io.Enum, xx, yy []float64) (o *Interpolator, err error) {
+//   Input:
+//     Type -- type of interpolator
+//     p    -- order of interpolator
+//     xx   -- x-data
+//     yy   -- y-data
+func NewInterpolator(Type io.Enum, p int, xx, yy []float64) (o *Interpolator, err error) {
 	o = new(Interpolator)
 	o.itype = Type
 	switch Type {
 	case LinearInterpKind:
 		o.m = 2
 		o.interp = o.linInterp
+	case PolyInterpKind:
+		o.m = p + 1
+		o.interp = o.polyInterp
 	default:
 		return nil, chk.Err("cannot find interpolator type == %q\n", Type)
 	}
@@ -187,4 +201,59 @@ func (o *Interpolator) linInterp(j int, x float64) float64 {
 		return o.yy[j]
 	}
 	return o.yy[j] + (o.yy[j+1]-o.yy[j])*(x-o.xx[j])/(o.xx[j+1]-o.xx[j])
+}
+
+// polyInterp performs a polynomial interpolation. This routine returns an interpolated value y, and
+// stores an error estimate dy. The returned value is obtained by m-point polynomial interpolation
+// on the subrange xx[jl..jl+m-1].
+func (o *Interpolator) polyInterp(jl int, x float64) (y float64) {
+
+	// allocate variables
+	xa := o.xx[jl:]
+	ya := o.yy[jl:]
+	dif := math.Abs(x - xa[0])
+	c := make([]float64, o.m)
+	d := make([]float64, o.m)
+
+	// find the index ns of the closest table entry,
+	var ns int
+	var dift float64
+	for i := 0; i < o.m; i++ {
+		dift = math.Abs(x - xa[i])
+		if dift < dif {
+			ns = i
+			dif = dift
+		}
+		c[i] = ya[i] // initialize the tableau of c's and d's.
+		d[i] = ya[i]
+	}
+
+	// initial approximation to y.
+	y = ya[ns]
+	ns--
+
+	// perform interpolation
+	var ho, hp, w, den float64
+	for m := 1; m < o.m; m++ { // for each column of the tableau,
+		for i := 0; i < o.m-m; i++ { // loop over the current c's and d's and update them.
+			ho = xa[i] - x
+			hp = xa[i+m] - x
+			w = c[i+1] - d[i]
+			den = ho - hp
+			if den == 0.0 {
+				chk.Panic("polyInterp failed because two input x points are identical (within roundoff)")
+			}
+			den = w / den
+			d[i] = hp * den
+			c[i] = ho * den
+		}
+		if 2*(ns+1) < (o.m - m) {
+			o.Dy = c[ns+1]
+		} else {
+			o.Dy = d[ns]
+			ns--
+		}
+		y += o.Dy
+	}
+	return
 }
