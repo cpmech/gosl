@@ -26,3 +26,27 @@ func setvzero(v []float64) {
 		v[i] = 0
 	}
 }
+
+// imax returns the max between two ints
+func imax(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// imin returns the min between two ints
+func imin(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// iabs performs the absolute operation with ints
+func iabs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
