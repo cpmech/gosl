@@ -13,7 +13,8 @@ import (
 var benchmarkingData []float64
 
 func init() {
-	N := 1 << 20 // 2²⁰ = 1,048,576
+	N := 1 << 10
+	//N := 1 << 20 // 2²⁰ = 1,048,576
 	benchmarkingData = make([]float64, N*2)
 	for i := 0; i < N; i++ {
 		ii := float64(i * 2)
