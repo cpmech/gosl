@@ -78,8 +78,8 @@ func (o *Interpolator) Reset(xx, yy []float64) (err error) {
 	if len(xx) < 2 {
 		return chk.Err("length of data sets must be at least 2. %d is invalid\n", len(xx))
 	}
-	if len(xx) <= o.m {
-		return chk.Err("length of data sets must be at smaller than %d when using %q interpolator\n", o.m, o.itype)
+	if len(xx) < o.m {
+		return chk.Err("length of data sets must be greater than or equal to %d when using %q interpolator\n", o.m, o.itype)
 	}
 	o.xx = xx
 	o.yy = yy
