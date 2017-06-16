@@ -19,14 +19,16 @@ func TestLagCardinal01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("LagCardinal01. Lagrange cardinal polynomials")
 
+	// allocate structure
 	N := 5
 	o, err := NewLagrangeInterp(N, UniformGridKind)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
 	}
-	chk.Scalar(tst, "Λ (Lebesgue constant)", 1e-15, o.Lebesgue(), 3.106301040275436e+00)
+	chk.Scalar(tst, "Λ (Lebesgue constant)", 1e-15, o.EstimateLebesgue(), 3.106301040275436e+00)
 
+	// check Kronecker property
 	for i := 0; i < N+1; i++ {
 		for j, x := range o.X {
 			li := o.L(i, x)
@@ -39,6 +41,7 @@ func TestLagCardinal01(tst *testing.T) {
 		io.Pl()
 	}
 
+	// plot basis
 	if chk.Verbose {
 		xx := utl.LinSpace(-1, 1, 201)
 		yy := make([]float64, len(xx))
@@ -63,10 +66,12 @@ func TestLagInterp01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("TestLagInterp01. Lagrange interpolation")
 
+	// cos-exp function
 	f := func(x float64) (float64, error) {
 		return math.Cos(math.Exp(2.0 * x)), nil
 	}
 
+	// allocate structure
 	N := 5
 	o, err := NewLagrangeInterp(N, UniformGridKind)
 	if err != nil {
@@ -74,6 +79,7 @@ func TestLagInterp01(tst *testing.T) {
 		return
 	}
 
+	// check interpolation
 	for i, x := range o.X {
 		ynum, err := o.I(x, f)
 		if err != nil {
@@ -85,6 +91,7 @@ func TestLagInterp01(tst *testing.T) {
 	}
 	io.Pl()
 
+	// plot interpolation
 	if chk.Verbose {
 		xx := utl.LinSpace(-1, 1, 201)
 		yy := make([]float64, len(xx))
@@ -99,8 +106,9 @@ func TestLagInterp01(tst *testing.T) {
 			for k, x := range xx {
 				iy[k], _ = p.I(x, f)
 			}
-			E := p.MaxErr(f)
+			E, xloc := p.EstimateMaxErr(f)
 			plt.Plot(xx, iy, &plt.A{L: io.Sf("$N=%2d\\;E=%.3e$", N, E), NoClip: true})
+			plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
 		}
 		plt.Gll("x", "y", nil)
 		plt.Cross(0, 0, &plt.A{C: "grey"})
@@ -112,19 +120,22 @@ func TestLagInterp01(tst *testing.T) {
 func TestLagInterp02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("TestLagInterp02. Lagrange interpolation")
+	chk.PrintTitle("TestLagInterp02. Lagrange interp. Runge problem")
 
+	// Runge function
 	f := func(x float64) (float64, error) {
 		return 1.0 / (1.0 + 16.0*x*x), nil
 	}
 
-	N := 5
+	// allocate structure
+	N := 8
 	o, err := NewLagrangeInterp(N, UniformGridKind)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
 	}
 
+	// check interpolation
 	for i, x := range o.X {
 		ynum, err := o.I(x, f)
 		if err != nil {
@@ -137,27 +148,44 @@ func TestLagInterp02(tst *testing.T) {
 	io.Pl()
 
 	if chk.Verbose {
+
+		// graphing points
 		xx := utl.LinSpace(-1, 1, 201)
 		yy := make([]float64, len(xx))
+
+		// plot nodal polynomial
+		_, xloc := o.EstimateMaxErr(f)
+		plt.Reset(true, nil)
+		for k, x := range xx {
+			yy[k] = o.W(x)
+		}
+		o.DrawPoints(nil)
+		plt.Plot(xx, yy, &plt.A{C: "r", Lw: 1, NoClip: true})
+		plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
+		plt.Gll("x", "y", nil)
+		plt.Cross(0, 0, &plt.A{C: "grey"})
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/fun", "laginterp02a")
+
+		// plot interpolation
+		plt.Reset(true, nil)
 		for k, x := range xx {
 			yy[k], _ = f(x)
 		}
-		iy := make([]float64, len(xx))
-		plt.Reset(true, nil)
 		plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
+		iy := make([]float64, len(xx))
 		for _, N := range []int{4, 6, 8, 12, 16, 24} {
 			p, _ := NewLagrangeInterp(N, UniformGridKind)
 			for k, x := range xx {
 				iy[k], _ = p.I(x, f)
 			}
-			E := p.MaxErr(f)
+			E, _ := p.EstimateMaxErr(f)
 			plt.Plot(xx, iy, &plt.A{L: io.Sf("$N=%2d\\;E=%.3e$", N, E), NoClip: true})
 		}
 		plt.Gll("x", "y", nil)
 		plt.Cross(0, 0, &plt.A{C: "grey"})
-		plt.AxisYmax(1)
-		plt.AxisYmin(-1)
+		plt.AxisYrange(-1, 1)
 		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "laginterp02")
+		plt.Save("/tmp/gosl/fun", "laginterp02b")
 	}
 }

@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -50,6 +51,9 @@ type LagrangeInterp struct {
 //   gridType -- type of grid; e.g. uniform
 //   NOTE: the grid will be generated in [-1, 1]
 func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
+	if N < 0 {
+		return nil, chk.Err("N must be at least equal to 0. N=%d is invalid\n", N)
+	}
 	o = new(LagrangeInterp)
 	o.N = N
 	switch gridType {
@@ -61,7 +65,24 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	return
 }
 
-// L computes the i-th Lagrange cardinl polynomial ℓ^X_i(x) associated with grid X
+// W computes the generating (nodal) polynomial associated with grid X. The nodal polynomial is the
+// unique polynomial of degree N+1 and leading coefficient whose zeros are the N+1 nodes of X.
+//
+//                 N
+//         X      ━━━━
+//        W (x) = ┃  ┃ (x - X[i])
+//        N+1     ┃  ┃
+//               i = 0
+//
+func (o *LagrangeInterp) W(x float64) (w float64) {
+	w = 1
+	for i := 0; i < o.N+1; i++ {
+		w *= x - o.X[i]
+	}
+	return
+}
+
+// L computes the i-th Lagrange cardinal polynomial ℓ^X_i(x) associated with grid X
 //
 //                 N
 //         X      ━━━━    x  -  X[j]
@@ -105,8 +126,8 @@ func (o *LagrangeInterp) I(x float64, f Ss) (ix float64, err error) {
 	return
 }
 
-// Lebesgue estimates the Lebesgue constant by using 10000 stations along [-1,1]
-func (o *LagrangeInterp) Lebesgue() (ΛN float64) {
+// EstimateLebesgue estimates the Lebesgue constant by using 10000 stations along [-1,1]
+func (o *LagrangeInterp) EstimateLebesgue() (ΛN float64) {
 	nsta := 10000 // generate several points along [-1,1]
 	for j := 0; j < nsta; j++ {
 		x := -1.0 + 2.0*float64(j)/float64(nsta-1)
@@ -121,9 +142,11 @@ func (o *LagrangeInterp) Lebesgue() (ΛN float64) {
 	return
 }
 
-// MaxErr estimates the maximum error using 10000 stations along [-1,1]
-func (o *LagrangeInterp) MaxErr(f Ss) (maxerr float64) {
+// EstimateMaxErr estimates the maximum error using 10000 stations along [-1,1]
+// This function also returns the location (xloc) of the estimated max error
+func (o *LagrangeInterp) EstimateMaxErr(f Ss) (maxerr, xloc float64) {
 	nsta := 10000 // generate several points along [-1,1]
+	xloc = -1
 	for i := 0; i < nsta; i++ {
 		x := -1.0 + 2.0*float64(i)/float64(nsta-1)
 		fx, err := f(x)
@@ -135,7 +158,19 @@ func (o *LagrangeInterp) MaxErr(f Ss) (maxerr float64) {
 			chk.Panic("I(x) failed:%v\n", err)
 		}
 		e := math.Abs(fx - ix)
-		maxerr = max(maxerr, e)
+		if e > maxerr {
+			maxerr = e
+			xloc = x
+		}
 	}
 	return
+}
+
+// DrawPoints draw points
+func (o *LagrangeInterp) DrawPoints(args *plt.A) {
+	if args == nil {
+		args = &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true}
+	}
+	Y := make([]float64, len(o.X))
+	plt.Plot(o.X, Y, args)
 }
