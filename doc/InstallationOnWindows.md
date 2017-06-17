@@ -17,7 +17,11 @@ Below, two options to install Gosl (and Gcc) are presented:
 
 ## [Recommended] Install Git and Bash
 
-2. Download and install *Git-2.13.0-64-bit.exe* from https://git-scm.com/download/
+2. Download and install *Git-2.13.1.2-64-bit.exe* from https://git-scm.com/download/
+
+**NOTE**: You must install Git in C:\Git or D:\Git but **NOT** in a "Program Files" directory (the problem here is the spaces between Program and Files).
+
+All the other default options are OK.
 
 ## [Recommended] Install Visual Studio Code
 
@@ -46,6 +50,9 @@ Also the environment variables can be replaced as desired.
 ## [Option B] Installing from Sources
 
 Skip these steps if you have used the _installer_ already.
+
+*NOTE*: Git Bash is required for the commandes below. Thus, see section on installing Git and Bash earlier first.
+
 
 ### Install Go and Set Environment Variable
 
@@ -125,6 +132,35 @@ mingw32-make.exe install
 ```
 
 TODO: Fix comparison files and check in `cd UMFPACK/Demo` with `mingw32-make.exe`
+
+### Download and Compile FFTW
+
+First, duplicate `mingw32-make.exe` into a file named simply `make` in `C:\TDM-GCC-64\bin`.
+
+Alternatively, create a link to `mingw32-make.exe` called `make` using the following command:
+```bash
+cmd //c "mklink /J C:\TDM-GCC-64\bin\make C:\TDM-GCC-64\bin\mingw32-make.exe"
+```
+
+Second, Download *fftw-3.3.6-pl2.tar.gz* from http://www.fftw.org/ and save it into `C:\TDM-GCC-64`
+
+Configure and compile with the following commands:
+```bash
+cd /c/TDM-GCC-64
+tar xzf fftw-3.3.6-pl2.tar.gz
+cd fftw-3.3.6-pl2
+./configure --disable-alloca --disable-shared --enable-static --enable-sse2 --with-incoming-stack-boundary=2
+make
+```
+
+If an error such as "C:\Program cannot be found" happens, probably you forgot to install Git Bash on C:\Git or D:\Git. See instructions above.
+
+Copy (Install) the following files:
+```bash
+cp api/fftw3.h ../include/
+cp .libs/libfftw3.a ../lib/
+```
+
 
 ### Build Gosl
 
