@@ -18,6 +18,9 @@ var (
 
 	// UniformGridKind defines the uniform 1D grid kind
 	UniformGridKind = io.NewEnum("Uniform", "fun.uniform", "U", "Uniform 1D grid")
+
+	// ChebyGaussGridKind defines the Chebyshev-Gauss 1D grid kind
+	ChebyGaussGridKind = io.NewEnum("ChebyGauss", "fun.chebygauss", "CG", "Chebyshev-Gauss 1D grid")
 )
 
 // LagrangeInterp implements Lagrange interpolators associated with a grid X
@@ -59,6 +62,12 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	switch gridType {
 	case UniformGridKind:
 		o.X = utl.LinSpace(-1, 1, N+1)
+	case ChebyGaussGridKind:
+		o.X = make([]float64, N+1)
+		h := math.Pi / float64(2*(N+1))
+		for i := 0; i < N+1; i++ {
+			o.X[i] = -math.Cos(h * float64(2*i+1))
+		}
 	default:
 		return nil, chk.Err("cannot create grid type %q\n", gridType)
 	}
@@ -166,11 +175,61 @@ func (o *LagrangeInterp) EstimateMaxErr(f Ss) (maxerr, xloc float64) {
 	return
 }
 
-// DrawPoints draw points
-func (o *LagrangeInterp) DrawPoints(args *plt.A) {
-	if args == nil {
-		args = &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true}
+// PlotLagInterpL plots cardinal polynomials ℓ
+func PlotLagInterpL(N int, gridType io.Enum) {
+	xx := utl.LinSpace(-1, 1, 201)
+	yy := make([]float64, len(xx))
+	o, _ := NewLagrangeInterp(N, gridType)
+	for n := 0; n < N+1; n++ {
+		for k, x := range xx {
+			yy[k] = o.L(n, x)
+		}
+		plt.Plot(xx, yy, &plt.A{NoClip: true})
+	}
+	Y := make([]float64, N+1)
+	plt.Plot(o.X, Y, &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true})
+	plt.Gll("$x$", "$\\ell(x)$", nil)
+	plt.Cross(0, 0, &plt.A{C: "grey"})
+	plt.HideAllBorders()
+}
+
+// PlotLagInterpW plots nodal polynomial
+func PlotLagInterpW(N int, gridType io.Enum) {
+	npts := 201
+	xx := utl.LinSpace(-1, 1, npts)
+	yy := make([]float64, len(xx))
+	o, _ := NewLagrangeInterp(N, gridType)
+	for k, x := range xx {
+		yy[k] = o.W(x)
 	}
 	Y := make([]float64, len(o.X))
-	plt.Plot(o.X, Y, args)
+	plt.Plot(o.X, Y, &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true})
+	plt.Plot(xx, yy, &plt.A{C: "b", Lw: 1, NoClip: true})
+	plt.Gll("$x$", "$w(x)$", nil)
+	plt.Cross(0, 0, &plt.A{C: "grey"})
+	plt.HideAllBorders()
+}
+
+// PlotLagInterpI plots Lagrange interpolation I(x) function for many degrees Nvalues
+func PlotLagInterpI(Nvalues []int, gridType io.Enum, f Ss) {
+	npts := 201
+	xx := utl.LinSpace(-1, 1, npts)
+	yy := make([]float64, len(xx))
+	for k, x := range xx {
+		yy[k], _ = f(x)
+	}
+	iy := make([]float64, len(xx))
+	plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
+	for _, N := range Nvalues {
+		p, _ := NewLagrangeInterp(N, gridType)
+		for k, x := range xx {
+			iy[k], _ = p.I(x, f)
+		}
+		E, xloc := p.EstimateMaxErr(f)
+		plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
+		plt.Plot(xx, iy, &plt.A{L: io.Sf("$N=%d\\;E=%.3e$", N, E), NoClip: true})
+	}
+	plt.Cross(0, 0, &plt.A{C: "grey"})
+	plt.Gll("$x$", "$f(x)\\quad I{f}(x)$", nil)
+	plt.HideAllBorders()
 }

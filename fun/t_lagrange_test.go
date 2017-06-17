@@ -11,7 +11,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
 )
 
 func TestLagCardinal01(tst *testing.T) {
@@ -43,20 +42,8 @@ func TestLagCardinal01(tst *testing.T) {
 
 	// plot basis
 	if chk.Verbose {
-		xx := utl.LinSpace(-1, 1, 201)
-		yy := make([]float64, len(xx))
 		plt.Reset(true, nil)
-		for n := 0; n < N+1; n++ {
-			for k, x := range xx {
-				yy[k] = o.L(n, x)
-			}
-			plt.Plot(xx, yy, &plt.A{NoClip: true})
-		}
-		Y := make([]float64, N+1)
-		plt.Plot(o.X, Y, &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true})
-		plt.Gll("x", "y", nil)
-		plt.Cross(0, 0, &plt.A{C: "grey"})
-		plt.HideAllBorders()
+		PlotLagInterpL(N, UniformGridKind)
 		plt.Save("/tmp/gosl/fun", "lagcardinal01")
 	}
 }
@@ -93,26 +80,8 @@ func TestLagInterp01(tst *testing.T) {
 
 	// plot interpolation
 	if chk.Verbose {
-		xx := utl.LinSpace(-1, 1, 201)
-		yy := make([]float64, len(xx))
-		for k, x := range xx {
-			yy[k], _ = f(x)
-		}
-		iy := make([]float64, len(xx))
 		plt.Reset(true, nil)
-		plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
-		for _, N := range []int{4, 6, 8, 12, 16, 24} {
-			p, _ := NewLagrangeInterp(N, UniformGridKind)
-			for k, x := range xx {
-				iy[k], _ = p.I(x, f)
-			}
-			E, xloc := p.EstimateMaxErr(f)
-			plt.Plot(xx, iy, &plt.A{L: io.Sf("$N=%2d\\;E=%.3e$", N, E), NoClip: true})
-			plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
-		}
-		plt.Gll("x", "y", nil)
-		plt.Cross(0, 0, &plt.A{C: "grey"})
-		plt.HideAllBorders()
+		PlotLagInterpI([]int{4, 6, 8, 12, 16, 24}, UniformGridKind, f)
 		plt.Save("/tmp/gosl/fun", "laginterp01")
 	}
 }
@@ -149,43 +118,15 @@ func TestLagInterp02(tst *testing.T) {
 
 	if chk.Verbose {
 
-		// graphing points
-		xx := utl.LinSpace(-1, 1, 201)
-		yy := make([]float64, len(xx))
-
 		// plot nodal polynomial
-		_, xloc := o.EstimateMaxErr(f)
 		plt.Reset(true, nil)
-		for k, x := range xx {
-			yy[k] = o.W(x)
-		}
-		o.DrawPoints(nil)
-		plt.Plot(xx, yy, &plt.A{C: "r", Lw: 1, NoClip: true})
-		plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
-		plt.Gll("x", "y", nil)
-		plt.Cross(0, 0, &plt.A{C: "grey"})
-		plt.HideAllBorders()
+		PlotLagInterpW(8, UniformGridKind)
 		plt.Save("/tmp/gosl/fun", "laginterp02a")
 
 		// plot interpolation
 		plt.Reset(true, nil)
-		for k, x := range xx {
-			yy[k], _ = f(x)
-		}
-		plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
-		iy := make([]float64, len(xx))
-		for _, N := range []int{4, 6, 8, 12, 16, 24} {
-			p, _ := NewLagrangeInterp(N, UniformGridKind)
-			for k, x := range xx {
-				iy[k], _ = p.I(x, f)
-			}
-			E, _ := p.EstimateMaxErr(f)
-			plt.Plot(xx, iy, &plt.A{L: io.Sf("$N=%2d\\;E=%.3e$", N, E), NoClip: true})
-		}
-		plt.Gll("x", "y", nil)
-		plt.Cross(0, 0, &plt.A{C: "grey"})
+		PlotLagInterpI([]int{4, 6, 8, 12, 16, 24}, UniformGridKind, f)
 		plt.AxisYrange(-1, 1)
-		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/fun", "laginterp02b")
 	}
 }
