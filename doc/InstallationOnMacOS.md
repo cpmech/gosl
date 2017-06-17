@@ -3,11 +3,9 @@
 The installation on macOS includes:
 
 1. Xcode
-2. MacPorts
-3. CMake and Lapack
-4. SuiteSparse
-5. Go (golang)
-6. Gosl 
+2. HomeBrew and dependencies
+3. Go language
+4. Gosl 
  
 ## 1 Xcode
 
@@ -17,53 +15,34 @@ In a terminal, type the following commands and click install to install the *com
 xcode-select --install
 ```
 
-## 2 MacPorts
+## 2 HomeBrew and dependencies
 
-Download and install MacPorts from https://www.macports.org/install.php
-
-Update the list of available packages with the following command:
+Download and install HomeBrew from https://brew.sh
 
 ```
-sudo port selfupdate
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
-## 3 CMake and Lapack
-
-To install CMake and Lapack, type:
+Install dependencies with:
 
 ```
-sudo port install lapack cmake
+brew install fftw
+brew install homebrew/science/suitesparse
 ```
 
-(yes: it's a bit slow, especially the llvm package)
-
-## 4 SuiteSparse
-
-Download SuiteSparse from http://faculty.cse.tamu.edu/davis/suitesparse.html and extract the files into `/Users/name/pkg/SuiteSparse`.
-
-Type the following commands:
-
-```
-cd /Users/name/pkg/SuiteSparse
-make
-make install
-sudo mkdir -p /usr/local/lib
-sudo cp lib/*.dylib /usr/local/lib
-sudo mkdir -p /usr/local/include/suitesparse
-sudo cp include/*.h /usr/local/include/
-```
-
-## 5 Go (golang)
+## 3 Go language
 
 Install Go (golang) for macOS from https://golang.org
 
-Edit `/Users/name/.profile` and add:
+Edit `/Users/name/.bash_profile` (or `/Users/name/.profile`) and add:
 
 ```
 export GOPATH=/Users/name/mygo
 ```
 
-## 6 Gosl
+(or another location as desired)
+
+## 4 Gosl
  
 Type the following commands:
 
