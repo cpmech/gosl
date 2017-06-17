@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !windows,!darwin
+// +build !windows
 
 // Package fftw wraps the FFTW library to perform Fourier Transforms
 // using the "fast" method by Cooley and Tukey
