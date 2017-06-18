@@ -153,6 +153,8 @@ func (o *LagrangeInterp) EstimateLebesgue() (ΛN float64) {
 
 // EstimateMaxErr estimates the maximum error using 10000 stations along [-1,1]
 // This function also returns the location (xloc) of the estimated max error
+//   Computes:
+//             maxerr = max(|f(x) - I{f}(x)|)
 func (o *LagrangeInterp) EstimateMaxErr(f Ss) (maxerr, xloc float64) {
 	nsta := 10000 // generate several points along [-1,1]
 	xloc = -1
