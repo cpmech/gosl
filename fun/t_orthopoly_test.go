@@ -18,10 +18,10 @@ import (
 // [1] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas, Graphs,
 //     and Mathematical Tables. U.S. Department of Commerce, NIST
 
-func Test_orthopoly01(tst *testing.T) {
+func TestGenOrthoPoly01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("orthopoly01. Jacobi P5(1,1)")
+	chk.PrintTitle("GenOrthoPoly01 Jacobi P5(1,1)")
 
 	N, α, β := 5, 1.0, 1.0
 	op := NewGeneralOrthoPoly(OP_JACOBI, N, []*P{
@@ -41,10 +41,10 @@ func Test_orthopoly01(tst *testing.T) {
 	}
 }
 
-func Test_orthopoly02(tst *testing.T) {
+func TestGenOrthoPoly02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("orthopoly02. Jacobi polynomials Fig 22.1 [1]")
+	chk.PrintTitle("GenOrthoPoly02 Jacobi polynomials Fig 22.1 [1]")
 
 	N, α, β := 5, 1.5, -0.5
 	op := NewGeneralOrthoPoly(OP_JACOBI, N, []*P{
@@ -75,14 +75,14 @@ func Test_orthopoly02(tst *testing.T) {
 		plt.AxisYrange(-1, 3.3)
 		plt.HideAllBorders()
 		plt.Gll("$x$", io.Sf("$P_n^{(%g,%g)}$", α, β), &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl", "orthopoly02")
+		plt.Save("/tmp/gosl/fun", "genorthopoly02")
 	}
 }
 
-func Test_orthopoly03(tst *testing.T) {
+func TestGenOrthoPoly03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("orthopoly03. Legendre polynomials Fig 22.8 [1]")
+	chk.PrintTitle("GenOrthoPoly03 Legendre polynomials Fig 22.8 [1]")
 
 	N := 5
 	op := NewGeneralOrthoPoly(OP_LEGENDRE, N, nil)
@@ -125,14 +125,14 @@ func Test_orthopoly03(tst *testing.T) {
 		plt.AxisYrange(-0.5, 1.0)
 		plt.HideAllBorders()
 		plt.Gll("$x$", "$P_n$", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl", "orthopoly03")
+		plt.Save("/tmp/gosl/fun", "genorthopoly03")
 	}
 }
 
-func Test_orthopoly04(tst *testing.T) {
+func TestGenOrthoPoly04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("orthopoly04. Hermite polynomials Fig 22.10 [1]")
+	chk.PrintTitle("GenOrthoPoly04 Hermite polynomials Fig 22.10 [1]")
 
 	N := 5
 	op := NewGeneralOrthoPoly(OP_HERMITE, N, nil)
@@ -168,14 +168,14 @@ func Test_orthopoly04(tst *testing.T) {
 		plt.AxisYrange(-1, 8.5)
 		plt.HideAllBorders()
 		plt.Gll("$x$", "$P_n$", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl", "orthopoly04")
+		plt.Save("/tmp/gosl/fun", "genorthopoly04")
 	}
 }
 
-func Test_orthopoly05(tst *testing.T) {
+func TestGenOrthoPoly05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("orthopoly05. Chebyshev1 polynomials Fig 22.6 [1]")
+	chk.PrintTitle("GenOrthoPoly05 Chebyshev1 polynomials Fig 22.6 [1]")
 
 	N := 5
 	op := NewGeneralOrthoPoly(OP_CHEBYSHEV1, N, nil)
@@ -225,14 +225,14 @@ func Test_orthopoly05(tst *testing.T) {
 		plt.Cross(0, 0, nil)
 		plt.HideAllBorders()
 		plt.Gll("$x$", "$P_n$", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl", "orthopoly05")
+		plt.Save("/tmp/gosl/fun", "genorthopoly05")
 	}
 }
 
-func Test_orthopoly06(tst *testing.T) {
+func TestGenOrthoPoly06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("orthopoly06. Chebyshev2 polynomials Fig 22.7 [1]")
+	chk.PrintTitle("GenOrthoPoly06 Chebyshev2 polynomials Fig 22.7 [1]")
 
 	N := 5
 	op := NewGeneralOrthoPoly(OP_CHEBYSHEV2, N, nil)
@@ -267,6 +267,6 @@ func Test_orthopoly06(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.AxisYrange(-3, 5.5)
 		plt.Gll("$x$", "$P_n$", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl", "orthopoly06")
+		plt.Save("/tmp/gosl/fun", "genorthopoly06")
 	}
 }
