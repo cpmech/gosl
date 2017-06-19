@@ -11,13 +11,22 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// enums
+// Orthogonal polynomial kinds
 var (
-	OpolyJacobiKind   = io.NewEnum("Jacobi", "fun.op", "J", "Jacobi OrthoPolynomial")     // Jacobi OrthoPolynomial
-	OpolyLegendreKind = io.NewEnum("Legendre", "fun.op", "L", "Legendre OrthoPolynomial") // Legendre OrthoPolynomial
-	OpolyHermiteKind  = io.NewEnum("Hermite", "fun.op", "H", "Hermite OrthoPolynomial")   // Hermite OrthoPolynomial
-	OpolyCheby1Kind   = io.NewEnum("Chebyshev1", "fun.op", "T", "Chebyshev First Kind")   // Chebyshev1 OrthoPolynomial
-	OpolyCheby2Kind   = io.NewEnum("Chebyshev2", "fun.op", "U", "Chebyshev Second Kind")  // Chebyshev2 OrthoPolynomial
+	// OpolyJacobiKind specifies the Jacobi orthogonal polynomial
+	OpolyJacobiKind = io.NewEnum("Jacobi", "fun.opoly", "J", "Jacobi orthogonal polynomial")
+
+	// OpolyLegendreKind specifies the Legendre orthogonal polynomial
+	OpolyLegendreKind = io.NewEnum("Legendre", "fun.opoly", "L", "Legendre orthogonal polynomial")
+
+	// OpolyHermiteKind specifies the Hermite orthogonal polynomial
+	OpolyHermiteKind = io.NewEnum("Hermite", "fun.opoly", "H", "Hermite orthogonal polynomial")
+
+	// OpolyCheby1Kind specifies the Chebyshev first kind orthogonal polynomial
+	OpolyCheby1Kind = io.NewEnum("Chebyshev1", "fun.opoly", "T", "Chebyshev First Kind orthogonal polynomial")
+
+	// OpolyCheby2Kind specifies the Chebyshev second kind orthogonal polynomial
+	OpolyCheby2Kind = io.NewEnum("Chebyshev2", "fun.opoly", "U", "Chebyshev Second Kind orthogonal polynomial")
 )
 
 // GeneralOrthoPoly (main) structure ////////////////////////////////////////////////////////////////

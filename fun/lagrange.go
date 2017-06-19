@@ -13,7 +13,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// enums
+// Interpolation grid kinds
 var (
 
 	// UniformGridKind defines the uniform 1D grid kind
