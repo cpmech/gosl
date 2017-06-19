@@ -52,19 +52,20 @@ type GeneralOrthoPoly struct {
 }
 
 // NewOrthoPolynomial creates a new orthogonal polynomial
-//   Type -- is the type: e.g. OP_JACOBI, OP_LEGENDRE, OP_HERMITE
-//   N    -- is the (max) degree of the polynomial.
-//           Lower order can later be quickly obtained after this
-//           polynomial with max(N) is created
-//   Prms -- parameters to each particular polynomial
+//   Type  -- is the type: e.g. OP_JACOBI, OP_LEGENDRE, OP_HERMITE
+//   N     -- is the (max) degree of the polynomial.
+//            Lower order can later be quickly obtained after this
+//            polynomial with max(N) is created
+//   alpha -- Jacobi only: α coefficient
+//   beta  -- Jacobi only: β coefficient
 //
 //   NOTE: all coefficients for the 0...N polynomials will be generated
 //
-func NewGeneralOrthoPoly(kind io.Enum, N int, prms Params) (o *GeneralOrthoPoly) {
+func NewGeneralOrthoPoly(kind io.Enum, N int, alpha, beta float64) (o *GeneralOrthoPoly) {
 	o = new(GeneralOrthoPoly)
 	o.Kind = kind
 	o.N = N
-	o.poly = newopoly(kind, prms)
+	o.poly = newopoly(kind, alpha, beta)
 	o.c = make([][]float64, o.N+1)
 	for n := 1; n <= o.N; n++ {
 		o.c[n] = make([]float64, o.poly.M(o.N)+1)
@@ -122,15 +123,15 @@ type oPoly interface {
 }
 
 // oPolyMaker defines a function that makes new oPolys
-type oPolyMaker func(prms Params) oPoly
+type oPolyMaker func(alpha, beta float64) oPoly
 
 // oPolyDB implements a database of oPoly makers
 var oPolyDB map[io.Enum]oPolyMaker = make(map[io.Enum]oPolyMaker)
 
 // newopoly finds oPoly or panic
-func newopoly(code io.Enum, prms Params) oPoly {
+func newopoly(code io.Enum, alpha, beta float64) oPoly {
 	if maker, ok := oPolyDB[code]; ok {
-		return maker(prms)
+		return maker(alpha, beta)
 	}
 	chk.Panic("cannot find OrthoPolynomial named %q in database", code)
 	return nil
@@ -162,10 +163,10 @@ func (o *opJacobi) g(n, m int, x float64) float64 {
 	return math.Pow(x-1, float64(n-m)) * math.Pow(x+1, float64(m))
 }
 
-func newJacobi(prms Params) oPoly {
+func newJacobi(alpha, beta float64) oPoly {
 	o := new(opJacobi)
-	prms.CheckLimits()
-	prms.ConnectSet([]*float64{&o.alpha, &o.beta}, []string{"alpha", "beta"}, "newJacobi")
+	o.alpha = alpha
+	o.beta = beta
 	return o
 }
 
@@ -192,7 +193,7 @@ func (o *opLegendre) g(n, m int, x float64) float64 {
 	return math.Pow(x, float64(n-2*m))
 }
 
-func newLegendre(prms Params) oPoly {
+func newLegendre(alpha, beta float64) oPoly {
 	return new(opLegendre)
 }
 
@@ -218,7 +219,7 @@ func (o *opHermite) g(n, m int, x float64) float64 {
 	return math.Pow(2*x, float64(n-2*m))
 }
 
-func newHermite(prms Params) oPoly {
+func newHermite(alpha, beta float64) oPoly {
 	return new(opHermite)
 }
 
@@ -263,7 +264,7 @@ func (o *opChebyshev1) g(n, m int, x float64) float64 {
 	return math.Pow(2*x, float64(n-2*m))
 }
 
-func newChebyshev1(prms Params) oPoly {
+func newChebyshev1(alpha, beta float64) oPoly {
 	return new(opChebyshev1)
 }
 
@@ -290,7 +291,7 @@ func (o *opChebyshev2) g(n, m int, x float64) float64 {
 	return math.Pow(2*x, float64(n-2*m))
 }
 
-func newChebyshev2(prms Params) oPoly {
+func newChebyshev2(alpha, beta float64) oPoly {
 	return new(opChebyshev2)
 }
 

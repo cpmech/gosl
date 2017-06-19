@@ -24,10 +24,7 @@ func TestGenOrthoPoly01(tst *testing.T) {
 	chk.PrintTitle("GenOrthoPoly01 Jacobi P5(1,1)")
 
 	N, α, β := 5, 1.0, 1.0
-	op := NewGeneralOrthoPoly(OpolyJacobiKind, N, []*P{
-		&P{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
-		&P{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
-	})
+	op := NewGeneralOrthoPoly(OpolyJacobiKind, N, α, β)
 
 	xx := utl.LinSpace(-1, 1, 5)
 	for _, x := range xx {
@@ -47,10 +44,7 @@ func TestGenOrthoPoly02(tst *testing.T) {
 	chk.PrintTitle("GenOrthoPoly02 Jacobi polynomials Fig 22.1 [1]")
 
 	N, α, β := 5, 1.5, -0.5
-	op := NewGeneralOrthoPoly(OpolyJacobiKind, N, []*P{
-		&P{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
-		&P{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
-	})
+	op := NewGeneralOrthoPoly(OpolyJacobiKind, N, α, β)
 
 	xx := utl.LinSpace(-1, 1, 5)
 	for _, x := range xx {
@@ -85,11 +79,8 @@ func TestGenOrthoPoly03(tst *testing.T) {
 	chk.PrintTitle("GenOrthoPoly03 Legendre polynomials Fig 22.8 [1]")
 
 	N := 5
-	op := NewGeneralOrthoPoly(OpolyLegendreKind, N, nil)
-	opj := NewGeneralOrthoPoly(OpolyJacobiKind, N, []*P{
-		&P{N: "alpha", V: 0, Min: -1, Max: math.MaxFloat64},
-		&P{N: "beta", V: 0, Min: -1, Max: math.MaxFloat64},
-	})
+	op := NewGeneralOrthoPoly(OpolyLegendreKind, N, 0, 0)
+	opj := NewGeneralOrthoPoly(OpolyJacobiKind, N, 0, 0)
 
 	xx := utl.LinSpace(-1, 1, 5)
 	for _, x := range xx {
@@ -135,7 +126,7 @@ func TestGenOrthoPoly04(tst *testing.T) {
 	chk.PrintTitle("GenOrthoPoly04 Hermite polynomials Fig 22.10 [1]")
 
 	N := 5
-	op := NewGeneralOrthoPoly(OpolyHermiteKind, N, nil)
+	op := NewGeneralOrthoPoly(OpolyHermiteKind, N, 0, 0)
 
 	xx := utl.LinSpace(-2, 2, 7)
 	for _, x := range xx {
@@ -178,7 +169,7 @@ func TestGenOrthoPoly05(tst *testing.T) {
 	chk.PrintTitle("GenOrthoPoly05 Chebyshev1 polynomials Fig 22.6 [1]")
 
 	N := 5
-	op := NewGeneralOrthoPoly(OpolyCheby1Kind, N, nil)
+	op := NewGeneralOrthoPoly(OpolyCheby1Kind, N, 0, 0)
 
 	xx := []float64{-2, -1.5, -1, -0.5, -1.0 / 3.0, 0, 1.0 / 3.0, 0.5, 1, 1.5, 2}
 	for _, x := range xx {
@@ -235,7 +226,7 @@ func TestGenOrthoPoly06(tst *testing.T) {
 	chk.PrintTitle("GenOrthoPoly06 Chebyshev2 polynomials Fig 22.7 [1]")
 
 	N := 5
-	op := NewGeneralOrthoPoly(OpolyCheby2Kind, N, nil)
+	op := NewGeneralOrthoPoly(OpolyCheby2Kind, N, 0, 0)
 
 	xx := utl.LinSpace(-1, 1, 5)
 	for _, x := range xx {
