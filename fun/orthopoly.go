@@ -20,10 +20,16 @@ var (
 	OP_CHEBYSHEV2 = io.NewEnum("Chebyshev2", "fun.op", "U", "Chebyshev Second Kind")  // Chebyshev2 OrthoPolynomial
 )
 
-// OrthoPolynomial (main) structure ////////////////////////////////////////////////////////////////
+// GeneralOrthoPoly (main) structure ////////////////////////////////////////////////////////////////
 
-// OrthoPolynomial implements orthogonal polynomials
-type OrthoPolynomial struct {
+// GeneralOrthoPoly implements general orthogonal polynomials. It uses a general format and is NOT
+// very efficient for large degrees. For efficiency, use the OrthoPoly structure instead.
+//
+//   Reference:
+//   [1] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas, Graphs,
+//       and Mathematical Tables. U.S. Department of Commerce, NIST
+//
+type GeneralOrthoPoly struct {
 
 	// input
 	Type io.Enum // type of orthogonal polynomial
@@ -42,8 +48,11 @@ type OrthoPolynomial struct {
 //           Lower order can later be quickly obtained after this
 //           polynomial with max(N) is created
 //   Prms -- parameters to each particular polynomial
-func NewOrthoPolynomial(Type io.Enum, N int, prms Params) (o *OrthoPolynomial) {
-	o = new(OrthoPolynomial)
+//
+//   NOTE: all coefficients for the 0...N polynomials will be generated
+//
+func NewGeneralOrthoPoly(Type io.Enum, N int, prms Params) (o *GeneralOrthoPoly) {
+	o = new(GeneralOrthoPoly)
 	o.Type = Type
 	o.N = N
 	o.poly = newopoly(Type, prms)
@@ -59,12 +68,18 @@ func NewOrthoPolynomial(Type io.Enum, N int, prms Params) (o *OrthoPolynomial) {
 }
 
 // F computes P(n,x) with n=N (max)
-func (o *OrthoPolynomial) F(x float64) (res float64) {
+//   Since GeneralOrthoPoly is a general form, the summations are directly implement; i.e. no
+//   advantages are taken w.r.t the structure of the polynomial. Thus, these functions are not
+//   highly efficient for large degrees N
+func (o *GeneralOrthoPoly) F(x float64) (res float64) {
 	return o.P(o.N, x)
 }
 
 // P computes P(n,x) where n must be ≤ N
-func (o *OrthoPolynomial) P(n int, x float64) (res float64) {
+//   Since GeneralOrthoPoly is a general form, the summations are directly implement; i.e. no
+//   advantages are taken w.r.t the structure of the polynomial. Thus, these functions are not
+//   highly efficient for large degrees N
+func (o *GeneralOrthoPoly) P(n int, x float64) (res float64) {
 	if n > o.N {
 		chk.Panic("the degree n must not be greater than max N. %d > %d", n, o.N)
 	}
@@ -80,7 +95,16 @@ func (o *OrthoPolynomial) P(n int, x float64) (res float64) {
 
 // oPoly database //////////////////////////////////////////////////////////////////////////////////
 
-// oPoly defines the functions that OrthoPolynomial must have
+// oPoly defines the functions that GeneralOrthoPolys must have
+//
+//   The general expression is (Table 22.3 Page 775 of [1]: Explicit Expressions):
+//
+//                          M(n)
+//                          ————
+//        f(n, x) =  d(n) ⋅ \     c(n, m) ⋅ g(n, m, x)
+//                          /
+//                          ————
+//                          m = 0
 type oPoly interface {
 	M(n int) int
 	d(n int) float64
@@ -112,7 +136,6 @@ type opJacobi struct {
 
 func (o *opJacobi) M(n int) int {
 	return n
-	//return int(math.Floor(float64(n / 2.0))) // L
 }
 
 func (o *opJacobi) d(n int) float64 {

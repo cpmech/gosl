@@ -24,7 +24,7 @@ func Test_orthopoly01(tst *testing.T) {
 	chk.PrintTitle("orthopoly01. Jacobi P5(1,1)")
 
 	N, α, β := 5, 1.0, 1.0
-	op := NewOrthoPolynomial(OP_JACOBI, N, []*P{
+	op := NewGeneralOrthoPoly(OP_JACOBI, N, []*P{
 		&P{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
 		&P{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
 	})
@@ -47,7 +47,7 @@ func Test_orthopoly02(tst *testing.T) {
 	chk.PrintTitle("orthopoly02. Jacobi polynomials Fig 22.1 [1]")
 
 	N, α, β := 5, 1.5, -0.5
-	op := NewOrthoPolynomial(OP_JACOBI, N, []*P{
+	op := NewGeneralOrthoPoly(OP_JACOBI, N, []*P{
 		&P{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
 		&P{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
 	})
@@ -85,8 +85,8 @@ func Test_orthopoly03(tst *testing.T) {
 	chk.PrintTitle("orthopoly03. Legendre polynomials Fig 22.8 [1]")
 
 	N := 5
-	op := NewOrthoPolynomial(OP_LEGENDRE, N, nil)
-	opj := NewOrthoPolynomial(OP_JACOBI, N, []*P{
+	op := NewGeneralOrthoPoly(OP_LEGENDRE, N, nil)
+	opj := NewGeneralOrthoPoly(OP_JACOBI, N, []*P{
 		&P{N: "alpha", V: 0, Min: -1, Max: math.MaxFloat64},
 		&P{N: "beta", V: 0, Min: -1, Max: math.MaxFloat64},
 	})
@@ -135,7 +135,7 @@ func Test_orthopoly04(tst *testing.T) {
 	chk.PrintTitle("orthopoly04. Hermite polynomials Fig 22.10 [1]")
 
 	N := 5
-	op := NewOrthoPolynomial(OP_HERMITE, N, nil)
+	op := NewGeneralOrthoPoly(OP_HERMITE, N, nil)
 
 	xx := utl.LinSpace(-2, 2, 7)
 	for _, x := range xx {
@@ -178,7 +178,7 @@ func Test_orthopoly05(tst *testing.T) {
 	chk.PrintTitle("orthopoly05. Chebyshev1 polynomials Fig 22.6 [1]")
 
 	N := 5
-	op := NewOrthoPolynomial(OP_CHEBYSHEV1, N, nil)
+	op := NewGeneralOrthoPoly(OP_CHEBYSHEV1, N, nil)
 
 	xx := []float64{-2, -1.5, -1, -0.5, -1.0 / 3.0, 0, 1.0 / 3.0, 0.5, 1, 1.5, 2}
 	for _, x := range xx {
@@ -235,7 +235,7 @@ func Test_orthopoly06(tst *testing.T) {
 	chk.PrintTitle("orthopoly06. Chebyshev2 polynomials Fig 22.7 [1]")
 
 	N := 5
-	op := NewOrthoPolynomial(OP_CHEBYSHEV2, N, nil)
+	op := NewGeneralOrthoPoly(OP_CHEBYSHEV2, N, nil)
 
 	xx := utl.LinSpace(-1, 1, 5)
 	for _, x := range xx {
