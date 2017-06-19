@@ -13,11 +13,11 @@ import (
 
 // enums
 var (
-	OP_JACOBI     = io.NewEnum("Jacobi", "fun.op", "J", "Jacobi OrthoPolynomial")     // Jacobi OrthoPolynomial
-	OP_LEGENDRE   = io.NewEnum("Legendre", "fun.op", "L", "Legendre OrthoPolynomial") // Legendre OrthoPolynomial
-	OP_HERMITE    = io.NewEnum("Hermite", "fun.op", "H", "Hermite OrthoPolynomial")   // Hermite OrthoPolynomial
-	OP_CHEBYSHEV1 = io.NewEnum("Chebyshev1", "fun.op", "T", "Chebyshev First Kind")   // Chebyshev1 OrthoPolynomial
-	OP_CHEBYSHEV2 = io.NewEnum("Chebyshev2", "fun.op", "U", "Chebyshev Second Kind")  // Chebyshev2 OrthoPolynomial
+	OpolyJacobiKind   = io.NewEnum("Jacobi", "fun.op", "J", "Jacobi OrthoPolynomial")     // Jacobi OrthoPolynomial
+	OpolyLegendreKind = io.NewEnum("Legendre", "fun.op", "L", "Legendre OrthoPolynomial") // Legendre OrthoPolynomial
+	OpolyHermiteKind  = io.NewEnum("Hermite", "fun.op", "H", "Hermite OrthoPolynomial")   // Hermite OrthoPolynomial
+	OpolyCheby1Kind   = io.NewEnum("Chebyshev1", "fun.op", "T", "Chebyshev First Kind")   // Chebyshev1 OrthoPolynomial
+	OpolyCheby2Kind   = io.NewEnum("Chebyshev2", "fun.op", "U", "Chebyshev Second Kind")  // Chebyshev2 OrthoPolynomial
 )
 
 // GeneralOrthoPoly (main) structure ////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ var (
 type GeneralOrthoPoly struct {
 
 	// input
-	Type io.Enum // type of orthogonal polynomial
+	Kind io.Enum // type of orthogonal polynomial
 	N    int     // (max) degree of polynomial. Lower order can be quickly obtained after this polynomial with max(N) is generated
 
 	// computed
@@ -51,11 +51,11 @@ type GeneralOrthoPoly struct {
 //
 //   NOTE: all coefficients for the 0...N polynomials will be generated
 //
-func NewGeneralOrthoPoly(Type io.Enum, N int, prms Params) (o *GeneralOrthoPoly) {
+func NewGeneralOrthoPoly(kind io.Enum, N int, prms Params) (o *GeneralOrthoPoly) {
 	o = new(GeneralOrthoPoly)
-	o.Type = Type
+	o.Kind = kind
 	o.N = N
-	o.poly = newopoly(Type, prms)
+	o.poly = newopoly(kind, prms)
 	o.c = make([][]float64, o.N+1)
 	for n := 1; n <= o.N; n++ {
 		o.c[n] = make([]float64, o.poly.M(o.N)+1)
@@ -288,9 +288,9 @@ func newChebyshev2(prms Params) oPoly {
 // add polynomials to database /////////////////////////////////////////////////////////////////////
 
 func init() {
-	oPolyDB[OP_JACOBI] = newJacobi
-	oPolyDB[OP_LEGENDRE] = newLegendre
-	oPolyDB[OP_HERMITE] = newHermite
-	oPolyDB[OP_CHEBYSHEV1] = newChebyshev1
-	oPolyDB[OP_CHEBYSHEV2] = newChebyshev2
+	oPolyDB[OpolyJacobiKind] = newJacobi
+	oPolyDB[OpolyLegendreKind] = newLegendre
+	oPolyDB[OpolyHermiteKind] = newHermite
+	oPolyDB[OpolyCheby1Kind] = newChebyshev1
+	oPolyDB[OpolyCheby2Kind] = newChebyshev2
 }
