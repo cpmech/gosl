@@ -11,7 +11,7 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// enums
+// Interpolator kinds
 var (
 
 	// LinearInterpKind defines the linear interpolator kind
