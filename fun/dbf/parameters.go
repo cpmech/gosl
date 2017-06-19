@@ -9,11 +9,6 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// global auxiliary variables
-var (
-	G_extraindent string // extra indentation
-)
-
 // P holds material parameter names and values
 type P struct {
 
@@ -172,7 +167,7 @@ func (o Params) String() (l string) {
 		if i > 0 {
 			l += ",\n"
 		}
-		l += io.Sf(G_extraindent + "{")
+		l += io.Sf("{")
 		l += io.Sf(`"n":%q, `, prm.N)
 		l += io.Sf(`"v":%v, `, prm.V)
 		l += io.Sf(`"min":%v, `, prm.Min)
