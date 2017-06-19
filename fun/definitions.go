@@ -6,7 +6,14 @@
 // Bessel, discrete Fourier transform, polynomial interpolators, and more.
 package fun
 
-import "github.com/cpmech/gosl/la"
+import (
+	"math"
+
+	"github.com/cpmech/gosl/la"
+)
+
+// π = 3.141592653589...
+const π = math.Pi
 
 // Ss defines a scalar function f(s) of a scalar argument s. Also returns error
 //   Scalar scalar

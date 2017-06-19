@@ -73,6 +73,24 @@ func TestGenOrthoPoly02(tst *testing.T) {
 	}
 }
 
+func calcLegendre(i int, x float64) float64 {
+	if i == 0 {
+		return 1.0
+	}
+	if i == 1 {
+		return x
+	}
+	tjm2 := 1.0 // value at step j-2
+	tjm1 := x   // value at step j-1
+	var tj float64
+	for j := 2; j <= i; j++ {
+		tj = (float64(2*j-1)*x*tjm1 - float64(j-1)*tjm2) / float64(j)
+		tjm2 = tjm1
+		tjm1 = tj
+	}
+	return tjm1
+}
+
 func TestGenOrthoPoly03(tst *testing.T) {
 
 	//verbose()
@@ -98,6 +116,7 @@ func TestGenOrthoPoly03(tst *testing.T) {
 		chk.Scalar(tst, "P5", 1e-15, y, (15*x-70*x*x*x+63*math.Pow(x, 5))/8)
 		for n := 0; n < 5; n++ {
 			chk.Scalar(tst, "Legendre-Jacobi", 1e-15, op.P(n, x), opj.P(n, x))
+			chk.Scalar(tst, "calcLegendre", 1e-17, op.P(n, x), calcLegendre(n, x))
 		}
 	}
 
