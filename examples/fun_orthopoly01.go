@@ -26,10 +26,7 @@ func main() {
 
 	// Jacobi polynomials Fig 22.1
 	N, α, β := 5, 1.5, -0.5
-	jacobi := fun.NewOrthoPolynomial(fun.OP_JACOBI, N, []*fun.P{
-		&fun.P{N: "alpha", V: α, Min: -1, Max: math.MaxFloat64},
-		&fun.P{N: "beta", V: β, Min: -1, Max: math.MaxFloat64},
-	})
+	jacobi := fun.NewGeneralOrthoPoly(fun.OpolyJacobiKind, N, α, β)
 	plt.Reset(true, &plt.A{Prop: 1.5})
 	X := utl.LinSpace(-1, 1, npts)
 	Y := make([]float64, len(X))
@@ -47,7 +44,7 @@ func main() {
 	plt.Save("/tmp/gosl", "as-fig-22-1")
 
 	// Chebyshev1 polynomials Fig 22.6
-	chebyshev1 := fun.NewOrthoPolynomial(fun.OP_CHEBYSHEV1, N, nil)
+	chebyshev1 := fun.NewGeneralOrthoPoly(fun.OpolyCheby1Kind, N, 0, 0)
 	plt.Reset(true, &plt.A{Prop: 0.8})
 	for n := 1; n <= 5; n++ {
 		for i := 0; i < len(X); i++ {
@@ -61,7 +58,7 @@ func main() {
 	plt.Save("/tmp/gosl", "as-fig-22-6")
 
 	// Chebyshev2 polynomials Fig 22.7
-	chebyshev2 := fun.NewOrthoPolynomial(fun.OP_CHEBYSHEV2, N, nil)
+	chebyshev2 := fun.NewGeneralOrthoPoly(fun.OpolyCheby2Kind, N, 0, 0)
 	plt.Reset(true, &plt.A{Prop: 0.8})
 	for n := 1; n <= 5; n++ {
 		for i := 0; i < len(X); i++ {
@@ -76,7 +73,7 @@ func main() {
 	plt.Save("/tmp/gosl", "as-fig-22-7")
 
 	// Legendre polynomials Fig 22.8
-	legendre := fun.NewOrthoPolynomial(fun.OP_LEGENDRE, N, nil)
+	legendre := fun.NewGeneralOrthoPoly(fun.OpolyLegendreKind, N, 0, 0)
 	plt.Reset(true, &plt.A{Prop: 1.0})
 	for n := 0; n <= 5; n++ {
 		for i := 0; i < len(X); i++ {
@@ -92,7 +89,7 @@ func main() {
 	plt.Save("/tmp/gosl", "as-fig-22-8")
 
 	// Hermite polynomials Fig 22.10
-	hermite := fun.NewOrthoPolynomial(fun.OP_HERMITE, N, nil)
+	hermite := fun.NewGeneralOrthoPoly(fun.OpolyHermiteKind, N, 0, 0)
 	plt.Reset(true, &plt.A{Prop: 0.8})
 	X = utl.LinSpace(0, 4, npts)
 	for n := 2; n <= 5; n++ {

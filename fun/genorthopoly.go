@@ -51,7 +51,7 @@ type GeneralOrthoPoly struct {
 	poly oPoly // implementation
 }
 
-// NewOrthoPolynomial creates a new orthogonal polynomial
+// NewGeneralOrthoPoly creates a new orthogonal polynomial
 //   Type  -- is the type: e.g. OP_JACOBI, OP_LEGENDRE, OP_HERMITE
 //   N     -- is the (max) degree of the polynomial.
 //            Lower order can later be quickly obtained after this
