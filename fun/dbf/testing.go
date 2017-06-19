@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -14,7 +14,7 @@ import (
 )
 
 // CheckDerivT checks derivatives w.r.t to t for fixed coordinates x
-func CheckDerivT(tst *testing.T, o TimeSpace, t0, tf float64, xcte []float64, np int, tskip []float64, sktol, dtol, dtol2 float64, ver bool) {
+func CheckDerivT(tst *testing.T, o T, t0, tf float64, xcte []float64, np int, tskip []float64, sktol, dtol, dtol2 float64, ver bool) {
 	t := utl.LinSpace(t0, tf, np)
 	for i := 0; i < np; i++ {
 		g := o.G(t[i], xcte)
@@ -39,7 +39,7 @@ func CheckDerivT(tst *testing.T, o TimeSpace, t0, tf float64, xcte []float64, np
 }
 
 // CheckDerivX checks derivatives w.r.t to x for fixed t
-func CheckDerivX(tst *testing.T, o TimeSpace, tcte float64, xmin, xmax []float64, np int, xskip [][]float64, sktol, dtol float64, ver bool) {
+func CheckDerivX(tst *testing.T, o T, tcte float64, xmin, xmax []float64, np int, xskip [][]float64, sktol, dtol float64, ver bool) {
 	ndim := len(xmin)
 	dx := make([]float64, ndim)
 	for i := 0; i < ndim; i++ {

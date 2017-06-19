@@ -20,13 +20,6 @@ func min(a, b float64) float64 {
 	return b
 }
 
-// setvzero sets v := 0
-func setvzero(v []float64) {
-	for i := 0; i < len(v); i++ {
-		v[i] = 0
-	}
-}
-
 // imax returns the max between two ints
 func imax(a, b int) int {
 	if a > b {

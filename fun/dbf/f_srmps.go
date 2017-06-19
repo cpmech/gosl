@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -18,7 +18,7 @@ type Srmps struct {
 
 // set allocators databse
 func init() {
-	allocators["srmps"] = func() TimeSpace { return new(Srmps) }
+	allocators["srmps"] = func() T { return new(Srmps) }
 }
 
 // Init initialises the function

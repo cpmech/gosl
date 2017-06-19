@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -23,7 +23,7 @@ type Cdist struct {
 
 // set allocators database
 func init() {
-	allocators["cdist"] = func() TimeSpace { return new(Cdist) }
+	allocators["cdist"] = func() T { return new(Cdist) }
 }
 
 // Init initialises the function

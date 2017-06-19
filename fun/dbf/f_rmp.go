@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import "github.com/cpmech/gosl/chk"
 
@@ -16,7 +16,7 @@ type Rmp struct {
 
 // set allocators database
 func init() {
-	allocators["rmp"] = func() TimeSpace { return new(Rmp) }
+	allocators["rmp"] = func() T { return new(Rmp) }
 }
 
 // Init initialises the function

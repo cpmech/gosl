@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package fun (functions) implements special functions such as elliptical, orthogonal polynomials,
+// Bessel, discrete Fourier transform, polynomial interpolators, and more.
 package fun
 
 import "github.com/cpmech/gosl/la"

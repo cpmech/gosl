@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -22,12 +22,12 @@ type Cos struct {
 	C float64
 
 	// derived
-	b_is_b_div_pi bool
+	bIsBdivPi bool
 }
 
 // set allocators database
 func init() {
-	allocators["cos"] = func() TimeSpace { return new(Cos) }
+	allocators["cos"] = func() T { return new(Cos) }
 }
 
 // Init initialises the function
@@ -39,7 +39,7 @@ func (o *Cos) Init(prms Params) (err error) {
 		e += prms.Connect(&o.B, "b", "cos function")
 	} else {
 		e += prms.Connect(&o.B, "b/pi", "cos function")
-		o.b_is_b_div_pi = true
+		o.bIsBdivPi = true
 	}
 	if e != "" {
 		err = chk.Err("%v\n", e)
@@ -50,7 +50,7 @@ func (o *Cos) Init(prms Params) (err error) {
 // F returns y = F(t, x)
 func (o Cos) F(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bIsBdivPi {
 		b = o.B * math.Pi
 	}
 	return o.A*math.Cos(b*t) + o.C
@@ -59,7 +59,7 @@ func (o Cos) F(t float64, x []float64) float64 {
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Cos) G(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bIsBdivPi {
 		b = o.B * math.Pi
 	}
 	return -o.A * b * math.Sin(b*t)
@@ -68,7 +68,7 @@ func (o Cos) G(t float64, x []float64) float64 {
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o Cos) H(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bIsBdivPi {
 		b = o.B * math.Pi
 	}
 	return -o.A * b * b * math.Cos(b*t)

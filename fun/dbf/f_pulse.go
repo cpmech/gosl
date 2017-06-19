@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -20,7 +20,7 @@ type Pulse struct {
 
 // set allocators database
 func init() {
-	allocators["pulse"] = func() TimeSpace { return new(Pulse) }
+	allocators["pulse"] = func() T { return new(Pulse) }
 }
 
 // Init initialises the function

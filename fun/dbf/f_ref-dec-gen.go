@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -25,7 +25,7 @@ type RefDecGen struct {
 
 // set allocators database
 func init() {
-	allocators["ref-dec-gen"] = func() TimeSpace { return new(RefDecGen) }
+	allocators["ref-dec-gen"] = func() T { return new(RefDecGen) }
 }
 
 // Init initialises the function

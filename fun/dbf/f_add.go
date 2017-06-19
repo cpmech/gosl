@@ -2,20 +2,20 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import "github.com/cpmech/gosl/chk"
 
 // Add implements the addition of two other functions.
 //  F(t, x) := A*Fa(t,x) + B*Fb(t,x)
 type Add struct {
-	Fa, Fb TimeSpace
+	Fa, Fb T
 	A, B   float64
 }
 
 // set allocators database
 func init() {
-	allocators["add"] = func() TimeSpace { return new(Add) }
+	allocators["add"] = func() T { return new(Add) }
 }
 
 // Init initialises the function

@@ -2,10 +2,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// fun (functions) implements special functions such as elliptical, orthogonal polynomials, and a
-// structure called TimeSpace defining scalar functions of one scalar and a vector such as f(t,[x]).
-// Several TimeSpace functions are defined as well.
-package fun
+// Package dbf implements a database of f(t,{x}) functions (e.g. time-space functions). The
+// functions in this package are accompanied by derivatives w.r.t t and gradients w.r.t {x}. For
+// instance: g(t,{x}) = df/dt, h(t,{x}) = dg/dt, and grad = df/d{x}
+package dbf
 
 import (
 	"os"
@@ -17,8 +17,8 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// TimeSpace defines the interface for simple functions
-type TimeSpace interface {
+// T defines the interface for t-x functions; i.e. f(t, {x})
+type T interface {
 	Init(prms Params) error                   // initialise function parameters
 	F(t float64, x []float64) float64         // y = F(t, x)
 	G(t float64, x []float64) float64         // ∂y/∂t_cteX = G(t, x)
@@ -27,10 +27,10 @@ type TimeSpace interface {
 }
 
 // allocators maps function type to function allocator
-var allocators = map[string]func() TimeSpace{} // type => function allocator
+var allocators = map[string]func() T{} // type => function allocator
 
 // New allocates function by name
-func New(name string, prms Params) (TimeSpace, error) {
+func New(name string, prms Params) (T, error) {
 	if name == "zero" {
 		return &Zero, nil
 	}
@@ -49,7 +49,7 @@ func New(name string, prms Params) (TimeSpace, error) {
 // PlotT plots F, G and H for varying t and fixed coordinates x
 //  fnkey       -- filename key (without extension)
 //  args{F,G,H} -- if any is "", the corresponding plot is not created
-func PlotT(o TimeSpace, dirout, fnkey string, t0, tf float64, xcte []float64, np int) {
+func PlotT(o T, dirout, fnkey string, t0, tf float64, xcte []float64, np int) {
 
 	// variables
 	t := utl.LinSpace(t0, tf, np)
@@ -134,7 +134,7 @@ func PlotT(o TimeSpace, dirout, fnkey string, t0, tf float64, xcte []float64, np
 // PlotX plots F and the gradient of F, Gx and Gy, for varying x and fixed t
 //  hlZero  -- highlight F(t,x) = 0
 //  axEqual -- use axis['equal']
-func PlotX(o TimeSpace, dirout, fnkey string, tcte float64, xmin, xmax []float64, np int) {
+func PlotX(o T, dirout, fnkey string, tcte float64, xmin, xmax []float64, np int) {
 	withGrad := true
 	hlZero := true
 	axEqual := true

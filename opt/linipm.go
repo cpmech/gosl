@@ -9,7 +9,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
@@ -66,7 +66,7 @@ func (o *LinIpm) Free() {
 }
 
 // Init initialises LinIpm
-func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms fun.Params) {
+func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms dbf.Params) {
 
 	// problem
 	o.A, o.B, o.C = A, b, c

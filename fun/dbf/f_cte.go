@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import "github.com/cpmech/gosl/chk"
 
@@ -19,7 +19,7 @@ type Cte struct {
 
 // set allocators database
 func init() {
-	allocators["cte"] = func() TimeSpace { return new(Cte) }
+	allocators["cte"] = func() T { return new(Cte) }
 }
 
 // Init initialises the function

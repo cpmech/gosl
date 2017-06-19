@@ -6,7 +6,7 @@ package rnd
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/fun/dbf"
 )
 
 // DistType indicates the distribution to which a random variable appears to belong to
@@ -39,7 +39,7 @@ type VarData struct {
 
 	// optional
 	Key string // auxiliary indentifier
-	Prm *fun.P // parameter connected to this random variable
+	Prm *dbf.P // parameter connected to this random variable
 
 	// derived
 	Distr Distribution // pointer to distribution

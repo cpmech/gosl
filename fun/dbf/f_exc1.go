@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -17,7 +17,7 @@ type Exc1 struct {
 
 // set allocators databse
 func init() {
-	allocators["exc1"] = func() TimeSpace { return new(Exc1) }
+	allocators["exc1"] = func() T { return new(Exc1) }
 }
 
 // Init initialises the function

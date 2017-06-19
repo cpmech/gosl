@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 // Xpoly2 implements F(x) as a 2nd order polynomial with the components x[i]
 //
@@ -27,7 +27,7 @@ type Xpoly2 struct {
 
 // set allocators database
 func init() {
-	allocators["xpoly2"] = func() TimeSpace { return new(Xpoly2) }
+	allocators["xpoly2"] = func() T { return new(Xpoly2) }
 }
 
 // Init initialises the function

@@ -2,19 +2,19 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import "github.com/cpmech/gosl/chk"
 
 // Mul implements the multiplication of two other functions.
 //  F(t, x) := fa(t,x) * fb(t,x)
 type Mul struct {
-	Fa, Fb TimeSpace
+	Fa, Fb T
 }
 
 // set allocators database
 func init() {
-	allocators["mul"] = func() TimeSpace { return new(Mul) }
+	allocators["mul"] = func() T { return new(Mul) }
 }
 
 // Init initialises the function

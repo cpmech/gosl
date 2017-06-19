@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import "github.com/cpmech/gosl/chk"
 
@@ -19,7 +19,7 @@ type Halo struct {
 
 // set allocators database
 func init() {
-	allocators["halo"] = func() TimeSpace { return new(Halo) }
+	allocators["halo"] = func() T { return new(Halo) }
 }
 
 // Init initialises the function

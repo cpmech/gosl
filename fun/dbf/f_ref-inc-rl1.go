@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -31,7 +31,7 @@ type RefIncRL1 struct {
 
 // set allocators database
 func init() {
-	allocators["ref-inc-rl1"] = func() TimeSpace { return new(RefIncRL1) }
+	allocators["ref-inc-rl1"] = func() T { return new(RefIncRL1) }
 }
 
 // Init initialises the model

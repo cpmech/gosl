@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"math"
@@ -27,7 +27,7 @@ type Sin struct {
 
 // set allocators database
 func init() {
-	allocators["sin"] = func() TimeSpace { return new(Sin) }
+	allocators["sin"] = func() T { return new(Sin) }
 }
 
 // Init initialises the function

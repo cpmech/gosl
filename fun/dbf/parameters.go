@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package fun
+package dbf
 
 import (
 	"github.com/cpmech/gosl/chk"
@@ -32,8 +32,8 @@ type P struct {
 	SetDef bool    `json:"setdef"` // tells model to use a default value
 
 	// auxiliary
-	Fcn   TimeSpace // a function y=f(t,x)
-	Other *P        // dependency: connected parameter
+	Fcn   T  // a function y=f(t,x)
+	Other *P // dependency: connected parameter
 
 	// derived
 	conn []*float64 // connected variables to V
