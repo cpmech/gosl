@@ -10,13 +10,13 @@ def vprint(name, v):
     l += '}'
     print l
 
-def mprint(name, m):
+def mprint(name, m, fmt='%23.15e'):
     l = '%s := [][]float64{\n' % name
     for i in range(len(m)):
         l += '    {'
         for j in range(len(m[i])):
             if j > 0: l += ','
-            l += '%23.15e' % m[i][j]
+            l += fmt % m[i][j]
         l += '},\n'
     l += '}'
     print l
