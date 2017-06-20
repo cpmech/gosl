@@ -373,8 +373,19 @@ func Zgetrf(m, n int, a *MatrixC, lda int, ipiv []int32) (err error) {
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Dgetri(n int, a []float64, lda int, ipiv []int32, work []float64, lwork int) (err error) {
-	chk.Panic("TODO: Dgetri")
+func Dgetri(n int, a *Matrix, lda int, ipiv []int32, work []float64, lwork int) (err error) {
+	info := C.LAPACKE_dgetri_work(
+		C.int(lapackColMajor),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+		(*C.double)(unsafe.Pointer(&work[0])),
+		C.lapack_int(lwork),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
@@ -383,8 +394,19 @@ func Dgetri(n int, a []float64, lda int, ipiv []int32, work []float64, lwork int
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Zgetri(n int, a []complex128, lda int, ipiv []int32, work []complex128, lwork int) (err error) {
-	chk.Panic("TODO: Zgetri")
+func Zgetri(n int, a *MatrixC, lda int, ipiv []int32, work []complex128, lwork int) (err error) {
+	info := C.LAPACKE_zgetri_work(
+		C.int(lapackColMajor),
+		C.lapack_int(n),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&work[0])),
+		C.lapack_int(lwork),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 

@@ -546,19 +546,20 @@ func TestZgesvd02(tst *testing.T) {
 func TestDgetrf01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Dgetrf01")
+	chk.PrintTitle("Dgetrf01. Dgetrf and Dgetri")
 
 	// matrix
-	m, n := 4, 4
-	a := NewMatrix(m, n)
-	a.SetFromMat([][]float64{
+	amat := [][]float64{
 		{1, 2, 0, 1},
 		{2, 3, -1, 1},
 		{1, 2, 0, 4},
 		{4, 0, 3, 1},
-	})
+	}
+	m, n := 4, 4
+	a := NewMatrix(m, n)
+	a.SetFromMat(amat)
 
-	// run
+	// run dgetrf
 	lda := m
 	ipiv := make([]int32, imin(m, n))
 	err := Dgetrf(m, n, a, lda, ipiv)
@@ -567,44 +568,111 @@ func TestDgetrf01(tst *testing.T) {
 		return
 	}
 
-	// check
+	// check LU
 	chk.Matrix(tst, "lu", 1e-17, a.GetMat(), [][]float64{
 		{+4.0e+00, +0.000000000000000e+00, +3.000000000000000e+00, +1.000000000000000e+00},
 		{+5.0e-01, +3.000000000000000e+00, -2.500000000000000e+00, +5.000000000000000e-01},
 		{+2.5e-01, +6.666666666666666e-01, +9.166666666666665e-01, +3.416666666666667e+00},
 		{+2.5e-01, +6.666666666666666e-01, +1.000000000000000e+00, -3.000000000000000e+00},
 	})
+
+	// run dgetri
+	lwork := 2 * n
+	work := make([]float64, lwork)
+	err = Dgetri(n, a, lda, ipiv, work, lwork)
+	if err != nil {
+		tst.Errorf("Dgetri failed:\n%v\n", err)
+		return
+	}
+
+	// compare inverse
+	ai := a.GetMat()
+	chk.Matrix(tst, "inv(a)", 1e-15, ai, [][]float64{
+		{-8.484848484848487e-01, +5.454545454545455e-01, +3.030303030303039e-02, +1.818181818181818e-01},
+		{+1.090909090909091e+00, -2.727272727272728e-01, -1.818181818181817e-01, -9.090909090909091e-02},
+		{+1.242424242424243e+00, -7.272727272727273e-01, -1.515151515151516e-01, +9.090909090909088e-02},
+		{-3.333333333333333e-01, +0.000000000000000e+00, +3.333333333333333e-01, +0.000000000000000e+00},
+	})
+
+	// check inverse
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			res := 0.0
+			for k := 0; k < m; k++ {
+				res += amat[i][k] * ai[k][j]
+			}
+			if i == j {
+				chk.Scalar(tst, "diag(a⋅a⁻¹)=diag(I)=1", 1e-15, res, 1)
+			} else {
+				chk.Scalar(tst, "diag(a⋅a⁻¹)=offdiag(I)=0", 1e-15, res, 0)
+			}
+		}
+	}
 }
 
 func TestZgetrf01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Zgetrf01")
+	chk.PrintTitle("Zgetrf01. Zgetrf and Zgetri")
 
 	// matrix
-	m, n := 4, 4
-	a := NewMatrixC(m, n)
-	a.SetFromMat([][]complex128{
+	amat := [][]complex128{
 		{1 + 1i, 2, +0, 1 - 1i},
 		{2 + 1i, 3, -1, 1 - 1i},
 		{1 + 1i, 2, +0, 4 - 1i},
 		{4 + 1i, 0, +3, 1 - 1i},
-	})
+	}
+	m, n := 4, 4
+	a := NewMatrixC(m, n)
+	a.SetFromMat(amat)
 
 	// run
 	lda := m
 	ipiv := make([]int32, imin(m, n))
 	err := Zgetrf(m, n, a, lda, ipiv)
 	if err != nil {
-		tst.Errorf("Dgetrf failed:\n%v\n", err)
+		tst.Errorf("Zgetrf failed:\n%v\n", err)
 		return
 	}
 
-	// check
+	// check LU
 	chk.MatrixC(tst, "lu", 1e-15, a.GetMat(), [][]complex128{
 		{+4.000000000000000e+00 + 1.000000000000000e+00i, +0.000000000000000e+00, +3.000000000000000e+00 + 0.000000000000000e+00i, +1.000000000000000e+00 - 1.000000000000000e+00i},
 		{+5.294117647058824e-01 + 1.176470588235294e-01i, +3.000000000000000e+00, -2.588235294117647e+00 - 3.529411764705882e-01i, +3.529411764705882e-01 - 5.882352941176471e-01i},
 		{+2.941176470588235e-01 + 1.764705882352941e-01i, +6.666666666666666e-01, +8.431372549019609e-01 - 2.941176470588235e-01i, +3.294117647058823e+00 - 4.901960784313725e-01i},
 		{+2.941176470588235e-01 + 1.764705882352941e-01i, +6.666666666666666e-01, +1.000000000000000e+00 + 0.000000000000000e+00i, -3.000000000000000e+00 + 0.000000000000000e+00i},
 	})
+
+	// run zgetri
+	lwork := 2 * n
+	work := make([]complex128, lwork)
+	err = Zgetri(n, a, lda, ipiv, work, lwork)
+	if err != nil {
+		tst.Errorf("Zgetri failed:\n%v\n", err)
+		return
+	}
+
+	// compare inverse
+	ai := a.GetMat()
+	chk.MatrixC(tst, "inv(a)", 1e-15, ai, [][]complex128{
+		{-8.442622950819669e-01 - 4.644808743169393e-02i, +5.409836065573769e-01 + 4.918032786885240e-02i, +3.278688524590156e-02 - 2.732240437158467e-02i, +1.803278688524591e-01 + 1.639344262295081e-02i},
+		{+1.065573770491803e+00 + 2.786885245901638e-01i, -2.459016393442623e-01 - 2.950819672131146e-01i, -1.967213114754096e-01 + 1.639344262295082e-01i, -8.196721311475419e-02 - 9.836065573770497e-02i},
+		{+1.221311475409836e+00 + 2.322404371584698e-01i, -7.049180327868851e-01 - 2.459016393442622e-01i, -1.639344262295082e-01 + 1.366120218579235e-01i, +9.836065573770481e-02 - 8.196721311475411e-02i},
+		{-3.333333333333333e-01 + 0.000000000000000e+00i, +0.000000000000000e+00 + 0.000000000000000e+00i, +3.333333333333333e-01 + 0.000000000000000e+00i, +0.000000000000000e+00 + 0.000000000000000e+00i},
+	})
+
+	// check inverse
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			res := 0.0 + 0.0i
+			for k := 0; k < m; k++ {
+				res += amat[i][k] * ai[k][j]
+			}
+			if i == j {
+				chk.ScalarC(tst, "diag(a⋅a⁻¹)=diag(I)=1", 1e-15, res, 1)
+			} else {
+				chk.ScalarC(tst, "diag(a⋅a⁻¹)=offdiag(I)=0", 1e-15, res, 0)
+			}
+		}
+	}
 }

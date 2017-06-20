@@ -13,3 +13,4 @@ print lu
 print piv
 
 mprint('lu', lu)
+mprint('ai', la.inv(a))
