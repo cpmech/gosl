@@ -26,6 +26,9 @@ func TestMatrix01(tst *testing.T) {
 	a.SetFromMat(A)
 	chk.Vector(tst, "A to a", 1e-15, a.data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
+	chk.Scalar(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
+	chk.Scalar(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2)
+
 	Aback := a.GetMat()
 	chk.Matrix(tst, "a to A", 1e-15, Aback, A)
 }
@@ -44,6 +47,9 @@ func TestMatrix02(tst *testing.T) {
 	a := NewMatrixC(3, 4)
 	a.SetFromMat(A)
 	chk.VectorC(tst, "A to a", 1e-15, a.data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
+
+	chk.ScalarC(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
+	chk.ScalarC(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
 
 	Aback := a.GetMat()
 	chk.MatrixC(tst, "a to A", 1e-15, Aback, A)
@@ -201,7 +207,7 @@ func TestDgesv01(tst *testing.T) {
 	// run test
 	nrhs := 1
 	lda, ldb := n, n
-	ipiv := make([]int, n)
+	ipiv := make([]int32, n)
 	err := Dgesv(n, nrhs, a, lda, ipiv, b, ldb)
 	if err != nil {
 		tst.Errorf("Dgesv failed:\n%v\n", err)
@@ -252,7 +258,7 @@ func TestZgesv01(tst *testing.T) {
 	// run test
 	nrhs := 1
 	lda, ldb := n, n
-	ipiv := make([]int, n)
+	ipiv := make([]int32, n)
 	err := Zgesv(n, nrhs, a, lda, ipiv, b, ldb)
 	if err != nil {
 		tst.Errorf("Zgesv failed:\n%v\n", err)
@@ -535,4 +541,70 @@ func TestZgesvd02(tst *testing.T) {
 
 	// check
 	checksvdC(tst, amat, uCorrect, vtCorrect, sCorrect, 1e-16, 1e-15, 1e-16, 1e-14)
+}
+
+func TestDgetrf01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgetrf01")
+
+	// matrix
+	m, n := 4, 4
+	a := NewMatrix(m, n)
+	a.SetFromMat([][]float64{
+		{1, 2, 0, 1},
+		{2, 3, -1, 1},
+		{1, 2, 0, 4},
+		{4, 0, 3, 1},
+	})
+
+	// run
+	lda := m
+	ipiv := make([]int32, imin(m, n))
+	err := Dgetrf(m, n, a, lda, ipiv)
+	if err != nil {
+		tst.Errorf("Dgetrf failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.Matrix(tst, "lu", 1e-17, a.GetMat(), [][]float64{
+		{+4.0e+00, +0.000000000000000e+00, +3.000000000000000e+00, +1.000000000000000e+00},
+		{+5.0e-01, +3.000000000000000e+00, -2.500000000000000e+00, +5.000000000000000e-01},
+		{+2.5e-01, +6.666666666666666e-01, +9.166666666666665e-01, +3.416666666666667e+00},
+		{+2.5e-01, +6.666666666666666e-01, +1.000000000000000e+00, -3.000000000000000e+00},
+	})
+}
+
+func TestZgetrf01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Zgetrf01")
+
+	// matrix
+	m, n := 4, 4
+	a := NewMatrixC(m, n)
+	a.SetFromMat([][]complex128{
+		{1 + 1i, 2, +0, 1 - 1i},
+		{2 + 1i, 3, -1, 1 - 1i},
+		{1 + 1i, 2, +0, 4 - 1i},
+		{4 + 1i, 0, +3, 1 - 1i},
+	})
+
+	// run
+	lda := m
+	ipiv := make([]int32, imin(m, n))
+	err := Zgetrf(m, n, a, lda, ipiv)
+	if err != nil {
+		tst.Errorf("Dgetrf failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.MatrixC(tst, "lu", 1e-15, a.GetMat(), [][]complex128{
+		{+4.000000000000000e+00 + 1.000000000000000e+00i, +0.000000000000000e+00, +3.000000000000000e+00 + 0.000000000000000e+00i, +1.000000000000000e+00 - 1.000000000000000e+00i},
+		{+5.294117647058824e-01 + 1.176470588235294e-01i, +3.000000000000000e+00, -2.588235294117647e+00 - 3.529411764705882e-01i, +3.529411764705882e-01 - 5.882352941176471e-01i},
+		{+2.941176470588235e-01 + 1.764705882352941e-01i, +6.666666666666666e-01, +8.431372549019609e-01 - 2.941176470588235e-01i, +3.294117647058823e+00 - 4.901960784313725e-01i},
+		{+2.941176470588235e-01 + 1.764705882352941e-01i, +6.666666666666666e-01, +1.000000000000000e+00 + 0.000000000000000e+00i, -3.000000000000000e+00 + 0.000000000000000e+00i},
+	})
 }

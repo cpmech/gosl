@@ -40,9 +40,14 @@ func (o *Matrix) SetFromMat(a [][]float64) {
 	}
 }
 
-// Sets value
+// Set sets value
 func (o *Matrix) Set(i, j int, val float64) {
 	o.data[i+j*o.m] = val // col-major
+}
+
+// Get gets value
+func (o *Matrix) Get(i, j int) float64 {
+	return o.data[i+j*o.m] // col-major
 }
 
 // GetMat returns nested slice representation; i.e. a la.Mat structure
@@ -97,9 +102,14 @@ func (o *MatrixC) SetFromMat(a [][]complex128) {
 	}
 }
 
-// Sets value
+// Set sets value
 func (o *MatrixC) Set(i, j int, val complex128) {
 	o.data[i+j*o.m] = val // col-major
+}
+
+// Get gets value
+func (o *MatrixC) Get(i, j int) complex128 {
+	return o.data[i+j*o.m] // col-major
 }
 
 // GetMat returns nested slice representation; i.e. a la.Mat structure

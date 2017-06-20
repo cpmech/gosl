@@ -175,7 +175,7 @@ func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []comp
 //  system of equations A * X = B.
 //
 //  NOTE: matrix 'a' will be modified
-func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int, b []float64, ldb int) (err error) {
+func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int32, b []float64, ldb int) (err error) {
 	if len(ipiv) != n {
 		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
 	}
@@ -213,7 +213,7 @@ func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int, b []float64, ldb int) (e
 //  system of equations A * X = B.
 //
 //  NOTE: matrix 'a' will be modified
-func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int, b []complex128, ldb int) (err error) {
+func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int32, b []complex128, ldb int) (err error) {
 	if len(ipiv) != n {
 		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
 	}
@@ -322,8 +322,21 @@ func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *Mat
 //  triangular (upper trapezoidal if m < n).
 //
 //  This is the right-looking Level 3 BLAS version of the algorithm.
-func Dgetrf(m, n int, a []float64, lda int, ipiv []int) (err error) {
-	chk.Panic("TODO: Dgetrf")
+//
+//  NOTE: (1) matrix 'a' will be modified
+//        (2) ipiv indices are 1-based (i.e. Fortran)
+func Dgetrf(m, n int, a *Matrix, lda int, ipiv []int32) (err error) {
+	info := C.LAPACKE_dgetrf_work(
+		C.int(lapackColMajor),
+		C.lapack_int(m),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
@@ -337,8 +350,21 @@ func Dgetrf(m, n int, a []float64, lda int, ipiv []int) (err error) {
 //  triangular (upper trapezoidal if m < n).
 //
 //  This is the right-looking Level 3 BLAS version of the algorithm.
-func Zgetrf(m, n int, a []complex128, lda int, ipiv []int) (err error) {
-	chk.Panic("TODO: Zgetrf")
+//
+//  NOTE: (1) matrix 'a' will be modified
+//        (2) ipiv indices are 1-based (i.e. Fortran)
+func Zgetrf(m, n int, a *MatrixC, lda int, ipiv []int32) (err error) {
+	info := C.LAPACKE_zgetrf_work(
+		C.int(lapackColMajor),
+		C.lapack_int(m),
+		C.lapack_int(n),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
@@ -347,7 +373,7 @@ func Zgetrf(m, n int, a []complex128, lda int, ipiv []int) (err error) {
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Dgetri(n int, a []float64, lda int, ipiv []int, work []float64, lwork int) (err error) {
+func Dgetri(n int, a []float64, lda int, ipiv []int32, work []float64, lwork int) (err error) {
 	chk.Panic("TODO: Dgetri")
 	return
 }
@@ -357,7 +383,7 @@ func Dgetri(n int, a []float64, lda int, ipiv []int, work []float64, lwork int) 
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Zgetri(n int, a []complex128, lda int, ipiv []int, work []complex128, lwork int) (err error) {
+func Zgetri(n int, a []complex128, lda int, ipiv []int32, work []complex128, lwork int) (err error) {
 	chk.Panic("TODO: Zgetri")
 	return
 }
