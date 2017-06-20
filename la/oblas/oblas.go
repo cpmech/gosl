@@ -288,8 +288,27 @@ func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matr
 //  Note that the routine returns V**H, not V.
 //
 //  NOTE: matrix 'a' will be modified
-func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s, u []complex128, ldu int, vt []complex128, ldvt int, work []complex128, lwork int) (err error) {
-	chk.Panic("TODO: Zgesvd")
+func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *MatrixC, ldu int, vt *MatrixC, ldvt int, work []complex128, lwork int, rwork []float64) (err error) {
+	info := C.LAPACKE_zgesvd_work(
+		C.int(lapackColMajor),
+		C.char(jobu),
+		C.char(jobvt),
+		C.lapack_int(m),
+		C.lapack_int(n),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+		(*C.double)(unsafe.Pointer(&s[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&u.data[0])),
+		C.lapack_int(ldu),
+		(*C.lapack_complex_double)(unsafe.Pointer(&vt.data[0])),
+		C.lapack_int(ldvt),
+		(*C.lapack_complex_double)(unsafe.Pointer(&work[0])),
+		C.lapack_int(lwork),
+		(*C.double)(unsafe.Pointer(&rwork[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
