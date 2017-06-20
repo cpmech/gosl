@@ -100,6 +100,7 @@ func TestDgemv01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Dgemv01")
 
+	// allocate
 	m, n := 4, 3
 	a := NewMatrix(m, n)
 	a.SetFromMat([][]float64{
@@ -108,9 +109,9 @@ func TestDgemv01(tst *testing.T) {
 		{2.0, 0.2, 0.3},
 		{3.0, 0.2, 0.3},
 	})
-
 	chk.Vector(tst, "a.data", 1e-15, a.data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 
+	// perform mv
 	α, β := 0.5, 2.0
 	x := []float64{20, 10, 30}
 	y := []float64{3, 1, 2, 4}
@@ -122,12 +123,16 @@ func TestDgemv01(tst *testing.T) {
 	}
 	chk.Vector(tst, "y", 1e-15, y, []float64{12.5, 17.5, 29.5, 43.5})
 
+	// perform mv with transpose
 	err = Dgemv(true, m, n, α, a, lda, y, incy, β, x, incx)
 	if err != nil {
 		tst.Errorf("Dgemv failed:\n%v\n", err)
 		return
 	}
 	chk.Vector(tst, "x", 1e-15, x, []float64{144.125, 30.3, 75.45})
+
+	// check that a is unmodified
+	chk.Vector(tst, "a.data", 1e-15, a.data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 }
 
 func TestZgemv01(tst *testing.T) {
@@ -135,6 +140,7 @@ func TestZgemv01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Zgemv01")
 
+	// allocate
 	m, n := 4, 3
 	a := NewMatrixC(m, n)
 	a.SetFromMat([][]complex128{
@@ -143,9 +149,9 @@ func TestZgemv01(tst *testing.T) {
 		{2.0 + 1i, 0.2, 0.3 - 0.5i},
 		{3.0 + 0.1i, 0.2, 0.3 - 0.6i},
 	})
-
 	chk.VectorC(tst, "a.data", 1e-15, a.data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 
+	// perform mv
 	α, β := 0.5+1i, 2.0+1i
 	x := []complex128{20, 10, 30}
 	y := []complex128{3, 1, 2, 4}
@@ -157,12 +163,16 @@ func TestZgemv01(tst *testing.T) {
 	}
 	chk.VectorC(tst, "y", 1e-15, y, []complex128{-38.5 + 41.5i, -10.5 + 46i, 24.5 + 55.5i, 59.5 + 67i})
 
+	// perform mv with transpose
 	err = Zgemv(true, m, n, α, a, lda, y, incy, β, x, incx)
 	if err != nil {
 		tst.Errorf("Zgemv failed:\n%v\n", err)
 		return
 	}
 	chk.VectorC(tst, "x", 1e-13, x, []complex128{-248.875 + 82.5i, -18.5 + 38i, 83.85 + 154.7i})
+
+	// check that a is unmodified
+	chk.VectorC(tst, "a.data", 1e-15, a.data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 }
 
 func TestDgesv01(tst *testing.T) {
@@ -171,15 +181,16 @@ func TestDgesv01(tst *testing.T) {
 	chk.PrintTitle("Dgesv01")
 
 	// matrix
-	n := 5
-	a := NewMatrix(n, n)
-	a.SetFromMat([][]float64{
+	amat := [][]float64{
 		{2, 3, 0, 0, 0},
 		{3, 0, 4, 0, 6},
 		{0, -1, -3, 2, 0},
 		{0, 0, 1, 0, 0},
 		{0, 4, 2, 0, 1},
-	})
+	}
+	n := 5
+	a := NewMatrix(n, n)
+	a.SetFromMat(amat)
 
 	// right-hand-side
 	b := []float64{8, 45, -3, 3, 19}
@@ -265,15 +276,18 @@ func TestDgesvd01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Dgesvd01")
 
-	m, n := 4, 5
-	a := NewMatrix(m, n)
-	a.SetFromMat([][]float64{
+	// allocate matrix
+	amat := [][]float64{
 		{1, 0, 0, 0, 2},
 		{0, 0, 3, 0, 0},
 		{0, 0, 0, 0, 0},
 		{0, 2, 0, 0, 0},
-	})
+	}
+	m, n := 4, 5
+	a := NewMatrix(m, n)
+	a.SetFromMat(amat)
 
+	// compute dimensions
 	minMN := imin(m, n)
 	maxMN := imax(m, n)
 	lda := m
@@ -281,20 +295,22 @@ func TestDgesvd01(tst *testing.T) {
 	ldvt := n
 	lwork := 2 * imax(3*minMN+maxMN, 5*minMN)
 
+	// allocate output arrays
 	s := make([]float64, minMN)
 	u := NewMatrix(m, m)
 	vt := NewMatrix(n, n)
 	work := make([]float64, lwork)
 
+	// perform SVD
 	jobu := 'A'
 	jobvt := 'A'
-
 	err := Dgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork)
 	if err != nil {
 		tst.Errorf("Dgesvd failed:\n%v\n", err)
 		return
 	}
 
+	// compare results
 	uCorrect := [][]float64{
 		{0, 1, 0, 0},
 		{1, 0, 0, 0},
@@ -311,8 +327,21 @@ func TestDgesvd01(tst *testing.T) {
 		{0, 0, 0, 1, 0},
 		{-s8, 0, 0, 0, s2},
 	}
+	umat := u.GetMat()
+	vtmat := vt.GetMat()
+	chk.Matrix(tst, "u", 1e-17, umat, uCorrect)
+	chk.Vector(tst, "s", 1e-17, s, sCorrect)
+	chk.Matrix(tst, "vt", 1e-15, vtmat, vtCorrect)
 
-	chk.Matrix(tst, "U", 1e-17, u.GetMat(), uCorrect)
-	chk.Vector(tst, "S", 1e-17, s, sCorrect)
-	chk.Matrix(tst, "V", 1e-15, vt.GetMat(), vtCorrect)
+	// check SVD
+	usv := make([][]float64, m)
+	for i := 0; i < m; i++ {
+		usv[i] = make([]float64, n)
+		for j := 0; j < n; j++ {
+			for k := 0; k < minMN; k++ {
+				usv[i][j] += umat[i][k] * s[k] * vtmat[k][j]
+			}
+		}
+	}
+	chk.Matrix(tst, "u⋅s⋅vt", 1e-15, amat, usv)
 }

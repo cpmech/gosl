@@ -173,6 +173,8 @@ func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []comp
 //  where P is a permutation matrix, L is unit lower triangular, and U is
 //  upper triangular.  The factored form of A is then used to solve the
 //  system of equations A * X = B.
+//
+//  NOTE: matrix 'a' will be modified
 func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int, b []float64, ldb int) (err error) {
 	if len(ipiv) != n {
 		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
@@ -209,6 +211,8 @@ func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int, b []float64, ldb int) (e
 //  where P is a permutation matrix, L is unit lower triangular, and U is
 //  upper triangular.  The factored form of A is then used to solve the
 //  system of equations A * X = B.
+//
+//  NOTE: matrix 'a' will be modified
 func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int, b []complex128, ldb int) (err error) {
 	if len(ipiv) != n {
 		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
@@ -243,6 +247,8 @@ func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int, b []complex128, ldb int
 //  U and V are the left and right singular vectors of A.
 //
 //  Note that the routine returns V**T, not V.
+//
+//  NOTE: matrix 'a' will be modified
 func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matrix, ldu int, vt *Matrix, ldvt int, work []float64, lwork int) (err error) {
 	info := C.LAPACKE_dgesvd_work(
 		C.int(lapackColMajor),
@@ -280,6 +286,8 @@ func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matr
 //  U and V are the left and right singular vectors of A.
 //
 //  Note that the routine returns V**H, not V.
+//
+//  NOTE: matrix 'a' will be modified
 func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s, u []complex128, ldu int, vt []complex128, ldvt int, work []complex128, lwork int) (err error) {
 	chk.Panic("TODO: Zgesvd")
 	return
