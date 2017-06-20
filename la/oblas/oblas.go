@@ -6,12 +6,6 @@
 package oblas
 
 /*
-#cgo linux   CFLAGS: -DOPENBLAS_USE64BITINT -O2 -I/usr/include
-#cgo linux   CFLAGS: -DOPENBLAS_USE64BITINT -O2 -I/usr/local/include
-#cgo windows CFLAGS: -DOPENBLAS_USE64BITINT -O2 -IC:/Gosl/include
-#cgo linux   LDFLAGS: -lopenblas -L/local/lib
-#cgo darwin  LDFLAGS: -lopenblas -L/usr/local/lib
-#cgo windows LDFLAGS: -lopenblas -LC:/Gosl/lib
 #ifdef WIN32
 #define LONG long long
 #else
@@ -20,6 +14,7 @@ package oblas
 
 #include <cblas.h>
 #include <lapacke.h>
+
 static inline double* cpt(double complex* p) { return (double*)p; }
 */
 import "C"
