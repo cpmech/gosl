@@ -19,6 +19,7 @@ package oblas
 #endif
 
 #include <cblas.h>
+#include <lapacke.h>
 static inline double* cpt(double complex* p) { return (double*)p; }
 */
 import "C"
@@ -123,8 +124,36 @@ func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64,
 //
 //  where alpha and beta are scalars, x and y are vectors and A is an
 //  m by n matrix.
-func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
-	chk.Panic("TODO: Zgemv")
+func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
+	if trans {
+		if len(x) != a.m {
+			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.m)
+		}
+		if len(y) != a.n {
+			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.n)
+		}
+	} else {
+		if len(x) != a.n {
+			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.n)
+		}
+		if len(y) != a.m {
+			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.m)
+		}
+	}
+	C.cblas_zgemv(
+		cblasColMajor,
+		cTrans(trans),
+		C.blasint(m),
+		C.blasint(n),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.data[0]))),
+		C.blasint(lda),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&x[0]))),
+		C.blasint(incx),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&y[0]))),
+		C.blasint(incy),
+	)
 	return
 }
 
@@ -144,8 +173,23 @@ func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []
 //  where P is a permutation matrix, L is unit lower triangular, and U is
 //  upper triangular.  The factored form of A is then used to solve the
 //  system of equations A * X = B.
-func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int, b []float64, ldb int) (err error) {
-	chk.Panic("TODO: Dgesv")
+func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int, b []float64, ldb int) (err error) {
+	if len(ipiv) != n {
+		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
+	}
+	info := C.LAPACKE_dgesv(
+		C.int(lapackColMajor),
+		C.lapack_int(n),
+		C.lapack_int(nrhs),
+		(*C.double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+		(*C.double)(unsafe.Pointer(&b[0])),
+		C.lapack_int(ldb),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
@@ -165,8 +209,23 @@ func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int, b []float64, ldb int) 
 //  where P is a permutation matrix, L is unit lower triangular, and U is
 //  upper triangular.  The factored form of A is then used to solve the
 //  system of equations A * X = B.
-func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int, b []complex128, ldb int) (err error) {
-	chk.Panic("TODO: Zgesv")
+func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int, b []complex128, ldb int) (err error) {
+	if len(ipiv) != n {
+		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
+	}
+	info := C.LAPACKE_zgesv(
+		C.int(lapackColMajor),
+		C.lapack_int(n),
+		C.lapack_int(nrhs),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&b[0])),
+		C.lapack_int(ldb),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
@@ -184,8 +243,26 @@ func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int, b []complex128, ldb
 //  U and V are the left and right singular vectors of A.
 //
 //  Note that the routine returns V**T, not V.
-func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s, u []float64, ldu int, vt []float64, ldvt int, work []float64, lwork int) (err error) {
-	chk.Panic("TODO: Dgesvd")
+func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matrix, ldu int, vt *Matrix, ldvt int, work []float64, lwork int) (err error) {
+	info := C.LAPACKE_dgesvd_work(
+		C.int(lapackColMajor),
+		C.char(jobu),
+		C.char(jobvt),
+		C.lapack_int(m),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+		(*C.double)(unsafe.Pointer(&s[0])),
+		(*C.double)(unsafe.Pointer(&u.data[0])),
+		C.lapack_int(ldu),
+		(*C.double)(unsafe.Pointer(&vt.data[0])),
+		C.lapack_int(ldvt),
+		(*C.double)(unsafe.Pointer(&work[0])),
+		C.lapack_int(lwork),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
@@ -348,8 +425,8 @@ func Dcholesky() (err error) {
 // constants
 const (
 	// Lapack matrix layout
-	lapackRowMajor uint32 = 101
-	lapackColMajor uint32 = 102
+	lapackRowMajor int = 101
+	lapackColMajor int = 102
 
 	// CBLAS_ORDER;
 	cblasRowMajor uint32 = 101

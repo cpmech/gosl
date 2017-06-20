@@ -8,14 +8,12 @@ echo $FILES
 echo
 echo
 
-refresh(){
-    echo
-    echo
-    echo
-    go test -test.run="zaxpy01"
-}
-
 while true; do
     inotifywait -q -e modify $FILES
-    refresh
+    echo
+    echo
+    echo
+    echo
+    #go test -test.run="zaxpy01"
+    go test
 done

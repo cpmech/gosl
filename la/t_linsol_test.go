@@ -97,6 +97,8 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 		PrintVecC("b", b, "(%g", "%+gi) ", false)
 	}
 
+	PrintMatC("A", A.ToDense(), "%10.3f", "%+9.3fi,", false)
+
 	// check
 	chk.VectorC(tst, "x", tol_cmp, x, x_correct)
 	CheckResidC(tst, tol_res, A.ToDense(), x, b)
@@ -287,7 +289,7 @@ func Test_linsol05(tst *testing.T) {
 
 func Test_linsol06(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("linsol06. complex (with complex components)")
 
 	// given the following matrix of complex numbers:
