@@ -289,7 +289,7 @@ func Test_linsol05(tst *testing.T) {
 
 func Test_linsol06(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("linsol06. complex (with complex components)")
 
 	// given the following matrix of complex numbers:
