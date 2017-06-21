@@ -534,8 +534,17 @@ func Dpotrf(up bool, n int, a *Matrix, lda int) (err error) {
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
-func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
-	chk.Panic("TODO: Zpotrf")
+func Zpotrf(up bool, n int, a *MatrixC, lda int) (err error) {
+	info := C.LAPACKE_zpotrf(
+		C.int(lapackColMajor),
+		lUplo(up),
+		C.lapack_int(n),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
