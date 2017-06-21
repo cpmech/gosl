@@ -496,13 +496,27 @@ func Zherk(up, trans bool, n, k int, alpha float64, a *MatrixC, lda int, beta fl
 //  See: http://www.netlib.org/lapack/explore-html/d0/d8a/dpotrf_8f.html
 //
 //  The factorization has the form
-//     A = U**T * U,  if UPLO = 'U', or
-//     A = L  * L**T,  if UPLO = 'L',
+//
+//     A = U**T * U,  if UPLO = 'U'
+//
+//  or
+//
+//     A = L  * L**T,  if UPLO = 'L'
+//
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
-func Dpotrf(up bool, n int, a []float64, lda int) (err error) {
-	chk.Panic("TODO: Dpotrf")
+func Dpotrf(up bool, n int, a *Matrix, lda int) (err error) {
+	info := C.LAPACKE_dpotrf(
+		C.int(lapackColMajor),
+		lUplo(up),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a.data[0])),
+		C.lapack_int(lda),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
@@ -510,8 +524,13 @@ func Dpotrf(up bool, n int, a []float64, lda int) (err error) {
 //  See: http://www.netlib.org/lapack/explore-html/d1/db9/zpotrf_8f.html
 //
 //  The factorization has the form
-//     A = U**H * U,  if UPLO = 'U', or
-//     A = L  * L**H,  if UPLO = 'L',
+//
+//     A = U**H * U,  if UPLO = 'U'
+//
+//  or
+//
+//     A = L  * L**H,  if UPLO = 'L'
+//
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
@@ -569,4 +588,11 @@ func cUplo(up bool) uint32 {
 		return cblasUpper
 	}
 	return cblasLower
+}
+
+func lUplo(up bool) C.char {
+	if up {
+		return 'U'
+	}
+	return 'L'
 }
