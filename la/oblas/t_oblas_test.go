@@ -28,7 +28,7 @@ func TestMatrix01(tst *testing.T) {
 	chk.Scalar(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
 	chk.Scalar(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2)
 
-	Aback := a.GetMat()
+	Aback := a.GetSlice()
 	chk.Matrix(tst, "a to A", 1e-15, Aback, A)
 
 	l := a.Print("")
@@ -60,7 +60,7 @@ func TestMatrix02(tst *testing.T) {
 	chk.ScalarC(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
 	chk.ScalarC(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
 
-	Aback := a.GetMat()
+	Aback := a.GetSlice()
 	chk.MatrixC(tst, "a to A", 1e-15, Aback, A)
 
 	l := a.Print("%g", "")
@@ -240,7 +240,7 @@ func TestDgemm01(tst *testing.T) {
 	}
 
 	// check
-	chk.Matrix(tst, "0.5⋅a⋅b + 2⋅c", 1e-17, c.GetMat(), [][]float64{
+	chk.Matrix(tst, "0.5⋅a⋅b + 2⋅c", 1e-17, c.GetSlice(), [][]float64{
 		{2, -1, 4},
 		{2, 1, 4},
 		{2, -1, 5},
@@ -289,7 +289,7 @@ func TestZgemm01(tst *testing.T) {
 	}
 
 	// check
-	chk.MatrixC(tst, "(0.5-2i)⋅a⋅b + (2-4i)⋅c", 1e-17, c.GetMat(), [][]complex128{
+	chk.MatrixC(tst, "(0.5-2i)⋅a⋅b + (2-4i)⋅c", 1e-17, c.GetSlice(), [][]complex128{
 		{2 - 6i, 3 + 6i, -0.5 - 14i},
 		{2 - 7i, 5 - 2i, -1.5 - 20.5i},
 		{2 - 9i, 3 + 6i, -5.5 - 20.5i},
@@ -423,8 +423,8 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 	}
 
 	// compare results
-	umat := u.GetMat()
-	vtmat := vt.GetMat()
+	umat := u.GetSlice()
+	vtmat := vt.GetSlice()
 	chk.Matrix(tst, "u", tolu, umat, uCorrect)
 	chk.Vector(tst, "s", tols, s, sCorrect)
 	chk.Matrix(tst, "vt", tolv, vtmat, vtCorrect)
@@ -579,8 +579,8 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 	}
 
 	// compare results
-	umat := u.GetMat()
-	vtmat := vt.GetMat()
+	umat := u.GetSlice()
+	vtmat := vt.GetSlice()
 	chk.MatrixC(tst, "u", tolu, umat, uCorrect)
 	chk.Vector(tst, "s", tols, s, sCorrect)
 	chk.MatrixC(tst, "vt", tolv, vtmat, vtCorrect)
@@ -684,7 +684,7 @@ func TestDgetrf01(tst *testing.T) {
 	}
 
 	// check LU
-	chk.Matrix(tst, "lu", 1e-17, a.GetMat(), [][]float64{
+	chk.Matrix(tst, "lu", 1e-17, a.GetSlice(), [][]float64{
 		{+4.0e+00, +0.000000000000000e+00, +3.000000000000000e+00, +1.000000000000000e+00},
 		{+5.0e-01, +3.000000000000000e+00, -2.500000000000000e+00, +5.000000000000000e-01},
 		{+2.5e-01, +6.666666666666666e-01, +9.166666666666665e-01, +3.416666666666667e+00},
@@ -701,7 +701,7 @@ func TestDgetrf01(tst *testing.T) {
 	}
 
 	// compare inverse
-	ai := a.GetMat()
+	ai := a.GetSlice()
 	chk.Matrix(tst, "inv(a)", 1e-15, ai, [][]float64{
 		{-8.484848484848487e-01, +5.454545454545455e-01, +3.030303030303039e-02, +1.818181818181818e-01},
 		{+1.090909090909091e+00, -2.727272727272728e-01, -1.818181818181817e-01, -9.090909090909091e-02},
@@ -751,7 +751,7 @@ func TestZgetrf01(tst *testing.T) {
 	}
 
 	// check LU
-	chk.MatrixC(tst, "lu", 1e-15, a.GetMat(), [][]complex128{
+	chk.MatrixC(tst, "lu", 1e-15, a.GetSlice(), [][]complex128{
 		{+4.000000000000000e+00 + 1.000000000000000e+00i, +0.000000000000000e+00, +3.000000000000000e+00 + 0.000000000000000e+00i, +1.000000000000000e+00 - 1.000000000000000e+00i},
 		{+5.294117647058824e-01 + 1.176470588235294e-01i, +3.000000000000000e+00, -2.588235294117647e+00 - 3.529411764705882e-01i, +3.529411764705882e-01 - 5.882352941176471e-01i},
 		{+2.941176470588235e-01 + 1.764705882352941e-01i, +6.666666666666666e-01, +8.431372549019609e-01 - 2.941176470588235e-01i, +3.294117647058823e+00 - 4.901960784313725e-01i},
@@ -768,7 +768,7 @@ func TestZgetrf01(tst *testing.T) {
 	}
 
 	// compare inverse
-	ai := a.GetMat()
+	ai := a.GetSlice()
 	chk.MatrixC(tst, "inv(a)", 1e-15, ai, [][]complex128{
 		{-8.442622950819669e-01 - 4.644808743169393e-02i, +5.409836065573769e-01 + 4.918032786885240e-02i, +3.278688524590156e-02 - 2.732240437158467e-02i, +1.803278688524591e-01 + 1.639344262295081e-02i},
 		{+1.065573770491803e+00 + 2.786885245901638e-01i, -2.459016393442623e-01 - 2.950819672131146e-01i, -1.967213114754096e-01 + 1.639344262295082e-01i, -8.196721311475419e-02 - 9.836065573770497e-02i},
@@ -872,7 +872,7 @@ func TestDsyrk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ - c", 1e-17, cUp.GetMat(), [][]float64{
+	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ - c", 1e-17, cUp.GetSlice(), [][]float64{
 		{21, 21, 24, +3},
 		{+0, 24, 32, +7},
 		{+0, +0, 71, 14},
@@ -888,7 +888,7 @@ func TestDsyrk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ - c", 1e-17, cLo.GetMat(), [][]float64{
+	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ - c", 1e-17, cLo.GetSlice(), [][]float64{
 		{21, +0, +0, +0},
 		{21, 24, +0, +0},
 		{24, 32, 71, +0},
@@ -955,7 +955,7 @@ func TestDsyrk02(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetMat(), [][]float64{
+	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetSlice(), [][]float64{
 		{48, 27, 36, +9, 15, -9},
 		{+0, 30, 22, 11, +2, -1},
 		{+0, +0, 40, 10, 16, -8},
@@ -973,7 +973,7 @@ func TestDsyrk02(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetMat(), [][]float64{
+	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetSlice(), [][]float64{
 		{48, +0, +0, +0, +0, +0},
 		{27, 30, +0, +0, +0, +0},
 		{36, 22, 40, +0, +0, +0},
@@ -1075,7 +1075,7 @@ func TestZsyrk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetMat(), [][]complex128{
+	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetSlice(), [][]complex128{
 		{24 - 5i, 21 - 6i, 22 - 6i, +3 - 3i},
 		{+0 + 0i, 27 + 0i, 33 + 3i, +8 + 0i},
 		{+0 + 0i, +0 + 0i, 75 + 18i, 16 + 0i},
@@ -1091,7 +1091,7 @@ func TestZsyrk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetMat(), [][]complex128{
+	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetSlice(), [][]complex128{
 		{24 - 5i, +0 + 0i, +0 + 0i, +0 + 0i},
 		{20 - 6i, 27 + 0i, +0 + 0i, +0 + 0i},
 		{20 - 6i, 34 + 3i, 75 + 18i, +0 + 0i},
@@ -1152,7 +1152,7 @@ func TestZherk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetMat(), [][]complex128{
+	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetSlice(), [][]complex128{
 		{31 + 0i, 21 - 5i, 15 - 11i, 3 - 1i},
 		{+0 + 0i, 33 + 0i, 34 - 9i, 14 + 0i},
 		{+0 + 0i, +0 + 0i, 82 + 0i, 16 + 5i},
@@ -1168,7 +1168,7 @@ func TestZherk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetMat(), [][]complex128{
+	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetSlice(), [][]complex128{
 		{31 + 0i, +0 + 0i, +0 + 0i, +0 + 0i},
 		{21 + 5i, 33 + 0i, +0 + 0i, +0 + 0i},
 		{15 + 11i, 34 + 9i, 82 + 0i, +0 + 0i},
@@ -1215,7 +1215,7 @@ func TestDpotrf01(tst *testing.T) {
 	}
 
 	// check aUp
-	chk.Matrix(tst, "chol(aUp)", 1e-15, aUp.GetMat(), [][]float64{
+	chk.Matrix(tst, "chol(aUp)", 1e-15, aUp.GetSlice(), [][]float64{
 		{+1.732050807568877e+00, +0.000000000000000e+00, -1.732050807568878e+00, +0.000000000000000e+00},
 		{+0.000000000000000e+00, +1.732050807568877e+00, +5.773502691896258e-01, +1.154700538379252e+00},
 		{+0.000000000000000e+00, +0.000000000000000e+00, +8.164965809277251e-01, +4.082482904638632e-01},
@@ -1231,7 +1231,7 @@ func TestDpotrf01(tst *testing.T) {
 	}
 
 	// check aLo
-	chk.Matrix(tst, "chol(aLo)", 1e-15, aLo.GetMat(), [][]float64{
+	chk.Matrix(tst, "chol(aLo)", 1e-15, aLo.GetSlice(), [][]float64{
 		{+1.732050807568877e+00, +0.000000000000000e+00, +0.000000000000000e+00, +0.000000000000000e+00},
 		{+0.000000000000000e+00, +1.732050807568877e+00, +0.000000000000000e+00, +0.000000000000000e+00},
 		{-1.732050807568878e+00, +5.773502691896258e-01, +8.164965809277251e-01, +0.000000000000000e+00},
@@ -1278,7 +1278,7 @@ func TestZpotrf01(tst *testing.T) {
 	}
 
 	// check aUp
-	chk.MatrixC(tst, "chol(aUp)", 1e-15, aUp.GetMat(), [][]complex128{
+	chk.MatrixC(tst, "chol(aUp)", 1e-15, aUp.GetSlice(), [][]complex128{
 		{+2, +0.000000000000000e+00 + 5.0e-01i, -1.500000000000000e+00 + 5.000000000000000e-01i, +0.000000000000000e+00 + 1.000000000000000e+00i},
 		{+0, +1.658312395177700e+00 + 0.0e+00i, +4.522670168666454e-01 - 4.522670168666454e-01i, +9.045340337332909e-01 + 0.000000000000000e+00i},
 		{+0, +0.000000000000000e+00 + 0.0e+00i, +1.044465935734187e+00 + 0.000000000000000e+00i, +8.703882797784884e-02 + 8.703882797784884e-02i},
@@ -1294,7 +1294,7 @@ func TestZpotrf01(tst *testing.T) {
 	}
 
 	// check aLo
-	chk.MatrixC(tst, "chol(aLo)", 1e-15, aLo.GetMat(), [][]complex128{
+	chk.MatrixC(tst, "chol(aLo)", 1e-15, aLo.GetSlice(), [][]complex128{
 		{+2.0 + 0.0e+00i, +0.000000000000000e+00 + 0.000000000000000e+00i, +0.000000000000000e+00 + 0.000000000000000e+00i, +0.000000000000000e+00},
 		{+0.0 - 5.0e-01i, +1.658312395177700e+00 + 0.000000000000000e+00i, +0.000000000000000e+00 + 0.000000000000000e+00i, +0.000000000000000e+00},
 		{-1.5 - 5.0e-01i, +4.522670168666454e-01 + 4.522670168666454e-01i, +1.044465935734187e+00 + 0.000000000000000e+00i, +0.000000000000000e+00},

@@ -71,8 +71,8 @@ func (o *Matrix) Get(i, j int) float64 {
 	return o.data[i+j*o.m] // col-major
 }
 
-// GetMat returns nested slice representation; i.e. a la.Mat structure
-func (o *Matrix) GetMat() (M [][]float64) {
+// GetMat returns nested slice representation
+func (o *Matrix) GetSlice() (M [][]float64) {
 	M = make([][]float64, o.m)
 	for i := 0; i < o.m; i++ {
 		M[i] = make([]float64, o.n)
@@ -204,8 +204,8 @@ func (o *MatrixC) Get(i, j int) complex128 {
 	return o.data[i+j*o.m] // col-major
 }
 
-// GetMat returns nested slice representation; i.e. a la.Mat structure
-func (o *MatrixC) GetMat() (M [][]complex128) {
+// GetMat returns nested slice representation
+func (o *MatrixC) GetSlice() (M [][]complex128) {
 	M = make([][]complex128, o.m)
 	for i := 0; i < o.m; i++ {
 		M[i] = make([]complex128, o.n)
