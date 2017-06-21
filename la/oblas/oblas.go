@@ -25,6 +25,11 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
+// SetNumThreads sets the number of threads in OpenBLAS
+func SetNumThreads(n int) {
+	C.openblas_set_num_threads(C.int(n))
+}
+
 // Daxpy computes constant times a vector plus a vector.
 //  See: http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html
 //
