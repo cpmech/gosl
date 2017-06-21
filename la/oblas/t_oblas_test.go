@@ -181,6 +181,106 @@ func TestZgemv01(tst *testing.T) {
 	chk.VectorC(tst, "a.data", 1e-15, a.data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 }
 
+func TestDgemm01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgemm01")
+
+	// allocate matrices
+	m, k := 4, 5
+	a := NewMatrix(m, k)
+	a.SetFromMat([][]float64{
+		{1, 2, 0, 1, -1},
+		{2, 3, -1, 1, +1},
+		{1, 2, 0, 4, -1},
+		{4, 0, 3, 1, +1},
+	})
+	n := 3
+	b := NewMatrix(k, n)
+	b.SetFromMat([][]float64{
+		{1, 0, 0},
+		{0, 0, 3},
+		{0, 0, 1},
+		{1, 0, 1},
+		{0, 2, 0},
+	})
+	c := NewMatrix(m, n)
+	c.SetFromMat([][]float64{
+		{+0.50, 0, +0.25},
+		{+0.25, 0, -0.25},
+		{-0.25, 0, +0.00},
+		{-0.25, 0, +0.00},
+	})
+
+	// run dgemm
+	transA, transB := false, false
+	alpha, beta := 0.5, 2.0
+	lda, ldb, ldc := m, k, m
+	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+	if err != nil {
+		tst.Errorf("Dgemm failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.Matrix(tst, "0.5⋅a⋅b + 2⋅c", 1e-17, c.GetMat(), [][]float64{
+		{2, -1, 4},
+		{2, 1, 4},
+		{2, -1, 5},
+		{2, 1, 2},
+	})
+}
+
+func TestZgemm01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Zgemm01")
+
+	// allocate matrices
+	m, k := 4, 5
+	a := NewMatrixC(m, k)
+	a.SetFromMat([][]complex128{
+		{1, 2, 0 + 1i, 1, -1},
+		{2, 3, -1 - 1i, 1, +1},
+		{1, 2, 0 + 1i, 4, -1},
+		{4, 0, 3 - 1i, 1, +1},
+	})
+	n := 3
+	b := NewMatrixC(k, n)
+	b.SetFromMat([][]complex128{
+		{1, 0, 0 + 1i},
+		{0, 0, 3 - 1i},
+		{0, 0, 1 + 1i},
+		{1, 0, 1 - 1i},
+		{0, 2, 0 + 1i},
+	})
+	c := NewMatrixC(m, n)
+	c.SetFromMat([][]complex128{
+		{+0.50, 1i, +0.25},
+		{+0.25, 1i, -0.25},
+		{-0.25, 1i, +0.00},
+		{-0.25, 1i, +0.00},
+	})
+
+	// run dgemm
+	transA, transB := false, false
+	alpha, beta := 0.5-2i, 2.0-4i
+	lda, ldb, ldc := m, k, m
+	err := Zgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+	if err != nil {
+		tst.Errorf("Zgemm failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.MatrixC(tst, "(0.5-2i)⋅a⋅b + (2-4i)⋅c", 1e-17, c.GetMat(), [][]complex128{
+		{2 - 6i, 3 + 6i, -0.5 - 14i},
+		{2 - 7i, 5 - 2i, -1.5 - 20.5i},
+		{2 - 9i, 3 + 6i, -5.5 - 20.5i},
+		{2 - 9i, 5 - 2i, 14.5 - 7i},
+	})
+}
+
 func TestDgesv01(tst *testing.T) {
 
 	//verbose()

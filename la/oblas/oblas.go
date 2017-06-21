@@ -152,6 +152,66 @@ func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []comp
 	return
 }
 
+// Dgemm performs one of the matrix-matrix operations
+//
+//     C := alpha*op( A )*op( B ) + beta*C,
+//
+//  where  op( X ) is one of
+//
+//     op( X ) = X   or   op( X ) = X**T,
+//
+//  alpha and beta are scalars, and A, B and C are matrices, with op( A )
+//  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
+func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *Matrix, lda int, b *Matrix, ldb int, beta float64, c *Matrix, ldc int) (err error) {
+	C.cblas_dgemm(
+		cblasColMajor,
+		cTrans(transA),
+		cTrans(transB),
+		C.blasint(m),
+		C.blasint(n),
+		C.blasint(k),
+		C.double(alpha),
+		(*C.double)(unsafe.Pointer(&a.data[0])),
+		C.blasint(lda),
+		(*C.double)(unsafe.Pointer(&b.data[0])),
+		C.blasint(ldb),
+		C.double(beta),
+		(*C.double)(unsafe.Pointer(&c.data[0])),
+		C.blasint(ldc),
+	)
+	return
+}
+
+// Zgemm performs one of the matrix-matrix operations
+//
+//     C := alpha*op( A )*op( B ) + beta*C,
+//
+//  where  op( X ) is one of
+//
+//     op( X ) = X   or   op( X ) = X**T   or   op( X ) = X**H,
+//
+//  alpha and beta are scalars, and A, B and C are matrices, with op( A )
+//  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
+func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *MatrixC, lda int, b *MatrixC, ldb int, beta complex128, c *MatrixC, ldc int) (err error) {
+	C.cblas_zgemm(
+		cblasColMajor,
+		cTrans(transA),
+		cTrans(transB),
+		C.blasint(m),
+		C.blasint(n),
+		C.blasint(k),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.data[0]))),
+		C.blasint(lda),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&b.data[0]))),
+		C.blasint(ldb),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.data[0]))),
+		C.blasint(ldc),
+	)
+	return
+}
+
 // Dgesv computes the solution to a real system of linear equations.
 //  See: http://www.netlib.org/lapack/explore-html/d8/d72/dgesv_8f.html
 //  The system is:

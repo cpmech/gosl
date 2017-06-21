@@ -14,6 +14,5 @@ while true; do
     echo
     echo
     echo
-    #go test -test.run="zaxpy01"
-    go test
+    go test -test.run="Zgemm01"
 done
