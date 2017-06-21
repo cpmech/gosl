@@ -12,7 +12,8 @@ import (
 
 // Matrix implements a column-major representation of a matrix by using a linear array that can be passed to Fortran code
 //
-//  NOTE: the functions related to Matrix do not check for the limits of indices and dimensions. Panic may occur then.
+//  NOTE: the functions related to Matrix do not check for the limits of indices and dimensions.
+//        Panic may occur then.
 //
 //  Example:
 //             _      _
@@ -27,7 +28,8 @@ type Matrix struct {
 	data []float64 // data array. column-major => Fortran
 }
 
-// NewMatrix allocates a new Matrix from given slice. NOTE: make sure to have at least 1x1 items
+// NewMatrix allocates a new Matrix from given slice.
+// NOTE: make sure to have at least 1x1 item
 func NewMatrix(a [][]float64) (o *Matrix) {
 	o = new(Matrix)
 	o.m, o.n = len(a), len(a[0])
@@ -160,7 +162,8 @@ type MatrixC struct {
 	data []complex128 // data array. column-major => Fortran
 }
 
-// NewMatrixC allocates a new MatrixC from given slice. NOTE: make sure to have at least 1x1 items
+// NewMatrixC allocates a new MatrixC from given slice.
+// NOTE: make sure to have at least 1x1 items
 func NewMatrixC(a [][]complex128) (o *MatrixC) {
 	o = new(MatrixC)
 	o.m, o.n = len(a), len(a[0])
