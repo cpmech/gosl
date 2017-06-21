@@ -447,7 +447,19 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a *Matrix, lda int, beta flo
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
 func Zsyrk(up, trans bool, n, k int, alpha complex128, a *MatrixC, lda int, beta complex128, c *MatrixC, ldc int) (err error) {
-	chk.Panic("TODO: Zsyrk")
+	C.cblas_zsyrk(
+		cblasColMajor,
+		cUplo(up),
+		cTrans(trans),
+		C.blasint(n),
+		C.blasint(k),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.data[0]))),
+		C.blasint(lda),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.data[0]))),
+		C.blasint(ldc),
+	)
 	return
 }
 

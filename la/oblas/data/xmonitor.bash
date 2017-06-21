@@ -14,5 +14,5 @@ while true; do
     echo
     echo
     echo
-    python dsyrk02.py
+    python zsyrk01.py
 done

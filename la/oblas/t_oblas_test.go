@@ -754,7 +754,7 @@ func TestDsyrk01(tst *testing.T) {
 	lda, ldc := n, n
 	err := Dsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
 	if err != nil {
-		tst.Errorf("Zgetri failed:\n%v\n", err)
+		tst.Errorf("Dsyrk failed:\n%v\n", err)
 		return
 	}
 
@@ -770,7 +770,7 @@ func TestDsyrk01(tst *testing.T) {
 	up = false
 	err = Dsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
 	if err != nil {
-		tst.Errorf("Zgetri failed:\n%v\n", err)
+		tst.Errorf("Dsyrk failed:\n%v\n", err)
 		return
 	}
 
@@ -839,12 +839,12 @@ func TestDsyrk02(tst *testing.T) {
 	lda, ldc := k, n
 	err := Dsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
 	if err != nil {
-		tst.Errorf("Zgetri failed:\n%v\n", err)
+		tst.Errorf("Dsyrk failed:\n%v\n", err)
 		return
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ - c", 1e-17, cUp.GetMat(), [][]float64{
+	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetMat(), [][]float64{
 		{48, 27, 36, +9, 15, -9},
 		{+0, 30, 22, 11, +2, -1},
 		{+0, +0, 40, 10, 16, -8},
@@ -857,17 +857,135 @@ func TestDsyrk02(tst *testing.T) {
 	up = false
 	err = Dsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
 	if err != nil {
-		tst.Errorf("Zgetri failed:\n%v\n", err)
+		tst.Errorf("Dsyrk failed:\n%v\n", err)
 		return
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ - c", 1e-17, cLo.GetMat(), [][]float64{
+	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetMat(), [][]float64{
 		{48, +0, +0, +0, +0, +0},
 		{27, 30, +0, +0, +0, +0},
 		{36, 22, 40, +0, +0, +0},
 		{+9, 11, 10, 12, +0, +0},
 		{15, +2, 16, +6, 19, +0},
 		{-9, -1, -8, +0, -3, +7},
+	})
+}
+
+func checkUploC(tst *testing.T, testname string, c, cLo, cUp *MatrixC, tolR, tolI float64) {
+	n := c.n
+	maxdiffR, maxdiffI := 0.0, 0.0
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			if i == j {
+				diffR := math.Abs(real(cLo.Get(i, j)) - real(c.Get(i, j)))
+				diffI := math.Abs(imag(cLo.Get(i, j)) - imag(c.Get(i, j)))
+				if diffR > tolR {
+					maxdiffR = diffR
+				}
+				if diffI > tolI {
+					maxdiffI = diffI
+				}
+				diffR = math.Abs(real(cUp.Get(i, j)) - real(c.Get(i, j)))
+				diffI = math.Abs(imag(cUp.Get(i, j)) - imag(c.Get(i, j)))
+				if diffR > tolR {
+					maxdiffR = diffR
+				}
+				if diffI > tolI {
+					maxdiffI = diffI
+				}
+			} else {
+				diffR := math.Abs(real(cLo.Get(i, j)) + real(cUp.Get(i, j)) - real(c.Get(i, j)))
+				diffI := math.Abs(imag(cLo.Get(i, j)) + imag(cUp.Get(i, j)) - imag(c.Get(i, j)))
+				if diffR > tolR {
+					maxdiffR = diffR
+				}
+				if diffI > tolI {
+					maxdiffI = diffI
+				}
+			}
+		}
+	}
+	if maxdiffR > 0 || maxdiffI > 0 {
+		tst.Errorf("checkUploC failed in test %q. maxdiffR=%g maxdiffI=%g\n", testname, maxdiffR, maxdiffI)
+	}
+}
+
+func TestZsyrk01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Zsyrk01")
+
+	// c matrices
+	n := 4
+	c := NewMatrixC(n, n)
+	c.SetFromMat([][]complex128{
+		{+3 + 1i, 0 + 0i, -2 + 0i, 0 + 0i},
+		{-1 + 0i, 3 + 0i, +0 + 0i, 2 + 0i},
+		{-4 + 0i, 1 + 0i, +3 + 0i, 1 + 0i},
+		{-1 + 0i, 2 + 0i, +0 + 0i, 3 - 1i},
+	})
+	cUp := NewMatrixC(n, n)
+	cUp.SetFromMat([][]complex128{
+		{+3 + 1i, 0 + 0i, -2 + 0i, 0 + 0i},
+		{+0 + 0i, 3 + 0i, +0 + 0i, 2 + 0i},
+		{+0 + 0i, 0 + 0i, +3 + 0i, 1 + 0i},
+		{+0 + 0i, 0 + 0i, +0 + 0i, 3 - 1i},
+	})
+	cLo := NewMatrixC(n, n)
+	cLo.SetFromMat([][]complex128{
+		{+3 + 1i, 0 + 0i, +0 + 0i, 0 + 0i},
+		{-1 + 0i, 3 + 0i, +0 + 0i, 0 + 0i},
+		{-4 + 0i, 1 + 0i, +3 + 0i, 0 + 0i},
+		{-1 + 0i, 2 + 0i, +0 + 0i, 3 - 1i},
+	})
+
+	// check cUp and cLo
+	checkUploC(tst, "Zsyrk02", c, cLo, cUp, 1e-17, 1e-17)
+
+	// a matrix
+	k := 6
+	a := NewMatrixC(n, k)
+	a.SetFromMat([][]complex128{
+		{+1 - 1i, +2, +1, +1, -1, +0 + 0i},
+		{+2 + 0i, +2, +1, +0, +0, +0 + 1i},
+		{+3 + 1i, +1, +3, +1, +2, -1 + 0i},
+		{+1 + 0i, +0, +1, -1, +0, +0 + 1i},
+	})
+
+	// constants
+	alpha, beta := 3.0+0i, +1.0+0i
+
+	// run dsyrk with up(c)
+	up, trans := true, false
+	lda, ldc := n, n
+	err := Zsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
+	if err != nil {
+		tst.Errorf("Zsyrk failed:\n%v\n", err)
+		return
+	}
+
+	// compare resulting up(c) matrix
+	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetMat(), [][]complex128{
+		{24 - 5i, 21 - 6i, 22 - 6i, +3 - 3i},
+		{+0 + 0i, 27 + 0i, 33 + 3i, +8 + 0i},
+		{+0 + 0i, +0 + 0i, 75 + 18i, 16 + 0i},
+		{+0 + 0i, +0 + 0i, +0 + 0i, +9 - 1i},
+	})
+
+	// run dsyrk with lo(c)
+	up = false
+	err = Zsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
+	if err != nil {
+		tst.Errorf("Zsyrk failed:\n%v\n", err)
+		return
+	}
+
+	// compare resulting up(c) matrix
+	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetMat(), [][]complex128{
+		{24 - 5i, +0 + 0i, +0 + 0i, +0 + 0i},
+		{20 - 6i, 27 + 0i, +0 + 0i, +0 + 0i},
+		{20 - 6i, 34 + 3i, 75 + 18i, +0 + 0i},
+		{+2 - 3i, +8 + 0i, 15 + 0i, +9 - 1i},
 	})
 }
