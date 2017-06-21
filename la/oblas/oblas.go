@@ -548,12 +548,6 @@ func Zpotrf(up bool, n int, a *MatrixC, lda int) (err error) {
 	return
 }
 
-// Dcholesky performs the Cholesky factorization
-func Dcholesky() (err error) {
-	chk.Panic("TODO: Dcholesky")
-	return
-}
-
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 // constants
