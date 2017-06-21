@@ -30,9 +30,9 @@ func main() {
 	α, β := 1.0, 0.0
 
 	// allocate matrices
-	a := oblas.NewMatrix(mMax, mMax)
-	b := oblas.NewMatrix(mMax, mMax)
-	c := oblas.NewMatrix(mMax, mMax)
+	a := oblas.NewMatrixMN(mMax, mMax)
+	b := oblas.NewMatrixMN(mMax, mMax)
+	c := oblas.NewMatrixMN(mMax, mMax)
 
 	// generate random matrices
 	for j := 0; j < mMax; j++ {
@@ -91,7 +91,6 @@ func main() {
 		plt.SetTicksRotationX(45)
 		plt.SetYnticks(16)
 		plt.Gll("$m$", "$GFlops$", nil)
-		plt.HideTRborders()
 		plt.Save("/tmp/gosl/oblas", "benchDgemm")
 	}
 }

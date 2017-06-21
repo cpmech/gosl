@@ -158,6 +158,7 @@ func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []comp
 }
 
 // Dgemm performs one of the matrix-matrix operations
+//  see: http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
 //
 //     C := alpha*op( A )*op( B ) + beta*C,
 //
@@ -188,6 +189,7 @@ func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *Matrix, lda int, 
 }
 
 // Zgemm performs one of the matrix-matrix operations
+//  see: http://www.netlib.org/lapack/explore-html/d7/d76/zgemm_8f.html
 //
 //     C := alpha*op( A )*op( B ) + beta*C,
 //
