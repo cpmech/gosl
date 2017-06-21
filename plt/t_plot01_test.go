@@ -100,6 +100,8 @@ func Test_plot01(tst *testing.T) {
 		Text(0.2, 0.8, "HERE", &A{Fsz: 20, Ha: "center", Va: "center", Rot: 90})
 		SetTicksX(0.1, 0.01, "%.3f")
 		SetTicksY(0.2, 0.1, "%.2f")
+		SetTicksRotationX(45)
+		SetTicksRotationY(-45)
 		SetTicksYlist(utl.LinSpace(-0.1, 1.1, 11))
 		HideBorders(&A{HideR: true, HideT: true})
 		//HideAllBorders()

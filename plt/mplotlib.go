@@ -223,6 +223,16 @@ func SetTicksNormal() {
 	io.Ff(&bufferPy, "plt.gca().ticklabel_format(useOffset=False)\n")
 }
 
+// SetTicksRotationX
+func SetTicksRotationX(degree float64) {
+	io.Ff(&bufferPy, "plt.setp(plt.gca().get_xticklabels(), rotation=%g)\n", degree)
+}
+
+// SetTicksRotationY
+func SetTicksRotationY(degree float64) {
+	io.Ff(&bufferPy, "plt.setp(plt.gca().get_yticklabels(), rotation=%g)\n", degree)
+}
+
 // ReplaceAxes substitutes axis frame (see Axes in gosl.py)
 //   ex: xDel, yDel := 0.04, 0.04
 func ReplaceAxes(xi, yi, xf, yf, xDel, yDel float64, xLab, yLab string, argsArrow, argsText *A) {
