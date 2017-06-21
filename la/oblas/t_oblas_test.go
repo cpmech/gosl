@@ -676,3 +676,198 @@ func TestZgetrf01(tst *testing.T) {
 		}
 	}
 }
+
+func checkUplo(tst *testing.T, testname string, c, cLo, cUp *Matrix, tol float64) {
+	n := c.n
+	maxdiff := 0.0
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			if i == j {
+				diff := math.Abs(cLo.Get(i, j) - c.Get(i, j))
+				if diff > tol {
+					maxdiff = diff
+				}
+				diff = math.Abs(cUp.Get(i, j) - c.Get(i, j))
+				if diff > tol {
+					maxdiff = diff
+				}
+			} else {
+				diff := math.Abs(cLo.Get(i, j) + cUp.Get(i, j) - c.Get(i, j))
+				if diff > tol {
+					maxdiff = diff
+				}
+			}
+		}
+	}
+	if maxdiff > 0 {
+		tst.Errorf("checkUplo failed in test %q. maxdiff=%g\n", testname, maxdiff)
+	}
+}
+
+func TestDsyrk01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dsyrk01")
+
+	// c matrices
+	n := 4
+	c := NewMatrix(n, n)
+	c.SetFromMat([][]float64{
+		{+3, +0, -3, +0},
+		{+0, +3, +1, +2},
+		{-3, +1, +4, +1},
+		{+0, +2, +1, +3},
+	})
+	cUp := NewMatrix(n, n)
+	cUp.SetFromMat([][]float64{
+		{+3, +0, -3, +0},
+		{+0, +3, +1, +2},
+		{+0, +0, +4, +1},
+		{+0, +0, +0, +3},
+	})
+	cLo := NewMatrix(n, n)
+	cLo.SetFromMat([][]float64{
+		{+3, +0, +0, +0},
+		{+0, +3, +0, +0},
+		{-3, +1, +4, +0},
+		{+0, +2, +1, +3},
+	})
+
+	// check cUp and cLo
+	checkUplo(tst, "Dsyrk01", c, cLo, cUp, 1e-17)
+
+	// a matrix
+	k := 6
+	a := NewMatrix(n, k)
+	a.SetFromMat([][]float64{
+		{+1, +2, +1, +1, -1, +0},
+		{+2, +2, +1, +0, +0, +0},
+		{+3, +1, +3, +1, +2, -1},
+		{+1, +0, +1, -1, +0, +0},
+	})
+
+	// constants
+	alpha, beta := 3.0, -1.0
+
+	// run dsyrk with up(c)
+	up, trans := true, false
+	lda, ldc := n, n
+	err := Dsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
+	if err != nil {
+		tst.Errorf("Zgetri failed:\n%v\n", err)
+		return
+	}
+
+	// compare resulting up(c) matrix
+	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ - c", 1e-17, cUp.GetMat(), [][]float64{
+		{21, 21, 24, +3},
+		{+0, 24, 32, +7},
+		{+0, +0, 71, 14},
+		{+0, +0, +0, +6},
+	})
+
+	// run dsyrk with lo(c)
+	up = false
+	err = Dsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
+	if err != nil {
+		tst.Errorf("Zgetri failed:\n%v\n", err)
+		return
+	}
+
+	// compare resulting up(c) matrix
+	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ - c", 1e-17, cLo.GetMat(), [][]float64{
+		{21, +0, +0, +0},
+		{21, 24, +0, +0},
+		{24, 32, 71, +0},
+		{+3, +7, 14, +6},
+	})
+}
+
+func TestDsyrk02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dsyrk02")
+
+	// c matrices
+	n := 6
+	c := NewMatrix(n, n)
+	c.SetFromMat([][]float64{
+		{+3, 0, -3, 0, 0, 0},
+		{+0, 3, +1, 2, 2, 2},
+		{-3, 1, +4, 1, 1, 1},
+		{+0, 2, +1, 3, 3, 3},
+		{+0, 2, +1, 3, 4, 3},
+		{+0, 2, +1, 3, 3, 4},
+	})
+	cUp := NewMatrix(n, n)
+	cUp.SetFromMat([][]float64{
+		{+3, 0, -3, 0, 0, 0},
+		{+0, 3, +1, 2, 2, 2},
+		{+0, 0, +4, 1, 1, 1},
+		{+0, 0, +0, 3, 3, 3},
+		{+0, 0, +0, 0, 4, 3},
+		{+0, 0, +0, 0, 0, 4},
+	})
+	cLo := NewMatrix(n, n)
+	cLo.SetFromMat([][]float64{
+		{+3, 0, +0, 0, 0, 0},
+		{+0, 3, +0, 0, 0, 0},
+		{-3, 1, +4, 0, 0, 0},
+		{+0, 2, +1, 3, 0, 0},
+		{+0, 2, +1, 3, 4, 0},
+		{+0, 2, +1, 3, 3, 4},
+	})
+
+	// check cUp and cLo
+	checkUplo(tst, "Dsyrk02", c, cLo, cUp, 1e-17)
+
+	// a matrix
+	k := 4
+	a := NewMatrix(k, n)
+	a.SetFromMat([][]float64{
+		{+1, +2, +1, +1, -1, +0},
+		{+2, +2, +1, +0, +0, +0},
+		{+3, +1, +3, +1, +2, -1},
+		{+1, +0, +1, -1, +0, +0},
+	})
+
+	// constants
+	alpha, beta := 3.0, +1.0
+
+	// run dsyrk with up(c)
+	up, trans := true, true
+	lda, ldc := k, n
+	err := Dsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
+	if err != nil {
+		tst.Errorf("Zgetri failed:\n%v\n", err)
+		return
+	}
+
+	// compare resulting up(c) matrix
+	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ - c", 1e-17, cUp.GetMat(), [][]float64{
+		{48, 27, 36, +9, 15, -9},
+		{+0, 30, 22, 11, +2, -1},
+		{+0, +0, 40, 10, 16, -8},
+		{+0, +0, +0, 12, +6, +0},
+		{+0, +0, +0, +0, 19, -3},
+		{+0, +0, +0, +0, +0, +7},
+	})
+
+	// run dsyrk with lo(c)
+	up = false
+	err = Dsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
+	if err != nil {
+		tst.Errorf("Zgetri failed:\n%v\n", err)
+		return
+	}
+
+	// compare resulting up(c) matrix
+	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ - c", 1e-17, cLo.GetMat(), [][]float64{
+		{48, +0, +0, +0, +0, +0},
+		{27, 30, +0, +0, +0, +0},
+		{36, 22, 40, +0, +0, +0},
+		{+9, 11, 10, 12, +0, +0},
+		{15, +2, 16, +6, 19, +0},
+		{-9, -1, -8, +0, -3, +7},
+	})
+}

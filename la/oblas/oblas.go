@@ -417,8 +417,20 @@ func Zgetri(n int, a *MatrixC, lda int, ipiv []int32, work []complex128, lwork i
 //  where  alpha and beta  are scalars, C is an  n by n  symmetric matrix
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
-func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta float64, c []float64, ldc int) (err error) {
-	chk.Panic("TODO: Dsyrk")
+func Dsyrk(up, trans bool, n, k int, alpha float64, a *Matrix, lda int, beta float64, c *Matrix, ldc int) (err error) {
+	C.cblas_dsyrk(
+		cblasColMajor,
+		cUplo(up),
+		cTrans(trans),
+		C.blasint(n),
+		C.blasint(k),
+		C.double(alpha),
+		(*C.double)(unsafe.Pointer(&a.data[0])),
+		C.blasint(lda),
+		C.double(beta),
+		(*C.double)(unsafe.Pointer(&c.data[0])),
+		C.blasint(ldc),
+	)
 	return
 }
 
@@ -434,7 +446,7 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta f
 //  where  alpha and beta  are scalars,  C is an  n by n symmetric matrix
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
-func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) (err error) {
+func Zsyrk(up, trans bool, n, k int, alpha complex128, a *MatrixC, lda int, beta complex128, c *MatrixC, ldc int) (err error) {
 	chk.Panic("TODO: Zsyrk")
 	return
 }
@@ -526,4 +538,11 @@ func cTrans(trans bool) uint32 {
 		return cblasTrans
 	}
 	return cblasNoTrans
+}
+
+func cUplo(up bool) uint32 {
+	if up {
+		return cblasUpper
+	}
+	return cblasLower
 }
