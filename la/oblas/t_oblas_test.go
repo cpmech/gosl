@@ -22,8 +22,7 @@ func TestMatrix01(tst *testing.T) {
 		{9, 0, -1, -2},
 	}
 
-	a := NewMatrix(3, 4)
-	a.SetFromMat(A)
+	a := NewMatrix(A)
 	chk.Vector(tst, "A to a", 1e-15, a.data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
 	chk.Scalar(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
@@ -31,6 +30,17 @@ func TestMatrix01(tst *testing.T) {
 
 	Aback := a.GetMat()
 	chk.Matrix(tst, "a to A", 1e-15, Aback, A)
+
+	l := a.Print("")
+	chk.String(tst, l, "1 2 3 4 \n5 6 7 8 \n9 0 -1 -2 ")
+
+	l = a.PrintGo("%2g")
+	lCorrect := "[][]float64{\n    { 1, 2, 3, 4},\n    { 5, 6, 7, 8},\n    { 9, 0,-1,-2},\n}"
+	chk.String(tst, l, lCorrect)
+
+	l = a.PrintPy("%2g")
+	lCorrect = "np.matrix([\n    [ 1, 2, 3, 4],\n    [ 5, 6, 7, 8],\n    [ 9, 0,-1,-2],\n], dtype=float)"
+	chk.String(tst, l, lCorrect)
 }
 
 func TestMatrix02(tst *testing.T) {
@@ -44,8 +54,7 @@ func TestMatrix02(tst *testing.T) {
 		{9 + 0.9i, 0, -1, -2 + 1i},
 	}
 
-	a := NewMatrixC(3, 4)
-	a.SetFromMat(A)
+	a := NewMatrixC(A)
 	chk.VectorC(tst, "A to a", 1e-15, a.data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
 
 	chk.ScalarC(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
@@ -53,6 +62,17 @@ func TestMatrix02(tst *testing.T) {
 
 	Aback := a.GetMat()
 	chk.MatrixC(tst, "a to A", 1e-15, Aback, A)
+
+	l := a.Print("%g", "")
+	chk.String(tst, l, "1+0.1i, 2+0i, 3+0i, 4-0.4i\n5+0.5i, 6+0i, 7+0i, 8-0.8i\n9+0.9i, 0+0i, -1+0i, -2+1i")
+
+	l = a.PrintGo("%2g", "%+4.1f")
+	lCorrect := "[][]complex128{\n    { 1+0.1i, 2+0.0i, 3+0.0i, 4-0.4i},\n    { 5+0.5i, 6+0.0i, 7+0.0i, 8-0.8i},\n    { 9+0.9i, 0+0.0i,-1+0.0i,-2+1.0i},\n}"
+	chk.String(tst, l, lCorrect)
+
+	l = a.PrintPy("%2g", "%4.1f")
+	lCorrect = "np.matrix([\n    [ 1+0.1j, 2+0.0j, 3+0.0j, 4-0.4j],\n    [ 5+0.5j, 6+0.0j, 7+0.0j, 8-0.8j],\n    [ 9+0.9j, 0+0.0j,-1+0.0j,-2+1.0j],\n], dtype=complex)"
+	chk.String(tst, l, lCorrect)
 }
 
 func TestDaxpy01(tst *testing.T) {
@@ -107,9 +127,7 @@ func TestDgemv01(tst *testing.T) {
 	chk.PrintTitle("Dgemv01")
 
 	// allocate
-	m, n := 4, 3
-	a := NewMatrix(m, n)
-	a.SetFromMat([][]float64{
+	a := NewMatrix([][]float64{
 		{0.1, 0.2, 0.3},
 		{1.0, 0.2, 0.3},
 		{2.0, 0.2, 0.3},
@@ -118,6 +136,7 @@ func TestDgemv01(tst *testing.T) {
 	chk.Vector(tst, "a.data", 1e-15, a.data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 
 	// perform mv
+	m, n := a.M(), a.N()
 	α, β := 0.5, 2.0
 	x := []float64{20, 10, 30}
 	y := []float64{3, 1, 2, 4}
@@ -147,14 +166,13 @@ func TestZgemv01(tst *testing.T) {
 	chk.PrintTitle("Zgemv01")
 
 	// allocate
-	m, n := 4, 3
-	a := NewMatrixC(m, n)
-	a.SetFromMat([][]complex128{
+	a := NewMatrixC([][]complex128{
 		{0.1 + 3i, 0.2, 0.3 - 0.3i},
 		{1.0 + 2i, 0.2, 0.3 - 0.4i},
 		{2.0 + 1i, 0.2, 0.3 - 0.5i},
 		{3.0 + 0.1i, 0.2, 0.3 - 0.6i},
 	})
+	m, n := a.M(), a.N()
 	chk.VectorC(tst, "a.data", 1e-15, a.data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 
 	// perform mv
@@ -187,30 +205,29 @@ func TestDgemm01(tst *testing.T) {
 	chk.PrintTitle("Dgemm01")
 
 	// allocate matrices
-	m, k := 4, 5
-	a := NewMatrix(m, k)
-	a.SetFromMat([][]float64{
+	a := NewMatrix([][]float64{
 		{1, 2, 0, 1, -1},
 		{2, 3, -1, 1, +1},
 		{1, 2, 0, 4, -1},
 		{4, 0, 3, 1, +1},
 	})
-	n := 3
-	b := NewMatrix(k, n)
-	b.SetFromMat([][]float64{
+	b := NewMatrix([][]float64{
 		{1, 0, 0},
 		{0, 0, 3},
 		{0, 0, 1},
 		{1, 0, 1},
 		{0, 2, 0},
 	})
-	c := NewMatrix(m, n)
-	c.SetFromMat([][]float64{
+	c := NewMatrix([][]float64{
 		{+0.50, 0, +0.25},
 		{+0.25, 0, -0.25},
 		{-0.25, 0, +0.00},
 		{-0.25, 0, +0.00},
 	})
+
+	// sizes
+	m, k := a.M(), a.N()
+	n := b.N()
 
 	// run dgemm
 	transA, transB := false, false
@@ -237,30 +254,29 @@ func TestZgemm01(tst *testing.T) {
 	chk.PrintTitle("Zgemm01")
 
 	// allocate matrices
-	m, k := 4, 5
-	a := NewMatrixC(m, k)
-	a.SetFromMat([][]complex128{
+	a := NewMatrixC([][]complex128{
 		{1, 2, 0 + 1i, 1, -1},
 		{2, 3, -1 - 1i, 1, +1},
 		{1, 2, 0 + 1i, 4, -1},
 		{4, 0, 3 - 1i, 1, +1},
 	})
-	n := 3
-	b := NewMatrixC(k, n)
-	b.SetFromMat([][]complex128{
+	b := NewMatrixC([][]complex128{
 		{1, 0, 0 + 1i},
 		{0, 0, 3 - 1i},
 		{0, 0, 1 + 1i},
 		{1, 0, 1 - 1i},
 		{0, 2, 0 + 1i},
 	})
-	c := NewMatrixC(m, n)
-	c.SetFromMat([][]complex128{
+	c := NewMatrixC([][]complex128{
 		{+0.50, 1i, +0.25},
 		{+0.25, 1i, -0.25},
 		{-0.25, 1i, +0.00},
 		{-0.25, 1i, +0.00},
 	})
+
+	// sizes
+	m, k := a.M(), a.N()
+	n := b.N()
 
 	// run dgemm
 	transA, transB := false, false
@@ -295,8 +311,8 @@ func TestDgesv01(tst *testing.T) {
 		{0, 4, 2, 0, 1},
 	}
 	n := 5
-	a := NewMatrix(n, n)
-	a.SetFromMat(amat)
+	a := NewMatrixMN(n, n)
+	a.SetFromSlice(amat)
 
 	// right-hand-side
 	b := []float64{8, 45, -3, 3, 19}
@@ -327,9 +343,7 @@ func TestZgesv01(tst *testing.T) {
 	tol := 0.0032
 
 	// matrix
-	n := 5
-	a := NewMatrixC(n, n)
-	a.SetFromMat([][]complex128{
+	a := NewMatrixC([][]complex128{
 		{19.730 + 0.000i, 12.110 - 1.000i, 0.000 + 5.000i, 0.000 + 0.000i, 0.000 + 0.000i},
 		{0.000 - 0.510i, 32.300 + 7.000i, 23.070 + 0.000i, 0.000 + 1.000i, 0.000 + 0.000i},
 		{0.000 + 0.000i, 0.000 - 0.510i, 70.000 + 7.300i, 3.950 + 0.000i, 19.000 + 31.830i},
@@ -356,6 +370,7 @@ func TestZgesv01(tst *testing.T) {
 	}
 
 	// run test
+	n := a.N()
 	nrhs := 1
 	lda, ldb := n, n
 	ipiv := make([]int32, n)
@@ -381,8 +396,8 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 
 	// allocate matrix
 	m, n := len(amat), len(amat[0])
-	a := NewMatrix(m, n)
-	a.SetFromMat(amat)
+	a := NewMatrixMN(m, n)
+	a.SetFromSlice(amat)
 
 	// compute dimensions
 	minMN := imin(m, n)
@@ -394,8 +409,8 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 
 	// allocate output arrays
 	s := make([]float64, minMN)
-	u := NewMatrix(m, m)
-	vt := NewMatrix(n, n)
+	u := NewMatrixMN(m, m)
+	vt := NewMatrixMN(n, n)
 	work := make([]float64, lwork)
 
 	// perform SVD
@@ -535,8 +550,8 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 
 	// allocate matrix
 	m, n := len(amat), len(amat[0])
-	a := NewMatrixC(m, n)
-	a.SetFromMat(amat)
+	a := NewMatrixCmn(m, n)
+	a.SetFromSlice(amat)
 
 	// compute dimensions
 	minMN := imin(m, n)
@@ -549,8 +564,8 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 
 	// allocate output arrays
 	s := make([]float64, minMN)
-	u := NewMatrixC(m, m)
-	vt := NewMatrixC(n, n)
+	u := NewMatrixCmn(m, m)
+	vt := NewMatrixCmn(n, n)
 	work := make([]complex128, lwork)
 	rwork := make([]float64, lrwork)
 
@@ -656,8 +671,8 @@ func TestDgetrf01(tst *testing.T) {
 		{4, 0, 3, 1},
 	}
 	m, n := 4, 4
-	a := NewMatrix(m, n)
-	a.SetFromMat(amat)
+	a := NewMatrixMN(m, n)
+	a.SetFromSlice(amat)
 
 	// run dgetrf
 	lda := m
@@ -723,8 +738,8 @@ func TestZgetrf01(tst *testing.T) {
 		{4 + 1i, 0, +3, 1 - 1i},
 	}
 	m, n := 4, 4
-	a := NewMatrixC(m, n)
-	a.SetFromMat(amat)
+	a := NewMatrixCmn(m, n)
+	a.SetFromSlice(amat)
 
 	// run
 	lda := m
@@ -810,23 +825,19 @@ func TestDsyrk01(tst *testing.T) {
 	chk.PrintTitle("Dsyrk01")
 
 	// c matrices
-	n := 4
-	c := NewMatrix(n, n)
-	c.SetFromMat([][]float64{
+	c := NewMatrix([][]float64{
 		{+3, +0, -3, +0},
 		{+0, +3, +1, +2},
 		{-3, +1, +4, +1},
 		{+0, +2, +1, +3},
 	})
-	cUp := NewMatrix(n, n)
-	cUp.SetFromMat([][]float64{
+	cUp := NewMatrix([][]float64{
 		{+3, +0, -3, +0},
 		{+0, +3, +1, +2},
 		{+0, +0, +4, +1},
 		{+0, +0, +0, +3},
 	})
-	cLo := NewMatrix(n, n)
-	cLo.SetFromMat([][]float64{
+	cLo := NewMatrix([][]float64{
 		{+3, +0, +0, +0},
 		{+0, +3, +0, +0},
 		{-3, +1, +4, +0},
@@ -837,14 +848,16 @@ func TestDsyrk01(tst *testing.T) {
 	checkUplo(tst, "Dsyrk01", c, cLo, cUp, 1e-17)
 
 	// a matrix
-	k := 6
-	a := NewMatrix(n, k)
-	a.SetFromMat([][]float64{
+	a := NewMatrix([][]float64{
 		{+1, +2, +1, +1, -1, +0},
 		{+2, +2, +1, +0, +0, +0},
 		{+3, +1, +3, +1, +2, -1},
 		{+1, +0, +1, -1, +0, +0},
 	})
+
+	// sizes
+	n := c.N()
+	k := a.N()
 
 	// constants
 	alpha, beta := 3.0, -1.0
@@ -889,9 +902,7 @@ func TestDsyrk02(tst *testing.T) {
 	chk.PrintTitle("Dsyrk02")
 
 	// c matrices
-	n := 6
-	c := NewMatrix(n, n)
-	c.SetFromMat([][]float64{
+	c := NewMatrix([][]float64{
 		{+3, 0, -3, 0, 0, 0},
 		{+0, 3, +1, 2, 2, 2},
 		{-3, 1, +4, 1, 1, 1},
@@ -899,8 +910,7 @@ func TestDsyrk02(tst *testing.T) {
 		{+0, 2, +1, 3, 4, 3},
 		{+0, 2, +1, 3, 3, 4},
 	})
-	cUp := NewMatrix(n, n)
-	cUp.SetFromMat([][]float64{
+	cUp := NewMatrix([][]float64{
 		{+3, 0, -3, 0, 0, 0},
 		{+0, 3, +1, 2, 2, 2},
 		{+0, 0, +4, 1, 1, 1},
@@ -908,8 +918,7 @@ func TestDsyrk02(tst *testing.T) {
 		{+0, 0, +0, 0, 4, 3},
 		{+0, 0, +0, 0, 0, 4},
 	})
-	cLo := NewMatrix(n, n)
-	cLo.SetFromMat([][]float64{
+	cLo := NewMatrix([][]float64{
 		{+3, 0, +0, 0, 0, 0},
 		{+0, 3, +0, 0, 0, 0},
 		{-3, 1, +4, 0, 0, 0},
@@ -922,14 +931,16 @@ func TestDsyrk02(tst *testing.T) {
 	checkUplo(tst, "Dsyrk02", c, cLo, cUp, 1e-17)
 
 	// a matrix
-	k := 4
-	a := NewMatrix(k, n)
-	a.SetFromMat([][]float64{
+	a := NewMatrix([][]float64{
 		{+1, +2, +1, +1, -1, +0},
 		{+2, +2, +1, +0, +0, +0},
 		{+3, +1, +3, +1, +2, -1},
 		{+1, +0, +1, -1, +0, +0},
 	})
+
+	// sizes
+	n := c.N()
+	k := a.M() // m now
 
 	// constants
 	alpha, beta := 3.0, +1.0
@@ -1017,23 +1028,19 @@ func TestZsyrk01(tst *testing.T) {
 	chk.PrintTitle("Zsyrk01")
 
 	// c matrices
-	n := 4
-	c := NewMatrixC(n, n)
-	c.SetFromMat([][]complex128{
+	c := NewMatrixC([][]complex128{
 		{+3 + 1i, 0 + 0i, -2 + 0i, 0 + 0i},
 		{-1 + 0i, 3 + 0i, +0 + 0i, 2 + 0i},
 		{-4 + 0i, 1 + 0i, +3 + 0i, 1 + 0i},
 		{-1 + 0i, 2 + 0i, +0 + 0i, 3 - 1i},
 	})
-	cUp := NewMatrixC(n, n)
-	cUp.SetFromMat([][]complex128{
+	cUp := NewMatrixC([][]complex128{
 		{+3 + 1i, 0 + 0i, -2 + 0i, 0 + 0i},
 		{+0 + 0i, 3 + 0i, +0 + 0i, 2 + 0i},
 		{+0 + 0i, 0 + 0i, +3 + 0i, 1 + 0i},
 		{+0 + 0i, 0 + 0i, +0 + 0i, 3 - 1i},
 	})
-	cLo := NewMatrixC(n, n)
-	cLo.SetFromMat([][]complex128{
+	cLo := NewMatrixC([][]complex128{
 		{+3 + 1i, 0 + 0i, +0 + 0i, 0 + 0i},
 		{-1 + 0i, 3 + 0i, +0 + 0i, 0 + 0i},
 		{-4 + 0i, 1 + 0i, +3 + 0i, 0 + 0i},
@@ -1044,14 +1051,16 @@ func TestZsyrk01(tst *testing.T) {
 	checkUploC(tst, "Zsyrk02", c, cLo, cUp, 1e-17, 1e-17)
 
 	// a matrix
-	k := 6
-	a := NewMatrixC(n, k)
-	a.SetFromMat([][]complex128{
+	a := NewMatrixC([][]complex128{
 		{+1 - 1i, +2, +1, +1, -1, +0 + 0i},
 		{+2 + 0i, +2, +1, +0, +0, +0 + 1i},
 		{+3 + 1i, +1, +3, +1, +2, -1 + 0i},
 		{+1 + 0i, +0, +1, -1, +0, +0 + 1i},
 	})
+
+	// sizes
+	n := c.N()
+	k := a.N()
 
 	// constants
 	alpha, beta := 3.0+0i, +1.0+0i
@@ -1096,23 +1105,19 @@ func TestZherk01(tst *testing.T) {
 	chk.PrintTitle("Zherk01")
 
 	// c matrices
-	n := 4
-	c := NewMatrixC(n, n)
-	c.SetFromMat([][]complex128{ // must be Hermitian: c = c^H
+	c := NewMatrixC([][]complex128{ // must be Hermitian: c = c^H
 		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
 		{+0 - 1i, 3 + 0i, +1 + 0i, 2 + 0i},
 		{-3 - 1i, 1 + 0i, +4 + 0i, 1 - 1i},
 		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
 	})
-	cUp := NewMatrixC(n, n)
-	cUp.SetFromMat([][]complex128{
+	cUp := NewMatrixC([][]complex128{
 		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
 		{+0 + 0i, 3 + 0i, +1 + 0i, 2 + 0i},
 		{+0 + 0i, 0 + 0i, +4 + 0i, 1 - 1i},
 		{+0 + 0i, 0 + 0i, +0 + 0i, 4 + 0i},
 	})
-	cLo := NewMatrixC(n, n)
-	cLo.SetFromMat([][]complex128{
+	cLo := NewMatrixC([][]complex128{
 		{+4 + 0i, 0 + 0i, +0 + 0i, 0 + 0i},
 		{+0 - 1i, 3 + 0i, +0 + 0i, 0 + 0i},
 		{-3 - 1i, 1 + 0i, +4 + 0i, 0 + 0i},
@@ -1123,14 +1128,16 @@ func TestZherk01(tst *testing.T) {
 	checkUploC(tst, "Zherk01", c, cLo, cUp, 1e-17, 1e-17)
 
 	// a matrix
-	k := 6
-	a := NewMatrixC(n, k)
-	a.SetFromMat([][]complex128{
+	a := NewMatrixC([][]complex128{
 		{+1 - 1i, +2, +1, +1, -1, +0 + 0i},
 		{+2 + 0i, +2, +1, +0, +0, +0 + 1i},
 		{+3 + 1i, +1, +3, +1, +2, -1 + 0i},
 		{+1 + 0i, +0, +1, -1, +0, +0 + 1i},
 	})
+
+	// sizes
+	n := c.N()
+	k := a.N()
 
 	// constants
 	alpha, beta := 3.0, +1.0
@@ -1175,23 +1182,19 @@ func TestDpotrf01(tst *testing.T) {
 	chk.PrintTitle("Dpotrf01")
 
 	// a matrices
-	n := 4
-	a := NewMatrix(n, n)
-	a.SetFromMat([][]float64{
+	a := NewMatrix([][]float64{
 		{+3, +0, -3, +0},
 		{+0, +3, +1, +2},
 		{-3, +1, +4, +1},
 		{+0, +2, +1, +3},
 	})
-	aUp := NewMatrix(n, n)
-	aUp.SetFromMat([][]float64{
+	aUp := NewMatrix([][]float64{
 		{+3, +0, -3, +0},
 		{+0, +3, +1, +2},
 		{+0, +0, +4, +1},
 		{+0, +0, +0, +3},
 	})
-	aLo := NewMatrix(n, n)
-	aLo.SetFromMat([][]float64{
+	aLo := NewMatrix([][]float64{
 		{+3, +0, +0, +0},
 		{+0, +3, +0, +0},
 		{-3, +1, +4, +0},
@@ -1202,6 +1205,7 @@ func TestDpotrf01(tst *testing.T) {
 	checkUplo(tst, "Dpotrf01", a, aLo, aUp, 1e-17)
 
 	// run dpotrf with up(a)
+	n := a.N()
 	up := true
 	lda := n
 	err := Dpotrf(up, n, aUp, lda)
@@ -1241,23 +1245,19 @@ func TestZpotrf01(tst *testing.T) {
 	chk.PrintTitle("Zpotrf01")
 
 	// a matrices
-	n := 4
-	a := NewMatrixC(n, n)
-	a.SetFromMat([][]complex128{ // must be Hermitian: a = a^H
+	a := NewMatrixC([][]complex128{ // must be Hermitian: a = a^H
 		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
 		{+0 - 1i, 3 + 0i, +1 + 0i, 2 + 0i},
 		{-3 - 1i, 1 + 0i, +4 + 0i, 1 - 1i},
 		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
 	})
-	aUp := NewMatrixC(n, n)
-	aUp.SetFromMat([][]complex128{
+	aUp := NewMatrixC([][]complex128{
 		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
 		{+0 + 0i, 3 + 0i, +1 + 0i, 2 + 0i},
 		{+0 + 0i, 0 + 0i, +4 + 0i, 1 - 1i},
 		{+0 + 0i, 0 + 0i, +0 + 0i, 4 + 0i},
 	})
-	aLo := NewMatrixC(n, n)
-	aLo.SetFromMat([][]complex128{
+	aLo := NewMatrixC([][]complex128{
 		{+4 + 0i, 0 + 0i, +0 + 0i, 0 + 0i},
 		{+0 - 1i, 3 + 0i, +0 + 0i, 0 + 0i},
 		{-3 - 1i, 1 + 0i, +4 + 0i, 0 + 0i},
@@ -1268,6 +1268,7 @@ func TestZpotrf01(tst *testing.T) {
 	checkUploC(tst, "Zherk01", a, aLo, aUp, 1e-17, 1e-17)
 
 	// run zpotrf with up(a)
+	n := a.N()
 	up := true
 	lda := n
 	err := Zpotrf(up, n, aUp, lda)
