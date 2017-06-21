@@ -956,7 +956,7 @@ func TestZsyrk01(tst *testing.T) {
 	// constants
 	alpha, beta := 3.0+0i, +1.0+0i
 
-	// run dsyrk with up(c)
+	// run zsyrk with up(c)
 	up, trans := true, false
 	lda, ldc := n, n
 	err := Zsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
@@ -973,7 +973,7 @@ func TestZsyrk01(tst *testing.T) {
 		{+0 + 0i, +0 + 0i, +0 + 0i, +9 - 1i},
 	})
 
-	// run dsyrk with lo(c)
+	// run zsyrk with lo(c)
 	up = false
 	err = Zsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
 	if err != nil {
@@ -987,5 +987,84 @@ func TestZsyrk01(tst *testing.T) {
 		{20 - 6i, 27 + 0i, +0 + 0i, +0 + 0i},
 		{20 - 6i, 34 + 3i, 75 + 18i, +0 + 0i},
 		{+2 - 3i, +8 + 0i, 15 + 0i, +9 - 1i},
+	})
+}
+
+func TestZherk01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Zherk01")
+
+	// c matrices
+	n := 4
+	c := NewMatrixC(n, n)
+	c.SetFromMat([][]complex128{ // must be Hermitian: c = c^H
+		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
+		{+0 - 1i, 3 + 0i, +1 + 0i, 2 + 0i},
+		{-3 - 1i, 1 + 0i, +4 + 0i, 1 - 1i},
+		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
+	})
+	cUp := NewMatrixC(n, n)
+	cUp.SetFromMat([][]complex128{
+		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
+		{+0 + 0i, 3 + 0i, +1 + 0i, 2 + 0i},
+		{+0 + 0i, 0 + 0i, +4 + 0i, 1 - 1i},
+		{+0 + 0i, 0 + 0i, +0 + 0i, 4 + 0i},
+	})
+	cLo := NewMatrixC(n, n)
+	cLo.SetFromMat([][]complex128{
+		{+4 + 0i, 0 + 0i, +0 + 0i, 0 + 0i},
+		{+0 - 1i, 3 + 0i, +0 + 0i, 0 + 0i},
+		{-3 - 1i, 1 + 0i, +4 + 0i, 0 + 0i},
+		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
+	})
+
+	// check cUp and cLo
+	checkUploC(tst, "Zherk01", c, cLo, cUp, 1e-17, 1e-17)
+
+	// a matrix
+	k := 6
+	a := NewMatrixC(n, k)
+	a.SetFromMat([][]complex128{
+		{+1 - 1i, +2, +1, +1, -1, +0 + 0i},
+		{+2 + 0i, +2, +1, +0, +0, +0 + 1i},
+		{+3 + 1i, +1, +3, +1, +2, -1 + 0i},
+		{+1 + 0i, +0, +1, -1, +0, +0 + 1i},
+	})
+
+	// constants
+	alpha, beta := 3.0, +1.0
+
+	// run zherk with up(c)
+	up, trans := true, false
+	lda, ldc := n, n
+	err := Zherk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
+	if err != nil {
+		tst.Errorf("Zherk failed:\n%v\n", err)
+		return
+	}
+
+	// compare resulting up(c) matrix
+	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetMat(), [][]complex128{
+		{31 + 0i, 21 - 5i, 15 - 11i, 3 - 1i},
+		{+0 + 0i, 33 + 0i, 34 - 9i, 14 + 0i},
+		{+0 + 0i, +0 + 0i, 82 + 0i, 16 + 5i},
+		{+0 + 0i, +0 + 0i, +0 + 0i, 16 + 0i},
+	})
+
+	// run zherk with lo(c)
+	up = false
+	err = Zherk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
+	if err != nil {
+		tst.Errorf("Zherk failed:\n%v\n", err)
+		return
+	}
+
+	// compare resulting up(c) matrix
+	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetMat(), [][]complex128{
+		{31 + 0i, +0 + 0i, +0 + 0i, +0 + 0i},
+		{21 + 5i, 33 + 0i, +0 + 0i, +0 + 0i},
+		{15 + 11i, 34 + 9i, 82 + 0i, +0 + 0i},
+		{3 + 1i, 14 + 0i, 16 - 5i, 16 + 0i},
 	})
 }

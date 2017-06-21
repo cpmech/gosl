@@ -475,8 +475,20 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a *MatrixC, lda int, beta
 //  where  alpha and beta  are  real scalars,  C is an  n by n  hermitian
 //  matrix and  A  is an  n by k  matrix in the  first case and a  k by n
 //  matrix in the second case.
-func Zherk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) (err error) {
-	chk.Panic("TODO: Zherk")
+func Zherk(up, trans bool, n, k int, alpha float64, a *MatrixC, lda int, beta float64, c *MatrixC, ldc int) (err error) {
+	C.cblas_zherk(
+		cblasColMajor,
+		cUplo(up),
+		cTrans(trans),
+		C.blasint(n),
+		C.blasint(k),
+		C.double(alpha),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.data[0]))),
+		C.blasint(lda),
+		C.double(beta),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.data[0]))),
+		C.blasint(ldc),
+	)
 	return
 }
 
