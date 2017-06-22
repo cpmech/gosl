@@ -2,6 +2,7 @@
 
 ## 1. [Required] Install some dependencies:
 
+Type:
 ```bash
 sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
 sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
@@ -39,8 +40,8 @@ Download MKL (~900Mb) from [the intel MKL website](https://software.intel.com/en
 (click on Free Download; need to sign-in), then:
 ```bash
 mkdir -p $HOME/xpkg && cd $HOME/xpkg
-tar xzvf l_mkl_2017.2.174.tgz
-cd l_mkl_2017.2.174/
+tar xzf l_mkl_2017.3.196.tgz
+cd l_mkl_2017.3.196/
 bash install_GUI.sh
 ```
 and follow the instructions. These options have been tested:
@@ -75,7 +76,7 @@ cd gosl
 ./all.bash
 ```
 
-## 7. [Optional] Test la/mkl and la/opencv subpackages
+## 7. [Optional] Test la/mkl and img/ocv subpackages
 
 Install and test subpackage `la/mkl`:
 ```bash

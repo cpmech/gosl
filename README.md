@@ -77,12 +77,15 @@ Gosl includes the following _subpackages_:
 ## Installation
 
 Since Gosl needs some other C and Fortran codes, not all sub-packages can be directly installed
-using `go get ...` (unfortunately). Nonetheless, **Gosl is pretty easy to install!** See links
-below:
+using `go get ...`. Nonetheless, **Gosl is pretty easy to install!** See links below:
 
 1. [Ubuntu](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md)
 2. [Windows](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
 3. [macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
+
+The following subpackages are available on Linux only at the moment: _mpi_, _la/mkl_, and _vtk_. The
+following subpackages are not available for Windows at the moment: _gm/tri_, _rnd/sfmt_, and
+_rnd/dsfmt_. Help to compile these packages in all platforms is much welcome and appreciated.
 
 
 

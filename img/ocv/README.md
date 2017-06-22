@@ -6,6 +6,8 @@ More information is available in **[the documentation of this package](https://g
 
 The `ocv` subpackage is a light wrapper to the [OpenCV](http://opencv.org) library.
 
+**WORK IN PROGRESS**
+
 ## Mat structure
 
 ## GUI commands
