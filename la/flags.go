@@ -13,7 +13,8 @@ package la
 #cgo windows CFLAGS: -O2
 #cgo windows LDFLAGS: -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lopenblas -lgfortran
 
-#cgo darwin LDFLAGS: -L/usr/local/lib
+#cgo darwin CFLAGS: -I/usr/local/opt/openblas/include
+#cgo darwin LDFLAGS: -L/usr/local/opt/openblas/lib
 #cgo darwin LDFLAGS: -lm -llapack -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig
 */
 import "C"

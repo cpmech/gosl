@@ -27,6 +27,7 @@ Install dependencies with:
 
 ```
 brew install fftw
+brew install homebrew/science/openblas
 brew install homebrew/science/suitesparse
 ```
 
