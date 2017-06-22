@@ -1,5 +1,7 @@
 # Gosl &ndash; Go scientific library
 
+[![GoDoc](https://godoc.org/github.com/cpmech/gosl?status.svg)](https://godoc.org/github.com/cpmech/gosl)
+
 Gosl is a library written in Go (golang) to develop high-performance scientific computing with ease.
 The library tries to be as general and _easy_ as possible. Gosl considers the use of both Go
 concurrency routines and parallel computing using the message passing interface. Gosl has several
@@ -18,14 +20,11 @@ for mesh generation to assist on the development of finite element solvers.
 [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
 functions and use structures).
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl?status.svg)](https://godoc.org/github.com/cpmech/gosl)
 
 
+## Summary
 
-## Content
-
-Gosl comprises several _subpackages_ as listed below:
-
+Gosl includes the following _subpackages_:
 1.  [chk](https://github.com/cpmech/gosl/tree/master/chk)             &ndash; Check code and unit test tools
 2.  [io](https://github.com/cpmech/gosl/tree/master/io)               &ndash; Input/output, read/write files, and print commands
 3.  [utl](https://github.com/cpmech/gosl/tree/master/utl)             &ndash; Utilities. Lists. Dictionaries. Simple Numerics
@@ -55,6 +54,7 @@ Gosl comprises several _subpackages_ as listed below:
 27. [img/ocv](https://github.com/cpmech/gosl/tree/master/img/ocv)     &ndash; Go wrapper to OpenCV
 
 
+
 ## Examples
 
 * [Compute (fast) discrete Fourier transform](examples/fun_fft01.go)
@@ -70,168 +70,52 @@ Gosl comprises several _subpackages_ as listed below:
 * [B-splines: curve, control, and basis](examples/gm_bspline02.go)
 * [Orthogonal polynomials](examples/fun_orthopoly01.go)
 
-
-[Check out more examples here](https://github.com/cpmech/gosl/blob/master/examples/README.md)
-
-<div id="container">
-<p><img src="examples/figs/gm_nurbs03.png" width="400"></p>
-Construction of NURBS surfaces with the gm package.
-</div>
-
-.  
-
-<div id="container">
-<p><img src="examples/figs/rnd_normalDistribution.png" width="400"></p>
-Normally distributed pseudo-random numbers. Using sub-package rnd
-</div>
+[See the output of examples here](https://github.com/cpmech/gosl/blob/master/examples/README.md)
 
 
 
-## 1 Installation on Windows
+## Installation
 
-1. Download and install *go1.8.3.windows-amd64.msi* (or newer) from https://golang.org/dl/
-2. Download and run the [Windows 10 Installer](https://sourceforge.net/projects/gosl-installer/files/)
+Since Gosl needs some other C and Fortran codes, not all sub-packages can be directly installed
+using `go get ...` (unfortunately). Nonetheless, **Gosl is pretty easy to install!** See links
+below:
 
-We also recommend to install [PythonXY](http://python-xy.github.io/downloads.html),
-[Git+Bash](https://git-scm.com/download/) and
-[Visual Studio Code](https://code.visualstudio.com/docs/?dv=win).
-
-[See further instructions here](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md), including instructions to compile from sources.
-
-## 2 Installation on macOS
-
-To install on macOS, [see instructions for macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
-
-## 3 Installation on Linux (Debian/Ubuntu)
-
-To install on Debian/Ubuntu/Linux, type the following commands:
-
-### 3.1. Install dependencies:
-```
-sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
-sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
-sudo apt-get install libfftw3-dev libfftw3-mpi-dev
-```
+1. [Ubuntu](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md)
+2. [Windows](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
+3. [macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
 
 
 
-### 3.2. Clone and install Gosl
-```
-mkdir -p ${GOPATH%:*}/src/github.com/cpmech
-cd ${GOPATH%:*}/src/github.com/cpmech
-git clone https://github.com/cpmech/gosl.git
-cd gosl
-./all.bash
-```
+## About the filenames
+
+1. `t_something_test.go` is a **unit test**. We have several of them! Some usage
+   information can be learned from these files.
+2. `t_something_main.go` is a test with a main function to be run with `go run ...` or `mpirun -np ? go
+   run ...` (replace ? with the number of cpus). There very few of these files.
+3. `t_b_something_test.go` is a benchmark test. There a few of them. Run benchmarks with `go test -run=XXX -bench=.`
 
 
 
-### 3.3 Set dynamic library flags if installing the next tools
+## Design strategies
 
-To set LD\_LIBRARY\_PATH, add the following line to `.bashrc` or `.bash_aliases`:
-```
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-```
-Alternatively, change `/etc/ld.so.conf` file as appropriate.
-
-
-
-### 3.4 Optional: Install OpenBLAS
-```
-mkdir -p $HOME/xpkg && cd $HOME/xpkg
-git clone https://github.com/xianyi/OpenBLAS.git
-cd OpenBLAS
-make -j4
-sudo make PREFIX=/usr/local install
-```
-
-**Note**: Make sure to set the `/usr/local/lib` directory as a searchable LD\_LIBRARY\_PATH.
-Otherwise, the following error may happen:
-```
-[...] libopenblas.so.0: cannot open shared object file: [...]
-```
-(see Section 3.3 above to fix this problem)
-
-Now, install and test subpackage `la/oblas`:
-```
-cd ${GOPATH%:*}/src/github.com/cpmech/la/oblas
-go install
-go test
-```
-
-
-
-### 3.5 Optional: Install Intel MKL
-Download MKL (~900Mb) from [the intel MKL website](https://software.intel.com/en-us/intel-mkl)
-(click on Free Download; need to sign-in), then:
-```
-mkdir -p $HOME/xpkg && cd $HOME/xpkg
-tar xzvf l_mkl_2017.2.174.tgz
-cd l_mkl_2017.2.174/
-bash install_GUI.sh
-```
-and follow the instructions. These options have been tested:
-1. Choose _Install as root using sudo_
-2. Keep default install location: **/opt/intel**
-
-Now, install and test subpackage `la/mkl`:
-```
-cd ${GOPATH%:*}/src/github.com/cpmech/la/mkl
-go install
-go test
-```
-
-
-
-### 3.6 Optional: Install OpenCV
-```
-sudo apt-get install libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
-mkdir -p $HOME/xpkg && cd $HOME/xpkg
-git clone https://github.com/opencv/opencv.git
-mkdir build_opencv
-cd build_opencv
-ccmake ../opencv
-```
-press `[c][c][g]`
-```
-make -j4
-sudo make install
-```
-
-Now, install and test subpackge `img/ocv`:
-```
-cd ${GOPATH%:*}/src/github.com/cpmech/img/ocv
-go install
-go test
-```
-
-
-
-### Python dependencies
-
-At the moment, the `plt` subpackage requires `python-scipy` and `python-matplotlib` (installed as
-above in Section 3.1).
-
-
-
-## Key aspects of the library
-
-Here, we call _user-defined_ types as _structures_. These are simply Go `types` defined as `struct`.
-Some may think of these _structures_ as _classes_. Gosl has several global functions as well and
+Here, we call _structure_ any _user-defined type_. These are simply Go `types` defined as `struct`.
+One may think of these _structures_ as _classes_. Gosl has several global functions as well and
 tries to avoid complicated constructions.
 
-An allocated structure is called an **object** and functions attached to this object are called
-**methods**. The variable holding the pointer to an object is always named **o** in Gosl. This
-variable is similar to `self` or `this` in other languages (Python, C++, respectively).
+An allocated structure (instance) is called an **object** and functions attached to this object are
+called **methods**. In Gosl, the variable holding the pointer to an object is always named **o**
+(lower case "o"). This variable is similar to the `self` or `this` keywords in other languages
+(Python, C++, respectively).
 
-Some objects need to be initialised before use. In this case, functions named `Init` have to be
-called (e.g. like `constructors`). Some structures require an explicit call to a function to release
-allocated memory. This function is named `Free`. Functions that allocate a pointer to a structure
-are prefixed with `New`; for instance: `NewIsoSurf`.
+Functions that allocate a pointer to a structure are prefixed with `New`; for instance:
+`NewIsoSurf`. Some structures require an explicit call to another function to release allocated
+memory. Be aware of this requirement! In this case, the function is named `Free` and appears in a
+few sub-packages that use CGO. Also, some objects may need to be initialised before use. In this
+case, functions named `Init` have to be called.
 
 The directories corresponding to each package has a README.md file that should help with
-understanding the library more in details. These include links to the definition of all functions
-and structures (the developer's documentation, generated by `godoc`).
+understanding the library. Also, there are links to `godoc.org` where all functions, structures, and
+variables are well explained.
 
 
 

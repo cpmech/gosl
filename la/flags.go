@@ -4,15 +4,10 @@
 
 package la
 
-// NOTE: -lblas must come after -lumfpack on Windows
-//       There is no need for -I and -L flags on Wndows
-//       Because include and lib files will be installed
-//       in C:\TDM-GCC-64, the default place for those files
-
 /*
 #cgo linux CFLAGS: -O2 -I/usr/include/suitesparse -I/usr/local/include/suitesparse
 #cgo linux LDFLAGS: -L/usr/lib -L/usr/local/lib
-#cgo linux LDFLAGS: -lm -llapack -lgfortran -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig
+#cgo linux LDFLAGS: -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lopenblas -lgfortran
 #cgo linux LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord
 
 #cgo windows CFLAGS: -O2
