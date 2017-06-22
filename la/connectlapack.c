@@ -3,18 +3,7 @@
 // license that can be found in the LICENSE file.
 
 #include <stdlib.h> // for malloc and free
-
-// DGETRF - compute an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges
-void dgetrf_(const int* m, const int* n, double* a, const int* lda, int* ipiv, int* info);
-
-// DGETRI - compute the inverse of a matrix using the LU factorization computed by DGETRF
-void dgetri_(const int* n, double* a, const int* lda, int* ipiv, double* work, const int* lwork, int* info);
-
-// DGESVD - computes the singular value decomposition of a real M-by-N matrix A, optionally computing the left and/or right singular vectors
-void dgesvd_(const char* jobu, const char* jobvt, const int* M, const int* N, double* A, const int* lda, double* S, double* U, const int* ldu, double* VT, const int* ldvt, double* work,const int* lwork, const int* info);
-
-// DGESV - double-general-solver
-void dgesv_(int *Np, int *NRHSp, double *A, int *LDAp, int *IPIVp, double *B, int *LDBp, int *INFOp);
+#include <lapacke.h>
 
 // make_int converts long (a_long) to int (a_int)
 // Return codes:
@@ -48,12 +37,12 @@ int lapack_square_inverse(double *Ai, long m_long, double *A) {
     int * ipiv = (int*)malloc(m * sizeof(int));
 
     // factorization
-    dgetrf_(&m,     // M
-            &m,     // N
+    info = LAPACKE_dgetrf_work(LAPACK_COL_MAJOR,
+            m,      // M
+            m,      // N
             Ai,     // double * A
-            &m,     // LDA
-            ipiv,   // Pivot indices
-            &info); // INFO
+            m,      // LDA
+            ipiv);  // Pivot indices
 
     // clean-up and check
     if (info != 0) {
@@ -67,13 +56,13 @@ int lapack_square_inverse(double *Ai, long m_long, double *A) {
     double * work  = (double*)malloc(lwork * sizeof(double)); // Work
 
     // inversion
-    dgetri_(&m,     // N
+    info = LAPACKE_dgetri_work(LAPACK_COL_MAJOR,
+            m,      // N
             Ai,     // double * A
-            &m,     // LDA
+            m,      // LDA
             ipiv,   // Pivot indices
             work,   // work
-            &lwork, // dimension of work
-            &info); // INFO
+            lwork); // dimension of work
 
     // clean up
     free(ipiv);
@@ -116,20 +105,20 @@ int lapack_svd(double *U, double *S, double *Vt, long m_long, long n_long, doubl
     double * work = (double*)malloc(lwork * sizeof(double));
 
     // decomposition
-    dgesvd_(&job,   // JOBU
-            &job,   // JOBVT
-            &m,     // M
-            &n,     // N
+    info = LAPACKE_dgesvd_work(LAPACK_COL_MAJOR,
+            job,    // JOBU
+            job,    // JOBVT
+            m,      // M
+            n,      // N
             A,      // A
-            &m,     // LDA
+            m,      // LDA
             S,      // S
             U,      // U
-            &m,     // LDU
+            m,      // LDU
             Vt,     // VT
-            &n,     // LDVT
+            n,      // LDVT
             work,   // WORK
-            &lwork, // LWORK
-            &info); // INFO
+            lwork); // LWORK
 
     // clean-up
     free(work);

@@ -7,10 +7,10 @@ package oblas
 /*
 #cgo linux   CFLAGS: -DOPENBLAS_USE64BITINT -O2 -I/usr/include
 #cgo linux   CFLAGS: -DOPENBLAS_USE64BITINT -O2 -I/usr/local/include
-#cgo windows CFLAGS: -DOPENBLAS_USE64BITINT -O2 -IC:/Gosl/include
+#cgo windows CFLAGS: -DOPENBLAS_USE64BITINT -O2
 
 #cgo linux   LDFLAGS: -lopenblas -L/local/lib
 #cgo darwin  LDFLAGS: -lopenblas -L/usr/local/lib
-#cgo windows LDFLAGS: -lopenblas -LC:/Gosl/lib
+#cgo windows LDFLAGS: -lopenblas -lgfortran
 */
 import "C"

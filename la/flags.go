@@ -16,7 +16,7 @@ package la
 #cgo linux LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord
 
 #cgo windows CFLAGS: -O2
-#cgo windows LDFLAGS: -llapack -lgfortran -lumfpack -lblas -lamd -lcholmod -lcolamd -lsuitesparseconfig
+#cgo windows LDFLAGS: -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lopenblas -lgfortran
 
 #cgo darwin LDFLAGS: -L/usr/local/lib
 #cgo darwin LDFLAGS: -lm -llapack -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig
