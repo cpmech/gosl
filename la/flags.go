@@ -15,6 +15,6 @@ package la
 
 #cgo darwin CFLAGS: -I/usr/local/opt/openblas/include
 #cgo darwin LDFLAGS: -L/usr/local/opt/openblas/lib
-#cgo darwin LDFLAGS: -lm -llapack -lblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig
+#cgo darwin LDFLAGS: -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lopenblas
 */
 import "C"
