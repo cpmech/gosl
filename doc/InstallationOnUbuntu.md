@@ -1,6 +1,6 @@
 # Installing Gosl on Ubuntu Linux (Debian)
 
-## [Required] Install some dependencies:
+## 1. [Required] Install some dependencies:
 
 ```bash
 sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
@@ -8,7 +8,7 @@ sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
 sudo apt-get install libfftw3-dev libfftw3-mpi-dev
 ```
 
-## [Required] Set dynamic library flags
+## 2. [Required] Set dynamic library flags
 
 To set LD\_LIBRARY\_PATH, add the following line to `.bashrc` or `.bash_aliases`:
 ```bash
@@ -16,7 +16,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 ```
 Alternatively, change `/etc/ld.so.conf` file as appropriate.
 
-## [Required] Install OpenBLAS
+## 3. [Required] Install OpenBLAS
 
 Type:
 ```bash
@@ -33,7 +33,7 @@ Otherwise, the following error may happen:
 [...] libopenblas.so.0: cannot open shared object file: [...]
 ```
 
-## [Optional] Install Intel MKL
+## 4. [Optional] Install Intel MKL
 
 Download MKL (~900Mb) from [the intel MKL website](https://software.intel.com/en-us/intel-mkl)
 (click on Free Download; need to sign-in), then:
@@ -47,7 +47,7 @@ and follow the instructions. These options have been tested:
 1. Choose _Install as root using sudo_
 2. Keep default install location: **/opt/intel**
 
-## [Optional] Install OpenCV
+## 5. [Optional] Install OpenCV
 
 Type:
 ```bash
@@ -64,7 +64,7 @@ make -j4
 sudo make install
 ```
 
-## [Required] Clone and install Gosl
+## 6. [Required] Clone and install Gosl
 
 Type:
 ```bash
@@ -75,7 +75,7 @@ cd gosl
 ./all.bash
 ```
 
-## [Optional] Test la/mkl and la/opencv subpackages
+## 7. [Optional] Test la/mkl and la/opencv subpackages
 
 Install and test subpackage `la/mkl`:
 ```bash
