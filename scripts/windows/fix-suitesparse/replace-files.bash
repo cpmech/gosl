@@ -14,7 +14,6 @@ cp $D/fix-suitesparse/SuiteSparse_CHOLMOD_Lib_Makefile.txt  SuiteSparse/CHOLMOD/
 cp $D/fix-suitesparse/SuiteSparse_CXSparse_Lib_Makefile.txt SuiteSparse/CXSparse/Lib/Makefile
 cp $D/fix-suitesparse/SuiteSparse_KLU_Lib_Makefile.txt      SuiteSparse/KLU/Lib/Makefile
 cp $D/fix-suitesparse/SuiteSparse_LDL_Lib_Makefile.txt      SuiteSparse/LDL/Lib/Makefile
+cp $D/fix-suitesparse/SuiteSparse_UMFPACK_Makefile.txt      SuiteSparse/UMFPACK/Makefile
 cp $D/fix-suitesparse/SuiteSparse_UMFPACK_Lib_Makefile.txt  SuiteSparse/UMFPACK/Lib/Makefile
 cp $D/fix-suitesparse/SuiteSparse_Makefile.txt              SuiteSparse/Makefile
-
-cp $D/fix-suitesparse/umfpack-output/*.out SuiteSparse/UMFPACK/Demo

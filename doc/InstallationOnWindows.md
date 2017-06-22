@@ -19,7 +19,7 @@ Below, two options to install Gosl (and Gcc) are presented:
 
 2. Download and install *Git-2.13.1.2-64-bit.exe* from https://git-scm.com/download/
 
-**NOTE**: You must install Git in C:\Git or D:\Git but **NOT** in a "Program Files" directory (the problem here is the spaces between Program and Files).
+**NOTE**: You must install Git in `C:\Git` or `D:\Git` but **NOT** within a "Program Files" directory (the problem here are the spaces between "Program" and "Files" that FFTW doesn't like...).
 
 All the other default options are OK.
 
@@ -34,7 +34,7 @@ Steps to Install [Go extension for VS Code](https://marketplace.visualstudio.com
 
 ## [Option A] Quick Install (Windows 10 Installer)
 
-The _Windows 10 Installer_ will install Gosl, TDM Gcc64, compiled Lapack and SuiteSparse,
+The _Windows 10 Installer_ will install Gosl, TDM Gcc64, compiled SuiteSparse and FFTW,
 and will set the required environment variables automatically.
 
 4. Download and install *go1.8.3.windows-amd64.msi* (or newer) from https://golang.org/dl/
@@ -51,8 +51,7 @@ Also the environment variables can be replaced as desired.
 
 Skip these steps if you have used the _installer_ already.
 
-*NOTE*: Git Bash is required for the commandes below. Thus, see section on installing Git and Bash earlier first.
-
+*NOTE*: Git Bash is required for the commandes below. Thus, see the section on installing Git and Bash above first.
 
 ### Install Go and Set Environment Variable
 
@@ -62,7 +61,6 @@ Create `C:\MyGo` directory (or any other to be set as `GOPATH`).
 
 Set the following environment variables (press `Windows key + R` to run `sysdm.cpl` then choose
 [Advanced] to set Environment Variables):
-
 ```
 GOPATH = C:\MyGo
 ```
@@ -80,43 +78,21 @@ git clone https://github.com/cpmech/gosl.git
 
 ### Download and Install Compilation Tools
 
-Download and Install:
-1. TDM-GCC-64 with Gcc and Gfortran for Windows from http://tdm-gcc.tdragon.net/download
-   1. Download and install *tdm64-gcc-5.1.0-2.exe* (or newer, as long as it is 64-bit)
-   2. Make sure to select *fortran* and keep other default options
-   3. Click on [Create] and leave the Installation Directory as `C:\TDM-GCC-64`
-2. CMake for Windows from https://cmake.org/download
-   1. Download and install *cmake-3.8.1-win64-x64.msi*. Keep default options
+Download and Install TDM-GCC-64 with Gcc and Gfortran for Windows from http://tdm-gcc.tdragon.net/download
 
-### Download and Compile Lapack
+1. Download and install *tdm64-gcc-5.1.0-2.exe* (or newer, it must be **64-bit**)
+2. Make sure to select **fortran** (under gcc) and keep other default options
+3. Click on [Create] and leave the Installation Directory as `C:\TDM-GCC-64`
+4. Duplicate `mingw32-make.exe` located in `C:\TDM-GCC-64\bin` into a file named `make` (without .exe).
 
-Download *lapack-3.7.0.tgz* from http://www.netlib.org/lapack and save it into `C:\TDM-GCC-64`
+### Download and Install OpenBLAS
 
-Start Git Bash and type:
-```bash
-cd /c/TDM-GCC-64
-tar xzf lapack-3.7.0.tgz
-mkdir build-lapack
-```
+Download OpenBLAS binaries for Windows from here https://sourceforge.net/projects/openblas/files/
 
-Start CMake (cmake-gui) and select:
+For example, download OpenBLAS-v0.2.19-Win64-int32.zip or newer.
 
-1. Where is the source code = `C:/TDM-GCC-64/lapack-3.7.0`
-2. Where to build the binaries = `C:/TDM-GCC-64/build-lapack`
-3. Hit `[Configure]`
-4. Select *MinGW Makefiles* under Specify the generator for this project (leave Use default native compilers on). Hit `[Finish]`
-5. Change `CMAKE_INSTALL_PREFIX` = `C:/TDM-GCC-64`
-6. Hit `[Configure]` again
-7. Hit `[Generate]` (and close window)
-
-Continue on Git Bash:
-
-```
-cd build-lapack
-mingw32-make.exe
-mingw32-make.exe test
-mingw32-make.exe install
-```
+1. Extract all files from the **include** directory of OpenBLAS...zip into `C:\TDM-GCC-64\include`
+2. Extract the `libopenblas.a` file from the **lib** directory of OpenBLAS...zip into `C:\TDM-GCC-64\lib`
 
 ### Download and Compile SuiteSparse
 
@@ -128,39 +104,29 @@ cd /c/TDM-GCC-64
 tar xzf SuiteSparse-4.5.5.tar.gz
 bash /c/MyGo/src/github.com/cpmech/gosl/scripts/windows/fix-suitesparse/replace-files.bash
 cd SuiteSparse
-mingw32-make.exe install
+make install
 ```
-
-TODO: Fix comparison files and check in `cd UMFPACK/Demo` with `mingw32-make.exe`
 
 ### Download and Compile FFTW
 
-First, duplicate `mingw32-make.exe` into a file named simply `make` in `C:\TDM-GCC-64\bin`.
+Download *fftw-3.3.6-pl2.tar.gz* from http://www.fftw.org/ and save it into `C:\TDM-GCC-64`
 
-Alternatively, create a link to `mingw32-make.exe` called `make` using the following command:
-```bash
-cmd //c "mklink /J C:\TDM-GCC-64\bin\make C:\TDM-GCC-64\bin\mingw32-make.exe"
-```
-
-Second, Download *fftw-3.3.6-pl2.tar.gz* from http://www.fftw.org/ and save it into `C:\TDM-GCC-64`
-
-Configure and compile with the following commands:
+Configure and compile FFTW with the following commands:
 ```bash
 cd /c/TDM-GCC-64
 tar xzf fftw-3.3.6-pl2.tar.gz
 cd fftw-3.3.6-pl2
-./configure --disable-alloca --disable-shared --enable-static --enable-sse2 --with-incoming-stack-boundary=2
+./configure --disable-alloca --with-our-malloc --disable-shared --enable-static --enable-sse2 --with-incoming-stack-boundary=2
 make
 ```
 
-If an error such as "C:\Program cannot be found" happens, probably you forgot to install Git Bash on C:\Git or D:\Git. See instructions above.
+If an error such as "C:\Program cannot be found" happens, probably you forgot to install Git Bash on C:\Git or D:\Git (Git must not be in "Program Files"). See instructions above.
 
-Copy (Install) the following files:
+Copy the following files to the `C:\TDM-GCC-64` directories:
 ```bash
 cp api/fftw3.h ../include/
 cp .libs/libfftw3.a ../lib/
 ```
-
 
 ### Build Gosl
 

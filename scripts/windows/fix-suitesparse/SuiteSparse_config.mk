@@ -169,6 +169,10 @@ UNAME = Windows
         endif
     endif
 
+    # dorival: using OpenBLAS
+    LAPACK =
+    BLAS = -lopenblas
+
     # For ACML, use this instead:
     #   make BLAS='-lacml -lgfortran'
 
