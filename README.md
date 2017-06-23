@@ -70,7 +70,10 @@ Gosl includes the following _subpackages_:
 * [B-splines: curve, control, and basis](examples/gm_bspline02.go)
 * [Orthogonal polynomials](examples/fun_orthopoly01.go)
 
-[See the output of examples here](https://github.com/cpmech/gosl/blob/master/examples/README.md)
+[See the output of examples here](examples/README.md)
+
+[See benchmark examples here](examples/benchmark/README.md)
+
 
 
 

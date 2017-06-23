@@ -8,13 +8,15 @@
 
 # Matrix-Matrix multiplication using oblas.Dgemm
 
+## Larger matrices
+
 Source code: <a href="oblas_dgemm01.go">oblas_dgemm01.go</a>
 
 <div id="container">
-<p><img src="figs/oblas-dgemm01b.png" width="500"></p>
+<p><img src="figs/oblas-dgemm01b.png"></p>
 </div>
 
-Output (large matrices):
+Output (larger matrices):
 ```
    size   ┃     OpenBLAS dgemm     (Dt) ┃          naïve           (naiveDt) ┃ naiveDt/Dt
 ━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━
@@ -42,8 +44,10 @@ Output (large matrices):
 1360×1360 ┃ 46.27 GFlops (108.736216ms) ┃ naive: N/A                         ┃ N/A
 ```
 
+## Small matrices
+
 <div id="container">
-<p><img src="figs/oblas-dgemm01a.png" width="500"></p>
+<p><img src="figs/oblas-dgemm01a.png"></p>
 </div>
 
 Output (small matrices):
