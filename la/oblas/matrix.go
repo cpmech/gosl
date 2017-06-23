@@ -79,6 +79,11 @@ func (o *Matrix) GetSlice() (M [][]float64) {
 	return
 }
 
+// Add adds value to (i,j) location
+func (o *Matrix) Add(i, j int, val float64) {
+	o.Data[i+j*o.M] += val // col-major
+}
+
 // Print prints matrix (without commas or brackets)
 func (o *Matrix) Print(nfmt string) (l string) {
 	if nfmt == "" {
@@ -205,6 +210,11 @@ func (o *MatrixC) GetSlice() (M [][]complex128) {
 		}
 	}
 	return
+}
+
+// Add adds value to (i,j) location
+func (o *MatrixC) Add(i, j int, val complex128) {
+	o.Data[i+j*o.M] += val // col-major
 }
 
 // Print prints matrix (without commas or brackets).
