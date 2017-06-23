@@ -401,22 +401,20 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 
 	// compute dimensions
 	minMN := imin(m, n)
-	maxMN := imax(m, n)
 	lda := m
 	ldu := m
 	ldvt := n
-	lwork := 2 * imax(3*minMN+maxMN, 5*minMN)
 
 	// allocate output arrays
 	s := make([]float64, minMN)
 	u := NewMatrixMN(m, m)
 	vt := NewMatrixMN(n, n)
-	work := make([]float64, lwork)
+	superb := make([]float64, minMN)
 
 	// perform SVD
 	jobu := 'A'
 	jobvt := 'A'
-	err := Dgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork)
+	err := Dgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, superb)
 	if err != nil {
 		tst.Errorf("Dgesvd failed:\n%v\n", err)
 		return
@@ -555,24 +553,20 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 
 	// compute dimensions
 	minMN := imin(m, n)
-	maxMN := imax(m, n)
 	lda := m
 	ldu := m
 	ldvt := n
-	lwork := 2 * (2*minMN + maxMN)
-	lrwork := 2 * (5 * minMN)
 
 	// allocate output arrays
 	s := make([]float64, minMN)
 	u := NewMatrixCmn(m, m)
 	vt := NewMatrixCmn(n, n)
-	work := make([]complex128, lwork)
-	rwork := make([]float64, lrwork)
+	superb := make([]float64, minMN)
 
 	// perform SVD
 	jobu := 'A'
 	jobvt := 'A'
-	err := Zgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, work, lwork, rwork)
+	err := Zgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, superb)
 	if err != nil {
 		tst.Errorf("Zgesvd failed:\n%v\n", err)
 		return
@@ -692,9 +686,7 @@ func TestDgetrf01(tst *testing.T) {
 	})
 
 	// run dgetri
-	lwork := 2 * n
-	work := make([]float64, lwork)
-	err = Dgetri(n, a, lda, ipiv, work, lwork)
+	err = Dgetri(n, a, lda, ipiv)
 	if err != nil {
 		tst.Errorf("Dgetri failed:\n%v\n", err)
 		return
@@ -759,9 +751,7 @@ func TestZgetrf01(tst *testing.T) {
 	})
 
 	// run zgetri
-	lwork := 2 * n
-	work := make([]complex128, lwork)
-	err = Zgetri(n, a, lda, ipiv, work, lwork)
+	err = Zgetri(n, a, lda, ipiv)
 	if err != nil {
 		tst.Errorf("Zgetri failed:\n%v\n", err)
 		return

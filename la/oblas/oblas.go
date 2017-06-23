@@ -290,7 +290,11 @@ func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int32, b []complex128, ldb i
 }
 
 // Dgesvd computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and/or right singular vectors.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d8/d2d/dgesvd_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-gesvd
+//
 //  The SVD is written
 //
 //       A = U * SIGMA * transpose(V)
@@ -305,8 +309,8 @@ func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int32, b []complex128, ldb i
 //  Note that the routine returns V**T, not V.
 //
 //  NOTE: matrix 'a' will be modified
-func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matrix, ldu int, vt *Matrix, ldvt int, work []float64, lwork int) (err error) {
-	info := C.LAPACKE_dgesvd_work(
+func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matrix, ldu int, vt *Matrix, ldvt int, superb []float64) (err error) {
+	info := C.LAPACKE_dgesvd(
 		C.int(lapackColMajor),
 		C.char(jobu),
 		C.char(jobvt),
@@ -319,8 +323,7 @@ func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matr
 		C.lapack_int(ldu),
 		(*C.double)(unsafe.Pointer(&vt.Data[0])),
 		C.lapack_int(ldvt),
-		(*C.double)(unsafe.Pointer(&work[0])),
-		C.lapack_int(lwork),
+		(*C.double)(unsafe.Pointer(&superb[0])),
 	)
 	if info != 0 {
 		err = chk.Err("lapack failed\n")
@@ -329,7 +332,11 @@ func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matr
 }
 
 // Zgesvd computes the singular value decomposition (SVD) of a complex M-by-N matrix A, optionally computing the left and/or right singular vectors.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d6/d42/zgesvd_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-gesvd
+//
 //  The SVD is written
 //
 //       A = U * SIGMA * conjugate-transpose(V)
@@ -344,8 +351,8 @@ func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matr
 //  Note that the routine returns V**H, not V.
 //
 //  NOTE: matrix 'a' will be modified
-func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *MatrixC, ldu int, vt *MatrixC, ldvt int, work []complex128, lwork int, rwork []float64) (err error) {
-	info := C.LAPACKE_zgesvd_work(
+func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *MatrixC, ldu int, vt *MatrixC, ldvt int, superb []float64) (err error) {
+	info := C.LAPACKE_zgesvd(
 		C.int(lapackColMajor),
 		C.char(jobu),
 		C.char(jobvt),
@@ -358,9 +365,7 @@ func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *Mat
 		C.lapack_int(ldu),
 		(*C.lapack_complex_double)(unsafe.Pointer(&vt.Data[0])),
 		C.lapack_int(ldvt),
-		(*C.lapack_complex_double)(unsafe.Pointer(&work[0])),
-		C.lapack_int(lwork),
-		(*C.double)(unsafe.Pointer(&rwork[0])),
+		(*C.double)(unsafe.Pointer(&superb[0])),
 	)
 	if info != 0 {
 		err = chk.Err("lapack failed\n")
@@ -382,7 +387,7 @@ func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *Mat
 //  NOTE: (1) matrix 'a' will be modified
 //        (2) ipiv indices are 1-based (i.e. Fortran)
 func Dgetrf(m, n int, a *Matrix, lda int, ipiv []int32) (err error) {
-	info := C.LAPACKE_dgetrf_work(
+	info := C.LAPACKE_dgetrf(
 		C.int(lapackColMajor),
 		C.lapack_int(m),
 		C.lapack_int(n),
@@ -410,7 +415,7 @@ func Dgetrf(m, n int, a *Matrix, lda int, ipiv []int32) (err error) {
 //  NOTE: (1) matrix 'a' will be modified
 //        (2) ipiv indices are 1-based (i.e. Fortran)
 func Zgetrf(m, n int, a *MatrixC, lda int, ipiv []int32) (err error) {
-	info := C.LAPACKE_zgetrf_work(
+	info := C.LAPACKE_zgetrf(
 		C.int(lapackColMajor),
 		C.lapack_int(m),
 		C.lapack_int(n),
@@ -429,15 +434,13 @@ func Zgetrf(m, n int, a *MatrixC, lda int, ipiv []int32) (err error) {
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Dgetri(n int, a *Matrix, lda int, ipiv []int32, work []float64, lwork int) (err error) {
-	info := C.LAPACKE_dgetri_work(
+func Dgetri(n int, a *Matrix, lda int, ipiv []int32) (err error) {
+	info := C.LAPACKE_dgetri(
 		C.int(lapackColMajor),
 		C.lapack_int(n),
 		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
-		(*C.double)(unsafe.Pointer(&work[0])),
-		C.lapack_int(lwork),
 	)
 	if info != 0 {
 		err = chk.Err("lapack failed\n")
@@ -450,15 +453,13 @@ func Dgetri(n int, a *Matrix, lda int, ipiv []int32, work []float64, lwork int) 
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Zgetri(n int, a *MatrixC, lda int, ipiv []int32, work []complex128, lwork int) (err error) {
-	info := C.LAPACKE_zgetri_work(
+func Zgetri(n int, a *MatrixC, lda int, ipiv []int32) (err error) {
+	info := C.LAPACKE_zgetri(
 		C.int(lapackColMajor),
 		C.lapack_int(n),
 		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
-		(*C.lapack_complex_double)(unsafe.Pointer(&work[0])),
-		C.lapack_int(lwork),
 	)
 	if info != 0 {
 		err = chk.Err("lapack failed\n")
