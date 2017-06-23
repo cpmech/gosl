@@ -25,7 +25,10 @@ func SetNumThreads(n int) {
 }
 
 // Daxpy computes constant times a vector plus a vector.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-axpy
 //
 //  y += alpha*x + y
 //
@@ -46,7 +49,10 @@ func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (
 }
 
 // Zaxpy computes constant times a vector plus a vector.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d7/db2/zaxpy_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-axpy
 //
 //  y += alpha*x + y
 //
@@ -67,7 +73,10 @@ func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, in
 }
 
 // Dgemv performs one of the matrix-vector operations
+//
 //  See: http://www.netlib.org/lapack/explore-html/dc/da8/dgemv_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemv
 //
 //     y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,
 //
@@ -110,7 +119,10 @@ func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64,
 }
 
 // Zgemv performs one of the matrix-vector operations.
+//
 //  See: http://www.netlib.org/lapack/explore-html/db/d40/zgemv_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemv
 //
 //     y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
 //
@@ -152,7 +164,10 @@ func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []comp
 }
 
 // Dgemm performs one of the matrix-matrix operations
+//
 //  see: http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
+//
+//  see: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemm
 //
 //     C := alpha*op( A )*op( B ) + beta*C,
 //
@@ -183,7 +198,10 @@ func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *Matrix, lda int, 
 }
 
 // Zgemm performs one of the matrix-matrix operations
+//
 //  see: http://www.netlib.org/lapack/explore-html/d7/d76/zgemm_8f.html
+//
+//  see: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemm
 //
 //     C := alpha*op( A )*op( B ) + beta*C,
 //
@@ -214,7 +232,11 @@ func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *MatrixC, lda i
 }
 
 // Dgesv computes the solution to a real system of linear equations.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d8/d72/dgesv_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-gesv
+//
 //  The system is:
 //
 //     A * X = B,
@@ -252,7 +274,11 @@ func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int32, b []float64, ldb int) 
 }
 
 // Zgesv computes the solution to a complex system of linear equations.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d1/ddc/zgesv_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-gesv
+//
 //  The system is:
 //
 //     A * X = B,
@@ -374,7 +400,10 @@ func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *Mat
 }
 
 // Dgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d3/d6a/dgetrf_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-getrf
 //
 //  The factorization has the form
 //     A = P * L * U
@@ -402,7 +431,10 @@ func Dgetrf(m, n int, a *Matrix, lda int, ipiv []int32) (err error) {
 }
 
 // Zgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
+//
 //  See: http://www.netlib.org/lapack/explore-html/dd/dd1/zgetrf_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-getrf
 //
 //  The factorization has the form
 //     A = P * L * U
@@ -430,7 +462,10 @@ func Zgetrf(m, n int, a *MatrixC, lda int, ipiv []int32) (err error) {
 }
 
 // Dgetri computes the inverse of a matrix using the LU factorization computed by DGETRF.
+//
 //  See: http://www.netlib.org/lapack/explore-html/df/da4/dgetri_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-getri
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
@@ -449,7 +484,10 @@ func Dgetri(n int, a *Matrix, lda int, ipiv []int32) (err error) {
 }
 
 // Zgetri computes the inverse of a matrix using the LU factorization computed by Zgetrf.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d0/db3/zgetri_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-getri
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
@@ -468,7 +506,10 @@ func Zgetri(n int, a *MatrixC, lda int, ipiv []int32) (err error) {
 }
 
 // Dsyrk performs one of the symmetric rank k operations
+//
 //  See: http://www.netlib.org/lapack/explore-html/dc/d05/dsyrk_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-syrk
 //
 //     C := alpha*A*A**T + beta*C,
 //
@@ -497,7 +538,10 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a *Matrix, lda int, beta flo
 }
 
 // Zsyrk performs one of the symmetric rank k operations
+//
 //  See: http://www.netlib.org/lapack/explore-html/de/d54/zsyrk_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-syrk
 //
 //     C := alpha*A*A**T + beta*C,
 //
@@ -526,7 +570,10 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a *MatrixC, lda int, beta
 }
 
 // Zherk performs one of the hermitian rank k operations
+//
 //  See: http://www.netlib.org/lapack/explore-html/d1/db1/zherk_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-herk
 //
 //     C := alpha*A*A**H + beta*C,
 //
@@ -555,7 +602,10 @@ func Zherk(up, trans bool, n, k int, alpha float64, a *MatrixC, lda int, beta fl
 }
 
 // Dpotrf computes the Cholesky factorization of a real symmetric positive definite matrix A.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d0/d8a/dpotrf_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-potrf
 //
 //  The factorization has the form
 //
@@ -583,7 +633,10 @@ func Dpotrf(up bool, n int, a *Matrix, lda int) (err error) {
 }
 
 // Zpotrf computes the Cholesky factorization of a complex Hermitian positive definite matrix A.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d1/db9/zpotrf_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-potrf
 //
 //  The factorization has the form
 //
