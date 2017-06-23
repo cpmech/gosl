@@ -8,6 +8,12 @@
 
 # Matrix-Matrix multiplication using oblas.Dgemm
 
+These tests were run on/at:
+* Ubuntu 16.04.2 LTS (from lsb_release -a)
+* Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz (from cat /proc/cpuinfo) and "standard flags"
+* Date = 2017-06-23
+with default OpenBLAS compilation.
+
 ## Larger matrices
 
 Source code: <a href="oblas_dgemm01.go">oblas_dgemm01.go</a>
