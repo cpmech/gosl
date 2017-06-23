@@ -2,18 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package mkl implements lower level linear algebra using Intel MKL for max efficiency
+// Package mkl implements lower level linear algebra using MKL for max efficiency
 package mkl
 
 /*
-#ifdef WIN32
-#define LONG long long
-#else
-#define LONG long
-#endif
-
-#include <mkl_types.h>
-#include <mkl_cblas.h>
+#include <mkl.h>
 
 #include <complex.h>
 static inline void* cpt(double complex* p) { return (void*)p; }
@@ -24,10 +17,19 @@ import (
 	"unsafe"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/la/oblas"
 )
 
+// SetNumThreads sets the number of threads in OpenBLAS
+func SetNumThreads(n int) {
+	C.mkl_set_num_threads(C.int(n))
+}
+
 // Daxpy computes constant times a vector plus a vector.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-axpy
 //
 //  y += alpha*x + y
 //
@@ -48,7 +50,10 @@ func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (
 }
 
 // Zaxpy computes constant times a vector plus a vector.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d7/db2/zaxpy_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-axpy
 //
 //  y += alpha*x + y
 //
@@ -69,7 +74,10 @@ func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, in
 }
 
 // Dgemv performs one of the matrix-vector operations
+//
 //  See: http://www.netlib.org/lapack/explore-html/dc/da8/dgemv_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemv
 //
 //     y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,
 //
@@ -78,20 +86,20 @@ func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, in
 //     trans=false     y := alpha*A*x + beta*y.
 //
 //     trans=true      y := alpha*A**T*x + beta*y.
-func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64, incx int, beta float64, y []float64, incy int) (err error) {
+func Dgemv(trans bool, m, n int, alpha float64, a *oblas.Matrix, lda int, x []float64, incx int, beta float64, y []float64, incy int) (err error) {
 	if trans {
-		if len(x) != a.m {
-			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.m)
+		if len(x) != a.M {
+			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.M)
 		}
-		if len(y) != a.n {
-			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.n)
+		if len(y) != a.N {
+			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.N)
 		}
 	} else {
-		if len(x) != a.n {
-			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.n)
+		if len(x) != a.N {
+			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.N)
 		}
-		if len(y) != a.m {
-			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.m)
+		if len(y) != a.M {
+			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.M)
 		}
 	}
 	C.cblas_dgemv(
@@ -100,7 +108,7 @@ func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64,
 		C.MKL_INT(m),
 		C.MKL_INT(n),
 		C.double(alpha),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.MKL_INT(lda),
 		(*C.double)(unsafe.Pointer(&x[0])),
 		C.MKL_INT(incx),
@@ -112,7 +120,10 @@ func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64,
 }
 
 // Zgemv performs one of the matrix-vector operations.
+//
 //  See: http://www.netlib.org/lapack/explore-html/db/d40/zgemv_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemv
 //
 //     y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
 //
@@ -120,13 +131,113 @@ func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64,
 //
 //  where alpha and beta are scalars, x and y are vectors and A is an
 //  m by n matrix.
-func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
-	chk.Panic("TODO: Zgemv")
+func Zgemv(trans bool, m, n int, alpha complex128, a *oblas.MatrixC, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
+	if trans {
+		if len(x) != a.M {
+			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.M)
+		}
+		if len(y) != a.N {
+			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.N)
+		}
+	} else {
+		if len(x) != a.N {
+			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.N)
+		}
+		if len(y) != a.M {
+			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.M)
+		}
+	}
+	C.cblas_zgemv(
+		cblasColMajor,
+		cTrans(trans),
+		C.MKL_INT(m),
+		C.MKL_INT(n),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
+		C.MKL_INT(lda),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&x[0]))),
+		C.MKL_INT(incx),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&y[0]))),
+		C.MKL_INT(incy),
+	)
+	return
+}
+
+// Dgemm performs one of the matrix-matrix operations
+//
+//  see: http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
+//
+//  see: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemm
+//
+//     C := alpha*op( A )*op( B ) + beta*C,
+//
+//  where  op( X ) is one of
+//
+//     op( X ) = X   or   op( X ) = X**T,
+//
+//  alpha and beta are scalars, and A, B and C are matrices, with op( A )
+//  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
+func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *oblas.Matrix, lda int, b *oblas.Matrix, ldb int, beta float64, c *oblas.Matrix, ldc int) (err error) {
+	C.cblas_dgemm(
+		cblasColMajor,
+		cTrans(transA),
+		cTrans(transB),
+		C.MKL_INT(m),
+		C.MKL_INT(n),
+		C.MKL_INT(k),
+		C.double(alpha),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		C.MKL_INT(lda),
+		(*C.double)(unsafe.Pointer(&b.Data[0])),
+		C.MKL_INT(ldb),
+		C.double(beta),
+		(*C.double)(unsafe.Pointer(&c.Data[0])),
+		C.MKL_INT(ldc),
+	)
+	return
+}
+
+// Zgemm performs one of the matrix-matrix operations
+//
+//  see: http://www.netlib.org/lapack/explore-html/d7/d76/zgemm_8f.html
+//
+//  see: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemm
+//
+//     C := alpha*op( A )*op( B ) + beta*C,
+//
+//  where  op( X ) is one of
+//
+//     op( X ) = X   or   op( X ) = X**T   or   op( X ) = X**H,
+//
+//  alpha and beta are scalars, and A, B and C are matrices, with op( A )
+//  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
+func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *oblas.MatrixC, lda int, b *oblas.MatrixC, ldb int, beta complex128, c *oblas.MatrixC, ldc int) (err error) {
+	C.cblas_zgemm(
+		cblasColMajor,
+		cTrans(transA),
+		cTrans(transB),
+		C.MKL_INT(m),
+		C.MKL_INT(n),
+		C.MKL_INT(k),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
+		C.MKL_INT(lda),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&b.Data[0]))),
+		C.MKL_INT(ldb),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
+		C.MKL_INT(ldc),
+	)
 	return
 }
 
 // Dgesv computes the solution to a real system of linear equations.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d8/d72/dgesv_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-gesv
+//
 //  The system is:
 //
 //     A * X = B,
@@ -141,13 +252,34 @@ func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []
 //  where P is a permutation matrix, L is unit lower triangular, and U is
 //  upper triangular.  The factored form of A is then used to solve the
 //  system of equations A * X = B.
-func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int, b []float64, ldb int) (err error) {
-	chk.Panic("TODO: Dgesv")
+//
+//  NOTE: matrix 'a' will be modified
+func Dgesv(n, nrhs int, a *oblas.Matrix, lda int, ipiv []int64, b []float64, ldb int) (err error) {
+	if len(ipiv) != n {
+		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
+	}
+	info := C.LAPACKE_dgesv(
+		C.int(lapackColMajor),
+		C.lapack_int(n),
+		C.lapack_int(nrhs),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+		(*C.double)(unsafe.Pointer(&b[0])),
+		C.lapack_int(ldb),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Zgesv computes the solution to a complex system of linear equations.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d1/ddc/zgesv_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-gesv
+//
 //  The system is:
 //
 //     A * X = B,
@@ -162,13 +294,34 @@ func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int, b []float64, ldb int) 
 //  where P is a permutation matrix, L is unit lower triangular, and U is
 //  upper triangular.  The factored form of A is then used to solve the
 //  system of equations A * X = B.
-func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int, b []complex128, ldb int) (err error) {
-	chk.Panic("TODO: Zgesv")
+//
+//  NOTE: matrix 'a' will be modified
+func Zgesv(n, nrhs int, a *oblas.MatrixC, lda int, ipiv []int64, b []complex128, ldb int) (err error) {
+	if len(ipiv) != n {
+		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
+	}
+	info := C.LAPACKE_zgesv(
+		C.int(lapackColMajor),
+		C.lapack_int(n),
+		C.lapack_int(nrhs),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&b[0])),
+		C.lapack_int(ldb),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Dgesvd computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and/or right singular vectors.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d8/d2d/dgesvd_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-gesvd
+//
 //  The SVD is written
 //
 //       A = U * SIGMA * transpose(V)
@@ -181,13 +334,36 @@ func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int, b []complex128, ldb
 //  U and V are the left and right singular vectors of A.
 //
 //  Note that the routine returns V**T, not V.
-func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s, u []float64, ldu int, vt []float64, ldvt int, work []float64, lwork int) (err error) {
-	chk.Panic("TODO: Dgesvd")
+//
+//  NOTE: matrix 'a' will be modified
+func Dgesvd(jobu, jobvt rune, m, n int, a *oblas.Matrix, lda int, s []float64, u *oblas.Matrix, ldu int, vt *oblas.Matrix, ldvt int, superb []float64) (err error) {
+	info := C.LAPACKE_dgesvd(
+		C.int(lapackColMajor),
+		C.char(jobu),
+		C.char(jobvt),
+		C.lapack_int(m),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+		(*C.double)(unsafe.Pointer(&s[0])),
+		(*C.double)(unsafe.Pointer(&u.Data[0])),
+		C.lapack_int(ldu),
+		(*C.double)(unsafe.Pointer(&vt.Data[0])),
+		C.lapack_int(ldvt),
+		(*C.double)(unsafe.Pointer(&superb[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Zgesvd computes the singular value decomposition (SVD) of a complex M-by-N matrix A, optionally computing the left and/or right singular vectors.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d6/d42/zgesvd_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-gesvd
+//
 //  The SVD is written
 //
 //       A = U * SIGMA * conjugate-transpose(V)
@@ -200,13 +376,35 @@ func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s, u []float64, ld
 //  U and V are the left and right singular vectors of A.
 //
 //  Note that the routine returns V**H, not V.
-func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s, u []complex128, ldu int, vt []complex128, ldvt int, work []complex128, lwork int) (err error) {
-	chk.Panic("TODO: Zgesvd")
+//
+//  NOTE: matrix 'a' will be modified
+func Zgesvd(jobu, jobvt rune, m, n int, a *oblas.MatrixC, lda int, s []float64, u *oblas.MatrixC, ldu int, vt *oblas.MatrixC, ldvt int, superb []float64) (err error) {
+	info := C.LAPACKE_zgesvd(
+		C.int(lapackColMajor),
+		C.char(jobu),
+		C.char(jobvt),
+		C.lapack_int(m),
+		C.lapack_int(n),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+		(*C.double)(unsafe.Pointer(&s[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&u.Data[0])),
+		C.lapack_int(ldu),
+		(*C.lapack_complex_double)(unsafe.Pointer(&vt.Data[0])),
+		C.lapack_int(ldvt),
+		(*C.double)(unsafe.Pointer(&superb[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Dgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d3/d6a/dgetrf_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-getrf
 //
 //  The factorization has the form
 //     A = P * L * U
@@ -215,13 +413,29 @@ func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s, u []complex1
 //  triangular (upper trapezoidal if m < n).
 //
 //  This is the right-looking Level 3 BLAS version of the algorithm.
-func Dgetrf(m, n int, a []float64, lda int, ipiv []int) (err error) {
-	chk.Panic("TODO: Dgetrf")
+//
+//  NOTE: (1) matrix 'a' will be modified
+//        (2) ipiv indices are 1-based (i.e. Fortran)
+func Dgetrf(m, n int, a *oblas.Matrix, lda int, ipiv []int64) (err error) {
+	info := C.LAPACKE_dgetrf(
+		C.int(lapackColMajor),
+		C.lapack_int(m),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Zgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
+//
 //  See: http://www.netlib.org/lapack/explore-html/dd/dd1/zgetrf_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-getrf
 //
 //  The factorization has the form
 //     A = P * L * U
@@ -230,33 +444,73 @@ func Dgetrf(m, n int, a []float64, lda int, ipiv []int) (err error) {
 //  triangular (upper trapezoidal if m < n).
 //
 //  This is the right-looking Level 3 BLAS version of the algorithm.
-func Zgetrf(m, n int, a []complex128, lda int, ipiv []int) (err error) {
-	chk.Panic("TODO: Zgetrf")
+//
+//  NOTE: (1) matrix 'a' will be modified
+//        (2) ipiv indices are 1-based (i.e. Fortran)
+func Zgetrf(m, n int, a *oblas.MatrixC, lda int, ipiv []int64) (err error) {
+	info := C.LAPACKE_zgetrf(
+		C.int(lapackColMajor),
+		C.lapack_int(m),
+		C.lapack_int(n),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Dgetri computes the inverse of a matrix using the LU factorization computed by DGETRF.
+//
 //  See: http://www.netlib.org/lapack/explore-html/df/da4/dgetri_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-getri
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Dgetri(n int, a []float64, lda int, ipiv []int, work []float64, lwork int) (err error) {
-	chk.Panic("TODO: Dgetri")
+func Dgetri(n int, a *oblas.Matrix, lda int, ipiv []int64) (err error) {
+	info := C.LAPACKE_dgetri(
+		C.int(lapackColMajor),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Zgetri computes the inverse of a matrix using the LU factorization computed by Zgetrf.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d0/db3/zgetri_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-getri
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Zgetri(n int, a []complex128, lda int, ipiv []int, work []complex128, lwork int) (err error) {
-	chk.Panic("TODO: Zgetri")
+func Zgetri(n int, a *oblas.MatrixC, lda int, ipiv []int64) (err error) {
+	info := C.LAPACKE_zgetri(
+		C.int(lapackColMajor),
+		C.lapack_int(n),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Dsyrk performs one of the symmetric rank k operations
+//
 //  See: http://www.netlib.org/lapack/explore-html/dc/d05/dsyrk_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-syrk
 //
 //     C := alpha*A*A**T + beta*C,
 //
@@ -267,13 +521,28 @@ func Zgetri(n int, a []complex128, lda int, ipiv []int, work []complex128, lwork
 //  where  alpha and beta  are scalars, C is an  n by n  symmetric matrix
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
-func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta float64, c []float64, ldc int) (err error) {
-	chk.Panic("TODO: Dsyrk")
+func Dsyrk(up, trans bool, n, k int, alpha float64, a *oblas.Matrix, lda int, beta float64, c *oblas.Matrix, ldc int) (err error) {
+	C.cblas_dsyrk(
+		cblasColMajor,
+		cUplo(up),
+		cTrans(trans),
+		C.MKL_INT(n),
+		C.MKL_INT(k),
+		C.double(alpha),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		C.MKL_INT(lda),
+		C.double(beta),
+		(*C.double)(unsafe.Pointer(&c.Data[0])),
+		C.MKL_INT(ldc),
+	)
 	return
 }
 
 // Zsyrk performs one of the symmetric rank k operations
+//
 //  See: http://www.netlib.org/lapack/explore-html/de/d54/zsyrk_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-syrk
 //
 //     C := alpha*A*A**T + beta*C,
 //
@@ -284,13 +553,28 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta f
 //  where  alpha and beta  are scalars,  C is an  n by n symmetric matrix
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
-func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) (err error) {
-	chk.Panic("TODO: Zsyrk")
+func Zsyrk(up, trans bool, n, k int, alpha complex128, a *oblas.MatrixC, lda int, beta complex128, c *oblas.MatrixC, ldc int) (err error) {
+	C.cblas_zsyrk(
+		cblasColMajor,
+		cUplo(up),
+		cTrans(trans),
+		C.MKL_INT(n),
+		C.MKL_INT(k),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
+		C.MKL_INT(lda),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
+		C.MKL_INT(ldc),
+	)
 	return
 }
 
 // Zherk performs one of the hermitian rank k operations
+//
 //  See: http://www.netlib.org/lapack/explore-html/d1/db1/zherk_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-herk
 //
 //     C := alpha*A*A**H + beta*C,
 //
@@ -301,42 +585,82 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, 
 //  where  alpha and beta  are  real scalars,  C is an  n by n  hermitian
 //  matrix and  A  is an  n by k  matrix in the  first case and a  k by n
 //  matrix in the second case.
-func Zherk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) (err error) {
-	chk.Panic("TODO: Zherk")
+func Zherk(up, trans bool, n, k int, alpha float64, a *oblas.MatrixC, lda int, beta float64, c *oblas.MatrixC, ldc int) (err error) {
+	C.cblas_zherk(
+		cblasColMajor,
+		cUplo(up),
+		cTrans(trans),
+		C.MKL_INT(n),
+		C.MKL_INT(k),
+		C.double(alpha),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
+		C.MKL_INT(lda),
+		C.double(beta),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
+		C.MKL_INT(ldc),
+	)
 	return
 }
 
 // Dpotrf computes the Cholesky factorization of a real symmetric positive definite matrix A.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d0/d8a/dpotrf_8f.html
 //
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-potrf
+//
 //  The factorization has the form
-//     A = U**T * U,  if UPLO = 'U', or
-//     A = L  * L**T,  if UPLO = 'L',
+//
+//     A = U**T * U,  if UPLO = 'U'
+//
+//  or
+//
+//     A = L  * L**T,  if UPLO = 'L'
+//
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
-func Dpotrf(up bool, n int, a []float64, lda int) (err error) {
-	chk.Panic("TODO: Dpotrf")
+func Dpotrf(up bool, n int, a *oblas.Matrix, lda int) (err error) {
+	info := C.LAPACKE_dpotrf(
+		C.int(lapackColMajor),
+		lUplo(up),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
 // Zpotrf computes the Cholesky factorization of a complex Hermitian positive definite matrix A.
+//
 //  See: http://www.netlib.org/lapack/explore-html/d1/db9/zpotrf_8f.html
 //
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-potrf
+//
 //  The factorization has the form
-//     A = U**H * U,  if UPLO = 'U', or
-//     A = L  * L**H,  if UPLO = 'L',
+//
+//     A = U**H * U,  if UPLO = 'U'
+//
+//  or
+//
+//     A = L  * L**H,  if UPLO = 'L'
+//
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
-func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
-	chk.Panic("TODO: Zpotrf")
-	return
-}
-
-// Dcholesky performs the Cholesky factorization
-func Dcholesky() (err error) {
-	chk.Panic("TODO: Dcholesky")
+func Zpotrf(up bool, n int, a *oblas.MatrixC, lda int) (err error) {
+	info := C.LAPACKE_zpotrf(
+		C.int(lapackColMajor),
+		lUplo(up),
+		C.lapack_int(n),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		C.lapack_int(lda),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
 	return
 }
 
@@ -344,7 +668,6 @@ func Dcholesky() (err error) {
 
 // constants
 const (
-
 	// Lapack matrix layout
 	lapackRowMajor = 101
 	lapackColMajor = 102
@@ -383,4 +706,18 @@ func cTrans(trans bool) C.CBLAS_TRANSPOSE {
 		return cblasTrans
 	}
 	return cblasNoTrans
+}
+
+func cUplo(up bool) C.CBLAS_UPLO {
+	if up {
+		return cblasUpper
+	}
+	return cblasLower
+}
+
+func lUplo(up bool) C.char {
+	if up {
+		return 'U'
+	}
+	return 'L'
 }
