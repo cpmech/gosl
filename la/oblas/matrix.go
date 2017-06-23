@@ -79,6 +79,13 @@ func (o *Matrix) GetSlice() (M [][]float64) {
 	return
 }
 
+// GetCopy returns a copy of this matrix
+func (o *Matrix) GetCopy() (clone *Matrix) {
+	clone = NewMatrixMN(o.M, o.N)
+	copy(clone.Data, o.Data)
+	return
+}
+
 // Add adds value to (i,j) location
 func (o *Matrix) Add(i, j int, val float64) {
 	o.Data[i+j*o.M] += val // col-major
@@ -209,6 +216,13 @@ func (o *MatrixC) GetSlice() (M [][]complex128) {
 			M[i][j] = o.Data[i+j*o.M]
 		}
 	}
+	return
+}
+
+// GetCopy returns a copy of this matrix
+func (o *MatrixC) GetCopy() (clone *MatrixC) {
+	clone = NewMatrixCmn(o.M, o.N)
+	copy(clone.Data, o.Data)
 	return
 }
 

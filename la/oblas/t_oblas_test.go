@@ -56,6 +56,17 @@ func TestMatrix01(tst *testing.T) {
 
 	a.Add(1, 2, -7)
 	chk.Scalar(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 0)
+
+	b := a.GetCopy()
+	if b.M != a.M {
+		tst.Errorf("b.M should be equal to a.M\n")
+		return
+	}
+	if b.N != a.N {
+		tst.Errorf("b.N should be equal to a.N\n")
+		return
+	}
+	chk.Vector(tst, "b.Data", 1e-17, b.Data, a.Data)
 }
 
 func TestMatrix02(tst *testing.T) {
@@ -103,6 +114,17 @@ func TestMatrix02(tst *testing.T) {
 
 	a.Add(1, 3, -8+0.8i)
 	chk.ScalarC(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 0)
+
+	b := a.GetCopy()
+	if b.M != a.M {
+		tst.Errorf("b.M should be equal to a.M\n")
+		return
+	}
+	if b.N != a.N {
+		tst.Errorf("b.N should be equal to a.N\n")
+		return
+	}
+	chk.VectorC(tst, "b.Data", 1e-17, b.Data, a.Data)
 }
 
 func TestDaxpy01(tst *testing.T) {
