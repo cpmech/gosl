@@ -6,12 +6,6 @@
 package oblas
 
 /*
-#ifdef WIN32
-#define LONG long long
-#else
-#define LONG long
-#endif
-
 #include <cblas.h>
 #include <lapacke.h>
 
