@@ -13,7 +13,7 @@
 Source code: <a href="oblas_dgemm01.go">oblas_dgemm01.go</a>
 
 <div id="container">
-<p><img src="figs/oblas-dgemm01b.png"></p>
+<p><img src="figs/oblas-dgemm01b.png" width="600"></p>
 </div>
 
 Output (larger matrices):
@@ -47,7 +47,7 @@ Output (larger matrices):
 ## Small matrices
 
 <div id="container">
-<p><img src="figs/oblas-dgemm01a.png"></p>
+<p><img src="figs/oblas-dgemm01a.png" width="600"></p>
 </div>
 
 Output (small matrices):
