@@ -5,7 +5,6 @@
 package chk
 
 import (
-	"fmt"
 	"math"
 	"math/cmplx"
 	"testing"
@@ -32,34 +31,68 @@ func AnaNum(tst *testing.T, msg string, tol, ana, num float64, verbose bool) {
 // String compares two strings
 func String(tst *testing.T, str, correct string) {
 	if str != correct {
-		fmt.Printf("[1;31merror %q != %q[0m\n", str, correct)
-		tst.Errorf("[1;31mstring failed with: %q != %q[0m", str, correct)
+		PrintFail("error %q != %q\n", str, correct)
+		tst.Errorf("string failed with: %q != %q", str, correct)
 		return
 	}
-	PrintOk(fmt.Sprintf("%s == %s", str, correct))
+	PrintOk("%s == %s", str, correct)
 }
 
 // Int compares two ints
 func Int(tst *testing.T, msg string, val, correct int) {
 	if val != correct {
-		fmt.Printf("[1;31m%s: error %d != %d[0m\n", msg, val, correct)
-		tst.Errorf("[1;31m%s failed with: %d != %d[0m", msg, val, correct)
+		PrintFail("%s: error %d != %d\n", msg, val, correct)
+		tst.Errorf("%s failed with: %d != %d", msg, val, correct)
 		return
 	}
-	PrintOk(fmt.Sprintf("%s: %d == %d", msg, val, correct))
+	PrintOk("%s: %d == %d", msg, val, correct)
 }
 
 // Ints compares two slices of integers
 func Ints(tst *testing.T, msg string, a, b []int) {
 	if len(a) != len(b) {
-		fmt.Printf("%s [1;31merror len(a)=%d != len(b)=%d[0m\n", msg, len(a), len(b))
-		tst.Errorf("[1;31m%s failed: slices have different lengths: %v != %v[0m", msg, a, b)
+		PrintFail("%s error len(a)=%d != len(b)=%d\n", msg, len(a), len(b))
+		tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
 		return
 	}
 	for i := 0; i < len(a); i++ {
 		if a[i] != b[i] {
-			fmt.Printf("%s [1;31merror %d != %d[0m\n", msg, a[i], b[i])
-			tst.Errorf("[1;31m%s failed: slices are different: %dth comp %v != %v\n%v != \n%v[0m", msg, i, a[i], b[i], a, b)
+			PrintFail("%s error %d != %d\n", msg, a[i], b[i])
+			tst.Errorf("%s failed: slices are different: %dth comp %v != %v\n%v != \n%v", msg, i, a[i], b[i], a, b)
+			return
+		}
+	}
+	PrintOk(msg)
+}
+
+// Int32s compares two slices of 32 integers
+func Int32s(tst *testing.T, msg string, a, b []int32) {
+	if len(a) != len(b) {
+		PrintFail("%s error len(a)=%d != len(b)=%d\n", msg, len(a), len(b))
+		tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
+		return
+	}
+	for i := 0; i < len(a); i++ {
+		if a[i] != b[i] {
+			PrintFail("%s error %d != %d\n", msg, a[i], b[i])
+			tst.Errorf("%s failed: slices are different: %dth comp %v != %v\n%v != \n%v", msg, i, a[i], b[i], a, b)
+			return
+		}
+	}
+	PrintOk(msg)
+}
+
+// Int64s compares two slices of 64 integers
+func Int64s(tst *testing.T, msg string, a, b []int64) {
+	if len(a) != len(b) {
+		PrintFail("%s error len(a)=%d != len(b)=%d\n", msg, len(a), len(b))
+		tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
+		return
+	}
+	for i := 0; i < len(a); i++ {
+		if a[i] != b[i] {
+			PrintFail("%s error %d != %d\n", msg, a[i], b[i])
+			tst.Errorf("%s failed: slices are different: %dth comp %v != %v\n%v != \n%v", msg, i, a[i], b[i], a, b)
 			return
 		}
 	}
@@ -69,14 +102,14 @@ func Ints(tst *testing.T, msg string, a, b []int) {
 // Bools compare two slices of bools
 func Bools(tst *testing.T, msg string, a, b []bool) {
 	if len(a) != len(b) {
-		fmt.Printf("%s [1;31merror len(%q)=%d != len(%q)=%d[0m\n", msg, a, len(a), b, len(b))
-		tst.Errorf("[1;31m%s failed: slices have different lengths: %v != %v[0m", msg, a, b)
+		PrintFail("%s error len(%q)=%d != len(%q)=%d\n", msg, a, len(a), b, len(b))
+		tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
 		return
 	}
 	for i := 0; i < len(a); i++ {
 		if a[i] != b[i] {
-			fmt.Printf("%s [1;31merror %v != %v[0m\n", msg, a[i], b[i])
-			tst.Errorf("[1;31m%s failed: slices are different: %dth comp %v != %v\n%v != \n%v[0m", msg, i, a[i], b[i], a, b)
+			PrintFail("%s error %v != %v\n", msg, a[i], b[i])
+			tst.Errorf("%s failed: slices are different: %dth comp %v != %v\n%v != \n%v", msg, i, a[i], b[i], a, b)
 			return
 		}
 	}
@@ -86,14 +119,14 @@ func Bools(tst *testing.T, msg string, a, b []bool) {
 // Strings compare two slices of strings
 func Strings(tst *testing.T, msg string, a, b []string) {
 	if len(a) != len(b) {
-		fmt.Printf("%s [1;31merror len(%q)=%d != len(%q)=%d[0m\n", msg, a, len(a), b, len(b))
-		tst.Errorf("[1;31m%s failed: slices have different lengths: %v != %v[0m", msg, a, b)
+		PrintFail("%s error len(%q)=%d != len(%q)=%d\n", msg, a, len(a), b, len(b))
+		tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
 		return
 	}
 	for i := 0; i < len(a); i++ {
 		if a[i] != b[i] {
-			fmt.Printf("%s [1;31merror %v != %v[0m\n", msg, a[i], b[i])
-			tst.Errorf("[1;31m%s failed: slices are different: %dth comp %v != %v\n%v != \n%v[0m", msg, i, a[i], b[i], a, b)
+			PrintFail("%s error %v != %v\n", msg, a[i], b[i])
+			tst.Errorf("%s failed: slices are different: %dth comp %v != %v\n%v != \n%v", msg, i, a[i], b[i], a, b)
 			return
 		}
 	}
@@ -107,8 +140,8 @@ func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 		zero = true
 	} else {
 		if len(res) != len(correct) {
-			fmt.Printf("%s [1;31merror[0m\n", msg)
-			tst.Errorf("[1;31m%s failed: res and correct matrices have different lengths. %d != %d[0m", msg, len(res), len(correct))
+			PrintFail("%s error\n", msg)
+			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
@@ -116,13 +149,13 @@ func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 	for i := 0; i < len(res); i++ {
 		if !zero {
 			if len(res[i]) != len(correct[i]) {
-				fmt.Printf("%s [1;31m error[0m\n", msg)
-				tst.Errorf("[1;31m%s failed: matrices have different number of columns[0m", msg)
+				PrintFail("%s  error\n", msg)
+				tst.Errorf("%s failed: matrices have different number of columns", msg)
 			}
 		}
 		for j := 0; j < len(res[i]); j++ {
 			if math.IsNaN(res[i][j]) {
-				tst.Errorf("[1;31m%s failed: NaN detected => %v[0m", msg, res[i][j])
+				tst.Errorf("%s failed: NaN detected => %v", msg, res[i][j])
 			}
 			if zero {
 				diff = math.Abs(res[i][j])
@@ -144,15 +177,15 @@ func Vector(tst *testing.T, msg string, tol float64, res, correct []float64) {
 		zero = true
 	} else {
 		if len(res) != len(correct) {
-			fmt.Printf("%s [1;31merror[0m\n", msg)
-			tst.Errorf("[1;31m%s failed: res and correct vectors have different lengths. %d != %d[0m", msg, len(res), len(correct))
+			PrintFail("%s error\n", msg)
+			tst.Errorf("%s failed: res and correct vectors have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
 	var diff, maxdiff float64
 	for i := 0; i < len(res); i++ {
 		if math.IsNaN(res[i]) {
-			tst.Errorf("[1;31m%s failed: NaN detected => %v[0m", msg, res[i])
+			tst.Errorf("%s failed: NaN detected => %v", msg, res[i])
 		}
 		if zero {
 			diff = math.Abs(res[i])
@@ -173,8 +206,8 @@ func MatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex12
 		zero = true
 	} else {
 		if len(res) != len(correct) {
-			fmt.Printf("%s [1;31merror[0m\n", msg)
-			tst.Errorf("[1;31m%s failed: res and correct matrices have different lengths. %d != %d[0m", msg, len(res), len(correct))
+			PrintFail("%s error\n", msg)
+			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
@@ -183,8 +216,8 @@ func MatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex12
 	for i := 0; i < len(res); i++ {
 		if !zero {
 			if len(res[i]) != len(correct[i]) {
-				fmt.Printf("%s [1;31m error[0m\n", msg)
-				tst.Errorf("[1;31m%s failed: matrices have different number of columns[0m", msg)
+				PrintFail("%s  error\n", msg)
+				tst.Errorf("%s failed: matrices have different number of columns", msg)
 			}
 		}
 		for j := 0; j < len(res[i]); j++ {
@@ -204,8 +237,8 @@ func MatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex12
 		}
 	}
 	if maxdiff > tol || maxdiffz > tol {
-		fmt.Printf("%s [1;31merror |maxdiff| = %g,  |maxdiffz| = %g[0m\n", msg, maxdiff, maxdiffz)
-		tst.Errorf("[1;31m%s failed with |maxdiff| = %g,  |maxdiffz| = %g[0m", msg, maxdiff, maxdiffz)
+		PrintFail("%s error |maxdiff| = %g,  |maxdiffz| = %g\n", msg, maxdiff, maxdiffz)
+		tst.Errorf("%s failed with |maxdiff| = %g,  |maxdiffz| = %g", msg, maxdiff, maxdiffz)
 		return
 	}
 	PrintOk(msg)
@@ -218,8 +251,8 @@ func VectorC(tst *testing.T, msg string, tol float64, res, correct []complex128)
 		zero = true
 	} else {
 		if len(res) != len(correct) {
-			fmt.Printf("%s [1;31merror[0m\n", msg)
-			tst.Errorf("[1;31m%s failed: res and correct matrices have different lengths. %d != %d[0m", msg, len(res), len(correct))
+			PrintFail("%s error\n", msg)
+			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
@@ -241,8 +274,8 @@ func VectorC(tst *testing.T, msg string, tol float64, res, correct []complex128)
 		}
 	}
 	if maxdiff > tol || maxdiffz > tol {
-		fmt.Printf("%s [1;31merror |maxdiff| = %g,  |maxdiffz| = %g[0m\n", msg, maxdiff, maxdiffz)
-		tst.Errorf("[1;31m%s failed with |maxdiff| = %g,  |maxdiffz| = %g[0m", msg, maxdiff, maxdiffz)
+		PrintFail("%s error |maxdiff| = %g,  |maxdiffz| = %g\n", msg, maxdiff, maxdiffz)
+		tst.Errorf("%s failed with |maxdiff| = %g,  |maxdiffz| = %g", msg, maxdiff, maxdiffz)
 		return
 	}
 	PrintOk(msg)
@@ -255,16 +288,16 @@ func StrMat(tst *testing.T, msg string, res, correct [][]string) {
 		empty = true
 	} else {
 		if len(res) != len(correct) {
-			fmt.Printf("%s [1;31merror len(res)=%d != len(correct)=%d[0m\n", msg, len(res), len(correct))
-			tst.Errorf("[1;31m%s failed: res and correct matrices have different lengths. %d != %d[0m", msg, len(res), len(correct))
+			PrintFail("%s error len(res)=%d != len(correct)=%d\n", msg, len(res), len(correct))
+			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
 	for i := 0; i < len(res); i++ {
 		if !empty {
 			if len(res[i]) != len(correct[i]) {
-				fmt.Printf("%s [1;31merror len(res[%d])=%d != len(correct[%d])=%d[0m\n", msg, i, len(res[i]), i, len(correct[i]))
-				tst.Errorf("[1;31m%s failed: string matrices have different number of columns[0m", msg)
+				PrintFail("%s error len(res[%d])=%d != len(correct[%d])=%d\n", msg, i, len(res[i]), i, len(correct[i]))
+				tst.Errorf("%s failed: string matrices have different number of columns", msg)
 				return
 			}
 		}
@@ -274,8 +307,8 @@ func StrMat(tst *testing.T, msg string, res, correct [][]string) {
 				c = correct[i][j]
 			}
 			if res[i][j] != c {
-				fmt.Printf("%s [1;31merror [%d,%d] %v != %v[0m\n", msg, i, j, res[i][j], c)
-				tst.Errorf("[1;31m%s failed: different str matrices:\n [%d,%d] item is wrong: %v != %v[0m", msg, i, j, res[i][j], c)
+				PrintFail("%s error [%d,%d] %v != %v\n", msg, i, j, res[i][j], c)
+				tst.Errorf("%s failed: different str matrices:\n [%d,%d] item is wrong: %v != %v", msg, i, j, res[i][j], c)
 				return
 			}
 		}
@@ -290,16 +323,16 @@ func IntMat(tst *testing.T, msg string, res, correct [][]int) {
 		zero = true
 	} else {
 		if len(res) != len(correct) {
-			fmt.Printf("%s [1;31merror len(res)=%d != len(correct)=%d[0m\n", msg, len(res), len(correct))
-			tst.Errorf("[1;31m%s failed: res and correct matrices have different lengths. %d != %d[0m", msg, len(res), len(correct))
+			PrintFail("%s error len(res)=%d != len(correct)=%d\n", msg, len(res), len(correct))
+			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
 	for i := 0; i < len(res); i++ {
 		if !zero {
 			if len(res[i]) != len(correct[i]) {
-				fmt.Printf("%s [1;31merror len(res[%d])=%d != len(correct[%d])=%d[0m\n", msg, i, len(res[i]), i, len(correct[i]))
-				tst.Errorf("[1;31m%s failed: matrices have different number of columns[0m", msg)
+				PrintFail("%s error len(res[%d])=%d != len(correct[%d])=%d\n", msg, i, len(res[i]), i, len(correct[i]))
+				tst.Errorf("%s failed: matrices have different number of columns", msg)
 				return
 			}
 		}
@@ -309,8 +342,8 @@ func IntMat(tst *testing.T, msg string, res, correct [][]int) {
 				c = correct[i][j]
 			}
 			if res[i][j] != c {
-				fmt.Printf("%s [1;31merror [%d,%d] %v != %v[0m\n", msg, i, j, res[i][j], c)
-				tst.Errorf("[1;31m%s failed: different int matrices:\n [%d,%d] item is wrong: %v != %v[0m", msg, i, j, res[i][j], c)
+				PrintFail("%s error [%d,%d] %v != %v\n", msg, i, j, res[i][j], c)
+				tst.Errorf("%s failed: different int matrices:\n [%d,%d] item is wrong: %v != %v", msg, i, j, res[i][j], c)
 				return
 			}
 		}
@@ -321,26 +354,26 @@ func IntMat(tst *testing.T, msg string, res, correct [][]int) {
 // Deep3 compares two deep3 slices
 func Deep3(tst *testing.T, msg string, tol float64, a, b [][][]float64) {
 	if len(a) != len(b) {
-		fmt.Printf("%s [1;31merror len(a)=%d != len(b)=%d[0m\n", msg, len(a), len(b))
-		tst.Errorf("[1;31m%s failed: slices have different lengths: %v != %v[0m", msg, a, b)
+		PrintFail("%s error len(a)=%d != len(b)=%d\n", msg, len(a), len(b))
+		tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
 		return
 	}
 	for i := 0; i < len(a); i++ {
 		if len(a[i]) != len(b[i]) {
-			fmt.Printf("%s [1;31merror len(a[%d])=%d != len(b[%d])=%d[0m\n", msg, i, len(a[i]), i, len(b[i]))
-			tst.Errorf("[1;31m%s failed: subslices have different lengths[0m", msg)
+			PrintFail("%s error len(a[%d])=%d != len(b[%d])=%d\n", msg, i, len(a[i]), i, len(b[i]))
+			tst.Errorf("%s failed: subslices have different lengths", msg)
 			return
 		}
 		for j := 0; j < len(a[i]); j++ {
 			if len(a[i][j]) != len(b[i][j]) {
-				fmt.Printf("%s [1;31merror len(a[%d][%d])=%d != len(b[%d][%d])=%d[0m\n", msg, i, j, len(a[i][j]), i, j, len(b[i][j]))
-				tst.Errorf("[1;31m%s failed: subsubslices have different lengths[0m", msg)
+				PrintFail("%s error len(a[%d][%d])=%d != len(b[%d][%d])=%d\n", msg, i, j, len(a[i][j]), i, j, len(b[i][j]))
+				tst.Errorf("%s failed: subsubslices have different lengths", msg)
 				return
 			}
 			for k := 0; k < len(a[i][j]); k++ {
 				if math.Abs(a[i][j][k]-b[i][j][k]) > tol {
-					fmt.Printf("%s [1;31merror %v != %v[0m\n", msg, a[i][j][k], b[i][j][k])
-					tst.Errorf("[1;31m%s failed: slices are different: %d,%d,%d component %v != %v\n%v != \n%v[0m", msg, i, j, k, a[i][j][k], b[i][j][k], a, b)
+					PrintFail("%s error %v != %v\n", msg, a[i][j][k], b[i][j][k])
+					tst.Errorf("%s failed: slices are different: %d,%d,%d component %v != %v\n%v != \n%v", msg, i, j, k, a[i][j][k], b[i][j][k], a, b)
 					return
 				}
 			}
@@ -352,32 +385,32 @@ func Deep3(tst *testing.T, msg string, tol float64, a, b [][][]float64) {
 // Deep4 compares two deep4 slices
 func Deep4(tst *testing.T, msg string, tol float64, a, b [][][][]float64) {
 	if len(a) != len(b) {
-		fmt.Printf("%s [1;31merror len(a)=%d != len(b)=%d[0m\n", msg, len(a), len(b))
-		tst.Errorf("[1;31m%s failed: slices have different lengths: %v != %v[0m", msg, a, b)
+		PrintFail("%s error len(a)=%d != len(b)=%d\n", msg, len(a), len(b))
+		tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
 		return
 	}
 	for i := 0; i < len(a); i++ {
 		if len(a[i]) != len(b[i]) {
-			fmt.Printf("%s [1;31merror len(a[%d])=%d != len(b[%d])=%d[0m\n", msg, i, len(a[i]), i, len(b[i]))
-			tst.Errorf("[1;31m%s failed: subslices have different lengths[0m", msg)
+			PrintFail("%s error len(a[%d])=%d != len(b[%d])=%d\n", msg, i, len(a[i]), i, len(b[i]))
+			tst.Errorf("%s failed: subslices have different lengths", msg)
 			return
 		}
 		for j := 0; j < len(a[i]); j++ {
 			if len(a[i][j]) != len(b[i][j]) {
-				fmt.Printf("%s [1;31merror len(a[%d][%d])=%d != len(b[%d][%d])=%d[0m\n", msg, i, j, len(a[i][j]), i, j, len(b[i][j]))
-				tst.Errorf("[1;31m%s failed: subsubslices have different lengths[0m", msg)
+				PrintFail("%s error len(a[%d][%d])=%d != len(b[%d][%d])=%d\n", msg, i, j, len(a[i][j]), i, j, len(b[i][j]))
+				tst.Errorf("%s failed: subsubslices have different lengths", msg)
 				return
 			}
 			for k := 0; k < len(a[i][j]); k++ {
 				if len(a[i][j][k]) != len(b[i][j][k]) {
-					fmt.Printf("%s [1;31merror len(a[%d][%d][%d])=%d != len(b[%d][%d][%d])=%d[0m\n", msg, i, j, k, len(a[i][j][k]), i, j, k, len(b[i][j][k]))
-					tst.Errorf("[1;31m%s failed: subsubsubslices have different lengths[0m", msg)
+					PrintFail("%s error len(a[%d][%d][%d])=%d != len(b[%d][%d][%d])=%d\n", msg, i, j, k, len(a[i][j][k]), i, j, k, len(b[i][j][k]))
+					tst.Errorf("%s failed: subsubsubslices have different lengths", msg)
 					return
 				}
 				for l := 0; l < len(a[i][j][k]); l++ {
 					if math.Abs(a[i][j][k][l]-b[i][j][k][l]) > tol {
-						fmt.Printf("%s [1;31merror %v != %v[0m\n", msg, a[i][j][k][l], b[i][j][k][l])
-						tst.Errorf("[1;31m%s failed: slices are different: %d,%d,%d,%d component %v != %v\n%v != \n%v[0m", msg, i, j, k, l, a[i][j][k][l], b[i][j][k][l], a, b)
+						PrintFail("%s error %v != %v\n", msg, a[i][j][k][l], b[i][j][k][l])
+						tst.Errorf("%s failed: slices are different: %d,%d,%d,%d component %v != %v\n%v != \n%v", msg, i, j, k, l, a[i][j][k][l], b[i][j][k][l], a, b)
 						return
 					}
 				}

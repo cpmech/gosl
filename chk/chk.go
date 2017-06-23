@@ -76,10 +76,10 @@ func PrintFail(msg string, prm ...interface{}) {
 	if Verbose {
 		fmt.Printf(msg, prm...)
 		if ColorsOn {
-			fmt.Println(" [1;31mFAIL[0m")
+			fmt.Println("[1;31mFAIL[0m")
 			return
 		}
-		fmt.Println(" FAIL")
+		fmt.Println("FAIL")
 	}
 }
 
