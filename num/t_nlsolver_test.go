@@ -56,7 +56,8 @@ func Test_nls01(tst *testing.T) {
 	// solve
 	err := nls_ana.Solve(x, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	// check
@@ -69,7 +70,8 @@ func Test_nls01(tst *testing.T) {
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
 	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	io.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
@@ -83,7 +85,8 @@ func Test_nls01(tst *testing.T) {
 	// solve
 	err = nls_num.Solve(xx, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	// check
@@ -97,7 +100,8 @@ func Test_nls01(tst *testing.T) {
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
 	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 }
 
@@ -142,7 +146,8 @@ func Test_nls02(tst *testing.T) {
 	// solve
 	err := nls_ana.Solve(x, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	// check
@@ -155,7 +160,8 @@ func Test_nls02(tst *testing.T) {
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
 	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	io.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
@@ -169,7 +175,8 @@ func Test_nls02(tst *testing.T) {
 	// solve
 	err = nls_num.Solve(xx, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	// check
@@ -183,7 +190,8 @@ func Test_nls02(tst *testing.T) {
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
 	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 }
 
@@ -242,7 +250,8 @@ func Test_nls03(tst *testing.T) {
 	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
 	err := nls_sps.Solve(x, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
@@ -255,7 +264,8 @@ func Test_nls03(tst *testing.T) {
 	//rtol = 1e-2
 	err = nls_sps.Solve(x, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
@@ -271,7 +281,8 @@ func Test_nls03(tst *testing.T) {
 	nls_sps.ChkConv = false
 	err = nls_sps.Solve(x, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
@@ -284,7 +295,8 @@ func Test_nls03(tst *testing.T) {
 	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
 	err = nls_den.Solve(x, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
@@ -297,7 +309,8 @@ func Test_nls03(tst *testing.T) {
 	//rtol = 1e-2
 	err = nls_den.Solve(x, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
@@ -310,7 +323,8 @@ func Test_nls03(tst *testing.T) {
 	nls_den.ChkConv = false
 	err = nls_den.Solve(x, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
@@ -411,7 +425,8 @@ func Test_nls04(tst *testing.T) {
 	// solve
 	err := nls_sps.Solve(U1sps, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	// check
@@ -423,7 +438,8 @@ func Test_nls04(tst *testing.T) {
 	// solve
 	err = nls_den.Solve(U1den, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	// check
@@ -435,7 +451,8 @@ func Test_nls04(tst *testing.T) {
 	// solve
 	err = nls_num.Solve(U1num, false)
 	if err != nil {
-		chk.Panic(err.Error())
+		tst.Error("%v\n", err)
+		return
 	}
 
 	// check

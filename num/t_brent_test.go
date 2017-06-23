@@ -24,19 +24,22 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.
 	var err error
 	xbrent, err = o.Solve(xa, xb, false)
 	if err != nil {
-		chk.Panic("%v", err)
+		tst.Errorf("%v\n", err)
+		return
 	}
 	var ybrent float64
 	ybrent, err = ffcnA(xbrent)
 	if err != nil {
-		chk.Panic("%v", err)
+		tst.Errorf("%v\n", err)
+		return
 	}
 	io.Pforan("x      = %v\n", xbrent)
 	io.Pforan("f(x)   = %v\n", ybrent)
 	io.Pforan("nfeval = %v\n", o.NFeval)
 	io.Pforan("nit    = %v\n", o.It)
 	if math.Abs(ybrent) > 1e-10 {
-		chk.Panic("Brent failed: f(x) = %g > 1e-10\n", ybrent)
+		tst.Errorf("Brent failed: f(x) = %g > 1e-10\n", ybrent)
+		return
 	}
 
 	// Newton
@@ -48,16 +51,19 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.
 	cnd, err = p.CheckJ(xnewt, 1e-6, true, !chk.Verbose)
 	io.Pforan("cond(J) = %v\n", cnd)
 	if err != nil {
-		chk.Panic("%v", err.Error())
+		tst.Errorf("%v\n", err)
+		return
 	}
 	err = p.Solve(xnewt, false)
 	if err != nil {
-		chk.Panic("%v", err.Error())
+		tst.Errorf("%v\n", err)
+		return
 	}
 	var ynewt float64
 	ynewt, err = ffcnA(xnewt[0])
 	if err != nil {
-		chk.Panic("%v", err)
+		tst.Errorf("%v\n", err)
+		return
 	}
 	io.Pforan("x      = %v\n", xnewt[0])
 	io.Pforan("f(x)   = %v\n", ynewt)
@@ -65,7 +71,8 @@ func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.
 	io.Pforan("nJeval = %v\n", p.NJeval)
 	io.Pforan("nit    = %v\n", p.It)
 	if math.Abs(ynewt) > 1e-9 {
-		chk.Panic("Newton failed: f(x) = %g > 1e-10\n", ynewt)
+		tst.Errorf("Newton failed: f(x) = %g > 1e-10\n", ynewt)
+		return
 	}
 
 	// compare Brent's and Newton's solutions
@@ -142,11 +149,13 @@ func Test_brent03(tst *testing.T) {
 	xa, xb := 0.0, 1.0
 	x, err := o.Min(xa, xb, false)
 	if err != nil {
-		chk.Panic("%v", err)
+		tst.Errorf("%v\n", err)
+		return
 	}
 	y, err := ffcn(x)
 	if err != nil {
-		chk.Panic("%v", err)
+		tst.Errorf("%v\n", err)
+		return
 	}
 	xcor := math.Sqrt(2.0 / 3.0)
 	io.Pforan("x      = %v (correct=%g)\n", x, xcor)
