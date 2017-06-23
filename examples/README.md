@@ -1,5 +1,7 @@
 # Gosl Examples
 
+[See benchmark examples here](benchmark/README.md)
+
 ## Summary
 
 * Compute (fast) discrete Fourier transform
