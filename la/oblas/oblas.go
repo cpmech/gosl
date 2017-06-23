@@ -84,18 +84,18 @@ func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, in
 //     trans=true      y := alpha*A**T*x + beta*y.
 func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64, incx int, beta float64, y []float64, incy int) (err error) {
 	if trans {
-		if len(x) != a.m {
-			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.m)
+		if len(x) != a.M {
+			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.M)
 		}
-		if len(y) != a.n {
-			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.n)
+		if len(y) != a.N {
+			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.N)
 		}
 	} else {
-		if len(x) != a.n {
-			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.n)
+		if len(x) != a.N {
+			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.N)
 		}
-		if len(y) != a.m {
-			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.m)
+		if len(y) != a.M {
+			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.M)
 		}
 	}
 	C.cblas_dgemv(
@@ -104,7 +104,7 @@ func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64,
 		C.blasint(m),
 		C.blasint(n),
 		C.double(alpha),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.blasint(lda),
 		(*C.double)(unsafe.Pointer(&x[0])),
 		C.blasint(incx),
@@ -126,18 +126,18 @@ func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64,
 //  m by n matrix.
 func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
 	if trans {
-		if len(x) != a.m {
-			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.m)
+		if len(x) != a.M {
+			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.M)
 		}
-		if len(y) != a.n {
-			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.n)
+		if len(y) != a.N {
+			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.N)
 		}
 	} else {
-		if len(x) != a.n {
-			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.n)
+		if len(x) != a.N {
+			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.N)
 		}
-		if len(y) != a.m {
-			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.m)
+		if len(y) != a.M {
+			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.M)
 		}
 	}
 	C.cblas_zgemv(
@@ -146,7 +146,7 @@ func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []comp
 		C.blasint(m),
 		C.blasint(n),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
 		C.blasint(lda),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&x[0]))),
 		C.blasint(incx),
@@ -177,12 +177,12 @@ func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *Matrix, lda int, 
 		C.blasint(n),
 		C.blasint(k),
 		C.double(alpha),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.blasint(lda),
-		(*C.double)(unsafe.Pointer(&b.data[0])),
+		(*C.double)(unsafe.Pointer(&b.Data[0])),
 		C.blasint(ldb),
 		C.double(beta),
-		(*C.double)(unsafe.Pointer(&c.data[0])),
+		(*C.double)(unsafe.Pointer(&c.Data[0])),
 		C.blasint(ldc),
 	)
 	return
@@ -208,12 +208,12 @@ func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *MatrixC, lda i
 		C.blasint(n),
 		C.blasint(k),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
 		C.blasint(lda),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&b.data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&b.Data[0]))),
 		C.blasint(ldb),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
 		C.blasint(ldc),
 	)
 	return
@@ -245,7 +245,7 @@ func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int32, b []float64, ldb int) 
 		C.int(lapackColMajor),
 		C.lapack_int(n),
 		C.lapack_int(nrhs),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 		(*C.double)(unsafe.Pointer(&b[0])),
@@ -283,7 +283,7 @@ func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int32, b []complex128, ldb i
 		C.int(lapackColMajor),
 		C.lapack_int(n),
 		C.lapack_int(nrhs),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 		(*C.lapack_complex_double)(unsafe.Pointer(&b[0])),
@@ -318,12 +318,12 @@ func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matr
 		C.char(jobvt),
 		C.lapack_int(m),
 		C.lapack_int(n),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.double)(unsafe.Pointer(&s[0])),
-		(*C.double)(unsafe.Pointer(&u.data[0])),
+		(*C.double)(unsafe.Pointer(&u.Data[0])),
 		C.lapack_int(ldu),
-		(*C.double)(unsafe.Pointer(&vt.data[0])),
+		(*C.double)(unsafe.Pointer(&vt.Data[0])),
 		C.lapack_int(ldvt),
 		(*C.double)(unsafe.Pointer(&work[0])),
 		C.lapack_int(lwork),
@@ -357,12 +357,12 @@ func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *Mat
 		C.char(jobvt),
 		C.lapack_int(m),
 		C.lapack_int(n),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.double)(unsafe.Pointer(&s[0])),
-		(*C.lapack_complex_double)(unsafe.Pointer(&u.data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&u.Data[0])),
 		C.lapack_int(ldu),
-		(*C.lapack_complex_double)(unsafe.Pointer(&vt.data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&vt.Data[0])),
 		C.lapack_int(ldvt),
 		(*C.lapack_complex_double)(unsafe.Pointer(&work[0])),
 		C.lapack_int(lwork),
@@ -392,7 +392,7 @@ func Dgetrf(m, n int, a *Matrix, lda int, ipiv []int32) (err error) {
 		C.int(lapackColMajor),
 		C.lapack_int(m),
 		C.lapack_int(n),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
@@ -420,7 +420,7 @@ func Zgetrf(m, n int, a *MatrixC, lda int, ipiv []int32) (err error) {
 		C.int(lapackColMajor),
 		C.lapack_int(m),
 		C.lapack_int(n),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
@@ -439,7 +439,7 @@ func Dgetri(n int, a *Matrix, lda int, ipiv []int32, work []float64, lwork int) 
 	info := C.LAPACKE_dgetri_work(
 		C.int(lapackColMajor),
 		C.lapack_int(n),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 		(*C.double)(unsafe.Pointer(&work[0])),
@@ -460,7 +460,7 @@ func Zgetri(n int, a *MatrixC, lda int, ipiv []int32, work []complex128, lwork i
 	info := C.LAPACKE_zgetri_work(
 		C.int(lapackColMajor),
 		C.lapack_int(n),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 		(*C.lapack_complex_double)(unsafe.Pointer(&work[0])),
@@ -492,10 +492,10 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a *Matrix, lda int, beta flo
 		C.blasint(n),
 		C.blasint(k),
 		C.double(alpha),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.blasint(lda),
 		C.double(beta),
-		(*C.double)(unsafe.Pointer(&c.data[0])),
+		(*C.double)(unsafe.Pointer(&c.Data[0])),
 		C.blasint(ldc),
 	)
 	return
@@ -521,10 +521,10 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a *MatrixC, lda int, beta
 		C.blasint(n),
 		C.blasint(k),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
 		C.blasint(lda),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
 		C.blasint(ldc),
 	)
 	return
@@ -550,10 +550,10 @@ func Zherk(up, trans bool, n, k int, alpha float64, a *MatrixC, lda int, beta fl
 		C.blasint(n),
 		C.blasint(k),
 		C.double(alpha),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
 		C.blasint(lda),
 		C.double(beta),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
 		C.blasint(ldc),
 	)
 	return
@@ -578,7 +578,7 @@ func Dpotrf(up bool, n int, a *Matrix, lda int) (err error) {
 		C.int(lapackColMajor),
 		lUplo(up),
 		C.lapack_int(n),
-		(*C.double)(unsafe.Pointer(&a.data[0])),
+		(*C.double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 	)
 	if info != 0 {
@@ -606,7 +606,7 @@ func Zpotrf(up bool, n int, a *MatrixC, lda int) (err error) {
 		C.int(lapackColMajor),
 		lUplo(up),
 		C.lapack_int(n),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
 		C.lapack_int(lda),
 	)
 	if info != 0 {

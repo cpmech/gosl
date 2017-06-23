@@ -23,7 +23,7 @@ func TestMatrix01(tst *testing.T) {
 	}
 
 	a := NewMatrix(A)
-	chk.Vector(tst, "A to a", 1e-15, a.data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
+	chk.Vector(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
 	chk.Scalar(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
 	chk.Scalar(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2)
@@ -55,7 +55,7 @@ func TestMatrix02(tst *testing.T) {
 	}
 
 	a := NewMatrixC(A)
-	chk.VectorC(tst, "A to a", 1e-15, a.data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
+	chk.VectorC(tst, "A to a", 1e-15, a.Data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
 
 	chk.ScalarC(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
 	chk.ScalarC(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
@@ -133,10 +133,10 @@ func TestDgemv01(tst *testing.T) {
 		{2.0, 0.2, 0.3},
 		{3.0, 0.2, 0.3},
 	})
-	chk.Vector(tst, "a.data", 1e-15, a.data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
+	chk.Vector(tst, "a.Data", 1e-15, a.Data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 
 	// perform mv
-	m, n := a.M(), a.N()
+	m, n := a.M, a.N
 	α, β := 0.5, 2.0
 	x := []float64{20, 10, 30}
 	y := []float64{3, 1, 2, 4}
@@ -157,7 +157,7 @@ func TestDgemv01(tst *testing.T) {
 	chk.Vector(tst, "x", 1e-15, x, []float64{144.125, 30.3, 75.45})
 
 	// check that a is unmodified
-	chk.Vector(tst, "a.data", 1e-15, a.data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
+	chk.Vector(tst, "a.Data", 1e-15, a.Data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 }
 
 func TestZgemv01(tst *testing.T) {
@@ -172,8 +172,8 @@ func TestZgemv01(tst *testing.T) {
 		{2.0 + 1i, 0.2, 0.3 - 0.5i},
 		{3.0 + 0.1i, 0.2, 0.3 - 0.6i},
 	})
-	m, n := a.M(), a.N()
-	chk.VectorC(tst, "a.data", 1e-15, a.data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
+	m, n := a.M, a.N
+	chk.VectorC(tst, "a.Data", 1e-15, a.Data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 
 	// perform mv
 	α, β := 0.5+1i, 2.0+1i
@@ -196,7 +196,7 @@ func TestZgemv01(tst *testing.T) {
 	chk.VectorC(tst, "x", 1e-13, x, []complex128{-248.875 + 82.5i, -18.5 + 38i, 83.85 + 154.7i})
 
 	// check that a is unmodified
-	chk.VectorC(tst, "a.data", 1e-15, a.data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
+	chk.VectorC(tst, "a.Data", 1e-15, a.Data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 }
 
 func TestDgemm01(tst *testing.T) {
@@ -226,8 +226,8 @@ func TestDgemm01(tst *testing.T) {
 	})
 
 	// sizes
-	m, k := a.M(), a.N()
-	n := b.N()
+	m, k := a.M, a.N
+	n := b.N
 
 	// run dgemm
 	transA, transB := false, false
@@ -275,8 +275,8 @@ func TestZgemm01(tst *testing.T) {
 	})
 
 	// sizes
-	m, k := a.M(), a.N()
-	n := b.N()
+	m, k := a.M, a.N
+	n := b.N
 
 	// run dgemm
 	transA, transB := false, false
@@ -370,7 +370,7 @@ func TestZgesv01(tst *testing.T) {
 	}
 
 	// run test
-	n := a.N()
+	n := a.N
 	nrhs := 1
 	lda, ldb := n, n
 	ipiv := make([]int32, n)
@@ -793,7 +793,7 @@ func TestZgetrf01(tst *testing.T) {
 }
 
 func checkUplo(tst *testing.T, testname string, c, cLo, cUp *Matrix, tol float64) {
-	n := c.n
+	n := c.N
 	maxdiff := 0.0
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
@@ -856,8 +856,8 @@ func TestDsyrk01(tst *testing.T) {
 	})
 
 	// sizes
-	n := c.N()
-	k := a.N()
+	n := c.N
+	k := a.N
 
 	// constants
 	alpha, beta := 3.0, -1.0
@@ -939,8 +939,8 @@ func TestDsyrk02(tst *testing.T) {
 	})
 
 	// sizes
-	n := c.N()
-	k := a.M() // m now
+	n := c.N
+	k := a.M // m now
 
 	// constants
 	alpha, beta := 3.0, +1.0
@@ -984,7 +984,7 @@ func TestDsyrk02(tst *testing.T) {
 }
 
 func checkUploC(tst *testing.T, testname string, c, cLo, cUp *MatrixC, tolR, tolI float64) {
-	n := c.n
+	n := c.N
 	maxdiffR, maxdiffI := 0.0, 0.0
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
@@ -1059,8 +1059,8 @@ func TestZsyrk01(tst *testing.T) {
 	})
 
 	// sizes
-	n := c.N()
-	k := a.N()
+	n := c.N
+	k := a.N
 
 	// constants
 	alpha, beta := 3.0+0i, +1.0+0i
@@ -1136,8 +1136,8 @@ func TestZherk01(tst *testing.T) {
 	})
 
 	// sizes
-	n := c.N()
-	k := a.N()
+	n := c.N
+	k := a.N
 
 	// constants
 	alpha, beta := 3.0, +1.0
@@ -1205,7 +1205,7 @@ func TestDpotrf01(tst *testing.T) {
 	checkUplo(tst, "Dpotrf01", a, aLo, aUp, 1e-17)
 
 	// run dpotrf with up(a)
-	n := a.N()
+	n := a.N
 	up := true
 	lda := n
 	err := Dpotrf(up, n, aUp, lda)
@@ -1268,7 +1268,7 @@ func TestZpotrf01(tst *testing.T) {
 	checkUploC(tst, "Zherk01", a, aLo, aUp, 1e-17, 1e-17)
 
 	// run zpotrf with up(a)
-	n := a.N()
+	n := a.N
 	up := true
 	lda := n
 	err := Zpotrf(up, n, aUp, lda)
