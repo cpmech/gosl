@@ -6,6 +6,9 @@ package la
 
 import (
 	"math"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/la/oblas"
 )
 
 /*  In the following code:
@@ -1142,6 +1145,19 @@ func MatMul(c [][]float64, α float64, a, b [][]float64) {
 				c[i][j] += α * a[i][k] * b[k][j]
 			}
 		}
+	}
+}
+
+// MatMulNew returns the matrix multiplication (scaled):
+//  c := α * a * b  =>  cij := α * aik * bkj
+//  NOTE: not efficient implementation => use for small matrices
+func MatMulNew(c *oblas.Matrix, α float64, a, b *oblas.Matrix) {
+	for i := 0; i < c.M*c.N; i++ {
+		c.Data[i] = 0
+	}
+	err := oblas.Dgemm(false, false, a.M, b.N, a.N, α, a, a.M, b, b.M, 1, c, c.M)
+	if err != nil {
+		chk.Panic("%v\n", err)
 	}
 }
 

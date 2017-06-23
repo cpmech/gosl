@@ -146,31 +146,4 @@ func Test_mat01(tst *testing.T) {
 	normIA := MatNormI(A)
 	io.Pf("normI(A) = %g\n", normIA)
 	chk.Scalar(tst, "normI(A)", 1e-17, normIA, 15.0)
-
-	// MatInv
-	io.Pfblue2("\nfunc MatInv(ai, a [][]float64, tol float64) (det float64, ok bool)\n")
-	g := [][]float64{
-		{1, 2, 3},
-		{0, 4, 5},
-		{1, 0, 6},
-	}
-	gi := MatAlloc(3, 3)
-	detg, err := MatInv(gi, g, 1e-17)
-	if err != nil {
-		chk.Panic("%v", err.Error())
-	}
-	gi22 := [][]float64{
-		{gi[0][0] * 22.0, gi[0][1] * 22.0, gi[0][2] * 22.0},
-		{gi[1][0] * 22.0, gi[1][1] * 22.0, gi[1][2] * 22.0},
-		{gi[2][0] * 22.0, gi[2][1] * 22.0, gi[2][2] * 22.0},
-	}
-	PrintMat("g", g, "%5g", false)
-	PrintMat("gi * 22", gi22, "%5g", false)
-	io.Pf("det(g) = %g\n", detg)
-	chk.Scalar(tst, "det(g)", 1e-17, detg, 22)
-	chk.Matrix(tst, "gi", 1e-17, gi, [][]float64{
-		{12.0 / 11.0, -6.0 / 11.0, -1.0 / 11.0},
-		{5.0 / 22.0, 3.0 / 22.0, -5.0 / 22.0},
-		{-2.0 / 11.0, 1.0 / 11.0, 2.0 / 11.0},
-	})
 }

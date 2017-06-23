@@ -8,5 +8,6 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="conv07"
+    go test -test.run="MatPseudo01"
+    #go test
 done
