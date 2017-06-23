@@ -330,6 +330,9 @@ func TestDgesv01(tst *testing.T) {
 		return
 	}
 	chk.Vector(tst, "x = A⁻¹ b", 1e-15, b, xCorrect)
+
+	// check ipiv
+	chk.Int32s(tst, "ipiv", ipiv, []int32{2, 5, 5, 5, 5})
 }
 
 func TestZgesv01(tst *testing.T) {
@@ -338,9 +341,9 @@ func TestZgesv01(tst *testing.T) {
 	chk.PrintTitle("Zgesv01. low accuracy")
 
 	// NOTE: zgesv performs badly with this problem
-	//       the best tolerance that can be selected is 0.00032
+	//       the best tolerance that can be selected is 0.00038
 	//       the same problem happens in python (probably using lapack as well)
-	tol := 0.0032
+	tol := 0.00038
 
 	// matrix
 	a := NewMatrixC([][]complex128{
@@ -390,6 +393,9 @@ func TestZgesv01(tst *testing.T) {
 		1.000001132800243e+01 - 1.774987242230929e+01i,
 	}
 	chk.VectorC(tst, "x = A⁻¹ b", 1e-14, b, xPython)
+
+	// check ipiv
+	chk.Int32s(tst, "ipiv", ipiv, []int32{1, 2, 3, 4, 5})
 }
 
 func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []float64, tolu, tols, tolv, tolusv float64) {
@@ -677,6 +683,9 @@ func TestDgetrf01(tst *testing.T) {
 		return
 	}
 
+	// check ipiv
+	chk.Int32s(tst, "ipiv", ipiv, []int32{4, 2, 3, 4})
+
 	// check LU
 	chk.Matrix(tst, "lu", 1e-17, a.GetSlice(), [][]float64{
 		{+4.0e+00, +0.000000000000000e+00, +3.000000000000000e+00, +1.000000000000000e+00},
@@ -741,6 +750,9 @@ func TestZgetrf01(tst *testing.T) {
 		tst.Errorf("Zgetrf failed:\n%v\n", err)
 		return
 	}
+
+	// check ipiv
+	chk.Int32s(tst, "ipiv", ipiv, []int32{4, 2, 3, 4})
 
 	// check LU
 	chk.MatrixC(tst, "lu", 1e-15, a.GetSlice(), [][]complex128{
