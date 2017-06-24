@@ -7,10 +7,10 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 )
@@ -34,7 +34,7 @@ func main() {
 	}()
 
 	if mpi.Rank() == 0 {
-		chk.PrintTitle("Test SumToRoot 01")
+		io.Pf("\nTest SumToRoot 01\n")
 	}
 
 	M := [][]float64{
@@ -60,7 +60,6 @@ func main() {
 			J.Put(i, j, M[i][j])
 		}
 	}
-	la.PrintMat(fmt.Sprintf("J @ proc # %d", id), J.ToMatrix(nil).ToDense(), "%10.1f", false)
 
 	la.SpTriSumToRoot(&J)
 	var tst testing.T

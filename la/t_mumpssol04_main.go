@@ -8,6 +8,7 @@ package main
 
 import (
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 )
@@ -19,7 +20,7 @@ func main() {
 
 	myrank := mpi.Rank()
 	if myrank == 0 {
-		chk.PrintTitle("Test MUMPS Sol 04")
+		io.Pf("\nTest MUMPS Sol 04\n")
 	}
 
 	ndim := 10

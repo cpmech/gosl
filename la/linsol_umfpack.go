@@ -236,7 +236,7 @@ func (o *LinSolUmfpack) Fact() (err error) {
 }
 
 // SolveR solves the linear Real system A.x = b
-func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error) {
+func (o *LinSolUmfpack) SolveR(xR, bR Vector, dummy bool) (err error) {
 
 	// check
 	if !o.is_initialised {
@@ -277,7 +277,7 @@ func (o *LinSolUmfpack) SolveR(xR, bR []float64, dummy bool) (err error) {
 }
 
 // SolveC solves the linear Complex system A.x = b
-func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC []float64, dummy bool) (err error) {
+func (o *LinSolUmfpack) SolveC(xR, xC, bR, bC Vector, dummy bool) (err error) {
 
 	// check
 	if !o.is_initialised {

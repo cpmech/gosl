@@ -282,7 +282,7 @@ func (o *LinSolMumps) Fact() (err error) {
 // SolveR solves the linear Real system A.x = b
 //  NOTES:
 //    1) sum_b_to_root is a flag for MUMPS; it tells Solve to sum the values in 'b' arrays to the root processor
-func (o *LinSolMumps) SolveR(xR, bR []float64, sum_b_to_root bool) (err error) {
+func (o *LinSolMumps) SolveR(xR, bR Vector, sum_b_to_root bool) (err error) {
 
 	// check
 	if !o.is_initialised {
@@ -334,7 +334,7 @@ func (o *LinSolMumps) SolveR(xR, bR []float64, sum_b_to_root bool) (err error) {
 // SolveC solves the linear Complex system A.x = b
 //  NOTES:
 //    1) sum_b_to_root is a flag for MUMPS; it tells Solve to sum the values in 'b' arrays to the root processor
-func (o *LinSolMumps) SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) (err error) {
+func (o *LinSolMumps) SolveC(xR, xC, bR, bC Vector, sum_b_to_root bool) (err error) {
 
 	// check
 	if !o.is_initialised {
@@ -500,7 +500,7 @@ func mumps_error(info, infx C.int) string {
 	return ""
 }
 
-func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct []float64, sum_b_to_root bool) {
+func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct Vector, sum_b_to_root bool) {
 
 	// info
 	symmetric := false
@@ -540,7 +540,7 @@ func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct []float64, sum_b_to
 	}
 }
 
-func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct []complex128, sum_b_to_root bool) {
+func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct VectorC, sum_b_to_root bool) {
 
 	// info
 	symmetric := false

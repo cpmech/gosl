@@ -10,12 +10,13 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
+// LinSol defines solvers for linear systems of equations
 type LinSol interface {
 	InitR(tR *Triplet, symmetric, verbose, timing bool) error  // init for Real solution
 	InitC(tC *TripletC, symmetric, verbose, timing bool) error // init for Complex solution
 	Fact() error                                               // factorise
-	SolveR(xR, bR []float64, sum_b_to_root bool) error         // solve Real problem. x = inv(A) * b
-	SolveC(xR, xC, bR, bC []float64, sum_b_to_root bool) error // solve Complex problem x = inv(A) * b
+	SolveR(xR, bR Vector, sum_b_to_root bool) error            // solve Real problem. x = inv(A) * b
+	SolveC(xR, xC, bR, bC Vector, sum_b_to_root bool) error    // solve Complex problem x = inv(A) * b
 	Free()                                                     // free memory
 	SetOrdScal(ordering, scaling string) error                 // set ordering and scaling method
 }
@@ -27,7 +28,7 @@ var lsAllocators = map[string]func() LinSol{} // maps solver name to solver allo
 func GetSolver(name string) LinSol {
 	allocator, ok := lsAllocators[name]
 	if !ok {
-		chk.Panic(_linsol_err01, name)
+		chk.Panic("cannot find solver named %s in factory of linear solvers", name)
 	}
 	return allocator()
 }
@@ -45,8 +46,3 @@ type linSolData struct {
 	tC    *TripletC // triplet structure (complex)
 	tini  time.Time // initial time
 }
-
-// error messages
-var (
-	_linsol_err01 = "linsol.go: GetSolver: cannot find solver named %s in factory of linear solvers"
-)
