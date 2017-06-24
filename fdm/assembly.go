@@ -26,10 +26,10 @@ func InitK11andK12(K11, K12 *la.Triplet, e *Equations) {
 //    e -- the Equation numbers
 //  Output:
 //    K11, K12 and F1 are assembled (must be pre-allocated)
-func AssemblePoisson2d(K11, K12 *la.Triplet, F1 []float64, kx, ky float64, src Cb_src, g *Grid2d, e *Equations) {
+func AssemblePoisson2d(K11, K12 *la.Triplet, F1 la.Vector, kx, ky float64, src Cb_src, g *Grid2d, e *Equations) {
 	K11.Start()
 	K12.Start()
-	la.VecFill(F1, 0.0)
+	F1.Fill(0)
 	alp, bet, gam := 2.0*(kx/g.Dxx+ky/g.Dyy), -kx/g.Dxx, -ky/g.Dyy
 	mol := []float64{alp, bet, bet, gam, gam}
 	for i, I := range e.RF1 {
