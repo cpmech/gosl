@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 )
 
 func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x_correct []float64, verbose bool) {
@@ -41,18 +40,9 @@ func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x
 		chk.Panic("%v", err.Error())
 	}
 
-	// output
-	A := t.ToMatrix(nil)
-	if verbose {
-		io.Pforan("A.x = b\n")
-		PrintMat("A", A.ToDense(), "%5g", false)
-		PrintVec("x", x, "%g ", false)
-		PrintVec("b", b, "%g ", false)
-	}
-
 	// check
 	chk.Vector(tst, "x", tol_cmp, x, x_correct)
-	CheckResidR(tst, tol_res, A.ToDense(), x, b)
+	checkResid(tst, t.GetDenseMatrix(), x, b, tol_res)
 }
 
 func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, x_correct []complex128, verbose bool) {
@@ -88,20 +78,8 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 	}
 	x := RCtoComplex(xR, xC)
 
-	// output
-	A := t.ToMatrix(nil)
-	if verbose {
-		io.Pforan("A.x = b\n")
-		PrintMatC("A", A.ToDense(), "(%g", "%+gi) ", false)
-		PrintVecC("x", x, "(%g", "%+gi) ", false)
-		PrintVecC("b", b, "(%g", "%+gi) ", false)
-	}
-
-	PrintMatC("A", A.ToDense(), "%10.3f", "%+9.3fi,", false)
-
 	// check
-	chk.VectorC(tst, "x", tol_cmp, x, x_correct)
-	CheckResidC(tst, tol_res, A.ToDense(), x, b)
+	checkResidC(tst, t.GetDenseMatrix(), x, b, tol_res)
 }
 
 func Test_linsol01a(tst *testing.T) {

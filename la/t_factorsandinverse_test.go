@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
 func checkIdentity(tst *testing.T, k string, a *Matrix, tol float64) {
@@ -89,7 +90,7 @@ func checkAi(tst *testing.T, k string, a *Matrix, correctAi *Matrix, tolAi, tolI
 func checkSvd(tst *testing.T, k string, a *Matrix, correctS []float64, correctU, correctVt *Matrix, tolS, tolU, tolVt, tolUsv float64) {
 
 	// compute SVD
-	s := make([]float64, imin(a.M, a.N))
+	s := make([]float64, utl.Imin(a.M, a.N))
 	u := NewMatrix(a.M, a.M)
 	vt := NewMatrix(a.N, a.N)
 	MatSvd(s, u, vt, a, true)

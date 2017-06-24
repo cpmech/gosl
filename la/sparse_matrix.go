@@ -24,20 +24,20 @@ type CCMatrix struct {
 }
 
 // Init allocates all memory required to hold a sparse matrix in triplet form
-func (t *Triplet) Init(m, n, max int) {
-	t.m, t.n, t.pos, t.max = m, n, 0, max
-	t.i = make([]int, max)
-	t.j = make([]int, max)
-	t.x = make([]float64, max)
+func (o *Triplet) Init(m, n, max int) {
+	o.m, o.n, o.pos, o.max = m, n, 0, max
+	o.i = make([]int, max)
+	o.j = make([]int, max)
+	o.x = make([]float64, max)
 }
 
 // Put inserts an element to a pre-allocated (with Init) triplet matrix
-func (t *Triplet) Put(i, j int, x float64) {
-	if t.pos >= t.max {
-		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", t.pos, t.max)
+func (o *Triplet) Put(i, j int, x float64) {
+	if o.pos >= o.max {
+		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", o.pos, o.max)
 	}
-	t.i[t.pos], t.j[t.pos], t.x[t.pos] = i, j, x
-	t.pos++
+	o.i[o.pos], o.j[o.pos], o.x[o.pos] = i, j, x
+	o.pos++
 }
 
 // PutMatAndMatT adds the content of a matrix "a" and its transpose "at" to triplet "o"
@@ -78,20 +78,29 @@ func (o *Triplet) PutCCMatAndMatT(a *CCMatrix) {
 	}
 }
 
-// Start (re-)starts the insertion index within "t" in order to allow (re-)insertion of
+// Start (re-)starts the insertion index within "o" in order to allow (re-)insertion of
 // items using the Put method
-func (t *Triplet) Start() {
-	t.pos = 0
+func (o *Triplet) Start() {
+	o.pos = 0
 }
 
 // Len returns the number of items just inserted in the triplet
-func (t *Triplet) Len() int {
-	return t.pos
+func (o *Triplet) Len() int {
+	return o.pos
 }
 
 // Max returns the maximum number of items that can be inserted in the triplet
-func (t *Triplet) Max() int {
-	return t.max
+func (o *Triplet) Max() int {
+	return o.max
+}
+
+// GetDenseMatrix returns the dense matrix corresponding to this Triplet
+func (o *Triplet) GetDenseMatrix() (a *Matrix) {
+	a = NewMatrix(o.m, o.n)
+	for k := 0; k < o.max; k++ {
+		a.Add(o.i[k], o.j[k], o.x[k])
+	}
+	return
 }
 
 // Set sets column-compressed matrix directly
@@ -109,6 +118,8 @@ func (o *CCMatrix) Set(m, n int, Ap, Ai []int, Ax []float64) {
 	o.m, o.n, o.nnz = m, n, nnz
 	o.p, o.i, o.x = Ap, Ai, Ax
 }
+
+// complex /////////////////////////////////////////////////////////////////////////////////////////
 
 // TripletC is the equivalent to Triplet but with values stored as pairs of
 // float64 representing complex numbers
@@ -132,46 +143,55 @@ type CCMatrixC struct {
 }
 
 // Init allocates all memory required to hold a sparse matrix in triplet (complex) form
-func (t *TripletC) Init(m, n, max int, xzmonolithic bool) {
-	t.m, t.n, t.pos, t.max = m, n, 0, max
-	t.i = make([]int, max)
-	t.j = make([]int, max)
+func (o *TripletC) Init(m, n, max int, xzmonolithic bool) {
+	o.m, o.n, o.pos, o.max = m, n, 0, max
+	o.i = make([]int, max)
+	o.j = make([]int, max)
 	if xzmonolithic {
-		t.xz = make([]float64, 2*max)
+		o.xz = make([]float64, 2*max)
 	} else {
-		t.x = make([]float64, max)
-		t.z = make([]float64, max)
+		o.x = make([]float64, max)
+		o.z = make([]float64, max)
 	}
 }
 
 // Put inserts an element to a pre-allocated (with Init) triplet (complex) matrix
-func (t *TripletC) Put(i, j int, x, z float64) {
-	if t.pos >= t.max {
-		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", t.pos, t.max)
+func (o *TripletC) Put(i, j int, x, z float64) {
+	if o.pos >= o.max {
+		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", o.pos, o.max)
 	}
-	t.i[t.pos], t.j[t.pos] = i, j
-	if t.xz != nil {
-		t.xz[t.pos*2], t.xz[t.pos*2+1] = x, z
+	o.i[o.pos], o.j[o.pos] = i, j
+	if o.xz != nil {
+		o.xz[o.pos*2], o.xz[o.pos*2+1] = x, z
 	} else {
-		t.x[t.pos], t.z[t.pos] = x, z
+		o.x[o.pos], o.z[o.pos] = x, z
 	}
-	t.pos++
+	o.pos++
 }
 
-// Start (re-)starts the insertion index within "t" in order to allow (re-)insertion of
+// Start (re-)starts the insertion index within "o" in order to allow (re-)insertion of
 // items using the Put method
-func (t *TripletC) Start() {
-	t.pos = 0
+func (o *TripletC) Start() {
+	o.pos = 0
 }
 
 // Len returns the number of items just inserted in the complex triplet
-func (t *TripletC) Len() int {
-	return t.pos
+func (o *TripletC) Len() int {
+	return o.pos
 }
 
 // Max returns the maximum number of items that can be inserted in the complex triplet
-func (t *TripletC) Max() int {
-	return t.max
+func (o *TripletC) Max() int {
+	return o.max
+}
+
+// GetDenseMatrix returns the dense matrix corresponding to this Triplet
+func (o *TripletC) GetDenseMatrix() (a *MatrixC) {
+	a = NewMatrixC(o.m, o.n)
+	for k := 0; k < o.max; k++ {
+		a.Add(o.i[k], o.j[k], complex(o.x[k], o.z[k]))
+	}
+	return
 }
 
 // ToDense converts a column-compressed matrix to dense form

@@ -8,13 +8,12 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 )
 
 func TestMatrix01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Matrix01. real")
+	chk.PrintTitle("Matrix01. (real) new and print")
 
 	A := [][]float64{
 		{1, 2, 3, 4},
@@ -22,7 +21,7 @@ func TestMatrix01(tst *testing.T) {
 		{9, 0, -1, -2},
 	}
 
-	a := NewMatrix(A)
+	a := NewMatrixSlice(A)
 	chk.Vector(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
 	chk.Scalar(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1)
@@ -72,7 +71,7 @@ func TestMatrix01(tst *testing.T) {
 func TestMatrix02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Matrix02. complex")
+	chk.PrintTitle("Matrix02. (complex) new and print")
 
 	A := [][]complex128{
 		{1 + 0.1i, 2, 3, 4 - 0.4i},
@@ -80,7 +79,7 @@ func TestMatrix02(tst *testing.T) {
 		{9 + 0.9i, 0, -1, -2 + 1i},
 	}
 
-	a := NewMatrixC(A)
+	a := NewMatrixSliceC(A)
 	chk.VectorC(tst, "A to a", 1e-15, a.Data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
 
 	chk.ScalarC(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1+0.1i)
@@ -127,45 +126,42 @@ func TestMatrix02(tst *testing.T) {
 	chk.VectorC(tst, "b.Data", 1e-17, b.Data, a.Data)
 }
 
-func Test_mat01(tst *testing.T) {
+func TestMatrix03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mat01. Matrix functions")
+	chk.PrintTitle("Matrix03. (real) matrix methods")
 
-	// MatAlloc
-	io.Pfblue2("\nfunc MatAlloc(m, n int) (mat [][]float64)\n")
-	a := MatAlloc(3, 5)
-	a[0][0] = 1
-	a[0][1] = 2
-	a[0][2] = 3
-	a[0][3] = 4
-	a[0][4] = 5
-	a[1][0] = 0.1
-	a[1][1] = 0.2
-	a[1][2] = 0.3
-	a[1][3] = 0.4
-	a[1][4] = 0.5
-	a[2][0] = 10
-	a[2][1] = 20
-	a[2][2] = 30
-	a[2][3] = 40
-	a[2][4] = 50
-	PrintMat("a", a, "%5g", false)
-	chk.Matrix(tst, "a", 1e-17, a, [][]float64{
+	// Set
+	a := NewMatrix(3, 5)
+	a.Set(0, 0, 1)
+	a.Set(0, 1, 2)
+	a.Set(0, 2, 3)
+	a.Set(0, 3, 4)
+	a.Set(0, 4, 5)
+	a.Set(1, 0, 0.1)
+	a.Set(1, 1, 0.2)
+	a.Set(1, 2, 0.3)
+	a.Set(1, 3, 0.4)
+	a.Set(1, 4, 0.5)
+	a.Set(2, 0, 10)
+	a.Set(2, 1, 20)
+	a.Set(2, 2, 30)
+	a.Set(2, 3, 40)
+	a.Set(2, 4, 50)
+	chk.Matrix(tst, "a", 1e-17, a.GetSlice(), [][]float64{
 		{1, 2, 3, 4, 5},
 		{0.1, 0.2, 0.3, 0.4, 0.5},
 		{10, 20, 30, 40, 50},
 	})
 
-	aclone := MatClone(a)
-	chk.Matrix(tst, "aclone", 1e-17, a, aclone)
+	// GetCopy
+	aclone := a.GetCopy()
+	chk.Vector(tst, "aclone", 1e-17, a.Data, aclone.Data)
 
-	// MatFill
-	io.Pfblue2("\nfunc MatFill(a [][]float64, s float64)\n")
-	b := MatAlloc(5, 3)
-	MatFill(b, 2)
-	PrintMat("b", b, "%5g", false)
-	chk.Matrix(tst, "b", 1e-17, b, [][]float64{
+	// Fill
+	b := NewMatrix(5, 3)
+	b.Fill(2)
+	chk.Matrix(tst, "b", 1e-17, b.GetSlice(), [][]float64{
 		{2, 2, 2},
 		{2, 2, 2},
 		{2, 2, 2},
@@ -173,13 +169,11 @@ func Test_mat01(tst *testing.T) {
 		{2, 2, 2},
 	})
 
-	// MatScale
-	io.Pfblue2("\nfunc MatScale(a [][]float64, alp float64)\n")
-	c := MatAlloc(5, 3)
-	MatFill(c, 2)
-	MatScale(c, 1.0/4.0)
-	PrintMat("c", c, "%5g", false)
-	chk.Matrix(tst, "c", 1e-17, c, [][]float64{
+	// Scale
+	c := NewMatrix(5, 3)
+	c.Fill(2)
+	c.Scale(0, 1.0/4.0)
+	chk.Matrix(tst, "c", 1e-17, c.GetSlice(), [][]float64{
 		{0.5, 0.5, 0.5},
 		{0.5, 0.5, 0.5},
 		{0.5, 0.5, 0.5},
@@ -188,76 +182,118 @@ func Test_mat01(tst *testing.T) {
 	})
 
 	// MatCopy
-	io.Pfblue2("\nfunc MatCopy(a [][]float64, alp float64, b [][]float64)\n")
-	d := MatAlloc(3, 5)
-	MatCopy(d, 1, a)
-	PrintMat("d", d, "%5g", false)
-	chk.Matrix(tst, "d", 1e-17, d, [][]float64{
+	d := NewMatrix(3, 5)
+	a.CopyInto(d, 1)
+	chk.Matrix(tst, "d", 1e-17, d.GetSlice(), [][]float64{
 		{1, 2, 3, 4, 5},
 		{0.1, 0.2, 0.3, 0.4, 0.5},
 		{10, 20, 30, 40, 50},
 	})
 
-	// MatSetDiag
-	io.Pfblue2("\nfunc MatSetDiag(a [][]float64, s float64)\n")
-	e := MatAlloc(3, 3)
-	MatSetDiag(e, 1)
-	PrintMat("e", e, "%5g", false)
-	chk.Matrix(tst, "e", 1e-17, e, [][]float64{
+	// SetDiag
+	e := NewMatrix(3, 3)
+	e.SetDiag(1)
+	chk.Matrix(tst, "e", 1e-17, e.GetSlice(), [][]float64{
 		{1, 0, 0},
 		{0, 1, 0},
 		{0, 0, 1},
 	})
 
-	// MatMaxDiff
-	io.Pfblue2("\nfunc MatMaxDiff(a, b [][]float64) (maxdiff float64)\n")
-	f := [][]float64{
+	// MaxDiff
+	f := NewMatrixSlice([][]float64{
 		{1.1, 2.2, 3.3, 4.4, 5.5},
 		{0.1, 0.2, 0.3, 0.4, 0.5},
 		{1, 2, 3, 4, 5},
-	}
-	fma := [][]float64{
-		{f[0][0] - a[0][0], f[0][1] - a[0][1], f[0][2] - a[0][2], f[0][3] - a[0][3], f[0][4] - a[0][4]},
-		{f[1][0] - a[1][0], f[1][1] - a[1][1], f[1][2] - a[1][2], f[1][3] - a[1][3], f[1][4] - a[1][4]},
-		{f[2][0] - a[2][0], f[2][1] - a[2][1], f[2][2] - a[2][2], f[2][3] - a[2][3], f[2][4] - a[2][4]},
-	}
-	PrintMat("a", a, "%5g", false)
-	PrintMat("f", f, "%5g", false)
-	PrintMat("f-a", fma, "%5g", false)
-	maxdiff := MatMaxDiff(f, a)
-	io.Pf("max(f-a) = %v\n", maxdiff)
-	chk.Scalar(tst, "maxdiff", 1e-17, maxdiff, 45)
+	})
+	maxdiff := a.MaxDiff(f)
+	chk.Scalar(tst, "MaxDiff", 1e-17, maxdiff, 45)
 
-	// MatLargest
-	io.Pfblue2("\nfunc MatLargest(a [][]float64, den float64) (largest float64)\n")
-	PrintMat("a", a, "%5g", false)
-	largest := MatLargest(a, 1)
-	io.Pf("largest(a) = %v\n", largest)
-	chk.Scalar(tst, "largest(a)", 1e-17, largest, 50)
+	// Largest
+	largest := a.Largest(1)
+	chk.Scalar(tst, "Largest", 1e-17, largest, 50)
 
-	// MatGetCol
-	io.Pfblue2("\nfunc MatGetCol(j int, a [][]float64) (col []float64)\n")
-	col := MatGetCol(0, a)
-	PrintMat("a", a, "%5g", false)
-	PrintVec("a[:][0]", col, "%5g", false)
-	chk.Vector(tst, "a[:][0]", 1e-17, col, []float64{1, 0.1, 10})
+	// GetRow
+	row0 := a.GetRow(0)
+	row1 := a.GetRow(1)
+	row2 := a.GetRow(2)
+	chk.Vector(tst, "GetRow(0)", 1e-17, row0, []float64{1, 2, 3, 4, 5})
+	chk.Vector(tst, "GetRow(1)", 1e-17, row1, []float64{0.1, 0.2, 0.3, 0.4, 0.5})
+	chk.Vector(tst, "GetRow(2)", 1e-17, row2, []float64{10, 20, 30, 40, 50})
 
-	// MatNormF
-	io.Pfblue2("\nfunc MatNormF(a [][]float64) (res float64)\n")
-	A := [][]float64{
+	// GetCol
+	col0 := a.GetCol(0)
+	col2 := a.GetCol(2)
+	col4 := a.GetCol(4)
+	chk.Vector(tst, "GetCol(0)", 1e-17, col0, []float64{1, 0.1, 10})
+	chk.Vector(tst, "GetCol(2)", 1e-17, col2, []float64{3, 0.3, 30})
+	chk.Vector(tst, "GetCol(4)", 1e-17, col4, []float64{5, 0.5, 50})
+
+	// NormFrob
+	A := NewMatrixSlice([][]float64{
 		{-3, 5, 7},
-		{2, 6, 4},
-		{0, 2, 8},
-	}
-	PrintMat("A", A, "%5g", false)
-	normFA := MatNormF(A)
-	io.Pf("normF(A) = %g\n", normFA)
-	chk.Scalar(tst, "normF(A)", 1e-17, normFA, 1.438749456993816e+01)
+		{+2, 6, 4},
+		{+0, 2, 8},
+	})
+	normFA := A.NormFrob()
+	chk.Scalar(tst, "NormFrob", 1e-17, normFA, 1.438749456993816e+01)
 
-	// MatNormI
-	io.Pfblue2("\nfunc MatNormI(a [][]float64) (res float64)\n")
-	PrintMat("A", A, "%5g", false)
-	normIA := MatNormI(A)
-	io.Pf("normI(A) = %g\n", normIA)
-	chk.Scalar(tst, "normI(A)", 1e-17, normIA, 15.0)
+	// NormInf
+	normIA := A.NormInf()
+	chk.Scalar(tst, "NormInf", 1e-17, normIA, 15.0)
+}
+
+func TestMatrix04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Matrix04. (complex) matrix methods")
+
+	// Set
+	a := NewMatrixC(3, 5)
+	a.Set(0, 0, 1+1i)
+	a.Set(0, 1, 2+2i)
+	a.Set(0, 2, 3+3i)
+	a.Set(0, 3, 4+4i)
+	a.Set(0, 4, 5+5i)
+	a.Set(1, 0, 0.1)
+	a.Set(1, 1, 0.2)
+	a.Set(1, 2, 0.3)
+	a.Set(1, 3, 0.4)
+	a.Set(1, 4, 0.5)
+	a.Set(2, 0, 10)
+	a.Set(2, 1, 20)
+	a.Set(2, 2, 30)
+	a.Set(2, 3, 40)
+	a.Set(2, 4, 50)
+	chk.MatrixC(tst, "a", 1e-17, a.GetSlice(), [][]complex128{
+		{1 + 1i, 2 + 2i, 3 + 3i, 4 + 4i, 5 + 5i},
+		{0.1, 0.2, 0.3, 0.4, 0.5},
+		{10, 20, 30, 40, 50},
+	})
+
+	// GetCopy
+	aclone := a.GetCopy()
+	chk.VectorC(tst, "aclone", 1e-17, a.Data, aclone.Data)
+
+	// Fill
+	b := NewMatrixC(5, 3)
+	b.Fill(2 - 1i)
+	chk.MatrixC(tst, "b", 1e-17, b.GetSlice(), [][]complex128{
+		{2 - 1i, 2 - 1i, 2 - 1i},
+		{2 - 1i, 2 - 1i, 2 - 1i},
+		{2 - 1i, 2 - 1i, 2 - 1i},
+		{2 - 1i, 2 - 1i, 2 - 1i},
+		{2 - 1i, 2 - 1i, 2 - 1i},
+	})
+
+	// Scale
+	c := NewMatrixC(5, 3)
+	c.Fill(2 + 2i)
+	c.Scale(0, 1.0/4.0)
+	chk.MatrixC(tst, "c", 1e-17, c.GetSlice(), [][]complex128{
+		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
+		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
+		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
+		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
+		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
+	})
 }

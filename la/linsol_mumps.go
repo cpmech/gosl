@@ -539,7 +539,7 @@ func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct []float64, sum_b_to
 		PrintVec("b", b, "%g ", false)
 
 		// check
-		err := VecMaxDiff(x, x_correct)
+		err := Vector(x).MaxDiff(x_correct)
 		if err > tol_cmp {
 			chk.Panic("test failed: err = %g", err)
 		}
@@ -590,11 +590,11 @@ func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct []complex128, sum_
 
 		// check
 		xR_correct, xC_correct := ComplexToRC(x_correct)
-		errR := VecMaxDiff(xR, xR_correct)
+		errR := Vector(xR).MaxDiff(xR_correct)
 		if errR > tol_cmp {
 			chk.Panic("test failed: errR = %g", errR)
 		}
-		errC := VecMaxDiff(xC, xC_correct)
+		errC := Vector(xC).MaxDiff(xC_correct)
 		if errC > tol_cmp {
 			chk.Panic("test failed: errC = %g", errC)
 		}

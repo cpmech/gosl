@@ -5,32 +5,53 @@
 package la
 
 import (
+	"math/cmplx"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 )
 
-func Test_hlsolver01(tst *testing.T) {
+func checkResid(tst *testing.T, a *Matrix, x, b Vector, tolNorm float64) {
+	r := b.GetScaled(0, -1)  // r = -b
+	MatVecMulAdd(r, 1, a, x) // r += 1*a*x
+	resid := r.Norm()
+	if resid > tolNorm {
+		tst.Errorf("residual is too large: %g\n", resid)
+		return
+	}
+}
+
+func checkResidC(tst *testing.T, a *MatrixC, x, b VectorC, tolNorm float64) {
+	r := b.GetScaled(0, -1)   // r = -b
+	MatVecMulAddC(r, 1, a, x) // r += 1*a*x
+	resid := cmplx.Abs(r.Norm())
+	if resid > tolNorm {
+		tst.Errorf("residual is too large: %g\n", resid)
+		return
+	}
+}
+
+func TestHLsolver01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("hlsolver01. real")
+	chk.PrintTitle("HLsolver01. real")
 
 	// sparse matrix
 	var A Triplet
 	A.Init(5, 5, 13)
-	A.Put(0, 0, 1.0)
-	A.Put(0, 0, 1.0)
-	A.Put(1, 0, 3.0)
-	A.Put(0, 1, 3.0)
+	A.Put(0, 0, +1.0) // << repeated
+	A.Put(0, 0, +1.0) // << repeated
+	A.Put(1, 0, +3.0)
+	A.Put(0, 1, +3.0)
 	A.Put(2, 1, -1.0)
-	A.Put(4, 1, 4.0)
-	A.Put(1, 2, 4.0)
+	A.Put(4, 1, +4.0)
+	A.Put(1, 2, +4.0)
 	A.Put(2, 2, -3.0)
-	A.Put(3, 2, 1.0)
-	A.Put(4, 2, 2.0)
-	A.Put(2, 3, 2.0)
-	A.Put(1, 4, 6.0)
-	A.Put(4, 4, 1.0)
+	A.Put(3, 2, +1.0)
+	A.Put(4, 2, +2.0)
+	A.Put(2, 3, +2.0)
+	A.Put(1, 4, +6.0)
+	A.Put(4, 4, +1.0)
 
 	// right-hand-side
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
@@ -43,15 +64,15 @@ func Test_hlsolver01(tst *testing.T) {
 	}
 
 	// check
-	x_correct := []float64{1, 2, 3, 4, 5}
-	chk.Vector(tst, "x", 1e-14, x, x_correct)
-	CheckResidR(tst, 1e-13, A.ToMatrix(nil).ToDense(), x, b)
+	xCorrect := []float64{1, 2, 3, 4, 5}
+	chk.Vector(tst, "x", 1e-14, x, xCorrect)
+	checkResid(tst, A.GetDenseMatrix(), x, b, 1e-13)
 }
 
-func Test_hlsolver02(tst *testing.T) {
+func TestHLsolver02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("hlsolver02. complex")
+	chk.PrintTitle("HLsolver02. complex")
 
 	// flag indicating to store (real,complex) values in monolithic form => 1D array
 	xzmono := false
@@ -88,11 +109,11 @@ func Test_hlsolver02(tst *testing.T) {
 
 	// right-hand-side
 	b := []complex128{
-		77.38 + 8.82i,
+		+77.38 + 8.82i,
 		157.48 + 19.8i,
 		1175.62 + 20.69i,
 		912.12 - 801.75i,
-		550 - 1060.4i,
+		550.00 - 1060.4i,
 	}
 
 	// solve
@@ -104,12 +125,12 @@ func Test_hlsolver02(tst *testing.T) {
 
 	// check
 	x_correct := []complex128{
-		3.3 - 1i,
-		1 + 0.17i,
-		5.5,
-		9,
-		10 - 17.75i,
+		+3.3 - 1.00i,
+		+1.0 + 0.17i,
+		+5.5 + 0.00i,
+		+9.0 + 0.00i,
+		10.0 - 17.75i,
 	}
 	chk.VectorC(tst, "x", 1e-3, x, x_correct)
-	CheckResidC(tst, 1e-12, A.ToMatrix(nil).ToDense(), x, b)
+	checkResidC(tst, A.GetDenseMatrix(), x, b, 1e-12)
 }

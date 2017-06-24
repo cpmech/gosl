@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la/oblas"
+	"github.com/cpmech/gosl/utl"
 )
 
 // MatInvSmall computes the inverse of small matrices of size 1x1, 2x2, or 3x3.
@@ -71,7 +72,7 @@ func MatInvSmall(ai, a *Matrix, tol float64) (det float64, err error) {
 //     u  -- left matrix [must be pre-allocated] u is (a.M x a.M)
 //     vt -- transposed right matrix [must be pre-allocated] vt is (a.N x a.N)
 func MatSvd(s []float64, u, vt, a *Matrix, copyA bool) {
-	superb := make([]float64, imin(a.M, a.N))
+	superb := make([]float64, utl.Imin(a.M, a.N))
 	acpy := a
 	if copyA {
 		acpy = a.GetCopy()
@@ -94,7 +95,7 @@ func MatInv(ai, a *Matrix) (err error) {
 	// square inverse
 	if a.M == a.N {
 		copy(ai.Data, a.Data)
-		ipiv := make([]int32, imin(a.M, a.N))
+		ipiv := make([]int32, utl.Imin(a.M, a.N))
 		err = oblas.Dgetrf(a.M, a.N, ai.Data, a.M, ipiv)
 		if err != nil {
 			return
@@ -104,9 +105,9 @@ func MatInv(ai, a *Matrix) (err error) {
 	}
 
 	// singular value decomposition
-	s := make([]float64, imin(a.M, a.N))
-	u := NewMatrixMN(a.M, a.M)
-	vt := NewMatrixMN(a.N, a.N)
+	s := make([]float64, utl.Imin(a.M, a.N))
+	u := NewMatrix(a.M, a.M)
+	vt := NewMatrix(a.N, a.N)
 	MatSvd(s, u, vt, a, true)
 
 	// pseudo inverse
@@ -130,15 +131,15 @@ func MatInv(ai, a *Matrix) (err error) {
 //    "F" or "" => Frobenius
 //    "I"       => Infinite
 func MatCondNum(a *Matrix, normtype string) (res float64, err error) {
-	ai := NewMatrixMN(a.M, a.N)
+	ai := NewMatrix(a.M, a.N)
 	err = MatInv(ai, a)
 	if err != nil {
 		return
 	}
 	if normtype == "I" {
-		res = MatNormI(a.GetSlice()) * MatNormI(ai.GetSlice()) // TODO: improve this
-	} else {
-		res = MatNormF(a.GetSlice()) * MatNormF(ai.GetSlice()) // TODO: improve this
+		res = a.NormInf() * ai.NormInf()
+		return
 	}
+	res = a.NormFrob() * ai.NormFrob()
 	return
 }
