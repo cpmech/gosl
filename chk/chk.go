@@ -54,6 +54,13 @@ func Panic(msg string, prm ...interface{}) {
 	panic(fmt.Sprintf(msg, prm...))
 }
 
+// PanicErr panics if err != nil
+func PanicErr(err error) {
+	if err != nil {
+		Panic("Error occurred:\n%v\n", err)
+	}
+}
+
 // Err returns a new error
 func Err(msg string, prm ...interface{}) error {
 	return fmt.Errorf(msg, prm...)

@@ -5,6 +5,7 @@
 package la
 
 import (
+	"math"
 	"strings"
 
 	"github.com/cpmech/gosl/io"
@@ -28,21 +29,21 @@ type Matrix struct {
 	Data []float64 // data array. column-major => Fortran
 }
 
-// NewMatrix allocates a new Matrix from given slice.
+// NewMatrix allocates a new (empty) Matrix with given (m,n) (row/col sizes)
+func NewMatrix(m, n int) (o *Matrix) {
+	o = new(Matrix)
+	o.M, o.N = m, n
+	o.Data = make([]float64, m*n)
+	return
+}
+
+// NewMatrixSlice allocates a new Matrix from given slice.
 // NOTE: make sure to have at least 1x1 item
-func NewMatrix(a [][]float64) (o *Matrix) {
+func NewMatrixSlice(a [][]float64) (o *Matrix) {
 	o = new(Matrix)
 	o.M, o.N = len(a), len(a[0])
 	o.Data = make([]float64, o.M*o.N)
 	o.SetFromSlice(a)
-	return
-}
-
-// NewMatrixMN allocates a new (empty) Matrix with given MN (row/col sizes)
-func NewMatrixMN(m, n int) (o *Matrix) {
-	o = new(Matrix)
-	o.M, o.N = m, n
-	o.Data = make([]float64, m*n)
 	return
 }
 
@@ -53,6 +54,19 @@ func (o *Matrix) SetFromSlice(a [][]float64) {
 		for i := 0; i < o.M; i++ {
 			o.Data[k] = a[i][j]
 			k += 1
+		}
+	}
+}
+
+// SetDiag sets diagonal matrix with diagonal components equal to val
+func (o *Matrix) SetDiag(val float64) {
+	for i := 0; i < o.M; i++ {
+		for j := 0; j < o.N; j++ {
+			if i == j {
+				o.Data[i+j*o.M] = val
+			} else {
+				o.Data[i+j*o.M] = 0
+			}
 		}
 	}
 }
@@ -81,14 +95,107 @@ func (o *Matrix) GetSlice() (M [][]float64) {
 
 // GetCopy returns a copy of this matrix
 func (o *Matrix) GetCopy() (clone *Matrix) {
-	clone = NewMatrixMN(o.M, o.N)
+	clone = NewMatrix(o.M, o.N)
 	copy(clone.Data, o.Data)
 	return
+}
+
+// CopyInto copies the scaled components of this matrix into another one (result)
+//  result := α * this   ⇒   result[ij] := α * this[ij]
+func (o *Matrix) CopyInto(result *Matrix, α float64) {
+	for k := 0; k < o.M*o.N; k++ {
+		result.Data[k] = α * o.Data[k]
+	}
 }
 
 // Add adds value to (i,j) location
 func (o *Matrix) Add(i, j int, val float64) {
 	o.Data[i+j*o.M] += val // col-major
+}
+
+// Fill fills this matrix with a single number val
+//  aij = val
+func (o *Matrix) Fill(val float64) {
+	for k := 0; k < o.M*o.N; k++ {
+		o.Data[k] = val
+	}
+}
+
+// Scale scales matrix using a shift value (a) and a multiplier (m)
+//  this[ij] = a + m * this[ij]
+func (o *Matrix) Scale(a, m float64) {
+	for k := 0; k < o.M*o.N; k++ {
+		o.Data[k] = a + m*o.Data[k]
+	}
+}
+
+// MaxDiff returns the maximum difference between the components of this and another matrix
+func (o *Matrix) MaxDiff(another *Matrix) (maxdiff float64) {
+	maxdiff = math.Abs(o.Data[0] - another.Data[0])
+	for k := 1; k < o.M*o.N; k++ {
+		diff := math.Abs(o.Data[k] - another.Data[k])
+		if diff > maxdiff {
+			maxdiff = diff
+		}
+	}
+	return
+}
+
+// Largest returns the largest component |a[ij]| of this matrix, normalised by den
+//   largest := |a[ij]| / den
+func (o *Matrix) Largest(den float64) (largest float64) {
+	largest = math.Abs(o.Data[0])
+	for k := 1; k < o.M*o.N; k++ {
+		tmp := math.Abs(o.Data[k])
+		if tmp > largest {
+			largest = tmp
+		}
+	}
+	return largest / den
+}
+
+// GetRow returns row i of this matrix
+func (o *Matrix) GetRow(i int) (row []float64) {
+	row = make([]float64, o.N)
+	for j := 0; j < o.N; j++ {
+		row[j] = o.Data[i+j*o.M]
+	}
+	return
+}
+
+// GetCol returns column j of this matrix
+func (o *Matrix) GetCol(j int) (col []float64) {
+	col = make([]float64, o.M)
+	copy(col, o.Data[j*o.M:(j+1)*o.M])
+	return
+}
+
+// NormFrob returns the Frobenious norm of this matrix
+//  nrm := ‖a‖_F = sqrt(Σ_i Σ_j a[ij]⋅a[ij]) = ‖a‖_2
+func (o *Matrix) NormFrob() (nrm float64) {
+	for k := 0; k < o.M*o.N; k++ {
+		nrm += o.Data[k] * o.Data[k]
+	}
+	return math.Sqrt(nrm)
+}
+
+// NormInf returns the infinite norm of this matrix
+//  nrm := ‖a‖_∞ = max_i ( Σ_j a[ij] )
+func (o *Matrix) NormInf() (nrm float64) {
+	for j := 0; j < o.N; j++ { // sum first row
+		nrm += math.Abs(o.Data[j*o.M])
+	}
+	var sumrow float64
+	for i := 1; i < o.M; i++ {
+		sumrow = 0.0
+		for j := 0; j < o.N; j++ { // sum the other rows
+			sumrow += math.Abs(o.Data[i+j*o.M])
+			if sumrow > nrm {
+				nrm = sumrow
+			}
+		}
+	}
+	return
 }
 
 // Print prints matrix (without commas or brackets)
@@ -168,21 +275,21 @@ type MatrixC struct {
 	Data []complex128 // data array. column-major => Fortran
 }
 
+// NewMatrixC allocates a new (empty) MatrixC with given (m,n) (row/col sizes)
+func NewMatrixC(m, n int) (o *MatrixC) {
+	o = new(MatrixC)
+	o.M, o.N = m, n
+	o.Data = make([]complex128, m*n)
+	return
+}
+
 // NewMatrixC allocates a new MatrixC from given slice.
 // NOTE: make sure to have at least 1x1 items
-func NewMatrixC(a [][]complex128) (o *MatrixC) {
+func NewMatrixSliceC(a [][]complex128) (o *MatrixC) {
 	o = new(MatrixC)
 	o.M, o.N = len(a), len(a[0])
 	o.Data = make([]complex128, o.M*o.N)
 	o.SetFromSlice(a)
-	return
-}
-
-// NewMatrixCmn allocates a new (empty) MatrixC with given mn (row/col sizes)
-func NewMatrixCmn(m, n int) (o *MatrixC) {
-	o = new(MatrixC)
-	o.M, o.N = m, n
-	o.Data = make([]complex128, m*n)
 	return
 }
 
@@ -221,7 +328,7 @@ func (o *MatrixC) GetSlice() (M [][]complex128) {
 
 // GetCopy returns a copy of this matrix
 func (o *MatrixC) GetCopy() (clone *MatrixC) {
-	clone = NewMatrixCmn(o.M, o.N)
+	clone = NewMatrixC(o.M, o.N)
 	copy(clone.Data, o.Data)
 	return
 }
@@ -229,6 +336,22 @@ func (o *MatrixC) GetCopy() (clone *MatrixC) {
 // Add adds value to (i,j) location
 func (o *MatrixC) Add(i, j int, val complex128) {
 	o.Data[i+j*o.M] += val // col-major
+}
+
+// Fill fills this matrix with a single number val
+//  aij = val
+func (o *MatrixC) Fill(val complex128) {
+	for k := 0; k < o.M*o.N; k++ {
+		o.Data[k] = val
+	}
+}
+
+// Scale scales matrix using a shift value (a) and a multiplier (m)
+//  this[ij] = a + m * this[ij]
+func (o *MatrixC) Scale(a, m complex128) {
+	for k := 0; k < o.M*o.N; k++ {
+		o.Data[k] = a + m*o.Data[k]
+	}
 }
 
 // Print prints matrix (without commas or brackets).
