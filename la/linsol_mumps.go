@@ -530,15 +530,8 @@ func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct []float64, sum_b_to
 		chk.Panic("%v", err.Error())
 	}
 
+	// check
 	if mpi.Rank() == 0 {
-		// output
-		A := t.ToMatrix(nil)
-		io.Pforan("A.x = b\n")
-		PrintMat("A", A.ToDense(), "%5g", false)
-		PrintVec("x", x, "%g ", false)
-		PrintVec("b", b, "%g ", false)
-
-		// check
 		err := Vector(x).MaxDiff(x_correct)
 		if err > tol_cmp {
 			chk.Panic("test failed: err = %g", err)
@@ -578,17 +571,9 @@ func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct []complex128, sum_
 	if err != nil {
 		chk.Panic("%v", err.Error())
 	}
-	x := RCtoComplex(xR, xC)
 
+	// check
 	if mpi.Rank() == 0 {
-		// output
-		A := t.ToMatrix(nil)
-		io.Pforan("A.x = b\n")
-		PrintMatC("A", A.ToDense(), "(%g+", "%gi) ", false)
-		PrintVecC("x", x, "(%g+", "%gi) ", false)
-		PrintVecC("b", b, "(%g+", "%gi) ", false)
-
-		// check
 		xR_correct, xC_correct := ComplexToRC(x_correct)
 		errR := Vector(xR).MaxDiff(xR_correct)
 		if errR > tol_cmp {

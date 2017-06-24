@@ -29,9 +29,6 @@ func TestConversion01(tst *testing.T) {
 	t.Put(2, 2, 32.0)
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	if chk.Verbose {
-		PrintMat("a", ad, "%5g", false)
-	}
 	chk.Matrix(tst, "a", 1e-17, ad, [][]float64{
 		{10, 11, 12},
 		{20, 21, 22},
@@ -62,9 +59,6 @@ func TestConversion02(tst *testing.T) {
 	t.Put(3, 0, 3.0) // repeated
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	if chk.Verbose {
-		PrintMat("a", ad, "%5g", false)
-	}
 	chk.Matrix(tst, "a", 1e-17, ad, [][]float64{
 		{1, 2, 3},
 		{4, 5, 6},
@@ -92,9 +86,6 @@ func TestConversion03(tst *testing.T) {
 	t.Put(2, 2, 32.0, 666.0)
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	if chk.Verbose {
-		PrintMatC("a", ad, "(%2g", " +%4gi)  ", false)
-	}
 	chk.MatrixC(tst, "a", 1.0e-17, ad, [][]complex128{
 		{10, 11, 12},
 		{20, 21, 22},
@@ -125,9 +116,6 @@ func TestConversion04(tst *testing.T) {
 	t.Put(3, 0, 3.0, 1.5) // repeated
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	if chk.Verbose {
-		PrintMatC("a", ad, "(%2g", " +%4gi)  ", false)
-	}
 	chk.MatrixC(tst, "a", 1.0e-17, ad, [][]complex128{
 		{1 + 1i, 2 + 1i, 3 + 2i},
 		{4 + 2i, 5 + 2i, 6 + 1i},

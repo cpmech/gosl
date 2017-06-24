@@ -23,7 +23,6 @@ func TestSparse01(tst *testing.T) {
 	var A CCMatrix
 	A.Set(5, 5, Ap, Ai, Ax)
 	Ad := A.ToDense()
-	PrintMat("A", Ad, "%5g", false)
 
 	chk.Matrix(tst, "A", 1e-17, Ad, [][]float64{
 		{2, 3, 0, 0, 0},
@@ -55,22 +54,10 @@ func TestSparse02(tst *testing.T) {
 		}
 	}
 	Am := A.ToMatrix(nil)
-	Ad := Am.ToDense()
-	if chk.Verbose {
-		Kd := K.ToMatrix(nil).ToDense()
-		Ld := L.ToMatrix(nil).ToDense()
-		PrintMat("K", Kd, "%8g", false)
-		PrintMat("L", Ld, "%8g", false)
-		PrintMat("A", Ad, "%8g", false)
-	}
 	K.PutMatAndMatT(&A)
 	L.PutCCMatAndMatT(Am)
 	Kaug := K.ToMatrix(nil).ToDense()
 	Laug := L.ToMatrix(nil).ToDense()
-	if chk.Verbose {
-		PrintMat("K augmented", Kaug, "%8g", false)
-		PrintMat("L augmented", Laug, "%8g", false)
-	}
 	Cor := [][]float64{
 		{1000, 1000, 1000, 1011, 1021, 1000},
 		{1000, 1000, 1000, 1012, 1022, 1000},
