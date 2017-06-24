@@ -244,8 +244,6 @@ func Test_mat01(tst *testing.T) {
 
 	// MatNormF
 	io.Pfblue2("\nfunc MatNormF(a [][]float64) (res float64)\n")
-	Pll = true
-	NCPU = 3
 	A := [][]float64{
 		{-3, 5, 7},
 		{2, 6, 4},
