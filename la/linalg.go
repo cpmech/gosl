@@ -1151,11 +1151,11 @@ func MatMul(c [][]float64, α float64, a, b [][]float64) {
 // MatMulNew returns the matrix multiplication (scaled):
 //  c := α * a * b  =>  cij := α * aik * bkj
 //  NOTE: not efficient implementation => use for small matrices
-func MatMulNew(c *oblas.Matrix, α float64, a, b *oblas.Matrix) {
+func MatMulNew(c *Matrix, α float64, a, b *Matrix) {
 	for i := 0; i < c.M*c.N; i++ {
 		c.Data[i] = 0
 	}
-	err := oblas.Dgemm(false, false, a.M, b.N, a.N, α, a, a.M, b, b.M, 1, c, c.M)
+	err := oblas.Dgemm(false, false, a.M, b.N, a.N, α, a.Data, a.M, b.Data, b.M, 1, c.Data, c.M)
 	if err != nil {
 		chk.Panic("%v\n", err)
 	}

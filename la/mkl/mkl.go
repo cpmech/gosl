@@ -2,7 +2,20 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package mkl implements lower level linear algebra using MKL for max efficiency
+// Package mkl implements lower-level linear algebra routines using MKL
+// for maximum efficiency. This package uses column-major representation for matrices.
+//
+//   Example of col-major data:
+//             _      _
+//            |  0  3  |
+//        A = |  1  4  |            ⇒     a = [0, 1, 2, 3, 4, 5]
+//            |_ 2  5 _|(m x n)
+//
+//        a[i+j*m] = A[i][j]
+//
+//  NOTE: the functions here do not check for the limits of indices. Be careful.
+//        Panic may occur then.
+//
 package mkl
 
 /*
@@ -17,7 +30,6 @@ import (
 	"unsafe"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la/oblas"
 )
 
 // SetNumThreads sets the number of threads in OpenBLAS
@@ -86,29 +98,14 @@ func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, in
 //     trans=false     y := alpha*A*x + beta*y.
 //
 //     trans=true      y := alpha*A**T*x + beta*y.
-func Dgemv(trans bool, m, n int, alpha float64, a *oblas.Matrix, lda int, x []float64, incx int, beta float64, y []float64, incy int) (err error) {
-	if trans {
-		if len(x) != a.M {
-			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.M)
-		}
-		if len(y) != a.N {
-			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.N)
-		}
-	} else {
-		if len(x) != a.N {
-			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.N)
-		}
-		if len(y) != a.M {
-			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.M)
-		}
-	}
+func Dgemv(trans bool, m, n int, alpha float64, a []float64, lda int, x []float64, incx int, beta float64, y []float64, incy int) (err error) {
 	C.cblas_dgemv(
 		cblasColMajor,
 		cTrans(trans),
 		C.MKL_INT(m),
 		C.MKL_INT(n),
 		C.double(alpha),
-		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		(*C.double)(unsafe.Pointer(&a[0])),
 		C.MKL_INT(lda),
 		(*C.double)(unsafe.Pointer(&x[0])),
 		C.MKL_INT(incx),
@@ -131,29 +128,14 @@ func Dgemv(trans bool, m, n int, alpha float64, a *oblas.Matrix, lda int, x []fl
 //
 //  where alpha and beta are scalars, x and y are vectors and A is an
 //  m by n matrix.
-func Zgemv(trans bool, m, n int, alpha complex128, a *oblas.MatrixC, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
-	if trans {
-		if len(x) != a.M {
-			return chk.Err("len(x)=%d must be equal to m=%d", len(x), a.M)
-		}
-		if len(y) != a.N {
-			return chk.Err("len(y)=%d must be equal to n=%d", len(y), a.N)
-		}
-	} else {
-		if len(x) != a.N {
-			return chk.Err("len(x)=%d must be equal to n=%d", len(x), a.N)
-		}
-		if len(y) != a.M {
-			return chk.Err("len(y)=%d must be equal to m=%d", len(y), a.M)
-		}
-	}
+func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
 	C.cblas_zgemv(
 		cblasColMajor,
 		cTrans(trans),
 		C.MKL_INT(m),
 		C.MKL_INT(n),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a[0]))),
 		C.MKL_INT(lda),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&x[0]))),
 		C.MKL_INT(incx),
@@ -178,7 +160,7 @@ func Zgemv(trans bool, m, n int, alpha complex128, a *oblas.MatrixC, lda int, x 
 //
 //  alpha and beta are scalars, and A, B and C are matrices, with op( A )
 //  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
-func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *oblas.Matrix, lda int, b *oblas.Matrix, ldb int, beta float64, c *oblas.Matrix, ldc int) (err error) {
+func Dgemm(transA, transB bool, m, n, k int, alpha float64, a []float64, lda int, b []float64, ldb int, beta float64, c []float64, ldc int) (err error) {
 	C.cblas_dgemm(
 		cblasColMajor,
 		cTrans(transA),
@@ -187,12 +169,12 @@ func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *oblas.Matrix, lda
 		C.MKL_INT(n),
 		C.MKL_INT(k),
 		C.double(alpha),
-		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		(*C.double)(unsafe.Pointer(&a[0])),
 		C.MKL_INT(lda),
-		(*C.double)(unsafe.Pointer(&b.Data[0])),
+		(*C.double)(unsafe.Pointer(&b[0])),
 		C.MKL_INT(ldb),
 		C.double(beta),
-		(*C.double)(unsafe.Pointer(&c.Data[0])),
+		(*C.double)(unsafe.Pointer(&c[0])),
 		C.MKL_INT(ldc),
 	)
 	return
@@ -212,7 +194,7 @@ func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *oblas.Matrix, lda
 //
 //  alpha and beta are scalars, and A, B and C are matrices, with op( A )
 //  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
-func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *oblas.MatrixC, lda int, b *oblas.MatrixC, ldb int, beta complex128, c *oblas.MatrixC, ldc int) (err error) {
+func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a []complex128, lda int, b []complex128, ldb int, beta complex128, c []complex128, ldc int) (err error) {
 	C.cblas_zgemm(
 		cblasColMajor,
 		cTrans(transA),
@@ -221,12 +203,12 @@ func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *oblas.MatrixC,
 		C.MKL_INT(n),
 		C.MKL_INT(k),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a[0]))),
 		C.MKL_INT(lda),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&b.Data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&b[0]))),
 		C.MKL_INT(ldb),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c[0]))),
 		C.MKL_INT(ldc),
 	)
 	return
@@ -254,7 +236,7 @@ func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *oblas.MatrixC,
 //  system of equations A * X = B.
 //
 //  NOTE: matrix 'a' will be modified
-func Dgesv(n, nrhs int, a *oblas.Matrix, lda int, ipiv []int64, b []float64, ldb int) (err error) {
+func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int64, b []float64, ldb int) (err error) {
 	if len(ipiv) != n {
 		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
 	}
@@ -262,7 +244,7 @@ func Dgesv(n, nrhs int, a *oblas.Matrix, lda int, ipiv []int64, b []float64, ldb
 		C.int(lapackColMajor),
 		C.lapack_int(n),
 		C.lapack_int(nrhs),
-		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		(*C.double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 		(*C.double)(unsafe.Pointer(&b[0])),
@@ -296,7 +278,7 @@ func Dgesv(n, nrhs int, a *oblas.Matrix, lda int, ipiv []int64, b []float64, ldb
 //  system of equations A * X = B.
 //
 //  NOTE: matrix 'a' will be modified
-func Zgesv(n, nrhs int, a *oblas.MatrixC, lda int, ipiv []int64, b []complex128, ldb int) (err error) {
+func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int64, b []complex128, ldb int) (err error) {
 	if len(ipiv) != n {
 		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
 	}
@@ -304,7 +286,7 @@ func Zgesv(n, nrhs int, a *oblas.MatrixC, lda int, ipiv []int64, b []complex128,
 		C.int(lapackColMajor),
 		C.lapack_int(n),
 		C.lapack_int(nrhs),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 		(*C.lapack_complex_double)(unsafe.Pointer(&b[0])),
@@ -336,19 +318,19 @@ func Zgesv(n, nrhs int, a *oblas.MatrixC, lda int, ipiv []int64, b []complex128,
 //  Note that the routine returns V**T, not V.
 //
 //  NOTE: matrix 'a' will be modified
-func Dgesvd(jobu, jobvt rune, m, n int, a *oblas.Matrix, lda int, s []float64, u *oblas.Matrix, ldu int, vt *oblas.Matrix, ldvt int, superb []float64) (err error) {
+func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s []float64, u []float64, ldu int, vt []float64, ldvt int, superb []float64) (err error) {
 	info := C.LAPACKE_dgesvd(
 		C.int(lapackColMajor),
 		C.char(jobu),
 		C.char(jobvt),
 		C.lapack_int(m),
 		C.lapack_int(n),
-		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		(*C.double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 		(*C.double)(unsafe.Pointer(&s[0])),
-		(*C.double)(unsafe.Pointer(&u.Data[0])),
+		(*C.double)(unsafe.Pointer(&u[0])),
 		C.lapack_int(ldu),
-		(*C.double)(unsafe.Pointer(&vt.Data[0])),
+		(*C.double)(unsafe.Pointer(&vt[0])),
 		C.lapack_int(ldvt),
 		(*C.double)(unsafe.Pointer(&superb[0])),
 	)
@@ -378,19 +360,19 @@ func Dgesvd(jobu, jobvt rune, m, n int, a *oblas.Matrix, lda int, s []float64, u
 //  Note that the routine returns V**H, not V.
 //
 //  NOTE: matrix 'a' will be modified
-func Zgesvd(jobu, jobvt rune, m, n int, a *oblas.MatrixC, lda int, s []float64, u *oblas.MatrixC, ldu int, vt *oblas.MatrixC, ldvt int, superb []float64) (err error) {
+func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s []float64, u []complex128, ldu int, vt []complex128, ldvt int, superb []float64) (err error) {
 	info := C.LAPACKE_zgesvd(
 		C.int(lapackColMajor),
 		C.char(jobu),
 		C.char(jobvt),
 		C.lapack_int(m),
 		C.lapack_int(n),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 		(*C.double)(unsafe.Pointer(&s[0])),
-		(*C.lapack_complex_double)(unsafe.Pointer(&u.Data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&u[0])),
 		C.lapack_int(ldu),
-		(*C.lapack_complex_double)(unsafe.Pointer(&vt.Data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&vt[0])),
 		C.lapack_int(ldvt),
 		(*C.double)(unsafe.Pointer(&superb[0])),
 	)
@@ -416,12 +398,12 @@ func Zgesvd(jobu, jobvt rune, m, n int, a *oblas.MatrixC, lda int, s []float64, 
 //
 //  NOTE: (1) matrix 'a' will be modified
 //        (2) ipiv indices are 1-based (i.e. Fortran)
-func Dgetrf(m, n int, a *oblas.Matrix, lda int, ipiv []int64) (err error) {
+func Dgetrf(m, n int, a []float64, lda int, ipiv []int64) (err error) {
 	info := C.LAPACKE_dgetrf(
 		C.int(lapackColMajor),
 		C.lapack_int(m),
 		C.lapack_int(n),
-		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		(*C.double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
@@ -447,12 +429,12 @@ func Dgetrf(m, n int, a *oblas.Matrix, lda int, ipiv []int64) (err error) {
 //
 //  NOTE: (1) matrix 'a' will be modified
 //        (2) ipiv indices are 1-based (i.e. Fortran)
-func Zgetrf(m, n int, a *oblas.MatrixC, lda int, ipiv []int64) (err error) {
+func Zgetrf(m, n int, a []complex128, lda int, ipiv []int64) (err error) {
 	info := C.LAPACKE_zgetrf(
 		C.int(lapackColMajor),
 		C.lapack_int(m),
 		C.lapack_int(n),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
@@ -470,11 +452,11 @@ func Zgetrf(m, n int, a *oblas.MatrixC, lda int, ipiv []int64) (err error) {
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Dgetri(n int, a *oblas.Matrix, lda int, ipiv []int64) (err error) {
+func Dgetri(n int, a []float64, lda int, ipiv []int64) (err error) {
 	info := C.LAPACKE_dgetri(
 		C.int(lapackColMajor),
 		C.lapack_int(n),
-		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		(*C.double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
@@ -492,11 +474,11 @@ func Dgetri(n int, a *oblas.Matrix, lda int, ipiv []int64) (err error) {
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Zgetri(n int, a *oblas.MatrixC, lda int, ipiv []int64) (err error) {
+func Zgetri(n int, a []complex128, lda int, ipiv []int64) (err error) {
 	info := C.LAPACKE_zgetri(
 		C.int(lapackColMajor),
 		C.lapack_int(n),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
@@ -521,7 +503,7 @@ func Zgetri(n int, a *oblas.MatrixC, lda int, ipiv []int64) (err error) {
 //  where  alpha and beta  are scalars, C is an  n by n  symmetric matrix
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
-func Dsyrk(up, trans bool, n, k int, alpha float64, a *oblas.Matrix, lda int, beta float64, c *oblas.Matrix, ldc int) (err error) {
+func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta float64, c []float64, ldc int) (err error) {
 	C.cblas_dsyrk(
 		cblasColMajor,
 		cUplo(up),
@@ -529,10 +511,10 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a *oblas.Matrix, lda int, be
 		C.MKL_INT(n),
 		C.MKL_INT(k),
 		C.double(alpha),
-		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		(*C.double)(unsafe.Pointer(&a[0])),
 		C.MKL_INT(lda),
 		C.double(beta),
-		(*C.double)(unsafe.Pointer(&c.Data[0])),
+		(*C.double)(unsafe.Pointer(&c[0])),
 		C.MKL_INT(ldc),
 	)
 	return
@@ -553,7 +535,7 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a *oblas.Matrix, lda int, be
 //  where  alpha and beta  are scalars,  C is an  n by n symmetric matrix
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
-func Zsyrk(up, trans bool, n, k int, alpha complex128, a *oblas.MatrixC, lda int, beta complex128, c *oblas.MatrixC, ldc int) (err error) {
+func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) (err error) {
 	C.cblas_zsyrk(
 		cblasColMajor,
 		cUplo(up),
@@ -561,10 +543,10 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a *oblas.MatrixC, lda int
 		C.MKL_INT(n),
 		C.MKL_INT(k),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a[0]))),
 		C.MKL_INT(lda),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&beta))),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c[0]))),
 		C.MKL_INT(ldc),
 	)
 	return
@@ -585,7 +567,7 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a *oblas.MatrixC, lda int
 //  where  alpha and beta  are  real scalars,  C is an  n by n  hermitian
 //  matrix and  A  is an  n by k  matrix in the  first case and a  k by n
 //  matrix in the second case.
-func Zherk(up, trans bool, n, k int, alpha float64, a *oblas.MatrixC, lda int, beta float64, c *oblas.MatrixC, ldc int) (err error) {
+func Zherk(up, trans bool, n, k int, alpha float64, a []complex128, lda int, beta float64, c []complex128, ldc int) (err error) {
 	C.cblas_zherk(
 		cblasColMajor,
 		cUplo(up),
@@ -593,10 +575,10 @@ func Zherk(up, trans bool, n, k int, alpha float64, a *oblas.MatrixC, lda int, b
 		C.MKL_INT(n),
 		C.MKL_INT(k),
 		C.double(alpha),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&a.Data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&a[0]))),
 		C.MKL_INT(lda),
 		C.double(beta),
-		C.cpt((*C.complexdouble)(unsafe.Pointer(&c.Data[0]))),
+		C.cpt((*C.complexdouble)(unsafe.Pointer(&c[0]))),
 		C.MKL_INT(ldc),
 	)
 	return
@@ -619,12 +601,12 @@ func Zherk(up, trans bool, n, k int, alpha float64, a *oblas.MatrixC, lda int, b
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
-func Dpotrf(up bool, n int, a *oblas.Matrix, lda int) (err error) {
+func Dpotrf(up bool, n int, a []float64, lda int) (err error) {
 	info := C.LAPACKE_dpotrf(
 		C.int(lapackColMajor),
 		lUplo(up),
 		C.lapack_int(n),
-		(*C.double)(unsafe.Pointer(&a.Data[0])),
+		(*C.double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 	)
 	if info != 0 {
@@ -650,12 +632,12 @@ func Dpotrf(up bool, n int, a *oblas.Matrix, lda int) (err error) {
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
-func Zpotrf(up bool, n int, a *oblas.MatrixC, lda int) (err error) {
+func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
 	info := C.LAPACKE_zpotrf(
 		C.int(lapackColMajor),
 		lUplo(up),
 		C.lapack_int(n),
-		(*C.lapack_complex_double)(unsafe.Pointer(&a.Data[0])),
+		(*C.lapack_complex_double)(unsafe.Pointer(&a[0])),
 		C.lapack_int(lda),
 	)
 	if info != 0 {

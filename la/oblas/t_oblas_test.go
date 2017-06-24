@@ -17,56 +17,28 @@ func TestMatrix01(tst *testing.T) {
 	chk.PrintTitle("Matrix01. real")
 
 	A := [][]float64{
-		{1, 2, 3, 4},
-		{5, 6, 7, 8},
+		{1, 2, +3, +4},
+		{5, 6, +7, +8},
 		{9, 0, -1, -2},
 	}
+	m, n := len(A), len(A[0])
 
-	a := NewMatrix(A)
-	chk.Vector(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
+	a := SliceToColMajor(A)
+	chk.Vector(tst, "A to a", 1e-15, a, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
-	chk.Scalar(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1)
-	chk.Scalar(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
-	chk.Scalar(tst, "Get(0,2)", 1e-17, a.Get(0, 2), 3)
-	chk.Scalar(tst, "Get(0,3)", 1e-17, a.Get(0, 3), 4)
-
-	chk.Scalar(tst, "Get(1,0)", 1e-17, a.Get(1, 0), 5)
-	chk.Scalar(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
-	chk.Scalar(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 7)
-	chk.Scalar(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 8)
-
-	chk.Scalar(tst, "Get(2,0)", 1e-17, a.Get(2, 0), 9)
-	chk.Scalar(tst, "Get(2,1)", 1e-17, a.Get(2, 1), 0)
-	chk.Scalar(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
-	chk.Scalar(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2)
-
-	Aback := a.GetSlice()
+	Aback := ColMajorToSlice(m, n, a)
 	chk.Matrix(tst, "a to A", 1e-15, Aback, A)
 
-	l := a.Print("")
+	l := PrintColMajor(m, n, a, "")
 	chk.String(tst, l, "1 2 3 4 \n5 6 7 8 \n9 0 -1 -2 ")
 
-	l = a.PrintGo("%2g")
+	l = PrintColMajorGo(m, n, a, "%2g")
 	lCorrect := "[][]float64{\n    { 1, 2, 3, 4},\n    { 5, 6, 7, 8},\n    { 9, 0,-1,-2},\n}"
 	chk.String(tst, l, lCorrect)
 
-	l = a.PrintPy("%2g")
+	l = PrintColMajorPy(m, n, a, "%2g")
 	lCorrect = "np.matrix([\n    [ 1, 2, 3, 4],\n    [ 5, 6, 7, 8],\n    [ 9, 0,-1,-2],\n], dtype=float)"
 	chk.String(tst, l, lCorrect)
-
-	a.Add(1, 2, -7)
-	chk.Scalar(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 0)
-
-	b := a.GetCopy()
-	if b.M != a.M {
-		tst.Errorf("b.M should be equal to a.M\n")
-		return
-	}
-	if b.N != a.N {
-		tst.Errorf("b.N should be equal to a.N\n")
-		return
-	}
-	chk.Vector(tst, "b.Data", 1e-17, b.Data, a.Data)
 }
 
 func TestMatrix02(tst *testing.T) {
@@ -75,56 +47,28 @@ func TestMatrix02(tst *testing.T) {
 	chk.PrintTitle("Matrix02. complex")
 
 	A := [][]complex128{
-		{1 + 0.1i, 2, 3, 4 - 0.4i},
-		{5 + 0.5i, 6, 7, 8 - 0.8i},
-		{9 + 0.9i, 0, -1, -2 + 1i},
+		{1 + 0.1i, 2, +3, +4 - 0.4i},
+		{5 + 0.5i, 6, +7, +8 - 0.8i},
+		{9 + 0.9i, 0, -1, -2 + 1.0i},
 	}
+	m, n := len(A), len(A[0])
 
-	a := NewMatrixC(A)
-	chk.VectorC(tst, "A to a", 1e-15, a.Data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
+	a := SliceToColMajorC(A)
+	chk.VectorC(tst, "A to a", 1e-15, a, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
 
-	chk.ScalarC(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1+0.1i)
-	chk.ScalarC(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
-	chk.ScalarC(tst, "Get(0,2)", 1e-17, a.Get(0, 2), 3)
-	chk.ScalarC(tst, "Get(0,3)", 1e-17, a.Get(0, 3), 4-0.4i)
-
-	chk.ScalarC(tst, "Get(1,0)", 1e-17, a.Get(1, 0), 5+0.5i)
-	chk.ScalarC(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
-	chk.ScalarC(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 7)
-	chk.ScalarC(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 8-0.8i)
-
-	chk.ScalarC(tst, "Get(2,0)", 1e-17, a.Get(2, 0), 9+0.9i)
-	chk.ScalarC(tst, "Get(2,1)", 1e-17, a.Get(2, 1), 0)
-	chk.ScalarC(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
-	chk.ScalarC(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
-
-	Aback := a.GetSlice()
+	Aback := ColMajorCtoSlice(m, n, a)
 	chk.MatrixC(tst, "a to A", 1e-15, Aback, A)
 
-	l := a.Print("%g", "")
+	l := PrintColMajorC(m, n, a, "%g", "")
 	chk.String(tst, l, "1+0.1i, 2+0i, 3+0i, 4-0.4i\n5+0.5i, 6+0i, 7+0i, 8-0.8i\n9+0.9i, 0+0i, -1+0i, -2+1i")
 
-	l = a.PrintGo("%2g", "%+4.1f")
+	l = PrintColMajorCgo(m, n, a, "%2g", "%+4.1f")
 	lCorrect := "[][]complex128{\n    { 1+0.1i, 2+0.0i, 3+0.0i, 4-0.4i},\n    { 5+0.5i, 6+0.0i, 7+0.0i, 8-0.8i},\n    { 9+0.9i, 0+0.0i,-1+0.0i,-2+1.0i},\n}"
 	chk.String(tst, l, lCorrect)
 
-	l = a.PrintPy("%2g", "%4.1f")
+	l = PrintColMajorCpy(m, n, a, "%2g", "%4.1f")
 	lCorrect = "np.matrix([\n    [ 1+0.1j, 2+0.0j, 3+0.0j, 4-0.4j],\n    [ 5+0.5j, 6+0.0j, 7+0.0j, 8-0.8j],\n    [ 9+0.9j, 0+0.0j,-1+0.0j,-2+1.0j],\n], dtype=complex)"
 	chk.String(tst, l, lCorrect)
-
-	a.Add(1, 3, -8+0.8i)
-	chk.ScalarC(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 0)
-
-	b := a.GetCopy()
-	if b.M != a.M {
-		tst.Errorf("b.M should be equal to a.M\n")
-		return
-	}
-	if b.N != a.N {
-		tst.Errorf("b.N should be equal to a.N\n")
-		return
-	}
-	chk.VectorC(tst, "b.Data", 1e-17, b.Data, a.Data)
 }
 
 func TestDaxpy01(tst *testing.T) {
@@ -179,16 +123,16 @@ func TestDgemv01(tst *testing.T) {
 	chk.PrintTitle("Dgemv01")
 
 	// allocate
-	a := NewMatrix([][]float64{
+	a := SliceToColMajor([][]float64{
 		{0.1, 0.2, 0.3},
 		{1.0, 0.2, 0.3},
 		{2.0, 0.2, 0.3},
 		{3.0, 0.2, 0.3},
 	})
-	chk.Vector(tst, "a.Data", 1e-15, a.Data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
+	chk.Vector(tst, "a", 1e-15, a, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 
 	// perform mv
-	m, n := a.M, a.N
+	m, n := 4, 3
 	α, β := 0.5, 2.0
 	x := []float64{20, 10, 30}
 	y := []float64{3, 1, 2, 4}
@@ -209,7 +153,7 @@ func TestDgemv01(tst *testing.T) {
 	chk.Vector(tst, "x", 1e-15, x, []float64{144.125, 30.3, 75.45})
 
 	// check that a is unmodified
-	chk.Vector(tst, "a.Data", 1e-15, a.Data, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
+	chk.Vector(tst, "a", 1e-15, a, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 }
 
 func TestZgemv01(tst *testing.T) {
@@ -218,14 +162,14 @@ func TestZgemv01(tst *testing.T) {
 	chk.PrintTitle("Zgemv01")
 
 	// allocate
-	a := NewMatrixC([][]complex128{
-		{0.1 + 3i, 0.2, 0.3 - 0.3i},
-		{1.0 + 2i, 0.2, 0.3 - 0.4i},
-		{2.0 + 1i, 0.2, 0.3 - 0.5i},
+	a := SliceToColMajorC([][]complex128{
+		{0.1 + 3.0i, 0.2, 0.3 - 0.3i},
+		{1.0 + 2.0i, 0.2, 0.3 - 0.4i},
+		{2.0 + 1.0i, 0.2, 0.3 - 0.5i},
 		{3.0 + 0.1i, 0.2, 0.3 - 0.6i},
 	})
-	m, n := a.M, a.N
-	chk.VectorC(tst, "a.Data", 1e-15, a.Data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
+	m, n := 4, 3
+	chk.VectorC(tst, "a", 1e-15, a, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 
 	// perform mv
 	α, β := 0.5+1i, 2.0+1i
@@ -248,7 +192,7 @@ func TestZgemv01(tst *testing.T) {
 	chk.VectorC(tst, "x", 1e-13, x, []complex128{-248.875 + 82.5i, -18.5 + 38i, 83.85 + 154.7i})
 
 	// check that a is unmodified
-	chk.VectorC(tst, "a.Data", 1e-15, a.Data, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
+	chk.VectorC(tst, "a", 1e-15, a, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 }
 
 func TestDgemm01(tst *testing.T) {
@@ -257,20 +201,20 @@ func TestDgemm01(tst *testing.T) {
 	chk.PrintTitle("Dgemm01")
 
 	// allocate matrices
-	a := NewMatrix([][]float64{
-		{1, 2, 0, 1, -1},
+	a := SliceToColMajor([][]float64{
+		{1, 2, +0, 1, -1},
 		{2, 3, -1, 1, +1},
-		{1, 2, 0, 4, -1},
-		{4, 0, 3, 1, +1},
+		{1, 2, +0, 4, -1},
+		{4, 0, +3, 1, +1},
 	})
-	b := NewMatrix([][]float64{
+	b := SliceToColMajor([][]float64{
 		{1, 0, 0},
 		{0, 0, 3},
 		{0, 0, 1},
 		{1, 0, 1},
 		{0, 2, 0},
 	})
-	c := NewMatrix([][]float64{
+	c := SliceToColMajor([][]float64{
 		{+0.50, 0, +0.25},
 		{+0.25, 0, -0.25},
 		{-0.25, 0, +0.00},
@@ -278,8 +222,8 @@ func TestDgemm01(tst *testing.T) {
 	})
 
 	// sizes
-	m, k := a.M, a.N
-	n := b.N
+	m, k := 4, 5
+	n := 3
 
 	// run dgemm
 	transA, transB := false, false
@@ -292,11 +236,11 @@ func TestDgemm01(tst *testing.T) {
 	}
 
 	// check
-	chk.Matrix(tst, "0.5⋅a⋅b + 2⋅c", 1e-17, c.GetSlice(), [][]float64{
+	chk.Matrix(tst, "0.5⋅a⋅b + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
 		{2, -1, 4},
-		{2, 1, 4},
+		{2, +1, 4},
 		{2, -1, 5},
-		{2, 1, 2},
+		{2, +1, 2},
 	})
 }
 
@@ -306,20 +250,20 @@ func TestZgemm01(tst *testing.T) {
 	chk.PrintTitle("Zgemm01")
 
 	// allocate matrices
-	a := NewMatrixC([][]complex128{
-		{1, 2, 0 + 1i, 1, -1},
+	a := SliceToColMajorC([][]complex128{
+		{1, 2, +0 + 1i, 1, -1},
 		{2, 3, -1 - 1i, 1, +1},
-		{1, 2, 0 + 1i, 4, -1},
-		{4, 0, 3 - 1i, 1, +1},
+		{1, 2, +0 + 1i, 4, -1},
+		{4, 0, +3 - 1i, 1, +1},
 	})
-	b := NewMatrixC([][]complex128{
+	b := SliceToColMajorC([][]complex128{
 		{1, 0, 0 + 1i},
 		{0, 0, 3 - 1i},
 		{0, 0, 1 + 1i},
 		{1, 0, 1 - 1i},
 		{0, 2, 0 + 1i},
 	})
-	c := NewMatrixC([][]complex128{
+	c := SliceToColMajorC([][]complex128{
 		{+0.50, 1i, +0.25},
 		{+0.25, 1i, -0.25},
 		{-0.25, 1i, +0.00},
@@ -327,8 +271,8 @@ func TestZgemm01(tst *testing.T) {
 	})
 
 	// sizes
-	m, k := a.M, a.N
-	n := b.N
+	m, k := 4, 5
+	n := 3
 
 	// run dgemm
 	transA, transB := false, false
@@ -341,7 +285,7 @@ func TestZgemm01(tst *testing.T) {
 	}
 
 	// check
-	chk.MatrixC(tst, "(0.5-2i)⋅a⋅b + (2-4i)⋅c", 1e-17, c.GetSlice(), [][]complex128{
+	chk.MatrixC(tst, "(0.5-2i)⋅a⋅b + (2-4i)⋅c", 1e-17, ColMajorCtoSlice(4, 3, c), [][]complex128{
 		{2 - 6i, 3 + 6i, -0.5 - 14i},
 		{2 - 7i, 5 - 2i, -1.5 - 20.5i},
 		{2 - 9i, 3 + 6i, -5.5 - 20.5i},
@@ -356,15 +300,14 @@ func TestDgesv01(tst *testing.T) {
 
 	// matrix
 	amat := [][]float64{
-		{2, 3, 0, 0, 0},
-		{3, 0, 4, 0, 6},
+		{2, +3, +0, 0, 0},
+		{3, +0, +4, 0, 6},
 		{0, -1, -3, 2, 0},
-		{0, 0, 1, 0, 0},
-		{0, 4, 2, 0, 1},
+		{0, +0, +1, 0, 0},
+		{0, +4, +2, 0, 1},
 	}
 	n := 5
-	a := NewMatrixMN(n, n)
-	a.SetFromSlice(amat)
+	a := SliceToColMajor(amat)
 
 	// right-hand-side
 	b := []float64{8, 45, -3, 3, 19}
@@ -398,34 +341,34 @@ func TestZgesv01(tst *testing.T) {
 	tol := 0.00038
 
 	// matrix
-	a := NewMatrixC([][]complex128{
-		{19.730 + 0.000i, 12.110 - 1.000i, 0.000 + 5.000i, 0.000 + 0.000i, 0.000 + 0.000i},
-		{0.000 - 0.510i, 32.300 + 7.000i, 23.070 + 0.000i, 0.000 + 1.000i, 0.000 + 0.000i},
-		{0.000 + 0.000i, 0.000 - 0.510i, 70.000 + 7.300i, 3.950 + 0.000i, 19.000 + 31.830i},
-		{0.000 + 0.000i, 0.000 + 0.000i, 1.000 + 1.100i, 50.170 + 0.000i, 45.510 + 0.000i},
-		{0.000 + 0.000i, 0.000 + 0.000i, 0.000 + 0.000i, 0.000 - 9.351i, 55.000 + 0.000i},
+	a := SliceToColMajorC([][]complex128{
+		{19.730 + 0.000i, 12.110 - 1.000i, +0.000 + 5.000i, +0.000 + 0.000i, +0.000 + 0.000i},
+		{+0.000 - 0.510i, 32.300 + 7.000i, 23.070 + 0.000i, +0.000 + 1.000i, +0.000 + 0.000i},
+		{+0.000 + 0.000i, +0.000 - 0.510i, 70.000 + 7.300i, +3.950 + 0.000i, 19.000 + 31.830i},
+		{+0.000 + 0.000i, +0.000 + 0.000i, +1.000 + 1.100i, 50.170 + 0.000i, 45.510 + 0.000i},
+		{+0.000 + 0.000i, +0.000 + 0.000i, +0.000 + 0.000i, +0.000 - 9.351i, 55.000 + 0.000i},
 	})
 
 	// right-hand-side
 	b := []complex128{
-		77.38 + 8.82i,
+		+77.38 + 8.82i,
 		157.48 + 19.8i,
 		1175.62 + 20.69i,
 		912.12 - 801.75i,
-		550 - 1060.4i,
+		550.00 - 1060.4i,
 	}
 
 	// solution
 	xCorrect := []complex128{
-		3.3 - 1i,
-		1 + 0.17i,
-		5.5,
-		9,
-		10 - 17.75i,
+		+3.3 - 1.00i,
+		+1.0 + 0.17i,
+		+5.5 + 0.00i,
+		+9.0 + 0.00i,
+		10.0 - 17.75i,
 	}
 
 	// run test
-	n := a.N
+	n := 5
 	nrhs := 1
 	lda, ldb := n, n
 	ipiv := make([]int32, n)
@@ -454,8 +397,7 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 
 	// allocate matrix
 	m, n := len(amat), len(amat[0])
-	a := NewMatrixMN(m, n)
-	a.SetFromSlice(amat)
+	a := SliceToColMajor(amat)
 
 	// compute dimensions
 	minMN := imin(m, n)
@@ -465,8 +407,8 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 
 	// allocate output arrays
 	s := make([]float64, minMN)
-	u := NewMatrixMN(m, m)
-	vt := NewMatrixMN(n, n)
+	u := make([]float64, m*m)
+	vt := make([]float64, n*n)
 	superb := make([]float64, minMN)
 
 	// perform SVD
@@ -479,11 +421,15 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 	}
 
 	// compare results
-	umat := u.GetSlice()
-	vtmat := vt.GetSlice()
-	chk.Matrix(tst, "u", tolu, umat, uCorrect)
+	umat := ColMajorToSlice(m, m, u)
+	vtmat := ColMajorToSlice(n, n, vt)
+	if uCorrect != nil {
+		chk.Matrix(tst, "u", tolu, umat, uCorrect)
+	}
 	chk.Vector(tst, "s", tols, s, sCorrect)
-	chk.Matrix(tst, "vt", tolv, vtmat, vtCorrect)
+	if vtCorrect != nil {
+		chk.Matrix(tst, "vt", tolv, vtmat, vtCorrect)
+	}
 
 	// check SVD
 	usv := make([][]float64, m)
@@ -606,8 +552,7 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 
 	// allocate matrix
 	m, n := len(amat), len(amat[0])
-	a := NewMatrixCmn(m, n)
-	a.SetFromSlice(amat)
+	a := SliceToColMajorC(amat)
 
 	// compute dimensions
 	minMN := imin(m, n)
@@ -617,8 +562,8 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 
 	// allocate output arrays
 	s := make([]float64, minMN)
-	u := NewMatrixCmn(m, m)
-	vt := NewMatrixCmn(n, n)
+	u := make([]complex128, m*m)
+	vt := make([]complex128, n*n)
 	superb := make([]float64, minMN)
 
 	// perform SVD
@@ -631,11 +576,15 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 	}
 
 	// compare results
-	umat := u.GetSlice()
-	vtmat := vt.GetSlice()
-	chk.MatrixC(tst, "u", tolu, umat, uCorrect)
+	umat := ColMajorCtoSlice(m, m, u)
+	vtmat := ColMajorCtoSlice(n, n, vt)
+	if uCorrect != nil {
+		chk.MatrixC(tst, "u", tolu, umat, uCorrect)
+	}
 	chk.Vector(tst, "s", tols, s, sCorrect)
-	chk.MatrixC(tst, "vt", tolv, vtmat, vtCorrect)
+	if vtCorrect != nil {
+		chk.MatrixC(tst, "vt", tolv, vtmat, vtCorrect)
+	}
 
 	// check SVD
 	usv := make([][]complex128, m)
@@ -717,14 +666,13 @@ func TestDgetrf01(tst *testing.T) {
 
 	// matrix
 	amat := [][]float64{
-		{1, 2, 0, 1},
+		{1, 2, +0, 1},
 		{2, 3, -1, 1},
-		{1, 2, 0, 4},
-		{4, 0, 3, 1},
+		{1, 2, +0, 4},
+		{4, 0, +3, 1},
 	}
 	m, n := 4, 4
-	a := NewMatrixMN(m, n)
-	a.SetFromSlice(amat)
+	a := SliceToColMajor(amat)
 
 	// run dgetrf
 	lda := m
@@ -739,7 +687,7 @@ func TestDgetrf01(tst *testing.T) {
 	chk.Int32s(tst, "ipiv", ipiv, []int32{4, 2, 3, 4})
 
 	// check LU
-	chk.Matrix(tst, "lu", 1e-17, a.GetSlice(), [][]float64{
+	chk.Matrix(tst, "lu", 1e-17, ColMajorToSlice(m, n, a), [][]float64{
 		{+4.0e+00, +0.000000000000000e+00, +3.000000000000000e+00, +1.000000000000000e+00},
 		{+5.0e-01, +3.000000000000000e+00, -2.500000000000000e+00, +5.000000000000000e-01},
 		{+2.5e-01, +6.666666666666666e-01, +9.166666666666665e-01, +3.416666666666667e+00},
@@ -754,7 +702,7 @@ func TestDgetrf01(tst *testing.T) {
 	}
 
 	// compare inverse
-	ai := a.GetSlice()
+	ai := ColMajorToSlice(n, m, a)
 	chk.Matrix(tst, "inv(a)", 1e-15, ai, [][]float64{
 		{-8.484848484848487e-01, +5.454545454545455e-01, +3.030303030303039e-02, +1.818181818181818e-01},
 		{+1.090909090909091e+00, -2.727272727272728e-01, -1.818181818181817e-01, -9.090909090909091e-02},
@@ -791,8 +739,7 @@ func TestZgetrf01(tst *testing.T) {
 		{4 + 1i, 0, +3, 1 - 1i},
 	}
 	m, n := 4, 4
-	a := NewMatrixCmn(m, n)
-	a.SetFromSlice(amat)
+	a := SliceToColMajorC(amat)
 
 	// run
 	lda := m
@@ -807,7 +754,7 @@ func TestZgetrf01(tst *testing.T) {
 	chk.Int32s(tst, "ipiv", ipiv, []int32{4, 2, 3, 4})
 
 	// check LU
-	chk.MatrixC(tst, "lu", 1e-15, a.GetSlice(), [][]complex128{
+	chk.MatrixC(tst, "lu", 1e-15, ColMajorCtoSlice(m, n, a), [][]complex128{
 		{+4.000000000000000e+00 + 1.000000000000000e+00i, +0.000000000000000e+00, +3.000000000000000e+00 + 0.000000000000000e+00i, +1.000000000000000e+00 - 1.000000000000000e+00i},
 		{+5.294117647058824e-01 + 1.176470588235294e-01i, +3.000000000000000e+00, -2.588235294117647e+00 - 3.529411764705882e-01i, +3.529411764705882e-01 - 5.882352941176471e-01i},
 		{+2.941176470588235e-01 + 1.764705882352941e-01i, +6.666666666666666e-01, +8.431372549019609e-01 - 2.941176470588235e-01i, +3.294117647058823e+00 - 4.901960784313725e-01i},
@@ -822,7 +769,7 @@ func TestZgetrf01(tst *testing.T) {
 	}
 
 	// compare inverse
-	ai := a.GetSlice()
+	ai := ColMajorCtoSlice(n, m, a)
 	chk.MatrixC(tst, "inv(a)", 1e-15, ai, [][]complex128{
 		{-8.442622950819669e-01 - 4.644808743169393e-02i, +5.409836065573769e-01 + 4.918032786885240e-02i, +3.278688524590156e-02 - 2.732240437158467e-02i, +1.803278688524591e-01 + 1.639344262295081e-02i},
 		{+1.065573770491803e+00 + 2.786885245901638e-01i, -2.459016393442623e-01 - 2.950819672131146e-01i, -1.967213114754096e-01 + 1.639344262295082e-01i, -8.196721311475419e-02 - 9.836065573770497e-02i},
@@ -846,22 +793,24 @@ func TestZgetrf01(tst *testing.T) {
 	}
 }
 
-func checkUplo(tst *testing.T, testname string, c, cLo, cUp *Matrix, tol float64) {
-	n := c.N
+func checkUplo(tst *testing.T, testname string, n int, c, cLo, cUp []float64, tol float64) {
 	maxdiff := 0.0
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
+			v := c[i+j*n]
+			vLo := cLo[i+j*n]
+			vUp := cUp[i+j*n]
 			if i == j {
-				diff := math.Abs(cLo.Get(i, j) - c.Get(i, j))
+				diff := math.Abs(vLo - v)
 				if diff > tol {
 					maxdiff = diff
 				}
-				diff = math.Abs(cUp.Get(i, j) - c.Get(i, j))
+				diff = math.Abs(vUp - v)
 				if diff > tol {
 					maxdiff = diff
 				}
 			} else {
-				diff := math.Abs(cLo.Get(i, j) + cUp.Get(i, j) - c.Get(i, j))
+				diff := math.Abs(vLo + vUp - v)
 				if diff > tol {
 					maxdiff = diff
 				}
@@ -879,39 +828,41 @@ func TestDsyrk01(tst *testing.T) {
 	chk.PrintTitle("Dsyrk01")
 
 	// c matrices
-	c := NewMatrix([][]float64{
+	c := SliceToColMajor([][]float64{
 		{+3, +0, -3, +0},
 		{+0, +3, +1, +2},
 		{-3, +1, +4, +1},
 		{+0, +2, +1, +3},
 	})
-	cUp := NewMatrix([][]float64{
+	cUp := SliceToColMajor([][]float64{
 		{+3, +0, -3, +0},
 		{+0, +3, +1, +2},
 		{+0, +0, +4, +1},
 		{+0, +0, +0, +3},
 	})
-	cLo := NewMatrix([][]float64{
+	cLo := SliceToColMajor([][]float64{
 		{+3, +0, +0, +0},
 		{+0, +3, +0, +0},
 		{-3, +1, +4, +0},
 		{+0, +2, +1, +3},
 	})
 
+	// n-size
+	n := 4 // c.N
+
 	// check cUp and cLo
-	checkUplo(tst, "Dsyrk01", c, cLo, cUp, 1e-17)
+	checkUplo(tst, "Dsyrk01", n, c, cLo, cUp, 1e-17)
 
 	// a matrix
-	a := NewMatrix([][]float64{
+	a := SliceToColMajor([][]float64{
 		{+1, +2, +1, +1, -1, +0},
 		{+2, +2, +1, +0, +0, +0},
 		{+3, +1, +3, +1, +2, -1},
 		{+1, +0, +1, -1, +0, +0},
 	})
 
-	// sizes
-	n := c.N
-	k := a.N
+	// k-size
+	k := 6 // a.N
 
 	// constants
 	alpha, beta := 3.0, -1.0
@@ -926,7 +877,7 @@ func TestDsyrk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ - c", 1e-17, cUp.GetSlice(), [][]float64{
+	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ - c", 1e-17, ColMajorToSlice(n, n, cUp), [][]float64{
 		{21, 21, 24, +3},
 		{+0, 24, 32, +7},
 		{+0, +0, 71, 14},
@@ -942,7 +893,7 @@ func TestDsyrk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ - c", 1e-17, cLo.GetSlice(), [][]float64{
+	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ - c", 1e-17, ColMajorToSlice(n, n, cLo), [][]float64{
 		{21, +0, +0, +0},
 		{21, 24, +0, +0},
 		{24, 32, 71, +0},
@@ -956,7 +907,7 @@ func TestDsyrk02(tst *testing.T) {
 	chk.PrintTitle("Dsyrk02")
 
 	// c matrices
-	c := NewMatrix([][]float64{
+	c := SliceToColMajor([][]float64{
 		{+3, 0, -3, 0, 0, 0},
 		{+0, 3, +1, 2, 2, 2},
 		{-3, 1, +4, 1, 1, 1},
@@ -964,7 +915,7 @@ func TestDsyrk02(tst *testing.T) {
 		{+0, 2, +1, 3, 4, 3},
 		{+0, 2, +1, 3, 3, 4},
 	})
-	cUp := NewMatrix([][]float64{
+	cUp := SliceToColMajor([][]float64{
 		{+3, 0, -3, 0, 0, 0},
 		{+0, 3, +1, 2, 2, 2},
 		{+0, 0, +4, 1, 1, 1},
@@ -972,7 +923,7 @@ func TestDsyrk02(tst *testing.T) {
 		{+0, 0, +0, 0, 4, 3},
 		{+0, 0, +0, 0, 0, 4},
 	})
-	cLo := NewMatrix([][]float64{
+	cLo := SliceToColMajor([][]float64{
 		{+3, 0, +0, 0, 0, 0},
 		{+0, 3, +0, 0, 0, 0},
 		{-3, 1, +4, 0, 0, 0},
@@ -981,20 +932,22 @@ func TestDsyrk02(tst *testing.T) {
 		{+0, 2, +1, 3, 3, 4},
 	})
 
+	// n-size
+	n := 6 // c.N
+
 	// check cUp and cLo
-	checkUplo(tst, "Dsyrk02", c, cLo, cUp, 1e-17)
+	checkUplo(tst, "Dsyrk02", n, c, cLo, cUp, 1e-17)
 
 	// a matrix
-	a := NewMatrix([][]float64{
+	a := SliceToColMajor([][]float64{
 		{+1, +2, +1, +1, -1, +0},
 		{+2, +2, +1, +0, +0, +0},
 		{+3, +1, +3, +1, +2, -1},
 		{+1, +0, +1, -1, +0, +0},
 	})
 
-	// sizes
-	n := c.N
-	k := a.M // m now
+	// k-size
+	k := 4 // a.M (it's m now)
 
 	// constants
 	alpha, beta := 3.0, +1.0
@@ -1009,7 +962,7 @@ func TestDsyrk02(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetSlice(), [][]float64{
+	chk.Matrix(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorToSlice(n, n, cUp), [][]float64{
 		{48, 27, 36, +9, 15, -9},
 		{+0, 30, 22, 11, +2, -1},
 		{+0, +0, 40, 10, 16, -8},
@@ -1027,7 +980,7 @@ func TestDsyrk02(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetSlice(), [][]float64{
+	chk.Matrix(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorToSlice(n, n, cLo), [][]float64{
 		{48, +0, +0, +0, +0, +0},
 		{27, 30, +0, +0, +0, +0},
 		{36, 22, 40, +0, +0, +0},
@@ -1037,22 +990,24 @@ func TestDsyrk02(tst *testing.T) {
 	})
 }
 
-func checkUploC(tst *testing.T, testname string, c, cLo, cUp *MatrixC, tolR, tolI float64) {
-	n := c.N
+func checkUploC(tst *testing.T, testname string, n int, c, cLo, cUp []complex128, tolR, tolI float64) {
 	maxdiffR, maxdiffI := 0.0, 0.0
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
+			v := c[i+j*n]
+			vLo := cLo[i+j*n]
+			vUp := cUp[i+j*n]
 			if i == j {
-				diffR := math.Abs(real(cLo.Get(i, j)) - real(c.Get(i, j)))
-				diffI := math.Abs(imag(cLo.Get(i, j)) - imag(c.Get(i, j)))
+				diffR := math.Abs(real(vLo) - real(v))
+				diffI := math.Abs(imag(vLo) - imag(v))
 				if diffR > tolR {
 					maxdiffR = diffR
 				}
 				if diffI > tolI {
 					maxdiffI = diffI
 				}
-				diffR = math.Abs(real(cUp.Get(i, j)) - real(c.Get(i, j)))
-				diffI = math.Abs(imag(cUp.Get(i, j)) - imag(c.Get(i, j)))
+				diffR = math.Abs(real(vUp) - real(v))
+				diffI = math.Abs(imag(vUp) - imag(v))
 				if diffR > tolR {
 					maxdiffR = diffR
 				}
@@ -1060,8 +1015,8 @@ func checkUploC(tst *testing.T, testname string, c, cLo, cUp *MatrixC, tolR, tol
 					maxdiffI = diffI
 				}
 			} else {
-				diffR := math.Abs(real(cLo.Get(i, j)) + real(cUp.Get(i, j)) - real(c.Get(i, j)))
-				diffI := math.Abs(imag(cLo.Get(i, j)) + imag(cUp.Get(i, j)) - imag(c.Get(i, j)))
+				diffR := math.Abs(real(vLo) + real(vUp) - real(v))
+				diffI := math.Abs(imag(vLo) + imag(vUp) - imag(v))
 				if diffR > tolR {
 					maxdiffR = diffR
 				}
@@ -1082,30 +1037,33 @@ func TestZsyrk01(tst *testing.T) {
 	chk.PrintTitle("Zsyrk01")
 
 	// c matrices
-	c := NewMatrixC([][]complex128{
+	c := SliceToColMajorC([][]complex128{
 		{+3 + 1i, 0 + 0i, -2 + 0i, 0 + 0i},
 		{-1 + 0i, 3 + 0i, +0 + 0i, 2 + 0i},
 		{-4 + 0i, 1 + 0i, +3 + 0i, 1 + 0i},
 		{-1 + 0i, 2 + 0i, +0 + 0i, 3 - 1i},
 	})
-	cUp := NewMatrixC([][]complex128{
+	cUp := SliceToColMajorC([][]complex128{
 		{+3 + 1i, 0 + 0i, -2 + 0i, 0 + 0i},
 		{+0 + 0i, 3 + 0i, +0 + 0i, 2 + 0i},
 		{+0 + 0i, 0 + 0i, +3 + 0i, 1 + 0i},
 		{+0 + 0i, 0 + 0i, +0 + 0i, 3 - 1i},
 	})
-	cLo := NewMatrixC([][]complex128{
+	cLo := SliceToColMajorC([][]complex128{
 		{+3 + 1i, 0 + 0i, +0 + 0i, 0 + 0i},
 		{-1 + 0i, 3 + 0i, +0 + 0i, 0 + 0i},
 		{-4 + 0i, 1 + 0i, +3 + 0i, 0 + 0i},
 		{-1 + 0i, 2 + 0i, +0 + 0i, 3 - 1i},
 	})
 
+	// n-size
+	n := 4 // c.N
+
 	// check cUp and cLo
-	checkUploC(tst, "Zsyrk02", c, cLo, cUp, 1e-17, 1e-17)
+	checkUploC(tst, "Zsyrk02", n, c, cLo, cUp, 1e-17, 1e-17)
 
 	// a matrix
-	a := NewMatrixC([][]complex128{
+	a := SliceToColMajorC([][]complex128{
 		{+1 - 1i, +2, +1, +1, -1, +0 + 0i},
 		{+2 + 0i, +2, +1, +0, +0, +0 + 1i},
 		{+3 + 1i, +1, +3, +1, +2, -1 + 0i},
@@ -1113,8 +1071,7 @@ func TestZsyrk01(tst *testing.T) {
 	})
 
 	// sizes
-	n := c.N
-	k := a.N
+	k := 6 // a.N
 
 	// constants
 	alpha, beta := 3.0+0i, +1.0+0i
@@ -1129,7 +1086,7 @@ func TestZsyrk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetSlice(), [][]complex128{
+	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cUp), [][]complex128{
 		{24 - 5i, 21 - 6i, 22 - 6i, +3 - 3i},
 		{+0 + 0i, 27 + 0i, 33 + 3i, +8 + 0i},
 		{+0 + 0i, +0 + 0i, 75 + 18i, 16 + 0i},
@@ -1145,7 +1102,7 @@ func TestZsyrk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetSlice(), [][]complex128{
+	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cLo), [][]complex128{
 		{24 - 5i, +0 + 0i, +0 + 0i, +0 + 0i},
 		{20 - 6i, 27 + 0i, +0 + 0i, +0 + 0i},
 		{20 - 6i, 34 + 3i, 75 + 18i, +0 + 0i},
@@ -1159,30 +1116,33 @@ func TestZherk01(tst *testing.T) {
 	chk.PrintTitle("Zherk01")
 
 	// c matrices
-	c := NewMatrixC([][]complex128{ // must be Hermitian: c = c^H
+	c := SliceToColMajorC([][]complex128{ // must be Hermitian: c = c^H
 		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
 		{+0 - 1i, 3 + 0i, +1 + 0i, 2 + 0i},
 		{-3 - 1i, 1 + 0i, +4 + 0i, 1 - 1i},
 		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
 	})
-	cUp := NewMatrixC([][]complex128{
+	cUp := SliceToColMajorC([][]complex128{
 		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
 		{+0 + 0i, 3 + 0i, +1 + 0i, 2 + 0i},
 		{+0 + 0i, 0 + 0i, +4 + 0i, 1 - 1i},
 		{+0 + 0i, 0 + 0i, +0 + 0i, 4 + 0i},
 	})
-	cLo := NewMatrixC([][]complex128{
+	cLo := SliceToColMajorC([][]complex128{
 		{+4 + 0i, 0 + 0i, +0 + 0i, 0 + 0i},
 		{+0 - 1i, 3 + 0i, +0 + 0i, 0 + 0i},
 		{-3 - 1i, 1 + 0i, +4 + 0i, 0 + 0i},
 		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
 	})
 
+	// n-size
+	n := 4 // c.N
+
 	// check cUp and cLo
-	checkUploC(tst, "Zherk01", c, cLo, cUp, 1e-17, 1e-17)
+	checkUploC(tst, "Zherk01", n, c, cLo, cUp, 1e-17, 1e-17)
 
 	// a matrix
-	a := NewMatrixC([][]complex128{
+	a := SliceToColMajorC([][]complex128{
 		{+1 - 1i, +2, +1, +1, -1, +0 + 0i},
 		{+2 + 0i, +2, +1, +0, +0, +0 + 1i},
 		{+3 + 1i, +1, +3, +1, +2, -1 + 0i},
@@ -1190,8 +1150,7 @@ func TestZherk01(tst *testing.T) {
 	})
 
 	// sizes
-	n := c.N
-	k := a.N
+	k := 6 // a.N
 
 	// constants
 	alpha, beta := 3.0, +1.0
@@ -1206,7 +1165,7 @@ func TestZherk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, cUp.GetSlice(), [][]complex128{
+	chk.MatrixC(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cUp), [][]complex128{
 		{31 + 0i, 21 - 5i, 15 - 11i, 3 - 1i},
 		{+0 + 0i, 33 + 0i, 34 - 9i, 14 + 0i},
 		{+0 + 0i, +0 + 0i, 82 + 0i, 16 + 5i},
@@ -1222,11 +1181,11 @@ func TestZherk01(tst *testing.T) {
 	}
 
 	// compare resulting up(c) matrix
-	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, cLo.GetSlice(), [][]complex128{
+	chk.MatrixC(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cLo), [][]complex128{
 		{31 + 0i, +0 + 0i, +0 + 0i, +0 + 0i},
 		{21 + 5i, 33 + 0i, +0 + 0i, +0 + 0i},
 		{15 + 11i, 34 + 9i, 82 + 0i, +0 + 0i},
-		{3 + 1i, 14 + 0i, 16 - 5i, 16 + 0i},
+		{+3 + 1i, 14 + 0i, 16 - 5i, 16 + 0i},
 	})
 }
 
@@ -1236,30 +1195,32 @@ func TestDpotrf01(tst *testing.T) {
 	chk.PrintTitle("Dpotrf01")
 
 	// a matrices
-	a := NewMatrix([][]float64{
+	a := SliceToColMajor([][]float64{
 		{+3, +0, -3, +0},
 		{+0, +3, +1, +2},
 		{-3, +1, +4, +1},
 		{+0, +2, +1, +3},
 	})
-	aUp := NewMatrix([][]float64{
+	aUp := SliceToColMajor([][]float64{
 		{+3, +0, -3, +0},
 		{+0, +3, +1, +2},
 		{+0, +0, +4, +1},
 		{+0, +0, +0, +3},
 	})
-	aLo := NewMatrix([][]float64{
+	aLo := SliceToColMajor([][]float64{
 		{+3, +0, +0, +0},
 		{+0, +3, +0, +0},
 		{-3, +1, +4, +0},
 		{+0, +2, +1, +3},
 	})
 
+	// n-size
+	n := 4 // a.N
+
 	// check aUp and aLo
-	checkUplo(tst, "Dpotrf01", a, aLo, aUp, 1e-17)
+	checkUplo(tst, "Dpotrf01", n, a, aLo, aUp, 1e-17)
 
 	// run dpotrf with up(a)
-	n := a.N
 	up := true
 	lda := n
 	err := Dpotrf(up, n, aUp, lda)
@@ -1269,7 +1230,7 @@ func TestDpotrf01(tst *testing.T) {
 	}
 
 	// check aUp
-	chk.Matrix(tst, "chol(aUp)", 1e-15, aUp.GetSlice(), [][]float64{
+	chk.Matrix(tst, "chol(aUp)", 1e-15, ColMajorToSlice(n, n, aUp), [][]float64{
 		{+1.732050807568877e+00, +0.000000000000000e+00, -1.732050807568878e+00, +0.000000000000000e+00},
 		{+0.000000000000000e+00, +1.732050807568877e+00, +5.773502691896258e-01, +1.154700538379252e+00},
 		{+0.000000000000000e+00, +0.000000000000000e+00, +8.164965809277251e-01, +4.082482904638632e-01},
@@ -1285,7 +1246,7 @@ func TestDpotrf01(tst *testing.T) {
 	}
 
 	// check aLo
-	chk.Matrix(tst, "chol(aLo)", 1e-15, aLo.GetSlice(), [][]float64{
+	chk.Matrix(tst, "chol(aLo)", 1e-15, ColMajorToSlice(n, n, aLo), [][]float64{
 		{+1.732050807568877e+00, +0.000000000000000e+00, +0.000000000000000e+00, +0.000000000000000e+00},
 		{+0.000000000000000e+00, +1.732050807568877e+00, +0.000000000000000e+00, +0.000000000000000e+00},
 		{-1.732050807568878e+00, +5.773502691896258e-01, +8.164965809277251e-01, +0.000000000000000e+00},
@@ -1299,30 +1260,32 @@ func TestZpotrf01(tst *testing.T) {
 	chk.PrintTitle("Zpotrf01")
 
 	// a matrices
-	a := NewMatrixC([][]complex128{ // must be Hermitian: a = a^H
+	a := SliceToColMajorC([][]complex128{ // must be Hermitian: a = a^H
 		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
 		{+0 - 1i, 3 + 0i, +1 + 0i, 2 + 0i},
 		{-3 - 1i, 1 + 0i, +4 + 0i, 1 - 1i},
 		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
 	})
-	aUp := NewMatrixC([][]complex128{
+	aUp := SliceToColMajorC([][]complex128{
 		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
 		{+0 + 0i, 3 + 0i, +1 + 0i, 2 + 0i},
 		{+0 + 0i, 0 + 0i, +4 + 0i, 1 - 1i},
 		{+0 + 0i, 0 + 0i, +0 + 0i, 4 + 0i},
 	})
-	aLo := NewMatrixC([][]complex128{
+	aLo := SliceToColMajorC([][]complex128{
 		{+4 + 0i, 0 + 0i, +0 + 0i, 0 + 0i},
 		{+0 - 1i, 3 + 0i, +0 + 0i, 0 + 0i},
 		{-3 - 1i, 1 + 0i, +4 + 0i, 0 + 0i},
 		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
 	})
 
+	// n-size
+	n := 4 // a.N
+
 	// check aUp and aLo
-	checkUploC(tst, "Zherk01", a, aLo, aUp, 1e-17, 1e-17)
+	checkUploC(tst, "Zherk01", n, a, aLo, aUp, 1e-17, 1e-17)
 
 	// run zpotrf with up(a)
-	n := a.N
 	up := true
 	lda := n
 	err := Zpotrf(up, n, aUp, lda)
@@ -1332,7 +1295,7 @@ func TestZpotrf01(tst *testing.T) {
 	}
 
 	// check aUp
-	chk.MatrixC(tst, "chol(aUp)", 1e-15, aUp.GetSlice(), [][]complex128{
+	chk.MatrixC(tst, "chol(aUp)", 1e-15, ColMajorCtoSlice(n, n, aUp), [][]complex128{
 		{+2, +0.000000000000000e+00 + 5.0e-01i, -1.500000000000000e+00 + 5.000000000000000e-01i, +0.000000000000000e+00 + 1.000000000000000e+00i},
 		{+0, +1.658312395177700e+00 + 0.0e+00i, +4.522670168666454e-01 - 4.522670168666454e-01i, +9.045340337332909e-01 + 0.000000000000000e+00i},
 		{+0, +0.000000000000000e+00 + 0.0e+00i, +1.044465935734187e+00 + 0.000000000000000e+00i, +8.703882797784884e-02 + 8.703882797784884e-02i},
@@ -1348,7 +1311,7 @@ func TestZpotrf01(tst *testing.T) {
 	}
 
 	// check aLo
-	chk.MatrixC(tst, "chol(aLo)", 1e-15, aLo.GetSlice(), [][]complex128{
+	chk.MatrixC(tst, "chol(aLo)", 1e-15, ColMajorCtoSlice(n, n, aLo), [][]complex128{
 		{+2.0 + 0.0e+00i, +0.000000000000000e+00 + 0.000000000000000e+00i, +0.000000000000000e+00 + 0.000000000000000e+00i, +0.000000000000000e+00},
 		{+0.0 - 5.0e-01i, +1.658312395177700e+00 + 0.000000000000000e+00i, +0.000000000000000e+00 + 0.000000000000000e+00i, +0.000000000000000e+00},
 		{-1.5 - 5.0e-01i, +4.522670168666454e-01 + 4.522670168666454e-01i, +1.044465935734187e+00 + 0.000000000000000e+00i, +0.000000000000000e+00},

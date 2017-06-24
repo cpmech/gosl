@@ -19,7 +19,7 @@ import (
 //   Output:
 //     ai  -- the inverse matrix
 //     det -- determinant of a
-func MatInvSmall(ai, a *oblas.Matrix, tol float64) (det float64, err error) {
+func MatInvSmall(ai, a *Matrix, tol float64) (det float64, err error) {
 	switch {
 	case a.M == 1 && a.N == 1:
 		det = a.Get(0, 0)
@@ -70,13 +70,13 @@ func MatInvSmall(ai, a *oblas.Matrix, tol float64) (det float64, err error) {
 //     s  -- diagonal terms [must be pre-allocated] len(s) = imin(a.M, a.N)
 //     u  -- left matrix [must be pre-allocated] u is (a.M x a.M)
 //     vt -- transposed right matrix [must be pre-allocated] vt is (a.N x a.N)
-func MatSvd(s []float64, u, vt, a *oblas.Matrix, copyA bool) {
+func MatSvd(s []float64, u, vt, a *Matrix, copyA bool) {
 	superb := make([]float64, imin(a.M, a.N))
 	acpy := a
 	if copyA {
 		acpy = a.GetCopy()
 	}
-	err := oblas.Dgesvd('A', 'A', a.M, a.N, acpy, a.M, s, u, a.M, vt, a.N, superb)
+	err := oblas.Dgesvd('A', 'A', a.M, a.N, acpy.Data, a.M, s, u.Data, a.M, vt.Data, a.N, superb)
 	if err != nil {
 		chk.Panic("%v\n", err)
 	}
@@ -89,24 +89,24 @@ func MatSvd(s []float64, u, vt, a *oblas.Matrix, copyA bool) {
 //   Output:
 //     ai -- inverse matrix (N x M)
 //   NOTE: the dimension of the ai matrix must be N x M for the pseudo-inverse
-func MatInv(ai, a *oblas.Matrix) (err error) {
+func MatInv(ai, a *Matrix) (err error) {
 
 	// square inverse
 	if a.M == a.N {
 		copy(ai.Data, a.Data)
 		ipiv := make([]int32, imin(a.M, a.N))
-		err = oblas.Dgetrf(a.M, a.N, ai, a.M, ipiv)
+		err = oblas.Dgetrf(a.M, a.N, ai.Data, a.M, ipiv)
 		if err != nil {
 			return
 		}
-		err = oblas.Dgetri(a.N, ai, a.M, ipiv)
+		err = oblas.Dgetri(a.N, ai.Data, a.M, ipiv)
 		return
 	}
 
 	// singular value decomposition
 	s := make([]float64, imin(a.M, a.N))
-	u := oblas.NewMatrixMN(a.M, a.M)
-	vt := oblas.NewMatrixMN(a.N, a.N)
+	u := NewMatrixMN(a.M, a.M)
+	vt := NewMatrixMN(a.N, a.N)
 	MatSvd(s, u, vt, a, true)
 
 	// pseudo inverse
@@ -129,8 +129,8 @@ func MatInv(ai, a *oblas.Matrix) (err error) {
 //  normtype -- Type of norm to use:
 //    "F" or "" => Frobenius
 //    "I"       => Infinite
-func MatCondNum(a *oblas.Matrix, normtype string) (res float64, err error) {
-	ai := oblas.NewMatrixMN(a.M, a.N)
+func MatCondNum(a *Matrix, normtype string) (res float64, err error) {
+	ai := NewMatrixMN(a.M, a.N)
 	err = MatInv(ai, a)
 	if err != nil {
 		return

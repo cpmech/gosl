@@ -11,6 +11,122 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
+func TestMatrix01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Matrix01. real")
+
+	A := [][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 0, -1, -2},
+	}
+
+	a := NewMatrix(A)
+	chk.Vector(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
+
+	chk.Scalar(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1)
+	chk.Scalar(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
+	chk.Scalar(tst, "Get(0,2)", 1e-17, a.Get(0, 2), 3)
+	chk.Scalar(tst, "Get(0,3)", 1e-17, a.Get(0, 3), 4)
+
+	chk.Scalar(tst, "Get(1,0)", 1e-17, a.Get(1, 0), 5)
+	chk.Scalar(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
+	chk.Scalar(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 7)
+	chk.Scalar(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 8)
+
+	chk.Scalar(tst, "Get(2,0)", 1e-17, a.Get(2, 0), 9)
+	chk.Scalar(tst, "Get(2,1)", 1e-17, a.Get(2, 1), 0)
+	chk.Scalar(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
+	chk.Scalar(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2)
+
+	Aback := a.GetSlice()
+	chk.Matrix(tst, "a to A", 1e-15, Aback, A)
+
+	l := a.Print("")
+	chk.String(tst, l, "1 2 3 4 \n5 6 7 8 \n9 0 -1 -2 ")
+
+	l = a.PrintGo("%2g")
+	lCorrect := "[][]float64{\n    { 1, 2, 3, 4},\n    { 5, 6, 7, 8},\n    { 9, 0,-1,-2},\n}"
+	chk.String(tst, l, lCorrect)
+
+	l = a.PrintPy("%2g")
+	lCorrect = "np.matrix([\n    [ 1, 2, 3, 4],\n    [ 5, 6, 7, 8],\n    [ 9, 0,-1,-2],\n], dtype=float)"
+	chk.String(tst, l, lCorrect)
+
+	a.Add(1, 2, -7)
+	chk.Scalar(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 0)
+
+	b := a.GetCopy()
+	if b.M != a.M {
+		tst.Errorf("b.M should be equal to a.M\n")
+		return
+	}
+	if b.N != a.N {
+		tst.Errorf("b.N should be equal to a.N\n")
+		return
+	}
+	chk.Vector(tst, "b.Data", 1e-17, b.Data, a.Data)
+}
+
+func TestMatrix02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Matrix02. complex")
+
+	A := [][]complex128{
+		{1 + 0.1i, 2, 3, 4 - 0.4i},
+		{5 + 0.5i, 6, 7, 8 - 0.8i},
+		{9 + 0.9i, 0, -1, -2 + 1i},
+	}
+
+	a := NewMatrixC(A)
+	chk.VectorC(tst, "A to a", 1e-15, a.Data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
+
+	chk.ScalarC(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1+0.1i)
+	chk.ScalarC(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
+	chk.ScalarC(tst, "Get(0,2)", 1e-17, a.Get(0, 2), 3)
+	chk.ScalarC(tst, "Get(0,3)", 1e-17, a.Get(0, 3), 4-0.4i)
+
+	chk.ScalarC(tst, "Get(1,0)", 1e-17, a.Get(1, 0), 5+0.5i)
+	chk.ScalarC(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
+	chk.ScalarC(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 7)
+	chk.ScalarC(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 8-0.8i)
+
+	chk.ScalarC(tst, "Get(2,0)", 1e-17, a.Get(2, 0), 9+0.9i)
+	chk.ScalarC(tst, "Get(2,1)", 1e-17, a.Get(2, 1), 0)
+	chk.ScalarC(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
+	chk.ScalarC(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
+
+	Aback := a.GetSlice()
+	chk.MatrixC(tst, "a to A", 1e-15, Aback, A)
+
+	l := a.Print("%g", "")
+	chk.String(tst, l, "1+0.1i, 2+0i, 3+0i, 4-0.4i\n5+0.5i, 6+0i, 7+0i, 8-0.8i\n9+0.9i, 0+0i, -1+0i, -2+1i")
+
+	l = a.PrintGo("%2g", "%+4.1f")
+	lCorrect := "[][]complex128{\n    { 1+0.1i, 2+0.0i, 3+0.0i, 4-0.4i},\n    { 5+0.5i, 6+0.0i, 7+0.0i, 8-0.8i},\n    { 9+0.9i, 0+0.0i,-1+0.0i,-2+1.0i},\n}"
+	chk.String(tst, l, lCorrect)
+
+	l = a.PrintPy("%2g", "%4.1f")
+	lCorrect = "np.matrix([\n    [ 1+0.1j, 2+0.0j, 3+0.0j, 4-0.4j],\n    [ 5+0.5j, 6+0.0j, 7+0.0j, 8-0.8j],\n    [ 9+0.9j, 0+0.0j,-1+0.0j,-2+1.0j],\n], dtype=complex)"
+	chk.String(tst, l, lCorrect)
+
+	a.Add(1, 3, -8+0.8i)
+	chk.ScalarC(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 0)
+
+	b := a.GetCopy()
+	if b.M != a.M {
+		tst.Errorf("b.M should be equal to a.M\n")
+		return
+	}
+	if b.N != a.N {
+		tst.Errorf("b.N should be equal to a.N\n")
+		return
+	}
+	chk.VectorC(tst, "b.Data", 1e-17, b.Data, a.Data)
+}
+
 func Test_mat01(tst *testing.T) {
 
 	//verbose()

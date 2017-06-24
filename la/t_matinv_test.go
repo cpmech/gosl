@@ -10,10 +10,9 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la/oblas"
 )
 
-func checkIdentity(tst *testing.T, k string, a *oblas.Matrix, tol float64) {
+func checkIdentity(tst *testing.T, k string, a *Matrix, tol float64) {
 	for i := 0; i < a.M; i++ {
 		for j := 0; j < a.N; j++ {
 			if i == j {
@@ -35,11 +34,11 @@ func checkIdentity(tst *testing.T, k string, a *oblas.Matrix, tol float64) {
 	}
 }
 
-func checkAiSmall(tst *testing.T, k string, a *oblas.Matrix, zeroDet float64,
-	correctAi *oblas.Matrix, correctDet, tolDet, tolAi, tolI float64) {
+func checkAiSmall(tst *testing.T, k string, a *Matrix, zeroDet float64,
+	correctAi *Matrix, correctDet, tolDet, tolAi, tolI float64) {
 
 	// compute inverse and determinant
-	ai := oblas.NewMatrixMN(a.M, a.N)
+	ai := NewMatrixMN(a.M, a.N)
 	det, err := MatInvSmall(ai, a, zeroDet)
 	if err != nil {
 		tst.Errorf("MatInvSmall failed:\n%v\n", err)
@@ -51,15 +50,15 @@ func checkAiSmall(tst *testing.T, k string, a *oblas.Matrix, zeroDet float64,
 	chk.Vector(tst, k+"i", tolAi, ai.Data, correctAi.Data)
 
 	// check a⋅ai = I
-	aai := oblas.NewMatrixMN(a.M, a.N)
+	aai := NewMatrixMN(a.M, a.N)
 	MatMulNew(aai, 1, a, ai)
 	checkIdentity(tst, k+"⋅"+k+"i", aai, tolI)
 }
 
-func checkAi(tst *testing.T, k string, a *oblas.Matrix, correctAi *oblas.Matrix, tolAi, tolI float64) {
+func checkAi(tst *testing.T, k string, a *Matrix, correctAi *Matrix, tolAi, tolI float64) {
 
 	// compute inverse
-	ai := oblas.NewMatrixMN(a.N, a.M)
+	ai := NewMatrixMN(a.N, a.M)
 	err := MatInv(ai, a)
 	if err != nil {
 		tst.Errorf("MatInv failed:\n%v\n", err)
@@ -72,7 +71,7 @@ func checkAi(tst *testing.T, k string, a *oblas.Matrix, correctAi *oblas.Matrix,
 	}
 
 	// multiply ai by a
-	aai := oblas.NewMatrixMN(a.M, a.M)
+	aai := NewMatrixMN(a.M, a.M)
 	MatMulNew(aai, 1, a, ai)
 
 	// square: check a⋅ai = I
@@ -82,17 +81,17 @@ func checkAi(tst *testing.T, k string, a *oblas.Matrix, correctAi *oblas.Matrix,
 	}
 
 	// rectangular: check a⋅ai⋅a = a
-	aaia := oblas.NewMatrixMN(a.M, a.N)
+	aaia := NewMatrixMN(a.M, a.N)
 	MatMulNew(aaia, 1, aai, a)
 	chk.Vector(tst, k+"⋅"+k+"i⋅"+k, tolI, aaia.Data, a.Data)
 }
 
-func checkSvd(tst *testing.T, k string, a *oblas.Matrix, correctS []float64, correctU, correctVt *oblas.Matrix, tolS, tolU, tolVt, tolUsv float64) {
+func checkSvd(tst *testing.T, k string, a *Matrix, correctS []float64, correctU, correctVt *Matrix, tolS, tolU, tolVt, tolUsv float64) {
 
 	// compute SVD
 	s := make([]float64, imin(a.M, a.N))
-	u := oblas.NewMatrixMN(a.M, a.M)
-	vt := oblas.NewMatrixMN(a.N, a.N)
+	u := NewMatrixMN(a.M, a.M)
+	vt := NewMatrixMN(a.N, a.N)
 	MatSvd(s, u, vt, a, true)
 
 	// compare results
@@ -107,7 +106,7 @@ func checkSvd(tst *testing.T, k string, a *oblas.Matrix, correctS []float64, cor
 	}
 
 	// check u⋅s⋅vt
-	usv := oblas.NewMatrixMN(a.M, a.N)
+	usv := NewMatrixMN(a.M, a.N)
 	for i := 0; i < a.M; i++ {
 		for j := 0; j < a.N; j++ {
 			for k := 0; k < len(s); k++ {
@@ -125,21 +124,21 @@ func TestMatInv01(tst *testing.T) {
 
 	// 1 x 1 matrix
 	io.Pf("\n----------------------------------(1 x 1)-----------------------------------\n")
-	a := oblas.NewMatrix([][]float64{
+	a := NewMatrix([][]float64{
 		{2.0},
 	})
-	ai := oblas.NewMatrix([][]float64{
+	ai := NewMatrix([][]float64{
 		{0.5},
 	})
 	checkAiSmall(tst, "a", a, 1e-15, ai, 2.0, 1e-17, 1e-17, 1e-17)
 
 	// 2 x 2 matrix
 	io.Pf("\n----------------------------------(2 x 2)-----------------------------------\n")
-	b := oblas.NewMatrix([][]float64{
+	b := NewMatrix([][]float64{
 		{1.0, 2.0},
 		{3.0, 2.0},
 	})
-	bi := oblas.NewMatrix([][]float64{
+	bi := NewMatrix([][]float64{
 		{-0.5, 0.5},
 		{0.75, -0.25},
 	})
@@ -147,12 +146,12 @@ func TestMatInv01(tst *testing.T) {
 
 	// 3 x 3 matrix
 	io.Pf("\n----------------------------------(3 x 3)-----------------------------------\n")
-	c := oblas.NewMatrix([][]float64{
+	c := NewMatrix([][]float64{
 		{+9.0, +3.0, 5.0},
 		{-6.0, -9.0, 7.0},
 		{-1.0, -8.0, 1.0},
 	})
-	ci := oblas.NewMatrix([][]float64{
+	ci := NewMatrix([][]float64{
 		{+7.642276422764227e-02, -6.991869918699187e-02, +1.073170731707317e-01},
 		{-1.626016260162601e-03, +2.276422764227642e-02, -1.512195121951219e-01},
 		{+6.341463414634146e-02, +1.121951219512195e-01, -1.024390243902439e-01},
@@ -161,12 +160,12 @@ func TestMatInv01(tst *testing.T) {
 
 	// 3 x 3 matrix
 	io.Pf("\n----------------------------------(3 x 3)-----------------------------------\n")
-	d := oblas.NewMatrix([][]float64{
+	d := NewMatrix([][]float64{
 		{1, 2, 3},
 		{0, 4, 5},
 		{1, 0, 6},
 	})
-	di := oblas.NewMatrix([][]float64{
+	di := NewMatrix([][]float64{
 		{12.0 / 11.0, -6.0 / 11.0, -1.0 / 11.0},
 		{5.0 / 22.0, 3.0 / 22.0, -5.0 / 22.0},
 		{-2.0 / 11.0, 1.0 / 11.0, 2.0 / 11.0},
@@ -175,11 +174,11 @@ func TestMatInv01(tst *testing.T) {
 
 	// 2 x 2 matrix
 	io.Pf("\n----------------------------------(2 x 2)-----------------------------------\n")
-	e := oblas.NewMatrix([][]float64{
+	e := NewMatrix([][]float64{
 		{1, 2},
 		{3, 4},
 	})
-	ei := oblas.NewMatrix([][]float64{
+	ei := NewMatrix([][]float64{
 		{-2.0, +1.0},
 		{+1.5, -0.5},
 	})
@@ -187,12 +186,12 @@ func TestMatInv01(tst *testing.T) {
 
 	// 3 x 3 matrix
 	io.Pf("\n----------------------------------(3 x 3)-----------------------------------\n")
-	f := oblas.NewMatrix([][]float64{
+	f := NewMatrix([][]float64{
 		{10, +1, +2},
 		{+3, 20, +4},
 		{+5, +6, 30},
 	})
-	fi := oblas.NewMatrix([][]float64{
+	fi := NewMatrix([][]float64{
 		{+1.0423452768729642e-01, -3.2573289902280136e-03, -6.5146579804560255e-03},
 		{-1.2667390517553386e-02, +5.2479189287006879e-02, -6.1527325370973572e-03},
 		{-1.4838943177705389e-02, -9.9529496923633724e-03, +3.5649656170828804e-02},
@@ -207,14 +206,14 @@ func TestMatInv02(tst *testing.T) {
 
 	// 5 x 5 matrix
 	io.Pf("\n----------------------------------(5 x 5)-----------------------------------\n")
-	a := oblas.NewMatrix([][]float64{
+	a := NewMatrix([][]float64{
 		{12, 28, 22, 20, +8},
 		{+0, +3, +5, 17, 28},
 		{56, +0, 23, +1, +0},
 		{12, 29, 27, 10, +1},
 		{+9, +4, 13, +8, 22},
 	})
-	ai := oblas.NewMatrix([][]float64{
+	ai := NewMatrix([][]float64{
 		{+6.9128803717996279e-01, -7.4226114383340802e-01, -9.8756287260606410e-02, -6.9062496266472417e-01, +7.2471057693456553e-01},
 		{+1.5936129795342968e+00, -1.7482347881148397e+00, -2.8304321334273236e-01, -1.5600769405383470e+00, +1.7164430532490673e+00},
 		{-1.6345384165063759e+00, +1.7495848317224429e+00, +2.7469205863729274e-01, +1.6325730875377857e+00, -1.7065745928961444e+00},
@@ -225,7 +224,7 @@ func TestMatInv02(tst *testing.T) {
 
 	// 6 x 6 matrix
 	io.Pf("\n----------------------------------(6 x 6)-----------------------------------\n")
-	b := oblas.NewMatrix([][]float64{
+	b := NewMatrix([][]float64{
 		{+3.46540497998689445e-05, -1.39368151175265866e-05, -1.39368151175265866e-05, +0.00000000000000000e+00, 7.15957288480514429e-23, -2.93617909908697186e+02},
 		{-1.39368151175265866e-05, +3.46540497998689445e-05, -1.39368151175265866e-05, +0.00000000000000000e+00, 7.15957288480514429e-23, -2.93617909908697186e+02},
 		{-1.39368151175265866e-05, -1.39368151175265866e-05, +3.46540497998689445e-05, +0.00000000000000000e+00, 7.15957288480514429e-23, -2.93617909908697186e+02},
@@ -233,7 +232,7 @@ func TestMatInv02(tst *testing.T) {
 		{+3.13760264822604860e-18, +3.13760264822604860e-18, +3.13760264822604860e-18, +0.00000000000000000e+00, 1.00000000000000000e+00, -1.93012141894243434e+07},
 		{+0.00000000000000000e+00, +0.00000000000000000e+00, +0.00000000000000000e+00, -0.00000000000000000e+00, 0.00000000000000000e+00, +1.00000000000000000e+00},
 	})
-	bi := oblas.NewMatrix([][]float64{
+	bi := NewMatrix([][]float64{
 		{+6.28811662297464645e+04, +4.23011662297464645e+04, +4.23011662297464645e+04, 0.00000000000000000e+00, -1.05591885817167332e-17, 4.33037966311565489e+07},
 		{+4.23011662297464645e+04, +6.28811662297464645e+04, +4.23011662297464645e+04, 0.00000000000000000e+00, -1.05591885817167332e-17, 4.33037966311565489e+07},
 		{+4.23011662297464645e+04, +4.23011662297464645e+04, +6.28811662297464645e+04, 0.00000000000000000e+00, -1.05591885817167348e-17, 4.33037966311565489e+07},
@@ -252,16 +251,16 @@ func TestMatSvd01(tst *testing.T) {
 	// 2 x 2 matrix
 	io.Pf("\n----------------------------------(2 x 2)-----------------------------------\n")
 
-	a := oblas.NewMatrix([][]float64{
+	a := NewMatrix([][]float64{
 		{1, 2},
 		{3, 4},
 	})
 	sA := []float64{5.4649857042190426e+00, 3.6596619062625751e-01}
-	uA := oblas.NewMatrix([][]float64{
+	uA := NewMatrix([][]float64{
 		{-4.0455358483375697e-01, -9.1451429567730447e-01},
 		{-9.1451429567730458e-01, +4.0455358483375692e-01},
 	})
-	vtA := oblas.NewMatrix([][]float64{
+	vtA := NewMatrix([][]float64{
 		{-5.7604843676632078e-01, -8.1741556047036323e-01},
 		{+8.1741556047036323e-01, -5.7604843676632078e-01},
 	})
@@ -269,18 +268,18 @@ func TestMatSvd01(tst *testing.T) {
 
 	// 3 x 3
 	io.Pf("\n----------------------------------(3 x 3)-----------------------------------\n")
-	b := oblas.NewMatrix([][]float64{
+	b := NewMatrix([][]float64{
 		{10, +1, +2},
 		{+3, 20, +4},
 		{+5, +6, 30},
 	})
 	sB := []float64{3.2864331638810626e+01, 1.7987569607075308e+01, 9.3478898990569999e+00}
-	uB := oblas.NewMatrix([][]float64{
+	uB := NewMatrix([][]float64{
 		{1.3141755556410686e-01, 4.4742200224954710e-02, -9.9031689958749303e-01},
 		{3.6969554284917222e-01, 9.2470200356647714e-01, 9.0837273173509273e-02},
 		{9.1981228067851462e-01, -3.7805335618027919e-01, 1.0498108493350734e-01},
 	})
-	vtB := oblas.NewMatrix([][]float64{
+	vtB := NewMatrix([][]float64{
 		{+2.1367614180500336e-01, 3.9691061543495060e-01, +8.9263904786782489e-01},
 		{+7.4010067014497569e-02, 9.0453921735335097e-01, -4.1991822328912670e-01},
 		{-9.7409702617544103e-01, 1.5579078157848747e-01, +1.6390306882827524e-01},
@@ -289,7 +288,7 @@ func TestMatSvd01(tst *testing.T) {
 
 	// 5 x 5
 	io.Pf("\n----------------------------------(5 x 5)-----------------------------------\n")
-	c := oblas.NewMatrix([][]float64{
+	c := NewMatrix([][]float64{
 		{12, 28, 22, 20, +8},
 		{+0, +3, +5, 17, 28},
 		{56, +0, 23, +1, +0},
@@ -297,14 +296,14 @@ func TestMatSvd01(tst *testing.T) {
 		{+9, +4, 13, +8, 22},
 	})
 	sC := []float64{7.6986806318205680e+01, 4.6904429440544916e+01, 3.2931871778592146e+01, 8.1528007049378086e+00, 1.7266616332203916e-01}
-	uC := oblas.NewMatrix([][]float64{
+	uC := NewMatrix([][]float64{
 		{-4.9131480299834873e-01, -3.9682713933839858e-01, +2.6940884231597306e-01, +5.5024083870837626e-01, +4.7517563167598015e-01},
 		{-1.8436234721034561e-01, -4.5587438252398499e-01, -6.3940295404484160e-01, +2.7258142302445876e-01, -5.2445429016279244e-01},
 		{-6.4666260791872432e-01, +7.1959191011975421e-01, -2.0909148108726730e-01, +1.1570356718901351e-01, -8.3116734093853104e-02},
 		{-4.7937866776415455e-01, -2.6140673166893563e-01, +5.1576653173706322e-01, -4.6093491312241469e-01, -4.7263781496573321e-01},
 		{-2.7684626365223813e-01, -2.2036508882136277e-01, -4.5699931653926035e-01, -6.3014766336473327e-01, +5.1851800447926977e-01},
 	})
-	vtC := oblas.NewMatrix([][]float64{
+	vtC := NewMatrix([][]float64{
 		{-6.5404770601013151e-01, -3.8083496832132990e-01, -5.6043632545196509e-01, -2.6778192710204507e-01, -2.0344603657478880e-01},
 		{+6.4844738712320205e-01, -4.4646185600181121e-01, -9.3417253067825071e-02, -4.1240888414037769e-01, -4.4875374803990237e-01},
 		{-1.9434098201682845e-01, +5.6949301281812137e-01, +1.7932721763630147e-01, -1.2720485785435223e-01, -7.6783459430605894e-01},
@@ -321,25 +320,25 @@ func TestMatPseudo01(tst *testing.T) {
 
 	// 4 x 3
 	io.Pf("\n----------------------------------(4 x 3)-----------------------------------\n")
-	a := oblas.NewMatrix([][]float64{
+	a := NewMatrix([][]float64{
 		{-5.773502691896260e-01, -5.773502691896260e-01, 1.000000000000000e+00},
 		{+5.773502691896260e-01, -5.773502691896260e-01, 1.000000000000000e+00},
 		{-5.773502691896260e-01, +5.773502691896260e-01, 1.000000000000000e+00},
 		{+5.773502691896260e-01, +5.773502691896260e-01, 1.000000000000000e+00},
 	})
-	ai := oblas.NewMatrix([][]float64{
+	ai := NewMatrix([][]float64{
 		{-4.330127018922192e-01, +4.330127018922192e-01, -4.330127018922192e-01, 4.330127018922192e-01},
 		{-4.330127018922192e-01, -4.330127018922192e-01, +4.330127018922192e-01, 4.330127018922192e-01},
 		{+2.500000000000000e-01, +2.500000000000000e-01, +2.500000000000000e-01, 2.500000000000000e-01},
 	})
 	sA := []float64{2, 1.15470053837925191e+00, 1.15470053837925191e+00}
-	uA := oblas.NewMatrix([][]float64{
+	uA := NewMatrix([][]float64{
 		{-0.5, -0.5, -0.5, +0.5},
 		{-0.5, +0.5, -0.5, -0.5},
 		{-0.5, -0.5, +0.5, -0.5},
 		{-0.5, +0.5, +0.5, +0.5},
 	})
-	vtA := oblas.NewMatrix([][]float64{
+	vtA := NewMatrix([][]float64{
 		{0, 0, -1},
 		{1, 0, 0},
 		{0, 1, 0},
@@ -349,13 +348,13 @@ func TestMatPseudo01(tst *testing.T) {
 
 	// 4 x 5
 	io.Pf("\n----------------------------------(4 x 5)-----------------------------------\n")
-	b := oblas.NewMatrix([][]float64{
+	b := NewMatrix([][]float64{
 		{1, 0, 0, 0, 2},
 		{0, 0, 3, 0, 0},
 		{0, 0, 0, 0, 0},
 		{0, 4, 0, 0, 0},
 	})
-	bi := oblas.NewMatrix([][]float64{
+	bi := NewMatrix([][]float64{
 		{0.2, 0.0, 0.0, 0.0},
 		{0.0, 0.0, 0.0, 1.0 / 4.0},
 		{0.0, 1.0 / 3.0, 0.0, 0.0},
@@ -363,13 +362,13 @@ func TestMatPseudo01(tst *testing.T) {
 		{0.4, 0.0, 0.0, 0.0},
 	})
 	sB := []float64{4, 3, math.Sqrt(5.0), 0}
-	uB := oblas.NewMatrix([][]float64{
+	uB := NewMatrix([][]float64{
 		{0, 0, 1, 0},
 		{0, 1, 0, 0},
 		{0, 0, 0, -1},
 		{1, 0, 0, 0},
 	})
-	vtB := oblas.NewMatrix([][]float64{
+	vtB := NewMatrix([][]float64{
 		{0, 1, 0, 0, 0},
 		{0, 0, 1, 0, 0},
 		{math.Sqrt(0.2), 0, 0, 0, math.Sqrt(0.8)},
@@ -381,14 +380,14 @@ func TestMatPseudo01(tst *testing.T) {
 
 	// 5 x 6
 	io.Pf("\n----------------------------------(5 x 6)-----------------------------------\n")
-	c := oblas.NewMatrix([][]float64{
+	c := NewMatrix([][]float64{
 		{12, 28, 22, 20, +8, 1},
 		{+0, +3, +5, 17, 28, 1},
 		{56, +0, 23, +1, +0, 1},
 		{12, 29, 27, 10, +1, 1},
 		{+9, +4, 13, +8, 22, 1},
 	})
-	ci := oblas.NewMatrix([][]float64{
+	ci := NewMatrix([][]float64{
 		{+5.6387724512344639e-01, -6.0176177188969326e-01, -7.6500652148749224e-02, -5.6389938864086908e-01, +5.8595836573334192e-01},
 		{+1.2836912791395787e+00, -1.4064756360496755e+00, -2.2890726327210095e-01, -1.2518220058421685e+00, +1.3789338004227019e+00},
 		{-1.2866745075158739e+00, +1.3659857664770796e+00, +2.1392850711928030e-01, +1.2865799982753852e+00, -1.3277457214130808e+00},
@@ -401,7 +400,7 @@ func TestMatPseudo01(tst *testing.T) {
 
 	// 8 x 6
 	io.Pf("\n----------------------------------(8 x 6)-----------------------------------\n")
-	d := oblas.NewMatrix([][]float64{
+	d := NewMatrix([][]float64{
 		{64, +2, +3, 61, 60, +6},
 		{+9, 55, 54, 12, 13, 51},
 		{17, 47, 46, 20, 21, 43},
@@ -421,7 +420,7 @@ func TestCondNum01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("CondNum01. condition number of matrix using inverse")
 
-	a := oblas.NewMatrix([][]float64{
+	a := NewMatrix([][]float64{
 		{1, 2},
 		{2, 3.999},
 	})
@@ -433,7 +432,7 @@ func TestCondNum01(tst *testing.T) {
 	}
 	chk.Scalar(tst, "condI(a) ", 1e-8, cIa, 35988.001)
 
-	b := oblas.NewMatrix([][]float64{
+	b := NewMatrix([][]float64{
 		{1, 2},
 		{2, 3},
 	})
