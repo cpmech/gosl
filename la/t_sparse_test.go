@@ -10,10 +10,10 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-func TestSparse01(tst *testing.T) {
+func TestSparseMatrix01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Sparse01. Setting CCMatrix")
+	chk.PrintTitle("SparseMatrix01. Setting CCMatrix")
 
 	//          ↓     ↓        ↓           ↓  ↓     ↓
 	//          0  1  2  3  4  5  6  7  8  9 10 11 12
@@ -24,7 +24,7 @@ func TestSparse01(tst *testing.T) {
 	A.Set(5, 5, Ap, Ai, Ax)
 	Ad := A.ToDense()
 
-	chk.Matrix(tst, "A", 1e-17, Ad, [][]float64{
+	chk.Matrix(tst, "A", 1e-17, Ad.GetSlice(), [][]float64{
 		{2, 3, 0, 0, 0},
 		{3, 0, 4, 0, 6},
 		{0, -1, -3, 2, 0},
@@ -33,10 +33,10 @@ func TestSparse01(tst *testing.T) {
 	})
 }
 
-func TestSparse02(tst *testing.T) {
+func TestSparseMatrix02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Sparse02. PutMatAndMatT, PutCCMatAndMatT")
+	chk.PrintTitle("SparseMatrix02. PutMatAndMatT, PutCCMatAndMatT")
 
 	var K, L, A Triplet
 	K.Init(6, 6, 36+2*6) // 2*6 == number of nonzeros in A
@@ -66,6 +66,6 @@ func TestSparse02(tst *testing.T) {
 		{1021, 1022, 1023, 1000, 1000, 1000},
 		{1000, 1000, 1000, 1000, 1000, 1000},
 	}
-	chk.Matrix(tst, "Kaug", 1.0e-17, Kaug, Cor)
-	chk.Matrix(tst, "Laug", 1.0e-17, Laug, Cor)
+	chk.Matrix(tst, "Kaug", 1.0e-17, Kaug.GetSlice(), Cor)
+	chk.Matrix(tst, "Laug", 1.0e-17, Laug.GetSlice(), Cor)
 }

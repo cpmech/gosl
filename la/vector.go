@@ -192,11 +192,11 @@ func (o Vector) GetScaled(a, m float64) (result Vector) {
 }
 
 // ScaleAbs scales vector using a shift value (a) and a multiplier (m) applied to the absolute value
-// of this vector components.
+// of another vector components.
 //  this[i] = a + m * |this[i]|
-func (o Vector) ScaleAbs(a, m float64) {
+func (o Vector) ScaleAbs(a, m float64, another Vector) {
 	for i := 0; i < len(o); i++ {
-		o[i] = a + m*math.Abs(o[i])
+		o[i] = a + m*math.Abs(another[i])
 	}
 }
 

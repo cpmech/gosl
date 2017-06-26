@@ -51,6 +51,8 @@ func TestVector01(tst *testing.T) {
 
 	chk.Scalar(tst, "c.Dot(b)", 1e-17, c.Dot(b), 14)
 
+	chk.Scalar(tst, "c.Dot(c)", 1e-17, c.Dot(c), 14)
+
 	d := NewVector(3)
 	b.CopyInto(d, -1)
 	chk.Vector(tst, "b.CopyInto", 1e-17, d, []float64{-1, -2, -3})
@@ -79,12 +81,12 @@ func TestVector01(tst *testing.T) {
 	d.Scale(3, 2)
 	chk.Vector(tst, "d.Scale (again)", 1e-17, d, []float64{1, -1, -3})
 
-	d.ScaleAbs(0, 1)
+	d.ScaleAbs(0, 1, d)
 	chk.Vector(tst, "d.ScaleAbs", 1e-17, d, []float64{1, 1, 3})
 
 	b.CopyInto(d, -1)
 	d.Scale(3, 2)
-	d.ScaleAbs(-2, 2)
+	d.ScaleAbs(-2, 2, d)
 	chk.Vector(tst, "d.ScaleAbs (again)", 1e-17, d, []float64{0, 0, 4})
 
 	chk.Scalar(tst, "c.Rms", 1e-17, c.Rms(), math.Sqrt(14.0/3.0))

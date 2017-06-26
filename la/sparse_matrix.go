@@ -195,29 +195,23 @@ func (o *TripletC) GetDenseMatrix() (a *MatrixC) {
 }
 
 // ToDense converts a column-compressed matrix to dense form
-func (a *CCMatrix) ToDense() [][]float64 {
-	r := make([][]float64, a.m)
-	for i := 0; i < a.m; i++ {
-		r[i] = make([]float64, a.n)
-	}
+func (a *CCMatrix) ToDense() (res *Matrix) {
+	res = NewMatrix(a.m, a.n)
 	for j := 0; j < a.n; j++ {
 		for p := a.p[j]; p < a.p[j+1]; p++ {
-			r[a.i[p]][j] = a.x[p]
+			res.Set(a.i[p], j, a.x[p])
 		}
 	}
-	return r
+	return
 }
 
 // ToDense converts a column-compressed matrix (complex) to dense form
-func (a *CCMatrixC) ToDense() [][]complex128 {
-	r := make([][]complex128, a.m)
-	for i := 0; i < a.m; i++ {
-		r[i] = make([]complex128, a.n)
-	}
+func (a *CCMatrixC) ToDense() (res *MatrixC) {
+	res = NewMatrixC(a.m, a.n)
 	for j := 0; j < a.n; j++ {
 		for p := a.p[j]; p < a.p[j+1]; p++ {
-			r[a.i[p]][j] = complex(a.x[p], a.z[p])
+			res.Set(a.i[p], j, complex(a.x[p], a.z[p]))
 		}
 	}
-	return r
+	return
 }
