@@ -12,7 +12,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -142,12 +141,12 @@ func PlotX(o T, dirout, fnkey string, tcte float64, xmin, xmax []float64, np int
 		chk.Panic("PlotX works in 2D only")
 	}
 	X, Y := utl.MeshGrid2d(xmin[0], xmax[0], xmin[1], xmax[1], np, np)
-	F := la.MatAlloc(np, np)
+	F := utl.Alloc(np, np)
 	var Gx, Gy [][]float64
 	nrow := 1
 	if withGrad {
-		Gx = la.MatAlloc(np, np)
-		Gy = la.MatAlloc(np, np)
+		Gx = utl.Alloc(np, np)
+		Gy = utl.Alloc(np, np)
 		nrow += 1
 	}
 	x := make([]float64, 2)
