@@ -122,9 +122,5 @@ func main() {
 	x := la.RCtoComplex(xR, xC)
 
 	// output
-	a := A.ToMatrix(nil)
-	io.Pforan("A.x = b\n")
-	la.PrintMatC("A", a.ToDense(), "(%5g", "%+6gi) ", false)
-	la.PrintVecC("b", b, "(%g", "%+gi) ", false)
-	la.PrintVecC("x", x, "(%.3f", "%+.3fi) ", false)
+	io.Pf("x = %v\n", x)
 }

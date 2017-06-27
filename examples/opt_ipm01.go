@@ -64,13 +64,6 @@ func main() {
 	// right-hand side
 	b := []float64{3, 3}
 
-	// print arrays
-	A := Am.ToDense()
-	la.PrintMat("\nA", A, "%6g", false)
-	la.PrintVec("\nb", b, "%6g", false)
-	la.PrintVec("\nc", c, "%6g", false)
-	io.Pf("\n")
-
 	// solve LP
 	var ipm opt.LinIpm
 	defer ipm.Free()
@@ -88,15 +81,16 @@ func main() {
 	io.Pf("s = %v\n", ipm.S)
 
 	// check solution
+	A := Am.ToDense()
 	x := ipm.X[:2]
-	bchk := make([]float64, 2)
+	bchk := la.NewVector(2)
 	la.MatVecMul(bchk, 1, A, x)
 	io.Pf("b(check) = %v\n", bchk)
 
 	// plotting
 	plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
 	f := func(x []float64) float64 { return c[0]*x[0] + c[1]*x[1] }
-	g := func(x []float64, i int) float64 { return A[i][0]*x[0] + A[i][1]*x[1] - b[i] }
+	g := func(x []float64, i int) float64 { return A.Get(i, 0)*x[0] + A.Get(i, 1)*x[1] - b[i] }
 	np := 41
 	argsF := &plt.A{CmapIdx: 0}
 	argsG := &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2, Fsz: 10}

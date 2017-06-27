@@ -11,6 +11,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 )
@@ -18,15 +19,15 @@ import (
 func main() {
 
 	// Function: y(x) = fx[0] with x = xvec[0]
-	fcn := func(fx, xvec []float64) (err error) {
+	fcn := func(fx, xvec la.Vector) (err error) {
 		x := xvec[0]
 		fx[0] = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
 		return
 	}
 
 	// Jacobian: dfdx(x) function
-	Jfcn := func(dfdx [][]float64, x []float64) (err error) {
-		dfdx[0][0] = 3.0*x[0]*x[0] - 2.0*0.165*x[0]
+	Jfcn := func(dfdx *la.Matrix, x la.Vector) (err error) {
+		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0*0.165*x[0])
 		return
 	}
 

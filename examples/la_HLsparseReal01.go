@@ -42,7 +42,5 @@ func main() {
 	}
 
 	// output
-	la.PrintMat("a", A.ToMatrix(nil).ToDense(), "%5g", false)
-	la.PrintVec("b", b, "%v ", false)
-	la.PrintVec("x", x, "%v ", false)
+	io.Pf("x = %v\n", x)
 }
