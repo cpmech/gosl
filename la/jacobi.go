@@ -10,35 +10,41 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-const (
-	JACOBI_TOL    = 1e-15
-	JACOBI_EPS    = 1e-16
-	JACOBI_NITMAX = 20
-)
-
 // Jacobi performs the Jacobi transformation of a symmetric matrix to find its eigenvectors and
-// eigenvalues. Note that for matrices of order greater than about 10, say, the algorithm is slower,
-// by a significant constant factor, than the QR method.   A = Q * L * Q.T
-//  Arguments:
-//   A In/Out -- matrix to compute eigenvalues (SYMMETRIC and SQUARE)
-//   Q   Out  -- matrix which columns are the eigenvectors
-//   v   Out  -- vector with the eigenvalues
-//   nit Out  -- the number of iterations
-func Jacobi(Q *Matrix, v Vector, A *Matrix) (nit int, err error) {
+// eigenvalues.
+//
+// The Jacobi method consists of a sequence of orthogonal similarity transformations. Each
+// transformation (a Jacobi rotation) is just a plane rotation designed to annihilate one of the
+// off-diagonal matrix elements. Successive transformations undo previously set zeros, but the
+// off-diagonal elements nevertheless get smaller and smaller. Accumulating the product of the
+// transformations as you go gives the matrix of eigenvectors (Q), while the elements of the final
+// diagonal matrix (A) are the eigenvalues.
+//
+// The Jacobi method is absolutely foolproof for all real symmetric matrices.
+//
+//         A = Q ⋅ L ⋅ Qᵀ
+//
+//   Input:
+//    A -- matrix to compute eigenvalues (SYMMETRIC and SQUARE)
+//   Output:
+//    A -- modified
+//    Q -- matrix which columns are the eigenvectors
+//    v -- vector with the eigenvalues
+//
+//   NOTE: for matrices of order greater than about 10, say, the algorithm is slower,
+//         by a significant constant factor, than the QR method.
+//
+func Jacobi(Q *Matrix, v Vector, A *Matrix) (err error) {
 
-	/*
-	   The Jacobi method consists of a sequence of orthogonal similarity transformations. Each
-	   transformation (a Jacobi rotation) is just a plane rotation designed to annihilate one of the
-	   off-diagonal matrix elements. Successive transformations undo previously set zeros, but the
-	   off-diagonal elements nevertheless get smaller and smaller. Accumulating the product of the
-	   transformations as you go gives the matrix of eigenvectors (Q), while the elements of the final
-	   diagonal matrix (A) are the eigenvalues. The Jacobi method is absolutely foolproof for all real
-	   symmetric matrices.
-	*/
+	// constants
+	tol := 1e-15
+	nItMax := 20
 
+	// auxiliary variables
 	var j, p, q int
 	var θ, τ, t, sm, s, h, g, c float64
 
+	// auxiliary variables
 	n := A.M
 	b := NewVector(n)
 	z := NewVector(n) // this vector will accumulate terms of the form tapq as in equation (11.1.14).
@@ -59,7 +65,7 @@ func Jacobi(Q *Matrix, v Vector, A *Matrix) (nit int, err error) {
 	}
 
 	// perform iterations
-	for it := 0; it < JACOBI_NITMAX; it++ {
+	for it := 0; it < nItMax; it++ {
 
 		// sum off-diagonal elements.
 		sm = 0.0
@@ -70,15 +76,15 @@ func Jacobi(Q *Matrix, v Vector, A *Matrix) (nit int, err error) {
 		}
 
 		// exit point
-		if sm < JACOBI_TOL {
-			return it + 1, nil
+		if sm < tol {
+			return
 		}
 
 		// rotations
 		for p = 0; p < n-1; p++ {
 			for q = p + 1; q < n; q++ {
 				h = v[q] - v[p]
-				if math.Abs(h) <= JACOBI_TOL {
+				if math.Abs(h) <= tol {
 					t = 1.0
 				} else {
 					θ = 0.5 * h / (A.Get(p, q))
@@ -129,6 +135,6 @@ func Jacobi(Q *Matrix, v Vector, A *Matrix) (nit int, err error) {
 		}
 	}
 
-	err = chk.Err("Jacobi rotation dit not converge after %d iterations", JACOBI_NITMAX+1)
+	err = chk.Err("Jacobi rotation dit not converge after %d iterations", nItMax+1)
 	return
 }
