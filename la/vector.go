@@ -35,6 +35,15 @@ func (o Vector) Fill(val float64) {
 	}
 }
 
+// Apply sets this vector with the scaled components of another vector
+//  this := α * another   ⇒   this[i] := α * another[i]
+//  NOTE: "another" may be "this"
+func (o Vector) Apply(α float64, another Vector) {
+	for i := 0; i < len(o); i++ {
+		o[i] = α * another[i]
+	}
+}
+
 // ApplyFunc runs a function over all components of a vector
 //  vi = f(i,vi)
 func (o Vector) ApplyFunc(f func(i int, x float64) float64) {
@@ -49,14 +58,6 @@ func (o Vector) GetCopy() (clone Vector) {
 	clone = make([]float64, len(o))
 	copy(clone, o)
 	return
-}
-
-// CopyInto copies the scaled components of this vector into another one (result)
-//  result := α * this   ⇒   result[i] := α * this[i]
-func (o Vector) CopyInto(result Vector, α float64) {
-	for i := 0; i < len(o); i++ {
-		result[i] = α * o[i]
-	}
 }
 
 // Accum sum/accumulates all components in a vector
@@ -75,6 +76,21 @@ func (o Vector) Norm() (nrm float64) {
 		nrm += o[i] * o[i]
 	}
 	return math.Sqrt(nrm)
+}
+
+// Rms returns the root-mean-square of this vector
+//                ________________________
+//               /     ————            2
+//              /  1   \    /         \
+//   rms =  \  /  ———  /    | this[i] |
+//           \/    N   ———— \         /
+//
+func (o Vector) Rms() (rms float64) {
+	for i := 0; i < len(o); i++ {
+		rms += o[i] * o[i]
+	}
+	rms = math.Sqrt(rms / float64(len(o)))
+	return
 }
 
 // NormDiff returns the Euclidian norm of the difference:
@@ -136,126 +152,6 @@ func (o Vector) Largest(den float64) (largest float64) {
 	return largest / den
 }
 
-// Dot returns the dot product between two vectors:
-//  s := u dot v
-func (o Vector) Dot(v Vector) (res float64) {
-	for i := 0; i < len(o); i++ {
-		res += o[i] * v[i]
-	}
-	return
-}
-
-// Add adds the scaled components of this vector to another one (result)
-//  result += α * this   ⇒   result[i] += α * this[i]
-func (o Vector) Add(result Vector, α float64) {
-	for i := 0; i < len(o); i++ {
-		result[i] += α * o[i]
-	}
-}
-
-// Add2 adds the scaled components of this vector and another vector to a third vector (result)
-//  result := α*this + β*another   ⇒   result[i] := α*this[i] + β*another[i]
-func (o Vector) Add2(result Vector, α, β float64, another Vector) {
-	for i := 0; i < len(o); i++ {
-		result[i] = α*o[i] + β*another[i]
-	}
-}
-
-// MaxDiff returns the maximum difference between the components of this and another vector
-func (o Vector) MaxDiff(another Vector) (maxdiff float64) {
-	maxdiff = math.Abs(o[0] - another[0])
-	for i := 1; i < len(o); i++ {
-		diff := math.Abs(o[i] - another[i])
-		if diff > maxdiff {
-			maxdiff = diff
-		}
-	}
-	return
-}
-
-// Scale scales vector using a shift value (a) and a multiplier (m)
-//  this[i] = a + m * this[i]
-func (o Vector) Scale(a, m float64) {
-	for i := 0; i < len(o); i++ {
-		o[i] = a + m*o[i]
-	}
-}
-
-// GetScaled returns a scaled vector using a shift value (a) and a multiplier (m)
-//  result[i] := a + m * this[i]
-func (o Vector) GetScaled(a, m float64) (result Vector) {
-	result = make([]float64, len(o))
-	for i := 0; i < len(o); i++ {
-		result[i] = a + m*o[i]
-	}
-	return
-}
-
-// ScaleAbs scales vector using a shift value (a) and a multiplier (m) applied to the absolute value
-// of another vector components.
-//  this[i] = a + m * |this[i]|
-func (o Vector) ScaleAbs(a, m float64, another Vector) {
-	for i := 0; i < len(o); i++ {
-		o[i] = a + m*math.Abs(another[i])
-	}
-}
-
-// Rms returns the root-mean-square of this vector
-//                ________________________
-//               /     ————            2
-//              /  1   \    /         \
-//   rms =  \  /  ———  /    | this[i] |
-//           \/    N   ———— \         /
-//
-func (o Vector) Rms() (rms float64) {
-	for i := 0; i < len(o); i++ {
-		rms += o[i] * o[i]
-	}
-	rms = math.Sqrt(rms / float64(len(o)))
-	return
-}
-
-// RmsScaled returns the scaled root-mean-square of this vector with components
-// normalised by a scaling factor
-//                ___________________________
-//               /     ————               2
-//              /  1   \    /   this[i]  \
-//   rms =  \  /  ———  /    | —————————— |
-//           \/    N   ———— \  scale[i]  /
-//
-//   scale[i] = a + m*|s[i]|
-//
-func (o Vector) RmsScaled(a, m float64, s Vector) (rms float64) {
-	var scale float64
-	for i := 0; i < len(o); i++ {
-		scale = a + m*math.Abs(s[i])
-		rms += o[i] * o[i] / (scale * scale)
-	}
-	return math.Sqrt(rms / float64(len(o)))
-}
-
-// RmsError returns the scaled root-mean-square of the difference between this vector and another
-// with components normalised by a scaling factor
-//                __________________________
-//               /     ————              2
-//              /  1   \    /  error[i]  \
-//   rms =  \  /  ———  /    | —————————— |
-//           \/    N   ———— \  scale[i]  /
-//
-//   error[i] = |this[i] - another[i]|
-//
-//   scale[i] = a + m*|s[i]|
-//
-func (o Vector) RmsError(a, m float64, s, another Vector) (rms float64) {
-	var scale, err float64
-	for i := 0; i < len(o); i++ {
-		scale = a + m*math.Abs(s[i])
-		err = math.Abs(o[i] - another[i])
-		rms += err * err / (scale * scale)
-	}
-	return math.Sqrt(rms / float64(len(o)))
-}
-
 // complex /////////////////////////////////////////////////////////////////////////////////////////
 
 // VectorC defines the vector type for complex numbers simply as a slice of complex128
@@ -284,6 +180,15 @@ func (o VectorC) Fill(s complex128) {
 	}
 }
 
+// Apply sets this vector with the scaled components of another vector
+//  this := α * another   ⇒   this[i] := α * another[i]
+//  NOTE: "another" may be "this"
+func (o VectorC) Apply(α complex128, another VectorC) {
+	for i := 0; i < len(o); i++ {
+		o[i] = α * another[i]
+	}
+}
+
 // ApplyFunc runs a function over all components of a vector
 //  vi = f(i,vi)
 func (o VectorC) ApplyFunc(f func(i int, x complex128) complex128) {
@@ -298,14 +203,6 @@ func (o VectorC) GetCopy() (clone VectorC) {
 	clone = make([]complex128, len(o))
 	copy(clone, o)
 	return
-}
-
-// CopyInto copies the scaled components of this vector into another one (result)
-//  result := α * this   ⇒   result[i] := α * this[i]
-func (o VectorC) CopyInto(result VectorC, α complex128) {
-	for i := 0; i < len(o); i++ {
-		result[i] = α * o[i]
-	}
 }
 
 // Norm returns the Euclidian norm of a vector:
@@ -335,14 +232,4 @@ func (o VectorC) MaxDiff(b VectorC) float64 {
 		return maxdiffR
 	}
 	return maxdiffC
-}
-
-// GetScaled returns a scaled vector using a shift value (a) and a multiplier (m)
-//  result[i] := a + m * this[i]
-func (o VectorC) GetScaled(a, m complex128) (result VectorC) {
-	result = make([]complex128, len(o))
-	for i := 0; i < len(o); i++ {
-		result[i] = a + m*o[i]
-	}
-	return
 }

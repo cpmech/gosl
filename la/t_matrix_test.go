@@ -172,8 +172,8 @@ func TestMatrix03(tst *testing.T) {
 	// Scale
 	c := NewMatrix(5, 3)
 	c.Fill(2)
-	c.Scale(0, 1.0/4.0)
-	chk.Matrix(tst, "c", 1e-17, c.GetSlice(), [][]float64{
+	c.Apply(1.0/4.0, c)
+	chk.Matrix(tst, "c := c/4", 1e-17, c.GetSlice(), [][]float64{
 		{0.5, 0.5, 0.5},
 		{0.5, 0.5, 0.5},
 		{0.5, 0.5, 0.5},
@@ -288,8 +288,8 @@ func TestMatrix04(tst *testing.T) {
 	// Scale
 	c := NewMatrixC(5, 3)
 	c.Fill(2 + 2i)
-	c.Scale(0, 1.0/4.0)
-	chk.MatrixC(tst, "c", 1e-17, c.GetSlice(), [][]complex128{
+	c.Apply(1.0/4.0, c)
+	chk.MatrixC(tst, "c := c/4", 1e-17, c.GetSlice(), [][]complex128{
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},

@@ -41,8 +41,7 @@ func TestBlas2tst01(tst *testing.T) {
 	chk.Vector(tst, "r = 1⋅a⋅x + 0", 1e-17, r, []float64{8, 45, -3, 3, 19})
 
 	// CopyInto
-	b := Vector([]float64{8, 45, -3, 3, 19})
-	b.CopyInto(r, -1)
+	r.Apply(-1, []float64{8, 45, -3, 3, 19}) // r := -b
 	chk.Vector(tst, "r := -b", 1e-17, r, []float64{-8, -45, 3, -3, -19})
 
 	// MatVecMulAdd
@@ -81,8 +80,7 @@ func TestBlas2tst02(tst *testing.T) {
 	chk.VectorC(tst, "r = 1⋅a⋅x + 0", 1e-17, r, []complex128{8, 45, -3, 3, 19})
 
 	// CopyInto
-	b := VectorC([]complex128{8, 45, -3, 3, 19})
-	b.CopyInto(r, -1)
+	r.Apply(-1, []complex128{8, 45, -3, 3, 19}) // r := -b
 	chk.VectorC(tst, "r := -b", 1e-17, r, []complex128{-8, -45, 3, -3, -19})
 
 	// MatVecMulAdd

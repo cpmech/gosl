@@ -12,7 +12,8 @@ import (
 )
 
 func checkResid(tst *testing.T, a *Matrix, x, b Vector, tolNorm float64) {
-	r := b.GetScaled(0, -1)  // r = -b
+	r := NewVector(len(x))
+	r.Apply(-1, b)           // r := -b
 	MatVecMulAdd(r, 1, a, x) // r += 1*a*x
 	resid := r.Norm()
 	if resid > tolNorm {
@@ -22,7 +23,8 @@ func checkResid(tst *testing.T, a *Matrix, x, b Vector, tolNorm float64) {
 }
 
 func checkResidC(tst *testing.T, a *MatrixC, x, b VectorC, tolNorm float64) {
-	r := b.GetScaled(0, -1)   // r = -b
+	r := NewVectorC(len(x))
+	r.Apply(-1, b)            // r = -b
 	MatVecMulAddC(r, 1, a, x) // r += 1*a*x
 	resid := cmplx.Abs(r.Norm())
 	if resid > tolNorm {

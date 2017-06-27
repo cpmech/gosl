@@ -121,14 +121,6 @@ func (o *Matrix) Fill(val float64) {
 	}
 }
 
-// Scale scales matrix using a shift value (a) and a multiplier (m)
-//  this[ij] = a + m * this[ij]
-func (o *Matrix) Scale(a, m float64) {
-	for k := 0; k < o.M*o.N; k++ {
-		o.Data[k] = a + m*o.Data[k]
-	}
-}
-
 // MaxDiff returns the maximum difference between the components of this and another matrix
 func (o *Matrix) MaxDiff(another *Matrix) (maxdiff float64) {
 	maxdiff = math.Abs(o.Data[0] - another.Data[0])
@@ -196,6 +188,15 @@ func (o *Matrix) NormInf() (nrm float64) {
 		}
 	}
 	return
+}
+
+// Apply sets this matrix with the scaled components of another matrix
+//  this := α * another   ⇒   this[i] := α * another[i]
+//  NOTE: "another" may be "this"
+func (o Matrix) Apply(α float64, another *Matrix) {
+	for k := 0; k < o.M*o.N; k++ {
+		o.Data[k] = α * another.Data[k]
+	}
 }
 
 // Print prints matrix (without commas or brackets)
@@ -346,11 +347,12 @@ func (o *MatrixC) Fill(val complex128) {
 	}
 }
 
-// Scale scales matrix using a shift value (a) and a multiplier (m)
-//  this[ij] = a + m * this[ij]
-func (o *MatrixC) Scale(a, m complex128) {
+// Apply sets this matrix with the scaled components of another matrix
+//  this := α * another   ⇒   this[i] := α * another[i]
+//  NOTE: "another" may be "this"
+func (o MatrixC) Apply(α complex128, another *MatrixC) {
 	for k := 0; k < o.M*o.N; k++ {
-		o.Data[k] = a + m*o.Data[k]
+		o.Data[k] = α * another.Data[k]
 	}
 }
 
