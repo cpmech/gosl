@@ -310,12 +310,20 @@ func Test_split01(tst *testing.T) {
 func Test_copy01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("copy01")
+	chk.PrintTitle("copy01. GetCopy and Clone")
 
 	v := []float64{1, 2, 3, 4, 4, 5, 5, 6, 6, 6}
 	w := GetCopy(v)
 	io.Pfblue2("v = %v\n", v)
 	chk.Vector(tst, "w==v", 1e-16, w, v)
+
+	m := [][]float64{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+	n := Clone(m)
+	chk.Matrix(tst, "n := m", 1e-17, n, m)
 }
 
 func Test_mylab07(tst *testing.T) {

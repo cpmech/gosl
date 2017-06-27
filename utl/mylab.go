@@ -246,6 +246,18 @@ func GetCopy(in []float64) (out []float64) {
 	return
 }
 
+// Clone allocates and clones a matrix of float64
+func Clone(a [][]float64) (b [][]float64) {
+	b = make([][]float64, len(a))
+	for i := 0; i < len(a); i++ {
+		b[i] = make([]float64, len(a[i]))
+		for j := 0; j < len(a[i]); j++ {
+			b[i][j] = a[i][j]
+		}
+	}
+	return
+}
+
 // LinSpace returns evenly spaced numbers over a specified closed interval.
 func LinSpace(start, stop float64, num int) (res []float64) {
 	if num <= 0 {
