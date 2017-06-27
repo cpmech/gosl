@@ -30,8 +30,13 @@ func TestBlas1tst01(tst *testing.T) {
 	// VecAdd
 	w := NewVector(len(u))
 	VecAdd(w, 1, u, -2, v)
-	chk.Vector(tst, "1⋅u - 2⋅v", 1e-17, w, []float64{-5, -2, 1})
+	chk.Vector(tst, "w := 1⋅u - 2⋅v", 1e-17, w, []float64{-5, -2, 1})
 
 	// VecMaxDiff
 	chk.Scalar(tst, "VecMaxDiff(u, w)", 1e-17, VecMaxDiff(u, w), 6.0)
+
+	// VecScaleAbs
+	scale := NewVector(len(w))
+	VecScaleAbs(scale, -1, 2, w)
+	chk.Vector(tst, "scale := -1 + 2⋅w", 1e-17, scale, []float64{9, 3, 1})
 }

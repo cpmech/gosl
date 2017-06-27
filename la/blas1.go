@@ -38,7 +38,7 @@ func VecDot(u, v Vector) (res float64) {
 }
 
 // VecAdd adds the scaled components of two vectors
-//   res := α*u + β*v   ⇒   result[i] := α*u[i] + β*v[i]
+//   res := α⋅u + β⋅v   ⇒   result[i] := α⋅u[i] + β⋅v[i]
 func VecAdd(res Vector, α float64, u Vector, β float64, v Vector) {
 	for i := 0; i < len(u); i++ {
 		res[i] = α*u[i] + β*v[i]
@@ -56,6 +56,14 @@ func VecMaxDiff(u, v Vector) (maxdiff float64) {
 		}
 	}
 	return
+}
+
+// VecScaleAbs creates a "scale" vector using the absolute value of another vector
+//   scale := a + m ⋅ |x|     ⇒      scale[i] := a + m ⋅ |x[i]|
+func VecScaleAbs(scale Vector, a, m float64, x Vector) {
+	for i := 0; i < len(x); i++ {
+		scale[i] = a + m*math.Abs(x[i])
+	}
 }
 
 // complex /////////////////////////////////////////////////////////////////////////////////////////
