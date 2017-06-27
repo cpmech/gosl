@@ -44,7 +44,7 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	// check
 	o.tR = tR
 	if tR.pos == 0 {
-		return chk.Err(_linsol_mumps_err01)
+		return chk.Err("triplet must have at least one item before calling this method\n")
 	}
 
 	// flags
@@ -73,7 +73,7 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	C.DMU_DAT.job = -1     // initialisation code
 	C.dmumps_c(&C.DMU_DAT) // initialise
 	if C.DMU_DAT.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err02, mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
+		return chk.Err("init failed: %v\n", mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
 	}
 
 	// convert indices to C.int (not C.long) and
@@ -117,7 +117,7 @@ func (o *LinSolMumps) InitR(tR *Triplet, symmetric, verbose, timing bool) (err e
 	C.DMU_DAT.job = 1      // analysis code
 	C.dmumps_c(&C.DMU_DAT) // analyse
 	if C.DMU_DAT.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err03, mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
+		return chk.Err("analysis failed: %v\n", mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
 	}
 
 	// duration
@@ -136,7 +136,7 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	// check
 	o.tC = tC
 	if tC.pos == 0 {
-		return chk.Err(_linsol_mumps_err04)
+		return chk.Err("triplet must have at least one item before calling this method\n")
 	}
 
 	// flags
@@ -157,7 +157,7 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 
 	// check xz
 	if len(o.tC.xz) != 2*len(o.tC.i) {
-		return chk.Err(_linsol_mumps_err05, len(o.tC.xz), len(o.tC.i))
+		return chk.Err("length of xz (%d) slice must be equal to two-times the length of i (%d) slice when using MUMPS complex solver\n", len(o.tC.xz), len(o.tC.i))
 	}
 
 	// initialise Mumps
@@ -170,7 +170,7 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	C.ZMU_DAT.job = -1     // initialisation code
 	C.zmumps_c(&C.ZMU_DAT) // initialise
 	if C.ZMU_DAT.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err06, mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
+		return chk.Err("init failed %v\n", mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
 	}
 
 	// convert indices to C.int (not C.long) and
@@ -219,7 +219,7 @@ func (o *LinSolMumps) InitC(tC *TripletC, symmetric, verbose, timing bool) (err 
 	C.ZMU_DAT.job = 1      // analysis code
 	C.zmumps_c(&C.ZMU_DAT) // analyse
 	if C.ZMU_DAT.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err07, mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
+		return chk.Err("analysis failed: %v\n", mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
 	}
 
 	// duration
@@ -258,7 +258,7 @@ func (o *LinSolMumps) Fact() (err error) {
 		C.ZMU_DAT.job = 2      // factorisation code
 		C.zmumps_c(&C.ZMU_DAT) // factorise
 		if C.ZMU_DAT.info[1-1] < 0 {
-			return chk.Err(_linsol_mumps_err08, "Real", mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
+			return chk.Err("(%s) failed %v\n", "Real", mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
 		}
 
 		// real
@@ -268,7 +268,7 @@ func (o *LinSolMumps) Fact() (err error) {
 		C.DMU_DAT.job = 2      // factorisation code
 		C.dmumps_c(&C.DMU_DAT) // factorise
 		if C.DMU_DAT.info[1-1] < 0 {
-			return chk.Err(_linsol_mumps_err08, "Complex", mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
+			return chk.Err("(%s) failed %v\n", "Complex", mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
 		}
 	}
 
@@ -289,7 +289,7 @@ func (o *LinSolMumps) SolveR(xR, bR Vector, sum_b_to_root bool) (err error) {
 		return chk.Err("linear solver must be initialised first\n")
 	}
 	if o.cmplx {
-		return chk.Err(_linsol_mumps_err09)
+		return chk.Err("this method must be called with Real matrices\n")
 	}
 
 	// start time
@@ -320,7 +320,7 @@ func (o *LinSolMumps) SolveR(xR, bR Vector, sum_b_to_root bool) (err error) {
 	C.DMU_DAT.job = 3      // solution code
 	C.dmumps_c(&C.DMU_DAT) // solve
 	if C.DMU_DAT.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err10, mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
+		return chk.Err("solver failed: %v\n", mumps_error(C.DMU_DAT.info[1-1], C.DMU_DAT.info[2-1]))
 	}
 	mpi.BcastFromRoot(xR) // broadcast from root
 
@@ -341,7 +341,7 @@ func (o *LinSolMumps) SolveC(xR, xC, bR, bC Vector, sum_b_to_root bool) (err err
 		return chk.Err("linear solver must be initialised first\n")
 	}
 	if !o.cmplx {
-		return chk.Err(_linsol_mumps_err11)
+		return chk.Err("this method must be called with Complex matrices\n")
 	}
 
 	// start time
@@ -377,7 +377,7 @@ func (o *LinSolMumps) SolveC(xR, xC, bR, bC Vector, sum_b_to_root bool) (err err
 	C.ZMU_DAT.job = 3      // solution code
 	C.zmumps_c(&C.ZMU_DAT) // solve
 	if C.ZMU_DAT.info[1-1] < 0 {
-		return chk.Err(_linsol_mumps_err12, mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
+		return chk.Err("solver failed: %v\n", mumps_error(C.ZMU_DAT.info[1-1], C.ZMU_DAT.info[2-1]))
 	}
 
 	// MUMPS: split complex values
@@ -453,7 +453,7 @@ func (o *LinSolMumps) SetOrdScal(ordering, scaling string) (err error) {
 	case "auto":
 		ord = 7
 	default:
-		return chk.Err(_linsol_mumps_err13, ordering)
+		return chk.Err("ordering scheme %s is not available\n", ordering)
 	}
 	if scaling == "" {
 		scaling = "rcit"
@@ -470,7 +470,7 @@ func (o *LinSolMumps) SetOrdScal(ordering, scaling string) (err error) {
 	case "auto":
 		sca = 77 // automatic
 	default:
-		return chk.Err(_linsol_mumps_err14, scaling)
+		return chk.Err("scaling scheme %s is not available\n", scaling)
 	}
 	if o.cmplx {
 		C.ZMU_DAT.icntl[7-1] = C.int(ord) // ordering
@@ -532,7 +532,7 @@ func RunMumpsTestR(t *Triplet, tol_cmp float64, b, x_correct Vector, sum_b_to_ro
 
 	// check
 	if mpi.Rank() == 0 {
-		err := Vector(x).MaxDiff(x_correct)
+		err := VecMaxDiff(x, x_correct)
 		if err > tol_cmp {
 			chk.Panic("test failed: err = %g", err)
 		}
@@ -575,11 +575,11 @@ func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct VectorC, sum_b_to_
 	// check
 	if mpi.Rank() == 0 {
 		xR_correct, xC_correct := ComplexToRC(x_correct)
-		errR := Vector(xR).MaxDiff(xR_correct)
+		errR := VecMaxDiff(xR, xR_correct)
 		if errR > tol_cmp {
 			chk.Panic("test failed: errR = %g", errR)
 		}
-		errC := Vector(xC).MaxDiff(xC_correct)
+		errC := VecMaxDiff(xC, xC_correct)
 		if errC > tol_cmp {
 			chk.Panic("test failed: errC = %g", errC)
 		}
@@ -587,21 +587,3 @@ func RunMumpsTestC(t *TripletC, tol_cmp float64, b, x_correct VectorC, sum_b_to_
 		io.Pf("err(xC) = %g [1;32mOK[0m\n", errC)
 	}
 }
-
-// error messages
-var (
-	_linsol_mumps_err01 = "triplet must have at least one item before calling this method\n"
-	_linsol_mumps_err02 = "init failed: %v\n"
-	_linsol_mumps_err03 = "analysis failed: %v\n"
-	_linsol_mumps_err04 = "triplet must have at least one item before calling this method\n"
-	_linsol_mumps_err05 = "length of xz (%d) slice must be equal to two-times the length of i (%d) slice when using MUMPS complex solver\n"
-	_linsol_mumps_err06 = "init failed %v\n"
-	_linsol_mumps_err07 = "analysis failed: %v\n"
-	_linsol_mumps_err08 = "(%s) failed %v\n"
-	_linsol_mumps_err09 = "this method must be called with Real matrices\n"
-	_linsol_mumps_err10 = "solver failed: %v\n"
-	_linsol_mumps_err11 = "this method must be called with Complex matrices\n"
-	_linsol_mumps_err12 = "solver failed: %v\n"
-	_linsol_mumps_err13 = "ordering scheme %s is not available\n"
-	_linsol_mumps_err14 = "scaling scheme %s is not available\n"
-)
