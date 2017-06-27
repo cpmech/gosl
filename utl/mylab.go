@@ -81,6 +81,13 @@ func IntAlloc(m, n int) (mat [][]int) {
 	return
 }
 
+// IntCopy returns a copy of slice of ints
+func IntCopy(in []int) (out []int) {
+	out = make([]int, len(in))
+	copy(out, in)
+	return
+}
+
 // IntsClone allocates and clones a matrix of integers
 func IntClone(a [][]int) (b [][]int) {
 	b = make([][]int, len(a))

@@ -47,6 +47,7 @@ func Test_mylab01(tst *testing.T) {
 		{6, 7, 8, 9, 10},
 	}
 	Pc := IntClone(P)
+	cc := IntCopy(c)
 	chk.Ints(tst, "I", I, []int{666, 666, 666, 666, 666})
 	chk.Ints(tst, "J", J, []int{666, 666, 666, 666, 666})
 	chk.Strings(tst, "Js", Js, []string{"666", "666", "666", "666", "666"})
@@ -54,6 +55,7 @@ func Test_mylab01(tst *testing.T) {
 	chk.Ints(tst, "a", a, []int{})
 	chk.Ints(tst, "b", b, []int{0})
 	chk.Ints(tst, "c", c, []int{0, 1, 2, 3, 4})
+	chk.Ints(tst, "cc", cc, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "C", C, []int{0, -1, -2, -3, -4})
 	chk.Ints(tst, "d", d, []int{2, 3, 4})
 	chk.Ints(tst, "D", D, []int{-2, -1, 0, 1, 2, 3, 4})
