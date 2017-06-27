@@ -20,27 +20,27 @@ const π = math.Pi
 type Ss func(s float64) (float64, error)
 
 // Sv defines a scalar functioin f(v) of a vector argument v. Also returns error
-type Sv func(v []float64) (float64, error)
+type Sv func(v la.Vector) (float64, error)
 
 // Vs defines a vector function f(s) of a scalar argument s. Also returns error
 //   Vector scalar
-type Vs func(f []float64, s float64) error
+type Vs func(f la.Vector, s float64) error
 
 // Vv defines a vector function f(v) of a vector argument v. Also returns error
 //   Vector vector
-type Vv func(f, v []float64) error
+type Vv func(f, v la.Vector) error
 
 // Mv defines a matrix function f(v) of a vector argument v. Also returns error
 //   Matrix vector
-type Mv func(f [][]float64, v []float64) error
+type Mv func(f *la.Matrix, v la.Vector) error
 
 // Mm defines a matrix function f(m) of a matrix argument m. Also returns error
 //   Matrix matrix
-type Mm func(f, m [][]float64) error
+type Mm func(f, m *la.Matrix) error
 
 // Tv defines a triplet (matrix) function f(v) of a vector argument v. Also returns error
 //   Triplet vector
-type Tv func(f *la.Triplet, v []float64) error
+type Tv func(f *la.Triplet, v la.Vector) error
 
 // Tt defines a triplet (matrix) function f(t) of a triplet (matrix) argument t. Also returns error
 //   Triplet triplet

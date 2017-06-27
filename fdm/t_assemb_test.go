@@ -34,8 +34,8 @@ func Test_assemb01(tst *testing.T) {
 	AssemblePoisson2d(&K11, &K12, F1, kx, ky, nil, &g, &e)
 
 	// check
-	K11d := K11.ToMatrix(nil).ToDense()
-	K12d := K12.ToMatrix(nil).ToDense()
+	K11d := K11.GetDenseMatrix().GetSlice()
+	K12d := K12.GetDenseMatrix().GetSlice()
 	K11c := [][]float64{
 		{16.0, -4.0, -8.0, 0.0, 0.0, 0.0},
 		{-8.0, 16.0, 0.0, -8.0, 0.0, 0.0},

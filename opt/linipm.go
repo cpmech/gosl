@@ -27,8 +27,8 @@ type LinIpm struct {
 
 	// problem
 	A *la.CCMatrix // [Nl][nx]
-	B []float64    // [Nl]
-	C []float64    // [nx]
+	B la.Vector    // [Nl]
+	C la.Vector    // [nx]
 
 	// constants
 	NmaxIt int     // max number of iterations
@@ -40,20 +40,20 @@ type LinIpm struct {
 	Ny int // number of y = nx + ns + nl = 2 * nx + nl
 
 	// solution vector
-	Y   []float64 // y := [x, λ, s]
-	X   []float64 // subset of y
-	L   []float64 // subset of y
-	S   []float64 // subset of y
-	Mdy []float64 // -Δy
-	Mdx []float64 // subset of Mdy == -Δx
-	Mdl []float64 // subset of Mdy == -Δλ
-	Mds []float64 // subset of Mdy == -Δs
+	Y   la.Vector // y := [x, λ, s]
+	X   la.Vector // subset of y
+	L   la.Vector // subset of y
+	S   la.Vector // subset of y
+	Mdy la.Vector // -Δy
+	Mdx la.Vector // subset of Mdy == -Δx
+	Mdl la.Vector // subset of Mdy == -Δλ
+	Mds la.Vector // subset of Mdy == -Δs
 
 	// affine solution
-	R  []float64   // residual
-	Rx []float64   // subset of R
-	Rl []float64   // subset of R
-	Rs []float64   // subset of R
+	R  la.Vector   // residual
+	Rx la.Vector   // subset of R
+	Rl la.Vector   // subset of R
+	Rs la.Vector   // subset of R
 	J  *la.Triplet // [ny][ny] Jacobian matrix
 
 	// linear solver
@@ -66,7 +66,7 @@ func (o *LinIpm) Free() {
 }
 
 // Init initialises LinIpm
-func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms dbf.Params) {
+func (o *LinIpm) Init(A *la.CCMatrix, b, c la.Vector, prms dbf.Params) {
 
 	// problem
 	o.A, o.B, o.C = A, b, c
@@ -116,15 +116,15 @@ func (o *LinIpm) Init(A *la.CCMatrix, b, c []float64, prms dbf.Params) {
 func (o *LinIpm) Solve(verbose bool) (err error) {
 
 	// starting point
-	AAt := la.MatAlloc(o.Nl, o.Nl)         // A*Aᵀ
-	d := make([]float64, o.Nl)             // inv(AAt) * b
-	e := make([]float64, o.Nl)             // A * c
-	la.SpMatMatTrMul(AAt, 1, o.A)          // AAt := A*Aᵀ
-	la.SpMatVecMul(e, 1, o.A, o.C)         // e := A * c
-	la.SPDsolve2(d, o.L, AAt, o.B, e)      // d := inv(AAt) * b  and  L := inv(AAt) * e
-	la.SpMatTrVecMul(o.X, 1, o.A, d)       // x := Aᵀ * d
-	la.VecCopy(o.S, 1, o.C)                // s := c
-	la.SpMatTrVecMulAdd(o.S, -1, o.A, o.L) // s -= Aᵀλ
+	AAt := la.NewMatrix(o.Nl, o.Nl)               // A*Aᵀ
+	d := la.NewVector(o.Nl)                       // inv(AAt) * b
+	e := la.NewVector(o.Nl)                       // A * c
+	la.SpMatMatTrMul(AAt, 1, o.A)                 // AAt := A*Aᵀ
+	la.SpMatVecMul(e, 1, o.A, o.C)                // e := A * c
+	la.SolveTwoRealLinSysSPD(d, o.L, AAt, o.B, e) // d := inv(AAt) * b  and  L := inv(AAt) * e
+	la.SpMatTrVecMul(o.X, 1, o.A, d)              // x := Aᵀ * d
+	o.S.Apply(1, o.C)                             // s := c
+	la.SpMatTrVecMulAdd(o.S, -1, o.A, o.L)        // s -= Aᵀλ
 	xmin := o.X[0]
 	smin := o.S[0]
 	for i := 1; i < o.Nx; i++ {

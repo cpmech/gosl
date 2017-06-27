@@ -26,9 +26,9 @@ type Integrator struct {
 	RefGrads  [][][]float64 // reference gradients gm = dSm(r)/dr @ all integ points [npts][nverts][ndim]
 
 	// mutable-data (scratchpad)
-	JacobianMat [][]float64 // jacobian matrix Jr of the mapping reference to general coords [ndim][ndim]
-	InvJacobMat [][]float64 // inverse of jacobian matrix [ndim][ndim]
-	DetJacobian float64     // determinat of jacobian matrix
+	JacobianMat *la.Matrix // jacobian matrix Jr of the mapping reference to general coords [ndim][ndim]
+	InvJacobMat *la.Matrix // inverse of jacobian matrix [ndim][ndim]
+	DetJacobian float64    // determinat of jacobian matrix
 }
 
 // NewIntegrator returns a new object to integrate over polyhedra/polygons (cells)
@@ -56,8 +56,8 @@ func NewIntegrator(ctype int, P [][]float64, pName string) (o *Integrator, err e
 	}
 
 	// allocate mutable data
-	o.JacobianMat = la.MatAlloc(o.Ndim, o.Ndim)
-	o.InvJacobMat = la.MatAlloc(o.Ndim, o.Ndim)
+	o.JacobianMat = la.NewMatrix(o.Ndim, o.Ndim)
+	o.InvJacobMat = la.NewMatrix(o.Ndim, o.Ndim)
 	return
 }
 
@@ -81,7 +81,7 @@ func (o *Integrator) ResetP(P [][]float64, pName string) (err error) {
 
 	// allocate slices related to integration points
 	if len(o.ShapeFcns) != o.Npts {
-		o.ShapeFcns = la.MatAlloc(o.Npts, o.Nverts)
+		o.ShapeFcns = utl.Alloc(o.Npts, o.Nverts)
 		o.RefGrads = utl.Deep3alloc(o.Npts, o.Nverts, o.Ndim)
 	}
 
@@ -178,13 +178,13 @@ func (o *Integrator) EvalJacobian(X [][]float64, ip int) (err error) {
 	}
 	for i := 0; i < o.Ndim; i++ {
 		for j := 0; j < o.Ndim; j++ {
-			o.JacobianMat[i][j] = 0
+			o.JacobianMat.Set(i, j, 0)
 			for m := 0; m < o.Nverts; m++ {
-				o.JacobianMat[i][j] += X[m][i] * o.RefGrads[ip][m][j]
+				o.JacobianMat.Add(i, j, X[m][i]*o.RefGrads[ip][m][j])
 			}
 		}
 	}
-	o.DetJacobian, err = la.MatInv(o.InvJacobMat, o.JacobianMat, 1e-14)
+	o.DetJacobian, err = la.MatInvSmall(o.InvJacobMat, o.JacobianMat, 1e-14)
 	return
 }
 

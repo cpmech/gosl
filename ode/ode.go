@@ -12,6 +12,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Solver implements an ODE solver
@@ -94,25 +95,25 @@ type Solver struct {
 
 	// step variables
 	h, hprev float64   // step-size and previous step-size
-	f0       []float64 // f(x,y) before step
-	scal     []float64 // scal = Atol + Rtol*abs(y)
+	f0       la.Vector // f(x,y) before step
+	scal     la.Vector // scal = Atol + Rtol*abs(y)
 
 	// rk variables
-	u     []float64   // u[stg]      = x + h*c[stg]
-	v     [][]float64 // v[stg][dim] = ya[dim] + h*sum(a[stg][j]*f[j][dim], j, nstg)
-	w, dw [][]float64 // workspace
-	f     [][]float64 // f[stg][dim] = f(u[stg], v[stg][dim])
+	u     la.Vector   // u[stg]      = x + h*c[stg]
+	v     []la.Vector // v[stg][dim] = ya[dim] + h*sum(a[stg][j]*f[j][dim], j, nstg)
+	w, dw []la.Vector // workspace
+	f     []la.Vector // f[stg][dim] = f(u[stg], v[stg][dim])
 
 	// explicit rk variables
 	erkdat ERKdat // explicit RK data
 
 	// radau5 variables
-	z             [][]float64 // Radau5
-	ez, lerr, rhs []float64   // Radau5
+	z             []la.Vector // Radau5
+	ez, lerr, rhs la.Vector   // Radau5
 	dfdyT         la.Triplet  // Jacobian (triplet)
 
 	// interpolation (radau5)
-	ycol [][]float64 // colocation values
+	ycol []la.Vector // colocation values
 
 	// for distributed solver
 	rctriR       *la.Triplet
@@ -201,30 +202,30 @@ func (o *Solver) Init(method string, ndim int, fcn Func, jac JacF, M *la.Triplet
 	}
 
 	// allocate step variables
-	o.f0 = make([]float64, o.ndim)
-	o.scal = make([]float64, o.ndim)
+	o.f0 = la.NewVector(o.ndim)
+	o.scal = la.NewVector(o.ndim)
 
 	// allocate rk variables
-	o.u = make([]float64, o.nstg)
-	o.v = make([][]float64, o.nstg)
-	o.w = make([][]float64, o.nstg)
-	o.dw = make([][]float64, o.nstg)
-	o.f = make([][]float64, o.nstg)
+	o.u = la.NewVector(o.nstg)
+	o.v = make([]la.Vector, o.nstg)
+	o.w = make([]la.Vector, o.nstg)
+	o.dw = make([]la.Vector, o.nstg)
+	o.f = make([]la.Vector, o.nstg)
 	if method == "Radau5" {
-		o.z = make([][]float64, o.nstg)
-		o.ycol = make([][]float64, o.nstg)
-		o.ez = make([]float64, o.ndim)
-		o.lerr = make([]float64, o.ndim)
-		o.rhs = make([]float64, o.ndim)
+		o.z = make([]la.Vector, o.nstg)
+		o.ycol = make([]la.Vector, o.nstg)
+		o.ez = la.NewVector(o.ndim)
+		o.lerr = la.NewVector(o.ndim)
+		o.rhs = la.NewVector(o.ndim)
 	}
 	for i := 0; i < o.nstg; i++ {
-		o.v[i] = make([]float64, o.ndim)
-		o.w[i] = make([]float64, o.ndim)
-		o.dw[i] = make([]float64, o.ndim)
-		o.f[i] = make([]float64, o.ndim)
+		o.v[i] = la.NewVector(o.ndim)
+		o.w[i] = la.NewVector(o.ndim)
+		o.dw[i] = la.NewVector(o.ndim)
+		o.f[i] = la.NewVector(o.ndim)
 		if method == "Radau5" {
-			o.z[i] = make([]float64, o.ndim)
-			o.ycol[i] = make([]float64, o.ndim)
+			o.z[i] = la.NewVector(o.ndim)
+			o.ycol[i] = la.NewVector(o.ndim)
 		}
 	}
 }
@@ -245,7 +246,7 @@ func (o *Solver) SetTol(atol, rtol float64) {
 }
 
 // Solve solves from (xa,ya) to (xb,yb) => find yb (stored in y)
-func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool) (err error) {
+func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error) {
 
 	// check
 	if xb < x {
@@ -275,7 +276,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool) (err error)
 	if o.SaveXY {
 		o.Hvalues = make([]float64, o.NmaxSS+1)
 		o.Xvalues = make([]float64, o.NmaxSS+1)
-		o.Yvalues = la.MatAlloc(o.ndim, o.NmaxSS+1)
+		o.Yvalues = utl.Alloc(o.ndim, o.NmaxSS+1)
 		o.Xvalues[o.IdxSave] = x
 		for i := 0; i < o.ndim; i++ {
 			o.Yvalues[i][o.IdxSave] = y[i]
@@ -330,7 +331,7 @@ func (o *Solver) Solve(y []float64, x, xb, Δx float64, fixstp bool) (err error)
 
 	// fixed steps
 	if fixstp {
-		la.VecCopy(o.w[0], 1, y) // copy initial values to worksapce
+		o.w[0].Apply(1, y) // w0 := y (copy initial values to worksapce)
 		if o.Verbose {
 			io.Pfgreen("x = %v\n", x)
 		}

@@ -44,7 +44,7 @@ if [[ $platform == 'linux' ]]; then
     install_and_test mpi 0
 fi
 
-for p in la/oblas la fdm num fun/dbf fun/fftw fun gm/rw gm/msh gm graph ode opt tsr; do
+for p in la/oblas la fun/dbf fun/fftw fun num fdm gm/rw gm/msh gm graph ode opt; do
     install_and_test $p 1
 done
 

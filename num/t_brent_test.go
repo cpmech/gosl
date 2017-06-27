@@ -11,6 +11,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 )
 
 // run_rootsol_test runs root solution test
@@ -90,13 +91,13 @@ func Test_brent01(tst *testing.T) {
 		return
 	}
 
-	ffcnB := func(fx, x []float64) (err error) {
+	ffcnB := func(fx, x la.Vector) (err error) {
 		fx[0], err = ffcnA(x[0])
 		return
 	}
 
-	JfcnB := func(dfdx [][]float64, x []float64) (err error) {
-		dfdx[0][0] = 3.0*x[0]*x[0] - 2.0*0.165*x[0]
+	JfcnB := func(dfdx *la.Matrix, x la.Vector) (err error) {
+		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0*0.165*x[0])
 		return
 	}
 
@@ -117,13 +118,13 @@ func Test_brent02(tst *testing.T) {
 		return x*x*x - 2.0*x - 5.0, nil
 	}
 
-	ffcnB := func(fx, x []float64) (err error) {
+	ffcnB := func(fx, x la.Vector) (err error) {
 		fx[0], err = ffcnA(x[0])
 		return
 	}
 
-	JfcnB := func(dfdx [][]float64, x []float64) (err error) {
-		dfdx[0][0] = 3.0*x[0]*x[0] - 2.0
+	JfcnB := func(dfdx *la.Matrix, x la.Vector) (err error) {
+		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0)
 		return
 	}
 

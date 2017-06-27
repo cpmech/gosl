@@ -35,7 +35,7 @@ type R5cte struct {
 // constants
 var r5 R5cte
 
-func radau5_accept(o *Solver, y []float64) {
+func radau5_accept(o *Solver, y la.Vector) {
 	for m := 0; m < o.ndim; m++ {
 		// update y
 		y[m] += o.z[2][m]
@@ -47,7 +47,7 @@ func radau5_accept(o *Solver, y []float64) {
 }
 
 // Radau5 step function
-func radau5_step(o *Solver, y0 []float64, x0 float64) (rerr float64, err error) {
+func radau5_step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
 
 	// factors
 	α := r5.α_ / o.h
@@ -67,7 +67,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64) (rerr float64, err error) 
 			// Jacobian triplet
 			if o.jac == nil { // numerical
 				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
-				err = num.Jacobian(&o.dfdyT, func(fy, y []float64) (e error) {
+				err = num.Jacobian(&o.dfdyT, func(fy, y la.Vector) (e error) {
 					e = o.fcn(fy, o.h, x0, y)
 					return
 				}, y0, o.f0, o.w[0]) // w works here as workspace variable
@@ -340,10 +340,10 @@ func radau5_step(o *Solver, y0 []float64, x0 float64) (rerr float64, err error) 
 						return
 					}
 					if o.hasM {
-						la.VecCopy(o.rhs, 1, o.f[0])              // rhs := f0perr
+						o.rhs.Apply(1, o.f[0])                    // rhs := f0perr
 						la.SpMatVecMulAdd(o.rhs, γ, o.mMat, o.ez) // rhs += γ * M * ez
 					} else {
-						la.VecAdd2(o.rhs, 1, o.f[0], γ, o.ez) // rhs = f0perr + γ * ez
+						la.VecAdd(o.rhs, 1, o.f[0], γ, o.ez) // rhs = f0perr + γ * ez
 					}
 					o.lsolR.SolveR(o.lerr, o.rhs, false)
 					rerr = o.rms_norm(o.lerr)
@@ -355,7 +355,7 @@ func radau5_step(o *Solver, y0 []float64, x0 float64) (rerr float64, err error) 
 }
 
 // calc RMS norm
-func (o *Solver) rms_norm(diff []float64) (rms float64) {
+func (o *Solver) rms_norm(diff la.Vector) (rms float64) {
 	for m := 0; m < o.ndim; m++ {
 		rms += math.Pow(diff[m]/o.scal[m], 2.0)
 	}

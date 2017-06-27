@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
 
@@ -37,7 +38,7 @@ func TestInteg01(tst *testing.T) {
 	chk.Int(tst, "Npts", o.Npts, 4)
 
 	// integrand function
-	fcn := func(x []float64) (f float64, e error) {
+	fcn := func(x la.Vector) (f float64, e error) {
 		f = x[0]*x[0] + x[1]*x[1]
 		return
 	}
@@ -121,19 +122,19 @@ func TestInteg02(tst *testing.T) {
 	}
 
 	// integrand function for second moment of inertia about x-axis: Ix
-	fcnIx := func(x []float64) (f float64, e error) {
+	fcnIx := func(x la.Vector) (f float64, e error) {
 		f = x[1] * x[1]
 		return
 	}
 
 	// integrand function for second moment of inertia about y-axis: Iy
-	fcnIy := func(x []float64) (f float64, e error) {
+	fcnIy := func(x la.Vector) (f float64, e error) {
 		f = x[0] * x[0]
 		return
 	}
 
 	// integrand function for second moment of inertia about the origin: I0
-	fcnI0 := func(x []float64) (f float64, e error) {
+	fcnI0 := func(x la.Vector) (f float64, e error) {
 		f = (x[0]*x[0] + x[1]*x[1])
 		return
 	}
@@ -192,7 +193,7 @@ func TestInteg03(tst *testing.T) {
 	chk.PrintTitle("Integ03. 2nd mom inertia: quarter of circle")
 
 	// integrand function for second moment of inertia about x-axis: Ix
-	fcnIx := func(x []float64) (f float64, e error) {
+	fcnIx := func(x la.Vector) (f float64, e error) {
 		f = x[1] * x[1]
 		return
 	}
@@ -248,7 +249,7 @@ func TestInteg04(tst *testing.T) {
 	chk.PrintTitle("Integ04. 2nd mom inergia: ring")
 
 	// integrand function for second moment of inertia about x-axis: Ix
-	fcnIx := func(x []float64) (f float64, e error) {
+	fcnIx := func(x la.Vector) (f float64, e error) {
 		f = x[1] * x[1]
 		return
 	}

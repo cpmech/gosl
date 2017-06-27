@@ -13,17 +13,17 @@ import (
 	"github.com/cpmech/gosl/num"
 )
 
-func bweuler_accept(o *Solver, y []float64) {
+func bweuler_accept(o *Solver, y la.Vector) {
 }
 
 // backward-Euler
-func bweuler_step(o *Solver, y []float64, x float64) (rerr float64, err error) {
+func bweuler_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 
 	// new x
 	x += o.h
 
 	// previous y
-	la.VecCopy(o.v[0], 1, y) // v := y_old
+	o.v[0].Apply(1, y) // v := y_old
 
 	// iterations
 	var rmsnr float64 // rms norm of residual
@@ -73,7 +73,7 @@ func bweuler_step(o *Solver, y []float64, x float64) (rerr float64, err error) {
 
 			// calculate Jacobian
 			if o.jac == nil { // numerical
-				err = num.Jacobian(&o.dfdyT, func(fy, yy []float64) (e error) {
+				err = num.Jacobian(&o.dfdyT, func(fy, yy la.Vector) (e error) {
 					e = o.fcn(fy, o.h, x, yy)
 					return
 				}, y, o.f[0], o.dw[0]) // δw works here as workspace variable

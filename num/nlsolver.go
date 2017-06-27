@@ -27,9 +27,9 @@ type NlSolver struct {
 
 	// auxiliary data
 	neq   int       // number of equations
-	scal  []float64 // scaling vector
-	fx    []float64 // f(x)
-	mdx   []float64 // - delta x
+	scal  la.Vector // scaling vector
+	fx    la.Vector // f(x)
+	mdx   la.Vector // - delta x
 	useDn bool      // use dense solver (matrix inversion) instead of Umfpack (sparse)
 	numJ  bool      // use numerical Jacobian (with sparse solver)
 
@@ -43,17 +43,17 @@ type NlSolver struct {
 
 	// data for Umfpack (sparse)
 	Jtri la.Triplet // triplet
-	w    []float64  // workspace
+	w    la.Vector  // workspace
 	lis  la.LinSol  // linear solver
 
 	// data for dense solver (matrix inversion)
-	J  [][]float64 // dense Jacobian matrix
-	Ji [][]float64 // inverse of Jacobian matrix
+	J  *la.Matrix // dense Jacobian matrix
+	Ji *la.Matrix // inverse of Jacobian matrix
 
 	// data for line-search
 	φ    float64
-	dφdx []float64
-	x0   []float64
+	dφdx la.Vector
+	x0   la.Vector
 
 	// stat data
 	It     int // number of iterations from the last call to Solve
@@ -98,9 +98,9 @@ func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useD
 
 	// auxiliary data
 	o.neq = neq
-	o.scal = make([]float64, o.neq)
-	o.fx = make([]float64, o.neq)
-	o.mdx = make([]float64, o.neq)
+	o.scal = la.NewVector(o.neq)
+	o.fx = la.NewVector(o.neq)
+	o.mdx = la.NewVector(o.neq)
 
 	// callbacks
 	o.Ffcn, o.JfcnSp, o.JfcnDn = Ffcn, JfcnSp, JfcnDn
@@ -110,8 +110,8 @@ func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useD
 
 	// use dense linear solver
 	if o.useDn {
-		o.J = la.MatAlloc(o.neq, o.neq)
-		o.Ji = la.MatAlloc(o.neq, o.neq)
+		o.J = la.NewMatrix(o.neq, o.neq)
+		o.Ji = la.NewMatrix(o.neq, o.neq)
 
 		// use sparse linear solver
 	} else {
@@ -120,14 +120,14 @@ func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useD
 			o.numJ = true
 		}
 		if o.numJ {
-			o.w = make([]float64, o.neq)
+			o.w = la.NewVector(o.neq)
 		}
 		o.lis = la.GetSolver("umfpack")
 	}
 
 	// allocate slices for line search
-	o.dφdx = make([]float64, o.neq)
-	o.x0 = make([]float64, o.neq)
+	o.dφdx = la.NewVector(o.neq)
+	o.x0 = la.NewVector(o.neq)
 }
 
 // Free frees memory
@@ -147,7 +147,7 @@ func (o *NlSolver) SetTols(Atol, Rtol, Ftol, ϵ float64) {
 func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 	// compute scaling vector
-	la.VecScaleAbs(o.scal, o.atol, o.rtol, x) // scal := Atol + Rtol*abs(x)
+	la.VecScaleAbs(o.scal, o.atol, o.rtol, x) // scal = Atol + Rtol*abs(x)
 
 	// evaluate function @ x
 	err = o.Ffcn(o.fx, x) // fx := f(x)
@@ -168,7 +168,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 	for o.It = 0; o.It < o.MaxIt; o.It++ {
 
 		// check convergence on f(x)
-		fx_max = la.VecLargest(o.fx, 1.0) // den = 1.0
+		fx_max = o.fx.Largest(1.0) // den = 1.0
 		if fx_max < o.ftol {
 			if !silent {
 				o.msg("fx_max(ini)", o.It, Ldx, fx_max, false, true)
@@ -208,7 +208,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		if o.useDn {
 
 			// invert matrix
-			err = la.MatInvG(o.Ji, o.J, 1e-10)
+			err = la.MatInv(o.Ji, o.J)
 			if err != nil {
 				return chk.Err(_nls_err1, err.Error())
 			}
@@ -218,8 +218,8 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			for i := 0; i < o.neq; i++ {
 				o.mdx[i], o.dφdx[i] = 0.0, 0.0
 				for j := 0; j < o.neq; j++ {
-					o.mdx[i] += o.Ji[i][j] * o.fx[j] // mdx  = inv(J) * fx
-					o.dφdx[i] += o.J[j][i] * o.fx[j] // dφdx = tra(J) * fx
+					o.mdx[i] += o.Ji.Get(i, j) * o.fx[j] // mdx  = inv(J) * fx
+					o.dφdx[i] += o.J.Get(j, i) * o.fx[j] // dφdx = tra(J) * fx
 				}
 				o.φ += o.fx[i] * o.fx[i]
 			}
@@ -267,7 +267,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		}
 
 		// check convergence on f(x) => avoid line-search if converged already
-		fx_max = la.VecLargest(o.fx, 1.0) // den = 1.0
+		fx_max = o.fx.Largest(1.0) // den = 1.0
 		if fx_max < o.ftol {
 			if !silent {
 				o.msg("fx_max", o.It, Ldx, fx_max, false, true)
@@ -295,7 +295,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 				Ldx += ((x[i] - o.x0[i]) / o.scal[i]) * ((x[i] - o.x0[i]) / o.scal[i])
 			}
 			Ldx = math.Sqrt(Ldx / float64(o.neq))
-			fx_max = la.VecLargest(o.fx, 1.0) // den = 1.0
+			fx_max = o.fx.Largest(1.0) // den = 1.0
 			if Ldx < o.fnewt {
 				if !silent {
 					o.msg("Ldx(linsrch)", o.It, Ldx, fx_max, false, true)
@@ -331,9 +331,9 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd float64, err error) {
 
 	// Jacobian matrix
-	var Jmat [][]float64
+	var Jmat *la.Matrix
 	if o.useDn {
-		Jmat = la.MatAlloc(o.neq, o.neq)
+		Jmat = la.NewMatrix(o.neq, o.neq)
 		err = o.JfcnDn(Jmat, x)
 		if err != nil {
 			return 0, chk.Err(_nls_err5, "dense", err.Error())
@@ -350,12 +350,11 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 				return 0, chk.Err(_nls_err5, "sparse(num)", err.Error())
 			}
 		}
-		Jmat = o.Jtri.ToMatrix(nil).ToDense()
+		Jmat = o.Jtri.GetDenseMatrix()
 	}
-	//la.PrintMat("J", Jmat, "%23g", false)
 
 	// condition number
-	cnd, err = la.MatCondG(Jmat, "F", 1e-10)
+	cnd, err = la.MatCondNum(Jmat, "F")
 	if err != nil {
 		return cnd, chk.Err(_nls_err6, err.Error())
 	}
@@ -368,7 +367,7 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 		return
 	}
 	var Jtmp la.Triplet
-	ws := make([]float64, o.neq)
+	ws := la.NewVector(o.neq)
 	err = o.Ffcn(o.fx, x)
 	if err != nil {
 		return
@@ -378,10 +377,10 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	Jnum := Jtmp.ToMatrix(nil).ToDense()
 	for i := 0; i < o.neq; i++ {
 		for j := 0; j < o.neq; j++ {
-			chk.PrintAnaNum(io.Sf("J[%d][%d]", i, j), tol, Jmat[i][j], Jnum[i][j], !silent)
+			chk.PrintAnaNum(io.Sf("J[%d][%d]", i, j), tol, Jmat.Get(i, j), Jnum.Get(i, j), !silent)
 		}
 	}
-	maxdiff := la.MatMaxDiff(Jmat, Jnum)
+	maxdiff := Jmat.MaxDiff(Jnum)
 	if maxdiff > tol {
 		err = chk.Err(_nls_err8, maxdiff)
 	}

@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fdm"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
@@ -27,12 +26,12 @@ func TestJacobian01a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("TestJacobian 01a")
 
-	ffcn := func(fx, x []float64) error {
+	ffcn := func(fx, x la.Vector) error {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
 		fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
 		return nil
 	}
-	Jfcn := func(dfdx *la.Triplet, x []float64) error {
+	Jfcn := func(dfdx *la.Triplet, x la.Vector) error {
 		dfdx.Start()
 		dfdx.Put(0, 0, 3.0*x[0]*x[0])
 		dfdx.Put(0, 1, 1.0)
@@ -49,7 +48,7 @@ func TestJacobian02a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("TestJacobian 02a")
 
-	ffcn := func(fx, x []float64) error {
+	ffcn := func(fx, x la.Vector) error {
 		fx[0] = 2.0*x[0] - x[1] + sin(x[2]) - cos(x[3]) - x[5]*x[5] - 1.0      // 0
 		fx[1] = -x[0] + 2.0*x[1] + cos(x[2]) - sin(x[3]) + x[5] - 1.0          // 1
 		fx[2] = x[0] + 3.0*x[1] + sin(x[3]) - cos(x[4]) - x[5]*x[5] - 1.0      // 2
@@ -58,7 +57,7 @@ func TestJacobian02a(tst *testing.T) {
 		fx[5] = x[0] + 6.0*x[1] - cos(x[2]) + cos(x[4]) + x[5] - 1.0           // 5
 		return nil
 	}
-	Jfcn := func(dfdx *la.Triplet, x []float64) error {
+	Jfcn := func(dfdx *la.Triplet, x la.Vector) error {
 		dfdx.Start()
 		dfdx.Put(0, 0, 2.0)
 		dfdx.Put(0, 1, -1.0)
@@ -103,9 +102,7 @@ func TestJacobian03(tst *testing.T) {
 
 	// grid
 	var g fdm.Grid2d
-	//g.Init(1.0, 1.0, 4, 4)
 	g.Init(0.0, 1.0, 0.0, 1.0, 6, 6)
-	//g.Init(1.0, 1.0, 11, 11)
 
 	// equations numbering
 	var e fdm.Equations
@@ -117,11 +114,11 @@ func TestJacobian03(tst *testing.T) {
 	fdm.InitK11andK12(&K11, &K12, &e)
 
 	// assembly
-	F1 := make([]float64, e.N1)
+	F1 := la.NewVector(e.N1)
 	fdm.AssemblePoisson2d(&K11, &K12, F1, 1, 1, nil, &g, &e)
 
 	// prescribed values
-	U2 := make([]float64, e.N2)
+	U2 := la.NewVector(e.N2)
 	for _, eq := range g.L {
 		U2[e.FR2[eq]] = 50.0
 	}
@@ -138,43 +135,16 @@ func TestJacobian03(tst *testing.T) {
 	// functions
 	k11 := K11.ToMatrix(nil)
 	k12 := K12.ToMatrix(nil)
-	ffcn := func(fU1, U1 []float64) error { // K11*U1 + K12*U2 - F1
-		la.VecCopy(fU1, -1, F1)            // fU1 := (-F1)
+	ffcn := func(fU1, U1 la.Vector) error { // K11*U1 + K12*U2 - F1
+		fU1.Apply(-1, F1)                  // fU1 := -1⋅F1
 		la.SpMatVecMulAdd(fU1, 1, k11, U1) // fU1 += K11*U1
 		la.SpMatVecMulAdd(fU1, 1, k12, U2) // fU1 += K12*U2
 		return nil
 	}
-	Jfcn := func(dfU1dU1 *la.Triplet, U1 []float64) error {
+	Jfcn := func(dfU1dU1 *la.Triplet, U1 la.Vector) error {
 		fdm.AssemblePoisson2d(dfU1dU1, &K12, F1, 1, 1, nil, &g, &e)
 		return nil
 	}
-	U1 := make([]float64, e.N1)
+	U1 := la.NewVector(e.N1)
 	CompareJac(tst, ffcn, Jfcn, U1, 0.0075)
-
-	print_jac := false
-	if print_jac {
-		W1 := make([]float64, e.N1)
-		fU1 := make([]float64, e.N1)
-		ffcn(fU1, U1)
-		var Jnum la.Triplet
-		Jnum.Init(e.N1, e.N1, e.N1*e.N1)
-		Jacobian(&Jnum, ffcn, U1, fU1, W1)
-		la.PrintMat("K11 ", K11.ToMatrix(nil).ToDense(), "%g ", false)
-		la.PrintMat("Jnum", Jnum.ToMatrix(nil).ToDense(), "%g ", false)
-	}
-
-	test_ffcn := false
-	if test_ffcn {
-		Uc := []float64{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 50.0, 25.0, 325.0 / 22.0, 100.0 / 11.0, 50.0 / 11.0,
-			0.0, 50.0, 775.0 / 22.0, 25.0, 375.0 / 22.0, 100.0 / 11.0, 0.0, 50.0, 450.0 / 11.0, 725.0 / 22.0,
-			25.0, 325.0 / 22.0, 0.0, 50.0, 500.0 / 11.0, 450.0 / 11.0, 775.0 / 22.0, 25.0, 0.0, 50.0, 50.0,
-			50.0, 50.0, 50.0, 50.0,
-		}
-		for i := 0; i < e.N1; i++ {
-			U1[i] = Uc[e.RF1[i]]
-		}
-		fU1 := make([]float64, e.N1)
-		min, max := la.VecMinMax(fU1)
-		io.Pf("min/max fU1 = %v\n", min, max)
-	}
 }

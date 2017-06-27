@@ -4,11 +4,13 @@
 
 package ode
 
-func fweuler_accept(o *Solver, y []float64) {
+import "github.com/cpmech/gosl/la"
+
+func fweuler_accept(o *Solver, y la.Vector) {
 }
 
 // forward-Euler
-func fweuler_step(o *Solver, y []float64, x float64) (rerr float64, err error) {
+func fweuler_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 	o.Nfeval += 1
 	err = o.fcn(o.f[0], o.h, x, y)
 	if err != nil {

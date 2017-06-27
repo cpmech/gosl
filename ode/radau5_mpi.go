@@ -18,7 +18,7 @@ import (
 )
 
 // Radau5 step function
-func radau5_step_mpi(o *Solver, y0 []float64, x0 float64) (rerr float64, err error) {
+func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
 
 	// factors
 	α := r5.α_ / o.h
@@ -38,7 +38,7 @@ func radau5_step_mpi(o *Solver, y0 []float64, x0 float64) (rerr float64, err err
 			// Jacobian triplet
 			if o.jac == nil { // numerical
 				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
-				err = num.JacobianMpi(&o.dfdyT, func(fy, y []float64) (e error) {
+				err = num.JacobianMpi(&o.dfdyT, func(fy, y la.Vector) (e error) {
 					e = o.fcn(fy, o.h, x0, y)
 					return
 				}, y0, o.f0, o.w[0], o.Distr) // w works here as workspace variable
@@ -330,7 +330,7 @@ func radau5_step_mpi(o *Solver, y0 []float64, x0 float64) (rerr float64, err err
 						return
 					}
 					if o.hasM {
-						la.VecCopy(o.rhs, 1, o.f[0]) // rhs := f0perr
+						o.rhs.Apply(1, o.f[0]) // rhs := f0perr
 						if o.Distr {
 							la.SpMatVecMul(o.dw[0], γ, o.mMat, o.ez)     // δw[0] = γ * M * ez (δw[0] is workspace)
 							mpi.AllReduceSumAdd(o.rhs, o.dw[0], o.dw[1]) // rhs += join_with_sum(δw[0]) (δw[1] is workspace)
@@ -338,7 +338,7 @@ func radau5_step_mpi(o *Solver, y0 []float64, x0 float64) (rerr float64, err err
 							la.SpMatVecMulAdd(o.rhs, γ, o.mMat, o.ez) // rhs += γ * M * ez
 						}
 					} else {
-						la.VecAdd2(o.rhs, 1, o.f[0], γ, o.ez) // rhs = f0perr + γ * ez
+						la.VecAdd(o.rhs, 1, o.f[0], γ, o.ez) // rhs = f0perr + γ * ez
 					}
 					o.lsolR.SolveR(o.lerr, o.rhs, false)
 					rerr = o.rms_norm(o.lerr)

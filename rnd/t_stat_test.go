@@ -9,7 +9,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 )
 
 func Test_stat01(tst *testing.T) {
@@ -70,9 +69,6 @@ func Test_stat02(tst *testing.T) {
 	}
 
 	y, z := StatTable(x, true, true)
-	la.PrintMat("x", x, "%5g", false)
-	la.PrintMat("y", y, "%13.6f", false)
-	la.PrintMat("z", z, "%13.6f", false)
 	io.Pforan("\nmin\n")
 	chk.Scalar(tst, "y00=min(x[0,:])", 1e-17, y[0][0], 70)
 	chk.Scalar(tst, "y01=min(x[1,:])", 1e-17, y[0][1], 12)

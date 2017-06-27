@@ -10,7 +10,6 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -52,14 +51,14 @@ func (o *Bspline) Init(T []float64, p int) {
 
 	// essential
 	o.T, o.p, o.m = T, p, len(T)
-	o.tmin, o.tmax = la.VecMinMax(T)
+	o.tmin, o.tmax = utl.MinMax(T)
 
 	// auxiliary
 	o.le = make([]float64, o.p+1)
 	o.ri = make([]float64, o.p+1)
-	o.ndu = la.MatAlloc(o.p+1, o.p+1)
-	o.der = la.MatAlloc(o.p+1, o.p+1)
-	o.daux = la.MatAlloc(2, o.p+1)
+	o.ndu = utl.Alloc(o.p+1, o.p+1)
+	o.der = utl.Alloc(o.p+1, o.p+1)
+	o.daux = utl.Alloc(2, o.p+1)
 }
 
 // SetOrder sets B-spline order (p)

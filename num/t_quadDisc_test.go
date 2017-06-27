@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -71,7 +70,7 @@ func Test_Disc2dInteg01(tst *testing.T) {
 	x := utl.LinSpace(-1, 1, 7)
 	y := utl.LinSpace(-2, 2, 9)
 	m, n := len(x), len(y)
-	f := la.MatAlloc(m, n)
+	f := utl.Alloc(m, n)
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
 			f[i][j] = 3.0
@@ -97,7 +96,7 @@ func Test_Disc2dInteg02(tst *testing.T) {
 	x := utl.LinSpace(0, 1, 11)
 	y := utl.LinSpace(0, 1, 11)
 	m, n := len(x), len(y)
-	f := la.MatAlloc(m, n)
+	f := utl.Alloc(m, n)
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
 			f[i][j] = 8.0 * math.Exp(-math.Pow(x[i], 2)-math.Pow(y[j], 4))
@@ -123,7 +122,7 @@ func Test_Disc2dInteg03(tst *testing.T) {
 	x := utl.LinSpace(0, 3, 5)
 	y := utl.LinSpace(1, 2, 5)
 	m, n := len(x), len(y)
-	f := la.MatAlloc(m, n)
+	f := utl.Alloc(m, n)
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
 			f[i][j] = 1.0 + 8.0*x[i]*y[j]
@@ -146,7 +145,7 @@ func Test_Disc2dInteg04(tst *testing.T) {
 	x := utl.LinSpace(0, math.Pi/2.0, 11)
 	y := utl.LinSpace(0, 1, 11)
 	m, n := len(x), len(y)
-	f := la.MatAlloc(m, n)
+	f := utl.Alloc(m, n)
 	for i := 0; i < m; i++ {
 		for j := 0; j < n; j++ {
 			f[i][j] = math.Sin(x[i]) * y[j]

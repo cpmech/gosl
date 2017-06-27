@@ -18,21 +18,21 @@ type ERKdat struct {
 	c     []float64   // c coefficients
 }
 
-func erk_accept(o *Solver, y []float64) {
-	la.VecCopy(y, 1, o.w[0]) // update y
+func erk_accept(o *Solver, y la.Vector) {
+	y.Apply(1, o.w[0]) // y := w (update y)
 }
 
 // explicit Runge-Kutta step function
-func erk_step(o *Solver, y []float64, x float64) (rerr float64, err error) {
+func erk_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 
 	for i := 0; i < o.nstg; i++ {
 		o.u[i] = x + o.h*o.erkdat.c[i]
-		la.VecCopy(o.v[i], 1, y)
+		o.v[i].Apply(1, y) // v[i] := y
 		for j := 0; j < i; j++ {
-			la.VecAdd(o.v[i], o.h*o.erkdat.a[i][j], o.f[j])
+			la.VecAdd(o.v[i], 1, o.v[i], o.h*o.erkdat.a[i][j], o.f[j]) // v[i] += h*a[i][j]*f[j]
 		}
 		if i == 0 && o.erkdat.usefp && !o.first {
-			la.VecCopy(o.f[i], 1, o.f[o.nstg-1])
+			o.f[i].Apply(1, o.f[o.nstg-1]) // f[i] := f[nstg-1]
 		} else {
 			o.Nfeval += 1
 			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i])

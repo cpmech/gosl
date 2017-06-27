@@ -8,12 +8,12 @@ import (
 	"math"
 	"math/rand"
 
-	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // UnitVectors generates random unit vectors in 3D
 func UnitVectors(n int) (U [][]float64) {
-	U = la.MatAlloc(n, 3)
+	U = utl.Alloc(n, 3)
 	for i := 0; i < n; i++ {
 		φ := 2.0 * math.Pi * rand.Float64()
 		θ := math.Acos(1.0 - 2.0*rand.Float64())

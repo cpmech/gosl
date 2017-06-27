@@ -8,8 +8,8 @@ import (
 	"math"
 	"testing"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
 
@@ -62,19 +62,12 @@ func CompareJac(tst *testing.T, ffcn fun.Vv, Jfcn fun.Tv, x []float64, tol float
 	var Jnum la.Triplet
 	Jnum.Init(n, n, n*n)
 	Jacobian(&Jnum, ffcn, x, fx, w)
-	jn := Jnum.ToMatrix(nil)
 
 	// analytical
 	var Jana la.Triplet
 	Jana.Init(n, n, n*n)
 	Jfcn(&Jana, x)
-	ja := Jana.ToMatrix(nil)
 
 	// compare
-	max_diff := la.MatMaxDiff(jn.ToDense(), ja.ToDense())
-	if max_diff > tol {
-		tst.Errorf("[1;31mmax_diff = %g[0m\n", max_diff)
-	} else {
-		io.Pf("[1;32mmax_diff = %g[0m\n", max_diff)
-	}
+	chk.Vector(tst, "Jacobian matrix", tol, Jnum.GetDenseMatrix().Data, Jana.GetDenseMatrix().Data)
 }

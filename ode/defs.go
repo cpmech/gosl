@@ -19,7 +19,7 @@ import "github.com/cpmech/gosl/la"
 //   Output:
 //     f -- {f}(h, x, {y})
 //
-type Func func(f []float64, h, x float64, y []float64) error
+type Func func(f la.Vector, h, x float64, y la.Vector) error
 
 // JacF defines the Jacobian matrix of Func
 //
@@ -34,7 +34,7 @@ type Func func(f []float64, h, x float64, y []float64) error
 //   Output:
 //     dfdy -- Jacobian matrix d{f}/d{y} := [J](h=dx, x, {y})
 //
-type JacF func(dfdy *la.Triplet, h, x float64, y []float64) error
+type JacF func(dfdy *la.Triplet, h, x float64, y la.Vector) error
 
 // OutF defines a "callback" function to be called during the output of results
 //   Input:
@@ -44,10 +44,10 @@ type JacF func(dfdy *la.Triplet, h, x float64, y []float64) error
 //     y     -- vector variable
 //   Output:
 //     error -- this function can return an error to force stopping the simulation
-type OutF func(first bool, h, x float64, y []float64) error
+type OutF func(first bool, h, x float64, y la.Vector) error
 
 // stpfcn defines the step function interface to implement ODE solvers
-type stpfcn func(o *Solver, y []float64, x float64) (rerr float64, err error)
+type stpfcn func(o *Solver, y la.Vector, x float64) (rerr float64, err error)
 
 // acptfcn defines the "accept update" function interface to implement ODE solvers
-type acptfcn func(o *Solver, y []float64)
+type acptfcn func(o *Solver, y la.Vector)

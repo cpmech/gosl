@@ -7,7 +7,6 @@ package gm
 import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -45,9 +44,9 @@ func (o *Nurbs) PlotBasis2d(l int, npts, option int) {
 		plt.Gll("$u$", io.Sf("$S_%d$", l), nil)
 	// surface
 	case 2:
-		xx := la.MatAlloc(npts, npts)
-		yy := la.MatAlloc(npts, npts)
-		zz := la.MatAlloc(npts, npts)
+		xx := utl.Alloc(npts, npts)
+		yy := utl.Alloc(npts, npts)
+		zz := utl.Alloc(npts, npts)
 		du0 := (o.b[0].tmax - o.b[0].tmin) / float64(npts-1)
 		du1 := (o.b[1].tmax - o.b[1].tmin) / float64(npts-1)
 		for m := 0; m < npts; m++ {
@@ -96,9 +95,9 @@ func (o *Nurbs) PlotDeriv2d(l, d int, npts int) {
 		plt.Gll("$u$", io.Sf("$G_%d$", l), nil)
 	// surface
 	case 2:
-		xx := la.MatAlloc(npts, npts)
-		yy := la.MatAlloc(npts, npts)
-		zz := la.MatAlloc(npts, npts)
+		xx := utl.Alloc(npts, npts)
+		yy := utl.Alloc(npts, npts)
+		zz := utl.Alloc(npts, npts)
 		du0 := (o.b[0].tmax - o.b[0].tmin) / float64(npts-1)
 		du1 := (o.b[1].tmax - o.b[1].tmin) / float64(npts-1)
 		drdu := make([]float64, 2)

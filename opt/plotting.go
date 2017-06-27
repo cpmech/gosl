@@ -6,7 +6,6 @@ package opt
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -34,7 +33,7 @@ func PlotTwoVarsContour(x []float64, np int, extra func(), axequal bool,
 	var Zf [][]float64
 	var Zg [][][]float64
 	if f != nil {
-		Zf = la.MatAlloc(np, np)
+		Zf = utl.Alloc(np, np)
 	}
 	if len(gs) > 0 {
 		Zg = utl.Deep3alloc(len(gs), np, np)

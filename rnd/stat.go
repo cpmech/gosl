@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // StatAve computes the average of x values
@@ -237,14 +237,14 @@ func StatTable(x [][]float64, std, withZ bool) (y, z [][]float64) {
 	}
 
 	// compute y
-	y = la.MatAlloc(4, m)
+	y = utl.Alloc(4, m)
 	for i := 0; i < m; i++ {
 		y[0][i], y[1][i], y[2][i], y[3][i] = StatBasic(x[i], std)
 	}
 
 	// compute z
 	if withZ {
-		z = la.MatAlloc(4, 4)
+		z = utl.Alloc(4, 4)
 		for i := 0; i < 4; i++ {
 			z[0][i], z[1][i], z[2][i], z[3][i] = StatBasic(y[i], std)
 		}

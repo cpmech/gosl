@@ -24,16 +24,16 @@ func Test_ode01(tst *testing.T) {
 
 	lam := -50.0
 	xa, xb := 0.0, 1.5
-	ya := []float64{0.0}
+	ya := la.Vector([]float64{0.0})
 	ndim := len(ya)
-	y := make([]float64, ndim)
+	y := la.NewVector(ndim)
 
-	fcn := func(f []float64, dx, x float64, y []float64) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
 		f[0] = lam*y[0] - lam*math.Cos(x)
 		return nil
 	}
 
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(1, 1, 1)
 		}
@@ -156,12 +156,12 @@ func Test_ode02(tst *testing.T) {
 
 	// problem definition
 	eps := 1.0e-6
-	fcn := func(f []float64, dx, x float64, y []float64) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
 		f[0] = y[1]
 		f[1] = ((1.0-y[0]*y[0])*y[1] - y[0]) / eps
 		return nil
 	}
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(2, 2, 4)
 		}
@@ -179,7 +179,7 @@ func Test_ode02(tst *testing.T) {
 	method := "Radau5"
 	numjac := false
 	xa, xb := 0.0, 2.0
-	ya := []float64{2.0, -0.6}
+	ya := la.Vector([]float64{2.0, -0.6})
 	ndim := len(ya)
 
 	// allocate ODE object
@@ -199,7 +199,7 @@ func Test_ode02(tst *testing.T) {
 	o.SaveXY = true
 
 	// solve problem
-	y := make([]float64, ndim)
+	y := la.NewVector(ndim)
 	copy(y, ya)
 	t0 := time.Now()
 	if fixstp {
@@ -239,7 +239,7 @@ func Test_ode02(tst *testing.T) {
 		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl", "vdpolA")
+		plt.Save("/tmp/gosl/ode", "vdpolA")
 	}
 }
 
@@ -249,13 +249,13 @@ func Test_ode03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ode03: Hairer-Wanner VII-p3 Eq.(1.4) Robertson's Equation")
 
-	fcn := func(f []float64, dx, x float64, y []float64) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
 		f[0] = -0.04*y[0] + 1.0e4*y[1]*y[2]
 		f[1] = 0.04*y[0] - 1.0e4*y[1]*y[2] - 3.0e7*y[1]*y[1]
 		f[2] = 3.0e7 * y[1] * y[1]
 		return nil
 	}
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(3, 3, 9)
 		}
@@ -277,7 +277,7 @@ func Test_ode03(tst *testing.T) {
 	//method := "Dopri5"
 	method := "Radau5"
 	xa, xb := 0.0, 0.3
-	ya := []float64{1.0, 0.0, 0.0}
+	ya := la.Vector([]float64{1.0, 0.0, 0.0})
 	ndim := len(ya)
 
 	// allocate ODE object
@@ -292,7 +292,7 @@ func Test_ode03(tst *testing.T) {
 	o.IniH = 1.0e-6
 
 	// solve problem
-	y := make([]float64, ndim)
+	y := la.NewVector(ndim)
 	copy(y, ya)
 	if fixstp {
 		o.Solve(y, xa, xb, 0.01, fixstp)
@@ -330,14 +330,14 @@ func Test_ode03(tst *testing.T) {
 		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl", "rober")
+		plt.Save("/tmp/gosl/ode", "rober")
 	}
 }
 
 func Test_ode04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ode04: Hairer-Wanner VII-p376 Transistor Amplifier\n")
+	chk.PrintTitle("ode04: Hairer-Wanner VII-p376 Transistor Amplifier")
 	// NOTE: from E Hairer's website, not the system in the book
 
 	// data
@@ -348,14 +348,15 @@ func Test_ode04(tst *testing.T) {
 
 	// initial values
 	xa := 0.0
-	ya := []float64{0.0,
+	ya := la.Vector([]float64{0.0,
 		UB,
 		UB / (R6/R5 + 1.0),
 		UB / (R6/R5 + 1.0),
 		UB,
 		UB / (R2/R1 + 1.0),
 		UB / (R2/R1 + 1.0),
-		0.0}
+		0.0,
+	})
 
 	// endpoint of integration
 	xb := 0.05
@@ -363,7 +364,7 @@ func Test_ode04(tst *testing.T) {
 	//xb = 0.01235 // !OK
 
 	// right-hand side of the amplifier problem
-	fcn := func(f []float64, dx, x float64, y []float64) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
 		UET := UE * math.Sin(W*x)
 		FAC1 := BETA * (math.Exp((y[3]-y[2])/UF) - 1.0)
 		FAC2 := BETA * (math.Exp((y[6]-y[5])/UF) - 1.0)
@@ -379,7 +380,7 @@ func Test_ode04(tst *testing.T) {
 	}
 
 	// Jacobian of the amplifier problem
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
 		FAC14 := BETA * math.Exp((y[3]-y[2])/UF) / UF
 		FAC27 := BETA * math.Exp((y[6]-y[5])/UF) / UF
 		if dfdy.Max() == 0 {
@@ -493,6 +494,6 @@ func Test_ode04(tst *testing.T) {
 		plt.SetYlog()
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl", "hwamplifier")
+		plt.Save("/tmp/gosl/ode", "hwamplifier")
 	}
 }
