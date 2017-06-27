@@ -10,7 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x_correct []float64, verbose bool) {
+func runLinsolR(tst *testing.T, t *Triplet, tol_cmp, tolRes float64, b, xCorrect []float64, verbose bool) {
 
 	// info
 	symmetric := false
@@ -41,11 +41,11 @@ func run_linsol_testR(tst *testing.T, t *Triplet, tol_cmp, tol_res float64, b, x
 	}
 
 	// check
-	chk.Vector(tst, "x", tol_cmp, x, x_correct)
-	checkResid(tst, t.GetDenseMatrix(), x, b, tol_res)
+	chk.Vector(tst, "x", tol_cmp, x, xCorrect)
+	checkResid(tst, t.GetDenseMatrix(), x, b, tolRes)
 }
 
-func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, x_correct []complex128, verbose bool) {
+func runLinsolC(tst *testing.T, t *TripletC, tol_cmp, tolRes float64, b, xCorrect []complex128, verbose bool) {
 
 	// info
 	symmetric := false
@@ -79,67 +79,67 @@ func run_linsol_testC(tst *testing.T, t *TripletC, tol_cmp, tol_res float64, b, 
 	x := RCtoComplex(xR, xC)
 
 	// check
-	checkResidC(tst, t.GetDenseMatrix(), x, b, tol_res)
+	checkResidC(tst, t.GetDenseMatrix(), x, b, tolRes)
 }
 
-func Test_linsol01a(tst *testing.T) {
+func TestLinsol01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linsol01a. real")
+	chk.PrintTitle("Linsol01a. real")
 
 	// input matrix data into Triplet
 	var t Triplet
 	t.Init(5, 5, 13)
-	t.Put(0, 0, 1.0)
-	t.Put(0, 0, 1.0)
-	t.Put(1, 0, 3.0)
-	t.Put(0, 1, 3.0)
+	t.Put(0, 0, +1.0) // << duplicated
+	t.Put(0, 0, +1.0) // << duplicated
+	t.Put(1, 0, +3.0)
+	t.Put(0, 1, +3.0)
 	t.Put(2, 1, -1.0)
-	t.Put(4, 1, 4.0)
-	t.Put(1, 2, 4.0)
+	t.Put(4, 1, +4.0)
+	t.Put(1, 2, +4.0)
 	t.Put(2, 2, -3.0)
-	t.Put(3, 2, 1.0)
-	t.Put(4, 2, 2.0)
-	t.Put(2, 3, 2.0)
-	t.Put(1, 4, 6.0)
-	t.Put(4, 4, 1.0)
+	t.Put(3, 2, +1.0)
+	t.Put(4, 2, +2.0)
+	t.Put(2, 3, +2.0)
+	t.Put(1, 4, +6.0)
+	t.Put(4, 4, +1.0)
 
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
-	x_correct := []float64{1, 2, 3, 4, 5}
-	run_linsol_testR(tst, &t, 1e-14, 1e-13, b, x_correct, false)
+	xCorrect := []float64{1, 2, 3, 4, 5}
+	runLinsolR(tst, &t, 1e-14, 1e-13, b, xCorrect, false)
 }
 
-func Test_linsol01b(tst *testing.T) {
+func TestLinsol01b(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linsol01b. real. go-routines")
+	chk.PrintTitle("Linsol01b. real. go-routines")
 
 	// input matrix data into Triplet
 	var t Triplet
 	t.Init(5, 5, 13)
-	t.Put(0, 0, 1.0)
-	t.Put(0, 0, 1.0)
-	t.Put(1, 0, 3.0)
-	t.Put(0, 1, 3.0)
+	t.Put(0, 0, +1.0) // << duplicated
+	t.Put(0, 0, +1.0) // << duplicated
+	t.Put(1, 0, +3.0)
+	t.Put(0, 1, +3.0)
 	t.Put(2, 1, -1.0)
-	t.Put(4, 1, 4.0)
-	t.Put(1, 2, 4.0)
+	t.Put(4, 1, +4.0)
+	t.Put(1, 2, +4.0)
 	t.Put(2, 2, -3.0)
-	t.Put(3, 2, 1.0)
-	t.Put(4, 2, 2.0)
-	t.Put(2, 3, 2.0)
-	t.Put(1, 4, 6.0)
-	t.Put(4, 4, 1.0)
+	t.Put(3, 2, +1.0)
+	t.Put(4, 2, +2.0)
+	t.Put(2, 3, +2.0)
+	t.Put(1, 4, +6.0)
+	t.Put(4, 4, +1.0)
 
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
-	x_correct := []float64{1, 2, 3, 4, 5}
+	xCorrect := []float64{1, 2, 3, 4, 5}
 	nch := 2
 	done := make(chan int, nch)
 	for i := 0; i < nch; i++ {
 		go func() {
-			run_linsol_testR(tst, &t, 1e-14, 1e-13, b, x_correct, false)
+			runLinsolR(tst, &t, 1e-14, 1e-13, b, xCorrect, false)
 			done <- 1
 		}()
 	}
@@ -148,10 +148,10 @@ func Test_linsol01b(tst *testing.T) {
 	}
 }
 
-func Test_linsol02(tst *testing.T) {
+func TestLinsol02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linsol02. real")
+	chk.PrintTitle("Linsol02. real")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -172,43 +172,43 @@ func Test_linsol02(tst *testing.T) {
 
 	// run test
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
-	x_correct := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
+	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
 	tol := 1e-9 // TODO: check why tests fails with 1e-10 @ office but not @ home
-	run_linsol_testR(tst, &t, 1e-4, tol, b, x_correct, false)
+	runLinsolR(tst, &t, 1e-4, tol, b, xCorrect, false)
 }
 
-func Test_linsol03(tst *testing.T) {
+func TestLinsol03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linsol03. complex (but real)")
+	chk.PrintTitle("Linsol03. complex (but without imaginary part)")
 
 	// input matrix data into Triplet
 	var t TripletC
 	t.Init(5, 5, 13, false)
-	t.Put(0, 0, 1.0, 0)
-	t.Put(0, 0, 1.0, 0)
-	t.Put(1, 0, 3.0, 0)
-	t.Put(0, 1, 3.0, 0)
+	t.Put(0, 0, +1.0, 0)
+	t.Put(0, 0, +1.0, 0)
+	t.Put(1, 0, +3.0, 0)
+	t.Put(0, 1, +3.0, 0)
 	t.Put(2, 1, -1.0, 0)
-	t.Put(4, 1, 4.0, 0)
-	t.Put(1, 2, 4.0, 0)
+	t.Put(4, 1, +4.0, 0)
+	t.Put(1, 2, +4.0, 0)
 	t.Put(2, 2, -3.0, 0)
-	t.Put(3, 2, 1.0, 0)
-	t.Put(4, 2, 2.0, 0)
-	t.Put(2, 3, 2.0, 0)
-	t.Put(1, 4, 6.0, 0)
-	t.Put(4, 4, 1.0, 0)
+	t.Put(3, 2, +1.0, 0)
+	t.Put(4, 2, +2.0, 0)
+	t.Put(2, 3, +2.0, 0)
+	t.Put(1, 4, +6.0, 0)
+	t.Put(4, 4, +1.0, 0)
 
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
-	x_correct := []complex128{1, 2, 3, 4, 5}
-	run_linsol_testC(tst, &t, 1e-14, 1e-13, b, x_correct, true)
+	xCorrect := []complex128{1, 2, 3, 4, 5}
+	runLinsolC(tst, &t, 1e-14, 1e-13, b, xCorrect, true)
 }
 
-func Test_linsol04(tst *testing.T) {
+func TestLinsol04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linsol04. complex (but real)")
+	chk.PrintTitle("Linsol04. complex (but real)")
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -229,19 +229,19 @@ func Test_linsol04(tst *testing.T) {
 
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
-	x_correct := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	run_linsol_testC(tst, &t, 1e-4, 1e-9, b, x_correct, true)
+	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
+	runLinsolC(tst, &t, 1e-4, 1e-9, b, xCorrect, true)
 }
 
-func Test_linsol05(tst *testing.T) {
+func TestLinsol05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linsol05. complex (but real)")
+	chk.PrintTitle("Linsol05. complex (but real)")
 
 	// data
 	n := 10
 	b := make([]complex128, n)
-	x_correct := make([]complex128, n)
+	xCorrect := make([]complex128, n)
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -254,21 +254,21 @@ func Test_linsol05(tst *testing.T) {
 		t.Put(i, i, ar, ac)
 
 		// Let exact solution = 1 + 0.5i
-		x_correct[i] = complex(float64(i+1), float64(i+1)/10.0)
+		xCorrect[i] = complex(float64(i+1), float64(i+1)/10.0)
 
 		// Generate RHS to match exact solution
-		b[i] = complex(ar*real(x_correct[i])-ac*imag(x_correct[i]),
-			ar*imag(x_correct[i])+ac*real(x_correct[i]))
+		b[i] = complex(ar*real(xCorrect[i])-ac*imag(xCorrect[i]),
+			ar*imag(xCorrect[i])+ac*real(xCorrect[i]))
 	}
 
 	// run test
-	run_linsol_testC(tst, &t, 1e-14, 1e-13, b, x_correct, true)
+	runLinsolC(tst, &t, 1e-14, 1e-13, b, xCorrect, true)
 }
 
-func Test_linsol06(tst *testing.T) {
+func TestLinsol06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linsol06. complex (with complex components)")
+	chk.PrintTitle("Linsol06. complex (with complex components)")
 
 	// given the following matrix of complex numbers:
 	//      _                                                  _
@@ -340,7 +340,7 @@ func Test_linsol06(tst *testing.T) {
 	}
 
 	// solution
-	x_correct := []complex128{
+	xCorrect := []complex128{
 		3.3 - 1i,
 		1 + 0.17i,
 		5.5,
@@ -349,5 +349,5 @@ func Test_linsol06(tst *testing.T) {
 	}
 
 	// run test
-	run_linsol_testC(tst, &t, 1e-3, 1e-12, b, x_correct, true)
+	runLinsolC(tst, &t, 1e-3, 1e-12, b, xCorrect, true)
 }
