@@ -6,10 +6,33 @@ package la
 
 import (
 	"math"
+	"math/cmplx"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 )
+
+func checkResid(tst *testing.T, a *Matrix, x, b Vector, tolNorm float64) {
+	r := NewVector(len(x))
+	r.Apply(-1, b)           // r := -b
+	MatVecMulAdd(r, 1, a, x) // r += 1*a*x
+	resid := r.Norm()
+	if resid > tolNorm {
+		tst.Errorf("residual is too large: %g\n", resid)
+		return
+	}
+}
+
+func checkResidC(tst *testing.T, a *MatrixC, x, b VectorC, tolNorm float64) {
+	r := NewVectorC(len(x))
+	r.Apply(-1, b)            // r = -b
+	MatVecMulAddC(r, 1, a, x) // r += 1*a*x
+	resid := cmplx.Abs(r.Norm())
+	if resid > tolNorm {
+		tst.Errorf("residual is too large: %g\n", resid)
+		return
+	}
+}
 
 func calcLLt(L *Matrix) (LLt *Matrix) {
 	LLt = NewMatrix(L.M, L.M)

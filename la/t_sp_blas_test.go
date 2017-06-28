@@ -11,10 +11,10 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func TestSparseBlas01(tst *testing.T) {
+func TestSpBlas01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas01. (real) matrix vector multiplication")
+	chk.PrintTitle("SpBlas01. (real) matrix vector multiplication")
 
 	var t Triplet
 	t.Init(3, 5, 15)
@@ -69,28 +69,28 @@ func TestSparseBlas01(tst *testing.T) {
 	chk.Vector(tst, "r += trans(a)*w", 1e-17, r, []float64{1312, 1624, 1936, 2248, 2560})
 }
 
-func TestSparseBlas02(tst *testing.T) {
+func TestSpBlas02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas02. (complex) matrix vector multiplication")
+	chk.PrintTitle("SpBlas02. (complex) matrix vector multiplication")
 
 	var t TripletC
-	t.Init(3, 5, 15, false)
-	t.Put(0, 0, 1, 0)
-	t.Put(0, 1, 2, 0)
-	t.Put(0, 2, 3, 0)
-	t.Put(0, 3, 4, 0)
-	t.Put(0, 4, 5, 0)
-	t.Put(1, 0, 0.1, 0)
-	t.Put(1, 1, 0.2, 0)
-	t.Put(1, 2, 0.3, 0)
-	t.Put(1, 3, 0.4, 0)
-	t.Put(1, 4, 0.5, 0)
-	t.Put(2, 0, 10, 0)
-	t.Put(2, 1, 20, 0)
-	t.Put(2, 2, 30, 0)
-	t.Put(2, 3, 40, 0)
-	t.Put(2, 4, 50, 0)
+	t.Init(3, 5, 15)
+	t.Put(0, 0, 1+0i)
+	t.Put(0, 1, 2+0i)
+	t.Put(0, 2, 3+0i)
+	t.Put(0, 3, 4+0i)
+	t.Put(0, 4, 5+0i)
+	t.Put(1, 0, 0.1+0i)
+	t.Put(1, 1, 0.2+0i)
+	t.Put(1, 2, 0.3+0i)
+	t.Put(1, 3, 0.4+0i)
+	t.Put(1, 4, 0.5+0i)
+	t.Put(2, 0, 10+0i)
+	t.Put(2, 1, 20+0i)
+	t.Put(2, 2, 30+0i)
+	t.Put(2, 3, 40+0i)
+	t.Put(2, 4, 50+0i)
 
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
@@ -120,28 +120,28 @@ func TestSparseBlas02(tst *testing.T) {
 	chk.VectorC(tst, "r += trans(a)*w", 1e-17, r, []complex128{1312, 1624, 1936, 2248, 2560})
 }
 
-func TestSparseBlas03(tst *testing.T) {
+func TestSpBlas03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas03 (complex) matrix vector multiplication")
+	chk.PrintTitle("SpBlas03 (complex) matrix vector multiplication")
 
 	var t TripletC
-	t.Init(3, 5, 15, false)
-	t.Put(0, 0, 1, 0)
-	t.Put(0, 1, 2, -1)
-	t.Put(0, 2, 3, 0)
-	t.Put(0, 3, 4, 3)
-	t.Put(0, 4, 5, 2)
-	t.Put(1, 0, 0.1, 1)
-	t.Put(1, 1, 0.2, 0)
-	t.Put(1, 2, 0.3, -2)
-	t.Put(1, 3, 0.4, 0)
-	t.Put(1, 4, 0.5, -1)
-	t.Put(2, 0, 10, 0)
-	t.Put(2, 1, 20, 2)
-	t.Put(2, 2, 30, 0)
-	t.Put(2, 3, 40, -1)
-	t.Put(2, 4, 50, 0)
+	t.Init(3, 5, 15)
+	t.Put(0, 0, 1+0i)
+	t.Put(0, 1, 2-1i)
+	t.Put(0, 2, 3+0i)
+	t.Put(0, 3, 4+3i)
+	t.Put(0, 4, 5+2i)
+	t.Put(1, 0, 0.1+1i)
+	t.Put(1, 1, 0.2+0i)
+	t.Put(1, 2, 0.3-2i)
+	t.Put(1, 3, 0.4+0i)
+	t.Put(1, 4, 0.5-1i)
+	t.Put(2, 0, 10+0i)
+	t.Put(2, 1, 20+2i)
+	t.Put(2, 2, 30+0i)
+	t.Put(2, 3, 40-1i)
+	t.Put(2, 4, 50+0i)
 
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
@@ -171,10 +171,10 @@ func TestSparseBlas03(tst *testing.T) {
 	chk.VectorC(tst, "r += trans(a)*w", 1e-14, r, []complex128{1312.5 + 21.95i, 1625 + 52.9i, 1935 - 36.15i, 2245 + 4.8i, 2557.5 + 5.75i})
 }
 
-func TestSparseBlas04(tst *testing.T) {
+func TestSpBlas04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas04. Matrix addition")
+	chk.PrintTitle("SpBlas04. Matrix addition")
 
 	var ta Triplet
 	ta.Init(3, 3, 4)
@@ -211,10 +211,10 @@ func TestSparseBlas04(tst *testing.T) {
 	chk.Matrix(tst, "c", 1e-17, c.ToDense().GetSlice(), [][]float64{{1, 2, 0}, {5, 0, 1}, {0, 3, 5}})
 }
 
-func TestSparseBlas05(tst *testing.T) {
+func TestSpBlas05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas05 Matrix addition")
+	chk.PrintTitle("SpBlas05 Matrix addition")
 
 	var ta Triplet
 	ta.Init(5, 6, 9)
@@ -270,10 +270,10 @@ func TestSparseBlas05(tst *testing.T) {
 	})
 }
 
-func TestSparseBlas06(tst *testing.T) {
+func TestSpBlas06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas06. (real and complex) Matrix addition")
+	chk.PrintTitle("SpBlas06. (real and complex) Matrix addition")
 
 	var ta Triplet
 	ta.Init(5, 6, 9)
@@ -287,7 +287,6 @@ func TestSparseBlas06(tst *testing.T) {
 	ta.Put(0, 5, 7)
 	ta.Put(2, 5, 8)
 	a := ta.ToMatrix(nil)
-	io.Pf("a = %+v\n", a)
 	chk.Vector(tst, "a.x", 1e-17, a.x, []float64{1, 2, 3, 3, 1, 1, 5, 7, 8})
 	chk.Ints(tst, "a.i", a.i, []int{0, 2, 4, 1, 3, 0, 4, 0, 2})
 	chk.Ints(tst, "a.p", a.p, []int{0, 3, 3, 5, 7, 7, 9})
@@ -307,7 +306,6 @@ func TestSparseBlas06(tst *testing.T) {
 	tb.Put(2, 5, 2)
 	tb.Put(4, 5, 1)
 	b := tb.ToMatrix(nil)
-	io.Pf("b = %+v\n", b)
 	chk.Vector(tst, "b.x", 1e-17, b.x, []float64{1, 8, 1, 2, 3, 4, 5, 5, 1, 4, 2, 1})
 	chk.Ints(tst, "b.i", b.i, []int{1, 3, 0, 1, 2, 3, 4, 2, 0, 1, 2, 4})
 	chk.Ints(tst, "b.p", b.p, []int{0, 0, 2, 7, 7, 8, 12})
@@ -323,11 +321,8 @@ func TestSparseBlas06(tst *testing.T) {
 	//    c :=      γ*a + μ*b
 	//    d := (α+βi)*a + μ*b
 	SpMatAddMatC(&d, c, α, β, γ, a, μ, b, a2c, b2c)
-	io.Pf("c = %+v\n", c)
-	io.Pf("d = %+v\n", d)
 	chk.Vector(tst, "c.x", 1e-16, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
-	chk.Vector(tst, "d.x", 1e-16, d.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
-	chk.Vector(tst, "d.z", 1e-17, d.z, []float64{1, 2, 3, 0, 0, 0, 3, 0, 1, 0, 1, 5, 0, 7, 0, 8, 0})
+	chk.VectorC(tst, "d.x", 1e-16, d.x, []complex128{0.1 + 1i, 0.2 + 2i, 0.3 + 3i, 2, 16, 2, 4.3 + 3i, 6, 8.1 + 1i, 10, 0.1 + 1i, 0.5 + 5i, 10, 2.7 + 7i, 8, 4.8 + 8i, 2})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 2, 6, 8, 10, 11, 13, 15})
 	chk.Ints(tst, "b2c", b2c, []int{3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16})
 	chk.Matrix(tst, "c", 1e-16, c.ToDense().GetSlice(), [][]float64{
@@ -346,10 +341,10 @@ func TestSparseBlas06(tst *testing.T) {
 	})
 }
 
-func TestSparseBlas07(tst *testing.T) {
+func TestSpBlas07(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas07. SpTriAdd")
+	chk.PrintTitle("SpBlas07. SpTriAdd")
 
 	var ta Triplet
 	ta.Init(5, 6, 9)
@@ -393,10 +388,10 @@ func TestSparseBlas07(tst *testing.T) {
 	})
 }
 
-func TestSparseBlas08(tst *testing.T) {
+func TestSpBlas08(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas08. SpTriAddR2C")
+	chk.PrintTitle("SpBlas08. SpTriAddR2C")
 
 	var ta Triplet
 	ta.Init(5, 6, 9)
@@ -428,7 +423,7 @@ func TestSparseBlas08(tst *testing.T) {
 	io.Pf("tb = %+v\n", tb)
 
 	var td TripletC
-	td.Init(5, 6, ta.Len()+tb.Len(), false)
+	td.Init(5, 6, ta.Len()+tb.Len())
 	α, β, μ := 0.1, 1.0, 2.0
 	// d := (α+βi)*a + μ*b
 	SpTriAddR2C(&td, α, β, &ta, μ, &tb)
@@ -442,10 +437,10 @@ func TestSparseBlas08(tst *testing.T) {
 	})
 }
 
-func TestSparseBlas09(tst *testing.T) {
+func TestSpBlas09(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas09. SpTriSetDiag")
+	chk.PrintTitle("SpBlas09. SpTriSetDiag")
 
 	var a Triplet
 	SpTriSetDiag(&a, 4, 666.0)
@@ -458,10 +453,10 @@ func TestSparseBlas09(tst *testing.T) {
 	})
 }
 
-func TestSparseBlas10(tst *testing.T) {
+func TestSpBlas10(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas10: SpTriMatTrVecMul")
+	chk.PrintTitle("SpBlas10: SpTriMatTrVecMul")
 
 	var a Triplet
 	a.Init(3, 5, 15)
@@ -494,10 +489,10 @@ func TestSparseBlas10(tst *testing.T) {
 	chk.Vector(tst, "z=a*u", 1e-17, z, []float64{4800, 2154, 3126})
 }
 
-func TestSparseBlas11(tst *testing.T) {
+func TestSpBlas11(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseBlas11: SpMatMatTrMul")
+	chk.PrintTitle("SpBlas11: SpMatMatTrMul")
 
 	var T1 Triplet
 	T1.Init(2, 3, 3)

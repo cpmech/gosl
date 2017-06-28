@@ -4,45 +4,59 @@
 
 package la
 
-import (
-	"time"
+import "github.com/cpmech/gosl/chk"
 
-	"github.com/cpmech/gosl/chk"
-)
-
-// LinSol defines solvers for linear systems of equations
-type LinSol interface {
-	InitR(tR *Triplet, symmetric, verbose, timing bool) error  // init for Real solution
-	InitC(tC *TripletC, symmetric, verbose, timing bool) error // init for Complex solution
-	Fact() error                                               // factorise
-	SolveR(xR, bR Vector, sum_b_to_root bool) error            // solve Real problem. x = inv(A) * b
-	SolveC(xR, xC, bR, bC Vector, sum_b_to_root bool) error    // solve Complex problem x = inv(A) * b
-	Free()                                                     // free memory
-	SetOrdScal(ordering, scaling string) error                 // set ordering and scaling method
+// SparseSolver solves sparse linear systems using UMFPACK or MUMPS
+//
+//   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
+//
+type SparseSolver interface {
+	Init(t *Triplet, symmetric, verbose bool, ordering, scaling string) error
+	Free()
+	Fact() error
+	Solve(x, b Vector, sumBtoRoot bool) error
 }
 
-// lsAllocators is a "factory" for making linear solvers
-var lsAllocators = map[string]func() LinSol{} // maps solver name to solver allocator
+// spSolverMaker defines a function that makes spSolvers
+type spSolverMaker func() SparseSolver
 
-// GetSolver returns a linear solver by name. e.g. "umfpack" or "mumps"
-func GetSolver(name string) LinSol {
-	allocator, ok := lsAllocators[name]
-	if !ok {
-		chk.Panic("cannot find solver named %s in factory of linear solvers", name)
+// spSolverDB implements a database of SparseSolver makers
+var spSolverDB map[string]spSolverMaker = make(map[string]spSolverMaker)
+
+// NewSparseSolver finds a SparseSolver in database or panic
+//   kind -- "umfpack" or "mumps"
+func NewSparseSolver(kind string) SparseSolver {
+	if maker, ok := spSolverDB[kind]; ok {
+		return maker()
 	}
-	return allocator()
+	chk.Panic("cannot find SparseSolver named %q in database", kind)
+	return nil
 }
 
-// linSolData holds all data necessary to solve a sparse linear system like A.x = b
-// Two direct solvers are used on the background: UMFPACK or MUMPS. The second one
-// can be run in parallel via MPI. Both real and complex matrices are available
-type linSolData struct {
-	name  string    // solver name
-	sym   bool      // is symmetric
-	cmplx bool      // is complex
-	verb  bool      // verbose call
-	ton   bool      // timing is on
-	tR    *Triplet  // triplet structure (real)
-	tC    *TripletC // triplet structure (complex)
-	tini  time.Time // initial time
+// complex /////////////////////////////////////////////////////////////////////////////////////////
+
+// SparseSolverC solves sparse linear systems using UMFPACK or MUMPS (complex version)
+//
+//   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
+//
+type SparseSolverC interface {
+	Init(t *TripletC, symmetric, verbose bool, ordering, scaling string) error
+	Free()
+	Fact() error
+	Solve(x, b VectorC, sumBtoRoot bool) error
+}
+
+// spSolverMakerC defines a function that makes spSolvers (complex version)
+type spSolverMakerC func() SparseSolverC
+
+// spSolverDBc implements a database of SparseSolver makers (complex version)
+var spSolverDBc map[string]spSolverMakerC = make(map[string]spSolverMakerC)
+
+// NewSparseSolverC finds a SparseSolver in database or panic
+func NewSparseSolverC(kind string) SparseSolverC {
+	if maker, ok := spSolverDBc[kind]; ok {
+		return maker()
+	}
+	chk.Panic("cannot find SparseSolverC named %q in database", kind)
+	return nil
 }

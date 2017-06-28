@@ -10,10 +10,10 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-func TestSparseMatrix01(tst *testing.T) {
+func TestSpMatrix01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseMatrix01. Setting CCMatrix")
+	chk.PrintTitle("SpMatrix01. Setting CCMatrix")
 
 	//          ↓     ↓        ↓           ↓  ↓     ↓
 	//          0  1  2  3  4  5  6  7  8  9 10 11 12
@@ -33,10 +33,10 @@ func TestSparseMatrix01(tst *testing.T) {
 	})
 }
 
-func TestSparseMatrix02(tst *testing.T) {
+func TestSpMatrix02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SparseMatrix02. PutMatAndMatT, PutCCMatAndMatT")
+	chk.PrintTitle("SpMatrix02. PutMatAndMatT, PutCCMatAndMatT")
 
 	var K, L, A Triplet
 	K.Init(6, 6, 36+2*6) // 2*6 == number of nonzeros in A

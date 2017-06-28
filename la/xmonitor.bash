@@ -8,6 +8,6 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="Linsol03"
-    #go test
+    #go test -test.run="SpSolver06M"
+    go test
 done

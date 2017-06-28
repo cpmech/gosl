@@ -103,6 +103,17 @@ func (o *Triplet) GetDenseMatrix() (a *Matrix) {
 	return
 }
 
+// ToDense converts a column-compressed matrix to dense form
+func (a *CCMatrix) ToDense() (res *Matrix) {
+	res = NewMatrix(a.m, a.n)
+	for j := 0; j < a.n; j++ {
+		for p := a.p[j]; p < a.p[j+1]; p++ {
+			res.Set(a.i[p], j, a.x[p])
+		}
+	}
+	return
+}
+
 // Set sets column-compressed matrix directly
 func (o *CCMatrix) Set(m, n int, Ap, Ai []int, Ax []float64) {
 	if len(Ap)-1 != n {
@@ -121,51 +132,38 @@ func (o *CCMatrix) Set(m, n int, Ap, Ai []int, Ax []float64) {
 
 // complex /////////////////////////////////////////////////////////////////////////////////////////
 
-// TripletC is the equivalent to Triplet but with values stored as pairs of
-// float64 representing complex numbers
+// Triplet is a simple representation of a sparse matrix, where the indices and values
+// of this matrix are stored directly. (complex version)
 type TripletC struct {
-	m, n     int       // matrix dimension (rows, columns)
-	pos, max int       // current position and max number of entries allowed (non-zeros, including repetitions)
-	i, j     []int     // indices for each x values (size=max)
-	x        []float64 // x,z split: values for each i, j (size=max)
-	z        []float64 // x,z split: complex values
-	xz       []float64 // xz monolithic: real and complex values: {real,cmplx,r,c,r,c,...}
+	m, n     int          // matrix dimension (rows, columns)
+	pos, max int          // current position and max number of entries allowed (non-zeros, including repetitions)
+	i, j     []int        // indices for each x values (size=max)
+	x        []complex128 // values for each i, j (size=max)
 }
 
-// CCMatrixC is the equivalent to CCMatrix but with values stored as paris of
-// float64 representing compressed numbers
+// CCMatrix represents a sparse matrix using the so-called "column-compressed format".
+// (complex version)
 type CCMatrixC struct {
-	m, n int       // matrix dimension (rows, columns)
-	nnz  int       // number of non-zeros
-	p, i []int     // pointers and row indices (len(p)=n+1, len(i)=nnz)
-	x    []float64 // values (len(x)=nnz)
-	z    []float64 // complex values (len(z)=nnz)
+	m, n int          // matrix dimension (rows, columns)
+	nnz  int          // number of non-zeros
+	p, i []int        // pointers and row indices (len(p)=n+1, len(i)=nnz)
+	x    []complex128 // values (len(x)=nnz)
 }
 
 // Init allocates all memory required to hold a sparse matrix in triplet (complex) form
-func (o *TripletC) Init(m, n, max int, xzmonolithic bool) {
+func (o *TripletC) Init(m, n, max int) {
 	o.m, o.n, o.pos, o.max = m, n, 0, max
 	o.i = make([]int, max)
 	o.j = make([]int, max)
-	if xzmonolithic {
-		o.xz = make([]float64, 2*max)
-	} else {
-		o.x = make([]float64, max)
-		o.z = make([]float64, max)
-	}
+	o.x = make([]complex128, max)
 }
 
 // Put inserts an element to a pre-allocated (with Init) triplet (complex) matrix
-func (o *TripletC) Put(i, j int, x, z float64) {
+func (o *TripletC) Put(i, j int, x complex128) {
 	if o.pos >= o.max {
 		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", o.pos, o.max)
 	}
-	o.i[o.pos], o.j[o.pos] = i, j
-	if o.xz != nil {
-		o.xz[o.pos*2], o.xz[o.pos*2+1] = x, z
-	} else {
-		o.x[o.pos], o.z[o.pos] = x, z
-	}
+	o.i[o.pos], o.j[o.pos], o.x[o.pos] = i, j, x
 	o.pos++
 }
 
@@ -189,18 +187,7 @@ func (o *TripletC) Max() int {
 func (o *TripletC) GetDenseMatrix() (a *MatrixC) {
 	a = NewMatrixC(o.m, o.n)
 	for k := 0; k < o.max; k++ {
-		a.Add(o.i[k], o.j[k], complex(o.x[k], o.z[k]))
-	}
-	return
-}
-
-// ToDense converts a column-compressed matrix to dense form
-func (a *CCMatrix) ToDense() (res *Matrix) {
-	res = NewMatrix(a.m, a.n)
-	for j := 0; j < a.n; j++ {
-		for p := a.p[j]; p < a.p[j+1]; p++ {
-			res.Set(a.i[p], j, a.x[p])
-		}
+		a.Add(o.i[k], o.j[k], o.x[k])
 	}
 	return
 }
@@ -210,7 +197,7 @@ func (a *CCMatrixC) ToDense() (res *MatrixC) {
 	res = NewMatrixC(a.m, a.n)
 	for j := 0; j < a.n; j++ {
 		for p := a.p[j]; p < a.p[j+1]; p++ {
-			res.Set(a.i[p], j, complex(a.x[p], a.z[p]))
+			res.Set(a.i[p], j, a.x[p])
 		}
 	}
 	return

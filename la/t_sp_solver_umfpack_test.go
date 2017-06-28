@@ -10,82 +10,76 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-func runLinsolR(tst *testing.T, t *Triplet, tol_cmp, tolRes float64, b, xCorrect []float64, verbose bool) {
-
-	// info
-	symmetric := false
-	timing := false
+func spSolve(tst *testing.T, solverKind string, symmetric bool, t *Triplet, b, xCorrect Vector, tolX, tolRes float64, verbose bool) {
 
 	// allocate solver
-	lis := GetSolver("umfpack")
-	defer lis.Free()
+	o := NewSparseSolver(solverKind)
+	defer o.Free()
 
 	// initialise solver
-	err := lis.InitR(t, symmetric, verbose, timing)
+	err := o.Init(t, symmetric, verbose, "", "")
 	if err != nil {
-		chk.Panic("%v", err.Error())
+		tst.Errorf("Init failed:\n%v\n", err)
+		return
 	}
 
 	// factorise
-	err = lis.Fact()
+	err = o.Fact()
 	if err != nil {
-		chk.Panic("%v", err.Error())
+		tst.Errorf("Fact failed:\n%v\n", err)
+		return
 	}
 
 	// solve
-	var dummy bool
-	x := make([]float64, len(b))
-	err = lis.SolveR(x, b, dummy) // x := inv(A) * b
+	x := NewVector(len(b))
+	err = o.Solve(x, b, false) // x := inv(A) * b
 	if err != nil {
-		chk.Panic("%v", err.Error())
+		tst.Errorf("Solve failed:\n%v\n", err)
+		return
 	}
 
 	// check
-	chk.Vector(tst, "x", tol_cmp, x, xCorrect)
+	chk.Vector(tst, "x", tolX, x, xCorrect)
 	checkResid(tst, t.GetDenseMatrix(), x, b, tolRes)
 }
 
-func runLinsolC(tst *testing.T, t *TripletC, tol_cmp, tolRes float64, b, xCorrect []complex128, verbose bool) {
-
-	// info
-	symmetric := false
-	timing := false
+func spSolveC(tst *testing.T, solverKind string, symmetric bool, t *TripletC, b, xCorrect VectorC, tolX, tolRes float64, verbose bool) {
 
 	// allocate solver
-	lis := GetSolver("umfpack")
-	defer lis.Free()
+	o := NewSparseSolverC(solverKind)
+	defer o.Free()
 
 	// initialise solver
-	err := lis.InitC(t, symmetric, verbose, timing)
+	err := o.Init(t, symmetric, verbose, "", "")
 	if err != nil {
-		chk.Panic("%v", err.Error())
+		tst.Errorf("Init failed:\n%v\n", err)
+		return
 	}
 
 	// factorise
-	err = lis.Fact()
+	err = o.Fact()
 	if err != nil {
-		chk.Panic("%v", err.Error())
+		tst.Errorf("Fact failed:\n%v\n", err)
+		return
 	}
 
 	// solve
-	var dummy bool
-	bR, bC := ComplexToRC(b)
-	xR := make([]float64, len(b))
-	xC := make([]float64, len(b))
-	err = lis.SolveC(xR, xC, bR, bC, dummy) // x := inv(A) * b
+	x := NewVectorC(len(b))
+	err = o.Solve(x, b, false) // x := inv(A) * b
 	if err != nil {
-		chk.Panic("%v", err.Error())
+		tst.Errorf("Solve failed:\n%v\n", err)
+		return
 	}
-	x := RCtoComplex(xR, xC)
 
 	// check
+	chk.VectorC(tst, "x", tolX, x, xCorrect)
 	checkResidC(tst, t.GetDenseMatrix(), x, b, tolRes)
 }
 
-func TestLinsol01a(tst *testing.T) {
+func TestSpSolver01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Linsol01a. real")
+	chk.PrintTitle("SpSolver01a. real")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -107,13 +101,13 @@ func TestLinsol01a(tst *testing.T) {
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []float64{1, 2, 3, 4, 5}
-	runLinsolR(tst, &t, 1e-14, 1e-13, b, xCorrect, false)
+	spSolve(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, chk.Verbose)
 }
 
-func TestLinsol01b(tst *testing.T) {
+func TestSpSolver01b(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Linsol01b. real. go-routines")
+	chk.PrintTitle("SpSolver01b. real. go-routines")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -139,7 +133,7 @@ func TestLinsol01b(tst *testing.T) {
 	done := make(chan int, nch)
 	for i := 0; i < nch; i++ {
 		go func() {
-			runLinsolR(tst, &t, 1e-14, 1e-13, b, xCorrect, false)
+			spSolve(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, false)
 			done <- 1
 		}()
 	}
@@ -148,10 +142,10 @@ func TestLinsol01b(tst *testing.T) {
 	}
 }
 
-func TestLinsol02(tst *testing.T) {
+func TestSpSolver02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Linsol02. real")
+	chk.PrintTitle("SpSolver02. real")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -174,45 +168,45 @@ func TestLinsol02(tst *testing.T) {
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
 	tol := 1e-9 // TODO: check why tests fails with 1e-10 @ office but not @ home
-	runLinsolR(tst, &t, 1e-4, tol, b, xCorrect, false)
+	spSolve(tst, "umfpack", false, &t, b, xCorrect, 1e-5, tol, false)
 }
 
-func TestLinsol03(tst *testing.T) {
+func TestSpSolver03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Linsol03. complex (but without imaginary part)")
+	chk.PrintTitle("SpSolver03. complex (without imaginary part)")
 
 	// input matrix data into Triplet
 	var t TripletC
-	t.Init(5, 5, 13, false)
-	t.Put(0, 0, +1.0, 0)
-	t.Put(0, 0, +1.0, 0)
-	t.Put(1, 0, +3.0, 0)
-	t.Put(0, 1, +3.0, 0)
-	t.Put(2, 1, -1.0, 0)
-	t.Put(4, 1, +4.0, 0)
-	t.Put(1, 2, +4.0, 0)
-	t.Put(2, 2, -3.0, 0)
-	t.Put(3, 2, +1.0, 0)
-	t.Put(4, 2, +2.0, 0)
-	t.Put(2, 3, +2.0, 0)
-	t.Put(1, 4, +6.0, 0)
-	t.Put(4, 4, +1.0, 0)
+	t.Init(5, 5, 13)
+	t.Put(0, 0, +1.0+0i) // << duplicated
+	t.Put(0, 0, +1.0+0i) // << duplicated
+	t.Put(1, 0, +3.0+0i)
+	t.Put(0, 1, +3.0+0i)
+	t.Put(2, 1, -1.0+0i)
+	t.Put(4, 1, +4.0+0i)
+	t.Put(1, 2, +4.0+0i)
+	t.Put(2, 2, -3.0+0i)
+	t.Put(3, 2, +1.0+0i)
+	t.Put(4, 2, +2.0+0i)
+	t.Put(2, 3, +2.0+0i)
+	t.Put(1, 4, +6.0+0i)
+	t.Put(4, 4, +1.0+0i)
 
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []complex128{1, 2, 3, 4, 5}
-	runLinsolC(tst, &t, 1e-14, 1e-13, b, xCorrect, true)
+	spSolveC(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, true)
 }
 
-func TestLinsol04(tst *testing.T) {
+func TestSpSolver04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Linsol04. complex (but real)")
+	chk.PrintTitle("SpSolver04. complex (without imaginary part)")
 
 	// input matrix data into Triplet
 	var t TripletC
-	t.Init(10, 10, 64, false)
+	t.Init(10, 10, 64)
 	for i := 0; i < 10; i++ {
 		j := i
 		if i > 0 {
@@ -223,20 +217,20 @@ func TestLinsol04(tst *testing.T) {
 			if i > j {
 				val -= 1.0
 			}
-			t.Put(i, j, val, 0)
+			t.Put(i, j, complex(val, 0))
 		}
 	}
 
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	runLinsolC(tst, &t, 1e-4, 1e-9, b, xCorrect, true)
+	spSolveC(tst, "umfpack", false, &t, b, xCorrect, 1e-5, 1e-9, true)
 }
 
-func TestLinsol05(tst *testing.T) {
+func TestSpSolver05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Linsol05. complex (but real)")
+	chk.PrintTitle("SpSolver05. complex")
 
 	// data
 	n := 10
@@ -245,13 +239,13 @@ func TestLinsol05(tst *testing.T) {
 
 	// input matrix data into Triplet
 	var t TripletC
-	t.Init(n, n, n, false)
+	t.Init(n, n, n)
 	for i := 0; i < n; i++ {
 
 		// Some very fake diagonals. Should take exactly 20 GMRES steps
 		ar := 10.0 + float64(i)/(float64(n)/10.0)
 		ac := 10.0 - float64(i)/(float64(n)/10.0)
-		t.Put(i, i, ar, ac)
+		t.Put(i, i, complex(ar, ac))
 
 		// Let exact solution = 1 + 0.5i
 		xCorrect[i] = complex(float64(i+1), float64(i+1)/10.0)
@@ -262,13 +256,13 @@ func TestLinsol05(tst *testing.T) {
 	}
 
 	// run test
-	runLinsolC(tst, &t, 1e-14, 1e-13, b, xCorrect, true)
+	spSolveC(tst, "umfpack", false, &t, b, xCorrect, 1e-15, 1e-13, true)
 }
 
-func TestLinsol06(tst *testing.T) {
+func TestSpSolver06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Linsol06. complex (with complex components)")
+	chk.PrintTitle("SpSolver06. complex")
 
 	// given the following matrix of complex numbers:
 	//      _                                                  _
@@ -297,57 +291,54 @@ func TestLinsol06(tst *testing.T) {
 	//     |       9      |
 	//     |_  10-17.75i _|
 
-	// flag indicating to store (real,complex) values in monolithic form => 1D array
-	xzmono := false
-
 	// input matrix in Complex Triplet format
 	var t TripletC
-	t.Init(5, 5, 16, xzmono) // 5 x 5 matrix with 16 non-zeros
+	t.Init(5, 5, 16) // 5 x 5 matrix with 16 non-zeros
 
 	// first column
-	t.Put(0, 0, 19.73, 0) // i=0, j=0, real=19.73, complex=0
-	t.Put(1, 0, 0, -0.51) // i=1, j=0, real=0, complex=-0.51
+	t.Put(0, 0, 19.73+0.00i)
+	t.Put(1, 0, +0.00-0.51i)
 
 	// second column
-	t.Put(0, 1, 12.11, -1) // i=0, j=1, real=12.11, complex=-1
-	t.Put(1, 1, 32.3, 7)
-	t.Put(2, 1, 0, -0.51)
+	t.Put(0, 1, 12.11-1.00i)
+	t.Put(1, 1, 32.30+7.00i)
+	t.Put(2, 1, +0.00-0.51i)
 
 	// third column
-	t.Put(0, 2, 0, 5)
-	t.Put(1, 2, 23.07, 0)
-	t.Put(2, 2, 70, 7.3)
-	t.Put(3, 2, 1, 1.1)
+	t.Put(0, 2, +0.00+5.0i)
+	t.Put(1, 2, 23.07+0.0i)
+	t.Put(2, 2, 70.00+7.3i)
+	t.Put(3, 2, +1.00+1.1i)
 
 	// fourth column
-	t.Put(1, 3, 0, 1)
-	t.Put(2, 3, 3.95, 0)
-	t.Put(3, 3, 50.17, 0)
-	t.Put(4, 3, 0, -9.351)
+	t.Put(1, 3, +0.00+1.000i)
+	t.Put(2, 3, +3.95+0.000i)
+	t.Put(3, 3, 50.17+0.000i)
+	t.Put(4, 3, +0.00-9.351i)
 
 	// fifth column
-	t.Put(2, 4, 19, 31.83)
-	t.Put(3, 4, 45.51, 0)
-	t.Put(4, 4, 55, 0)
+	t.Put(2, 4, 19.00+31.83i)
+	t.Put(3, 4, 45.51+0.00i)
+	t.Put(4, 4, 55.00+0.00i)
 
 	// right-hand-side
 	b := []complex128{
-		77.38 + 8.82i,
-		157.48 + 19.8i,
+		+77.38 + 8.82i,
+		+157.48 + 19.8i,
 		1175.62 + 20.69i,
-		912.12 - 801.75i,
-		550 - 1060.4i,
+		+912.12 - 801.75i,
+		+550.00 - 1060.4i,
 	}
 
 	// solution
 	xCorrect := []complex128{
-		3.3 - 1i,
-		1 + 0.17i,
-		5.5,
-		9,
-		10 - 17.75i,
+		+3.3 - 1.00i,
+		+1.0 + 0.17i,
+		+5.5 + 0.00i,
+		+9.0 + 0.00i,
+		10.0 - 17.75i,
 	}
 
 	// run test
-	runLinsolC(tst, &t, 1e-3, 1e-12, b, xCorrect, true)
+	spSolveC(tst, "umfpack", false, &t, b, xCorrect, 1e-3, 1e-12, true)
 }

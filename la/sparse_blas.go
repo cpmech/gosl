@@ -85,21 +85,21 @@ func SpMatTrVecMulAdd(v Vector, α float64, a *CCMatrix, u Vector) {
 // SpMatVecMulC returns the (sparse/complex) matrix-vector multiplication (scaled):
 //  v := α * a * u  =>  vi = α * aij * uj
 //  NOTE: dense vector v will be first initialised with zeros
-func SpMatVecMulC(v VectorC, α float64, a *CCMatrixC, u VectorC) {
+func SpMatVecMulC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 	v.Fill(0)
 	for j := 0; j < a.n; j++ {
 		for k := a.p[j]; k < a.p[j+1]; k++ {
-			v[a.i[k]] += complex(α*a.x[k], α*a.z[k]) * u[j]
+			v[a.i[k]] += α * a.x[k] * u[j]
 		}
 	}
 }
 
 // SpMatVecMulAddC returns the (sparse/complex) matrix-vector multiplication with addition (scaled):
 //  v += α * a * u  =>  vi += α * aij * uj
-func SpMatVecMulAddC(v VectorC, α float64, a *CCMatrixC, u VectorC) {
+func SpMatVecMulAddC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 	for j := 0; j < a.n; j++ {
 		for k := a.p[j]; k < a.p[j+1]; k++ {
-			v[a.i[k]] += complex(α*a.x[k], α*a.z[k]) * u[j]
+			v[a.i[k]] += α * a.x[k] * u[j]
 		}
 	}
 }
@@ -107,21 +107,21 @@ func SpMatVecMulAddC(v VectorC, α float64, a *CCMatrixC, u VectorC) {
 // SpMatTrVecMultC returns the (sparse/complex) matrix-vector multiplication with "a" transposed (scaled):
 //  v := α * transp(a) * u  =>  vj = α * aij * ui
 //  NOTE: dense vector v will be first initialised with zeros
-func SpMatTrVecMulC(v VectorC, α float64, a *CCMatrixC, u VectorC) {
+func SpMatTrVecMulC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 	v.Fill(0)
 	for j := 0; j < a.n; j++ {
 		for k := a.p[j]; k < a.p[j+1]; k++ {
-			v[j] += complex(α*a.x[k], α*a.z[k]) * u[a.i[k]]
+			v[j] += α * a.x[k] * u[a.i[k]]
 		}
 	}
 }
 
 // SpMatTrVecMulAddC returns the (sparse/complex) matrix-vector multiplication with addition and "a" transposed (scaled):
 //  v += α * transp(a) * u  =>  vj += α * aij * ui
-func SpMatTrVecMulAddC(v VectorC, α float64, a *CCMatrixC, u VectorC) {
+func SpMatTrVecMulAddC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 	for j := 0; j < a.n; j++ {
 		for k := a.p[j]; k < a.p[j+1]; k++ {
-			v[j] += complex(α*a.x[k], α*a.z[k]) * u[a.i[k]]
+			v[j] += α * a.x[k] * u[a.i[k]]
 		}
 	}
 }
@@ -136,7 +136,7 @@ func SpInitSimilar(b *CCMatrix, a *CCMatrix) {
 	b.m, b.n, b.nnz = a.m, a.n, a.nnz
 	b.p = make([]int, a.n+1)
 	b.i = make([]int, a.nnz)
-	b.x = make(Vector, a.nnz)
+	b.x = make([]float64, a.nnz)
 	for j := 0; j < a.n+1; j++ {
 		b.p[j] = a.p[j]
 	}
@@ -151,8 +151,7 @@ func SpInitSimilarR2C(b *CCMatrixC, a *CCMatrix) {
 	b.m, b.n, b.nnz = a.m, a.n, a.nnz
 	b.p = make([]int, a.n+1)
 	b.i = make([]int, a.nnz)
-	b.x = make(Vector, a.nnz)
-	b.z = make(Vector, a.nnz)
+	b.x = make([]complex128, a.nnz)
 	for j := 0; j < a.n+1; j++ {
 		b.p[j] = a.p[j]
 	}
@@ -197,44 +196,41 @@ func SpCheckDiag(a *CCMatrix) bool {
 }
 
 // SpInitRc initialises two complex sparse matrices (residual correction) according to:
-//  Real:     γ      *I - J
-//  Complex: (α + βi)*I - J
-//  NOTE: "a" must include all diagonal elements
-func SpInitRc(rcmatR *CCMatrix, rcmatC *CCMatrixC, a *CCMatrix) {
-	rcmatR.m, rcmatR.n, rcmatR.nnz = a.m, a.n, a.nnz
-	rcmatR.p = make([]int, a.n+1)
-	rcmatR.i = make([]int, a.nnz)
-	rcmatR.x = make(Vector, a.nnz)
-	rcmatC.m, rcmatC.n, rcmatC.nnz = a.m, a.n, a.nnz
-	rcmatC.p = make([]int, a.n+1)
-	rcmatC.i = make([]int, a.nnz)
-	rcmatC.x = make(Vector, a.nnz)
-	rcmatC.z = make(Vector, a.nnz)
-	for j := 0; j < a.n+1; j++ {
-		rcmatR.p[j] = a.p[j]
-		rcmatC.p[j] = a.p[j]
+//  Real:       R :=  γ      *I - J
+//  Complex:    C := (α + βi)*I - J
+//  NOTE: "J" must include all diagonal elements
+func SpInitRc(R *CCMatrix, C *CCMatrixC, J *CCMatrix) {
+	R.m, R.n, R.nnz = J.m, J.n, J.nnz
+	R.p = make([]int, J.n+1)
+	R.i = make([]int, J.nnz)
+	R.x = make([]float64, J.nnz)
+	C.m, C.n, C.nnz = J.m, J.n, J.nnz
+	C.p = make([]int, J.n+1)
+	C.i = make([]int, J.nnz)
+	C.x = make([]complex128, J.nnz)
+	for j := 0; j < J.n+1; j++ {
+		R.p[j] = J.p[j]
+		C.p[j] = J.p[j]
 	}
-	for k := 0; k < a.nnz; k++ {
-		rcmatR.i[k] = a.i[k]
-		rcmatC.i[k] = a.i[k]
+	for k := 0; k < J.nnz; k++ {
+		R.i[k] = J.i[k]
+		C.i[k] = J.i[k]
 	}
 }
 
 // SpSetRc sets the values within two complex sparse matrices (residual correction) according to:
-//  Real:     γ      *I - J
-//  Complex: (α + βi)*I - J
-//  NOTE: "a" must include all diagonal elements
-func SpSetRc(rcmatR *CCMatrix, rcmatC *CCMatrixC, α, β, γ float64, a *CCMatrix) {
-	for j := 0; j < a.n; j++ {
-		for k := a.p[j]; k < a.p[j+1]; k++ {
-			if a.i[k] == j {
-				rcmatR.x[k] = γ - a.x[k]
-				rcmatC.x[k] = α - a.x[k]
-				rcmatC.z[k] = β
+//  Real:       R :=  γ      *I - J
+//  Complex:    C := (α + βi)*I - J
+//  NOTE: "J" must include all diagonal elements
+func SpSetRc(R *CCMatrix, C *CCMatrixC, α, β, γ float64, J *CCMatrix) {
+	for j := 0; j < J.n; j++ {
+		for k := J.p[j]; k < J.p[j+1]; k++ {
+			if J.i[k] == j {
+				R.x[k] = γ - J.x[k]
+				C.x[k] = complex(α-J.x[k], β)
 			} else {
-				rcmatR.x[k] = -a.x[k]
-				rcmatC.x[k] = -a.x[k]
-				rcmatC.z[k] = 0.0
+				R.x[k] = -J.x[k]
+				C.x[k] = complex(-J.x[k], 0)
 			}
 		}
 	}
@@ -339,25 +335,24 @@ func SpMatAddMat(c *CCMatrix, α float64, a *CCMatrix, β float64, b *CCMatrix, 
 }
 
 // SpMatAddMatC adds two real sparse matrices with two sets of coefficients in such a way that
-// one real matrix (cR) and another complex matrix (cC) are obtained. The results are:
-//    cR :=      γ*a + μ*b
-//    cC := (α+βi)*a + μ*b
-//  NOTE: the structure of cR and cC are the same and can be allocated with SpAllocMatAddMat,
+// one real matrix (R) and another complex matrix (C) are obtained. The results are:
+//    R :=  γ    *a + μ*b
+//    C := (α+βi)*a + μ*b
+//  NOTE: the structure of R and C are the same and can be allocated with SpAllocMatAddMat,
 //        followed by one call to SpInitSimilarR2C. For example:
-//            cR, a2c, b2c := SpAllocMatAddMat(a, b)
-//            SpInitSimilarR2C(cC, cR)
-func SpMatAddMatC(cC *CCMatrixC, cR *CCMatrix, α, β, γ float64, a *CCMatrix, μ float64, b *CCMatrix, a2c, b2c []int) {
-	for k := 0; k < cR.nnz; k++ {
-		cR.x[k], cC.x[k], cC.z[k] = 0, 0, 0
+//            R, a2c, b2c := SpAllocMatAddMat(a, b)
+//            SpInitSimilarR2C(C, R)
+func SpMatAddMatC(C *CCMatrixC, R *CCMatrix, α, β, γ float64, a *CCMatrix, μ float64, b *CCMatrix, a2c, b2c []int) {
+	for k := 0; k < R.nnz; k++ {
+		R.x[k], C.x[k] = 0, 0
 	}
 	for k := 0; k < a.nnz; k++ {
-		cR.x[a2c[k]] += γ * a.x[k]
-		cC.x[a2c[k]] += α * a.x[k]
-		cC.z[a2c[k]] += β * a.x[k]
+		R.x[a2c[k]] += γ * a.x[k]
+		C.x[a2c[k]] += complex(α*a.x[k], β*a.x[k])
 	}
 	for k := 0; k < b.nnz; k++ {
-		cR.x[b2c[k]] += μ * b.x[k]
-		cC.x[b2c[k]] += μ * b.x[k]
+		R.x[b2c[k]] += μ * b.x[k]
+		C.x[b2c[k]] += complex(μ*b.x[k], 0)
 	}
 }
 
@@ -383,14 +378,13 @@ func SpTriAdd(c *Triplet, α float64, a *Triplet, β float64, b *Triplet) {
 // according to:
 //   c := (α+βi)*a + μ*b
 //   NOTE: the output 'c' triplet must be able to hold all nonzeros of 'a' and 'b'
-//         actually the 'c' triplet is just expanded
 func SpTriAddR2C(c *TripletC, α, β float64, a *Triplet, μ float64, b *Triplet) {
 	c.Start()
 	for k := 0; k < a.pos; k++ {
-		c.Put(a.i[k], a.j[k], α*a.x[k], β*a.x[k])
+		c.Put(a.i[k], a.j[k], complex(α*a.x[k], β*a.x[k]))
 	}
 	for k := 0; k < b.pos; k++ {
-		c.Put(b.i[k], b.j[k], μ*b.x[k], 0)
+		c.Put(b.i[k], b.j[k], complex(μ*b.x[k], 0))
 	}
 }
 

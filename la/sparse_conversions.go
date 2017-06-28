@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !appengine,!heroku
-
 package la
 
 /*
@@ -31,7 +29,7 @@ import (
 //   the previous "a" matrix or a pointer to a new one
 func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 	if t.pos < 1 {
-		chk.Panic(_sparsemat_umfpack_err1, t.pos)
+		chk.Panic("conversion can only be made for non-empty triplets. error: (pos = %d)", t.pos)
 	}
 	if a == nil {
 		a = new(CCMatrix)
@@ -48,7 +46,7 @@ func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 	Ax := (*C.double)(unsafe.Pointer(&a.x[0]))
 	status := C.umfpack_dl_triplet_to_col(C.LONG(a.m), C.LONG(a.n), C.LONG(a.nnz), Ti, Tj, Tx, Ap, Ai, Ax, nil)
 	if status != C.UMFPACK_OK {
-		chk.Panic(_sparsemat_umfpack_err2, Uerr2Text[int(status)])
+		chk.Panic("umfpack_dl_triplet_to_col failed (UMFPACK error: %s)", umfErr(status))
 	}
 	return a
 }
@@ -62,46 +60,61 @@ func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 //   the previous "a" matrix or a pointer to a new one
 func (t *TripletC) ToMatrix(a *CCMatrixC) *CCMatrixC {
 	if t.pos < 1 {
-		chk.Panic(_sparsemat_umfpack_err3, t.pos)
+		chk.Panic("conversion can only be made for non-empty triplets. error: (pos = %d)", t.pos)
 	}
 	if a == nil {
 		a = new(CCMatrixC)
 		a.m, a.n, a.nnz = t.m, t.n, t.pos
 		a.p = make([]int, a.n+1)
 		a.i = make([]int, a.nnz)
-		a.x = make([]float64, a.nnz)
-		a.z = make([]float64, a.nnz)
+		a.x = make([]complex128, a.nnz)
 	}
 	Ap := (*C.LONG)(unsafe.Pointer(&a.p[0]))
 	Ai := (*C.LONG)(unsafe.Pointer(&a.i[0]))
 	Ax := (*C.double)(unsafe.Pointer(&a.x[0]))
-	Az := (*C.double)(unsafe.Pointer(&a.z[0]))
 	Ti := (*C.LONG)(unsafe.Pointer(&t.i[0]))
 	Tj := (*C.LONG)(unsafe.Pointer(&t.j[0]))
-	var Tx, Tz *C.double
-	if t.xz != nil {
-		x := make([]float64, t.pos)
-		z := make([]float64, t.pos)
-		for k := 0; k < t.pos; k++ {
-			x[k], z[k] = t.xz[k*2], t.xz[k*2+1]
-		}
-		Tx = (*C.double)(unsafe.Pointer(&x[0]))
-		Tz = (*C.double)(unsafe.Pointer(&z[0]))
-	} else {
-		Tx = (*C.double)(unsafe.Pointer(&t.x[0]))
-		Tz = (*C.double)(unsafe.Pointer(&t.z[0]))
-	}
-	status := C.umfpack_zl_triplet_to_col(C.LONG(a.m), C.LONG(a.n), C.LONG(a.nnz), Ti, Tj, Tx, Tz, Ap, Ai, Ax, Az, nil)
+	Tx := (*C.double)(unsafe.Pointer(&t.x[0]))
+	status := C.umfpack_zl_triplet_to_col(C.LONG(a.m), C.LONG(a.n), C.LONG(a.nnz), Ti, Tj, Tx, nil, Ap, Ai, Ax, nil, nil)
 	if status != C.UMFPACK_OK {
-		chk.Panic(_sparsemat_umfpack_err4, Uerr2Text[int(status)])
+		chk.Panic("umfpack_zl_triplet_to_col failed (UMFPACK error: %s)", umfErr(status))
 	}
 	return a
 }
 
-// error messages
-var (
-	_sparsemat_umfpack_err1 = "sparsemat_umfpack.go: la.Triplet.ToMatrix: conversion can only be made for non-empty triplets. error: (pos = %d)"
-	_sparsemat_umfpack_err2 = "sparsemat_umfpack.go: la.Triplet.ToMatrix: umfpack_dl_triplet_to_col failed (UMFPACK error: %s)"
-	_sparsemat_umfpack_err3 = "sparsemat_umfpack.go: la.TripletC.ToMatrix: conversion can only be made for non-empty triplets. error: (pos = %d)"
-	_sparsemat_umfpack_err4 = "sparsemat_umfpack.go: la.TripletC.ToMatrix: umfpack_zl_triplet_to_col failed (UMFPACK error: %s)"
-)
+// umfErr returns UMFPACK error codes
+func umfErr(code C.long) string {
+	switch code {
+	case C.UMFPACK_ERROR_out_of_memory:
+		return "out_of_memory (-1)"
+	case C.UMFPACK_ERROR_invalid_Numeric_object:
+		return "invalid_Numeric_object (-3)"
+	case C.UMFPACK_ERROR_invalid_Symbolic_object:
+		return "invalid_Symbolic_object (-4)"
+	case C.UMFPACK_ERROR_argument_missing:
+		return "argument_missing (-5)"
+	case C.UMFPACK_ERROR_n_nonpositive:
+		return "n_nonpositive (-6)"
+	case C.UMFPACK_ERROR_invalid_matrix:
+		return "invalid_matrix (-8)"
+	case C.UMFPACK_ERROR_different_pattern:
+		return "different_pattern (-11)"
+	case C.UMFPACK_ERROR_invalid_system:
+		return "invalid_system (-13)"
+	case C.UMFPACK_ERROR_invalid_permutation:
+		return "invalid_permutation (-15)"
+	case C.UMFPACK_ERROR_internal_error:
+		return "internal_error (-911)"
+	case C.UMFPACK_ERROR_file_IO:
+		return "file_IO (-17)"
+	case -18:
+		return "ordering_failed (-18)"
+	case C.UMFPACK_WARNING_singular_matrix:
+		return "singular_matrix (1)"
+	case C.UMFPACK_WARNING_determinant_underflow:
+		return "determinant_underflow (2)"
+	case C.UMFPACK_WARNING_determinant_overflow:
+		return "determinant_overflow (3)"
+	}
+	return "unknown UMFPACK error"
+}
