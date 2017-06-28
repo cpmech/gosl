@@ -16,7 +16,7 @@ import (
 )
 
 func setslice(x []float64) {
-	switch mpi.Rank() {
+	switch mpi.WorldRank() {
 	case 0:
 		copy(x, []float64{0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3})
 	case 1:
@@ -28,62 +28,74 @@ func setslice(x []float64) {
 
 func main() {
 
-	mpi.Start(false)
-	defer mpi.Stop(false)
+	mpi.Start()
+	defer mpi.Stop()
 
-	if mpi.Rank() == 0 {
-		io.PfYel("\nTest MPI 01\n")
+	if mpi.WorldRank() == 0 {
+		io.Pf("\n\n------------------ Test MPI 01 ------------------\n\n")
 	}
-	if mpi.Size() != 3 {
+	if mpi.WorldSize() != 3 {
 		chk.Panic("this test needs 3 processors")
 	}
+
 	n := 11
 	x := make([]float64, n)
-	id, sz := mpi.Rank(), mpi.Size()
+	id, sz := int(mpi.WorldRank()), int(mpi.WorldSize())
 	start, endp1 := (id*n)/sz, ((id+1)*n)/sz
 	for i := start; i < endp1; i++ {
 		x[i] = float64(i)
 	}
 
-	// Barrier
-	mpi.Barrier()
+	// Communicator
+	comm := mpi.NewCommunicator(nil) // World
 
+	// Barrier
+	comm.Barrier()
 	io.Pfgrey("x @ proc # %d = %v\n", id, x)
+
+	// testing variable
+	chk.Verbose = true
+	var tst testing.T
 
 	// SumToRoot
 	r := make([]float64, n)
-	mpi.SumToRoot(r, x)
-	var tst testing.T
+	comm.ReduceSum(r, x)
 	if id == 0 {
-		chk.Vector(&tst, fmt.Sprintf("SumToRoot:       r @ proc # %d", id), 1e-17, r, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+		chk.Vector(&tst, fmt.Sprintf("ReduceSum:       r @ proc # %d", id), 1e-17, r, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 	} else {
-		chk.Vector(&tst, fmt.Sprintf("SumToRoot:       r @ proc # %d", id), 1e-17, r, make([]float64, n))
+		chk.Vector(&tst, fmt.Sprintf("ReduceSum:       r @ proc # %d", id), 1e-17, r, make([]float64, n))
 	}
 
 	// BcastFromRoot
-	r[0] = 666
-	mpi.BcastFromRoot(r)
-	chk.Vector(&tst, fmt.Sprintf("BcastFromRoot:   r @ proc # %d", id), 1e-17, r, []float64{666, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	r[0] = 123
+	comm.BcastFromRoot(r)
+	chk.Vector(&tst, fmt.Sprintf("BcastFromRoot:   r @ proc # %d", id), 1e-17, r, []float64{123, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 
 	// AllReduceSum
 	setslice(x)
 	w := make([]float64, n)
-	mpi.AllReduceSum(x, w)
+	comm.AllReduceSum(w, x)
 	chk.Vector(&tst, fmt.Sprintf("AllReduceSum:    w @ proc # %d", id), 1e-17, w, []float64{110, 110, 110, 1021, 1021, 1021, 2032, 2032, 2032, 3043, 3043})
 
-	// AllReduceSumAdd
+	// AllReduceSum
 	setslice(x)
 	y := []float64{-1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000}
-	mpi.AllReduceSumAdd(y, x, w)
-	chk.Vector(&tst, fmt.Sprintf("AllReduceSumAdd: y @ proc # %d", id), 1e-17, y, []float64{-890, -890, -890, 21, 21, 21, 1032, 1032, 1032, 2043, 2043})
+	for i := 0; i < len(w); i++ {
+		w[i] = 0
+	}
+	comm.AllReduceSum(w, x)
+	for i := 0; i < len(w); i++ {
+		y[i] += w[i]
+	}
+	chk.Vector(&tst, fmt.Sprintf("AllReduceSum:    y @ proc # %d", id), 1e-17, y, []float64{-890, -890, -890, 21, 21, 21, 1032, 1032, 1032, 2043, 2043})
 
 	// AllReduceMin
 	setslice(x)
-	mpi.AllReduceMin(x, w)
-	chk.Vector(&tst, fmt.Sprintf("AllReduceMin:    x @ proc # %d", id), 1e-17, x, []float64{0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3})
+	comm.AllReduceMin(w, x)
+	chk.Vector(&tst, fmt.Sprintf("AllReduceMin:    w @ proc # %d", id), 1e-17, w, []float64{0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3})
 
 	// AllReduceMax
 	setslice(x)
-	mpi.AllReduceMax(x, w)
-	chk.Vector(&tst, fmt.Sprintf("AllReduceMax:    x @ proc # %d", id), 1e-17, x, []float64{100, 100, 100, 1000, 1000, 1000, 2000, 2000, 2000, 3000, 3000})
+	comm.AllReduceMax(w, x)
+	chk.Vector(&tst, fmt.Sprintf("AllReduceMax:    w @ proc # %d", id), 1e-17, w, []float64{100, 100, 100, 1000, 1000, 1000, 2000, 2000, 2000, 3000, 3000})
 }

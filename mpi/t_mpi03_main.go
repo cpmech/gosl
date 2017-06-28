@@ -17,32 +17,30 @@ import (
 
 func main() {
 
-	mpi.Start(false)
-	defer func() {
-		mpi.Stop(false)
-	}()
+	mpi.Start()
+	defer mpi.Stop()
 
-	if mpi.Rank() == 0 {
-		io.PfYel("\nTest MPI 03\n")
+	if mpi.WorldRank() == 0 {
+		io.Pf("\n\n------------------ Test MPI 03 ------------------\n\n")
 	}
-	if mpi.Size() != 3 {
+	if mpi.WorldSize() != 3 {
 		chk.Panic("this test needs 3 processors")
 	}
+
 	x := []int{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 	n := len(x)
-	id, sz := mpi.Rank(), mpi.Size()
+	id, sz := int(mpi.WorldRank()), int(mpi.WorldSize())
 	start, endp1 := (id*n)/sz, ((id+1)*n)/sz
 	for i := start; i < endp1; i++ {
 		x[i] = i
 	}
 
-	//io.Pforan("x = %v\n", x)
+	comm := mpi.NewCommunicator(nil)
 
-	// IntAllReduceMax
 	w := make([]int, n)
-	mpi.IntAllReduceMax(x, w)
-	var tst testing.T
-	chk.Ints(&tst, fmt.Sprintf("IntAllReduceMax: x @ proc # %d", id), x, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	comm.AllReduceMaxI(w, x)
 
-	//io.Pfred("x = %v\n", x)
+	chk.Verbose = true
+	var tst testing.T
+	chk.Ints(&tst, fmt.Sprintf("AllReduceMaxI: w @ proc # %d", id), w, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 }

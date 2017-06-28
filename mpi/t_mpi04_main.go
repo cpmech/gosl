@@ -15,19 +15,21 @@ import (
 
 func main() {
 
-	mpi.Start(false)
-	defer mpi.Stop(false)
+	mpi.Start()
+	defer mpi.Stop()
 
-	if mpi.Rank() == 0 {
-		io.PfYel("\nTest MPI 04\n")
+	if mpi.WorldRank() == 0 {
+		io.Pf("\n\n------------------ Test MPI 04 ------------------\n\n")
 	}
+
+	comm := mpi.NewCommunicator(nil)
 
 	for i := 0; i < 60; i++ {
 		time.Sleep(1e9)
-		io.Pf("hello from %v\n", mpi.Rank())
-		if mpi.Rank() == 2 && i == 3 {
+		io.Pf("hello from %v\n", comm.Rank())
+		if comm.Rank() == 2 && i == 3 {
 			io.PfGreen("rank = 3 wants to abort (the following error is OK)\n")
-			mpi.Abort()
+			comm.Abort()
 		}
 	}
 }
