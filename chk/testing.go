@@ -48,6 +48,26 @@ func Int(tst *testing.T, msg string, val, correct int) {
 	PrintOk("%s: %d == %d", msg, val, correct)
 }
 
+// Int32 compares two int32
+func Int32(tst *testing.T, msg string, val, correct int32) {
+	if val != correct {
+		PrintFail("%s: error %d != %d\n", msg, val, correct)
+		tst.Errorf("%s failed with: %d != %d", msg, val, correct)
+		return
+	}
+	PrintOk("%s: %d == %d", msg, val, correct)
+}
+
+// Int64 compares two int64
+func Int64(tst *testing.T, msg string, val, correct int64) {
+	if val != correct {
+		PrintFail("%s: error %d != %d\n", msg, val, correct)
+		tst.Errorf("%s failed with: %d != %d", msg, val, correct)
+		return
+	}
+	PrintOk("%s: %d == %d", msg, val, correct)
+}
+
 // Ints compares two slices of integers
 func Ints(tst *testing.T, msg string, a, b []int) {
 	if len(a) != len(b) {
