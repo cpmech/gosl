@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <mpi.h>
+#include <complex.h>
 
 extern "C" {
 
@@ -49,6 +50,10 @@ void barrier() {
 
 void sumtoroot(double *dest, double *orig, int n) {
     MPI::COMM_WORLD.Reduce(orig, dest, n, MPI::DOUBLE, MPI::SUM, 0); // 0 => dest
+}
+
+void sumtorootC(double complex *dest, double complex *orig, int n) {
+    MPI::COMM_WORLD.Reduce(orig, dest, n, MPI::DOUBLE_COMPLEX, MPI::SUM, 0); // 0 => dest
 }
 
 void bcastfromroot(double *x, int n) {

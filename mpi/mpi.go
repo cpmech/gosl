@@ -2,15 +2,17 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !windows,!appengine,!heroku
+// +build !windows,!darwin
 
-// package mpi wraps the Message Passing Interface for parallel computations
+// Package mpi wraps the Message Passing Interface for parallel computations
 package mpi
 
 /*
 #cgo CXXFLAGS: -O3 -I. -I/usr/lib/openmpi/include -I/usr/lib/openmpi/include/openmpi -pthread
 #cgo LDFLAGS: -L. -L/usr/lib/openmpi/lib -lmpi_cxx -lmpi -ldl -lstdc++
 #include "connectmpi.h"
+
+#define DOUBLE_COMPLEX double complex
 */
 import "C"
 
@@ -76,6 +78,12 @@ func Barrier() {
 //  NOTE: orig and dest must be different slices, i.e. not pointing to the same underlying data structure
 func SumToRoot(dest, orig []float64) {
 	C.sumtoroot((*C.double)(unsafe.Pointer(&dest[0])), (*C.double)(unsafe.Pointer(&orig[0])), C.int(len(orig)))
+}
+
+// SumToRootC sums all values in 'orig' to 'dest' in root (Rank == 0) processor (complex version)
+//  NOTE: orig and dest must be different slices, i.e. not pointing to the same underlying data structure
+func SumToRootC(dest, orig []complex128) {
+	C.sumtorootC((*C.DOUBLE_COMPLEX)(unsafe.Pointer(&dest[0])), (*C.DOUBLE_COMPLEX)(unsafe.Pointer(&orig[0])), C.int(len(orig)))
 }
 
 // BcastFromRoot broadcasts 'x' slice from root (Rank == 0) to all other processors

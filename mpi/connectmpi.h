@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#include <complex.h>
+
 void abortmpi();
 int  ison();
 void startmpi(int debug);
@@ -17,6 +19,7 @@ int  mpirank();
 int  mpisize();
 void barrier();
 void sumtoroot(double *dest, double *orig, int n);
+void sumtorootC(double complex *dest, double complex *orig, int n);
 void bcastfromroot(double *x, int n);
 void allreducesum(double *dest, double *orig, int n);
 void allreducemin(double *dest, double *orig, int n);
