@@ -91,6 +91,11 @@ func BcastFromRoot(x []float64) {
 	C.bcastfromroot((*C.double)(unsafe.Pointer(&x[0])), C.int(len(x)))
 }
 
+// BcastFromRootC broadcasts 'x' slice from root (Rank == 0) to all other processors (complex version)
+func BcastFromRootC(x []complex128) {
+	C.bcastfromrootC((*C.DOUBLE_COMPLEX)(unsafe.Pointer(&x[0])), C.int(len(x)))
+}
+
 // AllReduceSum combines all values in 'x' from all processors. Corresponding components in
 // slice 'x' are added together. 'w' is a workspace with length = len(x). The operations are:
 //   w := join_all_with_sum(x)

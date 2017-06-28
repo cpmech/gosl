@@ -60,6 +60,10 @@ void bcastfromroot(double *x, int n) {
     MPI::COMM_WORLD.Bcast(x, n, MPI::DOUBLE, 0); // 0 => from
 }
 
+void bcastfromrootC(double complex *x, int n) {
+    MPI::COMM_WORLD.Bcast(x, n, MPI::DOUBLE_COMPLEX, 0); // 0 => from
+}
+
 void allreducesum(double *dest, double *orig, int n) {
     MPI::COMM_WORLD.Allreduce(orig, dest, n, MPI::DOUBLE, MPI::SUM);
 }

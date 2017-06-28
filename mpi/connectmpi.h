@@ -21,6 +21,7 @@ void barrier();
 void sumtoroot(double *dest, double *orig, int n);
 void sumtorootC(double complex *dest, double complex *orig, int n);
 void bcastfromroot(double *x, int n);
+void bcastfromrootC(double complex *x, int n);
 void allreducesum(double *dest, double *orig, int n);
 void allreducemin(double *dest, double *orig, int n);
 void allreducemax(double *dest, double *orig, int n);
