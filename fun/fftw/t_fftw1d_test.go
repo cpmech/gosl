@@ -6,6 +6,7 @@ package fftw
 
 import (
 	"math"
+	"math/cmplx"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -145,6 +146,48 @@ func TestOneDver02(tst *testing.T) {
 
 	// check output
 	chk.VectorC(tst, "X", 1e-13, x, test2Xref)
+}
+
+func TestOneDver03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("OneDver03")
+
+	// set input data
+	N := 16
+	x := make([]complex128, N)
+	for i := 0; i < N; i++ {
+		ibyN := float64(i) / float64(N)
+		x[i] = complex(math.Cos(ibyN*math.Pi*2), 0)
+	}
+
+	// allocate plan
+	plan, err := NewPlan1d(x, false, false)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	defer plan.Free()
+
+	// perform Fourier transform
+	plan.Execute()
+
+	// print output and check
+	// the real cosine should result in two nonzero frequencies, one at x[1] and one at x[N-1]
+	// these frequencies should be real and have amplitude equal to N/2 (fftw doesn't normalize)
+	// from: https://github.com/runningwild/go-fftw/blob/master/fftw/fftw_test.go
+	for i, v := range x {
+		if cmplx.Abs(v) > 1e-14 {
+			io.Pf("%g\n", v)
+		} else {
+			io.Pf("%g\n", 0.0+0.0i)
+		}
+		if i == 1 || i == N-1 {
+			chk.ScalarC(tst, "x[1]", 1e-14, v, complex(float64(N)/2.0, 0))
+		} else {
+			chk.ScalarC(tst, "x[:]", 1e-14, v, 0.0+0.0i)
+		}
+	}
 }
 
 // solution ////////////////////////////////////////////////////////////////////////////////////////

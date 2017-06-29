@@ -6,6 +6,7 @@ package fftw
 
 import (
 	"math"
+	"math/cmplx"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -112,6 +113,58 @@ func TestTwoDver01b(tst *testing.T) {
 	// check output
 	X := plan.GetSlice()
 	chk.MatrixC(tst, "X", 1e-13, X, test2d1Xref)
+}
+
+func TestTwoDver02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("TwoDver02.")
+
+	// allocate input data
+	N0, N1 := 64, 8
+	x := make([]complex128, N0*N1)
+
+	// allocate plan
+	plan, err := NewPlan2d(N0, N1, x, false, false)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	defer plan.Free()
+
+	// set input data
+	// with fx < dx/2 and fy < dy/2, where dx and dy are the lengths in each dimension,
+	// there will be 2^ndim spikes, where ndim is the number of dimensions. Each spike will be
+	// real and have magnitude equal to dx*dy / 2^ndim
+	// from: https://github.com/runningwild/go-fftw/blob/master/fftw/fftw_test.go
+	dx := N0
+	fx := float64(dx) / 4
+	dy := N1
+	fy := float64(dy) / 4
+	for i := 0; i < N0; i++ {
+		for j := 0; j < N1; j++ {
+			cosx := math.Cos(float64(i) / float64(dx) * fx * math.Pi * 2)
+			cosy := math.Cos(float64(j) / float64(dy) * fy * math.Pi * 2)
+			plan.Set(i, j, complex(cosx*cosy, 0))
+		}
+	}
+
+	// perform Fourier transform
+	plan.Execute()
+
+	// check
+	for i := 0; i < N0; i++ {
+		for j := 0; j < N1; j++ {
+			if (i == int(fx) || i == dx-int(fx)) && (j == int(fy) || j == dy-int(fy)) {
+				chk.ScalarC(tst, "nozero freq", 1e-12, plan.Get(i, j), complex(float64(dx*dy)/4.0, 0))
+			} else {
+				e := cmplx.Abs(plan.Get(i, j))
+				if e > 1e-12 {
+					tst.Errorf("zero freq failed. e = %v\n", e)
+				}
+			}
+		}
+	}
 }
 
 // solution ////////////////////////////////////////////////////////////////////////////////////////
