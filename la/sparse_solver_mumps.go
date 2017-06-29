@@ -44,16 +44,15 @@ type Mumps struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-//   ranks -- the CPU ranks when using a MPI solver such as MUMPS. Can be nil.
-func (o *Mumps) Init(ranks []int, t *Triplet, symmetric, verbose bool, ordering, scaling string) (err error) {
+func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) (err error) {
 
 	// check
 	if t.pos == 0 {
 		return chk.Err("triplet must have at least one item for initialisation\n")
 	}
 
-	// communicator
-	o.comm = mpi.NewCommunicator(ranks)
+	// set comm
+	o.comm = comm
 
 	// allocate data
 	if C.NumData == C.NumMaxData {
@@ -215,16 +214,15 @@ type MumpsC struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-//   ranks -- the CPU ranks when using a MPI solver such as MUMPS. Can be nil.
-func (o *MumpsC) Init(ranks []int, t *TripletC, symmetric, verbose bool, ordering, scaling string) (err error) {
+func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) (err error) {
 
 	// check
 	if t.pos == 0 {
 		return chk.Err("triplet must have at least one item for initialisation\n")
 	}
 
-	// communicator
-	o.comm = mpi.NewCommunicator(ranks)
+	// set comm
+	o.comm = comm
 
 	// allocate data
 	if C.NumDataC == C.NumMaxData {

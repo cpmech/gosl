@@ -10,72 +10,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-func spSolve(tst *testing.T, ranks []int, solverKind string, symmetric bool, t *Triplet, b, xCorrect Vector, tolX, tolRes float64, verbose bool) {
-
-	// allocate solver
-	o := NewSparseSolver(solverKind)
-	defer o.Free()
-
-	// initialise solver
-	err := o.Init(ranks, t, symmetric, verbose, "", "")
-	if err != nil {
-		tst.Errorf("Init failed:\n%v\n", err)
-		return
-	}
-
-	// factorise
-	err = o.Fact()
-	if err != nil {
-		tst.Errorf("Fact failed:\n%v\n", err)
-		return
-	}
-
-	// solve
-	x := NewVector(len(b))
-	err = o.Solve(x, b, false) // x := inv(A) * b
-	if err != nil {
-		tst.Errorf("Solve failed:\n%v\n", err)
-		return
-	}
-
-	// check
-	chk.Vector(tst, "x", tolX, x, xCorrect)
-	checkResid(tst, t.GetDenseMatrix(), x, b, tolRes)
-}
-
-func spSolveC(tst *testing.T, ranks []int, solverKind string, symmetric bool, t *TripletC, b, xCorrect VectorC, tolX, tolRes float64, verbose bool) {
-
-	// allocate solver
-	o := NewSparseSolverC(solverKind)
-	defer o.Free()
-
-	// initialise solver
-	err := o.Init(ranks, t, symmetric, verbose, "", "")
-	if err != nil {
-		tst.Errorf("Init failed:\n%v\n", err)
-		return
-	}
-
-	// factorise
-	err = o.Fact()
-	if err != nil {
-		tst.Errorf("Fact failed:\n%v\n", err)
-		return
-	}
-
-	// solve
-	x := NewVectorC(len(b))
-	err = o.Solve(x, b, false) // x := inv(A) * b
-	if err != nil {
-		tst.Errorf("Solve failed:\n%v\n", err)
-		return
-	}
-
-	// check
-	chk.VectorC(tst, "x", tolX, x, xCorrect)
-	checkResidC(tst, t.GetDenseMatrix(), x, b, tolRes)
-}
-
 func TestSpSolver01a(tst *testing.T) {
 
 	//verbose()
@@ -101,7 +35,7 @@ func TestSpSolver01a(tst *testing.T) {
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []float64{1, 2, 3, 4, 5}
-	spSolve(tst, nil, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, chk.Verbose)
+	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, chk.Verbose, nil)
 }
 
 func TestSpSolver01b(tst *testing.T) {
@@ -133,7 +67,7 @@ func TestSpSolver01b(tst *testing.T) {
 	done := make(chan int, nch)
 	for i := 0; i < nch; i++ {
 		go func() {
-			spSolve(tst, nil, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, false)
+			TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, false, nil)
 			done <- 1
 		}()
 	}
@@ -168,7 +102,7 @@ func TestSpSolver02(tst *testing.T) {
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
 	tol := 1e-9 // TODO: check why tests fails with 1e-10 @ office but not @ home
-	spSolve(tst, nil, "umfpack", false, &t, b, xCorrect, 1e-5, tol, false)
+	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-5, tol, false, nil)
 }
 
 func TestSpSolver03(tst *testing.T) {
@@ -196,7 +130,7 @@ func TestSpSolver03(tst *testing.T) {
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []complex128{1, 2, 3, 4, 5}
-	spSolveC(tst, nil, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, true)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, true, nil)
 }
 
 func TestSpSolver04(tst *testing.T) {
@@ -224,7 +158,7 @@ func TestSpSolver04(tst *testing.T) {
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	spSolveC(tst, nil, "umfpack", false, &t, b, xCorrect, 1e-5, 1e-9, true)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-5, 1e-9, true, nil)
 }
 
 func TestSpSolver05(tst *testing.T) {
@@ -256,7 +190,7 @@ func TestSpSolver05(tst *testing.T) {
 	}
 
 	// run test
-	spSolveC(tst, nil, "umfpack", false, &t, b, xCorrect, 1e-15, 1e-13, true)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-15, 1e-13, true, nil)
 }
 
 func TestSpSolver06(tst *testing.T) {
@@ -340,5 +274,5 @@ func TestSpSolver06(tst *testing.T) {
 	}
 
 	// run test
-	spSolveC(tst, nil, "umfpack", false, &t, b, xCorrect, 1e-3, 1e-12, true)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-3, 1e-12, true, nil)
 }

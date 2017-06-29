@@ -19,6 +19,7 @@ import (
 	"unsafe"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/mpi"
 )
 
 // Umfpack wraps the UMFPACK solver
@@ -47,8 +48,7 @@ type Umfpack struct {
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
-//   ranks -- the CPU ranks when using a MPI solver such as MUMPS. Can be nil.
-func (o *Umfpack) Init(ranks []int, t *Triplet, symmetric, verbose bool, ordering, scaling string) (err error) {
+func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, dummy *mpi.Communicator) (err error) {
 
 	// check
 	if t.pos == 0 {
@@ -184,8 +184,7 @@ type UmfpackC struct {
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
-//   ranks -- the CPU ranks when using a MPI solver such as MUMPS. Can be nil.
-func (o *UmfpackC) Init(ranks []int, t *TripletC, symmetric, verbose bool, ordering, scaling string) (err error) {
+func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, dummy *mpi.Communicator) (err error) {
 
 	// check
 	if t.pos == 0 {

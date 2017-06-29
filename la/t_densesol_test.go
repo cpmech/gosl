@@ -6,33 +6,10 @@ package la
 
 import (
 	"math"
-	"math/cmplx"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 )
-
-func checkResid(tst *testing.T, a *Matrix, x, b Vector, tolNorm float64) {
-	r := NewVector(len(x))
-	r.Apply(-1, b)           // r := -b
-	MatVecMulAdd(r, 1, a, x) // r += 1*a*x
-	resid := r.Norm()
-	if resid > tolNorm {
-		tst.Errorf("residual is too large: %g\n", resid)
-		return
-	}
-}
-
-func checkResidC(tst *testing.T, a *MatrixC, x, b VectorC, tolNorm float64) {
-	r := NewVectorC(len(x))
-	r.Apply(-1, b)            // r = -b
-	MatVecMulAddC(r, 1, a, x) // r += 1*a*x
-	resid := cmplx.Abs(r.Norm())
-	if resid > tolNorm {
-		tst.Errorf("residual is too large: %g\n", resid)
-		return
-	}
-}
 
 func calcLLt(L *Matrix) (LLt *Matrix) {
 	LLt = NewMatrix(L.M, L.M)
@@ -107,7 +84,7 @@ func TestSPDsolve01(tst *testing.T) {
 	b := []float64{-2, 4, 3, -5, 1}
 	x := make([]float64, 5)
 	SolveRealLinSysSPD(x, a, b)
-	checkResid(tst, a, x, b, 1e-14)
+	TestSolverResidual(tst, a, x, b, 1e-14)
 	chk.Vector(tst, "x = inv(a) * b", 1e-13, x, []float64{
 		-629.0 / 98.0,
 		+237.0 / 49.0,
@@ -134,8 +111,8 @@ func TestSPDsolve02(tst *testing.T) {
 	x := make([]float64, 5)
 	X := make([]float64, 5)
 	SolveTwoRealLinSysSPD(x, X, a, b, B)
-	checkResid(tst, a, x, b, 1e-14)
-	checkResid(tst, a, X, B, 1e-14)
+	TestSolverResidual(tst, a, x, b, 1e-14)
+	TestSolverResidual(tst, a, X, B, 1e-14)
 	chk.Vector(tst, "x = inv(a) * b", 1e-13, x, []float64{
 		-629.0 / 98.0,
 		+237.0 / 49.0,

@@ -15,16 +15,18 @@ import (
 
 func main() {
 
-	mpi.Start(false)
-	defer mpi.Stop(false)
+	mpi.Start()
+	defer mpi.Stop()
 
-	myrank := mpi.Rank()
+	comm := mpi.NewCommunicator(nil)
+
+	myrank := comm.Rank()
 	if myrank == 0 {
-		io.Pf("\nTest MUMPS Sol 01a\n")
+		io.Pf("\n------------------- Test MUMPS Sol 01a -------------------\n")
 	}
 
 	var t la.Triplet
-	switch mpi.Size() {
+	switch comm.Size() {
 	case 1:
 		t.Init(5, 5, 13)
 		t.Put(0, 0, 1.0)
@@ -64,7 +66,8 @@ func main() {
 	}
 
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
-	x_correct := []float64{1, 2, 3, 4, 5}
-	sum_b_to_root := false
+	xCorrect := []float64{1, 2, 3, 4, 5}
+	sumBtoRoot := false
+	la.TestSpSolver(tst,nil
 	la.RunMumpsTestR(&t, 1e-14, b, x_correct, sum_b_to_root)
 }

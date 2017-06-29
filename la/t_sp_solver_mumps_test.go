@@ -25,6 +25,7 @@ func TestSpSolver01aM(tst *testing.T) {
 	chk.PrintTitle("SpSolver01aM. real")
 
 	switchMPI()
+	comm := mpi.NewCommunicator(nil)
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -46,7 +47,7 @@ func TestSpSolver01aM(tst *testing.T) {
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []float64{1, 2, 3, 4, 5}
-	spSolve(tst, nil, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false) //chk.Verbose)
+	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, comm)
 }
 
 func TestSpSolver02M(tst *testing.T) {
@@ -55,6 +56,7 @@ func TestSpSolver02M(tst *testing.T) {
 	chk.PrintTitle("SpSolver02M. real")
 
 	switchMPI()
+	comm := mpi.NewCommunicator(nil)
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -76,7 +78,7 @@ func TestSpSolver02M(tst *testing.T) {
 	// run test
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	spSolve(tst, nil, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false)
+	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, comm)
 }
 
 func TestSpSolver03M(tst *testing.T) {
@@ -85,6 +87,7 @@ func TestSpSolver03M(tst *testing.T) {
 	chk.PrintTitle("SpSolver03M. complex (without imaginary part)")
 
 	switchMPI()
+	comm := mpi.NewCommunicator(nil)
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -106,7 +109,7 @@ func TestSpSolver03M(tst *testing.T) {
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []complex128{1, 2, 3, 4, 5}
-	spSolveC(tst, nil, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, comm)
 }
 
 func TestSpSolver04M(tst *testing.T) {
@@ -115,6 +118,7 @@ func TestSpSolver04M(tst *testing.T) {
 	chk.PrintTitle("SpSolver04M. complex (without imaginary part)")
 
 	switchMPI()
+	comm := mpi.NewCommunicator(nil)
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -136,7 +140,7 @@ func TestSpSolver04M(tst *testing.T) {
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	spSolveC(tst, nil, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, comm)
 }
 
 func TestSpSolver05M(tst *testing.T) {
@@ -145,6 +149,7 @@ func TestSpSolver05M(tst *testing.T) {
 	chk.PrintTitle("SpSolver05M. complex")
 
 	switchMPI()
+	comm := mpi.NewCommunicator(nil)
 
 	// data
 	n := 10
@@ -170,7 +175,7 @@ func TestSpSolver05M(tst *testing.T) {
 	}
 
 	// run test
-	spSolveC(tst, nil, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, comm)
 }
 
 func TestSpSolver06M(tst *testing.T) {
@@ -179,6 +184,7 @@ func TestSpSolver06M(tst *testing.T) {
 	chk.PrintTitle("SpSolver06M. complex")
 
 	switchMPI()
+	comm := mpi.NewCommunicator(nil)
 
 	// given the following matrix of complex numbers:
 	//      _                                                  _
@@ -256,5 +262,5 @@ func TestSpSolver06M(tst *testing.T) {
 	}
 
 	// run test
-	spSolveC(tst, nil, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false, comm)
 }

@@ -15,27 +15,16 @@ import (
 	"github.com/cpmech/gosl/mpi"
 )
 
-func setslice(x []float64) {
-	switch mpi.Rank() {
-	case 0:
-		copy(x, []float64{0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3})
-	case 1:
-		copy(x, []float64{10, 10, 10, 20, 20, 20, 30, 30, 30, 40, 40})
-	case 2:
-		copy(x, []float64{100, 100, 100, 1000, 1000, 1000, 2000, 2000, 2000, 3000, 3000})
-	}
-}
-
 func main() {
 
-	mpi.Start(false)
-	defer func() {
-		mpi.Stop(false)
-	}()
+	mpi.Start()
+	defer mpi.Stop()
 
-	if mpi.Rank() == 0 {
-		io.Pf("\nTest SumToRoot 01\n")
+	if mpi.WorldRank() == 0 {
+		io.Pf("\n------------------------ Test SP MPI 01------------------------ \n")
 	}
+
+	comm := mpi.NewCommunicator(nil)
 
 	M := [][]float64{
 		{1000, 1000, 1000, 1011, 1021, 1000},
@@ -46,7 +35,7 @@ func main() {
 		{1000, 1000, 1000, 1000, 1000, 1000},
 	}
 
-	id, sz, m := mpi.Rank(), mpi.Size(), len(M)
+	id, sz, m := comm.Rank(), comm.Size(), len(M)
 	start, endp1 := (id*m)/sz, ((id+1)*m)/sz
 
 	if sz > 6 {
@@ -61,10 +50,13 @@ func main() {
 		}
 	}
 
-	la.SpTriSumToRoot(&J)
+	la.SpTriReduce(comm, &J)
+
+	chk.Verbose = true
 	var tst testing.T
-	if mpi.Rank() == 0 {
-		chk.Matrix(&tst, "J @ proc 0", 1.0e-17, J.ToMatrix(nil).ToDense(), [][]float64{
+
+	if comm.Rank() == 0 {
+		chk.Matrix(&tst, "J @ proc 0", 1.0e-17, J.GetDenseMatrix().GetSlice(), [][]float64{
 			{1000, 1000, 1000, 1011, 1021, 1000},
 			{1000, 1000, 1000, 1012, 1022, 1000},
 			{1000, 1000, 1000, 1013, 1023, 1000},

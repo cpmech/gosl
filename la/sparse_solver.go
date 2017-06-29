@@ -4,14 +4,17 @@
 
 package la
 
-import "github.com/cpmech/gosl/chk"
+import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/mpi"
+)
 
 // SparseSolver solves sparse linear systems using UMFPACK or MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
 type SparseSolver interface {
-	Init(ranks []int, t *Triplet, symmetric, verbose bool, ordering, scaling string) error
+	Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, commOrDummy *mpi.Communicator) error
 	Free()
 	Fact() error
 	Solve(x, b Vector, sumBtoRoot bool) error
@@ -40,7 +43,7 @@ func NewSparseSolver(kind string) SparseSolver {
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
 type SparseSolverC interface {
-	Init(ranks []int, t *TripletC, symmetric, verbose bool, ordering, scaling string) error
+	Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, commOrDummy *mpi.Communicator) error
 	Free()
 	Fact() error
 	Solve(x, b VectorC, sumBtoRoot bool) error
