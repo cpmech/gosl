@@ -281,3 +281,34 @@ func (o IntHistogram) GenLabels(numfmt string) (labels []string) {
 	}
 	return
 }
+
+// Plot plots histogram
+//  args -- plot arguments. may be nil
+func (o IntHistogram) Plot(withText bool, args, argsTxt *plt.A) {
+	if args == nil {
+		args = &plt.A{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true, NoClip: true}
+	}
+	if argsTxt == nil {
+		argsTxt = &plt.A{C: "k", Ha: "center", Va: "center", NoClip: true}
+	}
+	nstations := len(o.Stations)
+	if nstations < 2 {
+		chk.Panic("histogram density graph needs at least two stations")
+	}
+	nsamples := 0
+	for _, cnt := range o.Counts {
+		nsamples += cnt
+	}
+	ymax := 0.0
+	for i := 0; i < nstations-1; i++ {
+		xi, xf := float64(o.Stations[i]), float64(o.Stations[i+1])
+		y := float64(o.Counts[i])
+		plt.Polyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, y}, {xi, y}}, args)
+		if withText {
+			plt.Text((xi+xf)/2.0, y/2.0, io.Sf("%d", o.Counts[i]), argsTxt)
+		}
+		ymax = max(ymax, y)
+	}
+	plt.AxisRange(float64(o.Stations[0]), float64(o.Stations[nstations-1]), 0, ymax)
+	return
+}

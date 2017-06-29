@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 )
 
 func Test_hist01(tst *testing.T) {
@@ -82,7 +83,7 @@ func Test_hist02(tst *testing.T) {
 
 	for i, x := range lims {
 		idx = hist.FindBin(x)
-		io.Pforan("x=%g idx=%d\n", x, idx)
+		io.Pforan("x=%v idx=%v\n", x, idx)
 		if i < len(lims)-1 {
 			chk.IntAssert(idx, i)
 		} else {
@@ -104,4 +105,10 @@ func Test_hist02(tst *testing.T) {
 
 	labels := hist.GenLabels("%d")
 	io.Pforan("labels = %v\n", labels)
+
+	if chk.Verbose {
+		plt.Reset(true, nil)
+		hist.Plot(true, nil, nil)
+		plt.Save("/tmp/gosl/rnd", "hist02")
+	}
 }
