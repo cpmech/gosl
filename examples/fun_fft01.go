@@ -11,7 +11,7 @@ import (
 	"math/cmplx"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/fftw"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/rnd"
 )
@@ -35,27 +35,33 @@ func main() {
 		xc[i] = xo[i] + 2.0*rnd.Normal(0, 2)
 	}
 
+	// allocate data arrays
+	oData := make([]complex128, L)
+	cData := make([]complex128, L)
+	for i := 0; i < L; i++ {
+		oData[i] = complex(xo[i], 0)
+		cData[i] = complex(xc[i], 0)
+	}
+
 	// compute the Fourier transform of original signal
-	p, err := fftw.NewPlan1dReal(xo, 0, false, false)
+	err := fun.Dft1d(oData, false)
 	if err != nil {
 		chk.Panic("%v\n", err)
 	}
-	p.Execute()
 
 	// compute the Fourier transform of corrupted signal
-	q, err := fftw.NewPlan1dReal(xc, 0, false, false)
+	err = fun.Dft1d(cData, false)
 	if err != nil {
 		chk.Panic("%v\n", err)
 	}
-	q.Execute()
 
 	// process results
 	P := make([]float64, L/2+1) // single-sided spectrum of the original signal
 	Q := make([]float64, L/2+1) // single-sided spectrum of the corrupted signal
 	F := make([]float64, L/2+1) // frequency domain f
 	for i := 0; i < L/2+1; i++ {
-		P[i] = 2 * cmplx.Abs(p.Output(i)) / float64(L)
-		Q[i] = 2 * cmplx.Abs(q.Output(i)) / float64(L)
+		P[i] = 2 * cmplx.Abs(oData[i]) / float64(L)
+		Q[i] = 2 * cmplx.Abs(cData[i]) / float64(L)
 		F[i] = Fs * float64(i) / float64(L)
 	}
 
