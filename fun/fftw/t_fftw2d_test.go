@@ -10,32 +10,37 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
-var test2d1XrefCc [][]complex128 // reference results
+// reference results
+var test2d1Xref [][]complex128
 
+// initialise reference results
 func init() {
 	x1 := [][]complex128{
 		{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i},
 		{8 + 9i, 10 + 11i, 12 + 13i, 14 + 15i},
 	}
-	test2d1XrefCc = dft2d(x1)
+	test2d1Xref = dft2d(x1)
 }
 
-func TestTwoDver01(tst *testing.T) {
+// tests ///////////////////////////////////////////////////////////////////////////////////////////
+
+func TestTwoDver01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("TwoDver01. 2D test. allocate Xin internally")
+	chk.PrintTitle("TwoDver01a.")
+
+	// allocate input data
+	N0, N1 := 2, 4
+	x := make([]complex128, N0*N1)
 
 	// flags
 	inverse := false
-	inplace := false
 	measure := false
 
 	// allocate plan
-	N0, N1 := 2, 4
-	plan, err := NewPlan2d(nil, N0, N1, inverse, inplace, measure)
+	plan, err := NewPlan2d(N0, N1, x, inverse, measure)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
@@ -46,28 +51,70 @@ func TestTwoDver01(tst *testing.T) {
 	k := 0
 	for i := 0; i < N0; i++ {
 		for j := 0; j < N1; j++ {
-			plan.Input(i, j, float64(k), float64(k+1))
+			plan.Set(i, j, complex(float64(k), float64(k+1)))
 			k += 2
 		}
 	}
-	chk.Vector(tst, "input: x", 1e-15, plan.Xin, utl.LinSpace(0, float64(2*N0*N1-1), 2*N0*N1))
+
+	// check input data
+	chk.VectorC(tst, "plan.data", 1e-17, plan.data, []complex128{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i, 8 + 9i, 10 + 11i, 12 + 13i, 14 + 15i})
 
 	// perform Fourier transform
 	plan.Execute()
 
 	// print output
-	io.Pf("output = ")
-	for i := 0; i < N0; i++ {
-		for j := 0; j < N1; j++ {
-			io.Pf("%v ", plan.Output(i, j))
-		}
-	}
-	io.Pl()
+	io.Pf("X = %v\n", x)
 
 	// check output
-	X := plan.GetOutput()
-	chk.MatrixC(tst, "X", 1e-13, X, test2d1XrefCc)
+	X := plan.GetSlice()
+	chk.MatrixC(tst, "X", 1e-13, X, test2d1Xref)
 }
+
+func TestTwoDver01b(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("TwoDver01b. (measure)")
+
+	// allocate input data
+	N0, N1 := 2, 4
+	x := make([]complex128, N0*N1)
+
+	// flags
+	inverse := false
+	measure := true
+
+	// allocate plan
+	plan, err := NewPlan2d(N0, N1, x, inverse, measure)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	defer plan.Free()
+
+	// set input data
+	k := 0
+	for i := 0; i < N0; i++ {
+		for j := 0; j < N1; j++ {
+			plan.Set(i, j, complex(float64(k), float64(k+1)))
+			k += 2
+		}
+	}
+
+	// check input data
+	chk.VectorC(tst, "plan.data", 1e-17, plan.data, []complex128{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i, 8 + 9i, 10 + 11i, 12 + 13i, 14 + 15i})
+
+	// perform Fourier transform
+	plan.Execute()
+
+	// print output
+	io.Pf("X = %v\n", x)
+
+	// check output
+	X := plan.GetSlice()
+	chk.MatrixC(tst, "X", 1e-13, X, test2d1Xref)
+}
+
+// solution ////////////////////////////////////////////////////////////////////////////////////////
 
 // dft2d compute the discrete Fourier Transform of x (very slow: for testing only)
 func dft2d(x [][]complex128) (X [][]complex128) {
