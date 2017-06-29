@@ -10,7 +10,14 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/mpi"
 )
+
+func switchMPI() {
+	if !mpi.IsOn() {
+		mpi.Start()
+	}
+}
 
 func TestSpSolver01aM(tst *testing.T) {
 
@@ -39,7 +46,7 @@ func TestSpSolver01aM(tst *testing.T) {
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []float64{1, 2, 3, 4, 5}
-	spSolve(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false) //chk.Verbose)
+	spSolve(tst, nil, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false) //chk.Verbose)
 }
 
 func TestSpSolver02M(tst *testing.T) {
@@ -69,7 +76,7 @@ func TestSpSolver02M(tst *testing.T) {
 	// run test
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	spSolve(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false)
+	spSolve(tst, nil, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false)
 }
 
 func TestSpSolver03M(tst *testing.T) {
@@ -99,7 +106,7 @@ func TestSpSolver03M(tst *testing.T) {
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []complex128{1, 2, 3, 4, 5}
-	spSolveC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
+	spSolveC(tst, nil, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
 }
 
 func TestSpSolver04M(tst *testing.T) {
@@ -129,7 +136,7 @@ func TestSpSolver04M(tst *testing.T) {
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	spSolveC(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false)
+	spSolveC(tst, nil, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false)
 }
 
 func TestSpSolver05M(tst *testing.T) {
@@ -163,7 +170,7 @@ func TestSpSolver05M(tst *testing.T) {
 	}
 
 	// run test
-	spSolveC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
+	spSolveC(tst, nil, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
 }
 
 func TestSpSolver06M(tst *testing.T) {
@@ -249,5 +256,5 @@ func TestSpSolver06M(tst *testing.T) {
 	}
 
 	// run test
-	spSolveC(tst, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false)
+	spSolveC(tst, nil, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false)
 }

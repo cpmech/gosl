@@ -11,7 +11,7 @@ import "github.com/cpmech/gosl/chk"
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
 type SparseSolver interface {
-	Init(t *Triplet, symmetric, verbose bool, ordering, scaling string) error
+	Init(ranks []int, t *Triplet, symmetric, verbose bool, ordering, scaling string) error
 	Free()
 	Fact() error
 	Solve(x, b Vector, sumBtoRoot bool) error
@@ -40,7 +40,7 @@ func NewSparseSolver(kind string) SparseSolver {
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
 type SparseSolverC interface {
-	Init(t *TripletC, symmetric, verbose bool, ordering, scaling string) error
+	Init(ranks []int, t *TripletC, symmetric, verbose bool, ordering, scaling string) error
 	Free()
 	Fact() error
 	Solve(x, b VectorC, sumBtoRoot bool) error

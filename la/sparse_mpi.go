@@ -10,27 +10,27 @@ import (
 	"github.com/cpmech/gosl/mpi"
 )
 
-// SpTriSumToRoot join (MPI) parallel triplets to root (Rank == 0) processor.
+// SpTriReduce joins (MPI) parallel triplets to root (Rank == 0) processor.
 //  NOTE: J in root is also joined into Jroot
-func SpTriSumToRoot(J *Triplet) {
-	if mpi.Rank() == 0 {
-		for proc := 1; proc < mpi.Size(); proc++ {
-			nnz := mpi.SingleIntRecv(proc)
+func SpTriReduce(comm *mpi.Communicator, J *Triplet) {
+	if comm.Rank() == 0 {
+		for proc := 1; proc < comm.Size(); proc++ {
+			nnz := comm.RecvOneI(proc)
 			irec := make([]int, nnz)
 			drec := make([]float64, nnz)
-			mpi.IntRecv(irec, proc)
+			comm.RecvI(irec, proc)
 			J.i = append(J.i, irec...)
-			mpi.IntRecv(irec, proc)
+			comm.RecvI(irec, proc)
 			J.j = append(J.j, irec...)
-			mpi.DblRecv(drec, proc)
+			comm.Recv(drec, proc)
 			J.x = append(J.x, drec...)
 		}
 		J.pos = len(J.x)
 		J.max = J.pos
 	} else {
-		mpi.SingleIntSend(J.max, 0)
-		mpi.IntSend(J.i, 0)
-		mpi.IntSend(J.j, 0)
-		mpi.DblSend(J.x, 0)
+		comm.SendOneI(J.max, 0)
+		comm.SendI(J.i, 0)
+		comm.SendI(J.j, 0)
+		comm.Send(J.x, 0)
 	}
 }

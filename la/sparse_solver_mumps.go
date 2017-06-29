@@ -30,9 +30,10 @@ import (
 type Mumps struct {
 
 	// internal
-	t  *Triplet
-	mi []int32
-	mj []int32
+	comm *mpi.Communicator
+	t    *Triplet
+	mi   []int32
+	mj   []int32
 
 	// MUMPS data
 	data *C.DMUMPS_STRUC_C
@@ -43,12 +44,16 @@ type Mumps struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string) (err error) {
+//   ranks -- the CPU ranks when using a MPI solver such as MUMPS. Can be nil.
+func (o *Mumps) Init(ranks []int, t *Triplet, symmetric, verbose bool, ordering, scaling string) (err error) {
 
 	// check
 	if t.pos == 0 {
 		return chk.Err("triplet must have at least one item for initialisation\n")
 	}
+
+	// communicator
+	o.comm = mpi.NewCommunicator(ranks)
 
 	// allocate data
 	if C.NumData == C.NumMaxData {
@@ -166,15 +171,15 @@ func (o *Mumps) Solve(x, b Vector, sumBtoRoot bool) (err error) {
 
 	// set RHS in processor # 0
 	if sumBtoRoot {
-		mpi.SumToRoot(x, b)
+		o.comm.ReduceSum(x, b)
 	} else {
-		if mpi.Rank() == 0 {
+		if o.comm.Rank() == 0 {
 			x.Apply(1, b) // x := b   or   copy(x, b)
 		}
 	}
 
 	// only proc # 0 needs the RHS
-	if mpi.Rank() == 0 {
+	if o.comm.Rank() == 0 {
 		o.data.rhs = (*C.double)(unsafe.Pointer(&x[0]))
 	}
 
@@ -186,7 +191,7 @@ func (o *Mumps) Solve(x, b Vector, sumBtoRoot bool) (err error) {
 	}
 
 	// broadcast from root
-	mpi.BcastFromRoot(x)
+	o.comm.BcastFromRoot(x)
 	return
 }
 
@@ -196,9 +201,10 @@ func (o *Mumps) Solve(x, b Vector, sumBtoRoot bool) (err error) {
 type MumpsC struct {
 
 	// internal
-	t  *TripletC
-	mi []int32
-	mj []int32
+	comm *mpi.Communicator
+	t    *TripletC
+	mi   []int32
+	mj   []int32
 
 	// MUMPS data
 	data *C.ZMUMPS_STRUC_C
@@ -209,12 +215,16 @@ type MumpsC struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string) (err error) {
+//   ranks -- the CPU ranks when using a MPI solver such as MUMPS. Can be nil.
+func (o *MumpsC) Init(ranks []int, t *TripletC, symmetric, verbose bool, ordering, scaling string) (err error) {
 
 	// check
 	if t.pos == 0 {
 		return chk.Err("triplet must have at least one item for initialisation\n")
 	}
+
+	// communicator
+	o.comm = mpi.NewCommunicator(ranks)
 
 	// allocate data
 	if C.NumDataC == C.NumMaxData {
@@ -332,15 +342,15 @@ func (o *MumpsC) Solve(x, b VectorC, sumBtoRoot bool) (err error) {
 
 	// set RHS in processor # 0
 	if sumBtoRoot {
-		mpi.SumToRootC(x, b)
+		o.comm.ReduceSumC(x, b)
 	} else {
-		if mpi.Rank() == 0 {
+		if o.comm.Rank() == 0 {
 			x.Apply(1, b) // x := b   or   copy(x, b)
 		}
 	}
 
 	// only proc # 0 needs the RHS
-	if mpi.Rank() == 0 {
+	if o.comm.Rank() == 0 {
 		o.data.rhs = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&x[0]))
 	}
 
@@ -352,7 +362,7 @@ func (o *MumpsC) Solve(x, b VectorC, sumBtoRoot bool) (err error) {
 	}
 
 	// broadcast from root
-	mpi.BcastFromRootC(x)
+	o.comm.BcastFromRootC(x)
 	return
 }
 
