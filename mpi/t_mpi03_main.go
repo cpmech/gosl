@@ -29,7 +29,7 @@ func main() {
 
 	x := []int{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 	n := len(x)
-	id, sz := int(mpi.WorldRank()), int(mpi.WorldSize())
+	id, sz := mpi.WorldRank(), mpi.WorldSize()
 	start, endp1 := (id*n)/sz, ((id+1)*n)/sz
 	for i := start; i < endp1; i++ {
 		x[i] = i

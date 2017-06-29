@@ -44,15 +44,17 @@ func Stop() {
 }
 
 // WorldRank returns the processor rank/ID within the World communicator
-func WorldRank() (rank int32) {
-	C.MPI_Comm_rank(C.World, (*C.int)(unsafe.Pointer(&rank)))
-	return
+func WorldRank() (rank int) {
+	var r int32
+	C.MPI_Comm_rank(C.World, (*C.int)(unsafe.Pointer(&r)))
+	return int(r)
 }
 
 // WorldSize returns the number of processors in the World communicator
-func WorldSize() (size int32) {
-	C.MPI_Comm_size(C.World, (*C.int)(unsafe.Pointer(&size)))
-	return
+func WorldSize() (size int) {
+	var s int32
+	C.MPI_Comm_size(C.World, (*C.int)(unsafe.Pointer(&s)))
+	return int(s)
 }
 
 // Communicator holds the World communicator or a subset communicator
@@ -64,15 +66,19 @@ type Communicator struct {
 // NewCommunicator creates a new communicator or returns the World communicator
 //   ranks -- World indices of processors in this Communicator.
 //            use nil or empty to get the World Communicator
-func NewCommunicator(ranks []int32) (o *Communicator) {
+func NewCommunicator(ranks []int) (o *Communicator) {
 	o = new(Communicator)
 	if len(ranks) == 0 {
 		o.comm = C.World
 		C.MPI_Comm_group(C.World, &o.group)
 		return
 	}
+	rs := make([]int32, len(ranks))
+	for i := 0; i < len(ranks); i++ {
+		rs[i] = int32(ranks[i])
+	}
 	n := C.int(len(ranks))
-	r := (*C.int)(unsafe.Pointer(&ranks[0]))
+	r := (*C.int)(unsafe.Pointer(&rs[0]))
 	var wgroup C.MPI_Group
 	C.MPI_Comm_group(C.World, &wgroup)
 	C.MPI_Group_incl(wgroup, n, r, &o.group)

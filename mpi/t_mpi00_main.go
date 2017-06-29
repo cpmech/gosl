@@ -59,8 +59,8 @@ func main() {
 	}
 
 	// subsets of processors
-	A := mpi.NewCommunicator([]int32{0, 1, 2, 3})
-	B := mpi.NewCommunicator([]int32{4, 5, 6, 7})
+	A := mpi.NewCommunicator([]int{0, 1, 2, 3})
+	B := mpi.NewCommunicator([]int{4, 5, 6, 7})
 
 	// test structure
 	chk.Verbose = true

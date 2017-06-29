@@ -82,8 +82,8 @@ func main() {
 	} else {
 
 		// SendOneI
-		comm.SendOneI(1000+int(mpi.WorldRank()), 0)
-		comm.SendOneI(2000+int(mpi.WorldRank()), 0)
+		comm.SendOneI(1000+mpi.WorldRank(), 0)
+		comm.SendOneI(2000+mpi.WorldRank(), 0)
 
 		// SendI
 		comm.SendOneI(len(myints), 0)

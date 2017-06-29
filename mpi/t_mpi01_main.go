@@ -40,7 +40,7 @@ func main() {
 
 	n := 11
 	x := make([]float64, n)
-	id, sz := int(mpi.WorldRank()), int(mpi.WorldSize())
+	id, sz := mpi.WorldRank(), mpi.WorldSize()
 	start, endp1 := (id*n)/sz, ((id+1)*n)/sz
 	for i := start; i < endp1; i++ {
 		x[i] = float64(i)
