@@ -23,8 +23,8 @@ func TestMpi01(tst *testing.T) {
 
 	wcomm := NewCommunicator(nil)
 	zcomm := NewCommunicator([]int{0})
-	chk.Int32(tst, "World rank", wcomm.Rank(), 0)
-	chk.Int32(tst, "Local rank", zcomm.Rank(), 0)
+	chk.Int(tst, "World rank", wcomm.Rank(), 0)
+	chk.Int(tst, "Local rank", zcomm.Rank(), 0)
 
 	wcomm.Barrier()
 	zcomm.Barrier()

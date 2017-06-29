@@ -87,15 +87,17 @@ func NewCommunicator(ranks []int) (o *Communicator) {
 }
 
 // Rank returns the processor rank/ID
-func (o *Communicator) Rank() (rank int32) {
-	C.MPI_Comm_rank(o.comm, (*C.int)(unsafe.Pointer(&rank)))
-	return
+func (o *Communicator) Rank() (rank int) {
+	var r int32
+	C.MPI_Comm_rank(o.comm, (*C.int)(unsafe.Pointer(&r)))
+	return int(r)
 }
 
 // Size returns the number of processors
-func (o *Communicator) Size() (size int32) {
-	C.MPI_Comm_size(o.comm, (*C.int)(unsafe.Pointer(&size)))
-	return
+func (o *Communicator) Size() (size int) {
+	var s int32
+	C.MPI_Comm_size(o.comm, (*C.int)(unsafe.Pointer(&s)))
+	return int(s)
 }
 
 // Abort aborts MPI
