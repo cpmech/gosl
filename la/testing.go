@@ -34,14 +34,15 @@ func TestSolverResidualC(tst *testing.T, a *MatrixC, x, b VectorC, tolNorm float
 	}
 }
 
-func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet, b, xCorrect Vector, tolX, tolRes float64, verbose bool, commOrDummy *mpi.Communicator) {
+func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet, b, xCorrect Vector,
+	tolX, tolRes float64, verbose, bIsDistr bool, comm *mpi.Communicator) {
 
 	// allocate solver
 	o := NewSparseSolver(solverKind)
 	defer o.Free()
 
 	// initialise solver
-	err := o.Init(t, symmetric, verbose, "", "", commOrDummy)
+	err := o.Init(t, symmetric, verbose, "", "", comm)
 	if err != nil {
 		tst.Errorf("Init failed:\n%v\n", err)
 		return
@@ -56,7 +57,7 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 
 	// solve
 	x := NewVector(len(b))
-	err = o.Solve(x, b, false) // x := inv(A) * b
+	err = o.Solve(x, b, bIsDistr) // x := inv(A) * b
 	if err != nil {
 		tst.Errorf("Solve failed:\n%v\n", err)
 		return
@@ -67,14 +68,15 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 	TestSolverResidual(tst, t.GetDenseMatrix(), x, b, tolRes)
 }
 
-func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *TripletC, b, xCorrect VectorC, tolX, tolRes float64, verbose bool, commOrDummy *mpi.Communicator) {
+func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *TripletC, b, xCorrect VectorC,
+	tolX, tolRes float64, verbose, bIsDistr bool, comm *mpi.Communicator) {
 
 	// allocate solver
 	o := NewSparseSolverC(solverKind)
 	defer o.Free()
 
 	// initialise solver
-	err := o.Init(t, symmetric, verbose, "", "", commOrDummy)
+	err := o.Init(t, symmetric, verbose, "", "", comm)
 	if err != nil {
 		tst.Errorf("Init failed:\n%v\n", err)
 		return
@@ -89,7 +91,7 @@ func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *Triplet
 
 	// solve
 	x := NewVectorC(len(b))
-	err = o.Solve(x, b, false) // x := inv(A) * b
+	err = o.Solve(x, b, bIsDistr) // x := inv(A) * b
 	if err != nil {
 		tst.Errorf("Solve failed:\n%v\n", err)
 		return

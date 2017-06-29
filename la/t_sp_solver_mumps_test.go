@@ -46,8 +46,9 @@ func TestSpSolver01aM(tst *testing.T) {
 
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
+	bIsDistr := false
 	xCorrect := []float64{1, 2, 3, 4, 5}
-	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, comm)
+	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
 }
 
 func TestSpSolver02M(tst *testing.T) {
@@ -77,8 +78,9 @@ func TestSpSolver02M(tst *testing.T) {
 
 	// run test
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
+	bIsDistr := false
 	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, comm)
+	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, bIsDistr, comm)
 }
 
 func TestSpSolver03M(tst *testing.T) {
@@ -108,8 +110,9 @@ func TestSpSolver03M(tst *testing.T) {
 
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
+	bIsDistr := false
 	xCorrect := []complex128{1, 2, 3, 4, 5}
-	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, comm)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
 }
 
 func TestSpSolver04M(tst *testing.T) {
@@ -139,8 +142,9 @@ func TestSpSolver04M(tst *testing.T) {
 
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
+	bIsDistr := false
 	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, comm)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, bIsDistr, comm)
 }
 
 func TestSpSolver05M(tst *testing.T) {
@@ -175,7 +179,8 @@ func TestSpSolver05M(tst *testing.T) {
 	}
 
 	// run test
-	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, comm)
+	bIsDistr := false
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
 }
 
 func TestSpSolver06M(tst *testing.T) {
@@ -262,5 +267,6 @@ func TestSpSolver06M(tst *testing.T) {
 	}
 
 	// run test
-	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false, comm)
+	bIsDistr := false
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false, bIsDistr, comm)
 }

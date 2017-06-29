@@ -7,6 +7,8 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
@@ -18,53 +20,58 @@ func main() {
 	mpi.Start()
 	defer mpi.Stop()
 
-	myrank := mpi.Rank()
+	comm := mpi.NewCommunicator(nil)
+
+	myrank := comm.Rank()
 	if myrank == 0 {
-		io.Pf("\nTest MUMPS Sol 03\n")
+		io.Pf("\n------------------- Test MUMPS Sol 03 --- (complex) -----\n")
 	}
 
 	var t la.TripletC
-	switch mpi.Size() {
+	switch comm.Size() {
 	case 1:
-		t.Init(5, 5, 13, true)
-		t.Put(0, 0, 1.0, 0)
-		t.Put(0, 0, 1.0, 0)
-		t.Put(1, 0, 3.0, 0)
-		t.Put(0, 1, 3.0, 0)
-		t.Put(2, 1, -1.0, 0)
-		t.Put(4, 1, 4.0, 0)
-		t.Put(1, 2, 4.0, 0)
-		t.Put(2, 2, -3.0, 0)
-		t.Put(3, 2, 1.0, 0)
-		t.Put(4, 2, 2.0, 0)
-		t.Put(2, 3, 2.0, 0)
-		t.Put(1, 4, 6.0, 0)
-		t.Put(4, 4, 1.0, 0)
+		t.Init(5, 5, 13)
+		t.Put(0, 0, +1.0+0i)
+		t.Put(0, 0, +1.0+0i)
+		t.Put(1, 0, +3.0+0i)
+		t.Put(0, 1, +3.0+0i)
+		t.Put(2, 1, -1.0+0i)
+		t.Put(4, 1, +4.0+0i)
+		t.Put(1, 2, +4.0+0i)
+		t.Put(2, 2, -3.0+0i)
+		t.Put(3, 2, +1.0+0i)
+		t.Put(4, 2, +2.0+0i)
+		t.Put(2, 3, +2.0+0i)
+		t.Put(1, 4, +6.0+0i)
+		t.Put(4, 4, +1.0+0i)
 	case 2:
 		if myrank == 0 {
-			t.Init(5, 5, 6, true)
-			t.Put(0, 0, 1.0, 0)
-			t.Put(0, 0, 1.0, 0)
-			t.Put(1, 0, 3.0, 0)
-			t.Put(0, 1, 3.0, 0)
-			t.Put(2, 1, -1.0, 0)
-			t.Put(4, 1, 4.0, 0)
+			t.Init(5, 5, 6)
+			t.Put(0, 0, +1.0+0i)
+			t.Put(0, 0, +1.0+0i)
+			t.Put(1, 0, +3.0+0i)
+			t.Put(0, 1, +3.0+0i)
+			t.Put(2, 1, -1.0+0i)
+			t.Put(4, 1, +4.0+0i)
 		} else {
-			t.Init(5, 5, 7, true)
-			t.Put(1, 2, 4.0, 0)
-			t.Put(2, 2, -3.0, 0)
-			t.Put(3, 2, 1.0, 0)
-			t.Put(4, 2, 2.0, 0)
-			t.Put(2, 3, 2.0, 0)
-			t.Put(1, 4, 6.0, 0)
-			t.Put(4, 4, 1.0, 0)
+			t.Init(5, 5, 7)
+			t.Put(1, 2, +4.0+0i)
+			t.Put(2, 2, -3.0+0i)
+			t.Put(3, 2, +1.0+0i)
+			t.Put(4, 2, +2.0+0i)
+			t.Put(2, 3, +2.0+0i)
+			t.Put(1, 4, +6.0+0i)
+			t.Put(4, 4, +1.0+0i)
 		}
 	default:
 		chk.Panic("this test needs 1 or 2 procs")
 	}
 
+	chk.Verbose = true
+	tst := new(testing.T)
+
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
-	x_correct := []complex128{1, 2, 3, 4, 5}
-	sum_b_to_root := false
-	la.RunMumpsTestC(&t, 1e-14, b, x_correct, sum_b_to_root)
+	bIsDistr := false
+	xCorrect := []complex128{1, 2, 3, 4, 5}
+	la.TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-17, false, bIsDistr, comm)
 }

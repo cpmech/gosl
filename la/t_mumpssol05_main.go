@@ -7,6 +7,8 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
@@ -18,30 +20,32 @@ func main() {
 	mpi.Start()
 	defer mpi.Stop()
 
-	myrank := mpi.Rank()
+	comm := mpi.NewCommunicator(nil)
+
+	myrank := comm.Rank()
 	if myrank == 0 {
-		io.Pf("\nTest MUMPS Sol 05\n")
+		io.Pf("\n------------------- Test MUMPS Sol 05 --- (complex) -----\n")
 	}
 
 	ndim := 10
-	id, sz := mpi.Rank(), mpi.Size()
+	id, sz := comm.Rank(), comm.Size()
 	start, endp1 := (id*ndim)/sz, ((id+1)*ndim)/sz
 
-	if mpi.Size() > ndim {
+	if comm.Size() > ndim {
 		chk.Panic("the number of processors must be smaller than or equal to %d", ndim)
 	}
 
 	n := 10
 	b := make([]complex128, n)
-	x_correct := make([]complex128, n)
+	xCorrect := make([]complex128, n)
 
 	// Let exact solution = 1 + 0.5i
 	for i := 0; i < ndim; i++ {
-		x_correct[i] = complex(float64(i+1), float64(i+1)/10.0)
+		xCorrect[i] = complex(float64(i+1), float64(i+1)/10.0)
 	}
 
 	var t la.TripletC
-	t.Init(ndim, ndim, ndim, true)
+	t.Init(ndim, ndim, ndim)
 
 	// assemble a and b
 	for i := start; i < endp1; i++ {
@@ -49,13 +53,16 @@ func main() {
 		// Some very fake diagonals. Should take exactly 20 GMRES steps
 		ar := 10.0 + float64(i)/(float64(ndim)/10.0)
 		ac := 10.0 - float64(i)/(float64(ndim)/10.0)
-		t.Put(i, i, ar, ac)
+		t.Put(i, i, complex(ar, ac))
 
 		// Generate RHS to match exact solution
-		b[i] = complex(ar*real(x_correct[i])-ac*imag(x_correct[i]),
-			ar*imag(x_correct[i])+ac*real(x_correct[i]))
+		b[i] = complex(ar*real(xCorrect[i])-ac*imag(xCorrect[i]),
+			ar*imag(xCorrect[i])+ac*real(xCorrect[i]))
 	}
 
-	sum_b_to_root := true
-	la.RunMumpsTestC(&t, 1e-14, b, x_correct, sum_b_to_root)
+	chk.Verbose = true
+	tst := new(testing.T)
+
+	bIsDistr := true
+	la.TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-17, false, bIsDistr, comm)
 }

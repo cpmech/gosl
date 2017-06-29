@@ -137,7 +137,7 @@ func (o *Umfpack) Fact() (err error) {
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *Umfpack) Solve(x, b Vector, sumBtoRoot bool) (err error) {
+func (o *Umfpack) Solve(x, b Vector, dummy bool) (err error) {
 
 	// check
 	if !o.factorised {
@@ -273,7 +273,7 @@ func (o *UmfpackC) Fact() (err error) {
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *UmfpackC) Solve(x, b VectorC, sumBtoRoot bool) (err error) {
+func (o *UmfpackC) Solve(x, b VectorC, dummy bool) (err error) {
 
 	// check
 	if !o.factorised {

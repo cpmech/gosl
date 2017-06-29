@@ -7,6 +7,8 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
@@ -18,16 +20,18 @@ func main() {
 	mpi.Start()
 	defer mpi.Stop()
 
-	myrank := mpi.Rank()
+	comm := mpi.NewCommunicator(nil)
+
+	myrank := comm.Rank()
 	if myrank == 0 {
-		io.Pf("\nTest MUMPS Sol 02\n")
+		io.Pf("\n------------------- Test MUMPS Sol 02 -------------------\n")
 	}
 
 	ndim := 10
-	id, sz := mpi.Rank(), mpi.Size()
+	id, sz := comm.Rank(), comm.Size()
 	start, endp1 := (id*ndim)/sz, ((id+1)*ndim)/sz
 
-	if mpi.Size() > ndim {
+	if comm.Size() > ndim {
 		chk.Panic("the number of processors must be smaller than or equal to %d", ndim)
 	}
 
@@ -50,7 +54,10 @@ func main() {
 		b[i] = float64(i + 1)
 	}
 
-	x_correct := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	sum_b_to_root := true
-	la.RunMumpsTestR(&t, 1e-4, b, x_correct, sum_b_to_root)
+	chk.Verbose = true
+	tst := new(testing.T)
+
+	bIsDistr := true
+	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
+	la.TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-14, false, bIsDistr, comm)
 }

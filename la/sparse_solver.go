@@ -14,10 +14,10 @@ import (
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
 type SparseSolver interface {
-	Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, commOrDummy *mpi.Communicator) error
+	Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) error
 	Free()
 	Fact() error
-	Solve(x, b Vector, sumBtoRoot bool) error
+	Solve(x, b Vector, bIsDistr bool) error
 }
 
 // spSolverMaker defines a function that makes spSolvers
@@ -43,10 +43,10 @@ func NewSparseSolver(kind string) SparseSolver {
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
 type SparseSolverC interface {
-	Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, commOrDummy *mpi.Communicator) error
+	Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) error
 	Free()
 	Fact() error
-	Solve(x, b VectorC, sumBtoRoot bool) error
+	Solve(x, b VectorC, bIsDistr bool) error
 }
 
 // spSolverMakerC defines a function that makes spSolvers (complex version)

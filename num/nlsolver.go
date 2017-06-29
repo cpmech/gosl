@@ -44,7 +44,7 @@ type NlSolver struct {
 	// data for Umfpack (sparse)
 	Jtri la.Triplet // triplet
 	w    la.Vector  // workspace
-	lis  la.LinSol  // linear solver
+	lis  la.Umfpack // linear solver
 
 	// data for dense solver (matrix inversion)
 	J  *la.Matrix // dense Jacobian matrix
@@ -122,7 +122,6 @@ func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useD
 		if o.numJ {
 			o.w = la.NewVector(o.neq)
 		}
-		o.lis = la.GetSolver("umfpack")
 	}
 
 	// allocate slices for line search
@@ -230,8 +229,8 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 			// init sparse solver
 			if o.It == 0 {
-				symmetric, verbose, timing := false, false, false
-				err := o.lis.InitR(&o.Jtri, symmetric, verbose, timing)
+				symmetric, verbose := false, false
+				err := o.lis.Init(nil, &o.Jtri, symmetric, verbose, "", "")
 				if err != nil {
 					return chk.Err(_nls_err9, err.Error())
 				}
@@ -241,7 +240,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			o.lis.Fact()
 
 			// solve linear system => compute mdx
-			o.lis.SolveR(o.mdx, o.fx, false) // mdx = inv(J) * fx   false => !sumToRoot
+			o.lis.Solve(o.mdx, o.fx, false) // mdx = inv(J) * fx   false => !sumToRoot
 
 			// compute lin-search data
 			if o.Lsearch {

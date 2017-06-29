@@ -7,6 +7,8 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
@@ -18,14 +20,16 @@ func main() {
 	mpi.Start()
 	defer mpi.Stop()
 
-	myrank := mpi.Rank()
+	comm := mpi.NewCommunicator(nil)
+
+	myrank := comm.Rank()
 	if myrank == 0 {
-		io.Pf("\nTest MUMPS Sol 01b\n")
+		io.Pf("\n------------------- Test MUMPS Sol 01b --- (distr b) -----\n")
 	}
 
 	var t la.Triplet
 	b := la.Vector([]float64{8.0, 45.0, -3.0, 3.0, 19.0})
-	switch mpi.Size() {
+	switch comm.Size() {
 	case 1:
 		t.Init(5, 5, 13)
 		t.Put(0, 0, 1.0)
@@ -75,7 +79,10 @@ func main() {
 		chk.Panic("this test needs 1 or 2 procs")
 	}
 
-	x_correct := la.Vector([]float64{1, 2, 3, 4, 5})
-	sum_b_to_root := true
-	la.RunMumpsTestR(&t, 1e-14, b, x_correct, sum_b_to_root)
+	chk.Verbose = true
+	tst := new(testing.T)
+
+	bIsDistr := true
+	xCorrect := la.Vector([]float64{1, 2, 3, 4, 5})
+	la.TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-14, false, bIsDistr, comm)
 }

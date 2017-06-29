@@ -7,6 +7,8 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
@@ -18,22 +20,24 @@ func main() {
 	mpi.Start()
 	defer mpi.Stop()
 
-	myrank := mpi.Rank()
+	comm := mpi.NewCommunicator(nil)
+
+	myrank := comm.Rank()
 	if myrank == 0 {
-		io.Pf("\nTest MUMPS Sol 04\n")
+		io.Pf("\n------------------- Test MUMPS Sol 04 --- (complex) -----\n")
 	}
 
 	ndim := 10
-	id, sz := mpi.Rank(), mpi.Size()
+	id, sz := comm.Rank(), comm.Size()
 	start, endp1 := (id*ndim)/sz, ((id+1)*ndim)/sz
 
-	if mpi.Size() > ndim {
+	if comm.Size() > ndim {
 		chk.Panic("the number of processors must be smaller than or equal to %d", ndim)
 	}
 
 	b := make([]complex128, ndim)
 	var t la.TripletC
-	t.Init(ndim, ndim, ndim*ndim, true)
+	t.Init(ndim, ndim, ndim*ndim)
 
 	for i := start; i < endp1; i++ {
 		j := i
@@ -45,12 +49,15 @@ func main() {
 			if i > j {
 				val -= 1.0
 			}
-			t.Put(i, j, val, 0)
+			t.Put(i, j, complex(val, 0))
 		}
 		b[i] = complex(float64(i+1), 0.0)
 	}
 
-	x_correct := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	sum_b_to_root := true
-	la.RunMumpsTestC(&t, 1e-4, b, x_correct, sum_b_to_root)
+	chk.Verbose = true
+	tst := new(testing.T)
+
+	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
+	bIsDistr := true
+	la.TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-17, false, bIsDistr, comm)
 }

@@ -161,7 +161,9 @@ func (o *Mumps) Fact() (err error) {
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *Mumps) Solve(x, b Vector, sumBtoRoot bool) (err error) {
+//   bIsDistr -- this flag tells that the right-hand-side vector 'b' is distributed.
+//
+func (o *Mumps) Solve(x, b Vector, bIsDistr bool) (err error) {
 
 	// check
 	if !o.factorised {
@@ -169,8 +171,8 @@ func (o *Mumps) Solve(x, b Vector, sumBtoRoot bool) (err error) {
 	}
 
 	// set RHS in processor # 0
-	if sumBtoRoot {
-		o.comm.ReduceSum(x, b)
+	if bIsDistr { // b is distributed => must join
+		o.comm.ReduceSum(x, b) // x := join(b)
 	} else {
 		if o.comm.Rank() == 0 {
 			x.Apply(1, b) // x := b   or   copy(x, b)
@@ -331,7 +333,9 @@ func (o *MumpsC) Fact() (err error) {
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *MumpsC) Solve(x, b VectorC, sumBtoRoot bool) (err error) {
+//   bIsDistr -- this flag tells that the right-hand-side vector 'b' is distributed.
+//
+func (o *MumpsC) Solve(x, b VectorC, bIsDistr bool) (err error) {
 
 	// check
 	if !o.factorised {
@@ -339,8 +343,8 @@ func (o *MumpsC) Solve(x, b VectorC, sumBtoRoot bool) (err error) {
 	}
 
 	// set RHS in processor # 0
-	if sumBtoRoot {
-		o.comm.ReduceSumC(x, b)
+	if bIsDistr { // b is distributed => must join
+		o.comm.ReduceSumC(x, b) // x := join(b)
 	} else {
 		if o.comm.Rank() == 0 {
 			x.Apply(1, b) // x := b   or   copy(x, b)
