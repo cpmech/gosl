@@ -230,7 +230,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			// init sparse solver
 			if o.It == 0 {
 				symmetric, verbose := false, false
-				err := o.lis.Init(nil, &o.Jtri, symmetric, verbose, "", "")
+				err := o.lis.Init(&o.Jtri, symmetric, verbose, "", "", nil)
 				if err != nil {
 					return chk.Err(_nls_err9, err.Error())
 				}
