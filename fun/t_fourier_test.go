@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -20,20 +19,17 @@ func TestDft01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Dft01. FFT")
 
-	x := []float64{1, 2, 3, 4, 5, 6, 7, 8}
+	x := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
 	err := Dft1d(x, false)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
 	}
-	X := la.RCpairsToComplex(x)
-	io.Pf("X = %v\n", X)
 
 	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
 	Y := dft1dslow(y)
-	io.Pf("Y = %v\n", Y)
 
-	chk.VectorC(tst, "X", 1e-14, Y, X)
+	chk.VectorC(tst, "X", 1e-14, x, Y)
 }
 
 func TestDft02(tst *testing.T) {
@@ -51,13 +47,13 @@ func TestDft02(tst *testing.T) {
 	// discrete data
 	N := 16
 	dt := 1.0 / float64(N-1)
-	tt := make([]float64, N)     // time
-	xx := make([]float64, N)     // x[n]
-	data := make([]float64, N*2) // x[n] to use as input of FFT
+	tt := make([]float64, N)      // time
+	xx := make([]float64, N)      // x[n]
+	data := make([]complex128, N) // x[n] to use as input of FFT
 	for i := 0; i < N; i++ {
 		tt[i] = float64(i) * dt
 		xx[i] = ss.Ybasis(tt[i])
-		data[i*2] = xx[i]
+		data[i] = complex(xx[i], 0)
 	}
 
 	// execute FFT
@@ -73,8 +69,8 @@ func TestDft02(tst *testing.T) {
 	Rf := make([]float64, N) // |X[n]|/n
 	maxRf := 0.0
 	for k := 0; k < N; k++ {
-		Xr[k] = data[k*2]
-		Xi[k] = data[k*2+1]
+		Xr[k] = real(data[k])
+		Xi[k] = imag(data[k])
 		Rf[k] = math.Sqrt(Xr[k]*Xr[k]+Xi[k]*Xi[k]) / float64(N)
 		if Rf[k] > maxRf {
 			maxRf = Rf[k]
