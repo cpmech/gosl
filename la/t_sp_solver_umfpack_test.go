@@ -10,10 +10,10 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-func TestSpSolver01a(tst *testing.T) {
+func TestSpUmfpack01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver01a. real")
+	chk.PrintTitle("SpUmfpack01a. real")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -38,10 +38,10 @@ func TestSpSolver01a(tst *testing.T) {
 	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, chk.Verbose, false, nil)
 }
 
-func TestSpSolver01b(tst *testing.T) {
+func TestSpUmfpack01b(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver01b. real. go-routines")
+	chk.PrintTitle("SpUmfpack01b. real. go-routines")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -76,10 +76,10 @@ func TestSpSolver01b(tst *testing.T) {
 	}
 }
 
-func TestSpSolver02(tst *testing.T) {
+func TestSpUmfpack02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver02. real")
+	chk.PrintTitle("SpUmfpack02. real")
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -105,10 +105,10 @@ func TestSpSolver02(tst *testing.T) {
 	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-5, tol, false, false, nil)
 }
 
-func TestSpSolver03(tst *testing.T) {
+func TestSpUmfpack03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver03. complex (without imaginary part)")
+	chk.PrintTitle("SpUmfpack03. complex (without imaginary part)")
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -133,10 +133,10 @@ func TestSpSolver03(tst *testing.T) {
 	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, true, false, nil)
 }
 
-func TestSpSolver04(tst *testing.T) {
+func TestSpUmfpack04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver04. complex (without imaginary part)")
+	chk.PrintTitle("SpUmfpack04. complex (without imaginary part)")
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -161,10 +161,10 @@ func TestSpSolver04(tst *testing.T) {
 	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-5, 1e-9, true, false, nil)
 }
 
-func TestSpSolver05(tst *testing.T) {
+func TestSpUmfpack05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver05. complex")
+	chk.PrintTitle("SpUmfpack05. complex")
 
 	// data
 	n := 10
@@ -193,10 +193,10 @@ func TestSpSolver05(tst *testing.T) {
 	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-15, 1e-13, true, false, nil)
 }
 
-func TestSpSolver06(tst *testing.T) {
+func TestSpUmfpack06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver06. complex")
+	chk.PrintTitle("SpUmfpack06. complex")
 
 	// given the following matrix of complex numbers:
 	//      _                                                  _

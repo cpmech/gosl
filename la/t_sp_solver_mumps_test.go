@@ -19,10 +19,10 @@ func switchMPI() {
 	}
 }
 
-func TestSpSolver01aM(tst *testing.T) {
+func TestSpMumps01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver01aM. real")
+	chk.PrintTitle("SpMumps01a. real")
 
 	switchMPI()
 	comm := mpi.NewCommunicator(nil)
@@ -51,10 +51,10 @@ func TestSpSolver01aM(tst *testing.T) {
 	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
 }
 
-func TestSpSolver02M(tst *testing.T) {
+func TestSpMumps02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver02M. real")
+	chk.PrintTitle("SpMumps02. real")
 
 	switchMPI()
 	comm := mpi.NewCommunicator(nil)
@@ -83,10 +83,10 @@ func TestSpSolver02M(tst *testing.T) {
 	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, bIsDistr, comm)
 }
 
-func TestSpSolver03M(tst *testing.T) {
+func TestSpMumps03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver03M. complex (without imaginary part)")
+	chk.PrintTitle("SpMumps03. complex (without imaginary part)")
 
 	switchMPI()
 	comm := mpi.NewCommunicator(nil)
@@ -115,10 +115,10 @@ func TestSpSolver03M(tst *testing.T) {
 	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
 }
 
-func TestSpSolver04M(tst *testing.T) {
+func TestSpMumps04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver04M. complex (without imaginary part)")
+	chk.PrintTitle("SpMumps04. complex (without imaginary part)")
 
 	switchMPI()
 	comm := mpi.NewCommunicator(nil)
@@ -147,10 +147,10 @@ func TestSpSolver04M(tst *testing.T) {
 	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, bIsDistr, comm)
 }
 
-func TestSpSolver05M(tst *testing.T) {
+func TestSpMumps05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver05M. complex")
+	chk.PrintTitle("SpMumps05. complex")
 
 	switchMPI()
 	comm := mpi.NewCommunicator(nil)
@@ -183,10 +183,10 @@ func TestSpSolver05M(tst *testing.T) {
 	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
 }
 
-func TestSpSolver06M(tst *testing.T) {
+func TestSpMumps06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("SpSolver06M. complex")
+	chk.PrintTitle("SpMumps06. complex")
 
 	switchMPI()
 	comm := mpi.NewCommunicator(nil)

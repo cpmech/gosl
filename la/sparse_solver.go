@@ -9,6 +9,8 @@ import (
 	"github.com/cpmech/gosl/mpi"
 )
 
+// real ////////////////////////////////////////////////////////////////////////////////////////////
+
 // SparseSolver solves sparse linear systems using UMFPACK or MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
@@ -62,4 +64,62 @@ func NewSparseSolverC(kind string) SparseSolverC {
 	}
 	chk.Panic("cannot find SparseSolverC named %q in database", kind)
 	return nil
+}
+
+// high-level functions ////////////////////////////////////////////////////////////////////////////
+
+// SpSolve solves a sparse linear system (using UMFPACK)
+//
+//   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
+//
+func SpSolve(A *Triplet, b Vector) (x Vector, err error) {
+
+	// allocate solver
+	o := NewSparseSolver("umfpack")
+	defer o.Free()
+
+	// initialise solver
+	err = o.Init(A, false, false, "", "", nil)
+	if err != nil {
+		return
+	}
+
+	// factorise
+	err = o.Fact()
+	if err != nil {
+		return
+	}
+
+	// solve
+	x = NewVector(len(b))
+	err = o.Solve(x, b, false) // x := inv(A) * b
+	return
+}
+
+// SpSolveC solves a sparse linear system (using UMFPACK) (complex version)
+//
+//   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
+//
+func SpSolveC(A *TripletC, b VectorC) (x VectorC, err error) {
+
+	// allocate solver
+	o := NewSparseSolverC("umfpack")
+	defer o.Free()
+
+	// initialise solver
+	err = o.Init(A, false, false, "", "", nil)
+	if err != nil {
+		return
+	}
+
+	// factorise
+	err = o.Fact()
+	if err != nil {
+		return
+	}
+
+	// solve
+	x = NewVectorC(len(b))
+	err = o.Solve(x, b, false) // x := inv(A) * b
+	return
 }
