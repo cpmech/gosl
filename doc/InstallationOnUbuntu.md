@@ -48,24 +48,7 @@ and follow the instructions. These options have been tested:
 1. Choose _Install as root using sudo_
 2. Keep default install location: **/opt/intel**
 
-## 5. [Optional] Install OpenCV
-
-Type:
-```bash
-sudo apt-get install libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
-mkdir -p $HOME/xpkg && cd $HOME/xpkg
-git clone https://github.com/opencv/opencv.git
-mkdir build_opencv
-cd build_opencv
-ccmake ../opencv
-```
-press `[c][c][g]`
-```
-make -j4
-sudo make install
-```
-
-## 6. [Required] Clone and install Gosl
+## 5. [Required] Clone and install Gosl
 
 Type:
 ```bash
@@ -76,7 +59,7 @@ cd gosl
 ./all.bash
 ```
 
-## 7. [Optional] Test la/mkl and img/ocv subpackages
+## 6. [Optional] Test la/mkl and img/ocv subpackages
 
 Install and test subpackage `la/mkl`:
 ```bash
