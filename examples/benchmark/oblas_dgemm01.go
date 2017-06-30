@@ -7,6 +7,7 @@
 package main
 
 import (
+	"bytes"
 	"math/rand"
 	"time"
 
@@ -41,7 +42,7 @@ func main() {
 
 	// run larger values
 	mValues = utl.IntRange3(16, 1424, 64)
-	nSamples = 10
+	nSamples = 100
 	bench("oblas-dgemm01b", nSamples, mValues)
 }
 
@@ -75,6 +76,10 @@ func bench(fnkey string, nSamples int, mValues []int) {
 	npts := len(mValues) + 1
 	xx, yy := make([]float64, npts), make([]float64, npts)
 	naiveX, naiveY := make([]float64, npts), make([]float64, npts)
+
+	// export results
+	buf := new(bytes.Buffer)
+	io.Ff(buf, "%4s %4s %23s %23s %23s %23s\n", "m", "n", "Gflops", "DtMicros", "naiveGflops", "naiveDtMicros")
 
 	// header
 	io.Pf("   size   ┃     OpenBLAS dgemm     (Dt) ┃          naïve           (naiveDt) ┃ naiveDt/Dt\n")
@@ -145,6 +150,9 @@ func bench(fnkey string, nSamples int, mValues []int) {
 			// print message
 			io.Pf("%4d×%4d ┃ %5.2f GFlops (%12v) ┃ naive: %5.2f GFlops (%12v) ┃ %.3f \n", m, m, gflops, dt, naiveGflops, naiveDt, naiveDtMicros/dtMicros)
 
+			// save buffer
+			io.Ff(buf, "%4d %4d %23.15e %23.15e %23.15e %23.15e\n", m, m, gflops, dtMicros, naiveGflops, naiveDtMicros)
+
 		} else {
 
 			// ------------------------------- message
@@ -152,8 +160,13 @@ func bench(fnkey string, nSamples int, mValues []int) {
 			// print message
 			io.Pf("%4d×%4d ┃ %5.2f GFlops (%12v) ┃ naive: N/A                         ┃ N/A\n", m, m, gflops, dt)
 
+			// save buffer
+			io.Ff(buf, "%4d %4d %23.15e %23.15e %23.15e %23.15e\n", m, m, gflops, dtMicros, 0.0, 0.0)
 		}
 	}
+
+	// save file
+	io.WriteFileVD("/tmp/gosl/", io.Sf("%s-%dsamples.res", fnkey, nSamples), buf)
 
 	// plot
 	if true {

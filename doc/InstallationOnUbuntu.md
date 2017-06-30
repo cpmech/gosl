@@ -34,6 +34,8 @@ Otherwise, the following error may happen:
 [...] libopenblas.so.0: cannot open shared object file: [...]
 ```
 
+**Note**: make sure `libopenblas-base` is NOT installed.
+
 ## 4. [Optional] Install Intel MKL
 
 Download MKL (~900Mb) from [the intel MKL website](https://software.intel.com/en-us/intel-mkl)
