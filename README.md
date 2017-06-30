@@ -49,8 +49,6 @@ Gosl includes the following _subpackages_:
 20. [rnd/dsfmt](https://github.com/cpmech/gosl/tree/master/rnd/dsfmt) &ndash; Go wrapper to dSIMD-oriented Fast Mersenne Twister
 21. [rnd/sfmt](https://github.com/cpmech/gosl/tree/master/rnd/sfmt)   &ndash; Go wrapper to SIMD-oriented Fast Mersenne Twister
 22. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)             &ndash; 3D Visualisation with the VTK tool kit
-23. [img](https://github.com/cpmech/gosl/tree/master/img)             &ndash; Image and machine learning algorithms for images
-24. [img/ocv](https://github.com/cpmech/gosl/tree/master/img/ocv)     &ndash; Go wrapper to OpenCV
 
 
 
