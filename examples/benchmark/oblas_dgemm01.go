@@ -52,16 +52,16 @@ func bench(fnkey string, nSamples int, mValues []int) {
 	_, mMax := utl.IntMinMax(mValues)
 
 	// Dgemm: allocate matrices
-	a := oblas.NewMatrixMN(mMax, mMax)
-	b := oblas.NewMatrixMN(mMax, mMax)
-	c := oblas.NewMatrixMN(mMax, mMax)
+	a := make([]float64, mMax*mMax)
+	b := make([]float64, mMax*mMax)
+	c := make([]float64, mMax*mMax)
 
 	// Dgemm: generate random matrices
 	for j := 0; j < mMax; j++ {
 		for i := 0; i < mMax; i++ {
-			a.Set(i, j, rand.Float64()-0.5)
-			b.Set(i, j, rand.Float64()-0.5)
-			c.Set(i, j, rand.Float64()-0.5)
+			a[i+j*mMax] = rand.Float64() - 0.5
+			b[i+j*mMax] = rand.Float64() - 0.5
+			c[i+j*mMax] = rand.Float64() - 0.5
 		}
 	}
 
