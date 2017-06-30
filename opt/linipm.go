@@ -57,7 +57,7 @@ type LinIpm struct {
 	J  *la.Triplet // [ny][ny] Jacobian matrix
 
 	// linear solver
-	Lis la.LinSol // linear solver
+	Lis la.SparseSolver // linear solver
 }
 
 // Free frees allocated memory
@@ -109,7 +109,7 @@ func (o *LinIpm) Init(A *la.CCMatrix, b, c la.Vector, prms dbf.Params) {
 	o.J.Init(o.Ny, o.Ny, nnz)
 
 	// linear solver
-	o.Lis = la.GetSolver("umfpack")
+	o.Lis = la.NewSparseSolver("umfpack")
 }
 
 // Solve solves linear programming problem
@@ -150,7 +150,6 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 
 	// constants for linear solver
 	symmetric := false
-	timing := false
 
 	// auxiliary
 	I := o.Nx + o.Nl
@@ -210,7 +209,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 
 		// solve linear system
 		if it == 0 {
-			err = o.Lis.InitR(o.J, symmetric, false, timing)
+			err = o.Lis.Init(o.J, symmetric, false, "", "", nil)
 			if err != nil {
 				return
 			}
@@ -219,7 +218,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 		if err != nil {
 			return
 		}
-		err = o.Lis.SolveR(o.Mdy, o.R, false) // mdy := inv(J) * R
+		err = o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
 		if err != nil {
 			return
 		}
@@ -241,7 +240,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 		}
 
 		// solve linear system again
-		err = o.Lis.SolveR(o.Mdy, o.R, false) // mdy := inv(J) * R
+		err = o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
 		if err != nil {
 			return
 		}
