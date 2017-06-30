@@ -13,7 +13,6 @@ import (
 
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la/mkl"
-	"github.com/cpmech/gosl/la/oblas"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -21,7 +20,6 @@ func main() {
 
 	// set number of threads
 	mkl.SetNumThreads(1)
-	oblas.SetNumThreads(1)
 
 	// run small values
 	mValues := utl.IntRange3(2, 66, 2)

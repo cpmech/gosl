@@ -24,14 +24,30 @@ Code for plotting: <a href="plot_mkl_oblas_naive.go">plot_mkl_oblas_naive.go</a>
 
 ## Larger matrices
 
+Single-threaded
+
 <div id="container">
 <p><img src="figs/mkl-oblas-comparison-large.png" width="600"></p>
 </div>
 
+4 threads
+
+<div id="container">
+<p><img src="figs/mkl-oblas-comparison-large-4t.png" width="600"></p>
+</div>
+
 ## Smaller matrices
+
+Single-threaded
 
 <div id="container">
 <p><img src="figs/mkl-oblas-comparison-small.png" width="600"></p>
+</div>
+
+4 threads
+
+<div id="container">
+<p><img src="figs/mkl-oblas-comparison-small-4t.png" width="600"></p>
 </div>
 
 
