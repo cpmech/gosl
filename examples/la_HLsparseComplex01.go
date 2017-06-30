@@ -7,6 +7,7 @@
 package main
 
 import (
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
@@ -40,55 +41,61 @@ func main() {
 	//     |       9      |
 	//     |_  10-17.75i _|
 
-	// flag indicating to store (real,complex) values in monolithic form => 1D array
-	xzmono := false
-
 	// input matrix in Complex Triplet format
-	var A la.TripletC
-	A.Init(5, 5, 16, xzmono) // 5 x 5 matrix with 16 non-zeros
+	A := new(la.TripletC)
+	A.Init(5, 5, 16) // 5 x 5 matrix with 16 non-zeros
 
 	// first column
-	A.Put(0, 0, 19.73, 0) // i=0, j=0, real=19.73, complex=0
-	A.Put(1, 0, 0, -0.51) // i=1, j=0, real=0, complex=-0.51
+	A.Put(0, 0, 19.73+0.00i)
+	A.Put(1, 0, +0.00-0.51i)
 
 	// second column
-	A.Put(0, 1, 12.11, -1) // i=0, j=1, real=12.11, complex=-1
-	A.Put(1, 1, 32.3, 7)
-	A.Put(2, 1, 0, -0.51)
+	A.Put(0, 1, 12.11-1.00i)
+	A.Put(1, 1, 32.30+7.00i)
+	A.Put(2, 1, +0.00-0.51i)
 
 	// third column
-	A.Put(0, 2, 0, 5)
-	A.Put(1, 2, 23.07, 0)
-	A.Put(2, 2, 70, 7.3)
-	A.Put(3, 2, 1, 1.1)
+	A.Put(0, 2, +0.00+5.0i)
+	A.Put(1, 2, 23.07+0.0i)
+	A.Put(2, 2, 70.00+7.3i)
+	A.Put(3, 2, +1.00+1.1i)
 
 	// fourth column
-	A.Put(1, 3, 0, 1)
-	A.Put(2, 3, 3.95, 0)
-	A.Put(3, 3, 50.17, 0)
-	A.Put(4, 3, 0, -9.351)
+	A.Put(1, 3, +0.00+1.000i)
+	A.Put(2, 3, +3.95+0.000i)
+	A.Put(3, 3, 50.17+0.000i)
+	A.Put(4, 3, +0.00-9.351i)
 
 	// fifth column
-	A.Put(2, 4, 19, 31.83)
-	A.Put(3, 4, 45.51, 0)
-	A.Put(4, 4, 55, 0)
+	A.Put(2, 4, 19.00+31.83i)
+	A.Put(3, 4, 45.51+0.00i)
+	A.Put(4, 4, 55.00+0.00i)
 
 	// right-hand-side
 	b := []complex128{
-		77.38 + 8.82i,
-		157.48 + 19.8i,
+		+77.38 + 8.82i,
+		+157.48 + 19.8i,
 		1175.62 + 20.69i,
-		912.12 - 801.75i,
-		550 - 1060.4i,
+		+912.12 - 801.75i,
+		+550.00 - 1060.4i,
+	}
+
+	// solution
+	xCorrect := []complex128{
+		+3.3 - 1.00i,
+		+1.0 + 0.17i,
+		+5.5 + 0.00i,
+		+9.0 + 0.00i,
+		10.0 - 17.75i,
 	}
 
 	// solve
-	x, err := la.SolveComplexLinSys(&A, b)
+	x, err := la.SpSolveC(A, b)
 	if err != nil {
-		io.Pfred("solver failed:\n%v", err)
-		return
+		chk.Panic("Solver failed %v\n")
 	}
 
 	// output
-	io.Pf("x = %v\n", x)
+	io.Pf("x = %.6f\n\n", x)
+	io.Pf("xCorrect = %v\n", xCorrect)
 }
