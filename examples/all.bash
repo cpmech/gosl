@@ -4,9 +4,6 @@ set -e
 
 examples="\
 chk_example01.go
-fdm_grid2d.go
-fdm_problem01.go
-fdm_problem02.go
 fun_fft01.go
 fun_orthopoly01.go
 gm_bezier01.go

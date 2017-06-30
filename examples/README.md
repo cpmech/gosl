@@ -12,7 +12,6 @@
 * Numerical differentiation
 * Drawing iso-surfaces with VTK
 * Plotting a contour
-* Solution of Poisson's equation using finite differences
 * Root finding problems
 * B-splines: curve, control, and basis
 * Orthogonal polynomials
@@ -240,53 +239,6 @@ Source code: <a href="plt_contour01.go">plt_contour01.go</a>
 <div id="container">
 <p><img src="figs/plt_contour01.png" width="500"></p>
 Contour
-</div>
-
-
-
-# Solution of Poisson's equation using finite differences
-
-Package `fdm` can help with the solution (approximation) of partial differential equations using the
-finite differences method (FDM).
-
-## First example
-
-Solving:
-
-```
-                ∂²u        ∂²u
-           - kx ———  -  ky ———  =  1
-                ∂x²        ∂y²
-```
-
-with zero Dirichlet boundary conditions around [-1, 1] x [-1, 1] and with kx=1 and ky=1.
-
-Solution with `fdm` and plotting with `plt`: <a href="fdm_problem01.go">fdm_problem01.go</a>
-
-<div id="container">
-<p><img src="figs/fdm_problem01.png" width="500"></p>
-Solution of Poisson's equation 01
-</div>
-
-
-## Second example
-
-Solving:
-
-```
-                ∂²u        ∂²u
-           - kx ———  -  ky ———  =  0
-                ∂x²        ∂y²
-```
-
-in the domain [0, 1] x [0, 1] with u = 50 @ the top and left boundaries. The other Dirichlet
-boundary conditions are zero. The material data are: kx = 1 and ky = 1.
-
-Solution with `fdm` and plotting with `plt`: <a href="fdm_problem02.go">fdm_problem02.go</a>
-
-<div id="container">
-<p><img src="figs/fdm_problem02.png" width="500"></p>
-Solution of Poisson's equation 02
 </div>
 
 
