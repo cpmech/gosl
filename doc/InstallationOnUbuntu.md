@@ -9,34 +9,32 @@ sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
 sudo apt-get install libfftw3-dev libfftw3-mpi-dev
 ```
 
-## 2. [Required] Set dynamic library flags
+## 2. [Required] Install OpenBLAS
 
-To set LD\_LIBRARY\_PATH, add the following line to `.bashrc` or `.bash_aliases`:
-```bash
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-```
-Alternatively, change `/etc/ld.so.conf` file as appropriate.
-
-## 3. [Required] Install OpenBLAS
+**Note**: make sure `libopenblas-base` is NOT installed (from apt-get).
 
 Type:
 ```bash
 mkdir -p $HOME/xpkg && cd $HOME/xpkg
 git clone https://github.com/xianyi/OpenBLAS.git
 cd OpenBLAS
-make -j4
-sudo make PREFIX=/usr/local install
+make DYNAMIC_ARCH=1 -j4
+sudo make DYNAMIC_ARCH=1 PREFIX=/usr/local install
 ```
 
-**Note**: Make sure to set the `/usr/local/lib` directory as a searchable LD\_LIBRARY\_PATH.
-Otherwise, the following error may happen:
+To avoid conflict between BLAS libraries, type:
+```bash
+sudo apt-get remove libopenblas-base
+sudo update-alternatives --remove libblas.so.3 /usr/local/lib/libopenblas.so.0
+sudo update-alternatives --list libblas.so.3
+sudo update-alternatives --install /usr/lib/libblas.so.3 libblas.so.3 /usr/local/lib/libopenblas.so.0 41
+sudo update-alternatives --config libblas.so.3
 ```
-[...] libopenblas.so.0: cannot open shared object file: [...]
-```
+In the last step, check that OpenBLAS is selected in auto mode.
 
-**Note**: make sure `libopenblas-base` is NOT installed.
+See more [information here](https://github.com/xianyi/OpenBLAS/wiki/faq#debianlts)
 
-## 4. [Optional] Install Intel MKL
+## 3. [Optional] Install Intel MKL
 
 Download MKL (~900Mb) from [the intel MKL website](https://software.intel.com/en-us/intel-mkl)
 (click on Free Download; need to sign-in), then:
@@ -50,7 +48,7 @@ and follow the instructions. These options have been tested:
 1. Choose _Install as root using sudo_
 2. Keep default install location: **/opt/intel**
 
-## 5. [Required] Clone and install Gosl
+## 4. [Required] Clone and install Gosl
 
 Type:
 ```bash
@@ -61,7 +59,7 @@ cd gosl
 ./all.bash
 ```
 
-## 6. [Optional] Test la/mkl and img/ocv subpackages
+## 5. [Optional] Test la/mkl and img/ocv subpackages
 
 Install and test subpackage `la/mkl`:
 ```bash
