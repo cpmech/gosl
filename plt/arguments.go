@@ -102,6 +102,11 @@ type A struct {
 // String returns a string representation of arguments
 func (o A) String(forHistogram, for3dPoints bool) (l string) {
 
+	// fix color if Void==true
+	if o.Void && o.C == "" {
+		o.C = "red"
+	}
+
 	// plot and basic options
 	if for3dPoints {
 		addToCmd(&l, o.Ms > 0, io.Sf("s=%d", o.Ms))
