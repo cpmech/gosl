@@ -275,7 +275,8 @@ func LinSpace(start, stop float64, num int) (res []float64) {
 	}
 	step := (stop - start) / float64(num-1)
 	res = make([]float64, num)
-	for i := 0; i < num; i++ {
+	res[0] = start
+	for i := 1; i < num; i++ {
 		res[i] = start + float64(i)*step
 	}
 	res[num-1] = stop
@@ -289,7 +290,8 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 	}
 	step := (stop - start) / float64(num)
 	res = make([]float64, num)
-	for i := 0; i < num; i++ {
+	res[0] = start
+	for i := 1; i < num; i++ {
 		res[i] = start + float64(i)*step
 	}
 	return

@@ -158,6 +158,13 @@ func Test_mylab04(tst *testing.T) {
 	io.Pf("a = %v\n", a)
 	io.Pf("r = %v\n", r)
 	chk.Vector(tst, "linspace(2,3,5)", 1e-17, a, []float64{2.0, 2.25, 2.5, 2.75, 3.0})
+	if a[0] != 2.0 {
+		tst.Errorf("first point must be exact. %g != %g\n", a[0], 2.0)
+	}
+	if a[len(a)-1] != 3.0 {
+		tst.Errorf("last point must be exact. %g != %g\n", a[len(a)-1], 3.0)
+		return
+	}
 
 	b := LinSpaceOpen(2.0, 3.0, n)
 	Δ := (3.0 - 2.0) / float64(n)
@@ -169,10 +176,30 @@ func Test_mylab04(tst *testing.T) {
 	io.Pf("b = %v\n", b)
 	io.Pf("R = %v\n", R)
 	chk.Vector(tst, "linspace(2,3,5,open)", 1e-17, b, []float64{2.0, 2.2, 2.4, 2.6, 2.8})
+	if b[0] != 2.0 {
+		tst.Errorf("first point must be exact. %g != %g\n", b[0], 2.0)
+	}
+	if b[len(b)-1] != 2.8 {
+		tst.Errorf("last point must be exact. %g != %g\n", b[len(b)-1], 2.8)
+		return
+	}
 
 	c := LinSpace(2.0, 3.0, 1)
 	io.Pf("c = %v\n", c)
 	chk.Vector(tst, "linspace(2,3,1)", 1e-17, c, []float64{2.0})
+	if c[0] != 2.0 {
+		tst.Errorf("first point must be exact. %g != %g\n", c[0], 2.0)
+	}
+
+	d := LinSpace(2.0, 3.0, 2)
+	chk.Vector(tst, "linspace(2,3,2)", 1e-17, d, []float64{2.0, 3.0})
+	if d[0] != 2.0 {
+		tst.Errorf("first point must be exact. %g != %g\n", d[0], 2.0)
+	}
+	if d[len(d)-1] != 3.0 {
+		tst.Errorf("last point must be exact. %g != %g\n", d[len(d)-1], 3.0)
+		return
+	}
 }
 
 func Test_mylab05(tst *testing.T) {
