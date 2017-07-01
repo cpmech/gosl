@@ -69,10 +69,11 @@ func main() {
 		X[i] = xvec[0]
 		Y[i] = fx[0]
 	}
-	plt.Reset(false, nil)
-	plt.AxHline(0, nil)
+	plt.Reset(true, nil)
+	plt.AxHline(0, &plt.A{C: "k"})
 	plt.Plot(X, Y, nil)
 	plt.PlotOne(xo, yo, &plt.A{C: "r", M: "."})
+	plt.HideTRborders()
 	plt.Gll("x", "y(x)", nil)
 	plt.Save("/tmp/gosl", "num_newton01")
 }
