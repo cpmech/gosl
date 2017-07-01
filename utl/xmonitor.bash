@@ -14,5 +14,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="AuxFuncs02"
+    go test -test.run="NonlinSpace"
 done

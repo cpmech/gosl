@@ -297,6 +297,100 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 	return
 }
 
+// NonlinSpace generates N points such that the ratio between the last segment (or the middle
+// segment) to the first one is equal to a given constant R.
+//
+//       ΔxL   = Δx0 ⋅ R
+//
+//   unsymmetric:
+//
+//     |--|-------|------------|-----------------|
+//      Δx0                            ΔxL
+//
+//   symmetric (odd number of spacings):
+//
+//     |---|--------|---------------|--------|---|
+//      Δx0                ΔxL                Δx0
+//
+//   symmetric (even number of spacings):
+//
+//     |---|----------------|----------------|---|
+//      Δx0       ΔxL               ΔxL       Δx0
+//
+func NonlinSpace(xa, xb float64, N int, R float64, symmetric bool) (x []float64) {
+
+	// initialise data
+	if N < 2 {
+		N = 2
+	}
+	x = make([]float64, N)
+	x[0] = xa
+	x[N-1] = xb
+	if N == 2 {
+		return
+	}
+
+	// uniform grid
+	if R == 1.0 {
+		return LinSpace(xa, xb, N)
+	}
+
+	// symmetric grid
+	if symmetric {
+
+		// even number of segments
+		if (N-1)%2 == 0 {
+			if N == 3 {
+				x[1] = (xa + xb) / 2.0
+				x[2] = xb
+				return
+			}
+			nh := float64((N - 1) / 2)
+			xh := 0.5 * (xa + xb)
+			α := math.Pow(R, 1.0/(nh-1.0))
+			m := (1.0 - α) / (1.0 - math.Pow(α, nh))
+			δx := (xh - xa) * m
+			for i := 1; i < (N-1)/2+1; i++ {
+				x[i] = x[i-1] + δx
+				δx *= α
+			}
+			δx /= α
+			for i := (N-1)/2 + 1; i < N-1; i++ {
+				x[i] = x[i-1] + δx
+				δx /= α
+			}
+
+			// odd number of segments
+		} else {
+			n := float64(N - 1)
+			α := math.Pow(R, 2.0/(n-1.0))
+			m := (1.0 - α) / (2.0 - math.Pow(α, (n+1.0)/2.0) - math.Pow(α, (n-1.0)/2.0))
+			δx := (xb - xa) * m
+			for i := 1; i < (N+2)/2; i++ {
+				x[i] = x[i-1] + δx
+				δx *= α
+			}
+			δx /= α * α
+			for i := (N + 2) / 2; i < N-1; i++ {
+				x[i] = x[i-1] + δx
+				δx /= α
+			}
+		}
+		return
+	}
+
+	// unsymmetric grid
+	n := float64(N - 1)
+	α := math.Pow(R, 1.0/(n-1.0))
+	m := (1.0 - α) / (1.0 - math.Pow(α, n))
+	δx := (xb - xa) * m
+	for i := 1; i < N-1; i++ {
+		x[i] = x[i-1] + δx
+		δx *= α
+	}
+	return
+}
+
 // ToStrings converts a slice of float64 to a slice of strings
 func ToStrings(v []float64, format string) (s []string) {
 	s = make([]string, len(v))
