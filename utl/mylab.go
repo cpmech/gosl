@@ -300,19 +300,26 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 // NonlinSpace generates N points such that the ratio between the last segment (or the middle
 // segment) to the first one is equal to a given constant R.
 //
+//   The ratio between the last (or middle largest) segment to the first one is:
+//
 //       ΔxL   = Δx0 ⋅ R
 //
-//   unsymmetric:
+//   The ratio between successive segments is
+//
+//                k-1
+//       Δx[k] = α    ⋅ Δx[0]
+//
+//   Unsymmetricc case:
 //
 //     |--|-------|------------|-----------------|
 //      Δx0                            ΔxL
 //
-//   symmetric (odd number of spacings):
+//   Symmetric case with odd number of spacings:
 //
 //     |---|--------|---------------|--------|---|
 //      Δx0                ΔxL                Δx0
 //
-//   symmetric (even number of spacings):
+//   Symmetric case with even number of spacings:
 //
 //     |---|----------------|----------------|---|
 //      Δx0       ΔxL               ΔxL       Δx0
@@ -324,8 +331,9 @@ func NonlinSpace(xa, xb float64, N int, R float64, symmetric bool) (x []float64)
 		N = 2
 	}
 	x = make([]float64, N)
+	l := N - 1
 	x[0] = xa
-	x[N-1] = xb
+	x[l] = xb
 	if N == 2 {
 		return
 	}
@@ -339,7 +347,7 @@ func NonlinSpace(xa, xb float64, N int, R float64, symmetric bool) (x []float64)
 	if symmetric {
 
 		// even number of segments
-		if (N-1)%2 == 0 {
+		if l%2 == 0 {
 			if N == 3 {
 				x[1] = (xa + xb) / 2.0
 				x[2] = xb
@@ -350,14 +358,12 @@ func NonlinSpace(xa, xb float64, N int, R float64, symmetric bool) (x []float64)
 			α := math.Pow(R, 1.0/(nh-1.0))
 			m := (1.0 - α) / (1.0 - math.Pow(α, nh))
 			δx := (xh - xa) * m
-			for i := 1; i < (N-1)/2+1; i++ {
+			for i := 1; i < l/2+1; i++ {
 				x[i] = x[i-1] + δx
+				if i < l/2 { // adding backwards
+					x[l-i] = x[N-i] - δx
+				}
 				δx *= α
-			}
-			δx /= α
-			for i := (N-1)/2 + 1; i < N-1; i++ {
-				x[i] = x[i-1] + δx
-				δx /= α
 			}
 
 			// odd number of segments
@@ -368,12 +374,10 @@ func NonlinSpace(xa, xb float64, N int, R float64, symmetric bool) (x []float64)
 			δx := (xb - xa) * m
 			for i := 1; i < (N+2)/2; i++ {
 				x[i] = x[i-1] + δx
+				if i < (N+2)/2-1 { // adding backwards
+					x[l-i] = x[N-i] - δx
+				}
 				δx *= α
-			}
-			δx /= α * α
-			for i := (N + 2) / 2; i < N-1; i++ {
-				x[i] = x[i-1] + δx
-				δx /= α
 			}
 		}
 		return
@@ -384,7 +388,7 @@ func NonlinSpace(xa, xb float64, N int, R float64, symmetric bool) (x []float64)
 	α := math.Pow(R, 1.0/(n-1.0))
 	m := (1.0 - α) / (1.0 - math.Pow(α, n))
 	δx := (xb - xa) * m
-	for i := 1; i < N-1; i++ {
+	for i := 1; i < l; i++ {
 		x[i] = x[i-1] + δx
 		δx *= α
 	}
