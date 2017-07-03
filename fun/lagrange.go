@@ -74,19 +74,19 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	return
 }
 
-// W computes the generating (nodal) polynomial associated with grid X. The nodal polynomial is the
-// unique polynomial of degree N+1 and leading coefficient whose zeros are the N+1 nodes of X.
+// Phi computes the generating (nodal) polynomial associated with grid X. The nodal polynomial is
+// the unique polynomial of degree N+1 and leading coefficient whose zeros are the N+1 nodes of X.
 //
 //                 N
 //         X      ━━━━
-//        W (x) = ┃  ┃ (x - X[i])
+//        Φ (x) = ┃  ┃ (x - X[i])
 //        N+1     ┃  ┃
 //               i = 0
 //
-func (o *LagrangeInterp) W(x float64) (w float64) {
-	w = 1
+func (o *LagrangeInterp) Phi(x float64) (Φ float64) {
+	Φ = 1
 	for i := 0; i < o.N+1; i++ {
-		w *= x - o.X[i]
+		Φ *= x - o.X[i]
 	}
 	return
 }
@@ -202,7 +202,7 @@ func PlotLagInterpW(N int, gridType io.Enum) {
 	yy := make([]float64, len(xx))
 	o, _ := NewLagrangeInterp(N, gridType)
 	for k, x := range xx {
-		yy[k] = o.W(x)
+		yy[k] = o.Phi(x)
 	}
 	Y := make([]float64, len(o.X))
 	plt.Plot(o.X, Y, &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true})
