@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILE="*.go"
+FILE="*.go *.c *.f"
 
 while true; do
     inotifywait -q -e modify $FILE
