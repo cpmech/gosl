@@ -11,7 +11,6 @@ import (
 
 func init() {
 	io.Verbose = false
-	//chk.Verbose = true
 }
 
 func verbose() {
