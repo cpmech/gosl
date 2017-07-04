@@ -39,8 +39,19 @@ dqwgts.f   \
 "
 
 # from SciPy
-for f in $FILES; do
-    curl https://raw.githubusercontent.com/scipy/scipy/master/scipy/integrate/quadpack/$f > $f
+#for f in $FILES; do
+    #curl https://raw.githubusercontent.com/scipy/scipy/master/scipy/integrate/quadpack/$f > $f
+#done
+
+# extra files
+EXTRA="\
+d1mach.f \
+i1mach.f \
+xerror.f \
+"
+
+for f in $EXTRA; do
+    curl https://raw.githubusercontent.com/scipy/scipy/master/scipy/special/mach/$f > $f
 done
 
 # from NetLib
