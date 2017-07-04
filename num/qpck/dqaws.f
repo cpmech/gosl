@@ -1,5 +1,5 @@
       subroutine dqaws(f,a,b,alfa,beta,integr,epsabs,epsrel,result,
-     *   abserr,neval,ier,limit,lenw,last,iwork,work)
+     *   abserr,neval,ier,limit,lenw,last,iwork,work,fid)
 c***begin prologue  dqaws
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -166,7 +166,7 @@ c***routines called  dqawse,xerror
 c***end prologue  dqaws
 c
       double precision a,abserr,alfa,b,beta,epsabs,epsrel,f,result,work
-      integer ier,integr,iwork,last,lenw,limit,lvl,l1,l2,l3,neval
+      integer ier,integr,iwork,last,lenw,limit,lvl,l1,l2,l3,neval,fid
 c
       dimension iwork(limit),work(lenw)
 c
@@ -189,7 +189,8 @@ c
       l3 = limit+l2
 c
       call dqawse(f,a,b,alfa,beta,integr,epsabs,epsrel,limit,result,
-     *  abserr,neval,ier,work(1),work(l1),work(l2),work(l3),iwork,last)
+     *  abserr,neval,ier,work(1),work(l1),work(l2),work(l3),iwork,last,
+     *  fid)
 c
 c         call error handler if necessary.
 c

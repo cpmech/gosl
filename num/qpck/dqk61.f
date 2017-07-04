@@ -1,4 +1,4 @@
-      subroutine dqk61(f,a,b,result,abserr,resabs,resasc)
+      subroutine dqk61(f,a,b,result,abserr,resabs,resasc,fid)
 c***begin prologue  dqk61
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -54,7 +54,7 @@ c
       double precision a,dabsc,abserr,b,centr,dabs,dhlgth,dmax1,dmin1,
      *  d1mach,epmach,f,fc,fsum,fval1,fval2,fv1,fv2,hlgth,resabs,resasc,
      *  resg,resk,reskh,result,uflow,wg,wgk,xgk
-      integer j,jtw,jtwm1
+      integer j,jtw,jtwm1,fid
       external f
 c
       dimension fv1(30),fv2(30),xgk(31),wgk(31),wg(15)
@@ -188,14 +188,14 @@ c           integral, and estimate the absolute error.
 c
 c***first executable statement  dqk61
       resg = 0.0d+00
-      fc = f(centr)
+      fc = f(centr,fid)
       resk = wgk(31)*fc
       resabs = dabs(resk)
       do 10 j=1,15
         jtw = j*2
         dabsc = hlgth*xgk(jtw)
-        fval1 = f(centr-dabsc)
-        fval2 = f(centr+dabsc)
+        fval1 = f(centr-dabsc,fid)
+        fval2 = f(centr+dabsc,fid)
         fv1(jtw) = fval1
         fv2(jtw) = fval2
         fsum = fval1+fval2
@@ -206,8 +206,8 @@ c***first executable statement  dqk61
       do 15 j=1,15
         jtwm1 = j*2-1
         dabsc = hlgth*xgk(jtwm1)
-        fval1 = f(centr-dabsc)
-        fval2 = f(centr+dabsc)
+        fval1 = f(centr-dabsc,fid)
+        fval2 = f(centr+dabsc,fid)
         fv1(jtwm1) = fval1
         fv2(jtwm1) = fval2
         fsum = fval1+fval2

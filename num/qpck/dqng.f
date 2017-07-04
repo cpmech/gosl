@@ -1,4 +1,4 @@
-      subroutine dqng(f,a,b,epsabs,epsrel,result,abserr,neval,ier)
+      subroutine dqng(f,a,b,epsabs,epsrel,result,abserr,neval,ier,fid)
 c***begin prologue  dqng
 c***date written   800101   (yymmdd)
 c***revision date  810101   (yymmdd)
@@ -79,7 +79,7 @@ c
      *  d1mach,epmach,epsabs,epsrel,f,fcentr,fval,fval1,fval2,fv1,fv2,
      *  fv3,fv4,hlgth,result,res10,res21,res43,res87,resabs,resasc,
      *  reskh,savfun,uflow,w10,w21a,w21b,w43a,w43b,w87a,w87b,x1,x2,x3,x4
-      integer ier,ipx,k,l,neval
+      integer ier,ipx,k,l,neval,fid
       external f
 c
       dimension fv1(5),fv2(5),fv3(5),fv4(5),x1(5),x2(5),x3(11),x4(22),
@@ -276,7 +276,7 @@ c
       hlgth = 0.5d+00*(b-a)
       dhlgth = dabs(hlgth)
       centr = 0.5d+00*(b+a)
-      fcentr = f(centr)
+      fcentr = f(centr,fid)
       neval = 21
       ier = 1
 c
@@ -289,8 +289,8 @@ c
       resabs = w21b(6)*dabs(fcentr)
       do 10 k=1,5
         absc = hlgth*x1(k)
-        fval1 = f(centr+absc)
-        fval2 = f(centr-absc)
+        fval1 = f(centr+absc,fid)
+        fval2 = f(centr-absc,fid)
         fval = fval1+fval2
         res10 = res10+w10(k)*fval
         res21 = res21+w21a(k)*fval
@@ -303,8 +303,8 @@ c
       do 15 k=1,5
         ipx = ipx+1
         absc = hlgth*x2(k)
-        fval1 = f(centr+absc)
-        fval2 = f(centr-absc)
+        fval1 = f(centr+absc,fid)
+        fval2 = f(centr-absc,fid)
         fval = fval1+fval2
         res21 = res21+w21b(k)*fval
         resabs = resabs+w21b(k)*(dabs(fval1)+dabs(fval2))
@@ -337,7 +337,7 @@ c
       do 40 k=1,11
         ipx = ipx+1
         absc = hlgth*x3(k)
-        fval = f(absc+centr)+f(centr-absc)
+        fval = f(absc+centr,fid)+f(centr-absc,fid)
         res43 = res43+fval*w43b(k)
         savfun(ipx) = fval
    40 continue
@@ -357,7 +357,7 @@ c
    50 continue
       do 60 k=1,22
         absc = hlgth*x4(k)
-        res87 = res87+w87b(k)*(f(absc+centr)+f(centr-absc))
+        res87 = res87+w87b(k)*(f(absc+centr,fid)+f(centr-absc,fid))
    60 continue
       result = res87*hlgth
       abserr = dabs((res87-res43)*hlgth)

@@ -1,6 +1,6 @@
       subroutine dqawoe (f,a,b,omega,integr,epsabs,epsrel,limit,icall,
      *  maxp1,result,abserr,neval,ier,last,alist,blist,rlist,elist,iord,
-     *   nnlog,momcom,chebmo)
+     *   nnlog,momcom,chebmo,fid)
 c***begin prologue  dqawoe
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -209,7 +209,7 @@ c
      *  omega,resabs,reseps,result,res3la,rlist,rlist2,small,uflow,width
       integer icall,id,ier,ierro,integr,iord,iroff1,iroff2,iroff3,
      *  jupbnd,k,ksgn,ktmin,last,limit,maxerr,maxp1,momcom,nev,neval,
-     *  nnlog,nres,nrmax,nrmom,numrl2
+     *  nnlog,nres,nrmax,nrmom,numrl2,fid
       logical extrap,noext,extall
 c
       dimension alist(limit),blist(limit),rlist(limit),elist(limit),
@@ -298,7 +298,7 @@ c
       if (icall.gt.1) go to 5
       momcom = 0
     5 call dqc25f(f,a,b,domega,integr,nrmom,maxp1,0,result,abserr,
-     *  neval,defabs,resabs,momcom,chebmo)
+     *  neval,defabs,resabs,momcom,chebmo,fid)
 c
 c           test on accuracy.
 c
@@ -356,10 +356,10 @@ c
         b2 = blist(maxerr)
         erlast = errmax
         call dqc25f(f,a1,b1,domega,integr,nrmom,maxp1,0,
-     *  area1,error1,nev,resabs,defab1,momcom,chebmo)
+     *  area1,error1,nev,resabs,defab1,momcom,chebmo,fid)
         neval = neval+nev
         call dqc25f(f,a2,b2,domega,integr,nrmom,maxp1,1,
-     *  area2,error2,nev,resabs,defab2,momcom,chebmo)
+     *  area2,error2,nev,resabs,defab2,momcom,chebmo,fid)
         neval = neval+nev
 c
 c           improve previous approximations to integral

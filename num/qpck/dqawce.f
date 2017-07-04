@@ -1,5 +1,5 @@
       subroutine dqawce(f,a,b,c,epsabs,epsrel,limit,result,abserr,neval,
-     *   ier,alist,blist,rlist,elist,iord,last)
+     *   ier,alist,blist,rlist,elist,iord,last,fid)
 c***begin prologue  dqawce
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -140,7 +140,7 @@ c
      *  b,bb,blist,b1,b2,c,dabs,dmax1,d1mach,elist,epmach,epsabs,epsrel,
      *  errbnd,errmax,error1,erro12,error2,errsum,f,result,rlist,uflow
       integer ier,iord,iroff1,iroff2,k,krule,last,limit,maxerr,nev,
-     *  neval,nrmax
+     *  neval,nrmax,fid
 c
       dimension alist(limit),blist(limit),rlist(limit),elist(limit),
      *  iord(limit)
@@ -206,7 +206,7 @@ c
       bb=a
 10    ier=0
       krule = 1
-      call dqc25c(f,aa,bb,c,result,abserr,krule,neval)
+      call dqc25c(f,aa,bb,c,result,abserr,krule,neval,fid)
       last = 1
       rlist(1) = result
       elist(1) = abserr
@@ -250,9 +250,9 @@ c
         if(c.gt.b1.and.c.lt.b2) b1 = 0.5d+00*(a1+c)
         a2 = b1
         krule = 2
-        call dqc25c(f,a1,b1,c,area1,error1,krule,nev)
+        call dqc25c(f,a1,b1,c,area1,error1,krule,nev,fid)
         neval = neval+nev
-        call dqc25c(f,a2,b2,c,area2,error2,krule,nev)
+        call dqc25c(f,a2,b2,c,area2,error2,krule,nev,fid)
         neval = neval+nev
 c
 c           improve previous approximations to integral

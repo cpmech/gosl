@@ -1,5 +1,5 @@
       subroutine dqage(f,a,b,epsabs,epsrel,key,limit,result,abserr,
-     *   neval,ier,alist,blist,rlist,elist,iord,last)
+     *   neval,ier,alist,blist,rlist,elist,iord,last,fid)
 c***begin prologue  dqage
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -150,7 +150,7 @@ c
      *  epsabs,epsrel,errbnd,errmax,error1,error2,erro12,errsum,f,
      *  resabs,result,rlist,uflow
       integer ier,iord,iroff1,iroff2,k,key,keyf,last,limit,maxerr,neval,
-     *  nrmax
+     *  nrmax,fid
 c
       dimension alist(limit),blist(limit),elist(limit),iord(limit),
      *  rlist(limit)
@@ -213,12 +213,12 @@ c
       if(key.le.0) keyf = 1
       if(key.ge.7) keyf = 6
       neval = 0
-      if(keyf.eq.1) call dqk15(f,a,b,result,abserr,defabs,resabs)
-      if(keyf.eq.2) call dqk21(f,a,b,result,abserr,defabs,resabs)
-      if(keyf.eq.3) call dqk31(f,a,b,result,abserr,defabs,resabs)
-      if(keyf.eq.4) call dqk41(f,a,b,result,abserr,defabs,resabs)
-      if(keyf.eq.5) call dqk51(f,a,b,result,abserr,defabs,resabs)
-      if(keyf.eq.6) call dqk61(f,a,b,result,abserr,defabs,resabs)
+      if(keyf.eq.1) call dqk15(f,a,b,result,abserr,defabs,resabs,fid)
+      if(keyf.eq.2) call dqk21(f,a,b,result,abserr,defabs,resabs,fid)
+      if(keyf.eq.3) call dqk31(f,a,b,result,abserr,defabs,resabs,fid)
+      if(keyf.eq.4) call dqk41(f,a,b,result,abserr,defabs,resabs,fid)
+      if(keyf.eq.5) call dqk51(f,a,b,result,abserr,defabs,resabs,fid)
+      if(keyf.eq.6) call dqk61(f,a,b,result,abserr,defabs,resabs,fid)
       last = 1
       rlist(1) = result
       elist(1) = abserr
@@ -255,18 +255,18 @@ c
         b1 = 0.5d+00*(alist(maxerr)+blist(maxerr))
         a2 = b1
         b2 = blist(maxerr)
-        if(keyf.eq.1) call dqk15(f,a1,b1,area1,error1,resabs,defab1)
-        if(keyf.eq.2) call dqk21(f,a1,b1,area1,error1,resabs,defab1)
-        if(keyf.eq.3) call dqk31(f,a1,b1,area1,error1,resabs,defab1)
-        if(keyf.eq.4) call dqk41(f,a1,b1,area1,error1,resabs,defab1)
-        if(keyf.eq.5) call dqk51(f,a1,b1,area1,error1,resabs,defab1)
-        if(keyf.eq.6) call dqk61(f,a1,b1,area1,error1,resabs,defab1)
-        if(keyf.eq.1) call dqk15(f,a2,b2,area2,error2,resabs,defab2)
-        if(keyf.eq.2) call dqk21(f,a2,b2,area2,error2,resabs,defab2)
-        if(keyf.eq.3) call dqk31(f,a2,b2,area2,error2,resabs,defab2)
-        if(keyf.eq.4) call dqk41(f,a2,b2,area2,error2,resabs,defab2)
-        if(keyf.eq.5) call dqk51(f,a2,b2,area2,error2,resabs,defab2)
-        if(keyf.eq.6) call dqk61(f,a2,b2,area2,error2,resabs,defab2)
+        if(keyf.eq.1) call dqk15(f,a1,b1,area1,error1,resabs,defab1,fid)
+        if(keyf.eq.2) call dqk21(f,a1,b1,area1,error1,resabs,defab1,fid)
+        if(keyf.eq.3) call dqk31(f,a1,b1,area1,error1,resabs,defab1,fid)
+        if(keyf.eq.4) call dqk41(f,a1,b1,area1,error1,resabs,defab1,fid)
+        if(keyf.eq.5) call dqk51(f,a1,b1,area1,error1,resabs,defab1,fid)
+        if(keyf.eq.6) call dqk61(f,a1,b1,area1,error1,resabs,defab1,fid)
+        if(keyf.eq.1) call dqk15(f,a2,b2,area2,error2,resabs,defab2,fid)
+        if(keyf.eq.2) call dqk21(f,a2,b2,area2,error2,resabs,defab2,fid)
+        if(keyf.eq.3) call dqk31(f,a2,b2,area2,error2,resabs,defab2,fid)
+        if(keyf.eq.4) call dqk41(f,a2,b2,area2,error2,resabs,defab2,fid)
+        if(keyf.eq.5) call dqk51(f,a2,b2,area2,error2,resabs,defab2,fid)
+        if(keyf.eq.6) call dqk61(f,a2,b2,area2,error2,resabs,defab2,fid)
 c
 c           improve previous approximations to integral
 c           and error and test for accuracy.

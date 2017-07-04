@@ -1,6 +1,6 @@
       subroutine dqagpe(f,a,b,npts2,points,epsabs,epsrel,limit,result,
      *   abserr,neval,ier,alist,blist,rlist,elist,pts,iord,level,ndin,
-     *   last)
+     *   last,fid)
 c***begin prologue  dqagpe
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -194,7 +194,7 @@ c***end prologue  dqagpe
      *  resa,resabs,reseps,result,res3la,rlist,rlist2,sign,temp,uflow
       integer i,id,ier,ierro,ind1,ind2,iord,ip1,iroff1,iroff2,iroff3,j,
      *  jlow,jupbnd,k,ksgn,ktmin,last,levcur,level,levmax,limit,maxerr,
-     *  ndin,neval,nint,nintp1,npts,npts2,nres,nrmax,numrl2
+     *  ndin,neval,nint,nintp1,npts,npts2,nres,nrmax,numrl2,fid
       logical extrap,noext
 c
 c
@@ -309,7 +309,7 @@ c
    40 resabs = 0.0d+00
       do 50 i = 1,nint
         b1 = pts(i+1)
-        call dqk21(f,a1,b1,area1,error1,defabs,resa)
+        call dqk21(f,a1,b1,area1,error1,defabs,resa,fid)
         abserr = abserr+error1
         result = result+area1
         ndin(i) = 0
@@ -393,8 +393,8 @@ c
         a2 = b1
         b2 = blist(maxerr)
         erlast = errmax
-        call dqk21(f,a1,b1,area1,error1,resa,defab1)
-        call dqk21(f,a2,b2,area2,error2,resa,defab2)
+        call dqk21(f,a1,b1,area1,error1,resa,defab1,fid)
+        call dqk21(f,a2,b2,area2,error2,resa,defab2,fid)
 c
 c           improve previous approximations to integral
 c           and error and test for accuracy.

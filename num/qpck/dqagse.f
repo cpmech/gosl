@@ -1,5 +1,5 @@
       subroutine dqagse(f,a,b,epsabs,epsrel,limit,result,abserr,neval,
-     *   ier,alist,blist,rlist,elist,iord,last)
+     *   ier,alist,blist,rlist,elist,iord,last,fid)
 c***begin prologue  dqagse
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -152,7 +152,7 @@ c
      *  error1,error2,erro12,errsum,ertest,f,oflow,resabs,reseps,result,
      *  res3la,rlist,rlist2,small,uflow
       integer id,ier,ierro,iord,iroff1,iroff2,iroff3,jupbnd,k,ksgn,
-     *  ktmin,last,limit,maxerr,neval,nres,nrmax,numrl2
+     *  ktmin,last,limit,maxerr,neval,nres,nrmax,numrl2,fid
       logical extrap,noext
 c
       dimension alist(limit),blist(limit),elist(limit),iord(limit),
@@ -237,7 +237,7 @@ c
       uflow = d1mach(1)
       oflow = d1mach(2)
       ierro = 0
-      call dqk21(f,a,b,result,abserr,defabs,resabs)
+      call dqk21(f,a,b,result,abserr,defabs,resabs,fid)
 c
 c           test on accuracy.
 c
@@ -286,8 +286,8 @@ c
         a2 = b1
         b2 = blist(maxerr)
         erlast = errmax
-        call dqk21(f,a1,b1,area1,error1,resabs,defab1)
-        call dqk21(f,a2,b2,area2,error2,resabs,defab2)
+        call dqk21(f,a1,b1,area1,error1,resabs,defab1,fid)
+        call dqk21(f,a2,b2,area2,error2,resabs,defab2,fid)
 c
 c           improve previous approximations to integral
 c           and error and test for accuracy.

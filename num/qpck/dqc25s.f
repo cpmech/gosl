@@ -1,5 +1,5 @@
       subroutine dqc25s(f,a,b,bl,br,alfa,beta,ri,rj,rg,rh,result,
-     *   abserr,resasc,integr,nev)
+     *   abserr,resasc,integr,nev,fid)
 c***begin prologue  dqc25s
 c***date written   810101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -79,7 +79,7 @@ c
       double precision a,abserr,alfa,b,beta,bl,br,centr,cheb12,cheb24,
      *  dabs,dc,dlog,f,factor,fix,fval,hlgth,resabs,resasc,result,res12,
      *  res24,rg,rh,ri,rj,u,dqwgts,x
-      integer i,integr,isym,nev
+      integer i,integr,isym,nev,fid
 c
       dimension cheb12(13),cheb24(25),fval(25),rg(25),rh(25),ri(25),
      *  rj(25),x(11)
@@ -133,7 +133,7 @@ c           scheme.
 c
 c
       call dqk15w(f,dqwgts,a,b,alfa,beta,integr,bl,br,
-     *    result,abserr,resabs,resasc)
+     *    result,abserr,resabs,resasc,fid)
       nev = 15
       go to 270
 c
@@ -148,14 +148,14 @@ c
    10 hlgth = 0.5d+00*(br-bl)
       centr = 0.5d+00*(br+bl)
       fix = b-centr
-      fval(1) = 0.5d+00*f(hlgth+centr)*(fix-hlgth)**beta
-      fval(13) = f(centr)*(fix**beta)
-      fval(25) = 0.5d+00*f(centr-hlgth)*(fix+hlgth)**beta
+      fval(1) = 0.5d+00*f(hlgth+centr,fid)*(fix-hlgth)**beta
+      fval(13) = f(centr,fid)*(fix**beta)
+      fval(25) = 0.5d+00*f(centr-hlgth,fid)*(fix+hlgth)**beta
       do 20 i=2,12
         u = hlgth*x(i-1)
         isym = 26-i
-        fval(i) = f(u+centr)*(fix-u)**beta
-        fval(isym) = f(centr-u)*(fix+u)**beta
+        fval(i) = f(u+centr,fid)*(fix-u)**beta
+        fval(isym) = f(centr-u,fid)*(fix+u)**beta
    20 continue
       factor = hlgth**(alfa+0.1d+01)
       result = 0.0d+00
@@ -247,14 +247,14 @@ c
   140 hlgth = 0.5d+00*(br-bl)
       centr = 0.5d+00*(br+bl)
       fix = centr-a
-      fval(1) = 0.5d+00*f(hlgth+centr)*(fix+hlgth)**alfa
-      fval(13) = f(centr)*(fix**alfa)
-      fval(25) = 0.5d+00*f(centr-hlgth)*(fix-hlgth)**alfa
+      fval(1) = 0.5d+00*f(hlgth+centr,fid)*(fix+hlgth)**alfa
+      fval(13) = f(centr,fid)*(fix**alfa)
+      fval(25) = 0.5d+00*f(centr-hlgth,fid)*(fix-hlgth)**alfa
       do 150 i=2,12
         u = hlgth*x(i-1)
         isym = 26-i
-        fval(i) = f(u+centr)*(fix+u)**alfa
-        fval(isym) = f(centr-u)*(fix-u)**alfa
+        fval(i) = f(u+centr,fid)*(fix+u)**alfa
+        fval(isym) = f(centr-u,fid)*(fix-u)**alfa
   150 continue
       factor = hlgth**(beta+0.1d+01)
       result = 0.0d+00

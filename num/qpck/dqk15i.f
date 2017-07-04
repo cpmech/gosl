@@ -1,4 +1,4 @@
-      subroutine dqk15i(f,boun,inf,a,b,result,abserr,resabs,resasc)
+      subroutine dqk15i(f,boun,inf,a,b,result,abserr,resabs,resasc,fid)
 c***begin prologue  dqk15i
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -73,7 +73,7 @@ c
      *  dmax1,dmin1,d1mach,epmach,f,fc,fsum,fval1,fval2,fv1,fv2,hlgth,
      *  resabs,resasc,resg,resk,reskh,result,tabsc1,tabsc2,uflow,wg,wgk,
      *  xgk
-      integer inf,j
+      integer inf,j,fid
       external f
 c
       dimension fv1(7),fv2(7),xgk(8),wgk(8),wg(8)
@@ -149,8 +149,8 @@ c
       centr = 0.5d+00*(a+b)
       hlgth = 0.5d+00*(b-a)
       tabsc1 = boun+dinf*(0.1d+01-centr)/centr
-      fval1 = f(tabsc1)
-      if(inf.eq.2) fval1 = fval1+f(-tabsc1)
+      fval1 = f(tabsc1,fid)
+      if(inf.eq.2) fval1 = fval1+f(-tabsc1,fid)
       fc = (fval1/centr)/centr
 c
 c           compute the 15-point kronrod approximation to
@@ -165,10 +165,10 @@ c
         absc2 = centr+absc
         tabsc1 = boun+dinf*(0.1d+01-absc1)/absc1
         tabsc2 = boun+dinf*(0.1d+01-absc2)/absc2
-        fval1 = f(tabsc1)
-        fval2 = f(tabsc2)
-        if(inf.eq.2) fval1 = fval1+f(-tabsc1)
-        if(inf.eq.2) fval2 = fval2+f(-tabsc2)
+        fval1 = f(tabsc1,fid)
+        fval2 = f(tabsc2,fid)
+        if(inf.eq.2) fval1 = fval1+f(-tabsc1,fid)
+        if(inf.eq.2) fval2 = fval2+f(-tabsc2,fid)
         fval1 = (fval1/absc1)/absc1
         fval2 = (fval2/absc2)/absc2
         fv1(j) = fval1

@@ -1,4 +1,4 @@
-      subroutine dqk51(f,a,b,result,abserr,resabs,resasc)
+      subroutine dqk51(f,a,b,result,abserr,resabs,resasc,fid)
 c***begin prologue  dqk51
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -53,7 +53,7 @@ c
       double precision a,absc,abserr,b,centr,dabs,dhlgth,dmax1,dmin1,
      *  d1mach,epmach,f,fc,fsum,fval1,fval2,fv1,fv2,hlgth,resabs,resasc,
      *  resg,resk,reskh,result,uflow,wg,wgk,xgk
-      integer j,jtw,jtwm1
+      integer j,jtw,jtwm1,fid
       external f
 c
       dimension fv1(25),fv2(25),xgk(26),wgk(26),wg(13)
@@ -176,15 +176,15 @@ c
 c           compute the 51-point kronrod approximation to
 c           the integral, and estimate the absolute error.
 c
-      fc = f(centr)
+      fc = f(centr,fid)
       resg = wg(13)*fc
       resk = wgk(26)*fc
       resabs = dabs(resk)
       do 10 j=1,12
         jtw = j*2
         absc = hlgth*xgk(jtw)
-        fval1 = f(centr-absc)
-        fval2 = f(centr+absc)
+        fval1 = f(centr-absc,fid)
+        fval2 = f(centr+absc,fid)
         fv1(jtw) = fval1
         fv2(jtw) = fval2
         fsum = fval1+fval2
@@ -195,8 +195,8 @@ c
       do 15 j = 1,13
         jtwm1 = j*2-1
         absc = hlgth*xgk(jtwm1)
-        fval1 = f(centr-absc)
-        fval2 = f(centr+absc)
+        fval1 = f(centr-absc,fid)
+        fval2 = f(centr+absc,fid)
         fv1(jtwm1) = fval1
         fv2(jtwm1) = fval2
         fsum = fval1+fval2

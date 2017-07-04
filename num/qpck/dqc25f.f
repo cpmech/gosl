@@ -1,5 +1,5 @@
       subroutine dqc25f(f,a,b,omega,integr,nrmom,maxp1,ksave,result,
-     *   abserr,neval,resabs,resasc,momcom,chebmo)
+     *   abserr,neval,resabs,resasc,momcom,chebmo,fid)
 c***begin prologue  dqc25f
 c***date written   810101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -101,7 +101,7 @@ c
      *  p2,p3,p4,resabs,resasc,resc12,resc24,ress12,ress24,result,
      *  sinpar,v,x
       integer i,iers,integr,isym,j,k,ksave,m,momcom,neval,maxp1,
-     *  noequ,noeq1,nrmom
+     *  noequ,noeq1,nrmom,fid
 c
       dimension chebmo(maxp1,25),cheb12(13),cheb24(25),d(25),d1(25),
      *  d2(25),fval(25),v(28),x(11)
@@ -164,7 +164,7 @@ c           is small.
 c
       if(dabs(parint).gt.0.2d+01) go to 10
       call dqk15w(f,dqwgtf,omega,p2,p3,p4,integr,a,b,result,
-     *  abserr,resabs,resasc)
+     *  abserr,resabs,resasc,fid)
       neval = 15
       go to 170
 c
@@ -312,13 +312,13 @@ c
 c           compute the coefficients of the chebyshev expansions
 c           of degrees 12 and 24 of the function f.
 c
-      fval(1) = 0.5d+00*f(centr+hlgth)
-      fval(13) = f(centr)
-      fval(25) = 0.5d+00*f(centr-hlgth)
+      fval(1) = 0.5d+00*f(centr+hlgth,fid)
+      fval(13) = f(centr,fid)
+      fval(25) = 0.5d+00*f(centr-hlgth,fid)
       do 130 i = 2,12
         isym = 26-i
-        fval(i) = f(hlgth*x(i-1)+centr)
-        fval(isym) = f(centr-hlgth*x(i-1))
+        fval(i) = f(hlgth*x(i-1)+centr,fid)
+        fval(isym) = f(centr-hlgth*x(i-1),fid)
   130 continue
       call dqcheb(x,fval,cheb12,cheb24)
 c

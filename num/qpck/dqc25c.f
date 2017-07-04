@@ -1,4 +1,4 @@
-      subroutine dqc25c(f,a,b,c,result,abserr,krul,neval)
+      subroutine dqc25c(f,a,b,c,result,abserr,krul,neval,fid)
 c***begin prologue  dqc25c
 c***date written   810101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -57,7 +57,7 @@ c
       double precision a,abserr,ak22,amom0,amom1,amom2,b,c,cc,centr,
      *  cheb12,cheb24,dabs,dlog,dqwgtc,f,fval,hlgth,p2,p3,p4,resabs,
      *  resasc,result,res12,res24,u,x
-      integer i,isym,k,kp,krul,neval
+      integer i,isym,k,kp,krul,neval,fid
 c
       dimension x(11),fval(25),cheb12(13),cheb24(25)
 c
@@ -107,7 +107,7 @@ c           apply the 15-point gauss-kronrod scheme.
 c
       krul = krul-1
       call dqk15w(f,dqwgtc,c,p2,p3,p4,kp,a,b,result,abserr,
-     *  resabs,resasc)
+     *  resabs,resasc,fid)
       neval = 15
       if (resasc.eq.abserr) krul = krul+1
       go to 50
@@ -117,14 +117,14 @@ c
    10 hlgth = 0.5d+00*(b-a)
       centr = 0.5d+00*(b+a)
       neval = 25
-      fval(1) = 0.5d+00*f(hlgth+centr)
+      fval(1) = 0.5d+00*f(hlgth+centr,fid)
       fval(13) = f(centr)
-      fval(25) = 0.5d+00*f(centr-hlgth)
+      fval(25) = 0.5d+00*f(centr-hlgth,fid)
       do 20 i=2,12
         u = hlgth*x(i-1)
         isym = 26-i
-        fval(i) = f(u+centr)
-        fval(isym) = f(centr-u)
+        fval(i) = f(u+centr,fid)
+        fval(isym) = f(centr-u,fid)
    20 continue
 c
 c           compute the chebyshev series expansion.

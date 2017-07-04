@@ -1,6 +1,6 @@
       subroutine dqawfe(f,a,omega,integr,epsabs,limlst,limit,maxp1,
      *   result,abserr,neval,ier,rslst,erlst,ierlst,lst,alist,blist,
-     *   rlist,elist,iord,nnlog,chebmo)
+     *   rlist,elist,iord,nnlog,chebmo,fid)
 c***begin prologue  dqawfe
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -201,7 +201,7 @@ c
      *  epsabs,errsum,f,fact,omega,p,pi,p1,psum,reseps,result,res3la,
      *  rlist,rslst,uflow
       integer ier,ierlst,integr,iord,ktmin,l,last,lst,limit,limlst,ll,
-     *    maxp1,momcom,nev,neval,nnlog,nres,numrl2
+     *    maxp1,momcom,nev,neval,nnlog,nres,numrl2,fid
 c
       dimension alist(limit),blist(limit),chebmo(maxp1,25),elist(limit),
      *  erlst(limlst),ierlst(limlst),iord(limit),nnlog(limit),psum(52),
@@ -254,7 +254,7 @@ c           integration by dqagie if omega is zero
 c           --------------------------------------
 c
       if(integr.eq.1) call dqagie(f,0.0d+00,1,epsabs,0.0d+00,limit,
-     *  result,abserr,neval,ier,alist,blist,rlist,elist,iord,last)
+     *  result,abserr,neval,ier,alist,blist,rlist,elist,iord,last,fid)
       rslst(1) = result
       erlst(1) = abserr
       ierlst(1) = ier
@@ -295,7 +295,7 @@ c
         epsa = eps*fact
         call dqawoe(f,c1,c2,omega,integr,epsa,0.0d+00,limit,lst,maxp1,
      *  rslst(lst),erlst(lst),nev,ierlst(lst),last,alist,blist,rlist,
-     *  elist,iord,nnlog,momcom,chebmo)
+     *  elist,iord,nnlog,momcom,chebmo,fid)
         neval = neval+nev
         fact = fact*p
         errsum = errsum+erlst(lst)

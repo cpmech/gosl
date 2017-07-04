@@ -1,5 +1,5 @@
       subroutine dqawf(f,a,omega,integr,epsabs,result,abserr,neval,ier,
-     *   limlst,lst,leniw,maxp1,lenw,iwork,work)
+     *   limlst,lst,leniw,maxp1,lenw,iwork,work,fid)
 c***begin prologue  dqawf
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -191,7 +191,7 @@ c***end prologue  dqawf
 c
        double precision a,abserr,epsabs,f,omega,result,work
        integer ier,integr,iwork,last,leniw,lenw,limit,limlst,ll2,lvl,
-     *  lst,l1,l2,l3,l4,l5,l6,maxp1,neval
+     *  lst,l1,l2,l3,l4,l5,l6,maxp1,neval,fid
 c
        dimension iwork(leniw),work(lenw)
 c
@@ -220,7 +220,7 @@ c
       ll2 = limit+l1
       call dqawfe(f,a,omega,integr,epsabs,limlst,limit,maxp1,result,
      *  abserr,neval,ier,work(1),work(l1),iwork(1),lst,work(l2),
-     *  work(l3),work(l4),work(l5),iwork(l1),iwork(ll2),work(l6))
+     *  work(l3),work(l4),work(l5),iwork(l1),iwork(ll2),work(l6),fid)
 c
 c         call error handler if necessary
 c

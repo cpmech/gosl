@@ -1,5 +1,5 @@
       subroutine dqawse(f,a,b,alfa,beta,integr,epsabs,epsrel,limit,
-     *   result,abserr,neval,ier,alist,blist,rlist,elist,iord,last)
+     *   result,abserr,neval,ier,alist,blist,rlist,elist,iord,last,fid)
 c***begin prologue  dqawse
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -163,7 +163,7 @@ c
      *  epsabs,epsrel,errbnd,errmax,error1,erro12,error2,errsum,f,
      *  resas1,resas2,result,rg,rh,ri,rj,rlist,uflow
       integer ier,integr,iord,iroff1,iroff2,k,last,limit,maxerr,nev,
-     *  neval,nrmax
+     *  neval,nrmax,fid
 c
       external f
 c
@@ -227,10 +227,10 @@ c           integrate over the intervals (a,(a+b)/2) and ((a+b)/2,b).
 c
       centre = 0.5d+00*(b+a)
       call dqc25s(f,a,b,a,centre,alfa,beta,ri,rj,rg,rh,area1,
-     *  error1,resas1,integr,nev)
+     *  error1,resas1,integr,nev,fid)
       neval = nev
       call dqc25s(f,a,b,centre,b,alfa,beta,ri,rj,rg,rh,area2,
-     *  error2,resas2,integr,nev)
+     *  error2,resas2,integr,nev,fid)
       last = 2
       neval = neval+nev
       result = area1+area2
@@ -286,10 +286,10 @@ c
         b2 = blist(maxerr)
 c
         call dqc25s(f,a,b,a1,b1,alfa,beta,ri,rj,rg,rh,area1,
-     *  error1,resas1,integr,nev)
+     *  error1,resas1,integr,nev,fid)
         neval = neval+nev
         call dqc25s(f,a,b,a2,b2,alfa,beta,ri,rj,rg,rh,area2,
-     *  error2,resas2,integr,nev)
+     *  error2,resas2,integr,nev,fid)
         neval = neval+nev
 c
 c           improve previous approximations integral and error

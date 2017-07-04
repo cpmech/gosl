@@ -1,5 +1,5 @@
       subroutine dqagie(f,bound,inf,epsabs,epsrel,limit,result,abserr,
-     *   neval,ier,alist,blist,rlist,elist,iord,last)
+     *   neval,ier,alist,blist,rlist,elist,iord,last,fid)
 c***begin prologue  dqagie
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -153,7 +153,7 @@ c***end prologue  dqagie
      *  errbnd,errmax,error1,error2,erro12,errsum,ertest,f,oflow,resabs,
      *  reseps,result,res3la,rlist,rlist2,small,uflow
       integer id,ier,ierro,inf,iord,iroff1,iroff2,iroff3,jupbnd,k,ksgn,
-     *  ktmin,last,limit,maxerr,neval,nres,nrmax,numrl2
+     *  ktmin,last,limit,maxerr,neval,nres,nrmax,numrl2,fid
       logical extrap,noext
 c
       dimension alist(limit),blist(limit),elist(limit),iord(limit),
@@ -246,7 +246,7 @@ c
       boun = bound
       if(inf.eq.2) boun = 0.0d+00
       call dqk15i(f,boun,inf,0.0d+00,0.1d+01,result,abserr,
-     *  defabs,resabs)
+     *  defabs,resabs,fid)
 c
 c           test on accuracy
 c
@@ -297,8 +297,8 @@ c
         a2 = b1
         b2 = blist(maxerr)
         erlast = errmax
-        call dqk15i(f,boun,inf,a1,b1,area1,error1,resabs,defab1)
-        call dqk15i(f,boun,inf,a2,b2,area2,error2,resabs,defab2)
+        call dqk15i(f,boun,inf,a1,b1,area1,error1,resabs,defab1,fid)
+        call dqk15i(f,boun,inf,a2,b2,area2,error2,resabs,defab2,fid)
 c
 c           improve previous approximations to integral
 c           and error and test for accuracy.

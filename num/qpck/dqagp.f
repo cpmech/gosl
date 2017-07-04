@@ -1,5 +1,5 @@
       subroutine dqagp(f,a,b,npts2,points,epsabs,epsrel,result,abserr,
-     *   neval,ier,leniw,lenw,last,iwork,work)
+     *   neval,ier,leniw,lenw,last,iwork,work,fid)
 c***begin prologue  dqagp
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -187,7 +187,7 @@ c***end prologue  dqagp
 c
       double precision a,abserr,b,epsabs,epsrel,f,points,result,work
       integer ier,iwork,last,leniw,lenw,limit,lvl,l1,l2,l3,l4,neval,
-     *  npts2
+     *  npts2,fid
 c
       dimension iwork(leniw),points(npts2),work(lenw)
 c
@@ -214,7 +214,7 @@ c
 c
       call dqagpe(f,a,b,npts2,points,epsabs,epsrel,limit,result,abserr,
      *  neval,ier,work(1),work(l1),work(l2),work(l3),work(l4),
-     *  iwork(1),iwork(l1),iwork(l2),last)
+     *  iwork(1),iwork(l1),iwork(l2),last,fid)
 c
 c         call error handler if necessary.
 c

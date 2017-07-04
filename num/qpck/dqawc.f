@@ -1,5 +1,5 @@
       subroutine dqawc(f,a,b,c,epsabs,epsrel,result,abserr,neval,ier,
-     *   limit,lenw,last,iwork,work)
+     *   limit,lenw,last,iwork,work,fid)
 c***begin prologue  dqawc
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -145,7 +145,7 @@ c***routines called  dqawce,xerror
 c***end prologue  dqawc
 c
       double precision a,abserr,b,c,epsabs,epsrel,f,result,work
-      integer ier,iwork,last,lenw,limit,lvl,l1,l2,l3,neval
+      integer ier,iwork,last,lenw,limit,lvl,l1,l2,l3,neval,fid
 c
       dimension iwork(limit),work(lenw)
 c
@@ -167,7 +167,7 @@ c
       l2 = limit+l1
       l3 = limit+l2
       call dqawce(f,a,b,c,epsabs,epsrel,limit,result,abserr,neval,ier,
-     *  work(1),work(l1),work(l2),work(l3),iwork,last)
+     *  work(1),work(l1),work(l2),work(l3),iwork,last,fid)
 c
 c         call error handler if necessary.
 c

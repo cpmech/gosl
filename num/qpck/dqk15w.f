@@ -1,5 +1,5 @@
       subroutine dqk15w(f,w,p1,p2,p3,p4,kp,a,b,result,abserr,
-     *   resabs,resasc)
+     *   resabs,resasc,fid)
 c***begin prologue  dqk15w
 c***date written   810101   (yymmdd)
 c***revision date  830518   (mmddyy)
@@ -67,7 +67,7 @@ c
      *  dmax1,dmin1,d1mach,epmach,f,fc,fsum,fval1,fval2,fv1,fv2,hlgth,
      *  p1,p2,p3,p4,resabs,resasc,resg,resk,reskh,result,uflow,w,wg,wgk,
      *  xgk
-      integer j,jtw,jtwm1,kp
+      integer j,jtw,jtwm1,kp,fid
       external f,w
 c
       dimension fv1(7),fv2(7),xgk(8),wgk(8),wg(4)
@@ -132,7 +132,7 @@ c
 c           compute the 15-point kronrod approximation to the
 c           integral, and estimate the error.
 c
-      fc = f(centr)*w(centr,p1,p2,p3,p4,kp)
+      fc = f(centr,fid)*w(centr,p1,p2,p3,p4,kp)
       resg = wg(4)*fc
       resk = wgk(8)*fc
       resabs = dabs(resk)
@@ -141,8 +141,8 @@ c
         absc = hlgth*xgk(jtw)
         absc1 = centr-absc
         absc2 = centr+absc
-        fval1 = f(absc1)*w(absc1,p1,p2,p3,p4,kp)
-        fval2 = f(absc2)*w(absc2,p1,p2,p3,p4,kp)
+        fval1 = f(absc1,fid)*w(absc1,p1,p2,p3,p4,kp)
+        fval2 = f(absc2,fid)*w(absc2,p1,p2,p3,p4,kp)
         fv1(jtw) = fval1
         fv2(jtw) = fval2
         fsum = fval1+fval2
@@ -155,8 +155,8 @@ c
         absc = hlgth*xgk(jtwm1)
         absc1 = centr-absc
         absc2 = centr+absc
-        fval1 = f(absc1)*w(absc1,p1,p2,p3,p4,kp)
-        fval2 = f(absc2)*w(absc2,p1,p2,p3,p4,kp)
+        fval1 = f(absc1,fid)*w(absc1,p1,p2,p3,p4,kp)
+        fval2 = f(absc2,fid)*w(absc2,p1,p2,p3,p4,kp)
         fv1(jtwm1) = fval1
         fv2(jtwm1) = fval2
         fsum = fval1+fval2

@@ -1,5 +1,5 @@
       subroutine dqawo(f,a,b,omega,integr,epsabs,epsrel,result,abserr,
-     *   neval,ier,leniw,maxp1,lenw,last,iwork,work)
+     *   neval,ier,leniw,maxp1,lenw,last,iwork,work,fid)
 c***begin prologue  dqawo
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -188,7 +188,7 @@ c***end prologue  dqawo
 c
        double precision a,abserr,b,epsabs,epsrel,f,omega,result,work
        integer ier,integr,iwork,last,limit,lenw,leniw,lvl,l1,l2,l3,l4,
-     *  maxp1,momcom,neval
+     *  maxp1,momcom,neval,fid
 c
        dimension iwork(leniw),work(lenw)
 c
@@ -214,7 +214,7 @@ c
       l4 = limit+l3
       call dqawoe(f,a,b,omega,integr,epsabs,epsrel,limit,1,maxp1,result,
      *   abserr,neval,ier,last,work(1),work(l1),work(l2),work(l3),
-     *   iwork(1),iwork(l1),momcom,work(l4))
+     *   iwork(1),iwork(l1),momcom,work(l4),fid)
 c
 c         call error handler if necessary
 c

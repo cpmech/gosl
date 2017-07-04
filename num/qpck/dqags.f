@@ -1,5 +1,5 @@
       subroutine dqags(f,a,b,epsabs,epsrel,result,abserr,neval,ier,
-     *   limit,lenw,last,iwork,work)
+     *   limit,lenw,last,iwork,work,fid)
 c***begin prologue  dqags
 c***date written   800101   (yymmdd)
 c***revision date  830518   (yymmdd)
@@ -154,7 +154,7 @@ c***end prologue  dqags
 c
 c
       double precision a,abserr,b,epsabs,epsrel,f,result,work
-      integer ier,iwork,last,lenw,limit,lvl,l1,l2,l3,neval
+      integer ier,iwork,last,lenw,limit,lvl,l1,l2,l3,neval,fid
 c
       dimension iwork(limit),work(lenw)
 c
@@ -177,7 +177,7 @@ c
       l3 = limit+l2
 c
       call dqagse(f,a,b,epsabs,epsrel,limit,result,abserr,neval,
-     *  ier,work(1),work(l1),work(l2),work(l3),iwork,last)
+     *  ier,work(1),work(l1),work(l2),work(l3),iwork,last,fid)
 c
 c         call error handler if necessary.
 c
