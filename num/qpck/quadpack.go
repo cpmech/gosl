@@ -455,7 +455,7 @@ func getErr(ier int32) error {
 	}
 	switch ier {
 	case 1:
-		return chk.Err("error # 1: maximum number of subdivisions allowed\n")
+		return chk.Err("error # 1: reached maximum number of subdivisions allowed\n")
 	case 2:
 		return chk.Err("error # 2: the occurrence of roundoff error is detected\n")
 	case 3:
