@@ -19,6 +19,12 @@ void dqagie_(fType f, double* bound, int* infCode, double* epsabs, double* epsre
 			 double* alist, double* blist, double* rlist, double* elist,
 			 int* iord, int* last, int* fid);
 
+void dqagpe_(fType f, double* a, double* b, int* npts2, double* points, double* epsabs, double* epsrel, int* limit,
+			 double* result, double* abserr, int* neval, int* ier,
+			 double* alist, double* blist, double* rlist, double* elist,
+			 double* pts, int* iord, int* level, int* ndin,
+             int* last, int* fid);
+
 #include "connect.h"
 */
 import "C"
@@ -221,16 +227,88 @@ func Qagie(fid int, f fType, bound float64, inf int32, epsabs, epsrel float64, a
 		(*C.int)(unsafe.Pointer(&fid)),
 	)
 
-	/*
-		io.PfYel("f(bound) = %v\n", f(bound+math.SmallestNonzeroFloat64))
-		io.PfYel("result = %v\n", result)
-		io.PfYel("alist = %v\n", alist)
-		io.PfYel("blist = %v\n", blist)
-		io.PfYel("rlist = %v\n", rlist)
-		io.PfYel("elist = %v\n", elist)
-		io.PfYel("iord = %v\n", iord)
-		io.PfYel("ier = %v\n", ier)
-	*/
+	// check error
+	err = getErr(ier)
+	return
+}
+
+// Qagpe approximates a definite integral over (a,b), hopefully satisfying given accuracy
+// Break points of the integration interval, where local difficulties of the integrand may
+// occur (e.g. singularities, discontinuities, etc), provided by user.
+//
+//   INPUT:
+//     pointsAndBuf2 -- break points and a buffer with 2 extra spaces.
+//                      The first (len(pointsAndBuf2)-2) elements are the user provided break points
+//                      Automatic ascending sorting is carried out
+//
+func Qagpe(fid int, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32, err error) {
+
+	// check nubmer of points
+	npts2 := int32(len(pointsAndBuf2))
+	if npts2 < 2 {
+		err = chk.Err("number of points (and buffer) must be at least 2; i.e. there are no points and just the 2-point buffer\n")
+		return
+	}
+
+	// set function in database
+	if fid >= len(functions) {
+		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
+		return
+	}
+	functions[fid] = f
+
+	// default values
+	if epsabs <= 0 {
+		epsabs = 1.49e-8
+	}
+	if epsrel <= 0 {
+		epsrel = 1.49e-8
+	}
+
+	// number of points
+	if int32(len(pts)) != npts2 {
+		pts = make([]float64, npts2)
+		ndin = make([]int32, npts2)
+	}
+
+	// allocate vectors
+	limit := len(alist)
+	if limit < 1 {
+		limit = 50
+		alist = make([]float64, limit)
+		blist = make([]float64, limit)
+		rlist = make([]float64, limit)
+		elist = make([]float64, limit)
+		iord = make([]int32, limit)
+		level = make([]int32, limit)
+	}
+
+	// call quadpack
+	var ier int32
+	C.dqagpe_(
+		C.fType(C.fcn),
+		(*C.double)(unsafe.Pointer(&a)),
+		(*C.double)(unsafe.Pointer(&b)),
+		(*C.int)(unsafe.Pointer(&npts2)),
+		(*C.double)(unsafe.Pointer(&pointsAndBuf2[0])),
+		(*C.double)(unsafe.Pointer(&epsabs)),
+		(*C.double)(unsafe.Pointer(&epsrel)),
+		(*C.int)(unsafe.Pointer(&limit)),
+		(*C.double)(unsafe.Pointer(&result)),
+		(*C.double)(unsafe.Pointer(&abserr)),
+		(*C.int)(unsafe.Pointer(&neval)),
+		(*C.int)(unsafe.Pointer(&ier)),
+		(*C.double)(unsafe.Pointer(&alist[0])),
+		(*C.double)(unsafe.Pointer(&blist[0])),
+		(*C.double)(unsafe.Pointer(&rlist[0])),
+		(*C.double)(unsafe.Pointer(&elist[0])),
+		(*C.double)(unsafe.Pointer(&pts[0])),
+		(*C.int)(unsafe.Pointer(&iord[0])),
+		(*C.int)(unsafe.Pointer(&level[0])),
+		(*C.int)(unsafe.Pointer(&ndin[0])),
+		(*C.int)(unsafe.Pointer(&last)),
+		(*C.int)(unsafe.Pointer(&fid)),
+	)
 
 	// check error
 	err = getErr(ier)

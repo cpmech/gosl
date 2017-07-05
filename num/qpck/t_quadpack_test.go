@@ -85,6 +85,15 @@ func TestQags02(tst *testing.T) {
 		chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
 	}
 
+	// auxiliary function to run test (with points cases)
+	dotestP := func(name string, y fType, a, b, correct, tol float64, ptsAndBuf2 []float64) {
+		res, _, _, _, err := Qagpe(0, y, a, b, ptsAndBuf2, 0, 0, nil, nil, nil, nil, nil, nil, nil, nil)
+		if err != nil {
+			tst.Errorf("%v\n", err)
+		}
+		chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
+	}
+
 	// 1. typical function with two extra arguments
 	dotest("function # 1", func(x float64) float64 {
 		// Bessel function integrand
@@ -101,4 +110,15 @@ func TestQags02(tst *testing.T) {
 		}
 		return -Exp(-x) * Log(x)
 	}, 0, infCode, 5.772156649008392e-01, 1e-15) // exact: 0.577215664901532860606512, 1e-12)
+
+	// 3. singular points in region of integration.
+	Aref := 1.0 - Cos(2.5) + Exp(-2.5) - Exp(-5.0)
+	dotestP("function # 3", func(x float64) float64 {
+		if x > 0 && x < 2.5 {
+			return Sin(x)
+		} else if x >= 2.5 && x <= 5.0 {
+			return Exp(-x)
+		}
+		return 0.0
+	}, 0, 10, Aref, 1e-15, []float64{2.5, 5.0, 0, 0})
 }
