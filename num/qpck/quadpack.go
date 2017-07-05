@@ -47,8 +47,10 @@ type fType func(x float64) float64
 // functions implements a functions database
 var functions []fType = make([]fType, 64)
 
-// Qagse computes a definite integral using an automatic integrator.
+// Agse computes a definite integral using an automatic integrator
 // 1D globally adaptive integrator using interval subdivision and extrapolation.
+//
+// AG: Automatic/general-purpose, S: end-point singularities
 //
 //   INPUT:
 //     fid    -- id of function to avoid goroutine problems
@@ -85,7 +87,7 @@ var functions []fType = make([]fType, 64)
 //     neval  -- number of integrand evaluations
 //     last   -- number of subintervals actually produced in the subdivision process
 //
-func Qagse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
+func Agse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
 
 	// set function in database
 	if fid >= int32(len(functions)) {
@@ -140,7 +142,9 @@ func Qagse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist
 	return
 }
 
-// Qagie performs integration over infinite intervals
+// Agie performs integration over infinite intervals
+//
+// AG: Automatic/general-purpose, I: with infinite intervals
 //
 //   INPUT:
 //     fid -- id of function to avoid goroutine problems
@@ -184,7 +188,7 @@ func Qagse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist
 //     neval  -- number of integrand evaluations
 //     last   -- number of subintervals actually produced in the subdivision process
 //
-func Qagie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
+func Agie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
 
 	// set function in database
 	if fid >= int32(len(functions)) {
@@ -239,16 +243,18 @@ func Qagie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64,
 	return
 }
 
-// Qagpe approximates a definite integral over (a,b), hopefully satisfying given accuracy
+// Agpe approximates a definite integral over (a,b), hopefully satisfying given accuracy
 // Break points of the integration interval, where local difficulties of the integrand may
 // occur (e.g. singularities, discontinuities, etc), provided by user.
+//
+// AG: Automatic/general-purpose, P: with points
 //
 //   INPUT:
 //     pointsAndBuf2 -- break points and a buffer with 2 extra spaces.
 //                      The first (len(pointsAndBuf2)-2) elements are the user provided break points
 //                      Automatic ascending sorting is carried out
 //
-func Qagpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32, err error) {
+func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32, err error) {
 
 	// check nubmer of points
 	npts2 := int32(len(pointsAndBuf2))
@@ -322,8 +328,11 @@ func Qagpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, ep
 	return
 }
 
-// Qawoe approximates the definite integral ∫ f(x)⋅w(x) dx over (a,b) where
+// Awoe approximates the definite integral ∫ f(x)⋅w(x) dx over (a,b) where
 // w(x) = cos(omega*x) or w(x)=sin(omega*x)
+//
+// AW: Automatic with omega ω, O: oscillatory
+//
 //
 //   INPUT:
 //
@@ -360,7 +369,7 @@ func Qagpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, ep
 //     nnlog -- vector containing the subdivision levels of the subintervals, i.e.
 //              l means that the subinterval numbered i is of length abs(b-a)*2**(1-l)
 //
-func Qawoe(fid int32, f fType, a, b, omega float64, integr int32, epsabs, epsrel float64, icall, maxp1 int32, alist, blist, rlist, elist []float64, iord, nnlog []int32, momcom int32, chebmo []float64) (result, abserr float64, neval, last int32, err error) {
+func Awoe(fid int32, f fType, a, b, omega float64, integr int32, epsabs, epsrel float64, icall, maxp1 int32, alist, blist, rlist, elist []float64, iord, nnlog []int32, momcom int32, chebmo []float64) (result, abserr float64, neval, last int32, err error) {
 
 	// set function in database
 	if fid >= int32(len(functions)) {

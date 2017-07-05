@@ -12,17 +12,17 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func TestQags01a(tst *testing.T) {
+func TestAgs01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Qags01a.")
+	chk.PrintTitle("Ags01a.")
 
 	y := func(x float64) (res float64) {
 		return Sqrt(1.0 + Pow(Sin(x), 3.0))
 	}
 
 	var fid int32
-	A, abserr, neval, last, err := Qagse(fid, y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
+	A, abserr, neval, last, err := Agse(fid, y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
@@ -34,10 +34,10 @@ func TestQags01a(tst *testing.T) {
 	chk.Scalar(tst, "A", 1e-12, A, 1.08268158558)
 }
 
-func TestQags01b(tst *testing.T) {
+func TestAgs01b(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Qags01b. goroutines")
+	chk.PrintTitle("Ags01b. goroutines")
 
 	y := func(x float64) (res float64) {
 		return Sqrt(1.0 + Pow(Sin(x), 3.0))
@@ -50,7 +50,7 @@ func TestQags01b(tst *testing.T) {
 	// run all
 	for ich := 0; ich < nch; ich++ {
 		go func(fid int) {
-			A, _, _, _, _ := Qagse(int32(fid), y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
+			A, _, _, _, _ := Agse(int32(fid), y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
 			chk.Scalar(tst, "A", 1e-12, A, 1.08268158558)
 			done <- 1
 		}(ich)
@@ -65,7 +65,7 @@ func TestQags01b(tst *testing.T) {
 // auxiliary function to run test
 
 func runQ(tst *testing.T, name string, y fType, a, b, correct, tol float64) {
-	res, _, _, _, err := Qagse(0, y, a, b, 0, 0, nil, nil, nil, nil, nil)
+	res, _, _, _, err := Agse(0, y, a, b, 0, 0, nil, nil, nil, nil, nil)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 	}
@@ -74,7 +74,7 @@ func runQ(tst *testing.T, name string, y fType, a, b, correct, tol float64) {
 
 // auxiliary function to run test (unbounded cases)
 func runU(tst *testing.T, name string, y fType, bound float64, infCode int32, correct, tol float64) {
-	res, _, _, _, err := Qagie(0, y, bound, infCode, 0, 0, nil, nil, nil, nil, nil)
+	res, _, _, _, err := Agie(0, y, bound, infCode, 0, 0, nil, nil, nil, nil, nil)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 	}
@@ -83,7 +83,7 @@ func runU(tst *testing.T, name string, y fType, bound float64, infCode int32, co
 
 // auxiliary function to run test (with points cases)
 func runP(tst *testing.T, name string, y fType, a, b, correct, tol float64, ptsAndBuf2 []float64) {
-	res, _, _, _, err := Qagpe(0, y, a, b, ptsAndBuf2, 0, 0, nil, nil, nil, nil, nil, nil, nil, nil)
+	res, _, _, _, err := Agpe(0, y, a, b, ptsAndBuf2, 0, 0, nil, nil, nil, nil, nil, nil, nil, nil)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 	}
@@ -96,17 +96,17 @@ func runO(tst *testing.T, name string, y fType, a, b, omega, correct, tol float6
 	if isSin {
 		integr = 2 // sin(omega*x)
 	}
-	res, _, _, _, err := Qawoe(0, y, a, b, omega, integr, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
+	res, _, _, _, err := Awoe(0, y, a, b, omega, integr, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 	}
 	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
 }
 
-func TestQags02(tst *testing.T) {
+func TestAgs02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Qags02. some functions")
+	chk.PrintTitle("Ags02. some functions")
 
 	// 1. typical function with two extra arguments
 	runQ(tst, "function # 1", func(x float64) float64 {
