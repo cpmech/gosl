@@ -11,19 +11,28 @@ typedef double (*fType) (double* x, int* fid);
 
 void dqagse_(fType f, double* a, double* b, double* epsabs, double* epsrel, int* limit,
              double* result, double* abserr, int* neval, int* ier,
-			 double* alist, double* blist, double* rlist, double* elist,
-			 int* iord, int* last, int* fid);
+             double* alist, double* blist, double* rlist, double* elist,
+             int* iord, int* last, int* fid);
 
 void dqagie_(fType f, double* bound, int* infCode, double* epsabs, double* epsrel, int* limit,
-			 double* result, double* abserr, int* neval, int* ier,
-			 double* alist, double* blist, double* rlist, double* elist,
-			 int* iord, int* last, int* fid);
+             double* result, double* abserr, int* neval, int* ier,
+             double* alist, double* blist, double* rlist, double* elist,
+             int* iord, int* last, int* fid);
 
-void dqagpe_(fType f, double* a, double* b, int* npts2, double* points, double* epsabs, double* epsrel, int* limit,
-			 double* result, double* abserr, int* neval, int* ier,
-			 double* alist, double* blist, double* rlist, double* elist,
-			 double* pts, int* iord, int* level, int* ndin,
+void dqagpe_(fType f, double* a, double* b, int* npts2, double* points,
+             double* epsabs, double* epsrel, int* limit,
+             double* result, double* abserr, int* neval, int* ier,
+             double* alist, double* blist, double* rlist, double* elist,
+             double* pts, int* iord, int* level, int* ndin,
              int* last, int* fid);
+
+void dqawoe_(fType f, double* a, double* b, double* omega, int* integr,
+             double* epsabs, double* epsrel, int* limit,
+             int* icall, int* maxp1,
+             double* result, double* abserr, int* neval, int* ier,
+             int* last,
+             double* alist, double* blist, double* rlist, double* elist,
+             int* iord, int* nnlog, int* momcom, double* chebmo, int* fid);
 
 #include "connect.h"
 */
@@ -78,10 +87,10 @@ var functions []fType = make([]fType, 64)
 //     neval  -- number of integrand evaluations
 //     last   -- number of subintervals actually produced in the subdivision process
 //
-func Qagse(fid int, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
+func Qagse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
 
 	// set function in database
-	if fid >= len(functions) {
+	if fid >= int32(len(functions)) {
 		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
 		return
 	}
@@ -177,10 +186,10 @@ func Qagse(fid int, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist, 
 //     neval  -- number of integrand evaluations
 //     last   -- number of subintervals actually produced in the subdivision process
 //
-func Qagie(fid int, f fType, bound float64, inf int32, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
+func Qagie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
 
 	// set function in database
-	if fid >= len(functions) {
+	if fid >= int32(len(functions)) {
 		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
 		return
 	}
@@ -241,7 +250,7 @@ func Qagie(fid int, f fType, bound float64, inf int32, epsabs, epsrel float64, a
 //                      The first (len(pointsAndBuf2)-2) elements are the user provided break points
 //                      Automatic ascending sorting is carried out
 //
-func Qagpe(fid int, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32, err error) {
+func Qagpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32, err error) {
 
 	// check nubmer of points
 	npts2 := int32(len(pointsAndBuf2))
@@ -251,7 +260,7 @@ func Qagpe(fid int, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsr
 	}
 
 	// set function in database
-	if fid >= len(functions) {
+	if fid >= int32(len(functions)) {
 		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
 		return
 	}
@@ -315,6 +324,123 @@ func Qagpe(fid int, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsr
 	return
 }
 
+// Qawoe approximates the definite integral ∫ f(x)⋅w(x) dx over (a,b) where
+// w(x) = cos(omega*x) or w(x)=sin(omega*x)
+//
+//   INPUT:
+//
+//     integr -- indicates which of the weight functions is to be used:
+//                 integr = 1  ⇒   w(x) = cos(omega*x)
+//                 integr = 2  ⇒   w(x) = sin(omega*x)
+//               [default = 1]
+//
+//     icall -- indicates whether to reuse or not moments
+//                icall = 1  ⇒  dqawoe is to be used only once, assuming that, the Chebyshev moments
+//                              (for Clenshaw-Curtis integration of degree 24) have been computed for
+//                              intervals of lenghts (abs(b-a))*2**(-l), l=0,1,2,...momcom-1.
+//                icall > 1  ⇒  this means that dqawoe has been called twice or more on intervals of
+//                              the same length abs(b-a). The Chebyshev moments already computed are
+//                              then re-used in subsequent calls.
+//              [default = 1,  icall ≥ 1]
+//
+//     maxp1 -- upper bound on the number of Chebyshev moments which can be stored, i.e. for the
+//              intervals of lenghts abs(b-a)*2**(-l),  l=0,1, ..., maxp1-2.
+//              [default = 50,  maxp1 ≥ 1]
+//
+//     momcom -- momcom = 1 indicates that the Chebyshev moments have been computed for intervals of
+//               lengths (abs(b-a))*2**(-l), l=0,1,2, ..., momcom-1.
+//               [default = 0,  momcom < maxp1]
+//
+//     chebmo -- A rank-2 array of shape (25, maxp1) containing the computed Chebyshev moments
+//               [may be nil]
+//
+//   INPUT/OUTPUT:
+//     NOTE: (1) the length of the vectors below is equal to the "limit" variable in the original
+//               code which is an upperbound on the number of subintervals in the partition of (a,b)
+//           (2) the 5 vectors below may be <nil>, thus memory is allocated here
+//
+//     nnlog -- vector containing the subdivision levels of the subintervals, i.e.
+//              l means that the subinterval numbered i is of length abs(b-a)*2**(1-l)
+//
+func Qawoe(fid int32, f fType, a, b, omega float64, integr int32, epsabs, epsrel float64, icall, maxp1 int32, alist, blist, rlist, elist []float64, iord, nnlog []int32, momcom int32, chebmo []float64) (result, abserr float64, neval, last int32, err error) {
+
+	// set function in database
+	if fid >= int32(len(functions)) {
+		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
+		return
+	}
+	functions[fid] = f
+
+	// default values
+	if epsabs <= 0 {
+		epsabs = 1.49e-8
+	}
+	if epsrel <= 0 {
+		epsrel = 1.49e-8
+	}
+
+	// default flags
+	if integr < 1 || integr > 2 {
+		integr = 1
+	}
+	if icall < 1 {
+		icall = 1
+	}
+	if maxp1 < 1 {
+		maxp1 = 50
+	}
+
+	// allocate vectors
+	limit := len(alist)
+	if limit < 1 {
+		limit = 50
+		alist = make([]float64, limit)
+		blist = make([]float64, limit)
+		rlist = make([]float64, limit)
+		elist = make([]float64, limit)
+		iord = make([]int32, limit)
+		nnlog = make([]int32, limit)
+	}
+
+	// chebmo
+	if int32(len(chebmo)) < 25*maxp1 {
+		chebmo = make([]float64, 25*maxp1)
+	}
+
+	// call quadpack
+	var ier int32
+	C.dqawoe_(
+		C.fType(C.fcn),
+		(*C.double)(unsafe.Pointer(&a)),
+		(*C.double)(unsafe.Pointer(&b)),
+		(*C.double)(unsafe.Pointer(&omega)),
+		(*C.int)(unsafe.Pointer(&integr)),
+		(*C.double)(unsafe.Pointer(&epsabs)),
+		(*C.double)(unsafe.Pointer(&epsrel)),
+		(*C.int)(unsafe.Pointer(&limit)),
+		(*C.int)(unsafe.Pointer(&icall)),
+		(*C.int)(unsafe.Pointer(&maxp1)),
+		(*C.double)(unsafe.Pointer(&result)),
+		(*C.double)(unsafe.Pointer(&abserr)),
+		(*C.int)(unsafe.Pointer(&neval)),
+		(*C.int)(unsafe.Pointer(&ier)),
+		(*C.int)(unsafe.Pointer(&last)),
+		(*C.double)(unsafe.Pointer(&alist[0])),
+		(*C.double)(unsafe.Pointer(&blist[0])),
+		(*C.double)(unsafe.Pointer(&rlist[0])),
+		(*C.double)(unsafe.Pointer(&elist[0])),
+		(*C.int)(unsafe.Pointer(&iord[0])),
+		(*C.int)(unsafe.Pointer(&nnlog[0])),
+		(*C.int)(unsafe.Pointer(&momcom)),
+		(*C.double)(unsafe.Pointer(&chebmo[0])),
+		(*C.int)(unsafe.Pointer(&fid)),
+	)
+
+	// check error
+	err = getErr(ier)
+	return
+}
+
 // getErr returns error message
 func getErr(ier int32) error {
 	if ier == 0 {
@@ -338,6 +464,6 @@ func getErr(ier int32) error {
 }
 
 //export gofcn
-func gofcn(x float64, fid int) float64 {
+func gofcn(x float64, fid int32) float64 {
 	return functions[fid](x)
 }

@@ -21,7 +21,7 @@ func TestQags01a(tst *testing.T) {
 		return Sqrt(1.0 + Pow(Sin(x), 3.0))
 	}
 
-	fid := 0
+	var fid int32
 	A, abserr, neval, last, err := Qagse(fid, y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
 	if err != nil {
 		tst.Errorf("%v\n", err)
@@ -50,7 +50,7 @@ func TestQags01b(tst *testing.T) {
 	// run all
 	for ich := 0; ich < nch; ich++ {
 		go func(fid int) {
-			A, _, _, _, _ := Qagse(fid, y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
+			A, _, _, _, _ := Qagse(int32(fid), y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
 			chk.Scalar(tst, "A", 1e-12, A, 1.08268158558)
 			done <- 1
 		}(ich)
@@ -62,40 +62,54 @@ func TestQags01b(tst *testing.T) {
 	}
 }
 
+// auxiliary function to run test
+
+func runQ(tst *testing.T, name string, y fType, a, b, correct, tol float64) {
+	res, _, _, _, err := Qagse(0, y, a, b, 0, 0, nil, nil, nil, nil, nil)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+	}
+	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
+}
+
+// auxiliary function to run test (unbounded cases)
+func runU(tst *testing.T, name string, y fType, bound float64, infCode int32, correct, tol float64) {
+	res, _, _, _, err := Qagie(0, y, bound, infCode, 0, 0, nil, nil, nil, nil, nil)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+	}
+	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
+}
+
+// auxiliary function to run test (with points cases)
+func runP(tst *testing.T, name string, y fType, a, b, correct, tol float64, ptsAndBuf2 []float64) {
+	res, _, _, _, err := Qagpe(0, y, a, b, ptsAndBuf2, 0, 0, nil, nil, nil, nil, nil, nil, nil, nil)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+	}
+	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
+}
+
+// auxiliary function to run test (with oscillatory factors)
+func runO(tst *testing.T, name string, y fType, a, b, omega, correct, tol float64, isSin bool) {
+	var integr int32 = 1 // cos(omega*x)
+	if isSin {
+		integr = 2 // sin(omega*x)
+	}
+	res, _, _, _, err := Qawoe(0, y, a, b, omega, integr, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+	}
+	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
+}
+
 func TestQags02(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("Qags02. some functions")
 
-	// auxiliary function to run test
-	dotest := func(name string, y fType, a, b, correct, tol float64) {
-		res, _, _, _, err := Qagse(0, y, a, b, 0, 0, nil, nil, nil, nil, nil)
-		if err != nil {
-			tst.Errorf("%v\n", err)
-		}
-		chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
-	}
-
-	// auxiliary function to run test (unbounded cases)
-	dotestU := func(name string, y fType, bound float64, infCode int32, correct, tol float64) {
-		res, _, _, _, err := Qagie(0, y, bound, infCode, 0, 0, nil, nil, nil, nil, nil)
-		if err != nil {
-			tst.Errorf("%v\n", err)
-		}
-		chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
-	}
-
-	// auxiliary function to run test (with points cases)
-	dotestP := func(name string, y fType, a, b, correct, tol float64, ptsAndBuf2 []float64) {
-		res, _, _, _, err := Qagpe(0, y, a, b, ptsAndBuf2, 0, 0, nil, nil, nil, nil, nil, nil, nil, nil)
-		if err != nil {
-			tst.Errorf("%v\n", err)
-		}
-		chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
-	}
-
 	// 1. typical function with two extra arguments
-	dotest("function # 1", func(x float64) float64 {
+	runQ(tst, "function # 1", func(x float64) float64 {
 		// Bessel function integrand
 		n, z := 2.0, 1.8
 		return Cos(n*x-z*Sin(x)) / Pi
@@ -103,7 +117,7 @@ func TestQags02(tst *testing.T) {
 
 	// 2. infinite integration limits --- Euler's constant
 	var infCode int32 = 1 // (bound,+infinity)
-	dotestU("function # 2", func(x float64) float64 {
+	runU(tst, "function # 2", func(x float64) float64 {
 		// Euler's constant integrand
 		if x == 0 {
 			tst.Errorf("must compute f(0) = %v\n", -Exp(-x)*Log(x))
@@ -113,7 +127,7 @@ func TestQags02(tst *testing.T) {
 
 	// 3. singular points in region of integration.
 	Aref := 1.0 - Cos(2.5) + Exp(-2.5) - Exp(-5.0)
-	dotestP("function # 3", func(x float64) float64 {
+	runP(tst, "function # 3", func(x float64) float64 {
 		if x > 0 && x < 2.5 {
 			return Sin(x)
 		} else if x >= 2.5 && x <= 5.0 {
@@ -121,4 +135,12 @@ func TestQags02(tst *testing.T) {
 		}
 		return 0.0
 	}, 0, 10, Aref, 1e-15, []float64{2.5, 5.0, 0, 0})
+
+	// 4. sine weighted integral (finite limits)
+	ome := Pow(2.0, 3.4)
+	Aref = (20*Sin(ome) - ome*Cos(ome) + ome*Exp(-20)) / (Pow(20, 2) + Pow(ome, 2))
+	runO(tst, "function # 4", func(x float64) float64 {
+		a := 20.0
+		return Exp(a * (x - 1))
+	}, 0, 1, ome, Aref, 1e-16, true) // true => sin
 }
