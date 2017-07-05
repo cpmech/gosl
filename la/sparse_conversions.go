@@ -83,7 +83,7 @@ func (t *TripletC) ToMatrix(a *CCMatrixC) *CCMatrixC {
 }
 
 // umfErr returns UMFPACK error codes
-func umfErr(code C.long) string {
+func umfErr(code C.LONG) string {
 	switch code {
 	case C.UMFPACK_ERROR_out_of_memory:
 		return "out_of_memory (-1)"
