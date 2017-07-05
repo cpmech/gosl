@@ -1,7 +1,0 @@
-cmake_minimum_required(VERSION 3.5)
-set(CMAKE_DISABLE_SOURCE_CHANGES ON)
-set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
-project(quadpack)
-enable_language(Fortran)
-file(GLOB all *.f)
-add_library(qpck STATIC ${all})
