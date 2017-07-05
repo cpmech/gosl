@@ -413,7 +413,7 @@ func TestMatPseudo01(tst *testing.T) {
 	})
 	sD := []float64{2.25169577993700130e+02, 1.27186528905283367e+02, 1.17578914421132179e+01, 1.81235447053960281e-14, 9.59676789459164647e-15, 5.90626950718289933e-15}
 	checkAi(tst, "d", d, nil, 1e-17, 1e-13)
-	checkSvd(tst, "d", d, sD, nil, nil, 1e-14, 1e-17, 1e-17, 1e-13)
+	checkSvd(tst, "d", d, sD, nil, nil, 1e-13, 1e-17, 1e-17, 1e-13)
 }
 
 func TestCondNum01(tst *testing.T) {
