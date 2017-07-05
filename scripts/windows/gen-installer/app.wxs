@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding='windows-1252'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
-  <Product Name='Gosl 4.2' Id='{FD5661AB-A2F6-4848-AC24-86B1CB8F7476}' UpgradeCode='{AA385207-0193-48D8-92FE-1A35A9C62C1A}'
+  <Product Name='Gosl 1.0.0' Id='{FD5661AB-A2F6-4848-AC24-86B1CB8F7476}' UpgradeCode='{AA385207-0193-48D8-92FE-1A35A9C62C1A}'
     Language='1033' Codepage='1252' Version='1.4.1' Manufacturer='Cpmech'>
 
-    <Package Id='*' Keywords='Installer' Description="Gosl 4.2 Installer"
+    <Package Id='*' Keywords='Installer' Description="Gosl Installer"
       Comments='Gosl Go Scientific Library' Manufacturer='Cpmech'
       InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
 
     <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
-    <Property Id='DiskPrompt' Value="Gosl 4.2 Installation [1]" />
+    <Property Id='DiskPrompt' Value="Gosl Installation [1]" />
 
     <Directory Id='TARGETDIR' Name='SourceDir'>
 
@@ -32,7 +32,7 @@
 
     </Directory>
 
-    <Feature Id='DefaultFeature' Title='Gosl 4.2' ConfigurableDirectory='TARGETDIR' Level='1'>
+    <Feature Id='DefaultFeature' Title='Gosl' ConfigurableDirectory='TARGETDIR' Level='1'>
 
       <Feature Id='GoFiles' Title='GoFiles' Description='Go Files' Level='1'>
         <ComponentGroupRef Id='MyGo' />

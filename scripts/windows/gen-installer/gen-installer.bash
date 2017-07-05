@@ -26,10 +26,13 @@ heat.exe dir SourceDir -gg -sfrag -sreg -srd -dr TARGETDIR -t $SS/trn.xslt -out 
 candle.exe frags.wxs $SS/app.wxs $SS/varsdlg.wxs $SS/ui.wxs
 
 # generate installer
-light.exe -ext WixUIExtension -ext WixUtilExtension -out gosl-installer.msi frags.wixobj app.wixobj varsdlg.wixobj ui.wixobj
+VER=1.0.0
+FNK=gosl-installer
+FN=$FNK-v$VER.msk
+light.exe -ext WixUIExtension -ext WixUtilExtension -out $FN frags.wixobj app.wixobj varsdlg.wixobj ui.wixobj
 
 # remove object files
 rm *.wixobj *.wixpdb
 
 # message
-echo "file <$TMPDIR/gosl-installer.msi> generated"
+echo "file <$TMPDIR/$FN> generated"

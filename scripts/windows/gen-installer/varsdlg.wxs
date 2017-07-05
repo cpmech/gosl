@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 <Fragment>
   <UI>
-    <Dialog Id="VarsDlg"  Width="370" Height="270" Title="Gosl 1.0" NoMinimize="yes">
+    <Dialog Id="VarsDlg"  Width="370" Height="270" Title="Gosl" NoMinimize="yes">
       
       <Control Id="Label0" Type="Text" X="20"  Y="40" Width="220" Height="15" TabSkip="no" Text="The following Environment Variables will be set:" />
       
