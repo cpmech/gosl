@@ -28,7 +28,7 @@ candle.exe frags.wxs $SS/app.wxs $SS/varsdlg.wxs $SS/ui.wxs
 # generate installer
 VER=1.0.0
 FNK=gosl-installer
-FN=$FNK-v$VER.msk
+FN=$FNK-v$VER.msi
 light.exe -ext WixUIExtension -ext WixUtilExtension -out $FN frags.wixobj app.wixobj varsdlg.wixobj ui.wixobj
 
 # remove object files
