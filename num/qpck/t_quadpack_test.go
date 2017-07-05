@@ -5,7 +5,7 @@
 package qpck
 
 import (
-	"math"
+	. "math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -18,7 +18,7 @@ func TestQags01a(tst *testing.T) {
 	chk.PrintTitle("Qags01a.")
 
 	y := func(x float64) (res float64) {
-		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
+		return Sqrt(1.0 + Pow(Sin(x), 3.0))
 	}
 
 	fid := 0
@@ -40,7 +40,7 @@ func TestQags01b(tst *testing.T) {
 	chk.PrintTitle("Qags01b. goroutines")
 
 	y := func(x float64) (res float64) {
-		return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
+		return Sqrt(1.0 + Pow(Sin(x), 3.0))
 	}
 
 	// channels
@@ -60,4 +60,45 @@ func TestQags01b(tst *testing.T) {
 	for i := 0; i < nch; i++ {
 		<-done
 	}
+}
+
+func TestQags02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Qags02. some functions")
+
+	// auxiliary function to run test
+	dotest := func(name string, y fType, a, b, correct, tol float64) {
+		res, _, _, _, err := Qagse(0, y, a, b, 0, 0, nil, nil, nil, nil, nil)
+		if err != nil {
+			tst.Errorf("%v\n", err)
+		}
+		chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
+	}
+
+	// auxiliary function to run test (unbounded cases)
+	dotestU := func(name string, y fType, bound float64, infCode int32, correct, tol float64) {
+		res, _, _, _, err := Qagie(0, y, bound, infCode, 0, 0, nil, nil, nil, nil, nil)
+		if err != nil {
+			tst.Errorf("%v\n", err)
+		}
+		chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
+	}
+
+	// 1. typical function with two extra arguments
+	dotest("function # 1", func(x float64) float64 {
+		// Bessel function integrand
+		n, z := 2.0, 1.8
+		return Cos(n*x-z*Sin(x)) / Pi
+	}, 0, Pi, 0.30614353532540296487, 1e-16)
+
+	// 2. infinite integration limits --- Euler's constant
+	var infCode int32 = 1 // (bound,+infinity)
+	dotestU("function # 2", func(x float64) float64 {
+		// Euler's constant integrand
+		if x == 0 {
+			tst.Errorf("must compute f(0) = %v\n", -Exp(-x)*Log(x))
+		}
+		return -Exp(-x) * Log(x)
+	}, 0, infCode, 5.772156649008392e-01, 1e-15) // exact: 0.577215664901532860606512, 1e-12)
 }
