@@ -29,7 +29,7 @@ c            bound  - double precision
 c                     finite bound of integration range
 c                     (has no meaning if interval is doubly-infinite)
 c
-c            inf    - double precision
+c            inf    - integer
 c                     indicating the kind of integration range involved
 c                     inf = 1 corresponds to  (bound,+infinity),
 c                     inf = -1            to  (-infinity,bound),
