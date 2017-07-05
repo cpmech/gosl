@@ -5,8 +5,6 @@
 package qpck
 
 /*
-#cgo LDFLAGS: -lopenblas -lgfortran -lm
-
 typedef double (*fType) (double* x, int* fid);
 
 void dqagse_(fType f, double* a, double* b, double* epsabs, double* epsrel, int* limit,

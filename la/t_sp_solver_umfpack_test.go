@@ -101,8 +101,9 @@ func TestSpUmfpack02(tst *testing.T) {
 	// run test
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	tol := 1e-9 // TODO: check why tests fails with 1e-10 @ office but not @ home
-	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-5, tol, false, false, nil)
+	tolx := 1e-4 // << for macOS, for Linux and Windows, tol = 1e-5
+	tol := 1e-9  // TODO: check why tests fails with 1e-10 @ office but not @ home
+	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, tolx, tol, false, false, nil)
 }
 
 func TestSpUmfpack03(tst *testing.T) {
