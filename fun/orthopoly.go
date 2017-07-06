@@ -80,8 +80,8 @@ func (o *ChebyshevPoly) gaussData(N int, gCheby bool) (wb, wb0, wbN, gam, gam0, 
 	return
 }
 
-// P computes p[i](x) (polynomial function) of Chebyshev polynomial
-func (o *ChebyshevPoly) P(i int, x float64) float64 {
+// Phi computes φi(x) (polynomial function) of Chebyshev polynomial
+func (o *ChebyshevPoly) Phi(i int, x float64) float64 {
 	return ChebyshevT(i, x)
 }
 
@@ -93,7 +93,7 @@ func (o *ChebyshevPoly) W(x float64) float64 {
 // Approx computes the approximated projection or interpolation via series approximation
 // after computing the coefficients of the interpolant or estimated projection
 //
-//    Approx(x) = Σ A[i] * P[i](x)  where  A is CoefI or CoefP (if projection==true)
+//    Approx(x) = Σ a[i] * φ[i](x)  where  'a' is CoefI or CoefP (if projection==true)
 //
 func (o *ChebyshevPoly) Approx(x float64, projection bool) (res float64) {
 	a := o.CoefI
@@ -101,7 +101,7 @@ func (o *ChebyshevPoly) Approx(x float64, projection bool) (res float64) {
 		a = o.CoefP
 	}
 	for i := 0; i < o.N+1; i++ {
-		res += a[i] * o.P(i, x)
+		res += a[i] * o.Phi(i, x)
 	}
 	return
 }
@@ -131,6 +131,9 @@ func (o *ChebyshevPoly) EstimateMaxErr(f Ss, projection bool) (maxerr, xloc floa
 }
 
 // CoefInterpolantSlow computes the coefficients of the interpolant by (slow) formula
+//
+//   A[i] = Σ f(x[i]) ⋅ φi(x[i]) ⋅ wb[i]
+//
 //   NOTE: the results will be stored in o.CoefI
 func (o *ChebyshevPoly) CoefInterpolantSlow(f Ss) (err error) {
 
@@ -147,7 +150,7 @@ func (o *ChebyshevPoly) CoefInterpolantSlow(f Ss) (err error) {
 	for i := 0; i < o.N+1; i++ {
 		o.CoefI[i] = 0
 		for j := 0; j < o.N+1; j++ {
-			o.CoefI[i] += fx[j] * o.P(i, o.X[j]) * o.Wb[j]
+			o.CoefI[i] += fx[j] * o.Phi(i, o.X[j]) * o.Wb[j]
 		}
 		o.CoefI[i] /= o.Gamma[i]
 	}
@@ -179,10 +182,10 @@ func (o *ChebyshevPoly) EstimateCoefProjection(f Ss) (err error) {
 	for i := 0; i < o.N+1; i++ {
 		o.CoefP[i] = 0
 		for j := 1; j < nn; j++ {
-			o.CoefP[i] += fx[j] * o.P(i, xx[j]) * wb
+			o.CoefP[i] += fx[j] * o.Phi(i, xx[j]) * wb
 		}
-		o.CoefP[i] += fx[0] * o.P(i, xx[0]) * wb0
-		o.CoefP[i] += fx[nn] * o.P(i, xx[nn]) * wbN
+		o.CoefP[i] += fx[0] * o.Phi(i, xx[0]) * wb0
+		o.CoefP[i] += fx[nn] * o.Phi(i, xx[nn]) * wbN
 		if i == 0 {
 			o.CoefP[i] /= gam0
 		} else if i == nn {

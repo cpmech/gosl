@@ -39,7 +39,7 @@ func TestOrthoPoly01(tst *testing.T) {
 
 	// check P
 	for _, x := range utl.LinSpace(-1, 1, 7) {
-		chk.AnaNum(tst, io.Sf("T%d(%+.3f)", N, x), 1e-15, che.P(N, x), calcChebyP(8, x), chk.Verbose)
+		chk.AnaNum(tst, io.Sf("T%d(%+.3f)", N, x), 1e-15, che.Phi(N, x), calcChebyP(8, x), chk.Verbose)
 	}
 
 	// Gauss-Chebyshev: check points
