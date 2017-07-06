@@ -74,19 +74,19 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	return
 }
 
-// Phi computes the generating (nodal) polynomial associated with grid X. The nodal polynomial is
+// Om computes the generating (nodal) polynomial associated with grid X. The nodal polynomial is
 // the unique polynomial of degree N+1 and leading coefficient whose zeros are the N+1 nodes of X.
 //
 //                 N
 //         X      ━━━━
-//        Φ (x) = ┃  ┃ (x - X[i])
+//        ω (x) = ┃  ┃ (x - X[i])
 //        N+1     ┃  ┃
 //               i = 0
 //
-func (o *LagrangeInterp) Phi(x float64) (Φ float64) {
-	Φ = 1
+func (o *LagrangeInterp) Om(x float64) (ω float64) {
+	ω = 1
 	for i := 0; i < o.N+1; i++ {
-		Φ *= x - o.X[i]
+		ω *= x - o.X[i]
 	}
 	return
 }
@@ -155,11 +155,16 @@ func (o *LagrangeInterp) EstimateLebesgue() (ΛN float64) {
 // This function also returns the location (xloc) of the estimated max error
 //   Computes:
 //             maxerr = max(|f(x) - I{f}(x)|)
-func (o *LagrangeInterp) EstimateMaxErr(f Ss) (maxerr, xloc float64) {
-	nsta := 10000 // generate several points along [-1,1]
+//
+//   e.g. nStations := 10000 (≥2) will generate several points along [-1,1]
+//
+func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float64) {
+	if nStations < 2 {
+		nStations = 10000
+	}
 	xloc = -1
-	for i := 0; i < nsta; i++ {
-		x := -1.0 + 2.0*float64(i)/float64(nsta-1)
+	for i := 0; i < nStations; i++ {
+		x := -1.0 + 2.0*float64(i)/float64(nStations-1)
 		fx, err := f(x)
 		if err != nil {
 			chk.Panic("f(x) failed:%v\n", err)
@@ -202,12 +207,12 @@ func PlotLagInterpW(N int, gridType io.Enum) {
 	yy := make([]float64, len(xx))
 	o, _ := NewLagrangeInterp(N, gridType)
 	for k, x := range xx {
-		yy[k] = o.Phi(x)
+		yy[k] = o.Om(x)
 	}
 	Y := make([]float64, len(o.X))
 	plt.Plot(o.X, Y, &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true})
 	plt.Plot(xx, yy, &plt.A{C: "b", Lw: 1, NoClip: true})
-	plt.Gll("$x$", "$w(x)$", nil)
+	plt.Gll("$x$", "$\\omega(x)$", nil)
 	plt.Cross(0, 0, &plt.A{C: "grey"})
 	plt.HideAllBorders()
 }
@@ -227,7 +232,7 @@ func PlotLagInterpI(Nvalues []int, gridType io.Enum, f Ss) {
 		for k, x := range xx {
 			iy[k], _ = p.I(x, f)
 		}
-		E, xloc := p.EstimateMaxErr(f)
+		E, xloc := p.EstimateMaxErr(0, f)
 		plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
 		plt.Plot(xx, iy, &plt.A{L: io.Sf("$N=%d\\;E=%.3e$", N, E), NoClip: true})
 	}

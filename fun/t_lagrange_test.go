@@ -193,7 +193,7 @@ func TestLagInterp03(tst *testing.T) {
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
 			p, _ := NewLagrangeInterp(int(n), kind)
-			E[i], _ = p.EstimateMaxErr(f)
+			E[i], _ = p.EstimateMaxErr(0, f)
 		}
 		plt.Plot(Nvalues, E, &plt.A{C: "red", M: ".", NoClip: true})
 		plt.Grid(nil)

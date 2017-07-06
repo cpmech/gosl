@@ -15,6 +15,7 @@
 * Root finding problems
 * B-splines: curve, control, and basis
 * Orthogonal polynomials
+* Lagrange interpolation using Chebyshev points
 
 
 
@@ -363,3 +364,52 @@ Hermite orthogonal polynomials. Figure 22.10 of [1]
 ## Reference:
 [1] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas,
     Graphs, and Mathematical Tables. U.S. Department of Commerce, NIST
+
+
+
+# Lagrange interpolation using Chebyshev points
+
+This example interpolates the Runge curve using the following formula:
+
+```
+                  N
+      X          ————             X
+     I {f}(x) =  \     f(x[i]) ⋅ ℓ (x)
+      N          /                i
+                 ————
+                 i = 0
+```
+
+where ℓ is the Lagrange (cardinal) function.
+
+Source code: <a href="fun_laginterp01.go">fun_laginterp01.go</a>
+
+## Generating (nodal) polynomial
+
+With N = 8
+
+```
+               N
+       X      ━━━━
+      ω (x) = ┃  ┃ (x - X[i])
+      N+1     ┃  ┃
+             i = 0
+```
+
+<div id="container">
+<p><img src="figs/fun_laginterp01a.png" width="500"></p>
+</div>
+
+## Runge curve for many polynomial degrees
+
+<div id="container">
+<p><img src="figs/fun_laginterp01b.png" width="500"></p>
+</div>
+
+
+## Error estimate
+
+<div id="container">
+<p><img src="figs/fun_laginterp01c.png" width="500"></p>
+</div>
+
