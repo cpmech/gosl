@@ -174,6 +174,9 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 			chk.Panic("I(x) failed:%v\n", err)
 		}
 		e := math.Abs(fx - ix)
+		if math.IsNaN(e) {
+			chk.Panic("error is NaN\n")
+		}
 		if e > maxerr {
 			maxerr = e
 			xloc = x
