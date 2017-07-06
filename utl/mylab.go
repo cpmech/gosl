@@ -228,6 +228,13 @@ func Alloc(m, n int) (mat [][]float64) {
 	return
 }
 
+// Fill fills a slice of float64
+func Fill(s []float64, val float64) {
+	for i := 0; i < len(s); i++ {
+		s[i] = val
+	}
+}
+
 // Ones generates a slice of float64 with ones
 func Ones(n int) (res []float64) {
 	res = make([]float64, n)
