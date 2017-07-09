@@ -89,16 +89,27 @@ func MatSvd(s []float64, u, vt, a *Matrix, copyA bool) {
 //     a -- input matrix (M x N)
 //   Output:
 //     ai -- inverse matrix (N x M)
+//     det -- determinant of matrix (ONLY if calcDet == true and the matrix is square)
 //   NOTE: the dimension of the ai matrix must be N x M for the pseudo-inverse
-func MatInv(ai, a *Matrix) (err error) {
+func MatInv(ai, a *Matrix, calcDet bool) (det float64, err error) {
 
 	// square inverse
 	if a.M == a.N {
 		copy(ai.Data, a.Data)
 		ipiv := make([]int32, utl.Imin(a.M, a.N))
-		err = oblas.Dgetrf(a.M, a.N, ai.Data, a.M, ipiv)
+		err = oblas.Dgetrf(a.M, a.N, ai.Data, a.M, ipiv) // NOTE: ipiv are 1-based indices
 		if err != nil {
 			return
+		}
+		if calcDet {
+			det = 1.0
+			for i := 0; i < a.M; i++ {
+				if ipiv[i]-1 == int32(i) { // NOTE: ipiv are 1-based indices
+					det = +det * ai.Get(i, i)
+				} else {
+					det = -det * ai.Get(i, i)
+				}
+			}
 		}
 		err = oblas.Dgetri(a.N, ai.Data, a.M, ipiv)
 		return
@@ -132,7 +143,7 @@ func MatInv(ai, a *Matrix) (err error) {
 //    "I"       => Infinite
 func MatCondNum(a *Matrix, normtype string) (res float64, err error) {
 	ai := NewMatrix(a.M, a.N)
-	err = MatInv(ai, a)
+	_, err = MatInv(ai, a, false)
 	if err != nil {
 		return
 	}

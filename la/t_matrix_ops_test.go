@@ -56,15 +56,19 @@ func checkAiSmall(tst *testing.T, k string, a *Matrix, zeroDet float64,
 	checkIdentity(tst, k+"⋅"+k+"i", aai, tolI)
 }
 
-func checkAi(tst *testing.T, k string, a *Matrix, correctAi *Matrix, tolAi, tolI float64) {
+func checkAi(tst *testing.T, k string, a *Matrix,
+	correctAi *Matrix, correctDet, tolDet, tolAi, tolI float64) {
 
 	// compute inverse
 	ai := NewMatrix(a.N, a.M)
-	err := MatInv(ai, a)
+	det, err := MatInv(ai, a, true)
 	if err != nil {
 		tst.Errorf("MatInv failed:\n%v\n", err)
 		return
 	}
+
+	// check determinant
+	chk.AnaNum(tst, "det("+k+")", tolDet, det, correctDet, chk.Verbose)
 
 	// compare inverse
 	if correctAi != nil {
@@ -203,7 +207,59 @@ func TestMatInv01(tst *testing.T) {
 func TestMatInv02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("MatInv02. larger matrices")
+	chk.PrintTitle("MatInv02. using OpenBLAS and larger matrices")
+
+	// 1 x 1 matrix
+	io.Pf("\n----------------------------------(1 x 1)-----------------------------------\n")
+	A := NewMatrixSlice([][]float64{
+		{2.0},
+	})
+	Ai := NewMatrixSlice([][]float64{
+		{0.5},
+	})
+	checkAi(tst, "A", A, Ai, 2.0, 1e-17, 1e-17, 1e-17)
+
+	// 2 x 2 matrix
+	io.Pf("\n----------------------------------(2 x 2)-----------------------------------\n")
+	B := NewMatrixSlice([][]float64{
+		{1.0, 2.0},
+		{3.0, 2.0},
+	})
+	Bi := NewMatrixSlice([][]float64{
+		{-0.5, 0.5},
+		{0.75, -0.25},
+	})
+	checkAi(tst, "B", B, Bi, -4.0, 1e-17, 1e-15, 1e-15)
+
+	// 3 x 3 matrix
+	io.Pf("\n----------------------------------(3 x 3)-----------------------------------\n")
+	C := NewMatrixSlice([][]float64{
+		{+9.0, +3.0, 5.0},
+		{-6.0, -9.0, 7.0},
+		{-1.0, -8.0, 1.0},
+	})
+	Ci := NewMatrixSlice([][]float64{
+		{+7.642276422764227e-02, -6.991869918699187e-02, +1.073170731707317e-01},
+		{-1.626016260162601e-03, +2.276422764227642e-02, -1.512195121951219e-01},
+		{+6.341463414634146e-02, +1.121951219512195e-01, -1.024390243902439e-01},
+	})
+	checkAi(tst, "C", C, Ci, 615.0, 1e-17, 1e-16, 1e-15)
+
+	// 4 x 4 matrix
+	io.Pf("\n----------------------------------(4 x 4)-----------------------------------\n")
+	D := NewMatrixSlice([][]float64{
+		{+3, +0, +2, -1},
+		{+1, +2, +0, -2},
+		{+4, +0, +6, -3},
+		{+5, +0, +2, +0},
+	})
+	Di := NewMatrixSlice([][]float64{
+		{+0.6, 0.0, -0.2, 0.0},
+		{-2.5, 0.5, +0.5, 1.0},
+		{-1.5, 0.0, +0.5, 0.5},
+		{-2.2, 0.0, +0.4, 1.0},
+	})
+	checkAi(tst, "D", D, Di, 20.0, 1e-14, 1e-15, 1e-15)
 
 	// 5 x 5 matrix
 	io.Pf("\n----------------------------------(5 x 5)-----------------------------------\n")
@@ -221,7 +277,8 @@ func TestMatInv02(tst *testing.T) {
 		{-1.1177465024312745e+00, +1.3261729250546601e+00, +2.1243473793622566e-01, +1.1258168958554866e+00, -1.3325766717243535e+00},
 		{+7.9976941733073770e-01, -8.9457712572131853e-01, -1.4770432850264653e-01, -8.0791149448632715e-01, +9.2990525800169743e-01},
 	})
-	checkAi(tst, "a", a, ai, 1e-14, 1e-13)
+	detA := -167402.0
+	checkAi(tst, "a", a, ai, detA, 1e-9, 1e-14, 1e-13)
 
 	// 6 x 6 matrix
 	io.Pf("\n----------------------------------(6 x 6)-----------------------------------\n")
@@ -241,7 +298,8 @@ func TestMatInv02(tst *testing.T) {
 		{-4.62744616057000471e-13, -4.62744616057000471e-13, -4.62744616057000471e-13, 0.00000000000000000e+00, +1.00000000000000000e+00, 1.93012141894243434e+07},
 		{+0.00000000000000000e+00, +0.00000000000000000e+00, +0.00000000000000000e+00, 0.00000000000000000e+00, +0.00000000000000000e+00, 1.00000000000000000e+00},
 	})
-	checkAi(tst, "b", b, bi, 1e-8, 1e-12)
+	detB := 0.0
+	checkAi(tst, "b", b, bi, detB, 1e-17, 1e-8, 1e-12)
 }
 
 func TestMatSvd01(tst *testing.T) {
@@ -344,7 +402,8 @@ func TestMatPseudo01(tst *testing.T) {
 		{1, 0, 0},
 		{0, 1, 0},
 	})
-	checkAi(tst, "a", a, ai, 1e-15, 1e-15)
+	detA := 0.0
+	checkAi(tst, "a", a, ai, detA, 1e-17, 1e-15, 1e-15)
 	checkSvd(tst, "a", a, sA, uA, vtA, 1e-15, 1e-15, 1e-17, 1e-15)
 
 	// 4 x 5
@@ -376,7 +435,8 @@ func TestMatPseudo01(tst *testing.T) {
 		{0, 0, 0, 1, 0},
 		{-math.Sqrt(0.8), 0, 0, 0, math.Sqrt(0.2)},
 	})
-	checkAi(tst, "b", b, bi, 1e-15, 1e-15)
+	detB := 0.0
+	checkAi(tst, "b", b, bi, detB, 1e-17, 1e-15, 1e-15)
 	checkSvd(tst, "b", b, sB, uB, vtB, 1e-17, 1e-17, 1e-15, 1e-15)
 
 	// 5 x 6
@@ -396,7 +456,8 @@ func TestMatPseudo01(tst *testing.T) {
 		{+6.6698814093525072e-01, -7.4815557352521045e-01, -1.2451059750508876e-01, -6.7584431870600359e-01, +7.8530451101142418e-01},
 		{-1.1017522295492406e+00, +1.2149323757487696e+00, +1.9244991110051662e-01, +1.0958269819071325e+00, -1.1998242501940171e+00},
 	})
-	checkAi(tst, "c", c, ci, 1e-13, 1e-12)
+	detC := 0.0
+	checkAi(tst, "c", c, ci, detC, 1e-17, 1e-13, 1e-12)
 	checkSvd(tst, "c", c, nil, nil, nil, 1e-17, 1e-17, 1e-17, 1e-13)
 
 	// 8 x 6
@@ -412,7 +473,8 @@ func TestMatPseudo01(tst *testing.T) {
 		{+8, 58, 59, +5, +4, 62},
 	})
 	sD := []float64{2.25169577993700130e+02, 1.27186528905283367e+02, 1.17578914421132179e+01, 1.81235447053960281e-14, 9.59676789459164647e-15, 5.90626950718289933e-15}
-	checkAi(tst, "d", d, nil, 1e-17, 1e-13)
+	detD := 0.0
+	checkAi(tst, "d", d, nil, detD, 1e-17, 1e-17, 1e-13)
 	checkSvd(tst, "d", d, sD, nil, nil, 1e-13, 1e-17, 1e-17, 1e-13)
 }
 
