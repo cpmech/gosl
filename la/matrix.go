@@ -8,7 +8,10 @@ import (
 	"math"
 	"strings"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la/oblas"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Matrix implements a column-major representation of a matrix by using a linear array that can be passed to Fortran code
@@ -197,6 +200,31 @@ func (o Matrix) Apply(α float64, another *Matrix) {
 	for k := 0; k < o.M*o.N; k++ {
 		o.Data[k] = α * another.Data[k]
 	}
+}
+
+// Det computes the determinant of matrix using the LU factorization
+//   NOTE: this method may fail due to overflow...
+func (o *Matrix) Det() (det float64, err error) {
+	if o.M != o.N {
+		err = chk.Err("matrix must be square to compute determinant. %d × %d is invalid\n", o.M, o.N)
+		return
+	}
+	ai := make([]float64, len(o.Data))
+	copy(ai, o.Data)
+	ipiv := make([]int32, utl.Imin(o.M, o.N))
+	err = oblas.Dgetrf(o.M, o.N, ai, o.M, ipiv) // NOTE: ipiv are 1-based indices
+	if err != nil {
+		return
+	}
+	det = 1.0
+	for i := 0; i < o.M; i++ {
+		if ipiv[i]-1 == int32(i) { // NOTE: ipiv are 1-based indices
+			det = +det * ai[i+i*o.M]
+		} else {
+			det = -det * ai[i+i*o.M]
+		}
+	}
+	return
 }
 
 // Print prints matrix (without commas or brackets)

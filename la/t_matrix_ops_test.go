@@ -68,7 +68,15 @@ func checkAi(tst *testing.T, k string, a *Matrix,
 	}
 
 	// check determinant
-	chk.AnaNum(tst, "det("+k+")", tolDet, det, correctDet, chk.Verbose)
+	if a.M == a.N {
+		chk.AnaNum(tst, "det("+k+") ", tolDet, det, correctDet, chk.Verbose)
+		ddet, err := a.Det()
+		if err != nil {
+			tst.Errorf("%v\n", err)
+			return
+		}
+		chk.AnaNum(tst, k+".Det()", tolDet, ddet, correctDet, chk.Verbose)
+	}
 
 	// compare inverse
 	if correctAi != nil {
