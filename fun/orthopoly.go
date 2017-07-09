@@ -30,6 +30,19 @@ type ChebyshevPoly struct {
 }
 
 // NewChebyshevPoly returns a new ChebyshevPoly structure
+//
+//   gaussChebyshev == true:
+//
+//                       /  (2i+1)⋅π  \
+//           X[i] = -cos | —————————— |       i = 0 ... N
+//                       \   2N + 2   /
+//
+//   gaussChebyshev == false: (Gauss-Lobatto-Chebyshev)
+//
+//                       /  i⋅π  \
+//           X[i] = -cos | ————— |       i = 0 ... N
+//                       \   N   /
+//
 func NewChebyshevPoly(N int, gaussChebyshev bool) (o *ChebyshevPoly, err error) {
 
 	// allocate
