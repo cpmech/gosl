@@ -57,6 +57,12 @@ static void cleanup(
 }
 
 static double get(int i, double* v) { return v[i]; }
+
+static double* dalloc(int len) {
+    double* d = (double*) malloc(len*sizeof(double));
+    for (int i=0; i<len; i++) { d[i] = 0; }
+    return d;
+}
 */
 import "C"
 
@@ -67,12 +73,12 @@ type A123 struct {
 
 	// matrices
 	A  []float64 // matrix data
-	EL []float64 // eigen data
-	ER []float64 // eigen data
-	AI []float64 // inverse
+	El []float64 // eigen data
+	Er []float64 // eigen data
+	Ai []float64 // inverse
 	P  []float64 // plu data
-	LL []float64 // plu data
-	UU []float64 // plu data
+	Ll []float64 // plu data
+	Uu []float64 // plu data
 	Q  []float64 // qr data
 	R  []float64 // qr data
 	U  []float64 // svd data
@@ -80,11 +86,11 @@ type A123 struct {
 	V  []float64 // svd data
 
 	// vectors
-	EV  []float64 // eigen data
-	NL  []float64 // null vector
-	NR  []float64 // null vector
-	RHS []float64 // rhs
-	SOL []float64 // solution
+	Ev  []float64 // eigen data
+	Nl  []float64 // null vector
+	Nr  []float64 // null vector
+	Rhs []float64 // rhs
+	Sol []float64 // solution
 
 	// scalars
 	Det float64 // determinant
@@ -105,6 +111,16 @@ func (o *A123) Generate() {
 	var s *C.double
 	var v *C.double
 
+	o.M, o.N = 3, 3
+	p = C.dalloc(C.int(o.M * o.M))
+	ll = C.dalloc(C.int(o.M * o.M))
+	uu = C.dalloc(C.int(o.M * o.N))
+	q = C.dalloc(C.int(o.M * o.N))
+	r = C.dalloc(C.int(o.M * o.N))
+	u = C.dalloc(C.int(o.M * o.M))
+	s = C.dalloc(C.int(o.M * o.M))
+	v = C.dalloc(C.int(o.N * o.N))
+
 	var ev *C.double
 	var nl *C.double
 	var nr *C.double
@@ -124,15 +140,14 @@ func (o *A123) Generate() {
 	sol = C.a123_solution()
 	C.a123_svd(u, s, v)
 
-	o.M, o.N = 3, 3
 	l := o.M * o.N
 	o.A = make([]float64, l)
-	o.EL = make([]float64, l)
-	o.ER = make([]float64, l)
-	o.AI = make([]float64, l)
+	o.El = make([]float64, l)
+	o.Er = make([]float64, l)
+	o.Ai = make([]float64, l)
 	o.P = make([]float64, l)
-	o.LL = make([]float64, l)
-	o.UU = make([]float64, l)
+	o.Ll = make([]float64, l)
+	o.Uu = make([]float64, l)
 	o.Q = make([]float64, l)
 	o.R = make([]float64, l)
 	o.U = make([]float64, l)
@@ -141,12 +156,12 @@ func (o *A123) Generate() {
 
 	for k := 0; k < l; k++ {
 		o.A[k] = float64(C.get(C.int(k), a))
-		o.EL[k] = float64(C.get(C.int(k), el))
-		o.ER[k] = float64(C.get(C.int(k), er))
-		o.AI[k] = float64(C.get(C.int(k), ai))
+		o.El[k] = float64(C.get(C.int(k), el))
+		o.Er[k] = float64(C.get(C.int(k), er))
+		o.Ai[k] = float64(C.get(C.int(k), ai))
 		o.P[k] = float64(C.get(C.int(k), p))
-		o.LL[k] = float64(C.get(C.int(k), ll))
-		o.UU[k] = float64(C.get(C.int(k), uu))
+		o.Ll[k] = float64(C.get(C.int(k), ll))
+		o.Uu[k] = float64(C.get(C.int(k), uu))
 		o.Q[k] = float64(C.get(C.int(k), q))
 		o.R[k] = float64(C.get(C.int(k), r))
 		o.U[k] = float64(C.get(C.int(k), u))
@@ -154,18 +169,18 @@ func (o *A123) Generate() {
 		o.V[k] = float64(C.get(C.int(k), v))
 	}
 
-	o.EV = make([]float64, o.M)
-	o.NL = make([]float64, o.M)
-	o.NR = make([]float64, o.M)
-	o.RHS = make([]float64, o.M)
-	o.SOL = make([]float64, o.M)
+	o.Ev = make([]float64, o.M)
+	o.Nl = make([]float64, o.M)
+	o.Nr = make([]float64, o.M)
+	o.Rhs = make([]float64, o.M)
+	o.Sol = make([]float64, o.M)
 
 	for i := 0; i < o.M; i++ {
-		o.EV[i] = float64(C.get(C.int(i), ev))
-		o.NL[i] = float64(C.get(C.int(i), nl))
-		o.NR[i] = float64(C.get(C.int(i), nr))
-		o.RHS[i] = float64(C.get(C.int(i), rhs))
-		o.SOL[i] = float64(C.get(C.int(i), sol))
+		o.Ev[i] = float64(C.get(C.int(i), ev))
+		o.Nl[i] = float64(C.get(C.int(i), nl))
+		o.Nr[i] = float64(C.get(C.int(i), nr))
+		o.Rhs[i] = float64(C.get(C.int(i), rhs))
+		o.Sol[i] = float64(C.get(C.int(i), sol))
 	}
 
 	C.cleanup(a, el, er, ai, p, ll, uu, q, r, u, s, v, ev, nl, nr, rhs, sol)
