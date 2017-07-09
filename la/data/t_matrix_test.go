@@ -5,9 +5,11 @@
 package data
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func TestA123(tst *testing.T) {
@@ -35,4 +37,70 @@ func TestA123(tst *testing.T) {
 	chk.Vector(tst, "s(A123)", 1e-17, a.S, []float64{16.848103352614210, 0.0, 0.0, 0.0, 1.068369514554710, 0.0, 0.0, 0.0, 0.0})
 	chk.Vector(tst, "v(A123)", 1e-17, a.V, []float64{-0.479671177877772, -0.572367793972062, -0.665064410066353, -0.776690990321560, -0.075686470104559, 0.625318050112443, -0.408248290463863, 0.816496580927726, -0.408248290463863})
 	chk.AnaNum(tst, "det(A123)", 1e-17, a.Det, 0.0, chk.Verbose)
+}
+
+func printMat(m, n int, a []float64, fmt string) {
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			io.Pf(fmt, a[i+j*m])
+		}
+		io.Pl()
+	}
+}
+
+func checkAi(tst *testing.T, n int, a, ai []float64, tolI float64) {
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			aia := 0.0
+			for k := 0; k < n; k++ {
+				aia += a[i+k*n] * ai[k+j*n]
+			}
+			if i == j {
+				if math.Abs(aia-1.0) > tolI {
+					tst.Errorf("Ai⋅A: diagonal is not 1.0\n")
+					return
+				}
+			} else {
+				if math.Abs(aia) > tolI {
+					tst.Errorf("Ai⋅A: off-diagonal is not 0.0\n")
+					return
+				}
+			}
+		}
+	}
+	io.PfGreen("Ai⋅A: OK\n")
+}
+
+func TestChebyT(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ChebyT.")
+
+	n := 4
+	a := new(ChebyT)
+	a.Generate(n)
+	printMat(a.M, a.N, a.A, "%12.6f")
+	//Print(a.M, a.N, a.A, "A")
+	//Plot(a.M, a.N, a.A, "A")
+	checkAi(tst, a.M, a.A, a.Ai, 1e-17)
+	chk.AnaNum(tst, "det(ChebyT)", 1e-17, a.Det, Det(a.M, a.A), chk.Verbose)
+}
+
+func Test5x5(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("5x5.")
+
+	// a := [][]float64{
+	//    {12, 28, 22, 20, +8},
+	//    {+0, +3, +5, 17, 28},
+	//    {56, +0, 23, +1, +0},
+	//    {12, 29, 27, 10, +1},
+	//    {+9, +4, 13, +8, 22},
+	// }
+
+	a := []float64{12, 0, 56, 12, 9, 28, 3, 0, 29, 4, 22, 5, 23, 27, 13, 20, 17, 1, 10, 8, 8, 28, 0, 1, 22}
+	//Print(5, 5, a, "A")
+	det := Det(5, a)
+	chk.AnaNum(tst, "det(a)", 1e-9, det, -167402.0, chk.Verbose)
 }

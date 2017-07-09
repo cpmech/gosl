@@ -18,7 +18,15 @@ package data
 
 #include "test_mat.h"
 
-static void cleanup(
+static void cleanup2(
+    double* a01,
+    double* a02
+) {
+    if (a01 != NULL) { free (a01); }
+    if (a02 != NULL) { free (a02); }
+}
+
+static void cleanup17(
     double* a01,
     double* a02,
     double* a03,
@@ -65,6 +73,33 @@ static double* dalloc(int len) {
 }
 */
 import "C"
+import "unsafe"
+
+// functions //////////////////////////////////////////////////////////////////////////////////////
+
+func Det(n int, a []float64) (det float64) {
+	res := C.r8mat_determinant(C.int(n), (*C.double)(unsafe.Pointer(&a[0])))
+	return float64(res)
+}
+
+func NormFrob(m, n int, a []float64) (norm float64) {
+	res := C.r8mat_norm_fro(C.int(m), C.int(n), (*C.double)(unsafe.Pointer(&a[0])))
+	return float64(res)
+}
+
+func Print(m, n int, a []float64, title string) {
+	ctitle := C.CString(title)
+	defer C.free(unsafe.Pointer(ctitle))
+	C.r8mat_print(C.int(m), C.int(n), (*C.double)(unsafe.Pointer(&a[0])), ctitle)
+}
+
+func Plot(m, n int, a []float64, title string) {
+	ctitle := C.CString(title)
+	defer C.free(unsafe.Pointer(ctitle))
+	C.r8mat_plot(C.int(m), C.int(n), (*C.double)(unsafe.Pointer(&a[0])), ctitle)
+}
+
+// a123 ///////////////////////////////////////////////////////////////////////////////////////////
 
 type A123 struct {
 
@@ -183,7 +218,46 @@ func (o *A123) Generate() {
 		o.Sol[i] = float64(C.get(C.int(i), sol))
 	}
 
-	C.cleanup(a, el, er, ai, p, ll, uu, q, r, u, s, v, ev, nl, nr, rhs, sol)
+	C.cleanup17(a, el, er, ai, p, ll, uu, q, r, u, s, v, ev, nl, nr, rhs, sol)
 
 	o.Det = float64(C.a123_determinant())
+}
+
+// cheby_t ////////////////////////////////////////////////////////////////////////////////////////
+
+type ChebyT struct {
+
+	// size
+	M, N int // size
+
+	// matrices
+	A  []float64 // matrix data
+	Ai []float64 // inverse
+
+	// scalars
+	Det float64 // determinant
+}
+
+func (o *ChebyT) Generate(n int) {
+
+	var a *C.double
+	var ai *C.double
+
+	o.M, o.N = n, n
+
+	a = C.cheby_t(C.int(n))
+	ai = C.cheby_t_inverse(C.int(n))
+
+	l := o.M * o.N
+	o.A = make([]float64, l)
+	o.Ai = make([]float64, l)
+
+	for k := 0; k < l; k++ {
+		o.A[k] = float64(C.get(C.int(k), a))
+		o.Ai[k] = float64(C.get(C.int(k), ai))
+	}
+
+	C.cleanup2(a, ai)
+
+	o.Det = float64(C.cheby_t_determinant(C.int(n)))
 }
