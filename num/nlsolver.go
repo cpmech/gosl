@@ -207,7 +207,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		if o.useDn {
 
 			// invert matrix
-			err = la.MatInv(o.Ji, o.J)
+			_, err = la.MatInv(o.Ji, o.J, false)
 			if err != nil {
 				return chk.Err(_nls_err1, err.Error())
 			}
