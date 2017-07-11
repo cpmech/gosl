@@ -27,7 +27,7 @@ type BsplineCurveWithKnots struct {
 	SelfIntersect      bool
 	KnotMultiplicities []int
 	Knots              []float64
-	Knot_spec          string
+	KnotSpec           string
 }
 
 // SurfaceCurve represents a surface curve
@@ -84,16 +84,16 @@ func (o *StepFile) ParseData(dat string) (err error) {
 		}
 
 		// left- and right-hand-sides => key = function
-		lhs_rhs := strings.Split(lin, "=")
-		if len(lhs_rhs) != 2 {
+		lhsAndRHS := strings.Split(lin, "=")
+		if len(lhsAndRHS) != 2 {
 			continue
 		}
 
 		// key
-		lhs := strings.TrimSpace(lhs_rhs[0])
+		lhs := strings.TrimSpace(lhsAndRHS[0])
 
 		// function call
-		rhs := strings.ToLower(strings.TrimSpace(lhs_rhs[1]))
+		rhs := strings.ToLower(strings.TrimSpace(lhsAndRHS[1]))
 
 		// extract entities
 		switch {
@@ -138,7 +138,7 @@ func (o *StepFile) ParseData(dat string) (err error) {
 				SelfIntersect:      atob(args[5]),
 				KnotMultiplicities: io.SplitInts(args[6]),
 				Knots:              io.SplitFloats(args[7]),
-				Knot_spec:          args[8],
+				KnotSpec:           args[8],
 			}
 			chk.IntAssert(len(b.KnotMultiplicities), len(b.Knots))
 			o.BsplineCurves[lhs] = &b

@@ -80,7 +80,3 @@ package tri
  *    +.'`
  *
  */
-
-// TODO: implement this
-func Generate() {
-}

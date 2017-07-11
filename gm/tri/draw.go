@@ -6,6 +6,7 @@ package tri
 
 import "github.com/cpmech/gosl/plt"
 
+// Draw draws mesh with given vertices in V (coordinates) and cells in C (connectivity)
 func Draw(V [][]float64, C [][]int, style *plt.A) {
 	if style == nil {
 		style = &plt.A{C: "b", M: "o", Ms: 2}
