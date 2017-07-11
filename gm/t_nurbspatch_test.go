@@ -60,8 +60,8 @@ func Test_npatch01(tst *testing.T) {
 	checkBinsEntries(tst, patch.Bins.All, entries)
 
 	// check exchange data
-	chk.Int(tst, "0: Id", patch.ExchangeData[0].Id, 0)
-	chk.Int(tst, "1: Id", patch.ExchangeData[1].Id, 1)
+	chk.Int(tst, "0: Id", patch.ExchangeData[0].ID, 0)
+	chk.Int(tst, "1: Id", patch.ExchangeData[1].ID, 1)
 	chk.Int(tst, "0: Gnd", patch.ExchangeData[0].Gnd, 2)
 	chk.Int(tst, "1: Gnd", patch.ExchangeData[1].Gnd, 2)
 	chk.Ints(tst, "0: Ords", patch.ExchangeData[0].Ords, []int{2, 1})
@@ -126,7 +126,7 @@ func Test_npatch02(tst *testing.T) {
 
 	// check control points
 	for i, cp := range patch.ControlPoints {
-		if i != cp.Id {
+		if i != cp.ID {
 			tst.Errorf("control point id is incorrect")
 			return
 		}
@@ -154,7 +154,7 @@ func Test_npatch02(tst *testing.T) {
 
 	// check read control points
 	for i, cp := range pp.ControlPoints {
-		if i != cp.Id {
+		if i != cp.ID {
 			tst.Errorf("read control point id is incorrect")
 			return
 		}
@@ -162,8 +162,8 @@ func Test_npatch02(tst *testing.T) {
 
 	// check read data
 	io.Pf("\n")
-	chk.Int(tst, "0: Id", pp.ExchangeData[0].Id, 0)
-	chk.Int(tst, "1: Id", pp.ExchangeData[1].Id, 1)
+	chk.Int(tst, "0: Id", pp.ExchangeData[0].ID, 0)
+	chk.Int(tst, "1: Id", pp.ExchangeData[1].ID, 1)
 	chk.Int(tst, "0: Gnd", pp.ExchangeData[0].Gnd, 2)
 	chk.Int(tst, "1: Gnd", pp.ExchangeData[1].Gnd, 2)
 	chk.Ints(tst, "0: Ords", pp.ExchangeData[0].Ords, []int{2, 1})

@@ -15,14 +15,14 @@ import (
 
 // PointExchangeData holds data for exchanging control points
 type PointExchangeData struct {
-	Id  int       `json:"i"` // id
+	ID  int       `json:"i"` // id
 	Tag int       `json:"t"` // tag
 	X   []float64 `json:"x"` // coordinates (size==4)
 }
 
 // NurbsExchangeData holds all data required to exchange NURBS; e.g. read/save files
 type NurbsExchangeData struct {
-	Id    int         `json:"i"` // id of Nurbs
+	ID    int         `json:"i"` // id of Nurbs
 	Gnd   int         `json:"g"` // 1: curve, 2:surface, 3:volume (geometry dimension)
 	Ords  []int       `json:"o"` // order along each x-y-z direction [gnd]
 	Knots [][]float64 `json:"k"` // knots along each x-y-z direction [gnd][m]
@@ -74,7 +74,7 @@ func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err err
 	}
 
 	// global index of control point
-	nextId := 0
+	nextID := 0
 
 	// set exchange data
 	o.ExchangeData = make([]*NurbsExchangeData, len(o.Entities))
@@ -85,7 +85,7 @@ func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err err
 
 		// new data structure
 		o.ExchangeData[e] = &NurbsExchangeData{
-			Id:    e,
+			ID:    e,
 			Gnd:   entity.gnd,
 			Ords:  make([]int, entity.gnd),
 			Knots: make([][]float64, entity.gnd),
@@ -110,7 +110,7 @@ func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err err
 
 					// get point Id
 					x := entity.GetQ(i, j, k)
-					id, existent := o.Bins.FindClosestAndAppend(&nextId, x, nil, tolerance, o.diffPoints)
+					id, existent := o.Bins.FindClosestAndAppend(&nextID, x, nil, tolerance, o.diffPoints)
 
 					// set control point id
 					o.ExchangeData[e].Ctrls[idxCtrl] = id
@@ -118,7 +118,7 @@ func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err err
 
 					// set list of points
 					if !existent {
-						o.ControlPoints = append(o.ControlPoints, &PointExchangeData{Id: id, X: x})
+						o.ControlPoints = append(o.ControlPoints, &PointExchangeData{ID: id, X: x})
 					}
 				}
 			}
@@ -166,7 +166,7 @@ func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err
 	}
 
 	// global index of control point
-	nextId := 0
+	nextID := 0
 
 	// set bins
 	for _, entity := range o.Entities {
@@ -174,7 +174,7 @@ func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err
 			for j := 0; j < entity.n[1]; j++ {
 				for i := 0; i < entity.n[0]; i++ {
 					x := entity.GetQ(i, j, k)
-					o.Bins.FindClosestAndAppend(&nextId, x, nil, tolerance, o.diffPoints)
+					o.Bins.FindClosestAndAppend(&nextID, x, nil, tolerance, o.diffPoints)
 				}
 			}
 		}

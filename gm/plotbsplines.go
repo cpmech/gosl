@@ -45,6 +45,7 @@ func (o *Bspline) Draw2d(npts, option int, withCtrl bool, argsCurve, argsCtrl *p
 	}
 }
 
+// Draw3d draws bspline in 3D
 func (o *Bspline) Draw3d(npts int) {
 	t := utl.LinSpace(o.tmin, o.tmax, npts)
 	x := make([]float64, npts)
@@ -89,7 +90,7 @@ func (o *Bspline) PlotBasis(npts, option int) {
 		plt.Plot(tt, f, nil)
 	}
 	plt.Gll("$x$", io.Sf("$N_{i,%d}$", o.p), &plt.A{LegOut: true, LegNcol: o.NumBasis(), LegHlen: 1.5, FszLeg: 7})
-	o.plt_ticks_spans()
+	o.pltTicksSpans()
 }
 
 // PlotDerivs plots derivatives of basis functions in I
@@ -112,11 +113,11 @@ func (o *Bspline) PlotDerivs(npts int) {
 		plt.Plot(tt, f, nil)
 	}
 	plt.Gll("$t$", io.Sf(`$\frac{\mathrm{d}N_{i,%d}}{\mathrm{d}t}$`, o.p), &plt.A{LegOut: true, LegNcol: o.NumBasis(), LegHlen: 1.5, FszLeg: 7})
-	o.plt_ticks_spans()
+	o.pltTicksSpans()
 }
 
-// plt_ticks_spans adds ticks indicating spans
-func (o *Bspline) plt_ticks_spans() {
+// pltTicksSpans adds ticks indicating spans
+func (o *Bspline) pltTicksSpans() {
 	lbls := make(map[float64]string, 0)
 	for i, t := range o.T {
 		if _, ok := lbls[t]; !ok {

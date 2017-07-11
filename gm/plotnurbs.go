@@ -434,9 +434,9 @@ func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, arg
 		o.DrawEdge(ndim, umin, umax, 0.0, 0, npts, args)
 		if withIds {
 			o.Point(c, []float64{umin}, ndim)
-			drawElemId(c, ndim, span[0], -1, -1, argsIds)
+			drawElemID(c, ndim, span[0], -1, -1, argsIds)
 			o.Point(c, []float64{umax}, ndim)
-			drawElemId(c, ndim, span[1], -1, -1, argsIds)
+			drawElemID(c, ndim, span[1], -1, -1, argsIds)
 		}
 	// surface
 	case 2:
@@ -448,13 +448,13 @@ func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, arg
 		o.DrawEdge(ndim, vmin, vmax, umax, 1, npts, args)
 		if withIds {
 			o.Point(c, []float64{umin, vmin}, ndim)
-			drawElemId(c, ndim, span[0], span[2], -1, argsIds)
+			drawElemID(c, ndim, span[0], span[2], -1, argsIds)
 			o.Point(c, []float64{umin, vmax}, ndim)
-			drawElemId(c, ndim, span[0], span[3], -1, argsIds)
+			drawElemID(c, ndim, span[0], span[3], -1, argsIds)
 			o.Point(c, []float64{umax, vmin}, ndim)
-			drawElemId(c, ndim, span[1], span[2], -1, argsIds)
+			drawElemID(c, ndim, span[1], span[2], -1, argsIds)
 			o.Point(c, []float64{umax, vmax}, ndim)
-			drawElemId(c, ndim, span[1], span[3], -1, argsIds)
+			drawElemID(c, ndim, span[1], span[3], -1, argsIds)
 		}
 	}
 }
@@ -517,8 +517,8 @@ func (o *Nurbs) DrawSurface(ndim int, nu, nv int, withSurf, withWire bool, argsS
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
-// drawElemId draws element id
-func drawElemId(c []float64, ndim, i, j, k int, args *plt.A) {
+// drawElemID draws element id
+func drawElemID(c []float64, ndim, i, j, k int, args *plt.A) {
 	txt := io.Sf("(%d", i)
 	if j >= 0 {
 		txt += io.Sf(",%d", j)

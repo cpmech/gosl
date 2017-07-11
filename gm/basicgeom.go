@@ -51,7 +51,7 @@ func (o *Segment) Len() float64 {
 	return DistPointPoint(o.A, o.B)
 }
 
-// NewScaled creates a new Segment scaled by m and starting from A
+// New creates a new Segment scaled by m and starting from A
 func (o *Segment) New(m float64) *Segment {
 	return &Segment{o.A.NewCopy(), &Point{o.A.X + m*(o.B.X-o.A.X),
 		o.A.Y + m*(o.B.Y-o.A.Y),

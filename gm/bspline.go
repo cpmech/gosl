@@ -82,8 +82,8 @@ func (o *Bspline) CalcBasis(t float64) {
 		chk.Panic("t must be within [%g, %g]. t=%g is incorrect", t, o.tmin, o.tmax)
 	}
 	// using basis_funs (Piegl & Tiller, algorithm A2.2)
-	o.span = o.find_span(t)
-	o.basis_funs(t, o.span)
+	o.span = o.findSpan(t)
+	o.basisFuns(t, o.span)
 }
 
 // CalcBasisAndDerivs computes all non-zero basis functions N[i] and corresponding
@@ -96,8 +96,8 @@ func (o *Bspline) CalcBasisAndDerivs(t float64) {
 		chk.Panic("t must be within [%g, %g]. t=%g is incorrect", t, o.tmin, o.tmax)
 	}
 	// using ders_basis_funs (Piegl & Tiller, algorithm A2.3)
-	o.span = o.find_span(t)
-	o.ders_basis_funs(t, o.span, 1)
+	o.span = o.findSpan(t)
+	o.dersBasisFuns(t, o.span, 1)
 }
 
 // GetBasis returns the basis function N[i] just computed by CalcBasis or CalcBasisAndDerivs
@@ -147,8 +147,8 @@ func (o *Bspline) Point(t float64, option int) (C []float64) {
 			}
 		}
 	case 1: // Piegl & Tiller: A3.1 p82
-		span := o.find_span(t)
-		o.basis_funs(t, span)
+		span := o.findSpan(t)
+		o.basisFuns(t, span)
 		for i := 0; i <= o.p; i++ {
 			for j := 0; j < ncp; j++ {
 				C[j] += o.ndu[i][o.p] * o.Q[span-o.p+i][j]
@@ -164,7 +164,7 @@ func (o *Bspline) Elements() (spans [][]int) {
 	for i := 0; i < o.m-1; i++ {
 		l := o.T[i+1] - o.T[i]
 		if math.Abs(l) > 1e-14 {
-			nspans += 1
+			nspans++
 		}
 	}
 	spans = utl.IntAlloc(nspans, 2)
@@ -174,7 +174,7 @@ func (o *Bspline) Elements() (spans [][]int) {
 		if math.Abs(l) > 1e-14 {
 			spans[ispan][0] = i
 			spans[ispan][1] = i + 1
-			ispan += 1
+			ispan++
 		}
 	}
 	return
@@ -182,8 +182,8 @@ func (o *Bspline) Elements() (spans [][]int) {
 
 // auxiliary methods /////////////////////////////////////////////////////////////////////////////////
 
-// find_span returns the span where t falls in
-func (o *Bspline) find_span(t float64) int {
+// findSpan returns the span where t falls in
+func (o *Bspline) findSpan(t float64) int {
 	// Piegl & Tiller: A2.1 p68
 	n := o.NumBasis()
 	if t >= o.T[n] {
@@ -217,26 +217,25 @@ func (o *Bspline) recursiveN(t float64, i int, p int) float64 {
 			return 1.0
 		}
 		return 0.0
-	} else {
-		d1 := o.T[i+p] - o.T[i]
-		d2 := o.T[i+p+1] - o.T[i+1]
-		var N1, N2 float64
-		if math.Abs(d1) < 1e-14 {
-			N1, d1 = 0.0, 1.0
-		} else {
-			N1 = o.recursiveN(t, i, p-1)
-		}
-		if math.Abs(d2) < 1e-14 {
-			N2, d2 = 0.0, 1.0
-		} else {
-			N2 = o.recursiveN(t, i+1, p-1)
-		}
-		return (t-o.T[i])*N1/d1 + (o.T[i+p+1]-t)*N2/d2
 	}
+	d1 := o.T[i+p] - o.T[i]
+	d2 := o.T[i+p+1] - o.T[i+1]
+	var N1, N2 float64
+	if math.Abs(d1) < 1e-14 {
+		N1, d1 = 0.0, 1.0
+	} else {
+		N1 = o.recursiveN(t, i, p-1)
+	}
+	if math.Abs(d2) < 1e-14 {
+		N2, d2 = 0.0, 1.0
+	} else {
+		N2 = o.recursiveN(t, i+1, p-1)
+	}
+	return (t-o.T[i])*N1/d1 + (o.T[i+p+1]-t)*N2/d2
 }
 
-// basis_funs computes basis functions using Piegl-Tiller algorithm A2.2/2.3 p70/p72
-func (o *Bspline) basis_funs(t float64, span int) {
+// basisFuns computes basis functions using Piegl-Tiller algorithm A2.2/2.3 p70/p72
+func (o *Bspline) basisFuns(t float64, span int) {
 	// Piegl & Tiller: A2.3 p72
 	// compute basis functions and knot differences
 	var temp, saved float64
@@ -255,10 +254,10 @@ func (o *Bspline) basis_funs(t float64, span int) {
 	}
 }
 
-// ders_basis_funs computes derivatives of basis functions using Piegl-Tiller algorithm A2.3 p72
-func (o *Bspline) ders_basis_funs(t float64, span, upto int) {
+// dersBasisFuns computes derivatives of basis functions using Piegl-Tiller algorithm A2.3 p72
+func (o *Bspline) dersBasisFuns(t float64, span, upto int) {
 	// compute and load the basis functions
-	o.basis_funs(t, span)
+	o.basisFuns(t, span)
 	for j := 0; j <= o.p; j++ {
 		o.der[0][j] = o.ndu[j][o.p]
 	}

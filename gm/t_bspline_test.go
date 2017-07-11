@@ -83,7 +83,7 @@ func Test_bspline02(tst *testing.T) {
 
 	tt := utl.LinSpace(0, 5, 11)
 	for k, t := range tt {
-		span := s.find_span(t)
+		span := s.findSpan(t)
 		io.Pforan("t=%.4f  =>  span=%v\n", t, span)
 		if span != sol[k] {
 			chk.Panic("find_span failed: t=%v  span => %d != %d", t, span, sol[k])

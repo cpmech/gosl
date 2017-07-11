@@ -13,10 +13,10 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func test_rwstep01(tst *testing.T) {
+func testRWstep01(tst *testing.T) {
 
-	verbose()
-	chk.PrintTitle("rwstep01")
+	//verbose()
+	chk.PrintTitle("RWstep01")
 
 	buf, err := io.ReadFile("rw/data/beadpanel.step")
 	if err != nil {

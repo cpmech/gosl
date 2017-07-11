@@ -124,8 +124,8 @@ func (o *Nurbs) SetControl(verts [][]float64, ctrls []int) (err error) {
 // Note: use GetBasisI or GetBasisL to get a particular basis function value
 func (o *Nurbs) CalcBasis(u []float64) {
 	for d := 0; d < o.gnd; d++ {
-		o.span[d] = o.b[d].find_span(u[d])
-		o.b[d].basis_funs(u[d], o.span[d])
+		o.span[d] = o.b[d].findSpan(u[d])
+		o.b[d].basisFuns(u[d], o.span[d])
 	}
 	α, β, γ := o.p[0], o.p[1], o.p[2]                               // B-spline orders
 	x, y, z := o.span[0]-o.p[0], o.span[1]-o.p[1], o.span[2]-o.p[2] // auxiliary indices
@@ -185,8 +185,8 @@ func (o *Nurbs) CalcBasis(u []float64) {
 func (o *Nurbs) CalcBasisAndDerivs(u []float64) {
 	π := 1 // derivative order
 	for d := 0; d < o.gnd; d++ {
-		o.span[d] = o.b[d].find_span(u[d])
-		o.b[d].ders_basis_funs(u[d], o.span[d], π)
+		o.span[d] = o.b[d].findSpan(u[d])
+		o.b[d].dersBasisFuns(u[d], o.span[d], π)
 	}
 	α, β, γ := o.p[0], o.p[1], o.p[2]                               // B-spline orders
 	x, y, z := o.span[0]-o.p[0], o.span[1]-o.p[1], o.span[2]-o.p[2] // auxiliary indices
@@ -357,8 +357,8 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 //     C -- [ndim] coordinates
 func (o *Nurbs) Point(C, u []float64, ndim int) {
 	for d := 0; d < o.gnd; d++ {
-		o.span[d] = o.b[d].find_span(u[d])
-		o.b[d].basis_funs(u[d], o.span[d])
+		o.span[d] = o.b[d].findSpan(u[d])
+		o.b[d].basisFuns(u[d], o.span[d])
 		o.idx[d] = o.span[d] - o.p[d]
 	}
 	for e := 0; e < 4; e++ {
@@ -403,12 +403,12 @@ func (o *Nurbs) Point(C, u []float64, ndim int) {
 
 // accessors methods /////////////////////////////////////////////////////////////////////////////////
 
-// GetGnd returns the geometry dimension
+// Gnd returns the geometry dimension
 func (o *Nurbs) Gnd() int {
 	return o.gnd
 }
 
-// GetOrd returns the order along direction dir
+// Ord returns the order along direction dir
 func (o *Nurbs) Ord(dir int) int {
 	return o.p[dir]
 }
@@ -532,7 +532,7 @@ func (o *Nurbs) IndBasis(span []int) (L []int) {
 			for i := 0; i < nbu; i++ {
 				I := span[0] - o.p[0] + i
 				L[c] = I + J*o.n[0]
-				c += 1
+				c++
 			}
 		}
 	// volume
@@ -549,7 +549,7 @@ func (o *Nurbs) IndBasis(span []int) (L []int) {
 				for i := 0; i < nbu; i++ {
 					I := span[0] - o.p[0] + i
 					L[c] = I + J*o.n[0] + K*o.n[1]*o.n[2]
-					c += 1
+					c++
 				}
 			}
 		}
@@ -613,19 +613,18 @@ func (o *Nurbs) KrefineN(ndiv int, hughesEtAlPaper bool) *Nurbs {
 		}
 		io.Pfgrey("KrefineN with hughesEtAlPaper==true => not implemented yet\n")
 		return nil
-	} else {
-		for d := 0; d < o.gnd; d++ {
-			nspans := o.b[d].m - 2*o.p[d] - 1
-			nnewk := nspans * (ndiv - 1)
-			X[d] = make([]float64, nnewk)
-			k := 0
-			for i := 0; i < nspans; i++ {
-				umin, umax := o.b[d].T[o.p[d]+i], o.b[d].T[o.p[d]+i+1]
-				du := (umax - umin) / float64(ndiv)
-				for j := 1; j < ndiv; j++ {
-					X[d][k] = umin + du*float64(j)
-					k += 1
-				}
+	}
+	for d := 0; d < o.gnd; d++ {
+		nspans := o.b[d].m - 2*o.p[d] - 1
+		nnewk := nspans * (ndiv - 1)
+		X[d] = make([]float64, nnewk)
+		k := 0
+		for i := 0; i < nspans; i++ {
+			umin, umax := o.b[d].T[o.p[d]+i], o.b[d].T[o.p[d]+i+1]
+			du := (umax - umin) / float64(ndiv)
+			for j := 1; j < ndiv; j++ {
+				X[d][k] = umin + du*float64(j)
+				k++
 			}
 		}
 	}
@@ -645,8 +644,8 @@ func (o *Nurbs) Krefine(X [][]float64) (O *Nurbs) {
 	nk, a, b := make([]int, 3), make([]int, 3), make([]int, 3)
 	for d := 0; d < o.gnd; d++ {
 		nk[d] = len(X[d])
-		a[d] = o.b[d].find_span(X[d][0])
-		b[d] = o.b[d].find_span(X[d][nk[d]-1])
+		a[d] = o.b[d].findSpan(X[d][0])
+		b[d] = o.b[d].findSpan(X[d][nk[d]-1])
 	}
 
 	// new knots array
@@ -786,6 +785,6 @@ func krefine(Unew [][]float64, Qnew, Qold [][][][]float64, dir int, X, U []float
 			}
 		}
 		Unew[dir][k] = X[j]
-		k -= 1
+		k--
 	}
 }

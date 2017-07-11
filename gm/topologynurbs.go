@@ -76,18 +76,18 @@ func (o *Nurbs) CloneCtrlsAlongCurve(iAlong, jAt int) (Qnew [][][][]float64) {
 }
 
 // CloneCtrlsAlongSurface returns a copy of control points @ 3D boundary
-func (o *Nurbs) CloneCtrlsAlongSurface(iAlong, jAlong, kAt int) (Qnew [][][][]float64) {
+func (o *Nurbs) CloneCtrlsAlongSurface(iAlong, jAlong, kat int) (Qnew [][][][]float64) {
 	Qnew = utl.Deep4alloc(o.n[iAlong], o.n[jAlong], 1, 4)
 	var i, j, k int
 	for m := 0; m < o.n[iAlong]; m++ {
 		for n := 0; n < o.n[jAlong]; n++ {
 			switch {
 			case iAlong == 0 && jAlong == 1:
-				i, j, k = m, n, kAt
+				i, j, k = m, n, kat
 			case iAlong == 1 && jAlong == 2:
-				i, j, k = kAt, m, n
+				i, j, k = kat, m, n
 			case iAlong == 2 && jAlong == 0:
-				i, j, k = n, kAt, m
+				i, j, k = n, kat, m
 			default:
 				chk.Panic("clone Q surface is specified by 'along' indices in (0,1) or (1,2) or (2,0). (%d,%d) is incorrect", iAlong, jAlong)
 			}
@@ -118,7 +118,7 @@ func (o *Nurbs) IndsAlongCurve(iAlong, iSpan0, jAt int) (L []int) {
 }
 
 // IndsAlongSurface return the control points indices along surface
-func (o *Nurbs) IndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kAt int) (L []int) {
+func (o *Nurbs) IndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kat int) (L []int) {
 	nbu := o.p[iAlong] + 1 // number of basis functions along i
 	nbv := o.p[jAlong] + 1 // number of basis functions along j
 	L = make([]int, nbu*nbv)
@@ -129,18 +129,18 @@ func (o *Nurbs) IndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kAt int) (L []i
 			case iAlong == 0 && jAlong == 1:
 				i = iSpan0 - o.p[0] + m
 				j = jSpan0 - o.p[1] + n
-				k = kAt
+				k = kat
 			case iAlong == 1 && jAlong == 2:
-				i = kAt
+				i = kat
 				j = iSpan0 - o.p[1] + m
 				k = jSpan0 - o.p[2] + n
 			case iAlong == 2 && jAlong == 0:
 				i = jSpan0 - o.p[0] + n
-				j = kAt
+				j = kat
 				k = iSpan0 - o.p[2] + m
 			}
 			L[c] = i + j*o.n[0] + k*o.n[1]*o.n[2]
-			c += 1
+			c++
 		}
 	}
 	return

@@ -20,7 +20,7 @@ var (
 
 // BinEntry holds data of an entry to bin
 type BinEntry struct {
-	Id    int         // object Id
+	ID    int         // object Id
 	X     []float64   // entry coordinate (read only)
 	Extra interface{} // any entity attached to this entry
 }
@@ -122,7 +122,7 @@ func (o Bins) FindBinByIndex(idx int) *Bin {
 	return o.All[idx]
 }
 
-// CalcIdx calculates the bin index where the point x is
+// CalcIndex calculates the bin index where the point x is
 // returns -1 if out-of-range
 func (o Bins) CalcIndex(x []float64) int {
 	for k := 0; k < o.Ndim; k++ {
@@ -165,7 +165,7 @@ func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
 			d += math.Pow(x[k]-entry.X[k], 2)
 		}
 		if d < sqDistMin {
-			idClosest = entry.Id
+			idClosest = entry.ID
 			sqDistMin = d
 		}
 	}
@@ -184,16 +184,16 @@ func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
 //   Output:
 //     id       -- the id attached to x
 //     existent -- flag telling if x was found, based on given tolerance
-func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{}, radTol float64, diff func(idOld int, xNew []float64) bool) (id int, existent bool) {
+func (o *Bins) FindClosestAndAppend(nextID *int, x []float64, extra interface{}, radTol float64, diff func(idOld int, xNew []float64) bool) (id int, existent bool) {
 
 	// try to find another close point
 	idClosest, sqDistMin := o.FindClosest(x)
 
 	// new point for sure; i.e no other point was found
-	id = *nextId
+	id = *nextID
 	if idClosest < 0 {
 		o.Append(x, id, extra)
-		(*nextId)++
+		(*nextID)++
 		return
 	}
 
@@ -201,7 +201,7 @@ func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{},
 	dist := math.Sqrt(sqDistMin)
 	if dist > radTol {
 		o.Append(x, id, extra)
-		(*nextId)++
+		(*nextID)++
 		return
 	}
 
@@ -209,7 +209,7 @@ func (o *Bins) FindClosestAndAppend(nextId *int, x []float64, extra interface{},
 	if diff != nil {
 		if diff(idClosest, x) {
 			o.Append(x, id, extra)
-			(*nextId)++
+			(*nextID)++
 			return
 		}
 	}
@@ -291,7 +291,7 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 			d := DistPointLine(&p, &pi, &pf, tol, false)
 			if d <= tol {
 				if IsPointIn(&p, xi, xf, tol) {
-					ids = append(ids, entry.Id)
+					ids = append(ids, entry.ID)
 				}
 			}
 		}
@@ -339,7 +339,7 @@ func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEnt
 	// selected bins
 	if o.Ndim == 2 {
 		nxy := o.Npts[0] * o.Npts[1]
-		for idx, _ := range selBins {
+		for idx := range selBins {
 			i := idx % o.Npts[0] // indices representing bin
 			j := (idx % nxy) / o.Npts[0]
 			x := o.Xmin[0] + float64(i)*o.Size[0] // coordinates of bin corner
@@ -385,11 +385,11 @@ func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEnt
 					if o.Ndim == 3 {
 						Z[k] = entry.X[2]
 						if withEntryTxt {
-							plt.Text3d(X[k], Y[k], Z[k], io.Sf("%d", entry.Id), argsTxtEntry)
+							plt.Text3d(X[k], Y[k], Z[k], io.Sf("%d", entry.ID), argsTxtEntry)
 						}
 					} else {
 						if withEntryTxt {
-							plt.Text(X[k], Y[k], io.Sf("%d", entry.Id), argsTxtEntry)
+							plt.Text(X[k], Y[k], io.Sf("%d", entry.ID), argsTxtEntry)
 						}
 					}
 					k++
@@ -485,7 +485,7 @@ func (o Bin) String() string {
 		if i > 0 {
 			l += ", "
 		}
-		l += io.Sf("{\"id\":%d, \"x\":[%g,%g", entry.Id, entry.X[0], entry.X[1])
+		l += io.Sf("{\"id\":%d, \"x\":[%g,%g", entry.ID, entry.X[0], entry.X[1])
 		if len(entry.X) > 2 {
 			l += io.Sf(",%g", entry.X[2])
 		}
@@ -509,7 +509,7 @@ func (o Bins) String() string {
 				l += ",\n"
 			}
 			l += io.Sf("  %v", bin)
-			k += 1
+			k++
 		}
 	}
 	l += "\n]"

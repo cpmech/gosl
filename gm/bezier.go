@@ -100,15 +100,15 @@ func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64 {
 	chk.IntAssert(len(X), ndim)
 
 	// solve cubic equation
-	var A_i, B_i, M_i, a, b, c, d float64
+	var Ai, Bi, Mi, a, b, c, d float64
 	for i := 0; i < ndim; i++ {
-		A_i = o.Q[2][i] - 2.0*o.Q[1][i] + o.Q[0][i]
-		B_i = o.Q[1][i] - o.Q[0][i]
-		M_i = o.Q[0][i] - X[i]
-		a += A_i * A_i
-		b += 3.0 * A_i * B_i
-		c += 2.0*B_i*B_i + M_i*A_i
-		d += M_i * B_i
+		Ai = o.Q[2][i] - 2.0*o.Q[1][i] + o.Q[0][i]
+		Bi = o.Q[1][i] - o.Q[0][i]
+		Mi = o.Q[0][i] - X[i]
+		a += Ai * Ai
+		b += 3.0 * Ai * Bi
+		c += 2.0*Bi*Bi + Mi*Ai
+		d += Mi * Bi
 	}
 	//io.Pforan("a=%v b=%v c=%v d=%v\n", a, b, c, d)
 	if math.Abs(a) < 1e-7 {

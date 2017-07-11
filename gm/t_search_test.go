@@ -124,53 +124,53 @@ func Test_bins02(tst *testing.T) {
 	chk.Scalar(tst, "closest 7: sqDist", 1e-15, sqDist, math.Pow(0.1-0.01, 2))
 
 	// append more points
-	nextId := bins.Nentries()
+	nextID := bins.Nentries()
 	tolerance := 1e-2
-	currentId, ex := bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance, nil)
+	currentID, ex := bins.FindClosestAndAppend(&nextID, []float64{1.0, 1.5}, nil, tolerance, nil)
 	io.Pf("\n")
 	if ex {
 		tst.Errorf("existent flag is incorrect")
 		return
 	}
-	chk.Int(tst, "currentId 8", currentId, 8)
-	chk.Int(tst, "nextId 9", nextId, 9)
+	chk.Int(tst, "currentId 8", currentID, 8)
+	chk.Int(tst, "nextId 9", nextID, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
 
 	// add point: repeated, no change
 	io.Pf("\n")
-	currentId, ex = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.5}, nil, tolerance, nil)
+	currentID, ex = bins.FindClosestAndAppend(&nextID, []float64{1.0, 1.5}, nil, tolerance, nil)
 	if !ex {
 		tst.Errorf("existent flag is incorrect")
 		return
 	}
-	chk.Int(tst, "currentId 8", currentId, 8)
-	chk.Int(tst, "nextId 9", nextId, 9)
+	chk.Int(tst, "currentId 8", currentID, 8)
+	chk.Int(tst, "nextId 9", nextID, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
 
 	// add point: very close
 	io.Pf("\n")
 	tolerance = 0.1
-	currentId, ex = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.59999}, nil, tolerance, nil)
+	currentID, ex = bins.FindClosestAndAppend(&nextID, []float64{1.0, 1.59999}, nil, tolerance, nil)
 	if !ex {
 		tst.Errorf("existent flag is incorrect")
 		return
 	}
-	chk.Int(tst, "currentId 8", currentId, 8)
-	chk.Int(tst, "nextId 9", nextId, 9)
+	chk.Int(tst, "currentId 8", currentID, 8)
+	chk.Int(tst, "nextId 9", nextID, 9)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 9)
 
 	// add point: new
 	io.Pf("\n")
-	currentId, ex = bins.FindClosestAndAppend(&nextId, []float64{1.0, 1.6}, nil, tolerance, nil)
+	currentID, ex = bins.FindClosestAndAppend(&nextID, []float64{1.0, 1.6}, nil, tolerance, nil)
 	if ex {
 		tst.Errorf("existent flag is incorrect")
 		return
 	}
-	chk.Int(tst, "currentId 9", currentId, 9)
-	chk.Int(tst, "nextId 10", nextId, 10)
+	chk.Int(tst, "currentId 9", currentID, 9)
+	chk.Int(tst, "nextId 10", nextID, 10)
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 10)
 
@@ -519,7 +519,7 @@ func checkBinsEntries(tst *testing.T, bins []*Bin, entries map[int][]int) {
 			chk.Int(tst, txt, len(bin.Entries), len(e))
 			ee := make([]int, len(bin.Entries))
 			for k, entry := range bin.Entries {
-				ee[k] = entry.Id
+				ee[k] = entry.ID
 			}
 			chk.Ints(tst, txt, ee, e)
 		} else {

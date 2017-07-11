@@ -21,7 +21,7 @@ type PointN struct {
 	X []float64 // coordinates
 
 	// optional
-	Id int // some identification number
+	ID int // some identification number
 }
 
 // NewPointNdim creates a new PointN with given dimension (ndim)
@@ -83,7 +83,7 @@ type BoxN struct {
 	Hi *PointN // higher point
 
 	// auxiliary
-	Id int // an auxiliary identification number
+	ID int // an auxiliary identification number
 }
 
 // NewBoxN creates a new box with given limiting coordinates
@@ -135,7 +135,7 @@ func (o BoxN) Draw(withTxt bool, args, argsTxt *plt.A) {
 	if argsTxt == nil {
 		argsTxt = &plt.A{C: "k", Fsz: 8, Ha: "center", Va: "center"}
 	}
-	lbl := io.Sf("%d", o.Id)
+	lbl := io.Sf("%d", o.ID)
 	ndim := len(o.Lo.X)
 	mid := o.GetMid()
 	if ndim == 2 {
@@ -241,7 +241,7 @@ func NewOctree(L ...float64) (o *Octree) {
 
 // qobox creates new box whose index is k. The root box is k==1
 func (o *Octree) qobox(k uint32) (box *BoxN) {
-	box = &BoxN{Lo: NewPointNdim(o.DIM), Hi: NewPointNdim(o.DIM), Id: int(k)}
+	box = &BoxN{Lo: NewPointNdim(o.DIM), Hi: NewPointNdim(o.DIM), ID: int(k)}
 	var j, kb uint32
 	offset := make([]float64, o.DIM)
 	del := 1.0
