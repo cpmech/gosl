@@ -10,7 +10,7 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// 'A' holds "arguments" to configure plots, including "style" data for shapes (e.g. polygons)
+// The A structure holds arguments to configure plots, including style data for shapes (e.g. polygons)
 type A struct {
 
 	// plot and basic options

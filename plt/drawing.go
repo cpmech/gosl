@@ -59,7 +59,7 @@ func Arrow(xi, yi, xf, yf float64, args *A) {
 	if args.Scale > 0 {
 		scale = args.Scale
 	}
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "pc%d = pat.FancyArrowPatch((%g,%g),(%g,%g),shrinkA=0,shrinkB=0,path_effects=[pff.Stroke(joinstyle='miter')],arrowstyle='%s',mutation_scale=%g", uid, xi, yi, xf, yf, style, scale)
 	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", uid)
@@ -67,7 +67,7 @@ func Arrow(xi, yi, xf, yf float64, args *A) {
 
 // Circle adds circle to plot
 func Circle(xc, yc, r float64, args *A) {
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "pc%d = pat.Circle((%g,%g), %g", uid, xc, yc, r)
 	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", uid)
@@ -76,7 +76,7 @@ func Circle(xc, yc, r float64, args *A) {
 // Arc adds arc to plot
 //  minAlpha and maxAlpha are in degrees
 func Arc(xc, yc, r, minAlpha, maxAlpha float64, args *A) {
-	uid := genUid()
+	uid := genUID()
 	r2 := 2.0 * r
 	θ1 := minAlpha * 180.0 / math.Pi
 	θ2 := maxAlpha * 180.0 / math.Pi
@@ -90,7 +90,7 @@ func Polyline(P [][]float64, args *A) {
 	if len(P) < 1 {
 		return
 	}
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "dat%d = [[pth.Path.MOVETO, [%g, %g]]", uid, P[0][0], P[0][1])
 	for _, p := range P {
 		io.Ff(&bufferPy, ", [pth.Path.LINETO, [%g, %g]]", p[0], p[1])
@@ -119,7 +119,7 @@ func Polygon3d(P [][]float64, args *A) {
 		args = &A{Fc: "#5294ed", Ec: "#ffec4f"}
 	}
 	createAxes3d()
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "verts%d = [[", uid)
 	for i, p := range P {
 		if i > 0 {
@@ -148,7 +148,7 @@ func Box(xmin, xmax, ymin, ymax, zmin, zmax float64, args *A) {
 		args = &A{Fc: "#5294ed", Ec: "#ffec4f", Lw: 3}
 	}
 	createAxes3d()
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "verts%d = [\n", uid)
 	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)],\n", xmin, ymin, zmin, xmin, ymax, zmin, xmin, ymax, zmax, xmin, ymin, zmax)
 	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)],\n", xmax, ymin, zmin, xmax, ymax, zmin, xmax, ymax, zmax, xmax, ymin, zmax)

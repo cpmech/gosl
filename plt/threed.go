@@ -29,7 +29,7 @@ func AxisRange3d(xmin, xmax, ymin, ymax, zmin, zmax float64) {
 // Plot3dLine plots 3d line
 func Plot3dLine(X, Y, Z []float64, args *A) {
 	createAxes3d()
-	uid := genUid()
+	uid := genUID()
 	sx := io.Sf("X%d", uid)
 	sy := io.Sf("Y%d", uid)
 	sz := io.Sf("Z%d", uid)
@@ -43,14 +43,14 @@ func Plot3dLine(X, Y, Z []float64, args *A) {
 // Plot3dPoint plot 3d point
 func Plot3dPoint(x, y, z float64, args *A) {
 	createAxes3d()
-	io.Ff(&bufferPy, "p%d = AX3D.scatter(%g,%g,%g", genUid(), x, y, z)
+	io.Ff(&bufferPy, "p%d = AX3D.scatter(%g,%g,%g", genUID(), x, y, z)
 	updateBufferAndClose(&bufferPy, args, false, true)
 }
 
 // Plot3dPoints plots 3d points
 func Plot3dPoints(X, Y, Z []float64, args *A) {
 	createAxes3d()
-	uid := genUid()
+	uid := genUID()
 	sx := io.Sf("X%d", uid)
 	sy := io.Sf("Y%d", uid)
 	sz := io.Sf("Z%d", uid)
@@ -64,7 +64,7 @@ func Plot3dPoints(X, Y, Z []float64, args *A) {
 // Wireframe draws wireframe
 func Wireframe(X, Y, Z [][]float64, args *A) {
 	createAxes3d()
-	uid := genUid()
+	uid := genUID()
 	sx := io.Sf("X%d", uid)
 	sy := io.Sf("Y%d", uid)
 	sz := io.Sf("Z%d", uid)
@@ -79,7 +79,7 @@ func Wireframe(X, Y, Z [][]float64, args *A) {
 // Surface draws surface
 func Surface(X, Y, Z [][]float64, args *A) {
 	createAxes3d()
-	uid := genUid()
+	uid := genUID()
 	sx := io.Sf("X%d", uid)
 	sy := io.Sf("Y%d", uid)
 	sz := io.Sf("Z%d", uid)
@@ -107,7 +107,7 @@ func AxDist(dist float64) {
 // Text3d adds text to 3d plot
 func Text3d(x, y, z float64, txt string, args *A) {
 	createAxes3d()
-	io.Ff(&bufferPy, "t%d = AX3D.text(%g,%g,%g,r'%s'", genUid(), x, y, z, txt)
+	io.Ff(&bufferPy, "t%d = AX3D.text(%g,%g,%g,r'%s'", genUID(), x, y, z, txt)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
@@ -191,7 +191,7 @@ func Draw3dVector(p, v []float64, sf float64, normed bool, args *A) {
 		}
 	}
 	createAxes3d()
-	io.Ff(&bufferPy, "p%d = AX3D.plot([%g,%g],[%g,%g],[%g,%g]", genUid(),
+	io.Ff(&bufferPy, "p%d = AX3D.plot([%g,%g],[%g,%g],[%g,%g]", genUID(),
 		p[0], p[0]+v[0]*scale,
 		p[1], p[1]+v[1]*scale,
 		p[2], p[2]+v[2]*scale)
@@ -205,7 +205,7 @@ func Diag3d(scale float64, args *A) {
 	if a == nil {
 		a = &A{C: "k"}
 	}
-	io.Ff(&bufferPy, "p%d = AX3D.plot([0,%g],[0,%g],[0,%g]", genUid(), scale, scale, scale)
+	io.Ff(&bufferPy, "p%d = AX3D.plot([0,%g],[0,%g],[0,%g]", genUID(), scale, scale, scale)
 	updateBufferAndClose(&bufferPy, a, false, false)
 }
 

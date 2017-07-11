@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// plt contains functions for plotting, drawing in 2D or 3D, and generationg PNG and EPS files
+// Package plt contains functions for plotting, drawing in 2D or 3D, and generationg PNG and EPS files
 package plt
 
 import (
@@ -15,14 +15,14 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// default directory and temporary file name for python commands
-var TEMPORARY = "/tmp/pltgosl.py"
+// TemporaryDir defines the default directory to save Python (matplotlib) files
+var TemporaryDir = "/tmp/pltgosl.py"
 
 // buffer holding Python commands
 var bufferPy bytes.Buffer
 
-// genUid returns an unique id for python variables
-func genUid() int { return bufferPy.Len() }
+// genUID returns an unique id for python variables
+func genUID() int { return bufferPy.Len() }
 
 // buffer holding Python extra artists commands
 var bufferEa bytes.Buffer
@@ -162,7 +162,7 @@ func SetYnticks(num int) {
 
 // SetTicksX sets ticks along x
 func SetTicksX(majorEvery, minorEvery float64, majorFmt string) {
-	uid := genUid()
+	uid := genUID()
 	if majorEvery > 0 {
 		io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", uid, majorEvery)
 		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", uid, majorEvery)
@@ -183,7 +183,7 @@ func SetTicksX(majorEvery, minorEvery float64, majorFmt string) {
 
 // SetTicksY sets ticks along y
 func SetTicksY(majorEvery, minorEvery float64, majorFmt string) {
-	uid := genUid()
+	uid := genUID()
 	if majorEvery > 0 {
 		io.Ff(&bufferPy, "majorLocator%d = tck.MultipleLocator(%g)\n", uid, majorEvery)
 		io.Ff(&bufferPy, "nticks%d = (plt.gca().axis()[1] - plt.gca().axis()[0]) / %g\n", uid, majorEvery)
@@ -204,7 +204,7 @@ func SetTicksY(majorEvery, minorEvery float64, majorFmt string) {
 
 // SetScientificX sets scientific notation for ticks along x-axis
 func SetScientificX(minOrder, maxOrder int) {
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "fmt%d = plt.ScalarFormatter(useOffset=True)\n", uid)
 	io.Ff(&bufferPy, "fmt%d.set_powerlimits((%d,%d))\n", uid, minOrder, maxOrder)
 	io.Ff(&bufferPy, "plt.gca().xaxis.set_major_formatter(fmt%d)\n", uid)
@@ -212,7 +212,7 @@ func SetScientificX(minOrder, maxOrder int) {
 
 // SetScientificY sets scientific notation for ticks along y-axis
 func SetScientificY(minOrder, maxOrder int) {
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "fmt%d = plt.ScalarFormatter(useOffset=True)\n", uid)
 	io.Ff(&bufferPy, "fmt%d.set_powerlimits((%d,%d))\n", uid, minOrder, maxOrder)
 	io.Ff(&bufferPy, "plt.gca().yaxis.set_major_formatter(fmt%d)\n", uid)
@@ -223,12 +223,12 @@ func SetTicksNormal() {
 	io.Ff(&bufferPy, "plt.gca().ticklabel_format(useOffset=False)\n")
 }
 
-// SetTicksRotationX
+// SetTicksRotationX sets the rotation angle of x-ticks
 func SetTicksRotationX(degree float64) {
 	io.Ff(&bufferPy, "plt.setp(plt.gca().get_xticklabels(), rotation=%g)\n", degree)
 }
 
-// SetTicksRotationY
+// SetTicksRotationY sets the rotation angle of y-ticks
 func SetTicksRotationY(degree float64) {
 	io.Ff(&bufferPy, "plt.setp(plt.gca().get_yticklabels(), rotation=%g)\n", degree)
 }
@@ -293,7 +293,7 @@ func AnnotateXlabels(x float64, txt string, args *A) {
 
 // SupTitle sets subplot title
 func SupTitle(txt string, args *A) {
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "st%d = plt.suptitle(r'%s'", uid, txt)
 	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "addToEA(st%d)\n", uid)
@@ -342,7 +342,7 @@ func Subplot(i, j, k int) {
 	io.Ff(&bufferPy, "plt.subplot(%d,%d,%d)\n", i, j, k)
 }
 
-// Subplot adds/sets a subplot with given indices in I
+// SubplotI adds/sets a subplot with given indices in I
 func SubplotI(I []int) {
 	if len(I) != 3 {
 		return
@@ -417,7 +417,7 @@ func AxisLims(lims []float64) {
 
 // Plot plots x-y series
 func Plot(x, y []float64, args *A) (sx, sy string) {
-	uid := genUid()
+	uid := genUID()
 	sx = io.Sf("x%d", uid)
 	sy = io.Sf("y%d", uid)
 	gen2Arrays(&bufferPy, sx, sy, x, y)
@@ -434,7 +434,7 @@ func PlotOne(x, y float64, args *A) {
 
 // Hist draws histogram
 func Hist(x [][]float64, labels []string, args *A) {
-	uid := genUid()
+	uid := genUID()
 	sx := io.Sf("x%d", uid)
 	sy := io.Sf("y%d", uid)
 	genList(&bufferPy, sx, x)
@@ -473,7 +473,7 @@ func Grid2d(X, Y [][]float64, withPoints bool, argsLines, argsPoints *A) {
 
 // ContourF draws filled contour and possibly with a contour of lines (if args.UnoLines=false)
 func ContourF(x, y, z [][]float64, args *A) {
-	uid := genUid()
+	uid := genUID()
 	sx := io.Sf("x%d", uid)
 	sy := io.Sf("y%d", uid)
 	sz := io.Sf("z%d", uid)
@@ -501,7 +501,7 @@ func ContourF(x, y, z [][]float64, args *A) {
 
 // ContourL draws a contour with lines only
 func ContourL(x, y, z [][]float64, args *A) {
-	uid := genUid()
+	uid := genUID()
 	sx := io.Sf("x%d", uid)
 	sy := io.Sf("y%d", uid)
 	sz := io.Sf("z%d", uid)
@@ -520,7 +520,7 @@ func ContourL(x, y, z [][]float64, args *A) {
 
 // Quiver draws vector field
 func Quiver(x, y, gx, gy [][]float64, args *A) {
-	uid := genUid()
+	uid := genUID()
 	sx := io.Sf("x%d", uid)
 	sy := io.Sf("y%d", uid)
 	sgx := io.Sf("gx%d", uid)
@@ -542,7 +542,7 @@ func Grid(args *A) {
 // Legend adds legend to plot
 func Legend(args *A) {
 	loc, ncol, hlen, fsz, frame, out, outX := argsLeg(args)
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "h%d, l%d = plt.gca().get_legend_handles_labels()\n", uid, uid)
 	io.Ff(&bufferPy, "if len(h%d) > 0 and len(l%d) > 0:\n", uid, uid)
 	if out == 1 {
@@ -561,7 +561,7 @@ func Legend(args *A) {
 // LegendX adds legend to plot with given data instead of relying on labels
 func LegendX(dat []*A, args *A) {
 	loc, ncol, hlen, fsz, frame, out, outX := argsLeg(args)
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "h%d = [", uid)
 	for i, d := range dat {
 		if i > 0 {
@@ -630,7 +630,7 @@ func SetFontSizes(args *A) {
 //  asOld -- handle to the previous axes
 //  axNew -- handle to the new axes
 func ZoomWindow(lef, bot, wid, hei float64, args *A) (axOld, axNew string) {
-	uid := genUid()
+	uid := genUID()
 	clr := "#dcdcdc"
 	if args != nil {
 		clr = args.C
@@ -680,7 +680,7 @@ func ShowSave(dirout, fnkey string) (err error) {
 	if empty {
 		return chk.Err("directory and filename key must not be empty\n")
 	}
-	uid := genUid()
+	uid := genUID()
 	io.Ff(&bufferPy, "fig%d = plt.gcf()\n", uid)
 	io.Ff(&bufferPy, "plt.show()\n")
 	err = os.MkdirAll(dirout, 0777)
@@ -700,9 +700,9 @@ func ShowSave(dirout, fnkey string) (err error) {
 // genMat generates matrix
 func genMat(buf *bytes.Buffer, name string, a [][]float64) {
 	io.Ff(buf, "%s=np.array([", name)
-	for i, _ := range a {
+	for i := range a {
 		io.Ff(buf, "[")
-		for j, _ := range a[i] {
+		for j := range a[i] {
 			io.Ff(buf, "%g,", a[i][j])
 		}
 		io.Ff(buf, "],")
@@ -713,9 +713,9 @@ func genMat(buf *bytes.Buffer, name string, a [][]float64) {
 // genList generates list
 func genList(buf *bytes.Buffer, name string, a [][]float64) {
 	io.Ff(buf, "%s=[", name)
-	for i, _ := range a {
+	for i := range a {
 		io.Ff(buf, "[")
-		for j, _ := range a[i] {
+		for j := range a[i] {
 			io.Ff(buf, "%g,", a[i][j])
 		}
 		io.Ff(buf, "],")
@@ -726,7 +726,7 @@ func genList(buf *bytes.Buffer, name string, a [][]float64) {
 // genArray generates the NumPy text corresponding to an array of float point numbers
 func genArray(buf *bytes.Buffer, name string, u []float64) {
 	io.Ff(buf, "%s=np.array([", name)
-	for i, _ := range u {
+	for i := range u {
 		io.Ff(buf, "%g,", u[i])
 	}
 	io.Ff(buf, "],dtype=float)\n")
@@ -741,7 +741,7 @@ func gen2Arrays(buf *bytes.Buffer, nameA, nameB string, a, b []float64) {
 // genStrArray generates the NumPy text corresponding to an array of strings
 func genStrArray(buf *bytes.Buffer, name string, u []string) {
 	io.Ff(buf, "%s=[", name)
-	for i, _ := range u {
+	for i := range u {
 		io.Ff(buf, "r'%s',", u[i])
 	}
 	io.Ff(buf, "]\n")
@@ -753,10 +753,10 @@ func genStrArray(buf *bytes.Buffer, name string, u []string) {
 func run(fn string) (err error) {
 
 	// write file
-	io.WriteFile(TEMPORARY, &bufferEa, &bufferPy)
+	io.WriteFile(TemporaryDir, &bufferEa, &bufferPy)
 
 	// set command
-	cmd := exec.Command("python", TEMPORARY)
+	cmd := exec.Command("python", TemporaryDir)
 	var out, serr bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &serr
