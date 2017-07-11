@@ -14,7 +14,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_lognormal(μ, σ float64) {
+func plotLognormal(μ, σ float64) {
 
 	var dist DistLogNormal
 	dist.Init(&VarData{M: μ, S: σ})
@@ -108,7 +108,7 @@ func Test_dist_lognormal_02(tst *testing.T) {
 			w := z * z
 			μ := math.Exp(n + w/2.0)
 			σ := μ * math.Sqrt(math.Exp(w)-1.0)
-			plot_lognormal(μ, σ)
+			plotLognormal(μ, σ)
 		}
 		plt.Save("/tmp/gosl", "rnd_dist_lognormal_02")
 	}
@@ -144,7 +144,7 @@ func Test_dist_lognormal_03(tst *testing.T) {
 
 	if chk.Verbose {
 		plt.Reset(false, nil)
-		plot_lognormal(μ, σ)
+		plotLognormal(μ, σ)
 		plt.Subplot(2, 1, 1)
 		hist.PlotDensity(nil)
 		plt.Save("/tmp/gosl", "rnd_dist_lognormal_03")

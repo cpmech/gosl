@@ -14,7 +14,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_gumbel(μ, σ float64) {
+func plotGumbel(μ, σ float64) {
 
 	var dist DistGumbel
 	dist.Init(&VarData{M: μ, S: σ})
@@ -108,7 +108,7 @@ func Test_dist_gumbel_02(tst *testing.T) {
 		for i, u := range U {
 			σ := B[i] * math.Pi / math.Sqrt(6.0)
 			μ := u + euler*B[i]
-			plot_gumbel(μ, σ)
+			plotGumbel(μ, σ)
 		}
 		plt.Save("/tmp/gosl", "rnd_dist_gumbel_02")
 	}

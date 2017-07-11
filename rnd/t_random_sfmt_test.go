@@ -24,11 +24,11 @@ func Test_MTint01(tst *testing.T) {
 	MTinit(1234)
 
 	nints := 10
-	vals := make([]int, NSAMPLES)
+	vals := make([]int, Nsamples)
 
 	// using MTint
 	t0 := time.Now()
-	for i := 0; i < NSAMPLES; i++ {
+	for i := 0; i < Nsamples; i++ {
 		vals[i] = MTint(0, nints-1)
 	}
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
@@ -55,11 +55,11 @@ func Test_MTflt01(tst *testing.T) {
 
 	xmin := 10.0
 	xmax := 20.0
-	vals := make([]float64, NSAMPLES)
+	vals := make([]float64, Nsamples)
 
 	// using MTfloat64
 	t0 := time.Now()
-	for i := 0; i < NSAMPLES; i++ {
+	for i := 0; i < Nsamples; i++ {
 		vals[i] = MTfloat64(xmin, xmax)
 	}
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))

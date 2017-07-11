@@ -14,7 +14,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_normal(μ, σ, xmin, xmax float64) {
+func plotNormal(μ, σ, xmin, xmax float64) {
 
 	var dist DistNormal
 	dist.Init(&VarData{M: μ, S: σ})
@@ -101,7 +101,7 @@ func Test_dist_normal_02(tst *testing.T) {
 	if doplot {
 		plt.Reset(false, nil)
 		for _, σ := range []float64{1, 0.5, 0.25} {
-			plot_normal(0, σ, -2, 2)
+			plotNormal(0, σ, -2, 2)
 		}
 		plt.Save("/tmp/gosl", "rnd_dist_normal_02")
 	}
@@ -188,7 +188,7 @@ func Test_dist_normal_05(tst *testing.T) {
 
 	if chk.Verbose {
 		plt.Reset(false, nil)
-		plot_normal(μ, σ, 0, 2)
+		plotNormal(μ, σ, 0, 2)
 		plt.Subplot(2, 1, 1)
 		hist.PlotDensity(nil)
 		plt.Save("/tmp/gosl", "rnd_dist_normal_05")

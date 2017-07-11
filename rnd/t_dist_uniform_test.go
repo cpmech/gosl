@@ -14,7 +14,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_uniform(A, B float64, xmin, xmax float64) {
+func plotUniform(A, B float64, xmin, xmax float64) {
 
 	var dist DistUniform
 	dist.Init(&VarData{Min: A, Max: B})
@@ -107,7 +107,7 @@ func Test_dist_uniform_02(tst *testing.T) {
 		plt.Reset(false, nil)
 		A := 1.5 // min
 		B := 2.5 // max
-		plot_uniform(A, B, 1.0, 3.0)
+		plotUniform(A, B, 1.0, 3.0)
 		plt.Save("/tmp/gosl", "rnd_dist_uniform_02a")
 	}
 }

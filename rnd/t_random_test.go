@@ -14,8 +14,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-//const NSAMPLES = 1000
-const NSAMPLES = 10
+const Nsamples = 10
 
 func Test_GOint01(tst *testing.T) {
 
@@ -25,11 +24,11 @@ func Test_GOint01(tst *testing.T) {
 	Init(1234)
 
 	nints := 10
-	vals := make([]int, NSAMPLES)
+	vals := make([]int, Nsamples)
 
 	// using Int
 	t0 := time.Now()
-	for i := 0; i < NSAMPLES; i++ {
+	for i := 0; i < Nsamples; i++ {
 		vals[i] = Int(0, nints-1)
 	}
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
@@ -56,11 +55,11 @@ func Test_GOflt01(tst *testing.T) {
 
 	xmin := 10.0
 	xmax := 20.0
-	vals := make([]float64, NSAMPLES)
+	vals := make([]float64, Nsamples)
 
 	// using Float64
 	t0 := time.Now()
-	for i := 0; i < NSAMPLES; i++ {
+	for i := 0; i < Nsamples; i++ {
 		vals[i] = Float64(xmin, xmax)
 	}
 	io.Pforan("time elapsed = %v\n", time.Now().Sub(t0))
@@ -138,9 +137,9 @@ func Test_getunique01(tst *testing.T) {
 	sel := IntGetUnique(nums, nsel)
 	io.Pfgreen("nums = %v\n", nums)
 	io.Pfcyan("sel  = %v\n", sel)
-	for i := 0; i < NSAMPLES; i++ {
+	for i := 0; i < Nsamples; i++ {
 		sel := IntGetUnique(nums, nsel)
-		check_repeated(sel)
+		checkRepeated(sel)
 		hist.Count(sel, false)
 		//io.Pfgrey("sel  = %v\n", sel)
 	}
@@ -161,9 +160,9 @@ func Test_getunique02(tst *testing.T) {
 	hist := IntHistogram{Stations: utl.IntRange(endp1 + 3)}
 	sel := IntGetUniqueN(start, endp1, nsel)
 	io.Pfcyan("sel  = %v\n", sel)
-	for i := 0; i < NSAMPLES; i++ {
+	for i := 0; i < Nsamples; i++ {
 		sel := IntGetUniqueN(start, endp1, nsel)
-		check_repeated(sel)
+		checkRepeated(sel)
 		hist.Count(sel, false)
 		//io.Pfgrey("sel  = %v\n", sel)
 	}
@@ -189,10 +188,10 @@ func Test_groups01(tst *testing.T) {
 	}
 	IntGetGroups(groups, ints)
 	io.Pfcyan("groups = %v\n", groups)
-	for i := 0; i < NSAMPLES; i++ {
+	for i := 0; i < Nsamples; i++ {
 		IntGetGroups(groups, ints)
 		for j := 0; j < ng; j++ {
-			check_repeated(groups[j])
+			checkRepeated(groups[j])
 			hists[j].Count(groups[j], false)
 		}
 	}
@@ -202,7 +201,7 @@ func Test_groups01(tst *testing.T) {
 	}
 }
 
-func check_repeated(v []int) {
+func checkRepeated(v []int) {
 	for i := 1; i < len(v); i++ {
 		if v[i] == v[i-1] {
 			chk.Panic("there are repeated entries in v = %v", v)
