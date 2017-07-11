@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package graph implements solvers based on Graph theory
+// Package graph implements solvers based on Graph theory
 package graph
 
 import (
@@ -13,8 +13,6 @@ import (
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
-
-const GRAPH_INF = 1e+30 // infinite distance
 
 // Graph defines a graph structure
 type Graph struct {
@@ -133,7 +131,7 @@ func (o *Graph) CalcDist() (err error) {
 			if i == j {
 				o.Dist[i][j] = 0
 			} else {
-				o.Dist[i][j] = GRAPH_INF
+				o.Dist[i][j] = math.MaxFloat64
 			}
 			o.Next[i][j] = -1
 		}
@@ -173,7 +171,7 @@ func (o *Graph) StrDistMatrix() (l string) {
 	maxlen := 0
 	for i := 0; i < nv; i++ {
 		for j := 0; j < nv; j++ {
-			if o.Dist[i][j] < GRAPH_INF {
+			if o.Dist[i][j] < math.MaxFloat64 {
 				maxlen = utl.Imax(maxlen, len(io.Sf("%g", o.Dist[i][j])))
 			}
 		}
@@ -183,7 +181,7 @@ func (o *Graph) StrDistMatrix() (l string) {
 	fmtn := io.Sf("%%%dg", maxlen+1)
 	for i := 0; i < nv; i++ {
 		for j := 0; j < nv; j++ {
-			if o.Dist[i][j] < GRAPH_INF {
+			if o.Dist[i][j] < math.MaxFloat64 {
 				l += io.Sf(fmtn, o.Dist[i][j])
 			} else {
 				l += io.Sf(fmts, "∞")

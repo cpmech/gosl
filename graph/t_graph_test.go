@@ -5,6 +5,7 @@
 package graph
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -90,7 +91,7 @@ func Test_graph01(tst *testing.T) {
 		tst.Errorf("ShortestPaths failed:\n%v", err)
 		return
 	}
-	inf := GRAPH_INF
+	inf := math.MaxFloat64
 	pth := G.Path(0, 3)
 	io.Pforan("dist =\n%v", G.StrDistMatrix())
 	io.Pforan("path from 0 to 3 = %v\n", pth)
@@ -175,7 +176,7 @@ func Test_graph02(tst *testing.T) {
 		tst.Errorf("ShortestPaths failed:\n%v", err)
 		return
 	}
-	inf := GRAPH_INF
+	inf := math.MaxFloat64
 	pth := G.Path(1, 3)
 	io.Pforan("dist =\n%v", G.StrDistMatrix())
 	io.Pforan("path from 1 to 3 = %v\n", pth)
