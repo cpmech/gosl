@@ -14,20 +14,19 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-const NSAMPLES = 100000
-
 func main() {
 
 	// initialise seed with fixed number; use 0 to use current time
 	rnd.Init(1234)
 
 	// allocate slice for integers
+	nsamples := 100000
 	nints := 10
-	vals := make([]int, NSAMPLES)
+	vals := make([]int, nsamples)
 
 	// using the rnd.Int function
 	t0 := time.Now()
-	for i := 0; i < NSAMPLES; i++ {
+	for i := 0; i < nsamples; i++ {
 		vals[i] = rnd.Int(0, nints-1)
 	}
 	io.Pf("time elapsed = %v\n", time.Now().Sub(t0))

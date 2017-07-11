@@ -13,7 +13,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func plot_normal(μ, σ, xmin, xmax float64) {
+func plotNormal(μ, σ, xmin, xmax float64) {
 
 	var dist rnd.DistNormal
 	dist.Init(&rnd.VarData{M: μ, S: σ})
@@ -73,7 +73,7 @@ func main() {
 	io.Pforan("area = %v\n", area)
 
 	plt.Reset(false, nil)
-	plot_normal(μ, σ, xmin, xmax)
+	plotNormal(μ, σ, xmin, xmax)
 	plt.Subplot(2, 1, 1)
 	hist.PlotDensity(nil)
 	plt.Save("/tmp/gosl", "rnd_normalDistribution")

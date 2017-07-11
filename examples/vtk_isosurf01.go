@@ -12,11 +12,11 @@ import (
 	"github.com/cpmech/gosl/vtk"
 )
 
-func calc_p(x []float64) float64 {
+func calcP(x []float64) float64 {
 	return -(x[0] + x[1] + x[2]) / 3.0
 }
 
-func calc_q(x []float64) float64 {
+func calcQ(x []float64) float64 {
 	return math.Sqrt(((x[0]-x[1])*(x[0]-x[1]) +
 		(x[1]-x[2])*(x[1]-x[2]) +
 		(x[2]-x[0])*(x[2]-x[0])) / 2.0)
@@ -39,7 +39,7 @@ func main() {
 
 	// cone symbolising the Drucker-Prager criterion
 	cone := vtk.NewIsoSurf(func(x []float64) (f, vx, vy, vz float64) {
-		p, q := calc_p(x), calc_q(x)
+		p, q := calcP(x), calcQ(x)
 		f = q - M*p
 		return
 	})
@@ -53,7 +53,7 @@ func main() {
 
 	// ellipsoid symbolising the Cam-clay yield surface
 	ellipsoid := vtk.NewIsoSurf(func(x []float64) (f, vx, vy, vz float64) {
-		p, q := calc_p(x), calc_q(x)
+		p, q := calcP(x), calcQ(x)
 		f = q*q + M*M*(p-pt)*(p-a0)
 		return
 	})

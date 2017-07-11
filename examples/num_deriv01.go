@@ -19,9 +19,9 @@ import (
 func main() {
 
 	// define function and derivative function
-	y_fcn := func(x float64) float64 { return math.Sin(x) }
-	dydx_fcn := func(x float64) float64 { return math.Cos(x) }
-	d2ydx2_fcn := func(x float64) float64 { return -math.Sin(x) }
+	yFcn := func(x float64) float64 { return math.Sin(x) }
+	dydxFcn := func(x float64) float64 { return math.Cos(x) }
+	d2ydx2Fcn := func(x float64) float64 { return -math.Sin(x) }
 
 	// run test for 11 points
 	X := utl.LinSpace(0, 2*math.Pi, 11)
@@ -29,29 +29,29 @@ func main() {
 	for _, x := range X {
 
 		// analytical derivatives
-		dydx_ana := dydx_fcn(x)
-		d2ydx2_ana := d2ydx2_fcn(x)
+		dydxAna := dydxFcn(x)
+		d2ydx2Ana := d2ydx2Fcn(x)
 
 		// numerical derivative: dydx
-		dydx_num, _ := num.DerivCen5(x, 1e-3, func(t float64) (float64, error) {
-			return y_fcn(t), nil
+		dydxNum, _ := num.DerivCen5(x, 1e-3, func(t float64) (float64, error) {
+			return yFcn(t), nil
 		})
 
 		// numerical derivative d2ydx2
-		d2ydx2_num, _ := num.DerivCen5(x, 1e-3, func(t float64) (float64, error) {
-			return dydx_fcn(t), nil
+		d2ydx2Num, _ := num.DerivCen5(x, 1e-3, func(t float64) (float64, error) {
+			return dydxFcn(t), nil
 		})
 
 		// check
-		chk.PrintAnaNum(io.Sf("dy/dx   @ %.6f", x), 1e-10, dydx_ana, dydx_num, true)
-		chk.PrintAnaNum(io.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2_ana, d2ydx2_num, true)
+		chk.PrintAnaNum(io.Sf("dy/dx   @ %.6f", x), 1e-10, dydxAna, dydxNum, true)
+		chk.PrintAnaNum(io.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2Ana, d2ydx2Num, true)
 	}
 
 	// generate 101 points for plotting
 	X = utl.LinSpace(0, 2*math.Pi, 101)
 	Y := make([]float64, len(X))
 	for i, x := range X {
-		Y[i] = y_fcn(x)
+		Y[i] = yFcn(x)
 	}
 
 	// plot
