@@ -96,8 +96,8 @@ func Test_munkres01(tst *testing.T) {
 
 	// 7: step 4 again (1)
 	Mcor = [][]MaskType{
-		{StarType, PrimType, NoneType},
-		{PrimType, NoneType, NoneType},
+		{StarType, PrimeType, NoneType},
+		{PrimeType, NoneType, NoneType},
 		{NoneType, NoneType, NoneType},
 	}
 	nextStep = mnk.step4()
@@ -161,7 +161,7 @@ func Test_munkres01(tst *testing.T) {
 
 	// 12: step 4 again (3)
 	Mcor = [][]MaskType{
-		{NoneType, StarType, PrimType},
+		{NoneType, StarType, PrimeType},
 		{StarType, NoneType, NoneType},
 		{NoneType, NoneType, NoneType},
 	}
@@ -191,9 +191,9 @@ func Test_munkres01(tst *testing.T) {
 
 	// 14: step 4 again (4)
 	Mcor = [][]MaskType{
-		{NoneType, StarType, PrimType},
-		{StarType, PrimType, NoneType},
-		{PrimType, NoneType, NoneType},
+		{NoneType, StarType, PrimeType},
+		{StarType, PrimeType, NoneType},
+		{PrimeType, NoneType, NoneType},
 	}
 	nextStep = mnk.step4()
 	io.PfYel("\n14: after step 4 again (4):\n")

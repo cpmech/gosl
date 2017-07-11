@@ -23,8 +23,8 @@ const (
 	// StarType defines the STAR mask type
 	StarType
 
-	// PrimType defines the PRIM mask type
-	PrimType
+	// PrimeType defines the PRIME mask type
+	PrimeType
 )
 
 // Munkres (Hungarian algorithm) method to solve the assignment problem
@@ -256,7 +256,7 @@ func (o *Munkres) step4() (nextStep int) {
 			done = true
 			nextStep = 6
 		} else {
-			o.M[row][col] = PrimType
+			o.M[row][col] = PrimeType
 			colStar := o.findStarInRow(row)
 			if colStar >= 0 {
 				col = colStar
@@ -323,7 +323,7 @@ func (o *Munkres) step5() (nextStep int) {
 	// erase primes
 	for i := 0; i < o.nrow; i++ {
 		for j := 0; j < o.ncol; j++ {
-			if o.M[i][j] == PrimType {
+			if o.M[i][j] == PrimeType {
 				o.M[i][j] = NoneType
 			}
 		}
@@ -386,7 +386,7 @@ func (o *Munkres) StrCostMatrix() (l string) {
 				s += " "
 			case StarType:
 				s += "*"
-			case PrimType:
+			case PrimeType:
 				s += "'"
 			}
 			l += io.Sf("%8v", s)
@@ -446,7 +446,7 @@ func (o *Munkres) findStarInCol(c int) (r int) {
 // findStarInRow is a method to support step 5
 func (o *Munkres) findPrimeInRow(r int) (c int) {
 	for j := 0; j < o.ncol; j++ {
-		if o.M[r][j] == PrimType {
+		if o.M[r][j] == PrimeType {
 			c = j
 		}
 	}
