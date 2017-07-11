@@ -69,16 +69,16 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 	fb, errb := o.Ffcn(b)
 	o.NFeval = 2
 	if erra != nil {
-		return 0, chk.Err(_brent_err1, "a", xa, erra.Error())
+		return 0, chk.Err("fa(%g) failed:\n%v", xa, erra.Error())
 	}
 	if errb != nil {
-		return 0, chk.Err(_brent_err1, "b", xb, errb.Error())
+		return 0, chk.Err("fb(%g) failed:\n%v", xb, errb.Error())
 	}
 	fc := fa
 
 	// check input
 	if fa*fb >= -MACHEPS {
-		return 0, chk.Err(_brent_err2, xa, xb, fa, fb)
+		return 0, chk.Err("root must be bracketed: xa=%g, xb=%g, fa=%g, fb=%b => fa * fb >= 0", xa, xb, fa, fb)
 	}
 
 	// message
@@ -88,15 +88,15 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 	}
 
 	// solve
-	var prev_step float64  // distance from the last but one to the last approximation
-	var tol_act float64    // actual tolerance
+	var prevStep float64   // distance from the last but one to the last approximation
+	var tolAct float64     // actual tolerance
 	var p, q float64       // interpol. step is calculated in the form p/q (divisions are delayed)
-	var new_step float64   // step at this iteration
+	var newStep float64    // step at this iteration
 	var t1, cb, t2 float64 // auxiliary variables
 	for o.It = 0; o.It < o.MaxIt; o.It++ {
 
 		// distance
-		prev_step = b - a
+		prevStep = b - a
 
 		// swap data for b to be the best approximation
 		if math.Abs(fc) < math.Abs(fb) {
@@ -107,19 +107,19 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 			fb = fc
 			fc = fa
 		}
-		tol_act = 2.0*MACHEPS*math.Abs(b) + o.Tol/2.0
-		new_step = (c - b) / 2.0
+		tolAct = 2.0*MACHEPS*math.Abs(b) + o.Tol/2.0
+		newStep = (c - b) / 2.0
 
 		// converged?
 		if !silent {
-			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(new_step))
+			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(newStep))
 		}
-		if math.Abs(new_step) <= tol_act || fb == 0.0 {
+		if math.Abs(newStep) <= tolAct || fb == 0.0 {
 			return b, nil
 		}
 
 		// decide if the interpolation can be tried
-		if math.Abs(prev_step) >= tol_act && math.Abs(fa) > math.Abs(fb) {
+		if math.Abs(prevStep) >= tolAct && math.Abs(fa) > math.Abs(fb) {
 			// if prev_step was large enough and was in true direction, interpolatiom may be tried
 			cb = c - b
 
@@ -148,17 +148,17 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 
 			// if b+p/q falls in [b,c] and isn't too large, it is accepted
 			// if p/q is too large then the bissection procedure can reduce [b,c] range to more extent
-			if p < (0.75*cb*q-math.Abs(tol_act*q)/2.0) && p < math.Abs(prev_step*q/2.0) {
-				new_step = p / q
+			if p < (0.75*cb*q-math.Abs(tolAct*q)/2.0) && p < math.Abs(prevStep*q/2.0) {
+				newStep = p / q
 			}
 		}
 
 		// adjust the step to be not less than tolerance
-		if math.Abs(new_step) < tol_act {
-			if new_step > 0.0 {
-				new_step = tol_act
+		if math.Abs(newStep) < tolAct {
+			if newStep > 0.0 {
+				newStep = tolAct
 			} else {
-				new_step = -tol_act
+				newStep = -tolAct
 			}
 		}
 
@@ -167,11 +167,11 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 		fa = fb
 
 		// do step to a new approximation
-		b += new_step
+		b += newStep
 		fb, errb = o.Ffcn(b)
-		o.NFeval += 1
+		o.NFeval++
 		if errb != nil {
-			return 0, chk.Err(_brent_err1, "", b, errb.Error())
+			return 0, chk.Err("f(%g) failed:\n%v", b, errb.Error())
 		}
 
 		// adjust c for it to have a sign opposite to that of b
@@ -182,7 +182,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 	}
 
 	// did not converge
-	return fb, chk.Err(_brent_err3, "Solve", o.It)
+	return fb, chk.Err("fail to converge after %d iterations", o.It)
 }
 
 // Min finds the minimum of f(x) in [xa, xb]
@@ -221,7 +221,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 
 	// check
 	if xb < xa {
-		return 0, chk.Err(_brent_err4, xa, xb)
+		return 0, chk.Err("xa(%g) must be smaller than xb(%g)", xa, xb)
 	}
 
 	// first step: always gold section
@@ -229,41 +229,41 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 	fv, errv := o.Ffcn(v)
 	o.NFeval = 1
 	if errv != nil {
-		return 0, chk.Err(_brent_err5, errv.Error())
+		return 0, chk.Err("f(%g) failed:\n%v\n", v, errv)
 	}
 	x, w, fx, fw := v, v, fv, fv
 
 	// solve
 	var rng float64         // range over which the minimum is seeked for
-	var mid_rng float64     // middle range
-	var tol_act float64     // actual tolerance
-	var new_step float64    // step at one iteration
+	var midRng float64      // middle range
+	var tolAct float64      // actual tolerance
+	var newStep float64     // step at one iteration
 	var tmp float64         // temporary
 	var p, q, t, ft float64 // auxiliary
 	for o.It = 0; o.It < o.MaxIt; o.It++ {
 
 		// auxiliary variables
 		rng = xb - xa
-		mid_rng = (xa + xb) / 2.0
-		tol_act = o.sqeps*math.Abs(x) + o.Tol/3.0
+		midRng = (xa + xb) / 2.0
+		tolAct = o.sqeps*math.Abs(x) + o.Tol/3.0
 
 		// converged?
 		if !silent {
-			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-mid_rng)+rng/2.0)
+			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-midRng)+rng/2.0)
 		}
-		if math.Abs(x-mid_rng)+rng/2.0 <= 2.0*tol_act {
+		if math.Abs(x-midRng)+rng/2.0 <= 2.0*tolAct {
 			return x, nil
 		}
 
 		// Obtain the gold section step
 		tmp = xa - x
-		if x < mid_rng {
+		if x < midRng {
 			tmp = xb - x
 		}
-		new_step = o.gsr * tmp
+		newStep = o.gsr * tmp
 
 		// decide if the interpolation can be tried
-		if math.Abs(x-w) >= tol_act { // if x and w are distinct interpolatiom may be tried
+		if math.Abs(x-w) >= tolAct { // if x and w are distinct interpolatiom may be tried
 
 			t = (x - w) * (fx - fv)
 			q = (x - v) * (fx - fw)
@@ -277,26 +277,26 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 			}
 
 			// x+p/q falls in [a,b] not too close to a and b, and isn't too large
-			if math.Abs(p) < math.Abs(new_step*q) && p > q*(xa-x+2.0*tol_act) && p < q*(xb-x-2.0*tol_act) {
-				new_step = p / q // it is accepted
+			if math.Abs(p) < math.Abs(newStep*q) && p > q*(xa-x+2.0*tolAct) && p < q*(xb-x-2.0*tolAct) {
+				newStep = p / q // it is accepted
 				// if p/q is too large then the gold section procedure can reduce [a,b] rng to more extent
 			}
 		}
 
 		// adjust the step to be not less than tolerance
-		if math.Abs(new_step) < tol_act {
-			if new_step > 0.0 {
-				new_step = tol_act
+		if math.Abs(newStep) < tolAct {
+			if newStep > 0.0 {
+				newStep = tolAct
 			} else {
-				new_step = -tol_act
+				newStep = -tolAct
 			}
 		}
 
 		// obtain the next approximation to min and reduce the enveloping rng
-		t = x + new_step // tentative point for the min  */
+		t = x + newStep // tentative point for the min  */
 		ft, err = o.Ffcn(t)
 		if err != nil {
-			return 0, chk.Err(_brent_err5, err.Error())
+			return 0, chk.Err("f(%g) failed:\n%v\n", t, err)
 		}
 
 		// t is a better approximation
@@ -334,14 +334,5 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 	}
 
 	// did not converge
-	return x, chk.Err(_brent_err3, "Min", o.It)
+	return x, chk.Err("fail to converge after %d iterations", o.It)
 }
-
-// error messages
-var (
-	_brent_err1 = "brent.go: Brent.Solve: f%s(%g) failed:\n%v"
-	_brent_err2 = "brent.go: Brent.Solve: root must be bracketed: xa=%g, xb=%g, fa=%g, fb=%b => fa * fb >= 0"
-	_brent_err3 = "brent.go: Brent.%s: dit not converge after %d iterations"
-	_brent_err4 = "min1d.go: Brent.FindMin: xa(%g) must be smaller than xb(%g)"
-	_brent_err5 = "min1d.go: Brent.FindMin: f(%g) failed:\n%v"
-)
