@@ -94,7 +94,7 @@ func GaussLegendreXW(x1, x2 float64, n int) (x, w []float64) {
 	return
 }
 
-// GaussLegendreXW computes positions (xi) and weights (wi) to perform Gauss-Jacobi integrations.
+// GaussJacobiXW computes positions (xi) and weights (wi) to perform Gauss-Jacobi integrations.
 // The largest abscissa is returned in x[0], the smallest in x[n-1].
 // The interval of integration is x ϵ [-1, 1]
 //   Input:
