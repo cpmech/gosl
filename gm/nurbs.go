@@ -12,10 +12,6 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-const (
-	ATOL = 1e-14 // zero α for refinement
-)
-
 // Nurbs holds NURBS data
 // Note: Control points must be set after a call to Init
 //       Either SetControl must be called or the Q array must be directly specified
@@ -321,7 +317,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 		for i := 0; i < o.n[0]; i++ {
 			den += o.b[0].RecursiveBasis(u[0], i) * o.Q[i][j][k][3]
 		}
-		if math.Abs(den) < ZTOL {
+		if math.Abs(den) < 1e-14 {
 			chk.Panic("denominator is zero (%v) @ %v for point %d", den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.Q[I[0]][j][k][3] / den
@@ -333,7 +329,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 				den += o.b[0].RecursiveBasis(u[0], i) * o.b[1].RecursiveBasis(u[1], j) * o.Q[i][j][k][3]
 			}
 		}
-		if math.Abs(den) < ZTOL {
+		if math.Abs(den) < 1e-14 {
 			chk.Panic("denominator is zero (%v) @ %v for point %d", den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.b[1].RecursiveBasis(u[1], I[1]) * o.Q[I[0]][I[1]][k][3] / den
@@ -346,7 +342,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 				}
 			}
 		}
-		if math.Abs(den) < ZTOL {
+		if math.Abs(den) < 1e-14 {
 			chk.Panic("denominator is zero (%v) @ %v for point %d", den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.b[1].RecursiveBasis(u[1], I[1]) * o.b[2].RecursiveBasis(u[2], I[2]) * o.Q[I[0]][I[1]][I[2]][3] / den
@@ -770,7 +766,7 @@ func krefine(Unew [][]float64, Qnew, Qold [][][][]float64, dir int, X, U []float
 		for l := 1; l <= p; l++ {
 			ind := k - p + l
 			alp := Unew[dir][k+l] - X[j]
-			if math.Abs(alp) > ATOL {
+			if math.Abs(alp) > 1e-14 {
 				alp /= Unew[dir][k+l] - U[i-p+l]
 				for f := 0; f < getnf[dir]; f++ {
 					for g := 0; g < getng[dir]; g++ {

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// gm (geometry and meshes) implements auxiliary functions for
+// Package gm (geometry and meshes) implements auxiliary functions for
 // handling geometry and mesh structures
 package gm
 
@@ -11,11 +11,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/utl"
-)
-
-const (
-	ZTOL = 1e-14
-	STOL = 1e-14
 )
 
 // Bspline holds B-spline data
@@ -168,7 +163,7 @@ func (o *Bspline) Elements() (spans [][]int) {
 	nspans := 0
 	for i := 0; i < o.m-1; i++ {
 		l := o.T[i+1] - o.T[i]
-		if math.Abs(l) > STOL {
+		if math.Abs(l) > 1e-14 {
 			nspans += 1
 		}
 	}
@@ -176,7 +171,7 @@ func (o *Bspline) Elements() (spans [][]int) {
 	ispan := 0
 	for i := 0; i < o.m-1; i++ {
 		l := o.T[i+1] - o.T[i]
-		if math.Abs(l) > STOL {
+		if math.Abs(l) > 1e-14 {
 			spans[ispan][0] = i
 			spans[ispan][1] = i + 1
 			ispan += 1
@@ -211,8 +206,8 @@ func (o *Bspline) find_span(t float64) int {
 
 // recursiveN computes basis functions using Cox-DeBoors recursive formula
 func (o *Bspline) recursiveN(t float64, i int, p int) float64 {
-	if math.Abs(t-o.tmax) < ZTOL {
-		t = o.tmax - ZTOL // remove noise. e.g. 1.000000000000002
+	if math.Abs(t-o.tmax) < 1e-14 {
+		t = o.tmax - 1e-14 // remove noise. e.g. 1.000000000000002
 	}
 	if p == 0 {
 		if t < o.T[i] {
@@ -226,12 +221,12 @@ func (o *Bspline) recursiveN(t float64, i int, p int) float64 {
 		d1 := o.T[i+p] - o.T[i]
 		d2 := o.T[i+p+1] - o.T[i+1]
 		var N1, N2 float64
-		if math.Abs(d1) < ZTOL {
+		if math.Abs(d1) < 1e-14 {
 			N1, d1 = 0.0, 1.0
 		} else {
 			N1 = o.recursiveN(t, i, p-1)
 		}
-		if math.Abs(d2) < ZTOL {
+		if math.Abs(d2) < 1e-14 {
 			N2, d2 = 0.0, 1.0
 		} else {
 			N2 = o.recursiveN(t, i+1, p-1)
