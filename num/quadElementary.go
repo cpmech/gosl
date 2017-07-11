@@ -22,7 +22,7 @@ type QuadElementary interface {
 	Integrate() (float64, error)      // Returns the integral for the specified input data
 }
 
-// Trap structure is used for the trapezoidal integration rule with refinement.
+// ElementaryTrapz structure is used for the trapezoidal integration rule with refinement.
 type ElementaryTrapz struct {
 	n    int     // current level of refinement.
 	a, b float64 // limits
@@ -46,7 +46,7 @@ func (o *ElementaryTrapz) Init(f fun.Ss, a, b, eps float64) {
 func (o *ElementaryTrapz) Next() (res float64, err error) {
 	var x, sum, del float64
 	var it, j, tnm int
-	o.n += 1
+	o.n++
 	var fa, fb, fx float64
 	if o.n == 1 {
 		fa, err = o.f(o.a)
@@ -59,28 +59,27 @@ func (o *ElementaryTrapz) Next() (res float64, err error) {
 		}
 		o.s = 0.5 * (o.b - o.a) * (fa + fb)
 		return o.s, nil
-	} else {
-		for it, j = 1, 1; j < o.n-1; j++ {
-			it *= 2
-		}
-		tnm = it
-		del = (o.b - o.a) / float64(tnm)
-
-		// This is the spacing of the points to be added.
-		x = o.a + 0.5*del
-
-		for sum, j = 0.0, 0; j < it; j, x = j+1, x+del {
-			fx, err = o.f(x)
-			if err != nil {
-				return
-			}
-			sum += fx
-		}
-		o.s = 0.5 * (o.s + (o.b-o.a)*sum/float64(tnm))
-
-		// This replaces s by its refined value.
-		return o.s, nil
 	}
+	for it, j = 1, 1; j < o.n-1; j++ {
+		it *= 2
+	}
+	tnm = it
+	del = (o.b - o.a) / float64(tnm)
+
+	// spacing of the points to be added.
+	x = o.a + 0.5*del
+
+	for sum, j = 0.0, 0; j < it; j, x = j+1, x+del {
+		fx, err = o.f(x)
+		if err != nil {
+			return
+		}
+		sum += fx
+	}
+	o.s = 0.5 * (o.s + (o.b-o.a)*sum/float64(tnm))
+
+	// replace s by its refined value.
+	return o.s, nil
 }
 
 // Integrate performs the numerical integration
@@ -102,7 +101,7 @@ func (o *ElementaryTrapz) Integrate() (res float64, err error) {
 	return 0, chk.Err("achieved maximum number of iterations (n=%d)", jmax)
 }
 
-// Simp structure implements the Simpson's method for quadrature with refinement.
+// ElementarySimpson structure implements the Simpson's method for quadrature with refinement.
 type ElementarySimpson struct {
 	n    int     // current level of refinement.
 	a, b float64 // limits
@@ -126,7 +125,7 @@ func (o *ElementarySimpson) Init(f fun.Ss, a, b, eps float64) {
 func (o *ElementarySimpson) Next() (res float64, err error) {
 	var x, sum, del, fa, fb, fx float64
 	var it, j, tnm int
-	o.n += 1
+	o.n++
 	if o.n == 1 {
 		fa, err = o.f(o.a)
 		if err != nil {
@@ -138,28 +137,27 @@ func (o *ElementarySimpson) Next() (res float64, err error) {
 		}
 		o.s = 0.5 * (o.b - o.a) * (fa + fb)
 		return o.s, nil
-	} else {
-		for it, j = 1, 1; j < o.n-1; j++ {
-			it *= 2
-		}
-		tnm = it
-		del = (o.b - o.a) / float64(tnm)
-
-		// This is the spacing of the points to be added.
-		x = o.a + 0.5*del
-
-		for sum, j = 0.0, 0; j < it; j, x = j+1, x+del {
-			fx, err = o.f(x)
-			if err != nil {
-				return
-			}
-			sum += fx
-		}
-		o.s = 0.5 * (o.s + (o.b-o.a)*sum/float64(tnm))
-
-		// This replaces s by its refined value.
-		return o.s, nil
 	}
+	for it, j = 1, 1; j < o.n-1; j++ {
+		it *= 2
+	}
+	tnm = it
+	del = (o.b - o.a) / float64(tnm)
+
+	// spacing of the points to be added.
+	x = o.a + 0.5*del
+
+	for sum, j = 0.0, 0; j < it; j, x = j+1, x+del {
+		fx, err = o.f(x)
+		if err != nil {
+			return
+		}
+		sum += fx
+	}
+	o.s = 0.5 * (o.s + (o.b-o.a)*sum/float64(tnm))
+
+	// replace s by its refined value.
+	return o.s, nil
 }
 
 // Integrate performs the numerical integration
