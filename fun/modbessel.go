@@ -12,10 +12,10 @@ func ModBesselI0(x float64) (ans float64) {
 	if ax < 15.0 { // Rational approximation.
 		y := x * x
 		return mbpoly(i0p, 13, y) / mbpoly(i0q, 4, 225.0-y)
-	} else { // Rational approximation with exp(x)/sqrt(x) factored out.
-		z := 1.0 - 15.0/ax
-		return math.Exp(ax) * mbpoly(i0pp, 4, z) / (mbpoly(i0qq, 5, z) * math.Sqrt(ax))
 	}
+	// rational approximation with exp(x)/sqrt(x) factored out.
+	z := 1.0 - 15.0/ax
+	return math.Exp(ax) * mbpoly(i0pp, 4, z) / (mbpoly(i0qq, 5, z) * math.Sqrt(ax))
 }
 
 // ModBesselI1 returns the modified Bessel function I1(x) for any real x.
@@ -24,14 +24,14 @@ func ModBesselI1(x float64) (ans float64) {
 	if ax < 15.0 { // Rational approximation.
 		y := x * x
 		return x * mbpoly(i1p, 13, y) / mbpoly(i1q, 4, 225.0-y)
-	} else { // Rational approximation with exp(x)/sqrt(x) factored out.
-		z := 1.0 - 15.0/ax
-		ans = math.Exp(ax) * mbpoly(i1pp, 4, z) / (mbpoly(i1qq, 5, z) * math.Sqrt(ax))
-		if x > 0.0 {
-			return ans
-		}
-		return -ans
 	}
+	// rational approximation with exp(x)/sqrt(x) factored out.
+	z := 1.0 - 15.0/ax
+	ans = math.Exp(ax) * mbpoly(i1pp, 4, z) / (mbpoly(i1qq, 5, z) * math.Sqrt(ax))
+	if x > 0.0 {
+		return ans
+	}
+	return -ans
 }
 
 // ModBesselIn returns the modified Bessel function In(x) for any real x and n ≥ 0
@@ -88,10 +88,10 @@ func ModBesselK0(x float64) float64 {
 		z := x * x
 		term := mbpoly(k0pi, 4, z) * math.Log(x) / mbpoly(k0qi, 2, 1.-z)
 		return mbpoly(k0p, 4, z)/mbpoly(k0q, 2, 1.-z) - term
-	} else { // Rational approximation with exp(-x) / sqrt(x) factored out.
-		z := 1.0 / x
-		return math.Exp(-x) * mbpoly(k0pp, 7, z) / (mbpoly(k0qq, 7, z) * math.Sqrt(x))
 	}
+	// rational approximation with exp(-x) / sqrt(x) factored out.
+	z := 1.0 / x
+	return math.Exp(-x) * mbpoly(k0pp, 7, z) / (mbpoly(k0qq, 7, z) * math.Sqrt(x))
 }
 
 // ModBesselK1 returns the modified Bessel function K1(x) for positive real x.
@@ -109,10 +109,10 @@ func ModBesselK1(x float64) float64 {
 		z := x * x
 		term := mbpoly(k1pi, 4, z) * math.Log(x) / mbpoly(k1qi, 2, 1.-z)
 		return x*(mbpoly(k1p, 4, z)/mbpoly(k1q, 2, 1.-z)+term) + 1./x
-	} else { // Rational approximation with exp(-x)/sqrt(x) factored out.
-		z := 1.0 / x
-		return math.Exp(-x) * mbpoly(k1pp, 7, z) / (mbpoly(k1qq, 7, z) * math.Sqrt(x))
 	}
+	// rational approximation with exp(-x)/sqrt(x) factored out.
+	z := 1.0 / x
+	return math.Exp(-x) * mbpoly(k1pp, 7, z) / (mbpoly(k1qq, 7, z) * math.Sqrt(x))
 }
 
 // ModBesselKn returns the modified Bessel function Kn(x) for positive x and n ≥ 0

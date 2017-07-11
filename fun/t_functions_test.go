@@ -65,7 +65,7 @@ func Test_functions02(tst *testing.T) {
 	g := make([]float64, np)
 	h := make([]float64, np)
 	tolg, tolh := 1e-6, 1e-5
-	with_err := false
+	withErr := false
 	for i := 0; i < np; i++ {
 		y[i] = Sramp(x[i], β)
 		g[i] = SrampD1(x[i], β)
@@ -76,15 +76,15 @@ func Test_functions02(tst *testing.T) {
 		errh := math.Abs(h[i] - hnum)
 		clrg, clrh := "[1;32m", "[1;32m"
 		if errg > tolg {
-			clrg, with_err = "[1;31m", true
+			clrg, withErr = "[1;31m", true
 		}
 		if errh > tolh {
-			clrh, with_err = "[1;31m", true
+			clrh, withErr = "[1;31m", true
 		}
 		io.Pf("errg = %s%23.15e   errh = %s%23.15e[0m\n", clrg, errg, clrh, errh)
 	}
 
-	if with_err {
+	if withErr {
 		chk.Panic("errors found")
 	}
 }
@@ -107,7 +107,7 @@ func Test_functions03(tst *testing.T) {
 	g := make([]float64, np)
 	h := make([]float64, np)
 	tolg, tolh := 1e-6, 1e-5
-	with_err := false
+	withErr := false
 	for i := 0; i < np; i++ {
 		Y[i] = math.Abs(x[i])
 		y[i] = Sabs(x[i], eps)
@@ -119,15 +119,15 @@ func Test_functions03(tst *testing.T) {
 		errh := math.Abs(h[i] - hnum)
 		clrg, clrh := "[1;32m", "[1;32m"
 		if errg > tolg {
-			clrg, with_err = "[1;31m", true
+			clrg, withErr = "[1;31m", true
 		}
 		if errh > tolh {
-			clrh, with_err = "[1;31m", true
+			clrh, withErr = "[1;31m", true
 		}
 		io.Pf("errg = %s%23.15e   errh = %s%23.15e[0m\n", clrg, errg, clrh, errh)
 	}
 
-	if with_err {
+	if withErr {
 		chk.Panic("errors found")
 	}
 

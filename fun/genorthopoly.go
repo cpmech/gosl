@@ -126,7 +126,7 @@ type oPoly interface {
 type oPolyMaker func(alpha, beta float64) oPoly
 
 // oPolyDB implements a database of oPoly makers
-var oPolyDB map[io.Enum]oPolyMaker = make(map[io.Enum]oPolyMaker)
+var oPolyDB = make(map[io.Enum]oPolyMaker)
 
 // newopoly finds oPoly or panic
 func newopoly(code io.Enum, alpha, beta float64) oPoly {

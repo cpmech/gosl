@@ -24,9 +24,8 @@ func ChebyshevT(n int, x float64) float64 {
 	if x < -1 {
 		if (n & 1) == 0 { // n is even
 			return math.Cosh(p * math.Acosh(-x))
-		} else {
-			return -math.Cosh(p * math.Acosh(-x))
 		}
+		return -math.Cosh(p * math.Acosh(-x))
 	}
 	if x > 1 {
 		return math.Cosh(p * math.Acosh(x))

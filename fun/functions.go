@@ -176,7 +176,7 @@ func Ramp(x float64) float64 {
 	return x
 }
 
-// Heaviside step function (== derivative of Ramp(x))
+// Heav computes the Heaviside step function (== derivative of Ramp(x))
 //
 //             │ 0    if x < 0
 //   Heav(x) = ┤ 1/2  if x = 0
