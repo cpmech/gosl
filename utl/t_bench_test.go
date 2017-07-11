@@ -11,9 +11,11 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-var ___benchmarking_strindexsmall___ []string
-var ___benchmarking_strindexmap___ map[string]int
-var ___benchmarking_result___ int
+var (
+	benchStrindexsmall []string
+	benchStrindexmap   map[string]int
+	benchResult        int
+)
 
 func init() {
 	rand.Seed(13)
@@ -24,15 +26,15 @@ func init() {
 	//m := 50
 	n := 20
 	m := 10
-	___benchmarking_strindexsmall___ = make([]string, n)
-	___benchmarking_strindexmap___ = make(map[string]int)
+	benchStrindexsmall = make([]string, n)
+	benchStrindexmap = make(map[string]int)
 	for i := 0; i < n; i++ {
 		j := rand.Intn(len(answers))
-		___benchmarking_strindexsmall___[i] = answers[j]
-		___benchmarking_strindexmap___[io.Sf("%s_%d", answers[j], i)] = i
+		benchStrindexsmall[i] = answers[j]
+		benchStrindexmap[io.Sf("%s_%d", answers[j], i)] = i
 		if i == m {
-			___benchmarking_strindexsmall___[i] = "user"
-			___benchmarking_strindexmap___["user"] = i
+			benchStrindexsmall[i] = "user"
+			benchStrindexmap["user"] = i
 		}
 	}
 	//io.Pforan("%v\n", ___benchmarking_strindexsmall___)
@@ -42,15 +44,15 @@ func init() {
 func BenchmarkStrIndexSmall(b *testing.B) {
 	var idx int
 	for i := 0; i < b.N; i++ {
-		idx = StrIndexSmall(___benchmarking_strindexsmall___, "user")
+		idx = StrIndexSmall(benchStrindexsmall, "user")
 	}
-	___benchmarking_result___ = idx
+	benchResult = idx
 }
 
 func BenchmarkStrIndexMap(b *testing.B) {
 	var idx int
 	for i := 0; i < b.N; i++ {
-		idx = ___benchmarking_strindexmap___["user"]
+		idx = benchStrindexmap["user"]
 	}
-	___benchmarking_result___ = idx
+	benchResult = idx
 }
