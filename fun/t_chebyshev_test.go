@@ -5,9 +5,13 @@
 package fun
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 func TestChebyshev01(tst *testing.T) {
@@ -15,8 +19,24 @@ func TestChebyshev01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Chebyshev01. Gauss (roots) and Lobatto points")
 
-	X := ChebyshevXgauss(3)
-	Xref := []float64{-9.238795325112867e-01, -3.826834323650898e-01, 3.826834323650897e-01, 9.238795325112867e-01}
+	X := ChebyshevXgauss(1)
+	Xref := []float64{-1.0 / math.Sqrt2, 1.0 / math.Sqrt2}
+	chk.Vector(tst, "X", 1e-15, X, Xref)
+
+	X = ChebyshevXlob(1)
+	Xref = []float64{-1.0, 1.0}
+	chk.Vector(tst, "X", 1e-17, X, Xref)
+
+	X = ChebyshevXgauss(2)
+	Xref = []float64{-math.Sqrt(3.0) / 2.0, 0, math.Sqrt(3.0) / 2.0}
+	chk.Vector(tst, "X", 1e-15, X, Xref)
+
+	X = ChebyshevXlob(2)
+	Xref = []float64{-1, 0, 1}
+	chk.Vector(tst, "X", 1e-17, X, Xref)
+
+	X = ChebyshevXgauss(3)
+	Xref = []float64{-9.238795325112867e-01, -3.826834323650898e-01, 3.826834323650897e-01, 9.238795325112867e-01}
 	chk.Vector(tst, "X", 1e-15, X, Xref)
 
 	X = ChebyshevXlob(3)
@@ -70,4 +90,90 @@ func TestChebyshev01(tst *testing.T) {
 	X = ChebyshevXlob(9)
 	Xref = []float64{-1.000000000000000e+00, -9.396926207859084e-01, -7.660444431189780e-01, -5.000000000000001e-01, -1.736481776669304e-01, 1.736481776669303e-01, 4.999999999999998e-01, 7.660444431189779e-01, 9.396926207859083e-01, 1.000000000000000e+00}
 	chk.Vector(tst, "X", 1e-15, X, Xref)
+}
+
+func TestChebyshev02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Chebyshev02. first derivative")
+
+	X := append(append([]float64{-1.2, -1.1}, utl.LinSpace(-1, 1, 11)...), []float64{1.1, 1.2}...)
+
+	for n := 0; n < 6; n++ {
+		for i := 0; i < len(X); i++ {
+			dTn := ChebyshevTdiff1(n, X[i])
+			chk.DerivScaSca(tst, io.Sf("dT%d(%5.2f)", n, X[i]), 1e-8, dTn, X[i], 1e-3, chk.Verbose, func(t float64) (res float64, e error) {
+				res = ChebyshevT(n, t)
+				return
+			})
+		}
+		io.Pl()
+	}
+
+	if chk.Verbose {
+		N := 3
+		plt.Reset(true, nil)
+		x1 := utl.LinSpace(-1.0, 1.0, 201)
+		x2 := utl.LinSpace(-1.1, 1.1, 201)
+		y1 := utl.GetMapped(x1, func(x float64) float64 { return ChebyshevT(N, x) })
+		y2 := utl.GetMapped(x2, func(x float64) float64 { return ChebyshevT(N, x) })
+		yy1 := utl.GetMapped(x1, func(x float64) float64 { return ChebyshevTdiff1(N, x) })
+		yy2 := utl.GetMapped(x2, func(x float64) float64 { return ChebyshevTdiff1(N, x) })
+		plt.Plot(x1, y1, &plt.A{C: "r", Lw: 4, NoClip: true, L: "Tn(x)"})
+		plt.Plot(x2, y2, &plt.A{C: "r", NoClip: true})
+		plt.Gll("$x$", io.Sf("$T_%d(x)$", N), nil)
+		plt.DoubleYscale(io.Sf("$dT_%d(x)/dx$", N))
+		plt.Plot(x1, yy1, &plt.A{C: "b", Lw: 4, NoClip: true, L: "deriv"})
+		plt.Plot(x2, yy2, &plt.A{C: "b", NoClip: true, L: "deriv"})
+		plt.Save("/tmp/gosl/fun", "chebydiff1")
+	}
+}
+
+func TestChebyshev03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Chebyshev03. second derivative")
+
+	X := append(append([]float64{-1.2, -1.1}, utl.LinSpace(-1, 1, 11)...), []float64{1.1, 1.2}...)
+
+	for n := 0; n < 6; n++ {
+		for i := 0; i < len(X); i++ {
+			x := X[i]
+			ddTn := ChebyshevTdiff2(n, x)
+			tol := 1e-8
+			if n == 4 {
+				if x == -1 || x == +1 {
+					tol = 1e-5
+				}
+			}
+			if n == 5 {
+				if x == -1 || x == +1 {
+					tol = 1e-4
+				}
+			}
+			chk.DerivScaSca(tst, io.Sf("ddT%d(%5.2f)", n, x), tol, ddTn, x, 1e-3, chk.Verbose, func(t float64) (res float64, e error) {
+				res = ChebyshevTdiff1(n, t)
+				return
+			})
+		}
+		io.Pl()
+	}
+
+	if chk.Verbose {
+		N := 5
+		plt.Reset(true, nil)
+		x1 := utl.LinSpace(-1.0, 1.0, 201)
+		x2 := utl.LinSpace(-1.1, 1.1, 201)
+		y1 := utl.GetMapped(x1, func(x float64) float64 { return ChebyshevTdiff1(N, x) })
+		y2 := utl.GetMapped(x2, func(x float64) float64 { return ChebyshevTdiff1(N, x) })
+		yy1 := utl.GetMapped(x1, func(x float64) float64 { return ChebyshevTdiff2(N, x) })
+		yy2 := utl.GetMapped(x2, func(x float64) float64 { return ChebyshevTdiff2(N, x) })
+		plt.Plot(x1, y1, &plt.A{C: "r", Lw: 4, NoClip: true, L: "dTndx(x)"})
+		plt.Plot(x2, y2, &plt.A{C: "r", NoClip: true})
+		plt.Gll("$x$", io.Sf("$dT_%d(x)/dx$", N), nil)
+		plt.DoubleYscale(io.Sf("$d^2T_%d(x)/dx^2$", N))
+		plt.Plot(x1, yy1, &plt.A{C: "b", Lw: 4, NoClip: true, L: "deriv"})
+		plt.Plot(x2, yy2, &plt.A{C: "b", NoClip: true, L: "deriv"})
+		plt.Save("/tmp/gosl/fun", "chebydiff2")
+	}
 }

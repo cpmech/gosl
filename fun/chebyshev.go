@@ -20,14 +20,18 @@ func ChebyshevT(n int, x float64) float64 {
 	if n == 1 {
 		return x
 	}
-	nn := float64(n)
+	p := float64(n)
 	if x < -1 {
-		return math.Pow(-1, nn) * math.Cosh(nn*math.Acosh(-x))
+		if (n & 1) == 0 { // n is even
+			return math.Cosh(p * math.Acosh(-x))
+		} else {
+			return -math.Cosh(p * math.Acosh(-x))
+		}
 	}
 	if x > 1 {
-		return math.Cosh(nn * math.Acosh(x))
+		return math.Cosh(p * math.Acosh(x))
 	}
-	return math.Cos(nn * math.Acos(x))
+	return math.Cos(p * math.Acos(x))
 }
 
 // ChebyshevXgauss computes Chebyshev-Gauss roots considering symmetry
@@ -96,4 +100,72 @@ func ChebyshevXlob(N int) (X []float64) {
 		}
 	}
 	return
+}
+
+// ChebyshevTdiff1 computes the first derivative of the Chebyshev function Tn(x)
+//
+//       dTn
+//       ————
+//        dx
+//
+func ChebyshevTdiff1(n int, x float64) float64 {
+	p := float64(n)
+	if x > -1 && x < +1 {
+		t := math.Acos(x)
+		d1 := -p * math.Sin(p*t) // derivatives of cos(n⋅t) with respect to t
+		s := math.Sin(t)
+		return -d1 / s
+	}
+	if x == +1 {
+		return p * p
+	}
+	if x == -1 {
+		if (n & 1) == 0 { // n is even ⇒ n+1 is odd
+			return -p * p
+		}
+		return p * p // n is odd ⇒ n+1 is even
+	}
+	if x < -1 {
+		return -math.Pow(-1, p) * (p * math.Sinh(p*math.Acosh(-x))) / math.Sqrt(x*x-1.0)
+	}
+	// x > +1
+	return (p * math.Sinh(p*math.Acosh(x))) / math.Sqrt(x*x-1.0)
+}
+
+// ChebyshevTdiff2 computes the second derivative of the Chebyshev function Tn(x)
+//
+//       d²Tn
+//       —————
+//        dx²
+//
+func ChebyshevTdiff2(n int, x float64) float64 {
+	p := float64(n)
+	pp := p * p
+	t := math.Acos(x)
+	if x > -1 && x < +1 {
+		d1 := -p * math.Sin(p*t) // derivatives of cos(n⋅t) with respect to t
+		d2 := -pp * math.Cos(p*t)
+		c := math.Cos(t)
+		s := math.Sin(t)
+		return (s*d2 - c*d1) / (s * s * s)
+	}
+	if x == -1 {
+		if (n & 1) != 0 { // n is odd
+			return -(pp*pp - pp) / 3.0
+		}
+		return (pp*pp - pp) / 3.0
+	}
+	if x == +1 {
+		return (pp*pp - pp) / 3.0
+	}
+	d := x*x - 1.0
+	if x < -1 {
+		r := (pp*math.Cosh(p*math.Acosh(-x)))/d + (p*x*math.Sinh(p*math.Acosh(-x)))/math.Pow(d, 1.5)
+		if (n & 1) == 0 { // n is even
+			return r
+		}
+		return -r
+	}
+	// x > +1
+	return (pp*math.Cosh(p*math.Acosh(x)))/d - (p*x*math.Sinh(p*math.Acosh(x)))/math.Pow(d, 1.5)
 }
