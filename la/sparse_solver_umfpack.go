@@ -133,7 +133,7 @@ func (o *Umfpack) Fact() (err error) {
 	return
 }
 
-// SparseSolver solves sparse linear systems using UMFPACK or MUMPS
+// Solve solves sparse linear systems using UMFPACK or MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
@@ -269,7 +269,7 @@ func (o *UmfpackC) Fact() (err error) {
 	return
 }
 
-// SparseSolver solves sparse linear systems using UMFPACK or MUMPS
+// Solve solves sparse linear systems using UMFPACK or MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //

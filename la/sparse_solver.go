@@ -26,7 +26,7 @@ type SparseSolver interface {
 type spSolverMaker func() SparseSolver
 
 // spSolverDB implements a database of SparseSolver makers
-var spSolverDB map[string]spSolverMaker = make(map[string]spSolverMaker)
+var spSolverDB = make(map[string]spSolverMaker)
 
 // NewSparseSolver finds a SparseSolver in database or panic
 //   kind -- "umfpack" or "mumps"
@@ -55,7 +55,7 @@ type SparseSolverC interface {
 type spSolverMakerC func() SparseSolverC
 
 // spSolverDBc implements a database of SparseSolver makers (complex version)
-var spSolverDBc map[string]spSolverMakerC = make(map[string]spSolverMakerC)
+var spSolverDBc = make(map[string]spSolverMakerC)
 
 // NewSparseSolverC finds a SparseSolver in database or panic
 func NewSparseSolverC(kind string) SparseSolverC {

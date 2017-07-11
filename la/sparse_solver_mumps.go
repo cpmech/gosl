@@ -159,7 +159,7 @@ func (o *Mumps) Fact() (err error) {
 	return
 }
 
-// SparseSolver solves sparse linear systems using MUMPS or MUMPS
+// Solve solves sparse linear systems using MUMPS or MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
@@ -331,7 +331,7 @@ func (o *MumpsC) Fact() (err error) {
 	return
 }
 
-// SparseSolver solves sparse linear systems using MUMPS or MUMPS
+// Solve solves sparse linear systems using MUMPS or MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
