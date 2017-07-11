@@ -107,7 +107,7 @@ func Test_fileIO3(tst *testing.T) {
 	chk.PrintTitle("fileIO3")
 
 	type Test struct {
-		Id     int
+		ID     int
 		Cells  []int
 		Types  []string
 		Values []float64

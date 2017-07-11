@@ -42,9 +42,8 @@ func Keycode(String string, Type string) (keycode string, found bool) {
 		if sss[0] == Type {
 			if len(sss) > 1 {
 				return sss[1], true
-			} else {
-				return "", true
 			}
+			return "", true
 		}
 	}
 	return
