@@ -206,12 +206,12 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 			err = chk.Err("cell ids must be sequential. cell %d must be %d", cell.ID, id)
 			return
 		}
-		if tindex, ok := TypeKeyToIndex[cell.TypeKey]; !ok {
-			err = chk.Err("cannot find cell type ken %q in database\n", cell.TypeKey)
+		tindex, ok := TypeKeyToIndex[cell.TypeKey]
+		if !ok {
+			err = chk.Err("cannot find cell type key %q in database\n", cell.TypeKey)
 			return
-		} else {
-			cell.TypeIndex = tindex
 		}
+		cell.TypeIndex = tindex
 		cell.Gndim = GeomNdim[cell.TypeIndex]
 		nv := NumVerts[cell.TypeIndex]
 		if len(cell.V) != nv {
