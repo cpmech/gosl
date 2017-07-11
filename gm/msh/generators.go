@@ -114,7 +114,7 @@ func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int
 	if nvCen > 0 {
 		switch ctype {
 		case TypeQua9:
-			nvlCen[0] += 1         // per cell
+			nvlCen[0]++            // per cell
 			nvertR[1] += 1 * ndivR // total along cen line
 		case TypeQua16:
 			nvlCen[0] += 2         // per cell
@@ -122,7 +122,7 @@ func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int
 			nvertR[1] += 2 * ndivR // total along cen line
 			nvertR[2] += 2 * ndivR // total along cen line
 		case TypeQua17:
-			nvlCen[1] += 1         // per cell
+			nvlCen[1]++            // per cell
 			nvertR[2] += 1 * ndivR // total along cen line
 		default:
 			err = chk.Err("cannot handle central vertices of %q cells\n", typekey)
