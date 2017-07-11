@@ -21,7 +21,7 @@ type DistFrechet struct {
 
 // set factory
 func init() {
-	distallocators[D_Frechet] = func() Distribution { return new(DistFrechet) }
+	distallocators[FrechetType] = func() Distribution { return new(DistFrechet) }
 }
 
 // Init initialises Frechet distribution
