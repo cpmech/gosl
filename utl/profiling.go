@@ -38,7 +38,7 @@ func ProfCPU(dirout, filename string, silent bool) func() {
 	fn := filepath.Join(dirout, filename)
 	f, err := os.Create(fn)
 	if err != nil {
-		chk.Panic("cannot create file:\n%v", err)
+		chk.Panic("cannot create file:\n%v\n", err)
 	}
 	if !silent {
 		io.Pfcyan("CPU profiling => %s\n", fn)
@@ -61,7 +61,7 @@ func ProfMEM(dirout, filename string, silent bool) func() {
 	fn := filepath.Join(dirout, filename)
 	f, err := os.Create(fn)
 	if err != nil {
-		chk.Panic(_profiling_err1, "ProfMEM", err.Error())
+		chk.Panic("cannot create file:\n%v\n", err)
 	}
 	if !silent {
 		io.Pfcyan("MEM profiling => %s\n", fn)

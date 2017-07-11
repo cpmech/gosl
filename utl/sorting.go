@@ -115,7 +115,7 @@ type Quadruple struct {
 // Quadruples helps to sort quadruples
 type Quadruples []*Quadruple
 
-// Init initialise Quadruples with i, x, y, and z
+// BuildQuadruples initialise Quadruples with i, x, y, and z
 //  Note: i, x, y, or z can be nil; but at least one of them must be non nil
 func BuildQuadruples(i []int, x, y, z []float64) (q Quadruples) {
 	ni := len(i)
@@ -195,24 +195,28 @@ func (o Quadruples) String() string {
 	return res
 }
 
-// Sort Quadruples by I
+// QuadruplesByI defines struct to sort Quadruples by I
 type QuadruplesByI struct{ Quadruples }
 
+// Less compares two QuadruplesI
 func (o QuadruplesByI) Less(i, j int) bool { return o.Quadruples[i].I < o.Quadruples[j].I }
 
-// Sort Quadruples by X
+// QuadruplesByX defines struct to sort Quadruples by X
 type QuadruplesByX struct{ Quadruples }
 
+// Less compares two QuadruplesX
 func (o QuadruplesByX) Less(i, j int) bool { return o.Quadruples[i].X < o.Quadruples[j].X }
 
-// Sort Quadruples by Y
+// QuadruplesByY Sort Quadruples by Y
 type QuadruplesByY struct{ Quadruples }
 
+// Less compares two QuadruplesY
 func (o QuadruplesByY) Less(i, j int) bool { return o.Quadruples[i].Y < o.Quadruples[j].Y }
 
-// Sort Quadruples by Z
+// QuadruplesByZ defines struct to Sort Quadruples by Z
 type QuadruplesByZ struct{ Quadruples }
 
+// Less compares two QuadruplesZ
 func (o QuadruplesByZ) Less(i, j int) bool { return o.Quadruples[i].Z < o.Quadruples[j].Z }
 
 // SortQuadruples sorts i, x, y, and z by "i", "x", "y", or "z"
