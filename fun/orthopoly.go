@@ -48,17 +48,22 @@ func NewChebyshevPoly(N int, gaussChebyshev bool) (o *ChebyshevPoly, err error) 
 	// allocate
 	o = new(ChebyshevPoly)
 	o.N = N
-	o.X = make([]float64, N+1)
 	o.Wb = make([]float64, N+1)
 	o.Gamma = make([]float64, N+1)
 	o.CoefI = make([]float64, N+1)
 	o.CoefP = make([]float64, N+1)
 	o.EstimationN = 128
 
+	// roots or points
+	if gaussChebyshev {
+		o.X = ChebyshevXgauss(N)
+	} else {
+		o.X = ChebyshevXlob(N)
+	}
+
 	// set data
-	wb, wb0, wbN, gam, gam0, gamN, a, b := o.gaussData(o.N, gaussChebyshev)
+	wb, wb0, wbN, gam, gam0, gamN, _, _ := o.gaussData(o.N, gaussChebyshev)
 	for i := 0; i < o.N+1; i++ {
-		o.X[i] = -math.Cos(a * b(i))
 		o.Wb[i] = wb
 		o.Gamma[i] = gam
 	}

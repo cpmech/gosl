@@ -49,7 +49,7 @@ func TestOrthoPoly01(tst *testing.T) {
 	// Gauss-Chebyshev: check coefficients of interpolant
 	che.CoefInterpolantSlow(f)
 	cref := []float64{5.005025576289825e-01, -4.734690106554930e-01, 3.343030345866715e-01, 5.329760324967350e-01, 2.005496385333029e-01, -1.552357980491117e-01, -2.768837833165416e-01, -2.160862487215637e-01, -1.033306390240169e-01}
-	chk.Vector(tst, "Gauss-Chebyshev: CoefI", 1e-15, che.CoefI, cref)
+	chk.Vector(tst, "Gauss-Chebyshev: CoefI", 1e-14, che.CoefI, cref)
 
 	// Gauss-Chebyshev: check coefficients of projection
 	che.EstimateCoefProjection(f)
