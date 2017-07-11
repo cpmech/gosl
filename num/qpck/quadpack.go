@@ -46,7 +46,7 @@ import (
 type fType func(x float64) float64
 
 // functions implements a functions database
-var functions []fType = make([]fType, 64)
+var functions = make([]fType, 64)
 
 // Agse computes a definite integral using an automatic integrator
 // 1D globally adaptive integrator using interval subdivision and extrapolation.
