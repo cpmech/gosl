@@ -28,7 +28,7 @@ func halton(i, j int) (sum float64) {
 	if j > 999 {
 		chk.Panic("HaltonPoints can only handle maximum dimension = 1000")
 	}
-	p1 := PRIMES1000[j]
+	p1 := Primes1000[j]
 	p2 := p1
 	first := true
 	for first || i > 0 {
