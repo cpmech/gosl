@@ -14,9 +14,9 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// run_rootsol_test runs root solution test
+// rootSolTest runs root solution test
 //  Note: xguess is the trial solution for Newton's method (not Brent's)
-func run_rootsol_test(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, ffcnB fun.Vv, JfcnB fun.Mv, fname string, save, show bool) (xbrent float64) {
+func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, ffcnB fun.Vv, JfcnB fun.Mv, fname string, save, show bool) (xbrent float64) {
 
 	// Brent
 	io.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")
@@ -106,7 +106,7 @@ func Test_brent01(tst *testing.T) {
 	xguess := 0.03
 	//save   := true
 	save := false
-	run_rootsol_test(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB, "brent01.png", save, false)
+	rootSolTest(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB, "brent01.png", save, false)
 }
 
 func Test_brent02(tst *testing.T) {
@@ -132,7 +132,7 @@ func Test_brent02(tst *testing.T) {
 	xguess := 2.1
 	//save   := true
 	save := false
-	xbrent := run_rootsol_test(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB, "brent02.png", save, false)
+	xbrent := rootSolTest(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB, "brent02.png", save, false)
 	chk.Scalar(tst, "xsol", 1e-14, xbrent, 2.09455148154233)
 }
 

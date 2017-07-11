@@ -47,12 +47,12 @@ func Test_nls01(tst *testing.T) {
 	io.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
 
 	// init
-	var nls_ana NlSolver
-	nls_ana.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-	defer nls_ana.Free()
+	var nlsAna NlSolver
+	nlsAna.Init(neq, ffcn, Jfcn, nil, false, false, prms)
+	defer nlsAna.Free()
 
 	// solve
-	err := nls_ana.Solve(x, false)
+	err := nlsAna.Solve(x, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -66,7 +66,7 @@ func Test_nls01(tst *testing.T) {
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
+	_, err = nlsAna.CheckJ(x, 1e-5, false, true)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -76,12 +76,12 @@ func Test_nls01(tst *testing.T) {
 	xx := []float64{0.5, 0.5}
 
 	// init
-	var nls_num NlSolver
-	nls_num.Init(neq, ffcn, nil, nil, false, true, prms)
-	defer nls_num.Free()
+	var nlsNum NlSolver
+	nlsNum.Init(neq, ffcn, nil, nil, false, true, prms)
+	defer nlsNum.Free()
 
 	// solve
-	err = nls_num.Solve(xx, false)
+	err = nlsNum.Solve(xx, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -96,7 +96,7 @@ func Test_nls01(tst *testing.T) {
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
+	_, err = nlsAna.CheckJ(x, 1e-5, false, true)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -137,12 +137,12 @@ func Test_nls02(tst *testing.T) {
 	io.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
 
 	// init
-	var nls_ana NlSolver
-	nls_ana.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-	defer nls_ana.Free()
+	var nlsAna NlSolver
+	nlsAna.Init(neq, ffcn, Jfcn, nil, false, false, prms)
+	defer nlsAna.Free()
 
 	// solve
-	err := nls_ana.Solve(x, false)
+	err := nlsAna.Solve(x, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -156,7 +156,7 @@ func Test_nls02(tst *testing.T) {
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
+	_, err = nlsAna.CheckJ(x, 1e-5, false, true)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -166,12 +166,12 @@ func Test_nls02(tst *testing.T) {
 	xx := []float64{5.0, 5.0}
 
 	// init
-	var nls_num NlSolver
-	nls_num.Init(neq, ffcn, nil, nil, false, true, prms)
-	defer nls_num.Free()
+	var nlsNum NlSolver
+	nlsNum.Init(neq, ffcn, nil, nil, false, true, prms)
+	defer nlsNum.Free()
 
 	// solve
-	err = nls_num.Solve(xx, false)
+	err = nlsNum.Solve(xx, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -186,7 +186,7 @@ func Test_nls02(tst *testing.T) {
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	_, err = nls_ana.CheckJ(x, 1e-5, false, true)
+	_, err = nlsAna.CheckJ(x, 1e-5, false, true)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -235,18 +235,18 @@ func Test_nls03(tst *testing.T) {
 	}
 
 	// init
-	var nls_sps NlSolver // sparse
-	var nls_den NlSolver // dense
-	nls_sps.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-	nls_den.Init(neq, ffcn, nil, JfcnD, true, false, prms)
-	defer nls_sps.Free()
-	defer nls_den.Free()
+	var nlsSps NlSolver // sparse
+	var nlsDen NlSolver // dense
+	nlsSps.Init(neq, ffcn, Jfcn, nil, false, false, prms)
+	nlsDen.Init(neq, ffcn, nil, JfcnD, true, false, prms)
+	defer nlsSps.Free()
+	defer nlsDen.Free()
 
 	io.PfMag("\n/////////////////////// sparse //////////////////////////////////////////\n")
 
 	x = []float64{0.4, 3.0}
 	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
-	err := nls_sps.Solve(x, false)
+	err := nlsSps.Solve(x, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -260,7 +260,7 @@ func Test_nls03(tst *testing.T) {
 	x = []float64{0.7, 4.0}
 	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
 	//rtol = 1e-2
-	err = nls_sps.Solve(x, false)
+	err = nlsSps.Solve(x, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -276,8 +276,8 @@ func Test_nls03(tst *testing.T) {
 	//lSearch, chkConv := false, true  // this combination fails due to divergence
 	//lSearch, chkConv := false, false // this combination works but results are different
 	//lSearch, chkConv := true, true   // this combination works but results are wrong => fails
-	nls_sps.ChkConv = false
-	err = nls_sps.Solve(x, false)
+	nlsSps.ChkConv = false
+	err = nlsSps.Solve(x, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -291,7 +291,7 @@ func Test_nls03(tst *testing.T) {
 
 	x = []float64{0.4, 3.0}
 	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
-	err = nls_den.Solve(x, false)
+	err = nlsDen.Solve(x, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -305,7 +305,7 @@ func Test_nls03(tst *testing.T) {
 	x = []float64{0.7, 4.0}
 	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
 	//rtol = 1e-2
-	err = nls_den.Solve(x, false)
+	err = nlsDen.Solve(x, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return
@@ -318,8 +318,8 @@ func Test_nls03(tst *testing.T) {
 
 	x = []float64{1.0, 4.0}
 	io.PfYel("\n--- dense ------------- with x = %v ---------------\n", x)
-	nls_den.ChkConv = false
-	err = nls_den.Solve(x, false)
+	nlsDen.ChkConv = false
+	err = nlsDen.Solve(x, false)
 	if err != nil {
 		tst.Error("%v\n", err)
 		return

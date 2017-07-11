@@ -54,12 +54,12 @@ func Test_DiscTrapz02(tst *testing.T) {
 	n := 11
 	x := utl.LinSpace(0, 1, n)
 	A, _ := QuadDiscreteTrapzXF(x, y)
-	A_, _ := QuadDiscreteTrapzRF(0, 1, n, y)
+	A1, _ := QuadDiscreteTrapzRF(0, 1, n, y)
 	io.Pforan("A  = %v\n", A)
-	io.Pforan("A_ = %v\n", A_)
+	io.Pforan("A1 = %v\n", A1)
 	Acor := 1.08306090851465 // right value is Acor := 1.08268158558
 	chk.Scalar(tst, "A", 1e-15, A, Acor)
-	chk.Scalar(tst, "A_", 1e-15, A_, Acor)
+	chk.Scalar(tst, "A1", 1e-15, A1, Acor)
 }
 
 func Test_Disc2dInteg01(tst *testing.T) {
@@ -91,7 +91,7 @@ func Test_Disc2dInteg02(tst *testing.T) {
 	chk.PrintTitle("Disc2dInteg02. Discrete 2D. Exp function")
 
 	// Γ(1/4, 1)
-	gamma_1div4_1 := 0.2462555291934987088744974330686081384629028737277219
+	gamma1div4o1 := 0.2462555291934987088744974330686081384629028737277219
 
 	x := utl.LinSpace(0, 1, 11)
 	y := utl.LinSpace(0, 1, 11)
@@ -105,7 +105,7 @@ func Test_Disc2dInteg02(tst *testing.T) {
 	dx, dy := x[1]-x[0], y[1]-y[0]
 	Vt := QuadDiscreteTrapz2d(dx, dy, f)
 	Vs := QuadDiscreteSimps2d(dx, dy, f)
-	Vc := math.Sqrt(math.Pi) * math.Erf(1) * (math.Gamma(1.0/4.0) - gamma_1div4_1)
+	Vc := math.Sqrt(math.Pi) * math.Erf(1) * (math.Gamma(1.0/4.0) - gamma1div4o1)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
 	io.Pfgreen("Vc = %v\n", Vc)
