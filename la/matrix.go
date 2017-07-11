@@ -59,7 +59,7 @@ func (o *Matrix) SetFromSlice(a [][]float64) {
 	for j := 0; j < o.N; j++ {
 		for i := 0; i < o.M; i++ {
 			o.Data[k] = a[i][j]
-			k += 1
+			k++
 		}
 	}
 }
@@ -87,7 +87,7 @@ func (o *Matrix) Get(i, j int) float64 {
 	return o.Data[i+j*o.M] // col-major
 }
 
-// GetMat returns nested slice representation
+// GetSlice returns nested slice representation
 func (o *Matrix) GetSlice() (M [][]float64) {
 	M = make([][]float64, o.M)
 	for i := 0; i < o.M; i++ {
@@ -315,7 +315,7 @@ func NewMatrixC(m, n int) (o *MatrixC) {
 	return
 }
 
-// NewMatrixC allocates a new MatrixC from given slice.
+// NewMatrixSliceC allocates a new MatrixC from given slice.
 // NOTE: make sure to have at least 1x1 items
 func NewMatrixSliceC(a [][]complex128) (o *MatrixC) {
 	o = new(MatrixC)
@@ -331,7 +331,7 @@ func (o *MatrixC) SetFromSlice(a [][]complex128) {
 	for j := 0; j < o.N; j++ {
 		for i := 0; i < o.M; i++ {
 			o.Data[k] = a[i][j]
-			k += 1
+			k++
 		}
 	}
 }
@@ -346,7 +346,7 @@ func (o *MatrixC) Get(i, j int) complex128 {
 	return o.Data[i+j*o.M] // col-major
 }
 
-// GetMat returns nested slice representation
+// GetSlice returns nested slice representation
 func (o *MatrixC) GetSlice() (M [][]complex128) {
 	M = make([][]complex128, o.M)
 	for i := 0; i < o.M; i++ {

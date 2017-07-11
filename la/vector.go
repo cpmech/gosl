@@ -103,7 +103,7 @@ func (o Vector) NormDiff(v Vector) (nrm float64) {
 	return
 }
 
-// VecMin returns the minimum component of a vector
+// Min returns the minimum component of a vector
 func (o Vector) Min() (min float64) {
 	min = o[0]
 	for i := 1; i < len(o); i++ {

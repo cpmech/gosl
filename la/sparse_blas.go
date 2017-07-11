@@ -60,7 +60,7 @@ func SpMatVecMulAddX(v Vector, a *CCMatrix, α float64, u Vector, β float64, w 
 	}
 }
 
-// SpMatTrVecMult returns the (sparse) matrix-vector multiplication with "a" transposed (scaled):
+// SpMatTrVecMul returns the (sparse) matrix-vector multiplication with "a" transposed (scaled):
 //  v := α * transp(a) * u  =>  vj = α * aij * ui
 //  NOTE: dense vector v will be first initialised with zeros
 func SpMatTrVecMul(v Vector, α float64, a *CCMatrix, u Vector) {
@@ -104,7 +104,7 @@ func SpMatVecMulAddC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 	}
 }
 
-// SpMatTrVecMultC returns the (sparse/complex) matrix-vector multiplication with "a" transposed (scaled):
+// SpMatTrVecMulC returns the (sparse/complex) matrix-vector multiplication with "a" transposed (scaled):
 //  v := α * transp(a) * u  =>  vj = α * aij * ui
 //  NOTE: dense vector v will be first initialised with zeros
 func SpMatTrVecMulC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
@@ -274,7 +274,7 @@ func SpAllocMatAddMat(a, b *CCMatrix) (c *CCMatrix, a2c, b2c []int) {
 			}
 			for i = 0; i < a.m; i++ {
 				if r2a[i] > -1 || r2b[i] > -1 {
-					nnz += 1
+					nnz++
 				}
 			}
 		}
@@ -309,7 +309,7 @@ func SpAllocMatAddMat(a, b *CCMatrix) (c *CCMatrix, a2c, b2c []int) {
 					b2c[r2b[i]] = nnz
 				}
 				c.i[nnz] = i
-				nnz += 1
+				nnz++
 			}
 		}
 		c.p[j+1] = nnz
