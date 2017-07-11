@@ -28,7 +28,7 @@ func SliceToColMajor(a [][]float64) (data []float64) {
 	for j := 0; j < n; j++ {
 		for i := 0; i < m; i++ {
 			data[k] = a[i][j]
-			k += 1
+			k++
 		}
 	}
 	return
@@ -123,7 +123,7 @@ func SliceToColMajorC(a [][]complex128) (data []complex128) {
 	for j := 0; j < n; j++ {
 		for i := 0; i < m; i++ {
 			data[k] = a[i][j]
-			k += 1
+			k++
 		}
 	}
 	return
