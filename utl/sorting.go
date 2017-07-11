@@ -253,85 +253,85 @@ func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []f
 // Str => ??? maps /////////////////////////////////////////////////////////////////////////////////
 
 // StrIntMapSort returns sorted keys of map[string]int
-func StrIntMapSort(m map[string]int) (sorted_keys []string) {
-	sorted_keys = make([]string, len(m))
+func StrIntMapSort(m map[string]int) (sortedKeys []string) {
+	sortedKeys = make([]string, len(m))
 	i := 0
 	for key, _ := range m {
-		sorted_keys[i] = key
+		sortedKeys[i] = key
 		i++
 	}
-	sort.Strings(sorted_keys)
+	sort.Strings(sortedKeys)
 	return
 }
 
 // StrFltMapSort returns sorted keys of map[string]float64
-func StrFltMapSort(m map[string]float64) (sorted_keys []string) {
-	sorted_keys = make([]string, len(m))
+func StrFltMapSort(m map[string]float64) (sortedKeys []string) {
+	sortedKeys = make([]string, len(m))
 	i := 0
 	for key, _ := range m {
-		sorted_keys[i] = key
+		sortedKeys[i] = key
 		i++
 	}
-	sort.Strings(sorted_keys)
+	sort.Strings(sortedKeys)
 	return
 }
 
 // StrBoolMapSort returns sorted keys of map[string]bool
-func StrBoolMapSort(m map[string]bool) (sorted_keys []string) {
-	sorted_keys = make([]string, len(m))
+func StrBoolMapSort(m map[string]bool) (sortedKeys []string) {
+	sortedKeys = make([]string, len(m))
 	i := 0
 	for key, _ := range m {
-		sorted_keys[i] = key
+		sortedKeys[i] = key
 		i++
 	}
-	sort.Strings(sorted_keys)
+	sort.Strings(sortedKeys)
 	return
 }
 
 // StrIntMapSortSplit returns sorted keys of map[string]int and sorted values
-func StrIntMapSortSplit(m map[string]int) (sorted_keys []string, sorted_vals []int) {
-	sorted_keys = make([]string, len(m))
-	sorted_vals = make([]int, len(m))
+func StrIntMapSortSplit(m map[string]int) (sortedKeys []string, sortedVals []int) {
+	sortedKeys = make([]string, len(m))
+	sortedVals = make([]int, len(m))
 	i := 0
 	for key, _ := range m {
-		sorted_keys[i] = key
+		sortedKeys[i] = key
 		i++
 	}
-	sort.Strings(sorted_keys)
-	for j, key := range sorted_keys {
-		sorted_vals[j] = m[key]
+	sort.Strings(sortedKeys)
+	for j, key := range sortedKeys {
+		sortedVals[j] = m[key]
 	}
 	return
 }
 
 // StrFltMapSortSplit returns sorted keys of map[string]float64 and sorted values
-func StrFltMapSortSplit(m map[string]float64) (sorted_keys []string, sorted_vals []float64) {
-	sorted_keys = make([]string, len(m))
-	sorted_vals = make([]float64, len(m))
+func StrFltMapSortSplit(m map[string]float64) (sortedKeys []string, sortedVals []float64) {
+	sortedKeys = make([]string, len(m))
+	sortedVals = make([]float64, len(m))
 	i := 0
 	for key, _ := range m {
-		sorted_keys[i] = key
+		sortedKeys[i] = key
 		i++
 	}
-	sort.Strings(sorted_keys)
-	for j, key := range sorted_keys {
-		sorted_vals[j] = m[key]
+	sort.Strings(sortedKeys)
+	for j, key := range sortedKeys {
+		sortedVals[j] = m[key]
 	}
 	return
 }
 
 // StrBoolMapSortSplit returns sorted keys of map[string]bool and sorted values
-func StrBoolMapSortSplit(m map[string]bool) (sorted_keys []string, sorted_vals []bool) {
-	sorted_keys = make([]string, len(m))
-	sorted_vals = make([]bool, len(m))
+func StrBoolMapSortSplit(m map[string]bool) (sortedKeys []string, sortedVals []bool) {
+	sortedKeys = make([]string, len(m))
+	sortedVals = make([]bool, len(m))
 	i := 0
 	for key, _ := range m {
-		sorted_keys[i] = key
+		sortedKeys[i] = key
 		i++
 	}
-	sort.Strings(sorted_keys)
-	for j, key := range sorted_keys {
-		sorted_vals[j] = m[key]
+	sort.Strings(sortedKeys)
+	for j, key := range sortedKeys {
+		sortedVals[j] = m[key]
 	}
 	return
 }
@@ -339,14 +339,14 @@ func StrBoolMapSortSplit(m map[string]bool) (sorted_keys []string, sorted_vals [
 // Int => ??? maps /////////////////////////////////////////////////////////////////////////////////
 
 // IntBoolMapSort returns sorted keys of map[int]bool
-func IntBoolMapSort(m map[int]bool) (sorted_keys []int) {
-	sorted_keys = make([]int, len(m))
+func IntBoolMapSort(m map[int]bool) (sortedKeys []int) {
+	sortedKeys = make([]int, len(m))
 	i := 0
 	for key, _ := range m {
-		sorted_keys[i] = key
+		sortedKeys[i] = key
 		i++
 	}
-	sort.Ints(sorted_keys)
+	sort.Ints(sortedKeys)
 	return
 }
 
