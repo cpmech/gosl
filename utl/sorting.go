@@ -256,7 +256,7 @@ func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []f
 func StrIntMapSort(m map[string]int) (sortedKeys []string) {
 	sortedKeys = make([]string, len(m))
 	i := 0
-	for key, _ := range m {
+	for key := range m {
 		sortedKeys[i] = key
 		i++
 	}
@@ -268,7 +268,7 @@ func StrIntMapSort(m map[string]int) (sortedKeys []string) {
 func StrFltMapSort(m map[string]float64) (sortedKeys []string) {
 	sortedKeys = make([]string, len(m))
 	i := 0
-	for key, _ := range m {
+	for key := range m {
 		sortedKeys[i] = key
 		i++
 	}
@@ -280,7 +280,7 @@ func StrFltMapSort(m map[string]float64) (sortedKeys []string) {
 func StrBoolMapSort(m map[string]bool) (sortedKeys []string) {
 	sortedKeys = make([]string, len(m))
 	i := 0
-	for key, _ := range m {
+	for key := range m {
 		sortedKeys[i] = key
 		i++
 	}
@@ -293,7 +293,7 @@ func StrIntMapSortSplit(m map[string]int) (sortedKeys []string, sortedVals []int
 	sortedKeys = make([]string, len(m))
 	sortedVals = make([]int, len(m))
 	i := 0
-	for key, _ := range m {
+	for key := range m {
 		sortedKeys[i] = key
 		i++
 	}
@@ -309,7 +309,7 @@ func StrFltMapSortSplit(m map[string]float64) (sortedKeys []string, sortedVals [
 	sortedKeys = make([]string, len(m))
 	sortedVals = make([]float64, len(m))
 	i := 0
-	for key, _ := range m {
+	for key := range m {
 		sortedKeys[i] = key
 		i++
 	}
@@ -325,7 +325,7 @@ func StrBoolMapSortSplit(m map[string]bool) (sortedKeys []string, sortedVals []b
 	sortedKeys = make([]string, len(m))
 	sortedVals = make([]bool, len(m))
 	i := 0
-	for key, _ := range m {
+	for key := range m {
 		sortedKeys[i] = key
 		i++
 	}
@@ -342,7 +342,7 @@ func StrBoolMapSortSplit(m map[string]bool) (sortedKeys []string, sortedVals []b
 func IntBoolMapSort(m map[int]bool) (sortedKeys []int) {
 	sortedKeys = make([]int, len(m))
 	i := 0
-	for key, _ := range m {
+	for key := range m {
 		sortedKeys[i] = key
 		i++
 	}
