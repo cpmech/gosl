@@ -9,6 +9,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+// PrintIndicatorMatrix prints indicator matrix
 func PrintIndicatorMatrix(x [][]int) (l string) {
 	m, n := len(x), len(x[0])
 	w := 2*n + 6 + 13
@@ -36,6 +37,7 @@ func PrintIndicatorMatrix(x [][]int) (l string) {
 	return
 }
 
+// BuildIndicatorMatrix builds indicator matrix
 func BuildIndicatorMatrix(nv int, pth []int) (x [][]int) {
 	x = utl.IntAlloc(nv, nv)
 	for k := 1; k < len(pth); k++ {
@@ -45,6 +47,7 @@ func BuildIndicatorMatrix(nv int, pth []int) (x [][]int) {
 	return
 }
 
+// CheckIndicatorMatrix checks indicator matirx
 func CheckIndicatorMatrix(source, target int, x [][]int, verbose bool) (errPath, errLoop int) {
 	nv := len(x)
 	var okPath, okLoop bool
@@ -84,6 +87,7 @@ func CheckIndicatorMatrix(source, target int, x [][]int, verbose bool) (errPath,
 	return
 }
 
+// CheckIndicatorMatrixRowMaj checks indicator matrix in row-major format
 func CheckIndicatorMatrixRowMaj(source, target, nv int, xmat []int) (errPath, errLoop int) {
 	var okPath, okLoop bool
 	var sij, sji int
