@@ -181,15 +181,13 @@ func IntPointsFindSet(cellKind int, setName string) (P [][]float64, err error) {
 		err = chk.Err("cellKind = %d is invalid\n", cellKind)
 		return
 	}
-	if db, ok := IntPoints[cellKind]; !ok {
+	db, ok := IntPoints[cellKind]
+	if !ok {
 		err = chk.Err("integration points set for cellKind = %d is not implemented yet\n", cellKind)
 		return
-	} else {
-		var ok bool
-		if P, ok = db[setName]; !ok {
-			err = chk.Err("cannot find integration points set named = %q for cellKind = %d\n", setName, cellKind)
-			return
-		}
+	}
+	if P, ok = db[setName]; !ok {
+		err = chk.Err("cannot find integration points set named = %q for cellKind = %d\n", setName, cellKind)
 	}
 	return
 }
