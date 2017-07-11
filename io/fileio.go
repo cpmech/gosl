@@ -52,7 +52,7 @@ func AppendToFile(fn string, buffer ...*bytes.Buffer) {
 		chk.Panic("cannot create file <%s>", fn)
 	}
 	defer fil.Close()
-	for k, _ := range buffer {
+	for k := range buffer {
 		if buffer[k] != nil {
 			fil.Write(buffer[k].Bytes())
 		}
@@ -66,7 +66,7 @@ func WriteFile(fn string, buffer ...*bytes.Buffer) {
 		chk.Panic("cannot create file <%s>", fn)
 	}
 	defer fil.Close()
-	for k, _ := range buffer {
+	for k := range buffer {
 		if buffer[k] != nil {
 			fil.Write(buffer[k].Bytes())
 		}
