@@ -79,7 +79,7 @@ func NewEnum(arguments ...string) Enum {
 		chk.Panic("enum \"%s.%s\" exists already", prefix, name)
 	}
 	enums = append(enums, enumData{name, prefix, key, desc})
-	var enum Enum = Enum(len(enums) - 1)
+	var enum = Enum(len(enums) - 1)
 	if enumsMap == nil {
 		enumsMap = make(map[string]Enum)
 	}

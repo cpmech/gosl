@@ -16,8 +16,11 @@ import (
 )
 
 var (
-	Verbose  = true // show messages on console
-	ColorsOn = true // use colors on console
+	// Verbose activates display of messages on console
+	Verbose = true
+
+	// ColorsOn activates use of colors on console
+	ColorsOn = true
 )
 
 // IntSf is the Sprintf for a slice of integers (without brackets)

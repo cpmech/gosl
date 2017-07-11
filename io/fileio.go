@@ -200,7 +200,7 @@ func ReadLinesFile(fil *os.File, cb ReadLinesCallback) (oserr error) {
 	return
 }
 
-//  ReadTableOrPanic reads text file as ReadTable; but panic on errors
+// ReadTableOrPanic reads text file as ReadTable; but panic on errors
 func ReadTableOrPanic(fn string) (keys []string, T map[string][]float64) {
 	var err error
 	keys, T, err = ReadTable(fn)
@@ -256,7 +256,7 @@ func ReadMatrix(fn string) (M [][]float64, err error) {
 	if err != nil {
 		return
 	}
-	ncol_fix := 0
+	ncolFix := 0
 	ReadLinesFile(f, func(idx int, line string) (stop bool) {
 		r := strings.Fields(line)
 		if len(r) == 0 { // skip empty lines
@@ -272,10 +272,10 @@ func ReadMatrix(fn string) (M [][]float64, err error) {
 		}
 		if M == nil {
 			M = make([][]float64, 0)
-			ncol_fix = ncol
+			ncolFix = ncol
 		}
-		if ncol != ncol_fix {
-			err = chk.Err("ReadMatrix: nubmer of columns must be equal for all lines (%d != %d)", ncol, ncol_fix)
+		if ncol != ncolFix {
+			err = chk.Err("ReadMatrix: nubmer of columns must be equal for all lines (%d != %d)", ncol, ncolFix)
 			return
 		}
 		vals := make([]float64, ncol)
