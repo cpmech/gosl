@@ -16,7 +16,7 @@ import (
 	"github.com/cpmech/gosl/mpi"
 )
 
-// Jacobian computes Jacobian (sparse) matrix
+// JacobianMpi computes Jacobian (sparse) matrix
 //      Calculates (with N=n-1):
 //          df0dx0, df0dx1, df0dx2, ... df0dxN
 //          df1dx0, df1dx1, df1dx2, ... df1dxN

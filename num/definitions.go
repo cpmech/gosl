@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package num implements fundamental numerical methods such as numerical derivative and quadrature,
+// Package num implements fundamental numerical methods such as numerical derivative and quadrature,
 // root finding solvers (Brent's and Newton's methods), among others.
 package num
 
