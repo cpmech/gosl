@@ -9,17 +9,19 @@ import (
 	"testing"
 )
 
-var __bench_nsamples int
-var __bench_ints []int
-var __bench_result int
+var (
+	benchNsamples int
+	benchInts     []int
+	benchResult   int
+)
 
 func init() {
 	rand.Seed(4321)
 	Init(4321)
-	__bench_nsamples = 1000
-	__bench_ints = make([]int, __bench_nsamples)
-	for i := 0; i < __bench_nsamples; i++ {
-		__bench_ints[i] = i
+	benchNsamples = 1000
+	benchInts = make([]int, benchNsamples)
+	for i := 0; i < benchNsamples; i++ {
+		benchInts[i] = i
 	}
 }
 
@@ -27,9 +29,9 @@ func Benchmark_go_int(b *testing.B) {
 	var res int
 	lo, hi := 0, 50
 	for i := 0; i < b.N; i++ {
-		for j := 0; j < __bench_nsamples; j++ {
+		for j := 0; j < benchNsamples; j++ {
 			res = Int(lo, hi)
 		}
 	}
-	__bench_result = res
+	benchResult = res
 }
