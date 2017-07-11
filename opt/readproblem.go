@@ -33,14 +33,14 @@ func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64) {
 	var z0 float64   // initial fixed value for objective
 
 	// auxiliary
-	reading_Ap := false
-	reading_Ai := false
-	reading_Ax := false
-	reading_b := false
-	reading_c := false
-	reading_z0 := false
-	reading_l := false
-	reading_u := false
+	readingAp := false
+	readingAi := false
+	readingAx := false
+	readingb := false
+	readingc := false
+	readingz0 := false
+	readingl := false
+	readingu := false
 	atof := func(s string) float64 {
 		return io.Atof(strings.Replace(s, "D", "E", 1))
 	}
@@ -56,14 +56,14 @@ func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64) {
 			m, n = io.Atoi(str[0]), io.Atoi(str[1])
 			Ap = make([]int, n+1)
 			k = 0
-			reading_Ap = true
+			readingAp = true
 			return
 		}
 		for _, s := range str {
-			if reading_Ap {
+			if readingAp {
 				if k == n+1 {
-					reading_Ap = false
-					reading_Ai = true
+					readingAp = false
+					readingAi = true
 					nnz := Ap[n]
 					Ai = make([]int, nnz)
 					Ax = make([]float64, nnz)
@@ -76,62 +76,62 @@ func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64) {
 					Ap[k] = io.Atoi(s) - 1 // subtract 1 because of Fortran indexing
 				}
 			}
-			if reading_Ai {
+			if readingAi {
 				if k == Ap[n] {
-					reading_Ai = false
-					reading_Ax = true
+					readingAi = false
+					readingAx = true
 					k = 0
 				} else {
 					Ai[k] = io.Atoi(s) - 1 // subtract 1 because of Fortran indexing
 				}
 			}
-			if reading_Ax {
+			if readingAx {
 				if k == Ap[n] {
-					reading_Ax = false
-					reading_b = true
+					readingAx = false
+					readingb = true
 					k = 0
 				} else {
 					Ax[k] = atof(s)
 				}
 			}
-			if reading_b {
+			if readingb {
 				if k == m {
-					reading_b = false
-					reading_c = true
+					readingb = false
+					readingc = true
 					k = 0
 				} else {
 					b[k] = atof(s)
 				}
 			}
-			if reading_c {
+			if readingc {
 				if k == n {
-					reading_c = false
-					reading_z0 = true
+					readingc = false
+					readingz0 = true
 					k = 0
 				} else {
 					c[k] = atof(s)
 				}
 			}
-			if reading_z0 {
+			if readingz0 {
 				z0 = atof(s)
 				_ = z0
-				reading_z0 = false
-				reading_l = true
+				readingz0 = false
+				readingl = true
 				k = 0
 				return
 			}
-			if reading_l {
+			if readingl {
 				if k == n {
-					reading_l = false
-					reading_u = true
+					readingl = false
+					readingu = true
 					k = 0
 				} else {
 					l[k] = atof(s)
 				}
 			}
-			if reading_u {
+			if readingu {
 				if k == n {
-					reading_u = false
+					readingu = false
 					k = 0
 				} else {
 					u[k] = atof(s)

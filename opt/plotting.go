@@ -10,8 +10,8 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// TwoVarsFunc_t defines a function to plot contours (len(x)==2)
-type TwoVarsFunc_t func(x []float64) float64
+// TwoVarsFuncType defines a function to plot contours (len(x)==2)
+type TwoVarsFuncType func(x []float64) float64
 
 // PlotTwoVarsContour plots contour for two variables problem. len(x) == 2
 //  Input
@@ -26,7 +26,7 @@ type TwoVarsFunc_t func(x []float64) float64
 //   argsF   -- plot arguments for f function. can be nil
 //   argsG   -- plot arguments for gs functions. can be nil
 func PlotTwoVarsContour(x []float64, np int, extra func(), axequal bool,
-	vmin, vmax []float64, argsF, argsG *plt.A, f TwoVarsFunc_t, gs ...TwoVarsFunc_t) {
+	vmin, vmax []float64, argsF, argsG *plt.A, f TwoVarsFuncType, gs ...TwoVarsFuncType) {
 	chk.IntAssert(len(vmin), 2)
 	chk.IntAssert(len(vmax), 2)
 	V0, V1 := utl.MeshGrid2d(vmin[0], vmax[0], vmin[1], vmax[1], np, np)
@@ -53,7 +53,7 @@ func PlotTwoVarsContour(x []float64, np int, extra func(), axequal bool,
 	if f != nil {
 		plt.ContourF(V0, V1, Zf, argsF)
 	}
-	for k, _ := range gs {
+	for k := range gs {
 		if argsG == nil {
 			argsG = &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2}
 		}

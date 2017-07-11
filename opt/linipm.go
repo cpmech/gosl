@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package opt implements routines for solving optimisation problems
+// Package opt implements routines for solving optimisation problems
 package opt
 
 import (
@@ -224,7 +224,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 		}
 
 		// control variables
-		xrmin, srmin = o.calc_min_ratios()
+		xrmin, srmin = o.calcMinRatios()
 		αpa = min(1, xrmin)
 		αda = min(1, srmin)
 		μaff = 0
@@ -246,7 +246,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 		}
 
 		// step lengths
-		xrmin, srmin = o.calc_min_ratios()
+		xrmin, srmin = o.calcMinRatios()
 		αpa = min(1, 0.99*xrmin)
 		αda = min(1, 0.99*srmin)
 
@@ -267,7 +267,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 	return
 }
 
-func (o *LinIpm) calc_min_ratios() (xrmin, srmin float64) {
+func (o *LinIpm) calcMinRatios() (xrmin, srmin float64) {
 	firstxrmin, firstsrmin := true, true
 	for i := 0; i < o.Nx; i++ {
 		if o.Mdx[i] > 0 {
