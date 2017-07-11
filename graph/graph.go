@@ -203,7 +203,7 @@ func ReadGraphTable(fname string, bargera bool) *Graph {
 	// Bar-Gera format files from: http://www.bgu.ac.il/~bargera/tntp/
 	if bargera {
 		k := 0
-		reading_meta := true
+		readingMeta := true
 		io.ReadLines(fname, func(idx int, line string) (stop bool) {
 			if len(line) < 1 {
 				return false
@@ -212,7 +212,7 @@ func ReadGraphTable(fname string, bargera bool) *Graph {
 			if line[0] == '~' {
 				return false
 			}
-			if reading_meta {
+			if readingMeta {
 				switch {
 				case strings.HasPrefix(line, "<NUMBER OF LINKS>"):
 					res := strings.Split(line, "<NUMBER OF LINKS>")
@@ -220,7 +220,7 @@ func ReadGraphTable(fname string, bargera bool) *Graph {
 					edges = make([][]int, ne)
 					weights = make([]float64, ne)
 				case strings.HasPrefix(line, "<END OF METADATA>"):
-					reading_meta = false
+					readingMeta = false
 				}
 				return false
 			}

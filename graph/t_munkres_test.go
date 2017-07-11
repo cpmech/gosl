@@ -26,10 +26,10 @@ func Test_munkres01(tst *testing.T) {
 		{0, 2, 4},
 		{0, 3, 6},
 	}
-	Mcor := [][]Mask_t{
-		{STAR, NONE, NONE},
-		{NONE, NONE, NONE},
-		{NONE, NONE, NONE},
+	Mcor := [][]MaskType{
+		{StarType, NoneType, NoneType},
+		{NoneType, NoneType, NoneType},
+		{NoneType, NoneType, NoneType},
 	}
 
 	var mnk Munkres
@@ -41,43 +41,43 @@ func Test_munkres01(tst *testing.T) {
 	io.Pf("%v", mnk.StrCostMatrix())
 
 	// 2: step 1
-	next_step := mnk.step1()
+	nextStep := mnk.step1()
 	io.PfYel("\n2: after step 1:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 2)
+	chk.IntAssert(nextStep, 2)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{false, false, false})
 
 	// 3: step 2
-	next_step = mnk.step2()
+	nextStep = mnk.step2()
 	io.PfYel("\n3: after step 2:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 3)
+	chk.IntAssert(nextStep, 3)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{false, false, false})
 
 	// 4: step 3
-	next_step = mnk.step3()
+	nextStep = mnk.step3()
 	io.PfYel("\n4: after step 3:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 4)
+	chk.IntAssert(nextStep, 4)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, false, false})
 
 	// 5: step 4
-	next_step = mnk.step4()
+	nextStep = mnk.step4()
 	io.PfYel("\n5: after step 4:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 6)
+	chk.IntAssert(nextStep, 6)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, false, false})
 
 	// 6: step 6
 	Ccor = [][]float64{
@@ -85,64 +85,64 @@ func Test_munkres01(tst *testing.T) {
 		{0, 1, 3},
 		{0, 2, 5},
 	}
-	next_step = mnk.step6()
+	nextStep = mnk.step6()
 	io.PfYel("\n6: after step 6:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 4)
+	chk.IntAssert(nextStep, 4)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, false, false})
 
 	// 7: step 4 again (1)
-	Mcor = [][]Mask_t{
-		{STAR, PRIM, NONE},
-		{PRIM, NONE, NONE},
-		{NONE, NONE, NONE},
+	Mcor = [][]MaskType{
+		{StarType, PrimType, NoneType},
+		{PrimType, NoneType, NoneType},
+		{NoneType, NoneType, NoneType},
 	}
-	next_step = mnk.step4()
+	nextStep = mnk.step4()
 	io.PfYel("\n7: after step 4 again (1):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 5)
+	chk.IntAssert(nextStep, 5)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{true, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{true, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{false, false, false})
 
 	// 8: step 5
-	Mcor = [][]Mask_t{
-		{NONE, STAR, NONE},
-		{STAR, NONE, NONE},
-		{NONE, NONE, NONE},
+	Mcor = [][]MaskType{
+		{NoneType, StarType, NoneType},
+		{StarType, NoneType, NoneType},
+		{NoneType, NoneType, NoneType},
 	}
-	next_step = mnk.step5()
+	nextStep = mnk.step5()
 	io.PfYel("\n8: after step 5:\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 3)
+	chk.IntAssert(nextStep, 3)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{false, false, false})
 
 	// 9: step 3 again (1)
-	next_step = mnk.step3()
+	nextStep = mnk.step3()
 	io.PfYel("\n9: after step 3 again (1):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 4)
+	chk.IntAssert(nextStep, 4)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, true, false})
 
 	// 10: step 4 again (2)
-	next_step = mnk.step4()
+	nextStep = mnk.step4()
 	io.PfYel("\n10: after step 4 again (2):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 6)
+	chk.IntAssert(nextStep, 6)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, true, false})
 
 	// 11: step 6 again (1)
 	Ccor = [][]float64{
@@ -150,29 +150,29 @@ func Test_munkres01(tst *testing.T) {
 		{0, 1, 2},
 		{0, 2, 4},
 	}
-	next_step = mnk.step6()
+	nextStep = mnk.step6()
 	io.PfYel("\n11: after step 6 again (1):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 4)
+	chk.IntAssert(nextStep, 4)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, true, false})
 
 	// 12: step 4 again (3)
-	Mcor = [][]Mask_t{
-		{NONE, STAR, PRIM},
-		{STAR, NONE, NONE},
-		{NONE, NONE, NONE},
+	Mcor = [][]MaskType{
+		{NoneType, StarType, PrimType},
+		{StarType, NoneType, NoneType},
+		{NoneType, NoneType, NoneType},
 	}
-	next_step = mnk.step4()
+	nextStep = mnk.step4()
 	io.PfYel("\n12: after step 4 again (3):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 6)
+	chk.IntAssert(nextStep, 6)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{true, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{true, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, false, false})
 
 	// 13: step 6 again (2)
 	Ccor = [][]float64{
@@ -180,54 +180,54 @@ func Test_munkres01(tst *testing.T) {
 		{0, 0, 1},
 		{0, 1, 3},
 	}
-	next_step = mnk.step6()
+	nextStep = mnk.step6()
 	io.PfYel("\n13: after step 6 again (2):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 4)
+	chk.IntAssert(nextStep, 4)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{true, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{true, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, false, false})
 
 	// 14: step 4 again (4)
-	Mcor = [][]Mask_t{
-		{NONE, STAR, PRIM},
-		{STAR, PRIM, NONE},
-		{PRIM, NONE, NONE},
+	Mcor = [][]MaskType{
+		{NoneType, StarType, PrimType},
+		{StarType, PrimType, NoneType},
+		{PrimType, NoneType, NoneType},
 	}
-	next_step = mnk.step4()
+	nextStep = mnk.step4()
 	io.PfYel("\n14: after step 4 again (4):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 5)
+	chk.IntAssert(nextStep, 5)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{true, true, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{true, true, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{false, false, false})
 
 	// 15: step 5 again (1)
-	Mcor = [][]Mask_t{
-		{NONE, NONE, STAR},
-		{NONE, STAR, NONE},
-		{STAR, NONE, NONE},
+	Mcor = [][]MaskType{
+		{NoneType, NoneType, StarType},
+		{NoneType, StarType, NoneType},
+		{StarType, NoneType, NoneType},
 	}
-	next_step = mnk.step5()
+	nextStep = mnk.step5()
 	io.PfYel("\n15: after step 5 again (1):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 3)
+	chk.IntAssert(nextStep, 3)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{false, false, false})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{false, false, false})
 
 	// 15: step 3 again (2)
-	next_step = mnk.step3()
+	nextStep = mnk.step3()
 	io.PfYel("\n15: after step 3 again (2):\n")
 	io.Pf("%v", mnk.StrCostMatrix())
-	chk.IntAssert(next_step, 7)
+	chk.IntAssert(nextStep, 7)
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
-	check_mask_matrix(tst, "M", mnk.M, Mcor)
-	chk.Bools(tst, "row_covered", mnk.row_covered, []bool{false, false, false})
-	chk.Bools(tst, "col_covered", mnk.col_covered, []bool{true, true, true})
+	checkMaskMatrix(tst, "M", mnk.M, Mcor)
+	chk.Bools(tst, "row_covered", mnk.rowCovered, []bool{false, false, false})
+	chk.Bools(tst, "col_covered", mnk.colCovered, []bool{true, true, true})
 }
 
 func Test_munkres02(tst *testing.T) {
@@ -384,7 +384,7 @@ func Test_munkres03(tst *testing.T) {
 	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, -13938)
 }
 
-func check_mask_matrix(tst *testing.T, msg string, res, correct [][]Mask_t) {
+func checkMaskMatrix(tst *testing.T, msg string, res, correct [][]MaskType) {
 	if len(res) != len(correct) {
 		io.Pf("%s [1;31merror len(res)=%d != len(correct)=%d[0m\n", msg, len(res), len(correct))
 		tst.Errorf("[1;31m%s failed: res and correct matrices have different lengths. %d != %d[0m", msg, len(res), len(correct))
