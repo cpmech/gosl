@@ -13,7 +13,9 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
+// NlSolver implements a solver to nonlinear systems of equations
 type NlSolver struct {
+
 	// constants
 	CteJac  bool    // constant Jacobian (Modified Newton's method)
 	Lsearch bool    // use linear search
@@ -161,7 +163,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 	}
 
 	// iterations
-	var Ldx, Ldx_prev, Θ float64 // RMS norm of delta x, convergence rate
+	var Ldx, LdxPrev, Θ float64 // RMS norm of delta x, convergence rate
 	var fx_max float64
 	var nfv int
 	for o.It = 0; o.It < o.MaxIt; o.It++ {
@@ -209,7 +211,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			// invert matrix
 			_, err = la.MatInv(o.Ji, o.J, false)
 			if err != nil {
-				return chk.Err(_nls_err1, err.Error())
+				return chk.Err("cannot compute inverse of Jacobian (dense) matrix:\n%v", err)
 			}
 
 			// solve linear system (compute mdx) and compute lin-search data
@@ -232,7 +234,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 				symmetric, verbose := false, false
 				err := o.lis.Init(&o.Jtri, symmetric, verbose, "", "", nil)
 				if err != nil {
-					return chk.Err(_nls_err9, err.Error())
+					return chk.Err("%v\n", err)
 				}
 			}
 
@@ -287,7 +289,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			nfv, err = LineSearch(x, o.fx, o.Ffcn, o.mdx, o.x0, o.dφdx, o.φ, o.LsMaxIt, true)
 			o.NFeval += nfv
 			if err != nil {
-				return chk.Err(_nls_err2, err.Error())
+				return chk.Err("LineSearch failed:\n%v", err)
 			}
 			Ldx = 0.0
 			for i := 0; i < o.neq; i++ {
@@ -305,12 +307,12 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 		// check convergence rate
 		if o.It > 0 && o.ChkConv {
-			Θ = Ldx / Ldx_prev
+			Θ = Ldx / LdxPrev
 			if Θ > 0.99 {
-				return chk.Err(_nls_err3, Θ, Ldx, Ldx_prev)
+				return chk.Err("solver is diverging with Θ = %g (Ldx=%g, LdxPrev=%g)", Θ, Ldx, LdxPrev)
 			}
 		}
-		Ldx_prev = Ldx
+		LdxPrev = Ldx
 	}
 
 	// output
@@ -320,7 +322,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 	// check convergence
 	if o.It == o.MaxIt {
-		err = chk.Err(_nls_err4, o.It)
+		err = chk.Err("cannot converge after %d iterations", o.It)
 	}
 	return
 }
@@ -335,18 +337,18 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 		Jmat = la.NewMatrix(o.neq, o.neq)
 		err = o.JfcnDn(Jmat, x)
 		if err != nil {
-			return 0, chk.Err(_nls_err5, "dense", err.Error())
+			return 0, chk.Err("dense Jacobian failed:\n%v", err)
 		}
 	} else {
 		if o.numJ {
 			err = Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
 			if err != nil {
-				return 0, chk.Err(_nls_err5, "sparse", err.Error())
+				return 0, chk.Err("sparse Jacobian failed:\n%v", err)
 			}
 		} else {
 			err = o.JfcnSp(&o.Jtri, x)
 			if err != nil {
-				return 0, chk.Err(_nls_err5, "sparse(num)", err.Error())
+				return 0, chk.Err("sparse(num) Jacobian failed:\n%v", err)
 			}
 		}
 		Jmat = o.Jtri.GetDenseMatrix()
@@ -355,10 +357,10 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	// condition number
 	cnd, err = la.MatCondNum(Jmat, "F")
 	if err != nil {
-		return cnd, chk.Err(_nls_err6, err.Error())
+		return cnd, chk.Err("cannot compute condition number\n%v", err)
 	}
 	if math.IsInf(cnd, 0) || math.IsNaN(cnd) {
-		return cnd, chk.Err(_nls_err7, cnd)
+		return cnd, chk.Err("condition number is Inf or NaN: %v", cnd)
 	}
 
 	// numerical Jacobian
@@ -381,7 +383,7 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	}
 	maxdiff := Jmat.MaxDiff(Jnum)
 	if maxdiff > tol {
-		err = chk.Err(_nls_err8, maxdiff)
+		err = chk.Err("maxdiff = %g\n", maxdiff)
 	}
 	return
 }
@@ -398,16 +400,3 @@ func (o *NlSolver) msg(typ string, it int, Ldx, fx_max float64, first, last bool
 		io.Pf(". . . converged with %s. nit=%d, nFeval=%d, nJeval=%d\n", typ, it, o.NFeval, o.NJeval)
 	}
 }
-
-// error messages
-var (
-	_nls_err1 = "nlsolver.go: NlSolver.Solve failed: cannot compute inverse of Jacobian (dense) matrix:\n%v"
-	_nls_err2 = "nlsolver.go: NlSolver.Solve: LineSearch failed:\n%v"
-	_nls_err3 = "nlsolver.go: NlSolver.Solve is diverging with Θ = %g (Ldx=%g, Ldx_prev=%g)"
-	_nls_err4 = "nlsolver.go: NlSolver.Solve did not converge after %d iterations"
-	_nls_err5 = "nlsolver.go: NlSolver.CheckJ: %s: failed:\n%v"
-	_nls_err6 = "nlsolver.go: NlSolver.CheckJ failed: cannot compute condition number\n%v"
-	_nls_err7 = "nlsolver.go: NlSolver.CheckJ failed: condition number is Inf or NaN: %v"
-	_nls_err8 = "nlsolver.go: NlSolver.CheckJ failed: maxdiff = %g"
-	_nls_err9 = "nlsolver.go: NlSolver.Init: cannot initialise LinSol('umfpack'):\n%v\n"
-)
