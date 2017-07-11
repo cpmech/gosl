@@ -56,11 +56,11 @@ func LatinIHS(dim, n, d int) (x [][]int) {
 	//    American Institute of Aeronautics and Astronautics Paper 2002-1274.
 
 	// auxiliary variables
-	var i, j, k, count, point_index, best int
-	var min_all, min_can, dist float64
+	var i, j, k, count, pointIndex, best int
+	var minAll, minCan, dist float64
 
 	// constant
-	r8_huge := 1.0E+30
+	r8huge := 1.0E+30
 
 	// slices
 	avail := make([]int, dim*n)
@@ -97,18 +97,18 @@ func LatinIHS(dim, n, d int) (x [][]int) {
 			}
 
 			for k = count*d - 1; 0 <= k; k-- {
-				point_index = Int(0, k)
-				point[i+k*dim] = list[point_index]
-				list[point_index] = list[k]
+				pointIndex = Int(0, k)
+				point[i+k*dim] = list[pointIndex]
+				list[pointIndex] = list[k]
 			}
 		}
 
 		// for each candidate, determine the distance to all the
 		// points that have already been selected, and save the minimum value
-		min_all = r8_huge
+		minAll = r8huge
 		best = 0
 		for k = 0; k < d*count; k++ {
-			min_can = r8_huge
+			minCan = r8huge
 
 			for j = count; j < n; j++ {
 
@@ -118,13 +118,13 @@ func LatinIHS(dim, n, d int) (x [][]int) {
 				}
 				dist = math.Sqrt(dist)
 
-				if dist < min_can {
-					min_can = dist
+				if dist < minCan {
+					minCan = dist
 				}
 			}
 
-			if math.Abs(min_can-opt) < min_all {
-				min_all = math.Abs(min_can - opt)
+			if math.Abs(minCan-opt) < minAll {
+				minAll = math.Abs(minCan - opt)
 				best = k
 			}
 

@@ -46,7 +46,7 @@ func TextHist(labels []string, counts []int, barlen int) string {
 		l += io.Sf("%"+sz+"s | %"+Sz+"d ", labels[i], f)
 		n := int(float64(f) * scale)
 		if f > 0 { // TODO: improve this
-			n += 1
+			n++
 		}
 		for j := 0; j < n; j++ {
 			l += "#"
@@ -138,7 +138,7 @@ func (o *Histogram) Count(vals []float64, clear bool) {
 	for _, x := range vals {
 		idx := o.FindBin(x)
 		if idx >= 0 {
-			o.Counts[idx] += 1
+			o.Counts[idx]++
 		}
 	}
 }
@@ -264,7 +264,7 @@ func (o *IntHistogram) Count(vals []int, clear bool) {
 	for _, x := range vals {
 		idx := o.FindBin(x)
 		if idx >= 0 {
-			o.Counts[idx] += 1
+			o.Counts[idx]++
 		}
 	}
 }
