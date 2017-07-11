@@ -11,8 +11,6 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-const PRINTDEEPZERO = 1e-3
-
 // PrintDeep3 prints an array of array of array
 func PrintDeep3(name string, A [][][]float64) {
 	io.Pf("%s = [\n", name)
@@ -29,7 +27,7 @@ func PrintDeep4(name string, A [][][][]float64, format string) {
 		for _, b := range a {
 			for _, c := range b {
 				for _, d := range c {
-					if math.Abs(d) <= PRINTDEEPZERO {
+					if math.Abs(d) <= 1e-3 {
 						d = 0
 					}
 					res += io.Sf(format, d)
