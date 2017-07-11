@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package la implements functions and structure for Linear Algebra computations. It defines a
+// Vector and Matrix types for computations with dense data and also a Triplet and CCMatrix for
+// sparse data.
 package la
 
 import (
