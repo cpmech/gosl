@@ -14,22 +14,19 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-const (
-	KBSIZE = 1024.0
-	MBSIZE = 1048576.0
-	GBSIZE = 1073741824.0
-)
-
 // PrintMemStat prints memory statistics
 func PrintMemStat(msg string) {
+	var kbSize uint64 = 1024
+	var mbSize uint64 = 1048576
+	var gbSize uint64 = 1073741824
 	var mem runtime.MemStats
 	runtime.ReadMemStats(&mem)
 	io.PfYel("%s\n", msg)
-	io.Pfyel("Alloc      = %v [KB]  %v [MB]  %v [GB]\n", mem.Alloc/KBSIZE, mem.Alloc/MBSIZE, mem.Alloc/GBSIZE)
-	io.Pfyel("HeapAlloc  = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapAlloc/KBSIZE, mem.HeapAlloc/MBSIZE, mem.HeapAlloc/GBSIZE)
-	io.Pfyel("Sys        = %v [KB]  %v [MB]  %v [GB]\n", mem.Sys/KBSIZE, mem.Sys/MBSIZE, mem.Sys/GBSIZE)
-	io.Pfyel("HeapSys    = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapSys/KBSIZE, mem.HeapSys/MBSIZE, mem.HeapSys/GBSIZE)
-	io.Pfyel("TotalAlloc = %v [KB]  %v [MB]  %v [GB]\n", mem.TotalAlloc/KBSIZE, mem.TotalAlloc/MBSIZE, mem.TotalAlloc/GBSIZE)
+	io.Pfyel("Alloc      = %v [KB]  %v [MB]  %v [GB]\n", mem.Alloc/kbSize, mem.Alloc/mbSize, mem.Alloc/gbSize)
+	io.Pfyel("HeapAlloc  = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapAlloc/kbSize, mem.HeapAlloc/mbSize, mem.HeapAlloc/gbSize)
+	io.Pfyel("Sys        = %v [KB]  %v [MB]  %v [GB]\n", mem.Sys/kbSize, mem.Sys/mbSize, mem.Sys/gbSize)
+	io.Pfyel("HeapSys    = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapSys/kbSize, mem.HeapSys/mbSize, mem.HeapSys/gbSize)
+	io.Pfyel("TotalAlloc = %v [KB]  %v [MB]  %v [GB]\n", mem.TotalAlloc/kbSize, mem.TotalAlloc/mbSize, mem.TotalAlloc/gbSize)
 	io.Pfyel("Mallocs    = %v\n", mem.Mallocs)
 	io.Pfyel("Frees      = %v\n", mem.Frees)
 }
