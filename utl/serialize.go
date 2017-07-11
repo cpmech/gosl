@@ -13,7 +13,7 @@ func MatToArray(a [][]float64) (v []float64) {
 	for j := 0; j < n; j++ {
 		for i := 0; i < m; i++ {
 			v[k] = a[i][j]
-			k += 1
+			k++
 		}
 	}
 	return
@@ -39,7 +39,7 @@ func Deep3Serialize(A [][][]float64) (I, P []int, S []float64) {
 	i, p := 0, 0
 	for _, a := range A {
 		for _, b := range a {
-			i += 1
+			i++
 			p += len(b)
 		}
 	}
@@ -50,12 +50,12 @@ func Deep3Serialize(A [][][]float64) (I, P []int, S []float64) {
 	for j, a := range A {
 		for _, b := range a {
 			I[i] = j
-			i += 1
+			i++
 			p += len(b)
 			P[i] = p
 			for _, v := range b {
 				S[k] = v
-				k += 1
+				k++
 			}
 		}
 	}
@@ -74,8 +74,8 @@ func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncols_t
 	nrows = I[len(I)-1] + 1
 	ncols = make([]int, nrows)
 	for _, j := range I {
-		ncols_tot += 1
-		ncols[j] += 1
+		ncols_tot++
+		ncols[j]++
 	}
 	if verbose {
 		io.Pf("nitems    = %v\n", nitems)
@@ -114,7 +114,7 @@ func Deep3Deserialize(I, P []int, S []float64, debug bool) (A [][][]float64) {
 			A[i][j][k] = S[p]
 		}
 		iprev = i
-		j += 1
+		j++
 	}
 	return
 }
