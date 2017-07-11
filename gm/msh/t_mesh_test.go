@@ -356,7 +356,7 @@ func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtag
 	io.Pfyel("\nvertices:\n")
 	for i, v := range m.Verts {
 		io.Pf("%+v\n", v)
-		chk.Vector(tst, io.Sf("vertex %2d: X", v.Id), 1e-15, v.X, X[v.Id])
+		chk.Vector(tst, io.Sf("vertex %2d: X", v.ID), 1e-15, v.X, X[v.ID])
 		if v.Tag != vtags[i] {
 			tst.Errorf("vtag is incorrect: %d != %d", v.Tag, vtags[i])
 			return
@@ -375,8 +375,8 @@ func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtag
 		}
 		chk.String(tst, typekeys[i], c.TypeKey)
 		chk.Int(tst, "cell type index", typeindices[i], c.TypeIndex)
-		chk.Ints(tst, io.Sf("cell %2d : V", c.Id), c.V, V[c.Id])
-		chk.Ints(tst, io.Sf("cell %2d : edgetags", c.Id), c.EdgeTags, etags[c.Id])
+		chk.Ints(tst, io.Sf("cell %2d : V", c.ID), c.V, V[c.ID])
+		chk.Ints(tst, io.Sf("cell %2d : edgetags", c.ID), c.EdgeTags, etags[c.ID])
 	}
 }
 
@@ -409,7 +409,7 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var ids []int
 		if verts, ok := tm.VertTag2verts[tag]; ok {
 			for _, v := range verts {
-				ids = append(ids, v.Id)
+				ids = append(ids, v.ID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in VertTag2verts map", tag)
@@ -434,7 +434,7 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var ids []int
 		if cells, ok := tm.CellTag2cells[tag]; ok {
 			for _, v := range cells {
-				ids = append(ids, v.Id)
+				ids = append(ids, v.ID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in CellTag2cells map", tag)
@@ -459,7 +459,7 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var ids []int
 		if cells, ok := tm.CellPart2cells[part]; ok {
 			for _, v := range cells {
-				ids = append(ids, v.Id)
+				ids = append(ids, v.ID)
 			}
 		} else {
 			tst.Errorf("cannot find part %d in CellPart2cells map", part)
@@ -484,7 +484,7 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var ids []int
 		if cells, ok := tm.CellType2cells[typ]; ok {
 			for _, v := range cells {
-				ids = append(ids, v.Id)
+				ids = append(ids, v.ID)
 			}
 		} else {
 			tst.Errorf("cannot find type %q in CellType2cells map", TypeIndexToKey[typ])
@@ -510,8 +510,8 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var bryids []int
 		if pairs, ok := tm.EdgeTag2cells[tag]; ok {
 			for _, pair := range pairs {
-				cids = append(cids, pair.C.Id)
-				bryids = append(bryids, pair.BryId)
+				cids = append(cids, pair.C.ID)
+				bryids = append(bryids, pair.BryID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in EdgeTag2cells map", tag)
@@ -537,7 +537,7 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var ids []int
 		if verts, ok := tm.EdgeTag2verts[tag]; ok {
 			for _, v := range verts {
-				ids = append(ids, v.Id)
+				ids = append(ids, v.ID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in EdgeTag2verts map", tag)
@@ -563,8 +563,8 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var bryids []int
 		if pairs, ok := tm.FaceTag2cells[tag]; ok {
 			for _, pair := range pairs {
-				cids = append(cids, pair.C.Id)
-				bryids = append(bryids, pair.BryId)
+				cids = append(cids, pair.C.ID)
+				bryids = append(bryids, pair.BryID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in FaceTag2cells map", tag)
@@ -590,7 +590,7 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var ids []int
 		if verts, ok := tm.FaceTag2verts[tag]; ok {
 			for _, v := range verts {
-				ids = append(ids, v.Id)
+				ids = append(ids, v.ID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in FaceTag2verts map", tag)

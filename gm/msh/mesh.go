@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package msh defines mesh data structures and implements interpolation functions for finite
+// Package msh defines mesh data structures and implements interpolation functions for finite
 // element analyses (FEA)
 package msh
 
@@ -39,17 +39,17 @@ type FaceSet []*Face
 // CellSet defines a set of cells
 type CellSet []*Cell
 
-// EdgeSetMap defines a map of Edges
+// EdgesMap defines a map of Edges
 type EdgesMap map[EdgeKey]*Edge
 
-// FaceSet defines a map of Faces
+// FacesMap defines a map of Faces
 type FacesMap map[FaceKey]*Face
 
 // Vertex holds vertex data (e.g. from msh file)
 type Vertex struct {
 
 	// input
-	Id  int       `json:"i"` // identifier
+	ID  int       `json:"i"` // identifier
 	Tag int       `json:"t"` // tag
 	X   []float64 `json:"x"` // coordinates (size==2 or 3)
 
@@ -65,7 +65,7 @@ type Vertex struct {
 type Cell struct {
 
 	// input
-	Id       int    `json:"i"`  // identifier
+	ID       int    `json:"i"`  // identifier
 	Tag      int    `json:"t"`  // tag
 	Part     int    `json:"p"`  // partition id
 	Disabled bool   `json:"d"`  // cell is disabled
@@ -73,7 +73,7 @@ type Cell struct {
 	V        []int  `json:"v"`  // vertices
 	EdgeTags []int  `json:"et"` // edge tags (2D or 3D)
 	FaceTags []int  `json:"ft"` // face tags (3D only)
-	NurbsId  int    `json:"b"`  // id of NURBS (or something else) that this cell belongs to
+	NurbsID  int    `json:"b"`  // id of NURBS (or something else) that this cell belongs to
 	Span     []int  `json:"s"`  // span in NURBS
 
 	// auxiliary
@@ -119,7 +119,7 @@ type Face struct {
 // BryPair defines a structure to identify bryIds => cells pairs
 type BryPair struct {
 	C     *Cell // cell
-	BryId int   // edge local id (edgeId) OR face local id (faceId)
+	BryID int   // edge local id (edgeId) OR face local id (faceId)
 }
 
 // BryPairSet defines a set of BryPair identifiers
@@ -180,8 +180,8 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 	}
 	o.Ndim = len(o.Verts[0].X)
 	for id, vert := range o.Verts {
-		if id != vert.Id {
-			err = chk.Err("vertex ids must be sequential. vertex %d must be %d", vert.Id, id)
+		if id != vert.ID {
+			err = chk.Err("vertex ids must be sequential. vertex %d must be %d", vert.ID, id)
 			return
 		}
 		ndim := len(vert.X)
@@ -202,8 +202,8 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 
 	// check cell data, set TypeIndex, gndim, and coordinates X
 	for id, cell := range o.Cells {
-		if id != cell.Id {
-			err = chk.Err("cell ids must be sequential. cell %d must be %d", cell.Id, id)
+		if id != cell.ID {
+			err = chk.Err("cell ids must be sequential. cell %d must be %d", cell.ID, id)
 			return
 		}
 		if tindex, ok := TypeKeyToIndex[cell.TypeKey]; !ok {
@@ -215,18 +215,18 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 		cell.Gndim = GeomNdim[cell.TypeIndex]
 		nv := NumVerts[cell.TypeIndex]
 		if len(cell.V) != nv {
-			err = chk.Err("number of vertices for cell %d is incorrect. %d != %d", cell.Id, len(cell.V), nv)
+			err = chk.Err("number of vertices for cell %d is incorrect. %d != %d", cell.ID, len(cell.V), nv)
 			return
 		}
 		nEtags := len(cell.EdgeTags)
 		if nEtags > 0 {
 			lv := EdgeLocalVerts[cell.TypeIndex]
 			if nEtags != len(lv) {
-				err = chk.Err("number of edge tags for cell %d is incorrect. %d != %d", cell.Id, nEtags, len(lv))
+				err = chk.Err("number of edge tags for cell %d is incorrect. %d != %d", cell.ID, nEtags, len(lv))
 				return
 			}
 		}
-		cell.X = o.ExtractCellCoords(cell.Id)
+		cell.X = o.ExtractCellCoords(cell.ID)
 	}
 	return
 }
@@ -267,7 +267,7 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 		// check edge tags
 		if len(cell.EdgeTags) > 0 {
 			if len(cell.EdgeTags) != len(edgeLocVerts) {
-				err = chk.Err("number of edge tags in \"et\" list for cell # %d is incorrect. %d != %d", cell.Id, len(cell.EdgeTags), len(edgeLocVerts))
+				err = chk.Err("number of edge tags in \"et\" list for cell # %d is incorrect. %d != %d", cell.ID, len(cell.EdgeTags), len(edgeLocVerts))
 				return
 			}
 		}
@@ -275,7 +275,7 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 		// check face tags
 		if len(cell.FaceTags) > 0 {
 			if len(cell.FaceTags) != len(faceLocVerts) {
-				err = chk.Err("number of face tags in \"ft\" list for cell # %d is incorrect. %d != %d", cell.Id, len(cell.FaceTags), len(faceLocVerts))
+				err = chk.Err("number of face tags in \"ft\" list for cell # %d is incorrect. %d != %d", cell.ID, len(cell.FaceTags), len(faceLocVerts))
 				return
 			}
 		}
@@ -307,8 +307,8 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 
 // ExtractCellCoords extracts cell coordinates
 //   X -- matrix with coordinates [nverts][gndim]
-func (o *Mesh) ExtractCellCoords(cellId int) (X [][]float64) {
-	c := o.Cells[cellId]
+func (o *Mesh) ExtractCellCoords(cellID int) (X [][]float64) {
+	c := o.Cells[cellID]
 	X = make([][]float64, len(c.V))
 	for m, v := range c.V {
 		X[m] = make([]float64, c.Gndim)
@@ -346,7 +346,7 @@ func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BryPairSet, vertBryMap *map[int
 					// find whether this vertex is in the slice attached to edgeTag or not
 					found := false
 					for _, v := range vertsOnEdge {
-						if vert.Id == v.Id {
+						if vert.ID == v.ID {
 							found = true
 							break
 						}

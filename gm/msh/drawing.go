@@ -87,7 +87,7 @@ func (o *Mesh) Draw(args *DrawArgs) {
 			nEdges := len(EdgeLocalVertsD[ct])
 			nvEdge := len(EdgeLocalVertsD[ct][0]) // number of vertices along edge of cell
 			nvEtot := nvEdge*nEdges - nEdges      // total number of vertices along all edges
-			aa := getargs(cell.Id, args.ArgsCells)
+			aa := getargs(cell.ID, args.ArgsCells)
 			if cell.Gndim > 2 {
 				// TODO
 			} else {
@@ -200,7 +200,7 @@ func (o *Mesh) Draw(args *DrawArgs) {
 				x[i] = o.Verts[vid].X[0]
 				y[i] = o.Verts[vid].X[1]
 			}
-			aa := getargs(cell.Id, args.ArgsLins)
+			aa := getargs(cell.ID, args.ArgsLins)
 			plt.Plot(x, y, aa)
 		}
 
@@ -215,7 +215,7 @@ func (o *Mesh) Draw(args *DrawArgs) {
 			for i := 0; i < cell.Gndim; i++ {
 				xc[i] /= float64(len(cell.X))
 			}
-			txt := io.Sf("%d", cell.Id)
+			txt := io.Sf("%d", cell.ID)
 			if o.Ndim > 2 {
 				z := 0.0
 				if cell.Gndim > 2 {
@@ -242,7 +242,7 @@ func (o *Mesh) Draw(args *DrawArgs) {
 				zv[i] = v.X[2]
 			}
 			if args.WithIdsVerts {
-				txt := io.Sf("%d", v.Id)
+				txt := io.Sf("%d", v.ID)
 				if o.Ndim > 2 {
 					plt.Text3d(xv[i], yv[i], zv[i], txt, args.ArgsIdsVerts)
 				} else {

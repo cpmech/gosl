@@ -230,9 +230,9 @@ func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator, err erro
 //              Ω
 //   Input:
 //     goroutineId -- go routine id to use when performing optimisation (not to partition mesh)
-func (o *MeshIntegrator) IntegrateSv(goroutineId int, f fun.Sv) (res float64, err error) {
+func (o *MeshIntegrator) IntegrateSv(goroutineID int, f fun.Sv) (res float64, err error) {
 	for _, c := range o.M.Cells {
-		r, e := o.Integrators[goroutineId][c.TypeIndex].IntegrateSv(c.X, f)
+		r, e := o.Integrators[goroutineID][c.TypeIndex].IntegrateSv(c.X, f)
 		if e != nil {
 			err = e
 			return

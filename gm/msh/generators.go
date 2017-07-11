@@ -152,7 +152,7 @@ func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int
 		for _, nr := range nvertR {
 			for i := 0; i < nr; i++ {
 				x, y := f(i, j, nr, ns)
-				o.Verts[iv] = &Vertex{Id: iv, Tag: qvtag(i, j, nr, ns), X: []float64{x, y}}
+				o.Verts[iv] = &Vertex{ID: iv, Tag: qvtag(i, j, nr, ns), X: []float64{x, y}}
 				iv++
 			}
 			j++
@@ -162,7 +162,7 @@ func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int
 		nr := nvertR[0]
 		for i := 0; i < nr; i++ {
 			x, y := f(i, ns-1, nr, ns)
-			o.Verts[iv] = &Vertex{Id: iv, Tag: qvtag(i, ns-1, nr, ns), X: []float64{x, y}}
+			o.Verts[iv] = &Vertex{ID: iv, Tag: qvtag(i, ns-1, nr, ns), X: []float64{x, y}}
 			iv++
 		}
 	}
@@ -231,7 +231,7 @@ func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int
 			}
 
 			// set cell
-			o.Cells[ic] = &Cell{Id: ic, Tag: -1, TypeKey: typekey, V: v, EdgeTags: qetag(i, j, ndivR, ndivS)}
+			o.Cells[ic] = &Cell{ID: ic, Tag: -1, TypeKey: typekey, V: v, EdgeTags: qetag(i, j, ndivR, ndivS)}
 			ic++
 		}
 	}

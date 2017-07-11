@@ -13,9 +13,9 @@ func (o EdgesMap) Find(key EdgeKey) *Edge {
 // Functions to sort VertSet
 func (o VertSet) Len() int           { return len(o) }
 func (o VertSet) Swap(i, j int)      { o[i], o[j] = o[j], o[i] }
-func (o VertSet) Less(i, j int) bool { return o[i].Id < o[j].Id }
+func (o VertSet) Less(i, j int) bool { return o[i].ID < o[j].ID }
 
 // Functions to sort CellSet
 func (o CellSet) Len() int           { return len(o) }
 func (o CellSet) Swap(i, j int)      { o[i], o[j] = o[j], o[i] }
-func (o CellSet) Less(i, j int) bool { return o[i].Id < o[j].Id }
+func (o CellSet) Less(i, j int) bool { return o[i].ID < o[j].ID }

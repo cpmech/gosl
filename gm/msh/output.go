@@ -8,7 +8,7 @@ import "github.com/cpmech/gosl/io"
 
 // String returns a JSON representation of *Vert
 func (o *Vertex) String() string {
-	l := io.Sf("{\"i\":%d, \"t\":%d, \"x\":[", o.Id, o.Tag)
+	l := io.Sf("{\"i\":%d, \"t\":%d, \"x\":[", o.ID, o.Tag)
 	for i, x := range o.X {
 		if i > 0 {
 			l += ", "
@@ -21,7 +21,7 @@ func (o *Vertex) String() string {
 
 // String returns a JSON representation of *Cell
 func (o *Cell) String() string {
-	l := io.Sf("{\"i\":%d, \"t\":%d, \"p\":%d, \"y\":%q, \"v\":[", o.Id, o.Tag, o.Part, o.TypeKey)
+	l := io.Sf("{\"i\":%d, \"t\":%d, \"p\":%d, \"y\":%q, \"v\":[", o.ID, o.Tag, o.Part, o.TypeKey)
 	for i, x := range o.V {
 		if i > 0 {
 			l += ", "
