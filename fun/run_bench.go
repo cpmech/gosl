@@ -19,7 +19,7 @@ import (
 	"github.com/cpmech/gosl/rnd"
 )
 
-func ScaledMflops(N int, dt time.Duration) float64 {
+func scaledMflops(N int, dt time.Duration) float64 {
 	n := float64(N)
 	dtMicroseconds := float64(dt.Nanoseconds()) * 1e-3
 	return 5.0 * n * math.Log2(n) / dtMicroseconds
@@ -74,7 +74,7 @@ func main() {
 	}
 	tf := time.Now()
 	io.Pf("FourierTransLL     dt = %v\n", tf.Sub(t0))
-	io.Pf("FourierTransLL mflops = %.1f\n", ScaledMflops(N, tf.Sub(t0)))
+	io.Pf("FourierTransLL mflops = %.1f\n", scaledMflops(N, tf.Sub(t0)))
 
 	// allocate plan
 	t0 = time.Now()
@@ -93,7 +93,7 @@ func main() {
 	tf = time.Now()
 	io.Pf("FFTW: execute      dt = %v\n", tf.Sub(t1))
 	io.Pf("FFTW: total        dt = %v\n", tf.Sub(t0))
-	io.Pf("FFTW:          mflops = %.1f\n", ScaledMflops(N, tf.Sub(t1)))
+	io.Pf("FFTW:          mflops = %.1f\n", scaledMflops(N, tf.Sub(t1)))
 
 	// check
 	if true && len(X) > 0 {
