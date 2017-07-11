@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func Test_IntAssert(tst *testing.T) {
+func TestIntAssert(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -28,7 +28,7 @@ func Test_IntAssert(tst *testing.T) {
 	IntAssert(2, 1)
 }
 
-func Test_DblAssert(tst *testing.T) {
+func TestDblAssert(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -47,7 +47,7 @@ func Test_DblAssert(tst *testing.T) {
 	DblAssert(2, 1)
 }
 
-func Test_IntAssertLessthan(tst *testing.T) {
+func TestIntAssertLessthan(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -66,7 +66,7 @@ func Test_IntAssertLessthan(tst *testing.T) {
 	IntAssertLessThan(1, 1)
 }
 
-func Test_IntAssertLessthanOrEqualTo(tst *testing.T) {
+func TestIntAssertLessthanOrEqualTo(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -85,7 +85,7 @@ func Test_IntAssertLessthanOrEqualTo(tst *testing.T) {
 	IntAssertLessThanOrEqualTo(2, 1)
 }
 
-func Test_StrAssert(tst *testing.T) {
+func TestStrAssert(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -107,7 +107,7 @@ func Test_StrAssert(tst *testing.T) {
 func myfunction() {}
 
 // TODO: this test doesn't work on MacOS
-func test_FcnName(tst *testing.T) {
+func testFcnName(tst *testing.T) {
 
 	//Verbose = true
 	PrintTitle("FcnName")
