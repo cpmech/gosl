@@ -14,13 +14,12 @@ func BestSquare(size int) (nrow, ncol int) {
 				nrow = x
 				ncol = x
 				return
-			} else {
-				for y := x; y >= 1; y-- {
-					if (x * y) == size {
-						nrow = x
-						ncol = y
-						return
-					}
+			}
+			for y := x; y >= 1; y-- {
+				if (x * y) == size {
+					nrow = x
+					ncol = y
+					return
 				}
 			}
 		}
@@ -36,7 +35,7 @@ func Imin(a, b int) int {
 	return b
 }
 
-// Imin returns the maximum between two integers
+// Imax returns the maximum between two integers
 func Imax(a, b int) int {
 	if a > b {
 		return a

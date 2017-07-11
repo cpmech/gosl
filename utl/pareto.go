@@ -13,27 +13,27 @@ import (
 
 // ParetoMin compares two vectors using Pareto's optimal criterion
 //  Note: minimum dominates (is better)
-func ParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
+func ParetoMin(u, v []float64) (uDominates, vDominates bool) {
 	chk.IntAssert(len(u), len(v))
-	u_has_all_leq := true // all u values are less-than or equal-to v values
-	u_has_one_le := false // u has at least one value less-than v
-	v_has_all_leq := true // all v values are less-than or equalt-to u values
-	v_has_one_le := false // v has at least one value less-than u
+	uHasAllLeq := true // all u values are less-than or equal-to v values
+	uHasOneLe := false // u has at least one value less-than v
+	vHasAllLeq := true // all v values are less-than or equalt-to u values
+	vHasOneLe := false // v has at least one value less-than u
 	for i := 0; i < len(u); i++ {
 		if u[i] > v[i] {
-			u_has_all_leq = false
-			v_has_one_le = true
+			uHasAllLeq = false
+			vHasOneLe = true
 		}
 		if u[i] < v[i] {
-			u_has_one_le = true
-			v_has_all_leq = false
+			uHasOneLe = true
+			vHasAllLeq = false
 		}
 	}
-	if u_has_all_leq && u_has_one_le {
-		u_dominates = true
+	if uHasAllLeq && uHasOneLe {
+		uDominates = true
 	}
-	if v_has_all_leq && v_has_one_le {
-		v_dominates = true
+	if vHasAllLeq && vHasOneLe {
+		vDominates = true
 	}
 	return
 }
@@ -43,8 +43,8 @@ func ParetoMin(u, v []float64) (u_dominates, v_dominates bool) {
 // If φ==0, deterministic analysis is carried out. If φ==1, probabilistic analysis is carried out.
 // As φ → 1, v "gets more help".
 //  Note: (1) minimum dominates (is better)
-//        (2) v dominates if !u_dominates
-func ParetoMinProb(u, v []float64, φ float64) (u_dominates bool) {
+//        (2) v dominates if !uDominates
+func ParetoMinProb(u, v []float64, φ float64) (uDominates bool) {
 	chk.IntAssert(len(u), len(v))
 	var pu, pv float64
 	for i := 0; i < len(u); i++ {
@@ -53,7 +53,7 @@ func ParetoMinProb(u, v []float64, φ float64) (u_dominates bool) {
 	}
 	pu /= float64(len(u))
 	if FlipCoin(pu) {
-		u_dominates = true
+		uDominates = true
 	}
 	return
 }
@@ -102,11 +102,11 @@ func ParetoFront(Ovs [][]float64) (front []int) {
 	}
 	for i := 0; i < nsamples; i++ {
 		for j := i + 1; j < nsamples; j++ {
-			u_dominates, v_dominates := ParetoMin(Ovs[i], Ovs[j])
-			if u_dominates {
+			uDominates, vDominates := ParetoMin(Ovs[i], Ovs[j])
+			if uDominates {
 				dominated[j] = true
 			}
-			if v_dominates {
+			if vDominates {
 				dominated[i] = true
 			}
 		}

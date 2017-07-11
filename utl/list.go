@@ -63,7 +63,7 @@ func (o *SerialList) Append(startRow bool, value float64) {
 		}
 	}
 	o.Vals = append(o.Vals, value)
-	o.Ptrs[len(o.Ptrs)-1] += 1
+	o.Ptrs[len(o.Ptrs)-1]++
 }
 
 // Print prints the souble-serial-list

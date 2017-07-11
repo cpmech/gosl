@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package utl implements functions for simplifying calculations and allocation of structures
+// Package utl implements functions for simplifying calculations and allocation of structures
 // such as slices and slices of slices. It also contains functions for sorting quantities.
 package utl
 
@@ -45,7 +45,7 @@ func StrVals(n int, val string) (s []string) {
 	return
 }
 
-// StrsAlloc allocates a matrix of strings
+// StrAlloc allocates a matrix of strings
 func StrAlloc(m, n int) (mat [][]string) {
 	mat = make([][]string, m)
 	for i := 0; i < m; i++ {
@@ -88,7 +88,7 @@ func IntCopy(in []int) (out []int) {
 	return
 }
 
-// IntsClone allocates and clones a matrix of integers
+// IntClone allocates and clones a matrix of integers
 func IntClone(a [][]int) (b [][]int) {
 	b = make([][]int, len(a))
 	for i := 0; i < len(a); i++ {
@@ -653,7 +653,7 @@ func ArgMinMax(v []float64) (imin, imax int) {
 
 // bool //////////////////////////////////////////////////////////////////////////////////////////
 
-// BoolAllTrue returns true if all values are true
+// AllTrue returns true if all values are true
 func AllTrue(values []bool) bool {
 	for _, v := range values {
 		if !v {
@@ -663,7 +663,7 @@ func AllTrue(values []bool) bool {
 	return true
 }
 
-// BoolAllFalse returns true if all values are false
+// AllFalse returns true if all values are false
 func AllFalse(values []bool) bool {
 	for _, v := range values {
 		if v {
