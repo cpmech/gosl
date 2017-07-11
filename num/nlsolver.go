@@ -164,22 +164,22 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 	// iterations
 	var Ldx, LdxPrev, Θ float64 // RMS norm of delta x, convergence rate
-	var fx_max float64
+	var fxMax float64
 	var nfv int
 	for o.It = 0; o.It < o.MaxIt; o.It++ {
 
 		// check convergence on f(x)
-		fx_max = o.fx.Largest(1.0) // den = 1.0
-		if fx_max < o.ftol {
+		fxMax = o.fx.Largest(1.0) // den = 1.0
+		if fxMax < o.ftol {
 			if !silent {
-				o.msg("fx_max(ini)", o.It, Ldx, fx_max, false, true)
+				o.msg("fxMax(ini)", o.It, Ldx, fxMax, false, true)
 			}
 			break
 		}
 
 		// show message
 		if !silent {
-			o.msg("", o.It, Ldx, fx_max, false, false)
+			o.msg("", o.It, Ldx, fxMax, false, false)
 		}
 
 		// output
@@ -199,7 +199,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 					err = o.JfcnSp(&o.Jtri, x)
 				}
 			}
-			o.NJeval += 1
+			o.NJeval++
 			if err != nil {
 				return
 			}
@@ -262,16 +262,16 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 		// calculate fx := f(x) @ update x
 		err = o.Ffcn(o.fx, x)
-		o.NFeval += 1
+		o.NFeval++
 		if err != nil {
 			return
 		}
 
 		// check convergence on f(x) => avoid line-search if converged already
-		fx_max = o.fx.Largest(1.0) // den = 1.0
-		if fx_max < o.ftol {
+		fxMax = o.fx.Largest(1.0) // den = 1.0
+		if fxMax < o.ftol {
 			if !silent {
-				o.msg("fx_max", o.It, Ldx, fx_max, false, true)
+				o.msg("fxMax", o.It, Ldx, fxMax, false, true)
 			}
 			break
 		}
@@ -279,7 +279,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		// check convergence on Ldx
 		if Ldx < o.fnewt {
 			if !silent {
-				o.msg("Ldx", o.It, Ldx, fx_max, false, true)
+				o.msg("Ldx", o.It, Ldx, fxMax, false, true)
 			}
 			break
 		}
@@ -296,10 +296,10 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 				Ldx += ((x[i] - o.x0[i]) / o.scal[i]) * ((x[i] - o.x0[i]) / o.scal[i])
 			}
 			Ldx = math.Sqrt(Ldx / float64(o.neq))
-			fx_max = o.fx.Largest(1.0) // den = 1.0
+			fxMax = o.fx.Largest(1.0) // den = 1.0
 			if Ldx < o.fnewt {
 				if !silent {
-					o.msg("Ldx(linsrch)", o.It, Ldx, fx_max, false, true)
+					o.msg("Ldx(linsrch)", o.It, Ldx, fxMax, false, true)
 				}
 				break
 			}
@@ -389,13 +389,13 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 }
 
 // msg prints information on residuals
-func (o *NlSolver) msg(typ string, it int, Ldx, fx_max float64, first, last bool) {
+func (o *NlSolver) msg(typ string, it int, Ldx, fxMax float64, first, last bool) {
 	if first {
-		io.Pf("\n%4s%23s%23s\n", "it", "Ldx", "fx_max")
+		io.Pf("\n%4s%23s%23s\n", "it", "Ldx", "fxMax")
 		io.Pf("%4s%23s%23s\n", "", io.Sf("(%7.1e)", o.fnewt), io.Sf("(%7.1e)", o.ftol))
 		return
 	}
-	io.Pf("%4d%23.15e%23.15e\n", it, Ldx, fx_max)
+	io.Pf("%4d%23.15e%23.15e\n", it, Ldx, fxMax)
 	if last {
 		io.Pf(". . . converged with %s. nit=%d, nFeval=%d, nJeval=%d\n", typ, it, o.NFeval, o.NJeval)
 	}
