@@ -20,7 +20,7 @@ func Test_sfmt01(tst *testing.T) {
 
 	Init(4321)
 
-	PrintIdString()
+	PrintIDString()
 	//TODO: add SFMT original test here
 	//io.Pf("64 bit generated randoms\n")
 	//io.Pf("init_gen_rand__________\n")

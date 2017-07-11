@@ -4,7 +4,7 @@
 
 // +build !windows
 
-// package sfmt wraps the SFMT SIMD-oriented Fast Mersenne Twister
+// Package sfmt wraps the SFMT SIMD-oriented Fast Mersenne Twister
 package sfmt
 
 /*
@@ -51,8 +51,8 @@ func Shuffle(values []int) {
 	C.SfmtShuffle((*C.LONG)(unsafe.Pointer(&values[0])), C.LONG(len(values)))
 }
 
-// PrintIdString prints SFMT id string
-func PrintIdString() {
+// PrintIDString prints SFMT id string
+func PrintIDString() {
 	if io.Verbose {
 		C.SfmtPrintIdString()
 	}

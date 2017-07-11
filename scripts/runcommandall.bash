@@ -71,7 +71,6 @@ tools \
 rungolint() {
     pkg=$1
     for f in *.go; do
-        echo $f
         golint $f
     done
 }
