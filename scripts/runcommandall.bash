@@ -6,9 +6,10 @@ echo "usage:"
 echo "    $0 JOB"
 echo "where JOB is:"
 echo "    0 -- count lines [default]"
-echo "    1 -- execute goimports"
-echo "    2 -- generate depedency graphs"
-echo "    3 -- fix links in README files"
+echo "    1 -- execute golint"
+echo "    2 -- execute goimports"
+echo "    3 -- generate depedency graphs"
+echo "    4 -- fix links in README files"
 
 JOB=0
 if [[ $# != 0 ]]; then
@@ -45,29 +46,35 @@ mpi \
 la  \
 la/mkl \
 la/oblas \
-fdm \
+num/qpck \
 num \
 fun \
+fun/dbf \
+fun/fftw \
 gm \
 gm/msh \
 gm/tri \
 gm/rw \
 graph \
-ode \
 opt \
 rnd \
 rnd/sfmt \
 rnd/dsfmt \
-tsr \
 vtk \
-img \
-img/ocv \
 "
 
 EXTRA="
 examples \
 tools \
 "
+
+rungolint() {
+    pkg=$1
+    for f in *.go; do
+        echo $f
+        golint $f
+    done
+}
 
 rungoimports() {
     pkg=$1
@@ -100,11 +107,11 @@ fixreadme() {
     #sed -i "/More information is available in/i $lnk \n" README.md
 }
 
-if [[ $JOB == 1 ]]; then
+if [[ $JOB == 2 ]]; then
     ALL="$ALL $EXTRA"
 fi
 
-if [[ $JOB == 2 ]]; then
+if [[ $JOB == 3 ]]; then
     mkdir -p /tmp/gosl
 fi
 
@@ -115,12 +122,15 @@ for pkg in $ALL; do
     echo
     echo ">>> $idx $pkg <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
     if [[ $JOB == 1 ]]; then
-        rungoimports $pkg
+        rungolint $pkg
     fi
     if [[ $JOB == 2 ]]; then
-        depgraph $pkg
+        rungoimports $pkg
     fi
     if [[ $JOB == 3 ]]; then
+        depgraph $pkg
+    fi
+    if [[ $JOB == 4 ]]; then
         fixreadme $pkg
     fi
     cd $HERE

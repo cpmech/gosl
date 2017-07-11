@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package vtk wraps the visualisation tool kit (VTK) for drawing 3D surfaces (scalar fields, vector
+// Package vtk wraps the visualisation tool kit (VTK) for drawing 3D surfaces (scalar fields, vector
 // fields, etc.)
 package vtk
 
@@ -101,8 +101,8 @@ type Spheres struct {
 	sset unsafe.Pointer // GoslVTK::Sphere
 }
 
-// Cb_fcn is a callback function to compute f, v := f(x) where v = dfdx
-type Cb_fcn func(x []float64) (fval, vx, vy, vz float64)
+// FxType is a callback function to compute f, v := f(x) where v = dfdx
+type FxType func(x []float64) (fval, vx, vy, vz float64)
 
 // IsoSurf holds data to generate isosurfaces
 //  CmapNclrs:
@@ -126,7 +126,7 @@ type IsoSurf struct {
 	Color         []float64 // {red, green, blue, opacity}
 	ShowWire      bool      // show wireframe of main object
 	GridShowPts   bool      // show underlying grid
-	fcn           Cb_fcn    // function
+	fcn           FxType    // function
 
 	// c data
 	isf unsafe.Pointer // GoslVTK::IsoSurf
@@ -201,7 +201,7 @@ func NewSpheresFromFile(filename string) *Spheres {
 }
 
 // NewIsoSurf allocates a new IsoSurf structure
-func NewIsoSurf(f Cb_fcn) *IsoSurf {
+func NewIsoSurf(f FxType) *IsoSurf {
 	return &IsoSurf{
 		Limits:     []float64{-1, 1, -1, 1, -1, 1},
 		Ndiv:       []int{21, 21, 21},
@@ -269,13 +269,13 @@ func (o *Scene) Run() (err error) {
 	defer C.free(unsafe.Pointer(fnk))
 
 	// connect Go and C
-	GOVTK_X = make([]float64, 3)
-	C.GOVTK_F = (*C.double)(unsafe.Pointer(&GOVTK_F))
-	C.GOVTK_VX = (*C.double)(unsafe.Pointer(&GOVTK_VX))
-	C.GOVTK_VY = (*C.double)(unsafe.Pointer(&GOVTK_VX))
-	C.GOVTK_VZ = (*C.double)(unsafe.Pointer(&GOVTK_VX))
-	C.GOVTK_X = (*C.double)(unsafe.Pointer(&GOVTK_X[0]))
-	C.GOVTK_I = (*C.long)(unsafe.Pointer(&GOVTK_I))
+	govtkX = make([]float64, 3)
+	C.GOVTK_F = (*C.double)(unsafe.Pointer(&govtkF))
+	C.GOVTK_VX = (*C.double)(unsafe.Pointer(&govtkVx))
+	C.GOVTK_VY = (*C.double)(unsafe.Pointer(&govtkVx))
+	C.GOVTK_VZ = (*C.double)(unsafe.Pointer(&govtkVx))
+	C.GOVTK_X = (*C.double)(unsafe.Pointer(&govtkX[0]))
+	C.GOVTK_I = (*C.long)(unsafe.Pointer(&govtkI))
 
 	// alloc win
 	if o.Width == 0 {
@@ -302,12 +302,12 @@ func (o *Scene) Run() (err error) {
 	for _, O := range o.arrows {
 		x0 := (*C.double)(unsafe.Pointer(&O.X0[0]))
 		v := (*C.double)(unsafe.Pointer(&O.V[0]))
-		cone_pct := (C.double)(O.ConePct)
-		cone_rad := (C.double)(O.ConeRad)
-		cyli_rad := (C.double)(O.CyliRad)
+		conePct := (C.double)(O.ConePct)
+		coneRad := (C.double)(O.ConeRad)
+		cyliRad := (C.double)(O.CyliRad)
 		resolution := (C.long)(O.Resolution)
 		color := (*C.double)(unsafe.Pointer(&O.Color[0]))
-		O.arr = C.arrow_addto(o.win, x0, v, cone_pct, cone_rad, cyli_rad, resolution, color)
+		O.arr = C.arrow_addto(o.win, x0, v, conePct, coneRad, cyliRad, resolution, color)
 		defer C.arrow_dealloc(O.arr)
 	}
 
@@ -357,8 +357,8 @@ func (o *Scene) Run() (err error) {
 		defer C.free(unsafe.Pointer(cmaptype))
 
 		// connect Go and C
-		idx := len(GOVTK_FCN)
-		GOVTK_FCN = append(GOVTK_FCN, O.fcn)
+		idx := len(govtkFcn)
+		govtkFcn = append(govtkFcn, O.fcn)
 
 		// call C routine: add isosurf
 		index := (C.long)(idx)
@@ -404,16 +404,16 @@ func (o *Scene) Run() (err error) {
 
 // global variables for communication with C
 var (
-	GOVTK_FCN []Cb_fcn
-	GOVTK_F   float64
-	GOVTK_VX  float64
-	GOVTK_VY  float64
-	GOVTK_VZ  float64
-	GOVTK_X   []float64
-	GOVTK_I   int
+	govtkFcn []FxType
+	govtkF   float64
+	govtkVx  float64
+	govtkVy  float64
+	govtkVz  float64
+	govtkX   []float64
+	govtkI   int
 )
 
 //export govtk_isosurf_fcn
 func govtk_isosurf_fcn() {
-	GOVTK_F, GOVTK_VX, GOVTK_VY, GOVTK_VZ = GOVTK_FCN[GOVTK_I](GOVTK_X)
+	govtkF, govtkVx, govtkVy, govtkVz = govtkFcn[govtkI](govtkX)
 }
