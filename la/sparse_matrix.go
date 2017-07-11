@@ -104,11 +104,11 @@ func (o *Triplet) GetDenseMatrix() (a *Matrix) {
 }
 
 // ToDense converts a column-compressed matrix to dense form
-func (a *CCMatrix) ToDense() (res *Matrix) {
-	res = NewMatrix(a.m, a.n)
-	for j := 0; j < a.n; j++ {
-		for p := a.p[j]; p < a.p[j+1]; p++ {
-			res.Set(a.i[p], j, a.x[p])
+func (o *CCMatrix) ToDense() (res *Matrix) {
+	res = NewMatrix(o.m, o.n)
+	for j := 0; j < o.n; j++ {
+		for p := o.p[j]; p < o.p[j+1]; p++ {
+			res.Set(o.i[p], j, o.x[p])
 		}
 	}
 	return
@@ -132,7 +132,7 @@ func (o *CCMatrix) Set(m, n int, Ap, Ai []int, Ax []float64) {
 
 // complex /////////////////////////////////////////////////////////////////////////////////////////
 
-// Triplet is a simple representation of a sparse matrix, where the indices and values
+// TripletC is a simple representation of a sparse matrix, where the indices and values
 // of this matrix are stored directly. (complex version)
 type TripletC struct {
 	m, n     int          // matrix dimension (rows, columns)
@@ -141,7 +141,7 @@ type TripletC struct {
 	x        []complex128 // values for each i, j (size=max)
 }
 
-// CCMatrix represents a sparse matrix using the so-called "column-compressed format".
+// CCMatrixC represents a sparse matrix using the so-called "column-compressed format".
 // (complex version)
 type CCMatrixC struct {
 	m, n int          // matrix dimension (rows, columns)
