@@ -24,7 +24,7 @@ func TestSolverResidual(tst *testing.T, a *Matrix, x, b Vector, tolNorm float64)
 	}
 }
 
-// TestSolverResidual check the residual of a linear system solution (complex version)
+// TestSolverResidualC check the residual of a linear system solution (complex version)
 func TestSolverResidualC(tst *testing.T, a *MatrixC, x, b VectorC, tolNorm float64) {
 	r := NewVectorC(len(x))
 	r.Apply(-1, b)            // r = -b
@@ -71,7 +71,7 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 	TestSolverResidual(tst, t.GetDenseMatrix(), x, b, tolRes)
 }
 
-// TestSpSolver tests a sparse solver (complex version)
+// TestSpSolverC tests a sparse solver (complex version)
 func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *TripletC, b, xCorrect VectorC,
 	tolX, tolRes float64, verbose, bIsDistr bool, comm *mpi.Communicator) {
 
