@@ -64,7 +64,7 @@ func Deep3Serialize(A [][][]float64) (I, P []int, S []float64) {
 
 // Deep3GetInfo returns information of serialized array of array of array
 //  Example:
-func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncols_tot int, ncols []int) {
+func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncolsTot int, ncols []int) {
 	if verbose {
 		io.Pf("I = %v\n", I)
 		io.Pf("P = %v\n", P)
@@ -74,13 +74,13 @@ func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncols_t
 	nrows = I[len(I)-1] + 1
 	ncols = make([]int, nrows)
 	for _, j := range I {
-		ncols_tot++
+		ncolsTot++
 		ncols[j]++
 	}
 	if verbose {
 		io.Pf("nitems    = %v\n", nitems)
 		io.Pf("nrows     = %v\n", nrows)
-		io.Pf("ncols_tot = %v\n", ncols_tot)
+		io.Pf("ncols_tot = %v\n", ncolsTot)
 		io.Pf("ncols     = %v\n", ncols)
 	}
 	return

@@ -38,7 +38,7 @@ func ProfCPU(dirout, filename string, silent bool) func() {
 	fn := filepath.Join(dirout, filename)
 	f, err := os.Create(fn)
 	if err != nil {
-		chk.Panic(_profiling_err1, "ProfCPU", err.Error())
+		chk.Panic("cannot create file:\n%v", err)
 	}
 	if !silent {
 		io.Pfcyan("CPU profiling => %s\n", fn)
@@ -92,8 +92,3 @@ func DoProf(silent bool, option int) func() {
 	}
 	return ProfCPU("/tmp/gosl", "cpu.pprof", silent)
 }
-
-// error messages
-var (
-	_profiling_err1 = "profiling.go: %s: cannot create file:\n%v"
-)
