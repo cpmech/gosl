@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package rnd implements random numbers generators (wrapping the standard functions or the Mersenne
+// Package rnd implements random numbers generators (wrapping the standard functions or the Mersenne
 // Twister library). It also implements probability distribution functions.
 package rnd
 

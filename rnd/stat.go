@@ -93,7 +93,7 @@ func StatDev(x []float64, std bool) (xdev float64) {
 	return
 }
 
-// StatAvedDev computes the average of x and the average deviation or standard deviation (σ)
+// StatAveDev computes the average of x and the average deviation or standard deviation (σ)
 //  Input:
 //   x   -- sample
 //   std -- compute standard deviation (σ) instead of average deviation (adev)
