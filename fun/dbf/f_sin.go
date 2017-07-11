@@ -22,7 +22,7 @@ type Sin struct {
 	C float64
 
 	// derived
-	b_is_b_div_pi bool
+	bDivPi bool
 }
 
 // set allocators database
@@ -39,7 +39,7 @@ func (o *Sin) Init(prms Params) (err error) {
 		e += prms.Connect(&o.B, "b", "sin function")
 	} else {
 		e += prms.Connect(&o.B, "b/pi", "sin function")
-		o.b_is_b_div_pi = true
+		o.bDivPi = true
 	}
 	if e != "" {
 		err = chk.Err("%v\n", e)
@@ -50,7 +50,7 @@ func (o *Sin) Init(prms Params) (err error) {
 // F returns y = F(t, x)
 func (o Sin) F(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bDivPi {
 		b = o.B * math.Pi
 	}
 	return o.A*math.Sin(b*t) + o.C
@@ -59,7 +59,7 @@ func (o Sin) F(t float64, x []float64) float64 {
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Sin) G(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bDivPi {
 		b = o.B * math.Pi
 	}
 	return o.A * b * math.Cos(b*t)
@@ -68,7 +68,7 @@ func (o Sin) G(t float64, x []float64) float64 {
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o Sin) H(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bDivPi {
 		b = o.B * math.Pi
 	}
 	return -o.A * b * b * math.Sin(b*t)

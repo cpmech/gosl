@@ -64,21 +64,21 @@ func PlotT(o T, dirout, fnkey string, t0, tf float64, xcte []float64, np int) {
 		for i := 0; i < np; i++ {
 			f[i] = o.F(t[i], xcte)
 		}
-		nrow += 1
+		nrow++
 	}
 	if withG {
 		g = make([]float64, np)
 		for i := 0; i < np; i++ {
 			g[i] = o.G(t[i], xcte)
 		}
-		nrow += 1
+		nrow++
 	}
 	if withH {
 		h = make([]float64, np)
 		for i := 0; i < np; i++ {
 			h[i] = o.H(t[i], xcte)
 		}
-		nrow += 1
+		nrow++
 	}
 	if nrow == 0 {
 		chk.Panic("one of args{F,G,H} must be provided")
@@ -102,7 +102,7 @@ func PlotT(o T, dirout, fnkey string, t0, tf float64, xcte []float64, np int) {
 		}
 		plt.Plot(t, f, nil)
 		plt.Gll(labelT, labelF, nil)
-		pidx += 1
+		pidx++
 	}
 
 	// plot G
@@ -112,7 +112,7 @@ func PlotT(o T, dirout, fnkey string, t0, tf float64, xcte []float64, np int) {
 		}
 		plt.Plot(t, g, nil)
 		plt.Gll(labelT, labelG, nil)
-		pidx += 1
+		pidx++
 	}
 
 	// plot H
@@ -147,7 +147,7 @@ func PlotX(o T, dirout, fnkey string, tcte float64, xmin, xmax []float64, np int
 	if withGrad {
 		Gx = utl.Alloc(np, np)
 		Gy = utl.Alloc(np, np)
-		nrow += 1
+		nrow++
 	}
 	x := make([]float64, 2)
 	g := make([]float64, 2)

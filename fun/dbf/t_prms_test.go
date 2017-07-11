@@ -66,9 +66,9 @@ func Test_prms02(tst *testing.T) {
 	io.Pforan("%v\n", prms)
 
 	var klx, kly, klz float64
-	err_msg := prms.ConnectSet([]*float64{&klx, &kly, &klz}, []string{"klx", "kly", "klz"}, "Test_prms02")
-	if err_msg != "" {
-		tst.Error("connect set failed: %v\n", err_msg)
+	errMsg := prms.ConnectSet([]*float64{&klx, &kly, &klz}, []string{"klx", "kly", "klz"}, "Test_prms02")
+	if errMsg != "" {
+		tst.Error("connect set failed: %v\n", errMsg)
 		return
 	}
 

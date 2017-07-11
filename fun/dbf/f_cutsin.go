@@ -10,7 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Cutsin implements
+// CutSin implements a sine function such as:
 // 	if find["cps"]: # means cut_positive is True
 //		if y < 0: y(t) = a * sin(b*t) + c
 //	 	else: y(t) = 0
@@ -28,8 +28,8 @@ type CutSin struct {
 	C float64
 
 	// derived
-	b_is_b_div_pi bool
-	cut_positive  bool
+	bDivPi      bool
+	cutPositive bool
 }
 
 // set allocators database
@@ -46,13 +46,13 @@ func (o *CutSin) Init(prms Params) (err error) {
 		e += prms.Connect(&o.B, "b", "cut-sin function")
 	} else {
 		e += prms.Connect(&o.B, "b/pi", "cut-sin function")
-		o.b_is_b_div_pi = true
+		o.bDivPi = true
 	}
 	p = prms.Find("cps")
 	if p == nil {
-		o.cut_positive = false
+		o.cutPositive = false
 	} else {
-		o.cut_positive = true
+		o.cutPositive = true
 	}
 	if e != "" {
 		err = chk.Err("%v\n", e)
@@ -63,64 +63,55 @@ func (o *CutSin) Init(prms Params) (err error) {
 // F returns y = F(t, x)
 func (o CutSin) F(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bDivPi {
 		b = o.B * math.Pi
 	}
-	if o.cut_positive {
+	if o.cutPositive {
 		if o.A*math.Sin(b*t)+o.C <= 0.0 {
 			return o.A*math.Sin(b*t) + o.C
-		} else {
-			return 0.0
 		}
-	} else {
-		if o.A*math.Sin(b*t)+o.C >= 0.0 {
-			return o.A*math.Sin(b*t) + o.C
-		} else {
-			return 0.0
-		}
+		return 0.0
 	}
+	if o.A*math.Sin(b*t)+o.C >= 0.0 {
+		return o.A*math.Sin(b*t) + o.C
+	}
+	return 0.0
 }
 
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o CutSin) G(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bDivPi {
 		b = o.B * math.Pi
 	}
-	if o.cut_positive {
+	if o.cutPositive {
 		if o.A*math.Sin(b*t)+o.C <= 0.0 {
 			return o.A * b * math.Cos(b*t)
-		} else {
-			return 0.0
 		}
-	} else {
-		if o.A*math.Sin(b*t)+o.C >= 0.0 {
-			return o.A * b * math.Cos(b*t)
-		} else {
-			return 0.0
-		}
+		return 0.0
 	}
+	if o.A*math.Sin(b*t)+o.C >= 0.0 {
+		return o.A * b * math.Cos(b*t)
+	}
+	return 0.0
 }
 
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o CutSin) H(t float64, x []float64) float64 {
 	b := o.B
-	if o.b_is_b_div_pi {
+	if o.bDivPi {
 		b = o.B * math.Pi
 	}
-	if o.cut_positive {
+	if o.cutPositive {
 		if o.A*math.Sin(b*t)+o.C <= 0.0 {
 			return -o.A * b * b * math.Sin(b*t)
-		} else {
-			return 0.0
 		}
-	} else {
-		if o.A*math.Sin(b*t)+o.C >= 0.0 {
-			return -o.A * b * b * math.Sin(b*t)
-		} else {
-			return 0.0
-		}
+		return 0.0
 	}
+	if o.A*math.Sin(b*t)+o.C >= 0.0 {
+		return -o.A * b * b * math.Sin(b*t)
+	}
+	return 0.0
 }
 
 // Grad returns ∇F = ∂y/∂x = Grad(t, x)

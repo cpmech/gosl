@@ -10,7 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Excitation # 2: y(t) = if t < ta a*sin(b*π*t), else 0
+// Exc2 implements excitation # 2: y(t) = if t < ta a*sin(b*π*t), else 0
 type Exc2 struct {
 	Ta float64
 	A  float64

@@ -10,7 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Excitation #1 y(t) = a * (1 - cos(b*π*t)) / 2
+// Exc1 implements excitation #1 y(t) = a * (1 - cos(b*π*t)) / 2
 type Exc1 struct {
 	A, B float64
 }

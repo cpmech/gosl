@@ -10,7 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Increasing or decreasing smooth-ramp-smooth function
+// Srmps implements the increasing or decreasing smooth-ramp-smooth function
 type Srmps struct {
 	Ca, Cb float64
 	Ta, Tb float64

@@ -30,7 +30,7 @@ func (o *Pts) Init(prms Params) (err error) {
 	// read parameters
 	var T, Y []float64
 	var dT, dY []float64
-	y_equal_dt := false
+	yEqualDt := false
 	for _, p := range prms {
 		switch p.N {
 		case "dt":
@@ -39,7 +39,7 @@ func (o *Pts) Init(prms Params) (err error) {
 			dY = utl.FromString(p.Extra)
 		case "y=dt":
 			Y = utl.FromString(p.Extra)
-			y_equal_dt = true
+			yEqualDt = true
 		default:
 			switch p.N[:1] {
 			case "t":
@@ -79,7 +79,7 @@ func (o *Pts) Init(prms Params) (err error) {
 	}
 
 	// given y=dt
-	if y_equal_dt {
+	if yEqualDt {
 		ny := len(Y)
 		T = make([]float64, ny)
 		for i := 0; i < ny-1; i++ {

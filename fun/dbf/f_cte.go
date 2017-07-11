@@ -36,13 +36,13 @@ func (o Cte) F(t float64, x []float64) float64 {
 	return o.C
 }
 
-// first derivative
+// G computes the first derivative
 // G returns ∂y/∂t_cteX = G(t, x)
 func (o Cte) G(t float64, x []float64) float64 {
 	return 0.0
 }
 
-// second derivative
+// H computes the second derivative
 // H returns ∂²y/∂t²_cteX = H(t, x)
 func (o Cte) H(t float64, x []float64) float64 {
 	return 0.0
