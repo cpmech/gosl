@@ -20,7 +20,7 @@ func TestShp01(tst *testing.T) {
 
 	r := []float64{0, 0, 0}
 
-	for ctypeindex, _ := range Functions {
+	for ctypeindex := range Functions {
 
 		io.Pfyel("--------------------------------- %-6s---------------------------------\n", TypeIndexToKey[ctypeindex])
 

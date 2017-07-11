@@ -325,16 +325,16 @@ func (o *Mesh) ExtractCellCoords(cellID int) (X [][]float64) {
 func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BryPairSet, vertBryMap *map[int]VertSet, cell *Cell, tagList []int, locVerts [][]int) {
 
 	// loop over each tag attached to a side of the cell
-	for edgeId, edgeTag := range tagList {
+	for edgeID, edgeTag := range tagList {
 
 		// there is a tag (i.e. it's nonzero)
 		if edgeTag != 0 {
 
 			// set edgeTag => cells map
-			(*cellBryMap)[edgeTag] = append((*cellBryMap)[edgeTag], &BryPair{cell, edgeId})
+			(*cellBryMap)[edgeTag] = append((*cellBryMap)[edgeTag], &BryPair{cell, edgeID})
 
 			// loop over local edges of cell
-			for _, locVid := range locVerts[edgeId] {
+			for _, locVid := range locVerts[edgeID] {
 
 				// find vertex
 				vid := cell.V[locVid] // local vertex id => global vertex id (vid)

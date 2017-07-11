@@ -41,17 +41,38 @@ const (
 type ShapeFunction func(S []float64, dSdR [][]float64, R []float64, derivs bool)
 
 var (
-	Functions       []ShapeFunction // shape functions and derivatives [TypeNumMax]
-	TypeKeyToIndex  map[string]int  // converts type key (e.g. "lin2") to index (e.g. TypeLin2)
-	TypeIndexToKey  []string        // converts type index (e.g. TypeLin2) to key (e.g. "lin2")
-	TypeIndexToKind []int           // converts type index (e.g. TypeLin2) to cell kind (e.g. KindLin)
-	NumVerts        []int           // number of vertices on shape [TypeNumMax]
-	GeomNdim        []int           // geometry number of space dimensions [TypeNumMax]
-	EdgeLocalVerts  [][][]int       // local indices of vertices on edges of shape [TypeNumMax][nedges][nverts]
-	FaceLocalVerts  [][][]int       // local indices of vertices on faces of shape [TypeNumMax][nfaces][nverts]
-	EdgeLocalVertsD [][][]int       // for drawing: local indices of vertices on edges of shape [TypeNumMax][nedges][nverts]
-	FaceLocalVertsD [][][][]int     // for drawing: local indices of vertices on faces of shape [TypeNumMax][nfaces][nverts]
-	NatCoords       [][][]float64   // natural coordinates of vertices on shape [TypeNumMax][nverts][gndim]
+	// Functions holds functions to compute shape functions and derivatives [TypeNumMax]
+	Functions []ShapeFunction
+
+	// TypeKeyToIndex converts type key (e.g. "lin2") to index (e.g. TypeLin2)
+	TypeKeyToIndex map[string]int
+
+	// TypeIndexToKey converts type index (e.g. TypeLin2) to key (e.g. "lin2")
+	TypeIndexToKey []string
+
+	// TypeIndexToKind converts type index (e.g. TypeLin2) to cell kind (e.g. KindLin)
+	TypeIndexToKind []int
+
+	// NumVerts holds the number of vertices on shape [TypeNumMax]
+	NumVerts []int
+
+	// GeomNdim holds the geometry number of space dimensions [TypeNumMax]
+	GeomNdim []int
+
+	// EdgeLocalVerts holds the local indices of vertices on edges of shape [TypeNumMax][nedges][nverts]
+	EdgeLocalVerts [][][]int
+
+	// FaceLocalVerts holds the local indices of vertices on faces of shape [TypeNumMax][nfaces][nverts]
+	FaceLocalVerts [][][]int
+
+	//EdgeLocalVertsD holds the local indices (for drawing) of vertices on edges of shape [TypeNumMax][nedges][nverts]
+	EdgeLocalVertsD [][][]int
+
+	// FaceLocalVertsD holds the local indices (for drawing) of vertices on faces of shape [TypeNumMax][nfaces][nverts]
+	FaceLocalVertsD [][][][]int
+
+	// NatCoords holds the natural coordinates of vertices on shape [TypeNumMax][nverts][gndim]
+	NatCoords [][][]float64
 )
 
 func init() {
