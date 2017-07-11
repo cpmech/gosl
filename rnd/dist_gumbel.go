@@ -17,11 +17,12 @@ func init() {
 	distallocators[D_Gumbel] = func() Distribution { return new(DistGumbel) }
 }
 
-// Init initialises lognormal distribution
+// Init initialises Gumbel distribution
 func (o *DistGumbel) Init(p *VarData) error {
+	euler := 0.57721566490153286060651209008240243104215
 	μ, σ := p.M, p.S
 	o.B = σ * math.Sqrt(6.0) / math.Pi
-	o.U = μ - EULER*o.B
+	o.U = μ - euler*o.B
 	return nil
 }
 

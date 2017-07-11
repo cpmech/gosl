@@ -104,9 +104,10 @@ func Test_dist_gumbel_02(tst *testing.T) {
 		plt.Reset(false, nil)
 		U := []float64{1.5, 1.0, 0.5, 3.0}
 		B := []float64{3.0, 2.0, 2.0, 4.0}
+		euler := 0.57721566490153286060651209008240243104215
 		for i, u := range U {
 			σ := B[i] * math.Pi / math.Sqrt(6.0)
-			μ := u + EULER*B[i]
+			μ := u + euler*B[i]
 			plot_gumbel(μ, σ)
 		}
 		plt.Save("/tmp/gosl", "rnd_dist_gumbel_02")

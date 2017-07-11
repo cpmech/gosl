@@ -54,7 +54,7 @@ func (o *DistLogNormal) Init(p *VarData) error {
 
 // Pdf computes the probability density function @ x
 func (o DistLogNormal) Pdf(x float64) float64 {
-	if x < ZERO {
+	if x < 1e-15 {
 		return 0
 	}
 	return o.A * math.Exp(o.B*math.Pow(math.Log(x)-o.N, 2.0)) / x
@@ -62,7 +62,7 @@ func (o DistLogNormal) Pdf(x float64) float64 {
 
 // Cdf computes the cumulative probability function @ x
 func (o DistLogNormal) Cdf(x float64) float64 {
-	if x < ZERO {
+	if x < 1e-15 {
 		return 0
 	}
 	return (1.0 + math.Erf((math.Log(x)-o.N)/(o.Z*math.Sqrt2))) / 2.0

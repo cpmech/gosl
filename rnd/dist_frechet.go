@@ -24,10 +24,10 @@ func init() {
 	distallocators[D_Frechet] = func() Distribution { return new(DistFrechet) }
 }
 
-// Init initialises lognormal distribution
+// Init initialises Frechet distribution
 func (o *DistFrechet) Init(p *VarData) error {
 	o.L, o.C, o.A = p.L, p.C, p.A
-	if math.Abs(o.C) < ZERO {
+	if math.Abs(o.C) < 1e-15 {
 		o.C = 1
 	}
 	p.M = o.Mean()
@@ -37,7 +37,7 @@ func (o *DistFrechet) Init(p *VarData) error {
 
 // Pdf computes the probability density function @ x
 func (o DistFrechet) Pdf(x float64) float64 {
-	if x-o.L < ZERO {
+	if x-o.L < 1e-15 {
 		return 0
 	}
 	z := (x - o.L) / o.C
@@ -46,7 +46,7 @@ func (o DistFrechet) Pdf(x float64) float64 {
 
 // Cdf computes the cumulative probability function @ x
 func (o DistFrechet) Cdf(x float64) float64 {
-	if x-o.L < ZERO {
+	if x-o.L < 1e-15 {
 		return 0
 	}
 	z := (x - o.L) / o.C

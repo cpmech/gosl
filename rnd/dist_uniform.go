@@ -24,7 +24,7 @@ func init() {
 	distallocators[D_Uniform] = func() Distribution { return new(DistUniform) }
 }
 
-// Init initialises normal distribution
+// Init initialises uniform distribution
 func (o *DistUniform) Init(p *VarData) error {
 	o.A, o.B = p.Min, p.Max
 	return nil
