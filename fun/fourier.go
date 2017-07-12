@@ -52,6 +52,22 @@ func dft1dslow(x []complex128) (X []complex128) {
 	return
 }
 
+// Smoothing kinds
+var (
+
+	// No smoothing
+	SmoNoneKind = io.NewEnum("None", "fun.smoothing", "L", "No smoothing")
+
+	// Lanczos (sinc) smoothing kind
+	SmoLanczosKind = io.NewEnum("Lanczos", "fun.smoothing", "L", "Lanczos (sinc) smoothing kind")
+
+	// Cesaro
+	SmoCesaroKind = io.NewEnum("Cesaro", "fun.smoothing", "L", "Lanczos (sinc) smoothing kind")
+
+	// Raised Cosine
+	SmoRcosKind = io.NewEnum("Rcos", "fun.smoothing", "L", "Lanczos (sinc) smoothing kind")
+)
+
 // FourierInterp performs interpolation using truncated Fourier series
 //
 //                  N/2 - 1
@@ -71,9 +87,8 @@ func dft1dslow(x []complex128) (X []complex128) {
 //
 type FourierInterp struct {
 	N int          // number of terms. must be power of 2; i.e. N = 2ⁿ
-	F Ss           // f(x)
 	A []complex128 // coefficients for interpolation. from FFT
-	X []float64    // grid (len=N): X[j] = 2 π j / N (excluding last point ⇒ periodic)
+	S []complex128 // smothing coefficients
 }
 
 // NewFourierInterp allocates a new FourierInterp object
@@ -85,7 +100,13 @@ type FourierInterp struct {
 //                    ————
 //                   j = 0
 //
-//   x ϵ [0, 2π]
+//  INPUT:
+//    N -- number of terms. must be power of 2; i.e. N = 2ⁿ
+//
+//    smoothing -- type of smoothing: use SmoNoneKind for no smoothing
+//
+//  NOTE: (1) x ϵ [0, 2π]
+//        (2) remember to call CalcA to calculate coefficients A!
 //
 //   Equation (2.1.25) of [1]. Note that f=u in [1] and A[k] is the tilde(u[k]) of [1]
 //
@@ -93,7 +114,7 @@ type FourierInterp struct {
 //     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
 //         Single Domains. Springer. 563p
 //
-func NewFourierInterp(N int, f Ss) (o *FourierInterp, err error) {
+func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 
 	// check
 	if N%2 != 0 {
@@ -104,26 +125,67 @@ func NewFourierInterp(N int, f Ss) (o *FourierInterp, err error) {
 	// allocate
 	o = new(FourierInterp)
 	o.N = N
-	o.F = f
 	o.A = make([]complex128, o.N)
-	o.X = make([]float64, o.N)
+	o.S = make([]complex128, o.N)
 
-	// compute grid coordinates and F(X[i])
-	π := math.Pi
+	// compute smoothing coefficients
 	n := float64(o.N)
-	for i := 0; i < o.N; i++ {
-		o.X[i] = 2.0 * π * float64(i) / n
-		fx, e := o.F(o.X[i])
-		if e != nil {
-			err = e
-			return
-		}
-		o.A[i] = complex(fx/n, 0)
+	σ := func(k float64) float64 { return 1.0 }
+	switch smoothing {
+	case SmoLanczosKind:
+		σ = func(k float64) float64 { return Sinc(2 * k * π / n) }
+	case SmoRcosKind:
+		σ = func(k float64) float64 { return (1.0 + math.Cos(2*k*π/n)) / 2.0 }
+	case SmoCesaroKind:
+		σ = func(k float64) float64 { return 1.0 - math.Abs(k)/(1.0+n/2.0) }
 	}
 
-	// perform Fourier transform to find A
+	for j := 0; j < o.N; j++ {
+		o.S[j] = complex(σ(o.K(j)), 0)
+	}
+	return
+}
+
+// CalcA calculates the coefficients A of the interpolation ousing FFT
+func (o *FourierInterp) CalcA(f Ss) (err error) {
+
+	// compute f(x[j]) and set A[j] with f(x[j]) / N
+	var fxj float64
+	n := float64(o.N)
+	for j := 0; j < o.N; j++ {
+		xj := 2.0 * math.Pi * float64(j) / n
+		fxj, err = f(xj)
+		if err != nil {
+			return
+		}
+		o.A[j] = complex(fxj/n, 0)
+	}
+
+	// perform Fourier transform to find A[j]
 	err = Dft1d(o.A, false)
 	return
+}
+
+// K computes k-index from j-index where j corresponds to the FFT index
+//
+//   FFT returns the A coefficients as:
+//
+//      {A[0], A[1], ..., A[N/2-1], A[-N/2], A[-N/2+1], ... A[-1]}
+//
+//   k ϵ [-N/2, N/2-1]
+//   j ϵ [0, N-1]
+//
+//   Example with N = 8:
+//
+//        j=0 ⇒ k=0      j=4 ⇒ k=-4
+//        j=1 ⇒ k=1      j=5 ⇒ k=-3
+//        j=2 ⇒ k=2      j=6 ⇒ k=-2
+//        j=3 ⇒ k=3      j=7 ⇒ k=-1
+//
+func (o *FourierInterp) K(j int) float64 {
+	h := o.N / 2
+	k := j - (j/h)*o.N
+	return float64(k)
 }
 
 // I computes the interpolation
@@ -143,19 +205,12 @@ func NewFourierInterp(N int, f Ss) (o *FourierInterp, err error) {
 //     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
 //         Single Domains. Springer. 563p
 //
+//  NOTE: remember to call CalcA to calculate coefficients A!
+//
 func (o *FourierInterp) I(x float64) float64 {
 	var res complex128
-	for i := 0; i < o.N/2; i++ {
-
-		// first half
-		k := i
-		res += o.A[i] * cmplx.Exp(complex(0, float64(k)*x))
-
-		// second half
-		ii := o.N/2 + i
-		kk := ii - o.N
-		res += o.A[ii] * cmplx.Exp(complex(0, float64(kk)*x))
-
+	for j := 0; j < o.N; j++ {
+		res += o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K(j)*x))
 	}
 	return real(res)
 }
@@ -171,22 +226,15 @@ func (o *FourierInterp) I(x float64) float64 {
 //
 //   x ϵ [0, 2π]
 //
+//  NOTE: remember to call CalcA to calculate coefficients A!
+//
 func (o *FourierInterp) DI(p int, x float64) float64 {
 	var res complex128
-	for i := 0; i < o.N/2; i++ {
-
-		// first half
-		k := i
-		kf := float64(k)
-		cf := cmplx.Pow(complex(0, kf), complex(float64(p), 0)) // TODO: simplify this
-		res += cf * o.A[i] * cmplx.Exp(complex(0, kf*x))
-
-		// second half
-		ii := o.N/2 + i
-		kk := ii - o.N
-		kkf := float64(kk)
-		ccf := cmplx.Pow(complex(0, kkf), complex(float64(p), 0)) // TODO: simplify this
-		res += ccf * o.A[ii] * cmplx.Exp(complex(0, kkf*x))
+	pc := complex(float64(p), 0)
+	for j := 0; j < o.N; j++ {
+		ik := complex(0, o.K(j))
+		ikp := cmplx.Pow(ik, pc)
+		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K(j)*x))
 	}
 	return real(res)
 }
@@ -201,22 +249,43 @@ func (o *FourierInterp) DI(p int, x float64) float64 {
 //   p      -- order of the derivative to plot if option == 6
 //   dfdx   -- is the analytic df/dx(x) [optional]
 //   d2fdx2 -- is the analytic d^2f/dx^2(x) [optional]
-func (o *FourierInterp) Plot(option, p int, dfdx, d2fdx2 Ss, argsF, argsI, argsX *plt.A) {
+func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, argsD1, argsD2, argsX *plt.A) {
+
+	// set arguments
 	if argsF == nil {
-		argsF = &plt.A{L: "f(x)", C: "#0034ab", NoClip: true}
+		argsF = &plt.A{L: "f(x)", C: plt.C(0, 1), NoClip: true}
 	}
 	if argsI == nil {
-		argsI = &plt.A{L: "I{f}(x)", C: "r", NoClip: true}
+		argsI = &plt.A{L: "I{f}(x)", C: plt.C(1, 1), NoClip: true}
+	}
+	if argsD1 == nil {
+		argsD1 = &plt.A{L: "D1I{f}(x)", C: plt.C(2, 1), NoClip: true}
+	}
+	if argsD2 == nil {
+		argsD2 = &plt.A{L: "D2I{f}(x)", C: plt.C(3, 1), NoClip: true}
 	}
 	if argsX == nil {
 		argsX = &plt.A{C: "k", M: "o", Ms: 3, Ls: "none", Void: true, NoClip: true}
 	}
+
+	// compute grid coordinates
+	n := float64(o.N)
+	X := make([]float64, o.N)
+	yX := make([]float64, o.N)
+	for i := 0; i < o.N; i++ {
+		X[i] = 2.0 * math.Pi * float64(i) / n
+	}
+
+	// graph points
 	npts := 2001
 	xx := utl.LinSpace(0, 2.0*math.Pi, npts)
-	yX := make([]float64, len(o.X))
+
+	// options
 	withF := option == 1 || option == 2 || option == 3
 	firstD := option == 2 || option == 3 || option == 4
 	secondD := option == 3 || option == 5
+
+	// allocate arrays
 	var y1, y2 []float64
 	if withF {
 		y1 = make([]float64, npts)
@@ -236,14 +305,18 @@ func (o *FourierInterp) Plot(option, p int, dfdx, d2fdx2 Ss, argsF, argsI, argsX
 	if option == 6 {
 		y7 = make([]float64, npts)
 	}
+
+	// compute values
 	for i := 0; i < npts; i++ {
 		x := xx[i]
 		if withF {
-			fx, err := o.F(x)
-			if err != nil {
-				chk.Panic("f(x) failed:\n%v\n", err)
+			if f != nil {
+				fx, err := f(x)
+				if err != nil {
+					chk.Panic("f(x) failed:\n%v\n", err)
+				}
+				y1[i] = fx
 			}
-			y1[i] = fx
 			y2[i] = o.I(x)
 		}
 		if firstD {
@@ -270,6 +343,8 @@ func (o *FourierInterp) Plot(option, p int, dfdx, d2fdx2 Ss, argsF, argsI, argsX
 			y7[i] = o.DI(p, x)
 		}
 	}
+
+	// plot
 	if option == 2 {
 		plt.Subplot(2, 1, 1)
 	}
@@ -277,8 +352,10 @@ func (o *FourierInterp) Plot(option, p int, dfdx, d2fdx2 Ss, argsF, argsI, argsX
 		plt.Subplot(3, 1, 1)
 	}
 	if withF {
-		plt.Plot(o.X, yX, argsX)
-		plt.Plot(xx, y1, argsF)
+		plt.Plot(X, yX, argsX)
+		if f != nil {
+			plt.Plot(xx, y1, argsF)
+		}
 		plt.Plot(xx, y2, argsI)
 		plt.HideTRborders()
 		plt.Gll("$x$", "$f(x)$", nil)
@@ -290,13 +367,12 @@ func (o *FourierInterp) Plot(option, p int, dfdx, d2fdx2 Ss, argsF, argsI, argsX
 		plt.Subplot(3, 1, 2)
 	}
 	if firstD {
-		argsF.L = "D1"
-		argsI.L = "D1"
-		plt.Plot(o.X, yX, argsX)
+		argsF.L = "dfdx"
+		plt.Plot(X, yX, argsX)
 		if dfdx != nil {
 			plt.Plot(xx, y3, argsF)
 		}
-		plt.Plot(xx, y4, argsI)
+		plt.Plot(xx, y4, argsD1)
 		plt.HideTRborders()
 		plt.Gll("$x$", "$\\frac{\\mathrm{d}f(x)}{\\mathrm{d}x}$", nil)
 	}
@@ -304,19 +380,18 @@ func (o *FourierInterp) Plot(option, p int, dfdx, d2fdx2 Ss, argsF, argsI, argsX
 		plt.Subplot(3, 1, 3)
 	}
 	if secondD {
-		argsF.L = "D2"
-		argsI.L = "D2"
-		plt.Plot(o.X, yX, argsX)
+		argsF.L = "d2fdx2"
+		plt.Plot(X, yX, argsX)
 		if d2fdx2 != nil {
 			plt.Plot(xx, y5, argsF)
 		}
-		plt.Plot(xx, y6, argsI)
+		plt.Plot(xx, y6, argsD2)
 		plt.HideTRborders()
 		plt.Gll("$x$", "$\\frac{\\mathrm{d}^2f(x)}{\\mathrm{d}x^2}$", nil)
 	}
 	if option == 6 {
 		argsI.L = io.Sf("D%d", p)
-		plt.Plot(o.X, yX, argsX)
+		plt.Plot(X, yX, argsX)
 		plt.Plot(xx, y7, argsI)
 		plt.HideTRborders()
 		plt.Gll("$x$", io.Sf("$\\frac{\\mathrm{d}^{%d}f(x)}{\\mathrm{d}x^{%d}}$", p, p), nil)
