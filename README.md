@@ -64,6 +64,8 @@ Gosl includes the following _subpackages_:
 * [Root finding problems](examples/num_brent01.go)
 * [B-splines: curve, control, and basis](examples/gm_bspline02.go)
 * [Orthogonal polynomials](examples/fun_orthopoly01.go)
+* [Chebyshev interpolation](examples/fun_laginterp01.go)
+* [Fourier interpolation](examples/fun_fourierinterp01.go)
 
 [See the output of examples here](examples/README.md)
 

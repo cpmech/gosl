@@ -423,5 +423,5 @@ Interpolte the boxcar function using truncate Fourier series
 Source code: <a href="fun_fourierinterp01.go">fun_fourierinterp01.go</a>
 
 <div id="container">
-<p><img src="figs/fun_fourierinterp01.png"></p>
+<p><img src="figs/fun_fourierinterp01.png" width="500"></p>
 </div>
