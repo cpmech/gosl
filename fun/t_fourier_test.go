@@ -303,7 +303,7 @@ func TestFourierInterp02(tst *testing.T) {
 		plt.Subplot(3, 1, 3)
 		plt.Title(io.Sf("d2f/dx2(x) and second deriv interpolation. N=%d", N), &plt.A{Fsz: 9})
 
-		fou.Plot(3, 3, f, dfdx, d2fdx2, nil, nil, nil, nil, nil)
+		fou.Plot(3, 3, f, dfdx, d2fdx2, nil, nil, nil, nil)
 		plt.Save("/tmp/gosl/fun", "fourierinterp02")
 	}
 }
@@ -352,13 +352,13 @@ func TestFourierInterp03(tst *testing.T) {
 		plt.SplotGap(0.0, 0.3)
 
 		plt.Subplot(3, 1, 1)
-		plt.Title(io.Sf("f(x) and interpolation. N=%d", N), &plt.A{Fsz: 9})
+		plt.Title("f(x) and interpolation", &plt.A{Fsz: 9})
 
 		plt.Subplot(3, 1, 2)
-		plt.Title(io.Sf("df/dx(x) and derivative of interpolation. N=%d", N), &plt.A{Fsz: 9})
+		plt.Title("df/dx(x) and derivative of interpolation", &plt.A{Fsz: 9})
 
 		plt.Subplot(3, 1, 3)
-		plt.Title(io.Sf("d2f/dx2(x) and second deriv interpolation. N=%d", N), &plt.A{Fsz: 9})
+		plt.Title("d2f/dx2(x) and second deriv interpolation", &plt.A{Fsz: 9})
 
 		for k, p := range []uint64{2, 3, 4, 5} {
 
@@ -375,7 +375,7 @@ func TestFourierInterp03(tst *testing.T) {
 				ll = "Lanczos"
 			}
 			l := io.Sf("%d", N)
-			fou.Plot(3, 3, ff, nil, nil, &plt.A{C: "k", L: ""}, &plt.A{C: plt.C(k, 0), L: l}, &plt.A{C: plt.C(k, 0), L: ll}, &plt.A{C: plt.C(k, 0), L: l}, nil)
+			fou.Plot(3, 3, ff, nil, nil, &plt.A{C: "k", L: ""}, &plt.A{C: plt.C(k, 0), L: l}, &plt.A{C: plt.C(k, 0), L: ll}, &plt.A{C: plt.C(k, 0), L: l})
 		}
 
 		for k, p := range []uint64{2, 3, 4, 5} {
@@ -390,7 +390,7 @@ func TestFourierInterp03(tst *testing.T) {
 			if k == 2 {
 				ll = "Rcos"
 			}
-			fou.Plot(3, 3, nil, nil, nil, nil, &plt.A{C: plt.C(k, 0), Ls: "--", L: ""}, &plt.A{C: plt.C(k, 0), Ls: "--", L: ll}, &plt.A{C: plt.C(k, 0), Ls: "--", L: ""}, nil)
+			fou.Plot(3, 3, nil, nil, nil, nil, &plt.A{C: plt.C(k, 0), Ls: "--", L: ""}, &plt.A{C: plt.C(k, 0), Ls: "--", L: ll}, &plt.A{C: plt.C(k, 0), Ls: "--", L: ""})
 		}
 
 		for k, p := range []uint64{2, 3, 4, 5} {
@@ -405,7 +405,7 @@ func TestFourierInterp03(tst *testing.T) {
 			if k == 2 {
 				ll = "Cesaro"
 			}
-			fou.Plot(3, 3, nil, nil, nil, nil, &plt.A{C: plt.C(k, 0), Ls: ":", L: ""}, &plt.A{C: plt.C(k, 0), Ls: ":", L: ll}, &plt.A{C: plt.C(k, 0), Ls: ":", L: ""}, nil)
+			fou.Plot(3, 3, nil, nil, nil, nil, &plt.A{C: plt.C(k, 0), Ls: ":", L: ""}, &plt.A{C: plt.C(k, 0), Ls: ":", L: ll}, &plt.A{C: plt.C(k, 0), Ls: ":", L: ""})
 		}
 
 		plt.Save("/tmp/gosl/fun", "fourierinterp03")

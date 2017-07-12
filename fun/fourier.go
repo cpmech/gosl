@@ -249,7 +249,7 @@ func (o *FourierInterp) DI(p int, x float64) float64 {
 //   p      -- order of the derivative to plot if option == 6
 //   dfdx   -- is the analytic df/dx(x) [optional]
 //   d2fdx2 -- is the analytic d^2f/dx^2(x) [optional]
-func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, argsD1, argsD2, argsX *plt.A) {
+func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, argsD1, argsD2 *plt.A) {
 
 	// set arguments
 	if argsF == nil {
@@ -263,17 +263,6 @@ func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, ar
 	}
 	if argsD2 == nil {
 		argsD2 = &plt.A{L: "D2I{f}(x)", C: plt.C(3, 1), NoClip: true}
-	}
-	if argsX == nil {
-		argsX = &plt.A{C: "k", M: "o", Ms: 3, Ls: "none", Void: true, NoClip: true}
-	}
-
-	// compute grid coordinates
-	n := float64(o.N)
-	X := make([]float64, o.N)
-	yX := make([]float64, o.N)
-	for i := 0; i < o.N; i++ {
-		X[i] = 2.0 * math.Pi * float64(i) / n
 	}
 
 	// graph points
@@ -352,7 +341,6 @@ func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, ar
 		plt.Subplot(3, 1, 1)
 	}
 	if withF {
-		plt.Plot(X, yX, argsX)
 		if f != nil {
 			plt.Plot(xx, y1, argsF)
 		}
@@ -368,7 +356,7 @@ func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, ar
 	}
 	if firstD {
 		argsF.L = "dfdx"
-		plt.Plot(X, yX, argsX)
+		//plt.Plot(X, yX, argsX)
 		if dfdx != nil {
 			plt.Plot(xx, y3, argsF)
 		}
@@ -381,7 +369,6 @@ func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, ar
 	}
 	if secondD {
 		argsF.L = "d2fdx2"
-		plt.Plot(X, yX, argsX)
 		if d2fdx2 != nil {
 			plt.Plot(xx, y5, argsF)
 		}
@@ -391,7 +378,6 @@ func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, ar
 	}
 	if option == 6 {
 		argsI.L = io.Sf("D%d", p)
-		plt.Plot(X, yX, argsX)
 		plt.Plot(xx, y7, argsI)
 		plt.HideTRborders()
 		plt.Gll("$x$", io.Sf("$\\frac{\\mathrm{d}^{%d}f(x)}{\\mathrm{d}x^{%d}}$", p, p), nil)
