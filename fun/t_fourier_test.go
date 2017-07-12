@@ -109,3 +109,116 @@ func TestDft02(tst *testing.T) {
 		plt.Save("/tmp/gosl/fun", "dft02")
 	}
 }
+
+func TestDft03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dft03. FFT and inverse FFT")
+
+	// function
+	π := math.Pi
+	f := func(x float64) float64 { return math.Sin(x / 2.0) }
+
+	// data
+	N := 4 // number of terms
+	U := make([]complex128, N)
+	Ucopy := make([]complex128, N)
+
+	// run with 3 places for performing normalisation
+	for place := 1; place <= 3; place++ {
+
+		// message
+		io.Pf("\n\n~~~~~~~~~~~~~~~~~~~~ place = %v ~~~~~~~~~~~~~~~~~~~~~~~~\n", place)
+
+		// f @ points
+		for i := 0; i < N; i++ {
+			x := 2.0 * π * float64(i) / float64(N)
+			U[i] = complex(f(x), 0)
+			Ucopy[i] = U[i]
+		}
+		io.Pf("before: U = %.3f\n", U)
+
+		switch place {
+
+		// normalise at the beginning
+		case 1:
+
+			// normalise
+			for i := 0; i < N; i++ {
+				U[i] /= complex(float64(N), 0)
+			}
+			io.Pfblue2("normalised\n")
+
+			// execute FFT
+			err := Dft1d(U, false)
+			if err != nil {
+				tst.Errorf("%v\n", err)
+				return
+			}
+			io.Pforan("FFT(U) = %.3f\n", U)
+
+			// execute inverse FFT
+			err = Dft1d(U, true)
+			if err != nil {
+				tst.Errorf("%v\n", err)
+				return
+			}
+			io.Pf("invFFT(U) = %.3f\n", U)
+			chk.VectorC(tst, "U", 1e-15, U, Ucopy)
+
+		// normalise after direct FFT
+		case 2:
+
+			// execute FFT
+			err := Dft1d(U, false)
+			if err != nil {
+				tst.Errorf("%v\n", err)
+				return
+			}
+			io.Pforan("FFT(U) = %.3f\n", U)
+
+			// normalise
+			for i := 0; i < N; i++ {
+				U[i] /= complex(float64(N), 0)
+			}
+			io.Pfblue2("normalised\n")
+
+			// execute inverse FFT
+			err = Dft1d(U, true)
+			if err != nil {
+				tst.Errorf("%v\n", err)
+				return
+			}
+			io.Pf("invFFT(U) = %.3f\n", U)
+			chk.VectorC(tst, "U", 1e-15, U, Ucopy)
+
+		// normalise after inverse FFT
+		case 3:
+
+			// execute FFT
+			err := Dft1d(U, false)
+			if err != nil {
+				tst.Errorf("%v\n", err)
+				return
+			}
+			io.Pforan("FFT(U) = %.3f\n", U)
+
+			// execute inverse FFT
+			err = Dft1d(U, true)
+			if err != nil {
+				tst.Errorf("%v\n", err)
+				return
+			}
+			io.Pf("invFFT(U) = %.3f\n", U)
+
+			// normalise
+			for i := 0; i < N; i++ {
+				U[i] /= complex(float64(N), 0)
+			}
+			io.Pfblue2("normalised\n")
+
+			// check
+			chk.VectorC(tst, "U", 1e-15, U, Ucopy)
+		}
+	}
+}
