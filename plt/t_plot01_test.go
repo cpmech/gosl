@@ -89,14 +89,27 @@ func Test_plot01(tst *testing.T) {
 
 		x := utl.LinSpace(0.0, 1.0, 11)
 		y := make([]float64, len(x))
+		y1 := make([]float64, len(x))
+		y2 := make([]float64, len(x))
+		y3 := make([]float64, len(x))
+		y4 := make([]float64, len(x))
 		for i := 0; i < len(x); i++ {
 			y[i] = x[i] * x[i]
+			y1[i] = x[i]
+			y2[i] = 0.5 * x[i]
+			y3[i] = math.Exp(-x[i])
+			y4[i] = -0.05
 		}
 
+		palette := 2
 		Reset(false, nil)
 		SetFontSizes(&A{Fsz: 20, FszLbl: 20, FszXtck: 10, FszYtck: 10, FontSet: "stix"})
-		Plot(x, y, &A{L: "first", A: 0.5, C: "", Void: true, M: "o", Ls: "-", Lw: 2, NoClip: true})
-		Plot(y, x, &A{L: "second", C: "b", M: ".", Ls: ":", Lw: 40})
+		Plot(x, y, &A{C: C(0, palette), Lw: 3, L: "first", A: 0.5, Void: true, M: "o", Ls: "-", NoClip: true})
+		Plot(y, x, &A{C: C(1, palette), Lw: 40, L: "second", M: ".", Ls: ":"})
+		Plot(x, y1, &A{C: C(2, palette), Lw: 3})
+		Plot(x, y2, &A{C: C(3, palette), Lw: 3})
+		Plot(x, y3, &A{C: C(4, palette), Lw: 3})
+		Plot(x, y4, &A{C: C(5, palette), Lw: 3})
 		Text(0.2, 0.8, "HERE", &A{Fsz: 20, Ha: "center", Va: "center", Rot: 90})
 		SetTicksX(0.1, 0.01, "%.3f")
 		SetTicksY(0.2, 0.1, "%.2f")
