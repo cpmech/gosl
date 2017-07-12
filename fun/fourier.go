@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun/fftw"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -72,7 +73,6 @@ type FourierInterp struct {
 	N int          // number of terms. must be power of 2; i.e. N = 2ⁿ
 	F Ss           // f(x)
 	A []complex128 // coefficients for interpolation. from FFT
-	B []complex128 // coefficients of the derivative of interpolation. from FFT
 	X []float64    // grid (len=N): X[j] = 2 π j / N (excluding last point ⇒ periodic)
 }
 
@@ -106,7 +106,6 @@ func NewFourierInterp(N int, f Ss) (o *FourierInterp, err error) {
 	o.N = N
 	o.F = f
 	o.A = make([]complex128, o.N)
-	o.B = make([]complex128, o.N)
 	o.X = make([]float64, o.N)
 
 	// compute grid coordinates and F(X[i])
@@ -124,22 +123,6 @@ func NewFourierInterp(N int, f Ss) (o *FourierInterp, err error) {
 
 	// perform Fourier transform to find A
 	err = Dft1d(o.A, false)
-	if err != nil {
-		return
-	}
-
-	// compute B
-	for i := 0; i < o.N/2; i++ {
-
-		// first half
-		k := i
-		o.B[i] = complex(0, float64(k)) * o.A[i]
-
-		// second half
-		ii := o.N/2 + i
-		kk := ii - o.N
-		o.B[ii] = complex(0, float64(kk)) * o.A[ii]
-	}
 	return
 }
 
@@ -177,39 +160,48 @@ func (o *FourierInterp) I(x float64) float64 {
 	return real(res)
 }
 
-// DI computes the derivative of the interpolation
+// DI computes the p-derivative of the interpolation
 //
-//                           N/2 - 1
-//                  d(I{f})    ————          +i k x
-//       DI{f}(x) = ——————— =  \     B[k] ⋅ e           with     B[k] = (√-1)⋅k⋅A[k]
-//        N           dx       /
-//                             ————
+//                   p       N/2 - 1
+//        p         d(I{f})    ————       p           +i k x
+//       DI{f}(x) = ——————— =  \     (i⋅k)  ⋅ A[k] ⋅ e
+//        N             p      /
+//                    dx       ————
 //                            k = -N/2
 //
 //   x ϵ [0, 2π]
 //
-func (o *FourierInterp) DI(x float64) float64 {
+func (o *FourierInterp) DI(p int, x float64) float64 {
 	var res complex128
 	for i := 0; i < o.N/2; i++ {
 
 		// first half
 		k := i
-		res += o.B[i] * cmplx.Exp(complex(0, float64(k)*x))
+		kf := float64(k)
+		cf := cmplx.Pow(complex(0, kf), complex(float64(p), 0)) // TODO: simplify this
+		res += cf * o.A[i] * cmplx.Exp(complex(0, kf*x))
 
 		// second half
 		ii := o.N/2 + i
 		kk := ii - o.N
-		res += o.B[ii] * cmplx.Exp(complex(0, float64(kk)*x))
+		kkf := float64(kk)
+		ccf := cmplx.Pow(complex(0, kkf), complex(float64(p), 0)) // TODO: simplify this
+		res += ccf * o.A[ii] * cmplx.Exp(complex(0, kkf*x))
 	}
 	return real(res)
 }
 
 // Plot plots interpolated curve
 //   option -- 1: plot only f(x)
-//             2: plot both f(x) and dfdx(x)  (dfdx must be given)
-//             3: plot only dfdx(x)  (dfdx must be given)
-//   dfdx -- is the analytic dfdx(x) (if option > 1)
-func (o *FourierInterp) Plot(option int, dfdx Ss, argsF, argsI, argsX *plt.A) {
+//             2: plot both f(x) and df/dx(x)
+//             3: plot all f(x), df/dx(x) and d^2f/dx^2
+//             4: plot only df/dx(x)
+//             5: plot only d^2f/dx^2(x)
+//             6: plot df^p/dx^p
+//   p      -- order of the derivative to plot if option == 6
+//   dfdx   -- is the analytic df/dx(x) [optional]
+//   d2fdx2 -- is the analytic d^2f/dx^2(x) [optional]
+func (o *FourierInterp) Plot(option, p int, dfdx, d2fdx2 Ss, argsF, argsI, argsX *plt.A) {
 	if argsF == nil {
 		argsF = &plt.A{L: "f(x)", C: "#0034ab", NoClip: true}
 	}
@@ -222,16 +214,31 @@ func (o *FourierInterp) Plot(option int, dfdx Ss, argsF, argsI, argsX *plt.A) {
 	npts := 2001
 	xx := utl.LinSpace(0, 2.0*math.Pi, npts)
 	yX := make([]float64, len(o.X))
-	y1 := make([]float64, npts)
-	y2 := make([]float64, npts)
+	withF := option == 1 || option == 2 || option == 3
+	firstD := option == 2 || option == 3 || option == 4
+	secondD := option == 3 || option == 5
+	var y1, y2 []float64
+	if withF {
+		y1 = make([]float64, npts)
+		y2 = make([]float64, npts)
+	}
 	var y3, y4 []float64
-	if option > 1 {
+	if firstD {
 		y3 = make([]float64, npts)
 		y4 = make([]float64, npts)
 	}
+	var y5, y6 []float64
+	if secondD {
+		y5 = make([]float64, npts)
+		y6 = make([]float64, npts)
+	}
+	var y7 []float64
+	if option == 6 {
+		y7 = make([]float64, npts)
+	}
 	for i := 0; i < npts; i++ {
 		x := xx[i]
-		if option < 3 {
+		if withF {
 			fx, err := o.F(x)
 			if err != nil {
 				chk.Panic("f(x) failed:\n%v\n", err)
@@ -239,19 +246,37 @@ func (o *FourierInterp) Plot(option int, dfdx Ss, argsF, argsI, argsX *plt.A) {
 			y1[i] = fx
 			y2[i] = o.I(x)
 		}
-		if option > 1 {
-			dfx, err := dfdx(x)
-			if err != nil {
-				chk.Panic("f(x) failed:\n%v\n", err)
+		if firstD {
+			if dfdx != nil {
+				dfx, err := dfdx(x)
+				if err != nil {
+					chk.Panic("df/dx(x) failed:\n%v\n", err)
+				}
+				y3[i] = dfx
 			}
-			y3[i] = dfx
-			y4[i] = o.DI(x)
+			y4[i] = o.DI(1, x)
+		}
+		if secondD {
+			if d2fdx2 != nil {
+				ddfx, err := d2fdx2(x)
+				if err != nil {
+					chk.Panic("d2f/dx2(x) failed:\n%v\n", err)
+				}
+				y5[i] = ddfx
+			}
+			y6[i] = o.DI(2, x)
+		}
+		if option == 6 {
+			y7[i] = o.DI(p, x)
 		}
 	}
 	if option == 2 {
 		plt.Subplot(2, 1, 1)
 	}
-	if option < 3 {
+	if option == 3 {
+		plt.Subplot(3, 1, 1)
+	}
+	if withF {
 		plt.Plot(o.X, yX, argsX)
 		plt.Plot(xx, y1, argsF)
 		plt.Plot(xx, y2, argsI)
@@ -261,13 +286,39 @@ func (o *FourierInterp) Plot(option int, dfdx Ss, argsF, argsI, argsX *plt.A) {
 	if option == 2 {
 		plt.Subplot(2, 1, 2)
 	}
-	if option > 1 {
-		argsF.L = "D[" + argsF.L + "]"
-		argsI.L = "D[" + argsI.L + "]"
+	if option == 3 {
+		plt.Subplot(3, 1, 2)
+	}
+	if firstD {
+		argsF.L = "D1"
+		argsI.L = "D1"
 		plt.Plot(o.X, yX, argsX)
-		plt.Plot(xx, y3, argsF)
+		if dfdx != nil {
+			plt.Plot(xx, y3, argsF)
+		}
 		plt.Plot(xx, y4, argsI)
 		plt.HideTRborders()
 		plt.Gll("$x$", "$\\frac{\\mathrm{d}f(x)}{\\mathrm{d}x}$", nil)
+	}
+	if option == 3 {
+		plt.Subplot(3, 1, 3)
+	}
+	if secondD {
+		argsF.L = "D2"
+		argsI.L = "D2"
+		plt.Plot(o.X, yX, argsX)
+		if d2fdx2 != nil {
+			plt.Plot(xx, y5, argsF)
+		}
+		plt.Plot(xx, y6, argsI)
+		plt.HideTRborders()
+		plt.Gll("$x$", "$\\frac{\\mathrm{d}^2f(x)}{\\mathrm{d}x^2}$", nil)
+	}
+	if option == 6 {
+		argsI.L = io.Sf("D%d", p)
+		plt.Plot(o.X, yX, argsX)
+		plt.Plot(xx, y7, argsI)
+		plt.HideTRborders()
+		plt.Gll("$x$", io.Sf("$\\frac{\\mathrm{d}^{%d}f(x)}{\\mathrm{d}x^{%d}}$", p, p), nil)
 	}
 }
