@@ -222,3 +222,33 @@ func TestDft03(tst *testing.T) {
 		}
 	}
 }
+
+func TestFourierInterp01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("FourierInterp01. interpolation using DFT")
+
+	// function
+	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
+
+	// constants
+	var p uint64 = 2 // exponent of 2ⁿ
+	N := 2 << p      // 2ⁿ (n=p): number of terms
+	fou, err := NewFourierInterp(N, f)
+	chk.EP(err)
+
+	// check interpolation
+	for i := 0; i < N; i++ {
+		x := fou.X[i]
+		fx, err := f(x)
+		chk.EP(err)
+		chk.AnaNum(tst, io.Sf("I{f}(%5.3f)", x), 1e-15, fx, fou.I(x), chk.Verbose)
+	}
+
+	// plot f(x)
+	plt.Reset(true, nil)
+	plt.Title(io.Sf("f(x) and Interp{f}(x). N=%d", N), &plt.A{Fsz: 9})
+	fou.Plot(nil, nil, nil)
+	plt.HideTRborders()
+	plt.Save("/tmp/gosl/fun", "fourierinterp01")
+}
