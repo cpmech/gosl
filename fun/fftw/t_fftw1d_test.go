@@ -190,6 +190,108 @@ func TestOneDver03(tst *testing.T) {
 	}
 }
 
+func TestOneDver04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("OneDver04. forward and inverse transforms")
+
+	// set input data
+	N := 4
+	x := make([]complex128, N)
+	for i := 0; i < N; i++ {
+		ii := float64(i * 2)
+		x[i] = complex(ii+1, ii+2)
+	}
+	io.Pf("x = %v\n", x)
+
+	// allocate plan
+	inverse := false
+	measure := false
+	plan, err := NewPlan1d(x, inverse, measure)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	defer plan.Free()
+
+	// perform Fourier transform
+	plan.Execute()
+	io.Pf("X = %v\n", x)
+	chk.VectorC(tst, "X", 1e-14, x, test1Xref)
+
+	// allocate plan for inverse transform
+	inverse = true
+	planInv, err := NewPlan1d(x, inverse, measure)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	defer planInv.Free()
+
+	// perform inverse Fourier transform
+	planInv.Execute()
+	for i := 0; i < N; i++ {
+		x[i] /= complex(float64(N), 0)
+	}
+	io.Pf("x = %v\n", x)
+	chk.VectorC(tst, "x", 1e-17, x, []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i})
+}
+
+func TestOneDver05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("OneDver05. forward and inverse transforms")
+
+	// function
+	π := math.Pi
+	f := func(x float64) float64 { return math.Sin(x / 2.0) }
+
+	// constants
+	N := 4 // number of terms
+
+	// f @ points
+	X := make([]float64, N)
+	U := make([]complex128, N)
+	Ucopy := make([]complex128, N)
+	for i := 0; i < N; i++ {
+		X[i] = 2.0 * π * float64(i) / float64(N)
+		U[i] = complex(f(X[i]), 0)
+		Ucopy[i] = U[i]
+	}
+	io.Pf("before: U = %.4f\n", U)
+
+	// allocate plan
+	inverse := false
+	measure := false
+	plan, err := NewPlan1d(U, inverse, measure)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	defer plan.Free()
+
+	// perform Fourier transform
+	plan.Execute()
+	io.Pf("U = %v\n", U)
+
+	// allocate plan for inverse transform
+	inverse = true
+	planInv, err := NewPlan1d(U, inverse, measure)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+	defer planInv.Free()
+
+	// perform inverse Fourier transform
+	planInv.Execute()
+	for i := 0; i < N; i++ {
+		U[i] /= complex(float64(N), 0)
+	}
+	io.Pforan("U = %v\n", U)
+	chk.VectorC(tst, "U", 1e-15, U, Ucopy)
+}
+
 // solution ////////////////////////////////////////////////////////////////////////////////////////
 
 // dft1d compute the discrete Fourier Transform of x (very slow: for testing only)
