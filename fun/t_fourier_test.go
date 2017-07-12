@@ -228,8 +228,9 @@ func TestFourierInterp01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("FourierInterp01. interpolation using DFT")
 
-	// function
+	// function and analytic derivative
 	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
+	dfdx := func(x float64) (float64, error) { return math.Cos(x/2.0) / 2.0, nil }
 
 	// constants
 	var p uint64 = 2 // exponent of 2ⁿ
@@ -237,7 +238,7 @@ func TestFourierInterp01(tst *testing.T) {
 	fou, err := NewFourierInterp(N, f)
 	chk.EP(err)
 
-	// check interpolation
+	// check interpolation @ nodes
 	for i := 0; i < N; i++ {
 		x := fou.X[i]
 		fx, err := f(x)
@@ -245,10 +246,25 @@ func TestFourierInterp01(tst *testing.T) {
 		chk.AnaNum(tst, io.Sf("I{f}(%5.3f)", x), 1e-15, fx, fou.I(x), chk.Verbose)
 	}
 
-	// plot f(x)
-	plt.Reset(true, nil)
-	plt.Title(io.Sf("f(x) and Interp{f}(x). N=%d", N), &plt.A{Fsz: 9})
-	fou.Plot(nil, nil, nil)
-	plt.HideTRborders()
-	plt.Save("/tmp/gosl/fun", "fourierinterp01")
+	// check derivative of interpolation
+	io.Pl()
+	xx := utl.LinSpace(0, 2*math.Pi, 11)
+	for i := 0; i < len(xx); i++ {
+		x := xx[i]
+		chk.DerivScaSca(tst, io.Sf("DI{f}(%5.3f)", x), 1e-10, fou.DI(x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
+			return fou.I(t), nil
+		})
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{Prop: 1.5})
+		plt.Subplot(2, 1, 1)
+		plt.Title(io.Sf("f(x) and interpolation. N=%d", N), &plt.A{Fsz: 9})
+		plt.Subplot(2, 1, 2)
+		plt.SplotGap(0.0, 0.25)
+		plt.Title(io.Sf("df/dx(x) and derivative of interpolation. N=%d", N), &plt.A{Fsz: 9})
+		fou.Plot(2, dfdx, nil, nil, nil)
+		plt.Save("/tmp/gosl/fun", "fourierinterp01")
+	}
 }

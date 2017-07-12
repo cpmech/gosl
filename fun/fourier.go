@@ -72,6 +72,7 @@ type FourierInterp struct {
 	N int          // number of terms. must be power of 2; i.e. N = 2ⁿ
 	F Ss           // f(x)
 	A []complex128 // coefficients for interpolation. from FFT
+	B []complex128 // coefficients of the derivative of interpolation. from FFT
 	X []float64    // grid (len=N): X[j] = 2 π j / N (excluding last point ⇒ periodic)
 }
 
@@ -105,6 +106,7 @@ func NewFourierInterp(N int, f Ss) (o *FourierInterp, err error) {
 	o.N = N
 	o.F = f
 	o.A = make([]complex128, o.N)
+	o.B = make([]complex128, o.N)
 	o.X = make([]float64, o.N)
 
 	// compute grid coordinates and F(X[i])
@@ -120,8 +122,24 @@ func NewFourierInterp(N int, f Ss) (o *FourierInterp, err error) {
 		o.A[i] = complex(fx/n, 0)
 	}
 
-	// perform Fourier transform
+	// perform Fourier transform to find A
 	err = Dft1d(o.A, false)
+	if err != nil {
+		return
+	}
+
+	// compute B
+	for i := 0; i < o.N/2; i++ {
+
+		// first half
+		k := i
+		o.B[i] = complex(0, float64(k)) * o.A[i]
+
+		// second half
+		ii := o.N/2 + i
+		kk := ii - o.N
+		o.B[ii] = complex(0, float64(kk)) * o.A[ii]
+	}
 	return
 }
 
@@ -159,8 +177,39 @@ func (o *FourierInterp) I(x float64) float64 {
 	return real(res)
 }
 
+// DI computes the derivative of the interpolation
+//
+//                           N/2 - 1
+//                  d(I{f})    ————          +i k x
+//       DI{f}(x) = ——————— =  \     B[k] ⋅ e           with     B[k] = (√-1)⋅k⋅A[k]
+//        N           dx       /
+//                             ————
+//                            k = -N/2
+//
+//   x ϵ [0, 2π]
+//
+func (o *FourierInterp) DI(x float64) float64 {
+	var res complex128
+	for i := 0; i < o.N/2; i++ {
+
+		// first half
+		k := i
+		res += o.B[i] * cmplx.Exp(complex(0, float64(k)*x))
+
+		// second half
+		ii := o.N/2 + i
+		kk := ii - o.N
+		res += o.B[ii] * cmplx.Exp(complex(0, float64(kk)*x))
+	}
+	return real(res)
+}
+
 // Plot plots interpolated curve
-func (o *FourierInterp) Plot(argsF, argsI, argsX *plt.A) {
+//   option -- 1: plot only f(x)
+//             2: plot both f(x) and dfdx(x)  (dfdx must be given)
+//             3: plot only dfdx(x)  (dfdx must be given)
+//   dfdx -- is the analytic dfdx(x) (if option > 1)
+func (o *FourierInterp) Plot(option int, dfdx Ss, argsF, argsI, argsX *plt.A) {
 	if argsF == nil {
 		argsF = &plt.A{L: "f(x)", C: "#0034ab", NoClip: true}
 	}
@@ -175,17 +224,50 @@ func (o *FourierInterp) Plot(argsF, argsI, argsX *plt.A) {
 	yX := make([]float64, len(o.X))
 	y1 := make([]float64, npts)
 	y2 := make([]float64, npts)
+	var y3, y4 []float64
+	if option > 1 {
+		y3 = make([]float64, npts)
+		y4 = make([]float64, npts)
+	}
 	for i := 0; i < npts; i++ {
 		x := xx[i]
-		fx, err := o.F(x)
-		if err != nil {
-			chk.Panic("f(x) failed:\n%v\n", err)
+		if option < 3 {
+			fx, err := o.F(x)
+			if err != nil {
+				chk.Panic("f(x) failed:\n%v\n", err)
+			}
+			y1[i] = fx
+			y2[i] = o.I(x)
 		}
-		y1[i] = fx
-		y2[i] = o.I(x)
+		if option > 1 {
+			dfx, err := dfdx(x)
+			if err != nil {
+				chk.Panic("f(x) failed:\n%v\n", err)
+			}
+			y3[i] = dfx
+			y4[i] = o.DI(x)
+		}
 	}
-	plt.Plot(o.X, yX, argsX)
-	plt.Plot(xx, y1, argsF)
-	plt.Plot(xx, y2, argsI)
-	plt.Gll("$x$", "$f(x)$", nil)
+	if option == 2 {
+		plt.Subplot(2, 1, 1)
+	}
+	if option < 3 {
+		plt.Plot(o.X, yX, argsX)
+		plt.Plot(xx, y1, argsF)
+		plt.Plot(xx, y2, argsI)
+		plt.HideTRborders()
+		plt.Gll("$x$", "$f(x)$", nil)
+	}
+	if option == 2 {
+		plt.Subplot(2, 1, 2)
+	}
+	if option > 1 {
+		argsF.L = "D[" + argsF.L + "]"
+		argsI.L = "D[" + argsI.L + "]"
+		plt.Plot(o.X, yX, argsX)
+		plt.Plot(xx, y3, argsF)
+		plt.Plot(xx, y4, argsI)
+		plt.HideTRborders()
+		plt.Gll("$x$", "$\\frac{\\mathrm{d}f(x)}{\\mathrm{d}x}$", nil)
+	}
 }
