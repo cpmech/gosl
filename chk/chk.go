@@ -23,6 +23,22 @@ var (
 	ColorsOn = true
 )
 
+// ET checks error in tests
+func ET(tst *testing.T, err error) (failed bool) {
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return true
+	}
+	return false
+}
+
+// EP checks error and panic
+func EP(err error) {
+	if err != nil {
+		Panic("%v\n", err)
+	}
+}
+
 // CallerInfo returns the file and line positions where an error occurred
 //  idx -- use idx=2 to get the caller of Panic
 func CallerInfo(idx int) {
