@@ -69,7 +69,7 @@ func NewChebyshevPoly(N int, gaussChebyshev bool) (o *ChebyshevPoly, err error) 
 	}
 
 	// set data
-	wb, wb0, wbN, gam, gam0, gamN, _, _ := o.gaussData(o.N)
+	wb, wb0, wbN, gam, gam0, gamN := o.gaussData(o.N)
 	for i := 0; i < o.N+1; i++ {
 		o.Wb[i] = wb
 		o.Gamma[i] = gam
@@ -82,7 +82,9 @@ func NewChebyshevPoly(N int, gaussChebyshev bool) (o *ChebyshevPoly, err error) 
 }
 
 // gaussData returns quadrature data for either Gauss-Chebyshev or Gauss-Lobatto
-func (o *ChebyshevPoly) gaussData(N int) (wb, wb0, wbN, gam, gam0, gamN, a float64, b func(i int) float64) {
+func (o *ChebyshevPoly) gaussData(N int) (wb, wb0, wbN, gam, gam0, gamN float64) {
+
+	// Gauss
 	if o.Gauss {
 		wb = π / float64(N+1)
 		wb0 = wb
@@ -90,45 +92,22 @@ func (o *ChebyshevPoly) gaussData(N int) (wb, wb0, wbN, gam, gam0, gamN, a float
 		gam = π / 2.0
 		gam0 = π
 		gamN = π / 2.0
-		a = π / float64(2*N+2)
-		b = func(i int) float64 { return float64(2*i + 1) }
-	} else {
-		wb = π / float64(N)
-		wb0 = π / float64(2*N)
-		wbN = wb0
-		gam = π / 2.0
-		gam0 = π
-		gamN = π
-		a = π / float64(N)
-		b = func(i int) float64 { return float64(i) }
+		return
 	}
+
+	// Gauss-Lobatto
+	wb = π / float64(N)
+	wb0 = π / float64(2*N)
+	wbN = wb0
+	gam = π / 2.0
+	gam0 = π
+	gamN = π
 	return
 }
-
-// P computes p_i(x)=T_i(x) (polynomial function) of Chebyshev polynomial
-//func (o *ChebyshevPoly) P(i int, x float64) float64 {
-//return ChebyshevT(i, x)
-//}
 
 // W computes W(x) (weight function) of Chebyshev polynomial
 func (o *ChebyshevPoly) W(x float64) float64 {
 	return 1.0 / math.Sqrt(1.0-x*x)
-}
-
-// Approx2 computes the approximated projection or interpolation via series approximation
-// after computing the coefficients of the interpolant or estimated projection
-//
-//    Approx(x) = Σ a[i] * φ[i](x)  where  'a' is CoefI or CoefP (if projection==true)
-//
-func (o *ChebyshevPoly) Approx2(x float64, projection bool) (res float64) {
-	a := o.CoefI
-	if projection {
-		a = o.CoefP
-	}
-	for i := 0; i < o.N+1; i++ {
-		res += a[i] * ChebyshevT(i, x)
-	}
-	return
 }
 
 // Approx computes the approximated projection or interpolation via series approximation
@@ -205,20 +184,24 @@ func (o *ChebyshevPoly) EstimateCoefProjection(f Ss) (err error) {
 
 	// quadrature data
 	nn := o.EstimationN
-	wb, wb0, wbN, gam, gam0, gamN, a, b := o.gaussData(nn)
+	wb, wb0, wbN, gam, gam0, gamN := o.gaussData(nn)
 
 	// evaluate function at many points
-	xx := make([]float64, nn+1)
+	var xx []float64
+	if o.Gauss {
+		xx = ChebyshevXgauss(nn)
+	} else {
+		xx = ChebyshevXlob(nn)
+	}
 	fx := make([]float64, nn+1)
 	for i := 0; i < nn+1; i++ {
-		xx[i] = -math.Cos(a * b(i))
 		fx[i], err = f(xx[i])
 		if err != nil {
 			return
 		}
 	}
 
-	// computation of coefficients using GaussChebyshev quadrature
+	// computation of coefficients using quadrature
 	for i := 0; i < o.N+1; i++ {
 		o.CoefP[i] = 0
 		for j := 1; j < nn; j++ {
