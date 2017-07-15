@@ -14,10 +14,10 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func TestOrthoPoly01(tst *testing.T) {
+func TestChebyPoly01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("OrthoPoly01")
+	chk.PrintTitle("ChebyPoly01")
 
 	// test function
 	f := func(x float64) (float64, error) {
@@ -39,7 +39,7 @@ func TestOrthoPoly01(tst *testing.T) {
 
 	// check P
 	for _, x := range utl.LinSpace(-1, 1, 7) {
-		chk.AnaNum(tst, io.Sf("T%d(%+.3f)", N, x), 1e-15, che.Phi(N, x), calcChebyP(8, x), chk.Verbose)
+		chk.AnaNum(tst, io.Sf("T%d(%+.3f)", N, x), 1e-15, ChebyshevT(N, x), che.HierarchicalT(8, x), chk.Verbose)
 	}
 
 	// Gauss-Chebyshev: check points
@@ -99,7 +99,7 @@ func TestOrthoPoly01(tst *testing.T) {
 		plt.Plot(X, Yproj, &plt.A{C: "b", L: "$\\Pi_N^{w}f$"})
 		plt.Gll("$x$", "$f(x)$", nil)
 		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "orthopoly01a")
+		plt.Save("/tmp/gosl/fun", "chebypoly01a")
 
 		// plot error
 		Nvalues := []float64{1, 8, 16, 24, 36, 40, 48, 60, 80, 100, 120}
@@ -113,24 +113,6 @@ func TestOrthoPoly01(tst *testing.T) {
 		plt.Plot(Nvalues, Yerr, &plt.A{C: "r", M: "o", Void: true, NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$N$", "$||f-\\Pi_N\\{f\\}||$", nil)
-		plt.Save("/tmp/gosl/fun", "orthopoly01b")
+		plt.Save("/tmp/gosl/fun", "chebypoly01b")
 	}
-}
-
-func calcChebyP(i int, x float64) float64 {
-	if i == 0 {
-		return 1.0
-	}
-	if i == 1 {
-		return x
-	}
-	tjm2 := 1.0 // value at step j - 2
-	tjm1 := x   // value at step j - 1
-	var tj float64
-	for j := 2; j <= i; j++ {
-		tj = 2*x*tjm1 - tjm2
-		tjm2 = tjm1
-		tjm1 = tj
-	}
-	return tjm1
 }
