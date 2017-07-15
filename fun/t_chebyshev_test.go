@@ -14,82 +14,132 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+func checkSymmetry(tst *testing.T, X []float64, tol float64) {
+
+	// some constants
+	npts := len(X)
+	l := npts - 1 // last
+	even := l%2 == 0
+	imax := l/2 + 1
+	if !even {
+		imax = (l + 1) / 2
+	}
+
+	// check first and last
+	if -X[0] != X[l] {
+		tst.Errorf("first and last coordinates are not exactly the same. %g != %g\n", -X[0], X[l])
+		return
+	}
+	io.Pf("\nfirst and last: OK\n")
+
+	// check symmetry
+	for i := 1; i < imax; i++ {
+		//io.Pforan("%d → %d  vs  %d → %d\n", i-1, i, l-i, l-i+1)
+		Δxa := X[i] - X[i-1]
+		Δxb := X[l-i+1] - X[l-i]
+		chk.AnaNum(tst, "Δxa = Δxb", tol, Δxa, Δxb, chk.Verbose)
+		if Δxa != Δxb {
+			tst.Errorf("Δxa must be exactly equal to Δxb\n")
+		}
+	}
+}
+
 func TestChebyshev01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("Chebyshev01. Gauss (roots) and Lobatto points")
 
+	tolSym := 0.0
+
 	X := ChebyshevXgauss(1)
 	Xref := []float64{-1.0 / math.Sqrt2, 1.0 / math.Sqrt2}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(1)
 	Xref = []float64{-1.0, 1.0}
 	chk.Vector(tst, "X", 1e-17, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXgauss(2)
 	Xref = []float64{-math.Sqrt(3.0) / 2.0, 0, math.Sqrt(3.0) / 2.0}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(2)
 	Xref = []float64{-1, 0, 1}
-	chk.Vector(tst, "X", 1e-17, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-17, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXgauss(3)
 	Xref = []float64{-9.238795325112867e-01, -3.826834323650898e-01, 3.826834323650897e-01, 9.238795325112867e-01}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(3)
 	Xref = []float64{-1, -0.5, 0.5, 1}
-	chk.Vector(tst, "X", 1e-16, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-16, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXgauss(4)
 	Xref = []float64{-9.510565162951535e-01, -5.877852522924731e-01, -6.123233995736766e-17, 5.877852522924730e-01, 9.510565162951535e-01}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(4)
 	Xref = []float64{-1.000000000000000e+00, -7.071067811865476e-01, -6.123233995736766e-17, 7.071067811865475e-01, 1.000000000000000e+00}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXgauss(5)
 	Xref = []float64{-9.659258262890683e-01, -7.071067811865476e-01, -2.588190451025210e-01, 2.588190451025206e-01, 7.071067811865475e-01, 9.659258262890682e-01}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(5)
 	Xref = []float64{-1.000000000000000e+00, -8.090169943749475e-01, -3.090169943749475e-01, 3.090169943749473e-01, 8.090169943749473e-01, 1.000000000000000e+00}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXgauss(6)
 	Xref = []float64{-9.749279121818236e-01, -7.818314824680298e-01, -4.338837391175582e-01, -6.123233995736766e-17, 4.338837391175581e-01, 7.818314824680298e-01, 9.749279121818236e-01}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(6)
 	Xref = []float64{-1.000000000000000e+00, -8.660254037844387e-01, -5.000000000000001e-01, -6.123233995736766e-17, 4.999999999999998e-01, 8.660254037844385e-01, 1.000000000000000e+00}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXgauss(7)
 	Xref = []float64{-9.807852804032304e-01, -8.314696123025452e-01, -5.555702330196023e-01, -1.950903220161283e-01, 1.950903220161282e-01, 5.555702330196020e-01, 8.314696123025453e-01, 9.807852804032304e-01}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(7)
 	Xref = []float64{-1.000000000000000e+00, -9.009688679024191e-01, -6.234898018587336e-01, -2.225209339563144e-01, 2.225209339563143e-01, 6.234898018587335e-01, 9.009688679024190e-01, 1.000000000000000e+00}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXgauss(8)
 	Xref = []float64{-9.848077530122080e-01, -8.660254037844387e-01, -6.427876096865394e-01, -3.420201433256688e-01, -6.123233995736766e-17, 3.420201433256687e-01, 6.427876096865394e-01, 8.660254037844387e-01, 9.848077530122080e-01}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(8)
 	Xref = []float64{-1.000000000000000e+00, -9.238795325112867e-01, -7.071067811865476e-01, -3.826834323650898e-01, -6.123233995736766e-17, 3.826834323650897e-01, 7.071067811865475e-01, 9.238795325112867e-01, 1.000000000000000e+00}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXgauss(9)
 	Xref = []float64{-9.876883405951378e-01, -8.910065241883679e-01, -7.071067811865476e-01, -4.539904997395468e-01, -1.564344650402309e-01, 1.564344650402308e-01, 4.539904997395467e-01, 7.071067811865475e-01, 8.910065241883678e-01, 9.876883405951377e-01}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 
 	X = ChebyshevXlob(9)
 	Xref = []float64{-1.000000000000000e+00, -9.396926207859084e-01, -7.660444431189780e-01, -5.000000000000001e-01, -1.736481776669304e-01, 1.736481776669303e-01, 4.999999999999998e-01, 7.660444431189779e-01, 9.396926207859083e-01, 1.000000000000000e+00}
-	chk.Vector(tst, "X", 1e-15, X, Xref)
+	chk.Vector(tst, "X and Xref", 1e-15, X, Xref)
+	checkSymmetry(tst, X, tolSym)
 }
 
 func TestChebyshev02(tst *testing.T) {
