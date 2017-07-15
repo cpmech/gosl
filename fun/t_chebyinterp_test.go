@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -119,7 +120,7 @@ func TestChebyInterp01(tst *testing.T) {
 
 func TestChebyInterp02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("ChebyInterp01")
 
 	// test function
@@ -131,23 +132,39 @@ func TestChebyInterp02(tst *testing.T) {
 	// allocate polynomials
 	N := 6
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	if err != nil {
-		tst.Errorf("test failed: %v\n", err)
-		return
-	}
+	chk.EP(err)
 
 	// compute data
 	err = o.CalcCoefI(f)
 	chk.EP(err)
 
 	// check interpolation @ nodes
-	for _, x := range o.X {
+	for k, x := range o.X {
 		fk, err := f(x)
-		if err != nil {
-			return
-		}
-		chk.Scalar(tst, "I(x_k)", 1e-14, o.I(x), fk)
+		chk.EP(err)
+		chk.Scalar(tst, io.Sf("I(x_%d)", k), 1e-14, o.I(x), fk)
 	}
+
+	// check conversion
+	o.CalcConvMats()
+	np := len(o.X) // number of points
+	u := la.NewVector(np)
+	for i, x := range o.X {
+		u[i], err = f(x)
+		chk.EP(err)
+	}
+	ub := la.NewVector(np)
+	la.MatVecMul(ub, 1, o.C, u)
+	io.Pf("u  = %.6f\n", u)
+	io.Pfyel("ub = %.6f\n", ub)
+	io.Pfyel("cf = %.6f\n", o.CoefI)
+	chk.Vector(tst, "ub", 1e-15, ub, o.CoefI)
+
+	// check inversion
+	uu := la.NewVector(np)
+	la.MatVecMul(uu, 1, o.Ci, ub)
+	io.Pf("uu = %.6f\n", uu)
+	chk.Vector(tst, "uu", 1e-15, uu, u)
 
 	// plot
 	if chk.Verbose {
