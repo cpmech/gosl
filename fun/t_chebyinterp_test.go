@@ -14,10 +14,10 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func TestChebyPoly01(tst *testing.T) {
+func TestChebyInterp01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyPoly01")
+	chk.PrintTitle("ChebyInterp01")
 
 	// test function
 	f := func(x float64) (float64, error) {
@@ -94,9 +94,9 @@ func TestChebyPoly01(tst *testing.T) {
 			Yproj[i] = lob.P(x)
 		}
 		plt.Reset(true, nil)
-		plt.Plot(X, Y, &plt.A{C: "r", L: "$f$"})
-		plt.Plot(X, Yinte, &plt.A{C: "g", L: "$I_N^{GL}f$"})
-		plt.Plot(X, Yproj, &plt.A{C: "b", L: "$\\Pi_N^{w}f$"})
+		plt.Plot(X, Y, &plt.A{C: "r", L: "$f$", NoClip: true})
+		plt.Plot(X, Yinte, &plt.A{C: "g", L: "$I_N^{GL}f$", NoClip: true})
+		plt.Plot(X, Yproj, &plt.A{C: "b", L: "$\\Pi_N^{w}f$", NoClip: true})
 		plt.Gll("$x$", "$f(x)$", nil)
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/fun", "chebyinterp01a")
@@ -114,5 +114,60 @@ func TestChebyPoly01(tst *testing.T) {
 		plt.SetYlog()
 		plt.Gll("$N$", "$||f-\\Pi_N\\{f\\}||$", nil)
 		plt.Save("/tmp/gosl/fun", "chebyinterp01b")
+	}
+}
+
+func TestChebyInterp02(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("ChebyInterp01")
+
+	// test function
+	f := func(x float64) (float64, error) {
+		//return 1.0 / (1.0 + 4.0*x*x), nil
+		return math.Cos(math.Exp(2.0 * x)), nil
+	}
+
+	// allocate polynomials
+	N := 6
+	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
+	if err != nil {
+		tst.Errorf("test failed: %v\n", err)
+		return
+	}
+
+	// compute data
+	err = o.CalcCoefI(f)
+	chk.EP(err)
+
+	// check interpolation @ nodes
+	for _, x := range o.X {
+		fk, err := f(x)
+		if err != nil {
+			return
+		}
+		chk.Scalar(tst, "I(x_k)", 1e-14, o.I(x), fk)
+	}
+
+	// plot
+	if chk.Verbose {
+		y0 := make([]float64, len(o.X))
+		for i := range o.X {
+			y0[i] = 0.2
+		}
+		xx := utl.LinSpace(-1, 1, 201)
+		y1 := make([]float64, len(xx))
+		y2 := make([]float64, len(xx))
+		for i, x := range xx {
+			y1[i], _ = f(x)
+			y2[i] = o.I(x)
+		}
+		plt.Reset(true, nil)
+		plt.Plot(o.X, y0, &plt.A{C: "k", M: "o", Ls: "none", Void: true, NoClip: true})
+		plt.Plot(xx, y1, &plt.A{C: plt.C(0, 1), L: "$f$", NoClip: true})
+		plt.Plot(xx, y2, &plt.A{C: plt.C(1, 1), L: "$I$", NoClip: true})
+		plt.Gll("$x$", "$f(x)$", nil)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/fun", "chebyinterp02")
 	}
 }

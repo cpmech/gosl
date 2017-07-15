@@ -40,14 +40,14 @@ type ChebyInterp struct {
 //
 //   gaussChebyshev == true:
 //
-//                       /  (2i+1)⋅π  \
-//           X[i] = -cos | —————————— |       i = 0 ... N
-//                       \   2N + 2   /
+//                       /  (2⋅j+1)⋅π  \
+//           X_j = - cos | ——————————— |       j = 0 ... N
+//                       \   2⋅N + 2   /
 //
 //   gaussChebyshev == false: (Gauss-Lobatto-Chebyshev)
 //
-//                       /  i⋅π  \
-//           X[i] = -cos | ————— |       i = 0 ... N
+//                       /  j⋅π  \
+//           X_j = - cos | ————— |       j = 0 ... N
 //                       \   N   /
 //
 func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
@@ -113,26 +113,42 @@ func (o *ChebyInterp) W(x float64) float64 {
 
 // I computes the interpolation
 //
-//    I{f}(x) = Σ CoefI[i] * T_i(x)
+//               N
+//    I{f}(x) =  Σ  CoefI_k ⋅ T_k(x)
+//              k=0
+//
+//    Thus:
+//
+//              N
+//    f(x_j) =  Σ   CoefI_k ⋅ T_k(x_j)
+//             k=0
 //
 //    NOTE: CoefI coefficients must be computed first
 //
 func (o *ChebyInterp) I(x float64) (res float64) {
-	for i := 0; i < o.N+1; i++ {
-		res += o.CoefI[i] * ChebyshevT(i, x)
+	for k := 0; k < o.N+1; k++ {
+		res += o.CoefI[k] * ChebyshevT(k, x)
 	}
 	return
 }
 
 // P computes the (approximated) projection
 //
-//    P{f}(x) = Σ CoefP[i] * T_i(x)
+//               ∞
+//    S{f}(x) =  Σ  CoefP_k ⋅ T_k(x)   (series representation)
+//              k=0
+//
+//    Thus:
+//
+//               N
+//    P{f}(x) =  Σ  CoefP_k ⋅ T_k(x)   (truncated series)
+//              k=0
 //
 //    NOTE: CoefP coefficients must be computed first
 //
 func (o *ChebyInterp) P(x float64) (res float64) {
-	for i := 0; i < o.N+1; i++ {
-		res += o.CoefP[i] * ChebyshevT(i, x)
+	for k := 0; k < o.N+1; k++ {
+		res += o.CoefP[k] * ChebyshevT(k, x)
 	}
 	return
 }
@@ -170,7 +186,18 @@ func (o *ChebyInterp) EstimateMaxErr(f Ss, projection bool) (maxerr, xloc float6
 
 // CalcCoefI computes the coefficients of the interpolant by (slow) direct formula
 //
-//   CoefI[i] == A[i] := Σ f(x[i]) ⋅ T_i(x[i]) ⋅ wb[i]
+//              1    N
+//   CoefI_k = ——— ⋅ Σ  f(x_j) ⋅ T_k(x_j) ⋅ wb_j
+//             γ_k  j=0
+//
+//   Thus, since Tn(-x) = (-1)ⁿ ⋅ Tn(x)
+//
+//               2       N  (-1)^k                /  k⋅j⋅π  \
+//   CoefI_k = —————— ⋅  Σ  —————— ⋅ f(x_j) ⋅ cos | ——————— |
+//             N⋅cb_k   j=0  cb_j                 \    N    /
+//
+//   where:
+//           cb_k = 2 if j=0,N   or   1 if j=1...N-1
 //
 //   NOTE: the results will be stored in o.CoefI
 //
@@ -186,18 +213,22 @@ func (o *ChebyInterp) CalcCoefI(f Ss) (err error) {
 	}
 
 	// computation of coefficients
-	for i := 0; i < o.N+1; i++ {
-		o.CoefI[i] = 0
+	for k := 0; k < o.N+1; k++ {
+		o.CoefI[k] = 0
 		for j := 0; j < o.N+1; j++ {
-			o.CoefI[i] += fx[j] * ChebyshevT(i, o.X[j]) * o.Wb[j]
+			o.CoefI[k] += fx[j] * ChebyshevT(k, o.X[j]) * o.Wb[j]
 		}
-		o.CoefI[i] /= o.Gamma[i]
+		o.CoefI[k] /= o.Gamma[k]
 	}
 	return
 }
 
 // CalcCoefP computes the coefficients of the projection (slow)
 // using o.EstimationN + 1 points
+//
+//               ∫ f(x)⋅T_k(x)⋅w(x) dx      (f, T_k)_w
+//   CoefP_k = ————————————————————————— = ————————————
+//              ∫ T_k(x)⋅T_k(x)⋅w(x) dx      ‖ T_k ‖²
 //
 //   NOTE: the results will be stored in o.CoefP
 //
@@ -259,4 +290,14 @@ func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 		tjm1 = tj
 	}
 	return tjm1
+}
+
+// auxiliary //////////////////////////////////////////////////////////////////////////////////////
+
+// cbar returns 2 if j=0,N or 1 if j=1,...,N-1
+func (o *ChebyInterp) cbar(j int) float64 {
+	if j == 0 || j == o.N {
+		return 2
+	}
+	return 1
 }
