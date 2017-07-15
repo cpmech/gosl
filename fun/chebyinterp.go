@@ -11,8 +11,9 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// ChebyshevPoly defines a structure for efficient computations with Chebyshev polynomials
-type ChebyshevPoly struct {
+// ChebyInterp defines a structure for efficient computations with Chebyshev polynomials such as
+// projecttion or interpolation
+type ChebyInterp struct {
 
 	// input
 	N     int  // degree of polynomial
@@ -35,7 +36,7 @@ type ChebyshevPoly struct {
 	D1  *la.Matrix // (dψj/dx)(xi)
 }
 
-// NewChebyshevPoly returns a new ChebyshevPoly structure
+// NewChebyInterp returns a new ChebyInterp structure
 //
 //   gaussChebyshev == true:
 //
@@ -49,10 +50,10 @@ type ChebyshevPoly struct {
 //           X[i] = -cos | ————— |       i = 0 ... N
 //                       \   N   /
 //
-func NewChebyshevPoly(N int, gaussChebyshev bool) (o *ChebyshevPoly, err error) {
+func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
 
 	// allocate
-	o = new(ChebyshevPoly)
+	o = new(ChebyInterp)
 	o.N = N
 	o.Gauss = gaussChebyshev
 	o.Wb = make([]float64, N+1)
@@ -82,7 +83,7 @@ func NewChebyshevPoly(N int, gaussChebyshev bool) (o *ChebyshevPoly, err error) 
 }
 
 // gaussData returns quadrature data for either Gauss-Chebyshev or Gauss-Lobatto
-func (o *ChebyshevPoly) gaussData(N int) (wb, wb0, wbN, gam, gam0, gamN float64) {
+func (o *ChebyInterp) gaussData(N int) (wb, wb0, wbN, gam, gam0, gamN float64) {
 
 	// Gauss
 	if o.Gauss {
@@ -106,7 +107,7 @@ func (o *ChebyshevPoly) gaussData(N int) (wb, wb0, wbN, gam, gam0, gamN float64)
 }
 
 // W computes W(x) (weight function) of Chebyshev polynomial
-func (o *ChebyshevPoly) W(x float64) float64 {
+func (o *ChebyInterp) W(x float64) float64 {
 	return 1.0 / math.Sqrt(1.0-x*x)
 }
 
@@ -115,7 +116,7 @@ func (o *ChebyshevPoly) W(x float64) float64 {
 //
 //    Approx(x) = Σ a[i] * φ[i](x)  where  'a' is CoefI or CoefP (if projection==true)
 //
-func (o *ChebyshevPoly) Approx(x float64, projection bool) (res float64) {
+func (o *ChebyInterp) Approx(x float64, projection bool) (res float64) {
 	a := o.CoefI
 	if projection {
 		a = o.CoefP
@@ -131,7 +132,7 @@ func (o *ChebyshevPoly) Approx(x float64, projection bool) (res float64) {
 //
 //    maxerr = max(|f - I{f}|)  or  maxerr = max(|f - Π{f}|)
 //
-func (o *ChebyshevPoly) EstimateMaxErr(f Ss, projection bool) (maxerr, xloc float64) {
+func (o *ChebyInterp) EstimateMaxErr(f Ss, projection bool) (maxerr, xloc float64) {
 	nsta := 10000 // generate several points along [-1,1]
 	xloc = -1
 	for i := 0; i < nsta; i++ {
@@ -155,7 +156,7 @@ func (o *ChebyshevPoly) EstimateMaxErr(f Ss, projection bool) (maxerr, xloc floa
 //   A[i] = Σ f(x[i]) ⋅ φi(x[i]) ⋅ wb[i]
 //
 //   NOTE: the results will be stored in o.CoefI
-func (o *ChebyshevPoly) CoefInterpolantSlow(f Ss) (err error) {
+func (o *ChebyInterp) CoefInterpolantSlow(f Ss) (err error) {
 
 	// evaluate function at all points
 	fx := make([]float64, o.N+1)
@@ -180,7 +181,7 @@ func (o *ChebyshevPoly) CoefInterpolantSlow(f Ss) (err error) {
 // EstimateCoefProjection computes the coefficients of the projection (slow)
 // using GaussChebyshev quadrature and EstimationN + 1 points
 //   NOTE: the results will be stored in o.CoefP
-func (o *ChebyshevPoly) EstimateCoefProjection(f Ss) (err error) {
+func (o *ChebyInterp) EstimateCoefProjection(f Ss) (err error) {
 
 	// quadrature data
 	nn := o.EstimationN
@@ -222,7 +223,7 @@ func (o *ChebyshevPoly) EstimateCoefProjection(f Ss) (err error) {
 
 // HierarchicalT computes Tn(x) using hierarchical definition (but NOT recursive)
 //   NOTE: this function is not as efficient as ChebyshevT and should be used for testing only
-func (o *ChebyshevPoly) HierarchicalT(i int, x float64) float64 {
+func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 	if i == 0 {
 		return 1.0
 	}

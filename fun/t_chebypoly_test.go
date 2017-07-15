@@ -26,12 +26,12 @@ func TestChebyPoly01(tst *testing.T) {
 
 	// allocate polynomials
 	N := 8
-	che, err := NewChebyshevPoly(N, true) // Gauss-Chebyshev
+	che, err := NewChebyInterp(N, true) // Gauss-Chebyshev
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
 		return
 	}
-	lob, err := NewChebyshevPoly(N, false) // Gauss-Lobatto
+	lob, err := NewChebyInterp(N, false) // Gauss-Lobatto
 	if err != nil {
 		tst.Errorf("test failed: %v\n", err)
 		return
@@ -105,7 +105,7 @@ func TestChebyPoly01(tst *testing.T) {
 		Nvalues := []float64{1, 8, 16, 24, 36, 40, 48, 60, 80, 100, 120}
 		Yerr := make([]float64, len(Nvalues))
 		for i, nn := range Nvalues {
-			o, _ := NewChebyshevPoly(int(nn), false)
+			o, _ := NewChebyInterp(int(nn), false)
 			o.EstimateCoefProjection(f)
 			Yerr[i], _ = o.EstimateMaxErr(f, true)
 		}
