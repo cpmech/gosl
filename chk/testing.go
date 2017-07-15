@@ -439,3 +439,27 @@ func Deep4(tst *testing.T, msg string, tol float64, a, b [][][][]float64) {
 	}
 	PrintOk(msg)
 }
+
+// Symmetry checks symmetry of SEGMENTS in an even or odd slice of float64
+func Symmetry(tst *testing.T, msg string, X []float64) {
+
+	// some constants
+	npts := len(X)
+	l := npts - 1 // last
+	even := l%2 == 0
+	imax := l/2 + 1
+	if !even {
+		imax = (l + 1) / 2
+	}
+
+	// check symmetry
+	for i := 1; i < imax; i++ {
+		Δxa := X[i] - X[i-1]
+		Δxb := X[l-i+1] - X[l-i]
+		AnaNum(tst, "Δxa = Δxb", 0, Δxa, Δxb, Verbose)
+		if Δxa != Δxb {
+			tst.Errorf("Δxa must be exactly equal to Δxb\n")
+			return
+		}
+	}
+}
