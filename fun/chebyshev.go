@@ -49,10 +49,10 @@ func ChebyshevXgauss(N int) (X []float64) {
 			X[i] = -X[N-i]
 		}
 	} else { // odd number of segments
-		l := (N + 3) / 2
+		l := (N+3)/2 - 1
 		for i := 0; i < l; i++ {
 			X[N-i] = math.Cos(float64(2*i+1) * math.Pi / d)
-			if i < l-1 {
+			if i < l {
 				X[i] = -X[N-i]
 			}
 		}
@@ -90,10 +90,10 @@ func ChebyshevXlob(N int) (X []float64) {
 			X[i] = -X[N-i]
 		}
 	} else { // odd number of segments
-		l := (N + 3) / 2
+		l := (N+3)/2 - 1
 		for i := 1; i < l; i++ {
 			X[N-i] = math.Sin(π * (n - 2.0*float64(i)) / d)
-			if i < l-1 {
+			if i < l {
 				X[i] = -X[N-i]
 			}
 		}
