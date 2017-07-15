@@ -456,9 +456,9 @@ func Symmetry(tst *testing.T, msg string, X []float64) {
 	for i := 1; i < imax; i++ {
 		Δxa := X[i] - X[i-1]
 		Δxb := X[l-i+1] - X[l-i]
-		AnaNum(tst, "Δxa = Δxb", 0, Δxa, Δxb, Verbose)
+		AnaNum(tst, msg+": Δxa = Δxb", 0, Δxa, Δxb, Verbose)
 		if Δxa != Δxb {
-			tst.Errorf("Δxa must be exactly equal to Δxb\n")
+			tst.Errorf(msg + ": Δxa must be exactly equal to Δxb\n")
 			return
 		}
 	}
