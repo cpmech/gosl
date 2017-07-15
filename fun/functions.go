@@ -329,3 +329,11 @@ func Sinc(x float64) float64 {
 	}
 	return math.Sin(x) / x
 }
+
+// NegOnePowN computes (-1)ⁿ
+func NegOnePowN(n int) float64 {
+	if (n & 1) == 0 { // even
+		return 1
+	}
+	return -1
+}

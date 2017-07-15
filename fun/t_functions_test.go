@@ -425,3 +425,26 @@ func TestRect01(tst *testing.T) {
 		plt.Save("/tmp/gosl/fun", "rect01")
 	}
 }
+
+func TestNegOnePowN(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("NegOnePowN. calc (-1)ⁿ")
+
+	for n := 0; n < 7; n++ {
+		res := NegOnePowN(n)
+		io.Pf("n=%d ⇒ (-1)ⁿ = %v\n", n, res)
+		if n%2 == 0 { // even
+			if res != 1 {
+				tst.Errorf("pow(-1, %d) must be equal to 1\n", n)
+				return
+			}
+		} else {
+			if res != -1 {
+				tst.Errorf("pow(+1, %d) must be equal to -1\n", n)
+				return
+			}
+		}
+		chk.Scalar(tst, io.Sf("pow(-1,%d)", n), 1e-17, res, math.Pow(-1, float64(n)))
+	}
+}
