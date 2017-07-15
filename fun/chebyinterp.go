@@ -111,18 +111,28 @@ func (o *ChebyInterp) W(x float64) float64 {
 	return 1.0 / math.Sqrt(1.0-x*x)
 }
 
-// Approx computes the approximated projection or interpolation via series approximation
-// after computing the coefficients of the interpolant or estimated projection
+// I computes the interpolation
 //
-//    Approx(x) = Σ a[i] * φ[i](x)  where  'a' is CoefI or CoefP (if projection==true)
+//    I{f}(x) = Σ CoefI[i] * T_i(x)
 //
-func (o *ChebyInterp) Approx(x float64, projection bool) (res float64) {
-	a := o.CoefI
-	if projection {
-		a = o.CoefP
-	}
+//    NOTE: CoefI coefficients must be computed first
+//
+func (o *ChebyInterp) I(x float64) (res float64) {
 	for i := 0; i < o.N+1; i++ {
-		res += a[i] * ChebyshevT(i, x)
+		res += o.CoefI[i] * ChebyshevT(i, x)
+	}
+	return
+}
+
+// P computes the (approximated) projection
+//
+//    P{f}(x) = Σ CoefP[i] * T_i(x)
+//
+//    NOTE: CoefP coefficients must be computed first
+//
+func (o *ChebyInterp) P(x float64) (res float64) {
+	for i := 0; i < o.N+1; i++ {
+		res += o.CoefP[i] * ChebyshevT(i, x)
 	}
 	return
 }
@@ -130,18 +140,25 @@ func (o *ChebyInterp) Approx(x float64, projection bool) (res float64) {
 // EstimateMaxErr estimates the maximum error using 10000 stations along [-1,1]
 // This function also returns the location (xloc) of the estimated max error
 //
-//    maxerr = max(|f - I{f}|)  or  maxerr = max(|f - Π{f}|)
+//    maxerr = max(|f - I{f}|)  or  maxerr = max(|f - P{f}|)
+//
+//    NOTE: CoefI or CoefP must be computed first
 //
 func (o *ChebyInterp) EstimateMaxErr(f Ss, projection bool) (maxerr, xloc float64) {
 	nsta := 10000 // generate several points along [-1,1]
 	xloc = -1
+	var fa float64
 	for i := 0; i < nsta; i++ {
 		x := -1.0 + 2.0*float64(i)/float64(nsta-1)
 		fx, err := f(x)
 		if err != nil {
 			chk.Panic("f(x) failed:%v\n", err)
 		}
-		fa := o.Approx(x, projection)
+		if projection {
+			fa = o.P(x)
+		} else {
+			fa = o.I(x)
+		}
 		e := math.Abs(fx - fa)
 		if e > maxerr {
 			maxerr = e
@@ -151,12 +168,13 @@ func (o *ChebyInterp) EstimateMaxErr(f Ss, projection bool) (maxerr, xloc float6
 	return
 }
 
-// CoefInterpolantSlow computes the coefficients of the interpolant by (slow) formula
+// CalcCoefI computes the coefficients of the interpolant by (slow) direct formula
 //
-//   A[i] = Σ f(x[i]) ⋅ φi(x[i]) ⋅ wb[i]
+//   CoefI[i] == A[i] := Σ f(x[i]) ⋅ T_i(x[i]) ⋅ wb[i]
 //
 //   NOTE: the results will be stored in o.CoefI
-func (o *ChebyInterp) CoefInterpolantSlow(f Ss) (err error) {
+//
+func (o *ChebyInterp) CalcCoefI(f Ss) (err error) {
 
 	// evaluate function at all points
 	fx := make([]float64, o.N+1)
@@ -178,10 +196,12 @@ func (o *ChebyInterp) CoefInterpolantSlow(f Ss) (err error) {
 	return
 }
 
-// EstimateCoefProjection computes the coefficients of the projection (slow)
-// using GaussChebyshev quadrature and EstimationN + 1 points
+// CalcCoefP computes the coefficients of the projection (slow)
+// using o.EstimationN + 1 points
+//
 //   NOTE: the results will be stored in o.CoefP
-func (o *ChebyInterp) EstimateCoefProjection(f Ss) (err error) {
+//
+func (o *ChebyInterp) CalcCoefP(f Ss) (err error) {
 
 	// quadrature data
 	nn := o.EstimationN
