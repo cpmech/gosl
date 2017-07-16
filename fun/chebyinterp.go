@@ -310,7 +310,7 @@ func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 	return tjm1
 }
 
-// PsiLobDirect evaluates the Lagrangian polynomial ψ_l(x) of degree N with Gauss-Lobatto points
+// PsiLobDirect evaluates the Lagrangian cardinal function ψ_l(x) of degree N with Gauss-Lobatto points
 //
 //              N
 //   I{f}(x) =  Σ   f(x_l) ⋅ ψ_l(x)
