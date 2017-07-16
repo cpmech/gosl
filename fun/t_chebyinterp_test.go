@@ -44,7 +44,17 @@ func TestChebyInterp01(tst *testing.T) {
 	}
 
 	// Gauss-Chebyshev: check points
-	xref := []float64{-9.848077530122080e-01, -8.660254037844387e-01, -6.427876096865394e-01, -3.420201433256688e-01, -6.123233995736766e-17, 3.420201433256687e-01, 6.427876096865394e-01, 8.660254037844387e-01, 9.848077530122080e-01}
+	xref := []float64{
+		9.848077530122080e-01,
+		8.660254037844387e-01,
+		6.427876096865394e-01,
+		3.420201433256687e-01,
+		0,
+		-3.420201433256688e-01,
+		-6.427876096865394e-01,
+		-8.660254037844387e-01,
+		-9.848077530122080e-01,
+	}
 	chk.Vector(tst, "Gauss-Chebyshev: X", 1e-15, che.X, xref)
 
 	// Gauss-Chebyshev: check coefficients of interpolant
@@ -58,7 +68,17 @@ func TestChebyInterp01(tst *testing.T) {
 	chk.Vector(tst, "Gauss-Chebyshev: CoefP", 1e-15, che.CoefP, cref)
 
 	// Gauss-Lobatto: check points
-	xref = []float64{-1.000000000000000e+00, -9.238795325112867e-01, -7.071067811865476e-01, -3.826834323650898e-01, -6.123233995736766e-17, 3.826834323650897e-01, 7.071067811865475e-01, 9.238795325112867e-01, 1.000000000000000e+00}
+	xref = []float64{
+		1.000000000000000e+00,
+		9.238795325112867e-01,
+		7.071067811865475e-01,
+		3.826834323650897e-01,
+		0,
+		-3.826834323650898e-01,
+		-7.071067811865476e-01,
+		-9.238795325112867e-01,
+		-1.000000000000000e+00,
+	}
 	chk.Vector(tst, "Gauss-Lobatto: X", 1e-15, lob.X, xref)
 
 	// Gauss-Lobatto: check coefficients of interpolant
@@ -121,7 +141,7 @@ func TestChebyInterp01(tst *testing.T) {
 func TestChebyInterp02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp01")
+	chk.PrintTitle("ChebyInterp02")
 
 	// test function
 	f := func(x float64) (float64, error) {

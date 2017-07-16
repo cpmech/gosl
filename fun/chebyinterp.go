@@ -20,7 +20,7 @@ type ChebyInterp struct {
 	Gauss bool // use roots (Gauss) or points (Lobatto)?
 
 	// derived
-	X     []float64 // points
+	X     []float64 // points. NOTE: mirrowed version of Chebyshev X; i.e. from +1 to -1
 	Wb    []float64 // weights for Gaussian quadrature
 	Gamma []float64 // denominador of coefficients equation ~ ‖p[i]‖²
 	CoefI []float64 // coefficients of interpolant
@@ -40,15 +40,17 @@ type ChebyInterp struct {
 //
 //   gaussChebyshev == true:
 //
-//                       /  (2⋅j+1)⋅π  \
-//           X_j = - cos | ——————————— |       j = 0 ... N
-//                       \   2⋅N + 2   /
+//                     /  (2⋅j+1)⋅π  \
+//           X_j = cos | ——————————— |       j = 0 ... N
+//                     \   2⋅N + 2   /
 //
 //   gaussChebyshev == false: (Gauss-Lobatto-Chebyshev)
 //
-//                       /  j⋅π  \
-//           X_j = - cos | ————— |       j = 0 ... N
-//                       \   N   /
+//                     /  j⋅π  \
+//           X_j = cos | ————— |       j = 0 ... N
+//                     \   N   /
+//
+//   NOTE: X here is the mirrowed version of Chebyshev X; i.e. from +1 to -1
 //
 func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
 
@@ -63,10 +65,15 @@ func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
 	o.EstimationN = 128
 
 	// roots or points
+	var xx []float64
 	if gaussChebyshev {
-		o.X = ChebyshevXgauss(N)
+		xx = ChebyshevXgauss(N)
 	} else {
-		o.X = ChebyshevXlob(N)
+		xx = ChebyshevXlob(N)
+	}
+	o.X = make([]float64, o.N+1)
+	for i := 0; i < o.N+1; i++ {
+		o.X[i] = xx[o.N-i]
 	}
 
 	// set data
@@ -92,13 +99,13 @@ func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
 //    u_j =  Σ   C⁻¹_{jk} ⋅ trans(u)_k
 //          k=0
 //
-//                   2                      /  j⋅k⋅π  \
-//    C_{kj} = ————————————— ⋅ (-1)^k ⋅ cos | ——————— |
-//              cb_k⋅cb_j⋅N                 \    N    /
+//                   2             /  j⋅k⋅π  \
+//    C_{kj} = ————————————— ⋅ cos | ——————— |
+//              cb_k⋅cb_j⋅N        \    N    /
 //
-//                            /  j⋅k⋅π  \
-//    C⁻¹_{jk} = (-1)^k ⋅ cos | ——————— |
-//                            \    N    /
+//                   /  j⋅k⋅π  \
+//    C⁻¹_{jk} = cos | ——————— |
+//                   \    N    /
 //
 func (o *ChebyInterp) CalcConvMats() {
 	o.C = la.NewMatrix(o.N+1, o.N+1)
@@ -108,7 +115,7 @@ func (o *ChebyInterp) CalcConvMats() {
 		cbk := o.cbar(k)
 		for j := 0; j < o.N+1; j++ {
 			cbj := o.cbar(j)
-			v := NegOnePowN(k) * math.Cos(π*float64(k*j)/n)
+			v := math.Cos(π * float64(k*j) / n)
 			o.C.Set(k, j, 2.0*v/(cbk*cbj*n))
 			o.Ci.Set(j, k, v)
 		}
@@ -121,9 +128,9 @@ func (o *ChebyInterp) CalcConvMats() {
 //   CoefI_k = ——— ⋅ Σ  f(x_j) ⋅ T_k(x_j) ⋅ wb_j
 //             γ_k  j=0
 //
-//   Thus (for Gauss-Lobatto), since Tn(-x) = (-1)ⁿ ⋅ Tn(x)
+//   Thus (for Gauss-Lobatto):
 //
-//               2       N  (-1)^k                /  k⋅j⋅π  \
+//               2       N    1                   /  k⋅j⋅π  \
 //   CoefI_k = —————— ⋅  Σ  —————— ⋅ f(x_j) ⋅ cos | ——————— |
 //             N⋅cb_k   j=0  cb_j                 \    N    /
 //
