@@ -20,7 +20,7 @@ type ChebyInterp struct {
 	Gauss bool // use roots (Gauss) or points (Lobatto)?
 
 	// derived
-	X     []float64 // points. NOTE: mirrowed version of Chebyshev X; i.e. from +1 to -1
+	X     []float64 // points. NOTE: this mirrowed version of Chebyshev X; i.e. from +1 to -1
 	Wb    []float64 // weights for Gaussian quadrature
 	Gamma []float64 // denominador of coefficients equation ~ ‖p[i]‖²
 	CoefI []float64 // coefficients of interpolant
@@ -30,10 +30,9 @@ type ChebyInterp struct {
 	EstimationN int // N to use when estimating CoefP [default=128]
 
 	// computed
-	C   *la.Matrix // physical to transform space conversion matrix
-	Ci  *la.Matrix // transform to physical space conversion matrix
-	Psi []float64  // basis functions @ Gauss-Lobatto points
-	D1  *la.Matrix // (dψj/dx)(xi)
+	C        *la.Matrix // physical to transform space conversion matrix
+	Ci       *la.Matrix // transform to physical space conversion matrix
+	D1direct *la.Matrix // (dψj/dx)(xi)
 }
 
 // NewChebyInterp returns a new ChebyInterp structure
@@ -301,6 +300,99 @@ func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 		tjm1 = tj
 	}
 	return tjm1
+}
+
+// PsiLobDirect evaluates the Lagrangian polynomial ψ_l(x) of degree N with Gauss-Lobatto points
+//
+//   Equation (2.4.30), page 88 of [1]
+//
+//   NOTE: must not use with Gauss (roots) points
+//
+//   Reference:
+//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
+//         Single Domains. Springer. 563p
+//
+func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
+	if math.Abs(x-o.X[l]) < 1e-14 {
+		return 1
+	}
+	nn := float64(o.N * o.N)
+	cbl := o.cbar(l)
+	dTn := ChebyshevTdiff1(o.N, x)
+	return NegOnePowN(l+1) * (1.0 - x*x) * dTn / (cbl * nn * (x - o.X[l]))
+}
+
+// CalcD1direct computes the differentiation matrix D1 of the function PsiLobDirect
+//
+//            dψ_l  |
+//    D1_jl = ————— |
+//             dx   |x=x_j
+//
+//   useTrigo -- use trigonometric identities (to reduce round-off errors)
+//
+//   NOTE: (1) the signs are swapped (compared to [1]) because X are reversed here (from -1 to +1)
+//         (2) this method is only available for Gauss-Lobatto points
+//
+//   Equations (2.4.31) and (2.4.33), page 89 of [1]
+//
+//   Reference:
+//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
+//         Single Domains. Springer. 563p
+//
+func (o *ChebyInterp) CalcD1direct(useTrigo bool) {
+	if o.Gauss {
+		chk.Panic("cannot compute D1 for non-Gauss-Lobatto points\n")
+	}
+	o.D1direct = la.NewMatrix(o.N+1, o.N+1)
+	n := float64(o.N)
+	nn := float64(o.N * o.N)
+	n2 := 2.0 * n
+	var v, s1, s2, jj, ll, cbj, cbl float64
+	if useTrigo {
+		for j := 0; j < o.N+1; j++ {
+			for l := 0; l < o.N+1; l++ {
+				if j == l {
+					if j == 0 {
+						v = (2.0*nn + 1.0) / 6.0
+					} else if j == o.N {
+						v = -(2.0*nn + 1.0) / 6.0
+					} else {
+						jj = float64(j)
+						s1 = math.Sin(jj * π / n)
+						v = -o.X[j] / (2.0 * s1 * s1)
+					}
+				} else {
+					jj = float64(j)
+					ll = float64(l)
+					cbj = o.cbar(j)
+					cbl = o.cbar(l)
+					s1 = math.Sin((jj + ll) * π / n2)
+					s2 = math.Sin((jj - ll) * π / n2)
+					v = -cbj * NegOnePowN(j+l) / (2.0 * cbl * s1 * s2)
+				}
+				o.D1direct.Set(j, l, v)
+			}
+		}
+		return
+	}
+	for j := 0; j < o.N+1; j++ {
+		for l := 0; l < o.N+1; l++ {
+			if j == l {
+				if j == 0 {
+					v = (2.0*nn + 1.0) / 6.0
+				} else if j == o.N {
+					v = -(2.0*nn + 1.0) / 6.0
+				} else {
+					v = -o.X[l] / (2.0 * (1.0 - o.X[l]*o.X[l]))
+				}
+			} else {
+				cbj = o.cbar(j)
+				cbl = o.cbar(l)
+				v = cbj * NegOnePowN(j+l) / (cbl * (o.X[j] - o.X[l]))
+			}
+			o.D1direct.Set(j, l, v)
+		}
+	}
 }
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////

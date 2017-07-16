@@ -208,3 +208,83 @@ func TestChebyInterp02(tst *testing.T) {
 		plt.Save("/tmp/gosl/fun", "chebyinterp02")
 	}
 }
+
+func TestChebyInterp03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ChebyInterp03")
+
+	// test function
+	f := func(x float64) (float64, error) {
+		//return 1.0 / (1.0 + 4.0*x*x), nil
+		return math.Cos(math.Exp(2.0 * x)), nil
+	}
+
+	// allocate polynomials
+	N := 4
+	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
+	chk.EP(err)
+
+	// compute data
+	err = o.CalcCoefI(f)
+	chk.EP(err)
+
+	// check ψl @ nodes (direct)
+	for k, x := range o.X {
+		for l := 0; l < o.N+1; l++ {
+			res := o.PsiLobDirect(l, x)
+			if k == l {
+				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==1", l, k), 1e-15, res, 1, chk.Verbose)
+			} else {
+				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==0", l, k), 1e-15, res, 0, chk.Verbose)
+			}
+		}
+		io.Pl()
+	}
+
+	// check D1 matrix (direct)
+	o.CalcD1direct(false)
+	D1direct := o.D1direct.GetSlice()
+	for j := 0; j < o.N+1; j++ {
+		xj := o.X[j]
+		for l := 0; l < o.N+1; l++ {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), 1e-5, o.D1direct.Get(j, l), xj, 1e-2, chk.Verbose, func(t float64) (float64, error) {
+				return o.PsiLobDirect(l, t), nil
+			})
+		}
+	}
+	io.Pl()
+
+	// check D1 matrix (trigo)
+	o.CalcD1direct(true)
+	D1trigo := o.D1direct.GetSlice()
+	for j := 0; j < o.N+1; j++ {
+		xj := o.X[j]
+		for l := 0; l < o.N+1; l++ {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), 1e-5, o.D1direct.Get(j, l), xj, 1e-2, chk.Verbose, func(t float64) (float64, error) {
+				return o.PsiLobDirect(l, t), nil
+			})
+		}
+	}
+	io.Pl()
+
+	// compare D1 direct
+	chk.Matrix(tst, "D1direct", 1e-15, D1direct, D1trigo)
+
+	// plot
+	if chk.Verbose && false {
+		npts := 201
+		xx := utl.LinSpace(-1, 1, npts)
+		yy := make([]float64, npts)
+		plt.Reset(true, nil)
+		for l := 0; l < N+1; l++ {
+			for i := 0; i < npts; i++ {
+				yy[i] = o.PsiLobDirect(l, xx[i])
+			}
+			plt.Plot(xx, yy, &plt.A{C: plt.C(l, 1), L: io.Sf("l=%d", l), NoClip: true})
+		}
+		plt.HideTRborders()
+		plt.Gll("$x$", "$\\psi_l(x)$", &plt.A{LegOut: true, LegNcol: 7, LegHlen: 2})
+		plt.Save("/tmp/gosl/fun", "chebyinterp03")
+	}
+}
