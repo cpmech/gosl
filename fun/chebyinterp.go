@@ -312,6 +312,10 @@ func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 
 // PsiLobDirect evaluates the Lagrangian polynomial ψ_l(x) of degree N with Gauss-Lobatto points
 //
+//              N
+//   I{f}(x) =  Σ   f(x_l) ⋅ ψ_l(x)
+//             l=0
+//
 //   Equation (2.4.30), page 88 of [1]
 //
 //   NOTE: must not use with Gauss (roots) points
@@ -327,6 +331,16 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 }
 
 // CalcD1direct computes the differentiation matrix D1 of the function PsiLobDirect
+//
+//    d I{f}(x)     N            d ψ_l(x)
+//   ——————————— =  Σ   f(x_l) ⋅ ————————
+//        dx       l=0              dx
+//
+//    d I{f}(x)  |         N
+//   ——————————— |      =  Σ   D1_jl ⋅ f(x_l)
+//        dx     |x=x_j   l=0
+//
+//   where:
 //
 //            dψ_l  |
 //    D1_jl = ————— |
