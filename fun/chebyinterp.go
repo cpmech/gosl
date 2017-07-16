@@ -13,6 +13,13 @@ import (
 
 // ChebyInterp defines a structure for efficient computations with Chebyshev polynomials such as
 // projecttion or interpolation
+//
+//   Some equations are based on [1]
+//
+//   Reference:
+//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
+//         Single Domains. Springer. 563p
+//
 type ChebyInterp struct {
 
 	// input
@@ -33,6 +40,7 @@ type ChebyInterp struct {
 	C        *la.Matrix // physical to transform space conversion matrix
 	Ci       *la.Matrix // transform to physical space conversion matrix
 	D1direct *la.Matrix // (dψj/dx)(xi)
+	D2direct *la.Matrix // (d²ψj/dx²)(xi)
 }
 
 // NewChebyInterp returns a new ChebyInterp structure
@@ -308,10 +316,6 @@ func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 //
 //   NOTE: must not use with Gauss (roots) points
 //
-//   Reference:
-//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
-//         Single Domains. Springer. 563p
-//
 func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 	if math.Abs(x-o.X[l]) < 1e-14 {
 		return 1
@@ -334,10 +338,6 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 //         (2) this method is only available for Gauss-Lobatto points
 //
 //   Equations (2.4.31) and (2.4.33), page 89 of [1]
-//
-//   Reference:
-//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
-//         Single Domains. Springer. 563p
 //
 func (o *ChebyInterp) CalcD1direct(useTrigo bool) {
 	if o.Gauss {
@@ -391,6 +391,54 @@ func (o *ChebyInterp) CalcD1direct(useTrigo bool) {
 				v = cbj * NegOnePowN(j+l) / (cbl * (o.X[j] - o.X[l]))
 			}
 			o.D1direct.Set(j, l, v)
+		}
+	}
+}
+
+// CalcD2direct calculates the second derivative
+//
+//            d²ψ_l  |
+//    D2_jl = —————— |
+//             dx²   |x=x_j
+//
+//    Equation (2.4.32), page 89 of [1]
+//
+func (o *ChebyInterp) CalcD2direct() {
+	if o.Gauss {
+		chk.Panic("cannot compute D2 for non-Gauss-Lobatto points\n")
+	}
+	o.D2direct = la.NewMatrix(o.N+1, o.N+1)
+	nn := float64(o.N * o.N)
+	nn2p1 := 2.0*nn + 1.0
+	NN := nn * nn
+	tt := 2.0 / 3.0
+	var v, s, cbl, d float64
+	for j := 0; j < o.N+1; j++ {
+		for l := 0; l < o.N+1; l++ {
+			if j == l {
+				if j == 0 || j == o.N {
+					v = (NN - 1.0) / 15.0
+				} else {
+					s = 1.0 - o.X[j]*o.X[j]
+					v = -((nn-1.0)*s + 3.0) / (3.0 * s * s)
+				}
+			} else {
+				if j == 0 {
+					cbl = o.cbar(l)
+					d = (1.0 - o.X[l])
+					v = (tt / cbl) * NegOnePowN(l) * (nn2p1*d - 6.0) / (d * d)
+				} else if j == o.N {
+					cbl = o.cbar(l)
+					d = (1.0 + o.X[l])
+					v = (tt / cbl) * NegOnePowN(l+o.N) * (nn2p1*d - 6.0) / (d * d)
+				} else {
+					cbl = o.cbar(l)
+					s = 1.0 - o.X[j]*o.X[j]
+					d = o.X[j] - o.X[l]
+					v = (1.0 / cbl) * NegOnePowN(j+l) * (o.X[j]*o.X[j] + o.X[j]*o.X[l] - 2.0) / (s * d * d)
+				}
+			}
+			o.D2direct.Set(j, l, v)
 		}
 	}
 }

@@ -270,7 +270,7 @@ func checkD1direct(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb boo
 func TestChebyInterp03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp03")
+	chk.PrintTitle("ChebyInterp03. ψ and first derivative of ψ")
 
 	// run test
 	k := 0
@@ -300,5 +300,47 @@ func TestChebyInterp03(tst *testing.T) {
 		plt.HideTRborders()
 		plt.Gll("$x$", "$\\psi_l(x)$", &plt.A{LegOut: true, LegNcol: 7, LegHlen: 2})
 		plt.Save("/tmp/gosl/fun", "chebyinterp03")
+	}
+}
+
+func checkD2direct(tst *testing.T, N int, h, tolD float64, verb bool) {
+
+	// allocate
+	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
+	chk.EP(err)
+	if verb {
+		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
+	}
+
+	// check D2 matrix (direct)
+	hh := h * h
+	o.CalcD2direct()
+	for j := 0; j < o.N+1; j++ {
+		xj := o.X[j]
+		for l := 0; l < o.N+1; l++ {
+			ψlxjBefore := o.PsiLobDirect(l, xj-h)
+			ψlxjCurrent := o.PsiLobDirect(l, xj)
+			ψlxjAfter := o.PsiLobDirect(l, xj+h)
+			dψldxAtXj := (ψlxjBefore - 2.0*ψlxjCurrent + ψlxjAfter) / hh
+			chk.AnaNum(tst, io.Sf("D2[%d,%d](%+.3f)", j, l, xj), tolD, o.D2direct.Get(j, l), dψldxAtXj, verb)
+		}
+	}
+	if verb {
+		io.Pl()
+	}
+}
+
+func TestChebyInterp04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ChebyInterp04. Second derivative of ψ")
+
+	// check D2
+	k := 0
+	hs := []float64{1e-2, 1e-3, 1e-3, 1e-3}
+	tols := []float64{1e-9, 1e-5, 1e-4, 1e-3}
+	for N := 3; N <= 6; N++ {
+		checkD2direct(tst, N, hs[k], tols[k], chk.Verbose)
+		k++
 	}
 }
