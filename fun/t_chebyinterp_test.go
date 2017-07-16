@@ -209,37 +209,28 @@ func TestChebyInterp02(tst *testing.T) {
 	}
 }
 
-func TestChebyInterp03(tst *testing.T) {
+func checkD1direct(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb bool) {
 
-	//verbose()
-	chk.PrintTitle("ChebyInterp03")
-
-	// test function
-	f := func(x float64) (float64, error) {
-		//return 1.0 / (1.0 + 4.0*x*x), nil
-		return math.Cos(math.Exp(2.0 * x)), nil
-	}
-
-	// allocate polynomials
-	N := 4
+	// allocate
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
 	chk.EP(err)
-
-	// compute data
-	err = o.CalcCoefI(f)
-	chk.EP(err)
+	if verb {
+		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
+	}
 
 	// check ψl @ nodes (direct)
 	for k, x := range o.X {
 		for l := 0; l < o.N+1; l++ {
 			res := o.PsiLobDirect(l, x)
 			if k == l {
-				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==1", l, k), 1e-15, res, 1, chk.Verbose)
+				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==1", l, k), tolPsi, res, 1, verb)
 			} else {
-				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==0", l, k), 1e-15, res, 0, chk.Verbose)
+				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==0", l, k), tolPsi, res, 0, verb)
 			}
 		}
-		io.Pl()
+		if verb {
+			io.Pl()
+		}
 	}
 
 	// check D1 matrix (direct)
@@ -248,12 +239,14 @@ func TestChebyInterp03(tst *testing.T) {
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < o.N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), 1e-5, o.D1direct.Get(j, l), xj, 1e-2, chk.Verbose, func(t float64) (float64, error) {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1direct.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
 				return o.PsiLobDirect(l, t), nil
 			})
 		}
 	}
-	io.Pl()
+	if verb {
+		io.Pl()
+	}
 
 	// check D1 matrix (trigo)
 	o.CalcD1direct(true)
@@ -261,18 +254,39 @@ func TestChebyInterp03(tst *testing.T) {
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < o.N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), 1e-5, o.D1direct.Get(j, l), xj, 1e-2, chk.Verbose, func(t float64) (float64, error) {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1direct.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
 				return o.PsiLobDirect(l, t), nil
 			})
 		}
 	}
-	io.Pl()
+	if verb {
+		io.Pl()
+	}
 
 	// compare D1 direct
-	chk.Matrix(tst, "D1direct", 1e-15, D1direct, D1trigo)
+	chk.Matrix(tst, "D1direct", tolCmp, D1direct, D1trigo)
+}
+
+func TestChebyInterp03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ChebyInterp03")
+
+	// run test
+	k := 0
+	tolPsi := 1e-15
+	tolsD := []float64{1e-5, 1e-5, 1e-4, 1e-4}
+	tolsC := []float64{1e-15, 1e-15, 1e-14, 1e-14}
+	for N := 3; N <= 6; N++ {
+		checkD1direct(tst, N, tolPsi, tolsD[k], tolsC[k], chk.Verbose)
+		k++
+	}
 
 	// plot
-	if chk.Verbose && false {
+	if chk.Verbose {
+		N := 4
+		o, err := NewChebyInterp(N, false) // Gauss-Lobatto
+		chk.EP(err)
 		npts := 201
 		xx := utl.LinSpace(-1, 1, npts)
 		yy := make([]float64, npts)
