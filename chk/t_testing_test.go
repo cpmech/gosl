@@ -9,7 +9,6 @@ import "testing"
 func TestScalarC(tst *testing.T) {
 
 	//Verbose = true
-
 	PrintTitle("ScalarC")
 
 	a := 123.123 + 456.456i
@@ -33,7 +32,6 @@ func TestScalarC(tst *testing.T) {
 func TestInts(tst *testing.T) {
 
 	//Verbose = true
-
 	PrintTitle("Ints")
 
 	// std int -----------------------------------------

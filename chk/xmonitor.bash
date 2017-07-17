@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="ScalarC"
+    go test -test.run="MinMax01"
 done
