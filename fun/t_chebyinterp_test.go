@@ -345,7 +345,7 @@ func checkD1(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 
 func TestChebyInterp04(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("ChebyInterp04. D1 matrix: first derivative of ψ @ nodes")
 
 	// run test
