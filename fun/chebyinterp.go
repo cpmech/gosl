@@ -376,17 +376,29 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 //    D1_jl = ————— |
 //             dx   |x=x_j
 //
-//   INPUT:
+//   Equations (2.4.31) and (2.4.33), page 89 of [1]
+//
+//   INPUT (see [2]):
 //     trigo -- [best] use trigonometric identities (to reduce round-off errors)
-//     flip  -- [best] compute lower-diagonal part from upper diagonal part with:
+//
+//     flip -- [best] compute lower-diagonal part from upper diagonal part with:
 //                              D_{N-j,N-l} = -D_{j,l}
+//             (flip will be turn on if nst==true)
+//
+//     nst -- use the "negative sum trick" to compute the diagonal components according to:
+//                                     N
+//                          D_{jj} = - Σ  D_{jl}
+//                                    l=0
+//                                    l≠j
 //
 //   NOTE: (1) the signs are swapped (compared to [1]) because X are reversed here (from -1 to +1)
 //         (2) this method is only available for Gauss-Lobatto points
 //
-//   Equations (2.4.31) and (2.4.33), page 89 of [1]
+//   Reference:
+//     [2] Baltensperger R, Trummer M (2003) Spectral Differencing with a twist,
+//         SIAM J. Sci. Comput., Vol. 24, No. 5, pp. 1465-1487
 //
-func (o *ChebyInterp) CalcD1(trigo, flip bool) (err error) {
+func (o *ChebyInterp) CalcD1(trigo, flip, nst bool) (err error) {
 
 	// check
 	if o.Gauss {
@@ -400,6 +412,11 @@ func (o *ChebyInterp) CalcD1(trigo, flip bool) (err error) {
 	n2 := 2.0 * n
 	var v, s1, s2, jj, ll, cbj, cbl float64
 
+	// set flip flag in case NST is true
+	if nst {
+		flip = true
+	}
+
 	// using trigonometric identities
 	if trigo {
 		for j := 0; j < o.N+1; j++ {
@@ -409,6 +426,9 @@ func (o *ChebyInterp) CalcD1(trigo, flip bool) (err error) {
 			}
 			for l := lMin; l < o.N+1; l++ {
 				if j == l {
+					if nst {
+						continue
+					}
 					if j == 0 {
 						v = (2.0*nn + 1.0) / 6.0
 					} else if j == o.N {
@@ -430,13 +450,7 @@ func (o *ChebyInterp) CalcD1(trigo, flip bool) (err error) {
 				o.D1.Set(j, l, v)
 			}
 		}
-		if flip {
-			for j := 0; j < o.N+1; j++ {
-				for l := j + 1; l < o.N+1; l++ {
-					o.D1.Set(o.N-j, o.N-l, -o.D1.Get(j, l))
-				}
-			}
-		}
+		o.flipNstD1(flip, nst)
 		return
 	}
 
@@ -448,6 +462,9 @@ func (o *ChebyInterp) CalcD1(trigo, flip bool) (err error) {
 		}
 		for l := lMin; l < o.N+1; l++ {
 			if j == l {
+				if nst {
+					continue
+				}
 				if j == 0 {
 					v = (2.0*nn + 1.0) / 6.0
 				} else if j == o.N {
@@ -463,6 +480,33 @@ func (o *ChebyInterp) CalcD1(trigo, flip bool) (err error) {
 			o.D1.Set(j, l, v)
 		}
 	}
+	o.flipNstD1(flip, nst)
+	return
+}
+
+// flipNstD1 flips and/or apply NST trick to D1
+func (o *ChebyInterp) flipNstD1(flip, nst bool) {
+
+	// set lower triangle and diagonal using the "negative sum trick"
+	if nst {
+		var sumRow float64
+		for j := 0; j < o.N+1; j++ {
+			sumRow = 0.0
+			for l := 0; l < o.N+1; l++ {
+				if j == l {
+					continue
+				}
+				if j > l { // lower triangle
+					o.D1.Set(j, l, -o.D1.Get(o.N-j, o.N-l))
+				}
+				sumRow += o.D1.Get(j, l)
+			}
+			o.D1.Set(j, j, -sumRow)
+		}
+		return
+	}
+
+	// flip to set lower triangle
 	if flip {
 		for j := 0; j < o.N+1; j++ {
 			for l := j + 1; l < o.N+1; l++ {

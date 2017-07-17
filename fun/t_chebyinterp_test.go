@@ -209,7 +209,8 @@ func TestChebyInterp02(tst *testing.T) {
 	}
 }
 
-func checkD1(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb bool) {
+// checkIandIs checks I, Is and ψl @ nodes
+func checkIandIs(tst *testing.T, N int, f Ss, tol float64, verb bool) {
 
 	// allocate
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
@@ -218,116 +219,57 @@ func checkD1(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb bool) {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
-	// check ψl @ nodes
+	// compute coefficients
+	o.CalcCoefI(f)
+	o.CalcCoefIs(f)
+	chk.EP(err)
+
+	// check interpolations
+	xx := utl.LinSpace(-1, 1, 11)
+	for _, x := range xx {
+		i1 := o.I(x)
+		i2 := o.Is(x)
+		chk.AnaNum(tst, "I(x) == Is(x)", 1e-14, i1, i2, chk.Verbose)
+	}
+	if verb {
+		io.Pl()
+	}
+
+	// check ψ @ notes
 	for k, x := range o.X {
 		for l := 0; l < o.N+1; l++ {
 			res := o.PsiLobDirect(l, x)
 			if k == l {
-				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==1", l, k), tolPsi, res, 1, verb)
+				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==1", l, k), tol, res, 1, verb)
 			} else {
-				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==0", l, k), tolPsi, res, 0, verb)
+				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==0", l, k), tol, res, 0, verb)
 			}
 		}
 		if verb {
 			io.Pl()
 		}
 	}
-
-	// ------------------------------- no flip
-
-	// check D1 matrix (noFlip)
-	err = o.CalcD1(false, false)
-	chk.EP(err)
-	D1 := o.D1.GetDeep2()
-	for j := 0; j < o.N+1; j++ {
-		xj := o.X[j]
-		for l := 0; l < o.N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
-				return o.PsiLobDirect(l, t), nil
-			})
-		}
-	}
-	if verb {
-		io.Pl()
-	}
-
-	// check D1 matrix (trigo, noFlip)
-	err = o.CalcD1(true, false)
-	chk.EP(err)
-	D1trigo := o.D1.GetDeep2()
-	for j := 0; j < o.N+1; j++ {
-		xj := o.X[j]
-		for l := 0; l < o.N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
-				return o.PsiLobDirect(l, t), nil
-			})
-		}
-	}
-	if verb {
-		io.Pl()
-	}
-
-	// compare D1
-	chk.Deep2(tst, "D1 [noflip]", tolCmp, D1, D1trigo)
-
-	// ------------------------------- flip
-	io.Pl()
-	io.Pl()
-
-	// check D1 matrix (noFlip)
-	err = o.CalcD1(false, true)
-	chk.EP(err)
-	D1 = o.D1.GetDeep2()
-	for j := 0; j < o.N+1; j++ {
-		xj := o.X[j]
-		for l := 0; l < o.N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
-				return o.PsiLobDirect(l, t), nil
-			})
-		}
-	}
-	if verb {
-		io.Pl()
-	}
-
-	// check D1 matrix (trigo, noFlip)
-	err = o.CalcD1(true, true)
-	chk.EP(err)
-	D1trigo = o.D1.GetDeep2()
-	for j := 0; j < o.N+1; j++ {
-		xj := o.X[j]
-		for l := 0; l < o.N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
-				return o.PsiLobDirect(l, t), nil
-			})
-		}
-	}
-	if verb {
-		io.Pl()
-	}
-
-	// compare D1
-	chk.Deep2(tst, "D1 [flip]", tolCmp, D1, D1trigo)
 }
 
 func TestChebyInterp03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp03. ψ and first derivative of ψ")
+	chk.PrintTitle("ChebyInterp03. ψ and I(x) versus Is(x)")
 
-	// run test
-	k := 0
-	tolPsi := 1e-15
-	tolsD := []float64{1e-5, 1e-5, 1e-4, 1e-4}
-	tolsC := []float64{1e-15, 1e-15, 1e-14, 1e-14}
-	for N := 3; N <= 6; N++ {
-		checkD1(tst, N, tolPsi, tolsD[k], tolsC[k], chk.Verbose)
-		k++
+	// test function
+	f := func(x float64) (float64, error) {
+		return math.Cos(math.Exp(2.0 * x)), nil
+	}
+
+	// allocate polynomial
+	Nvals := []int{5, 6}
+	for _, N := range Nvals {
+		checkIandIs(tst, N, f, 1e-15, chk.Verbose)
 	}
 
 	// plot
 	if chk.Verbose {
-		N := 4
+		N := 5
 		o, err := NewChebyInterp(N, false) // Gauss-Lobatto
 		chk.EP(err)
 		npts := 201
@@ -343,6 +285,86 @@ func TestChebyInterp03(tst *testing.T) {
 		plt.HideTRborders()
 		plt.Gll("$x$", "$\\psi_l(x)$", &plt.A{LegOut: true, LegNcol: 7, LegHlen: 2})
 		plt.Save("/tmp/gosl/fun", "chebyinterp03")
+	}
+}
+
+// cmpD1 compares D1 matrices with numerical differentiation and with each other
+func cmpD1(tst *testing.T, msg string, o *ChebyInterp, D1, D1trig [][]float64, tolD, tolCmp float64, verb bool) {
+	io.Pf("\n\n . . . . . . . . . . . . . %s . . . . . . . . . . . . . . . . . . . . . \n\n", msg)
+	m := len(D1)
+	for j := 0; j < m; j++ {
+		xj := o.X[j]
+		for l := 0; l < m; l++ {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, D1[j][l], xj, 1e-2, verb, func(t float64) (float64, error) {
+				return o.PsiLobDirect(l, t), nil
+			})
+		}
+	}
+	if verb {
+		io.Pl()
+	}
+	chk.Deep2(tst, "D1 vs. D1trig "+msg, tolCmp, D1, D1trig)
+}
+
+func checkD1(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
+
+	// allocate
+	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
+	chk.EP(err)
+	if verb {
+		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
+	}
+
+	// noFlip,noNst
+	err = o.CalcD1(false, false, false)
+	chk.EP(err)
+	D1 := o.D1.GetDeep2()
+	err = o.CalcD1(true, false, false)
+	chk.EP(err)
+	D1trig := o.D1.GetDeep2()
+	cmpD1(tst, "[noFlip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
+
+	// flip,noNst
+	err = o.CalcD1(false, true, false)
+	chk.EP(err)
+	D1 = o.D1.GetDeep2()
+	err = o.CalcD1(true, true, false)
+	chk.EP(err)
+	D1trig = o.D1.GetDeep2()
+	cmpD1(tst, "[flip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
+
+	// noFlip,nst
+	err = o.CalcD1(false, false, true)
+	chk.EP(err)
+	D1 = o.D1.GetDeep2()
+	err = o.CalcD1(true, false, true)
+	chk.EP(err)
+	D1trig = o.D1.GetDeep2()
+	cmpD1(tst, "[noFlip,nst]", o, D1, D1trig, tolD, tolCmp, verb)
+
+	// flip,nst
+	err = o.CalcD1(false, true, true)
+	chk.EP(err)
+	D1 = o.D1.GetDeep2()
+	err = o.CalcD1(true, true, true)
+	chk.EP(err)
+	D1trig = o.D1.GetDeep2()
+	cmpD1(tst, "[flip,nst]", o, D1, D1trig, tolD, tolCmp, verb)
+}
+
+func TestChebyInterp04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ChebyInterp04. D1 matrix: first derivative of ψ @ nodes")
+
+	// run test
+	Nvals := []int{3}
+	//tolsD := []float64{1e-5, 1e-5, 1e-4, 1e-4}
+	//tolsC := []float64{1e-15, 1e-15, 1e-14, 1e-14}
+	tolsD := []float64{1e-5}
+	tolsC := []float64{1e-15}
+	for i, N := range Nvals {
+		checkD1(tst, N, tolsD[i], tolsC[i], chk.Verbose)
 	}
 }
 
@@ -374,10 +396,10 @@ func checkD2(tst *testing.T, N int, h, tolD float64, verb bool) {
 	}
 }
 
-func TestChebyInterp04(tst *testing.T) {
+func TestChebyInterp05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp04. Second derivative of ψ")
+	chk.PrintTitle("ChebyInterp05. Second derivative of ψ")
 
 	// check D2
 	k := 0
@@ -389,10 +411,65 @@ func TestChebyInterp04(tst *testing.T) {
 	}
 }
 
-func TestChebyInterp05(tst *testing.T) {
+// cmpD1ana compares D1 matrices with numerical differentiation and with each other
+func cmpD1ana(tst *testing.T, msg string, o *ChebyInterp, f, dfdxAna Ss, tol float64, verb bool) {
+	err := o.CalcCoefIs(f)
+	chk.EP(err)
+	u := o.CoefIs //f @ nodes: u = f(x_i)
+	v := la.NewVector(o.N + 1)
+	la.MatVecMul(v, 1, o.D1, u)
+	maxDiff := o.CalcErrorD1(f, dfdxAna)
+	if maxDiff > tol {
+		tst.Errorf(msg+": maxDiff = %23g ⇒ D1 failed\n", maxDiff)
+	} else {
+		io.Pf(msg+": maxDiff = %23g ⇒ D1 is OK\n", maxDiff)
+	}
+}
+
+func checkD1ana(tst *testing.T, N int, f, dfdxAna Ss, tol, tolTrig, tolNst float64, verb bool) {
+
+	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
+	chk.EP(err)
+
+	err = o.CalcD1(false, false, false)
+	chk.EP(err)
+	cmpD1ana(tst, "[noTrig, noFlip, noNst]", o, f, dfdxAna, tol, verb)
+
+	err = o.CalcD1(true, false, false)
+	chk.EP(err)
+	cmpD1ana(tst, "[  trig, noFlip, noNst]", o, f, dfdxAna, tolTrig, verb)
+
+	err = o.CalcD1(false, true, false)
+	chk.EP(err)
+	cmpD1ana(tst, "[noTrig,   flip, noNst]", o, f, dfdxAna, tol, verb)
+
+	err = o.CalcD1(true, true, false)
+	chk.EP(err)
+	cmpD1ana(tst, "[  trig,   flip, noNst]", o, f, dfdxAna, tolTrig, verb)
+
+	// nst
+
+	err = o.CalcD1(false, false, true)
+	chk.EP(err)
+	cmpD1ana(tst, "[noTrig, noFlip,   nst]", o, f, dfdxAna, tolNst, verb)
+
+	err = o.CalcD1(true, false, true)
+	chk.EP(err)
+	cmpD1ana(tst, "[  trig, noFlip,   nst]", o, f, dfdxAna, tolNst, verb)
+
+	err = o.CalcD1(false, true, true)
+	chk.EP(err)
+	cmpD1ana(tst, "[noTrig,   flip,   nst]", o, f, dfdxAna, tolNst, verb)
+
+	err = o.CalcD1(true, true, true)
+	chk.EP(err)
+	cmpD1ana(tst, "[  trig,   flip,   nst]", o, f, dfdxAna, tolNst, verb)
+}
+
+func TestChebyInterp06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp05. I(x) versus Is(x). Flip vs NoFlip")
+	chk.PrintTitle("ChebyInterp06. I(x) versus Is(x). D1 matrices")
 
 	// test function
 	f := func(x float64) (float64, error) {
@@ -411,13 +488,10 @@ func TestChebyInterp05(tst *testing.T) {
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
 	chk.EP(err)
 
-	// compute coefficients
+	// check interpolations
 	o.CalcCoefI(f)
 	o.CalcCoefIs(f)
 	chk.EP(err)
-	u := o.CoefIs //f @ nodes: u = f(x_i)
-
-	// check interpolations
 	xx := utl.LinSpace(-1, 1, 11)
 	for _, x := range xx {
 		i1 := o.I(x)
@@ -425,26 +499,9 @@ func TestChebyInterp05(tst *testing.T) {
 		chk.AnaNum(tst, "I(x) == Is(x)", 1e-14, i1, i2, chk.Verbose)
 	}
 
-	// derivative of interpolation @ x_i
-	trigo, flip := false, false
-	err = o.CalcD1(trigo, flip)
-	chk.EP(err)
-	v := la.NewVector(o.N + 1)
-	la.MatVecMul(v, 1, o.D1, u)
-
-	// check error on derivative
-	maxDiff := o.CalcErrorD1(f, g)
-	io.Pforan("maxDiff = %v\n", maxDiff)
-	if maxDiff > 1e-14 {
-		tst.Errorf("maxDiff = %g ⇒ D1 failed\n", maxDiff)
-	}
-
-	// compare flip vs non-flip
-	D1flip := o.D1.GetDeep2()
-	flip = true
-	err = o.CalcD1(trigo, flip)
-	chk.EP(err)
-	chk.Deep2(tst, "D1 flip vs noFlip", 1e-13, D1flip, o.D1.GetDeep2())
+	// check D1 matrices
+	io.Pl()
+	checkD1ana(tst, N, f, g, 1e-14, 1e-13, 1e-14, chk.Verbose)
 
 	// plot
 	if chk.Verbose && true {
@@ -460,6 +517,12 @@ func TestChebyInterp05(tst *testing.T) {
 			y3[i] = o.Is(x)
 			y4[i], _ = g(x)
 		}
+
+		o.CalcD1(true, true, true)
+		u := o.CoefIs //f @ nodes: u = f(x_i)
+		v := la.NewVector(o.N + 1)
+		la.MatVecMul(v, 1, o.D1, u)
+
 		plt.Reset(true, &plt.A{Prop: 1.5})
 
 		plt.Subplot(2, 1, 1)
@@ -476,11 +539,11 @@ func TestChebyInterp05(tst *testing.T) {
 		plt.Gll("$x$", "$g(x)$", nil)
 		plt.HideAllBorders()
 
-		plt.Save("/tmp/gosl/fun", "chebyinterp05")
+		plt.Save("/tmp/gosl/fun", "chebyinterp06")
 	}
 }
 
-func calcD1error(N int, f, dfdxAna Ss, trigo, flip bool) (maxDiff float64) {
+func calcD1error(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64) {
 
 	// allocate polynomial
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
@@ -491,7 +554,7 @@ func calcD1error(N int, f, dfdxAna Ss, trigo, flip bool) (maxDiff float64) {
 	chk.EP(err)
 
 	// compute D1 matrix
-	err = o.CalcD1(trigo, flip)
+	err = o.CalcD1(trig, flip, nst)
 	chk.EP(err)
 
 	// compute error
@@ -499,10 +562,10 @@ func calcD1error(N int, f, dfdxAna Ss, trigo, flip bool) (maxDiff float64) {
 	return
 }
 
-func TestChebyInterp06(tst *testing.T) {
+func TestChebyInterp07(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp06. round-off errors")
+	chk.PrintTitle("ChebyInterp07. round-off errors")
 
 	// test function
 	f := func(x float64) (float64, error) {
@@ -513,32 +576,45 @@ func TestChebyInterp06(tst *testing.T) {
 	}
 
 	if chk.Verbose {
+		var dummy bool
 
 		// check
-		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
+		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256} //, 500, 512, 1000, 1024, 2000, 2048}
 		nn := make([]float64, len(Nvals))
 		eeA := make([]float64, len(Nvals))
 		eeB := make([]float64, len(Nvals))
 		eeC := make([]float64, len(Nvals))
 		eeD := make([]float64, len(Nvals))
+		eeE := make([]float64, len(Nvals))
+		eeF := make([]float64, len(Nvals))
 		for i, N := range Nvals {
 			nn[i] = float64(N)
-			eeA[i] = calcD1error(N, f, g, false, false)
-			eeB[i] = calcD1error(N, f, g, true, false)
-			eeC[i] = calcD1error(N, f, g, false, true)
-			eeD[i] = calcD1error(N, f, g, true, true)
-			io.Pf("%4d: maxdiff = %24v  %24v\n", N, eeA[i], eeB[i])
+
+			eeA[i] = calcD1error(N, f, g, false, false, false)
+			eeB[i] = calcD1error(N, f, g, true, false, false)
+			eeC[i] = calcD1error(N, f, g, false, true, false)
+			eeD[i] = calcD1error(N, f, g, true, true, false)
+			eeE[i] = calcD1error(N, f, g, false, dummy, true)
+			eeF[i] = calcD1error(N, f, g, true, dummy, true)
+
+			io.Pf("%4d: %.2e  %.2e  %.2e  %.2e  %.2e  %.2e\n", N,
+				eeA[i], eeB[i], eeC[i], eeD[i], eeE[i], eeF[i])
+
 		}
 
 		// plot
 		plt.Reset(true, nil)
-		plt.Plot(nn, eeA, &plt.A{C: "b", L: "std,noFlip", M: "s", Me: 1, NoClip: true})
-		plt.Plot(nn, eeB, &plt.A{C: "r", L: "tri,noFlip", M: "+", Me: 1, NoClip: true})
-		plt.Plot(nn, eeC, &plt.A{C: "c", L: "std,flip", M: ".", Me: 1, NoClip: true})
-		plt.Plot(nn, eeD, &plt.A{C: "m", L: "tri,flip", M: "*", Me: 1, NoClip: true})
-		plt.Gll("$N$", "$||Df-df/dx||_\\infty$", nil)
+
+		plt.Plot(nn, eeA, &plt.A{C: "b", L: "std,nof", M: "s", Me: 1, NoClip: true})
+		plt.Plot(nn, eeB, &plt.A{C: "r", L: "tri,nof", M: "+", Me: 1, NoClip: true})
+		plt.Plot(nn, eeC, &plt.A{C: "c", L: "std,fli", M: ".", Me: 1, NoClip: true})
+		plt.Plot(nn, eeD, &plt.A{C: "m", L: "tri,fli", M: "*", Me: 1, NoClip: true})
+		plt.Plot(nn, eeE, &plt.A{C: "y", L: "std,nst", M: "s", Me: 1, NoClip: true})
+		plt.Plot(nn, eeF, &plt.A{C: "k", L: "tri,nst", M: "+", Me: 1, NoClip: true})
+
+		plt.Gll("$N$", "$||Df-df/dx||_\\infty$", &plt.A{LegOut: true, LegNcol: 3, LegHlen: 3})
 		plt.SetYlog()
 		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "chebyinterp06")
+		plt.Save("/tmp/gosl/fun", "chebyinterp07")
 	}
 }
