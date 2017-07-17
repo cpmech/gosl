@@ -25,7 +25,7 @@ func Test_hc01(tst *testing.T) {
 		{2, 9, 5, 8, 1, 4, 3, 10, 7, 6},
 		{3, 10, 1, 2, 7, 4, 9, 6, 5, 8},
 	}
-	chk.IntMat(tst, "x", x, xchk)
+	chk.IntDeep2(tst, "x", x, xchk)
 
 	xmin := []float64{-1.0, 0.0}
 	xmax := []float64{1.0, 2.0}

@@ -208,7 +208,7 @@ func TestSpBlas04(tst *testing.T) {
 	chk.Ints(tst, "c.p", c.p, []int{0, 2, 4, 6})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 3, 5})
 	chk.Ints(tst, "b2c", b2c, []int{1, 2, 4, 5})
-	chk.Matrix(tst, "c", 1e-17, c.ToDense().GetSlice(), [][]float64{{1, 2, 0}, {5, 0, 1}, {0, 3, 5}})
+	chk.Deep2(tst, "c", 1e-17, c.ToDense().GetSlice(), [][]float64{{1, 2, 0}, {5, 0, 1}, {0, 3, 5}})
 }
 
 func TestSpBlas05(tst *testing.T) {
@@ -261,7 +261,7 @@ func TestSpBlas05(tst *testing.T) {
 	chk.Ints(tst, "c.p", c.p, []int{0, 3, 5, 10, 12, 13, 17})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 2, 6, 8, 10, 11, 13, 15})
 	chk.Ints(tst, "b2c", b2c, []int{3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16})
-	chk.Matrix(tst, "c", 1e-16, c.ToDense().GetSlice(), [][]float64{
+	chk.Deep2(tst, "c", 1e-16, c.ToDense().GetSlice(), [][]float64{
 		{0.1, +0, +2.0, 0.1, +0, 2.7},
 		{0.0, +2, +4.3, 0.0, +0, 8.0},
 		{0.2, +0, +6.0, 0.0, 10, 4.8},
@@ -325,14 +325,14 @@ func TestSpBlas06(tst *testing.T) {
 	chk.ArrayC(tst, "d.x", 1e-16, d.x, []complex128{0.1 + 1i, 0.2 + 2i, 0.3 + 3i, 2, 16, 2, 4.3 + 3i, 6, 8.1 + 1i, 10, 0.1 + 1i, 0.5 + 5i, 10, 2.7 + 7i, 8, 4.8 + 8i, 2})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 2, 6, 8, 10, 11, 13, 15})
 	chk.Ints(tst, "b2c", b2c, []int{3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16})
-	chk.Matrix(tst, "c", 1e-16, c.ToDense().GetSlice(), [][]float64{
+	chk.Deep2(tst, "c", 1e-16, c.ToDense().GetSlice(), [][]float64{
 		{0.1, +0, +2.0, 0.1, +0, 2.7},
 		{0.0, +2, +4.3, 0.0, +0, 8.0},
 		{0.2, +0, +6.0, 0.0, 10, 4.8},
 		{0.0, 16, +8.1, 0.0, +0, 0.0},
 		{0.3, +0, 10.0, 0.5, +0, 2.0},
 	})
-	chk.MatrixC(tst, "d", 1e-16, d.ToDense().GetSlice(), [][]complex128{
+	chk.Deep2c(tst, "d", 1e-16, d.ToDense().GetSlice(), [][]complex128{
 		{0.1 + 1i, +0, +2.0 + 0i, 0.1 + 1i, +0, 2.7 + 7i},
 		{0.0 + 0i, +2, +4.3 + 3i, 0.0 + 0i, +0, 8.0 + 0i},
 		{0.2 + 2i, +0, +6.0 + 0i, 0.0 + 0i, 10, 4.8 + 8i},
@@ -379,7 +379,7 @@ func TestSpBlas07(tst *testing.T) {
 	tc.Init(5, 6, ta.Len()+tb.Len())
 	SpTriAdd(&tc, 0.1, &ta, 2, &tb)
 	io.Pf("tc = %+v\n", tc)
-	chk.Matrix(tst, "c", 1e-16, tc.GetDenseMatrix().GetSlice(), [][]float64{
+	chk.Deep2(tst, "c", 1e-16, tc.GetDenseMatrix().GetSlice(), [][]float64{
 		{0.1, +0, +2.0, 0.1, +0, 2.7},
 		{0.0, +2, +4.3, 0.0, +0, 8.0},
 		{0.2, +0, +6.0, 0.0, 10, 4.8},
@@ -428,7 +428,7 @@ func TestSpBlas08(tst *testing.T) {
 	// d := (α+βi)*a + μ*b
 	SpTriAddR2C(&td, α, β, &ta, μ, &tb)
 	io.Pf("td = %+v\n", td)
-	chk.MatrixC(tst, "d", 1e-16, td.GetDenseMatrix().GetSlice(), [][]complex128{
+	chk.Deep2c(tst, "d", 1e-16, td.GetDenseMatrix().GetSlice(), [][]complex128{
 		{0.1 + 1i, +0, +2.0 + 0i, 0.1 + 1i, +0, 2.7 + 7i},
 		{0.0 + 0i, +2, +4.3 + 3i, 0.0 + 0i, +0, 8.0 + 0i},
 		{0.2 + 2i, +0, +6.0 + 0i, 0.0 + 0i, 10, 4.8 + 8i},
@@ -445,7 +445,7 @@ func TestSpBlas09(tst *testing.T) {
 	var a Triplet
 	SpTriSetDiag(&a, 4, 666.0)
 	A := a.ToMatrix(nil).ToDense()
-	chk.Matrix(tst, "a", 1e-17, A.GetSlice(), [][]float64{
+	chk.Deep2(tst, "a", 1e-17, A.GetSlice(), [][]float64{
 		{666, 0, 0, 0},
 		{0, 666, 0, 0},
 		{0, 0, 666, 0},
@@ -504,7 +504,7 @@ func TestSpBlas11(tst *testing.T) {
 
 	b1 := NewMatrix(a1.m, a1.m)
 	SpMatMatTrMul(b1, 1, a1)
-	chk.Matrix(tst, "b1", 1e-17, b1.GetSlice(), [][]float64{{1, 0}, {0, 2}})
+	chk.Deep2(tst, "b1", 1e-17, b1.GetSlice(), [][]float64{{1, 0}, {0, 2}})
 
 	io.Pf("\n----------------------------------\n")
 	var T2 Triplet
@@ -520,7 +520,7 @@ func TestSpBlas11(tst *testing.T) {
 
 	b2 := NewMatrix(a2.m, a2.m)
 	SpMatMatTrMul(b2, 1, a2)
-	chk.Matrix(tst, "b2", 1e-17, b2.GetSlice(), [][]float64{{2, -1, -6}, {-1, 13, 8}, {-6, 8, 20}})
+	chk.Deep2(tst, "b2", 1e-17, b2.GetSlice(), [][]float64{{2, -1, -6}, {-1, 13, 8}, {-6, 8, 20}})
 
 	io.Pf("\n----------------------------------\n")
 	var T3 Triplet
@@ -533,7 +533,7 @@ func TestSpBlas11(tst *testing.T) {
 
 	b3 := NewMatrix(a3.m, a3.m)
 	SpMatMatTrMul(b3, 1, a3)
-	chk.Matrix(tst, "b3", 1e-17, b3.GetSlice(), [][]float64{{1, 2, -3, 0}, {2, 4, -6, 0}, {-3, -6, 9, 0}, {0, 0, 0, 0}})
+	chk.Deep2(tst, "b3", 1e-17, b3.GetSlice(), [][]float64{{1, 2, -3, 0}, {2, 4, -6, 0}, {-3, -6, 9, 0}, {0, 0, 0, 0}})
 
 	io.Pf("\n----------------------------------\n")
 	var T4 Triplet
@@ -545,5 +545,5 @@ func TestSpBlas11(tst *testing.T) {
 
 	b4 := NewMatrix(a4.m, a4.m)
 	SpMatMatTrMul(b4, 1, a4)
-	chk.Matrix(tst, "b4", 1e-17, b4.GetSlice(), [][]float64{{5}})
+	chk.Deep2(tst, "b4", 1e-17, b4.GetSlice(), [][]float64{{5}})
 }

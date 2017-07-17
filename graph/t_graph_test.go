@@ -96,7 +96,7 @@ func Test_graph01(tst *testing.T) {
 	io.Pforan("dist =\n%v", G.StrDistMatrix())
 	io.Pforan("path from 0 to 3 = %v\n", pth)
 	chk.Ints(tst, "0 → 3", pth, []int{0, 1, 2, 3})
-	chk.Matrix(tst, "dist", 1e-17, G.Dist, [][]float64{
+	chk.Deep2(tst, "dist", 1e-17, G.Dist, [][]float64{
 		{0, 5, 8, 9},
 		{inf, 0, 3, 4},
 		{inf, inf, 0, 1},
@@ -114,7 +114,7 @@ func Test_graph01(tst *testing.T) {
 	io.Pfcyan("dist =\n%v", G.StrDistMatrix())
 	io.Pfcyan("path from 0 to 3 = %v\n", pth)
 	chk.Ints(tst, "0 → 3", pth, []int{0, 3})
-	chk.Matrix(tst, "dist", 1e-17, G.Dist, [][]float64{
+	chk.Deep2(tst, "dist", 1e-17, G.Dist, [][]float64{
 		{0, 5, 8, 10},
 		{inf, 0, 3, 16},
 		{inf, inf, 0, 13},
@@ -181,7 +181,7 @@ func Test_graph02(tst *testing.T) {
 	io.Pforan("dist =\n%v", G.StrDistMatrix())
 	io.Pforan("path from 1 to 3 = %v\n", pth)
 	chk.Ints(tst, "1 → 3", pth, []int{1, 4, 5, 3})
-	chk.Matrix(tst, "dist", 1e-17, G.Dist, [][]float64{
+	chk.Deep2(tst, "dist", 1e-17, G.Dist, [][]float64{
 		{0, 6, 8, 17, 17, 20},
 		{inf, 0, 21, 18, 11, 14},
 		{inf, inf, 0, 9, inf, inf},

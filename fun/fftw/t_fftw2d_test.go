@@ -68,7 +68,7 @@ func TestTwoDver01a(tst *testing.T) {
 
 	// check output
 	X := plan.GetSlice()
-	chk.MatrixC(tst, "X", 1e-13, X, test2d1Xref)
+	chk.Deep2c(tst, "X", 1e-13, X, test2d1Xref)
 }
 
 func TestTwoDver01b(tst *testing.T) {
@@ -112,7 +112,7 @@ func TestTwoDver01b(tst *testing.T) {
 
 	// check output
 	X := plan.GetSlice()
-	chk.MatrixC(tst, "X", 1e-13, X, test2d1Xref)
+	chk.Deep2c(tst, "X", 1e-13, X, test2d1Xref)
 }
 
 func TestTwoDver02(tst *testing.T) {

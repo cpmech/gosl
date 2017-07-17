@@ -67,20 +67,20 @@ func Test_mylab01(tst *testing.T) {
 	chk.Array(tst, "ff", 1e-16, ff, []float64{123, 123, 123, 123, 123})
 	chk.Ints(tst, "h", h, []int{0, 1, 2, 3, 4, 7, 8, 9, 11, 12, 23, 32, 37})
 	chk.Ints(tst, "H", H, []int{-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 11, 15, 16, 38, 39})
-	chk.IntMat(tst, "M", M, [][]int{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}})
-	chk.Matrix(tst, "N", 1e-17, N, [][]float64{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}})
-	chk.Matrix(tst, "X", 1e-17, X, [][]float64{{3, 4, 5, 6}, {3, 4, 5, 6}, {3, 4, 5, 6}})
-	chk.Matrix(tst, "Y", 1e-17, Y, [][]float64{{10, 10, 10, 10}, {15, 15, 15, 15}, {20, 20, 20, 20}})
-	chk.Matrix(tst, "U", 1e-17, U, [][]float64{{-1, 0, 1}, {-1, 0, 1}, {-1, 0, 1}})
-	chk.Matrix(tst, "V", 1e-17, V, [][]float64{{-2, -2, -2}, {0, 0, 0}, {2, 2, 2}})
-	chk.Matrix(tst, "W", 1e-17, W, [][]float64{{-3, -2, -1}, {-1, 0, 1}, {1, 2, 3}})
-	chk.Matrix(tst, "XX", 1e-17, XX, [][]float64{{-1, 0, 1}, {-1, 0, 1}, {-1, 0, 1}})
-	chk.Matrix(tst, "YY", 1e-17, YY, [][]float64{{-2, -2, -2}, {0, 0, 0}, {2, 2, 2}})
-	chk.Matrix(tst, "ZZ", 1e-17, ZZ, [][]float64{{-5, -4, -3}, {-1, 0, 1}, {3, 4, 5}})
-	chk.Matrix(tst, "UU", 1e-17, UU, [][]float64{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}})
-	chk.Matrix(tst, "VV", 1e-17, VV, [][]float64{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}})
-	chk.StrMat(tst, "S", S, [][]string{{"", "", ""}, {"", "", ""}})
-	chk.IntMat(tst, "Pc", Pc, P)
+	chk.IntDeep2(tst, "M", M, [][]int{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}})
+	chk.Deep2(tst, "N", 1e-17, N, [][]float64{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}})
+	chk.Deep2(tst, "X", 1e-17, X, [][]float64{{3, 4, 5, 6}, {3, 4, 5, 6}, {3, 4, 5, 6}})
+	chk.Deep2(tst, "Y", 1e-17, Y, [][]float64{{10, 10, 10, 10}, {15, 15, 15, 15}, {20, 20, 20, 20}})
+	chk.Deep2(tst, "U", 1e-17, U, [][]float64{{-1, 0, 1}, {-1, 0, 1}, {-1, 0, 1}})
+	chk.Deep2(tst, "V", 1e-17, V, [][]float64{{-2, -2, -2}, {0, 0, 0}, {2, 2, 2}})
+	chk.Deep2(tst, "W", 1e-17, W, [][]float64{{-3, -2, -1}, {-1, 0, 1}, {1, 2, 3}})
+	chk.Deep2(tst, "XX", 1e-17, XX, [][]float64{{-1, 0, 1}, {-1, 0, 1}, {-1, 0, 1}})
+	chk.Deep2(tst, "YY", 1e-17, YY, [][]float64{{-2, -2, -2}, {0, 0, 0}, {2, 2, 2}})
+	chk.Deep2(tst, "ZZ", 1e-17, ZZ, [][]float64{{-5, -4, -3}, {-1, 0, 1}, {3, 4, 5}})
+	chk.Deep2(tst, "UU", 1e-17, UU, [][]float64{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}})
+	chk.Deep2(tst, "VV", 1e-17, VV, [][]float64{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}})
+	chk.StrDeep2(tst, "S", S, [][]string{{"", "", ""}, {"", "", ""}})
+	chk.IntDeep2(tst, "Pc", Pc, P)
 }
 
 func Test_mylab03a(tst *testing.T) {
@@ -355,7 +355,7 @@ func Test_copy01(tst *testing.T) {
 		{7, 8, 9},
 	}
 	n := Clone(m)
-	chk.Matrix(tst, "n := m", 1e-17, n, m)
+	chk.Deep2(tst, "n := m", 1e-17, n, m)
 }
 
 func Test_mylab07(tst *testing.T) {
@@ -464,7 +464,7 @@ func Test_mylab11(tst *testing.T) {
 		{3, 300, -3},
 	}
 	B := GetMapped2(A, func(x float64) float64 { return x / 10.0 })
-	chk.Matrix(tst, "B", 1e-15, B, [][]float64{{0.1, 1, 10, 100}, {0.2, 1}, {0.3, 30, -0.3}})
+	chk.Deep2(tst, "B", 1e-15, B, [][]float64{{0.1, 1, 10, 100}, {0.2, 1}, {0.3, 30, -0.3}})
 }
 
 func Test_mylab12(tst *testing.T) {

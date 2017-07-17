@@ -37,8 +37,8 @@ func TestCholesky01(tst *testing.T) {
 	L := NewMatrix(3, 3)
 	Cholesky(L, a) // L is such that: A = L * transp(L)
 	LLt := calcLLt(L)
-	chk.Matrix(tst, "a = LLt", 1e-17, LLt.GetSlice(), a.GetSlice())
-	chk.Matrix(tst, "L", 1e-17, L.GetSlice(), [][]float64{
+	chk.Deep2(tst, "a = LLt", 1e-17, LLt.GetSlice(), a.GetSlice())
+	chk.Deep2(tst, "L", 1e-17, L.GetSlice(), [][]float64{
 		{+5, 0, 0},
 		{+3, 3, 0},
 		{-1, 1, 3},
@@ -59,8 +59,8 @@ func TestCholesky02(tst *testing.T) {
 	})
 	L := NewMatrix(5, 5)
 	Cholesky(L, a)
-	chk.Matrix(tst, "a = LLt", 1e-15, calcLLt(L).GetSlice(), a.GetSlice())
-	chk.Matrix(tst, "L", 1e-15, L.GetSlice(), [][]float64{
+	chk.Deep2(tst, "a = LLt", 1e-15, calcLLt(L).GetSlice(), a.GetSlice())
+	chk.Deep2(tst, "L", 1e-15, L.GetSlice(), [][]float64{
 		{math.Sqrt2, 0, 0, 0, 0},
 		{1.0 / math.Sqrt2, math.Sqrt(3.0 / 2.0), 0, 0, 0},
 		{1.0 / math.Sqrt2, math.Sqrt(3.0 / 2.0), math.Sqrt(7.0), 0, 0},

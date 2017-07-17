@@ -266,7 +266,7 @@ func checkD1direct(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb boo
 	}
 
 	// compare D1 direct
-	chk.Matrix(tst, "D1direct", tolCmp, D1direct, D1trigo)
+	chk.Deep2(tst, "D1direct", tolCmp, D1direct, D1trigo)
 }
 
 func TestChebyInterp03(tst *testing.T) {
@@ -403,7 +403,7 @@ func TestChebyInterp05(tst *testing.T) {
 	flip = true
 	err = o.CalcD1direct(trigo, flip)
 	chk.EP(err)
-	chk.Matrix(tst, "D1 flip vs noFlip", 1e-13, D1flip, o.D1direct.GetSlice())
+	chk.Deep2(tst, "D1 flip vs noFlip", 1e-13, D1flip, o.D1direct.GetSlice())
 
 	// plot
 	if chk.Verbose && true {

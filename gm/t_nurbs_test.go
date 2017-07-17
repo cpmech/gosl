@@ -116,7 +116,7 @@ func Test_nurbs01(tst *testing.T) {
 	io.Pf("\n------------ elem bry local inds -----------\n")
 	elembryinds := surf.ElemBryLocalInds()
 	io.Pforan("elembryinds = %v\n", elembryinds)
-	chk.IntMat(tst, "elembryinds", elembryinds, [][]int{
+	chk.IntDeep2(tst, "elembryinds", elembryinds, [][]int{
 		{0, 1, 2},
 		{2, 5},
 		{3, 4, 5},

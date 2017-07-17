@@ -34,7 +34,7 @@ func TestReadMatrix01(tst *testing.T) {
 		tst.Errorf("[1;31mfile cannot be read:[0m\n%v\n", err.Error())
 	}
 
-	chk.Matrix(tst, "mat", 1.0e-17, res, [][]float64{
+	chk.Deep2(tst, "mat", 1.0e-17, res, [][]float64{
 		{1, 2, 3, 4},
 		{10, 20, 30, 40},
 		{-1, -2, -3, -4},

@@ -88,5 +88,5 @@ func Test_serial03(tst *testing.T) {
 	io.Pforan("a => v = %v\n", v)
 	io.Pforan("v => a = %v\n", b)
 	chk.Array(tst, "a => v", 1e-15, v, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
-	chk.Matrix(tst, "v => a", 1e-15, b, a)
+	chk.Deep2(tst, "v => a", 1e-15, b, a)
 }

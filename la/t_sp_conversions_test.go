@@ -29,7 +29,7 @@ func TestSpConversion01(tst *testing.T) {
 	t.Put(2, 2, 32.0)
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	chk.Matrix(tst, "a", 1e-17, ad.GetSlice(), [][]float64{
+	chk.Deep2(tst, "a", 1e-17, ad.GetSlice(), [][]float64{
 		{10, 11, 12},
 		{20, 21, 22},
 		{30, 31, 32},
@@ -59,7 +59,7 @@ func TestSpConversion02(tst *testing.T) {
 	t.Put(3, 0, 3.0) // repeated
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	chk.Matrix(tst, "a", 1e-17, ad.GetSlice(), [][]float64{
+	chk.Deep2(tst, "a", 1e-17, ad.GetSlice(), [][]float64{
 		{1, 2, 3},
 		{4, 5, 6},
 		{7, 8, 9},
@@ -86,7 +86,7 @@ func TestSpConversion03(tst *testing.T) {
 	t.Put(2, 2, 32.0+1i)
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	chk.MatrixC(tst, "a", 1.0e-17, ad.GetSlice(), [][]complex128{
+	chk.Deep2c(tst, "a", 1.0e-17, ad.GetSlice(), [][]complex128{
 		{10, 11, 12},
 		{20, 21, 22},
 		{30, 31, 32 + 1i},
@@ -116,7 +116,7 @@ func TestSpConversion04(tst *testing.T) {
 	t.Put(3, 0, +3.0+1.5i) // repeated
 	a := t.ToMatrix(nil)
 	ad := a.ToDense()
-	chk.MatrixC(tst, "a", 1.0e-17, ad.GetSlice(), [][]complex128{
+	chk.Deep2c(tst, "a", 1.0e-17, ad.GetSlice(), [][]complex128{
 		{1 + 1i, 2 + 1i, 3 + 2i},
 		{4 + 2i, 5 + 2i, 6 + 1i},
 		{7 + 3i, 8 + 3i, 9 + 4i},

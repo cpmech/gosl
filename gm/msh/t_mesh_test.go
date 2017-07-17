@@ -386,7 +386,7 @@ func checkderived(tst *testing.T, m *Mesh, ndim int, xmin, xmax []float64, allGn
 	chk.Array(tst, "Xmin", 1e-15, m.Xmin, xmin)
 	chk.Array(tst, "Xmax", 1e-15, m.Xmax, xmax)
 	for i, c := range m.Cells {
-		chk.Matrix(tst, io.Sf("Cell %d: X", i), 1e-15, c.X, allCoords[i])
+		chk.Deep2(tst, io.Sf("Cell %d: X", i), 1e-15, c.X, allCoords[i])
 		chk.Int(tst, io.Sf("Cell %d: Gndim", i), c.Gndim, allGndim[i])
 	}
 }

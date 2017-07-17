@@ -219,15 +219,15 @@ func ArrayC(tst *testing.T, msg string, tol float64, res, correct []complex128) 
 	PrintOk(msg)
 }
 
-// Matrix compares two matrices
-func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
+// Deep2 compares two nested (depth=2) slices
+func Deep2(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 	zero := false
 	if len(correct) == 0 {
 		zero = true
 	} else {
 		if len(res) != len(correct) {
 			PrintFail("%s error\n", msg)
-			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
+			tst.Errorf("%s failed: res and correct slices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
@@ -236,7 +236,7 @@ func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 		if !zero {
 			if len(res[i]) != len(correct[i]) {
 				PrintFail("%s  error\n", msg)
-				tst.Errorf("%s failed: matrices have different number of columns", msg)
+				tst.Errorf("%s failed: slices have different number of columns", msg)
 			}
 		}
 		for j := 0; j < len(res[i]); j++ {
@@ -256,15 +256,15 @@ func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 	CheckAndPrint(tst, msg, tol, maxdiff)
 }
 
-// MatrixC compares two matrices of complex nummbers
-func MatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex128) {
+// Deep2c compares two nested (depth=2) slices
+func Deep2c(tst *testing.T, msg string, tol float64, res, correct [][]complex128) {
 	zero := false
 	if len(correct) == 0 {
 		zero = true
 	} else {
 		if len(res) != len(correct) {
 			PrintFail("%s error\n", msg)
-			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
+			tst.Errorf("%s failed: res and correct slices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
@@ -274,7 +274,7 @@ func MatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex12
 		if !zero {
 			if len(res[i]) != len(correct[i]) {
 				PrintFail("%s  error\n", msg)
-				tst.Errorf("%s failed: matrices have different number of columns", msg)
+				tst.Errorf("%s failed: slices have different number of columns", msg)
 			}
 		}
 		for j := 0; j < len(res[i]); j++ {
@@ -301,15 +301,15 @@ func MatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex12
 	PrintOk(msg)
 }
 
-// StrMat compares matrices of strings
-func StrMat(tst *testing.T, msg string, res, correct [][]string) {
+// StrDeep2 compares nested slices of strings
+func StrDeep2(tst *testing.T, msg string, res, correct [][]string) {
 	empty := false
 	if len(correct) == 0 {
 		empty = true
 	} else {
 		if len(res) != len(correct) {
 			PrintFail("%s error len(res)=%d != len(correct)=%d\n", msg, len(res), len(correct))
-			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
+			tst.Errorf("%s failed: res and correct slices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
@@ -317,7 +317,7 @@ func StrMat(tst *testing.T, msg string, res, correct [][]string) {
 		if !empty {
 			if len(res[i]) != len(correct[i]) {
 				PrintFail("%s error len(res[%d])=%d != len(correct[%d])=%d\n", msg, i, len(res[i]), i, len(correct[i]))
-				tst.Errorf("%s failed: string matrices have different number of columns", msg)
+				tst.Errorf("%s failed: string slices have different number of columns", msg)
 				return
 			}
 		}
@@ -328,7 +328,7 @@ func StrMat(tst *testing.T, msg string, res, correct [][]string) {
 			}
 			if res[i][j] != c {
 				PrintFail("%s error [%d,%d] %v != %v\n", msg, i, j, res[i][j], c)
-				tst.Errorf("%s failed: different str matrices:\n [%d,%d] item is wrong: %v != %v", msg, i, j, res[i][j], c)
+				tst.Errorf("%s failed: different str slices:\n [%d,%d] item is wrong: %v != %v", msg, i, j, res[i][j], c)
 				return
 			}
 		}
@@ -336,15 +336,15 @@ func StrMat(tst *testing.T, msg string, res, correct [][]string) {
 	PrintOk(msg)
 }
 
-// IntMat compares matrices of ints
-func IntMat(tst *testing.T, msg string, res, correct [][]int) {
+// IntDeep2 compares nested slices of ints
+func IntDeep2(tst *testing.T, msg string, res, correct [][]int) {
 	zero := false
 	if len(correct) == 0 {
 		zero = true
 	} else {
 		if len(res) != len(correct) {
 			PrintFail("%s error len(res)=%d != len(correct)=%d\n", msg, len(res), len(correct))
-			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
+			tst.Errorf("%s failed: res and correct slices have different lengths. %d != %d", msg, len(res), len(correct))
 			return
 		}
 	}
@@ -352,7 +352,7 @@ func IntMat(tst *testing.T, msg string, res, correct [][]int) {
 		if !zero {
 			if len(res[i]) != len(correct[i]) {
 				PrintFail("%s error len(res[%d])=%d != len(correct[%d])=%d\n", msg, i, len(res[i]), i, len(correct[i]))
-				tst.Errorf("%s failed: matrices have different number of columns", msg)
+				tst.Errorf("%s failed: slices have different number of columns", msg)
 				return
 			}
 		}
@@ -363,7 +363,7 @@ func IntMat(tst *testing.T, msg string, res, correct [][]int) {
 			}
 			if res[i][j] != c {
 				PrintFail("%s error [%d,%d] %v != %v\n", msg, i, j, res[i][j], c)
-				tst.Errorf("%s failed: different int matrices:\n [%d,%d] item is wrong: %v != %v", msg, i, j, res[i][j], c)
+				tst.Errorf("%s failed: different int slices:\n [%d,%d] item is wrong: %v != %v", msg, i, j, res[i][j], c)
 				return
 			}
 		}

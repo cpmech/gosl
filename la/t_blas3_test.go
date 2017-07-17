@@ -31,7 +31,7 @@ func TestBlas3tst01(tst *testing.T) {
 	c.Set(0, 0, 12333)
 	c.Set(1, 3, 111)
 	MatMatMul(c, 1, a, b)
-	chk.Matrix(tst, "c := 1⋅a⋅b", 1e-15, c.GetSlice(), [][]float64{
+	chk.Deep2(tst, "c := 1⋅a⋅b", 1e-15, c.GetSlice(), [][]float64{
 		{1.40, 6.0, 6.0, 6.250},
 		{0.65, 2.5, 2.5, 2.625},
 	})
@@ -39,7 +39,7 @@ func TestBlas3tst01(tst *testing.T) {
 	// MatMatMulAdd
 	c.Fill(100)
 	MatMatMulAdd(c, 1, a, b)
-	chk.Matrix(tst, "c := 1⋅a⋅b", 1e-17, c.GetSlice(), [][]float64{
+	chk.Deep2(tst, "c := 1⋅a⋅b", 1e-17, c.GetSlice(), [][]float64{
 		{101.40, 106.0, 106.0, 106.250},
 		{100.65, 102.5, 102.5, 102.625},
 	})
