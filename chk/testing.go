@@ -441,31 +441,50 @@ func Deep3(tst *testing.T, msg string, tol float64, a, b [][][]float64) {
 
 // Deep4 compares two deep4 slices
 func Deep4(tst *testing.T, msg string, tol float64, a, b [][][][]float64) {
-	if len(a) != len(b) {
-		PrintFail("%s error len(a)=%d != len(b)=%d\n", msg, len(a), len(b))
-		tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
-		return
-	}
-	for i := 0; i < len(a); i++ {
-		if len(a[i]) != len(b[i]) {
-			PrintFail("%s error len(a[%d])=%d != len(b[%d])=%d\n", msg, i, len(a[i]), i, len(b[i]))
-			tst.Errorf("%s failed: subslices have different lengths", msg)
+	zero := false
+	if len(b) == 0 {
+		zero = true
+	} else {
+		if len(a) != len(b) {
+			PrintFail("%s error len(a)=%d != len(b)=%d\n", msg, len(a), len(b))
+			tst.Errorf("%s failed: slices have different lengths: %v != %v", msg, a, b)
 			return
 		}
-		for j := 0; j < len(a[i]); j++ {
-			if len(a[i][j]) != len(b[i][j]) {
-				PrintFail("%s error len(a[%d][%d])=%d != len(b[%d][%d])=%d\n", msg, i, j, len(a[i][j]), i, j, len(b[i][j]))
-				tst.Errorf("%s failed: subsubslices have different lengths", msg)
+	}
+	for i := 0; i < len(a); i++ {
+		if !zero {
+			if len(a[i]) != len(b[i]) {
+				PrintFail("%s error len(a[%d])=%d != len(b[%d])=%d\n", msg, i, len(a[i]), i, len(b[i]))
+				tst.Errorf("%s failed: subslices have different lengths", msg)
 				return
 			}
-			for k := 0; k < len(a[i][j]); k++ {
-				if len(a[i][j][k]) != len(b[i][j][k]) {
-					PrintFail("%s error len(a[%d][%d][%d])=%d != len(b[%d][%d][%d])=%d\n", msg, i, j, k, len(a[i][j][k]), i, j, k, len(b[i][j][k]))
-					tst.Errorf("%s failed: subsubsubslices have different lengths", msg)
+		}
+		for j := 0; j < len(a[i]); j++ {
+			if !zero {
+				if len(a[i][j]) != len(b[i][j]) {
+					PrintFail("%s error len(a[%d][%d])=%d != len(b[%d][%d])=%d\n", msg, i, j, len(a[i][j]), i, j, len(b[i][j]))
+					tst.Errorf("%s failed: subsubslices have different lengths", msg)
 					return
 				}
+			}
+			for k := 0; k < len(a[i][j]); k++ {
+				if !zero {
+					if len(a[i][j][k]) != len(b[i][j][k]) {
+						PrintFail("%s error len(a[%d][%d][%d])=%d != len(b[%d][%d][%d])=%d\n", msg, i, j, k, len(a[i][j][k]), i, j, k, len(b[i][j][k]))
+						tst.Errorf("%s failed: subsubsubslices have different lengths", msg)
+						return
+					}
+				}
 				for l := 0; l < len(a[i][j][k]); l++ {
-					if math.Abs(a[i][j][k][l]-b[i][j][k][l]) > tol {
+					if math.IsNaN(a[i][j][k][l]) {
+						tst.Errorf("%s failed: NaN detected => %v", msg, a[i][j][k][l])
+						return
+					}
+					var c float64
+					if !zero {
+						c = b[i][j][k][l]
+					}
+					if math.Abs(a[i][j][k][l]-c) > tol {
 						PrintFail("%s error %v != %v\n", msg, a[i][j][k][l], b[i][j][k][l])
 						tst.Errorf("%s failed: slices are different: %d,%d,%d,%d component %v != %v\n%v != \n%v", msg, i, j, k, l, a[i][j][k][l], b[i][j][k][l], a, b)
 						return
@@ -478,6 +497,9 @@ func Deep4(tst *testing.T, msg string, tol float64, a, b [][][][]float64) {
 }
 
 // Symmetry checks symmetry of SEGMENTS in an even or odd slice of float64
+//
+//   NOTE: values in X must be sorted ascending
+//
 func Symmetry(tst *testing.T, msg string, X []float64) {
 
 	// some constants

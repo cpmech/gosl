@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="Deriv05"
+    go test -test.run="PrintAnaNum"
 done
