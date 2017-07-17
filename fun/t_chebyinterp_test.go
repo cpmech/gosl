@@ -209,7 +209,7 @@ func TestChebyInterp02(tst *testing.T) {
 	}
 }
 
-func checkD1direct(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb bool) {
+func checkD1(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb bool) {
 
 	// allocate
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
@@ -218,7 +218,7 @@ func checkD1direct(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb boo
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
-	// check ψl @ nodes (direct)
+	// check ψl @ nodes
 	for k, x := range o.X {
 		for l := 0; l < o.N+1; l++ {
 			res := o.PsiLobDirect(l, x)
@@ -233,14 +233,14 @@ func checkD1direct(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb boo
 		}
 	}
 
-	// check D1 matrix (direct, noFlip)
-	err = o.CalcD1direct(false, false)
+	// check D1 matrix (noFlip)
+	err = o.CalcD1(false, false)
 	chk.EP(err)
-	D1direct := o.D1direct.GetDeep2()
+	D1 := o.D1.GetDeep2()
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < o.N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1direct.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
 				return o.PsiLobDirect(l, t), nil
 			})
 		}
@@ -250,13 +250,13 @@ func checkD1direct(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb boo
 	}
 
 	// check D1 matrix (trigo, noFlip)
-	err = o.CalcD1direct(true, false)
+	err = o.CalcD1(true, false)
 	chk.EP(err)
-	D1trigo := o.D1direct.GetDeep2()
+	D1trigo := o.D1.GetDeep2()
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < o.N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1direct.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
 				return o.PsiLobDirect(l, t), nil
 			})
 		}
@@ -265,8 +265,8 @@ func checkD1direct(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb boo
 		io.Pl()
 	}
 
-	// compare D1 direct
-	chk.Deep2(tst, "D1direct", tolCmp, D1direct, D1trigo)
+	// compare D1
+	chk.Deep2(tst, "D1", tolCmp, D1, D1trigo)
 }
 
 func TestChebyInterp03(tst *testing.T) {
@@ -280,7 +280,7 @@ func TestChebyInterp03(tst *testing.T) {
 	tolsD := []float64{1e-5, 1e-5, 1e-4, 1e-4}
 	tolsC := []float64{1e-15, 1e-15, 1e-14, 1e-14}
 	for N := 3; N <= 6; N++ {
-		checkD1direct(tst, N, tolPsi, tolsD[k], tolsC[k], chk.Verbose)
+		checkD1(tst, N, tolPsi, tolsD[k], tolsC[k], chk.Verbose)
 		k++
 	}
 
@@ -305,7 +305,7 @@ func TestChebyInterp03(tst *testing.T) {
 	}
 }
 
-func checkD2direct(tst *testing.T, N int, h, tolD float64, verb bool) {
+func checkD2(tst *testing.T, N int, h, tolD float64, verb bool) {
 
 	// allocate
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
@@ -314,9 +314,9 @@ func checkD2direct(tst *testing.T, N int, h, tolD float64, verb bool) {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
-	// check D2 matrix (direct)
+	// check D2 matrix
 	hh := h * h
-	err = o.CalcD2direct()
+	err = o.CalcD2()
 	chk.EP(err)
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
@@ -325,7 +325,7 @@ func checkD2direct(tst *testing.T, N int, h, tolD float64, verb bool) {
 			ψlxjCurrent := o.PsiLobDirect(l, xj)
 			ψlxjAfter := o.PsiLobDirect(l, xj+h)
 			dψldxAtXj := (ψlxjBefore - 2.0*ψlxjCurrent + ψlxjAfter) / hh
-			chk.AnaNum(tst, io.Sf("D2[%d,%d](%+.3f)", j, l, xj), tolD, o.D2direct.Get(j, l), dψldxAtXj, verb)
+			chk.AnaNum(tst, io.Sf("D2[%d,%d](%+.3f)", j, l, xj), tolD, o.D2.Get(j, l), dψldxAtXj, verb)
 		}
 	}
 	if verb {
@@ -343,7 +343,7 @@ func TestChebyInterp04(tst *testing.T) {
 	hs := []float64{1e-2, 1e-3, 1e-3, 1e-3}
 	tols := []float64{1e-9, 1e-5, 1e-4, 1e-3}
 	for N := 3; N <= 6; N++ {
-		checkD2direct(tst, N, hs[k], tols[k], chk.Verbose)
+		checkD2(tst, N, hs[k], tols[k], chk.Verbose)
 		k++
 	}
 }
@@ -386,10 +386,10 @@ func TestChebyInterp05(tst *testing.T) {
 
 	// derivative of interpolation @ x_i
 	trigo, flip := false, false
-	err = o.CalcD1direct(trigo, flip)
+	err = o.CalcD1(trigo, flip)
 	chk.EP(err)
 	v := la.NewVector(o.N + 1)
-	la.MatVecMul(v, 1, o.D1direct, u)
+	la.MatVecMul(v, 1, o.D1, u)
 
 	// check error on derivative
 	maxDiff := o.CalcErrorD1(f, g)
@@ -399,11 +399,11 @@ func TestChebyInterp05(tst *testing.T) {
 	}
 
 	// compare flip vs non-flip
-	D1flip := o.D1direct.GetDeep2()
+	D1flip := o.D1.GetDeep2()
 	flip = true
-	err = o.CalcD1direct(trigo, flip)
+	err = o.CalcD1(trigo, flip)
 	chk.EP(err)
-	chk.Deep2(tst, "D1 flip vs noFlip", 1e-13, D1flip, o.D1direct.GetDeep2())
+	chk.Deep2(tst, "D1 flip vs noFlip", 1e-13, D1flip, o.D1.GetDeep2())
 
 	// plot
 	if chk.Verbose && true {
@@ -450,7 +450,7 @@ func calcD1error(N int, f, dfdxAna Ss, trigo, flip bool) (maxDiff float64) {
 	chk.EP(err)
 
 	// compute D1 matrix
-	err = o.CalcD1direct(trigo, flip)
+	err = o.CalcD1(trigo, flip)
 	chk.EP(err)
 
 	// compute error

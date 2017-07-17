@@ -38,10 +38,10 @@ type ChebyInterp struct {
 	EstimationN int // N to use when estimating CoefP [default=128]
 
 	// computed
-	C        *la.Matrix // physical to transform space conversion matrix
-	Ci       *la.Matrix // transform to physical space conversion matrix
-	D1direct *la.Matrix // (dψj/dx)(xi)
-	D2direct *la.Matrix // (d²ψj/dx²)(xi)
+	C  *la.Matrix // physical to transform space conversion matrix
+	Ci *la.Matrix // transform to physical space conversion matrix
+	D1 *la.Matrix // (dψj/dx)(xi)
+	D2 *la.Matrix // (d²ψj/dx²)(xi)
 }
 
 // NewChebyInterp returns a new ChebyInterp structure
@@ -360,7 +360,7 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 	return NegOnePowN(l+1) * (1.0 - x*x) * dTn / (cbl * nn * (x - o.X[l]))
 }
 
-// CalcD1direct computes the differentiation matrix D1 of the function PsiLobDirect
+// CalcD1 computes the differentiation matrix D1 of the function PsiLobDirect
 //
 //    d I{f}(x)     N            d ψ_l(x)
 //   ——————————— =  Σ   f(x_l) ⋅ ————————
@@ -383,7 +383,7 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 //
 //   Equations (2.4.31) and (2.4.33), page 89 of [1]
 //
-func (o *ChebyInterp) CalcD1direct(useTrigo, flip bool) (err error) {
+func (o *ChebyInterp) CalcD1(useTrigo, flip bool) (err error) {
 
 	// check
 	if o.Gauss {
@@ -391,7 +391,7 @@ func (o *ChebyInterp) CalcD1direct(useTrigo, flip bool) (err error) {
 	}
 
 	// allocate output and declare some constants/variables
-	o.D1direct = la.NewMatrix(o.N+1, o.N+1)
+	o.D1 = la.NewMatrix(o.N+1, o.N+1)
 	n := float64(o.N)
 	nn := float64(o.N * o.N)
 	n2 := 2.0 * n
@@ -424,13 +424,13 @@ func (o *ChebyInterp) CalcD1direct(useTrigo, flip bool) (err error) {
 					s2 = math.Sin((jj - ll) * π / n2)
 					v = -cbj * NegOnePowN(j+l) / (2.0 * cbl * s1 * s2)
 				}
-				o.D1direct.Set(j, l, v)
+				o.D1.Set(j, l, v)
 			}
 		}
 		if flip {
 			for j := 0; j < o.N+1; j++ {
 				for l := j + 1; l < o.N+1; l++ {
-					o.D1direct.Set(o.N-j, o.N-l, -o.D1direct.Get(j, l))
+					o.D1.Set(o.N-j, o.N-l, -o.D1.Get(j, l))
 				}
 			}
 		}
@@ -457,20 +457,20 @@ func (o *ChebyInterp) CalcD1direct(useTrigo, flip bool) (err error) {
 				cbl = o.cbar(l)
 				v = cbj * NegOnePowN(j+l) / (cbl * (o.X[j] - o.X[l]))
 			}
-			o.D1direct.Set(j, l, v)
+			o.D1.Set(j, l, v)
 		}
 	}
 	if flip {
 		for j := 0; j < o.N+1; j++ {
 			for l := j + 1; l < o.N+1; l++ {
-				o.D1direct.Set(o.N-j, o.N-l, -o.D1direct.Get(j, l))
+				o.D1.Set(o.N-j, o.N-l, -o.D1.Get(j, l))
 			}
 		}
 	}
 	return
 }
 
-// CalcD2direct calculates the second derivative
+// CalcD2 calculates the second derivative
 //
 //            d²ψ_l  |
 //    D2_jl = —————— |
@@ -478,11 +478,11 @@ func (o *ChebyInterp) CalcD1direct(useTrigo, flip bool) (err error) {
 //
 //    Equation (2.4.32), page 89 of [1]
 //
-func (o *ChebyInterp) CalcD2direct() (err error) {
+func (o *ChebyInterp) CalcD2() (err error) {
 	if o.Gauss {
 		chk.Panic("cannot compute D2 for non-Gauss-Lobatto points\n")
 	}
-	o.D2direct = la.NewMatrix(o.N+1, o.N+1)
+	o.D2 = la.NewMatrix(o.N+1, o.N+1)
 	nn := float64(o.N * o.N)
 	nn2p1 := 2.0*nn + 1.0
 	NN := nn * nn
@@ -513,7 +513,7 @@ func (o *ChebyInterp) CalcD2direct() (err error) {
 					v = (1.0 / cbl) * NegOnePowN(j+l) * (o.X[j]*o.X[j] + o.X[j]*o.X[l] - 2.0) / (s * d * d)
 				}
 			}
-			o.D2direct.Set(j, l, v)
+			o.D2.Set(j, l, v)
 		}
 	}
 	return
@@ -528,7 +528,7 @@ func (o *ChebyInterp) CalcErrorD1(f, dfdxAna Ss) (maxDiff float64) {
 
 	// derivative of interpolation @ x_i
 	v := la.NewVector(o.N + 1)
-	la.MatVecMul(v, 1, o.D1direct, u)
+	la.MatVecMul(v, 1, o.D1, u)
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
