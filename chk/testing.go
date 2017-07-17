@@ -169,6 +169,7 @@ func Array(tst *testing.T, msg string, tol float64, res, correct []float64) {
 	for i := 0; i < len(res); i++ {
 		if math.IsNaN(res[i]) {
 			tst.Errorf("%s failed: NaN detected => %v", msg, res[i])
+			return
 		}
 		if zero {
 			diff = math.Abs(res[i])
@@ -199,9 +200,11 @@ func ArrayC(tst *testing.T, msg string, tol float64, res, correct []complex128) 
 	for i := 0; i < len(res); i++ {
 		if math.IsNaN(real(res[i])) {
 			tst.Errorf("%s failed: NaN detected => %v", msg, res[i])
+			return
 		}
 		if math.IsNaN(imag(res[i])) {
 			tst.Errorf("%s failed: NaN detected => %v", msg, res[i])
+			return
 		}
 		if zero {
 			diff = math.Abs(real(res[i]))
@@ -249,6 +252,7 @@ func Deep2(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 		for j := 0; j < len(res[i]); j++ {
 			if math.IsNaN(res[i][j]) {
 				tst.Errorf("%s failed: NaN detected => %v", msg, res[i][j])
+				return
 			}
 			if zero {
 				diff = math.Abs(res[i][j])
@@ -288,9 +292,11 @@ func Deep2c(tst *testing.T, msg string, tol float64, res, correct [][]complex128
 		for j := 0; j < len(res[i]); j++ {
 			if math.IsNaN(real(res[i][j])) {
 				tst.Errorf("%s failed: NaN detected => %v", msg, res[i][j])
+				return
 			}
 			if math.IsNaN(imag(res[i][j])) {
 				tst.Errorf("%s failed: NaN detected => %v", msg, res[i][j])
+				return
 			}
 			if zero {
 				diff = math.Abs(real(res[i][j]))
