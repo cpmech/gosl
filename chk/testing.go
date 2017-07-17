@@ -286,6 +286,12 @@ func Deep2c(tst *testing.T, msg string, tol float64, res, correct [][]complex128
 			}
 		}
 		for j := 0; j < len(res[i]); j++ {
+			if math.IsNaN(real(res[i][j])) {
+				tst.Errorf("%s failed: NaN detected => %v", msg, res[i][j])
+			}
+			if math.IsNaN(imag(res[i][j])) {
+				tst.Errorf("%s failed: NaN detected => %v", msg, res[i][j])
+			}
 			if zero {
 				diff = math.Abs(real(res[i][j]))
 				diffz = math.Abs(imag(res[i][j]))
