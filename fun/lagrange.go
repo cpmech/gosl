@@ -47,9 +47,14 @@ var (
 //               j = 0
 //               j ≠ i
 //
+//   References:
+//     [1] Berrut JP, Trefethen LN (2004) Barycentric Lagrange Interpolation,
+//         SIAM Review Vol. 46, No. 3, pp. 501-517
+//
 type LagrangeInterp struct {
-	N int       // degree: N = len(X)-1
-	X []float64 // grid points: len(X) = P+1; generated in [-1, 1]
+	N   int       // degree: N = len(X)-1
+	X   []float64 // grid points: len(X) = P+1; generated in [-1, 1]
+	Lam []float64 // λ_i barycentric weights (also w_i in [1])
 }
 
 // NewLagrangeInterp allocates a new LagrangeInterp
@@ -77,6 +82,28 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 		o.X = ChebyshevXlob(N)
 	default:
 		return nil, chk.Err("cannot create grid type %q\n", gridType)
+	}
+
+	// compute barycentric weights as in [1]
+	o.Lam = make([]float64, o.N+1)
+	o.Lam[0] = 1
+	n := 0
+	for j := 1; j < o.N+1; j++ {
+		for k := 0; k < j; k++ {
+			//io.Pf("λ%d *= (x%d - x%d)\n", k, k, j)
+			o.Lam[k] *= (o.X[k] - o.X[j])
+			n++
+		}
+		o.Lam[j] = 1
+		for k := 0; k < j; k++ {
+			//io.Pfyel("λ%d *= (x%d - x%d)\n", j, j, k)
+			o.Lam[j] *= (o.X[j] - o.X[k])
+			n++
+		}
+		//io.Pl()
+	}
+	for j := 0; j < o.N+1; j++ {
+		o.Lam[j] = 1.0 / o.Lam[j]
 	}
 	return
 }
