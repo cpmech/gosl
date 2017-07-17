@@ -11,7 +11,7 @@ import (
 
 func TestCallerInfo(tst *testing.T) {
 	prev := Verbose
-	Verbose = true
+	//Verbose = true
 	CallerInfo(100)
 	Verbose = prev
 }
@@ -19,7 +19,7 @@ func TestCallerInfo(tst *testing.T) {
 func TestPrintOk(tst *testing.T) {
 	prevV := Verbose
 	prevC := ColorsOn
-	Verbose = true
+	//Verbose = true
 	ColorsOn = false
 	PrintTitle("PrintOk: verbose is ON for this test")
 	PrintOk("x")
@@ -32,7 +32,7 @@ func TestPrintOk(tst *testing.T) {
 func TestPrintFail(tst *testing.T) {
 	prevV := Verbose
 	prevC := ColorsOn
-	Verbose = true
+	//Verbose = true
 	ColorsOn = false
 	PrintTitle("PrintFail: verbose is ON for this test")
 	PrintFail("the message 'FAIL' is ok ⇒ ")
@@ -44,7 +44,7 @@ func TestPrintFail(tst *testing.T) {
 
 func TestCheckAndPrint(tst *testing.T) {
 	prevV := Verbose
-	Verbose = true
+	//Verbose = true
 	PrintTitle("CheckAndPrint: verbose is ON for this test")
 	t1 := new(testing.T)
 	CheckAndPrint(t1, "x", 0, math.Sqrt(-1))
@@ -66,17 +66,17 @@ func TestCheckAndPrint(tst *testing.T) {
 
 func TestPrintAnaNum(tst *testing.T) {
 	prevV := Verbose
-	Verbose = true
+	//Verbose = true
 	PrintTitle("PrintAnaNum: verbose is ON for this test")
-	err := PrintAnaNum("x", 0, math.Sqrt(-1), math.Sqrt(-1), true)
+	err := PrintAnaNum("x", 0, math.Sqrt(-1), math.Sqrt(-1), Verbose)
 	if err == nil {
 		tst.Errorf("error message should not be nil\n")
 	}
-	err = PrintAnaNum("x", 0, math.Inf(+1), math.Inf(+1), true)
+	err = PrintAnaNum("x", 0, math.Inf(+1), math.Inf(+1), Verbose)
 	if err == nil {
 		tst.Errorf("error message should not be nil\n")
 	}
-	err = PrintAnaNum("x", 0, 1, 2, true)
+	err = PrintAnaNum("x", 0, 1, 2, Verbose)
 	if err == nil {
 		tst.Errorf("error message should not be nil\n")
 	}
