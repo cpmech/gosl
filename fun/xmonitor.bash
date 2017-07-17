@@ -9,5 +9,5 @@ while true; do
     echo
     echo
     #go test -test.run="Chebyshev01"
-    go test -test.run="ChebyInterp06"
+    go test -test.run="ChebyInterp03"
 done

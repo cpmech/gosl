@@ -233,6 +233,8 @@ func checkD1(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb bool) {
 		}
 	}
 
+	// ------------------------------- no flip
+
 	// check D1 matrix (noFlip)
 	err = o.CalcD1(false, false)
 	chk.EP(err)
@@ -266,7 +268,46 @@ func checkD1(tst *testing.T, N int, tolPsi, tolD, tolCmp float64, verb bool) {
 	}
 
 	// compare D1
-	chk.Deep2(tst, "D1", tolCmp, D1, D1trigo)
+	chk.Deep2(tst, "D1 [noflip]", tolCmp, D1, D1trigo)
+
+	// ------------------------------- flip
+	io.Pl()
+	io.Pl()
+
+	// check D1 matrix (noFlip)
+	err = o.CalcD1(false, true)
+	chk.EP(err)
+	D1 = o.D1.GetDeep2()
+	for j := 0; j < o.N+1; j++ {
+		xj := o.X[j]
+		for l := 0; l < o.N+1; l++ {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
+				return o.PsiLobDirect(l, t), nil
+			})
+		}
+	}
+	if verb {
+		io.Pl()
+	}
+
+	// check D1 matrix (trigo, noFlip)
+	err = o.CalcD1(true, true)
+	chk.EP(err)
+	D1trigo = o.D1.GetDeep2()
+	for j := 0; j < o.N+1; j++ {
+		xj := o.X[j]
+		for l := 0; l < o.N+1; l++ {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, o.D1.Get(j, l), xj, 1e-2, verb, func(t float64) (float64, error) {
+				return o.PsiLobDirect(l, t), nil
+			})
+		}
+	}
+	if verb {
+		io.Pl()
+	}
+
+	// compare D1
+	chk.Deep2(tst, "D1 [flip]", tolCmp, D1, D1trigo)
 }
 
 func TestChebyInterp03(tst *testing.T) {
