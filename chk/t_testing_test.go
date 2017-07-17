@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestIntAssert(tst *testing.T) {
+func TestIntAssert01(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -22,13 +22,22 @@ func TestIntAssert(tst *testing.T) {
 		}
 	}()
 
-	PrintTitle("IntAssert")
+	PrintTitle("IntAssert01")
 
 	PrintOk("the next error message is")
 	IntAssert(2, 1)
 }
 
-func TestDblAssert(tst *testing.T) {
+func TestIntAssert02(tst *testing.T) {
+
+	//Verbose = true
+
+	PrintTitle("IntAssert02")
+
+	IntAssert(1, 1)
+}
+
+func TestDblAssert01(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -41,13 +50,13 @@ func TestDblAssert(tst *testing.T) {
 		}
 	}()
 
-	PrintTitle("DblAssert")
+	PrintTitle("DblAssert01")
 
 	PrintOk("the next error message is")
 	DblAssert(2, 1)
 }
 
-func TestIntAssertLessthan(tst *testing.T) {
+func TestIntAssertLessthan01(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -60,13 +69,22 @@ func TestIntAssertLessthan(tst *testing.T) {
 		}
 	}()
 
-	PrintTitle("IntAssertLessthan")
+	PrintTitle("IntAssertLessthan01")
 
 	PrintOk("the next error message is")
 	IntAssertLessThan(1, 1)
 }
 
-func TestIntAssertLessthanOrEqualTo(tst *testing.T) {
+func TestIntAssertLessthan02(tst *testing.T) {
+
+	//Verbose = true
+
+	PrintTitle("IntAssertLessthan02")
+
+	IntAssertLessThan(1, 2)
+}
+
+func TestIntAssertLessthanOrEqualTo01(tst *testing.T) {
 
 	//Verbose = true
 	defer func() {
@@ -79,10 +97,19 @@ func TestIntAssertLessthanOrEqualTo(tst *testing.T) {
 		}
 	}()
 
-	PrintTitle("IntAssertLessthanOrEqualTo")
+	PrintTitle("IntAssertLessthanOrEqualTo01")
 
 	PrintOk("the next error message is")
 	IntAssertLessThanOrEqualTo(2, 1)
+}
+
+func TestIntAssertLessthanOrEqualTo02(tst *testing.T) {
+
+	//Verbose = true
+
+	PrintTitle("IntAssertLessthanOrEqualTo02")
+
+	IntAssertLessThanOrEqualTo(1, 2)
 }
 
 func TestStrAssert(tst *testing.T) {
