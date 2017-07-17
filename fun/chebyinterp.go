@@ -376,18 +376,21 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 //    D1_jl = ————— |
 //             dx   |x=x_j
 //
-//   useTrigo -- use trigonometric identities (to reduce round-off errors)
+//   INPUT:
+//     trigo -- [best] use trigonometric identities (to reduce round-off errors)
+//     flip  -- [best] compute lower-diagonal part from upper diagonal part with:
+//                              D_{N-j,N-l} = -D_{j,l}
 //
 //   NOTE: (1) the signs are swapped (compared to [1]) because X are reversed here (from -1 to +1)
 //         (2) this method is only available for Gauss-Lobatto points
 //
 //   Equations (2.4.31) and (2.4.33), page 89 of [1]
 //
-func (o *ChebyInterp) CalcD1(useTrigo, flip bool) (err error) {
+func (o *ChebyInterp) CalcD1(trigo, flip bool) (err error) {
 
 	// check
 	if o.Gauss {
-		chk.Panic("cannot compute D1 for non-Gauss-Lobatto points\n")
+		return chk.Err("cannot compute D1 for non-Gauss-Lobatto points\n")
 	}
 
 	// allocate output and declare some constants/variables
@@ -398,7 +401,7 @@ func (o *ChebyInterp) CalcD1(useTrigo, flip bool) (err error) {
 	var v, s1, s2, jj, ll, cbj, cbl float64
 
 	// using trigonometric identities
-	if useTrigo {
+	if trigo {
 		for j := 0; j < o.N+1; j++ {
 			lMin := 0
 			if flip {
@@ -479,15 +482,21 @@ func (o *ChebyInterp) CalcD1(useTrigo, flip bool) (err error) {
 //    Equation (2.4.32), page 89 of [1]
 //
 func (o *ChebyInterp) CalcD2() (err error) {
+
+	// check
 	if o.Gauss {
-		chk.Panic("cannot compute D2 for non-Gauss-Lobatto points\n")
+		return chk.Err("cannot compute D2 for non-Gauss-Lobatto points\n")
 	}
+
+	// allocate output and declare some constants/variables
 	o.D2 = la.NewMatrix(o.N+1, o.N+1)
 	nn := float64(o.N * o.N)
 	nn2p1 := 2.0*nn + 1.0
 	NN := nn * nn
 	tt := 2.0 / 3.0
 	var v, s, cbl, d float64
+
+	// compute D2 matrix
 	for j := 0; j < o.N+1; j++ {
 		for l := 0; l < o.N+1; l++ {
 			if j == l {
