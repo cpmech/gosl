@@ -187,8 +187,8 @@ func Test_ts05(tst *testing.T) {
 
 	io.Pforan("Zero(666,nil) = %v\n", Zero.F(666, nil))
 	io.Pforan("One(666,nil)  = %v\n", One.F(666, nil))
-	chk.Scalar(tst, "zero", 1e-17, Zero.F(666, nil), 0)
-	chk.Scalar(tst, "one ", 1e-17, One.F(666, nil), 1)
+	chk.Float64(tst, "zero", 1e-17, Zero.F(666, nil), 0)
+	chk.Float64(tst, "one ", 1e-17, One.F(666, nil), 1)
 }
 
 func Test_ts06a(tst *testing.T) {

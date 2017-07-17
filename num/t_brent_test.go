@@ -77,7 +77,7 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 	}
 
 	// compare Brent's and Newton's solutions
-	chk.Scalar(tst, "xbrent - xnewt", tolcmp, xbrent, xnewt[0])
+	chk.Float64(tst, "xbrent - xnewt", tolcmp, xbrent, xnewt[0])
 	return
 }
 
@@ -133,7 +133,7 @@ func Test_brent02(tst *testing.T) {
 	//save   := true
 	save := false
 	xbrent := rootSolTest(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB, "brent02.png", save, false)
-	chk.Scalar(tst, "xsol", 1e-14, xbrent, 2.09455148154233)
+	chk.Float64(tst, "xsol", 1e-14, xbrent, 2.09455148154233)
 }
 
 func Test_brent03(tst *testing.T) {
@@ -165,5 +165,5 @@ func Test_brent03(tst *testing.T) {
 	io.Pforan("nit    = %v\n", o.It)
 
 	//save := true
-	chk.Scalar(tst, "xcorrect", 1e-8, x, xcor)
+	chk.Float64(tst, "xcorrect", 1e-8, x, xcor)
 }

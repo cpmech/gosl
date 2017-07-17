@@ -183,9 +183,9 @@ func TestOneDver03(tst *testing.T) {
 			io.Pf("%g\n", 0.0+0.0i)
 		}
 		if i == 1 || i == N-1 {
-			chk.ScalarC(tst, "x[1]", 1e-14, v, complex(float64(N)/2.0, 0))
+			chk.Complex128(tst, "x[1]", 1e-14, v, complex(float64(N)/2.0, 0))
 		} else {
-			chk.ScalarC(tst, "x[:]", 1e-14, v, 0.0+0.0i)
+			chk.Complex128(tst, "x[:]", 1e-14, v, 0.0+0.0i)
 		}
 	}
 }

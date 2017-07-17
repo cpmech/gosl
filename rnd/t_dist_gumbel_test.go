@@ -122,8 +122,8 @@ func Test_gumbel_03(tst *testing.T) {
 	var dist DistGumbel
 	dist.Init(&VarData{M: 61.3, S: 7.52}) // from Haldar & Mahadevan page 90
 	io.Pforan("dist = %+#v\n", dist)
-	chk.Scalar(tst, "u", 0.00011, dist.U, 57.9157)
-	chk.Scalar(tst, "β", 1e-4, dist.B, 1.0/0.17055)
+	chk.Float64(tst, "u", 0.00011, dist.U, 57.9157)
+	chk.Float64(tst, "β", 1e-4, dist.B, 1.0/0.17055)
 }
 
 func Test_dist_gumbel_04(tst *testing.T) {

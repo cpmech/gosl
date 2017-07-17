@@ -10,13 +10,13 @@ import (
 	"testing"
 )
 
-// Scalar compares two scalars
-func Scalar(tst *testing.T, msg string, tol, res, correct float64) {
+// Float64 compares two float64 numbers
+func Float64(tst *testing.T, msg string, tol, res, correct float64) {
 	CheckAndPrint(tst, msg, tol, math.Abs(res-correct))
 }
 
-// ScalarC compares two scalars (complex version)
-func ScalarC(tst *testing.T, msg string, tolNorm float64, res, correct complex128) {
+// Complex128 compares two complex128 numbers
+func Complex128(tst *testing.T, msg string, tolNorm float64, res, correct complex128) {
 	CheckAndPrint(tst, msg, tolNorm, cmplx.Abs(res-correct))
 }
 

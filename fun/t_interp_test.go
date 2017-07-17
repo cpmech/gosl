@@ -27,13 +27,13 @@ func TestInterp01(tst *testing.T) {
 	}
 
 	for i, x := range xx {
-		chk.Scalar(tst, "P(xi)", 1e-17, o.P(x), yy[i])
+		chk.Float64(tst, "P(xi)", 1e-17, o.P(x), yy[i])
 	}
 
 	xref := []float64{1.0 / 3.0, 2.5, 2.0 / 3.0, 1.1, 1.5, 3.5, 4.5}
 	yref := []float64{0.4, 0.125, 0.3, 0.2, 0.2, 0.03, 0.005}
 	for i, x := range xref {
-		chk.Scalar(tst, "P(xref)", 1e-16, o.P(x), yref[i])
+		chk.Float64(tst, "P(xref)", 1e-16, o.P(x), yref[i])
 	}
 
 	if chk.Verbose {
@@ -70,14 +70,14 @@ func TestInterp02(tst *testing.T) {
 		}
 
 		for i, x := range xx {
-			chk.Scalar(tst, "P(xi)", 1e-17, o.P(x), yy[i])
+			chk.Float64(tst, "P(xi)", 1e-17, o.P(x), yy[i])
 		}
 
 		if o.m == 2 {
 			xref := []float64{1.0 / 3.0, 2.5, 2.0 / 3.0, 1.1, 1.5, 3.5, 4.5}
 			yref := []float64{0.4, 0.125, 0.3, 0.2, 0.2, 0.03, 0.005}
 			for i, x := range xref {
-				chk.Scalar(tst, "P(xref)", 1e-16, o.P(x), yref[i])
+				chk.Float64(tst, "P(xref)", 1e-16, o.P(x), yref[i])
 			}
 		}
 

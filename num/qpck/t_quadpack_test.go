@@ -31,7 +31,7 @@ func TestAgs01a(tst *testing.T) {
 	io.Pforan("abserr = %v\n", abserr)
 	io.Pforan("neval  = %v\n", neval)
 	io.Pforan("last   = %v\n", last)
-	chk.Scalar(tst, "A", 1e-12, A, 1.08268158558)
+	chk.Float64(tst, "A", 1e-12, A, 1.08268158558)
 }
 
 func TestAgs01b(tst *testing.T) {
@@ -51,7 +51,7 @@ func TestAgs01b(tst *testing.T) {
 	for ich := 0; ich < nch; ich++ {
 		go func(fid int) {
 			A, _, _, _, _ := Agse(int32(fid), y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
-			chk.Scalar(tst, "A", 1e-12, A, 1.08268158558)
+			chk.Float64(tst, "A", 1e-12, A, 1.08268158558)
 			done <- 1
 		}(ich)
 	}

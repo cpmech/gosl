@@ -140,9 +140,9 @@ func Test_mylab03b(tst *testing.T) {
 	io.Pf("sum(A) = %v\n", s)
 	io.Pf("min(A) = %v\n", mi)
 	io.Pf("max(A) = %v\n", ma)
-	chk.Scalar(tst, "sum(A)", 1e-17, s, 8)
-	chk.Scalar(tst, "min(A)", 1e-17, mi, -3)
-	chk.Scalar(tst, "max(A)", 1e-17, ma, 8)
+	chk.Float64(tst, "sum(A)", 1e-17, s, 8)
+	chk.Float64(tst, "min(A)", 1e-17, mi, -3)
+	chk.Float64(tst, "max(A)", 1e-17, ma, 8)
 }
 
 func Test_mylab04(tst *testing.T) {
@@ -218,35 +218,35 @@ func Test_mylab05(tst *testing.T) {
 
 	res := GtPenalty(0, 0, 1)
 	io.Pforan("\n0 > 0: penalty = %v\n", res)
-	chk.Scalar(tst, "0 > 0", 1e-18, res, 1e-16)
+	chk.Float64(tst, "0 > 0", 1e-18, res, 1e-16)
 
 	res = GtePenalty(0, 0, 1)
 	io.Pforan("\n0 ≥ 0: penalty = %v\n", res)
-	chk.Scalar(tst, "0 ≥ 0", 1e-18, res, 0)
+	chk.Float64(tst, "0 ≥ 0", 1e-18, res, 0)
 
 	res = GtPenalty(0, -1, 1)
 	io.Pforan("\n0 > -1: penalty = %v\n", res)
-	chk.Scalar(tst, "0 > -1", 1e-18, res, 0)
+	chk.Float64(tst, "0 > -1", 1e-18, res, 0)
 
 	res = GtPenalty(1, 0, 1)
 	io.Pforan("\n1 > 0: penalty = %v\n", res)
-	chk.Scalar(tst, "1 > 0", 1e-18, res, 0)
+	chk.Float64(tst, "1 > 0", 1e-18, res, 0)
 
 	res = GtPenalty(1, 1, 1)
 	io.Pforan("\n1 > 1: penalty = %v\n", res)
-	chk.Scalar(tst, "1 > 1", 1e-18, res, 1e-16)
+	chk.Float64(tst, "1 > 1", 1e-18, res, 1e-16)
 
 	res = GtePenalty(1, 1, 1)
 	io.Pforan("\n1 ≥ 1: penalty = %v\n", res)
-	chk.Scalar(tst, "1 ≥ 1", 1e-18, res, 0)
+	chk.Float64(tst, "1 ≥ 1", 1e-18, res, 0)
 
 	res = GtPenalty(23, 123, 10)
 	io.Pforan("\n23 > 123: (m=10) penalty = %v\n", res)
-	chk.Scalar(tst, "23 > 123 (m=10)", 1e-18, res, 1000)
+	chk.Float64(tst, "23 > 123 (m=10)", 1e-18, res, 1000)
 
 	res = GtePenalty(23, 123, 10)
 	io.Pforan("\n23 ≥ 123: (m=10) penalty = %v\n", res)
-	chk.Scalar(tst, "23 ≥ 123 (m=10)", 1e-18, res, 1000)
+	chk.Float64(tst, "23 ≥ 123 (m=10)", 1e-18, res, 1000)
 }
 
 func Test_mylab06(tst *testing.T) {
@@ -395,21 +395,21 @@ func Test_mylab08(tst *testing.T) {
 	w := make([]float64, 3)
 	s := Dot3d(u, v)
 	Cross3d(w, u, v) // w := u cross v
-	chk.Scalar(tst, "s = u dot v", 1e-17, s, -13)
+	chk.Float64(tst, "s = u dot v", 1e-17, s, -13)
 	chk.Array(tst, "w = u cross v", 1e-17, w, []float64{-15, -2, 39})
 
 	u = []float64{3, -3, 1}
 	v = []float64{-12, 12, -4}
 	s = Dot3d(u, v)
 	Cross3d(w, u, v) // w := u cross v
-	chk.Scalar(tst, "s = u dot v", 1e-17, s, -76)
+	chk.Float64(tst, "s = u dot v", 1e-17, s, -76)
 	chk.Array(tst, "w = u cross v", 1e-17, w, []float64{0, 0, 0})
 
 	u = []float64{3, 2, -2}
 	v = []float64{1, 0, -5}
 	s = Dot3d(u, v)
 	Cross3d(w, u, v) // w := u cross v
-	chk.Scalar(tst, "s = u dot v", 1e-17, s, 13)
+	chk.Float64(tst, "s = u dot v", 1e-17, s, 13)
 	chk.Array(tst, "w = u cross v", 1e-17, w, []float64{-10, 13, -2})
 }
 
@@ -428,7 +428,7 @@ func Test_mylab09(tst *testing.T) {
 	v := []float64{0, 1, 8, 0, -1, 3, 4}
 	d := L2norm(u, v)
 	io.Pforan("d = %v\n", d)
-	chk.Scalar(tst, "L2(u,v)", 1e-17, d, 62.912637840103322)
+	chk.Float64(tst, "L2(u,v)", 1e-17, d, 62.912637840103322)
 }
 
 func Test_mylab10(tst *testing.T) {

@@ -22,22 +22,22 @@ func Test_elliptic01(tst *testing.T) {
 	φ, k := d2r(5), 0.0
 	F := Elliptic1(φ, k)
 	io.Pf("F(5°,0) = %v\n", F)
-	chk.Scalar(tst, "F(5°,0)", 1e-15, F, φ)
+	chk.Float64(tst, "F(5°,0)", 1e-15, F, φ)
 
 	φ, k = d2r(30), math.Sin(d2r(68))
 	F = Elliptic1(φ, k)
 	io.Pf("F(30°,68°) = %v\n", F)
-	chk.Scalar(tst, "F(30°,68°)", 1e-9, F, 0.54527182)
+	chk.Float64(tst, "F(30°,68°)", 1e-9, F, 0.54527182)
 
 	φ, k = d2r(65), math.Sin(d2r(88))
 	F = Elliptic1(φ, k)
 	io.Pf("F(65°,88°) = %v\n", F)
-	chk.Scalar(tst, "F(65°,88°)", 1e-8, F, 1.50537033)
+	chk.Float64(tst, "F(65°,88°)", 1e-8, F, 1.50537033)
 
 	φ, k = d2r(85), math.Sin(d2r(90))
 	F = Elliptic1(φ, k)
 	io.Pf("F(85°,90°) = %v\n", F)
-	chk.Scalar(tst, "F(85°,90°)", 1e-8, F, 3.13130133)
+	chk.Float64(tst, "F(85°,90°)", 1e-8, F, 3.13130133)
 
 	p90 := d2r(90)
 	φ, k = p90, math.Sin(d2r(90))
@@ -64,7 +64,7 @@ func Test_elliptic01(tst *testing.T) {
 				return
 			}
 		} else {
-			chk.Scalar(tst, io.Sf("F(%.8f,%.8f)=%23.15e", p, k, F), 1e-14, F, dat["F"][i])
+			chk.Float64(tst, io.Sf("F(%.8f,%.8f)=%23.15e", p, k, F), 1e-14, F, dat["F"][i])
 		}
 	}
 }
@@ -77,28 +77,28 @@ func Test_elliptic02(tst *testing.T) {
 	φ, k := d2r(5), 0.0
 	E := Elliptic2(φ, k)
 	io.Pf("E(5°,0) = %v\n", E)
-	chk.Scalar(tst, "E(5°,0)", 1e-15, E, φ)
+	chk.Float64(tst, "E(5°,0)", 1e-15, E, φ)
 
 	φ, k = d2r(30), math.Sin(d2r(68))
 	E = Elliptic2(φ, k)
 	io.Pf("E(30°,68°) = %v\n", E)
-	chk.Scalar(tst, "E(30°,68°)", 1e-9, E, 0.50343686)
+	chk.Float64(tst, "E(30°,68°)", 1e-9, E, 0.50343686)
 
 	φ, k = d2r(65), math.Sin(d2r(88))
 	E = Elliptic2(φ, k)
 	io.Pf("E(65°,88°) = %v\n", E)
-	chk.Scalar(tst, "E(65°,88°)", 1e-8, E, 0.90667305)
+	chk.Float64(tst, "E(65°,88°)", 1e-8, E, 0.90667305)
 
 	φ, k = d2r(85), math.Sin(d2r(90))
 	E = Elliptic2(φ, k)
 	io.Pf("E(85°,90°) = %v\n", E)
-	chk.Scalar(tst, "E(85°,90°)", 1e-8, E, 0.99619470)
+	chk.Float64(tst, "E(85°,90°)", 1e-8, E, 0.99619470)
 
 	p90 := d2r(90)
 	φ, k = p90, math.Sin(d2r(90))
 	E = Elliptic2(φ, k)
 	io.Pf("E(90°,90°) = %v\n", E)
-	chk.Scalar(tst, "E(85°,90°)", 1e-8, E, 1)
+	chk.Float64(tst, "E(85°,90°)", 1e-8, E, 1)
 
 	// load data
 	_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.6-small.cmp")
@@ -110,7 +110,7 @@ func Test_elliptic02(tst *testing.T) {
 	for i, p := range dat["phi"] {
 		k := dat["k"][i]
 		E := Elliptic2(p, k)
-		chk.Scalar(tst, io.Sf("E(%.8f,%.8f)=%23.15e", p, k, E), 1e-14, E, dat["E"][i])
+		chk.Float64(tst, io.Sf("E(%.8f,%.8f)=%23.15e", p, k, E), 1e-14, E, dat["E"][i])
 	}
 }
 
@@ -122,12 +122,12 @@ func Test_elliptic03(tst *testing.T) {
 	n, φ, k := 0.1, d2r(0), 0.0
 	P := Elliptic3(n, φ, k)
 	io.Pf("Π(0,15°,0) = %v\n", P)
-	chk.Scalar(tst, "Π(0,15°,0)", 1e-15, P, 0)
+	chk.Float64(tst, "Π(0,15°,0)", 1e-15, P, 0)
 
 	n, φ, k = 0.1, d2r(15), 0.0
 	P = Elliptic3(n, φ, k)
 	io.Pf("Π(0,90°,0) = %v\n", P)
-	chk.Scalar(tst, "Π(0,90°,0)", 1e-5, P, 0.26239)
+	chk.Float64(tst, "Π(0,90°,0)", 1e-5, P, 0.26239)
 
 	// load data
 	_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.9-small.cmp")
@@ -152,7 +152,7 @@ func Test_elliptic03(tst *testing.T) {
 				return
 			}
 		} else {
-			chk.Scalar(tst, io.Sf("Π(%.2f,%.8f,%.8f)=%23.15e", n, p, k, P), 1e-14, P, dat["PI"][i])
+			chk.Float64(tst, io.Sf("Π(%.2f,%.8f,%.8f)=%23.15e", n, p, k, P), 1e-14, P, dat["PI"][i])
 		}
 	}
 }

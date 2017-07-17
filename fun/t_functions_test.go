@@ -180,12 +180,12 @@ func Test_factorial01(tst *testing.T) {
 	n10 := Factorial22(10)
 	n22 := Factorial22(22)
 
-	chk.Scalar(tst, "0!", 1e-15, n0, 1)
-	chk.Scalar(tst, "1!", 1e-15, n1, 1)
-	chk.Scalar(tst, "2!", 1e-15, n2, 2)
-	chk.Scalar(tst, "3!", 1e-15, n3, 6)
-	chk.Scalar(tst, "10!", 1e-15, n10, 3628800)
-	chk.Scalar(tst, "22!", 1e-15, n22, 1124000727777607680000)
+	chk.Float64(tst, "0!", 1e-15, n0, 1)
+	chk.Float64(tst, "1!", 1e-15, n1, 1)
+	chk.Float64(tst, "2!", 1e-15, n2, 2)
+	chk.Float64(tst, "3!", 1e-15, n3, 6)
+	chk.Float64(tst, "10!", 1e-15, n10, 3628800)
+	chk.Float64(tst, "22!", 1e-15, n22, 1124000727777607680000)
 
 	// printing max int sizes, out of curiosity
 	MaxUint := ^uint(0)
@@ -227,7 +227,7 @@ func Test_factorial02(tst *testing.T) {
 		diff.Sub(fbig, &f)
 		d, a := diff.Float64()
 		chk.String(tst, a.String(), "Exact")
-		chk.Scalar(tst, "diff", 1e-15, d, 0)
+		chk.Float64(tst, "diff", 1e-15, d, 0)
 	}
 }
 
@@ -246,7 +246,7 @@ func Test_beta01(tst *testing.T) {
 	for i, a := range aValues {
 		for j, b := range bValues {
 			res := Beta(a, b)
-			chk.Scalar(tst, io.Sf("Beta(%2f,%2f)", a, b), 1e-15, res, answers[i][j])
+			chk.Float64(tst, io.Sf("Beta(%2f,%2f)", a, b), 1e-15, res, answers[i][j])
 		}
 	}
 }
@@ -267,8 +267,8 @@ func Test_binomial01(tst *testing.T) {
 		for j, b := range bValues {
 			res := Binomial(a, b)
 			ures := UintBinomial(uint64(a), uint64(b))
-			chk.Scalar(tst, io.Sf("Binomial(%2d,%2d)", a, b), 1e-15, res, answers[i][j])
-			chk.Scalar(tst, "ures", 1e-15, float64(ures), answers[i][j])
+			chk.Float64(tst, io.Sf("Binomial(%2d,%2d)", a, b), 1e-15, res, answers[i][j])
+			chk.Float64(tst, "ures", 1e-15, float64(ures), answers[i][j])
 		}
 	}
 
@@ -276,10 +276,10 @@ func Test_binomial01(tst *testing.T) {
 	r26 := Binomial(50, 26)     // k > n-k
 	u49 := UintBinomial(50, 49) // k = n-1
 	u26 := UintBinomial(50, 26) // k > n-k
-	chk.Scalar(tst, "Binomial(50,49)", 1e-15, r49, 50)
-	chk.Scalar(tst, "Binomial(50,26)", 1e-15, r26, 121548660036300-1) // cannot get 121548660036300
-	chk.Scalar(tst, "UintBinomial(50,49)", 1e-15, float64(u49), 50)
-	chk.Scalar(tst, "UintBinomial(50,26)", 1e-15, float64(u26), 121548660036300)
+	chk.Float64(tst, "Binomial(50,49)", 1e-15, r49, 50)
+	chk.Float64(tst, "Binomial(50,26)", 1e-15, r26, 121548660036300-1) // cannot get 121548660036300
+	chk.Float64(tst, "UintBinomial(50,49)", 1e-15, float64(u49), 50)
+	chk.Float64(tst, "UintBinomial(50,26)", 1e-15, float64(u26), 121548660036300)
 	io.Pforan("r26 = %.1f (should be 121548660036300.0)\n", r26)
 	io.Pforan("u26 = %v\n", u26)
 
@@ -291,7 +291,7 @@ func Test_binomial01(tst *testing.T) {
 		n100k50maxima := 100891344545564193334812497256.0
 		io.Pforan("Binomial(100,50) = %v\n", n100k50)
 		io.Pforan("UintBinomial(100,50) = %v\n", u100k50)
-		chk.Scalar(tst, "Binomial(100,50)", 1e-15, n100k50, n100k50maxima)
+		chk.Float64(tst, "Binomial(100,50)", 1e-15, n100k50, n100k50maxima)
 	}
 }
 
@@ -330,21 +330,21 @@ func TestEuler01(tst *testing.T) {
 	a := ExpPix(math.Pi)
 	A := cmplx.Exp(complex(0, math.Pi))
 	io.Pforan("exp(+i⋅π) = %v  (%v)\n", a, A)
-	chk.ScalarC(tst, "exp(+i⋅π) == -1", 1e-15, a, -1)
-	chk.ScalarC(tst, "a == A", 1e-17, a, A)
+	chk.Complex128(tst, "exp(+i⋅π) == -1", 1e-15, a, -1)
+	chk.Complex128(tst, "a == A", 1e-17, a, A)
 
 	b := ExpMix(math.Pi)
 	B := cmplx.Exp(complex(0, -math.Pi))
 	io.Pforan("exp(-i⋅π) = %v  (%v)\n", b, B)
-	chk.ScalarC(tst, "exp(-i⋅π) == -1", 1e-15, b, -1)
-	chk.ScalarC(tst, "b == B", 1e-17, b, B)
+	chk.Complex128(tst, "exp(-i⋅π) == -1", 1e-15, b, -1)
+	chk.Complex128(tst, "b == B", 1e-17, b, B)
 
 	c := ExpPix(1)
 	C := cmplx.Exp(1i)
 	io.Pforan("exp(i) = %v  (%v)\n", c, C)
-	chk.Scalar(tst, "real(exp(i))", 1e-17, real(c), math.Cos(1))
-	chk.Scalar(tst, "imag(exp(i))", 1e-17, imag(c), math.Sin(1))
-	chk.ScalarC(tst, "c == C", 1e-17, c, C)
+	chk.Float64(tst, "real(exp(i))", 1e-17, real(c), math.Cos(1))
+	chk.Float64(tst, "imag(exp(i))", 1e-17, imag(c), math.Sin(1))
+	chk.Complex128(tst, "c == C", 1e-17, c, C)
 }
 
 func TestSinc01(tst *testing.T) {
@@ -352,10 +352,10 @@ func TestSinc01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Sinc01. sine cardinal function")
 
-	chk.Scalar(tst, "sinc(0)", 1e-17, Sinc(0), 1)
-	chk.Scalar(tst, "sinc(π)", 1e-16, Sinc(math.Pi), 0)
-	chk.Scalar(tst, "sinc(π/2)", 1e-17, Sinc(math.Pi/2), 2.0/math.Pi)
-	chk.Scalar(tst, "sinc(3π/2)", 1e-17, Sinc(3*math.Pi/2), -2.0/(3.0*math.Pi))
+	chk.Float64(tst, "sinc(0)", 1e-17, Sinc(0), 1)
+	chk.Float64(tst, "sinc(π)", 1e-16, Sinc(math.Pi), 0)
+	chk.Float64(tst, "sinc(π/2)", 1e-17, Sinc(math.Pi/2), 2.0/math.Pi)
+	chk.Float64(tst, "sinc(3π/2)", 1e-17, Sinc(3*math.Pi/2), -2.0/(3.0*math.Pi))
 
 	if chk.Verbose {
 		X := utl.LinSpace(-15, 15, 201)
@@ -376,13 +376,13 @@ func TestBoxcar01(tst *testing.T) {
 
 	a, b := 0.5, 1.0
 
-	chk.Scalar(tst, "boxcar(a)", 1e-17, Boxcar(a, a, b), 0.5)
-	chk.Scalar(tst, "boxcar(b)", 1e-17, Boxcar(b, a, b), 0.5)
-	chk.Scalar(tst, "boxcar((a+b)/2)", 1e-17, Boxcar((a+b)/2, a, b), 1)
-	chk.Scalar(tst, "boxcar(a-1)", 1e-17, Boxcar(a-1, a, b), 0)
-	chk.Scalar(tst, "boxcar(b+1)", 1e-17, Boxcar(b+1, a, b), 0)
+	chk.Float64(tst, "boxcar(a)", 1e-17, Boxcar(a, a, b), 0.5)
+	chk.Float64(tst, "boxcar(b)", 1e-17, Boxcar(b, a, b), 0.5)
+	chk.Float64(tst, "boxcar((a+b)/2)", 1e-17, Boxcar((a+b)/2, a, b), 1)
+	chk.Float64(tst, "boxcar(a-1)", 1e-17, Boxcar(a-1, a, b), 0)
+	chk.Float64(tst, "boxcar(b+1)", 1e-17, Boxcar(b+1, a, b), 0)
 	for _, x := range []float64{-1, 0, 0.5, 0.7, 1.0, 1.5} {
-		chk.Scalar(tst, "H(x-a)-H(x-b)", 1e-17, Boxcar(x, a, b), Heav(x-a)-Heav(x-b))
+		chk.Float64(tst, "H(x-a)-H(x-b)", 1e-17, Boxcar(x, a, b), Heav(x-a)-Heav(x-b))
 	}
 
 	if chk.Verbose {
@@ -405,11 +405,11 @@ func TestRect01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Rect01. rectangular function")
 
-	chk.Scalar(tst, "rect(-0.5)", 1e-17, Rect(-0.5), 0.5)
-	chk.Scalar(tst, "rect(+0.5)", 1e-17, Rect(+0.5), 0.5)
-	chk.Scalar(tst, "rect(0)", 1e-17, Rect(0), 1)
-	chk.Scalar(tst, "rect(-0.7)", 1e-17, Rect(-0.7), 0)
-	chk.Scalar(tst, "rect(+0.7)", 1e-17, Rect(+0.7), 0)
+	chk.Float64(tst, "rect(-0.5)", 1e-17, Rect(-0.5), 0.5)
+	chk.Float64(tst, "rect(+0.5)", 1e-17, Rect(+0.5), 0.5)
+	chk.Float64(tst, "rect(0)", 1e-17, Rect(0), 1)
+	chk.Float64(tst, "rect(-0.7)", 1e-17, Rect(-0.7), 0)
+	chk.Float64(tst, "rect(+0.7)", 1e-17, Rect(+0.7), 0)
 
 	if chk.Verbose {
 		Xa := utl.LinSpace(-1.5, 1.5, 201)
@@ -445,6 +445,6 @@ func TestNegOnePowN(tst *testing.T) {
 				return
 			}
 		}
-		chk.Scalar(tst, io.Sf("pow(-1,%d)", n), 1e-17, res, math.Pow(-1, float64(n)))
+		chk.Float64(tst, io.Sf("pow(-1,%d)", n), 1e-17, res, math.Pow(-1, float64(n)))
 	}
 }

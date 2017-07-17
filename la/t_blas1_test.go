@@ -22,10 +22,10 @@ func TestBlas1tst01(tst *testing.T) {
 	s := Vector([]float64{-1, -1, -1})
 	a, m := 1.0, 1.0
 	rms := VecRmsError(u, v, a, m, s)
-	chk.Scalar(tst, "rms", 1e-17, rms, math.Sqrt(2.0/3.0))
+	chk.Float64(tst, "rms", 1e-17, rms, math.Sqrt(2.0/3.0))
 
 	// VecDot
-	chk.Scalar(tst, "u・v", 1e-17, VecDot(u, v), 10.0)
+	chk.Float64(tst, "u・v", 1e-17, VecDot(u, v), 10.0)
 
 	// VecAdd
 	w := NewVector(len(u))
@@ -33,7 +33,7 @@ func TestBlas1tst01(tst *testing.T) {
 	chk.Array(tst, "w := 1⋅u - 2⋅v", 1e-17, w, []float64{-5, -2, 1})
 
 	// VecMaxDiff
-	chk.Scalar(tst, "VecMaxDiff(u, w)", 1e-17, VecMaxDiff(u, w), 6.0)
+	chk.Float64(tst, "VecMaxDiff(u, w)", 1e-17, VecMaxDiff(u, w), 6.0)
 
 	// VecScaleAbs
 	scale := NewVector(len(w))

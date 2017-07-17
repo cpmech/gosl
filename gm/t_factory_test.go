@@ -30,7 +30,7 @@ func Test_factory01(tst *testing.T) {
 	for _, u := range U {
 		curve.Point(x, []float64{u}, 2)
 		e := math.Sqrt(math.Pow(x[0]-xc, 2)+math.Pow(x[1]-yc, 2)) - r
-		chk.Scalar(tst, io.Sf("error @ (%+.8f,%+.8f) == 0?", x[0], x[1]), 1e-15, e, 0)
+		chk.Float64(tst, io.Sf("error @ (%+.8f,%+.8f) == 0?", x[0], x[1]), 1e-15, e, 0)
 	}
 
 	// plot
@@ -66,7 +66,7 @@ func Test_factory02(tst *testing.T) {
 		for _, u := range U {
 			nurbs.Point(x, []float64{u}, 2)
 			e := math.Sqrt(math.Pow(x[0]-xc, 2)+math.Pow(x[1]-yc, 2)) - r
-			chk.Scalar(tst, io.Sf("error @ (%+.8f,%+.8f) == 0?", x[0], x[1]), 1e-15, e, 0)
+			chk.Float64(tst, io.Sf("error @ (%+.8f,%+.8f) == 0?", x[0], x[1]), 1e-15, e, 0)
 		}
 	}
 
@@ -125,7 +125,7 @@ func Test_factory03(tst *testing.T) {
 				nurbs.Point(x, []float64{u, v}, 3)
 				e := math.Pow(R-math.Sqrt(math.Pow(x[0]-xc, 2)+math.Pow(x[1]-yc, 2)), 2) +
 					math.Pow(x[2]-zc, 2) - r*r
-				chk.Scalar(tst, io.Sf("error @ (%+.8f,%+8f,%+8f) == 0?", x[0], x[1], x[2]), tol, e, 0)
+				chk.Float64(tst, io.Sf("error @ (%+.8f,%+8f,%+8f) == 0?", x[0], x[1], x[2]), tol, e, 0)
 			}
 		}
 	}

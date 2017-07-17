@@ -162,7 +162,7 @@ func TestChebyInterp02(tst *testing.T) {
 	for k, x := range o.X {
 		fk, err := f(x)
 		chk.EP(err)
-		chk.Scalar(tst, io.Sf("I(x_%d)", k), 1e-14, o.I(x), fk)
+		chk.Float64(tst, io.Sf("I(x_%d)", k), 1e-14, o.I(x), fk)
 	}
 
 	// check conversion

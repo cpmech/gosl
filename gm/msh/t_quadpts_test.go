@@ -76,7 +76,7 @@ func TestQuadpts01(tst *testing.T) {
 					sumW += pts[i][3]
 				}
 				io.Pfblue2("\nrule = %v\n", rule)
-				chk.Scalar(tst, "sumW", 1e-15, sumW, 2)
+				chk.Float64(tst, "sumW", 1e-15, sumW, 2)
 				io.Pf("x = %v\n", x)
 				io.Pfgreen("    %v\n", xref[n])
 				io.Pf("w = %v\n", w)
@@ -94,7 +94,7 @@ func TestQuadpts01(tst *testing.T) {
 					sumW += p[3]
 				}
 				io.Pfblue2("\nrule = %v\n", rule)
-				chk.Scalar(tst, "sumW", 1e-14, sumW, 4)
+				chk.Float64(tst, "sumW", 1e-14, sumW, 4)
 				switch rule {
 				case "legendre":
 					n1d := int(math.Sqrt(float64(n)))
@@ -110,7 +110,7 @@ func TestQuadpts01(tst *testing.T) {
 							io.Pf("  %d%d x = %23v  w = %23v\n", i, j, x, v)
 							io.Pfgreen("         %23v      %23v\n", y, w)
 							chk.Array(tst, "x", 1e-15, x, y)
-							chk.Scalar(tst, "w", 1e-15, v, w)
+							chk.Float64(tst, "w", 1e-15, v, w)
 						}
 					}
 				case "wilson5corner":
@@ -140,7 +140,7 @@ func TestQuadpts01(tst *testing.T) {
 					sumW += p[3]
 				}
 				io.Pfblue2("\nrule = %v\n", rule)
-				chk.Scalar(tst, "sumW", 1e-14, sumW, 8)
+				chk.Float64(tst, "sumW", 1e-14, sumW, 8)
 				switch rule {
 				case "legendre":
 					n1d := int(math.Floor(math.Pow(float64(n), 1.0/3.0) + 0.5))
@@ -157,7 +157,7 @@ func TestQuadpts01(tst *testing.T) {
 								io.Pf("%d%d x=%18v w=%18v\n", i, j, x, v)
 								io.Pfgreen("     %18v   %18v\n", y, w)
 								chk.Array(tst, "x", 1e-15, x, y)
-								chk.Scalar(tst, "w", 1e-14, v, w)
+								chk.Float64(tst, "w", 1e-14, v, w)
 							}
 						}
 					}

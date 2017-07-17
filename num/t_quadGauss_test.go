@@ -30,7 +30,7 @@ func Test_quadGaussL01(tst *testing.T) {
 		return
 	}
 	io.Pforan("A  = %v\n", A)
-	chk.Scalar(tst, "A", 1e-12, A, Acor)
+	chk.Float64(tst, "A", 1e-12, A, Acor)
 }
 
 func Test_gaussLegXW01(tst *testing.T) {

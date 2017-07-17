@@ -29,13 +29,13 @@ func TestSinusoid01(tst *testing.T) {
 	sb := NewSinusoidBasis(T, A0, sa.A[1], sa.B[1])
 
 	// check setup data
-	chk.Scalar(tst, "Period", 1e-15, sa.Period, sb.Period)
-	chk.Scalar(tst, "Frequency", 1e-15, sa.Frequency, sb.Frequency)
-	chk.Scalar(tst, "PhaseShift", 1e-15, sa.PhaseShift, sb.PhaseShift)
-	chk.Scalar(tst, "MeanValue", 1e-15, sa.MeanValue, sb.MeanValue)
-	chk.Scalar(tst, "Amplitude", 1e-15, sa.Amplitude, sb.Amplitude)
-	chk.Scalar(tst, "AngularFreq", 1e-15, sa.AngularFreq, sb.AngularFreq)
-	chk.Scalar(tst, "TimeShift", 1e-15, sa.TimeShift, sb.TimeShift)
+	chk.Float64(tst, "Period", 1e-15, sa.Period, sb.Period)
+	chk.Float64(tst, "Frequency", 1e-15, sa.Frequency, sb.Frequency)
+	chk.Float64(tst, "PhaseShift", 1e-15, sa.PhaseShift, sb.PhaseShift)
+	chk.Float64(tst, "MeanValue", 1e-15, sa.MeanValue, sb.MeanValue)
+	chk.Float64(tst, "Amplitude", 1e-15, sa.Amplitude, sb.Amplitude)
+	chk.Float64(tst, "AngularFreq", 1e-15, sa.AngularFreq, sb.AngularFreq)
+	chk.Float64(tst, "TimeShift", 1e-15, sa.TimeShift, sb.TimeShift)
 	chk.Array(tst, "A", 1e-15, sa.A, sb.A)
 	chk.Array(tst, "B", 1e-15, sa.B, sb.B)
 

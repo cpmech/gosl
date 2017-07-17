@@ -26,7 +26,7 @@ func TestLagCardinal01(tst *testing.T) {
 		tst.Errorf("%v\n", err)
 		return
 	}
-	chk.Scalar(tst, "ΛN (Lebesgue constant)", 1e-15, o.EstimateLebesgue(), 3.106301040275436e+00)
+	chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-15, o.EstimateLebesgue(), 3.106301040275436e+00)
 
 	// check Kronecker property
 	for i := 0; i < N+1; i++ {
@@ -170,7 +170,7 @@ func TestLagInterp03(tst *testing.T) {
 	ΛN := []float64{1.988854381999833e+00, 2.361856787767076e+00, 3.011792612349363e+00}
 	for i, n := range []int{4, 8, 24} {
 		p, _ := NewLagrangeInterp(n, kind)
-		chk.Scalar(tst, "ΛN (Lebesgue constant)", 1e-13, p.EstimateLebesgue(), ΛN[i])
+		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-13, p.EstimateLebesgue(), ΛN[i])
 	}
 
 	if chk.Verbose {

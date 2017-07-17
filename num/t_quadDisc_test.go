@@ -27,7 +27,7 @@ func Test_DiscSimpson01(tst *testing.T) {
 	A, _ := QuadDiscreteSimpsonRF(0, 1, n, y)
 	io.Pforan("A  = %v\n", A)
 	Acor := 1.08268158558
-	chk.Scalar(tst, "A", 1e-11, A, Acor)
+	chk.Float64(tst, "A", 1e-11, A, Acor)
 }
 
 func Test_DiscTrapz01(tst *testing.T) {
@@ -38,7 +38,7 @@ func Test_DiscTrapz01(tst *testing.T) {
 	x := []float64{4, 6, 8}
 	y := []float64{1, 2, 3}
 	A := QuadDiscreteTrapzXY(x, y)
-	chk.Scalar(tst, "A", 1e-17, A, 8)
+	chk.Float64(tst, "A", 1e-17, A, 8)
 }
 
 func Test_DiscTrapz02(tst *testing.T) {
@@ -58,8 +58,8 @@ func Test_DiscTrapz02(tst *testing.T) {
 	io.Pforan("A  = %v\n", A)
 	io.Pforan("A1 = %v\n", A1)
 	Acor := 1.08306090851465 // right value is Acor := 1.08268158558
-	chk.Scalar(tst, "A", 1e-15, A, Acor)
-	chk.Scalar(tst, "A1", 1e-15, A1, Acor)
+	chk.Float64(tst, "A", 1e-15, A, Acor)
+	chk.Float64(tst, "A1", 1e-15, A1, Acor)
 }
 
 func Test_Disc2dInteg01(tst *testing.T) {
@@ -81,8 +81,8 @@ func Test_Disc2dInteg01(tst *testing.T) {
 	Vs := QuadDiscreteSimps2d(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
-	chk.Scalar(tst, "Vt", 1e-14, Vt, 24.0)
-	chk.Scalar(tst, "Vs", 1e-14, Vs, 24.0)
+	chk.Float64(tst, "Vt", 1e-14, Vt, 24.0)
+	chk.Float64(tst, "Vs", 1e-14, Vs, 24.0)
 }
 
 func Test_Disc2dInteg02(tst *testing.T) {
@@ -109,8 +109,8 @@ func Test_Disc2dInteg02(tst *testing.T) {
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
 	io.Pfgreen("Vc = %v\n", Vc)
-	chk.Scalar(tst, "Vt", 0.0114830435645548, Vt, Vc)
-	chk.Scalar(tst, "Vs", 1e-4, Vs, Vc)
+	chk.Float64(tst, "Vt", 0.0114830435645548, Vt, Vc)
+	chk.Float64(tst, "Vs", 1e-4, Vs, Vc)
 
 }
 
@@ -133,8 +133,8 @@ func Test_Disc2dInteg03(tst *testing.T) {
 	Vs := QuadDiscreteSimps2d(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
-	chk.Scalar(tst, "Vt", 1e-13, Vt, 57.0)
-	chk.Scalar(tst, "Vs", 1e-13, Vs, 57.0)
+	chk.Float64(tst, "Vt", 1e-13, Vt, 57.0)
+	chk.Float64(tst, "Vs", 1e-13, Vs, 57.0)
 }
 
 func Test_Disc2dInteg04(tst *testing.T) {
@@ -156,6 +156,6 @@ func Test_Disc2dInteg04(tst *testing.T) {
 	Vs := QuadDiscreteSimps2d(dx, dy, f)
 	io.Pforan("Vt = %v\n", Vt)
 	io.Pforan("Vs = %v\n", Vs)
-	chk.Scalar(tst, "Vt", 0.00103, Vt, 0.5)
-	chk.Scalar(tst, "Vs", 1e-5, Vs, 0.5)
+	chk.Float64(tst, "Vt", 0.00103, Vt, 0.5)
+	chk.Float64(tst, "Vs", 1e-5, Vs, 0.5)
 }

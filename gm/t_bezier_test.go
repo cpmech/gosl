@@ -38,7 +38,7 @@ func Test_bezier01(tst *testing.T) {
 		X[i] = C[0]
 		Y[i] = C[1]
 		Y2[i] = X2[i] * X2[i]
-		chk.Scalar(tst, "y=y", 1e-15, Y[i], X[i]*X[i])
+		chk.Float64(tst, "y=y", 1e-15, Y[i], X[i]*X[i])
 	}
 
 	XX, YY, _ := bez.GetPoints(T)

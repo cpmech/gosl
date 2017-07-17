@@ -50,7 +50,7 @@ func TestInteg01(tst *testing.T) {
 		return
 	}
 	io.Pforan("1: res = %v\n", res)
-	chk.Scalar(tst, "∫(x²+y²)dxdy (default)", 1e-15, res, 8.0/3.0)
+	chk.Float64(tst, "∫(x²+y²)dxdy (default)", 1e-15, res, 8.0/3.0)
 
 	// reset integration points
 	err = o.ResetP(nil, "legendre_9")
@@ -66,7 +66,7 @@ func TestInteg01(tst *testing.T) {
 		return
 	}
 	io.Pforan("2: res = %v\n", res)
-	chk.Scalar(tst, "∫(x²+y²)dxdy (legendre 9)", 1e-15, res, 8.0/3.0)
+	chk.Float64(tst, "∫(x²+y²)dxdy (legendre 9)", 1e-15, res, 8.0/3.0)
 
 	// reset integration points
 	err = o.ResetP(nil, "wilson5corner_5")
@@ -82,7 +82,7 @@ func TestInteg01(tst *testing.T) {
 		return
 	}
 	io.Pforan("3: res = %v\n", res)
-	chk.Scalar(tst, "∫(x²+y²)dxdy (wilson5corner)", 1e-15, res, 8.0/3.0)
+	chk.Float64(tst, "∫(x²+y²)dxdy (wilson5corner)", 1e-15, res, 8.0/3.0)
 
 	// draw polygon
 	if chk.Verbose {
@@ -151,7 +151,7 @@ func TestInteg02(tst *testing.T) {
 		return
 	}
 	io.Pforan("Ix = %v\n", Ix)
-	chk.Scalar(tst, "Ix", 1e-15, Ix, anaIx)
+	chk.Float64(tst, "Ix", 1e-15, Ix, anaIx)
 
 	// compute Iy
 	Iy, err := o.IntegrateSv(X, fcnIy)
@@ -160,7 +160,7 @@ func TestInteg02(tst *testing.T) {
 		return
 	}
 	io.Pforan("Iy = %v\n", Iy)
-	chk.Scalar(tst, "Iy", 1e-15, Iy, anaIy)
+	chk.Float64(tst, "Iy", 1e-15, Iy, anaIy)
 
 	// compute I0
 	I0, err := o.IntegrateSv(X, fcnI0)
@@ -169,7 +169,7 @@ func TestInteg02(tst *testing.T) {
 		return
 	}
 	io.Pforan("I0 = %v\n", I0)
-	chk.Scalar(tst, "I0", 1e-15, I0, anaI0)
+	chk.Float64(tst, "I0", 1e-15, I0, anaI0)
 
 	// draw polygon
 	if chk.Verbose {
@@ -229,7 +229,7 @@ func TestInteg03(tst *testing.T) {
 		}
 		typekey := TypeIndexToKey[ctype]
 		io.Pf("%s : Ix = %v  error = %v\n", typekey, Ix, math.Abs(Ix-anaIx))
-		chk.Scalar(tst, "Ix", tols[i], Ix, anaIx)
+		chk.Float64(tst, "Ix", tols[i], Ix, anaIx)
 
 		if chk.Verbose {
 			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
@@ -285,7 +285,7 @@ func TestInteg04(tst *testing.T) {
 		}
 		typekey := TypeIndexToKey[ctype]
 		io.Pf("%s : Ix = %v  error = %v\n", typekey, Ix, math.Abs(Ix-anaIx))
-		chk.Scalar(tst, "Ix", tols[i], Ix, anaIx)
+		chk.Float64(tst, "Ix", tols[i], Ix, anaIx)
 
 		if chk.Verbose {
 			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})

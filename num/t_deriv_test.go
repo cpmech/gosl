@@ -106,7 +106,7 @@ func Test_deriv01(tst *testing.T) {
 					tst.Errorf("%v\n", err)
 					return
 				}
-				chk.Scalar(tst, "    "+names[i], tols[i], dnum, dana)
+				chk.Float64(tst, "    "+names[i], tols[i], dnum, dana)
 			}
 		}
 	}

@@ -688,9 +688,9 @@ func TestDgetrf01(tst *testing.T) {
 				res += amat[i][k] * ai[k][j]
 			}
 			if i == j {
-				chk.Scalar(tst, "diag(a⋅a⁻¹)=diag(I)=1", 1e-15, res, 1)
+				chk.Float64(tst, "diag(a⋅a⁻¹)=diag(I)=1", 1e-15, res, 1)
 			} else {
-				chk.Scalar(tst, "diag(a⋅a⁻¹)=offdiag(I)=0", 1e-15, res, 0)
+				chk.Float64(tst, "diag(a⋅a⁻¹)=offdiag(I)=0", 1e-15, res, 0)
 			}
 		}
 	}
@@ -755,9 +755,9 @@ func TestZgetrf01(tst *testing.T) {
 				res += amat[i][k] * ai[k][j]
 			}
 			if i == j {
-				chk.ScalarC(tst, "diag(a⋅a⁻¹)=diag(I)=1", 1e-15, res, 1)
+				chk.Complex128(tst, "diag(a⋅a⁻¹)=diag(I)=1", 1e-15, res, 1)
 			} else {
-				chk.ScalarC(tst, "diag(a⋅a⁻¹)=offdiag(I)=0", 1e-15, res, 0)
+				chk.Complex128(tst, "diag(a⋅a⁻¹)=offdiag(I)=0", 1e-15, res, 0)
 			}
 		}
 	}

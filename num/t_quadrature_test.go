@@ -24,7 +24,7 @@ func TestQuadGen01(tst *testing.T) {
 		return
 	}
 	io.Pforan("A  = %v\n", A)
-	chk.Scalar(tst, "A", 1e-12, A, 1.08268158558)
+	chk.Float64(tst, "A", 1e-12, A, 1.08268158558)
 }
 
 func TestQuadCs01(tst *testing.T) {
@@ -41,5 +41,5 @@ func TestQuadCs01(tst *testing.T) {
 	}
 	io.Pforan("A  = %v\n", A)
 	Aref := (20*Sin(ω) - ω*Cos(ω) + ω*Exp(-20)) / (Pow(20, 2) + Pow(ω, 2))
-	chk.Scalar(tst, "A", 1e-16, A, Aref)
+	chk.Float64(tst, "A", 1e-16, A, Aref)
 }

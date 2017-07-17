@@ -36,11 +36,11 @@ func Test_prms01(tst *testing.T) {
 		return
 	}
 
-	chk.Scalar(tst, "a", 1e-15, a, 1.0)
-	chk.Scalar(tst, "b", 1e-15, b, 2.0)
-	chk.Scalar(tst, "c", 1e-15, c, 3.0)
-	chk.Scalar(tst, "A", 1e-15, A, 1.0)
-	chk.Scalar(tst, "B", 1e-15, B, 2.0)
+	chk.Float64(tst, "a", 1e-15, a, 1.0)
+	chk.Float64(tst, "b", 1e-15, b, 2.0)
+	chk.Float64(tst, "c", 1e-15, c, 3.0)
+	chk.Float64(tst, "A", 1e-15, A, 1.0)
+	chk.Float64(tst, "B", 1e-15, B, 2.0)
 
 	prm := prms.Find("a")
 	if prm == nil {
@@ -48,8 +48,8 @@ func Test_prms01(tst *testing.T) {
 		return
 	}
 	prm.Set(123)
-	chk.Scalar(tst, "a", 1e-15, a, 123)
-	chk.Scalar(tst, "A", 1e-15, A, 123)
+	chk.Float64(tst, "a", 1e-15, a, 123)
+	chk.Float64(tst, "A", 1e-15, A, 123)
 }
 
 func Test_prms02(tst *testing.T) {
@@ -72,12 +72,12 @@ func Test_prms02(tst *testing.T) {
 		return
 	}
 
-	chk.Scalar(tst, "klx", 1e-15, klx, 1.0)
-	chk.Scalar(tst, "kly", 1e-15, kly, 2.0)
-	chk.Scalar(tst, "klz", 1e-15, klz, 3.0)
+	chk.Float64(tst, "klx", 1e-15, klx, 1.0)
+	chk.Float64(tst, "kly", 1e-15, kly, 2.0)
+	chk.Float64(tst, "klz", 1e-15, klz, 3.0)
 
 	prms[1].Set(2.2)
-	chk.Scalar(tst, "kly", 1e-15, kly, 2.2)
+	chk.Float64(tst, "kly", 1e-15, kly, 2.2)
 }
 
 func Test_prms03(tst *testing.T) {
@@ -120,6 +120,6 @@ func Test_prms04(tst *testing.T) {
 
 	var a, b float64
 	prms.CheckAndSetVars([]string{"a", "b"}, []*float64{&a, &b})
-	chk.Scalar(tst, "a", 1e-15, a, 123)
-	chk.Scalar(tst, "b", 1e-15, b, 456)
+	chk.Float64(tst, "a", 1e-15, a, 123)
+	chk.Float64(tst, "b", 1e-15, b, 456)
 }

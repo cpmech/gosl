@@ -87,7 +87,7 @@ func TestGen01(tst *testing.T) {
 		vset = append(vset, tm.VertTag2verts[41]...)
 		vset = append(vset, tm.VertTag2verts[34]...)
 		for _, v := range vset {
-			chk.Scalar(tst, "x=xmin", 1e-15, v.X[0], xmin)
+			chk.Float64(tst, "x=xmin", 1e-15, v.X[0], xmin)
 		}
 
 		// vertices along right border
@@ -95,7 +95,7 @@ func TestGen01(tst *testing.T) {
 		vset = append(vset, tm.VertTag2verts[12]...)
 		vset = append(vset, tm.VertTag2verts[23]...)
 		for _, v := range vset {
-			chk.Scalar(tst, "x=xmax", 1e-15, v.X[0], xmax)
+			chk.Float64(tst, "x=xmax", 1e-15, v.X[0], xmax)
 		}
 
 		// plot
@@ -226,7 +226,7 @@ func TestGen03(tst *testing.T) {
 		vset = append(vset, tm.VertTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
-			chk.Scalar(tst, "r", 1e-15, r, rm)
+			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
@@ -235,7 +235,7 @@ func TestGen03(tst *testing.T) {
 		vset = append(vset, tm.VertTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
-			chk.Scalar(tst, "R", 1e-15, R, Rm)
+			chk.Float64(tst, "R", 1e-15, R, Rm)
 		}
 
 		// plot
@@ -309,7 +309,7 @@ func TestGen04(tst *testing.T) {
 		vset = append(vset, tm.VertTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
-			chk.Scalar(tst, "r", 1e-15, r, rm)
+			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
@@ -318,7 +318,7 @@ func TestGen04(tst *testing.T) {
 		vset = append(vset, tm.VertTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
-			chk.Scalar(tst, "R", 1e-15, R, Rm)
+			chk.Float64(tst, "R", 1e-15, R, Rm)
 		}
 
 		// plot
@@ -393,7 +393,7 @@ func TestGen05(tst *testing.T) {
 		vset = append(vset, tm.VertTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
-			chk.Scalar(tst, "r", 1e-15, r, rm)
+			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
@@ -402,7 +402,7 @@ func TestGen05(tst *testing.T) {
 		vset = append(vset, tm.VertTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
-			chk.Scalar(tst, "R", 1e-15, R, Rm)
+			chk.Float64(tst, "R", 1e-15, R, Rm)
 		}
 
 		// plot

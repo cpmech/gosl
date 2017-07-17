@@ -32,7 +32,7 @@ func Test_QuadElem01(tst *testing.T) {
 		io.Pforan(err.Error())
 	}
 	io.Pforan("A  = %v\n", A)
-	chk.Scalar(tst, "A", 1e-11, A, Acor)
+	chk.Float64(tst, "A", 1e-11, A, Acor)
 
 	// Simpson's rule
 	var S QuadElementary
@@ -43,5 +43,5 @@ func Test_QuadElem01(tst *testing.T) {
 		io.Pforan(err.Error())
 	}
 	io.Pforan("A  = %v\n", A)
-	chk.Scalar(tst, "A", 1e-11, A, Acor)
+	chk.Float64(tst, "A", 1e-11, A, Acor)
 }

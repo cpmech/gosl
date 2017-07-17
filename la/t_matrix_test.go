@@ -24,20 +24,20 @@ func TestMatrix01(tst *testing.T) {
 	a := NewMatrixSlice(A)
 	chk.Array(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
-	chk.Scalar(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1)
-	chk.Scalar(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
-	chk.Scalar(tst, "Get(0,2)", 1e-17, a.Get(0, 2), 3)
-	chk.Scalar(tst, "Get(0,3)", 1e-17, a.Get(0, 3), 4)
+	chk.Float64(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1)
+	chk.Float64(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
+	chk.Float64(tst, "Get(0,2)", 1e-17, a.Get(0, 2), 3)
+	chk.Float64(tst, "Get(0,3)", 1e-17, a.Get(0, 3), 4)
 
-	chk.Scalar(tst, "Get(1,0)", 1e-17, a.Get(1, 0), 5)
-	chk.Scalar(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
-	chk.Scalar(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 7)
-	chk.Scalar(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 8)
+	chk.Float64(tst, "Get(1,0)", 1e-17, a.Get(1, 0), 5)
+	chk.Float64(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
+	chk.Float64(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 7)
+	chk.Float64(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 8)
 
-	chk.Scalar(tst, "Get(2,0)", 1e-17, a.Get(2, 0), 9)
-	chk.Scalar(tst, "Get(2,1)", 1e-17, a.Get(2, 1), 0)
-	chk.Scalar(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
-	chk.Scalar(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2)
+	chk.Float64(tst, "Get(2,0)", 1e-17, a.Get(2, 0), 9)
+	chk.Float64(tst, "Get(2,1)", 1e-17, a.Get(2, 1), 0)
+	chk.Float64(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
+	chk.Float64(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2)
 
 	Aback := a.GetSlice()
 	chk.Matrix(tst, "a to A", 1e-15, Aback, A)
@@ -54,7 +54,7 @@ func TestMatrix01(tst *testing.T) {
 	chk.String(tst, l, lCorrect)
 
 	a.Add(1, 2, -7)
-	chk.Scalar(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 0)
+	chk.Float64(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 0)
 
 	b := a.GetCopy()
 	if b.M != a.M {
@@ -82,20 +82,20 @@ func TestMatrix02(tst *testing.T) {
 	a := NewMatrixSliceC(A)
 	chk.ArrayC(tst, "A to a", 1e-15, a.Data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
 
-	chk.ScalarC(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1+0.1i)
-	chk.ScalarC(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
-	chk.ScalarC(tst, "Get(0,2)", 1e-17, a.Get(0, 2), 3)
-	chk.ScalarC(tst, "Get(0,3)", 1e-17, a.Get(0, 3), 4-0.4i)
+	chk.Complex128(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1+0.1i)
+	chk.Complex128(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
+	chk.Complex128(tst, "Get(0,2)", 1e-17, a.Get(0, 2), 3)
+	chk.Complex128(tst, "Get(0,3)", 1e-17, a.Get(0, 3), 4-0.4i)
 
-	chk.ScalarC(tst, "Get(1,0)", 1e-17, a.Get(1, 0), 5+0.5i)
-	chk.ScalarC(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
-	chk.ScalarC(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 7)
-	chk.ScalarC(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 8-0.8i)
+	chk.Complex128(tst, "Get(1,0)", 1e-17, a.Get(1, 0), 5+0.5i)
+	chk.Complex128(tst, "Get(1,1)", 1e-17, a.Get(1, 1), 6)
+	chk.Complex128(tst, "Get(1,2)", 1e-17, a.Get(1, 2), 7)
+	chk.Complex128(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 8-0.8i)
 
-	chk.ScalarC(tst, "Get(2,0)", 1e-17, a.Get(2, 0), 9+0.9i)
-	chk.ScalarC(tst, "Get(2,1)", 1e-17, a.Get(2, 1), 0)
-	chk.ScalarC(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
-	chk.ScalarC(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
+	chk.Complex128(tst, "Get(2,0)", 1e-17, a.Get(2, 0), 9+0.9i)
+	chk.Complex128(tst, "Get(2,1)", 1e-17, a.Get(2, 1), 0)
+	chk.Complex128(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
+	chk.Complex128(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
 
 	Aback := a.GetSlice()
 	chk.MatrixC(tst, "a to A", 1e-15, Aback, A)
@@ -112,7 +112,7 @@ func TestMatrix02(tst *testing.T) {
 	chk.String(tst, l, lCorrect)
 
 	a.Add(1, 3, -8+0.8i)
-	chk.ScalarC(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 0)
+	chk.Complex128(tst, "Get(1,3)", 1e-17, a.Get(1, 3), 0)
 
 	b := a.GetCopy()
 	if b.M != a.M {
@@ -206,11 +206,11 @@ func TestMatrix03(tst *testing.T) {
 		{1, 2, 3, 4, 5},
 	})
 	maxdiff := a.MaxDiff(f)
-	chk.Scalar(tst, "MaxDiff", 1e-17, maxdiff, 45)
+	chk.Float64(tst, "MaxDiff", 1e-17, maxdiff, 45)
 
 	// Largest
 	largest := a.Largest(1)
-	chk.Scalar(tst, "Largest", 1e-17, largest, 50)
+	chk.Float64(tst, "Largest", 1e-17, largest, 50)
 
 	// GetRow
 	row0 := a.GetRow(0)
@@ -235,11 +235,11 @@ func TestMatrix03(tst *testing.T) {
 		{+0, 2, 8},
 	})
 	normFA := A.NormFrob()
-	chk.Scalar(tst, "NormFrob", 1e-17, normFA, 1.438749456993816e+01)
+	chk.Float64(tst, "NormFrob", 1e-17, normFA, 1.438749456993816e+01)
 
 	// NormInf
 	normIA := A.NormInf()
-	chk.Scalar(tst, "NormInf", 1e-17, normIA, 15.0)
+	chk.Float64(tst, "NormInf", 1e-17, normIA, 15.0)
 }
 
 func TestMatrix04(tst *testing.T) {

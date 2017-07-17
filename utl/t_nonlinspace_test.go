@@ -34,7 +34,7 @@ func TestNonlinSpace01(tst *testing.T) {
 	Δxn := x[len(x)-1] - x[len(x)-2]
 
 	io.Pf("Δxn/Δx0 = %v\n", Δxn/Δx0)
-	chk.Scalar(tst, "Δxn/Δx0", 1e-15, Δxn/Δx0, R)
+	chk.Float64(tst, "Δxn/Δx0", 1e-15, Δxn/Δx0, R)
 
 	R = 1
 	xuni := NonlinSpace(xa, xb, N, R, false)
@@ -158,8 +158,8 @@ func TestNonlinSpace03(tst *testing.T) {
 		io.Pf("N = %d\n", N)
 		io.Pf("x = %v\n", x)
 		chk.Int(tst, "len(x)", len(x), N)
-		chk.Scalar(tst, "x0", 1e-17, x[0], xa)
-		chk.Scalar(tst, "xL", 1e-17, x[N-1], xb)
+		chk.Float64(tst, "x0", 1e-17, x[0], xa)
+		chk.Float64(tst, "xL", 1e-17, x[N-1], xb)
 
 		// some constants
 		l := N - 1
@@ -178,7 +178,7 @@ func TestNonlinSpace03(tst *testing.T) {
 			io.Pforan("%d → %d  vs  %d → %d\n", i-1, i, l-i, l-i+1)
 			Δxa := x[i] - x[i-1]
 			Δxb := x[l-i+1] - x[l-i]
-			chk.Scalar(tst, "Δxa = Δxb", tolSym, Δxa, Δxb)
+			chk.Float64(tst, "Δxa = Δxb", tolSym, Δxa, Δxb)
 		}
 
 		// check ratio
@@ -196,6 +196,6 @@ func TestNonlinSpace03(tst *testing.T) {
 		Δx0 := x[1] - x[0]
 		r := Δxl / Δx0
 		io.Pforan("r = %v\n", r)
-		chk.Scalar(tst, "ratio", tolR, r, R)
+		chk.Float64(tst, "ratio", tolR, r, R)
 	}
 }

@@ -115,13 +115,13 @@ func Test_bins02(tst *testing.T) {
 	id, sqDist := bins.FindClosest([]float64{2.2, 2.0})
 	io.Pforan("\nid=%v  sqDist=%v\n", id, sqDist)
 	chk.Int(tst, "closest 4: id", id, 4)
-	chk.Scalar(tst, "closest 4: sqDist", 1e-15, sqDist, 0.1*0.1)
+	chk.Float64(tst, "closest 4: sqDist", 1e-15, sqDist, 0.1*0.1)
 
 	// find closest again
 	id, sqDist = bins.FindClosest([]float64{2.2, 2.01})
 	io.Pforan("\nid=%v  sqDist=%v\n", id, sqDist)
 	chk.Int(tst, "closest 7: id", id, 7)
-	chk.Scalar(tst, "closest 7: sqDist", 1e-15, sqDist, math.Pow(0.1-0.01, 2))
+	chk.Float64(tst, "closest 7: sqDist", 1e-15, sqDist, math.Pow(0.1-0.01, 2))
 
 	// append more points
 	nextID := bins.Nentries()

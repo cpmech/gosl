@@ -156,7 +156,7 @@ func TestTwoDver02(tst *testing.T) {
 	for i := 0; i < N0; i++ {
 		for j := 0; j < N1; j++ {
 			if (i == int(fx) || i == dx-int(fx)) && (j == int(fy) || j == dy-int(fy)) {
-				chk.ScalarC(tst, "nozero freq", 1e-12, plan.Get(i, j), complex(float64(dx*dy)/4.0, 0))
+				chk.Complex128(tst, "nozero freq", 1e-12, plan.Get(i, j), complex(float64(dx*dy)/4.0, 0))
 			} else {
 				e := cmplx.Abs(plan.Get(i, j))
 				if e > 1e-12 {

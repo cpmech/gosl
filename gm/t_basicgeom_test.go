@@ -23,38 +23,38 @@ func Test_basicgeom01(tst *testing.T) {
 	io.Pforan("a = %+v\n", a)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, 0.0)
+	chk.Float64(tst, "dist(a,b)", 1e-17, δ, 0.0)
 
 	SQ3 := math.Sqrt(3.0)
 	c := a.NewDisp(-1.0/SQ3, -1.0/SQ3, -1.0/SQ3)
 	δ = DistPointPoint(a, c)
 	io.Pforan("c = %+v\n", c)
 	io.Pforan("δ(a,c) = %v\n", δ)
-	chk.Scalar(tst, "dist(a,c)", 1e-17, δ, 1.0)
+	chk.Float64(tst, "dist(a,c)", 1e-17, δ, 1.0)
 
 	b.X, b.Y, b.Z = 1, 0, 0
 	δ = DistPointPoint(a, b)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, 1)
+	chk.Float64(tst, "dist(a,b)", 1e-17, δ, 1)
 
 	b.X, b.Y, b.Z = 0, 2, 0
 	δ = DistPointPoint(a, b)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, 2)
+	chk.Float64(tst, "dist(a,b)", 1e-17, δ, 2)
 
 	b.X, b.Y, b.Z = 0, 3, 0
 	δ = DistPointPoint(a, b)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, 3)
+	chk.Float64(tst, "dist(a,b)", 1e-17, δ, 3)
 
 	b.X, b.Y, b.Z = 1, 1, 1
 	δ = DistPointPoint(a, b)
 	io.Pforan("b = %+v\n", b)
 	io.Pforan("δ(a,b) = %v\n", δ)
-	chk.Scalar(tst, "dist(a,b)", 1e-17, δ, math.Sqrt(3.0))
+	chk.Float64(tst, "dist(a,b)", 1e-17, δ, math.Sqrt(3.0))
 }
 
 func Test_basicgeom02(tst *testing.T) {
@@ -71,9 +71,9 @@ func Test_basicgeom02(tst *testing.T) {
 	io.Pforan("v = %v  norm = %g\n", v, VecNorm(v))
 	io.Pforan("w = %v  norm = %g\n", w, VecNorm(w))
 	io.Pforan("u.v = %v\n", s)
-	chk.Scalar(tst, "u.v", 1e-17, s, 32.0)
-	chk.Scalar(tst, "norm(u)", 1e-17, VecNorm(u), math.Sqrt(14.0))
-	chk.Scalar(tst, "norm(v)", 1e-17, VecNorm(v), math.Sqrt(77.0))
+	chk.Float64(tst, "u.v", 1e-17, s, 32.0)
+	chk.Float64(tst, "norm(u)", 1e-17, VecNorm(u), math.Sqrt(14.0))
+	chk.Float64(tst, "norm(v)", 1e-17, VecNorm(v), math.Sqrt(77.0))
 	chk.Array(tst, "r", 1e-17, r, []float64{2, 4, 6})
 	chk.Array(tst, "w", 1e-17, w, []float64{-10, -11, -12})
 }
@@ -95,12 +95,12 @@ func Test_basicgeom03(tst *testing.T) {
 	io.Pforan("U = %v\n", U)
 	io.Pforan("V = %v\n", V)
 	io.Pforan("W = %v\n", W)
-	chk.Scalar(tst, "len(u)", 1e-17, u.Len(), 3.0)
-	chk.Scalar(tst, "len(v)", 1e-17, v.Len(), 5.0)
-	chk.Scalar(tst, "len(w)", 1e-17, w.Len(), 10.0)
-	chk.Scalar(tst, "w.A.X", 1e-17, w.A.X, v.A.X)
-	chk.Scalar(tst, "w.A.Y", 1e-17, w.A.Y, v.A.Y)
-	chk.Scalar(tst, "w.A.Z", 1e-17, w.A.Z, v.A.Z)
+	chk.Float64(tst, "len(u)", 1e-17, u.Len(), 3.0)
+	chk.Float64(tst, "len(v)", 1e-17, v.Len(), 5.0)
+	chk.Float64(tst, "len(w)", 1e-17, w.Len(), 10.0)
+	chk.Float64(tst, "w.A.X", 1e-17, w.A.X, v.A.X)
+	chk.Float64(tst, "w.A.Y", 1e-17, w.A.Y, v.A.Y)
+	chk.Float64(tst, "w.A.Z", 1e-17, w.A.Z, v.A.Z)
 	chk.Array(tst, "U", 1e-17, U, []float64{3, 0, 0})
 	chk.Array(tst, "V", 1e-17, V, []float64{3, 4, 0})
 	chk.Array(tst, "W", 1e-17, W, []float64{6, 8, 0})
@@ -110,9 +110,9 @@ func Test_basicgeom03(tst *testing.T) {
 	io.Pforan("dot(u,v) = %v\n", udotv)
 	io.Pforan("dot(u,w) = %v\n", udotw)
 	io.Pforan("dot(v,w) = %v\n", vdotw)
-	chk.Scalar(tst, "dot(u,v)", 1e-17, udotv, 9.0)
-	chk.Scalar(tst, "dot(u,w)", 1e-17, udotw, 18.0)
-	chk.Scalar(tst, "dot(v,w)", 1e-17, vdotw, 50.0)
+	chk.Float64(tst, "dot(u,v)", 1e-17, udotv, 9.0)
+	chk.Float64(tst, "dot(u,w)", 1e-17, udotw, 18.0)
+	chk.Float64(tst, "dot(v,w)", 1e-17, vdotw, 50.0)
 }
 
 func Test_basicgeom04(tst *testing.T) {

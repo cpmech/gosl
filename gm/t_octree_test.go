@@ -46,10 +46,10 @@ func Test_octree01(tst *testing.T) {
 	chk.Array(tst, "a == p", 1e-15, a.X, []float64{1, 2, 3})
 
 	dap := DistPointPointN(a, p)
-	chk.Scalar(tst, "dist(a,p)", 1e-15, dap, 0)
+	chk.Float64(tst, "dist(a,p)", 1e-15, dap, 0)
 
 	dpq := DistPointPointN(p, q)
-	chk.Scalar(tst, "dist(p,q)", 1e-15, dpq, math.Sqrt(5.0))
+	chk.Float64(tst, "dist(p,q)", 1e-15, dpq, math.Sqrt(5.0))
 
 	c1 := NewPointNdim(2)
 	c1.X[0] = 1
@@ -77,7 +77,7 @@ func Test_octree02(tst *testing.T) {
 	p := &PointN{X: []float64{-2, 0, 0}}
 	dist := DistPointBoxN(p, b)
 	io.Pforan("dist = %v\n", dist)
-	chk.Scalar(tst, "dist(p,b)", 1e-15, dist, 1.0)
+	chk.Float64(tst, "dist(p,b)", 1e-15, dist, 1.0)
 
 	if b.IsInside(p) {
 		tst.Errorf("is inside box failed")
@@ -87,7 +87,7 @@ func Test_octree02(tst *testing.T) {
 	q := &PointN{X: []float64{-2, 3, 0}}
 	dist = DistPointBoxN(q, b)
 	io.Pforan("dist = %v\n", dist)
-	chk.Scalar(tst, "dist(q,b)", 1e-15, dist, math.Sqrt2)
+	chk.Float64(tst, "dist(q,b)", 1e-15, dist, math.Sqrt2)
 
 	if b.IsInside(q) {
 		tst.Errorf("is inside box failed")
@@ -97,7 +97,7 @@ func Test_octree02(tst *testing.T) {
 	r := &PointN{X: []float64{-2, 3, 2}}
 	dist = DistPointBoxN(r, b)
 	io.Pforan("dist = %v\n", dist)
-	chk.Scalar(tst, "dist(r,b)", 1e-15, dist, math.Sqrt(3.0))
+	chk.Float64(tst, "dist(r,b)", 1e-15, dist, math.Sqrt(3.0))
 
 	if b.IsInside(r) {
 		tst.Errorf("is inside box failed")
@@ -107,7 +107,7 @@ func Test_octree02(tst *testing.T) {
 	s := &PointN{X: []float64{0, 0, 0}}
 	dist = DistPointBoxN(s, b)
 	io.Pforan("dist = %v\n", dist)
-	chk.Scalar(tst, "dist(s,b)", 1e-15, dist, 0)
+	chk.Float64(tst, "dist(s,b)", 1e-15, dist, 0)
 
 	if !b.IsInside(s) {
 		tst.Errorf("is inside box failed")
@@ -117,7 +117,7 @@ func Test_octree02(tst *testing.T) {
 	s.X[0] = 1.0
 	dist = DistPointBoxN(s, b)
 	io.Pforan("dist = %v\n", dist)
-	chk.Scalar(tst, "dist(s,b)", 1e-15, dist, 0)
+	chk.Float64(tst, "dist(s,b)", 1e-15, dist, 0)
 
 	if !b.IsInside(s) {
 		tst.Errorf("is inside box failed")

@@ -47,7 +47,7 @@ func checkAiSmall(tst *testing.T, k string, a *Matrix, zeroDet float64,
 	}
 
 	// check inverse and determinant
-	chk.Scalar(tst, "det("+k+")", tolDet, det, correctDet)
+	chk.Float64(tst, "det("+k+")", tolDet, det, correctDet)
 	chk.Array(tst, k+"i", tolAi, ai.Data, correctAi.Data)
 
 	// check a⋅ai = I
@@ -501,7 +501,7 @@ func TestCondNum01(tst *testing.T) {
 		tst.Errorf("MatCondNum failed:\n%v\n", err)
 		return
 	}
-	chk.Scalar(tst, "condI(a) ", 1e-8, cIa, 35988.001)
+	chk.Float64(tst, "condI(a) ", 1e-8, cIa, 35988.001)
 
 	b := NewMatrixSlice([][]float64{
 		{1, 2},
@@ -519,6 +519,6 @@ func TestCondNum01(tst *testing.T) {
 		tst.Errorf("MatCondNum failed:\n%v\n", err)
 		return
 	}
-	chk.Scalar(tst, "condI(b) ", 1e-17, cIb, 25.0)
-	chk.Scalar(tst, "condF(b) ", 1e-14, cFb, 18.0)
+	chk.Float64(tst, "condI(b) ", 1e-17, cIb, 25.0)
+	chk.Float64(tst, "condF(b) ", 1e-14, cFb, 18.0)
 }

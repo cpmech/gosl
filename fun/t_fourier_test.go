@@ -77,7 +77,7 @@ func TestDft02(tst *testing.T) {
 		}
 	}
 	io.Pforan("maxRf = %v\n", maxRf)
-	chk.Scalar(tst, "maxRf", 1e-12, maxRf, 0.383616856748)
+	chk.Float64(tst, "maxRf", 1e-12, maxRf, 0.383616856748)
 
 	// plot
 	if chk.Verbose {

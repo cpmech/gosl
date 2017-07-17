@@ -33,21 +33,21 @@ func TestVector01(tst *testing.T) {
 	c := b.GetCopy()
 	chk.Array(tst, "b.GetCopy", 1e-17, c, []float64{1, 2, 3})
 
-	chk.Scalar(tst, "c.Accum", 1e-17, c.Accum(), 6)
+	chk.Float64(tst, "c.Accum", 1e-17, c.Accum(), 6)
 
-	chk.Scalar(tst, "c.Norm", 1e-17, c.Norm(), math.Sqrt(14.0))
+	chk.Float64(tst, "c.Norm", 1e-17, c.Norm(), math.Sqrt(14.0))
 
-	chk.Scalar(tst, "c.NormDiff(b)", 1e-17, c.NormDiff(b), 0)
+	chk.Float64(tst, "c.NormDiff(b)", 1e-17, c.NormDiff(b), 0)
 
-	chk.Scalar(tst, "c.Min", 1e-17, c.Min(), 1)
+	chk.Float64(tst, "c.Min", 1e-17, c.Min(), 1)
 
-	chk.Scalar(tst, "c.Max", 1e-17, c.Max(), 3)
+	chk.Float64(tst, "c.Max", 1e-17, c.Max(), 3)
 
 	min, max := c.MinMax()
-	chk.Scalar(tst, "min", 1e-17, min, 1)
-	chk.Scalar(tst, "max", 1e-17, max, 3)
+	chk.Float64(tst, "min", 1e-17, min, 1)
+	chk.Float64(tst, "max", 1e-17, max, 3)
 
-	chk.Scalar(tst, "c.Largest", 1e-17, c.Largest(3), 1)
+	chk.Float64(tst, "c.Largest", 1e-17, c.Largest(3), 1)
 }
 
 func TestVector02(tst *testing.T) {
@@ -71,5 +71,5 @@ func TestVector02(tst *testing.T) {
 	chk.ArrayC(tst, "b.GetCopy", 1e-17, c, []complex128{1 + 1i, 2 + 1i, 3 + 1i})
 
 	io.Pforan("c = %v\n", c)
-	chk.ScalarC(tst, "c.Norm", 1e-17, c.Norm(), cmplx.Sqrt(2i+(3+4i)+(8+6i)))
+	chk.Complex128(tst, "c.Norm", 1e-17, c.Norm(), cmplx.Sqrt(2i+(3+4i)+(8+6i)))
 }

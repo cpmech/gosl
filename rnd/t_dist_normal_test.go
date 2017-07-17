@@ -112,21 +112,21 @@ func Test_dist_normal_03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("dist_normal_03")
 
-	chk.Scalar(tst, "φ(0)", 1e-16, Stdphi(0.0), 0.3989422804014327)
-	chk.Scalar(tst, "φ(2)", 1e-16, Stdphi(2.0), 0.053990966513188063)
-	chk.Scalar(tst, "φ(10)", 1e-16, Stdphi(10.0), 7.6945986267064199e-23)
+	chk.Float64(tst, "φ(0)", 1e-16, Stdphi(0.0), 0.3989422804014327)
+	chk.Float64(tst, "φ(2)", 1e-16, Stdphi(2.0), 0.053990966513188063)
+	chk.Float64(tst, "φ(10)", 1e-16, Stdphi(10.0), 7.6945986267064199e-23)
 	io.Pf("\n")
-	chk.Scalar(tst, "Φ(0)", 1e-16, StdPhi(0.0), 0.5)
-	chk.Scalar(tst, "Φ(2)", 1e-16, StdPhi(2.0), 0.97724986805182079)
-	chk.Scalar(tst, "Φ(4)", 1e-16, StdPhi(4.0), 0.99996832875816688)
+	chk.Float64(tst, "Φ(0)", 1e-16, StdPhi(0.0), 0.5)
+	chk.Float64(tst, "Φ(2)", 1e-16, StdPhi(2.0), 0.97724986805182079)
+	chk.Float64(tst, "Φ(4)", 1e-16, StdPhi(4.0), 0.99996832875816688)
 	io.Pf("\n")
-	chk.Scalar(tst, "Φ⁻¹(Φ(0))", 1e-16, StdInvPhi(StdPhi(0.0)), 0.0)
-	chk.Scalar(tst, "Φ⁻¹(Φ(2))", 1e-9, StdInvPhi(StdPhi(2.0)), 2.0)
-	chk.Scalar(tst, "Φ⁻¹(Φ(4))", 1e-8, StdInvPhi(StdPhi(4.0)), 4.0)
+	chk.Float64(tst, "Φ⁻¹(Φ(0))", 1e-16, StdInvPhi(StdPhi(0.0)), 0.0)
+	chk.Float64(tst, "Φ⁻¹(Φ(2))", 1e-9, StdInvPhi(StdPhi(2.0)), 2.0)
+	chk.Float64(tst, "Φ⁻¹(Φ(4))", 1e-8, StdInvPhi(StdPhi(4.0)), 4.0)
 	io.Pf("\n")
-	chk.Scalar(tst, "Φ⁻¹(Φ(0))", 1e-16, StdInvPhi(0.5), 0.0)
-	chk.Scalar(tst, "Φ⁻¹(Φ(2))", 1e-9, StdInvPhi(0.97724986805182079), 2.0)
-	chk.Scalar(tst, "Φ⁻¹(Φ(4))", 1e-8, StdInvPhi(0.99996832875816688), 4.0)
+	chk.Float64(tst, "Φ⁻¹(Φ(0))", 1e-16, StdInvPhi(0.5), 0.0)
+	chk.Float64(tst, "Φ⁻¹(Φ(2))", 1e-9, StdInvPhi(0.97724986805182079), 2.0)
+	chk.Float64(tst, "Φ⁻¹(Φ(4))", 1e-8, StdInvPhi(0.99996832875816688), 4.0)
 }
 
 func Test_dist_normal_04(tst *testing.T) {
@@ -184,7 +184,7 @@ func Test_dist_normal_05(tst *testing.T) {
 		area += dx * prob[i]
 	}
 	io.Pforan("area = %v\n", area)
-	chk.Scalar(tst, "area", 1e-15, area, 1)
+	chk.Float64(tst, "area", 1e-15, area, 1)
 
 	if chk.Verbose {
 		plt.Reset(false, nil)

@@ -140,7 +140,7 @@ func Test_dist_lognormal_03(tst *testing.T) {
 
 	area := hist.DensityArea(nsamples)
 	io.Pforan("area = %v\n", area)
-	chk.Scalar(tst, "area", 1e-15, area, 1)
+	chk.Float64(tst, "area", 1e-15, area, 1)
 
 	if chk.Verbose {
 		plt.Reset(false, nil)

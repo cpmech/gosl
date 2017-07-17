@@ -244,7 +244,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 goes with 1 and 1 goes with 0
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 2)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 2)
 
 	C = [][]float64{
 		{2, 2},
@@ -254,7 +254,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 1}) // 0 goes 0 and 1 goes with 1
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 5)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 5)
 
 	C = [][]float64{
 		{2, 2},
@@ -264,7 +264,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{1, 0}) // 0 goes 1 and 1 goes 0
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 3)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 3)
 
 	C = [][]float64{
 		{2, 1},
@@ -276,7 +276,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{-1, -1, 1, 0})
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 2)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 2)
 
 	C = [][]float64{
 		{1, 2, 3},
@@ -286,7 +286,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 2}) // 0 goes with 0 and 1 goes with 2
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 5)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 5)
 
 	C = [][]float64{
 		{1, 2, 3},
@@ -297,7 +297,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 2, 1}) // 0 goes with 0, 1 goes with 2 and 2 goes with 1
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 6)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 6)
 
 	C = [][]float64{
 		{2, 4, 7, 9},
@@ -308,7 +308,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.SetCostMatrix(C)
 	mnk.Run()
 	chk.Ints(tst, "links", mnk.Links, []int{0, 3, 1})
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 5)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 5)
 
 	C = [][]float64{
 		{1, 2, 3},
@@ -325,7 +325,7 @@ func Test_munkres02(tst *testing.T) {
 	mnk.Run()
 	chk.Matrix(tst, "C", 1e-17, mnk.C, Ccor)
 	chk.Ints(tst, "links", mnk.Links, []int{2, 1, 0}) // 0 goes with 2, 1 goes with 1 and 2 goes with 0
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 10)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 10)
 
 	// from https://projecteuler.net/index.php?section=problems&id=345
 	C = [][]float64{
@@ -381,7 +381,7 @@ func Test_munkres03(tst *testing.T) {
 	io.Pforan("links = %v\n", mnk.Links)
 	io.Pforan("cost = %v  (13938)\n", -mnk.Cost)
 	chk.Ints(tst, "links", mnk.Links, []int{9, 10, 7, 4, 3, 0, 13, 2, 14, 11, 6, 5, 12, 8, 1})
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, -13938)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, -13938)
 }
 
 func checkMaskMatrix(tst *testing.T, msg string, res, correct [][]MaskType) {
@@ -427,7 +427,7 @@ func Test_munkres04(tst *testing.T) {
 	io.Pforan("links = %v\n", mnk.Links)
 	io.Pforan("cost = %v  (13938)\n", mnk.Cost)
 	chk.Ints(tst, "links", mnk.Links, []int{-1, -1, 0, -1, -1})
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 0.5)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 0.5)
 
 	C = [][]float64{
 		{1.0, 2.0, 0.5, 3.0, 4.0},
@@ -438,7 +438,7 @@ func Test_munkres04(tst *testing.T) {
 	io.Pforan("links = %v\n", mnk.Links)
 	io.Pforan("cost = %v  (13938)\n", mnk.Cost)
 	chk.Ints(tst, "links", mnk.Links, []int{2})
-	chk.Scalar(tst, "cost", 1e-17, mnk.Cost, 0.5)
+	chk.Float64(tst, "cost", 1e-17, mnk.Cost, 0.5)
 }
 
 func Test_munkres05(tst *testing.T) {
@@ -465,7 +465,7 @@ func Test_munkres05(tst *testing.T) {
 	io.Pforan("C: links = %v\n", mnkC.Links)
 	io.Pforan("C: cost = %v\n", mnkC.Cost)
 	chk.Ints(tst, "C: links", mnkC.Links, []int{0, 1, -1})
-	chk.Scalar(tst, "C: cost", 1e-17, mnkC.Cost, 35928)
+	chk.Float64(tst, "C: cost", 1e-17, mnkC.Cost, 35928)
 
 	io.Pf("\n")
 
@@ -476,5 +476,5 @@ func Test_munkres05(tst *testing.T) {
 	io.Pforan("D: links = %v\n", mnkD.Links)
 	io.Pforan("D: cost = %v\n", mnkD.Cost)
 	chk.Ints(tst, "D: links", mnkD.Links, []int{0, -1, 1})
-	chk.Scalar(tst, "D: cost", 1e-17, mnkD.Cost, 35928)
+	chk.Float64(tst, "D: cost", 1e-17, mnkD.Cost, 35928)
 }

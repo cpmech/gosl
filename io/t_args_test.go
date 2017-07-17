@@ -22,7 +22,7 @@ func Test_args01(tst *testing.T) {
 	chk.String(tst, fnk, "simulation")
 
 	resFloat := ArgToFloat(1, 456)
-	chk.Scalar(tst, "456", 1e-17, resFloat, 456)
+	chk.Float64(tst, "456", 1e-17, resFloat, 456)
 
 	resInt := ArgToInt(1, 123)
 	if resInt != 123 {
