@@ -37,9 +37,8 @@ func TestLagCardinal01(tst *testing.T) {
 			if i != j {
 				ana = 0
 			}
-			chk.AnaNum(tst, io.Sf("L^%d_%d(X[%d])", N, i, j), 1e-17, li, ana, chk.Verbose)
+			chk.AnaNum(tst, io.Sf("L^%d_%d(X[%d])", N, i, j), 1e-17, li, ana, false)
 		}
-		io.Pl()
 	}
 
 	// check Kronecker property not using barycentic formula
@@ -51,9 +50,8 @@ func TestLagCardinal01(tst *testing.T) {
 			if i != j {
 				ana = 0
 			}
-			chk.AnaNum(tst, io.Sf("L^%d_%d(X[%d])", N, i, j), 1e-17, li, ana, chk.Verbose)
+			chk.AnaNum(tst, io.Sf("L^%d_%d(X[%d])", N, i, j), 1e-17, li, ana, false)
 		}
-		io.Pl()
 	}
 
 	// compare formulae
@@ -190,7 +188,8 @@ func TestLagInterp03(tst *testing.T) {
 	// check Lebesgue constants and compute max error
 	ΛN := []float64{1.988854381999833e+00, 2.361856787767076e+00, 3.011792612349363e+00}
 	for i, n := range []int{4, 8, 24} {
-		p, _ := NewLagrangeInterp(n, kind)
+		p, err := NewLagrangeInterp(n, kind)
+		chk.EP(err)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-13, p.EstimateLebesgue(), ΛN[i])
 	}
 
@@ -213,7 +212,10 @@ func TestLagInterp03(tst *testing.T) {
 		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
-			p, _ := NewLagrangeInterp(int(n), kind)
+			p, err := NewLagrangeInterp(int(n), kind)
+			chk.EP(err)
+			err = p.CalcU(f)
+			chk.EP(err)
 			E[i], _ = p.EstimateMaxErr(0, f)
 		}
 		plt.Plot(Nvalues, E, &plt.A{C: "red", M: ".", NoClip: true})
@@ -255,7 +257,8 @@ func TestLagInterp04(tst *testing.T) {
 	// check Lebesgue constants and compute max error
 	ΛN := []float64{1.798761778849085e+00, 2.274730699116020e+00, 2.984443326362511e+00}
 	for i, n := range []int{4, 8, 24} {
-		p, _ := NewLagrangeInterp(n, kind)
+		p, err := NewLagrangeInterp(n, kind)
+		chk.EP(err)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-14, p.EstimateLebesgue(), ΛN[i])
 	}
 
@@ -278,7 +281,10 @@ func TestLagInterp04(tst *testing.T) {
 		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
-			p, _ := NewLagrangeInterp(int(n), kind)
+			p, err := NewLagrangeInterp(int(n), kind)
+			chk.EP(err)
+			err = p.CalcU(f)
+			chk.EP(err)
 			E[i], _ = p.EstimateMaxErr(0, f)
 		}
 		plt.Plot(Nvalues, E, &plt.A{C: "red", M: ".", NoClip: true})
@@ -364,19 +370,5 @@ func TestLagInterp05(tst *testing.T) {
 			chk.EP(err)
 			chk.AnaNum(tst, io.Sf("I%d", i), 1e-15, i1, i2, false)
 		}
-	}
-
-	// plot
-	if chk.Verbose {
-		xx := utl.LinSpace(-1, 1, 201)
-		y1 := make([]float64, len(xx))
-		for i, x := range xx {
-			y1[i], _ = f(x)
-		}
-		plt.Reset(true, nil)
-		plt.Plot(xx, y1, &plt.A{C: plt.C(0, 1), L: "$f$", NoClip: true})
-		plt.Gll("$x$", "$f(x)$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "laginterp05")
 	}
 }

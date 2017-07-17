@@ -314,15 +314,21 @@ func PlotLagInterpI(Nvalues []int, gridType io.Enum, f Ss) {
 	npts := 201
 	xx := utl.LinSpace(-1, 1, npts)
 	yy := make([]float64, len(xx))
+	var err error
 	for k, x := range xx {
-		yy[k], _ = f(x)
+		yy[k], err = f(x)
+		chk.EP(err)
 	}
 	iy := make([]float64, len(xx))
 	plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
 	for _, N := range Nvalues {
-		p, _ := NewLagrangeInterp(N, gridType)
+		p, err := NewLagrangeInterp(N, gridType)
+		chk.EP(err)
+		p.CalcU(f)
+		chk.EP(err)
 		for k, x := range xx {
-			iy[k], _ = p.I(x, f)
+			iy[k], err = p.I(x, f)
+			chk.EP(err)
 		}
 		E, xloc := p.EstimateMaxErr(0, f)
 		plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
