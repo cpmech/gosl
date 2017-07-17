@@ -27,11 +27,12 @@ type ChebyInterp struct {
 	Gauss bool // use roots (Gauss) or points (Lobatto)?
 
 	// derived
-	X     []float64 // points. NOTE: this mirrowed version of Chebyshev X; i.e. from +1 to -1
-	Wb    []float64 // weights for Gaussian quadrature
-	Gamma []float64 // denominador of coefficients equation ~ ‖p[i]‖²
-	CoefI []float64 // coefficients of interpolant
-	CoefP []float64 // coefficients of projection (estimated)
+	X      []float64 // points. NOTE: this mirrowed version of Chebyshev X; i.e. from +1 to -1
+	Wb     []float64 // weights for Gaussian quadrature
+	Gamma  []float64 // denominador of coefficients equation ~ ‖p[i]‖²
+	CoefI  []float64 // coefficients of interpolant
+	CoefP  []float64 // coefficients of projection (estimated)
+	CoefIs []float64 // coefficients of interpolation using Lagrange cardinal functions
 
 	// constants
 	EstimationN int // N to use when estimating CoefP [default=128]
@@ -310,7 +311,36 @@ func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 	return tjm1
 }
 
-// PsiLobDirect evaluates the Lagrangian cardinal function ψ_l(x) of degree N with Gauss-Lobatto points
+// CalcCoefIs computes the coefficients for interpolation with Lagrange cardinal functions ψ_l(x)
+func (o *ChebyInterp) CalcCoefIs(f Ss) (err error) {
+	if len(o.CoefIs) != o.N+1 {
+		o.CoefIs = make([]float64, o.N+1)
+	}
+	for l := 0; l < o.N+1; l++ {
+		o.CoefIs[l], err = f(o.X[l])
+		if err != nil {
+			return
+		}
+	}
+	return
+}
+
+// Is computes the interpolation using the Lagrange cardinal functions ψ_l(x)
+//
+//              N                                         N
+//   I{f}(x) =  Σ   f(x_l) ⋅ ψ_l(x)    or      I{f}(x) =  Σ  CoefIs_l ⋅ ψ_l(x)
+//             l=0                                       l=0
+//
+//   NOTE: CoefIs == f(x_l) coefficients must be computed first
+//
+func (o *ChebyInterp) Is(x float64) (res float64) {
+	for l := 0; l < o.N+1; l++ {
+		res += o.CoefIs[l] * o.PsiLobDirect(l, x)
+	}
+	return
+}
+
+// PsiLobDirect evaluates the Lagrange cardinal function ψ_l(x) of degree N with Gauss-Lobatto points
 //
 //              N
 //   I{f}(x) =  Σ   f(x_l) ⋅ ψ_l(x)
@@ -353,18 +383,28 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 //
 //   Equations (2.4.31) and (2.4.33), page 89 of [1]
 //
-func (o *ChebyInterp) CalcD1direct(useTrigo bool) {
+func (o *ChebyInterp) CalcD1direct(useTrigo, flip bool) (err error) {
+
+	// check
 	if o.Gauss {
 		chk.Panic("cannot compute D1 for non-Gauss-Lobatto points\n")
 	}
+
+	// allocate output and declare some constants/variables
 	o.D1direct = la.NewMatrix(o.N+1, o.N+1)
 	n := float64(o.N)
 	nn := float64(o.N * o.N)
 	n2 := 2.0 * n
 	var v, s1, s2, jj, ll, cbj, cbl float64
+
+	// using trigonometric identities
 	if useTrigo {
 		for j := 0; j < o.N+1; j++ {
-			for l := 0; l < o.N+1; l++ {
+			lMin := 0
+			if flip {
+				lMin = j
+			}
+			for l := lMin; l < o.N+1; l++ {
 				if j == l {
 					if j == 0 {
 						v = (2.0*nn + 1.0) / 6.0
@@ -387,10 +427,23 @@ func (o *ChebyInterp) CalcD1direct(useTrigo bool) {
 				o.D1direct.Set(j, l, v)
 			}
 		}
+		if flip {
+			for j := 0; j < o.N+1; j++ {
+				for l := j + 1; l < o.N+1; l++ {
+					o.D1direct.Set(o.N-j, o.N-l, -o.D1direct.Get(j, l))
+				}
+			}
+		}
 		return
 	}
+
+	// direct derivatives
 	for j := 0; j < o.N+1; j++ {
-		for l := 0; l < o.N+1; l++ {
+		lMin := 0
+		if flip {
+			lMin = j
+		}
+		for l := lMin; l < o.N+1; l++ {
 			if j == l {
 				if j == 0 {
 					v = (2.0*nn + 1.0) / 6.0
@@ -407,6 +460,14 @@ func (o *ChebyInterp) CalcD1direct(useTrigo bool) {
 			o.D1direct.Set(j, l, v)
 		}
 	}
+	if flip {
+		for j := 0; j < o.N+1; j++ {
+			for l := j + 1; l < o.N+1; l++ {
+				o.D1direct.Set(o.N-j, o.N-l, -o.D1direct.Get(j, l))
+			}
+		}
+	}
+	return
 }
 
 // CalcD2direct calculates the second derivative
@@ -417,7 +478,7 @@ func (o *ChebyInterp) CalcD1direct(useTrigo bool) {
 //
 //    Equation (2.4.32), page 89 of [1]
 //
-func (o *ChebyInterp) CalcD2direct() {
+func (o *ChebyInterp) CalcD2direct() (err error) {
 	if o.Gauss {
 		chk.Panic("cannot compute D2 for non-Gauss-Lobatto points\n")
 	}
@@ -455,6 +516,30 @@ func (o *ChebyInterp) CalcD2direct() {
 			o.D2direct.Set(j, l, v)
 		}
 	}
+	return
+}
+
+// CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
+//   NOTE: CoefIs and D1 matrix must be computed previously
+func (o *ChebyInterp) CalcErrorD1(f, dfdxAna Ss) (maxDiff float64) {
+
+	// f @ nodes: u = f(x_i)
+	u := o.CoefIs
+
+	// derivative of interpolation @ x_i
+	v := la.NewVector(o.N + 1)
+	la.MatVecMul(v, 1, o.D1direct, u)
+
+	// compute error
+	for i := 0; i < o.N+1; i++ {
+		vana, err := dfdxAna(o.X[i])
+		chk.EP(err)
+		diff := math.Abs(v[i] - vana)
+		if diff > maxDiff {
+			maxDiff = diff
+		}
+	}
+	return
 }
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
