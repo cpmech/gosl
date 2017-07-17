@@ -153,6 +153,72 @@ func Strings(tst *testing.T, msg string, a, b []string) {
 	PrintOk(msg)
 }
 
+// Array compares two arrays
+func Array(tst *testing.T, msg string, tol float64, res, correct []float64) {
+	zero := false
+	if len(correct) == 0 {
+		zero = true
+	} else {
+		if len(res) != len(correct) {
+			PrintFail("%s error\n", msg)
+			tst.Errorf("%s failed: res and correct arrays have different lengths. %d != %d", msg, len(res), len(correct))
+			return
+		}
+	}
+	var diff, maxdiff float64
+	for i := 0; i < len(res); i++ {
+		if math.IsNaN(res[i]) {
+			tst.Errorf("%s failed: NaN detected => %v", msg, res[i])
+		}
+		if zero {
+			diff = math.Abs(res[i])
+		} else {
+			diff = math.Abs(res[i] - correct[i])
+		}
+		if diff > maxdiff {
+			maxdiff = diff
+		}
+	}
+	CheckAndPrint(tst, msg, tol, maxdiff)
+}
+
+// ArrayC compares two slices of complex nummbers
+func ArrayC(tst *testing.T, msg string, tol float64, res, correct []complex128) {
+	zero := false
+	if len(correct) == 0 {
+		zero = true
+	} else {
+		if len(res) != len(correct) {
+			PrintFail("%s error\n", msg)
+			tst.Errorf("%s failed: res and correct arrays have different lengths. %d != %d", msg, len(res), len(correct))
+			return
+		}
+	}
+	var diff, maxdiff float64
+	var diffz, maxdiffz float64
+	for i := 0; i < len(res); i++ {
+		if zero {
+			diff = math.Abs(real(res[i]))
+			diffz = math.Abs(imag(res[i]))
+		} else {
+			diff = math.Abs(real(res[i]) - real(correct[i]))
+			diffz = math.Abs(imag(res[i]) - imag(correct[i]))
+		}
+		if diff > maxdiff {
+			maxdiff = diff
+		}
+		if diffz > maxdiffz {
+			maxdiffz = diffz
+		}
+	}
+	if maxdiff > tol || maxdiffz > tol {
+		PrintFail("%s error |maxdiff| = %g,  |maxdiffz| = %g\n", msg, maxdiff, maxdiffz)
+		tst.Errorf("%s failed with |maxdiff| = %g,  |maxdiffz| = %g", msg, maxdiff, maxdiffz)
+		return
+	}
+	PrintOk(msg)
+}
+
 // Matrix compares two matrices
 func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 	zero := false
@@ -185,35 +251,6 @@ func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 			if diff > maxdiff {
 				maxdiff = diff
 			}
-		}
-	}
-	CheckAndPrint(tst, msg, tol, maxdiff)
-}
-
-// Array compares two arrays
-func Array(tst *testing.T, msg string, tol float64, res, correct []float64) {
-	zero := false
-	if len(correct) == 0 {
-		zero = true
-	} else {
-		if len(res) != len(correct) {
-			PrintFail("%s error\n", msg)
-			tst.Errorf("%s failed: res and correct vectors have different lengths. %d != %d", msg, len(res), len(correct))
-			return
-		}
-	}
-	var diff, maxdiff float64
-	for i := 0; i < len(res); i++ {
-		if math.IsNaN(res[i]) {
-			tst.Errorf("%s failed: NaN detected => %v", msg, res[i])
-		}
-		if zero {
-			diff = math.Abs(res[i])
-		} else {
-			diff = math.Abs(res[i] - correct[i])
-		}
-		if diff > maxdiff {
-			maxdiff = diff
 		}
 	}
 	CheckAndPrint(tst, msg, tol, maxdiff)
@@ -254,43 +291,6 @@ func MatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex12
 			if diffz > maxdiffz {
 				maxdiffz = diffz
 			}
-		}
-	}
-	if maxdiff > tol || maxdiffz > tol {
-		PrintFail("%s error |maxdiff| = %g,  |maxdiffz| = %g\n", msg, maxdiff, maxdiffz)
-		tst.Errorf("%s failed with |maxdiff| = %g,  |maxdiffz| = %g", msg, maxdiff, maxdiffz)
-		return
-	}
-	PrintOk(msg)
-}
-
-// ArrayC compares two slices of complex nummbers
-func ArrayC(tst *testing.T, msg string, tol float64, res, correct []complex128) {
-	zero := false
-	if len(correct) == 0 {
-		zero = true
-	} else {
-		if len(res) != len(correct) {
-			PrintFail("%s error\n", msg)
-			tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
-			return
-		}
-	}
-	var diff, maxdiff float64
-	var diffz, maxdiffz float64
-	for i := 0; i < len(res); i++ {
-		if zero {
-			diff = math.Abs(real(res[i]))
-			diffz = math.Abs(imag(res[i]))
-		} else {
-			diff = math.Abs(real(res[i]) - real(correct[i]))
-			diffz = math.Abs(imag(res[i]) - imag(correct[i]))
-		}
-		if diff > maxdiff {
-			maxdiff = diff
-		}
-		if diffz > maxdiffz {
-			maxdiffz = diffz
 		}
 	}
 	if maxdiff > tol || maxdiffz > tol {
