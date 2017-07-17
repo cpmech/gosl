@@ -24,7 +24,7 @@ func TestSpMatrix01(tst *testing.T) {
 	A.Set(5, 5, Ap, Ai, Ax)
 	Ad := A.ToDense()
 
-	chk.Deep2(tst, "A", 1e-17, Ad.GetSlice(), [][]float64{
+	chk.Deep2(tst, "A", 1e-17, Ad.GetDeep2(), [][]float64{
 		{2, 3, 0, 0, 0},
 		{3, 0, 4, 0, 6},
 		{0, -1, -3, 2, 0},
@@ -66,6 +66,6 @@ func TestSpMatrix02(tst *testing.T) {
 		{1021, 1022, 1023, 1000, 1000, 1000},
 		{1000, 1000, 1000, 1000, 1000, 1000},
 	}
-	chk.Deep2(tst, "Kaug", 1.0e-17, Kaug.GetSlice(), Cor)
-	chk.Deep2(tst, "Laug", 1.0e-17, Laug.GetSlice(), Cor)
+	chk.Deep2(tst, "Kaug", 1.0e-17, Kaug.GetDeep2(), Cor)
+	chk.Deep2(tst, "Laug", 1.0e-17, Laug.GetDeep2(), Cor)
 }

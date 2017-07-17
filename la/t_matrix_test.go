@@ -21,7 +21,7 @@ func TestMatrix01(tst *testing.T) {
 		{9, 0, -1, -2},
 	}
 
-	a := NewMatrixSlice(A)
+	a := NewMatrixDeep2(A)
 	chk.Array(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
 	chk.Float64(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1)
@@ -39,7 +39,7 @@ func TestMatrix01(tst *testing.T) {
 	chk.Float64(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
 	chk.Float64(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2)
 
-	Aback := a.GetSlice()
+	Aback := a.GetDeep2()
 	chk.Deep2(tst, "a to A", 1e-15, Aback, A)
 
 	l := a.Print("")
@@ -79,7 +79,7 @@ func TestMatrix02(tst *testing.T) {
 		{9 + 0.9i, 0, -1, -2 + 1i},
 	}
 
-	a := NewMatrixSliceC(A)
+	a := NewMatrixDeep2c(A)
 	chk.ArrayC(tst, "A to a", 1e-15, a.Data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
 
 	chk.Complex128(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1+0.1i)
@@ -97,7 +97,7 @@ func TestMatrix02(tst *testing.T) {
 	chk.Complex128(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
 	chk.Complex128(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
 
-	Aback := a.GetSlice()
+	Aback := a.GetDeep2c()
 	chk.Deep2c(tst, "a to A", 1e-15, Aback, A)
 
 	l := a.Print("%g", "")
@@ -148,7 +148,7 @@ func TestMatrix03(tst *testing.T) {
 	a.Set(2, 2, 30)
 	a.Set(2, 3, 40)
 	a.Set(2, 4, 50)
-	chk.Deep2(tst, "a", 1e-17, a.GetSlice(), [][]float64{
+	chk.Deep2(tst, "a", 1e-17, a.GetDeep2(), [][]float64{
 		{1, 2, 3, 4, 5},
 		{0.1, 0.2, 0.3, 0.4, 0.5},
 		{10, 20, 30, 40, 50},
@@ -161,7 +161,7 @@ func TestMatrix03(tst *testing.T) {
 	// Fill
 	b := NewMatrix(5, 3)
 	b.Fill(2)
-	chk.Deep2(tst, "b", 1e-17, b.GetSlice(), [][]float64{
+	chk.Deep2(tst, "b", 1e-17, b.GetDeep2(), [][]float64{
 		{2, 2, 2},
 		{2, 2, 2},
 		{2, 2, 2},
@@ -173,7 +173,7 @@ func TestMatrix03(tst *testing.T) {
 	c := NewMatrix(5, 3)
 	c.Fill(2)
 	c.Apply(1.0/4.0, c)
-	chk.Deep2(tst, "c := c/4", 1e-17, c.GetSlice(), [][]float64{
+	chk.Deep2(tst, "c := c/4", 1e-17, c.GetDeep2(), [][]float64{
 		{0.5, 0.5, 0.5},
 		{0.5, 0.5, 0.5},
 		{0.5, 0.5, 0.5},
@@ -184,7 +184,7 @@ func TestMatrix03(tst *testing.T) {
 	// MatCopy
 	d := NewMatrix(3, 5)
 	a.CopyInto(d, 1)
-	chk.Deep2(tst, "d", 1e-17, d.GetSlice(), [][]float64{
+	chk.Deep2(tst, "d", 1e-17, d.GetDeep2(), [][]float64{
 		{1, 2, 3, 4, 5},
 		{0.1, 0.2, 0.3, 0.4, 0.5},
 		{10, 20, 30, 40, 50},
@@ -193,14 +193,14 @@ func TestMatrix03(tst *testing.T) {
 	// SetDiag
 	e := NewMatrix(3, 3)
 	e.SetDiag(1)
-	chk.Deep2(tst, "e", 1e-17, e.GetSlice(), [][]float64{
+	chk.Deep2(tst, "e", 1e-17, e.GetDeep2(), [][]float64{
 		{1, 0, 0},
 		{0, 1, 0},
 		{0, 0, 1},
 	})
 
 	// MaxDiff
-	f := NewMatrixSlice([][]float64{
+	f := NewMatrixDeep2([][]float64{
 		{1.1, 2.2, 3.3, 4.4, 5.5},
 		{0.1, 0.2, 0.3, 0.4, 0.5},
 		{1, 2, 3, 4, 5},
@@ -229,7 +229,7 @@ func TestMatrix03(tst *testing.T) {
 	chk.Array(tst, "GetCol(4)", 1e-17, col4, []float64{5, 0.5, 50})
 
 	// NormFrob
-	A := NewMatrixSlice([][]float64{
+	A := NewMatrixDeep2([][]float64{
 		{-3, 5, 7},
 		{+2, 6, 4},
 		{+0, 2, 8},
@@ -264,7 +264,7 @@ func TestMatrix04(tst *testing.T) {
 	a.Set(2, 2, 30)
 	a.Set(2, 3, 40)
 	a.Set(2, 4, 50)
-	chk.Deep2c(tst, "a", 1e-17, a.GetSlice(), [][]complex128{
+	chk.Deep2c(tst, "a", 1e-17, a.GetDeep2c(), [][]complex128{
 		{1 + 1i, 2 + 2i, 3 + 3i, 4 + 4i, 5 + 5i},
 		{0.1, 0.2, 0.3, 0.4, 0.5},
 		{10, 20, 30, 40, 50},
@@ -277,7 +277,7 @@ func TestMatrix04(tst *testing.T) {
 	// Fill
 	b := NewMatrixC(5, 3)
 	b.Fill(2 - 1i)
-	chk.Deep2c(tst, "b", 1e-17, b.GetSlice(), [][]complex128{
+	chk.Deep2c(tst, "b", 1e-17, b.GetDeep2c(), [][]complex128{
 		{2 - 1i, 2 - 1i, 2 - 1i},
 		{2 - 1i, 2 - 1i, 2 - 1i},
 		{2 - 1i, 2 - 1i, 2 - 1i},
@@ -289,7 +289,7 @@ func TestMatrix04(tst *testing.T) {
 	c := NewMatrixC(5, 3)
 	c.Fill(2 + 2i)
 	c.Apply(1.0/4.0, c)
-	chk.Deep2c(tst, "c := c/4", 1e-17, c.GetSlice(), [][]complex128{
+	chk.Deep2c(tst, "c := c/4", 1e-17, c.GetDeep2c(), [][]complex128{
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},

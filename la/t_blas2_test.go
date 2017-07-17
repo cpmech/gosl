@@ -16,7 +16,7 @@ func TestBlas2tst01(tst *testing.T) {
 	chk.PrintTitle("Blas2tst01. (real) Blas2 functions")
 
 	// allocate data
-	a := NewMatrixSlice([][]float64{
+	a := NewMatrixDeep2([][]float64{
 		{2, +3, +0, 0, 0},
 		{3, +0, +4, 0, 6},
 		{0, -1, -3, 2, 0},
@@ -55,7 +55,7 @@ func TestBlas2tst02(tst *testing.T) {
 	chk.PrintTitle("Blas2tst02. (complex) Blas2 functions")
 
 	// allocate data
-	a := NewMatrixSliceC([][]complex128{
+	a := NewMatrixDeep2c([][]complex128{
 		{2, +3, +0, 0, 0},
 		{3, +0, +4, 0, 6},
 		{0, -1, -3, 2, 0},

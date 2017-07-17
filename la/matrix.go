@@ -43,18 +43,18 @@ func NewMatrix(m, n int) (o *Matrix) {
 	return
 }
 
-// NewMatrixSlice allocates a new Matrix from given slice.
+// NewMatrixDeep2 allocates a new Matrix from given (Deep2) nested slice.
 // NOTE: make sure to have at least 1x1 item
-func NewMatrixSlice(a [][]float64) (o *Matrix) {
+func NewMatrixDeep2(a [][]float64) (o *Matrix) {
 	o = new(Matrix)
 	o.M, o.N = len(a), len(a[0])
 	o.Data = make([]float64, o.M*o.N)
-	o.SetFromSlice(a)
+	o.SetFromDeep2(a)
 	return
 }
 
-// SetFromSlice sets matrix with data from a nested slice structure
-func (o *Matrix) SetFromSlice(a [][]float64) {
+// SetFromDeep2 sets matrix with data from a nested slice (Deep2) structure
+func (o *Matrix) SetFromDeep2(a [][]float64) {
 	k := 0
 	for j := 0; j < o.N; j++ {
 		for i := 0; i < o.M; i++ {
@@ -87,8 +87,8 @@ func (o *Matrix) Get(i, j int) float64 {
 	return o.Data[i+j*o.M] // col-major
 }
 
-// GetSlice returns nested slice representation
-func (o *Matrix) GetSlice() (M [][]float64) {
+// GetDeep2 returns nested slice representation
+func (o *Matrix) GetDeep2() (M [][]float64) {
 	M = make([][]float64, o.M)
 	for i := 0; i < o.M; i++ {
 		M[i] = make([]float64, o.N)
@@ -315,18 +315,18 @@ func NewMatrixC(m, n int) (o *MatrixC) {
 	return
 }
 
-// NewMatrixSliceC allocates a new MatrixC from given slice.
+// NewMatrixDeep2c allocates a new MatrixC from given (Deep2c) nested slice.
 // NOTE: make sure to have at least 1x1 items
-func NewMatrixSliceC(a [][]complex128) (o *MatrixC) {
+func NewMatrixDeep2c(a [][]complex128) (o *MatrixC) {
 	o = new(MatrixC)
 	o.M, o.N = len(a), len(a[0])
 	o.Data = make([]complex128, o.M*o.N)
-	o.SetFromSlice(a)
+	o.SetFromDeep2c(a)
 	return
 }
 
-// SetFromSlice sets matrix with data from a nested slice structure
-func (o *MatrixC) SetFromSlice(a [][]complex128) {
+// SetFromDeep2c sets matrix with data from a nested slice (Deep2c) structure
+func (o *MatrixC) SetFromDeep2c(a [][]complex128) {
 	k := 0
 	for j := 0; j < o.N; j++ {
 		for i := 0; i < o.M; i++ {
@@ -346,8 +346,8 @@ func (o *MatrixC) Get(i, j int) complex128 {
 	return o.Data[i+j*o.M] // col-major
 }
 
-// GetSlice returns nested slice representation
-func (o *MatrixC) GetSlice() (M [][]complex128) {
+// GetDeep2c returns nested slice representation
+func (o *MatrixC) GetDeep2c() (M [][]complex128) {
 	M = make([][]complex128, o.M)
 	for i := 0; i < o.M; i++ {
 		M[i] = make([]complex128, o.N)

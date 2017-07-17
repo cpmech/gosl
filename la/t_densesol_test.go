@@ -28,7 +28,7 @@ func TestCholesky01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Cholesky 01")
 
-	a := NewMatrixSlice([][]float64{
+	a := NewMatrixDeep2([][]float64{
 		{25.0, 15.0, -5.0},
 		{15.0, 18.0, 0.0},
 		{-5.0, 0.0, 11.0},
@@ -37,8 +37,8 @@ func TestCholesky01(tst *testing.T) {
 	L := NewMatrix(3, 3)
 	Cholesky(L, a) // L is such that: A = L * transp(L)
 	LLt := calcLLt(L)
-	chk.Deep2(tst, "a = LLt", 1e-17, LLt.GetSlice(), a.GetSlice())
-	chk.Deep2(tst, "L", 1e-17, L.GetSlice(), [][]float64{
+	chk.Deep2(tst, "a = LLt", 1e-17, LLt.GetDeep2(), a.GetDeep2())
+	chk.Deep2(tst, "L", 1e-17, L.GetDeep2(), [][]float64{
 		{+5, 0, 0},
 		{+3, 3, 0},
 		{-1, 1, 3},
@@ -50,7 +50,7 @@ func TestCholesky02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Cholesky 02")
 
-	a := NewMatrixSlice([][]float64{
+	a := NewMatrixDeep2([][]float64{
 		{2, 1, 1, 3, 2},
 		{1, 2, 2, 1, 1},
 		{1, 2, 9, 1, 5},
@@ -59,8 +59,8 @@ func TestCholesky02(tst *testing.T) {
 	})
 	L := NewMatrix(5, 5)
 	Cholesky(L, a)
-	chk.Deep2(tst, "a = LLt", 1e-15, calcLLt(L).GetSlice(), a.GetSlice())
-	chk.Deep2(tst, "L", 1e-15, L.GetSlice(), [][]float64{
+	chk.Deep2(tst, "a = LLt", 1e-15, calcLLt(L).GetDeep2(), a.GetDeep2())
+	chk.Deep2(tst, "L", 1e-15, L.GetDeep2(), [][]float64{
 		{math.Sqrt2, 0, 0, 0, 0},
 		{1.0 / math.Sqrt2, math.Sqrt(3.0 / 2.0), 0, 0, 0},
 		{1.0 / math.Sqrt2, math.Sqrt(3.0 / 2.0), math.Sqrt(7.0), 0, 0},
@@ -74,7 +74,7 @@ func TestSPDsolve01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("TestSPDsolve 01")
 
-	a := NewMatrixSlice([][]float64{
+	a := NewMatrixDeep2([][]float64{
 		{2, 1, 1, 3, 2},
 		{1, 2, 2, 1, 1},
 		{1, 2, 9, 1, 5},
@@ -99,7 +99,7 @@ func TestSPDsolve02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("TestSPDsolve 02")
 
-	a := NewMatrixSlice([][]float64{
+	a := NewMatrixDeep2([][]float64{
 		{2, 1, 1, 3, 2},
 		{1, 2, 2, 1, 1},
 		{1, 2, 9, 1, 5},
