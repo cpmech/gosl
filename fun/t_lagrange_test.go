@@ -86,14 +86,13 @@ func TestLagInterp01(tst *testing.T) {
 		return math.Cos(math.Exp(2.0 * x)), nil
 	}
 
-	// allocate structure
+	// allocate structure and calculate U
 	N := 5
 	kind := UniformGridKind
 	o, err := NewLagrangeInterp(N, kind)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	chk.EP(err)
+	err = o.CalcU(f)
+	chk.EP(err)
 
 	// check interpolation
 	for i, x := range o.X {
@@ -125,14 +124,13 @@ func TestLagInterp02(tst *testing.T) {
 		return 1.0 / (1.0 + 16.0*x*x), nil
 	}
 
-	// allocate structure
+	// allocate structure and calculate U
 	N := 8
 	kind := UniformGridKind
 	o, err := NewLagrangeInterp(N, kind)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	chk.EP(err)
+	err = o.CalcU(f)
+	chk.EP(err)
 
 	// check interpolation
 	for i, x := range o.X {
@@ -172,14 +170,13 @@ func TestLagInterp03(tst *testing.T) {
 		return 1.0 / (1.0 + 16.0*x*x), nil
 	}
 
-	// allocate structure
+	// allocate structure and calculate U
 	N := 8
 	kind := ChebyGaussGridKind
 	o, err := NewLagrangeInterp(N, kind)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	chk.EP(err)
+	err = o.CalcU(f)
+	chk.EP(err)
 
 	// check interpolation
 	for i, x := range o.X {
@@ -238,14 +235,13 @@ func TestLagInterp04(tst *testing.T) {
 		return 1.0 / (1.0 + 16.0*x*x), nil
 	}
 
-	// allocate structure
+	// allocate structure and calculate U
 	N := 8
 	kind := ChebyGaussLobGridKind
 	o, err := NewLagrangeInterp(N, kind)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	chk.EP(err)
+	err = o.CalcU(f)
+	chk.EP(err)
 
 	// check interpolation
 	for i, x := range o.X {
@@ -327,10 +323,12 @@ func TestLagInterp05(tst *testing.T) {
 		return math.Cos(math.Exp(2.0 * x)), nil
 	}
 
-	// allocate structure
+	// allocate structure and calculate U
 	N := 6
 	kind := ChebyGaussLobGridKind
 	o, err := NewLagrangeInterp(N, kind)
+	chk.EP(err)
+	err = o.CalcU(f)
 	chk.EP(err)
 
 	// check λ

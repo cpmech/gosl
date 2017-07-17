@@ -55,6 +55,7 @@ type LagrangeInterp struct {
 	N     int       // degree: N = len(X)-1
 	X     []float64 // grid points: len(X) = P+1; generated in [-1, 1]
 	Lam   []float64 // λ_i barycentric weights (also w_i in [1])
+	U     []float64 // function evaluated @ nodes: f(x_i)
 	Bary  bool      // do not use barycentric formulae in for ℓ_i and I{f} [default=true]
 	Ncomp int       // number of computations
 }
@@ -169,47 +170,56 @@ func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 	return
 }
 
+// CalcU computes f(x_i); i.e. function f(x) @ all nodes
+func (o *LagrangeInterp) CalcU(f Ss) (err error) {
+	if len(o.U) != o.N+1 {
+		o.U = make([]float64, o.N+1)
+	}
+	for i := 0; i < o.N+1; i++ {
+		fxi, e := f(o.X[i])
+		if e != nil {
+			return e
+		}
+		o.U[i] = fxi
+	}
+	return
+}
+
 // I computes the interpolation I^X_N{f}(x) @ x
 //
 //                     N
-//         X          ————             X
-//        I {f}(x) =  \     f(x[i]) ⋅ ℓ (x)
-//         N          /                i
+//         X          ————          X
+//        I {f}(x) =  \     U[i] ⋅ ℓ (x)       with   U[i] = f(x[i])
+//         N          /             i
 //                    ————
 //                    i = 0
 //
-func (o *LagrangeInterp) I(x float64, f Ss) (ix float64, err error) {
+//   NOTE: U[i] = f(x[i]) must be calculated with o.CalcU or set first
+//
+func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 
 	// barycentric formula
 	o.Ncomp = 0
 	if o.Bary {
 		var d, num, den float64
 		for i := 0; i < o.N+1; i++ {
-			fxi, e := f(o.X[i])
-			if e != nil {
-				return 0, e
-			}
 			d = x - o.X[i]
 			if math.Abs(d) < 1e-15 {
-				ix = fxi
+				res = o.U[i]
 				return
 			}
-			num += fxi * o.Lam[i] / d
+			num += o.U[i] * o.Lam[i] / d
 			den += o.Lam[i] / d
 			o.Ncomp++
 			o.Ncomp++
 		}
-		ix = num / den
+		res = num / den
 		return
 	}
 
 	// standard formula
 	for i := 0; i < o.N+1; i++ {
-		fxi, e := f(o.X[i])
-		if e != nil {
-			return 0, e
-		}
-		ix += fxi * o.L(i, x)
+		res += o.U[i] * o.L(i, x)
 	}
 	return
 }
