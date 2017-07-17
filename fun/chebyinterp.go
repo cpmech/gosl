@@ -385,7 +385,7 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 //                              D_{N-j,N-l} = -D_{j,l}
 //             (flip will be turn on if nst==true)
 //
-//     nst -- use the "negative sum trick" to compute the diagonal components according to:
+//     nst -- [best] use the "negative sum trick" to compute the diagonal components according to:
 //                                     N
 //                          D_{jj} = - Σ  D_{jl}
 //                                    l=0

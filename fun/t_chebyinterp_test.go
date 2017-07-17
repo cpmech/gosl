@@ -551,8 +551,11 @@ func TestChebyInterp07(tst *testing.T) {
 	// test function
 	f := func(x float64) (float64, error) {
 		return math.Pow(x, 8), nil
+		//return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5), nil
 	}
 	g := func(x float64) (float64, error) {
+		//d := math.Pow(x+1.1, 1.5)
+		//return (8*math.Cos(8*x))/d - (3*math.Sin(8*x))/(2*(1.1+x)*d), nil
 		return 8.0 * math.Pow(x, 7), nil
 	}
 
@@ -560,7 +563,8 @@ func TestChebyInterp07(tst *testing.T) {
 		var dummy bool
 
 		// check
-		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256} //, 500, 512, 1000, 1024, 2000, 2048}
+		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
+		//Nvals := utl.IntRange3(16, 2048, 10)
 		nn := make([]float64, len(Nvals))
 		eeA := make([]float64, len(Nvals))
 		eeB := make([]float64, len(Nvals))
