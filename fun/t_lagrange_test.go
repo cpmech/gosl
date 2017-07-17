@@ -203,3 +203,72 @@ func TestLagInterp03(tst *testing.T) {
 		plt.Save("/tmp/gosl/fun", "laginterp03c")
 	}
 }
+
+func TestLagInterp04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("TestLagInterp04. Chebyshev-Gauss-Lobatto. Runge problem")
+
+	// Runge function
+	f := func(x float64) (float64, error) {
+		return 1.0 / (1.0 + 16.0*x*x), nil
+	}
+
+	// allocate structure
+	N := 8
+	kind := ChebyGaussLobGridKind
+	o, err := NewLagrangeInterp(N, kind)
+	if err != nil {
+		tst.Errorf("%v\n", err)
+		return
+	}
+
+	// check interpolation
+	for i, x := range o.X {
+		ynum, err := o.I(x, f)
+		if err != nil {
+			tst.Errorf("%v\n", err)
+			return
+		}
+		yana, _ := f(x)
+		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
+	}
+	io.Pl()
+
+	// check Lebesgue constants and compute max error
+	ΛN := []float64{1.798761778849085e+00, 2.274730699116020e+00, 2.984443326362511e+00}
+	for i, n := range []int{4, 8, 24} {
+		p, _ := NewLagrangeInterp(n, kind)
+		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-14, p.EstimateLebesgue(), ΛN[i])
+	}
+
+	if chk.Verbose {
+
+		// plot nodal polynomial
+		plt.Reset(true, nil)
+		PlotLagInterpW(8, kind)
+		plt.AxisYrange(-0.02, 0.02)
+		plt.Save("/tmp/gosl/fun", "laginterp04a")
+
+		// plot interpolation
+		plt.Reset(true, nil)
+		PlotLagInterpI([]int{4, 6, 8, 12, 16, 24}, kind, f)
+		plt.AxisYrange(-1, 1)
+		plt.Save("/tmp/gosl/fun", "laginterp04b")
+
+		// plot error
+		plt.Reset(true, nil)
+		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
+		E := make([]float64, len(Nvalues))
+		for i, n := range Nvalues {
+			p, _ := NewLagrangeInterp(int(n), kind)
+			E[i], _ = p.EstimateMaxErr(0, f)
+		}
+		plt.Plot(Nvalues, E, &plt.A{C: "red", M: ".", NoClip: true})
+		plt.Grid(nil)
+		plt.Gll("$N$", "$\\max[|f(x) - I^X_N\\{f\\}(x)|]$", nil)
+		plt.HideTRborders()
+		plt.SetYlog()
+		plt.Save("/tmp/gosl/fun", "laginterp04c")
+	}
+}

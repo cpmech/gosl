@@ -21,6 +21,9 @@ var (
 
 	// ChebyGaussGridKind defines the Chebyshev-Gauss 1D grid kind
 	ChebyGaussGridKind = io.NewEnum("ChebyGauss", "fun.chebygauss", "CG", "Chebyshev-Gauss 1D grid")
+
+	// ChebyGaussLobGridKind defines the Chebyshev-Gauss-Lobatto 1D grid kind
+	ChebyGaussLobGridKind = io.NewEnum("ChebyGaussLob", "fun.chebygausslob", "CGL", "Chebyshev-Gauss-Lobatto0 1D grid")
 )
 
 // LagrangeInterp implements Lagrange interpolators associated with a grid X
@@ -54,20 +57,24 @@ type LagrangeInterp struct {
 //   gridType -- type of grid; e.g. uniform
 //   NOTE: the grid will be generated in [-1, 1]
 func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
+
+	// check
 	if N < 0 {
 		return nil, chk.Err("N must be at least equal to 0. N=%d is invalid\n", N)
 	}
+
+	// allocate
 	o = new(LagrangeInterp)
 	o.N = N
+
+	// generate grid
 	switch gridType {
 	case UniformGridKind:
 		o.X = utl.LinSpace(-1, 1, N+1)
 	case ChebyGaussGridKind:
-		o.X = make([]float64, N+1)
-		h := math.Pi / float64(2*(N+1))
-		for i := 0; i < N+1; i++ {
-			o.X[i] = -math.Cos(h * float64(2*i+1))
-		}
+		o.X = ChebyshevXgauss(N)
+	case ChebyGaussLobGridKind:
+		o.X = ChebyshevXlob(N)
 	default:
 		return nil, chk.Err("cannot create grid type %q\n", gridType)
 	}
