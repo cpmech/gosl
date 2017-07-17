@@ -21,10 +21,10 @@ func Test_octree01(tst *testing.T) {
 	p := &PointN{X: []float64{1, 2, 3}}
 
 	io.Pforan("p = %+v\n", p)
-	chk.Vector(tst, "p.X", 1e-15, p.X, []float64{1, 2, 3})
+	chk.Array(tst, "p.X", 1e-15, p.X, []float64{1, 2, 3})
 	q := &PointN{X: []float64{2, 2, 1}}
 	io.Pforan("q = %+v\n", q)
-	chk.Vector(tst, "q.X", 1e-15, q.X, []float64{2, 2, 1})
+	chk.Array(tst, "q.X", 1e-15, q.X, []float64{2, 2, 1})
 	if p.ExactlyTheSameX(q) {
 		tst.Errorf("ExactlyTheSame should return false because points are indeed different")
 		return
@@ -43,7 +43,7 @@ func Test_octree01(tst *testing.T) {
 	}
 
 	a := p.GetCloneX()
-	chk.Vector(tst, "a == p", 1e-15, a.X, []float64{1, 2, 3})
+	chk.Array(tst, "a == p", 1e-15, a.X, []float64{1, 2, 3})
 
 	dap := DistPointPointN(a, p)
 	chk.Scalar(tst, "dist(a,p)", 1e-15, dap, 0)
@@ -54,13 +54,13 @@ func Test_octree01(tst *testing.T) {
 	c1 := NewPointNdim(2)
 	c1.X[0] = 1
 	c1.X[1] = 2
-	chk.Vector(tst, "c1", 1e-15, c1.X, []float64{1, 2})
+	chk.Array(tst, "c1", 1e-15, c1.X, []float64{1, 2})
 
 	c2 := NewPointN(1, 2)
-	chk.Vector(tst, "c2", 1e-15, c2.X, []float64{1, 2})
+	chk.Array(tst, "c2", 1e-15, c2.X, []float64{1, 2})
 
 	c3 := NewPointN(1, 2, 3)
-	chk.Vector(tst, "c3", 1e-15, c3.X, []float64{1, 2, 3})
+	chk.Array(tst, "c3", 1e-15, c3.X, []float64{1, 2, 3})
 }
 
 func Test_octree02(tst *testing.T) {
@@ -71,8 +71,8 @@ func Test_octree02(tst *testing.T) {
 	b := &BoxN{&PointN{X: []float64{-1, -2, -3}}, &PointN{X: []float64{3, 2, 1}}, 0}
 	mid := b.GetMid()
 	delta := b.GetSize()
-	chk.Vector(tst, "mid", 1e-15, mid, []float64{1, 0, -1})
-	chk.Vector(tst, "delta", 1e-15, delta, []float64{4, 4, 4})
+	chk.Array(tst, "mid", 1e-15, mid, []float64{1, 0, -1})
+	chk.Array(tst, "delta", 1e-15, delta, []float64{4, 4, 4})
 
 	p := &PointN{X: []float64{-2, 0, 0}}
 	dist := DistPointBoxN(p, b)
@@ -126,10 +126,10 @@ func Test_octree02(tst *testing.T) {
 
 	b1 := NewBoxN(0, 1, 2, 3)       // xmin,xmax, ymin,ymax
 	b2 := NewBoxN(0, 1, 2, 3, 4, 5) // xmin,xmax, ymin,ymax
-	chk.Vector(tst, "b1.Lo", 1e-15, b1.Lo.X, []float64{0, 2})
-	chk.Vector(tst, "b1.Hi", 1e-15, b1.Hi.X, []float64{1, 3})
-	chk.Vector(tst, "b2.Lo", 1e-15, b2.Lo.X, []float64{0, 2, 4})
-	chk.Vector(tst, "b2.Hi", 1e-15, b2.Hi.X, []float64{1, 3, 5})
+	chk.Array(tst, "b1.Lo", 1e-15, b1.Lo.X, []float64{0, 2})
+	chk.Array(tst, "b1.Hi", 1e-15, b1.Hi.X, []float64{1, 3})
+	chk.Array(tst, "b2.Lo", 1e-15, b2.Lo.X, []float64{0, 2, 4})
+	chk.Array(tst, "b2.Hi", 1e-15, b2.Hi.X, []float64{1, 3, 5})
 
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
@@ -153,8 +153,8 @@ func Test_octree03(tst *testing.T) {
 	chk.PrintTitle("octree03. qobox")
 
 	o := NewOctree(-1, 1, -2, 1) // 4 numbers => 2D
-	chk.Vector(tst, "blo", 1e-15, o.blo, []float64{-1, -2})
-	chk.Vector(tst, "bscale", 1e-15, o.bscale, []float64{2, 3})
+	chk.Array(tst, "blo", 1e-15, o.blo, []float64{-1, -2})
+	chk.Array(tst, "bscale", 1e-15, o.bscale, []float64{2, 3})
 
 	b1 := o.qobox(1)
 	b2 := o.qobox(2)
@@ -169,32 +169,32 @@ func Test_octree03(tst *testing.T) {
 	b41 := o.qobox(41)
 	b45 := o.qobox(45)
 	b52 := o.qobox(52)
-	chk.Vector(tst, "1: lo", 1e-15, b1.Lo.X, []float64{-1, -2})
-	chk.Vector(tst, "1: hi", 1e-15, b1.Hi.X, []float64{1, 1})
-	chk.Vector(tst, "2: lo", 1e-15, b2.Lo.X, []float64{-1, -2})
-	chk.Vector(tst, "2: hi", 1e-15, b2.Hi.X, []float64{0, -0.5})
-	chk.Vector(tst, "3: lo", 1e-15, b3.Lo.X, []float64{0, -2})
-	chk.Vector(tst, "3: hi", 1e-15, b3.Hi.X, []float64{1, -0.5})
-	chk.Vector(tst, "4: lo", 1e-15, b4.Lo.X, []float64{-1, -0.5})
-	chk.Vector(tst, "4: hi", 1e-15, b4.Hi.X, []float64{0, 1.0})
-	chk.Vector(tst, "5: lo", 1e-15, b5.Lo.X, []float64{0, -0.5})
-	chk.Vector(tst, "5: hi", 1e-15, b5.Hi.X, []float64{1, 1})
-	chk.Vector(tst, "6: lo", 1e-15, b6.Lo.X, []float64{-1, -2})
-	chk.Vector(tst, "6: hi", 1e-15, b6.Hi.X, []float64{-0.5, -1.25})
-	chk.Vector(tst, "7: lo", 1e-15, b7.Lo.X, []float64{-0.5, -2})
-	chk.Vector(tst, "7: hi", 1e-15, b7.Hi.X, []float64{0, -1.25})
-	chk.Vector(tst, "15: lo", 1e-15, b15.Lo.X, []float64{-0.5, -0.5})
-	chk.Vector(tst, "15: hi", 1e-15, b15.Hi.X, []float64{0, 0.25})
-	chk.Vector(tst, "21: lo", 1e-15, b21.Lo.X, []float64{0.5, 0.25})
-	chk.Vector(tst, "21: hi", 1e-15, b21.Hi.X, []float64{1, 1})
-	chk.Vector(tst, "22: lo", 1e-15, b22.Lo.X, []float64{-1, -2})
-	chk.Vector(tst, "22: hi", 1e-15, b22.Hi.X, []float64{-0.75, -1.625})
-	chk.Vector(tst, "41: lo", 1e-15, b41.Lo.X, []float64{0.25, -1.625})
-	chk.Vector(tst, "41: hi", 1e-15, b41.Hi.X, []float64{0.5, -1.25})
-	chk.Vector(tst, "45: lo", 1e-15, b45.Lo.X, []float64{0.75, -1.625})
-	chk.Vector(tst, "45: hi", 1e-15, b45.Hi.X, []float64{1, -1.25})
-	chk.Vector(tst, "52: lo", 1e-15, b52.Lo.X, []float64{0.5, -0.875})
-	chk.Vector(tst, "52: hi", 1e-15, b52.Hi.X, []float64{0.75, -0.5})
+	chk.Array(tst, "1: lo", 1e-15, b1.Lo.X, []float64{-1, -2})
+	chk.Array(tst, "1: hi", 1e-15, b1.Hi.X, []float64{1, 1})
+	chk.Array(tst, "2: lo", 1e-15, b2.Lo.X, []float64{-1, -2})
+	chk.Array(tst, "2: hi", 1e-15, b2.Hi.X, []float64{0, -0.5})
+	chk.Array(tst, "3: lo", 1e-15, b3.Lo.X, []float64{0, -2})
+	chk.Array(tst, "3: hi", 1e-15, b3.Hi.X, []float64{1, -0.5})
+	chk.Array(tst, "4: lo", 1e-15, b4.Lo.X, []float64{-1, -0.5})
+	chk.Array(tst, "4: hi", 1e-15, b4.Hi.X, []float64{0, 1.0})
+	chk.Array(tst, "5: lo", 1e-15, b5.Lo.X, []float64{0, -0.5})
+	chk.Array(tst, "5: hi", 1e-15, b5.Hi.X, []float64{1, 1})
+	chk.Array(tst, "6: lo", 1e-15, b6.Lo.X, []float64{-1, -2})
+	chk.Array(tst, "6: hi", 1e-15, b6.Hi.X, []float64{-0.5, -1.25})
+	chk.Array(tst, "7: lo", 1e-15, b7.Lo.X, []float64{-0.5, -2})
+	chk.Array(tst, "7: hi", 1e-15, b7.Hi.X, []float64{0, -1.25})
+	chk.Array(tst, "15: lo", 1e-15, b15.Lo.X, []float64{-0.5, -0.5})
+	chk.Array(tst, "15: hi", 1e-15, b15.Hi.X, []float64{0, 0.25})
+	chk.Array(tst, "21: lo", 1e-15, b21.Lo.X, []float64{0.5, 0.25})
+	chk.Array(tst, "21: hi", 1e-15, b21.Hi.X, []float64{1, 1})
+	chk.Array(tst, "22: lo", 1e-15, b22.Lo.X, []float64{-1, -2})
+	chk.Array(tst, "22: hi", 1e-15, b22.Hi.X, []float64{-0.75, -1.625})
+	chk.Array(tst, "41: lo", 1e-15, b41.Lo.X, []float64{0.25, -1.625})
+	chk.Array(tst, "41: hi", 1e-15, b41.Hi.X, []float64{0.5, -1.25})
+	chk.Array(tst, "45: lo", 1e-15, b45.Lo.X, []float64{0.75, -1.625})
+	chk.Array(tst, "45: hi", 1e-15, b45.Hi.X, []float64{1, -1.25})
+	chk.Array(tst, "52: lo", 1e-15, b52.Lo.X, []float64{0.5, -0.875})
+	chk.Array(tst, "52: hi", 1e-15, b52.Hi.X, []float64{0.75, -0.5})
 
 	if chk.Verbose {
 		b85 := o.qobox(85)

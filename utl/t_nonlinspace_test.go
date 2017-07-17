@@ -45,15 +45,15 @@ func TestNonlinSpace01(tst *testing.T) {
 		tst.Errorf("last point must be exact. %g != %g\n", xuni[N-1], xb)
 		return
 	}
-	chk.Vector(tst, "xuni", 1e-17, xuni, LinSpace(xa, xb, N))
+	chk.Array(tst, "xuni", 1e-17, xuni, LinSpace(xa, xb, N))
 
 	N = 2
 	x2 := NonlinSpace(xa, xb, N, R, false)
-	chk.Vector(tst, "x2", 1e-17, x2, []float64{xa, xb})
+	chk.Array(tst, "x2", 1e-17, x2, []float64{xa, xb})
 
 	N = 1
 	x2b := NonlinSpace(xa, xb, N, R, false)
-	chk.Vector(tst, "x2b", 1e-17, x2b, []float64{xa, xb})
+	chk.Array(tst, "x2b", 1e-17, x2b, []float64{xa, xb})
 
 	xa, xb = -2.0, 12.0
 	N = 4
@@ -66,7 +66,7 @@ func TestNonlinSpace01(tst *testing.T) {
 		tst.Errorf("last point must be exact. %g != %g\n", x4[N-1], xb)
 		return
 	}
-	chk.Vector(tst, "x4", 1e-17, x4, []float64{-2, 0, 4, 12})
+	chk.Array(tst, "x4", 1e-17, x4, []float64{-2, 0, 4, 12})
 }
 
 func TestNonlinSpace02(tst *testing.T) {
@@ -79,7 +79,7 @@ func TestNonlinSpace02(tst *testing.T) {
 
 	N := 2
 	x2 := NonlinSpace(xa, xb, N, R, true)
-	chk.Vector(tst, "x2", 1e-17, x2, []float64{0, 10})
+	chk.Array(tst, "x2", 1e-17, x2, []float64{0, 10})
 	if x2[0] != xa {
 		tst.Errorf("first point must be exact. %g != %g\n", x2[0], xa)
 	}
@@ -90,7 +90,7 @@ func TestNonlinSpace02(tst *testing.T) {
 
 	N = 3
 	x3 := NonlinSpace(xa, xb, N, R, true)
-	chk.Vector(tst, "x3", 1e-17, x3, []float64{0, 5, 10})
+	chk.Array(tst, "x3", 1e-17, x3, []float64{0, 5, 10})
 	if x3[0] != xa {
 		tst.Errorf("first point must be exact. %g != %g\n", x3[0], xa)
 	}
@@ -101,7 +101,7 @@ func TestNonlinSpace02(tst *testing.T) {
 
 	N = 4
 	x4 := NonlinSpace(xa, xb, N, R, true)
-	chk.Vector(tst, "x4", 1e-14, x4, []float64{0, 5.0 / 3.0, 25.0 / 3.0, 10})
+	chk.Array(tst, "x4", 1e-14, x4, []float64{0, 5.0 / 3.0, 25.0 / 3.0, 10})
 	if x4[0] != xa {
 		tst.Errorf("first point must be exact. %g != %g\n", x4[0], xa)
 	}
@@ -112,7 +112,7 @@ func TestNonlinSpace02(tst *testing.T) {
 
 	N = 5
 	x5 := NonlinSpace(xa, xb, N, R, true)
-	chk.Vector(tst, "x5", 1e-17, x5, []float64{0, 1, 5, 9, 10})
+	chk.Array(tst, "x5", 1e-17, x5, []float64{0, 1, 5, 9, 10})
 	if x5[0] != xa {
 		tst.Errorf("first point must be exact. %g != %g\n", x5[0], xa)
 	}
@@ -123,7 +123,7 @@ func TestNonlinSpace02(tst *testing.T) {
 
 	N = 6
 	x6 := NonlinSpace(xa, xb, N, R, true)
-	chk.Vector(tst, "x6", 1e-17, x6, []float64{0, 1, 3, 7, 9, 10})
+	chk.Array(tst, "x6", 1e-17, x6, []float64{0, 1, 3, 7, 9, 10})
 	if x6[0] != xa {
 		tst.Errorf("first point must be exact. %g != %g\n", x6[0], xa)
 	}
@@ -134,7 +134,7 @@ func TestNonlinSpace02(tst *testing.T) {
 
 	N = 7
 	x7 := NonlinSpace(xa, xb, N, R, true)
-	chk.Vector(tst, "x5", 1e-15, x7, []float64{0, 10.0 / 14.0, 30.0 / 14.0, 70.0 / 14.0, 110.0 / 14.0, 130.0 / 14.0, 10.0})
+	chk.Array(tst, "x5", 1e-15, x7, []float64{0, 10.0 / 14.0, 30.0 / 14.0, 70.0 / 14.0, 110.0 / 14.0, 130.0 / 14.0, 10.0})
 	if x7[0] != xa {
 		tst.Errorf("first point must be exact. %g != %g\n", x7[0], xa)
 	}

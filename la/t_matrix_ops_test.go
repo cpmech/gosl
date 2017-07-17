@@ -48,7 +48,7 @@ func checkAiSmall(tst *testing.T, k string, a *Matrix, zeroDet float64,
 
 	// check inverse and determinant
 	chk.Scalar(tst, "det("+k+")", tolDet, det, correctDet)
-	chk.Vector(tst, k+"i", tolAi, ai.Data, correctAi.Data)
+	chk.Array(tst, k+"i", tolAi, ai.Data, correctAi.Data)
 
 	// check a⋅ai = I
 	aai := NewMatrix(a.M, a.N)
@@ -80,7 +80,7 @@ func checkAi(tst *testing.T, k string, a *Matrix,
 
 	// compare inverse
 	if correctAi != nil {
-		chk.Vector(tst, k+"i", tolAi, ai.Data, correctAi.Data)
+		chk.Array(tst, k+"i", tolAi, ai.Data, correctAi.Data)
 	}
 
 	// multiply ai by a
@@ -96,7 +96,7 @@ func checkAi(tst *testing.T, k string, a *Matrix,
 	// rectangular: check a⋅ai⋅a = a
 	aaia := NewMatrix(a.M, a.N)
 	MatMatMul(aaia, 1, aai, a)
-	chk.Vector(tst, k+"⋅"+k+"i⋅"+k, tolI, aaia.Data, a.Data)
+	chk.Array(tst, k+"⋅"+k+"i⋅"+k, tolI, aaia.Data, a.Data)
 }
 
 func checkSvd(tst *testing.T, k string, a *Matrix, correctS []float64, correctU, correctVt *Matrix, tolS, tolU, tolVt, tolUsv float64) {
@@ -109,13 +109,13 @@ func checkSvd(tst *testing.T, k string, a *Matrix, correctS []float64, correctU,
 
 	// compare results
 	if correctS != nil {
-		chk.Vector(tst, "s", tolS, s, correctS)
+		chk.Array(tst, "s", tolS, s, correctS)
 	}
 	if correctU != nil {
-		chk.Vector(tst, "u", tolU, u.Data, correctU.Data)
+		chk.Array(tst, "u", tolU, u.Data, correctU.Data)
 	}
 	if correctVt != nil {
-		chk.Vector(tst, "vt", tolVt, vt.Data, correctVt.Data)
+		chk.Array(tst, "vt", tolVt, vt.Data, correctVt.Data)
 	}
 
 	// check u⋅s⋅vt
@@ -127,7 +127,7 @@ func checkSvd(tst *testing.T, k string, a *Matrix, correctS []float64, correctU,
 			}
 		}
 	}
-	chk.Vector(tst, "u⋅s⋅vt", tolUsv, usv.Data, a.Data)
+	chk.Array(tst, "u⋅s⋅vt", tolUsv, usv.Data, a.Data)
 }
 
 func TestMatInv01(tst *testing.T) {

@@ -36,8 +36,8 @@ func TestSinusoid01(tst *testing.T) {
 	chk.Scalar(tst, "Amplitude", 1e-15, sa.Amplitude, sb.Amplitude)
 	chk.Scalar(tst, "AngularFreq", 1e-15, sa.AngularFreq, sb.AngularFreq)
 	chk.Scalar(tst, "TimeShift", 1e-15, sa.TimeShift, sb.TimeShift)
-	chk.Vector(tst, "A", 1e-15, sa.A, sb.A)
-	chk.Vector(tst, "B", 1e-15, sa.B, sb.B)
+	chk.Array(tst, "A", 1e-15, sa.A, sb.A)
+	chk.Array(tst, "B", 1e-15, sa.B, sb.B)
 
 	// check essen vs basis
 	tt := utl.LinSpace(-sa.TimeShift, 2.5, 7)
@@ -47,7 +47,7 @@ func TestSinusoid01(tst *testing.T) {
 		y1[i] = sa.Yessen(tt[i])
 		y2[i] = sb.Ybasis(tt[i])
 	}
-	chk.Vector(tst, "essen vs basis", 1e-15, y1, y2)
+	chk.Array(tst, "essen vs basis", 1e-15, y1, y2)
 
 	// check periodicity
 	if !sa.TestPeriodicity(0, 4*π, 10) {

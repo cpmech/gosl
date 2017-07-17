@@ -67,7 +67,7 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 	}
 
 	// check
-	chk.Vector(tst, "x", tolX, x, xCorrect)
+	chk.Array(tst, "x", tolX, x, xCorrect)
 	TestSolverResidual(tst, t.GetDenseMatrix(), x, b, tolRes)
 }
 
@@ -102,6 +102,6 @@ func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *Triplet
 	}
 
 	// check
-	chk.VectorC(tst, "x", tolX, x, xCorrect)
+	chk.ArrayC(tst, "x", tolX, x, xCorrect)
 	TestSolverResidualC(tst, t.GetDenseMatrix(), x, b, tolRes)
 }

@@ -34,7 +34,7 @@ func Test_serial01(tst *testing.T) {
 	chk.Ints(tst, "P", P, []int{0, 3, 4, 6, 7, 8, 9, 11, 12, 16, 17, 19, 22})
 	Scor := LinSpace(100, 121, 22)
 	io.Pf("Scor = %v\n", Scor)
-	chk.Vector(tst, "S", 1e-16, S, Scor)
+	chk.Array(tst, "S", 1e-16, S, Scor)
 
 	// deserialize
 	B := Deep3Deserialize(I, P, S, false)
@@ -63,7 +63,7 @@ func Test_serial02(tst *testing.T) {
 	// check serialization
 	chk.Ints(tst, "I", I, []int{0, 0, 0, 0, 1, 1, 1, 2})
 	chk.Ints(tst, "P", P, []int{0, 3, 4, 8, 10, 11, 12, 13, 19})
-	chk.Vector(tst, "S", 1e-16, S, []float64{1, 3, 4, 6, 232, 23, 292, 2023, 2, 3, 0, 1, 0, 0, 5, 6, 8, 3, 0})
+	chk.Array(tst, "S", 1e-16, S, []float64{1, 3, 4, 6, 232, 23, 292, 2023, 2, 3, 0, 1, 0, 0, 5, 6, 8, 3, 0})
 
 	// deserialize
 	B := Deep3Deserialize(I, P, S, false)
@@ -87,6 +87,6 @@ func Test_serial03(tst *testing.T) {
 	b := ArrayToMat(v, 3, 4)
 	io.Pforan("a => v = %v\n", v)
 	io.Pforan("v => a = %v\n", b)
-	chk.Vector(tst, "a => v", 1e-15, v, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
+	chk.Array(tst, "a => v", 1e-15, v, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 	chk.Matrix(tst, "v => a", 1e-15, b, a)
 }

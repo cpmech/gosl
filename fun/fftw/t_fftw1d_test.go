@@ -60,7 +60,7 @@ func TestOneDver01a(tst *testing.T) {
 	defer plan.Free()
 
 	// check plan.data
-	chk.VectorC(tst, "plan.data", 1e-15, plan.data, []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i})
+	chk.ArrayC(tst, "plan.data", 1e-15, plan.data, []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i})
 
 	// perform Fourier transform
 	plan.Execute()
@@ -69,7 +69,7 @@ func TestOneDver01a(tst *testing.T) {
 	io.Pf("X = %v\n", x)
 
 	// check output
-	chk.VectorC(tst, "X", 1e-14, x, test1Xref)
+	chk.ArrayC(tst, "X", 1e-14, x, test1Xref)
 }
 
 func TestOneDver01b(tst *testing.T) {
@@ -98,7 +98,7 @@ func TestOneDver01b(tst *testing.T) {
 	defer plan.Free()
 
 	// check plan.data
-	chk.VectorC(tst, "plan.data", 1e-15, plan.data, []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i})
+	chk.ArrayC(tst, "plan.data", 1e-15, plan.data, []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i})
 
 	// perform Fourier transform
 	plan.Execute()
@@ -107,7 +107,7 @@ func TestOneDver01b(tst *testing.T) {
 	io.Pf("X = %v\n", x)
 
 	// check output
-	chk.VectorC(tst, "X", 1e-14, x, test1Xref)
+	chk.ArrayC(tst, "X", 1e-14, x, test1Xref)
 }
 
 func TestOneDver02(tst *testing.T) {
@@ -136,7 +136,7 @@ func TestOneDver02(tst *testing.T) {
 	defer plan.Free()
 
 	// check plan.data
-	chk.VectorC(tst, "plan.data", 1e-15, plan.data, []complex128{1, 2, 3, 4, 5, 6, 7, 8})
+	chk.ArrayC(tst, "plan.data", 1e-15, plan.data, []complex128{1, 2, 3, 4, 5, 6, 7, 8})
 
 	// perform Fourier transform
 	plan.Execute()
@@ -145,7 +145,7 @@ func TestOneDver02(tst *testing.T) {
 	io.Pf("X = %v\n", x)
 
 	// check output
-	chk.VectorC(tst, "X", 1e-13, x, test2Xref)
+	chk.ArrayC(tst, "X", 1e-13, x, test2Xref)
 }
 
 func TestOneDver03(tst *testing.T) {
@@ -217,7 +217,7 @@ func TestOneDver04(tst *testing.T) {
 	// perform Fourier transform
 	plan.Execute()
 	io.Pf("X = %v\n", x)
-	chk.VectorC(tst, "X", 1e-14, x, test1Xref)
+	chk.ArrayC(tst, "X", 1e-14, x, test1Xref)
 
 	// allocate plan for inverse transform
 	inverse = true
@@ -234,7 +234,7 @@ func TestOneDver04(tst *testing.T) {
 		x[i] /= complex(float64(N), 0)
 	}
 	io.Pf("x = %v\n", x)
-	chk.VectorC(tst, "x", 1e-17, x, []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i})
+	chk.ArrayC(tst, "x", 1e-17, x, []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i})
 }
 
 func TestOneDver05(tst *testing.T) {
@@ -289,7 +289,7 @@ func TestOneDver05(tst *testing.T) {
 		U[i] /= complex(float64(N), 0)
 	}
 	io.Pforan("U = %v\n", U)
-	chk.VectorC(tst, "U", 1e-15, U, Ucopy)
+	chk.ArrayC(tst, "U", 1e-15, U, Ucopy)
 }
 
 // solution ////////////////////////////////////////////////////////////////////////////////////////

@@ -51,7 +51,7 @@ func Test_mylab01(tst *testing.T) {
 	Pc := IntClone(P)
 	cc := IntCopy(c)
 	chk.Ints(tst, "I", I, []int{123, 123, 123, 123, 123})
-	chk.Vector(tst, "II", 1e-17, II, []float64{123, 123, 123, 123, 123})
+	chk.Array(tst, "II", 1e-17, II, []float64{123, 123, 123, 123, 123})
 	chk.Ints(tst, "J", J, []int{123, 123, 123, 123, 123})
 	chk.Strings(tst, "Js", Js, []string{"123", "123", "123", "123", "123"})
 	chk.Ints(tst, "A", A, []int{})
@@ -63,8 +63,8 @@ func Test_mylab01(tst *testing.T) {
 	chk.Ints(tst, "d", d, []int{2, 3, 4})
 	chk.Ints(tst, "D", D, []int{-2, -1, 0, 1, 2, 3, 4})
 	chk.Ints(tst, "e", e, []int{0, 1, 2, 3, 4, 5, 6})
-	chk.Vector(tst, "f", 1e-16, f, []float64{1, 1, 1, 1, 1})
-	chk.Vector(tst, "ff", 1e-16, ff, []float64{123, 123, 123, 123, 123})
+	chk.Array(tst, "f", 1e-16, f, []float64{1, 1, 1, 1, 1})
+	chk.Array(tst, "ff", 1e-16, ff, []float64{123, 123, 123, 123, 123})
 	chk.Ints(tst, "h", h, []int{0, 1, 2, 3, 4, 7, 8, 9, 11, 12, 23, 32, 37})
 	chk.Ints(tst, "H", H, []int{-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 11, 15, 16, 38, 39})
 	chk.IntMat(tst, "M", M, [][]int{{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}})
@@ -160,7 +160,7 @@ func Test_mylab04(tst *testing.T) {
 	io.Pf("δ = %v\n", δ)
 	io.Pf("a = %v\n", a)
 	io.Pf("r = %v\n", r)
-	chk.Vector(tst, "linspace(2,3,5)", 1e-17, a, []float64{2.0, 2.25, 2.5, 2.75, 3.0})
+	chk.Array(tst, "linspace(2,3,5)", 1e-17, a, []float64{2.0, 2.25, 2.5, 2.75, 3.0})
 	if a[0] != 2.0 {
 		tst.Errorf("first point must be exact. %g != %g\n", a[0], 2.0)
 	}
@@ -178,7 +178,7 @@ func Test_mylab04(tst *testing.T) {
 	io.Pf("Δ = %v\n", Δ)
 	io.Pf("b = %v\n", b)
 	io.Pf("R = %v\n", R)
-	chk.Vector(tst, "linspace(2,3,5,open)", 1e-17, b, []float64{2.0, 2.2, 2.4, 2.6, 2.8})
+	chk.Array(tst, "linspace(2,3,5,open)", 1e-17, b, []float64{2.0, 2.2, 2.4, 2.6, 2.8})
 	if b[0] != 2.0 {
 		tst.Errorf("first point must be exact. %g != %g\n", b[0], 2.0)
 	}
@@ -189,13 +189,13 @@ func Test_mylab04(tst *testing.T) {
 
 	c := LinSpace(2.0, 3.0, 1)
 	io.Pf("c = %v\n", c)
-	chk.Vector(tst, "linspace(2,3,1)", 1e-17, c, []float64{2.0})
+	chk.Array(tst, "linspace(2,3,1)", 1e-17, c, []float64{2.0})
 	if c[0] != 2.0 {
 		tst.Errorf("first point must be exact. %g != %g\n", c[0], 2.0)
 	}
 
 	d := LinSpace(2.0, 3.0, 2)
-	chk.Vector(tst, "linspace(2,3,2)", 1e-17, d, []float64{2.0, 3.0})
+	chk.Array(tst, "linspace(2,3,2)", 1e-17, d, []float64{2.0, 3.0})
 	if d[0] != 2.0 {
 		tst.Errorf("first point must be exact. %g != %g\n", d[0], 2.0)
 	}
@@ -214,7 +214,7 @@ func Test_mylab05(tst *testing.T) {
 	cs := make([]float64, len(p))
 	CumSum(cs, p)
 	io.Pforan("cs = %v\n", cs)
-	chk.Vector(tst, "cumsum", 1e-17, cs, []float64{1, 3, 6, 10, 15})
+	chk.Array(tst, "cumsum", 1e-17, cs, []float64{1, 3, 6, 10, 15})
 
 	res := GtPenalty(0, 0, 1)
 	io.Pforan("\n0 > 0: penalty = %v\n", res)
@@ -263,7 +263,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, -2.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, LinSpace(-2, -1, len(x)))
+	chk.Array(tst, "s", 1e-15, s, LinSpace(-2, -1, len(x)))
 
 	// |dx|>0: reverse
 	io.Pfblue2("\n|dx|>0: reverse\n")
@@ -271,7 +271,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, -3.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, LinSpace(-2, -3, len(x)))
+	chk.Array(tst, "s", 1e-15, s, LinSpace(-2, -3, len(x)))
 
 	// |dx|>0: increasing
 	io.Pfblue2("\n|dx|>0: increasing (shuffled)\n")
@@ -280,7 +280,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, 0.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, []float64{0.1, 0.0, 0.2, 0.9, 0.5, 1.0, 0.7, 0.6, 0.8, 0.3, 0.4})
+	chk.Array(tst, "s", 1e-15, s, []float64{0.1, 0.0, 0.2, 0.9, 0.5, 1.0, 0.7, 0.6, 0.8, 0.3, 0.4})
 
 	// |dx|=0: increasing (using indices)
 	io.Pfblue2("\n|dx|=0: increasing (using indices)\n")
@@ -290,7 +290,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, 10.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, []float64{10, 10.25, 10.5, 10.75, 11})
+	chk.Array(tst, "s", 1e-15, s, []float64{10, 10.25, 10.5, 10.75, 11})
 
 	// |dx|=0: reverse (using indices)
 	io.Pfblue2("\n|dx|=0: reverse (using indices)\n")
@@ -298,7 +298,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, 10.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, []float64{11, 10.75, 10.5, 10.25, 10})
+	chk.Array(tst, "s", 1e-15, s, []float64{11, 10.75, 10.5, 10.25, 10})
 
 	// |dx|=0: increasing (not using indices)
 	io.Pfblue2("\n|dx|=0: increasing (not using indices)\n")
@@ -307,7 +307,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, 88.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, Vals(len(x), 88))
+	chk.Array(tst, "s", 1e-15, s, Vals(len(x), 88))
 
 	// |dx|=0: reverse (not using indices)
 	io.Pfblue2("\n|dx|=0: reverse (not using indices)\n")
@@ -315,7 +315,7 @@ func Test_mylab06(tst *testing.T) {
 	Scaling(s, x, 88.0, 1e-16, reverse, useinds)
 	io.Pfpink("x = %v\n", x)
 	io.Pforan("s = %v\n", s)
-	chk.Vector(tst, "s", 1e-15, s, Vals(len(x), 88))
+	chk.Array(tst, "s", 1e-15, s, Vals(len(x), 88))
 }
 
 func Test_conversions01(tst *testing.T) {
@@ -326,7 +326,7 @@ func Test_conversions01(tst *testing.T) {
 	v := []float64{2.48140019424242e-08, 0.0014621532754275238, 5.558773630697262e-09, 3.0581358492226644e-08, 0.001096211253647636}
 	s := ToStrings(v, "%.17e")
 	w := FromStrings(s)
-	chk.Vector(tst, "v => s => w", 1e-17, v, w)
+	chk.Array(tst, "v => s => w", 1e-17, v, w)
 }
 
 func Test_split01(tst *testing.T) {
@@ -336,7 +336,7 @@ func Test_split01(tst *testing.T) {
 
 	r := FromString(" 1e4 1 3   8   88   ")
 	io.Pfblue2("r = %v\n", r)
-	chk.Vector(tst, "r", 1e-16, r, []float64{1e4, 1, 3, 8, 88})
+	chk.Array(tst, "r", 1e-16, r, []float64{1e4, 1, 3, 8, 88})
 }
 
 func Test_copy01(tst *testing.T) {
@@ -347,7 +347,7 @@ func Test_copy01(tst *testing.T) {
 	v := []float64{1, 2, 3, 4, 4, 5, 5, 6, 6, 6}
 	w := GetCopy(v)
 	io.Pfblue2("v = %v\n", v)
-	chk.Vector(tst, "w==v", 1e-16, w, v)
+	chk.Array(tst, "w==v", 1e-16, w, v)
 
 	m := [][]float64{
 		{1, 2, 3},
@@ -373,16 +373,16 @@ func Test_mylab07(tst *testing.T) {
 	}
 
 	x := GetColumn(0, v)
-	chk.Vector(tst, "v[:,0]", 1e-17, x, []float64{1, -1, -1, 1, 1, 0})
+	chk.Array(tst, "v[:,0]", 1e-17, x, []float64{1, -1, -1, 1, 1, 0})
 
 	x = GetColumn(1, v)
-	chk.Vector(tst, "v[:,1]", 1e-17, x, []float64{2, 2, 2, -2, 1, 2})
+	chk.Array(tst, "v[:,1]", 1e-17, x, []float64{2, 2, 2, -2, 1, 2})
 
 	x = GetColumn(2, v)
-	chk.Vector(tst, "v[:,2]", 1e-17, x, []float64{3, 3, 1, 3, -3, 9})
+	chk.Array(tst, "v[:,2]", 1e-17, x, []float64{3, 3, 1, 3, -3, 9})
 
 	x = GetColumn(3, v)
-	chk.Vector(tst, "v[:,3]", 1e-17, x, []float64{4, 0, 4, 8, 4, -4})
+	chk.Array(tst, "v[:,3]", 1e-17, x, []float64{4, 0, 4, 8, 4, -4})
 }
 
 func Test_mylab08(tst *testing.T) {
@@ -396,21 +396,21 @@ func Test_mylab08(tst *testing.T) {
 	s := Dot3d(u, v)
 	Cross3d(w, u, v) // w := u cross v
 	chk.Scalar(tst, "s = u dot v", 1e-17, s, -13)
-	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{-15, -2, 39})
+	chk.Array(tst, "w = u cross v", 1e-17, w, []float64{-15, -2, 39})
 
 	u = []float64{3, -3, 1}
 	v = []float64{-12, 12, -4}
 	s = Dot3d(u, v)
 	Cross3d(w, u, v) // w := u cross v
 	chk.Scalar(tst, "s = u dot v", 1e-17, s, -76)
-	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{0, 0, 0})
+	chk.Array(tst, "w = u cross v", 1e-17, w, []float64{0, 0, 0})
 
 	u = []float64{3, 2, -2}
 	v = []float64{1, 0, -5}
 	s = Dot3d(u, v)
 	Cross3d(w, u, v) // w := u cross v
 	chk.Scalar(tst, "s = u dot v", 1e-17, s, 13)
-	chk.Vector(tst, "w = u cross v", 1e-17, w, []float64{-10, 13, -2})
+	chk.Array(tst, "w = u cross v", 1e-17, w, []float64{-10, 13, -2})
 }
 
 func Test_mylab09(tst *testing.T) {
@@ -456,7 +456,7 @@ func Test_mylab11(tst *testing.T) {
 
 	X := []float64{1, 10, 100, 1000}
 	Y := GetMapped(X, func(x float64) float64 { return math.Log10(x) })
-	chk.Vector(tst, "Y", 1e-15, Y, []float64{0, 1, 2, 3})
+	chk.Array(tst, "Y", 1e-15, Y, []float64{0, 1, 2, 3})
 
 	A := [][]float64{
 		{1, 10, 100, 1000},

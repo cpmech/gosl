@@ -102,7 +102,7 @@ func Test_bspline02(tst *testing.T) {
 		io.Pf("Point:      dtime = %v\n", time.Now().Sub(t0))
 		xx[k], yy[k] = pb[0], pb[1]
 		io.Pfred("pa - pb = %v, %v\n", pa[0]-pb[0], pa[1]-pb[1])
-		chk.Vector(tst, "Point", tol, pa, pb)
+		chk.Array(tst, "Point", tol, pa, pb)
 	}
 
 	if chk.Verbose {

@@ -85,7 +85,7 @@ func TestSPDsolve01(tst *testing.T) {
 	x := make([]float64, 5)
 	SolveRealLinSysSPD(x, a, b)
 	TestSolverResidual(tst, a, x, b, 1e-14)
-	chk.Vector(tst, "x = inv(a) * b", 1e-13, x, []float64{
+	chk.Array(tst, "x = inv(a) * b", 1e-13, x, []float64{
 		-629.0 / 98.0,
 		+237.0 / 49.0,
 		-53.0 / 49.0,
@@ -113,12 +113,12 @@ func TestSPDsolve02(tst *testing.T) {
 	SolveTwoRealLinSysSPD(x, X, a, b, B)
 	TestSolverResidual(tst, a, x, b, 1e-14)
 	TestSolverResidual(tst, a, X, B, 1e-14)
-	chk.Vector(tst, "x = inv(a) * b", 1e-13, x, []float64{
+	chk.Array(tst, "x = inv(a) * b", 1e-13, x, []float64{
 		-629.0 / 98.0,
 		+237.0 / 49.0,
 		-53.0 / 49.0,
 		+62.0 / 49.0,
 		+23.0 / 14.0,
 	})
-	chk.Vector(tst, "X = inv(a) * B", 1e-13, X, []float64{0, 4, 7, -1, 8})
+	chk.Array(tst, "X = inv(a) * B", 1e-13, X, []float64{0, 4, 7, -1, 8})
 }

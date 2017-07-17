@@ -61,8 +61,8 @@ func Test_linipm01(tst *testing.T) {
 	bres := make([]float64, 2)
 	la.MatVecMul(bres, 1, A, x)
 	io.Pforan("bres = %v\n", bres)
-	chk.Vector(tst, "x", 1e-9, x, []float64{1, 1})
-	chk.Vector(tst, "A*x=b", 1e-8, bres, b)
+	chk.Array(tst, "x", 1e-9, x, []float64{1, 1})
+	chk.Array(tst, "A*x=b", 1e-8, bres, b)
 
 	// plot
 	if chk.Verbose {
@@ -137,13 +137,13 @@ func Test_linipm02(tst *testing.T) {
 	bres := make([]float64, len(b))
 	la.MatVecMul(bres, 1, A, ipm.X)
 	io.Pforan("bres = %v\n", bres)
-	chk.Vector(tst, "A*x=b", 1e-8, bres, b)
+	chk.Array(tst, "A*x=b", 1e-8, bres, b)
 
 	// fix and check x
 	x := ipm.X[:2]
 	x[0] -= ipm.X[5]
 	io.Pforan("x = %v\n", x)
-	chk.Vector(tst, "x", 1e-8, x, []float64{0.5, 1.5})
+	chk.Array(tst, "x", 1e-8, x, []float64{0.5, 1.5})
 
 	// plot
 	if chk.Verbose {
@@ -196,5 +196,5 @@ func Test_linipm03(tst *testing.T) {
 	io.Pf("\n")
 	bres := make([]float64, len(b))
 	la.MatVecMul(bres, 1, A.ToDense(), ipm.X)
-	chk.Vector(tst, "A*x=b", 1e-13, bres, b)
+	chk.Array(tst, "A*x=b", 1e-13, bres, b)
 }

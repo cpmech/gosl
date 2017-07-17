@@ -24,7 +24,7 @@ func TestMatrix01(tst *testing.T) {
 	m, n := len(A), len(A[0])
 
 	a := SliceToColMajor(A)
-	chk.Vector(tst, "A to a", 1e-15, a, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
+	chk.Array(tst, "A to a", 1e-15, a, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
 	Aback := ColMajorToSlice(m, n, a)
 	chk.Matrix(tst, "a to A", 1e-15, Aback, A)
@@ -54,7 +54,7 @@ func TestMatrix02(tst *testing.T) {
 	m, n := len(A), len(A[0])
 
 	a := SliceToColMajorC(A)
-	chk.VectorC(tst, "A to a", 1e-15, a, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
+	chk.ArrayC(tst, "A to a", 1e-15, a, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
 
 	Aback := ColMajorCtoSlice(m, n, a)
 	chk.MatrixC(tst, "a to A", 1e-15, Aback, A)
@@ -86,8 +86,8 @@ func TestDaxpy01(tst *testing.T) {
 		return
 	}
 
-	chk.Vector(tst, "x", 1e-15, x, []float64{20, 10, 30, 123, 123})
-	chk.Vector(tst, "y", 1e-15, y, []float64{-5, 0, -9, 666, 666, 666})
+	chk.Array(tst, "x", 1e-15, x, []float64{20, 10, 30, 123, 123})
+	chk.Array(tst, "y", 1e-15, y, []float64{-5, 0, -9, 666, 666, 666})
 }
 
 func TestZaxpy01(tst *testing.T) {
@@ -105,8 +105,8 @@ func TestZaxpy01(tst *testing.T) {
 		return
 	}
 
-	chk.VectorC(tst, "x", 1e-15, x, []complex128{20 + 1i, 10 + 2i, 30 + 1.5i, -123 + 0.5i, -123 + 0.5i})
-	chk.VectorC(tst, "y", 1e-15, y, []complex128{5 + 2.5i, 5, 6 + 2.5i, 543, 543 + 5.5i})
+	chk.ArrayC(tst, "x", 1e-15, x, []complex128{20 + 1i, 10 + 2i, 30 + 1.5i, -123 + 0.5i, -123 + 0.5i})
+	chk.ArrayC(tst, "y", 1e-15, y, []complex128{5 + 2.5i, 5, 6 + 2.5i, 543, 543 + 5.5i})
 
 	α = 0.5 + 1i
 	err = Zaxpy(n, α, x, incx, y, incy)
@@ -114,7 +114,7 @@ func TestZaxpy01(tst *testing.T) {
 		tst.Errorf("Daxpy failed:\n%v\n", err)
 		return
 	}
-	chk.VectorC(tst, "y", 1e-15, y, []complex128{14.0 + 23.i, 8.0 + 11.i, 19.5 + 33.25i, 481.0 - 122.75i, 481.0 - 117.25i})
+	chk.ArrayC(tst, "y", 1e-15, y, []complex128{14.0 + 23.i, 8.0 + 11.i, 19.5 + 33.25i, 481.0 - 122.75i, 481.0 - 117.25i})
 }
 
 func TestDgemv01(tst *testing.T) {
@@ -129,7 +129,7 @@ func TestDgemv01(tst *testing.T) {
 		{2.0, 0.2, 0.3},
 		{3.0, 0.2, 0.3},
 	})
-	chk.Vector(tst, "a", 1e-15, a, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
+	chk.Array(tst, "a", 1e-15, a, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 
 	// perform mv
 	m, n := 4, 3
@@ -142,7 +142,7 @@ func TestDgemv01(tst *testing.T) {
 		tst.Errorf("Dgemv failed:\n%v\n", err)
 		return
 	}
-	chk.Vector(tst, "y", 1e-15, y, []float64{12.5, 17.5, 29.5, 43.5})
+	chk.Array(tst, "y", 1e-15, y, []float64{12.5, 17.5, 29.5, 43.5})
 
 	// perform mv with transpose
 	err = Dgemv(true, m, n, α, a, lda, y, incy, β, x, incx)
@@ -150,10 +150,10 @@ func TestDgemv01(tst *testing.T) {
 		tst.Errorf("Dgemv failed:\n%v\n", err)
 		return
 	}
-	chk.Vector(tst, "x", 1e-15, x, []float64{144.125, 30.3, 75.45})
+	chk.Array(tst, "x", 1e-15, x, []float64{144.125, 30.3, 75.45})
 
 	// check that a is unmodified
-	chk.Vector(tst, "a", 1e-15, a, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
+	chk.Array(tst, "a", 1e-15, a, []float64{0.1, 1, 2, 3, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 0.3})
 }
 
 func TestZgemv01(tst *testing.T) {
@@ -169,7 +169,7 @@ func TestZgemv01(tst *testing.T) {
 		{3.0 + 0.1i, 0.2, 0.3 - 0.6i},
 	})
 	m, n := 4, 3
-	chk.VectorC(tst, "a", 1e-15, a, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
+	chk.ArrayC(tst, "a", 1e-15, a, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 
 	// perform mv
 	α, β := 0.5+1i, 2.0+1i
@@ -181,7 +181,7 @@ func TestZgemv01(tst *testing.T) {
 		tst.Errorf("Zgemv failed:\n%v\n", err)
 		return
 	}
-	chk.VectorC(tst, "y", 1e-15, y, []complex128{-38.5 + 41.5i, -10.5 + 46i, 24.5 + 55.5i, 59.5 + 67i})
+	chk.ArrayC(tst, "y", 1e-15, y, []complex128{-38.5 + 41.5i, -10.5 + 46i, 24.5 + 55.5i, 59.5 + 67i})
 
 	// perform mv with transpose
 	err = Zgemv(true, m, n, α, a, lda, y, incy, β, x, incx)
@@ -189,10 +189,10 @@ func TestZgemv01(tst *testing.T) {
 		tst.Errorf("Zgemv failed:\n%v\n", err)
 		return
 	}
-	chk.VectorC(tst, "x", 1e-13, x, []complex128{-248.875 + 82.5i, -18.5 + 38i, 83.85 + 154.7i})
+	chk.ArrayC(tst, "x", 1e-13, x, []complex128{-248.875 + 82.5i, -18.5 + 38i, 83.85 + 154.7i})
 
 	// check that a is unmodified
-	chk.VectorC(tst, "a", 1e-15, a, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
+	chk.ArrayC(tst, "a", 1e-15, a, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 }
 
 func TestDgemm01(tst *testing.T) {
@@ -324,7 +324,7 @@ func TestDgesv01(tst *testing.T) {
 		tst.Errorf("Dgesv failed:\n%v\n", err)
 		return
 	}
-	chk.Vector(tst, "x = A⁻¹ b", 1e-15, b, xCorrect)
+	chk.Array(tst, "x = A⁻¹ b", 1e-15, b, xCorrect)
 
 	// check ipiv
 	chk.Int32s(tst, "ipiv", ipiv, []int32{2, 5, 5, 5, 5})
@@ -377,7 +377,7 @@ func TestZgesv01(tst *testing.T) {
 		tst.Errorf("Zgesv failed:\n%v\n", err)
 		return
 	}
-	chk.VectorC(tst, "x = A⁻¹ b", tol, b, xCorrect)
+	chk.ArrayC(tst, "x = A⁻¹ b", tol, b, xCorrect)
 
 	// compare with python results
 	xPython := []complex128{
@@ -387,7 +387,7 @@ func TestZgesv01(tst *testing.T) {
 		8.999787912842375e+00 - 6.662818244209770e-05i,
 		1.000001132800243e+01 - 1.774987242230929e+01i,
 	}
-	chk.VectorC(tst, "x = A⁻¹ b", 1e-14, b, xPython)
+	chk.ArrayC(tst, "x = A⁻¹ b", 1e-14, b, xPython)
 
 	// check ipiv
 	chk.Int32s(tst, "ipiv", ipiv, []int32{1, 2, 3, 4, 5})
@@ -426,7 +426,7 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 	if uCorrect != nil {
 		chk.Matrix(tst, "u", tolu, umat, uCorrect)
 	}
-	chk.Vector(tst, "s", tols, s, sCorrect)
+	chk.Array(tst, "s", tols, s, sCorrect)
 	if vtCorrect != nil {
 		chk.Matrix(tst, "vt", tolv, vtmat, vtCorrect)
 	}
@@ -562,7 +562,7 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 	if uCorrect != nil {
 		chk.MatrixC(tst, "u", tolu, umat, uCorrect)
 	}
-	chk.Vector(tst, "s", tols, s, sCorrect)
+	chk.Array(tst, "s", tols, s, sCorrect)
 	if vtCorrect != nil {
 		chk.MatrixC(tst, "vt", tolv, vtmat, vtCorrect)
 	}

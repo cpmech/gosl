@@ -81,8 +81,8 @@ func TestQuadpts01(tst *testing.T) {
 				io.Pfgreen("    %v\n", xref[n])
 				io.Pf("w = %v\n", w)
 				io.Pfgreen("    %v\n", wref[n])
-				chk.Vector(tst, io.Sf("lin:%d x", n), 1e-15, x, xref[n])
-				chk.Vector(tst, io.Sf("lin:%d w", n), 1e-15, w, wref[n])
+				chk.Array(tst, io.Sf("lin:%d x", n), 1e-15, x, xref[n])
+				chk.Array(tst, io.Sf("lin:%d w", n), 1e-15, w, wref[n])
 			}
 
 		case KindQua:
@@ -109,21 +109,21 @@ func TestQuadpts01(tst *testing.T) {
 							w := w1d[i] * w1d[j]
 							io.Pf("  %d%d x = %23v  w = %23v\n", i, j, x, v)
 							io.Pfgreen("         %23v      %23v\n", y, w)
-							chk.Vector(tst, "x", 1e-15, x, y)
+							chk.Array(tst, "x", 1e-15, x, y)
 							chk.Scalar(tst, "w", 1e-15, v, w)
 						}
 					}
 				case "wilson5corner":
 					for i, p := range pts {
-						chk.Vector(tst, io.Sf("wilson5corner %d", i), 1e-15, p, wilson5corner[i])
+						chk.Array(tst, io.Sf("wilson5corner %d", i), 1e-15, p, wilson5corner[i])
 					}
 				case "wilson5stable":
 					for i, p := range pts {
-						chk.Vector(tst, io.Sf("wilson5stable %d", i), 1e-15, p, wilson5stable[i])
+						chk.Array(tst, io.Sf("wilson5stable %d", i), 1e-15, p, wilson5stable[i])
 					}
 				case "wilson8default":
 					for i, p := range pts {
-						chk.Vector(tst, io.Sf("wilson8default %d", i), 1e-15, p, wilson8default[i])
+						chk.Array(tst, io.Sf("wilson8default %d", i), 1e-15, p, wilson8default[i])
 					}
 				default:
 					tst.Errorf("cannot check rule %q\n", rule)
@@ -156,7 +156,7 @@ func TestQuadpts01(tst *testing.T) {
 								w := w1d[i] * w1d[j] * w1d[k]
 								io.Pf("%d%d x=%18v w=%18v\n", i, j, x, v)
 								io.Pfgreen("     %18v   %18v\n", y, w)
-								chk.Vector(tst, "x", 1e-15, x, y)
+								chk.Array(tst, "x", 1e-15, x, y)
 								chk.Scalar(tst, "w", 1e-14, v, w)
 							}
 						}

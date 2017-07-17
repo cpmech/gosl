@@ -94,11 +94,11 @@ func Test_prms03(tst *testing.T) {
 	io.Pforan("%v\n", prms)
 
 	values, found := prms.GetValues([]string{"klx", "kly", "klz"})
-	chk.Vector(tst, "values", 1e-15, values, []float64{1, 2, 3})
+	chk.Array(tst, "values", 1e-15, values, []float64{1, 2, 3})
 	chk.Bools(tst, "found", found, []bool{true, true, true})
 
 	values, found = prms.GetValues([]string{"klx", "klY", "klz"})
-	chk.Vector(tst, "values", 1e-15, values, []float64{1, 0, 3})
+	chk.Array(tst, "values", 1e-15, values, []float64{1, 0, 3})
 	chk.Bools(tst, "found", found, []bool{true, false, true})
 }
 
@@ -116,7 +116,7 @@ func Test_prms04(tst *testing.T) {
 	prms.CheckLimits()
 
 	values := prms.CheckAndGetValues([]string{"a", "b"})
-	chk.Vector(tst, "values", 1e-15, values, []float64{123, 456})
+	chk.Array(tst, "values", 1e-15, values, []float64{123, 456})
 
 	var a, b float64
 	prms.CheckAndSetVars([]string{"a", "b"}, []*float64{&a, &b})

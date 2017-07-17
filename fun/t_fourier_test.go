@@ -29,7 +29,7 @@ func TestDft01(tst *testing.T) {
 	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
 	Y := dft1dslow(y)
 
-	chk.VectorC(tst, "X", 1e-14, x, Y)
+	chk.ArrayC(tst, "X", 1e-14, x, Y)
 }
 
 func TestDft02(tst *testing.T) {
@@ -164,7 +164,7 @@ func TestDft03(tst *testing.T) {
 				return
 			}
 			io.Pf("invFFT(U) = %.3f\n", U)
-			chk.VectorC(tst, "U", 1e-15, U, Ucopy)
+			chk.ArrayC(tst, "U", 1e-15, U, Ucopy)
 
 		// normalise after direct FFT
 		case 2:
@@ -190,7 +190,7 @@ func TestDft03(tst *testing.T) {
 				return
 			}
 			io.Pf("invFFT(U) = %.3f\n", U)
-			chk.VectorC(tst, "U", 1e-15, U, Ucopy)
+			chk.ArrayC(tst, "U", 1e-15, U, Ucopy)
 
 		// normalise after inverse FFT
 		case 3:
@@ -218,7 +218,7 @@ func TestDft03(tst *testing.T) {
 			io.Pfblue2("normalised\n")
 
 			// check
-			chk.VectorC(tst, "U", 1e-15, U, Ucopy)
+			chk.ArrayC(tst, "U", 1e-15, U, Ucopy)
 		}
 	}
 }
@@ -238,7 +238,7 @@ func TestFourierInterp01(tst *testing.T) {
 	for j := 0; j < N; j++ {
 		kvals[j] = fou.K(j)
 	}
-	chk.Vector(tst, "k(j)", 1e-17, kvals, []float64{0, 1, 2, 3, -4, -3, -2, -1})
+	chk.Array(tst, "k(j)", 1e-17, kvals, []float64{0, 1, 2, 3, -4, -3, -2, -1})
 }
 
 func TestFourierInterp02(tst *testing.T) {

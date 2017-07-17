@@ -58,7 +58,7 @@ func TestTwoDver01a(tst *testing.T) {
 	}
 
 	// check input data
-	chk.VectorC(tst, "plan.data", 1e-17, plan.data, []complex128{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i, 8 + 9i, 10 + 11i, 12 + 13i, 14 + 15i})
+	chk.ArrayC(tst, "plan.data", 1e-17, plan.data, []complex128{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i, 8 + 9i, 10 + 11i, 12 + 13i, 14 + 15i})
 
 	// perform Fourier transform
 	plan.Execute()
@@ -102,7 +102,7 @@ func TestTwoDver01b(tst *testing.T) {
 	}
 
 	// check input data
-	chk.VectorC(tst, "plan.data", 1e-17, plan.data, []complex128{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i, 8 + 9i, 10 + 11i, 12 + 13i, 14 + 15i})
+	chk.ArrayC(tst, "plan.data", 1e-17, plan.data, []complex128{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i, 8 + 9i, 10 + 11i, 12 + 13i, 14 + 15i})
 
 	// perform Fourier transform
 	plan.Execute()

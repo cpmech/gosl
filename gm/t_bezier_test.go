@@ -42,12 +42,12 @@ func Test_bezier01(tst *testing.T) {
 	}
 
 	XX, YY, _ := bez.GetPoints(T)
-	chk.Vector(tst, "X", 1e-15, X, XX)
-	chk.Vector(tst, "Y", 1e-15, Y, YY)
+	chk.Array(tst, "X", 1e-15, X, XX)
+	chk.Array(tst, "Y", 1e-15, Y, YY)
 
 	Xq, Yq, _ := bez.GetControlCoords()
-	chk.Vector(tst, "Xq", 1e-15, Xq, []float64{-1, 0.5, 2})
-	chk.Vector(tst, "Yq", 1e-15, Yq, []float64{1, -2, 4})
+	chk.Array(tst, "Xq", 1e-15, Xq, []float64{-1, 0.5, 2})
+	chk.Array(tst, "Yq", 1e-15, Yq, []float64{1, -2, 4})
 
 	if false {
 		plt.Reset(false, nil)

@@ -36,9 +36,9 @@ func Test_functions01(tst *testing.T) {
 		yHea2Ramp[i] = x[i] * yh[i]
 		ySig2Heav[i] = (1.0 + ys[i]) / 2.0
 	}
-	chk.Vector(tst, "abs => ramp", 1e-17, ym, yAbs2Ramp)
-	chk.Vector(tst, "hea => ramp", 1e-17, ym, yHea2Ramp)
-	chk.Vector(tst, "sig => heav", 1e-17, yh, ySig2Heav)
+	chk.Array(tst, "abs => ramp", 1e-17, ym, yAbs2Ramp)
+	chk.Array(tst, "hea => ramp", 1e-17, ym, yHea2Ramp)
+	chk.Array(tst, "sig => heav", 1e-17, yh, ySig2Heav)
 }
 
 // numderiv employs a 1st order forward difference to approximate the derivative of f(x) w.r.t x @ x

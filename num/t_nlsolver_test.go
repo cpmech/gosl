@@ -62,7 +62,7 @@ func Test_nls01(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{1.0, 0.0})
 	io.Pf("f(x) = %v\n", fx)
-	chk.Vector(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
+	chk.Array(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
@@ -91,8 +91,8 @@ func Test_nls01(tst *testing.T) {
 	ffcn(fx, xx)
 	io.Pf("xx    = %v  expected = %v\n", xx, []float64{1.0, 0.0})
 	io.Pf("f(xx) = %v\n", fx)
-	chk.Vector(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
-	chk.Vector(tst, "x == xx", 1e-15, x, xx)
+	chk.Array(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
+	chk.Array(tst, "x == xx", 1e-15, x, xx)
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
@@ -152,7 +152,7 @@ func Test_nls02(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
 	io.Pf("f(x) = %v\n", fx)
-	chk.Vector(tst, "f(x) = 0? ", 1e-14, fx, []float64{})
+	chk.Array(tst, "f(x) = 0? ", 1e-14, fx, []float64{})
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
@@ -181,8 +181,8 @@ func Test_nls02(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("xx    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
 	io.Pf("f(xx) = %v\n", fx)
-	chk.Vector(tst, "f(x) = 0? ", 1e-14, fx, []float64{})
-	chk.Vector(tst, "x == xx", 1e-15, x, xx)
+	chk.Array(tst, "f(x) = 0? ", 1e-14, fx, []float64{})
+	chk.Array(tst, "x == xx", 1e-15, x, xx)
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
@@ -254,8 +254,8 @@ func Test_nls03(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
 	io.Pf("f(x) = %v\n", fx)
-	chk.Vector(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
-	chk.Vector(tst, "f(x) = 0? ", 1e-11, fx, nil)
+	chk.Array(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
+	chk.Array(tst, "f(x) = 0? ", 1e-11, fx, nil)
 
 	x = []float64{0.7, 4.0}
 	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
@@ -268,8 +268,8 @@ func Test_nls03(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
 	io.Pf("f(x) = %v\n", fx)
-	chk.Vector(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
-	chk.Vector(tst, "f(x) = 0? ", 1e-7, fx, nil)
+	chk.Array(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
+	chk.Array(tst, "f(x) = 0? ", 1e-7, fx, nil)
 
 	x = []float64{1.0, 4.0}
 	io.PfYel("\n--- sparse ------------- with x = %v ---------------\n", x)
@@ -285,7 +285,7 @@ func Test_nls03(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
 	io.Pf("f(x) = %v << converges to a different solution\n", fx)
-	chk.Vector(tst, "f(x) = 0? ", 1e-8, fx, nil)
+	chk.Array(tst, "f(x) = 0? ", 1e-8, fx, nil)
 
 	io.PfMag("\n/////////////////////// dense //////////////////////////////////////////\n")
 
@@ -299,8 +299,8 @@ func Test_nls03(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
 	io.Pf("f(x) = %v\n", fx)
-	chk.Vector(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
-	chk.Vector(tst, "f(x) = 0? ", 1e-11, fx, nil)
+	chk.Array(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
+	chk.Array(tst, "f(x) = 0? ", 1e-11, fx, nil)
 
 	x = []float64{0.7, 4.0}
 	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
@@ -313,8 +313,8 @@ func Test_nls03(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
 	io.Pf("f(x) = %v\n", fx)
-	chk.Vector(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
-	chk.Vector(tst, "f(x) = 0? ", 1e-7, fx, nil)
+	chk.Array(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
+	chk.Array(tst, "f(x) = 0? ", 1e-7, fx, nil)
 
 	x = []float64{1.0, 4.0}
 	io.PfYel("\n--- dense ------------- with x = %v ---------------\n", x)
@@ -327,5 +327,5 @@ func Test_nls03(tst *testing.T) {
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
 	io.Pf("f(x) = %v << converges to a different solution\n", fx)
-	chk.Vector(tst, "f(x) = 0? ", 1e-8, fx, nil)
+	chk.Array(tst, "f(x) = 0? ", 1e-8, fx, nil)
 }

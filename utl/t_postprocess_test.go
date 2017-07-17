@@ -27,7 +27,7 @@ func Test_postp01(tst *testing.T) {
 	io.Pforan("T = %v\n", T)
 
 	chk.Ints(tst, "I", I, []int{0, 2, 5, 6, 7, 9})
-	chk.Vector(tst, "T", 1e-16, T, []float64{0, 0.2, 0.3001, 0.8, 0.99, 1})
+	chk.Array(tst, "T", 1e-16, T, []float64{0, 0.2, 0.3001, 0.8, 0.99, 1})
 }
 
 func Test_postp02(tst *testing.T) {

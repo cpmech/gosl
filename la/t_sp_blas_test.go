@@ -53,20 +53,20 @@ func TestSpBlas01(tst *testing.T) {
 
 	p := make([]float64, 3)
 	SpMatVecMul(p, 1, a, u) // p := 1*a*u
-	chk.Vector(tst, "p = a*u", 1e-17, p, []float64{5.5, 0.55, 55})
+	chk.Array(tst, "p = a*u", 1e-17, p, []float64{5.5, 0.55, 55})
 
 	SpMatVecMulAdd(s, 1, a, u) // s += dot(a, u)
-	chk.Vector(tst, "s += a*u", 1e-17, s, []float64{1005.5, 1000.55, 1055})
+	chk.Array(tst, "s += a*u", 1e-17, s, []float64{1005.5, 1000.55, 1055})
 
 	SpMatVecMulAddX(x, a, 2, u, 3, W) // x += a * (2*u + 3*W)
-	chk.Vector(tst, "x += a * (2*u + 3*W)", 1e-17, x, []float64{1176, 2017.6, 4760})
+	chk.Array(tst, "x += a * (2*u + 3*W)", 1e-17, x, []float64{1176, 2017.6, 4760})
 
 	q := make([]float64, 5)
 	SpMatTrVecMul(q, 1, a, w) // q = dot(transpose(a), w)
-	chk.Vector(tst, "q = trans(a)*w", 1e-17, q, []float64{312, 624, 936, 1248, 1560})
+	chk.Array(tst, "q = trans(a)*w", 1e-17, q, []float64{312, 624, 936, 1248, 1560})
 
 	SpMatTrVecMulAdd(r, 1, a, w) // r += dot(transpose(a), w)
-	chk.Vector(tst, "r += trans(a)*w", 1e-17, r, []float64{1312, 1624, 1936, 2248, 2560})
+	chk.Array(tst, "r += trans(a)*w", 1e-17, r, []float64{1312, 1624, 1936, 2248, 2560})
 }
 
 func TestSpBlas02(tst *testing.T) {
@@ -107,17 +107,17 @@ func TestSpBlas02(tst *testing.T) {
 
 	p := make([]complex128, 3)
 	SpMatVecMulC(p, 1, a, u) // p := 1*a*u
-	chk.VectorC(tst, "p = a*u", 1e-17, p, []complex128{5.5, 0.55, 55})
+	chk.ArrayC(tst, "p = a*u", 1e-17, p, []complex128{5.5, 0.55, 55})
 
 	SpMatVecMulAddC(s, 1, a, u) // s += dot(a, u)
-	chk.VectorC(tst, "s += a*u", 1e-17, s, []complex128{1005.5, 1000.55, 1055})
+	chk.ArrayC(tst, "s += a*u", 1e-17, s, []complex128{1005.5, 1000.55, 1055})
 
 	q := make([]complex128, 5)
 	SpMatTrVecMulC(q, 1, a, w) // q = dot(transpose(a), w)
-	chk.VectorC(tst, "q = trans(a)*w", 1e-17, q, []complex128{312, 624, 936, 1248, 1560})
+	chk.ArrayC(tst, "q = trans(a)*w", 1e-17, q, []complex128{312, 624, 936, 1248, 1560})
 
 	SpMatTrVecMulAddC(r, 1, a, w) // r += dot(transpose(a), w)
-	chk.VectorC(tst, "r += trans(a)*w", 1e-17, r, []complex128{1312, 1624, 1936, 2248, 2560})
+	chk.ArrayC(tst, "r += trans(a)*w", 1e-17, r, []complex128{1312, 1624, 1936, 2248, 2560})
 }
 
 func TestSpBlas03(tst *testing.T) {
@@ -158,17 +158,17 @@ func TestSpBlas03(tst *testing.T) {
 
 	p := make([]complex128, 3)
 	SpMatVecMulC(p, 1, a, u) // p := 1*a*u
-	chk.VectorC(tst, "p = a*u", 1e-17, p, []complex128{6.5 + 34i, 0.55 + 2.2i, 38 + 320i})
+	chk.ArrayC(tst, "p = a*u", 1e-17, p, []complex128{6.5 + 34i, 0.55 + 2.2i, 38 + 320i})
 
 	SpMatVecMulAddC(s, 1, a, u) // s += dot(a, u)
-	chk.VectorC(tst, "s += a*u", 1e-15, s, []complex128{1006.5 + 33i, 1000.55 + 1.2i, 1038 + 319i})
+	chk.ArrayC(tst, "s += a*u", 1e-15, s, []complex128{1006.5 + 33i, 1000.55 + 1.2i, 1038 + 319i})
 
 	q := make([]complex128, 5)
 	SpMatTrVecMulC(q, 1, a, w) // q = dot(transpose(a), w)
-	chk.VectorC(tst, "q = trans(a)*w", 1e-14, q, []complex128{312.5 + 20.95i, 625 + 51.9i, 935 - 37.15i, 1245 + 3.8i, 1557.5 + 4.75i})
+	chk.ArrayC(tst, "q = trans(a)*w", 1e-14, q, []complex128{312.5 + 20.95i, 625 + 51.9i, 935 - 37.15i, 1245 + 3.8i, 1557.5 + 4.75i})
 
 	SpMatTrVecMulAddC(r, 1, a, w) // r += dot(transpose(a), w)
-	chk.VectorC(tst, "r += trans(a)*w", 1e-14, r, []complex128{1312.5 + 21.95i, 1625 + 52.9i, 1935 - 36.15i, 2245 + 4.8i, 2557.5 + 5.75i})
+	chk.ArrayC(tst, "r += trans(a)*w", 1e-14, r, []complex128{1312.5 + 21.95i, 1625 + 52.9i, 1935 - 36.15i, 2245 + 4.8i, 2557.5 + 5.75i})
 }
 
 func TestSpBlas04(tst *testing.T) {
@@ -184,7 +184,7 @@ func TestSpBlas04(tst *testing.T) {
 	ta.Put(2, 2, 4.0)
 	a := ta.ToMatrix(nil)
 	io.Pf("a = %+v\n", a)
-	chk.Vector(tst, "a.x", 1e-17, a.x, []float64{1, 2, 3, 4})
+	chk.Array(tst, "a.x", 1e-17, a.x, []float64{1, 2, 3, 4})
 	chk.Ints(tst, "a.i", a.i, []int{0, 1, 2, 2})
 	chk.Ints(tst, "a.p", a.p, []int{0, 2, 3, 4})
 
@@ -196,14 +196,14 @@ func TestSpBlas04(tst *testing.T) {
 	tb.Put(2, 2, 1.0)
 	b := tb.ToMatrix(nil)
 	io.Pf("b = %+v\n", b)
-	chk.Vector(tst, "b.x", 1e-17, b.x, []float64{3, 2, 1, 1})
+	chk.Array(tst, "b.x", 1e-17, b.x, []float64{3, 2, 1, 1})
 	chk.Ints(tst, "b.i", b.i, []int{1, 0, 1, 2})
 	chk.Ints(tst, "b.p", b.p, []int{0, 1, 2, 4})
 
 	c, a2c, b2c := SpAllocMatAddMat(a, b)
 	SpMatAddMat(c, 1, a, 1, b, a2c, b2c)
 	io.Pf("c = %+v\n", c)
-	chk.Vector(tst, "c.x", 1e-17, c.x, []float64{1, 5, 2, 3, 1, 5})
+	chk.Array(tst, "c.x", 1e-17, c.x, []float64{1, 5, 2, 3, 1, 5})
 	chk.Ints(tst, "c.i", c.i, []int{0, 1, 0, 2, 1, 2})
 	chk.Ints(tst, "c.p", c.p, []int{0, 2, 4, 6})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 3, 5})
@@ -229,7 +229,7 @@ func TestSpBlas05(tst *testing.T) {
 	ta.Put(2, 5, 8)
 	a := ta.ToMatrix(nil)
 	io.Pf("a = %+v\n", a)
-	chk.Vector(tst, "a.x", 1e-17, a.x, []float64{1, 2, 3, 3, 1, 1, 5, 7, 8})
+	chk.Array(tst, "a.x", 1e-17, a.x, []float64{1, 2, 3, 3, 1, 1, 5, 7, 8})
 	chk.Ints(tst, "a.i", a.i, []int{0, 2, 4, 1, 3, 0, 4, 0, 2})
 	chk.Ints(tst, "a.p", a.p, []int{0, 3, 3, 5, 7, 7, 9})
 
@@ -249,14 +249,14 @@ func TestSpBlas05(tst *testing.T) {
 	tb.Put(4, 5, 1)
 	b := tb.ToMatrix(nil)
 	io.Pf("b = %+v\n", b)
-	chk.Vector(tst, "b.x", 1e-16, b.x, []float64{1, 8, 1, 2, 3, 4, 5, 5, 1, 4, 2, 1})
+	chk.Array(tst, "b.x", 1e-16, b.x, []float64{1, 8, 1, 2, 3, 4, 5, 5, 1, 4, 2, 1})
 	chk.Ints(tst, "b.i", b.i, []int{1, 3, 0, 1, 2, 3, 4, 2, 0, 1, 2, 4})
 	chk.Ints(tst, "b.p", b.p, []int{0, 0, 2, 7, 7, 8, 12})
 
 	c, a2c, b2c := SpAllocMatAddMat(a, b)
 	SpMatAddMat(c, 0.1, a, 2, b, a2c, b2c)
 	io.Pf("c = %+v\n", c)
-	chk.Vector(tst, "c.x", 1e-16, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
+	chk.Array(tst, "c.x", 1e-16, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
 	chk.Ints(tst, "c.i", c.i, []int{0, 2, 4, 1, 3, 0, 1, 2, 3, 4, 0, 4, 2, 0, 1, 2, 4})
 	chk.Ints(tst, "c.p", c.p, []int{0, 3, 5, 10, 12, 13, 17})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 2, 6, 8, 10, 11, 13, 15})
@@ -287,7 +287,7 @@ func TestSpBlas06(tst *testing.T) {
 	ta.Put(0, 5, 7)
 	ta.Put(2, 5, 8)
 	a := ta.ToMatrix(nil)
-	chk.Vector(tst, "a.x", 1e-17, a.x, []float64{1, 2, 3, 3, 1, 1, 5, 7, 8})
+	chk.Array(tst, "a.x", 1e-17, a.x, []float64{1, 2, 3, 3, 1, 1, 5, 7, 8})
 	chk.Ints(tst, "a.i", a.i, []int{0, 2, 4, 1, 3, 0, 4, 0, 2})
 	chk.Ints(tst, "a.p", a.p, []int{0, 3, 3, 5, 7, 7, 9})
 
@@ -306,7 +306,7 @@ func TestSpBlas06(tst *testing.T) {
 	tb.Put(2, 5, 2)
 	tb.Put(4, 5, 1)
 	b := tb.ToMatrix(nil)
-	chk.Vector(tst, "b.x", 1e-17, b.x, []float64{1, 8, 1, 2, 3, 4, 5, 5, 1, 4, 2, 1})
+	chk.Array(tst, "b.x", 1e-17, b.x, []float64{1, 8, 1, 2, 3, 4, 5, 5, 1, 4, 2, 1})
 	chk.Ints(tst, "b.i", b.i, []int{1, 3, 0, 1, 2, 3, 4, 2, 0, 1, 2, 4})
 	chk.Ints(tst, "b.p", b.p, []int{0, 0, 2, 7, 7, 8, 12})
 
@@ -321,8 +321,8 @@ func TestSpBlas06(tst *testing.T) {
 	//    c :=      γ*a + μ*b
 	//    d := (α+βi)*a + μ*b
 	SpMatAddMatC(&d, c, α, β, γ, a, μ, b, a2c, b2c)
-	chk.Vector(tst, "c.x", 1e-16, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
-	chk.VectorC(tst, "d.x", 1e-16, d.x, []complex128{0.1 + 1i, 0.2 + 2i, 0.3 + 3i, 2, 16, 2, 4.3 + 3i, 6, 8.1 + 1i, 10, 0.1 + 1i, 0.5 + 5i, 10, 2.7 + 7i, 8, 4.8 + 8i, 2})
+	chk.Array(tst, "c.x", 1e-16, c.x, []float64{0.1, 0.2, 0.3, 2, 16, 2, 4.3, 6, 8.1, 10, 0.1, 0.5, 10, 2.7, 8, 4.8, 2})
+	chk.ArrayC(tst, "d.x", 1e-16, d.x, []complex128{0.1 + 1i, 0.2 + 2i, 0.3 + 3i, 2, 16, 2, 4.3 + 3i, 6, 8.1 + 1i, 10, 0.1 + 1i, 0.5 + 5i, 10, 2.7 + 7i, 8, 4.8 + 8i, 2})
 	chk.Ints(tst, "a2c", a2c, []int{0, 1, 2, 6, 8, 10, 11, 13, 15})
 	chk.Ints(tst, "b2c", b2c, []int{3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16})
 	chk.Matrix(tst, "c", 1e-16, c.ToDense().GetSlice(), [][]float64{
@@ -480,13 +480,13 @@ func TestSpBlas10(tst *testing.T) {
 	y := make([]float64, 5)
 	SpTriMatTrVecMul(y, &a, x) // y := transpose(a) * x
 	io.Pforan("y = %v\n", y)
-	chk.Vector(tst, "y=Tr(a)*x", 1e-17, y, []float64{8.4, 18.6, 25.2, 37.2, 42})
+	chk.Array(tst, "y=Tr(a)*x", 1e-17, y, []float64{8.4, 18.6, 25.2, 37.2, 42})
 
 	u := []float64{8.4, 18.6, 25.2, 37.2, 42}
 	z := make([]float64, 3)
 	SpTriMatVecMul(z, &a, u)
 	io.Pfcyan("z = %v\n", z)
-	chk.Vector(tst, "z=a*u", 1e-17, z, []float64{4800, 2154, 3126})
+	chk.Array(tst, "z=a*u", 1e-17, z, []float64{4800, 2154, 3126})
 }
 
 func TestSpBlas11(tst *testing.T) {

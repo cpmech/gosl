@@ -190,8 +190,8 @@ func Matrix(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 	CheckAndPrint(tst, msg, tol, maxdiff)
 }
 
-// Vector compares two vectors
-func Vector(tst *testing.T, msg string, tol float64, res, correct []float64) {
+// Array compares two arrays
+func Array(tst *testing.T, msg string, tol float64, res, correct []float64) {
 	zero := false
 	if len(correct) == 0 {
 		zero = true
@@ -264,8 +264,8 @@ func MatrixC(tst *testing.T, msg string, tol float64, res, correct [][]complex12
 	PrintOk(msg)
 }
 
-// VectorC compares two vectors of complex nummbers
-func VectorC(tst *testing.T, msg string, tol float64, res, correct []complex128) {
+// ArrayC compares two slices of complex nummbers
+func ArrayC(tst *testing.T, msg string, tol float64, res, correct []complex128) {
 	zero := false
 	if len(correct) == 0 {
 		zero = true

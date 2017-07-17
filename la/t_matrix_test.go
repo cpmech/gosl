@@ -22,7 +22,7 @@ func TestMatrix01(tst *testing.T) {
 	}
 
 	a := NewMatrixSlice(A)
-	chk.Vector(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
+	chk.Array(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
 
 	chk.Scalar(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1)
 	chk.Scalar(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
@@ -65,7 +65,7 @@ func TestMatrix01(tst *testing.T) {
 		tst.Errorf("b.N should be equal to a.N\n")
 		return
 	}
-	chk.Vector(tst, "b.Data", 1e-17, b.Data, a.Data)
+	chk.Array(tst, "b.Data", 1e-17, b.Data, a.Data)
 }
 
 func TestMatrix02(tst *testing.T) {
@@ -80,7 +80,7 @@ func TestMatrix02(tst *testing.T) {
 	}
 
 	a := NewMatrixSliceC(A)
-	chk.VectorC(tst, "A to a", 1e-15, a.Data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
+	chk.ArrayC(tst, "A to a", 1e-15, a.Data, []complex128{1 + 0.1i, 5 + 0.5i, 9 + 0.9i, 2, 6, 0, 3, 7, -1, 4 - 0.4i, 8 - 0.8i, -2 + 1i})
 
 	chk.ScalarC(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1+0.1i)
 	chk.ScalarC(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
@@ -123,7 +123,7 @@ func TestMatrix02(tst *testing.T) {
 		tst.Errorf("b.N should be equal to a.N\n")
 		return
 	}
-	chk.VectorC(tst, "b.Data", 1e-17, b.Data, a.Data)
+	chk.ArrayC(tst, "b.Data", 1e-17, b.Data, a.Data)
 }
 
 func TestMatrix03(tst *testing.T) {
@@ -156,7 +156,7 @@ func TestMatrix03(tst *testing.T) {
 
 	// GetCopy
 	aclone := a.GetCopy()
-	chk.Vector(tst, "aclone", 1e-17, a.Data, aclone.Data)
+	chk.Array(tst, "aclone", 1e-17, a.Data, aclone.Data)
 
 	// Fill
 	b := NewMatrix(5, 3)
@@ -216,17 +216,17 @@ func TestMatrix03(tst *testing.T) {
 	row0 := a.GetRow(0)
 	row1 := a.GetRow(1)
 	row2 := a.GetRow(2)
-	chk.Vector(tst, "GetRow(0)", 1e-17, row0, []float64{1, 2, 3, 4, 5})
-	chk.Vector(tst, "GetRow(1)", 1e-17, row1, []float64{0.1, 0.2, 0.3, 0.4, 0.5})
-	chk.Vector(tst, "GetRow(2)", 1e-17, row2, []float64{10, 20, 30, 40, 50})
+	chk.Array(tst, "GetRow(0)", 1e-17, row0, []float64{1, 2, 3, 4, 5})
+	chk.Array(tst, "GetRow(1)", 1e-17, row1, []float64{0.1, 0.2, 0.3, 0.4, 0.5})
+	chk.Array(tst, "GetRow(2)", 1e-17, row2, []float64{10, 20, 30, 40, 50})
 
 	// GetCol
 	col0 := a.GetCol(0)
 	col2 := a.GetCol(2)
 	col4 := a.GetCol(4)
-	chk.Vector(tst, "GetCol(0)", 1e-17, col0, []float64{1, 0.1, 10})
-	chk.Vector(tst, "GetCol(2)", 1e-17, col2, []float64{3, 0.3, 30})
-	chk.Vector(tst, "GetCol(4)", 1e-17, col4, []float64{5, 0.5, 50})
+	chk.Array(tst, "GetCol(0)", 1e-17, col0, []float64{1, 0.1, 10})
+	chk.Array(tst, "GetCol(2)", 1e-17, col2, []float64{3, 0.3, 30})
+	chk.Array(tst, "GetCol(4)", 1e-17, col4, []float64{5, 0.5, 50})
 
 	// NormFrob
 	A := NewMatrixSlice([][]float64{
@@ -272,7 +272,7 @@ func TestMatrix04(tst *testing.T) {
 
 	// GetCopy
 	aclone := a.GetCopy()
-	chk.VectorC(tst, "aclone", 1e-17, a.Data, aclone.Data)
+	chk.ArrayC(tst, "aclone", 1e-17, a.Data, aclone.Data)
 
 	// Fill
 	b := NewMatrixC(5, 3)

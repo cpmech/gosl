@@ -74,8 +74,8 @@ func Test_basicgeom02(tst *testing.T) {
 	chk.Scalar(tst, "u.v", 1e-17, s, 32.0)
 	chk.Scalar(tst, "norm(u)", 1e-17, VecNorm(u), math.Sqrt(14.0))
 	chk.Scalar(tst, "norm(v)", 1e-17, VecNorm(v), math.Sqrt(77.0))
-	chk.Vector(tst, "r", 1e-17, r, []float64{2, 4, 6})
-	chk.Vector(tst, "w", 1e-17, w, []float64{-10, -11, -12})
+	chk.Array(tst, "r", 1e-17, r, []float64{2, 4, 6})
+	chk.Array(tst, "w", 1e-17, w, []float64{-10, -11, -12})
 }
 
 func Test_basicgeom03(tst *testing.T) {
@@ -101,9 +101,9 @@ func Test_basicgeom03(tst *testing.T) {
 	chk.Scalar(tst, "w.A.X", 1e-17, w.A.X, v.A.X)
 	chk.Scalar(tst, "w.A.Y", 1e-17, w.A.Y, v.A.Y)
 	chk.Scalar(tst, "w.A.Z", 1e-17, w.A.Z, v.A.Z)
-	chk.Vector(tst, "U", 1e-17, U, []float64{3, 0, 0})
-	chk.Vector(tst, "V", 1e-17, V, []float64{3, 4, 0})
-	chk.Vector(tst, "W", 1e-17, W, []float64{6, 8, 0})
+	chk.Array(tst, "U", 1e-17, U, []float64{3, 0, 0})
+	chk.Array(tst, "V", 1e-17, V, []float64{3, 4, 0})
+	chk.Array(tst, "W", 1e-17, W, []float64{6, 8, 0})
 	udotv := VecDot(U, V)
 	udotw := VecDot(U, W)
 	vdotw := VecDot(V, W)
@@ -258,8 +258,8 @@ func Test_basicgeom05(tst *testing.T) {
 	b := &Point{0.1, 0.5, 0.8}
 	c := &Point{1, 1, 1}
 	cmin, cmax := PointsLims([]*Point{o, a, b, c})
-	chk.Vector(tst, "cmin", 1e-17, cmin, []float64{0, 0, 0})
-	chk.Vector(tst, "cmax", 1e-17, cmax, []float64{1, 1, 1})
+	chk.Array(tst, "cmin", 1e-17, cmin, []float64{0, 0, 0})
+	chk.Array(tst, "cmax", 1e-17, cmax, []float64{1, 1, 1})
 	if !IsPointIn(a, cmin, cmax, zero) {
 		chk.Panic("a=%v must be in box")
 	}

@@ -36,8 +36,8 @@ func Test_delaunay01(tst *testing.T) {
 		xout[i] = v[0]
 		yout[i] = v[1]
 	}
-	chk.Vector(tst, "X", 1e-15, xout, X)
-	chk.Vector(tst, "Y", 1e-15, yout, Y)
+	chk.Array(tst, "X", 1e-15, xout, X)
+	chk.Array(tst, "Y", 1e-15, yout, Y)
 	for i, c := range C {
 		io.Pforan("cell %2d : verts = %v\n", i, c)
 	}

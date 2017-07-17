@@ -18,10 +18,10 @@ func TestReadTable01(tst *testing.T) {
 	keys, res := ReadTableOrPanic("data/table01.dat")
 
 	chk.Strings(tst, "keys", keys, []string{"a", "b", "c", "d"})
-	chk.Vector(tst, "a", 1.0e-17, res["a"], []float64{1, 4, 7})
-	chk.Vector(tst, "b", 1.0e-17, res["b"], []float64{2, 5, 8})
-	chk.Vector(tst, "c", 1.0e-17, res["c"], []float64{3, 6, 9})
-	chk.Vector(tst, "d", 1.0e-17, res["d"], []float64{666, 777, 641})
+	chk.Array(tst, "a", 1.0e-17, res["a"], []float64{1, 4, 7})
+	chk.Array(tst, "b", 1.0e-17, res["b"], []float64{2, 5, 8})
+	chk.Array(tst, "c", 1.0e-17, res["c"], []float64{3, 6, 9})
+	chk.Array(tst, "d", 1.0e-17, res["d"], []float64{666, 777, 641})
 }
 
 func TestReadMatrix01(tst *testing.T) {

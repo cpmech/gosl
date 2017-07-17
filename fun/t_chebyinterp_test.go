@@ -55,17 +55,17 @@ func TestChebyInterp01(tst *testing.T) {
 		-8.660254037844387e-01,
 		-9.848077530122080e-01,
 	}
-	chk.Vector(tst, "Gauss-Chebyshev: X", 1e-15, che.X, xref)
+	chk.Array(tst, "Gauss-Chebyshev: X", 1e-15, che.X, xref)
 
 	// Gauss-Chebyshev: check coefficients of interpolant
 	che.CalcCoefI(f)
 	cref := []float64{5.005025576289825e-01, -4.734690106554930e-01, 3.343030345866715e-01, 5.329760324967350e-01, 2.005496385333029e-01, -1.552357980491117e-01, -2.768837833165416e-01, -2.160862487215637e-01, -1.033306390240169e-01}
-	chk.Vector(tst, "Gauss-Chebyshev: CoefI", 1e-14, che.CoefI, cref)
+	chk.Array(tst, "Gauss-Chebyshev: CoefI", 1e-14, che.CoefI, cref)
 
 	// Gauss-Chebyshev: check coefficients of projection
 	che.CalcCoefP(f)
 	cref = []float64{5.003559557885667e-01, -4.738396675676836e-01, 3.337904287575258e-01, 5.326202849023425e-01, 2.014887911962803e-01, -1.505413304349933e-01, -2.650525046501985e-01, -1.959021686279372e-01, -8.320914768336027e-02}
-	chk.Vector(tst, "Gauss-Chebyshev: CoefP", 1e-15, che.CoefP, cref)
+	chk.Array(tst, "Gauss-Chebyshev: CoefP", 1e-15, che.CoefP, cref)
 
 	// Gauss-Lobatto: check points
 	xref = []float64{
@@ -79,16 +79,16 @@ func TestChebyInterp01(tst *testing.T) {
 		-9.238795325112867e-01,
 		-1.000000000000000e+00,
 	}
-	chk.Vector(tst, "Gauss-Lobatto: X", 1e-15, lob.X, xref)
+	chk.Array(tst, "Gauss-Lobatto: X", 1e-15, lob.X, xref)
 
 	// Gauss-Lobatto: check coefficients of interpolant
 	lob.CalcCoefI(f)
 	cref = []float64{4.998505262591759e-01, -4.745223967909372e-01, 3.345788625609180e-01, 5.372649935983991e-01, 2.133118551317398e-01, -1.303539051589940e-01, -2.449269176317319e-01, -2.036386455562469e-01, -8.320813059359007e-02}
-	chk.Vector(tst, "Gauss-Lobatto: CoefI", 1e-15, lob.CoefI, cref)
+	chk.Array(tst, "Gauss-Lobatto: CoefI", 1e-15, lob.CoefI, cref)
 
 	// Gauss-Lobatto: check coefficients of projection
 	lob.CalcCoefP(f)
-	chk.Vector(tst, "Gauss-Lobatto: CoefP", 1e-15, lob.CoefP, che.CoefP)
+	chk.Array(tst, "Gauss-Lobatto: CoefP", 1e-15, lob.CoefP, che.CoefP)
 
 	// Gauss-Chebyshev: estimate error
 	Eproj, _ := che.EstimateMaxErr(f, true)
@@ -178,13 +178,13 @@ func TestChebyInterp02(tst *testing.T) {
 	io.Pf("u  = %.6f\n", u)
 	io.Pfyel("ub = %.6f\n", ub)
 	io.Pfyel("cf = %.6f\n", o.CoefI)
-	chk.Vector(tst, "ub", 1e-15, ub, o.CoefI)
+	chk.Array(tst, "ub", 1e-15, ub, o.CoefI)
 
 	// check inversion
 	uu := la.NewVector(np)
 	la.MatVecMul(uu, 1, o.Ci, ub)
 	io.Pf("uu = %.6f\n", uu)
-	chk.Vector(tst, "uu", 1e-15, uu, u)
+	chk.Array(tst, "uu", 1e-15, uu, u)
 
 	// plot
 	if chk.Verbose {

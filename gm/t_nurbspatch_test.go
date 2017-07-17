@@ -33,10 +33,10 @@ func Test_npatch01(tst *testing.T) {
 
 	// check bins
 	io.Pf("%v\n", patch.Bins)
-	chk.Vector(tst, "Xmin", 1e-15, patch.Bins.Xmin, []float64{-1, -0.5})
-	chk.Vector(tst, "Xmax", 1e-15, patch.Bins.Xmax, []float64{3, 2.5})
-	chk.Vector(tst, "Xdel", 1e-15, patch.Bins.Xdel, []float64{3 + 1, 2.5 + 0.5})
-	chk.Vector(tst, "Size", 1e-15, patch.Bins.Size, []float64{4.0 / 3.0, 3.0 / 3.0})
+	chk.Array(tst, "Xmin", 1e-15, patch.Bins.Xmin, []float64{-1, -0.5})
+	chk.Array(tst, "Xmax", 1e-15, patch.Bins.Xmax, []float64{3, 2.5})
+	chk.Array(tst, "Xdel", 1e-15, patch.Bins.Xdel, []float64{3 + 1, 2.5 + 0.5})
+	chk.Array(tst, "Size", 1e-15, patch.Bins.Size, []float64{4.0 / 3.0, 3.0 / 3.0})
 	chk.Ints(tst, "Npts", patch.Bins.Npts, []int{4, 4})
 	chk.Int(tst, "Nall", len(patch.Bins.All), 4*4)    // there are ghost bins along each direction
 	chk.Int(tst, "Nactive", patch.Bins.Nactive(), 11) // mind the ghost bins

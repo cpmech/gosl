@@ -356,7 +356,7 @@ func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtag
 	io.Pfyel("\nvertices:\n")
 	for i, v := range m.Verts {
 		io.Pf("%+v\n", v)
-		chk.Vector(tst, io.Sf("vertex %2d: X", v.ID), 1e-15, v.X, X[v.ID])
+		chk.Array(tst, io.Sf("vertex %2d: X", v.ID), 1e-15, v.X, X[v.ID])
 		if v.Tag != vtags[i] {
 			tst.Errorf("vtag is incorrect: %d != %d", v.Tag, vtags[i])
 			return
@@ -383,8 +383,8 @@ func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtag
 func checkderived(tst *testing.T, m *Mesh, ndim int, xmin, xmax []float64, allGndim []int, allCoords [][][]float64) {
 	io.Pfyel("\nderived data:\n")
 	chk.Int(tst, "Ndim", m.Ndim, ndim)
-	chk.Vector(tst, "Xmin", 1e-15, m.Xmin, xmin)
-	chk.Vector(tst, "Xmax", 1e-15, m.Xmax, xmax)
+	chk.Array(tst, "Xmin", 1e-15, m.Xmin, xmin)
+	chk.Array(tst, "Xmax", 1e-15, m.Xmax, xmax)
 	for i, c := range m.Cells {
 		chk.Matrix(tst, io.Sf("Cell %d: X", i), 1e-15, c.X, allCoords[i])
 		chk.Int(tst, io.Sf("Cell %d: Gndim", i), c.Gndim, allGndim[i])

@@ -231,7 +231,7 @@ func Test_parsing07(tst *testing.T) {
 	str := "1.0   1111.11 2.0   3.0"
 	res := SplitFloats(str)
 	Pforan("floats = %v\n", res)
-	chk.Vector(tst, "res", 1e-17, res, []float64{1, 1111.11, 2, 3})
+	chk.Array(tst, "res", 1e-17, res, []float64{1, 1111.11, 2, 3})
 
 	str = "1   1111 2  3"
 	ints := SplitInts(str)

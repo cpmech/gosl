@@ -102,10 +102,10 @@ func Test_bins02(tst *testing.T) {
 	io.Pf(bins.Summary())
 	io.Pf("\n")
 	chk.Int(tst, "Ndim", bins.Ndim, 2)
-	chk.Vector(tst, "Xmin", 1e-15, bins.Xmin, []float64{0, 0})
-	chk.Vector(tst, "Xmax", 1e-15, bins.Xmax, []float64{4, 3})
-	chk.Vector(tst, "Xdel", 1e-15, bins.Xdel, []float64{4, 3})
-	chk.Vector(tst, "Size", 1e-15, bins.Size, []float64{4.0 / 5.0, 3.0 / 5.0})
+	chk.Array(tst, "Xmin", 1e-15, bins.Xmin, []float64{0, 0})
+	chk.Array(tst, "Xmax", 1e-15, bins.Xmax, []float64{4, 3})
+	chk.Array(tst, "Xdel", 1e-15, bins.Xdel, []float64{4, 3})
+	chk.Array(tst, "Size", 1e-15, bins.Size, []float64{4.0 / 5.0, 3.0 / 5.0})
 	chk.Ints(tst, "Npts", bins.Npts, []int{6, 6})
 	chk.Int(tst, "Nall", len(bins.All), 6*6) // there are ghost bins along each direction
 	chk.Int(tst, "Nactive", bins.Nactive(), 6)
@@ -206,10 +206,10 @@ func Test_bins03(tst *testing.T) {
 	// check
 	io.Pf("\n")
 	chk.Int(tst, "Ndim", bins.Ndim, 2)
-	chk.Vector(tst, "Xmin", 1e-15, bins.Xmin, []float64{-0.2, -0.2})
-	chk.Vector(tst, "Xmax", 1e-15, bins.Xmax, []float64{0.8, 1.8})
-	chk.Vector(tst, "Xdel", 1e-15, bins.Xdel, []float64{1, 2})
-	chk.Vector(tst, "Size", 1e-15, bins.Size, []float64{1.0 / 5.0, 2.0 / 5.0})
+	chk.Array(tst, "Xmin", 1e-15, bins.Xmin, []float64{-0.2, -0.2})
+	chk.Array(tst, "Xmax", 1e-15, bins.Xmax, []float64{0.8, 1.8})
+	chk.Array(tst, "Xdel", 1e-15, bins.Xdel, []float64{1, 2})
+	chk.Array(tst, "Size", 1e-15, bins.Size, []float64{1.0 / 5.0, 2.0 / 5.0})
 	chk.Ints(tst, "Npts", bins.Npts, []int{6, 6})
 	chk.Int(tst, "Nall", len(bins.All), 6*6) // there are ghost bins along each direction
 	chk.Int(tst, "Nactive", bins.Nactive(), 0)
@@ -427,10 +427,10 @@ func Test_bins06(tst *testing.T) {
 
 	// check
 	chk.Int(tst, "Ndim", bins.Ndim, 3)
-	chk.Vector(tst, "Xmin", 1e-15, bins.Xmin, []float64{5, 5, 5})
-	chk.Vector(tst, "Xmax", 1e-15, bins.Xmax, []float64{10, 10, 10})
-	chk.Vector(tst, "Xdel", 1e-15, bins.Xdel, []float64{5, 5, 5})
-	chk.Vector(tst, "Size", 1e-15, bins.Size, []float64{2.5, 2.5, 2.5})
+	chk.Array(tst, "Xmin", 1e-15, bins.Xmin, []float64{5, 5, 5})
+	chk.Array(tst, "Xmax", 1e-15, bins.Xmax, []float64{10, 10, 10})
+	chk.Array(tst, "Xdel", 1e-15, bins.Xdel, []float64{5, 5, 5})
+	chk.Array(tst, "Size", 1e-15, bins.Size, []float64{2.5, 2.5, 2.5})
 	chk.Ints(tst, "Npts", bins.Npts, []int{3, 3, 3})
 	chk.Int(tst, "Nall", len(bins.All), 27) // there are extra bins along each direction
 	chk.Int(tst, "Nactive", bins.Nactive(), 0)

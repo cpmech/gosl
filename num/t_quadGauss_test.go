@@ -43,10 +43,10 @@ func Test_gaussLegXW01(tst *testing.T) {
 	wRef := []float64{0.0666713443086881, 0.1494513491505806, 0.2190863625159821, 0.2692667193099963, 0.2955242247147529, 0.2955242247147529, 0.2692667193099963, 0.2190863625159821, 0.1494513491505806, 0.0666713443086881}
 
 	xL, wL := GaussLegendreXW(-1, 1, 10)
-	chk.Vector(tst, "xL", 1e-15, xL, xRef)
-	chk.Vector(tst, "wL", 1e-15, wL, wRef)
+	chk.Array(tst, "xL", 1e-15, xL, xRef)
+	chk.Array(tst, "wL", 1e-15, wL, wRef)
 
 	xJ, wJ := GaussJacobiXW(0, 0, 10)
-	chk.Vector(tst, "xJ", 1e-15, xJ, xRef)
-	chk.Vector(tst, "wJ", 1e-14, wJ, wRef)
+	chk.Array(tst, "xJ", 1e-15, xJ, xRef)
+	chk.Array(tst, "wJ", 1e-14, wJ, wRef)
 }

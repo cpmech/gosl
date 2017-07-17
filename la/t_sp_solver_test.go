@@ -41,7 +41,7 @@ func TestSpSolver01(tst *testing.T) {
 	}
 
 	// check
-	chk.Vector(tst, "x", 1e-14, x, []float64{1, 2, 3, 4, 5})
+	chk.Array(tst, "x", 1e-14, x, []float64{1, 2, 3, 4, 5})
 	TestSolverResidual(tst, A.GetDenseMatrix(), x, b, 1e-13)
 }
 
@@ -133,6 +133,6 @@ func TestSpSolver02(tst *testing.T) {
 	}
 
 	// check
-	chk.VectorC(tst, "x", 1e-3, x, xCorrect)
+	chk.ArrayC(tst, "x", 1e-3, x, xCorrect)
 	TestSolverResidualC(tst, A.GetDenseMatrix(), x, b, 1e-12)
 }

@@ -32,8 +32,8 @@ func Test_hc01(tst *testing.T) {
 	dx := (xmax[0] - xmin[0]) / float64(n-1)
 	dy := (xmax[1] - xmin[1]) / float64(n-1)
 	X := HypercubeCoords(x, xmin, xmax)
-	chk.Vector(tst, "x0", 1e-15, X[0], []float64{-1 + dx, -1 + 8*dx, -1 + 4*dx, -1 + 7*dx, -1, -1 + 3*dx, -1 + 2*dx, -1 + 9*dx, -1 + 6*dx, -1 + 5*dx})
-	chk.Vector(tst, "x1", 1e-15, X[1], []float64{2 * dy, 9 * dy, 0, dy, 6 * dy, 3 * dy, 8 * dy, 5 * dy, 4 * dy, 7 * dy})
+	chk.Array(tst, "x0", 1e-15, X[0], []float64{-1 + dx, -1 + 8*dx, -1 + 4*dx, -1 + 7*dx, -1, -1 + 3*dx, -1 + 2*dx, -1 + 9*dx, -1 + 6*dx, -1 + 5*dx})
+	chk.Array(tst, "x1", 1e-15, X[1], []float64{2 * dy, 9 * dy, 0, dy, 6 * dy, 3 * dy, 8 * dy, 5 * dy, 4 * dy, 7 * dy})
 
 	if chk.Verbose {
 		plt.Reset(true, nil)
