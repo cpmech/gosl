@@ -197,6 +197,12 @@ func ArrayC(tst *testing.T, msg string, tol float64, res, correct []complex128) 
 	var diff, maxdiff float64
 	var diffz, maxdiffz float64
 	for i := 0; i < len(res); i++ {
+		if math.IsNaN(real(res[i])) {
+			tst.Errorf("%s failed: NaN detected => %v", msg, res[i])
+		}
+		if math.IsNaN(imag(res[i])) {
+			tst.Errorf("%s failed: NaN detected => %v", msg, res[i])
+		}
 		if zero {
 			diff = math.Abs(real(res[i]))
 			diffz = math.Abs(imag(res[i]))
