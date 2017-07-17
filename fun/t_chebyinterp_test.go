@@ -333,36 +333,25 @@ func checkD1(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 	D1trig = o.D1.GetDeep2()
 	cmpD1(tst, "[flip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
-	// noFlip,nst
+	// nst
 	err = o.CalcD1(false, false, true)
 	chk.EP(err)
 	D1 = o.D1.GetDeep2()
 	err = o.CalcD1(true, false, true)
 	chk.EP(err)
 	D1trig = o.D1.GetDeep2()
-	cmpD1(tst, "[noFlip,nst]", o, D1, D1trig, tolD, tolCmp, verb)
-
-	// flip,nst
-	err = o.CalcD1(false, true, true)
-	chk.EP(err)
-	D1 = o.D1.GetDeep2()
-	err = o.CalcD1(true, true, true)
-	chk.EP(err)
-	D1trig = o.D1.GetDeep2()
-	cmpD1(tst, "[flip,nst]", o, D1, D1trig, tolD, tolCmp, verb)
+	cmpD1(tst, "[---, nst]", o, D1, D1trig, tolD, tolCmp, verb)
 }
 
 func TestChebyInterp04(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("ChebyInterp04. D1 matrix: first derivative of ψ @ nodes")
 
 	// run test
-	Nvals := []int{3}
-	//tolsD := []float64{1e-5, 1e-5, 1e-4, 1e-4}
-	//tolsC := []float64{1e-15, 1e-15, 1e-14, 1e-14}
-	tolsD := []float64{1e-5}
-	tolsC := []float64{1e-15}
+	Nvals := []int{3, 4, 5}
+	tolsD := []float64{1e-5, 1e-5, 1e-4}
+	tolsC := []float64{1e-15, 1e-15, 1e-14}
 	for i, N := range Nvals {
 		checkD1(tst, N, tolsD[i], tolsC[i], chk.Verbose)
 	}
@@ -451,19 +440,11 @@ func checkD1ana(tst *testing.T, N int, f, dfdxAna Ss, tol, tolTrig, tolNst float
 
 	err = o.CalcD1(false, false, true)
 	chk.EP(err)
-	cmpD1ana(tst, "[noTrig, noFlip,   nst]", o, f, dfdxAna, tolNst, verb)
+	cmpD1ana(tst, "[noTrig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 
 	err = o.CalcD1(true, false, true)
 	chk.EP(err)
-	cmpD1ana(tst, "[  trig, noFlip,   nst]", o, f, dfdxAna, tolNst, verb)
-
-	err = o.CalcD1(false, true, true)
-	chk.EP(err)
-	cmpD1ana(tst, "[noTrig,   flip,   nst]", o, f, dfdxAna, tolNst, verb)
-
-	err = o.CalcD1(true, true, true)
-	chk.EP(err)
-	cmpD1ana(tst, "[  trig,   flip,   nst]", o, f, dfdxAna, tolNst, verb)
+	cmpD1ana(tst, "[  trig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 }
 
 func TestChebyInterp06(tst *testing.T) {
