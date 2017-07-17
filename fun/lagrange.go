@@ -52,9 +52,11 @@ var (
 //         SIAM Review Vol. 46, No. 3, pp. 501-517
 //
 type LagrangeInterp struct {
-	N   int       // degree: N = len(X)-1
-	X   []float64 // grid points: len(X) = P+1; generated in [-1, 1]
-	Lam []float64 // λ_i barycentric weights (also w_i in [1])
+	N     int       // degree: N = len(X)-1
+	X     []float64 // grid points: len(X) = P+1; generated in [-1, 1]
+	Lam   []float64 // λ_i barycentric weights (also w_i in [1])
+	Bary  bool      // do not use barycentric formulae in for ℓ_i and I{f} [default=true]
+	Ncomp int       // number of computations
 }
 
 // NewLagrangeInterp allocates a new LagrangeInterp
@@ -71,6 +73,7 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	// allocate
 	o = new(LagrangeInterp)
 	o.N = N
+	o.Bary = true
 
 	// generate grid
 	switch gridType {
@@ -140,10 +143,27 @@ func (o *LagrangeInterp) Om(x float64) (ω float64) {
 //   Output:
 //      lix -- ℓ^X_i(x)
 func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
+
+	// barycentric formula
+	if o.Bary {
+		if math.Abs(x-o.X[i]) < 1e-15 {
+			return 1.0
+		}
+		var sum float64
+		for j := 0; j < o.N+1; j++ {
+			sum += o.Lam[j] / (x - o.X[j])
+			o.Ncomp++
+		}
+		lix = (o.Lam[i] / (x - o.X[i])) / sum
+		return
+	}
+
+	// standard formula
 	lix = 1
 	for j := 0; j < o.N+1; j++ {
 		if i != j {
 			lix *= (x - o.X[j]) / (o.X[i] - o.X[j])
+			o.Ncomp++
 		}
 	}
 	return
@@ -159,6 +179,31 @@ func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 //                    i = 0
 //
 func (o *LagrangeInterp) I(x float64, f Ss) (ix float64, err error) {
+
+	// barycentric formula
+	o.Ncomp = 0
+	if o.Bary {
+		var d, num, den float64
+		for i := 0; i < o.N+1; i++ {
+			fxi, e := f(o.X[i])
+			if e != nil {
+				return 0, e
+			}
+			d = x - o.X[i]
+			if math.Abs(d) < 1e-15 {
+				ix = fxi
+				return
+			}
+			num += fxi * o.Lam[i] / d
+			den += o.Lam[i] / d
+			o.Ncomp++
+			o.Ncomp++
+		}
+		ix = num / den
+		return
+	}
+
+	// standard formula
 	for i := 0; i < o.N+1; i++ {
 		fxi, e := f(o.X[i])
 		if e != nil {
