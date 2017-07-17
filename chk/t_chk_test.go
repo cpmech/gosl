@@ -59,12 +59,6 @@ func TestErr01(tst *testing.T) {
 	PrintFail("hello from PrintFail => ")
 }
 
-func TestCallerInfo(tst *testing.T) {
-	//Verbose = true
-	PrintTitle("CallerInfo")
-	CallerInfo(100)
-}
-
 func TestPanicErr(tst *testing.T) {
 
 	defer func() {
