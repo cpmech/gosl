@@ -243,6 +243,7 @@ func Deep2(tst *testing.T, msg string, tol float64, res, correct [][]float64) {
 			if len(res[i]) != len(correct[i]) {
 				PrintFail("%s  error\n", msg)
 				tst.Errorf("%s failed: slices have different number of columns", msg)
+				return
 			}
 		}
 		for j := 0; j < len(res[i]); j++ {
@@ -281,6 +282,7 @@ func Deep2c(tst *testing.T, msg string, tol float64, res, correct [][]complex128
 			if len(res[i]) != len(correct[i]) {
 				PrintFail("%s  error\n", msg)
 				tst.Errorf("%s failed: slices have different number of columns", msg)
+				return
 			}
 		}
 		for j := 0; j < len(res[i]); j++ {
