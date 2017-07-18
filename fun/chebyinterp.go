@@ -27,7 +27,7 @@ type ChebyInterp struct {
 	Gauss bool // use roots (Gauss) or points (Lobatto)?
 
 	// derived
-	X      []float64 // points. NOTE: this mirrowed version of Chebyshev X; i.e. from +1 to -1
+	X      []float64 // points. NOTE: mirrowed version of Chebyshev X; i.e. from +1 to -1
 	Wb     []float64 // weights for Gaussian quadrature
 	Gamma  []float64 // denominador of coefficients equation ~ ‖p[i]‖²
 	CoefI  []float64 // coefficients of interpolant
@@ -40,8 +40,8 @@ type ChebyInterp struct {
 	// computed
 	C  *la.Matrix // physical to transform space conversion matrix
 	Ci *la.Matrix // transform to physical space conversion matrix
-	D1 *la.Matrix // (dψj/dx)(xi)
-	D2 *la.Matrix // (d²ψj/dx²)(xi)
+	D1 *la.Matrix // (dℓj/dx)(xi)
+	D2 *la.Matrix // (d²ℓj/dx²)(xi)
 }
 
 // NewChebyInterp returns a new ChebyInterp structure
@@ -311,7 +311,7 @@ func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 	return tjm1
 }
 
-// CalcCoefIs computes the coefficients for interpolation with Lagrange cardinal functions ψ_l(x)
+// CalcCoefIs computes the coefficients for interpolation with Lagrange cardinal functions ℓ_l(x)
 func (o *ChebyInterp) CalcCoefIs(f Ss) (err error) {
 	if len(o.CoefIs) != o.N+1 {
 		o.CoefIs = make([]float64, o.N+1)
@@ -325,32 +325,33 @@ func (o *ChebyInterp) CalcCoefIs(f Ss) (err error) {
 	return
 }
 
-// Is computes the interpolation using the Lagrange cardinal functions ψ_l(x)
+// Il computes the interpolation using the Lagrange cardinal functions ℓ_i(x)
 //
 //              N                                         N
-//   I{f}(x) =  Σ   f(x_l) ⋅ ψ_l(x)    or      I{f}(x) =  Σ  CoefIs_l ⋅ ψ_l(x)
-//             l=0                                       l=0
+//   I{f}(x) =  Σ   f(x_i) ⋅ ℓ_i(x)    or      I{f}(x) =  Σ  CoefIs_i ⋅ ℓ_i(x)
+//             l=0                                       i=0
 //
-//   NOTE: CoefIs == f(x_l) coefficients must be computed first
+//   NOTE: (1) CoefIs == f(x_i) coefficients must be computed (or set) first
+//         (2) ℓ is symbolised by ℓ in [1]
 //
-func (o *ChebyInterp) Is(x float64) (res float64) {
+func (o *ChebyInterp) Il(x float64) (res float64) {
 	for l := 0; l < o.N+1; l++ {
-		res += o.CoefIs[l] * o.PsiLobDirect(l, x)
+		res += o.CoefIs[l] * o.L(l, x)
 	}
 	return
 }
 
-// PsiLobDirect evaluates the Lagrange cardinal function ψ_l(x) of degree N with Gauss-Lobatto points
+// L evaluates the Lagrange cardinal function ℓ_i(x) of degree N with Gauss-Lobatto points
 //
 //              N
-//   I{f}(x) =  Σ   f(x_l) ⋅ ψ_l(x)
-//             l=0
+//   I{f}(x) =  Σ   f(x_i) ⋅ ℓ_i(x)
+//             i=0
 //
 //   Equation (2.4.30), page 88 of [1]
 //
 //   NOTE: must not use with Gauss (roots) points
 //
-func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
+func (o *ChebyInterp) L(l int, x float64) float64 {
 	if math.Abs(x-o.X[l]) < 1e-14 {
 		return 1
 	}
@@ -360,9 +361,9 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 	return NegOnePowN(l+1) * (1.0 - x*x) * dTn / (cbl * nn * (x - o.X[l]))
 }
 
-// CalcD1 computes the differentiation matrix D1 of the function PsiLobDirect
+// CalcD1 computes the differentiation matrix D1 of the function L_i
 //
-//    d I{f}(x)     N            d ψ_l(x)
+//    d I{f}(x)     N            d ℓ_l(x)
 //   ——————————— =  Σ   f(x_l) ⋅ ————————
 //        dx       l=0              dx
 //
@@ -372,7 +373,7 @@ func (o *ChebyInterp) PsiLobDirect(l int, x float64) float64 {
 //
 //   where:
 //
-//            dψ_l  |
+//            dℓ_l  |
 //    D1_jl = ————— |
 //             dx   |x=x_j
 //
@@ -519,7 +520,7 @@ func (o *ChebyInterp) flipNstD1(flip, nst bool) {
 
 // CalcD2 calculates the second derivative
 //
-//            d²ψ_l  |
+//            d²ℓ_l  |
 //    D2_jl = —————— |
 //             dx²   |x=x_j
 //

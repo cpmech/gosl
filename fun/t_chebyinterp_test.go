@@ -209,7 +209,7 @@ func TestChebyInterp02(tst *testing.T) {
 	}
 }
 
-// checkIandIs checks I, Is and ψl @ nodes
+// checkIandIs checks I, Is and ℓl @ nodes
 func checkIandIs(tst *testing.T, N int, f Ss, tol float64, verb bool) {
 
 	// allocate
@@ -228,21 +228,21 @@ func checkIandIs(tst *testing.T, N int, f Ss, tol float64, verb bool) {
 	xx := utl.LinSpace(-1, 1, 11)
 	for _, x := range xx {
 		i1 := o.I(x)
-		i2 := o.Is(x)
+		i2 := o.Il(x)
 		chk.AnaNum(tst, "I(x) == Is(x)", 1e-14, i1, i2, chk.Verbose)
 	}
 	if verb {
 		io.Pl()
 	}
 
-	// check ψ @ notes
+	// check ℓ @ notes
 	for k, x := range o.X {
 		for l := 0; l < o.N+1; l++ {
-			res := o.PsiLobDirect(l, x)
+			res := o.L(l, x)
 			if k == l {
-				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==1", l, k), tol, res, 1, verb)
+				chk.AnaNum(tst, io.Sf("ℓ_%d(x_%d)==1", l, k), tol, res, 1, verb)
 			} else {
-				chk.AnaNum(tst, io.Sf("ψ_%d(x_%d)==0", l, k), tol, res, 0, verb)
+				chk.AnaNum(tst, io.Sf("ℓ_%d(x_%d)==0", l, k), tol, res, 0, verb)
 			}
 		}
 		if verb {
@@ -254,7 +254,7 @@ func checkIandIs(tst *testing.T, N int, f Ss, tol float64, verb bool) {
 func TestChebyInterp03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp03. ψ and I(x) versus Is(x)")
+	chk.PrintTitle("ChebyInterp03. ℓ and I(x) versus Is(x)")
 
 	// test function
 	f := func(x float64) (float64, error) {
@@ -278,7 +278,7 @@ func TestChebyInterp03(tst *testing.T) {
 		plt.Reset(true, nil)
 		for l := 0; l < N+1; l++ {
 			for i := 0; i < npts; i++ {
-				yy[i] = o.PsiLobDirect(l, xx[i])
+				yy[i] = o.L(l, xx[i])
 			}
 			plt.Plot(xx, yy, &plt.A{C: plt.C(l, 1), L: io.Sf("l=%d", l), NoClip: true})
 		}
@@ -296,7 +296,7 @@ func cmpD1(tst *testing.T, msg string, o *ChebyInterp, D1, D1trig [][]float64, t
 		xj := o.X[j]
 		for l := 0; l < m; l++ {
 			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, D1[j][l], xj, 1e-2, verb, func(t float64) (float64, error) {
-				return o.PsiLobDirect(l, t), nil
+				return o.L(l, t), nil
 			})
 		}
 	}
@@ -346,7 +346,7 @@ func checkD1(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 func TestChebyInterp04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp04. D1 matrix: first derivative of ψ @ nodes")
+	chk.PrintTitle("ChebyInterp04. D1 matrix: first derivative of ℓ @ nodes")
 
 	// run test
 	Nvals := []int{3, 4, 5}
@@ -373,11 +373,11 @@ func checkD2(tst *testing.T, N int, h, tolD float64, verb bool) {
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < o.N+1; l++ {
-			ψlxjBefore := o.PsiLobDirect(l, xj-h)
-			ψlxjCurrent := o.PsiLobDirect(l, xj)
-			ψlxjAfter := o.PsiLobDirect(l, xj+h)
-			dψldxAtXj := (ψlxjBefore - 2.0*ψlxjCurrent + ψlxjAfter) / hh
-			chk.AnaNum(tst, io.Sf("D2[%d,%d](%+.3f)", j, l, xj), tolD, o.D2.Get(j, l), dψldxAtXj, verb)
+			LlxjBefore := o.L(l, xj-h)
+			LlxjCurrent := o.L(l, xj)
+			LlxjAfter := o.L(l, xj+h)
+			dLldxAtXj := (LlxjBefore - 2.0*LlxjCurrent + LlxjAfter) / hh
+			chk.AnaNum(tst, io.Sf("D2[%d,%d](%+.3f)", j, l, xj), tolD, o.D2.Get(j, l), dLldxAtXj, verb)
 		}
 	}
 	if verb {
@@ -388,7 +388,7 @@ func checkD2(tst *testing.T, N int, h, tolD float64, verb bool) {
 func TestChebyInterp05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp05. Second derivative of ψ")
+	chk.PrintTitle("ChebyInterp05. Second derivative of ℓ")
 
 	// check D2
 	k := 0
@@ -476,7 +476,7 @@ func TestChebyInterp06(tst *testing.T) {
 	xx := utl.LinSpace(-1, 1, 11)
 	for _, x := range xx {
 		i1 := o.I(x)
-		i2 := o.Is(x)
+		i2 := o.Il(x)
 		chk.AnaNum(tst, "I(x) == Is(x)", 1e-14, i1, i2, chk.Verbose)
 	}
 
@@ -495,7 +495,7 @@ func TestChebyInterp06(tst *testing.T) {
 		for i, x := range xx {
 			y1[i], _ = f(x)
 			y2[i] = o.I(x)
-			y3[i] = o.Is(x)
+			y3[i] = o.Il(x)
 			y4[i], _ = g(x)
 		}
 
