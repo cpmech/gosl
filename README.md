@@ -2,7 +2,7 @@
 
 [![GoDoc](https://godoc.org/github.com/cpmech/gosl?status.svg)](https://godoc.org/github.com/cpmech/gosl)
 
-Gosl is a library written in Go (golang) to develop high-performance scientific computing with ease.
+Gosl is a library written in Go to develop high-performance scientific computing with ease.
 The library tries to be as general and _easy_ as possible. Gosl considers the use of both Go
 concurrency routines and parallel computing using the message passing interface. Gosl has several
 modules (sub-libraries/sub-packages) for a variety of tasks in scientific computing, image analysis,
