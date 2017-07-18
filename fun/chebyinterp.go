@@ -16,20 +16,26 @@ import (
 //
 //   Some equations are based on [1]
 //
-//   Reference:
+//   References:
 //     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
 //         Single Domains. Springer. 563p
+//     [2] Webb M, Trefethen LN, Gonnet P (2012) Stability of barycentric interpolation formulas for
+//         extrapolation, SIAM J. Sci. Comput. Vol. 34, No. 6, pp. A3009-A3015
 //
 type ChebyInterp struct {
 
 	// input
 	N     int  // degree of polynomial
 	Gauss bool // use roots (Gauss) or points (Lobatto)?
+	Bary  bool // use barycentric formulae in for ℓ_i and I{f} [default=true]
 
 	// derived
-	X      []float64 // points. NOTE: mirrowed version of Chebyshev X; i.e. from +1 to -1
-	Wb     []float64 // weights for Gaussian quadrature
-	Gamma  []float64 // denominador of coefficients equation ~ ‖p[i]‖²
+	X     []float64 // points. NOTE: mirrowed version of Chebyshev X; i.e. from +1 to -1
+	Wb    []float64 // weights for Gaussian quadrature
+	Gamma []float64 // denominador of coefficients equation ~ ‖p[i]‖²
+	Lam   []float64 // λ_i barycentric weights (also w_i in some papers)
+
+	// computed by auxiliary methods
 	CoefI  []float64 // coefficients of interpolant
 	CoefP  []float64 // coefficients of projection (estimated)
 	CoefIs []float64 // coefficients of interpolation using Lagrange cardinal functions
@@ -66,6 +72,7 @@ func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
 	o = new(ChebyInterp)
 	o.N = N
 	o.Gauss = gaussChebyshev
+	o.Bary = true
 	o.Wb = make([]float64, N+1)
 	o.Gamma = make([]float64, N+1)
 	o.CoefI = make([]float64, N+1)
@@ -94,6 +101,16 @@ func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
 	o.Wb[o.N] = wbN
 	o.Gamma[0] = gam0
 	o.Gamma[o.N] = gamN
+
+	// compute barycentric weights as in [2]
+	n := float64(o.N)
+	m := math.Pow(2, n-1) / n
+	o.Lam = make([]float64, o.N+1)
+	for i := 1; i < o.N; i++ {
+		o.Lam[i] = m * NegOnePowN(i)
+	}
+	o.Lam[0] = m * NegOnePowN(0) / 2.0
+	o.Lam[o.N] = m * NegOnePowN(o.N) / 2.0
 	return
 }
 
@@ -351,14 +368,14 @@ func (o *ChebyInterp) Il(x float64) (res float64) {
 //
 //   NOTE: must not use with Gauss (roots) points
 //
-func (o *ChebyInterp) L(l int, x float64) float64 {
-	if math.Abs(x-o.X[l]) < 1e-14 {
-		return 1
+func (o *ChebyInterp) L(i int, x float64) float64 {
+	if math.Abs(x-o.X[i]) < 1e-15 {
+		return 1.0
 	}
 	nn := float64(o.N * o.N)
-	cbl := o.cbar(l)
+	cbl := o.cbar(i)
 	dTn := ChebyshevTdiff1(o.N, x)
-	return NegOnePowN(l+1) * (1.0 - x*x) * dTn / (cbl * nn * (x - o.X[l]))
+	return NegOnePowN(i+1) * (1.0 - x*x) * dTn / (cbl * nn * (x - o.X[i]))
 }
 
 // CalcD1 computes the differentiation matrix D1 of the function L_i

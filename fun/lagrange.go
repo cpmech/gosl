@@ -56,7 +56,7 @@ type LagrangeInterp struct {
 	X     []float64 // grid points: len(X) = P+1; generated in [-1, 1]
 	Lam   []float64 // λ_i barycentric weights (also w_i in [1])
 	U     []float64 // function evaluated @ nodes: f(x_i)
-	Bary  bool      // do not use barycentric formulae in for ℓ_i and I{f} [default=true]
+	Bary  bool      // use barycentric formulae in for ℓ_i and I{f} [default=true]
 	Ncomp int       // number of computations
 }
 

@@ -42,4 +42,10 @@ func TestLagCheby01(tst *testing.T) {
 	io.Pforan("lag.U = %+8.4f\n", lag.U)
 	io.Pforan("che.U = %+8.4f\n", cheU)
 	chk.Array(tst, "U", 1e-17, lag.U, cheU)
+
+	// check λ values
+	cheL := utl.GetReversed(che.Lam)
+	io.Pforan("lag.λ = %+8.4f\n", lag.Lam)
+	io.Pforan("che.λ = %+8.4f\n", cheL)
+	chk.Array(tst, "λ", 1e-14, lag.Lam, cheL)
 }
