@@ -33,7 +33,7 @@ brew install homebrew/science/suitesparse
 
 ## 3 Go language
 
-Install Go (golang) for macOS from https://golang.org
+Install Go for macOS from https://golang.org
 
 Edit `/Users/name/.bash_profile` (or `/Users/name/.profile`) and add:
 

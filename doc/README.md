@@ -1,10 +1,10 @@
 # Gosl &ndash; Go scientific library
 
-Gosl is a computing library written in go language (golang) to help with the development of software
-for scientific research. The library tries to be as general as possible. The use of concurrency for
-multi-threaded applications and message passing for parallel computations are considered. Functions
-and structures for geometry calculations, random numbers generation and probability distributions,
-optimisation algorithms, and plotting and visualisation are implemented as well.
+Gosl is a computing library written in Go to help with the development of software for scientific
+research. The library tries to be as general as possible. The use of concurrency for multi-threaded
+applications and message passing for parallel computations are considered. Functions and structures
+for geometry calculations, random numbers generation and probability distributions, optimisation
+algorithms, and plotting and visualisation are implemented as well.
 
 [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
 functions and use structures).
