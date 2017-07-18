@@ -12,7 +12,7 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func Test_mylab01(tst *testing.T) {
+func TestMylab01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab01")
@@ -83,7 +83,7 @@ func Test_mylab01(tst *testing.T) {
 	chk.IntDeep2(tst, "Pc", Pc, P)
 }
 
-func Test_mylab03a(tst *testing.T) {
+func TestMylab03a(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab03a. ints: min and max. min and max")
@@ -114,7 +114,7 @@ func Test_mylab03a(tst *testing.T) {
 	}
 }
 
-func Test_mylab03b(tst *testing.T) {
+func TestMylab03b(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab03b. ints: neg out and min and max")
@@ -145,7 +145,7 @@ func Test_mylab03b(tst *testing.T) {
 	chk.Float64(tst, "max(A)", 1e-17, ma, 8)
 }
 
-func Test_mylab04(tst *testing.T) {
+func TestMylab04(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab04")
@@ -205,7 +205,7 @@ func Test_mylab04(tst *testing.T) {
 	}
 }
 
-func Test_mylab05(tst *testing.T) {
+func TestMylab05(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab05. cumsum, gtpenalty")
@@ -249,7 +249,7 @@ func Test_mylab05(tst *testing.T) {
 	chk.Float64(tst, "23 ≥ 123 (m=10)", 1e-18, res, 1000)
 }
 
-func Test_mylab06(tst *testing.T) {
+func TestMylab06(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab06. scaling")
@@ -358,7 +358,7 @@ func Test_copy01(tst *testing.T) {
 	chk.Deep2(tst, "n := m", 1e-17, n, m)
 }
 
-func Test_mylab07(tst *testing.T) {
+func TestMylab07(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab07. get column")
@@ -385,7 +385,7 @@ func Test_mylab07(tst *testing.T) {
 	chk.Array(tst, "v[:,3]", 1e-17, x, []float64{4, 0, 4, 8, 4, -4})
 }
 
-func Test_mylab08(tst *testing.T) {
+func TestMylab08(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab08. dot and cross products")
@@ -413,7 +413,7 @@ func Test_mylab08(tst *testing.T) {
 	chk.Array(tst, "w = u cross v", 1e-17, w, []float64{-10, 13, -2})
 }
 
-func Test_mylab09(tst *testing.T) {
+func TestMylab09(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab09. arg min and max and L2norm")
@@ -431,7 +431,7 @@ func Test_mylab09(tst *testing.T) {
 	chk.Float64(tst, "L2(u,v)", 1e-17, d, 62.912637840103322)
 }
 
-func Test_mylab10(tst *testing.T) {
+func TestMylab10(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab10. bool all true and all false")
@@ -449,7 +449,7 @@ func Test_mylab10(tst *testing.T) {
 	}
 }
 
-func Test_mylab11(tst *testing.T) {
+func TestMylab11(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab11. GetMapped and GetMapped2")
@@ -467,7 +467,7 @@ func Test_mylab11(tst *testing.T) {
 	chk.Deep2(tst, "B", 1e-15, B, [][]float64{{0.1, 1, 10, 100}, {0.2, 1}, {0.3, 30, -0.3}})
 }
 
-func Test_mylab12(tst *testing.T) {
+func TestMylab12(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("mylab12. IntRange3")
@@ -479,4 +479,14 @@ func Test_mylab12(tst *testing.T) {
 	J := IntRange3(0, -21, -5)
 	io.Pf("J = %v\n", J)
 	chk.Ints(tst, "J", J, []int{0, -5, -10, -15})
+}
+
+func TestMylab13(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab13. GetReversed")
+
+	a := []float64{1, 2, 3, 4, 5}
+	b := GetReversed(a)
+	chk.Array(tst, "rev(a)", 1e-17, b, []float64{5, 4, 3, 2, 1})
 }

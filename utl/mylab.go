@@ -260,6 +260,16 @@ func GetCopy(in []float64) (out []float64) {
 	return
 }
 
+// GetReversed return a copy with reversed items
+func GetReversed(in []float64) (out []float64) {
+	n := len(in)
+	out = make([]float64, n)
+	for i := 0; i < n; i++ {
+		out[n-1-i] = in[i]
+	}
+	return
+}
+
 // Clone allocates and clones a matrix of float64
 func Clone(a [][]float64) (b [][]float64) {
 	b = make([][]float64, len(a))
