@@ -74,3 +74,49 @@ func TestAuxFuncs01(tst *testing.T) {
 		return
 	}
 }
+
+func TestMinMax01(tst *testing.T) {
+
+	//chk.Verbose = true
+	chk.PrintTitle("MinMax01")
+
+	if Imin(1, 2) != 1 {
+		tst.Errorf("Imin() failed\n")
+		return
+	}
+
+	if Imin(2, 1) != 1 {
+		tst.Errorf("Imin() failed\n")
+		return
+	}
+
+	if Imax(1, 2) != 2 {
+		tst.Errorf("Imax() failed\n")
+		return
+	}
+
+	if Imax(2, 1) != 2 {
+		tst.Errorf("Imax() failed\n")
+		return
+	}
+
+	if Min(1, 2) != 1 {
+		tst.Errorf("Min() failed\n")
+		return
+	}
+
+	if Min(2, 1) != 1 {
+		tst.Errorf("Min() failed\n")
+		return
+	}
+
+	if Max(1, 2) != 2 {
+		tst.Errorf("Max() failed\n")
+		return
+	}
+
+	if Max(2, 1) != 2 {
+		tst.Errorf("Max() failed\n")
+		return
+	}
+}
