@@ -14,5 +14,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="NonlinSpace03"
+    go test -test.run="EncDec02"
 done

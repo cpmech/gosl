@@ -20,16 +20,16 @@ type Decoder interface {
 	Decode(e interface{}) error
 }
 
-// GetEncoder returns a new encoder
-func GetEncoder(w goio.Writer, enctype string) Encoder {
+// NewEncoder returns a new encoder
+func NewEncoder(w goio.Writer, enctype string) Encoder {
 	if enctype == "json" {
 		return json.NewEncoder(w)
 	}
 	return gob.NewEncoder(w)
 }
 
-// GetDecoder returns a new decoder
-func GetDecoder(r goio.Reader, enctype string) Decoder {
+// NewDecoder returns a new decoder
+func NewDecoder(r goio.Reader, enctype string) Decoder {
 	if enctype == "json" {
 		return json.NewDecoder(r)
 	}
