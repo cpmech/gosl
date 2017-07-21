@@ -5,10 +5,7 @@
 package utl
 
 import (
-	"sort"
 	"time"
-
-	"github.com/cpmech/gosl/chk"
 )
 
 // IntMinMax returns the maximum and minimum elements in v
@@ -79,38 +76,6 @@ func IntIndexSmall(a []int, val int) int {
 		}
 	}
 	return -1 // not found
-}
-
-// IntIndexSorted finds the index of an item in a slice of ints by means of
-// searching a sorted list (given or computed here)
-//  Input:
-//   a         -- the list
-//   val       -- value to be searched for
-//   aSortedIn -- an existing sorted 'a' list or <nil>
-//  Output:
-//   idx        -- position in 'a' where val is located if found; otherwise returns -1
-//   aSortedOut -- sorted list if the input aSortedIn is <nil>
-//  Note: If you were to sort the array with MergeSort or any other O(nlogn) algorithm then
-//        the complexity would be O(nlogn).
-//        O(logn) < O(n) < O(nlogn)
-//
-//  TODO: this function is finished yet
-//
-func IntIndexSorted(a []int, val int, aSortedIn []int) (idx int, aSortedOut []int) {
-	chk.Panic("this function is not implemented yet")
-	aSortedOut = aSortedIn
-	if aSortedIn == nil {
-		aSortedOut = make([]int, len(a))
-		copy(aSortedOut, a)
-		sort.Ints(aSortedOut)
-	}
-	idx = -1 // not found
-	idxInSorted := sort.SearchInts(aSortedOut, val)
-	if idxInSorted < len(aSortedOut) && aSortedOut[idxInSorted] == val { // found in sorted list
-		// TODO: convert index in sorted list into index in original list
-		return
-	}
-	return
 }
 
 // IntFilter filters out components in slice
