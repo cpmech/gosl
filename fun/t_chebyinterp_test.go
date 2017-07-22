@@ -524,7 +524,7 @@ func TestChebyInterp06(tst *testing.T) {
 	}
 }
 
-func calcD1error(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64) {
+func calcD1errorChe(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64) {
 
 	// allocate polynomial
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
@@ -575,12 +575,12 @@ func TestChebyInterp07(tst *testing.T) {
 		for i, N := range Nvals {
 			nn[i] = float64(N)
 
-			eeA[i] = calcD1error(N, f, g, false, false, false)
-			eeB[i] = calcD1error(N, f, g, true, false, false)
-			eeC[i] = calcD1error(N, f, g, false, true, false)
-			eeD[i] = calcD1error(N, f, g, true, true, false)
-			eeE[i] = calcD1error(N, f, g, false, dummy, true)
-			eeF[i] = calcD1error(N, f, g, true, dummy, true)
+			eeA[i] = calcD1errorChe(N, f, g, false, false, false)
+			eeB[i] = calcD1errorChe(N, f, g, true, false, false)
+			eeC[i] = calcD1errorChe(N, f, g, false, true, false)
+			eeD[i] = calcD1errorChe(N, f, g, true, true, false)
+			eeE[i] = calcD1errorChe(N, f, g, false, dummy, true)
+			eeF[i] = calcD1errorChe(N, f, g, true, dummy, true)
 
 			io.Pf("%4d: %.2e  %.2e  %.2e  %.2e  %.2e  %.2e\n", N,
 				eeA[i], eeB[i], eeC[i], eeD[i], eeE[i], eeF[i])
