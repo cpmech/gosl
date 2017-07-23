@@ -41,8 +41,8 @@ func TestLagCardinal01(tst *testing.T) {
 		}
 	}
 
-	// check Kronecker property not using barycentic formula
-	o.Bary = false
+	// check Kronecker property (barycentic, notLog)
+	o.CalcBary(false)
 	for i := 0; i < N+1; i++ {
 		for j, x := range o.X {
 			li := o.L(i, x)
@@ -58,9 +58,33 @@ func TestLagCardinal01(tst *testing.T) {
 	xx := utl.LinSpace(-1, 1, 11)
 	for _, x := range xx {
 		for i := 0; i < N+1; i++ {
-			o.Bary = true
+			o.UseBary = true
 			li1 := o.L(i, x)
-			o.Bary = false
+			o.UseBary = false
+			li2 := o.L(i, x)
+			chk.AnaNum(tst, io.Sf("l%d", i), 1e-15, li1, li2, chk.Verbose)
+		}
+	}
+
+	// check Kronecker property (barycentic, log)
+	o.CalcBary(true)
+	for i := 0; i < N+1; i++ {
+		for j, x := range o.X {
+			li := o.L(i, x)
+			ana := 1.0
+			if i != j {
+				ana = 0
+			}
+			chk.AnaNum(tst, io.Sf("L^%d_%d(X[%d])", N, i, j), 1e-17, li, ana, false)
+		}
+	}
+
+	// compare formulae
+	for _, x := range xx {
+		for i := 0; i < N+1; i++ {
+			o.UseBary = true
+			li1 := o.L(i, x)
+			o.UseBary = false
 			li2 := o.L(i, x)
 			chk.AnaNum(tst, io.Sf("l%d", i), 1e-15, li1, li2, chk.Verbose)
 		}
@@ -296,7 +320,7 @@ func TestLagInterp04(tst *testing.T) {
 	}
 }
 
-func checkLam(tst *testing.T, o *LagrangeInterp) {
+func checkLam(tst *testing.T, o *LagrangeInterp, tol float64) {
 	λ := make([]float64, o.N+1)
 	for i := 0; i < o.N+1; i++ {
 		λ[i] = 1
@@ -316,7 +340,88 @@ func checkLam(tst *testing.T, o *LagrangeInterp) {
 	//d := 16.0 / 3.0
 	//λ = []float64{8.0 / 3.0, -d, d, -d, d, -d, 8.0 / 3.0}
 	//}
-	chk.Array(tst, "λ", 1e-17, o.Lam, λ)
+	chk.Array(tst, "λ", tol, o.Lam, λ)
+}
+
+func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
+
+	// allocate structure and calculate U
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	chk.EP(err)
+	err = o.CalcU(f)
+	chk.EP(err)
+
+	// check interpolation
+	for i, x := range o.X {
+		ynum, err := o.I(x, f)
+		chk.EP(err)
+		yana, _ := f(x)
+		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
+	}
+
+	// -------------- barycentric: std method ---------------------------
+
+	// check λ (std method)
+	io.Pl()
+	o.CalcBary(false)
+	io.Pforan("λ[std] = %v\n", o.Lam)
+	checkLam(tst, o, 1e-17)
+
+	// check interpolation
+	io.Pl()
+	for i, x := range o.X {
+		ynum, err := o.I(x, f)
+		chk.EP(err)
+		yana, _ := f(x)
+		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
+	}
+
+	// compare formulae
+	io.Pl()
+	xx := utl.LinSpace(-1, 1, 14)
+	for _, x := range xx {
+		for i := 0; i < o.N+1; i++ {
+			o.UseBary = true
+			i1, err := o.I(x, f)
+			chk.EP(err)
+			o.UseBary = false
+			i2, err := o.I(x, f)
+			chk.EP(err)
+			chk.AnaNum(tst, io.Sf("I%d", i), 1e-15, i1, i2, false)
+		}
+	}
+
+	// -------------- barycentric: log method ---------------------------
+
+	// check λ (log method)
+	io.Pl()
+	o.CalcBary(true)
+	io.Pforan("λ[log] = %v\n", o.Lam)
+	checkLam(tst, o, tolLam)
+
+	// check interpolation
+	io.Pl()
+	for i, x := range o.X {
+		ynum, err := o.I(x, f)
+		chk.EP(err)
+		yana, _ := f(x)
+		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
+	}
+
+	// compare formulae
+	io.Pl()
+	for _, x := range xx {
+
+		for i := 0; i < o.N+1; i++ {
+			o.UseBary = true
+			i1, err := o.I(x, f)
+			chk.EP(err)
+			o.UseBary = false
+			i2, err := o.I(x, f)
+			chk.EP(err)
+			chk.AnaNum(tst, io.Sf("I%d", i), 1e-15, i1, i2, false)
+		}
+	}
 }
 
 func TestLagInterp05(tst *testing.T) {
@@ -329,46 +434,11 @@ func TestLagInterp05(tst *testing.T) {
 		return math.Cos(math.Exp(2.0 * x)), nil
 	}
 
-	// allocate structure and calculate U
-	N := 6
-	kind := ChebyGaussLobGridKind
-	o, err := NewLagrangeInterp(N, kind)
-	chk.EP(err)
-	err = o.CalcU(f)
-	chk.EP(err)
-
-	// check λ
-	checkLam(tst, o)
-
-	// check interpolation
-	for i, x := range o.X {
-		ynum, err := o.I(x, f)
-		chk.EP(err)
-		yana, _ := f(x)
-		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
-	}
-	io.Pl()
-
-	o.Bary = false
-	o.I(0.1, f)
-	io.Pforan("Ncomp [std]  = %v\n", o.Ncomp)
-
-	o.Bary = true
-	o.I(0.1, f)
-	io.Pforan("Ncomp [bary] = %v\n", o.Ncomp)
-
-	// compare formulae
-	xx := utl.LinSpace(-1, 1, 14)
-	for _, x := range xx {
-		//io.Pfblue2("x = %v\n", x)
-		for i := 0; i < N+1; i++ {
-			o.Bary = true
-			i1, err := o.I(x, f)
-			chk.EP(err)
-			o.Bary = false
-			i2, err := o.I(x, f)
-			chk.EP(err)
-			chk.AnaNum(tst, io.Sf("I%d", i), 1e-15, i1, i2, false)
-		}
+	// test
+	Nvals := []int{3, 4, 5, 6, 7, 8}
+	tols := []float64{1e-15, 1e-15, 1e-15, 1e-15, 1e-14, 1e-14}
+	for k, N := range Nvals {
+		io.Pf("\n\n-------------------------------- N = %d -----------------------------------------------\n\n", N)
+		checkIandLam(tst, N, tols[k], f)
 	}
 }

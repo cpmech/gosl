@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -52,12 +53,17 @@ var (
 //         SIAM Review Vol. 46, No. 3, pp. 501-517
 //
 type LagrangeInterp struct {
-	N     int       // degree: N = len(X)-1
-	X     []float64 // grid points: len(X) = P+1; generated in [-1, 1]
-	Lam   []float64 // λ_i barycentric weights (also w_i in [1])
-	U     []float64 // function evaluated @ nodes: f(x_i)
-	Bary  bool      // use barycentric formulae in for ℓ_i and I{f} [default=true]
-	Ncomp int       // number of computations
+
+	// general
+	N int       // degree: N = len(X)-1
+	X la.Vector // grid points: len(X) = P+1; generated in [-1, 1]
+	U la.Vector // function evaluated @ nodes: f(x_i)
+
+	// barycentric
+	UseBary bool      // use barycentric weights
+	useLogx bool      // use log method to compute barycentric weights and ratio
+	Lam     la.Vector // λ_i barycentric weights (also w_i in [1]) [after Bary]
+	Eta     la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)  [after Bary]
 }
 
 // NewLagrangeInterp allocates a new LagrangeInterp
@@ -74,7 +80,6 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	// allocate
 	o = new(LagrangeInterp)
 	o.N = N
-	o.Bary = true
 
 	// generate grid
 	switch gridType {
@@ -87,24 +92,51 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	default:
 		return nil, chk.Err("cannot create grid type %q\n", gridType)
 	}
+	return
+}
 
-	// compute barycentric weights as in [1]
+// CalcBary calculates barycentric weights λ and activates use of λ in interpolation and derivatives
+//   useBary -- activates/deactivates use of barycentric weights
+//   useLogx -- use the "log(|xk-xj|)" method to avoid round-off errors with large N
+func (o *LagrangeInterp) CalcBary(useLogx bool) (err error) {
+
+	// setup
+	o.UseBary = true
+	o.useLogx = useLogx
+
+	// setup and allocate arrays
 	o.Lam = make([]float64, o.N+1)
+	o.Eta = make([]float64, o.N+1)
+
+	// compute η and use log method
+	if o.useLogx {
+		for k := 0; k < o.N+1; k++ {
+			for j := 0; j < o.N+1; j++ {
+				if j != k {
+					o.Eta[k] += math.Log(math.Abs(o.X[k] - o.X[j]))
+				}
+			}
+			io.Pl()
+		}
+		for k := 0; k < o.N+1; k++ {
+			o.Lam[k] = 1.0 / (NegOnePowN(k+o.N) * math.Exp(o.Eta[k]))
+			if math.IsInf(o.Lam[k], 0) {
+				return chk.Err("λ%d is infinite: %v\n", k, o.Lam[k])
+			}
+		}
+		return
+	}
+
+	// "standard" method
 	o.Lam[0] = 1
-	n := 0
 	for j := 1; j < o.N+1; j++ {
 		for k := 0; k < j; k++ {
-			//io.Pf("λ%d *= (x%d - x%d)\n", k, k, j)
 			o.Lam[k] *= (o.X[k] - o.X[j])
-			n++
 		}
 		o.Lam[j] = 1
 		for k := 0; k < j; k++ {
-			//io.Pfyel("λ%d *= (x%d - x%d)\n", j, j, k)
 			o.Lam[j] *= (o.X[j] - o.X[k])
-			n++
 		}
-		//io.Pl()
 	}
 	for j := 0; j < o.N+1; j++ {
 		o.Lam[j] = 1.0 / o.Lam[j]
@@ -146,14 +178,13 @@ func (o *LagrangeInterp) Om(x float64) (ω float64) {
 func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 
 	// barycentric formula
-	if o.Bary {
+	if o.UseBary {
 		if math.Abs(x-o.X[i]) < 1e-15 {
 			return 1.0
 		}
 		var sum float64
 		for j := 0; j < o.N+1; j++ {
 			sum += o.Lam[j] / (x - o.X[j])
-			o.Ncomp++
 		}
 		lix = (o.Lam[i] / (x - o.X[i])) / sum
 		return
@@ -164,7 +195,6 @@ func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 	for j := 0; j < o.N+1; j++ {
 		if i != j {
 			lix *= (x - o.X[j]) / (o.X[i] - o.X[j])
-			o.Ncomp++
 		}
 	}
 	return
@@ -199,8 +229,7 @@ func (o *LagrangeInterp) CalcU(f Ss) (err error) {
 func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 
 	// barycentric formula
-	o.Ncomp = 0
-	if o.Bary {
+	if o.UseBary {
 		var d, num, den float64
 		for i := 0; i < o.N+1; i++ {
 			d = x - o.X[i]
@@ -210,8 +239,6 @@ func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 			}
 			num += o.U[i] * o.Lam[i] / d
 			den += o.Lam[i] / d
-			o.Ncomp++
-			o.Ncomp++
 		}
 		res = num / den
 		return
