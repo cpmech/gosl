@@ -72,7 +72,7 @@ type LagrangeInterp struct {
 //   gridType -- type of grid; e.g. uniform
 //   useLogx  -- use ln(|xk-xl|) method to compute λk
 //   NOTE: the grid will be generated in [-1, 1]
-func NewLagrangeInterp(N int, gridType io.Enum, useLogx bool) (o *LagrangeInterp, err error) {
+func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 
 	// check
 	if N < 0 {
@@ -327,7 +327,7 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 func PlotLagInterpL(N int, gridType io.Enum) {
 	xx := utl.LinSpace(-1, 1, 201)
 	yy := make([]float64, len(xx))
-	o, _ := NewLagrangeInterp(N, gridType, false)
+	o, _ := NewLagrangeInterp(N, gridType)
 	for n := 0; n < N+1; n++ {
 		for k, x := range xx {
 			yy[k] = o.L(n, x)
@@ -346,7 +346,7 @@ func PlotLagInterpW(N int, gridType io.Enum) {
 	npts := 201
 	xx := utl.LinSpace(-1, 1, npts)
 	yy := make([]float64, len(xx))
-	o, _ := NewLagrangeInterp(N, gridType, false)
+	o, _ := NewLagrangeInterp(N, gridType)
 	for k, x := range xx {
 		yy[k] = o.Om(x)
 	}
@@ -371,7 +371,7 @@ func PlotLagInterpI(Nvalues []int, gridType io.Enum, f Ss) {
 	iy := make([]float64, len(xx))
 	plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
 	for _, N := range Nvalues {
-		p, err := NewLagrangeInterp(N, gridType, false)
+		p, err := NewLagrangeInterp(N, gridType)
 		chk.EP(err)
 		p.CalcU(f)
 		chk.EP(err)

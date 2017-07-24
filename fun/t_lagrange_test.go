@@ -22,7 +22,7 @@ func TestLagCardinal01(tst *testing.T) {
 	// allocate structure
 	N := 5
 	kind := UniformGridKind
-	o, err := NewLagrangeInterp(N, kind, false)
+	o, err := NewLagrangeInterp(N, kind)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
@@ -88,7 +88,7 @@ func TestLagInterp01(tst *testing.T) {
 	// allocate structure and calculate U
 	N := 5
 	kind := UniformGridKind
-	o, err := NewLagrangeInterp(N, kind, false)
+	o, err := NewLagrangeInterp(N, kind)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -126,7 +126,7 @@ func TestLagInterp02(tst *testing.T) {
 	// allocate structure and calculate U
 	N := 8
 	kind := UniformGridKind
-	o, err := NewLagrangeInterp(N, kind, false)
+	o, err := NewLagrangeInterp(N, kind)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -172,7 +172,7 @@ func TestLagInterp03(tst *testing.T) {
 	// allocate structure and calculate U
 	N := 8
 	kind := ChebyGaussGridKind
-	o, err := NewLagrangeInterp(N, kind, false)
+	o, err := NewLagrangeInterp(N, kind)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -189,7 +189,7 @@ func TestLagInterp03(tst *testing.T) {
 	// check Lebesgue constants and compute max error
 	ΛN := []float64{1.988854381999833e+00, 2.361856787767076e+00, 3.011792612349363e+00}
 	for i, n := range []int{4, 8, 24} {
-		p, err := NewLagrangeInterp(n, kind, false)
+		p, err := NewLagrangeInterp(n, kind)
 		chk.EP(err)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-13, p.EstimateLebesgue(), ΛN[i])
 	}
@@ -213,7 +213,7 @@ func TestLagInterp03(tst *testing.T) {
 		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
-			p, err := NewLagrangeInterp(int(n), kind, false)
+			p, err := NewLagrangeInterp(int(n), kind)
 			chk.EP(err)
 			err = p.CalcU(f)
 			chk.EP(err)
@@ -241,7 +241,7 @@ func TestLagInterp04(tst *testing.T) {
 	// allocate structure and calculate U
 	N := 8
 	kind := ChebyGaussLobGridKind
-	o, err := NewLagrangeInterp(N, kind, false)
+	o, err := NewLagrangeInterp(N, kind)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -258,7 +258,7 @@ func TestLagInterp04(tst *testing.T) {
 	// check Lebesgue constants and compute max error
 	ΛN := []float64{1.798761778849085e+00, 2.274730699116020e+00, 2.984443326362511e+00}
 	for i, n := range []int{4, 8, 24} {
-		p, err := NewLagrangeInterp(n, kind, false)
+		p, err := NewLagrangeInterp(n, kind)
 		chk.EP(err)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-14, p.EstimateLebesgue(), ΛN[i])
 	}
@@ -282,7 +282,7 @@ func TestLagInterp04(tst *testing.T) {
 		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
-			p, err := NewLagrangeInterp(int(n), kind, false)
+			p, err := NewLagrangeInterp(int(n), kind)
 			chk.EP(err)
 			err = p.CalcU(f)
 			chk.EP(err)
@@ -312,7 +312,7 @@ func checkLam(tst *testing.T, o *LagrangeInterp, tol float64) {
 func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 
 	// allocate structure and calculate U
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind, false)
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -375,7 +375,7 @@ func TestLagInterp05(tst *testing.T) {
 func checkD1lag(tst *testing.T, N int, tol float64) {
 
 	// allocate structure
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind, false)
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
 	chk.EP(err)
 
 	// calc and check D1
