@@ -26,7 +26,7 @@ func TestLagCheby01(tst *testing.T) {
 	// allocate Lagrange structure and calculate U
 	N := 7
 	kind := ChebyGaussLobGridKind
-	lag, err := NewLagrangeInterp(N, kind)
+	lag, err := NewLagrangeInterp(N, kind, false)
 	chk.EP(err)
 	err = lag.CalcU(f)
 	chk.EP(err)

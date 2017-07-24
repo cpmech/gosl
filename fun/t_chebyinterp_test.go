@@ -306,7 +306,7 @@ func cmpD1(tst *testing.T, msg string, o *ChebyInterp, D1, D1trig [][]float64, t
 	chk.Deep2(tst, "D1 vs. D1trig "+msg, tolCmp, D1, D1trig)
 }
 
-func checkD1(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
+func checkD1che(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 
 	// allocate
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
@@ -353,7 +353,7 @@ func TestChebyInterp04(tst *testing.T) {
 	tolsD := []float64{1e-5, 1e-5, 1e-4}
 	tolsC := []float64{1e-15, 1e-15, 1e-14}
 	for i, N := range Nvals {
-		checkD1(tst, N, tolsD[i], tolsC[i], chk.Verbose)
+		checkD1che(tst, N, tolsD[i], tolsC[i], chk.Verbose)
 	}
 }
 

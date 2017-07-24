@@ -22,14 +22,15 @@ func TestLagCardinal01(tst *testing.T) {
 	// allocate structure
 	N := 5
 	kind := UniformGridKind
-	o, err := NewLagrangeInterp(N, kind)
+	o, err := NewLagrangeInterp(N, kind, false)
 	if err != nil {
 		tst.Errorf("%v\n", err)
 		return
 	}
 	chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-15, o.EstimateLebesgue(), 3.106301040275436e+00)
 
-	// check Kronecker property
+	// check Kronecker property (barycentic)
+	o.Bary = true
 	for i := 0; i < N+1; i++ {
 		for j, x := range o.X {
 			li := o.L(i, x)
@@ -41,8 +42,8 @@ func TestLagCardinal01(tst *testing.T) {
 		}
 	}
 
-	// check Kronecker property (barycentic, notLog)
-	o.CalcBary(false)
+	// check Kronecker property
+	o.Bary = false
 	for i := 0; i < N+1; i++ {
 		for j, x := range o.X {
 			li := o.L(i, x)
@@ -58,33 +59,9 @@ func TestLagCardinal01(tst *testing.T) {
 	xx := utl.LinSpace(-1, 1, 11)
 	for _, x := range xx {
 		for i := 0; i < N+1; i++ {
-			o.UseBary = true
+			o.Bary = true
 			li1 := o.L(i, x)
-			o.UseBary = false
-			li2 := o.L(i, x)
-			chk.AnaNum(tst, io.Sf("l%d", i), 1e-15, li1, li2, chk.Verbose)
-		}
-	}
-
-	// check Kronecker property (barycentic, log)
-	o.CalcBary(true)
-	for i := 0; i < N+1; i++ {
-		for j, x := range o.X {
-			li := o.L(i, x)
-			ana := 1.0
-			if i != j {
-				ana = 0
-			}
-			chk.AnaNum(tst, io.Sf("L^%d_%d(X[%d])", N, i, j), 1e-17, li, ana, false)
-		}
-	}
-
-	// compare formulae
-	for _, x := range xx {
-		for i := 0; i < N+1; i++ {
-			o.UseBary = true
-			li1 := o.L(i, x)
-			o.UseBary = false
+			o.Bary = false
 			li2 := o.L(i, x)
 			chk.AnaNum(tst, io.Sf("l%d", i), 1e-15, li1, li2, chk.Verbose)
 		}
@@ -111,7 +88,7 @@ func TestLagInterp01(tst *testing.T) {
 	// allocate structure and calculate U
 	N := 5
 	kind := UniformGridKind
-	o, err := NewLagrangeInterp(N, kind)
+	o, err := NewLagrangeInterp(N, kind, false)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -149,7 +126,7 @@ func TestLagInterp02(tst *testing.T) {
 	// allocate structure and calculate U
 	N := 8
 	kind := UniformGridKind
-	o, err := NewLagrangeInterp(N, kind)
+	o, err := NewLagrangeInterp(N, kind, false)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -195,7 +172,7 @@ func TestLagInterp03(tst *testing.T) {
 	// allocate structure and calculate U
 	N := 8
 	kind := ChebyGaussGridKind
-	o, err := NewLagrangeInterp(N, kind)
+	o, err := NewLagrangeInterp(N, kind, false)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -212,7 +189,7 @@ func TestLagInterp03(tst *testing.T) {
 	// check Lebesgue constants and compute max error
 	ΛN := []float64{1.988854381999833e+00, 2.361856787767076e+00, 3.011792612349363e+00}
 	for i, n := range []int{4, 8, 24} {
-		p, err := NewLagrangeInterp(n, kind)
+		p, err := NewLagrangeInterp(n, kind, false)
 		chk.EP(err)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-13, p.EstimateLebesgue(), ΛN[i])
 	}
@@ -236,7 +213,7 @@ func TestLagInterp03(tst *testing.T) {
 		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
-			p, err := NewLagrangeInterp(int(n), kind)
+			p, err := NewLagrangeInterp(int(n), kind, false)
 			chk.EP(err)
 			err = p.CalcU(f)
 			chk.EP(err)
@@ -264,7 +241,7 @@ func TestLagInterp04(tst *testing.T) {
 	// allocate structure and calculate U
 	N := 8
 	kind := ChebyGaussLobGridKind
-	o, err := NewLagrangeInterp(N, kind)
+	o, err := NewLagrangeInterp(N, kind, false)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -281,7 +258,7 @@ func TestLagInterp04(tst *testing.T) {
 	// check Lebesgue constants and compute max error
 	ΛN := []float64{1.798761778849085e+00, 2.274730699116020e+00, 2.984443326362511e+00}
 	for i, n := range []int{4, 8, 24} {
-		p, err := NewLagrangeInterp(n, kind)
+		p, err := NewLagrangeInterp(n, kind, false)
 		chk.EP(err)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-14, p.EstimateLebesgue(), ΛN[i])
 	}
@@ -305,7 +282,7 @@ func TestLagInterp04(tst *testing.T) {
 		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
-			p, err := NewLagrangeInterp(int(n), kind)
+			p, err := NewLagrangeInterp(int(n), kind, false)
 			chk.EP(err)
 			err = p.CalcU(f)
 			chk.EP(err)
@@ -343,32 +320,33 @@ func checkLam(tst *testing.T, o *LagrangeInterp, tol float64) {
 	chk.Array(tst, "λ", tol, o.Lam, λ)
 }
 
-func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
+func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss, useLogx bool) {
 
 	// allocate structure and calculate U
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind, useLogx)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
 
-	// check interpolation
+	// check interpolation (std)
+	o.Bary = false
 	for i, x := range o.X {
 		ynum, err := o.I(x, f)
 		chk.EP(err)
 		yana, _ := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
 	}
-
-	// -------------- barycentric: std method ---------------------------
 
 	// check λ (std method)
-	io.Pl()
-	o.CalcBary(false)
-	io.Pforan("λ[std] = %v\n", o.Lam)
-	checkLam(tst, o, 1e-17)
+	msg := "std"
+	if useLogx {
+		msg = "log"
+	}
+	io.Pforan(msg+"λ["+msg+"] = %v\n", o.Lam)
+	checkLam(tst, o, tolLam)
 
-	// check interpolation
-	io.Pl()
+	// check interpolation (barycentric)
+	o.Bary = true
 	for i, x := range o.X {
 		ynum, err := o.I(x, f)
 		chk.EP(err)
@@ -376,47 +354,14 @@ func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
 	}
 
-	// compare formulae
-	io.Pl()
+	// compare std and barycentric
 	xx := utl.LinSpace(-1, 1, 14)
 	for _, x := range xx {
 		for i := 0; i < o.N+1; i++ {
-			o.UseBary = true
+			o.Bary = false
 			i1, err := o.I(x, f)
 			chk.EP(err)
-			o.UseBary = false
-			i2, err := o.I(x, f)
-			chk.EP(err)
-			chk.AnaNum(tst, io.Sf("I%d", i), 1e-15, i1, i2, false)
-		}
-	}
-
-	// -------------- barycentric: log method ---------------------------
-
-	// check λ (log method)
-	io.Pl()
-	o.CalcBary(true)
-	io.Pforan("λ[log] = %v\n", o.Lam)
-	checkLam(tst, o, tolLam)
-
-	// check interpolation
-	io.Pl()
-	for i, x := range o.X {
-		ynum, err := o.I(x, f)
-		chk.EP(err)
-		yana, _ := f(x)
-		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
-	}
-
-	// compare formulae
-	io.Pl()
-	for _, x := range xx {
-
-		for i := 0; i < o.N+1; i++ {
-			o.UseBary = true
-			i1, err := o.I(x, f)
-			chk.EP(err)
-			o.UseBary = false
+			o.Bary = true
 			i2, err := o.I(x, f)
 			chk.EP(err)
 			chk.AnaNum(tst, io.Sf("I%d", i), 1e-15, i1, i2, false)
@@ -436,9 +381,43 @@ func TestLagInterp05(tst *testing.T) {
 
 	// test
 	Nvals := []int{3, 4, 5, 6, 7, 8}
-	tols := []float64{1e-15, 1e-15, 1e-15, 1e-15, 1e-14, 1e-14}
+	tolsA := []float64{1e-17, 1e-17, 1e-17, 1e-17, 1e-17, 1e-17}
+	tolsB := []float64{1e-15, 1e-15, 1e-15, 1e-15, 1e-14, 1e-14}
 	for k, N := range Nvals {
 		io.Pf("\n\n-------------------------------- N = %d -----------------------------------------------\n\n", N)
-		checkIandLam(tst, N, tols[k], f)
+		checkIandLam(tst, N, tolsA[k], f, false)
+		checkIandLam(tst, N, tolsB[k], f, true)
+	}
+}
+
+func checkD1lag(tst *testing.T, N int, tol float64) {
+
+	// allocate structure
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind, false)
+	chk.EP(err)
+
+	// calc and check D1
+	err = o.CalcD1()
+	chk.EP(err)
+	for j := 0; j < N+1; j++ {
+		xj := o.X[j]
+		for l := 0; l < N+1; l++ {
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tol, o.D1.Get(j, l), xj, 1e-2, chk.Verbose, func(t float64) (float64, error) {
+				return o.L(l, t), nil
+			})
+		}
+	}
+}
+
+func TestLagInterp06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("TestLagInterp06. D1")
+
+	Nvals := []int{3, 4, 5, 6, 7, 8}
+	tols := []float64{1e-10, 1e-9, 1e-9, 1e-9, 1e-9, 1e-8}
+	for k, N := range Nvals {
+		io.Pf("\n\n-------------------------------- N = %d -----------------------------------------------\n\n", N)
+		checkD1lag(tst, N, tols[k])
 	}
 }

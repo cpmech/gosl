@@ -60,17 +60,20 @@ type LagrangeInterp struct {
 	U la.Vector // function evaluated @ nodes: f(x_i)
 
 	// barycentric
-	UseBary bool      // use barycentric weights
-	useLogx bool      // use log method to compute barycentric weights and ratio
-	Lam     la.Vector // λ_i barycentric weights (also w_i in [1]) [after Bary]
-	Eta     la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)  [after Bary]
+	Bary bool      // use barycentric weights [default=true]
+	Lam  la.Vector // λ_i barycentric weights (also w_i in [1])
+	Eta  la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
+
+	// computed
+	D1 *la.Matrix // (dℓj/dx)(xi)
 }
 
 // NewLagrangeInterp allocates a new LagrangeInterp
 //   N        -- degree
 //   gridType -- type of grid; e.g. uniform
+//   useLogx  -- use ln(|xk-xl|) method to compute λk
 //   NOTE: the grid will be generated in [-1, 1]
-func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
+func NewLagrangeInterp(N int, gridType io.Enum, useLogx bool) (o *LagrangeInterp, err error) {
 
 	// check
 	if N < 0 {
@@ -92,36 +95,28 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	default:
 		return nil, chk.Err("cannot create grid type %q\n", gridType)
 	}
-	return
-}
 
-// CalcBary calculates barycentric weights λ and activates use of λ in interpolation and derivatives
-//   useBary -- activates/deactivates use of barycentric weights
-//   useLogx -- use the "log(|xk-xj|)" method to avoid round-off errors with large N
-func (o *LagrangeInterp) CalcBary(useLogx bool) (err error) {
-
-	// setup
-	o.UseBary = true
-	o.useLogx = useLogx
-
-	// setup and allocate arrays
+	// barycentric data
+	o.Bary = true
 	o.Lam = make([]float64, o.N+1)
 	o.Eta = make([]float64, o.N+1)
 
-	// compute η and use log method
-	if o.useLogx {
-		for k := 0; k < o.N+1; k++ {
-			for j := 0; j < o.N+1; j++ {
-				if j != k {
-					o.Eta[k] += math.Log(math.Abs(o.X[k] - o.X[j]))
-				}
+	// compute η
+	for k := 0; k < o.N+1; k++ {
+		for j := 0; j < o.N+1; j++ {
+			if j != k {
+				o.Eta[k] += math.Log(math.Abs(o.X[k] - o.X[j]))
 			}
-			io.Pl()
 		}
+	}
+
+	// "log" method
+	if useLogx {
 		for k := 0; k < o.N+1; k++ {
 			o.Lam[k] = 1.0 / (NegOnePowN(k+o.N) * math.Exp(o.Eta[k]))
 			if math.IsInf(o.Lam[k], 0) {
-				return chk.Err("λ%d is infinite: %v\n", k, o.Lam[k])
+				err = chk.Err("λ%d is infinite: %v\n", k, o.Lam[k])
+				return
 			}
 		}
 		return
@@ -140,6 +135,10 @@ func (o *LagrangeInterp) CalcBary(useLogx bool) (err error) {
 	}
 	for j := 0; j < o.N+1; j++ {
 		o.Lam[j] = 1.0 / o.Lam[j]
+		if math.IsInf(o.Lam[j], 0) {
+			err = chk.Err("λ%d is infinite: %v\n", j, o.Lam[j])
+			return
+		}
 	}
 	return
 }
@@ -178,7 +177,7 @@ func (o *LagrangeInterp) Om(x float64) (ω float64) {
 func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 
 	// barycentric formula
-	if o.UseBary {
+	if o.Bary {
 		if math.Abs(x-o.X[i]) < 1e-15 {
 			return 1.0
 		}
@@ -229,7 +228,7 @@ func (o *LagrangeInterp) CalcU(f Ss) (err error) {
 func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 
 	// barycentric formula
-	if o.UseBary {
+	if o.Bary {
 		var d, num, den float64
 		for i := 0; i < o.N+1; i++ {
 			d = x - o.X[i]
@@ -247,6 +246,54 @@ func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 	// standard formula
 	for i := 0; i < o.N+1; i++ {
 		res += o.U[i] * o.L(i, x)
+	}
+	return
+}
+
+// CalcD1 computes the differentiation matrix D1 of the function L_i
+//
+//    d I{f}(x)  |         N
+//   ——————————— |      =  Σ   D1_kj ⋅ f(x_j)
+//        dx     |x=x_k   j=0
+//
+//   see [2]
+//
+func (o *LagrangeInterp) CalcD1() (err error) {
+	o.D1 = la.NewMatrix(o.N+1, o.N+1)
+	var r, v, sumRow float64
+	for k := 0; k < o.N+1; k++ {
+		sumRow = 0
+		for j := 0; j < o.N+1; j++ {
+			if k != j {
+				r = NegOnePowN(k+j) * math.Exp(o.Eta[k]-o.Eta[j])
+				v = r / (o.X[k] - o.X[j])
+				o.D1.Set(k, j, v)
+				sumRow += v
+			}
+		}
+		o.D1.Set(k, k, -sumRow)
+	}
+	return
+}
+
+// CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
+//   NOTE: U and D1 matrix must be computed previously
+func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
+
+	// derivative of interpolation @ x_i
+	v := la.NewVector(o.N + 1)
+	la.MatVecMul(v, 1, o.D1, o.U)
+	io.PfYel("max(U) = %v\n", la.Vector(o.U).Max())
+	io.Pforan("lam = %v\n", la.Vector(o.Lam).Max())
+
+	// compute error
+	for i := 0; i < o.N+1; i++ {
+		vana, err := dfdxAna(o.X[i])
+		chk.EP(err)
+		diff := math.Abs(v[i] - vana)
+		if diff > maxDiff {
+			maxDiff = diff
+		}
 	}
 	return
 }
@@ -305,7 +352,7 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 func PlotLagInterpL(N int, gridType io.Enum) {
 	xx := utl.LinSpace(-1, 1, 201)
 	yy := make([]float64, len(xx))
-	o, _ := NewLagrangeInterp(N, gridType)
+	o, _ := NewLagrangeInterp(N, gridType, false)
 	for n := 0; n < N+1; n++ {
 		for k, x := range xx {
 			yy[k] = o.L(n, x)
@@ -324,7 +371,7 @@ func PlotLagInterpW(N int, gridType io.Enum) {
 	npts := 201
 	xx := utl.LinSpace(-1, 1, npts)
 	yy := make([]float64, len(xx))
-	o, _ := NewLagrangeInterp(N, gridType)
+	o, _ := NewLagrangeInterp(N, gridType, false)
 	for k, x := range xx {
 		yy[k] = o.Om(x)
 	}
@@ -349,7 +396,7 @@ func PlotLagInterpI(Nvalues []int, gridType io.Enum, f Ss) {
 	iy := make([]float64, len(xx))
 	plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
 	for _, N := range Nvalues {
-		p, err := NewLagrangeInterp(N, gridType)
+		p, err := NewLagrangeInterp(N, gridType, false)
 		chk.EP(err)
 		p.CalcU(f)
 		chk.EP(err)
