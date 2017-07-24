@@ -298,32 +298,21 @@ func TestLagInterp04(tst *testing.T) {
 }
 
 func checkLam(tst *testing.T, o *LagrangeInterp, tol float64) {
-	λ := make([]float64, o.N+1)
 	for i := 0; i < o.N+1; i++ {
-		λ[i] = 1
+		m := 1.0
 		for j := 0; j < o.N+1; j++ {
 			if i != j {
-				λ[i] *= (o.X[i] - o.X[j])
+				m *= (o.X[i] - o.X[j])
 			}
 		}
+		chk.AnaNum(tst, io.Sf("λ%d", i), tol, o.Lam(i), 1.0/m, chk.Verbose)
 	}
-	for i := 0; i < o.N+1; i++ {
-		λ[i] = 1.0 / λ[i]
-	}
-	//if o.N == 4 {
-	//λ = []float64{1, -2, 2, -2, 1} // N=4
-	//}
-	//if o.N == 6 {
-	//d := 16.0 / 3.0
-	//λ = []float64{8.0 / 3.0, -d, d, -d, d, -d, 8.0 / 3.0}
-	//}
-	chk.Array(tst, "λ", tol, o.Lam, λ)
 }
 
-func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss, useLogx bool) {
+func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 
 	// allocate structure and calculate U
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind, useLogx)
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind, false)
 	chk.EP(err)
 	err = o.CalcU(f)
 	chk.EP(err)
@@ -337,12 +326,7 @@ func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss, useLogx bool) {
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
 	}
 
-	// check λ (std method)
-	msg := "std"
-	if useLogx {
-		msg = "log"
-	}
-	io.Pforan(msg+"λ["+msg+"] = %v\n", o.Lam)
+	// check λ
 	checkLam(tst, o, tolLam)
 
 	// check interpolation (barycentric)
@@ -381,12 +365,10 @@ func TestLagInterp05(tst *testing.T) {
 
 	// test
 	Nvals := []int{3, 4, 5, 6, 7, 8}
-	tolsA := []float64{1e-17, 1e-17, 1e-17, 1e-17, 1e-17, 1e-17}
-	tolsB := []float64{1e-15, 1e-15, 1e-15, 1e-15, 1e-14, 1e-14}
+	tolsL := []float64{1e-15, 1e-15, 1e-15, 1e-15, 1e-14, 1e-14}
 	for k, N := range Nvals {
 		io.Pf("\n\n-------------------------------- N = %d -----------------------------------------------\n\n", N)
-		checkIandLam(tst, N, tolsA[k], f, false)
-		checkIandLam(tst, N, tolsB[k], f, true)
+		checkIandLam(tst, N, tolsL[k], f)
 	}
 }
 

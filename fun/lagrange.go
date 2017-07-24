@@ -61,7 +61,6 @@ type LagrangeInterp struct {
 
 	// barycentric
 	Bary bool      // use barycentric weights [default=true]
-	Lam  la.Vector // λ_i barycentric weights (also w_i in [1])
 	Eta  la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
 
 	// computed
@@ -98,7 +97,6 @@ func NewLagrangeInterp(N int, gridType io.Enum, useLogx bool) (o *LagrangeInterp
 
 	// barycentric data
 	o.Bary = true
-	o.Lam = make([]float64, o.N+1)
 	o.Eta = make([]float64, o.N+1)
 
 	// compute η
@@ -109,36 +107,14 @@ func NewLagrangeInterp(N int, gridType io.Enum, useLogx bool) (o *LagrangeInterp
 			}
 		}
 	}
+	return
+}
 
-	// "log" method
-	if useLogx {
-		for k := 0; k < o.N+1; k++ {
-			o.Lam[k] = 1.0 / (NegOnePowN(k+o.N) * math.Exp(o.Eta[k]))
-			if math.IsInf(o.Lam[k], 0) {
-				err = chk.Err("λ%d is infinite: %v\n", k, o.Lam[k])
-				return
-			}
-		}
-		return
-	}
-
-	// "standard" method
-	o.Lam[0] = 1
-	for j := 1; j < o.N+1; j++ {
-		for k := 0; k < j; k++ {
-			o.Lam[k] *= (o.X[k] - o.X[j])
-		}
-		o.Lam[j] = 1
-		for k := 0; k < j; k++ {
-			o.Lam[j] *= (o.X[j] - o.X[k])
-		}
-	}
-	for j := 0; j < o.N+1; j++ {
-		o.Lam[j] = 1.0 / o.Lam[j]
-		if math.IsInf(o.Lam[j], 0) {
-			err = chk.Err("λ%d is infinite: %v\n", j, o.Lam[j])
-			return
-		}
+// Lam computes barycentric weight λk from ηk
+func (o *LagrangeInterp) Lam(k int) (λk float64) {
+	λk = NegOnePowN(k+o.N) * math.Exp(-o.Eta[k])
+	if math.IsInf(λk, 0) {
+		chk.Panic("λ%d is infinite: %v\n", k, λk)
 	}
 	return
 }
@@ -183,9 +159,9 @@ func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 		}
 		var sum float64
 		for j := 0; j < o.N+1; j++ {
-			sum += o.Lam[j] / (x - o.X[j])
+			sum += o.Lam(j) / (x - o.X[j])
 		}
-		lix = (o.Lam[i] / (x - o.X[i])) / sum
+		lix = (o.Lam(i) / (x - o.X[i])) / sum
 		return
 	}
 
@@ -236,8 +212,8 @@ func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 				res = o.U[i]
 				return
 			}
-			num += o.U[i] * o.Lam[i] / d
-			den += o.Lam[i] / d
+			num += o.U[i] * o.Lam(i) / d
+			den += o.Lam(i) / d
 		}
 		res = num / den
 		return
@@ -284,7 +260,6 @@ func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 	v := la.NewVector(o.N + 1)
 	la.MatVecMul(v, 1, o.D1, o.U)
 	io.PfYel("max(U) = %v\n", la.Vector(o.U).Max())
-	io.Pforan("lam = %v\n", la.Vector(o.Lam).Max())
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
