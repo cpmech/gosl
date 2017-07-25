@@ -316,28 +316,34 @@ func checkD1che(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 	}
 
 	// noFlip,noNst
-	err = o.CalcD1(false, false, false)
+	o.Trig, o.Flip, o.Nst = false, false, false
+	err = o.CalcD1()
 	chk.EP(err)
 	D1 := o.D1.GetDeep2()
-	err = o.CalcD1(true, false, false)
+	o.Trig, o.Flip, o.Nst = true, false, false
+	err = o.CalcD1()
 	chk.EP(err)
 	D1trig := o.D1.GetDeep2()
 	cmpD1che(tst, "[noFlip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
 	// flip,noNst
-	err = o.CalcD1(false, true, false)
+	o.Trig, o.Flip, o.Nst = false, true, false
+	err = o.CalcD1()
 	chk.EP(err)
 	D1 = o.D1.GetDeep2()
-	err = o.CalcD1(true, true, false)
+	o.Trig, o.Flip, o.Nst = true, true, false
+	err = o.CalcD1()
 	chk.EP(err)
 	D1trig = o.D1.GetDeep2()
 	cmpD1che(tst, "[flip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
 	// nst
-	err = o.CalcD1(false, false, true)
+	o.Trig, o.Flip, o.Nst = false, false, true
+	err = o.CalcD1()
 	chk.EP(err)
 	D1 = o.D1.GetDeep2()
-	err = o.CalcD1(true, false, true)
+	o.Trig, o.Flip, o.Nst = true, false, true
+	err = o.CalcD1()
 	chk.EP(err)
 	D1trig = o.D1.GetDeep2()
 	cmpD1che(tst, "[---, nst]", o, D1, D1trig, tolD, tolCmp, verb)
@@ -420,29 +426,35 @@ func checkD1ana(tst *testing.T, N int, f, dfdxAna Ss, tol, tolTrig, tolNst float
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
 	chk.EP(err)
 
-	err = o.CalcD1(false, false, false)
+	o.Trig, o.Flip, o.Nst = false, false, false
+	err = o.CalcD1()
 	chk.EP(err)
 	cmpD1ana(tst, "[noTrig, noFlip, noNst]", o, f, dfdxAna, tol, verb)
 
-	err = o.CalcD1(true, false, false)
+	o.Trig, o.Flip, o.Nst = true, false, false
+	err = o.CalcD1()
 	chk.EP(err)
 	cmpD1ana(tst, "[  trig, noFlip, noNst]", o, f, dfdxAna, tolTrig, verb)
 
-	err = o.CalcD1(false, true, false)
+	o.Trig, o.Flip, o.Nst = false, true, false
+	err = o.CalcD1()
 	chk.EP(err)
 	cmpD1ana(tst, "[noTrig,   flip, noNst]", o, f, dfdxAna, tol, verb)
 
-	err = o.CalcD1(true, true, false)
+	o.Trig, o.Flip, o.Nst = true, true, false
+	err = o.CalcD1()
 	chk.EP(err)
 	cmpD1ana(tst, "[  trig,   flip, noNst]", o, f, dfdxAna, tolTrig, verb)
 
 	// nst
 
-	err = o.CalcD1(false, false, true)
+	o.Trig, o.Flip, o.Nst = false, false, true
+	err = o.CalcD1()
 	chk.EP(err)
 	cmpD1ana(tst, "[noTrig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 
-	err = o.CalcD1(true, false, true)
+	o.Trig, o.Flip, o.Nst = true, false, true
+	err = o.CalcD1()
 	chk.EP(err)
 	cmpD1ana(tst, "[  trig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 }
@@ -499,7 +511,7 @@ func TestChebyInterp06(tst *testing.T) {
 			y4[i], _ = g(x)
 		}
 
-		o.CalcD1(true, true, true)
+		o.CalcD1()
 		u := o.CoefIs //f @ nodes: u = f(x_i)
 		v := la.NewVector(o.N + 1)
 		la.MatVecMul(v, 1, o.D1, u)
@@ -535,7 +547,8 @@ func calcD1errorChe(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64
 	chk.EP(err)
 
 	// compute D1 matrix
-	err = o.CalcD1(trig, flip, nst)
+	o.Trig, o.Flip, o.Nst = trig, flip, nst
+	err = o.CalcD1()
 	chk.EP(err)
 
 	// compute error

@@ -14,20 +14,30 @@ import (
 // ChebyInterp defines a structure for efficient computations with Chebyshev polynomials such as
 // projecttion or interpolation
 //
-//   Some equations are based on [1]
+//   Some equations are based on [1,2,3]
 //
 //   References:
 //     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
 //         Single Domains. Springer. 563p
 //     [2] Webb M, Trefethen LN, Gonnet P (2012) Stability of barycentric interpolation formulas for
 //         extrapolation, SIAM J. Sci. Comput. Vol. 34, No. 6, pp. A3009-A3015
+//     [3] Baltensperger R, Trummer M (2003) Spectral Differencing with a twist,
+//         SIAM J. Sci. Comput., Vol. 24, No. 5, pp. 1465-1487
 //
 type ChebyInterp struct {
 
 	// input
 	N     int  // degree of polynomial
 	Gauss bool // use roots (Gauss) or points (Lobatto)?
-	Bary  bool // use barycentric formulae in for ℓ_i and I{f} [default=true]
+
+	// options
+	Bary bool // [default=true] use barycentric formulae in for ℓ_i and I{f} [default=true]
+	Nst  bool // [default=true] use the "negative sum trick" to compute the diagonal components according to:
+	Trig bool // [default=false] use trigonometric identities (to reduce round-off errors)
+	Flip bool // [default=false] compute lower-diagonal part from upper diagonal part with D_{N-j,N-l} = -D_{j,l}
+
+	// constants
+	EstimationN int // N to use when estimating CoefP [default=128]
 
 	// derived
 	X     []float64 // points. NOTE: mirrowed version of Chebyshev X; i.e. from +1 to -1
@@ -39,9 +49,6 @@ type ChebyInterp struct {
 	CoefI  []float64 // coefficients of interpolant
 	CoefP  []float64 // coefficients of projection (estimated)
 	CoefIs []float64 // coefficients of interpolation using Lagrange cardinal functions
-
-	// constants
-	EstimationN int // N to use when estimating CoefP [default=128]
 
 	// computed
 	C  *la.Matrix // physical to transform space conversion matrix
@@ -72,11 +79,16 @@ func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
 	o = new(ChebyInterp)
 	o.N = N
 	o.Gauss = gaussChebyshev
-	o.Bary = true
 	o.Wb = make([]float64, N+1)
 	o.Gamma = make([]float64, N+1)
 	o.CoefI = make([]float64, N+1)
 	o.CoefP = make([]float64, N+1)
+
+	// options
+	o.Bary = true
+	o.Nst = true
+
+	// constants
 	o.EstimationN = 128
 
 	// roots or points
@@ -394,14 +406,8 @@ func (o *ChebyInterp) L(i int, x float64) float64 {
 //
 //   Equations (2.4.31) and (2.4.33), page 89 of [1]
 //
-//   INPUT (see [2]):
-//     trigo -- [best] use trigonometric identities (to reduce round-off errors)
+//   If Nst==true (negative-sum-trick):
 //
-//     flip -- [best] compute lower-diagonal part from upper diagonal part with:
-//                              D_{N-j,N-l} = -D_{j,l}
-//             (flip will be turn on if nst==true)
-//
-//     nst -- [best] use the "negative sum trick" to compute the diagonal components according to:
 //                                     N
 //                          D_{jj} = - Σ  D_{jl}
 //                                    l=0
@@ -410,11 +416,8 @@ func (o *ChebyInterp) L(i int, x float64) float64 {
 //   NOTE: (1) the signs are swapped (compared to [1]) because X are reversed here (from -1 to +1)
 //         (2) this method is only available for Gauss-Lobatto points
 //
-//   Reference:
-//     [2] Baltensperger R, Trummer M (2003) Spectral Differencing with a twist,
-//         SIAM J. Sci. Comput., Vol. 24, No. 5, pp. 1465-1487
 //
-func (o *ChebyInterp) CalcD1(trigo, flip, nst bool) (err error) {
+func (o *ChebyInterp) CalcD1() (err error) {
 
 	// check
 	if o.Gauss {
@@ -429,12 +432,13 @@ func (o *ChebyInterp) CalcD1(trigo, flip, nst bool) (err error) {
 	var v, s1, s2, jj, ll, cbj, cbl float64
 
 	// set flip flag in case NST is true
-	if nst {
+	flip := o.Flip
+	if o.Nst {
 		flip = true
 	}
 
 	// using trigonometric identities
-	if trigo {
+	if o.Trig {
 		for j := 0; j < o.N+1; j++ {
 			lMin := 0
 			if flip {
@@ -442,7 +446,7 @@ func (o *ChebyInterp) CalcD1(trigo, flip, nst bool) (err error) {
 			}
 			for l := lMin; l < o.N+1; l++ {
 				if j == l {
-					if nst {
+					if o.Nst {
 						continue
 					}
 					if j == 0 {
@@ -466,7 +470,7 @@ func (o *ChebyInterp) CalcD1(trigo, flip, nst bool) (err error) {
 				o.D1.Set(j, l, v)
 			}
 		}
-		o.flipNstD1(flip, nst)
+		o.flipNstD1(flip)
 		return
 	}
 
@@ -478,7 +482,7 @@ func (o *ChebyInterp) CalcD1(trigo, flip, nst bool) (err error) {
 		}
 		for l := lMin; l < o.N+1; l++ {
 			if j == l {
-				if nst {
+				if o.Nst {
 					continue
 				}
 				if j == 0 {
@@ -496,15 +500,15 @@ func (o *ChebyInterp) CalcD1(trigo, flip, nst bool) (err error) {
 			o.D1.Set(j, l, v)
 		}
 	}
-	o.flipNstD1(flip, nst)
+	o.flipNstD1(flip)
 	return
 }
 
 // flipNstD1 flips and/or apply NST trick to D1
-func (o *ChebyInterp) flipNstD1(flip, nst bool) {
+func (o *ChebyInterp) flipNstD1(flip bool) {
 
 	// set lower triangle and diagonal using the "negative sum trick"
-	if nst {
+	if o.Nst {
 		var sumRow float64
 		for j := 0; j < o.N+1; j++ {
 			sumRow = 0.0
