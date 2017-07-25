@@ -91,6 +91,8 @@ var (
 //         Single Domains. Springer. 563p
 //     [2] Berrut JP, Trefethen LN (2004) Barycentric Lagrange Interpolation,
 //         SIAM Review Vol. 46, No. 3, pp. 501-517
+//     [3] Costa B, Don WS (2000) On the computation of high order pseudospectral derivatives,
+//         Applied Numerical Mathematics, 33:151-159.
 //
 type LagrangeInterp struct {
 
@@ -109,6 +111,7 @@ type LagrangeInterp struct {
 
 	// computed
 	D1 *la.Matrix // (dℓj/dx)(xi)
+	D2 *la.Matrix // (d²ℓj/dx²)(xi)
 }
 
 // NewLagrangeInterp allocates a new LagrangeInterp
@@ -423,6 +426,39 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 	}
 	return
 }
+
+// CalcD2 calculates the second derivative
+//
+//            d²ℓ_l  |
+//    D2_jl = —————— |
+//             dx²   |x=x_j
+//
+//  INPUT:
+//    useD1 -- use D1 values already computed. NOTE: must call CalcD1() first.
+func (o *LagrangeInterp) CalcD2(useD1 bool) (err error) {
+
+	// allocate output
+	o.D2 = la.NewMatrix(o.N+1, o.N+1)
+	var v, sumRow float64
+
+	// compute D2 from D1 values using Eqs. (9) and (13) of [3]
+	if useD1 {
+		for k := 0; k < o.N+1; k++ {
+			sumRow = 0
+			for j := 0; j < o.N+1; j++ {
+				if k != j {
+					v = 2.0 * o.D1.Get(k, j) * (o.D1.Get(k, k) - 1.0/(o.X[k]-o.X[j]))
+					o.D2.Set(k, j, v)
+					sumRow += v
+				}
+			}
+			o.D2.Set(k, k, -sumRow)
+		}
+	}
+	return
+}
+
+// plotting ////////////////////////////////////////////////////////////////////////////////////////
 
 // PlotLagInterpL plots cardinal polynomials ℓ
 func PlotLagInterpL(N int, gridType io.Enum) {

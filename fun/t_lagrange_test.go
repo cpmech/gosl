@@ -404,3 +404,50 @@ func TestLagInterp06(tst *testing.T) {
 		cmpD1lag(tst, N, tols[k])
 	}
 }
+
+func checkD2lag(tst *testing.T, N int, h, tolD float64, useD1, verb bool) {
+
+	// allocate
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	chk.EP(err)
+	if verb {
+		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
+	}
+
+	// calc D1 matrix
+	if useD1 {
+		o.CalcD1()
+	}
+
+	// check D2 matrix
+	hh := h * h
+	err = o.CalcD2(useD1)
+	chk.EP(err)
+	for j := 0; j < o.N+1; j++ {
+		xj := o.X[j]
+		for l := 0; l < o.N+1; l++ {
+			LlxjBefore := o.L(l, xj-h)
+			LlxjCurrent := o.L(l, xj)
+			LlxjAfter := o.L(l, xj+h)
+			dLldxAtXj := (LlxjBefore - 2.0*LlxjCurrent + LlxjAfter) / hh
+			chk.AnaNum(tst, io.Sf("D2[%d,%d](%+.3f)", j, l, xj), tolD, o.D2.Get(j, l), dLldxAtXj, verb)
+		}
+	}
+	if verb {
+		io.Pl()
+	}
+}
+
+func TestLagInterp07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LagInterp07. Second derivative of ℓ")
+
+	// check D2
+	Nvals := []int{3, 4, 5, 6}
+	hs := []float64{1e-2, 1e-3, 1e-3, 1e-3}
+	tols := []float64{1e-11, 1e-5, 1e-4, 1e-3}
+	for k, N := range Nvals {
+		checkD2lag(tst, N, hs[k], tols[k], true, chk.Verbose)
+	}
+}
