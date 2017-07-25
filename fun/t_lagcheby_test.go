@@ -37,13 +37,11 @@ func compareLambda(tst *testing.T, N int, f Ss, tolU, tolL float64) {
 	chk.Array(tst, "U", tolU, lag.U, cheU)
 
 	// check λ values
-	cheL := utl.GetReversed(che.Lam)
-	//if N < 9 {
-	//io.Pfcyan("lag.λ = %+8.4f\n", lag.Lam)
-	//io.Pfblue2("che.λ = %+8.4f\n", cheL)
-	//}
-	//chk.Array(tst, "λ", tolL, lag.Lam, cheL)
-	_ = cheL
+	for i := 0; i < N+1; i++ {
+		lagλi := lag.Lam(i)
+		cheλi := che.Lam[N-i]
+		chk.AnaNum(tst, io.Sf("λ%d", i), tolL, lagλi, cheλi, false)
+	}
 }
 
 func TestLagCheby01(tst *testing.T) {
@@ -57,10 +55,9 @@ func TestLagCheby01(tst *testing.T) {
 	}
 
 	// test
-	Nvals := []int{6, 7, 8, 9, 100}
-	tolsU := []float64{1e-17, 1e-17, 1e-17, 1e-17, 1e-17}
-	tolsL := []float64{1e-14, 1e-14, 1e-14, 1e-13, 0.2}
-	Nvals = []int{1041}
+	Nvals := []int{6, 7, 8, 9, 700, 701, 1024, 2048}
+	tolsU := []float64{1e-17, 1e-17, 1e-17, 1e-17, 1e-17, 1e-17, 1e-17, 1e-17}
+	tolsL := []float64{1e-15, 1e-15, 1e-15, 1e-14, 1e-11, 1e-11, 1e-11, 1e-10}
 	for k, N := range Nvals {
 		compareLambda(tst, N, f, tolsU[k], tolsL[k])
 	}

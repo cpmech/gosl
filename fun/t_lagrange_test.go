@@ -298,14 +298,15 @@ func TestLagInterp04(tst *testing.T) {
 }
 
 func checkLam(tst *testing.T, o *LagrangeInterp, tol float64) {
+	m := math.Pow(2, float64(o.N)-1) / float64(o.N)
 	for i := 0; i < o.N+1; i++ {
-		m := 1.0
+		d := 1.0
 		for j := 0; j < o.N+1; j++ {
 			if i != j {
-				m *= (o.X[i] - o.X[j])
+				d *= (o.X[i] - o.X[j])
 			}
 		}
-		chk.AnaNum(tst, io.Sf("λ%d", i), tol, o.Lam(i), 1.0/m, chk.Verbose)
+		chk.AnaNum(tst, io.Sf("λ%d", i), tol, o.Lam(i), 1.0/d/m, chk.Verbose)
 	}
 }
 
