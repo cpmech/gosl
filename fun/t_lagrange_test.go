@@ -95,7 +95,7 @@ func TestLagInterp01(tst *testing.T) {
 
 	// check interpolation
 	for i, x := range o.X {
-		ynum, err := o.I(x, f)
+		ynum, err := o.I(x)
 		if err != nil {
 			tst.Errorf("%v\n", err)
 			return
@@ -133,7 +133,7 @@ func TestLagInterp02(tst *testing.T) {
 
 	// check interpolation
 	for i, x := range o.X {
-		ynum, err := o.I(x, f)
+		ynum, err := o.I(x)
 		if err != nil {
 			tst.Errorf("%v\n", err)
 			return
@@ -179,7 +179,7 @@ func TestLagInterp03(tst *testing.T) {
 
 	// check interpolation
 	for i, x := range o.X {
-		ynum, err := o.I(x, f)
+		ynum, err := o.I(x)
 		chk.EP(err)
 		yana, _ := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
@@ -248,7 +248,7 @@ func TestLagInterp04(tst *testing.T) {
 
 	// check interpolation
 	for i, x := range o.X {
-		ynum, err := o.I(x, f)
+		ynum, err := o.I(x)
 		chk.EP(err)
 		yana, _ := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
@@ -321,7 +321,7 @@ func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 	// check interpolation (std)
 	o.Bary = false
 	for i, x := range o.X {
-		ynum, err := o.I(x, f)
+		ynum, err := o.I(x)
 		chk.EP(err)
 		yana, _ := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
@@ -333,7 +333,7 @@ func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 	// check interpolation (barycentric)
 	o.Bary = true
 	for i, x := range o.X {
-		ynum, err := o.I(x, f)
+		ynum, err := o.I(x)
 		chk.EP(err)
 		yana, _ := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
@@ -344,10 +344,10 @@ func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 	for _, x := range xx {
 		for i := 0; i < o.N+1; i++ {
 			o.Bary = false
-			i1, err := o.I(x, f)
+			i1, err := o.I(x)
 			chk.EP(err)
 			o.Bary = true
-			i2, err := o.I(x, f)
+			i2, err := o.I(x)
 			chk.EP(err)
 			chk.AnaNum(tst, io.Sf("I%d", i), 1e-15, i1, i2, false)
 		}

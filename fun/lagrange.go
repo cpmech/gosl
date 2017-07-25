@@ -289,7 +289,7 @@ func (o *LagrangeInterp) CalcU(f Ss) (err error) {
 //
 //   NOTE: U[i] = f(x[i]) must be calculated with o.CalcU or set first
 //
-func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
+func (o *LagrangeInterp) I(x float64) (res float64, err error) {
 
 	// barycentric formula
 	if o.Bary {
@@ -471,7 +471,7 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 		if err != nil {
 			chk.Panic("f(x) failed:%v\n", err)
 		}
-		ix, err := o.I(x, f)
+		ix, err := o.I(x)
 		if err != nil {
 			chk.Panic("I(x) failed:%v\n", err)
 		}
@@ -542,7 +542,7 @@ func PlotLagInterpI(Nvalues []int, gridType io.Enum, f Ss) {
 		p.CalcU(f)
 		chk.EP(err)
 		for k, x := range xx {
-			iy[k], err = p.I(x, f)
+			iy[k], err = p.I(x)
 			chk.EP(err)
 		}
 		E, xloc := p.EstimateMaxErr(0, f)
