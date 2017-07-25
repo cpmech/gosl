@@ -306,7 +306,7 @@ func checkLam(tst *testing.T, o *LagrangeInterp, tol float64) {
 				d *= (o.X[i] - o.X[j])
 			}
 		}
-		chk.AnaNum(tst, io.Sf("λ%d", i), tol, o.Lam(i), 1.0/d/m, chk.Verbose)
+		chk.AnaNum(tst, io.Sf("λ%d", i), tol, o.Lam[i], 1.0/d/m, chk.Verbose)
 	}
 }
 

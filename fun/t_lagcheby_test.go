@@ -37,11 +37,8 @@ func compareLambda(tst *testing.T, N int, f Ss, tolU, tolL float64) {
 	chk.Array(tst, "U", tolU, lag.U, cheU)
 
 	// check λ values
-	for i := 0; i < N+1; i++ {
-		lagλi := lag.Lam(i)
-		cheλi := che.Lam[N-i]
-		chk.AnaNum(tst, io.Sf("λ%d", i), tolL, lagλi, cheλi, false)
-	}
+	cheL := utl.GetReversed(che.Lam)
+	chk.Array(tst, "λ", tolL, lag.Lam, cheL)
 }
 
 func TestLagCheby01(tst *testing.T) {

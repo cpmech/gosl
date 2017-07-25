@@ -48,8 +48,48 @@ var (
 //               j = 0
 //               j ≠ i
 //
+//   or, barycentric form:
+//
+//                     N   λ[i] ⋅ f[i]
+//                     Σ   ———————————
+//         X          i=0   x - x[i]
+//        I {f}(x) = ——————————————————
+//         N            N     λ[i]
+//                      Σ   ————————
+//                     i=0  x - x[i]
+//
+//   with:
+//
+//                     λ[i]
+//                   ————————
+//         N         x - x[i]
+//        ℓ (x) = ———————————————
+//         i        N     λ[k]
+//                  Σ   ————————
+//                 k=0  x - x[k]
+//
+//   The barycentric weights λk are normalised and computed from ηk as follows:
+//
+//      ηk = Σ ln(|xk-xl|) (k≠l)
+//
+//            a ⋅ b             k+N
+//      λk =  —————     a = (-1)        b = exp(m)    m = -ηk
+//             lf0
+//
+//      lf0 = 2ⁿ⁻¹/n
+//
+//    or, if N > 700:
+//
+//            / a ⋅ b \   /  b  \   /  b  \
+//      λk =  | ————— | ⋅ | ——— | ⋅ | ——— |      b = exp(m/3)
+//            \  lf0  /   \ lf1 /   \ lf2 /
+//
+//      lf0⋅lf1⋅lf2 = 2ⁿ⁻¹/n
+//
 //   References:
-//     [1] Berrut JP, Trefethen LN (2004) Barycentric Lagrange Interpolation,
+//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
+//         Single Domains. Springer. 563p
+//     [2] Berrut JP, Trefethen LN (2004) Barycentric Lagrange Interpolation,
 //         SIAM Review Vol. 46, No. 3, pp. 501-517
 //
 type LagrangeInterp struct {
@@ -62,12 +102,10 @@ type LagrangeInterp struct {
 	// barycentric
 	Bary bool      // use barycentric weights [default=true]
 	Eta  la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
+	Lam  la.Vector // normalised barycentric weights λk = pow(-1, k+N) ⋅ ηk / (2ⁿ⁻¹/n)
 
 	// computed
 	D1 *la.Matrix // (dℓj/dx)(xi)
-
-	// auxiliary
-	lf0, lf1, lf2 float64 // lambda factors (lf0⋅lf1⋅lf2 = 2ⁿ⁻¹/n) if N > 700
 }
 
 // NewLagrangeInterp allocates a new LagrangeInterp
@@ -101,6 +139,7 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	// barycentric data
 	o.Bary = true
 	o.Eta = make([]float64, o.N+1)
+	o.Lam = make([]float64, o.N+1)
 
 	// compute η
 	for k := 0; k < o.N+1; k++ {
@@ -112,47 +151,33 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 	}
 
 	// lambda factors
+	var lf0, lf1, lf2 float64
 	n := float64(o.N)
 	if o.N > 700 {
-		o.lf0 = math.Pow(2, n/3.0)
-		o.lf1 = math.Pow(2, n/3.0)
-		o.lf2 = math.Pow(2, n/3.0-1) / n
+		lf0 = math.Pow(2, n/3.0)
+		lf1 = math.Pow(2, n/3.0)
+		lf2 = math.Pow(2, n/3.0-1) / n
 	} else {
-		o.lf0 = math.Pow(2, n-1) / n
+		lf0 = math.Pow(2, n-1) / n
 	}
-	return
-}
 
-// Lam computes (normalised) barycentric weight λk from ηk
-//
-//            a ⋅ b             k+N
-//      λk =  —————     a = (-1)        b = exp(m)    m = -ηk
-//             lf0
-//
-//      lf0 = 2ⁿ⁻¹/n
-//
-//    or, if N > 700:
-//
-//            / a ⋅ b \   /  b  \   /  b  \
-//      λk =  | ————— | ⋅ | ——— | ⋅ | ——— |      b = exp(m/3)
-//            \  lf0  /   \ lf1 /   \ lf2 /
-//
-//      lf0⋅lf1⋅lf2 = 2ⁿ⁻¹/n
-//
-func (o *LagrangeInterp) Lam(k int) (λk float64) {
-	a := NegOnePowN(k + o.N)
-	m := -o.Eta[k]
-	if o.N > 700 {
-		b := math.Exp(m / 3.0)
-		λk = a * b / o.lf0
-		λk *= b / o.lf1
-		λk *= b / o.lf2
-	} else {
-		b := math.Exp(m)
-		λk = a * b / o.lf0
-	}
-	if math.IsInf(λk, 0) {
-		chk.Panic("λ%d is infinite: %v\n", k, λk)
+	// compute λk
+	for k := 0; k < o.N+1; k++ {
+		a := NegOnePowN(k + o.N)
+		m := -o.Eta[k]
+		if o.N > 700 {
+			b := math.Exp(m / 3.0)
+			o.Lam[k] = a * b / lf0
+			o.Lam[k] *= b / lf1
+			o.Lam[k] *= b / lf2
+		} else {
+			b := math.Exp(m)
+			o.Lam[k] = a * b / lf0
+		}
+		if math.IsInf(o.Lam[k], 0) {
+			err = chk.Err("λ%d is infinite: %v\n", k, o.Lam[k])
+			return
+		}
 	}
 	return
 }
@@ -207,9 +232,9 @@ func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 		}
 		var sum float64
 		for k := 0; k < o.N+1; k++ {
-			sum += o.Lam(k) / (x - o.X[k])
+			sum += o.Lam[k] / (x - o.X[k])
 		}
-		lix = o.Lam(i) / (x - o.X[i]) / sum
+		lix = o.Lam[i] / (x - o.X[i]) / sum
 		return
 	}
 
@@ -270,8 +295,8 @@ func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 				res = o.U[i]
 				return
 			}
-			num += o.U[i] * o.Lam(i) / dx
-			den += o.Lam(i) / dx
+			num += o.U[i] * o.Lam[i] / dx
+			den += o.Lam[i] / dx
 		}
 		res = num / den
 		return
