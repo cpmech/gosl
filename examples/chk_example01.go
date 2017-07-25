@@ -42,7 +42,7 @@ func main() {
 	tolerance := 1e-8 // this allows test to pass
 
 	// compare matrices
-	chk.Matrix(tst, "A", tolerance, Anumerical, Aanalytical)
+	chk.Deep2(tst, "A", tolerance, Anumerical, Aanalytical)
 
 	// note that this is not the a common way of using testing.T
 	// usually, the "tst" variable comes from a unit test
