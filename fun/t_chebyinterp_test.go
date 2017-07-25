@@ -363,49 +363,6 @@ func TestChebyInterp04(tst *testing.T) {
 	}
 }
 
-func checkD2(tst *testing.T, N int, h, tolD float64, verb bool) {
-
-	// allocate
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
-	if verb {
-		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
-	}
-
-	// check D2 matrix
-	hh := h * h
-	err = o.CalcD2()
-	chk.EP(err)
-	for j := 0; j < o.N+1; j++ {
-		xj := o.X[j]
-		for l := 0; l < o.N+1; l++ {
-			LlxjBefore := o.L(l, xj-h)
-			LlxjCurrent := o.L(l, xj)
-			LlxjAfter := o.L(l, xj+h)
-			dLldxAtXj := (LlxjBefore - 2.0*LlxjCurrent + LlxjAfter) / hh
-			chk.AnaNum(tst, io.Sf("D2[%d,%d](%+.3f)", j, l, xj), tolD, o.D2.Get(j, l), dLldxAtXj, verb)
-		}
-	}
-	if verb {
-		io.Pl()
-	}
-}
-
-func TestChebyInterp05(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("ChebyInterp05. Second derivative of ℓ")
-
-	// check D2
-	k := 0
-	hs := []float64{1e-2, 1e-3, 1e-3, 1e-3}
-	tols := []float64{1e-9, 1e-5, 1e-4, 1e-3}
-	for N := 3; N <= 6; N++ {
-		checkD2(tst, N, hs[k], tols[k], chk.Verbose)
-		k++
-	}
-}
-
 // cmpD1ana compares D1 matrices with numerical differentiation and with each other
 func cmpD1ana(tst *testing.T, msg string, o *ChebyInterp, f, dfdxAna Ss, tol float64, verb bool) {
 	err := o.CalcCoefIs(f)
@@ -459,10 +416,10 @@ func checkD1ana(tst *testing.T, N int, f, dfdxAna Ss, tol, tolTrig, tolNst float
 	cmpD1ana(tst, "[  trig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 }
 
-func TestChebyInterp06(tst *testing.T) {
+func TestChebyInterp05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp06. I(x) versus Is(x). D1 matrices")
+	chk.PrintTitle("ChebyInterp05. I(x) versus Is(x). D1 matrices")
 
 	// test function
 	f := func(x float64) (float64, error) {
@@ -532,7 +489,7 @@ func TestChebyInterp06(tst *testing.T) {
 		plt.Gll("$x$", "$g(x)$", nil)
 		plt.HideAllBorders()
 
-		plt.Save("/tmp/gosl/fun", "chebyinterp06")
+		plt.Save("/tmp/gosl/fun", "chebyinterp05")
 	}
 }
 
@@ -556,10 +513,10 @@ func calcD1errorChe(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64
 	return
 }
 
-func TestChebyInterp07(tst *testing.T) {
+func TestChebyInterp06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ChebyInterp07. round-off errors")
+	chk.PrintTitle("ChebyInterp06. round-off errors")
 
 	// test function
 	f := func(x float64) (float64, error) {
@@ -613,6 +570,49 @@ func TestChebyInterp07(tst *testing.T) {
 		plt.Gll("$N$", "$||Df-df/dx||_\\infty$", &plt.A{LegOut: true, LegNcol: 3, LegHlen: 3})
 		plt.SetYlog()
 		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "chebyinterp07")
+		plt.Save("/tmp/gosl/fun", "chebyinterp06")
+	}
+}
+
+func checkD2che(tst *testing.T, N int, h, tolD float64, verb bool) {
+
+	// allocate
+	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
+	chk.EP(err)
+	if verb {
+		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
+	}
+
+	// check D2 matrix
+	hh := h * h
+	err = o.CalcD2()
+	chk.EP(err)
+	for j := 0; j < o.N+1; j++ {
+		xj := o.X[j]
+		for l := 0; l < o.N+1; l++ {
+			LlxjBefore := o.L(l, xj-h)
+			LlxjCurrent := o.L(l, xj)
+			LlxjAfter := o.L(l, xj+h)
+			dLldxAtXj := (LlxjBefore - 2.0*LlxjCurrent + LlxjAfter) / hh
+			chk.AnaNum(tst, io.Sf("D2[%d,%d](%+.3f)", j, l, xj), tolD, o.D2.Get(j, l), dLldxAtXj, verb)
+		}
+	}
+	if verb {
+		io.Pl()
+	}
+}
+
+func TestChebyInterp07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ChebyInterp05. Second derivative of ℓ")
+
+	// check D2
+	k := 0
+	hs := []float64{1e-2, 1e-3, 1e-3, 1e-3}
+	tols := []float64{1e-9, 1e-5, 1e-4, 1e-3}
+	for N := 3; N <= 6; N++ {
+		checkD2che(tst, N, hs[k], tols[k], chk.Verbose)
+		k++
 	}
 }
