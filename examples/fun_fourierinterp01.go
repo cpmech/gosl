@@ -32,9 +32,9 @@ func main() {
 	plt.Subplot(3, 1, 3)
 	plt.Title("d2f/dx2(x) and second deriv interpolation", &plt.A{Fsz: 9})
 
-	for k, p := range []uint64{2, 3, 4, 5} {
+	for k, p := range []uint64{3, 4, 5, 6} {
 
-		N := 2 << p
+		N := 1 << p
 		fou, err := fun.NewFourierInterp(N, fun.SmoLanczosKind)
 		chk.EP(err)
 		err = fou.CalcA(f)
@@ -50,9 +50,9 @@ func main() {
 		fou.Plot(3, 3, ff, nil, nil, &plt.A{C: "k", L: ""}, &plt.A{C: plt.C(k, 0), L: l}, &plt.A{C: plt.C(k, 0), L: ll}, &plt.A{C: plt.C(k, 0), L: l})
 	}
 
-	for k, p := range []uint64{2, 3, 4, 5} {
+	for k, p := range []uint64{3, 4, 5, 6} {
 
-		N := 2 << p
+		N := 1 << p
 		fou, err := fun.NewFourierInterp(N, fun.SmoRcosKind)
 		chk.EP(err)
 		err = fou.CalcA(f)
@@ -65,9 +65,9 @@ func main() {
 		fou.Plot(3, 3, nil, nil, nil, nil, &plt.A{C: plt.C(k, 0), Ls: "--", L: ""}, &plt.A{C: plt.C(k, 0), Ls: "--", L: ll}, &plt.A{C: plt.C(k, 0), Ls: "--", L: ""})
 	}
 
-	for k, p := range []uint64{2, 3, 4, 5} {
+	for k, p := range []uint64{3, 4, 5, 6} {
 
-		N := 2 << p
+		N := 1 << p
 		fou, err := fun.NewFourierInterp(N, fun.SmoCesaroKind)
 		chk.EP(err)
 		err = fou.CalcA(f)
