@@ -93,20 +93,19 @@ func runAndPlotD2err(fnkey string, Nvals []int, f, h Ss) {
 	eeB := make([]float64, len(Nvals))
 	eeC := make([]float64, len(Nvals))
 	eeD := make([]float64, len(Nvals))
-	dummy := false
 	for i, N := range Nvals {
 		nn[i] = float64(N)
-		eeA[i] = calcD2errorChe(N, f, h, false, dummy, true) // std,nst
-		eeB[i] = calcD2errorChe(N, f, h, true, dummy, true)  // tri,nst
-		eeC[i] = calcD2errorLag(N, f, h, false)              // lag,---
-		eeD[i] = calcD2errorLag(N, f, h, true)               // lag,eta
+		eeA[i] = calcD2errorChe(N, f, h, false) // che,useD1
+		eeB[i] = calcD2errorChe(N, f, h, true)  // che,std
+		eeC[i] = calcD2errorLag(N, f, h, false) // lag,lam
+		eeD[i] = calcD2errorLag(N, f, h, true)  // lag,eta
 		io.Pf("%4d: %.2e  %.2e  %.2e  %.2e\n", N, eeA[i], eeB[i], eeC[i], eeD[i])
 	}
 	plt.Reset(true, nil)
-	plt.Plot(nn, eeA, &plt.A{C: "y", L: "std,nst", M: "s", Me: 1, NoClip: true})
-	plt.Plot(nn, eeB, &plt.A{C: "k", L: "tri,nst", M: "+", Me: 1, NoClip: true})
-	plt.Plot(nn, eeC, &plt.A{C: "r", L: "lag,---", M: ".", Me: 1, NoClip: true})
-	plt.Plot(nn, eeD, &plt.A{C: "b", L: "lag,eta", M: "^", Me: 1, NoClip: true})
+	plt.Plot(nn, eeA, &plt.A{C: "g", L: "che,uD1", M: "+", Me: 1, NoClip: true})
+	plt.Plot(nn, eeB, &plt.A{C: "r", L: "che,std", M: "s", Me: 1, NoClip: true})
+	plt.Plot(nn, eeC, &plt.A{C: "b", L: "lag,lam", M: ".", Me: 1, NoClip: true})
+	plt.Plot(nn, eeD, &plt.A{C: "m", L: "lag,eta", M: "^", Me: 1, NoClip: true})
 	plt.Gll("$N$", "$||D^{(2)}f-d^2f/dx^2||_\\infty$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 3})
 	plt.SetYlog()
 	plt.HideTRborders()

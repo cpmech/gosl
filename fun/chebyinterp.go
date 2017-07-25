@@ -31,10 +31,11 @@ type ChebyInterp struct {
 	Gauss bool // use roots (Gauss) or points (Lobatto)?
 
 	// options
-	Bary bool // [default=true] use barycentric formulae in for ℓ_i and I{f} [default=true]
-	Nst  bool // [default=true] use the "negative sum trick" to compute the diagonal components according to:
-	Trig bool // [default=false] use trigonometric identities (to reduce round-off errors)
-	Flip bool // [default=false] compute lower-diagonal part from upper diagonal part with D_{N-j,N-l} = -D_{j,l}
+	Bary  bool // [default=true] use barycentric formulae in for ℓ_i and I{f} [default=true]
+	Nst   bool // [default=true] use the "negative sum trick" to compute the diagonal components according to:
+	Trig  bool // [default=false] use trigonometric identities (to reduce round-off errors)
+	Flip  bool // [default=false] compute lower-diagonal part from upper diagonal part with D_{N-j,N-l} = -D_{j,l}
+	StdD2 bool // [default=false] compute D2 using standard formula, otherwise use D1
 
 	// constants
 	EstimationN int // N to use when estimating CoefP [default=128]
@@ -509,7 +510,8 @@ func (o *ChebyInterp) CalcD1() (err error) {
 //    D2_jl = —————— |
 //             dx²   |x=x_j
 //
-//    Equation (2.4.32), page 89 of [1]
+//  NOTE: this function will call CalcD1() because the D1 values required to compute D2,
+//        unless StdD2=true where the "standard" formula (Eq. 2.4.32) is used instead => less accurate
 //
 func (o *ChebyInterp) CalcD2() (err error) {
 
@@ -518,42 +520,69 @@ func (o *ChebyInterp) CalcD2() (err error) {
 		return chk.Err("cannot compute D2 for non-Gauss-Lobatto points\n")
 	}
 
-	// allocate output and declare some constants/variables
+	// allocate output
 	o.D2 = la.NewMatrix(o.N+1, o.N+1)
-	nn := float64(o.N * o.N)
-	nn2p1 := 2.0*nn + 1.0
-	NN := nn * nn
-	tt := 2.0 / 3.0
-	var v, s, cbl, d float64
 
-	// compute D2 matrix
-	for j := 0; j < o.N+1; j++ {
-		for l := 0; l < o.N+1; l++ {
-			if j == l {
-				if j == 0 || j == o.N {
-					v = (NN - 1.0) / 15.0
+	// use standarda formula. Equation (2.4.32), page 89 of [1]
+	if o.StdD2 {
+
+		// declare some constants/variables
+		nn := float64(o.N * o.N)
+		nn2p1 := 2.0*nn + 1.0
+		NN := nn * nn
+		tt := 2.0 / 3.0
+		var v, s, cbl, d float64
+
+		// compute D2 matrix
+		for j := 0; j < o.N+1; j++ {
+			for l := 0; l < o.N+1; l++ {
+				if j == l {
+					if j == 0 || j == o.N {
+						v = (NN - 1.0) / 15.0
+					} else {
+						s = 1.0 - o.X[j]*o.X[j]
+						v = -((nn-1.0)*s + 3.0) / (3.0 * s * s)
+					}
 				} else {
-					s = 1.0 - o.X[j]*o.X[j]
-					v = -((nn-1.0)*s + 3.0) / (3.0 * s * s)
+					if j == 0 {
+						cbl = o.cbar(l)
+						d = (1.0 - o.X[l])
+						v = (tt / cbl) * NegOnePowN(l) * (nn2p1*d - 6.0) / (d * d)
+					} else if j == o.N {
+						cbl = o.cbar(l)
+						d = (1.0 + o.X[l])
+						v = (tt / cbl) * NegOnePowN(l+o.N) * (nn2p1*d - 6.0) / (d * d)
+					} else {
+						cbl = o.cbar(l)
+						s = 1.0 - o.X[j]*o.X[j]
+						d = o.X[j] - o.X[l]
+						v = (1.0 / cbl) * NegOnePowN(j+l) * (o.X[j]*o.X[j] + o.X[j]*o.X[l] - 2.0) / (s * d * d)
+					}
 				}
-			} else {
-				if j == 0 {
-					cbl = o.cbar(l)
-					d = (1.0 - o.X[l])
-					v = (tt / cbl) * NegOnePowN(l) * (nn2p1*d - 6.0) / (d * d)
-				} else if j == o.N {
-					cbl = o.cbar(l)
-					d = (1.0 + o.X[l])
-					v = (tt / cbl) * NegOnePowN(l+o.N) * (nn2p1*d - 6.0) / (d * d)
-				} else {
-					cbl = o.cbar(l)
-					s = 1.0 - o.X[j]*o.X[j]
-					d = o.X[j] - o.X[l]
-					v = (1.0 / cbl) * NegOnePowN(j+l) * (o.X[j]*o.X[j] + o.X[j]*o.X[l] - 2.0) / (s * d * d)
-				}
+				o.D2.Set(j, l, v)
 			}
-			o.D2.Set(j, l, v)
 		}
+		return
+	}
+
+	// calculate D1
+	err = o.CalcD1()
+	if err != nil {
+		return
+	}
+
+	// compute D2 from D1 values using Eqs. (9) and (13) of [3]
+	var v, sumRow float64
+	for k := 0; k < o.N+1; k++ {
+		sumRow = 0
+		for j := 0; j < o.N+1; j++ {
+			if k != j {
+				v = 2.0 * o.D1.Get(k, j) * (o.D1.Get(k, k) - 1.0/(o.X[k]-o.X[j]))
+				o.D2.Set(k, j, v)
+				sumRow += v
+			}
+		}
+		o.D2.Set(k, k, -sumRow)
 	}
 	return
 }

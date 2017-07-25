@@ -102,8 +102,8 @@ type LagrangeInterp struct {
 	U la.Vector // function evaluated @ nodes: f(x_i)
 
 	// barycentric
-	Bary   bool      // use barycentric weights [default=true]
-	UseEta bool      // use ηk when computing D1 [default=true]
+	Bary   bool      // [default=true] use barycentric weights
+	UseEta bool      // [default=true] use ηk when computing D1
 	Eta    la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
 	Lam    la.Vector // normalised barycentric weights λk = pow(-1, k+N) ⋅ ηk / (2ⁿ⁻¹/n)
 
