@@ -417,6 +417,26 @@ func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 	return
 }
 
+// CalcErrorD2 computes the maximum error due to differentiation (@ X[i]) using the D2 matrix
+//   NOTE: U and D2 matrix must be computed previously
+func (o *LagrangeInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
+
+	// derivative of interpolation @ x_i
+	v := la.NewVector(o.N + 1)
+	la.MatVecMul(v, 1, o.D2, o.U)
+
+	// compute error
+	for i := 0; i < o.N+1; i++ {
+		vana, err := d2fdx2Ana(o.X[i])
+		chk.EP(err)
+		diff := math.Abs(v[i] - vana)
+		if diff > maxDiff {
+			maxDiff = diff
+		}
+	}
+	return
+}
+
 // EstimateLebesgue estimates the Lebesgue constant by using 10000 stations along [-1,1]
 func (o *LagrangeInterp) EstimateLebesgue() (ΛN float64) {
 	nsta := 10000 // generate several points along [-1,1]

@@ -513,6 +513,26 @@ func calcD1errorChe(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64
 	return
 }
 
+func calcD2errorChe(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64) {
+
+	// allocate polynomial
+	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
+	chk.EP(err)
+
+	// compute coefficients
+	err = o.CalcCoefIs(f)
+	chk.EP(err)
+
+	// compute D2 matrix
+	o.Trig, o.Flip, o.Nst = trig, flip, nst
+	err = o.CalcD2()
+	chk.EP(err)
+
+	// compute error
+	maxDiff = o.CalcErrorD2(dfdxAna)
+	return
+}
+
 func TestChebyInterp06(tst *testing.T) {
 
 	//verbose()
@@ -615,4 +635,38 @@ func TestChebyInterp07(tst *testing.T) {
 		checkD2che(tst, N, hs[k], tols[k], chk.Verbose)
 		k++
 	}
+}
+
+func TestChebyInterp08(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ChebyInterp08. D1 and D2. analytical")
+
+	f := func(x float64) (float64, error) {
+		return math.Pow(x, 8), nil
+	}
+	g := func(x float64) (float64, error) {
+		return 8.0 * math.Pow(x, 7), nil
+	}
+	h := func(x float64) (float64, error) {
+		return 56.0 * math.Pow(x, 6), nil
+	}
+
+	N := 8
+
+	maxDiff := calcD1errorChe(N, f, g, false, false, false)
+	io.Pf("no nst: err(D1{f}) = %v\n", maxDiff)
+	chk.Float64(tst, "err(D2{f})", 1e-14, maxDiff, 0)
+
+	maxDiff = calcD2errorChe(N, f, h, false, false, true)
+	io.Pf("   nst: err(D2{f}) = %v\n", maxDiff)
+	chk.Float64(tst, "err(D2{f})", 1e-13, maxDiff, 0)
+
+	maxDiff = calcD1errorChe(N, f, g, false, false, false)
+	io.Pf("no nst: err(D1{f}) = %v\n", maxDiff)
+	chk.Float64(tst, "err(D2{f})", 1e-14, maxDiff, 0)
+
+	maxDiff = calcD2errorChe(N, f, h, false, false, true)
+	io.Pf("   nst: err(D2{f}) = %v\n", maxDiff)
+	chk.Float64(tst, "err(D2{f})", 1e-13, maxDiff, 0)
 }

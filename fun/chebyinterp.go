@@ -581,6 +581,29 @@ func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 	return
 }
 
+// CalcErrorD2 computes the maximum error due to differentiation (@ X[i]) using the D2 matrix
+//   NOTE: CoefIs and D2 matrix must be computed previously
+func (o *ChebyInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
+
+	// f @ nodes: u = f(x_i)
+	u := o.CoefIs
+
+	// derivative of interpolation @ x_i
+	v := la.NewVector(o.N + 1)
+	la.MatVecMul(v, 1, o.D2, u)
+
+	// compute error
+	for i := 0; i < o.N+1; i++ {
+		vana, err := d2fdx2Ana(o.X[i])
+		chk.EP(err)
+		diff := math.Abs(v[i] - vana)
+		if diff > maxDiff {
+			maxDiff = diff
+		}
+	}
+	return
+}
+
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 // cbar returns 2 if j=0,N or 1 if j=1,...,N-1

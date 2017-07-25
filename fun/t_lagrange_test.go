@@ -446,3 +446,77 @@ func TestLagInterp07(tst *testing.T) {
 		checkD2lag(tst, N, hs[k], tols[k], chk.Verbose)
 	}
 }
+
+func calcD1errorLag(N int, f, dfdxAna Ss, useEta bool) (maxDiff float64) {
+
+	// allocate polynomial
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	chk.EP(err)
+
+	// compute coefficients
+	err = o.CalcU(f)
+	chk.EP(err)
+
+	// compute D1 matrix
+	o.UseEta = useEta
+	err = o.CalcD1()
+	chk.EP(err)
+
+	// compute error
+	maxDiff = o.CalcErrorD1(dfdxAna)
+	return
+}
+
+func calcD2errorLag(N int, f, d2fdx2Ana Ss, useEta bool) (maxDiff float64) {
+
+	// allocate polynomial
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	chk.EP(err)
+
+	// compute coefficients
+	err = o.CalcU(f)
+	chk.EP(err)
+
+	// compute D2 matrix
+	o.UseEta = useEta
+	err = o.CalcD2()
+	chk.EP(err)
+
+	// compute error
+	maxDiff = o.CalcErrorD2(d2fdx2Ana)
+	return
+}
+
+func TestLagInterp08(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LagInterp08. D1 and D2. analytical")
+
+	f := func(x float64) (float64, error) {
+		return math.Pow(x, 8), nil
+	}
+	g := func(x float64) (float64, error) {
+		return 8.0 * math.Pow(x, 7), nil
+	}
+	h := func(x float64) (float64, error) {
+		return 56.0 * math.Pow(x, 6), nil
+	}
+
+	N := 8
+
+	maxDiff := calcD1errorLag(N, f, g, true)
+	io.Pf("useEta: err(D1{f}) = %v\n", maxDiff)
+	chk.Float64(tst, "err(D2{f})", 1e-13, maxDiff, 0)
+
+	maxDiff = calcD2errorLag(N, f, h, true)
+	io.Pf("useEta: err(D2{f}) = %v\n", maxDiff)
+	chk.Float64(tst, "err(D2{f})", 1e-12, maxDiff, 0)
+
+	maxDiff = calcD1errorLag(N, f, g, false)
+	io.Pf("no eta: err(D1{f}) = %v\n", maxDiff)
+	chk.Float64(tst, "err(D2{f})", 1e-13, maxDiff, 0)
+
+	maxDiff = calcD2errorLag(N, f, h, false)
+	io.Pf("no eta: err(D2{f}) = %v\n", maxDiff)
+	chk.Float64(tst, "err(D2{f})", 1e-12, maxDiff, 0)
+}
