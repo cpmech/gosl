@@ -590,7 +590,7 @@ func (o *ChebyInterp) CalcD2() (err error) {
 
 // CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
 //   NOTE: CoefIs and D1 matrix must be computed previously
-func (o *ChebyInterp) CalcErrorD1(f, dfdxAna Ss) (maxDiff float64) {
+func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 
 	// f @ nodes: u = f(x_i)
 	u := o.CoefIs

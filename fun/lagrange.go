@@ -342,7 +342,6 @@ func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 	// derivative of interpolation @ x_i
 	v := la.NewVector(o.N + 1)
 	la.MatVecMul(v, 1, o.D1, o.U)
-	io.PfYel("max(U) = %v\n", la.Vector(o.U).Max())
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {

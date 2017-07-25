@@ -373,7 +373,7 @@ func TestLagInterp05(tst *testing.T) {
 	}
 }
 
-func checkD1lag(tst *testing.T, N int, tol float64) {
+func cmpD1lag(tst *testing.T, N int, tol float64) {
 
 	// allocate structure
 	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
@@ -401,6 +401,6 @@ func TestLagInterp06(tst *testing.T) {
 	tols := []float64{1e-10, 1e-9, 1e-9, 1e-9, 1e-9, 1e-8}
 	for k, N := range Nvals {
 		io.Pf("\n\n-------------------------------- N = %d -----------------------------------------------\n\n", N)
-		checkD1lag(tst, N, tols[k])
+		cmpD1lag(tst, N, tols[k])
 	}
 }

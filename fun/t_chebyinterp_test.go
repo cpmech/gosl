@@ -288,8 +288,8 @@ func TestChebyInterp03(tst *testing.T) {
 	}
 }
 
-// cmpD1 compares D1 matrices with numerical differentiation and with each other
-func cmpD1(tst *testing.T, msg string, o *ChebyInterp, D1, D1trig [][]float64, tolD, tolCmp float64, verb bool) {
+// cmpD1che compares D1 matrices with numerical differentiation and with each other
+func cmpD1che(tst *testing.T, msg string, o *ChebyInterp, D1, D1trig [][]float64, tolD, tolCmp float64, verb bool) {
 	io.Pf("\n\n . . . . . . . . . . . . . %s . . . . . . . . . . . . . . . . . . . . . \n\n", msg)
 	m := len(D1)
 	for j := 0; j < m; j++ {
@@ -322,7 +322,7 @@ func checkD1che(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 	err = o.CalcD1(true, false, false)
 	chk.EP(err)
 	D1trig := o.D1.GetDeep2()
-	cmpD1(tst, "[noFlip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
+	cmpD1che(tst, "[noFlip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
 	// flip,noNst
 	err = o.CalcD1(false, true, false)
@@ -331,7 +331,7 @@ func checkD1che(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 	err = o.CalcD1(true, true, false)
 	chk.EP(err)
 	D1trig = o.D1.GetDeep2()
-	cmpD1(tst, "[flip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
+	cmpD1che(tst, "[flip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
 	// nst
 	err = o.CalcD1(false, false, true)
@@ -340,7 +340,7 @@ func checkD1che(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 	err = o.CalcD1(true, false, true)
 	chk.EP(err)
 	D1trig = o.D1.GetDeep2()
-	cmpD1(tst, "[---, nst]", o, D1, D1trig, tolD, tolCmp, verb)
+	cmpD1che(tst, "[---, nst]", o, D1, D1trig, tolD, tolCmp, verb)
 }
 
 func TestChebyInterp04(tst *testing.T) {
@@ -407,7 +407,7 @@ func cmpD1ana(tst *testing.T, msg string, o *ChebyInterp, f, dfdxAna Ss, tol flo
 	u := o.CoefIs //f @ nodes: u = f(x_i)
 	v := la.NewVector(o.N + 1)
 	la.MatVecMul(v, 1, o.D1, u)
-	maxDiff := o.CalcErrorD1(f, dfdxAna)
+	maxDiff := o.CalcErrorD1(dfdxAna)
 	if maxDiff > tol {
 		tst.Errorf(msg+": maxDiff = %23g ⇒ D1 failed\n", maxDiff)
 	} else {
@@ -539,7 +539,7 @@ func calcD1errorChe(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64
 	chk.EP(err)
 
 	// compute error
-	maxDiff = o.CalcErrorD1(f, dfdxAna)
+	maxDiff = o.CalcErrorD1(dfdxAna)
 	return
 }
 
