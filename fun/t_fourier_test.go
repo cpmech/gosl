@@ -252,8 +252,8 @@ func TestFourierInterp02(tst *testing.T) {
 	d2fdx2 := func(x float64) (float64, error) { return -math.Cos(x/2.0) / 4.0, nil }
 
 	// constants
-	var p uint64 = 2 // exponent of 2ⁿ
-	N := 2 << p      // 2ⁿ (n=p): number of terms
+	var p uint64 = 3 // exponent of 2ⁿ
+	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoNoneKind)
 	chk.EP(err)
 
@@ -318,7 +318,7 @@ func TestFourierInterp03(tst *testing.T) {
 
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
-	N := 2 << p      // 2ⁿ (n=p): number of terms
+	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoLanczosKind)
 	chk.EP(err)
 
@@ -362,7 +362,7 @@ func TestFourierInterp03(tst *testing.T) {
 
 		for k, p := range []uint64{2, 3, 4, 5} {
 
-			N := 2 << p
+			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoLanczosKind)
 			chk.EP(err)
 			err = fou.CalcA(f)
@@ -380,7 +380,7 @@ func TestFourierInterp03(tst *testing.T) {
 
 		for k, p := range []uint64{2, 3, 4, 5} {
 
-			N := 2 << p
+			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoRcosKind)
 			chk.EP(err)
 			err = fou.CalcA(f)
@@ -395,7 +395,7 @@ func TestFourierInterp03(tst *testing.T) {
 
 		for k, p := range []uint64{2, 3, 4, 5} {
 
-			N := 2 << p
+			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoCesaroKind)
 			chk.EP(err)
 			err = fou.CalcA(f)
