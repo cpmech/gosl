@@ -405,7 +405,7 @@ func TestLagInterp06(tst *testing.T) {
 	}
 }
 
-func checkD2lag(tst *testing.T, N int, h, tolD float64, useD1, verb bool) {
+func checkD2lag(tst *testing.T, N int, h, tolD float64, verb bool) {
 
 	// allocate
 	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
@@ -414,14 +414,9 @@ func checkD2lag(tst *testing.T, N int, h, tolD float64, useD1, verb bool) {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
-	// calc D1 matrix
-	if useD1 {
-		o.CalcD1()
-	}
-
 	// check D2 matrix
 	hh := h * h
-	err = o.CalcD2(useD1)
+	err = o.CalcD2()
 	chk.EP(err)
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
@@ -448,6 +443,6 @@ func TestLagInterp07(tst *testing.T) {
 	hs := []float64{1e-2, 1e-3, 1e-3, 1e-3}
 	tols := []float64{1e-11, 1e-5, 1e-4, 1e-3}
 	for k, N := range Nvals {
-		checkD2lag(tst, N, hs[k], tols[k], true, chk.Verbose)
+		checkD2lag(tst, N, hs[k], tols[k], chk.Verbose)
 	}
 }

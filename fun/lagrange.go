@@ -102,12 +102,10 @@ type LagrangeInterp struct {
 	U la.Vector // function evaluated @ nodes: f(x_i)
 
 	// barycentric
-	Bary     bool      // use barycentric weights [default=true]
-	UseEtaD1 bool      // use ηk when computing D1 [default=true]
-	Eta      la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
-	Lam      la.Vector // normalised barycentric weights λk = pow(-1, k+N) ⋅ ηk / (2ⁿ⁻¹/n)
-
-	// options
+	Bary   bool      // use barycentric weights [default=true]
+	UseEta bool      // use ηk when computing D1 [default=true]
+	Eta    la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
+	Lam    la.Vector // normalised barycentric weights λk = pow(-1, k+N) ⋅ ηk / (2ⁿ⁻¹/n)
 
 	// computed
 	D1 *la.Matrix // (dℓj/dx)(xi)
@@ -144,7 +142,7 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 
 	// barycentric data
 	o.Bary = true
-	o.UseEtaD1 = true
+	o.UseEta = true
 	o.Eta = make([]float64, o.N+1)
 	o.Lam = make([]float64, o.N+1)
 
@@ -325,8 +323,12 @@ func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 //   see [2]
 //
 func (o *LagrangeInterp) CalcD1() (err error) {
+
+	// allocate output
 	o.D1 = la.NewMatrix(o.N+1, o.N+1)
-	if o.UseEtaD1 {
+
+	// calculate D1 using ηk
+	if o.UseEta {
 		var r, v, sumRow float64
 		for k := 0; k < o.N+1; k++ {
 			sumRow = 0
@@ -340,19 +342,57 @@ func (o *LagrangeInterp) CalcD1() (err error) {
 			}
 			o.D1.Set(k, k, -sumRow)
 		}
-	} else {
-		var v, sumRow float64
-		for k := 0; k < o.N+1; k++ {
-			sumRow = 0
-			for j := 0; j < o.N+1; j++ {
-				if k != j {
-					v = (o.Lam[j] / o.Lam[k]) / (o.X[k] - o.X[j])
-					o.D1.Set(k, j, v)
-					sumRow += v
-				}
+		return
+
+	}
+
+	// calculate D1 using λk
+	var v, sumRow float64
+	for k := 0; k < o.N+1; k++ {
+		sumRow = 0
+		for j := 0; j < o.N+1; j++ {
+			if k != j {
+				v = (o.Lam[j] / o.Lam[k]) / (o.X[k] - o.X[j])
+				o.D1.Set(k, j, v)
+				sumRow += v
 			}
-			o.D1.Set(k, k, -sumRow)
 		}
+		o.D1.Set(k, k, -sumRow)
+	}
+	return
+}
+
+// CalcD2 calculates the second derivative
+//
+//            d²ℓ_l  |
+//    D2_jl = —————— |
+//             dx²   |x=x_j
+//
+//  NOTE: this function will call CalcD1() because the D1 values required to compute D2
+//
+func (o *LagrangeInterp) CalcD2() (err error) {
+
+	// calculate D1
+	err = o.CalcD1()
+	if err != nil {
+		return
+	}
+
+	// allocate output
+	o.D2 = la.NewMatrix(o.N+1, o.N+1)
+	var v, sumRow float64
+
+	// compute D2 from D1 values using Eqs. (9) and (13) of [3]
+	for k := 0; k < o.N+1; k++ {
+		sumRow = 0
+		for j := 0; j < o.N+1; j++ {
+			if k != j {
+				v = 2.0 * o.D1.Get(k, j) * (o.D1.Get(k, k) - 1.0/(o.X[k]-o.X[j]))
+				o.D2.Set(k, j, v)
+				sumRow += v
+			}
+		}
+		o.D2.Set(k, k, -sumRow)
 	}
 	return
 }
@@ -422,37 +462,6 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 		if e > maxerr {
 			maxerr = e
 			xloc = x
-		}
-	}
-	return
-}
-
-// CalcD2 calculates the second derivative
-//
-//            d²ℓ_l  |
-//    D2_jl = —————— |
-//             dx²   |x=x_j
-//
-//  INPUT:
-//    useD1 -- use D1 values already computed. NOTE: must call CalcD1() first.
-func (o *LagrangeInterp) CalcD2(useD1 bool) (err error) {
-
-	// allocate output
-	o.D2 = la.NewMatrix(o.N+1, o.N+1)
-	var v, sumRow float64
-
-	// compute D2 from D1 values using Eqs. (9) and (13) of [3]
-	if useD1 {
-		for k := 0; k < o.N+1; k++ {
-			sumRow = 0
-			for j := 0; j < o.N+1; j++ {
-				if k != j {
-					v = 2.0 * o.D1.Get(k, j) * (o.D1.Get(k, k) - 1.0/(o.X[k]-o.X[j]))
-					o.D2.Set(k, j, v)
-					sumRow += v
-				}
-			}
-			o.D2.Set(k, k, -sumRow)
 		}
 	}
 	return

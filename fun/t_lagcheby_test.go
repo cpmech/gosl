@@ -72,7 +72,7 @@ func calcD1errorLag(N int, f, dfdxAna Ss, useEta bool) (maxDiff float64) {
 	chk.EP(err)
 
 	// compute D1 matrix
-	o.UseEtaD1 = useEta
+	o.UseEta = useEta
 	err = o.CalcD1()
 	chk.EP(err)
 

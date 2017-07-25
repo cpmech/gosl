@@ -416,7 +416,6 @@ func (o *ChebyInterp) L(i int, x float64) float64 {
 //   NOTE: (1) the signs are swapped (compared to [1]) because X are reversed here (from -1 to +1)
 //         (2) this method is only available for Gauss-Lobatto points
 //
-//
 func (o *ChebyInterp) CalcD1() (err error) {
 
 	// check
@@ -501,39 +500,6 @@ func (o *ChebyInterp) CalcD1() (err error) {
 		}
 	}
 	o.flipNstD1(flip)
-	return
-}
-
-// flipNstD1 flips and/or apply NST trick to D1
-func (o *ChebyInterp) flipNstD1(flip bool) {
-
-	// set lower triangle and diagonal using the "negative sum trick"
-	if o.Nst {
-		var sumRow float64
-		for j := 0; j < o.N+1; j++ {
-			sumRow = 0.0
-			for l := 0; l < o.N+1; l++ {
-				if j == l {
-					continue
-				}
-				if j > l { // lower triangle
-					o.D1.Set(j, l, -o.D1.Get(o.N-j, o.N-l))
-				}
-				sumRow += o.D1.Get(j, l)
-			}
-			o.D1.Set(j, j, -sumRow)
-		}
-		return
-	}
-
-	// flip to set lower triangle
-	if flip {
-		for j := 0; j < o.N+1; j++ {
-			for l := j + 1; l < o.N+1; l++ {
-				o.D1.Set(o.N-j, o.N-l, -o.D1.Get(j, l))
-			}
-		}
-	}
 	return
 }
 
@@ -646,5 +612,38 @@ func (o *ChebyInterp) gaussData(N int) (wb, wb0, wbN, gam, gam0, gamN float64) {
 	gam = π / 2.0
 	gam0 = π
 	gamN = π
+	return
+}
+
+// flipNstD1 flips and/or apply NST trick to D1
+func (o *ChebyInterp) flipNstD1(flip bool) {
+
+	// set lower triangle and diagonal using the "negative sum trick"
+	if o.Nst {
+		var sumRow float64
+		for j := 0; j < o.N+1; j++ {
+			sumRow = 0.0
+			for l := 0; l < o.N+1; l++ {
+				if j == l {
+					continue
+				}
+				if j > l { // lower triangle
+					o.D1.Set(j, l, -o.D1.Get(o.N-j, o.N-l))
+				}
+				sumRow += o.D1.Get(j, l)
+			}
+			o.D1.Set(j, j, -sumRow)
+		}
+		return
+	}
+
+	// flip to set lower triangle
+	if flip {
+		for j := 0; j < o.N+1; j++ {
+			for l := j + 1; l < o.N+1; l++ {
+				o.D1.Set(o.N-j, o.N-l, -o.D1.Get(j, l))
+			}
+		}
+	}
 	return
 }
