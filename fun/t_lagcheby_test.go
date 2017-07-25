@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -57,5 +58,86 @@ func TestLagCheby01(tst *testing.T) {
 	tolsL := []float64{1e-15, 1e-15, 1e-15, 1e-14, 1e-11, 1e-11, 1e-11, 1e-10}
 	for k, N := range Nvals {
 		compareLambda(tst, N, f, tolsU[k], tolsL[k])
+	}
+}
+
+func calcD1errorLag(N int, f, dfdxAna Ss, useEta bool) (maxDiff float64) {
+
+	// allocate polynomial
+	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	chk.EP(err)
+
+	// compute coefficients
+	err = o.CalcU(f)
+	chk.EP(err)
+
+	// compute D1 matrix
+	o.UseEtaD1 = useEta
+	err = o.CalcD1()
+	chk.EP(err)
+
+	// compute error
+	maxDiff = o.CalcErrorD1(dfdxAna)
+	return
+}
+
+func runAndPlotD1err(fnkey string, Nvals []int, f, g Ss) {
+	nn := make([]float64, len(Nvals))
+	eeA := make([]float64, len(Nvals))
+	eeB := make([]float64, len(Nvals))
+	eeC := make([]float64, len(Nvals))
+	eeD := make([]float64, len(Nvals))
+	dummy := false
+	for i, N := range Nvals {
+		nn[i] = float64(N)
+		eeA[i] = calcD1errorChe(N, f, g, false, dummy, true) // std,nst
+		eeB[i] = calcD1errorChe(N, f, g, true, dummy, true)  // tri,nst
+		eeC[i] = calcD1errorLag(N, f, g, false)              // lag,---
+		eeD[i] = calcD1errorLag(N, f, g, true)               // lag,eta
+		io.Pf("%4d: %.2e  %.2e  %.2e  %.2e\n", N, eeA[i], eeB[i], eeC[i], eeD[i])
+	}
+	plt.Reset(true, nil)
+	plt.Plot(nn, eeA, &plt.A{C: "y", L: "std,nst", M: "s", Me: 1, NoClip: true})
+	plt.Plot(nn, eeB, &plt.A{C: "k", L: "tri,nst", M: "+", Me: 1, NoClip: true})
+	plt.Plot(nn, eeC, &plt.A{C: "r", L: "lag,---", M: ".", Me: 1, NoClip: true})
+	plt.Plot(nn, eeD, &plt.A{C: "b", L: "lag,eta", M: "^", Me: 1, NoClip: true})
+	plt.Gll("$N$", "$||Df-df/dx||_\\infty$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 3})
+	plt.SetYlog()
+	plt.HideTRborders()
+	plt.Save("/tmp/gosl/fun", fnkey)
+}
+
+func TestLagCheby02a(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LagCheby02a. round-off errors")
+
+	f := func(x float64) (float64, error) {
+		return math.Pow(x, 8), nil
+	}
+	g := func(x float64) (float64, error) {
+		return 8.0 * math.Pow(x, 7), nil
+	}
+	if chk.Verbose {
+		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
+		runAndPlotD1err("lagcheby02a", Nvals, f, g)
+	}
+}
+
+func TestLagCheby02b(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LagCheby02b. round-off errors")
+
+	f := func(x float64) (float64, error) {
+		return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5), nil
+	}
+	g := func(x float64) (float64, error) {
+		d := math.Pow(x+1.1, 1.5)
+		return (8*math.Cos(8*x))/d - (3*math.Sin(8*x))/(2*(1.1+x)*d), nil
+	}
+	if chk.Verbose {
+		Nvals := []int{64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
+		runAndPlotD1err("lagcheby02b", Nvals, f, g)
 	}
 }

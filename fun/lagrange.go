@@ -100,9 +100,12 @@ type LagrangeInterp struct {
 	U la.Vector // function evaluated @ nodes: f(x_i)
 
 	// barycentric
-	Bary bool      // use barycentric weights [default=true]
-	Eta  la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
-	Lam  la.Vector // normalised barycentric weights λk = pow(-1, k+N) ⋅ ηk / (2ⁿ⁻¹/n)
+	Bary     bool      // use barycentric weights [default=true]
+	UseEtaD1 bool      // use ηk when computing D1 [default=true]
+	Eta      la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
+	Lam      la.Vector // normalised barycentric weights λk = pow(-1, k+N) ⋅ ηk / (2ⁿ⁻¹/n)
+
+	// options
 
 	// computed
 	D1 *la.Matrix // (dℓj/dx)(xi)
@@ -138,6 +141,7 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 
 	// barycentric data
 	o.Bary = true
+	o.UseEtaD1 = true
 	o.Eta = make([]float64, o.N+1)
 	o.Lam = make([]float64, o.N+1)
 
@@ -319,18 +323,33 @@ func (o *LagrangeInterp) I(x float64, f Ss) (res float64, err error) {
 //
 func (o *LagrangeInterp) CalcD1() (err error) {
 	o.D1 = la.NewMatrix(o.N+1, o.N+1)
-	var r, v, sumRow float64
-	for k := 0; k < o.N+1; k++ {
-		sumRow = 0
-		for j := 0; j < o.N+1; j++ {
-			if k != j {
-				r = NegOnePowN(k+j) * math.Exp(o.Eta[k]-o.Eta[j])
-				v = r / (o.X[k] - o.X[j])
-				o.D1.Set(k, j, v)
-				sumRow += v
+	if o.UseEtaD1 {
+		var r, v, sumRow float64
+		for k := 0; k < o.N+1; k++ {
+			sumRow = 0
+			for j := 0; j < o.N+1; j++ {
+				if k != j {
+					r = NegOnePowN(k+j) * math.Exp(o.Eta[k]-o.Eta[j])
+					v = r / (o.X[k] - o.X[j])
+					o.D1.Set(k, j, v)
+					sumRow += v
+				}
 			}
+			o.D1.Set(k, k, -sumRow)
 		}
-		o.D1.Set(k, k, -sumRow)
+	} else {
+		var v, sumRow float64
+		for k := 0; k < o.N+1; k++ {
+			sumRow = 0
+			for j := 0; j < o.N+1; j++ {
+				if k != j {
+					v = (o.Lam[j] / o.Lam[k]) / (o.X[k] - o.X[j])
+					o.D1.Set(k, j, v)
+					sumRow += v
+				}
+			}
+			o.D1.Set(k, k, -sumRow)
+		}
 	}
 	return
 }
