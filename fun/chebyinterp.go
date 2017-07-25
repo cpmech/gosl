@@ -102,7 +102,7 @@ func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
 	o.Gamma[0] = gam0
 	o.Gamma[o.N] = gamN
 
-	// compute barycentric weights as in [2]
+	// compute barycentric weights
 	o.Lam = make([]float64, o.N+1)
 	for i := 1; i < o.N; i++ {
 		o.Lam[i] = NegOnePowN(i)
