@@ -80,6 +80,37 @@ func PrintAnaNum(msg string, tol, ana, num float64, verbose bool) (e error) {
 	return
 }
 
+// PrintAnaNumC formats the output of analytical versus numerical comparisons (complex version)
+func PrintAnaNumC(msg string, tol float64, ana, num complex128, verbose bool) (e error) {
+	diffR := math.Abs(real(ana) - real(num))
+	diffC := math.Abs(imag(ana) - imag(num))
+	if math.IsNaN(diffR) || math.IsInf(diffR, 0) {
+		e = Err("[1;31m%s (real part) failed with NaN or Inf: %v[0m", msg, diffR)
+		return
+	}
+	if math.IsNaN(diffC) || math.IsInf(diffC, 0) {
+		e = Err("[1;31m%s (imag part) failed with NaN or Inf: %v[0m", msg, diffC)
+		return
+	}
+	if verbose {
+		clrR := "[1;32m" // green
+		clrC := "[1;32m" // green
+		if diffR > tol {
+			clrR = "[1;31m" // red
+		}
+		if diffC > tol {
+			clrC = "[1;31m" // red
+		}
+		f := "%" + fmt.Sprintf("%d", len(msg)) + "s"
+		fmt.Printf(f+" %23v  %23v  %s%23v[0m\n", msg, real(ana), real(num), clrR, diffR)
+		fmt.Printf(f+" %23vi %23vi %s%23v[0m\n", "", imag(ana), imag(num), clrC, diffC)
+	}
+	if diffR > tol || diffC > tol {
+		e = Err("[1;31m%s failed with |diffR| = %g  |diffC| = %g[0m", msg, diffR, diffC)
+	}
+	return
+}
+
 // CallerInfo returns the file and line positions where an error occurred
 //  idx -- use idx=2 to get the caller of Panic
 func CallerInfo(idx int) {

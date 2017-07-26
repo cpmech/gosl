@@ -41,6 +41,40 @@ func TestScalars(tst *testing.T) {
 	}
 }
 
+func TestAnaNum(tst *testing.T) {
+
+	//Verbose = true
+	PrintTitle("AnaNum and AnaNumC")
+
+	t1 := new(testing.T)
+	AnaNum(t1, "a", 1e-17, 123, 456, false)
+	if !t1.Failed() {
+		tst.Errorf("t1 should have failed\n")
+		return
+	}
+
+	t2 := new(testing.T)
+	AnaNum(t2, "a", 1e-17, 123, 123, false)
+	if t2.Failed() {
+		tst.Errorf("t2 should NOT have failed\n")
+		return
+	}
+
+	t3 := new(testing.T)
+	AnaNumC(t3, "a", 1e-17, 123i, 456i, false)
+	if !t3.Failed() {
+		tst.Errorf("t3 should have failed\n")
+		return
+	}
+
+	t4 := new(testing.T)
+	AnaNumC(t4, "a", 1e-17, 123i, 123i, false)
+	if t4.Failed() {
+		tst.Errorf("t4 should NOT have failed\n")
+		return
+	}
+}
+
 func TestString(tst *testing.T) {
 
 	//Verbose = true

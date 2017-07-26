@@ -82,3 +82,48 @@ func TestPrintAnaNum(tst *testing.T) {
 	}
 	Verbose = prevV
 }
+
+func TestPrintAnaNumC(tst *testing.T) {
+	prevV := Verbose
+	//Verbose = true
+	PrintTitle("PrintAnaNumC: verbose is ON for this test")
+
+	a := 123 + 456i
+	b := 123 + 456i
+	err := PrintAnaNumC("x", 0, a, b, Verbose)
+	if err != nil {
+		tst.Errorf("error message should be nil\n")
+	}
+
+	a = complex(math.NaN(), 0)
+	b = 1i
+	err = PrintAnaNumC("x", 0, a, b, Verbose)
+	if err == nil {
+		tst.Errorf("error message should NOT be nil\n")
+	}
+
+	a = 1i
+	b = complex(0, math.NaN())
+	err = PrintAnaNumC("x", 0, a, b, Verbose)
+	if err == nil {
+		tst.Errorf("error message should NOT be nil\n")
+	}
+
+	a = complex(math.Inf(+1), 0)
+	b = complex(math.Inf(+1), 0)
+	err = PrintAnaNumC("x", 0, a, b, Verbose)
+	if err == nil {
+		tst.Errorf("error message should NOT be nil\n")
+	}
+
+	err = PrintAnaNumC("x", 0, 1, 2, Verbose)
+	if err == nil {
+		tst.Errorf("error message should NOT be nil\n")
+	}
+
+	err = PrintAnaNumC("x", 0, 1i, 2i, Verbose)
+	if err == nil {
+		tst.Errorf("error message should NOT be nil\n")
+	}
+	Verbose = prevV
+}

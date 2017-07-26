@@ -28,6 +28,14 @@ func AnaNum(tst *testing.T, msg string, tol, ana, num float64, verbose bool) {
 	}
 }
 
+// AnaNumC compares analytical versus numerical values (complex version)
+func AnaNumC(tst *testing.T, msg string, tol float64, ana, num complex128, verbose bool) {
+	e := PrintAnaNumC(msg, tol, ana, num, verbose)
+	if e != nil {
+		tst.Errorf("%v", e.Error())
+	}
+}
+
 // String compares two strings
 func String(tst *testing.T, str, correct string) {
 	if str != correct {
