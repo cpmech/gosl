@@ -49,3 +49,59 @@ func QuadCs(a, b, ω float64, useSin bool, fid int, f func(x float64) float64) (
 	res, _, _, _, err = qpck.Awoe(id, f, a, b, ω, cs, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
 	return
 }
+
+// QuadExpIx approximates the integral of f(x) ⋅ exp(i⋅m⋅x) with i = √-1
+//
+//   INPUT:
+//     a      -- lower limit of integration
+//     b      -- upper limit of integration
+//     m      -- coefficient of x
+//     fid    -- index of goroutine (to avoid race problems)
+//     f      -- function defining the integrand
+//
+//   OUTPUT:        b                           b                           b
+//           res = ∫  f(x) ⋅ exp(i⋅m⋅x) dx   = ∫  f(x) ⋅ cos(m⋅x) dx + i ⋅ ∫  f(x) ⋅ sin(m⋅x) dx
+//                 a                           a                           a
+//
+func QuadExpIx(a, b, m float64, fid int, f func(x float64) float64) (res complex128, err error) {
+
+	// allocate workspace
+	limit := 50
+	alist := make([]float64, limit)
+	blist := make([]float64, limit)
+	rlist := make([]float64, limit)
+	elist := make([]float64, limit)
+	iord := make([]int32, limit)
+	nnlog := make([]int32, limit)
+
+	// set flags
+	id := int32(fid)
+	var icall int32 = 1  // do not reuse moments
+	var maxp1 int32 = 50 // upper bound on the number of Chebyshev moments
+	var momcom int32     // 0 => do compute moments
+
+	// allocate Chebyshev moments array
+	chebmo := make([]float64, 25*maxp1)
+
+	// perform integration of cos term
+	var integr int32 = 1 // w(x) = cos(m*x)
+	Icos, _, _, _, err := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
+	if err != nil {
+		return
+	}
+
+	// set flags
+	icall = 2  // do reuse moments
+	momcom = 1 // do not compute moments
+
+	// perform integration of sin term
+	integr = 2 // w(x) = sin(m*x)
+	Isin, _, _, _, err := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
+	if err != nil {
+		return
+	}
+
+	// results
+	res = complex(Icos, Isin)
+	return
+}
