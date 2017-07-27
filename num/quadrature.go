@@ -90,10 +90,6 @@ func QuadExpIx(a, b, m float64, fid int, f func(x float64) float64) (res complex
 		return
 	}
 
-	// set flags
-	icall = 2  // do reuse moments
-	momcom = 1 // do not compute moments
-
 	// perform integration of sin term
 	integr = 2 // w(x) = sin(m*x)
 	Isin, _, _, _, err := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
