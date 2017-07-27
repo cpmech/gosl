@@ -56,7 +56,7 @@ func main() {
 	var tst testing.T
 
 	if comm.Rank() == 0 {
-		chk.Matrix(&tst, "J @ proc 0", 1.0e-17, J.GetDenseMatrix().GetSlice(), [][]float64{
+		chk.Deep2(&tst, "J @ proc 0", 1.0e-17, J.GetDenseMatrix().GetDeep2(), [][]float64{
 			{1000, 1000, 1000, 1011, 1021, 1000},
 			{1000, 1000, 1000, 1012, 1022, 1000},
 			{1000, 1000, 1000, 1013, 1023, 1000},
