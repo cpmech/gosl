@@ -19,28 +19,28 @@ import (
 
 func main() {
 
-	mpi.Start(false)
-	defer func() {
-		mpi.Stop(false)
-	}()
+	mpi.Start()
+	defer mpi.Stop()
 
-	if mpi.Rank() == 0 {
+	comm := mpi.NewCommunicator(nil)
+
+	if comm.Rank() == 0 {
 		chk.PrintTitle("TestJacobian 01b (MPI)")
 	}
-	if mpi.Size() != 2 {
+	if comm.Size() != 2 {
 		io.Pf("this tests needs MPI 2 processors\n")
 		return
 	}
 
-	ffcn := func(fx, x []float64) error {
+	ffcn := func(fx, x la.Vector) error {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
 		fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
 		return nil
 	}
-	Jfcn := func(dfdx *la.Triplet, x []float64) error {
+	Jfcn := func(dfdx *la.Triplet, x la.Vector) error {
 		dfdx.Start()
 		if false {
-			if mpi.Rank() == 0 {
+			if comm.Rank() == 0 {
 				dfdx.Put(0, 0, 3.0*x[0]*x[0])
 				dfdx.Put(1, 0, -1.0)
 			} else {
@@ -48,7 +48,7 @@ func main() {
 				dfdx.Put(1, 1, 3.0*x[1]*x[1])
 			}
 		} else {
-			if mpi.Rank() == 0 {
+			if comm.Rank() == 0 {
 				dfdx.Put(0, 0, 3.0*x[0]*x[0])
 				dfdx.Put(0, 1, 1.0)
 			} else {
@@ -60,5 +60,5 @@ func main() {
 	}
 	x := []float64{0.5, 0.5}
 	var tst testing.T
-	num.CompareJacMpi(&tst, ffcn, Jfcn, x, 1e-8, true)
+	num.CompareJacMpi(&tst, comm, ffcn, Jfcn, x, 1e-8, true)
 }
