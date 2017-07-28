@@ -201,12 +201,16 @@ func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out O
 	// method
 	switch method {
 	case "FwEuler":
-		o.step = fweulerStep
-		o.accept = fweulerAccept
+		o.rkm = NewRKmethod(FwEulerKind)
+		o.rkm.Init(o.Distr)
+		o.step = o.rkm.Step
+		o.accept = o.rkm.Accept
 		o.nstg = 1
 	case "BwEuler":
-		o.step = bweulerStep
-		o.accept = bweulerAccept
+		o.rkm = NewRKmethod(BwEulerKind)
+		o.rkm.Init(o.Distr)
+		o.step = o.rkm.Step
+		o.accept = o.rkm.Accept
 		o.nstg = 1
 	case "MoEuler":
 		o.rkm = NewRKmethod(MoEulerKind)

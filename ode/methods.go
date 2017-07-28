@@ -16,7 +16,7 @@ var (
 	FwEulerKind = io.NewEnum("FwEuler", "ode", "FE", "Forward Euler (explicit)")
 
 	// BwEulerKind specifies the Backward Euler method (explicit)
-	BwEulerKind = io.NewEnum("BwEuler", "ode", "BE", "Backward Euler (explicit)")
+	BwEulerKind = io.NewEnum("BwEuler", "ode", "BE", "Backward Euler (implicit)")
 
 	// MoEulerKind specifies the Modified Euler method (explicit)
 	MoEulerKind = io.NewEnum("MoEuler", "ode", "ME", "Modified Euler (explicit)")

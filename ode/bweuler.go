@@ -13,112 +13,127 @@ import (
 	"github.com/cpmech/gosl/num"
 )
 
-// bweulerAccept accepts update
-func bweulerAccept(o *Solver, y la.Vector) {
+// BwEuler implements the (implicit) Backward Euler method
+type BwEuler struct {
 }
 
-// bweulerStep performs one step update
-func bweulerStep(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
+// Init initialises structure
+func (o *BwEuler) Init(distr bool) (err error) {
+	return nil
+}
+
+// Accept accepts update
+func (o *BwEuler) Accept(sol *Solver, y la.Vector) {
+}
+
+// Step steps update
+func (o *BwEuler) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
 
 	// new x
-	x += o.h
+	x0 += sol.h
 
 	// previous y
-	o.v[0].Apply(1, y) // v := y_old
+	sol.v[0].Apply(1, y0) // v := y_old
 
 	// iterations
 	var rmsnr float64 // rms norm of residual
 	var it int
-	for it = 0; it < o.NmaxIt; it++ {
+	for it = 0; it < sol.NmaxIt; it++ {
 
 		// max iterations ?
-		o.nit = it + 1
-		if o.nit > o.Nitmax {
-			o.Nitmax = o.nit
+		sol.nit = it + 1
+		if sol.nit > sol.Nitmax {
+			sol.Nitmax = sol.nit
 		}
 
 		// calculate f @ update y
-		o.Nfeval++
-		err = o.fcn(o.f[0], o.h, x, y)
+		sol.Nfeval++
+		err = sol.fcn(sol.f[0], sol.h, x0, y0)
 		if err != nil {
 			return
 		}
 
 		// calculate residual
 		rmsnr = 0.0
-		for i := 0; i < o.ndim; i++ {
-			o.w[0][i] = y[i] - o.v[0][i] - o.h*o.f[0][i] // w := residual
-			if o.UseRmsNorm {
-				rmsnr += math.Pow(o.w[0][i]/o.scal[i], 2.0)
+		for i := 0; i < sol.ndim; i++ {
+			sol.w[0][i] = y0[i] - sol.v[0][i] - sol.h*sol.f[0][i] // w := residual
+			if sol.UseRmsNorm {
+				rmsnr += math.Pow(sol.w[0][i]/sol.scal[i], 2.0)
 			} else {
-				rmsnr += o.w[0][i] * o.w[0][i]
+				rmsnr += sol.w[0][i] * sol.w[0][i]
 			}
 		}
-		if o.UseRmsNorm {
-			rmsnr = math.Sqrt(rmsnr / float64(o.ndim))
+		if sol.UseRmsNorm {
+			rmsnr = math.Sqrt(rmsnr / float64(sol.ndim))
 		} else {
 			rmsnr = math.Sqrt(rmsnr)
 		}
-		if o.Verbose {
-			io.Pfgrey("    residual = %10.5e    (tol = %10.5e)\n", rmsnr, o.fnewt)
+		if sol.Verbose {
+			io.Pfgrey("    residual = %10.5e    (tol = %10.5e)\n", rmsnr, sol.fnewt)
 		}
 
 		// converged
-		if rmsnr < o.fnewt {
+		if rmsnr < sol.fnewt {
 			break
 		}
 
 		// Jacobian matrix
-		if o.doinit || !o.CteTg {
-			o.Njeval++
+		if sol.doinit || !sol.CteTg {
+			sol.Njeval++
 
 			// calculate Jacobian
-			if o.jac == nil { // numerical
-				err = num.Jacobian(&o.dfdyT, func(fy, yy la.Vector) (e error) {
-					e = o.fcn(fy, o.h, x, yy)
+			if sol.jac == nil { // numerical
+				err = num.Jacobian(&sol.dfdyT, func(fy, yy la.Vector) (e error) {
+					e = sol.fcn(fy, sol.h, x0, yy)
 					return
-				}, y, o.f[0], o.dw[0]) // δw works here as workspace variable
+				}, y0, sol.f[0], sol.dw[0]) // δw works here as workspace variable
 			} else { // analytical
-				err = o.jac(&o.dfdyT, o.h, x, y)
+				err = sol.jac(&sol.dfdyT, sol.h, x0, y0)
 			}
 			if err != nil {
 				return
 			}
-			if o.doinit {
-				o.rctriR = new(la.Triplet)
-				o.rctriR.Init(o.ndim, o.ndim, o.mTri.Len()+o.dfdyT.Len())
+			if sol.doinit {
+				sol.rctriR = new(la.Triplet)
+				sol.rctriR.Init(sol.ndim, sol.ndim, sol.mTri.Len()+sol.dfdyT.Len())
 			}
 
 			// calculate drdy matrix
-			la.SpTriAdd(o.rctriR, 1, o.mTri, -o.h, &o.dfdyT) // rctriR := I - h * dfdy
+			la.SpTriAdd(sol.rctriR, 1, sol.mTri, -sol.h, &sol.dfdyT) // rctriR := I - h * dfdy
 
 			// initialise linear solver
-			if o.doinit {
-				err = o.lsolR.Init(o.rctriR, o.symmetric, o.lsverbose, o.ordering, o.scaling, o.comm)
+			if sol.doinit {
+				err = sol.lsolR.Init(sol.rctriR, sol.symmetric, sol.lsverbose, sol.ordering, sol.scaling, sol.comm)
 				if err != nil {
 					return
 				}
 			}
 
 			// perform factorisation
-			o.Ndecomp++
-			o.lsolR.Fact()
+			sol.Ndecomp++
+			sol.lsolR.Fact()
 		}
 
 		// solve linear system
-		o.Nlinsol++
-		o.lsolR.Solve(o.dw[0], o.w[0], false) // δw := inv(rcmat) * residual
+		sol.Nlinsol++
+		sol.lsolR.Solve(sol.dw[0], sol.w[0], false) // δw := inv(rcmat) * residual
 
 		// update y
-		for i := 0; i < o.ndim; i++ {
-			y[i] -= o.dw[0][i]
+		for i := 0; i < sol.ndim; i++ {
+			y0[i] -= sol.dw[0][i]
 		}
 	}
 
 	// did not converge
-	if it == o.NmaxIt-1 {
-		chk.Panic("bweuler_step failed with it = %d", it)
+	if it == sol.NmaxIt-1 {
+		chk.Panic("convergence failed with it = %d", it)
 	}
 
 	return 1e+20, err // must not be used with automatic substepping
+}
+
+// add method to database //////////////////////////////////////////////////////////////////////////
+
+func init() {
+	rkmDB[BwEulerKind] = func() RKmethod { return new(BwEuler) }
 }
