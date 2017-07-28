@@ -32,9 +32,6 @@ type Solver struct {
 	// method data
 	method io.Enum  // method kind
 	rkm    RKmethod // Runge-Kutta method
-	step   stpfcn   // step function
-	accept acptfcn  // accept update function
-	nstg   int      // number of stages
 
 	// primary variables
 	ndim int          // size of y
@@ -201,30 +198,28 @@ func NewSolver(method io.Enum, ndim int, fcn Func, jac JacF, M *la.Triplet, out 
 	o.method = method
 	o.rkm = NewRKmethod(method)
 	o.rkm.Init(o.Distr)
-	o.step = o.rkm.Step
-	o.accept = o.rkm.Accept
-	o.nstg = o.rkm.Nstages()
+	nstg := o.rkm.Nstages()
 
 	// allocate step variables
 	o.f0 = la.NewVector(o.ndim)
 	o.scal = la.NewVector(o.ndim)
 
 	// allocate rk variables
-	o.u = la.NewVector(o.nstg)
-	o.v = make([]la.Vector, o.nstg)
-	o.w = make([]la.Vector, o.nstg)
-	o.dw = make([]la.Vector, o.nstg)
-	o.f = make([]la.Vector, o.nstg)
+	o.u = la.NewVector(nstg)
+	o.v = make([]la.Vector, nstg)
+	o.w = make([]la.Vector, nstg)
+	o.dw = make([]la.Vector, nstg)
+	o.f = make([]la.Vector, nstg)
 	if method == Radau5kind {
-		o.z = make([]la.Vector, o.nstg)
-		o.ycol = make([]la.Vector, o.nstg)
+		o.z = make([]la.Vector, nstg)
+		o.ycol = make([]la.Vector, nstg)
 		o.ez = la.NewVector(o.ndim)
 		o.lerr = la.NewVector(o.ndim)
 		o.rhs = la.NewVector(o.ndim)
 		o.v12 = la.NewVectorC(o.ndim)
 		o.dw12 = la.NewVectorC(o.ndim)
 	}
-	for i := 0; i < o.nstg; i++ {
+	for i := 0; i < nstg; i++ {
 		o.v[i] = la.NewVector(o.ndim)
 		o.w[i] = la.NewVector(o.ndim)
 		o.dw[i] = la.NewVector(o.ndim)
@@ -353,13 +348,13 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 			o.reuseJdec = false
 			o.reuseJ = false
 			o.jacIsOK = false
-			o.step(o, y, x)
+			o.rkm.Step(o, y, x)
 			o.Nsteps++
 			o.doinit = false
 			o.first = false
 			o.hprev = o.h
 			x += o.h
-			o.accept(o, y)
+			o.rkm.Accept(o, y)
 			if o.out != nil {
 				o.out(false, o.h, x, y)
 			}
@@ -408,7 +403,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 			}
 
 			// step update
-			rerr, err = o.step(o, y, x)
+			rerr, err = o.rkm.Step(o, y, x)
 
 			// initialise only once
 			o.doinit = false
@@ -438,7 +433,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 				// update x and y
 				o.hprev = o.h
 				x += o.h
-				o.accept(o, y)
+				o.rkm.Accept(o, y)
 
 				// output
 				if o.out != nil {
