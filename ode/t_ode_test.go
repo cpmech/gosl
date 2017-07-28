@@ -46,8 +46,7 @@ func Test_ode01(tst *testing.T) {
 	io.Pforan(". . . FwEuler . . . \n")
 	dx := 1.875 / 50.0
 	copy(y, ya)
-	var FwEuler Solver
-	FwEuler.Init("FwEuler", ndim, fcn, jac, nil, nil)
+	FwEuler := NewSolver("FwEuler", ndim, fcn, jac, nil, nil)
 	FwEuler.SaveXY = true
 	FwEuler.Solve(y, xa, xb, dx, true)
 	chk.Int(tst, "number of F evaluations ", FwEuler.Nfeval, 40)
@@ -63,9 +62,7 @@ func Test_ode01(tst *testing.T) {
 	// BwEuler
 	io.Pforan(". . . BwEuler . . . \n")
 	copy(y, ya)
-	var BwEuler Solver
-	//BwEuler.Init("BwEuler", ndim, fcn, nil, nil, out)
-	BwEuler.Init("BwEuler", ndim, fcn, jac, nil, nil)
+	BwEuler := NewSolver("BwEuler", ndim, fcn, jac, nil, nil)
 	BwEuler.SaveXY = true
 	BwEuler.Solve(y, xa, xb, dx, true)
 	chk.Int(tst, "number of F evaluations ", BwEuler.Nfeval, 80)
@@ -81,8 +78,7 @@ func Test_ode01(tst *testing.T) {
 	// MoEuler
 	io.Pforan(". . . MoEuler . . . \n")
 	copy(y, ya)
-	var MoEuler Solver
-	MoEuler.Init("MoEuler", ndim, fcn, jac, nil, nil)
+	MoEuler := NewSolver("MoEuler", ndim, fcn, jac, nil, nil)
 	MoEuler.SaveXY = true
 	MoEuler.Solve(y, xa, xb, xb-xa, false)
 	chk.Int(tst, "number of F evaluations ", MoEuler.Nfeval, 379)
@@ -98,8 +94,7 @@ func Test_ode01(tst *testing.T) {
 	// Dopri5
 	io.Pforan(". . . Dopri5 . . . \n")
 	copy(y, ya)
-	var Dopri5 Solver
-	Dopri5.Init("Dopri5", ndim, fcn, jac, nil, nil)
+	Dopri5 := NewSolver("Dopri5", ndim, fcn, jac, nil, nil)
 	Dopri5.SaveXY = true
 	Dopri5.Solve(y, xa, xb, xb-xa, false)
 	chk.Int(tst, "number of F evaluations ", Dopri5.Nfeval, 1132)
@@ -115,8 +110,7 @@ func Test_ode01(tst *testing.T) {
 	// Radau5
 	io.Pforan(". . . Radau5 . . . \n")
 	copy(y, ya)
-	var Radau5 Solver
-	Radau5.Init("Radau5", ndim, fcn, jac, nil, nil)
+	Radau5 := NewSolver("Radau5", ndim, fcn, jac, nil, nil)
 	Radau5.SaveXY = true
 	Radau5.Solve(y, xa, xb, xb-xa, false)
 	chk.Int(tst, "number of F evaluations ", Radau5.Nfeval, 66)
@@ -183,11 +177,11 @@ func Test_ode02(tst *testing.T) {
 	ndim := len(ya)
 
 	// allocate ODE object
-	var o Solver
+	var o *Solver
 	if numjac {
-		o.Init(method, ndim, fcn, nil, nil, nil)
+		o = NewSolver(method, ndim, fcn, nil, nil, nil)
 	} else {
-		o.Init(method, ndim, fcn, jac, nil, nil)
+		o = NewSolver(method, ndim, fcn, jac, nil, nil)
 	}
 
 	// tolerances and initial step size
@@ -281,8 +275,7 @@ func Test_ode03(tst *testing.T) {
 	ndim := len(ya)
 
 	// allocate ODE object
-	var o Solver
-	o.Init(method, ndim, fcn, jac, nil, nil)
+	o := NewSolver(method, ndim, fcn, jac, nil, nil)
 	o.SaveXY = true
 
 	// tolerances and initial step size
@@ -436,14 +429,14 @@ func Test_ode04(tst *testing.T) {
 	numjac := false
 
 	// ODE solver
-	var o Solver
-	o.Pll = true
-	o.SaveXY = true
+	var o *Solver
+	//o.Pll = true
+	//o.SaveXY = true
 
 	if numjac {
-		o.Init(method, ndim, fcn, nil, &M, nil)
+		o = NewSolver(method, ndim, fcn, nil, &M, nil)
 	} else {
-		o.Init(method, ndim, fcn, jac, &M, nil)
+		o = NewSolver(method, ndim, fcn, jac, &M, nil)
 	}
 	o.IniH = 1.0e-6 // initial step size
 

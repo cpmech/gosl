@@ -143,8 +143,11 @@ type Solver struct {
 	lsolC     la.SparseSolverC  // solver for the complex part
 }
 
-// Init initialises ODE structure with default values and allocate slices
-func (o *Solver) Init(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out OutF) {
+// NewSolver returns a new ODE structure with default values and allocated slices
+func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out OutF) (o *Solver) {
+
+	// new structure
+	o = new(Solver)
 
 	// primary variables
 	o.method = method
@@ -258,6 +261,7 @@ func (o *Solver) Init(method string, ndim int, fcn Func, jac JacF, M *la.Triplet
 			o.ycol[i] = la.NewVector(o.ndim)
 		}
 	}
+	return
 }
 
 // SetTol sets tolerances according to Hairer and Wanner suggestions. This routine also
