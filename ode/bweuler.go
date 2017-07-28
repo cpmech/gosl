@@ -13,11 +13,12 @@ import (
 	"github.com/cpmech/gosl/num"
 )
 
-func bweuler_accept(o *Solver, y la.Vector) {
+// bweulerAccept accepts update
+func bweulerAccept(o *Solver, y la.Vector) {
 }
 
-// backward-Euler
-func bweuler_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
+// bweulerStep performs one step update
+func bweulerStep(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 
 	// new x
 	x += o.h
@@ -37,7 +38,7 @@ func bweuler_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 		}
 
 		// calculate f @ update y
-		o.Nfeval += 1
+		o.Nfeval++
 		err = o.fcn(o.f[0], o.h, x, y)
 		if err != nil {
 			return
@@ -69,7 +70,7 @@ func bweuler_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 
 		// Jacobian matrix
 		if o.doinit || !o.CteTg {
-			o.Njeval += 1
+			o.Njeval++
 
 			// calculate Jacobian
 			if o.jac == nil { // numerical
@@ -100,12 +101,12 @@ func bweuler_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 			}
 
 			// perform factorisation
-			o.Ndecomp += 1
+			o.Ndecomp++
 			o.lsolR.Fact()
 		}
 
 		// solve linear system
-		o.Nlinsol += 1
+		o.Nlinsol++
 		o.lsolR.Solve(o.dw[0], o.w[0], false) // δw := inv(rcmat) * residual
 
 		// update y

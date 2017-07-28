@@ -10,7 +10,8 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-type ERKdat struct {
+// ExplicitRungeKutta holds data to solve an ODE using the explicit Runge-Kutta method
+type ExplicitRungeKutta struct {
 	usefp bool        // method can use f from previous step
 	a     [][]float64 // a coefficients
 	b     []float64   // b coefficients
@@ -18,12 +19,13 @@ type ERKdat struct {
 	c     []float64   // c coefficients
 }
 
-func erk_accept(o *Solver, y la.Vector) {
+// erkAccept accepts update
+func erkAccept(o *Solver, y la.Vector) {
 	y.Apply(1, o.w[0]) // y := w (update y)
 }
 
-// explicit Runge-Kutta step function
-func erk_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
+// erkStep performs one step update using the (explicit) Runge-Kutta method
+func erkStep(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 
 	for i := 0; i < o.nstg; i++ {
 		o.u[i] = x + o.h*o.erkdat.c[i]
@@ -34,7 +36,7 @@ func erk_step(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 		if i == 0 && o.erkdat.usefp && !o.first {
 			o.f[i].Apply(1, o.f[o.nstg-1]) // f[i] := f[nstg-1]
 		} else {
-			o.Nfeval += 1
+			o.Nfeval++
 			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i])
 			if err != nil {
 				return

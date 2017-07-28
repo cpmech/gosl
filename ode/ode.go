@@ -2,8 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// package ode implements solvers for ordinary differential equations, such as the ones based on the
-// Runge-Kutta method; e.g. Radau5
+// Package ode implements solvers for ordinary differential equations, including explicit and
+// implicit Runge-Kutta methods; e.g. the fantastic Radau5 method by
+// Hairer, Norsett & Wanner [1, 2].
+//   References:
+//     [1] Hairer E, Nørsett SP, Wanner G (1993). Solving Ordinary Differential Equations I:
+//         Nonstiff Problems. Springer Series in Computational Mathematics, Vol. 8, Berlin,
+//         Germany, 523 p.
+//     [2] Hairer E, Wanner G (1996). Solving Ordinary Differential Equations II: Stiff and
+//         Differential-Algebraic Problems. Springer Series in Computational Mathematics,
+//         Vol. 14, Berlin, Germany, 614 p.
 package ode
 
 import (
@@ -111,7 +119,7 @@ type Solver struct {
 	dw12 la.VectorC // join 1 and 2: complex(dw[1],d2[2])
 
 	// explicit rk variables
-	erkdat ERKdat // explicit RK data
+	erkdat ExplicitRungeKutta // explicit RK data
 
 	// radau5 variables
 	z     []la.Vector // Radau5
@@ -196,19 +204,19 @@ func (o *Solver) Init(method string, ndim int, fcn Func, jac JacF, M *la.Triplet
 		o.accept = fweuler_accept
 		o.nstg = 1
 	case "BwEuler":
-		o.step = bweuler_step
-		o.accept = bweuler_accept
+		o.step = bweulerStep
+		o.accept = bweulerAccept
 		o.nstg = 1
 	case "MoEuler":
-		o.step = erk_step
-		o.accept = erk_accept
+		o.step = erkStep
+		o.accept = erkAccept
 		o.nstg = 2
-		o.erkdat = ERKdat{true, ME2_a, ME2_b, ME2_be, ME2_c}
+		o.erkdat = ExplicitRungeKutta{true, ME2_a, ME2_b, ME2_be, ME2_c}
 	case "Dopri5":
-		o.step = erk_step
-		o.accept = erk_accept
+		o.step = erkStep
+		o.accept = erkAccept
 		o.nstg = 7
-		o.erkdat = ERKdat{true, DP5_a, DP5_b, DP5_be, DP5_c}
+		o.erkdat = ExplicitRungeKutta{true, DP5_a, DP5_b, DP5_be, DP5_c}
 	case "Radau5":
 		if o.Distr {
 			o.step = radau5_step_mpi
@@ -218,7 +226,7 @@ func (o *Solver) Init(method string, ndim int, fcn Func, jac JacF, M *la.Triplet
 		o.accept = radau5_accept
 		o.nstg = 3
 	default:
-		chk.Panic(_ode_err1, method)
+		chk.Panic("method %s is not available", method)
 	}
 
 	// allocate step variables
@@ -259,7 +267,7 @@ func (o *Solver) SetTol(atol, rtol float64) {
 	// check and change the tolerances
 	β := 2.0 / 3.0
 	if o.Atol <= 0.0 || o.Rtol <= 10.0*o.Eps {
-		chk.Panic(_ode_err4, o.Atol, o.Rtol)
+		chk.Panic("tolerances are too small: Atol=%v, Rtol=%v", o.Atol, o.Rtol)
 	} else {
 		quot := o.Atol / o.Rtol
 		o.Rtol = 0.1 * math.Pow(o.Rtol, β)
@@ -272,7 +280,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 
 	// check
 	if xb < x {
-		err = chk.Err(_ode_err3, xb, x)
+		err = chk.Err("xb == %v must be greater than x == %v\n", xb, x)
 		return
 	}
 
@@ -361,7 +369,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 			//if x + o.h > xb { o.h = xb - x }
 			if o.jac == nil { // numerical Jacobian
 				if o.method == "Radau5" {
-					o.Nfeval += 1
+					o.Nfeval++
 					o.fcn(o.f0, o.h, x, y)
 				}
 			}
@@ -369,7 +377,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 			o.reuseJ = false
 			o.jacIsOK = false
 			o.step(o, y, x)
-			o.Nsteps += 1
+			o.Nsteps++
 			o.doinit = false
 			o.first = false
 			o.hprev = o.h
@@ -396,11 +404,11 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 	}
 
 	// first function evaluation
-	o.Nfeval += 1
+	o.Nfeval++
 	o.fcn(o.f0, o.h, x, y) // o.f0 := f(x,y)
 
 	// time loop
-	var dxmax, xstep, fac, div, dxnew, facgus, old_h, old_rerr float64
+	var dxmax, xstep, fac, div, dxnew, facgus, oldH, oldRerr float64
 	var dxratio float64
 	var failed bool
 	for x < xb {
@@ -409,7 +417,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 		for iss := 0; iss < o.NmaxSS+1; iss++ {
 
 			// total number of substeps
-			o.Nsteps += 1
+			o.Nsteps++
 
 			// error: did not converge
 			if iss == o.NmaxSS {
@@ -446,7 +454,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 			if rerr < 1.0 {
 
 				// set flags
-				o.Naccepted += 1
+				o.Naccepted++
 				o.first = false
 				o.jacIsOK = false
 
@@ -479,18 +487,18 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 				// predictive controller of Gustafsson
 				if o.PredCtrl {
 					if o.Naccepted > 1 {
-						facgus = (old_h / o.h) * math.Pow(math.Pow(rerr, 2.0)/old_rerr, 0.25) / o.Mfac
+						facgus = (oldH / o.h) * math.Pow(math.Pow(rerr, 2.0)/oldRerr, 0.25) / o.Mfac
 						facgus = max(o.Mmin, min(o.Mmax, facgus))
 						div = max(div, facgus)
 						dxnew = o.h / div
 					}
-					old_h = o.h
-					old_rerr = max(1.0e-2, rerr)
+					oldH = o.h
+					oldRerr = max(1.0e-2, rerr)
 				}
 
 				// calc new scal and f0
 				la.VecScaleAbs(o.scal, o.Atol, o.Rtol, y) // o.scal := o.Atol + o.Rtol * abs(y)
-				o.Nfeval += 1
+				o.Nfeval++
 				o.fcn(o.f0, o.h, x, y) // o.f0 := f(x,y)
 
 				// new step size
@@ -524,7 +532,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 			} else {
 				// set flags
 				if o.Naccepted > 0 {
-					o.Nrejected += 1
+					o.Nrejected++
 				}
 				o.reject = true
 				o.last = false
@@ -545,13 +553,14 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 
 		// sub-stepping failed
 		if failed {
-			err = chk.Err(_ode_err2, o.NmaxSS)
+			err = chk.Err("substepping did not converge after %d steps\n", o.NmaxSS)
 			break
 		}
 	}
 	return
 }
 
+// Stat prints "statistical" information about the solution process
 func (o *Solver) Stat() {
 	io.Pf("number of F evaluations   =%6d\n", o.Nfeval)
 	io.Pf("number of J evaluations   =%6d\n", o.Njeval)
@@ -576,11 +585,3 @@ func min(a, b float64) float64 {
 	}
 	return b
 }
-
-// error messages
-var (
-	_ode_err1 = "ode.go: ODE.Init: method %s is not available"
-	_ode_err2 = "ode.go: ODE.Solve: substepping did not converge after %d steps\n"
-	_ode_err3 = "ode.go: ODE.Solve: xb == %v must be greater than x == %v\n"
-	_ode_err4 = "ode.go: ODE.SetHWtol: tolerances are too small: Atol=%v, Rtol=%v"
-)
