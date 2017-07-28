@@ -10,6 +10,49 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
+// erkdata holds data for an explicit Runge-Kutta method
+type erkdata struct {
+	A  [][]float64 // a coefficients
+	B  []float64   // b coefficients
+	Be []float64   // be coefficients
+	C  []float64   // c coefficients
+}
+
+// erkstep performs the step update of an explicit Runge-Kutta method
+func erkstep(o *erkdata, nStages int, useFprev bool, sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
+
+	// update
+	for i := 0; i < nStages; i++ {
+		sol.u[i] = x0 + sol.h*o.C[i]
+		sol.v[i].Apply(1, y0) // v[i] := y
+		for j := 0; j < i; j++ {
+			la.VecAdd(sol.v[i], 1, sol.v[i], sol.h*o.A[i][j], sol.f[j]) // v[i] += h*a[i][j]*f[j]
+		}
+		if i == 0 && useFprev && !sol.first {
+			sol.f[i].Apply(1, sol.f[nStages-1]) // f[i] := f[nstg-1]
+		} else {
+			sol.Nfeval++
+			err = sol.fcn(sol.f[i], sol.h, sol.u[i], sol.v[i])
+			if err != nil {
+				return
+			}
+		}
+	}
+
+	// error estimation
+	var lerrm float64 // m component of local error estimate
+	for m := 0; m < sol.ndim; m++ {
+		lerrm = 0.0
+		for i := 0; i < nStages; i++ {
+			sol.w[0][m] += o.B[i] * sol.f[i][m] * sol.h
+			lerrm += (o.Be[i] - o.B[i]) * sol.f[i][m] * sol.h
+		}
+		rerr += math.Pow(lerrm/sol.scal[m], 2.0)
+	}
+	rerr = max(math.Sqrt(rerr/float64(sol.ndim)), 1.0e-10)
+	return
+}
+
 // expRKdat holds data to solve an ODE using the explicit Runge-Kutta method
 type expRKdat struct {
 	usefp bool        // method can use f from previous step
@@ -20,24 +63,24 @@ type expRKdat struct {
 }
 
 // erkAccept accepts update
-func erkAccept(o *Solver, y la.Vector) {
-	y.Apply(1, o.w[0]) // y := w (update y)
+func erkAccept(sol *Solver, y la.Vector) {
+	y.Apply(1, sol.w[0]) // y := w (update y)
 }
 
 // erkStep performs one step update using the (explicit) Runge-Kutta method
-func erkStep(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
+func erkStep(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
 
-	for i := 0; i < o.nstg; i++ {
-		o.u[i] = x + o.h*o.erkdat.c[i]
-		o.v[i].Apply(1, y) // v[i] := y
+	for i := 0; i < sol.nstg; i++ {
+		sol.u[i] = x0 + sol.h*sol.erkdat.c[i]
+		sol.v[i].Apply(1, y0) // v[i] := y
 		for j := 0; j < i; j++ {
-			la.VecAdd(o.v[i], 1, o.v[i], o.h*o.erkdat.a[i][j], o.f[j]) // v[i] += h*a[i][j]*f[j]
+			la.VecAdd(sol.v[i], 1, sol.v[i], sol.h*sol.erkdat.a[i][j], sol.f[j]) // v[i] += h*a[i][j]*f[j]
 		}
-		if i == 0 && o.erkdat.usefp && !o.first {
-			o.f[i].Apply(1, o.f[o.nstg-1]) // f[i] := f[nstg-1]
+		if i == 0 && sol.erkdat.usefp && !sol.first {
+			sol.f[i].Apply(1, sol.f[sol.nstg-1]) // f[i] := f[nstg-1]
 		} else {
-			o.Nfeval++
-			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i])
+			sol.Nfeval++
+			err = sol.fcn(sol.f[i], sol.h, sol.u[i], sol.v[i])
 			if err != nil {
 				return
 			}
@@ -45,15 +88,15 @@ func erkStep(o *Solver, y la.Vector, x float64) (rerr float64, err error) {
 	}
 
 	var lerrm float64 // m component of local error estimate
-	for m := 0; m < o.ndim; m++ {
+	for m := 0; m < sol.ndim; m++ {
 		lerrm = 0.0
-		for i := 0; i < o.nstg; i++ {
-			o.w[0][m] += o.erkdat.b[i] * o.f[i][m] * o.h
-			lerrm += (o.erkdat.be[i] - o.erkdat.b[i]) * o.f[i][m] * o.h
+		for i := 0; i < sol.nstg; i++ {
+			sol.w[0][m] += sol.erkdat.b[i] * sol.f[i][m] * sol.h
+			lerrm += (sol.erkdat.be[i] - sol.erkdat.b[i]) * sol.f[i][m] * sol.h
 		}
-		rerr += math.Pow(lerrm/o.scal[m], 2.0)
+		rerr += math.Pow(lerrm/sol.scal[m], 2.0)
 	}
-	rerr = max(math.Sqrt(rerr/float64(o.ndim)), 1.0e-10)
+	rerr = max(math.Sqrt(rerr/float64(sol.ndim)), 1.0e-10)
 
 	return
 }

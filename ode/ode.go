@@ -30,6 +30,7 @@ import (
 type Solver struct {
 
 	// method data
+	rkm    RKmethod // Runge-Kutta method
 	method string   // method name
 	step   stpfcn   // step function
 	accept acptfcn  // accept update function
@@ -209,8 +210,10 @@ func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out O
 		o.accept = bweulerAccept
 		o.nstg = 1
 	case "MoEuler":
-		o.step = erkStep
-		o.accept = erkAccept
+		o.rkm = NewRKmethod(MoEulerKind)
+		o.step = o.rkm.Step
+		o.accept = o.rkm.Accept
+		o.rkm.Init(o.Distr)
 		o.nstg = 2
 		o.erkdat = expRKdat{true, ME2_a, ME2_b, ME2_be, ME2_c}
 	case "Dopri5":

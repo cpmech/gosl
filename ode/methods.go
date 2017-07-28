@@ -7,26 +7,50 @@ package ode
 import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 )
 
-// ODE methods
+// Runge-Kutta methods
 var (
-	// FwEuler specifies the Forward Euler method (explicit)
-	FwEuler = io.NewEnum("FwEuler", "ode", "FE", "Forward Euler (explicit)")
+	// FwEulerKind specifies the Forward Euler method (explicit)
+	FwEulerKind = io.NewEnum("FwEuler", "ode", "FE", "Forward Euler (explicit)")
 
-	// BwEuler specifies the Backward Euler method (explicit)
-	BwEuler = io.NewEnum("BwEuler", "ode", "BE", "Backward Euler (explicit)")
+	// BwEulerKind specifies the Backward Euler method (explicit)
+	BwEulerKind = io.NewEnum("BwEuler", "ode", "BE", "Backward Euler (explicit)")
 
-	// MoEuler specifies the Modified Euler method (explicit)
-	MoEuler = io.NewEnum("MoEuler", "ode", "ME", "Modified Euler (explicit)")
+	// MoEulerKind specifies the Modified Euler method (explicit)
+	MoEulerKind = io.NewEnum("MoEuler", "ode", "ME", "Modified Euler (explicit)")
 
-	// DoPri5 specifies the Dormand-Prince5 method (explicit)
-	DoPri5 = io.NewEnum("DoPri5", "ode", "DP", "Dormand-Prince5 (explicit)")
+	// DoPri5kind specifies the Dormand-Prince5 method (explicit)
+	DoPri5kind = io.NewEnum("DoPri5", "ode", "DP", "Dormand-Prince5 (explicit)")
 
-	// Radau5 specifies the Radau5 method (implicit)
-	Radau5 = io.NewEnum("Radau5", "ode", "R", "Foward Euler (implicit)")
+	// Radau5kind specifies the Radau5 method (implicit)
+	Radau5kind = io.NewEnum("Radau5", "ode", "R", "Radau5 (implicit)")
 )
 
+// RKmethod defines the required functions of Runge-Kutta method
+type RKmethod interface {
+	Init(distr bool) (err error)                                        // initialise
+	Accept(o *Solver, y la.Vector)                                      // accept update
+	Step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) // step update
+}
+
+// rkmMaker defines a function that makes RKmethods
+type rkmMaker func() RKmethod
+
+// rkmDB implements a database of RKmethod makers
+var rkmDB = make(map[io.Enum]rkmMaker)
+
+// NewRKmethod finds a RKmethod in database or panic
+func NewRKmethod(kind io.Enum) RKmethod {
+	if maker, ok := rkmDB[kind]; ok {
+		return maker()
+	}
+	chk.Panic("cannot find RKmethod named %q in database", kind)
+	return nil
+}
+
+/*
 func getMethod(kind io.Enum, distr bool) (name string, step stpfcn, accept acptfcn, nstg int, erkdat expRKdat) {
 	switch kind {
 	case FwEuler:
@@ -60,3 +84,4 @@ func getMethod(kind io.Enum, distr bool) (name string, step stpfcn, accept acptf
 	}
 	return
 }
+*/
