@@ -200,8 +200,8 @@ func (o *Solver) Init(method string, ndim int, fcn Func, jac JacF, M *la.Triplet
 	// method
 	switch method {
 	case "FwEuler":
-		o.step = fweuler_step
-		o.accept = fweuler_accept
+		o.step = fweulerStep
+		o.accept = fweulerAccept
 		o.nstg = 1
 	case "BwEuler":
 		o.step = bweulerStep
