@@ -20,9 +20,9 @@ import (
 func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
 
 	// factors
-	α := r5.α_ / o.h
-	β := r5.β_ / o.h
-	γ := r5.γ_ / o.h
+	α := r5.Alp / o.h
+	β := r5.Bet / o.h
+	γ := r5.Gam / o.h
 
 	// Jacobian and decomposition
 	if o.reuseJdec {
@@ -101,9 +101,9 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 	}
 
 	// updated u[i]
-	o.u[0] = x0 + r5.c[0]*o.h
-	o.u[1] = x0 + r5.c[1]*o.h
-	o.u[2] = x0 + r5.c[2]*o.h
+	o.u[0] = x0 + r5.C[0]*o.h
+	o.u[1] = x0 + r5.C[1]*o.h
+	o.u[2] = x0 + r5.C[2]*o.h
 
 	// (trial/initial) updated z[i] and w[i]
 	if o.first || o.ZeroTrial {
@@ -114,12 +114,12 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 		}
 	} else {
 		c3q := o.h / o.hprev
-		c1q := r5.μ1 * c3q
-		c2q := r5.μ2 * c3q
+		c1q := r5.Mu1 * c3q
+		c2q := r5.Mu2 * c3q
 		for m := 0; m < o.ndim; m++ {
-			o.z[0][m] = c1q * (o.ycol[0][m] + (c1q-r5.μ4)*(o.ycol[1][m]+(c1q-r5.μ3)*o.ycol[2][m]))
-			o.z[1][m] = c2q * (o.ycol[0][m] + (c2q-r5.μ4)*(o.ycol[1][m]+(c2q-r5.μ3)*o.ycol[2][m]))
-			o.z[2][m] = c3q * (o.ycol[0][m] + (c3q-r5.μ4)*(o.ycol[1][m]+(c3q-r5.μ3)*o.ycol[2][m]))
+			o.z[0][m] = c1q * (o.ycol[0][m] + (c1q-r5.Mu4)*(o.ycol[1][m]+(c1q-r5.Mu3)*o.ycol[2][m]))
+			o.z[1][m] = c2q * (o.ycol[0][m] + (c2q-r5.Mu4)*(o.ycol[1][m]+(c2q-r5.Mu3)*o.ycol[2][m]))
+			o.z[2][m] = c3q * (o.ycol[0][m] + (c3q-r5.Mu4)*(o.ycol[1][m]+(c3q-r5.Mu3)*o.ycol[2][m]))
 			o.w[0][m] = r5.Ti[0][0]*o.z[0][m] + r5.Ti[0][1]*o.z[1][m] + r5.Ti[0][2]*o.z[2][m]
 			o.w[1][m] = r5.Ti[1][0]*o.z[0][m] + r5.Ti[1][1]*o.z[1][m] + r5.Ti[1][2]*o.z[2][m]
 			o.w[2][m] = r5.Ti[2][0]*o.z[0][m] + r5.Ti[2][1]*o.z[1][m] + r5.Ti[2][2]*o.z[2][m]
@@ -281,8 +281,8 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 
 		// simple strategy => HW-VII p123 Eq.(8.17) (not good for stiff problems)
 		for m := 0; m < o.ndim; m++ {
-			o.ez[m] = r5.e0*o.z[0][m] + r5.e1*o.z[1][m] + r5.e2*o.z[2][m]
-			o.lerr[m] = r5.γ0*o.h*o.f0[m] + o.ez[m]
+			o.ez[m] = r5.E0*o.z[0][m] + r5.E1*o.z[1][m] + r5.E2*o.z[2][m]
+			o.lerr[m] = r5.Gam0*o.h*o.f0[m] + o.ez[m]
 			rerr += math.Pow(o.lerr[m]/o.scal[m], 2.0)
 		}
 		rerr = max(math.Sqrt(rerr/float64(o.ndim)), 1.0e-10)
@@ -292,7 +292,7 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 		// common
 		if o.hasM {
 			for m := 0; m < o.ndim; m++ {
-				o.ez[m] = r5.e0*o.z[0][m] + r5.e1*o.z[1][m] + r5.e2*o.z[2][m]
+				o.ez[m] = r5.E0*o.z[0][m] + r5.E1*o.z[1][m] + r5.E2*o.z[2][m]
 				o.rhs[m] = o.f0[m]
 			}
 			if o.Distr {
@@ -303,7 +303,7 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 			}
 		} else {
 			for m := 0; m < o.ndim; m++ {
-				o.ez[m] = r5.e0*o.z[0][m] + r5.e1*o.z[1][m] + r5.e2*o.z[2][m]
+				o.ez[m] = r5.E0*o.z[0][m] + r5.E1*o.z[1][m] + r5.E2*o.z[2][m]
 				o.rhs[m] = o.f0[m] + γ*o.ez[m]
 			}
 		}

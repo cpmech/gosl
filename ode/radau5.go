@@ -14,35 +14,36 @@ import (
 	"github.com/cpmech/gosl/num"
 )
 
-type R5cte struct {
-	c  []float64   // c coefficients
-	T  [][]float64 // T matrix
-	Ti [][]float64 // inv(T) matrix
-	α_ float64     // alpha-hat
-	β_ float64     // beta-hat
-	γ_ float64     // gamma-hat
-	γ0 float64     // gamma0 coefficient
-	e0 float64     // e0 coefficient
-	e1 float64     // e1 coefficient
-	e2 float64     // e2 coefficient
-	μ1 float64     // collocation: C1    = (4.D0-SQ6)/10.D0
-	μ2 float64     // collocation: C2    = (4.D0+SQ6)/10.D0
-	μ3 float64     // collocation: C1M1  = C1-1.D0
-	μ4 float64     // collocation: C2M1  = C2-1.D0
-	μ5 float64     // collocation: C1MC2 = C1-C2
+// Radau5 implements the Radau5 implicit Runge-Kutta method
+type Radau5 struct {
+	C    []float64   // c coefficients
+	T    [][]float64 // T matrix
+	Ti   [][]float64 // inv(T) matrix
+	Alp  float64     // alpha-hat
+	Bet  float64     // beta-hat
+	Gam  float64     // gamma-hat
+	Gam0 float64     // gamma0 coefficient
+	E0   float64     // e0 coefficient
+	E1   float64     // e1 coefficient
+	E2   float64     // e2 coefficient
+	Mu1  float64     // collocation: C1    = (4.D0-SQ6)/10.D0
+	Mu2  float64     // collocation: C2    = (4.D0+SQ6)/10.D0
+	Mu3  float64     // collocation: C1M1  = C1-1.D0
+	Mu4  float64     // collocation: C2M1  = C2-1.D0
+	Mu5  float64     // collocation: C1MC2 = C1-C2
 }
 
 // constants
-var r5 R5cte
+var r5 Radau5
 
 func radau5_accept(o *Solver, y la.Vector) {
 	for m := 0; m < o.ndim; m++ {
 		// update y
 		y[m] += o.z[2][m]
 		// collocation polynomial values
-		o.ycol[0][m] = (o.z[1][m] - o.z[2][m]) / r5.μ4
-		o.ycol[1][m] = ((o.z[0][m]-o.z[1][m])/r5.μ5 - o.ycol[0][m]) / r5.μ3
-		o.ycol[2][m] = o.ycol[1][m] - ((o.z[0][m]-o.z[1][m])/r5.μ5-o.z[0][m]/r5.μ1)/r5.μ2
+		o.ycol[0][m] = (o.z[1][m] - o.z[2][m]) / r5.Mu4
+		o.ycol[1][m] = ((o.z[0][m]-o.z[1][m])/r5.Mu5 - o.ycol[0][m]) / r5.Mu3
+		o.ycol[2][m] = o.ycol[1][m] - ((o.z[0][m]-o.z[1][m])/r5.Mu5-o.z[0][m]/r5.Mu1)/r5.Mu2
 	}
 }
 
@@ -50,9 +51,9 @@ func radau5_accept(o *Solver, y la.Vector) {
 func radau5_step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
 
 	// factors
-	α := r5.α_ / o.h
-	β := r5.β_ / o.h
-	γ := r5.γ_ / o.h
+	α := r5.Alp / o.h
+	β := r5.Bet / o.h
+	γ := r5.Gam / o.h
 
 	// Jacobian and decomposition
 	if o.reuseJdec {
@@ -122,9 +123,9 @@ func radau5_step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) 
 	}
 
 	// updated u[i]
-	o.u[0] = x0 + r5.c[0]*o.h
-	o.u[1] = x0 + r5.c[1]*o.h
-	o.u[2] = x0 + r5.c[2]*o.h
+	o.u[0] = x0 + r5.C[0]*o.h
+	o.u[1] = x0 + r5.C[1]*o.h
+	o.u[2] = x0 + r5.C[2]*o.h
 
 	// (trial/initial) updated z[i] and w[i]
 	if o.first || o.ZeroTrial {
@@ -135,12 +136,12 @@ func radau5_step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) 
 		}
 	} else {
 		c3q := o.h / o.hprev
-		c1q := r5.μ1 * c3q
-		c2q := r5.μ2 * c3q
+		c1q := r5.Mu1 * c3q
+		c2q := r5.Mu2 * c3q
 		for m := 0; m < o.ndim; m++ {
-			o.z[0][m] = c1q * (o.ycol[0][m] + (c1q-r5.μ4)*(o.ycol[1][m]+(c1q-r5.μ3)*o.ycol[2][m]))
-			o.z[1][m] = c2q * (o.ycol[0][m] + (c2q-r5.μ4)*(o.ycol[1][m]+(c2q-r5.μ3)*o.ycol[2][m]))
-			o.z[2][m] = c3q * (o.ycol[0][m] + (c3q-r5.μ4)*(o.ycol[1][m]+(c3q-r5.μ3)*o.ycol[2][m]))
+			o.z[0][m] = c1q * (o.ycol[0][m] + (c1q-r5.Mu4)*(o.ycol[1][m]+(c1q-r5.Mu3)*o.ycol[2][m]))
+			o.z[1][m] = c2q * (o.ycol[0][m] + (c2q-r5.Mu4)*(o.ycol[1][m]+(c2q-r5.Mu3)*o.ycol[2][m]))
+			o.z[2][m] = c3q * (o.ycol[0][m] + (c3q-r5.Mu4)*(o.ycol[1][m]+(c3q-r5.Mu3)*o.ycol[2][m]))
 			o.w[0][m] = r5.Ti[0][0]*o.z[0][m] + r5.Ti[0][1]*o.z[1][m] + r5.Ti[0][2]*o.z[2][m]
 			o.w[1][m] = r5.Ti[1][0]*o.z[0][m] + r5.Ti[1][1]*o.z[1][m] + r5.Ti[1][2]*o.z[2][m]
 			o.w[2][m] = r5.Ti[2][0]*o.z[0][m] + r5.Ti[2][1]*o.z[1][m] + r5.Ti[2][2]*o.z[2][m]
@@ -301,8 +302,8 @@ func radau5_step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) 
 
 		// simple strategy => HW-VII p123 Eq.(8.17) (not good for stiff problems)
 		for m := 0; m < o.ndim; m++ {
-			o.ez[m] = r5.e0*o.z[0][m] + r5.e1*o.z[1][m] + r5.e2*o.z[2][m]
-			o.lerr[m] = r5.γ0*o.h*o.f0[m] + o.ez[m]
+			o.ez[m] = r5.E0*o.z[0][m] + r5.E1*o.z[1][m] + r5.E2*o.z[2][m]
+			o.lerr[m] = r5.Gam0*o.h*o.f0[m] + o.ez[m]
 			rerr += math.Pow(o.lerr[m]/o.scal[m], 2.0)
 		}
 		rerr = max(math.Sqrt(rerr/float64(o.ndim)), 1.0e-10)
@@ -312,13 +313,13 @@ func radau5_step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) 
 		// common
 		if o.hasM {
 			for m := 0; m < o.ndim; m++ {
-				o.ez[m] = r5.e0*o.z[0][m] + r5.e1*o.z[1][m] + r5.e2*o.z[2][m]
+				o.ez[m] = r5.E0*o.z[0][m] + r5.E1*o.z[1][m] + r5.E2*o.z[2][m]
 				o.rhs[m] = o.f0[m]
 			}
 			la.SpMatVecMulAdd(o.rhs, γ, o.mMat, o.ez) // rhs += γ * M * ez
 		} else {
 			for m := 0; m < o.ndim; m++ {
-				o.ez[m] = r5.e0*o.z[0][m] + r5.e1*o.z[1][m] + r5.e2*o.z[2][m]
+				o.ez[m] = r5.E0*o.z[0][m] + r5.E1*o.z[1][m] + r5.E2*o.z[2][m]
 				o.rhs[m] = o.f0[m] + γ*o.ez[m]
 			}
 		}
@@ -367,7 +368,7 @@ func (o *Solver) rms_norm(diff la.Vector) (rms float64) {
 }
 
 func init() {
-	r5.c = []float64{(4.0 - math.Sqrt(6.0)) / 10.0, (4.0 + math.Sqrt(6.0)) / 10.0, 1.0}
+	r5.C = []float64{(4.0 - math.Sqrt(6.0)) / 10.0, (4.0 + math.Sqrt(6.0)) / 10.0, 1.0}
 
 	r5.T = [][]float64{{9.1232394870892942792e-02, -0.14125529502095420843, -3.0029194105147424492e-02},
 		{0.24171793270710701896, 0.20412935229379993199, 0.38294211275726193779},
@@ -381,17 +382,17 @@ func init() {
 	c2 := math.Pow(3.0, 3.0/2.0)
 	c3 := math.Pow(9.0, 2.0/3.0)
 
-	r5.α_ = -c1/2.0 + 3.0/(2.0*c1) + 3.0
-	r5.β_ = (math.Sqrt(3.0)*c1)/2.0 + c2/(2.0*c1)
-	r5.γ_ = c1 - 3.0/c1 + 3.0
-	r5.γ0 = c1 / (c3 + 3.0*c1 - 3.0)
-	r5.e0 = r5.γ0 * (-13.0 - 7.0*math.Sqrt(6.0)) / 3.0
-	r5.e1 = r5.γ0 * (-13.0 + 7.0*math.Sqrt(6.0)) / 3.0
-	r5.e2 = r5.γ0 * (-1.0) / 3.0
+	r5.Alp = -c1/2.0 + 3.0/(2.0*c1) + 3.0
+	r5.Bet = (math.Sqrt(3.0)*c1)/2.0 + c2/(2.0*c1)
+	r5.Gam = c1 - 3.0/c1 + 3.0
+	r5.Gam0 = c1 / (c3 + 3.0*c1 - 3.0)
+	r5.E0 = r5.Gam0 * (-13.0 - 7.0*math.Sqrt(6.0)) / 3.0
+	r5.E1 = r5.Gam0 * (-13.0 + 7.0*math.Sqrt(6.0)) / 3.0
+	r5.E2 = r5.Gam0 * (-1.0) / 3.0
 
-	r5.μ1 = (4.0 - math.Sqrt(6.0)) / 10.0
-	r5.μ2 = (4.0 + math.Sqrt(6.0)) / 10.0
-	r5.μ3 = r5.μ1 - 1.0
-	r5.μ4 = r5.μ2 - 1.0
-	r5.μ5 = r5.μ1 - r5.μ2
+	r5.Mu1 = (4.0 - math.Sqrt(6.0)) / 10.0
+	r5.Mu2 = (4.0 + math.Sqrt(6.0)) / 10.0
+	r5.Mu3 = r5.Mu1 - 1.0
+	r5.Mu4 = r5.Mu2 - 1.0
+	r5.Mu5 = r5.Mu1 - r5.Mu2
 }
