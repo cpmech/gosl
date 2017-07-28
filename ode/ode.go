@@ -35,7 +35,6 @@ type Solver struct {
 	step   stpfcn   // step function
 	accept acptfcn  // accept update function
 	nstg   int      // number of stages
-	erkdat expRKdat // explicit RK data
 
 	// primary variables
 	ndim int          // size of y
@@ -211,16 +210,16 @@ func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out O
 		o.nstg = 1
 	case "MoEuler":
 		o.rkm = NewRKmethod(MoEulerKind)
+		o.rkm.Init(o.Distr)
 		o.step = o.rkm.Step
 		o.accept = o.rkm.Accept
-		o.rkm.Init(o.Distr)
 		o.nstg = 2
-		o.erkdat = expRKdat{true, ME2_a, ME2_b, ME2_be, ME2_c}
-	case "Dopri5":
-		o.step = erkStep
-		o.accept = erkAccept
+	case "DoPri5":
+		o.rkm = NewRKmethod(DoPri5kind)
+		o.rkm.Init(o.Distr)
+		o.step = o.rkm.Step
+		o.accept = o.rkm.Accept
 		o.nstg = 7
-		o.erkdat = expRKdat{true, DP5_a, DP5_b, DP5_be, DP5_c}
 	case "Radau5":
 		if o.Distr {
 			o.step = radau5_step_mpi
