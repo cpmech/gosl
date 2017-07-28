@@ -19,7 +19,7 @@ import (
 // Hairer-Wanner VII-p2 Eq.(1.1)
 func Test_ode01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("ode01: Hairer-Wanner VII-p2 Eq.(1.1)")
 
 	lam := -50.0
@@ -46,7 +46,7 @@ func Test_ode01(tst *testing.T) {
 	io.Pforan(". . . FwEuler . . . \n")
 	dx := 1.875 / 50.0
 	copy(y, ya)
-	sol1 := NewSolver("FwEuler", ndim, fcn, jac, nil, nil)
+	sol1 := NewSolver(FwEulerKind, ndim, fcn, jac, nil, nil)
 	sol1.SaveXY = true
 	sol1.Solve(y, xa, xb, dx, true)
 	chk.Int(tst, "number of F evaluations ", sol1.Nfeval, 40)
@@ -62,7 +62,7 @@ func Test_ode01(tst *testing.T) {
 	// BwEuler
 	io.Pforan(". . . BwEuler . . . \n")
 	copy(y, ya)
-	sol2 := NewSolver("BwEuler", ndim, fcn, jac, nil, nil)
+	sol2 := NewSolver(BwEulerKind, ndim, fcn, jac, nil, nil)
 	sol2.SaveXY = true
 	sol2.Solve(y, xa, xb, dx, true)
 	chk.Int(tst, "number of F evaluations ", sol2.Nfeval, 80)
@@ -78,7 +78,7 @@ func Test_ode01(tst *testing.T) {
 	// MoEuler
 	io.Pforan(". . . MoEuler . . . \n")
 	copy(y, ya)
-	sol3 := NewSolver("MoEuler", ndim, fcn, jac, nil, nil)
+	sol3 := NewSolver(MoEulerKind, ndim, fcn, jac, nil, nil)
 	sol3.SaveXY = true
 	sol3.Solve(y, xa, xb, xb-xa, false)
 	chk.Int(tst, "number of F evaluations ", sol3.Nfeval, 379)
@@ -94,7 +94,7 @@ func Test_ode01(tst *testing.T) {
 	// DoPri5
 	io.Pforan(". . . DoPri5 . . . \n")
 	copy(y, ya)
-	sol4 := NewSolver("DoPri5", ndim, fcn, jac, nil, nil)
+	sol4 := NewSolver(DoPri5kind, ndim, fcn, jac, nil, nil)
 	sol4.SaveXY = true
 	sol4.Solve(y, xa, xb, xb-xa, false)
 	chk.Int(tst, "number of F evaluations ", sol4.Nfeval, 1132)
@@ -110,7 +110,7 @@ func Test_ode01(tst *testing.T) {
 	// Radau5
 	io.Pforan(". . . Radau5 . . . \n")
 	copy(y, ya)
-	sol5 := NewSolver("Radau5", ndim, fcn, jac, nil, nil)
+	sol5 := NewSolver(Radau5kind, ndim, fcn, jac, nil, nil)
 	sol5.SaveXY = true
 	sol5.Solve(y, xa, xb, xb-xa, false)
 	chk.Int(tst, "number of F evaluations ", sol5.Nfeval, 66)
@@ -169,8 +169,7 @@ func Test_ode02(tst *testing.T) {
 
 	// method and flags
 	fixstp := false
-	//method := "Dopri5"
-	method := "Radau5"
+	method := Radau5kind
 	numjac := false
 	xa, xb := 0.0, 2.0
 	ya := la.Vector([]float64{2.0, -0.6})
@@ -268,8 +267,7 @@ func Test_ode03(tst *testing.T) {
 
 	// data
 	fixstp := false
-	//method := "Dopri5"
-	method := "Radau5"
+	method := Radau5kind
 	xa, xb := 0.0, 0.3
 	ya := la.Vector([]float64{1.0, 0.0, 0.0})
 	ndim := len(ya)
@@ -423,8 +421,7 @@ func Test_ode04(tst *testing.T) {
 
 	// flags
 	fixstp := false
-	//method := "Dopri5"
-	method := "Radau5"
+	method := Radau5kind
 	ndim := len(ya)
 	numjac := false
 

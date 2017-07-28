@@ -30,8 +30,8 @@ import (
 type Solver struct {
 
 	// method data
+	method io.Enum  // method kind
 	rkm    RKmethod // Runge-Kutta method
-	method string   // method name
 	step   stpfcn   // step function
 	accept acptfcn  // accept update function
 	nstg   int      // number of stages
@@ -142,13 +142,12 @@ type Solver struct {
 }
 
 // NewSolver returns a new ODE structure with default values and allocated slices
-func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out OutF) (o *Solver) {
+func NewSolver(method io.Enum, ndim int, fcn Func, jac JacF, M *la.Triplet, out OutF) (o *Solver) {
 
 	// new structure
 	o = new(Solver)
 
 	// primary variables
-	o.method = method
 	o.ndim = ndim
 	o.fcn = fcn
 	o.jac = jac
@@ -189,7 +188,7 @@ func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out O
 		o.mMat = o.mTri.ToMatrix(nil)
 		o.hasM = true
 	} else {
-		if o.method == "BwEuler" {
+		if method == BwEulerKind {
 			M = new(la.Triplet)
 			la.SpTriSetDiag(M, o.ndim, 1)
 			o.mTri = M
@@ -199,42 +198,12 @@ func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out O
 	}
 
 	// method
-	switch method {
-	case "FwEuler":
-		o.rkm = NewRKmethod(FwEulerKind)
-		o.rkm.Init(o.Distr)
-		o.step = o.rkm.Step
-		o.accept = o.rkm.Accept
-		o.nstg = 1
-	case "BwEuler":
-		o.rkm = NewRKmethod(BwEulerKind)
-		o.rkm.Init(o.Distr)
-		o.step = o.rkm.Step
-		o.accept = o.rkm.Accept
-		o.nstg = 1
-	case "MoEuler":
-		o.rkm = NewRKmethod(MoEulerKind)
-		o.rkm.Init(o.Distr)
-		o.step = o.rkm.Step
-		o.accept = o.rkm.Accept
-		o.nstg = 2
-	case "DoPri5":
-		o.rkm = NewRKmethod(DoPri5kind)
-		o.rkm.Init(o.Distr)
-		o.step = o.rkm.Step
-		o.accept = o.rkm.Accept
-		o.nstg = 7
-	case "Radau5":
-		if o.Distr {
-			o.step = radau5_step_mpi
-		} else {
-			o.step = radau5_step
-		}
-		o.accept = radau5_accept
-		o.nstg = 3
-	default:
-		chk.Panic("method %s is not available", method)
-	}
+	o.method = method
+	o.rkm = NewRKmethod(method)
+	o.rkm.Init(o.Distr)
+	o.step = o.rkm.Step
+	o.accept = o.rkm.Accept
+	o.nstg = o.rkm.Nstages()
 
 	// allocate step variables
 	o.f0 = la.NewVector(o.ndim)
@@ -246,7 +215,7 @@ func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out O
 	o.w = make([]la.Vector, o.nstg)
 	o.dw = make([]la.Vector, o.nstg)
 	o.f = make([]la.Vector, o.nstg)
-	if method == "Radau5" {
+	if method == Radau5kind {
 		o.z = make([]la.Vector, o.nstg)
 		o.ycol = make([]la.Vector, o.nstg)
 		o.ez = la.NewVector(o.ndim)
@@ -260,7 +229,7 @@ func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out O
 		o.w[i] = la.NewVector(o.ndim)
 		o.dw[i] = la.NewVector(o.ndim)
 		o.f[i] = la.NewVector(o.ndim)
-		if method == "Radau5" {
+		if method == Radau5kind {
 			o.z[i] = la.NewVector(o.ndim)
 			o.ycol[i] = la.NewVector(o.ndim)
 		}
@@ -376,7 +345,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 		for x < xb {
 			//if x + o.h > xb { o.h = xb - x }
 			if o.jac == nil { // numerical Jacobian
-				if o.method == "Radau5" {
+				if o.method == Radau5kind {
 					o.Nfeval++
 					o.fcn(o.f0, o.h, x, y)
 				}

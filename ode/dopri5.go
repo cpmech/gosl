@@ -29,6 +29,11 @@ func (o *DoPri5) Init(distr bool) (err error) {
 	return nil
 }
 
+// Nstages returns the number of stages
+func (o *DoPri5) Nstages() int {
+	return 7
+}
+
 // Accept accepts update
 func (o *DoPri5) Accept(sol *Solver, y la.Vector) {
 	y.Apply(1, sol.w[0]) // y := w (update y)

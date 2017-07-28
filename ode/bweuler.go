@@ -22,6 +22,11 @@ func (o *BwEuler) Init(distr bool) (err error) {
 	return nil
 }
 
+// Nstages returns the number of stages
+func (o *BwEuler) Nstages() int {
+	return 1
+}
+
 // Accept accepts update
 func (o *BwEuler) Accept(sol *Solver, y la.Vector) {
 }

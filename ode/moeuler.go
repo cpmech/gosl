@@ -26,6 +26,11 @@ func (o *MoEuler) Init(distr bool) (err error) {
 	return nil
 }
 
+// Nstages returns the number of stages
+func (o *MoEuler) Nstages() int {
+	return 2
+}
+
 // Accept accepts update
 func (o *MoEuler) Accept(sol *Solver, y la.Vector) {
 	y.Apply(1, sol.w[0]) // y := w (update y)

@@ -31,6 +31,7 @@ var (
 // RKmethod defines the required functions of Runge-Kutta method
 type RKmethod interface {
 	Init(distr bool) (err error)                                        // initialise
+	Nstages() int                                                       // number of stages
 	Accept(o *Solver, y la.Vector)                                      // accept update
 	Step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) // step update
 }

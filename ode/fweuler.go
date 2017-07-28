@@ -19,6 +19,11 @@ func (o *FwEuler) Init(distr bool) (err error) {
 func (o *FwEuler) Accept(sol *Solver, y la.Vector) {
 }
 
+// Nstages returns the number of stages
+func (o *FwEuler) Nstages() int {
+	return 1
+}
+
 // Step steps update
 func (o *FwEuler) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
 	sol.Nfeval++
