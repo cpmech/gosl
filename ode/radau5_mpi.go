@@ -66,7 +66,7 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 					}
 				}
 			}
-			o.Njeval += 1
+			o.Njeval++
 			o.jacIsOK = true
 		}
 
@@ -97,7 +97,7 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 		// perform factorisation
 		o.lsolR.Fact()
 		o.lsolC.Fact()
-		o.Ndecomp += 1
+		o.Ndecomp++
 	}
 
 	// updated u[i]
@@ -146,7 +146,7 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 			for m := 0; m < o.ndim; m++ {
 				o.v[i][m] = y0[m] + o.z[i][m]
 			}
-			o.Nfeval += 1
+			o.Nfeval++
 			err = o.fcn(o.f[i], o.h, o.u[i], o.v[i])
 			if err != nil {
 				return
@@ -178,7 +178,7 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 		}
 
 		// solve linear system
-		o.Nlinsol += 1
+		o.Nlinsol++
 		var errR, errC error
 		if !o.Distr && o.Pll {
 			wg := new(sync.WaitGroup)
@@ -322,7 +322,7 @@ func radau5_step_mpi(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err err
 					for m := 0; m < o.ndim; m++ {
 						o.v[0][m] = y0[m] + o.lerr[m] // y0perr
 					}
-					o.Nfeval += 1
+					o.Nfeval++
 					err = o.fcn(o.f[0], o.h, x0, o.v[0]) // f0perr
 					if err != nil {
 						return
