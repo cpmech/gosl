@@ -8,6 +8,5 @@ while true; do
     echo
     echo
     echo
-    go install
-    go test -test.run="ode02"
+    go test -test.run="ode01"
 done

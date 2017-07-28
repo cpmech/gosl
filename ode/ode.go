@@ -102,9 +102,13 @@ type Solver struct {
 	// rk variables
 	u  la.Vector   // u[stg]      = x + h*c[stg]
 	v  []la.Vector // v[stg][dim] = ya[dim] + h*sum(a[stg][j]*f[j][dim], j, nstg)
-	w  []la.Vector // workspace
-	dw []la.Vector // workspace
+	w  []la.Vector // w[stg][dim] workspace
+	dw []la.Vector // dw[stg][dim] workspace
 	f  []la.Vector // f[stg][dim] = f(u[stg], v[stg][dim])
+
+	// complex variables
+	v12  la.VectorC // join 1 and 2: complex(v[1],v[2])
+	dw12 la.VectorC // join 1 and 2: complex(dw[1],d2[2])
 
 	// explicit rk variables
 	erkdat ERKdat // explicit RK data
@@ -233,6 +237,8 @@ func (o *Solver) Init(method string, ndim int, fcn Func, jac JacF, M *la.Triplet
 		o.ez = la.NewVector(o.ndim)
 		o.lerr = la.NewVector(o.ndim)
 		o.rhs = la.NewVector(o.ndim)
+		o.v12 = la.NewVectorC(o.ndim)
+		o.dw12 = la.NewVectorC(o.ndim)
 	}
 	for i := 0; i < o.nstg; i++ {
 		o.v[i] = la.NewVector(o.ndim)

@@ -204,13 +204,17 @@ func radau5_step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) 
 				wg.Done()
 			}()
 			go func() {
-				//errC = o.lsolC.Solve(o.dw[1], o.dw[2], o.v[1], o.v[2], false)
+				o.v12.JoinRealImag(o.v[1], o.v[2])
+				errC = o.lsolC.Solve(o.dw12, o.v12, false)
+				o.dw12.SplitRealImag(o.dw[1], o.dw[2])
 				wg.Done()
 			}()
 			wg.Wait()
 		} else {
+			o.v12.JoinRealImag(o.v[1], o.v[2])
 			errR = o.lsolR.Solve(o.dw[0], o.v[0], false)
-			//errC = o.lsolC.Solve(o.dw[1], o.dw[2], o.v[1], o.v[2], false)
+			errC = o.lsolC.Solve(o.dw12, o.v12, false)
+			o.dw12.SplitRealImag(o.dw[1], o.dw[2])
 		}
 
 		// check for errors from linear solution
