@@ -10,8 +10,8 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// ExplicitRungeKutta holds data to solve an ODE using the explicit Runge-Kutta method
-type ExplicitRungeKutta struct {
+// expRKdat holds data to solve an ODE using the explicit Runge-Kutta method
+type expRKdat struct {
 	usefp bool        // method can use f from previous step
 	a     [][]float64 // a coefficients
 	b     []float64   // b coefficients

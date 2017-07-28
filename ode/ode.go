@@ -29,11 +29,12 @@ import (
 //        However, it can be set OFF after calling Init.
 type Solver struct {
 
-	// method
-	method string  // method name
-	step   stpfcn  // step function
-	accept acptfcn // accept update function
-	nstg   int     // number of stages
+	// method data
+	method string   // method name
+	step   stpfcn   // step function
+	accept acptfcn  // accept update function
+	nstg   int      // number of stages
+	erkdat expRKdat // explicit RK data
 
 	// primary variables
 	ndim int          // size of y
@@ -117,9 +118,6 @@ type Solver struct {
 	// complex variables
 	v12  la.VectorC // join 1 and 2: complex(v[1],v[2])
 	dw12 la.VectorC // join 1 and 2: complex(dw[1],d2[2])
-
-	// explicit rk variables
-	erkdat ExplicitRungeKutta // explicit RK data
 
 	// radau5 variables
 	z     []la.Vector // Radau5
@@ -214,12 +212,12 @@ func NewSolver(method string, ndim int, fcn Func, jac JacF, M *la.Triplet, out O
 		o.step = erkStep
 		o.accept = erkAccept
 		o.nstg = 2
-		o.erkdat = ExplicitRungeKutta{true, ME2_a, ME2_b, ME2_be, ME2_c}
+		o.erkdat = expRKdat{true, ME2_a, ME2_b, ME2_be, ME2_c}
 	case "Dopri5":
 		o.step = erkStep
 		o.accept = erkAccept
 		o.nstg = 7
-		o.erkdat = ExplicitRungeKutta{true, DP5_a, DP5_b, DP5_be, DP5_c}
+		o.erkdat = expRKdat{true, DP5_a, DP5_b, DP5_be, DP5_c}
 	case "Radau5":
 		if o.Distr {
 			o.step = radau5_step_mpi
