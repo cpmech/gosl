@@ -73,3 +73,29 @@ func TestVector02(tst *testing.T) {
 	io.Pforan("c = %v\n", c)
 	chk.Complex128(tst, "c.Norm", 1e-17, c.Norm(), cmplx.Sqrt(2i+(3+4i)+(8+6i)))
 }
+
+func TestVector03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Vector02. (complex) real and imag")
+
+	a := NewVectorMappedC(3, func(i int) complex128 {
+		return complex(float64(1+i), float64(-1-i))
+	})
+
+	aR := make([]float64, 3)
+	aI := make([]float64, 3)
+	a.SplitRealImag(aR, aI)
+	io.Pf("a = %v\n", a)
+	io.Pfyel("aR = %v\n", aR)
+	io.Pf("aI = %v\n", aI)
+
+	chk.Array(tst, "aR", 1e-17, aR, []float64{1, 2, 3})
+	chk.Array(tst, "aI", 1e-17, aI, []float64{-1, -2, -3})
+
+	b := NewVectorC(3)
+	b.JoinRealImag(aR, aI)
+	io.Pforan("b = %v\n", b)
+
+	chk.ArrayC(tst, "b:=complex(aR,aI)", 1e-17, b, []complex128{1 - 1i, 2 - 2i, 3 - 3i})
+}

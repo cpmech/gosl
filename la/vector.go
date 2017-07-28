@@ -233,3 +233,23 @@ func (o VectorC) MaxDiff(b VectorC) float64 {
 	}
 	return maxdiffC
 }
+
+// SplitRealImag splits this vector into two vectors with the real and imaginary parts
+//  xR := real(this)
+//  xI := imag(this)
+//  NOTE: xR and xI must be pre-allocated with length = len(this)
+func (o VectorC) SplitRealImag(xR, xI Vector) {
+	for i := 0; i < len(o); i++ {
+		xR[i] = real(o[i])
+		xI[i] = imag(o[i])
+	}
+}
+
+// JoinRealImag sets this vector with two vectors having the real and imaginary parts
+//  this := complex(xR, xI)
+//  NOTE: len(xR) == len(xI) == len(this)
+func (o VectorC) JoinRealImag(xR, xI Vector) {
+	for i := 0; i < len(o); i++ {
+		o[i] = complex(xR[i], xI[i])
+	}
+}
