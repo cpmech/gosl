@@ -427,15 +427,13 @@ func Test_ode04(tst *testing.T) {
 
 	// ODE solver
 	var o *Solver
-	//o.Pll = true
-	//o.SaveXY = true
-
 	if numjac {
 		o = NewSolver(method, ndim, fcn, nil, &M, nil)
 	} else {
 		o = NewSolver(method, ndim, fcn, jac, &M, nil)
 	}
 	o.IniH = 1.0e-6 // initial step size
+	o.SaveXY = true
 
 	// set tolerances
 	atol, rtol := 1e-11, 1e-5
