@@ -26,7 +26,7 @@ func main() {
 
 	if mpi.WorldRank() == 0 {
 		chk.Verbose = true
-		chk.PrintTitle("Hairer-Wanner VII-p376 Transistor Amplifier\n")
+		chk.PrintTitle("Hairer-Wanner VII-p376 Transistor Amplifier")
 	}
 	if mpi.WorldSize() != 3 {
 		if mpi.WorldRank() == 0 {
