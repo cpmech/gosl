@@ -9,7 +9,6 @@ package ode
 import (
 	"errors"
 	"math"
-	"sync"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
@@ -179,23 +178,10 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 
 		// solve linear system
 		sol.Nlinsol++
-		var errR, errC error
-		if !sol.Distr && sol.Pll {
-			wg := new(sync.WaitGroup)
-			wg.Add(2)
-			go func() {
-				errR = sol.lsolR.Solve(sol.dw[0], sol.v[0], false)
-				wg.Done()
-			}()
-			go func() {
-				//errC = o.lsolC.Solve(o.dw[1], o.dw[2], o.v[1], o.v[2], false)
-				wg.Done()
-			}()
-			wg.Wait()
-		} else {
-			errR = sol.lsolR.Solve(sol.dw[0], sol.v[0], false)
-			//errC = o.lsolC.Solve(o.dw[1], o.dw[2], o.v[1], o.v[2], false)
-		}
+		sol.v12.JoinRealImag(sol.v[1], sol.v[2])
+		errR := sol.lsolR.Solve(sol.dw[0], sol.v[0], false)
+		errC := sol.lsolC.Solve(sol.dw12, sol.v12, false)
+		sol.dw12.SplitRealImag(sol.dw[1], sol.dw[2])
 
 		// check for errors from linear solution
 		if errR != nil || errC != nil {
@@ -298,6 +284,7 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 			if sol.Distr {
 				la.SpMatVecMul(sol.dw[0], γ, sol.mMat, sol.ez) // δw[0] = γ * M * ez (δw[0] is workspace)
 				//o.comm.AllReduceSumAdd(o.rhs, o.dw[0], o.dw[1]) // rhs += join_with_sum(δw[0]) (δw[1] is workspace)
+				chk.Panic("stop")
 			} else {
 				la.SpMatVecMulAdd(sol.rhs, γ, sol.mMat, sol.ez) // rhs += γ * M * ez
 			}
@@ -332,6 +319,9 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 						if sol.Distr {
 							la.SpMatVecMul(sol.dw[0], γ, sol.mMat, sol.ez) // δw[0] = γ * M * ez (δw[0] is workspace)
 							//o.comm.AllReduceSumAdd(o.rhs, o.dw[0], o.dw[1]) // rhs += join_with_sum(δw[0]) (δw[1] is workspace)
+							sol.comm.AllReduceSum(sol.dw[1], sol.dw[0]) // dw1 := join(dw0)
+							chk.Panic("stop")
+							sol.rhs.Apply(1, sol.dw[1]) // rhs += dw0
 						} else {
 							la.SpMatVecMulAdd(sol.rhs, γ, sol.mMat, sol.ez) // rhs += γ * M * ez
 						}

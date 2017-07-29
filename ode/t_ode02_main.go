@@ -20,38 +20,40 @@ import (
 
 func main() {
 
-	mpi.Start(false)
-	defer mpi.Stop(false)
+	mpi.Start()
+	defer mpi.Stop()
 
-	if mpi.Rank() == 0 {
+	comm := mpi.NewCommunicator(nil)
+
+	if comm.Rank() == 0 {
 		chk.PrintTitle("ode02: Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation")
 	}
-	if mpi.Size() != 2 {
+	if comm.Size() != 2 {
 		chk.Panic(">> error: this test requires 2 MPI processors\n")
 		return
 	}
 
 	eps := 1.0e-6
 	w := make([]float64, 2) // workspace
-	fcn := func(f []float64, dx, x float64, y []float64) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
 		f[0], f[1] = 0, 0
-		switch mpi.Rank() {
+		switch comm.Rank() {
 		case 0:
 			f[0] = y[1]
 		case 1:
 			f[1] = ((1.0-y[0]*y[0])*y[1] - y[0]) / eps
 		}
 		// join all f
-		mpi.AllReduceSum(f, w)
+		comm.AllReduceSum(f, w)
 		return nil
 	}
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(2, 2, 4)
 		}
 		dfdy.Start()
 		if false { // per column
-			switch mpi.Rank() {
+			switch comm.Rank() {
 			case 0:
 				dfdy.Put(0, 0, 0.0)
 				dfdy.Put(1, 0, (-2.0*y[0]*y[1]-1.0)/eps)
@@ -60,7 +62,7 @@ func main() {
 				dfdy.Put(1, 1, (1.0-y[0]*y[0])/eps)
 			}
 		} else { // per row
-			switch mpi.Rank() {
+			switch comm.Rank() {
 			case 0:
 				dfdy.Put(0, 0, 0.0)
 				dfdy.Put(0, 1, 1.0)
@@ -74,22 +76,21 @@ func main() {
 
 	// method and flags
 	fixstp := false
-	//method := "Dopri5"
-	method := "Radau5"
+	method := ode.Radau5kind
 	numjac := false
 	xa, xb := 0.0, 2.0
 	ya := []float64{2.0, -0.6}
 	ndim := len(ya)
 
 	// allocate ODE object
-	var o ode.Solver
+	var o *ode.Solver
+	if numjac {
+		o = ode.NewSolver(method, ndim, fcn, nil, nil, nil)
+	} else {
+		o = ode.NewSolver(method, ndim, fcn, jac, nil, nil)
+	}
 	o.SaveXY = true
 	o.Distr = true
-	if numjac {
-		o.Init(method, ndim, fcn, nil, nil, nil)
-	} else {
-		o.Init(method, ndim, fcn, jac, nil, nil)
-	}
 
 	// tolerances and initial step size
 	rtol := 1e-4
@@ -109,7 +110,8 @@ func main() {
 	}
 
 	// check
-	if mpi.Rank() == 0 {
+	if comm.Rank() == 0 {
+		chk.Verbose = true
 		tst := new(testing.T)
 		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2233)
 		chk.Int(tst, "number of J evaluations ", o.Njeval, 160)
@@ -122,7 +124,7 @@ func main() {
 	}
 
 	// plot
-	if mpi.Rank() == 0 {
+	if comm.Rank() == 0 {
 		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
@@ -144,6 +146,6 @@ func main() {
 		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl", "vdpolA_mpi")
+		plt.Save("/tmp/gosl/ode", "vdpolA_mpi")
 	}
 }
