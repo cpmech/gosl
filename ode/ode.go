@@ -544,13 +544,24 @@ func (o *Solver) Stat() {
 	io.Pf("max number of iterations  =%6d\n", o.Nitmax)
 }
 
-// auxiliary functions
+// rmsNorm computes the RMS norm
+func (o *Solver) rmsNorm(diff la.Vector) (rms float64) {
+	for m := 0; m < o.ndim; m++ {
+		rms += math.Pow(diff[m]/o.scal[m], 2.0)
+	}
+	rms = max(math.Sqrt(rms/float64(o.ndim)), 1.0e-10)
+	return
+}
+
+// max returns the maximum between a and b
 func max(a, b float64) float64 {
 	if a > b {
 		return a
 	}
 	return b
 }
+
+// min returns the minimum between a and b
 func min(a, b float64) float64 {
 	if a < b {
 		return a
