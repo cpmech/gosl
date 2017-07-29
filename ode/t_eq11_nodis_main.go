@@ -23,7 +23,8 @@ func main() {
 	mpi.Start()
 	defer mpi.Stop()
 
-	chk.PrintTitle("ode01: Hairer-Wanner VII-p2 Eq.(1.1)")
+	chk.Verbose = true
+	chk.PrintTitle("Hairer-Wanner VII-p2 Eq.(1.1)")
 
 	lam := -50.0
 
@@ -51,7 +52,6 @@ func main() {
 
 	sol.Solve(y, xa, xb, xb-xa, false)
 
-	chk.Verbose = true
 	tst := new(testing.T)
 	chk.Int(tst, "number of F evaluations ", sol.Nfeval, 66)
 	chk.Int(tst, "number of J evaluations ", sol.Njeval, 1)
@@ -63,17 +63,15 @@ func main() {
 	chk.Int(tst, "max number of iterations", sol.Nitmax, 2)
 	chk.Int(tst, "IdxSave", sol.IdxSave, sol.Naccepted+1)
 
-	if chk.Verbose {
-		X := utl.LinSpace(xa, xb, 101)
-		Y := make([]float64, len(X))
-		for i := 0; i < len(X); i++ {
-			Y[i] = -lam * (math.Sin(X[i]) - lam*math.Cos(X[i]) + lam*math.Exp(lam*X[i])) / (lam*lam + 1.0)
-		}
-		e := sol.IdxSave
-		plt.Reset(false, nil)
-		plt.Plot(X, Y, &plt.A{C: "grey", Ls: "-", Lw: 10, L: "solution", NoClip: true})
-		plt.Plot(sol.Xvalues[:e], sol.Yvalues[0][:e], &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Save("/tmp/gosl/ode", "eq11_nodis")
+	X := utl.LinSpace(xa, xb, 101)
+	Y := make([]float64, len(X))
+	for i := 0; i < len(X); i++ {
+		Y[i] = -lam * (math.Sin(X[i]) - lam*math.Cos(X[i]) + lam*math.Exp(lam*X[i])) / (lam*lam + 1.0)
 	}
+	e := sol.IdxSave
+	plt.Reset(false, nil)
+	plt.Plot(X, Y, &plt.A{C: "grey", Ls: "-", Lw: 10, L: "solution", NoClip: true})
+	plt.Plot(sol.Xvalues[:e], sol.Yvalues[0][:e], &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5", NoClip: true})
+	plt.Gll("$x$", "$y$", nil)
+	plt.Save("/tmp/gosl/ode", "eq11_nodis")
 }

@@ -446,7 +446,7 @@ func Test_ode04(tst *testing.T) {
 	} else {
 		o.Solve(ya, xa, xb, xb-xa, fixstp)
 	}
-	if false {
+	if true {
 		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2599)
 		chk.Int(tst, "number of J evaluations ", o.Njeval, 216)
 		chk.Int(tst, "total number of steps   ", o.Nsteps, 275)

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-MAIN="t_eq11_nodis_main"
+#MAIN="t_eq11_nodis_main"
+MAIN="t_vdp_nodis_main"
 
 FILES="radau5.go $MAIN.go"
 

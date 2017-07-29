@@ -1,6 +1,7 @@
 #!/bin/bash
 
-MAIN="t_eq11_distr_main"
+#MAIN="t_eq11_distr_main"
+MAIN="t_vdp_distr_main"
 
 FILES="radau5_mpi.go $MAIN.go"
 

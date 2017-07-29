@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 )
@@ -85,7 +86,7 @@ func (o *Radau5) Accept(sol *Solver, y la.Vector) {
 // Step steps update
 func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
 
-	// distributed version
+	// run MPI version if distributed=true
 	if sol.Distr {
 		return o.StepMpi(sol, y0, x0)
 	}
@@ -113,12 +114,16 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 					return
 				}, y0, sol.f0, sol.w[0]) // w works here as workspace variable
 			} else { // analytical
-				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n") }
+				if x0 == 0.0 {
+					io.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n")
+				}
 				err = sol.jac(&sol.dfdyT, sol.h, x0, y0)
 			}
 			if err != nil {
 				return
 			}
+
+			io.Pf("\n%v\n", sol.dfdyT.GetDenseMatrix().Print("%10.5f"))
 
 			// create M matrix
 			if sol.doinit && !sol.hasM {
@@ -166,6 +171,8 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 	sol.u[0] = x0 + o.C[0]*sol.h
 	sol.u[1] = x0 + o.C[1]*sol.h
 	sol.u[2] = x0 + o.C[2]*sol.h
+
+	io.Pf("u0 = %v\n", sol.u[0])
 
 	// (trial/initial) updated z[i] and w[i]
 	if sol.first || sol.ZeroTrial {
@@ -291,6 +298,8 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 		}
 		Lδw = math.Sqrt(Lδw / float64(3*sol.ndim))
 
+		io.Pfblue2("Ldw = %v\n", Lδw)
+
 		// check convergence
 		if it > 0 {
 			thq = Lδw / oLδw
@@ -337,6 +346,8 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 		return
 	}
 
+	io.PfYel("LerrStrat = %v\n", sol.LerrStrat)
+
 	// error estimate
 	if sol.LerrStrat == 1 {
 
@@ -367,12 +378,12 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 		// HW-VII p123 Eq.(8.19)
 		if sol.LerrStrat == 2 {
 			sol.lsolR.Solve(sol.lerr, sol.rhs, false)
-			rerr = sol.rms_norm(sol.lerr)
+			rerr = sol.rmsNorm(sol.lerr)
 
 			// HW-VII p123 Eq.(8.20)
 		} else {
 			sol.lsolR.Solve(sol.lerr, sol.rhs, false)
-			rerr = sol.rms_norm(sol.lerr)
+			rerr = sol.rmsNorm(sol.lerr)
 			if !(rerr < 1.0) {
 				if sol.first || sol.reject {
 					for m := 0; m < sol.ndim; m++ {
@@ -384,26 +395,20 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 						return
 					}
 					if sol.hasM {
+						//la.VecCopy(sol.rhs, 1, sol.f[0])                // rhs := f0perr
 						sol.rhs.Apply(1, sol.f[0])                      // rhs := f0perr
 						la.SpMatVecMulAdd(sol.rhs, γ, sol.mMat, sol.ez) // rhs += γ * M * ez
 					} else {
+						//la.VecAdd2(sol.rhs, 1, sol.f[0], γ, sol.ez) // rhs = f0perr + γ * ez
 						la.VecAdd(sol.rhs, 1, sol.f[0], γ, sol.ez) // rhs = f0perr + γ * ez
+						io.Pfgrey("rerr = %g\n", rerr)
 					}
 					sol.lsolR.Solve(sol.lerr, sol.rhs, false)
-					rerr = sol.rms_norm(sol.lerr)
+					rerr = sol.rmsNorm(sol.lerr)
 				}
 			}
 		}
 	}
-	return
-}
-
-// calc RMS norm
-func (o *Solver) rms_norm(diff la.Vector) (rms float64) {
-	for m := 0; m < o.ndim; m++ {
-		rms += math.Pow(diff[m]/o.scal[m], 2.0)
-	}
-	rms = max(math.Sqrt(rms/float64(o.ndim)), 1.0e-10)
 	return
 }
 

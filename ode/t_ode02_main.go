@@ -34,14 +34,14 @@ func main() {
 	}
 
 	eps := 1.0e-6
-	w := make([]float64, 2) // workspace
+	w := la.NewVector(2) // workspace
 	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
-		f[0], f[1] = 0, 0
+		w.Fill(0)
 		switch comm.Rank() {
 		case 0:
-			f[0] = y[1]
+			w[0] = y[1]
 		case 1:
-			f[1] = ((1.0-y[0]*y[0])*y[1] - y[0]) / eps
+			w[1] = ((1.0-y[0]*y[0])*y[1] - y[0]) / eps
 		}
 		// join all f
 		comm.AllReduceSum(f, w)
