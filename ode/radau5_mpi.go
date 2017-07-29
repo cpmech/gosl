@@ -12,7 +12,6 @@ import (
 	"sync"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 )
@@ -37,22 +36,16 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 
 			// Jacobian triplet
 			if sol.jac == nil { // numerical
-				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
 				err = num.JacobianMpi(sol.comm, &sol.dfdyT, func(fy, y la.Vector) (e error) {
 					e = sol.fcn(fy, sol.h, x0, y)
 					return
 				}, y0, sol.f0, sol.w[0], sol.Distr) // w works here as workspace variable
 			} else { // analytical
-				if x0 == 0.0 {
-					io.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n")
-				}
 				err = sol.jac(&sol.dfdyT, sol.h, x0, y0)
 			}
 			if err != nil {
 				return
 			}
-
-			io.Pf("\n%v\n", sol.dfdyT.GetDenseMatrix().Print("%10.5f"))
 
 			// create M matrix
 			if sol.doinit && !sol.hasM {
@@ -110,8 +103,6 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 	sol.u[1] = x0 + o.C[1]*sol.h
 	sol.u[2] = x0 + o.C[2]*sol.h
 
-	io.Pf("u0 = %v\n", sol.u[0])
-
 	// (trial/initial) updated z[i] and w[i]
 	if sol.first || sol.ZeroTrial {
 		for m := 0; m < sol.ndim; m++ {
@@ -162,15 +153,20 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 
 		// calc rhs
 		if sol.hasM {
-			// using δw as workspace here
-			la.SpMatVecMul(sol.dw[0], 1, sol.mMat, sol.w[0]) // δw0 := M * w0
-			la.SpMatVecMul(sol.dw[1], 1, sol.mMat, sol.w[1]) // δw1 := M * w1
-			la.SpMatVecMul(sol.dw[2], 1, sol.mMat, sol.w[2]) // δw2 := M * w2
 			if sol.Distr {
-				chk.Panic("stop")
-				//mpi.AllReduceSum(sol.dw[0], sol.v[0]) // v is used as workspace here
-				//mpi.AllReduceSum(sol.dw[1], sol.v[1]) // v is used as workspace here
-				//mpi.AllReduceSum(sol.dw[2], sol.v[2]) // v is used as workspace here
+				// using v as workspace here (not δw as in the non-distributed version)
+				la.SpMatVecMul(sol.v[0], 1, sol.mMat, sol.w[0]) // v0 := M * w0
+				la.SpMatVecMul(sol.v[1], 1, sol.mMat, sol.w[1]) // v1 := M * w1
+				la.SpMatVecMul(sol.v[2], 1, sol.mMat, sol.w[2]) // v2 := M * w2
+				// the AllReduceSum now sets δw with v values
+				sol.comm.AllReduceSum(sol.dw[0], sol.v[0]) // δw0 := M * w0
+				sol.comm.AllReduceSum(sol.dw[1], sol.v[1]) // δw1 := M * w1
+				sol.comm.AllReduceSum(sol.dw[2], sol.v[2]) // δw2 := M * w2
+			} else {
+				// using δw as workspace here
+				la.SpMatVecMul(sol.dw[0], 1, sol.mMat, sol.w[0]) // δw0 := M * w0
+				la.SpMatVecMul(sol.dw[1], 1, sol.mMat, sol.w[1]) // δw1 := M * w1
+				la.SpMatVecMul(sol.dw[2], 1, sol.mMat, sol.w[2]) // δw2 := M * w2
 			}
 			for m := 0; m < sol.ndim; m++ {
 				sol.v[0][m] = o.Ti[0][0]*sol.f[0][m] + o.Ti[0][1]*sol.f[1][m] + o.Ti[0][2]*sol.f[2][m] - γ*sol.dw[0][m]
@@ -242,8 +238,6 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 		}
 		Lδw = math.Sqrt(Lδw / float64(3*sol.ndim))
 
-		io.Pfblue2("Ldw = %v\n", Lδw)
-
 		// check convergence
 		if it > 0 {
 			thq = Lδw / oLδw
@@ -290,8 +284,6 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 		return
 	}
 
-	io.PfYel("LerrStrat = %v\n", sol.LerrStrat)
-
 	// error estimate
 	if sol.LerrStrat == 1 {
 
@@ -313,8 +305,8 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 			}
 			if sol.Distr {
 				la.SpMatVecMul(sol.dw[0], γ, sol.mMat, sol.ez) // δw[0] = γ * M * ez (δw[0] is workspace)
-				//mpi.AllReduceSumAdd(sol.rhs, sol.dw[0], sol.dw[1]) // rhs += join_with_sum(δw[0]) (δw[1] is workspace)
-				chk.Panic("stop2")
+				sol.comm.AllReduceSum(sol.dw[1], sol.dw[0])    // δw[1] = join(δw[0])
+				la.VecAdd(sol.rhs, 1, sol.rhs, 1, sol.dw[1])   // rhs += δw[1]
 			} else {
 				la.SpMatVecMulAdd(sol.rhs, γ, sol.mMat, sol.ez) // rhs += γ * M * ez
 			}
@@ -345,19 +337,16 @@ func (o *Radau5) StepMpi(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, e
 						return
 					}
 					if sol.hasM {
-						//la.VecCopy(sol.rhs, 1, sol.f[0]) // rhs := f0perr
-						chk.Panic("stop3")
+						sol.rhs.Apply(1, sol.f[0]) // rhs := f0perr
 						if sol.Distr {
 							la.SpMatVecMul(sol.dw[0], γ, sol.mMat, sol.ez) // δw[0] = γ * M * ez (δw[0] is workspace)
-							//mpi.AllReduceSumAdd(sol.rhs, sol.dw[0], sol.dw[1]) // rhs += join_with_sum(δw[0]) (δw[1] is workspace)
-							chk.Panic("stop4")
+							sol.comm.AllReduceSum(sol.dw[1], sol.dw[0])    // δw[1] = join(δw[0])
+							la.VecAdd(sol.rhs, 1, sol.rhs, 1, sol.dw[1])   // rhs += δw[1]
 						} else {
 							la.SpMatVecMulAdd(sol.rhs, γ, sol.mMat, sol.ez) // rhs += γ * M * ez
 						}
 					} else {
-						//la.VecAdd2(sol.rhs, 1, sol.f[0], γ, sol.ez) // rhs = f0perr + γ * ez
 						la.VecAdd(sol.rhs, 1, sol.f[0], γ, sol.ez) // rhs = f0perr + γ * ez
-						io.Pfgrey("rerr = %g\n", rerr)
 					}
 					sol.lsolR.Solve(sol.lerr, sol.rhs, false)
 					rerr = sol.rmsNorm(sol.lerr)
