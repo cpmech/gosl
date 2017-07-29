@@ -19,7 +19,7 @@ import (
 // Hairer-Wanner VII-p2 Eq.(1.1)
 func Test_ode01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("ode01: Hairer-Wanner VII-p2 Eq.(1.1)")
 
 	lam := -50.0
