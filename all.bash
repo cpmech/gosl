@@ -46,7 +46,7 @@ else
     install_and_test mpi 0
 fi
 
-for p in la/oblas la fun/dbf fun/fftw fun num/qpck num gm/rw gm/msh gm graph opt; do
+for p in la/oblas la fun/dbf fun/fftw fun num/qpck num gm/rw gm/msh gm graph opt ode; do
     install_and_test $p 1
 done
 
