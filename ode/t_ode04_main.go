@@ -21,15 +21,15 @@ import (
 
 func main() {
 
-	mpi.Start(false)
-	defer func() {
-		mpi.Stop(false)
-	}()
+	mpi.Start()
+	defer mpi.Stop()
 
-	if mpi.Rank() == 0 {
+	comm := mpi.NewCommunicator(nil)
+
+	if comm.Rank() == 0 {
 		chk.PrintTitle("ode04: Hairer-Wanner VII-p376 Transistor Amplifier\n")
 	}
-	if mpi.Size() != 3 {
+	if comm.Size() != 3 {
 		chk.Panic(">> error: this test requires 3 MPI processors\n")
 		return
 	}
@@ -58,12 +58,12 @@ func main() {
 
 	// right-hand side of the amplifier problem
 	w := make([]float64, 8) // workspace
-	fcn := func(f []float64, dx, x float64, y []float64) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
 		UET := UE * math.Sin(W*x)
 		FAC1 := BETA * (math.Exp((y[3]-y[2])/UF) - 1.0)
 		FAC2 := BETA * (math.Exp((y[6]-y[5])/UF) - 1.0)
-		la.VecFill(f, 0)
-		switch mpi.Rank() {
+		f.Fill(0)
+		switch comm.Rank() {
 		case 0:
 			f[0] = y[0] / R9
 		case 1:
@@ -76,12 +76,12 @@ func main() {
 			f[6] = y[6]/R1 + (y[6]-UB)/R2 + (1.0-ALPHA)*FAC2
 			f[7] = (y[7] - UET) / R0
 		}
-		mpi.AllReduceSum(f, w)
+		comm.AllReduceSum(f, w)
 		return nil
 	}
 
 	// Jacobian of the amplifier problem
-	jac := func(dfdy *la.Triplet, dx, x float64, y []float64) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
 		FAC14 := BETA * math.Exp((y[3]-y[2])/UF) / UF
 		FAC27 := BETA * math.Exp((y[6]-y[5])/UF) / UF
 		if dfdy.Max() == 0 {
@@ -89,7 +89,7 @@ func main() {
 		}
 		NU := 2
 		dfdy.Start()
-		switch mpi.Rank() {
+		switch comm.Rank() {
 		case 0:
 			dfdy.Put(2+0-NU, 0, 1.0/R9)
 			dfdy.Put(2+1-NU, 1, 1.0/R8)
@@ -119,7 +119,7 @@ func main() {
 	M.Init(8, 8, 14)
 	M.Start()
 	NU := 1
-	switch mpi.Rank() {
+	switch comm.Rank() {
 	case 0:
 		M.Put(1+0-NU, 0, -c5)
 		M.Put(0+1-NU, 1, c5)
@@ -141,23 +141,20 @@ func main() {
 
 	// flags
 	fixstp := false
-	//method := "Dopri5"
-	method := "Radau5"
+	method := ode.Radau5kind
 	ndim := len(ya)
 	numjac := false
 
 	// ODE solver
-	var o ode.Solver
-	o.SaveXY = true
-	o.Pll = true
-
-	// solve problem
+	var o *ode.Solver
 	if numjac {
-		o.Init(method, ndim, fcn, nil, &M, nil)
+		o = ode.NewSolver(method, ndim, fcn, nil, &M, nil)
 	} else {
-		o.Init(method, ndim, fcn, jac, &M, nil)
+		o = ode.NewSolver(method, ndim, fcn, jac, &M, nil)
 	}
 	o.IniH = 1.0e-6 // initial step size
+	o.SaveXY = true
+	o.Pll = true
 
 	// set tolerances
 	atol, rtol := 1e-11, 1e-5
@@ -172,7 +169,8 @@ func main() {
 	}
 
 	// check
-	if mpi.Rank() == 0 {
+	if comm.Rank() == 0 {
+		chk.Verbose = true
 		tst := new(testing.T)
 		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2609)
 		chk.Int(tst, "number of J evaluations ", o.Njeval, 215)
@@ -185,7 +183,7 @@ func main() {
 	}
 
 	// plot
-	if mpi.Rank() == 0 {
+	if comm.Rank() == 0 {
 		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 		plt.Reset(true, &plt.A{WidthPt: 450, Dpi: 150, Prop: 1.8, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
