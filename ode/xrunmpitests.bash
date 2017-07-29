@@ -13,7 +13,7 @@ t_ode02_main
 "
 
 NP3="
-t_ode04_main \
+t_amp_np3_main
 "
 
 for main in $NP1; do
