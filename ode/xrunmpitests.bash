@@ -9,7 +9,6 @@ t_vdp_nodis_main
 
 NP2="
 t_vdp_np2_main \
-t_ode02_main
 "
 
 NP3="
