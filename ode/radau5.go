@@ -10,7 +10,6 @@ import (
 	"sync"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 )
@@ -108,22 +107,16 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 
 			// Jacobian triplet
 			if sol.jac == nil { // numerical
-				//if x0 == 0.0 { io.Pfgrey(" > > > > > > > > . . . numerical Jacobian . . . < < < < < < < < <\n") }
 				err = num.Jacobian(&sol.dfdyT, func(fy, y la.Vector) (e error) {
 					e = sol.fcn(fy, sol.h, x0, y)
 					return
 				}, y0, sol.f0, sol.w[0]) // w works here as workspace variable
 			} else { // analytical
-				if x0 == 0.0 {
-					io.Pfgrey(" > > > > > > > > . . . analytical Jacobian . . . < < < < < < < < <\n")
-				}
 				err = sol.jac(&sol.dfdyT, sol.h, x0, y0)
 			}
 			if err != nil {
 				return
 			}
-
-			io.Pf("\n%v\n", sol.dfdyT.GetDenseMatrix().Print("%10.5f"))
 
 			// create M matrix
 			if sol.doinit && !sol.hasM {
@@ -171,8 +164,6 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 	sol.u[0] = x0 + o.C[0]*sol.h
 	sol.u[1] = x0 + o.C[1]*sol.h
 	sol.u[2] = x0 + o.C[2]*sol.h
-
-	io.Pf("u0 = %v\n", sol.u[0])
 
 	// (trial/initial) updated z[i] and w[i]
 	if sol.first || sol.ZeroTrial {
@@ -298,8 +289,6 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 		}
 		Lδw = math.Sqrt(Lδw / float64(3*sol.ndim))
 
-		io.Pfblue2("Ldw = %v\n", Lδw)
-
 		// check convergence
 		if it > 0 {
 			thq = Lδw / oLδw
@@ -345,8 +334,6 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 		rerr = 2.0 // must leave state intact, any rerr is OK
 		return
 	}
-
-	io.PfYel("LerrStrat = %v\n", sol.LerrStrat)
 
 	// error estimate
 	if sol.LerrStrat == 1 {
@@ -395,13 +382,10 @@ func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err 
 						return
 					}
 					if sol.hasM {
-						//la.VecCopy(sol.rhs, 1, sol.f[0])                // rhs := f0perr
 						sol.rhs.Apply(1, sol.f[0])                      // rhs := f0perr
 						la.SpMatVecMulAdd(sol.rhs, γ, sol.mMat, sol.ez) // rhs += γ * M * ez
 					} else {
-						//la.VecAdd2(sol.rhs, 1, sol.f[0], γ, sol.ez) // rhs = f0perr + γ * ez
 						la.VecAdd(sol.rhs, 1, sol.f[0], γ, sol.ez) // rhs = f0perr + γ * ez
-						io.Pfgrey("rerr = %g\n", rerr)
 					}
 					sol.lsolR.Solve(sol.lerr, sol.rhs, false)
 					rerr = sol.rmsNorm(sol.lerr)
