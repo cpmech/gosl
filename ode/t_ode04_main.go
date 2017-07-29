@@ -57,24 +57,24 @@ func main() {
 	//xb = 0.01235 // !OK
 
 	// right-hand side of the amplifier problem
-	w := make([]float64, 8) // workspace
+	w := la.NewVector(8) // workspace
 	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
 		UET := UE * math.Sin(W*x)
 		FAC1 := BETA * (math.Exp((y[3]-y[2])/UF) - 1.0)
 		FAC2 := BETA * (math.Exp((y[6]-y[5])/UF) - 1.0)
-		f.Fill(0)
+		w.Fill(0)
 		switch comm.Rank() {
 		case 0:
-			f[0] = y[0] / R9
+			w[0] = y[0] / R9
 		case 1:
-			f[1] = (y[1]-UB)/R8 + ALPHA*FAC1
-			f[2] = y[2]/R7 - FAC1
+			w[1] = (y[1]-UB)/R8 + ALPHA*FAC1
+			w[2] = y[2]/R7 - FAC1
 		case 2:
-			f[3] = y[3]/R5 + (y[3]-UB)/R6 + (1.0-ALPHA)*FAC1
-			f[4] = (y[4]-UB)/R4 + ALPHA*FAC2
-			f[5] = y[5]/R3 - FAC2
-			f[6] = y[6]/R1 + (y[6]-UB)/R2 + (1.0-ALPHA)*FAC2
-			f[7] = (y[7] - UET) / R0
+			w[3] = y[3]/R5 + (y[3]-UB)/R6 + (1.0-ALPHA)*FAC1
+			w[4] = (y[4]-UB)/R4 + ALPHA*FAC2
+			w[5] = y[5]/R3 - FAC2
+			w[6] = y[6]/R1 + (y[6]-UB)/R2 + (1.0-ALPHA)*FAC2
+			w[7] = (y[7] - UET) / R0
 		}
 		comm.AllReduceSum(f, w)
 		return nil
@@ -172,14 +172,14 @@ func main() {
 	if comm.Rank() == 0 {
 		chk.Verbose = true
 		tst := new(testing.T)
-		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2609)
-		chk.Int(tst, "number of J evaluations ", o.Njeval, 215)
-		chk.Int(tst, "total number of steps   ", o.Nsteps, 278)
+		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2655)
+		chk.Int(tst, "number of J evaluations ", o.Njeval, 217)
+		chk.Int(tst, "total number of steps   ", o.Nsteps, 282)
 		chk.Int(tst, "number of accepted steps", o.Naccepted, 221)
-		chk.Int(tst, "number of rejected steps", o.Nrejected, 18)
-		chk.Int(tst, "number of decompositions", o.Ndecomp, 276)
-		chk.Int(tst, "number of lin solutions ", o.Nlinsol, 795)
-		chk.Int(tst, "max number of iterations", o.Nitmax, 5)
+		chk.Int(tst, "number of rejected steps", o.Nrejected, 23)
+		chk.Int(tst, "number of decompositions", o.Ndecomp, 281)
+		chk.Int(tst, "number of lin solutions ", o.Nlinsol, 809)
+		chk.Int(tst, "max number of iterations", o.Nitmax, 6)
 	}
 
 	// plot
