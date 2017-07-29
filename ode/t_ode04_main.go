@@ -24,13 +24,14 @@ func main() {
 	mpi.Start()
 	defer mpi.Stop()
 
-	comm := mpi.NewCommunicator(nil)
-
-	if comm.Rank() == 0 {
-		chk.PrintTitle("ode04: Hairer-Wanner VII-p376 Transistor Amplifier\n")
+	if mpi.WorldRank() == 0 {
+		chk.Verbose = true
+		chk.PrintTitle("Hairer-Wanner VII-p376 Transistor Amplifier\n")
 	}
-	if comm.Size() != 3 {
-		chk.Panic(">> error: this test requires 3 MPI processors\n")
+	if mpi.WorldSize() != 3 {
+		if mpi.WorldRank() == 0 {
+			io.Pf("ERROR: this test needs 3 processors (run with mpi -np 3)\n")
+		}
 		return
 	}
 
@@ -42,19 +43,24 @@ func main() {
 
 	// initial values
 	xa := 0.0
-	ya := []float64{0.0,
+	ya := []float64{
+		0.0,
 		UB,
 		UB / (R6/R5 + 1.0),
 		UB / (R6/R5 + 1.0),
 		UB,
 		UB / (R2/R1 + 1.0),
 		UB / (R2/R1 + 1.0),
-		0.0}
+		0.0,
+	}
 
 	// endpoint of integration
 	xb := 0.05
 	//xb = 0.0123 // OK
 	//xb = 0.01235 // !OK
+
+	// communicator
+	comm := mpi.NewCommunicator(nil)
 
 	// right-hand side of the amplifier problem
 	w := la.NewVector(8) // workspace
@@ -139,19 +145,9 @@ func main() {
 		M.Put(1+7-NU, 7, -c1)
 	}
 
-	// flags
-	fixstp := false
-	method := ode.Radau5kind
-	ndim := len(ya)
-	numjac := false
-
 	// ODE solver
-	var o *ode.Solver
-	if numjac {
-		o = ode.NewSolver(method, ndim, fcn, nil, &M, nil)
-	} else {
-		o = ode.NewSolver(method, ndim, fcn, jac, &M, nil)
-	}
+	ndim := len(ya)
+	o := ode.NewSolver(ode.Radau5kind, ndim, fcn, jac, &M, nil)
 	o.IniH = 1.0e-6 // initial step size
 	o.SaveXY = true
 	o.Pll = true
@@ -162,15 +158,12 @@ func main() {
 
 	// run
 	t0 := time.Now()
-	if fixstp {
-		o.Solve(ya, xa, xb, 0.01, fixstp)
-	} else {
-		o.Solve(ya, xa, xb, xb-xa, fixstp)
-	}
+	o.Solve(ya, xa, xb, xb-xa, false)
 
-	// check
-	if comm.Rank() == 0 {
-		chk.Verbose = true
+	// only root
+	if mpi.WorldRank() == 0 {
+
+		// check
 		tst := new(testing.T)
 		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2655)
 		chk.Int(tst, "number of J evaluations ", o.Njeval, 217)
@@ -180,10 +173,8 @@ func main() {
 		chk.Int(tst, "number of decompositions", o.Ndecomp, 281)
 		chk.Int(tst, "number of lin solutions ", o.Nlinsol, 809)
 		chk.Int(tst, "max number of iterations", o.Nitmax, 6)
-	}
 
-	// plot
-	if comm.Rank() == 0 {
+		// plot
 		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 		plt.Reset(true, &plt.A{WidthPt: 450, Dpi: 150, Prop: 1.8, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
@@ -207,6 +198,6 @@ func main() {
 		plt.SetYlog()
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl", "hwamplifier_mpi")
+		plt.Save("/tmp/gosl/ode", "amp_np3")
 	}
 }
