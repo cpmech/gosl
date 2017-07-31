@@ -49,6 +49,7 @@ var (
 //
 type FourierInterp struct {
 	N int          // number of terms. must be power of 2; i.e. N = 2ⁿ
+	X []float64    // point coordinates == 2⋅π.j/N
 	A []complex128 // coefficients for interpolation. from FFT
 	S []complex128 // smothing coefficients
 }
@@ -87,11 +88,17 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 	// allocate
 	o = new(FourierInterp)
 	o.N = N
+	o.X = make([]float64, o.N)
 	o.A = make([]complex128, o.N)
 	o.S = make([]complex128, o.N)
 
-	// compute smoothing coefficients
+	// point coordinates
 	n := float64(o.N)
+	for j := 0; j < o.N; j++ {
+		o.X[j] = 2.0 * math.Pi * float64(j) / n
+	}
+
+	// compute smoothing coefficients
 	σ := func(k float64) float64 { return 1.0 }
 	switch smoothing {
 	case SmoLanczosKind:
@@ -115,8 +122,7 @@ func (o *FourierInterp) CalcA(f Ss) (err error) {
 	var fxj float64
 	n := float64(o.N)
 	for j := 0; j < o.N; j++ {
-		xj := 2.0 * math.Pi * float64(j) / n
-		fxj, err = f(xj)
+		fxj, err = f(o.X[j])
 		if err != nil {
 			return
 		}
