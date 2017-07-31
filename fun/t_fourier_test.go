@@ -38,34 +38,20 @@ func TestFourierInterp01(tst *testing.T) {
 	chk.Ints(tst, "j[k]", jvals, []int{4, 5, 6, 7, 0, 1, 2, 3})
 }
 
-func TestFourierInterp02(tst *testing.T) {
+// check interpolation @ nodes
+func fouCheckI(tst *testing.T, fou *FourierInterp, f Ss) {
 
-	//verbose()
-	chk.PrintTitle("FourierInterp02. interpolation using DFT")
-
-	// function and analytic derivative
-	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
-	dfdx := func(x float64) (float64, error) { return math.Cos(x/2.0) / 2.0, nil }
-	d2fdx2 := func(x float64) (float64, error) { return -math.Cos(x/2.0) / 4.0, nil }
-
-	// constants
-	var p uint64 = 3 // exponent of 2ⁿ
-	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, SmoNoneKind)
-	chk.EP(err)
-
-	// compute A[k]
-	err = fou.CalcA(f)
-	chk.EP(err)
-
-	// check interpolation @ nodes
-	n := float64(N)
-	for j := 0; j < N; j++ {
+	n := float64(fou.N)
+	for j := 0; j < fou.N; j++ {
 		xj := 2.0 * math.Pi * float64(j) / n
 		fx, err := f(xj)
 		chk.EP(err)
 		chk.AnaNum(tst, io.Sf("I{f}(%5.3f)", xj), 1e-15, fx, fou.I(xj), chk.Verbose)
 	}
+}
+
+// check derivatives @ notes
+func fouCheckD1andD2(tst *testing.T, fou *FourierInterp, f Ss) {
 
 	// check first derivative of interpolation
 	io.Pl()
@@ -85,6 +71,37 @@ func TestFourierInterp02(tst *testing.T) {
 			return fou.DI(1, t), nil
 		})
 	}
+}
+
+func TestFourierInterp02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("FourierInterp02. interpolation using DFT")
+
+	// function and analytic derivative
+	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
+	dfdx := func(x float64) (float64, error) { return math.Cos(x/2.0) / 2.0, nil }
+	d2fdx2 := func(x float64) (float64, error) { return -math.Cos(x/2.0) / 4.0, nil }
+
+	// constants
+	var p uint64 = 3 // exponent of 2ⁿ
+	N := 1 << p      // 2ⁿ (n=p): number of terms
+	fou, err := NewFourierInterp(N, SmoNoneKind)
+	chk.EP(err)
+
+	// compute A[k] using 3/2-rule
+	err = fou.CalcA(f, true)
+	chk.EP(err)
+	A32 := fou.A.GetCopy()
+	io.Pf("\n............3/2-rule.............\n")
+	fouCheckD1andD2(tst, fou, f)
+
+	// compute A[k] (standard)
+	err = fou.CalcA(f, false)
+	chk.EP(err)
+	io.Pf("\n.......no aliasing removal.......\n")
+	fouCheckI(tst, fou, f)
+	fouCheckD1andD2(tst, fou, f)
 
 	// plot
 	if chk.Verbose {
@@ -100,7 +117,12 @@ func TestFourierInterp02(tst *testing.T) {
 		plt.Subplot(3, 1, 3)
 		plt.Title(io.Sf("d2f/dx2(x) and second deriv interpolation. N=%d", N), &plt.A{Fsz: 9})
 
-		fou.Plot(3, 3, f, dfdx, d2fdx2, nil, nil, nil, nil)
+		fou.Plot(3, 3, f, dfdx, d2fdx2, nil,
+			&plt.A{L: "noAliasRem", C: plt.C(1, 1), Ls: "--", NoClip: true},
+			&plt.A{L: "noAliasRem", C: plt.C(2, 1), Ls: "--", NoClip: true},
+			&plt.A{L: "noAliasRem", C: plt.C(3, 1), Ls: "--", NoClip: true})
+		copy(fou.A, A32)
+		fou.Plot(3, 3, nil, nil, nil, nil, nil, nil, nil)
 		plt.Save("/tmp/gosl/fun", "fourierinterp02")
 	}
 }
@@ -120,7 +142,7 @@ func TestFourierInterp03(tst *testing.T) {
 	chk.EP(err)
 
 	// compute A[k]
-	err = fou.CalcA(f)
+	err = fou.CalcA(f, false)
 	chk.EP(err)
 
 	// check first derivative of interpolation
@@ -162,7 +184,7 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoLanczosKind)
 			chk.EP(err)
-			err = fou.CalcA(f)
+			err = fou.CalcA(f, false)
 			chk.EP(err)
 
 			ff := f
@@ -180,7 +202,7 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoRcosKind)
 			chk.EP(err)
-			err = fou.CalcA(f)
+			err = fou.CalcA(f, false)
 			chk.EP(err)
 
 			ll := ""
@@ -195,7 +217,7 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoCesaroKind)
 			chk.EP(err)
-			err = fou.CalcA(f)
+			err = fou.CalcA(f, false)
 			chk.EP(err)
 
 			ll := ""

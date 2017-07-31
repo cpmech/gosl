@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -48,11 +49,11 @@ var (
 //         Single Domains. Springer. 563p
 //
 type FourierInterp struct {
-	N int          // number of terms. must be power of 2; i.e. N = 2ⁿ
-	X []float64    // point coordinates == 2⋅π.j/N
-	K []float64    // k values computed from j such that j = 0...N-1 ⇒ k = -N/2...N/2-1
-	A []complex128 // coefficients for interpolation. from FFT
-	S []complex128 // smothing coefficients
+	N int        // number of terms. must be power of 2; i.e. N = 2ⁿ
+	X la.Vector  // point coordinates == 2⋅π.j/N
+	K la.Vector  // k values computed from j such that j = 0...N-1 ⇒ k = -N/2...N/2-1
+	A la.VectorC // coefficients for interpolation. from FFT
+	S la.VectorC // smothing coefficients
 }
 
 // NewFourierInterp allocates a new FourierInterp object
@@ -119,10 +120,44 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 }
 
 // CalcA calculates the coefficients A of the interpolation ousing FFT
-func (o *FourierInterp) CalcA(f Ss) (err error) {
+//   rule32 -- uses 3/2-rule to remove alias error (padding method)
+//
+//   NOTE: by using the 3/2-rule, the intepolatory property is not exact; i.e. I(xi)≈f(xi) only
+//
+func (o *FourierInterp) CalcA(f Ss, rule32 bool) (err error) {
+
+	// aliasing removal by padding (3/2-rule)
+	var fxj float64
+	if rule32 {
+		M := 3*o.N/2 - 1
+		m := float64(M)
+		tmp := make([]complex128, M)
+		for j := 0; j < M; j++ {
+			xj := 2.0 * math.Pi * float64(j) / m
+			fxj, err = f(xj)
+			if err != nil {
+				return
+			}
+			tmp[j] = complex(fxj/m, 0)
+		}
+		err = Dft1d(tmp, false)
+		if err != nil {
+			return
+		}
+		var jN, jM int // j's corresponding to the N and M series, respectively
+		for jN = 0; jN < o.N; jN++ {
+			k := int(o.K[jN])
+			if k < 0 {
+				jM = M + k
+			} else {
+				jM = k
+			}
+			o.A[jN] = tmp[jM]
+		}
+		return
+	}
 
 	// compute f(x[j]) and set A[j] with f(x[j]) / N
-	var fxj float64
 	n := float64(o.N)
 	for j := 0; j < o.N; j++ {
 		fxj, err = f(o.X[j])
