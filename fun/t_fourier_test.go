@@ -17,7 +17,7 @@ import (
 func TestFourierInterp01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("FourierInterp01. check k(j)")
+	chk.PrintTitle("FourierInterp01. check k(j) and j(k)")
 
 	// constants
 	N := 8
@@ -25,11 +25,17 @@ func TestFourierInterp01(tst *testing.T) {
 	chk.EP(err)
 
 	// check k
-	kvals := make([]float64, N)
-	for j := 0; j < N; j++ {
-		kvals[j] = fou.K[j]
+	chk.Array(tst, "k[j]", 1e-17, fou.K, []float64{0, 1, 2, 3, -4, -3, -2, -1})
+
+	// check j
+	jvals := make([]int, N)
+	i := 0
+	for k := -N / 2; k <= N/2-1; k++ {
+		jvals[i] = fou.CalcJ(float64(k))
+		i++
 	}
-	chk.Array(tst, "k[j]", 1e-17, kvals, []float64{0, 1, 2, 3, -4, -3, -2, -1})
+	io.Pf("jvals = %v\n", jvals)
+	chk.Ints(tst, "j[k]", jvals, []int{4, 5, 6, 7, 0, 1, 2, 3})
 }
 
 func TestFourierInterp02(tst *testing.T) {

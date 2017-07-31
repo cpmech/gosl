@@ -159,6 +159,25 @@ func (o *FourierInterp) CalcK(j int) float64 {
 	return float64(k)
 }
 
+// CalcJ computes j-index from k-index where j corresponds to the FFT index
+//
+//   k ϵ [-N/2, N/2-1]
+//   j ϵ [0, N-1]
+//
+//   Example with N = 8:
+//
+//        k=0 ⇒ j=0      k=-4 ⇒ j=4
+//        k=1 ⇒ j=1      k=-3 ⇒ j=5      j = { N + k  if  k < 0
+//        k=2 ⇒ j=2      k=-2 ⇒ j=6          {     k  otherwise
+//        k=3 ⇒ j=3      k=-1 ⇒ j=7
+//
+func (o *FourierInterp) CalcJ(k float64) int {
+	if k < 0 {
+		return o.N + int(k)
+	}
+	return int(k)
+}
+
 // I computes the interpolation
 //
 //                  N/2 - 1
