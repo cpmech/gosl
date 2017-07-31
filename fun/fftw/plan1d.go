@@ -16,9 +16,13 @@ import "unsafe"
 // Plan1d implements the FFTW3 plan structure; i.e. a "plan" to compute direct or inverse 1D FTs
 //
 //   Computes:
-//                      N-1         -i 2 π k l / N
-//               X[l] =  Σ  x[k] ⋅ e
-//                      k=0
+//                      N-1         -i 2 π j k / N                 __
+//     forward:  X[k] =  Σ  x[j] ⋅ e                     with i = √-1
+//                      j=0
+//
+//                      N-1         +i 2 π j k / N
+//     inverse:  Y[k] =  Σ  y[j] ⋅ e                     thus x[k] = Y[k] / N
+//                      j=0
 //
 type Plan1d struct {
 	p    C.fftw_plan  // FFTW "plan" structure

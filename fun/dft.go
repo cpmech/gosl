@@ -15,12 +15,17 @@ import (
 // or replaces data by its inverse discrete Fourier transform, if inverse==true
 //
 //   Computes:
-//                      N-1         -i 2 π k l / N
-//               X[l] =  Σ  x[k] ⋅ e
-//                      k=0
+//                      N-1         -i 2 π j k / N                 __
+//     forward:  X[k] =  Σ  x[j] ⋅ e                     with i = √-1
+//                      j=0
 //
-//   NOTE: (1) ideally, N=len(data) is an integer power of 2.
-//         (2) using FFTW
+//                      N-1         +i 2 π j k / N
+//     inverse:  Y[k] =  Σ  y[j] ⋅ e                     thus x[k] = Y[k] / N
+//                      j=0
+//
+//   NOTE: (1) the inverse operation does not divide by N
+//         (2) ideally, N=len(data) is an integer power of 2.
+//         (3) using FFTW: http://fftw.org/fftw3_doc/What-FFTW-Really-Computes.html
 //
 func Dft1d(data []complex128, inverse bool) (err error) {
 	plan, err := fftw.NewPlan1d(data, inverse, false)

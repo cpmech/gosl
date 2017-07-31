@@ -19,17 +19,31 @@ func TestDft01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Dft01. FFT")
 
+	// forward dft
 	x := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	err := Dft1d(x, false)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
+	X := make([]complex128, len(x))
+	copy(X, x)
+	err := Dft1d(X, false)
+	chk.EP(err)
+
+	// check
+	Xref := dft1dslow(x)
+	chk.ArrayC(tst, "X = DFT[x] = Xref", 1e-14, X, Xref)
+
+	// inverse dft
+	Y := make([]complex128, len(x))
+	copy(Y, X)
+	err = Dft1d(Y, true)
+	chk.EP(err)
+
+	// divide by N
+	n := complex(float64(len(Y)), 0)
+	for i := 0; i < len(Y); i++ {
+		Y[i] /= n
 	}
 
-	y := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
-	Y := dft1dslow(y)
-
-	chk.ArrayC(tst, "X", 1e-14, x, Y)
+	// check
+	chk.ArrayC(tst, "inverse: Y/N = x", 1e-14, Y, x)
 }
 
 func TestDft02(tst *testing.T) {
