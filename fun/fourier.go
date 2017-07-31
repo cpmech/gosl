@@ -50,6 +50,7 @@ var (
 type FourierInterp struct {
 	N int          // number of terms. must be power of 2; i.e. N = 2ⁿ
 	X []float64    // point coordinates == 2⋅π.j/N
+	K []float64    // k values computed from j such that j = 0...N-1 ⇒ k = -N/2...N/2-1
 	A []complex128 // coefficients for interpolation. from FFT
 	S []complex128 // smothing coefficients
 }
@@ -89,13 +90,15 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 	o = new(FourierInterp)
 	o.N = N
 	o.X = make([]float64, o.N)
+	o.K = make([]float64, o.N)
 	o.A = make([]complex128, o.N)
 	o.S = make([]complex128, o.N)
 
-	// point coordinates
+	// point coordinates and K values
 	n := float64(o.N)
 	for j := 0; j < o.N; j++ {
 		o.X[j] = 2.0 * math.Pi * float64(j) / n
+		o.K[j] = o.CalcK(j)
 	}
 
 	// compute smoothing coefficients
@@ -110,7 +113,7 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 	}
 
 	for j := 0; j < o.N; j++ {
-		o.S[j] = complex(σ(o.CalcK(j)), 0)
+		o.S[j] = complex(σ(o.K[j]), 0)
 	}
 	return
 }
@@ -178,7 +181,7 @@ func (o *FourierInterp) CalcK(j int) float64 {
 func (o *FourierInterp) I(x float64) float64 {
 	var res complex128
 	for j := 0; j < o.N; j++ {
-		res += o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.CalcK(j)*x))
+		res += o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K[j]*x))
 	}
 	return real(res)
 }
@@ -200,9 +203,9 @@ func (o *FourierInterp) DI(p int, x float64) float64 {
 	var res complex128
 	pc := complex(float64(p), 0)
 	for j := 0; j < o.N; j++ {
-		ik := complex(0, o.CalcK(j))
+		ik := complex(0, o.K[j])
 		ikp := cmplx.Pow(ik, pc)
-		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.CalcK(j)*x))
+		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K[j]*x))
 	}
 	return real(res)
 }
