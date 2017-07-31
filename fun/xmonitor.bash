@@ -11,5 +11,6 @@ while true; do
     #go test -test.run="LagCardinal01"
     #go test -test.run="LagInterp08"
     #go test -test.run="ChebyInterp07"
-    go test -test.run="LagCheby03"
+    #go test -test.run="LagCheby03"
+    go test -test.run="FourierInterp"
 done

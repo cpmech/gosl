@@ -27,7 +27,7 @@ func TestFourierInterp01(tst *testing.T) {
 	// check k
 	kvals := make([]float64, N)
 	for j := 0; j < N; j++ {
-		kvals[j] = fou.K(j)
+		kvals[j] = fou.CalcK(j)
 	}
 	chk.Array(tst, "k(j)", 1e-17, kvals, []float64{0, 1, 2, 3, -4, -3, -2, -1})
 }

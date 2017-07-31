@@ -110,7 +110,7 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 	}
 
 	for j := 0; j < o.N; j++ {
-		o.S[j] = complex(σ(o.K(j)), 0)
+		o.S[j] = complex(σ(o.CalcK(j)), 0)
 	}
 	return
 }
@@ -134,7 +134,7 @@ func (o *FourierInterp) CalcA(f Ss) (err error) {
 	return
 }
 
-// K computes k-index from j-index where j corresponds to the FFT index
+// CalcK computes k-index from j-index where j corresponds to the FFT index
 //
 //   FFT returns the A coefficients as:
 //
@@ -150,7 +150,7 @@ func (o *FourierInterp) CalcA(f Ss) (err error) {
 //        j=2 ⇒ k=2      j=6 ⇒ k=-2
 //        j=3 ⇒ k=3      j=7 ⇒ k=-1
 //
-func (o *FourierInterp) K(j int) float64 {
+func (o *FourierInterp) CalcK(j int) float64 {
 	h := o.N / 2
 	k := j - (j/h)*o.N
 	return float64(k)
@@ -178,7 +178,7 @@ func (o *FourierInterp) K(j int) float64 {
 func (o *FourierInterp) I(x float64) float64 {
 	var res complex128
 	for j := 0; j < o.N; j++ {
-		res += o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K(j)*x))
+		res += o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.CalcK(j)*x))
 	}
 	return real(res)
 }
@@ -200,9 +200,9 @@ func (o *FourierInterp) DI(p int, x float64) float64 {
 	var res complex128
 	pc := complex(float64(p), 0)
 	for j := 0; j < o.N; j++ {
-		ik := complex(0, o.K(j))
+		ik := complex(0, o.CalcK(j))
 		ikp := cmplx.Pow(ik, pc)
-		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K(j)*x))
+		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.CalcK(j)*x))
 	}
 	return real(res)
 }
