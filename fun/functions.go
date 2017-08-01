@@ -246,6 +246,38 @@ func Rect(x float64) float64 {
 	return 0.5
 }
 
+// Hat implements the hat function
+//
+//      --———--   o (xc,y0+h)
+//         |     / \
+//         h    /   \    m = h/l
+//         |   /m    \
+//   y0 ——————o       o—————————
+//
+//            |<  2l >|
+//
+func Hat(x, xc, y0, h, l float64) float64 {
+	if x <= xc-l || x >= xc+l {
+		return y0
+	}
+	if x <= xc {
+		return y0 + (h/l)*(x-xc+l)
+	}
+	return y0 + h - (h/l)*(x-xc)
+}
+
+// HatD1 returns the first derivative of the hat function
+// NOTE: the discontinuity is ignored ⇒ D1(xc-l)=D1(xc+l)=D1(xc)=0
+func HatD1(x, xc, y0, h, l float64) float64 {
+	if x <= xc-l || x >= xc+l || x == xc {
+		return 0
+	}
+	if x < xc {
+		return h / l
+	}
+	return -h / l
+}
+
 // Sramp implements a smooth ramp function. Ramp
 func Sramp(x, β float64) float64 {
 	if -β*x > 500.0 {

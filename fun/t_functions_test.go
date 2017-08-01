@@ -393,7 +393,7 @@ func TestBoxcar01(tst *testing.T) {
 		plt.Reset(true, nil)
 		plt.Plot(Xa, Ya, &plt.A{C: "b", NoClip: true})
 		plt.Plot(Xb, Yb, &plt.A{C: "r", Ls: "none", M: ".", NoClip: true})
-		plt.Gll("x", "sinc(x)", nil)
+		plt.Gll("x", "boxcar(x)", nil)
 		plt.Cross(0, 0, nil)
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/fun", "boxcar01")
@@ -419,10 +419,56 @@ func TestRect01(tst *testing.T) {
 		plt.Reset(true, nil)
 		plt.Plot(Xa, Ya, &plt.A{C: "b", NoClip: true})
 		plt.Plot(Xb, Yb, &plt.A{C: "r", Ls: "none", M: ".", NoClip: true})
-		plt.Gll("x", "sinc(x)", nil)
+		plt.Gll("x", "rect(x)", nil)
 		plt.Cross(0, 0, nil)
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/fun", "rect01")
+	}
+}
+
+func TestHat01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Hat01. 'hat' function")
+
+	xc := 1.0
+	y0 := 1.0
+	h := 1.0
+	l := 2.0
+
+	chk.Float64(tst, "rect(-2.0)", 1e-17, Hat(-2.0, xc, y0, h, l), y0)
+	chk.Float64(tst, "rect(-1.0)", 1e-17, Hat(-1.0, xc, y0, h, l), y0)
+	chk.Float64(tst, "rect(+0.0)", 1e-17, Hat(+0.0, xc, y0, h, l), y0+h/2)
+	chk.Float64(tst, "rect(+1.0)", 1e-17, Hat(+1.0, xc, y0, h, l), y0+h)
+	chk.Float64(tst, "rect(+2.0)", 1e-17, Hat(+2.0, xc, y0, h, l), y0+h/2)
+	chk.Float64(tst, "rect(+3.0)", 1e-17, Hat(+3.0, xc, y0, h, l), y0)
+	chk.Float64(tst, "rect(+4.0)", 1e-17, Hat(+4.0, xc, y0, h, l), y0)
+
+	Xb := utl.LinSpace(-2, 4, 13)
+	for _, x := range Xb {
+		chk.AnaNum(tst, io.Sf("Hat(%+.2f)", x), 1e-17, Hat(x, xc, y0, h, l), max(y0, y0+h-math.Abs(x-xc)/2), chk.Verbose)
+	}
+
+	Xb = utl.LinSpace(-2, 4, 8)
+	for _, x := range Xb {
+		chk.AnaNum(tst, io.Sf("Hat(%+.2f)", x), 1e-17, Hat(x, xc, y0, h, l), max(y0, y0+h-math.Abs(x-xc)/2), chk.Verbose)
+		chk.DerivScaSca(tst, "HatD1", 1e-12, HatD1(x, xc, y0, h, l), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
+			return Hat(t, xc, y0, h, l), nil
+		})
+	}
+
+	if chk.Verbose {
+		Xa := utl.LinSpace(-2, 4, 201)
+		Ya := utl.GetMapped(Xa, func(x float64) float64 { return Hat(x, xc, y0, h, l) })
+		Yb := utl.GetMapped(Xb, func(x float64) float64 { return Hat(x, xc, y0, h, l) })
+		plt.Reset(true, nil)
+		plt.Plot(Xa, Ya, &plt.A{C: "b", NoClip: true})
+		plt.Plot(Xb, Yb, &plt.A{C: "r", Ls: "none", M: ".", NoClip: true})
+		plt.Equal()
+		plt.Gll("x", "hat(x)", nil)
+		plt.Cross(0, 0, nil)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/fun", "hat01")
 	}
 }
 
