@@ -51,7 +51,8 @@ type A struct {
 	HideT   bool    // hide top frame border
 
 	// other options
-	FigFraction bool // the given x-y coordinates correspond to figure coords  "xycoords='figure fraction'") }
+	AxCoords  bool // the given x-y coordinates correspond to axes coords
+	FigCoords bool // the given x-y coordinates correspond to figure coords
 
 	// legend
 	LegLoc   string    // legend: location. e.g.: right, center left, upper right, lower right, best, center, lower left, center right, upper left, upper center, lower center
@@ -143,9 +144,6 @@ func (o A) String(forHistogram, for3dPoints bool) (l string) {
 	addToCmd(&l, o.Va != "", io.Sf("va='%s'", o.Va))
 	addToCmd(&l, o.Rot > 0, io.Sf("rotation=%g", o.Rot))
 	addToCmd(&l, o.Fsz > 0, io.Sf("fontsize=%g", o.Fsz))
-
-	// other options
-	addToCmd(&l, o.FigFraction, "xycoords='figure fraction'")
 
 	// histograms
 	if forHistogram {

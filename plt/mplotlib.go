@@ -275,7 +275,12 @@ func HideTRborders() {
 
 // Annotate adds annotation to plot
 func Annotate(x, y float64, txt string, args *A) {
-	io.Ff(&bufferPy, "plt.annotate(r'%s', xy=(%g,%g)", txt, x, y)
+	l := "plt.annotate(r'%s',xy=(%g,%g)"
+	if args != nil {
+		addToCmd(&l, args.AxCoords, "xycoords='axes fraction'")
+		addToCmd(&l, args.FigCoords, "xycoords='figure fraction'")
+	}
+	io.Ff(&bufferPy, l, txt, x, y)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
@@ -307,7 +312,15 @@ func Title(txt string, args *A) {
 
 // Text adds text to plot
 func Text(x, y float64, txt string, args *A) {
-	io.Ff(&bufferPy, "plt.text(%g,%g,r'%s'", x, y, txt)
+	l := "plt.text(%g,%g,r'%s'"
+	if args != nil {
+		addToCmd(&l, args.AxCoords, "transform=plt.gca().transAxes")
+		if args.FigCoords {
+			chk.Panic("FigCoords seems broken in current Matplotlib. Try Annotate instead")
+			addToCmd(&l, args.FigCoords, "transform=plt.gcf().transFigure")
+		}
+	}
+	io.Ff(&bufferPy, l, x, y, txt)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
