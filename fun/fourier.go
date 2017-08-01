@@ -33,16 +33,23 @@ var (
 
 // FourierInterp performs interpolation using truncated Fourier series
 //
-//                  N/2 - 1
-//                   ————          +i k X[j]
-//        f(x[j]) =  \     A[k] ⋅ e              with    X[j] = 2 π j / N
-//                   /
-//                   ————
-//                  k = -N/2
+//               N/2 - 1
+//                ————          +i k X[j]
+//     f(x[j]) =  \     A[k] ⋅ e                   with    X[j] = 2 π j / N
+//                /
+//                ————
+//               k = -N/2                 Eq (2.1.27) of [1]    x ϵ [0, 2π]
 //
-//   x ϵ [0, 2π]
+//     where:
 //
-//   Equation (2.1.27) of [1]. Note that f=u in [1] and A[k] is the tilde(u[k]) of [1]
+//                 N - 1
+//             1   ————             -i k X[j]
+//     A[k] = ———  \     f(x[j]) ⋅ e              with    X[j] = 2 π j / N
+//             N   /
+//                 ————
+//                j = 0                                  Eq (2.1.25) of [1]
+//
+//   NOTE: f=u in [1] and A[k] is the tilde(u[k]) of [1]
 //
 //   Reference:
 //     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
@@ -57,27 +64,10 @@ type FourierInterp struct {
 }
 
 // NewFourierInterp allocates a new FourierInterp object
+//   N         -- number of terms. must be even; ideally power of 2, e.g. N = 2ⁿ
+//   smoothing -- type of smoothing: use SmoNoneKind for no smoothing
 //
-//                    N - 1
-//                1   ————             -i k X[j]
-//        A[k] = ———  \     f(x[j]) ⋅ e              with    X[j] = 2 π j / N
-//                N   /
-//                    ————
-//                   j = 0
-//
-//  INPUT:
-//    N -- number of terms. must be power of 2; i.e. N = 2ⁿ
-//
-//    smoothing -- type of smoothing: use SmoNoneKind for no smoothing
-//
-//  NOTE: (1) x ϵ [0, 2π]
-//        (2) remember to call CalcA to calculate coefficients A!
-//
-//   Equation (2.1.25) of [1]. Note that f=u in [1] and A[k] is the tilde(u[k]) of [1]
-//
-//   Reference:
-//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
-//         Single Domains. Springer. 563p
+//   NOTE: remember to call CalcA to calculate coefficients A!
 //
 func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 
@@ -119,10 +109,19 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 	return
 }
 
-// CalcA calculates the coefficients A of the interpolation ousing FFT
+// CalcA calculates the coefficients A of the interpolation using (fwd) FFT
+//
+//                 N - 1
+//             1   ————             -i k X[j]
+//     A[k] = ———  \     f(x[j]) ⋅ e              with    X[j] = 2 π j / N
+//             N   /
+//                 ————
+//                j = 0                                  Eq (2.1.25) of [1]
+//
 //   rule32 -- uses 3/2-rule to remove alias error (padding method)
 //
-//   NOTE: by using the 3/2-rule, the intepolatory property is not exact; i.e. I(xi)≈f(xi) only
+//   NOTE: by using the 3/2-rule, the intepolatory property is not exact;
+//         i.e. I(xi)≈f(xi) only
 //
 func (o *FourierInterp) CalcA(f Ss, rule32 bool) (err error) {
 
@@ -213,22 +212,14 @@ func (o *FourierInterp) CalcJ(k float64) int {
 	return int(k)
 }
 
-// I computes the interpolation
+// I computes the interpolation (with smoothing or not)
 //
-//                  N/2 - 1
-//                    ————          +i k x
-//        I {f}(x) =  \     A[k] ⋅ e
-//         N          /
-//                    ————
-//                   k = -N/2
-//
-//   x ϵ [0, 2π]
-//
-//   Equation (2.1.28) of [1]. Note that f=u in [1] and A[k] is the tilde(u[k]) of [1]
-//
-//   Reference:
-//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
-//         Single Domains. Springer. 563p
+//               N/2 - 1
+//                 ————          +i k x
+//     I {f}(x) =  \     A[k] ⋅ e                 x ϵ [0, 2π]
+//      N          /
+//                 ————
+//                k = -N/2                 Eq (2.1.28) of [1]
 //
 //  NOTE: remember to call CalcA to calculate coefficients A!
 //
@@ -240,16 +231,14 @@ func (o *FourierInterp) I(x float64) float64 {
 	return real(res)
 }
 
-// DI computes the p-derivative of the interpolation
+// DI computes the p-derivative of the interpolation (with smoothing or not)
 //
 //                   p       N/2 - 1
 //        p         d(I{f})    ————       p           +i k x
 //       DI{f}(x) = ——————— =  \     (i⋅k)  ⋅ A[k] ⋅ e
 //        N             p      /
 //                    dx       ————
-//                            k = -N/2
-//
-//   x ϵ [0, 2π]
+//                            k = -N/2                   x ϵ [0, 2π]
 //
 //  NOTE: remember to call CalcA to calculate coefficients A!
 //
