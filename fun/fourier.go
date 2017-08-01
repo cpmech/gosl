@@ -118,12 +118,23 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 //                 ————
 //                j = 0                                  Eq (2.1.25) of [1]
 //
-//   rule32 -- uses 3/2-rule to remove alias error (padding method)
+//   INPUT:
+//     fvals  -- [optional] f(x[j]); if nil, f must be given
+//     f      -- [optional] f(x); if nil, fvals must be given
+//     rule32 -- uses 3/2-rule to remove alias error (padding method)
 //
 //   NOTE: by using the 3/2-rule, the intepolatory property is not exact;
 //         i.e. I(xi)≈f(xi) only
 //
-func (o *FourierInterp) CalcA(f Ss, rule32 bool) (err error) {
+func (o *FourierInterp) CalcA(fvals []float64, f Ss, rule32 bool) (err error) {
+
+	// check
+	if fvals == nil && f == nil {
+		return chk.Err("either fvals or f (function) must be given\n")
+	}
+	if f == nil && rule32 {
+		return chk.Err("fvals does not work with rule32\n")
+	}
 
 	// aliasing removal by padding (3/2-rule)
 	var fxj float64
@@ -159,9 +170,13 @@ func (o *FourierInterp) CalcA(f Ss, rule32 bool) (err error) {
 	// compute f(x[j]) and set A[j] with f(x[j]) / N
 	n := float64(o.N)
 	for j := 0; j < o.N; j++ {
-		fxj, err = f(o.X[j])
-		if err != nil {
-			return
+		if f == nil {
+			fxj = fvals[j]
+		} else {
+			fxj, err = f(o.X[j])
+			if err != nil {
+				return
+			}
 		}
 		o.A[j] = complex(fxj/n, 0)
 	}

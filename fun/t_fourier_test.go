@@ -90,14 +90,14 @@ func TestFourierInterp02(tst *testing.T) {
 	chk.EP(err)
 
 	// compute A[k] using 3/2-rule
-	err = fou.CalcA(f, true)
+	err = fou.CalcA(nil, f, true)
 	chk.EP(err)
 	A32 := fou.A.GetCopy()
 	io.Pf("\n............3/2-rule.............\n")
 	fouCheckD1andD2(tst, fou, f)
 
 	// compute A[k] (standard)
-	err = fou.CalcA(f, false)
+	err = fou.CalcA(nil, f, false)
 	chk.EP(err)
 	io.Pf("\n.......no aliasing removal.......\n")
 	fouCheckI(tst, fou, f)
@@ -142,7 +142,7 @@ func TestFourierInterp03(tst *testing.T) {
 	chk.EP(err)
 
 	// compute A[k]
-	err = fou.CalcA(f, false)
+	err = fou.CalcA(nil, f, false)
 	chk.EP(err)
 
 	// check first derivative of interpolation
@@ -184,7 +184,7 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoLanczosKind)
 			chk.EP(err)
-			err = fou.CalcA(f, false)
+			err = fou.CalcA(nil, f, false)
 			chk.EP(err)
 
 			ff := f
@@ -202,7 +202,7 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoRcosKind)
 			chk.EP(err)
-			err = fou.CalcA(f, false)
+			err = fou.CalcA(nil, f, false)
 			chk.EP(err)
 
 			ll := ""
@@ -217,7 +217,7 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoCesaroKind)
 			chk.EP(err)
-			err = fou.CalcA(f, false)
+			err = fou.CalcA(nil, f, false)
 			chk.EP(err)
 
 			ll := ""
@@ -229,4 +229,37 @@ func TestFourierInterp03(tst *testing.T) {
 
 		plt.Save("/tmp/gosl/fun", "fourierinterp03")
 	}
+}
+
+func TestFourierInterp04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("FourierInterp04. using fvals and f(x)")
+
+	// function
+	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
+
+	// constants
+	var p uint64 = 3 // exponent of 2ⁿ
+	N := 1 << p      // 2ⁿ (n=p): number of terms
+	fou, err := NewFourierInterp(N, SmoNoneKind)
+	chk.EP(err)
+
+	// calc fvals
+	fvals := make([]float64, N)
+	for j := 0; j < N; j++ {
+		fvals[j], _ = f(fou.X[j])
+	}
+
+	// compute A[k] using fvals
+	err = fou.CalcA(fvals, nil, false)
+	chk.EP(err)
+	Afvals := fou.A.GetCopy()
+
+	// compute A[k] using f(x)
+	err = fou.CalcA(nil, f, false)
+	chk.EP(err)
+
+	// check
+	chk.ArrayC(tst, "A", 1e-17, Afvals, fou.A)
 }
