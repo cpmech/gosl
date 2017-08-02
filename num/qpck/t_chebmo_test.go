@@ -14,7 +14,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func runIntegConly(N int, f func(x float64) float64, reuse bool) (C []float64) {
+func runIntegConly(tst *testing.T, N int, f func(x float64) float64, reuse bool) (C []float64) {
 
 	// allocate workspace
 	limit := 50
@@ -45,7 +45,7 @@ func runIntegConly(N int, f func(x float64) float64, reuse bool) (C []float64) {
 
 		// perform integration of cos term
 		C[j], _, _, _, err = Awoe(0, f, a, b, m, icos, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
-		chk.EP(err)
+		status(tst, err)
 
 		// set flags
 		if reuse {
@@ -57,7 +57,7 @@ func runIntegConly(N int, f func(x float64) float64, reuse bool) (C []float64) {
 	return
 }
 
-func runIntegCandS(N int, f func(x float64) float64, reuse bool) (C, S []float64) {
+func runIntegCandS(tst *testing.T, N int, f func(x float64) float64, reuse bool) (C, S []float64) {
 
 	// allocate workspace
 	limit := 50
@@ -90,7 +90,7 @@ func runIntegCandS(N int, f func(x float64) float64, reuse bool) (C, S []float64
 
 		// perform integration of cos term
 		C[j], _, _, _, err = Awoe(0, f, a, b, m, icos, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
-		chk.EP(err)
+		status(tst, err)
 
 		// set flags
 		if reuse {
@@ -99,7 +99,7 @@ func runIntegCandS(N int, f func(x float64) float64, reuse bool) (C, S []float64
 
 		// perform integration of sin term
 		S[j], _, _, _, err = Awoe(0, f, a, b, m, isin, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
-		chk.EP(err)
+		status(tst, err)
 	}
 	return
 }
@@ -112,8 +112,8 @@ func TestChebmo01(tst *testing.T) {
 	f := func(x float64) float64 { return math.Exp(1.0 - math.Sin(x)) }
 
 	N := 3
-	Ca := runIntegConly(N, f, false) // false => do not reuse moments
-	Cb := runIntegConly(N, f, true)  // true => reuse moments
+	Ca := runIntegConly(tst, N, f, false) // false => do not reuse moments
+	Cb := runIntegConly(tst, N, f, true)  // true => reuse moments
 	io.Pl()
 	io.Pforan("Ca = %v\n", Ca)
 	io.Pf("Cb = %v\n", Cb)
@@ -138,8 +138,8 @@ func TestChebmo02(tst *testing.T) {
 	f := func(x float64) float64 { return math.Exp(1.0 - math.Sin(x)) }
 
 	N := 3
-	Ca, Sa := runIntegCandS(N, f, false) // false => do not reuse moments
-	Cb, Sb := runIntegCandS(N, f, true)  // true => reuse moments
+	Ca, Sa := runIntegCandS(tst, N, f, false) // false => do not reuse moments
+	Cb, Sb := runIntegCandS(tst, N, f, true)  // true => reuse moments
 	io.Pforan("Ca = %v\n", Ca)
 	io.Pf("Cb = %v\n", Cb)
 	io.Pforan("Sa = %v\n", Sa)
