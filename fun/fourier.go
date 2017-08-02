@@ -126,7 +126,7 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 //   NOTE: by using the 3/2-rule, the intepolatory property is not exact;
 //         i.e. I(xi)≈f(xi) only
 //
-func (o *FourierInterp) CalcA(fvals []float64, f Ss, rule32 bool) (err error) {
+func (o *FourierInterp) CalcA(fvals la.Vector, f Ss, rule32 bool) (err error) {
 
 	// check
 	if fvals == nil && f == nil {
@@ -266,6 +266,45 @@ func (o *FourierInterp) DI(p int, x float64) float64 {
 		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K[j]*x))
 	}
 	return real(res)
+}
+
+// Deriv calculates the p-derivative of the interpolated function @ grid points using the FFT
+//
+//   INPUT:
+//      fx -- f(x[j])
+//      p  -- derivative order
+//
+//   OUTPUT:
+//      dfdx -- pre-allocated vector of len==N, such that
+//                  p      |
+//                 d(I{f}) |
+//         dfdx =  ——————— |             len(res) must be equal to N
+//                     p   |
+//                   dx    |x=x[j]
+//
+//      dfdxHat -- derivative in spectral space (pre-allocated vector of len==N)
+//
+//  NOTE: remember to call CalcA to calculate coefficients A!
+//
+func (o *FourierInterp) Deriv(dfdx la.Vector, dfdxHat la.VectorC, fx la.Vector, p int) (err error) {
+
+	// compute dfdxjHat
+	pc := complex(float64(p), 0)
+	for j := 0; j < o.N; j++ {
+		ik := complex(0, o.K[j])
+		ikp := cmplx.Pow(ik, pc)
+		dfdxHat[j] = ikp * o.S[j] * o.A[j]
+	}
+
+	// use inverse FFT to compute dfdx
+	err = Dft1d(dfdxHat, true)
+	if err != nil {
+		return
+	}
+	for j := 0; j < o.N; j++ {
+		dfdx[j] = real(dfdxHat[j])
+	}
+	return
 }
 
 // Plot plots interpolated curve
