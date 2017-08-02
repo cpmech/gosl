@@ -56,19 +56,28 @@ var (
 //         Single Domains. Springer. 563p
 //
 type FourierInterp struct {
+
+	// main
 	N int        // number of terms. must be power of 2; i.e. N = 2ⁿ
 	X la.Vector  // point coordinates == 2⋅π.j/N
 	K la.Vector  // k values computed from j such that j = 0...N-1 ⇒ k = -N/2...N/2-1
 	A la.VectorC // coefficients for interpolation. from FFT
 	S la.VectorC // smothing coefficients
+
+	// computed (U and Uali may be set externally)
+	U      la.Vector // values of f(x) at grid points (nodes) X[j]
+	Du1    la.Vector // 1st derivative of f(x) at grid points (nodes) X[j]
+	Du2    la.Vector // 2nd derivative of f(x) at grid points (nodes) X[j]
+	Du1Hat la.Vector // spectral coefficient corresponding to 1st derivative
+	Du2Hat la.Vector // spectral coefficient corresponding to 1st derivative
+
+	// workspace
+	workAli la.VectorC // values of f(x) at 3⋅N/2-1 grid points (nodes) X[j] to reduce aliasing error
 }
 
 // NewFourierInterp allocates a new FourierInterp object
 //   N         -- number of terms. must be even; ideally power of 2, e.g. N = 2ⁿ
 //   smoothing -- type of smoothing: use SmoNoneKind for no smoothing
-//
-//   NOTE: remember to call CalcA to calculate coefficients A!
-//
 func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 
 	// check
@@ -102,9 +111,22 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 	case SmoCesaroKind:
 		σ = func(k float64) float64 { return 1.0 - math.Abs(k)/(1.0+n/2.0) }
 	}
-
 	for j := 0; j < o.N; j++ {
 		o.S[j] = complex(σ(o.K[j]), 0)
+	}
+	return
+}
+
+// CalcU calculates f(x) at grid points (to be used later with CalcA and/or CalcD)
+func (o *FourierInterp) CalcU(f Ss) (err error) {
+	if len(o.U) != o.N {
+		o.U = la.NewVector(o.N)
+	}
+	for j := 0; j < o.N; j++ {
+		o.U[j], err = f(o.X[j])
+		if err != nil {
+			return
+		}
 	}
 	return
 }
@@ -118,71 +140,144 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 //                 ————
 //                j = 0                                  Eq (2.1.25) of [1]
 //
-//   INPUT:
-//     fvals  -- [optional] f(x[j]); if nil, f must be given
-//     f      -- [optional] f(x); if nil, fvals must be given
-//     rule32 -- uses 3/2-rule to remove alias error (padding method)
+//  NOTE: remember to set U (or call CalcU) first
 //
-//   NOTE: by using the 3/2-rule, the intepolatory property is not exact;
-//         i.e. I(xi)≈f(xi) only
-//
-func (o *FourierInterp) CalcA(fvals la.Vector, f Ss, rule32 bool) (err error) {
+func (o *FourierInterp) CalcA() (err error) {
 
-	// check
-	if fvals == nil && f == nil {
-		return chk.Err("either fvals or f (function) must be given\n")
-	}
-	if f == nil && rule32 {
-		return chk.Err("fvals does not work with rule32\n")
-	}
-
-	// aliasing removal by padding (3/2-rule)
-	var fxj float64
-	if rule32 {
-		M := 3*o.N/2 - 1
-		m := float64(M)
-		tmp := make([]complex128, M)
-		for j := 0; j < M; j++ {
-			xj := 2.0 * math.Pi * float64(j) / m
-			fxj, err = f(xj)
-			if err != nil {
-				return
-			}
-			tmp[j] = complex(fxj/m, 0)
-		}
-		err = Dft1d(tmp, false)
-		if err != nil {
-			return
-		}
-		var jN, jM int // j's corresponding to the N and M series, respectively
-		for jN = 0; jN < o.N; jN++ {
-			k := int(o.K[jN])
-			if k < 0 {
-				jM = M + k
-			} else {
-				jM = k
-			}
-			o.A[jN] = tmp[jM]
-		}
-		return
-	}
-
-	// compute f(x[j]) and set A[j] with f(x[j]) / N
+	// set A[j] with f(x[j]) / N
 	n := float64(o.N)
 	for j := 0; j < o.N; j++ {
-		if f == nil {
-			fxj = fvals[j]
-		} else {
-			fxj, err = f(o.X[j])
-			if err != nil {
-				return
-			}
-		}
-		o.A[j] = complex(fxj/n, 0)
+		o.A[j] = complex(o.U[j]/n, 0)
 	}
 
 	// perform Fourier transform to find A[j]
 	err = Dft1d(o.A, false)
+	return
+}
+
+// CalcAwithAliasRemoval calculates the coefficients A by using the 3/2-rule to remove alias error
+// via the padding method
+//
+//  NOTE: with the 3/2-rule, the intepolatory property is not exact; i.e. I(xi)≈f(xi) only
+//
+func (o *FourierInterp) CalcAwithAliasRemoval(f Ss) (err error) {
+
+	// allocate workspace
+	M := 3*o.N/2 - 1
+	if len(o.workAli) != M {
+		o.workAli = la.NewVectorC(M)
+	}
+
+	// set workAli[j] with f(x[j]) / M
+	var fxj float64
+	m := float64(M)
+	for j := 0; j < M; j++ {
+		xj := 2.0 * math.Pi * float64(j) / m
+		fxj, err = f(xj)
+		if err != nil {
+			return
+		}
+		o.workAli[j] = complex(fxj/m, 0)
+	}
+
+	// perform Fourier transform to find A[j]
+	err = Dft1d(o.workAli, false)
+	if err != nil {
+		return
+	}
+
+	// copy spectral coefficients to the right place in the smaller grid
+	var jN, jM int // j's corresponding to the N and M series, respectively
+	for jN = 0; jN < o.N; jN++ {
+		k := int(o.K[jN])
+		if k < 0 {
+			jM = M + k
+		} else {
+			jM = k
+		}
+		o.A[jN] = o.workAli[jM]
+	}
+	return
+}
+
+// I computes the interpolation (with smoothing or not)
+//
+//               N/2 - 1
+//                 ————          +i k x
+//     I {f}(x) =  \     A[k] ⋅ e                 x ϵ [0, 2π]
+//      N          /
+//                 ————
+//                k = -N/2                 Eq (2.1.28) of [1]
+//
+//  NOTE: remember to call CalcA first
+//
+func (o *FourierInterp) I(x float64) float64 {
+	var res complex128
+	for j := 0; j < o.N; j++ {
+		res += o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K[j]*x))
+	}
+	return real(res)
+}
+
+// Idiff performs the differentiation of the interpolation; i.e. computes the p-derivative of the
+// interpolation (with smoothing or not)
+//
+//                   p       N/2 - 1
+//        p         d(I{f})    ————       p           +i k x
+//  res: DI{f}(x) = ——————— =  \     (i⋅k)  ⋅ A[k] ⋅ e
+//        N             p      /
+//                    dx       ————
+//                            k = -N/2                   x ϵ [0, 2π]
+//
+//  NOTE: remember to call CalcA first
+//
+func (o *FourierInterp) Idiff(p int, x float64) float64 {
+	var res complex128
+	pc := complex(float64(p), 0)
+	for j := 0; j < o.N; j++ {
+		ik := complex(0, o.K[j])
+		ikp := cmplx.Pow(ik, pc)
+		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K[j]*x))
+	}
+	return real(res)
+}
+
+// CalcD calculates the p-derivative of the interpolated function @ grid points using the FFT
+// (with smoothing or not)
+//
+//                  p      |
+//                 d(I{f}) |
+//         dfdx =  ——————— |             len(res) must be equal to N
+//                     p   |
+//                   dx    |x=x[j]
+//
+//   INPUT:
+//      p -- derivative order
+//
+//   OUTPUT:
+//      dfdx    -- pre-allocated vector of len==N, such that
+//      dfdxHat -- derivative in spectral space (pre-allocated vector of len==N)
+//
+//  NOTE: remember to call CalcA first
+//
+func (o *FourierInterp) CalcD(dfdx la.Vector, dfdxHat la.VectorC, p int) (err error) {
+
+	// compute dfdxjHat
+	pc := complex(float64(p), 0)
+	for j := 0; j < o.N; j++ {
+		ik := complex(0, o.K[j])
+		ikp := cmplx.Pow(ik, pc)
+		dfdxHat[j] = ikp * o.S[j] * o.A[j]
+	}
+
+	// use inverse FFT to compute dfdx
+	err = Dft1d(dfdxHat, true)
+	if err != nil {
+		return
+	}
+	for j := 0; j < o.N; j++ {
+		dfdx[j] = real(dfdxHat[j])
+	}
 	return
 }
 
@@ -227,85 +322,7 @@ func (o *FourierInterp) CalcJ(k float64) int {
 	return int(k)
 }
 
-// I computes the interpolation (with smoothing or not)
-//
-//               N/2 - 1
-//                 ————          +i k x
-//     I {f}(x) =  \     A[k] ⋅ e                 x ϵ [0, 2π]
-//      N          /
-//                 ————
-//                k = -N/2                 Eq (2.1.28) of [1]
-//
-//  NOTE: remember to call CalcA to calculate coefficients A!
-//
-func (o *FourierInterp) I(x float64) float64 {
-	var res complex128
-	for j := 0; j < o.N; j++ {
-		res += o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K[j]*x))
-	}
-	return real(res)
-}
-
-// DI computes the p-derivative of the interpolation (with smoothing or not)
-//
-//                   p       N/2 - 1
-//        p         d(I{f})    ————       p           +i k x
-//       DI{f}(x) = ——————— =  \     (i⋅k)  ⋅ A[k] ⋅ e
-//        N             p      /
-//                    dx       ————
-//                            k = -N/2                   x ϵ [0, 2π]
-//
-//  NOTE: remember to call CalcA to calculate coefficients A!
-//
-func (o *FourierInterp) DI(p int, x float64) float64 {
-	var res complex128
-	pc := complex(float64(p), 0)
-	for j := 0; j < o.N; j++ {
-		ik := complex(0, o.K[j])
-		ikp := cmplx.Pow(ik, pc)
-		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K[j]*x))
-	}
-	return real(res)
-}
-
-// Deriv calculates the p-derivative of the interpolated function @ grid points using the FFT
-//
-//   INPUT:
-//      fx -- f(x[j])
-//      p  -- derivative order
-//
-//   OUTPUT:
-//      dfdx -- pre-allocated vector of len==N, such that
-//                  p      |
-//                 d(I{f}) |
-//         dfdx =  ——————— |             len(res) must be equal to N
-//                     p   |
-//                   dx    |x=x[j]
-//
-//      dfdxHat -- derivative in spectral space (pre-allocated vector of len==N)
-//
-//  NOTE: remember to call CalcA to calculate coefficients A!
-//
-func (o *FourierInterp) Deriv(dfdx la.Vector, dfdxHat la.VectorC, fx la.Vector, p int) (err error) {
-
-	// compute dfdxjHat
-	pc := complex(float64(p), 0)
-	for j := 0; j < o.N; j++ {
-		ik := complex(0, o.K[j])
-		ikp := cmplx.Pow(ik, pc)
-		dfdxHat[j] = ikp * o.S[j] * o.A[j]
-	}
-
-	// use inverse FFT to compute dfdx
-	err = Dft1d(dfdxHat, true)
-	if err != nil {
-		return
-	}
-	for j := 0; j < o.N; j++ {
-		dfdx[j] = real(dfdxHat[j])
-	}
-	return
-}
+// plotting //////////////////////////////////////////////////////////////////////////////////////
 
 // Plot plots interpolated curve
 //   option -- 1: plot only f(x)
@@ -384,7 +401,7 @@ func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, ar
 				}
 				y3[i] = dfx
 			}
-			y4[i] = o.DI(1, x)
+			y4[i] = o.Idiff(1, x)
 		}
 		if secondD {
 			if d2fdx2 != nil {
@@ -394,10 +411,10 @@ func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, ar
 				}
 				y5[i] = ddfx
 			}
-			y6[i] = o.DI(2, x)
+			y6[i] = o.Idiff(2, x)
 		}
 		if option == 6 {
-			y7[i] = o.DI(p, x)
+			y7[i] = o.Idiff(p, x)
 		}
 	}
 

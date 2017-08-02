@@ -5,16 +5,23 @@
 package fun
 
 import (
+	"testing"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 )
 
 func init() {
 	io.Verbose = false
-	//chk.Verbose = true
 }
 
 func verbose() {
 	io.Verbose = true
 	chk.Verbose = true
+}
+
+func status(tst *testing.T, err error) {
+	if err != nil {
+		tst.Errorf("%v\n", err)
+	}
 }

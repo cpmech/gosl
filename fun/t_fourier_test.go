@@ -23,7 +23,7 @@ func TestFourierInterp01(tst *testing.T) {
 	// constants
 	N := 8
 	fou, err := NewFourierInterp(N, 0)
-	chk.EP(err)
+	status(tst, err)
 
 	// check k
 	chk.Array(tst, "k[j]", 1e-17, fou.K, []float64{0, 1, 2, 3, -4, -3, -2, -1})
@@ -46,7 +46,7 @@ func fouCheckI(tst *testing.T, fou *FourierInterp, f Ss) {
 	for j := 0; j < fou.N; j++ {
 		xj := 2.0 * math.Pi * float64(j) / n
 		fx, err := f(xj)
-		chk.EP(err)
+		status(tst, err)
 		chk.AnaNum(tst, io.Sf("I{f}(%5.3f)", xj), 1e-15, fx, fou.I(xj), chk.Verbose)
 	}
 }
@@ -59,7 +59,7 @@ func fouCheckD1andD2(tst *testing.T, fou *FourierInterp, f Ss) {
 	xx := utl.LinSpace(0, 2*math.Pi, 11)
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D1I{f}(%5.3f)", x), 1e-10, fou.DI(1, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
+		chk.DerivScaSca(tst, io.Sf("D1I{f}(%5.3f)", x), 1e-10, fou.Idiff(1, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
 			return fou.I(t), nil
 		})
 	}
@@ -68,8 +68,8 @@ func fouCheckD1andD2(tst *testing.T, fou *FourierInterp, f Ss) {
 	io.Pl()
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-10, fou.DI(2, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
-			return fou.DI(1, t), nil
+		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-10, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
+			return fou.Idiff(1, t), nil
 		})
 	}
 }
@@ -88,18 +88,17 @@ func TestFourierInterp02(tst *testing.T) {
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoNoneKind)
-	chk.EP(err)
+	status(tst, err)
 
-	// compute A[k] using 3/2-rule
-	err = fou.CalcA(nil, f, true)
-	chk.EP(err)
+	// compute A using 3/2-rule
+	status(tst, fou.CalcAwithAliasRemoval(f))
 	A32 := fou.A.GetCopy()
 	io.Pf("\n............3/2-rule.............\n")
 	fouCheckD1andD2(tst, fou, f)
 
-	// compute A[k] (standard)
-	err = fou.CalcA(nil, f, false)
-	chk.EP(err)
+	// compute U and A (standard)
+	status(tst, fou.CalcU(f))
+	status(tst, fou.CalcA())
 	io.Pf("\n.......no aliasing removal.......\n")
 	fouCheckI(tst, fou, f)
 	fouCheckD1andD2(tst, fou, f)
@@ -140,18 +139,18 @@ func TestFourierInterp03(tst *testing.T) {
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoLanczosKind)
-	chk.EP(err)
+	status(tst, err)
 
-	// compute A[k]
-	err = fou.CalcA(nil, f, false)
-	chk.EP(err)
+	// compute U and A
+	status(tst, fou.CalcU(f))
+	status(tst, fou.CalcA())
 
 	// check first derivative of interpolation
 	io.Pl()
 	xx := utl.LinSpace(0, 2*math.Pi, 11)
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D1I{f}(%5.3f)", x), 1e-10, fou.DI(1, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
+		chk.DerivScaSca(tst, io.Sf("D1I{f}(%5.3f)", x), 1e-10, fou.Idiff(1, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
 			return fou.I(t), nil
 		})
 	}
@@ -160,8 +159,8 @@ func TestFourierInterp03(tst *testing.T) {
 	io.Pl()
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-9, fou.DI(2, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
-			return fou.DI(1, t), nil
+		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-9, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
+			return fou.Idiff(1, t), nil
 		})
 	}
 
@@ -184,9 +183,9 @@ func TestFourierInterp03(tst *testing.T) {
 
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoLanczosKind)
-			chk.EP(err)
-			err = fou.CalcA(nil, f, false)
-			chk.EP(err)
+			status(tst, err)
+			status(tst, fou.CalcU(f))
+			status(tst, fou.CalcA())
 
 			ff := f
 			ll := ""
@@ -202,9 +201,9 @@ func TestFourierInterp03(tst *testing.T) {
 
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoRcosKind)
-			chk.EP(err)
-			err = fou.CalcA(nil, f, false)
-			chk.EP(err)
+			status(tst, err)
+			status(tst, fou.CalcU(f))
+			status(tst, fou.CalcA())
 
 			ll := ""
 			if k == 2 {
@@ -217,9 +216,9 @@ func TestFourierInterp03(tst *testing.T) {
 
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoCesaroKind)
-			chk.EP(err)
-			err = fou.CalcA(nil, f, false)
-			chk.EP(err)
+			status(tst, err)
+			status(tst, fou.CalcU(f))
+			status(tst, fou.CalcA())
 
 			ll := ""
 			if k == 2 {
@@ -235,7 +234,7 @@ func TestFourierInterp03(tst *testing.T) {
 func TestFourierInterp04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("FourierInterp04. using fvals and f(x)")
+	chk.PrintTitle("FourierInterp04. setting U externally")
 
 	// function
 	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
@@ -244,22 +243,22 @@ func TestFourierInterp04(tst *testing.T) {
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoNoneKind)
-	chk.EP(err)
+	status(tst, err)
 
-	// calc fvals
+	// calc fvals and set U
 	fvals := make([]float64, N)
 	for j := 0; j < N; j++ {
 		fvals[j], _ = f(fou.X[j])
 	}
+	fou.U = fvals
 
 	// compute A[k] using fvals
-	err = fou.CalcA(fvals, nil, false)
-	chk.EP(err)
+	status(tst, fou.CalcA())
 	Afvals := fou.A.GetCopy()
 
 	// compute A[k] using f(x)
-	err = fou.CalcA(nil, f, false)
-	chk.EP(err)
+	status(tst, fou.CalcU(f))
+	status(tst, fou.CalcA())
 
 	// check
 	chk.ArrayC(tst, "A", 1e-17, Afvals, fou.A)
@@ -279,32 +278,26 @@ func TestFourierInterp05(tst *testing.T) {
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoNoneKind)
-	chk.EP(err)
+	status(tst, err)
 
-	// compute f(x) @ nodes
-	fx := la.NewVector(fou.N)
-	for j, x := range fou.X {
-		fx[j], _ = f(x)
-	}
-
-	// compute A[k] using fx
-	err = fou.CalcA(fx, nil, false)
-	chk.EP(err)
+	// compute U and A
+	status(tst, fou.CalcU(f))
+	status(tst, fou.CalcA())
 
 	// compute 1st derivatives @ grid points
 	df1 := la.NewVector(fou.N)
 	df1Hat := la.NewVectorC(fou.N)
-	fou.Deriv(df1, df1Hat, fx, 1)
+	fou.CalcD(df1, df1Hat, 1)
 
 	// compute 2nd derivatives @ grid points
 	df2 := la.NewVector(fou.N)
 	df2Hat := la.NewVectorC(fou.N)
-	fou.Deriv(df2, df2Hat, fx, 2)
+	fou.CalcD(df2, df2Hat, 2)
 
 	// check
 	for j, x := range fou.X {
-		d1 := fou.DI(1, x)
-		d2 := fou.DI(2, x)
+		d1 := fou.Idiff(1, x)
+		d2 := fou.Idiff(2, x)
 		chk.AnaNum(tst, "d1", 1e-15, df1[j], d1, chk.Verbose)
 		chk.AnaNum(tst, "d2", 1e-15, df2[j], d2, chk.Verbose)
 	}
