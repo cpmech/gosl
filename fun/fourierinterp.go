@@ -65,11 +65,11 @@ type FourierInterp struct {
 	S la.VectorC // smothing coefficients
 
 	// computed (U and Uali may be set externally)
-	U      la.Vector // values of f(x) at grid points (nodes) X[j]
-	Du1    la.Vector // 1st derivative of f(x) at grid points (nodes) X[j]
-	Du2    la.Vector // 2nd derivative of f(x) at grid points (nodes) X[j]
-	Du1Hat la.Vector // spectral coefficient corresponding to 1st derivative
-	Du2Hat la.Vector // spectral coefficient corresponding to 1st derivative
+	U      la.Vector  // values of f(x) at grid points (nodes) X[j]
+	Du1    la.Vector  // 1st derivative of f(x) at grid points (nodes) X[j]
+	Du2    la.Vector  // 2nd derivative of f(x) at grid points (nodes) X[j]
+	Du1Hat la.VectorC // spectral coefficient corresponding to 1st derivative
+	Du2Hat la.VectorC // spectral coefficient corresponding to 1st derivative
 
 	// workspace
 	workAli la.VectorC // values of f(x) at 3⋅N/2-1 grid points (nodes) X[j] to reduce aliasing error
@@ -279,6 +279,28 @@ func (o *FourierInterp) CalcD(dfdx la.Vector, dfdxHat la.VectorC, p int) (err er
 		dfdx[j] = real(dfdxHat[j])
 	}
 	return
+}
+
+// CalcD1 calculates the 1st derivative using function CalcD and internal arrays.
+// See function CalcD for further details
+//  OUTPUT: the results will be stored in o.Du1 and o.Du1Hat
+func (o *FourierInterp) CalcD1() (err error) {
+	if len(o.Du1) != o.N {
+		o.Du1 = la.NewVector(o.N)
+		o.Du1Hat = la.NewVectorC(o.N)
+	}
+	return o.CalcD(o.Du1, o.Du1Hat, 1)
+}
+
+// CalcD2 calculates the 2nd derivative using function CalcD and internal arrays.
+// See function CalcD for further details
+//  OUTPUT: the results will be stored in o.Du2 and o.Du2Hat
+func (o *FourierInterp) CalcD2() (err error) {
+	if len(o.Du2) != o.N {
+		o.Du2 = la.NewVector(o.N)
+		o.Du2Hat = la.NewVectorC(o.N)
+	}
+	return o.CalcD(o.Du2, o.Du2Hat, 2)
 }
 
 // CalcK computes k-index from j-index where j corresponds to the FFT index

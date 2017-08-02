@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -285,21 +284,17 @@ func TestFourierInterp05(tst *testing.T) {
 	status(tst, fou.CalcA())
 
 	// compute 1st derivatives @ grid points
-	df1 := la.NewVector(fou.N)
-	df1Hat := la.NewVectorC(fou.N)
-	fou.CalcD(df1, df1Hat, 1)
+	fou.CalcD1()
 
 	// compute 2nd derivatives @ grid points
-	df2 := la.NewVector(fou.N)
-	df2Hat := la.NewVectorC(fou.N)
-	fou.CalcD(df2, df2Hat, 2)
+	fou.CalcD2()
 
 	// check
 	for j, x := range fou.X {
 		d1 := fou.Idiff(1, x)
 		d2 := fou.Idiff(2, x)
-		chk.AnaNum(tst, "d1", 1e-15, df1[j], d1, chk.Verbose)
-		chk.AnaNum(tst, "d2", 1e-15, df2[j], d2, chk.Verbose)
+		chk.AnaNum(tst, "d1", 1e-15, fou.Du1[j], d1, chk.Verbose)
+		chk.AnaNum(tst, "d2", 1e-15, fou.Du2[j], d2, chk.Verbose)
 	}
 
 	// plot
@@ -312,11 +307,11 @@ func TestFourierInterp05(tst *testing.T) {
 
 		plt.Subplot(3, 1, 2)
 		plt.Title(io.Sf("df/dx(x) and derivative of interpolation. N=%d", N), &plt.A{Fsz: 9})
-		plt.Plot(fou.X, df1, &plt.A{C: "k", M: ".", Ls: "none", Void: true, NoClip: true})
+		plt.Plot(fou.X, fou.Du1, &plt.A{C: "k", M: ".", Ls: "none", Void: true, NoClip: true})
 
 		plt.Subplot(3, 1, 3)
 		plt.Title(io.Sf("d2f/dx2(x) and second deriv interpolation. N=%d", N), &plt.A{Fsz: 9})
-		plt.Plot(fou.X, df2, &plt.A{C: "k", M: ".", Ls: "none", Void: true, NoClip: true})
+		plt.Plot(fou.X, fou.Du2, &plt.A{C: "k", M: ".", Ls: "none", Void: true, NoClip: true})
 
 		fou.Plot(3, 3, f, dfdx, d2fdx2, nil, nil, nil, nil)
 		plt.Save("/tmp/gosl/fun", "fourierinterp05")
