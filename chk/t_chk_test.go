@@ -4,46 +4,7 @@
 
 package chk
 
-import (
-	"fmt"
-	"testing"
-)
-
-func TestET(tst *testing.T) {
-
-	//Verbose = true
-	PrintTitle("ET (error test)")
-
-	t1 := new(testing.T)
-	ET(t1, nil)
-	if t1.Failed() {
-		tst.Errorf("t1 should NOT have failed\n")
-	}
-
-	err := Err("stop")
-	t2 := new(testing.T)
-	ET(t2, err)
-	if !t2.Failed() {
-		tst.Errorf("t2 should have failed\n")
-	}
-}
-
-func TestEP(tst *testing.T) {
-
-	defer func() {
-		if err := recover(); err != nil {
-			if Verbose {
-				fmt.Printf("OK, caught the following message:\n\n\t%v\n", err)
-			}
-		} else {
-			tst.Errorf("\n\tTEST FAILED. test should have panicked\n")
-		}
-	}()
-
-	//Verbose = true
-	PrintTitle("EP (error panic)")
-	EP(Err("stop"))
-}
+import "testing"
 
 func TestErr01(tst *testing.T) {
 
@@ -57,21 +18,4 @@ func TestErr01(tst *testing.T) {
 
 	PrintOk("hello from PrintOk => ")
 	PrintFail("hello from PrintFail => ")
-}
-
-func TestPanicErr(tst *testing.T) {
-
-	defer func() {
-		if err := recover(); err != nil {
-			if Verbose {
-				fmt.Printf("OK, caught the following message:\n\n\t%v\n", err)
-			}
-		} else {
-			tst.Errorf("\n\tTEST FAILED. test should have panicked\n")
-		}
-	}()
-
-	//Verbose = true
-	PrintTitle("PanicErr")
-	PanicErr(Err("stop"))
 }

@@ -5,10 +5,7 @@
 // Package chk contains functions for checking and testing computations
 package chk
 
-import (
-	"fmt"
-	"testing"
-)
+import "fmt"
 
 var (
 	// AssertOn activates or deactivates asserts
@@ -21,40 +18,17 @@ var (
 	ColorsOn = true
 )
 
-// ET checks error in tests
-func ET(tst *testing.T, err error) (failed bool) {
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return true
-	}
-	return false
-}
-
-// EP checks error and panic
-func EP(err error) {
-	if err != nil {
-		Panic("%v\n", err)
-	}
-}
-
 // PanicSimple panicks without calling CallerInfo
 func PanicSimple(msg string, prm ...interface{}) {
 	panic(fmt.Sprintf(msg, prm...))
 }
 
-// Panic panicks
+// Panic calls CallerInfo and panicks
 func Panic(msg string, prm ...interface{}) {
 	CallerInfo(4)
 	CallerInfo(3)
 	CallerInfo(2)
 	panic(fmt.Sprintf(msg, prm...))
-}
-
-// PanicErr panics if err != nil
-func PanicErr(err error) {
-	if err != nil {
-		Panic("Error occurred:\n%v\n", err)
-	}
 }
 
 // Err returns a new error
