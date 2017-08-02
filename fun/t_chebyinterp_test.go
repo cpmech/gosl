@@ -152,16 +152,15 @@ func TestChebyInterp02(tst *testing.T) {
 	// allocate polynomials
 	N := 6
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
+	status(tst, err)
 
 	// compute data
-	err = o.CalcCoefI(f)
-	chk.EP(err)
+	status(tst, o.CalcCoefI(f))
 
 	// check interpolation @ nodes
 	for k, x := range o.X {
 		fk, err := f(x)
-		chk.EP(err)
+		status(tst, err)
 		chk.Float64(tst, io.Sf("I(x_%d)", k), 1e-14, o.I(x), fk)
 	}
 
@@ -171,7 +170,7 @@ func TestChebyInterp02(tst *testing.T) {
 	u := la.NewVector(np)
 	for i, x := range o.X {
 		u[i], err = f(x)
-		chk.EP(err)
+		status(tst, err)
 	}
 	ub := la.NewVector(np)
 	la.MatVecMul(ub, 1, o.C, u)
@@ -214,7 +213,7 @@ func checkIandIs(tst *testing.T, N int, f Ss, tol float64, verb bool) {
 
 	// allocate
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
+	status(tst, err)
 	if verb {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
@@ -222,7 +221,6 @@ func checkIandIs(tst *testing.T, N int, f Ss, tol float64, verb bool) {
 	// compute coefficients
 	o.CalcCoefI(f)
 	o.CalcCoefIs(f)
-	chk.EP(err)
 
 	// check interpolations
 	xx := utl.LinSpace(-1, 1, 11)
@@ -271,7 +269,7 @@ func TestChebyInterp03(tst *testing.T) {
 	if chk.Verbose {
 		N := 5
 		o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-		chk.EP(err)
+		status(tst, err)
 		npts := 201
 		xx := utl.LinSpace(-1, 1, npts)
 		yy := make([]float64, npts)
@@ -310,41 +308,35 @@ func checkD1che(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 
 	// allocate
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
+	status(tst, err)
 	if verb {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
 	// noFlip,noNst
 	o.Trig, o.Flip, o.Nst = false, false, false
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	D1 := o.D1.GetDeep2()
 	o.Trig, o.Flip, o.Nst = true, false, false
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	D1trig := o.D1.GetDeep2()
 	cmpD1che(tst, "[noFlip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
 	// flip,noNst
 	o.Trig, o.Flip, o.Nst = false, true, false
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	D1 = o.D1.GetDeep2()
 	o.Trig, o.Flip, o.Nst = true, true, false
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	D1trig = o.D1.GetDeep2()
 	cmpD1che(tst, "[flip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
 	// nst
 	o.Trig, o.Flip, o.Nst = false, false, true
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	D1 = o.D1.GetDeep2()
 	o.Trig, o.Flip, o.Nst = true, false, true
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	D1trig = o.D1.GetDeep2()
 	cmpD1che(tst, "[---, nst]", o, D1, D1trig, tolD, tolCmp, verb)
 }
@@ -365,12 +357,12 @@ func TestChebyInterp04(tst *testing.T) {
 
 // cmpD1ana compares D1 matrices with numerical differentiation and with each other
 func cmpD1ana(tst *testing.T, msg string, o *ChebyInterp, f, dfdxAna Ss, tol float64, verb bool) {
-	err := o.CalcCoefIs(f)
-	chk.EP(err)
+	status(tst, o.CalcCoefIs(f))
 	u := o.CoefIs //f @ nodes: u = f(x_i)
 	v := la.NewVector(o.N + 1)
 	la.MatVecMul(v, 1, o.D1, u)
-	maxDiff := o.CalcErrorD1(dfdxAna)
+	maxDiff, err := o.CalcErrorD1(dfdxAna)
+	status(tst, err)
 	if maxDiff > tol {
 		tst.Errorf(msg+": maxDiff = %23g ⇒ D1 failed\n", maxDiff)
 	} else {
@@ -381,38 +373,32 @@ func cmpD1ana(tst *testing.T, msg string, o *ChebyInterp, f, dfdxAna Ss, tol flo
 func checkD1ana(tst *testing.T, N int, f, dfdxAna Ss, tol, tolTrig, tolNst float64, verb bool) {
 
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
+	status(tst, err)
 
 	o.Trig, o.Flip, o.Nst = false, false, false
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	cmpD1ana(tst, "[noTrig, noFlip, noNst]", o, f, dfdxAna, tol, verb)
 
 	o.Trig, o.Flip, o.Nst = true, false, false
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	cmpD1ana(tst, "[  trig, noFlip, noNst]", o, f, dfdxAna, tolTrig, verb)
 
 	o.Trig, o.Flip, o.Nst = false, true, false
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	cmpD1ana(tst, "[noTrig,   flip, noNst]", o, f, dfdxAna, tol, verb)
 
 	o.Trig, o.Flip, o.Nst = true, true, false
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	cmpD1ana(tst, "[  trig,   flip, noNst]", o, f, dfdxAna, tolTrig, verb)
 
 	// nst
 
 	o.Trig, o.Flip, o.Nst = false, false, true
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	cmpD1ana(tst, "[noTrig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 
 	o.Trig, o.Flip, o.Nst = true, false, true
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 	cmpD1ana(tst, "[  trig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 }
 
@@ -436,12 +422,11 @@ func TestChebyInterp05(tst *testing.T) {
 	// allocate polynomial
 	N := 8
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
+	status(tst, err)
 
 	// check interpolations
-	o.CalcCoefI(f)
-	o.CalcCoefIs(f)
-	chk.EP(err)
+	status(tst, o.CalcCoefI(f))
+	status(tst, o.CalcCoefIs(f))
 	xx := utl.LinSpace(-1, 1, 11)
 	for _, x := range xx {
 		i1 := o.I(x)
@@ -493,43 +478,41 @@ func TestChebyInterp05(tst *testing.T) {
 	}
 }
 
-func calcD1errorChe(N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64) {
+func calcD1errorChe(tst *testing.T, N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64) {
 
 	// allocate polynomial
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
+	status(tst, err)
 
 	// compute coefficients
-	err = o.CalcCoefIs(f)
-	chk.EP(err)
+	status(tst, o.CalcCoefIs(f))
 
 	// compute D1 matrix
 	o.Trig, o.Flip, o.Nst = trig, flip, nst
-	err = o.CalcD1()
-	chk.EP(err)
+	status(tst, o.CalcD1())
 
 	// compute error
-	maxDiff = o.CalcErrorD1(dfdxAna)
+	maxDiff, err = o.CalcErrorD1(dfdxAna)
+	status(tst, err)
 	return
 }
 
-func calcD2errorChe(N int, f, dfdxAna Ss, stdD2 bool) (maxDiff float64) {
+func calcD2errorChe(tst *testing.T, N int, f, dfdxAna Ss, stdD2 bool) (maxDiff float64) {
 
 	// allocate polynomial
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
+	status(tst, err)
 
 	// compute coefficients
-	err = o.CalcCoefIs(f)
-	chk.EP(err)
+	status(tst, o.CalcCoefIs(f))
 
 	// compute D2 matrix
 	o.StdD2 = stdD2
-	err = o.CalcD2()
-	chk.EP(err)
+	status(tst, o.CalcD2())
 
 	// compute error
-	maxDiff = o.CalcErrorD2(dfdxAna)
+	maxDiff, err = o.CalcErrorD2(dfdxAna)
+	status(tst, err)
 	return
 }
 
@@ -565,12 +548,12 @@ func TestChebyInterp06(tst *testing.T) {
 		for i, N := range Nvals {
 			nn[i] = float64(N)
 
-			eeA[i] = calcD1errorChe(N, f, g, false, false, false)
-			eeB[i] = calcD1errorChe(N, f, g, true, false, false)
-			eeC[i] = calcD1errorChe(N, f, g, false, true, false)
-			eeD[i] = calcD1errorChe(N, f, g, true, true, false)
-			eeE[i] = calcD1errorChe(N, f, g, false, dummy, true)
-			eeF[i] = calcD1errorChe(N, f, g, true, dummy, true)
+			eeA[i] = calcD1errorChe(tst, N, f, g, false, false, false)
+			eeB[i] = calcD1errorChe(tst, N, f, g, true, false, false)
+			eeC[i] = calcD1errorChe(tst, N, f, g, false, true, false)
+			eeD[i] = calcD1errorChe(tst, N, f, g, true, true, false)
+			eeE[i] = calcD1errorChe(tst, N, f, g, false, dummy, true)
+			eeF[i] = calcD1errorChe(tst, N, f, g, true, dummy, true)
 
 			io.Pf("%4d: %.2e  %.2e  %.2e  %.2e  %.2e  %.2e\n", N,
 				eeA[i], eeB[i], eeC[i], eeD[i], eeE[i], eeF[i])
@@ -598,15 +581,14 @@ func checkD2che(tst *testing.T, N int, h, tolD float64, verb bool) {
 
 	// allocate
 	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
+	status(tst, err)
 	if verb {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
 	// check D2 matrix
 	hh := h * h
-	err = o.CalcD2()
-	chk.EP(err)
+	status(tst, o.CalcD2())
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < o.N+1; l++ {
@@ -654,19 +636,19 @@ func TestChebyInterp08(tst *testing.T) {
 
 	N := 8
 
-	maxDiff := calcD1errorChe(N, f, g, false, false, false)
+	maxDiff := calcD1errorChe(tst, N, f, g, false, false, false)
 	io.Pf("no nst: err(D1{f}) = %v\n", maxDiff)
 	chk.Float64(tst, "err(D1{f})", 1e-14, maxDiff, 0)
 
-	maxDiff = calcD1errorChe(N, f, g, false, false, true)
+	maxDiff = calcD1errorChe(tst, N, f, g, false, false, true)
 	io.Pf("   nst: err(D1{f}) = %v\n", maxDiff)
 	chk.Float64(tst, "err(D1{f})", 1e-14, maxDiff, 0)
 
-	maxDiff = calcD2errorChe(N, f, h, true)
+	maxDiff = calcD2errorChe(tst, N, f, h, true)
 	io.Pf("   std: err(D2{f}) = %v\n", maxDiff)
 	chk.Float64(tst, "err(D2{f})", 1e-13, maxDiff, 0)
 
-	maxDiff = calcD2errorChe(N, f, h, false)
+	maxDiff = calcD2errorChe(tst, N, f, h, false)
 	io.Pf("use D1: err(D2{f}) = %v\n", maxDiff)
 	chk.Float64(tst, "err(D2{f})", 1e-13, maxDiff, 0)
 }

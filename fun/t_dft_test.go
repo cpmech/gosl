@@ -23,8 +23,7 @@ func TestDft01(tst *testing.T) {
 	x := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
 	X := make([]complex128, len(x))
 	copy(X, x)
-	err := Dft1d(X, false)
-	chk.EP(err)
+	status(tst, Dft1d(X, false))
 
 	// check
 	Xref := dft1dslow(x)
@@ -33,8 +32,7 @@ func TestDft01(tst *testing.T) {
 	// inverse dft
 	Y := make([]complex128, len(x))
 	copy(Y, X)
-	err = Dft1d(Y, true)
-	chk.EP(err)
+	status(tst, Dft1d(Y, true))
 
 	// divide by N
 	n := complex(float64(len(Y)), 0)

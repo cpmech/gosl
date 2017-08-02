@@ -589,7 +589,7 @@ func (o *ChebyInterp) CalcD2() (err error) {
 
 // CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
 //   NOTE: CoefIs and D1 matrix must be computed previously
-func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
+func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64, err error) {
 
 	// f @ nodes: u = f(x_i)
 	u := o.CoefIs
@@ -600,8 +600,10 @@ func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
-		vana, err := dfdxAna(o.X[i])
-		chk.EP(err)
+		vana, e := dfdxAna(o.X[i])
+		if e != nil {
+			return math.MaxFloat64, e
+		}
 		diff := math.Abs(v[i] - vana)
 		if diff > maxDiff {
 			maxDiff = diff
@@ -612,7 +614,7 @@ func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 
 // CalcErrorD2 computes the maximum error due to differentiation (@ X[i]) using the D2 matrix
 //   NOTE: CoefIs and D2 matrix must be computed previously
-func (o *ChebyInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
+func (o *ChebyInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64, err error) {
 
 	// f @ nodes: u = f(x_i)
 	u := o.CoefIs
@@ -623,8 +625,10 @@ func (o *ChebyInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
-		vana, err := d2fdx2Ana(o.X[i])
-		chk.EP(err)
+		vana, e := d2fdx2Ana(o.X[i])
+		if e != nil {
+			return math.MaxFloat64, e
+		}
 		diff := math.Abs(v[i] - vana)
 		if diff > maxDiff {
 			maxDiff = diff

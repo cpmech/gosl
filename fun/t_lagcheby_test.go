@@ -18,15 +18,13 @@ func compareLambda(tst *testing.T, N int, f Ss, tolU, tolL float64) {
 
 	// allocate Lagrange structure and calculate U
 	lag, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
-	chk.EP(err)
-	err = lag.CalcU(f)
-	chk.EP(err)
+	status(tst, err)
+	status(tst, lag.CalcU(f))
 
 	// allocate Chebyshev structure and calculate U
 	che, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	chk.EP(err)
-	err = che.CalcCoefIs(f)
-	chk.EP(err)
+	status(tst, err)
+	status(tst, che.CalcCoefIs(f))
 
 	// check U values
 	io.Pf("\n-------------------------------- N = %d -----------------------------------\n", N)
@@ -61,7 +59,7 @@ func TestLagCheby01(tst *testing.T) {
 	}
 }
 
-func runAndPlotD1err(fnkey string, Nvals []int, f, g Ss) {
+func runAndPlotD1err(tst *testing.T, fnkey string, Nvals []int, f, g Ss) {
 	nn := make([]float64, len(Nvals))
 	eeA := make([]float64, len(Nvals))
 	eeB := make([]float64, len(Nvals))
@@ -70,10 +68,10 @@ func runAndPlotD1err(fnkey string, Nvals []int, f, g Ss) {
 	dummy := false
 	for i, N := range Nvals {
 		nn[i] = float64(N)
-		eeA[i] = calcD1errorChe(N, f, g, false, dummy, true) // std,nst
-		eeB[i] = calcD1errorChe(N, f, g, true, dummy, true)  // tri,nst
-		eeC[i] = calcD1errorLag(N, f, g, false)              // lag,---
-		eeD[i] = calcD1errorLag(N, f, g, true)               // lag,eta
+		eeA[i] = calcD1errorChe(tst, N, f, g, false, dummy, true) // std,nst
+		eeB[i] = calcD1errorChe(tst, N, f, g, true, dummy, true)  // tri,nst
+		eeC[i] = calcD1errorLag(tst, N, f, g, false)              // lag,---
+		eeD[i] = calcD1errorLag(tst, N, f, g, true)               // lag,eta
 		io.Pf("%4d: %.2e  %.2e  %.2e  %.2e\n", N, eeA[i], eeB[i], eeC[i], eeD[i])
 	}
 	plt.Reset(true, nil)
@@ -87,7 +85,7 @@ func runAndPlotD1err(fnkey string, Nvals []int, f, g Ss) {
 	plt.Save("/tmp/gosl/fun", fnkey)
 }
 
-func runAndPlotD2err(fnkey string, Nvals []int, f, h Ss) {
+func runAndPlotD2err(tst *testing.T, fnkey string, Nvals []int, f, h Ss) {
 	nn := make([]float64, len(Nvals))
 	eeA := make([]float64, len(Nvals))
 	eeB := make([]float64, len(Nvals))
@@ -95,10 +93,10 @@ func runAndPlotD2err(fnkey string, Nvals []int, f, h Ss) {
 	eeD := make([]float64, len(Nvals))
 	for i, N := range Nvals {
 		nn[i] = float64(N)
-		eeA[i] = calcD2errorChe(N, f, h, false) // che,useD1
-		eeB[i] = calcD2errorChe(N, f, h, true)  // che,std
-		eeC[i] = calcD2errorLag(N, f, h, false) // lag,lam
-		eeD[i] = calcD2errorLag(N, f, h, true)  // lag,eta
+		eeA[i] = calcD2errorChe(tst, N, f, h, false) // che,useD1
+		eeB[i] = calcD2errorChe(tst, N, f, h, true)  // che,std
+		eeC[i] = calcD2errorLag(tst, N, f, h, false) // lag,lam
+		eeD[i] = calcD2errorLag(tst, N, f, h, true)  // lag,eta
 		io.Pf("%4d: %.2e  %.2e  %.2e  %.2e\n", N, eeA[i], eeB[i], eeC[i], eeD[i])
 	}
 	plt.Reset(true, nil)
@@ -125,7 +123,7 @@ func TestLagCheby02a(tst *testing.T) {
 	}
 	if chk.Verbose {
 		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
-		runAndPlotD1err("lagcheby02a", Nvals, f, g)
+		runAndPlotD1err(tst, "lagcheby02a", Nvals, f, g)
 	}
 }
 
@@ -143,7 +141,7 @@ func TestLagCheby02b(tst *testing.T) {
 	}
 	if chk.Verbose {
 		Nvals := []int{64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
-		runAndPlotD1err("lagcheby02b", Nvals, f, g)
+		runAndPlotD1err(tst, "lagcheby02b", Nvals, f, g)
 	}
 }
 
@@ -160,7 +158,7 @@ func TestLagCheby03a(tst *testing.T) {
 	}
 	if chk.Verbose {
 		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500}
-		runAndPlotD2err("lagcheby03a", Nvals, f, h)
+		runAndPlotD2err(tst, "lagcheby03a", Nvals, f, h)
 	}
 }
 
@@ -179,6 +177,6 @@ func TestLagCheby03b(tst *testing.T) {
 	}
 	if chk.Verbose {
 		Nvals := []int{64, 100, 128, 250, 256, 500}
-		runAndPlotD2err("lagcheby03b", Nvals, f, h)
+		runAndPlotD2err(tst, "lagcheby03b", Nvals, f, h)
 	}
 }

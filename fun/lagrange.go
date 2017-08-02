@@ -399,7 +399,7 @@ func (o *LagrangeInterp) CalcD2() (err error) {
 
 // CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
 //   NOTE: U and D1 matrix must be computed previously
-func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
+func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64, err error) {
 
 	// derivative of interpolation @ x_i
 	v := la.NewVector(o.N + 1)
@@ -407,8 +407,10 @@ func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
-		vana, err := dfdxAna(o.X[i])
-		chk.EP(err)
+		vana, e := dfdxAna(o.X[i])
+		if e != nil {
+			return math.MaxFloat64, e
+		}
 		diff := math.Abs(v[i] - vana)
 		if diff > maxDiff {
 			maxDiff = diff
@@ -419,7 +421,7 @@ func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 
 // CalcErrorD2 computes the maximum error due to differentiation (@ X[i]) using the D2 matrix
 //   NOTE: U and D2 matrix must be computed previously
-func (o *LagrangeInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
+func (o *LagrangeInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64, err error) {
 
 	// derivative of interpolation @ x_i
 	v := la.NewVector(o.N + 1)
@@ -427,8 +429,10 @@ func (o *LagrangeInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
-		vana, err := d2fdx2Ana(o.X[i])
-		chk.EP(err)
+		vana, e := d2fdx2Ana(o.X[i])
+		if e != nil {
+			return math.MaxFloat64, e
+		}
 		diff := math.Abs(v[i] - vana)
 		if diff > maxDiff {
 			maxDiff = diff
@@ -532,18 +536,26 @@ func PlotLagInterpI(Nvalues []int, gridType io.Enum, f Ss) {
 	var err error
 	for k, x := range xx {
 		yy[k], err = f(x)
-		chk.EP(err)
+		if err != nil {
+			chk.Panic("%v\n", err)
+		}
 	}
 	iy := make([]float64, len(xx))
 	plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
 	for _, N := range Nvalues {
 		p, err := NewLagrangeInterp(N, gridType)
-		chk.EP(err)
+		if err != nil {
+			chk.Panic("%v\n", err)
+		}
 		p.CalcU(f)
-		chk.EP(err)
+		if err != nil {
+			chk.Panic("%v\n", err)
+		}
 		for k, x := range xx {
 			iy[k], err = p.I(x)
-			chk.EP(err)
+			if err != nil {
+				chk.Panic("%v\n", err)
+			}
 		}
 		E, xloc := p.EstimateMaxErr(0, f)
 		plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
