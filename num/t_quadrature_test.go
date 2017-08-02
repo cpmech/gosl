@@ -57,7 +57,7 @@ func TestQuadExpIx01(tst *testing.T) {
 	m := 4.0
 
 	I, err := QuadExpIx(a, b, m, 0, f)
-	chk.EP(err)
+	status(tst, err)
 
 	ee := cmplx.Exp(complex(0, 2*π*m))
 	π2 := complex(π*π, 0)
@@ -83,7 +83,7 @@ func TestQuadExpIx02(tst *testing.T) {
 	m := 0.5
 
 	I, err := QuadExpIx(a, b, m, 0, f)
-	chk.EP(err)
+	status(tst, err)
 
 	ee := cmplx.Exp(complex(0, 2*π*m))
 	Q := complex(q, 0)
