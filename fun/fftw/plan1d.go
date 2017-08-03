@@ -24,6 +24,15 @@ import "unsafe"
 //     inverse:  Y[k] =  Σ  y[j] ⋅ e                     thus x[k] = Y[k] / N
 //                      j=0
 //
+//   NOTE: FFTW says "so you should initialize your input data after creating the plan."
+//         Therefore, the plan can be created and reused several times.
+//         [http://www.fftw.org/fftw3_doc/Planner-Flags.html]
+//         Also: "The plan can be reused as many times as needed. In typical high-performance
+//         applications, many transforms of the same size are computed"
+//         [http://www.fftw.org/fftw3_doc/Introduction.html]
+//
+//         Create a new Plan1d with NewPlan1d(...) AND deallocate memory with Free()
+//
 type Plan1d struct {
 	p    C.fftw_plan  // FFTW "plan" structure
 	data []complex128 // input
