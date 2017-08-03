@@ -10,12 +10,9 @@ import (
 )
 
 // Waterfall draws parallel lines @ t along x with height = z. z[len(t)][len(x)]
-func Waterfall(X, T []float64, Z [][]float64, argsLine, argsFace *A) {
-	if argsLine == nil {
-		argsLine = &A{C: "k"}
-	}
-	if argsFace == nil {
-		argsFace = &A{Fc: "w", Ec: "k", Closed: false}
+func Waterfall(X, T []float64, Z [][]float64, args *A) {
+	if args == nil {
+		args = &A{Fc: "w", Ec: "k", Closed: false}
 	}
 	createAxes3d()
 	uid := genUID()
@@ -43,7 +40,7 @@ func Waterfall(X, T []float64, Z [][]float64, argsLine, argsFace *A) {
 		}
 		tmin = utl.Min(tmin, t)
 		tmax = utl.Max(tmax, t)
-		Polygon3d(P, argsFace)
+		Polygon3d(P, args)
 	}
 	for _, x := range X {
 		xmin = utl.Min(xmin, x)

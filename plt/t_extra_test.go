@@ -44,7 +44,7 @@ func TestWaterfall01(tst *testing.T) {
 		}
 
 		Reset(true, nil)
-		Waterfall(X, T, Z, nil, nil)
+		Waterfall(X, T, Z, nil)
 		err := Save("/tmp/gosl/plt", "waterfall01")
 		if err != nil {
 			tst.Errorf("%v", err)
