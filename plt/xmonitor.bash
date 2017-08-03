@@ -14,5 +14,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="plot01"
+    go test -test.run="Waterfall01"
 done
