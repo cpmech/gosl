@@ -43,6 +43,9 @@ func TestMylab01(tst *testing.T) {
 	X, Y := MeshGrid2d(3, 6, 10, 20, 4, 3)
 	U, V, W := MeshGrid2dF(-1, 1, -2, 2, 3, 3, func(x, y float64) float64 { return x + y })
 	XX, YY, ZZ, UU, VV := MeshGrid2dFG(-1, 1, -2, 2, 3, 3, func(x, y float64) (z, u, v float64) { return x + 2*y, 1, 2 })
+	xv, yv := MeshGrid2dV([]float64{1, 5, 8}, []float64{100, 200, 201, 302})
+	io.Pforan("xv = %v\n", xv)
+	io.Pf("yv = %v\n", yv)
 	P := [][]int{
 		{1, 2, 3, 4, 5},
 		{-1, -2, -3, -4, -5},
@@ -79,6 +82,8 @@ func TestMylab01(tst *testing.T) {
 	chk.Deep2(tst, "ZZ", 1e-17, ZZ, [][]float64{{-5, -4, -3}, {-1, 0, 1}, {3, 4, 5}})
 	chk.Deep2(tst, "UU", 1e-17, UU, [][]float64{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}})
 	chk.Deep2(tst, "VV", 1e-17, VV, [][]float64{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}})
+	chk.Deep2(tst, "xv", 1e-17, xv, [][]float64{{1, 5, 8}, {1, 5, 8}, {1, 5, 8}, {1, 5, 8}})
+	chk.Deep2(tst, "yv", 1e-17, yv, [][]float64{{100, 100, 100}, {200, 200, 200}, {201, 201, 201}, {302, 302, 302}})
 	chk.StrDeep2(tst, "S", S, [][]string{{"", "", ""}, {"", "", ""}})
 	chk.IntDeep2(tst, "Pc", Pc, P)
 }

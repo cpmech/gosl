@@ -15,5 +15,6 @@ while true; do
     echo
     echo
     #go test -test.run="EncDec02"
-    go test -test.run="Outputter05"
+    #go test -test.run="Outputter05"
+    go test -test.run="Mylab01"
 done

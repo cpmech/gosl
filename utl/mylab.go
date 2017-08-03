@@ -515,6 +515,26 @@ func MeshGrid2dFG(xmin, xmax, ymin, ymax float64, nx, ny int, fg func(x, y float
 	return
 }
 
+// MeshGrid2dV creates a grid with x-y coordinates given x and y values
+//  X, Y -- [len(yVals)][len(xVals)]
+func MeshGrid2dV(xVals, yVals []float64) (X, Y [][]float64) {
+	nx, ny := len(xVals), len(yVals)
+	if nx < 2 || ny < 2 {
+		return
+	}
+	X = make([][]float64, ny)
+	Y = make([][]float64, ny)
+	for i := 0; i < ny; i++ {
+		X[i] = make([]float64, nx)
+		Y[i] = make([]float64, nx)
+		for j := 0; j < nx; j++ {
+			X[i][j] = xVals[j]
+			Y[i][j] = yVals[i]
+		}
+	}
+	return
+}
+
 // more functions ////////////////////////////////////////////////////////////////////////////////
 
 // Scaling computes a scaled version of the input slice with results in [0.0, 1.0]
