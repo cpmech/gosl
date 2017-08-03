@@ -6,6 +6,76 @@ package utl
 
 import "math"
 
+// OutFcnType is a function that sets the "u" array with an output @ time "t"
+type OutFcnType func(u []float64, t float64)
+
+// Outputter helps with the output of (numerical) results
+//
+//   The time loop can be something like:
+//     t := 0.0
+//     for tidx := 0; tidx < outper.Nsteps; tidx++ {
+//         t += outper.Dt
+//         ... // do something
+//         outper.MaybeNow(tidx, t)
+//     }
+//
+type Outputter struct {
+	Dt     float64     // time step
+	DtOut  float64     // time step for output
+	Tmax   float64     // final time (eventually increased to accomodate all time steps)
+	Nsteps int         // number of time steps
+	Every  int         // increment to output after every time step
+	Tidx   int         // the index of the time step for the next output
+	Nmax   int         // max number of outputs
+	Idx    int         // index in the output arrays for the next output == num.outputs in the end
+	T      []float64   // saved t values len = Nmax
+	U      [][]float64 // saved u values @ t. [Nmax][nu]
+	Fcn    OutFcnType  // function to process output. may be nil
+}
+
+// NewOutputter creates a new Outputter
+//  dt     -- time step
+//  dtOut  -- time step for output
+//  tmax   -- final time (of simulation)
+//  outFcn -- callback function to perform output (may be nil)
+//  NOTE: a first output will be processed if outFcn != nil
+func NewOutputter(dt, dtOut, tmax float64, nu int, outFcn OutFcnType) (o *Outputter) {
+	if dtOut < dt {
+		dtOut = dt
+	}
+	o = new(Outputter)
+	o.Dt = dt
+	o.DtOut = dtOut
+	o.Nsteps = int(math.Ceil(tmax / o.Dt))
+	o.Tmax = float64(o.Nsteps) * o.Dt // fix tmax
+	o.Every = int(o.DtOut / o.Dt)
+	o.Nmax = int(math.Ceil(float64(o.Nsteps)/float64(o.Every))) + 1
+	o.T = make([]float64, o.Nmax)
+	o.U = Alloc(o.Nmax, nu)
+	if outFcn != nil {
+		o.Fcn = outFcn
+		o.Fcn(o.U[o.Idx], 0)
+		if o.Every > 1 {
+			o.Tidx = o.Every - 1 // use -1 here only for the first output
+		}
+		o.Idx++
+	}
+	return
+}
+
+// MaybeNow process the output if tidx == NextIdxT
+func (o *Outputter) MaybeNow(tidx int, t float64) {
+	if o.Fcn == nil {
+		return
+	}
+	if tidx == o.Tidx || tidx == o.Nsteps-1 { // always proces the last one
+		o.T[o.Idx] = t
+		o.Fcn(o.U[o.Idx], t)
+		o.Tidx += o.Every
+		o.Idx++
+	}
+}
+
 // GetITout returns indices and output times
 //  Input:
 //    all_output_times  -- array with all output times. ex: [0,0.1,0.2,0.22,0.3,0.4]
