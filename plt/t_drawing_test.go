@@ -57,7 +57,7 @@ func Test_draw02(tst *testing.T) {
 	}
 
 	Reset(true, nil)
-	Polygon3d(Q, &A{Fc: "#ace3ba", Ec: "#8700c6"})
+	Polygon3d(Q, &A{Fc: "#ace3ba", Ec: "#8700c6", Lw: 2})
 	Polygon3d(P, nil)
 
 	if chk.Verbose {

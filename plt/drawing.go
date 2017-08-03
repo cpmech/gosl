@@ -135,9 +135,8 @@ func Polygon3d(P [][]float64, args *A) {
 		io.Ff(&bufferPy, ")")
 	}
 	io.Ff(&bufferPy, "]]\n")
-	io.Ff(&bufferPy, "poly%d = m3d.art3d.Poly3DCollection(verts%d)\n", uid, uid)
-	io.Ff(&bufferPy, "poly%d.set_color('%s')\n", uid, args.Fc)
-	io.Ff(&bufferPy, "poly%d.set_edgecolor('%s')\n", uid, args.Ec)
+	io.Ff(&bufferPy, "poly%d = m3d.art3d.Poly3DCollection(verts%d", uid, uid)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_collection3d(poly%d)\n", uid)
 }
 
@@ -157,16 +156,8 @@ func Box(xmin, xmax, ymin, ymax, zmin, zmax float64, args *A) {
 	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)],\n", xmin, ymin, zmin, xmin, ymax, zmin, xmax, ymax, zmin, xmax, ymin, zmin)
 	io.Ff(&bufferPy, "    [(%g,%g,%g),(%g,%g,%g),(%g,%g,%g),(%g,%g,%g)]\n", xmin, ymin, zmax, xmin, ymax, zmax, xmax, ymax, zmax, xmax, ymin, zmax)
 	io.Ff(&bufferPy, "]\n")
-	if args.A > 0 {
-		io.Ff(&bufferPy, "poly%d = m3d.art3d.Poly3DCollection(verts%d, alpha=%g)\n", uid, uid, args.A)
-	} else {
-		io.Ff(&bufferPy, "poly%d = m3d.art3d.Poly3DCollection(verts%d)\n", uid, uid)
-	}
-	io.Ff(&bufferPy, "poly%d.set_color('%s')\n", uid, args.Fc)
-	io.Ff(&bufferPy, "poly%d.set_edgecolor('%s')\n", uid, args.Ec)
-	if args.Lw > 0 {
-		io.Ff(&bufferPy, "poly%d.set_linewidth(%g)\n", uid, args.Lw)
-	}
+	io.Ff(&bufferPy, "poly%d = m3d.art3d.Poly3DCollection(verts%d\n", uid, uid)
+	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_collection3d(poly%d)\n", uid)
 	if args.Wire {
 		ls := "--"
