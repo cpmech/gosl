@@ -71,8 +71,8 @@ func Wireframe(X, Y, Z [][]float64, args *A) {
 	genMat(&bufferPy, sx, X)
 	genMat(&bufferPy, sy, Y)
 	genMat(&bufferPy, sz, Z)
-	_, rs, cs := args3d(args)
-	io.Ff(&bufferPy, "p%d = AX3D.plot_wireframe(%s,%s,%s,rstride=%d,cstride=%d", uid, sx, sy, sz, rs, cs)
+	l := argsWireSurf(args, false)
+	io.Ff(&bufferPy, "p%d = AX3D.plot_wireframe(%s,%s,%s%s", uid, sx, sy, sz, l)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
@@ -86,8 +86,8 @@ func Surface(X, Y, Z [][]float64, args *A) {
 	genMat(&bufferPy, sx, X)
 	genMat(&bufferPy, sy, Y)
 	genMat(&bufferPy, sz, Z)
-	cmapIdx, rs, cs := args3d(args)
-	io.Ff(&bufferPy, "p%d = AX3D.plot_surface(%s,%s,%s,cmap=getCmap(%d),rstride=%d,cstride=%d", uid, sx, sy, sz, cmapIdx, rs, cs)
+	l := argsWireSurf(args, true)
+	io.Ff(&bufferPy, "p%d = AX3D.plot_surface(%s,%s,%s%s", uid, sx, sy, sz, l)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 

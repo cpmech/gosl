@@ -331,16 +331,19 @@ func argsFigData(args *A) (figType string, dpi, width, height int) {
 	return
 }
 
-// args3d collects arguments for 3d plots (e.g. Surface and Wireframe)
-func args3d(args *A) (cmapIdx, rstride, cstride int) {
-	cmapIdx, rstride, cstride = 0, 1, 1
+// argsWireSurf collects arguments for Wireframe or Surface
+func argsWireSurf(args *A, surf bool) (l string) {
 	if args != nil {
-		cmapIdx = args.CmapIdx
+		if surf {
+			if args.C == "" {
+				l += io.Sf(",cmap=getCmap(%d)", args.CmapIdx)
+			}
+		}
 		if args.Rstride > 0 {
-			rstride = args.Rstride
+			l += io.Sf(",rstride=%d", args.Rstride)
 		}
 		if args.Cstride > 0 {
-			cstride = args.Cstride
+			l += io.Sf(",cstride=%d", args.Cstride)
 		}
 	}
 	return
