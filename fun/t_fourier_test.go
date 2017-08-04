@@ -23,6 +23,7 @@ func TestFourierInterp01(tst *testing.T) {
 	N := 8
 	fou, err := NewFourierInterp(N, 0)
 	status(tst, err)
+	defer fou.Free()
 
 	// check k
 	chk.Array(tst, "k[j]", 1e-17, fou.K, []float64{0, 1, 2, 3, -4, -3, -2, -1})
@@ -88,6 +89,7 @@ func TestFourierInterp02(tst *testing.T) {
 	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoNoneKind)
 	status(tst, err)
+	defer fou.Free()
 
 	// compute A using 3/2-rule
 	status(tst, fou.CalcAwithAliasRemoval(f))
@@ -97,7 +99,7 @@ func TestFourierInterp02(tst *testing.T) {
 
 	// compute U and A (standard)
 	status(tst, fou.CalcU(f))
-	status(tst, fou.CalcA())
+	fou.CalcA()
 	io.Pf("\n.......no aliasing removal.......\n")
 	fouCheckI(tst, fou, f)
 	fouCheckD1andD2(tst, fou, f)
@@ -139,10 +141,11 @@ func TestFourierInterp03(tst *testing.T) {
 	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoLanczosKind)
 	status(tst, err)
+	defer fou.Free()
 
 	// compute U and A
 	status(tst, fou.CalcU(f))
-	status(tst, fou.CalcA())
+	fou.CalcA()
 
 	// check first derivative of interpolation
 	io.Pl()
@@ -183,8 +186,10 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoLanczosKind)
 			status(tst, err)
+			defer fou.Free()
+
 			status(tst, fou.CalcU(f))
-			status(tst, fou.CalcA())
+			fou.CalcA()
 
 			ff := f
 			ll := ""
@@ -201,8 +206,10 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoRcosKind)
 			status(tst, err)
+			defer fou.Free()
+
 			status(tst, fou.CalcU(f))
-			status(tst, fou.CalcA())
+			fou.CalcA()
 
 			ll := ""
 			if k == 2 {
@@ -216,8 +223,10 @@ func TestFourierInterp03(tst *testing.T) {
 			N := 1 << p
 			fou, err := NewFourierInterp(N, SmoCesaroKind)
 			status(tst, err)
+			defer fou.Free()
+
 			status(tst, fou.CalcU(f))
-			status(tst, fou.CalcA())
+			fou.CalcA()
 
 			ll := ""
 			if k == 2 {
@@ -243,6 +252,7 @@ func TestFourierInterp04(tst *testing.T) {
 	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoNoneKind)
 	status(tst, err)
+	defer fou.Free()
 
 	// calc fvals and set U
 	fvals := make([]float64, N)
@@ -252,12 +262,12 @@ func TestFourierInterp04(tst *testing.T) {
 	fou.U = fvals
 
 	// compute A[k] using fvals
-	status(tst, fou.CalcA())
+	fou.CalcA()
 	Afvals := fou.A.GetCopy()
 
 	// compute A[k] using f(x)
 	status(tst, fou.CalcU(f))
-	status(tst, fou.CalcA())
+	fou.CalcA()
 
 	// check
 	chk.ArrayC(tst, "A", 1e-17, Afvals, fou.A)
@@ -278,10 +288,11 @@ func TestFourierInterp05(tst *testing.T) {
 	N := 1 << p      // 2ⁿ (n=p): number of terms
 	fou, err := NewFourierInterp(N, SmoNoneKind)
 	status(tst, err)
+	defer fou.Free()
 
 	// compute U and A
 	status(tst, fou.CalcU(f))
-	status(tst, fou.CalcA())
+	fou.CalcA()
 
 	// compute 1st derivatives @ grid points
 	fou.CalcD1()

@@ -9,6 +9,7 @@ import (
 	"math/cmplx"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/fftw"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -49,7 +50,15 @@ var (
 //                 ————
 //                j = 0                                  Eq (2.1.25) of [1]
 //
-//   NOTE: f=u in [1] and A[k] is the tilde(u[k]) of [1]
+//   NOTE: (1) f=u in [1] and A[k] is the tilde(u[k]) of [1]
+//         (2) FFTW says "so you should initialize your input data after creating the plan."
+//             Therefore, the plan can be created and reused several times.
+//             [http://www.fftw.org/fftw3_doc/Planner-Flags.html]
+//             Also: "The plan can be reused as many times as needed. In typical high-performance
+//             applications, many transforms of the same size are computed"
+//             [http://www.fftw.org/fftw3_doc/Introduction.html]
+//
+//   Create a new object with NewFourierInterp(...) AND deallocate memory with Free()
 //
 //   Reference:
 //     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
@@ -64,12 +73,20 @@ type FourierInterp struct {
 	A la.VectorC // coefficients for interpolation. from FFT
 	S la.VectorC // smothing coefficients
 
-	// computed (U and Uali may be set externally)
+	// computed (U may be set externally)
 	U      la.Vector  // values of f(x) at grid points (nodes) X[j]
+	Du     la.Vector  // p-order derivative of u
 	Du1    la.Vector  // 1st derivative of f(x) at grid points (nodes) X[j]
 	Du2    la.Vector  // 2nd derivative of f(x) at grid points (nodes) X[j]
+	DuHat  la.VectorC // spectral coefficient corresponding to p-derivative
 	Du1Hat la.VectorC // spectral coefficient corresponding to 1st derivative
 	Du2Hat la.VectorC // spectral coefficient corresponding to 1st derivative
+
+	// FFTW
+	planA   *fftw.Plan1d // "plan" to compute the A coefficients
+	planDu  *fftw.Plan1d // "plan" to compute the p-derivative (inverse transform)
+	planDu1 *fftw.Plan1d // "plan" to compute the 1st derivative (inverse transform)
+	planDu2 *fftw.Plan1d // "plan" to compute the 2nd derivative (inverse transform)
 
 	// workspace
 	workAli la.VectorC // values of f(x) at 3⋅N/2-1 grid points (nodes) X[j] to reduce aliasing error
@@ -78,6 +95,10 @@ type FourierInterp struct {
 // NewFourierInterp allocates a new FourierInterp object
 //   N         -- number of terms. must be even; ideally power of 2, e.g. N = 2ⁿ
 //   smoothing -- type of smoothing: use SmoNoneKind for no smoothing
+//
+//   NOTE: remember to call Free in the end to release memory allocatedy by FFTW; e.g.
+//         defer o.Free()
+//
 func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 
 	// check
@@ -114,7 +135,47 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 	for j := 0; j < o.N; j++ {
 		o.S[j] = complex(σ(o.K[j]), 0)
 	}
+
+	// allocate variables to compute A, Du1, and Du2
+	o.Du = la.NewVector(o.N)
+	o.Du1 = la.NewVector(o.N)
+	o.Du2 = la.NewVector(o.N)
+	o.DuHat = la.NewVectorC(o.N)
+	o.Du1Hat = la.NewVectorC(o.N)
+	o.Du2Hat = la.NewVectorC(o.N)
+	o.planA, err = fftw.NewPlan1d(o.A, false, false)
+	if err != nil {
+		return
+	}
+	o.planDu, err = fftw.NewPlan1d(o.DuHat, true, false)
+	if err != nil {
+		return
+	}
+	o.planDu1, err = fftw.NewPlan1d(o.Du1Hat, true, false)
+	if err != nil {
+		return
+	}
+	o.planDu2, err = fftw.NewPlan1d(o.Du2Hat, true, false)
+	if err != nil {
+		return
+	}
 	return
+}
+
+// Free releases resources allocated for FFTW
+func (o *FourierInterp) Free() {
+	if o.planA != nil {
+		o.planA.Free()
+	}
+	if o.planDu != nil {
+		o.planDu.Free()
+	}
+	if o.planDu1 != nil {
+		o.planDu1.Free()
+	}
+	if o.planDu2 != nil {
+		o.planDu2.Free()
+	}
 }
 
 // CalcU calculates f(x) at grid points (to be used later with CalcA and/or CalcD)
@@ -142,7 +203,7 @@ func (o *FourierInterp) CalcU(f Ss) (err error) {
 //
 //  NOTE: remember to set U (or call CalcU) first
 //
-func (o *FourierInterp) CalcA() (err error) {
+func (o *FourierInterp) CalcA() {
 
 	// set A[j] with f(x[j]) / N
 	n := float64(o.N)
@@ -150,9 +211,8 @@ func (o *FourierInterp) CalcA() (err error) {
 		o.A[j] = complex(o.U[j]/n, 0)
 	}
 
-	// perform Fourier transform to find A[j]
-	err = Dft1d(o.A, false)
-	return
+	// run FFT
+	o.planA.Execute()
 }
 
 // CalcAwithAliasRemoval calculates the coefficients A by using the 3/2-rule to remove alias error
@@ -255,51 +315,60 @@ func (o *FourierInterp) Idiff(p int, x float64) float64 {
 //      p -- derivative order
 //
 //   OUTPUT:
-//      dfdx    -- pre-allocated vector of len==N, such that
-//      dfdxHat -- derivative in spectral space (pre-allocated vector of len==N)
+//      Du and DuHat will contain the results
 //
 //  NOTE: remember to call CalcA first
 //
-func (o *FourierInterp) CalcD(dfdx la.Vector, dfdxHat la.VectorC, p int) (err error) {
+func (o *FourierInterp) CalcD(p int) {
 
-	// compute dfdxjHat
+	// compute hat(Du)
 	pf := float64(p)
 	for j := 0; j < o.N; j++ {
 		ikp := ImagPowN(p) * complex(math.Pow(o.K[j], pf), 0)
-		dfdxHat[j] = ikp * o.S[j] * o.A[j]
+		o.DuHat[j] = ikp * o.S[j] * o.A[j]
 	}
 
-	// use inverse FFT to compute dfdx
-	err = Dft1d(dfdxHat, true)
-	if err != nil {
-		return
-	}
+	// run FFT and extract real part
+	o.planDu.Execute()
 	for j := 0; j < o.N; j++ {
-		dfdx[j] = real(dfdxHat[j])
+		o.Du[j] = real(o.DuHat[j])
 	}
-	return
 }
 
 // CalcD1 calculates the 1st derivative using function CalcD and internal arrays.
 // See function CalcD for further details
-//  OUTPUT: the results will be stored in o.Du1 and o.Du1Hat
-func (o *FourierInterp) CalcD1() (err error) {
-	if len(o.Du1) != o.N {
-		o.Du1 = la.NewVector(o.N)
-		o.Du1Hat = la.NewVectorC(o.N)
+//  OUTPUT: the results will be stored in Du1 and Du1Hat
+func (o *FourierInterp) CalcD1() {
+
+	// compute hat(Du1)
+	for j := 0; j < o.N; j++ {
+		c := complex(0, o.K[j]) // c := (i⋅k)¹ = i⋅k
+		o.Du1Hat[j] = c * o.S[j] * o.A[j]
 	}
-	return o.CalcD(o.Du1, o.Du1Hat, 1)
+
+	// run FFT and extract real part
+	o.planDu1.Execute()
+	for j := 0; j < o.N; j++ {
+		o.Du1[j] = real(o.Du1Hat[j])
+	}
 }
 
 // CalcD2 calculates the 2nd derivative using function CalcD and internal arrays.
 // See function CalcD for further details
-//  OUTPUT: the results will be stored in o.Du2 and o.Du2Hat
-func (o *FourierInterp) CalcD2() (err error) {
-	if len(o.Du2) != o.N {
-		o.Du2 = la.NewVector(o.N)
-		o.Du2Hat = la.NewVectorC(o.N)
+//  OUTPUT: the results will be stored in Du2 and Du2Hat
+func (o *FourierInterp) CalcD2() {
+
+	// compute hat(Du2)
+	for j := 0; j < o.N; j++ {
+		c := complex(-o.K[j]*o.K[j], 0) // c := (i⋅k)² = -k²
+		o.Du2Hat[j] = c * o.S[j] * o.A[j]
 	}
-	return o.CalcD(o.Du2, o.Du2Hat, 2)
+
+	// run FFT and extract real part
+	o.planDu2.Execute()
+	for j := 0; j < o.N; j++ {
+		o.Du2[j] = real(o.Du2Hat[j])
+	}
 }
 
 // CalcK computes k-index from j-index where j corresponds to the FFT index
