@@ -455,14 +455,12 @@ func PowP(x float64, n uint32) (r float64) {
 		r = x * x * x
 		return r * r * r * x
 	}
-	r = x * x * x
-	r = r * r * r * x
-	var i uint32
-	for i = 11; i <= 20; i++ {
-		r *= x
-		if n == i {
-			return
+	r = 1.0
+	for i := n; i > 0; i >>= 1 {
+		if i&1 == 1 {
+			r *= x
 		}
+		x *= x
 	}
-	return math.Pow(x, float64(n))
+	return
 }

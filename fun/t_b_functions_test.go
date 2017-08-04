@@ -61,6 +61,54 @@ func BenchmarkPowP20std(b *testing.B) {
 	benchRes = res
 }
 
+func BenchmarkPowP50(b *testing.B) {
+	var res float64
+	x := 2.5
+	var n uint32
+	for i := 0; i < b.N; i++ {
+		for n = 0; n < 50; n++ {
+			res = PowP(x, n)
+		}
+	}
+	benchRes = res
+}
+
+func BenchmarkPowP50std(b *testing.B) {
+	var res float64
+	x := 2.5
+	var n uint32
+	for i := 0; i < b.N; i++ {
+		for n = 0; n < 50; n++ {
+			res = math.Pow(x, float64(n))
+		}
+	}
+	benchRes = res
+}
+
+func BenchmarkPowP100(b *testing.B) {
+	var res float64
+	x := 2.5
+	var n uint32
+	for i := 0; i < b.N; i++ {
+		for n = 0; n < 100; n++ {
+			res = PowP(x, n)
+		}
+	}
+	benchRes = res
+}
+
+func BenchmarkPowP100std(b *testing.B) {
+	var res float64
+	x := 2.5
+	var n uint32
+	for i := 0; i < b.N; i++ {
+		for n = 0; n < 100; n++ {
+			res = math.Pow(x, float64(n))
+		}
+	}
+	benchRes = res
+}
+
 func BenchmarkPowP200(b *testing.B) {
 	var res float64
 	x := 2.5
