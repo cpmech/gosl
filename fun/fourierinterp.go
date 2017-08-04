@@ -321,9 +321,8 @@ func (o *FourierInterp) Idiff(p int, x float64) float64 {
 func (o *FourierInterp) CalcD(p int) {
 
 	// compute hat(Du)
-	pf := float64(p)
 	for j := 0; j < o.N; j++ {
-		ikp := ImagPowN(p) * complex(math.Pow(o.K[j], pf), 0)
+		ikp := ImagXpowN(o.K[j], p)
 		o.DuHat[j] = ikp * o.S[j] * o.A[j]
 	}
 
@@ -341,8 +340,8 @@ func (o *FourierInterp) CalcD1() {
 
 	// compute hat(Du1)
 	for j := 0; j < o.N; j++ {
-		c := complex(0, o.K[j]) // c := (i⋅k)¹ = i⋅k
-		o.Du1Hat[j] = c * o.S[j] * o.A[j]
+		ik1 := complex(0, o.K[j]) // (i⋅k)¹ = i⋅k
+		o.Du1Hat[j] = ik1 * o.S[j] * o.A[j]
 	}
 
 	// run FFT and extract real part
@@ -359,8 +358,8 @@ func (o *FourierInterp) CalcD2() {
 
 	// compute hat(Du2)
 	for j := 0; j < o.N; j++ {
-		c := complex(-o.K[j]*o.K[j], 0) // c := (i⋅k)² = -k²
-		o.Du2Hat[j] = c * o.S[j] * o.A[j]
+		ik2 := complex(-o.K[j]*o.K[j], 0) // (i⋅k)² = -k²
+		o.Du2Hat[j] = ik2 * o.S[j] * o.A[j]
 	}
 
 	// run FFT and extract real part
