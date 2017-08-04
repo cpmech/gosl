@@ -68,7 +68,7 @@ func fouCheckD1andD2(tst *testing.T, fou *FourierInterp, f Ss) {
 	io.Pl()
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-10, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
+		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-9, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
 			return fou.Idiff(1, t), nil
 		})
 	}

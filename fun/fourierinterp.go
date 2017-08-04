@@ -293,10 +293,9 @@ func (o *FourierInterp) I(x float64) float64 {
 //
 func (o *FourierInterp) Idiff(p int, x float64) float64 {
 	var res complex128
-	pc := complex(float64(p), 0)
+	pf := float64(p)
 	for j := 0; j < o.N; j++ {
-		ik := complex(0, o.K[j])
-		ikp := cmplx.Pow(ik, pc)
+		ikp := ImagPowN(p) * complex(math.Pow(o.K[j], pf), 0)
 		res += ikp * o.S[j] * o.A[j] * cmplx.Exp(complex(0, o.K[j]*x))
 	}
 	return real(res)
