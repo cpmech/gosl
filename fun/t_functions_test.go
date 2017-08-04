@@ -506,6 +506,31 @@ func TestImagPowN(tst *testing.T) {
 		if n > 10 {
 			tol = 1e-14
 		}
-		chk.Complex128(tst, io.Sf("pow(i,%d)=%v", n, res), tol, res, cmplx.Pow(1i, complex(float64(n), 0)))
+		chk.AnaNumC(tst, io.Sf("pow(i,%2d)", n), tol, res, cmplx.Pow(1i, complex(float64(n), 0)), chk.Verbose)
+	}
+}
+
+func TestImagXpowN(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ImagXpowN. calc (x⋅i)ⁿ")
+
+	x := 2.5
+	for n := 0; n < 21; n++ {
+		res := ImagXpowN(x, n)
+		tol := 1e-15
+		if n > 2 {
+			tol = 1e-12
+		}
+		if n > 8 {
+			tol = 1e-11
+		}
+		if n > 10 {
+			tol = 1e-9
+		}
+		if n > 14 {
+			tol = 1e-6
+		}
+		chk.AnaNumC(tst, io.Sf("pow(x*i,%2d)", n), tol, res, cmplx.Pow(complex(0, x), complex(float64(n), 0)), chk.Verbose)
 	}
 }

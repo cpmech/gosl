@@ -12,8 +12,9 @@ while true; do
     #go test -test.run="LagInterp08"
     #go test -test.run="ChebyInterp07"
     #go test -test.run="LagCheby03"
-    go test -test.run="FourierInterp05"
+    #go test -test.run="FourierInterp05"
     #go test -test.run="Dft01"
     #go test -test.run="Hat01"
-    #go test -test.run="ImagPowN"
+    go test -test.run="ImagPowN"
+    go test -test.run="ImagXpowN"
 done

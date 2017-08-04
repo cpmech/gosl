@@ -9,26 +9,36 @@ import (
 	"testing"
 )
 
-var (
-	imagpownRes complex128
-)
-
 func BenchmarkImagPowN(b *testing.B) {
-	var res complex128
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < 200; n++ {
-			res = ImagPowN(n)
+			ImagPowN(n)
 		}
 	}
-	imagpownRes = res
 }
 
 func BenchmarkImagPowNcmplx(b *testing.B) {
-	var res complex128
 	for i := 0; i < b.N; i++ {
 		for n := 0; n < 200; n++ {
-			res = cmplx.Pow(1i, complex(float64(n), 0))
+			cmplx.Pow(1i, complex(float64(n), 0))
 		}
 	}
-	imagpownRes = res
+}
+
+func BenchmarkImagXpowN(b *testing.B) {
+	x := 2.5
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < 200; n++ {
+			ImagXpowN(x, n)
+		}
+	}
+}
+
+func BenchmarkImagXpowNcmplx(b *testing.B) {
+	x := 2.5
+	for i := 0; i < b.N; i++ {
+		for n := 0; n < 200; n++ {
+			cmplx.Pow(complex(0, x), complex(float64(n), 0))
+		}
+	}
 }

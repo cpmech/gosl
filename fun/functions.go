@@ -390,3 +390,25 @@ func ImagPowN(n int) complex128 {
 	}
 	return 1
 }
+
+// ImagXpowN computes (x⋅i)ⁿ
+//
+//   (x⋅i)¹ = x¹⋅i      (x⋅i)²  = -x²       (x⋅i)³  = -x³ ⋅i      (x⋅i)⁴  = x⁴
+//   (x⋅i)⁵ = x⁵⋅i      (x⋅i)⁶  = -x⁶       (x⋅i)⁷  = -x⁷ ⋅i      (x⋅i)⁸  = x⁸
+//   (x⋅i)⁹ = x⁹⋅i      (x⋅i)¹⁰ = -x¹⁰      (x⋅i)¹¹ = -x¹¹⋅i      (x⋅i)¹² = x¹²
+//
+func ImagXpowN(x float64, n int) complex128 {
+	if n == 0 {
+		return 1
+	}
+	xn := math.Pow(x, float64(n))
+	switch n % 4 {
+	case 1:
+		return complex(0, xn)
+	case 2:
+		return complex(-xn, 0)
+	case 3:
+		return complex(0, -xn)
+	}
+	return complex(xn, 0)
+}
