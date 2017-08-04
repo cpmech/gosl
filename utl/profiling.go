@@ -14,25 +14,49 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// PrintMemStat prints memory statistics
-func PrintMemStat(msg string) {
-	var kbSize uint64 = 1024
-	var mbSize uint64 = 1048576
-	var gbSize uint64 = 1073741824
-	var mem runtime.MemStats
-	runtime.ReadMemStats(&mem)
-	io.PfYel("%s\n", msg)
-	io.Pfyel("Alloc      = %v [KB]  %v [MB]  %v [GB]\n", mem.Alloc/kbSize, mem.Alloc/mbSize, mem.Alloc/gbSize)
-	io.Pfyel("HeapAlloc  = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapAlloc/kbSize, mem.HeapAlloc/mbSize, mem.HeapAlloc/gbSize)
-	io.Pfyel("Sys        = %v [KB]  %v [MB]  %v [GB]\n", mem.Sys/kbSize, mem.Sys/mbSize, mem.Sys/gbSize)
-	io.Pfyel("HeapSys    = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapSys/kbSize, mem.HeapSys/mbSize, mem.HeapSys/gbSize)
-	io.Pfyel("TotalAlloc = %v [KB]  %v [MB]  %v [GB]\n", mem.TotalAlloc/kbSize, mem.TotalAlloc/mbSize, mem.TotalAlloc/gbSize)
-	io.Pfyel("Mallocs    = %v\n", mem.Mallocs)
-	io.Pfyel("Frees      = %v\n", mem.Frees)
+// Prof runs either CPU profiling or MEM profiling
+//
+//  INPUT:
+//    mem    -- memory profiling instead of CPU profiling
+//    silent -- hide messages
+//
+//  OUTPUT:
+//    returns a "stop()" function to be called before exiting
+//    output files are saved to "/tmp/gosl/cpu.pprof"; or
+//                              "/tmp/gosl/mem.pprof"
+//  Run analysis with:
+//      go tool pprof <binary-goes-here> /tmp/gosl/cpu.pprof
+//  or
+//      go tool pprof <binary-goes-here> /tmp/gosl/mem.pprof
+//
+//  Example of use (notice the last parentheses):
+//
+//       func main() {
+//          defer utl.Prof(false, false)()
+//          ...
+//       }
+//
+func Prof(mem, silent bool) func() {
+	if mem {
+		return ProfMEM("/tmp/gosl", "mem.pprof", silent)
+	}
+	return ProfCPU("/tmp/gosl", "cpu.pprof", silent)
 }
 
 // ProfCPU activates CPU profiling
-//  Note: returns a "stop()" function to be called before shutting down
+//
+//  OUTPUT: returns a "stop()" function to be called before exiting
+//
+//  Example of use (notice the last parentheses):
+//
+//       func main() {
+//          defer ProfCPU("/tmp", "cpu.pprof", true)()
+//          ...
+//       }
+//
+//  Run analysis with:
+//      go tool pprof <binary-goes-here> /tmp/cpu.pprof
+//
 func ProfCPU(dirout, filename string, silent bool) func() {
 	os.MkdirAll(dirout, 0777)
 	fn := filepath.Join(dirout, filename)
@@ -49,13 +73,25 @@ func ProfCPU(dirout, filename string, silent bool) func() {
 		f.Close()
 		if !silent {
 			io.Pfcyan("CPU profiling finished\n")
-			io.Pfcyan("run: go tool pprof <binary> %s/%s\n", dirout, filename)
+			io.Pfcyan("go tool pprof <binary-goes-here> %s/%s\n", dirout, filename)
 		}
 	}
 }
 
 // ProfMEM activates memory profiling
-//  Note: returns a "stop()" function to be called before shutting down
+//
+//  OUTPUT: returns a "stop()" function to be called before exiting
+//
+//  Example of use (notice the last parentheses):
+//
+//       func main() {
+//          defer ProfMEM("/tmp", "mem.pprof", true)()
+//          ...
+//       }
+//
+//  Run analysis with:
+//      go tool pprof <binary-goes-here> /tmp/mem.pprof
+//
 func ProfMEM(dirout, filename string, silent bool) func() {
 	os.MkdirAll(dirout, 0777)
 	fn := filepath.Join(dirout, filename)
@@ -71,24 +107,24 @@ func ProfMEM(dirout, filename string, silent bool) func() {
 		f.Close()
 		if !silent {
 			io.Pfcyan("MEM profiling finished\n")
-			io.Pfcyan("run: go tool pprof <binary> %s/%s\n", dirout, filename)
+			io.Pfcyan("go tool pprof <binary-goes-here> %s/%s\n", dirout, filename)
 		}
 	}
 }
 
-// DoProf runs either CPU profiling or MEM profiling
-//  Input:
-//    silent -- show message
-//    option -- 1=CPU profiling, 2=memory profiling
-//  Output:
-//    1) returns a "stop()" function to be called before shutting down
-//    2) output files are saved to "/tmp/gosl/cpu.pprof"; or
-//                                 "/tmp/gosl/mem.pprof"
-//    3) run analysis with (e.g.):
-//         go tool pprof binary /tmp/gosl/mem.pprof
-func DoProf(silent bool, option int) func() {
-	if option == 2 {
-		return ProfMEM("/tmp/gosl", "mem.pprof", silent)
-	}
-	return ProfCPU("/tmp/gosl", "cpu.pprof", silent)
+// PrintMemStat prints memory statistics
+func PrintMemStat(msg string) {
+	var kbSize uint64 = 1024
+	var mbSize uint64 = 1048576
+	var gbSize uint64 = 1073741824
+	var mem runtime.MemStats
+	runtime.ReadMemStats(&mem)
+	io.PfYel("%s\n", msg)
+	io.Pfyel("Alloc      = %v [KB]  %v [MB]  %v [GB]\n", mem.Alloc/kbSize, mem.Alloc/mbSize, mem.Alloc/gbSize)
+	io.Pfyel("HeapAlloc  = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapAlloc/kbSize, mem.HeapAlloc/mbSize, mem.HeapAlloc/gbSize)
+	io.Pfyel("Sys        = %v [KB]  %v [MB]  %v [GB]\n", mem.Sys/kbSize, mem.Sys/mbSize, mem.Sys/gbSize)
+	io.Pfyel("HeapSys    = %v [KB]  %v [MB]  %v [GB]\n", mem.HeapSys/kbSize, mem.HeapSys/mbSize, mem.HeapSys/gbSize)
+	io.Pfyel("TotalAlloc = %v [KB]  %v [MB]  %v [GB]\n", mem.TotalAlloc/kbSize, mem.TotalAlloc/mbSize, mem.TotalAlloc/gbSize)
+	io.Pfyel("Mallocs    = %v\n", mem.Mallocs)
+	io.Pfyel("Frees      = %v\n", mem.Frees)
 }
