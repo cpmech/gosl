@@ -412,3 +412,57 @@ func ImagXpowN(x float64, n int) complex128 {
 	}
 	return complex(xn, 0)
 }
+
+// PowP computes real raised to positive integer xⁿ
+func PowP(x float64, n uint32) (r float64) {
+	if n == 0 {
+		return 1.0
+	}
+	if n == 1 {
+		return x
+	}
+	if n == 2 {
+		return x * x
+	}
+	if n == 3 {
+		return x * x * x
+	}
+	if n == 4 {
+		r = x * x
+		return r * r
+	}
+	if n == 5 {
+		r = x * x
+		return r * r * x
+	}
+	if n == 6 {
+		r = x * x * x
+		return r * r
+	}
+	if n == 7 {
+		r = x * x * x
+		return r * r * x
+	}
+	if n == 8 {
+		r = x * x * x * x
+		return r * r
+	}
+	if n == 9 {
+		r = x * x * x
+		return r * r * r
+	}
+	if n == 10 {
+		r = x * x * x
+		return r * r * r * x
+	}
+	r = x * x * x
+	r = r * r * r * x
+	var i uint32
+	for i = 11; i <= 20; i++ {
+		r *= x
+		if n == i {
+			return
+		}
+	}
+	return math.Pow(x, float64(n))
+}
