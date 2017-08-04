@@ -369,3 +369,24 @@ func NegOnePowN(n int) float64 {
 	}
 	return -1
 }
+
+// ImagPowN computes iⁿ = (√-1)ⁿ
+//
+//   i¹ = i      i²  = -1      i³  = -i      i⁴  = 1
+//   i⁵ = i      i⁶  = -1      i⁷  = -i      i⁸  = 1
+//   i⁹ = i      i¹⁰ = -1      i¹¹ = -i      i¹² = 1
+//
+func ImagPowN(n int) complex128 {
+	if n == 0 {
+		return 1
+	}
+	switch n % 4 {
+	case 1:
+		return 1i
+	case 2:
+		return -1
+	case 3:
+		return -1i
+	}
+	return 1
+}

@@ -494,3 +494,18 @@ func TestNegOnePowN(tst *testing.T) {
 		chk.Float64(tst, io.Sf("pow(-1,%d)", n), 1e-17, res, math.Pow(-1, float64(n)))
 	}
 }
+
+func TestImagPowN(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("ImagPowN. calc iⁿ; i.e. (√-1)ⁿ")
+
+	for n := 0; n < 21; n++ {
+		res := ImagPowN(n)
+		tol := 1e-15
+		if n > 10 {
+			tol = 1e-14
+		}
+		chk.Complex128(tst, io.Sf("pow(i,%d)=%v", n, res), tol, res, cmplx.Pow(1i, complex(float64(n), 0)))
+	}
+}
