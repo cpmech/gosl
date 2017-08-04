@@ -296,9 +296,13 @@ func TestFourierInterp05(tst *testing.T) {
 
 	// compute 1st derivatives @ grid points
 	fou.CalcD1()
+	fou.CalcD(1)
+	chk.Array(tst, "D1=D(1)", 1e-17, fou.Du1, fou.Du)
 
 	// compute 2nd derivatives @ grid points
 	fou.CalcD2()
+	fou.CalcD(2)
+	chk.Array(tst, "D2=D(2)", 1e-17, fou.Du2, fou.Du)
 
 	// check
 	for j, x := range fou.X {
