@@ -7,6 +7,7 @@
 * Compute (fast) discrete Fourier transform
 * Generate and draw a NURBS toroidal surface
 * Generating normally distributed pseudo-random numbers
+* Visualising Triplets for sparse matrix input
 * Solution of sparse linear system
 * Solution of sparse linear system with complex numbers
 * Numerical differentiation
@@ -53,6 +54,32 @@ Source code: <a href="rnd_normalDistribution.go">rnd_normalDistribution.go</a>
 <div id="container">
 <p><img src="figs/rnd_normalDistribution.png" width="400"></p>
 Normally distributed pseudo-random numbers
+</div>
+
+
+
+# Visualising Triplets for sparse matrix input
+
+Triplets are the easiest way to input sparse matrix data. They can be visualised using
+[Vismatrix](https://github.com/cpmech/vismatrix) after writing a **.smat** file.
+
+Given the following matrix:
+
+```
+      _            _
+     |  0  2  0  0  |
+ a = |  1  0  4  0  |
+     |  0  0  0  5  |
+     |_ 0  3  0  6 _|
+```
+
+The matrix can be generated using: <a href="la_triplet01.go">la_triplet01.go</a>
+
+The matrix can be visualised using Vismatrix resulting in:
+
+<div id="container">
+<p><img src="figs/la_triplet01.png" width="300"></p>
+Output of Vismatrix
 </div>
 
 
