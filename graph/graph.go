@@ -204,7 +204,7 @@ func ReadGraphTable(fname string, bargera bool) *Graph {
 	if bargera {
 		k := 0
 		readingMeta := true
-		io.ReadLines(fname, func(idx int, line string) (stop bool) {
+		err := io.ReadLines(fname, func(idx int, line string) (stop bool) {
 			if len(line) < 1 {
 				return false
 			}
@@ -230,6 +230,9 @@ func ReadGraphTable(fname string, bargera bool) *Graph {
 			k++
 			return false
 		})
+		if err != nil {
+			chk.Panic("ERROR: %v\n", err)
+		}
 	} else {
 		_, dat, err := io.ReadTable(fname)
 		if err != nil {
