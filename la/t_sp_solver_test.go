@@ -35,10 +35,7 @@ func TestSpSolver01(tst *testing.T) {
 	// solve
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 	x, err := SpSolve(A, b)
-	if err != nil {
-		tst.Errorf("%v\n")
-		return
-	}
+	status(tst, err)
 
 	// check
 	chk.Array(tst, "x", 1e-14, x, []float64{1, 2, 3, 4, 5})
@@ -127,10 +124,7 @@ func TestSpSolver02(tst *testing.T) {
 
 	// solve
 	x, err := SpSolveC(A, b)
-	if err != nil {
-		tst.Errorf("%v\n")
-		return
-	}
+	status(tst, err)
 
 	// check
 	chk.ArrayC(tst, "x", 1e-3, x, xCorrect)
