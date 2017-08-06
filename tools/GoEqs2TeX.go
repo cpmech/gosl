@@ -8,10 +8,21 @@ package main
 
 import (
 	"bytes"
+	"os"
 	"strings"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 )
+
+func status(err error) {
+	if err != nil {
+		io.Pf("ERROR: %v\n", err)
+		chk.Verbose = true
+		chk.CallerInfo(2)
+		os.Exit(1)
+	}
+}
 
 func main() {
 
@@ -32,9 +43,7 @@ func main() {
 
 	// open file
 	f, err := io.OpenFileR(filename)
-	if err != nil {
-		return
-	}
+	status(err)
 
 	// constants
 	MAXNIDX := 100
@@ -42,7 +51,7 @@ func main() {
 
 	// read file
 	var buf bytes.Buffer
-	io.ReadLinesFile(f, func(idx int, line string) (stop bool) {
+	err = io.ReadLinesFile(f, func(idx int, line string) (stop bool) {
 
 		// indices
 		l := line
@@ -74,6 +83,7 @@ func main() {
 		io.Ff(&buf, "%s\n", l)
 		return
 	})
+	status(err)
 
 	// write file
 	io.WriteFileVD("/tmp/gosl", fnkey+".tex", &buf)
