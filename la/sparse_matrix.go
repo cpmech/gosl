@@ -128,7 +128,7 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) {
 // ReadSmat reads ".smat" file back
 func (o *Triplet) ReadSmat(filename string) (err error) {
 	var e error
-	io.ReadLines(filename, func(idx int, line string) (stop bool) {
+	err = io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		r := strings.Fields(line)
 		if len(r) != 3 {
 			e = chk.Err("number of columns must be 3\n")
