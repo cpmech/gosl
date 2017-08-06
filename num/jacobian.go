@@ -69,5 +69,5 @@ func CompareJac(tst *testing.T, ffcn fun.Vv, Jfcn fun.Tv, x []float64, tol float
 	Jfcn(&Jana, x)
 
 	// compare
-	chk.Array(tst, "Jacobian matrix", tol, Jnum.GetDenseMatrix().Data, Jana.GetDenseMatrix().Data)
+	chk.Array(tst, "Jacobian matrix", tol, Jnum.ToDense().Data, Jana.ToDense().Data)
 }

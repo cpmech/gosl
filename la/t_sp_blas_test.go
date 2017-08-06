@@ -93,7 +93,7 @@ func TestSpBlas02(tst *testing.T) {
 	t.Put(2, 4, 50+0i)
 
 	a := t.ToMatrix(nil)
-	ad := a.GetDenseMatrix()
+	ad := a.ToDense()
 	u := []complex128{0.1, 0.2, 0.3, 0.4, 0.5}
 	w := []complex128{10.0, 20.0, 30.0}
 	r := []complex128{1000, 1000, 1000, 1000, 1000}
@@ -144,7 +144,7 @@ func TestSpBlas03(tst *testing.T) {
 	t.Put(2, 4, 50+0i)
 
 	a := t.ToMatrix(nil)
-	ad := a.GetDenseMatrix()
+	ad := a.ToDense()
 	u := []complex128{0.1, 0.2 + 10i, 0.3, 0.4 + 3i, 0.5}
 	w := []complex128{10.0 + 1i, 20.0 - 0.5i, 30.0}
 	r := []complex128{1000 + 1i, 1000 + 1i, 1000 + 1i, 1000 + 1i, 1000 + 1i}
@@ -332,7 +332,7 @@ func TestSpBlas06(tst *testing.T) {
 		{0.0, 16, +8.1, 0.0, +0, 0.0},
 		{0.3, +0, 10.0, 0.5, +0, 2.0},
 	})
-	chk.Deep2c(tst, "d", 1e-16, d.GetDenseMatrix().GetDeep2(), [][]complex128{
+	chk.Deep2c(tst, "d", 1e-16, d.ToDense().GetDeep2(), [][]complex128{
 		{0.1 + 1i, +0, +2.0 + 0i, 0.1 + 1i, +0, 2.7 + 7i},
 		{0.0 + 0i, +2, +4.3 + 3i, 0.0 + 0i, +0, 8.0 + 0i},
 		{0.2 + 2i, +0, +6.0 + 0i, 0.0 + 0i, 10, 4.8 + 8i},
@@ -379,7 +379,7 @@ func TestSpBlas07(tst *testing.T) {
 	tc.Init(5, 6, ta.Len()+tb.Len())
 	SpTriAdd(&tc, 0.1, &ta, 2, &tb)
 	io.Pf("tc = %+v\n", tc)
-	chk.Deep2(tst, "c", 1e-16, tc.GetDenseMatrix().GetDeep2(), [][]float64{
+	chk.Deep2(tst, "c", 1e-16, tc.ToDense().GetDeep2(), [][]float64{
 		{0.1, +0, +2.0, 0.1, +0, 2.7},
 		{0.0, +2, +4.3, 0.0, +0, 8.0},
 		{0.2, +0, +6.0, 0.0, 10, 4.8},
@@ -428,7 +428,7 @@ func TestSpBlas08(tst *testing.T) {
 	// d := (α+βi)*a + μ*b
 	SpTriAddR2C(&td, α, β, &ta, μ, &tb)
 	io.Pf("td = %+v\n", td)
-	chk.Deep2c(tst, "d", 1e-16, td.GetDenseMatrix().GetDeep2(), [][]complex128{
+	chk.Deep2c(tst, "d", 1e-16, td.ToDense().GetDeep2(), [][]complex128{
 		{0.1 + 1i, +0, +2.0 + 0i, 0.1 + 1i, +0, 2.7 + 7i},
 		{0.0 + 0i, +2, +4.3 + 3i, 0.0 + 0i, +0, 8.0 + 0i},
 		{0.2 + 2i, +0, +6.0 + 0i, 0.0 + 0i, 10, 4.8 + 8i},

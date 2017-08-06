@@ -102,8 +102,8 @@ func (o *Triplet) Max() int {
 	return o.max
 }
 
-// GetDenseMatrix returns the dense matrix corresponding to this Triplet
-func (o *Triplet) GetDenseMatrix() (a *Matrix) {
+// ToDense returns the dense matrix corresponding to this Triplet
+func (o *Triplet) ToDense() (a *Matrix) {
 	a = NewMatrix(o.m, o.n)
 	for k := 0; k < o.max; k++ {
 		a.Add(o.i[k], o.j[k], o.x[k])
@@ -243,8 +243,8 @@ func (o *TripletC) Max() int {
 	return o.max
 }
 
-// GetDenseMatrix returns the dense matrix corresponding to this Triplet
-func (o *TripletC) GetDenseMatrix() (a *MatrixC) {
+// ToDense returns the dense matrix corresponding to this Triplet
+func (o *TripletC) ToDense() (a *MatrixC) {
 	a = NewMatrixC(o.m, o.n)
 	for k := 0; k < o.max; k++ {
 		a.Add(o.i[k], o.j[k], o.x[k])
@@ -322,8 +322,8 @@ func (o *CCMatrixC) WriteSmatAbs(dirout, fnkey string, tol float64) {
 	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
 }
 
-// GetDenseMatrix converts a column-compressed matrix (complex) to dense form
-func (o *CCMatrixC) GetDenseMatrix() (res *MatrixC) {
+// ToDense converts a column-compressed matrix (complex) to dense form
+func (o *CCMatrixC) ToDense() (res *MatrixC) {
 	res = NewMatrixC(o.m, o.n)
 	for j := 0; j < o.n; j++ {
 		for p := o.p[j]; p < o.p[j+1]; p++ {

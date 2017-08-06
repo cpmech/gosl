@@ -30,7 +30,7 @@ func TestTriplet01(tst *testing.T) {
 	a.Put(2, 3, 5)
 	a.Put(3, 3, 6)
 
-	l := a.GetDenseMatrix().Print("%2g")
+	l := a.ToDense().Print("%2g")
 	io.Pf("%v\n", l)
 	chk.String(tst, l, " 0 2 0 0\n 1 0 4 0\n 0 0 0 5\n 0 3 0 6")
 
@@ -43,7 +43,7 @@ func TestTriplet01(tst *testing.T) {
 	b := new(Triplet)
 	err = b.ReadSmat("/tmp/gosl/la/triplet01.smat")
 	status(tst, err)
-	chk.Deep2(tst, "b=a", 1e-17, a.GetDenseMatrix().GetDeep2(), b.GetDenseMatrix().GetDeep2())
+	chk.Deep2(tst, "b=a", 1e-17, a.ToDense().GetDeep2(), b.ToDense().GetDeep2())
 }
 
 func TestTriplet02(tst *testing.T) {
@@ -64,7 +64,7 @@ func TestTriplet02(tst *testing.T) {
 	a.Put(2, 3, 5-5i)
 	a.Put(3, 3, 6+6i)
 
-	l := a.GetDenseMatrix().Print("%2g", "%+2g")
+	l := a.ToDense().Print("%2g", "%+2g")
 	io.Pf("%v\n", l)
 	chk.String(tst, l, " 0+0i  2+2i  0+0i  0+0i\n 1+1i  0+0i  4+4i  0+0i\n 0+0i  0+0i  0+0i  5-5i\n 0+0i  3-3i  0+0i  6+6i")
 
@@ -78,13 +78,13 @@ func TestTriplet02(tst *testing.T) {
 	b := new(TripletC)
 	err = b.ReadSmat("/tmp/gosl/la/triplet02.smat")
 	status(tst, err)
-	chk.Deep2c(tst, "b=a", 1e-17, a.GetDenseMatrix().GetDeep2(), b.GetDenseMatrix().GetDeep2())
+	chk.Deep2c(tst, "b=a", 1e-17, a.ToDense().GetDeep2(), b.ToDense().GetDeep2())
 
 	am.WriteSmatAbs("/tmp/gosl/la", "triplet02b", 0)
 	c := new(Triplet)
 	err = c.ReadSmat("/tmp/gosl/la/triplet02b.smat")
 	status(tst, err)
-	chk.Deep2(tst, "b=a", 1e-14, c.GetDenseMatrix().GetDeep2(), [][]float64{
+	chk.Deep2(tst, "b=a", 1e-14, c.ToDense().GetDeep2(), [][]float64{
 		{0, math.Sqrt(8), 0, 0},
 		{math.Sqrt2, 0, math.Sqrt(32), 0},
 		{0, 0, 0, math.Sqrt(50)},

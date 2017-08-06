@@ -351,7 +351,7 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 				return 0, chk.Err("sparse(num) Jacobian failed:\n%v", err)
 			}
 		}
-		Jmat = o.Jtri.GetDenseMatrix()
+		Jmat = o.Jtri.ToDense()
 	}
 
 	// condition number

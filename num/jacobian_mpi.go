@@ -85,5 +85,5 @@ func CompareJacMpi(tst *testing.T, comm *mpi.Communicator, ffcn fun.Vv, Jfcn fun
 	Jfcn(&Jana, x)
 
 	// compare
-	chk.Array(tst, "Jacobian matrix", tol, Jnum.GetDenseMatrix().Data, Jana.GetDenseMatrix().Data)
+	chk.Array(tst, "Jacobian matrix", tol, Jnum.ToDense().Data, Jana.ToDense().Data)
 }

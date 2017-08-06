@@ -68,7 +68,7 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 
 	// check
 	chk.Array(tst, "x", tolX, x, xCorrect)
-	TestSolverResidual(tst, t.GetDenseMatrix(), x, b, tolRes)
+	TestSolverResidual(tst, t.ToDense(), x, b, tolRes)
 }
 
 // TestSpSolverC tests a sparse solver (complex version)
@@ -103,5 +103,5 @@ func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *Triplet
 
 	// check
 	chk.ArrayC(tst, "x", tolX, x, xCorrect)
-	TestSolverResidualC(tst, t.GetDenseMatrix(), x, b, tolRes)
+	TestSolverResidualC(tst, t.ToDense(), x, b, tolRes)
 }
