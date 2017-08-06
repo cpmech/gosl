@@ -7,6 +7,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -16,6 +17,15 @@ import (
 	"github.com/cpmech/gosl/ode"
 	"github.com/cpmech/gosl/plt"
 )
+
+func status(err error) {
+	if err != nil {
+		io.Pf("ERROR: %v\n", err)
+		chk.Verbose = true
+		chk.CallerInfo(2)
+		os.Exit(1)
+	}
+}
 
 func main() {
 
@@ -73,16 +83,17 @@ func main() {
 
 	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
 	_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
-	chk.EP(err)
+	status(err)
 	s := sol.IdxSave
 	for j := 0; j < ndim; j++ {
 		labelA, labelB := "", ""
 		if j == 2 {
 			labelA, labelB = "reference", "gosl"
 		}
+		Yj := sol.ExtractTimeSeries(j)
 		plt.Subplot(ndim+1, 1, j+1)
 		plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
-		plt.Plot(sol.Xvalues[:s], sol.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
+		plt.Plot(sol.Xvalues[:s], Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
 		plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 	}
 	plt.Subplot(ndim+1, 1, ndim+1)

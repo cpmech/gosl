@@ -21,7 +21,6 @@ import (
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
-	"github.com/cpmech/gosl/utl"
 )
 
 // Solver implements an ODE solver
@@ -68,7 +67,7 @@ type Solver struct {
 	IdxSave int         // current index in Xvalues and Yvalues == last output
 	Hvalues []float64   // h values if SaveXY is true [IdxSave]
 	Xvalues []float64   // X values if SaveXY is true [IdxSave]
-	Yvalues [][]float64 // Y values if SaveXY is true [ndim][IdxSave]
+	Yvalues []la.Vector // Y values if SaveXY is true [IdxSave][ndim]
 
 	// derived variables
 	Distr bool    // MPI distributed execution. automatically set ON in Init if mpi is on and there are more then one processor.
@@ -278,12 +277,8 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 	if o.SaveXY {
 		o.Hvalues = make([]float64, o.NmaxSS+1)
 		o.Xvalues = make([]float64, o.NmaxSS+1)
-		o.Yvalues = utl.Alloc(o.ndim, o.NmaxSS+1)
-		o.Xvalues[o.IdxSave] = x
-		for i := 0; i < o.ndim; i++ {
-			o.Yvalues[i][o.IdxSave] = y[i]
-		}
-		o.IdxSave++
+		o.Yvalues = make([]la.Vector, o.NmaxSS+1)
+		o.savexy(0, x, y)
 	}
 
 	// stat variables
@@ -359,14 +354,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 				o.out(false, o.h, x, y)
 			}
 			if o.SaveXY {
-				if o.IdxSave < o.NmaxSS {
-					o.Hvalues[o.IdxSave] = o.h
-					o.Xvalues[o.IdxSave] = x
-					for i := 0; i < o.ndim; i++ {
-						o.Yvalues[i][o.IdxSave] = y[i]
-					}
-					o.IdxSave++
-				}
+				o.savexy(o.h, x, y)
 			}
 			if o.Verbose {
 				io.Pfgreen("x = %v\n", x)
@@ -442,12 +430,7 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 
 				// save X value
 				if o.SaveXY {
-					o.Hvalues[o.IdxSave] = o.h
-					o.Xvalues[o.IdxSave] = x
-					for i := 0; i < o.ndim; i++ {
-						o.Yvalues[i][o.IdxSave] = y[i]
-					}
-					o.IdxSave++
+					o.savexy(o.h, x, y)
 				}
 
 				// converged ?
@@ -544,6 +527,18 @@ func (o *Solver) Stat() {
 	io.Pf("max number of iterations  =%6d\n", o.Nitmax)
 }
 
+// ExtractTimeSeries extracts the y[i] values for all output times
+//  i -- index of y component
+//  use to plot time series; e.g.:
+//     plt.Plot(o.Xvalues[:o.IdxSave], o.ExtractTimeSeries(0), &plt.A{L:"y0"})
+func (o *Solver) ExtractTimeSeries(i int) (Yi []float64) {
+	Yi = make([]float64, o.IdxSave)
+	for j := 0; j < o.IdxSave; j++ {
+		Yi[j] = o.Yvalues[j][i]
+	}
+	return
+}
+
 // rmsNorm computes the RMS norm
 func (o *Solver) rmsNorm(diff la.Vector) (rms float64) {
 	for m := 0; m < o.ndim; m++ {
@@ -551,6 +546,15 @@ func (o *Solver) rmsNorm(diff la.Vector) (rms float64) {
 	}
 	rms = max(math.Sqrt(rms/float64(o.ndim)), 1.0e-10)
 	return
+}
+
+// savexy saves x and y values
+func (o *Solver) savexy(h, x float64, y []float64) {
+	o.Hvalues[o.IdxSave] = h
+	o.Xvalues[o.IdxSave] = x
+	o.Yvalues[o.IdxSave] = la.NewVector(o.ndim)
+	o.Yvalues[o.IdxSave].Apply(1, y)
+	o.IdxSave++
 }
 
 // max returns the maximum between a and b

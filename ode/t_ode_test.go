@@ -130,13 +130,14 @@ func Test_ode01(tst *testing.T) {
 			Y[i] = -lam * (math.Sin(X[i]) - lam*math.Cos(X[i]) + lam*math.Exp(lam*X[i])) / (lam*lam + 1.0)
 		}
 		a, b, c, d, e := sol1.IdxSave, sol2.IdxSave, sol3.IdxSave, sol4.IdxSave, sol5.IdxSave
+		Ya, Yb, Yc, Yd, Ye := sol1.ExtractTimeSeries(0), sol2.ExtractTimeSeries(0), sol3.ExtractTimeSeries(0), sol4.ExtractTimeSeries(0), sol5.ExtractTimeSeries(0)
 		plt.Reset(false, nil)
 		plt.Plot(X, Y, &plt.A{C: "grey", Ls: "-", Lw: 10, L: "solution"})
-		plt.Plot(sol1.Xvalues[:a], sol1.Yvalues[0][:a], &plt.A{C: "k", M: ".", Ls: ":", L: "FwEuler"})
-		plt.Plot(sol2.Xvalues[:b], sol2.Yvalues[0][:b], &plt.A{C: "r", M: ".", Ls: ":", L: "BwEuler"})
-		plt.Plot(sol3.Xvalues[:c], sol3.Yvalues[0][:c], &plt.A{C: "c", M: "+", Ls: ":", L: "MoEuler"})
-		plt.Plot(sol4.Xvalues[:d], sol4.Yvalues[0][:d], &plt.A{C: "m", M: ".", Ls: "--", L: "Dopri5"})
-		plt.Plot(sol5.Xvalues[:e], sol5.Yvalues[0][:e], &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5"})
+		plt.Plot(sol1.Xvalues[:a], Ya, &plt.A{C: "k", M: ".", Ls: ":", L: "FwEuler"})
+		plt.Plot(sol2.Xvalues[:b], Yb, &plt.A{C: "r", M: ".", Ls: ":", L: "BwEuler"})
+		plt.Plot(sol3.Xvalues[:c], Yc, &plt.A{C: "c", M: "+", Ls: ":", L: "MoEuler"})
+		plt.Plot(sol4.Xvalues[:d], Yd, &plt.A{C: "m", M: ".", Ls: "--", L: "Dopri5"})
+		plt.Plot(sol5.Xvalues[:e], Ye, &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5"})
 		plt.Gll("$x$", "$y$", nil)
 		plt.Save("/tmp/gosl/ode", "ode1")
 	}
@@ -223,9 +224,10 @@ func Test_ode02(tst *testing.T) {
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
+			Yj := o.ExtractTimeSeries(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
-			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
+			plt.Plot(o.Xvalues[:s], Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(ndim+1, 1, ndim+1)
@@ -312,9 +314,10 @@ func Test_ode03(tst *testing.T) {
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
+			Yj := o.ExtractTimeSeries(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
-			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
+			plt.Plot(o.Xvalues[:s], Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(ndim+1, 1, ndim+1)
@@ -471,9 +474,10 @@ func Test_ode04(tst *testing.T) {
 			if j == 4 {
 				labelA, labelB = "reference", "gosl"
 			}
+			Yj := o.ExtractTimeSeries(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
-			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB})
+			plt.Plot(o.Xvalues[:s], Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB})
 			plt.AxisXmax(0.05)
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}

@@ -147,32 +147,32 @@ func main() {
 
 	// ODE solver
 	ndim := len(ya)
-	o := ode.NewSolver(ode.Radau5kind, ndim, fcn, jac, &M, nil)
-	o.IniH = 1.0e-6 // initial step size
-	o.SaveXY = true
-	o.Pll = true
+	sol := ode.NewSolver(ode.Radau5kind, ndim, fcn, jac, &M, nil)
+	sol.IniH = 1.0e-6 // initial step size
+	sol.SaveXY = true
+	sol.Pll = true
 
 	// set tolerances
 	atol, rtol := 1e-11, 1e-5
-	o.SetTol(atol, rtol)
+	sol.SetTol(atol, rtol)
 
 	// run
 	t0 := time.Now()
-	o.Solve(ya, xa, xb, xb-xa, false)
+	sol.Solve(ya, xa, xb, xb-xa, false)
 
 	// only root
 	if mpi.WorldRank() == 0 {
 
 		// check
 		tst := new(testing.T)
-		chk.Int(tst, "number of F evaluations ", o.Nfeval, 2655)
-		chk.Int(tst, "number of J evaluations ", o.Njeval, 217)
-		chk.Int(tst, "total number of steps   ", o.Nsteps, 282)
-		chk.Int(tst, "number of accepted steps", o.Naccepted, 221)
-		chk.Int(tst, "number of rejected steps", o.Nrejected, 23)
-		chk.Int(tst, "number of decompositions", o.Ndecomp, 281)
-		chk.Int(tst, "number of lin solutions ", o.Nlinsol, 809)
-		chk.Int(tst, "max number of iterations", o.Nitmax, 6)
+		chk.Int(tst, "number of F evaluations ", sol.Nfeval, 2655)
+		chk.Int(tst, "number of J evaluations ", sol.Njeval, 217)
+		chk.Int(tst, "total number of steps   ", sol.Nsteps, 282)
+		chk.Int(tst, "number of accepted steps", sol.Naccepted, 221)
+		chk.Int(tst, "number of rejected steps", sol.Nrejected, 23)
+		chk.Int(tst, "number of decompositions", sol.Ndecomp, 281)
+		chk.Int(tst, "number of lin solutions ", sol.Nlinsol, 809)
+		chk.Int(tst, "max number of iterations", sol.Nitmax, 6)
 
 		// plot
 		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
@@ -181,20 +181,21 @@ func main() {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		s := o.IdxSave
+		s := sol.IdxSave
 		for j := 0; j < ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 4 {
 				labelA, labelB = "reference", "gosl"
 			}
+			Yj := sol.ExtractTimeSeries(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
-			plt.Plot(o.Xvalues[:s], o.Yvalues[j][:s], &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB})
+			plt.Plot(sol.Xvalues[:s], Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB})
 			plt.AxisXmax(0.05)
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(ndim+1, 1, ndim+1)
-		plt.Plot(o.Xvalues[1:s], o.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
+		plt.Plot(sol.Xvalues[1:s], sol.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)

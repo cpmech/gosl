@@ -69,9 +69,10 @@ func main() {
 		Y[i] = -lam * (math.Sin(X[i]) - lam*math.Cos(X[i]) + lam*math.Exp(lam*X[i])) / (lam*lam + 1.0)
 	}
 	e := sol.IdxSave
+	Y0 := sol.ExtractTimeSeries(0)
 	plt.Reset(false, nil)
 	plt.Plot(X, Y, &plt.A{C: "grey", Ls: "-", Lw: 10, L: "solution", NoClip: true})
-	plt.Plot(sol.Xvalues[:e], sol.Yvalues[0][:e], &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5", NoClip: true})
+	plt.Plot(sol.Xvalues[:e], Y0, &plt.A{C: "b", M: "o", Ls: "-", L: "Radau5", NoClip: true})
 	plt.Gll("$x$", "$y$", nil)
 	plt.Save("/tmp/gosl/ode", "eq11_distr")
 }
