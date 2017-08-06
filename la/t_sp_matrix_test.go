@@ -11,7 +11,7 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func TestSpTriplet01(tst *testing.T) {
+func TestTriplet01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("SpTriplet01")
@@ -43,6 +43,40 @@ func TestSpTriplet01(tst *testing.T) {
 	err = b.ReadSmat("/tmp/gosl/la/triplet01.smat")
 	status(tst, err)
 	chk.Deep2(tst, "b=a", 1e-17, a.GetDenseMatrix().GetDeep2(), b.GetDenseMatrix().GetDeep2())
+}
+
+func TestTriplet02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("SpTriplet02. (complex version)")
+
+	//   0    2+2i 0    0
+	//   1+1i 0    4+4i 0
+	//   0    0    0    5-5i
+	//   0    3-3i 0    6+6i
+	a := new(TripletC)
+	a.Init(4, 4, 6)
+	a.Put(1, 0, 1+1i)
+	a.Put(0, 1, 2+2i)
+	a.Put(3, 1, 3-3i)
+	a.Put(1, 2, 4+4i)
+	a.Put(2, 3, 5-5i)
+	a.Put(3, 3, 6+6i)
+
+	l := a.GetDenseMatrix().Print("%2g", "%+2g")
+	io.Pf("%v\n", l)
+	chk.String(tst, l, " 0+0i  2+2i  0+0i  0+0i\n 1+1i  0+0i  4+4i  0+0i\n 0+0i  0+0i  0+0i  5-5i\n 0+0i  3-3i  0+0i  6+6i")
+
+	a.WriteSmat("/tmp/gosl/la", "triplet02", 0)
+	d, err := io.ReadFile("/tmp/gosl/la/triplet02.smat")
+	status(tst, err)
+	io.Pforan("d = %v\n", string(d))
+	chk.String(tst, string(d), "4  4  6\n  1  0    1.000000000000000e+00  +1.000000000000000e+00\n  0  1    2.000000000000000e+00  +2.000000000000000e+00\n  3  1    3.000000000000000e+00  -3.000000000000000e+00\n  1  2    4.000000000000000e+00  +4.000000000000000e+00\n  2  3    5.000000000000000e+00  -5.000000000000000e+00\n  3  3    6.000000000000000e+00  +6.000000000000000e+00\n")
+
+	b := new(TripletC)
+	err = b.ReadSmat("/tmp/gosl/la/triplet02.smat")
+	status(tst, err)
+	chk.Deep2c(tst, "b=a", 1e-17, a.GetDenseMatrix().GetDeep2(), b.GetDenseMatrix().GetDeep2())
 }
 
 func TestSpMatrix01(tst *testing.T) {

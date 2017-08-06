@@ -125,25 +125,38 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) {
 	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
 }
 
-// ReadSmat reads ".smat" file back
+// ReadSmat reads ".smat" file
+//
+//    m n nnz
+//     i j x
+//      ...
+//     i j x
+//
 func (o *Triplet) ReadSmat(filename string) (err error) {
 	var e error
 	err = io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		r := strings.Fields(line)
-		if len(r) != 3 {
-			e = chk.Err("number of columns must be 3\n")
-			return true // stop
-		}
 		if idx == 0 {
+			if len(r) != 3 {
+				e = chk.Err("number of columns in header must be 3 (m,n,nnz)\n")
+				return true // stop
+			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 			o.Init(m, n, nnz)
 		} else {
+			if len(r) != 3 {
+				e = chk.Err("number of columns in data lines must be 4 (i,j,x)\n")
+				return true // stop
+			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
 			o.Put(i, j, x)
 		}
 		return
 	})
-	return
+	if err != nil {
+		return
+	}
+	return e
 }
 
 // ToDense converts a column-compressed matrix to dense form
@@ -235,8 +248,57 @@ func (o *TripletC) GetDenseMatrix() (a *MatrixC) {
 	return
 }
 
-// ToDense converts a column-compressed matrix (complex) to dense form
-func (a *CCMatrixC) ToDense() (res *MatrixC) {
+// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+//  tol -- tolerance to skip zero values
+func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64) {
+	var bfa, bfb bytes.Buffer
+	var nnz int
+	for k := 0; k < o.pos; k++ {
+		if math.Abs(real(o.x[k])) > tol || math.Abs(imag(o.x[k])) > tol {
+			io.Ff(&bfb, "  %d  %d  %23.15e %+23.15e\n", o.i[k], o.j[k], real(o.x[k]), imag(o.x[k]))
+			nnz++
+		}
+	}
+	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
+	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
+}
+
+// ReadSmat reads ".smat" file
+//
+//    m n nnz
+//     i j xReal xImag
+//          ...
+//     i j xReal xImag
+//
+func (o *TripletC) ReadSmat(filename string) (err error) {
+	var e error
+	err = io.ReadLines(filename, func(idx int, line string) (stop bool) {
+		r := strings.Fields(line)
+		if idx == 0 {
+			if len(r) != 3 {
+				e = chk.Err("number of columns in header must be 3 (m,n,nnz)\n")
+				return true // stop
+			}
+			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
+			o.Init(m, n, nnz)
+		} else {
+			if len(r) != 4 {
+				e = chk.Err("number of columns in data lines must be 4 (i,j,xReal,xImag)\n")
+				return true // stop
+			}
+			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), complex(io.Atof(r[2]), io.Atof(r[3]))
+			o.Put(i, j, x)
+		}
+		return
+	})
+	if err != nil {
+		return
+	}
+	return e
+}
+
+// GetDenseMatrix converts a column-compressed matrix (complex) to dense form
+func (a *CCMatrixC) GetDenseMatrix() (res *MatrixC) {
 	res = NewMatrixC(a.m, a.n)
 	for j := 0; j < a.n; j++ {
 		for p := a.p[j]; p < a.p[j+1]; p++ {

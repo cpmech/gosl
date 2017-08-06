@@ -97,11 +97,11 @@ func TestMatrix02(tst *testing.T) {
 	chk.Complex128(tst, "Get(2,2)", 1e-17, a.Get(2, 2), -1)
 	chk.Complex128(tst, "Get(2,3)", 1e-17, a.Get(2, 3), -2+1i)
 
-	Aback := a.GetDeep2c()
+	Aback := a.GetDeep2()
 	chk.Deep2c(tst, "a to A", 1e-15, Aback, A)
 
 	l := a.Print("%g", "")
-	chk.String(tst, l, "1+0.1i, 2+0i, 3+0i, 4-0.4i\n5+0.5i, 6+0i, 7+0i, 8-0.8i\n9+0.9i, 0+0i, -1+0i, -2+1i")
+	chk.String(tst, l, "1+0.1i 2+0i 3+0i 4-0.4i\n5+0.5i 6+0i 7+0i 8-0.8i\n9+0.9i 0+0i -1+0i -2+1i")
 
 	l = a.PrintGo("%2g", "%+4.1f")
 	lCorrect := "[][]complex128{\n    { 1+0.1i, 2+0.0i, 3+0.0i, 4-0.4i},\n    { 5+0.5i, 6+0.0i, 7+0.0i, 8-0.8i},\n    { 9+0.9i, 0+0.0i,-1+0.0i,-2+1.0i},\n}"
@@ -264,7 +264,7 @@ func TestMatrix04(tst *testing.T) {
 	a.Set(2, 2, 30)
 	a.Set(2, 3, 40)
 	a.Set(2, 4, 50)
-	chk.Deep2c(tst, "a", 1e-17, a.GetDeep2c(), [][]complex128{
+	chk.Deep2c(tst, "a", 1e-17, a.GetDeep2(), [][]complex128{
 		{1 + 1i, 2 + 2i, 3 + 3i, 4 + 4i, 5 + 5i},
 		{0.1, 0.2, 0.3, 0.4, 0.5},
 		{10, 20, 30, 40, 50},
@@ -277,7 +277,7 @@ func TestMatrix04(tst *testing.T) {
 	// Fill
 	b := NewMatrixC(5, 3)
 	b.Fill(2 - 1i)
-	chk.Deep2c(tst, "b", 1e-17, b.GetDeep2c(), [][]complex128{
+	chk.Deep2c(tst, "b", 1e-17, b.GetDeep2(), [][]complex128{
 		{2 - 1i, 2 - 1i, 2 - 1i},
 		{2 - 1i, 2 - 1i, 2 - 1i},
 		{2 - 1i, 2 - 1i, 2 - 1i},
@@ -289,7 +289,7 @@ func TestMatrix04(tst *testing.T) {
 	c := NewMatrixC(5, 3)
 	c.Fill(2 + 2i)
 	c.Apply(1.0/4.0, c)
-	chk.Deep2c(tst, "c := c/4", 1e-17, c.GetDeep2c(), [][]complex128{
+	chk.Deep2c(tst, "c := c/4", 1e-17, c.GetDeep2(), [][]complex128{
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},

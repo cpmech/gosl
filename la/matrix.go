@@ -346,8 +346,8 @@ func (o *MatrixC) Get(i, j int) complex128 {
 	return o.Data[i+j*o.M] // col-major
 }
 
-// GetDeep2c returns nested slice representation
-func (o *MatrixC) GetDeep2c() (M [][]complex128) {
+// GetDeep2 returns nested slice representation
+func (o *MatrixC) GetDeep2() (M [][]complex128) {
 	M = make([][]complex128, o.M)
 	for i := 0; i < o.M; i++ {
 		M[i] = make([]complex128, o.N)
@@ -405,7 +405,7 @@ func (o *MatrixC) Print(nfmtR, nfmtI string) (l string) {
 		}
 		for j := 0; j < o.N; j++ {
 			if j > 0 {
-				l += ", "
+				l += " "
 			}
 			l += io.Sf(nfmtR, real(o.Get(i, j))) + io.Sf(nfmtI, imag(o.Get(i, j))) + "i"
 		}
