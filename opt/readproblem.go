@@ -7,6 +7,7 @@ package opt
 import (
 	"strings"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
@@ -47,7 +48,7 @@ func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64) {
 
 	// read data
 	k := 0
-	io.ReadLines(fn, func(idx int, line string) (stop bool) {
+	err := io.ReadLines(fn, func(idx int, line string) (stop bool) {
 		if idx == 0 { // skip name
 			return
 		}
@@ -141,6 +142,9 @@ func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64) {
 		}
 		return
 	})
+	if err != nil {
+		chk.Panic("ERROR: %v\n", err)
+	}
 
 	// debug
 	if false {
