@@ -7,6 +7,7 @@ package la
 import (
 	"bytes"
 	"math"
+	"math/cmplx"
 	"strings"
 
 	"github.com/cpmech/gosl/chk"
@@ -295,6 +296,24 @@ func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64) {
 		for p := o.p[j]; p < o.p[j+1]; p++ {
 			if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
 				io.Ff(&bfb, "  %d  %d  %23.15e %+23.15e\n", o.i[p], j, real(o.x[p]), imag(o.x[p]))
+				nnz++
+			}
+		}
+	}
+	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
+	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
+}
+
+// WriteSmatAbs writes a ".smat" file that can be visualised with vismatrix (abs(complex) version)
+// NOTE: this method must belong to CCMatrixC because duplicates must be added before saving file
+//  tol -- tolerance to skip zero values
+func (o *CCMatrixC) WriteSmatAbs(dirout, fnkey string, tol float64) {
+	var bfa, bfb bytes.Buffer
+	var nnz int
+	for j := 0; j < o.n; j++ {
+		for p := o.p[j]; p < o.p[j+1]; p++ {
+			if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
+				io.Ff(&bfb, "  %d  %d  %23.15e\n", o.i[p], j, cmplx.Abs(o.x[p]))
 				nnz++
 			}
 		}

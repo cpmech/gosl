@@ -5,6 +5,7 @@
 package la
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -67,7 +68,8 @@ func TestTriplet02(tst *testing.T) {
 	io.Pf("%v\n", l)
 	chk.String(tst, l, " 0+0i  2+2i  0+0i  0+0i\n 1+1i  0+0i  4+4i  0+0i\n 0+0i  0+0i  0+0i  5-5i\n 0+0i  3-3i  0+0i  6+6i")
 
-	a.ToMatrix(nil).WriteSmat("/tmp/gosl/la", "triplet02", 0)
+	am := a.ToMatrix(nil)
+	am.WriteSmat("/tmp/gosl/la", "triplet02", 0)
 	d, err := io.ReadFile("/tmp/gosl/la/triplet02.smat")
 	status(tst, err)
 	io.Pforan("d = %v\n", string(d))
@@ -77,6 +79,17 @@ func TestTriplet02(tst *testing.T) {
 	err = b.ReadSmat("/tmp/gosl/la/triplet02.smat")
 	status(tst, err)
 	chk.Deep2c(tst, "b=a", 1e-17, a.GetDenseMatrix().GetDeep2(), b.GetDenseMatrix().GetDeep2())
+
+	am.WriteSmatAbs("/tmp/gosl/la", "triplet02b", 0)
+	c := new(Triplet)
+	err = c.ReadSmat("/tmp/gosl/la/triplet02b.smat")
+	status(tst, err)
+	chk.Deep2(tst, "b=a", 1e-14, c.GetDenseMatrix().GetDeep2(), [][]float64{
+		{0, math.Sqrt(8), 0, 0},
+		{math.Sqrt2, 0, math.Sqrt(32), 0},
+		{0, 0, 0, math.Sqrt(50)},
+		{0, math.Sqrt(18), 0, math.Sqrt(72)},
+	})
 }
 
 func TestSpMatrix01(tst *testing.T) {
