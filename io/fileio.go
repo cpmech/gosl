@@ -149,10 +149,10 @@ func ReadFile(fn string) (b []byte, err error) {
 type ReadLinesCallback func(idx int, line string) (stop bool)
 
 // ReadLines reads lines from a file and calls ReadLinesCallback to process each line being read
-func ReadLines(fn string, cb ReadLinesCallback) {
+func ReadLines(fn string, cb ReadLinesCallback) (err error) {
 	fil, err := os.Open(os.ExpandEnv(fn))
 	if err != nil {
-		chk.Panic("could not open file <%s>", fn)
+		return
 	}
 	defer fil.Close()
 	r := bufio.NewReader(fil)
@@ -160,13 +160,15 @@ func ReadLines(fn string, cb ReadLinesCallback) {
 	for {
 		lin, prefix, errl := r.ReadLine()
 		if prefix {
-			chk.Panic("cannot read long line. file = <%s>", fn)
+			err = chk.Err("cannot read long line. file = <%s>", fn)
+			return
 		}
 		if errl == io.EOF {
 			break
 		}
 		if errl != nil {
-			chk.Panic("cannot read line. file = <%s>", fn)
+			err = chk.Err("cannot read line. file = <%s>", fn)
+			return
 		}
 		stop := cb(idx, string(lin))
 		if stop {
@@ -174,6 +176,7 @@ func ReadLines(fn string, cb ReadLinesCallback) {
 		}
 		idx++
 	}
+	return
 }
 
 // ReadLinesFile reads lines from a file and calls ReadLinesCallback to process each line being read

@@ -4,7 +4,11 @@
 
 package io
 
-import "github.com/cpmech/gosl/chk"
+import (
+	"testing"
+
+	"github.com/cpmech/gosl/chk"
+)
 
 func init() {
 	Verbose = false
@@ -13,4 +17,10 @@ func init() {
 func verbose() {
 	Verbose = true
 	chk.Verbose = true
+}
+
+func status(tst *testing.T, err error) {
+	if err != nil {
+		tst.Errorf("%v\n", err)
+	}
 }
