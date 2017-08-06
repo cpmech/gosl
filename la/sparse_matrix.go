@@ -7,6 +7,7 @@ package la
 import (
 	"bytes"
 	"math"
+	"strings"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -122,6 +123,27 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) {
 	}
 	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
 	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
+}
+
+// ReadSmat reads ".smat" file back
+func (o *Triplet) ReadSmat(filename string) (err error) {
+	var e error
+	io.ReadLines(filename, func(idx int, line string) (stop bool) {
+		r := strings.Fields(line)
+		if len(r) != 3 {
+			e = chk.Err("number of columns must be 3\n")
+			return true // stop
+		}
+		if idx == 0 {
+			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
+			o.Init(m, n, nnz)
+		} else {
+			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
+			o.Put(i, j, x)
+		}
+		return
+	})
+	return
 }
 
 // ToDense converts a column-compressed matrix to dense form

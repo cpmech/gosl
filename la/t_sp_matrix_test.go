@@ -38,6 +38,11 @@ func TestSpTriplet01(tst *testing.T) {
 	status(tst, err)
 	io.Pforan("d = %v\n", string(d))
 	chk.String(tst, string(d), "4  4  6\n  1  0    1.000000000000000e+00\n  0  1    2.000000000000000e+00\n  3  1    3.000000000000000e+00\n  1  2    4.000000000000000e+00\n  2  3    5.000000000000000e+00\n  3  3    6.000000000000000e+00\n")
+
+	b := new(Triplet)
+	err = b.ReadSmat("/tmp/gosl/la/triplet01.smat")
+	status(tst, err)
+	chk.Deep2(tst, "b=a", 1e-17, a.GetDenseMatrix().GetDeep2(), b.GetDenseMatrix().GetDeep2())
 }
 
 func TestSpMatrix01(tst *testing.T) {
