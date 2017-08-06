@@ -33,7 +33,7 @@ func TestTriplet01(tst *testing.T) {
 	io.Pf("%v\n", l)
 	chk.String(tst, l, " 0 2 0 0\n 1 0 4 0\n 0 0 0 5\n 0 3 0 6")
 
-	a.WriteSmat("/tmp/gosl/la", "triplet01", 0)
+	a.ToMatrix(nil).WriteSmat("/tmp/gosl/la", "triplet01", 0)
 	d, err := io.ReadFile("/tmp/gosl/la/triplet01.smat")
 	status(tst, err)
 	io.Pforan("d = %v\n", string(d))
@@ -67,7 +67,7 @@ func TestTriplet02(tst *testing.T) {
 	io.Pf("%v\n", l)
 	chk.String(tst, l, " 0+0i  2+2i  0+0i  0+0i\n 1+1i  0+0i  4+4i  0+0i\n 0+0i  0+0i  0+0i  5-5i\n 0+0i  3-3i  0+0i  6+6i")
 
-	a.WriteSmat("/tmp/gosl/la", "triplet02", 0)
+	a.ToMatrix(nil).WriteSmat("/tmp/gosl/la", "triplet02", 0)
 	d, err := io.ReadFile("/tmp/gosl/la/triplet02.smat")
 	status(tst, err)
 	io.Pforan("d = %v\n", string(d))

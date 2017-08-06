@@ -110,21 +110,6 @@ func (o *Triplet) GetDenseMatrix() (a *Matrix) {
 	return
 }
 
-// WriteSmat writes a ".smat" file that can be visualised with vismatrix
-//  tol -- tolerance to skip zero values
-func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) {
-	var bfa, bfb bytes.Buffer
-	var nnz int
-	for k := 0; k < o.pos; k++ {
-		if math.Abs(o.x[k]) > tol {
-			io.Ff(&bfb, "  %d  %d  %23.15e\n", o.i[k], o.j[k], o.x[k])
-			nnz++
-		}
-	}
-	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
-	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
-}
-
 // ReadSmat reads ".smat" file
 //
 //    m n nnz
@@ -157,6 +142,24 @@ func (o *Triplet) ReadSmat(filename string) (err error) {
 		return
 	}
 	return e
+}
+
+// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+// NOTE: this method must belong to CCMatrixC because duplicates must be added before saving file
+//  tol -- tolerance to skip zero values
+func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64) {
+	var bfa, bfb bytes.Buffer
+	var nnz int
+	for j := 0; j < o.n; j++ {
+		for p := o.p[j]; p < o.p[j+1]; p++ {
+			if math.Abs(o.x[p]) > tol {
+				io.Ff(&bfb, "  %d  %d  %23.15e\n", o.i[p], j, o.x[p])
+				nnz++
+			}
+		}
+	}
+	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
+	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
 }
 
 // ToDense converts a column-compressed matrix to dense form
@@ -248,21 +251,6 @@ func (o *TripletC) GetDenseMatrix() (a *MatrixC) {
 	return
 }
 
-// WriteSmat writes a ".smat" file that can be visualised with vismatrix
-//  tol -- tolerance to skip zero values
-func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64) {
-	var bfa, bfb bytes.Buffer
-	var nnz int
-	for k := 0; k < o.pos; k++ {
-		if math.Abs(real(o.x[k])) > tol || math.Abs(imag(o.x[k])) > tol {
-			io.Ff(&bfb, "  %d  %d  %23.15e %+23.15e\n", o.i[k], o.j[k], real(o.x[k]), imag(o.x[k]))
-			nnz++
-		}
-	}
-	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
-	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
-}
-
 // ReadSmat reads ".smat" file
 //
 //    m n nnz
@@ -297,12 +285,30 @@ func (o *TripletC) ReadSmat(filename string) (err error) {
 	return e
 }
 
+// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+// NOTE: this method must belong to CCMatrixC because duplicates must be added before saving file
+//  tol -- tolerance to skip zero values
+func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64) {
+	var bfa, bfb bytes.Buffer
+	var nnz int
+	for j := 0; j < o.n; j++ {
+		for p := o.p[j]; p < o.p[j+1]; p++ {
+			if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
+				io.Ff(&bfb, "  %d  %d  %23.15e %+23.15e\n", o.i[p], j, real(o.x[p]), imag(o.x[p]))
+				nnz++
+			}
+		}
+	}
+	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
+	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
+}
+
 // GetDenseMatrix converts a column-compressed matrix (complex) to dense form
-func (a *CCMatrixC) GetDenseMatrix() (res *MatrixC) {
-	res = NewMatrixC(a.m, a.n)
-	for j := 0; j < a.n; j++ {
-		for p := a.p[j]; p < a.p[j+1]; p++ {
-			res.Set(a.i[p], j, a.x[p])
+func (o *CCMatrixC) GetDenseMatrix() (res *MatrixC) {
+	res = NewMatrixC(o.m, o.n)
+	for j := 0; j < o.n; j++ {
+		for p := o.p[j]; p < o.p[j+1]; p++ {
+			res.Set(o.i[p], j, o.x[p])
 		}
 	}
 	return
