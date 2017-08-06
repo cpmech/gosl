@@ -8,7 +8,37 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
+
+func TestSpTriplet01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("SpTriplet01")
+
+	//   0 2 0 0
+	//   1 0 4 0
+	//   0 0 0 5
+	//   0 3 0 6
+	a := new(Triplet)
+	a.Init(4, 4, 6)
+	a.Put(1, 0, 1)
+	a.Put(0, 1, 2)
+	a.Put(3, 1, 3)
+	a.Put(1, 2, 4)
+	a.Put(2, 3, 5)
+	a.Put(3, 3, 6)
+
+	l := a.GetDenseMatrix().Print("%2g")
+	io.Pf("%v\n", l)
+	chk.String(tst, l, " 0 2 0 0\n 1 0 4 0\n 0 0 0 5\n 0 3 0 6")
+
+	a.WriteSmat("/tmp/gosl/la", "triplet01", 0)
+	d, err := io.ReadFile("/tmp/gosl/la/triplet01.smat")
+	status(tst, err)
+	io.Pforan("d = %v\n", string(d))
+	chk.String(tst, string(d), "4  4  6\n  1  0    1.000000000000000e+00\n  0  1    2.000000000000000e+00\n  3  1    3.000000000000000e+00\n  1  2    4.000000000000000e+00\n  2  3    5.000000000000000e+00\n  3  3    6.000000000000000e+00\n")
+}
 
 func TestSpMatrix01(tst *testing.T) {
 

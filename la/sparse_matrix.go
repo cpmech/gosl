@@ -4,7 +4,13 @@
 
 package la
 
-import "github.com/cpmech/gosl/chk"
+import (
+	"bytes"
+	"math"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+)
 
 // Triplet is a simple representation of a sparse matrix, where the indices and values
 // of this matrix are stored directly.
@@ -101,6 +107,21 @@ func (o *Triplet) GetDenseMatrix() (a *Matrix) {
 		a.Add(o.i[k], o.j[k], o.x[k])
 	}
 	return
+}
+
+// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+//  tol -- tolerance to skip zero values
+func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) {
+	var bfa, bfb bytes.Buffer
+	var nnz int
+	for k := 0; k < o.pos; k++ {
+		if math.Abs(o.x[k]) > tol {
+			io.Ff(&bfb, "  %d  %d  %23.15e\n", o.i[k], o.j[k], o.x[k])
+			nnz++
+		}
+	}
+	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
+	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
 }
 
 // ToDense converts a column-compressed matrix to dense form
