@@ -14,6 +14,9 @@ import (
 )
 
 // NlSolver implements a solver to nonlinear systems of equations
+//   References:
+//    [1] G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
+//        computations. M., Mir, 1980, p.180 of the Russian edition
 type NlSolver struct {
 
 	// constants
