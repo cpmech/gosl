@@ -81,20 +81,3 @@ See: <a href="t_jacobi_test.go">t_jacobi_test.go</a>
 ### Cholesky decomposition
 
 See: <a href="t_densesol_test.go">t_densesol_test.go</a>
-
-
-### Linear Solver with real numbers
-
-See: <a href="t_linsol_test.go">t_linsol_test.go</a>
-
-
-
-### Linear Solver with complex numbers
-
-See: <a href="t_linsol_test.go">t_linsol_test.go</a>
-
-
-
-### Parallel solver with distributed right-hand-side
-
-See: <a href="t_mumpssol01b_main.go">t_mumpssol01b_main.go</a>
