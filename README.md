@@ -48,7 +48,7 @@ Gosl includes the following _subpackages_:
 21. [rnd/dsfmt](https://github.com/cpmech/gosl/tree/master/rnd/dsfmt) &ndash; Go wrapper to dSIMD-oriented Fast Mersenne Twister
 22. [rnd/sfmt](https://github.com/cpmech/gosl/tree/master/rnd/sfmt)   &ndash; Go wrapper to SIMD-oriented Fast Mersenne Twister
 23. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)             &ndash; 3D Visualisation with the VTK tool kit
-24. [ode](https://github.com/cpmech/gosl/tree/master/ode)             &ndash; ODE solvers such as Runge-Kutta
+24. [ode](https://github.com/cpmech/gosl/tree/master/ode)             &ndash; Solvers for ordinary differential equations
 
 
 
