@@ -10,6 +10,10 @@ import (
 )
 
 // P holds material parameter names and values
+//
+// The connected variables to V data holds pointers to other scalars that need to be updated when
+// the paramter is changed. For instance, when running simulations with variable parameters.
+//
 type P struct {
 
 	// input
