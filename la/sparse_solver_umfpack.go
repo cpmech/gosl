@@ -33,6 +33,11 @@ type Umfpack struct {
 	usymb unsafe.Pointer
 	unum  unsafe.Pointer
 
+	// data
+	apData []int
+	aiData []int
+	axData []float64
+
 	// pointers
 	t  *Triplet
 	ti *C.LONG
@@ -45,6 +50,8 @@ type Umfpack struct {
 	// derived
 	initialised bool
 	factorised  bool
+	symbFact    bool
+	numeFact    bool
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
@@ -56,18 +63,18 @@ func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling st
 	}
 
 	// allocate data
-	apData := make([]int, t.n+1)
-	aiData := make([]int, t.pos)
-	axData := make([]float64, t.pos)
+	o.apData = make([]int, t.n+1)
+	o.aiData = make([]int, t.pos)
+	o.axData = make([]float64, t.pos)
 
 	// pointers
 	o.t = t
 	o.ti = (*C.LONG)(unsafe.Pointer(&t.i[0]))
 	o.tj = (*C.LONG)(unsafe.Pointer(&t.j[0]))
 	o.tx = (*C.double)(unsafe.Pointer(&t.x[0]))
-	o.ap = (*C.LONG)(unsafe.Pointer(&apData[0]))
-	o.ai = (*C.LONG)(unsafe.Pointer(&aiData[0]))
-	o.ax = (*C.double)(unsafe.Pointer(&axData[0]))
+	o.ap = (*C.LONG)(unsafe.Pointer(&o.apData[0]))
+	o.ai = (*C.LONG)(unsafe.Pointer(&o.aiData[0]))
+	o.ax = (*C.double)(unsafe.Pointer(&o.axData[0]))
 
 	// info and control
 	o.info = make([]float64, C.UMFPACK_INFO)
@@ -91,9 +98,13 @@ func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling st
 
 // Free clears extra memory allocated by UMFPACK
 func (o *Umfpack) Free() {
-	if o.initialised {
+	if o.symbFact {
 		C.umfpack_dl_free_symbolic(&o.usymb)
+		o.symbFact = false
+	}
+	if o.numeFact {
 		C.umfpack_dl_free_numeric(&o.unum)
+		o.numeFact = false
 	}
 }
 
@@ -104,11 +115,7 @@ func (o *Umfpack) Fact() (err error) {
 	if !o.initialised {
 		return chk.Err("linear solver must be initialised first\n")
 	}
-
-	// clear memory
-	if o.factorised {
-		o.Free()
-	}
+	o.factorised = false
 
 	// convert triplet to column-compressed format
 	code := C.umfpack_dl_triplet_to_col(C.LONG(o.t.m), C.LONG(o.t.n), C.LONG(o.t.pos), o.ti, o.tj, o.tx, o.ap, o.ai, o.ax, nil)
@@ -117,16 +124,26 @@ func (o *Umfpack) Fact() (err error) {
 	}
 
 	// symbolic factorisation
+	if o.symbFact {
+		C.umfpack_dl_free_symbolic(&o.usymb)
+		o.symbFact = false
+	}
 	code = C.umfpack_dl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
 		return chk.Err("symbolic factorised failed (UMFPACK error: %s)\n", umfErr(code))
 	}
+	o.symbFact = true
 
 	// numeric factorisation
+	if o.numeFact {
+		C.umfpack_dl_free_numeric(&o.unum)
+		o.numeFact = false
+	}
 	code = C.umfpack_dl_numeric(o.ap, o.ai, o.ax, o.usymb, &o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
 		return chk.Err("numeric factorisation failed (UMFPACK error: %s)\n", umfErr(code))
 	}
+	o.numeFact = true
 
 	// success
 	o.factorised = true
@@ -169,6 +186,11 @@ type UmfpackC struct {
 	usymb unsafe.Pointer
 	unum  unsafe.Pointer
 
+	// data
+	apData []int
+	aiData []int
+	axData []float64
+
 	// pointers
 	t  *TripletC
 	ti *C.LONG
@@ -181,6 +203,8 @@ type UmfpackC struct {
 	// derived
 	initialised bool
 	factorised  bool
+	symbFact    bool
+	numeFact    bool
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
@@ -192,18 +216,18 @@ func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling 
 	}
 
 	// allocate data
-	apData := make([]int, t.n+1)
-	aiData := make([]int, t.pos)
-	axData := make([]float64, t.pos)
+	o.apData = make([]int, t.n+1)
+	o.aiData = make([]int, t.pos)
+	o.axData = make([]float64, t.pos)
 
 	// pointers
 	o.t = t
 	o.ti = (*C.LONG)(unsafe.Pointer(&t.i[0]))
 	o.tj = (*C.LONG)(unsafe.Pointer(&t.j[0]))
 	o.tx = (*C.double)(unsafe.Pointer(&t.x[0]))
-	o.ap = (*C.LONG)(unsafe.Pointer(&apData[0]))
-	o.ai = (*C.LONG)(unsafe.Pointer(&aiData[0]))
-	o.ax = (*C.double)(unsafe.Pointer(&axData[0]))
+	o.ap = (*C.LONG)(unsafe.Pointer(&o.apData[0]))
+	o.ai = (*C.LONG)(unsafe.Pointer(&o.aiData[0]))
+	o.ax = (*C.double)(unsafe.Pointer(&o.axData[0]))
 
 	// info and control
 	o.info = make([]float64, C.UMFPACK_INFO)
@@ -227,9 +251,13 @@ func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling 
 
 // Free clears extra memory allocated by UMFPACK
 func (o *UmfpackC) Free() {
-	if o.initialised {
+	if o.symbFact {
 		C.umfpack_zl_free_symbolic(&o.usymb)
+		o.symbFact = false
+	}
+	if o.numeFact {
 		C.umfpack_zl_free_numeric(&o.unum)
+		o.numeFact = false
 	}
 }
 
@@ -240,11 +268,7 @@ func (o *UmfpackC) Fact() (err error) {
 	if !o.initialised {
 		return chk.Err("linear solver must be initialised first\n")
 	}
-
-	// clear memory
-	if o.factorised {
-		o.Free()
-	}
+	o.factorised = false
 
 	// convert triplet to column-compressed format
 	code := C.umfpack_zl_triplet_to_col(C.LONG(o.t.m), C.LONG(o.t.n), C.LONG(o.t.pos), o.ti, o.tj, o.tx, nil, o.ap, o.ai, o.ax, nil, nil)
@@ -253,16 +277,26 @@ func (o *UmfpackC) Fact() (err error) {
 	}
 
 	// symbolic factorisation
+	if o.symbFact {
+		C.umfpack_zl_free_symbolic(&o.usymb)
+		o.symbFact = false
+	}
 	code = C.umfpack_zl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, nil, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
 		return chk.Err("symbolic factorised failed (UMFPACK error: %s)\n", umfErr(code))
 	}
+	o.symbFact = true
 
 	// numeric factorisation
+	if o.numeFact {
+		C.umfpack_zl_free_numeric(&o.unum)
+		o.numeFact = false
+	}
 	code = C.umfpack_zl_numeric(o.ap, o.ai, o.ax, nil, o.usymb, &o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
 		return chk.Err("numeric factorisation failed (UMFPACK error: %s)\n", umfErr(code))
 	}
+	o.numeFact = true
 
 	// success
 	o.factorised = true
