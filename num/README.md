@@ -4,27 +4,18 @@
 
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/num).**
 
-This package implements basic numerical methods such as for root finding, numerical quadrature,
+This package implements essential numerical methods such as for root finding, numerical quadrature,
 numerical differentiation, and solution of simple nonlinear problems.
 
-
-
-## Root finding
-
-The problem of finding the _roots_ of any function **y(x)** is solved when the *x* values that lead
-to **y(x) = 0** are found.
-
-At the moment, two methods are available in the `num` package to solve these types of problems. The
-first one is the Newton's method and the second one is the Brent's method; see e.g. [1]. The key
-difference between these two methods is that the first requires the derivatives of **y** with
-respect to **x**, the Jacobian.
-
-The Newton's method is implemented by the `NlSolver` structure whereas Brent's method is in `Brent`.
-Nonetheless, on Newton's method can solve nonlinear system of equations.
+While the supackage [num/qpck](https://github.com/cpmech/gosl/tree/master/num/qpck) provides
+advanced quadrature schemes (by wrapping [Quadpack](http://www.netlib.org/quadpack/)), this package
+implements few (simpler) methods to compute numerical integrals. Here, there are two kinds of
+algorithms: (1) basic methods for discrete data; and (2) using refinment for integrating general
+functions.
 
 
 
-### Examples
+## Example: Using Brent's method:
 
 Find the root of
 ```
@@ -33,34 +24,7 @@ Find the root of
 within [0, 0.11]. We have to make sure that the root is bounded otherwise Brent's method doesn't
 work.
 
-
-### Using Brent's method:
-
-```go
-// y(x) function
-yx := func(x float64) (res float64, err error) {
-    res = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
-    return
-}
-
-// range: be sure to enclose root
-xa, xb := 0.0, 0.11
-
-// initialise solver
-var o num.Brent
-o.Init(yx)
-
-// solve
-xo, err := o.Solve(xa, xb, false)
-
-// output
-yo, _ := yx(xo)
-io.Pf("\n")
-io.Pf("x      = %v\n", xo)
-io.Pf("f(x)   = %v\n", yo)
-io.Pf("nfeval = %v\n", o.NFeval)
-io.Pf("niter. = %v\n", o.It)
-```
+Source: <a href="../examples/num_brent01.go">../examples/num_brent01.go</a>
 
 Output of Brent's solution:
 ```
@@ -86,49 +50,11 @@ Simple root finding problem solved by Brent's method.
 </div>
 
 
-### Using Newton's method:
+## Example:  Using Newton's method:
 
-```go
-// Function: y(x) = fx[0] with x = xvec[0]
-fcn := func(fx, xvec []float64) (err error) {
-    x := xvec[0]
-    fx[0] = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
-    return
-}
+Same problem as before.
 
-// Jacobian: dfdx(x) function
-Jfcn := func(dfdx [][]float64, x []float64) (err error) {
-    dfdx[0][0] = 3.0*x[0]*x[0] - 2.0*0.165*x[0]
-    return
-}
-
-// trial solution
-xguess := 0.03
-
-// initialise solver
-neq := 1      // number of equations
-useDn := true // use dense Jacobian
-numJ := false // numerical Jacobian
-var o num.NlSolver
-o.Init(neq, fcn, nil, Jfcn, useDn, numJ, nil)
-
-// solve
-x := []float64{xguess}
-err := o.Solve(x, false)
-if err != nil {
-    chk.Panic("NlSolver filed: %v\n", err)
-}
-
-// Output
-fx := []float64{123}
-fcn(fx, x)
-xo, yo := x[0], fx[0]
-io.Pf("\n")
-io.Pf("x      = %v\n", xo)
-io.Pf("f(x)   = %v\n", yo)
-io.Pf("nfeval = %v\n", o.NFeval)
-io.Pf("niter. = %v\n", o.It)
-```
+Source: <a href="../examples/num_newton01.go">../examples/num_newton01.go</a>
 
 Output of NlSolver:
 ```
@@ -153,24 +79,17 @@ Simple root finding problem solved by Newton's method.
 
 
 
-## Numerical quadrature
-
-`num` package implements a number of methods to compute numerical integrals; i.e. quadrature.
-
-There are two kinds of algorithms: (1) basic methods for discrete data; and (2) using refinment for
-integrating general functions.
-
-### Examples. Basic methods for discrete data
+## Example: Quadrature with discrete data
 
 Source code: <a href="t_quadDisc_test.go">t_quadDisc_test.go</a>
 
-### Examples. Methods with refinement
+## Example: Quadrature with methods using refinement
 
 Source code: <a href="t_quadElem_test.go">t_quadElem_test.go</a>
 
 
 
-## Numerical differentiation
+## Example: numerical differentiation
 
 Check first and second derivative of `y(x) = sin(x)`
 
@@ -178,9 +97,7 @@ See source code: <a href="../examples/num_deriv01.go">num_deriv01.go</a>
 
 
 
-## Nonlinear problems
-
-### Examples
+## Examples: nonlinear problems
 
 Source code: <a href="t_nlsolver_test.go">t_nlsolver_test.go</a>
 
@@ -190,45 +107,8 @@ f0(x0,x1) = 2.0*x0 - x1 - exp(-x0)
 f1(x0,x1) = -x0 + 2.0*x1 - exp(-x1)
 ```
 
+
 ### Using analytical (sparse) Jacobian matrix
-
-```go
-ffcn := func(fx, x []float64) error {
-    fx[0] = 2.0*x[0] - x[1] - math.Exp(-x[0])
-    fx[1] = -x[0] + 2.0*x[1] - math.Exp(-x[1])
-    return nil
-}
-
-Jfcn := func(dfdx *la.Triplet, x []float64) error {
-    dfdx.Start()
-    dfdx.Put(0, 0, 2.0+math.Exp(-x[0]))
-    dfdx.Put(0, 1, -1.0)
-    dfdx.Put(1, 0, -1.0)
-    dfdx.Put(1, 1, 2.0+math.Exp(-x[1]))
-    return nil
-}
-
-x := []float64{5.0, 5.0}
-atol, rtol, ftol := 1e-10, 1e-10, 10*EPS
-fx := make([]float64, len(x))
-neq := len(x)
-
-prms := map[string]float64{
-    "atol":    atol,
-    "rtol":    rtol,
-    "ftol":    ftol,
-    "lSearch": 1.0,
-}
-
-var o num.NlSolver
-o.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-defer o.Free()
-
-err := o.Solve(x, false)
-if err != nil {
-    chk.Panic(err.Error())
-}
-```
 
 Output:
 ```
@@ -248,11 +128,6 @@ f(x) = [-1.1102230246251565e-16 -1.1102230246251565e-16]
 
 
 ### Using numerical Jacobian matrix
-
-Just change the call to Init
-```go
-o.Init(neq, ffcn, nil, nil, false, true, prms)
-```
 
 Output:
 ```
@@ -283,9 +158,3 @@ JfcnD := func(dfdx [][]float64, x []float64) error {
     return nil
 }
 ```
-
-
-## References
-
-[1] G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
-    computations. M., Mir, 1980, p.180 of the Russian edition
