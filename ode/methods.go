@@ -28,61 +28,24 @@ var (
 	Radau5kind = io.NewEnum("Radau5", "ode", "R", "Radau5 (implicit)")
 )
 
-// RKmethod defines the required functions of Runge-Kutta method
-type RKmethod interface {
-	Init(distr bool) (err error)                                        // initialise
-	Nstages() int                                                       // number of stages
-	Accept(o *Solver, y la.Vector)                                      // accept update
-	Step(o *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) // step update
+// rkmethod defines the required functions of Runge-Kutta method
+type rkmethod interface {
+	Info() (fixedOnly, implicit bool, nstages int)                                        // information
+	Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error)           // initialise
+	Accept(y la.Vector, work *rkwork)                                                     // accept update
+	Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) // step update
 }
 
-// rkmMaker defines a function that makes RKmethods
-type rkmMaker func() RKmethod
+// rkmMaker defines a function that makes rkmethods
+type rkmMaker func() rkmethod
 
-// rkmDB implements a database of RKmethod makers
+// rkmDB implements a database of rkmethod makers
 var rkmDB = make(map[io.Enum]rkmMaker)
 
-// NewRKmethod finds a RKmethod in database or panic
-func NewRKmethod(kind io.Enum) RKmethod {
+// newRKmethod finds a rkmethod in database or panic
+func newRKmethod(kind io.Enum) (rkmethod, error) {
 	if maker, ok := rkmDB[kind]; ok {
-		return maker()
+		return maker(), nil
 	}
-	chk.Panic("cannot find RKmethod named %q in database", kind)
-	return nil
+	return nil, chk.Err("cannot find rkmethod named %q in database", kind)
 }
-
-/*
-func getMethod(kind io.Enum, distr bool) (name string, step stpfcn, accept acptfcn, nstg int, erkdat expRKdat) {
-	switch kind {
-	case FwEuler:
-		step = fweulerStep
-		accept = fweulerAccept
-		nstg = 1
-	case BwEuler:
-		step = bweulerStep
-		accept = bweulerAccept
-		nstg = 1
-	case MoEuler:
-		step = erkStep
-		accept = erkAccept
-		nstg = 2
-		erkdat = expRKdat{true, ME2_a, ME2_b, ME2_be, ME2_c}
-	case DoPri5:
-		step = erkStep
-		accept = erkAccept
-		nstg = 7
-		erkdat = expRKdat{true, DP5_a, DP5_b, DP5_be, DP5_c}
-	case Radau5:
-		if distr {
-			step = radau5_step_mpi
-		} else {
-			step = radau5_step
-		}
-		accept = radau5_accept
-		nstg = 3
-	default:
-		chk.Panic("method %s is not available", kind)
-	}
-	return
-}
-*/

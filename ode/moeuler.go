@@ -9,12 +9,20 @@ import "github.com/cpmech/gosl/la"
 // MoEuler implements the (explicit) Modified Euler method
 // Modified-Euler 2(1), order=2, error_est_order=2, nstages=2
 type MoEuler struct {
+	fcn Func
 	dat *erkdata
 }
 
+// Info returns information about this method
+func (o *MoEuler) Info() (fixedOnly, implicit bool, nstages int) {
+	return false, false, 2
+}
+
 // Init initialises structure
-func (o *MoEuler) Init(distr bool) (err error) {
+func (o *MoEuler) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error) {
+	o.fcn = fcn
 	o.dat = &erkdata{
+		Fprev: true,
 		A: [][]float64{
 			{0.0, 0.0},
 			{1.0, 0.0},
@@ -22,27 +30,23 @@ func (o *MoEuler) Init(distr bool) (err error) {
 		B:  []float64{1.0, 0.0},
 		Be: []float64{0.5, 0.5},
 		C:  []float64{0.0, 1.0},
+		w:  la.NewVector(ndim),
 	}
 	return nil
 }
 
-// Nstages returns the number of stages
-func (o *MoEuler) Nstages() int {
-	return 2
-}
-
 // Accept accepts update
-func (o *MoEuler) Accept(sol *Solver, y la.Vector) {
-	y.Apply(1, sol.w[0]) // y := w (update y)
+func (o *MoEuler) Accept(y la.Vector, work *rkwork) {
+	y.Apply(1, o.dat.w)
 }
 
 // Step steps update
-func (o *MoEuler) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
-	return erkstep(o.dat, 2, true, sol, y0, x0)
+func (o *MoEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
+	return o.dat.step(h, x0, y0, stat, work, o.fcn)
 }
 
 // add method to database //////////////////////////////////////////////////////////////////////////
 
 func init() {
-	rkmDB[MoEulerKind] = func() RKmethod { return new(MoEuler) }
+	rkmDB[MoEulerKind] = func() rkmethod { return new(MoEuler) }
 }

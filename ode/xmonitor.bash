@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="ode01"
+    go test -test.run="Ode01"
 done

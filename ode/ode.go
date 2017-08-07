@@ -15,372 +15,162 @@
 package ode
 
 import (
-	"math"
-
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/mpi"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Solver implements an ODE solver
-//  Note: Distr is automatically set ON by Init if mpi is on and there are more then one processor.
-//        However, it can be set OFF after calling Init.
 type Solver struct {
 
-	// method data
-	method io.Enum  // method kind
-	rkm    RKmethod // Runge-Kutta method
+	// main
+	Conf *Config // configuration parameters
+	Stat *Stat   // statistics
+	Out  *Output // output
 
-	// primary variables
-	ndim int          // size of y
-	fcn  Func         // dydx := f(x,y)
-	jac  JacF         // Jacobian: dfdy
-	out  OutF         // output function
-	hasM bool         // has M matrix
-	mTri *la.Triplet  // M matrix in Triplet form
-	mMat *la.CCMatrix // M matrix
+	// input
+	ndim int  // size of y
+	fcn  Func // dy/dx := f(x,y)
+	jac  JacF // Jacobian: df/dy
 
-	// flags
-	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
-	Atol       float64 // absolute tolerance
-	Rtol       float64 // relative tolerance
-	IniH       float64 // initial H
-	NmaxIt     int     // max num iterations (allowed)
-	NmaxSS     int     // max num substeps
-	Mmin       float64 // min step multiplier
-	Mmax       float64 // max step multiplier
-	Mfac       float64 // step multiplier factor
-	PredCtrl   bool    // use Gustafsson's predictive controller
-	Eps        float64 // smallest number satisfying 1.0 + ϵ > 1.0
-	ThetaMax   float64 // max theta to decide whether the Jacobian should be recomputed or not
-	C1h        float64 // c1 of HW-VII p124 => min ratio to retain previous h
-	C2h        float64 // c2 of HW-VII p124 => max ratio to retain previous h
-	LerrStrat  int     // strategy to select local error computation method
-	Pll        bool    // parallel (threaded) execution
-	CteTg      bool    // use constant tangent (Jacobian) in BwEuler
-	UseRmsNorm bool    // use RMS norm instead of Euclidian in BwEuler
-	Verbose    bool    // be more verbose, e.g. during iterations
-	SaveXY     bool    // save X values in an array (e.g. for plotting)
-
-	// output
-	IdxSave int         // current index in Xvalues and Yvalues == last output
-	Hvalues []float64   // h values if SaveXY is true [IdxSave]
-	Xvalues []float64   // X values if SaveXY is true [IdxSave]
-	Yvalues []la.Vector // Y values if SaveXY is true [IdxSave][ndim]
-
-	// derived variables
-	Distr bool    // MPI distributed execution. automatically set ON in Init if mpi is on and there are more then one processor.
-	root  bool    // if distributed, tells if this is the root processor
-	fnewt float64 // Newton's iterations tolerance
-
-	// stat variables
-	Nfeval    int // number of calls to fcn
-	Njeval    int // number of Jacobian matrix evaluations
-	Nsteps    int // total number of substeps
-	Naccepted int // number of accepted substeps
-	Nrejected int // number of rejected substeps
-	Ndecomp   int // number of matrix decompositions
-	Nlinsol   int // number of calls to linsolver
-	Nitmax    int // number max of iterations
-
-	// control variables
-	doinit    bool    // flag indicating 'do initialisation' within step function
-	first     bool    // first substep
-	last      bool    // last substep
-	reject    bool    // reject step
-	diverg    bool    // flag diverging step
-	dvfac     float64 // dv factor
-	eta       float64 // eta tolerance
-	jacIsOK   bool    // Jacobian is OK
-	reuseJdec bool    // reuse current Jacobian and current decomposition
-	reuseJ    bool    // reuse last Jacobian (only)
-	nit       int     // current number of iterations
-	hopt      float64 // optimal h after successful substepping
-	theta     float64 // theta variable
-
-	// step variables
-	h, hprev float64   // step-size and previous step-size
-	f0       la.Vector // f(x,y) before step
-	scal     la.Vector // scal = Atol + Rtol*abs(y)
-
-	// rk variables
-	u  la.Vector   // u[stg]      = x + h*c[stg]
-	v  []la.Vector // v[stg][dim] = ya[dim] + h*sum(a[stg][j]*f[j][dim], j, nstg)
-	w  []la.Vector // w[stg][dim] workspace
-	dw []la.Vector // dw[stg][dim] workspace
-	f  []la.Vector // f[stg][dim] = f(u[stg], v[stg][dim])
-
-	// complex variables
-	v12  la.VectorC // join 1 and 2: complex(v[1],v[2])
-	dw12 la.VectorC // join 1 and 2: complex(dw[1],d2[2])
-
-	// radau5 variables
-	z     []la.Vector // Radau5
-	ez    la.Vector   // Radau5
-	lerr  la.Vector   // Radau5
-	rhs   la.Vector   // Radau5
-	dfdyT la.Triplet  // Jacobian (triplet)
-
-	// interpolation (radau5)
-	ycol []la.Vector // colocation values
-
-	// linear systems solver
-	symmetric bool              // symmetric
-	lsverbose bool              // verbose
-	ordering  string            // ordering
-	scaling   string            // scaling
-	comm      *mpi.Communicator // communicator
-	rctriR    *la.Triplet       // matrix for the real part
-	rctriC    *la.TripletC      // matrix for the complex part
-	lsolR     la.SparseSolver   // solver for the real part
-	lsolC     la.SparseSolverC  // solver for the complex part
+	// method, info and workspace
+	rkm       rkmethod // Runge-Kutta method
+	fixedOnly bool     // method can only be used with fixed steps
+	implicit  bool     // method is implicit
+	work      *rkwork  // Runge-Kutta workspace
 }
 
 // NewSolver returns a new ODE structure with default values and allocated slices
-func NewSolver(method io.Enum, ndim int, fcn Func, jac JacF, M *la.Triplet, out OutF) (o *Solver) {
+func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn OutF) (o *Solver, err error) {
 
-	// new structure
+	// main
 	o = new(Solver)
+	o.Conf = conf
+	o.Stat = NewStat()
+	o.Out = NewOutput(ofcn)
+	if conf.SaveXY {
+		o.Out.Resize(conf.NmaxSS + 1)
+	}
 
-	// primary variables
+	// input
 	o.ndim = ndim
 	o.fcn = fcn
 	o.jac = jac
-	o.out = out
-	o.ZeroTrial = false
-	o.Atol = 1.0e-4
-	o.Rtol = 1.0e-4
-	o.IniH = 1.0e-4
-	o.NmaxIt = 7
-	o.NmaxSS = 1000
-	o.Mmin = 0.125
-	o.Mmax = 5.0
-	o.Mfac = 0.9
-	o.PredCtrl = true
-	o.Eps = 1.0e-16
-	o.ThetaMax = 1.0e-3
-	o.C1h = 1.0
-	o.C2h = 1.2
-	o.LerrStrat = 3
-	o.Pll = true
-	o.UseRmsNorm = true
-	o.SetTol(o.Atol, o.Rtol)
 
-	// derived variables
-	o.root = true
-	o.Distr = false
-	if mpi.IsOn() {
-		o.comm = mpi.NewCommunicator(nil)
-		o.root = (o.comm.Rank() == 0)
-		if o.comm.Size() > 1 {
-			o.Distr = true
-		}
+	// method and info
+	o.rkm, err = newRKmethod(o.Conf.Method)
+	if err != nil {
+		return
+	}
+	err = o.rkm.Init(o.Conf, ndim, fcn, jac, M)
+	if err != nil {
+		return
 	}
 
-	// M matrix
-	if M != nil {
-		o.mTri = M
-		o.mMat = o.mTri.ToMatrix(nil)
-		o.hasM = true
-	} else {
-		if method == BwEulerKind {
-			M = new(la.Triplet)
-			la.SpTriSetDiag(M, o.ndim, 1)
-			o.mTri = M
-			o.mMat = o.mTri.ToMatrix(nil)
-			o.hasM = true
-		}
-	}
+	// information
+	var nstg int
+	o.fixedOnly, o.implicit, nstg = o.rkm.Info()
 
-	// method
-	o.method = method
-	o.rkm = NewRKmethod(method)
-	o.rkm.Init(o.Distr)
-	nstg := o.rkm.Nstages()
-
-	// allocate step variables
-	o.f0 = la.NewVector(o.ndim)
-	o.scal = la.NewVector(o.ndim)
-
-	// allocate rk variables
-	o.u = la.NewVector(nstg)
-	o.v = make([]la.Vector, nstg)
-	o.w = make([]la.Vector, nstg)
-	o.dw = make([]la.Vector, nstg)
-	o.f = make([]la.Vector, nstg)
-	if method == Radau5kind {
-		o.z = make([]la.Vector, nstg)
-		o.ycol = make([]la.Vector, nstg)
-		o.ez = la.NewVector(o.ndim)
-		o.lerr = la.NewVector(o.ndim)
-		o.rhs = la.NewVector(o.ndim)
-		o.v12 = la.NewVectorC(o.ndim)
-		o.dw12 = la.NewVectorC(o.ndim)
-	}
-	for i := 0; i < nstg; i++ {
-		o.v[i] = la.NewVector(o.ndim)
-		o.w[i] = la.NewVector(o.ndim)
-		o.dw[i] = la.NewVector(o.ndim)
-		o.f[i] = la.NewVector(o.ndim)
-		if method == Radau5kind {
-			o.z[i] = la.NewVector(o.ndim)
-			o.ycol[i] = la.NewVector(o.ndim)
-		}
-	}
+	// workspace
+	o.work = newRKwork(nstg, o.ndim)
 	return
 }
 
-// SetTol sets tolerances according to Hairer and Wanner suggestions. This routine also
-// checks for consistent values and only considers the case of scalars Atol and Rtol.
-func (o *Solver) SetTol(atol, rtol float64) {
-	o.Atol, o.Rtol = atol, rtol
-	// check and change the tolerances
-	β := 2.0 / 3.0
-	if o.Atol <= 0.0 || o.Rtol <= 10.0*o.Eps {
-		chk.Panic("tolerances are too small: Atol=%v, Rtol=%v", o.Atol, o.Rtol)
-	} else {
-		quot := o.Atol / o.Rtol
-		o.Rtol = 0.1 * math.Pow(o.Rtol, β)
-		o.Atol = o.Rtol * quot
-	}
-}
-
-// Solve solves from (xa,ya) to (xb,yb) => find yb (stored in y)
-func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error) {
+// Solve solves dy/dx = f(x,y) from x to xf with initial y given in y
+func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 	// check
-	if xb < x {
-		err = chk.Err("xb == %v must be greater than x == %v\n", xb, x)
+	if xf < x {
+		err = chk.Err("xf == %v must be greater than x == %v\n", xf, x)
 		return
 	}
-
-	// derived variables
-	o.fnewt = max(10.0*o.Eps/o.Rtol, min(0.03, math.Sqrt(o.Rtol)))
 
 	// initial step size
-	Δx = min(Δx, xb-x)
-	if fixstp {
-		o.h = Δx
+	h := xf - x
+	fixed := false
+	if o.Conf.FixedStp > 0 || o.fixedOnly {
+		if o.Conf.FixedStp < o.Conf.Hmin {
+			o.Conf.FixedStp = o.Conf.IniH
+		}
+		h = utl.Min(h, o.Conf.FixedStp)
+		fixed = true
 	} else {
-		o.h = min(Δx, o.IniH)
-	}
-	o.hprev = o.h
-
-	// output initial state
-	if o.out != nil {
-		o.out(true, o.h, x, y)
+		h = utl.Min(h, o.Conf.IniH)
 	}
 
-	// save X
-	o.IdxSave = 0
-	if o.SaveXY {
-		o.Hvalues = make([]float64, o.NmaxSS+1)
-		o.Xvalues = make([]float64, o.NmaxSS+1)
-		o.Yvalues = make([]la.Vector, o.NmaxSS+1)
-		o.savexy(0, x, y)
-	}
+	// stat and output
+	o.Stat.Reset()
+	o.Stat.Hopt = h
+	o.Out.Execute(h, x, y)
 
-	// stat variables
-	o.Nfeval = 0
-	o.Njeval = 0
-	o.Nsteps = 0
-	o.Naccepted = 0
-	o.Nrejected = 0
-	o.Ndecomp = 0
-	o.Nlinsol = 0
-	o.Nitmax = 0
-
-	// control variables
-	o.doinit = true
-	o.first = true
-	o.last = false
-	o.reject = false
-	o.diverg = false
-	o.dvfac = 0
-	o.eta = 1.0
-	o.jacIsOK = false
-	o.reuseJdec = false
-	o.reuseJ = false
-	o.nit = 0
-	o.hopt = o.h
-	o.theta = o.ThetaMax
-
-	// local error indicator
-	var rerr float64
-
-	// linear solver
-	lsname := "umfpack"
-	if o.Distr {
-		lsname = "mumps"
-	}
-	o.lsolR = la.NewSparseSolver(lsname)
-	o.lsolC = la.NewSparseSolverC(lsname)
-
-	// free memory and show stat before leaving
-	defer func() {
-		o.lsolR.Free()
-		o.lsolC.Free()
-	}()
+	// set control flags
+	o.work.first = true
 
 	// first scaling variable
-	la.VecScaleAbs(o.scal, o.Atol, o.Rtol, y) // o.scal := o.Atol + o.Rtol * abs(y)
+	la.VecScaleAbs(o.work.scal, o.Conf.atol, o.Conf.rtol, y) // scal = atol + rtol * abs(y)
 
-	// fixed steps
-	if fixstp {
-		o.w[0].Apply(1, y) // w0 := y (copy initial values to worksapce)
-		if o.Verbose {
+	// fixed steps //////////////////////////////
+	if fixed {
+		if o.Conf.Verbose {
 			io.Pfgreen("x = %v\n", x)
+			io.Pf("y = %v\n", y)
 		}
-		for x < xb {
-			//if x + o.h > xb { o.h = xb - x }
-			if o.jac == nil { // numerical Jacobian
-				if o.method == Radau5kind {
-					o.Nfeval++
-					o.fcn(o.f0, o.h, x, y)
-				}
+		for x < xf {
+			if o.implicit && o.jac == nil { // f0 for numerical Jacobian
+				o.Stat.Nfeval++
+				o.fcn(o.work.f0, h, x, y)
 			}
-			o.reuseJdec = false
-			o.reuseJ = false
-			o.jacIsOK = false
-			o.rkm.Step(o, y, x)
-			o.Nsteps++
-			o.doinit = false
-			o.first = false
-			o.hprev = o.h
-			x += o.h
-			o.rkm.Accept(o, y)
-			if o.out != nil {
-				o.out(false, o.h, x, y)
+			_, err = o.rkm.Step(h, x, y, o.Stat, o.work)
+			if err != nil {
+				return
 			}
-			if o.SaveXY {
-				o.savexy(o.h, x, y)
-			}
-			if o.Verbose {
+			o.Stat.Nsteps++
+			//o.doinit = false
+			o.work.first = false
+			x += h
+			o.rkm.Accept(y, o.work)
+			o.Out.Execute(h, x, y)
+			if o.Conf.Verbose {
 				io.Pfgreen("x = %v\n", x)
+				io.Pf("y = %v\n", y)
 			}
 		}
 		return
 	}
 
+	// variable steps //////////////////////////////
+
+	// control variables
+	o.work.reuseJdec = false
+	o.work.reuseJ = false
+	o.work.jacIsOK = false
+	o.work.hprev = h
+	o.work.nit = 0
+	o.work.eta = 1.0
+	o.work.theta = o.Conf.ThetaMax
+	o.work.dvfac = 0.0
+	o.work.diverg = false
+	o.work.reject = false
+
 	// first function evaluation
-	o.Nfeval++
-	o.fcn(o.f0, o.h, x, y) // o.f0 := f(x,y)
+	o.Stat.Nfeval++
+	o.fcn(o.work.f0, h, x, y) // o.f0 := f(x,y)
 
 	// time loop
-	var dxmax, xstep, fac, div, dxnew, facgus, oldH, oldRerr float64
-	var dxratio float64
-	var failed bool
-	for x < xb {
+	Δx := xf - x
+	var dxmax, xstep, div, dxnew, oldH, oldRerr, dxratio, rerr float64
+	var last, failed bool
+	for x < xf {
 		dxmax, xstep = Δx, x+Δx
 		failed = false
-		for iss := 0; iss < o.NmaxSS+1; iss++ {
+		for iss := 0; iss < o.Conf.NmaxSS+1; iss++ {
 
 			// total number of substeps
-			o.Nsteps++
+			o.Stat.Nsteps++
 
 			// error: did not converge
-			if iss == o.NmaxSS {
+			if iss == o.Conf.NmaxSS {
 				failed = true
 				break
 			}
@@ -391,184 +181,112 @@ func (o *Solver) Solve(y la.Vector, x, xb, Δx float64, fixstp bool) (err error)
 			}
 
 			// step update
-			rerr, err = o.rkm.Step(o, y, x)
-
-			// initialise only once
-			o.doinit = false
+			rerr, err = o.rkm.Step(h, x, y, o.Stat, o.work)
 
 			// iterations diverging ?
-			if o.diverg {
-				o.diverg = false
-				o.reject = true
-				o.last = false
-				o.h = o.dvfac * o.h
+			if o.work.diverg {
+				o.work.diverg = false
+				o.work.reject = true
+				last = false
+				h *= o.work.dvfac
 				continue
 			}
 
 			// step size change
-			fac = min(o.Mfac, o.Mfac*float64(1+2*o.NmaxIt)/float64(o.nit+2*o.NmaxIt))
-			div = max(o.Mmin, min(o.Mmax, math.Pow(rerr, 0.25)/fac))
-			dxnew = o.h / div
+			dxnew, div = o.Conf.dxnew(h, rerr, o.work.nit)
 
 			// accepted
 			if rerr < 1.0 {
 
 				// set flags
-				o.Naccepted++
-				o.first = false
-				o.jacIsOK = false
+				o.Stat.Naccepted++
+				o.work.first = false
+				o.work.jacIsOK = false
 
 				// update x and y
-				o.hprev = o.h
-				x += o.h
-				o.rkm.Accept(o, y)
+				o.work.hprev = h
+				x += h
+				o.rkm.Accept(y, o.work)
 
 				// output
-				if o.out != nil {
-					o.out(false, o.h, x, y)
-				}
-
-				// save X value
-				if o.SaveXY {
-					o.savexy(o.h, x, y)
-				}
+				o.Out.Execute(h, x, y)
 
 				// converged ?
-				if o.last {
-					o.hopt = o.h // optimal h
+				if last {
+					o.Stat.Hopt = h // optimal h
 					break
 				}
 
 				// predictive controller of Gustafsson
-				if o.PredCtrl {
-					if o.Naccepted > 1 {
-						facgus = (oldH / o.h) * math.Pow(math.Pow(rerr, 2.0)/oldRerr, 0.25) / o.Mfac
-						facgus = max(o.Mmin, min(o.Mmax, facgus))
-						div = max(div, facgus)
-						dxnew = o.h / div
+				if o.Conf.PredCtrl {
+					if o.Stat.Naccepted > 1 {
+						dxnew = o.Conf.dxnewGus(div, oldH, h, oldRerr, rerr)
 					}
-					oldH = o.h
-					oldRerr = max(1.0e-2, rerr)
+					oldH = h
+					oldRerr = utl.Max(1.0e-2, rerr)
 				}
 
 				// calc new scal and f0
-				la.VecScaleAbs(o.scal, o.Atol, o.Rtol, y) // o.scal := o.Atol + o.Rtol * abs(y)
-				o.Nfeval++
-				o.fcn(o.f0, o.h, x, y) // o.f0 := f(x,y)
+				la.VecScaleAbs(o.work.scal, o.Conf.atol, o.Conf.rtol, y)
+				o.Stat.Nfeval++
+				o.fcn(o.work.f0, h, x, y) // o.f0 := f(x,y)
 
 				// new step size
-				dxnew = min(dxnew, dxmax)
-				if o.reject { // do not alow o.h to grow if previous was a reject
-					dxnew = min(o.h, dxnew)
+				dxnew = utl.Min(dxnew, dxmax)
+				if o.work.reject { // do not alow h to grow if previous was a reject
+					dxnew = utl.Min(h, dxnew)
 				}
-				o.reject = false
+				o.work.reject = false
 
 				// do not reuse current Jacobian and decomposition by default
-				o.reuseJdec = false
+				o.work.reuseJdec = false
 
 				// last step ?
 				if x+dxnew-xstep >= 0.0 {
-					o.last = true
-					o.h = xstep - x
+					last = true
+					h = xstep - x
 				} else {
-					dxratio = dxnew / o.h
-					o.reuseJdec = (o.theta <= o.ThetaMax && dxratio >= o.C1h && dxratio <= o.C2h)
-					if !o.reuseJdec {
-						o.h = dxnew
+					dxratio = dxnew / h
+					o.work.reuseJdec = o.work.theta <= o.Conf.ThetaMax && dxratio >= o.Conf.C1h && dxratio <= o.Conf.C2h
+					if !o.work.reuseJdec {
+						h = dxnew
 					}
 				}
 
 				// check θ to decide if at least the Jacobian can be reused
-				if !o.reuseJdec {
-					o.reuseJ = (o.theta <= o.ThetaMax)
+				if !o.work.reuseJdec {
+					o.work.reuseJ = o.work.theta <= o.Conf.ThetaMax
 				}
 
 				// rejected
 			} else {
+
 				// set flags
-				if o.Naccepted > 0 {
-					o.Nrejected++
+				if o.Stat.Naccepted > 0 {
+					o.Stat.Nrejected++
 				}
-				o.reject = true
-				o.last = false
+				o.work.reject = true
+				last = false
 
 				// new step size
-				if o.first {
-					o.h = 0.1 * o.h
+				if o.work.first {
+					h = 0.1 * h
 				} else {
-					o.h = dxnew
+					h = dxnew
 				}
 
 				// last step
-				if x+o.h > xstep {
-					o.h = xstep - x
+				if x+h > xstep {
+					h = xstep - x
 				}
 			}
 		}
 
 		// sub-stepping failed
 		if failed {
-			err = chk.Err("substepping did not converge after %d steps\n", o.NmaxSS)
+			err = chk.Err("substepping did not converge after %d steps\n", o.Conf.NmaxSS)
 			break
 		}
 	}
 	return
-}
-
-// Stat prints "statistical" information about the solution process
-func (o *Solver) Stat() {
-	io.Pf("number of F evaluations   =%6d\n", o.Nfeval)
-	io.Pf("number of J evaluations   =%6d\n", o.Njeval)
-	io.Pf("total number of steps     =%6d\n", o.Nsteps)
-	io.Pf("number of accepted steps  =%6d\n", o.Naccepted)
-	io.Pf("number of rejected steps  =%6d\n", o.Nrejected)
-	io.Pf("number of decompositions  =%6d\n", o.Ndecomp)
-	io.Pf("number of lin solutions   =%6d\n", o.Nlinsol)
-	io.Pf("max number of iterations  =%6d\n", o.Nitmax)
-}
-
-// ExtractTimeSeries extracts the y[i] values for all output times
-//  i -- index of y component
-//  use to plot time series; e.g.:
-//     plt.Plot(o.Xvalues[:o.IdxSave], o.ExtractTimeSeries(0), &plt.A{L:"y0"})
-func (o *Solver) ExtractTimeSeries(i int) (Yi []float64) {
-	Yi = make([]float64, o.IdxSave)
-	for j := 0; j < o.IdxSave; j++ {
-		Yi[j] = o.Yvalues[j][i]
-	}
-	return
-}
-
-// rmsNorm computes the RMS norm
-func (o *Solver) rmsNorm(diff la.Vector) (rms float64) {
-	for m := 0; m < o.ndim; m++ {
-		rms += math.Pow(diff[m]/o.scal[m], 2.0)
-	}
-	rms = max(math.Sqrt(rms/float64(o.ndim)), 1.0e-10)
-	return
-}
-
-// savexy saves x and y values
-func (o *Solver) savexy(h, x float64, y []float64) {
-	o.Hvalues[o.IdxSave] = h
-	o.Xvalues[o.IdxSave] = x
-	o.Yvalues[o.IdxSave] = la.NewVector(o.ndim)
-	o.Yvalues[o.IdxSave].Apply(1, y)
-	o.IdxSave++
-}
-
-// max returns the maximum between a and b
-func max(a, b float64) float64 {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-// min returns the minimum between a and b
-func min(a, b float64) float64 {
-	if a < b {
-		return a
-	}
-	return b
 }

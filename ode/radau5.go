@@ -12,10 +12,42 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Radau5 implements the Radau5 implicit Runge-Kutta method
 type Radau5 struct {
+
+	// main
+	conf  *Config      // configurations
+	fcn   Func         // dy/dx := f(x,y)
+	jac   JacF         // Jacobian function: df/dy(x,y)
+	dfdy  *la.Triplet  // df/dy matrix
+	mtri  *la.Triplet  // M matrix in triplet format
+	mmat  *la.CCMatrix // M matrix in compressed-column format
+	hasM  bool         // has M matrix
+	ready bool         // matrices and solver are ready
+
+	// linear systems solver
+	kmatR *la.Triplet      // matrix for the real part
+	kmatC *la.TripletC     // matrix for the imag part
+	lsR   la.SparseSolver  // solver for the real part
+	lsC   la.SparseSolverC // solver for the imag part
+
+	// workspace
+	z    [][]float64 // [nstg][ndim] normalised arrays
+	w    [][]float64 // [nstg][ndim] workspace
+	dw   [][]float64 // [nstg][ndim] workspace (incremental)
+	ycol [][]float64 // [nstg][ndim] colocation values
+	v12  la.VectorC  // packed (v[1],v[2])
+	dw12 la.VectorC  // packed (dw[1],dw[2])
+
+	// error estimate
+	ez   la.Vector // [ndim] for error estimate
+	lerr la.Vector // [ndim] for error estimate
+	rhs  la.Vector // [ndim] for error estimate
+
+	// constants
 	C    []float64   // c coefficients
 	T    [][]float64 // T matrix
 	Ti   [][]float64 // inv(T) matrix
@@ -33,8 +65,420 @@ type Radau5 struct {
 	Mu5  float64     // collocation: C1MC2 = C1-C2
 }
 
+// Info returns information about this method
+func (o *Radau5) Info() (fixedOnly, implicit bool, nstages int) {
+	return false, true, 3
+}
+
 // Init initialises structure
-func (o *Radau5) Init(distr bool) (err error) {
+func (o *Radau5) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error) {
+
+	// main
+	o.conf = conf
+	o.fcn = fcn
+	o.jac = jac
+	o.dfdy = new(la.Triplet)
+	o.mtri = M
+	if M == nil {
+		o.mtri = new(la.Triplet)
+		la.SpTriSetDiag(o.mtri, ndim, 1)
+	} else {
+		o.hasM = true
+	}
+	o.mmat = o.mtri.ToMatrix(nil)
+
+	// linear systems solver
+	o.kmatR = new(la.Triplet)
+	o.kmatC = new(la.TripletC)
+	o.lsR = la.NewSparseSolver(o.conf.lsKind)
+	o.lsC = la.NewSparseSolverC(o.conf.lsKind)
+
+	// workspace
+	nstg := 3
+	o.z = make([][]float64, nstg)
+	o.w = make([][]float64, nstg)
+	o.dw = make([][]float64, nstg)
+	o.ycol = make([][]float64, nstg)
+	for i := 0; i < nstg; i++ {
+		o.z[i] = make([]float64, ndim)
+		o.w[i] = make([]float64, ndim)
+		o.dw[i] = make([]float64, ndim)
+		o.ycol[i] = make([]float64, ndim)
+	}
+	o.v12 = la.NewVectorC(ndim)
+	o.dw12 = la.NewVectorC(ndim)
+
+	// error estimate
+	o.ez = la.NewVector(ndim)
+	o.lerr = la.NewVector(ndim)
+	o.rhs = la.NewVector(ndim)
+
+	// constants
+	o.initConstants()
+	return
+}
+
+// Accept accepts update
+func (o *Radau5) Accept(y la.Vector, work *rkwork) {
+	for m := 0; m < work.ndim; m++ {
+		// update y
+		y[m] += o.z[2][m]
+		// collocation polynomial values
+		o.ycol[0][m] = (o.z[1][m] - o.z[2][m]) / o.Mu4
+		o.ycol[1][m] = ((o.z[0][m]-o.z[1][m])/o.Mu5 - o.ycol[0][m]) / o.Mu3
+		o.ycol[2][m] = o.ycol[1][m] - ((o.z[0][m]-o.z[1][m])/o.Mu5-o.z[0][m]/o.Mu1)/o.Mu2
+	}
+}
+
+// Step steps update
+func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
+
+	// run MPI version if distributed=true
+	//if sol.Distr {
+	//return o.StepMpi(sol, y0, x0)
+	//}
+
+	// factors
+	α := o.Alp / h
+	β := o.Bet / h
+	γ := o.Gam / h
+
+	// Jacobian and decomposition
+	if work.reuseJdec {
+		work.reuseJdec = false
+	} else {
+
+		// calculate only first Jacobian for all iterations (simple/modified Newton's method)
+		if work.reuseJ {
+			work.reuseJ = false
+		} else if !work.jacIsOK {
+
+			// stat
+			stat.Njeval++
+
+			// numerical Jacobian
+			if o.jac == nil { // numerical
+				err = num.Jacobian(o.dfdy, func(fy, yy la.Vector) (e error) {
+					e = o.fcn(fy, h, x0, yy)
+					return
+				}, y0, work.f0, o.w[0]) // w works here as workspace variable
+
+				// analytical Jacobian
+			} else {
+				err = o.jac(o.dfdy, h, x0, y0)
+			}
+
+			// check
+			if err != nil {
+				return
+			}
+
+			// set flag
+			work.jacIsOK = true
+		}
+
+		// initialise drdy matrix
+		if !o.ready {
+			o.kmatR.Init(work.ndim, work.ndim, o.mtri.Len()+o.dfdy.Len())
+			o.kmatC.Init(work.ndim, work.ndim, o.mtri.Len()+o.dfdy.Len())
+		}
+
+		// update matrices
+		la.SpTriAdd(o.kmatR, γ, o.mtri, -1, o.dfdy)       // kmatR :=      γ*M - dfdy
+		la.SpTriAddR2C(o.kmatC, α, β, o.mtri, -1, o.dfdy) // kmatC := (α+βi)*M - dfdy
+
+		// initialise linear solver
+		if !o.ready {
+			err = o.lsR.Init(o.kmatR, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
+			if err != nil {
+				return
+			}
+			err = o.lsC.Init(o.kmatC, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
+			if err != nil {
+				return
+			}
+			o.ready = true
+		}
+
+		// perform factorisation
+		stat.Ndecomp++
+		err = o.lsR.Fact()
+		if err != nil {
+			return
+		}
+		err = o.lsC.Fact()
+		if err != nil {
+			return
+		}
+	}
+
+	// update u[i]
+	work.u[0] = x0 + o.C[0]*h
+	work.u[1] = x0 + o.C[1]*h
+	work.u[2] = x0 + o.C[2]*h
+
+	// zero trial: z[i] and w[i]
+	if work.first || o.conf.ZeroTrial {
+		for m := 0; m < work.ndim; m++ {
+			o.z[0][m], o.w[0][m] = 0.0, 0.0
+			o.z[1][m], o.w[1][m] = 0.0, 0.0
+			o.z[2][m], o.w[2][m] = 0.0, 0.0
+		}
+
+		// interpolation polynomial trial: z[i] and w[i]
+	} else {
+		c3q := h / work.hprev
+		c1q := o.Mu1 * c3q
+		c2q := o.Mu2 * c3q
+		for m := 0; m < work.ndim; m++ {
+			o.z[0][m] = c1q * (o.ycol[0][m] + (c1q-o.Mu4)*(o.ycol[1][m]+(c1q-o.Mu3)*o.ycol[2][m]))
+			o.z[1][m] = c2q * (o.ycol[0][m] + (c2q-o.Mu4)*(o.ycol[1][m]+(c2q-o.Mu3)*o.ycol[2][m]))
+			o.z[2][m] = c3q * (o.ycol[0][m] + (c3q-o.Mu4)*(o.ycol[1][m]+(c3q-o.Mu3)*o.ycol[2][m]))
+			o.w[0][m] = o.Ti[0][0]*o.z[0][m] + o.Ti[0][1]*o.z[1][m] + o.Ti[0][2]*o.z[2][m]
+			o.w[1][m] = o.Ti[1][0]*o.z[0][m] + o.Ti[1][1]*o.z[1][m] + o.Ti[1][2]*o.z[2][m]
+			o.w[2][m] = o.Ti[2][0]*o.z[0][m] + o.Ti[2][1]*o.z[1][m] + o.Ti[2][2]*o.z[2][m]
+		}
+	}
+
+	// iterations
+	nstg := 3
+	work.nit = 0
+	work.eta = math.Pow(utl.Max(work.eta, o.conf.Eps), 0.8)
+	work.theta = o.conf.ThetaMax
+	work.diverg = false
+	denLdw := float64(3 * work.ndim)
+	nmaxit := float64(o.conf.NmaxIt)
+	var errR, errC error
+	var Ldw, LdwOld, thq, othq, iterr, itRerr, qnewt, ratio0, ratio1, ratio2, nitf float64
+	var it int
+	for it = 0; it < o.conf.NmaxIt; it++ {
+
+		// max iterations ?
+		work.nit = it + 1
+		if work.nit > stat.Nitmax {
+			stat.Nitmax = work.nit
+		}
+
+		// evaluate f(x,y) at (u[i],v[i]=y0+z[i])
+		for i := 0; i < nstg; i++ {
+			for m := 0; m < work.ndim; m++ {
+				work.v[i][m] = y0[m] + o.z[i][m]
+			}
+			stat.Nfeval++
+			err = o.fcn(work.f[i], h, work.u[i], work.v[i])
+			if err != nil {
+				return
+			}
+		}
+
+		// calc rhs
+		if o.hasM {
+			// using dw as workspace here
+			la.SpMatVecMul(o.dw[0], 1, o.mmat, o.w[0]) // dw0 := M ⋅ w0
+			la.SpMatVecMul(o.dw[1], 1, o.mmat, o.w[1]) // dw1 := M ⋅ w1
+			la.SpMatVecMul(o.dw[2], 1, o.mmat, o.w[2]) // dw2 := M ⋅ w2
+			for m := 0; m < work.ndim; m++ {
+				work.v[0][m] = o.Ti[0][0]*work.f[0][m] + o.Ti[0][1]*work.f[1][m] + o.Ti[0][2]*work.f[2][m] - γ*o.dw[0][m]
+				work.v[1][m] = o.Ti[1][0]*work.f[0][m] + o.Ti[1][1]*work.f[1][m] + o.Ti[1][2]*work.f[2][m] - α*o.dw[1][m] + β*o.dw[2][m]
+				work.v[2][m] = o.Ti[2][0]*work.f[0][m] + o.Ti[2][1]*work.f[1][m] + o.Ti[2][2]*work.f[2][m] - β*o.dw[1][m] - α*o.dw[2][m]
+			}
+		} else {
+			for m := 0; m < work.ndim; m++ {
+				work.v[0][m] = o.Ti[0][0]*work.f[0][m] + o.Ti[0][1]*work.f[1][m] + o.Ti[0][2]*work.f[2][m] - γ*o.w[0][m]
+				work.v[1][m] = o.Ti[1][0]*work.f[0][m] + o.Ti[1][1]*work.f[1][m] + o.Ti[1][2]*work.f[2][m] - α*o.w[1][m] + β*o.w[2][m]
+				work.v[2][m] = o.Ti[2][0]*work.f[0][m] + o.Ti[2][1]*work.f[1][m] + o.Ti[2][2]*work.f[2][m] - β*o.w[1][m] - α*o.w[2][m]
+			}
+		}
+
+		// solve linear system
+		stat.Nlinsol++
+		if !o.conf.distr && o.conf.GoChan {
+			wg := new(sync.WaitGroup)
+			wg.Add(2)
+			go func() {
+				errR = o.lsR.Solve(o.dw[0], work.v[0], false)
+				wg.Done()
+			}()
+			go func() {
+				o.v12.JoinRealImag(work.v[1], work.v[2])
+				errC = o.lsC.Solve(o.dw12, o.v12, false)
+				o.dw12.SplitRealImag(o.dw[1], o.dw[2])
+				wg.Done()
+			}()
+			wg.Wait()
+		} else {
+			o.v12.JoinRealImag(work.v[1], work.v[2])
+			errR = o.lsR.Solve(o.dw[0], work.v[0], false)
+			errC = o.lsC.Solve(o.dw12, o.v12, false)
+			o.dw12.SplitRealImag(o.dw[1], o.dw[2])
+		}
+
+		// check for errors from linear solution
+		if errR != nil || errC != nil {
+			var errmsg string
+			if errR != nil {
+				errmsg += errR.Error()
+			}
+			if errC != nil {
+				if errR != nil {
+					errmsg += "\n"
+				}
+				errmsg += errC.Error()
+			}
+			err = errors.New(errmsg)
+			return
+		}
+
+		// update w and z
+		for m := 0; m < work.ndim; m++ {
+			o.w[0][m] += o.dw[0][m]
+			o.w[1][m] += o.dw[1][m]
+			o.w[2][m] += o.dw[2][m]
+			o.z[0][m] = o.T[0][0]*o.w[0][m] + o.T[0][1]*o.w[1][m] + o.T[0][2]*o.w[2][m]
+			o.z[1][m] = o.T[1][0]*o.w[0][m] + o.T[1][1]*o.w[1][m] + o.T[1][2]*o.w[2][m]
+			o.z[2][m] = o.T[2][0]*o.w[0][m] + o.T[2][1]*o.w[1][m] + o.T[2][2]*o.w[2][m]
+		}
+
+		// rms norm of δw
+		Ldw = 0.0
+		for m := 0; m < work.ndim; m++ {
+			ratio0 = o.dw[0][m] / work.scal[m]
+			ratio1 = o.dw[1][m] / work.scal[m]
+			ratio2 = o.dw[2][m] / work.scal[m]
+			Ldw += ratio0*ratio0 + ratio1*ratio1 + ratio2*ratio2
+		}
+		Ldw = math.Sqrt(Ldw / denLdw)
+
+		// check convergence
+		if it > 0 {
+			thq = Ldw / LdwOld
+			if it == 1 {
+				work.theta = thq
+			} else {
+				work.theta = math.Sqrt(thq * othq)
+			}
+			othq = thq
+			if work.theta < 0.99 {
+				work.eta = work.theta / (1.0 - work.theta)
+				nitf = float64(work.nit)
+				iterr = Ldw * math.Pow(work.theta, nmaxit-nitf) / (1.0 - work.theta)
+				itRerr = iterr / o.conf.fnewt
+				if itRerr >= 1.0 { // diverging
+					qnewt = utl.Max(1.0e-4, utl.Min(20.0, itRerr))
+					work.dvfac = 0.8 * math.Pow(qnewt, -1.0/(4.0+nmaxit-1.0-nitf))
+					work.diverg = true
+					break
+				}
+			} else { // diverging badly (unexpected step-rejection)
+				work.dvfac = 0.5
+				work.diverg = true
+				break
+			}
+		}
+
+		// save old norm
+		LdwOld = Ldw
+
+		// converged
+		if work.eta*Ldw < o.conf.fnewt {
+			break
+		}
+	}
+
+	// did not converge
+	if it == o.conf.NmaxIt-1 {
+		err = chk.Err("Radau5 did not converge with nit=%d", work.nit)
+		return
+	}
+
+	// diverging => stop
+	if work.diverg {
+		rerr = 2.0 // must leave state intact, any rerr is OK
+		return
+	}
+
+	// error estimate
+	return o.errorEstimate(h, x0, y0, stat, work)
+}
+
+// errorEstimate computes error estimate
+func (o *Radau5) errorEstimate(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
+
+	// simple strategy => HW-VII p123 Eq.(8.17) (not good for stiff problems)
+	if o.conf.LerrStrat == 1 {
+
+		for m := 0; m < work.ndim; m++ {
+			o.ez[m] = o.E0*o.z[0][m] + o.E1*o.z[1][m] + o.E2*o.z[2][m]
+			o.lerr[m] = o.Gam0*h*work.f0[m] + o.ez[m]
+			ratio := o.lerr[m] / work.scal[m]
+			rerr += ratio * ratio
+		}
+		rerr = utl.Max(math.Sqrt(rerr/float64(work.ndim)), 1.0e-10)
+		return
+	}
+
+	// common
+	γ := o.Gam / h
+	if o.hasM {
+		for m := 0; m < work.ndim; m++ {
+			o.ez[m] = o.E0*o.z[0][m] + o.E1*o.z[1][m] + o.E2*o.z[2][m]
+			o.rhs[m] = work.f0[m]
+		}
+		la.SpMatVecMulAdd(o.rhs, γ, o.mmat, o.ez) // rhs += γ ⋅ M ⋅ ez
+	} else {
+		for m := 0; m < work.ndim; m++ {
+			o.ez[m] = o.E0*o.z[0][m] + o.E1*o.z[1][m] + o.E2*o.z[2][m]
+			o.rhs[m] = work.f0[m] + γ*o.ez[m]
+		}
+	}
+
+	// HW-VII p123 Eq.(8.19)
+	if o.conf.LerrStrat == 2 {
+		o.lsR.Solve(o.lerr, o.rhs, false)
+		rerr = o.rmsNorm(work, o.lerr)
+		return
+	}
+
+	// HW-VII p123 Eq.(8.20)
+	o.lsR.Solve(o.lerr, o.rhs, false)
+	rerr = o.rmsNorm(work, o.lerr)
+	if !(rerr < 1.0) {
+		if work.first || work.reject {
+			for m := 0; m < work.ndim; m++ {
+				work.v[0][m] = y0[m] + o.lerr[m] // y0perr
+			}
+			stat.Nfeval++
+			err = o.fcn(work.f[0], h, x0, work.v[0]) // f0perr
+			if err != nil {
+				return
+			}
+			if o.hasM {
+				o.rhs.Apply(1, work.f[0])                 // rhs := f0perr
+				la.SpMatVecMulAdd(o.rhs, γ, o.mmat, o.ez) // rhs += γ * M * ez
+			} else {
+				la.VecAdd(o.rhs, 1, work.f[0], γ, o.ez) // rhs = f0perr + γ * ez
+			}
+			o.lsR.Solve(o.lerr, o.rhs, false)
+			rerr = o.rmsNorm(work, o.lerr)
+		}
+	}
+	return
+}
+
+// rmsNorm computes the RMS norm
+func (o *Radau5) rmsNorm(work *rkwork, diff la.Vector) (rms float64) {
+	ndim := len(diff)
+	var ratio float64
+	for m := 0; m < ndim; m++ {
+		ratio = diff[m] / work.scal[m]
+		rms += ratio * ratio
+	}
+	return utl.Max(math.Sqrt(rms/float64(ndim)), 1.0e-10)
+}
+
+// initConstants initialises constants
+func (o *Radau5) initConstants() {
+
 	o.C = []float64{(4.0 - math.Sqrt(6.0)) / 10.0, (4.0 + math.Sqrt(6.0)) / 10.0, 1.0}
 
 	o.T = [][]float64{{9.1232394870892942792e-02, -0.14125529502095420843, -3.0029194105147424492e-02},
@@ -62,342 +506,10 @@ func (o *Radau5) Init(distr bool) (err error) {
 	o.Mu3 = o.Mu1 - 1.0
 	o.Mu4 = o.Mu2 - 1.0
 	o.Mu5 = o.Mu1 - o.Mu2
-	return nil
-}
-
-// Nstages returns the number of stages
-func (o *Radau5) Nstages() int {
-	return 3
-}
-
-// Accept accepts update
-func (o *Radau5) Accept(sol *Solver, y la.Vector) {
-	for m := 0; m < sol.ndim; m++ {
-		// update y
-		y[m] += sol.z[2][m]
-		// collocation polynomial values
-		sol.ycol[0][m] = (sol.z[1][m] - sol.z[2][m]) / o.Mu4
-		sol.ycol[1][m] = ((sol.z[0][m]-sol.z[1][m])/o.Mu5 - sol.ycol[0][m]) / o.Mu3
-		sol.ycol[2][m] = sol.ycol[1][m] - ((sol.z[0][m]-sol.z[1][m])/o.Mu5-sol.z[0][m]/o.Mu1)/o.Mu2
-	}
-}
-
-// Step steps update
-func (o *Radau5) Step(sol *Solver, y0 la.Vector, x0 float64) (rerr float64, err error) {
-
-	// run MPI version if distributed=true
-	if sol.Distr {
-		return o.StepMpi(sol, y0, x0)
-	}
-
-	// factors
-	α := o.Alp / sol.h
-	β := o.Bet / sol.h
-	γ := o.Gam / sol.h
-
-	// Jacobian and decomposition
-	if sol.reuseJdec {
-		sol.reuseJdec = false
-	} else {
-
-		// calculate only first Jacobian for all iterations (simple/modified Newton's method)
-		if sol.reuseJ {
-			sol.reuseJ = false
-		} else if !sol.jacIsOK {
-
-			// Jacobian triplet
-			if sol.jac == nil { // numerical
-				err = num.Jacobian(&sol.dfdyT, func(fy, y la.Vector) (e error) {
-					e = sol.fcn(fy, sol.h, x0, y)
-					return
-				}, y0, sol.f0, sol.w[0]) // w works here as workspace variable
-			} else { // analytical
-				err = sol.jac(&sol.dfdyT, sol.h, x0, y0)
-			}
-			if err != nil {
-				return
-			}
-
-			// create M matrix
-			if sol.doinit && !sol.hasM {
-				sol.mTri = new(la.Triplet)
-				sol.mTri.Init(sol.ndim, sol.ndim, sol.ndim)
-				for i := 0; i < sol.ndim; i++ {
-					sol.mTri.Put(i, i, 1.0)
-				}
-			}
-			sol.Njeval++
-			sol.jacIsOK = true
-		}
-
-		// initialise triplets
-		if sol.doinit {
-			sol.rctriR = new(la.Triplet)
-			sol.rctriC = new(la.TripletC)
-			sol.rctriR.Init(sol.ndim, sol.ndim, sol.mTri.Len()+sol.dfdyT.Len())
-			sol.rctriC.Init(sol.ndim, sol.ndim, sol.mTri.Len()+sol.dfdyT.Len())
-		}
-
-		// update triplets
-		la.SpTriAdd(sol.rctriR, γ, sol.mTri, -1, &sol.dfdyT)       // rctriR :=      γ*M - dfdy
-		la.SpTriAddR2C(sol.rctriC, α, β, sol.mTri, -1, &sol.dfdyT) // rctriC := (α+βi)*M - dfdy
-
-		// initialise solver
-		if sol.doinit {
-			err = sol.lsolR.Init(sol.rctriR, sol.symmetric, sol.lsverbose, sol.ordering, sol.scaling, sol.comm)
-			if err != nil {
-				return
-			}
-			err = sol.lsolC.Init(sol.rctriC, sol.symmetric, sol.lsverbose, sol.ordering, sol.scaling, sol.comm)
-			if err != nil {
-				return
-			}
-		}
-
-		// perform factorisation
-		sol.lsolR.Fact()
-		sol.lsolC.Fact()
-		sol.Ndecomp++
-	}
-
-	// updated u[i]
-	sol.u[0] = x0 + o.C[0]*sol.h
-	sol.u[1] = x0 + o.C[1]*sol.h
-	sol.u[2] = x0 + o.C[2]*sol.h
-
-	// (trial/initial) updated z[i] and w[i]
-	if sol.first || sol.ZeroTrial {
-		for m := 0; m < sol.ndim; m++ {
-			sol.z[0][m], sol.w[0][m] = 0.0, 0.0
-			sol.z[1][m], sol.w[1][m] = 0.0, 0.0
-			sol.z[2][m], sol.w[2][m] = 0.0, 0.0
-		}
-	} else {
-		c3q := sol.h / sol.hprev
-		c1q := o.Mu1 * c3q
-		c2q := o.Mu2 * c3q
-		for m := 0; m < sol.ndim; m++ {
-			sol.z[0][m] = c1q * (sol.ycol[0][m] + (c1q-o.Mu4)*(sol.ycol[1][m]+(c1q-o.Mu3)*sol.ycol[2][m]))
-			sol.z[1][m] = c2q * (sol.ycol[0][m] + (c2q-o.Mu4)*(sol.ycol[1][m]+(c2q-o.Mu3)*sol.ycol[2][m]))
-			sol.z[2][m] = c3q * (sol.ycol[0][m] + (c3q-o.Mu4)*(sol.ycol[1][m]+(c3q-o.Mu3)*sol.ycol[2][m]))
-			sol.w[0][m] = o.Ti[0][0]*sol.z[0][m] + o.Ti[0][1]*sol.z[1][m] + o.Ti[0][2]*sol.z[2][m]
-			sol.w[1][m] = o.Ti[1][0]*sol.z[0][m] + o.Ti[1][1]*sol.z[1][m] + o.Ti[1][2]*sol.z[2][m]
-			sol.w[2][m] = o.Ti[2][0]*sol.z[0][m] + o.Ti[2][1]*sol.z[1][m] + o.Ti[2][2]*sol.z[2][m]
-		}
-	}
-
-	// iterations
-	sol.nit = 0
-	sol.eta = math.Pow(max(sol.eta, sol.Eps), 0.8)
-	sol.theta = sol.ThetaMax
-	sol.diverg = false
-	var Lδw, oLδw, thq, othq, iterr, itRerr, qnewt float64
-	var it int
-	for it = 0; it < sol.NmaxIt; it++ {
-
-		// max iterations ?
-		sol.nit = it + 1
-		if sol.nit > sol.Nitmax {
-			sol.Nitmax = sol.nit
-		}
-
-		// evaluate f(x,y) at (u[i],v[i]=y0+z[i])
-		for i := 0; i < 3; i++ {
-			for m := 0; m < sol.ndim; m++ {
-				sol.v[i][m] = y0[m] + sol.z[i][m]
-			}
-			sol.Nfeval++
-			err = sol.fcn(sol.f[i], sol.h, sol.u[i], sol.v[i])
-			if err != nil {
-				return
-			}
-		}
-
-		// calc rhs
-		if sol.hasM {
-			// using δw as workspace here
-			la.SpMatVecMul(sol.dw[0], 1, sol.mMat, sol.w[0]) // δw0 := M * w0
-			la.SpMatVecMul(sol.dw[1], 1, sol.mMat, sol.w[1]) // δw1 := M * w1
-			la.SpMatVecMul(sol.dw[2], 1, sol.mMat, sol.w[2]) // δw2 := M * w2
-			for m := 0; m < sol.ndim; m++ {
-				sol.v[0][m] = o.Ti[0][0]*sol.f[0][m] + o.Ti[0][1]*sol.f[1][m] + o.Ti[0][2]*sol.f[2][m] - γ*sol.dw[0][m]
-				sol.v[1][m] = o.Ti[1][0]*sol.f[0][m] + o.Ti[1][1]*sol.f[1][m] + o.Ti[1][2]*sol.f[2][m] - α*sol.dw[1][m] + β*sol.dw[2][m]
-				sol.v[2][m] = o.Ti[2][0]*sol.f[0][m] + o.Ti[2][1]*sol.f[1][m] + o.Ti[2][2]*sol.f[2][m] - β*sol.dw[1][m] - α*sol.dw[2][m]
-			}
-		} else {
-			for m := 0; m < sol.ndim; m++ {
-				sol.v[0][m] = o.Ti[0][0]*sol.f[0][m] + o.Ti[0][1]*sol.f[1][m] + o.Ti[0][2]*sol.f[2][m] - γ*sol.w[0][m]
-				sol.v[1][m] = o.Ti[1][0]*sol.f[0][m] + o.Ti[1][1]*sol.f[1][m] + o.Ti[1][2]*sol.f[2][m] - α*sol.w[1][m] + β*sol.w[2][m]
-				sol.v[2][m] = o.Ti[2][0]*sol.f[0][m] + o.Ti[2][1]*sol.f[1][m] + o.Ti[2][2]*sol.f[2][m] - β*sol.w[1][m] - α*sol.w[2][m]
-			}
-		}
-
-		// solve linear system
-		sol.Nlinsol++
-		var errR, errC error
-		if !sol.Distr && sol.Pll {
-			wg := new(sync.WaitGroup)
-			wg.Add(2)
-			go func() {
-				errR = sol.lsolR.Solve(sol.dw[0], sol.v[0], false)
-				wg.Done()
-			}()
-			go func() {
-				sol.v12.JoinRealImag(sol.v[1], sol.v[2])
-				errC = sol.lsolC.Solve(sol.dw12, sol.v12, false)
-				sol.dw12.SplitRealImag(sol.dw[1], sol.dw[2])
-				wg.Done()
-			}()
-			wg.Wait()
-		} else {
-			sol.v12.JoinRealImag(sol.v[1], sol.v[2])
-			errR = sol.lsolR.Solve(sol.dw[0], sol.v[0], false)
-			errC = sol.lsolC.Solve(sol.dw12, sol.v12, false)
-			sol.dw12.SplitRealImag(sol.dw[1], sol.dw[2])
-		}
-
-		// check for errors from linear solution
-		if errR != nil || errC != nil {
-			var errmsg string
-			if errR != nil {
-				errmsg += errR.Error()
-			}
-			if errC != nil {
-				if errR != nil {
-					errmsg += "\n"
-				}
-				errmsg += errC.Error()
-			}
-			err = errors.New(errmsg)
-			return
-		}
-
-		// update w and z
-		for m := 0; m < sol.ndim; m++ {
-			sol.w[0][m] += sol.dw[0][m]
-			sol.w[1][m] += sol.dw[1][m]
-			sol.w[2][m] += sol.dw[2][m]
-			sol.z[0][m] = o.T[0][0]*sol.w[0][m] + o.T[0][1]*sol.w[1][m] + o.T[0][2]*sol.w[2][m]
-			sol.z[1][m] = o.T[1][0]*sol.w[0][m] + o.T[1][1]*sol.w[1][m] + o.T[1][2]*sol.w[2][m]
-			sol.z[2][m] = o.T[2][0]*sol.w[0][m] + o.T[2][1]*sol.w[1][m] + o.T[2][2]*sol.w[2][m]
-		}
-
-		// rms norm of δw
-		Lδw = 0.0
-		for m := 0; m < sol.ndim; m++ {
-			Lδw += math.Pow(sol.dw[0][m]/sol.scal[m], 2.0) + math.Pow(sol.dw[1][m]/sol.scal[m], 2.0) + math.Pow(sol.dw[2][m]/sol.scal[m], 2.0)
-		}
-		Lδw = math.Sqrt(Lδw / float64(3*sol.ndim))
-
-		// check convergence
-		if it > 0 {
-			thq = Lδw / oLδw
-			if it == 1 {
-				sol.theta = thq
-			} else {
-				sol.theta = math.Sqrt(thq * othq)
-			}
-			othq = thq
-			if sol.theta < 0.99 {
-				sol.eta = sol.theta / (1.0 - sol.theta)
-				iterr = Lδw * math.Pow(sol.theta, float64(sol.NmaxIt-sol.nit)) / (1.0 - sol.theta)
-				itRerr = iterr / sol.fnewt
-				if itRerr >= 1.0 { // diverging
-					qnewt = max(1.0e-4, min(20.0, itRerr))
-					sol.dvfac = 0.8 * math.Pow(qnewt, -1.0/(4.0+float64(sol.NmaxIt)-1.0-float64(sol.nit)))
-					sol.diverg = true
-					break
-				}
-			} else { // diverging badly (unexpected step-rejection)
-				sol.dvfac = 0.5
-				sol.diverg = true
-				break
-			}
-		}
-
-		// save old norm
-		oLδw = Lδw
-
-		// converged
-		if sol.eta*Lδw < sol.fnewt {
-			break
-		}
-	}
-
-	// did not converge
-	if it == sol.NmaxIt-1 {
-		chk.Panic("radau5_step failed with it=%d", it)
-	}
-
-	// diverging => stop
-	if sol.diverg {
-		rerr = 2.0 // must leave state intact, any rerr is OK
-		return
-	}
-
-	// error estimate
-	if sol.LerrStrat == 1 {
-
-		// simple strategy => HW-VII p123 Eq.(8.17) (not good for stiff problems)
-		for m := 0; m < sol.ndim; m++ {
-			sol.ez[m] = o.E0*sol.z[0][m] + o.E1*sol.z[1][m] + o.E2*sol.z[2][m]
-			sol.lerr[m] = o.Gam0*sol.h*sol.f0[m] + sol.ez[m]
-			rerr += math.Pow(sol.lerr[m]/sol.scal[m], 2.0)
-		}
-		rerr = max(math.Sqrt(rerr/float64(sol.ndim)), 1.0e-10)
-
-	} else {
-
-		// common
-		if sol.hasM {
-			for m := 0; m < sol.ndim; m++ {
-				sol.ez[m] = o.E0*sol.z[0][m] + o.E1*sol.z[1][m] + o.E2*sol.z[2][m]
-				sol.rhs[m] = sol.f0[m]
-			}
-			la.SpMatVecMulAdd(sol.rhs, γ, sol.mMat, sol.ez) // rhs += γ * M * ez
-		} else {
-			for m := 0; m < sol.ndim; m++ {
-				sol.ez[m] = o.E0*sol.z[0][m] + o.E1*sol.z[1][m] + o.E2*sol.z[2][m]
-				sol.rhs[m] = sol.f0[m] + γ*sol.ez[m]
-			}
-		}
-
-		// HW-VII p123 Eq.(8.19)
-		if sol.LerrStrat == 2 {
-			sol.lsolR.Solve(sol.lerr, sol.rhs, false)
-			rerr = sol.rmsNorm(sol.lerr)
-
-			// HW-VII p123 Eq.(8.20)
-		} else {
-			sol.lsolR.Solve(sol.lerr, sol.rhs, false)
-			rerr = sol.rmsNorm(sol.lerr)
-			if !(rerr < 1.0) {
-				if sol.first || sol.reject {
-					for m := 0; m < sol.ndim; m++ {
-						sol.v[0][m] = y0[m] + sol.lerr[m] // y0perr
-					}
-					sol.Nfeval++
-					err = sol.fcn(sol.f[0], sol.h, x0, sol.v[0]) // f0perr
-					if err != nil {
-						return
-					}
-					if sol.hasM {
-						sol.rhs.Apply(1, sol.f[0])                      // rhs := f0perr
-						la.SpMatVecMulAdd(sol.rhs, γ, sol.mMat, sol.ez) // rhs += γ * M * ez
-					} else {
-						la.VecAdd(sol.rhs, 1, sol.f[0], γ, sol.ez) // rhs = f0perr + γ * ez
-					}
-					sol.lsolR.Solve(sol.lerr, sol.rhs, false)
-					rerr = sol.rmsNorm(sol.lerr)
-				}
-			}
-		}
-	}
-	return
 }
 
 // add method to database //////////////////////////////////////////////////////////////////////////
 
 func init() {
-	rkmDB[Radau5kind] = func() RKmethod { return new(Radau5) }
+	rkmDB[Radau5kind] = func() rkmethod { return new(Radau5) }
 }
