@@ -5,20 +5,16 @@
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/plt).**
 
 This package provides several functions to draw figures, plot results and annotate graphs. `plt` has
-been largelly based on [matplotlib](https://matplotlib.org) and is, currently, a sort of wrapper to
-Python/pyplot in the sense that it generates python scripts to be run by an external `os` call.
+been largelly based on [matplotlib](https://matplotlib.org) and is, currently, a wrapper to
+Python/pyplot by generating scripts to be run by an external `os` call.
 
-A future implementation will add an option to draw directly to the web browser, after generating
-JavaScript codes. We also plan for a [QT](https://www.qt.io) version.
-
-Some basic functions are (some are very similar to matplotlib ones):
+Some basic functions are (similar to matplotlib ones to some extent):
 1. `ReplaceAxes`, `Clf`
 2. `Hist`, `Plot`, `Text`
 3. `Show`, `Grid`
 4. `Contour`, `Quiver`
 
-The `plt` package is in fact somewhat **more convenient** than the analogue pyplot because it comes
-with a number of _higher level_ functions such as:
+The `plt` package has also some _higher level_ functions such as:
 1. `Arrow`, `Circle`, `Polyline`
 2. `AutoScale`, `AxisOff`, `AxisRange`
 4. `Camera`, `Cross` (indicating the origin)
@@ -29,9 +25,10 @@ Functions to draw and handle 3D graphs are also available:
 1. `Plot3dLine`, `Plot3dPoint`, `Plot3dPoints`
 2. `Wireframe`, `Surface`, `Hemisphere`, `Superquadric`
 3. `AxisRange3d`, `CylinderZ`, `ConeZ`
-Nonetheless, fancier graphs can also be developed with the `vtk` subpackage.
 
-To initialise the figure, view and save figures, the following commands are available:
+Nonetheless, interactive 3D graphs can also be developed with the `vtk` subpackage.
+
+To initialise the figure, view and save a file (PNG or EPS), the following commands are available:
 1. `Reset` initialises drawing space (optional)
 2. `Show` show figure
 3. `Save` saves the figure, after creating a directory.
