@@ -218,7 +218,7 @@ func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling 
 	// allocate data
 	o.apData = make([]int, t.n+1)
 	o.aiData = make([]int, t.pos)
-	o.axData = make([]float64, t.pos)
+	o.axData = make([]float64, t.pos*2) // MUST multiply by 2 because complex is packed
 
 	// pointers
 	o.t = t
