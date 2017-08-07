@@ -49,6 +49,9 @@ type Mumps struct {
 func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) (err error) {
 
 	// check
+	if o.initialised {
+		return chk.Err("solver must be initialised just once\n")
+	}
 	if t.pos == 0 {
 		return chk.Err("triplet must have at least one item for initialisation\n")
 	}
@@ -221,6 +224,9 @@ type MumpsC struct {
 func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) (err error) {
 
 	// check
+	if o.initialised {
+		return chk.Err("solver must be initialised just once\n")
+	}
 	if t.pos == 0 {
 		return chk.Err("triplet must have at least one item for initialisation\n")
 	}

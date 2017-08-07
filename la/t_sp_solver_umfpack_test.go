@@ -277,3 +277,124 @@ func TestSpUmfpack06(tst *testing.T) {
 	// run test
 	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-3, 1e-12, true, false, nil)
 }
+
+func TestSpUmfpack07a(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("SpUmfpack07a. large matrix")
+
+	// matrix and rhs
+	N := 512
+	A := new(Triplet)
+	b := NewVector(N)
+
+	// generator
+	gen := func() {
+		if A.Max() == 0 {
+			A.Init(N, N, N*N)
+		}
+		A.Start()
+		for i := 0; i < N; i++ {
+			j := i
+			if i > 0 {
+				j = i - 1
+			}
+			for ; j < N; j++ {
+				val := float64(N) - float64(j)
+				if i > j {
+					val -= 1.0
+				}
+				A.Put(i, j, val)
+			}
+			b[i] = float64(i)
+		}
+	}
+
+	// allocate solver
+	var sol Umfpack
+	defer sol.Free()
+
+	// loop
+	var err error
+	for k := 0; k < 3; k++ {
+
+		// generate matrix
+		gen()
+
+		// initialise solver
+		if k == 0 {
+			err = sol.Init(A, false, false, "", "", nil)
+			status(tst, err)
+		}
+
+		// factorise
+		err = sol.Fact()
+		status(tst, err)
+
+		// solve
+		x := NewVector(len(b))
+		err = sol.Solve(x, b, false) // x := inv(A) * b
+		status(tst, err)
+	}
+}
+
+func TestSpUmfpack07b(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("SpUmfpack07b. large matrix (complex)")
+
+	// matrix and rhs
+	N := 512
+	A := new(TripletC)
+	b := NewVectorC(N)
+
+	// generator
+	gen := func() {
+		if A.Max() == 0 {
+			A.Init(N, N, N*N)
+		}
+		A.Start()
+		for i := 0; i < N; i++ {
+			j := i
+			if i > 0 {
+				j = i - 1
+			}
+			for ; j < N; j++ {
+				val := float64(N) - float64(j)
+				if i > j {
+					val -= 1.0
+				}
+				A.Put(i, j, complex(val, 0))
+			}
+			b[i] = complex(float64(i), 0)
+		}
+	}
+
+	// allocate solver
+	var sol UmfpackC
+	defer sol.Free()
+
+	// loop
+	var err error
+	for k := 0; k < 3; k++ {
+
+		// generate matrix
+		gen()
+		chk.Int(tst, "pos", A.pos, (N*N-N)/2+N+N-1)
+
+		// initialise solver
+		if k == 0 {
+			err = sol.Init(A, false, false, "", "", nil)
+			status(tst, err)
+		}
+
+		// factorise
+		err = sol.Fact()
+		status(tst, err)
+
+		// solve
+		x := NewVectorC(len(b))
+		err = sol.Solve(x, b, false) // x := inv(A) * b
+		status(tst, err)
+	}
+}
