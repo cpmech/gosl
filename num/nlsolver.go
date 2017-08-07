@@ -44,9 +44,10 @@ type NlSolver struct {
 	Out func(x []float64) error // output callback function
 
 	// data for Umfpack (sparse)
-	Jtri la.Triplet // triplet
-	w    la.Vector  // workspace
-	lis  la.Umfpack // linear solver
+	Jtri    la.Triplet // triplet
+	w       la.Vector  // workspace
+	lis     la.Umfpack // linear solver
+	lsReady bool       // linear solver is lsReady
 
 	// data for dense solver (matrix inversion)
 	J  *la.Matrix // dense Jacobian matrix
@@ -230,12 +231,13 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		} else {
 
 			// init sparse solver
-			if o.It == 0 {
+			if !o.lsReady {
 				symmetric, verbose := false, false
 				err := o.lis.Init(&o.Jtri, symmetric, verbose, "", "", nil)
 				if err != nil {
 					return chk.Err("%v\n", err)
 				}
+				o.lsReady = true
 			}
 
 			// factorisation (must be done for all iterations)
