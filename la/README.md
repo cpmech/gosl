@@ -72,6 +72,14 @@ would be constantly allocated and deallocated.
 
 ## Examples
 
+### Solution of sparse linear systems
+
+See: <a href="t_sp_solver_test.go">t_sp_solver_test.go</a>
+
+See: <a href="t_sp_solver_umfpack_test.go">t_sp_solver_umfpack_test.go</a>
+
+See: <a href="t_sp_solver_mumps_test.go">t_sp_solver_mumps_test.go</a>
+
 
 ### Eigenvalues of (3 x 3) matrix
 
