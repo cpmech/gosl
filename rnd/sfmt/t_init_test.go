@@ -24,7 +24,7 @@ func verbose() {
 
 func status(tst *testing.T, err error) {
 	if err != nil {
-		tst.Errorf("%v\n", err)
+		tst.Errorf("ERROR: %v\n", err)
 		tst.FailNow()
 	}
 }
