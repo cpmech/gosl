@@ -50,17 +50,6 @@ C := [][]int{
     {0, 1, 2},
     {2, 3, 0},
 }
-
-// plot
-plt.Reset(true, &plt.A{WidthPt: 300})
-tri.Draw(V, C, &plt.A{C: "#376ac6", Lw: 2, NoClip: true})
-for i, v := range V {
-    plt.Text(v[0], v[1], io.Sf("(%d)", i), &plt.A{C: "r", Fsz: 12, NoClip: true})
-}
-plt.Gll("x", "y", nil)
-plt.Equal()
-plt.HideAllBorders()
-plt.Save("/tmp/gosl", "tri_draw01")
 ```
 
 Source code: <a href="../../examples/tri_draw01.go">../../examples/tri_draw01.go</a>
@@ -71,46 +60,6 @@ Source code: <a href="../../examples/tri_draw01.go">../../examples/tri_draw01.go
 
 The Delaunay triangulation of a cloud of points in the `tri` package is easily computed with the
 `Delaunay` command that takes as input the Cartesian coordinates.
-
-For example:
-```go
-// fix seed
-rnd.Init(1358)
-
-// generate cloud of points
-nx, ny := 6, 6
-dx := 1.0 / float64(nx-1)
-dy := 1.0 / float64(ny-1)
-X := make([]float64, nx*ny)
-Y := make([]float64, nx*ny)
-for j := 0; j < ny; j++ {
-    for i := 0; i < nx; i++ {
-        n := i + j*nx
-        X[n] = float64(i) * (dx * rnd.Float64(0.5, 1.0))
-        Y[n] = float64(j) * (dy * rnd.Float64(0.5, 1.0))
-    }
-}
-
-// generate
-V, C, err := tri.Delaunay(X, Y, false)
-if err != nil {
-    io.Pf("%v", err)
-    return
-}
-
-io.Pforan("V = %v\n", V)
-io.Pf("C = %v\n", C)
-
-// plot
-plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-tri.Draw(V, C, &plt.A{C: "orange", Ls: "-", NoClip: true})
-plt.Plot(X, Y, &plt.A{C: "k", Ls: "none", M: ".", NoClip: true})
-plt.Gll("x", "y", nil)
-plt.Equal()
-plt.HideAllBorders()
-plt.Save("/tmp/gosl", "tri_delaunay01")
-```
-will produce the following figure:
 
 <div id="container">
 <p><img src="../../examples/figs/tri_delaunay01.png"></p>
