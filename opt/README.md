@@ -5,8 +5,7 @@
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/opt).**
 
 This package provides routines to solve optimisation problems. Currently, linear programming
-problems can be solved with the interior-point method. In the future, more solution techniques will
-be implemented directly in Go.
+problems can be solved with the interior-point method.
 
 ## Interior-point method for linear problems
 
@@ -68,71 +67,7 @@ as matrix:
 
 ```
 
-Code:
-```go
-// coefficients vector
-c := []float64{-4, -5, 0, 0}
-
-// constraints as a sparse matrix
-var T la.Triplet
-T.Init(2, 4, 6) // 2 by 4 matrix, with 6 non-zeros
-T.Put(0, 0, 2.0)
-T.Put(0, 1, 1.0)
-T.Put(0, 2, 1.0)
-T.Put(1, 0, 1.0)
-T.Put(1, 1, 2.0)
-T.Put(1, 3, 1.0)
-Am := T.ToMatrix(nil) // compressed-column matrix
-
-// right-hand side
-b := []float64{3, 3}
-
-// print arrays
-A := Am.ToDense()
-la.PrintMat("\nA", A, "%6g", false)
-la.PrintVec("\nb", b, "%6g", false)
-la.PrintVec("\nc", c, "%6g", false)
-io.Pf("\n")
-
-// solve LP
-var ipm opt.LinIpm
-defer ipm.Free()
-ipm.Init(Am, b, c, nil)
-err := ipm.Solve(true)
-if err != nil {
-    io.Pf("%v", err)
-    return
-}
-
-// print solution
-io.Pf("\n")
-io.Pf("x = %v\n", ipm.X)
-io.Pf("λ = %v\n", ipm.L)
-io.Pf("s = %v\n", ipm.S)
-
-// check solution
-x := ipm.X[:2]
-bchk := make([]float64, 2)
-la.MatVecMul(bchk, 1, A, x)
-io.Pf("b(check) = %v\n", bchk)
-
-// plotting
-plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-f := func(x []float64) float64 { return c[0]*x[0] + c[1]*x[1] }
-g := func(x []float64, i int) float64 { return A[i][0]*x[0] + A[i][1]*x[1] - b[i] }
-np := 41
-argsF := &plt.A{CmapIdx: 0}
-argsG := &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2, Fsz: 10}
-vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
-opt.PlotTwoVarsContour(x, np, nil, true, vmin, vmax, argsF, argsG, f,
-    func(x []float64) float64 { return g(x, 0) },
-    func(x []float64) float64 { return g(x, 1) },
-)
-plt.Equal()
-plt.HideAllBorders()
-plt.Gll("$x$", "$y$", &plt.A{LegOut: true})
-plt.Save("/tmp/gosl", "opt_ipm01")
-```
+Source code: <a href="../examples/opt_ipm01.go">../examples/opt_ipm01.go</a>
 
 Output:
 ```
@@ -157,8 +92,6 @@ x = [0.9999999990004347 1.000000000078799 1.9203318816792844e-09 8.4196708618428
 s = [7.256799795925211e-10 1.218218347079067e-10 1.0000000006656913 2.000000000061833]
 b(check) = [2.9999999980796686 2.9999999991580326]
 ```
-
-Source code: <a href="../examples/opt_ipm01.go">../examples/opt_ipm01.go</a>
 
 <div id="container">
 <p><img src="../examples/figs/opt_ipm01.png" width="500"></p>
@@ -200,79 +133,7 @@ standard (step 2)
         x0_,x1,x2,x3,x4,x5 ≥ 0
 ```
 
-Code
-```go
-// coefficients vector
-c := []float64{2, 1, 0, 0, 0, -2}
-
-// constraints as a sparse matrix
-var T la.Triplet
-T.Init(3, 6, 12) // 3 by 6 matrix, with 12 non-zeros
-T.Put(0, 0, -1)
-T.Put(0, 1, 1)
-T.Put(0, 2, 1)
-T.Put(0, 5, 1)
-T.Put(1, 0, -1)
-T.Put(1, 1, -1)
-T.Put(1, 3, 1)
-T.Put(1, 5, 1)
-T.Put(2, 0, 1)
-T.Put(2, 1, -2)
-T.Put(2, 4, 1)
-T.Put(2, 5, -1)
-Am := T.ToMatrix(nil) // compressed-column matrix
-
-// right-hand side
-b := []float64{1, -2, 4}
-
-// print arrays
-A := Am.ToDense()
-la.PrintMat("\nA", A, "%6g", false)
-la.PrintVec("\nb", b, "%6g", false)
-la.PrintVec("\nc", c, "%6g", false)
-io.Pf("\n")
-
-// solve LP
-var ipm opt.LinIpm
-defer ipm.Free()
-ipm.Init(Am, b, c, nil)
-err := ipm.Solve(true)
-if err != nil {
-    io.Pf("%v", err)
-    return
-}
-
-// print solution
-io.Pf("\n")
-io.Pf("x = %v\n", ipm.X)
-io.Pf("λ = %v\n", ipm.L)
-io.Pf("s = %v\n", ipm.S)
-
-// check solution
-x := ipm.X[:2]
-x[0] -= ipm.X[5]
-io.Pf("x = %v\n", x)
-bchk := make([]float64, 3)
-la.MatVecMul(bchk, 1, A, x)
-io.Pf("b(check) = %v\n", bchk)
-
-// plotting
-plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-f := func(x []float64) float64 { return c[0]*x[0] + c[1]*x[1] }
-g := func(x []float64, i int) float64 { return A[i][0]*x[0] + A[i][1]*x[1] - b[i] }
-np := 41
-argsF := &plt.A{CmapIdx: 1}
-argsG := &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2, Fsz: 10}
-vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
-opt.PlotTwoVarsContour(x, np, nil, true, vmin, vmax, argsF, argsG, f,
-    func(x []float64) float64 { return g(x, 0) },
-    func(x []float64) float64 { return g(x, 1) },
-)
-plt.Equal()
-plt.HideAllBorders()
-plt.Gll("$x$", "$y$", &plt.A{LegOut: true})
-plt.Save("/tmp/gosl", "opt_ipm02")
-```
+Source code: <a href="../examples/opt_ipm02.go">../examples/opt_ipm02.go</a>
 
 Output:
 ```
@@ -300,8 +161,6 @@ s = [2.489351257414523e-10 1.207644468431149e-10 0.5000000000671894 1.5000000000
 x = [0.5000000015974742 1.4999999986259591]
 b(check) = [0.999999997028485 -2.0000000002234333 -2.499999995654444]
 ```
-
-Source code: <a href="../examples/opt_ipm02.go">../examples/opt_ipm02.go</a>
 
 <div id="container">
 <p><img src="../examples/figs/opt_ipm02.png" width="500"></p>
