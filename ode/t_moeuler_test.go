@@ -18,15 +18,14 @@ func TestMoEuler01(tst *testing.T) {
 
 	// problem
 	p := ProbHwEq11()
-	ndim := len(p.Y)
 
 	// configuration
-	conf, err := NewConfig(MoEulerKind, "", nil, nil)
+	conf, err := NewConfig(MoEulerKind, "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 
 	// solver
-	sol, err := NewSolver(conf, ndim, p.Fcn, p.Jac, nil, nil)
+	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 

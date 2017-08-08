@@ -46,8 +46,7 @@ type Config struct {
 	Scaling   string // scaling for linear solver
 
 	// linear solver control
-	commR  *mpi.Communicator // for MPI run (real linear solver)
-	commC  *mpi.Communicator // for MPI run (complex linear solver)
+	comm   *mpi.Communicator // for MPI run (real linear solver)
 	lsKind string            // linear solver kind
 	distr  bool              // MPI distributed execution
 
@@ -59,12 +58,12 @@ type Config struct {
 
 // NewConfig returns a new [default] set of configuration parameters
 //   method -- the ODE method; e.g. Radau5kind
-//   commR  -- communicator for real linear solver [may be nil]
-//   commC  -- communicator for complex linear solver [may be nil or the same as commR]
+//   comm   -- communicator for the linear solver [may be nil]
 //   lsKind -- kind of linear solver: "umfpack" or "mumps" [may be empty]
-//   NOTE: (1) if comm{R&C} == nil, the linear solver will be "umfpack" by default
-//         (2) if comm{R&C} != nil and comm.Size() > 1, the linear solver will be set to "mumps"
-func NewConfig(method io.Enum, lsKind string, commR, commC *mpi.Communicator) (o *Config, err error) {
+//   NOTE: (1) if comm == nil, the linear solver will be "umfpack" by default
+//         (2) if comm != nil and comm.Size() == 1, you can use either "umfpack" or "mumps"
+//         (3) if comm != nil and comm.Size() > 1, the linear solver will be set to "mumps" automatically
+func NewConfig(method io.Enum, lsKind string, comm *mpi.Communicator) (o *Config, err error) {
 
 	// parameters
 	o = new(Config)
@@ -91,22 +90,17 @@ func NewConfig(method io.Enum, lsKind string, commR, commC *mpi.Communicator) (o
 	o.SaveXY = false
 
 	// linear solver control
-	if (commR == nil && commC != nil) || (commR != nil && commC == nil) {
-		err = chk.Err("either both of none communicators must be nil\n")
-		return
-	}
-	if commR == nil || lsKind == "" {
+	if comm == nil || lsKind == "" {
 		lsKind = "umfpack"
 	}
-	if commR != nil {
-		if commR.Size() > 1 {
+	if comm != nil {
+		if comm.Size() > 1 {
 			lsKind = "mumps"
 			o.distr = true
 		}
 	}
 	o.lsKind = lsKind
-	o.commR = commR
-	o.commC = commC
+	o.comm = comm
 
 	// set tolerances
 	err = o.SetTol(1e-4, 1e-4)

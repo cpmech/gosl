@@ -49,6 +49,7 @@ func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn O
 	o = new(Solver)
 	o.Conf = conf
 	o.Stat = NewStat()
+	o.Stat.LsKind = o.Conf.lsKind
 	o.Out = NewOutput(ofcn)
 	if conf.SaveXY {
 		o.Out.Resize(conf.NmaxSS + 1)

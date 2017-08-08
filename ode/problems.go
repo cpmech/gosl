@@ -34,7 +34,7 @@ func (o *Problem) Solve(method io.Enum, fixedStp, numJac bool) (stat *Stat, out 
 	y.Apply(1, o.Y)
 
 	// configuration
-	conf, err := NewConfig(method, "", nil, nil)
+	conf, err := NewConfig(method, "", nil)
 	conf.SaveXY = true
 	if fixedStp {
 		conf.FixedStp = o.Dx

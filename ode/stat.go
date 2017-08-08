@@ -17,6 +17,7 @@ type Stat struct {
 	Nlinsol   int     // number of calls to linsolver
 	Nitmax    int     // number max of iterations
 	Hopt      float64 // optimal step size at the end
+	LsKind    string  // kind of linear solver used
 }
 
 // NewStat returns a new structure
@@ -47,4 +48,5 @@ func (o *Stat) Print() {
 	io.Pf("number of lin solutions   =%6d\n", o.Nlinsol)
 	io.Pf("max number of iterations  =%6d\n", o.Nitmax)
 	io.Pf("optimal step size Hopt    = %g\n", o.Hopt)
+	io.Pf("kind of linear solver     = %q\n", o.LsKind)
 }

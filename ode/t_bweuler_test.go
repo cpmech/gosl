@@ -18,16 +18,15 @@ func TestBwEuler01a(tst *testing.T) {
 
 	// problem
 	p := ProbHwEq11()
-	ndim := len(p.Y)
 
 	// configuration
-	conf, err := NewConfig(BwEulerKind, "", nil, nil)
+	conf, err := NewConfig(BwEulerKind, "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.FixedStp = p.Dx
 
 	// solver
-	sol, err := NewSolver(conf, ndim, p.Fcn, p.Jac, nil, nil)
+	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -63,16 +62,15 @@ func TestBwEuler01b(tst *testing.T) {
 
 	// problem
 	p := ProbHwEq11()
-	ndim := len(p.Y)
 
 	// configuration
-	conf, err := NewConfig(BwEulerKind, "", nil, nil)
+	conf, err := NewConfig(BwEulerKind, "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.FixedStp = p.Dx
 
 	// solver
-	sol, err := NewSolver(conf, ndim, p.Fcn, nil, nil, nil)
+	sol, err := NewSolver(conf, p.Ndim, p.Fcn, nil, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 

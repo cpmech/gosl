@@ -111,7 +111,7 @@ func TestOde02(tst *testing.T) {
 	p := ProbVanDerPol()
 
 	// configuration
-	conf, err := NewConfig(Radau5kind, "", nil, nil)
+	conf, err := NewConfig(Radau5kind, "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 
@@ -170,7 +170,7 @@ func TestOde03(tst *testing.T) {
 	p := ProbRobertson()
 
 	// configuration
-	conf, err := NewConfig(Radau5kind, "", nil, nil)
+	conf, err := NewConfig(Radau5kind, "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 
@@ -237,7 +237,7 @@ func TestOde04(tst *testing.T) {
 	p := ProbHwAmplifier()
 
 	// configurations
-	conf, err := NewConfig(Radau5kind, "", nil, nil)
+	conf, err := NewConfig(Radau5kind, "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.IniH = 1.0e-6 // initial step size

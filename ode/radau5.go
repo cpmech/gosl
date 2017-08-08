@@ -199,11 +199,11 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 
 		// initialise linear solver
 		if !o.ready {
-			err = o.lsR.Init(o.kmatR, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.commR)
+			err = o.lsR.Init(o.kmatR, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
 			if err != nil {
 				return
 			}
-			err = o.lsC.Init(o.kmatC, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.commC)
+			err = o.lsC.Init(o.kmatC, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
 			if err != nil {
 				return
 			}
