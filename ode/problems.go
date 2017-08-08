@@ -76,7 +76,7 @@ func (o *Problem) Plot(label string, out *Output, npts int, withAna bool, argsAn
 	}
 	n := out.IdxSave
 	Xn := out.Xvalues[:n]
-	Yn := out.ExtractTimeSeries(0)
+	Yn := out.GetYi(0)
 	plt.Plot(Xn, Yn, argsNum)
 }
 

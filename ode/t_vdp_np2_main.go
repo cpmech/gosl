@@ -113,20 +113,21 @@ func main() {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
 		status(err)
-		n := sol.Out.IdxSave
+		X := sol.Out.GetX()
+		H := sol.Out.GetH()
 		for j := 0; j < ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.ExtractTimeSeries(j)
+			Yj := sol.Out.GetYi(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
-			plt.Plot(sol.Out.Xvalues[:n], Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
+			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(ndim+1, 1, ndim+1)
-		plt.Plot(sol.Out.Xvalues[:n], sol.Out.Hvalues[:n], &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, H, &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "vdp_np2")

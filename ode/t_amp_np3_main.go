@@ -173,14 +173,14 @@ func main() {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		n := sol.Out.IdxSave
-		X := sol.Out.Xvalues[:n]
+		X := sol.Out.GetX()
+		H := sol.Out.GetH()
 		for j := 0; j < ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 4 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.ExtractTimeSeries(j)
+			Yj := sol.Out.GetYi(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA, NoClip: true})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB, NoClip: true})
@@ -189,7 +189,7 @@ func main() {
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(ndim+1, 1, ndim+1)
-		plt.Plot(X, sol.Out.Hvalues[:n], &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, H, &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)

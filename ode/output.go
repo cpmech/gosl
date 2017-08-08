@@ -7,6 +7,7 @@ package ode
 import (
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Output holds output data
@@ -78,15 +79,55 @@ func (o *Output) Execute(h, x float64, y []float64) {
 	}
 }
 
-// ExtractTimeSeries extracts the y[i] values for all output times
+// GetH returns all h values
+func (o *Output) GetH() (X []float64) {
+	return o.Hvalues[:o.IdxSave]
+}
+
+// GetX returns all x values
+func (o *Output) GetX() (X []float64) {
+	return o.Xvalues[:o.IdxSave]
+}
+
+// GetYi extracts the y[i] values for all output times
 //  i -- index of y component
 //  use to plot time series; e.g.:
-//     plt.Plot(o.Xvalues[:o.IdxSave], o.ExtractTimeSeries(0), &plt.A{L:"y0"})
-func (o *Output) ExtractTimeSeries(i int) (Yi []float64) {
+//     plt.Plot(o.GetX(), o.GetY(0), &plt.A{L:"y0"})
+func (o *Output) GetYi(i int) (Yi []float64) {
 	if o.IdxSave > 0 {
 		Yi = make([]float64, o.IdxSave)
 		for j := 0; j < o.IdxSave; j++ {
 			Yi[j] = o.Yvalues[j][i]
+		}
+	}
+	return
+}
+
+// GetY returns a table with all y values such that ytable[idxOut][dim]
+func (o *Output) GetY() (Y [][]float64) {
+	if len(o.Yvalues) < 1 {
+		return
+	}
+	ndim := len(o.Yvalues[0])
+	Y = utl.Alloc(o.IdxSave, ndim)
+	for j := 0; j < o.IdxSave; j++ {
+		for i := 0; i < ndim; i++ {
+			Y[j][i] = o.Yvalues[j][i]
+		}
+	}
+	return
+}
+
+// GetYt returns a (transposed) table with all y values such that ytable[dim][idxOut]
+func (o *Output) GetYt() (Y [][]float64) {
+	if len(o.Yvalues) < 1 {
+		return
+	}
+	ndim := len(o.Yvalues[0])
+	Y = utl.Alloc(ndim, o.IdxSave)
+	for j := 0; j < o.IdxSave; j++ {
+		for i := 0; i < ndim; i++ {
+			Y[i][j] = o.Yvalues[j][i]
 		}
 	}
 	return

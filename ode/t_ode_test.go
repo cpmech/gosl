@@ -139,21 +139,20 @@ func TestOde02(tst *testing.T) {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
 		status(tst, err)
-		n := sol.Out.IdxSave
-		X := sol.Out.Xvalues[:n]
+		X := sol.Out.GetX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.ExtractTimeSeries(j)
+			Yj := sol.Out.GetYi(j)
 			plt.Subplot(p.Ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(p.Ndim+1, 1, p.Ndim+1)
-		plt.Plot(X, sol.Out.Hvalues[:n], &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, sol.Out.GetH(), &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "vdpolA")
@@ -206,14 +205,13 @@ func TestOde03(tst *testing.T) {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		n := sol.Out.IdxSave
-		X := sol.Out.Xvalues[:n]
+		X := sol.Out.GetX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.ExtractTimeSeries(j)
+			Yj := sol.Out.GetYi(j)
 			plt.Subplot(p.Ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA, NoClip: true})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB, NoClip: true})
@@ -221,7 +219,7 @@ func TestOde03(tst *testing.T) {
 			plt.HideTRborders()
 		}
 		plt.Subplot(p.Ndim+1, 1, p.Ndim+1)
-		plt.Plot(X, sol.Out.Hvalues[:n], &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, sol.Out.GetH(), &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "rober")
@@ -276,14 +274,13 @@ func TestOde04(tst *testing.T) {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		n := sol.Out.IdxSave
-		X := sol.Out.Xvalues[:n]
+		X := sol.Out.GetX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 4 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.ExtractTimeSeries(j)
+			Yj := sol.Out.GetYi(j)
 			plt.Subplot(p.Ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA, NoClip: true})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB, NoClip: true})
@@ -292,7 +289,7 @@ func TestOde04(tst *testing.T) {
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(p.Ndim+1, 1, p.Ndim+1)
-		plt.Plot(X, sol.Out.Hvalues[:n], &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, sol.Out.GetH(), &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
