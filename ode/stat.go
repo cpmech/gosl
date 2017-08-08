@@ -46,5 +46,5 @@ func (o *Stat) Print() {
 	io.Pf("number of decompositions  =%6d\n", o.Ndecomp)
 	io.Pf("number of lin solutions   =%6d\n", o.Nlinsol)
 	io.Pf("max number of iterations  =%6d\n", o.Nitmax)
-	io.Pf("optimal step size Hopt    =%6d\n", o.Hopt)
+	io.Pf("optimal step size Hopt    = %g\n", o.Hopt)
 }

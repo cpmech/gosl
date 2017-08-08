@@ -18,6 +18,7 @@
 * Orthogonal polynomials
 * Lagrange interpolation using Chebyshev points
 * Fourier interpolation
+* Solving ordinary differential equations
 
 
 
@@ -451,4 +452,24 @@ Source code: <a href="fun_fourierinterp01.go">fun_fourierinterp01.go</a>
 
 <div id="container">
 <p><img src="figs/fun_fourierinterp01.png" width="500"></p>
+</div>
+
+
+
+# Solving ordinary differential equations
+
+Hairer-Wanner VII-p2 Eq.(1.1)
+
+References:
+  [1] Hairer E, Nørsett SP, Wanner G (1993). Solving Ordinary Differential Equations I:
+      Nonstiff Problems. Springer Series in Computational Mathematics, Vol. 8, Berlin,
+      Germany, 523 p.
+  [2] Hairer E, Wanner G (1996). Solving Ordinary Differential Equations II: Stiff and
+      Differential-Algebraic Problems. Springer Series in Computational Mathematics,
+      Vol. 14, Berlin, Germany, 614 p.
+
+Source code: <a href="ode_hweq11.go">ode_hweq11.go</a>
+
+<div id="container">
+<p><img src="figs/ode_hweq11.png" width="500"></p>
 </div>
