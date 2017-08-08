@@ -134,7 +134,6 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				return
 			}
 			o.Stat.Nsteps++
-			//o.doinit = false
 			o.work.first = false
 			x += h
 			o.rkm.Accept(y, o.work)
