@@ -58,7 +58,7 @@ Gosl includes the following _subpackages_:
 
 [See benchmarks here](examples/benchmark/README.md)
 
-Summary:
+Selected:
 
 * [Compute (fast) discrete Fourier transform](examples/fun_fft01.go)
 * [Generate and draw a NURBS toroidal surface](examples/gm_nurbs03.go)
@@ -73,6 +73,7 @@ Summary:
 * [Orthogonal polynomials](examples/fun_orthopoly01.go)
 * [Chebyshev interpolation](examples/fun_laginterp01.go)
 * [Fourier interpolation](examples/fun_fourierinterp01.go)
+* [Solving ordinary differential equations](examples/ode_hweq11.go)
 
 
 
