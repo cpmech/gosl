@@ -13,20 +13,20 @@ import (
 type DistType int
 
 const (
-	// NormalType defines the Normal distribution type
-	NormalType DistType = 1
+	// NormalKind defines the Normal distribution type
+	NormalKind DistType = 1
 
-	// LognormalType defines the Lognormal distribution type
-	LognormalType DistType = 2
+	// LognormalKind defines the Lognormal distribution type
+	LognormalKind DistType = 2
 
-	// GumbelType defines the Gumbel (Type I Extreme Value) distribution type
-	GumbelType DistType = 3
+	// GumbelKind defines the Gumbel (Type I Extreme Value) distribution type
+	GumbelKind DistType = 3
 
-	// FrechetType defines the Frechet (Type II Extreme Value) distribution type
-	FrechetType DistType = 4
+	// FrechetKind defines the Frechet (Type II Extreme Value) distribution type
+	FrechetKind DistType = 4
 
-	// UniformType defines the Uniform distribution type
-	UniformType DistType = 5
+	// UniformKind defines the Uniform distribution type
+	UniformKind DistType = 5
 )
 
 // VarData implements data defining one random variable
@@ -56,7 +56,7 @@ type VarData struct {
 
 // Transform transform x into standard normal space
 func (o *VarData) Transform(x float64) (y float64, invalid bool) {
-	if o.D == NormalType {
+	if o.D == NormalKind {
 		y = (x - o.M) / o.S
 		return
 	}
@@ -105,33 +105,33 @@ func (o Variables) Transform(x []float64) (y []float64, invalid bool) {
 func GetDistribution(name string) DistType {
 	switch name {
 	case "normal":
-		return NormalType
+		return NormalKind
 	case "lognormal":
-		return LognormalType
+		return LognormalKind
 	case "gumbel":
-		return GumbelType
+		return GumbelKind
 	case "frechet":
-		return FrechetType
+		return FrechetKind
 	case "uniform":
-		return UniformType
+		return UniformKind
 	default:
 		chk.Panic("cannot get distribution named %q", name)
 	}
-	return NormalType
+	return NormalKind
 }
 
 // GetDistrName returns distribution name from ID
 func GetDistrName(typ DistType) (name string) {
 	switch typ {
-	case NormalType:
+	case NormalKind:
 		return "normal"
-	case LognormalType:
+	case LognormalKind:
 		return "lognormal"
-	case GumbelType:
+	case GumbelKind:
 		return "gumbel"
-	case FrechetType:
+	case FrechetKind:
 		return "frechet"
-	case UniformType:
+	case UniformKind:
 		return "uniform"
 	default:
 		chk.Panic("cannot get distribution %v", typ)
@@ -142,15 +142,15 @@ func GetDistrName(typ DistType) (name string) {
 // GetDistrKey returns distribution key from ID
 func GetDistrKey(typ DistType) (name string) {
 	switch typ {
-	case NormalType:
+	case NormalKind:
 		return "N"
-	case LognormalType:
+	case LognormalKind:
 		return "L"
-	case GumbelType:
+	case GumbelKind:
 		return "G"
-	case FrechetType:
+	case FrechetKind:
 		return "F"
-	case UniformType:
+	case UniformKind:
 		return "U"
 	default:
 		chk.Panic("cannot get distribution %v", typ)
