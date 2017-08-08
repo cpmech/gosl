@@ -8,8 +8,8 @@ package main
 
 import (
 	"math"
+	"os"
 	"testing"
-	"time"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -21,9 +21,11 @@ import (
 
 func main() {
 
+	// start mpi
 	mpi.Start()
 	defer mpi.Stop()
 
+	// check number of processors
 	if mpi.WorldRank() == 0 {
 		chk.Verbose = true
 		chk.PrintTitle("Hairer-Wanner VII-p376 Transistor Amplifier")
@@ -35,174 +37,169 @@ func main() {
 		return
 	}
 
-	// data
-	UE, UB, UF, ALPHA, BETA := 0.1, 6.0, 0.026, 0.99, 1.0e-6
-	R0, R1, R2, R3, R4, R5 := 1000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0
-	R6, R7, R8, R9 := 9000.0, 9000.0, 9000.0, 9000.0
-	W := 2.0 * 3.141592654 * 100.0
-
-	// initial values
-	xa := 0.0
-	ya := []float64{
-		0.0,
-		UB,
-		UB / (R6/R5 + 1.0),
-		UB / (R6/R5 + 1.0),
-		UB,
-		UB / (R2/R1 + 1.0),
-		UB / (R2/R1 + 1.0),
-		0.0,
-	}
-
-	// endpoint of integration
-	xb := 0.05
-	//xb = 0.0123 // OK
-	//xb = 0.01235 // !OK
-
 	// communicator
 	comm := mpi.NewCommunicator(nil)
 
+	// constants
+	ue, ub, uf, α, β := 0.1, 6.0, 0.026, 0.99, 1.0e-6
+	r0, r1, r2, r3, r4, r5 := 1000.0, 9000.0, 9000.0, 9000.0, 9000.0, 9000.0
+	r6, r7, r8, r9 := 9000.0, 9000.0, 9000.0, 9000.0
+	w := 2.0 * 3.141592654 * 100.0
+	xf := 0.05
+
+	// initial values
+	y := la.Vector([]float64{0.0,
+		ub,
+		ub / (r6/r5 + 1.0),
+		ub / (r6/r5 + 1.0),
+		ub,
+		ub / (r2/r1 + 1.0),
+		ub / (r2/r1 + 1.0),
+		0.0,
+	})
+	ndim := len(y)
+
 	// right-hand side of the amplifier problem
-	w := la.NewVector(8) // workspace
 	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
-		UET := UE * math.Sin(W*x)
-		FAC1 := BETA * (math.Exp((y[3]-y[2])/UF) - 1.0)
-		FAC2 := BETA * (math.Exp((y[6]-y[5])/UF) - 1.0)
-		w.Fill(0)
-		switch comm.Rank() {
-		case 0:
-			w[0] = y[0] / R9
-		case 1:
-			w[1] = (y[1]-UB)/R8 + ALPHA*FAC1
-			w[2] = y[2]/R7 - FAC1
-		case 2:
-			w[3] = y[3]/R5 + (y[3]-UB)/R6 + (1.0-ALPHA)*FAC1
-			w[4] = (y[4]-UB)/R4 + ALPHA*FAC2
-			w[5] = y[5]/R3 - FAC2
-			w[6] = y[6]/R1 + (y[6]-UB)/R2 + (1.0-ALPHA)*FAC2
-			w[7] = (y[7] - UET) / R0
-		}
-		comm.AllReduceSum(f, w)
+		uet := ue * math.Sin(w*x)
+		fac1 := β * (math.Exp((y[3]-y[2])/uf) - 1.0)
+		fac2 := β * (math.Exp((y[6]-y[5])/uf) - 1.0)
+		f[0] = y[0] / r9
+		f[1] = (y[1]-ub)/r8 + α*fac1
+		f[2] = y[2]/r7 - fac1
+		f[3] = y[3]/r5 + (y[3]-ub)/r6 + (1.0-α)*fac1
+		f[4] = (y[4]-ub)/r4 + α*fac2
+		f[5] = y[5]/r3 - fac2
+		f[6] = y[6]/r1 + (y[6]-ub)/r2 + (1.0-α)*fac2
+		f[7] = (y[7] - uet) / r0
 		return nil
 	}
 
 	// Jacobian of the amplifier problem
 	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
-		FAC14 := BETA * math.Exp((y[3]-y[2])/UF) / UF
-		FAC27 := BETA * math.Exp((y[6]-y[5])/UF) / UF
+		fac14 := β * math.Exp((y[3]-y[2])/uf) / uf
+		fac27 := β * math.Exp((y[6]-y[5])/uf) / uf
 		if dfdy.Max() == 0 {
 			dfdy.Init(8, 8, 16)
 		}
-		NU := 2
+		nu := 2
 		dfdy.Start()
 		switch comm.Rank() {
 		case 0:
-			dfdy.Put(2+0-NU, 0, 1.0/R9)
-			dfdy.Put(2+1-NU, 1, 1.0/R8)
-			dfdy.Put(1+2-NU, 2, -ALPHA*FAC14)
-			dfdy.Put(0+3-NU, 3, ALPHA*FAC14)
-			dfdy.Put(2+2-NU, 2, 1.0/R7+FAC14)
+			dfdy.Put(2+0-nu, 0, 1.0/r9)
+			dfdy.Put(2+1-nu, 1, 1.0/r8)
+			dfdy.Put(1+2-nu, 2, -α*fac14)
+			dfdy.Put(0+3-nu, 3, α*fac14)
+			dfdy.Put(2+2-nu, 2, 1.0/r7+fac14)
 		case 1:
-			dfdy.Put(1+3-NU, 3, -FAC14)
-			dfdy.Put(2+3-NU, 3, 1.0/R5+1.0/R6+(1.0-ALPHA)*FAC14)
-			dfdy.Put(3+2-NU, 2, -(1.0-ALPHA)*FAC14)
-			dfdy.Put(2+4-NU, 4, 1.0/R4)
-			dfdy.Put(1+5-NU, 5, -ALPHA*FAC27)
+			dfdy.Put(1+3-nu, 3, -fac14)
+			dfdy.Put(2+3-nu, 3, 1.0/r5+1.0/r6+(1.0-α)*fac14)
+			dfdy.Put(3+2-nu, 2, -(1.0-α)*fac14)
+			dfdy.Put(2+4-nu, 4, 1.0/r4)
+			dfdy.Put(1+5-nu, 5, -α*fac27)
 		case 2:
-			dfdy.Put(0+6-NU, 6, ALPHA*FAC27)
-			dfdy.Put(2+5-NU, 5, 1.0/R3+FAC27)
-			dfdy.Put(1+6-NU, 6, -FAC27)
-			dfdy.Put(2+6-NU, 6, 1.0/R1+1.0/R2+(1.0-ALPHA)*FAC27)
-			dfdy.Put(3+5-NU, 5, -(1.0-ALPHA)*FAC27)
-			dfdy.Put(2+7-NU, 7, 1.0/R0)
+			dfdy.Put(0+6-nu, 6, α*fac27)
+			dfdy.Put(2+5-nu, 5, 1.0/r3+fac27)
+			dfdy.Put(1+6-nu, 6, -fac27)
+			dfdy.Put(2+6-nu, 6, 1.0/r1+1.0/r2+(1.0-α)*fac27)
+			dfdy.Put(3+5-nu, 5, -(1.0-α)*fac27)
+			dfdy.Put(2+7-nu, 7, 1.0/r0)
 		}
 		return nil
 	}
 
-	// matrix "M"
+	// "mass" matrix
 	c1, c2, c3, c4, c5 := 1.0e-6, 2.0e-6, 3.0e-6, 4.0e-6, 5.0e-6
-	var M la.Triplet
+	M := new(la.Triplet)
 	M.Init(8, 8, 14)
 	M.Start()
-	NU := 1
+	nu := 1
 	switch comm.Rank() {
 	case 0:
-		M.Put(1+0-NU, 0, -c5)
-		M.Put(0+1-NU, 1, c5)
-		M.Put(2+0-NU, 0, c5)
-		M.Put(1+1-NU, 1, -c5)
-		M.Put(1+2-NU, 2, -c4)
-		M.Put(1+3-NU, 3, -c3)
+		M.Put(1+0-nu, 0, -c5)
+		M.Put(0+1-nu, 1, c5)
+		M.Put(2+0-nu, 0, c5)
+		M.Put(1+1-nu, 1, -c5)
+		M.Put(1+2-nu, 2, -c4)
+		M.Put(1+3-nu, 3, -c3)
 	case 1:
-		M.Put(0+4-NU, 4, c3)
-		M.Put(2+3-NU, 3, c3)
-		M.Put(1+4-NU, 4, -c3)
+		M.Put(0+4-nu, 4, c3)
+		M.Put(2+3-nu, 3, c3)
+		M.Put(1+4-nu, 4, -c3)
 	case 2:
-		M.Put(1+5-NU, 5, -c2)
-		M.Put(1+6-NU, 6, -c1)
-		M.Put(0+7-NU, 7, c1)
-		M.Put(2+6-NU, 6, c1)
-		M.Put(1+7-NU, 7, -c1)
+		M.Put(1+5-nu, 5, -c2)
+		M.Put(1+6-nu, 6, -c1)
+		M.Put(0+7-nu, 7, c1)
+		M.Put(2+6-nu, 6, c1)
+		M.Put(1+7-nu, 7, -c1)
 	}
 
-	conf, err := ode.NewConfig(ode.Radau5kind, "", nil, nil)
+	// configurations
+	conf, err := ode.NewConfig(ode.Radau5kind, "", comm)
 	status(err)
 	conf.SaveXY = true
-
-	// ODE solver
-	ndim := len(ya)
-	sol := ode.NewSolver(ode.Radau5kind, ndim, fcn, jac, &M, nil)
-	sol.IniH = 1.0e-6 // initial step size
-	sol.SaveXY = true
-	sol.Pll = true
+	conf.IniH = 1.0e-6 // initial step size
 
 	// set tolerances
 	atol, rtol := 1e-11, 1e-5
-	sol.SetTol(atol, rtol)
+	conf.SetTol(atol, rtol)
+
+	// ODE solver
+	sol, err := ode.NewSolver(conf, ndim, fcn, jac, M, nil)
+	status(err)
+	defer sol.Free()
 
 	// run
-	t0 := time.Now()
-	sol.Solve(ya, xa, xb, xb-xa, false)
+	err = sol.Solve(y, 0.0, xf)
+	status(err)
 
 	// only root
 	if mpi.WorldRank() == 0 {
 
 		// check
 		tst := new(testing.T)
-		chk.Int(tst, "number of F evaluations ", sol.Nfeval, 2655)
-		chk.Int(tst, "number of J evaluations ", sol.Njeval, 217)
-		chk.Int(tst, "total number of steps   ", sol.Nsteps, 282)
-		chk.Int(tst, "number of accepted steps", sol.Naccepted, 221)
-		chk.Int(tst, "number of rejected steps", sol.Nrejected, 23)
-		chk.Int(tst, "number of decompositions", sol.Ndecomp, 281)
-		chk.Int(tst, "number of lin solutions ", sol.Nlinsol, 809)
-		chk.Int(tst, "max number of iterations", sol.Nitmax, 6)
+		chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2655)
+		chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 217)
+		chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 282)
+		chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 221)
+		chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 23)
+		chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 281)
+		chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 809)
+		chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
 
 		// plot
-		io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 		plt.Reset(true, &plt.A{WidthPt: 450, Dpi: 150, Prop: 1.8, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		s := sol.IdxSave
+		n := sol.Out.IdxSave
+		X := sol.Out.Xvalues[:n]
 		for j := 0; j < ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 4 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.ExtractTimeSeries(j)
+			Yj := sol.Out.ExtractTimeSeries(j)
 			plt.Subplot(ndim+1, 1, j+1)
-			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
-			plt.Plot(sol.Xvalues[:s], Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB})
+			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA, NoClip: true})
+			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB, NoClip: true})
 			plt.AxisXmax(0.05)
+			plt.HideTRborders()
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(ndim+1, 1, ndim+1)
-		plt.Plot(sol.Xvalues[1:s], sol.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, sol.Out.Hvalues[:n], &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "amp_np3")
+	}
+}
+
+func status(err error) {
+	if err != nil {
+		io.Pf("ERROR: %v\n", err)
+		os.Exit(1)
 	}
 }

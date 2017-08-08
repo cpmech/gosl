@@ -18,20 +18,13 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
-func status(err error) {
-	if err != nil {
-		io.Pf("ERROR: %v\n", err)
-		chk.Verbose = true
-		chk.CallerInfo(2)
-		os.Exit(1)
-	}
-}
-
 func main() {
 
+	// start mpi
 	mpi.Start()
 	defer mpi.Stop()
 
+	//check number of processors
 	if mpi.WorldRank() == 0 {
 		chk.Verbose = true
 		chk.PrintTitle("Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation (Distr=true)")
@@ -43,10 +36,11 @@ func main() {
 		return
 	}
 
+	// communicator
 	comm := mpi.NewCommunicator(nil)
 
+	// dy/dx function
 	eps := 1.0e-6
-
 	w := la.NewVector(2) // workspace
 	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
 		w.Fill(0)
@@ -60,6 +54,7 @@ func main() {
 		return nil
 	}
 
+	// Jacobian
 	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
 		if dfdy.Max() == 0 {
 			dfdy.Init(2, 2, 4)
@@ -76,56 +71,71 @@ func main() {
 		return nil
 	}
 
-	xa, xb := 0.0, 2.0
+	// initial values
+	xb := 2.0
 	ndim := 2
 	y := la.Vector([]float64{2.0, -0.6})
 
-	conf, err := ode.NewConfig(ode.Radau5kind, "", nil, nil)
+	// configurations
+	conf, err := ode.NewConfig(ode.Radau5kind, "", comm)
 	status(err)
 	conf.SaveXY = true
 
-	sol := ode.NewSolver(ode.Radau5kind, ndim, fcn, jac, nil, nil)
-	sol.SaveXY = true
-	sol.Distr = true // <<<<<<< distributed mode
-
+	// tolerances
 	rtol := 1e-4
 	atol := rtol
-	sol.IniH = 1.0e-4
-	sol.SetTol(atol, rtol)
+	conf.IniH = 1.0e-4
+	conf.SetTol(atol, rtol)
 
-	sol.Solve(y, xa, xb, xb-xa, false)
+	// solver
+	sol, err := ode.NewSolver(conf, ndim, fcn, jac, nil, nil)
+	status(err)
 
+	// solve
+	err = sol.Solve(y, 0, xb)
+	status(err)
+
+	// only root
 	if mpi.WorldRank() == 0 {
-		tst := new(testing.T)
-		chk.Int(tst, "number of F evaluations ", sol.Nfeval, 2233)
-		chk.Int(tst, "number of J evaluations ", sol.Njeval, 160)
-		chk.Int(tst, "total number of steps   ", sol.Nsteps, 280)
-		chk.Int(tst, "number of accepted steps", sol.Naccepted, 241)
-		chk.Int(tst, "number of rejected steps", sol.Nrejected, 7)
-		chk.Int(tst, "number of decompositions", sol.Ndecomp, 251)
-		chk.Int(tst, "number of lin solutions ", sol.Nlinsol, 663)
-		chk.Int(tst, "max number of iterations", sol.Nitmax, 6)
-		chk.Int(tst, "IdxSave", sol.IdxSave, sol.Naccepted+1)
 
+		//check
+		tst := new(testing.T)
+		chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2233)
+		chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 160)
+		chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 280)
+		chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 241)
+		chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 7)
+		chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 251)
+		chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 663)
+		chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
+
+		// plot
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
 		status(err)
-		s := sol.IdxSave
+		n := sol.Out.IdxSave
 		for j := 0; j < ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.ExtractTimeSeries(j)
+			Yj := sol.Out.ExtractTimeSeries(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
-			plt.Plot(sol.Xvalues[:s], Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
+			plt.Plot(sol.Out.Xvalues[:n], Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(ndim+1, 1, ndim+1)
-		plt.Plot(sol.Xvalues[1:s], sol.Hvalues[1:s], &plt.A{C: "b", NoClip: true})
+		plt.Plot(sol.Out.Xvalues[:n], sol.Out.Hvalues[:n], &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "vdp_np2")
+	}
+}
+
+func status(err error) {
+	if err != nil {
+		io.Pf("ERROR: %v\n", err)
+		os.Exit(1)
 	}
 }

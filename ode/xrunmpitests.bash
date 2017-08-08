@@ -1,10 +1,7 @@
 #!/bin/bash
 
 NP1="
-t_eq11_distr_main \
-t_eq11_nodis_main \
-t_vdp_distr_main \
-t_vdp_nodis_main
+t_eq11_np1_main \
 "
 
 NP2="
