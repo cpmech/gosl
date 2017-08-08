@@ -91,7 +91,11 @@ func (o *Radau5) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet)
 	o.mtri = M
 	if M == nil {
 		o.mtri = new(la.Triplet)
-		la.SpTriSetDiag(o.mtri, ndim, 1)
+		if o.conf.distr {
+			o.distrM(ndim)
+		} else {
+			la.SpTriSetDiag(o.mtri, ndim, 1)
+		}
 	} else {
 		o.hasM = true
 	}
@@ -143,11 +147,6 @@ func (o *Radau5) Accept(y la.Vector, work *rkwork) {
 // Step steps update
 func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
 
-	// run MPI version if distributed=true
-	//if sol.Distr {
-	//return o.StepMpi(sol, y0, x0)
-	//}
-
 	// factors
 	α := o.Alp / h
 	β := o.Bet / h
@@ -168,10 +167,17 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 
 			// numerical Jacobian
 			if o.jac == nil { // numerical
-				err = num.Jacobian(o.dfdy, func(fy, yy la.Vector) (e error) {
-					e = o.fcn(fy, h, x0, yy)
-					return
-				}, y0, work.f0, o.w[0]) // w works here as workspace variable
+				if o.conf.distr {
+					err = num.JacobianMpi(o.conf.comm, o.dfdy, func(fy, yy la.Vector) (e error) {
+						e = o.fcn(fy, h, x0, yy)
+						return
+					}, y0, work.f0, o.w[0], true) // w works here as workspace variable
+				} else {
+					err = num.Jacobian(o.dfdy, func(fy, yy la.Vector) (e error) {
+						e = o.fcn(fy, h, x0, yy)
+						return
+					}, y0, work.f0, o.w[0]) // w works here as workspace variable
+				}
 
 				// analytical Jacobian
 			} else {
@@ -283,10 +289,14 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 
 		// calc rhs
 		if o.hasM {
-			// using dw as workspace here
-			la.SpMatVecMul(o.dw[0], 1, o.mmat, o.w[0]) // dw0 := M ⋅ w0
-			la.SpMatVecMul(o.dw[1], 1, o.mmat, o.w[1]) // dw1 := M ⋅ w1
-			la.SpMatVecMul(o.dw[2], 1, o.mmat, o.w[2]) // dw2 := M ⋅ w2
+			if o.conf.distr {
+				o.distrDw(work) // compute dw[i]
+			} else {
+				// using dw as workspace here
+				la.SpMatVecMul(o.dw[0], 1, o.mmat, o.w[0]) // dw0 := M ⋅ w0
+				la.SpMatVecMul(o.dw[1], 1, o.mmat, o.w[1]) // dw1 := M ⋅ w1
+				la.SpMatVecMul(o.dw[2], 1, o.mmat, o.w[2]) // dw2 := M ⋅ w2
+			}
 			for m := 0; m < work.ndim; m++ {
 				work.v[0][m] = o.Ti[0][0]*work.f[0][m] + o.Ti[0][1]*work.f[1][m] + o.Ti[0][2]*work.f[2][m] - γ*o.dw[0][m]
 				work.v[1][m] = o.Ti[1][0]*work.f[0][m] + o.Ti[1][1]*work.f[1][m] + o.Ti[1][2]*work.f[2][m] - α*o.dw[1][m] + β*o.dw[2][m]
@@ -434,7 +444,11 @@ func (o *Radau5) errorEstimate(h, x0 float64, y0 la.Vector, stat *Stat, work *rk
 			o.ez[m] = o.E0*o.z[0][m] + o.E1*o.z[1][m] + o.E2*o.z[2][m]
 			o.rhs[m] = work.f0[m]
 		}
-		la.SpMatVecMulAdd(o.rhs, γ, o.mmat, o.ez) // rhs += γ ⋅ M ⋅ ez
+		if o.conf.distr {
+			o.distrAddToRHS(γ)
+		} else {
+			la.SpMatVecMulAdd(o.rhs, γ, o.mmat, o.ez) // rhs += γ ⋅ M ⋅ ez
+		}
 	} else {
 		for m := 0; m < work.ndim; m++ {
 			o.ez[m] = o.E0*o.z[0][m] + o.E1*o.z[1][m] + o.E2*o.z[2][m]
@@ -463,16 +477,51 @@ func (o *Radau5) errorEstimate(h, x0 float64, y0 la.Vector, stat *Stat, work *rk
 				return
 			}
 			if o.hasM {
-				o.rhs.Apply(1, work.f[0])                 // rhs := f0perr
-				la.SpMatVecMulAdd(o.rhs, γ, o.mmat, o.ez) // rhs += γ * M * ez
+				o.rhs.Apply(1, work.f[0]) // rhs := f0perr
+				if o.conf.distr {
+					o.distrAddToRHS(γ)
+				} else {
+					la.SpMatVecMulAdd(o.rhs, γ, o.mmat, o.ez) // rhs += γ ⋅ M ⋅ ez
+				}
 			} else {
-				la.VecAdd(o.rhs, 1, work.f[0], γ, o.ez) // rhs = f0perr + γ * ez
+				la.VecAdd(o.rhs, 1, work.f[0], γ, o.ez) // rhs = f0perr + γ ⋅ ez
 			}
 			o.lsR.Solve(o.lerr, o.rhs, false)
 			rerr = o.rmsNorm(work, o.lerr)
 		}
 	}
 	return
+}
+
+// distrM sets M matrix (distributed version)
+func (o *Radau5) distrM(ndim int) {
+	id, sz := o.conf.comm.Rank(), o.conf.comm.Size()
+	start, endp1 := (id*ndim)/sz, ((id+1)*ndim)/sz
+	o.mtri.Init(ndim, ndim, endp1-start)
+	for i := start; i < endp1; i++ {
+		o.mtri.Put(i, i, 1.0)
+	}
+}
+
+// distrDw computes dw = M * w (distributed version)
+func (o *Radau5) distrDw(work *rkwork) {
+
+	// using v as workspace here
+	la.SpMatVecMul(work.v[0], 1, o.mmat, o.w[0]) // v0 := M * w0
+	la.SpMatVecMul(work.v[1], 1, o.mmat, o.w[1]) // v1 := M * w1
+	la.SpMatVecMul(work.v[2], 1, o.mmat, o.w[2]) // v2 := M * w2
+
+	// the AllReduceSum will produce dw
+	o.conf.comm.AllReduceSum(o.dw[0], work.v[0]) // dw0 := M * w0
+	o.conf.comm.AllReduceSum(o.dw[1], work.v[1]) // dw1 := M * w1
+	o.conf.comm.AllReduceSum(o.dw[2], work.v[2]) // dw2 := M * w2
+}
+
+// distrAddToRHS adds part of error estimate to rhs (disbributed version)
+func (o *Radau5) distrAddToRHS(γ float64) {
+	la.SpMatVecMul(o.dw[0], γ, o.mmat, o.ez)   // dw[0] = γ ⋅ M ⋅ ez  (dw[0] is workspace)
+	o.conf.comm.AllReduceSum(o.dw[1], o.dw[0]) // dw[1] = join(dw[0])
+	la.VecAdd(o.rhs, 1, o.rhs, 1, o.dw[1])     // rhs += dw[1]
 }
 
 // rmsNorm computes the RMS norm
