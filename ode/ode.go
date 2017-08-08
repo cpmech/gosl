@@ -59,7 +59,7 @@ func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn O
 	o.fcn = fcn
 	o.jac = jac
 
-	// method and info
+	// method
 	o.rkm, err = newRKmethod(o.Conf.Method)
 	if err != nil {
 		return
@@ -90,7 +90,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 	// check
 	if xf < x {
-		err = chk.Err("xf == %v must be greater than x == %v\n", xf, x)
+		err = chk.Err("xf=%v must be greater than x=%v\n", xf, x)
 		return
 	}
 
