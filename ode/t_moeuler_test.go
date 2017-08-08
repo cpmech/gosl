@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/plt"
 )
 
 func TestMoEuler01(tst *testing.T) {
@@ -15,19 +16,25 @@ func TestMoEuler01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("MoEuler01. Modified-Euler")
 
-	_, xf, y, yana, fcn, _ := eq11data()
+	// problem
+	p := ProbHwEq11()
+	ndim := len(p.Y)
 
+	// configuration
 	conf, err := NewConfig(MoEulerKind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 
-	sol, err := NewSolver(conf, 1, fcn, nil, nil, nil)
+	// solver
+	sol, err := NewSolver(conf, ndim, p.Fcn, p.Jac, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 
-	err = sol.Solve(y, 0.0, xf)
+	// solve ODE
+	err = sol.Solve(p.Y, 0.0, p.Xf)
 	status(tst, err)
 
+	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 379)
 	chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 0)
 	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 189)
@@ -37,9 +44,13 @@ func TestMoEuler01(tst *testing.T) {
 	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 0)
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 0)
 
-	chk.Float64(tst, "yFin", 4.294973673e-5, y[0], yana(xf))
+	// check results
+	chk.Float64(tst, "yFin", 4.294973673e-5, p.Y[0], p.Yana(p.Xf))
 
+	// plot
 	if chk.Verbose {
-		eq11plotOne("moeuler01", "MoEuler", xf, yana, sol)
+		plt.Reset(true, nil)
+		p.Plot("MoEuler", sol.Out, 101, true, nil, nil)
+		plt.Save("/tmp/gosl/ode", "moeuler01")
 	}
 }

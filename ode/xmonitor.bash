@@ -9,4 +9,5 @@ while true; do
     echo
     echo
     go test -test.run="Ode01"
+    #go test -test.run="BwEuler"
 done

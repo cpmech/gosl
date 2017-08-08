@@ -46,6 +46,10 @@ func main() {
 	ndim := 1
 	y := la.NewVector(ndim)
 
+	conf, err := ode.NewConfig(ode.Radau5kind, "", nil, nil)
+	status(err)
+	conf.SaveXY = true
+
 	sol := ode.NewSolver(ode.Radau5kind, ndim, fcn, jac, nil, nil)
 	sol.SaveXY = true
 	sol.Distr = false // <<< disable distributed computations

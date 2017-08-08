@@ -145,6 +145,10 @@ func main() {
 		M.Put(1+7-NU, 7, -c1)
 	}
 
+	conf, err := ode.NewConfig(ode.Radau5kind, "", nil, nil)
+	status(err)
+	conf.SaveXY = true
+
 	// ODE solver
 	ndim := len(ya)
 	sol := ode.NewSolver(ode.Radau5kind, ndim, fcn, jac, &M, nil)

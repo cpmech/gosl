@@ -46,8 +46,8 @@ type JacF func(dfdy *la.Triplet, h, x float64, y la.Vector) error
 //     error -- this function can return an error to force stopping the simulation
 type OutF func(first bool, h, x float64, y la.Vector) error
 
-// stpfcn defines the step function interface to implement ODE solvers
-type stpfcn func(o *Solver, y la.Vector, x float64) (rerr float64, err error)
+// YanaF defines a function to be used when computing analytical solutions
+type YanaF func(x float64) float64
 
-// acptfcn defines the "accept update" function interface to implement ODE solvers
-type acptfcn func(o *Solver, y la.Vector)
+// ProbPlotF defines a function to plot problems' results
+//type ProbPlotF func(dirout, fnk, label string, xf float64, yana yanaType, sol *Solver)

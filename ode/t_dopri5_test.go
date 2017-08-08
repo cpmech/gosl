@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/plt"
 )
 
 func TestDoPri501(tst *testing.T) {
@@ -15,19 +16,25 @@ func TestDoPri501(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("DoPri501. Dormand-Prince5")
 
-	_, xf, y, yana, fcn, _ := eq11data()
+	// problem
+	p := ProbHwEq11()
+	ndim := len(p.Y)
 
+	// configuration
 	conf, err := NewConfig(DoPri5kind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 
-	sol, err := NewSolver(conf, 1, fcn, nil, nil, nil)
+	// solver
+	sol, err := NewSolver(conf, ndim, p.Fcn, p.Jac, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 
-	err = sol.Solve(y, 0.0, xf)
+	// solve ODE
+	err = sol.Solve(p.Y, 0.0, p.Xf)
 	status(tst, err)
 
+	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 1132)
 	chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 0)
 	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 172)
@@ -37,9 +44,13 @@ func TestDoPri501(tst *testing.T) {
 	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 0)
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 0)
 
-	chk.Float64(tst, "yFin", 0.0179276654, y[0], yana(xf))
+	// check results
+	chk.Float64(tst, "yFin", 0.0179276654, p.Y[0], p.Yana(p.Xf))
 
+	// plot
 	if chk.Verbose {
-		eq11plotOne("dopri501", "DoPri5", xf, yana, sol)
+		plt.Reset(true, nil)
+		p.Plot("DoPri5", sol.Out, 101, true, nil, nil)
+		plt.Save("/tmp/gosl/ode", "dopri501")
 	}
 }

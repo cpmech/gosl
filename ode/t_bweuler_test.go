@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/plt"
 )
 
 func TestBwEuler01a(tst *testing.T) {
@@ -15,20 +16,26 @@ func TestBwEuler01a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("BwEuler01a. Backward-Euler (analytical Jacobian)")
 
-	dx, xf, y, yana, fcn, jac := eq11data()
+	// problem
+	p := ProbHwEq11()
+	ndim := len(p.Y)
 
+	// configuration
 	conf, err := NewConfig(BwEulerKind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
-	conf.FixedStp = dx
+	conf.FixedStp = p.Dx
 
-	sol, err := NewSolver(conf, 1, fcn, jac, nil, nil)
+	// solver
+	sol, err := NewSolver(conf, ndim, p.Fcn, p.Jac, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 
-	err = sol.Solve(y, 0.0, xf)
+	// solve ODE
+	err = sol.Solve(p.Y, 0.0, p.Xf)
 	status(tst, err)
 
+	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 80)
 	chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 40)
 	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 40)
@@ -38,10 +45,14 @@ func TestBwEuler01a(tst *testing.T) {
 	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 40)
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 2)
 
-	chk.Float64(tst, "yFin", 1e-4, y[0], yana(xf))
+	// check results
+	chk.Float64(tst, "yFin", 1e-4, p.Y[0], p.Yana(p.Xf))
 
+	// plot
 	if chk.Verbose {
-		eq11plotOne("bweuler01a", "BwEuler,Jana", xf, yana, sol)
+		plt.Reset(true, nil)
+		p.Plot("BwEuler,Jana", sol.Out, 101, true, nil, nil)
+		plt.Save("/tmp/gosl/ode", "bweuler01a")
 	}
 }
 
@@ -50,20 +61,26 @@ func TestBwEuler01b(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("BwEuler01b. Backward-Euler (numerical Jacobian)")
 
-	dx, xf, y, yana, fcn, _ := eq11data()
+	// problem
+	p := ProbHwEq11()
+	ndim := len(p.Y)
 
+	// configuration
 	conf, err := NewConfig(BwEulerKind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
-	conf.FixedStp = dx
+	conf.FixedStp = p.Dx
 
-	sol, err := NewSolver(conf, 1, fcn, nil, nil, nil)
+	// solver
+	sol, err := NewSolver(conf, ndim, p.Fcn, nil, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 
-	err = sol.Solve(y, 0.0, xf)
+	// solve ODE
+	err = sol.Solve(p.Y, 0.0, p.Xf)
 	status(tst, err)
 
+	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 120)
 	chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 40)
 	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 40)
@@ -73,9 +90,13 @@ func TestBwEuler01b(tst *testing.T) {
 	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 40)
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 2)
 
-	chk.Float64(tst, "yFin", 1e-4, y[0], yana(xf))
+	// check results
+	chk.Float64(tst, "yFin", 1e-4, p.Y[0], p.Yana(p.Xf))
 
+	// plot
 	if chk.Verbose {
-		eq11plotOne("bweuler01b", "BwEuler,Jnum", xf, yana, sol)
+		plt.Reset(true, nil)
+		p.Plot("BwEuler,Jnum", sol.Out, 101, true, nil, nil)
+		plt.Save("/tmp/gosl/ode", "bweuler01b")
 	}
 }
