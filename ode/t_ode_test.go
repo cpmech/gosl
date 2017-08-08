@@ -30,7 +30,7 @@ func TestOde01(tst *testing.T) {
 	// FwEuler
 	io.Pforan("\n. . . FwEuler . . . \n")
 	copy(y, ya)
-	conf1, err := NewConfig(FwEulerKind, nil, "", 0, 0)
+	conf1, err := NewConfig(FwEulerKind, "", nil, nil)
 	status(tst, err)
 	conf1.SaveXY = true
 	conf1.FixedStp = dx
@@ -51,7 +51,7 @@ func TestOde01(tst *testing.T) {
 	// BwEuler
 	io.Pforan("\n. . . BwEuler . . . \n")
 	copy(y, ya)
-	conf2, err := NewConfig(BwEulerKind, nil, "", 0, 0)
+	conf2, err := NewConfig(BwEulerKind, "", nil, nil)
 	status(tst, err)
 	conf2.SaveXY = true
 	conf2.FixedStp = dx
@@ -72,7 +72,7 @@ func TestOde01(tst *testing.T) {
 	// MoEuler
 	io.Pforan("\n. . . MoEuler . . . \n")
 	copy(y, ya)
-	conf3, err := NewConfig(MoEulerKind, nil, "", 0, 0)
+	conf3, err := NewConfig(MoEulerKind, "", nil, nil)
 	status(tst, err)
 	conf3.SaveXY = true
 	sol3, err := NewSolver(conf3, ndim, fcn, jac, nil, nil)
@@ -92,7 +92,7 @@ func TestOde01(tst *testing.T) {
 	// DoPri5
 	io.Pforan("\n. . . DoPri5 . . . \n")
 	copy(y, ya)
-	conf4, err := NewConfig(DoPri5kind, nil, "", 0, 0)
+	conf4, err := NewConfig(DoPri5kind, "", nil, nil)
 	status(tst, err)
 	conf4.SaveXY = true
 	sol4, err := NewSolver(conf4, ndim, fcn, jac, nil, nil)
@@ -112,7 +112,7 @@ func TestOde01(tst *testing.T) {
 	// Radau5
 	io.Pforan("\n. . . Radau5 . . . \n")
 	copy(y, ya)
-	conf5, err := NewConfig(Radau5kind, nil, "", 0, 0)
+	conf5, err := NewConfig(Radau5kind, "", nil, nil)
 	status(tst, err)
 	conf5.SaveXY = true
 	sol5, err := NewSolver(conf5, ndim, fcn, jac, nil, nil)
@@ -179,7 +179,7 @@ func TestOde02(tst *testing.T) {
 	ndim := len(y)
 
 	// configuration
-	conf, err := NewConfig(Radau5kind, nil, "", 0, 0)
+	conf, err := NewConfig(Radau5kind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 
@@ -264,7 +264,7 @@ func TestOde03(tst *testing.T) {
 	ndim := len(y)
 
 	// configuration
-	conf, err := NewConfig(Radau5kind, nil, "", 0, 0)
+	conf, err := NewConfig(Radau5kind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 
@@ -415,7 +415,7 @@ func TestOde04(tst *testing.T) {
 	M.Put(1+7-NU, 7, -c1)
 
 	// configurations
-	conf, err := NewConfig(Radau5kind, nil, "", 0, 0)
+	conf, err := NewConfig(Radau5kind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.IniH = 1.0e-6 // initial step size

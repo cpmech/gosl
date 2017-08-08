@@ -17,7 +17,7 @@ func TestMoEuler01(tst *testing.T) {
 
 	_, xf, y, yana, fcn, _ := eq11data()
 
-	conf, err := NewConfig(MoEulerKind, nil, "", 0, 0)
+	conf, err := NewConfig(MoEulerKind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 

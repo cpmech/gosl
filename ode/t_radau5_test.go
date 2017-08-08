@@ -17,7 +17,7 @@ func TestRadau501(tst *testing.T) {
 
 	_, xf, y, yana, fcn, jac := eq11data()
 
-	conf, err := NewConfig(Radau5kind, nil, "", 0, 0)
+	conf, err := NewConfig(Radau5kind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 

@@ -17,7 +17,7 @@ func TestBwEuler01a(tst *testing.T) {
 
 	dx, xf, y, yana, fcn, jac := eq11data()
 
-	conf, err := NewConfig(BwEulerKind, nil, "", 0, 0)
+	conf, err := NewConfig(BwEulerKind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.FixedStp = dx
@@ -52,7 +52,7 @@ func TestBwEuler01b(tst *testing.T) {
 
 	dx, xf, y, yana, fcn, _ := eq11data()
 
-	conf, err := NewConfig(BwEulerKind, nil, "", 0, 0)
+	conf, err := NewConfig(BwEulerKind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.FixedStp = dx

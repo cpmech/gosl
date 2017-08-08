@@ -17,7 +17,7 @@ func TestFwEuler01(tst *testing.T) {
 
 	dx, xf, y, yana, fcn, _ := eq11data()
 
-	conf, err := NewConfig(FwEulerKind, nil, "", 0, 0)
+	conf, err := NewConfig(FwEulerKind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.FixedStp = dx

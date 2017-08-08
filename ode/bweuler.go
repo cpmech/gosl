@@ -149,7 +149,7 @@ func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 
 			// initialise linear solver
 			if !o.ready {
-				err = o.ls.Init(o.drdy, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
+				err = o.ls.Init(o.drdy, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.commR)
 				if err != nil {
 					return
 				}

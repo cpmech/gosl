@@ -45,8 +45,9 @@ type Config struct {
 	Ordering  string // ordering for linear solver
 	Scaling   string // scaling for linear solver
 
-	// control
-	comm   *mpi.Communicator // for MPI run
+	// linear solver control
+	commR  *mpi.Communicator // for MPI run (real linear solver)
+	commC  *mpi.Communicator // for MPI run (complex linear solver)
 	lsKind string            // linear solver kind
 	distr  bool              // MPI distributed execution
 
@@ -58,13 +59,12 @@ type Config struct {
 
 // NewConfig returns a new [default] set of configuration parameters
 //   method -- the ODE method; e.g. Radau5kind
-//   comm   -- communicator [may be nil]
+//   commR  -- communicator for real linear solver [may be nil]
+//   commC  -- communicator for complex linear solver [may be nil or the same as commR]
 //   lsKind -- kind of linear solver: "umfpack" or "mumps" [may be empty]
-//   atol   -- absolute tolerance; use 0 for default [default = 1e-4]
-//   rtol   -- relative tolerance; use 0 for default [default = 1e-4]
-//   NOTE: (1) if comm == nil, the linear solver will be "umfpack" by default
-//         (2) if comm != nil and comm.Size() > 1, the linear solver will be set to "mumps"
-func NewConfig(method io.Enum, comm *mpi.Communicator, lsKind string, atol, rtol float64) (o *Config, err error) {
+//   NOTE: (1) if comm{R&C} == nil, the linear solver will be "umfpack" by default
+//         (2) if comm{R&C} != nil and comm.Size() > 1, the linear solver will be set to "mumps"
+func NewConfig(method io.Enum, lsKind string, commR, commC *mpi.Communicator) (o *Config, err error) {
 
 	// parameters
 	o = new(Config)
@@ -90,31 +90,32 @@ func NewConfig(method io.Enum, comm *mpi.Communicator, lsKind string, atol, rtol
 	o.Verbose = false
 	o.SaveXY = false
 
-	// control
-	if comm == nil || lsKind == "" {
+	// linear solver control
+	if (commR == nil && commC != nil) || (commR != nil && commC == nil) {
+		err = chk.Err("either both of none communicators must be nil\n")
+		return
+	}
+	if commR == nil || lsKind == "" {
 		lsKind = "umfpack"
 	}
-	if comm != nil {
-		if comm.Size() > 1 {
+	if commR != nil {
+		if commR.Size() > 1 {
 			lsKind = "mumps"
 			o.distr = true
 		}
 	}
-	o.comm = comm
 	o.lsKind = lsKind
+	o.commR = commR
+	o.commC = commC
 
 	// set tolerances
-	if atol < 1e-14 {
-		atol = 1e-4
-	}
-	if rtol < 1e-14 {
-		rtol = 1e-4
-	}
-	err = o.SetTol(atol, rtol)
+	err = o.SetTol(1e-4, 1e-4)
 	return
 }
 
 // SetTol sets tolerances according to Hairer and Wanner' suggestions
+//   atol   -- absolute tolerance; use 0 for default [default = 1e-4]
+//   rtol   -- relative tolerance; use 0 for default [default = 1e-4]
 func (o *Config) SetTol(atol, rtol float64) (err error) {
 
 	// check

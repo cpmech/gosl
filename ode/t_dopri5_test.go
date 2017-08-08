@@ -17,7 +17,7 @@ func TestDoPri501(tst *testing.T) {
 
 	_, xf, y, yana, fcn, _ := eq11data()
 
-	conf, err := NewConfig(DoPri5kind, nil, "", 0, 0)
+	conf, err := NewConfig(DoPri5kind, "", nil, nil)
 	status(tst, err)
 	conf.SaveXY = true
 
