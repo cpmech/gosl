@@ -36,6 +36,7 @@ func TestOde01(tst *testing.T) {
 	conf1.FixedStp = dx
 	sol1, err := NewSolver(conf1, ndim, fcn, jac, nil, nil)
 	status(tst, err)
+	defer sol1.Free()
 	err = sol1.Solve(y, 0.0, xf)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", sol1.Stat.Nfeval, 40)
@@ -56,6 +57,7 @@ func TestOde01(tst *testing.T) {
 	conf2.FixedStp = dx
 	sol2, err := NewSolver(conf2, ndim, fcn, jac, nil, nil)
 	status(tst, err)
+	defer sol2.Free()
 	err = sol2.Solve(y, 0.0, xf)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", sol2.Stat.Nfeval, 80)
@@ -75,6 +77,7 @@ func TestOde01(tst *testing.T) {
 	conf3.SaveXY = true
 	sol3, err := NewSolver(conf3, ndim, fcn, jac, nil, nil)
 	status(tst, err)
+	defer sol3.Free()
 	err = sol3.Solve(y, 0.0, xf)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", sol3.Stat.Nfeval, 379)
@@ -94,6 +97,7 @@ func TestOde01(tst *testing.T) {
 	conf4.SaveXY = true
 	sol4, err := NewSolver(conf4, ndim, fcn, jac, nil, nil)
 	status(tst, err)
+	defer sol4.Free()
 	err = sol4.Solve(y, 0.0, xf)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", sol4.Stat.Nfeval, 1132)
@@ -113,6 +117,7 @@ func TestOde01(tst *testing.T) {
 	conf5.SaveXY = true
 	sol5, err := NewSolver(conf5, ndim, fcn, jac, nil, nil)
 	status(tst, err)
+	defer sol5.Free()
 	err = sol5.Solve(y, 0.0, xf)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", sol5.Stat.Nfeval, 66)
@@ -181,6 +186,7 @@ func TestOde02(tst *testing.T) {
 	// allocate ODE object
 	sol, err := NewSolver(conf, ndim, fcn, jac, nil, nil)
 	status(tst, err)
+	defer sol.Free()
 
 	// solve problem
 	err = sol.Solve(y, 0, xf)
@@ -271,6 +277,7 @@ func TestOde03(tst *testing.T) {
 	// allocate ODE object
 	sol, err := NewSolver(conf, ndim, fcn, jac, nil, nil)
 	status(tst, err)
+	defer sol.Free()
 
 	// solve problem
 	err = sol.Solve(y, 0.0, xf)
@@ -421,6 +428,7 @@ func TestOde04(tst *testing.T) {
 	ndim := len(y)
 	sol, err := NewSolver(conf, ndim, fcn, jac, M, nil)
 	status(tst, err)
+	defer sol.Free()
 
 	// run
 	t0 := time.Now()

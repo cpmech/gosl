@@ -23,6 +23,7 @@ func TestMoEuler01(tst *testing.T) {
 
 	sol, err := NewSolver(conf, 1, fcn, nil, nil, nil)
 	status(tst, err)
+	defer sol.Free()
 
 	err = sol.Solve(y, 0.0, xf)
 	status(tst, err)
