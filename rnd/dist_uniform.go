@@ -21,7 +21,7 @@ type DistUniform struct {
 
 // set factory
 func init() {
-	distallocators[UniformType] = func() Distribution { return new(DistUniform) }
+	distallocators[UniformKind] = func() Distribution { return new(DistUniform) }
 }
 
 // Init initialises uniform distribution

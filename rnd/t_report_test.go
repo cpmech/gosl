@@ -25,33 +25,33 @@ func Test_report01(tst *testing.T) {
 			&SetOfVars{
 				Name: "problem 1",
 				Vars: []*VarData{
-					&VarData{D: NormalType, M: 1, S: 0.1},
-					&VarData{D: NormalType, M: 2, S: 0.2},
-					&VarData{D: NormalType, M: 3, S: 0.3},
+					&VarData{D: NormalKind, M: 1, S: 0.1},
+					&VarData{D: NormalKind, M: 2, S: 0.2},
+					&VarData{D: NormalKind, M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem:2",
 				Vars: []*VarData{
-					&VarData{D: GumbelType, M: 1, S: 0.1},
-					&VarData{D: GumbelType, M: 2, S: 0.2},
-					&VarData{D: GumbelType, M: 3, S: 0.3},
+					&VarData{D: GumbelKind, M: 1, S: 0.1},
+					&VarData{D: GumbelKind, M: 2, S: 0.2},
+					&VarData{D: GumbelKind, M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem_3",
 				Vars: []*VarData{
-					&VarData{D: LognormalType, M: 1, S: 0.1},
-					&VarData{D: LognormalType, M: 2, S: 0.2},
-					&VarData{D: LognormalType, M: 3, S: 0.3},
+					&VarData{D: LognormalKind, M: 1, S: 0.1},
+					&VarData{D: LognormalKind, M: 2, S: 0.2},
+					&VarData{D: LognormalKind, M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem-4",
 				Vars: []*VarData{
-					&VarData{D: UniformType, Min: 1, Max: 10},
-					&VarData{D: UniformType, Min: 2, Max: 20},
-					&VarData{D: UniformType, Min: 3, Max: 30},
+					&VarData{D: UniformKind, Min: 1, Max: 10},
+					&VarData{D: UniformKind, Min: 2, Max: 20},
+					&VarData{D: UniformKind, Min: 3, Max: 30},
 				},
 			},
 		}

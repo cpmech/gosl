@@ -14,7 +14,7 @@ type DistGumbel struct {
 
 // set factory
 func init() {
-	distallocators[GumbelType] = func() Distribution { return new(DistGumbel) }
+	distallocators[GumbelKind] = func() Distribution { return new(DistGumbel) }
 }
 
 // Init initialises Gumbel distribution

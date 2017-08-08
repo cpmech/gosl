@@ -43,7 +43,7 @@ type DistNormal struct {
 
 // set factory
 func init() {
-	distallocators[NormalType] = func() Distribution { return new(DistNormal) }
+	distallocators[NormalKind] = func() Distribution { return new(DistNormal) }
 }
 
 // CalcDerived compute derived/auxiliary quantities

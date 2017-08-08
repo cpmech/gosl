@@ -44,7 +44,7 @@ name & var & $\mu$ & $\sigma$ & D$^{\star}$ & min & max \\ \hline
 				key = strings.Replace(key, "_", "-", -1)
 			}
 			txtM, txtS := "-", "-"
-			if v.D != UniformType {
+			if v.D != UniformKind {
 				txtM = "$" + io.TexNum("", v.M, true) + "$"
 				txtS = "$" + io.TexNum("", v.S, true) + "$"
 			}
