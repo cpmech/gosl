@@ -65,6 +65,16 @@ type Radau5 struct {
 	Mu5  float64     // collocation: C1MC2 = C1-C2
 }
 
+// Free releases memory
+func (o *Radau5) Free() {
+	if o.lsR != nil {
+		o.lsR.Free()
+	}
+	if o.lsC != nil {
+		o.lsC.Free()
+	}
+}
+
 // Info returns information about this method
 func (o *Radau5) Info() (fixedOnly, implicit bool, nstages int) {
 	return false, true, 3

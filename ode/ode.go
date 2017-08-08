@@ -42,6 +42,7 @@ type Solver struct {
 }
 
 // NewSolver returns a new ODE structure with default values and allocated slices
+//  NOTE: remember to call Free() to release allocated resources (e.g. from the linear solvers)
 func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn OutF) (o *Solver, err error) {
 
 	// main
@@ -75,6 +76,13 @@ func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn O
 	// workspace
 	o.work = newRKwork(nstg, o.ndim)
 	return
+}
+
+// Free releases allocated memory (e.g. by the linear solvers)
+func (o *Solver) Free() {
+	if o.rkm != nil {
+		o.rkm.Free()
+	}
 }
 
 // Solve solves dy/dx = f(x,y) from x to xf with initial y given in y

@@ -14,6 +14,9 @@ type FwEuler struct {
 	fcn Func
 }
 
+// Free releases memory
+func (o *FwEuler) Free() {}
+
 // Info returns information about this method
 func (o *FwEuler) Info() (fixedOnly, implicit bool, nstages int) {
 	return true, false, 1

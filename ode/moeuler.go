@@ -13,6 +13,9 @@ type MoEuler struct {
 	dat *erkdata
 }
 
+// Free releases memory
+func (o *MoEuler) Free() {}
+
 // Info returns information about this method
 func (o *MoEuler) Info() (fixedOnly, implicit bool, nstages int) {
 	return false, false, 2

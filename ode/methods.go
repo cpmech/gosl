@@ -30,6 +30,7 @@ var (
 
 // rkmethod defines the required functions of Runge-Kutta method
 type rkmethod interface {
+	Free()                                                                                // free memory
 	Info() (fixedOnly, implicit bool, nstages int)                                        // information
 	Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error)           // initialise
 	Accept(y la.Vector, work *rkwork)                                                     // accept update

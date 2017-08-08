@@ -30,6 +30,7 @@ var spSolverDB = make(map[string]spSolverMaker)
 
 // NewSparseSolver finds a SparseSolver in database or panic
 //   kind -- "umfpack" or "mumps"
+//   NOTE: remember to call Free() to release allocated resources
 func NewSparseSolver(kind string) SparseSolver {
 	if maker, ok := spSolverDB[kind]; ok {
 		return maker()
@@ -58,6 +59,7 @@ type spSolverMakerC func() SparseSolverC
 var spSolverDBc = make(map[string]spSolverMakerC)
 
 // NewSparseSolverC finds a SparseSolver in database or panic
+//   NOTE: remember to call Free() to release allocated resources
 func NewSparseSolverC(kind string) SparseSolverC {
 	if maker, ok := spSolverDBc[kind]; ok {
 		return maker()

@@ -13,6 +13,9 @@ type DoPri5 struct {
 	dat *erkdata
 }
 
+// Free releases memory
+func (o *DoPri5) Free() {}
+
 // Init initialises structure
 func (o *DoPri5) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error) {
 	o.fcn = fcn

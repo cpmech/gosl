@@ -27,6 +27,13 @@ type BwEuler struct {
 	ready bool            // matrices and solver are ready
 }
 
+// Free releases memory
+func (o *BwEuler) Free() {
+	if o.ls != nil {
+		o.ls.Free()
+	}
+}
+
 // Info returns information about this method
 func (o *BwEuler) Info() (fixedOnly, implicit bool, nstages int) {
 	return true, true, 1
