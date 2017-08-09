@@ -7,7 +7,6 @@ package ode
 import (
 	"math"
 
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
@@ -25,6 +24,12 @@ type ExplicitRK struct {
 	Nstg  int         // number of stages
 	w     la.Vector   // step update (normalised variable starting from zero)
 	fcn   Func        // dy/dx = f(x,y) function
+}
+
+// add methods to database
+func init() {
+	rkmDB["moeuler"] = func() rkmethod { return newERK("moeuler") }
+	rkmDB["dopri5"] = func() rkmethod { return newERK("dopri5") }
 }
 
 // Free releases memory
@@ -83,11 +88,11 @@ func (o *ExplicitRK) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork)
 	return
 }
 
-func newERK(kind io.Enum) rkmethod {
+func newERK(kind string) rkmethod {
 	o := new(ExplicitRK)
 	o.Fprev = true
 	switch kind {
-	case MoEulerKind:
+	case "moeuler":
 		o.A = [][]float64{
 			{0.0, 0.0},
 			{1.0, 0.0},
@@ -96,7 +101,7 @@ func newERK(kind io.Enum) rkmethod {
 		o.Be = []float64{0.5, 0.5}
 		o.C = []float64{0.0, 1.0}
 		o.Nstg = 2
-	case DoPri5kind:
+	case "dopri5":
 		o.A = [][]float64{
 			{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
 			{1.0 / 5.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -110,13 +115,8 @@ func newERK(kind io.Enum) rkmethod {
 		o.Be = []float64{5179.0 / 57600.0, 0.0, 7571.0 / 16695.0, 393.0 / 640.0, -92097.0 / 339200.0, 187.0 / 2100.0, 1.0 / 40.0}
 		o.C = []float64{0.0, 1.0 / 5.0, 3.0 / 10.0, 4.0 / 5.0, 8.0 / 9.0, 1.0, 1.0}
 		o.Nstg = 7
+	default:
+		return nil
 	}
 	return o
-}
-
-// add methods to database /////////////////////////////////////////////////////////////////////////
-
-func init() {
-	rkmDB[MoEulerKind] = func() rkmethod { return newERK(MoEulerKind) }
-	rkmDB[DoPri5kind] = func() rkmethod { return newERK(DoPri5kind) }
 }

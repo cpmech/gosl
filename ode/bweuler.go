@@ -27,6 +27,11 @@ type BwEuler struct {
 	ready bool            // matrices and solver are ready
 }
 
+// add method to database
+func init() {
+	rkmDB["bweuler"] = func() rkmethod { return new(BwEuler) }
+}
+
 // Free releases memory
 func (o *BwEuler) Free() {
 	if o.ls != nil {
@@ -180,10 +185,4 @@ func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 		return
 	}
 	return 1e+20, err // must not be used with automatic substepping
-}
-
-// add method to database //////////////////////////////////////////////////////////////////////////
-
-func init() {
-	rkmDB[BwEulerKind] = func() rkmethod { return new(BwEuler) }
 }

@@ -8,19 +8,21 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
 
 func TestRadau501a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Radau501a. Radau5 (analytical Jacobian)")
+	chk.PrintTitle("Radau501a. Eq11 (analytical Jacobian)")
 
 	// problem
 	p := ProbHwEq11()
 
 	// configuration
-	conf, err := NewConfig(Radau5kind, "", nil)
+	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 
@@ -52,4 +54,48 @@ func TestRadau501a(tst *testing.T) {
 		p.Plot("Radau5,Jana", sol.Out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "radau501a")
 	}
+}
+
+func TestRadau502(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Radau502: Van der Pol's Equation")
+
+	// problem
+	p := ProbVanDerPol()
+	p.Y[1] = -0.66 // for some reason the previous reference code was using -0.6
+	p.Xf = 2.0
+
+	// configuration
+	conf, err := NewConfig("radau5", "", nil)
+	status(tst, err)
+	conf.SaveXY = true
+	conf.IniH = 1e-6
+	conf.SetTol(1e-4, 1e-4)
+	io.Pforan("rtol=%16.8e atol=%16.8e\n", conf.rtol, conf.atol)
+
+	// output function
+	out := func(istep int, h, x float64, y la.Vector) error {
+		//io.Pf("x=%5.2f  y=%18.10e%18.10e  nstep=%d\n", x, y[0], y[1], istep)
+		return nil
+	}
+
+	// allocate ODE object
+	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, out)
+	status(tst, err)
+	defer sol.Free()
+
+	// solve problem
+	err = sol.Solve(p.Y, 0, p.Xf)
+	status(tst, err)
+
+	// check
+	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2218)
+	chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 161)
+	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 275)
+	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 238)
+	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 8)
+	chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 248)
+	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 660)
+	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
 }

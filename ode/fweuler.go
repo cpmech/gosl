@@ -14,6 +14,11 @@ type FwEuler struct {
 	fcn Func
 }
 
+// add method to database
+func init() {
+	rkmDB["fweuler"] = func() rkmethod { return new(FwEuler) }
+}
+
 // Free releases memory
 func (o *FwEuler) Free() {}
 
@@ -47,10 +52,4 @@ func (o *FwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 		y0[i] += h * work.f[0][i]
 	}
 	return 1e+20, err // must not be used with automatic substepping
-}
-
-// add method to database //////////////////////////////////////////////////////////////////////////
-
-func init() {
-	rkmDB[FwEulerKind] = func() rkmethod { return new(FwEuler) }
 }

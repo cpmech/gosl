@@ -20,7 +20,7 @@ func TestMoEuler01(tst *testing.T) {
 	p := ProbHwEq11()
 
 	// configuration
-	conf, err := NewConfig(MoEulerKind, "", nil)
+	conf, err := NewConfig("moeuler", "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 

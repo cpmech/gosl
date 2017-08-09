@@ -6,26 +6,7 @@ package ode
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-)
-
-// Runge-Kutta methods
-var (
-	// FwEulerKind specifies the Forward Euler method (explicit)
-	FwEulerKind = io.NewEnum("FwEuler", "ode", "FE", "Forward Euler (explicit)")
-
-	// BwEulerKind specifies the Backward Euler method (explicit)
-	BwEulerKind = io.NewEnum("BwEuler", "ode", "BE", "Backward Euler (implicit)")
-
-	// MoEulerKind specifies the Modified Euler method (explicit)
-	MoEulerKind = io.NewEnum("MoEuler", "ode", "ME", "Modified Euler (explicit)")
-
-	// DoPri5kind specifies the Dormand-Prince5 method (explicit)
-	DoPri5kind = io.NewEnum("DoPri5", "ode", "DP", "Dormand-Prince5 (explicit)")
-
-	// Radau5kind specifies the Radau5 method (implicit)
-	Radau5kind = io.NewEnum("Radau5", "ode", "R", "Radau5 (implicit)")
 )
 
 // rkmethod defines the required functions of Runge-Kutta method
@@ -41,10 +22,10 @@ type rkmethod interface {
 type rkmMaker func() rkmethod
 
 // rkmDB implements a database of rkmethod makers
-var rkmDB = make(map[io.Enum]rkmMaker)
+var rkmDB = make(map[string]rkmMaker)
 
 // newRKmethod finds a rkmethod in database or panic
-func newRKmethod(kind io.Enum) (rkmethod, error) {
+func newRKmethod(kind string) (rkmethod, error) {
 	if maker, ok := rkmDB[kind]; ok {
 		return maker(), nil
 	}

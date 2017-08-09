@@ -8,7 +8,6 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/utl"
 )
@@ -17,7 +16,7 @@ import (
 type Config struct {
 
 	// parameters
-	Method     io.Enum // the ODE method
+	Method     string  // the ODE method
 	FixedStp   float64 // if >0, use fixed steps instead of automatic substepping
 	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
 	Hmin       float64 // minimum H allowed
@@ -57,13 +56,13 @@ type Config struct {
 }
 
 // NewConfig returns a new [default] set of configuration parameters
-//   method -- the ODE method; e.g. Radau5kind
+//   method -- the ODE method: e.g. fweuler, bweuler, radau5, moeuler, dopri5
 //   comm   -- communicator for the linear solver [may be nil]
 //   lsKind -- kind of linear solver: "umfpack" or "mumps" [may be empty]
 //   NOTE: (1) if comm == nil, the linear solver will be "umfpack" by default
 //         (2) if comm != nil and comm.Size() == 1, you can use either "umfpack" or "mumps"
 //         (3) if comm != nil and comm.Size() > 1, the linear solver will be set to "mumps" automatically
-func NewConfig(method io.Enum, lsKind string, comm *mpi.Communicator) (o *Config, err error) {
+func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config, err error) {
 
 	// parameters
 	o = new(Config)

@@ -20,7 +20,7 @@ func TestBwEuler01a(tst *testing.T) {
 	p := ProbHwEq11()
 
 	// configuration
-	conf, err := NewConfig(BwEulerKind, "", nil)
+	conf, err := NewConfig("bweuler", "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.FixedStp = p.Dx
@@ -64,7 +64,7 @@ func TestBwEuler01b(tst *testing.T) {
 	p := ProbHwEq11()
 
 	// configuration
-	conf, err := NewConfig(BwEulerKind, "", nil)
+	conf, err := NewConfig("bweuler", "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 	conf.FixedStp = p.Dx

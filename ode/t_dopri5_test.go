@@ -20,7 +20,7 @@ func TestDoPri501(tst *testing.T) {
 	p := ProbHwEq11()
 
 	// configuration
-	conf, err := NewConfig(DoPri5kind, "", nil)
+	conf, err := NewConfig("dopri5", "", nil)
 	status(tst, err)
 	conf.SaveXY = true
 

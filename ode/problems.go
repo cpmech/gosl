@@ -7,7 +7,6 @@ package ode
 import (
 	"math"
 
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -27,7 +26,7 @@ type Problem struct {
 
 // Solve solves ODE problem using standard parameters
 // NOTE: this solver doesn't change o.Y
-func (o *Problem) Solve(method io.Enum, fixedStp, numJac bool) (stat *Stat, out *Output, err error) {
+func (o *Problem) Solve(method string, fixedStp, numJac bool) (stat *Stat, out *Output, err error) {
 
 	// current y vector
 	y := la.NewVector(o.Ndim)

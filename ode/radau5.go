@@ -65,6 +65,11 @@ type Radau5 struct {
 	Mu5  float64     // collocation: C1MC2 = C1-C2
 }
 
+// add method to database
+func init() {
+	rkmDB["radau5"] = func() rkmethod { return new(Radau5) }
+}
+
 // Free releases memory
 func (o *Radau5) Free() {
 	if o.lsR != nil {
@@ -569,10 +574,4 @@ func (o *Radau5) initConstants() {
 	o.Mu3 = o.Mu1 - 1.0
 	o.Mu4 = o.Mu2 - 1.0
 	o.Mu5 = o.Mu1 - o.Mu2
-}
-
-// add method to database //////////////////////////////////////////////////////////////////////////
-
-func init() {
-	rkmDB[Radau5kind] = func() rkmethod { return new(Radau5) }
 }
