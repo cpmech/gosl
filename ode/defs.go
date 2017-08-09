@@ -38,13 +38,13 @@ type JacF func(dfdy *la.Triplet, h, x float64, y la.Vector) error
 
 // OutF defines a "callback" function to be called during the output of results
 //   Input:
-//     first -- whether this is the first output or not
+//     istep -- index of step (0 is the very first output whereas 1 is the first accepted step)
 //     h     -- stepsize = dx
 //     x     -- scalar variable
 //     y     -- vector variable
 //   Output:
 //     error -- this function can return an error to force stopping the simulation
-type OutF func(first bool, h, x float64, y la.Vector) error
+type OutF func(istep int, h, x float64, y la.Vector) error
 
 // YanaF defines a function to be used when computing analytical solutions
 type YanaF func(x float64) float64

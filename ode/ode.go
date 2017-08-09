@@ -111,7 +111,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	// stat and output
 	o.Stat.Reset()
 	o.Stat.Hopt = h
-	o.Out.Execute(h, x, y)
+	o.Out.Execute(0, h, x, y)
 
 	// set control flags
 	o.work.first = true
@@ -121,6 +121,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 	// fixed steps //////////////////////////////
 	if fixed {
+		istep := 1
 		if o.Conf.Verbose {
 			io.Pfgreen("x = %v\n", x)
 			io.Pf("y = %v\n", y)
@@ -138,11 +139,12 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			o.work.first = false
 			x += h
 			o.rkm.Accept(y, o.work)
-			o.Out.Execute(h, x, y)
+			o.Out.Execute(istep, h, x, y)
 			if o.Conf.Verbose {
 				io.Pfgreen("x = %v\n", x)
 				io.Pf("y = %v\n", y)
 			}
+			istep++
 		}
 		return
 	}
@@ -217,7 +219,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.rkm.Accept(y, o.work)
 
 				// output
-				o.Out.Execute(h, x, y)
+				o.Out.Execute(o.Stat.Naccepted, h, x, y)
 
 				// converged ?
 				if last {

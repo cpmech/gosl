@@ -45,9 +45,9 @@ func (o *Output) Resize(NmaxOut int) {
 }
 
 // Execute executes output; e.g. call Fcn and saves x and y values
-func (o *Output) Execute(h, x float64, y []float64) {
+func (o *Output) Execute(istep int, h, x float64, y []float64) {
 	if o.Fcn != nil {
-		o.Fcn(o.first, h, x, y)
+		o.Fcn(istep, h, x, y)
 		if o.first {
 			o.first = false
 		}
