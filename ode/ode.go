@@ -50,10 +50,6 @@ func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn O
 	o.Conf = conf
 	o.Stat = NewStat()
 	o.Stat.LsKind = o.Conf.lsKind
-	o.Out = NewOutput(ofcn)
-	if conf.SaveXY {
-		o.Out.Resize(conf.NmaxSS + 1)
-	}
 
 	// input
 	o.ndim = ndim
@@ -73,6 +69,13 @@ func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn O
 	// information
 	var nstg int
 	o.fixedOnly, o.implicit, nstg = o.rkm.Info()
+
+	// output
+	nMaxOut := 0
+	if conf.SaveXY {
+		nMaxOut = conf.NmaxSS + 1
+	}
+	o.Out = NewOutput(ofcn, ndim, nMaxOut, conf.ContNmax, conf.ContDx, o.rkm.ContOut)
 
 	// workspace
 	o.work = newRKwork(nstg, o.ndim)
@@ -111,7 +114,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	// stat and output
 	o.Stat.Reset()
 	o.Stat.Hopt = h
-	o.Out.Execute(0, h, x, y)
+	o.Out.Execute(0, false, h, x, y)
 
 	// set control flags
 	o.work.first = true
@@ -139,7 +142,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			o.work.first = false
 			x += h
 			o.rkm.Accept(y, o.work)
-			o.Out.Execute(istep, h, x, y)
+			o.Out.Execute(istep, false, h, x, y)
 			if o.Conf.Verbose {
 				io.Pfgreen("x = %v\n", x)
 				io.Pf("y = %v\n", y)
@@ -219,7 +222,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.rkm.Accept(y, o.work)
 
 				// output
-				o.Out.Execute(o.Stat.Naccepted, h, x, y)
+				o.Out.Execute(o.Stat.Naccepted, last, h, x, y)
 
 				// converged ?
 				if last {

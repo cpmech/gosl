@@ -37,6 +37,8 @@ type Config struct {
 	UseRmsNorm bool    // use RMS norm instead of Euclidian in BwEuler
 	Verbose    bool    // show messages, e.g. during iterations
 	SaveXY     bool    // save X values in an array (e.g. for plotting)
+	ContNmax   int     // maximum number of continuous output; e.g. xf / ContDx + 1
+	ContDx     float64 // step size for continuous output
 
 	// linear solver
 	Symmetric bool   // assume symmetric matrix

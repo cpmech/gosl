@@ -7,6 +7,7 @@ package ode
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
@@ -50,6 +51,11 @@ func (o *ExplicitRK) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Trip
 // Accept accepts update
 func (o *ExplicitRK) Accept(y la.Vector, work *rkwork) {
 	y.Apply(1, o.w)
+}
+
+// ContOut produces continuous output (after Accept)
+func (o *ExplicitRK) ContOut(yOut, y la.Vector, xOut, x, h float64) {
+	chk.Panic("TODO")
 }
 
 // Step steps update

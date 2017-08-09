@@ -41,6 +41,11 @@ func (o *FwEuler) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet
 func (o *FwEuler) Accept(y la.Vector, work *rkwork) {
 }
 
+// ContOut produces continuous output (after Accept)
+func (o *FwEuler) ContOut(yOut, y la.Vector, xOut, x, h float64) {
+	chk.Panic("TODO")
+}
+
 // Step steps update
 func (o *FwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
 	stat.Nfeval++

@@ -5,77 +5,102 @@
 package ode
 
 import (
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
 
+// ContOutFcn defines a function to compute continuous output
+type ContOutFcn func(yout, y la.Vector, xout, x, h float64)
+
 // Output holds output data
 type Output struct {
 
-	// control
-	Fcn     OutF        // output function
-	IdxSave int         // current index in Xvalues and Yvalues == last output
-	Hvalues []float64   // h values if SaveXY is true [IdxSave]
-	Xvalues []float64   // X values if SaveXY is true [IdxSave]
-	Yvalues []la.Vector // Y values if SaveXY is true [IdxSave][ndim]
+	// output using function
+	Fcn OutF // output function
 
-	// derived
-	first   bool // first output
-	nMaxOut int  // max number of output
+	// discrete output at accepted steps
+	IdxSave int         // current index in Xvalues and Yvalues == last output
+	Hvalues []float64   // h values [IdxSave]
+	Xvalues []float64   // X values [IdxSave]
+	Yvalues []la.Vector // Y values [IdxSave][ndim]
+	nMaxOut int         // max number of output
+
+	// continuous output
+	ContIdx  int         // current index in Xcont and Ycont arrays
+	ContX    []float64   // X values during continuous output [IdxCont]
+	ContY    []la.Vector // Y values during continuous output [IdxCont][ndim]
+	ContStp  []int       // index of step
+	contNmax int         // maximum number of continuous output; e.g. xf / ContDx + 1
+	contOk   bool        // do continuous output
+	xCont    float64     // current continuous x value
+	dxCont   float64     // step size for continuous output
+	fcnCont  ContOutFcn  // function to calculate continuous values of y
 }
 
 // NewOutput returns a new structure
-func NewOutput(fcn OutF) (o *Output) {
+//  fcn     -- the output function. nil ⇒ no output
+//  nMaxOut -- maximum number of output at each accepted substep; e.g. nMaxOut = nMaxSteps+1. 0 ⇒ not output
+//  xf      -- final x to compute size of continuous output arrays
+//  contDx  -- step size for continuous output. 0 ⇒ no output
+//  contFcn -- function to calculate continuous values of y. nil ⇒ no output
+func NewOutput(fcn OutF, ndim, nMaxOut, contNmax int, contDx float64, contFcn ContOutFcn) (o *Output) {
 	o = new(Output)
 	o.Fcn = fcn
-	return
-}
-
-// Resize allocates memory
-//   NmaxOut -- max number of output. use 0 for NO output
-func (o *Output) Resize(NmaxOut int) {
-	o.nMaxOut = NmaxOut
-	o.IdxSave = 0
+	o.nMaxOut = nMaxOut
+	o.contNmax = contNmax
+	o.dxCont = contDx
+	o.fcnCont = contFcn
+	o.contOk = contNmax > 0 && o.dxCont > 0 && o.fcnCont != nil
 	if o.nMaxOut > 0 {
 		o.Hvalues = make([]float64, o.nMaxOut)
 		o.Xvalues = make([]float64, o.nMaxOut)
 		o.Yvalues = make([]la.Vector, o.nMaxOut)
 	}
+	if o.contOk {
+		o.ContX = make([]float64, contNmax)
+		o.ContY = make([]la.Vector, contNmax)
+		o.ContStp = make([]int, contNmax)
+	}
+	return
 }
 
 // Execute executes output; e.g. call Fcn and saves x and y values
-func (o *Output) Execute(istep int, h, x float64, y []float64) {
+func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) {
+
+	// output using function
 	if o.Fcn != nil {
 		o.Fcn(istep, h, x, y)
-		if o.first {
-			o.first = false
-		}
 	}
+
+	// discrete output at accepted steps
 	if o.IdxSave < o.nMaxOut {
 		o.Hvalues[o.IdxSave] = h
 		o.Xvalues[o.IdxSave] = x
 		o.Yvalues[o.IdxSave] = la.NewVector(len(y))
 		o.Yvalues[o.IdxSave].Apply(1, y)
 		o.IdxSave++
-	} else if o.nMaxOut > 0 { // allocate more space
-		io.Pf(". . . allocating more space for output . . . \n")
-		factor := 2
-		htmp := make([]float64, o.nMaxOut*factor)
-		xtmp := make([]float64, o.nMaxOut*factor)
-		ytmp := make([]la.Vector, o.nMaxOut*factor)
-		copy(htmp, o.Hvalues[:o.IdxSave])
-		copy(xtmp, o.Xvalues[:o.IdxSave])
-		for i := 0; i < o.IdxSave; i++ {
-			htmp[i] = o.Hvalues[i]
-			xtmp[i] = o.Xvalues[i]
-			ytmp[i] = la.NewVector(len(y))
-			ytmp[i].Apply(1, o.Yvalues[i])
+	}
+
+	// continuous output
+	if o.contOk && o.ContIdx < o.contNmax {
+		if istep == 0 || last {
+			o.xCont = x
+			o.ContX[o.ContIdx] = o.xCont
+			o.ContY[o.ContIdx] = la.NewVector(len(y))
+			o.ContY[o.ContIdx].Apply(1, y)
+			o.ContStp[o.ContIdx] = istep
+			o.xCont = o.dxCont
+			o.ContIdx++
+		} else {
+			for x >= o.xCont {
+				o.ContX[o.ContIdx] = o.xCont
+				o.ContY[o.ContIdx] = la.NewVector(len(y))
+				o.fcnCont(o.ContY[o.ContIdx], y, o.xCont, x, h)
+				o.ContStp[o.ContIdx] = istep
+				o.xCont += o.dxCont
+				o.ContIdx++
+			}
 		}
-		o.Hvalues = htmp
-		o.Xvalues = xtmp
-		o.Yvalues = ytmp
-		o.nMaxOut *= factor
 	}
 }
 

@@ -5,6 +5,7 @@
 package ode
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -64,7 +65,7 @@ func TestRadau502(tst *testing.T) {
 	// problem
 	p := ProbVanDerPol()
 	p.Y[1] = -0.66 // for some reason the previous reference code was using -0.6
-	p.Xf = 2.0
+	//p.Xf = 0.6
 
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
@@ -72,7 +73,8 @@ func TestRadau502(tst *testing.T) {
 	conf.SaveXY = true
 	conf.IniH = 1e-6
 	conf.SetTol(1e-4, 1e-4)
-	io.Pforan("rtol=%16.8e atol=%16.8e\n", conf.rtol, conf.atol)
+	conf.ContDx = 0.2
+	conf.ContNmax = int(math.Ceil(p.Xf/conf.ContDx)) + 1
 
 	// output function
 	out := func(istep int, h, x float64, y la.Vector) error {
@@ -88,6 +90,20 @@ func TestRadau502(tst *testing.T) {
 	// solve problem
 	err = sol.Solve(p.Y, 0, p.Xf)
 	status(tst, err)
+
+	// compare with fortran code
+	_, d, err := io.ReadTable("data/dr1_radau5.cmp")
+	status(tst, err)
+	chk.Int(tst, "ContIdx", sol.Out.ContIdx, len(d["x"]))
+	for i := 0; i < sol.Out.ContIdx; i++ {
+		for j := 0; j < p.Ndim; j++ {
+			key := io.Sf("y%d", j)
+			chk.AnaNum(tst, key, 1e-11, sol.Out.ContY[i][j], d[key][i], chk.Verbose)
+		}
+	}
+	for i := 0; i < sol.Out.ContIdx; i++ {
+		chk.Int(tst, "stp", sol.Out.ContStp[i], int(d["stp"][i]))
+	}
 
 	// check
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2218)

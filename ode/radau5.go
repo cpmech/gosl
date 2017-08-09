@@ -149,6 +149,14 @@ func (o *Radau5) Accept(y la.Vector, work *rkwork) {
 	}
 }
 
+// ContOut produces continuous output (after Accept)
+func (o *Radau5) ContOut(yOut, y la.Vector, xOut, x, h float64) {
+	s := (xOut - x) / h
+	for i := 0; i < len(y); i++ {
+		yOut[i] = y[i] + s*(o.ycol[0][i]+(s-o.Mu4)*(o.ycol[1][i]+(s-o.Mu3)*o.ycol[2][i]))
+	}
+}
+
 // Step steps update
 func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
 
