@@ -55,7 +55,7 @@ func TestRadau501a(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("Radau5,Jana", 0, sol.Out, 101, true, nil, nil)
+		p.Plot("Radau5,Jana", 0, out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "radau501a")
 	}
 }

@@ -52,7 +52,7 @@ func TestMoEuler01(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("MoEuler", 0, sol.Out, 101, true, nil, nil)
+		p.Plot("MoEuler", 0, out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "moeuler01")
 	}
 }

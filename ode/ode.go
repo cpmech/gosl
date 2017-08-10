@@ -25,8 +25,8 @@ import (
 type Solver struct {
 
 	// structures
-	Conf *Config // configuration parameters
-	Out  *Output // output handler
+	conf *Config // configuration parameters
+	out  *Output // output handler
 	Stat *Stat   // statistics
 
 	// problem definition
@@ -57,10 +57,10 @@ func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Tr
 
 	// main
 	o = new(Solver)
-	o.Conf = conf
-	o.Out = out
+	o.conf = conf
+	o.out = out
 	o.Stat = NewStat()
-	o.Stat.LsKind = o.Conf.lsKind
+	o.Stat.LsKind = o.conf.lsKind
 
 	// problem definition
 	o.ndim = ndim
@@ -68,18 +68,18 @@ func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Tr
 	o.jac = jac
 
 	// method
-	o.rkm, err = newRKmethod(o.Conf.Method)
+	o.rkm, err = newRKmethod(o.conf.Method)
 	if err != nil {
 		return
 	}
-	err = o.rkm.Init(o.Conf, ndim, fcn, jac, M)
+	err = o.rkm.Init(o.conf, ndim, fcn, jac, M)
 	if err != nil {
 		return
 	}
 
 	// connect continuous output function
-	if o.Out != nil {
-		o.Out.cout = o.rkm.ContOut
+	if o.out != nil {
+		o.out.cout = o.rkm.ContOut
 	}
 
 	// information
@@ -110,21 +110,21 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	// initial step size
 	h := xf - x
 	fixed := false
-	if o.Conf.FixedStp > 0 || o.fixedOnly {
-		if o.Conf.FixedStp < o.Conf.Hmin {
-			o.Conf.FixedStp = o.Conf.IniH
+	if o.conf.FixedStp > 0 || o.fixedOnly {
+		if o.conf.FixedStp < o.conf.Hmin {
+			o.conf.FixedStp = o.conf.IniH
 		}
-		h = utl.Min(h, o.Conf.FixedStp)
+		h = utl.Min(h, o.conf.FixedStp)
 		fixed = true
 	} else {
-		h = utl.Min(h, o.Conf.IniH)
+		h = utl.Min(h, o.conf.IniH)
 	}
 
 	// stat and output
 	o.Stat.Reset()
 	o.Stat.Hopt = h
-	if o.Out != nil {
-		stop, e := o.Out.Execute(0, false, h, x, y)
+	if o.out != nil {
+		stop, e := o.out.Execute(0, false, h, x, y)
 		if stop || e != nil {
 			err = e
 			return
@@ -135,12 +135,12 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	o.work.first = true
 
 	// first scaling variable
-	la.VecScaleAbs(o.work.scal, o.Conf.atol, o.Conf.rtol, y) // scal = atol + rtol * abs(y)
+	la.VecScaleAbs(o.work.scal, o.conf.atol, o.conf.rtol, y) // scal = atol + rtol * abs(y)
 
 	// fixed steps //////////////////////////////
 	if fixed {
 		istep := 1
-		if o.Conf.Verbose {
+		if o.conf.Verbose {
 			io.Pfgreen("x = %v\n", x)
 			io.Pf("y = %v\n", y)
 		}
@@ -157,14 +157,14 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			o.work.first = false
 			x += h
 			o.rkm.Accept(y, o.work)
-			if o.Out != nil {
-				stop, e := o.Out.Execute(istep, false, h, x, y)
+			if o.out != nil {
+				stop, e := o.out.Execute(istep, false, h, x, y)
 				if stop || e != nil {
 					err = e
 					return
 				}
 			}
-			if o.Conf.Verbose {
+			if o.conf.Verbose {
 				io.Pfgreen("x = %v\n", x)
 				io.Pf("y = %v\n", y)
 			}
@@ -182,7 +182,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	o.work.hprev = h
 	o.work.nit = 0
 	o.work.eta = 1.0
-	o.work.theta = o.Conf.ThetaMax
+	o.work.theta = o.conf.ThetaMax
 	o.work.dvfac = 0.0
 	o.work.diverg = false
 	o.work.reject = false
@@ -198,13 +198,13 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	for x < xf {
 		dxmax, xstep = Δx, x+Δx
 		failed = false
-		for iss := 0; iss < o.Conf.NmaxSS+1; iss++ {
+		for iss := 0; iss < o.conf.NmaxSS+1; iss++ {
 
 			// total number of substeps
 			o.Stat.Nsteps++
 
 			// error: did not converge
-			if iss == o.Conf.NmaxSS {
+			if iss == o.conf.NmaxSS {
 				failed = true
 				break
 			}
@@ -227,7 +227,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			}
 
 			// step size change
-			dxnew, div = o.Conf.dxnew(h, rerr, o.work.nit)
+			dxnew, div = o.conf.dxnew(h, rerr, o.work.nit)
 
 			// accepted
 			if rerr < 1.0 {
@@ -243,8 +243,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.rkm.Accept(y, o.work)
 
 				// output
-				if o.Out != nil {
-					stop, e := o.Out.Execute(o.Stat.Naccepted, last, h, x, y)
+				if o.out != nil {
+					stop, e := o.out.Execute(o.Stat.Naccepted, last, h, x, y)
 					if stop || e != nil {
 						err = e
 						return
@@ -258,16 +258,16 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				}
 
 				// predictive controller of Gustafsson
-				if o.Conf.PredCtrl {
+				if o.conf.PredCtrl {
 					if o.Stat.Naccepted > 1 {
-						dxnew = o.Conf.dxnewGus(div, oldH, h, oldRerr, rerr)
+						dxnew = o.conf.dxnewGus(div, oldH, h, oldRerr, rerr)
 					}
 					oldH = h
 					oldRerr = utl.Max(1.0e-2, rerr)
 				}
 
 				// calc new scal and f0
-				la.VecScaleAbs(o.work.scal, o.Conf.atol, o.Conf.rtol, y)
+				la.VecScaleAbs(o.work.scal, o.conf.atol, o.conf.rtol, y)
 				o.Stat.Nfeval++
 				o.fcn(o.work.f0, h, x, y) // o.f0 := f(x,y)
 
@@ -287,7 +287,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 					h = xstep - x
 				} else {
 					dxratio = dxnew / h
-					o.work.reuseJdec = o.work.theta <= o.Conf.ThetaMax && dxratio >= o.Conf.C1h && dxratio <= o.Conf.C2h
+					o.work.reuseJdec = o.work.theta <= o.conf.ThetaMax && dxratio >= o.conf.C1h && dxratio <= o.conf.C2h
 					if !o.work.reuseJdec {
 						h = dxnew
 					}
@@ -295,7 +295,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 				// check θ to decide if at least the Jacobian can be reused
 				if !o.work.reuseJdec {
-					o.work.reuseJ = o.work.theta <= o.Conf.ThetaMax
+					o.work.reuseJ = o.work.theta <= o.conf.ThetaMax
 				}
 
 				// rejected
@@ -324,7 +324,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 		// sub-stepping failed
 		if failed {
-			err = chk.Err("substepping did not converge after %d steps\n", o.Conf.NmaxSS)
+			err = chk.Err("substepping did not converge after %d steps\n", o.conf.NmaxSS)
 			break
 		}
 	}
