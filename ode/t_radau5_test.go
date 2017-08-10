@@ -62,7 +62,7 @@ func TestRadau501a(tst *testing.T) {
 
 func TestRadau502(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("Radau502: Van der Pol's Equation")
 
 	// problem
@@ -132,6 +132,13 @@ func TestRadau502(tst *testing.T) {
 	chk.Array(tst, "xx", 1e-15, xx, d.X)
 	chk.Array(tst, "yy0", 1e-12, yy0, d.Y[0])
 	chk.Array(tst, "yy1", 1e-11, yy1, d.Y[1])
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, nil)
+		p.Plot("Radau5,Jana", 0, out, 101, true, nil, nil)
+		plt.Save("/tmp/gosl/ode", "radau502")
+	}
 }
 
 type refData struct {

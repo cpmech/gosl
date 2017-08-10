@@ -72,7 +72,7 @@ func (o *Problem) Plot(label string, idxY int, out *Output, npts int, withAna bo
 		argsNum = &plt.A{C: "r", M: ".", Ls: "-", L: label, NoClip: true}
 	}
 	argsNum.L = label
-	if withAna {
+	if withAna && o.Yana != nil {
 		X := utl.LinSpace(0, o.Xf, npts)
 		Y := utl.GetMapped(X, func(x float64) float64 { return o.Yana(x) })
 		plt.Plot(X, Y, argsAna)
