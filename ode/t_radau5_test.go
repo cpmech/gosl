@@ -5,6 +5,7 @@
 package ode
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -101,18 +102,25 @@ func TestRadau502(tst *testing.T) {
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
 
 	// compare with fortran code
-	_, d, err := io.ReadTable("data/dr1_radau5.cmp")
+	d, err := readRefData("data/dr1_radau5.cmp")
 	status(tst, err)
-	io.Pl()
-	chk.Int(tst, "ContIdx", sol.Out.ContIdx, len(d["x"]))
-	for i := 0; i < sol.Out.ContIdx; i++ {
-		for j := 0; j < p.Ndim; j++ {
-			key := io.Sf("y%d", j)
-			chk.AnaNum(tst, key, 1e-11, sol.Out.ContY[i][j], d[key][i], chk.Verbose)
-		}
+	chk.Ints(tst, "S", out.GetContS(), d.S)
+	chk.Array(tst, "X", 1e-15, out.GetContX(), d.X)
+	chk.Deep2(tst, "Y", 1e-11, out.GetContYtableT(), d.Y)
+}
+
+type refData struct {
+	S []int       // [nout]
+	X []float64   // [nout]
+	Y [][]float64 // [dim][nout]
+}
+
+func readRefData(fn string) (o *refData, err error) {
+	o = new(refData)
+	b, err := io.ReadFile(fn)
+	if err != nil {
+		return
 	}
-	io.Pl()
-	for i := 0; i < sol.Out.ContIdx; i++ {
-		chk.Int(tst, "stp", sol.Out.ContS[i], int(d["stp"][i]))
-	}
+	err = json.Unmarshal(b, o)
+	return
 }
