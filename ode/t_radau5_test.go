@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
 
@@ -79,6 +80,23 @@ func TestRadau502(tst *testing.T) {
 	conf.StepNmax = conf.NmaxSS + 1
 	conf.ContNmax = conf.CalcNfixedMax(conf.ContDx, p.Xf)
 
+	// continuous output function
+	ss := make([]int, 11)
+	xx := make([]float64, 11)
+	yy0 := make([]float64, 11)
+	yy1 := make([]float64, 11)
+	iout := 0
+	io.Pf("\n%5s%7s%23s%23s\n", "s", "x", "y0", "y1")
+	conf.ContF = func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+		io.Pf("%5d%7.3f%23.15e%23.15e\n", istep, x, y[0], y[1])
+		ss[iout] = istep
+		xx[iout] = xout
+		yy0[iout] = yout[0]
+		yy1[iout] = yout[1]
+		iout++
+		return
+	}
+
 	// output handler
 	out := NewOutput(p.Ndim, conf)
 
@@ -92,6 +110,7 @@ func TestRadau502(tst *testing.T) {
 	status(tst, err)
 
 	// check
+	io.Pl()
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2218)
 	chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 161)
 	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 275)
@@ -107,6 +126,12 @@ func TestRadau502(tst *testing.T) {
 	chk.Ints(tst, "S", out.GetContS(), d.S)
 	chk.Array(tst, "X", 1e-15, out.GetContX(), d.X)
 	chk.Deep2(tst, "Y", 1e-11, out.GetContYtableT(), d.Y)
+
+	// check saved output
+	chk.Ints(tst, "ss", ss, d.S)
+	chk.Array(tst, "xx", 1e-15, xx, d.X)
+	chk.Array(tst, "yy0", 1e-12, yy0, d.Y[0])
+	chk.Array(tst, "yy1", 1e-11, yy1, d.Y[1])
 }
 
 type refData struct {
