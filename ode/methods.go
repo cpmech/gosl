@@ -15,7 +15,7 @@ type rkmethod interface {
 	Info() (fixedOnly, implicit bool, nstages int)                                        // information
 	Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error)           // initialise
 	Accept(y la.Vector, work *rkwork)                                                     // accept update
-	ContOut(yOut, y la.Vector, xOut, x, h float64)                                        // continuous output (after Accept)
+	ContOut(yout la.Vector, h, x float64, y la.Vector, xout float64)                      // continuous output (after Accept)
 	Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) // step update
 }
 

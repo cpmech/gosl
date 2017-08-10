@@ -42,7 +42,7 @@ func (o *FwEuler) Accept(y la.Vector, work *rkwork) {
 }
 
 // ContOut produces continuous output (after Accept)
-func (o *FwEuler) ContOut(yOut, y la.Vector, xOut, x, h float64) {
+func (o *FwEuler) ContOut(yout la.Vector, h, x float64, y la.Vector, xout float64) {
 	chk.Panic("TODO")
 }
 

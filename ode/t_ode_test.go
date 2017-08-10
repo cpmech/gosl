@@ -113,10 +113,13 @@ func TestOde02(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.SaveXY = true
+	conf.StepNmax = conf.NmaxSS + 1
+
+	// output handler
+	out := NewOutput(p.Ndim, conf)
 
 	// allocate ODE object
-	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, nil)
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -155,7 +158,7 @@ func TestOde02(tst *testing.T) {
 		plt.Plot(X, sol.Out.GetH(), &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl/ode", "vdpolA")
+		plt.Save("/tmp/gosl/ode", "ode2")
 	}
 }
 
@@ -171,7 +174,10 @@ func TestOde03(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.SaveXY = true
+	conf.StepNmax = conf.NmaxSS + 1
+
+	// output handler
+	out := NewOutput(p.Ndim, conf)
 
 	// tolerances and initial step size
 	rtol := 1e-2
@@ -180,7 +186,7 @@ func TestOde03(tst *testing.T) {
 	conf.IniH = 1.0e-6
 
 	// allocate ODE object
-	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, nil)
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -222,7 +228,7 @@ func TestOde03(tst *testing.T) {
 		plt.Plot(X, sol.Out.GetH(), &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl/ode", "rober")
+		plt.Save("/tmp/gosl/ode", "ode3")
 	}
 }
 
@@ -237,15 +243,18 @@ func TestOde04(tst *testing.T) {
 	// configurations
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.SaveXY = true
+	conf.StepNmax = conf.NmaxSS + 1
 	conf.IniH = 1.0e-6 // initial step size
 
 	// set tolerances
 	atol, rtol := 1e-11, 1e-5
 	conf.SetTol(atol, rtol)
 
+	// output handler
+	out := NewOutput(p.Ndim, conf)
+
 	// ODE solver
-	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, p.M, nil)
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, p.M)
 	status(tst, err)
 	defer sol.Free()
 
@@ -293,6 +302,6 @@ func TestOde04(tst *testing.T) {
 		plt.SetYlog()
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl/ode", "hwamplifier")
+		plt.Save("/tmp/gosl/ode", "ode4")
 	}
 }

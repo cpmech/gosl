@@ -34,17 +34,22 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (stat *Stat, out *
 
 	// configuration
 	conf, err := NewConfig(method, "", nil)
-	conf.SaveXY = true
 	if fixedStp {
 		conf.FixedStp = o.Dx
+		conf.StepNmax = conf.CalcNfixedMax(o.Dx, o.Xf)
+	} else {
+		conf.StepNmax = conf.NmaxSS + 1
 	}
+
+	// output handler
+	out = NewOutput(o.Ndim, conf)
 
 	// allocate solver
 	jac := o.Jac
 	if numJac {
 		jac = nil
 	}
-	sol, err := NewSolver(conf, o.Ndim, o.Fcn, jac, nil, nil)
+	sol, err := NewSolver(o.Ndim, conf, out, o.Fcn, jac, nil)
 	if err != nil {
 		return
 	}
@@ -53,9 +58,8 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (stat *Stat, out *
 	// solve ODE
 	err = sol.Solve(y, 0.0, o.Xf)
 
-	// results
+	// set stat variable
 	stat = sol.Stat
-	out = sol.Out
 	return
 }
 

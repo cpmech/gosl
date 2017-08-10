@@ -22,10 +22,13 @@ func TestMoEuler01(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("moeuler", "", nil)
 	status(tst, err)
-	conf.SaveXY = true
+	conf.StepNmax = conf.NmaxSS + 1
+
+	// output handler
+	out := NewOutput(p.Ndim, conf)
 
 	// solver
-	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, nil)
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 

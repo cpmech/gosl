@@ -24,12 +24,12 @@ import (
 // Solver implements an ODE solver
 type Solver struct {
 
-	// main
+	// structures
 	Conf *Config // configuration parameters
+	Out  *Output // output handler
 	Stat *Stat   // statistics
-	Out  *Output // output
 
-	// input
+	// problem definition
 	ndim int  // size of y
 	fcn  Func // dy/dx := f(x,y)
 	jac  JacF // Jacobian: df/dy
@@ -42,16 +42,27 @@ type Solver struct {
 }
 
 // NewSolver returns a new ODE structure with default values and allocated slices
+//
+//  INPUT:
+//    ndim -- problem dimension
+//    conf -- configuration parameters
+//    out  -- output handler [may be nil]
+//    fcn  -- f(x,y) = dy/dx function
+//    jac  -- Jacobian: df/dy function [may be nil ⇒ use numerical Jacobian, if neccessary]
+//    M    -- "mass" matrix, such that M ⋅ dy/dx = f(x,y) [may be nil]
+//
 //  NOTE: remember to call Free() to release allocated resources (e.g. from the linear solvers)
-func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn OutF) (o *Solver, err error) {
+//
+func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Triplet) (o *Solver, err error) {
 
 	// main
 	o = new(Solver)
 	o.Conf = conf
+	o.Out = out
 	o.Stat = NewStat()
 	o.Stat.LsKind = o.Conf.lsKind
 
-	// input
+	// problem definition
 	o.ndim = ndim
 	o.fcn = fcn
 	o.jac = jac
@@ -66,16 +77,14 @@ func NewSolver(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet, ofcn O
 		return
 	}
 
+	// connect continuous output function
+	if o.Out != nil {
+		o.Out.cout = o.rkm.ContOut
+	}
+
 	// information
 	var nstg int
 	o.fixedOnly, o.implicit, nstg = o.rkm.Info()
-
-	// output
-	nMaxOut := 0
-	if conf.SaveXY {
-		nMaxOut = conf.NmaxSS + 1
-	}
-	o.Out = NewOutput(ofcn, ndim, nMaxOut, conf.ContNmax, conf.ContDx, o.rkm.ContOut)
 
 	// workspace
 	o.work = newRKwork(nstg, o.ndim)
@@ -114,7 +123,13 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	// stat and output
 	o.Stat.Reset()
 	o.Stat.Hopt = h
-	o.Out.Execute(0, false, h, x, y)
+	if o.Out != nil {
+		stop, e := o.Out.Execute(0, false, h, x, y)
+		if stop || e != nil {
+			err = e
+			return
+		}
+	}
 
 	// set control flags
 	o.work.first = true
@@ -142,7 +157,13 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			o.work.first = false
 			x += h
 			o.rkm.Accept(y, o.work)
-			o.Out.Execute(istep, false, h, x, y)
+			if o.Out != nil {
+				stop, e := o.Out.Execute(istep, false, h, x, y)
+				if stop || e != nil {
+					err = e
+					return
+				}
+			}
 			if o.Conf.Verbose {
 				io.Pfgreen("x = %v\n", x)
 				io.Pf("y = %v\n", y)
@@ -222,7 +243,13 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.rkm.Accept(y, o.work)
 
 				// output
-				o.Out.Execute(o.Stat.Naccepted, last, h, x, y)
+				if o.Out != nil {
+					stop, e := o.Out.Execute(o.Stat.Naccepted, last, h, x, y)
+					if stop || e != nil {
+						err = e
+						return
+					}
+				}
 
 				// converged ?
 				if last {

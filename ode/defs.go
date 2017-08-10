@@ -12,12 +12,14 @@ import "github.com/cpmech/gosl/la"
 //
 //     d{y}/dx := {f}(h=dx, x, {y})
 //
-//   Input:
+//   INPUT:
 //     h -- current stepsize = dx
 //     x -- current x
 //     y -- current {y}
-//   Output:
-//     f -- {f}(h, x, {y})
+//
+//   OUTPUT:
+//     f     -- {f}(h, x, {y})
+//     error -- occurred error
 //
 type Func func(f la.Vector, h, x float64, y la.Vector) error
 
@@ -27,27 +29,47 @@ type Func func(f la.Vector, h, x float64, y la.Vector) error
 //
 //   d{f}/d{y} := [J](h=dx, x, {y})
 //
-//   Input:
-//     h -- current stepsize = dx
-//     x -- current x
-//     y -- current {y}
-//   Output:
-//     dfdy -- Jacobian matrix d{f}/d{y} := [J](h=dx, x, {y})
+//   INPUT:
+//     h     -- current stepsize = dx
+//     x     -- current x
+//     y     -- current {y}
+//     error -- occurred error
+//
+//   OUTPUT:
+//     dfdy  -- Jacobian matrix d{f}/d{y} := [J](h=dx, x, {y})
+//     error -- occurred error
 //
 type JacF func(dfdy *la.Triplet, h, x float64, y la.Vector) error
 
-// OutF defines a "callback" function to be called during the output of results
-//   Input:
+// StepOutF defines a callback function to be called when a step is accepted
+//
+//   INPUT:
 //     istep -- index of step (0 is the very first output whereas 1 is the first accepted step)
 //     h     -- stepsize = dx
 //     x     -- scalar variable
 //     y     -- vector variable
-//   Output:
-//     error -- this function can return an error to force stopping the simulation
-type OutF func(istep int, h, x float64, y la.Vector) error
+//
+//   OUTPUT:
+//     stop -- stop simulation (nicely)
+//     err  -- occurred error
+//
+type StepOutF func(istep int, h, x float64, y la.Vector) (stop bool, err error)
+
+// ContOutF defines a function to produce a continuous output
+//
+//   INPUT:
+//     istep -- index of step (0 is the very first output whereas 1 is the first accepted step)
+//     h     -- best (current) h
+//     x     -- current (just updated) x
+//     y     -- current (just updated) y
+//     xout  -- selected x to produce an output
+//     yout  -- y values computed @ xout
+//
+//   OUTPUT:
+//     stop -- stop simulation (nicely)
+//     err  -- occurred error
+//
+type ContOutF func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error)
 
 // YanaF defines a function to be used when computing analytical solutions
 type YanaF func(x float64) float64
-
-// ProbPlotF defines a function to plot problems' results
-//type ProbPlotF func(dirout, fnk, label string, xf float64, yana yanaType, sol *Solver)

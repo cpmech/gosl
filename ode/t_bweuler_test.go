@@ -22,11 +22,14 @@ func TestBwEuler01a(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("bweuler", "", nil)
 	status(tst, err)
-	conf.SaveXY = true
 	conf.FixedStp = p.Dx
+	conf.StepNmax = conf.CalcNfixedMax(p.Dx, p.Xf)
+
+	// output handler
+	out := NewOutput(p.Ndim, conf)
 
 	// solver
-	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, nil)
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -66,11 +69,14 @@ func TestBwEuler01b(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("bweuler", "", nil)
 	status(tst, err)
-	conf.SaveXY = true
 	conf.FixedStp = p.Dx
+	conf.StepNmax = conf.CalcNfixedMax(p.Dx, p.Xf)
+
+	// output handler
+	out := NewOutput(p.Ndim, conf)
 
 	// solver
-	sol, err := NewSolver(conf, p.Ndim, p.Fcn, nil, nil, nil)
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 

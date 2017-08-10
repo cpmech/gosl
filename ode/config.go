@@ -36,9 +36,13 @@ type Config struct {
 	CteTg      bool    // use constant tangent (Jacobian) in BwEuler
 	UseRmsNorm bool    // use RMS norm instead of Euclidian in BwEuler
 	Verbose    bool    // show messages, e.g. during iterations
-	SaveXY     bool    // save X values in an array (e.g. for plotting)
-	ContNmax   int     // maximum number of continuous output; e.g. xf / ContDx + 1
-	ContDx     float64 // step size for continuous output
+
+	// output
+	StepF    StepOutF // function to process step output (of accepted steps) [may be nil]
+	ContF    ContOutF // function to process continuous output [may be nil]
+	StepNmax int      // maximum number of accepted steps output [may be nil ⇒ no output]
+	ContNmax int      // maximum number of continuous output [may be nil ⇒ no output]
+	ContDx   float64  // step size for continuous output
 
 	// linear solver
 	Symmetric bool   // assume symmetric matrix
@@ -88,7 +92,6 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 	o.CteTg = false
 	o.UseRmsNorm = true
 	o.Verbose = false
-	o.SaveXY = false
 
 	// linear solver control
 	if comm == nil || lsKind == "" {
@@ -130,6 +133,11 @@ func (o *Config) SetTol(atol, rtol float64) (err error) {
 	// tolerance for iterations
 	o.fnewt = utl.Max(10.0*o.Eps/o.rtol, utl.Min(0.03, math.Sqrt(o.rtol)))
 	return
+}
+
+// CalcNfixedMax calculates the maximum number of fixed steps (e.g. for output)
+func (o *Config) CalcNfixedMax(dx, xf float64) int {
+	return int(math.Ceil(xf/dx)) + 1
 }
 
 // dxnew computes standard dx estimate

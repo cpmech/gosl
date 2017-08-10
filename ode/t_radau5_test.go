@@ -5,12 +5,10 @@
 package ode
 
 import (
-	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
 
@@ -25,10 +23,13 @@ func TestRadau501a(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.SaveXY = true
+	conf.StepNmax = conf.NmaxSS + 1
+
+	// output handler
+	out := NewOutput(p.Ndim, conf)
 
 	// solver
-	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, nil)
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -64,46 +65,30 @@ func TestRadau502(tst *testing.T) {
 
 	// problem
 	p := ProbVanDerPol()
-	p.Y[1] = -0.66 // for some reason the previous reference code was using -0.6
+	p.Y[1] = -0.66 // for some reason, the previous reference code was using -0.6
+	///////////////// -0.66 is the value from Hairer's website code
 	//p.Xf = 0.6
 
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.SaveXY = true
 	conf.IniH = 1e-6
 	conf.SetTol(1e-4, 1e-4)
 	conf.ContDx = 0.2
-	conf.ContNmax = int(math.Ceil(p.Xf/conf.ContDx)) + 1
+	conf.StepNmax = conf.NmaxSS + 1
+	conf.ContNmax = conf.CalcNfixedMax(conf.ContDx, p.Xf)
 
-	// output function
-	out := func(istep int, h, x float64, y la.Vector) error {
-		//io.Pf("x=%5.2f  y=%18.10e%18.10e  nstep=%d\n", x, y[0], y[1], istep)
-		return nil
-	}
+	// output handler
+	out := NewOutput(p.Ndim, conf)
 
 	// allocate ODE object
-	sol, err := NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, out)
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
 	// solve problem
 	err = sol.Solve(p.Y, 0, p.Xf)
 	status(tst, err)
-
-	// compare with fortran code
-	_, d, err := io.ReadTable("data/dr1_radau5.cmp")
-	status(tst, err)
-	chk.Int(tst, "ContIdx", sol.Out.ContIdx, len(d["x"]))
-	for i := 0; i < sol.Out.ContIdx; i++ {
-		for j := 0; j < p.Ndim; j++ {
-			key := io.Sf("y%d", j)
-			chk.AnaNum(tst, key, 1e-11, sol.Out.ContY[i][j], d[key][i], chk.Verbose)
-		}
-	}
-	for i := 0; i < sol.Out.ContIdx; i++ {
-		chk.Int(tst, "stp", sol.Out.ContStp[i], int(d["stp"][i]))
-	}
 
 	// check
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2218)
@@ -114,4 +99,20 @@ func TestRadau502(tst *testing.T) {
 	chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 248)
 	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 660)
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
+
+	// compare with fortran code
+	_, d, err := io.ReadTable("data/dr1_radau5.cmp")
+	status(tst, err)
+	io.Pl()
+	chk.Int(tst, "ContIdx", sol.Out.ContIdx, len(d["x"]))
+	for i := 0; i < sol.Out.ContIdx; i++ {
+		for j := 0; j < p.Ndim; j++ {
+			key := io.Sf("y%d", j)
+			chk.AnaNum(tst, key, 1e-11, sol.Out.ContY[i][j], d[key][i], chk.Verbose)
+		}
+	}
+	io.Pl()
+	for i := 0; i < sol.Out.ContIdx; i++ {
+		chk.Int(tst, "stp", sol.Out.ContStp[i], int(d["stp"][i]))
+	}
 }
