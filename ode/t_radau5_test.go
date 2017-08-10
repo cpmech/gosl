@@ -62,7 +62,7 @@ func TestRadau501a(tst *testing.T) {
 
 func TestRadau502(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("Radau502: Van der Pol's Equation")
 
 	// problem
@@ -136,7 +136,9 @@ func TestRadau502(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("Radau5,Jana", 0, out, 101, true, nil, nil)
+		p.Plot("steps", 0, out, 101, false, nil, &plt.A{M: "+", C: plt.C(1, 0), NoClip: true})
+		plt.Plot(out.GetContX(), out.GetContY(0), &plt.A{L: "cont", Ls: "none", M: ".", C: plt.C(0, 0), NoClip: true})
+		plt.Gll("$x$", "$y$", nil)
 		plt.Save("/tmp/gosl/ode", "radau502")
 	}
 }
