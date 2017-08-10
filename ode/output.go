@@ -17,10 +17,10 @@ type Output struct {
 	conf *Config // configuration
 
 	// discrete output at accepted steps
-	IdxSave int         // current index in Xvalues and Yvalues == last output
-	Hvalues []float64   // h values [IdxSave]
-	Xvalues []float64   // X values [IdxSave]
-	Yvalues []la.Vector // Y values [IdxSave][ndim]
+	StepIdx int         // current index in Xvalues and Yvalues == last output
+	StepH   []float64   // h values [IdxSave]
+	StepX   []float64   // X values [IdxSave]
+	StepY   []la.Vector // Y values [IdxSave][ndim]
 	stepOK  bool        // step output is OK (activated)
 
 	// continuous output
@@ -46,9 +46,9 @@ func NewOutput(ndim int, conf *Config) (o *Output) {
 	o.stepOK = conf.StepNmax > 0
 	o.contOK = conf.ContNmax > 0 && conf.ContDx > 0
 	if o.stepOK {
-		o.Hvalues = make([]float64, o.conf.StepNmax)
-		o.Xvalues = make([]float64, o.conf.StepNmax)
-		o.Yvalues = make([]la.Vector, o.conf.StepNmax)
+		o.StepH = make([]float64, o.conf.StepNmax)
+		o.StepX = make([]float64, o.conf.StepNmax)
+		o.StepY = make([]la.Vector, o.conf.StepNmax)
 	}
 	if o.contOK {
 		o.ContX = make([]float64, o.conf.ContNmax)
@@ -73,12 +73,12 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 	}
 
 	// save step output
-	if o.IdxSave < o.conf.StepNmax {
-		o.Hvalues[o.IdxSave] = h
-		o.Xvalues[o.IdxSave] = x
-		o.Yvalues[o.IdxSave] = la.NewVector(o.ndim)
-		o.Yvalues[o.IdxSave].Apply(1, y)
-		o.IdxSave++
+	if o.StepIdx < o.conf.StepNmax {
+		o.StepH[o.StepIdx] = h
+		o.StepX[o.StepIdx] = x
+		o.StepY[o.StepIdx] = la.NewVector(o.ndim)
+		o.StepY[o.StepIdx].Apply(1, y)
+		o.StepIdx++
 	}
 
 	// continuous output using function
@@ -136,12 +136,12 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 // GetStepH returns all h values
 // from the (accepted) steps output
 func (o *Output) GetStepH() (X []float64) {
-	return o.Hvalues[:o.IdxSave]
+	return o.StepH[:o.StepIdx]
 }
 
 // GetStepX returns all x values
 func (o *Output) GetStepX() (X []float64) {
-	return o.Xvalues[:o.IdxSave]
+	return o.StepX[:o.StepIdx]
 }
 
 // GetStepY extracts the y[i] values for all output times
@@ -150,10 +150,10 @@ func (o *Output) GetStepX() (X []float64) {
 //  use to plot time series; e.g.:
 //     plt.Plot(o.GetStepX(), o.GetStepY(0), &plt.A{L:"y0"})
 func (o *Output) GetStepY(i int) (Y []float64) {
-	if o.IdxSave > 0 {
-		Y = make([]float64, o.IdxSave)
-		for j := 0; j < o.IdxSave; j++ {
-			Y[j] = o.Yvalues[j][i]
+	if o.StepIdx > 0 {
+		Y = make([]float64, o.StepIdx)
+		for j := 0; j < o.StepIdx; j++ {
+			Y[j] = o.StepY[j][i]
 		}
 	}
 	return
@@ -162,14 +162,14 @@ func (o *Output) GetStepY(i int) (Y []float64) {
 // GetStepYtable returns a table with all y values such that Y[idxOut][dim]
 // from the (accepted) steps output
 func (o *Output) GetStepYtable() (Y [][]float64) {
-	if len(o.Yvalues) < 1 {
+	if len(o.StepY) < 1 {
 		return
 	}
-	ndim := len(o.Yvalues[0])
-	Y = utl.Alloc(o.IdxSave, ndim)
-	for j := 0; j < o.IdxSave; j++ {
+	ndim := len(o.StepY[0])
+	Y = utl.Alloc(o.StepIdx, ndim)
+	for j := 0; j < o.StepIdx; j++ {
 		for i := 0; i < ndim; i++ {
-			Y[j][i] = o.Yvalues[j][i]
+			Y[j][i] = o.StepY[j][i]
 		}
 	}
 	return
@@ -178,14 +178,14 @@ func (o *Output) GetStepYtable() (Y [][]float64) {
 // GetStepYtableT returns a (transposed) table with all y values such that Y[dim][idxOut]
 // from the (accepted) steps output
 func (o *Output) GetStepYtableT() (Y [][]float64) {
-	if len(o.Yvalues) < 1 {
+	if len(o.StepY) < 1 {
 		return
 	}
-	ndim := len(o.Yvalues[0])
-	Y = utl.Alloc(ndim, o.IdxSave)
-	for j := 0; j < o.IdxSave; j++ {
+	ndim := len(o.StepY[0])
+	Y = utl.Alloc(ndim, o.StepIdx)
+	for j := 0; j < o.StepIdx; j++ {
 		for i := 0; i < ndim; i++ {
-			Y[i][j] = o.Yvalues[j][i]
+			Y[i][j] = o.StepY[j][i]
 		}
 	}
 	return
