@@ -25,9 +25,9 @@ type Output struct {
 
 	// continuous output
 	ContIdx int         // current index in Xcont and Ycont arrays
+	ContS   []int       // index of step
 	ContX   []float64   // X values during continuous output [IdxCont]
 	ContY   []la.Vector // Y values during continuous output [IdxCont][ndim]
-	ContStp []int       // index of step
 	contOK  bool        // continuous output is OK (activated)
 	xout    float64     // current x of continuous output
 	yout    la.Vector   // current y of continuous output (used if ContF != nil only)
@@ -51,9 +51,9 @@ func NewOutput(ndim int, conf *Config) (o *Output) {
 		o.StepY = make([]la.Vector, o.conf.StepNmax)
 	}
 	if o.contOK {
+		o.ContS = make([]int, o.conf.ContNmax)
 		o.ContX = make([]float64, o.conf.ContNmax)
 		o.ContY = make([]la.Vector, o.conf.ContNmax)
-		o.ContStp = make([]int, o.conf.ContNmax)
 	}
 	if o.contOK || o.conf.ContF != nil {
 		o.yout = la.NewVector(ndim)
@@ -109,16 +109,16 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 	if o.contOK && o.ContIdx < o.conf.ContNmax {
 		if istep == 0 || last {
 			xo = x
+			o.ContS[o.ContIdx] = istep
 			o.ContX[o.ContIdx] = xo
 			o.ContY[o.ContIdx] = la.NewVector(o.ndim)
 			o.ContY[o.ContIdx].Apply(1, y)
-			o.ContStp[o.ContIdx] = istep
 			o.ContIdx++
 			xo = o.conf.ContDx
 		} else {
 			xo = o.xout
 			for x >= xo {
-				o.ContStp[o.ContIdx] = istep
+				o.ContS[o.ContIdx] = istep
 				o.ContX[o.ContIdx] = xo
 				o.ContY[o.ContIdx] = la.NewVector(o.ndim)
 				o.cout(o.ContY[o.ContIdx], h, x, y, xo)
@@ -133,6 +133,8 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 	return
 }
 
+// step output ////////////////////////////////////////////////////////////////////////////////////
+
 // GetStepH returns all h values
 // from the (accepted) steps output
 func (o *Output) GetStepH() (X []float64) {
@@ -140,6 +142,7 @@ func (o *Output) GetStepH() (X []float64) {
 }
 
 // GetStepX returns all x values
+// from the (accepted) steps output
 func (o *Output) GetStepX() (X []float64) {
 	return o.StepX[:o.StepIdx]
 }
@@ -186,6 +189,67 @@ func (o *Output) GetStepYtableT() (Y [][]float64) {
 	for j := 0; j < o.StepIdx; j++ {
 		for i := 0; i < ndim; i++ {
 			Y[i][j] = o.StepY[j][i]
+		}
+	}
+	return
+}
+
+// continuous output //////////////////////////////////////////////////////////////////////////////
+
+// GetContS returns all s (step-index) values
+// from the continuous output data
+func (o *Output) GetContS() (S []int) {
+	return o.ContS[:o.ContIdx]
+}
+
+// GetContX returns all x values
+// from the continuous output data
+func (o *Output) GetContX() (X []float64) {
+	return o.ContX[:o.ContIdx]
+}
+
+// GetContY extracts the y[i] values for all output times
+// from the continuous output data
+//  i -- index of y component
+//  use to plot time series; e.g.:
+//     plt.Plot(o.GetContX(), o.GetContY(0), &plt.A{L:"y0"})
+func (o *Output) GetContY(i int) (Y []float64) {
+	if o.ContIdx > 0 {
+		Y = make([]float64, o.ContIdx)
+		for j := 0; j < o.ContIdx; j++ {
+			Y[j] = o.ContY[j][i]
+		}
+	}
+	return
+}
+
+// GetContYtable returns a table with all y values such that Y[idxOut][dim]
+// from the continuous output data
+func (o *Output) GetContYtable() (Y [][]float64) {
+	if len(o.ContY) < 1 {
+		return
+	}
+	ndim := len(o.ContY[0])
+	Y = utl.Alloc(o.ContIdx, ndim)
+	for j := 0; j < o.ContIdx; j++ {
+		for i := 0; i < ndim; i++ {
+			Y[j][i] = o.ContY[j][i]
+		}
+	}
+	return
+}
+
+// GetContYtableT returns a (transposed) table with all y values such that Y[dim][idxOut]
+// from the continuous output data
+func (o *Output) GetContYtableT() (Y [][]float64) {
+	if len(o.ContY) < 1 {
+		return
+	}
+	ndim := len(o.ContY[0])
+	Y = utl.Alloc(ndim, o.ContIdx)
+	for j := 0; j < o.ContIdx; j++ {
+		for i := 0; i < ndim; i++ {
+			Y[i][j] = o.ContY[j][i]
 		}
 	}
 	return

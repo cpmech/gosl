@@ -113,6 +113,6 @@ func TestRadau502(tst *testing.T) {
 	}
 	io.Pl()
 	for i := 0; i < sol.Out.ContIdx; i++ {
-		chk.Int(tst, "stp", sol.Out.ContStp[i], int(d["stp"][i]))
+		chk.Int(tst, "stp", sol.Out.ContS[i], int(d["stp"][i]))
 	}
 }
