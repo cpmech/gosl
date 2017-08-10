@@ -52,7 +52,7 @@ func TestDoPri501(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("DoPri5", sol.Out, 101, true, nil, nil)
+		p.Plot("DoPri5", 0, sol.Out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "dopri501")
 	}
 }

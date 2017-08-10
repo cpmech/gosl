@@ -53,7 +53,7 @@ func TestBwEuler01a(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("BwEuler,Jana", sol.Out, 101, true, nil, nil)
+		p.Plot("BwEuler,Jana", 0, sol.Out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "bweuler01a")
 	}
 }
@@ -100,7 +100,7 @@ func TestBwEuler01b(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("BwEuler,Jnum", sol.Out, 101, true, nil, nil)
+		p.Plot("BwEuler,Jnum", 0, sol.Out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "bweuler01b")
 	}
 }

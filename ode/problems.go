@@ -64,7 +64,7 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (stat *Stat, out *
 }
 
 // Plot plots Y[i] versus x series
-func (o *Problem) Plot(label string, out *Output, npts int, withAna bool, argsAna, argsNum *plt.A) {
+func (o *Problem) Plot(label string, idxY int, out *Output, npts int, withAna bool, argsAna, argsNum *plt.A) {
 	if argsAna == nil {
 		argsAna = &plt.A{C: "grey", Ls: "-", Lw: 5, L: "ana", NoClip: true}
 	}
@@ -77,10 +77,7 @@ func (o *Problem) Plot(label string, out *Output, npts int, withAna bool, argsAn
 		Y := utl.GetMapped(X, func(x float64) float64 { return o.Yana(x) })
 		plt.Plot(X, Y, argsAna)
 	}
-	n := out.IdxSave
-	Xn := out.Xvalues[:n]
-	Yn := out.GetYi(0)
-	plt.Plot(Xn, Yn, argsNum)
+	plt.Plot(out.GetStepX(), out.GetStepY(idxY), argsNum)
 }
 
 // problems database //////////////////////////////////////////////////////////////////////////////

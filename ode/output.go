@@ -133,32 +133,35 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 	return
 }
 
-// GetH returns all h values
-func (o *Output) GetH() (X []float64) {
+// GetStepH returns all h values
+// from the (accepted) steps output
+func (o *Output) GetStepH() (X []float64) {
 	return o.Hvalues[:o.IdxSave]
 }
 
-// GetX returns all x values
-func (o *Output) GetX() (X []float64) {
+// GetStepX returns all x values
+func (o *Output) GetStepX() (X []float64) {
 	return o.Xvalues[:o.IdxSave]
 }
 
-// GetYi extracts the y[i] values for all output times
+// GetStepY extracts the y[i] values for all output times
+// from the (accepted) steps output
 //  i -- index of y component
 //  use to plot time series; e.g.:
-//     plt.Plot(o.GetX(), o.GetY(0), &plt.A{L:"y0"})
-func (o *Output) GetYi(i int) (Yi []float64) {
+//     plt.Plot(o.GetStepX(), o.GetStepY(0), &plt.A{L:"y0"})
+func (o *Output) GetStepY(i int) (Y []float64) {
 	if o.IdxSave > 0 {
-		Yi = make([]float64, o.IdxSave)
+		Y = make([]float64, o.IdxSave)
 		for j := 0; j < o.IdxSave; j++ {
-			Yi[j] = o.Yvalues[j][i]
+			Y[j] = o.Yvalues[j][i]
 		}
 	}
 	return
 }
 
-// GetY returns a table with all y values such that ytable[idxOut][dim]
-func (o *Output) GetY() (Y [][]float64) {
+// GetStepYtable returns a table with all y values such that Y[idxOut][dim]
+// from the (accepted) steps output
+func (o *Output) GetStepYtable() (Y [][]float64) {
 	if len(o.Yvalues) < 1 {
 		return
 	}
@@ -172,8 +175,9 @@ func (o *Output) GetY() (Y [][]float64) {
 	return
 }
 
-// GetYt returns a (transposed) table with all y values such that ytable[dim][idxOut]
-func (o *Output) GetYt() (Y [][]float64) {
+// GetStepYtableT returns a (transposed) table with all y values such that Y[dim][idxOut]
+// from the (accepted) steps output
+func (o *Output) GetStepYtableT() (Y [][]float64) {
 	if len(o.Yvalues) < 1 {
 		return
 	}

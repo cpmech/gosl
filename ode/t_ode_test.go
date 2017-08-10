@@ -91,11 +91,11 @@ func TestOde01(tst *testing.T) {
 	if chk.Verbose {
 		npts := 201
 		plt.Reset(true, nil)
-		p.Plot("FwEuler", out1, npts, true, nil, &plt.A{C: "k", M: ".", Ls: ":"})
-		p.Plot("BwEuler", out2, npts, false, nil, &plt.A{C: "r", M: ".", Ls: ":"})
-		p.Plot("MoEuler", out3, npts, false, nil, &plt.A{C: "c", M: "+", Ls: ":"})
-		p.Plot("Dopri5", out4, npts, false, nil, &plt.A{C: "m", M: "^", Ls: "--", Ms: 3})
-		p.Plot("Radau5", out5, npts, false, nil, &plt.A{C: "b", M: "s", Ls: "-", Ms: 3})
+		p.Plot("FwEuler", 0, out1, npts, true, nil, &plt.A{C: "k", M: ".", Ls: ":"})
+		p.Plot("BwEuler", 0, out2, npts, false, nil, &plt.A{C: "r", M: ".", Ls: ":"})
+		p.Plot("MoEuler", 0, out3, npts, false, nil, &plt.A{C: "c", M: "+", Ls: ":"})
+		p.Plot("Dopri5", 0, out4, npts, false, nil, &plt.A{C: "m", M: "^", Ls: "--", Ms: 3})
+		p.Plot("Radau5", 0, out5, npts, false, nil, &plt.A{C: "b", M: "s", Ls: "-", Ms: 3})
 		plt.Gll("$x$", "$y$", nil)
 		plt.Save("/tmp/gosl/ode", "ode1")
 	}
@@ -142,20 +142,20 @@ func TestOde02(tst *testing.T) {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
 		status(tst, err)
-		X := sol.Out.GetX()
+		X := sol.Out.GetStepX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.GetYi(j)
+			Yj := sol.Out.GetStepY(j)
 			plt.Subplot(p.Ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(p.Ndim+1, 1, p.Ndim+1)
-		plt.Plot(X, sol.Out.GetH(), &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, sol.Out.GetStepH(), &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "ode2")
@@ -211,13 +211,13 @@ func TestOde03(tst *testing.T) {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		X := sol.Out.GetX()
+		X := sol.Out.GetStepX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.GetYi(j)
+			Yj := sol.Out.GetStepY(j)
 			plt.Subplot(p.Ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA, NoClip: true})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB, NoClip: true})
@@ -225,7 +225,7 @@ func TestOde03(tst *testing.T) {
 			plt.HideTRborders()
 		}
 		plt.Subplot(p.Ndim+1, 1, p.Ndim+1)
-		plt.Plot(X, sol.Out.GetH(), &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, sol.Out.GetStepH(), &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "ode3")
@@ -283,13 +283,13 @@ func TestOde04(tst *testing.T) {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		X := sol.Out.GetX()
+		X := sol.Out.GetStepX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 4 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.GetYi(j)
+			Yj := sol.Out.GetStepY(j)
 			plt.Subplot(p.Ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA, NoClip: true})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB, NoClip: true})
@@ -298,7 +298,7 @@ func TestOde04(tst *testing.T) {
 			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
 		}
 		plt.Subplot(p.Ndim+1, 1, p.Ndim+1)
-		plt.Plot(X, sol.Out.GetH(), &plt.A{C: "b", NoClip: true})
+		plt.Plot(X, sol.Out.GetStepH(), &plt.A{C: "b", NoClip: true})
 		plt.SetYlog()
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
