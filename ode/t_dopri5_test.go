@@ -37,11 +37,11 @@ func TestDoPri501(tst *testing.T) {
 	status(tst, err)
 
 	// check Stat
-	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 1132)
+	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 815)
 	chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 0)
-	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 172)
-	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 99)
-	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 73)
+	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 125)
+	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 64)
+	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 61)
 	chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 0)
 	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 0)
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 0)
