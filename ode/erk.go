@@ -23,7 +23,7 @@ type ExplicitRK struct {
 	Be    []float64   // be coefficients
 	C     []float64   // c coefficients
 	Nstg  int         // number of stages
-	w     la.Vector   // step update (normalised variable starting from zero)
+	w     la.Vector   // workspace
 	fcn   Func        // dy/dx = f(x,y) function
 }
 
