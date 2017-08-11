@@ -59,12 +59,12 @@ func (o *ExplicitRK) ContOut(yout la.Vector, h, x float64, y la.Vector, xout flo
 }
 
 // Step steps update
-func (o *ExplicitRK) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
+func (o *ExplicitRK) Step(h, xa float64, ya la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
 
 	// update
 	for i := 0; i < work.nstg; i++ {
-		work.u[i] = x0 + h*o.C[i]
-		work.v[i].Apply(1, y0) // v[i] := y
+		work.u[i] = xa + h*o.C[i]
+		work.v[i].Apply(1, ya) // v[i] := y
 		for j := 0; j < i; j++ {
 			la.VecAdd(work.v[i], 1, work.v[i], h*o.A[i][j], work.f[j]) // v[i] += h*a[i][j]*f[j]
 		}
