@@ -82,6 +82,7 @@ func (o *ExplicitRK) Step(h, xa float64, ya la.Vector, stat *Stat, work *rkwork)
 	// error estimation
 	var lerrm, ratio float64 // m component of local error estimate
 	for m := 0; m < work.ndim; m++ {
+		o.w[m] = ya[m]
 		lerrm = 0.0
 		for i := 0; i < work.nstg; i++ {
 			o.w[m] += o.B[i] * work.f[i][m] * h
