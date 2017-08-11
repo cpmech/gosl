@@ -64,9 +64,9 @@ func (o *ExplicitRK) Step(h, xa float64, ya la.Vector, stat *Stat, work *rkwork)
 	// update
 	for i := 0; i < work.nstg; i++ {
 		work.u[i] = xa + h*o.C[i]
-		work.v[i].Apply(1, ya)   // v[i] := y
+		work.v[i].Apply(1, ya)   // vi := ya
 		for j := 0; j < i; j++ { // lower diagonal ⇒ explicit
-			la.VecAdd(work.v[i], 1, work.v[i], h*o.A[i][j], work.f[j]) // v[i] += h⋅aij⋅kj
+			la.VecAdd(work.v[i], 1, work.v[i], h*o.A[i][j], work.f[j]) // vi += h⋅aij⋅kj
 		}
 		if i == 0 && o.Fprev && !work.first { // can reuse k[s] from last step
 			work.f[i].Apply(1, work.f[work.nstg-1]) // ki := ks
