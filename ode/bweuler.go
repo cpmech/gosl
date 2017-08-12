@@ -15,7 +15,10 @@ import (
 
 // BwEuler implements the (implicit) Backward Euler method
 type BwEuler struct {
+	ndim  int             // problem dimension
 	conf  *Config         // configurations
+	work  *rkwork         // workspace
+	stat  *Stat           // statistics
 	fcn   Func            // dy/dx := f(x,y)
 	jac   JacF            // Jacobian function: df/dy(x,y)
 	dfdy  *la.Triplet     // df/dy matrix
@@ -45,12 +48,15 @@ func (o *BwEuler) Info() (fixedOnly, implicit bool, nstages int) {
 }
 
 // Init initialises structure
-func (o *BwEuler) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error) {
+func (o *BwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) {
 	if M != nil {
 		err = chk.Err("Backward-Euler solver cannot handle M matrix yet\n")
 		return
 	}
+	o.ndim = ndim
 	o.conf = conf
+	o.work = work
+	o.stat = stat
 	o.fcn = fcn
 	o.jac = jac
 	o.dfdy = new(la.Triplet)
@@ -64,7 +70,13 @@ func (o *BwEuler) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet
 }
 
 // Accept accepts update
-func (o *BwEuler) Accept(y la.Vector, work *rkwork) {
+func (o *BwEuler) Accept(y la.Vector) (dxnew float64) {
+	return
+}
+
+// Reject processes step rejection
+func (o *BwEuler) Reject() (dxnew float64) {
+	return
 }
 
 // ContOut produces continuous output (after Accept)
@@ -73,13 +85,18 @@ func (o *BwEuler) ContOut(yout la.Vector, h, x float64, y la.Vector, xout float6
 }
 
 // Step steps update
-func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
+func (o *BwEuler) Step(x0 float64, y0 la.Vector) (err error) {
+
+	// auxiliary
+	h := o.work.h
+	k := o.work.f[0]
+	yOld := o.work.v[0]
 
 	// new x
 	x0 += h
 
 	// previous y
-	work.v[0].Apply(1, y0) // v := y_old
+	yOld.Apply(1, y0) // v := y_old
 
 	// iterations
 	var rmsnr float64 // rms norm of residual
@@ -87,29 +104,29 @@ func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 	for it = 0; it < o.conf.NmaxIt; it++ {
 
 		// statistics about iterations
-		if it+1 > stat.Nitmax {
-			stat.Nitmax = it + 1
+		if it+1 > o.stat.Nitmax {
+			o.stat.Nitmax = it + 1
 		}
 
 		// trial f @ update y
-		stat.Nfeval++
-		err = o.fcn(work.f[0], h, x0, y0)
+		o.stat.Nfeval++
+		err = o.fcn(k, h, x0, y0)
 		if err != nil {
 			return
 		}
 
 		// calculate residual
 		rmsnr = 0.0
-		for i := 0; i < work.ndim; i++ {
-			o.r[i] = y0[i] - work.v[0][i] - h*work.f[0][i] // residual
+		for i := 0; i < o.ndim; i++ {
+			o.r[i] = y0[i] - yOld[i] - h*k[i] // residual
 			if o.conf.UseRmsNorm {
-				rmsnr += math.Pow(o.r[i]/work.scal[i], 2.0)
+				rmsnr += math.Pow(o.r[i]/o.work.scal[i], 2.0)
 			} else {
 				rmsnr += o.r[i] * o.r[i]
 			}
 		}
 		if o.conf.UseRmsNorm {
-			rmsnr = math.Sqrt(rmsnr / float64(work.ndim))
+			rmsnr = math.Sqrt(rmsnr / float64(o.ndim))
 		} else {
 			rmsnr = math.Sqrt(rmsnr)
 		}
@@ -127,17 +144,17 @@ func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 		}
 
 		// Jacobian matrix
-		if work.first || !o.conf.CteTg {
+		if o.work.first || !o.conf.CteTg {
 
 			// stat
-			stat.Njeval++
+			o.stat.Njeval++
 
 			// numerical Jacobian
 			if o.jac == nil { // numerical
 				err = num.Jacobian(o.dfdy, func(fy, yy la.Vector) (e error) {
 					e = o.fcn(fy, h, x0, yy)
 					return
-				}, y0, work.f[0], o.dr) // dr works here as workspace variable
+				}, y0, o.work.f[0], o.dr) // dr works here as workspace variable
 
 				// analytical Jacobian
 			} else {
@@ -151,7 +168,7 @@ func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 
 			// initialise drdy matrix
 			if !o.ready {
-				o.drdy.Init(work.ndim, work.ndim, o.imat.Len()+o.dfdy.Len())
+				o.drdy.Init(o.ndim, o.ndim, o.imat.Len()+o.dfdy.Len())
 			}
 
 			// calculate drdy matrix
@@ -167,7 +184,7 @@ func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 			}
 
 			// perform factorisation
-			stat.Ndecomp++
+			o.stat.Ndecomp++
 			err = o.ls.Fact()
 			if err != nil {
 				return
@@ -175,11 +192,11 @@ func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 		}
 
 		// solve linear system
-		stat.Nlinsol++
+		o.stat.Nlinsol++
 		o.ls.Solve(o.dr, o.r, false) // dr := inv(drdy) * residual
 
 		// update y
-		for i := 0; i < work.ndim; i++ {
+		for i := 0; i < o.ndim; i++ {
 			y0[i] -= o.dr[i]
 		}
 	}
@@ -187,7 +204,6 @@ func (o *BwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (r
 	// did not converge
 	if it == o.conf.NmaxIt-1 {
 		err = chk.Err("convergence failed with nit = %d", it+1)
-		return
 	}
-	return 1e+20, err // must not be used with automatic substepping
+	return
 }

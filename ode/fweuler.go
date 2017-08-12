@@ -11,7 +11,11 @@ import (
 
 // FwEuler implements the (explicit) Forward Euler method
 type FwEuler struct {
-	fcn Func
+	ndim int     // problem dimension
+	conf *Config // configurations
+	work *rkwork // workspace
+	stat *Stat   // statistics
+	fcn  Func    // dy/dx := f(x,y)
 }
 
 // add method to database
@@ -28,17 +32,27 @@ func (o *FwEuler) Info() (fixedOnly, implicit bool, nstages int) {
 }
 
 // Init initialises structure
-func (o *FwEuler) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error) {
+func (o *FwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) {
 	if M != nil {
 		err = chk.Err("Forward-Euler solver cannot handle M matrix yet\n")
 		return
 	}
+	o.ndim = ndim
+	o.conf = conf
+	o.work = work
+	o.stat = stat
 	o.fcn = fcn
 	return
 }
 
 // Accept accepts update
-func (o *FwEuler) Accept(y la.Vector, work *rkwork) {
+func (o *FwEuler) Accept(y la.Vector) (dxnew float64) {
+	return
+}
+
+// Reject processes step rejection
+func (o *FwEuler) Reject() (dxnew float64) {
+	return
 }
 
 // ContOut produces continuous output (after Accept)
@@ -47,14 +61,14 @@ func (o *FwEuler) ContOut(yout la.Vector, h, x float64, y la.Vector, xout float6
 }
 
 // Step steps update
-func (o *FwEuler) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
-	stat.Nfeval++
-	err = o.fcn(work.f[0], h, x0, y0)
+func (o *FwEuler) Step(x0 float64, y0 la.Vector) (err error) {
+	o.stat.Nfeval++
+	err = o.fcn(o.work.f[0], o.work.h, x0, y0)
 	if err != nil {
 		return
 	}
-	for i := 0; i < work.ndim; i++ {
-		y0[i] += h * work.f[0][i]
+	for i := 0; i < o.ndim; i++ {
+		y0[i] += o.work.h * o.work.f[0][i]
 	}
-	return 1e+20, err // must not be used with automatic substepping
+	return
 }

@@ -17,14 +17,27 @@ import (
 //     moeuler -- Modified-Euler 2(1), order=2, nstages=2, error_est_order=2
 //     dopri5  -- Dormand-Prince 5(4), order=5, nstages=7, error_est_order=4
 type ExplicitRK struct {
+
+	// constants
 	Fprev bool        // can use previous f
 	A     [][]float64 // a coefficients
 	B     []float64   // b coefficients
 	Be    []float64   // be coefficients
 	C     []float64   // c coefficients
 	Nstg  int         // number of stages
-	w     la.Vector   // workspace
-	fcn   Func        // dy/dx = f(x,y) function
+	q     int         // order of error estimator; e.g. DoPri5(4) ⇒ q = 4 (=min(order(y1),order(y1bar))
+
+	// data
+	ndim int       // problem dimension
+	conf *Config   // configuration
+	work *rkwork   // workspace
+	stat *Stat     // statistics
+	fcn  Func      // dy/dx = f(x,y) function
+	w    la.Vector // local workspace
+	beta float64   // factor to stabilize step
+	n    float64   // exponent n = 1/(q+1) (or 1/(q+1)-0.75⋅β) of rerrⁿ
+	dmin float64   // dmin = 1/Mmin
+	dmax float64   // dmax = 1/Mmax
 }
 
 // add methods to database
@@ -42,15 +55,46 @@ func (o *ExplicitRK) Info() (fixedOnly, implicit bool, nstages int) {
 }
 
 // Init initialises structure
-func (o *ExplicitRK) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error) {
+func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) {
+	o.ndim = ndim
+	o.conf = conf
+	o.work = work
+	o.stat = stat
 	o.fcn = fcn
-	o.w = la.NewVector(ndim)
+	o.w = la.NewVector(o.ndim)
+	if conf.Method == "dopri5" {
+		o.beta = conf.DP5beta
+	}
+	o.n = 1.0/float64(o.q+1) - o.beta*0.75
+	o.dmin = 1.0 / o.conf.Mmin
+	o.dmax = 1.0 / o.conf.Mmax
 	return nil
 }
 
-// Accept accepts update
-func (o *ExplicitRK) Accept(y la.Vector, work *rkwork) {
+// Accept accepts update and computes next stepsize
+func (o *ExplicitRK) Accept(y la.Vector) (dxnew float64) {
+
+	// update y and k0
 	y.Apply(1, o.w)
+	o.work.f[0].Apply(1, o.work.f[o.Nstg-1]) // k0 := ks for next step
+
+	// estimate new stepsize
+	d := math.Pow(o.work.rerr, o.n)
+	if o.beta > 0 { // lund-stabilization
+		d = d / math.Pow(o.work.rerrPrev, o.beta)
+	}
+	d = utl.Max(o.dmax, utl.Min(o.dmin, d/o.conf.Mfac)) // we require  fac1 <= hnew/h <= fac2
+	dxnew = o.work.h / d
+	return
+}
+
+// Reject processes step rejection and computes next stepsize
+func (o *ExplicitRK) Reject() (dxnew float64) {
+
+	// estimate new stepsize
+	d := math.Pow(o.work.rerr, o.n) / o.conf.Mfac
+	dxnew = o.work.h / utl.Min(o.dmin, d)
+	return
 }
 
 // ContOut produces continuous output (after Accept)
@@ -59,39 +103,53 @@ func (o *ExplicitRK) ContOut(yout la.Vector, h, x float64, y la.Vector, xout flo
 }
 
 // Step steps update
-func (o *ExplicitRK) Step(h, xa float64, ya la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
+func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 
-	// update
-	for i := 0; i < work.nstg; i++ {
-		work.u[i] = xa + h*o.C[i]
-		work.v[i].Apply(1, ya)   // vi := ya
-		for j := 0; j < i; j++ { // lower diagonal ⇒ explicit
-			la.VecAdd(work.v[i], 1, work.v[i], h*o.A[i][j], work.f[j]) // vi += h⋅aij⋅kj
+	// auxiliary
+	h := o.work.h
+	k := o.work.f
+	v := o.work.v
+
+	// compute k0 (otherwise, use k0 saved in Accept)
+	if o.work.first || !o.Fprev { // do it also if cannot reuse previous ks
+		u0 := xa + h*o.C[0]
+		o.stat.Nfeval++
+		err = o.fcn(k[0], h, u0, ya) // k0 := f(ui,vi)
+		if err != nil {
+			return
 		}
-		if i == 0 && o.Fprev && !work.first { // can reuse k[s] from last step
-			work.f[i].Apply(1, work.f[work.nstg-1]) // ki := ks
-		} else {
-			stat.Nfeval++
-			err = o.fcn(work.f[i], h, work.u[i], work.v[i]) // ki := f(ui,vi)
-			if err != nil {
-				return
-			}
+	}
+
+	// compute ki
+	var ui float64
+	for i := 1; i < o.work.nstg; i++ {
+		ui = xa + h*o.C[i]
+		v[i].Apply(1, ya)        // vi := ya
+		for j := 0; j < i; j++ { // lower diagonal ⇒ explicit
+			la.VecAdd(v[i], 1, v[i], h*o.A[i][j], k[j]) // vi += h⋅aij⋅kj
+		}
+		o.stat.Nfeval++
+		err = o.fcn(k[i], h, ui, v[i]) // ki := f(ui,vi)
+		if err != nil {
+			return
 		}
 	}
 
 	// error estimation
-	var lerrm, ratio float64 // m component of local error estimate
-	for m := 0; m < work.ndim; m++ {
+	var kh, sum, lerrm, ratio float64 // m component of local error estimate
+	for m := 0; m < o.ndim; m++ {
 		o.w[m] = ya[m]
-		lerrm = 0.0
-		for i := 0; i < work.nstg; i++ {
-			o.w[m] += o.B[i] * work.f[i][m] * h
-			lerrm += (o.Be[i] - o.B[i]) * work.f[i][m] * h
+		lerrm = 0.0 // must be zeroed for each m
+		for i := 0; i < o.Nstg; i++ {
+			kh = k[i][m] * h
+			o.w[m] += o.B[i] * kh
+			lerrm += (o.Be[i] - o.B[i]) * kh
 		}
-		ratio = lerrm / work.scal[m]
-		rerr += ratio * ratio
+		sk := o.conf.atol + o.conf.rtol*utl.Max(math.Abs(ya[m]), math.Abs(o.w[m]))
+		ratio = lerrm / sk
+		sum += ratio * ratio
 	}
-	rerr = utl.Max(math.Sqrt(rerr/float64(work.ndim)), 1.0e-10)
+	o.work.rerr = utl.Max(math.Sqrt(sum/float64(o.ndim)), 1.0e-10)
 	return
 }
 
@@ -108,6 +166,7 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{0.5, 0.5}
 		o.C = []float64{0.0, 1.0}
 		o.Nstg = 2
+		o.q = 1
 	case "dopri5":
 		o.A = [][]float64{
 			{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -122,6 +181,7 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{5179.0 / 57600.0, 0.0, 7571.0 / 16695.0, 393.0 / 640.0, -92097.0 / 339200.0, 187.0 / 2100.0, 1.0 / 40.0}
 		o.C = []float64{0.0, 1.0 / 5.0, 3.0 / 10.0, 4.0 / 5.0, 8.0 / 9.0, 1.0, 1.0}
 		o.Nstg = 7
+		o.q = 4
 	default:
 		return nil
 	}

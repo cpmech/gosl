@@ -192,7 +192,8 @@ func ProbHwAmplifier() (o *Problem) {
 	w := 2.0 * 3.141592654 * 100.0
 
 	// initial values
-	o.Y = la.Vector([]float64{0.0,
+	o.Y = la.Vector([]float64{
+		0.0,
 		ub,
 		ub / (r6/r5 + 1.0),
 		ub / (r6/r5 + 1.0),
@@ -267,5 +268,32 @@ func ProbHwAmplifier() (o *Problem) {
 	o.M.Put(0+7-nu, 7, c1)
 	o.M.Put(2+6-nu, 6, c1)
 	o.M.Put(1+7-nu, 7, -c1)
+	return
+}
+
+// ProbArenstorf returns the Arenstorf orbit problem
+func ProbArenstorf() (o *Problem) {
+	o = new(Problem)
+	o.Xf = 17.0652165601579625588917206249
+	o.Y = la.Vector([]float64{
+		0.994,
+		0.0,
+		0.0,
+		-2.00158510637908252240537862224,
+	})
+	o.Ndim = len(o.Y)
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+		amu := 0.012277471
+		amup := 1.0 - amu
+		f[0] = y[2]
+		f[1] = y[3]
+		r1 := (y[0]+amu)*(y[0]+amu) + y[1]*y[1]
+		r1 = r1 * math.Sqrt(r1)
+		r2 := (y[0]-amup)*(y[0]-amup) + y[1]*y[1]
+		r2 = r2 * math.Sqrt(r2)
+		f[2] = y[0] + 2*y[3] - amup*(y[0]+amu)/r1 - amu*(y[0]-amup)/r2
+		f[3] = y[1] - 2*y[2] - amup*y[1]/r1 - amu*y[1]/r2
+		return nil
+	}
 	return
 }

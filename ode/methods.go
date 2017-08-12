@@ -11,12 +11,13 @@ import (
 
 // rkmethod defines the required functions of Runge-Kutta method
 type rkmethod interface {
-	Free()                                                                                // free memory
-	Info() (fixedOnly, implicit bool, nstages int)                                        // information
-	Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error)           // initialise
-	Accept(y la.Vector, work *rkwork)                                                     // accept update
-	ContOut(yout la.Vector, h, x float64, y la.Vector, xout float64)                      // continuous output (after Accept)
-	Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) // step update
+	Free()                                                                                                // free memory
+	Info() (fixedOnly, implicit bool, nstages int)                                                        // information
+	Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) // initialise
+	Accept(y la.Vector) (dxnew float64)                                                                   // accept update (must compute rerr)
+	Reject() (dxnew float64)                                                                              // process step rejection (must compute rerr)
+	ContOut(yout la.Vector, h, x float64, y la.Vector, xout float64)                                      // continuous output (after Accept)
+	Step(x0 float64, y0 la.Vector) (err error)                                                            // step update
 }
 
 // rkmMaker defines a function that makes rkmethods

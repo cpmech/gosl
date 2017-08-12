@@ -18,11 +18,15 @@ type Stat struct {
 	Nitmax    int     // number max of iterations
 	Hopt      float64 // optimal step size at the end
 	LsKind    string  // kind of linear solver used
+	Implicit  bool    // method is implicit
 }
 
 // NewStat returns a new structure
-func NewStat() (o *Stat) {
-	return new(Stat)
+func NewStat(lskind string, implicit bool) (o *Stat) {
+	o = new(Stat)
+	o.LsKind = lskind
+	o.Implicit = implicit
+	return
 }
 
 // Reset initialises Stat
@@ -38,15 +42,21 @@ func (o *Stat) Reset() {
 }
 
 // Print prints information about the solution process
-func (o *Stat) Print() {
+func (o *Stat) Print(extra bool) {
 	io.Pf("number of F evaluations   =%6d\n", o.Nfeval)
-	io.Pf("number of J evaluations   =%6d\n", o.Njeval)
+	if o.Implicit {
+		io.Pf("number of J evaluations   =%6d\n", o.Njeval)
+	}
 	io.Pf("total number of steps     =%6d\n", o.Nsteps)
 	io.Pf("number of accepted steps  =%6d\n", o.Naccepted)
 	io.Pf("number of rejected steps  =%6d\n", o.Nrejected)
-	io.Pf("number of decompositions  =%6d\n", o.Ndecomp)
-	io.Pf("number of lin solutions   =%6d\n", o.Nlinsol)
-	io.Pf("max number of iterations  =%6d\n", o.Nitmax)
-	io.Pf("optimal step size Hopt    = %g\n", o.Hopt)
-	io.Pf("kind of linear solver     = %q\n", o.LsKind)
+	if o.Implicit {
+		io.Pf("number of decompositions  =%6d\n", o.Ndecomp)
+		io.Pf("number of lin solutions   =%6d\n", o.Nlinsol)
+		io.Pf("max number of iterations  =%6d\n", o.Nitmax)
+	}
+	if extra {
+		io.Pf("optimal step size Hopt    = %g\n", o.Hopt)
+		io.Pf("kind of linear solver     = %q\n", o.LsKind)
+	}
 }

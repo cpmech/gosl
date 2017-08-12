@@ -17,6 +17,8 @@ type rkwork struct {
 	f    []la.Vector // f[stg][dim] = f(u[stg], v[stg][dim])
 
 	// step data
+	h     float64   // current stepsize
+	hPrev float64   // previous stepsize
 	first bool      // first step
 	f0    la.Vector // f(x,y) before step
 	scal  la.Vector // scal = Atol + Rtol*abs(y)
@@ -25,13 +27,16 @@ type rkwork struct {
 	reuseJdec bool    // reuse current Jacobian and current decomposition
 	reuseJ    bool    // reuse last Jacobian (only)
 	jacIsOK   bool    // Jacobian is OK
-	hprev     float64 // previous stepsize
 	nit       int     // current number of iterations
 	eta       float64 // eta tolerance
 	theta     float64 // theta variable
 	dvfac     float64 // divergence factor
 	diverg    bool    // flag diverging step
 	reject    bool    // reject step
+
+	// error control
+	rerr     float64 // relative error
+	rerrPrev float64 // previous relative error
 }
 
 // newRKwork returns a new structure

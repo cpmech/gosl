@@ -37,6 +37,9 @@ type Config struct {
 	UseRmsNorm bool    // use RMS norm instead of Euclidian in BwEuler
 	Verbose    bool    // show messages, e.g. during iterations
 
+	// DoPri5
+	DP5beta float64 // β for DoPri5
+
 	// output
 	StepF    StepOutF // function to process step output (of accepted steps) [may be nil]
 	ContF    ContOutF // function to process continuous output [may be nil]
@@ -59,6 +62,9 @@ type Config struct {
 	atol  float64 // absolute tolerance
 	rtol  float64 // relative tolerance
 	fnewt float64 // Newton's iterations tolerance
+
+	// coefficients
+	rerrPrevMin float64 // min value of rerrPrev
 }
 
 // NewConfig returns a new [default] set of configuration parameters
@@ -93,6 +99,9 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 	o.UseRmsNorm = true
 	o.Verbose = false
 
+	// DoPri5
+	o.DP5beta = 0.04
+
 	// linear solver control
 	if comm == nil || lsKind == "" {
 		lsKind = "umfpack"
@@ -108,6 +117,12 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 
 	// set tolerances
 	err = o.SetTol(1e-4, 1e-4)
+
+	// coefficients
+	o.rerrPrevMin = 1e-4
+	if o.Method == "radau5" {
+		o.rerrPrevMin = 1e-2
+	}
 	return
 }
 
@@ -124,11 +139,13 @@ func (o *Config) SetTol(atol, rtol float64) (err error) {
 	// set
 	o.atol, o.rtol = atol, rtol
 
-	// check and change the tolerances
-	β := 2.0 / 3.0
-	quot := o.atol / o.rtol
-	o.rtol = 0.1 * math.Pow(o.rtol, β)
-	o.atol = o.rtol * quot
+	// check and change the tolerances [radau5 only]
+	if o.Method == "radau5" {
+		β := 2.0 / 3.0
+		quot := o.atol / o.rtol
+		o.rtol = 0.1 * math.Pow(o.rtol, β)
+		o.atol = o.rtol * quot
+	}
 
 	// tolerance for iterations
 	o.fnewt = utl.Max(10.0*o.Eps/o.rtol, utl.Min(0.03, math.Sqrt(o.rtol)))
@@ -138,21 +155,4 @@ func (o *Config) SetTol(atol, rtol float64) (err error) {
 // CalcNfixedMax calculates the maximum number of fixed steps (e.g. for output)
 func (o *Config) CalcNfixedMax(dx, xf float64) int {
 	return int(math.Ceil(xf/dx)) + 1
-}
-
-// dxnew computes standard dx estimate
-func (o *Config) dxnew(h, rerr float64, nit int) (dx, div float64) {
-	fac := utl.Min(o.Mfac, o.Mfac*float64(1+2*o.NmaxIt)/float64(nit+2*o.NmaxIt))
-	div = utl.Max(o.Mmin, utl.Min(o.Mmax, math.Pow(rerr, 0.25)/fac))
-	dx = h / div
-	return
-}
-
-// dxnewGus computes dx estimate using predictive controller of Gustafsson
-func (o *Config) dxnewGus(div, oldH, h, oldRerr, rerr float64) float64 {
-	r2 := rerr * rerr
-	fac := (oldH / h) * math.Pow(r2/oldRerr, 0.25) / o.Mfac
-	fac = utl.Max(o.Mmin, utl.Min(o.Mmax, fac))
-	div = utl.Max(div, fac)
-	return h / div
 }

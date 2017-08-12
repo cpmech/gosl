@@ -59,20 +59,30 @@ func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Tr
 	o = new(Solver)
 	o.conf = conf
 	o.out = out
-	o.Stat = NewStat()
-	o.Stat.LsKind = o.conf.lsKind
 
 	// problem definition
 	o.ndim = ndim
 	o.fcn = fcn
 	o.jac = jac
 
-	// method
+	// allocate method
 	o.rkm, err = newRKmethod(o.conf.Method)
 	if err != nil {
 		return
 	}
-	err = o.rkm.Init(o.conf, ndim, fcn, jac, M)
+
+	// information
+	var nstg int
+	o.fixedOnly, o.implicit, nstg = o.rkm.Info()
+
+	// stat
+	o.Stat = NewStat(o.conf.lsKind, o.implicit)
+
+	// workspace
+	o.work = newRKwork(nstg, o.ndim)
+
+	// initialise method
+	err = o.rkm.Init(ndim, o.conf, o.work, o.Stat, fcn, jac, M)
 	if err != nil {
 		return
 	}
@@ -81,13 +91,6 @@ func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Tr
 	if o.out != nil {
 		o.out.cout = o.rkm.ContOut
 	}
-
-	// information
-	var nstg int
-	o.fixedOnly, o.implicit, nstg = o.rkm.Info()
-
-	// workspace
-	o.work = newRKwork(nstg, o.ndim)
 	return
 }
 
@@ -108,23 +111,23 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	}
 
 	// initial step size
-	h := xf - x
+	o.work.h = xf - x
 	fixed := false
 	if o.conf.FixedStp > 0 || o.fixedOnly {
 		if o.conf.FixedStp < o.conf.Hmin {
 			o.conf.FixedStp = o.conf.IniH
 		}
-		h = utl.Min(h, o.conf.FixedStp)
+		o.work.h = utl.Min(o.work.h, o.conf.FixedStp)
 		fixed = true
 	} else {
-		h = utl.Min(h, o.conf.IniH)
+		o.work.h = utl.Min(o.work.h, o.conf.IniH)
 	}
 
 	// stat and output
 	o.Stat.Reset()
-	o.Stat.Hopt = h
+	o.Stat.Hopt = o.work.h
 	if o.out != nil {
-		stop, e := o.out.Execute(0, false, h, x, y)
+		stop, e := o.out.Execute(0, false, o.work.h, x, y)
 		if stop || e != nil {
 			err = e
 			return
@@ -147,18 +150,18 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 		for x < xf {
 			if o.implicit && o.jac == nil { // f0 for numerical Jacobian
 				o.Stat.Nfeval++
-				o.fcn(o.work.f0, h, x, y)
+				o.fcn(o.work.f0, o.work.h, x, y)
 			}
-			_, err = o.rkm.Step(h, x, y, o.Stat, o.work)
+			err = o.rkm.Step(x, y)
 			if err != nil {
 				return
 			}
 			o.Stat.Nsteps++
 			o.work.first = false
-			x += h
-			o.rkm.Accept(y, o.work)
+			x += o.work.h
+			o.rkm.Accept(y)
 			if o.out != nil {
-				stop, e := o.out.Execute(istep, false, h, x, y)
+				stop, e := o.out.Execute(istep, false, o.work.h, x, y)
 				if stop || e != nil {
 					err = e
 					return
@@ -179,21 +182,22 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	o.work.reuseJdec = false
 	o.work.reuseJ = false
 	o.work.jacIsOK = false
-	o.work.hprev = h
+	o.work.hPrev = o.work.h
 	o.work.nit = 0
 	o.work.eta = 1.0
 	o.work.theta = o.conf.ThetaMax
 	o.work.dvfac = 0.0
 	o.work.diverg = false
 	o.work.reject = false
+	o.work.rerrPrev = 1e-4
 
 	// first function evaluation
 	o.Stat.Nfeval++
-	o.fcn(o.work.f0, h, x, y) // o.f0 := f(x,y)
+	o.fcn(o.work.f0, o.work.h, x, y) // o.f0 := f(x,y)
 
 	// time loop
 	Δx := xf - x
-	var dxmax, xstep, div, dxnew, oldH, oldRerr, dxratio, rerr float64
+	var dxmax, xstep, dxnew, dxratio float64
 	var last, failed bool
 	for x < xf {
 		dxmax, xstep = Δx, x+Δx
@@ -215,22 +219,22 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			}
 
 			// step update
-			rerr, err = o.rkm.Step(h, x, y, o.Stat, o.work)
+			err = o.rkm.Step(x, y)
+			if err != nil {
+				return
+			}
 
 			// iterations diverging ?
 			if o.work.diverg {
 				o.work.diverg = false
 				o.work.reject = true
 				last = false
-				h *= o.work.dvfac
+				o.work.h *= o.work.dvfac
 				continue
 			}
 
-			// step size change
-			dxnew, div = o.conf.dxnew(h, rerr, o.work.nit)
-
 			// accepted
-			if rerr < 1.0 {
+			if o.work.rerr < 1.0 {
 
 				// set flags
 				o.Stat.Naccepted++
@@ -238,13 +242,12 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.work.jacIsOK = false
 
 				// update x and y
-				o.work.hprev = h
-				x += h
-				o.rkm.Accept(y, o.work)
+				x += o.work.h
+				dxnew = o.rkm.Accept(y)
 
 				// output
 				if o.out != nil {
-					stop, e := o.out.Execute(o.Stat.Naccepted, last, h, x, y)
+					stop, e := o.out.Execute(o.Stat.Naccepted, last, o.work.h, x, y)
 					if stop || e != nil {
 						err = e
 						return
@@ -253,28 +256,25 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 				// converged ?
 				if last {
-					o.Stat.Hopt = h // optimal h
+					o.Stat.Hopt = o.work.h // optimal stepsize
 					break
 				}
 
-				// predictive controller of Gustafsson
-				if o.conf.PredCtrl {
-					if o.Stat.Naccepted > 1 {
-						dxnew = o.conf.dxnewGus(div, oldH, h, oldRerr, rerr)
-					}
-					oldH = h
-					oldRerr = utl.Max(1.0e-2, rerr)
-				}
+				// save previous stepsize and relative error
+				o.work.hPrev = o.work.h
+				o.work.rerrPrev = utl.Max(o.conf.rerrPrevMin, o.work.rerr)
 
 				// calc new scal and f0
-				la.VecScaleAbs(o.work.scal, o.conf.atol, o.conf.rtol, y)
-				o.Stat.Nfeval++
-				o.fcn(o.work.f0, h, x, y) // o.f0 := f(x,y)
+				if o.implicit {
+					la.VecScaleAbs(o.work.scal, o.conf.atol, o.conf.rtol, y)
+					o.Stat.Nfeval++
+					o.fcn(o.work.f0, o.work.h, x, y) // o.f0 := f(x,y)
+				}
 
-				// new step size
+				// check new step size
 				dxnew = utl.Min(dxnew, dxmax)
 				if o.work.reject { // do not alow h to grow if previous was a reject
-					dxnew = utl.Min(h, dxnew)
+					dxnew = utl.Min(o.work.h, dxnew)
 				}
 				o.work.reject = false
 
@@ -284,18 +284,24 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				// last step ?
 				if x+dxnew-xstep >= 0.0 {
 					last = true
-					h = xstep - x
+					o.work.h = xstep - x
 				} else {
-					dxratio = dxnew / h
-					o.work.reuseJdec = o.work.theta <= o.conf.ThetaMax && dxratio >= o.conf.C1h && dxratio <= o.conf.C2h
-					if !o.work.reuseJdec {
-						h = dxnew
+					if o.implicit {
+						dxratio = dxnew / o.work.h
+						o.work.reuseJdec = o.work.theta <= o.conf.ThetaMax && dxratio >= o.conf.C1h && dxratio <= o.conf.C2h
+						if !o.work.reuseJdec {
+							o.work.h = dxnew
+						}
+					} else {
+						o.work.h = dxnew
 					}
 				}
 
 				// check θ to decide if at least the Jacobian can be reused
-				if !o.work.reuseJdec {
-					o.work.reuseJ = o.work.theta <= o.conf.ThetaMax
+				if o.implicit {
+					if !o.work.reuseJdec {
+						o.work.reuseJ = o.work.theta <= o.conf.ThetaMax
+					}
 				}
 
 				// rejected
@@ -308,16 +314,19 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.work.reject = true
 				last = false
 
+				// compute next stepsize
+				dxnew = o.rkm.Reject()
+
 				// new step size
 				if o.work.first {
-					h = 0.1 * h
+					o.work.h = 0.1 * o.work.h
 				} else {
-					h = dxnew
+					o.work.h = dxnew
 				}
 
 				// last step
-				if x+h > xstep {
-					h = xstep - x
+				if x+o.work.h > xstep {
+					o.work.h = xstep - x
 				}
 			}
 		}

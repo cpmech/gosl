@@ -19,7 +19,10 @@ import (
 type Radau5 struct {
 
 	// main
+	ndim  int          // problem dimension
 	conf  *Config      // configurations
+	work  *rkwork      // workspace
+	stat  *Stat        // statistics
 	fcn   Func         // dy/dx := f(x,y)
 	jac   JacF         // Jacobian function: df/dy(x,y)
 	dfdy  *la.Triplet  // df/dy matrix
@@ -27,6 +30,12 @@ type Radau5 struct {
 	mmat  *la.CCMatrix // M matrix in compressed-column format
 	hasM  bool         // has M matrix
 	ready bool         // matrices and solver are ready
+
+	// coefficients
+	mni    float64 // Mfac ⋅ (1+2⋅NmaxIt)
+	ndf    float64 // float(ndim)
+	denLdw float64 // 3 ⋅ o.ndim)
+	nmaxit float64 // NmaxIt
 
 	// linear systems solver
 	kmatR *la.Triplet      // matrix for the real part
@@ -86,10 +95,13 @@ func (o *Radau5) Info() (fixedOnly, implicit bool, nstages int) {
 }
 
 // Init initialises structure
-func (o *Radau5) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet) (err error) {
+func (o *Radau5) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) {
 
 	// main
+	o.ndim = ndim
 	o.conf = conf
+	o.work = work
+	o.stat = stat
 	o.fcn = fcn
 	o.jac = jac
 	o.dfdy = new(la.Triplet)
@@ -105,6 +117,12 @@ func (o *Radau5) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet)
 		o.hasM = true
 	}
 	o.mmat = o.mtri.ToMatrix(nil)
+
+	// coefficients
+	o.mni = o.conf.Mfac * float64(1+2*o.conf.NmaxIt)
+	o.ndf = float64(ndim)
+	o.denLdw = float64(3 * ndim)
+	o.nmaxit = float64(o.conf.NmaxIt)
 
 	// linear systems solver
 	o.kmatR = new(la.Triplet)
@@ -137,9 +155,11 @@ func (o *Radau5) Init(conf *Config, ndim int, fcn Func, jac JacF, M *la.Triplet)
 	return
 }
 
-// Accept accepts update
-func (o *Radau5) Accept(y la.Vector, work *rkwork) {
-	for m := 0; m < work.ndim; m++ {
+// Accept accepts update and computes next stepsize
+func (o *Radau5) Accept(y la.Vector) (dxnew float64) {
+
+	// update y
+	for m := 0; m < o.ndim; m++ {
 		// update y
 		y[m] += o.z[2][m]
 		// collocation polynomial values
@@ -147,6 +167,34 @@ func (o *Radau5) Accept(y la.Vector, work *rkwork) {
 		o.ycol[1][m] = ((o.z[0][m]-o.z[1][m])/o.Mu5 - o.ycol[0][m]) / o.Mu3
 		o.ycol[2][m] = o.ycol[1][m] - ((o.z[0][m]-o.z[1][m])/o.Mu5-o.z[0][m]/o.Mu1)/o.Mu2
 	}
+
+	// estimate new stepsize
+	fac := utl.Min(o.conf.Mfac, o.mni/float64(o.work.nit+2*o.conf.NmaxIt))
+	div := utl.Max(o.conf.Mmin, utl.Min(o.conf.Mmax, math.Pow(o.work.rerr, 0.25)/fac))
+	dxnew = o.work.h / div
+
+	// predictive controller of Gustafsson
+	if o.conf.PredCtrl {
+		if o.stat.Naccepted > 1 {
+			rerr := o.work.rerr
+			rprev := o.work.rerrPrev
+			r2 := rerr * rerr
+			fac := (o.work.hPrev / o.work.h) * math.Pow(r2/rprev, 0.25) / o.conf.Mfac
+			fac = utl.Max(o.conf.Mmin, utl.Min(o.conf.Mmax, fac))
+			div = utl.Max(div, fac)
+			dxnew = o.work.h / div
+		}
+	}
+	return
+}
+
+// Reject processes step rejection and computes next stepsize
+func (o *Radau5) Reject() (dxnew float64) {
+	// estimate new stepsize
+	fac := utl.Min(o.conf.Mfac, o.mni/float64(o.work.nit+2*o.conf.NmaxIt))
+	div := utl.Max(o.conf.Mmin, utl.Min(o.conf.Mmax, math.Pow(o.work.rerr, 0.25)/fac))
+	dxnew = o.work.h / div
+	return
 }
 
 // ContOut produces continuous output (after Accept)
@@ -158,7 +206,13 @@ func (o *Radau5) ContOut(yout la.Vector, h, x float64, y la.Vector, xout float64
 }
 
 // Step steps update
-func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
+func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
+
+	// auxiliary
+	h := o.work.h
+	u := o.work.u
+	v := o.work.v
+	k := o.work.f
 
 	// factors
 	α := o.Alp / h
@@ -166,17 +220,17 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 	γ := o.Gam / h
 
 	// Jacobian and decomposition
-	if work.reuseJdec {
-		work.reuseJdec = false
+	if o.work.reuseJdec {
+		o.work.reuseJdec = false
 	} else {
 
 		// calculate only first Jacobian for all iterations (simple/modified Newton's method)
-		if work.reuseJ {
-			work.reuseJ = false
-		} else if !work.jacIsOK {
+		if o.work.reuseJ {
+			o.work.reuseJ = false
+		} else if !o.work.jacIsOK {
 
 			// stat
-			stat.Njeval++
+			o.stat.Njeval++
 
 			// numerical Jacobian
 			if o.jac == nil { // numerical
@@ -184,12 +238,12 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 					err = num.JacobianMpi(o.conf.comm, o.dfdy, func(fy, yy la.Vector) (e error) {
 						e = o.fcn(fy, h, x0, yy)
 						return
-					}, y0, work.f0, o.w[0], true) // w works here as workspace variable
+					}, y0, o.work.f0, o.w[0], true) // w works here as workspace variable
 				} else {
 					err = num.Jacobian(o.dfdy, func(fy, yy la.Vector) (e error) {
 						e = o.fcn(fy, h, x0, yy)
 						return
-					}, y0, work.f0, o.w[0]) // w works here as workspace variable
+					}, y0, o.work.f0, o.w[0]) // w works here as workspace variable
 				}
 
 				// analytical Jacobian
@@ -203,13 +257,13 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 			}
 
 			// set flag
-			work.jacIsOK = true
+			o.work.jacIsOK = true
 		}
 
 		// initialise drdy matrix
 		if !o.ready {
-			o.kmatR.Init(work.ndim, work.ndim, o.mtri.Len()+o.dfdy.Len())
-			o.kmatC.Init(work.ndim, work.ndim, o.mtri.Len()+o.dfdy.Len())
+			o.kmatR.Init(o.ndim, o.ndim, o.mtri.Len()+o.dfdy.Len())
+			o.kmatC.Init(o.ndim, o.ndim, o.mtri.Len()+o.dfdy.Len())
 		}
 
 		// update matrices
@@ -230,7 +284,7 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 		}
 
 		// perform factorisation
-		stat.Ndecomp++
+		o.stat.Ndecomp++
 		err = o.lsR.Fact()
 		if err != nil {
 			return
@@ -242,13 +296,13 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 	}
 
 	// update u[i]
-	work.u[0] = x0 + o.C[0]*h
-	work.u[1] = x0 + o.C[1]*h
-	work.u[2] = x0 + o.C[2]*h
+	u[0] = x0 + o.C[0]*h
+	u[1] = x0 + o.C[1]*h
+	u[2] = x0 + o.C[2]*h
 
 	// zero trial: z[i] and w[i]
-	if work.first || o.conf.ZeroTrial {
-		for m := 0; m < work.ndim; m++ {
+	if o.work.first || o.conf.ZeroTrial {
+		for m := 0; m < o.ndim; m++ {
 			o.z[0][m], o.w[0][m] = 0.0, 0.0
 			o.z[1][m], o.w[1][m] = 0.0, 0.0
 			o.z[2][m], o.w[2][m] = 0.0, 0.0
@@ -256,10 +310,10 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 
 		// interpolation polynomial trial: z[i] and w[i]
 	} else {
-		c3q := h / work.hprev
+		c3q := h / o.work.hPrev
 		c1q := o.Mu1 * c3q
 		c2q := o.Mu2 * c3q
-		for m := 0; m < work.ndim; m++ {
+		for m := 0; m < o.ndim; m++ {
 			o.z[0][m] = c1q * (o.ycol[0][m] + (c1q-o.Mu4)*(o.ycol[1][m]+(c1q-o.Mu3)*o.ycol[2][m]))
 			o.z[1][m] = c2q * (o.ycol[0][m] + (c2q-o.Mu4)*(o.ycol[1][m]+(c2q-o.Mu3)*o.ycol[2][m]))
 			o.z[2][m] = c3q * (o.ycol[0][m] + (c3q-o.Mu4)*(o.ycol[1][m]+(c3q-o.Mu3)*o.ycol[2][m]))
@@ -271,30 +325,28 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 
 	// iterations
 	nstg := 3
-	work.nit = 0
-	work.eta = math.Pow(utl.Max(work.eta, o.conf.Eps), 0.8)
-	work.theta = o.conf.ThetaMax
-	work.diverg = false
-	denLdw := float64(3 * work.ndim)
-	nmaxit := float64(o.conf.NmaxIt)
+	o.work.nit = 0
+	o.work.eta = math.Pow(utl.Max(o.work.eta, o.conf.Eps), 0.8)
+	o.work.theta = o.conf.ThetaMax
+	o.work.diverg = false
 	var errR, errC error
 	var Ldw, LdwOld, thq, othq, iterr, itRerr, qnewt, ratio0, ratio1, ratio2, nitf float64
 	var it int
 	for it = 0; it < o.conf.NmaxIt; it++ {
 
 		// max iterations ?
-		work.nit = it + 1
-		if work.nit > stat.Nitmax {
-			stat.Nitmax = work.nit
+		o.work.nit = it + 1
+		if o.work.nit > o.stat.Nitmax {
+			o.stat.Nitmax = o.work.nit
 		}
 
 		// evaluate f(x,y) at (u[i],v[i]=y0+z[i])
 		for i := 0; i < nstg; i++ {
-			for m := 0; m < work.ndim; m++ {
-				work.v[i][m] = y0[m] + o.z[i][m]
+			for m := 0; m < o.ndim; m++ {
+				v[i][m] = y0[m] + o.z[i][m]
 			}
-			stat.Nfeval++
-			err = o.fcn(work.f[i], h, work.u[i], work.v[i])
+			o.stat.Nfeval++
+			err = o.fcn(k[i], h, u[i], v[i])
 			if err != nil {
 				return
 			}
@@ -303,45 +355,45 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 		// calc rhs
 		if o.hasM {
 			if o.conf.distr {
-				o.distrDw(work) // compute dw[i]
+				o.distrDw() // compute dw[i]
 			} else {
 				// using dw as workspace here
 				la.SpMatVecMul(o.dw[0], 1, o.mmat, o.w[0]) // dw0 := M ⋅ w0
 				la.SpMatVecMul(o.dw[1], 1, o.mmat, o.w[1]) // dw1 := M ⋅ w1
 				la.SpMatVecMul(o.dw[2], 1, o.mmat, o.w[2]) // dw2 := M ⋅ w2
 			}
-			for m := 0; m < work.ndim; m++ {
-				work.v[0][m] = o.Ti[0][0]*work.f[0][m] + o.Ti[0][1]*work.f[1][m] + o.Ti[0][2]*work.f[2][m] - γ*o.dw[0][m]
-				work.v[1][m] = o.Ti[1][0]*work.f[0][m] + o.Ti[1][1]*work.f[1][m] + o.Ti[1][2]*work.f[2][m] - α*o.dw[1][m] + β*o.dw[2][m]
-				work.v[2][m] = o.Ti[2][0]*work.f[0][m] + o.Ti[2][1]*work.f[1][m] + o.Ti[2][2]*work.f[2][m] - β*o.dw[1][m] - α*o.dw[2][m]
+			for m := 0; m < o.ndim; m++ {
+				v[0][m] = o.Ti[0][0]*k[0][m] + o.Ti[0][1]*k[1][m] + o.Ti[0][2]*k[2][m] - γ*o.dw[0][m]
+				v[1][m] = o.Ti[1][0]*k[0][m] + o.Ti[1][1]*k[1][m] + o.Ti[1][2]*k[2][m] - α*o.dw[1][m] + β*o.dw[2][m]
+				v[2][m] = o.Ti[2][0]*k[0][m] + o.Ti[2][1]*k[1][m] + o.Ti[2][2]*k[2][m] - β*o.dw[1][m] - α*o.dw[2][m]
 			}
 		} else {
-			for m := 0; m < work.ndim; m++ {
-				work.v[0][m] = o.Ti[0][0]*work.f[0][m] + o.Ti[0][1]*work.f[1][m] + o.Ti[0][2]*work.f[2][m] - γ*o.w[0][m]
-				work.v[1][m] = o.Ti[1][0]*work.f[0][m] + o.Ti[1][1]*work.f[1][m] + o.Ti[1][2]*work.f[2][m] - α*o.w[1][m] + β*o.w[2][m]
-				work.v[2][m] = o.Ti[2][0]*work.f[0][m] + o.Ti[2][1]*work.f[1][m] + o.Ti[2][2]*work.f[2][m] - β*o.w[1][m] - α*o.w[2][m]
+			for m := 0; m < o.ndim; m++ {
+				v[0][m] = o.Ti[0][0]*k[0][m] + o.Ti[0][1]*k[1][m] + o.Ti[0][2]*k[2][m] - γ*o.w[0][m]
+				v[1][m] = o.Ti[1][0]*k[0][m] + o.Ti[1][1]*k[1][m] + o.Ti[1][2]*k[2][m] - α*o.w[1][m] + β*o.w[2][m]
+				v[2][m] = o.Ti[2][0]*k[0][m] + o.Ti[2][1]*k[1][m] + o.Ti[2][2]*k[2][m] - β*o.w[1][m] - α*o.w[2][m]
 			}
 		}
 
 		// solve linear system
-		stat.Nlinsol++
+		o.stat.Nlinsol++
 		if !o.conf.distr && o.conf.GoChan {
 			wg := new(sync.WaitGroup)
 			wg.Add(2)
 			go func() {
-				errR = o.lsR.Solve(o.dw[0], work.v[0], false)
+				errR = o.lsR.Solve(o.dw[0], v[0], false)
 				wg.Done()
 			}()
 			go func() {
-				o.v12.JoinRealImag(work.v[1], work.v[2])
+				o.v12.JoinRealImag(v[1], v[2])
 				errC = o.lsC.Solve(o.dw12, o.v12, false)
 				o.dw12.SplitRealImag(o.dw[1], o.dw[2])
 				wg.Done()
 			}()
 			wg.Wait()
 		} else {
-			o.v12.JoinRealImag(work.v[1], work.v[2])
-			errR = o.lsR.Solve(o.dw[0], work.v[0], false)
+			o.v12.JoinRealImag(v[1], v[2])
+			errR = o.lsR.Solve(o.dw[0], v[0], false)
 			errC = o.lsC.Solve(o.dw12, o.v12, false)
 			o.dw12.SplitRealImag(o.dw[1], o.dw[2])
 		}
@@ -363,7 +415,7 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 		}
 
 		// update w and z
-		for m := 0; m < work.ndim; m++ {
+		for m := 0; m < o.ndim; m++ {
 			o.w[0][m] += o.dw[0][m]
 			o.w[1][m] += o.dw[1][m]
 			o.w[2][m] += o.dw[2][m]
@@ -374,37 +426,37 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 
 		// rms norm of δw
 		Ldw = 0.0
-		for m := 0; m < work.ndim; m++ {
-			ratio0 = o.dw[0][m] / work.scal[m]
-			ratio1 = o.dw[1][m] / work.scal[m]
-			ratio2 = o.dw[2][m] / work.scal[m]
+		for m := 0; m < o.ndim; m++ {
+			ratio0 = o.dw[0][m] / o.work.scal[m]
+			ratio1 = o.dw[1][m] / o.work.scal[m]
+			ratio2 = o.dw[2][m] / o.work.scal[m]
 			Ldw += ratio0*ratio0 + ratio1*ratio1 + ratio2*ratio2
 		}
-		Ldw = math.Sqrt(Ldw / denLdw)
+		Ldw = math.Sqrt(Ldw / o.denLdw)
 
 		// check convergence
 		if it > 0 {
 			thq = Ldw / LdwOld
 			if it == 1 {
-				work.theta = thq
+				o.work.theta = thq
 			} else {
-				work.theta = math.Sqrt(thq * othq)
+				o.work.theta = math.Sqrt(thq * othq)
 			}
 			othq = thq
-			if work.theta < 0.99 {
-				work.eta = work.theta / (1.0 - work.theta)
-				nitf = float64(work.nit)
-				iterr = Ldw * math.Pow(work.theta, nmaxit-nitf) / (1.0 - work.theta)
+			if o.work.theta < 0.99 {
+				o.work.eta = o.work.theta / (1.0 - o.work.theta)
+				nitf = float64(o.work.nit)
+				iterr = Ldw * math.Pow(o.work.theta, o.nmaxit-nitf) / (1.0 - o.work.theta)
 				itRerr = iterr / o.conf.fnewt
 				if itRerr >= 1.0 { // diverging
 					qnewt = utl.Max(1.0e-4, utl.Min(20.0, itRerr))
-					work.dvfac = 0.8 * math.Pow(qnewt, -1.0/(4.0+nmaxit-1.0-nitf))
-					work.diverg = true
+					o.work.dvfac = 0.8 * math.Pow(qnewt, -1.0/(4.0+o.nmaxit-1.0-nitf))
+					o.work.diverg = true
 					break
 				}
 			} else { // diverging badly (unexpected step-rejection)
-				work.dvfac = 0.5
-				work.diverg = true
+				o.work.dvfac = 0.5
+				o.work.diverg = true
 				break
 			}
 		}
@@ -413,49 +465,56 @@ func (o *Radau5) Step(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (re
 		LdwOld = Ldw
 
 		// converged
-		if work.eta*Ldw < o.conf.fnewt {
+		if o.work.eta*Ldw < o.conf.fnewt {
 			break
 		}
 	}
 
 	// did not converge
 	if it == o.conf.NmaxIt-1 {
-		err = chk.Err("Radau5 did not converge with nit=%d", work.nit)
+		err = chk.Err("Radau5 did not converge with nit=%d", o.work.nit)
 		return
 	}
 
 	// diverging => stop
-	if work.diverg {
-		rerr = 2.0 // must leave state intact, any rerr is OK
+	if o.work.diverg {
+		o.work.rerr = 2.0 // must leave state intact, any rerr is OK
 		return
 	}
 
 	// error estimate
-	return o.errorEstimate(h, x0, y0, stat, work)
+	o.errorEstimate(x0, y0)
+	return
 }
 
 // errorEstimate computes error estimate
-func (o *Radau5) errorEstimate(h, x0 float64, y0 la.Vector, stat *Stat, work *rkwork) (rerr float64, err error) {
+func (o *Radau5) errorEstimate(x0 float64, y0 la.Vector) (err error) {
+
+	// auxiliary
+	h := o.work.h
+	v := o.work.v
+	k := o.work.f
 
 	// simple strategy => HW-VII p123 Eq.(8.17) (not good for stiff problems)
 	if o.conf.LerrStrat == 1 {
 
-		for m := 0; m < work.ndim; m++ {
+		var sum float64
+		for m := 0; m < o.ndim; m++ {
 			o.ez[m] = o.E0*o.z[0][m] + o.E1*o.z[1][m] + o.E2*o.z[2][m]
-			o.lerr[m] = o.Gam0*h*work.f0[m] + o.ez[m]
-			ratio := o.lerr[m] / work.scal[m]
-			rerr += ratio * ratio
+			o.lerr[m] = o.Gam0*h*o.work.f0[m] + o.ez[m]
+			ratio := o.lerr[m] / o.work.scal[m]
+			sum += ratio * ratio
 		}
-		rerr = utl.Max(math.Sqrt(rerr/float64(work.ndim)), 1.0e-10)
+		o.work.rerr = utl.Max(math.Sqrt(sum/o.ndf), 1.0e-10)
 		return
 	}
 
 	// common
 	γ := o.Gam / h
 	if o.hasM {
-		for m := 0; m < work.ndim; m++ {
+		for m := 0; m < o.ndim; m++ {
 			o.ez[m] = o.E0*o.z[0][m] + o.E1*o.z[1][m] + o.E2*o.z[2][m]
-			o.rhs[m] = work.f0[m]
+			o.rhs[m] = o.work.f0[m]
 		}
 		if o.conf.distr {
 			o.distrAddToRHS(γ)
@@ -463,44 +522,44 @@ func (o *Radau5) errorEstimate(h, x0 float64, y0 la.Vector, stat *Stat, work *rk
 			la.SpMatVecMulAdd(o.rhs, γ, o.mmat, o.ez) // rhs += γ ⋅ M ⋅ ez
 		}
 	} else {
-		for m := 0; m < work.ndim; m++ {
+		for m := 0; m < o.ndim; m++ {
 			o.ez[m] = o.E0*o.z[0][m] + o.E1*o.z[1][m] + o.E2*o.z[2][m]
-			o.rhs[m] = work.f0[m] + γ*o.ez[m]
+			o.rhs[m] = o.work.f0[m] + γ*o.ez[m]
 		}
 	}
 
 	// HW-VII p123 Eq.(8.19)
 	if o.conf.LerrStrat == 2 {
 		o.lsR.Solve(o.lerr, o.rhs, false)
-		rerr = o.rmsNorm(work, o.lerr)
+		o.work.rerr = o.rmsNorm(o.lerr)
 		return
 	}
 
 	// HW-VII p123 Eq.(8.20)
 	o.lsR.Solve(o.lerr, o.rhs, false)
-	rerr = o.rmsNorm(work, o.lerr)
-	if !(rerr < 1.0) {
-		if work.first || work.reject {
-			for m := 0; m < work.ndim; m++ {
-				work.v[0][m] = y0[m] + o.lerr[m] // y0perr
+	o.work.rerr = o.rmsNorm(o.lerr)
+	if !(o.work.rerr < 1.0) {
+		if o.work.first || o.work.reject {
+			for m := 0; m < o.ndim; m++ {
+				v[0][m] = y0[m] + o.lerr[m] // y0perr
 			}
-			stat.Nfeval++
-			err = o.fcn(work.f[0], h, x0, work.v[0]) // f0perr
+			o.stat.Nfeval++
+			err = o.fcn(k[0], h, x0, v[0]) // f0perr
 			if err != nil {
 				return
 			}
 			if o.hasM {
-				o.rhs.Apply(1, work.f[0]) // rhs := f0perr
+				o.rhs.Apply(1, k[0]) // rhs := f0perr
 				if o.conf.distr {
 					o.distrAddToRHS(γ)
 				} else {
 					la.SpMatVecMulAdd(o.rhs, γ, o.mmat, o.ez) // rhs += γ ⋅ M ⋅ ez
 				}
 			} else {
-				la.VecAdd(o.rhs, 1, work.f[0], γ, o.ez) // rhs = f0perr + γ ⋅ ez
+				la.VecAdd(o.rhs, 1, k[0], γ, o.ez) // rhs = f0perr + γ ⋅ ez
 			}
 			o.lsR.Solve(o.lerr, o.rhs, false)
-			rerr = o.rmsNorm(work, o.lerr)
+			o.work.rerr = o.rmsNorm(o.lerr)
 		}
 	}
 	return
@@ -517,17 +576,18 @@ func (o *Radau5) distrM(ndim int) {
 }
 
 // distrDw computes dw = M * w (distributed version)
-func (o *Radau5) distrDw(work *rkwork) {
+func (o *Radau5) distrDw() {
 
 	// using v as workspace here
-	la.SpMatVecMul(work.v[0], 1, o.mmat, o.w[0]) // v0 := M * w0
-	la.SpMatVecMul(work.v[1], 1, o.mmat, o.w[1]) // v1 := M * w1
-	la.SpMatVecMul(work.v[2], 1, o.mmat, o.w[2]) // v2 := M * w2
+	v := o.work.v
+	la.SpMatVecMul(v[0], 1, o.mmat, o.w[0]) // v0 := M * w0
+	la.SpMatVecMul(v[1], 1, o.mmat, o.w[1]) // v1 := M * w1
+	la.SpMatVecMul(v[2], 1, o.mmat, o.w[2]) // v2 := M * w2
 
 	// the AllReduceSum will produce dw
-	o.conf.comm.AllReduceSum(o.dw[0], work.v[0]) // dw0 := M * w0
-	o.conf.comm.AllReduceSum(o.dw[1], work.v[1]) // dw1 := M * w1
-	o.conf.comm.AllReduceSum(o.dw[2], work.v[2]) // dw2 := M * w2
+	o.conf.comm.AllReduceSum(o.dw[0], v[0]) // dw0 := M * w0
+	o.conf.comm.AllReduceSum(o.dw[1], v[1]) // dw1 := M * w1
+	o.conf.comm.AllReduceSum(o.dw[2], v[2]) // dw2 := M * w2
 }
 
 // distrAddToRHS adds part of error estimate to rhs (disbributed version)
@@ -538,14 +598,13 @@ func (o *Radau5) distrAddToRHS(γ float64) {
 }
 
 // rmsNorm computes the RMS norm
-func (o *Radau5) rmsNorm(work *rkwork, diff la.Vector) (rms float64) {
-	ndim := len(diff)
+func (o *Radau5) rmsNorm(diff la.Vector) (rms float64) {
 	var ratio float64
-	for m := 0; m < ndim; m++ {
-		ratio = diff[m] / work.scal[m]
+	for m := 0; m < o.ndim; m++ {
+		ratio = diff[m] / o.work.scal[m]
 		rms += ratio * ratio
 	}
-	return utl.Max(math.Sqrt(rms/float64(ndim)), 1.0e-10)
+	return utl.Max(math.Sqrt(rms/o.ndf), 1.0e-10)
 }
 
 // initConstants initialises constants
