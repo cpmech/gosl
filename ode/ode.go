@@ -109,6 +109,10 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 		err = chk.Err("xf=%v must be greater than x=%v\n", xf, x)
 		return
 	}
+	if o.fixedOnly && o.conf.FixedStp == 0 {
+		err = chk.Err("method %q can only be used with fixed steps. make sure to set conf.FixedStp > 0", o.conf.Method)
+		return
+	}
 
 	// initial step size
 	o.work.h = xf - x
