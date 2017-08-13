@@ -13,9 +13,21 @@ import (
 )
 
 // ExplicitRK implements explicit Runge-Kutta methods
+//
 //   The methods available are:
-//     moeuler -- Modified-Euler 2(1), order=2, nstages=2, error_est_order=2
-//     dopri5  -- Dormand-Prince 5(4), order=5, nstages=7, error_est_order=4
+//     moeuler    -- Modified-Euler 2(1) ⇒ q = 1
+//     rk2        -- Runge, order 2 (mid-point). page 135 of [1]
+//     rk3        -- Runge, order 3. page 135 of [1]
+//     heun3      -- Heun, order 3. page 135 of [1]
+//     rk4        -- "The" Runge-Kutta method. page 138 of [1]
+//     rk4-3/8    -- Runge-Kutta method: 3/8-Rule. page 138 of [1]
+//     merson4    -- Merson 4("5") method. "5" means that the order 5 is for linear equations with constant coefficients; otherwise the method is of order3. page 167 of [1]
+//     zonneveld4 -- Zonneveld 4(3). page 167 of [1]
+//     dopri5     -- Dormand-Prince 5(4) ⇒ q = 4
+//     fehlberg4  -- Fehlberg 4(5) ⇒ q = 4
+//     fehlberg7  -- Fehlberg 7(8) ⇒ q = 7
+//     verner6    -- Verner 6(5) ⇒ q = 5
+//  where p(q) means method of p-order with embedded estimator of q-order
 //
 //  References:
 //    [1] E. Hairer, S. P. Nørsett, G. Wanner (2008) Solving Ordinary Differential Equations I.
