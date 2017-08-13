@@ -64,13 +64,6 @@ type ExplicitRK struct {
 	dmax float64   // dmax = 1/Mmax
 }
 
-// add methods to database
-func init() {
-	rkmDB["moeuler"] = func() rkmethod { return newERK("moeuler") }
-	rkmDB["dopri5"] = func() rkmethod { return newERK("dopri5") }
-	rkmDB["rk4"] = func() rkmethod { return newERK("rk4") }
-}
-
 // Free releases memory
 func (o *ExplicitRK) Free() {}
 
@@ -386,4 +379,20 @@ func newERK(kind string) rkmethod {
 	// set number of stages
 	o.Nstg = len(o.A)
 	return o
+}
+
+// add methods to database
+func init() {
+	rkmDB["moeuler"] = func() rkmethod { return newERK("moeuler") }
+	rkmDB["rk2"] = func() rkmethod { return newERK("rk2") }
+	rkmDB["rk3"] = func() rkmethod { return newERK("rk3") }
+	rkmDB["heun3"] = func() rkmethod { return newERK("heun3") }
+	rkmDB["rk4"] = func() rkmethod { return newERK("rk4") }
+	rkmDB["rk4-3/8"] = func() rkmethod { return newERK("rk4-3/8") }
+	rkmDB["merson4"] = func() rkmethod { return newERK("merson4") }
+	rkmDB["zonneveld4"] = func() rkmethod { return newERK("zonneveld4") }
+	rkmDB["dopri5"] = func() rkmethod { return newERK("dopri5") }
+	rkmDB["fehlberg4"] = func() rkmethod { return newERK("fehlberg4") }
+	rkmDB["fehlberg7"] = func() rkmethod { return newERK("fehlberg7") }
+	rkmDB["verner6"] = func() rkmethod { return newERK("verner6") }
 }
