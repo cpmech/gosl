@@ -161,7 +161,7 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 		for i := 0; i < o.Nstg; i++ {
 			kh = k[i][m] * h
 			o.w[m] += o.B[i] * kh
-			lerrm += (o.Be[i] - o.B[i]) * kh
+			lerrm += o.E[i] * kh
 		}
 		sk := o.conf.atol + o.conf.rtol*utl.Max(math.Abs(ya[m]), math.Abs(o.w[m]))
 		ratio = lerrm / sk
