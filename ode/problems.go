@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -23,7 +24,7 @@ type Problem struct {
 	Y    la.Vector   // initial (current) y vector
 	Ndim int         // dimension == len(Y)
 	M    *la.Triplet // "mass" matrix
-	Ytmp []float64   // to use with Yana
+	Ytmp la.Vector   // to use with Yana
 }
 
 // Solve solves ODE problem using standard parameters
@@ -60,6 +61,9 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 
 	// set stat variable
 	stat = sol.Stat
+
+	// set auxiliary variable
+	o.Ytmp = la.NewVector(o.Ndim)
 	return
 }
 
@@ -88,7 +92,7 @@ func (o *Problem) CalcYana(idxY int, x float64) float64 {
 		chk.Panic("analytical solution is not available\n")
 	}
 	if len(o.Ytmp) != o.Ndim {
-		o.Ytmp = make([]float64, o.Ndim)
+		o.Ytmp = la.NewVector(o.Ndim)
 	}
 	o.Yana(o.Ytmp, x)
 	return o.Ytmp[idxY]
@@ -329,5 +333,51 @@ func ProbSimpleNdim2() (o *Problem) {
 	o.Ndim = len(o.Y)
 	o.Dx = 0.1
 	o.Xf = 1.0
+	return
+}
+
+// ProbSimpleNdim4a returns a simple 4-dim problem (a)
+func ProbSimpleNdim4a() (o *Problem) {
+	o = new(Problem)
+	o.Yana = func(res []float64, x float64) {
+		res[0] = math.Exp(math.Sin(x * x))
+		res[1] = math.Exp(5.0 * math.Sin(x*x))
+		res[2] = math.Sin(x*x) + 1.0
+		res[3] = math.Cos(x * x)
+	}
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+		f[0] = 2.0 * x * y[3] * y[0]
+		f[1] = 10.0 * x * y[3] * fun.PowP(y[0], 5)
+		f[2] = 2.0 * x * y[3]
+		f[3] = -2.0 * x * (y[2] - 1)
+		return nil
+	}
+	o.Y = la.Vector([]float64{1, 1, 1, 1})
+	o.Ndim = len(o.Y)
+	o.Dx = 0.1
+	o.Xf = 2.8
+	return
+}
+
+// ProbSimpleNdim4b returns a simple 4-dim problem (b)
+func ProbSimpleNdim4b() (o *Problem) {
+	o = new(Problem)
+	o.Yana = func(res []float64, x float64) {
+		res[0] = math.Exp(math.Sin(x * x))
+		res[1] = math.Exp(5.0 * math.Sin(x*x))
+		res[2] = math.Sin(x*x) + 1.0
+		res[3] = math.Cos(x * x)
+	}
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+		f[0] = 2.0 * x * math.Pow(y[1], 1.0/5.0) * y[3]
+		f[1] = 10.0 * x * math.Exp(5.0*(y[2]-1.0)) * y[3]
+		f[2] = 2.0 * x * y[3]
+		f[3] = -2.0 * x * math.Log(y[0])
+		return nil
+	}
+	o.Y = la.Vector([]float64{1, 1, 1, 1})
+	o.Ndim = len(o.Y)
+	o.Dx = 0.1
+	o.Xf = 2.8
 	return
 }

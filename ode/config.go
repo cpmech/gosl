@@ -166,7 +166,7 @@ func (o *Config) SetFixedH(dxApprox, xf float64) {
 	o.fixedNsteps = int(math.Ceil(xf / dxApprox))
 	o.fixedH = xf / float64(o.fixedNsteps)
 	xfinal := float64(o.fixedNsteps) * o.fixedH
-	if xfinal != xf {
+	if math.Abs(xfinal-xf) > 1e-14 {
 		chk.Panic("_internal_: xfinal should be equal to xf. xfinal-xf=%25.18e\n", xfinal-xf)
 	}
 }

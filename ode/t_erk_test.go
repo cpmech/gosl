@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -110,7 +109,7 @@ func TestErk01(tst *testing.T) {
 
 func TestErk02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("Erk02. simple problem")
 
 	// problem
@@ -128,7 +127,7 @@ func TestErk02(tst *testing.T) {
 	tols := []float64{0.11, 0.11, 0.0077, 0.009, 5.8e-4, 5.8e-4, 1.3e-4, 5.8e-4}
 	for im, method := range []string{"moeuler", "rk2", "rk3", "heun3", "rk4", "rk4-3/8", "merson4", "zonneveld4"} {
 
-		// configuration
+		// solve problem
 		y, _, out, err := p.Solve(method, true, false)
 		status(tst, err)
 
@@ -163,125 +162,123 @@ func TestErk02(tst *testing.T) {
 	}
 }
 
-func testErk03(tst *testing.T) {
+func convergenceTest(tst *testing.T, p *Problem) {
 
-	verbose()
-	chk.PrintTitle("Erk03.")
+	// try methods
+	M := []string{"s", ".", "+", "^", "x", "*", "|", ""}
+	Ms := []int{4, 6, 6, 6, 6, 6, 6, 6}
+	for im, method := range []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"} {
 
-	yana := func(x float64) la.Vector {
-		return []float64{
-			math.Exp(math.Sin(x * x)),
-			math.Exp(5.0 * math.Sin(x*x)),
-			math.Sin(x*x) + 1.0,
-			math.Cos(x * x),
-		}
-	}
+		l10fcs := utl.LinSpace(2.6, 3.5, 10)
+		U := make([]float64, len(l10fcs))
+		V := make([]float64, len(l10fcs))
+		for idx, l10fc := range l10fcs {
 
-	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
-		f[0] = 2.0 * x * y[3] * y[0]
-		f[1] = 10.0 * x * y[3] * fun.PowP(y[0], 5)
-		f[2] = 2.0 * x * y[3]
-		f[3] = -2.0 * x * (y[2] - 1)
-		return nil
-	}
+			// compute dx
+			fc := math.Pow(10.0, l10fc)
+			nsteps := fc / 4
+			p.Dx = p.Xf / (nsteps - 1)
 
-	/*
-		yana := func(x float64) la.Vector {
-			return []float64{
-				math.Exp(math.Sin(x * x)),
-				math.Exp(5.0 * math.Sin(x*x)),
-				math.Sin(x*x) + 1.0,
-				math.Cos(x * x),
-			}
+			// solve problem
+			y, stat, _, err := p.Solve(method, true, false)
+			status(tst, err)
+
+			// global error
+			p.Yana(p.Ytmp, p.Xf)
+			e := la.VecMaxDiff(y, p.Ytmp)
+			U[idx] = -math.Log10(e)
+			V[idx] = math.Log10(float64(stat.Nfeval))
 		}
 
-			fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
-				f[0] = 2.0 * x * math.Pow(y[1], 1.0/5.0) * y[3]
-				f[1] = 10.0 * x * math.Exp(5.0*(y[2]-1.0)) * y[3]
-				f[2] = 2.0 * x * y[3]
-				f[3] = -2.0 * x * math.Log(y[0])
-				return nil
-			}
-	*/
+		if chk.Verbose {
+			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: M[im], Ms: Ms[im], NoClip: true})
+		}
+	}
+}
 
-	ya := la.Vector([]float64{1, 1, 1, 1})
-	xf := 2.8
-	ndim := 4
+func TestErk03a(tst *testing.T) {
 
+	//verbose()
+	chk.PrintTitle("Erk03a.")
+
+	if !chk.Verbose {
+		return
+	}
+
+	// problem
+	p := ProbSimpleNdim4a()
+
+	// prepare plot
 	if chk.Verbose {
 		m := 1.0 / 4.0
 		plt.Reset(true, nil)
 		plt.Plot([]float64{0, 5}, []float64{2.5, 2.5 + m*5}, &plt.A{C: "k", Ls: ":", NoClip: true})
 	}
 
-	M := []string{"o", "+"}
+	// run test
+	convergenceTest(tst, p)
 
-	for im, method := range []string{"fweuler", "rk4"} {
+	// plot
+	if chk.Verbose {
+		plt.Gll("$-log_{10}(err)$", "$log_{10}(nfeval)$", nil)
+		plt.HideTRborders()
+		plt.Save("/tmp/gosl/ode", "erk03a")
+	}
+}
 
-		//method := "moeuler"
-		//method := "dopri5"
-		//method := "fweuler"
-		//method := "bweuler"
-		//method := "rk4"
-		//method := "rk4-3/8"
+func TestErk03b(tst *testing.T) {
 
-		//l10fcs := utl.LinSpace(2.6, 3.5, 10)
-		//l10fcs := []float64{3.0}
-		//U := make([]float64, len(l10fcs))
-		//V := make([]float64, len(l10fcs))
-		Dx := utl.LinSpace(0.001, 0.01, 21)
-		U := make([]float64, len(Dx))
-		V := make([]float64, len(Dx))
-		for idx, dx := range Dx {
-			io.Pf("dx = %v\n", dx)
-			//for idx, l10fc := range l10fcs {
+	//verbose()
+	chk.PrintTitle("Erk03b.")
 
-			//fc := math.Pow(10.0, l10fc)
-			//nsteps := fc / 4
-			//dx := xf / (nsteps - 1)
+	if !chk.Verbose {
+		return
+	}
 
-			// configuration
-			conf, err := NewConfig(method, "", nil)
-			status(tst, err)
-			//if false {
-			//conf.FixedStp = dx
-			//}
-			//conf.SetTol(1e-9, 1e-9)
-			//io.Pforan("dx = %v\n", dx)
+	// problem
+	p := ProbSimpleNdim4b()
 
-			// allocate solver
-			sol, err := NewSolver(ndim, conf, nil, fcn, nil, nil)
-			status(tst, err)
-			defer sol.Free()
+	// prepare plot
+	if chk.Verbose {
+		m := 1.0 / 4.0
+		plt.Reset(true, nil)
+		plt.Plot([]float64{0, 5}, []float64{2.5, 2.5 + m*5}, &plt.A{C: "k", Ls: ":", NoClip: true})
+	}
 
-			// solve ODE
-			y := ya.GetCopy()
-			err = sol.Solve(y, 0.0, xf)
+	// try methods
+	M := []string{"s", ".", "+", "^", "x", "*", "|", ""}
+	Ms := []int{4, 6, 6, 6, 6, 6, 6, 6}
+	for im, method := range []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"} {
+
+		l10fcs := utl.LinSpace(2.6, 3.5, 10)
+		U := make([]float64, len(l10fcs))
+		V := make([]float64, len(l10fcs))
+		for idx, l10fc := range l10fcs {
+
+			// compute dx
+			fc := math.Pow(10.0, l10fc)
+			nsteps := fc / 4
+			p.Dx = p.Xf / (nsteps - 1)
+
+			// solve problem
+			y, stat, _, err := p.Solve(method, true, false)
 			status(tst, err)
 
 			// global error
-			yRef := yana(xf)
-			io.Pfblue2("y    = %+.8f\n", y)
-			io.Pf("yRef = %+.8f\n", yRef)
-			//e := la.VecRmsError(y, yRef, 0, 1, yRef)
-			//e := la.VecMaxDiff(y, yRef)
-			e := y.NormDiff(yRef)
-			//e := y.NormDiff(yRef) / yRef.Norm()
-			io.Pforan("e = %v\n", e)
+			p.Yana(p.Ytmp, p.Xf)
+			e := la.VecMaxDiff(y, p.Ytmp)
 			U[idx] = -math.Log10(e)
-			V[idx] = math.Log10(float64(sol.Stat.Nfeval))
+			V[idx] = math.Log10(float64(stat.Nfeval))
 		}
 
 		if chk.Verbose {
-			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: M[im], NoClip: true})
+			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: M[im], Ms: Ms[im], NoClip: true})
 		}
 	}
 
 	if chk.Verbose {
 		plt.Gll("$-log_{10}(err)$", "$log_{10}(nfeval)$", nil)
-		plt.SetTicksXlist(utl.LinSpace(0, 5, 11))
-		plt.SetTicksYlist(utl.LinSpace(2.5, 3.7, 13))
 		plt.HideTRborders()
-		plt.Save("/tmp/gosl/ode", "erk02")
+		plt.Save("/tmp/gosl/ode", "erk03b")
 	}
 }
