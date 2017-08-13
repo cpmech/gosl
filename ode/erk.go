@@ -92,11 +92,18 @@ func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn 
 // Accept accepts update and computes next stepsize
 func (o *ExplicitRK) Accept(y la.Vector) (dxnew float64) {
 
-	// update y and k0
+	// update y
 	y.Apply(1, o.w)
-	o.work.f[0].Apply(1, o.work.f[o.Nstg-1]) // k0 := ks for next step
+
+	// update k0
+	if o.UseKsPrev {
+		o.work.f[0].Apply(1, o.work.f[o.Nstg-1]) // k0 := ks for next step
+	}
 
 	// estimate new stepsize
+	if !o.Embedded {
+		return
+	}
 	d := math.Pow(o.work.rerr, o.n)
 	if o.beta > 0 { // lund-stabilization
 		d = d / math.Pow(o.work.rerrPrev, o.beta)
