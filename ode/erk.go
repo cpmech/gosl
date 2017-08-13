@@ -36,6 +36,7 @@ type ExplicitRK struct {
 	C         []float64   // c coefficients
 	E         []float64   // difference between b and be: e = b - be (if be is not nil)
 	Nstg      int         // number of stages = len(A) = len(B) = len(C)
+	P         int         // order of y1 (corresponding to b)
 	Q         int         // order of error estimator (embedded only); e.g. DoPri5(4) ⇒ q = 4 (=min(order(y1),order(y1bar))
 
 	// data
@@ -175,19 +176,20 @@ func newERK(kind string) rkmethod {
 	// set coefficients
 	switch kind {
 	case "moeuler": // Modified-Euler 2(1) ⇒ q = 1
-		o.UseKsPrev = true
+		o.UseKsPrev = false
 		o.Embedded = true
 		o.A = [][]float64{
 			{0.0, 0.0},
 			{1.0, 0.0},
 		}
-		o.B = []float64{1.0, 0.0}
-		o.Be = []float64{1.0 / 2.0, 1.0 / 2.0}
+		o.B = []float64{1.0 / 2.0, 1.0 / 2.0}
+		o.Be = []float64{1.0, 0.0}
 		o.C = []float64{0.0, 1.0}
-		o.E = []float64{1.0 / 2.0, -1.0 / 2.0}
+		o.E = []float64{-1.0 / 2.0, 1.0 / 2.0}
+		o.P = 2
 		o.Q = 1
 
-	case "rk2": // Runge, order 2. page 135 of [1]
+	case "rk2": // Runge, order 2 (mid-point). page 135 of [1]
 		o.UseKsPrev = false
 		o.Embedded = false
 		o.A = [][]float64{
@@ -196,6 +198,7 @@ func newERK(kind string) rkmethod {
 		}
 		o.B = []float64{0.0, 1.0}
 		o.C = []float64{0.0, 1.0 / 2.0}
+		o.P = 2
 
 	case "rk3": // Runge, order 3. page 135 of [1]
 		o.UseKsPrev = false
@@ -208,8 +211,9 @@ func newERK(kind string) rkmethod {
 		}
 		o.B = []float64{1.0 / 6.0, 2.0 / 3.0, 0.0, 1.0 / 6.0}
 		o.C = []float64{0.0, 1.0 / 2.0, 1.0, 1.0}
+		o.P = 3
 
-	case "heun": // Heun, order 3. page 135 of [1]
+	case "heun3": // Heun, order 3. page 135 of [1]
 		o.UseKsPrev = false
 		o.Embedded = false
 		o.A = [][]float64{
@@ -219,6 +223,7 @@ func newERK(kind string) rkmethod {
 		}
 		o.B = []float64{1.0 / 4.0, 0.0, 3.0 / 4.0}
 		o.C = []float64{0.0, 1.0 / 3.0, 2.0 / 3.0}
+		o.P = 3
 
 	case "rk4": // "The" Runge-Kutta method. page 138 of [1]
 		o.UseKsPrev = false
@@ -231,6 +236,7 @@ func newERK(kind string) rkmethod {
 		}
 		o.B = []float64{1.0 / 6.0, 2.0 / 6.0, 2.0 / 6.0, 1.0 / 6.0}
 		o.C = []float64{0.0, 1.0 / 2.0, 1.0 / 2.0, 1.0}
+		o.P = 4
 
 	case "rk4-3/8": // Runge-Kutta method: 3/8-Rule. page 138 of [1]
 		o.UseKsPrev = false
@@ -243,6 +249,7 @@ func newERK(kind string) rkmethod {
 		}
 		o.B = []float64{1.0 / 8.0, 3.0 / 8.0, 3.0 / 8.0, 1.0 / 8.0}
 		o.C = []float64{0.0, 1.0 / 3.0, 2.0 / 3.0, 1.0}
+		o.P = 4
 
 	case "merson4": // Merson 4("5") method. "5" means that the order 5 is for linear equations with constant coefficients; otherwise the method is of order3. page 167 of [1]
 		o.UseKsPrev = false
@@ -258,6 +265,7 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{1.0 / 10.0, 0.0, 3.0 / 10.0, 2.0 / 5.0, 1.0 / 5.0}
 		o.C = []float64{0.0, 1.0 / 3.0, 1.0 / 3.0, 1.0 / 2.0, 1.0}
 		o.E = []float64{1.0 / 15.0, 0.0, -3.0 / 10.0, 4.0 / 15.0, -1.0 / 30.0}
+		o.P = 4
 		o.Q = 3
 
 	case "zonneveld4": // Zonneveld 4(3). page 167 of [1]
@@ -274,6 +282,7 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{-1.0 / 2.0, 7.0 / 3.0, 7.0 / 3.0, 13.0 / 6.0, -16.0 / 3.0}
 		o.C = []float64{0.0, 1.0 / 2.0, 1.0 / 2.0, 1.0, 3.0 / 4.0}
 		o.E = []float64{2.0 / 3.0, -2.0, -2.0, -2.0, 16.0 / 3.0}
+		o.P = 4
 		o.Q = 3
 
 	case "dopri5": // Dormand-Prince 5(4) ⇒ q = 4
@@ -292,6 +301,7 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{5179.0 / 57600.0, 0.0, 7571.0 / 16695.0, 393.0 / 640.0, -92097.0 / 339200.0, 187.0 / 2100.0, 1.0 / 40.0}
 		o.C = []float64{0.0, 1.0 / 5.0, 3.0 / 10.0, 4.0 / 5.0, 8.0 / 9.0, 1.0, 1.0}
 		o.E = []float64{71.0 / 57600.0, 0.0, -71.0 / 16695.0, 71.0 / 1920.0, -17253.0 / 339200.0, 22.0 / 525.0, -1.0 / 40.0}
+		o.P = 5
 		o.Q = 4
 
 	case "fehlberg4": // Fehlberg 4(5) ⇒ q = 4
@@ -309,6 +319,7 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{16.0 / 135.0, 0.0, 6656.0 / 12825.0, 28561.0 / 56430.0, -9.0 / 50.0, 2.0 / 55.0}
 		o.C = []float64{0.0, 1.0 / 4.0, 3.0 / 8.0, 12.0 / 13.0, 1.0, 1.0 / 2.0}
 		o.E = []float64{-1.0 / 360.0, 0.0, 128.0 / 4275.0, 2197.0 / 75240.0, -1.0 / 50.0, -2.0 / 55.0}
+		o.P = 4
 		o.Q = 4
 
 	case "fehlberg7": // Fehlberg 7(8) ⇒ q = 7
@@ -333,6 +344,7 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{0.0, 0.0, 0.0, 0.0, 0.0, 34.0 / 105.0, 9.0 / 35.0, 9.0 / 35.0, 9.0 / 280.0, 9.0 / 280.0, 0.0, 41.0 / 840.0, 41.0 / 840.0}
 		o.C = []float64{0.0, 2.0 / 27.0, 1.0 / 9.0, 1.0 / 6.0, 5.0 / 12.0, 1.0 / 2.0, 5.0 / 6.0, 1.0 / 6.0, 2.0 / 3.0, 1.0 / 3.0, 1.0, 0.0, 1.0}
 		o.E = []float64{41.0 / 840.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 41.0 / 840.0, -41.0 / 840.0, -41.0 / 840.0}
+		o.P = 7
 		o.Q = 8
 
 	case "verner6": // Verner 6(5) ⇒ q = 5
@@ -352,6 +364,7 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{13.0 / 160.0, 0.0, 2375.0 / 5984.0, 5.0 / 16.0, 12.0 / 85.0, 3.0 / 44.0, 0.0, 0.0}
 		o.C = []float64{0.0, 1.0 / 6.0, 4.0 / 15.0, 2.0 / 3.0, 5.0 / 6.0, 1.0, 1.0 / 15.0, 1.0}
 		o.E = []float64{-1.0 / 160.0, 0.0, -125.0 / 17952.0, 1.0 / 144.0, -12.0 / 1955.0, -3.0 / 44.0, 125.0 / 11592.0, 43.0 / 616.0}
+		o.P = 6
 		o.Q = 5
 
 	default:

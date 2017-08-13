@@ -37,10 +37,10 @@ func TestMoEuler01(tst *testing.T) {
 	status(tst, err)
 
 	// check Stat
-	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 192)
+	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 425) // 192
 	chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 0)
-	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 190)
-	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 190)
+	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 212) // 190
+	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 212)
 	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 0)
 	chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 0)
 	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 0)
