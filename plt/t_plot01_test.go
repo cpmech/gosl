@@ -110,6 +110,18 @@ func Test_plot01(tst *testing.T) {
 		Plot(x, y2, &A{C: C(3, palette), Lw: 3})
 		Plot(x, y3, &A{C: C(4, palette), Lw: 3})
 		Plot(x, y4, &A{C: C(5, palette), Lw: 3})
+
+		npts := 30
+		for i := 0; i < npts; i++ {
+			θ := float64(i) * math.Pi / 2.0 / float64(npts-1)
+			xx := math.Cos(θ)
+			yy := math.Sin(θ)
+			PlotOne(xx, yy, &A{C: "k", M: M(i, 0), NoClip: true})
+			xx = 0.7 * math.Cos(θ)
+			yy = 0.7 * math.Sin(θ)
+			PlotOne(xx, yy, &A{C: "k", M: M(i, 1), NoClip: true})
+		}
+
 		Text(0.2, 0.8, "HERE", &A{Fsz: 20, Ha: "center", Va: "center", Rot: 90})
 		SetTicksX(0.1, 0.01, "%.3f")
 		SetTicksY(0.2, 0.1, "%.2f")

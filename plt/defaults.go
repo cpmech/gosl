@@ -5,6 +5,7 @@
 package plt
 
 // C returns a color from a default palette
+//  use palette < 0 for automatic color
 func C(i, palette int) string {
 	if palette < 0 || palette >= len(palettes) {
 		return ""
@@ -13,6 +14,20 @@ func C(i, palette int) string {
 	return p[i%len(p)]
 }
 
+// M returns a marker
+//  use scheme < 0 for no marker
+func M(i, scheme int) string {
+	if scheme < 0 {
+		return ""
+	}
+	if scheme >= len(markers) {
+		scheme = 0
+	}
+	s := markers[scheme]
+	return s[i%len(s)]
+}
+
+// palettes holds color palettes
 var palettes = [][]string{
 	{"#003fff", "#35b052", "#e8000b", "#8a2be2", "#ffc400", "#00d7ff"},
 	{"blue", "green", "magenta", "orange", "red", "cyan", "black", "#de9700", "#89009d", "#7ad473", "#737ad4", "#d473ce", "#7e6322", "#462222", "#98ac9d", "#37a3e8", "yellow"},
@@ -24,4 +39,34 @@ var palettes = [][]string{
 	{"#0072b2", "#009e73", "#d55e00", "#cc79a7", "#f0e442", "#56b4e9"},
 	{"#4878cf", "#6acc65", "#d65f5f", "#b47cc7", "#c4ad66", "#77bedb"},
 	{"#92c6ff", "#97f0aa", "#ff9f9a", "#d0bbff", "#fffea3", "#b0e0e6"},
+}
+
+// markers holds marker types
+//    "   none
+//    .   point
+//    +   plus
+//    x   x
+//    *   star
+//    d   thin_diamond
+//    o   circle
+//    s   square
+//    ^   triangle_up
+//    v   triangle_down
+//    <   triangle_left
+//    >   triangle_right
+//    8   octagon
+//    p   pentagon
+//    h   hexagon1
+//    H   hexagon2
+//    D   diamond
+//    |   vline
+//    _   hline
+//    1   tri_down
+//    2   tri_up
+//    3   tri_left
+//    4   tri_right
+//    ,   pixel
+var markers = [][]string{
+	{".", "+", "x", "*", "^", "s", "d", "p", "v"},
+	{".", "+", "x", "*", "^", "s", "d", "p", "v", "|", "o", "_", "<", "1", ">", "2", "8", "3", "h", "4", "D"},
 }
