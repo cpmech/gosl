@@ -24,7 +24,7 @@ func TestOde01(tst *testing.T) {
 
 	// FwEuler
 	io.Pforan("\n. . . FwEuler . . . \n")
-	stat1, out1, err := p.Solve("fweuler", true, false)
+	_, stat1, out1, err := p.Solve("fweuler", true, false)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", stat1.Nfeval, 40)
 	chk.Int(tst, "number of J evaluations ", stat1.Njeval, 0)
@@ -37,7 +37,7 @@ func TestOde01(tst *testing.T) {
 
 	// BwEuler
 	io.Pforan("\n. . . BwEuler . . . \n")
-	stat2, out2, err := p.Solve("bweuler", true, false)
+	_, stat2, out2, err := p.Solve("bweuler", true, false)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", stat2.Nfeval, 80)
 	chk.Int(tst, "number of J evaluations ", stat2.Njeval, 40)
@@ -50,7 +50,7 @@ func TestOde01(tst *testing.T) {
 
 	// MoEuler
 	io.Pforan("\n. . . MoEuler . . . \n")
-	stat3, out3, err := p.Solve("moeuler", false, false)
+	_, stat3, out3, err := p.Solve("moeuler", false, false)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", stat3.Nfeval, 425)
 	chk.Int(tst, "number of J evaluations ", stat3.Njeval, 0)
@@ -63,7 +63,7 @@ func TestOde01(tst *testing.T) {
 
 	// DoPri5
 	io.Pforan("\n. . . DoPri5 . . . \n")
-	stat4, out4, err := p.Solve("dopri5", false, false)
+	_, stat4, out4, err := p.Solve("dopri5", false, false)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", stat4.Nfeval, 242)
 	chk.Int(tst, "number of J evaluations ", stat4.Njeval, 0)
@@ -76,7 +76,7 @@ func TestOde01(tst *testing.T) {
 
 	// Radau5
 	io.Pforan("\n. . . Radau5 . . . \n")
-	stat5, out5, err := p.Solve("radau5", false, false)
+	_, stat5, out5, err := p.Solve("radau5", false, false)
 	status(tst, err)
 	chk.Int(tst, "number of F evaluations ", stat5.Nfeval, 66)
 	chk.Int(tst, "number of J evaluations ", stat5.Njeval, 1)

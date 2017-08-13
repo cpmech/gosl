@@ -174,7 +174,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			}
 			istep++
 		}
-		if math.Abs(x-xf) > 1e-15 {
+		if math.Abs(x-xf) > 1e-14 {
 			err = chk.Err("internal error: x must be equal to xf in the end. x-xf=%v\n", x-xf)
 		}
 		return

@@ -72,4 +72,4 @@ type StepOutF func(istep int, h, x float64, y la.Vector) (stop bool, err error)
 type ContOutF func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error)
 
 // YanaF defines a function to be used when computing analytical solutions
-type YanaF func(x float64) float64
+type YanaF func(res []float64, x float64)

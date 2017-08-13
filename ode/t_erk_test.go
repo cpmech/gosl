@@ -108,10 +108,65 @@ func TestErk01(tst *testing.T) {
 	}
 }
 
-func testErk02(tst *testing.T) {
+func TestErk02(tst *testing.T) {
 
 	verbose()
-	chk.PrintTitle("Erk02.")
+	chk.PrintTitle("Erk02. simple problem")
+
+	// problem
+	p := ProbSimpleNdim2()
+	p.Dx = 0.17
+
+	// prepare plot
+	if chk.Verbose {
+		plt.Reset(true, nil)
+	}
+
+	// try methods
+	M := []string{"s", ".", "+", "^", "x", "*", "|", ""}
+	Ms := []int{4, 6, 6, 6, 6, 6, 6, 6}
+	tols := []float64{0.11, 0.11, 0.0077, 0.009, 5.8e-4, 5.8e-4, 1.3e-4, 5.8e-4}
+	for im, method := range []string{"moeuler", "rk2", "rk3", "heun3", "rk4", "rk4-3/8", "merson4", "zonneveld4"} {
+
+		// configuration
+		y, _, out, err := p.Solve(method, true, false)
+		status(tst, err)
+
+		// results
+		X := out.GetStepX()
+		Y0 := out.GetStepY(0)
+		Y1 := out.GetStepY(1)
+		chk.Float64(tst, "xf == X[last]", 1e-15, p.Xf, X[out.StepIdx-1])
+		chk.AnaNum(tst, "y0(xf)", tols[im], y[0], p.CalcYana(0, p.Xf), chk.Verbose)
+		chk.AnaNum(tst, "y1(xf)", tols[im], y[1], p.CalcYana(1, p.Xf), chk.Verbose)
+
+		// plot
+		if chk.Verbose {
+			plt.Plot(X, Y0, &plt.A{L: method + ":y0", C: plt.C(im*2+0, 8), M: M[im], Ms: Ms[im], NoClip: true})
+			plt.Plot(X, Y1, &plt.A{L: method + ":y1", C: plt.C(im*2+1, 8), M: M[im], Ms: Ms[im], NoClip: true})
+		}
+	}
+
+	// save plot
+	if chk.Verbose {
+		xx := utl.LinSpace(0, p.Xf, 101)
+		y0 := make([]float64, len(xx))
+		y1 := make([]float64, len(xx))
+		for i := 0; i < len(xx); i++ {
+			p.Yana(p.Ytmp, xx[i])
+			y0[i], y1[i] = p.Ytmp[0], p.Ytmp[1]
+		}
+		plt.Plot(xx, y0, &plt.A{C: "k", Ls: "--", NoClip: true})
+		plt.Plot(xx, y1, &plt.A{C: "k", Ls: "--", NoClip: true})
+		plt.Gll("$x$", "$y$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 2})
+		plt.Save("/tmp/gosl/ode", "erk02")
+	}
+}
+
+func testErk03(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("Erk03.")
 
 	yana := func(x float64) la.Vector {
 		return []float64{

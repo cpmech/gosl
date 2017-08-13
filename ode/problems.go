@@ -7,6 +7,7 @@ package ode
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -22,14 +23,15 @@ type Problem struct {
 	Y    la.Vector   // initial (current) y vector
 	Ndim int         // dimension == len(Y)
 	M    *la.Triplet // "mass" matrix
+	Ytmp []float64   // to use with Yana
 }
 
 // Solve solves ODE problem using standard parameters
 // NOTE: this solver doesn't change o.Y
-func (o *Problem) Solve(method string, fixedStp, numJac bool) (stat *Stat, out *Output, err error) {
+func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat *Stat, out *Output, err error) {
 
 	// current y vector
-	y := la.NewVector(o.Ndim)
+	y = la.NewVector(o.Ndim)
 	y.Apply(1, o.Y)
 
 	// configuration
@@ -72,10 +74,24 @@ func (o *Problem) Plot(label string, idxY int, out *Output, npts int, withAna bo
 	argsNum.L = label
 	if withAna && o.Yana != nil {
 		X := utl.LinSpace(0, o.Xf, npts)
-		Y := utl.GetMapped(X, func(x float64) float64 { return o.Yana(x) })
+		Y := utl.GetMapped(X, func(x float64) float64 {
+			return o.CalcYana(idxY, x)
+		})
 		plt.Plot(X, Y, argsAna)
 	}
 	plt.Plot(out.GetStepX(), out.GetStepY(idxY), argsNum)
+}
+
+// CalcYana computes component idxY of analytical solution @ x, if available
+func (o *Problem) CalcYana(idxY int, x float64) float64 {
+	if o.Yana == nil {
+		chk.Panic("analytical solution is not available\n")
+	}
+	if len(o.Ytmp) != o.Ndim {
+		o.Ytmp = make([]float64, o.Ndim)
+	}
+	o.Yana(o.Ytmp, x)
+	return o.Ytmp[idxY]
 }
 
 // problems database //////////////////////////////////////////////////////////////////////////////
@@ -90,8 +106,8 @@ func ProbHwEq11() (o *Problem) {
 	o.Y = la.Vector([]float64{0.0})
 	o.Ndim = len(o.Y)
 
-	o.Yana = func(x float64) float64 {
-		return -λ * (math.Sin(x) - λ*math.Cos(x) + λ*math.Exp(λ*x)) / (λ*λ + 1.0)
+	o.Yana = func(res []float64, x float64) {
+		res[0] = -λ * (math.Sin(x) - λ*math.Cos(x) + λ*math.Exp(λ*x)) / (λ*λ + 1.0)
 	}
 
 	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
@@ -293,5 +309,25 @@ func ProbArenstorf() (o *Problem) {
 		f[3] = y[1] - 2*y[2] - amup*y[1]/r1 - amu*y[1]/r2
 		return nil
 	}
+	return
+}
+
+// ProbSimpleNdim2 returns a simple 2-dim problem
+func ProbSimpleNdim2() (o *Problem) {
+	o = new(Problem)
+	o.Yana = func(res []float64, x float64) {
+		e2x := math.Exp(2.0 * x)
+		res[0] = -0.5*e2x + x*x + 2*x - 0.5
+		res[1] = +0.5*e2x + x*x - 0.5
+	}
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+		f[0] = +y[0] - y[1] + 2.0
+		f[1] = -y[0] + y[1] + 4.0*x
+		return nil
+	}
+	o.Y = la.Vector([]float64{-1.0, 0.0})
+	o.Ndim = len(o.Y)
+	o.Dx = 0.1
+	o.Xf = 1.0
 	return
 }

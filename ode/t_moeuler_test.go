@@ -47,7 +47,7 @@ func TestMoEuler01(tst *testing.T) {
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 0)
 
 	// check results
-	chk.Float64(tst, "yFin", 4.294973673e-5, p.Y[0], p.Yana(p.Xf))
+	chk.Float64(tst, "yFin", 4.294973673e-5, p.Y[0], p.CalcYana(0, p.Xf))
 
 	// plot
 	if chk.Verbose {

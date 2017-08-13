@@ -48,7 +48,7 @@ func TestBwEuler01a(tst *testing.T) {
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 2)
 
 	// check results
-	chk.Float64(tst, "yFin", 1e-4, p.Y[0], p.Yana(p.Xf))
+	chk.Float64(tst, "yFin", 1e-4, p.Y[0], p.CalcYana(0, p.Xf))
 
 	// plot
 	if chk.Verbose {
@@ -95,7 +95,7 @@ func TestBwEuler01b(tst *testing.T) {
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 2)
 
 	// check results
-	chk.Float64(tst, "yFin", 1e-4, p.Y[0], p.Yana(p.Xf))
+	chk.Float64(tst, "yFin", 1e-4, p.Y[0], p.CalcYana(0, p.Xf))
 
 	// plot
 	if chk.Verbose {
