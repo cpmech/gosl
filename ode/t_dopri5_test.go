@@ -24,7 +24,7 @@ func TestDoPri501(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("dopri5", "", nil)
 	status(tst, err)
-	conf.StepNmax = conf.NmaxSS + 1
+	conf.SetStepOut(true, nil)
 
 	// output handler
 	out := NewOutput(p.Ndim, conf)
@@ -70,7 +70,6 @@ func TestDoPri502(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("dopri5", "", nil)
 	status(tst, err)
-	conf.StepNmax = conf.NmaxSS + 1
 	conf.SetTol(1e-7, 1e-7)
 	conf.Mmin = 0.2
 	conf.Mmax = 10.0
@@ -78,10 +77,10 @@ func TestDoPri502(tst *testing.T) {
 
 	// output handler
 	io.Pf("%6s%10s%10s%14s%14s%14s%14s\n", "istep", "h", "x", "y0", "y1", "y2", "y3")
-	conf.StepF = func(istep int, h, x float64, y la.Vector) (stop bool, err error) {
+	conf.SetStepOut(true, func(istep int, h, x float64, y la.Vector) (stop bool, err error) {
 		io.Pf("%6d%10.6f%10.6f%14.6E%14.6E%14.6E%14.6E\n", istep, h, x, y[0], y[1], y[2], y[3])
 		return false, nil
-	}
+	})
 	out := NewOutput(p.Ndim, conf)
 
 	// solver

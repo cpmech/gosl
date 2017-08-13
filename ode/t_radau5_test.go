@@ -25,7 +25,7 @@ func TestRadau501a(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.StepNmax = conf.NmaxSS + 1
+	conf.SetStepOut(true, nil)
 
 	// output handler
 	out := NewOutput(p.Ndim, conf)
@@ -74,11 +74,9 @@ func TestRadau502(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
+	conf.SetStepOut(true, nil)
 	conf.IniH = 1e-6
 	conf.SetTol(1e-4, 1e-4)
-	conf.ContDx = 0.2
-	conf.StepNmax = conf.NmaxSS + 1
-	conf.ContNmax = conf.CalcNfixedMax(conf.ContDx, p.Xf)
 
 	// continuous output function
 	ss := make([]int, 11)
@@ -87,7 +85,7 @@ func TestRadau502(tst *testing.T) {
 	yy1 := make([]float64, 11)
 	iout := 0
 	io.Pf("\n%5s%7s%23s%23s\n", "s", "x", "y0", "y1")
-	conf.ContF = func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+	conf.SetContOut(true, 0.2, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
 		io.Pf("%5d%7.3f%23.15e%23.15e\n", istep, x, y[0], y[1])
 		ss[iout] = istep
 		xx[iout] = xout
@@ -95,7 +93,7 @@ func TestRadau502(tst *testing.T) {
 		yy1[iout] = yout[1]
 		iout++
 		return
-	}
+	})
 
 	// output handler
 	out := NewOutput(p.Ndim, conf)

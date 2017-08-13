@@ -17,20 +17,20 @@ type Output struct {
 	conf *Config // configuration
 
 	// discrete output at accepted steps
-	StepIdx int         // current index in Xvalues and Yvalues == last output
-	StepH   []float64   // h values [IdxSave]
-	StepX   []float64   // X values [IdxSave]
-	StepY   []la.Vector // Y values [IdxSave][ndim]
-	stepOK  bool        // step output is OK (activated)
+	StepIdx  int         // current index in Xvalues and Yvalues == last output
+	StepH    []float64   // h values [IdxSave]
+	StepX    []float64   // X values [IdxSave]
+	StepY    []la.Vector // Y values [IdxSave][ndim]
+	stepNmax int         // max number of output steps
 
 	// continuous output
-	ContIdx int         // current index in Xcont and Ycont arrays
-	ContS   []int       // index of step
-	ContX   []float64   // X values during continuous output [IdxCont]
-	ContY   []la.Vector // Y values during continuous output [IdxCont][ndim]
-	contOK  bool        // continuous output is OK (activated)
-	xout    float64     // current x of continuous output
-	yout    la.Vector   // current y of continuous output (used if ContF != nil only)
+	ContIdx  int         // current index in Xcont and Ycont arrays
+	ContS    []int       // index of step
+	ContX    []float64   // X values during continuous output [IdxCont]
+	ContY    []la.Vector // Y values during continuous output [IdxCont][ndim]
+	contNmax int         // max number of continuous output
+	xout     float64     // current x of continuous output
+	yout     la.Vector   // current y of continuous output (used if ContF != nil only)
 
 	// from RK method
 	cout func(yout la.Vector, h, x float64, y la.Vector, xout float64) // function to calculate continuous values of y
@@ -43,19 +43,23 @@ func NewOutput(ndim int, conf *Config) (o *Output) {
 	o = new(Output)
 	o.ndim = ndim
 	o.conf = conf
-	o.stepOK = conf.StepNmax > 0
-	o.contOK = conf.ContNmax > 0 && conf.ContDx > 0
-	if o.stepOK {
-		o.StepH = make([]float64, o.conf.StepNmax)
-		o.StepX = make([]float64, o.conf.StepNmax)
-		o.StepY = make([]la.Vector, o.conf.StepNmax)
+	if o.conf.stepOut {
+		if o.conf.fixed {
+			o.stepNmax = o.conf.fixedNsteps + 1
+		} else {
+			o.stepNmax = o.conf.NmaxSS + 1
+		}
+		o.StepH = make([]float64, o.stepNmax)
+		o.StepX = make([]float64, o.stepNmax)
+		o.StepY = make([]la.Vector, o.stepNmax)
 	}
-	if o.contOK {
-		o.ContS = make([]int, o.conf.ContNmax)
-		o.ContX = make([]float64, o.conf.ContNmax)
-		o.ContY = make([]la.Vector, o.conf.ContNmax)
+	if o.conf.contOut {
+		o.contNmax = o.conf.contNstp + 1
+		o.ContS = make([]int, o.contNmax)
+		o.ContX = make([]float64, o.contNmax)
+		o.ContY = make([]la.Vector, o.contNmax)
 	}
-	if o.contOK || o.conf.ContF != nil {
+	if o.conf.contF != nil {
 		o.yout = la.NewVector(ndim)
 	}
 	return
@@ -65,15 +69,15 @@ func NewOutput(ndim int, conf *Config) (o *Output) {
 func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop bool, err error) {
 
 	// step output using function
-	if o.conf.StepF != nil {
-		stop, err = o.conf.StepF(istep, h, x, y)
+	if o.conf.stepF != nil {
+		stop, err = o.conf.stepF(istep, h, x, y)
 		if stop || err != nil {
 			return
 		}
 	}
 
 	// save step output
-	if o.StepIdx < o.conf.StepNmax {
+	if o.StepIdx < o.stepNmax {
 		o.StepH[o.StepIdx] = h
 		o.StepX[o.StepIdx] = x
 		o.StepY[o.StepIdx] = la.NewVector(o.ndim)
@@ -83,30 +87,30 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 
 	// continuous output using function
 	var xo float64
-	if o.conf.ContF != nil {
+	if o.conf.contF != nil {
 		if istep == 0 || last {
 			xo = x
 			o.yout.Apply(1, y)
-			stop, err = o.conf.ContF(istep, h, x, y, xo, o.yout)
+			stop, err = o.conf.contF(istep, h, x, y, xo, o.yout)
 			if stop || err != nil {
 				return
 			}
-			xo = o.conf.ContDx
+			xo = o.conf.contDx
 		} else {
 			xo = o.xout
 			for x >= xo {
 				o.cout(o.yout, h, x, y, xo)
-				stop, err = o.conf.ContF(istep, h, x, y, xo, o.yout)
+				stop, err = o.conf.contF(istep, h, x, y, xo, o.yout)
 				if stop || err != nil {
 					return
 				}
-				xo += o.conf.ContDx
+				xo += o.conf.contDx
 			}
 		}
 	}
 
 	// save continuous output
-	if o.contOK && o.ContIdx < o.conf.ContNmax {
+	if o.ContIdx < o.contNmax {
 		if istep == 0 || last {
 			xo = x
 			o.ContS[o.ContIdx] = istep
@@ -114,7 +118,7 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 			o.ContY[o.ContIdx] = la.NewVector(o.ndim)
 			o.ContY[o.ContIdx].Apply(1, y)
 			o.ContIdx++
-			xo = o.conf.ContDx
+			xo = o.conf.contDx
 		} else {
 			xo = o.xout
 			for x >= xo {
@@ -123,7 +127,7 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 				o.ContY[o.ContIdx] = la.NewVector(o.ndim)
 				o.cout(o.ContY[o.ContIdx], h, x, y, xo)
 				o.ContIdx++
-				xo += o.conf.ContDx
+				xo += o.conf.contDx
 			}
 		}
 	}

@@ -80,7 +80,7 @@ func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn 
 	o.stat = stat
 	o.fcn = fcn
 	o.w = la.NewVector(o.ndim)
-	if conf.Method == "dopri5" {
+	if conf.method == "dopri5" {
 		o.beta = conf.DP5beta
 	}
 	o.n = 1.0/float64(o.Q+1) - o.beta*0.75

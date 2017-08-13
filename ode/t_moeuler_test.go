@@ -22,7 +22,7 @@ func TestMoEuler01(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("moeuler", "", nil)
 	status(tst, err)
-	conf.StepNmax = conf.NmaxSS + 1
+	conf.SetStepOut(true, nil)
 
 	// output handler
 	out := NewOutput(p.Ndim, conf)

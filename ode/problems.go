@@ -35,11 +35,9 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (stat *Stat, out *
 	// configuration
 	conf, err := NewConfig(method, "", nil)
 	if fixedStp {
-		conf.FixedStp = o.Dx
-		conf.StepNmax = conf.CalcNfixedMax(o.Dx, o.Xf)
-	} else {
-		conf.StepNmax = conf.NmaxSS + 1
+		conf.SetFixedH(o.Dx, o.Xf)
 	}
+	conf.SetStepOut(true, nil)
 
 	// output handler
 	out = NewOutput(o.Ndim, conf)

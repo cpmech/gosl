@@ -113,7 +113,7 @@ func TestOde02(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.StepNmax = conf.NmaxSS + 1
+	conf.SetStepOut(true, nil)
 
 	// output handler
 	out := NewOutput(p.Ndim, conf)
@@ -174,7 +174,7 @@ func TestOde03(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.StepNmax = conf.NmaxSS + 1
+	conf.SetStepOut(true, nil)
 
 	// output handler
 	out := NewOutput(p.Ndim, conf)
@@ -243,7 +243,7 @@ func TestOde04(tst *testing.T) {
 	// configurations
 	conf, err := NewConfig("radau5", "", nil)
 	status(tst, err)
-	conf.StepNmax = conf.NmaxSS + 1
+	conf.SetStepOut(true, nil)
 	conf.IniH = 1.0e-6 // initial step size
 
 	// set tolerances

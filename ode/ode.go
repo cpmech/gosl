@@ -15,6 +15,8 @@
 package ode
 
 import (
+	"math"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
@@ -66,7 +68,7 @@ func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Tr
 	o.jac = jac
 
 	// allocate method
-	o.rkm, err = newRKmethod(o.conf.Method)
+	o.rkm, err = newRKmethod(o.conf.method)
 	if err != nil {
 		return
 	}
@@ -109,20 +111,15 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 		err = chk.Err("xf=%v must be greater than x=%v\n", xf, x)
 		return
 	}
-	if o.fixedOnly && o.conf.FixedStp == 0 {
-		err = chk.Err("method %q can only be used with fixed steps. make sure to set conf.FixedStp > 0", o.conf.Method)
+	if o.fixedOnly && !o.conf.fixed {
+		err = chk.Err("method %q can only be used with fixed steps. make sure to call conf.SetFixedH > 0", o.conf.method)
 		return
 	}
 
 	// initial step size
 	o.work.h = xf - x
-	fixed := false
-	if o.conf.FixedStp > 0 || o.fixedOnly {
-		if o.conf.FixedStp < o.conf.Hmin {
-			o.conf.FixedStp = o.conf.IniH
-		}
-		o.work.h = utl.Min(o.work.h, o.conf.FixedStp)
-		fixed = true
+	if o.conf.fixed {
+		o.work.h = o.conf.fixedH
 	} else {
 		o.work.h = utl.Min(o.work.h, o.conf.IniH)
 	}
@@ -145,13 +142,13 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	la.VecScaleAbs(o.work.scal, o.conf.atol, o.conf.rtol, y) // scal = atol + rtol * abs(y)
 
 	// fixed steps //////////////////////////////
-	if fixed {
+	if o.conf.fixed {
 		istep := 1
 		if o.conf.Verbose {
 			io.Pfgreen("x = %v\n", x)
 			io.Pf("y = %v\n", y)
 		}
-		for x < xf {
+		for n := 0; n < o.conf.fixedNsteps; n++ {
 			if o.implicit && o.jac == nil { // f0 for numerical Jacobian
 				o.Stat.Nfeval++
 				o.fcn(o.work.f0, o.work.h, x, y)
@@ -176,6 +173,9 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				io.Pf("y = %v\n", y)
 			}
 			istep++
+		}
+		if math.Abs(x-xf) > 1e-15 {
+			err = chk.Err("internal error: x must be equal to xf in the end. x-xf=%v\n", x-xf)
 		}
 		return
 	}

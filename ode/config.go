@@ -16,9 +16,6 @@ import (
 type Config struct {
 
 	// parameters
-	Method     string  // the ODE method
-	FixedStp   float64 // if >0, use fixed steps instead of automatic substepping
-	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
 	Hmin       float64 // minimum H allowed
 	IniH       float64 // initial H
 	NmaxIt     int     // max num iterations (allowed)
@@ -36,22 +33,27 @@ type Config struct {
 	CteTg      bool    // use constant tangent (Jacobian) in BwEuler
 	UseRmsNorm bool    // use RMS norm instead of Euclidian in BwEuler
 	Verbose    bool    // show messages, e.g. during iterations
+	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
 
 	// DoPri5
 	DP5beta float64 // β for DoPri5
 
 	// output
-	StepF    StepOutF // function to process step output (of accepted steps) [may be nil]
-	ContF    ContOutF // function to process continuous output [may be nil]
-	StepNmax int      // maximum number of accepted steps output [may be nil ⇒ no output]
-	ContNmax int      // maximum number of continuous output [may be nil ⇒ no output]
-	ContDx   float64  // step size for continuous output
+	stepF    StepOutF // function to process step output (of accepted steps) [may be nil]
+	contF    ContOutF // function to process continuous output [may be nil]
+	contDx   float64  // step size for continuous output
+	stepOut  bool     // perform output of (variable) steps
+	contOut  bool     // perform continuous output is active
+	contNstp int      // number of continuous steps
 
 	// linear solver
 	Symmetric bool   // assume symmetric matrix
 	LsVerbose bool   // show linear solver messages
 	Ordering  string // ordering for linear solver
 	Scaling   string // scaling for linear solver
+
+	// internal data
+	method string // the ODE method
 
 	// linear solver control
 	comm   *mpi.Communicator // for MPI run (real linear solver)
@@ -65,6 +67,11 @@ type Config struct {
 
 	// coefficients
 	rerrPrevMin float64 // min value of rerrPrev
+
+	// fixed steps
+	fixed       bool    // use fixed steps
+	fixedH      float64 // value of fixed stepsize
+	fixedNsteps int     // number of fixed steps
 }
 
 // NewConfig returns a new [default] set of configuration parameters
@@ -78,8 +85,6 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 
 	// parameters
 	o = new(Config)
-	o.Method = method
-	o.FixedStp = 0
 	o.ZeroTrial = false
 	o.Hmin = 1.0e-10
 	o.IniH = 1.0e-4
@@ -102,6 +107,9 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 	// DoPri5
 	o.DP5beta = 0.04
 
+	// internal data
+	o.method = method
+
 	// linear solver control
 	if comm == nil || lsKind == "" {
 		lsKind = "umfpack"
@@ -120,7 +128,7 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 
 	// coefficients
 	o.rerrPrevMin = 1e-4
-	if o.Method == "radau5" {
+	if o.method == "radau5" {
 		o.rerrPrevMin = 1e-2
 	}
 	return
@@ -140,7 +148,7 @@ func (o *Config) SetTol(atol, rtol float64) (err error) {
 	o.atol, o.rtol = atol, rtol
 
 	// check and change the tolerances [radau5 only]
-	if o.Method == "radau5" {
+	if o.method == "radau5" {
 		β := 2.0 / 3.0
 		quot := o.atol / o.rtol
 		o.rtol = 0.1 * math.Pow(o.rtol, β)
@@ -152,7 +160,33 @@ func (o *Config) SetTol(atol, rtol float64) (err error) {
 	return
 }
 
-// CalcNfixedMax calculates the maximum number of fixed steps (e.g. for output)
-func (o *Config) CalcNfixedMax(dx, xf float64) int {
-	return int(math.Ceil(xf/dx)) + 1
+// SetFixedH calculates the number of steps, the exact stepsize h, and set to use fixed stepsize
+func (o *Config) SetFixedH(dxApprox, xf float64) {
+	o.fixed = true
+	o.fixedNsteps = int(math.Ceil(xf / dxApprox))
+	o.fixedH = xf / float64(o.fixedNsteps)
+	xfinal := float64(o.fixedNsteps) * o.fixedH
+	if xfinal != xf {
+		chk.Panic("_internal_: xfinal should be equal to xf. xfinal-xf=%25.18e\n", xfinal-xf)
+	}
+}
+
+// SetStepOut activates output of (variable) steps
+//  save -- save all values
+//  out  -- function to be during step output [may be nil]
+func (o *Config) SetStepOut(save bool, out StepOutF) {
+	o.stepOut = save
+	o.stepF = out
+}
+
+// SetContOut activates continuous output
+//  save -- save all values
+//  out  -- function to be during continuous output [may be nil]
+func (o *Config) SetContOut(save bool, dxOut, xf float64, out ContOutF) {
+	if dxOut > 0 {
+		o.contOut = save
+		o.contF = out
+		o.contNstp = int(math.Ceil(xf / dxOut))
+		o.contDx = xf / float64(o.contNstp)
+	}
 }

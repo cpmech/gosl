@@ -22,8 +22,8 @@ func TestBwEuler01a(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("bweuler", "", nil)
 	status(tst, err)
-	conf.FixedStp = p.Dx
-	conf.StepNmax = conf.CalcNfixedMax(p.Dx, p.Xf)
+	conf.SetFixedH(p.Dx, p.Xf)
+	conf.SetStepOut(true, nil)
 
 	// output handler
 	out := NewOutput(p.Ndim, conf)
@@ -69,8 +69,8 @@ func TestBwEuler01b(tst *testing.T) {
 	// configuration
 	conf, err := NewConfig("bweuler", "", nil)
 	status(tst, err)
-	conf.FixedStp = p.Dx
-	conf.StepNmax = conf.CalcNfixedMax(p.Dx, p.Xf)
+	conf.SetFixedH(p.Dx, p.Xf)
+	conf.SetStepOut(true, nil)
 
 	// output handler
 	out := NewOutput(p.Ndim, conf)
