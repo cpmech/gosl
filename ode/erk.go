@@ -154,6 +154,9 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 	}
 
 	// error estimation
+	if !o.Embedded {
+		return
+	}
 	var kh, sum, lerrm, ratio float64 // m component of local error estimate
 	for m := 0; m < o.ndim; m++ {
 		o.w[m] = ya[m]
