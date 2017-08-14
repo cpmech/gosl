@@ -108,7 +108,7 @@ func TestOde02(tst *testing.T) {
 	chk.PrintTitle("ode02: Hairer-Wanner VII-p5 Eq.(1.5) Van der Pol's Equation")
 
 	// problem
-	p := ProbVanDerPol()
+	p := ProbVanDerPol(false)
 
 	// configuration
 	conf, err := NewConfig("radau5", "", nil)

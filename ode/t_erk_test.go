@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -173,11 +174,15 @@ func TestErk03a(tst *testing.T) {
 		plt.Reset(true, nil)
 	}
 
+	// reference solution
+	yExact := la.NewVector(p.Ndim)
+	p.Yana(yExact, p.Xf)
+
 	// run test
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []int{4, 4, 4, 4}
 	tols := []float64{0.011, 0.023, 0.00471, 0.011}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, methods, orders, tols, chk.Verbose)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {
@@ -202,11 +207,15 @@ func TestErk03b(tst *testing.T) {
 		plt.Reset(true, nil)
 	}
 
+	// reference solution
+	yExact := la.NewVector(p.Ndim)
+	p.Yana(yExact, p.Xf)
+
 	// run test
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []int{4, 4, 4, 4}
 	tols := []float64{0.086, 0.164, 0.07, 0.09}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, methods, orders, tols, chk.Verbose)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {
@@ -232,6 +241,10 @@ func TestErk04(tst *testing.T) {
 		plt.Reset(true, nil)
 	}
 
+	// reference solution
+	yExact := la.NewVector(p.Ndim)
+	p.Yana(yExact, p.Xf)
+
 	// run test
 	methods := []string{"fweuler", "bweuler", "moeuler", "rk2", "rk3", "heun3",
 		"rk4", "rk4-3/8", "merson4", "zonneveld4", "fehlberg4"}
@@ -239,7 +252,7 @@ func TestErk04(tst *testing.T) {
 		4, 4, 4, 4, 4}
 	tols := []float64{0.043, 0.0176, 0.11, 0.049, 0.016, 0.0023,
 		0.086, 0.164, 0.07, 0.09, 0.005}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, methods, orders, tols, chk.Verbose)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {

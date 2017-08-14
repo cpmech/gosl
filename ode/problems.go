@@ -74,7 +74,9 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 }
 
 // ConvergenceTest runs convergence test
-func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int, methods []string, orders []int, tols []float64, doPlot bool) (err error) {
+//   yExact -- is the exact (reference) y @ xf
+func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int, yExact la.Vector,
+	methods []string, orders []int, tols []float64, doPlot bool) (err error) {
 
 	// constants
 	dxs := utl.LinSpace(dxmin, dxmax, ndx)
@@ -97,8 +99,7 @@ func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int,
 			}
 
 			// global error
-			o.Yana(o.Ytmp, o.Xf)
-			diff := la.VecMaxDiff(y, o.Ytmp)
+			diff := la.VecMaxDiff(y, yExact)
 			U[idx] = float64(stat.Nfeval)
 			V[idx] = diff
 
@@ -182,13 +183,24 @@ func ProbHwEq11() (o *Problem) {
 }
 
 // ProbVanDerPol returns the Van der Pol' Equation as given in Hairer-Wanner VII-p5 Eq.(1.5)
-func ProbVanDerPol() (o *Problem) {
+//  stationary -- use eps=1 and compute period and amplitude such that
+//                y = [A, 0] is a stationary point
+func ProbVanDerPol(stationary bool) (o *Problem) {
 
 	o = new(Problem)
 	eps := 1.0e-6
 	o.Xf = 2.0
 	o.Y = la.Vector([]float64{2.0, -0.6})
 	o.Ndim = len(o.Y)
+
+	if stationary {
+		eps = 1.0
+		T := 6.6632868593231301896996820305
+		A := 2.00861986087484313650940188
+		o.Y[0] = A
+		o.Y[1] = 0.0
+		o.Xf = T
+	}
 
 	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
 		f[0] = y[1]
