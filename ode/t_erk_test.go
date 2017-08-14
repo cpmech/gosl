@@ -5,13 +5,11 @@
 package ode
 
 import (
-	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -163,57 +161,6 @@ func TestErk02(tst *testing.T) {
 	}
 }
 
-func convergenceTest(tst *testing.T, p *Problem, dxmin, dxmax float64, ndx int, methods []string, orders []int, tols []float64) {
-
-	// constants
-	dxs := utl.LinSpace(dxmin, dxmax, ndx)
-	U := make([]float64, ndx)
-	V := make([]float64, ndx)
-	lu := make([]float64, ndx)
-	lv := make([]float64, ndx)
-
-	// try methods
-	for im, method := range methods {
-
-		// run for many dx
-		for idx, dx := range dxs {
-
-			// solve problem
-			p.Dx = dx
-			y, stat, _, err := p.Solve(method, true, false)
-			status(tst, err)
-
-			// global error
-			p.Yana(p.Ytmp, p.Xf)
-			e := la.VecMaxDiff(y, p.Ytmp)
-			U[idx] = float64(stat.Nfeval)
-			V[idx] = e
-
-			// debug
-			if false { // fake slope of 1:4
-				U[0] = math.Pow(10, 4)
-				U[1] = math.Pow(10, 3.75)
-				U[2] = math.Pow(10, 3.5)
-				V[0] = math.Pow(10, -8)
-				V[1] = math.Pow(10, -7)
-				V[2] = math.Pow(10, -6)
-			}
-
-			// log-log values
-			lu[idx] = math.Log10(U[idx])
-			lv[idx] = math.Log10(V[idx])
-		}
-
-		// calc convergence rate
-		_, m := num.LinFit(lu, lv)
-		chk.AnaNum(tst, "slope m", tols[im], m, -float64(orders[im]), chk.Verbose)
-
-		if chk.Verbose {
-			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: plt.M(im, 0), NoClip: true})
-		}
-	}
-}
-
 func TestErk03a(tst *testing.T) {
 
 	//verbose()
@@ -231,7 +178,7 @@ func TestErk03a(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []int{4, 4, 4, 4}
 	tols := []float64{0.011, 0.023, 0.00471, 0.011}
-	convergenceTest(tst, p, 1e-3, 1e-2, 3, methods, orders, tols)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {
@@ -239,7 +186,6 @@ func TestErk03a(tst *testing.T) {
 		plt.SlopeInd(-4, 3.8, -6, 0.4, "4", false, true, true, nil, nil)
 		plt.SetXlog()
 		plt.SetYlog()
-		//plt.Equal()
 		plt.Save("/tmp/gosl/ode", "erk03a")
 	}
 }
@@ -261,7 +207,7 @@ func TestErk03b(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []int{4, 4, 4, 4}
 	tols := []float64{0.086, 0.164, 0.07, 0.09}
-	convergenceTest(tst, p, 1e-3, 1e-2, 3, methods, orders, tols)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {
@@ -294,7 +240,7 @@ func TestErk04(tst *testing.T) {
 		4, 4, 4, 4, 4}
 	tols := []float64{0.043, 0.0176, 0.11, 0.049, 0.016, 0.0023,
 		0.086, 0.164, 0.07, 0.09, 0.005}
-	convergenceTest(tst, p, 1e-3, 1e-2, 3, methods, orders, tols)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {

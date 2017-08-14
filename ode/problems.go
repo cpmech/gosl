@@ -6,11 +6,13 @@ package ode
 
 import (
 	"math"
+	"testing"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -68,6 +70,51 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 
 	// set auxiliary variable
 	o.Ytmp = la.NewVector(o.Ndim)
+	return
+}
+
+// ConvergenceTest runs convergence test
+func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int, methods []string, orders []int, tols []float64, doPlot bool) (err error) {
+
+	// constants
+	dxs := utl.LinSpace(dxmin, dxmax, ndx)
+	U := make([]float64, ndx)
+	V := make([]float64, ndx)
+	lu := make([]float64, ndx)
+	lv := make([]float64, ndx)
+
+	// try methods
+	for im, method := range methods {
+
+		// run for many dx
+		for idx, dx := range dxs {
+
+			// solve problem
+			o.Dx = dx
+			y, stat, _, e := o.Solve(method, true, false)
+			if e != nil {
+				return e
+			}
+
+			// global error
+			o.Yana(o.Ytmp, o.Xf)
+			diff := la.VecMaxDiff(y, o.Ytmp)
+			U[idx] = float64(stat.Nfeval)
+			V[idx] = diff
+
+			// log-log values
+			lu[idx] = math.Log10(U[idx])
+			lv[idx] = math.Log10(V[idx])
+		}
+
+		// calc convergence rate
+		_, m := num.LinFit(lu, lv)
+		chk.AnaNum(tst, "slope m", tols[im], m, -float64(orders[im]), chk.Verbose)
+
+		if chk.Verbose {
+			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: plt.M(im, 0), NoClip: true})
+		}
+	}
 	return
 }
 
