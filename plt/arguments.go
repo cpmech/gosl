@@ -134,6 +134,7 @@ func (o A) String(forHistogram, for3dPoints bool) (l string) {
 	addToCmd(&l, o.Me > 0, io.Sf("markevery=%d", o.Me))
 	addToCmd(&l, o.Z > 0, io.Sf("zorder=%d", o.Z))
 	addToCmd(&l, o.NoClip, "clip_on=0")
+	addToCmd(&l, o.AxCoords, "transform=plt.gca().transAxes")
 
 	// shapes
 	addToCmd(&l, o.Fc != "", io.Sf("facecolor='%s'", o.Fc))

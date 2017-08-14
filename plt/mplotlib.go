@@ -312,15 +312,7 @@ func Title(txt string, args *A) {
 
 // Text adds text to plot
 func Text(x, y float64, txt string, args *A) {
-	l := "plt.text(%g,%g,r'%s'"
-	if args != nil {
-		addToCmd(&l, args.AxCoords, "transform=plt.gca().transAxes")
-		if args.FigCoords {
-			chk.Panic("FigCoords seems broken in current Matplotlib. Try Annotate instead")
-			addToCmd(&l, args.FigCoords, "transform=plt.gcf().transFigure")
-		}
-	}
-	io.Ff(&bufferPy, l, x, y, txt)
+	io.Ff(&bufferPy, "plt.text(%g,%g,r'%s'", x, y, txt)
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 

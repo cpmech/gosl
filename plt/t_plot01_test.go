@@ -152,8 +152,8 @@ func Test_plot02(tst *testing.T) {
 	if chk.Verbose {
 
 		Reset(true, &A{Eps: true, WidthPt: 380})
-		ReplaceAxes(0, 0, 1, 1, 0.04, 0.04, "the x", "the y", &A{Style: "->"}, &A{})
-		Arrow(0, 0, 1, 1, &A{C: "orange"})
+		ReplaceAxes(-0.2, -0.1, 1.2, 1.1, 0.04, 0.04, "the x", "the y", &A{Style: "->", NoClip: true}, &A{})
+		Arrow(-0.2, -0.1, 1.2, 1.1, &A{C: "orange"})
 		AxHline(0, &A{C: "red"})
 		AxVline(0, &A{C: "blue"})
 		Annotate(0, 0, "............00", &A{C: "g", AxCoords: true})
@@ -164,7 +164,7 @@ func Test_plot02(tst *testing.T) {
 		Annotate(1, 0, "ann-10", &A{C: "g", FigCoords: true, Ha: "right"})
 		Annotate(1, 1, "ann-11", &A{C: "g", FigCoords: true, Ha: "right", Va: "top"})
 		Annotate(0, 1, "ann-01", &A{C: "g", FigCoords: true, Va: "top"})
-		AnnotateXlabels(0, "HERE", &A{Fsz: 10})
+		AnnotateXlabels(0, "AnnotateXlabels", &A{Fsz: 10})
 		SupTitle("suptitle goes here", &A{C: "red"})
 		Title("title goes here", &A{C: "cyan"})
 		Text(0.5, 0.5, "TEXT", &A{C: "orange", Va: "top"})
@@ -177,6 +177,7 @@ func Test_plot02(tst *testing.T) {
 		//broken: Text(1, 1, "txt-11", &A{C: "m", FigCoords: true, Ha: "right", Va: "top"})
 		//broken: Text(0, 1, "txt-01", &A{C: "m", FigCoords: true, Ha: "left", Va: "top"})
 		Cross(0.5, 0.5, nil)
+		AxisRange(-0.2, 1.3, -0.2, 1.3)
 		PlotOne(0, 0, &A{M: "*"})
 
 		err := Save("/tmp/gosl/plt", "t_plot02")
