@@ -5,6 +5,8 @@
 package plt
 
 import (
+	"math"
+
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
@@ -47,4 +49,77 @@ func Waterfall(X, T []float64, Z [][]float64, args *A) {
 		xmax = utl.Max(xmax, x)
 	}
 	AxisRange3d(xmin, xmax, tmin, tmax, zmin, zmax)
+}
+
+// DrawSlopeInd draws indicator of line slope
+func DrawSlopeInd(m, xc, yc, xlen float64, lbl string, flip, xlog, ylog bool, args, argsLbl *A) {
+	if args == nil {
+		args = &A{C: "k"}
+	}
+	args.NoClip = true
+	l := 0.5 * xlen
+	x := []float64{xc - l, xc + l, xc + l, xc - l}
+	y := []float64{yc - m*l, yc - m*l, yc + m*l, yc - m*l}
+	if flip {
+		x[1] = xc - l
+		y[1] = yc + m*l
+	}
+	dx, dy := x[2]-x[0], y[2]-y[0]
+	d := 0.03 * math.Sqrt(dx*dx+dy*dy)
+	xm := xc - l - d
+	xp := xc + l + d
+	ym := yc + m*l - d
+	yp := yc + m*l + d
+	yr := yc - m*l + d
+	ys := yc - m*l - d
+	if xlog {
+		for i := 0; i < 4; i++ {
+			x[i] = math.Pow(10.0, x[i])
+		}
+		xc = math.Pow(10.0, xc)
+		xm = math.Pow(10.0, xm)
+		xp = math.Pow(10.0, xp)
+	}
+	if ylog {
+		for i := 0; i < 4; i++ {
+			y[i] = math.Pow(10.0, y[i])
+		}
+		yc = math.Pow(10.0, yc)
+		ym = math.Pow(10.0, ym)
+		yp = math.Pow(10.0, yp)
+		yr = math.Pow(10.0, yr)
+		ys = math.Pow(10.0, ys)
+	}
+	Plot(x, y, args)
+	if lbl != "" {
+		if argsLbl == nil {
+			argsLbl = &A{C: "k", Fsz: 6}
+		}
+		argsLbl.NoClip = true
+		if flip {
+			argsLbl.Ha = "center"
+			if m < 0 {
+				argsLbl.Va = "top"
+				Text(xc, ym, "1", argsLbl)
+			} else {
+				argsLbl.Va = "bottom"
+				Text(xc, yp, "1", argsLbl)
+			}
+			argsLbl.Ha = "right"
+			argsLbl.Va = "center"
+			Text(xm, yc, lbl, argsLbl)
+		} else {
+			argsLbl.Ha = "center"
+			if m < 0 {
+				argsLbl.Va = "bottom"
+				Text(xc, yr, "1", argsLbl)
+			} else {
+				argsLbl.Va = "top"
+				Text(xc, ys, "1", argsLbl)
+			}
+			argsLbl.Ha = "left"
+			argsLbl.Va = "center"
+			Text(xp, yc, lbl, argsLbl)
+		}
+	}
 }
