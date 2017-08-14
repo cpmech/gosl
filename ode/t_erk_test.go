@@ -191,7 +191,7 @@ func convergenceTest(tst *testing.T, p *Problem, methods []string, orders []int,
 			V[idx] = e
 
 			// debug
-			if true {
+			if false { // fake slope of 1:4
 				U[0] = math.Pow(10, 4)
 				U[1] = math.Pow(10, 3.75)
 				U[2] = math.Pow(10, 3.5)
@@ -215,35 +215,10 @@ func convergenceTest(tst *testing.T, p *Problem, methods []string, orders []int,
 	}
 }
 
-// DrawSlopeIndicator draws indicator of line slope
-//  uc -- centre (axis-)coordinate ϵ (0,1)
-//  vc -- centre (axis-)coordinate ϵ (0,1)
-//  scale is in [0, 1]
-func DrawSlopeIndicator(uc, vc, scale, m float64, flip bool, args *plt.A) {
-	if args == nil {
-		args = &plt.A{C: "k"}
-	}
-	args.AxCoords = true
-	args.NoClip = true
-	l := 0.5 * scale
-	io.Pfblue2("l = %v\n", l)
-	u := []float64{uc - l, uc + l, uc + l, uc - l}
-	v := []float64{vc - m*l, vc - m*l, vc + m*l, vc - m*l}
-	if flip {
-		u[1] = uc - l
-		v[1] = vc + m*l
-	}
-	io.Pforan("u = %v\n", u)
-	io.Pforan("v = %v\n", v)
-	_, slope := num.LinFit(u, v)
-	io.PfYel("slope = %v\n", slope)
-	plt.Plot(u, v, args)
-}
-
 func TestErk03a(tst *testing.T) {
 
-	verbose()
-	chk.PrintTitle("Erk03a.")
+	//verbose()
+	chk.PrintTitle("Erk03a. rk-fours. problem a")
 
 	// problem
 	p := ProbSimpleNdim4a()
@@ -256,25 +231,24 @@ func TestErk03a(tst *testing.T) {
 	// run test
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []int{4, 4, 4, 4}
-	tols := []float64{0.011, 0.023, 0.0047, 0.011}
+	tols := []float64{0.011, 0.023, 0.00471, 0.011}
 	convergenceTest(tst, p, methods, orders, tols)
 
 	// plot
 	if chk.Verbose {
 		plt.Gll("$nFeval$", "$error$", nil)
-		DrawSlopeIndicator(0.5, 0.5, 1, -1, false, nil)
-		//plt.SetXlog()
-		//plt.SetYlog()
-		plt.HideTRborders()
-		plt.Equal()
+		plt.SlopeInd(-4, 3.8, -6, 0.4, "4", false, true, true, nil, nil)
+		plt.SetXlog()
+		plt.SetYlog()
+		//plt.Equal()
 		plt.Save("/tmp/gosl/ode", "erk03a")
 	}
 }
 
 func TestErk03b(tst *testing.T) {
 
-	verbose()
-	chk.PrintTitle("Erk03b.")
+	//verbose()
+	chk.PrintTitle("Erk03b. rk-fours. problem b")
 
 	// problem
 	p := ProbSimpleNdim4b()
@@ -293,9 +267,10 @@ func TestErk03b(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Gll("$nFeval$", "$error$", nil)
+		plt.SlopeInd(-4, 3.8, -5, 0.4, "4", false, true, true, nil, nil)
 		plt.SetXlog()
 		plt.SetYlog()
-		plt.HideTRborders()
+		//plt.Equal()
 		plt.Save("/tmp/gosl/ode", "erk03b")
 	}
 }
