@@ -328,7 +328,7 @@ func newERK(kind string) rkmethod {
 		o.Q = 4
 
 	case "fehlberg4": // Fehlberg 4(5) ⇒ q = 4
-		o.UseKsPrev = true
+		o.UseKsPrev = false
 		o.Embedded = true
 		o.A = [][]float64{
 			{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
