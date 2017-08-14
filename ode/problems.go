@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -373,6 +374,12 @@ func ProbSimpleNdim4b() (o *Problem) {
 		f[1] = 10.0 * x * math.Exp(5.0*(y[2]-1.0)) * y[3]
 		f[2] = 2.0 * x * y[3]
 		f[3] = -2.0 * x * math.Log(y[0])
+		if y[0] < 0 || y[1] < 0 {
+			io.Pf("x = %v\n", x)
+			io.Pf("y = %v\n", y)
+			io.Pf("f = %v\n", f)
+			return chk.Err("y0 and y1 cannot be negative\n")
+		}
 		return nil
 	}
 	o.Y = la.Vector([]float64{1, 1, 1, 1})
