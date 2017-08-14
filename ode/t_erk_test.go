@@ -11,6 +11,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -162,122 +163,138 @@ func TestErk02(tst *testing.T) {
 	}
 }
 
-func convergenceTest(tst *testing.T, p *Problem) {
+func convergenceTest(tst *testing.T, p *Problem, methods []string, orders []int, tols []float64) {
+
+	// constants
+	ndx := 3
+	dxs := utl.LinSpace(0.001, 0.01, ndx)
+	U := make([]float64, ndx)
+	V := make([]float64, ndx)
+	lu := make([]float64, ndx)
+	lv := make([]float64, ndx)
 
 	// try methods
-	M := []string{"s", ".", "+", "^", "x", "*", "|", ""}
-	Ms := []int{4, 6, 6, 6, 6, 6, 6, 6}
-	for im, method := range []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"} {
+	for im, method := range methods {
 
-		l10fcs := utl.LinSpace(2.6, 3.5, 10)
-		U := make([]float64, len(l10fcs))
-		V := make([]float64, len(l10fcs))
-		for idx, l10fc := range l10fcs {
-
-			// compute dx
-			fc := math.Pow(10.0, l10fc)
-			nsteps := fc / 4
-			p.Dx = p.Xf / (nsteps - 1)
+		// run for many dx
+		for idx, dx := range dxs {
 
 			// solve problem
+			p.Dx = dx
 			y, stat, _, err := p.Solve(method, true, false)
 			status(tst, err)
 
 			// global error
 			p.Yana(p.Ytmp, p.Xf)
 			e := la.VecMaxDiff(y, p.Ytmp)
-			U[idx] = -math.Log10(e)
-			V[idx] = math.Log10(float64(stat.Nfeval))
+			U[idx] = float64(stat.Nfeval)
+			V[idx] = e
+
+			// debug
+			if true {
+				U[0] = math.Pow(10, 4)
+				U[1] = math.Pow(10, 3.75)
+				U[2] = math.Pow(10, 3.5)
+				V[0] = math.Pow(10, -8)
+				V[1] = math.Pow(10, -7)
+				V[2] = math.Pow(10, -6)
+			}
+
+			// log-log values
+			lu[idx] = math.Log10(U[idx])
+			lv[idx] = math.Log10(V[idx])
 		}
 
+		// calc convergence rate
+		_, m := num.LinFit(lu, lv)
+		chk.AnaNum(tst, "slope m", tols[im], m, -4.0, chk.Verbose)
+
 		if chk.Verbose {
-			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: M[im], Ms: Ms[im], NoClip: true})
+			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: plt.M(im, 0), NoClip: true})
 		}
 	}
 }
 
+// DrawSlopeIndicator draws indicator of line slope
+//  uc -- centre (axis-)coordinate ϵ (0,1)
+//  vc -- centre (axis-)coordinate ϵ (0,1)
+//  scale is in [0, 1]
+func DrawSlopeIndicator(uc, vc, scale, m float64, flip bool, args *plt.A) {
+	if args == nil {
+		args = &plt.A{C: "k"}
+	}
+	args.AxCoords = true
+	args.NoClip = true
+	l := 0.5 * scale
+	io.Pfblue2("l = %v\n", l)
+	u := []float64{uc - l, uc + l, uc + l, uc - l}
+	v := []float64{vc - m*l, vc - m*l, vc + m*l, vc - m*l}
+	if flip {
+		u[1] = uc - l
+		v[1] = vc + m*l
+	}
+	io.Pforan("u = %v\n", u)
+	io.Pforan("v = %v\n", v)
+	_, slope := num.LinFit(u, v)
+	io.PfYel("slope = %v\n", slope)
+	plt.Plot(u, v, args)
+}
+
 func TestErk03a(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("Erk03a.")
-
-	if !chk.Verbose {
-		return
-	}
 
 	// problem
 	p := ProbSimpleNdim4a()
 
 	// prepare plot
 	if chk.Verbose {
-		m := 1.0 / 4.0
 		plt.Reset(true, nil)
-		plt.Plot([]float64{0, 5}, []float64{2.5, 2.5 + m*5}, &plt.A{C: "k", Ls: ":", NoClip: true})
 	}
 
 	// run test
-	convergenceTest(tst, p)
+	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
+	orders := []int{4, 4, 4, 4}
+	tols := []float64{0.011, 0.023, 0.0047, 0.011}
+	convergenceTest(tst, p, methods, orders, tols)
 
 	// plot
 	if chk.Verbose {
-		plt.Gll("$-log_{10}(err)$", "$log_{10}(nfeval)$", nil)
+		plt.Gll("$nFeval$", "$error$", nil)
+		DrawSlopeIndicator(0.5, 0.5, 1, -1, false, nil)
+		//plt.SetXlog()
+		//plt.SetYlog()
 		plt.HideTRborders()
+		plt.Equal()
 		plt.Save("/tmp/gosl/ode", "erk03a")
 	}
 }
 
 func TestErk03b(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("Erk03b.")
-
-	if !chk.Verbose {
-		return
-	}
 
 	// problem
 	p := ProbSimpleNdim4b()
 
 	// prepare plot
 	if chk.Verbose {
-		m := 1.0 / 4.0
 		plt.Reset(true, nil)
-		plt.Plot([]float64{0, 5}, []float64{2.5, 2.5 + m*5}, &plt.A{C: "k", Ls: ":", NoClip: true})
 	}
 
-	// try methods
-	M := []string{"s", ".", "+", "^", "x", "*", "|", ""}
-	Ms := []int{4, 6, 6, 6, 6, 6, 6, 6}
-	for im, method := range []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"} {
+	// run test
+	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
+	orders := []int{4, 4, 4, 4}
+	tols := []float64{0.086, 0.164, 0.07, 0.09}
+	convergenceTest(tst, p, methods, orders, tols)
 
-		l10fcs := utl.LinSpace(2.6, 3.5, 10)
-		U := make([]float64, len(l10fcs))
-		V := make([]float64, len(l10fcs))
-		for idx, l10fc := range l10fcs {
-
-			// compute dx
-			fc := math.Pow(10.0, l10fc)
-			nsteps := fc / 4
-			p.Dx = p.Xf / (nsteps - 1)
-
-			// solve problem
-			y, stat, _, err := p.Solve(method, true, false)
-			status(tst, err)
-
-			// global error
-			p.Yana(p.Ytmp, p.Xf)
-			e := la.VecMaxDiff(y, p.Ytmp)
-			U[idx] = -math.Log10(e)
-			V[idx] = math.Log10(float64(stat.Nfeval))
-		}
-
-		if chk.Verbose {
-			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: M[im], Ms: Ms[im], NoClip: true})
-		}
-	}
-
+	// plot
 	if chk.Verbose {
-		plt.Gll("$-log_{10}(err)$", "$log_{10}(nfeval)$", nil)
+		plt.Gll("$nFeval$", "$error$", nil)
+		plt.SetXlog()
+		plt.SetYlog()
 		plt.HideTRborders()
 		plt.Save("/tmp/gosl/ode", "erk03b")
 	}

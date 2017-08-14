@@ -82,6 +82,28 @@ Source code: <a href="../examples/plt_boxandpoints.go">../examples/plt_boxandpoi
 
 
 
+### Waterfall graph
+
+Source code: <a href="t_extra_test">t_extra_test</a>
+
+<div id="container">
+<p><img src="../examples/figs/t_waterfall01.png" width="450"></p>
+</div>
+
+
+
+### Drawing slope indicators
+
+Source code: <a href="t_extra_test">t_extra_test</a>
+
+<div id="container">
+<p><img src="../examples/figs/t_slopeind01.png" width="450"></p>
+</div>
+
+<div id="container">
+<p><img src="../examples/figs/t_slopeind02.png" width="450"></p>
+</div>
+
 
 ## Output of Tests
 

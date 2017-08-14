@@ -45,7 +45,7 @@ func TestWaterfall01(tst *testing.T) {
 
 		Reset(true, nil)
 		Waterfall(X, T, Z, nil)
-		err := Save("/tmp/gosl/plt", "waterfall01")
+		err := Save("/tmp/gosl/plt", "t_waterfall01")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -78,7 +78,7 @@ func TestSlopeInd01(tst *testing.T) {
 		}
 		draw(1)
 		draw(2)
-		err := Save("/tmp/gosl/plt", "slopeind01")
+		err := Save("/tmp/gosl/plt", "t_slopeind01")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -113,7 +113,7 @@ func TestSlopeInd02(tst *testing.T) {
 		}
 		draw(1)
 		draw(2)
-		err := Save("/tmp/gosl/plt", "slopeind02")
+		err := Save("/tmp/gosl/plt", "t_slopeind02")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -128,20 +128,15 @@ func TestSlopeInd03(tst *testing.T) {
 	if chk.Verbose {
 		x := []float64{1, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6}
 		y := []float64{0, 2, 4, 6, 4, 2, 0}
-		Reset(true, &A{Prop: 1.5})
-		draw := func(idx int) {
-			Subplot(2, 1, idx)
-			Plot(x, y, &A{C: C(0, 0), M: ".", NoClip: true})
-			DrawSlopeInd(+2.0, 1.1, 2.0, 1, "2", false, true, false, nil, nil)
-			DrawSlopeInd(+2.0, 1.9, 4.0, 1, "2", true, true, false, nil, nil)
-			DrawSlopeInd(-2.0, 5.1, 2.0, 1, "2", false, true, false, nil, nil)
-			DrawSlopeInd(-2.0, 3.9, 4.0, 1, "2", true, true, false, nil, nil)
-			Grid(nil)
-			SetXlog()
-		}
-		draw(1)
-		draw(2)
-		err := Save("/tmp/gosl/plt", "slopeind03")
+		Reset(true, nil)
+		Plot(x, y, &A{C: C(0, 0), M: ".", NoClip: true})
+		DrawSlopeInd(+2.0, 1.1, 2.0, 1, "2", false, true, false, nil, nil)
+		DrawSlopeInd(+2.0, 1.9, 4.0, 1, "2", true, true, false, nil, nil)
+		DrawSlopeInd(-2.0, 5.1, 2.0, 1, "2", false, true, false, nil, nil)
+		DrawSlopeInd(-2.0, 3.9, 4.0, 1, "2", true, true, false, nil, nil)
+		Grid(nil)
+		SetXlog()
+		err := Save("/tmp/gosl/plt", "t_slopeind03")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -156,20 +151,15 @@ func TestSlopeInd04(tst *testing.T) {
 	if chk.Verbose {
 		x := []float64{0, 1, 2, 3, 4, 5, 6}
 		y := []float64{1, 1e2, 1e4, 1e6, 1e4, 1e2, 1}
-		Reset(true, &A{Prop: 1.5})
-		draw := func(idx int) {
-			Subplot(2, 1, idx)
-			Plot(x, y, &A{C: C(0, 0), M: ".", NoClip: true})
-			DrawSlopeInd(+2.0, 1.1, 2.0, 1, "2", false, false, true, nil, nil)
-			DrawSlopeInd(+2.0, 1.9, 4.0, 1, "2", true, false, true, nil, nil)
-			DrawSlopeInd(-2.0, 5.1, 2.0, 1, "2", false, false, true, nil, nil)
-			DrawSlopeInd(-2.0, 3.9, 4.0, 1, "2", true, false, true, nil, nil)
-			Grid(nil)
-			SetYlog()
-		}
-		draw(1)
-		draw(2)
-		err := Save("/tmp/gosl/plt", "slopeind04")
+		Reset(true, nil)
+		Plot(x, y, &A{C: C(0, 0), M: ".", NoClip: true})
+		DrawSlopeInd(+2.0, 1.1, 2.0, 1, "2", false, false, true, nil, nil)
+		DrawSlopeInd(+2.0, 1.9, 4.0, 1, "2", true, false, true, nil, nil)
+		DrawSlopeInd(-2.0, 5.1, 2.0, 1, "2", false, false, true, nil, nil)
+		DrawSlopeInd(-2.0, 3.9, 4.0, 1, "2", true, false, true, nil, nil)
+		Grid(nil)
+		SetYlog()
+		err := Save("/tmp/gosl/plt", "t_slopeind04")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}

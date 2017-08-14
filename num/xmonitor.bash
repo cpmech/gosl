@@ -8,5 +8,6 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="QuadExpIx"
+    #go test -test.run="QuadExpIx"
+    go test -test.run="LinFit"
 done
