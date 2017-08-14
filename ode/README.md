@@ -19,6 +19,17 @@ Solution of Robertson's equation
 </div>
 
 
+## Output of Tests
+
+### Convergence of explicit Runge-Kutta methods
+
+Source code: <a href="t_erk_test.go">t_erk_test.go</a>
+
+<div id="container">
+<p><img src="../examples/figs/t_erk04.png" width="400"></p>
+</div>
+
+
 ## References
 
 [1] Hairer E, Norset SP, Wanner G. Solving O. Solving Ordinary Differential Equations I. Nonstiff

@@ -163,11 +163,10 @@ func TestErk02(tst *testing.T) {
 	}
 }
 
-func convergenceTest(tst *testing.T, p *Problem, methods []string, orders []int, tols []float64) {
+func convergenceTest(tst *testing.T, p *Problem, dxmin, dxmax float64, ndx int, methods []string, orders []int, tols []float64) {
 
 	// constants
-	ndx := 3
-	dxs := utl.LinSpace(0.001, 0.01, ndx)
+	dxs := utl.LinSpace(dxmin, dxmax, ndx)
 	U := make([]float64, ndx)
 	V := make([]float64, ndx)
 	lu := make([]float64, ndx)
@@ -207,7 +206,7 @@ func convergenceTest(tst *testing.T, p *Problem, methods []string, orders []int,
 
 		// calc convergence rate
 		_, m := num.LinFit(lu, lv)
-		chk.AnaNum(tst, "slope m", tols[im], m, -4.0, chk.Verbose)
+		chk.AnaNum(tst, "slope m", tols[im], m, -float64(orders[im]), chk.Verbose)
 
 		if chk.Verbose {
 			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: plt.M(im, 0), NoClip: true})
@@ -232,7 +231,7 @@ func TestErk03a(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []int{4, 4, 4, 4}
 	tols := []float64{0.011, 0.023, 0.00471, 0.011}
-	convergenceTest(tst, p, methods, orders, tols)
+	convergenceTest(tst, p, 1e-3, 1e-2, 3, methods, orders, tols)
 
 	// plot
 	if chk.Verbose {
@@ -262,7 +261,7 @@ func TestErk03b(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []int{4, 4, 4, 4}
 	tols := []float64{0.086, 0.164, 0.07, 0.09}
-	convergenceTest(tst, p, methods, orders, tols)
+	convergenceTest(tst, p, 1e-3, 1e-2, 3, methods, orders, tols)
 
 	// plot
 	if chk.Verbose {
@@ -272,5 +271,40 @@ func TestErk03b(tst *testing.T) {
 		plt.SetYlog()
 		//plt.Equal()
 		plt.Save("/tmp/gosl/ode", "erk03b")
+	}
+}
+
+func TestErk04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Erk04.")
+
+	// problem
+	p := ProbSimpleNdim4a()
+
+	// prepare plot
+	if chk.Verbose {
+		plt.Reset(true, nil)
+	}
+
+	// run test
+	methods := []string{"fweuler", "bweuler", "moeuler", "rk2", "rk3", "heun3",
+		"rk4", "rk4-3/8", "merson4", "zonneveld4", "fehlberg4"}
+	orders := []int{1, 1, 2, 2, 3, 3,
+		4, 4, 4, 4, 4}
+	tols := []float64{0.043, 0.0176, 0.11, 0.049, 0.016, 0.0023,
+		0.086, 0.164, 0.07, 0.09, 0.005}
+	convergenceTest(tst, p, 1e-3, 1e-2, 3, methods, orders, tols)
+
+	// plot
+	if chk.Verbose {
+		plt.Gll("$nFeval$", "$error$", &plt.A{LegOut: true, LegHlen: 2, LegNcol: 4})
+		plt.SlopeInd(-1, 2.8, +1.0, 0.4, "1", true, true, true, nil, nil)
+		plt.SlopeInd(-2, 3.3, -1.5, 0.4, "2", false, true, true, nil, nil)
+		plt.SlopeInd(-3, 4.0, -4.5, 0.4, "3", false, true, true, nil, nil)
+		plt.SlopeInd(-4, 3.4, -6.0, 0.4, "4", true, true, true, nil, nil)
+		plt.SetXlog()
+		plt.SetYlog()
+		plt.Save("/tmp/gosl/ode", "erk04")
 	}
 }
