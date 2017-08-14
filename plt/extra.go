@@ -51,8 +51,8 @@ func Waterfall(X, T []float64, Z [][]float64, args *A) {
 	AxisRange3d(xmin, xmax, tmin, tmax, zmin, zmax)
 }
 
-// DrawSlopeInd draws indicator of line slope
-func DrawSlopeInd(m, xc, yc, xlen float64, lbl string, flip, xlog, ylog bool, args, argsLbl *A) {
+// SlopeInd draws indicator of line slope
+func SlopeInd(m, xc, yc, xlen float64, lbl string, flip, xlog, ylog bool, args, argsLbl *A) {
 	if args == nil {
 		args = &A{C: "k"}
 	}
