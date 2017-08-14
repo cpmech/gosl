@@ -38,6 +38,9 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 
 	// configuration
 	conf, err := NewConfig(method, "", nil)
+	if err != nil {
+		return
+	}
 	if fixedStp {
 		conf.SetFixedH(o.Dx, o.Xf)
 	}
