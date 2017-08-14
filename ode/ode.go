@@ -143,8 +143,10 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 	// make sure that final x is equal to xf in the end
 	defer func() {
-		if math.Abs(x-xf) > 1e-15 {
-			err = chk.Err("internal error: x must be equal to xf in the end. x-xf=%v\n", x-xf)
+		if err == nil {
+			if math.Abs(x-xf) > 1e-15 {
+				err = chk.Err("internal error: x must be equal to xf in the end. x-xf=%v\n", x-xf)
+			}
 		}
 	}()
 
