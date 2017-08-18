@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -19,21 +20,32 @@ func TestErk01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Erk01. coefficients")
 
-	methods := []string{"moeuler", "rk2", "rk3", "heun3",
-		"rk4", "rk4-3/8", "merson4", "zonneveld4",
-		"dopri5", "fehlberg4", "fehlberg7", "verner6"}
+	methods := []string{
+		"moeuler", "rk2",
+		"rk3", "heun3",
+		"rk4", "rk4-3/8",
+		"merson4", "zonneveld4", "fehlberg4",
+		"dopri5", "verner6",
+		"fehlberg7", "dopri8",
+	}
 
-	tols1 := []float64{1e-17, 1e-17, 1e-17, 1e-17,
-		1e-17, 1e-15, 1e-17, 1e-17,
-		1e-15, 1e-15, 1e-14, 1e-15}
+	tols1 := []float64{
+		1e-17, 1e-17,
+		1e-17, 1e-17,
+		1e-17, 1e-15,
+		1e-17, 1e-17, 1e-15,
+		1e-15, 1e-15,
+		1e-14, 1e-14,
+	}
 
-	tols2 := []float64{1e-17, 1e-17, 1e-15, 1e-17,
-		1e-15, 1e-17, 1e-15, 1e-15,
-		1e-15, 1e-17, 1e-14, 1e-17}
-
-	tols3 := []float64{1e-17, 1e-17, 1e-17, 1e-17,
-		1e-17, 1e-16, 1e-17, 1e-17,
-		1e-15, 1e-15, 1e-14, 1e-16}
+	tols2 := []float64{
+		1e-17, 1e-17,
+		1e-15, 1e-17,
+		1e-15, 1e-16,
+		1e-15, 1e-15, 1e-15,
+		1e-15, 1e-16,
+		1e-16, 1e-15,
+	}
 
 	for im, method := range methods {
 		io.Pf("\n------------------------------------ %s ---------------------------------------\n", method)
@@ -56,7 +68,7 @@ func TestErk01(tst *testing.T) {
 			for j := 0; j < i; j++ {
 				sumrow += o.A[i][j]
 			}
-			chk.AnaNum(tst, io.Sf("Σa%dj", i), tols1[im], sumrow, o.C[i], chk.Verbose)
+			chk.AnaNum(tst, io.Sf("Σa%2dj", i), tols1[im], sumrow, o.C[i], chk.Verbose)
 		}
 		if o.Embedded {
 			io.Pf("\nerror estimator\n")
@@ -65,20 +77,23 @@ func TestErk01(tst *testing.T) {
 			}
 		}
 
-		io.Pf("\nEquations (1.11) of [1], page 135-136\n")
-		Sb := 0.0
-		Sbc := 0.0
-		Sbc2 := 0.0
-		Sbc3 := 0.0
+		io.Pf("\nEquations (1.11) of [1, page 135-136] and (5.20) of [1, page 181-182]\n")
+		SbcPow := 0.0
+		for p := 1; p <= o.P; p++ {
+			SbcPow = 0.0
+			for i := 0; i < o.Nstg; i++ {
+				SbcPow += o.B[i] * fun.PowP(o.C[i], uint32(p-1))
+			}
+			chk.AnaNum(tst, io.Sf("Σbi⋅ciⁿ⁻¹     =1/%d ", p), tols2[im], SbcPow, 1.0/float64(p), chk.Verbose)
+		}
+		if o.P < 3 {
+			continue
+		}
 		Sbac := 0.0
 		Sbcac := 0.0
 		Sbac2 := 0.0
 		Sbaac := 0.0
 		for i := 0; i < o.Nstg; i++ {
-			Sb += o.B[i]
-			Sbc += o.B[i] * o.C[i]
-			Sbc2 += o.B[i] * o.C[i] * o.C[i]
-			Sbc3 += o.B[i] * o.C[i] * o.C[i] * o.C[i]
 			for j := 0; j < o.Nstg; j++ {
 				Sbac += o.B[i] * o.A[i][j] * o.C[j]
 				Sbcac += o.B[i] * o.C[i] * o.A[i][j] * o.C[j]
@@ -88,21 +103,13 @@ func TestErk01(tst *testing.T) {
 				}
 			}
 		}
-		chk.AnaNum(tst, "Σbi           =1   ", tols2[im], Sb, 1.0, chk.Verbose)
-		_ = tols3
-		chk.AnaNum(tst, "Σbi⋅ci        =1/2 ", tols2[im], Sbc, 0.5, chk.Verbose)
-		if o.P < 3 {
-			continue
-		}
-		chk.AnaNum(tst, "Σbi⋅ci²       =1/3 ", tols3[im], Sbc2, 1.0/3.0, chk.Verbose)
+		chk.AnaNum(tst, "Σbi⋅aij⋅cj    =1/6 ", tols2[im], Sbac, 1.0/6.0, chk.Verbose)
 		if o.P < 4 {
 			continue
 		}
-		chk.AnaNum(tst, "Σbi⋅ci³       =1/4 ", tols3[im], Sbc3, 1.0/4.0, chk.Verbose)
-		chk.AnaNum(tst, "Σbi⋅aij⋅cj    =1/6 ", tols3[im], Sbac, 1.0/6.0, chk.Verbose)
-		chk.AnaNum(tst, "Σbi⋅ci⋅aij⋅cj =1/8 ", tols3[im], Sbcac, 1.0/8.0, chk.Verbose)
-		chk.AnaNum(tst, "Σbi⋅aij⋅cj²   =1/12", tols3[im], Sbac2, 1.0/12.0, chk.Verbose)
-		chk.AnaNum(tst, "Σbi⋅aij⋅ajk⋅ck=1/24", tols3[im], Sbaac, 1.0/24.0, chk.Verbose)
+		chk.AnaNum(tst, "Σbi⋅ci⋅aij⋅cj =1/8 ", tols2[im], Sbcac, 1.0/8.0, chk.Verbose)
+		chk.AnaNum(tst, "Σbi⋅aij⋅cj²   =1/12", tols2[im], Sbac2, 1.0/12.0, chk.Verbose)
+		chk.AnaNum(tst, "Σbi⋅aij⋅ajk⋅ck=1/24", tols2[im], Sbaac, 1.0/24.0, chk.Verbose)
 	}
 }
 
@@ -182,7 +189,8 @@ func TestErk03a(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []float64{4, 4, 4, 4}
 	tols := []float64{0.011, 0.023, 0.00471, 0.011}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
+	err := p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
+	status(tst, err)
 
 	// plot
 	if chk.Verbose {
@@ -215,7 +223,8 @@ func TestErk03b(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []float64{4, 4, 4, 4}
 	tols := []float64{0.086, 0.164, 0.07, 0.09}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
+	err := p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
+	status(tst, err)
 
 	// plot
 	if chk.Verbose {
@@ -252,7 +261,8 @@ func TestErk04(tst *testing.T) {
 		4, 4, 4, 4, 4}
 	tols := []float64{0.043, 0.0176, 0.11, 0.049, 0.016, 0.0023,
 		0.086, 0.164, 0.07, 0.09, 0.005}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
+	err := p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
+	status(tst, err)
 
 	// plot
 	if chk.Verbose {
@@ -284,13 +294,14 @@ func TestErk05(tst *testing.T) {
 	yExact := p.Y.GetCopy()
 
 	// test
-	methods := []string{"rk4", "fehlberg4", "dopri5", "verner6", "fehlberg7"}
-	orders := []float64{3.9874, 4.6923, 6.3012, 6.5916, 8.0283}
-	tols := []float64{1e-4, 1e-4, 1e-4, 1e-4, 1e-4}
-	p.ConvergenceTest(tst, 8e-2, 3e-1, 3, yExact, methods, orders, tols, chk.Verbose)
+	methods := []string{"rk4", "fehlberg4", "dopri5", "verner6", "fehlberg7", "dopri8"}
+	orders := []float64{3.9874, 4.6923, 6.3012, 6.5916, 8.0283, 6.8463}
+	tols := []float64{1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4}
+	err := p.ConvergenceTest(tst, 8e-2, 3e-1, 3, yExact, methods, orders, tols, chk.Verbose)
+	status(tst, err)
 
 	if chk.Verbose {
-		plt.Gll("$nFeval$", "$error$", &plt.A{LegOut: true, LegHlen: 2, LegNcol: 5})
+		plt.Gll("$nFeval$", "$error$", &plt.A{LegOut: true, LegHlen: 2, LegNcol: 3})
 		plt.SetXlog()
 		plt.SetYlog()
 		plt.Save("/tmp/gosl/ode", "erk05")
