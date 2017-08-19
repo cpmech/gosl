@@ -283,7 +283,7 @@ func TestErk05(tst *testing.T) {
 	chk.PrintTitle("Erk05. Convergence of high-order methods")
 
 	// problem
-	p := ProbVanDerPol(true)
+	p := ProbVanDerPol(0, true)
 
 	// prepare plot
 	if chk.Verbose {

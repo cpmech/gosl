@@ -66,7 +66,7 @@ func TestRadau502(tst *testing.T) {
 	chk.PrintTitle("Radau502: Van der Pol's Equation")
 
 	// problem
-	p := ProbVanDerPol(false)
+	p := ProbVanDerPol(0, false)
 	p.Y[1] = -0.66 // for some reason, the previous reference code was using -0.6
 	///////////////// -0.66 is the value from Hairer's website code
 	//p.Xf = 0.6

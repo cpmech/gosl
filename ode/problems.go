@@ -183,15 +183,19 @@ func ProbHwEq11() (o *Problem) {
 }
 
 // ProbVanDerPol returns the Van der Pol' Equation as given in Hairer-Wanner VII-p5 Eq.(1.5)
+//  eps  -- ε coefficient; use 0 for default value [=1e-6]
 //  stationary -- use eps=1 and compute period and amplitude such that
 //                y = [A, 0] is a stationary point
-func ProbVanDerPol(stationary bool) (o *Problem) {
+func ProbVanDerPol(eps float64, stationary bool) (o *Problem) {
 
 	o = new(Problem)
-	eps := 1.0e-6
 	o.Xf = 2.0
 	o.Y = la.Vector([]float64{2.0, -0.6})
 	o.Ndim = len(o.Y)
+
+	if eps < 1e-16 {
+		eps = 1e-6
+	}
 
 	if stationary {
 		eps = 1.0
