@@ -58,7 +58,6 @@ type ExplicitRK struct {
 	stat *Stat     // statistics
 	fcn  Func      // dy/dx = f(x,y) function
 	w    la.Vector // local workspace
-	beta float64   // factor to stabilize step
 	n    float64   // exponent n = 1/(q+1) (or 1/(q+1)-0.75⋅β) of rerrⁿ
 	dmin float64   // dmin = 1/Mmin
 	dmax float64   // dmax = 1/Mmax
@@ -87,10 +86,11 @@ func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn 
 	o.stat = stat
 	o.fcn = fcn
 	o.w = la.NewVector(o.ndim)
-	if conf.method == "dopri5" {
-		o.beta = conf.DP5beta
+	if o.conf.StabBeta > 0 { // lund-stabilization
+		o.n = 1.0/float64(o.Q+1) - o.conf.StabBeta*o.conf.stabBetaM
+	} else {
+		o.n = 1.0 / float64(o.Q+1)
 	}
-	o.n = 1.0/float64(o.Q+1) - o.beta*0.75
 	o.dmin = 1.0 / o.conf.Mmin
 	o.dmax = 1.0 / o.conf.Mmax
 	o.ndf = float64(ndim)
@@ -119,8 +119,8 @@ func (o *ExplicitRK) Accept(y la.Vector) (dxnew float64) {
 		return
 	}
 	d := math.Pow(o.work.rerr, o.n)
-	if o.beta > 0 { // lund-stabilization
-		d = d / math.Pow(o.work.rerrPrev, o.beta)
+	if o.conf.StabBeta > 0 { // lund-stabilization
+		d = d / math.Pow(o.work.rerrPrev, o.conf.StabBeta)
 	}
 	d = utl.Max(o.dmax, utl.Min(o.dmin, d/o.conf.Mfac)) // we require  fac1 <= hnew/h <= fac2
 	dxnew = o.work.h / d

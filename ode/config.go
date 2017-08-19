@@ -34,9 +34,7 @@ type Config struct {
 	UseRmsNorm bool    // use RMS norm instead of Euclidian in BwEuler
 	Verbose    bool    // show messages, e.g. during iterations
 	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
-
-	// DoPri5
-	DP5beta float64 // β for DoPri5
+	StabBeta   float64 // Lund stabilisation coefficient β
 
 	// output
 	stepF    StepOutF // function to process step output (of accepted steps) [may be nil]
@@ -53,7 +51,8 @@ type Config struct {
 	Scaling   string // scaling for linear solver
 
 	// internal data
-	method string // the ODE method
+	method    string  // the ODE method
+	stabBetaM float64 // factor to multiply stabilisation coefficient β
 
 	// linear solver control
 	comm   *mpi.Communicator // for MPI run (real linear solver)
@@ -104,9 +103,6 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 	o.UseRmsNorm = true
 	o.Verbose = false
 
-	// DoPri5
-	o.DP5beta = 0.04
-
 	// internal data
 	o.method = method
 
@@ -128,8 +124,14 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 
 	// coefficients
 	o.rerrPrevMin = 1e-4
-	if o.method == "radau5" {
+	switch method {
+	case "radau5":
 		o.rerrPrevMin = 1e-2
+	case "dopri5":
+		o.StabBeta = 0.04
+		o.stabBetaM = 0.75
+	case "dopri8":
+		o.stabBetaM = 0.2
 	}
 	return
 }
