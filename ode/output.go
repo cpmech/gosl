@@ -33,7 +33,7 @@ type Output struct {
 	yout      la.Vector   // current y of dense output (used if denseF != nil only)
 
 	// from RK method
-	cout func(yout la.Vector, h, x float64, y la.Vector, xout float64) // function to calculate dense values of y
+	dout func(yout la.Vector, h, x float64, y la.Vector, xout float64) // function to calculate dense values of y
 }
 
 // NewOutput returns a new structure
@@ -95,11 +95,11 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 			if stop || err != nil {
 				return
 			}
-			xo = o.conf.denseDx
+			xo += o.conf.denseDx
 		} else {
 			xo = o.xout
 			for x >= xo {
-				o.cout(o.yout, h, x, y, xo)
+				o.dout(o.yout, h, x, y, xo)
 				stop, err = o.conf.denseF(istep, h, x, y, xo, o.yout)
 				if stop || err != nil {
 					return
@@ -125,7 +125,7 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 				o.DenseS[o.DenseIdx] = istep
 				o.DenseX[o.DenseIdx] = xo
 				o.DenseY[o.DenseIdx] = la.NewVector(o.ndim)
-				o.cout(o.DenseY[o.DenseIdx], h, x, y, xo)
+				o.dout(o.DenseY[o.DenseIdx], h, x, y, xo)
 				o.DenseIdx++
 				xo += o.conf.denseDx
 			}
