@@ -15,18 +15,19 @@ import (
 // ExplicitRK implements explicit Runge-Kutta methods
 //
 //   The methods available are:
-//     moeuler    -- Modified-Euler 2(1) ⇒ q = 1
-//     rk2        -- Runge, order 2 (mid-point). page 135 of [1]
-//     rk3        -- Runge, order 3. page 135 of [1]
-//     heun3      -- Heun, order 3. page 135 of [1]
-//     rk4        -- "The" Runge-Kutta method. page 138 of [1]
-//     rk4-3/8    -- Runge-Kutta method: 3/8-Rule. page 138 of [1]
-//     merson4    -- Merson 4("5") method. "5" means that the order 5 is for linear equations with constant coefficients; otherwise the method is of order3. page 167 of [1]
-//     zonneveld4 -- Zonneveld 4(3). page 167 of [1]
-//     dopri5     -- Dormand-Prince 5(4) ⇒ q = 4
-//     fehlberg4  -- Fehlberg 4(5) ⇒ q = 4
-//     fehlberg7  -- Fehlberg 7(8) ⇒ q = 7
-//     verner6    -- Verner 6(5) ⇒ q = 5
+//     moeuler    -- 2(1) Modified-Euler 2(1) ⇒ q = 1
+//     rk2        -- 2 Runge, order 2 (mid-point). page 135 of [1]
+//     rk3        -- 3 Runge, order 3. page 135 of [1]
+//     heun3      -- 3 Heun, order 3. page 135 of [1]
+//     rk4        -- 4 "The" Runge-Kutta method. page 138 of [1]
+//     rk4-3/8    -- 4 Runge-Kutta method: 3/8-Rule. page 138 of [1]
+//     merson4    -- 4 Merson 4("5") method. "5" means that the order 5 is for linear equations with constant coefficients; otherwise the method is of order3. page 167 of [1]
+//     zonneveld4 -- 4 Zonneveld 4(3). page 167 of [1]
+//     fehlberg4  -- 4(5) Fehlberg 4(5) ⇒ q = 4
+//     dopri5     -- 5(4) Dormand-Prince 5(4) ⇒ q = 4
+//     verner6    -- 6(5) Verner 6(5) ⇒ q = 5
+//     fehlberg7  -- 7(8) Fehlberg 7(8) ⇒ q = 7
+//     dopri8     -- 8(5,3) Dormand-Prince 8 order with 5,3 estimator
 //  where p(q) means method of p-order with embedded estimator of q-order
 //
 //  References:
@@ -40,16 +41,16 @@ import (
 type ExplicitRK struct {
 
 	// constants
-	UseKsPrev bool        // can use previous ks to compute k0; i.e. k0 := ks{previous]
-	Embedded  bool        // has embedded error estimator
-	A         [][]float64 // a coefficients
-	B         []float64   // b coefficients
-	Be        []float64   // be coefficients (may be nil, if Fprev = false)
-	C         []float64   // c coefficients
-	E         []float64   // difference between b and be: e = b - be (if be is not nil)
-	Nstg      int         // number of stages = len(A) = len(B) = len(C)
-	P         int         // order of y1 (corresponding to b)
-	Q         int         // order of error estimator (embedded only); e.g. DoPri5(4) ⇒ q = 4 (=min(order(y1),order(y1bar))
+	FSAL     bool        // can use previous ks to compute k0; i.e. k0 := ks{previous]. first same as last [1, page 167]
+	Embedded bool        // has embedded error estimator
+	A        [][]float64 // a coefficients
+	B        []float64   // b coefficients
+	Be       []float64   // be coefficients (may be nil, if FSAL = false)
+	C        []float64   // c coefficients
+	E        []float64   // difference between b and be: e = b - be (if be is not nil)
+	Nstg     int         // number of stages = len(A) = len(B) = len(C)
+	P        int         // order of y1 (corresponding to b)
+	Q        int         // order of error estimator (embedded only); e.g. DoPri5(4) ⇒ q = 4 (=min(order(y1),order(y1bar))
 
 	// data
 	ndim int       // problem dimension
@@ -110,7 +111,7 @@ func (o *ExplicitRK) Accept(y la.Vector) (dxnew float64) {
 	y.Apply(1, o.w)
 
 	// update k0
-	if o.UseKsPrev {
+	if o.FSAL {
 		o.work.f[0].Apply(1, o.work.f[o.Nstg-1]) // k0 := ks for next step
 	}
 
@@ -150,7 +151,7 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 	v := o.work.v
 
 	// compute k0 (otherwise, use k0 saved in Accept)
-	if (o.work.first || !o.UseKsPrev) && !o.work.reject { // do it also if cannot reuse previous ks
+	if (o.work.first || !o.FSAL) && !o.work.reject {
 		u0 := xa + h*o.C[0]
 		o.stat.Nfeval++
 		err = o.fcn(k[0], h, u0, ya) // k0 := f(ui,vi)
@@ -210,7 +211,7 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 	}
 
 	// update and error estimation
-	var kh, sum, lerrm, ratio float64 // m component of local error estimate
+	var kh, sum, lerrm, sk, ratio float64 // lerr[m] component of local error estimate
 	for m := 0; m < o.ndim; m++ {
 		o.w[m] = ya[m]
 		lerrm = 0.0 // must be zeroed for each m
@@ -219,11 +220,11 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 			o.w[m] += o.B[i] * kh
 			lerrm += o.E[i] * kh
 		}
-		sk := o.conf.atol + o.conf.rtol*utl.Max(math.Abs(ya[m]), math.Abs(o.w[m]))
+		sk = o.conf.atol + o.conf.rtol*utl.Max(math.Abs(ya[m]), math.Abs(o.w[m]))
 		ratio = lerrm / sk
 		sum += ratio * ratio
 	}
-	o.work.rerr = utl.Max(math.Sqrt(sum/float64(o.ndim)), 1.0e-10)
+	o.work.rerr = utl.Max(math.Sqrt(sum/o.ndf), 1.0e-10)
 	return
 }
 
@@ -351,7 +352,7 @@ func newERK(kind string) rkmethod {
 		o.Q = 4
 
 	case "dopri5": // Dormand-Prince 5(4) ⇒ q = 4
-		o.UseKsPrev = true
+		o.FSAL = true
 		o.Embedded = true
 		o.A = [][]float64{
 			{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
