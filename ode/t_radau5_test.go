@@ -78,14 +78,14 @@ func TestRadau502(tst *testing.T) {
 	conf.IniH = 1e-6
 	conf.SetTol(1e-4, 1e-4)
 
-	// continuous output function
+	// dense output function
 	ss := make([]int, 11)
 	xx := make([]float64, 11)
 	yy0 := make([]float64, 11)
 	yy1 := make([]float64, 11)
 	iout := 0
 	io.Pf("\n%5s%7s%23s%23s\n", "s", "x", "y0", "y1")
-	conf.SetContOut(true, 0.2, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+	conf.SetDenseOut(true, 0.2, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
 		io.Pf("%5d%7.3f%23.15e%23.15e\n", istep, x, y[0], y[1])
 		ss[iout] = istep
 		xx[iout] = xout
@@ -121,9 +121,9 @@ func TestRadau502(tst *testing.T) {
 	// compare with fortran code
 	d, err := readRefData("data/dr1_radau5.cmp")
 	status(tst, err)
-	chk.Ints(tst, "S", out.GetContS(), d.S)
-	chk.Array(tst, "X", 1e-15, out.GetContX(), d.X)
-	chk.Deep2(tst, "Y", 1e-11, out.GetContYtableT(), d.Y)
+	chk.Ints(tst, "S", out.GetDenseS(), d.S)
+	chk.Array(tst, "X", 1e-15, out.GetDenseX(), d.X)
+	chk.Deep2(tst, "Y", 1e-11, out.GetDenseYtableT(), d.Y)
 
 	// check saved output
 	chk.Ints(tst, "ss", ss, d.S)
@@ -135,7 +135,7 @@ func TestRadau502(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, nil)
 		p.Plot("steps", 0, out, 101, false, nil, &plt.A{M: "+", C: plt.C(1, 0), NoClip: true})
-		plt.Plot(out.GetContX(), out.GetContY(0), &plt.A{L: "cont", Ls: "none", M: ".", C: plt.C(0, 0), NoClip: true})
+		plt.Plot(out.GetDenseX(), out.GetDenseY(0), &plt.A{L: "cont", Ls: "none", M: ".", C: plt.C(0, 0), NoClip: true})
 		plt.Gll("$x$", "$y$", nil)
 		plt.Save("/tmp/gosl/ode", "radau502")
 	}

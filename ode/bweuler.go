@@ -79,8 +79,8 @@ func (o *BwEuler) Reject() (dxnew float64) {
 	return
 }
 
-// ContOut produces continuous output (after Accept)
-func (o *BwEuler) ContOut(yout la.Vector, h, x float64, y la.Vector, xout float64) {
+// DenseOut produces dense output (after Accept)
+func (o *BwEuler) DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float64) {
 	chk.Panic("TODO")
 }
 

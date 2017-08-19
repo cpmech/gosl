@@ -55,7 +55,8 @@ type JacF func(dfdy *la.Triplet, h, x float64, y la.Vector) error
 //
 type StepOutF func(istep int, h, x float64, y la.Vector) (stop bool, err error)
 
-// ContOutF defines a function to produce a continuous output
+// DenseOutF defines a function to produce a dense output (i.e. many equally spaced points,
+// regardless of the actual stepsize)
 //
 //   INPUT:
 //     istep -- index of step (0 is the very first output whereas 1 is the first accepted step)
@@ -69,7 +70,7 @@ type StepOutF func(istep int, h, x float64, y la.Vector) (stop bool, err error)
 //     stop -- stop simulation (nicely)
 //     err  -- occurred error
 //
-type ContOutF func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error)
+type DenseOutF func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error)
 
 // YanaF defines a function to be used when computing analytical solutions
 type YanaF func(res []float64, x float64)

@@ -16,7 +16,7 @@ type rkmethod interface {
 	Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) // initialise
 	Accept(y la.Vector) (dxnew float64)                                                                   // accept update (must compute rerr)
 	Reject() (dxnew float64)                                                                              // process step rejection (must compute rerr)
-	ContOut(yout la.Vector, h, x float64, y la.Vector, xout float64)                                      // continuous output (after Accept)
+	DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float64)                                     // dense output (after Accept)
 	Step(x0 float64, y0 la.Vector) (err error)                                                            // step update
 }
 

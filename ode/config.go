@@ -37,12 +37,12 @@ type Config struct {
 	StabBeta   float64 // Lund stabilisation coefficient β
 
 	// output
-	stepF    StepOutF // function to process step output (of accepted steps) [may be nil]
-	contF    ContOutF // function to process continuous output [may be nil]
-	contDx   float64  // step size for continuous output
-	stepOut  bool     // perform output of (variable) steps
-	contOut  bool     // perform continuous output is active
-	contNstp int      // number of continuous steps
+	stepF     StepOutF  // function to process step output (of accepted steps) [may be nil]
+	denseF    DenseOutF // function to process dense output [may be nil]
+	denseDx   float64   // step size for dense output
+	stepOut   bool      // perform output of (variable) steps
+	denseOut  bool      // perform dense output is active
+	denseNstp int       // number of dense steps
 
 	// linear solver
 	Symmetric bool   // assume symmetric matrix
@@ -181,14 +181,14 @@ func (o *Config) SetStepOut(save bool, out StepOutF) {
 	o.stepF = out
 }
 
-// SetContOut activates continuous output
+// SetDenseOut activates dense output
 //  save -- save all values
-//  out  -- function to be during continuous output [may be nil]
-func (o *Config) SetContOut(save bool, dxOut, xf float64, out ContOutF) {
+//  out  -- function to be during dense output [may be nil]
+func (o *Config) SetDenseOut(save bool, dxOut, xf float64, out DenseOutF) {
 	if dxOut > 0 {
-		o.contOut = save
-		o.contF = out
-		o.contNstp = int(math.Ceil(xf / dxOut))
-		o.contDx = xf / float64(o.contNstp)
+		o.denseOut = save
+		o.denseF = out
+		o.denseNstp = int(math.Ceil(xf / dxOut))
+		o.denseDx = xf / float64(o.denseNstp)
 	}
 }

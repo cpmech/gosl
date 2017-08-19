@@ -197,8 +197,8 @@ func (o *Radau5) Reject() (dxnew float64) {
 	return
 }
 
-// ContOut produces continuous output (after Accept)
-func (o *Radau5) ContOut(yout la.Vector, h, x float64, y la.Vector, xout float64) {
+// DenseOut produces dense output (after Accept)
+func (o *Radau5) DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float64) {
 	s := (xout - x) / h
 	for i := 0; i < len(y); i++ {
 		yout[i] = y[i] + s*(o.ycol[0][i]+(s-o.Mu4)*(o.ycol[1][i]+(s-o.Mu3)*o.ycol[2][i]))

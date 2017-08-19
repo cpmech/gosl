@@ -23,17 +23,17 @@ type Output struct {
 	StepY    []la.Vector // Y values [IdxSave][ndim]
 	stepNmax int         // max number of output steps
 
-	// continuous output
-	ContIdx  int         // current index in Xcont and Ycont arrays
-	ContS    []int       // index of step
-	ContX    []float64   // X values during continuous output [IdxCont]
-	ContY    []la.Vector // Y values during continuous output [IdxCont][ndim]
-	contNmax int         // max number of continuous output
-	xout     float64     // current x of continuous output
-	yout     la.Vector   // current y of continuous output (used if ContF != nil only)
+	// dense output
+	DenseIdx  int         // current index in DenseS, DenseX, and DenseY arrays
+	DenseS    []int       // index of step
+	DenseX    []float64   // X values during dense output [DenseIdx]
+	DenseY    []la.Vector // Y values during dense output [DenseIdx][ndim]
+	denseNmax int         // max number of dense output
+	xout      float64     // current x of dense output
+	yout      la.Vector   // current y of dense output (used if denseF != nil only)
 
 	// from RK method
-	cout func(yout la.Vector, h, x float64, y la.Vector, xout float64) // function to calculate continuous values of y
+	cout func(yout la.Vector, h, x float64, y la.Vector, xout float64) // function to calculate dense values of y
 }
 
 // NewOutput returns a new structure
@@ -53,13 +53,13 @@ func NewOutput(ndim int, conf *Config) (o *Output) {
 		o.StepX = make([]float64, o.stepNmax)
 		o.StepY = make([]la.Vector, o.stepNmax)
 	}
-	if o.conf.contOut {
-		o.contNmax = o.conf.contNstp + 1
-		o.ContS = make([]int, o.contNmax)
-		o.ContX = make([]float64, o.contNmax)
-		o.ContY = make([]la.Vector, o.contNmax)
+	if o.conf.denseOut {
+		o.denseNmax = o.conf.denseNstp + 1
+		o.DenseS = make([]int, o.denseNmax)
+		o.DenseX = make([]float64, o.denseNmax)
+		o.DenseY = make([]la.Vector, o.denseNmax)
 	}
-	if o.conf.contF != nil {
+	if o.conf.denseF != nil {
 		o.yout = la.NewVector(ndim)
 	}
 	return
@@ -85,49 +85,49 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 		o.StepIdx++
 	}
 
-	// continuous output using function
+	// dense output using function
 	var xo float64
-	if o.conf.contF != nil {
+	if o.conf.denseF != nil {
 		if istep == 0 || last {
 			xo = x
 			o.yout.Apply(1, y)
-			stop, err = o.conf.contF(istep, h, x, y, xo, o.yout)
+			stop, err = o.conf.denseF(istep, h, x, y, xo, o.yout)
 			if stop || err != nil {
 				return
 			}
-			xo = o.conf.contDx
+			xo = o.conf.denseDx
 		} else {
 			xo = o.xout
 			for x >= xo {
 				o.cout(o.yout, h, x, y, xo)
-				stop, err = o.conf.contF(istep, h, x, y, xo, o.yout)
+				stop, err = o.conf.denseF(istep, h, x, y, xo, o.yout)
 				if stop || err != nil {
 					return
 				}
-				xo += o.conf.contDx
+				xo += o.conf.denseDx
 			}
 		}
 	}
 
-	// save continuous output
-	if o.ContIdx < o.contNmax {
+	// save dense output
+	if o.DenseIdx < o.denseNmax {
 		if istep == 0 || last {
 			xo = x
-			o.ContS[o.ContIdx] = istep
-			o.ContX[o.ContIdx] = xo
-			o.ContY[o.ContIdx] = la.NewVector(o.ndim)
-			o.ContY[o.ContIdx].Apply(1, y)
-			o.ContIdx++
-			xo = o.conf.contDx
+			o.DenseS[o.DenseIdx] = istep
+			o.DenseX[o.DenseIdx] = xo
+			o.DenseY[o.DenseIdx] = la.NewVector(o.ndim)
+			o.DenseY[o.DenseIdx].Apply(1, y)
+			o.DenseIdx++
+			xo = o.conf.denseDx
 		} else {
 			xo = o.xout
 			for x >= xo {
-				o.ContS[o.ContIdx] = istep
-				o.ContX[o.ContIdx] = xo
-				o.ContY[o.ContIdx] = la.NewVector(o.ndim)
-				o.cout(o.ContY[o.ContIdx], h, x, y, xo)
-				o.ContIdx++
-				xo += o.conf.contDx
+				o.DenseS[o.DenseIdx] = istep
+				o.DenseX[o.DenseIdx] = xo
+				o.DenseY[o.DenseIdx] = la.NewVector(o.ndim)
+				o.cout(o.DenseY[o.DenseIdx], h, x, y, xo)
+				o.DenseIdx++
+				xo += o.conf.denseDx
 			}
 		}
 	}
@@ -198,62 +198,62 @@ func (o *Output) GetStepYtableT() (Y [][]float64) {
 	return
 }
 
-// continuous output //////////////////////////////////////////////////////////////////////////////
+// dense output ///////////////////////////////////////////////////////////////////////////////////
 
-// GetContS returns all s (step-index) values
-// from the continuous output data
-func (o *Output) GetContS() (S []int) {
-	return o.ContS[:o.ContIdx]
+// GetDenseS returns all s (step-index) values
+// from the dense output data
+func (o *Output) GetDenseS() (S []int) {
+	return o.DenseS[:o.DenseIdx]
 }
 
-// GetContX returns all x values
-// from the continuous output data
-func (o *Output) GetContX() (X []float64) {
-	return o.ContX[:o.ContIdx]
+// GetDenseX returns all x values
+// from the dense output data
+func (o *Output) GetDenseX() (X []float64) {
+	return o.DenseX[:o.DenseIdx]
 }
 
-// GetContY extracts the y[i] values for all output times
-// from the continuous output data
+// GetDenseY extracts the y[i] values for all output times
+// from the dense output data
 //  i -- index of y component
 //  use to plot time series; e.g.:
-//     plt.Plot(o.GetContX(), o.GetContY(0), &plt.A{L:"y0"})
-func (o *Output) GetContY(i int) (Y []float64) {
-	if o.ContIdx > 0 {
-		Y = make([]float64, o.ContIdx)
-		for j := 0; j < o.ContIdx; j++ {
-			Y[j] = o.ContY[j][i]
+//     plt.Plot(o.GetDenseX(), o.GetDenseY(0), &plt.A{L:"y0"})
+func (o *Output) GetDenseY(i int) (Y []float64) {
+	if o.DenseIdx > 0 {
+		Y = make([]float64, o.DenseIdx)
+		for j := 0; j < o.DenseIdx; j++ {
+			Y[j] = o.DenseY[j][i]
 		}
 	}
 	return
 }
 
-// GetContYtable returns a table with all y values such that Y[idxOut][dim]
-// from the continuous output data
-func (o *Output) GetContYtable() (Y [][]float64) {
-	if len(o.ContY) < 1 {
+// GetDenseYtable returns a table with all y values such that Y[idxOut][dim]
+// from the dense output data
+func (o *Output) GetDenseYtable() (Y [][]float64) {
+	if len(o.DenseY) < 1 {
 		return
 	}
-	ndim := len(o.ContY[0])
-	Y = utl.Alloc(o.ContIdx, ndim)
-	for j := 0; j < o.ContIdx; j++ {
+	ndim := len(o.DenseY[0])
+	Y = utl.Alloc(o.DenseIdx, ndim)
+	for j := 0; j < o.DenseIdx; j++ {
 		for i := 0; i < ndim; i++ {
-			Y[j][i] = o.ContY[j][i]
+			Y[j][i] = o.DenseY[j][i]
 		}
 	}
 	return
 }
 
-// GetContYtableT returns a (transposed) table with all y values such that Y[dim][idxOut]
-// from the continuous output data
-func (o *Output) GetContYtableT() (Y [][]float64) {
-	if len(o.ContY) < 1 {
+// GetDenseYtableT returns a (transposed) table with all y values such that Y[dim][idxOut]
+// from the dense output data
+func (o *Output) GetDenseYtableT() (Y [][]float64) {
+	if len(o.DenseY) < 1 {
 		return
 	}
-	ndim := len(o.ContY[0])
-	Y = utl.Alloc(ndim, o.ContIdx)
-	for j := 0; j < o.ContIdx; j++ {
+	ndim := len(o.DenseY[0])
+	Y = utl.Alloc(ndim, o.DenseIdx)
+	for j := 0; j < o.DenseIdx; j++ {
 		for i := 0; i < ndim; i++ {
-			Y[i][j] = o.ContY[j][i]
+			Y[i][j] = o.DenseY[j][i]
 		}
 	}
 	return

@@ -89,9 +89,9 @@ func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Tr
 		return
 	}
 
-	// connect continuous output function
+	// connect dense output function
 	if o.out != nil {
-		o.out.cout = o.rkm.ContOut
+		o.out.cout = o.rkm.DenseOut
 	}
 	return
 }

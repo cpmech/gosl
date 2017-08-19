@@ -14,13 +14,13 @@ import "github.com/cpmech/gosl/la"
 //   jac       -- Jacobian function d{f}/d{y} := [J](h=dx, x, {y}) [may be nil]
 //   y         -- current {y} @ x=0
 //   xf        -- final x
-//   dx        -- stepsize. [may be used for continuous output]
+//   dx        -- stepsize. [may be used for dense output]
 //   atol      -- absolute tolerance; use 0 for default [default = 1e-4] (for fixedStp=false)
 //   rtol      -- relative tolerance; use 0 for default [default = 1e-4] (for fixedStp=false)
 //   numJac    -- use numerical Jacobian if if jac is non nil
 //   fixedStep -- fixed steps
 //   saveStep  -- save steps
-//   saveCont  -- save continuously [using dx]
+//   saveDense -- save many steps (dense output) [using dx]
 //
 //  OUTPUT:
 //   yf   -- final {y}
@@ -28,7 +28,7 @@ import "github.com/cpmech/gosl/la"
 //   out  -- output with all steps results with save==true
 //
 func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol float64,
-	numJac, fixedStep, saveStep, saveCont bool) (yf la.Vector, stat *Stat, out *Output, err error) {
+	numJac, fixedStep, saveStep, saveDense bool) (yf la.Vector, stat *Stat, out *Output, err error) {
 
 	// current y vector
 	ndim := len(y)
@@ -49,8 +49,8 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 	if saveStep {
 		conf.SetStepOut(true, nil)
 	}
-	if saveCont {
-		conf.SetContOut(true, dx, xf, nil)
+	if saveDense {
+		conf.SetDenseOut(true, dx, xf, nil)
 	}
 
 	// output handler
