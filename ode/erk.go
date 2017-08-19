@@ -62,6 +62,13 @@ type ExplicitRK struct {
 	n    float64   // exponent n = 1/(q+1) (or 1/(q+1)-0.75⋅β) of rerrⁿ
 	dmin float64   // dmin = 1/Mmin
 	dmax float64   // dmax = 1/Mmax
+	ndf  float64   // float64(ndim)
+
+	// 5(3) error estimator
+	err53 bool    // use 5-3 error estimator
+	bhh1  float64 // error estimator: coefficient of k0
+	bhh2  float64 // error estimator: coefficient of k8
+	bhh3  float64 // error estimator: coefficient of k11
 }
 
 // Free releases memory
@@ -86,6 +93,13 @@ func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn 
 	o.n = 1.0/float64(o.Q+1) - o.beta*0.75
 	o.dmin = 1.0 / o.conf.Mmin
 	o.dmax = 1.0 / o.conf.Mmax
+	o.ndf = float64(ndim)
+	if conf.method == "dopri8" {
+		o.err53 = true
+		o.bhh1 = 0.244094488188976377952755905512e+00
+		o.bhh2 = 0.733846688281611857341361741547e+00
+		o.bhh3 = 0.220588235294117647058823529412e-01
+	}
 	return nil
 }
 
@@ -136,7 +150,7 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 	v := o.work.v
 
 	// compute k0 (otherwise, use k0 saved in Accept)
-	if o.work.first || !o.UseKsPrev { // do it also if cannot reuse previous ks
+	if (o.work.first || !o.UseKsPrev) && !o.work.reject { // do it also if cannot reuse previous ks
 		u0 := xa + h*o.C[0]
 		o.stat.Nfeval++
 		err = o.fcn(k[0], h, u0, ya) // k0 := f(ui,vi)
@@ -168,6 +182,30 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 				o.w[m] += o.B[i] * k[i][m] * h
 			}
 		}
+		return
+	}
+
+	// error estimation with 5 and 3 orders (e.g. DoPri853)
+	if o.err53 {
+		var sk, errA, errB, err3, err5 float64
+		for m := 0; m < o.ndim; m++ {
+			o.w[m] = ya[m]
+			errA, errB = 0.0, 0.0
+			for i := 0; i < o.Nstg; i++ {
+				o.w[m] += o.B[i] * k[i][m] * h
+				errA += o.B[i] * k[i][m]
+				errB += o.E[i] * k[i][m]
+			}
+			sk = o.conf.atol + o.conf.rtol*utl.Max(math.Abs(ya[m]), math.Abs(o.w[m]))
+			errA -= (o.bhh1*k[0][m] + o.bhh2*k[8][m] + o.bhh3*k[11][m])
+			err3 += (errA / sk) * (errA / sk)
+			err5 += (errB / sk) * (errB / sk)
+		}
+		den := err5 + 0.01*err3 // similar to Eq. (10.17) of [1, page 255]
+		if den <= 0.0 {
+			den = 1.0
+		}
+		o.work.rerr = math.Abs(h) * err5 * math.Sqrt(1.0/(o.ndf*den))
 		return
 	}
 

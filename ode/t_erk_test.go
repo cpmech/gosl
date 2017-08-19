@@ -54,7 +54,6 @@ func TestErk01(tst *testing.T) {
 		chk.Int(tst, "len(B)=nstg", len(o.B), o.Nstg)
 		chk.Int(tst, "len(C)=nstg", len(o.C), o.Nstg)
 		if o.Embedded {
-			chk.Int(tst, "len(Be)=nstg", len(o.Be), o.Nstg)
 			chk.Int(tst, "len(E)=nstg", len(o.E), o.Nstg)
 		}
 		for i := 0; i < o.Nstg; i++ {
@@ -70,7 +69,7 @@ func TestErk01(tst *testing.T) {
 			}
 			chk.AnaNum(tst, io.Sf("Σa%2dj", i), tols1[im], sumrow, o.C[i], chk.Verbose)
 		}
-		if o.Embedded {
+		if o.Embedded && len(o.Be) == len(o.E) {
 			io.Pf("\nerror estimator\n")
 			for i := 0; i < o.Nstg; i++ {
 				chk.AnaNum(tst, io.Sf("E%d=B%d-Be%d", i, i, i), 1e-15, o.E[i], o.B[i]-o.Be[i], chk.Verbose)
