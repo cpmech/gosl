@@ -48,7 +48,7 @@ type ExplicitRK struct {
 	Be       []float64   // be coefficients [may be nil, e.g. if FSAL = false]
 	C        []float64   // c coefficients
 	E        []float64   // error coefficients. difference between b and be: e = b - be (if be is not nil)
-	D        []float64   // dense output coefficients. [may be nil]
+	D        [][]float64 // dense output coefficients. [may be nil]
 	Nstg     int         // number of stages = len(A) = len(B) = len(C)
 	P        int         // order of y1 (corresponding to b)
 	Q        int         // order of error estimator (embedded only); e.g. DoPri5(4) ⇒ q = 4 (=min(order(y1),order(y1bar))
@@ -142,19 +142,16 @@ func (o *ExplicitRK) Accept(y la.Vector) (dxnew float64) {
 	if o.conf.denseOut {
 		h := o.work.h
 		k := o.work.f
+		var ydiff, bspl float64
 		if o.dopri5 {
-			var ydiff, bspl float64
 			for m := 0; m < o.ndim; m++ {
 				ydiff = o.w[m] - y[m]
 				bspl = h*k[0][m] - ydiff
 				o.do[0][m] = y[m]
 				o.do[1][m] = ydiff
 				o.do[2][m] = bspl
-				o.do[3][m] = -h*k[6][m] + ydiff - bspl
-				o.do[4][m] = 0.0
-				for i := 0; i < o.Nstg; i++ {
-					o.do[4][m] += o.D[i] * o.work.f[i][m]
-				}
+				o.do[3][m] = ydiff - h*k[6][m] - bspl
+				o.do[4][m] = o.D[0][0]*k[0][m] + o.D[0][1]*k[2][m] + o.D[0][2]*k[3][m] + o.D[0][3]*k[4][m] + o.D[0][4]*k[5][m] + o.D[0][5]*k[6][m]
 				o.do[4][m] *= o.work.h
 			}
 		}
@@ -427,15 +424,14 @@ func newERK(kind string) rkmethod {
 		o.Be = []float64{5179.0 / 57600.0, 0.0, 7571.0 / 16695.0, 393.0 / 640.0, -92097.0 / 339200.0, 187.0 / 2100.0, 1.0 / 40.0}
 		o.C = []float64{0.0, 1.0 / 5.0, 3.0 / 10.0, 4.0 / 5.0, 8.0 / 9.0, 1.0, 1.0}
 		o.E = []float64{71.0 / 57600.0, 0.0, -71.0 / 16695.0, 71.0 / 1920.0, -17253.0 / 339200.0, 22.0 / 525.0, -1.0 / 40.0}
-		o.D = []float64{ // dense output of shampine (1986) [1]
+		o.D = [][]float64{{ // dense output of shampine (1986) [1]
 			-12715105075.0 / 11282082432.0,  // D1
-			0.000000000000000000000000,      // D2
 			87487479700.0 / 32700410799.0,   // D3
 			-10690763975.0 / 1880347072.0,   // D4
 			701980252875.0 / 199316789632.0, // D5
 			-1453857185.0 / 822651844.0,     // D6
 			69997945.0 / 29380423.0,         // D7
-		}
+		}}
 		o.P = 5
 		o.Q = 4
 
