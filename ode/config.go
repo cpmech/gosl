@@ -189,6 +189,6 @@ func (o *Config) SetDenseOut(save bool, dxOut, xf float64, out DenseOutF) {
 		o.denseOut = save
 		o.denseF = out
 		o.denseNstp = int(math.Ceil(xf / dxOut))
-		o.denseDx = xf / float64(o.denseNstp)
+		o.denseDx = dxOut
 	}
 }
