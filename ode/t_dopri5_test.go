@@ -75,12 +75,36 @@ func TestDoPri502(tst *testing.T) {
 	conf.Mmax = 10.0
 	conf.PredCtrl = false
 
-	// output handler
-	io.Pf("%6s%10s%10s%14s%14s%14s%14s\n", "istep", "h", "x", "y0", "y1", "y2", "y3")
+	// step output
+	io.Pf("\n%5s%15s%12s%15s%15s%15s%15s\n", "s", "h", "x", "y0", "y1", "y2", "y3")
 	conf.SetStepOut(true, func(istep int, h, x float64, y la.Vector) (stop bool, err error) {
-		io.Pf("%6d%10.6f%10.6f%14.6E%14.6E%14.6E%14.6E\n", istep, h, x, y[0], y[1], y[2], y[3])
+		io.Pf("%5d%15.7E%12.7f%15.7E%15.7E%15.7E%15.7E\n", istep, h, x, y[0], y[1], y[2], y[3])
 		return false, nil
 	})
+
+	// dense output function
+	ss := make([]int, 10)
+	xx := make([]float64, 10)
+	yy0 := make([]float64, 10)
+	yy1 := make([]float64, 10)
+	yy2 := make([]float64, 10)
+	yy3 := make([]float64, 10)
+	iout := 0
+	conf.SetDenseOut(true, 2.0, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+		xold := x - h
+		dx := xout - xold
+		io.Pforan("%5d%15.7E%12.7f%15.7E%15.7E%15.7E%15.7E\n", istep, dx, xout, yout[0], yout[1], yout[2], yout[3])
+		ss[iout] = istep
+		xx[iout] = xout
+		yy0[iout] = yout[0]
+		yy1[iout] = yout[1]
+		yy2[iout] = yout[2]
+		yy3[iout] = yout[3]
+		iout++
+		return
+	})
+
+	// output handler
 	out := NewOutput(p.Ndim, conf)
 
 	// solver
@@ -101,11 +125,19 @@ func TestDoPri502(tst *testing.T) {
 	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 217)
 	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 21)
 
-	// check results
+	// check results: step
 	_, d, err := io.ReadTable("data/dr_dopri5.txt")
 	status(tst, err)
-	chk.Array(tst, "y0", 1e-6, out.GetStepY(0), d["y0"])
-	chk.Array(tst, "y1", 1e-6, out.GetStepY(1), d["y1"])
-	chk.Array(tst, "y2", 1e-6, out.GetStepY(2), d["y2"])
-	chk.Array(tst, "y3", 1e-6, out.GetStepY(3), d["y3"])
+	chk.Array(tst, "step: y0", 1e-6, out.GetStepY(0), d["y0"])
+	chk.Array(tst, "step: y1", 1e-6, out.GetStepY(1), d["y1"])
+	chk.Array(tst, "step: y2", 1e-6, out.GetStepY(2), d["y2"])
+	chk.Array(tst, "step: y3", 1e-6, out.GetStepY(3), d["y3"])
+
+	// check results: dense
+	_, dd, err := io.ReadTable("data/dr_dopri5_dense.txt")
+	status(tst, err)
+	chk.Array(tst, "dense: y0", 1e-7, yy0, dd["y0"])
+	chk.Array(tst, "dense: y1", 1e-7, yy1, dd["y1"])
+	chk.Array(tst, "dense: y2", 1e-7, yy2, dd["y2"])
+	chk.Array(tst, "dense: y3", 1e-7, yy3, dd["y3"])
 }
