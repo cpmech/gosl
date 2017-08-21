@@ -17,6 +17,7 @@ type rkwork struct {
 	f    []la.Vector // f[stg][dim] = f(u[stg], v[stg][dim])
 
 	// step data
+	rs    float64   // stiffness ratio ρ = ‖ k[s] - k[s-1] ‖ / ‖ v[s] - v[s-1] ‖
 	h     float64   // current stepsize
 	hPrev float64   // previous stepsize
 	first bool      // first step

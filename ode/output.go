@@ -18,6 +18,7 @@ type Output struct {
 
 	// discrete output at accepted steps
 	StepIdx  int         // current index in Xvalues and Yvalues == last output
+	StepRS   []float64   // ρ{stiffness} ratio [IdxSave]
 	StepH    []float64   // h values [IdxSave]
 	StepX    []float64   // X values [IdxSave]
 	StepY    []la.Vector // Y values [IdxSave][ndim]
@@ -49,6 +50,7 @@ func NewOutput(ndim int, conf *Config) (o *Output) {
 		} else {
 			o.stepNmax = o.conf.NmaxSS + 1
 		}
+		o.StepRS = make([]float64, o.stepNmax)
 		o.StepH = make([]float64, o.stepNmax)
 		o.StepX = make([]float64, o.stepNmax)
 		o.StepY = make([]la.Vector, o.stepNmax)
@@ -66,7 +68,7 @@ func NewOutput(ndim int, conf *Config) (o *Output) {
 }
 
 // Execute executes output; e.g. call Fcn and saves x and y values
-func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop bool, err error) {
+func (o *Output) Execute(istep int, last bool, ρs, h, x float64, y []float64) (stop bool, err error) {
 
 	// step output using function
 	if o.conf.stepF != nil {
@@ -78,6 +80,7 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 
 	// save step output
 	if o.StepIdx < o.stepNmax {
+		o.StepRS[o.StepIdx] = ρs
 		o.StepH[o.StepIdx] = h
 		o.StepX[o.StepIdx] = x
 		o.StepY[o.StepIdx] = la.NewVector(o.ndim)
@@ -138,6 +141,12 @@ func (o *Output) Execute(istep int, last bool, h, x float64, y []float64) (stop 
 }
 
 // step output ////////////////////////////////////////////////////////////////////////////////////
+
+// GetStepRs returns all ρs (stiffness ratio) values
+// from the (accepted) steps output
+func (o *Output) GetStepRs() (X []float64) {
+	return o.StepRS[:o.StepIdx]
+}
 
 // GetStepH returns all h values
 // from the (accepted) steps output

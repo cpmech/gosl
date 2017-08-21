@@ -225,6 +225,7 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 	}
 
 	// error estimation with 5 and 3 orders (e.g. DoPri853)
+	var dk, dv, snum, sden float64 // for stiffness estimation
 	if o.err53 {
 		var sk, errA, errB, err3, err5 float64
 		for m := 0; m < o.ndim; m++ {
@@ -239,16 +240,24 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 			errA -= (o.bhh1*k[0][m] + o.bhh2*k[8][m] + o.bhh3*k[11][m])
 			err3 += (errA / sk) * (errA / sk)
 			err5 += (errB / sk) * (errB / sk)
+			// stiffness estimation
+			dk = k[o.Nstg-1][m] - k[o.Nstg-2][m]
+			dv = v[o.Nstg-1][m] - v[o.Nstg-2][m]
+			snum += dk * dk
+			sden += dv * dv
 		}
 		den := err5 + 0.01*err3 // similar to Eq. (10.17) of [1, page 255]
 		if den <= 0.0 {
 			den = 1.0
 		}
 		o.work.rerr = math.Abs(h) * err5 * math.Sqrt(1.0/(o.ndf*den))
+		if sden > 0 {
+			o.work.rs = h * math.Sqrt(snum/sden)
+		}
 		return
 	}
 
-	// update and error estimation
+	// update, error and stiffness estimation
 	var kh, sum, lerrm, sk, ratio float64 // lerr[m] component of local error estimate
 	for m := 0; m < o.ndim; m++ {
 		o.w[m] = ya[m]
@@ -261,8 +270,16 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 		sk = o.conf.atol + o.conf.rtol*utl.Max(math.Abs(ya[m]), math.Abs(o.w[m]))
 		ratio = lerrm / sk
 		sum += ratio * ratio
+		// stiffness estimation
+		dk = k[o.Nstg-1][m] - k[o.Nstg-2][m]
+		dv = v[o.Nstg-1][m] - v[o.Nstg-2][m]
+		snum += dk * dk
+		sden += dv * dv
 	}
 	o.work.rerr = utl.Max(math.Sqrt(sum/o.ndf), 1.0e-10)
+	if sden > 0 {
+		o.work.rs = h * math.Sqrt(snum/sden)
+	}
 	return
 }
 

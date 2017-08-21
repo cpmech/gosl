@@ -96,7 +96,8 @@ func TestDoPri802(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		XX := out.GetStepX()
-		plt.Reset(true, nil)
+		plt.Reset(true, &plt.A{Prop: 1.5})
+		plt.Subplot(2, 1, 1)
 		plt.Plot(XX, out.GetStepY(0), &plt.A{C: "r", M: ".", Ms: 3, NoClip: true})
 		plt.Plot(xx, yy0, &plt.A{C: "r", M: "o", NoClip: true})
 		plt.Gll("$x$", "$y_0$", nil)
@@ -106,6 +107,10 @@ func TestDoPri802(tst *testing.T) {
 		plt.AxisXrange(-0.01, 0.2)
 		plt.Gll("$x$", "$y_1$", nil)
 		plt.HideTRborders()
+		plt.Subplot(2, 1, 2)
+		plt.Plot(XX, out.GetStepRs(), &plt.A{C: plt.C(3, 0), NoClip: true})
+		plt.AxisXrange(-0.01, 0.2)
+		plt.Gll("$x$", "$\\rho_s$", nil)
 		plt.Save("/tmp/gosl/ode", "dopri802")
 	}
 }

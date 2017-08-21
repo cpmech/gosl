@@ -128,7 +128,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	o.Stat.Reset()
 	o.Stat.Hopt = o.work.h
 	if o.out != nil {
-		stop, e := o.out.Execute(0, false, o.work.h, x, y)
+		stop, e := o.out.Execute(0, false, o.work.rs, o.work.h, x, y)
 		if stop || e != nil {
 			err = e
 			return
@@ -174,7 +174,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				return
 			}
 			if o.out != nil {
-				stop, e := o.out.Execute(istep, false, o.work.h, x, y)
+				stop, e := o.out.Execute(istep, false, o.work.rs, o.work.h, x, y)
 				if stop || e != nil {
 					err = e
 					return
@@ -263,7 +263,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 				// output
 				if o.out != nil {
-					stop, e := o.out.Execute(o.Stat.Naccepted, last, o.work.h, x, y)
+					stop, e := o.out.Execute(o.Stat.Naccepted, last, o.work.rs, o.work.h, x, y)
 					if stop || e != nil {
 						err = e
 						return
