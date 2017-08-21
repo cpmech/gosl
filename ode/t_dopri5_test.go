@@ -141,3 +141,99 @@ func TestDoPri502(tst *testing.T) {
 	chk.Array(tst, "dense: y2", 1e-7, yy2, dd["y2"])
 	chk.Array(tst, "dense: y3", 1e-7, yy3, dd["y3"])
 }
+
+func TestDoPri503(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("DoPri503. Dormand-Prince5(4). Van de Pol")
+
+	// problem
+	p := ProbVanDerPol(1e-3, false)
+	p.Y[0] = 2.0
+	p.Y[1] = 0.0
+	p.Xf = 0.2
+
+	// configuration
+	conf, err := NewConfig("dopri5", "", nil)
+	status(tst, err)
+	conf.SetTol(1e-7, 1e-7)
+	conf.Mmin = 0.2
+	conf.Mmax = 10.0
+	conf.PredCtrl = false
+	conf.NmaxSS = 2000
+	conf.MfirstRej = 0
+
+	// step output
+	io.Pf("\n%6s%15s%15s%15s%15s\n", "s", "h", "x", "y0", "y1")
+	conf.SetStepOut(true, func(istep int, h, x float64, y la.Vector) (stop bool, err error) {
+		io.Pf("%6d%15.7E%12.7f%15.7E%15.7E\n", istep, h, x, y[0], y[1])
+		return false, nil
+	})
+
+	// dense output function
+	ss := make([]int, 11)
+	xx := make([]float64, 11)
+	yy0 := make([]float64, 11)
+	yy1 := make([]float64, 11)
+	iout := 0
+	conf.SetDenseOut(true, 0.02, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+		xold := x - h
+		dx := xout - xold
+		_ = dx
+		//io.Pforan("%6d%15.7E%12.7f%15.7E%15.7E\n", istep, dx, xout, yout[0], yout[1])
+		ss[iout] = istep
+		xx[iout] = xout
+		yy0[iout] = yout[0]
+		yy1[iout] = yout[1]
+		iout++
+		return
+	})
+
+	// output handler
+	out := NewOutput(p.Ndim, conf)
+
+	// solver
+	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
+	status(tst, err)
+	defer sol.Free()
+
+	// solve ODE
+	err = sol.Solve(p.Y, 0.0, p.Xf)
+	status(tst, err)
+
+	// print stat
+	sol.Stat.Print(false)
+
+	// check Stat
+	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 1274)
+	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 212)
+	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 211)
+	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 0)
+
+	// check results: dense
+	_, dd, err := io.ReadTable("data/dr2_dopri5_dense.txt")
+	status(tst, err)
+	chk.Array(tst, "dense: y0", 1e-7, yy0, dd["y0"])
+	chk.Array(tst, "dense: y1", 1e-7, yy1, dd["y1"])
+
+	// plot
+	if chk.Verbose {
+		XX := out.GetStepX()
+		plt.Reset(true, &plt.A{Prop: 1.5})
+		plt.Subplot(2, 1, 1)
+		plt.Plot(XX, out.GetStepY(0), &plt.A{C: "r", M: ".", Ms: 3, NoClip: true})
+		plt.Plot(xx, yy0, &plt.A{C: "r", M: "o", NoClip: true})
+		plt.Gll("$x$", "$y_0$", nil)
+		plt.DoubleYscale("")
+		plt.Plot(XX, out.GetStepY(1), &plt.A{C: "b", M: "+", Ms: 3, NoClip: true})
+		plt.Plot(xx, yy1, &plt.A{C: "b", M: "x", Ls: "none", NoClip: true})
+		plt.AxisXrange(-0.01, 0.2)
+		plt.Gll("$x$", "$y_1$", nil)
+		plt.HideTRborders()
+		plt.Subplot(2, 1, 2)
+		plt.Plot(XX, out.GetStepRs(), &plt.A{C: plt.C(3, 0), M: "+", Ms: 3, NoClip: true})
+		plt.AxisXrange(-0.01, 0.2)
+		plt.Gll("$x$", "$\\rho_s$", nil)
+		plt.Save("/tmp/gosl/ode", "dopri503")
+	}
+}
