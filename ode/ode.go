@@ -334,8 +334,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				dxnew = o.rkm.Reject()
 
 				// new step size
-				if o.work.first {
-					o.work.h = 0.1 * o.work.h
+				if o.work.first && o.conf.MfirstRej > 0 {
+					o.work.h = o.conf.MfirstRej * o.work.h
 				} else {
 					o.work.h = dxnew
 				}

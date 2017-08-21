@@ -23,6 +23,7 @@ type Config struct {
 	Mmin       float64 // min step multiplier
 	Mmax       float64 // max step multiplier
 	Mfac       float64 // step multiplier factor
+	MfirstRej  float64 // coefficient to multiply stepsize if first step is rejected [0 ⇒ use dxnew]
 	PredCtrl   bool    // use Gustafsson's predictive controller
 	Eps        float64 // smallest number satisfying 1.0 + ϵ > 1.0
 	ThetaMax   float64 // max theta to decide whether the Jacobian should be recomputed or not
@@ -92,6 +93,7 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 	o.Mmin = 0.125
 	o.Mmax = 5.0
 	o.Mfac = 0.9
+	o.MfirstRej = 0.1
 	o.PredCtrl = true
 	o.Eps = 1.0e-16
 	o.ThetaMax = 1.0e-3
