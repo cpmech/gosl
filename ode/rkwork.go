@@ -38,6 +38,10 @@ type rkwork struct {
 	// error control
 	rerr     float64 // relative error
 	rerrPrev float64 // previous relative error
+
+	// stiffness detection
+	stiffYes int // counter of "stiff" steps
+	stiffNot int // counter of not "stiff" steps
 }
 
 // newRKwork returns a new structure

@@ -37,6 +37,12 @@ type Config struct {
 	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
 	StabBeta   float64 // Lund stabilisation coefficient β
 
+	// stiffness detection
+	StiffNstp  int     // number of steps to check stiff situation. 0 ⇒ no check. [default = 1]
+	StiffRsMax float64 // maximum value of ρs [default = 0.5]
+	StiffNyes  int     // number of "yes" stiff steps allowed [default = 15]
+	StiffNnot  int     // number of "not" stiff steps to disregard stiffness [default = 6]
+
 	// output
 	stepF     StepOutF  // function to process step output (of accepted steps) [may be nil]
 	denseF    DenseOutF // function to process dense output [may be nil]
@@ -104,6 +110,12 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 	o.CteTg = false
 	o.UseRmsNorm = true
 	o.Verbose = false
+
+	// stiffness detection
+	o.StiffNstp = 0
+	o.StiffRsMax = 0.5
+	o.StiffNyes = 15
+	o.StiffNnot = 6
 
 	// internal data
 	o.method = method

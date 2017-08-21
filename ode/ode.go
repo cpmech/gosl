@@ -203,6 +203,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	o.work.diverg = false
 	o.work.reject = false
 	o.work.rerrPrev = 1e-4
+	o.work.stiffYes = 0
+	o.work.stiffNot = 0
 
 	// first function evaluation
 	o.Stat.Nfeval++
@@ -253,6 +255,24 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.Stat.Naccepted++
 				o.work.first = false
 				o.work.jacIsOK = false
+
+				// stiffness detection
+				if o.conf.StiffNstp > 0 {
+					if o.Stat.Naccepted%o.conf.StiffNstp == 0 || o.work.stiffYes > 0 {
+						if o.work.rs > o.conf.StiffRsMax {
+							o.work.stiffNot = 0
+							o.work.stiffYes++
+							if o.work.stiffYes == o.conf.StiffNyes {
+								io.Pf("stiff step detected @ x = %g\n", x)
+							}
+						} else {
+							o.work.stiffNot++
+							if o.work.stiffNot == o.conf.StiffNnot {
+								o.work.stiffYes = 0
+							}
+						}
+					}
+				}
 
 				// update x and y
 				dxnew, err = o.rkm.Accept(y, x)
