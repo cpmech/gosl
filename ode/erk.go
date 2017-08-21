@@ -43,15 +43,17 @@ type ExplicitRK struct {
 	// constants
 	FSAL     bool        // can use previous ks to compute k0; i.e. k0 := ks{previous]. first same as last [1, page 167]
 	Embedded bool        // has embedded error estimator
-	A        [][]float64 // a coefficients
-	B        []float64   // b coefficients
-	Be       []float64   // be coefficients [may be nil, e.g. if FSAL = false]
-	C        []float64   // c coefficients
-	E        []float64   // error coefficients. difference between b and be: e = b - be (if be is not nil)
-	D        [][]float64 // dense output coefficients. [may be nil]
+	A        [][]float64 // A coefficients
+	B        []float64   // B coefficients
+	Be       []float64   // B coefficients [may be nil, e.g. if FSAL = false]
+	C        []float64   // C coefficients
+	E        []float64   // error coefficients. difference between B and Be: e = b - be (if be is not nil)
 	Nstg     int         // number of stages = len(A) = len(B) = len(C)
 	P        int         // order of y1 (corresponding to b)
 	Q        int         // order of error estimator (embedded only); e.g. DoPri5(4) ⇒ q = 4 (=min(order(y1),order(y1bar))
+	Ad       [][]float64 // A coefficients for dense output
+	Cd       []float64   // C coefficients for dense output
+	D        [][]float64 // dense output coefficients. [may be nil]
 
 	// data
 	ndim int     // problem dimension
@@ -73,10 +75,14 @@ type ExplicitRK struct {
 	bhh2  float64 // error estimator: coefficient of k8
 	bhh3  float64 // error estimator: coefficient of k11
 
-	// for dense output
-	dopri5 bool        // method is DoPri5
-	dopri8 bool        // method is DoPri8
-	do     [][]float64 // dense output coefficients [ninterp][ndim]
+	// dense output
+	do []la.Vector // dense output coefficients [nstgDense][ndim] (partially allocated by newERK method)
+	kd []la.Vector // k values for dense output [nextraKs] (partially allocated by newERK method)
+	yd la.Vector   // y values for dense output (allocated here if len(kd)>0)
+
+	// functions to compute variables for dense output
+	dfunA func(y0 la.Vector, x0 float64) error                          // in Accept function
+	dfunB func(yout la.Vector, h, x float64, y la.Vector, xout float64) // DenseOut function
 }
 
 // Free releases memory
@@ -108,57 +114,39 @@ func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn 
 	o.dmax = 1.0 / o.conf.Mmax
 	o.ndf = float64(ndim)
 
-	// method specific
-	switch o.conf.method {
-
-	case "dopri5":
-		o.dopri5 = true
-		if o.conf.denseOut {
-			o.do = utl.Alloc(5, ndim)
-		}
-
-	case "dopri8":
-		o.dopri8 = true
-		o.err53 = true
-		o.bhh1 = 0.244094488188976377952755905512e+00
-		o.bhh2 = 0.733846688281611857341361741547e+00
-		o.bhh3 = 0.220588235294117647058823529412e-01
-		if o.conf.denseOut {
-			o.do = utl.Alloc(8, ndim)
-		}
-
-	default:
-		if o.conf.denseOut {
+	// dense output
+	if o.conf.denseOut {
+		if o.do == nil {
 			chk.Panic("dense output is not available for %q\n", o.conf.method)
+		}
+		for i := 0; i < len(o.do); i++ {
+			o.do[i] = la.NewVector(ndim)
+		}
+		for i := 0; i < len(o.kd); i++ {
+			o.kd[i] = la.NewVector(ndim)
+		}
+		if len(o.kd) > 0 {
+			o.yd = la.NewVector(ndim)
 		}
 	}
 	return nil
 }
 
 // Accept accepts update and computes next stepsize
-func (o *ExplicitRK) Accept(y la.Vector) (dxnew float64) {
+func (o *ExplicitRK) Accept(y0 la.Vector, x0 float64) (dxnew float64, err error) {
 
 	// store data for future dense output
 	if o.conf.denseOut {
-		h := o.work.h
-		k := o.work.f
-		var ydiff, bspl float64
-		if o.dopri5 {
-			for m := 0; m < o.ndim; m++ {
-				ydiff = o.w[m] - y[m]
-				bspl = h*k[0][m] - ydiff
-				o.do[0][m] = y[m]
-				o.do[1][m] = ydiff
-				o.do[2][m] = bspl
-				o.do[3][m] = ydiff - h*k[6][m] - bspl
-				o.do[4][m] = o.D[0][0]*k[0][m] + o.D[0][2]*k[2][m] + o.D[0][3]*k[3][m] + o.D[0][4]*k[4][m] + o.D[0][5]*k[5][m] + o.D[0][6]*k[6][m]
-				o.do[4][m] *= o.work.h
+		if o.dfunA != nil {
+			err := o.dfunA(y0, x0)
+			if err != nil {
+				chk.Panic("%v", err)
 			}
 		}
 	}
 
 	// update y
-	y.Apply(1, o.w)
+	y0.Apply(1, o.w)
 
 	// update k0
 	if o.FSAL {
@@ -189,14 +177,7 @@ func (o *ExplicitRK) Reject() (dxnew float64) {
 
 // DenseOut produces dense output (after Accept)
 func (o *ExplicitRK) DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float64) {
-	xold := x - h
-	θ := (xout - xold) / h
-	uθ := 1.0 - θ
-	if o.dopri5 {
-		for i := 0; i < o.ndim; i++ {
-			yout[i] = o.do[0][i] + θ*(o.do[1][i]+uθ*(o.do[2][i]+θ*(o.do[3][i]+uθ*o.do[4][i])))
-		}
-	}
+	o.dfunB(yout, h, x, y, xout)
 }
 
 // Step steps update
@@ -435,6 +416,31 @@ func newERK(kind string) rkmethod {
 		}}
 		o.P = 5
 		o.Q = 4
+		o.do = make([]la.Vector, 5)
+		o.dfunA = func(y0 la.Vector, x0 float64) (err error) {
+			h := o.work.h
+			k := o.work.f
+			var ydiff, bspl float64
+			for m := 0; m < o.ndim; m++ {
+				ydiff = o.w[m] - y0[m]
+				bspl = h*k[0][m] - ydiff
+				o.do[0][m] = y0[m]
+				o.do[1][m] = ydiff
+				o.do[2][m] = bspl
+				o.do[3][m] = ydiff - h*k[6][m] - bspl
+				o.do[4][m] = o.D[0][0]*k[0][m] + o.D[0][2]*k[2][m] + o.D[0][3]*k[3][m] + o.D[0][4]*k[4][m] + o.D[0][5]*k[5][m] + o.D[0][6]*k[6][m]
+				o.do[4][m] *= o.work.h
+			}
+			return
+		}
+		o.dfunB = func(yout la.Vector, h, x float64, y la.Vector, xout float64) {
+			xold := x - h
+			θ := (xout - xold) / h
+			uθ := 1.0 - θ
+			for i := 0; i < o.ndim; i++ {
+				yout[i] = o.do[0][i] + θ*(o.do[1][i]+uθ*(o.do[2][i]+θ*(o.do[3][i]+uθ*o.do[4][i])))
+			}
+		}
 
 	case "verner6": // Verner 6(5) ⇒ q = 5
 		o.Embedded = true

@@ -46,7 +46,7 @@ func (o *FwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Fun
 }
 
 // Accept accepts update
-func (o *FwEuler) Accept(y la.Vector) (dxnew float64) {
+func (o *FwEuler) Accept(y0 la.Vector, x0 float64) (dxnew float64, err error) {
 	return
 }
 

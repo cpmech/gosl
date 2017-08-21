@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 )
 
 func TestDoPri802(tst *testing.T) {
@@ -31,8 +32,32 @@ func TestDoPri802(tst *testing.T) {
 	conf.PredCtrl = false
 	conf.NmaxSS = 2000
 
+	// step output
+	io.Pf("\n%6s%15s%15s%15s%15s\n", "s", "h", "x", "y0", "y1")
+	conf.SetStepOut(true, func(istep int, h, x float64, y la.Vector) (stop bool, err error) {
+		io.Pf("%6d%15.7E%12.7f%15.7E%15.7E\n", istep, h, x, y[0], y[1])
+		return false, nil
+	})
+
+	// dense output function
+	ss := make([]int, 11)
+	xx := make([]float64, 11)
+	yy0 := make([]float64, 11)
+	yy1 := make([]float64, 11)
+	iout := 0
+	conf.SetDenseOut(true, 0.02, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+		xold := x - h
+		dx := xout - xold
+		io.Pforan("%6d%15.7E%12.7f%15.7E%15.7E\n", istep, dx, xout, yout[0], yout[1])
+		ss[iout] = istep
+		xx[iout] = xout
+		yy0[iout] = yout[0]
+		yy1[iout] = yout[1]
+		iout++
+		return
+	})
+
 	// output handler
-	conf.SetStepOut(true, nil)
 	out := NewOutput(p.Ndim, conf)
 
 	// solver
@@ -48,20 +73,22 @@ func TestDoPri802(tst *testing.T) {
 	sol.Stat.Print(false)
 
 	// check Stat
-	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 1924)
+	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2314)
 	chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 163)
 	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 130)
 	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 33)
 
-	// check results
-	H := out.GetStepH()
-	X := out.GetStepX()
-	Y0 := out.GetStepY(0)
-	Y1 := out.GetStepY(1)
+	// check results: setps
 	_, d, err := io.ReadTable("data/dr_dop853.txt")
 	status(tst, err)
-	chk.Array(tst, "h", 1e-6, H, d["h"])
-	chk.Array(tst, "x", 1e-6, X, d["x"])
-	chk.Array(tst, "y0", 1e-6, Y0, d["y0"])
-	chk.Array(tst, "y1", 1e-6, Y1, d["y1"])
+	chk.Array(tst, "h", 1e-6, out.GetStepH(), d["h"])
+	chk.Array(tst, "x", 1e-6, out.GetStepX(), d["x"])
+	chk.Array(tst, "y0", 1e-6, out.GetStepY(0), d["y0"])
+	chk.Array(tst, "y1", 1e-6, out.GetStepY(1), d["y1"])
+
+	// check results: dense
+	_, dd, err := io.ReadTable("data/dr_dop853_dense.txt")
+	status(tst, err)
+	chk.Array(tst, "dense: y0", 1e-7, yy0, dd["y0"])
+	chk.Array(tst, "dense: y1", 1e-7, yy1, dd["y1"])
 }

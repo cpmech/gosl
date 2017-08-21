@@ -156,12 +156,12 @@ func (o *Radau5) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func
 }
 
 // Accept accepts update and computes next stepsize
-func (o *Radau5) Accept(y la.Vector) (dxnew float64) {
+func (o *Radau5) Accept(y0 la.Vector, x0 float64) (dxnew float64, err error) {
 
 	// update y
 	for m := 0; m < o.ndim; m++ {
 		// update y
-		y[m] += o.z[2][m]
+		y0[m] += o.z[2][m]
 		// collocation polynomial values
 		o.ycol[0][m] = (o.z[1][m] - o.z[2][m]) / o.Mu4
 		o.ycol[1][m] = ((o.z[0][m]-o.z[1][m])/o.Mu5 - o.ycol[0][m]) / o.Mu3

@@ -70,7 +70,7 @@ func (o *BwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Fun
 }
 
 // Accept accepts update
-func (o *BwEuler) Accept(y la.Vector) (dxnew float64) {
+func (o *BwEuler) Accept(y0 la.Vector, x0 float64) (dxnew float64, err error) {
 	return
 }
 

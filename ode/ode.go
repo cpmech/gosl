@@ -169,7 +169,10 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			o.Stat.Nsteps++
 			o.work.first = false
 			x = float64(n+1) * o.work.h
-			o.rkm.Accept(y)
+			_, err = o.rkm.Accept(y, x)
+			if err != nil {
+				return
+			}
 			if o.out != nil {
 				stop, e := o.out.Execute(istep, false, o.work.h, x, y)
 				if stop || e != nil {
@@ -252,8 +255,11 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.work.jacIsOK = false
 
 				// update x and y
+				dxnew, err = o.rkm.Accept(y, x)
+				if err != nil {
+					return
+				}
 				x += o.work.h
-				dxnew = o.rkm.Accept(y)
 
 				// output
 				if o.out != nil {
