@@ -106,6 +106,17 @@ func (o *Matrix) GetCopy() (clone *Matrix) {
 	return
 }
 
+// GetTranspose returns the tranpose matrix
+func (o *Matrix) GetTranspose() (tran *Matrix) {
+	tran = NewMatrix(o.N, o.M)
+	for i := 0; i < o.N; i++ {
+		for j := 0; j < o.M; j++ {
+			tran.Set(i, j, o.Get(j, i))
+		}
+	}
+	return
+}
+
 // CopyInto copies the scaled components of this matrix into another one (result)
 //  result := α * this   ⇒   result[ij] := α * this[ij]
 func (o *Matrix) CopyInto(result *Matrix, α float64) {
@@ -362,6 +373,17 @@ func (o *MatrixC) GetDeep2() (M [][]complex128) {
 func (o *MatrixC) GetCopy() (clone *MatrixC) {
 	clone = NewMatrixC(o.M, o.N)
 	copy(clone.Data, o.Data)
+	return
+}
+
+// GetTranspose returns the tranpose matrix
+func (o *MatrixC) GetTranspose() (tran *MatrixC) {
+	tran = NewMatrixC(o.N, o.M)
+	for i := 0; i < o.N; i++ {
+		for j := 0; j < o.M; j++ {
+			tran.Set(i, j, o.Get(j, i))
+		}
+	}
 	return
 }
 

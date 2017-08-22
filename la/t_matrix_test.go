@@ -158,6 +158,16 @@ func TestMatrix03(tst *testing.T) {
 	aclone := a.GetCopy()
 	chk.Array(tst, "aclone", 1e-17, a.Data, aclone.Data)
 
+	// GetTranspose
+	atrans := a.GetTranspose()
+	chk.Deep2(tst, "aᵀ", 1e-17, atrans.GetDeep2(), [][]float64{
+		{1, 0.1, 10},
+		{2, 0.2, 20},
+		{3, 0.3, 30},
+		{4, 0.4, 40},
+		{5, 0.5, 50},
+	})
+
 	// Fill
 	b := NewMatrix(5, 3)
 	b.Fill(2)
@@ -273,6 +283,16 @@ func TestMatrix04(tst *testing.T) {
 	// GetCopy
 	aclone := a.GetCopy()
 	chk.ArrayC(tst, "aclone", 1e-17, a.Data, aclone.Data)
+
+	// GetTranspose
+	atrans := a.GetTranspose()
+	chk.Deep2c(tst, "aᵀ", 1e-17, atrans.GetDeep2(), [][]complex128{
+		{1 + 1i, 0.1, 10},
+		{2 + 2i, 0.2, 20},
+		{3 + 3i, 0.3, 30},
+		{4 + 4i, 0.4, 40},
+		{5 + 5i, 0.5, 50},
+	})
 
 	// Fill
 	b := NewMatrixC(5, 3)
