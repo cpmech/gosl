@@ -137,16 +137,7 @@ func (o *Integrator) IntegrateSv(X *la.Matrix, f fun.Sv) (res float64, err error
 		if err != nil {
 			return
 		}
-		if false {
-			la.MatTrVecMul(o.xip, 1, X, o.ShapeFcns[ip]) // xip := 1⋅Xᵀ⋅S
-		} else { // this seem to be faster
-			for i := 0; i < o.Ndim; i++ {
-				o.xip[i] = 0.0
-				for n := 0; n < o.Nverts; n++ {
-					o.xip[i] += o.ShapeFcns[ip][n] * X.Get(n, i)
-				}
-			}
-		}
+		la.MatTrVecMul(o.xip, 1, X, o.ShapeFcns[ip]) // xip := 1⋅Xᵀ⋅S
 		fx, err = f(o.xip)
 		if err != nil {
 			return
@@ -191,18 +182,7 @@ func (o *Integrator) EvalJacobian(X *la.Matrix, ip int) (err error) {
 		chk.Err("TODO")
 		return
 	}
-	if false {
-		la.MatTrMatMul(o.JacobianMat, 1, X, o.RefGrads[ip]) // Jmat := 1⋅Xᵀ⋅gmat
-	} else { // this seem to be faster
-		for i := 0; i < o.Ndim; i++ {
-			for j := 0; j < o.Ndim; j++ {
-				o.JacobianMat.Set(i, j, 0.0)
-				for n := 0; n < o.Nverts; n++ {
-					o.JacobianMat.Add(i, j, X.Get(n, i)*o.RefGrads[ip].Get(n, j))
-				}
-			}
-		}
-	}
+	la.MatTrMatMul(o.JacobianMat, 1, X, o.RefGrads[ip]) // Jmat := 1⋅Xᵀ⋅gmat
 	o.DetJacobian, err = la.MatInvSmall(o.InvJacobMat, o.JacobianMat, 1e-14)
 	return
 }
