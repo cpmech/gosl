@@ -10,7 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
+	"github.com/cpmech/gosl/la"
 )
 
 func TestShp01(tst *testing.T) {
@@ -55,8 +55,8 @@ func checkShape(tst *testing.T, ctypeindex int, tol float64, verbose bool) {
 	coords := NatCoords[ctypeindex]
 
 	// allocate slices
-	S := make([]float64, nverts)
-	dSdR := utl.Alloc(nverts, ndim)
+	S := la.NewVector(nverts)
+	dSdR := la.NewMatrix(nverts, ndim)
 
 	// loop over all vertices
 	errS := 0.0
@@ -106,14 +106,15 @@ func checkDerivs(tst *testing.T, ctypeindex int, r []float64, tol float64, verbo
 	nverts := NumVerts[ctypeindex]
 
 	// allocate slices
-	S := make([]float64, nverts)
-	dSdR := utl.Alloc(nverts, ndim)
+	S := la.NewVector(nverts)
+	dSdR := la.NewMatrix(nverts, ndim)
 
 	// analytical
 	fcn(S, dSdR, r, true)
 
 	// check
-	chk.DerivVecVec(tst, "dSdR", tol, dSdR, r[:ndim], 1e-1, verbose, func(f, x []float64) error {
+	M := dSdR.GetDeep2()
+	chk.DerivVecVec(tst, "dSdR", tol, M, r[:ndim], 1e-1, verbose, func(f, x []float64) error {
 		fcn(f, nil, x, false)
 		return nil
 	})

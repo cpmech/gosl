@@ -207,13 +207,13 @@ func (o *Mesh) Draw(args *DrawArgs) {
 		// cell ids
 		if args.WithIdsCells {
 			xc := make([]float64, cell.Gndim)
-			for _, x := range cell.X {
-				for i := 0; i < cell.Gndim; i++ {
-					xc[i] += x[i]
+			for i := 0; i < cell.X.M; i++ {
+				for j := 0; j < cell.Gndim; j++ {
+					xc[j] += cell.X.Get(i, j)
 				}
 			}
 			for i := 0; i < cell.Gndim; i++ {
-				xc[i] /= float64(len(cell.X))
+				xc[i] /= float64(cell.X.M)
 			}
 			txt := io.Sf("%d", cell.ID)
 			if o.Ndim > 2 {

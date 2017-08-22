@@ -4,13 +4,15 @@
 
 package msh
 
+import "github.com/cpmech/gosl/la"
+
 // FuncLin2 calculates the shape functions (S) and derivatives of shape functions (dSdR) of lin2
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
 //
 //    -1     0    +1
 //     0-----------1-->r
 //
-func FuncLin2(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncLin2(S la.Vector, dSdR *la.Matrix, R la.Vector, derivs bool) {
 
 	r := R[0]
 	S[0] = 0.5 * (1.0 - r)
@@ -20,8 +22,8 @@ func FuncLin2(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 		return
 	}
 
-	dSdR[0][0] = -0.5
-	dSdR[1][0] = 0.5
+	dSdR.Set(0, 0, -0.5)
+	dSdR.Set(1, 0, 0.5)
 }
 
 // FuncLin3 calculates the shape functions (S) and derivatives of shape functions (dSdR) of lin3
@@ -30,7 +32,7 @@ func FuncLin2(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 //    -1     0    +1
 //     0-----2-----1-->r
 //
-func FuncLin3(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncLin3(S la.Vector, dSdR *la.Matrix, R la.Vector, derivs bool) {
 
 	r := R[0]
 	S[0] = 0.5 * (r*r - r)
@@ -41,9 +43,9 @@ func FuncLin3(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 		return
 	}
 
-	dSdR[0][0] = r - 0.5
-	dSdR[1][0] = r + 0.5
-	dSdR[2][0] = -2.0 * r
+	dSdR.Set(0, 0, r-0.5)
+	dSdR.Set(1, 0, r+0.5)
+	dSdR.Set(2, 0, -2.0*r)
 }
 
 // FuncLin4 calculates the shape functions (S) and derivatives of shape functions (dSdR) of lin4
@@ -53,7 +55,7 @@ func FuncLin3(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 //     @------@-----@------@  --> r
 //     0      2     3      1
 //
-func FuncLin4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncLin4(S la.Vector, dSdR *la.Matrix, R la.Vector, derivs bool) {
 
 	r := R[0]
 	S[0] = (-9.0*r*r*r + 9.0*r*r + r - 1.0) / 16.0
@@ -65,10 +67,10 @@ func FuncLin4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 		return
 	}
 
-	dSdR[0][0] = 1.0 / 16.0 * (-27.0*r*r + 18.0*r + 1.0)
-	dSdR[1][0] = 1.0 / 16.0 * (27.0*r*r + 18.0*r - 1.0)
-	dSdR[2][0] = 1.0 / 16.0 * (81.0*r*r - 18.0*r - 27.0)
-	dSdR[3][0] = 1.0 / 16.0 * (-81.0*r*r - 18.0*r + 27.0)
+	dSdR.Set(0, 0, 1.0/16.0*(-27.0*r*r+18.0*r+1.0))
+	dSdR.Set(1, 0, 1.0/16.0*(27.0*r*r+18.0*r-1.0))
+	dSdR.Set(2, 0, 1.0/16.0*(81.0*r*r-18.0*r-27.0))
+	dSdR.Set(3, 0, 1.0/16.0*(-81.0*r*r-18.0*r+27.0))
 }
 
 // FuncLin5 calculates the shape functions (S) and derivatives of shape functions (dSdR) of lin5
@@ -79,7 +81,7 @@ func FuncLin4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 //      |           |           |
 //     r=-1  -1/2   r=0  1/2   r=+1
 //
-func FuncLin5(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncLin5(S la.Vector, dSdR *la.Matrix, R la.Vector, derivs bool) {
 
 	r := R[0]
 	S[0] = (r - 1.0) * (1.0 - 2.0*r) * r * (-1.0 - 2.0*r) / 6.0
@@ -92,9 +94,9 @@ func FuncLin5(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 		return
 	}
 
-	dSdR[0][0] = -((1.0-2.0*r)*(r-1.0)*r)/3.0 - ((-2.0*r-1.0)*(r-1.0)*r)/3.0 + ((-2.0*r-1.0)*(1.0-2.0*r)*r)/6.0 + ((-2.0*r-1.0)*(1.0-2.0*r)*(r-1.0))/6.0
-	dSdR[1][0] = -((1.0-2.0*r)*r*(r+1.0))/3.0 - ((-2.0*r-1.0)*r*(r+1.0))/3.0 + ((-2.0*r-1.0)*(1.0-2.0*r)*(r+1.0))/6.0 + ((-2.0*r-1.0)*(1.0-2.0*r)*r)/6.0
-	dSdR[2][0] = -2.0*(1.0-2.0*r)*(-r-1.0)*(1.0-r) - 2.0*(-2.0*r-1.0)*(-r-1.0)*(1.0-r) - (-2.0*r-1.0)*(1.0-2.0*r)*(1.0-r) - (-2.0*r-1.0)*(1.0-2.0*r)*(-r-1.0)
-	dSdR[3][0] = -(8.0*(-r-1.0)*(1.0-r)*r)/3.0 - (4.0*(1.0-2.0*r)*(1.0-r)*r)/3.0 - (4.0*(1.0-2.0*r)*(-r-1.0)*r)/3.0 + (4.0*(1.0-2.0*r)*(-r-1.0)*(1.0-r))/3.0
-	dSdR[4][0] = -(8.0*(-r-1.0)*(1.0-r)*r)/3.0 - (4.0*(-2.0*r-1.0)*(1.0-r)*r)/3.0 - (4.0*(-2.0*r-1.0)*(-r-1.0)*r)/3.0 + (4.0*(-2.0*r-1.0)*(-r-1.0)*(1.0-r))/3.0
+	dSdR.Set(0, 0, -((1.0-2.0*r)*(r-1.0)*r)/3.0-((-2.0*r-1.0)*(r-1.0)*r)/3.0+((-2.0*r-1.0)*(1.0-2.0*r)*r)/6.0+((-2.0*r-1.0)*(1.0-2.0*r)*(r-1.0))/6.0)
+	dSdR.Set(1, 0, -((1.0-2.0*r)*r*(r+1.0))/3.0-((-2.0*r-1.0)*r*(r+1.0))/3.0+((-2.0*r-1.0)*(1.0-2.0*r)*(r+1.0))/6.0+((-2.0*r-1.0)*(1.0-2.0*r)*r)/6.0)
+	dSdR.Set(2, 0, -2.0*(1.0-2.0*r)*(-r-1.0)*(1.0-r)-2.0*(-2.0*r-1.0)*(-r-1.0)*(1.0-r)-(-2.0*r-1.0)*(1.0-2.0*r)*(1.0-r)-(-2.0*r-1.0)*(1.0-2.0*r)*(-r-1.0))
+	dSdR.Set(3, 0, -(8.0*(-r-1.0)*(1.0-r)*r)/3.0-(4.0*(1.0-2.0*r)*(1.0-r)*r)/3.0-(4.0*(1.0-2.0*r)*(-r-1.0)*r)/3.0+(4.0*(1.0-2.0*r)*(-r-1.0)*(1.0-r))/3.0)
+	dSdR.Set(4, 0, -(8.0*(-r-1.0)*(1.0-r)*r)/3.0-(4.0*(-2.0*r-1.0)*(1.0-r)*r)/3.0-(4.0*(-2.0*r-1.0)*(-r-1.0)*r)/3.0+(4.0*(-2.0*r-1.0)*(-r-1.0)*(1.0-r))/3.0)
 }

@@ -20,12 +20,12 @@ func TestInteg01(tst *testing.T) {
 	chk.PrintTitle("Integ01. integration over rotated square")
 
 	// vertices (diamond shape)
-	X := [][]float64{
+	X := la.NewMatrixDeep2([][]float64{
 		{0.0, +0.0},
 		{1.0, -1.0},
 		{2.0, +0.0},
 		{1.0, +1.0},
-	}
+	})
 
 	// allocate cell integrator with default integration points
 	o, err := NewIntegrator(TypeQua4, nil, "")
@@ -87,10 +87,10 @@ func TestInteg01(tst *testing.T) {
 	// draw polygon
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Polyline(X, &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
+		plt.Polyline(X.GetDeep2(), &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
 		Xip := o.GetXip(X)
-		for _, x := range Xip {
-			plt.PlotOne(x[0], x[1], &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
+		for i := 0; i < Xip.M; i++ {
+			plt.PlotOne(Xip.Get(i, 0), Xip.Get(i, 1), &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
 		}
 		plt.Gll("x", "y", nil)
 		plt.AxisRange(0, 2, -1, 1)
@@ -107,12 +107,12 @@ func TestInteg02(tst *testing.T) {
 
 	// vertices (trapezium)
 	a, b, h := 3.0, 0.5, 1.0
-	X := [][]float64{
+	X := la.NewMatrixDeep2([][]float64{
 		{-a / 2.0, -h / 2.0},
 		{+a / 2.0, -h / 2.0},
 		{+b / 2.0, +h / 2.0},
 		{-b / 2.0, +h / 2.0},
-	}
+	})
 
 	// allocate cell integrator with default integration points
 	o, err := NewIntegrator(TypeQua4, nil, "legendre_4")
@@ -174,10 +174,10 @@ func TestInteg02(tst *testing.T) {
 	// draw polygon
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Polyline(X, &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
+		plt.Polyline(X.GetDeep2(), &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
 		Xip := o.GetXip(X)
-		for _, x := range Xip {
-			plt.PlotOne(x[0], x[1], &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
+		for i := 0; i < Xip.M; i++ {
+			plt.PlotOne(Xip.Get(i, 0), Xip.Get(i, 1), &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
 		}
 		plt.Gll("x", "y", nil)
 		plt.AxisRange(0, 2, -1, 1)

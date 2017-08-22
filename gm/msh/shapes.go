@@ -4,6 +4,8 @@
 
 package msh
 
+import "github.com/cpmech/gosl/la"
+
 // cell kinds
 const (
 	KindLin    = 0 // "lin" cell kind
@@ -38,7 +40,7 @@ const (
 )
 
 // ShapeFunction computes the shape function and derivatives
-type ShapeFunction func(S []float64, dSdR [][]float64, R []float64, derivs bool)
+type ShapeFunction func(S la.Vector, dSdR *la.Matrix, R la.Vector, derivs bool)
 
 var (
 	// Functions holds functions to compute shape functions and derivatives [TypeNumMax]

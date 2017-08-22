@@ -4,6 +4,8 @@
 
 package msh
 
+import "github.com/cpmech/gosl/la"
+
 // FuncTet4 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tet4
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.
 //
@@ -36,7 +38,7 @@ package msh
 //     /
 //    r
 //
-func FuncTet4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncTet4(S la.Vector, dSdR *la.Matrix, R la.Vector, derivs bool) {
 
 	r, s, t := R[0], R[1], R[2]
 	S[0] = 1.0 - r - s - t
@@ -48,20 +50,20 @@ func FuncTet4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 		return
 	}
 
-	dSdR[0][0] = -1.0
-	dSdR[1][0] = 1.0
-	dSdR[2][0] = 0.0
-	dSdR[3][0] = 0.0
+	dSdR.Set(0, 0, -1.0)
+	dSdR.Set(1, 0, 1.0)
+	dSdR.Set(2, 0, 0.0)
+	dSdR.Set(3, 0, 0.0)
 
-	dSdR[0][1] = -1.0
-	dSdR[1][1] = 0.0
-	dSdR[2][1] = 1.0
-	dSdR[3][1] = 0.0
+	dSdR.Set(0, 1, -1.0)
+	dSdR.Set(1, 1, 0.0)
+	dSdR.Set(2, 1, 1.0)
+	dSdR.Set(3, 1, 0.0)
 
-	dSdR[0][2] = -1.0
-	dSdR[1][2] = 0.0
-	dSdR[2][2] = 0.0
-	dSdR[3][2] = 1.0
+	dSdR.Set(0, 2, -1.0)
+	dSdR.Set(1, 2, 0.0)
+	dSdR.Set(2, 2, 0.0)
+	dSdR.Set(3, 2, 1.0)
 }
 
 // FuncTet10 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tet10
@@ -96,7 +98,7 @@ func FuncTet4(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 //     /
 //    r
 //
-func FuncTet10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
+func FuncTet10(S la.Vector, dSdR *la.Matrix, R la.Vector, derivs bool) {
 
 	r, s, t := R[0], R[1], R[2]
 	u := 1.0 - r - s - t
@@ -115,36 +117,36 @@ func FuncTet10(S []float64, dSdR [][]float64, R []float64, derivs bool) {
 		return
 	}
 
-	dSdR[0][0] = 4.0*(r+s+t) - 3.0
-	dSdR[1][0] = 4.0*r - 1.0
-	dSdR[2][0] = 0.0
-	dSdR[3][0] = 0.0
-	dSdR[4][0] = 4.0 - 8.0*r - 4.0*s - 4.0*t
-	dSdR[5][0] = 4.0 * s
-	dSdR[6][0] = -4.0 * s
-	dSdR[7][0] = -4.0 * t
-	dSdR[8][0] = 4.0 * t
-	dSdR[9][0] = 0.0
+	dSdR.Set(0, 0, 4.0*(r+s+t)-3.0)
+	dSdR.Set(1, 0, 4.0*r-1.0)
+	dSdR.Set(2, 0, 0.0)
+	dSdR.Set(3, 0, 0.0)
+	dSdR.Set(4, 0, 4.0-8.0*r-4.0*s-4.0*t)
+	dSdR.Set(5, 0, 4.0*s)
+	dSdR.Set(6, 0, -4.0*s)
+	dSdR.Set(7, 0, -4.0*t)
+	dSdR.Set(8, 0, 4.0*t)
+	dSdR.Set(9, 0, 0.0)
 
-	dSdR[0][1] = 4.0*(r+s+t) - 3.0
-	dSdR[1][1] = 0.0
-	dSdR[2][1] = 4.0*s - 1.0
-	dSdR[3][1] = 0.0
-	dSdR[4][1] = -4.0 * r
-	dSdR[5][1] = 4.0 * r
-	dSdR[6][1] = 4.0 - 4.0*r - 8.0*s - 4.0*t
-	dSdR[7][1] = -4.0 * t
-	dSdR[8][1] = 0.0
-	dSdR[9][1] = 4.0 * t
+	dSdR.Set(0, 1, 4.0*(r+s+t)-3.0)
+	dSdR.Set(1, 1, 0.0)
+	dSdR.Set(2, 1, 4.0*s-1.0)
+	dSdR.Set(3, 1, 0.0)
+	dSdR.Set(4, 1, -4.0*r)
+	dSdR.Set(5, 1, 4.0*r)
+	dSdR.Set(6, 1, 4.0-4.0*r-8.0*s-4.0*t)
+	dSdR.Set(7, 1, -4.0*t)
+	dSdR.Set(8, 1, 0.0)
+	dSdR.Set(9, 1, 4.0*t)
 
-	dSdR[0][2] = 4.0*(r+s+t) - 3.0
-	dSdR[1][2] = 0.0
-	dSdR[2][2] = 0.0
-	dSdR[3][2] = 4.0*t - 1.0
-	dSdR[4][2] = -4.0 * r
-	dSdR[5][2] = 0.0
-	dSdR[6][2] = -4.0 * s
-	dSdR[7][2] = 4.0 - 4.0*r - 4.0*s - 8.0*t
-	dSdR[8][2] = 4.0 * r
-	dSdR[9][2] = 4.0 * s
+	dSdR.Set(0, 2, 4.0*(r+s+t)-3.0)
+	dSdR.Set(1, 2, 0.0)
+	dSdR.Set(2, 2, 0.0)
+	dSdR.Set(3, 2, 4.0*t-1.0)
+	dSdR.Set(4, 2, -4.0*r)
+	dSdR.Set(5, 2, 0.0)
+	dSdR.Set(6, 2, -4.0*s)
+	dSdR.Set(7, 2, 4.0-4.0*r-4.0*s-8.0*t)
+	dSdR.Set(8, 2, 4.0*r)
+	dSdR.Set(9, 2, 4.0*s)
 }

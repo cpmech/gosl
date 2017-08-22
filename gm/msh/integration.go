@@ -8,7 +8,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
 )
 
 // Integrator implements methods to perform numerical integration over a polyhedron/polygon
@@ -22,10 +21,11 @@ type Integrator struct {
 	P      [][]float64 // (Gauss) integration points [npts][ndim]
 
 	// slices related to integration points
-	ShapeFcns [][]float64   // shape functions Sm @ all integ points [npts][nverts]
-	RefGrads  [][][]float64 // reference gradients gm = dSm(r)/dr @ all integ points [npts][nverts][ndim]
+	ShapeFcns []la.Vector  // shape functions Sm @ all integ points [npts][nverts]
+	RefGrads  []*la.Matrix // reference gradients gm = dSm(r)/dr @ all integ points [npts][nverts][ndim]
 
 	// mutable-data (scratchpad)
+	xip         la.Vector  // x(r); i.e. x @ integration point
 	JacobianMat *la.Matrix // jacobian matrix Jr of the mapping reference to general coords [ndim][ndim]
 	InvJacobMat *la.Matrix // inverse of jacobian matrix [ndim][ndim]
 	DetJacobian float64    // determinat of jacobian matrix
@@ -81,8 +81,13 @@ func (o *Integrator) ResetP(P [][]float64, pName string) (err error) {
 
 	// allocate slices related to integration points
 	if len(o.ShapeFcns) != o.Npts {
-		o.ShapeFcns = utl.Alloc(o.Npts, o.Nverts)
-		o.RefGrads = utl.Deep3alloc(o.Npts, o.Nverts, o.Ndim)
+		o.xip = la.NewVector(o.Ndim)
+		o.ShapeFcns = make([]la.Vector, o.Npts)
+		o.RefGrads = make([]*la.Matrix, o.Npts)
+		for i := 0; i < o.Npts; i++ {
+			o.ShapeFcns[i] = la.NewVector(o.Nverts)
+			o.RefGrads[i] = la.NewMatrix(o.Nverts, o.Ndim)
+		}
 	}
 
 	// compute shape and reference gradient @ all integ points
@@ -97,13 +102,12 @@ func (o *Integrator) ResetP(P [][]float64, pName string) (err error) {
 //     X -- coordinates of vertices of cell (polyhedron/polygon) [nverts][ndim]
 //   Output:
 //     Xip -- general (non-reference) coordinate of integ points [npts][ndim]
-func (o *Integrator) GetXip(X [][]float64) (Xip [][]float64) {
-	Xip = make([][]float64, o.Npts)
+func (o *Integrator) GetXip(X *la.Matrix) (Xip *la.Matrix) {
+	Xip = la.NewMatrix(o.Npts, o.Ndim)
 	for i := 0; i < o.Npts; i++ {
-		Xip[i] = make([]float64, o.Ndim)
 		for j := 0; j < o.Ndim; j++ {
 			for m := 0; m < o.Nverts; m++ {
-				Xip[i][j] += o.ShapeFcns[i][m] * X[m][j]
+				Xip.Add(i, j, o.ShapeFcns[i][m]*X.Get(m, j))
 			}
 		}
 	}
@@ -114,35 +118,27 @@ func (o *Integrator) GetXip(X [][]float64) (Xip [][]float64) {
 //
 //   Computes:
 //
-//           ⌠⌠⌠   →       ⌠⌠⌠   → →     →        n-1   →  →      →
-//     res = │││ f(x) dΩ = │││ f(x(r))⋅J(r) dΩr ≈  Σ  f(xi(ri))⋅J(ri)⋅wi
+//           ⌠⌠⌠   →       ⌠⌠⌠   → →     →       nip-1   →  →      →
+//     res = │││ f(x) dΩ = │││ f(x(r))⋅J(r) dΩr ≈  Σ   f(xi(ri))⋅J(ri)⋅wi
 //           ⌡⌡⌡           ⌡⌡⌡                    i=0
 //              Ω             Ωr
-//   where:
-//            → →    m-1   m →     m
-//            x(r) ≈  Σ   S (r) ⋅ x               J = det(Jmat)
-//                   i=0
-//   and:
-//            m -- number of cell nodes
-//            n -- number of integration points
+//
+//   where (J = det(Jmat)):
+//
+//      x(r) ≈ Σ Sⁿ(r) ⋅ xⁿ     ⇒     x[i] = Σ S[n] * X[n,i]     ⇒     x = Xᵀ ⋅ S
+//             n                             n
 //   Input:
 //     X  -- coordinates of vertices of cell (polyhedron/polygon) [nverts][ndim]
 //     f  -- integrand function
-func (o *Integrator) IntegrateSv(X [][]float64, f fun.Sv) (res float64, err error) {
-	xip := make([]float64, o.Ndim)
+func (o *Integrator) IntegrateSv(X *la.Matrix, f fun.Sv) (res float64, err error) {
 	var fx float64
 	for ip, point := range o.P {
-		for j := 0; j < o.Ndim; j++ {
-			xip[j] = 0
-			for m := 0; m < o.Nverts; m++ {
-				xip[j] += o.ShapeFcns[ip][m] * X[m][j]
-			}
-		}
 		err = o.EvalJacobian(X, ip)
 		if err != nil {
 			return
 		}
-		fx, err = f(xip)
+		la.MatTrVecMul(o.xip, 1, X, o.ShapeFcns[ip]) // xip := 1⋅Xᵀ⋅S
+		fx, err = f(o.xip)
 		if err != nil {
 			return
 		}
@@ -154,6 +150,14 @@ func (o *Integrator) IntegrateSv(X [][]float64, f fun.Sv) (res float64, err erro
 // EvalJacobian computes the Jacobian of the mapping from general to reference space
 // at integration point with index ip
 //
+//                               dx          dSⁿ
+//    x(r) = Σ Sⁿ(r) xⁿ    ⇒     —— = Σ xⁿ ⊗ ———
+//           n                   dr   n       dr
+//
+//    ∂xi              dS
+//    ——— = Σ X[n,i] * ——[n,j]    ⇒    Jmat = Xᵀ · dSdr
+//    ∂rj   n          dr
+//
 //           →     _                           _
 //          dx    |  ∂x0/∂r0  ∂x0/∂r1  ∂x0/∂r2  |                ∂xi
 //   Jmat = —— =  |  ∂x1/∂r0  ∂x1/∂r1  ∂x1/∂r2  |     Jmat[ij] = ———
@@ -163,27 +167,22 @@ func (o *Integrator) IntegrateSv(X [][]float64, f fun.Sv) (res float64, err erro
 //   Input:
 //     X  -- coordinates of vertices of cell (polyhedron/polygon) [nverts][ndim]
 //     ip -- index of integration point
+//
 //   Computed (stored):
 //     JacobianMat -- reference Jacobian matrix [ndim][ndim]
 //     InvJacobMat -- inverse of Jmat [ndim][ndim]
 //     DetJacobian -- determinat of the reference Jacobian matrix
-func (o *Integrator) EvalJacobian(X [][]float64, ip int) (err error) {
+//
+func (o *Integrator) EvalJacobian(X *la.Matrix, ip int) (err error) {
 	if ip < 0 || ip > o.Npts {
 		chk.Err("index of integration point %d is invalid. ip must be in [0,%d]\n", ip, o.Npts)
 		return
 	}
 	if o.Ndim == 1 {
-		// TODO
+		chk.Err("TODO")
 		return
 	}
-	for i := 0; i < o.Ndim; i++ {
-		for j := 0; j < o.Ndim; j++ {
-			o.JacobianMat.Set(i, j, 0)
-			for m := 0; m < o.Nverts; m++ {
-				o.JacobianMat.Add(i, j, X[m][i]*o.RefGrads[ip][m][j])
-			}
-		}
-	}
+	la.MatTrMatMul(o.JacobianMat, 1, X, o.RefGrads[ip]) // Jmat := 1⋅Xᵀ⋅gmat
 	o.DetJacobian, err = la.MatInvSmall(o.InvJacobMat, o.JacobianMat, 1e-14)
 	return
 }

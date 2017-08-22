@@ -13,6 +13,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 )
 
 // EdgeKey implements a key to identify edges
@@ -80,11 +81,11 @@ type Cell struct {
 	TypeIndex int `json:"-"` // type index of cell. converted from TypeKey
 
 	// derived
-	Edges      EdgeSet     `json:"-"` // edges on this cell
-	Faces      FaceSet     `json:"-"` // faces on this cell
-	Neighbours CellSet     `json:"-"` // neighbour cells
-	Gndim      int         `json:"-"` // geometry ndim
-	X          [][]float64 `json:"-"` // all vertex coordinates
+	Edges      EdgeSet    `json:"-"` // edges on this cell
+	Faces      FaceSet    `json:"-"` // faces on this cell
+	Neighbours CellSet    `json:"-"` // neighbour cells
+	Gndim      int        `json:"-"` // geometry ndim
+	X          *la.Matrix `json:"-"` // all vertex coordinates [nverts][ndim]
 }
 
 // Mesh defines mesh data
@@ -307,13 +308,12 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 
 // ExtractCellCoords extracts cell coordinates
 //   X -- matrix with coordinates [nverts][gndim]
-func (o *Mesh) ExtractCellCoords(cellID int) (X [][]float64) {
+func (o *Mesh) ExtractCellCoords(cellID int) (X *la.Matrix) {
 	c := o.Cells[cellID]
-	X = make([][]float64, len(c.V))
+	X = la.NewMatrix(len(c.V), c.Gndim)
 	for m, v := range c.V {
-		X[m] = make([]float64, c.Gndim)
 		for i := 0; i < c.Gndim; i++ {
-			X[m][i] = o.Verts[v].X[i]
+			X.Set(m, i, o.Verts[v].X[i])
 		}
 	}
 	return
