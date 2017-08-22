@@ -20,6 +20,17 @@ func MatVecMul(v Vector, α float64, a *Matrix, u Vector) {
 	}
 }
 
+// MatTrVecMul returns the transpose(matrix)-vector multiplication
+//
+//   v = α⋅aᵀ⋅u    ⇒    vi = α * aji * uj = α * uj * aji
+//
+func MatTrVecMul(v Vector, α float64, a *Matrix, u Vector) {
+	err := oblas.Dgemv(true, a.M, a.N, α, a.Data, a.M, u, 1, 0.0, v, 1)
+	if err != nil {
+		chk.Panic("%v\n", err)
+	}
+}
+
 // MatVecMulAdd returns the matrix-vector multiplication with addition
 //
 //   v += α⋅a⋅u    ⇒    vi += α * aij * uj

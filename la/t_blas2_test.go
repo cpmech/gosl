@@ -12,7 +12,7 @@ import (
 
 func TestBlas2tst01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("Blas2tst01. (real) Blas2 functions")
 
 	// allocate data
@@ -86,4 +86,30 @@ func TestBlas2tst02(tst *testing.T) {
 	// MatVecMulAdd
 	MatVecMulAddC(r, 1, a, x)
 	chk.ArrayC(tst, "r = 1⋅a⋅x - b", 1e-17, r, nil)
+}
+
+func TestBlas2tst03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Blas2tst03. (real) Blas2 functions (tranpose)")
+
+	// allocate data
+	a := NewMatrixDeep2([][]float64{
+		{1, 2, +0, 1, -1},
+		{2, 3, -1, 1, +1},
+		{1, 2, +0, 4, -1},
+		{4, 0, +3, 1, +1},
+	})
+	u := Vector([]float64{1, 2, 3, 4, 5})
+	v := Vector([]float64{1, 2, 3, 4})
+
+	// MatVecMul
+	x := NewVector(4)
+	MatVecMul(x, 0.5, a, u)
+	chk.Array(tst, "0.5⋅a⋅u", 1e-17, x, []float64{2, 7, 8, 11})
+
+	// MatTrVecMul
+	y := NewVector(5)
+	MatTrVecMul(y, 0.5, a, v)
+	chk.Array(tst, "0.5⋅aᵀ⋅v", 1e-17, y, []float64{12, 7, 5, 9.5, 1})
 }
