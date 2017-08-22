@@ -14,6 +14,17 @@ import (
 //  c := α⋅a⋅b    ⇒    cij := α * aik * bkj
 //
 func MatMatMul(c *Matrix, α float64, a, b *Matrix) {
+	if c.M < 6 && c.N < 6 && a.N < 30 {
+		for i := 0; i < c.M; i++ {
+			for j := 0; j < c.N; j++ {
+				c.Set(i, j, 0.0)
+				for k := 0; k < a.N; k++ {
+					c.Add(i, j, α*a.Get(i, k)*b.Get(k, j))
+				}
+			}
+		}
+		return
+	}
 	err := oblas.Dgemm(false, false, a.M, b.N, a.N, α, a.Data, a.M, b.Data, b.M, 0.0, c.Data, c.M)
 	if err != nil {
 		chk.Panic("%v\n", err)
@@ -25,6 +36,17 @@ func MatMatMul(c *Matrix, α float64, a, b *Matrix) {
 //  c := α⋅aᵀ⋅b    ⇒    cij := α * aki * bkj
 //
 func MatTrMatMul(c *Matrix, α float64, a, b *Matrix) {
+	if c.M < 6 && c.N < 6 && a.M < 30 {
+		for i := 0; i < c.M; i++ {
+			for j := 0; j < c.N; j++ {
+				c.Set(i, j, 0.0)
+				for k := 0; k < a.M; k++ {
+					c.Add(i, j, α*a.Get(k, i)*b.Get(k, j))
+				}
+			}
+		}
+		return
+	}
 	err := oblas.Dgemm(true, false, a.N, b.N, a.M, α, a.Data, a.M, b.Data, b.M, 0.0, c.Data, c.M)
 	if err != nil {
 		chk.Panic("%v\n", err)

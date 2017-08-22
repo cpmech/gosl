@@ -14,6 +14,15 @@ import (
 //   v = α⋅a⋅u    ⇒    vi = α * aij * uj
 //
 func MatVecMul(v Vector, α float64, a *Matrix, u Vector) {
+	if a.M < 9 && a.N < 9 {
+		for i := 0; i < a.M; i++ {
+			v[i] = 0.0
+			for j := 0; j < a.N; j++ {
+				v[i] += α * a.Get(i, j) * u[j]
+			}
+		}
+		return
+	}
 	err := oblas.Dgemv(false, a.M, a.N, α, a.Data, a.M, u, 1, 0.0, v, 1)
 	if err != nil {
 		chk.Panic("%v\n", err)
@@ -25,6 +34,15 @@ func MatVecMul(v Vector, α float64, a *Matrix, u Vector) {
 //   v = α⋅aᵀ⋅u    ⇒    vi = α * aji * uj = α * uj * aji
 //
 func MatTrVecMul(v Vector, α float64, a *Matrix, u Vector) {
+	if a.M < 9 && a.N < 9 {
+		for i := 0; i < a.N; i++ {
+			v[i] = 0.0
+			for j := 0; j < a.M; j++ {
+				v[i] += α * a.Get(j, i) * u[j]
+			}
+		}
+		return
+	}
 	err := oblas.Dgemv(true, a.M, a.N, α, a.Data, a.M, u, 1, 0.0, v, 1)
 	if err != nil {
 		chk.Panic("%v\n", err)
