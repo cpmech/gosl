@@ -74,3 +74,22 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 	stat = sol.Stat
 	return
 }
+
+// Dopri5simple solves ODE using DoPri5 method without options for saving results and others
+func Dopri5simple(fcn Func, y la.Vector, xf, tol float64) (yf la.Vector, err error) {
+	yf, _, _, err = Solve("dopri5", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
+	return
+}
+
+// Dopri8simple solves ODE using DoPri8 method without options for saving results and others
+func Dopri8simple(fcn Func, y la.Vector, xf, tol float64) (yf la.Vector, err error) {
+	yf, _, _, err = Solve("dopri8", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
+	return
+}
+
+// Radau5simple solves ODE using Radau5 method without options for saving results and others
+func Radau5simple(fcn Func, jac JacF, y la.Vector, xf, tol float64) (yf la.Vector, err error) {
+	numJac := jac == nil
+	yf, _, _, err = Solve("radau5", fcn, jac, y, xf, 0, tol, tol, numJac, false, false, false)
+	return
+}

@@ -43,8 +43,22 @@ func TestHL01(tst *testing.T) {
 	stat.Print(false)
 
 	// check
-	chk.AnaNum(tst, "y0", 1e-4, yf[0], y[0], chk.Verbose)
-	chk.AnaNum(tst, "y1", 1e-4, yf[1], y[1], chk.Verbose)
+	chk.AnaNum(tst, "dopri5: y0", 1e-4, yf[0], y[0], chk.Verbose)
+	chk.AnaNum(tst, "dopri5: y1", 1e-4, yf[1], y[1], chk.Verbose)
+
+	// using simple version
+	yf2, err := Dopri5simple(fcn, y, xf, atol)
+	chk.Array(tst, "dopri5: yf2", 1e-17, yf, yf2)
+
+	// dopri8
+	yf3, err := Dopri8simple(fcn, y, xf, atol)
+	chk.AnaNum(tst, "dopri8: y0", 1e-7, yf3[0], y[0], chk.Verbose)
+	chk.AnaNum(tst, "dopri8: y1", 1e-5, yf3[1], y[1], chk.Verbose)
+
+	// radau5
+	yf4, err := Radau5simple(fcn, nil, y, xf, atol)
+	chk.AnaNum(tst, "radau5: y0", 1e-6, yf4[0], y[0], chk.Verbose)
+	chk.AnaNum(tst, "radau5: y1", 1e-5, yf4[1], y[1], chk.Verbose)
 
 	// plot
 	if chk.Verbose {
