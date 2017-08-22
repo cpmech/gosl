@@ -12,7 +12,7 @@ import (
 
 func TestBlas2tst01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("Blas2tst01. (real) Blas2 functions")
 
 	// allocate data
