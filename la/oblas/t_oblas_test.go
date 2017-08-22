@@ -198,23 +198,23 @@ func TestZgemv01(tst *testing.T) {
 func TestDgemm01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Dgemm01")
+	chk.PrintTitle("Dgemm01: 0.5⋅a⋅b + 2⋅c")
 
 	// allocate matrices
-	a := SliceToColMajor([][]float64{
+	a := SliceToColMajor([][]float64{ // 4 x 5
 		{1, 2, +0, 1, -1},
 		{2, 3, -1, 1, +1},
 		{1, 2, +0, 4, -1},
 		{4, 0, +3, 1, +1},
 	})
-	b := SliceToColMajor([][]float64{
+	b := SliceToColMajor([][]float64{ // 5 x 3
 		{1, 0, 0},
 		{0, 0, 3},
 		{0, 0, 1},
 		{1, 0, 1},
 		{0, 2, 0},
 	})
-	c := SliceToColMajor([][]float64{
+	c := SliceToColMajor([][]float64{ // 4 x 3
 		{+0.50, 0, +0.25},
 		{+0.25, 0, -0.25},
 		{-0.25, 0, +0.00},
@@ -222,13 +222,14 @@ func TestDgemm01(tst *testing.T) {
 	})
 
 	// sizes
-	m, k := 4, 5
-	n := 3
+	m := 4 // m = nrow(a) = a.M = nrow(c)
+	k := 5 // k = ncol(a) = a.N = nrow(b)
+	n := 3 // n = ncol(b) = b.N = ncol(c)
 
 	// run dgemm
 	transA, transB := false, false
 	alpha, beta := 0.5, 2.0
-	lda, ldb, ldc := m, k, m
+	lda, ldb, ldc := 4, 5, 4
 	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
 	if err != nil {
 		tst.Errorf("Dgemm failed:\n%v\n", err)
@@ -237,6 +238,154 @@ func TestDgemm01(tst *testing.T) {
 
 	// check
 	chk.Deep2(tst, "0.5⋅a⋅b + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
+		{2, -1, 4},
+		{2, +1, 4},
+		{2, -1, 5},
+		{2, +1, 2},
+	})
+}
+
+func TestDgemm02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgemm02: 0.5⋅a⋅bᵀ + 2⋅c")
+
+	// allocate matrices
+	a := SliceToColMajor([][]float64{ // 4 x 5
+		{1, 2, +0, 1, -1},
+		{2, 3, -1, 1, +1},
+		{1, 2, +0, 4, -1},
+		{4, 0, +3, 1, +1},
+	})
+	b := SliceToColMajor([][]float64{ // 3 x 5
+		{1, 0, 0, 1, 0},
+		{0, 0, 0, 0, 2},
+		{0, 3, 1, 1, 0},
+	})
+	c := SliceToColMajor([][]float64{ // 4 x 3
+		{+0.50, 0, +0.25},
+		{+0.25, 0, -0.25},
+		{-0.25, 0, +0.00},
+		{-0.25, 0, +0.00},
+	})
+
+	// sizes
+	m := 4 // m = nrow(a)        = a.M = nrow(c)
+	k := 5 // k = ncol(a)        = a.N = nrow(trans(b))
+	n := 3 // n = ncol(trans(b)) = b.M = ncol(c)
+
+	// run dgemm
+	transA, transB := false, true
+	alpha, beta := 0.5, 2.0
+	lda, ldb, ldc := 4, 3, 4
+	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+	if err != nil {
+		tst.Errorf("Dgemm failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.Deep2(tst, "0.5⋅a⋅bᵀ + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
+		{2, -1, 4},
+		{2, +1, 4},
+		{2, -1, 5},
+		{2, +1, 2},
+	})
+}
+
+func TestDgemm03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgemm03: 0.5⋅aᵀ⋅b + 2⋅c")
+
+	// allocate matrices
+	a := SliceToColMajor([][]float64{ // 5 x 4
+		{+1, +2, +1, +4},
+		{+2, +3, +2, +0},
+		{+0, -1, +0, +3},
+		{+1, +1, +4, +1},
+		{-1, +1, -1, +1},
+	})
+	b := SliceToColMajor([][]float64{ // 5 x 3
+		{1, 0, 0},
+		{0, 0, 3},
+		{0, 0, 1},
+		{1, 0, 1},
+		{0, 2, 0},
+	})
+	c := SliceToColMajor([][]float64{ // 4 x 3
+		{+0.50, 0, +0.25},
+		{+0.25, 0, -0.25},
+		{-0.25, 0, +0.00},
+		{-0.25, 0, +0.00},
+	})
+
+	// sizes
+	m := 4 // m = nrow(trans(a)) = a.N = nrow(c)
+	k := 5 // k = ncol(trans(a)) = a.M = nrow(trans(b))
+	n := 3 // n = ncol(b)        = b.N = ncol(c)
+
+	// run dgemm
+	transA, transB := true, false
+	alpha, beta := 0.5, 2.0
+	lda, ldb, ldc := 5, 5, 4
+	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+	if err != nil {
+		tst.Errorf("Dgemm failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.Deep2(tst, "0.5⋅aᵀ⋅b + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
+		{2, -1, 4},
+		{2, +1, 4},
+		{2, -1, 5},
+		{2, +1, 2},
+	})
+}
+
+func TestDgemm04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgemm04: 0.5⋅aᵀ⋅bᵀ + 2⋅c")
+
+	// allocate matrices
+	a := SliceToColMajor([][]float64{ // 5 x 4
+		{+1, +2, +1, +4},
+		{+2, +3, +2, +0},
+		{+0, -1, +0, +3},
+		{+1, +1, +4, +1},
+		{-1, +1, -1, +1},
+	})
+	b := SliceToColMajor([][]float64{ // 3 x 5
+		{1, 0, 0, 1, 0},
+		{0, 0, 0, 0, 2},
+		{0, 3, 1, 1, 0},
+	})
+	c := SliceToColMajor([][]float64{ // 4 x 3
+		{+0.50, 0, +0.25},
+		{+0.25, 0, -0.25},
+		{-0.25, 0, +0.00},
+		{-0.25, 0, +0.00},
+	})
+
+	// sizes
+	m := 4 // m = nrow(trans(a)) = a.N = nrow(c)
+	k := 5 // k = ncol(trans(a)) = a.M = nrow(trans(b))
+	n := 3 // n = ncol(trans(b)) = b.M = ncol(c)
+
+	// run dgemm
+	transA, transB := true, true
+	alpha, beta := 0.5, 2.0
+	lda, ldb, ldc := 5, 3, 4
+	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+	if err != nil {
+		tst.Errorf("Dgemm failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.Deep2(tst, "0.5⋅aᵀ⋅bᵀ + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
 		{2, -1, 4},
 		{2, +1, 4},
 		{2, -1, 5},

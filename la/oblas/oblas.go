@@ -148,6 +148,11 @@ func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []
 
 // Dgemm performs one of the matrix-matrix operations
 //
+//  false,false:  C_{m,n} := α ⋅ A_{m,k} ⋅ B_{k,n}  +  β ⋅ C_{m,n}
+//  false,true:   C_{m,n} := α ⋅ A_{m,k} ⋅ B_{n,k}  +  β ⋅ C_{m,n}
+//  true, false:  C_{m,n} := α ⋅ A_{k,m} ⋅ B_{k,n}  +  β ⋅ C_{m,n}
+//  true, true:   C_{m,n} := α ⋅ A_{k,m} ⋅ B_{n,k}  +  β ⋅ C_{m,n}
+//
 //  see: http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
 //
 //  see: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemm
