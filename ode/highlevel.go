@@ -23,17 +23,12 @@ import "github.com/cpmech/gosl/la"
 //   saveDense -- save many steps (dense output) [using dx]
 //
 //  OUTPUT:
-//   yf   -- final {y}
+//   y    -- modified y vector with final {y}
 //   stat -- statistics
 //   out  -- output with all steps results with save==true
 //
 func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol float64,
-	numJac, fixedStep, saveStep, saveDense bool) (yf la.Vector, stat *Stat, out *Output, err error) {
-
-	// current y vector
-	ndim := len(y)
-	yf = la.NewVector(ndim)
-	yf.Apply(1, y)
+	numJac, fixedStep, saveStep, saveDense bool) (stat *Stat, out *Output, err error) {
 
 	// configuration
 	conf, err := NewConfig(method, "", nil)
@@ -54,6 +49,7 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 	}
 
 	// output handler
+	ndim := len(y)
 	out = NewOutput(ndim, conf)
 
 	// allocate solver
@@ -68,7 +64,7 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(yf, 0.0, xf)
+	err = sol.Solve(y, 0.0, xf)
 
 	// set stat variable
 	stat = sol.Stat
@@ -76,20 +72,20 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 }
 
 // Dopri5simple solves ODE using DoPri5 method without options for saving results and others
-func Dopri5simple(fcn Func, y la.Vector, xf, tol float64) (yf la.Vector, err error) {
-	yf, _, _, err = Solve("dopri5", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
+func Dopri5simple(fcn Func, y la.Vector, xf, tol float64) (err error) {
+	_, _, err = Solve("dopri5", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
 	return
 }
 
 // Dopri8simple solves ODE using DoPri8 method without options for saving results and others
-func Dopri8simple(fcn Func, y la.Vector, xf, tol float64) (yf la.Vector, err error) {
-	yf, _, _, err = Solve("dopri8", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
+func Dopri8simple(fcn Func, y la.Vector, xf, tol float64) (err error) {
+	_, _, err = Solve("dopri8", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
 	return
 }
 
 // Radau5simple solves ODE using Radau5 method without options for saving results and others
-func Radau5simple(fcn Func, jac JacF, y la.Vector, xf, tol float64) (yf la.Vector, err error) {
+func Radau5simple(fcn Func, jac JacF, y la.Vector, xf, tol float64) (err error) {
 	numJac := jac == nil
-	yf, _, _, err = Solve("radau5", fcn, jac, y, xf, 0, tol, tol, numJac, false, false, false)
+	_, _, err = Solve("radau5", fcn, jac, y, xf, 0, tol, tol, numJac, false, false, false)
 	return
 }
