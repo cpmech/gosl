@@ -48,16 +48,12 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 		conf.SetDenseOut(true, dx, xf, nil)
 	}
 
-	// output handler
-	ndim := len(y)
-	out = NewOutput(ndim, conf)
-
 	// allocate solver
 	J := jac
 	if numJac {
 		J = nil
 	}
-	sol, err := NewSolver(ndim, conf, out, fcn, J, nil)
+	sol, err := NewSolver(len(y), conf, fcn, J, nil)
 	if err != nil {
 		return
 	}
@@ -66,8 +62,9 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 	// solve ODE
 	err = sol.Solve(y, 0.0, xf)
 
-	// set stat variable
+	// results
 	stat = sol.Stat
+	out = sol.Out
 	return
 }
 

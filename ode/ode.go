@@ -28,7 +28,7 @@ type Solver struct {
 
 	// structures
 	conf *Config // configuration parameters
-	out  *Output // output handler
+	Out  *Output // output handler
 	Stat *Stat   // statistics
 
 	// problem definition
@@ -55,12 +55,12 @@ type Solver struct {
 //
 //  NOTE: remember to call Free() to release allocated resources (e.g. from the linear solvers)
 //
-func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Triplet) (o *Solver, err error) {
+func NewSolver(ndim int, conf *Config, fcn Func, jac JacF, M *la.Triplet) (o *Solver, err error) {
 
 	// main
 	o = new(Solver)
 	o.conf = conf
-	o.out = out
+	o.Out = newOutput(ndim, conf)
 
 	// problem definition
 	o.ndim = ndim
@@ -90,8 +90,8 @@ func NewSolver(ndim int, conf *Config, out *Output, fcn Func, jac JacF, M *la.Tr
 	}
 
 	// connect dense output function
-	if o.out != nil {
-		o.out.dout = o.rkm.DenseOut
+	if o.Out != nil {
+		o.Out.dout = o.rkm.DenseOut
 	}
 	return
 }
@@ -127,8 +127,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	// stat and output
 	o.Stat.Reset()
 	o.Stat.Hopt = o.work.h
-	if o.out != nil {
-		stop, e := o.out.Execute(0, false, o.work.rs, o.work.h, x, y)
+	if o.Out != nil {
+		stop, e := o.Out.execute(0, false, o.work.rs, o.work.h, x, y)
 		if stop || e != nil {
 			err = e
 			return
@@ -173,8 +173,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			if err != nil {
 				return
 			}
-			if o.out != nil {
-				stop, e := o.out.Execute(istep, false, o.work.rs, o.work.h, x, y)
+			if o.Out != nil {
+				stop, e := o.Out.execute(istep, false, o.work.rs, o.work.h, x, y)
 				if stop || e != nil {
 					err = e
 					return
@@ -282,8 +282,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				x += o.work.h
 
 				// output
-				if o.out != nil {
-					stop, e := o.out.Execute(o.Stat.Naccepted, last, o.work.rs, o.work.h, x, y)
+				if o.Out != nil {
+					stop, e := o.Out.execute(o.Stat.Naccepted, last, o.work.rs, o.work.h, x, y)
 					if stop || e != nil {
 						err = e
 						return

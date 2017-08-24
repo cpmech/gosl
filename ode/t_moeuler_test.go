@@ -24,11 +24,8 @@ func TestMoEuler01(tst *testing.T) {
 	status(tst, err)
 	conf.SetStepOut(true, nil)
 
-	// output handler
-	out := NewOutput(p.Ndim, conf)
-
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
+	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -52,7 +49,7 @@ func TestMoEuler01(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("MoEuler", 0, out, 101, true, nil, nil)
+		p.Plot("MoEuler", 0, sol.Out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "moeuler01")
 	}
 }

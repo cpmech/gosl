@@ -27,11 +27,8 @@ func TestRadau501a(tst *testing.T) {
 	status(tst, err)
 	conf.SetStepOut(true, nil)
 
-	// output handler
-	out := NewOutput(p.Ndim, conf)
-
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
+	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -55,7 +52,7 @@ func TestRadau501a(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("Radau5,Jana", 0, out, 101, true, nil, nil)
+		p.Plot("Radau5,Jana", 0, sol.Out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "radau501a")
 	}
 }
@@ -95,11 +92,8 @@ func TestRadau502(tst *testing.T) {
 		return
 	})
 
-	// output handler
-	out := NewOutput(p.Ndim, conf)
-
 	// allocate ODE object
-	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
+	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -121,9 +115,9 @@ func TestRadau502(tst *testing.T) {
 	// compare with fortran code
 	d, err := readRefData("data/dr1_radau5.cmp")
 	status(tst, err)
-	chk.Ints(tst, "S", out.GetDenseS(), d.S)
-	chk.Array(tst, "X", 1e-15, out.GetDenseX(), d.X)
-	chk.Deep2(tst, "Y", 1e-11, out.GetDenseYtableT(), d.Y)
+	chk.Ints(tst, "S", sol.Out.GetDenseS(), d.S)
+	chk.Array(tst, "X", 1e-15, sol.Out.GetDenseX(), d.X)
+	chk.Deep2(tst, "Y", 1e-11, sol.Out.GetDenseYtableT(), d.Y)
 
 	// check saved output
 	chk.Ints(tst, "ss", ss, d.S)
@@ -134,8 +128,8 @@ func TestRadau502(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("steps", 0, out, 101, false, nil, &plt.A{M: "+", C: plt.C(1, 0), NoClip: true})
-		plt.Plot(out.GetDenseX(), out.GetDenseY(0), &plt.A{L: "cont", Ls: "none", M: ".", C: plt.C(0, 0), NoClip: true})
+		p.Plot("steps", 0, sol.Out, 101, false, nil, &plt.A{M: "+", C: plt.C(1, 0), NoClip: true})
+		plt.Plot(sol.Out.GetDenseX(), sol.Out.GetDenseY(0), &plt.A{L: "cont", Ls: "none", M: ".", C: plt.C(0, 0), NoClip: true})
 		plt.Gll("$x$", "$y$", nil)
 		plt.Save("/tmp/gosl/ode", "radau502")
 	}

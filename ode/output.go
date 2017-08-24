@@ -9,7 +9,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Output holds output data
+// Output holds output data (prepared by Solver)
 type Output struct {
 
 	// input
@@ -37,10 +37,10 @@ type Output struct {
 	dout func(yout la.Vector, h, x float64, y la.Vector, xout float64) // function to calculate dense values of y
 }
 
-// NewOutput returns a new structure
+// newOutput returns a new structure
 //  ndim -- dimension of problem
 //  conf -- configuration
-func NewOutput(ndim int, conf *Config) (o *Output) {
+func newOutput(ndim int, conf *Config) (o *Output) {
 	o = new(Output)
 	o.ndim = ndim
 	o.conf = conf
@@ -67,8 +67,8 @@ func NewOutput(ndim int, conf *Config) (o *Output) {
 	return
 }
 
-// Execute executes output; e.g. call Fcn and saves x and y values
-func (o *Output) Execute(istep int, last bool, ρs, h, x float64, y []float64) (stop bool, err error) {
+// execute executes output; e.g. call Fcn and saves x and y values
+func (o *Output) execute(istep int, last bool, ρs, h, x float64, y []float64) (stop bool, err error) {
 
 	// step output using function
 	if o.conf.stepF != nil {

@@ -48,15 +48,12 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 	}
 	conf.SetStepOut(true, nil)
 
-	// output handler
-	out = NewOutput(o.Ndim, conf)
-
 	// allocate solver
 	jac := o.Jac
 	if numJac {
 		jac = nil
 	}
-	sol, err := NewSolver(o.Ndim, conf, out, o.Fcn, jac, nil)
+	sol, err := NewSolver(o.Ndim, conf, o.Fcn, jac, nil)
 	if err != nil {
 		return
 	}
@@ -65,8 +62,9 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 	// solve ODE
 	err = sol.Solve(y, 0.0, o.Xf)
 
-	// set stat variable
+	// set output
 	stat = sol.Stat
+	out = sol.Out
 
 	// set auxiliary variable
 	o.Ytmp = la.NewVector(o.Ndim)

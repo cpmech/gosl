@@ -25,11 +25,8 @@ func TestBwEuler01a(tst *testing.T) {
 	conf.SetFixedH(p.Dx, p.Xf)
 	conf.SetStepOut(true, nil)
 
-	// output handler
-	out := NewOutput(p.Ndim, conf)
-
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
+	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -53,7 +50,7 @@ func TestBwEuler01a(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("BwEuler,Jana", 0, out, 101, true, nil, nil)
+		p.Plot("BwEuler,Jana", 0, sol.Out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "bweuler01a")
 	}
 }
@@ -72,11 +69,8 @@ func TestBwEuler01b(tst *testing.T) {
 	conf.SetFixedH(p.Dx, p.Xf)
 	conf.SetStepOut(true, nil)
 
-	// output handler
-	out := NewOutput(p.Ndim, conf)
-
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, nil, nil)
+	sol, err := NewSolver(p.Ndim, conf, p.Fcn, nil, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -100,7 +94,7 @@ func TestBwEuler01b(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, nil)
-		p.Plot("BwEuler,Jnum", 0, out, 101, true, nil, nil)
+		p.Plot("BwEuler,Jnum", 0, sol.Out, 101, true, nil, nil)
 		plt.Save("/tmp/gosl/ode", "bweuler01b")
 	}
 }

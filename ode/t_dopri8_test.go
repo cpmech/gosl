@@ -58,11 +58,8 @@ func TestDoPri802(tst *testing.T) {
 		return
 	})
 
-	// output handler
-	out := NewOutput(p.Ndim, conf)
-
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, out, p.Fcn, p.Jac, nil)
+	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	status(tst, err)
 	defer sol.Free()
 
@@ -82,10 +79,10 @@ func TestDoPri802(tst *testing.T) {
 	// check results: setps
 	_, d, err := io.ReadTable("data/dr_dop853.txt")
 	status(tst, err)
-	chk.Array(tst, "h", 1e-6, out.GetStepH(), d["h"])
-	chk.Array(tst, "x", 1e-6, out.GetStepX(), d["x"])
-	chk.Array(tst, "y0", 1e-6, out.GetStepY(0), d["y0"])
-	chk.Array(tst, "y1", 1e-6, out.GetStepY(1), d["y1"])
+	chk.Array(tst, "h", 1e-6, sol.Out.GetStepH(), d["h"])
+	chk.Array(tst, "x", 1e-6, sol.Out.GetStepX(), d["x"])
+	chk.Array(tst, "y0", 1e-6, sol.Out.GetStepY(0), d["y0"])
+	chk.Array(tst, "y1", 1e-6, sol.Out.GetStepY(1), d["y1"])
 
 	// check results: dense
 	_, dd, err := io.ReadTable("data/dr_dop853_dense.txt")
@@ -95,20 +92,20 @@ func TestDoPri802(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		XX := out.GetStepX()
+		XX := sol.Out.GetStepX()
 		plt.Reset(true, &plt.A{Prop: 1.5})
 		plt.Subplot(2, 1, 1)
-		plt.Plot(XX, out.GetStepY(0), &plt.A{C: "r", M: ".", Ms: 3, NoClip: true})
+		plt.Plot(XX, sol.Out.GetStepY(0), &plt.A{C: "r", M: ".", Ms: 3, NoClip: true})
 		plt.Plot(xx, yy0, &plt.A{C: "r", M: "o", NoClip: true})
 		plt.Gll("$x$", "$y_0$", nil)
 		plt.DoubleYscale("")
-		plt.Plot(XX, out.GetStepY(1), &plt.A{C: "b", M: "+", Ms: 3, NoClip: true})
+		plt.Plot(XX, sol.Out.GetStepY(1), &plt.A{C: "b", M: "+", Ms: 3, NoClip: true})
 		plt.Plot(xx, yy1, &plt.A{C: "b", M: "x", Ls: "none", NoClip: true})
 		plt.AxisXrange(-0.01, 0.2)
 		plt.Gll("$x$", "$y_1$", nil)
 		plt.HideTRborders()
 		plt.Subplot(2, 1, 2)
-		plt.Plot(XX, out.GetStepRs(), &plt.A{C: plt.C(3, 0), NoClip: true})
+		plt.Plot(XX, sol.Out.GetStepRs(), &plt.A{C: plt.C(3, 0), NoClip: true})
 		plt.AxisXrange(-0.01, 0.2)
 		plt.Gll("$x$", "$\\rho_s$", nil)
 		plt.Save("/tmp/gosl/ode", "dopri802")
