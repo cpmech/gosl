@@ -23,6 +23,32 @@ func calcLLt(L *Matrix) (LLt *Matrix) {
 	return
 }
 
+func TestDenSolve01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("DenSolve01")
+
+	a := NewMatrixDeep2([][]float64{
+		{2, 1, 1, 3, 2},
+		{1, 2, 2, 1, 1},
+		{1, 2, 9, 1, 5},
+		{3, 1, 1, 7, 1},
+		{2, 1, 5, 1, 8},
+	})
+	b := []float64{-2, 4, 3, -5, 1}
+	x := make([]float64, 5)
+	err := DenSolve(x, a, b, true)
+	status(tst, err)
+	TestSolverResidual(tst, a, x, b, 1e-14)
+	chk.Array(tst, "x = inv(a) * b", 1e-13, x, []float64{
+		-629.0 / 98.0,
+		+237.0 / 49.0,
+		-53.0 / 49.0,
+		+62.0 / 49.0,
+		+23.0 / 14.0,
+	})
+}
+
 func TestCholesky01(tst *testing.T) {
 
 	//verbose()

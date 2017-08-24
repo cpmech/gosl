@@ -18,5 +18,6 @@ while true; do
     #mpirun -np 2 go run t_mumpssol04_main.go
     #mpirun -np 3 go run t_mumpssol05_main.go
     #go test -test.run="Vector03"
-    go test -test.run="Triplet02"
+    #go test -test.run="Triplet02"
+    go test -test.run="DenSolve01"
 done

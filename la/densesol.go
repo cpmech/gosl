@@ -8,7 +8,24 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/la/oblas"
 )
+
+// DenSolve solves dense linear system using LAPACK (OpemBLAS)
+//
+//   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
+//
+func DenSolve(x Vector, A *Matrix, b Vector, preserveA bool) (err error) {
+	a := A
+	if preserveA {
+		a = NewMatrix(A.M, A.N)
+		copy(a.Data, A.Data)
+	}
+	copy(x, b)
+	ipiv := make([]int32, A.M)
+	err = oblas.Dgesv(A.M, 1, a.Data, A.M, ipiv, x, A.M)
+	return
+}
 
 // Cholesky returns the Cholesky decomposition of a symmetric positive-definite matrix
 //
