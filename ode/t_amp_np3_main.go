@@ -135,17 +135,16 @@ func main() {
 	}
 
 	// configurations
-	conf, err := ode.NewConfig(ode.Radau5kind, "", comm)
-	status(err)
-	conf.SaveXY = true
+	conf := ode.NewConfig("radau5", "", comm)
+	conf.SetStepOut(true, nil)
 	conf.IniH = 1.0e-6 // initial step size
 
 	// set tolerances
 	atol, rtol := 1e-11, 1e-5
-	conf.SetTol(atol, rtol)
+	conf.SetTols(atol, rtol)
 
 	// ODE solver
-	sol, err := ode.NewSolver(conf, ndim, fcn, jac, M, nil)
+	sol, err := ode.NewSolver(ndim, conf, fcn, jac, M)
 	status(err)
 	defer sol.Free()
 
@@ -173,14 +172,14 @@ func main() {
 		if err != nil {
 			chk.Panic("%v", err)
 		}
-		X := sol.Out.GetX()
-		H := sol.Out.GetH()
+		X := sol.Out.GetStepX()
+		H := sol.Out.GetStepH()
 		for j := 0; j < ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 4 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.GetYi(j)
+			Yj := sol.Out.GetStepY(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA, NoClip: true})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB, NoClip: true})

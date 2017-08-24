@@ -77,18 +77,12 @@ func main() {
 	y := la.Vector([]float64{2.0, -0.6})
 
 	// configurations
-	conf, err := ode.NewConfig(ode.Radau5kind, "", comm)
-	status(err)
-	conf.SaveXY = true
-
-	// tolerances
-	rtol := 1e-4
-	atol := rtol
-	conf.IniH = 1.0e-4
-	conf.SetTol(atol, rtol)
+	conf := ode.NewConfig("radau5", "", comm)
+	conf.SetStepOut(true, nil)
+	conf.SetTol(1e-4)
 
 	// solver
-	sol, err := ode.NewSolver(conf, ndim, fcn, jac, nil, nil)
+	sol, err := ode.NewSolver(ndim, conf, fcn, jac, nil)
 	status(err)
 
 	// solve
@@ -113,14 +107,14 @@ func main() {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
 		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
 		status(err)
-		X := sol.Out.GetX()
-		H := sol.Out.GetH()
+		X := sol.Out.GetStepX()
+		H := sol.Out.GetStepH()
 		for j := 0; j < ndim; j++ {
 			labelA, labelB := "", ""
 			if j == 2 {
 				labelA, labelB = "reference", "gosl"
 			}
-			Yj := sol.Out.GetYi(j)
+			Yj := sol.Out.GetStepY(j)
 			plt.Subplot(ndim+1, 1, j+1)
 			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA})
 			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 2, Ls: "none", L: labelB})

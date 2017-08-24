@@ -34,12 +34,11 @@ func main() {
 	p := ode.ProbHwEq11()
 
 	// configuration
-	conf, err := ode.NewConfig(ode.Radau5kind, "mumps", comm)
-	status(err)
-	conf.SaveXY = true
+	conf := ode.NewConfig("radau5", "mumps", comm)
+	conf.SetStepOut(true, nil)
 
 	// solver
-	sol, err := ode.NewSolver(conf, p.Ndim, p.Fcn, p.Jac, nil, nil)
+	sol, err := ode.NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	status(err)
 	defer sol.Free()
 
@@ -61,11 +60,11 @@ func main() {
 	chk.String(tst, sol.Stat.LsKind, "mumps")
 
 	// check results
-	chk.Float64(tst, "yFin", 2.94e-5, p.Y[0], p.Yana(p.Xf))
+	chk.Float64(tst, "yFin", 2.94e-5, p.Y[0], p.CalcYana(0, p.Xf))
 
 	// plot
 	plt.Reset(true, nil)
-	p.Plot("Radau5,Jana", sol.Out, 101, true, nil, nil)
+	p.Plot("Radau5,Jana", 0, sol.Out, 101, true, nil, nil)
 	plt.Save("/tmp/gosl/ode", "mpi_eq11_np1")
 }
 
