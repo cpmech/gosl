@@ -87,7 +87,7 @@ type Config struct {
 //   NOTE: (1) if comm == nil, the linear solver will be "umfpack" by default
 //         (2) if comm != nil and comm.Size() == 1, you can use either "umfpack" or "mumps"
 //         (3) if comm != nil and comm.Size() > 1, the linear solver will be set to "mumps" automatically
-func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config, err error) {
+func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config) {
 
 	// parameters
 	o = new(Config)
@@ -134,7 +134,7 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 	o.comm = comm
 
 	// set tolerances
-	err = o.SetTol(1e-4, 1e-4)
+	o.SetTols(1e-4, 1e-4)
 
 	// coefficients
 	o.rerrPrevMin = 1e-4
@@ -150,14 +150,14 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config,
 	return
 }
 
-// SetTol sets tolerances according to Hairer and Wanner' suggestions
+// SetTols sets tolerances according to Hairer and Wanner' suggestions
 //   atol   -- absolute tolerance; use 0 for default [default = 1e-4]
 //   rtol   -- relative tolerance; use 0 for default [default = 1e-4]
-func (o *Config) SetTol(atol, rtol float64) (err error) {
+func (o *Config) SetTols(atol, rtol float64) {
 
 	// check
 	if atol <= 0.0 || atol <= 10.0*o.Eps {
-		return chk.Err("tolerances are too small: Atol=%v, Rtol=%v", atol, atol)
+		chk.Panic("tolerances are too small: Atol=%v, Rtol=%v", atol, atol)
 	}
 
 	// set
@@ -174,6 +174,11 @@ func (o *Config) SetTol(atol, rtol float64) (err error) {
 	// tolerance for iterations
 	o.fnewt = utl.Max(10.0*o.Eps/o.rtol, utl.Min(0.03, math.Sqrt(o.rtol)))
 	return
+}
+
+// SetTol sets both tolerances: Atol and Rtol
+func (o *Config) SetTol(atolAndRtol float64) {
+	o.SetTols(atolAndRtol, atolAndRtol)
 }
 
 // SetFixedH calculates the number of steps, the exact stepsize h, and set to use fixed stepsize

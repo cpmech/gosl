@@ -31,12 +31,9 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 	numJac, fixedStep, saveStep, saveDense bool) (stat *Stat, out *Output, err error) {
 
 	// configuration
-	conf, err := NewConfig(method, "", nil)
-	if err != nil {
-		return
-	}
+	conf := NewConfig(method, "", nil)
 	if atol > 0 && rtol > 0 {
-		conf.SetTol(atol, rtol)
+		conf.SetTols(atol, rtol)
 	}
 	if fixedStep {
 		conf.SetFixedH(dx, xf)

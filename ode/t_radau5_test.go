@@ -23,8 +23,7 @@ func TestRadau501a(tst *testing.T) {
 	p := ProbHwEq11()
 
 	// configuration
-	conf, err := NewConfig("radau5", "", nil)
-	status(tst, err)
+	conf := NewConfig("radau5", "", nil)
 	conf.SetStepOut(true, nil)
 
 	// solver
@@ -69,11 +68,10 @@ func TestRadau502(tst *testing.T) {
 	//p.Xf = 0.6
 
 	// configuration
-	conf, err := NewConfig("radau5", "", nil)
-	status(tst, err)
+	conf := NewConfig("radau5", "", nil)
 	conf.SetStepOut(true, nil)
 	conf.IniH = 1e-6
-	conf.SetTol(1e-4, 1e-4)
+	conf.SetTols(1e-4, 1e-4)
 
 	// dense output function
 	ss := make([]int, 11)
