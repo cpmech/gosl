@@ -317,3 +317,45 @@ func TestMatrix04(tst *testing.T) {
 		{0.5 + 0.5i, 0.5 + 0.5i, 0.5 + 0.5i},
 	})
 }
+
+func TestMatrix05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Matrix05. (real) extra methods")
+
+	A := NewMatrixDeep2([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{4, 3, 2, 1},
+	})
+	A.ClearRC([]int{1, 2}, nil, 1.0)
+	chk.Deep2(tst, "A", 1e-17, A.GetDeep2(), [][]float64{
+		{1, 2, 3, 4},
+		{0, 1, 0, 0},
+		{0, 0, 1, 0},
+	})
+
+	B := NewMatrixDeep2([][]float64{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{4, 3, 2, 1},
+	})
+	B.ClearRC([]int{0, 2}, []int{0, 3}, 2.0)
+	chk.Deep2(tst, "B", 1e-17, B.GetDeep2(), [][]float64{
+		{2, 0, 0, 0},
+		{0, 6, 7, 0},
+		{0, 0, 2, 0},
+	})
+
+	C := NewMatrixDeep2([][]float64{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	})
+	C.ClearBry(1.0)
+	chk.Deep2(tst, "C", 1e-17, C.GetDeep2(), [][]float64{
+		{1, 0, 0},
+		{0, 5, 0},
+		{0, 0, 1},
+	})
+}

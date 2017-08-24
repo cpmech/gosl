@@ -138,6 +138,43 @@ func (o *Matrix) Fill(val float64) {
 	}
 }
 
+// ClearRC clear rows and columns and set diagonal components
+//                 _         _                                     _         _
+//  Example:      |  1 2 3 4  |                                   |  1 2 3 4  |
+//            A = |  5 6 7 8  |  ⇒  clear([1,2], [], 1.0)  ⇒  A = |  0 1 0 0  |
+//                |_ 4 3 2 1 _|                                   |_ 0 0 1 0 _|
+//
+func (o *Matrix) ClearRC(rows, cols []int, diag float64) {
+	for _, r := range rows {
+		for j := 0; j < o.N; j++ {
+			if r == j {
+				o.Set(r, j, diag)
+			} else {
+				o.Set(r, j, 0.0)
+			}
+		}
+	}
+	for _, c := range cols {
+		for i := 0; i < o.M; i++ {
+			if i == c {
+				o.Set(i, c, diag)
+			} else {
+				o.Set(i, c, 0.0)
+			}
+		}
+	}
+}
+
+// ClearBry clears boundaries
+//                 _       _                          _       _
+//  Example:      |  1 2 3  |                        |  1 0 0  |
+//            A = |  4 5 6  |  ⇒  clear(1.0)  ⇒  A = |  0 5 0  |
+//                |_ 7 8 9 _|                        |_ 0 0 1 _|
+//
+func (o *Matrix) ClearBry(diag float64) {
+	o.ClearRC([]int{0, o.M - 1}, []int{0, o.N - 1}, diag)
+}
+
 // MaxDiff returns the maximum difference between the components of this and another matrix
 func (o *Matrix) MaxDiff(another *Matrix) (maxdiff float64) {
 	maxdiff = math.Abs(o.Data[0] - another.Data[0])
