@@ -7,6 +7,9 @@
 package main
 
 import (
+	"testing"
+
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/opt"
@@ -77,19 +80,23 @@ func main() {
 	}
 
 	// print solution
-	io.Pf("\n")
+	io.Pl()
 	io.Pf("x = %v\n", ipm.X)
 	io.Pf("λ = %v\n", ipm.L)
 	io.Pf("s = %v\n", ipm.S)
 
 	// check solution
+	chk.Verbose = true
+	tst := new(testing.T)
 	A := Am.ToDense()
+	bres := make([]float64, len(b))
+	la.MatVecMul(bres, 1, A, ipm.X)
+	chk.Array(tst, "A*x=b", 1e-8, bres, b)
+
+	// fix and check x
 	x := ipm.X[:2]
 	x[0] -= ipm.X[5]
-	io.Pf("x = %v\n", x)
-	bchk := la.NewVector(3)
-	la.MatVecMul(bchk, 1, A, x)
-	io.Pf("b(check) = %v\n", bchk)
+	chk.Array(tst, "x", 1e-8, x, []float64{0.5, 1.5})
 
 	// plotting
 	plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
@@ -99,7 +106,7 @@ func main() {
 	argsF := &plt.A{CmapIdx: 1}
 	argsG := &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2, Fsz: 10}
 	vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
-	opt.PlotTwoVarsContour(x, np, nil, true, vmin, vmax, argsF, argsG, f,
+	opt.PlotTwoVarsContour(ipm.X[:2], np, nil, true, vmin, vmax, argsF, argsG, f,
 		func(x []float64) float64 { return g(x, 0) },
 		func(x []float64) float64 { return g(x, 1) },
 	)
