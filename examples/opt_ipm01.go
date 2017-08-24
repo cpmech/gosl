@@ -82,9 +82,8 @@ func main() {
 
 	// check solution
 	A := Am.ToDense()
-	x := ipm.X[:2]
 	bchk := la.NewVector(2)
-	la.MatVecMul(bchk, 1, A, x)
+	la.MatVecMul(bchk, 1, A, ipm.X)
 	io.Pf("b(check) = %v\n", bchk)
 
 	// plotting
@@ -95,7 +94,7 @@ func main() {
 	argsF := &plt.A{CmapIdx: 0}
 	argsG := &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2, Fsz: 10}
 	vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
-	opt.PlotTwoVarsContour(x, np, nil, true, vmin, vmax, argsF, argsG, f,
+	opt.PlotTwoVarsContour(ipm.X[:2], np, nil, true, vmin, vmax, argsF, argsG, f,
 		func(x []float64) float64 { return g(x, 0) },
 		func(x []float64) float64 { return g(x, 1) },
 	)
