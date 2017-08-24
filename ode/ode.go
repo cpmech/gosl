@@ -38,8 +38,8 @@ type Solver struct {
 
 	// method, info and workspace
 	rkm       rkmethod // Runge-Kutta method
-	fixedOnly bool     // method can only be used with fixed steps
-	implicit  bool     // method is implicit
+	FixedOnly bool     // method can only be used with fixed steps
+	Implicit  bool     // method is implicit
 	work      *rkwork  // Runge-Kutta workspace
 }
 
@@ -75,10 +75,10 @@ func NewSolver(ndim int, conf *Config, fcn Func, jac JacF, M *la.Triplet) (o *So
 
 	// information
 	var nstg int
-	o.fixedOnly, o.implicit, nstg = o.rkm.Info()
+	o.FixedOnly, o.Implicit, nstg = o.rkm.Info()
 
 	// stat
-	o.Stat = NewStat(o.conf.lsKind, o.implicit)
+	o.Stat = NewStat(o.conf.lsKind, o.Implicit)
 
 	// workspace
 	o.work = newRKwork(nstg, o.ndim)
@@ -111,7 +111,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 		err = chk.Err("xf=%v must be greater than x=%v\n", xf, x)
 		return
 	}
-	if o.fixedOnly && !o.conf.fixed {
+	if o.FixedOnly && !o.conf.fixed {
 		err = chk.Err("method %q can only be used with fixed steps. make sure to call conf.SetFixedH > 0", o.conf.method)
 		return
 	}
@@ -158,7 +158,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			io.Pf("y = %v\n", y)
 		}
 		for n := 0; n < o.conf.fixedNsteps; n++ {
-			if o.implicit && o.jac == nil { // f0 for numerical Jacobian
+			if o.Implicit && o.jac == nil { // f0 for numerical Jacobian
 				o.Stat.Nfeval++
 				o.fcn(o.work.f0, o.work.h, x, y)
 			}
@@ -301,7 +301,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.work.rerrPrev = utl.Max(o.conf.rerrPrevMin, o.work.rerr)
 
 				// calc new scal and f0
-				if o.implicit {
+				if o.Implicit {
 					la.VecScaleAbs(o.work.scal, o.conf.atol, o.conf.rtol, y)
 					o.Stat.Nfeval++
 					o.fcn(o.work.f0, o.work.h, x, y) // o.f0 := f(x,y)
@@ -322,7 +322,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 					last = true
 					o.work.h = xstep - x
 				} else {
-					if o.implicit {
+					if o.Implicit {
 						dxratio = dxnew / o.work.h
 						o.work.reuseJdec = o.work.theta <= o.conf.ThetaMax && dxratio >= o.conf.C1h && dxratio <= o.conf.C2h
 						if !o.work.reuseJdec {
@@ -334,7 +334,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				}
 
 				// check θ to decide if at least the Jacobian can be reused
-				if o.implicit {
+				if o.Implicit {
 					if !o.work.reuseJdec {
 						o.work.reuseJ = o.work.theta <= o.conf.ThetaMax
 					}
