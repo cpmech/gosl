@@ -52,16 +52,19 @@ func Test_linipm01(tst *testing.T) {
 		return
 	}
 
-	// check
-	io.Pf("\n")
+	// check x
+	io.Pl()
 	io.Pforan("x = %v\n", ipm.X)
 	io.Pfcyan("λ = %v\n", ipm.L)
 	io.Pforan("s = %v\n", ipm.S)
-	x := ipm.X[:2]
+	chk.Array(tst, "x", 1e-8, ipm.X, []float64{1, 1, 0, 0})
+
+	// check A * x
+	io.Pl()
 	bres := make([]float64, 2)
-	la.MatVecMul(bres, 1, A, x)
-	io.Pforan("bres = %v\n", bres)
-	chk.Array(tst, "x", 1e-9, x, []float64{1, 1})
+	la.MatVecMul(bres, 1, A, ipm.X)
+	io.Pf("A =\n%v\n", A.Print(""))
+	io.Pf("bres = %v\n", bres)
 	chk.Array(tst, "A*x=b", 1e-8, bres, b)
 
 	// plot
@@ -72,7 +75,7 @@ func Test_linipm01(tst *testing.T) {
 		vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
 		plt.Reset(false, nil)
 		argsG := &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2, Fsz: 10}
-		PlotTwoVarsContour(x, np, nil, true, vmin, vmax, nil, argsG, f,
+		PlotTwoVarsContour(ipm.X[:2], np, nil, true, vmin, vmax, nil, argsG, f,
 			func(x []float64) float64 { return g(x, 0) },
 			func(x []float64) float64 { return g(x, 1) },
 		)
