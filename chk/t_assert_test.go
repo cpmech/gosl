@@ -53,7 +53,7 @@ func TestDblAssert01(tst *testing.T) {
 	PrintTitle("DblAssert01")
 
 	PrintOk("the next error message is")
-	DblAssert(2, 1)
+	Float64assert(2, 1)
 }
 
 func TestIntAssertLessthan01(tst *testing.T) {

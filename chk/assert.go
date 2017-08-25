@@ -39,8 +39,8 @@ func IntAssertLessThanOrEqualTo(a, b int) {
 	}
 }
 
-// DblAssert asserts that a is equal to b (floats)
-func DblAssert(a, b float64) {
+// Float64assert asserts that a is equal to b (floats)
+func Float64assert(a, b float64) {
 	if AssertOn {
 		if a != b {
 			CallerInfo(3)
