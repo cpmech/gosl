@@ -46,10 +46,6 @@ func SetNumThreads(n int) {
 //  y += alpha*x + y
 //
 func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (err error) {
-	nmin := imin(len(x), len(y))
-	if n > nmin {
-		return chk.Err("n must not be greater than %d", n, nmin)
-	}
 	C.cblas_daxpy(
 		C.blasint(n),
 		C.double(alpha),
@@ -70,10 +66,6 @@ func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (
 //  y += alpha*x + y
 //
 func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, incy int) (err error) {
-	nmin := imin(len(x), len(y))
-	if n > nmin {
-		return chk.Err("n must not be greater than %d", n, nmin)
-	}
 	C.cblas_zaxpy(
 		C.blasint(n),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
