@@ -214,12 +214,12 @@ func (o *Matrix) Largest(den float64) (largest float64) {
 // Col access column j of this matrix. No copies are made since the internal data are in
 // col-major format already.
 // NOTE: this method can be used to modify the columns; e.g. with o.Col(0)[0] = 123
-func (o *Matrix) Col(j int) []float64 {
+func (o *Matrix) Col(j int) Vector {
 	return o.Data[j*o.M : (j+1)*o.M]
 }
 
 // GetRow returns row i of this matrix
-func (o *Matrix) GetRow(i int) (row []float64) {
+func (o *Matrix) GetRow(i int) (row Vector) {
 	row = make([]float64, o.N)
 	for j := 0; j < o.N; j++ {
 		row[j] = o.Data[i+j*o.M]
@@ -228,7 +228,7 @@ func (o *Matrix) GetRow(i int) (row []float64) {
 }
 
 // GetCol returns column j of this matrix
-func (o *Matrix) GetCol(j int) (col []float64) {
+func (o *Matrix) GetCol(j int) (col Vector) {
 	col = make([]float64, o.M)
 	copy(col, o.Data[j*o.M:(j+1)*o.M])
 	return
@@ -458,12 +458,12 @@ func (o *MatrixC) Fill(val complex128) {
 // Col access column j of this matrix. No copies are made since the internal data are in
 // col-major format already.
 // NOTE: this method can be used to modify the columns; e.g. with o.Col(0)[0] = 123
-func (o *MatrixC) Col(j int) []complex128 {
+func (o *MatrixC) Col(j int) VectorC {
 	return o.Data[j*o.M : (j+1)*o.M]
 }
 
 // GetRow returns row i of this matrix
-func (o *MatrixC) GetRow(i int) (row []complex128) {
+func (o *MatrixC) GetRow(i int) (row VectorC) {
 	row = make([]complex128, o.N)
 	for j := 0; j < o.N; j++ {
 		row[j] = o.Data[i+j*o.M]
@@ -472,7 +472,7 @@ func (o *MatrixC) GetRow(i int) (row []complex128) {
 }
 
 // GetCol returns column j of this matrix
-func (o *MatrixC) GetCol(j int) (col []complex128) {
+func (o *MatrixC) GetCol(j int) (col VectorC) {
 	col = make([]complex128, o.M)
 	copy(col, o.Data[j*o.M:(j+1)*o.M])
 	return
