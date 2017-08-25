@@ -558,7 +558,7 @@ func Qsort2(arr, brr []float64) {
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 type Sorter struct {
-	indx []int
+	Index []int
 }
 
 // Init builds an index indx[0..n-1] to sort an array a[0..n-1] such that a[indx[j]] is in
@@ -573,25 +573,25 @@ func (o *Sorter) Init(n int, less func(i, j int) bool) {
 	M := 7       // size of subarrays sorted by straight insertion
 	NSTACK := 64 // required auxiliary storage.
 	istack := make([]int, NSTACK)
-	o.indx = make([]int, n)
+	o.Index = make([]int, n)
 	jstack := -1
 	l := 0
 	ir := n - 1
 	var i, j, k, indxt int
 	for j = 0; j < n; j++ {
-		o.indx[j] = j
+		o.Index[j] = j
 	}
 	for { // Insertion sort when subarray small enough.
 		if ir-l < M {
 			for j = l + 1; j <= ir; j++ {
-				indxt = o.indx[j]
+				indxt = o.Index[j]
 				for i = j - 1; i >= l; i-- {
-					if less(o.indx[i], indxt) {
+					if less(o.Index[i], indxt) {
 						break
 					}
-					o.indx[i+1] = o.indx[i]
+					o.Index[i+1] = o.Index[i]
 				}
-				o.indx[i+1] = indxt
+				o.Index[i+1] = indxt
 			}
 			if jstack < 0 {
 				break
@@ -602,31 +602,31 @@ func (o *Sorter) Init(n int, less func(i, j int) bool) {
 			jstack--
 		} else {
 			k = (l + ir) >> 1 // Choose median of left, center, and right elements as partitioning element a. Also rearrange so that a[l] ≤ a[l+1] ≤ a[ir].
-			iswap(&o.indx[k], &o.indx[l+1])
-			if !less(o.indx[l], o.indx[ir]) {
-				iswap(&o.indx[l], &o.indx[ir])
+			iswap(&o.Index[k], &o.Index[l+1])
+			if !less(o.Index[l], o.Index[ir]) {
+				iswap(&o.Index[l], &o.Index[ir])
 			}
-			if !less(o.indx[l+1], o.indx[ir]) {
-				iswap(&o.indx[l+1], &o.indx[ir])
+			if !less(o.Index[l+1], o.Index[ir]) {
+				iswap(&o.Index[l+1], &o.Index[ir])
 			}
-			if !less(o.indx[l], o.indx[l+1]) {
-				iswap(&o.indx[l], &o.indx[l+1])
+			if !less(o.Index[l], o.Index[l+1]) {
+				iswap(&o.Index[l], &o.Index[l+1])
 			}
 			i = l + 1 // Initialize pointers for partitioning.
 			j = ir
-			indxt = o.indx[l+1]
+			indxt = o.Index[l+1]
 			for {
 				// Scan up to find element > a.
 				for { // do i++; while (a[indx[i]] < a[indxt]);
 					i++
-					if !less(o.indx[i], indxt) {
+					if !less(o.Index[i], indxt) {
 						break
 					}
 				}
 				// Scan down to find element < a.
 				for { // do j--; while (a[o.indx[j]] > a[indxt]);
 					j--
-					if less(o.indx[j], indxt) {
+					if less(o.Index[j], indxt) {
 						break
 					}
 				}
@@ -634,10 +634,10 @@ func (o *Sorter) Init(n int, less func(i, j int) bool) {
 					break
 				}
 				// Pointers crossed. Partitioning complete.
-				iswap(&o.indx[i], &o.indx[j])
+				iswap(&o.Index[i], &o.Index[j])
 			}
-			o.indx[l+1] = o.indx[j] // Insert partitioning element.
-			o.indx[j] = indxt
+			o.Index[l+1] = o.Index[j] // Insert partitioning element.
+			o.Index[j] = indxt
 			jstack += 2
 			// Push pointers to larger subarray on stack; process smaller subarray immediately.
 			if jstack >= NSTACK {
@@ -659,9 +659,9 @@ func (o *Sorter) Init(n int, less func(i, j int) bool) {
 // GetSorted returns a copy of array 'a' sorted according to the previously built index.
 // NOTE: the copy may be smaller if the index was built with a smaller set
 func (o *Sorter) GetSorted(a []float64) (b []float64) {
-	b = make([]float64, len(o.indx))
-	for i := 0; i < len(o.indx); i++ {
-		b[i] = a[o.indx[i]]
+	b = make([]float64, len(o.Index))
+	for i := 0; i < len(o.Index); i++ {
+		b[i] = a[o.Index[i]]
 	}
 	return
 }
@@ -669,9 +669,9 @@ func (o *Sorter) GetSorted(a []float64) (b []float64) {
 // GetSortedI returns a copy of array 'a' sorted according to the previously built index.
 // NOTE: the copy may be smaller if the index was built with a smaller set
 func (o *Sorter) GetSortedI(a []int) (b []int) {
-	b = make([]int, len(o.indx))
-	for i := 0; i < len(o.indx); i++ {
-		b[i] = a[o.indx[i]]
+	b = make([]int, len(o.Index))
+	for i := 0; i < len(o.Index); i++ {
+		b[i] = a[o.Index[i]]
 	}
 	return
 }

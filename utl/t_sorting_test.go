@@ -259,7 +259,7 @@ func Test_sort08(tst *testing.T) {
 
 	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
 	s.Init(3, func(i, j int) bool { return a[i] < a[j] })
-	chk.Ints(tst, "indx", s.indx, []int{0, 2, 1}) // 3 => smaller set
+	chk.Ints(tst, "indx", s.Index, []int{0, 2, 1}) // 3 => smaller set
 
 	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
 	as := s.GetSorted(a)
@@ -267,7 +267,7 @@ func Test_sort08(tst *testing.T) {
 
 	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
 	s.Init(5, func(i, j int) bool { return b[i] < b[j] }) // 5 => smaller set
-	chk.Ints(tst, "indx", s.indx, []int{3, 4, 2, 1, 0})
+	chk.Ints(tst, "indx", s.Index, []int{3, 4, 2, 1, 0})
 
 	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
 	bs := s.GetSorted(b)
@@ -275,7 +275,7 @@ func Test_sort08(tst *testing.T) {
 
 	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
 	s.Init(len(a), func(i, j int) bool { return a[i] < a[j] })
-	chk.Ints(tst, "indx", s.indx, []int{8, 7, 0, 4, 2, 6, 1, 3, 5})
+	chk.Ints(tst, "indx", s.Index, []int{8, 7, 0, 4, 2, 6, 1, 3, 5})
 
 	a = []float64{1, 5, 2, 8, 2, 9, 4, 0, -2}
 	b = []float64{9, 8, 7, 0, 3, -7, 6, 1, -1}
