@@ -288,7 +288,41 @@ func ExtractColC(j, m, n int, A []complex128) (colj []complex128) {
 
 // eigenvector matrices ////////////////////////////////////////////////////////////////////////////
 
-// EigenvecsBuildLeftAndRight builds complex left and right eigenvectros created by Dgeev function
+// EigenvecsBuild builds complex eigenvectros created by Dgeev function
+//  INPUT:
+//   wr, wi -- real and imag parts of eigenvalues
+//   v      -- left or right eigenvectors from Dgeev
+//  OUTPUT:
+//   vv -- complex version of left or right eigenvector [pre-allocated]
+//  NOTE (no checks made)
+//   n = len(wr) = len(wi) = len(v)
+//   2 * n = len(vv)
+func EigenvecsBuild(vv []complex128, wr, wi, v []float64) {
+	n := len(wr)
+	dj := 1                      // increment for next conjugate pair
+	for j := 0; j < n; j += dj { // loop over columns == eigenvalues
+		if math.Abs(wi[j]) > 0.0 { // eigenvalue is complex
+			if j > n-2 {
+				chk.Panic("last eigenvalue cannot be complex\n")
+			}
+			for i := 0; i < n; i++ { // loop over rows
+				p := i + j*n
+				q := i + (j+1)*n
+				vv[p] = complex(v[p], v[q])
+				vv[q] = complex(v[p], -v[q])
+			}
+			dj = 2
+		} else {
+			for i := 0; i < n; i++ { // loop over rows
+				p := i + j*n
+				vv[p] = complex(v[p], 0.0)
+			}
+			dj = 1
+		}
+	}
+}
+
+// EigenvecsBuildBoth builds complex left and right eigenvectros created by Dgeev function
 //  INPUT:
 //   wr, wi -- real and imag parts of eigenvalues
 //   vl, vr -- left and right eigenvectors from Dgeev
@@ -297,7 +331,7 @@ func ExtractColC(j, m, n int, A []complex128) (colj []complex128) {
 //  NOTE (no checks made)
 //   n = len(wr) = len(wi) = len(vl) = len(vr)
 //   2 * n = len(vvl) = len(vvr)
-func EigenvecsBuildLeftAndRight(vvl, vvr []complex128, wr, wi, vl, vr []float64) {
+func EigenvecsBuildBoth(vvl, vvr []complex128, wr, wi, vl, vr []float64) {
 	n := len(wr)
 	dj := 1                      // increment for next conjugate pair
 	for j := 0; j < n; j += dj { // loop over columns == eigenvalues

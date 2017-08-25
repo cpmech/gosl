@@ -1431,12 +1431,13 @@ func TestDgeev01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Dgeev01")
 
-	a := SliceToColMajor([][]float64{
+	adeep2 := [][]float64{
 		{+0.35, +0.45, -0.14, -0.17},
 		{+0.09, +0.07, -0.54, +0.35},
 		{-0.44, -0.33, -0.03, +0.17},
 		{+0.25, -0.32, -0.13, +0.11},
-	})
+	}
+	a := SliceToColMajor(adeep2)
 
 	n := 4
 	lda := n
@@ -1457,7 +1458,7 @@ func TestDgeev01(tst *testing.T) {
 
 	vvl := make([]complex128, n*n)
 	vvr := make([]complex128, n*n)
-	EigenvecsBuildLeftAndRight(vvl, vvr, wr, wi, vl, vr)
+	EigenvecsBuildBoth(vvl, vvr, wr, wi, vl, vr)
 
 	// check eigenvalues
 	wRef := []complex128{
@@ -1528,4 +1529,57 @@ func TestDgeev01(tst *testing.T) {
 	chk.ArrayC(tst, "vr1", 1e-15, ExtractColC(1, n, n, vvr), vr1Ref)
 	chk.ArrayC(tst, "vr2", 1e-15, ExtractColC(2, n, n, vvr), vr2Ref)
 	chk.ArrayC(tst, "vr3", 1e-15, ExtractColC(3, n, n, vvr), vr3Ref)
+
+	// call Dgeev again without vr
+	a2 := SliceToColMajor(adeep2)
+	wr2 := make([]float64, n)   // eigen values (real part)
+	wi2 := make([]float64, n)   // eigen values (imaginary part)
+	vl2 := make([]float64, n*n) // left eigenvectors
+	calcVl = true
+	calcVr = false
+	err = Dgeev(calcVl, calcVr, n, a2, lda, wr2, wi2, vl2, ldvl, nil, 0)
+	status(tst, err)
+
+	// check eigenvalues and left eigenvectors
+	vvl2 := make([]complex128, n*n)
+	EigenvecsBuild(vvl2, wr2, wi2, vl2)
+	ww2 := JoinComplex(wr2, wi2)
+	chk.ArrayC(tst, "2: w", 1e-16, ww2, wRef)
+	chk.ArrayC(tst, "2: vl0", 1e-15, ExtractColC(0, n, n, vvl2), vl0Ref)
+	chk.ArrayC(tst, "2: vl1", 1e-15, ExtractColC(1, n, n, vvl2), vl1Ref)
+	chk.ArrayC(tst, "2: vl2", 1e-15, ExtractColC(2, n, n, vvl2), vl2Ref)
+	chk.ArrayC(tst, "2: vl3", 1e-15, ExtractColC(3, n, n, vvl2), vl3Ref)
+
+	// call Dgeev again without vl
+	a3 := SliceToColMajor(adeep2)
+	wr3 := make([]float64, n)   // eigen values (real part)
+	wi3 := make([]float64, n)   // eigen values (imaginary part)
+	vr3 := make([]float64, n*n) // right eigenvectors
+	calcVl = false
+	calcVr = true
+	err = Dgeev(calcVl, calcVr, n, a3, lda, wr3, wi3, nil, 0, vr3, ldvr)
+	status(tst, err)
+
+	// check eigenvalues and right eigenvectors
+	vvr3 := make([]complex128, n*n)
+	EigenvecsBuild(vvr3, wr3, wi3, vr3)
+	ww3 := JoinComplex(wr3, wi3)
+	chk.ArrayC(tst, "3: w", 1e-16, ww3, wRef)
+	chk.ArrayC(tst, "3: vr0", 1e-15, ExtractColC(0, n, n, vvr3), vr0Ref)
+	chk.ArrayC(tst, "3: vr1", 1e-15, ExtractColC(1, n, n, vvr3), vr1Ref)
+	chk.ArrayC(tst, "3: vr3", 1e-15, ExtractColC(3, n, n, vvr3), vr3Ref)
+	chk.ArrayC(tst, "3: vr3", 1e-15, ExtractColC(3, n, n, vvr3), vr3Ref)
+
+	// call Dgeev again without eigenvectors
+	a4 := SliceToColMajor(adeep2)
+	wr4 := make([]float64, n) // eigen values (real part)
+	wi4 := make([]float64, n) // eigen values (imaginary part)
+	calcVl = false
+	calcVr = false
+	err = Dgeev(calcVl, calcVr, n, a4, lda, wr4, wi4, nil, 0, nil, 0)
+	status(tst, err)
+
+	// check eigenvalues
+	ww4 := JoinComplex(wr4, wi4)
+	chk.ArrayC(tst, "4: w", 1e-16, ww4, wRef)
 }

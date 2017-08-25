@@ -667,6 +667,17 @@ func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
 //  The computed eigenvectors are normalized to have Euclidean norm
 //  equal to 1 and largest component real.
 func Dgeev(calcVl, calcVr bool, n int, a []float64, lda int, wr []float64, wi, vl []float64, ldvl int, vr []float64, ldvr int) (err error) {
+	var vvl, vvr *C.double
+	if calcVl {
+		vvl = (*C.double)(unsafe.Pointer(&vl[0]))
+	} else {
+		ldvl = 1
+	}
+	if calcVr {
+		vvr = (*C.double)(unsafe.Pointer(&vr[0]))
+	} else {
+		ldvr = 1
+	}
 	info := C.LAPACKE_dgeev(
 		C.int(lapackColMajor),
 		jobVlr(calcVl),
@@ -676,9 +687,9 @@ func Dgeev(calcVl, calcVr bool, n int, a []float64, lda int, wr []float64, wi, v
 		C.lapack_int(lda),
 		(*C.double)(unsafe.Pointer(&wr[0])),
 		(*C.double)(unsafe.Pointer(&wi[0])),
-		(*C.double)(unsafe.Pointer(&vl[0])),
+		vvl,
 		C.lapack_int(ldvl),
-		(*C.double)(unsafe.Pointer(&vr[0])),
+		vvr,
 		C.lapack_int(ldvr),
 	)
 	if info != 0 {
