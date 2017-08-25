@@ -478,6 +478,24 @@ func (o *MatrixC) GetCol(j int) (col VectorC) {
 	return
 }
 
+// GetColReal returns column j of this matrix considering that the imaginary part is zero
+func (o *MatrixC) GetColReal(j int, checkZeroImag bool) (col Vector) {
+	col = make([]float64, o.M)
+	if checkZeroImag {
+		for i := 0; i < o.M; i++ {
+			if math.Abs(imag(o.Data[i+j*o.M])) > 0.0 {
+				chk.Panic("imaginary part is not zero\n")
+			}
+			col[i] = real(o.Data[i+j*o.M])
+		}
+		return
+	}
+	for i := 0; i < o.M; i++ {
+		col[i] = real(o.Data[i+j*o.M])
+	}
+	return
+}
+
 // Apply sets this matrix with the scaled components of another matrix
 //  this := α * another   ⇒   this[i] := α * another[i]
 //  NOTE: "another" may be "this"

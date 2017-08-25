@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func TestMatrix01(tst *testing.T) {
@@ -405,4 +406,32 @@ func TestMatrix05(tst *testing.T) {
 		{0, 0, 1},
 	})
 
+}
+
+func TestMatrix06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Matrix06. extraction methods")
+
+	A := NewMatrixDeep2c([][]complex128{
+		{1 + 1i, 0.1, 10},
+		{2 + 2i, 0.2, 20},
+		{3 + 3i, 0.3, 30},
+		{4 + 4i, 0.4, 40},
+		{5 + 5i, 0.5, 50},
+	})
+
+	col1 := A.GetColReal(1, true)
+	chk.Array(tst, "col1", 1e-17, col1, []float64{0.1, 0.2, 0.3, 0.4, 0.5})
+
+	defer func() {
+		if err := recover(); err != nil {
+			if chk.Verbose {
+				io.Pf("OK, caught the following message:\n\n\t%v\n", err)
+			}
+		} else {
+			tst.Errorf("\n\tTEST FAILED. GetColReal should have panicked\n")
+		}
+	}()
+	A.GetColReal(0, true)
 }
