@@ -328,6 +328,14 @@ func TestMatrix05(tst *testing.T) {
 		{5, 6, 7, 8},
 		{4, 3, 2, 1},
 	})
+
+	Ac := A.GetComplex()
+	chk.Deep2c(tst, "Ac", 1e-17, Ac.GetDeep2(), [][]complex128{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{4, 3, 2, 1},
+	})
+
 	A.ClearRC([]int{1, 2}, nil, 1.0)
 	chk.Deep2(tst, "A", 1e-17, A.GetDeep2(), [][]float64{
 		{1, 2, 3, 4},
@@ -358,4 +366,5 @@ func TestMatrix05(tst *testing.T) {
 		{0, 5, 0},
 		{0, 0, 1},
 	})
+
 }

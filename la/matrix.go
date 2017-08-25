@@ -117,6 +117,17 @@ func (o *Matrix) GetTranspose() (tran *Matrix) {
 	return
 }
 
+// GetComplex returns a complex version of this matrix
+func (o *Matrix) GetComplex() (b *MatrixC) {
+	b = NewMatrixC(o.M, o.N)
+	for i := 0; i < o.M; i++ {
+		for j := 0; j < o.N; j++ {
+			b.Set(i, j, complex(o.Get(i, j), 0))
+		}
+	}
+	return
+}
+
 // CopyInto copies the scaled components of this matrix into another one (result)
 //  result := α * this   ⇒   result[ij] := α * this[ij]
 func (o *Matrix) CopyInto(result *Matrix, α float64) {
