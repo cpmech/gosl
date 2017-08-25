@@ -25,7 +25,7 @@ def mprint(name, m, fmt='%+23.15e'):
 
 def vprintC(name, v, fmt='%+23.15e'):
     ff = fmt + ' ' + fmt + 'i'
-    l = '%s := []fcomplex128{' % name
+    l = '%s := []complex128{' % name
     for i in range(len(v)):
         if i > 0: l += ','
         l += ff % (v[i].real, v[i].imag)

@@ -643,6 +643,50 @@ func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
 	return
 }
 
+// Dgeev computes for an N-by-N real nonsymmetric matrix A, the
+// eigenvalues and, optionally, the left and/or right eigenvectors.
+//
+//  See: http://www.netlib.org/lapack/explore-html/d9/d28/dgeev_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-geev
+//
+//  See: https://www.nag.co.uk/numeric/fl/nagdoc_fl26/html/f08/f08naf.html
+//
+//  The right eigenvector v(j) of A satisfies
+//
+//                   A * v(j) = lambda(j) * v(j)
+//
+//  where lambda(j) is its eigenvalue.
+//
+//  The left eigenvector u(j) of A satisfies
+//
+//                u(j)**H * A = lambda(j) * u(j)**H
+//
+//  where u(j)**H denotes the conjugate-transpose of u(j).
+//
+//  The computed eigenvectors are normalized to have Euclidean norm
+//  equal to 1 and largest component real.
+func Dgeev(calcVl, calcVr bool, n int, a []float64, lda int, wr []float64, wi, vl []float64, ldvl int, vr []float64, ldvr int) (err error) {
+	info := C.LAPACKE_dgeev(
+		C.int(lapackColMajor),
+		jobVlr(calcVl),
+		jobVlr(calcVr),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a[0])),
+		C.lapack_int(lda),
+		(*C.double)(unsafe.Pointer(&wr[0])),
+		(*C.double)(unsafe.Pointer(&wi[0])),
+		(*C.double)(unsafe.Pointer(&vl[0])),
+		C.lapack_int(ldvl),
+		(*C.double)(unsafe.Pointer(&vr[0])),
+		C.lapack_int(ldvr),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
+	return
+}
+
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 // constants
@@ -693,4 +737,11 @@ func lUplo(up bool) C.char {
 		return 'U'
 	}
 	return 'L'
+}
+
+func jobVlr(doCalc bool) C.char {
+	if doCalc {
+		return 'V'
+	}
+	return 'N'
 }

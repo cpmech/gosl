@@ -14,5 +14,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="Matrix02"
+    go test -test.run="Dgeev01"
 done

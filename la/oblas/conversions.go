@@ -5,8 +5,10 @@
 package oblas
 
 import (
+	"math"
 	"strings"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 )
 
@@ -282,4 +284,43 @@ func ExtractColC(j, m, n int, A []complex128) (colj []complex128) {
 		colj[i] = A[i+j*m]
 	}
 	return
+}
+
+// eigenvector matrices ////////////////////////////////////////////////////////////////////////////
+
+// EigenvecsBuildLeftAndRight builds complex left and right eigenvectros created by Dgeev function
+//  INPUT:
+//   wr, wi -- real and imag parts of eigenvalues
+//   vl, vr -- left and right eigenvectors from Dgeev
+//  OUTPUT:
+//   vvl, vvr -- complex version of left and right eigenvectors [pre-allocated]
+//  NOTE (no checks made)
+//   n = len(wr) = len(wi) = len(vl) = len(vr)
+//   2 * n = len(vvl) = len(vvr)
+func EigenvecsBuildLeftAndRight(vvl, vvr []complex128, wr, wi, vl, vr []float64) {
+	n := len(wr)
+	dj := 1                      // increment for next conjugate pair
+	for j := 0; j < n; j += dj { // loop over columns == eigenvalues
+		if math.Abs(wi[j]) > 0.0 { // eigenvalue is complex
+			if j > n-2 {
+				chk.Panic("last eigenvalue cannot be complex\n")
+			}
+			for i := 0; i < n; i++ { // loop over rows
+				p := i + j*n
+				q := i + (j+1)*n
+				vvl[p] = complex(vl[p], vl[q])
+				vvr[p] = complex(vr[p], vr[q])
+				vvl[q] = complex(vl[p], -vl[q])
+				vvr[q] = complex(vr[p], -vr[q])
+			}
+			dj = 2
+		} else {
+			for i := 0; i < n; i++ { // loop over rows
+				p := i + j*n
+				vvl[p] = complex(vl[p], 0.0)
+				vvr[p] = complex(vr[p], 0.0)
+			}
+			dj = 1
+		}
+	}
 }

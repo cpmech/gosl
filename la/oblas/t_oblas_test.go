@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 func TestMatrix01(tst *testing.T) {
@@ -549,7 +550,7 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 	a := SliceToColMajor(amat)
 
 	// compute dimensions
-	minMN := imin(m, n)
+	minMN := utl.Imin(m, n)
 	lda := m
 	ldu := m
 	ldvt := n
@@ -685,7 +686,7 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 	a := SliceToColMajorC(amat)
 
 	// compute dimensions
-	minMN := imin(m, n)
+	minMN := utl.Imin(m, n)
 	lda := m
 	ldu := m
 	ldvt := n
@@ -782,7 +783,7 @@ func TestDgetrf01(tst *testing.T) {
 
 	// run dgetrf
 	lda := m
-	ipiv := make([]int32, imin(m, n))
+	ipiv := make([]int32, utl.Imin(m, n))
 	err := Dgetrf(m, n, a, lda, ipiv)
 	if err != nil {
 		tst.Errorf("Dgetrf failed:\n%v\n", err)
@@ -849,7 +850,7 @@ func TestZgetrf01(tst *testing.T) {
 
 	// run
 	lda := m
-	ipiv := make([]int32, imin(m, n))
+	ipiv := make([]int32, utl.Imin(m, n))
 	err := Zgetrf(m, n, a, lda, ipiv)
 	if err != nil {
 		tst.Errorf("Zgetrf failed:\n%v\n", err)
@@ -1423,4 +1424,108 @@ func TestZpotrf01(tst *testing.T) {
 		{-1.5 - 5.0e-01i, +4.522670168666454e-01 + 4.522670168666454e-01i, +1.044465935734187e+00 + 0.000000000000000e+00i, +0.000000000000000e+00},
 		{+0.0 - 1.0e+00i, +9.045340337332909e-01 + 0.000000000000000e+00i, +8.703882797784884e-02 - 8.703882797784884e-02i, +1.471960144387974e+00},
 	})
+}
+
+func TestDgeev01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgeev01")
+
+	a := SliceToColMajor([][]float64{
+		{+0.35, +0.45, -0.14, -0.17},
+		{+0.09, +0.07, -0.54, +0.35},
+		{-0.44, -0.33, -0.03, +0.17},
+		{+0.25, -0.32, -0.13, +0.11},
+	})
+
+	n := 4
+	lda := n
+
+	wr := make([]float64, n)   // eigen values (real part)
+	wi := make([]float64, n)   // eigen values (imaginary part)
+	vl := make([]float64, n*n) // left eigenvectors
+	vr := make([]float64, n*n) // right eigenvectors
+
+	ldvl := n
+	ldvr := n
+
+	calcVl := true
+	calcVr := true
+
+	err := Dgeev(calcVl, calcVr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr)
+	status(tst, err)
+
+	vvl := make([]complex128, n*n)
+	vvr := make([]complex128, n*n)
+	EigenvecsBuildLeftAndRight(vvl, vvr, wr, wi, vl, vr)
+
+	// check eigenvalues
+	wRef := []complex128{
+		+7.994821225862098e-01,
+		-9.941245329507467e-02 + 4.007924719897546e-01i,
+		-9.941245329507467e-02 - 4.007924719897546e-01i,
+		-1.006572159960587e-01,
+	}
+	ww := JoinComplex(wr, wi)
+	chk.ArrayC(tst, "w", 1e-16, ww, wRef)
+
+	// check left eigenvectors
+	vl0Ref := []complex128{
+		-6.244707486379453e-01,
+		-5.994889025288728e-01,
+		+4.999156725721429e-01,
+		-2.708616172576073e-02,
+	}
+	vl1Ref := []complex128{
+		+5.330229831716200e-01,
+		-2.666163325181558e-01 + 4.041362636762622e-01i,
+		+3.455257668600027e-01 + 3.152853126680209e-01i,
+		-2.540814367391268e-01 - 4.451133008385643e-01i,
+	}
+	vl2Ref := []complex128{
+		+5.330229831716200e-01,
+		-2.666163325181558e-01 - 4.041362636762622e-01i,
+		+3.455257668600027e-01 - 3.152853126680209e-01i,
+		-2.540814367391268e-01 + 4.451133008385643e-01i,
+	}
+	vl3Ref := []complex128{
+		+6.641410231734539e-01,
+		-1.068153340034493e-01,
+		+7.293254091191846e-01,
+		+1.248664621625170e-01,
+	}
+	chk.ArrayC(tst, "vl0", 1e-15, ExtractColC(0, n, n, vvl), vl0Ref)
+	chk.ArrayC(tst, "vl1", 1e-15, ExtractColC(1, n, n, vvl), vl1Ref)
+	chk.ArrayC(tst, "vl2", 1e-15, ExtractColC(2, n, n, vvl), vl2Ref)
+	chk.ArrayC(tst, "vl3", 1e-15, ExtractColC(3, n, n, vvl), vl3Ref)
+
+	// check right eigenvectors
+	vr0Ref := []complex128{
+		-6.550887675124076e-01,
+		-5.236294609021240e-01,
+		+5.362184613722345e-01,
+		-9.560677820122976e-02,
+	}
+	vr1Ref := []complex128{
+		-1.933015482642217e-01 + 2.546315719275843e-01i,
+		+2.518565317267399e-01 - 5.224047347116287e-01i,
+		+9.718245844328152e-02 - 3.083837558972283e-01i,
+		+6.759540542547480e-01,
+	}
+	vr2Ref := []complex128{
+		-1.933015482642217e-01 - 2.546315719275843e-01i,
+		+2.518565317267399e-01 + 5.224047347116287e-01i,
+		+9.718245844328152e-02 + 3.083837558972283e-01i,
+		+6.759540542547480e-01,
+	}
+	vr3Ref := []complex128{
+		+1.253326972309026e-01,
+		+3.320222155717508e-01,
+		+5.938377595573312e-01,
+		+7.220870298624550e-01,
+	}
+	chk.ArrayC(tst, "vr0", 1e-15, ExtractColC(0, n, n, vvr), vr0Ref)
+	chk.ArrayC(tst, "vr1", 1e-15, ExtractColC(1, n, n, vvr), vr1Ref)
+	chk.ArrayC(tst, "vr2", 1e-15, ExtractColC(2, n, n, vvr), vr2Ref)
+	chk.ArrayC(tst, "vr3", 1e-15, ExtractColC(3, n, n, vvr), vr3Ref)
 }
