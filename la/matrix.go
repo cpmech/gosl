@@ -211,6 +211,13 @@ func (o *Matrix) Largest(den float64) (largest float64) {
 	return largest / den
 }
 
+// Col access column j of this matrix. No copies are made since the internal data are in
+// col-major format already.
+// NOTE: this method can be used to modify the columns; e.g. with o.Col(0)[0] = 123
+func (o *Matrix) Col(j int) []float64 {
+	return o.Data[j*o.M : (j+1)*o.M]
+}
+
 // GetRow returns row i of this matrix
 func (o *Matrix) GetRow(i int) (row []float64) {
 	row = make([]float64, o.N)

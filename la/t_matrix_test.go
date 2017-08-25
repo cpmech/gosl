@@ -238,6 +238,17 @@ func TestMatrix03(tst *testing.T) {
 	chk.Array(tst, "GetCol(2)", 1e-17, col2, []float64{3, 0.3, 30})
 	chk.Array(tst, "GetCol(4)", 1e-17, col4, []float64{5, 0.5, 50})
 
+	// Col
+	c0 := a.Col(0)
+	c0[0] = 123
+	c2 := a.Col(2)
+	c2[1] = 456
+	c4 := a.Col(4)
+	c4[2] = 789
+	chk.Array(tst, "Col(0)", 1e-17, c0, []float64{123, 0.1, 10})
+	chk.Array(tst, "Col(2)", 1e-17, c2, []float64{3, 456, 30})
+	chk.Array(tst, "Col(4)", 1e-17, c4, []float64{5, 0.5, 789})
+
 	// NormFrob
 	A := NewMatrixDeep2([][]float64{
 		{-3, 5, 7},
