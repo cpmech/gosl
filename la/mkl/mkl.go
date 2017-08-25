@@ -140,6 +140,11 @@ func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []
 
 // Dgemm performs one of the matrix-matrix operations
 //
+//  false,false:  C_{m,n} := α ⋅ A_{m,k} ⋅ B_{k,n}  +  β ⋅ C_{m,n}
+//  false,true:   C_{m,n} := α ⋅ A_{m,k} ⋅ B_{n,k}  +  β ⋅ C_{m,n}
+//  true, false:  C_{m,n} := α ⋅ A_{k,m} ⋅ B_{k,n}  +  β ⋅ C_{m,n}
+//  true, true:   C_{m,n} := α ⋅ A_{k,m} ⋅ B_{n,k}  +  β ⋅ C_{m,n}
+//
 //  see: http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
 //
 //  see: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-gemm
@@ -638,6 +643,61 @@ func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
 	return
 }
 
+// Dgeev computes for an N-by-N real nonsymmetric matrix A, the
+// eigenvalues and, optionally, the left and/or right eigenvectors.
+//
+//  See: http://www.netlib.org/lapack/explore-html/d9/d28/dgeev_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-geev
+//
+//  See: https://www.nag.co.uk/numeric/fl/nagdoc_fl26/html/f08/f08naf.html
+//
+//  The right eigenvector v(j) of A satisfies
+//
+//                   A * v(j) = lambda(j) * v(j)
+//
+//  where lambda(j) is its eigenvalue.
+//
+//  The left eigenvector u(j) of A satisfies
+//
+//                u(j)**H * A = lambda(j) * u(j)**H
+//
+//  where u(j)**H denotes the conjugate-transpose of u(j).
+//
+//  The computed eigenvectors are normalized to have Euclidean norm
+//  equal to 1 and largest component real.
+func Dgeev(calcVl, calcVr bool, n int, a []float64, lda int, wr []float64, wi, vl []float64, ldvl int, vr []float64, ldvr int) (err error) {
+	var vvl, vvr *C.double
+	if calcVl {
+		vvl = (*C.double)(unsafe.Pointer(&vl[0]))
+	} else {
+		ldvl = 1
+	}
+	if calcVr {
+		vvr = (*C.double)(unsafe.Pointer(&vr[0]))
+	} else {
+		ldvr = 1
+	}
+	info := C.LAPACKE_dgeev(
+		C.int(lapackColMajor),
+		jobVlr(calcVl),
+		jobVlr(calcVr),
+		C.lapack_int(n),
+		(*C.double)(unsafe.Pointer(&a[0])),
+		C.lapack_int(lda),
+		(*C.double)(unsafe.Pointer(&wr[0])),
+		(*C.double)(unsafe.Pointer(&wi[0])),
+		vvl,
+		C.lapack_int(ldvl),
+		vvr,
+		C.lapack_int(ldvr),
+	)
+	if info != 0 {
+		err = chk.Err("lapack failed\n")
+	}
+	return
+}
+
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 // constants
@@ -694,4 +754,11 @@ func lUplo(up bool) C.char {
 		return 'U'
 	}
 	return 'L'
+}
+
+func jobVlr(doCalc bool) C.char {
+	if doCalc {
+		return 'V'
+	}
+	return 'N'
 }

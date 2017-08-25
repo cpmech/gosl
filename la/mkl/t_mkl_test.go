@@ -199,23 +199,23 @@ func TestZgemv01(tst *testing.T) {
 func TestDgemm01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Dgemm01")
+	chk.PrintTitle("Dgemm01: 0.5⋅a⋅b + 2⋅c")
 
 	// allocate matrices
-	a := SliceToColMajor([][]float64{
+	a := SliceToColMajor([][]float64{ // 4 x 5
 		{1, 2, +0, 1, -1},
 		{2, 3, -1, 1, +1},
 		{1, 2, +0, 4, -1},
 		{4, 0, +3, 1, +1},
 	})
-	b := SliceToColMajor([][]float64{
+	b := SliceToColMajor([][]float64{ // 5 x 3
 		{1, 0, 0},
 		{0, 0, 3},
 		{0, 0, 1},
 		{1, 0, 1},
 		{0, 2, 0},
 	})
-	c := SliceToColMajor([][]float64{
+	c := SliceToColMajor([][]float64{ // 4 x 3
 		{+0.50, 0, +0.25},
 		{+0.25, 0, -0.25},
 		{-0.25, 0, +0.00},
@@ -223,13 +223,14 @@ func TestDgemm01(tst *testing.T) {
 	})
 
 	// sizes
-	m, k := 4, 5
-	n := 3
+	m := 4 // m = nrow(a) = a.M = nrow(c)
+	k := 5 // k = ncol(a) = a.N = nrow(b)
+	n := 3 // n = ncol(b) = b.N = ncol(c)
 
 	// run dgemm
 	transA, transB := false, false
 	alpha, beta := 0.5, 2.0
-	lda, ldb, ldc := m, k, m
+	lda, ldb, ldc := 4, 5, 4
 	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
 	if err != nil {
 		tst.Errorf("Dgemm failed:\n%v\n", err)
@@ -238,6 +239,154 @@ func TestDgemm01(tst *testing.T) {
 
 	// check
 	chk.Deep2(tst, "0.5⋅a⋅b + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
+		{2, -1, 4},
+		{2, +1, 4},
+		{2, -1, 5},
+		{2, +1, 2},
+	})
+}
+
+func TestDgemm02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgemm02: 0.5⋅a⋅bᵀ + 2⋅c")
+
+	// allocate matrices
+	a := SliceToColMajor([][]float64{ // 4 x 5
+		{1, 2, +0, 1, -1},
+		{2, 3, -1, 1, +1},
+		{1, 2, +0, 4, -1},
+		{4, 0, +3, 1, +1},
+	})
+	b := SliceToColMajor([][]float64{ // 3 x 5
+		{1, 0, 0, 1, 0},
+		{0, 0, 0, 0, 2},
+		{0, 3, 1, 1, 0},
+	})
+	c := SliceToColMajor([][]float64{ // 4 x 3
+		{+0.50, 0, +0.25},
+		{+0.25, 0, -0.25},
+		{-0.25, 0, +0.00},
+		{-0.25, 0, +0.00},
+	})
+
+	// sizes
+	m := 4 // m = nrow(a)        = a.M = nrow(c)
+	k := 5 // k = ncol(a)        = a.N = nrow(trans(b))
+	n := 3 // n = ncol(trans(b)) = b.M = ncol(c)
+
+	// run dgemm
+	transA, transB := false, true
+	alpha, beta := 0.5, 2.0
+	lda, ldb, ldc := 4, 3, 4
+	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+	if err != nil {
+		tst.Errorf("Dgemm failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.Deep2(tst, "0.5⋅a⋅bᵀ + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
+		{2, -1, 4},
+		{2, +1, 4},
+		{2, -1, 5},
+		{2, +1, 2},
+	})
+}
+
+func TestDgemm03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgemm03: 0.5⋅aᵀ⋅b + 2⋅c")
+
+	// allocate matrices
+	a := SliceToColMajor([][]float64{ // 5 x 4
+		{+1, +2, +1, +4},
+		{+2, +3, +2, +0},
+		{+0, -1, +0, +3},
+		{+1, +1, +4, +1},
+		{-1, +1, -1, +1},
+	})
+	b := SliceToColMajor([][]float64{ // 5 x 3
+		{1, 0, 0},
+		{0, 0, 3},
+		{0, 0, 1},
+		{1, 0, 1},
+		{0, 2, 0},
+	})
+	c := SliceToColMajor([][]float64{ // 4 x 3
+		{+0.50, 0, +0.25},
+		{+0.25, 0, -0.25},
+		{-0.25, 0, +0.00},
+		{-0.25, 0, +0.00},
+	})
+
+	// sizes
+	m := 4 // m = nrow(trans(a)) = a.N = nrow(c)
+	k := 5 // k = ncol(trans(a)) = a.M = nrow(trans(b))
+	n := 3 // n = ncol(b)        = b.N = ncol(c)
+
+	// run dgemm
+	transA, transB := true, false
+	alpha, beta := 0.5, 2.0
+	lda, ldb, ldc := 5, 5, 4
+	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+	if err != nil {
+		tst.Errorf("Dgemm failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.Deep2(tst, "0.5⋅aᵀ⋅b + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
+		{2, -1, 4},
+		{2, +1, 4},
+		{2, -1, 5},
+		{2, +1, 2},
+	})
+}
+
+func TestDgemm04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgemm04: 0.5⋅aᵀ⋅bᵀ + 2⋅c")
+
+	// allocate matrices
+	a := SliceToColMajor([][]float64{ // 5 x 4
+		{+1, +2, +1, +4},
+		{+2, +3, +2, +0},
+		{+0, -1, +0, +3},
+		{+1, +1, +4, +1},
+		{-1, +1, -1, +1},
+	})
+	b := SliceToColMajor([][]float64{ // 3 x 5
+		{1, 0, 0, 1, 0},
+		{0, 0, 0, 0, 2},
+		{0, 3, 1, 1, 0},
+	})
+	c := SliceToColMajor([][]float64{ // 4 x 3
+		{+0.50, 0, +0.25},
+		{+0.25, 0, -0.25},
+		{-0.25, 0, +0.00},
+		{-0.25, 0, +0.00},
+	})
+
+	// sizes
+	m := 4 // m = nrow(trans(a)) = a.N = nrow(c)
+	k := 5 // k = ncol(trans(a)) = a.M = nrow(trans(b))
+	n := 3 // n = ncol(trans(b)) = b.M = ncol(c)
+
+	// run dgemm
+	transA, transB := true, true
+	alpha, beta := 0.5, 2.0
+	lda, ldb, ldc := 5, 3, 4
+	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
+	if err != nil {
+		tst.Errorf("Dgemm failed:\n%v\n", err)
+		return
+	}
+
+	// check
+	chk.Deep2(tst, "0.5⋅aᵀ⋅bᵀ + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
 		{2, -1, 4},
 		{2, +1, 4},
 		{2, -1, 5},
@@ -524,8 +673,7 @@ func TestDgesvd03(tst *testing.T) {
 		{49, 15, 14, 52, 53, 11},
 		{8, 58, 59, 5, 4, 62},
 	}
-	sCorrect := []float64{
-		+2.251695779937001e+02, +1.271865289052834e+02, +1.175789144211322e+01, +1.277237188369868e-14, +6.934703857768031e-15, +5.031833747507930e-15}
+	sCorrect := []float64{+2.251695779937001e+02, +1.271865289052834e+02, +1.175789144211322e+01, +1.277237188369868e-14, +6.934703857768031e-15, +5.031833747507930e-15}
 
 	// check
 	checksvd(tst, amat, nil, nil, sCorrect, 1e-15, 1e-13, 1e-15, 1e-13)
@@ -1288,4 +1436,162 @@ func TestZpotrf01(tst *testing.T) {
 		{-1.5 - 5.0e-01i, +4.522670168666454e-01 + 4.522670168666454e-01i, +1.044465935734187e+00 + 0.000000000000000e+00i, +0.000000000000000e+00},
 		{+0.0 - 1.0e+00i, +9.045340337332909e-01 + 0.000000000000000e+00i, +8.703882797784884e-02 - 8.703882797784884e-02i, +1.471960144387974e+00},
 	})
+}
+
+func TestDgeev01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dgeev01")
+
+	adeep2 := [][]float64{
+		{+0.35, +0.45, -0.14, -0.17},
+		{+0.09, +0.07, -0.54, +0.35},
+		{-0.44, -0.33, -0.03, +0.17},
+		{+0.25, -0.32, -0.13, +0.11},
+	}
+	a := SliceToColMajor(adeep2)
+
+	n := 4
+	lda := n
+
+	wr := make([]float64, n)   // eigen values (real part)
+	wi := make([]float64, n)   // eigen values (imaginary part)
+	vl := make([]float64, n*n) // left eigenvectors
+	vr := make([]float64, n*n) // right eigenvectors
+
+	ldvl := n
+	ldvr := n
+
+	calcVl := true
+	calcVr := true
+
+	err := Dgeev(calcVl, calcVr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr)
+	status(tst, err)
+
+	vvl := make([]complex128, n*n)
+	vvr := make([]complex128, n*n)
+	EigenvecsBuildBoth(vvl, vvr, wr, wi, vl, vr)
+
+	// check eigenvalues
+	wRef := []complex128{
+		+7.994821225862098e-01,
+		-9.941245329507467e-02 + 4.007924719897546e-01i,
+		-9.941245329507467e-02 - 4.007924719897546e-01i,
+		-1.006572159960587e-01,
+	}
+	ww := JoinComplex(wr, wi)
+	chk.ArrayC(tst, "w", 1e-15, ww, wRef)
+
+	// check left eigenvectors
+	vl0Ref := []complex128{
+		-6.244707486379453e-01,
+		-5.994889025288728e-01,
+		+4.999156725721429e-01,
+		-2.708616172576073e-02,
+	}
+	vl1Ref := []complex128{
+		+5.330229831716200e-01,
+		-2.666163325181558e-01 + 4.041362636762622e-01i,
+		+3.455257668600027e-01 + 3.152853126680209e-01i,
+		-2.540814367391268e-01 - 4.451133008385643e-01i,
+	}
+	vl2Ref := []complex128{
+		+5.330229831716200e-01,
+		-2.666163325181558e-01 - 4.041362636762622e-01i,
+		+3.455257668600027e-01 - 3.152853126680209e-01i,
+		-2.540814367391268e-01 + 4.451133008385643e-01i,
+	}
+	vl3Ref := []complex128{
+		+6.641410231734539e-01,
+		-1.068153340034493e-01,
+		+7.293254091191846e-01,
+		+1.248664621625170e-01,
+	}
+	chk.ArrayC(tst, "vl0", 1e-15, ExtractColC(0, n, n, vvl), vl0Ref)
+	chk.ArrayC(tst, "vl1", 1e-15, ExtractColC(1, n, n, vvl), vl1Ref)
+	chk.ArrayC(tst, "vl2", 1e-15, ExtractColC(2, n, n, vvl), vl2Ref)
+	chk.ArrayC(tst, "vl3", 1e-15, ExtractColC(3, n, n, vvl), vl3Ref)
+
+	// check right eigenvectors
+	vr0Ref := []complex128{
+		-6.550887675124076e-01,
+		-5.236294609021240e-01,
+		+5.362184613722345e-01,
+		-9.560677820122976e-02,
+	}
+	vr1Ref := []complex128{
+		-1.933015482642217e-01 + 2.546315719275843e-01i,
+		+2.518565317267399e-01 - 5.224047347116287e-01i,
+		+9.718245844328152e-02 - 3.083837558972283e-01i,
+		+6.759540542547480e-01,
+	}
+	vr2Ref := []complex128{
+		-1.933015482642217e-01 - 2.546315719275843e-01i,
+		+2.518565317267399e-01 + 5.224047347116287e-01i,
+		+9.718245844328152e-02 + 3.083837558972283e-01i,
+		+6.759540542547480e-01,
+	}
+	vr3Ref := []complex128{
+		+1.253326972309026e-01,
+		+3.320222155717508e-01,
+		+5.938377595573312e-01,
+		+7.220870298624550e-01,
+	}
+	chk.ArrayC(tst, "vr0", 1e-15, ExtractColC(0, n, n, vvr), vr0Ref)
+	chk.ArrayC(tst, "vr1", 1e-15, ExtractColC(1, n, n, vvr), vr1Ref)
+	chk.ArrayC(tst, "vr2", 1e-15, ExtractColC(2, n, n, vvr), vr2Ref)
+	chk.ArrayC(tst, "vr3", 1e-15, ExtractColC(3, n, n, vvr), vr3Ref)
+
+	// call Dgeev again without vr
+	a2 := SliceToColMajor(adeep2)
+	wr2 := make([]float64, n)   // eigen values (real part)
+	wi2 := make([]float64, n)   // eigen values (imaginary part)
+	vl2 := make([]float64, n*n) // left eigenvectors
+	calcVl = true
+	calcVr = false
+	err = Dgeev(calcVl, calcVr, n, a2, lda, wr2, wi2, vl2, ldvl, nil, 0)
+	status(tst, err)
+
+	// check eigenvalues and left eigenvectors
+	vvl2 := make([]complex128, n*n)
+	EigenvecsBuild(vvl2, wr2, wi2, vl2)
+	ww2 := JoinComplex(wr2, wi2)
+	chk.ArrayC(tst, "2: w", 1e-15, ww2, wRef)
+	chk.ArrayC(tst, "2: vl0", 1e-15, ExtractColC(0, n, n, vvl2), vl0Ref)
+	chk.ArrayC(tst, "2: vl1", 1e-15, ExtractColC(1, n, n, vvl2), vl1Ref)
+	chk.ArrayC(tst, "2: vl2", 1e-15, ExtractColC(2, n, n, vvl2), vl2Ref)
+	chk.ArrayC(tst, "2: vl3", 1e-15, ExtractColC(3, n, n, vvl2), vl3Ref)
+
+	// call Dgeev again without vl
+	a3 := SliceToColMajor(adeep2)
+	wr3 := make([]float64, n)   // eigen values (real part)
+	wi3 := make([]float64, n)   // eigen values (imaginary part)
+	vr3 := make([]float64, n*n) // right eigenvectors
+	calcVl = false
+	calcVr = true
+	err = Dgeev(calcVl, calcVr, n, a3, lda, wr3, wi3, nil, 0, vr3, ldvr)
+	status(tst, err)
+
+	// check eigenvalues and right eigenvectors
+	vvr3 := make([]complex128, n*n)
+	EigenvecsBuild(vvr3, wr3, wi3, vr3)
+	ww3 := JoinComplex(wr3, wi3)
+	chk.ArrayC(tst, "3: w", 1e-15, ww3, wRef)
+	chk.ArrayC(tst, "3: vr0", 1e-15, ExtractColC(0, n, n, vvr3), vr0Ref)
+	chk.ArrayC(tst, "3: vr1", 1e-15, ExtractColC(1, n, n, vvr3), vr1Ref)
+	chk.ArrayC(tst, "3: vr3", 1e-15, ExtractColC(3, n, n, vvr3), vr3Ref)
+	chk.ArrayC(tst, "3: vr3", 1e-15, ExtractColC(3, n, n, vvr3), vr3Ref)
+
+	// call Dgeev again without eigenvectors
+	a4 := SliceToColMajor(adeep2)
+	wr4 := make([]float64, n) // eigen values (real part)
+	wi4 := make([]float64, n) // eigen values (imaginary part)
+	calcVl = false
+	calcVr = false
+	err = Dgeev(calcVl, calcVr, n, a4, lda, wr4, wi4, nil, 0, nil, 0)
+	status(tst, err)
+
+	// check eigenvalues
+	ww4 := JoinComplex(wr4, wi4)
+	chk.ArrayC(tst, "4: w", 1e-15, ww4, wRef)
 }
