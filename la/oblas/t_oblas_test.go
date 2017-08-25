@@ -1467,7 +1467,7 @@ func TestDgeev01(tst *testing.T) {
 		-9.941245329507467e-02 - 4.007924719897546e-01i,
 		-1.006572159960587e-01,
 	}
-	ww := JoinComplex(wr, wi)
+	ww := GetJoinComplex(wr, wi)
 	chk.ArrayC(tst, "w", 1e-16, ww, wRef)
 
 	// check left eigenvectors
@@ -1543,7 +1543,7 @@ func TestDgeev01(tst *testing.T) {
 	// check eigenvalues and left eigenvectors
 	vvl2 := make([]complex128, n*n)
 	EigenvecsBuild(vvl2, wr2, wi2, vl2)
-	ww2 := JoinComplex(wr2, wi2)
+	ww2 := GetJoinComplex(wr2, wi2)
 	chk.ArrayC(tst, "2: w", 1e-16, ww2, wRef)
 	chk.ArrayC(tst, "2: vl0", 1e-15, ExtractColC(0, n, n, vvl2), vl0Ref)
 	chk.ArrayC(tst, "2: vl1", 1e-15, ExtractColC(1, n, n, vvl2), vl1Ref)
@@ -1563,7 +1563,7 @@ func TestDgeev01(tst *testing.T) {
 	// check eigenvalues and right eigenvectors
 	vvr3 := make([]complex128, n*n)
 	EigenvecsBuild(vvr3, wr3, wi3, vr3)
-	ww3 := JoinComplex(wr3, wi3)
+	ww3 := GetJoinComplex(wr3, wi3)
 	chk.ArrayC(tst, "3: w", 1e-16, ww3, wRef)
 	chk.ArrayC(tst, "3: vr0", 1e-15, ExtractColC(0, n, n, vvr3), vr0Ref)
 	chk.ArrayC(tst, "3: vr1", 1e-15, ExtractColC(1, n, n, vvr3), vr1Ref)
@@ -1580,6 +1580,6 @@ func TestDgeev01(tst *testing.T) {
 	status(tst, err)
 
 	// check eigenvalues
-	ww4 := JoinComplex(wr4, wi4)
+	ww4 := GetJoinComplex(wr4, wi4)
 	chk.ArrayC(tst, "4: w", 1e-16, ww4, wRef)
 }
