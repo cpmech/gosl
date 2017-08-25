@@ -455,6 +455,29 @@ func (o *MatrixC) Fill(val complex128) {
 	}
 }
 
+// Col access column j of this matrix. No copies are made since the internal data are in
+// col-major format already.
+// NOTE: this method can be used to modify the columns; e.g. with o.Col(0)[0] = 123
+func (o *MatrixC) Col(j int) []complex128 {
+	return o.Data[j*o.M : (j+1)*o.M]
+}
+
+// GetRow returns row i of this matrix
+func (o *MatrixC) GetRow(i int) (row []complex128) {
+	row = make([]complex128, o.N)
+	for j := 0; j < o.N; j++ {
+		row[j] = o.Data[i+j*o.M]
+	}
+	return
+}
+
+// GetCol returns column j of this matrix
+func (o *MatrixC) GetCol(j int) (col []complex128) {
+	col = make([]complex128, o.M)
+	copy(col, o.Data[j*o.M:(j+1)*o.M])
+	return
+}
+
 // Apply sets this matrix with the scaled components of another matrix
 //  this := α * another   ⇒   this[i] := α * another[i]
 //  NOTE: "another" may be "this"

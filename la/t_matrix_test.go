@@ -316,6 +316,33 @@ func TestMatrix04(tst *testing.T) {
 		{2 - 1i, 2 - 1i, 2 - 1i},
 	})
 
+	// GetRow
+	row0 := a.GetRow(0)
+	row1 := a.GetRow(1)
+	row2 := a.GetRow(2)
+	chk.ArrayC(tst, "GetRow(0)", 1e-17, row0, []complex128{1 + 1i, 2 + 2i, 3 + 3i, 4 + 4i, 5 + 5i})
+	chk.ArrayC(tst, "GetRow(1)", 1e-17, row1, []complex128{0.1, 0.2, 0.3, 0.4, 0.5})
+	chk.ArrayC(tst, "GetRow(2)", 1e-17, row2, []complex128{10, 20, 30, 40, 50})
+
+	// GetCol
+	col0 := a.GetCol(0)
+	col2 := a.GetCol(2)
+	col4 := a.GetCol(4)
+	chk.ArrayC(tst, "GetCol(0)", 1e-17, col0, []complex128{1 + 1i, 0.1, 10})
+	chk.ArrayC(tst, "GetCol(2)", 1e-17, col2, []complex128{3 + 3i, 0.3, 30})
+	chk.ArrayC(tst, "GetCol(4)", 1e-17, col4, []complex128{5 + 5i, 0.5, 50})
+
+	// Col
+	c0 := a.Col(0)
+	c0[0] = 123
+	c2 := a.Col(2)
+	c2[1] = 456
+	c4 := a.Col(4)
+	c4[2] = 789
+	chk.ArrayC(tst, "Col(0)", 1e-17, c0, []complex128{123, 0.1, 10})
+	chk.ArrayC(tst, "Col(2)", 1e-17, c2, []complex128{3 + 3i, 456, 30})
+	chk.ArrayC(tst, "Col(4)", 1e-17, c4, []complex128{5 + 5i, 0.5, 789})
+
 	// Scale
 	c := NewMatrixC(5, 3)
 	c.Fill(2 + 2i)
