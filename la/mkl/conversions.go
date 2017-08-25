@@ -228,8 +228,8 @@ func PrintColMajorCpy(m, n int, data []complex128, nfmtR, nfmtI string) (l strin
 
 // complex arrays //////////////////////////////////////////////////////////////////////////////////
 
-// JoinComplex joins real and imag parts of array
-func JoinComplex(vReal, vImag []float64) (v []complex128) {
+// GetJoinComplex joins real and imag parts of array
+func GetJoinComplex(vReal, vImag []float64) (v []complex128) {
 	v = make([]complex128, len(vReal))
 	for i := 0; i < len(vReal); i++ {
 		v[i] = complex(vReal[i], vImag[i])
@@ -237,8 +237,8 @@ func JoinComplex(vReal, vImag []float64) (v []complex128) {
 	return
 }
 
-// SplitComplex splits real and imag parts of array
-func SplitComplex(v []complex128) (vReal, vImag []float64) {
+// GetSplitComplex splits real and imag parts of array
+func GetSplitComplex(v []complex128) (vReal, vImag []float64) {
 	vReal = make([]float64, len(v))
 	vImag = make([]float64, len(v))
 	for i := 0; i < len(v); i++ {

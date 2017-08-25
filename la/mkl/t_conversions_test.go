@@ -17,11 +17,11 @@ func TestSplitJoinComplex(tst *testing.T) {
 	chk.PrintTitle("SplitJoinComplex")
 
 	v := []complex128{1 + 0.1i, 2 + 0.2i, 3 - 0.3i}
-	vr, vi := SplitComplex(v)
+	vr, vi := GetSplitComplex(v)
 	chk.Array(tst, "vr", 1e-17, vr, []float64{1, 2, 3})
 	chk.Array(tst, "vi", 1e-17, vi, []float64{0.1, 0.2, -0.3})
 
-	u := JoinComplex(vr, vi)
+	u := GetJoinComplex(vr, vi)
 	chk.ArrayC(tst, "u=v", 1e-17, u, v)
 }
 
