@@ -248,6 +248,23 @@ func GetSplitComplex(v []complex128) (vReal, vImag []float64) {
 	return
 }
 
+// JoinComplex joins real and imag parts of array
+func JoinComplex(v []complex128, vReal, vImag []float64) {
+	for i := 0; i < len(vReal); i++ {
+		v[i] = complex(vReal[i], vImag[i])
+	}
+	return
+}
+
+// SplitComplex splits real and imag parts of array
+func SplitComplex(vReal, vImag []float64, v []complex128) {
+	for i := 0; i < len(v); i++ {
+		vReal[i] = real(v[i])
+		vImag[i] = imag(v[i])
+	}
+	return
+}
+
 // extraction //////////////////////////////////////////////////////////////////////////////////////
 
 // ExtractRow extracts i row from (m,n) col-major matrix

@@ -23,6 +23,15 @@ func TestSplitJoinComplex(tst *testing.T) {
 
 	u := GetJoinComplex(vr, vi)
 	chk.ArrayC(tst, "u=v", 1e-17, u, v)
+
+	wr, wi := make([]float64, len(v)), make([]float64, len(v))
+	SplitComplex(wr, wi, v)
+	chk.Array(tst, "wr", 1e-17, wr, []float64{1, 2, 3})
+	chk.Array(tst, "wi", 1e-17, wi, []float64{0.1, 0.2, -0.3})
+
+	w := make([]complex128, len(v))
+	JoinComplex(w, wr, wi)
+	chk.ArrayC(tst, "w=v", 1e-17, w, v)
 }
 
 func TestConversions01(tst *testing.T) {
