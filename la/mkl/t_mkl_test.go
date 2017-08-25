@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 func TestMatrix01(tst *testing.T) {
@@ -400,7 +401,7 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 	a := SliceToColMajor(amat)
 
 	// compute dimensions
-	minMN := imin(m, n)
+	minMN := utl.Imin(m, n)
 	lda := m
 	ldu := m
 	ldvt := n
@@ -537,7 +538,7 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 	a := SliceToColMajorC(amat)
 
 	// compute dimensions
-	minMN := imin(m, n)
+	minMN := utl.Imin(m, n)
 	lda := m
 	ldu := m
 	ldvt := n
@@ -646,7 +647,7 @@ func TestDgetrf01(tst *testing.T) {
 
 	// run dgetrf
 	lda := m
-	ipiv := make([]int64, imin(m, n))
+	ipiv := make([]int64, utl.Imin(m, n))
 	err := Dgetrf(m, n, a, lda, ipiv)
 	if err != nil {
 		tst.Errorf("Dgetrf failed:\n%v\n", err)
@@ -713,7 +714,7 @@ func TestZgetrf01(tst *testing.T) {
 
 	// run
 	lda := m
-	ipiv := make([]int64, imin(m, n))
+	ipiv := make([]int64, utl.Imin(m, n))
 	err := Zgetrf(m, n, a, lda, ipiv)
 	if err != nil {
 		tst.Errorf("Zgetrf failed:\n%v\n", err)
