@@ -111,6 +111,20 @@ func (o *Triplet) ToDense() (a *Matrix) {
 	return
 }
 
+// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+//
+//  NOTE: this method will create a CCMatrix first because
+//        duplicates must be added before saving the file
+//
+//  dirout -- directory for output. will be created
+//  fnkey  -- filename key (filename without extension). ".smat" will be added
+//  tol    -- tolerance to skip zero values
+func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrix) {
+	cmat = o.ToMatrix(nil)
+	cmat.WriteSmat(dirout, fnkey, tol)
+	return
+}
+
 // ReadSmat reads ".smat" file
 //
 //    m n nnz
@@ -146,8 +160,13 @@ func (o *Triplet) ReadSmat(filename string) (err error) {
 }
 
 // WriteSmat writes a ".smat" file that can be visualised with vismatrix
-// NOTE: this method must belong to CCMatrixC because duplicates must be added before saving file
-//  tol -- tolerance to skip zero values
+//
+//  NOTE: CCMatrix must be used to generate the resulting values because
+//        duplicates must be added before saving file
+//
+//  dirout -- directory for output. will be created
+//  fnkey  -- filename key (filename without extension). ".smat" will be added
+//  tol    -- tolerance to skip zero values
 func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64) {
 	var bfa, bfb bytes.Buffer
 	var nnz int
@@ -160,7 +179,7 @@ func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64) {
 		}
 	}
 	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
-	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
+	io.WriteFileVD(dirout, fnkey+".smat", &bfa, &bfb)
 }
 
 // ToDense converts a column-compressed matrix to dense form
@@ -252,6 +271,20 @@ func (o *TripletC) ToDense() (a *MatrixC) {
 	return
 }
 
+// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+//
+//  NOTE: this method will create a CCMatrixC first because
+//        duplicates must be added before saving the file
+//
+//  dirout -- directory for output. will be created
+//  fnkey  -- filename key (filename without extension). ".smat" will be added
+//  tol    -- tolerance to skip zero values
+func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrixC) {
+	cmat = o.ToMatrix(nil)
+	cmat.WriteSmat(dirout, fnkey, tol)
+	return
+}
+
 // ReadSmat reads ".smat" file
 //
 //    m n nnz
@@ -287,8 +320,13 @@ func (o *TripletC) ReadSmat(filename string) (err error) {
 }
 
 // WriteSmat writes a ".smat" file that can be visualised with vismatrix
-// NOTE: this method must belong to CCMatrixC because duplicates must be added before saving file
-//  tol -- tolerance to skip zero values
+//
+//  NOTE: CCMatrix must be used to generate the resulting values because
+//        duplicates must be added before saving file
+//
+//  dirout -- directory for output. will be created
+//  fnkey  -- filename key (filename without extension). ".smat" will be added
+//  tol    -- tolerance to skip zero values
 func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64) {
 	var bfa, bfb bytes.Buffer
 	var nnz int
@@ -301,11 +339,14 @@ func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64) {
 		}
 	}
 	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
-	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
+	io.WriteFileVD(dirout, fnkey+".smat", &bfa, &bfb)
 }
 
 // WriteSmatAbs writes a ".smat" file that can be visualised with vismatrix (abs(complex) version)
-// NOTE: this method must belong to CCMatrixC because duplicates must be added before saving file
+//
+//  NOTE: CCMatrix must be used to generate the resulting values because
+//        duplicates must be added before saving file
+//
 //  tol -- tolerance to skip zero values
 func (o *CCMatrixC) WriteSmatAbs(dirout, fnkey string, tol float64) {
 	var bfa, bfb bytes.Buffer
@@ -319,7 +360,7 @@ func (o *CCMatrixC) WriteSmatAbs(dirout, fnkey string, tol float64) {
 		}
 	}
 	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
-	io.WriteFileD(dirout, fnkey+".smat", &bfa, &bfb)
+	io.WriteFileVD(dirout, fnkey+".smat", &bfa, &bfb)
 }
 
 // ToDense converts a column-compressed matrix (complex) to dense form

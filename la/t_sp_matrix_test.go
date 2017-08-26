@@ -38,12 +38,18 @@ func TestTriplet01(tst *testing.T) {
 	d, err := io.ReadFile("/tmp/gosl/la/triplet01.smat")
 	status(tst, err)
 	io.Pforan("d = %v\n", string(d))
-	chk.String(tst, string(d), "4  4  6\n  1  0    1.000000000000000e+00\n  0  1    2.000000000000000e+00\n  3  1    3.000000000000000e+00\n  1  2    4.000000000000000e+00\n  2  3    5.000000000000000e+00\n  3  3    6.000000000000000e+00\n")
+	smat1 := "4  4  6\n  1  0    1.000000000000000e+00\n  0  1    2.000000000000000e+00\n  3  1    3.000000000000000e+00\n  1  2    4.000000000000000e+00\n  2  3    5.000000000000000e+00\n  3  3    6.000000000000000e+00\n"
+	chk.String(tst, string(d), smat1)
 
 	b := new(Triplet)
 	err = b.ReadSmat("/tmp/gosl/la/triplet01.smat")
 	status(tst, err)
 	chk.Deep2(tst, "b=a", 1e-17, a.ToDense().GetDeep2(), b.ToDense().GetDeep2())
+
+	a.WriteSmat("/tmp/gosl/la", "triplet01b", 0)
+	db, err := io.ReadFile("/tmp/gosl/la/triplet01b.smat")
+	status(tst, err)
+	chk.String(tst, string(db), smat1)
 }
 
 func TestTriplet02(tst *testing.T) {
@@ -73,7 +79,8 @@ func TestTriplet02(tst *testing.T) {
 	d, err := io.ReadFile("/tmp/gosl/la/triplet02.smat")
 	status(tst, err)
 	io.Pforan("d = %v\n", string(d))
-	chk.String(tst, string(d), "4  4  6\n  1  0    1.000000000000000e+00  +1.000000000000000e+00\n  0  1    2.000000000000000e+00  +2.000000000000000e+00\n  3  1    3.000000000000000e+00  -3.000000000000000e+00\n  1  2    4.000000000000000e+00  +4.000000000000000e+00\n  2  3    5.000000000000000e+00  -5.000000000000000e+00\n  3  3    6.000000000000000e+00  +6.000000000000000e+00\n")
+	smat1 := "4  4  6\n  1  0    1.000000000000000e+00  +1.000000000000000e+00\n  0  1    2.000000000000000e+00  +2.000000000000000e+00\n  3  1    3.000000000000000e+00  -3.000000000000000e+00\n  1  2    4.000000000000000e+00  +4.000000000000000e+00\n  2  3    5.000000000000000e+00  -5.000000000000000e+00\n  3  3    6.000000000000000e+00  +6.000000000000000e+00\n"
+	chk.String(tst, string(d), smat1)
 
 	b := new(TripletC)
 	err = b.ReadSmat("/tmp/gosl/la/triplet02.smat")
@@ -90,6 +97,11 @@ func TestTriplet02(tst *testing.T) {
 		{0, 0, 0, math.Sqrt(50)},
 		{0, math.Sqrt(18), 0, math.Sqrt(72)},
 	})
+
+	a.WriteSmat("/tmp/gosl/la", "triplet02b", 0)
+	db, err := io.ReadFile("/tmp/gosl/la/triplet02b.smat")
+	status(tst, err)
+	chk.String(tst, string(db), smat1)
 }
 
 func TestSpMatrix01(tst *testing.T) {
