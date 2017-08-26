@@ -1,4 +1,4 @@
-# Gosl. la. Linear Algebra and efficient sparse solvers
+# Gosl. la. Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions, etc.
 
 [![GoDoc](https://godoc.org/github.com/cpmech/gosl/la?status.svg)](https://godoc.org/github.com/cpmech/gosl/la) 
 
@@ -69,23 +69,51 @@ Note however that the high level functions shouldn't be used for repeated execut
 would be constantly allocated and deallocated.
 
 
-
 ## Examples
 
-### Solution of sparse linear systems
+### Vectors and matrices
 
-See: <a href="t_sp_solver_test.go">t_sp_solver_test.go</a>
+<a href="t_vector_test.go">source file</a>
+<a href="t_matrix_test.go">source file</a>
+<a href="t_matrix_ops_test.go">source file</a>
 
-See: <a href="t_sp_solver_umfpack_test.go">t_sp_solver_umfpack_test.go</a>
+### BLAS1, 2 and 3 functions
 
-See: <a href="t_sp_solver_mumps_test.go">t_sp_solver_mumps_test.go</a>
+<a href="t_blas1_test.go">source file</a>
+<a href="t_blas2_test.go">source file</a>
+<a href="t_blas3_test.go">source file</a>
 
+### General dense solver and Cholesky decomposition
 
-### Eigenvalues of (3 x 3) matrix
+<a href="t_densesol_test.go">source file</a>
 
-See: <a href="t_jacobi_test.go">t_jacobi_test.go</a>
+### Eigenvalues and eigenvectors of general matrix
 
+<a href="t_eigen_test.go">source file</a>
 
-### Cholesky decomposition
+### Eigenvalues of symmetric (3 x 3) matrix
 
-See: <a href="t_densesol_test.go">t_densesol_test.go</a>
+<a href="t_jacobi_test.go">source file</a>
+
+### Sparse BLAS functions
+<a href="t_sp_blas_test.go">source file</a>
+
+### Conversions related to sparse matrices
+
+<a href="t_sp_conversions_test.go">source file</a>
+
+### Sparse Triplet and Matrix
+
+<a href="t_sp_matrix_test.go">source file</a>
+
+### Sparse linear solver using MUMPS
+
+<a href="t_sp_solver_mumps_test.go">source file</a>
+
+### Sparse linear solver using UMFPACK
+
+<a href="t_sp_solver_umfpack_test.go">source file</a>
+
+### Solutions using sparse solvers
+
+<a href="t_sp_solver_test.go">source file</a>
