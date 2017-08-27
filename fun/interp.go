@@ -8,20 +8,9 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 )
 
-// Interpolator kinds
-var (
-
-	// LinearInterpKind defines the linear interpolator kind
-	LinearInterpKind = io.NewEnum("Linear", "fun.interp", "L", "Linear Interpolator")
-
-	// PolyInterpKind defines the polynomial interpolator kind
-	PolyInterpKind = io.NewEnum("Polynomial", "fun.interp", "L", "Polynomial Interpolator")
-)
-
-// Interpolator implements numeric interpolators
+// Interpolator implements numeric interpolators to be used with discrete data
 type Interpolator struct {
 
 	// configuration data
@@ -31,7 +20,7 @@ type Interpolator struct {
 	Dy float64 // error estimate
 
 	// input data
-	itype io.Enum   // type of interpolator
+	itype string    // type of interpolator
 	xx    []float64 // x-data values
 	yy    []float64 // y-data values
 
@@ -48,19 +37,22 @@ type Interpolator struct {
 }
 
 // NewInterpolator creates new interpolator of type=Type for data point sets xx and yy (with same lengths)
-//   Input:
+//
 //     Type -- type of interpolator
-//     p    -- order of interpolator
-//     xx   -- x-data
-//     yy   -- y-data
-func NewInterpolator(Type io.Enum, p int, xx, yy []float64) (o *Interpolator, err error) {
+//        "lin"  : linear
+//        "poly" : polynomial
+//
+//     p  -- order of interpolator
+//     xx -- x-data
+//     yy -- y-data
+func NewInterpolator(Type string, p int, xx, yy []float64) (o *Interpolator, err error) {
 	o = new(Interpolator)
 	o.itype = Type
 	switch Type {
-	case LinearInterpKind:
+	case "lin":
 		o.m = 2
 		o.interp = o.linInterp
-	case PolyInterpKind:
+	case "poly":
 		o.m = p + 1
 		o.interp = o.polyInterp
 	default:
