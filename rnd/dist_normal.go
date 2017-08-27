@@ -56,7 +56,7 @@ func (o *DistNormal) CalcDerived() {
 }
 
 // Init initialises normal distribution
-func (o *DistNormal) Init(p *VarData) error {
+func (o *DistNormal) Init(p *Variable) error {
 	o.Mu, o.Sig = p.M, p.S
 	o.CalcDerived()
 	return nil

@@ -17,7 +17,7 @@ import (
 func plotLognormal(μ, σ float64) {
 
 	var dist DistLogNormal
-	dist.Init(&VarData{M: μ, S: σ})
+	dist.Init(&Variable{M: μ, S: σ})
 
 	n := 101
 	x := utl.LinSpace(0, 3, n)
@@ -79,7 +79,7 @@ func Test_dist_lognormal_01(tst *testing.T) {
 		w := Z[i] * Z[i]
 		μ := math.Exp(N[i] + w/2.0)
 		σ := μ * math.Sqrt(math.Exp(w)-1.0)
-		dist.Init(&VarData{M: μ, S: σ})
+		dist.Init(&Variable{M: μ, S: σ})
 		Ypdf := dist.Pdf(X[i])
 		Ycdf := dist.Cdf(X[i])
 		err := chk.PrintAnaNum("ypdf", 1e-14, YpdfCmp[i], Ypdf, chk.Verbose)
@@ -159,7 +159,7 @@ func Test_dist_lognormal_04(tst *testing.T) {
 	doplot := chk.Verbose
 	if doplot {
 
-		vard := &VarData{M: 1.5, S: 0.1}
+		vard := &Variable{M: 1.5, S: 0.1}
 		vard.Distr = new(DistLogNormal)
 		vard.Distr.Init(vard)
 

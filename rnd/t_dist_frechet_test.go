@@ -17,7 +17,7 @@ import (
 func plotFrechet(l, c, a float64, xmin, xmax float64) {
 
 	var dist DistFrechet
-	dist.Init(&VarData{L: l, C: c, A: a})
+	dist.Init(&Variable{L: l, C: c, A: a})
 
 	n := 101
 	x := utl.LinSpace(xmin, xmax, n)
@@ -82,7 +82,7 @@ func Test_dist_frechet_01(tst *testing.T) {
 
 	nx := len(X)
 	for i := 0; i < nx; i++ {
-		dist.Init(&VarData{L: L[i], C: C[i], A: A[i]})
+		dist.Init(&Variable{L: L[i], C: C[i], A: A[i]})
 		Ypdf := dist.Pdf(X[i])
 		Ycdf := dist.Cdf(X[i])
 		err := chk.PrintAnaNum("ypdf", 1e-14, YpdfCmp[i], Ypdf, chk.Verbose)
@@ -153,7 +153,7 @@ func Test_frechet_03(tst *testing.T) {
 	α = 4.095645
 
 	var dist DistFrechet
-	dist.Init(&VarData{L: l, A: α})
+	dist.Init(&Variable{L: l, A: α})
 	io.Pforan("dist = %+#v\n", dist)
 	io.Pforan("mean = %v\n", dist.Mean())
 	io.Pforan("var  = %v\n", dist.Variance())
@@ -176,7 +176,7 @@ func Test_dist_frechet_04(tst *testing.T) {
 		l := 8.782275
 		α := 4.095645
 
-		vard := &VarData{L: l, A: α}
+		vard := &Variable{L: l, A: α}
 		vard.Distr = new(DistFrechet)
 		vard.Distr.Init(vard)
 

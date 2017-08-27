@@ -45,7 +45,7 @@ func (o *DistLogNormal) CalcDerived() {
 }
 
 // Init initialises lognormal distribution
-func (o *DistLogNormal) Init(p *VarData) error {
+func (o *DistLogNormal) Init(p *Variable) error {
 	μ, σ := p.M, p.S
 	δ := σ / μ
 	v := math.Log(1.0 + δ*δ)

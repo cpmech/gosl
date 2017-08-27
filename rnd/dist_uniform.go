@@ -28,7 +28,7 @@ func init() {
 func (o *DistUniform) Name() string { return "Uniform" }
 
 // Init initialises uniform distribution
-func (o *DistUniform) Init(p *VarData) error {
+func (o *DistUniform) Init(p *Variable) error {
 	o.A, o.B = p.Min, p.Max
 	return nil
 }

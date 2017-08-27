@@ -17,7 +17,7 @@ import (
 func plotUniform(A, B float64, xmin, xmax float64) {
 
 	var dist DistUniform
-	dist.Init(&VarData{Min: A, Max: B})
+	dist.Init(&Variable{Min: A, Max: B})
 
 	n := 101
 	x := utl.LinSpace(xmin, xmax, n)
@@ -81,7 +81,7 @@ func Test_dist_uniform_01(tst *testing.T) {
 
 	nx := len(X)
 	for i := 0; i < nx; i++ {
-		dist.Init(&VarData{Min: A[i], Max: B[i]})
+		dist.Init(&Variable{Min: A[i], Max: B[i]})
 		Ypdf := dist.Pdf(X[i])
 		Ycdf := dist.Cdf(X[i])
 		err := chk.PrintAnaNum("ypdf", 1e-14, YpdfCmp[i], Ypdf, chk.Verbose)
@@ -120,7 +120,7 @@ func Test_dist_uniform_03(tst *testing.T) {
 	doplot := chk.Verbose
 	if doplot {
 
-		vard := &VarData{D: "U", Min: 1.5, Max: 2.5}
+		vard := &Variable{D: "U", Min: 1.5, Max: 2.5}
 		vard.Distr = new(DistUniform)
 		vard.Distr.Init(vard)
 

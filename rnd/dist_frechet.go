@@ -28,7 +28,7 @@ func init() {
 func (o *DistFrechet) Name() string { return "Frechet" }
 
 // Init initialises Frechet distribution
-func (o *DistFrechet) Init(p *VarData) error {
+func (o *DistFrechet) Init(p *Variable) error {
 	o.L, o.C, o.A = p.L, p.C, p.A
 	if math.Abs(o.C) < 1e-15 {
 		o.C = 1
@@ -80,7 +80,7 @@ func FrechetPlotCoef(dirout, fnkey string, amin, amax float64) {
 	Y := make([]float64, np)
 	var dist DistFrechet
 	for i := 0; i < np; i++ {
-		dist.Init(&VarData{L: 0, A: A[i]})
+		dist.Init(&Variable{L: 0, A: A[i]})
 		X[i] = 1.0 / A[i]
 		μ := dist.Mean()
 		σ2 := dist.Variance()

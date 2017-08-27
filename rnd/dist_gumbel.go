@@ -21,7 +21,7 @@ func init() {
 func (o *DistGumbel) Name() string { return "Gumbel" }
 
 // Init initialises Gumbel distribution
-func (o *DistGumbel) Init(p *VarData) error {
+func (o *DistGumbel) Init(p *Variable) error {
 	euler := 0.57721566490153286060651209008240243104215
 	μ, σ := p.M, p.S
 	o.B = σ * math.Sqrt(6.0) / math.Pi

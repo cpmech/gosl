@@ -17,7 +17,7 @@ import (
 func plotGumbel(μ, σ float64) {
 
 	var dist DistGumbel
-	dist.Init(&VarData{M: μ, S: σ})
+	dist.Init(&Variable{M: μ, S: σ})
 
 	n := 101
 	x := utl.LinSpace(-5, 20, n)
@@ -120,7 +120,7 @@ func Test_gumbel_03(tst *testing.T) {
 	chk.PrintTitle("dist_gumbel_03")
 
 	var dist DistGumbel
-	dist.Init(&VarData{M: 61.3, S: 7.52}) // from Haldar & Mahadevan page 90
+	dist.Init(&Variable{M: 61.3, S: 7.52}) // from Haldar & Mahadevan page 90
 	io.Pforan("dist = %+#v\n", dist)
 	chk.Float64(tst, "u", 0.00011, dist.U, 57.9157)
 	chk.Float64(tst, "β", 1e-4, dist.B, 1.0/0.17055)
@@ -134,7 +134,7 @@ func Test_dist_gumbel_04(tst *testing.T) {
 	doplot := chk.Verbose
 	if doplot {
 
-		vard := &VarData{M: 1.5, S: 0.1}
+		vard := &Variable{M: 1.5, S: 0.1}
 		vard.Distr = new(DistGumbel)
 		vard.Distr.Init(vard)
 

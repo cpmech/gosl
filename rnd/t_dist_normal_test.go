@@ -17,7 +17,7 @@ import (
 func plotNormal(μ, σ, xmin, xmax float64) {
 
 	var dist DistNormal
-	dist.Init(&VarData{M: μ, S: σ})
+	dist.Init(&Variable{M: μ, S: σ})
 
 	n := 101
 	x := utl.LinSpace(xmin, xmax, n)
@@ -76,7 +76,7 @@ func Test_dist_normal_01(tst *testing.T) {
 
 	n := len(X)
 	for i := 0; i < n; i++ {
-		dist.Init(&VarData{M: Mu[i], S: Sig[i]})
+		dist.Init(&Variable{M: Mu[i], S: Sig[i]})
 		Ypdf := dist.Pdf(X[i])
 		Ycdf := dist.Cdf(X[i])
 		err := chk.PrintAnaNum("ypdf", 1e-15, YpdfCmp[i], Ypdf, chk.Verbose)
@@ -203,7 +203,7 @@ func Test_dist_normal_06(tst *testing.T) {
 	doplot := chk.Verbose
 	if doplot {
 
-		vard := &VarData{M: 1.5, S: 0.1}
+		vard := &Variable{M: 1.5, S: 0.1}
 		vard.Distr = new(DistNormal)
 		vard.Distr.Init(vard)
 

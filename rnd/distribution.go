@@ -9,7 +9,7 @@ import "github.com/cpmech/gosl/chk"
 // Distribution defines a probability distribution
 type Distribution interface {
 	Name() string
-	Init(prms *VarData) error
+	Init(prms *Variable) error
 	Pdf(x float64) float64
 	Cdf(x float64) float64
 }
