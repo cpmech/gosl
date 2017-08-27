@@ -21,7 +21,7 @@ func TestFourierInterp01(tst *testing.T) {
 
 	// constants
 	N := 8
-	fou, err := NewFourierInterp(N, 0)
+	fou, err := NewFourierInterp(N, "")
 	status(tst, err)
 	defer fou.Free()
 
@@ -87,7 +87,7 @@ func TestFourierInterp02(tst *testing.T) {
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, SmoNoneKind)
+	fou, err := NewFourierInterp(N, "")
 	status(tst, err)
 	defer fou.Free()
 
@@ -139,7 +139,7 @@ func TestFourierInterp03(tst *testing.T) {
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, SmoLanczosKind)
+	fou, err := NewFourierInterp(N, "lanc")
 	status(tst, err)
 	defer fou.Free()
 
@@ -184,7 +184,7 @@ func TestFourierInterp03(tst *testing.T) {
 		for k, p := range []uint64{2, 3, 4, 5} {
 
 			N := 1 << p
-			fou, err := NewFourierInterp(N, SmoLanczosKind)
+			fou, err := NewFourierInterp(N, "lanc")
 			status(tst, err)
 			defer fou.Free()
 
@@ -204,7 +204,7 @@ func TestFourierInterp03(tst *testing.T) {
 		for k, p := range []uint64{2, 3, 4, 5} {
 
 			N := 1 << p
-			fou, err := NewFourierInterp(N, SmoRcosKind)
+			fou, err := NewFourierInterp(N, "rcos")
 			status(tst, err)
 			defer fou.Free()
 
@@ -221,7 +221,7 @@ func TestFourierInterp03(tst *testing.T) {
 		for k, p := range []uint64{2, 3, 4, 5} {
 
 			N := 1 << p
-			fou, err := NewFourierInterp(N, SmoCesaroKind)
+			fou, err := NewFourierInterp(N, "ces")
 			status(tst, err)
 			defer fou.Free()
 
@@ -250,7 +250,7 @@ func TestFourierInterp04(tst *testing.T) {
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, SmoNoneKind)
+	fou, err := NewFourierInterp(N, "")
 	status(tst, err)
 	defer fou.Free()
 
@@ -286,7 +286,7 @@ func TestFourierInterp05(tst *testing.T) {
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, SmoNoneKind)
+	fou, err := NewFourierInterp(N, "")
 	status(tst, err)
 	defer fou.Free()
 

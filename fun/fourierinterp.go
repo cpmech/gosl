@@ -16,22 +16,6 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Smoothing kinds
-var (
-
-	// No smoothing
-	SmoNoneKind = io.NewEnum("None", "fun.smoothing", "L", "No smoothing")
-
-	// Lanczos (sinc) smoothing kind
-	SmoLanczosKind = io.NewEnum("Lanczos", "fun.smoothing", "L", "Lanczos (sinc) smoothing kind")
-
-	// Cesaro
-	SmoCesaroKind = io.NewEnum("Cesaro", "fun.smoothing", "L", "Lanczos (sinc) smoothing kind")
-
-	// Raised Cosine
-	SmoRcosKind = io.NewEnum("Rcos", "fun.smoothing", "L", "Lanczos (sinc) smoothing kind")
-)
-
 // FourierInterp performs interpolation using truncated Fourier series
 //
 //               N/2 - 1
@@ -93,13 +77,19 @@ type FourierInterp struct {
 }
 
 // NewFourierInterp allocates a new FourierInterp object
-//   N         -- number of terms. must be even; ideally power of 2, e.g. N = 2ⁿ
+//
+//   N -- number of terms. must be even; ideally power of 2, e.g. N = 2ⁿ
+//
 //   smoothing -- type of smoothing: use SmoNoneKind for no smoothing
+//     "" or "none" : no smoothing
+//     "lanc"       : Lanczos (sinc)
+//     "rcos"       : Raised Cosine
+//     "ces"        : Cesaro
 //
 //   NOTE: remember to call Free in the end to release memory allocatedy by FFTW; e.g.
 //         defer o.Free()
 //
-func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
+func NewFourierInterp(N int, smoothing string) (o *FourierInterp, err error) {
 
 	// check
 	if N%2 != 0 {
@@ -125,11 +115,11 @@ func NewFourierInterp(N int, smoothing io.Enum) (o *FourierInterp, err error) {
 	// compute smoothing coefficients
 	σ := func(k float64) float64 { return 1.0 }
 	switch smoothing {
-	case SmoLanczosKind:
+	case "lanc":
 		σ = func(k float64) float64 { return Sinc(2 * k * π / n) }
-	case SmoRcosKind:
+	case "rcos":
 		σ = func(k float64) float64 { return (1.0 + math.Cos(2*k*π/n)) / 2.0 }
-	case SmoCesaroKind:
+	case "ces":
 		σ = func(k float64) float64 { return 1.0 - math.Abs(k)/(1.0+n/2.0) }
 	}
 	for j := 0; j < o.N; j++ {
