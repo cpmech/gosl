@@ -43,9 +43,9 @@ import (
 //                                  └────────────> unknown
 //
 //  The Equations structure uses arrays to map the indices of equations from the "full"
-//  system to the reduced systems and vice-versa. We call these arrays "maps" but they are
-//  not Go maps; they are simple slices of integers and should give better performance than
-//  using maps.
+//  system to the reduced systems and vice-versa. We call these arrays "maps" but they
+//  are not Go maps; they are simple slices of integers and should give better
+//  performance than using maps.
 //
 //  Two "maps" (slices of integers) are built:
 //   * "RF" means "reduced to full"
