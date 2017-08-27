@@ -10,8 +10,8 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// Interpolator implements numeric interpolators to be used with discrete data
-type Interpolator struct {
+// DataInterp implements numeric interpolators to be used with discrete data
+type DataInterp struct {
 
 	// configuration data
 	DisableHunt bool // do not use hunt code at all
@@ -36,7 +36,7 @@ type Interpolator struct {
 	interp func(j int, x float64) float64
 }
 
-// NewInterpolator creates new interpolator of type=Type for data point sets xx and yy (with same lengths)
+// NewDataInterp creates new interpolator for data point sets xx and yy (with same lengths)
 //
 //     Type -- type of interpolator
 //        "lin"  : linear
@@ -45,8 +45,8 @@ type Interpolator struct {
 //     p  -- order of interpolator
 //     xx -- x-data
 //     yy -- y-data
-func NewInterpolator(Type string, p int, xx, yy []float64) (o *Interpolator, err error) {
-	o = new(Interpolator)
+func NewDataInterp(Type string, p int, xx, yy []float64) (o *DataInterp, err error) {
+	o = new(DataInterp)
 	o.itype = Type
 	switch Type {
 	case "lin":
@@ -63,7 +63,7 @@ func NewInterpolator(Type string, p int, xx, yy []float64) (o *Interpolator, err
 }
 
 // Reset re-assigns xx and yy data sets
-func (o *Interpolator) Reset(xx, yy []float64) (err error) {
+func (o *DataInterp) Reset(xx, yy []float64) (err error) {
 	if len(xx) != len(yy) {
 		return chk.Err("lengths of data sets must be the same. %d != %d\n", len(xx), len(yy))
 	}
@@ -83,7 +83,7 @@ func (o *Interpolator) Reset(xx, yy []float64) (err error) {
 }
 
 // P computes P(x); i.e. performs the interpolation
-func (o *Interpolator) P(x float64) float64 {
+func (o *DataInterp) P(x float64) float64 {
 	var jlo int
 	if o.useHunt && !o.DisableHunt {
 		jlo = o.hunt(x)
@@ -96,7 +96,7 @@ func (o *Interpolator) P(x float64) float64 {
 // locate returns a value j such that x is (insofar as possible) centered in the subrange
 // xx[j..j+mm-1], where xx is the stored pointer. The values in xx must be monotonic, either
 // increasing or decreasing. The returned value is not less than 0, nor greater than n-1.
-func (o *Interpolator) locate(x float64) int {
+func (o *DataInterp) locate(x float64) int {
 
 	// bisection
 	jl := 0         // initialize lower
@@ -125,7 +125,7 @@ func (o *Interpolator) locate(x float64) int {
 // hunt returns a value j such that x is (insofar as possible) centered in the subrange
 // xx[j..j+mm-1], where xx is the stored pointer. The values in xx must be monotonic, either
 // increasing or decreasing. The returned value is not less than 0, nor greater than n-1.
-func (o *Interpolator) hunt(x float64) int {
+func (o *DataInterp) hunt(x float64) int {
 
 	// hunting
 	jl := o.jHunt
@@ -188,7 +188,7 @@ func (o *Interpolator) hunt(x float64) int {
 }
 
 // linInterp implements linear interpolator
-func (o *Interpolator) linInterp(j int, x float64) float64 {
+func (o *DataInterp) linInterp(j int, x float64) float64 {
 	if o.xx[j] == o.xx[j+1] { // table is defective, but we can recover.
 		return o.yy[j]
 	}
@@ -198,7 +198,7 @@ func (o *Interpolator) linInterp(j int, x float64) float64 {
 // polyInterp performs a polynomial interpolation. This routine returns an interpolated value y, and
 // stores an error estimate dy. The returned value is obtained by m-point polynomial interpolation
 // on the subrange xx[jl..jl+m-1].
-func (o *Interpolator) polyInterp(jl int, x float64) (y float64) {
+func (o *DataInterp) polyInterp(jl int, x float64) (y float64) {
 
 	// allocate variables
 	xa := o.xx[jl:]
