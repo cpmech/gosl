@@ -14,19 +14,6 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Interpolation grid kinds
-var (
-
-	// UniformGridKind defines the uniform 1D grid kind
-	UniformGridKind = io.NewEnum("Uniform", "fun.uniform", "U", "Uniform 1D grid")
-
-	// ChebyGaussGridKind defines the Chebyshev-Gauss 1D grid kind
-	ChebyGaussGridKind = io.NewEnum("ChebyGauss", "fun.chebygauss", "CG", "Chebyshev-Gauss 1D grid")
-
-	// ChebyGaussLobGridKind defines the Chebyshev-Gauss-Lobatto 1D grid kind
-	ChebyGaussLobGridKind = io.NewEnum("ChebyGaussLob", "fun.chebygausslob", "CGL", "Chebyshev-Gauss-Lobatto0 1D grid")
-)
-
 // LagrangeInterp implements Lagrange interpolators associated with a grid X
 //
 //   An interpolant I^X_N{f} (associated with a grid X; of degree N; with N+1 points)
@@ -113,11 +100,17 @@ type LagrangeInterp struct {
 }
 
 // NewLagrangeInterp allocates a new LagrangeInterp
-//   N        -- degree
-//   gridType -- type of grid; e.g. uniform
-//   useLogx  -- use ln(|xk-xl|) method to compute λk
-//   NOTE: the grid will be generated in [-1, 1]
-func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
+//
+//     N -- degree
+//
+//     gridType -- type of grid:
+//        "uni" : uniform 1D grid kind
+//        "cg"  : Chebyshev-Gauss 1D grid kind
+//        "cgl" : Chebyshev-Gauss-Lobatto 1D grid kind
+//
+//     NOTE: the grid will be generated in [-1, 1]
+//
+func NewLagrangeInterp(N int, gridType string) (o *LagrangeInterp, err error) {
 
 	// check
 	if N < 1 || N > 2048 {
@@ -130,11 +123,11 @@ func NewLagrangeInterp(N int, gridType io.Enum) (o *LagrangeInterp, err error) {
 
 	// generate grid
 	switch gridType {
-	case UniformGridKind:
+	case "uni":
 		o.X = utl.LinSpace(-1, 1, N+1)
-	case ChebyGaussGridKind:
+	case "cg":
 		o.X = ChebyshevXgauss(N)
-	case ChebyGaussLobGridKind:
+	case "cgl":
 		o.X = ChebyshevXlob(N)
 	default:
 		return nil, chk.Err("cannot create grid type %q\n", gridType)
@@ -494,7 +487,7 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 // plotting ////////////////////////////////////////////////////////////////////////////////////////
 
 // PlotLagInterpL plots cardinal polynomials ℓ
-func PlotLagInterpL(N int, gridType io.Enum) {
+func PlotLagInterpL(N int, gridType string) {
 	xx := utl.LinSpace(-1, 1, 201)
 	yy := make([]float64, len(xx))
 	o, _ := NewLagrangeInterp(N, gridType)
@@ -512,7 +505,7 @@ func PlotLagInterpL(N int, gridType io.Enum) {
 }
 
 // PlotLagInterpW plots nodal polynomial
-func PlotLagInterpW(N int, gridType io.Enum) {
+func PlotLagInterpW(N int, gridType string) {
 	npts := 201
 	xx := utl.LinSpace(-1, 1, npts)
 	yy := make([]float64, len(xx))
@@ -529,7 +522,7 @@ func PlotLagInterpW(N int, gridType io.Enum) {
 }
 
 // PlotLagInterpI plots Lagrange interpolation I(x) function for many degrees Nvalues
-func PlotLagInterpI(Nvalues []int, gridType io.Enum, f Ss) {
+func PlotLagInterpI(Nvalues []int, gridType string, f Ss) {
 	npts := 201
 	xx := utl.LinSpace(-1, 1, npts)
 	yy := make([]float64, len(xx))

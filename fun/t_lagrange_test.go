@@ -21,7 +21,7 @@ func TestLagCardinal01(tst *testing.T) {
 
 	// allocate structure
 	N := 5
-	kind := UniformGridKind
+	kind := "uni"
 	o, err := NewLagrangeInterp(N, kind)
 	if err != nil {
 		tst.Errorf("%v\n", err)
@@ -87,7 +87,7 @@ func TestLagInterp01(tst *testing.T) {
 
 	// allocate structure and calculate U
 	N := 5
-	kind := UniformGridKind
+	kind := "uni"
 	o, err := NewLagrangeInterp(N, kind)
 	status(tst, err)
 	status(tst, o.CalcU(f))
@@ -124,7 +124,7 @@ func TestLagInterp02(tst *testing.T) {
 
 	// allocate structure and calculate U
 	N := 8
-	kind := UniformGridKind
+	kind := "uni"
 	o, err := NewLagrangeInterp(N, kind)
 	status(tst, err)
 	status(tst, o.CalcU(f))
@@ -169,7 +169,7 @@ func TestLagInterp03(tst *testing.T) {
 
 	// allocate structure and calculate U
 	N := 8
-	kind := ChebyGaussGridKind
+	kind := "cg"
 	o, err := NewLagrangeInterp(N, kind)
 	status(tst, err)
 	status(tst, o.CalcU(f))
@@ -236,7 +236,7 @@ func TestLagInterp04(tst *testing.T) {
 
 	// allocate structure and calculate U
 	N := 8
-	kind := ChebyGaussLobGridKind
+	kind := "cgl"
 	o, err := NewLagrangeInterp(N, kind)
 	status(tst, err)
 	status(tst, o.CalcU(f))
@@ -307,7 +307,7 @@ func checkLam(tst *testing.T, o *LagrangeInterp, tol float64) {
 func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 
 	// allocate structure and calculate U
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	o, err := NewLagrangeInterp(N, "cgl")
 	status(tst, err)
 	status(tst, o.CalcU(f))
 
@@ -369,7 +369,7 @@ func TestLagInterp05(tst *testing.T) {
 func cmpD1lag(tst *testing.T, N int, tol float64) {
 
 	// allocate structure
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	o, err := NewLagrangeInterp(N, "cgl")
 	status(tst, err)
 
 	// calc and check D1
@@ -400,7 +400,7 @@ func TestLagInterp06(tst *testing.T) {
 func checkD2lag(tst *testing.T, N int, h, tolD float64, verb bool) {
 
 	// allocate
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	o, err := NewLagrangeInterp(N, "cgl")
 	status(tst, err)
 	if verb {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
@@ -441,7 +441,7 @@ func TestLagInterp07(tst *testing.T) {
 func calcD1errorLag(tst *testing.T, N int, f, dfdxAna Ss, useEta bool) (maxDiff float64) {
 
 	// allocate polynomial
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	o, err := NewLagrangeInterp(N, "cgl")
 	status(tst, err)
 
 	// compute coefficients
@@ -460,7 +460,7 @@ func calcD1errorLag(tst *testing.T, N int, f, dfdxAna Ss, useEta bool) (maxDiff 
 func calcD2errorLag(tst *testing.T, N int, f, d2fdx2Ana Ss, useEta bool) (maxDiff float64) {
 
 	// allocate polynomial
-	o, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	o, err := NewLagrangeInterp(N, "cgl")
 	status(tst, err)
 
 	// compute coefficients

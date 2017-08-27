@@ -17,7 +17,7 @@ import (
 func compareLambda(tst *testing.T, N int, f Ss, tolU, tolL float64) {
 
 	// allocate Lagrange structure and calculate U
-	lag, err := NewLagrangeInterp(N, ChebyGaussLobGridKind)
+	lag, err := NewLagrangeInterp(N, "cgl")
 	status(tst, err)
 	status(tst, lag.CalcU(f))
 
