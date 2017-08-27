@@ -12,7 +12,7 @@ import (
 
 func Test_report01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("Report01. random variables")
 
 	if chk.Verbose {
@@ -25,33 +25,33 @@ func Test_report01(tst *testing.T) {
 			&SetOfVars{
 				Name: "problem 1",
 				Vars: []*VarData{
-					&VarData{D: NormalKind, M: 1, S: 0.1},
-					&VarData{D: NormalKind, M: 2, S: 0.2},
-					&VarData{D: NormalKind, M: 3, S: 0.3},
+					&VarData{D: "N", M: 1, S: 0.1},
+					&VarData{D: "N", M: 2, S: 0.2},
+					&VarData{D: "N", M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem:2",
 				Vars: []*VarData{
-					&VarData{D: GumbelKind, M: 1, S: 0.1},
-					&VarData{D: GumbelKind, M: 2, S: 0.2},
-					&VarData{D: GumbelKind, M: 3, S: 0.3},
+					&VarData{D: "G", M: 1, S: 0.1},
+					&VarData{D: "G", M: 2, S: 0.2},
+					&VarData{D: "G", M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem_3",
 				Vars: []*VarData{
-					&VarData{D: LognormalKind, M: 1, S: 0.1},
-					&VarData{D: LognormalKind, M: 2, S: 0.2},
-					&VarData{D: LognormalKind, M: 3, S: 0.3},
+					&VarData{D: "L", M: 1, S: 0.1},
+					&VarData{D: "L", M: 2, S: 0.2},
+					&VarData{D: "L", M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem-4",
 				Vars: []*VarData{
-					&VarData{D: UniformKind, Min: 1, Max: 10},
-					&VarData{D: UniformKind, Min: 2, Max: 20},
-					&VarData{D: UniformKind, Min: 3, Max: 30},
+					&VarData{D: "U", Min: 1, Max: 10},
+					&VarData{D: "U", Min: 2, Max: 20},
+					&VarData{D: "U", Min: 3, Max: 30},
 				},
 			},
 		}

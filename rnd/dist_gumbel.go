@@ -14,8 +14,11 @@ type DistGumbel struct {
 
 // set factory
 func init() {
-	distallocators[GumbelKind] = func() Distribution { return new(DistGumbel) }
+	distallocators["G"] = func() Distribution { return new(DistGumbel) }
 }
+
+// Name returns the name of this probability distribution
+func (o *DistGumbel) Name() string { return "Gumbel" }
 
 // Init initialises Gumbel distribution
 func (o *DistGumbel) Init(p *VarData) error {

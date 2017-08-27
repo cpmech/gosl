@@ -43,8 +43,11 @@ type DistNormal struct {
 
 // set factory
 func init() {
-	distallocators[NormalKind] = func() Distribution { return new(DistNormal) }
+	distallocators["N"] = func() Distribution { return new(DistNormal) }
 }
+
+// Name returns the name of this probability distribution
+func (o *DistNormal) Name() string { return "Normal" }
 
 // CalcDerived compute derived/auxiliary quantities
 func (o *DistNormal) CalcDerived() {

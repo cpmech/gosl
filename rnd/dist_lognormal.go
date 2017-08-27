@@ -32,8 +32,11 @@ type DistLogNormal struct {
 
 // set factory
 func init() {
-	distallocators[LognormalKind] = func() Distribution { return new(DistLogNormal) }
+	distallocators["L"] = func() Distribution { return new(DistLogNormal) }
 }
+
+// Name returns the name of this probability distribution
+func (o *DistLogNormal) Name() string { return "Lognormal" }
 
 // CalcDerived computes derived/auxiliary quantities
 func (o *DistLogNormal) CalcDerived() {

@@ -8,19 +8,20 @@ import "github.com/cpmech/gosl/chk"
 
 // Distribution defines a probability distribution
 type Distribution interface {
+	Name() string
 	Init(prms *VarData) error
 	Pdf(x float64) float64
 	Cdf(x float64) float64
 }
 
 // factory
-var distallocators = make(map[DistType]func() Distribution)
+var distallocators = make(map[string]func() Distribution)
 
 // GetDistrib returns a distribution from factory
-func GetDistrib(dtype DistType) (d Distribution, err error) {
+func GetDistrib(dtype string) (d Distribution, err error) {
 	allocator, ok := distallocators[dtype]
 	if !ok {
-		return nil, chk.Err("cannot find distribution: %+v", dtype)
+		return nil, chk.Err("cannot find %q distribution", dtype)
 	}
 	return allocator(), nil
 }

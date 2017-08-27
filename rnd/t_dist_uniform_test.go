@@ -120,7 +120,7 @@ func Test_dist_uniform_03(tst *testing.T) {
 	doplot := chk.Verbose
 	if doplot {
 
-		vard := &VarData{D: UniformKind, Min: 1.5, Max: 2.5}
+		vard := &VarData{D: "U", Min: 1.5, Max: 2.5}
 		vard.Distr = new(DistUniform)
 		vard.Distr.Init(vard)
 

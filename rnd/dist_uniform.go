@@ -21,8 +21,11 @@ type DistUniform struct {
 
 // set factory
 func init() {
-	distallocators[UniformKind] = func() Distribution { return new(DistUniform) }
+	distallocators["U"] = func() Distribution { return new(DistUniform) }
 }
+
+// Name returns the name of this probability distribution
+func (o *DistUniform) Name() string { return "Uniform" }
 
 // Init initialises uniform distribution
 func (o *DistUniform) Init(p *VarData) error {

@@ -44,11 +44,11 @@ name & var & $\mu$ & $\sigma$ & D$^{\star}$ & min & max \\ \hline
 				key = strings.Replace(key, "_", "-", -1)
 			}
 			txtM, txtS := "-", "-"
-			if v.D != UniformKind {
+			if v.D != "U" {
 				txtM = "$" + io.TexNum("", v.M, true) + "$"
 				txtS = "$" + io.TexNum("", v.S, true) + "$"
 			}
-			io.Ff(buf, `%s & $x_{%d}$ & %s & %s & %s & $%s$ & $%s$ \\`, key, j, txtM, txtS, GetDistrKey(v.D), io.TexNum("", v.Min, true), io.TexNum("", v.Max, true))
+			io.Ff(buf, `%s & $x_{%d}$ & %s & %s & %s & $%s$ & $%s$ \\`, key, j, txtM, txtS, v.D, io.TexNum("", v.Min, true), io.TexNum("", v.Max, true))
 			io.Ff(buf, "\n")
 		}
 		if i < len(sets)-1 {

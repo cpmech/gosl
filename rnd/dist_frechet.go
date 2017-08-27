@@ -21,8 +21,11 @@ type DistFrechet struct {
 
 // set factory
 func init() {
-	distallocators[FrechetKind] = func() Distribution { return new(DistFrechet) }
+	distallocators["F"] = func() Distribution { return new(DistFrechet) }
 }
+
+// Name returns the name of this probability distribution
+func (o *DistFrechet) Name() string { return "Frechet" }
 
 // Init initialises Frechet distribution
 func (o *DistFrechet) Init(p *VarData) error {
