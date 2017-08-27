@@ -28,7 +28,8 @@ import (
 //   * We call reduced system # 2 a system of equations with the prescribed equations only
 //             ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄                                ┄┄┄┄┄┄┄┄┄┄
 //
-//   * We call the system K⋅u=f the "full" system, with all equations (unknown and prescribed)
+//   * We call the system K⋅u=f the "full" system, with all equations
+//     (unknown and prescribed)
 //
 //  The "full" linear system is:
 //                                  K ⋅ u = f     or    [ K11 K12 ] ⋅ { u1 } = { f1 }
@@ -41,9 +42,10 @@ import (
 //                                  │   └────────> prescribed
 //                                  └────────────> unknown
 //
-//  The Equations structure uses arrays to map the indices of equations from the "full" system
-//  to the reduced systems and vice-versa. We call these arrays "maps" but they are not Go maps;
-//  they are simple slices of integers and should give better performance than using maps.
+//  The Equations structure uses arrays to map the indices of equations from the "full"
+//  system to the reduced systems and vice-versa. We call these arrays "maps" but they are
+//  not Go maps; they are simple slices of integers and should give better performance than
+//  using maps.
 //
 //  Two "maps" (slices of integers) are built:
 //   * "RF" means "reduced to full"
@@ -73,19 +75,19 @@ import (
 //   N2 = 3 => number of equations of type 2 (prescribed)
 //   N1 + N2 == N
 //
-//          0  1  2  3  4  5
-//   RF1 = [1  2  4  5  7  8]           ⇒ ex:  RF1[3] returns equation # 5 of full system
+//          0  1  2  3  4  5              Example:
+//   RF1 = [1  2  4  5  7  8]           ⇒ RF1[3] returns equation # 5 of full system
 //
 //          0  1  2  3  4  5  6  7  8
-//   FR1 = [   0  1     2  3     4  5]  ⇒ ex:  FR1[5] returns equation # 3 of reduced system
-//         -1       -1       -1         ⇒      -1 indicates 'value not set'
+//   FR1 = [   0  1     2  3     4  5]  ⇒ FR1[5] returns equation # 3 of reduced system
+//         -1       -1       -1         ⇒ -1 indicates 'value not set'
 //
 //          0  1  2
-//   RF2 = [0  3  6]                    ⇒ ex:  RF2[1] returns equation # 3 of full system
+//   RF2 = [0  3  6]                    ⇒ RF2[1] returns equation # 3 of full system
 //
 //          0  1  2  3  4  5  6  7  8
-//   FR2 = [0        1        2      ]  ⇒ ex:  FR2[3] returns equation # 1 of reduced system
-//            -1 -1    -1 -1    -1 -1   ⇒      -1 indicates 'value not set'
+//   FR2 = [0        1        2      ]  ⇒ FR2[3] returns equation # 1 of reduced system
+//            -1 -1    -1 -1    -1 -1   ⇒ -1 indicates 'value not set'
 //
 type Equations struct {
 	N1, N2, N int   // unknowns, prescribed, total numbers
