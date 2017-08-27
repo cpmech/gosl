@@ -8,25 +8,6 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-)
-
-// Orthogonal polynomial kinds
-var (
-	// OpolyJacobiKind specifies the Jacobi orthogonal polynomial
-	OpolyJacobiKind = io.NewEnum("Jacobi", "fun.opoly", "J", "Jacobi orthogonal polynomial")
-
-	// OpolyLegendreKind specifies the Legendre orthogonal polynomial
-	OpolyLegendreKind = io.NewEnum("Legendre", "fun.opoly", "L", "Legendre orthogonal polynomial")
-
-	// OpolyHermiteKind specifies the Hermite orthogonal polynomial
-	OpolyHermiteKind = io.NewEnum("Hermite", "fun.opoly", "H", "Hermite orthogonal polynomial")
-
-	// OpolyCheby1Kind specifies the Chebyshev first kind orthogonal polynomial
-	OpolyCheby1Kind = io.NewEnum("Chebyshev1", "fun.opoly", "T", "Chebyshev First Kind orthogonal polynomial")
-
-	// OpolyCheby2Kind specifies the Chebyshev second kind orthogonal polynomial
-	OpolyCheby2Kind = io.NewEnum("Chebyshev2", "fun.opoly", "U", "Chebyshev Second Kind orthogonal polynomial")
 )
 
 // GeneralOrthoPoly (main) structure ////////////////////////////////////////////////////////////////
@@ -38,11 +19,14 @@ var (
 //   [1] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas, Graphs,
 //       and Mathematical Tables. U.S. Department of Commerce, NIST
 //
+//   NOTE: this structure should be not be used for high-performance computing;
+//         it's probably useful for verifications or learning purposes only
+//
 type GeneralOrthoPoly struct {
 
 	// input
-	Kind io.Enum // type of orthogonal polynomial
-	N    int     // (max) degree of polynomial. Lower order can be quickly obtained after this polynomial with max(N) is generated
+	Kind string // type of orthogonal polynomial
+	N    int    // (max) degree of polynomial. Lower order can be quickly obtained after this polynomial with max(N) is generated
 
 	// computed
 	c [][]float64 // all c coefficients [N+1][M+1]
@@ -52,16 +36,28 @@ type GeneralOrthoPoly struct {
 }
 
 // NewGeneralOrthoPoly creates a new orthogonal polynomial
-//   Type  -- is the type: e.g. OP_JACOBI, OP_LEGENDRE, OP_HERMITE
-//   N     -- is the (max) degree of the polynomial.
-//            Lower order can later be quickly obtained after this
-//            polynomial with max(N) is created
+//
+//   kind -- is the type of orthognal polynomial:
+//     "J" or "jac"    : Jacobi
+//     "L" or "leg"    : Legendre
+//     "H" or "her"    : Hermite
+//     "T" or "cheby1" : Chebyshev first kind
+//     "U" or "cheby2" : Chebyshev second kind
+//
+//   N -- is the (max) degree of the polynomial.
+//        Lower order can later be quickly obtained after this
+//        polynomial with max(N) is created
+//
 //   alpha -- Jacobi only: α coefficient
-//   beta  -- Jacobi only: β coefficient
+//
+//   beta -- Jacobi only: β coefficient
 //
 //   NOTE: all coefficients for the 0...N polynomials will be generated
 //
-func NewGeneralOrthoPoly(kind io.Enum, N int, alpha, beta float64) (o *GeneralOrthoPoly) {
+//   NOTE: this structure should be not be used for high-performance computing;
+//         it's probably useful for verifications or learning purposes only
+//
+func NewGeneralOrthoPoly(kind string, N int, alpha, beta float64) (o *GeneralOrthoPoly) {
 	o = new(GeneralOrthoPoly)
 	o.Kind = kind
 	o.N = N
@@ -126,14 +122,14 @@ type oPoly interface {
 type oPolyMaker func(alpha, beta float64) oPoly
 
 // oPolyDB implements a database of oPoly makers
-var oPolyDB = make(map[io.Enum]oPolyMaker)
+var oPolyDB = make(map[string]oPolyMaker)
 
 // newopoly finds oPoly or panic
-func newopoly(code io.Enum, alpha, beta float64) oPoly {
-	if maker, ok := oPolyDB[code]; ok {
+func newopoly(kind string, alpha, beta float64) oPoly {
+	if maker, ok := oPolyDB[kind]; ok {
 		return maker(alpha, beta)
 	}
-	chk.Panic("cannot find OrthoPolynomial named %q in database", code)
+	chk.Panic("cannot find OrthoPolynomial named %q in database", kind)
 	return nil
 }
 
@@ -280,9 +276,9 @@ func newChebyshev2(alpha, beta float64) oPoly {
 // add polynomials to database /////////////////////////////////////////////////////////////////////
 
 func init() {
-	oPolyDB[OpolyJacobiKind] = newJacobi
-	oPolyDB[OpolyLegendreKind] = newLegendre
-	oPolyDB[OpolyHermiteKind] = newHermite
-	oPolyDB[OpolyCheby1Kind] = newChebyshev1
-	oPolyDB[OpolyCheby2Kind] = newChebyshev2
+	oPolyDB["J"] = newJacobi
+	oPolyDB["L"] = newLegendre
+	oPolyDB["H"] = newHermite
+	oPolyDB["T"] = newChebyshev1
+	oPolyDB["U"] = newChebyshev2
 }
