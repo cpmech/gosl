@@ -14,7 +14,7 @@ import (
 // SetOfVars defines a set of random variables
 type SetOfVars struct {
 	Name string
-	Vars []*Variable
+	Vars Variables
 }
 
 // SetsOfVars defines a set of sets of random variables
