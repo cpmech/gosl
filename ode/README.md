@@ -26,7 +26,11 @@ Solution of Robertson's equation
 Source code: <a href="t_erk_test.go">t_erk_test.go</a>
 
 <div id="container">
-<p><img src="../examples/figs/t_erk04.png" width="450"></p>
+<p><img src="../examples/figs/t_erk04.png" width="500"></p>
+</div>
+
+<div id="container">
+<p><img src="../examples/figs/t_erk05.png" width="500"></p>
 </div>
 
 
