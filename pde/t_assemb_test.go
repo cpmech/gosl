@@ -30,7 +30,7 @@ func Test_assemb01(tst *testing.T) {
 
 	// assembly
 	kx, ky := 1.0, 1.0
-	F1 := make([]float64, e.N1)
+	F1 := make([]float64, e.Nu)
 	AssemblePoisson2d(&K11, &K12, F1, kx, ky, nil, &g, &e)
 
 	// check
