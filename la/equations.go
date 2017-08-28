@@ -146,14 +146,13 @@ func (o *Equations) Stat(full bool) {
 	io.Pf("number of known x-components:   Nk = %d\n", o.Nk)
 	io.Pf("total number of equations:      N  = %d\n", o.N)
 	if full {
-		io.Pf("reduced u-system to full-system map: UtoF =\n")
-		io.Pf("%v", o.UtoF)
-		io.Pf("full-system to reduced u-system map: FtoU =\n")
-		io.Pf("%v", o.FtoU)
-		io.Pl()
-		io.Pf("reduced k-system to full system map: KtoF =\n")
-		io.Pf("%v", o.KtoF)
-		io.Pf("full-system to reduced k-system map: FtoK =\n")
-		io.Pf("%v", o.FtoK)
+		io.Pf("reduced u-system to full-system map:\nUtoF =\n")
+		io.Pf("%v\n", o.UtoF)
+		io.Pf("full-system to reduced u-system map:\nFtoU =\n")
+		io.Pf("%v\n", o.FtoU)
+		io.Pf("reduced k-system to full system map:\nKtoF =\n")
+		io.Pf("%v\n", o.KtoF)
+		io.Pf("full-system to reduced k-system map:\nFtoK =\n")
+		io.Pf("%v\n", o.FtoK)
 	}
 }
