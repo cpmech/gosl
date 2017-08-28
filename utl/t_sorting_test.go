@@ -163,9 +163,13 @@ func Test_sort04(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("sort04")
 
+	A := []int{-3, -7, 8, 11, 3, 0, -11, 8}
+	B := IntGetSorted(A)
+	chk.Ints(tst, "sorted A", B, []int{-11, -7, -3, 0, 3, 8, 8, 11})
+
 	a := []float64{-3, -7, 8, 11, 3, 0, -11, 8}
 	b := GetSorted(a)
-	chk.Array(tst, "a(sorted)", 1e-16, b, []float64{-11, -7, -3, 0, 3, 8, 8, 11})
+	chk.Array(tst, "sorted a", 1e-16, b, []float64{-11, -7, -3, 0, 3, 8, 8, 11})
 }
 
 func Test_sort05(tst *testing.T) {

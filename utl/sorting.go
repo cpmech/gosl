@@ -94,11 +94,19 @@ func Sort4(a, b, c, d *float64) {
 	}
 }
 
+// IntGetSorted returns a sorted (increasing) copy of 'A'
+func IntGetSorted(A []int) (sortedA []int) {
+	sortedA = make([]int, len(A))
+	copy(sortedA, A)
+	sort.Ints(sortedA)
+	return
+}
+
 // GetSorted returns a sorted (increasing) copy of 'A'
-func GetSorted(A []float64) (Asorted []float64) {
-	Asorted = make([]float64, len(A))
-	copy(Asorted, A)
-	sort.Float64s(Asorted)
+func GetSorted(A []float64) (sortedA []float64) {
+	sortedA = make([]float64, len(A))
+	copy(sortedA, A)
+	sort.Float64s(sortedA)
 	return
 }
 
