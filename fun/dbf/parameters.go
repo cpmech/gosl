@@ -144,7 +144,7 @@ func (o *Params) CheckAndSetVars(names []string, variables []*float64) {
 }
 
 // Connect connects parameter
-func (o *Params) Connect(V *float64, name, caller string) (err string) {
+func (o *Params) Connect(V *float64, name, caller string) (errorMessage string) {
 	prm := o.Find(name)
 	if prm == nil {
 		return io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
@@ -154,14 +154,15 @@ func (o *Params) Connect(V *float64, name, caller string) (err string) {
 }
 
 // ConnectSet connects set of parameters
-func (o *Params) ConnectSet(V []*float64, names []string, caller string) (err string) {
+func (o *Params) ConnectSet(V []*float64, names []string, caller string) (errorMessage string) {
 	chk.IntAssert(len(V), len(names))
 	for i, name := range names {
 		prm := o.Find(name)
 		if prm == nil {
-			return io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
+			errorMessage += io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
+		} else {
+			prm.Connect(V[i])
 		}
-		prm.Connect(V[i])
 	}
 	return
 }

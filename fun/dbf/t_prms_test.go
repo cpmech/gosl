@@ -32,7 +32,7 @@ func Test_prms01(tst *testing.T) {
 	e += prms.Connect(&A, "a", "test call")
 	e += prms.Connect(&B, "b", "test call")
 	if e != "" {
-		tst.Error("connect failed: %v\n", e)
+		tst.Errorf("connect failed: %v\n", e)
 		return
 	}
 
@@ -68,7 +68,7 @@ func Test_prms02(tst *testing.T) {
 	var klx, kly, klz float64
 	errMsg := prms.ConnectSet([]*float64{&klx, &kly, &klz}, []string{"klx", "kly", "klz"}, "Test_prms02")
 	if errMsg != "" {
-		tst.Error("connect set failed: %v\n", errMsg)
+		tst.Errorf("connect set failed: %v\n", errMsg)
 		return
 	}
 
