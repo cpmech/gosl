@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package pde
+package la
 
 import (
 	"testing"
@@ -13,7 +13,7 @@ import (
 
 func TestEqs01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("Eqs01")
 
 	var e Equations

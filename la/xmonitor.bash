@@ -20,6 +20,7 @@ while true; do
     #go test -test.run="Vector03"
     #go test -test.run="Triplet02"
     #go test -test.run="DenSolve01"
-    go test -test.run="Matrix06"
+    #go test -test.run="Matrix06"
     #go test -test.run="Eigen05"
+    go test -test.run="Eqs01"
 done
