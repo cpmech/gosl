@@ -31,6 +31,13 @@ type CCMatrix struct {
 	x    []float64 // values (len(x)=nnz)
 }
 
+// NewTriplet returns a new Triplet. This is a wrapper to new(Triplet) followed by Init()
+func NewTriplet(m, n, max int) (o *Triplet) {
+	o = new(Triplet)
+	o.Init(m, n, max)
+	return
+}
+
 // Init allocates all memory required to hold a sparse matrix in triplet form
 func (o *Triplet) Init(m, n, max int) {
 	o.m, o.n, o.pos, o.max = m, n, 0, max
@@ -227,6 +234,13 @@ type CCMatrixC struct {
 	nnz  int          // number of non-zeros
 	p, i []int        // pointers and row indices (len(p)=n+1, len(i)=nnz)
 	x    []complex128 // values (len(x)=nnz)
+}
+
+// NewTripletC returns a new TripletC. This is a wrapper to new(TripletC) followed by Init()
+func NewTripletC(m, n, max int) (o *TripletC) {
+	o = new(TripletC)
+	o.Init(m, n, max)
+	return
 }
 
 // Init allocates all memory required to hold a sparse matrix in triplet (complex) form

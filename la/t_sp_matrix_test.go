@@ -21,8 +21,7 @@ func TestTriplet01(tst *testing.T) {
 	//   1 0 4 0
 	//   0 0 0 5
 	//   0 3 0 6
-	a := new(Triplet)
-	a.Init(4, 4, 6)
+	a := NewTriplet(4, 4, 6)
 	a.Put(1, 0, 1)
 	a.Put(0, 1, 2)
 	a.Put(3, 1, 3)
@@ -61,8 +60,7 @@ func TestTriplet02(tst *testing.T) {
 	//   1+1i 0    4+4i 0
 	//   0    0    0    5-5i
 	//   0    3-3i 0    6+6i
-	a := new(TripletC)
-	a.Init(4, 4, 6)
+	a := NewTripletC(4, 4, 6)
 	a.Put(1, 0, 1+1i)
 	a.Put(0, 1, 2+2i)
 	a.Put(3, 1, 3-3i)
