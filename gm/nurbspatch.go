@@ -68,7 +68,7 @@ func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err err
 
 	// reset bins
 	o.Bins.Clear()
-	err = o.Bins.Init(xmin[:ndim], xmax[:ndim], binsNdiv)
+	err = o.Bins.Init(xmin[:ndim], xmax[:ndim], utl.IntVals(ndim, binsNdiv))
 	if err != nil {
 		return
 	}
@@ -160,7 +160,7 @@ func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err
 
 	// reset bins
 	o.Bins.Clear()
-	err = o.Bins.Init(xmin[:ndim], xmax[:ndim], binsNdiv)
+	err = o.Bins.Init(xmin[:ndim], xmax[:ndim], utl.IntVals(ndim, binsNdiv))
 	if err != nil {
 		return
 	}

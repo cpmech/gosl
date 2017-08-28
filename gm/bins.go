@@ -46,26 +46,28 @@ type Bins struct {
 // Init initialise Bins structure
 //   xmin -- [ndim] min/initial coordinates of the whole space (box/cube)
 //   xmax -- [ndim] max/final coordinates of the whole space (box/cube)
-//   ndiv -- number of divisions for xmax-xmin
-func (o *Bins) Init(xmin, xmax []float64, ndiv int) (err error) {
+//   ndiv -- [ndim] number of divisions for xmax-xmin
+func (o *Bins) Init(xmin, xmax []float64, ndiv []int) (err error) {
 
 	// check for out-of-range values
 	o.Ndim = len(xmin)
 	o.Xmin = xmin
 	o.Xmax = xmax
-	if len(xmin) != len(xmax) || len(xmin) < 2 || len(xmin) > 3 {
+	chk.IntAssert(len(xmin), len(xmax))
+	chk.IntAssert(len(xmin), len(ndiv))
+	if len(xmin) < 2 || len(xmin) > 3 {
 		return chk.Err("sizes of xmin and xmax must be the same and equal to either 2 or 3")
-	}
-	if ndiv < 1 {
-		ndiv = 1
 	}
 
 	// allocate slices with max lengths and number of division
 	o.Xdel = make([]float64, o.Ndim)
 	o.Size = make([]float64, o.Ndim)
 	for k := 0; k < o.Ndim; k++ {
+		if ndiv[k] < 1 {
+			ndiv[k] = 1
+		}
 		o.Xdel[k] = o.Xmax[k] - o.Xmin[k]
-		o.Size[k] = o.Xdel[k] / float64(ndiv)
+		o.Size[k] = o.Xdel[k] / float64(ndiv[k])
 		if o.Xdel[k] < XDELZERO {
 			return chk.Err("xmax[%d]-xmin[%d]=%g must be greater than %g", k, k, o.Xdel[k], XDELZERO)
 		}

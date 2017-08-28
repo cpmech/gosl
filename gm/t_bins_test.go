@@ -21,7 +21,7 @@ func Test_bins01(tst *testing.T) {
 	chk.PrintTitle("bins01. save and recovery")
 
 	var bins Bins
-	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 100)
+	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, []int{100, 100, 100})
 
 	// fill bins structure
 	maxit := 1000 // number of entries
@@ -85,7 +85,7 @@ func Test_bins02(tst *testing.T) {
 
 	// bins
 	var bins Bins
-	bins.Init([]float64{0, 0}, []float64{4, 3}, 5)
+	bins.Init([]float64{0, 0}, []float64{4, 3}, []int{5, 5})
 
 	// append points
 	X := []float64{0.5, 1.0, 2.0, 2.0, 2.1, 3.0, 2.1, 2.2}
@@ -200,7 +200,7 @@ func Test_bins03(tst *testing.T) {
 
 	// bins
 	var bins Bins
-	bins.Init([]float64{-0.2, -0.2}, []float64{0.8, 1.8}, 5)
+	bins.Init([]float64{-0.2, -0.2}, []float64{0.8, 1.8}, []int{5, 5})
 	io.Pf(bins.Summary())
 
 	// check
@@ -331,7 +331,7 @@ func Test_bins04(tst *testing.T) {
 
 	// bins
 	var bins Bins
-	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, 10)
+	bins.Init([]float64{0, 0, 0}, []float64{10, 10, 10}, []int{10, 10, 10})
 
 	// fill bins structure
 	maxit := 10 // number of entries
@@ -366,14 +366,14 @@ func Test_bins04(tst *testing.T) {
 	}
 }
 
-func Test_bins05(tst *testing.T) {
+func Test_bins05a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("bins05. find along line (2D)")
+	chk.PrintTitle("bins05a. find along line (2D)")
 
 	// bins
 	var bins Bins
-	bins.Init([]float64{0, 0}, []float64{1, 2}, 10)
+	bins.Init([]float64{0, 0}, []float64{1, 2}, []int{10, 10})
 
 	// add points
 	points := [][]float64{
@@ -408,7 +408,56 @@ func Test_bins05(tst *testing.T) {
 		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
-		err = plt.Save("/tmp/gosl/gm", "t_bins05")
+		err = plt.Save("/tmp/gosl/gm", "t_bins05a")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}
+
+func Test_bins05b(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("bins05b. find along line (2D). unequal ndiv")
+
+	// bins
+	var bins Bins
+	bins.Init([]float64{0, 0}, []float64{1, 2}, []int{5, 10})
+
+	// add points
+	points := [][]float64{
+		{0.21132486540518713, 0.21132486540518713},
+		{0.7886751345948129, 0.21132486540518713},
+		{0.21132486540518713, 0.7886751345948129},
+		{0.7886751345948129, 0.7886751345948129},
+		{0.21132486540518713, 1.2113248654051871},
+		{0.7886751345948129, 1.2113248654051871},
+		{0.21132486540518713, 1.788675134594813},
+		{0.7886751345948129, 1.788675134594813},
+	}
+	var err error
+	for i := 0; i < 8; i++ {
+		err = bins.Append(points[i], i, nil)
+		if err != nil {
+			tst.Errorf("%v", err)
+			return
+		}
+	}
+	io.Pf("bins = %v\n", bins)
+
+	// find points
+	x := 0.7886751345948129
+	ids := bins.FindAlongSegment([]float64{x, 0}, []float64{x, 2}, 1.e-15)
+	io.Pf("ids = %v\n", ids)
+	chk.Ints(tst, "ids", []int{1, 3, 5, 7}, ids)
+
+	// draw
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 500})
+		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
+		plt.Grid(&plt.A{C: "grey"})
+		plt.Equal()
+		err = plt.Save("/tmp/gosl/gm", "t_bins05b")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -422,7 +471,7 @@ func Test_bins06(tst *testing.T) {
 
 	// bins
 	var bins Bins
-	bins.Init([]float64{5, 5, 5}, []float64{10, 10, 10}, 2)
+	bins.Init([]float64{5, 5, 5}, []float64{10, 10, 10}, []int{2, 2, 2})
 	io.Pfpink(bins.Summary())
 
 	// check
