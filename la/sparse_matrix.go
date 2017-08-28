@@ -93,8 +93,7 @@ func (o *Triplet) PutCCMatAndMatT(a *CCMatrix) {
 	}
 }
 
-// Start (re-)starts the insertion index within "o" in order to allow (re-)insertion of
-// items using the Put method
+// Start (re)starts index for inserting items using the Put command
 func (o *Triplet) Start() {
 	o.pos = 0
 }
@@ -260,8 +259,7 @@ func (o *TripletC) Put(i, j int, x complex128) {
 	o.pos++
 }
 
-// Start (re-)starts the insertion index within "o" in order to allow (re-)insertion of
-// items using the Put method
+// Start (re)starts index for inserting items using the Put command
 func (o *TripletC) Start() {
 	o.pos = 0
 }
