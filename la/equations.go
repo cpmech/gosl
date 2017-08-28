@@ -44,7 +44,7 @@ import (
 //
 //  NOTE: the {bu} part is known and the {bk} can be (post-)computed if needed.
 //
-//  The following mnemonic may help:
+//  The partitioned system is symbolised as follows:
 //
 //                                Auu Auk  u─────> unknown
 //                                Aku Akk  k─────> known
@@ -102,6 +102,8 @@ import (
 //             -1 -1    -1 -1    -1 -1   ⇒ -1 indicates 'value not set'
 //
 type Equations struct {
+
+	// essential
 	N    int   // total number of equations
 	Nu   int   // number of unknowns (size of u-system)
 	Nk   int   // number of known values (size of k-system)
@@ -109,6 +111,10 @@ type Equations struct {
 	FtoU []int // full-system to reduced u-system
 	KtoF []int // reduced k-system to full system
 	FtoK []int // full-system to reduced k-system
+
+	// convenience
+	Auu, Auk, Aku, Akk *Triplet // the partitioned system in sparse format
+	Duu, Duk, Dku, Dkk *Matrix  // the partitioned system in dense format
 }
 
 // Init initialises Equations
@@ -140,8 +146,109 @@ func (o *Equations) Init(n int, kx []int) {
 	}
 }
 
-// Stat prints information about Equations
-func (o *Equations) Stat(full bool) {
+// Alloc allocates the A matrices in triplet format
+//  INPUT:
+//    nnz -- total number of nonzeros in each part [nnz(Auu), nnz(Auk), nnz(Aku), nnz(Akk)]
+//           nnz may be nil, in this case, the following values are assumed:
+//                    nnz(Auu) = Nu ⋅ Nu
+//                    nnz(Auk) = Nu ⋅ Nk
+//                    nnz(Aku) = Nk ⋅ Nu
+//                    nnz(Akk) = Nk ⋅ Nk
+//           Thus, memory is wasted as the size of a fully dense system is considered.
+//   kparts -- also allocates Aku and Akk
+// OUTPUT:
+//   The partitioned system (Auu, Auk, Aku, Akk) is stored as member of this object
+func (o *Equations) Alloc(nnz []int, kparts bool) {
+	if nnz == nil {
+		nnz = []int{o.Nu * o.Nu, o.Nu * o.Nk, o.Nk * o.Nu, o.Nk * o.Nk}
+	}
+	o.Auu = NewTriplet(o.Nu, o.Nu, nnz[0])
+	o.Auk = NewTriplet(o.Nu, o.Nk, nnz[1])
+	if kparts {
+		o.Aku = NewTriplet(o.Nk, o.Nu, nnz[2])
+		o.Akk = NewTriplet(o.Nk, o.Nk, nnz[3])
+	}
+	return
+}
+
+// Start (re)starts index for inserting items using the Put command
+func (o *Equations) Start() {
+	o.Auu.Start()
+	o.Auk.Start()
+	if o.Aku != nil {
+		o.Aku.Start()
+		o.Akk.Start()
+	}
+}
+
+// Put puts component into the right place in partitioned Triplet (Auu, Auk, Aku, Akk)
+//  I and J are the equation numbers in the FULL system
+func (o *Equations) Put(I, J int, value float64) {
+	i := o.FtoU[I]
+	j := o.FtoU[J]
+	if i >= 0 { // u-row
+		if j >= 0 { // u-column
+			o.Auu.Put(i, j, value)
+			return
+		}
+		j = o.FtoK[J] // k-column
+		o.Auk.Put(i, j, value)
+		return
+	}
+	if o.Aku == nil {
+		return
+	}
+	i = o.FtoK[I] // k-row
+	if j >= 0 {   // u-column
+		o.Aku.Put(i, j, value)
+		return
+	}
+	j = o.FtoK[J] // k-column
+	o.Akk.Put(i, j, value)
+}
+
+// AllocDense allocates the A matrices in dense format
+//  INPUT:
+//   kparts -- also allocates Aku and Akk
+//  OUTPUT:
+//   The partitioned system (Duu, Duk, Dku, Dkk) is stored as member of this object
+func (o *Equations) AllocDense(kparts bool) {
+	o.Duu = NewMatrix(o.Nu, o.Nu)
+	o.Duk = NewMatrix(o.Nu, o.Nk)
+	if kparts {
+		o.Dku = NewMatrix(o.Nk, o.Nu)
+		o.Dkk = NewMatrix(o.Nk, o.Nk)
+	}
+	return
+}
+
+// SetDense allocates and sets partitioned system in dense format
+//  kparts -- also computes Aku and Akk
+func (o *Equations) SetDense(A *Matrix, kparts bool) {
+	o.AllocDense(kparts)
+	for i, I := range o.UtoF {
+		for j, J := range o.UtoF {
+			o.Duu.Set(i, j, A.Get(I, J)) // uu
+		}
+		for j, J := range o.KtoF {
+			o.Duk.Set(i, j, A.Get(I, J)) // uk
+		}
+	}
+	if kparts {
+		for i, I := range o.KtoF {
+			for j, J := range o.UtoF {
+				o.Dku.Set(i, j, A.Get(I, J)) // ku
+			}
+			for j, J := range o.KtoF {
+				o.Dkk.Set(i, j, A.Get(I, J)) // kk
+			}
+		}
+	}
+	return
+}
+
+// Print prints information about Equations
+func (o *Equations) Print(full bool) {
 	io.Pf("number of unknown x-components: Nu = %d\n", o.Nu)
 	io.Pf("number of known x-components:   Nk = %d\n", o.Nk)
 	io.Pf("total number of equations:      N  = %d\n", o.N)

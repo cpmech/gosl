@@ -19,7 +19,7 @@ func TestEqs01(tst *testing.T) {
 	// some prescribed
 	var e Equations
 	e.Init(9, []int{0, 6, 3})
-	e.Stat(true)
+	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{1, 2, 4, 5, 7, 8})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, 0, 1, -1, 2, 3, -1, 4, 5})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{0, 3, 6})
@@ -28,7 +28,7 @@ func TestEqs01(tst *testing.T) {
 	// some prescribed
 	io.Pl()
 	e.Init(9, []int{0, 2, 1})
-	e.Stat(true)
+	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{3, 4, 5, 6, 7, 8})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, -1, -1, 0, 1, 2, 3, 4, 5})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{0, 1, 2})
@@ -37,7 +37,7 @@ func TestEqs01(tst *testing.T) {
 	// none prescribed
 	io.Pl()
 	e.Init(5, nil)
-	e.Stat(true)
+	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "KtoF", e.KtoF, nil)
@@ -46,9 +46,122 @@ func TestEqs01(tst *testing.T) {
 	// all prescribed
 	io.Pl()
 	e.Init(5, []int{0, 1, 2, 3, 4})
-	e.Stat(true)
+	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, nil)
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, -1, -1, -1, -1})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "FtoK", e.FtoK, []int{0, 1, 2, 3, 4})
+}
+
+func TestEqs02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Eqs02. Put items in partitioned sparse A matrix")
+
+	// equations classifier
+	var e Equations
+	e.Init(5, []int{4, 2})
+	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 3})
+	chk.Ints(tst, "KtoF", e.KtoF, []int{2, 4})
+
+	// allocate partitioned A matrix
+	e.Alloc(nil, true)
+
+	// assemble A matrix
+	// 11  12  13  14  15    0
+	// 21  22  23  24  25    1
+	// 31  32  33  34  35    2 ◀ known
+	// 41  42  43  44  45    3
+	// 51  52  53  54  55    4 ◀ known
+	//  0   1   2   3   4
+	//          ▲       ▲
+	e.Start()
+	e.Put(0, 0, 11) // 0
+	e.Put(0, 1, 12) // 1
+	e.Put(0, 2, 13) // 2
+	e.Put(0, 3, 14) // 3
+	e.Put(0, 4, 15) // 4
+	e.Put(1, 0, 21) // 5
+	e.Put(1, 1, 22) // 6
+	e.Put(1, 2, 23) // 7
+	e.Put(1, 3, 24) // 8
+	e.Put(1, 4, 25) // 9
+	e.Put(2, 0, 31) // 10
+	e.Put(2, 1, 32) // 11
+	e.Put(2, 2, 33) // 12
+	e.Put(2, 3, 34) // 13
+	e.Put(2, 4, 35) // 14
+	e.Put(3, 0, 41) // 15
+	e.Put(3, 1, 42) // 16
+	e.Put(3, 2, 43) // 17
+	e.Put(3, 3, 44) // 18
+	e.Put(3, 4, 45) // 19
+	e.Put(4, 0, 51) // 20
+	e.Put(4, 1, 52) // 21
+	e.Put(4, 2, 53) // 22
+	e.Put(4, 3, 54) // 23
+	e.Put(4, 4, 55) // 24
+
+	// check
+	chk.Deep2(tst, "Auu", 1e-17, e.Auu.ToDense().GetDeep2(), [][]float64{
+		{11, 12, 14},
+		{21, 22, 24},
+		{41, 42, 44},
+	})
+	chk.Deep2(tst, "Auk", 1e-17, e.Auk.ToDense().GetDeep2(), [][]float64{
+		{13, 15},
+		{23, 25},
+		{43, 45},
+	})
+	chk.Deep2(tst, "Aku", 1e-17, e.Aku.ToDense().GetDeep2(), [][]float64{
+		{31, 32, 34},
+		{51, 52, 54},
+	})
+	chk.Deep2(tst, "Akk", 1e-17, e.Akk.ToDense().GetDeep2(), [][]float64{
+		{33, 35},
+		{53, 55},
+	})
+}
+
+func TestEqs03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Eqs03. Split dense A matrix")
+
+	// A matrix
+	A := NewMatrixDeep2([][]float64{
+		{11, 12, 13, 14, 15}, // 0
+		{21, 22, 23, 24, 25}, // 1
+		{31, 32, 33, 34, 35}, // 2 ◀ known
+		{41, 42, 43, 44, 45}, // 3
+		{51, 52, 53, 54, 55}, // 4 ◀ known
+	}) // 0   1   2   3   4
+	//            ▲       ▲
+
+	// equations classifier
+	var e Equations
+	e.Init(A.M, []int{4, 2})
+	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 3})
+	chk.Ints(tst, "KtoF", e.KtoF, []int{2, 4})
+
+	// split
+	e.SetDense(A, true)
+	chk.Deep2(tst, "Auu", 1e-17, e.Duu.GetDeep2(), [][]float64{
+		{11, 12, 14},
+		{21, 22, 24},
+		{41, 42, 44},
+	})
+	chk.Deep2(tst, "Auk", 1e-17, e.Duk.GetDeep2(), [][]float64{
+		{13, 15},
+		{23, 25},
+		{43, 45},
+	})
+	chk.Deep2(tst, "Aku", 1e-17, e.Dku.GetDeep2(), [][]float64{
+		{31, 32, 34},
+		{51, 52, 54},
+	})
+	chk.Deep2(tst, "Akk", 1e-17, e.Dkk.GetDeep2(), [][]float64{
+		{33, 35},
+		{53, 55},
+	})
 }
