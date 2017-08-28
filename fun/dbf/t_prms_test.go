@@ -63,7 +63,7 @@ func Test_prms02(tst *testing.T) {
 		&P{N: "kly", V: 2.0},
 		&P{N: "klz", V: 3.0},
 	}
-	io.Pforan("%v\n", prms)
+	io.Pf("%v\n", prms)
 
 	var klx, kly, klz float64
 	errMsg := prms.ConnectSet([]*float64{&klx, &kly, &klz}, []string{"klx", "kly", "klz"}, "Test_prms02")
@@ -78,6 +78,29 @@ func Test_prms02(tst *testing.T) {
 
 	prms[1].Set(2.2)
 	chk.Float64(tst, "kly", 1e-15, kly, 2.2)
+
+	var dummy float64
+	errMsg = prms.ConnectSetOpt(
+		[]*float64{&klx, &kly, &dummy},
+		[]string{"klx", "kly", "dummy"},
+		[]bool{false, false, true},
+		"Test_prms02",
+	)
+	if errMsg != "" {
+		tst.Errorf("connect set failed: %v\n", errMsg)
+		return
+	}
+
+	errMsg = prms.ConnectSetOpt(
+		[]*float64{&klx, &kly, &dummy},
+		[]string{"klx", "kly", "dummy"},
+		[]bool{false, false, false},
+		"Test_prms02",
+	)
+	if errMsg == "" {
+		tst.Errorf("errMsg should not be empty\n")
+		return
+	}
 }
 
 func Test_prms03(tst *testing.T) {

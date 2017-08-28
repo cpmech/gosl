@@ -167,6 +167,24 @@ func (o *Params) ConnectSet(V []*float64, names []string, caller string) (errorM
 	return
 }
 
+// ConnectSetOpt connects set of parameters with some being optional
+func (o *Params) ConnectSetOpt(V []*float64, names []string, optional []bool, caller string) (errorMessage string) {
+	chk.IntAssert(len(V), len(names))
+	chk.IntAssert(len(V), len(optional))
+	for i, name := range names {
+		prm := o.Find(name)
+		if prm == nil {
+			if !optional[i] {
+				errorMessage += io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
+			}
+		} else {
+			prm.Connect(V[i])
+		}
+	}
+	return
+}
+
+// String returns a summary of parameters
 func (o Params) String() (l string) {
 	for i, prm := range o {
 		if i > 0 {
