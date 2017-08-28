@@ -8,50 +8,45 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/gm"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
 
-func Test_assemb01(tst *testing.T) {
+func TestFdmLaplace01(tst *testing.T) {
 
-	verbose()
-	chk.PrintTitle("assemb01")
+	//verbose()
+	chk.PrintTitle("FdmLaplace01")
 
 	// grid
-	var g Grid2d
-	g.Init(0.0, 1.0, 0.0, 1.0, 3, 3)
+	g := new(gm.Grid)
+	g.Init([]float64{0, 0}, []float64{2, 2}, []int{2, 2}) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
 
-	// equations numbering
-	var e Equations
-	e.Init(g.N, []int{0, 3, 6})
+	// equations
+	e := new(la.Equations)
+	e.Init(g.N, nil)
 
-	// K11 and K12
-	var K11, K12 la.Triplet
-	InitK11andK12(&K11, &K12, &e)
+	// operator
+	op := NewFdmOperator("laplacian")
+	err := op.Init(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
+	status(tst, err)
 
-	// assembly
-	kx, ky := 1.0, 1.0
-	F1 := make([]float64, e.Nu)
-	AssemblePoisson2d(&K11, &K12, F1, kx, ky, nil, &g, &e)
+	// assemble
+	op.Assemble(g, e)
+	Duu := e.Auu.ToDense()
+	io.Pf("%v\n", Duu.Print("%+5g"))
 
 	// check
-	K11d := K11.ToMatrix(nil).ToDense()
-	K12d := K12.ToMatrix(nil).ToDense()
-	K11c := [][]float64{
-		{16.0, -4.0, -8.0, 0.0, 0.0, 0.0},
-		{-8.0, 16.0, 0.0, -8.0, 0.0, 0.0},
-		{-4.0, 0.0, 16.0, -4.0, -4.0, 0.0},
-		{0.0, -4.0, -8.0, 16.0, 0.0, -4.0},
-		{0.0, 0.0, -8.0, 0.0, 16.0, -4.0},
-		{0.0, 0.0, 0.0, -8.0, -8.0, 16.0},
-	}
-	K12c := [][]float64{
-		{-4.0, 0.0, 0.0},
-		{0.0, 0.0, 0.0},
-		{0.0, -4.0, 0.0},
-		{0.0, 0.0, 0.0},
-		{0.0, 0.0, -4.0},
-		{0.0, 0.0, 0.0},
-	}
-	chk.Deep2(tst, "K11: ", 1e-16, K11d.GetDeep2(), K11c)
-	chk.Deep2(tst, "K12: ", 1e-16, K12d.GetDeep2(), K12c)
+	chk.Deep2(tst, "Auu", 1e-17, Duu.GetDeep2(), [][]float64{
+		{+4, -2, +0, -2, +0, +0, +0, +0, +0}, // 0
+		{-1, +4, -1, +0, -2, +0, +0, +0, +0}, // 1
+		{+0, -2, +4, +0, +0, -2, +0, +0, +0}, // 2
+		{-1, +0, +0, +4, -2, +0, -1, +0, +0}, // 3
+		{+0, -1, +0, -1, +4, -1, +0, -1, +0}, // 4
+		{+0, +0, -1, +0, -2, +4, +0, +0, -1}, // 5
+		{+0, +0, +0, -2, +0, +0, +4, -2, +0}, // 6
+		{+0, +0, +0, +0, -2, +0, -1, +4, -1}, // 7
+		{+0, +0, +0, +0, +0, -2, +0, -2, +4}, // 8
+	})
 }

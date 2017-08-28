@@ -5,79 +5,109 @@
 package pde
 
 import (
-	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/la"
 )
 
-// InitK11andK12 initialises the two triplets
-func InitK11andK12(K11, K12 *la.Triplet, e *Equations) {
-	K11.Init(e.Nu, e.Nu, e.Nu*5)
-	K12.Init(e.Nu, e.Nk, e.Nu*5)
+// database ////////////////////////////////////////////////////////////////////////////////////////
+
+// FdmOperator defines the interface for FDM (finite-difference method) operators such as
+// the Laplacian and so on
+type FdmOperator interface {
+	Init(params dbf.Params) (err error)
+	Assemble(g *gm.Grid, e *la.Equations)
 }
 
-// AssemblePoisson2d assembles K11 and K12 corresponding to the Poisson problem in 2D
-//   Solving:
-//                 ∂²u        ∂²u
-//            - kx ———  -  ky ———  =  s(x,y)
-//                 ∂x²        ∂y²
-//  Input:
-//    kx and ky -- the diffusion coefficients
-//    src -- the source term function s(x,y) (may be nil)
-//    g -- the 2D grid
-//    e -- the Equation numbers
-//  Output:
-//    K11, K12 and F1 are assembled (must be pre-allocated)
-func AssemblePoisson2d(K11, K12 *la.Triplet, F1 la.Vector, kx, ky float64, src fun.Sv, g *Grid2d, e *Equations) (err error) {
-	K11.Start()
-	K12.Start()
-	F1.Fill(0.0)
-	alp, bet, gam := 2.0*(kx/g.Dxx+ky/g.Dyy), -kx/g.Dxx, -ky/g.Dyy
-	mol := []float64{alp, bet, bet, gam, gam}
-	for i, I := range e.UtoF {
-		col, row := I%g.Nx, I/g.Nx
-		nodes := []int{I, I - 1, I + 1, I - g.Nx, I + g.Nx} // I, left, right, bottom, top
-		if col == 0 {
-			nodes[1] = nodes[2]
-		}
-		if col == g.Nx-1 {
-			nodes[2] = nodes[1]
-		}
-		if row == 0 {
-			nodes[3] = nodes[4]
-		}
-		if row == g.Ny-1 {
-			nodes[4] = nodes[3]
-		}
-		for k, J := range nodes {
-			j1, j2 := e.FtoU[J], e.FtoK[J] // 1 or 2?
-			if j1 > -1 {                   // 11
-				K11.Put(i, j1, mol[k])
-			} else { // 12
-				K12.Put(i, j2, mol[k])
-			}
-		}
-		if src != nil {
-			x := float64(col) * g.Dx
-			y := float64(row) * g.Dy
-			s, er := src([]float64{x, y})
-			if er != nil {
-				err = er
-				return
-			}
-			F1[i] += s
-		}
+// fdmOperatorMaker defines a function that makes (allocates) FdmOperators
+type fdmOperatorMaker func() FdmOperator
+
+// fdmOperatorDB implemetns a database of FdmOperators
+var fdmOperatorDB = make(map[string]fdmOperatorMaker)
+
+// NewFdmOperator finds a FdmOperator in database or panic
+func NewFdmOperator(kind string) FdmOperator {
+	if maker, ok := fdmOperatorDB[kind]; ok {
+		return maker()
+	}
+	chk.Panic("cannot find FdmOperator named %q in database", kind)
+	return nil
+}
+
+// implementation: Laplacian ///////////////////////////////////////////////////////////////////////
+
+// FdmLaplacian implements the (negative) FDM Laplacian operator (2D or 3D)
+//
+//                ∂²u        ∂²u        ∂²u
+//    L{u} = - kx ———  -  ky ———  -  kz ———
+//                ∂x²        ∂y²        ∂z²
+//
+type FdmLaplacian struct {
+	kx float64 // isotropic coefficient x
+	ky float64 // isotropic coefficient y
+	kz float64 // isotropic coefficient z
+}
+
+// add to database
+func init() {
+	fdmOperatorDB["laplacian"] = func() FdmOperator { return new(FdmLaplacian) }
+}
+
+// Init initialises operator with given parameters
+func (o *FdmLaplacian) Init(params dbf.Params) (err error) {
+	e := params.ConnectSetOpt(
+		[]*float64{&o.kx, &o.ky, &o.kz},
+		[]string{"kx", "ky", "kz"},
+		[]bool{false, false, true},
+		"FdmLaplacian",
+	)
+	if e != "" {
+		err = chk.Err(e)
 	}
 	return
 }
 
-// JoinVecs joins U1 and U2 by placing their components at the right place in U
-func JoinVecs(U, U1, U2 []float64, e *Equations) {
-	for I := 0; I < e.N; I++ {
-		i1, i2 := e.FtoU[I], e.FtoK[I] // 1 or 2?
-		if i1 > -1 {
-			U[I] = U1[i1]
-		} else {
-			U[I] = U2[i2]
+// Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
+func (o *FdmLaplacian) Assemble(g *gm.Grid, e *la.Equations) {
+	if e.Auu == nil {
+		e.Alloc([]int{5 * e.Nu, 5 * e.Nu, 5 * e.Nk, 5 * e.Nk}, true)
+	}
+	e.Start()
+	if g.Ndim == 2 {
+		nx := g.Npts[0]
+		ny := g.Npts[1]
+		dx2 := g.Size[0] * g.Size[0]
+		dy2 := g.Size[1] * g.Size[1]
+		α := 2.0 * (o.kx/dx2 + o.ky/dy2)
+		β := -o.kx / dx2
+		γ := -o.ky / dy2
+		mol := []float64{α, β, β, γ, γ}
+		jays := make([]int, 5)
+		for I := 0; I < e.N; I++ { // loop over all Nx*Ny equations
+			col := I % nx    // grid column number
+			row := I / nx    // grid row number
+			jays[0] = I      // current node
+			jays[1] = I - 1  // left node
+			jays[2] = I + 1  // right node
+			jays[3] = I - nx // bottom node
+			jays[4] = I + nx // top node
+			if col == 0 {
+				jays[1] = jays[2]
+			}
+			if col == nx-1 {
+				jays[2] = jays[1]
+			}
+			if row == 0 {
+				jays[3] = jays[4]
+			}
+			if row == ny-1 {
+				jays[4] = jays[3]
+			}
+			for k, J := range jays { // loop over non-zero columns
+				e.Put(I, J, mol[k])
+			}
 		}
+		return
 	}
 }
