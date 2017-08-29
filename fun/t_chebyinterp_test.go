@@ -436,7 +436,7 @@ func TestChebyInterp05(tst *testing.T) {
 
 	// check D1 matrices
 	io.Pl()
-	checkD1ana(tst, N, f, g, 1e-14, 1e-13, 1e-14, chk.Verbose)
+	checkD1ana(tst, N, f, g, 1e-14, 1e-13, 1e-13, chk.Verbose)
 
 	// plot
 	if chk.Verbose && true {
@@ -646,9 +646,9 @@ func TestChebyInterp08(tst *testing.T) {
 
 	maxDiff = calcD2errorChe(tst, N, f, h, true)
 	io.Pf("   std: err(D2{f}) = %v\n", maxDiff)
-	chk.Float64(tst, "err(D2{f})", 1e-13, maxDiff, 0)
+	chk.Float64(tst, "err(D2{f})", 1e-12, maxDiff, 0)
 
 	maxDiff = calcD2errorChe(tst, N, f, h, false)
 	io.Pf("use D1: err(D2{f}) = %v\n", maxDiff)
-	chk.Float64(tst, "err(D2{f})", 1e-13, maxDiff, 0)
+	chk.Float64(tst, "err(D2{f})", 1e-12, maxDiff, 0)
 }
