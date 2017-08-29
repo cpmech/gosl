@@ -51,13 +51,13 @@ func TestBlas3tst01(tst *testing.T) {
 	c.Set(0, 0, 12333) // noise
 	c.Set(1, 3, 111)   // noise
 	MatMatTrMul(c, 2, a, btrans)
-	chk.Deep2(tst, "c := 2⋅a⋅bᵀ", 1e-17, c.GetDeep2(), cref)
+	chk.Deep2(tst, "c := 2⋅a⋅bᵀ", 1e-15, c.GetDeep2(), cref)
 
 	// MatTrMatTrMul
 	c.Set(0, 0, 12333) // noise
 	c.Set(1, 3, 111)   // noise
 	MatTrMatTrMul(c, 2, atrans, btrans)
-	chk.Deep2(tst, "c := 2⋅aᵀ⋅bᵀ", 1e-17, c.GetDeep2(), cref)
+	chk.Deep2(tst, "c := 2⋅aᵀ⋅bᵀ", 1e-15, c.GetDeep2(), cref)
 }
 
 func TestBlas3tst02(tst *testing.T) {
