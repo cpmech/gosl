@@ -65,7 +65,7 @@ func TestEqs02(tst *testing.T) {
 	chk.Ints(tst, "KtoF", e.KtoF, []int{2, 4})
 
 	// allocate partitioned A matrix
-	e.Alloc(nil, true)
+	e.Alloc(nil, true, true)
 
 	// assemble A matrix
 	// 11  12  13  14  15    0
@@ -121,6 +121,28 @@ func TestEqs02(tst *testing.T) {
 		{33, 35},
 		{53, 55},
 	})
+
+	// check lengths of vectors
+	chk.Int(tst, "len(Bu)", len(e.Bu), 3)
+	chk.Int(tst, "len(Bk)", len(e.Bk), 2)
+	chk.Int(tst, "len(Xu)", len(e.Xu), 3)
+	chk.Int(tst, "len(Xk)", len(e.Xk), 2)
+
+	// set vectors
+	e.Bu[0] = 100
+	e.Bu[1] = 101
+	e.Bu[2] = 103
+	e.Bk[0] = 102
+	e.Bk[1] = 104
+	b := NewVector(5)
+	e.JoinVector(b, e.Bu, e.Bk)
+	chk.Array(tst, "b=join(bu,bk)", 1e-17, b, []float64{100, 101, 102, 103, 104})
+
+	vu := NewVector(3)
+	vk := NewVector(2)
+	e.SplitVector(vu, vk, b)
+	chk.Array(tst, "vu=split(b)_u", 1e-17, vu, []float64{100, 101, 103})
+	chk.Array(tst, "vk=split(b)_k", 1e-17, vk, []float64{102, 104})
 }
 
 func TestEqs03(tst *testing.T) {

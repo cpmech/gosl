@@ -115,6 +115,7 @@ type Equations struct {
 	// convenience
 	Auu, Auk, Aku, Akk *Triplet // the partitioned system in sparse format
 	Duu, Duk, Dku, Dkk *Matrix  // the partitioned system in dense format
+	Bu, Bk, Xu, Xk     Vector   // partitioned rhs and unknowns vector
 }
 
 // Init initialises Equations
@@ -156,9 +157,10 @@ func (o *Equations) Init(n int, kx []int) {
 //                    nnz(Akk) = Nk ⋅ Nk
 //           Thus, memory is wasted as the size of a fully dense system is considered.
 //   kparts -- also allocates Aku and Akk
+//   vectors -- also allocates the partitioned vectors Bu, Bk, Xu, Xk
 // OUTPUT:
 //   The partitioned system (Auu, Auk, Aku, Akk) is stored as member of this object
-func (o *Equations) Alloc(nnz []int, kparts bool) {
+func (o *Equations) Alloc(nnz []int, kparts, vectors bool) {
 	if nnz == nil {
 		nnz = []int{o.Nu * o.Nu, o.Nu * o.Nk, o.Nk * o.Nu, o.Nk * o.Nk}
 	}
@@ -167,6 +169,12 @@ func (o *Equations) Alloc(nnz []int, kparts bool) {
 	if kparts {
 		o.Aku = NewTriplet(o.Nk, o.Nu, nnz[2])
 		o.Akk = NewTriplet(o.Nk, o.Nk, nnz[3])
+	}
+	if vectors {
+		o.Bu = NewVector(o.Nu)
+		o.Bk = NewVector(o.Nk)
+		o.Xu = NewVector(o.Nu)
+		o.Xk = NewVector(o.Nk)
 	}
 	return
 }
@@ -205,6 +213,34 @@ func (o *Equations) Put(I, J int, value float64) {
 	}
 	j = o.FtoK[J] // k-column
 	o.Akk.Put(i, j, value)
+}
+
+// JoinVector joins uknown with known parts of vector
+//  INPUT:
+//   bu, bk -- partitioned vectors; e.g. o.Bu, and o.Bk or o.Xu, o.Xk
+//  OUTPUT:
+//   b -- pre-allocated b vector such that b = join(bu,bk)
+func (o *Equations) JoinVector(b, bu, bk Vector) {
+	for i, I := range o.UtoF {
+		b[I] = bu[i]
+	}
+	for i, I := range o.KtoF {
+		b[I] = bk[i]
+	}
+}
+
+// SplitVector splits full vector b into known and unknown parts
+//  INPUT:
+//   b -- full b vector. b = join(bu,bk)
+//  OUTPUT:
+//   bu, bk -- partitioned vectors; e.g. o.Bu, and o.Bk or o.Xu, o.Xk
+func (o *Equations) SplitVector(bu, bk, b Vector) {
+	for i, I := range o.UtoF {
+		bu[i] = b[I]
+	}
+	for i, I := range o.KtoF {
+		bk[i] = b[I]
+	}
 }
 
 // AllocDense allocates the A matrices in dense format
