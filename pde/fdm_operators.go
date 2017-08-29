@@ -71,7 +71,7 @@ func (o *FdmLaplacian) Init(params dbf.Params) (err error) {
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
 func (o *FdmLaplacian) Assemble(g *gm.Grid, e *la.Equations) {
 	if e.Auu == nil {
-		e.Alloc([]int{5 * e.Nu, 5 * e.Nu, 5 * e.Nk, 5 * e.Nk}, true)
+		e.Alloc([]int{5 * e.Nu, 5 * e.Nu, 5 * e.Nk, 5 * e.Nk}, true, true)
 	}
 	e.Start()
 	if g.Ndim == 2 {

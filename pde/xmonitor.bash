@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="FdmLaplace01"
+    go test -test.run="FdmLaplace02"
 done
