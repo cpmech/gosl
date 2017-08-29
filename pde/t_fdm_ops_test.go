@@ -21,17 +21,14 @@ func TestFdmLaplace01(tst *testing.T) {
 	chk.PrintTitle("FdmLaplace01. Full Auu matrix.")
 
 	// grid
-	g := new(gm.Grid)
-	g.Init([]float64{0, 0}, []float64{2, 2}, []int{2, 2}) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
+	g, err := gm.NewGrid([]float64{0, 0}, []float64{2, 2}, []int{2, 2}) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
+	status(tst, err)
 
 	// equations
-	e := new(la.Equations)
-	e.Init(g.N, nil)
+	e := la.NewEquations(g.N, nil)
 
 	// operator
-	op, err := NewFdmOperator("laplacian")
-	status(tst, err)
-	err = op.Init(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
+	op, err := NewFdmOperator("laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
 	status(tst, err)
 
 	// assemble
@@ -59,18 +56,14 @@ func TestFdmLaplace02(tst *testing.T) {
 	chk.PrintTitle("FdmLaplace02. Auu without borders")
 
 	// grid
-	g := new(gm.Grid)
-	g.Init([]float64{0, 0}, []float64{3, 3}, []int{3, 3}) // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
+	g, err := gm.NewGrid([]float64{0, 0}, []float64{3, 3}, []int{3, 3}) // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
+	status(tst, err)
 
 	// equations
-	e := new(la.Equations)
-	e.Init(g.N, nil)
-	e.Init(g.N, utl.IntUnique(g.Edge...))
+	e := la.NewEquations(g.N, utl.IntUnique(g.Edge...))
 
 	// operator
-	op, err := NewFdmOperator("laplacian")
-	status(tst, err)
-	err = op.Init(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
+	op, err := NewFdmOperator("laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
 	status(tst, err)
 
 	// assemble

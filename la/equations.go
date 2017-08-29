@@ -118,10 +118,11 @@ type Equations struct {
 	Bu, Bk, Xu, Xk     Vector   // partitioned rhs and unknowns vector
 }
 
-// Init initialises Equations
+// NewEquations creates a new Equations structure
 //   n  -- total number of equations; i.e. len({x}) in [A]⋅{x}={b}
 //   kx -- known x-components ⇒ "known equations" [may be unsorted]
-func (o *Equations) Init(n int, kx []int) {
+func NewEquations(n int, kx []int) (o *Equations) {
+	o = new(Equations)
 	o.N = n
 	o.Nk = len(kx)
 	o.Nu = o.N - o.Nk
@@ -145,6 +146,7 @@ func (o *Equations) Init(n int, kx []int) {
 			iu++
 		}
 	}
+	return
 }
 
 // Alloc allocates the A matrices in triplet format

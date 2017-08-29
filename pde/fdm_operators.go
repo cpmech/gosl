@@ -16,20 +16,19 @@ import (
 // FdmOperator defines the interface for FDM (finite-difference method) operators such as
 // the Laplacian and so on
 type FdmOperator interface {
-	Init(params dbf.Params) (err error)
 	Assemble(g *gm.Grid, e *la.Equations)
 }
 
 // fdmOperatorMaker defines a function that makes (allocates) FdmOperators
-type fdmOperatorMaker func() FdmOperator
+type fdmOperatorMaker func(params dbf.Params) (FdmOperator, error)
 
 // fdmOperatorDB implemetns a database of FdmOperators
 var fdmOperatorDB = make(map[string]fdmOperatorMaker)
 
 // NewFdmOperator finds a FdmOperator in database or panic
-func NewFdmOperator(kind string) (FdmOperator, error) {
+func NewFdmOperator(kind string, params dbf.Params) (FdmOperator, error) {
 	if maker, ok := fdmOperatorDB[kind]; ok {
-		return maker(), nil
+		return maker(params)
 	}
 	return nil, chk.Err("cannot find FdmOperator named %q in database", kind)
 }
@@ -50,11 +49,14 @@ type FdmLaplacian struct {
 
 // add to database
 func init() {
-	fdmOperatorDB["laplacian"] = func() FdmOperator { return new(FdmLaplacian) }
+	fdmOperatorDB["laplacian"] = func(params dbf.Params) (FdmOperator, error) {
+		return newFdmLaplacian(params)
+	}
 }
 
-// Init initialises operator with given parameters
-func (o *FdmLaplacian) Init(params dbf.Params) (err error) {
+// newFdmLaplacian creates a new Laplacian operator with given parameters
+func newFdmLaplacian(params dbf.Params) (o *FdmLaplacian, err error) {
+	o = new(FdmLaplacian)
 	e := params.ConnectSetOpt(
 		[]*float64{&o.kx, &o.ky, &o.kz},
 		[]string{"kx", "ky", "kz"},

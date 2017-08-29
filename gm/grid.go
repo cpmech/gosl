@@ -18,11 +18,12 @@ type Grid struct {
 	Face [][]int // ids of points on faces: [face0, face1, face2, face3, face4, face5]
 }
 
-// Init initialise Grid structure
+// NewGrid creates a new Grid structure
 //   xmin -- [ndim] min/initial coordinates of the whole space (box/cube)
 //   xmax -- [ndim] max/final coordinates of the whole space (box/cube)
 //   ndiv -- [ndim] number of divisions for xmax-xmin
-func (o *Grid) Init(xmin, xmax []float64, ndiv []int) (err error) {
+func NewGrid(xmin, xmax []float64, ndiv []int) (o *Grid, err error) {
+	o = new(Grid)
 	err = o.Bins.Init(xmin, xmax, ndiv)
 	o.N = 1
 	for k := 0; k < o.Ndim; k++ {

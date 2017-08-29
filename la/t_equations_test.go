@@ -17,8 +17,7 @@ func TestEqs01(tst *testing.T) {
 	chk.PrintTitle("Eqs01")
 
 	// some prescribed
-	var e Equations
-	e.Init(9, []int{0, 6, 3})
+	e := NewEquations(9, []int{0, 6, 3})
 	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{1, 2, 4, 5, 7, 8})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, 0, 1, -1, 2, 3, -1, 4, 5})
@@ -27,7 +26,7 @@ func TestEqs01(tst *testing.T) {
 
 	// some prescribed
 	io.Pl()
-	e.Init(9, []int{0, 2, 1})
+	e = NewEquations(9, []int{0, 2, 1})
 	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{3, 4, 5, 6, 7, 8})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, -1, -1, 0, 1, 2, 3, 4, 5})
@@ -36,7 +35,7 @@ func TestEqs01(tst *testing.T) {
 
 	// none prescribed
 	io.Pl()
-	e.Init(5, nil)
+	e = NewEquations(5, nil)
 	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{0, 1, 2, 3, 4})
@@ -45,7 +44,7 @@ func TestEqs01(tst *testing.T) {
 
 	// all prescribed
 	io.Pl()
-	e.Init(5, []int{0, 1, 2, 3, 4})
+	e = NewEquations(5, []int{0, 1, 2, 3, 4})
 	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, nil)
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, -1, -1, -1, -1})
@@ -59,8 +58,7 @@ func TestEqs02(tst *testing.T) {
 	chk.PrintTitle("Eqs02. Put items in partitioned sparse A matrix")
 
 	// equations classifier
-	var e Equations
-	e.Init(5, []int{4, 2})
+	e := NewEquations(5, []int{4, 2})
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 3})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{2, 4})
 
@@ -161,8 +159,7 @@ func TestEqs03(tst *testing.T) {
 	//            ▲       ▲
 
 	// equations classifier
-	var e Equations
-	e.Init(A.M, []int{4, 2})
+	e := NewEquations(A.M, []int{4, 2})
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 3})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{2, 4})
 
