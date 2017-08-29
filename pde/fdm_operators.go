@@ -27,12 +27,11 @@ type fdmOperatorMaker func() FdmOperator
 var fdmOperatorDB = make(map[string]fdmOperatorMaker)
 
 // NewFdmOperator finds a FdmOperator in database or panic
-func NewFdmOperator(kind string) FdmOperator {
+func NewFdmOperator(kind string) (FdmOperator, error) {
 	if maker, ok := fdmOperatorDB[kind]; ok {
-		return maker()
+		return maker(), nil
 	}
-	chk.Panic("cannot find FdmOperator named %q in database", kind)
-	return nil
+	return nil, chk.Err("cannot find FdmOperator named %q in database", kind)
 }
 
 // implementation: Laplacian ///////////////////////////////////////////////////////////////////////

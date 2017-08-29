@@ -29,8 +29,9 @@ func TestFdmLaplace01(tst *testing.T) {
 	e.Init(g.N, nil)
 
 	// operator
-	op := NewFdmOperator("laplacian")
-	err := op.Init(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
+	op, err := NewFdmOperator("laplacian")
+	status(tst, err)
+	err = op.Init(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
 	status(tst, err)
 
 	// assemble
@@ -67,8 +68,9 @@ func TestFdmLaplace02(tst *testing.T) {
 	e.Init(g.N, utl.IntUnique(g.Edge...))
 
 	// operator
-	op := NewFdmOperator("laplacian")
-	err := op.Init(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
+	op, err := NewFdmOperator("laplacian")
+	status(tst, err)
+	err = op.Init(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
 	status(tst, err)
 
 	// assemble
