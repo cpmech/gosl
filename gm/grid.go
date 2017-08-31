@@ -10,6 +10,25 @@ import (
 )
 
 // Grid implements a 2D or 3D grid of points (based on Bins)
+//
+//   The sets of boundary nodes are organised in the following order:
+//
+//              Edges                                         Faces
+//
+//                2                                       +----------------+
+//          +-----------+                               ,'|              ,'|
+//          |           |                             ,'  |  ___       ,'  |
+//          |           |                           ,'    |,'5,' [0] ,'    |
+//         3|           |1                        ,'      |~~~     ,'  ,   |
+//          |           |                       +'===============+'  ,'|   |
+//          |           |                       |   ,'|   |      |   |3|   |
+//          +-----------+                       |   |2|   |      |   |,'   |
+//                0                             |   |,'   +- - - | +- - - -+
+//                                              |   '   ,'       |       ,'
+//                                              |     ,' [1]  ___|     ,'
+//                                              |   ,'      ,'4,'|   ,'
+//                                              | ,'        ~~~  | ,'
+//                                              +----------------+'
 type Grid struct {
 	Bins // derived
 
@@ -57,6 +76,55 @@ func NewGrid(xmin, xmax []float64, ndiv []int) (o *Grid, err error) {
 	o.Face[5] = make([]int, nx*ny) // zmax
 	// TODO: implement ids of faces
 	return
+}
+
+// GetNodesWithTag returns a list of nodes marked with given tag
+//
+//              Edges                                         Faces
+//
+//               21                                       +----------------+
+//          +-----------+                               ,'|              ,'|
+//          |           |                             ,'  |  ___       ,'  |
+//          |           |                           ,'    |,'31'  10 ,'    |
+//        10|           |11                       ,'      |~~~     ,'  ,,  |
+//          |           |                       +'===============+'  ,' |  |
+//          |           |                       |   ,'|   |      |   |21|  |
+//          +-----------+                       |  |20|   |      |   |,'   |
+//               20                             |  | ,'   +- - - | +- - - -+
+//                                              |   '   ,'       |       ,'
+//                                              |     ,' 11   ___|     ,'
+//   NOTE: will return empty list if            |   ,'      ,'30'|   ,'
+//         tag is not available                 | ,'        ~~~  | ,'
+//                                              +----------------+'
+func (o *Grid) GetNodesWithTag(tag int) []int {
+	if o.Ndim == 2 {
+		switch tag {
+		case 20:
+			return o.Edge[0]
+		case 11:
+			return o.Edge[1]
+		case 21:
+			return o.Edge[2]
+		case 10:
+			return o.Edge[3]
+		}
+		return nil
+	}
+	switch tag {
+	case 10:
+		return o.Face[0]
+	case 11:
+		return o.Face[1]
+	case 20:
+		return o.Face[2]
+	case 21:
+		return o.Face[3]
+	case 30:
+		return o.Face[4]
+	case 31:
+		return o.Face[5]
+	}
+	return nil
 }
 
 // Eval2d evaluates function over grid

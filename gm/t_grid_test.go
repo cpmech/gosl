@@ -34,6 +34,11 @@ func TestGrid01(tst *testing.T) {
 	chk.Ints(tst, "T", g.Edge[2], []int{15, 16, 17, 18, 19})
 	chk.Ints(tst, "L", g.Edge[3], []int{0, 5, 10, 15})
 
+	chk.Ints(tst, "Tag # 10: L", g.GetNodesWithTag(10), []int{0, 5, 10, 15})
+	chk.Ints(tst, "Tag # 11: R", g.GetNodesWithTag(11), []int{4, 9, 14, 19})
+	chk.Ints(tst, "Tag # 20: B", g.GetNodesWithTag(20), []int{0, 1, 2, 3, 4})
+	chk.Ints(tst, "Tag # 21: T", g.GetNodesWithTag(21), []int{15, 16, 17, 18, 19})
+
 	// plot
 	if chk.Verbose {
 		X, Y, F, err := g.Eval2d(func(x la.Vector) (float64, error) {
