@@ -17,7 +17,8 @@ func TestEqs01(tst *testing.T) {
 	chk.PrintTitle("Eqs01")
 
 	// some prescribed
-	e := NewEquations(9, []int{0, 6, 3})
+	e, err := NewEquations(9, []int{0, 6, 3})
+	status(tst, err)
 	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{1, 2, 4, 5, 7, 8})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, 0, 1, -1, 2, 3, -1, 4, 5})
@@ -26,7 +27,8 @@ func TestEqs01(tst *testing.T) {
 
 	// some prescribed
 	io.Pl()
-	e = NewEquations(9, []int{0, 2, 1})
+	e, err = NewEquations(9, []int{0, 2, 1})
+	status(tst, err)
 	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{3, 4, 5, 6, 7, 8})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, -1, -1, 0, 1, 2, 3, 4, 5})
@@ -35,21 +37,23 @@ func TestEqs01(tst *testing.T) {
 
 	// none prescribed
 	io.Pl()
-	e = NewEquations(5, nil)
+	e, err = NewEquations(5, nil)
+	status(tst, err)
 	e.Print(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "KtoF", e.KtoF, nil)
 	chk.Ints(tst, "FtoK", e.FtoK, []int{-1, -1, -1, -1, -1})
 
-	// all prescribed
+	// most prescribed
 	io.Pl()
-	e = NewEquations(5, []int{0, 1, 2, 3, 4})
+	e, err = NewEquations(5, []int{1, 2, 3, 4})
+	status(tst, err)
 	e.Print(true)
-	chk.Ints(tst, "UtoF", e.UtoF, nil)
-	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, -1, -1, -1, -1})
-	chk.Ints(tst, "KtoF", e.KtoF, []int{0, 1, 2, 3, 4})
-	chk.Ints(tst, "FtoK", e.FtoK, []int{0, 1, 2, 3, 4})
+	chk.Ints(tst, "UtoF", e.UtoF, []int{0})
+	chk.Ints(tst, "FtoU", e.FtoU, []int{0, -1, -1, -1, -1})
+	chk.Ints(tst, "KtoF", e.KtoF, []int{1, 2, 3, 4})
+	chk.Ints(tst, "FtoK", e.FtoK, []int{-1, 0, 1, 2, 3})
 }
 
 func TestEqs02(tst *testing.T) {
@@ -58,7 +62,8 @@ func TestEqs02(tst *testing.T) {
 	chk.PrintTitle("Eqs02. Put items in partitioned sparse A matrix")
 
 	// equations classifier
-	e := NewEquations(5, []int{4, 2})
+	e, err := NewEquations(5, []int{4, 2})
+	status(tst, err)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 3})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{2, 4})
 
@@ -159,7 +164,8 @@ func TestEqs03(tst *testing.T) {
 	//            ▲       ▲
 
 	// equations classifier
-	e := NewEquations(A.M, []int{4, 2})
+	e, err := NewEquations(A.M, []int{4, 2})
+	status(tst, err)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 3})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{2, 4})
 
@@ -183,4 +189,42 @@ func TestEqs03(tst *testing.T) {
 		{33, 35},
 		{53, 55},
 	})
+}
+
+func TestEqs04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Eqs04. errors due to kx")
+
+	e, err := NewEquations(0, nil)
+	io.Pf("equations = %v+#\n", e)
+	io.Pf("err = %v\n", err)
+	if err == nil {
+		tst.Errorf("err should NOT be nil\n")
+		return
+	}
+
+	e, err = NewEquations(5, []int{0, 4, 2, 1, 3, 5})
+	io.Pf("equations = %v+#\n", e)
+	io.Pf("err = %v\n", err)
+	if err == nil {
+		tst.Errorf("err should NOT be nil\n")
+		return
+	}
+
+	e, err = NewEquations(9, []int{0, 4, 8, 3, 7, 11})
+	io.Pf("equations = %v+#\n", e)
+	io.Pf("err = %v\n", err)
+	if err == nil {
+		tst.Errorf("err should NOT be nil\n")
+		return
+	}
+
+	e, err = NewEquations(15, []int{0, 4, 8, 12, 3, 7, 11, 15, 0, 1, 2, 3, 12, 13, 14, 15})
+	io.Pf("equations = %v+#\n", e)
+	io.Pf("err = %v\n", err)
+	if err == nil {
+		tst.Errorf("err should NOT be nil\n")
+		return
+	}
 }

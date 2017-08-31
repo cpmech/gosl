@@ -22,5 +22,5 @@ while true; do
     #go test -test.run="DenSolve01"
     #go test -test.run="Matrix06"
     #go test -test.run="Eigen05"
-    go test -test.run="Eqs02"
+    go test -test.run="Eqs04"
 done
