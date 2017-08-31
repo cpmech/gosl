@@ -26,6 +26,14 @@ func (o *EssentialBc) GetNodesSorted() []int {
 	return utl.IntBoolMapSort(o.Nodes)
 }
 
+// Value returns the constant value (cvalue) or function value @ t (time)
+func (o *EssentialBc) Value(t float64) float64 {
+	if o.Fvalue == nil {
+		return o.Cvalue
+	}
+	return o.Fvalue.F(t, nil)
+}
+
 // uuidT defines a type for unique identifier
 type uuidT struct {
 	tag int
