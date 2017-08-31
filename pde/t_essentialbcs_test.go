@@ -10,7 +10,6 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
 )
 
 func TestEssentialBcs01(tst *testing.T) {
@@ -42,6 +41,6 @@ func TestEssentialBcs01(tst *testing.T) {
 	io.Pf("%v\n", ebcs.Print())
 
 	// check
-	chk.Ints(tst, "left boundary", utl.IntBoolMapSort(ebcs.All[0].Nodes), []int{0, 3, 6})
-	chk.Ints(tst, "right boundary", utl.IntBoolMapSort(ebcs.All[1].Nodes), []int{0, 1, 2})
+	chk.Ints(tst, "left boundary", ebcs.All[0].GetNodesSorted(), []int{0, 3, 6})
+	chk.Ints(tst, "right boundary", ebcs.All[1].GetNodesSorted(), []int{0, 1, 2})
 }

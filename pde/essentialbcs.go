@@ -21,6 +21,11 @@ type EssentialBc struct {
 	Nodes  map[int]bool // list of nodes with this BCS
 }
 
+// GetNodesSorted returns sorted list of nodes with this boundary condition
+func (o *EssentialBc) GetNodesSorted() []int {
+	return utl.IntBoolMapSort(o.Nodes)
+}
+
 // uuidT defines a type for unique identifier
 type uuidT struct {
 	tag int
@@ -75,7 +80,7 @@ func (o *EssentialBcs) Print() (l string) {
 		} else {
 			l += io.Sf("cvalue = %v\n", bc.Cvalue)
 		}
-		l += io.Sf("nodes  = %v\n", utl.IntBoolMapSort(bc.Nodes))
+		l += io.Sf("nodes  = %v\n", bc.GetNodesSorted())
 	}
 	return
 }
