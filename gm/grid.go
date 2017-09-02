@@ -5,11 +5,12 @@
 package gm
 
 import (
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/utl"
 )
 
-// UniformGrid implements a 2D or 3D grid of points (based on Bins)
+// GridBoundaries generates the IDs of nodes on the boundaries of a rectangular grid
 //
 //   The sets of boundary nodes are organised in the following order:
 //
@@ -29,6 +30,89 @@ import (
 //                                              |   ,'      ,'4,'|   ,'
 //                                              | ,'        ~~~  | ,'
 //                                              +----------------+'
+func GridBoundaries(npts []int) (edge, face [][]int) {
+	ndim := len(npts)
+	nx := npts[0]
+	ny := npts[1]
+	if ndim == 2 {
+		edge = make([][]int, 4)   // bottom, right, top, left
+		edge[0] = make([]int, nx) // bottom
+		edge[1] = make([]int, ny) // right
+		edge[2] = make([]int, nx) // top
+		edge[3] = make([]int, ny) // left
+		for i := 0; i < nx; i++ {
+			edge[0][i] = i             // bottom
+			edge[2][i] = i + (ny-1)*nx // top
+		}
+		for j := 0; j < ny; j++ {
+			edge[1][j] = j*nx + nx - 1 // right
+			edge[3][j] = j * nx        // left
+		}
+		return
+	}
+	nz := npts[2]
+	face = make([][]int, 6)      // xmin,xmax, ymin,ymax, zmin,zmax
+	face[0] = make([]int, ny*nz) // xmin
+	face[1] = make([]int, ny*nz) // xmax
+	face[2] = make([]int, nx*nz) // ymin
+	face[3] = make([]int, nx*nz) // ymax
+	face[4] = make([]int, nx*ny) // zmin
+	face[5] = make([]int, nx*ny) // zmax
+	chk.Panic("TODO: implement ids of faces\n")
+	return
+}
+
+// GridBoundaryTag returns a list of nodes marked with given tag
+//
+//              Edges                                         Faces
+//
+//               21                                       +----------------+
+//          +-----------+                               ,'|              ,'|
+//          |           |                             ,'  |  ___       ,'  |
+//          |           |                           ,'    |,'31'  10 ,'    |
+//        10|           |11                       ,'      |~~~     ,'  ,,  |
+//          |           |                       +'===============+'  ,' |  |
+//          |           |                       |   ,'|   |      |   |21|  |
+//          +-----------+                       |  |20|   |      |   |,'   |
+//               20                             |  | ,'   +- - - | +- - - -+
+//                                              |   '   ,'       |       ,'
+//                                              |     ,' 11   ___|     ,'
+//   NOTE: will return empty list if            |   ,'      ,'30'|   ,'
+//         tag is not available                 | ,'        ~~~  | ,'
+//                                              +----------------+'
+func GridBoundaryTag(tag, ndim int, edge, face [][]int) []int {
+	if ndim == 2 {
+		switch tag {
+		case 20:
+			return edge[0]
+		case 11:
+			return edge[1]
+		case 21:
+			return edge[2]
+		case 10:
+			return edge[3]
+		}
+		return nil
+	}
+	switch tag {
+	case 10:
+		return face[0]
+	case 11:
+		return face[1]
+	case 20:
+		return face[2]
+	case 21:
+		return face[3]
+	case 30:
+		return face[4]
+	case 31:
+		return face[5]
+	}
+	return nil
+}
+
+// UniformGrid implements a 2D or 3D grid of points (based on Bins)
+// See function GridBoundaries() with a picture of how the boundaries are numbered
 type UniformGrid struct {
 	Bins // derived
 
@@ -48,83 +132,13 @@ func NewUniformGrid(xmin, xmax []float64, ndiv []int) (o *UniformGrid, err error
 	for k := 0; k < o.Ndim; k++ {
 		o.N *= o.Npts[k]
 	}
-	nx := o.Npts[0]
-	ny := o.Npts[1]
-	if o.Ndim == 2 {
-		o.Edge = make([][]int, 4)   // bottom, right, top, left
-		o.Edge[0] = make([]int, nx) // bottom
-		o.Edge[1] = make([]int, ny) // right
-		o.Edge[2] = make([]int, nx) // top
-		o.Edge[3] = make([]int, ny) // left
-		for i := 0; i < nx; i++ {
-			o.Edge[0][i] = i             // bottom
-			o.Edge[2][i] = i + (ny-1)*nx // top
-		}
-		for j := 0; j < ny; j++ {
-			o.Edge[1][j] = j*nx + nx - 1 // right
-			o.Edge[3][j] = j * nx        // left
-		}
-		return
-	}
-	nz := o.Npts[2]
-	o.Face = make([][]int, 6)      // xmin,xmax, ymin,ymax, zmin,zmax
-	o.Face[0] = make([]int, ny*nz) // xmin
-	o.Face[1] = make([]int, ny*nz) // xmax
-	o.Face[2] = make([]int, nx*nz) // ymin
-	o.Face[3] = make([]int, nx*nz) // ymax
-	o.Face[4] = make([]int, nx*ny) // zmin
-	o.Face[5] = make([]int, nx*ny) // zmax
-	// TODO: implement ids of faces
+	o.Edge, o.Face = GridBoundaries(o.Npts)
 	return
 }
 
-// GetNodesWithTag returns a list of nodes marked with given tag
-//
-//              Edges                                         Faces
-//
-//               21                                       +----------------+
-//          +-----------+                               ,'|              ,'|
-//          |           |                             ,'  |  ___       ,'  |
-//          |           |                           ,'    |,'31'  10 ,'    |
-//        10|           |11                       ,'      |~~~     ,'  ,,  |
-//          |           |                       +'===============+'  ,' |  |
-//          |           |                       |   ,'|   |      |   |21|  |
-//          +-----------+                       |  |20|   |      |   |,'   |
-//               20                             |  | ,'   +- - - | +- - - -+
-//                                              |   '   ,'       |       ,'
-//                                              |     ,' 11   ___|     ,'
-//   NOTE: will return empty list if            |   ,'      ,'30'|   ,'
-//         tag is not available                 | ,'        ~~~  | ,'
-//                                              +----------------+'
+// GridBoundaryTag returns a list of nodes marked with given tag
 func (o *UniformGrid) GetNodesWithTag(tag int) []int {
-	if o.Ndim == 2 {
-		switch tag {
-		case 20:
-			return o.Edge[0]
-		case 11:
-			return o.Edge[1]
-		case 21:
-			return o.Edge[2]
-		case 10:
-			return o.Edge[3]
-		}
-		return nil
-	}
-	switch tag {
-	case 10:
-		return o.Face[0]
-	case 11:
-		return o.Face[1]
-	case 20:
-		return o.Face[2]
-	case 21:
-		return o.Face[3]
-	case 30:
-		return o.Face[4]
-	case 31:
-		return o.Face[5]
-	}
-	return nil
+	return GridBoundaryTag(tag, o.Ndim, o.Edge, o.Face)
 }
 
 // Eval2d evaluates function over grid
