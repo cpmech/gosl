@@ -10,5 +10,5 @@ while true; do
     echo
     go install
     #go test -test.run="octree02"
-    go test -test.run="Grid01"
+    go test -test.run="Grid03"
 done

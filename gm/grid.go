@@ -7,6 +7,8 @@ package gm
 import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -42,7 +44,7 @@ func GridBoundaries(npts []int) (edge, face [][]int) {
 		edge[3] = make([]int, ny) // left
 		for i := 0; i < nx; i++ {
 			edge[0][i] = i             // bottom
-			edge[2][i] = i + (ny-1)*nx // top
+			edge[2][i] = i + nx*(ny-1) // top
 		}
 		for j := 0; j < ny; j++ {
 			edge[1][j] = j*nx + nx - 1 // right
@@ -58,7 +60,30 @@ func GridBoundaries(npts []int) (edge, face [][]int) {
 	face[3] = make([]int, nx*nz) // ymax
 	face[4] = make([]int, nx*ny) // zmin
 	face[5] = make([]int, nx*ny) // zmax
-	chk.Panic("TODO: implement ids of faces\n")
+	p := 0
+	for j := 0; j < npts[1]; j++ {
+		for i := 0; i < npts[0]; i++ {
+			face[4][p] = i + nx*j                  // zmin
+			face[5][p] = i + nx*j + (nx*ny)*(nz-1) // zmax
+			p++
+		}
+	}
+	p = 0
+	for k := 0; k < npts[2]; k++ {
+		for i := 0; i < npts[0]; i++ {
+			face[2][p] = i + (nx*ny)*k             // ymin
+			face[3][p] = i + (nx*ny)*k + nx*(ny-1) // ymax
+			p++
+		}
+	}
+	p = 0
+	for k := 0; k < npts[2]; k++ {
+		for j := 0; j < npts[1]; j++ {
+			face[0][p] = j*nx + (nx*ny)*k            // xmin
+			face[1][p] = j*nx + (nx*ny)*k + (nx - 1) // xmax
+			p++
+		}
+	}
 	return
 }
 
@@ -111,7 +136,190 @@ func GridBoundaryTag(tag, ndim int, edge, face [][]int) []int {
 	return nil
 }
 
-// UniformGrid implements a 2D or 3D grid of points (based on Bins)
+// grid ////////////////////////////////////////////////////////////////////////////////////////////
+
+// Grid implements a generic (uniform or nonuniform) 2D or 3D grid of points
+// See function GridBoundaries() with a picture of how the boundaries are numbered
+type Grid struct {
+	Ndim int           // space dimension
+	Npts []int         // [ndim] number of points along each direction; i.e. ndiv + 1
+	N    int           // total number of points
+	Edge [][]int       // ids of points on edges: [edge0, edge1, edge2, edge3]
+	Face [][]int       // ids of points on faces: [face0, face1, face2, face3, face4, face5]
+	X2d  [][]float64   // [ny][nx] 2D grid coordinates
+	Y2d  [][]float64   // [ny][nx] 2D grid coordinates
+	X3d  [][][]float64 // [nz][ny][nx] 3D grid coordinates
+	Y3d  [][][]float64 // [nz][ny][nx] 3D grid coordinates
+	Z3d  [][][]float64 // [nz][ny][nx] 3D grid coordinates
+	Min  []float64     // [ndim] left/lower-most point
+	Max  []float64     // [ndim] right/upper-most point
+	Del  []float64     // [ndim] the lengths along each direction (whole box)
+}
+
+// NewGrid creates a new Grid structure
+//   ndiv -- [ndim] number of divisions for xmax-xmin
+func NewGrid(ndiv []int) (o *Grid, err error) {
+
+	// new structure
+	o = new(Grid)
+	o.Ndim = len(ndiv)
+
+	// number of points along each direction and total number of points
+	o.Npts = make([]int, o.Ndim)
+	o.N = 1
+	for k := 0; k < o.Ndim; k++ {
+		o.Npts[k] = ndiv[k] + 1
+		o.N *= o.Npts[k]
+	}
+
+	// boundaries
+	o.Edge, o.Face = GridBoundaries(o.Npts)
+	return
+}
+
+// GetNodesWithTag returns a list of nodes marked with given tag
+func (o *Grid) GetNodesWithTag(tag int) []int {
+	return GridBoundaryTag(tag, o.Ndim, o.Edge, o.Face)
+}
+
+// SetCoords2d sets 2d coordinates: will allocate X2d[ny][nx] and Y3d[ny][nx]
+func (o *Grid) SetCoords2d(X, Y []float64) (err error) {
+
+	if o.Ndim != 2 {
+		return chk.Err("grid must be 2D\n")
+	}
+	if len(X) != o.Npts[0] {
+		return chk.Err("number of points along x is incorrect. %d != %d\n", len(X), o.Npts[0])
+	}
+	if len(Y) != o.Npts[1] {
+		return chk.Err("number of points along y is incorrect. %d != %d\n", len(Y), o.Npts[1])
+	}
+	nx := o.Npts[0]
+	ny := o.Npts[1]
+	o.X2d = utl.Alloc(ny, nx)
+	o.Y2d = utl.Alloc(ny, nx)
+	o.Min = []float64{X[0], Y[0]}
+	o.Max = []float64{X[0], Y[0]}
+	for j := 0; j < ny; j++ {
+		for i := 0; i < nx; i++ {
+			o.X2d[j][i] = X[i]
+			o.Y2d[j][i] = Y[j]
+		}
+		o.Min[1] = utl.Min(o.Min[1], Y[j])
+		o.Max[1] = utl.Max(o.Max[1], Y[j])
+	}
+	for i := 0; i < nx; i++ {
+		o.Min[0] = utl.Min(o.Min[0], X[i])
+		o.Max[0] = utl.Max(o.Max[0], X[i])
+	}
+	o.Del = make([]float64, o.Ndim)
+	for k := 0; k < o.Ndim; k++ {
+		o.Del[k] = o.Max[k] - o.Min[k]
+	}
+	return
+}
+
+// SetCoords3d sets 3d coordinates: will allocate X3d[nz][ny][nx], Y3d[nz][ny][nx], and Z3d[nz][ny][nx]
+func (o *Grid) SetCoords3d(X, Y, Z []float64) (err error) {
+	if o.Ndim != 3 {
+		return chk.Err("grid must be 3D\n")
+	}
+	if len(X) != o.Npts[0] {
+		return chk.Err("number of points along x is incorrect. %d != %d\n", len(X), o.Npts[0])
+	}
+	if len(Y) != o.Npts[1] {
+		return chk.Err("number of points along y is incorrect. %d != %d\n", len(Y), o.Npts[1])
+	}
+	if len(Z) != o.Npts[2] {
+		return chk.Err("number of points along z is incorrect. %d != %d\n", len(Z), o.Npts[2])
+	}
+	nx := o.Npts[0]
+	ny := o.Npts[1]
+	nz := o.Npts[2]
+	o.X3d = utl.Deep3alloc(nz, ny, nx)
+	o.Y3d = utl.Deep3alloc(nz, ny, nx)
+	o.Z3d = utl.Deep3alloc(nz, ny, nx)
+	o.Min = []float64{X[0], Y[0], Z[0]}
+	o.Max = []float64{X[0], Y[0], Z[0]}
+	for k := 0; k < nz; k++ {
+		for j := 0; j < ny; j++ {
+			for i := 0; i < nx; i++ {
+				o.X3d[k][j][i] = X[i]
+				o.Y3d[k][j][i] = Y[j]
+				o.Z3d[k][j][i] = Z[k]
+			}
+		}
+		o.Min[2] = utl.Min(o.Min[2], Z[k])
+		o.Max[2] = utl.Max(o.Max[2], Z[k])
+	}
+	for j := 0; j < ny; j++ {
+		o.Min[1] = utl.Min(o.Min[1], Y[j])
+		o.Max[1] = utl.Max(o.Max[1], Y[j])
+	}
+	for i := 0; i < nx; i++ {
+		o.Min[0] = utl.Min(o.Min[0], X[i])
+		o.Max[0] = utl.Max(o.Max[0], X[i])
+	}
+	o.Del = make([]float64, o.Ndim)
+	for k := 0; k < o.Ndim; k++ {
+		o.Del[k] = o.Max[k] - o.Min[k]
+	}
+	return
+}
+
+// Draw draws grid
+func (o *Grid) Draw(withTxt bool, argsGrid, argsTxt *plt.A) {
+
+	// configuration
+	if argsGrid == nil {
+		argsGrid = &plt.A{C: "#427ce5", Lw: 0.8, NoClip: true}
+	}
+
+	// draw grid
+	if o.Ndim == 2 {
+		plt.Grid2d(o.X2d, o.Y2d, false, argsGrid, nil)
+	} else {
+		Zlevels := make([]float64, o.Npts[2])
+		for k := 0; k < o.Npts[2]; k++ {
+			Zlevels[k] = o.Z3d[k][0][0]
+		}
+		plt.Grid3d(o.X3d[0], o.Y3d[0], Zlevels, argsGrid)
+	}
+
+	// grid txt
+	if withTxt {
+
+		// configuration
+		if argsTxt == nil {
+			argsTxt = &plt.A{C: "orange", Fsz: 8}
+		}
+
+		// add text
+		if o.Ndim == 2 {
+			for j := 0; j < o.Npts[1]; j++ {
+				for i := 0; i < o.Npts[0]; i++ {
+					idx := i + j*o.Npts[0]
+					txt := io.Sf("%d", idx)
+					plt.Text(o.X2d[j][i], o.Y2d[j][i], txt, argsTxt)
+				}
+			}
+		} else {
+			for k := 0; k < o.Npts[2]; k++ {
+				for j := 0; j < o.Npts[1]; j++ {
+					for i := 0; i < o.Npts[0]; i++ {
+						idx := i + j*o.Npts[0] + k*o.Npts[0]*o.Npts[1]
+						txt := io.Sf("%d", idx)
+						plt.Text3d(o.X3d[k][j][i], o.Y3d[k][j][i], o.Z3d[k][j][i], txt, argsTxt)
+					}
+				}
+			}
+		}
+	}
+}
+
+// uniform grid ///////////////////////////////////////////////////////////////////////////////////
+
+// UniformGrid implements a uniform 2D or 3D grid of points (based on Bins)
 // See function GridBoundaries() with a picture of how the boundaries are numbered
 type UniformGrid struct {
 	Bins // derived
@@ -136,7 +344,7 @@ func NewUniformGrid(xmin, xmax []float64, ndiv []int) (o *UniformGrid, err error
 	return
 }
 
-// GridBoundaryTag returns a list of nodes marked with given tag
+// GetNodesWithTag returns a list of nodes marked with given tag
 func (o *UniformGrid) GetNodesWithTag(tag int) []int {
 	return GridBoundaryTag(tag, o.Ndim, o.Edge, o.Face)
 }
