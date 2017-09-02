@@ -21,7 +21,7 @@ func TestFdmLaplace01(tst *testing.T) {
 	chk.PrintTitle("FdmLaplace01. Full Auu matrix.")
 
 	// grid
-	g, err := gm.NewGrid([]float64{0, 0}, []float64{2, 2}, []int{2, 2}) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
+	g, err := gm.NewUniformGrid([]float64{0, 0}, []float64{2, 2}, []int{2, 2}) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
 	status(tst, err)
 
 	// equations
@@ -57,7 +57,7 @@ func TestFdmLaplace02(tst *testing.T) {
 	chk.PrintTitle("FdmLaplace02. Auu without borders")
 
 	// grid
-	g, err := gm.NewGrid([]float64{0, 0}, []float64{3, 3}, []int{3, 3}) // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
+	g, err := gm.NewUniformGrid([]float64{0, 0}, []float64{3, 3}, []int{3, 3}) // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 	status(tst, err)
 
 	// equations

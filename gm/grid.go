@@ -9,7 +9,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Grid implements a 2D or 3D grid of points (based on Bins)
+// UniformGrid implements a 2D or 3D grid of points (based on Bins)
 //
 //   The sets of boundary nodes are organised in the following order:
 //
@@ -29,7 +29,7 @@ import (
 //                                              |   ,'      ,'4,'|   ,'
 //                                              | ,'        ~~~  | ,'
 //                                              +----------------+'
-type Grid struct {
+type UniformGrid struct {
 	Bins // derived
 
 	N    int     // total number of points
@@ -37,12 +37,12 @@ type Grid struct {
 	Face [][]int // ids of points on faces: [face0, face1, face2, face3, face4, face5]
 }
 
-// NewGrid creates a new Grid structure
+// NewUniformGrid creates a new UniformGrid structure
 //   xmin -- [ndim] min/initial coordinates of the whole space (box/cube)
 //   xmax -- [ndim] max/final coordinates of the whole space (box/cube)
 //   ndiv -- [ndim] number of divisions for xmax-xmin
-func NewGrid(xmin, xmax []float64, ndiv []int) (o *Grid, err error) {
-	o = new(Grid)
+func NewUniformGrid(xmin, xmax []float64, ndiv []int) (o *UniformGrid, err error) {
+	o = new(UniformGrid)
 	err = o.Bins.Init(xmin, xmax, ndiv)
 	o.N = 1
 	for k := 0; k < o.Ndim; k++ {
@@ -96,7 +96,7 @@ func NewGrid(xmin, xmax []float64, ndiv []int) (o *Grid, err error) {
 //   NOTE: will return empty list if            |   ,'      ,'30'|   ,'
 //         tag is not available                 | ,'        ~~~  | ,'
 //                                              +----------------+'
-func (o *Grid) GetNodesWithTag(tag int) []int {
+func (o *UniformGrid) GetNodesWithTag(tag int) []int {
 	if o.Ndim == 2 {
 		switch tag {
 		case 20:
@@ -131,7 +131,7 @@ func (o *Grid) GetNodesWithTag(tag int) []int {
 //  X -- [ny][nx] will hold the grid coordinates
 //  Y -- [ny][nx] will hold the grid coordinates
 //  F -- [ny][nx] will hold the results
-func (o *Grid) Eval2d(f fun.Sv) (X, Y, F [][]float64, err error) {
+func (o *UniformGrid) Eval2d(f fun.Sv) (X, Y, F [][]float64, err error) {
 	nx := o.Npts[0]
 	ny := o.Npts[1]
 	X = utl.Alloc(ny, nx)
@@ -160,7 +160,7 @@ func (o *Grid) Eval2d(f fun.Sv) (X, Y, F [][]float64, err error) {
 //  Y -- [nz][ny][nx] will hold the grid coordinates
 //  Z -- [nz][ny][nx] will hold the grid coordinates
 //  F -- [nz][ny][nx] will hold the results
-func (o *Grid) Eval3d(f fun.Sv) (X, Y, Z, F [][][]float64, err error) {
+func (o *UniformGrid) Eval3d(f fun.Sv) (X, Y, Z, F [][][]float64, err error) {
 	nx := o.Npts[0]
 	ny := o.Npts[1]
 	nz := o.Npts[2]

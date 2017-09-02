@@ -15,7 +15,7 @@ import (
 type FdmSolver struct {
 	Operator  FdmOperator     // differential operator
 	Equations *la.Equations   // equations numbering in linear system
-	Grid      *gm.Grid        // grid structure
+	Grid      *gm.UniformGrid // grid structure
 	Ebcs      *EssentialBcs   // essential boundary conditions
 	U         la.Vector       // vector of unknowns
 	F         la.Vector       // right hand-side [if reactions=true]
@@ -38,7 +38,7 @@ func NewFdmSolver(operator string, params dbf.Params, xmin []float64, xmax []flo
 	if err != nil {
 		return
 	}
-	o.Grid, err = gm.NewGrid(xmin, xmax, ndiv)
+	o.Grid, err = gm.NewUniformGrid(xmin, xmax, ndiv)
 	return
 }
 

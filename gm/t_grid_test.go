@@ -17,7 +17,7 @@ func TestGrid01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Grid01")
 
-	g, err := NewGrid([]float64{-6, -3}, []float64{6, 3}, []int{4, 3})
+	g, err := NewUniformGrid([]float64{-6, -3}, []float64{6, 3}, []int{4, 3})
 	status(tst, err)
 
 	chk.Int(tst, "N", g.N, 20)

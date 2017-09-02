@@ -27,7 +27,7 @@ func TestEssentialBcs01(tst *testing.T) {
 	//          |        |        |
 	//          |0       |1       |2
 	//          o--------o--------o
-	g, err := gm.NewGrid([]float64{0, 0}, []float64{2, 2}, []int{2, 2}) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
+	g, err := gm.NewUniformGrid([]float64{0, 0}, []float64{2, 2}, []int{2, 2}) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
 	status(tst, err)
 
 	// essential boundary conditions
