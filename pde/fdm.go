@@ -13,17 +13,17 @@ import (
 
 // FdmSolver implements solvers based on the finite-differences method (FDM)
 type FdmSolver struct {
-	Op       FdmOperator     // differential operator
-	Eqs      *la.Equations   // equations numbering in linear system
-	Grid     *gm.Grid        // grid structure
-	Ebcs     *EssentialBcs   // essential boundary conditions
-	U        la.Vector       // vector of unknowns
-	F        la.Vector       // right hand-side [if reactions=true]
-	denseAuk *la.CCMatrix    // dense form of Auk matrix
-	denseAku *la.CCMatrix    // dense form of Aku matrix [if reactions=true]
-	denseAkk *la.CCMatrix    // dense form of Akk matrix [if reactions=true]
-	buCopy   la.Vector       // copy of Bu vector if reactions == true
-	linsol   la.SparseSolver // linear solver
+	Op     FdmOperator     // differential operator
+	Eqs    *la.Equations   // equations numbering in linear system
+	Grid   *gm.Grid        // grid structure
+	Ebcs   *EssentialBcs   // essential boundary conditions
+	U      la.Vector       // vector of unknowns
+	F      la.Vector       // right hand-side [if reactions=true]
+	matAuk *la.CCMatrix    // dense form of Auk matrix
+	matAku *la.CCMatrix    // dense form of Aku matrix [if reactions=true]
+	matAkk *la.CCMatrix    // dense form of Akk matrix [if reactions=true]
+	buCopy la.Vector       // copy of Bu vector if reactions == true
+	linsol la.SparseSolver // linear solver
 }
 
 // NewFdmSolver returns a new FDM solver
@@ -59,7 +59,7 @@ func (o *FdmSolver) SetBcs(ebcs *EssentialBcs) (err error) {
 
 	// assemble matrices
 	o.Op.Assemble(o.Grid, o.Eqs)
-	o.denseAuk = o.Eqs.Auk.ToMatrix(nil)
+	o.matAuk = o.Eqs.Auk.ToMatrix(nil)
 
 	// init linear solver
 	o.linsol = la.NewSparseSolver("umfpack")
@@ -69,6 +69,7 @@ func (o *FdmSolver) SetBcs(ebcs *EssentialBcs) (err error) {
 }
 
 // Solve solves problem
+//  The solution will be saved in U
 func (o *FdmSolver) Solve(reactions bool) (err error) {
 
 	// check
@@ -86,11 +87,11 @@ func (o *FdmSolver) Solve(reactions bool) (err error) {
 
 	// set known part of RHS reactions vector
 	if reactions {
-		if o.denseAku == nil {
+		if o.matAku == nil {
 			o.F = la.NewVector(o.Eqs.N)
 			o.buCopy = la.NewVector(o.Eqs.Nu)
-			o.denseAku = o.Eqs.Aku.ToMatrix(nil)
-			o.denseAkk = o.Eqs.Akk.ToMatrix(nil)
+			o.matAku = o.Eqs.Aku.ToMatrix(nil)
+			o.matAkk = o.Eqs.Akk.ToMatrix(nil)
 		}
 		copy(o.buCopy, bu)
 	}
@@ -104,7 +105,7 @@ func (o *FdmSolver) Solve(reactions bool) (err error) {
 	}
 
 	// fix RHS vector: bu -= Auk⋅xk
-	la.SpMatVecMulAdd(bu, -1.0, o.denseAuk, xk)
+	la.SpMatVecMulAdd(bu, -1.0, o.matAuk, xk)
 
 	// solve system
 	err = o.linsol.Solve(xu, bu, false)
@@ -117,8 +118,8 @@ func (o *FdmSolver) Solve(reactions bool) (err error) {
 	if reactions {
 		xu := o.Eqs.Xu
 		bk := o.Eqs.Bk
-		la.SpMatVecMul(bk, 1.0, o.denseAku, xu)
-		la.SpMatVecMulAdd(bk, 1.0, o.denseAkk, xk)
+		la.SpMatVecMul(bk, 1.0, o.matAku, xu)
+		la.SpMatVecMulAdd(bk, 1.0, o.matAkk, xk)
 		o.Eqs.JoinVector(o.F, o.buCopy, bk)
 	}
 	return
