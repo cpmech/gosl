@@ -77,10 +77,13 @@ func (o *Solver) SetBcs(ebcs *EssentialBcs) (err error) {
 		return
 	}
 	o.U = la.NewVector(o.Eqs.N)
+	o.F = la.NewVector(o.Eqs.N)
 
 	// assemble matrices
 	o.Op.Assemble(o.Eqs)
-	o.matAuk = o.Eqs.Auk.ToMatrix(nil)
+	if o.Eqs.Nk > 0 {
+		o.matAuk = o.Eqs.Auk.ToMatrix(nil)
+	}
 
 	// init linear solver
 	o.linsol = la.NewSparseSolver("umfpack")
@@ -90,12 +93,15 @@ func (o *Solver) SetBcs(ebcs *EssentialBcs) (err error) {
 }
 
 // Solve solves problem
-//  The solution will be saved in U
+//  The solution will be saved in U (and F if reactions == true)
 func (o *Solver) Solve(reactions bool) (err error) {
 
 	// check
 	if o.Eqs == nil {
 		return chk.Err("please set boundary conditions first\n")
+	}
+	if o.Eqs.Nk == 0 {
+		reactions = false
 	}
 
 	// auxiliary
@@ -109,7 +115,6 @@ func (o *Solver) Solve(reactions bool) (err error) {
 	// set known part of RHS reactions vector
 	if reactions {
 		if o.matAku == nil {
-			o.F = la.NewVector(o.Eqs.N)
 			o.buCopy = la.NewVector(o.Eqs.Nu)
 			o.matAku = o.Eqs.Aku.ToMatrix(nil)
 			o.matAkk = o.Eqs.Akk.ToMatrix(nil)
@@ -126,7 +131,9 @@ func (o *Solver) Solve(reactions bool) (err error) {
 	}
 
 	// fix RHS vector: bu -= Auk⋅xk
-	la.SpMatVecMulAdd(bu, -1.0, o.matAuk, xk)
+	if o.Eqs.Nk > 0 {
+		la.SpMatVecMulAdd(bu, -1.0, o.matAuk, xk)
+	}
 
 	// solve system
 	err = o.linsol.Solve(xu, bu, false)
