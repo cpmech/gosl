@@ -157,12 +157,12 @@ func TestGrid03(tst *testing.T) {
 	chk.Ints(tst, "zmin", g.Face(4), []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11})
 	chk.Ints(tst, "zmax", g.Face(5), []int{12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23})
 
-	chk.Ints(tst, "Tag # 10: xmin", g.FaceT(10), g.Face(0))
-	chk.Ints(tst, "Tag # 11: xmax", g.FaceT(11), g.Face(1))
-	chk.Ints(tst, "Tag # 20: ymin", g.FaceT(20), g.Face(2))
-	chk.Ints(tst, "Tag # 21: ymax", g.FaceT(21), g.Face(3))
-	chk.Ints(tst, "Tag # 30: zmin", g.FaceT(30), g.Face(4))
-	chk.Ints(tst, "Tag # 31: zmax", g.FaceT(31), g.Face(5))
+	chk.Ints(tst, "Tag # 10: xmin", g.Boundary(100), g.Face(0))
+	chk.Ints(tst, "Tag # 11: xmax", g.Boundary(101), g.Face(1))
+	chk.Ints(tst, "Tag # 20: ymin", g.Boundary(200), g.Face(2))
+	chk.Ints(tst, "Tag # 21: ymax", g.Boundary(201), g.Face(3))
+	chk.Ints(tst, "Tag # 30: zmin", g.Boundary(300), g.Face(4))
+	chk.Ints(tst, "Tag # 31: zmax", g.Boundary(301), g.Face(5))
 
 	xx, yy, zz := g.Mesh3d()
 
