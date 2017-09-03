@@ -9,32 +9,29 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
 )
 
 func TestFdmLaplace01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("FdmLaplace01. Full Auu matrix.")
 
-	// grid
-	g := new(gm.Grid)
-	err := g.GenUniform([]float64{0, 0}, []float64{2, 2}, []int{2, 2}, false) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
+	// operator
+	op, err := NewFdmOperator("laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
+	status(tst, err)
+
+	// init operator with grid: 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
+	g, err := op.InitWithGrid("uni", []float64{0, 0}, []float64{2, 2}, []int{2, 2})
 	status(tst, err)
 
 	// equations
 	e, err := la.NewEquations(g.Size(), nil)
 	status(tst, err)
 
-	// operator
-	op, err := NewFdmOperator("laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
-	status(tst, err)
-
 	// assemble
-	op.Assemble(g, e)
+	op.Assemble(e)
 	Duu := e.Auu.ToDense()
 	io.Pf("%v\n", Duu.Print("%4g"))
 
@@ -54,74 +51,13 @@ func TestFdmLaplace01(tst *testing.T) {
 
 func TestFdmLaplace02(tst *testing.T) {
 
-	//verbose()
-	chk.PrintTitle("FdmLaplace02. Auu without borders")
-
-	// grid
-	g := new(gm.Grid)
-	err := g.GenUniform([]float64{0, 0}, []float64{3, 3}, []int{3, 3}, false) // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
-	status(tst, err)
-
-	// equations
-	e, err := la.NewEquations(g.Size(), utl.IntUnique(g.Edge(0), g.Edge(1), g.Edge(2), g.Edge(3)))
-	status(tst, err)
-
-	// operator
-	op, err := NewFdmOperator("laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
-	status(tst, err)
-
-	// assemble
-	op.Assemble(g, e)
-	Duu := e.Auu.ToDense()
-	io.Pf("%v\n", Duu.Print("%4g"))
-
-	// check
-	chk.Deep2(tst, "Auu", 1e-17, Duu.GetDeep2(), [][]float64{
-		{+4, -1, -1, +0}, // 0 ⇒ node (1,1) 5
-		{-1, +4, +0, -1}, // 1 ⇒ node (2,1) 6
-		{-1, +0, +4, -1}, // 2 ⇒ node (1,2) 9
-		{+0, -1, -1, +4}, // 3 ⇒ node (2,2) 10
-	})
+	verbose()
+	chk.PrintTitle("FdmLaplace02. simple Dirichlet problem")
 
 	// solve problem
 	//    ∂²u     ∂²u
 	//    ———  +  ——— = 0    with   u(x,0)=1   u(3,y)=2   u(x,3)=2   u(0,y)=1
 	//    ∂x²     ∂y²               (bottom)   (right)    (top)      (left)
-
-	// set BCS
-	for _, I := range g.Edge(0) { // bottom
-		e.Xk[e.FtoK[I]] = 1.0
-	}
-	for _, I := range g.Edge(1) { // right
-		e.Xk[e.FtoK[I]] = 2.0
-	}
-	for _, I := range g.Edge(2) { // top
-		e.Xk[e.FtoK[I]] = 2.0
-	}
-	for _, I := range g.Edge(3) { // left
-		e.Xk[e.FtoK[I]] = 1.0
-	}
-
-	// fix RHS: bu -= Auk⋅xk
-	la.SpMatVecMulAdd(e.Bu, -1.0, e.Auk.ToMatrix(nil), e.Xk)
-
-	// solve system
-	err = la.SolveRealLinSysSPD(e.Xu, Duu, e.Bu)
-	status(tst, err)
-
-	// joint parts
-	x := la.NewVector(g.Size())
-	e.JoinVector(x, e.Xu, e.Xk)
-
-	// check
-	io.Pf("x = %v\n", x)
-	chk.Array(tst, "x", 1e-15, x, []float64{1, 1, 1, 2, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 1, 2, 2, 2})
-}
-
-func TestFdmLaplace03(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("FdmLaplace03. Auu without borders (FdmSolver)")
 
 	// problem data
 	params := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
@@ -130,7 +66,7 @@ func TestFdmLaplace03(tst *testing.T) {
 	ndiv := []int{3, 3} // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 
 	// fdm solver
-	fdm, err := NewFdmSolver("laplacian", params, xmin, xmax, ndiv)
+	fdm, err := NewFdmSolver("laplacian", "", params, xmin, xmax, ndiv)
 	status(tst, err)
 
 	// essential boundary conditions
@@ -146,6 +82,15 @@ func TestFdmLaplace03(tst *testing.T) {
 	chk.Ints(tst, "UtoF", fdm.Eqs.UtoF, []int{5, 6, 9, 10})
 	chk.Ints(tst, "KtoF", fdm.Eqs.KtoF, []int{0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15})
 
+	// check
+	Duu := fdm.Eqs.Auu.ToDense()
+	chk.Deep2(tst, "Auu", 1e-17, Duu.GetDeep2(), [][]float64{
+		{+4, -1, -1, +0}, // 0 ⇒ node (1,1) 5
+		{-1, +4, +0, -1}, // 1 ⇒ node (2,1) 6
+		{-1, +0, +4, -1}, // 2 ⇒ node (1,2) 9
+		{+0, -1, -1, +4}, // 3 ⇒ node (2,2) 10
+	})
+
 	// solve problem
 	err = fdm.Solve(true)
 	status(tst, err)
@@ -155,7 +100,7 @@ func TestFdmLaplace03(tst *testing.T) {
 	// check
 	eqFull, err := la.NewEquations(fdm.Grid.Size(), nil)
 	status(tst, err)
-	fdm.Op.Assemble(fdm.Grid, eqFull)
+	fdm.Op.Assemble(eqFull)
 	K := eqFull.Auu.ToMatrix(nil)
 	Fref := la.NewVector(fdm.Eqs.N)
 	la.SpMatVecMul(Fref, 1.0, K, fdm.U)

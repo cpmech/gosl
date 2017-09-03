@@ -33,7 +33,7 @@ type SpcSolver struct {
 //  xmin     -- Grid: [ndim] min/initial coordinates of the whole space (box/cube)
 //  xmax     -- Grid: [ndim] max/final coordinates of the whole space (box/cube)
 //  ndiv     -- Grid: [ndim] number of divisions for xmax-xmin
-func NewSpcSolver(operator, gtype string, params dbf.Params, xmin []float64, xmax []float64, ndiv []int) (o *SpcSolver, err error) {
+func NewSpcSolver(operator, gtype string, params dbf.Params, xmin, xmax []float64, ndiv []int) (o *SpcSolver, err error) {
 
 	// check lengths
 	ndim := len(xmin)
@@ -53,9 +53,6 @@ func NewSpcSolver(operator, gtype string, params dbf.Params, xmin []float64, xma
 
 	// grid
 	o.Grid, err = o.Op.InitWithGrid(gtype, xmin, xmax, ndiv)
-	if err != nil {
-		return
-	}
 	return
 }
 

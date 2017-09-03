@@ -16,7 +16,8 @@ import (
 // FdmOperator defines the interface for FDM (finite-difference method) operators such as
 // the Laplacian and so on
 type FdmOperator interface {
-	Assemble(g *gm.Grid, e *la.Equations)
+	InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (*gm.Grid, error)
+	Assemble(e *la.Equations)
 }
 
 // fdmOperatorMaker defines a function that makes (allocates) FdmOperators
@@ -42,9 +43,10 @@ func NewFdmOperator(kind string, params dbf.Params) (FdmOperator, error) {
 //                ∂x²        ∂y²        ∂z²
 //
 type FdmLaplacian struct {
-	kx float64 // isotropic coefficient x
-	ky float64 // isotropic coefficient y
-	kz float64 // isotropic coefficient z
+	kx float64  // isotropic coefficient x
+	ky float64  // isotropic coefficient y
+	kz float64  // isotropic coefficient z
+	g  *gm.Grid // grid
 }
 
 // add to database
@@ -69,17 +71,25 @@ func newFdmLaplacian(params dbf.Params) (o *FdmLaplacian, err error) {
 	return
 }
 
+// InitWithGrid initialises operator with new grid
+func (o *FdmLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.Grid, err error) {
+	g = new(gm.Grid)
+	err = g.GenUniform(xmin, xmax, ndiv, false)
+	o.g = g
+	return
+}
+
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
-func (o *FdmLaplacian) Assemble(g *gm.Grid, e *la.Equations) {
+func (o *FdmLaplacian) Assemble(e *la.Equations) {
 	if e.Auu == nil {
 		e.Alloc([]int{5 * e.Nu, 5 * e.Nu, 5 * e.Nk, 5 * e.Nk}, true, true)
 	}
 	e.Start()
-	if g.Ndim() == 2 {
-		nx := g.Npts(0)
-		ny := g.Npts(1)
-		dx := g.Length(0) / float64(nx-1)
-		dy := g.Length(1) / float64(ny-1)
+	if o.g.Ndim() == 2 {
+		nx := o.g.Npts(0)
+		ny := o.g.Npts(1)
+		dx := o.g.Length(0) / float64(nx-1)
+		dy := o.g.Length(1) / float64(ny-1)
 		dx2 := dx * dx
 		dy2 := dy * dy
 		α := 2.0 * (o.kx/dx2 + o.ky/dy2)

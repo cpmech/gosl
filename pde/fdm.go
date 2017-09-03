@@ -28,11 +28,12 @@ type FdmSolver struct {
 
 // NewFdmSolver returns a new FDM solver
 //  operator -- differential operator; e.g. "laplacian"
+//  gtype    -- grid type: "uni", "cgl" (Chebyshev-Gauss-Lobato)
 //  params   -- parameters for operator; e.g. "kx" and "ky"
 //  xmin     -- Grid: [ndim] min/initial coordinates of the whole space (box/cube)
 //  xmax     -- Grid: [ndim] max/final coordinates of the whole space (box/cube)
 //  ndiv     -- Grid: [ndim] number of divisions for xmax-xmin
-func NewFdmSolver(operator string, params dbf.Params, xmin []float64, xmax []float64, ndiv []int) (o *FdmSolver, err error) {
+func NewFdmSolver(operator, gtype string, params dbf.Params, xmin, xmax []float64, ndiv []int) (o *FdmSolver, err error) {
 
 	// check lengths
 	ndim := len(xmin)
@@ -51,8 +52,7 @@ func NewFdmSolver(operator string, params dbf.Params, xmin []float64, xmax []flo
 	}
 
 	// grid
-	o.Grid = new(gm.Grid)
-	err = o.Grid.GenUniform(xmin, xmax, ndiv, false)
+	o.Grid, err = o.Op.InitWithGrid("uni", xmin, xmax, ndiv)
 	return
 }
 
@@ -71,7 +71,7 @@ func (o *FdmSolver) SetBcs(ebcs *EssentialBcs) (err error) {
 	o.U = la.NewVector(o.Eqs.N)
 
 	// assemble matrices
-	o.Op.Assemble(o.Grid, o.Eqs)
+	o.Op.Assemble(o.Eqs)
 	o.matAuk = o.Eqs.Auk.ToMatrix(nil)
 
 	// init linear solver
