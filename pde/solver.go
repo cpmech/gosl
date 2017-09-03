@@ -11,9 +11,9 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// FdmSolver implements solvers based on the finite-differences method (FDM)
-type FdmSolver struct {
-	Op     FdmOperator     // differential operator
+// Solver solvers a PDE by calling specific operators
+type Solver struct {
+	Op     SpcOperator     // differential operator
 	Eqs    *la.Equations   // equations numbering in linear system
 	Grid   *gm.Grid        // grid structure
 	Ebcs   *EssentialBcs   // essential boundary conditions
@@ -26,14 +26,15 @@ type FdmSolver struct {
 	linsol la.SparseSolver // linear solver
 }
 
-// NewFdmSolver returns a new FDM solver
-//  operator -- differential operator; e.g. "laplacian"
+// NewGridSolver returns a new grid-based (e.g. FDM, SPC) solver
+//  method   -- "fdm", "spc"(spectral-collocation), "fem"
 //  gtype    -- grid type: "uni", "cgl" (Chebyshev-Gauss-Lobato)
+//  operator -- differential operator; e.g. "laplacian"
 //  params   -- parameters for operator; e.g. "kx" and "ky"
 //  xmin     -- Grid: [ndim] min/initial coordinates of the whole space (box/cube)
 //  xmax     -- Grid: [ndim] max/final coordinates of the whole space (box/cube)
 //  ndiv     -- Grid: [ndim] number of divisions for xmax-xmin
-func NewFdmSolver(operator, gtype string, params dbf.Params, xmin, xmax []float64, ndiv []int) (o *FdmSolver, err error) {
+func NewGridSolver(method, gtype, operator string, params dbf.Params, xmin, xmax []float64, ndiv []int) (o *Solver, err error) {
 
 	// check lengths
 	ndim := len(xmin)
@@ -45,19 +46,26 @@ func NewFdmSolver(operator, gtype string, params dbf.Params, xmin, xmax []float6
 	}
 
 	// new solver and operator
-	o = new(FdmSolver)
-	o.Op, err = NewFdmOperator(operator, params)
+	o = new(Solver)
+	switch method {
+	case "fdm":
+		o.Op, err = NewFdmOperator(operator, params)
+	case "spc":
+		o.Op, err = NewSpcOperator(operator, params)
+	default:
+		return nil, chk.Err("method %q is not available\n", method)
+	}
 	if err != nil {
 		return
 	}
 
 	// grid
-	o.Grid, err = o.Op.InitWithGrid("uni", xmin, xmax, ndiv)
+	o.Grid, err = o.Op.InitWithGrid(gtype, xmin, xmax, ndiv)
 	return
 }
 
 // SetBcs sets boundary conditions
-func (o *FdmSolver) SetBcs(ebcs *EssentialBcs) (err error) {
+func (o *Solver) SetBcs(ebcs *EssentialBcs) (err error) {
 
 	// collect known equations
 	o.Ebcs = ebcs
@@ -83,7 +91,7 @@ func (o *FdmSolver) SetBcs(ebcs *EssentialBcs) (err error) {
 
 // Solve solves problem
 //  The solution will be saved in U
-func (o *FdmSolver) Solve(reactions bool) (err error) {
+func (o *Solver) Solve(reactions bool) (err error) {
 
 	// check
 	if o.Eqs == nil {

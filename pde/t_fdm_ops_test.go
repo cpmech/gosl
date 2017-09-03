@@ -15,7 +15,7 @@ import (
 
 func TestFdmLaplace01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("FdmLaplace01. Full Auu matrix.")
 
 	// operator
@@ -51,7 +51,7 @@ func TestFdmLaplace01(tst *testing.T) {
 
 func TestFdmLaplace02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("FdmLaplace02. simple Dirichlet problem")
 
 	// solve problem
@@ -66,7 +66,7 @@ func TestFdmLaplace02(tst *testing.T) {
 	ndiv := []int{3, 3} // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 
 	// fdm solver
-	fdm, err := NewFdmSolver("laplacian", "", params, xmin, xmax, ndiv)
+	fdm, err := NewGridSolver("fdm", "uni", "laplacian", params, xmin, xmax, ndiv)
 	status(tst, err)
 
 	// essential boundary conditions
@@ -84,6 +84,7 @@ func TestFdmLaplace02(tst *testing.T) {
 
 	// check
 	Duu := fdm.Eqs.Auu.ToDense()
+	io.Pf("Auu =\n%v\n", Duu.Print("%4g"))
 	chk.Deep2(tst, "Auu", 1e-17, Duu.GetDeep2(), [][]float64{
 		{+4, -1, -1, +0}, // 0 ⇒ node (1,1) 5
 		{-1, +4, +0, -1}, // 1 ⇒ node (2,1) 6

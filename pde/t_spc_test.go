@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
@@ -16,7 +17,12 @@ import (
 func TestSpc01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Spc01. Auu without borders (SpcSolver)")
+	chk.PrintTitle("Spc01. simple Dirichlet problem")
+
+	// solve problem
+	//    ∂²u     ∂²u
+	//    ———  +  ——— = 0    with   u(x,0)=1   u(3,y)=2   u(x,3)=2   u(0,y)=1
+	//    ∂x²     ∂y²               (bottom)   (right)    (top)      (left)
 
 	// problem data
 	params := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
@@ -25,7 +31,7 @@ func TestSpc01(tst *testing.T) {
 	ndiv := []int{3, 3} // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 
 	// spectral-collocation solver
-	spc, err := NewSpcSolver("laplacian", "uni", params, xmin, xmax, ndiv)
+	spc, err := NewGridSolver("spc", "uni", "laplacian", params, xmin, xmax, ndiv)
 	status(tst, err)
 
 	// essential boundary conditions
@@ -40,6 +46,16 @@ func TestSpc01(tst *testing.T) {
 	spc.SetBcs(ebcs)
 	chk.Ints(tst, "UtoF", spc.Eqs.UtoF, []int{5, 6, 9, 10})
 	chk.Ints(tst, "KtoF", spc.Eqs.KtoF, []int{0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15})
+
+	// check
+	Duu := spc.Eqs.Auu.ToDense()
+	io.Pf("Auu =\n%v\n", Duu.Print("%6g"))
+	chk.Deep2(tst, "Auu", 1e-17, Duu.GetDeep2(), [][]float64{
+		{-9.00, +2.25, +2.25, +0.00}, // 0 ⇒ node (1,1) 5
+		{+2.25, -9.00, +0.00, +2.25}, // 1 ⇒ node (2,1) 6
+		{+2.25, +0.00, -9.00, +2.25}, // 2 ⇒ node (1,2) 9
+		{+0.00, +2.25, +2.25, -9.00}, // 3 ⇒ node (2,2) 10
+	})
 
 	// solve problem
 	err = spc.Solve(true)
@@ -63,31 +79,6 @@ func TestSpc01(tst *testing.T) {
 		plt.Gll("$x$", "$y$", nil)
 		plt.HideAllBorders()
 		err = plt.Save("/tmp/gosl/pde", "spc01")
-		status(tst, err)
-	}
-}
-
-func TestSpc02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("Spc02. Spectral-Collocation. 3D")
-
-	// problem data
-	params := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}, {N: "kz", V: 1}}
-	xmin := []float64{0, 0, 0}
-	xmax := []float64{3, 3, 3}
-	ndiv := []int{4, 3, 2} // 4x3x2 divs ⇒ 5x4x3 grid ⇒ 60 equations
-
-	// spectral-collocation solver
-	spc, err := NewSpcSolver("laplacian", "cgl", params, xmin, xmax, ndiv)
-	status(tst, err)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		spc.Grid.Draw(true, nil, &plt.A{C: plt.C(2, 0), Fsz: 6})
-		plt.Default3dView(-1, 1, -1, 1, -1, 1, true)
-		err = plt.Save("/tmp/gosl/pde", "spc02")
 		status(tst, err)
 	}
 }
