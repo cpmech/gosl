@@ -12,10 +12,10 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func Test_deep01(tst *testing.T) {
+func TestDeep01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("deep01")
+	chk.PrintTitle("Deep01")
 
 	a := Deep3alloc(3, 2, 4)
 	for i := 0; i < 3; i++ {
@@ -44,10 +44,10 @@ func Test_deep01(tst *testing.T) {
 	io.Pf("b = %v\n", b)
 }
 
-func Test_deep02(tst *testing.T) {
+func TestDeep02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("deep02")
+	chk.PrintTitle("Deep02")
 
 	a := Deep3alloc(3, 2, 4)
 	Deep3set(a, 666)
@@ -66,4 +66,91 @@ func Test_deep02(tst *testing.T) {
 		{{{666, 666}}, {{666, 666}}},
 	})
 	io.Pf("b = %v\n", b)
+}
+
+func TestDeep03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Deep03. check sizes of Deep2")
+
+	a := [][]float64{
+		{1, 2, 3},
+		{3, 4, 5},
+	}
+	ok := Deep2checkSize(2, 3, a)
+	if !ok {
+		tst.Errorf("check should have returned true")
+	}
+
+	ok = Deep2checkSize(1, 3, a)
+	if ok {
+		tst.Errorf("check should have returned false")
+	}
+
+	ok = Deep2checkSize(2, 2, a)
+	if ok {
+		tst.Errorf("check should have returned false")
+	}
+
+	b := [][]float64{}
+	ok = Deep2checkSize(0, 0, b)
+	if !ok {
+		tst.Errorf("check should have returned true")
+	}
+}
+
+func TestDeep04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Deep04. check sizes of Deep3")
+
+	a := [][][]float64{
+		{
+			{1, 2, 3},
+			{3, 4, 5},
+		},
+	}
+	ok := Deep3checkSize(1, 2, 3, a)
+	if !ok {
+		tst.Errorf("check should have returned true")
+	}
+
+	ok = Deep3checkSize(2, 2, 3, a)
+	if ok {
+		tst.Errorf("check should have returned false")
+	}
+
+	ok = Deep3checkSize(1, 1, 3, a)
+	if ok {
+		tst.Errorf("check should have returned false")
+	}
+
+	ok = Deep3checkSize(1, 2, 2, a)
+	if ok {
+		tst.Errorf("check should have returned false")
+	}
+
+	b := [][][]float64{}
+	ok = Deep3checkSize(0, 0, 0, b)
+	if !ok {
+		tst.Errorf("check should have returned true")
+	}
+
+	c := [][][]float64{
+		{
+			{},
+		},
+	}
+	ok = Deep3checkSize(1, 1, 0, c)
+	if !ok {
+		tst.Errorf("check should have returned true")
+	}
+
+	d := [][][]float64{
+		{},
+	}
+	ok = Deep3checkSize(1, 0, 0, d)
+	if !ok {
+		tst.Errorf("check should have returned true")
+	}
 }

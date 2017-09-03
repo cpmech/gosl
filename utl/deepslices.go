@@ -54,3 +54,37 @@ func Deep4set(a [][][][]float64, v float64) {
 		}
 	}
 }
+
+// Deep2checkSize checks if dimensions of Deep2 slice are correct
+func Deep2checkSize(n1, n2 int, a [][]float64) bool {
+	if len(a) != n1 {
+		return false
+	}
+	if n1 == 0 {
+		return true
+	}
+	if len(a[0]) != n2 {
+		return false
+	}
+	return true
+}
+
+// Deep3checkSize checks if dimensions of Deep3 slice are correct
+func Deep3checkSize(n1, n2, n3 int, a [][][]float64) bool {
+	if len(a) != n1 {
+		return false
+	}
+	if n1 == 0 {
+		return true
+	}
+	if len(a[0]) != n2 {
+		return false
+	}
+	if n2 == 0 {
+		return true
+	}
+	if len(a[0][0]) != n3 {
+		return false
+	}
+	return true
+}
