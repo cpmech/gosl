@@ -15,7 +15,7 @@ import (
 
 func TestSpc01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("Spc01. Auu without borders (SpcSolver)")
 
 	// problem data

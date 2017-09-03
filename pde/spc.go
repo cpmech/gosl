@@ -99,14 +99,8 @@ func (o *SpcSolver) SetBcs(ebcs *EssentialBcs) (err error) {
 	o.Ebcs = ebcs
 	knownEqs := o.Ebcs.GetNodesList()
 
-	// total number of equations
-	neq := 1
-	for _, lag := range o.Interp {
-		neq *= (lag.N + 1)
-	}
-
 	// init equations structure
-	o.Eqs, err = la.NewEquations(neq, knownEqs)
+	o.Eqs, err = la.NewEquations(o.Grid.Size(), knownEqs)
 	if err != nil {
 		return
 	}
