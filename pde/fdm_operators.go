@@ -16,7 +16,7 @@ import (
 // FdmOperator defines the interface for FDM (finite-difference method) operators such as
 // the Laplacian and so on
 type FdmOperator interface {
-	Assemble(g *gm.UniformGrid, e *la.Equations)
+	Assemble(g *gm.Grid, e *la.Equations)
 }
 
 // fdmOperatorMaker defines a function that makes (allocates) FdmOperators
@@ -70,16 +70,18 @@ func newFdmLaplacian(params dbf.Params) (o *FdmLaplacian, err error) {
 }
 
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
-func (o *FdmLaplacian) Assemble(g *gm.UniformGrid, e *la.Equations) {
+func (o *FdmLaplacian) Assemble(g *gm.Grid, e *la.Equations) {
 	if e.Auu == nil {
 		e.Alloc([]int{5 * e.Nu, 5 * e.Nu, 5 * e.Nk, 5 * e.Nk}, true, true)
 	}
 	e.Start()
-	if g.Ndim == 2 {
-		nx := g.Npts[0]
-		ny := g.Npts[1]
-		dx2 := g.Size[0] * g.Size[0]
-		dy2 := g.Size[1] * g.Size[1]
+	if g.Ndim() == 2 {
+		nx := g.Npts(0)
+		ny := g.Npts(1)
+		dx := g.Length(0) / float64(nx-1)
+		dy := g.Length(1) / float64(ny-1)
+		dx2 := dx * dx
+		dy2 := dy * dy
 		α := 2.0 * (o.kx/dx2 + o.ky/dy2)
 		β := -o.kx / dx2
 		γ := -o.ky / dy2

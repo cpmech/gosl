@@ -21,11 +21,12 @@ func TestFdmLaplace01(tst *testing.T) {
 	chk.PrintTitle("FdmLaplace01. Full Auu matrix.")
 
 	// grid
-	g, err := gm.NewUniformGrid([]float64{0, 0}, []float64{2, 2}, []int{2, 2}) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
+	g := new(gm.Grid)
+	err := g.GenUniform([]float64{0, 0}, []float64{2, 2}, []int{2, 2}, false) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
 	status(tst, err)
 
 	// equations
-	e, err := la.NewEquations(g.N, nil)
+	e, err := la.NewEquations(g.Size(), nil)
 	status(tst, err)
 
 	// operator
@@ -57,11 +58,12 @@ func TestFdmLaplace02(tst *testing.T) {
 	chk.PrintTitle("FdmLaplace02. Auu without borders")
 
 	// grid
-	g, err := gm.NewUniformGrid([]float64{0, 0}, []float64{3, 3}, []int{3, 3}) // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
+	g := new(gm.Grid)
+	err := g.GenUniform([]float64{0, 0}, []float64{3, 3}, []int{3, 3}, false) // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 	status(tst, err)
 
 	// equations
-	e, err := la.NewEquations(g.N, utl.IntUnique(g.Edge...))
+	e, err := la.NewEquations(g.Size(), utl.IntUnique(g.Edge(0), g.Edge(1), g.Edge(2), g.Edge(3)))
 	status(tst, err)
 
 	// operator
@@ -87,16 +89,16 @@ func TestFdmLaplace02(tst *testing.T) {
 	//    ∂x²     ∂y²               (bottom)   (right)    (top)      (left)
 
 	// set BCS
-	for _, I := range g.Edge[0] { // bottom
+	for _, I := range g.Edge(0) { // bottom
 		e.Xk[e.FtoK[I]] = 1.0
 	}
-	for _, I := range g.Edge[1] { // right
+	for _, I := range g.Edge(1) { // right
 		e.Xk[e.FtoK[I]] = 2.0
 	}
-	for _, I := range g.Edge[2] { // top
+	for _, I := range g.Edge(2) { // top
 		e.Xk[e.FtoK[I]] = 2.0
 	}
-	for _, I := range g.Edge[3] { // left
+	for _, I := range g.Edge(3) { // left
 		e.Xk[e.FtoK[I]] = 1.0
 	}
 
@@ -108,7 +110,7 @@ func TestFdmLaplace02(tst *testing.T) {
 	status(tst, err)
 
 	// joint parts
-	x := la.NewVector(g.N)
+	x := la.NewVector(g.Size())
 	e.JoinVector(x, e.Xu, e.Xk)
 
 	// check
@@ -151,7 +153,7 @@ func TestFdmLaplace03(tst *testing.T) {
 	chk.Array(tst, "U", 1e-15, fdm.U, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
 
 	// check
-	eqFull, err := la.NewEquations(fdm.Grid.N, nil)
+	eqFull, err := la.NewEquations(fdm.Grid.Size(), nil)
 	status(tst, err)
 	fdm.Operator.Assemble(fdm.Grid, eqFull)
 	K := eqFull.Auu.ToMatrix(nil)

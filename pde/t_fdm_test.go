@@ -47,7 +47,7 @@ func TestFdm01(tst *testing.T) {
 	chk.Array(tst, "U", 1e-15, fdm.U, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
 
 	// check
-	eqFull, err := la.NewEquations(fdm.Grid.N, nil)
+	eqFull, err := la.NewEquations(fdm.Grid.Size(), nil)
 	status(tst, err)
 	fdm.Operator.Assemble(fdm.Grid, eqFull)
 	K := eqFull.Auu.ToMatrix(nil)
