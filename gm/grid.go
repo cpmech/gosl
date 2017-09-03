@@ -226,20 +226,32 @@ func (o *Grid) Face(iFace int) []int {
 //
 func (o *Grid) FaceT(tag int) []int {
 	switch tag {
-	case 10:
+	case 100:
 		return o.face[0]
-	case 11:
+	case 101:
 		return o.face[1]
-	case 20:
+	case 200:
 		return o.face[2]
-	case 21:
+	case 201:
 		return o.face[3]
-	case 30:
+	case 300:
 		return o.face[4]
-	case 31:
+	case 301:
 		return o.face[5]
 	}
 	return nil
+}
+
+// Boundary returns list of edge or face nodes on boundary
+//   NOTE: will return empty list if tag is not available
+func (o *Grid) Boundary(tag int) []int {
+	if tag > 50 {
+		if o.ndim == 2 {
+			return nil
+		}
+		return o.FaceT(tag)
+	}
+	return o.EdgeT(tag)
 }
 
 // Draw draws grid
