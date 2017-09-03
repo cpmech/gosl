@@ -48,11 +48,7 @@ func (o *FdmSolver) SetBcs(ebcs *EssentialBcs) (err error) {
 
 	// collect known equations
 	o.Ebcs = ebcs
-	var knownEqs []int
-	for _, bc := range o.Ebcs.All {
-		nodes := bc.GetNodesSorted()
-		knownEqs = append(knownEqs, nodes...)
-	}
+	knownEqs := o.Ebcs.GetNodesList()
 
 	// init equations structure
 	o.Eqs, err = la.NewEquations(o.Grid.Size(), knownEqs)
