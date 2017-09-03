@@ -15,7 +15,7 @@ import (
 
 func TestSpc01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("Spc01. Auu without borders (SpcSolver)")
 
 	// problem data
@@ -50,7 +50,7 @@ func TestSpc01(tst *testing.T) {
 	// check
 	eqFull, err := la.NewEquations(spc.Grid.Size(), nil)
 	status(tst, err)
-	spc.Op.Assemble(spc.Interp, eqFull)
+	spc.Op.Assemble(eqFull)
 	K := eqFull.Auu.ToMatrix(nil)
 	Fref := la.NewVector(spc.Eqs.N)
 	la.SpMatVecMul(Fref, 1.0, K, spc.U)

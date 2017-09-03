@@ -8,6 +8,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/la"
 )
 
@@ -16,7 +17,8 @@ import (
 // SpcOperator defines the interface for SPC (spectral collocation) operators such as
 // the Laplacian and so on
 type SpcOperator interface {
-	Assemble(L []*fun.LagrangeInterp, e *la.Equations)
+	InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (*gm.Grid, error)
+	Assemble(e *la.Equations)
 }
 
 // spcOperatorMaker defines a function that makes (allocates) SpcOperators
@@ -42,9 +44,10 @@ func NewSpcOperator(kind string, params dbf.Params) (SpcOperator, error) {
 //                ∂x²        ∂y²        ∂z²
 //
 type SpcLaplacian struct {
-	kx float64 // isotropic coefficient x
-	ky float64 // isotropic coefficient y
-	kz float64 // isotropic coefficient z
+	kx  float64               // isotropic coefficient x
+	ky  float64               // isotropic coefficient y
+	kz  float64               // isotropic coefficient z
+	lip []*fun.LagrangeInterp // Lagrange interpolators [ndim]
 }
 
 // add to database
@@ -69,14 +72,45 @@ func newSpcLaplacian(params dbf.Params) (o *SpcLaplacian, err error) {
 	return
 }
 
+// InitWithGrid initialises operator with new grid
+func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.Grid, err error) {
+
+	// Lagrange interpolators
+	ndim := len(xmin)
+	o.lip = make([]*fun.LagrangeInterp, ndim)
+	for i := 0; i < ndim; i++ {
+
+		// allocate
+		o.lip[i], err = fun.NewLagrangeInterp(ndiv[i], gtype)
+		if err != nil {
+			return
+		}
+
+		// compute D2 matrix
+		err = o.lip[i].CalcD2()
+		if err != nil {
+			return
+		}
+	}
+
+	// new grid
+	g = new(gm.Grid)
+	if ndim == 2 {
+		err = g.Set2d(o.lip[0].X, o.lip[1].X, false)
+	} else {
+		err = g.Set3d(o.lip[0].X, o.lip[1].X, o.lip[2].X, false)
+	}
+	return
+}
+
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
-func (o *SpcLaplacian) Assemble(L []*fun.LagrangeInterp, e *la.Equations) {
-	ndim := len(L)
+func (o *SpcLaplacian) Assemble(e *la.Equations) {
+	ndim := len(o.lip)
 	if ndim != 2 { // TODO
 		return
 	}
-	nx := L[0].N + 1
-	ny := L[1].N + 1
+	nx := o.lip[0].N + 1
+	ny := o.lip[1].N + 1
 	if e.Auu == nil {
 		nnz := (nx*nx)*ny + (ny*ny)*nx
 		e.Alloc([]int{nnz, nnz, nnz, nnz}, true, true) // TODO: optimise nnz
@@ -85,14 +119,14 @@ func (o *SpcLaplacian) Assemble(L []*fun.LagrangeInterp, e *la.Equations) {
 	for k := 0; k < ny; k++ {
 		for i := 0; i < nx; i++ {
 			for j := 0; j < nx; j++ {
-				e.Put(i+k*nx, j+k*nx, L[0].D2.Get(i, j))
+				e.Put(i+k*nx, j+k*nx, o.lip[0].D2.Get(i, j))
 			}
 		}
 	}
 	for k := 0; k < nx; k++ {
 		for i := 0; i < ny; i++ {
 			for j := 0; j < ny; j++ {
-				e.Put(i*nx+k, j*nx+k, L[1].D2.Get(i, j))
+				e.Put(i*nx+k, j*nx+k, o.lip[1].D2.Get(i, j))
 			}
 		}
 	}

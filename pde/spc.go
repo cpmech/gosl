@@ -6,7 +6,6 @@ package pde
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/la"
@@ -14,18 +13,17 @@ import (
 
 // SpcSolver implements solvers based on spectral collocation method
 type SpcSolver struct {
-	Op     SpcOperator           // differential operator
-	Interp []*fun.LagrangeInterp // Lagrange interpolators
-	Eqs    *la.Equations         // equations numbering in linear system
-	Grid   *gm.Grid              // grid structure
-	Ebcs   *EssentialBcs         // essential boundary conditions
-	U      la.Vector             // vector of unknowns
-	F      la.Vector             // right hand-side [if reactions=true]
-	matAuk *la.CCMatrix          // c-c-mat form of Auk matrix
-	matAku *la.CCMatrix          // c-c-mat form of Aku matrix [if reactions=true]
-	matAkk *la.CCMatrix          // c-c-mat form of Akk matrix [if reactions=true]
-	buCopy la.Vector             // copy of Bu vector if reactions == true
-	linsol la.SparseSolver       // linear solver
+	Op     SpcOperator     // differential operator
+	Eqs    *la.Equations   // equations numbering in linear system
+	Grid   *gm.Grid        // grid structure
+	Ebcs   *EssentialBcs   // essential boundary conditions
+	U      la.Vector       // vector of unknowns
+	F      la.Vector       // right hand-side [if reactions=true]
+	matAuk *la.CCMatrix    // c-c-mat form of Auk matrix
+	matAku *la.CCMatrix    // c-c-mat form of Aku matrix [if reactions=true]
+	matAkk *la.CCMatrix    // c-c-mat form of Akk matrix [if reactions=true]
+	buCopy la.Vector       // copy of Bu vector if reactions == true
+	linsol la.SparseSolver // linear solver
 }
 
 // NewSpcSolver returns a new FDM solver
@@ -53,36 +51,8 @@ func NewSpcSolver(operator, gtype string, params dbf.Params, xmin []float64, xma
 		return
 	}
 
-	// Lagrange interpolators
-	o.Interp = make([]*fun.LagrangeInterp, ndim)
-	for i := 0; i < ndim; i++ {
-
-		// allocate
-		o.Interp[i], err = fun.NewLagrangeInterp(ndiv[i], gtype)
-		if err != nil {
-			return
-		}
-
-		// compute D1 matrix
-		err = o.Interp[i].CalcD1()
-		if err != nil {
-			return
-		}
-
-		// compute D2 matrix
-		err = o.Interp[i].CalcD2()
-		if err != nil {
-			return
-		}
-	}
-
 	// grid
-	o.Grid = new(gm.Grid)
-	if ndim == 2 {
-		err = o.Grid.Set2d(o.Interp[0].X, o.Interp[1].X, false)
-	} else {
-		err = o.Grid.Set3d(o.Interp[0].X, o.Interp[1].X, o.Interp[2].X, false)
-	}
+	o.Grid, err = o.Op.InitWithGrid(gtype, xmin, xmax, ndiv)
 	if err != nil {
 		return
 	}
@@ -107,7 +77,7 @@ func (o *SpcSolver) SetBcs(ebcs *EssentialBcs) (err error) {
 	o.U = la.NewVector(o.Eqs.N)
 
 	// assemble matrices
-	o.Op.Assemble(o.Interp, o.Eqs)
+	o.Op.Assemble(o.Eqs)
 	o.matAuk = o.Eqs.Auk.ToMatrix(nil)
 
 	// init linear solver
