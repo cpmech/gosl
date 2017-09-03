@@ -19,9 +19,9 @@ type FdmSolver struct {
 	Ebcs   *EssentialBcs   // essential boundary conditions
 	U      la.Vector       // vector of unknowns
 	F      la.Vector       // right hand-side [if reactions=true]
-	matAuk *la.CCMatrix    // dense form of Auk matrix
-	matAku *la.CCMatrix    // dense form of Aku matrix [if reactions=true]
-	matAkk *la.CCMatrix    // dense form of Akk matrix [if reactions=true]
+	matAuk *la.CCMatrix    // c-c-mat form of Auk matrix
+	matAku *la.CCMatrix    // c-c-mat form of Aku matrix [if reactions=true]
+	matAkk *la.CCMatrix    // c-c-mat form of Akk matrix [if reactions=true]
 	buCopy la.Vector       // copy of Bu vector if reactions == true
 	linsol la.SparseSolver // linear solver
 }
@@ -33,11 +33,24 @@ type FdmSolver struct {
 //  xmax     -- Grid: [ndim] max/final coordinates of the whole space (box/cube)
 //  ndiv     -- Grid: [ndim] number of divisions for xmax-xmin
 func NewFdmSolver(operator string, params dbf.Params, xmin []float64, xmax []float64, ndiv []int) (o *FdmSolver, err error) {
+
+	// check lengths
+	ndim := len(xmin)
+	if len(xmax) != ndim {
+		return nil, chk.Err("len(xmax) must be equal to len(xmin) == ndim. %d != %d\n", len(xmax), ndim)
+	}
+	if len(ndiv) != ndim {
+		return nil, chk.Err("len(ndiv) must be equal to len(xmin) == ndim. %d != %d\n", len(ndiv), ndim)
+	}
+
+	// new solver and operator
 	o = new(FdmSolver)
 	o.Op, err = NewFdmOperator(operator, params)
 	if err != nil {
 		return
 	}
+
+	// grid
 	o.Grid = new(gm.Grid)
 	err = o.Grid.GenUniform(xmin, xmax, ndiv, false)
 	return

@@ -100,6 +100,9 @@ func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []i
 	} else {
 		err = g.Set3d(o.lip[0].X, o.lip[1].X, o.lip[2].X, false)
 	}
+
+	// TODO:
+	//  map [-1,+1] to xmin and xmax
 	return
 }
 

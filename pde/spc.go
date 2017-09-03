@@ -56,9 +56,6 @@ func NewSpcSolver(operator, gtype string, params dbf.Params, xmin []float64, xma
 	if err != nil {
 		return
 	}
-
-	// TODO:
-	//  map [-1,+1] to xmin and xmax
 	return
 }
 
