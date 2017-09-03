@@ -143,21 +143,21 @@ func TestFdmLaplace03(tst *testing.T) {
 
 	// set bcs
 	fdm.SetBcs(ebcs)
-	chk.Ints(tst, "UtoF", fdm.Equations.UtoF, []int{5, 6, 9, 10})
-	chk.Ints(tst, "KtoF", fdm.Equations.KtoF, []int{0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15})
+	chk.Ints(tst, "UtoF", fdm.Eqs.UtoF, []int{5, 6, 9, 10})
+	chk.Ints(tst, "KtoF", fdm.Eqs.KtoF, []int{0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15})
 
 	// solve problem
 	err = fdm.Solve(true)
 	status(tst, err)
-	chk.Array(tst, "Xk", 1e-17, fdm.Equations.Xk, []float64{1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2})
+	chk.Array(tst, "Xk", 1e-17, fdm.Eqs.Xk, []float64{1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2})
 	chk.Array(tst, "U", 1e-15, fdm.U, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
 
 	// check
 	eqFull, err := la.NewEquations(fdm.Grid.Size(), nil)
 	status(tst, err)
-	fdm.Operator.Assemble(fdm.Grid, eqFull)
+	fdm.Op.Assemble(fdm.Grid, eqFull)
 	K := eqFull.Auu.ToMatrix(nil)
-	Fref := la.NewVector(fdm.Equations.N)
+	Fref := la.NewVector(fdm.Eqs.N)
 	la.SpMatVecMul(Fref, 1.0, K, fdm.U)
 	chk.Array(tst, "F", 1e-15, fdm.F, Fref)
 }
