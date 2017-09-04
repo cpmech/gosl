@@ -32,10 +32,11 @@ type Solver struct {
 //  gtype    -- grid type: "uni", "cgl" (Chebyshev-Gauss-Lobato)
 //  operator -- differential operator; e.g. "laplacian"
 //  params   -- parameters for operator; e.g. "kx" and "ky"
+//  source   -- source term function
 //  xmin     -- Grid: [ndim] min/initial coordinates of the whole space (box/cube)
 //  xmax     -- Grid: [ndim] max/final coordinates of the whole space (box/cube)
 //  ndiv     -- Grid: [ndim] number of divisions for xmax-xmin
-func NewGridSolver(method, gtype, operator string, params dbf.Params, xmin, xmax []float64, ndiv []int) (o *Solver, err error) {
+func NewGridSolver(method, gtype, operator string, params dbf.Params, source dbf.T, xmin, xmax []float64, ndiv []int) (o *Solver, err error) {
 
 	// check lengths
 	ndim := len(xmin)
@@ -48,7 +49,7 @@ func NewGridSolver(method, gtype, operator string, params dbf.Params, xmin, xmax
 
 	// new solver and operator
 	o = new(Solver)
-	o.Op, err = NewOperator(method+"."+operator, params)
+	o.Op, err = NewOperator(method+"."+operator, params, source)
 	if err != nil {
 		return
 	}

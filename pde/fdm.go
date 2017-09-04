@@ -21,18 +21,19 @@ type FdmLaplacian struct {
 	kx float64  // isotropic coefficient x
 	ky float64  // isotropic coefficient y
 	kz float64  // isotropic coefficient z
+	s  dbf.T    // source term function
 	g  *gm.Grid // grid
 }
 
 // add to database
 func init() {
-	operatorDB["fdm.laplacian"] = func(params dbf.Params) (Operator, error) {
-		return newFdmLaplacian(params)
+	operatorDB["fdm.laplacian"] = func(params dbf.Params, source dbf.T) (Operator, error) {
+		return newFdmLaplacian(params, source)
 	}
 }
 
 // newFdmLaplacian creates a new Laplacian operator with given parameters
-func newFdmLaplacian(params dbf.Params) (o *FdmLaplacian, err error) {
+func newFdmLaplacian(params dbf.Params, source dbf.T) (o *FdmLaplacian, err error) {
 	o = new(FdmLaplacian)
 	e := params.ConnectSetOpt(
 		[]*float64{&o.kx, &o.ky, &o.kz},
@@ -43,6 +44,7 @@ func newFdmLaplacian(params dbf.Params) (o *FdmLaplacian, err error) {
 	if e != "" {
 		err = chk.Err(e)
 	}
+	o.s = source
 	return
 }
 

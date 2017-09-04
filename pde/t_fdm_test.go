@@ -20,7 +20,7 @@ func TestFdm01(tst *testing.T) {
 	chk.PrintTitle("Fdm01. Full Auu matrix.")
 
 	// operator
-	op, err := NewOperator("fdm.laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
+	op, err := NewOperator("fdm.laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}, nil)
 	status(tst, err)
 
 	// init operator with grid: 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
@@ -67,7 +67,7 @@ func TestFdm02(tst *testing.T) {
 	ndiv := []int{3, 3} // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 
 	// fdm solver
-	fdm, err := NewGridSolver("fdm", "uni", "laplacian", params, xmin, xmax, ndiv)
+	fdm, err := NewGridSolver("fdm", "uni", "laplacian", params, nil, xmin, xmax, ndiv)
 	status(tst, err)
 
 	// essential boundary conditions

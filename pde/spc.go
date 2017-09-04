@@ -22,18 +22,19 @@ type SpcLaplacian struct {
 	kx  float64               // isotropic coefficient x
 	ky  float64               // isotropic coefficient y
 	kz  float64               // isotropic coefficient z
+	s   dbf.T                 // source term function
 	lip []*fun.LagrangeInterp // Lagrange interpolators [ndim]
 }
 
 // add to database
 func init() {
-	operatorDB["spc.laplacian"] = func(params dbf.Params) (Operator, error) {
-		return newSpcLaplacian(params)
+	operatorDB["spc.laplacian"] = func(params dbf.Params, source dbf.T) (Operator, error) {
+		return newSpcLaplacian(params, source)
 	}
 }
 
 // newSpcLaplacian creates a new Laplacian operator with given parameters
-func newSpcLaplacian(params dbf.Params) (o *SpcLaplacian, err error) {
+func newSpcLaplacian(params dbf.Params, source dbf.T) (o *SpcLaplacian, err error) {
 	o = new(SpcLaplacian)
 	e := params.ConnectSetOpt(
 		[]*float64{&o.kx, &o.ky, &o.kz},
@@ -44,6 +45,7 @@ func newSpcLaplacian(params dbf.Params) (o *SpcLaplacian, err error) {
 	if e != "" {
 		err = chk.Err(e)
 	}
+	o.s = source
 	return
 }
 

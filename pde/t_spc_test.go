@@ -26,7 +26,7 @@ func TestSpc01(tst *testing.T) {
 	ndiv := []int{4, 4} // 4x4 divs ⇒ 5x5 grid ⇒ 25 equations
 
 	// spectral-collocation solver
-	spc, err := NewGridSolver("spc", "cgl", "laplacian", params, xmin, xmax, ndiv)
+	spc, err := NewGridSolver("spc", "cgl", "laplacian", params, nil, xmin, xmax, ndiv)
 	status(tst, err)
 
 	// essential boundary conditions
@@ -75,7 +75,7 @@ func TestSpc02(tst *testing.T) {
 	ndiv := []int{3, 3} // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 
 	// spectral-collocation solver
-	spc, err := NewGridSolver("spc", "uni", "laplacian", params, xmin, xmax, ndiv)
+	spc, err := NewGridSolver("spc", "uni", "laplacian", params, nil, xmin, xmax, ndiv)
 	status(tst, err)
 
 	// essential boundary conditions

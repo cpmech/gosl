@@ -19,15 +19,15 @@ type Operator interface {
 }
 
 // operatorMaker defines a function that makes (allocates) Operators
-type operatorMaker func(params dbf.Params) (Operator, error)
+type operatorMaker func(params dbf.Params, source dbf.T) (Operator, error)
 
 // operatorDB implemetns a database of Operators
 var operatorDB = make(map[string]operatorMaker)
 
 // NewOperator finds a Operator in database or panic
-func NewOperator(kind string, params dbf.Params) (Operator, error) {
+func NewOperator(kind string, params dbf.Params, source dbf.T) (Operator, error) {
 	if maker, ok := operatorDB[kind]; ok {
-		return maker(params)
+		return maker(params, source)
 	}
 	return nil, chk.Err("cannot find Operator named %q in database", kind)
 }
