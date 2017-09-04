@@ -122,14 +122,14 @@ func (o *SpcLaplacian) Assemble(e *la.Equations) {
 	for k := 0; k < ny; k++ {
 		for i := 0; i < nx; i++ {
 			for j := 0; j < nx; j++ {
-				e.Put(i+k*nx, j+k*nx, o.lip[0].D2.Get(i, j))
+				e.Put(i+k*nx, j+k*nx, -o.kx*o.lip[0].D2.Get(i, j))
 			}
 		}
 	}
 	for k := 0; k < nx; k++ {
 		for i := 0; i < ny; i++ {
 			for j := 0; j < ny; j++ {
-				e.Put(i*nx+k, j*nx+k, o.lip[1].D2.Get(i, j))
+				e.Put(i*nx+k, j*nx+k, -o.ky*o.lip[1].D2.Get(i, j))
 			}
 		}
 	}
