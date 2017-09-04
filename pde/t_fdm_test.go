@@ -13,10 +13,10 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-func TestFdmLaplace01(tst *testing.T) {
+func TestFdm01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("FdmLaplace01. Full Auu matrix.")
+	chk.PrintTitle("Fdm01. Full Auu matrix.")
 
 	// operator
 	op, err := NewFdmOperator("laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
@@ -49,10 +49,10 @@ func TestFdmLaplace01(tst *testing.T) {
 	})
 }
 
-func TestFdmLaplace02(tst *testing.T) {
+func TestFdm02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("FdmLaplace02. simple Dirichlet problem")
+	chk.PrintTitle("Fdm02. simple Dirichlet problem (Laplace)")
 
 	// solve problem
 	//    ∂²u     ∂²u
