@@ -104,6 +104,6 @@ func (o *FdmLaplacian) Assemble(e *la.Equations) (err error) {
 }
 
 // SourceTerm assembles the source term vector
-func (o *FdmLaplacian) SourceTerm(e *la.Equations) (err error) {
+func (o *FdmLaplacian) SourceTerm(e *la.Equations, reactions bool) (err error) {
 	return
 }

@@ -102,12 +102,16 @@ func (o *Solver) Solve(reactions bool) (err error) {
 
 	// auxiliary
 	bu := o.Eqs.Bu
+	bk := o.Eqs.Bk
 	xu := o.Eqs.Xu
 	xk := o.Eqs.Xk
 
 	// set RHS vector
 	bu.Fill(0)
-	err = o.Op.SourceTerm(o.Eqs)
+	if reactions {
+		bk.Fill(0)
+	}
+	err = o.Op.SourceTerm(o.Eqs, reactions)
 	if err != nil {
 		return
 	}
@@ -144,8 +148,6 @@ func (o *Solver) Solve(reactions bool) (err error) {
 	// collect results
 	o.Eqs.JoinVector(o.U, xu, xk)
 	if reactions {
-		xu := o.Eqs.Xu
-		bk := o.Eqs.Bk
 		la.SpMatVecMul(bk, 1.0, o.matAku, xu)
 		la.SpMatVecMulAdd(bk, 1.0, o.matAkk, xk)
 		o.Eqs.JoinVector(o.F, o.buCopy, bk)

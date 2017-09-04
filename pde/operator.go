@@ -16,7 +16,7 @@ import (
 type Operator interface {
 	InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (*gm.Grid, error)
 	Assemble(e *la.Equations) error
-	SourceTerm(e *la.Equations) error
+	SourceTerm(e *la.Equations, reactions bool) error
 }
 
 // operatorMaker defines a function that makes (allocates) Operators

@@ -116,7 +116,7 @@ func (o *SpcLaplacian) Assemble(e *la.Equations) (err error) {
 }
 
 // SourceTerm assembles the source term vector
-func (o *SpcLaplacian) SourceTerm(e *la.Equations) (err error) {
+func (o *SpcLaplacian) SourceTerm(e *la.Equations, reactions bool) (err error) {
 	if o.s == nil {
 		return
 	}
@@ -126,6 +126,15 @@ func (o *SpcLaplacian) SourceTerm(e *la.Equations) (err error) {
 		e.Bu[i], err = o.s(x, 0)
 		if err != nil {
 			return
+		}
+	}
+	if reactions {
+		for i, I := range e.KtoF {
+			o.g.Node(x, I)
+			e.Bk[i], err = o.s(x, 0)
+			if err != nil {
+				return
+			}
 		}
 	}
 	return
