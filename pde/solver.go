@@ -14,7 +14,7 @@ import (
 
 // Solver solvers a PDE by calling specific operators
 type Solver struct {
-	Op     SpcOperator     // differential operator
+	Op     Operator        // differential operator
 	Eqs    *la.Equations   // equations numbering in linear system
 	Grid   *gm.Grid        // grid structure
 	Ebcs   *EssentialBcs   // essential boundary conditions
@@ -48,14 +48,7 @@ func NewGridSolver(method, gtype, operator string, params dbf.Params, xmin, xmax
 
 	// new solver and operator
 	o = new(Solver)
-	switch method {
-	case "fdm":
-		o.Op, err = NewFdmOperator(operator, params)
-	case "spc":
-		o.Op, err = NewSpcOperator(operator, params)
-	default:
-		return nil, chk.Err("method %q is not available\n", method)
-	}
+	o.Op, err = NewOperator(method+"."+operator, params)
 	if err != nil {
 		return
 	}

@@ -11,31 +11,6 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// database ////////////////////////////////////////////////////////////////////////////////////////
-
-// FdmOperator defines the interface for FDM (finite-difference method) operators such as
-// the Laplacian and so on
-type FdmOperator interface {
-	InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (*gm.Grid, error)
-	Assemble(e *la.Equations)
-}
-
-// fdmOperatorMaker defines a function that makes (allocates) FdmOperators
-type fdmOperatorMaker func(params dbf.Params) (FdmOperator, error)
-
-// fdmOperatorDB implemetns a database of FdmOperators
-var fdmOperatorDB = make(map[string]fdmOperatorMaker)
-
-// NewFdmOperator finds a FdmOperator in database or panic
-func NewFdmOperator(kind string, params dbf.Params) (FdmOperator, error) {
-	if maker, ok := fdmOperatorDB[kind]; ok {
-		return maker(params)
-	}
-	return nil, chk.Err("cannot find FdmOperator named %q in database", kind)
-}
-
-// implementation: Laplacian ///////////////////////////////////////////////////////////////////////
-
 // FdmLaplacian implements the (negative) FDM Laplacian operator (2D or 3D)
 //
 //                ∂²u        ∂²u        ∂²u
@@ -51,7 +26,7 @@ type FdmLaplacian struct {
 
 // add to database
 func init() {
-	fdmOperatorDB["laplacian"] = func(params dbf.Params) (FdmOperator, error) {
+	operatorDB["fdm.laplacian"] = func(params dbf.Params) (Operator, error) {
 		return newFdmLaplacian(params)
 	}
 }

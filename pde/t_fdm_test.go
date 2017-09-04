@@ -20,7 +20,7 @@ func TestFdm01(tst *testing.T) {
 	chk.PrintTitle("Fdm01. Full Auu matrix.")
 
 	// operator
-	op, err := NewFdmOperator("laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
+	op, err := NewOperator("fdm.laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}})
 	status(tst, err)
 
 	// init operator with grid: 2x2 divs ⇒ 3x3 grid ⇒ 9 equations

@@ -12,31 +12,6 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// database ////////////////////////////////////////////////////////////////////////////////////////
-
-// SpcOperator defines the interface for SPC (spectral collocation) operators such as
-// the Laplacian and so on
-type SpcOperator interface {
-	InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (*gm.Grid, error)
-	Assemble(e *la.Equations)
-}
-
-// spcOperatorMaker defines a function that makes (allocates) SpcOperators
-type spcOperatorMaker func(params dbf.Params) (SpcOperator, error)
-
-// spcOperatorDB implemetns a database of SpcOperators
-var spcOperatorDB = make(map[string]spcOperatorMaker)
-
-// NewSpcOperator finds a SpcOperator in database or panic
-func NewSpcOperator(kind string, params dbf.Params) (SpcOperator, error) {
-	if maker, ok := spcOperatorDB[kind]; ok {
-		return maker(params)
-	}
-	return nil, chk.Err("cannot find SpcOperator named %q in database", kind)
-}
-
-// implementation: Laplacian ///////////////////////////////////////////////////////////////////////
-
 // SpcLaplacian implements the (negative) FDM Laplacian operator (2D or 3D)
 //
 //                ∂²u        ∂²u        ∂²u
@@ -52,7 +27,7 @@ type SpcLaplacian struct {
 
 // add to database
 func init() {
-	spcOperatorDB["laplacian"] = func(params dbf.Params) (SpcOperator, error) {
+	operatorDB["spc.laplacian"] = func(params dbf.Params) (Operator, error) {
 		return newSpcLaplacian(params)
 	}
 }
