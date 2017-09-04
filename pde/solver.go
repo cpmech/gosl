@@ -9,6 +9,7 @@ import (
 	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Solver solvers a PDE by calling specific operators
@@ -149,6 +150,22 @@ func (o *Solver) Solve(reactions bool) (err error) {
 		la.SpMatVecMul(bk, 1.0, o.matAku, xu)
 		la.SpMatVecMulAdd(bk, 1.0, o.matAkk, xk)
 		o.Eqs.JoinVector(o.F, o.buCopy, bk)
+	}
+	return
+}
+
+// Ugrid2d returns the U results converted to grid-shape
+//   U -- [ny][nx] results at grid nodes
+func (o *Solver) Ugrid2d() (uu [][]float64) {
+	nx, ny := o.Grid.Npts(0), o.Grid.Npts(1)
+	uu = utl.Alloc(ny, nx)
+	for _, I := range o.Eqs.UtoF {
+		m, n := I%nx, I/nx
+		uu[n][m] = o.U[I]
+	}
+	for _, I := range o.Eqs.KtoF {
+		m, n := I%nx, I/nx
+		uu[n][m] = o.U[I]
 	}
 	return
 }

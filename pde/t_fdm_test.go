@@ -11,6 +11,7 @@ import (
 	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/plt"
 )
 
 func TestFdm01(tst *testing.T) {
@@ -106,4 +107,25 @@ func TestFdm02(tst *testing.T) {
 	Fref := la.NewVector(fdm.Eqs.N)
 	la.SpMatVecMul(Fref, 1.0, K, fdm.U)
 	chk.Array(tst, "F", 1e-15, fdm.F, Fref)
+
+	// get results over grid
+	uu := fdm.Ugrid2d()
+	chk.Deep2(tst, "uu", 1e-15, uu, [][]float64{
+		{1.00, 1.00, 1.00, 1.00},
+		{1.00, 1.25, 1.50, 2.00},
+		{1.00, 1.50, 1.75, 2.00},
+		{2.00, 2.00, 2.00, 2.00},
+	})
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		fdm.Grid.Draw(true, nil, &plt.A{C: plt.C(1, 0), Fsz: 7})
+		xx, yy := fdm.Grid.Mesh2d()
+		plt.ContourL(xx, yy, uu, nil)
+		plt.Gll("$x$", "$y$", nil)
+		plt.HideAllBorders()
+		err = plt.Save("/tmp/gosl/pde", "fdm02")
+		status(tst, err)
+	}
 }

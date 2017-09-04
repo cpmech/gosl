@@ -116,13 +116,24 @@ func TestSpc02(tst *testing.T) {
 	la.SpMatVecMul(Fref, 1.0, K, spc.U)
 	chk.Array(tst, "F", 1e-14, spc.F, Fref)
 
+	// get results over grid
+	uu := spc.Ugrid2d()
+	chk.Deep2(tst, "uu", 1e-15, uu, [][]float64{
+		{1.00, 1.00, 1.00, 1.00},
+		{1.00, 1.25, 1.50, 2.00},
+		{1.00, 1.50, 1.75, 2.00},
+		{2.00, 2.00, 2.00, 2.00},
+	})
+
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		spc.Grid.Draw(true, nil, nil)
+		spc.Grid.Draw(true, nil, &plt.A{C: plt.C(1, 0), Fsz: 7})
+		xx, yy := spc.Grid.Mesh2d()
+		plt.ContourL(xx, yy, uu, nil)
 		plt.Gll("$x$", "$y$", nil)
 		plt.HideAllBorders()
-		err = plt.Save("/tmp/gosl/pde", "spc01")
+		err = plt.Save("/tmp/gosl/pde", "spc02")
 		status(tst, err)
 	}
 }
