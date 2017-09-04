@@ -45,3 +45,6 @@ type Tv func(f *la.Triplet, v la.Vector) error
 // Tt defines a triplet (matrix) function f(t) of a triplet (matrix) argument t. Also returns error
 //   Triplet triplet
 type Tt func(f, t *la.Triplet) error
+
+// Svs defines a scalar function f(v,s) of a vector and a scalar
+type Svs func(v la.Vector, s float64) (float64, error)
