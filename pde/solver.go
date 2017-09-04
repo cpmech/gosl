@@ -6,6 +6,7 @@ package pde
 
 import (
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/la"
@@ -36,7 +37,7 @@ type Solver struct {
 //  xmin     -- Grid: [ndim] min/initial coordinates of the whole space (box/cube)
 //  xmax     -- Grid: [ndim] max/final coordinates of the whole space (box/cube)
 //  ndiv     -- Grid: [ndim] number of divisions for xmax-xmin
-func NewGridSolver(method, gtype, operator string, params dbf.Params, source dbf.T, xmin, xmax []float64, ndiv []int) (o *Solver, err error) {
+func NewGridSolver(method, gtype, operator string, params dbf.Params, source fun.Svs, xmin, xmax []float64, ndiv []int) (o *Solver, err error) {
 
 	// check lengths
 	ndim := len(xmin)

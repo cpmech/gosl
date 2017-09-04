@@ -6,6 +6,7 @@ package pde
 
 import (
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/la"
@@ -21,19 +22,19 @@ type FdmLaplacian struct {
 	kx float64  // isotropic coefficient x
 	ky float64  // isotropic coefficient y
 	kz float64  // isotropic coefficient z
-	s  dbf.T    // source term function
+	s  fun.Svs  // source term function s({x},t)
 	g  *gm.Grid // grid
 }
 
 // add to database
 func init() {
-	operatorDB["fdm.laplacian"] = func(params dbf.Params, source dbf.T) (Operator, error) {
+	operatorDB["fdm.laplacian"] = func(params dbf.Params, source fun.Svs) (Operator, error) {
 		return newFdmLaplacian(params, source)
 	}
 }
 
 // newFdmLaplacian creates a new Laplacian operator with given parameters
-func newFdmLaplacian(params dbf.Params, source dbf.T) (o *FdmLaplacian, err error) {
+func newFdmLaplacian(params dbf.Params, source fun.Svs) (o *FdmLaplacian, err error) {
 	o = new(FdmLaplacian)
 	e := params.ConnectSetOpt(
 		[]*float64{&o.kx, &o.ky, &o.kz},

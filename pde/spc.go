@@ -22,19 +22,20 @@ type SpcLaplacian struct {
 	kx  float64               // isotropic coefficient x
 	ky  float64               // isotropic coefficient y
 	kz  float64               // isotropic coefficient z
-	s   dbf.T                 // source term function
+	s   fun.Svs               // source term function s({x},t)
+	g   *gm.Grid              // grid
 	lip []*fun.LagrangeInterp // Lagrange interpolators [ndim]
 }
 
 // add to database
 func init() {
-	operatorDB["spc.laplacian"] = func(params dbf.Params, source dbf.T) (Operator, error) {
+	operatorDB["spc.laplacian"] = func(params dbf.Params, source fun.Svs) (Operator, error) {
 		return newSpcLaplacian(params, source)
 	}
 }
 
 // newSpcLaplacian creates a new Laplacian operator with given parameters
-func newSpcLaplacian(params dbf.Params, source dbf.T) (o *SpcLaplacian, err error) {
+func newSpcLaplacian(params dbf.Params, source fun.Svs) (o *SpcLaplacian, err error) {
 	o = new(SpcLaplacian)
 	e := params.ConnectSetOpt(
 		[]*float64{&o.kx, &o.ky, &o.kz},
@@ -77,6 +78,7 @@ func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []i
 	} else {
 		err = g.Set3d(o.lip[0].X, o.lip[1].X, o.lip[2].X, false)
 	}
+	o.g = g
 
 	// TODO:
 	//  map [-1,+1] to xmin and xmax
@@ -115,5 +117,16 @@ func (o *SpcLaplacian) Assemble(e *la.Equations) (err error) {
 
 // SourceTerm assembles the source term vector
 func (o *SpcLaplacian) SourceTerm(e *la.Equations) (err error) {
+	if o.s == nil {
+		return
+	}
+	x := la.NewVector(o.g.Ndim())
+	for i, I := range e.UtoF {
+		o.g.Node(x, I)
+		e.Bu[i], err = o.s(x, 0)
+		if err != nil {
+			return
+		}
+	}
 	return
 }

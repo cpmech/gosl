@@ -6,6 +6,7 @@ package pde
 
 import (
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/la"
@@ -19,13 +20,13 @@ type Operator interface {
 }
 
 // operatorMaker defines a function that makes (allocates) Operators
-type operatorMaker func(params dbf.Params, source dbf.T) (Operator, error)
+type operatorMaker func(params dbf.Params, source fun.Svs) (Operator, error)
 
 // operatorDB implemetns a database of Operators
 var operatorDB = make(map[string]operatorMaker)
 
 // NewOperator finds a Operator in database or panic
-func NewOperator(kind string, params dbf.Params, source dbf.T) (Operator, error) {
+func NewOperator(kind string, params dbf.Params, source fun.Svs) (Operator, error) {
 	if maker, ok := operatorDB[kind]; ok {
 		return maker(params, source)
 	}

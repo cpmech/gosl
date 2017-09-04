@@ -5,6 +5,7 @@
 package pde
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -136,4 +137,59 @@ func TestSpc02(tst *testing.T) {
 		err = plt.Save("/tmp/gosl/pde", "spc02")
 		status(tst, err)
 	}
+}
+
+func TestSpc03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Spc03. Trefethen's p16")
+
+	// solve problem
+	//    ∂²u     ∂²u
+	//    ———  +  ——— = 10 sin(8x⋅(y-1))    with   homogeneous BCs
+	//    ∂x²     ∂y²
+
+	// problem data
+	params := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	xmin := []float64{-1, -1}
+	xmax := []float64{+1, +1}
+	ndiv := []int{4, 4} // 4x4 divs ⇒ 5x5 grid ⇒ 25 equations
+	source := func(x la.Vector, t float64) (float64, error) {
+		return -10 * math.Sin(8*x[0]*(x[1]-1)), nil // -1 here because Lapacian is negative
+	}
+
+	// spectral-collocation solver
+	spc, err := NewGridSolver("spc", "cgl", "laplacian", params, source, xmin, xmax, ndiv)
+	status(tst, err)
+
+	// essential boundary conditions
+	ebcs := NewEssentialBcs()
+	L, R, B, T := 10, 11, 20, 21 // left, right, bottom, top
+	ebcs.SetInGrid(spc.Grid, L, "u", 0.0, nil)
+	ebcs.SetInGrid(spc.Grid, R, "u", 0.0, nil)
+	ebcs.SetInGrid(spc.Grid, B, "u", 0.0, nil)
+	ebcs.SetInGrid(spc.Grid, T, "u", 0.0, nil)
+
+	// set bcs
+	spc.SetBcs(ebcs)
+
+	// solve problem
+	err = spc.Solve(true)
+	status(tst, err)
+
+	// output
+	uu := spc.Ugrid2d()
+	xx, yy := spc.Grid.Mesh2d()
+	io.Pf("xx =\n%v\n", la.NewMatrixDeep2(xx).Print("%17.13f"))
+	io.Pf("yy=\n%v\n", la.NewMatrixDeep2(yy).Print("%17.13f"))
+	io.Pf("uu=\n%v\n", la.NewMatrixDeep2(uu).Print("%17.13f"))
+
+	// check
+	chk.Deep2(tst, "uu", 1e-14, uu, [][]float64{
+		{0, +0.000000000000000, +0, +0.000000000000000, 0},
+		{0, +0.181363633964132, +0, -0.181363633964131, 0},
+		{0, +0.292713394079481, +0, -0.292713394079479, 0},
+		{0, -0.329593843114906, +0, +0.329593843114906, 0},
+		{0, +0.000000000000000, +0, +0.000000000000000, 0},
+	})
 }
