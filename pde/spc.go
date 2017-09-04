@@ -82,7 +82,7 @@ func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []i
 }
 
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
-func (o *SpcLaplacian) Assemble(e *la.Equations) {
+func (o *SpcLaplacian) Assemble(e *la.Equations) (err error) {
 	ndim := len(o.lip)
 	if ndim != 2 { // TODO
 		return
@@ -108,4 +108,10 @@ func (o *SpcLaplacian) Assemble(e *la.Equations) {
 			}
 		}
 	}
+	return
+}
+
+// SourceTerm assembles the source term vector
+func (o *SpcLaplacian) SourceTerm(e *la.Equations) (err error) {
+	return
 }

@@ -55,7 +55,7 @@ func (o *FdmLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []i
 }
 
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
-func (o *FdmLaplacian) Assemble(e *la.Equations) {
+func (o *FdmLaplacian) Assemble(e *la.Equations) (err error) {
 	if e.Auu == nil {
 		e.Alloc([]int{5 * e.Nu, 5 * e.Nu, 5 * e.Nk, 5 * e.Nk}, true, true)
 	}
@@ -96,6 +96,11 @@ func (o *FdmLaplacian) Assemble(e *la.Equations) {
 				e.Put(I, J, mol[k])
 			}
 		}
-		return
 	}
+	return
+}
+
+// SourceTerm assembles the source term vector
+func (o *FdmLaplacian) SourceTerm(e *la.Equations) (err error) {
+	return
 }

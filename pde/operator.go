@@ -14,7 +14,8 @@ import (
 // Operator defines the interface for differential operators such as the Laplacian and so on
 type Operator interface {
 	InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (*gm.Grid, error)
-	Assemble(e *la.Equations)
+	Assemble(e *la.Equations) error
+	SourceTerm(e *la.Equations) error
 }
 
 // operatorMaker defines a function that makes (allocates) Operators

@@ -105,6 +105,10 @@ func (o *Solver) Solve(reactions bool) (err error) {
 
 	// set RHS vector
 	bu.Fill(0)
+	err = o.Op.SourceTerm(o.Eqs)
+	if err != nil {
+		return
+	}
 
 	// set known part of RHS reactions vector
 	if reactions {
