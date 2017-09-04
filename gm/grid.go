@@ -7,6 +7,7 @@ package gm
 import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -144,6 +145,33 @@ func (o *Grid) Mesh2d() (X, Y [][]float64) {
 // Mesh3d returns 3D "meshgrid"
 func (o *Grid) Mesh3d() (X, Y, Z [][][]float64) {
 	return o.x3d, o.y3d, o.z3d
+}
+
+// Node returns in 'x' the coordinates of a node 'n'
+func (o *Grid) Node(x la.Vector, n int) {
+	nx := o.npts[0]
+	if o.ndim == 2 {
+		i := n % nx
+		j := n / nx
+		x[0] = o.coords[0][i]
+		x[1] = o.coords[1][j]
+		return
+	}
+	ny := o.npts[1]
+	k := n / (nx * ny)
+	m := n % (nx * ny)
+	i := m % nx
+	j := m / nx
+	x[0] = o.coords[0][i]
+	x[1] = o.coords[1][j]
+	x[2] = o.coords[2][k]
+}
+
+// GetNode returns coordinates of node 'n'
+func (o *Grid) GetNode(n int) (x la.Vector) {
+	x = la.NewVector(o.ndim)
+	o.Node(x, n)
+	return
 }
 
 // Edge returns the ids of points on edges: [edge0, edge1, edge2, edge3]

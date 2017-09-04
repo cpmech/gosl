@@ -60,6 +60,12 @@ func TestGrid01(tst *testing.T) {
 		{+3, +3, +3, +3, +3},
 	})
 
+	chk.Array(tst, "x[0]", 1e-17, g.GetNode(0), []float64{-6, -3})
+	chk.Array(tst, "x[7]", 1e-17, g.GetNode(7), []float64{0, -1})
+	chk.Array(tst, "x[9]", 1e-17, g.GetNode(9), []float64{6, -1})
+	chk.Array(tst, "x[15]", 1e-17, g.GetNode(15), []float64{-6, 3})
+	chk.Array(tst, "x[19]", 1e-17, g.GetNode(19), []float64{6, 3})
+
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 500})
@@ -210,6 +216,16 @@ func TestGrid03(tst *testing.T) {
 	chk.Array(tst, "Min", 1e-17, min, []float64{1, 0, -1})
 	chk.Array(tst, "Max", 1e-17, max, []float64{8, 4, -0.5})
 	chk.Array(tst, "Del", 1e-17, del, []float64{7, 4, 0.5})
+
+	chk.Array(tst, "x[0]", 1e-17, g.GetNode(0), []float64{1, 0, -1})
+	chk.Array(tst, "x[1]", 1e-17, g.GetNode(1), []float64{2, 0, -1})
+	chk.Array(tst, "x[6]", 1e-17, g.GetNode(6), []float64{4, 3, -1})
+	chk.Array(tst, "x[8]", 1e-17, g.GetNode(8), []float64{1, 4, -1})
+	chk.Array(tst, "x[11]", 1e-17, g.GetNode(11), []float64{8, 4, -1})
+	chk.Array(tst, "x[12]", 1e-17, g.GetNode(12), []float64{1, 0, -0.5})
+	chk.Array(tst, "x[17]", 1e-17, g.GetNode(17), []float64{2, 3, -0.5})
+	chk.Array(tst, "x[19]", 1e-17, g.GetNode(19), []float64{8, 3, -0.5})
+	chk.Array(tst, "x[22]", 1e-17, g.GetNode(22), []float64{4, 4, -0.5})
 
 	// plot
 	if chk.Verbose {
