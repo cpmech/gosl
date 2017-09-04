@@ -139,11 +139,17 @@ func (o *Grid) Length(dim int) float64 {
 
 // Mesh2d returns 2D "meshgrid"
 func (o *Grid) Mesh2d() (X, Y [][]float64) {
+	if !utl.Deep2checkSize(o.npts[0], o.npts[1], o.x2d) {
+		o.genMesh()
+	}
 	return o.x2d, o.y2d
 }
 
 // Mesh3d returns 3D "meshgrid"
 func (o *Grid) Mesh3d() (X, Y, Z [][][]float64) {
+	if !utl.Deep3checkSize(o.npts[0], o.npts[1], o.npts[2], o.x3d) {
+		o.genMesh()
+	}
 	return o.x3d, o.y3d, o.z3d
 }
 
