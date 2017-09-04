@@ -17,7 +17,51 @@ import (
 func TestSpc01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Spc01. simple Dirichlet problem")
+	chk.PrintTitle("Spc01. Auu matrix after homogeneous bcs")
+
+	// problem data
+	params := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	xmin := []float64{0, 0}
+	xmax := []float64{4, 4}
+	ndiv := []int{4, 4} // 4x4 divs ⇒ 5x5 grid ⇒ 25 equations
+
+	// spectral-collocation solver
+	spc, err := NewGridSolver("spc", "cgl", "laplacian", params, xmin, xmax, ndiv)
+	status(tst, err)
+
+	// essential boundary conditions
+	ebcs := NewEssentialBcs()
+	L, R, B, T := 10, 11, 20, 21 // left, right, bottom, top
+	ebcs.SetInGrid(spc.Grid, L, "u", 0.0, nil)
+	ebcs.SetInGrid(spc.Grid, R, "u", 0.0, nil)
+	ebcs.SetInGrid(spc.Grid, B, "u", 0.0, nil)
+	ebcs.SetInGrid(spc.Grid, T, "u", 0.0, nil)
+
+	// set bcs
+	spc.SetBcs(ebcs)
+
+	// check
+	Duu := spc.Eqs.Auu.ToDense()
+	io.Pf("Auu =\n%v\n", Duu.Print("%10.5f"))
+	chk.Deep2(tst, "Auu", 1e-14, Duu.GetDeep2(), [][]float64{
+		{-28, +6., -2., +6., +0., +0., -2., +0., +0.},
+		{+4., -20, +4., +0., +6., +0., +0., -2., +0.},
+		{-2., +6., -28, +0., +0., +6., +0., +0., -2.},
+		{+4., +0., +0., -20, +6., -2., +4., +0., +0.},
+		{+0., +4., +0., +4., -12, +4., +0., +4., +0.},
+		{+0., +0., +4., -2., +6., -20, +0., +0., +4.},
+		{-2., +0., +0., +6., +0., +0., -28, +6., -2.},
+		{+0., -2., +0., +0., +6., +0., +4., -20, +4.},
+		{+0., +0., -2., +0., +0., +6., -2., +6., -28},
+	})
+	err = spc.Solve(true)
+	status(tst, err)
+}
+
+func TestSpc02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Spc02. simple Dirichlet problem (unif-grid / Laplace)")
 
 	// solve problem
 	//    ∂²u     ∂²u
