@@ -28,44 +28,44 @@ func Test_deriv01(tst *testing.T) {
 	}
 
 	fcns := []fun.Ss{
-		func(x float64) (float64, error) { // 1
-			return x * x, nil
+		func(x float64) float64 { // 1
+			return x * x
 		},
-		func(x float64) (float64, error) { // 2
-			return math.Exp(x), nil
+		func(x float64) float64 { // 2
+			return math.Exp(x)
 		},
-		func(x float64) (float64, error) { // 3
-			return math.Exp(-x * x), nil
+		func(x float64) float64 { // 3
+			return math.Exp(-x * x)
 		},
-		func(x float64) (float64, error) { // 4
-			return 1.0 / x, nil
+		func(x float64) float64 { // 4
+			return 1.0 / x
 		},
-		func(x float64) (float64, error) { // 5
-			return x * math.Sqrt(x), nil
+		func(x float64) float64 { // 5
+			return x * math.Sqrt(x)
 		},
-		func(x float64) (float64, error) { // 6
-			return math.Sin(1.0 / x), nil
+		func(x float64) float64 { // 6
+			return math.Sin(1.0 / x)
 		},
 	}
 
 	danas := []fun.Ss{
-		func(x float64) (float64, error) { // 1
-			return 2 * x, nil
+		func(x float64) float64 { // 1
+			return 2 * x
 		},
-		func(x float64) (float64, error) { // 2
-			return math.Exp(x), nil
+		func(x float64) float64 { // 2
+			return math.Exp(x)
 		},
-		func(x float64) (float64, error) { // 3
-			return -2 * x * math.Exp(-x*x), nil
+		func(x float64) float64 { // 3
+			return -2 * x * math.Exp(-x*x)
 		},
-		func(x float64) (float64, error) { // 4
-			return -1.0 / (x * x), nil
+		func(x float64) float64 { // 4
+			return -1.0 / (x * x)
 		},
-		func(x float64) (float64, error) { // 5
-			return 1.5 * math.Sqrt(x), nil
+		func(x float64) float64 { // 5
+			return 1.5 * math.Sqrt(x)
 		},
-		func(x float64) (float64, error) { // 6
-			return -math.Cos(1.0/x) / (x * x), nil
+		func(x float64) float64 { // 6
+			return -math.Cos(1.0/x) / (x * x)
 		},
 	}
 
@@ -86,7 +86,7 @@ func Test_deriv01(tst *testing.T) {
 
 	// check
 	smethods := []string{"DerivCen5", "DerivFwd4", "DerivBwd4"}
-	methods := []func(float64, float64, fun.Ss) (float64, error){
+	methods := []func(float64, float64, fun.Ss) float64{
 		DerivCen5, DerivFwd4, DerivBwd4,
 	}
 	for idx, method := range methods {
@@ -96,16 +96,8 @@ func Test_deriv01(tst *testing.T) {
 		io.Pf("\ncheck %s:\n", smethods[idx])
 		for i, f := range fcns {
 			for _, x := range xvals[i] {
-				dnum, err := method(x, hs[i], f)
-				if err != nil {
-					tst.Errorf("%v\n", err)
-					return
-				}
-				dana, err := danas[i](x)
-				if err != nil {
-					tst.Errorf("%v\n", err)
-					return
-				}
+				dnum := method(x, hs[i], f)
+				dana := danas[i](x)
 				chk.Float64(tst, "    "+names[i], tols[i], dnum, dana)
 			}
 		}
@@ -118,8 +110,8 @@ func Test_deriv02(tst *testing.T) {
 	chk.PrintTitle("deriv02")
 
 	// scalar field
-	fcn := func(x, y float64) (float64, error) {
-		return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0), nil
+	fcn := func(x, y float64) float64 {
+		return -math.Pow(math.Pow(math.Cos(x), 2.0)+math.Pow(math.Cos(y), 2.0), 2.0)
 	}
 
 	// gradient. u=dfdx, v=dfdy
@@ -147,26 +139,18 @@ func Test_deriv02(tst *testing.T) {
 			y := xmin + float64(i)*dx
 
 			// scalar and vector field
-			f, _ := fcn(x, y)
+			f := fcn(x, y)
 			u, v := grad(x, y)
 
 			// numerical dfdx @ (x,y)
-			unum, err := DerivCen5(x, h, func(xvar float64) (float64, error) {
+			unum := DerivCen5(x, h, func(xvar float64) float64 {
 				return fcn(xvar, y)
 			})
-			if err != nil {
-				tst.Errorf("%v\n", err)
-				return
-			}
 
 			// numerical dfdy @ (x,y)
-			vnum, err := DerivCen5(y, h, func(yvar float64) (float64, error) {
+			vnum := DerivCen5(y, h, func(yvar float64) float64 {
 				return fcn(x, yvar)
 			})
-			if err != nil {
-				tst.Errorf("%v\n", err)
-				return
-			}
 
 			// output
 			if chk.Verbose {

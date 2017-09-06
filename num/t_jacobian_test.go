@@ -24,18 +24,18 @@ func TestJacobian01a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("TestJacobian 01a")
 
-	ffcn := func(fx, x la.Vector) error {
+	ffcn := func(fx, x la.Vector) {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
 		fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
-		return nil
+		return
 	}
-	Jfcn := func(dfdx *la.Triplet, x la.Vector) error {
+	Jfcn := func(dfdx *la.Triplet, x la.Vector) {
 		dfdx.Start()
 		dfdx.Put(0, 0, 3.0*x[0]*x[0])
 		dfdx.Put(0, 1, 1.0)
 		dfdx.Put(1, 0, -1.0)
 		dfdx.Put(1, 1, 3.0*x[1]*x[1])
-		return nil
+		return
 	}
 	x := []float64{0.5, 0.5}
 	CompareJac(tst, ffcn, Jfcn, x, 1e-7)
@@ -46,16 +46,16 @@ func TestJacobian02a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("TestJacobian 02a")
 
-	ffcn := func(fx, x la.Vector) error {
+	ffcn := func(fx, x la.Vector) {
 		fx[0] = 2.0*x[0] - x[1] + sin(x[2]) - cos(x[3]) - x[5]*x[5] - 1.0      // 0
 		fx[1] = -x[0] + 2.0*x[1] + cos(x[2]) - sin(x[3]) + x[5] - 1.0          // 1
 		fx[2] = x[0] + 3.0*x[1] + sin(x[3]) - cos(x[4]) - x[5]*x[5] - 1.0      // 2
 		fx[3] = 2.0*x[0] + 4.0*x[1] + cos(x[3]) - cos(x[4]) + x[5] - 1.0       // 3
 		fx[4] = x[0] + 5.0*x[1] - sin(x[2]) + sin(x[4]) - x[5]*x[5]*x[5] - 1.0 // 4
 		fx[5] = x[0] + 6.0*x[1] - cos(x[2]) + cos(x[4]) + x[5] - 1.0           // 5
-		return nil
+		return
 	}
-	Jfcn := func(dfdx *la.Triplet, x la.Vector) error {
+	Jfcn := func(dfdx *la.Triplet, x la.Vector) {
 		dfdx.Start()
 		dfdx.Put(0, 0, 2.0)
 		dfdx.Put(0, 1, -1.0)
@@ -87,7 +87,7 @@ func TestJacobian02a(tst *testing.T) {
 		dfdx.Put(5, 2, sin(x[2]))
 		dfdx.Put(5, 4, -sin(x[4]))
 		dfdx.Put(5, 5, 1.0)
-		return nil
+		return
 	}
 	x := []float64{5.0, 5.0, pi, pi, pi, 5.0}
 	CompareJac(tst, ffcn, Jfcn, x, 1e-6)

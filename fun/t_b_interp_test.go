@@ -36,7 +36,7 @@ func init() {
 }
 
 func BenchmarkInterp(b *testing.B) {
-	o, _ := NewDataInterp("lin", 1, benchmarkingX, benchmarkingY)
+	o := NewDataInterp("lin", 1, benchmarkingX, benchmarkingY)
 	var res float64
 	for i := 0; i < b.N; i++ {
 		res = interpoRunSearch(o)
@@ -45,7 +45,7 @@ func BenchmarkInterp(b *testing.B) {
 }
 
 func BenchmarkInterpNoHunt(b *testing.B) {
-	o, _ := NewDataInterp("lin", 1, benchmarkingX, benchmarkingY)
+	o := NewDataInterp("lin", 1, benchmarkingX, benchmarkingY)
 	o.DisableHunt = true
 	var res float64
 	for i := 0; i < b.N; i++ {

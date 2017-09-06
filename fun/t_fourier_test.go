@@ -21,8 +21,7 @@ func TestFourierInterp01(tst *testing.T) {
 
 	// constants
 	N := 8
-	fou, err := NewFourierInterp(N, "")
-	status(tst, err)
+	fou := NewFourierInterp(N, "")
 	defer fou.Free()
 
 	// check k
@@ -45,8 +44,7 @@ func fouCheckI(tst *testing.T, fou *FourierInterp, f Ss) {
 	n := float64(fou.N)
 	for j := 0; j < fou.N; j++ {
 		xj := 2.0 * math.Pi * float64(j) / n
-		fx, err := f(xj)
-		status(tst, err)
+		fx := f(xj)
 		chk.AnaNum(tst, io.Sf("I{f}(%5.3f)", xj), 1e-15, fx, fou.I(xj), chk.Verbose)
 	}
 }
@@ -80,25 +78,24 @@ func TestFourierInterp02(tst *testing.T) {
 	chk.PrintTitle("FourierInterp02. interpolation using DFT")
 
 	// function and analytic derivative
-	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
-	dfdx := func(x float64) (float64, error) { return math.Cos(x/2.0) / 2.0, nil }
-	d2fdx2 := func(x float64) (float64, error) { return -math.Cos(x/2.0) / 4.0, nil }
+	f := func(x float64) float64 { return math.Sin(x / 2.0) }
+	dfdx := func(x float64) float64 { return math.Cos(x/2.0) / 2.0 }
+	d2fdx2 := func(x float64) float64 { return -math.Cos(x/2.0) / 4.0 }
 
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, "")
-	status(tst, err)
+	fou := NewFourierInterp(N, "")
 	defer fou.Free()
 
 	// compute A using 3/2-rule
-	status(tst, fou.CalcAwithAliasRemoval(f))
+	fou.CalcAwithAliasRemoval(f)
 	A32 := fou.A.GetCopy()
 	io.Pf("\n............3/2-rule.............\n")
 	fouCheckD1andD2(tst, fou, f)
 
 	// compute U and A (standard)
-	status(tst, fou.CalcU(f))
+	fou.CalcU(f)
 	fou.CalcA()
 	io.Pf("\n.......no aliasing removal.......\n")
 	fouCheckI(tst, fou, f)
@@ -134,17 +131,16 @@ func TestFourierInterp03(tst *testing.T) {
 	chk.PrintTitle("FourierInterp03. square wave")
 
 	// function and analytic derivative
-	f := func(x float64) (float64, error) { return Boxcar(x-math.Pi/2, 0, math.Pi), nil }
+	f := func(x float64) float64 { return Boxcar(x-math.Pi/2, 0, math.Pi) }
 
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, "lanc")
-	status(tst, err)
+	fou := NewFourierInterp(N, "lanc")
 	defer fou.Free()
 
 	// compute U and A
-	status(tst, fou.CalcU(f))
+	fou.CalcU(f)
 	fou.CalcA()
 
 	// check first derivative of interpolation
@@ -184,11 +180,10 @@ func TestFourierInterp03(tst *testing.T) {
 		for k, p := range []uint64{2, 3, 4, 5} {
 
 			N := 1 << p
-			fou, err := NewFourierInterp(N, "lanc")
-			status(tst, err)
+			fou := NewFourierInterp(N, "lanc")
 			defer fou.Free()
 
-			status(tst, fou.CalcU(f))
+			fou.CalcU(f)
 			fou.CalcA()
 
 			ff := f
@@ -204,11 +199,10 @@ func TestFourierInterp03(tst *testing.T) {
 		for k, p := range []uint64{2, 3, 4, 5} {
 
 			N := 1 << p
-			fou, err := NewFourierInterp(N, "rcos")
-			status(tst, err)
+			fou := NewFourierInterp(N, "rcos")
 			defer fou.Free()
 
-			status(tst, fou.CalcU(f))
+			fou.CalcU(f)
 			fou.CalcA()
 
 			ll := ""
@@ -221,11 +215,10 @@ func TestFourierInterp03(tst *testing.T) {
 		for k, p := range []uint64{2, 3, 4, 5} {
 
 			N := 1 << p
-			fou, err := NewFourierInterp(N, "ces")
-			status(tst, err)
+			fou := NewFourierInterp(N, "ces")
 			defer fou.Free()
 
-			status(tst, fou.CalcU(f))
+			fou.CalcU(f)
 			fou.CalcA()
 
 			ll := ""
@@ -245,19 +238,18 @@ func TestFourierInterp04(tst *testing.T) {
 	chk.PrintTitle("FourierInterp04. setting U externally")
 
 	// function
-	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
+	f := func(x float64) float64 { return math.Sin(x / 2.0) }
 
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, "")
-	status(tst, err)
+	fou := NewFourierInterp(N, "")
 	defer fou.Free()
 
 	// calc fvals and set U
 	fvals := make([]float64, N)
 	for j := 0; j < N; j++ {
-		fvals[j], _ = f(fou.X[j])
+		fvals[j] = f(fou.X[j])
 	}
 	fou.U = fvals
 
@@ -266,7 +258,7 @@ func TestFourierInterp04(tst *testing.T) {
 	Afvals := fou.A.GetCopy()
 
 	// compute A[k] using f(x)
-	status(tst, fou.CalcU(f))
+	fou.CalcU(f)
 	fou.CalcA()
 
 	// check
@@ -279,19 +271,18 @@ func TestFourierInterp05(tst *testing.T) {
 	chk.PrintTitle("FourierInterp05. Derivative @ grid points ⇒ DFT")
 
 	// function
-	f := func(x float64) (float64, error) { return math.Sin(x / 2.0), nil }
-	dfdx := func(x float64) (float64, error) { return math.Cos(x/2.0) / 2.0, nil }
-	d2fdx2 := func(x float64) (float64, error) { return -math.Cos(x/2.0) / 4.0, nil }
+	f := func(x float64) float64 { return math.Sin(x / 2.0) }
+	dfdx := func(x float64) float64 { return math.Cos(x/2.0) / 2.0 }
+	d2fdx2 := func(x float64) float64 { return -math.Cos(x/2.0) / 4.0 }
 
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
 	N := 1 << p      // 2ⁿ (n=p): number of terms
-	fou, err := NewFourierInterp(N, "")
-	status(tst, err)
+	fou := NewFourierInterp(N, "")
 	defer fou.Free()
 
 	// compute U and A
-	status(tst, fou.CalcU(f))
+	fou.CalcU(f)
 	fou.CalcA()
 
 	// compute 1st derivatives @ grid points

@@ -26,7 +26,7 @@ import (
 //      w    : workspace with size == n == len(x)
 //  RETURNS:
 //      J : dfdx @ x [must be pre-allocated]
-func Jacobian(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64) (err error) {
+func Jacobian(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64) {
 	ndim := len(x)
 	start, endp1 := 0, ndim
 	if J.Max() == 0 {
@@ -38,10 +38,7 @@ func Jacobian(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64) (err error) {
 		xsafe := x[col]
 		delta := math.Sqrt(MACHEPS * max(1e-5, math.Abs(xsafe)))
 		x[col] = xsafe + delta
-		err = ffcn(w, x) // w := f(x+δx[col])
-		if err != nil {
-			return
-		}
+		ffcn(w, x) // w := f(x+δx[col])
 		for row := start; row < endp1; row++ {
 			df = w[row] - fx[row]
 			J.Put(row, col, df/delta)

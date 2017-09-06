@@ -30,7 +30,7 @@ import (
 //      dx     -- changed to -dx if dx_is_mdx == true
 //      nFeval -- number of calls to f(x)
 //
-func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 float64, maxIt int, dxIsMdx bool) (nFeval int, err error) {
+func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 float64, maxIt int, dxIsMdx bool) (nFeval int) {
 
 	// tolGraMin -- tolerance to consider local minimum
 	// mulDxMax  -- multiplier to control maximum dx
@@ -79,7 +79,7 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 
 	// check slope on the direction of dx
 	if slope > slopeMax {
-		return nFeval, chk.Err("slope must be negative (%g is invalid)\n", slope)
+		chk.Panic("slope must be negative (%g is invalid)\n", slope)
 	}
 
 	// iterations
@@ -92,11 +92,8 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 		for i := 0; i < n; i++ {
 			x[i] = x0[i] + λ*dx[i]
 		}
-		err = ffcn(fx, x)
+		ffcn(fx, x)
 		nFeval++
-		if err != nil {
-			return
-		}
 
 		// compute φ
 		φ = 0.0
@@ -117,7 +114,7 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 				}
 			}
 			if gra < tolGraMin {
-				return nFeval, chk.Err("local mininum reached? λ=%g, λ_min=%g, gra=%g", λ, λmin, gra)
+				chk.Panic("local mininum reached? λ=%g, λ_min=%g, gra=%g", λ, λmin, gra)
 			}
 			return // converged
 		}
@@ -159,7 +156,7 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 
 	// check convergence
 	if it == maxIt {
-		return nFeval, chk.Err("failed to converge after %d iterations", it+1)
+		chk.Panic("failed to converge after %d iterations", it+1)
 	}
 	return
 }

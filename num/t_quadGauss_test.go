@@ -17,18 +17,13 @@ func Test_quadGaussL01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("quadGaussL01. Gauss-Legendre quadrature.")
 
-	y := func(x float64) (res float64, err error) {
+	y := func(x float64) (res float64) {
 		res = math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
 		return
 	}
-	var err error
 	Acor := 1.08268158558
 
-	A, err := QuadGaussL10(0, 1, y)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	A := QuadGaussL10(0, 1, y)
 	io.Pforan("A  = %v\n", A)
 	chk.Float64(tst, "A", 1e-12, A, Acor)
 }

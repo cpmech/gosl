@@ -235,13 +235,13 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
 			// numerical Jacobian
 			if o.jac == nil { // numerical
 				if o.conf.distr {
-					err = num.JacobianMpi(o.conf.comm, o.dfdy, func(fy, yy la.Vector) (e error) {
-						e = o.fcn(fy, h, x0, yy)
+					num.JacobianMpi(o.conf.comm, o.dfdy, func(fy, yy la.Vector) {
+						o.fcn(fy, h, x0, yy)
 						return
 					}, y0, o.work.f0, o.w[0], true) // w works here as workspace variable
 				} else {
-					err = num.Jacobian(o.dfdy, func(fy, yy la.Vector) (e error) {
-						e = o.fcn(fy, h, x0, yy)
+					num.Jacobian(o.dfdy, func(fy, yy la.Vector) {
+						o.fcn(fy, h, x0, yy)
 						return
 					}, y0, o.work.f0, o.w[0]) // w works here as workspace variable
 				}

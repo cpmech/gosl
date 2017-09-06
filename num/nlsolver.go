@@ -149,17 +149,14 @@ func (o *NlSolver) SetTols(Atol, Rtol, Ftol, ϵ float64) {
 }
 
 // Solve solves non-linear problem f(x) == 0
-func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
+func (o *NlSolver) Solve(x []float64, silent bool) {
 
 	// compute scaling vector
 	la.VecScaleAbs(o.scal, o.atol, o.rtol, x) // scal = Atol + Rtol*abs(x)
 
 	// evaluate function @ x
-	err = o.Ffcn(o.fx, x) // fx := f(x)
+	o.Ffcn(o.fx, x) // fx := f(x)
 	o.NFeval, o.NJeval = 1, 0
-	if err != nil {
-		return
-	}
 
 	// show message
 	if !silent {
@@ -194,29 +191,23 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		// evaluate Jacobian @ x
 		if o.It == 0 || !o.CteJac {
 			if o.useDn {
-				err = o.JfcnDn(o.J, x)
+				o.JfcnDn(o.J, x)
 			} else {
 				if o.numJ {
-					err = Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
+					Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
 					o.NFeval += o.neq
 				} else {
-					err = o.JfcnSp(&o.Jtri, x)
+					o.JfcnSp(&o.Jtri, x)
 				}
 			}
 			o.NJeval++
-			if err != nil {
-				return
-			}
 		}
 
 		// dense solution
 		if o.useDn {
 
 			// invert matrix
-			_, err = la.MatInv(o.Ji, o.J, false)
-			if err != nil {
-				return chk.Err("cannot compute inverse of Jacobian (dense) matrix:\n%v", err)
-			}
+			la.MatInv(o.Ji, o.J, false)
 
 			// solve linear system (compute mdx) and compute lin-search data
 			o.φ = 0.0
@@ -236,10 +227,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 			// init sparse solver
 			if !o.lsReady {
 				symmetric, verbose := false, false
-				err := o.lis.Init(&o.Jtri, symmetric, verbose, "", "", nil)
-				if err != nil {
-					return chk.Err("%v\n", err)
-				}
+				o.lis.Init(&o.Jtri, symmetric, verbose, "", "", nil)
 				o.lsReady = true
 			}
 
@@ -266,11 +254,8 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		Ldx = math.Sqrt(Ldx / float64(o.neq))
 
 		// calculate fx := f(x) @ update x
-		err = o.Ffcn(o.fx, x)
+		o.Ffcn(o.fx, x)
 		o.NFeval++
-		if err != nil {
-			return
-		}
 
 		// check convergence on f(x) => avoid line-search if converged already
 		fxMax = o.fx.Largest(1.0) // den = 1.0
@@ -291,11 +276,8 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 		// call line-search => update x and fx
 		if o.Lsearch {
-			nfv, err = LineSearch(x, o.fx, o.Ffcn, o.mdx, o.x0, o.dφdx, o.φ, o.LsMaxIt, true)
+			nfv = LineSearch(x, o.fx, o.Ffcn, o.mdx, o.x0, o.dφdx, o.φ, o.LsMaxIt, true)
 			o.NFeval += nfv
-			if err != nil {
-				return chk.Err("LineSearch failed:\n%v", err)
-			}
 			Ldx = 0.0
 			for i := 0; i < o.neq; i++ {
 				Ldx += ((x[i] - o.x0[i]) / o.scal[i]) * ((x[i] - o.x0[i]) / o.scal[i])
@@ -314,7 +296,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 		if o.It > 0 && o.ChkConv {
 			Θ = Ldx / LdxPrev
 			if Θ > 0.99 {
-				return chk.Err("solver is diverging with Θ = %g (Ldx=%g, LdxPrev=%g)", Θ, Ldx, LdxPrev)
+				chk.Panic("solver is diverging with Θ = %g (Ldx=%g, LdxPrev=%g)", Θ, Ldx, LdxPrev)
 			}
 		}
 		LdxPrev = Ldx
@@ -327,45 +309,33 @@ func (o *NlSolver) Solve(x []float64, silent bool) (err error) {
 
 	// check convergence
 	if o.It == o.MaxIt {
-		err = chk.Err("cannot converge after %d iterations", o.It)
+		chk.Panic("cannot converge after %d iterations", o.It)
 	}
 	return
 }
 
 // CheckJ check Jacobian matrix
 //  Ouptut: cnd -- condition number (with Frobenius norm)
-func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd float64, err error) {
+func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd float64) {
 
 	// Jacobian matrix
 	var Jmat *la.Matrix
 	if o.useDn {
 		Jmat = la.NewMatrix(o.neq, o.neq)
-		err = o.JfcnDn(Jmat, x)
-		if err != nil {
-			return 0, chk.Err("dense Jacobian failed:\n%v", err)
-		}
+		o.JfcnDn(Jmat, x)
 	} else {
 		if o.numJ {
-			err = Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
-			if err != nil {
-				return 0, chk.Err("sparse Jacobian failed:\n%v", err)
-			}
+			Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
 		} else {
-			err = o.JfcnSp(&o.Jtri, x)
-			if err != nil {
-				return 0, chk.Err("sparse(num) Jacobian failed:\n%v", err)
-			}
+			o.JfcnSp(&o.Jtri, x)
 		}
 		Jmat = o.Jtri.ToDense()
 	}
 
 	// condition number
-	cnd, err = la.MatCondNum(Jmat, "F")
-	if err != nil {
-		return cnd, chk.Err("cannot compute condition number\n%v", err)
-	}
+	cnd, _ = la.MatCondNum(Jmat, "F")
 	if math.IsInf(cnd, 0) || math.IsNaN(cnd) {
-		return cnd, chk.Err("condition number is Inf or NaN: %v", cnd)
+		chk.Panic("condition number is Inf or NaN: %v", cnd)
 	}
 
 	// numerical Jacobian
@@ -374,10 +344,7 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	}
 	var Jtmp la.Triplet
 	ws := la.NewVector(o.neq)
-	err = o.Ffcn(o.fx, x)
-	if err != nil {
-		return
-	}
+	o.Ffcn(o.fx, x)
 	Jtmp.Init(o.neq, o.neq, o.neq*o.neq)
 	Jacobian(&Jtmp, o.Ffcn, x, o.fx, ws)
 	Jnum := Jtmp.ToMatrix(nil).ToDense()
@@ -388,7 +355,7 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	}
 	maxdiff := Jmat.MaxDiff(Jnum)
 	if maxdiff > tol {
-		err = chk.Err("maxdiff = %g\n", maxdiff)
+		chk.Panic("maxdiff = %g\n", maxdiff)
 	}
 	return
 }

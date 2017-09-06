@@ -19,9 +19,9 @@ import "github.com/cpmech/gosl/num/qpck"
 //             res = ∫  f(x) dx
 //                   a
 //
-func QuadGen(a, b float64, fid int, f func(x float64) float64) (res float64, err error) {
+func QuadGen(a, b float64, fid int, f func(x float64) float64) (res float64) {
 	id := int32(fid)
-	res, _, _, _, err = qpck.Agse(id, f, a, b, 0, 0, nil, nil, nil, nil, nil)
+	res, _, _, _, _ = qpck.Agse(id, f, a, b, 0, 0, nil, nil, nil, nil, nil)
 	return
 }
 
@@ -40,13 +40,13 @@ func QuadGen(a, b float64, fid int, f func(x float64) float64) (res float64, err
 //             res = ∫  f(x) ⋅ cos(ω⋅x) dx     or    res = ∫ f(x) ⋅ sin(ω⋅x) dx
 //                   a                                     a
 //
-func QuadCs(a, b, ω float64, useSin bool, fid int, f func(x float64) float64) (res float64, err error) {
+func QuadCs(a, b, ω float64, useSin bool, fid int, f func(x float64) float64) (res float64) {
 	id := int32(fid)
 	cs := int32(1) // cos
 	if useSin {
 		cs = 2 // sin
 	}
-	res, _, _, _, err = qpck.Awoe(id, f, a, b, ω, cs, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
+	res, _, _, _, _ = qpck.Awoe(id, f, a, b, ω, cs, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
 	return
 }
 
@@ -63,7 +63,7 @@ func QuadCs(a, b, ω float64, useSin bool, fid int, f func(x float64) float64) (
 //           res = ∫  f(x) ⋅ exp(i⋅m⋅x) dx   = ∫  f(x) ⋅ cos(m⋅x) dx + i ⋅ ∫  f(x) ⋅ sin(m⋅x) dx
 //                 a                           a                           a
 //
-func QuadExpIx(a, b, m float64, fid int, f func(x float64) float64) (res complex128, err error) {
+func QuadExpIx(a, b, m float64, fid int, f func(x float64) float64) (res complex128) {
 
 	// allocate workspace
 	limit := 50
@@ -85,17 +85,11 @@ func QuadExpIx(a, b, m float64, fid int, f func(x float64) float64) (res complex
 
 	// perform integration of cos term
 	var integr int32 = 1 // w(x) = cos(m*x)
-	Icos, _, _, _, err := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
-	if err != nil {
-		return
-	}
+	Icos, _, _, _, _ := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
 
 	// perform integration of sin term
 	integr = 2 // w(x) = sin(m*x)
-	Isin, _, _, _, err := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
-	if err != nil {
-		return
-	}
+	Isin, _, _, _, _ := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
 
 	// results
 	res = complex(Icos, Isin)

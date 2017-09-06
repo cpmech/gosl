@@ -19,7 +19,7 @@ import (
 // QuadElementary defines the interface for elementary quadrature algorithms with refinement.
 type QuadElementary interface {
 	Init(f fun.Ss, a, b, eps float64) // The constructor takes as inputs f, the function or functor to be integrated between limits a and b, also input.
-	Integrate() (float64, error)      // Returns the integral for the specified input data
+	Integrate() float64               // Returns the integral for the specified input data
 }
 
 // ElementaryTrapz structure is used for the trapezoidal integration rule with refinement.
@@ -43,22 +43,16 @@ func (o *ElementaryTrapz) Init(f fun.Ss, a, b, eps float64) {
 // Next returns the nth stage of refinement of the extended trapezoidal rule. On the first call (n=1),
 // R b the routine returns the crudest estimate of a f .x/dx. Subsequent calls set n=2,3,... and
 // improve the accuracy by adding 2 n-2 additional interior points.
-func (o *ElementaryTrapz) Next() (res float64, err error) {
+func (o *ElementaryTrapz) Next() (res float64) {
 	var x, sum, del float64
 	var it, j, tnm int
 	o.n++
 	var fa, fb, fx float64
 	if o.n == 1 {
-		fa, err = o.f(o.a)
-		if err != nil {
-			return
-		}
-		fb, err = o.f(o.b)
-		if err != nil {
-			return
-		}
+		fa = o.f(o.a)
+		fb = o.f(o.b)
 		o.s = 0.5 * (o.b - o.a) * (fa + fb)
-		return o.s, nil
+		return o.s
 	}
 	for it, j = 1, 1; j < o.n-1; j++ {
 		it *= 2
@@ -70,35 +64,30 @@ func (o *ElementaryTrapz) Next() (res float64, err error) {
 	x = o.a + 0.5*del
 
 	for sum, j = 0.0, 0; j < it; j, x = j+1, x+del {
-		fx, err = o.f(x)
-		if err != nil {
-			return
-		}
+		fx = o.f(x)
 		sum += fx
 	}
 	o.s = 0.5 * (o.s + (o.b-o.a)*sum/float64(tnm))
 
 	// replace s by its refined value.
-	return o.s, nil
+	return o.s
 }
 
 // Integrate performs the numerical integration
-func (o *ElementaryTrapz) Integrate() (res float64, err error) {
+func (o *ElementaryTrapz) Integrate() (res float64) {
 	jmax := 20
 	var olds float64
 	for j := 0; j < jmax; j++ {
-		o.s, err = o.Next()
-		if err != nil {
-			return
-		}
+		o.s = o.Next()
 		if j > 5 {
 			if math.Abs(o.s-olds) < o.eps*math.Abs(olds) || (o.s == 0 && olds == 0) {
-				return o.s, nil
+				return o.s
 			}
 		}
 		olds = o.s
 	}
-	return 0, chk.Err("achieved maximum number of iterations (n=%d)", jmax)
+	chk.Panic("achieved maximum number of iterations (n=%d)", jmax)
+	return
 }
 
 // ElementarySimpson structure implements the Simpson's method for quadrature with refinement.
@@ -122,21 +111,15 @@ func (o *ElementarySimpson) Init(f fun.Ss, a, b, eps float64) {
 // Next returns the nth stage of refinement of the extended trapezoidal rule. On the first call (n=1),
 // R b the routine returns the crudest estimate of a f .x/dx. Subsequent calls set n=2,3,... and
 // improve the accuracy by adding 2 n-2 additional interior points.
-func (o *ElementarySimpson) Next() (res float64, err error) {
+func (o *ElementarySimpson) Next() (res float64) {
 	var x, sum, del, fa, fb, fx float64
 	var it, j, tnm int
 	o.n++
 	if o.n == 1 {
-		fa, err = o.f(o.a)
-		if err != nil {
-			return
-		}
-		fb, err = o.f(o.b)
-		if err != nil {
-			return
-		}
+		fa = o.f(o.a)
+		fb = o.f(o.b)
 		o.s = 0.5 * (o.b - o.a) * (fa + fb)
-		return o.s, nil
+		return o.s
 	}
 	for it, j = 1, 1; j < o.n-1; j++ {
 		it *= 2
@@ -148,35 +131,30 @@ func (o *ElementarySimpson) Next() (res float64, err error) {
 	x = o.a + 0.5*del
 
 	for sum, j = 0.0, 0; j < it; j, x = j+1, x+del {
-		fx, err = o.f(x)
-		if err != nil {
-			return
-		}
+		fx = o.f(x)
 		sum += fx
 	}
 	o.s = 0.5 * (o.s + (o.b-o.a)*sum/float64(tnm))
 
 	// replace s by its refined value.
-	return o.s, nil
+	return o.s
 }
 
 // Integrate performs the numerical integration
-func (o *ElementarySimpson) Integrate() (res float64, err error) {
+func (o *ElementarySimpson) Integrate() (res float64) {
 	jmax := 20
 	var s, st, ost, os float64
 	for j := 0; j < jmax; j++ {
-		st, err = o.Next()
-		if err != nil {
-			return
-		}
+		st = o.Next()
 		s = (4*st - ost) / 3
 		if j > 5 {
 			if math.Abs(s-os) < o.eps*math.Abs(os) || (s == 0 && os == 0) {
-				return s, nil
+				return s
 			}
 		}
 		os = s
 		ost = st
 	}
-	return 0, chk.Err("achieved maximum number of iterations (n=%d)", jmax)
+	chk.Panic("achieved maximum number of iterations (n=%d)", jmax)
+	return
 }

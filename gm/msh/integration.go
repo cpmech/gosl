@@ -138,10 +138,7 @@ func (o *Integrator) IntegrateSv(X *la.Matrix, f fun.Sv) (res float64, err error
 			return
 		}
 		la.MatTrVecMul(o.xip, 1, X, o.ShapeFcns[ip]) // xip := 1⋅Xᵀ⋅S
-		fx, err = f(o.xip)
-		if err != nil {
-			return
-		}
+		fx = f(o.xip)
 		res += fx * o.DetJacobian * point[3]
 	}
 	return

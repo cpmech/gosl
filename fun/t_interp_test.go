@@ -21,10 +21,7 @@ func TestInterp01(tst *testing.T) {
 	xx := []float64{0, 1, 2, 3, 4, 5}
 	yy := []float64{0.50, 0.20, 0.20, 0.05, 0.01, 0.00}
 
-	o, err := NewDataInterp("lin", 1, xx, yy)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	o := NewDataInterp("lin", 1, xx, yy)
 
 	for i, x := range xx {
 		chk.Float64(tst, "P(xi)", 1e-17, o.P(x), yy[i])
@@ -64,10 +61,7 @@ func TestInterp02(tst *testing.T) {
 
 	for _, p := range []int{1, 2, 3} {
 
-		o, err := NewDataInterp("poly", p, xx, yy)
-		if err != nil {
-			tst.Errorf("%v\n", err)
-		}
+		o := NewDataInterp("poly", p, xx, yy)
 
 		for i, x := range xx {
 			chk.Float64(tst, "P(xi)", 1e-17, o.P(x), yy[i])

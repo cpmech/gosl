@@ -27,7 +27,7 @@ import (
 //      w    : workspace with size == n == len(x)
 //  RETURNS:
 //      J : dfdx @ x [must be pre-allocated]
-func JacobianMpi(comm *mpi.Communicator, J *la.Triplet, ffcn fun.Vv, x, fx, w []float64, distr bool) (err error) {
+func JacobianMpi(comm *mpi.Communicator, J *la.Triplet, ffcn fun.Vv, x, fx, w []float64, distr bool) {
 	ndim := len(x)
 	start, endp1 := 0, ndim
 	if distr {
@@ -52,10 +52,7 @@ func JacobianMpi(comm *mpi.Communicator, J *la.Triplet, ffcn fun.Vv, x, fx, w []
 		xsafe := x[col]
 		delta := math.Sqrt(MACHEPS * max(1e-5, math.Abs(xsafe)))
 		x[col] = xsafe + delta
-		err = ffcn(w, x) // w := f(x+δx[col])
-		if err != nil {
-			return
-		}
+		ffcn(w, x) // w := f(x+δx[col])
 		for row := start; row < endp1; row++ {
 			df = w[row] - fx[row]
 			J.Put(row, col, df/delta)

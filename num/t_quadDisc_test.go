@@ -18,13 +18,13 @@ func Test_DiscSimpson01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("DiscSimpson01. Simple function")
 
-	y := func(x float64) (res float64, err error) {
+	y := func(x float64) (res float64) {
 		res = math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
 		return
 	}
 
 	n := 1000
-	A, _ := QuadDiscreteSimpsonRF(0, 1, n, y)
+	A := QuadDiscreteSimpsonRF(0, 1, n, y)
 	io.Pforan("A  = %v\n", A)
 	Acor := 1.08268158558
 	chk.Float64(tst, "A", 1e-11, A, Acor)
@@ -46,15 +46,15 @@ func Test_DiscTrapz02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("DiscTrapz02. Discrete trapezoidal XF and RF")
 
-	y := func(x float64) (res float64, err error) {
+	y := func(x float64) (res float64) {
 		res = math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
 		return
 	}
 
 	n := 11
 	x := utl.LinSpace(0, 1, n)
-	A, _ := QuadDiscreteTrapzXF(x, y)
-	A1, _ := QuadDiscreteTrapzRF(0, 1, n, y)
+	A := QuadDiscreteTrapzXF(x, y)
+	A1 := QuadDiscreteTrapzRF(0, 1, n, y)
 	io.Pforan("A  = %v\n", A)
 	io.Pforan("A1 = %v\n", A1)
 	Acor := 1.08306090851465 // right value is Acor := 1.08268158558

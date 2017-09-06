@@ -16,21 +16,17 @@ func Test_QuadElem01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("QuadElem01. Trapz and Simpson Elementary")
 
-	y := func(x float64) (res float64, err error) {
+	y := func(x float64) (res float64) {
 		res = math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0))
 		return
 	}
-	var err error
 	Acor := 1.08268158558
 
 	// trapezoidal rule
 	var T QuadElementary
 	T = new(ElementaryTrapz)
 	T.Init(y, 0, 1, 1e-11)
-	A, err := T.Integrate()
-	if err != nil {
-		io.Pforan(err.Error())
-	}
+	A := T.Integrate()
 	io.Pforan("A  = %v\n", A)
 	chk.Float64(tst, "A", 1e-11, A, Acor)
 
@@ -38,10 +34,7 @@ func Test_QuadElem01(tst *testing.T) {
 	var S QuadElementary
 	S = new(ElementarySimpson)
 	S.Init(y, 0, 1, 1e-11)
-	A, err = S.Integrate()
-	if err != nil {
-		io.Pforan(err.Error())
-	}
+	A = S.Integrate()
 	io.Pforan("A  = %v\n", A)
 	chk.Float64(tst, "A", 1e-11, A, Acor)
 }

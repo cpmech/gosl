@@ -45,7 +45,7 @@ type DataInterp struct {
 //     p  -- order of interpolator
 //     xx -- x-data
 //     yy -- y-data
-func NewDataInterp(Type string, p int, xx, yy []float64) (o *DataInterp, err error) {
+func NewDataInterp(Type string, p int, xx, yy []float64) (o *DataInterp) {
 	o = new(DataInterp)
 	o.itype = Type
 	switch Type {
@@ -56,22 +56,22 @@ func NewDataInterp(Type string, p int, xx, yy []float64) (o *DataInterp, err err
 		o.m = p + 1
 		o.interp = o.polyInterp
 	default:
-		return nil, chk.Err("cannot find interpolator type == %q\n", Type)
+		chk.Panic("cannot find interpolator type == %q\n", Type)
 	}
-	err = o.Reset(xx, yy)
+	o.Reset(xx, yy)
 	return
 }
 
 // Reset re-assigns xx and yy data sets
-func (o *DataInterp) Reset(xx, yy []float64) (err error) {
+func (o *DataInterp) Reset(xx, yy []float64) {
 	if len(xx) != len(yy) {
-		return chk.Err("lengths of data sets must be the same. %d != %d\n", len(xx), len(yy))
+		chk.Panic("lengths of data sets must be the same. %d != %d\n", len(xx), len(yy))
 	}
 	if len(xx) < 2 {
-		return chk.Err("length of data sets must be at least 2. %d is invalid\n", len(xx))
+		chk.Panic("length of data sets must be at least 2. %d is invalid\n", len(xx))
 	}
 	if len(xx) < o.m {
-		return chk.Err("length of data sets must be greater than or equal to %d when using %q interpolator\n", o.m, o.itype)
+		chk.Panic("length of data sets must be greater than or equal to %d when using %q interpolator\n", o.m, o.itype)
 	}
 	o.xx = xx
 	o.yy = yy

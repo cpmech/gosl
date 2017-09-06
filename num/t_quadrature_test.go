@@ -19,11 +19,7 @@ func TestQuadGen01(tst *testing.T) {
 	chk.PrintTitle("QuadGen01. using QUADPACK general function")
 
 	f := func(x float64) float64 { return math.Sqrt(1.0 + math.Pow(math.Sin(x), 3.0)) }
-	A, err := QuadGen(0, 1, 0, f)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	A := QuadGen(0, 1, 0, f)
 	io.Pforan("A  = %v\n", A)
 	chk.Float64(tst, "A", 1e-12, A, 1.08268158558)
 }
@@ -35,11 +31,7 @@ func TestQuadCs01(tst *testing.T) {
 
 	ω := math.Pow(2.0, 3.4)
 	f := func(x float64) float64 { return math.Exp(20.0 * (x - 1)) }
-	A, err := QuadCs(0, 1, ω, true, 0, f)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	A := QuadCs(0, 1, ω, true, 0, f)
 	io.Pforan("A  = %v\n", A)
 	Aref := (20*math.Sin(ω) - ω*math.Cos(ω) + ω*math.Exp(-20)) / (math.Pow(20, 2) + math.Pow(ω, 2))
 	chk.Float64(tst, "A", 1e-16, A, Aref)
@@ -56,8 +48,7 @@ func TestQuadExpIx01(tst *testing.T) {
 	b := 2.0 * π
 	m := 4.0
 
-	I, err := QuadExpIx(a, b, m, 0, f)
-	status(tst, err)
+	I := QuadExpIx(a, b, m, 0, f)
 
 	ee := cmplx.Exp(complex(0, 2*π*m))
 	π2 := complex(π*π, 0)
@@ -82,8 +73,7 @@ func TestQuadExpIx02(tst *testing.T) {
 	b := 2.0 * π
 	m := 0.5
 
-	I, err := QuadExpIx(a, b, m, 0, f)
-	status(tst, err)
+	I := QuadExpIx(a, b, m, 0, f)
 
 	ee := cmplx.Exp(complex(0, 2*π*m))
 	Q := complex(q, 0)

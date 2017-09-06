@@ -18,7 +18,7 @@ import (
 //   Reference:
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
 //       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-func QuadGaussL10(a, b float64, f fun.Ss) (res float64, err error) {
+func QuadGaussL10(a, b float64, f fun.Ss) (res float64) {
 
 	// constants
 	x := []float64{0.1488743389816312, 0.4333953941292472, 0.6794095682990244, 0.8650633666889845, 0.9739065285171717}
@@ -33,14 +33,8 @@ func QuadGaussL10(a, b float64, f fun.Ss) (res float64, err error) {
 	var dx, fp, fm float64
 	for j := 0; j < 5; j++ {
 		dx = xr * x[j]
-		fp, err = f(xm + dx)
-		if err != nil {
-			return
-		}
-		fm, err = f(xm - dx)
-		if err != nil {
-			return
-		}
+		fp = f(xm + dx)
+		fm = f(xm - dx)
 		s += w[j] * (fp + fm)
 	}
 	res = s * xr // scale the answer to the range of integration.

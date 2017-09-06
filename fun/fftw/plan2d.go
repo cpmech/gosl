@@ -51,7 +51,7 @@ type Plan2d struct {
 //
 //   l = n1⋅i + j       i = l // n1      j = l % n1
 //
-func NewPlan2d(N0, N1 int, data []complex128, inverse, measure bool) (o *Plan2d, err error) {
+func NewPlan2d(N0, N1 int, data []complex128, inverse, measure bool) (o *Plan2d) {
 
 	// allocate new object
 	o = new(Plan2d)

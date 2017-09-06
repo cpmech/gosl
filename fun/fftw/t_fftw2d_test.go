@@ -41,11 +41,7 @@ func TestTwoDver01a(tst *testing.T) {
 	measure := false
 
 	// allocate plan
-	plan, err := NewPlan2d(N0, N1, x, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan2d(N0, N1, x, inverse, measure)
 	defer plan.Free()
 
 	// set input data
@@ -85,11 +81,7 @@ func TestTwoDver01b(tst *testing.T) {
 	measure := true
 
 	// allocate plan
-	plan, err := NewPlan2d(N0, N1, x, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan2d(N0, N1, x, inverse, measure)
 	defer plan.Free()
 
 	// set input data
@@ -125,11 +117,7 @@ func TestTwoDver02(tst *testing.T) {
 	x := make([]complex128, N0*N1)
 
 	// allocate plan
-	plan, err := NewPlan2d(N0, N1, x, false, false)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan2d(N0, N1, x, false, false)
 	defer plan.Free()
 
 	// set input data

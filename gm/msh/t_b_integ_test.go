@@ -36,7 +36,7 @@ func init() {
 }
 
 func BenchmarkInteg(b *testing.B) {
-	fcnIx := func(x la.Vector) (f float64, e error) {
+	fcnIx := func(x la.Vector) (f float64) {
 		f = x[1] * x[1]
 		return
 	}

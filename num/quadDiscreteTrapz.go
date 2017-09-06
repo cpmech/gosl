@@ -23,17 +23,11 @@ func QuadDiscreteTrapzXY(x, y []float64) (A float64) {
 
 // QuadDiscreteTrapzXF approximates the area below the discrete curve defined by x points and y
 // function. Computations are carried out with the (very simple) trapezoidal rule.
-func QuadDiscreteTrapzXF(x []float64, y fun.Ss) (A float64, err error) {
+func QuadDiscreteTrapzXF(x []float64, y fun.Ss) (A float64) {
 	var ya, yb float64
 	for i := 1; i < len(x); i++ {
-		ya, err = y(x[i-1])
-		if err != nil {
-			return
-		}
-		yb, err = y(x[i])
-		if err != nil {
-			return
-		}
+		ya = y(x[i-1])
+		yb = y(x[i])
 		A += (x[i] - x[i-1]) * (yb + ya) / 2.0
 	}
 	return
@@ -42,7 +36,7 @@ func QuadDiscreteTrapzXF(x []float64, y fun.Ss) (A float64, err error) {
 // QuadDiscreteTrapzRF approximates the area below the discrete curve defined by [xa,xy] range and y
 // function. Computations are carried out with the (very simple) trapezoidal rule from xa to xb,
 // with npts points
-func QuadDiscreteTrapzRF(xa, xb float64, npts int, y fun.Ss) (A float64, err error) {
+func QuadDiscreteTrapzRF(xa, xb float64, npts int, y fun.Ss) (A float64) {
 	if npts < 2 {
 		chk.Panic("number of points must be at least 2", npts)
 	}
@@ -51,14 +45,8 @@ func QuadDiscreteTrapzRF(xa, xb float64, npts int, y fun.Ss) (A float64, err err
 	for i := 1; i < npts; i++ {
 		x0 = xa + dx*float64(i-1)
 		x1 = xa + dx*float64(i)
-		y0, err = y(x0)
-		if err != nil {
-			return
-		}
-		y1, err = y(x1)
-		if err != nil {
-			return
-		}
+		y0 = y(x0)
+		y1 = y(x1)
 		A += (x1 - x0) * (y1 + y0) / 2.0
 	}
 	return

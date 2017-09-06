@@ -27,11 +27,8 @@ import (
 //         (2) ideally, N=len(data) is an integer power of 2.
 //         (3) using FFTW: http://fftw.org/fftw3_doc/What-FFTW-Really-Computes.html
 //
-func Dft1d(data []complex128, inverse bool) (err error) {
-	plan, err := fftw.NewPlan1d(data, inverse, false)
-	if err != nil {
-		return
-	}
+func Dft1d(data []complex128, inverse bool) {
+	plan := fftw.NewPlan1d(data, inverse, false)
 	defer plan.Free()
 	plan.Execute()
 	return

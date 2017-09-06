@@ -110,11 +110,11 @@ type LagrangeInterp struct {
 //
 //     NOTE: the grid will be generated in [-1, 1]
 //
-func NewLagrangeInterp(N int, gridType string) (o *LagrangeInterp, err error) {
+func NewLagrangeInterp(N int, gridType string) (o *LagrangeInterp) {
 
 	// check
 	if N < 1 || N > 2048 {
-		return nil, chk.Err("N must be in [1,2048]. N=%d is invalid\n", N)
+		chk.Panic("N must be in [1,2048]. N=%d is invalid\n", N)
 	}
 
 	// allocate
@@ -130,7 +130,7 @@ func NewLagrangeInterp(N int, gridType string) (o *LagrangeInterp, err error) {
 	case "cgl":
 		o.X = ChebyshevXlob(N)
 	default:
-		return nil, chk.Err("cannot create grid type %q\n", gridType)
+		chk.Panic("cannot create grid type %q\n", gridType)
 	}
 
 	// barycentric data
@@ -173,7 +173,7 @@ func NewLagrangeInterp(N int, gridType string) (o *LagrangeInterp, err error) {
 			o.Lam[k] = a * b / lf0
 		}
 		if math.IsInf(o.Lam[k], 0) {
-			err = chk.Err("λ%d is infinite: %v\n", k, o.Lam[k])
+			chk.Panic("λ%d is infinite: %v\n", k, o.Lam[k])
 			return
 		}
 	}
@@ -247,15 +247,12 @@ func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 }
 
 // CalcU computes f(x_i); i.e. function f(x) @ all nodes
-func (o *LagrangeInterp) CalcU(f Ss) (err error) {
+func (o *LagrangeInterp) CalcU(f Ss) {
 	if len(o.U) != o.N+1 {
 		o.U = make([]float64, o.N+1)
 	}
 	for i := 0; i < o.N+1; i++ {
-		fxi, e := f(o.X[i])
-		if e != nil {
-			return e
-		}
+		fxi := f(o.X[i])
 		o.U[i] = fxi
 	}
 	return
@@ -282,7 +279,7 @@ func (o *LagrangeInterp) CalcU(f Ss) (err error) {
 //
 //   NOTE: U[i] = f(x[i]) must be calculated with o.CalcU or set first
 //
-func (o *LagrangeInterp) I(x float64) (res float64, err error) {
+func (o *LagrangeInterp) I(x float64) (res float64) {
 
 	// barycentric formula
 	if o.Bary {
@@ -315,7 +312,7 @@ func (o *LagrangeInterp) I(x float64) (res float64, err error) {
 //
 //   see [2]
 //
-func (o *LagrangeInterp) CalcD1() (err error) {
+func (o *LagrangeInterp) CalcD1() {
 
 	// allocate output
 	o.D1 = la.NewMatrix(o.N+1, o.N+1)
@@ -363,13 +360,10 @@ func (o *LagrangeInterp) CalcD1() (err error) {
 //
 //  NOTE: this function will call CalcD1() because the D1 values required to compute D2
 //
-func (o *LagrangeInterp) CalcD2() (err error) {
+func (o *LagrangeInterp) CalcD2() {
 
 	// calculate D1
-	err = o.CalcD1()
-	if err != nil {
-		return
-	}
+	o.CalcD1()
 
 	// allocate output
 	o.D2 = la.NewMatrix(o.N+1, o.N+1)
@@ -392,7 +386,7 @@ func (o *LagrangeInterp) CalcD2() (err error) {
 
 // CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
 //   NOTE: U and D1 matrix must be computed previously
-func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64, err error) {
+func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 
 	// derivative of interpolation @ x_i
 	v := la.NewVector(o.N + 1)
@@ -400,10 +394,7 @@ func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64, err error) {
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
-		vana, e := dfdxAna(o.X[i])
-		if e != nil {
-			return math.MaxFloat64, e
-		}
+		vana := dfdxAna(o.X[i])
 		diff := math.Abs(v[i] - vana)
 		if diff > maxDiff {
 			maxDiff = diff
@@ -414,7 +405,7 @@ func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64, err error) {
 
 // CalcErrorD2 computes the maximum error due to differentiation (@ X[i]) using the D2 matrix
 //   NOTE: U and D2 matrix must be computed previously
-func (o *LagrangeInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64, err error) {
+func (o *LagrangeInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
 
 	// derivative of interpolation @ x_i
 	v := la.NewVector(o.N + 1)
@@ -422,10 +413,7 @@ func (o *LagrangeInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64, err error) 
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
-		vana, e := d2fdx2Ana(o.X[i])
-		if e != nil {
-			return math.MaxFloat64, e
-		}
+		vana := d2fdx2Ana(o.X[i])
 		diff := math.Abs(v[i] - vana)
 		if diff > maxDiff {
 			maxDiff = diff
@@ -464,14 +452,8 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 	xloc = -1
 	for i := 0; i < nStations; i++ {
 		x := -1.0 + 2.0*float64(i)/float64(nStations-1)
-		fx, err := f(x)
-		if err != nil {
-			chk.Panic("f(x) failed:%v\n", err)
-		}
-		ix, err := o.I(x)
-		if err != nil {
-			chk.Panic("I(x) failed:%v\n", err)
-		}
+		fx := f(x)
+		ix := o.I(x)
 		e := math.Abs(fx - ix)
 		if math.IsNaN(e) {
 			chk.Panic("error is NaN\n")
@@ -490,7 +472,7 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 func PlotLagInterpL(N int, gridType string) {
 	xx := utl.LinSpace(-1, 1, 201)
 	yy := make([]float64, len(xx))
-	o, _ := NewLagrangeInterp(N, gridType)
+	o := NewLagrangeInterp(N, gridType)
 	for n := 0; n < N+1; n++ {
 		for k, x := range xx {
 			yy[k] = o.L(n, x)
@@ -509,7 +491,7 @@ func PlotLagInterpW(N int, gridType string) {
 	npts := 201
 	xx := utl.LinSpace(-1, 1, npts)
 	yy := make([]float64, len(xx))
-	o, _ := NewLagrangeInterp(N, gridType)
+	o := NewLagrangeInterp(N, gridType)
 	for k, x := range xx {
 		yy[k] = o.Om(x)
 	}
@@ -526,29 +508,16 @@ func PlotLagInterpI(Nvalues []int, gridType string, f Ss) {
 	npts := 201
 	xx := utl.LinSpace(-1, 1, npts)
 	yy := make([]float64, len(xx))
-	var err error
 	for k, x := range xx {
-		yy[k], err = f(x)
-		if err != nil {
-			chk.Panic("%v\n", err)
-		}
+		yy[k] = f(x)
 	}
 	iy := make([]float64, len(xx))
 	plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
 	for _, N := range Nvalues {
-		p, err := NewLagrangeInterp(N, gridType)
-		if err != nil {
-			chk.Panic("%v\n", err)
-		}
+		p := NewLagrangeInterp(N, gridType)
 		p.CalcU(f)
-		if err != nil {
-			chk.Panic("%v\n", err)
-		}
 		for k, x := range xx {
-			iy[k], err = p.I(x)
-			if err != nil {
-				chk.Panic("%v\n", err)
-			}
+			iy[k] = p.I(x)
 		}
 		E, xloc := p.EstimateMaxErr(0, f)
 		plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})

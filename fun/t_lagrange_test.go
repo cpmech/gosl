@@ -22,11 +22,7 @@ func TestLagCardinal01(tst *testing.T) {
 	// allocate structure
 	N := 5
 	kind := "uni"
-	o, err := NewLagrangeInterp(N, kind)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	o := NewLagrangeInterp(N, kind)
 	chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-15, o.EstimateLebesgue(), 3.106301040275436e+00)
 
 	// check Kronecker property (barycentic)
@@ -81,25 +77,20 @@ func TestLagInterp01(tst *testing.T) {
 	chk.PrintTitle("TestLagInterp01. Lagrange interpolation")
 
 	// cos-exp function
-	f := func(x float64) (float64, error) {
-		return math.Cos(math.Exp(2.0 * x)), nil
+	f := func(x float64) float64 {
+		return math.Cos(math.Exp(2.0 * x))
 	}
 
 	// allocate structure and calculate U
 	N := 5
 	kind := "uni"
-	o, err := NewLagrangeInterp(N, kind)
-	status(tst, err)
-	status(tst, o.CalcU(f))
+	o := NewLagrangeInterp(N, kind)
+	o.CalcU(f)
 
 	// check interpolation
 	for i, x := range o.X {
-		ynum, err := o.I(x)
-		if err != nil {
-			tst.Errorf("%v\n", err)
-			return
-		}
-		yana, _ := f(x)
+		ynum := o.I(x)
+		yana := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
 	}
 	io.Pl()
@@ -118,25 +109,20 @@ func TestLagInterp02(tst *testing.T) {
 	chk.PrintTitle("TestLagInterp02. Lagrange interp. Runge problem")
 
 	// Runge function
-	f := func(x float64) (float64, error) {
-		return 1.0 / (1.0 + 16.0*x*x), nil
+	f := func(x float64) float64 {
+		return 1.0 / (1.0 + 16.0*x*x)
 	}
 
 	// allocate structure and calculate U
 	N := 8
 	kind := "uni"
-	o, err := NewLagrangeInterp(N, kind)
-	status(tst, err)
-	status(tst, o.CalcU(f))
+	o := NewLagrangeInterp(N, kind)
+	o.CalcU(f)
 
 	// check interpolation
 	for i, x := range o.X {
-		ynum, err := o.I(x)
-		if err != nil {
-			tst.Errorf("%v\n", err)
-			return
-		}
-		yana, _ := f(x)
+		ynum := o.I(x)
+		yana := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
 	}
 	io.Pl()
@@ -163,22 +149,20 @@ func TestLagInterp03(tst *testing.T) {
 	chk.PrintTitle("TestLagInterp03. Chebyshev-Gauss. Runge problem")
 
 	// Runge function
-	f := func(x float64) (float64, error) {
-		return 1.0 / (1.0 + 16.0*x*x), nil
+	f := func(x float64) float64 {
+		return 1.0 / (1.0 + 16.0*x*x)
 	}
 
 	// allocate structure and calculate U
 	N := 8
 	kind := "cg"
-	o, err := NewLagrangeInterp(N, kind)
-	status(tst, err)
-	status(tst, o.CalcU(f))
+	o := NewLagrangeInterp(N, kind)
+	o.CalcU(f)
 
 	// check interpolation
 	for i, x := range o.X {
-		ynum, err := o.I(x)
-		status(tst, err)
-		yana, _ := f(x)
+		ynum := o.I(x)
+		yana := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
 	}
 	io.Pl()
@@ -186,8 +170,7 @@ func TestLagInterp03(tst *testing.T) {
 	// check Lebesgue constants and compute max error
 	ΛN := []float64{1.988854381999833e+00, 2.361856787767076e+00, 3.011792612349363e+00}
 	for i, n := range []int{4, 8, 24} {
-		p, err := NewLagrangeInterp(n, kind)
-		status(tst, err)
+		p := NewLagrangeInterp(n, kind)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-13, p.EstimateLebesgue(), ΛN[i])
 	}
 
@@ -210,9 +193,8 @@ func TestLagInterp03(tst *testing.T) {
 		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
-			p, err := NewLagrangeInterp(int(n), kind)
-			status(tst, err)
-			status(tst, p.CalcU(f))
+			p := NewLagrangeInterp(int(n), kind)
+			p.CalcU(f)
 			E[i], _ = p.EstimateMaxErr(0, f)
 		}
 		plt.Plot(Nvalues, E, &plt.A{C: "red", M: ".", NoClip: true})
@@ -230,22 +212,20 @@ func TestLagInterp04(tst *testing.T) {
 	chk.PrintTitle("TestLagInterp04. Chebyshev-Gauss-Lobatto. Runge problem")
 
 	// Runge function
-	f := func(x float64) (float64, error) {
-		return 1.0 / (1.0 + 16.0*x*x), nil
+	f := func(x float64) float64 {
+		return 1.0 / (1.0 + 16.0*x*x)
 	}
 
 	// allocate structure and calculate U
 	N := 8
 	kind := "cgl"
-	o, err := NewLagrangeInterp(N, kind)
-	status(tst, err)
-	status(tst, o.CalcU(f))
+	o := NewLagrangeInterp(N, kind)
+	o.CalcU(f)
 
 	// check interpolation
 	for i, x := range o.X {
-		ynum, err := o.I(x)
-		status(tst, err)
-		yana, _ := f(x)
+		ynum := o.I(x)
+		yana := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
 	}
 	io.Pl()
@@ -253,8 +233,7 @@ func TestLagInterp04(tst *testing.T) {
 	// check Lebesgue constants and compute max error
 	ΛN := []float64{1.798761778849085e+00, 2.274730699116020e+00, 2.984443326362511e+00}
 	for i, n := range []int{4, 8, 24} {
-		p, err := NewLagrangeInterp(n, kind)
-		status(tst, err)
+		p := NewLagrangeInterp(n, kind)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-14, p.EstimateLebesgue(), ΛN[i])
 	}
 
@@ -277,9 +256,8 @@ func TestLagInterp04(tst *testing.T) {
 		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
 		E := make([]float64, len(Nvalues))
 		for i, n := range Nvalues {
-			p, err := NewLagrangeInterp(int(n), kind)
-			status(tst, err)
-			status(tst, p.CalcU(f))
+			p := NewLagrangeInterp(int(n), kind)
+			p.CalcU(f)
 			E[i], _ = p.EstimateMaxErr(0, f)
 		}
 		plt.Plot(Nvalues, E, &plt.A{C: "red", M: ".", NoClip: true})
@@ -307,16 +285,14 @@ func checkLam(tst *testing.T, o *LagrangeInterp, tol float64) {
 func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 
 	// allocate structure and calculate U
-	o, err := NewLagrangeInterp(N, "cgl")
-	status(tst, err)
-	status(tst, o.CalcU(f))
+	o := NewLagrangeInterp(N, "cgl")
+	o.CalcU(f)
 
 	// check interpolation (std)
 	o.Bary = false
 	for i, x := range o.X {
-		ynum, err := o.I(x)
-		status(tst, err)
-		yana, _ := f(x)
+		ynum := o.I(x)
+		yana := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
 	}
 
@@ -326,9 +302,8 @@ func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 	// check interpolation (barycentric)
 	o.Bary = true
 	for i, x := range o.X {
-		ynum, err := o.I(x)
-		status(tst, err)
-		yana, _ := f(x)
+		ynum := o.I(x)
+		yana := f(x)
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, false)
 	}
 
@@ -337,11 +312,9 @@ func checkIandLam(tst *testing.T, N int, tolLam float64, f Ss) {
 	for _, x := range xx {
 		for i := 0; i < o.N+1; i++ {
 			o.Bary = false
-			i1, err := o.I(x)
-			status(tst, err)
+			i1 := o.I(x)
 			o.Bary = true
-			i2, err := o.I(x)
-			status(tst, err)
+			i2 := o.I(x)
 			chk.AnaNum(tst, io.Sf("I%d", i), 1e-15, i1, i2, false)
 		}
 	}
@@ -353,8 +326,8 @@ func TestLagInterp05(tst *testing.T) {
 	chk.PrintTitle("TestLagInterp05. Barycentric formulae")
 
 	// Runge function
-	f := func(x float64) (float64, error) {
-		return math.Cos(math.Exp(2.0 * x)), nil
+	f := func(x float64) float64 {
+		return math.Cos(math.Exp(2.0 * x))
 	}
 
 	// test
@@ -369,11 +342,10 @@ func TestLagInterp05(tst *testing.T) {
 func cmpD1lag(tst *testing.T, N int, tol float64) {
 
 	// allocate structure
-	o, err := NewLagrangeInterp(N, "cgl")
-	status(tst, err)
+	o := NewLagrangeInterp(N, "cgl")
 
 	// calc and check D1
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	for j := 0; j < N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < N+1; l++ {
@@ -400,15 +372,14 @@ func TestLagInterp06(tst *testing.T) {
 func checkD2lag(tst *testing.T, N int, h, tolD float64, verb bool) {
 
 	// allocate
-	o, err := NewLagrangeInterp(N, "cgl")
-	status(tst, err)
+	o := NewLagrangeInterp(N, "cgl")
 	if verb {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
 	// check D2 matrix
 	hh := h * h
-	status(tst, o.CalcD2())
+	o.CalcD2()
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < o.N+1; l++ {
@@ -441,38 +412,34 @@ func TestLagInterp07(tst *testing.T) {
 func calcD1errorLag(tst *testing.T, N int, f, dfdxAna Ss, useEta bool) (maxDiff float64) {
 
 	// allocate polynomial
-	o, err := NewLagrangeInterp(N, "cgl")
-	status(tst, err)
+	o := NewLagrangeInterp(N, "cgl")
 
 	// compute coefficients
-	status(tst, o.CalcU(f))
+	o.CalcU(f)
 
 	// compute D1 matrix
 	o.UseEta = useEta
-	status(tst, o.CalcD1())
+	o.CalcD1()
 
 	// compute error
-	maxDiff, err = o.CalcErrorD1(dfdxAna)
-	status(tst, err)
+	maxDiff = o.CalcErrorD1(dfdxAna)
 	return
 }
 
 func calcD2errorLag(tst *testing.T, N int, f, d2fdx2Ana Ss, useEta bool) (maxDiff float64) {
 
 	// allocate polynomial
-	o, err := NewLagrangeInterp(N, "cgl")
-	status(tst, err)
+	o := NewLagrangeInterp(N, "cgl")
 
 	// compute coefficients
-	status(tst, o.CalcU(f))
+	o.CalcU(f)
 
 	// compute D2 matrix
 	o.UseEta = useEta
-	status(tst, o.CalcD2())
+	o.CalcD2()
 
 	// compute error
-	maxDiff, err = o.CalcErrorD2(d2fdx2Ana)
-	status(tst, err)
+	maxDiff = o.CalcErrorD2(d2fdx2Ana)
 	return
 }
 
@@ -481,14 +448,14 @@ func TestLagInterp08(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("LagInterp08. D1 and D2. analytical")
 
-	f := func(x float64) (float64, error) {
-		return math.Pow(x, 8), nil
+	f := func(x float64) float64 {
+		return math.Pow(x, 8)
 	}
-	g := func(x float64) (float64, error) {
-		return 8.0 * math.Pow(x, 7), nil
+	g := func(x float64) float64 {
+		return 8.0 * math.Pow(x, 7)
 	}
-	h := func(x float64) (float64, error) {
-		return 56.0 * math.Pow(x, 6), nil
+	h := func(x float64) float64 {
+		return 56.0 * math.Pow(x, 6)
 	}
 
 	N := 8

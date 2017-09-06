@@ -89,12 +89,11 @@ type FourierInterp struct {
 //   NOTE: remember to call Free in the end to release memory allocatedy by FFTW; e.g.
 //         defer o.Free()
 //
-func NewFourierInterp(N int, smoothing string) (o *FourierInterp, err error) {
+func NewFourierInterp(N int, smoothing string) (o *FourierInterp) {
 
 	// check
 	if N%2 != 0 {
-		err = chk.Err("N must be even. N=%d is invalid\n", N)
-		return
+		chk.Panic("N must be even. N=%d is invalid\n", N)
 	}
 
 	// allocate
@@ -133,22 +132,10 @@ func NewFourierInterp(N int, smoothing string) (o *FourierInterp, err error) {
 	o.DuHat = la.NewVectorC(o.N)
 	o.Du1Hat = la.NewVectorC(o.N)
 	o.Du2Hat = la.NewVectorC(o.N)
-	o.planA, err = fftw.NewPlan1d(o.A, false, false)
-	if err != nil {
-		return
-	}
-	o.planDu, err = fftw.NewPlan1d(o.DuHat, true, false)
-	if err != nil {
-		return
-	}
-	o.planDu1, err = fftw.NewPlan1d(o.Du1Hat, true, false)
-	if err != nil {
-		return
-	}
-	o.planDu2, err = fftw.NewPlan1d(o.Du2Hat, true, false)
-	if err != nil {
-		return
-	}
+	o.planA = fftw.NewPlan1d(o.A, false, false)
+	o.planDu = fftw.NewPlan1d(o.DuHat, true, false)
+	o.planDu1 = fftw.NewPlan1d(o.Du1Hat, true, false)
+	o.planDu2 = fftw.NewPlan1d(o.Du2Hat, true, false)
 	return
 }
 
@@ -169,15 +156,12 @@ func (o *FourierInterp) Free() {
 }
 
 // CalcU calculates f(x) at grid points (to be used later with CalcA and/or CalcD)
-func (o *FourierInterp) CalcU(f Ss) (err error) {
+func (o *FourierInterp) CalcU(f Ss) {
 	if len(o.U) != o.N {
 		o.U = la.NewVector(o.N)
 	}
 	for j := 0; j < o.N; j++ {
-		o.U[j], err = f(o.X[j])
-		if err != nil {
-			return
-		}
+		o.U[j] = f(o.X[j])
 	}
 	return
 }
@@ -210,7 +194,7 @@ func (o *FourierInterp) CalcA() {
 //
 //  NOTE: with the 3/2-rule, the intepolatory property is not exact; i.e. I(xi)≈f(xi) only
 //
-func (o *FourierInterp) CalcAwithAliasRemoval(f Ss) (err error) {
+func (o *FourierInterp) CalcAwithAliasRemoval(f Ss) {
 
 	// allocate workspace
 	M := 3*o.N/2 - 1
@@ -223,18 +207,12 @@ func (o *FourierInterp) CalcAwithAliasRemoval(f Ss) (err error) {
 	m := float64(M)
 	for j := 0; j < M; j++ {
 		xj := 2.0 * math.Pi * float64(j) / m
-		fxj, err = f(xj)
-		if err != nil {
-			return
-		}
+		fxj = f(xj)
 		o.workAli[j] = complex(fxj/m, 0)
 	}
 
 	// perform Fourier transform to find A[j]
-	err = Dft1d(o.workAli, false)
-	if err != nil {
-		return
-	}
+	Dft1d(o.workAli, false)
 
 	// copy spectral coefficients to the right place in the smaller grid
 	var jN, jM int // j's corresponding to the N and M series, respectively
@@ -463,30 +441,21 @@ func (o *FourierInterp) Plot(option, p int, f, dfdx, d2fdx2 Ss, argsF, argsI, ar
 		x := xx[i]
 		if withF {
 			if f != nil {
-				fx, err := f(x)
-				if err != nil {
-					chk.Panic("f(x) failed:\n%v\n", err)
-				}
+				fx := f(x)
 				y1[i] = fx
 			}
 			y2[i] = o.I(x)
 		}
 		if firstD {
 			if dfdx != nil {
-				dfx, err := dfdx(x)
-				if err != nil {
-					chk.Panic("df/dx(x) failed:\n%v\n", err)
-				}
+				dfx := dfdx(x)
 				y3[i] = dfx
 			}
 			y4[i] = o.Idiff(1, x)
 		}
 		if secondD {
 			if d2fdx2 != nil {
-				ddfx, err := d2fdx2(x)
-				if err != nil {
-					chk.Panic("d2f/dx2(x) failed:\n%v\n", err)
-				}
+				ddfx := d2fdx2(x)
 				y5[i] = ddfx
 			}
 			y6[i] = o.Idiff(2, x)

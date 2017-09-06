@@ -51,7 +51,7 @@ type Plan1d struct {
 //   NOTE: (1) the user must remember to call Free to deallocate FFTW data
 //         (2) data will be overwritten
 //
-func NewPlan1d(data []complex128, inverse, measure bool) (o *Plan1d, err error) {
+func NewPlan1d(data []complex128, inverse, measure bool) (o *Plan1d) {
 
 	// allocate new object
 	o = new(Plan1d)

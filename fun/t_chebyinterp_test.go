@@ -21,22 +21,14 @@ func TestChebyInterp01(tst *testing.T) {
 	chk.PrintTitle("ChebyInterp01")
 
 	// test function
-	f := func(x float64) (float64, error) {
-		return math.Cos(math.Exp(2.0 * x)), nil
+	f := func(x float64) float64 {
+		return math.Cos(math.Exp(2.0 * x))
 	}
 
 	// allocate polynomials
 	N := 8
-	che, err := NewChebyInterp(N, true) // Gauss-Chebyshev
-	if err != nil {
-		tst.Errorf("test failed: %v\n", err)
-		return
-	}
-	lob, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	if err != nil {
-		tst.Errorf("test failed: %v\n", err)
-		return
-	}
+	che := NewChebyInterp(N, true)  // Gauss-Chebyshev
+	lob := NewChebyInterp(N, false) // Gauss-Lobatto
 
 	// check P
 	for _, x := range utl.LinSpace(-1, 1, 7) {
@@ -110,7 +102,7 @@ func TestChebyInterp01(tst *testing.T) {
 		Yinte := make([]float64, len(X))
 		Yproj := make([]float64, len(X))
 		for i, x := range X {
-			Y[i], _ = f(x)
+			Y[i] = f(x)
 			Yinte[i] = lob.I(x)
 			Yproj[i] = lob.P(x)
 		}
@@ -126,7 +118,7 @@ func TestChebyInterp01(tst *testing.T) {
 		Nvalues := []float64{1, 8, 16, 24, 36, 40, 48, 60, 80, 100, 120}
 		Yerr := make([]float64, len(Nvalues))
 		for i, nn := range Nvalues {
-			o, _ := NewChebyInterp(int(nn), false)
+			o := NewChebyInterp(int(nn), false)
 			o.CalcCoefP(f)
 			Yerr[i], _ = o.EstimateMaxErr(f, true)
 		}
@@ -144,23 +136,21 @@ func TestChebyInterp02(tst *testing.T) {
 	chk.PrintTitle("ChebyInterp02")
 
 	// test function
-	f := func(x float64) (float64, error) {
+	f := func(x float64) float64 {
 		//return 1.0 / (1.0 + 4.0*x*x), nil
-		return math.Cos(math.Exp(2.0 * x)), nil
+		return math.Cos(math.Exp(2.0 * x))
 	}
 
 	// allocate polynomials
 	N := 6
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
+	o := NewChebyInterp(N, false) // Gauss-Lobatto
 
 	// compute data
-	status(tst, o.CalcCoefI(f))
+	o.CalcCoefI(f)
 
 	// check interpolation @ nodes
 	for k, x := range o.X {
-		fk, err := f(x)
-		status(tst, err)
+		fk := f(x)
 		chk.Float64(tst, io.Sf("I(x_%d)", k), 1e-14, o.I(x), fk)
 	}
 
@@ -169,8 +159,7 @@ func TestChebyInterp02(tst *testing.T) {
 	np := len(o.X) // number of points
 	u := la.NewVector(np)
 	for i, x := range o.X {
-		u[i], err = f(x)
-		status(tst, err)
+		u[i] = f(x)
 	}
 	ub := la.NewVector(np)
 	la.MatVecMul(ub, 1, o.C, u)
@@ -195,7 +184,7 @@ func TestChebyInterp02(tst *testing.T) {
 		y1 := make([]float64, len(xx))
 		y2 := make([]float64, len(xx))
 		for i, x := range xx {
-			y1[i], _ = f(x)
+			y1[i] = f(x)
 			y2[i] = o.I(x)
 		}
 		plt.Reset(true, nil)
@@ -212,8 +201,7 @@ func TestChebyInterp02(tst *testing.T) {
 func checkIandIs(tst *testing.T, N int, f Ss, tol float64, verb bool) {
 
 	// allocate
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
+	o := NewChebyInterp(N, false) // Gauss-Lobatto
 	if verb {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
@@ -255,8 +243,8 @@ func TestChebyInterp03(tst *testing.T) {
 	chk.PrintTitle("ChebyInterp03. ℓ and I(x) versus Is(x)")
 
 	// test function
-	f := func(x float64) (float64, error) {
-		return math.Cos(math.Exp(2.0 * x)), nil
+	f := func(x float64) float64 {
+		return math.Cos(math.Exp(2.0 * x))
 	}
 
 	// allocate polynomial
@@ -268,8 +256,7 @@ func TestChebyInterp03(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		N := 5
-		o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-		status(tst, err)
+		o := NewChebyInterp(N, false) // Gauss-Lobatto
 		npts := 201
 		xx := utl.LinSpace(-1, 1, npts)
 		yy := make([]float64, npts)
@@ -307,36 +294,35 @@ func cmpD1che(tst *testing.T, msg string, o *ChebyInterp, D1, D1trig [][]float64
 func checkD1che(tst *testing.T, N int, tolD, tolCmp float64, verb bool) {
 
 	// allocate
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
+	o := NewChebyInterp(N, false) // Gauss-Lobatto
 	if verb {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
 	// noFlip,noNst
 	o.Trig, o.Flip, o.Nst = false, false, false
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	D1 := o.D1.GetDeep2()
 	o.Trig, o.Flip, o.Nst = true, false, false
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	D1trig := o.D1.GetDeep2()
 	cmpD1che(tst, "[noFlip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
 	// flip,noNst
 	o.Trig, o.Flip, o.Nst = false, true, false
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	D1 = o.D1.GetDeep2()
 	o.Trig, o.Flip, o.Nst = true, true, false
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	D1trig = o.D1.GetDeep2()
 	cmpD1che(tst, "[flip,noNst]", o, D1, D1trig, tolD, tolCmp, verb)
 
 	// nst
 	o.Trig, o.Flip, o.Nst = false, false, true
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	D1 = o.D1.GetDeep2()
 	o.Trig, o.Flip, o.Nst = true, false, true
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	D1trig = o.D1.GetDeep2()
 	cmpD1che(tst, "[---, nst]", o, D1, D1trig, tolD, tolCmp, verb)
 }
@@ -357,12 +343,11 @@ func TestChebyInterp04(tst *testing.T) {
 
 // cmpD1ana compares D1 matrices with numerical differentiation and with each other
 func cmpD1ana(tst *testing.T, msg string, o *ChebyInterp, f, dfdxAna Ss, tol float64, verb bool) {
-	status(tst, o.CalcCoefIs(f))
+	o.CalcCoefIs(f)
 	u := o.CoefIs //f @ nodes: u = f(x_i)
 	v := la.NewVector(o.N + 1)
 	la.MatVecMul(v, 1, o.D1, u)
-	maxDiff, err := o.CalcErrorD1(dfdxAna)
-	status(tst, err)
+	maxDiff := o.CalcErrorD1(dfdxAna)
 	if maxDiff > tol {
 		tst.Errorf(msg+": maxDiff = %23g ⇒ D1 failed\n", maxDiff)
 	} else {
@@ -372,33 +357,32 @@ func cmpD1ana(tst *testing.T, msg string, o *ChebyInterp, f, dfdxAna Ss, tol flo
 
 func checkD1ana(tst *testing.T, N int, f, dfdxAna Ss, tol, tolTrig, tolNst float64, verb bool) {
 
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
+	o := NewChebyInterp(N, false) // Gauss-Lobatto
 
 	o.Trig, o.Flip, o.Nst = false, false, false
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	cmpD1ana(tst, "[noTrig, noFlip, noNst]", o, f, dfdxAna, tol, verb)
 
 	o.Trig, o.Flip, o.Nst = true, false, false
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	cmpD1ana(tst, "[  trig, noFlip, noNst]", o, f, dfdxAna, tolTrig, verb)
 
 	o.Trig, o.Flip, o.Nst = false, true, false
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	cmpD1ana(tst, "[noTrig,   flip, noNst]", o, f, dfdxAna, tol, verb)
 
 	o.Trig, o.Flip, o.Nst = true, true, false
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	cmpD1ana(tst, "[  trig,   flip, noNst]", o, f, dfdxAna, tolTrig, verb)
 
 	// nst
 
 	o.Trig, o.Flip, o.Nst = false, false, true
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	cmpD1ana(tst, "[noTrig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 
 	o.Trig, o.Flip, o.Nst = true, false, true
-	status(tst, o.CalcD1())
+	o.CalcD1()
 	cmpD1ana(tst, "[  trig,  ---  ,   nst]", o, f, dfdxAna, tolNst, verb)
 }
 
@@ -408,25 +392,24 @@ func TestChebyInterp05(tst *testing.T) {
 	chk.PrintTitle("ChebyInterp05. I(x) versus Is(x). D1 matrices")
 
 	// test function
-	f := func(x float64) (float64, error) {
-		//return math.Cos(math.Exp(2.0 * x)), nil
-		//return 1.0 / (1.0 + 4.0*x*x), nil
-		return math.Pow(x, 8), nil
+	f := func(x float64) float64 {
+		//return math.Cos(math.Exp(2.0 * x))
+		//return 1.0 / (1.0 + 4.0*x*x)
+		return math.Pow(x, 8)
 	}
-	g := func(x float64) (float64, error) {
-		//return -2.0 * math.Exp(2.0*x) * math.Sin(math.Exp(2.0*x)), nil
-		//return -8.0 * x / math.Pow(1.0+4.0*x*x, 2.0), nil
-		return 8.0 * math.Pow(x, 7), nil
+	g := func(x float64) float64 {
+		//return -2.0 * math.Exp(2.0*x) * math.Sin(math.Exp(2.0*x))
+		//return -8.0 * x / math.Pow(1.0+4.0*x*x, 2.0)
+		return 8.0 * math.Pow(x, 7)
 	}
 
 	// allocate polynomial
 	N := 8
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
+	o := NewChebyInterp(N, false) // Gauss-Lobatto
 
 	// check interpolations
-	status(tst, o.CalcCoefI(f))
-	status(tst, o.CalcCoefIs(f))
+	o.CalcCoefI(f)
+	o.CalcCoefIs(f)
 	xx := utl.LinSpace(-1, 1, 11)
 	for _, x := range xx {
 		i1 := o.I(x)
@@ -447,10 +430,10 @@ func TestChebyInterp05(tst *testing.T) {
 		y3 := make([]float64, len(xx))
 		y4 := make([]float64, len(xx))
 		for i, x := range xx {
-			y1[i], _ = f(x)
+			y1[i] = f(x)
 			y2[i] = o.I(x)
 			y3[i] = o.Il(x)
-			y4[i], _ = g(x)
+			y4[i] = g(x)
 		}
 
 		o.CalcD1()
@@ -481,38 +464,34 @@ func TestChebyInterp05(tst *testing.T) {
 func calcD1errorChe(tst *testing.T, N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64) {
 
 	// allocate polynomial
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
+	o := NewChebyInterp(N, false) // Gauss-Lobatto
 
 	// compute coefficients
-	status(tst, o.CalcCoefIs(f))
+	o.CalcCoefIs(f)
 
 	// compute D1 matrix
 	o.Trig, o.Flip, o.Nst = trig, flip, nst
-	status(tst, o.CalcD1())
+	o.CalcD1()
 
 	// compute error
-	maxDiff, err = o.CalcErrorD1(dfdxAna)
-	status(tst, err)
+	maxDiff = o.CalcErrorD1(dfdxAna)
 	return
 }
 
 func calcD2errorChe(tst *testing.T, N int, f, dfdxAna Ss, stdD2 bool) (maxDiff float64) {
 
 	// allocate polynomial
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
+	o := NewChebyInterp(N, false) // Gauss-Lobatto
 
 	// compute coefficients
-	status(tst, o.CalcCoefIs(f))
+	o.CalcCoefIs(f)
 
 	// compute D2 matrix
 	o.StdD2 = stdD2
-	status(tst, o.CalcD2())
+	o.CalcD2()
 
 	// compute error
-	maxDiff, err = o.CalcErrorD2(dfdxAna)
-	status(tst, err)
+	maxDiff = o.CalcErrorD2(dfdxAna)
 	return
 }
 
@@ -522,14 +501,14 @@ func TestChebyInterp06(tst *testing.T) {
 	chk.PrintTitle("ChebyInterp06. round-off errors")
 
 	// test function
-	f := func(x float64) (float64, error) {
-		return math.Pow(x, 8), nil
-		//return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5), nil
+	f := func(x float64) float64 {
+		return math.Pow(x, 8)
+		//return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5)
 	}
-	g := func(x float64) (float64, error) {
+	g := func(x float64) float64 {
 		//d := math.Pow(x+1.1, 1.5)
-		//return (8*math.Cos(8*x))/d - (3*math.Sin(8*x))/(2*(1.1+x)*d), nil
-		return 8.0 * math.Pow(x, 7), nil
+		//return (8*math.Cos(8*x))/d - (3*math.Sin(8*x))/(2*(1.1+x)*d)
+		return 8.0 * math.Pow(x, 7)
 	}
 
 	if chk.Verbose {
@@ -580,15 +559,14 @@ func TestChebyInterp06(tst *testing.T) {
 func checkD2che(tst *testing.T, N int, h, tolD float64, verb bool) {
 
 	// allocate
-	o, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
+	o := NewChebyInterp(N, false) // Gauss-Lobatto
 	if verb {
 		io.Pf("\n\n----------------------------- N = %d -----------------------------------------\n\n", N)
 	}
 
 	// check D2 matrix
 	hh := h * h
-	status(tst, o.CalcD2())
+	o.CalcD2()
 	for j := 0; j < o.N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < o.N+1; l++ {
@@ -624,14 +602,14 @@ func TestChebyInterp08(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ChebyInterp08. D1 and D2. analytical")
 
-	f := func(x float64) (float64, error) {
-		return math.Pow(x, 8), nil
+	f := func(x float64) float64 {
+		return math.Pow(x, 8)
 	}
-	g := func(x float64) (float64, error) {
-		return 8.0 * math.Pow(x, 7), nil
+	g := func(x float64) float64 {
+		return 8.0 * math.Pow(x, 7)
 	}
-	h := func(x float64) (float64, error) {
-		return 56.0 * math.Pow(x, 6), nil
+	h := func(x float64) float64 {
+		return 56.0 * math.Pow(x, 6)
 	}
 
 	N := 8

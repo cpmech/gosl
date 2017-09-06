@@ -151,9 +151,8 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) (err error) {
 
 			// numerical Jacobian
 			if o.jac == nil { // numerical
-				err = num.Jacobian(o.dfdy, func(fy, yy la.Vector) (e error) {
-					e = o.fcn(fy, h, x0, yy)
-					return
+				num.Jacobian(o.dfdy, func(fy, yy la.Vector) {
+					o.fcn(fy, h, x0, yy)
 				}, y0, o.work.f[0], o.dr) // dr works here as workspace variable
 
 				// analytical Jacobian

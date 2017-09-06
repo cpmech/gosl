@@ -22,18 +22,9 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 	io.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")
 	var o Brent
 	o.Init(ffcnA)
-	var err error
-	xbrent, err = o.Solve(xa, xb, false)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	xbrent = o.Solve(xa, xb, false)
 	var ybrent float64
-	ybrent, err = ffcnA(xbrent)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	ybrent = ffcnA(xbrent)
 	io.Pforan("x      = %v\n", xbrent)
 	io.Pforan("f(x)   = %v\n", ybrent)
 	io.Pforan("nfeval = %v\n", o.NFeval)
@@ -49,23 +40,11 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 	p.Init(1, ffcnB, nil, JfcnB, true, false, nil)
 	xnewt := []float64{xguess}
 	var cnd float64
-	cnd, err = p.CheckJ(xnewt, 1e-6, true, !chk.Verbose)
+	cnd = p.CheckJ(xnewt, 1e-6, true, !chk.Verbose)
 	io.Pforan("cond(J) = %v\n", cnd)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
-	err = p.Solve(xnewt, false)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	p.Solve(xnewt, false)
 	var ynewt float64
-	ynewt, err = ffcnA(xnewt[0])
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	ynewt = ffcnA(xnewt[0])
 	io.Pforan("x      = %v\n", xnewt[0])
 	io.Pforan("f(x)   = %v\n", ynewt)
 	io.Pforan("nfeval = %v\n", p.NFeval)
@@ -86,17 +65,17 @@ func Test_brent01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("brent01. root finding")
 
-	ffcnA := func(x float64) (res float64, err error) {
+	ffcnA := func(x float64) (res float64) {
 		res = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
 		return
 	}
 
-	ffcnB := func(fx, x la.Vector) (err error) {
-		fx[0], err = ffcnA(x[0])
+	ffcnB := func(fx, x la.Vector) {
+		fx[0] = ffcnA(x[0])
 		return
 	}
 
-	JfcnB := func(dfdx *la.Matrix, x la.Vector) (err error) {
+	JfcnB := func(dfdx *la.Matrix, x la.Vector) {
 		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0*0.165*x[0])
 		return
 	}
@@ -114,16 +93,16 @@ func Test_brent02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("brent02. root finding")
 
-	ffcnA := func(x float64) (res float64, err error) {
-		return x*x*x - 2.0*x - 5.0, nil
+	ffcnA := func(x float64) (res float64) {
+		return x*x*x - 2.0*x - 5.0
 	}
 
-	ffcnB := func(fx, x la.Vector) (err error) {
-		fx[0], err = ffcnA(x[0])
+	ffcnB := func(fx, x la.Vector) {
+		fx[0] = ffcnA(x[0])
 		return
 	}
 
-	JfcnB := func(dfdx *la.Matrix, x la.Vector) (err error) {
+	JfcnB := func(dfdx *la.Matrix, x la.Vector) {
 		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0)
 		return
 	}
@@ -141,23 +120,15 @@ func Test_brent03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("brent03. minimum finding")
 
-	ffcn := func(x float64) (res float64, err error) {
-		return x*x*x - 2.0*x - 5.0, nil
+	ffcn := func(x float64) (res float64) {
+		return x*x*x - 2.0*x - 5.0
 	}
 
 	var o Brent
 	o.Init(ffcn)
 	xa, xb := 0.0, 1.0
-	x, err := o.Min(xa, xb, false)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
-	y, err := ffcn(x)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	x := o.Min(xa, xb, false)
+	y := ffcn(x)
 	xcor := math.Sqrt(2.0 / 3.0)
 	io.Pforan("x      = %v (correct=%g)\n", x, xcor)
 	io.Pforan("f(x)   = %v\n", y)

@@ -52,11 +52,7 @@ func TestOneDver01a(tst *testing.T) {
 	measure := false
 
 	// allocate plan
-	plan, err := NewPlan1d(x, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan1d(x, inverse, measure)
 	defer plan.Free()
 
 	// check plan.data
@@ -90,11 +86,7 @@ func TestOneDver01b(tst *testing.T) {
 	measure := true
 
 	// allocate plan
-	plan, err := NewPlan1d(x, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan1d(x, inverse, measure)
 	defer plan.Free()
 
 	// check plan.data
@@ -128,11 +120,7 @@ func TestOneDver02(tst *testing.T) {
 	measure := true
 
 	// allocate plan
-	plan, err := NewPlan1d(x, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan1d(x, inverse, measure)
 	defer plan.Free()
 
 	// check plan.data
@@ -162,11 +150,7 @@ func TestOneDver03(tst *testing.T) {
 	}
 
 	// allocate plan
-	plan, err := NewPlan1d(x, false, false)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan1d(x, false, false)
 	defer plan.Free()
 
 	// perform Fourier transform
@@ -207,11 +191,7 @@ func TestOneDver04(tst *testing.T) {
 	// allocate plan
 	inverse := false
 	measure := false
-	plan, err := NewPlan1d(x, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan1d(x, inverse, measure)
 	defer plan.Free()
 
 	// perform Fourier transform
@@ -221,11 +201,7 @@ func TestOneDver04(tst *testing.T) {
 
 	// allocate plan for inverse transform
 	inverse = true
-	planInv, err := NewPlan1d(x, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	planInv := NewPlan1d(x, inverse, measure)
 	defer planInv.Free()
 
 	// perform inverse Fourier transform
@@ -263,11 +239,7 @@ func TestOneDver05(tst *testing.T) {
 	// allocate plan
 	inverse := false
 	measure := false
-	plan, err := NewPlan1d(U, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	plan := NewPlan1d(U, inverse, measure)
 	defer plan.Free()
 
 	// perform Fourier transform
@@ -276,11 +248,7 @@ func TestOneDver05(tst *testing.T) {
 
 	// allocate plan for inverse transform
 	inverse = true
-	planInv, err := NewPlan1d(U, inverse, measure)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	planInv := NewPlan1d(U, inverse, measure)
 	defer planInv.Free()
 
 	// perform inverse Fourier transform

@@ -23,7 +23,7 @@ func TestDft01(tst *testing.T) {
 	x := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}
 	X := make([]complex128, len(x))
 	copy(X, x)
-	status(tst, Dft1d(X, false))
+	Dft1d(X, false)
 
 	// check
 	Xref := dft1dslow(x)
@@ -32,7 +32,7 @@ func TestDft01(tst *testing.T) {
 	// inverse dft
 	Y := make([]complex128, len(x))
 	copy(Y, X)
-	status(tst, Dft1d(Y, true))
+	Dft1d(Y, true)
 
 	// divide by N
 	n := complex(float64(len(Y)), 0)
@@ -69,11 +69,7 @@ func TestDft02(tst *testing.T) {
 	}
 
 	// execute FFT
-	err := Dft1d(data, false)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	Dft1d(data, false)
 
 	// extract results
 	Xr := make([]float64, N) // real(X[n])
@@ -162,19 +158,11 @@ func TestDft03(tst *testing.T) {
 			io.Pfblue2("normalised\n")
 
 			// execute FFT
-			err := Dft1d(U, false)
-			if err != nil {
-				tst.Errorf("%v\n", err)
-				return
-			}
+			Dft1d(U, false)
 			io.Pforan("FFT(U) = %.3f\n", U)
 
 			// execute inverse FFT
-			err = Dft1d(U, true)
-			if err != nil {
-				tst.Errorf("%v\n", err)
-				return
-			}
+			Dft1d(U, true)
 			io.Pf("invFFT(U) = %.3f\n", U)
 			chk.ArrayC(tst, "U", 1e-15, U, Ucopy)
 
@@ -182,11 +170,7 @@ func TestDft03(tst *testing.T) {
 		case 2:
 
 			// execute FFT
-			err := Dft1d(U, false)
-			if err != nil {
-				tst.Errorf("%v\n", err)
-				return
-			}
+			Dft1d(U, false)
 			io.Pforan("FFT(U) = %.3f\n", U)
 
 			// normalise
@@ -196,11 +180,7 @@ func TestDft03(tst *testing.T) {
 			io.Pfblue2("normalised\n")
 
 			// execute inverse FFT
-			err = Dft1d(U, true)
-			if err != nil {
-				tst.Errorf("%v\n", err)
-				return
-			}
+			Dft1d(U, true)
 			io.Pf("invFFT(U) = %.3f\n", U)
 			chk.ArrayC(tst, "U", 1e-15, U, Ucopy)
 
@@ -208,19 +188,11 @@ func TestDft03(tst *testing.T) {
 		case 3:
 
 			// execute FFT
-			err := Dft1d(U, false)
-			if err != nil {
-				tst.Errorf("%v\n", err)
-				return
-			}
+			Dft1d(U, false)
 			io.Pforan("FFT(U) = %.3f\n", U)
 
 			// execute inverse FFT
-			err = Dft1d(U, true)
-			if err != nil {
-				tst.Errorf("%v\n", err)
-				return
-			}
+			Dft1d(U, true)
 			io.Pf("invFFT(U) = %.3f\n", U)
 
 			// normalise

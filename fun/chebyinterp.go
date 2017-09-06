@@ -74,7 +74,7 @@ type ChebyInterp struct {
 //
 //   NOTE: X here is the mirrowed version of Chebyshev X; i.e. from +1 to -1
 //
-func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp, err error) {
+func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp) {
 
 	// allocate
 	o = new(ChebyInterp)
@@ -175,15 +175,12 @@ func (o *ChebyInterp) CalcConvMats() {
 //
 //   NOTE: the results will be stored in o.CoefI
 //
-func (o *ChebyInterp) CalcCoefI(f Ss) (err error) {
+func (o *ChebyInterp) CalcCoefI(f Ss) {
 
 	// evaluate function at all points
 	fx := make([]float64, o.N+1)
 	for i := 0; i < o.N+1; i++ {
-		fx[i], err = f(o.X[i])
-		if err != nil {
-			return
-		}
+		fx[i] = f(o.X[i])
 	}
 
 	// computation of coefficients
@@ -206,7 +203,7 @@ func (o *ChebyInterp) CalcCoefI(f Ss) (err error) {
 //
 //   NOTE: the results will be stored in o.CoefP
 //
-func (o *ChebyInterp) CalcCoefP(f Ss) (err error) {
+func (o *ChebyInterp) CalcCoefP(f Ss) {
 
 	// quadrature data
 	nn := o.EstimationN
@@ -221,10 +218,7 @@ func (o *ChebyInterp) CalcCoefP(f Ss) (err error) {
 	}
 	fx := make([]float64, nn+1)
 	for i := 0; i < nn+1; i++ {
-		fx[i], err = f(xx[i])
-		if err != nil {
-			return
-		}
+		fx[i] = f(xx[i])
 	}
 
 	// computation of coefficients using quadrature
@@ -301,10 +295,7 @@ func (o *ChebyInterp) EstimateMaxErr(f Ss, projection bool) (maxerr, xloc float6
 	var fa float64
 	for i := 0; i < nsta; i++ {
 		x := -1.0 + 2.0*float64(i)/float64(nsta-1)
-		fx, err := f(x)
-		if err != nil {
-			chk.Panic("f(x) failed:%v\n", err)
-		}
+		fx := f(x)
 		if projection {
 			fa = o.P(x)
 		} else {
@@ -340,15 +331,12 @@ func (o *ChebyInterp) HierarchicalT(i int, x float64) float64 {
 }
 
 // CalcCoefIs computes the coefficients for interpolation with Lagrange cardinal functions ℓ_l(x)
-func (o *ChebyInterp) CalcCoefIs(f Ss) (err error) {
+func (o *ChebyInterp) CalcCoefIs(f Ss) {
 	if len(o.CoefIs) != o.N+1 {
 		o.CoefIs = make([]float64, o.N+1)
 	}
 	for l := 0; l < o.N+1; l++ {
-		o.CoefIs[l], err = f(o.X[l])
-		if err != nil {
-			return
-		}
+		o.CoefIs[l] = f(o.X[l])
 	}
 	return
 }
@@ -417,11 +405,11 @@ func (o *ChebyInterp) L(i int, x float64) float64 {
 //   NOTE: (1) the signs are swapped (compared to [1]) because X are reversed here (from -1 to +1)
 //         (2) this method is only available for Gauss-Lobatto points
 //
-func (o *ChebyInterp) CalcD1() (err error) {
+func (o *ChebyInterp) CalcD1() {
 
 	// check
 	if o.Gauss {
-		return chk.Err("cannot compute D1 for non-Gauss-Lobatto points\n")
+		chk.Panic("cannot compute D1 for non-Gauss-Lobatto points\n")
 	}
 
 	// allocate output and declare some constants/variables
@@ -513,11 +501,11 @@ func (o *ChebyInterp) CalcD1() (err error) {
 //  NOTE: this function will call CalcD1() because the D1 values required to compute D2,
 //        unless StdD2=true where the "standard" formula (Eq. 2.4.32) is used instead => less accurate
 //
-func (o *ChebyInterp) CalcD2() (err error) {
+func (o *ChebyInterp) CalcD2() {
 
 	// check
 	if o.Gauss {
-		return chk.Err("cannot compute D2 for non-Gauss-Lobatto points\n")
+		chk.Panic("cannot compute D2 for non-Gauss-Lobatto points\n")
 	}
 
 	// allocate output
@@ -566,10 +554,7 @@ func (o *ChebyInterp) CalcD2() (err error) {
 	}
 
 	// calculate D1
-	err = o.CalcD1()
-	if err != nil {
-		return
-	}
+	o.CalcD1()
 
 	// compute D2 from D1 values using Eqs. (9) and (13) of [3]
 	var v, sumRow float64
@@ -589,7 +574,7 @@ func (o *ChebyInterp) CalcD2() (err error) {
 
 // CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
 //   NOTE: CoefIs and D1 matrix must be computed previously
-func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64, err error) {
+func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 
 	// f @ nodes: u = f(x_i)
 	u := o.CoefIs
@@ -600,10 +585,7 @@ func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64, err error) {
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
-		vana, e := dfdxAna(o.X[i])
-		if e != nil {
-			return math.MaxFloat64, e
-		}
+		vana := dfdxAna(o.X[i])
 		diff := math.Abs(v[i] - vana)
 		if diff > maxDiff {
 			maxDiff = diff
@@ -614,7 +596,7 @@ func (o *ChebyInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64, err error) {
 
 // CalcErrorD2 computes the maximum error due to differentiation (@ X[i]) using the D2 matrix
 //   NOTE: CoefIs and D2 matrix must be computed previously
-func (o *ChebyInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64, err error) {
+func (o *ChebyInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
 
 	// f @ nodes: u = f(x_i)
 	u := o.CoefIs
@@ -625,10 +607,7 @@ func (o *ChebyInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64, err error) {
 
 	// compute error
 	for i := 0; i < o.N+1; i++ {
-		vana, e := d2fdx2Ana(o.X[i])
-		if e != nil {
-			return math.MaxFloat64, e
-		}
+		vana := d2fdx2Ana(o.X[i])
 		diff := math.Abs(v[i] - vana)
 		if diff > maxDiff {
 			maxDiff = diff

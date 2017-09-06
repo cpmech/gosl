@@ -17,14 +17,12 @@ import (
 func compareLambda(tst *testing.T, N int, f Ss, tolU, tolL float64) {
 
 	// allocate Lagrange structure and calculate U
-	lag, err := NewLagrangeInterp(N, "cgl")
-	status(tst, err)
-	status(tst, lag.CalcU(f))
+	lag := NewLagrangeInterp(N, "cgl")
+	lag.CalcU(f)
 
 	// allocate Chebyshev structure and calculate U
-	che, err := NewChebyInterp(N, false) // Gauss-Lobatto
-	status(tst, err)
-	status(tst, che.CalcCoefIs(f))
+	che := NewChebyInterp(N, false) // Gauss-Lobatto
+	che.CalcCoefIs(f)
 
 	// check U values
 	io.Pf("\n-------------------------------- N = %d -----------------------------------\n", N)
@@ -46,8 +44,8 @@ func TestLagCheby01(tst *testing.T) {
 	chk.PrintTitle("LagCheby01")
 
 	// test function
-	f := func(x float64) (float64, error) {
-		return math.Cos(math.Exp(2.0 * x)), nil
+	f := func(x float64) float64 {
+		return math.Cos(math.Exp(2.0 * x))
 	}
 
 	// test
@@ -115,11 +113,11 @@ func TestLagCheby02a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("LagCheby02a. round-off errors")
 
-	f := func(x float64) (float64, error) {
-		return math.Pow(x, 8), nil
+	f := func(x float64) float64 {
+		return math.Pow(x, 8)
 	}
-	g := func(x float64) (float64, error) {
-		return 8.0 * math.Pow(x, 7), nil
+	g := func(x float64) float64 {
+		return 8.0 * math.Pow(x, 7)
 	}
 	if chk.Verbose {
 		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
@@ -132,12 +130,12 @@ func TestLagCheby02b(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("LagCheby02b. round-off errors")
 
-	f := func(x float64) (float64, error) {
-		return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5), nil
+	f := func(x float64) float64 {
+		return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5)
 	}
-	g := func(x float64) (float64, error) {
+	g := func(x float64) float64 {
 		d := math.Pow(x+1.1, 1.5)
-		return (8*math.Cos(8*x))/d - (3*math.Sin(8*x))/(2*(1.1+x)*d), nil
+		return (8*math.Cos(8*x))/d - (3*math.Sin(8*x))/(2*(1.1+x)*d)
 	}
 	if chk.Verbose {
 		Nvals := []int{64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
@@ -150,11 +148,11 @@ func TestLagCheby03a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("LagCheby03a. round-off errors")
 
-	f := func(x float64) (float64, error) {
-		return math.Pow(x, 8), nil
+	f := func(x float64) float64 {
+		return math.Pow(x, 8)
 	}
-	h := func(x float64) (float64, error) {
-		return 56.0 * math.Pow(x, 6), nil
+	h := func(x float64) float64 {
+		return 56.0 * math.Pow(x, 6)
 	}
 	if chk.Verbose {
 		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500}
@@ -167,13 +165,13 @@ func TestLagCheby03b(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("LagCheby03b. round-off errors")
 
-	f := func(x float64) (float64, error) {
-		return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5), nil
+	f := func(x float64) float64 {
+		return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5)
 	}
-	h := func(x float64) (float64, error) {
+	h := func(x float64) float64 {
 		m := x + 1.1
 		d := math.Pow(m, 1.5)
-		return -(64*math.Sin(8*x))/d + (3.75*math.Sin(8*x))/(d*m*m) - (24*math.Cos(8*x))/(d*m), nil
+		return -(64*math.Sin(8*x))/d + (3.75*math.Sin(8*x))/(d*m*m) - (24*math.Cos(8*x))/(d*m)
 	}
 	if chk.Verbose {
 		Nvals := []int{64, 100, 128, 250, 256, 500}

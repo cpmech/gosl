@@ -59,26 +59,20 @@ func (o *Brent) Init(ffcn fun.Ss) {
 //   is used in the other case. Therefore, the range of uncertainty is
 //   ensured to be reduced at least by the factor 1.6
 //
-func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
+func (o *Brent) Solve(xa, xb float64, silent bool) (res float64) {
 
 	// basic variables and function evaluation
 	a := xa // the last but one approximation
 	b := xb // the last and the best approximation to the root
 	c := a  // the last but one or even earlier approximation than a that
-	fa, erra := o.Ffcn(a)
-	fb, errb := o.Ffcn(b)
+	fa := o.Ffcn(a)
+	fb := o.Ffcn(b)
 	o.NFeval = 2
-	if erra != nil {
-		return 0, chk.Err("fa(%g) failed:\n%v", xa, erra.Error())
-	}
-	if errb != nil {
-		return 0, chk.Err("fb(%g) failed:\n%v", xb, errb.Error())
-	}
 	fc := fa
 
 	// check input
 	if fa*fb >= -MACHEPS {
-		return 0, chk.Err("root must be bracketed: xa=%g, xb=%g, fa=%g, fb=%b => fa * fb >= 0", xa, xb, fa, fb)
+		chk.Panic("root must be bracketed: xa=%g, xb=%g, fa=%g, fb=%b => fa * fb >= 0", xa, xb, fa, fb)
 	}
 
 	// message
@@ -115,7 +109,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(newStep))
 		}
 		if math.Abs(newStep) <= tolAct || fb == 0.0 {
-			return b, nil
+			return b
 		}
 
 		// decide if the interpolation can be tried
@@ -168,11 +162,8 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 
 		// do step to a new approximation
 		b += newStep
-		fb, errb = o.Ffcn(b)
+		fb = o.Ffcn(b)
 		o.NFeval++
-		if errb != nil {
-			return 0, chk.Err("f(%g) failed:\n%v", b, errb.Error())
-		}
 
 		// adjust c for it to have a sign opposite to that of b
 		if (fb > 0.0 && fc > 0.0) || (fb < 0.0 && fc < 0.0) {
@@ -182,7 +173,8 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 	}
 
 	// did not converge
-	return fb, chk.Err("fail to converge after %d iterations", o.It)
+	chk.Panic("fail to converge after %d iterations", o.It)
+	return
 }
 
 // Min finds the minimum of f(x) in [xa, xb]
@@ -217,20 +209,17 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64, err error) {
 //   within the given range, Fminbr returns 'a' (if f(a) < f(b)), otherwise
 //   it returns the right range boundary value b.
 //
-func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
+func (o *Brent) Min(xa, xb float64, silent bool) (res float64) {
 
 	// check
 	if xb < xa {
-		return 0, chk.Err("xa(%g) must be smaller than xb(%g)", xa, xb)
+		chk.Panic("xa(%g) must be smaller than xb(%g)", xa, xb)
 	}
 
 	// first step: always gold section
 	v := xa + o.gsr*(xb-xa)
-	fv, errv := o.Ffcn(v)
+	fv := o.Ffcn(v)
 	o.NFeval = 1
-	if errv != nil {
-		return 0, chk.Err("f(%g) failed:\n%v\n", v, errv)
-	}
 	x, w, fx, fw := v, v, fv, fv
 
 	// solve
@@ -252,7 +241,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-midRng)+rng/2.0)
 		}
 		if math.Abs(x-midRng)+rng/2.0 <= 2.0*tolAct {
-			return x, nil
+			return x
 		}
 
 		// Obtain the gold section step
@@ -294,10 +283,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 
 		// obtain the next approximation to min and reduce the enveloping rng
 		t = x + newStep // tentative point for the min  */
-		ft, err = o.Ffcn(t)
-		if err != nil {
-			return 0, chk.Err("f(%g) failed:\n%v\n", t, err)
-		}
+		ft = o.Ffcn(t)
 
 		// t is a better approximation
 		if ft <= fx {
@@ -334,5 +320,6 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64, err error) {
 	}
 
 	// did not converge
-	return x, chk.Err("fail to converge after %d iterations", o.It)
+	chk.Panic("fail to converge after %d iterations", o.It)
+	return
 }

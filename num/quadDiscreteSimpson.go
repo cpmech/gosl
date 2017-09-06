@@ -12,29 +12,19 @@ import (
 // QuadDiscreteSimpsonRF approximates the area below the discrete curve defined by [xa,xy] range and
 // y function. Computations are carried out with the (very simple) Simpson method from xa to xb,
 // with npts points
-func QuadDiscreteSimpsonRF(a, b float64, n int, f fun.Ss) (res float64, err error) {
+func QuadDiscreteSimpsonRF(a, b float64, n int, f fun.Ss) (res float64) {
 	if n < 2 || n%2 > 0 {
-		err = chk.Err("number of subintervas should be even (n=%d)", n)
-		return
+		chk.Panic("number of subintervas should be even (n=%d)", n)
 	}
-	fa, err := f(a)
-	if err != nil {
-		return
-	}
-	fb, err := f(b)
-	if err != nil {
-		return
-	}
+	fa := f(a)
+	fb := f(b)
 	var fx float64
 	x := a
 	h := (b - a) / float64(n)
 	sum := fa + fb
 	for i := 1; i < n; i++ {
 		x += h
-		fx, err = f(x)
-		if err != nil {
-			return
-		}
+		fx = f(x)
 		if i%2 == 1 { // i is odd
 			sum += 4 * fx
 		} else { // i is even

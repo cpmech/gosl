@@ -18,18 +18,18 @@ func Test_nls01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("nls01. 2 eqs system")
 
-	ffcn := func(fx, x la.Vector) error {
+	ffcn := func(fx, x la.Vector) {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
 		fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
-		return nil
+		return
 	}
-	Jfcn := func(dfdx *la.Triplet, x la.Vector) error {
+	Jfcn := func(dfdx *la.Triplet, x la.Vector) {
 		dfdx.Start()
 		dfdx.Put(0, 0, 3.0*x[0]*x[0])
 		dfdx.Put(0, 1, 1.0)
 		dfdx.Put(1, 0, -1.0)
 		dfdx.Put(1, 1, 3.0*x[1]*x[1])
-		return nil
+		return
 	}
 
 	x := []float64{0.5, 0.5}
@@ -52,11 +52,7 @@ func Test_nls01(tst *testing.T) {
 	defer nlsAna.Free()
 
 	// solve
-	err := nlsAna.Solve(x, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsAna.Solve(x, false)
 
 	// check
 	ffcn(fx, x)
@@ -66,11 +62,7 @@ func Test_nls01(tst *testing.T) {
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	_, err = nlsAna.CheckJ(x, 1e-5, false, true)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsAna.CheckJ(x, 1e-5, false, true)
 
 	io.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
 	xx := []float64{0.5, 0.5}
@@ -81,11 +73,7 @@ func Test_nls01(tst *testing.T) {
 	defer nlsNum.Free()
 
 	// solve
-	err = nlsNum.Solve(xx, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsNum.Solve(xx, false)
 
 	// check
 	ffcn(fx, xx)
@@ -96,11 +84,7 @@ func Test_nls01(tst *testing.T) {
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	_, err = nlsAna.CheckJ(x, 1e-5, false, true)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsAna.CheckJ(x, 1e-5, false, true)
 }
 
 func Test_nls02(tst *testing.T) {
@@ -108,18 +92,18 @@ func Test_nls02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("nls02. 2 eqs system with exp function")
 
-	ffcn := func(fx, x la.Vector) error {
+	ffcn := func(fx, x la.Vector) {
 		fx[0] = 2.0*x[0] - x[1] - math.Exp(-x[0])
 		fx[1] = -x[0] + 2.0*x[1] - math.Exp(-x[1])
-		return nil
+		return
 	}
-	Jfcn := func(dfdx *la.Triplet, x la.Vector) error {
+	Jfcn := func(dfdx *la.Triplet, x la.Vector) {
 		dfdx.Start()
 		dfdx.Put(0, 0, 2.0+math.Exp(-x[0]))
 		dfdx.Put(0, 1, -1.0)
 		dfdx.Put(1, 0, -1.0)
 		dfdx.Put(1, 1, 2.0+math.Exp(-x[1]))
-		return nil
+		return
 	}
 
 	x := []float64{5.0, 5.0}
@@ -142,11 +126,7 @@ func Test_nls02(tst *testing.T) {
 	defer nlsAna.Free()
 
 	// solve
-	err := nlsAna.Solve(x, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsAna.Solve(x, false)
 
 	// check
 	ffcn(fx, x)
@@ -156,11 +136,7 @@ func Test_nls02(tst *testing.T) {
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	_, err = nlsAna.CheckJ(x, 1e-5, false, true)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsAna.CheckJ(x, 1e-5, false, true)
 
 	io.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
 	xx := []float64{5.0, 5.0}
@@ -171,11 +147,7 @@ func Test_nls02(tst *testing.T) {
 	defer nlsNum.Free()
 
 	// solve
-	err = nlsNum.Solve(xx, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsNum.Solve(xx, false)
 
 	// check
 	ffcn(fx, x)
@@ -186,11 +158,7 @@ func Test_nls02(tst *testing.T) {
 
 	// check Jacobian
 	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	_, err = nlsAna.CheckJ(x, 1e-5, false, true)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsAna.CheckJ(x, 1e-5, false, true)
 }
 
 func Test_nls03(tst *testing.T) {
@@ -199,25 +167,25 @@ func Test_nls03(tst *testing.T) {
 	chk.PrintTitle("nls03. 2 eqs system with trig functions")
 
 	e := math.E
-	ffcn := func(fx, x la.Vector) error {
+	ffcn := func(fx, x la.Vector) {
 		fx[0] = 0.5*sin(x[0]*x[1]) - 0.25*x[1]/pi - 0.5*x[0]
 		fx[1] = (1.0-0.25/pi)*(math.Exp(2.0*x[0])-e) + e*x[1]/pi - 2.0*e*x[0]
-		return nil
+		return
 	}
-	Jfcn := func(dfdx *la.Triplet, x la.Vector) error {
+	Jfcn := func(dfdx *la.Triplet, x la.Vector) {
 		dfdx.Start()
 		dfdx.Put(0, 0, 0.5*x[1]*cos(x[0]*x[1])-0.5)
 		dfdx.Put(0, 1, 0.5*x[0]*cos(x[0]*x[1])-0.25/pi)
 		dfdx.Put(1, 0, (2.0-0.5/pi)*math.Exp(2.0*x[0])-2.0*e)
 		dfdx.Put(1, 1, e/pi)
-		return nil
+		return
 	}
-	JfcnD := func(dfdx *la.Matrix, x la.Vector) error {
+	JfcnD := func(dfdx *la.Matrix, x la.Vector) {
 		dfdx.Set(0, 0, 0.5*x[1]*cos(x[0]*x[1])-0.5)
 		dfdx.Set(0, 1, 0.5*x[0]*cos(x[0]*x[1])-0.25/pi)
 		dfdx.Set(1, 0, (2.0-0.5/pi)*math.Exp(2.0*x[0])-2.0*e)
 		dfdx.Set(1, 1, e/pi)
-		return nil
+		return
 	}
 
 	x := []float64{0.4, 3.0}
@@ -246,11 +214,7 @@ func Test_nls03(tst *testing.T) {
 
 	x = []float64{0.4, 3.0}
 	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
-	err := nlsSps.Solve(x, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsSps.Solve(x, false)
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
 	io.Pf("f(x) = %v\n", fx)
@@ -260,11 +224,7 @@ func Test_nls03(tst *testing.T) {
 	x = []float64{0.7, 4.0}
 	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
 	//rtol = 1e-2
-	err = nlsSps.Solve(x, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsSps.Solve(x, false)
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
 	io.Pf("f(x) = %v\n", fx)
@@ -277,11 +237,7 @@ func Test_nls03(tst *testing.T) {
 	//lSearch, chkConv := false, false // this combination works but results are different
 	//lSearch, chkConv := true, true   // this combination works but results are wrong => fails
 	nlsSps.ChkConv = false
-	err = nlsSps.Solve(x, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsSps.Solve(x, false)
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
 	io.Pf("f(x) = %v << converges to a different solution\n", fx)
@@ -291,11 +247,7 @@ func Test_nls03(tst *testing.T) {
 
 	x = []float64{0.4, 3.0}
 	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
-	err = nlsDen.Solve(x, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsDen.Solve(x, false)
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
 	io.Pf("f(x) = %v\n", fx)
@@ -305,11 +257,7 @@ func Test_nls03(tst *testing.T) {
 	x = []float64{0.7, 4.0}
 	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
 	//rtol = 1e-2
-	err = nlsDen.Solve(x, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsDen.Solve(x, false)
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
 	io.Pf("f(x) = %v\n", fx)
@@ -319,11 +267,7 @@ func Test_nls03(tst *testing.T) {
 	x = []float64{1.0, 4.0}
 	io.PfYel("\n--- dense ------------- with x = %v ---------------\n", x)
 	nlsDen.ChkConv = false
-	err = nlsDen.Solve(x, false)
-	if err != nil {
-		tst.Error("%v\n", err)
-		return
-	}
+	nlsDen.Solve(x, false)
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
 	io.Pf("f(x) = %v << converges to a different solution\n", fx)
