@@ -146,7 +146,7 @@ func SubplotMatrix(nrow, ncol int, cmds func(i, j int)) {
 			if col > 0 {
 				SetNoYtickLabels()
 			} else {
-				SetYlabel(io.Sf("$x_{%d}$", row), nil)
+				SetYlabel(io.Sf("$y_{%d}$", row), nil)
 			}
 			if row > 0 {
 				SetNoXtickLabels()
