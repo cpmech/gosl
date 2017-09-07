@@ -46,10 +46,7 @@ func TestWaterfall01(tst *testing.T) {
 
 		Reset(true, nil)
 		Waterfall(X, T, Z, nil)
-		err := Save("/tmp/gosl/plt", "t_waterfall01")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_waterfall01")
 	}
 }
 
@@ -79,10 +76,7 @@ func TestSlopeInd01(tst *testing.T) {
 		}
 		draw(1)
 		draw(2)
-		err := Save("/tmp/gosl/plt", "t_slopeind01")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_slopeind01")
 	}
 }
 
@@ -114,10 +108,7 @@ func TestSlopeInd02(tst *testing.T) {
 		}
 		draw(1)
 		draw(2)
-		err := Save("/tmp/gosl/plt", "t_slopeind02")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_slopeind02")
 	}
 }
 
@@ -137,10 +128,7 @@ func TestSlopeInd03(tst *testing.T) {
 		SlopeInd(-2.0, 3.9, 4.0, 1, "2", true, true, false, nil, nil)
 		Grid(nil)
 		SetXlog()
-		err := Save("/tmp/gosl/plt", "t_slopeind03")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_slopeind03")
 	}
 }
 
@@ -160,10 +148,7 @@ func TestSlopeInd04(tst *testing.T) {
 		SlopeInd(-2.0, 3.9, 4.0, 1, "2", true, false, true, nil, nil)
 		Grid(nil)
 		SetYlog()
-		err := Save("/tmp/gosl/plt", "t_slopeind04")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_slopeind04")
 	}
 }
 
@@ -186,10 +171,7 @@ func TestMatrix01(tst *testing.T) {
 		}
 		Reset(true, &A{WidthPt: 500})
 		SubplotMatrix(len(xx), len(xx), cmds)
-		err := Save("/tmp/gosl/plt", "t_matrix01")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_matrix01")
 	}
 }
 
@@ -214,9 +196,6 @@ func TestMatrixSym01(tst *testing.T) {
 		}
 		Reset(true, &A{WidthPt: 500})
 		SubplotMatrixSym(len(xx), len(xx), cmds, nil)
-		err := Save("/tmp/gosl/plt", "t_matrixsym01")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_matrixsym01")
 	}
 }

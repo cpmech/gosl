@@ -7,7 +7,6 @@
 package main
 
 import (
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -47,8 +46,5 @@ func main() {
 	plt.Plot(x, y4, &plt.A{C: "cyan", L: "curve ond new again"})
 	plt.Gll("xnew", "ynew", nil)
 
-	err := plt.Save("/tmp/gosl", "plt_zoomwindow01")
-	if err != nil {
-		io.PfRed("save failed:\n%v\n", err)
-	}
+	plt.Save("/tmp/gosl", "plt_zoomwindow01")
 }

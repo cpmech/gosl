@@ -40,10 +40,7 @@ func Test_hc01(tst *testing.T) {
 		plt.Plot(X[0], X[1], &plt.A{C: "r", M: "o", Ls: "none", NoClip: true})
 		plt.Equal()
 		plt.Gll("$x_0$", "$x_1$", nil)
-		err := plt.Save("/tmp/gosl/rnd", "t_hc01")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl/rnd", "t_hc01")
 	}
 }
 
@@ -65,10 +62,7 @@ func Test_hc02(tst *testing.T) {
 		plt.Plot(X[0], X[1], &plt.A{C: "r", M: "o", Ls: "none", NoClip: true})
 		plt.Equal()
 		plt.Gll("$x_0$", "$x_1$", nil)
-		err := plt.Save("/tmp/gosl/rnd", "t_hc02")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl/rnd", "t_hc02")
 	}
 }
 
@@ -90,9 +84,6 @@ func Test_hc03(tst *testing.T) {
 		plt.Plot3dPoints(X[0], X[1], X[2], &plt.A{C: "r", M: "o"})
 		plt.SetLabels3d("$x_0$", "$x_1$", "$x_2$", nil)
 		plt.Default3dView(xmin[0], xmax[0], xmin[1], xmax[1], xmin[2], xmax[2], true)
-		err := plt.Save("/tmp/gosl/rnd", "t_hc03")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl/rnd", "t_hc03")
 	}
 }

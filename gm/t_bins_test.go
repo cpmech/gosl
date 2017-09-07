@@ -68,9 +68,9 @@ func Test_bins01(tst *testing.T) {
 		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
 		var err error
 		if false {
-			err = plt.ShowSave("/tmp/gosl/gm", "t_bins01")
+			plt.ShowSave("/tmp/gosl/gm", "t_bins01")
 		} else {
-			err = plt.Save("/tmp/gosl/gm", "t_bins01")
+			plt.Save("/tmp/gosl/gm", "t_bins01")
 		}
 		if err != nil {
 			tst.Errorf("%v", err)
@@ -186,10 +186,7 @@ func Test_bins02(tst *testing.T) {
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.HideAllBorders()
-		err := plt.Save("/tmp/gosl/gm", "t_bins02")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl/gm", "t_bins02")
 	}
 }
 
@@ -317,10 +314,7 @@ func Test_bins03(tst *testing.T) {
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.HideAllBorders()
-		err := plt.Save("/tmp/gosl/gm", "t_bins03")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl/gm", "t_bins03")
 	}
 }
 
@@ -359,10 +353,7 @@ func Test_bins04(tst *testing.T) {
 		bins.Draw(true, true, false, false, nil, argsGrid, nil, nil, nil)
 		plt.DefaultTriad(10.1)
 		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
-		err := plt.Save("/tmp/gosl/gm", "t_bins04")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl/gm", "t_bins04")
 	}
 }
 
@@ -408,7 +399,7 @@ func Test_bins05a(tst *testing.T) {
 		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
-		err = plt.Save("/tmp/gosl/gm", "t_bins05a")
+		plt.Save("/tmp/gosl/gm", "t_bins05a")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -457,7 +448,7 @@ func Test_bins05b(tst *testing.T) {
 		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
-		err = plt.Save("/tmp/gosl/gm", "t_bins05b")
+		plt.Save("/tmp/gosl/gm", "t_bins05b")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}
@@ -544,9 +535,9 @@ func Test_bins06(tst *testing.T) {
 		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
 		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
 		if false {
-			err = plt.ShowSave("/tmp/gosl/gm", "t_bins06")
+			plt.ShowSave("/tmp/gosl/gm", "t_bins06")
 		} else {
-			err = plt.Save("/tmp/gosl/gm", "t_bins06")
+			plt.Save("/tmp/gosl/gm", "t_bins06")
 		}
 		if err != nil {
 			tst.Errorf("%v", err)

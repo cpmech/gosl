@@ -8,7 +8,6 @@ package main
 
 import (
 	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 )
 
@@ -49,8 +48,5 @@ func main() {
 	plt.Subplot(3, 2, 6)
 	s2.PlotDerivs(npts)
 
-	err := plt.Save("/tmp/gosl", "gm_bspline02")
-	if err != nil {
-		io.PfRed("%v", err)
-	}
+	plt.Save("/tmp/gosl", "gm_bspline02")
 }

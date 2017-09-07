@@ -7,7 +7,6 @@
 package main
 
 import (
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 )
 
@@ -19,8 +18,5 @@ func main() {
 	plt.Box(-0.5, 1, -1, 2, -3, 0, &plt.A{A: 0.5, Lw: 3, Fc: "#5294ed", Ec: "#ffec4f", Wire: true})
 	plt.Triad(1.5, "x", "y", "z", nil, nil)
 	plt.Default3dView(-1, 1.5, -1.5, 2.5, -3.5, 0.5, true)
-	err := plt.Save("/tmp/gosl", "plt_boxandpoints")
-	if err != nil {
-		io.PfRed("%v", err)
-	}
+	plt.Save("/tmp/gosl", "plt_boxandpoints")
 }

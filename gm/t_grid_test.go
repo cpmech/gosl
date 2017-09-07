@@ -75,7 +75,7 @@ func TestGrid01(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.SetXnticks(12)
 		plt.SetYnticks(12)
-		err = plt.Save("/tmp/gosl/gm", "grid01")
+		plt.Save("/tmp/gosl/gm", "grid01")
 		status(tst, err)
 	}
 }
@@ -136,7 +136,7 @@ func TestGrid02(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.SetXnticks(17)
 		plt.SetYnticks(17)
-		err = plt.Save("/tmp/gosl/gm", "grid02")
+		plt.Save("/tmp/gosl/gm", "grid02")
 		status(tst, err)
 	}
 }
@@ -237,7 +237,7 @@ func TestGrid03(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.DefaultTriad(1)
 		plt.Default3dView(g.Min(0), g.Max(0), g.Min(1), g.Max(1), g.Min(2), g.Max(2), true)
-		err = plt.Save("/tmp/gosl/gm", "grid03")
+		plt.Save("/tmp/gosl/gm", "grid03")
 		status(tst, err)
 	}
 }

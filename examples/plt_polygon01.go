@@ -7,7 +7,6 @@
 package main
 
 import (
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 )
 
@@ -58,8 +57,5 @@ func main() {
 	}, nil)
 
 	// save figure (default is PNG)
-	err := plt.Save("/tmp/gosl", "plt_polygon01")
-	if err != nil {
-		io.Pf("error: %v\n", err)
-	}
+	plt.Save("/tmp/gosl", "plt_polygon01")
 }

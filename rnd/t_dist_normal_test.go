@@ -236,9 +236,6 @@ func Test_dist_normal_06(tst *testing.T) {
 		plt.Gll("$x$", "$y=T(x)$", nil)
 		plt.AxisXmin(1)
 
-		err := plt.Save("/tmp/gosl", "rnd_dist_normal_06")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl", "rnd_dist_normal_06")
 	}
 }

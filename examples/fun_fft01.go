@@ -10,7 +10,6 @@ import (
 	"math"
 	"math/cmplx"
 
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/rnd"
@@ -44,16 +43,10 @@ func main() {
 	}
 
 	// compute the Fourier transform of original signal
-	err := fun.Dft1d(oData, false)
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
+	fun.Dft1d(oData, false)
 
 	// compute the Fourier transform of corrupted signal
-	err = fun.Dft1d(cData, false)
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
+	fun.Dft1d(cData, false)
 
 	// process results
 	P := make([]float64, L/2+1) // single-sided spectrum of the original signal

@@ -137,10 +137,7 @@ func Test_plot01(tst *testing.T) {
 			HideR:   true,
 		})
 
-		err := Save("/tmp/gosl/plt", "t_plot01")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot01")
 	}
 }
 
@@ -180,10 +177,7 @@ func Test_plot02(tst *testing.T) {
 		AxisRange(-0.2, 1.3, -0.2, 1.3)
 		PlotOne(0, 0, &A{M: "*"})
 
-		err := Save("/tmp/gosl/plt", "t_plot02")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot02")
 	}
 }
 
@@ -219,10 +213,7 @@ func Test_plot03(tst *testing.T) {
 		ContourF(X, Y, F, a)
 		SetLabels("$x$", "$y$", nil)
 
-		err := Save("/tmp/gosl/plt", "t_plot03")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot03")
 	}
 }
 
@@ -272,10 +263,7 @@ func Test_plot04(tst *testing.T) {
 		Quiver(X, Y, U, V, nil)
 		Grid(&A{C: "white"})
 
-		err := Save("/tmp/gosl/plt", "t_plot04")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot04")
 	}
 }
 
@@ -310,10 +298,7 @@ func Test_plot05(tst *testing.T) {
 		Hist(X, L, a)
 		Gll("series", "count", nil)
 
-		err := Save("/tmp/gosl/plt", "t_plot05")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot05")
 	}
 }
 
@@ -353,11 +338,7 @@ func Test_plot06(tst *testing.T) {
 		AxDist(10.5)
 		Scale3d(0, 1.5, 0, 1.5, 0, 1.5, true)
 
-		//err := ShowSave("/tmp/gosl/plt", "t_plot06")
-		err := Save("/tmp/gosl/plt", "t_plot06")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot06")
 	}
 }
 
@@ -386,11 +367,7 @@ func Test_plot07(tst *testing.T) {
 		Default3dView(-0.1, 1.1, -0.1, 1.1, -0.1, 1.1, true)
 
 		// save
-		//err := ShowSave("/tmp/gosl/plt", "t_plot07")
-		err := Save("/tmp/gosl/plt", "t_plot07")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot07")
 	}
 }
 
@@ -428,11 +405,7 @@ func Test_plot08(tst *testing.T) {
 		SetLabels3d(`$x_{axis}$`, `$y_{axis}$`, `$z_{axis}$`, &A{C: "r", Fsz: 14})
 
 		// save
-		err := Save("/tmp/gosl/plt", "t_plot08")
-		//err := ShowSave("/tmp/gosl/plt", "t_plot08")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot08")
 	}
 }
 
@@ -483,11 +456,7 @@ func Test_plot09(tst *testing.T) {
 		Default3dView(-1.1, 1.1, -1.1, 1.1, -1.1, 1.1, true)
 
 		// save
-		err := Save("/tmp/gosl/plt", "t_plot09")
-		//err := ShowSave("/tmp/gosl/plt", "t_plot09")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot09")
 	}
 }
 
@@ -531,10 +500,7 @@ func Test_plot10(tst *testing.T) {
 		Plot(x, y4, &A{C: "cyan", L: "curve ond new again"})
 		Gll("xnew", "ynew", nil)
 
-		err := Save("/tmp/gosl/plt", "t_plot10")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot10")
 	}
 }
 
@@ -562,10 +528,7 @@ func Test_plot11(tst *testing.T) {
 			&A{LegOut: true, LegNcol: 3},
 		)
 
-		err := Save("/tmp/gosl/plt", "t_plot11")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot11")
 	}
 }
 
@@ -605,10 +568,7 @@ func Test_plot12(tst *testing.T) {
 		HideAllBorders()
 		Equal()
 
-		err := Save("/tmp/gosl/plt", "t_plot12")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot12")
 	}
 }
 
@@ -650,9 +610,6 @@ func Test_plot13(tst *testing.T) {
 		DefaultTriad(1.1)
 		Default3dView(0, 1.1+dx, 0, 1.1+dy, 0, 1.1, true)
 
-		err := Save("/tmp/gosl/plt", "t_plot13")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		Save("/tmp/gosl/plt", "t_plot13")
 	}
 }

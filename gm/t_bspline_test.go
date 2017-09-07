@@ -62,10 +62,7 @@ func Test_bspline01(tst *testing.T) {
 		plt.Subplot(3, 2, 6)
 		s2.PlotDerivs(npts) // 0 => CalcBasisAndDerivs
 
-		err := plt.Save("/tmp/gosl", "bspline01")
-		if err != nil {
-			tst.Error("%v", err)
-		}
+		plt.Save("/tmp/gosl", "bspline01")
 	}
 }
 

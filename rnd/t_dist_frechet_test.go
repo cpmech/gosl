@@ -205,9 +205,6 @@ func Test_dist_frechet_04(tst *testing.T) {
 		plt.HideTRborders()
 		plt.Gll("$x$", "$y=T(x)$", nil)
 
-		err := plt.Save("/tmp/gosl", "rnd_dist_frechet_04")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl", "rnd_dist_frechet_04")
 	}
 }

@@ -5,7 +5,6 @@
 package gm
 
 import (
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -557,8 +556,5 @@ func plotTwoNurbs2d(dirout, fnkey string, a, b *Nurbs, labelA, labelB string, ex
 		extra()
 	}
 	plt.LegendX([]*plt.A{argsCtrlA, argsCtrlB, argsElemsA, argsElemsB}, &plt.A{LegOut: true, LegNcol: 2})
-	err := plt.Save(dirout, fnkey)
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
+	plt.Save(dirout, fnkey)
 }

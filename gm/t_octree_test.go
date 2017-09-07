@@ -139,11 +139,7 @@ func Test_octree02(tst *testing.T) {
 		plt.Plot3dPoint(r.X[0], r.X[1], r.X[2], &plt.A{C: "y", Ec: "y"})
 		plt.Triad(1, "x", "y", "z", nil, nil)
 		plt.Default3dView(-3, 3, -3, 3, -3, 3, true)
-		//err := plt.ShowSave("/tmp/gosl", "octree02")
-		err := plt.Save("/tmp/gosl", "octree02")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl", "octree02")
 	}
 }
 
@@ -219,9 +215,6 @@ func Test_octree03(tst *testing.T) {
 		plt.Equal()
 		plt.HideAllBorders()
 		plt.Grid(nil)
-		err := plt.Save("/tmp/gosl", "octree03")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
+		plt.Save("/tmp/gosl", "octree03")
 	}
 }
