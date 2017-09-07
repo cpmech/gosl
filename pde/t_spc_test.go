@@ -27,8 +27,7 @@ func TestSpc01(tst *testing.T) {
 	ndiv := []int{4, 4} // 4x4 divs ⇒ 5x5 grid ⇒ 25 equations
 
 	// spectral-collocation solver
-	spc, err := NewGridSolver("spc", "cgl", "laplacian", params, nil, xmin, xmax, ndiv)
-	status(tst, err)
+	spc := NewGridSolver("spc", "cgl", "laplacian", params, nil, xmin, xmax, ndiv)
 
 	// essential boundary conditions
 	ebcs := NewEssentialBcs()
@@ -55,8 +54,7 @@ func TestSpc01(tst *testing.T) {
 		{+0., +2., +0., +0., -6., +0., -4., +20, -4.},
 		{+0., +0., +2., +0., +0., -6., +2., -6., +28},
 	})
-	err = spc.Solve(true)
-	status(tst, err)
+	spc.Solve(true)
 }
 
 func TestSpc02(tst *testing.T) {
@@ -76,8 +74,7 @@ func TestSpc02(tst *testing.T) {
 	ndiv := []int{3, 3} // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 
 	// spectral-collocation solver
-	spc, err := NewGridSolver("spc", "uni", "laplacian", params, nil, xmin, xmax, ndiv)
-	status(tst, err)
+	spc := NewGridSolver("spc", "uni", "laplacian", params, nil, xmin, xmax, ndiv)
 
 	// essential boundary conditions
 	ebcs := NewEssentialBcs()
@@ -103,14 +100,12 @@ func TestSpc02(tst *testing.T) {
 	})
 
 	// solve problem
-	err = spc.Solve(true)
-	status(tst, err)
+	spc.Solve(true)
 	chk.Array(tst, "Xk", 1e-17, spc.Eqs.Xk, []float64{1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2})
 	chk.Array(tst, "U", 1e-15, spc.U, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
 
 	// check
-	eqFull, err := la.NewEquations(spc.Grid.Size(), nil)
-	status(tst, err)
+	eqFull, _ := la.NewEquations(spc.Grid.Size(), nil)
 	spc.Op.Assemble(eqFull)
 	K := eqFull.Auu.ToMatrix(nil)
 	Fref := la.NewVector(spc.Eqs.N)
@@ -134,8 +129,7 @@ func TestSpc02(tst *testing.T) {
 		plt.ContourL(xx, yy, uu, nil)
 		plt.Gll("$x$", "$y$", nil)
 		plt.HideAllBorders()
-		err = plt.Save("/tmp/gosl/pde", "spc02")
-		status(tst, err)
+		plt.Save("/tmp/gosl/pde", "spc02")
 	}
 }
 
@@ -154,13 +148,12 @@ func TestSpc03(tst *testing.T) {
 	xmin := []float64{-1, -1}
 	xmax := []float64{+1, +1}
 	ndiv := []int{4, 4} // 4x4 divs ⇒ 5x5 grid ⇒ 25 equations
-	source := func(x la.Vector, t float64) (float64, error) {
-		return -10 * math.Sin(8*x[0]*(x[1]-1)), nil // -1 here because Lapacian is negative
+	source := func(x la.Vector, t float64) float64 {
+		return -10 * math.Sin(8*x[0]*(x[1]-1)) // -1 here because Lapacian is negative
 	}
 
 	// spectral-collocation solver
-	spc, err := NewGridSolver("spc", "cgl", "laplacian", params, source, xmin, xmax, ndiv)
-	status(tst, err)
+	spc := NewGridSolver("spc", "cgl", "laplacian", params, source, xmin, xmax, ndiv)
 
 	// essential boundary conditions
 	ebcs := NewEssentialBcs()
@@ -174,8 +167,7 @@ func TestSpc03(tst *testing.T) {
 	spc.SetBcs(ebcs)
 
 	// solve problem
-	err = spc.Solve(true)
-	status(tst, err)
+	spc.Solve(true)
 
 	// output
 	uu := spc.Ugrid2d()

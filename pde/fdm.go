@@ -28,13 +28,13 @@ type FdmLaplacian struct {
 
 // add to database
 func init() {
-	operatorDB["fdm.laplacian"] = func(params dbf.Params, source fun.Svs) (Operator, error) {
+	operatorDB["fdm.laplacian"] = func(params dbf.Params, source fun.Svs) Operator {
 		return newFdmLaplacian(params, source)
 	}
 }
 
 // newFdmLaplacian creates a new Laplacian operator with given parameters
-func newFdmLaplacian(params dbf.Params, source fun.Svs) (o *FdmLaplacian, err error) {
+func newFdmLaplacian(params dbf.Params, source fun.Svs) (o *FdmLaplacian) {
 	o = new(FdmLaplacian)
 	e := params.ConnectSetOpt(
 		[]*float64{&o.kx, &o.ky, &o.kz},
@@ -43,22 +43,22 @@ func newFdmLaplacian(params dbf.Params, source fun.Svs) (o *FdmLaplacian, err er
 		"FdmLaplacian",
 	)
 	if e != "" {
-		err = chk.Err(e)
+		chk.Panic(e)
 	}
 	o.s = source
 	return
 }
 
 // InitWithGrid initialises operator with new grid
-func (o *FdmLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.Grid, err error) {
+func (o *FdmLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.Grid) {
 	g = new(gm.Grid)
-	err = g.GenUniform(xmin, xmax, ndiv, false)
+	g.GenUniform(xmin, xmax, ndiv, false)
 	o.g = g
 	return
 }
 
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
-func (o *FdmLaplacian) Assemble(e *la.Equations) (err error) {
+func (o *FdmLaplacian) Assemble(e *la.Equations) {
 	if e.Auu == nil {
 		e.Alloc([]int{5 * e.Nu, 5 * e.Nu, 5 * e.Nk, 5 * e.Nk}, true, true)
 	}
@@ -104,6 +104,6 @@ func (o *FdmLaplacian) Assemble(e *la.Equations) (err error) {
 }
 
 // SourceTerm assembles the source term vector
-func (o *FdmLaplacian) SourceTerm(e *la.Equations, reactions bool) (err error) {
+func (o *FdmLaplacian) SourceTerm(e *la.Equations, reactions bool) {
 	return
 }

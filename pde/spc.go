@@ -29,13 +29,13 @@ type SpcLaplacian struct {
 
 // add to database
 func init() {
-	operatorDB["spc.laplacian"] = func(params dbf.Params, source fun.Svs) (Operator, error) {
+	operatorDB["spc.laplacian"] = func(params dbf.Params, source fun.Svs) Operator {
 		return newSpcLaplacian(params, source)
 	}
 }
 
 // newSpcLaplacian creates a new Laplacian operator with given parameters
-func newSpcLaplacian(params dbf.Params, source fun.Svs) (o *SpcLaplacian, err error) {
+func newSpcLaplacian(params dbf.Params, source fun.Svs) (o *SpcLaplacian) {
 	o = new(SpcLaplacian)
 	e := params.ConnectSetOpt(
 		[]*float64{&o.kx, &o.ky, &o.kz},
@@ -44,14 +44,14 @@ func newSpcLaplacian(params dbf.Params, source fun.Svs) (o *SpcLaplacian, err er
 		"SpcLaplacian",
 	)
 	if e != "" {
-		err = chk.Err(e)
+		chk.Panic(e)
 	}
 	o.s = source
 	return
 }
 
 // InitWithGrid initialises operator with new grid
-func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.Grid, err error) {
+func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.Grid) {
 
 	// Lagrange interpolators
 	ndim := len(xmin)
@@ -59,24 +59,18 @@ func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []i
 	for i := 0; i < ndim; i++ {
 
 		// allocate
-		o.lip[i], err = fun.NewLagrangeInterp(ndiv[i], gtype)
-		if err != nil {
-			return
-		}
+		o.lip[i] = fun.NewLagrangeInterp(ndiv[i], gtype)
 
 		// compute D2 matrix
-		err = o.lip[i].CalcD2()
-		if err != nil {
-			return
-		}
+		o.lip[i].CalcD2()
 	}
 
 	// new grid
 	g = new(gm.Grid)
 	if ndim == 2 {
-		err = g.Set2d(o.lip[0].X, o.lip[1].X, false)
+		g.Set2d(o.lip[0].X, o.lip[1].X, false)
 	} else {
-		err = g.Set3d(o.lip[0].X, o.lip[1].X, o.lip[2].X, false)
+		g.Set3d(o.lip[0].X, o.lip[1].X, o.lip[2].X, false)
 	}
 	o.g = g
 
@@ -86,7 +80,7 @@ func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []i
 }
 
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
-func (o *SpcLaplacian) Assemble(e *la.Equations) (err error) {
+func (o *SpcLaplacian) Assemble(e *la.Equations) {
 	ndim := len(o.lip)
 	if ndim != 2 { // TODO
 		return
@@ -116,25 +110,19 @@ func (o *SpcLaplacian) Assemble(e *la.Equations) (err error) {
 }
 
 // SourceTerm assembles the source term vector
-func (o *SpcLaplacian) SourceTerm(e *la.Equations, reactions bool) (err error) {
+func (o *SpcLaplacian) SourceTerm(e *la.Equations, reactions bool) {
 	if o.s == nil {
 		return
 	}
 	x := la.NewVector(o.g.Ndim())
 	for i, I := range e.UtoF {
 		o.g.Node(x, I)
-		e.Bu[i], err = o.s(x, 0)
-		if err != nil {
-			return
-		}
+		e.Bu[i] = o.s(x, 0)
 	}
 	if reactions {
 		for i, I := range e.KtoF {
 			o.g.Node(x, I)
-			e.Bk[i], err = o.s(x, 0)
-			if err != nil {
-				return
-			}
+			e.Bk[i] = o.s(x, 0)
 		}
 	}
 	return

@@ -20,16 +20,13 @@ func TestFdm01(tst *testing.T) {
 	chk.PrintTitle("Fdm01. Full Auu matrix.")
 
 	// operator
-	op, err := NewOperator("fdm.laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}, nil)
-	status(tst, err)
+	op := NewOperator("fdm.laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}, nil)
 
 	// init operator with grid: 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
-	g, err := op.InitWithGrid("uni", []float64{0, 0}, []float64{2, 2}, []int{2, 2})
-	status(tst, err)
+	g := op.InitWithGrid("uni", []float64{0, 0}, []float64{2, 2}, []int{2, 2})
 
 	// equations
-	e, err := la.NewEquations(g.Size(), nil)
-	status(tst, err)
+	e, _ := la.NewEquations(g.Size(), nil)
 
 	// assemble
 	op.Assemble(e)
@@ -67,8 +64,7 @@ func TestFdm02(tst *testing.T) {
 	ndiv := []int{3, 3} // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
 
 	// fdm solver
-	fdm, err := NewGridSolver("fdm", "uni", "laplacian", params, nil, xmin, xmax, ndiv)
-	status(tst, err)
+	fdm := NewGridSolver("fdm", "uni", "laplacian", params, nil, xmin, xmax, ndiv)
 
 	// essential boundary conditions
 	ebcs := NewEssentialBcs()
@@ -94,14 +90,12 @@ func TestFdm02(tst *testing.T) {
 	})
 
 	// solve problem
-	err = fdm.Solve(true)
-	status(tst, err)
+	fdm.Solve(true)
 	chk.Array(tst, "Xk", 1e-17, fdm.Eqs.Xk, []float64{1, 1, 1, 1, 1, 2, 1, 2, 2, 2, 2, 2})
 	chk.Array(tst, "U", 1e-15, fdm.U, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
 
 	// check
-	eqFull, err := la.NewEquations(fdm.Grid.Size(), nil)
-	status(tst, err)
+	eqFull, _ := la.NewEquations(fdm.Grid.Size(), nil)
 	fdm.Op.Assemble(eqFull)
 	K := eqFull.Auu.ToMatrix(nil)
 	Fref := la.NewVector(fdm.Eqs.N)
@@ -125,7 +119,6 @@ func TestFdm02(tst *testing.T) {
 		plt.ContourL(xx, yy, uu, nil)
 		plt.Gll("$x$", "$y$", nil)
 		plt.HideAllBorders()
-		err = plt.Save("/tmp/gosl/pde", "fdm02")
-		status(tst, err)
+		plt.Save("/tmp/gosl/pde", "fdm02")
 	}
 }

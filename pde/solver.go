@@ -37,41 +37,35 @@ type Solver struct {
 //  xmin     -- Grid: [ndim] min/initial coordinates of the whole space (box/cube)
 //  xmax     -- Grid: [ndim] max/final coordinates of the whole space (box/cube)
 //  ndiv     -- Grid: [ndim] number of divisions for xmax-xmin
-func NewGridSolver(method, gtype, operator string, params dbf.Params, source fun.Svs, xmin, xmax []float64, ndiv []int) (o *Solver, err error) {
+func NewGridSolver(method, gtype, operator string, params dbf.Params, source fun.Svs, xmin, xmax []float64, ndiv []int) (o *Solver) {
 
 	// check lengths
 	ndim := len(xmin)
 	if len(xmax) != ndim {
-		return nil, chk.Err("len(xmax) must be equal to len(xmin) == ndim. %d != %d\n", len(xmax), ndim)
+		chk.Panic("len(xmax) must be equal to len(xmin) == ndim. %d != %d\n", len(xmax), ndim)
 	}
 	if len(ndiv) != ndim {
-		return nil, chk.Err("len(ndiv) must be equal to len(xmin) == ndim. %d != %d\n", len(ndiv), ndim)
+		chk.Panic("len(ndiv) must be equal to len(xmin) == ndim. %d != %d\n", len(ndiv), ndim)
 	}
 
 	// new solver and operator
 	o = new(Solver)
-	o.Op, err = NewOperator(method+"."+operator, params, source)
-	if err != nil {
-		return
-	}
+	o.Op = NewOperator(method+"."+operator, params, source)
 
 	// grid
-	o.Grid, err = o.Op.InitWithGrid(gtype, xmin, xmax, ndiv)
+	o.Grid = o.Op.InitWithGrid(gtype, xmin, xmax, ndiv)
 	return
 }
 
 // SetBcs sets boundary conditions
-func (o *Solver) SetBcs(ebcs *EssentialBcs) (err error) {
+func (o *Solver) SetBcs(ebcs *EssentialBcs) {
 
 	// collect known equations
 	o.Ebcs = ebcs
 	knownEqs := o.Ebcs.GetNodesList()
 
 	// init equations structure
-	o.Eqs, err = la.NewEquations(o.Grid.Size(), knownEqs)
-	if err != nil {
-		return
-	}
+	o.Eqs, _ = la.NewEquations(o.Grid.Size(), knownEqs)
 	o.U = la.NewVector(o.Eqs.N)
 	o.F = la.NewVector(o.Eqs.N)
 
@@ -84,7 +78,7 @@ func (o *Solver) SetBcs(ebcs *EssentialBcs) (err error) {
 	// init linear solver
 	o.linsol = la.NewSparseSolver("umfpack")
 	o.linsol.Init(o.Eqs.Auu, true, false, "", "", nil)
-	err = o.linsol.Fact()
+	o.linsol.Fact()
 	return
 }
 
@@ -111,10 +105,7 @@ func (o *Solver) Solve(reactions bool) (err error) {
 	if reactions {
 		bk.Fill(0)
 	}
-	err = o.Op.SourceTerm(o.Eqs, reactions)
-	if err != nil {
-		return
-	}
+	o.Op.SourceTerm(o.Eqs, reactions)
 
 	// set known part of RHS reactions vector
 	if reactions {
