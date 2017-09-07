@@ -4,6 +4,8 @@
 
 package utl
 
+import "github.com/cpmech/gosl/chk"
+
 // Deep3alloc allocates a slice of slice of slice
 func Deep3alloc(n1, n2, n3 int) (a [][][]float64) {
 	a = make([][][]float64, n1)
@@ -87,4 +89,19 @@ func Deep3checkSize(n1, n2, n3 int, a [][][]float64) bool {
 		return false
 	}
 	return true
+}
+
+// Deep2transpose returns the transpose of a deep2 slice
+func Deep2transpose(a [][]float64) (aT [][]float64) {
+	if len(a) < 1 {
+		chk.Panic("input Deep2 slice must be greater than (1,1)\n")
+	}
+	m, n := len(a), len(a[0])
+	aT = Alloc(n, m)
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			aT[j][i] = a[i][j]
+		}
+	}
+	return
 }

@@ -154,3 +154,20 @@ func TestDeep04(tst *testing.T) {
 		tst.Errorf("check should have returned true")
 	}
 }
+
+func TestDeep05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Deep05. transpose")
+
+	a := [][]float64{
+		{1, 2, 3},
+		{3, 4, 5},
+	}
+	aT := Deep2transpose(a)
+	chk.Deep2(tst, "trans(a)", 1e-17, aT, [][]float64{
+		{1, 3},
+		{2, 4},
+		{3, 5},
+	})
+}
