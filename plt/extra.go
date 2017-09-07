@@ -143,7 +143,17 @@ func SubplotMatrix(nrow, ncol int, cmds func(i, j int)) {
 			Subplot(nrow, ncol, idx)
 			SplotGap(0.0, 0.0)
 			cmds(col, row)
-			Gll(io.Sf("$x_{%d}$", col), io.Sf("$x_{%d}$", row), nil)
+			if col > 0 {
+				SetNoYtickLabels()
+			} else {
+				SetYlabel(io.Sf("$x_{%d}$", row), nil)
+			}
+			if row > 0 {
+				SetNoXtickLabels()
+			} else {
+				SetXlabel(io.Sf("$x_{%d}$", col), nil)
+			}
+			Grid(&A{C: "grey", Z: -1000})
 			idx--
 		}
 	}

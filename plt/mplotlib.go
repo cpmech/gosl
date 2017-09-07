@@ -624,6 +624,16 @@ func SetLabels(x, y string, args *A) {
 	io.Ff(&bufferPy, "plt.xlabel(r'%s'%s);plt.ylabel(r'%s'%s)\n", x, a, y, a)
 }
 
+// SetXlabel sets x-label
+func SetXlabel(xl string, args *A) {
+	io.Ff(&bufferPy, "plt.xlabel(r'%s')\n", xl)
+}
+
+// SetYlabel sets y-label
+func SetYlabel(yl string, args *A) {
+	io.Ff(&bufferPy, "plt.ylabel(r'%s')\n", yl)
+}
+
 // Clf clears current figure
 func Clf() {
 	io.Ff(&bufferPy, "plt.clf()\n")
