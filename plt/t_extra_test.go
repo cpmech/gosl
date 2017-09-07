@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -160,6 +161,60 @@ func TestSlopeInd04(tst *testing.T) {
 		Grid(nil)
 		SetYlog()
 		err := Save("/tmp/gosl/plt", "t_slopeind04")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}
+
+func TestMatrix01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Matrix01. Subplot matrix")
+
+	if chk.Verbose {
+		xx := [][]float64{ // [iComponent][iTime]
+			{0.0, +1.0, +2.0, +3.0}, // x0
+			{0.0, 1.0, 4.0, 9.0},    // x1
+		}
+		count := 0
+		cmds := func(i, j int) {
+			io.Pforan("\nxx[%d] = %v\n", i, xx[i])
+			io.Pf("xx[%d] = %v\n", j, xx[j])
+			Plot(xx[i], xx[j], &A{M: ".", C: C(count, 0)})
+			count++
+		}
+		Reset(true, &A{WidthPt: 500})
+		SubplotMatrix(len(xx), len(xx), cmds)
+		err := Save("/tmp/gosl/plt", "t_matrix01")
+		if err != nil {
+			tst.Errorf("%v", err)
+		}
+	}
+}
+
+func TestMatrixSym01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("MatrixSym01. Subplot matrix symmetric")
+
+	if chk.Verbose {
+		xx := [][]float64{ // [iComponent][iTime]
+			{0.0, +1.0, +2.0, +3.0}, // x0
+			{0.0, -1.0, -2.0, -3.0}, // x1
+			{0.0, 2.0, 4.0, 6.0},    // x2
+			{0.0, 1.0, 4.0, 9.0},    // x3
+		}
+		count := 0
+		cmds := func(i, j int) {
+			io.Pforan("\nxx[%d] = %v\n", i, xx[i])
+			io.Pf("xx[%d] = %v\n", j, xx[j])
+			Plot(xx[i], xx[j], &A{M: ".", C: C(count, 0)})
+			count++
+		}
+		Reset(true, &A{WidthPt: 500})
+		SubplotMatrixSym(len(xx), len(xx), cmds, nil)
+		err := Save("/tmp/gosl/plt", "t_matrixsym01")
 		if err != nil {
 			tst.Errorf("%v", err)
 		}

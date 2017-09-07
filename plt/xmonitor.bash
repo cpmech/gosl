@@ -17,5 +17,5 @@ while true; do
     #go test -test.run="Waterfall01"
     #go test -test.run="draw03"
     #go test -test.run="plot01"
-    go test -test.run="SlopeInd"
+    go test -test.run="Matrix01"
 done

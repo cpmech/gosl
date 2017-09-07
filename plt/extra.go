@@ -7,6 +7,7 @@ package plt
 import (
 	"math"
 
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/utl"
 )
@@ -122,4 +123,74 @@ func SlopeInd(m, xc, yc, xlen float64, lbl string, flip, xlog, ylog bool, args, 
 			Text(xp, yc, lbl, argsLbl)
 		}
 	}
+}
+
+// SubplotMatrix call plotCommands to fill a matrix of plots
+//   Input:
+//     nrow -- number of rows in matrix [must be at least 1]
+//     ncol -- number of columns in matrix [must be at least 1]
+//     cmds -- plotting commants for each (i,j) grid point (NOT Subplot indices)
+func SubplotMatrix(nrow, ncol int, cmds func(i, j int)) {
+	if nrow < 1 {
+		chk.Panic("At least one row is required. nrow = %d is invalid\n", nrow)
+	}
+	if ncol < 1 {
+		chk.Panic("At least one column is required. ncol = %d is invalid\n", ncol)
+	}
+	idx := nrow * ncol
+	for row := 0; row < nrow; row++ {
+		for col := ncol - 1; col >= 0; col-- {
+			io.PfYel("row=%d col=%d idx=%d\n", row, col, idx)
+			Subplot(nrow, ncol, idx)
+			SplotGap(0.0, 0.0)
+			cmds(col, row)
+			Gll(io.Sf("$x_{%d}$", col), io.Sf("$x_{%d}$", row), nil)
+			idx--
+		}
+	}
+}
+
+// SubplotMatrixSym call plotCommands to fill a symmetric matrix of plots (excluding the diagonal)
+//   Input:
+//     nrow   -- number of rows in matrix including diagonal [must be at least 2]
+//     ncol   -- number of columns in matrix  including diagonal[must be at least 2]
+//     cmds   -- plotting commants for each (i,j) grid point (NOT Subplot indices)
+//     corner -- function to be called to draw on "corner" of matrix (left-bottom side)
+//   Output:
+//     n -- the effective number of columns == min(nrow-1,ncol-1)
+//     cornerIdx -- the subplot index of "corner" graph
+//     NOTE: the resulting grid will be (n×n)
+func SubplotMatrixSym(nrow, ncol int, cmds func(i, j int), corner func()) (n, cornerIdx int) {
+	if nrow < 2 {
+		chk.Panic("At least two rows are required. nrow = %d is invalid\n", nrow)
+	}
+	if ncol < 2 {
+		chk.Panic("At least two columns are required. ncol = %d is invalid\n", ncol)
+	}
+	n = utl.Imin(nrow, ncol)
+	n--
+	idx := 1
+	for row := 0; row < nrow; row++ {
+		idx += row
+		for col := row + 1; col < nrow; col++ {
+			Subplot(n, n, idx)
+			SplotGap(0.0, 0.0)
+			cmds(col, row)
+			if col > row+1 {
+				SetNoXtickLabels()
+				SetNoYtickLabels()
+				Grid(&A{C: "grey", Z: -1000})
+			} else {
+				Gll(io.Sf("$x_{%d}$", col), io.Sf("$x_{%d}$", row), nil)
+			}
+			idx++
+		}
+	}
+	cornerIdx = n*(n-1) + 1
+	Subplot(n, n, cornerIdx)
+	AxisOff()
+	if corner != nil {
+		corner()
+	}
+	return
 }

@@ -132,6 +132,18 @@ func SetYlog() {
 	io.Ff(&bufferPy, "plt.gca().set_yscale('log')\n")
 }
 
+// SetNoXtickLabels hides labels of x-ticks but keep ticks
+func SetNoXtickLabels() {
+	io.Ff(&bufferPy, "plt.gca().tick_params(labelbottom='off')\n")
+	//io.Ff(&bufferPy, "plt.gca().set_xticklabels(['']*len([l.get_text() for l in plt.gca().get_xticklabels()]))\n")
+}
+
+// SetNoYtickLabels hides labels of y-ticks but keep ticks
+func SetNoYtickLabels() {
+	io.Ff(&bufferPy, "plt.gca().tick_params(labelleft='off')\n")
+	//io.Ff(&bufferPy, "plt.gca().set_yticklabels(['']*len([l.get_text() for l in plt.gca().get_yticklabels()]))\n")
+}
+
 // SetTicksXlist sets x-axis ticks with given list
 func SetTicksXlist(values []float64) {
 	io.Ff(&bufferPy, "plt.xticks(%v)\n", floats2list(values))
