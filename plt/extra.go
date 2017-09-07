@@ -140,7 +140,6 @@ func SubplotMatrix(nrow, ncol int, cmds func(i, j int)) {
 	idx := nrow * ncol
 	for row := 0; row < nrow; row++ {
 		for col := ncol - 1; col >= 0; col-- {
-			io.PfYel("row=%d col=%d idx=%d\n", row, col, idx)
 			Subplot(nrow, ncol, idx)
 			SplotGap(0.0, 0.0)
 			cmds(col, row)
