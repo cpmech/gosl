@@ -474,7 +474,7 @@ func TestDgesv01(tst *testing.T) {
 		tst.Errorf("Dgesv failed:\n%v\n", err)
 		return
 	}
-	chk.Array(tst, "x = A⁻¹ b", 1e-13, b, xCorrect)
+	chk.Array(tst, "x = A⁻¹ b", 1e-15, b, xCorrect)
 
 	// check ipiv
 	chk.Int32s(tst, "ipiv", ipiv, []int32{2, 5, 5, 5, 5})
@@ -537,7 +537,7 @@ func TestZgesv01(tst *testing.T) {
 		8.999787912842375e+00 - 6.662818244209770e-05i,
 		1.000001132800243e+01 - 1.774987242230929e+01i,
 	}
-	chk.ArrayC(tst, "x = A⁻¹ b", 1e-14, b, xPython)
+	chk.ArrayC(tst, "x = A⁻¹ b", 1e-13, b, xPython)
 
 	// check ipiv
 	chk.Int32s(tst, "ipiv", ipiv, []int32{1, 2, 3, 4, 5})
