@@ -44,7 +44,7 @@ func Test_args01(tst *testing.T) {
 	a.Fsz = 7
 
 	l := a.String(false, false)
-	chk.String(tst, l, "color='red',markeredgecolor='blue',markerfacecolor='none',mew=0.3,alpha=0.5,marker='o',ls='--',lw=1.2,label='gosl',markevery=2,zorder=123,clip_on=0,facecolor='magenta',edgecolor='yellow',ha='center',va='center',fontsize=7")
+	chk.String(tst, l, "color='red',markeredgecolor='blue',markerfacecolor='none',mew=0.3,alpha=0.5,marker='o',linestyle='--',lw=1.2,label='gosl',markevery=2,zorder=123,clip_on=0,facecolor='magenta',edgecolor='yellow',ha='center',va='center',fontsize=7")
 }
 
 func Test_args02(tst *testing.T) {
