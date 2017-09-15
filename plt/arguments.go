@@ -128,7 +128,7 @@ func (o A) String(forHistogram, for3dPoints bool) (l string) {
 	}
 	addToCmd(&l, o.A > 0, io.Sf("alpha=%g", o.A))
 	addToCmd(&l, o.M != "", io.Sf("marker='%s'", o.M))
-	addToCmd(&l, o.Ls != "", io.Sf("ls='%s'", o.Ls))
+	addToCmd(&l, o.Ls != "", io.Sf("linestyle='%s'", o.Ls))
 	addToCmd(&l, o.Lw > 0, io.Sf("lw=%g", o.Lw))
 	addToCmd(&l, o.L != "", io.Sf("label='%s'", o.L))
 	addToCmd(&l, o.Me > 0, io.Sf("markevery=%d", o.Me))
