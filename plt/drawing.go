@@ -5,8 +5,6 @@
 package plt
 
 import (
-	"math"
-
 	"github.com/cpmech/gosl/io"
 )
 
@@ -78,9 +76,7 @@ func Circle(xc, yc, r float64, args *A) {
 func Arc(xc, yc, r, minAlpha, maxAlpha float64, args *A) {
 	uid := genUID()
 	r2 := 2.0 * r
-	θ1 := minAlpha * 180.0 / math.Pi
-	θ2 := maxAlpha * 180.0 / math.Pi
-	io.Ff(&bufferPy, "pc%d = pat.Arc((%g,%g),%g,%g,angle=0,theta1=%g,theta2=%g", uid, xc, yc, r2, r2, θ1, θ2)
+	io.Ff(&bufferPy, "pc%d = pat.Arc((%g,%g),%g,%g,angle=0,theta1=%g,theta2=%g", uid, xc, yc, r2, r2, minAlpha, maxAlpha)
 	updateBufferAndClose(&bufferPy, args, false, false)
 	io.Ff(&bufferPy, "plt.gca().add_patch(pc%d)\n", uid)
 }
