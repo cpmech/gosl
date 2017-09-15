@@ -11,5 +11,5 @@ while true; do
     go install
     #go test -test.run="octree02"
     #go test -test.run="Grid03"
-    go test -test.run="Transfinite02"
+    go test -test.run="Transfinite03"
 done

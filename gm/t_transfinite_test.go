@@ -10,7 +10,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
@@ -85,9 +84,6 @@ func TestTransfinite01(tst *testing.T) {
 
 	trf.QuadMap(x, []float64{+1, +1})
 	chk.Array(tst, "x(+1,+1)", 1e-15, x, []float64{0, 3})
-
-	trf.Γ[0](x, -1)
-	io.Pf("%v\n", x)
 
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
@@ -170,9 +166,6 @@ func TestTransfinite02(tst *testing.T) {
 	trf.QuadMap(x, []float64{+1, +1})
 	chk.Array(tst, "x(+1,+1)", 1e-15, x, []float64{0, 3})
 
-	trf.Γ[0](x, -1)
-	io.Pf("%v\n", x)
-
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
 		trf.Draw([]int{21, 21}, nil, nil)
@@ -180,5 +173,48 @@ func TestTransfinite02(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.Equal()
 		plt.Save("/tmp/gosl/gm", "transfinite02")
+	}
+}
+
+func TestTransfinite03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Transfinite03")
+
+	if chk.Verbose {
+
+		curve0 := FactoryNurbs.Curve2dExample1()
+
+		e0 := []float64{1, 0}
+		e1 := []float64{0, 1}
+
+		u := []float64{0} // knots
+		trf := NewTransfinite(2, []fun.Vs{
+			func(x la.Vector, ξ float64) {
+				u[0] = (1 + ξ) / 2.0
+				for i := 0; i < len(x); i++ {
+					curve0.Point(x, u, 2)
+				}
+			},
+			func(x la.Vector, η float64) {
+				x[0] = 3
+				x[1] = 1.5 * (1 + η) * e1[1]
+			},
+			func(x la.Vector, ξ float64) {
+				x[0] = 1.5 * (1 + ξ) * e0[0]
+				x[1] = 3
+			},
+			func(x la.Vector, η float64) {
+				x[0] = 0
+				x[1] = 1.5 * (1 + η) * e1[1]
+			},
+		})
+
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		curve0.DrawElems(2, 41, false, &plt.A{C: plt.C(2, 0), Z: 10}, nil)
+		trf.Draw([]int{21, 21}, nil, nil)
+		plt.HideAllBorders()
+		plt.Equal()
+		plt.Save("/tmp/gosl/gm", "transfinite03")
 	}
 }
