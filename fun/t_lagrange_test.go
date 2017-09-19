@@ -349,8 +349,8 @@ func cmpD1lag(tst *testing.T, N int, tol float64) {
 	for j := 0; j < N+1; j++ {
 		xj := o.X[j]
 		for l := 0; l < N+1; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tol, o.D1.Get(j, l), xj, 1e-2, chk.Verbose, func(t float64) (float64, error) {
-				return o.L(l, t), nil
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tol, o.D1.Get(j, l), xj, 1e-2, chk.Verbose, func(t float64) float64 {
+				return o.L(l, t)
 			})
 		}
 	}

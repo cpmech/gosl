@@ -147,9 +147,8 @@ func TestChebyshev02(tst *testing.T) {
 	for n := 0; n < 6; n++ {
 		for i := 0; i < len(X); i++ {
 			dTn := ChebyshevTdiff1(n, X[i])
-			chk.DerivScaSca(tst, io.Sf("dT%d(%5.2f)", n, X[i]), 1e-8, dTn, X[i], 1e-3, chk.Verbose, func(t float64) (res float64, e error) {
-				res = ChebyshevT(n, t)
-				return
+			chk.DerivScaSca(tst, io.Sf("dT%d(%5.2f)", n, X[i]), 1e-8, dTn, X[i], 1e-3, chk.Verbose, func(t float64) float64 {
+				return ChebyshevT(n, t)
 			})
 		}
 		io.Pl()
@@ -196,9 +195,8 @@ func TestChebyshev03(tst *testing.T) {
 					tol = 1e-4
 				}
 			}
-			chk.DerivScaSca(tst, io.Sf("ddT%d(%5.2f)", n, x), tol, ddTn, x, 1e-3, chk.Verbose, func(t float64) (res float64, e error) {
-				res = ChebyshevTdiff1(n, t)
-				return
+			chk.DerivScaSca(tst, io.Sf("ddT%d(%5.2f)", n, x), tol, ddTn, x, 1e-3, chk.Verbose, func(t float64) float64 {
+				return ChebyshevTdiff1(n, t)
 			})
 		}
 		io.Pl()

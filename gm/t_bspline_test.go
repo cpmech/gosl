@@ -145,8 +145,8 @@ func Test_bspline03(tst *testing.T) {
 		for i := 0; i < s.NumBasis(); i++ {
 			s.CalcBasisAndDerivs(t)
 			anad[i] = s.GetDeriv(i)
-			chk.DerivScaSca(tst, io.Sf("i=%d t=%.3f", i, t), tol, anad[i], t, 1e-1, ver, func(x float64) (float64, error) {
-				return s.RecursiveBasis(x, i), nil
+			chk.DerivScaSca(tst, io.Sf("i=%d t=%.3f", i, t), tol, anad[i], t, 1e-1, ver, func(x float64) float64 {
+				return s.RecursiveBasis(x, i)
 			})
 		}
 	}

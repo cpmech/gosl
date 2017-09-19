@@ -57,8 +57,8 @@ func fouCheckD1andD2(tst *testing.T, fou *FourierInterp, f Ss) {
 	xx := utl.LinSpace(0, 2*math.Pi, 11)
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D1I{f}(%5.3f)", x), 1e-10, fou.Idiff(1, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
-			return fou.I(t), nil
+		chk.DerivScaSca(tst, io.Sf("D1I{f}(%5.3f)", x), 1e-10, fou.Idiff(1, x), x, 1e-3, chk.Verbose, func(t float64) float64 {
+			return fou.I(t)
 		})
 	}
 
@@ -66,8 +66,8 @@ func fouCheckD1andD2(tst *testing.T, fou *FourierInterp, f Ss) {
 	io.Pl()
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-9, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
-			return fou.Idiff(1, t), nil
+		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-9, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) float64 {
+			return fou.Idiff(1, t)
 		})
 	}
 }
@@ -148,8 +148,8 @@ func TestFourierInterp03(tst *testing.T) {
 	xx := utl.LinSpace(0, 2*math.Pi, 11)
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D1I{f}(%5.3f)", x), 1e-10, fou.Idiff(1, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
-			return fou.I(t), nil
+		chk.DerivScaSca(tst, io.Sf("D1I{f}(%5.3f)", x), 1e-10, fou.Idiff(1, x), x, 1e-3, chk.Verbose, func(t float64) float64 {
+			return fou.I(t)
 		})
 	}
 
@@ -157,8 +157,8 @@ func TestFourierInterp03(tst *testing.T) {
 	io.Pl()
 	for i := 0; i < len(xx); i++ {
 		x := xx[i]
-		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-9, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
-			return fou.Idiff(1, t), nil
+		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-9, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) float64 {
+			return fou.Idiff(1, t)
 		})
 	}
 

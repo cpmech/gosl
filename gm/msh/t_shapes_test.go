@@ -114,8 +114,7 @@ func checkDerivs(tst *testing.T, ctypeindex int, r []float64, tol float64, verbo
 
 	// check
 	M := dSdR.GetDeep2()
-	chk.DerivVecVec(tst, "dSdR", tol, M, r[:ndim], 1e-1, verbose, func(f, x []float64) error {
+	chk.DerivVecVec(tst, "dSdR", tol, M, r[:ndim], 1e-1, verbose, func(f, x []float64) {
 		fcn(f, nil, x, false)
-		return nil
 	})
 }

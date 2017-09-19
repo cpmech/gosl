@@ -29,11 +29,11 @@ func CheckDerivT(tst *testing.T, o T, t0, tf float64, xcte []float64, np int, ts
 		if skip {
 			continue
 		}
-		chk.DerivScaSca(tst, io.Sf("G(%10f)", t[i]), dtol, g, t[i], 1e-3, ver, func(τ float64) (float64, error) {
-			return o.F(τ, xcte), nil
+		chk.DerivScaSca(tst, io.Sf("G(%10f)", t[i]), dtol, g, t[i], 1e-3, ver, func(τ float64) float64 {
+			return o.F(τ, xcte)
 		})
-		chk.DerivScaSca(tst, io.Sf("H(%10f)", t[i]), dtol2, h, t[i], 1e-3, ver, func(τ float64) (float64, error) {
-			return o.G(τ, xcte), nil
+		chk.DerivScaSca(tst, io.Sf("H(%10f)", t[i]), dtol2, h, t[i], 1e-3, ver, func(τ float64) float64 {
+			return o.G(τ, xcte)
 		})
 	}
 }
@@ -72,8 +72,8 @@ func CheckDerivX(tst *testing.T, o T, tcte float64, xmin, xmax []float64, np int
 					continue
 				}
 				o.Grad(g, tcte, x)
-				chk.DerivScaVec(tst, io.Sf("dFdX(t,%10v)", x), dtol, g, x, 1e-3, ver, func(xVec []float64) (float64, error) {
-					return o.F(tcte, xVec), nil
+				chk.DerivScaVec(tst, io.Sf("dFdX(t,%10v)", x), dtol, g, x, 1e-3, ver, func(xVec []float64) float64 {
+					return o.F(tcte, xVec)
 				})
 			}
 		}

@@ -280,8 +280,8 @@ func cmpD1che(tst *testing.T, msg string, o *ChebyInterp, D1, D1trig [][]float64
 	for j := 0; j < m; j++ {
 		xj := o.X[j]
 		for l := 0; l < m; l++ {
-			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, D1[j][l], xj, 1e-2, verb, func(t float64) (float64, error) {
-				return o.L(l, t), nil
+			chk.DerivScaSca(tst, io.Sf("D1[%d,%d](%+.3f)", j, l, xj), tolD, D1[j][l], xj, 1e-2, verb, func(t float64) float64 {
+				return o.L(l, t)
 			})
 		}
 	}

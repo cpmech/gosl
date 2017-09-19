@@ -25,8 +25,8 @@ func checkDerivs(tst *testing.T, b *Nurbs, npts int, tol float64, verb bool) {
 				for j := 0; j < b.n[1]; j++ {
 					l := i + j*b.n[0]
 					b.GetDerivL(dana, l)
-					chk.DerivScaVec(tst, io.Sf("dR%d(%.3f,%.3f)", l, uu[0], uu[1]), tol, dana, uu, 1e-1, verb, func(x []float64) (float64, error) {
-						return b.RecursiveBasis(x, l), nil
+					chk.DerivScaVec(tst, io.Sf("dR%d(%.3f,%.3f)", l, uu[0], uu[1]), tol, dana, uu, 1e-1, verb, func(x []float64) float64 {
+						return b.RecursiveBasis(x, l)
 					})
 				}
 			}

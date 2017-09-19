@@ -26,15 +26,14 @@ import (
 //     verb -- verbose: show messages
 //     fcn  -- [vector] function f(x). x is scalar
 func DerivVecSca(tst *testing.T, msg string, tol float64, gAna []float64, xAt, h float64,
-	verb bool, fcn func(f []float64, x float64) error) {
+	verb bool, fcn func(f []float64, x float64)) {
 
 	// run test
 	f := make([]float64, len(gAna))
 	for i, ana := range gAna {
-		fi := func(x float64) (fres float64, ferr error) {
-			ferr = fcn(f, x)
-			fres = f[i]
-			return
+		fi := func(x float64) float64 {
+			fcn(f, x)
+			return f[i]
 		}
 		DerivScaSca(tst, fmt.Sprintf("%s%d", msg, i), tol, ana, xAt, h, verb, fi)
 	}
@@ -56,7 +55,7 @@ func DerivVecSca(tst *testing.T, msg string, tol float64, gAna []float64, xAt, h
 //     verb -- verbose: show messages
 //     fcn  -- [scalar] function f(x). x is vector
 func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, h float64,
-	verb bool, fcn func(x []float64) (float64, error)) {
+	verb bool, fcn func(x []float64) float64) {
 
 	// check input
 	ndim := len(xAt)
@@ -69,7 +68,7 @@ func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, h
 	xTmp := make([]float64, ndim)
 	for i := 0; i < ndim; i++ {
 		copy(xTmp, xAt)
-		fi := func(x float64) (fres float64, ferr error) {
+		fi := func(x float64) float64 {
 			xTmp[i] = x
 			return fcn(xTmp)
 		}
@@ -93,7 +92,7 @@ func DerivScaVec(tst *testing.T, msg string, tol float64, gAna, xAt []float64, h
 //     verb -- verbose: show messages
 //     fcn  -- [vector] function f(x). x is vector
 func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt []float64, h float64,
-	verb bool, fcn func(f, x []float64) error) {
+	verb bool, fcn func(f, x []float64)) {
 
 	// check input
 	nrow := len(gAna)
@@ -119,11 +118,10 @@ func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt 
 		}
 		for j := 0; j < ndim; j++ {
 			copy(xTmp, xAt)
-			fij := func(x float64) (fres float64, ferr error) {
+			fij := func(x float64) float64 {
 				xTmp[j] = x
-				ferr = fcn(f, xTmp)
-				fres = f[i]
-				return
+				fcn(f, xTmp)
+				return f[i]
 			}
 			DerivScaSca(tst, fmt.Sprintf("%s%d%d", msg, i, j), tol, gAna[i][j], xAt[j], h, verb, fij)
 		}
@@ -145,14 +143,10 @@ func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt 
 //     h    -- initial stepsize; e.g. 1e-1
 //     verb -- verbose: show messages
 //     fcn  -- [scalar] function f(x). x is scalar
-func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb bool, fcn func(x float64) (float64, error)) {
+func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb bool, fcn func(x float64) float64) {
 
 	// call centralDeriv first
-	res, round, trunc, err := centralDeriv(fcn, xAt, h)
-	if err != nil {
-		tst.Errorf("function call failed:\n%v\n", err)
-		return
-	}
+	res, round, trunc := centralDeriv(fcn, xAt, h)
 	numerr := round + trunc
 
 	// check rounding error
@@ -161,11 +155,7 @@ func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb boo
 		// compute an optimised stepsize to minimize the total error, using the scaling of the
 		// truncation error (O(h^2)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(2.0*trunc), 1.0/3.0)
-		rOpt, roundOpt, truncOpt, err := centralDeriv(fcn, xAt, hOpt)
-		if err != nil {
-			tst.Errorf("function call failed:\n%v\n", err)
-			return
-		}
+		rOpt, roundOpt, truncOpt := centralDeriv(fcn, xAt, hOpt)
 		errorOpt := roundOpt + truncOpt
 
 		// check that the new error is smaller, and that the new derivative is consistent with the
@@ -180,28 +170,16 @@ func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb boo
 }
 
 // centralDeriv Computes the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
-func centralDeriv(f func(x float64) (float64, error), x float64, h float64) (res, absErrRound, absErrTrunc float64, err error) {
+func centralDeriv(f func(x float64) float64, x float64, h float64) (res, absErrRound, absErrTrunc float64) {
 
 	// Compute the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
 	// Note that the central point is not used.
 	// Compute the error using the difference between the 5-point and the 3-point rule (x-h,x,x+h).
 	// Again the central point is not used.
-	fm1, err := f(x - h)
-	if err != nil {
-		return
-	}
-	fp1, err := f(x + h)
-	if err != nil {
-		return
-	}
-	fmh, err := f(x - h/2.0)
-	if err != nil {
-		return
-	}
-	fph, err := f(x + h/2.0)
-	if err != nil {
-		return
-	}
+	fm1 := f(x - h)
+	fp1 := f(x + h)
+	fmh := f(x - h/2.0)
+	fph := f(x + h/2.0)
 	EPS := 1.0e-15 // smallest number satisfying 1.0 + EPS > 1.0
 	r3 := 0.5 * (fp1 - fm1)
 	r5 := (4.0/3.0)*(fph-fmh) - (1.0/3.0)*r3

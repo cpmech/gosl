@@ -452,8 +452,8 @@ func TestHat01(tst *testing.T) {
 	Xb = utl.LinSpace(-2, 4, 8)
 	for _, x := range Xb {
 		chk.AnaNum(tst, io.Sf("Hat(%+.2f)", x), 1e-17, Hat(x, xc, y0, h, l), max(y0, y0+h-math.Abs(x-xc)/2), chk.Verbose)
-		chk.DerivScaSca(tst, "HatD1", 1e-12, HatD1(x, xc, y0, h, l), x, 1e-3, chk.Verbose, func(t float64) (float64, error) {
-			return Hat(t, xc, y0, h, l), nil
+		chk.DerivScaSca(tst, "HatD1", 1e-12, HatD1(x, xc, y0, h, l), x, 1e-3, chk.Verbose, func(t float64) float64 {
+			return Hat(t, xc, y0, h, l)
 		})
 	}
 

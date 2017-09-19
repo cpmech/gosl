@@ -14,7 +14,7 @@ func TestDeriv01(tst *testing.T) {
 	//Verbose = true
 	PrintTitle("Deriv01. DerivScaSca")
 
-	f := func(x float64) (float64, error) { return math.Cos(math.Pi * x / 2.0), nil }
+	f := func(x float64) float64 { return math.Cos(math.Pi * x / 2.0) }
 
 	dfdxAna := -1.0 * math.Pi / 2.0
 	xAt := 1.0
@@ -40,7 +40,7 @@ func TestDeriv02(tst *testing.T) {
 	//Verbose = true
 	PrintTitle("Deriv02. DerivVecSca")
 
-	fcn := func(f []float64, x float64) (err error) {
+	fcn := func(f []float64, x float64) {
 		f[0] = math.Cos(math.Pi * x / 2.0)
 		f[1] = math.Sin(math.Pi * x / 2.0)
 		return
@@ -96,8 +96,8 @@ func TestDeriv03(tst *testing.T) {
 	//Verbose = true
 	PrintTitle("Deriv03. DerivScaVec")
 
-	fcn := func(x []float64) (float64, error) {
-		return x[0]*x[0]*x[0] + x[1]*x[1] + x[0]*x[1] + x[0] - x[1], nil
+	fcn := func(x []float64) float64 {
+		return x[0]*x[0]*x[0] + x[1]*x[1] + x[0]*x[1] + x[0] - x[1]
 	}
 
 	dfdx := func(x []float64) []float64 {
@@ -141,7 +141,7 @@ func TestDeriv04(tst *testing.T) {
 	//Verbose = true
 	PrintTitle("Deriv04. DerivVecVec")
 
-	fcn := func(f, x []float64) (err error) {
+	fcn := func(f, x []float64) {
 		f[0] = x[0]*x[0]*x[0] + x[1]*x[1] + x[0]*x[1] + x[0] - x[1]
 		f[1] = math.Cos(math.Pi*x[0]/2.0) * math.Sin(math.Pi*x[1]/2.0)
 		return
@@ -207,64 +207,42 @@ func TestDeriv05(tst *testing.T) {
 	}
 
 	t4 := new(testing.T)
-	DerivVecVec(t4, "", 0, [][]float64{{1}, {2, 1}, {3, 4}}, []float64{1}, 1e-3, false, func(f, x []float64) error { return nil })
+	DerivVecVec(t4, "", 0, [][]float64{{1}, {2, 1}, {3, 4}}, []float64{1}, 1e-3, false, func(f, x []float64) { return })
 	if !t4.Failed() {
 		tst.Errorf("t4 should have failed")
 	}
 
-	t5 := new(testing.T)
-	DerivScaSca(t5, "", 0, 0, 0, 1e-3, false, func(x float64) (float64, error) { return 0, Err("stop") })
-	if !t5.Failed() {
-		tst.Errorf("t5 should have failed")
-	}
-
 	t6 := new(testing.T)
 	xAt, h := 1.0, 1.0
-	DerivScaSca(t6, "", 0, 0, xAt, h, false, func(x float64) (float64, error) {
+	DerivScaSca(t6, "", 0, 0, xAt, h, false, func(x float64) float64 {
 		if x == 2.0 { // xAt + h
-			return 0, Err("stop")
+			return 0
 		}
-		return x, nil
+		return x
 	})
 	if !t6.Failed() {
 		tst.Errorf("t6 should have failed")
 	}
 
 	t7 := new(testing.T)
-	DerivScaSca(t7, "", 0, 0, xAt, h, false, func(x float64) (float64, error) {
+	DerivScaSca(t7, "", 0, 0, xAt, h, false, func(x float64) float64 {
 		if x == 0.5 { // xAt - h/2
-			return 0, Err("stop")
+			return 0
 		}
-		return x, nil
+		return x
 	})
 	if !t7.Failed() {
 		tst.Errorf("t7 should have failed")
 	}
 
 	t8 := new(testing.T)
-	DerivScaSca(t8, "", 0, 0, xAt, h, false, func(x float64) (float64, error) {
+	DerivScaSca(t8, "", 0, 0, xAt, h, false, func(x float64) float64 {
 		if x == 1.5 { // xAt + h/2
-			return 0, Err("stop")
+			return 0
 		}
-		return x, nil
+		return x
 	})
 	if !t8.Failed() {
 		tst.Errorf("t8 should have failed")
-	}
-
-	k := 0
-	t9 := new(testing.T)
-	DerivScaSca(t9, "", 0, 0, xAt, h, false, func(x float64) (float64, error) {
-		if x == 1.5 { // use discrete function to trigger "check rounding error" condition
-			k++
-			return 10.0, nil
-		}
-		if k > 0 {
-			return 0, Err("stop")
-		}
-		return 0, nil
-	})
-	if !t9.Failed() {
-		tst.Errorf("t9 should have failed")
 	}
 }
