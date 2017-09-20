@@ -49,6 +49,9 @@ func AutoScale(P [][]float64) {
 //     Wedge           wedge    tail_width=0.3,shrink_factor=0.5
 //     BarAB           |-|      widthA=1.0,angleA=None,widthB=1.0,angleB=None
 func Arrow(xi, yi, xf, yf float64, args *A) {
+	if args == nil {
+		args = &A{C: "orange"}
+	}
 	style := "simple"
 	scale := 20.0
 	if args.Style != "" {
