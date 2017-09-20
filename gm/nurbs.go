@@ -425,7 +425,7 @@ func (o *Nurbs) PointDeriv(dCdu *la.Matrix, C, u []float64, ndim int) {
 	for e := 0; e < 4; e++ {
 		o.cw[e] = 0
 	}
-	dcwdu := make([]float64, 4)
+	dcwdu := utl.Alloc(o.gnd, 4)
 	switch o.gnd {
 	// curve
 	case 1:
@@ -436,13 +436,30 @@ func (o *Nurbs) PointDeriv(dCdu *la.Matrix, C, u []float64, ndim int) {
 				if i < o.p[0] {
 					num := o.Q[o.idx[0]+i+1][j][k][e] - o.Q[o.idx[0]+i][j][k][e]
 					den := o.b[0].T[o.idx[0]+i+1+o.p[0]] - o.b[0].T[o.idx[0]+i+1]
-					dcwdu[e] += o.b[0].ndu[i][o.p[0]-1] * float64(o.p[0]) * num / den
+					dcwdu[0][e] += o.b[0].ndu[i][o.p[0]-1] * float64(o.p[0]) * num / den
 				}
 			}
 		}
 	// surface
 	case 2:
-		chk.Panic("PointDeriv of surface is not available yet\n")
+		k := 0
+		for i := 0; i <= o.p[0]; i++ {
+			for j := 0; j <= o.p[1]; j++ {
+				for e := 0; e < 4; e++ {
+					o.cw[e] += o.b[0].ndu[i][o.p[0]] * o.b[1].ndu[j][o.p[1]] * o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+					if i < o.p[0] {
+						num := o.Q[o.idx[0]+i+1][o.idx[1]+j][k][e] - o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+						den := o.b[0].T[o.idx[0]+i+1+o.p[0]] - o.b[0].T[o.idx[0]+i+1]
+						dcwdu[0][e] += o.b[0].ndu[i][o.p[0]-1] * o.b[1].ndu[j][o.p[1]] * float64(o.p[0]) * num / den
+					}
+					if j < o.p[1] {
+						num := o.Q[o.idx[0]+i][o.idx[1]+j+1][k][e] - o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+						den := o.b[1].T[o.idx[1]+j+1+o.p[1]] - o.b[1].T[o.idx[1]+j+1]
+						dcwdu[1][e] += o.b[0].ndu[i][o.p[0]] * o.b[1].ndu[j][o.p[1]-1] * float64(o.p[1]) * num / den
+					}
+				}
+			}
+		}
 	// volume
 	case 3:
 		chk.Panic("PointDeriv of volume is not available yet\n")
@@ -450,7 +467,7 @@ func (o *Nurbs) PointDeriv(dCdu *la.Matrix, C, u []float64, ndim int) {
 	for e := 0; e < ndim; e++ {
 		C[e] = o.cw[e] / o.cw[3]
 		for d := 0; d < o.gnd; d++ {
-			dCdu.Set(e, d, (dcwdu[e]-dcwdu[3]*C[e])/o.cw[3])
+			dCdu.Set(e, d, (dcwdu[d][e]-dcwdu[d][3]*C[e])/o.cw[3])
 		}
 	}
 	return

@@ -355,7 +355,7 @@ func TestNurbs04(tst *testing.T) {
 	}
 }
 
-func tanVector(dCdu *la.Matrix) la.Vector {
+func vec(dCdu *la.Matrix) la.Vector {
 	return []float64{dCdu.Get(0, 0), dCdu.Get(1, 0)}
 }
 
@@ -375,7 +375,7 @@ func drawArrow(c la.Vector, dCdu *la.Matrix, normalize bool, args *plt.A) {
 func TestNurbs05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Nurbs05. Point and PointDeriv")
+	chk.PrintTitle("Nurbs05. PointDeriv. Curve")
 
 	// NURBS
 	verts := [][]float64{
@@ -405,16 +405,16 @@ func TestNurbs05(tst *testing.T) {
 
 	// check
 	curve.PointDeriv(dCduA, cA, []float64{0}, 2)
-	chk.Array(tst, "dCdu @ u=0  ", 1e-17, tanVector(dCduA), []float64{5, 15})
+	chk.Array(tst, "dCdu @ u=0  ", 1e-17, vec(dCduA), []float64{5, 15})
 
 	curve.PointDeriv(dCduB, cB, []float64{2.0 / 5.0}, 2)
-	chk.Array(tst, "dCdu @ u=2/5", 1e-17, tanVector(dCduB), []float64{10, 0})
+	chk.Array(tst, "dCdu @ u=2/5", 1e-17, vec(dCduB), []float64{10, 0})
 
 	curve.PointDeriv(dCduC, cC, []float64{3.0 / 5.0}, 2)
-	chk.Array(tst, "dCdu @ u=3/5", 1e-17, tanVector(dCduC), []float64{10.0 / 3.0, -10})
+	chk.Array(tst, "dCdu @ u=3/5", 1e-17, vec(dCduC), []float64{10.0 / 3.0, -10})
 
 	curve.PointDeriv(dCduD, cD, []float64{1}, 2)
-	chk.Array(tst, "dCdu @ u=1  ", 1e-17, tanVector(dCduD), []float64{5, 10})
+	chk.Array(tst, "dCdu @ u=1  ", 1e-17, vec(dCduD), []float64{5, 10})
 
 	// plot
 	if chk.Verbose {
@@ -433,7 +433,7 @@ func TestNurbs05(tst *testing.T) {
 func TestNurbs06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Nurbs06. Point and PointDeriv")
+	chk.PrintTitle("Nurbs06. PointDeriv. Curve")
 
 	// NURBS
 	verts := [][]float64{
@@ -461,14 +461,14 @@ func TestNurbs06(tst *testing.T) {
 
 	// check
 	curve.PointDeriv(dCduA, cA, []float64{0}, 2)
-	chk.Array(tst, "dCdu @ u=0  ", 1e-17, tanVector(dCduA), []float64{0, 2})
+	chk.Array(tst, "dCdu @ u=0  ", 1e-17, vec(dCduA), []float64{0, 2})
 
 	curve.PointDeriv(dCduB, cB, []float64{2.0 / 5.0}, 2)
 
 	curve.PointDeriv(dCduC, cC, []float64{3.0 / 5.0}, 2)
 
 	curve.PointDeriv(dCduD, cD, []float64{1}, 2)
-	chk.Array(tst, "dCdu @ u=1  ", 1e-17, tanVector(dCduD), []float64{-1, 0})
+	chk.Array(tst, "dCdu @ u=1  ", 1e-17, vec(dCduD), []float64{-1, 0})
 
 	// plot
 	if chk.Verbose {
@@ -481,5 +481,102 @@ func TestNurbs06(tst *testing.T) {
 			plt.HideTRborders()
 			plt.Equal()
 		})
+	}
+}
+
+func vec3d(dCdu *la.Matrix, col int, normalize bool) la.Vector {
+	if normalize {
+		dx := dCdu.Get(0, col)
+		dy := dCdu.Get(1, col)
+		dz := dCdu.Get(2, col)
+		s := math.Sqrt(dx*dx + dy*dy + dz*dz)
+		if s > 0 {
+			dx /= s
+			dy /= s
+			dz /= s
+		}
+		return []float64{dx, dy, dz}
+	}
+	return []float64{dCdu.Get(0, col), dCdu.Get(1, col), dCdu.Get(2, col)}
+}
+
+func drawArrow3d(c la.Vector, dCdu *la.Matrix, col int, normalize bool, sf float64, args *plt.A) {
+	dx := dCdu.Get(0, col)
+	dy := dCdu.Get(1, col)
+	dz := dCdu.Get(2, col)
+	if normalize {
+		s := math.Sqrt(dx*dx + dy*dy + dz*dz)
+		if s > 0 {
+			dx /= s
+			dy /= s
+			dz /= s
+		}
+	}
+	plt.Draw3dVector(c, []float64{dx, dy, dz}, sf, false, args)
+}
+
+func TestNurbs07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Nurbs07. PointDeriv. Surface")
+
+	// surface
+	xc, yc, zc, r, R := 0.0, 0.0, 0.0, 2.0, 4.0
+	surf := FactoryNurbs.Surf3dTorus(xc, yc, zc, r, R)
+
+	cA := la.NewVector(3)
+	dCduA := la.NewMatrix(3, surf.Gnd())
+	surf.PointDeriv(dCduA, cA, []float64{1, 0}, 3)
+
+	cB := la.NewVector(3)
+	dCduB := la.NewMatrix(3, surf.Gnd())
+	surf.PointDeriv(dCduB, cB, []float64{2, 0}, 3)
+
+	cC := la.NewVector(3)
+	dCduC := la.NewMatrix(3, surf.Gnd())
+	surf.PointDeriv(dCduC, cC, []float64{1, 1}, 3)
+
+	cD := la.NewVector(3)
+	dCduD := la.NewMatrix(3, surf.Gnd())
+	surf.PointDeriv(dCduD, cD, []float64{2, 1}, 3)
+
+	chk.Array(tst, "cA", 1e-17, cA, []float64{6, 0, 0})
+	chk.Array(tst, "cB", 1e-17, cB, []float64{4, 0, 2})
+	chk.Array(tst, "cC", 1e-17, cC, []float64{0, 6, 0})
+	chk.Array(tst, "cD", 1e-17, cD, []float64{0, 4, 2})
+	chk.Array(tst, "dCduA_u", 1e-15, vec3d(dCduA, 0, true), []float64{0, 0, 1})
+	chk.Array(tst, "dCduA_v", 1e-15, vec3d(dCduA, 1, true), []float64{0, 1, 0})
+	chk.Array(tst, "dCduB_u", 1e-15, vec3d(dCduB, 0, true), []float64{-1, 0, 0})
+	chk.Array(tst, "dCduB_v", 1e-15, vec3d(dCduB, 1, true), []float64{0, 1, 0})
+	chk.Array(tst, "dCduC_u", 1e-15, vec3d(dCduC, 0, true), []float64{0, 0, 1})
+	chk.Array(tst, "dCduC_v", 1e-15, vec3d(dCduC, 1, true), []float64{-1, 0, 0})
+	chk.Array(tst, "dCduD_u", 1e-15, vec3d(dCduD, 0, true), []float64{0, -1, 0})
+	chk.Array(tst, "dCduD_v", 1e-15, vec3d(dCduD, 1, true), []float64{-1, 0, 0})
+
+	// plot
+	if chk.Verbose {
+		nu, nv := 18, 41
+		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
+		//surf.DrawCtrl(3, false, &plt.A{C: "grey", Lw: 0.5}, nil)
+		surf.DrawSurface(3, nu, nv, true, false, &plt.A{C: plt.C(0, 9), Rstride: 1, Cstride: 1}, &plt.A{C: "#2782c8", Lw: 0.5})
+		//surf.DrawSurface(3, nu, nv, false, true, &plt.A{C: plt.C(0, 9), Rstride: 1, Cstride: 1}, &plt.A{C: "#2782c8", Lw: 0.5})
+		plt.Sphere(cA, 0.5, 11, 11, &plt.A{C: "r", Surf: true})
+		plt.Sphere(cB, 0.5, 11, 11, &plt.A{C: "r", Surf: true})
+
+		drawArrow3d(cA, dCduA, 0, true, 5, &plt.A{C: plt.C(0, 0)})
+		drawArrow3d(cA, dCduA, 1, true, 5, &plt.A{C: plt.C(1, 0)})
+
+		drawArrow3d(cB, dCduB, 0, true, 5, &plt.A{C: plt.C(0, 0)})
+		drawArrow3d(cB, dCduB, 1, true, 5, &plt.A{C: plt.C(1, 0)})
+
+		drawArrow3d(cC, dCduC, 0, true, 5, &plt.A{C: plt.C(0, 0)})
+		drawArrow3d(cC, dCduC, 1, true, 5, &plt.A{C: plt.C(1, 0)})
+
+		drawArrow3d(cD, dCduD, 0, true, 5, &plt.A{C: plt.C(0, 0)})
+		drawArrow3d(cD, dCduD, 1, true, 5, &plt.A{C: plt.C(1, 0)})
+
+		plt.Default3dView(-6.1, 6.1, -6.1, 6.1, -6.1, 6.1, true)
+		plt.Save("/tmp/gosl/gm", "nurbs07")
+		//plt.ShowSave("/tmp/gosl/gm", "nurbs07")
 	}
 }
