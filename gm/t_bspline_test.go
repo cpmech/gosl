@@ -19,14 +19,12 @@ func Test_bspline01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("bspline01")
 
-	var s1 Bspline
 	T1 := []float64{0, 0, 0, 1, 1, 1}
-	s1.Init(T1, 2)
+	s1 := NewBspline(T1, 2)
 	s1.SetControl([][]float64{{0, 0}, {0.5, 1}, {1, 0}})
 
-	var s2 Bspline
 	T2 := []float64{0, 0, 0, 0.5, 1, 1, 1}
-	s2.Init(T2, 2)
+	s2 := NewBspline(T2, 2)
 	s2.SetControl([][]float64{{0, 0}, {0.25, 0.5}, {0.75, 0.5}, {1, 0}})
 
 	if chk.Verbose {
@@ -74,8 +72,7 @@ func Test_bspline02(tst *testing.T) {
 	//               0 1 2 3 4 5 6 7 8 9 10
 	T := []float64{0, 0, 0, 1, 2, 3, 4, 4, 5, 5, 5}
 	sol := []int{2, 2, 3, 3, 4, 4, 5, 5, 7, 7, 7}
-	var s Bspline
-	s.Init(T, 2)
+	s := NewBspline(T, 2)
 	s.SetControl([][]float64{{0, 0}, {0.5, 1}, {1, 0}, {1.5, 0}, {2, 1}, {2.5, 1}, {3, 0.5}, {3.5, 0}})
 
 	tt := utl.LinSpace(0, 5, 11)
@@ -122,8 +119,7 @@ func Test_bspline03(tst *testing.T) {
 
 	//             0 1 2 3 4 5 6 7 8 9 10
 	T := []float64{0, 0, 0, 1, 2, 3, 4, 4, 5, 5, 5}
-	var s Bspline
-	s.Init(T, 2)
+	s := NewBspline(T, 2)
 	s.SetControl([][]float64{{0, 0}, {0.5, 1}, {1, 0}, {1.5, 0}, {2, 1}, {2.5, 1}, {3, 0.5}, {3.5, 0}})
 
 	// analytical derivatives

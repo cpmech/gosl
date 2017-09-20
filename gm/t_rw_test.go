@@ -70,8 +70,7 @@ func testRWstep01(tst *testing.T) {
 		}
 
 		// create B-spline
-		bsp := new(Bspline)
-		bsp.Init(knots, curve.Degree)
+		bsp := NewBspline(knots, curve.Degree)
 		bsp.SetControl(verts)
 		bsplines = append(bsplines, bsp)
 	}

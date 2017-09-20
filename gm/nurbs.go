@@ -25,7 +25,7 @@ type Nurbs struct {
 	// essential
 	gnd int             // 1: curve, 2:surface, 3:volume (geometry dimension)
 	p   []int           // orders [3]
-	b   []Bspline       // B-splines [gnd]
+	b   []*Bspline      // B-splines [gnd]
 	n   []int           // number of basis functions along each direction [3]
 	Q   [][][][]float64 // Qw: weighted control points and weights [n[0]][n[1]][n[2]][4] (Piegl p120)
 	l2i [][]int         // local ids of ctrl points => indices of basis functions [nctrl][3]
@@ -50,11 +50,11 @@ func NewNurbs(gnd int, ords []int, knots [][]float64) (o *Nurbs) {
 	o.p = make([]int, 3)
 
 	// B-splines
-	o.b = make([]Bspline, o.gnd)
+	o.b = make([]*Bspline, o.gnd)
 	o.n = make([]int, 3)
 	for d := 0; d < o.gnd; d++ {
 		o.p[d] = ords[d]
-		o.b[d].Init(knots[d], o.p[d])
+		o.b[d] = NewBspline(knots[d], o.p[d])
 		o.n[d] = o.b[d].NumBasis()
 		if o.n[d] < 2 {
 			chk.Panic("number of knots is incorrect for dimension %d. n == %d is invalid", d, o.n[d])

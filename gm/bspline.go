@@ -39,7 +39,7 @@ type Bspline struct {
 }
 
 // Init initialises B-spline
-func (o *Bspline) Init(T []float64, p int) {
+func NewBspline(T []float64, p int) (o *Bspline) {
 
 	// check
 	if len(T) < 2*(p+1) {
@@ -47,6 +47,7 @@ func (o *Bspline) Init(T []float64, p int) {
 	}
 
 	// essential
+	o = new(Bspline)
 	o.T, o.p, o.m = T, p, len(T)
 	o.tmin, o.tmax = utl.MinMax(T)
 
@@ -56,6 +57,7 @@ func (o *Bspline) Init(T []float64, p int) {
 	o.ndu = utl.Alloc(o.p+1, o.p+1)
 	o.der = utl.Alloc(o.p+1, o.p+1)
 	o.daux = utl.Alloc(2, o.p+1)
+	return
 }
 
 // SetOrder sets B-spline order (p)

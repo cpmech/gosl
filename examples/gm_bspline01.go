@@ -25,8 +25,7 @@ func main() {
 	T1 := append(append(startT, utl.LinSpace(0.1, 0.9, 9)...), endT...)
 
 	// B-spline
-	var b1 gm.Bspline
-	b1.Init(T1, p)
+	b1 := gm.NewBspline(T1, p)
 
 	// set control points
 	b1.SetControl([][]float64{

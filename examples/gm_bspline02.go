@@ -13,14 +13,12 @@ import (
 
 func main() {
 
-	var s1 gm.Bspline
 	T1 := []float64{0, 0, 0, 1, 1, 1}
-	s1.Init(T1, 2)
+	s1 := gm.NewBspline(T1, 2)
 	s1.SetControl([][]float64{{0, 0}, {0.5, 1}, {1, 0}})
 
-	var s2 gm.Bspline
 	T2 := []float64{0, 0, 0, 0.5, 1, 1, 1}
-	s2.Init(T2, 2)
+	s2 := gm.NewBspline(T2, 2)
 	s2.SetControl([][]float64{{0, 0}, {0.25, 0.5}, {0.75, 0.5}, {1, 0}})
 
 	npts := 201
