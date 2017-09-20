@@ -9,7 +9,6 @@ package main
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
@@ -18,9 +17,8 @@ import (
 func main() {
 
 	// y(x) function
-	yx := func(x float64) (res float64, err error) {
-		res = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
-		return
+	yx := func(x float64) float64 {
+		return math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
 	}
 
 	// range: be sure to enclose root
@@ -31,13 +29,10 @@ func main() {
 	o.Init(yx)
 
 	// solve
-	xo, err := o.Solve(xa, xb, false)
-	if err != nil {
-		chk.Panic("Brent solver filed: %v\n", err)
-	}
+	xo := o.Solve(xa, xb, false)
 
 	// output
-	yo, _ := yx(xo)
+	yo := yx(xo)
 	io.Pf("\n")
 	io.Pf("x      = %v\n", xo)
 	io.Pf("f(x)   = %v\n", yo)
@@ -50,7 +45,7 @@ func main() {
 	Y := make([]float64, npts)
 	for i := 0; i < npts; i++ {
 		X[i] = xa + float64(i)*(xb-xa)/float64(npts-1)
-		Y[i], _ = yx(X[i])
+		Y[i] = yx(X[i])
 	}
 	plt.Reset(false, nil)
 	plt.AxHline(0, nil)
