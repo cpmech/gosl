@@ -33,13 +33,13 @@ func main() {
 		d2ydx2Ana := d2ydx2Fcn(x)
 
 		// numerical derivative: dydx
-		dydxNum, _ := num.DerivCen5(x, 1e-3, func(t float64) (float64, error) {
-			return yFcn(t), nil
+		dydxNum := num.DerivCen5(x, 1e-3, func(t float64) float64 {
+			return yFcn(t)
 		})
 
 		// numerical derivative d2ydx2
-		d2ydx2Num, _ := num.DerivCen5(x, 1e-3, func(t float64) (float64, error) {
-			return dydxFcn(t), nil
+		d2ydx2Num := num.DerivCen5(x, 1e-3, func(t float64) float64 {
+			return dydxFcn(t)
 		})
 
 		// check
