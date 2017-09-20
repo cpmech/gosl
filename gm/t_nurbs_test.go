@@ -371,8 +371,7 @@ func TestNurbs05(tst *testing.T) {
 		{0, 0, 0, 2.0 / 5.0, 3.0 / 5.0, 1, 1, 1},
 	}
 	curve := NewNurbs(1, []int{2}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	status(tst, err)
+	curve.SetControl(verts, utl.IntRange(len(verts)))
 
 	// derivatives
 	dCduA := la.NewMatrix(2, curve.Gnd())
@@ -434,8 +433,7 @@ func TestNurbs06(tst *testing.T) {
 		{0, 0, 0, 1, 1, 1},
 	}
 	curve := NewNurbs(1, []int{2}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	status(tst, err)
+	curve.SetControl(verts, utl.IntRange(len(verts)))
 
 	// derivatives
 	dCduA := la.NewMatrix(2, curve.Gnd())

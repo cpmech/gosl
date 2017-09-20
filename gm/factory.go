@@ -7,7 +7,6 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -33,10 +32,7 @@ func (o facNurbsT) Curve2dExample1() (curve *Nurbs) {
 		{0, 0, 0, 0, 0.3, 0.7, 1, 1, 1, 1},
 	}
 	curve = NewNurbs(1, []int{3}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	curve.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
 
@@ -53,10 +49,7 @@ func (o facNurbsT) Curve2dExample2() (curve *Nurbs) {
 		{0, 0, 0, 1, 2, 3, 3, 3},
 	}
 	curve = NewNurbs(1, []int{2}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	curve.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
 
@@ -79,10 +72,7 @@ func (o facNurbsT) Curve2dCircle(xc, yc, r float64) (curve *Nurbs) {
 		{0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4}, // only along first dimension
 	}
 	curve = NewNurbs(1, []int{2}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	curve.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
 
@@ -97,10 +87,7 @@ func (o facNurbsT) Curve2dQuarterCircle(xc, yc, r float64) (curve *Nurbs) {
 		{0, 0, 0, 1, 1, 1}, // only along first dimension
 	}
 	curve = NewNurbs(1, []int{2}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	curve.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
 
@@ -122,10 +109,7 @@ func (o facNurbsT) Surf2dRectangleQL(x0, y0, dx, dy float64) (curve *Nurbs) {
 		{0, 0, 1, 1},
 	}
 	curve = NewNurbs(2, []int{2, 1}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	curve.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
 
@@ -148,10 +132,7 @@ func (o facNurbsT) Surf2dExample1() (surf *Nurbs) {
 		{0, 0, 1, 1},
 	}
 	surf = NewNurbs(2, []int{2, 1}, knots)
-	err := surf.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	surf.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
 
@@ -175,12 +156,9 @@ func (o facNurbsT) Surf2dQuarterPlateHole1() (surf *Nurbs) {
 		{0, 0, 0, 1, 1, 1},
 	}
 	surf = NewNurbs(2, []int{2, 2}, knots)
-	//                                                           repeated
-	//                                                             V  V
-	err := surf.SetControl(verts, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 10})
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	//                                                    repeated
+	//                                                      V  V
+	surf.SetControl(verts, []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9, 10})
 	return
 }
 
@@ -215,10 +193,7 @@ func (o facNurbsT) Surf3dCylinder(xc, yc, zc, r, h float64) (curve *Nurbs) {
 		{0, 0, 1, 1},
 	}
 	curve = NewNurbs(2, []int{2, 1}, knots)
-	err := curve.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	curve.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
 
@@ -325,9 +300,6 @@ func (o facNurbsT) Surf3dTorus(xc, yc, zc, r, R float64) (surf *Nurbs) {
 		{0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4},
 	}
 	surf = NewNurbs(2, []int{2, 2}, knots)
-	err := surf.SetControl(verts, utl.IntRange(len(verts)))
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	surf.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }

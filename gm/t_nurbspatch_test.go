@@ -21,15 +21,11 @@ func Test_npatch01(tst *testing.T) {
 	// NURBS patch
 	binsNdiv := 3
 	tolerance := 1e-10
-	patch, err := NewNurbsPatch(binsNdiv, tolerance,
+	patch := NewNurbsPatch(binsNdiv, tolerance,
 		FactoryNurbs.Surf2dRectangleQL(-1, -0.5, 2, 1),
 		FactoryNurbs.Surf2dRectangleQL(1, 0.5, 2, 1),
 		FactoryNurbs.Surf2dRectangleQL(0.5, 1.7, 2, 0.8),
 	)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
 
 	// check bins
 	io.Pf("%v\n", patch.Bins)
@@ -94,17 +90,13 @@ func Test_npatch02(tst *testing.T) {
 	// NURBS patch
 	binsNdiv := 3
 	tolerance := 1e-10
-	patch, err := NewNurbsPatch(binsNdiv, tolerance,
+	patch := NewNurbsPatch(binsNdiv, tolerance,
 		FactoryNurbs.Surf2dRectangleQL(-1, -0.5, 2, 1),
 		FactoryNurbs.Surf2dRectangleQL(1, 0.5, 2, 1),
 		FactoryNurbs.Surf2dRectangleQL(0.5, 1.7, 2, 0.8),
 		FactoryNurbs.Curve2dCircle(0, 1.7, 0.5),
 		FactoryNurbs.Curve2dCircle(3, 1.2, 0.5), // will fail if xc==3.0
 	)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
 
 	// check number of entries in bins
 	io.Pf("\n")
@@ -146,11 +138,7 @@ func Test_npatch02(tst *testing.T) {
 	patch.Write("/tmp/gosl/gm", "npatch02")
 
 	// read file back
-	pp, err := NewNurbsPatchFromFile(filepath.Join("/tmp/gosl/gm", "npatch02.json"), binsNdiv, tolerance)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	pp := NewNurbsPatchFromFile(filepath.Join("/tmp/gosl/gm", "npatch02.json"), binsNdiv, tolerance)
 
 	// check read control points
 	for i, cp := range pp.ControlPoints {

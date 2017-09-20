@@ -50,28 +50,22 @@ type NurbsPatch struct {
 
 // NewNurbsPatch returns new patch of NURBS
 //   tolerance -- tolerance to assume that two control points are the same
-func NewNurbsPatch(binsNdiv int, tolerance float64, entities ...*Nurbs) (o *NurbsPatch, err error) {
+func NewNurbsPatch(binsNdiv int, tolerance float64, entities ...*Nurbs) (o *NurbsPatch) {
 	o = new(NurbsPatch)
 	o.Entities = entities
-	err = o.ResetFromEntities(binsNdiv, tolerance)
+	o.ResetFromEntities(binsNdiv, tolerance)
 	return
 }
 
 // ResetFromEntities will reset all exchange data with information from Entities slice
-func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err error) {
+func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) {
 
 	// limits and ndim
-	xmin, xmax, ndim, err := o.LimitsAndNdim()
-	if err != nil {
-		return
-	}
+	xmin, xmax, ndim := o.LimitsAndNdim()
 
 	// reset bins
 	o.Bins.Clear()
-	err = o.Bins.Init(xmin[:ndim], xmax[:ndim], utl.IntVals(ndim, binsNdiv))
-	if err != nil {
-		return
-	}
+	o.Bins.Init(xmin[:ndim], xmax[:ndim], utl.IntVals(ndim, binsNdiv))
 
 	// global index of control point
 	nextID := 0
@@ -128,11 +122,11 @@ func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) (err err
 }
 
 // ResetFromExchangeData will reset all Entities with information from ExchangeData (and ControlPoints)
-func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err error) {
+func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) {
 
 	// check
 	if len(o.ExchangeData) < 1 || len(o.ControlPoints) < 1 {
-		return chk.Err("there are no ExchangeData or ControlPoints")
+		chk.Panic("there are no ExchangeData or ControlPoints\n")
 	}
 
 	// collect vertices
@@ -145,24 +139,15 @@ func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err
 	o.Entities = make([]*Nurbs, len(o.ExchangeData))
 	for i, ed := range o.ExchangeData {
 		o.Entities[i] = NewNurbs(ed.Gnd, ed.Ords, ed.Knots)
-		err = o.Entities[i].SetControl(verts, ed.Ctrls)
-		if err != nil {
-			return
-		}
+		o.Entities[i].SetControl(verts, ed.Ctrls)
 	}
 
 	// limits and ndim
-	xmin, xmax, ndim, err := o.LimitsAndNdim()
-	if err != nil {
-		return
-	}
+	xmin, xmax, ndim := o.LimitsAndNdim()
 
 	// reset bins
 	o.Bins.Clear()
-	err = o.Bins.Init(xmin[:ndim], xmax[:ndim], utl.IntVals(ndim, binsNdiv))
-	if err != nil {
-		return
-	}
+	o.Bins.Init(xmin[:ndim], xmax[:ndim], utl.IntVals(ndim, binsNdiv))
 
 	// global index of control point
 	nextID := 0
@@ -178,7 +163,6 @@ func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err
 			}
 		}
 	}
-	return
 }
 
 // read/write function ////////////////////////////////////////////////////////////////////////////
@@ -194,33 +178,32 @@ func (o NurbsPatch) Write(dirout, fnkey string) (err error) {
 }
 
 // NewNurbsPatchFromFile allocates a NurbsPatch with data from file
-func NewNurbsPatchFromFile(filename string, binsNdiv int, tolerance float64) (o *NurbsPatch, err error) {
+func NewNurbsPatchFromFile(filename string, binsNdiv int, tolerance float64) (o *NurbsPatch) {
 
 	// read exchange data
 	b, err := io.ReadFile(filename)
 	if err != nil {
-		return
+		chk.Panic("%v\n", err)
 	}
 	o = new(NurbsPatch)
 	err = json.Unmarshal(b, o)
 	if err != nil {
-		return
+		chk.Panic("%v\n", err)
 	}
 
 	// allocate nurbs
-	err = o.ResetFromExchangeData(binsNdiv, tolerance)
+	o.ResetFromExchangeData(binsNdiv, tolerance)
 	return
 }
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 // LimitsAndNdim computes the limits of the patch and max dimension by looping over all Entities
-func (o NurbsPatch) LimitsAndNdim() (xmin, xmax []float64, ndim int, err error) {
+func (o NurbsPatch) LimitsAndNdim() (xmin, xmax []float64, ndim int) {
 
 	// check
 	if len(o.Entities) < 1 {
-		err = chk.Err("there are no Entities")
-		return
+		chk.Panic("there are no Entities\n")
 	}
 
 	// find limits
@@ -245,7 +228,7 @@ func (o NurbsPatch) LimitsAndNdim() (xmin, xmax []float64, ndim int, err error) 
 		}
 	}
 	if ndim < 1 {
-		err = chk.Err("ndim=%d is invalid", ndim)
+		chk.Panic("ndim=%d is invalid\n", ndim)
 	}
 	return
 }
