@@ -44,7 +44,7 @@ func main() {
 
 	// plot lognormal distribution
 	var dist rnd.DistLogNormal
-	dist.Init(&rnd.VarData{M: μ, S: σ})
+	dist.Init(&rnd.Variable{M: μ, S: σ})
 
 	// compute lognormal points for plot
 	n := 101
