@@ -251,7 +251,7 @@ func Grid3d(X, Y [][]float64, Zlevels []float64, argsLines *A) {
 //     nv -- number of divisions along the orther direction on plane
 //     showPN -- show point and normal
 //   Output:
-//     X, Y, Z -- the coordinages of all points as in a meshgrid
+//     X, Y, Z -- the coordinates of all points as in a meshgrid
 func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN bool, args *A) (X, Y, Z [][]float64) {
 	if math.Abs(n[2]) < 1e-10 {
 		return
@@ -282,7 +282,7 @@ func PlaneZ(p, n []float64, xmin, xmax, ymin, ymax float64, nu, nv int, showPN b
 //     surface -- generate surface
 //     wireframe -- generate wireframe
 //   Output:
-//     X, Y, Z -- the coordinages of all points as in a meshgrid
+//     X, Y, Z -- the coordinates of all points as in a meshgrid
 func Hemisphere(c []float64, r, alphaMin, alphaMax float64, nu, nv int, cup bool, args *A) (X, Y, Z [][]float64) {
 	if c == nil {
 		c = []float64{0, 0, 0}
@@ -318,15 +318,17 @@ func Hemisphere(c []float64, r, alphaMin, alphaMax float64, nu, nv int, cup bool
 
 // Superquadric draws superquadric (i.e. superellipsoid)
 //   Input:
-//     c -- centre coordinates. may be nil
-//     r -- radii [3]
-//     a -- exponents [3]
+//     c      -- centre coordinates. may be nil => (0,0,0) will be considered
+//     r      -- radii [3]
+//     a      -- exponents [3]
 //     alpMin -- min alp angle. in [-180, 180) degrees
 //     alpMax -- max alp angle. in (-180, 180] degrees
 //     etaMin -- min eta angle. in [-90, 90) degrees
 //     etaMax -- max eta angle. in (-90, 90] degrees
+//     nalp   -- number of divisions along α
+//     neta   -- number of divisions along η
 //   Output:
-//     X, Y, Z -- the coordinages of all points as in a meshgrid
+//     X, Y, Z -- the coordinates of all points as in a meshgrid
 func Superquadric(c, r, a []float64, alpMin, alpMax, etaMin, etaMax float64, nalp, neta int, args *A) (X, Y, Z [][]float64) {
 	if c == nil {
 		c = []float64{0, 0, 0}
@@ -357,6 +359,23 @@ func Superquadric(c, r, a []float64, alpMin, alpMax, etaMin, etaMax float64, nal
 	return
 }
 
+// Sphere draws sphere
+//   Input:
+//     c    -- centre coordinates. may be nil => (0,0,0) will be considered
+//     r    -- radius
+//     nalp -- number of divisions along α
+//     neta -- number of divisions along η
+//   Output:
+//     X, Y, Z -- the coordinates of all points as in a meshgrid
+func Sphere(c []float64, radius float64, nalp, neta int, args *A) (X, Y, Z [][]float64) {
+	if c == nil {
+		c = []float64{0, 0, 0}
+	}
+	alpMin, alpMax := -180.0, 180.0
+	etaMin, etaMax := -90.0, 90.0
+	return Superquadric(c, []float64{radius, radius, radius}, []float64{2, 2, 2}, alpMin, alpMax, etaMin, etaMax, nalp, neta, args)
+}
+
 // CylinderZ draws cylinder aligned with the z axis
 //  Input:
 //     c -- centre coordinates. may be nil
@@ -365,7 +384,7 @@ func Superquadric(c, r, a []float64, alpMin, alpMax, etaMin, etaMax float64, nal
 //     nu -- number of divisions along the height of cone; e.g. 11
 //     nv -- number of divisions along circumference of cone; e.g. 21
 //   Output:
-//     X, Y, Z -- the coordinages of all points as in a meshgrid
+//     X, Y, Z -- the coordinates of all points as in a meshgrid
 func CylinderZ(c []float64, radius, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
 	if c == nil {
 		c = []float64{0, 0, 0}
@@ -397,7 +416,7 @@ func CylinderZ(c []float64, radius, height float64, nu, nv int, args *A) (X, Y, 
 //     nu -- number of divisions along the height of cone; e.g. 11
 //     nv -- number of divisions along circumference of cone; e.g. 21
 //   Output:
-//     X, Y, Z -- the coordinages of all points as in a meshgrid
+//     X, Y, Z -- the coordinates of all points as in a meshgrid
 func ConeZ(c []float64, alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
 	if c == nil {
 		c = []float64{0, 0, 0}
@@ -430,7 +449,7 @@ func ConeZ(c []float64, alphaDeg float64, height float64, nu, nv int, args *A) (
 //     nu -- number of divisions along the height of cone; e.g. 11
 //     nv -- number of divisions along circumference of cone; e.g. 21
 //   Output:
-//     X, Y, Z -- the coordinages of all points as in a meshgrid
+//     X, Y, Z -- the coordinates of all points as in a meshgrid
 func ConeDiag(c []float64, alphaDeg float64, height float64, nu, nv int, args *A) (X, Y, Z [][]float64) {
 	if c == nil {
 		c = []float64{0, 0, 0}

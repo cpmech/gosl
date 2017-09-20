@@ -613,3 +613,16 @@ func Test_plot13(tst *testing.T) {
 		Save("/tmp/gosl/plt", "t_plot13")
 	}
 }
+
+func Test_plot14(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot14. Sphere")
+
+	if chk.Verbose {
+		Reset(true, nil)
+		Sphere(nil, 1, 30, 30, &A{Surf: true})
+		Default3dView(-1.1, 1.1, -1.1, 1.1, -1.1, 1.1, true)
+		Save("/tmp/gosl/plt", "t_plot14")
+	}
+}
