@@ -25,24 +25,31 @@ import (
 type Transfinite struct {
 	Ndim int         // space dimension
 	Γ    []fun.Vs    // the boundary functions
+	Γd   []fun.Vs    // derivatives of boundary functions
 	C    []la.Vector // "corner" points
-	X    []la.Vector // points on arbitrary positions along edges/faces
+	X    []la.Vector // points at arbitrary positions along edges/faces
+	Xd   []la.Vector // derivatives at arbitrary positions along edges/faces
 }
 
 // NewTransfinite allocates a new structure
-func NewTransfinite(ndim int, Γ []fun.Vs) (o *Transfinite) {
+//  Γ  -- boundary functions x(s) = Γ(s)
+//  Γd -- derivative functions dxds(s) = Γ'(s)
+func NewTransfinite(ndim int, Γ, Γd []fun.Vs) (o *Transfinite) {
 	o = new(Transfinite)
 	o.Ndim = ndim
 	o.Γ = Γ
+	o.Γd = Γd
 	if o.Ndim == 2 {
-		if len(Γ) != 4 {
+		if len(Γ) != 4 || len(Γd) != 4 {
 			chk.Panic("in 2D, four boundary functions Γ are required\n")
 		}
 		o.C = make([]la.Vector, 4)
 		o.X = make([]la.Vector, 4)
+		o.Xd = make([]la.Vector, 4)
 		for i := 0; i < len(o.C); i++ {
 			o.C[i] = la.NewVector(o.Ndim)
 			o.X[i] = la.NewVector(o.Ndim)
+			o.Xd[i] = la.NewVector(o.Ndim)
 		}
 		o.Γ[0](o.C[0], -1)
 		o.Γ[0](o.C[1], +1)
@@ -58,27 +65,67 @@ func NewTransfinite(ndim int, Γ []fun.Vs) (o *Transfinite) {
 	return
 }
 
-// QuadMap computes "real" position x(ξ,η)
+// Point computes "real" position x(ξ,η)
 //  Input:
 //    r -- the "reference" coordinates {ξ,η}
-//
 //  Output:
 //    x -- the "real" coordinates {x,y}
-//
-func (o *Transfinite) QuadMap(x, r la.Vector) {
+func (o *Transfinite) Point(x, r la.Vector) {
 	if o.Ndim == 2 {
 		ξ, η := r[0], r[1]
-		o.Γ[0](o.X[0], ξ)
-		o.Γ[1](o.X[1], η)
-		o.Γ[2](o.X[2], ξ)
-		o.Γ[3](o.X[3], η)
+		A, B, C, D := o.X[0], o.X[1], o.X[2], o.X[3]
+		m, n, p, q := o.C[0], o.C[1], o.C[2], o.C[3]
+		o.Γ[0](A, ξ)
+		o.Γ[1](B, η)
+		o.Γ[2](C, ξ)
+		o.Γ[3](D, η)
 		for i := 0; i < o.Ndim; i++ {
-			x[i] = 0.5*((1-ξ)*o.X[3][i]+(1+ξ)*o.X[1][i]+(1-η)*o.X[0][i]+(1+η)*o.X[2][i]) -
-				0.25*((1-ξ)*((1-η)*o.C[0][i]+(1+η)*o.C[3][i])+(1+ξ)*((1-η)*o.C[1][i]+(1+η)*o.C[2][i]))
+			x[i] = 0.5*((1-η)*A[i]+(1+ξ)*B[i]+(1+η)*C[i]+(1-ξ)*D[i]) -
+				0.25*((1-ξ)*((1-η)*m[i]+(1+η)*q[i])+(1+ξ)*((1-η)*n[i]+(1+η)*p[i]))
 		}
 		return
 	}
-	chk.Panic("QuadMap function is not ready for 3D yet\n")
+	chk.Panic("Point function is not ready for 3D yet\n")
+}
+
+// Derivs calculates derivatives (=metric terms) @ r={ξ,η}
+//  Input:
+//    r -- the "reference" coordinates {ξ,η}
+//  Output:
+//    dxdr -- the derivatives [dx/dr]ij = dxi/drj
+//    x    -- the "real" coordinates {x,y}
+func (o *Transfinite) Derivs(dxdr *la.Matrix, x, r la.Vector) {
+	if o.Ndim == 2 {
+		ξ, η := r[0], r[1]
+		A, B, C, D := o.X[0], o.X[1], o.X[2], o.X[3]
+		a, b, c, d := o.Xd[0], o.Xd[1], o.Xd[2], o.Xd[3]
+		m, n, p, q := o.C[0], o.C[1], o.C[2], o.C[3]
+		o.Γ[0](A, ξ)
+		o.Γ[1](B, η)
+		o.Γ[2](C, ξ)
+		o.Γ[3](D, η)
+		o.Γd[0](a, ξ)
+		o.Γd[1](b, η)
+		o.Γd[2](c, ξ)
+		o.Γd[3](d, η)
+		var dxidξ, dxidη float64
+		for i := 0; i < o.Ndim; i++ {
+
+			x[i] = 0.5*((1-η)*A[i]+(1+ξ)*B[i]+(1+η)*C[i]+(1-ξ)*D[i]) -
+				0.25*((1-ξ)*((1-η)*m[i]+(1+η)*q[i])+(1+ξ)*((1-η)*n[i]+(1+η)*p[i]))
+
+			dxidξ = 0.5*((1-η)*a[i]+B[i]+(1+η)*c[i]-D[i]) -
+				0.25*((1-η)*(n[i]-m[i])+(1+η)*(p[i]-q[i]))
+
+			dxidη = 0.5*(-A[i]+(1+ξ)*b[i]+C[i]+(1-ξ)*d[i]) -
+				0.25*((1-ξ)*(q[i]-m[i])+(1+ξ)*(p[i]-n[i]))
+
+			dxdr.Set(i, 0, dxidξ)
+			dxdr.Set(i, 1, dxidη)
+		}
+		return
+	}
+	chk.Panic("Derivs function is not ready for 3D yet\n")
 }
 
 // Draw draws figure formed by Γ
@@ -109,7 +156,7 @@ func (o *Transfinite) Draw(npts []int, args, argsBry *plt.A) {
 		r[1] = -1 + 2*float64(j)/float64(npts[1]-1)
 		for i := 0; i < npts[0]; i++ {
 			r[0] = -1 + 2*float64(i)/float64(npts[0]-1)
-			o.QuadMap(x, r)
+			o.Point(x, r)
 			x0[i] = x[0]
 			y0[i] = x[1]
 		}
@@ -123,7 +170,7 @@ func (o *Transfinite) Draw(npts []int, args, argsBry *plt.A) {
 		r[0] = -1 + 2*float64(i)/float64(npts[0]-1)
 		for j := 0; j < npts[1]; j++ {
 			r[1] = -1 + 2*float64(j)/float64(npts[1]-1)
-			o.QuadMap(x, r)
+			o.Point(x, r)
 			x1[j] = x[0]
 			y1[j] = x[1]
 		}

@@ -58,7 +58,7 @@ func DrawArrow2d(c, v la.Vector, normalize bool, sf float64, args *plt.A) {
 // DrawArrow2dM draws 2d arrow @ c with direction v (matrix version)
 func DrawArrow2dM(c la.Vector, vm *la.Matrix, col int, normalize bool, sf float64, args *plt.A) {
 	v := GetVec2d(vm, col, normalize)
-	plt.Arrow(c[0], c[1], c[0]+v[0], c[1]+v[1], args)
+	plt.Arrow(c[0], c[1], c[0]+v[0]*sf, c[1]+v[1]*sf, args)
 }
 
 // DrawArrow3d draws 3d arrow @ c with direction v
