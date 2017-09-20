@@ -340,8 +340,14 @@ func argsWireSurf(args *A, surf bool) (l string) {
 				l += io.Sf(",cmap=getCmap(%d)", args.CmapIdx)
 			}
 		}
+		if args.Rstride < 1 {
+			args.Rstride = 1
+		}
 		if args.Rstride > 0 {
 			l += io.Sf(",rstride=%d", args.Rstride)
+		}
+		if args.Cstride < 1 {
+			args.Cstride = 1
 		}
 		if args.Cstride > 0 {
 			l += io.Sf(",cstride=%d", args.Cstride)
