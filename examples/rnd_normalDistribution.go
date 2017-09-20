@@ -16,7 +16,7 @@ import (
 func plotNormal(μ, σ, xmin, xmax float64) {
 
 	var dist rnd.DistNormal
-	dist.Init(&rnd.VarData{M: μ, S: σ})
+	dist.Init(&rnd.Variable{M: μ, S: σ})
 
 	n := 101
 	x := utl.LinSpace(xmin, xmax, n)
