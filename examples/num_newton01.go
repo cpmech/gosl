@@ -9,7 +9,6 @@ package main
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
@@ -19,14 +18,13 @@ import (
 func main() {
 
 	// Function: y(x) = fx[0] with x = xvec[0]
-	fcn := func(fx, xvec la.Vector) (err error) {
+	fcn := func(fx, xvec la.Vector) {
 		x := xvec[0]
 		fx[0] = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
-		return
 	}
 
 	// Jacobian: dfdx(x) function
-	Jfcn := func(dfdx *la.Matrix, x la.Vector) (err error) {
+	Jfcn := func(dfdx *la.Matrix, x la.Vector) {
 		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0*0.165*x[0])
 		return
 	}
@@ -43,10 +41,7 @@ func main() {
 
 	// solve
 	xvec := []float64{xguess}
-	err := o.Solve(xvec, false)
-	if err != nil {
-		chk.Panic("NlSolver filed: %v\n", err)
-	}
+	o.Solve(xvec, false)
 
 	// output
 	fx := []float64{123}
