@@ -13,8 +13,12 @@ import (
 )
 
 // Nurbs holds NURBS data
-// Note: Control points must be set after a call to Init
-//       Either SetControl must be called or the Q array must be directly specified
+//
+//  NOTE: (1) Control points must be set after a call to Init
+//        (2) Either SetControl must be called or the Q array must be directly specified
+//
+//  Reference:
+//   [1] Piegl L and Tiller W (1995) The NURBS book, Springer, 646p
 type Nurbs struct {
 
 	// essential
@@ -352,9 +356,11 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 
 // Point returns the x-y-z coordinates of a point on curve/surface/volume
 //   Input:
-//     u -- [gnd] knot values
+//     u    -- [gnd] knot values
+//     ndim -- the dimension of the point. E.g. allows drawing curves in 3D
 //   Output:
-//     C -- [ndim] coordinates
+//     C -- [ndim] point coordinates
+//   NOTE: Algorithm A4.1 (p124) of [1]
 func (o *Nurbs) Point(C, u []float64, ndim int) {
 	for d := 0; d < o.gnd; d++ {
 		o.span[d] = o.b[d].findSpan(u[d])
