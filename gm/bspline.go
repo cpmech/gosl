@@ -14,6 +14,8 @@ import (
 )
 
 // Bspline holds B-spline data
+//  Reference:
+//   [1] Piegl L and Tiller W (1995) The NURBS book, Springer, 646p
 type Bspline struct {
 
 	// essential
