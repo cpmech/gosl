@@ -370,8 +370,7 @@ func TestNurbs05(tst *testing.T) {
 	knots := [][]float64{
 		{0, 0, 0, 2.0 / 5.0, 3.0 / 5.0, 1, 1, 1},
 	}
-	curve := new(Nurbs)
-	curve.Init(1, []int{2}, knots)
+	curve := NewNurbs(1, []int{2}, knots)
 	err := curve.SetControl(verts, utl.IntRange(len(verts)))
 	status(tst, err)
 
@@ -434,8 +433,7 @@ func TestNurbs06(tst *testing.T) {
 	knots := [][]float64{
 		{0, 0, 0, 1, 1, 1},
 	}
-	curve := new(Nurbs)
-	curve.Init(1, []int{2}, knots)
+	curve := NewNurbs(1, []int{2}, knots)
 	err := curve.SetControl(verts, utl.IntRange(len(verts)))
 	status(tst, err)
 

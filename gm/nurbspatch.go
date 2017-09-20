@@ -144,8 +144,7 @@ func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) (err
 	// allocate nurbs
 	o.Entities = make([]*Nurbs, len(o.ExchangeData))
 	for i, ed := range o.ExchangeData {
-		o.Entities[i] = new(Nurbs)
-		o.Entities[i].Init(ed.Gnd, ed.Ords, ed.Knots)
+		o.Entities[i] = NewNurbs(ed.Gnd, ed.Ords, ed.Knots)
 		err = o.Entities[i].SetControl(verts, ed.Ctrls)
 		if err != nil {
 			return

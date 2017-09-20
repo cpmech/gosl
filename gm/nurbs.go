@@ -41,10 +41,11 @@ type Nurbs struct {
 
 // initialisation methods ////////////////////////////////////////////////////////////////////////////
 
-// Init initialises Nurbs
-func (o *Nurbs) Init(gnd int, ords []int, knots [][]float64) {
+// NewNurbs returns a new Nurbs object
+func NewNurbs(gnd int, ords []int, knots [][]float64) (o *Nurbs) {
 
 	// essential
+	o = new(Nurbs)
 	o.gnd = gnd
 	o.p = make([]int, 3)
 
@@ -89,6 +90,7 @@ func (o *Nurbs) Init(gnd int, ords []int, knots [][]float64) {
 	o.rr = utl.Deep3alloc(o.p[0]+1, o.p[1]+1, o.p[2]+1)
 	o.drr = utl.Deep4alloc(o.p[0]+1, o.p[1]+1, o.p[2]+1, o.gnd)
 	o.dww = make([]float64, o.gnd)
+	return
 }
 
 // SetControl sets control points from list of global vertices
@@ -751,8 +753,7 @@ func (o *Nurbs) Krefine(X [][]float64) (O *Nurbs) {
 	}
 
 	// initialize new nurbs
-	O = new(Nurbs)
-	O.Init(o.gnd, o.p, Unew)
+	O = NewNurbs(o.gnd, o.p, Unew)
 	O.Q = Qnew
 	return
 }

@@ -32,8 +32,7 @@ func main() {
 	// NURBS curve
 	gnd := 1           // geometry number of dimensions: 1=>curve, 2=>surface, 3=>volume
 	orders := []int{3} // 3rd order along the only dimension
-	curve := new(gm.Nurbs)
-	curve.Init(gnd, orders, knots)
+	curve := gm.NewNurbs(gnd, orders, knots)
 	curve.SetControl(verts, utl.IntRange(len(verts)))
 
 	// refine NURBS

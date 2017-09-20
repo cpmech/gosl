@@ -41,11 +41,9 @@ func (o *Nurbs) ExtractSurfaces() (surfs []*Nurbs) {
 	}
 	for i := 0; i < o.gnd; i++ {
 		a, b := i*o.gnd, i*o.gnd+1
-		surfs[a] = new(Nurbs) // surface perpendicular to i
-		surfs[b] = new(Nurbs) // opposite surface perpendicular to i
-		surfs[a].Init(o.gnd-1, ords[i], knots[i])
-		surfs[b].Init(o.gnd-1, ords[i], knots[i])
-		if o.gnd == 2 { // boundary is curve
+		surfs[a] = NewNurbs(o.gnd-1, ords[i], knots[i]) // surface perpendicular to i
+		surfs[b] = NewNurbs(o.gnd-1, ords[i], knots[i]) // opposite surface perpendicular to i
+		if o.gnd == 2 {                                 // boundary is curve
 			j := (i + 1) % o.gnd // direction perpendicular to i
 			surfs[a].Q = o.CloneCtrlsAlongCurve(j, 0)
 			surfs[b].Q = o.CloneCtrlsAlongCurve(j, o.n[i]-1)

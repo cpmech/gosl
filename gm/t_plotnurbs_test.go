@@ -145,8 +145,7 @@ func Test_plotnurbs05(tst *testing.T) {
 			{1, 1, 1, 1},
 		}
 		knots := [][]float64{{0, 0, 0, 0.5, 1, 1, 1}}
-		curve := new(Nurbs)
-		curve.Init(1, []int{2}, knots)
+		curve := NewNurbs(1, []int{2}, knots)
 		err := curve.SetControl(verts, utl.IntRange(len(verts)))
 		if err != nil {
 			tst.Errorf("%v", err)
@@ -191,8 +190,7 @@ func Test_plotnurbs06(tst *testing.T) {
 			{0, 0, 0, 1, 1, 1},
 			{0, 0, 0, 1, 1, 1},
 		}
-		curve := new(Nurbs)
-		curve.Init(2, []int{2, 2}, knots)
+		curve := NewNurbs(2, []int{2, 2}, knots)
 		err := curve.SetControl(verts, utl.IntRange(len(verts)))
 		if err != nil {
 			tst.Errorf("%v", err)
