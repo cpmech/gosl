@@ -38,7 +38,7 @@ type Bspline struct {
 	daux [][]float64 // auxiliary array for computing derivatives
 }
 
-// Init initialises B-spline
+// NewBspline returns a new B-spline
 func NewBspline(T []float64, p int) (o *Bspline) {
 
 	// check
