@@ -34,7 +34,7 @@ func checkDerivs(tst *testing.T, b *Nurbs, npts int, tol float64, verb bool) {
 	}
 }
 
-func Test_nurbs01(tst *testing.T) {
+func TestNurbs01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("nurbs01. Elements, IndBasis, and ExtractSurfaces")
@@ -179,24 +179,24 @@ func Test_nurbs01(tst *testing.T) {
 		io.Pf("\n------------ plot -------------\n")
 		ndim := 2
 		plt.Reset(true, nil)
-		PlotNurbs("/tmp/gosl", "t_nurbs01a", surf, ndim, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs("/tmp/gosl/gm", "nurbs01a", surf, ndim, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, nil)
-		PlotNurbsBasis2d("/tmp/gosl", "t_nurbs01b", surf, 0, 7, true, true, nil, nil, func(idx int) {
+		PlotNurbsBasis2d("/tmp/gosl/gm", "nurbs01b", surf, 0, 7, true, true, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, &plt.A{Prop: 1.0})
-		PlotNurbsDerivs2d("/tmp/gosl", "t_nurbs01c", surf, 0, 7, false, false, nil, nil, func(idx int) {
+		PlotNurbsDerivs2d("/tmp/gosl/gm", "nurbs01c", surf, 0, 7, false, false, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
 		})
 	}
 }
 
-func Test_nurbs02(tst *testing.T) {
+func TestNurbs02(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("nurbs02. Elements and IndBasis")
@@ -256,24 +256,24 @@ func Test_nurbs02(tst *testing.T) {
 		la := 0 + 0*surf.n[0]
 		lb := 2 + 1*surf.n[0]
 		plt.Reset(true, nil)
-		PlotNurbs("/tmp/gosl", "t_nurbs02a", surf, ndim, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs("/tmp/gosl/gm", "nurbs02a", surf, ndim, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, &plt.A{Prop: 1.5})
-		PlotNurbsBasis2d("/tmp/gosl", "t_nurbs02b", surf, la, lb, false, false, nil, nil, func(idx int) {
+		PlotNurbsBasis2d("/tmp/gosl/gm", "nurbs02b", surf, la, lb, false, false, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, &plt.A{Prop: 1.7})
-		PlotNurbsDerivs2d("/tmp/gosl", "t_nurbs02c", surf, la, lb, false, false, nil, nil, func(idx int) {
+		PlotNurbsDerivs2d("/tmp/gosl/gm", "nurbs02c", surf, la, lb, false, false, nil, nil, func(idx int) {
 			plt.AxisOff()
 			plt.Equal()
 		})
 	}
 }
 
-func Test_nurbs03(tst *testing.T) {
+func TestNurbs03(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("nurbs03. Elements and Krefine")
@@ -303,25 +303,25 @@ func Test_nurbs03(tst *testing.T) {
 
 		// geometry
 		plt.Reset(true, &plt.A{WidthPt: 450})
-		plotTwoNurbs2d("/tmp/gosl", "t_nurbs03a", surf, refined, "original", "refined", func() {
+		plotTwoNurbs2d("/tmp/gosl/gm", "nurbs03a", surf, refined, "original", "refined", func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 
 		// basis
 		plt.Reset(true, &plt.A{Prop: 1.2})
-		PlotNurbsBasis2d("/tmp/gosl", "t_nurbs03b", surf, 0, 1, false, false, nil, nil, func(idx int) {
+		PlotNurbsBasis2d("/tmp/gosl/gm", "nurbs03b", surf, 0, 1, false, false, nil, nil, func(idx int) {
 			plt.HideBorders(&plt.A{HideR: true, HideT: true})
 		})
 		plt.Reset(true, &plt.A{Prop: 1.2})
 		plt.HideBorders(&plt.A{HideR: true, HideT: true})
-		PlotNurbsDerivs2d("/tmp/gosl", "t_nurbs03c", surf, 0, 1, false, false, nil, nil, func(idx int) {
+		PlotNurbsDerivs2d("/tmp/gosl/gm", "nurbs03c", surf, 0, 1, false, false, nil, nil, func(idx int) {
 			plt.HideBorders(&plt.A{HideR: true, HideT: true})
 		})
 	}
 }
 
-func Test_nurbs04(tst *testing.T) {
+func TestNurbs04(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("nurbs04. KrefineN and file read-write")
@@ -331,53 +331,22 @@ func Test_nurbs04(tst *testing.T) {
 	b := a.KrefineN(2, false)
 	c := a.KrefineN(4, false)
 
-	// tags
-	/*
-		// tolerace for normalised space comparisons
-		tol := 1e-7
-
-		a_vt := tag_verts(a, tol)
-		a_ct := map[string]int{
-			"0_0": -1,
-			"0_1": -2,
-		}
-		b_vt := tag_verts(b, tol)
-		c_vt := tag_verts(c, tol)
-
-		// write .msh files
-		WriteMsh("/tmp/gosl", "m_nurbs04a", []*Nurbs{a}, a_vt, a_ct, tol)
-		WriteMsh("/tmp/gosl", "m_nurbs04b", []*Nurbs{b}, b_vt, nil, tol)
-		WriteMsh("/tmp/gosl", "m_nurbs04c", []*Nurbs{c}, c_vt, nil, tol)
-
-		// read .msh file back and check
-		a_read := ReadMsh("/tmp/gosl/m_nurbs04a")[0]
-		chk.IntAssert(a_read.gnd, a.gnd)
-		chk.Ints(tst, "p", a.p, a_read.p)
-		chk.Ints(tst, "n", a.n, a_read.n)
-		chk.Deep4(tst, "Q", 1.0e-17, a.Q, a_read.Q)
-		chk.IntMat(tst, "l2i", a.l2i, a_read.l2i)
-	*/
-
 	// plot
 	if chk.Verbose {
 		ndim := 2
 		plt.Reset(true, nil)
-		PlotNurbs("/tmp/gosl", "t_nurbs04a", b, ndim, 41, true, true, nil, nil, nil, func() {
+		PlotNurbs("/tmp/gosl/gm", "nurbs04a", b, ndim, 41, true, true, nil, nil, nil, func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, nil)
-		//plotTwoNurbs2d("/tmp/gosl", "t_nurbs04b", a, a_read, "original", "from file", func() {
-		//plt.AxisOff()
-		//plt.Equal()
-		//})
 		plt.Reset(true, nil)
-		plotTwoNurbs2d("/tmp/gosl", "t_nurbs04c", a, b, "original", "refined", func() {
+		plotTwoNurbs2d("/tmp/gosl/gm", "nurbs04c", a, b, "original", "refined", func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
 		plt.Reset(true, nil)
-		plotTwoNurbs2d("/tmp/gosl", "t_nurbs04d", a, c, "original", "refined", func() {
+		plotTwoNurbs2d("/tmp/gosl/gm", "nurbs04d", a, c, "original", "refined", func() {
 			plt.AxisOff()
 			plt.Equal()
 		})
