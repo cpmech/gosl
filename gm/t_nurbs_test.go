@@ -5,10 +5,12 @@
 package gm
 
 import (
+	"math"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -37,7 +39,7 @@ func checkDerivs(tst *testing.T, b *Nurbs, npts int, tol float64, verb bool) {
 func TestNurbs01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs01. Elements, IndBasis, and ExtractSurfaces")
+	chk.PrintTitle("Nurbs01. Elements, IndBasis, and ExtractSurfaces")
 
 	// NURBS
 	surf := FactoryNurbs.Surf2dExample1()
@@ -199,7 +201,7 @@ func TestNurbs01(tst *testing.T) {
 func TestNurbs02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs02. Elements and IndBasis")
+	chk.PrintTitle("Nurbs02. Elements and IndBasis")
 
 	// NURBS
 	surf := FactoryNurbs.Surf2dQuarterPlateHole1()
@@ -276,7 +278,7 @@ func TestNurbs02(tst *testing.T) {
 func TestNurbs03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs03. Elements and Krefine")
+	chk.PrintTitle("Nurbs03. Elements and Krefine")
 
 	// NURBS
 	surf := FactoryNurbs.Curve2dExample1()
@@ -324,7 +326,7 @@ func TestNurbs03(tst *testing.T) {
 func TestNurbs04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nurbs04. KrefineN and file read-write")
+	chk.PrintTitle("Nurbs04. KrefineN and file read-write")
 
 	// NURBS
 	a := FactoryNurbs.Surf2dQuarterPlateHole1()
@@ -348,6 +350,135 @@ func TestNurbs04(tst *testing.T) {
 		plt.Reset(true, nil)
 		plotTwoNurbs2d("/tmp/gosl/gm", "nurbs04d", a, c, "original", "refined", func() {
 			plt.AxisOff()
+			plt.Equal()
+		})
+	}
+}
+
+func tanVector(dCdu *la.Matrix) la.Vector {
+	return []float64{dCdu.Get(0, 0), dCdu.Get(1, 0)}
+}
+
+func drawArrow(c la.Vector, dCdu *la.Matrix, normalize bool, args *plt.A) {
+	dx := dCdu.Get(0, 0)
+	dy := dCdu.Get(1, 0)
+	if normalize {
+		s := math.Sqrt(dx*dx + dy*dy)
+		if s > 0 {
+			dx /= s
+			dy /= s
+		}
+	}
+	plt.Arrow(c[0], c[1], c[0]+dx, c[1]+dy, args)
+}
+
+func TestNurbs05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Nurbs05. Point and PointDeriv")
+
+	// NURBS
+	verts := [][]float64{
+		{0, 0, 0, 1},
+		{1, 3, 0, 1},
+		{4, 3, 0, 1},
+		{5, 0, 0, 1},
+		{6, 2, 0, 1},
+	}
+	knots := [][]float64{
+		{0, 0, 0, 2.0 / 5.0, 3.0 / 5.0, 1, 1, 1},
+	}
+	curve := new(Nurbs)
+	curve.Init(1, []int{2}, knots)
+	err := curve.SetControl(verts, utl.IntRange(len(verts)))
+	status(tst, err)
+
+	// derivatives
+	dCduA := la.NewMatrix(2, curve.Gnd())
+	dCduB := la.NewMatrix(2, curve.Gnd())
+	dCduC := la.NewMatrix(2, curve.Gnd())
+	dCduD := la.NewMatrix(2, curve.Gnd())
+	cA := la.NewVector(2)
+	cB := la.NewVector(2)
+	cC := la.NewVector(2)
+	cD := la.NewVector(2)
+
+	// check
+	curve.PointDeriv(dCduA, cA, []float64{0}, 2)
+	chk.Array(tst, "dCdu @ u=0  ", 1e-17, tanVector(dCduA), []float64{5, 15})
+
+	curve.PointDeriv(dCduB, cB, []float64{2.0 / 5.0}, 2)
+	chk.Array(tst, "dCdu @ u=2/5", 1e-17, tanVector(dCduB), []float64{10, 0})
+
+	curve.PointDeriv(dCduC, cC, []float64{3.0 / 5.0}, 2)
+	chk.Array(tst, "dCdu @ u=3/5", 1e-17, tanVector(dCduC), []float64{10.0 / 3.0, -10})
+
+	curve.PointDeriv(dCduD, cD, []float64{1}, 2)
+	chk.Array(tst, "dCdu @ u=1  ", 1e-17, tanVector(dCduD), []float64{5, 10})
+
+	// plot
+	if chk.Verbose {
+		PlotNurbs("/tmp/gosl/gm", "nurbs05", curve, 2, 41, false, true, nil, nil, nil, func() {
+			drawArrow(cA, dCduA, true, nil)
+			drawArrow(cB, dCduB, true, nil)
+			drawArrow(cC, dCduC, true, nil)
+			drawArrow(cD, dCduD, true, nil)
+			plt.Gll("x", "y", nil)
+			plt.HideTRborders()
+			plt.Equal()
+		})
+	}
+}
+
+func TestNurbs06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Nurbs06. Point and PointDeriv")
+
+	// NURBS
+	verts := [][]float64{
+		{1, 0, 0, 1},
+		{1, 1, 0, 1},
+		{0, 1, 0, 2},
+	}
+	knots := [][]float64{
+		{0, 0, 0, 1, 1, 1},
+	}
+	curve := new(Nurbs)
+	curve.Init(1, []int{2}, knots)
+	err := curve.SetControl(verts, utl.IntRange(len(verts)))
+	status(tst, err)
+
+	// derivatives
+	dCduA := la.NewMatrix(2, curve.Gnd())
+	dCduB := la.NewMatrix(2, curve.Gnd())
+	dCduC := la.NewMatrix(2, curve.Gnd())
+	dCduD := la.NewMatrix(2, curve.Gnd())
+	cA := la.NewVector(2)
+	cB := la.NewVector(2)
+	cC := la.NewVector(2)
+	cD := la.NewVector(2)
+
+	// check
+	curve.PointDeriv(dCduA, cA, []float64{0}, 2)
+	chk.Array(tst, "dCdu @ u=0  ", 1e-17, tanVector(dCduA), []float64{0, 2})
+
+	curve.PointDeriv(dCduB, cB, []float64{2.0 / 5.0}, 2)
+
+	curve.PointDeriv(dCduC, cC, []float64{3.0 / 5.0}, 2)
+
+	curve.PointDeriv(dCduD, cD, []float64{1}, 2)
+	chk.Array(tst, "dCdu @ u=1  ", 1e-17, tanVector(dCduD), []float64{-1, 0})
+
+	// plot
+	if chk.Verbose {
+		PlotNurbs("/tmp/gosl/gm", "nurbs06", curve, 2, 41, false, true, nil, nil, nil, func() {
+			drawArrow(cA, dCduA, false, nil)
+			drawArrow(cB, dCduB, false, nil)
+			drawArrow(cC, dCduC, false, nil)
+			drawArrow(cD, dCduD, false, nil)
+			plt.Gll("x", "y", nil)
+			plt.HideTRborders()
 			plt.Equal()
 		})
 	}

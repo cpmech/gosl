@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -403,6 +404,54 @@ func (o *Nurbs) Point(C, u []float64, ndim int) {
 	}
 	for e := 0; e < ndim; e++ {
 		C[e] = o.cw[e] / o.cw[3]
+	}
+	return
+}
+
+// PointDeriv returns the derivatives of the x-y-z coordinates of a point on curve/surface/volume
+// with respect to the knot values u @ u
+//   Input:
+//     u    -- [gnd] knot values
+//     ndim -- the dimension of the point. E.g. allows drawing curves in 3D
+//   Output:
+//     dCdu -- [ndim][gnd] derivatives dC_i/du_j
+//     C    -- [ndim] point coordinates
+func (o *Nurbs) PointDeriv(dCdu *la.Matrix, C, u []float64, ndim int) {
+	for d := 0; d < o.gnd; d++ {
+		o.span[d] = o.b[d].findSpan(u[d])
+		o.b[d].basisFuns(u[d], o.span[d])
+		o.idx[d] = o.span[d] - o.p[d]
+	}
+	for e := 0; e < 4; e++ {
+		o.cw[e] = 0
+	}
+	dcwdu := make([]float64, 4)
+	switch o.gnd {
+	// curve
+	case 1:
+		j, k := 0, 0
+		for i := 0; i <= o.p[0]; i++ {
+			for e := 0; e < 4; e++ {
+				o.cw[e] += o.b[0].ndu[i][o.p[0]] * o.Q[o.idx[0]+i][j][k][e]
+				if i < o.p[0] {
+					num := o.Q[o.idx[0]+i+1][j][k][e] - o.Q[o.idx[0]+i][j][k][e]
+					den := o.b[0].T[o.idx[0]+i+1+o.p[0]] - o.b[0].T[o.idx[0]+i+1]
+					dcwdu[e] += o.b[0].ndu[i][o.p[0]-1] * float64(o.p[0]) * num / den
+				}
+			}
+		}
+	// surface
+	case 2:
+		chk.Panic("PointDeriv of surface is not available yet\n")
+	// volume
+	case 3:
+		chk.Panic("PointDeriv of volume is not available yet\n")
+	}
+	for e := 0; e < ndim; e++ {
+		C[e] = o.cw[e] / o.cw[3]
+		for d := 0; d < o.gnd; d++ {
+			dCdu.Set(e, d, (dcwdu[e]-dcwdu[3]*C[e])/o.cw[3])
+		}
 	}
 	return
 }
