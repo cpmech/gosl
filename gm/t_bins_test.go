@@ -37,11 +37,7 @@ func Test_bins01(tst *testing.T) {
 		Y[k] = y
 		Z[k] = z
 		ID[k] = k
-		err := bins.Append([]float64{x, y, z}, k, nil)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		bins.Append([]float64{x, y, z}, k, nil)
 	}
 
 	// getting ids from bins
@@ -66,14 +62,10 @@ func Test_bins01(tst *testing.T) {
 		plt.Reset(false, nil)
 		bins.Draw(true, false, false, false, nil, nil, nil, nil, nil)
 		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
-		var err error
 		if false {
 			plt.ShowSave("/tmp/gosl/gm", "t_bins01")
 		} else {
 			plt.Save("/tmp/gosl/gm", "t_bins01")
-		}
-		if err != nil {
-			tst.Errorf("%v", err)
 		}
 	}
 }
@@ -91,11 +83,7 @@ func Test_bins02(tst *testing.T) {
 	X := []float64{0.5, 1.0, 2.0, 2.0, 2.1, 3.0, 2.1, 2.2}
 	Y := []float64{0.0, 0.5, 0.5, 1.0, 2.0, 2.0, 2.1, 2.1}
 	for i := 0; i < len(X); i++ {
-		err := bins.Append([]float64{X[i], Y[i]}, i, nil)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		bins.Append([]float64{X[i], Y[i]}, i, nil)
 	}
 
 	// check
@@ -261,11 +249,7 @@ func Test_bins03(tst *testing.T) {
 			io.Pf("  which will induce x falling within bin # 28.\n")
 			io.Pf("------------------------------------------------------------------------------\n")
 		}
-		err := bins.Append(x, ID[k], nil)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		bins.Append(x, ID[k], nil)
 	}
 
 	// message
@@ -285,11 +269,7 @@ func Test_bins03(tst *testing.T) {
 
 	// add more points to bins
 	for i := 0; i < 5; i++ {
-		err := bins.Append([]float64{float64(i) * 0.1, 1.8}, 100+i, nil)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		bins.Append([]float64{float64(i) * 0.1, 1.8}, 100+i, nil)
 	}
 
 	// find points along diagonal
@@ -330,15 +310,10 @@ func Test_bins04(tst *testing.T) {
 	// fill bins structure
 	maxit := 10 // number of entries
 	ID := make([]int, maxit)
-	var err error
 	for k := 0; k < maxit; k++ {
 		x := float64(k) / float64(maxit) * 10
 		ID[k] = k * 11
-		err = bins.Append([]float64{x, x, x}, ID[k], nil)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		bins.Append([]float64{x, x, x}, ID[k], nil)
 	}
 
 	// find points along along space diagonal
@@ -377,13 +352,8 @@ func Test_bins05a(tst *testing.T) {
 		{0.21132486540518713, 1.788675134594813},
 		{0.7886751345948129, 1.788675134594813},
 	}
-	var err error
 	for i := 0; i < 8; i++ {
-		err = bins.Append(points[i], i, nil)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		bins.Append(points[i], i, nil)
 	}
 	io.Pf("bins = %v\n", bins)
 
@@ -400,9 +370,6 @@ func Test_bins05a(tst *testing.T) {
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.Save("/tmp/gosl/gm", "t_bins05a")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
 	}
 }
 
@@ -426,13 +393,8 @@ func Test_bins05b(tst *testing.T) {
 		{0.21132486540518713, 1.788675134594813},
 		{0.7886751345948129, 1.788675134594813},
 	}
-	var err error
 	for i := 0; i < 8; i++ {
-		err = bins.Append(points[i], i, nil)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		bins.Append(points[i], i, nil)
 	}
 	io.Pf("bins = %v\n", bins)
 
@@ -449,9 +411,6 @@ func Test_bins05b(tst *testing.T) {
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.Save("/tmp/gosl/gm", "t_bins05b")
-		if err != nil {
-			tst.Errorf("%v", err)
-		}
 	}
 }
 
@@ -477,41 +436,13 @@ func Test_bins06(tst *testing.T) {
 	chk.Int(tst, "Nentries", bins.Nentries(), 0)
 
 	// append
-	err := bins.Append([]float64{9, 7, 6}, 1, nil)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-	err = bins.Append([]float64{8, 5, 6}, 2, nil)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-	err = bins.Append([]float64{7, 7, 5}, 3, nil)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-	err = bins.Append([]float64{5, 7, 6}, 4, nil)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-	err = bins.Append([]float64{5, 5, 5}, 5, nil)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-	err = bins.Append([]float64{10, 10, 10}, 6, nil) // this one goes to a ghost bin
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-	err = bins.Append([]float64{5, 5, 10}, 7, nil) // this one goes to a ghost bin too
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	bins.Append([]float64{9, 7, 6}, 1, nil)
+	bins.Append([]float64{8, 5, 6}, 2, nil)
+	bins.Append([]float64{7, 7, 5}, 3, nil)
+	bins.Append([]float64{5, 7, 6}, 4, nil)
+	bins.Append([]float64{5, 5, 5}, 5, nil)
+	bins.Append([]float64{10, 10, 10}, 6, nil) // this one goes to a ghost bin
+	bins.Append([]float64{5, 5, 10}, 7, nil)   // this one goes to a ghost bin too
 
 	// check again
 	chk.Int(tst, "Nactive", bins.Nactive(), 4)
@@ -538,9 +469,6 @@ func Test_bins06(tst *testing.T) {
 			plt.ShowSave("/tmp/gosl/gm", "t_bins06")
 		} else {
 			plt.Save("/tmp/gosl/gm", "t_bins06")
-		}
-		if err != nil {
-			tst.Errorf("%v", err)
 		}
 	}
 }

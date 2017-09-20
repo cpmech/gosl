@@ -47,7 +47,7 @@ type Bins struct {
 //   xmin -- [ndim] min/initial coordinates of the whole space (box/cube)
 //   xmax -- [ndim] max/final coordinates of the whole space (box/cube)
 //   ndiv -- [ndim] number of divisions for xmax-xmin
-func (o *Bins) Init(xmin, xmax []float64, ndiv []int) (err error) {
+func (o *Bins) Init(xmin, xmax []float64, ndiv []int) {
 
 	// check for out-of-range values
 	o.Ndim = len(xmin)
@@ -56,7 +56,7 @@ func (o *Bins) Init(xmin, xmax []float64, ndiv []int) (err error) {
 	chk.IntAssert(len(xmin), len(xmax))
 	chk.IntAssert(len(xmin), len(ndiv))
 	if len(xmin) < 2 || len(xmin) > 3 {
-		return chk.Err("sizes of xmin and xmax must be the same and equal to either 2 or 3")
+		chk.Panic("sizes of xmin and xmax must be the same and equal to either 2 or 3\n")
 	}
 
 	// allocate slices with max lengths and number of division
@@ -69,7 +69,7 @@ func (o *Bins) Init(xmin, xmax []float64, ndiv []int) (err error) {
 		o.Xdel[k] = o.Xmax[k] - o.Xmin[k]
 		o.Size[k] = o.Xdel[k] / float64(ndiv[k])
 		if o.Xdel[k] < XDELZERO {
-			return chk.Err("xmax[%d]-xmin[%d]=%g must be greater than %g", k, k, o.Xdel[k], XDELZERO)
+			chk.Panic("xmax[%d]-xmin[%d]=%g must be greater than %g\n", k, k, o.Xdel[k], XDELZERO)
 		}
 	}
 
@@ -84,23 +84,21 @@ func (o *Bins) Init(xmin, xmax []float64, ndiv []int) (err error) {
 	// other slices
 	o.All = make([]*Bin, nbins)
 	o.tmp = make([]int, o.Ndim)
-	return
 }
 
 // Append adds a new entry {x, id, something} into the Bins structure
-func (o *Bins) Append(x []float64, id int, extra interface{}) (err error) {
+func (o *Bins) Append(x []float64, id int, extra interface{}) {
 	idx := o.CalcIndex(x)
 	if idx < 0 {
-		return chk.Err("coordinates %v are out of range", x)
+		chk.Panic("coordinates %v are out of range\n", x)
 	}
 	bin := o.FindBinByIndex(idx)
 	if bin == nil {
-		return chk.Err("bin index %v is out of range", idx)
+		chk.Panic("bin index %v is out of range\n", idx)
 	}
 	xcopy := utl.GetCopy(x)
 	entry := BinEntry{id, xcopy, extra}
 	bin.Entries = append(bin.Entries, &entry)
-	return
 }
 
 // Clear clears all bins
