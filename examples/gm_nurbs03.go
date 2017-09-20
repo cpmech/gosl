@@ -25,7 +25,7 @@ func main() {
 	plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
 	plt.Triad(1.1, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
 	curve.DrawCtrl(ndim, false, &plt.A{C: "grey", Lw: 0.5}, nil)
-	curve.DrawSurface(3, nu, nv, true, false, &plt.A{CmapIdx: 3}, &plt.A{C: "#2782c8", Lw: 0.5})
+	curve.DrawSurface(3, nu, nv, true, false, &plt.A{CmapIdx: 3, Rstride: 1, Cstride: 1}, &plt.A{C: "#2782c8", Lw: 0.5})
 	plt.Default3dView(-6.1, 6.1, -6.1, 6.1, -6.1, 6.1, true)
 	plt.Save("/tmp/gosl", "gm_nurbs03")
 }
