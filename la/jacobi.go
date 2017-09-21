@@ -34,7 +34,7 @@ import (
 //   NOTE: for matrices of order greater than about 10, say, the algorithm is slower,
 //         by a significant constant factor, than the QR method.
 //
-func Jacobi(Q *Matrix, v Vector, A *Matrix) (err error) {
+func Jacobi(Q *Matrix, v Vector, A *Matrix) {
 
 	// constants
 	tol := 1e-15
@@ -135,6 +135,5 @@ func Jacobi(Q *Matrix, v Vector, A *Matrix) (err error) {
 		}
 	}
 
-	err = chk.Err("Jacobi rotation dit not converge after %d iterations", nItMax+1)
-	return
+	chk.Panic("Jacobi rotation dit not converge after %d iterations", nItMax+1)
 }

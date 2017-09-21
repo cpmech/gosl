@@ -24,10 +24,7 @@ func TestJacobi01(tst *testing.T) {
 
 	Q := NewMatrix(3, 3)
 	v := NewVector(3)
-	err := Jacobi(Q, v, A)
-	if err != nil {
-		chk.Panic("Jacobi failed:\n%v", err)
-	}
+	Jacobi(Q, v, A)
 
 	chk.Deep2(tst, "Q", 1e-17, Q.GetDeep2(), [][]float64{
 		{1, 0, 0},
@@ -50,10 +47,7 @@ func TestJacobi02(tst *testing.T) {
 
 	Q := NewMatrix(3, 3)
 	v := NewVector(3)
-	err := Jacobi(Q, v, A)
-	if err != nil {
-		chk.Panic("Jacobi failed:\n%v", err)
-	}
+	Jacobi(Q, v, A)
 
 	os3 := 1.0 / math.Sqrt(5.0)
 	chk.Deep2(tst, "Q", 1e-17, Q.GetDeep2(), [][]float64{
@@ -77,10 +71,7 @@ func TestJacobi03(tst *testing.T) {
 
 	Q := NewMatrix(3, 3)
 	v := NewVector(3)
-	err := Jacobi(Q, v, A)
-	if err != nil {
-		chk.Panic("Jacobi failed:\n%v", err)
-	}
+	Jacobi(Q, v, A)
 
 	chk.Deep2(tst, "Q", 1e-17, Q.GetDeep2(), [][]float64{
 		{+7.81993314738381295e-01, 5.26633230856907386e-01, +3.33382506832158143e-01},
@@ -105,10 +96,7 @@ func TestJacobi04(tst *testing.T) {
 
 	Q := NewMatrix(5, 5)
 	v := NewVector(5)
-	err := Jacobi(Q, v, A)
-	if err != nil {
-		chk.Panic("Jacobi failed:\n%v", err)
-	}
+	Jacobi(Q, v, A)
 
 	chk.Deep2(tst, "Q", 1e-14, Q.GetDeep2(), [][]float64{
 		{+4.265261184874604e-01, +5.285232769688938e-01, +1.854383137677959e-01, +2.570216184506737e-01, -6.620355997875309e-01},
