@@ -122,21 +122,21 @@ type Equations struct {
 // NewEquations creates a new Equations structure
 //   n  -- total number of equations; i.e. len({x}) in [A]⋅{x}={b}
 //   kx -- known x-components ⇒ "known equations" [may be unsorted]
-func NewEquations(n int, kx []int) (o *Equations, err error) {
+func NewEquations(n int, kx []int) (o *Equations) {
 	sortedkx := utl.IntUnique(kx)
 	o = new(Equations)
 	o.N = n
 	o.Nk = len(sortedkx)
 	o.Nu = o.N - o.Nk
 	if o.N < 1 {
-		return nil, chk.Err("the number of equations must be greater than 0. N=%d is invalid\n", o.N)
+		chk.Panic("the number of equations must be greater than 0. N=%d is invalid\n", o.N)
 	}
 	if o.Nu <= 0 {
-		return nil, chk.Err("at least one unknown equation is required. Nu=%d is invalid. Nk=%d. N=%d\n", o.Nu, o.Nk, o.N)
+		chk.Panic("at least one unknown equation is required. Nu=%d is invalid. Nk=%d. N=%d\n", o.Nu, o.Nk, o.N)
 	}
 	for _, eq := range kx {
 		if eq < 0 || eq >= o.N {
-			return nil, chk.Err("known equation number is out of bounds. eq=%d must be in [0,%d]\n", eq, o.N-1)
+			chk.Panic("known equation number is out of bounds. eq=%d must be in [0,%d]\n", eq, o.N-1)
 		}
 	}
 	o.UtoF = make([]int, o.Nu)

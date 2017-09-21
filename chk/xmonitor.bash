@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="PrintAnaNum"
+    go test -test.run="Recover01"
 done

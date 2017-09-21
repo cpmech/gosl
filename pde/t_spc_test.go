@@ -105,7 +105,7 @@ func TestSpc02(tst *testing.T) {
 	chk.Array(tst, "U", 1e-15, spc.U, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
 
 	// check
-	eqFull, _ := la.NewEquations(spc.Grid.Size(), nil)
+	eqFull := la.NewEquations(spc.Grid.Size(), nil)
 	spc.Op.Assemble(eqFull)
 	K := eqFull.Auu.ToMatrix(nil)
 	Fref := la.NewVector(spc.Eqs.N)

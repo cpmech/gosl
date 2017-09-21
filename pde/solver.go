@@ -65,7 +65,7 @@ func (o *Solver) SetBcs(ebcs *EssentialBcs) {
 	knownEqs := o.Ebcs.GetNodesList()
 
 	// init equations structure
-	o.Eqs, _ = la.NewEquations(o.Grid.Size(), knownEqs)
+	o.Eqs = la.NewEquations(o.Grid.Size(), knownEqs)
 	o.U = la.NewVector(o.Eqs.N)
 	o.F = la.NewVector(o.Eqs.N)
 
@@ -84,11 +84,11 @@ func (o *Solver) SetBcs(ebcs *EssentialBcs) {
 
 // Solve solves problem
 //  The solution will be saved in U (and F if reactions == true)
-func (o *Solver) Solve(reactions bool) (err error) {
+func (o *Solver) Solve(reactions bool) {
 
 	// check
 	if o.Eqs == nil {
-		return chk.Err("please set boundary conditions first\n")
+		chk.Panic("please set boundary conditions first\n")
 	}
 	if o.Eqs.Nk == 0 {
 		reactions = false
@@ -131,10 +131,7 @@ func (o *Solver) Solve(reactions bool) (err error) {
 	}
 
 	// solve system
-	err = o.linsol.Solve(xu, bu, false)
-	if err != nil {
-		return
-	}
+	o.linsol.Solve(xu, bu, false)
 
 	// collect results
 	o.Eqs.JoinVector(o.U, xu, xk)
@@ -143,7 +140,6 @@ func (o *Solver) Solve(reactions bool) (err error) {
 		la.SpMatVecMulAdd(bk, 1.0, o.matAkk, xk)
 		o.Eqs.JoinVector(o.F, o.buCopy, bk)
 	}
-	return
 }
 
 // Ugrid2d returns the U results converted to grid-shape

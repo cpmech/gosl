@@ -26,7 +26,7 @@ func TestFdm01(tst *testing.T) {
 	g := op.InitWithGrid("uni", []float64{0, 0}, []float64{2, 2}, []int{2, 2})
 
 	// equations
-	e, _ := la.NewEquations(g.Size(), nil)
+	e := la.NewEquations(g.Size(), nil)
 
 	// assemble
 	op.Assemble(e)
@@ -95,7 +95,7 @@ func TestFdm02(tst *testing.T) {
 	chk.Array(tst, "U", 1e-15, fdm.U, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
 
 	// check
-	eqFull, _ := la.NewEquations(fdm.Grid.Size(), nil)
+	eqFull := la.NewEquations(fdm.Grid.Size(), nil)
 	fdm.Op.Assemble(eqFull)
 	K := eqFull.Auu.ToMatrix(nil)
 	Fref := la.NewVector(fdm.Eqs.N)

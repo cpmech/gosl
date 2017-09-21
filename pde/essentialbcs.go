@@ -55,10 +55,10 @@ func NewEssentialBcs() (o *EssentialBcs) {
 }
 
 // SetInGrid sets boundary condition considering Grid data
-func (o *EssentialBcs) SetInGrid(g *gm.Grid, tag int, key string, cvalue float64, fvalue dbf.T) (err error) {
+func (o *EssentialBcs) SetInGrid(g *gm.Grid, tag int, key string, cvalue float64, fvalue dbf.T) {
 	nodes := g.Boundary(tag)
 	if nodes == nil {
-		return chk.Err("cannot find nodes with tag=%d in grid\n", tag)
+		chk.Panic("cannot find nodes with tag=%d in grid\n", tag)
 	}
 	uuid := uuidT{tag, key}
 	if idx, ok := o.Finder[uuid]; ok {
@@ -74,7 +74,6 @@ func (o *EssentialBcs) SetInGrid(g *gm.Grid, tag int, key string, cvalue float64
 		}
 		o.All = append(o.All, &EssentialBc{tag, key, cvalue, fvalue, nmap})
 	}
-	return
 }
 
 // GetNodesList returns (unique/sorted) list of all nodes

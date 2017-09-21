@@ -28,15 +28,12 @@ func TestEssentialBcs01(tst *testing.T) {
 	//          |0       |1       |2
 	//          o--------o--------o
 	g := new(gm.Grid)
-	err := g.GenUniform([]float64{0, 0}, []float64{2, 2}, []int{2, 2}, false) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
-	status(tst, err)
+	g.GenUniform([]float64{0, 0}, []float64{2, 2}, []int{2, 2}, false) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
 
 	// essential boundary conditions
 	ebcs := NewEssentialBcs()
-	err = ebcs.SetInGrid(g, 10, "u", 123.0, nil) // left
-	status(tst, err)
-	err = ebcs.SetInGrid(g, 20, "u", 123.0, nil) // bottom
-	status(tst, err)
+	ebcs.SetInGrid(g, 10, "u", 123.0, nil) // left
+	ebcs.SetInGrid(g, 20, "u", 123.0, nil) // bottom
 
 	// print bcs
 	io.Pf("%v\n", ebcs.Print())
