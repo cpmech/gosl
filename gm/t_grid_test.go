@@ -17,8 +17,7 @@ func TestGrid01(tst *testing.T) {
 	chk.PrintTitle("Grid01")
 
 	g := new(Grid)
-	err := g.GenUniform([]float64{-6, -3}, []float64{6, 3}, []int{4, 3}, true)
-	status(tst, err)
+	g.GenUniform([]float64{-6, -3}, []float64{6, 3}, []int{4, 3}, true)
 
 	chk.Int(tst, "ndim", g.Ndim(), 2)
 	chk.Int(tst, "size", g.Size(), 20)
@@ -76,7 +75,6 @@ func TestGrid01(tst *testing.T) {
 		plt.SetXnticks(12)
 		plt.SetYnticks(12)
 		plt.Save("/tmp/gosl/gm", "grid01")
-		status(tst, err)
 	}
 }
 
@@ -86,8 +84,7 @@ func TestGrid02(tst *testing.T) {
 	chk.PrintTitle("Grid02")
 
 	g := new(Grid)
-	err := g.Set2d([]float64{1, 2, 4, 8, 16}, []float64{0, 3, 4, 7}, true)
-	status(tst, err)
+	g.Set2d([]float64{1, 2, 4, 8, 16}, []float64{0, 3, 4, 7}, true)
 
 	chk.Int(tst, "ndim", g.Ndim(), 2)
 	chk.Int(tst, "size", g.Size(), 20)
@@ -128,7 +125,6 @@ func TestGrid02(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		status(tst, err)
 		plt.Reset(true, &plt.A{WidthPt: 500})
 		g.Draw(true, nil, nil)
 		plt.Grid(&plt.A{C: "grey"})
@@ -137,7 +133,6 @@ func TestGrid02(tst *testing.T) {
 		plt.SetXnticks(17)
 		plt.SetYnticks(17)
 		plt.Save("/tmp/gosl/gm", "grid02")
-		status(tst, err)
 	}
 }
 
@@ -147,8 +142,7 @@ func TestGrid03(tst *testing.T) {
 	chk.PrintTitle("Grid03")
 
 	g := new(Grid)
-	err := g.Set3d([]float64{1, 2, 4, 8}, []float64{0, 3, 4}, []float64{-1, -0.5}, true)
-	status(tst, err)
+	g.Set3d([]float64{1, 2, 4, 8}, []float64{0, 3, 4}, []float64{-1, -0.5}, true)
 
 	chk.Int(tst, "ndim", g.Ndim(), 3)
 	chk.Int(tst, "size", g.Size(), 24)
@@ -229,7 +223,6 @@ func TestGrid03(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		status(tst, err)
 		plt.Reset(true, &plt.A{WidthPt: 500})
 		g.Draw(true, nil, &plt.A{Fsz: 6})
 		plt.Grid(&plt.A{C: "grey"})
@@ -238,6 +231,5 @@ func TestGrid03(tst *testing.T) {
 		plt.DefaultTriad(1)
 		plt.Default3dView(g.Min(0), g.Max(0), g.Min(1), g.Max(1), g.Min(2), g.Max(2), true)
 		plt.Save("/tmp/gosl/gm", "grid03")
-		status(tst, err)
 	}
 }

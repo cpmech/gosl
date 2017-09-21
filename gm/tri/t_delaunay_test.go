@@ -22,11 +22,7 @@ func Test_delaunay01(tst *testing.T) {
 	Y := []float64{0, 0, 1, 1, 0.5}
 
 	// generate
-	V, C, err := Delaunay(X, Y, chk.Verbose)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	V, C := Delaunay(X, Y, chk.Verbose)
 
 	// check
 	xout := make([]float64, len(V))

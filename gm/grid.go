@@ -38,16 +38,16 @@ type Grid struct {
 //  max  -- max x-y-z values, len==ndim: [xmax, ymax, zmax]
 //  ndiv -- number of divisions along each direction len==ndim: [ndivx, ndivy, ndivz]
 //  genMeshCoords -- generate "meshgrid" coordinates. Accessed with Mesh2d or Mesh3d
-func (o *Grid) GenUniform(min, max []float64, ndiv []int, genMeshCoords bool) (err error) {
+func (o *Grid) GenUniform(min, max []float64, ndiv []int, genMeshCoords bool) {
 	o.ndim = len(min)
 	if o.ndim != 2 && o.ndim != 3 {
-		return chk.Err("ndim must be 2 or 3. ndim=%d is invalid\n", o.ndim)
+		chk.Panic("ndim must be 2 or 3. ndim=%d is invalid\n", o.ndim)
 	}
 	if len(max) != o.ndim {
-		return chk.Err("len(max) must be equal to len(min) == ndim. %d != %d\n", len(max), o.ndim)
+		chk.Panic("len(max) must be equal to len(min) == ndim. %d != %d\n", len(max), o.ndim)
 	}
 	if len(ndiv) != o.ndim {
-		return chk.Err("len(ndiv) must be equal to len(min) == ndim. %d != %d\n", len(ndiv), o.ndim)
+		chk.Panic("len(ndiv) must be equal to len(min) == ndim. %d != %d\n", len(ndiv), o.ndim)
 	}
 	o.npts = make([]int, o.ndim)
 	o.min = utl.GetCopy(min)
@@ -65,12 +65,11 @@ func (o *Grid) GenUniform(min, max []float64, ndiv []int, genMeshCoords bool) (e
 		o.genMesh()
 	}
 	o.edge, o.face = o.boundaries(o.npts)
-	return
 }
 
 // Set2d sets coordinates along each direction
 //  genMeshCoords -- generate "meshgrid" coordinates. Accessed with Mesh2d or Mesh3d
-func (o *Grid) Set2d(X, Y []float64, genMeshCoords bool) (err error) {
+func (o *Grid) Set2d(X, Y []float64, genMeshCoords bool) {
 	nx := len(X)
 	ny := len(Y)
 	o.ndim = 2
@@ -82,12 +81,11 @@ func (o *Grid) Set2d(X, Y []float64, genMeshCoords bool) (err error) {
 		o.genMesh()
 	}
 	o.edge, o.face = o.boundaries(o.npts)
-	return
 }
 
 // Set3d sets coordinates along each direction
 //  genMeshCoords -- generate "meshgrid" coordinates. Accessed with Mesh2d or Mesh3d
-func (o *Grid) Set3d(X, Y, Z []float64, genMeshCoords bool) (err error) {
+func (o *Grid) Set3d(X, Y, Z []float64, genMeshCoords bool) {
 	nx := len(X)
 	ny := len(Y)
 	nz := len(Z)
@@ -100,7 +98,6 @@ func (o *Grid) Set3d(X, Y, Z []float64, genMeshCoords bool) (err error) {
 		o.genMesh()
 	}
 	o.edge, o.face = o.boundaries(o.npts)
-	return
 }
 
 // Ndim returns the space dimension

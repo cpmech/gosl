@@ -24,7 +24,7 @@ import (
 //  Ouptut:
 //    V = { { x0, y0 }, { x1, y1 }, { x2, y2 } ... Nvertices }
 //    C = { { id0, id1, id2 }, { id0, id1, id2 } ... Ncellls }
-func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int, err error) {
+func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int) {
 
 	// input
 	chk.IntAssert(len(X), len(Y))
@@ -45,7 +45,7 @@ func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int, err error
 		(C.long)(verb),
 	)
 	if res != 0 {
-		chk.Err("Delaunay2d failed: Triangle returned %d code\n", res)
+		chk.Panic("Delaunay2d failed: Triangle returned %d code\n", res)
 	}
 
 	// output
