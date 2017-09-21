@@ -7,7 +7,6 @@
 package main
 
 import (
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
@@ -90,10 +89,7 @@ func main() {
 	}
 
 	// solve
-	x, err := la.SpSolveC(A, b)
-	if err != nil {
-		chk.Panic("Solver failed %v\n")
-	}
+	x := la.SpSolveC(A, b)
 
 	// output
 	io.Pf("x = %.6f\n\n", x)

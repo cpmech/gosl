@@ -40,26 +40,14 @@ func main() {
 
 	// initialise solver
 	symmetric, verbose := false, false
-	err := o.Init(A, symmetric, verbose, "", "", nil)
-	if err != nil {
-		io.Pf("Init failed:\n%v\n", err)
-		return
-	}
+	o.Init(A, symmetric, verbose, "", "", nil)
 
 	// factorise
-	err = o.Fact()
-	if err != nil {
-		io.Pf("Fact failed:\n%v\n", err)
-		return
-	}
+	o.Fact()
 
 	// solve
 	x := la.NewVector(len(b))
-	err = o.Solve(x, b, false) // x := inv(A) * b
-	if err != nil {
-		io.Pf("Solve failed:\n%v\n", err)
-		return
-	}
+	o.Solve(x, b, false) // x := inv(A) * b
 
 	// print solution
 	xCorrect := []float64{1, 2, 3, 4, 5}

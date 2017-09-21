@@ -7,7 +7,6 @@
 package main
 
 import (
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
@@ -33,10 +32,7 @@ func main() {
 
 	// solve
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
-	x, err := la.SpSolve(A, b)
-	if err != nil {
-		chk.Panic("Solver failed: %v\n")
-	}
+	x := la.SpSolve(A, b)
 
 	// output
 	io.Pf("x = %v\n", x)

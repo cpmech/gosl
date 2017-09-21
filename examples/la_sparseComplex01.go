@@ -94,26 +94,14 @@ func main() {
 
 	// initialise solver
 	symmetric, verbose := false, false
-	err := o.Init(A, symmetric, verbose, "", "", nil)
-	if err != nil {
-		io.Pf("Init failed:\n%v\n", err)
-		return
-	}
+	o.Init(A, symmetric, verbose, "", "", nil)
 
 	// factorise
-	err = o.Fact()
-	if err != nil {
-		io.Pf("Fact failed:\n%v\n", err)
-		return
-	}
+	o.Fact()
 
 	// solve
 	x := la.NewVectorC(len(b))
-	err = o.Solve(x, b, false) // x := inv(A) * b
-	if err != nil {
-		io.Pf("Solve failed:\n%v\n", err)
-		return
-	}
+	o.Solve(x, b, false) // x := inv(A) * b
 
 	// output
 	io.Pf("x = %.6f\n\n", x)
