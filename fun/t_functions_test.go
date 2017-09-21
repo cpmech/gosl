@@ -44,7 +44,7 @@ func Test_functions01(tst *testing.T) {
 // numderiv employs a 1st order forward difference to approximate the derivative of f(x) w.r.t x @ x
 func numderiv(f func(x float64) float64, x float64) float64 {
 	eps, cte1 := 1e-16, 1e-5
-	delta := math.Sqrt(eps * max(cte1, math.Abs(x)))
+	delta := math.Sqrt(eps * utl.Max(cte1, math.Abs(x)))
 	return (f(x+delta) - f(x)) / delta
 }
 
@@ -446,12 +446,12 @@ func TestHat01(tst *testing.T) {
 
 	Xb := utl.LinSpace(-2, 4, 13)
 	for _, x := range Xb {
-		chk.AnaNum(tst, io.Sf("Hat(%+.2f)", x), 1e-17, Hat(x, xc, y0, h, l), max(y0, y0+h-math.Abs(x-xc)/2), chk.Verbose)
+		chk.AnaNum(tst, io.Sf("Hat(%+.2f)", x), 1e-17, Hat(x, xc, y0, h, l), utl.Max(y0, y0+h-math.Abs(x-xc)/2), chk.Verbose)
 	}
 
 	Xb = utl.LinSpace(-2, 4, 8)
 	for _, x := range Xb {
-		chk.AnaNum(tst, io.Sf("Hat(%+.2f)", x), 1e-17, Hat(x, xc, y0, h, l), max(y0, y0+h-math.Abs(x-xc)/2), chk.Verbose)
+		chk.AnaNum(tst, io.Sf("Hat(%+.2f)", x), 1e-17, Hat(x, xc, y0, h, l), utl.Max(y0, y0+h-math.Abs(x-xc)/2), chk.Verbose)
 		chk.DerivScaSca(tst, "HatD1", 1e-12, HatD1(x, xc, y0, h, l), x, 1e-3, chk.Verbose, func(t float64) float64 {
 			return Hat(t, xc, y0, h, l)
 		})

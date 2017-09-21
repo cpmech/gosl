@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 // DataInterp implements numeric interpolators to be used with discrete data
@@ -76,7 +77,7 @@ func (o *DataInterp) Reset(xx, yy []float64) {
 	o.xx = xx
 	o.yy = yy
 	o.n = len(o.xx)
-	o.djHunt = imin(1, int(math.Pow(float64(o.n), 0.25)))
+	o.djHunt = utl.Imin(1, int(math.Pow(float64(o.n), 0.25)))
 	o.useHunt = false
 	o.ascnd = o.xx[o.n-1] >= o.xx[0]
 	return
@@ -111,7 +112,7 @@ func (o *DataInterp) locate(x float64) int {
 	}
 
 	// set hunt flag
-	if iabs(jl-o.jHunt) > o.djHunt {
+	if utl.Iabs(jl-o.jHunt) > o.djHunt {
 		o.useHunt = false // too large, use locate next time
 	} else {
 		o.useHunt = true // ok, use hunt next time
@@ -119,7 +120,7 @@ func (o *DataInterp) locate(x float64) int {
 	o.jHunt = jl
 
 	// results
-	return imax(0, imin(o.n-o.m, jl-((o.m-2)>>1)))
+	return utl.Imax(0, utl.Imin(o.n-o.m, jl-((o.m-2)>>1)))
 }
 
 // hunt returns a value j such that x is (insofar as possible) centered in the subrange
@@ -176,7 +177,7 @@ func (o *DataInterp) hunt(x float64) int {
 	}
 
 	// set hunt flag
-	if iabs(jl-o.jHunt) > o.djHunt {
+	if utl.Iabs(jl-o.jHunt) > o.djHunt {
 		o.useHunt = false
 	} else {
 		o.useHunt = true
@@ -184,7 +185,7 @@ func (o *DataInterp) hunt(x float64) int {
 	o.jHunt = jl
 
 	// results
-	return imax(0, imin(o.n-o.m, jl-((o.m-2)>>1)))
+	return utl.Imax(0, utl.Imin(o.n-o.m, jl-((o.m-2)>>1)))
 }
 
 // linInterp implements linear interpolator

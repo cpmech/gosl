@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Elliptic1 computes Legendre elliptic integral of the first kind F(φ,k),
@@ -145,7 +146,7 @@ func CarlsonRf(x, y, z float64) float64 {
 	C4 := 1.0 / 14.0
 	TINY := 5.0 * math.SmallestNonzeroFloat64
 	BIG := 0.2 * math.MaxFloat64
-	if min(min(x, y), z) < 0.0 || min(min(x+y, x+z), y+z) < TINY || max(max(x, y), z) > BIG {
+	if utl.Min(utl.Min(x, y), z) < 0.0 || utl.Min(utl.Min(x+y, x+z), y+z) < TINY || utl.Max(utl.Max(x, y), z) > BIG {
 		chk.Panic("cannot compute Carlson's Rf function with x=%g, y=%g, z=%g. All values must be non-negative and at most one can be zero", x, y, z)
 	}
 	xt := x
@@ -165,7 +166,7 @@ func CarlsonRf(x, y, z float64) float64 {
 		delx = (ave - xt) / ave
 		dely = (ave - yt) / ave
 		delz = (ave - zt) / ave
-		if max(max(math.Abs(delx), math.Abs(dely)), math.Abs(delz)) < ERRTOL {
+		if utl.Max(utl.Max(math.Abs(delx), math.Abs(dely)), math.Abs(delz)) < ERRTOL {
 			break
 		}
 	}
@@ -193,7 +194,7 @@ func CarlsonRd(x, y, z float64) float64 {
 	C6 := 1.5 * C4
 	TINY := 2.0 * math.Pow(math.MaxFloat64, -2.0/3.0)
 	BIG := 0.1 * ERRTOL * math.Pow(math.SmallestNonzeroFloat64, -2.0/3.0)
-	if min(x, y) < 0.0 || min(x+y, z) < TINY || max(max(x, y), z) > BIG {
+	if utl.Min(x, y) < 0.0 || utl.Min(x+y, z) < TINY || utl.Max(utl.Max(x, y), z) > BIG {
 		chk.Panic("cannot compute Carlson's Rd function with x=%g, y=%g, z=%g. x,y must be non-negative and at most one can be zero. z must be positive", x, y, z)
 	}
 	xt := x
@@ -217,7 +218,7 @@ func CarlsonRd(x, y, z float64) float64 {
 		delx = (ave - xt) / ave
 		dely = (ave - yt) / ave
 		delz = (ave - zt) / ave
-		if max(max(math.Abs(delx), math.Abs(dely)), math.Abs(delz)) < ERRTOL {
+		if utl.Max(utl.Max(math.Abs(delx), math.Abs(dely)), math.Abs(delz)) < ERRTOL {
 			break
 		}
 	}
@@ -248,7 +249,7 @@ func CarlsonRj(x, y, z, p float64) float64 {
 	TINY := math.Pow(5.0*math.SmallestNonzeroFloat64, 1.0/3.0)
 	BIG := 0.3 * math.Pow(0.2*math.MaxFloat64, 1.0/3.0)
 	var a, alamb, alpha, ans, ave, b, beta, delp, delx, dely, delz, ea, eb, ec, ed, ee, pt, rcx, rho, sqrtx, sqrty, sqrtz, tau, xt, yt, zt float64
-	if min(min(x, y), z) < 0.0 || min(min(x+y, x+z), min(y+z, math.Abs(p))) < TINY || max(max(x, y), max(z, math.Abs(p))) > BIG {
+	if utl.Min(utl.Min(x, y), z) < 0.0 || utl.Min(utl.Min(x+y, x+z), utl.Min(y+z, math.Abs(p))) < TINY || utl.Max(utl.Max(x, y), utl.Max(z, math.Abs(p))) > BIG {
 		chk.Panic("cannot compute Carlson's Rj function with x=%g, y=%g, z=%g, p=%g. x,y,z must be non-negative and at most one can be zero. p must be nonzero", x, y, z, p)
 	}
 	sum := 0.0
@@ -259,8 +260,8 @@ func CarlsonRj(x, y, z, p float64) float64 {
 		zt = z
 		pt = p
 	} else {
-		xt = min(min(x, y), z)
-		zt = max(max(x, y), z)
+		xt = utl.Min(utl.Min(x, y), z)
+		zt = utl.Max(utl.Max(x, y), z)
 		yt = x + y + z - xt - zt
 		a = 1.0 / (yt - p)
 		b = a * (zt - yt) * (yt - xt)
@@ -289,7 +290,7 @@ func CarlsonRj(x, y, z, p float64) float64 {
 		dely = (ave - yt) / ave
 		delz = (ave - zt) / ave
 		delp = (ave - pt) / ave
-		if max(max(math.Abs(delx), math.Abs(dely)), max(math.Abs(delz), math.Abs(delp))) < ERRTOL {
+		if utl.Max(utl.Max(math.Abs(delx), math.Abs(dely)), utl.Max(math.Abs(delz), math.Abs(delp))) < ERRTOL {
 			break
 		}
 	}
