@@ -34,56 +34,56 @@ func Test_keycode01(tst *testing.T) {
 
 	str := "!typeA:keycodeA !typeB:keycodeB!typeC  : keycodeC"
 	if resA, ok := Keycode(str, "typeA"); !ok {
-		tst.Errorf("[1;31mcannot find   typeA[0m")
+		tst.Errorf("cannot find   typeA")
 	} else {
 		if resA != "keycodeA" {
-			tst.Errorf("[1;31mresA != keycodeA[0m")
+			tst.Errorf("resA != keycodeA")
 		}
 	}
 	if resB, ok := Keycode(str, "typeB"); !ok {
-		tst.Errorf("[1;31mcannot find   typeB[0m")
+		tst.Errorf("cannot find   typeB")
 	} else {
 		if resB != "keycodeB" {
-			tst.Errorf("[1;31mresB != keycodeB[0m")
+			tst.Errorf("resB != keycodeB")
 		}
 	}
 	if resC, ok := Keycode(str, "typeC"); !ok {
-		tst.Errorf("[1;31mcannot find   typeC[0m")
+		tst.Errorf("cannot find   typeC")
 	} else {
 		if resC != "keycodeC" {
-			tst.Errorf("[1;31mresC != keycodeC[0m")
+			tst.Errorf("resC != keycodeC")
 		}
 	}
 	if resD, ok := Keycode(str, "typeD"); ok {
-		tst.Errorf("[1;31mmust not find typeD[0m")
+		tst.Errorf("must not find typeD")
 	} else {
 		if resD != "" {
-			tst.Errorf("[1;31mresD != \"\"    [0m")
+			tst.Errorf("resD != \"\"    ")
 		}
 	}
 
 	res, ok := Keycode("", "")
 	if res != "" {
-		tst.Errorf("[1;31merror when handling empty string[0m")
+		tst.Errorf("error when handling empty string")
 	}
 	if ok {
-		tst.Errorf("[1;31merror when handling empty string[0m")
+		tst.Errorf("error when handling empty string")
 	}
 
 	res, ok = Keycode("!", "")
 	if res != "" {
-		tst.Errorf("[1;31merror when handling '!' string[0m")
+		tst.Errorf("error when handling '!' string")
 	}
 	if ok {
-		tst.Errorf("[1;31merror when handling '!' string[0m")
+		tst.Errorf("error when handling '!' string")
 	}
 
 	res, ok = Keycode("!keyA !keyB", "keyA")
 	if res != "" {
-		tst.Errorf("[1;31merror when handling '!keyA !keyB' string[0m")
+		tst.Errorf("error when handling '!keyA !keyB' string")
 	}
 	if !ok {
-		tst.Errorf("[1;31merror when handling '!keyA !keyB' string[0m")
+		tst.Errorf("error when handling '!keyA !keyB' string")
 	}
 }
 
