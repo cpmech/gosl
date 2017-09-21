@@ -69,11 +69,7 @@ func main() {
 
 	// plot
 	plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150, Prop: 1.1})
-	err := g.Draw(vlabels, elabels, 0, 0, 0, nil, nil, nil, nil)
-	if err != nil {
-		io.Pf("%v", err)
-		return
-	}
+	g.Draw(vlabels, elabels, 0, 0, 0, nil, nil, nil, nil)
 	plt.Equal()
 	plt.AxisOff()
 	plt.Save("/tmp/gosl/graph", "graph_siouxfalls01")
