@@ -13,35 +13,35 @@ import (
 
 // Transfinite maps a reference square [-1,1]×[-1,1] into a curve-bounded quadrilateral
 //
-//                                   Γ1(η) _,B
+//                                   B1(s) _,B
 //       c———————b                C--.___-'  |
-//       |       |                 \         | Γ0(ξ)
-//   η   |       |      y     Γ2(ξ) \        |
+//       |       |                 \         | B0(r)
+//   s   |       |      y     B2(r) \        |
 //   ↑   |       |      ↑           /      __A
 //   |   d———————a      |          / ____,'
-//   |                  |         D-'   Γ3(η)
-//   +————→ξ            +————→x
+//   |                  |         D-'   B3(s)
+//   +————→r            +————→x
 //
 type Transfinite struct {
 	Ndim int         // space dimension
-	Γ    []fun.Vs    // the boundary functions
-	Γd   []fun.Vs    // derivatives of boundary functions
+	B    []fun.Vs    // the boundary functions
+	Bd   []fun.Vs    // derivatives of boundary functions
 	C    []la.Vector // "corner" points
 	X    []la.Vector // points at arbitrary positions along edges/faces
 	Xd   []la.Vector // derivatives at arbitrary positions along edges/faces
 }
 
 // NewTransfinite allocates a new structure
-//  Γ  -- boundary functions x(s) = Γ(s)
-//  Γd -- derivative functions dxds(s) = Γ'(s)
-func NewTransfinite(ndim int, Γ, Γd []fun.Vs) (o *Transfinite) {
+//  B  -- boundary functions x(s) = B(s)
+//  Bd -- derivative functions dxds(s) = B'(s)
+func NewTransfinite(ndim int, B, Bd []fun.Vs) (o *Transfinite) {
 	o = new(Transfinite)
 	o.Ndim = ndim
-	o.Γ = Γ
-	o.Γd = Γd
+	o.B = B
+	o.Bd = Bd
 	if o.Ndim == 2 {
-		if len(Γ) != 4 || len(Γd) != 4 {
-			chk.Panic("in 2D, four boundary functions Γ are required\n")
+		if len(B) != 4 || len(Bd) != 4 {
+			chk.Panic("in 2D, four boundary functions B are required\n")
 		}
 		o.C = make([]la.Vector, 4)
 		o.X = make([]la.Vector, 4)
@@ -51,13 +51,13 @@ func NewTransfinite(ndim int, Γ, Γd []fun.Vs) (o *Transfinite) {
 			o.X[i] = la.NewVector(o.Ndim)
 			o.Xd[i] = la.NewVector(o.Ndim)
 		}
-		o.Γ[0](o.C[0], -1)
-		o.Γ[0](o.C[1], +1)
-		o.Γ[2](o.C[2], +1)
-		o.Γ[2](o.C[3], -1)
+		o.B[0](o.C[0], -1)
+		o.B[0](o.C[1], +1)
+		o.B[2](o.C[2], +1)
+		o.B[2](o.C[3], -1)
 	} else if o.Ndim == 3 {
-		if len(Γ) != 6 {
-			chk.Panic("in 3D, six boundary functions Γ are required\n")
+		if len(B) != 6 {
+			chk.Panic("in 3D, six boundary functions B are required\n")
 		}
 	} else {
 		chk.Panic("space dimension (ndim) must be 2 or 3\n")
@@ -65,70 +65,70 @@ func NewTransfinite(ndim int, Γ, Γd []fun.Vs) (o *Transfinite) {
 	return
 }
 
-// Point computes "real" position x(ξ,η)
+// Point computes "real" position x(r,s,t)
 //  Input:
-//    r -- the "reference" coordinates {ξ,η}
+//    u -- the "reference" coordinates {r,s,t} ϵ [-1,+1]×[-1,+1]×[-1,+1]
 //  Output:
-//    x -- the "real" coordinates {x,y}
-func (o *Transfinite) Point(x, r la.Vector) {
+//    x -- the "real" coordinates {x,y,z}
+func (o *Transfinite) Point(x, u la.Vector) {
 	if o.Ndim == 2 {
-		ξ, η := r[0], r[1]
+		r, s := u[0], u[1]
 		A, B, C, D := o.X[0], o.X[1], o.X[2], o.X[3]
 		m, n, p, q := o.C[0], o.C[1], o.C[2], o.C[3]
-		o.Γ[0](A, ξ)
-		o.Γ[1](B, η)
-		o.Γ[2](C, ξ)
-		o.Γ[3](D, η)
+		o.B[0](A, r)
+		o.B[1](B, s)
+		o.B[2](C, r)
+		o.B[3](D, s)
 		for i := 0; i < o.Ndim; i++ {
-			x[i] = 0.5*((1-η)*A[i]+(1+ξ)*B[i]+(1+η)*C[i]+(1-ξ)*D[i]) -
-				0.25*((1-ξ)*((1-η)*m[i]+(1+η)*q[i])+(1+ξ)*((1-η)*n[i]+(1+η)*p[i]))
+			x[i] = 0.5*((1-s)*A[i]+(1+r)*B[i]+(1+s)*C[i]+(1-r)*D[i]) -
+				0.25*((1-r)*((1-s)*m[i]+(1+s)*q[i])+(1+r)*((1-s)*n[i]+(1+s)*p[i]))
 		}
 		return
 	}
 	chk.Panic("Point function is not ready for 3D yet\n")
 }
 
-// Derivs calculates derivatives (=metric terms) @ r={ξ,η}
+// Derivs calculates derivatives (=metric terms) @ u={r,s,t}
 //  Input:
-//    r -- the "reference" coordinates {ξ,η}
+//    u -- the "reference" coordinates {r,s,t} ϵ [-1,+1]×[-1,+1]×[-1,+1]
 //  Output:
-//    dxdr -- the derivatives [dx/dr]ij = dxi/drj
-//    x    -- the "real" coordinates {x,y}
-func (o *Transfinite) Derivs(dxdr *la.Matrix, x, r la.Vector) {
+//    dxdu -- the derivatives [dx/du]ij = dxi/duj
+//    x    -- the "real" coordinates {x,y,z}
+func (o *Transfinite) Derivs(dxdu *la.Matrix, x, u la.Vector) {
 	if o.Ndim == 2 {
-		ξ, η := r[0], r[1]
+		r, s := u[0], u[1]
 		A, B, C, D := o.X[0], o.X[1], o.X[2], o.X[3]
 		a, b, c, d := o.Xd[0], o.Xd[1], o.Xd[2], o.Xd[3]
 		m, n, p, q := o.C[0], o.C[1], o.C[2], o.C[3]
-		o.Γ[0](A, ξ)
-		o.Γ[1](B, η)
-		o.Γ[2](C, ξ)
-		o.Γ[3](D, η)
-		o.Γd[0](a, ξ)
-		o.Γd[1](b, η)
-		o.Γd[2](c, ξ)
-		o.Γd[3](d, η)
-		var dxidξ, dxidη float64
+		o.B[0](A, r)
+		o.B[1](B, s)
+		o.B[2](C, r)
+		o.B[3](D, s)
+		o.Bd[0](a, r)
+		o.Bd[1](b, s)
+		o.Bd[2](c, r)
+		o.Bd[3](d, s)
+		var dxidr, dxids float64
 		for i := 0; i < o.Ndim; i++ {
 
-			x[i] = 0.5*((1-η)*A[i]+(1+ξ)*B[i]+(1+η)*C[i]+(1-ξ)*D[i]) -
-				0.25*((1-ξ)*((1-η)*m[i]+(1+η)*q[i])+(1+ξ)*((1-η)*n[i]+(1+η)*p[i]))
+			x[i] = 0.5*((1-s)*A[i]+(1+r)*B[i]+(1+s)*C[i]+(1-r)*D[i]) -
+				0.25*((1-r)*((1-s)*m[i]+(1+s)*q[i])+(1+r)*((1-s)*n[i]+(1+s)*p[i]))
 
-			dxidξ = 0.5*((1-η)*a[i]+B[i]+(1+η)*c[i]-D[i]) -
-				0.25*((1-η)*(n[i]-m[i])+(1+η)*(p[i]-q[i]))
+			dxidr = 0.5*((1-s)*a[i]+B[i]+(1+s)*c[i]-D[i]) -
+				0.25*((1-s)*(n[i]-m[i])+(1+s)*(p[i]-q[i]))
 
-			dxidη = 0.5*(-A[i]+(1+ξ)*b[i]+C[i]+(1-ξ)*d[i]) -
-				0.25*((1-ξ)*(q[i]-m[i])+(1+ξ)*(p[i]-n[i]))
+			dxids = 0.5*(-A[i]+(1+r)*b[i]+C[i]+(1-r)*d[i]) -
+				0.25*((1-r)*(q[i]-m[i])+(1+r)*(p[i]-n[i]))
 
-			dxdr.Set(i, 0, dxidξ)
-			dxdr.Set(i, 1, dxidη)
+			dxdu.Set(i, 0, dxidr)
+			dxdu.Set(i, 1, dxids)
 		}
 		return
 	}
 	chk.Panic("Derivs function is not ready for 3D yet\n")
 }
 
-// Draw draws figure formed by Γ
+// Draw draws figure formed by B
 func (o *Transfinite) Draw(npts []int, args, argsBry *plt.A) {
 
 	// auxiliary
@@ -147,16 +147,16 @@ func (o *Transfinite) Draw(npts []int, args, argsBry *plt.A) {
 		argsBry = &plt.A{C: plt.C(0, 0), Lw: 2, NoClip: true}
 	}
 	x := la.NewVector(o.Ndim)
-	r := la.NewVector(o.Ndim)
+	u := la.NewVector(o.Ndim)
 
 	// draw 0-lines
 	x0 := make([]float64, npts[0])
 	y0 := make([]float64, npts[0])
 	for j := 0; j < npts[1]; j++ {
-		r[1] = -1 + 2*float64(j)/float64(npts[1]-1)
+		u[1] = -1 + 2*float64(j)/float64(npts[1]-1)
 		for i := 0; i < npts[0]; i++ {
-			r[0] = -1 + 2*float64(i)/float64(npts[0]-1)
-			o.Point(x, r)
+			u[0] = -1 + 2*float64(i)/float64(npts[0]-1)
+			o.Point(x, u)
 			x0[i] = x[0]
 			y0[i] = x[1]
 		}
@@ -167,47 +167,47 @@ func (o *Transfinite) Draw(npts []int, args, argsBry *plt.A) {
 	x1 := make([]float64, npts[1])
 	y1 := make([]float64, npts[1])
 	for i := 0; i < npts[0]; i++ {
-		r[0] = -1 + 2*float64(i)/float64(npts[0]-1)
+		u[0] = -1 + 2*float64(i)/float64(npts[0]-1)
 		for j := 0; j < npts[1]; j++ {
-			r[1] = -1 + 2*float64(j)/float64(npts[1]-1)
-			o.Point(x, r)
+			u[1] = -1 + 2*float64(j)/float64(npts[1]-1)
+			o.Point(x, u)
 			x1[j] = x[0]
 			y1[j] = x[1]
 		}
 		plt.Plot(x1, y1, args)
 	}
 
-	// draw Γ0(ξ)
+	// draw B0(r)
 	for i := 0; i < npts[0]; i++ {
-		ξ := -1 + 2*float64(i)/float64(npts[0]-1)
-		o.Γ[0](x, ξ)
+		r := -1 + 2*float64(i)/float64(npts[0]-1)
+		o.B[0](x, r)
 		x0[i] = x[0]
 		y0[i] = x[1]
 	}
 	plt.Plot(x0, y0, argsBry)
 
-	// draw Γ1(η)
+	// draw B1(s)
 	for j := 0; j < npts[1]; j++ {
-		η := -1 + 2*float64(j)/float64(npts[1]-1)
-		o.Γ[1](x, η)
+		s := -1 + 2*float64(j)/float64(npts[1]-1)
+		o.B[1](x, s)
 		x1[j] = x[0]
 		y1[j] = x[1]
 	}
 	plt.Plot(x1, y1, argsBry)
 
-	// draw Γ2(ξ)
+	// draw B2(r)
 	for i := 0; i < npts[0]; i++ {
-		ξ := -1 + 2*float64(i)/float64(npts[0]-1)
-		o.Γ[2](x, ξ)
+		r := -1 + 2*float64(i)/float64(npts[0]-1)
+		o.B[2](x, r)
 		x0[i] = x[0]
 		y0[i] = x[1]
 	}
 	plt.Plot(x0, y0, argsBry)
 
-	// draw Γ3(η)
+	// draw B3(s)
 	for j := 0; j < npts[1]; j++ {
-		η := -1 + 2*float64(j)/float64(npts[1]-1)
-		o.Γ[3](x, η)
+		s := -1 + 2*float64(j)/float64(npts[1]-1)
+		o.B[3](x, s)
 		x1[j] = x[0]
 		y1[j] = x[1]
 	}
