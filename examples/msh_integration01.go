@@ -8,7 +8,6 @@ package main
 
 import (
 	"math"
-	"os"
 
 	"github.com/cpmech/gosl/gm/msh"
 	"github.com/cpmech/gosl/io"
@@ -23,9 +22,8 @@ func main() {
 	defer utl.ProfCPU("/tmp/gosl", "cpu.integ", false)()
 
 	// integrand function for second moment of inertia about x-axis: Ix
-	fcnIx := func(x la.Vector) (f float64, e error) {
-		f = x[1] * x[1]
-		return
+	fcnIx := func(x la.Vector) float64 {
+		return x[1] * x[1]
 	}
 
 	// constants
@@ -35,16 +33,13 @@ func main() {
 
 	// generate mesh
 	ctype := msh.TypeQua17
-	mesh, err := msh.GenRing2d(ctype, nr, na, r, R, 2.0*math.Pi)
-	status(err)
+	mesh := msh.GenRing2d(ctype, nr, na, r, R, 2.0*math.Pi)
 
 	// allocate cell integrator with default integration points
-	o, err := msh.NewMeshIntegrator(mesh, 1)
-	status(err)
+	o := msh.NewMeshIntegrator(mesh, 1)
 
 	// compute Ix
-	Ix, err := o.IntegrateSv(0, fcnIx)
-	status(err)
+	Ix := o.IntegrateSv(0, fcnIx)
 
 	// compare with analytical solution
 	typekey := msh.TypeIndexToKey[ctype]
@@ -60,12 +55,5 @@ func main() {
 		mesh.Draw(args)
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/gm", io.Sf("integ04-%s", typekey))
-	}
-}
-
-func status(err error) {
-	if err != nil {
-		io.Pf("ERROR: %v\n", err)
-		os.Exit(1)
 	}
 }

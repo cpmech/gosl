@@ -8,7 +8,6 @@ package main
 
 import (
 	"math"
-	"os"
 
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
@@ -33,19 +32,17 @@ func main() {
 	saveDense := false
 
 	// ode function: f(x,y) = dy/dx
-	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) {
 		f[0] = λ*y[0] - λ*math.Cos(x)
-		return nil
 	}
 
 	// Jacobian function: J = df/dy
-	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) {
 		if dfdy.Max() == 0 {
 			dfdy.Init(1, 1, 1)
 		}
 		dfdy.Start()
 		dfdy.Put(0, 0, λ)
-		return nil
 	}
 
 	// initial values
@@ -56,44 +53,38 @@ func main() {
 	// FwEuler
 	io.Pf("\n------------ Forward-Euler ------------------\n")
 	fixedStep := true
-	stat1, out1, err := ode.Solve("fweuler", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
+	stat1, out1 := ode.Solve("fweuler", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
 	stat1.Print(false)
-	status(err)
 
 	// BwEuler
 	io.Pf("\n------------ Backward-Euler ------------------\n")
 	fixedStep = true
-	stat2, out2, err := ode.Solve("bweuler", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
+	stat2, out2 := ode.Solve("bweuler", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
 	stat2.Print(false)
-	status(err)
 
 	// MoEuler
 	io.Pf("\n------------ Modified-Euler ------------------\n")
 	fixedStep = false
-	stat3, out3, err := ode.Solve("moeuler", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
+	stat3, out3 := ode.Solve("moeuler", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
 	stat3.Print(true)
-	status(err)
 
 	// DoPri5
 	io.Pf("\n------------ Dormand-Prince5 -----------------\n")
 	fixedStep = false
-	stat4, out4, err := ode.Solve("dopri5", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
+	stat4, out4 := ode.Solve("dopri5", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
 	stat4.Print(true)
-	status(err)
 
 	// DoPri8
 	io.Pf("\n------------ Dormand-Prince8 -----------------\n")
 	fixedStep = false
-	stat5, out5, err := ode.Solve("dopri8", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
+	stat5, out5 := ode.Solve("dopri8", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
 	stat5.Print(true)
-	status(err)
 
 	// Radau5
 	io.Pf("\n------------ Radau5 --------------------------\n")
 	fixedStep = false
-	stat6, out6, err := ode.Solve("radau5", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
+	stat6, out6 := ode.Solve("radau5", fcn, jac, y.GetCopy(), xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveDense)
 	stat6.Print(true)
-	status(err)
 
 	// analytical solution
 	npts := 201
@@ -124,11 +115,4 @@ func main() {
 	plt.Gll("$x$", "$y$", nil)
 
 	plt.Save("/tmp/gosl", "ode_hweq11")
-}
-
-func status(err error) {
-	if err != nil {
-		io.Pf("ERROR: %v\n", err)
-		os.Exit(1)
-	}
 }
