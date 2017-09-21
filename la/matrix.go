@@ -280,10 +280,7 @@ func (o *Matrix) Det() (det float64) {
 	ai := make([]float64, len(o.Data))
 	copy(ai, o.Data)
 	ipiv := make([]int32, utl.Imin(o.M, o.N))
-	err := oblas.Dgetrf(o.M, o.N, ai, o.M, ipiv) // NOTE: ipiv are 1-based indices
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
+	oblas.Dgetrf(o.M, o.N, ai, o.M, ipiv) // NOTE: ipiv are 1-based indices
 	det = 1.0
 	for i := 0; i < o.M; i++ {
 		if ipiv[i]-1 == int32(i) { // NOTE: ipiv are 1-based indices

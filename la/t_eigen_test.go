@@ -24,13 +24,11 @@ func TestEigen01(tst *testing.T) {
 	})
 
 	w := NewVectorC(A.M)
-	err := EigenVal(w, A, true)
-	status(tst, err)
+	EigenVal(w, A, true)
 	chk.ArrayC(tst, "w", 1e-17, w, []complex128{2, 2, 2})
 
 	v := NewMatrixC(A.M, A.M)
-	err = EigenVecR(v, w, A, true)
-	status(tst, err)
+	EigenVecR(v, w, A, true)
 
 	io.Pf("v = \n")
 	io.Pf("%v\n", v.Print("", ""))
@@ -56,14 +54,12 @@ func TestEigen02(tst *testing.T) {
 	})
 
 	w := NewVectorC(A.M)
-	err := EigenVal(w, A, true)
-	status(tst, err)
+	EigenVal(w, A, true)
 	io.Pforan("w = %v\n", w)
 	chk.ArrayC(tst, "w", 1e-17, w, []complex128{11, 1, 2})
 
 	v := NewMatrixC(A.M, A.M)
-	err = EigenVecR(v, w, A, true)
-	status(tst, err)
+	EigenVecR(v, w, A, true)
 
 	io.Pf("v = \n")
 	io.Pf("%v\n", v.Print("%12.8f", "%12.8f"))
@@ -92,14 +88,12 @@ func TestEigen03(tst *testing.T) {
 	})
 
 	w := NewVectorC(A.M)
-	err := EigenVal(w, A, true)
-	status(tst, err)
+	EigenVal(w, A, true)
 	io.Pforan("w = %v\n", w)
 	chk.ArrayC(tst, "w", 1e-14, w, []complex128{6.69537390404459476e+00, -1.55809924785903786e+00, 8.62725343814443657e-01})
 
 	v := NewMatrixC(A.M, A.M)
-	err = EigenVecR(v, w, A, true)
-	status(tst, err)
+	EigenVecR(v, w, A, true)
 
 	io.Pf("v = \n")
 	io.Pf("%v\n", v.Print("%12.8f", "%12.8f"))
@@ -126,8 +120,7 @@ func TestEigen04(tst *testing.T) {
 
 	w := NewVectorC(A.M)
 	v := NewMatrixC(A.M, A.M)
-	err := EigenVecR(v, w, A, true)
-	status(tst, err)
+	EigenVecR(v, w, A, true)
 
 	io.Pforan("w = %v\n", w)
 	chk.ArrayC(tst, "w", 1e-14, w, []complex128{16.116843969807043, -1.116843969807043, 0.0})
@@ -159,8 +152,7 @@ func TestEigen05(tst *testing.T) {
 	u := NewMatrixC(A.M, A.M)
 	v := NewMatrixC(A.M, A.M)
 	w := NewVectorC(A.M)
-	err := EigenVecLR(u, v, w, A, true)
-	status(tst, err)
+	EigenVecLR(u, v, w, A, true)
 
 	io.Pforan("w = %v\n", w)
 	chk.ArrayC(tst, "w", 1e-14, w, []complex128{12.0, 1.0 + 5.0i, 1.0 - 5.0i, 2.0})
@@ -194,14 +186,12 @@ func TestEigen05(tst *testing.T) {
 	// compute left eigenvector again
 	u2 := NewMatrixC(A.M, A.M)
 	w2 := NewVectorC(A.M)
-	err = EigenVecL(u2, w2, A, true)
-	status(tst, err)
+	EigenVecL(u2, w2, A, true)
 	chk.Deep2c(tst, "u2", 1e-15, u2.GetDeep2(), uRef)
 
 	// compute right eigenvector again
 	v3 := NewMatrixC(A.M, A.M)
 	w3 := NewVectorC(A.M)
-	err = EigenVecR(v3, w3, A, true)
-	status(tst, err)
+	EigenVecR(v3, w3, A, true)
 	chk.Deep2c(tst, "v3", 1e-15, v3.GetDeep2(), vRef)
 }

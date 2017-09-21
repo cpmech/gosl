@@ -23,10 +23,7 @@ func DenSolve(x Vector, A *Matrix, b Vector, preserveA bool) {
 	}
 	copy(x, b)
 	ipiv := make([]int32, A.M)
-	err := oblas.Dgesv(A.M, 1, a.Data, A.M, ipiv, x, A.M)
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
+	oblas.Dgesv(A.M, 1, a.Data, A.M, ipiv, x, A.M)
 }
 
 // Cholesky returns the Cholesky decomposition of a symmetric positive-definite matrix

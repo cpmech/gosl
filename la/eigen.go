@@ -22,15 +22,14 @@ import (
 //   OUTPUT:
 //     w -- eigenvalues [pre-allocated]
 //
-func EigenVal(w VectorC, A *Matrix, preserveA bool) (err error) {
+func EigenVal(w VectorC, A *Matrix, preserveA bool) {
 	a := A
 	if preserveA {
 		a = A.GetCopy()
 	}
 	wr, wi := make([]float64, a.M), make([]float64, a.M)
-	err = oblas.Dgeev(false, false, a.M, a.Data, a.M, wr, wi, nil, 0, nil, 0)
+	oblas.Dgeev(false, false, a.M, a.Data, a.M, wr, wi, nil, 0, nil, 0)
 	oblas.JoinComplex(w, wr, wi)
-	return
 }
 
 // EigenVecL computes eigenvalues and LEFT eigenvectors of general matrix
@@ -45,17 +44,16 @@ func EigenVal(w VectorC, A *Matrix, preserveA bool) (err error) {
 //     u -- matrix with the eigenvectors; each column contains one eigenvector [pre-allocated]
 //     w -- eigenvalues [pre-allocated]
 //
-func EigenVecL(u *MatrixC, w VectorC, A *Matrix, preserveA bool) (err error) {
+func EigenVecL(u *MatrixC, w VectorC, A *Matrix, preserveA bool) {
 	a := A
 	if preserveA {
 		a = A.GetCopy()
 	}
 	wr, wi := make([]float64, a.M), make([]float64, a.M)
 	vl := make([]float64, a.M*a.M)
-	err = oblas.Dgeev(true, false, a.M, a.Data, a.M, wr, wi, vl, a.M, nil, 0)
+	oblas.Dgeev(true, false, a.M, a.Data, a.M, wr, wi, vl, a.M, nil, 0)
 	oblas.JoinComplex(w, wr, wi)
 	oblas.EigenvecsBuild(u.Data, wr, wi, vl)
-	return
 }
 
 // EigenVecR computes eigenvalues and RIGHT eigenvectors of general matrix
@@ -69,17 +67,16 @@ func EigenVecL(u *MatrixC, w VectorC, A *Matrix, preserveA bool) (err error) {
 //     v -- matrix with the eigenvectors; each column contains one eigenvector [pre-allocated]
 //     w -- eigenvalues [pre-allocated]
 //
-func EigenVecR(v *MatrixC, w VectorC, A *Matrix, preserveA bool) (err error) {
+func EigenVecR(v *MatrixC, w VectorC, A *Matrix, preserveA bool) {
 	a := A
 	if preserveA {
 		a = A.GetCopy()
 	}
 	wr, wi := make([]float64, a.M), make([]float64, a.M)
 	vr := make([]float64, a.M*a.M)
-	err = oblas.Dgeev(false, true, a.M, a.Data, a.M, wr, wi, nil, 0, vr, a.M)
+	oblas.Dgeev(false, true, a.M, a.Data, a.M, wr, wi, nil, 0, vr, a.M)
 	oblas.JoinComplex(w, wr, wi)
 	oblas.EigenvecsBuild(v.Data, wr, wi, vr)
-	return
 }
 
 // EigenVecLR computes eigenvalues and LEFT and RIGHT eigenvectors of general matrix
@@ -97,7 +94,7 @@ func EigenVecR(v *MatrixC, w VectorC, A *Matrix, preserveA bool) (err error) {
 //     v -- matrix with the RIGHT eigenvectors; each column contains one eigenvector [pre-allocated]
 //     w -- λ eigenvalues [pre-allocated]
 //
-func EigenVecLR(u, v *MatrixC, w VectorC, A *Matrix, preserveA bool) (err error) {
+func EigenVecLR(u, v *MatrixC, w VectorC, A *Matrix, preserveA bool) {
 	a := A
 	if preserveA {
 		a = A.GetCopy()
@@ -105,10 +102,9 @@ func EigenVecLR(u, v *MatrixC, w VectorC, A *Matrix, preserveA bool) (err error)
 	wr, wi := make([]float64, a.M), make([]float64, a.M)
 	uu := make([]float64, a.M*a.M)
 	vv := make([]float64, a.M*a.M)
-	err = oblas.Dgeev(true, true, a.M, a.Data, a.M, wr, wi, uu, a.M, vv, a.M)
+	oblas.Dgeev(true, true, a.M, a.Data, a.M, wr, wi, uu, a.M, vv, a.M)
 	oblas.JoinComplex(w, wr, wi)
 	oblas.EigenvecsBuildBoth(u.Data, v.Data, wr, wi, uu, vv)
-	return
 }
 
 // CheckEigenVecL checks left eigenvector:

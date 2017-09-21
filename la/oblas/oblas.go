@@ -45,7 +45,7 @@ func SetNumThreads(n int) {
 //
 //  y += alpha*x + y
 //
-func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (err error) {
+func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) {
 	C.cblas_daxpy(
 		C.blasint(n),
 		C.double(alpha),
@@ -54,7 +54,6 @@ func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (
 		(*C.double)(unsafe.Pointer(&y[0])),
 		C.blasint(incy),
 	)
-	return
 }
 
 // Zaxpy computes constant times a vector plus a vector.
@@ -65,7 +64,7 @@ func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (
 //
 //  y += alpha*x + y
 //
-func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, incy int) (err error) {
+func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, incy int) {
 	C.cblas_zaxpy(
 		C.blasint(n),
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&alpha))),
@@ -74,7 +73,6 @@ func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, in
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&y[0]))),
 		C.blasint(incy),
 	)
-	return
 }
 
 // Dgemv performs one of the matrix-vector operations
@@ -90,7 +88,7 @@ func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, in
 //     trans=false     y := alpha*A*x + beta*y.
 //
 //     trans=true      y := alpha*A**T*x + beta*y.
-func Dgemv(trans bool, m, n int, alpha float64, a []float64, lda int, x []float64, incx int, beta float64, y []float64, incy int) (err error) {
+func Dgemv(trans bool, m, n int, alpha float64, a []float64, lda int, x []float64, incx int, beta float64, y []float64, incy int) {
 	C.cblas_dgemv(
 		cblasColMajor,
 		cTrans(trans),
@@ -105,7 +103,6 @@ func Dgemv(trans bool, m, n int, alpha float64, a []float64, lda int, x []float6
 		(*C.double)(unsafe.Pointer(&y[0])),
 		C.blasint(incy),
 	)
-	return
 }
 
 // Zgemv performs one of the matrix-vector operations.
@@ -120,7 +117,7 @@ func Dgemv(trans bool, m, n int, alpha float64, a []float64, lda int, x []float6
 //
 //  where alpha and beta are scalars, x and y are vectors and A is an
 //  m by n matrix.
-func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
+func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) {
 	C.cblas_zgemv(
 		cblasColMajor,
 		cTrans(trans),
@@ -135,7 +132,6 @@ func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&y[0]))),
 		C.blasint(incy),
 	)
-	return
 }
 
 // Dgemm performs one of the matrix-matrix operations
@@ -157,7 +153,7 @@ func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []
 //
 //  alpha and beta are scalars, and A, B and C are matrices, with op( A )
 //  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
-func Dgemm(transA, transB bool, m, n, k int, alpha float64, a []float64, lda int, b []float64, ldb int, beta float64, c []float64, ldc int) (err error) {
+func Dgemm(transA, transB bool, m, n, k int, alpha float64, a []float64, lda int, b []float64, ldb int, beta float64, c []float64, ldc int) {
 	C.cblas_dgemm(
 		cblasColMajor,
 		cTrans(transA),
@@ -174,7 +170,6 @@ func Dgemm(transA, transB bool, m, n, k int, alpha float64, a []float64, lda int
 		(*C.double)(unsafe.Pointer(&c[0])),
 		C.blasint(ldc),
 	)
-	return
 }
 
 // Zgemm performs one of the matrix-matrix operations
@@ -191,7 +186,7 @@ func Dgemm(transA, transB bool, m, n, k int, alpha float64, a []float64, lda int
 //
 //  alpha and beta are scalars, and A, B and C are matrices, with op( A )
 //  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
-func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a []complex128, lda int, b []complex128, ldb int, beta complex128, c []complex128, ldc int) (err error) {
+func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a []complex128, lda int, b []complex128, ldb int, beta complex128, c []complex128, ldc int) {
 	C.cblas_zgemm(
 		cblasColMajor,
 		cTrans(transA),
@@ -208,7 +203,6 @@ func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a []complex128, l
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&c[0]))),
 		C.blasint(ldc),
 	)
-	return
 }
 
 // Dgesv computes the solution to a real system of linear equations.
@@ -233,9 +227,9 @@ func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a []complex128, l
 //  system of equations A * X = B.
 //
 //  NOTE: matrix 'a' will be modified
-func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int32, b []float64, ldb int) (err error) {
+func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int32, b []float64, ldb int) {
 	if len(ipiv) != n {
-		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
+		chk.Panic("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
 	}
 	info := C.LAPACKE_dgesv(
 		C.int(lapackColMajor),
@@ -248,9 +242,8 @@ func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int32, b []float64, ldb int
 		C.lapack_int(ldb),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Zgesv computes the solution to a complex system of linear equations.
@@ -275,9 +268,9 @@ func Dgesv(n, nrhs int, a []float64, lda int, ipiv []int32, b []float64, ldb int
 //  system of equations A * X = B.
 //
 //  NOTE: matrix 'a' will be modified
-func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int32, b []complex128, ldb int) (err error) {
+func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int32, b []complex128, ldb int) {
 	if len(ipiv) != n {
-		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
+		chk.Panic("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
 	}
 	info := C.LAPACKE_zgesv(
 		C.int(lapackColMajor),
@@ -290,9 +283,8 @@ func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int32, b []complex128, l
 		C.lapack_int(ldb),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Dgesvd computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and/or right singular vectors.
@@ -315,7 +307,7 @@ func Zgesv(n, nrhs int, a []complex128, lda int, ipiv []int32, b []complex128, l
 //  Note that the routine returns V**T, not V.
 //
 //  NOTE: matrix 'a' will be modified
-func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s []float64, u []float64, ldu int, vt []float64, ldvt int, superb []float64) (err error) {
+func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s []float64, u []float64, ldu int, vt []float64, ldvt int, superb []float64) {
 	info := C.LAPACKE_dgesvd(
 		C.int(lapackColMajor),
 		C.char(jobu),
@@ -332,9 +324,8 @@ func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s []float64, u []f
 		(*C.double)(unsafe.Pointer(&superb[0])),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Zgesvd computes the singular value decomposition (SVD) of a complex M-by-N matrix A, optionally computing the left and/or right singular vectors.
@@ -357,7 +348,7 @@ func Dgesvd(jobu, jobvt rune, m, n int, a []float64, lda int, s []float64, u []f
 //  Note that the routine returns V**H, not V.
 //
 //  NOTE: matrix 'a' will be modified
-func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s []float64, u []complex128, ldu int, vt []complex128, ldvt int, superb []float64) (err error) {
+func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s []float64, u []complex128, ldu int, vt []complex128, ldvt int, superb []float64) {
 	info := C.LAPACKE_zgesvd(
 		C.int(lapackColMajor),
 		C.char(jobu),
@@ -374,9 +365,8 @@ func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s []float64, u 
 		(*C.double)(unsafe.Pointer(&superb[0])),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Dgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
@@ -395,7 +385,7 @@ func Zgesvd(jobu, jobvt rune, m, n int, a []complex128, lda int, s []float64, u 
 //
 //  NOTE: (1) matrix 'a' will be modified
 //        (2) ipiv indices are 1-based (i.e. Fortran)
-func Dgetrf(m, n int, a []float64, lda int, ipiv []int32) (err error) {
+func Dgetrf(m, n int, a []float64, lda int, ipiv []int32) {
 	info := C.LAPACKE_dgetrf(
 		C.int(lapackColMajor),
 		C.lapack_int(m),
@@ -405,9 +395,8 @@ func Dgetrf(m, n int, a []float64, lda int, ipiv []int32) (err error) {
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Zgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
@@ -426,7 +415,7 @@ func Dgetrf(m, n int, a []float64, lda int, ipiv []int32) (err error) {
 //
 //  NOTE: (1) matrix 'a' will be modified
 //        (2) ipiv indices are 1-based (i.e. Fortran)
-func Zgetrf(m, n int, a []complex128, lda int, ipiv []int32) (err error) {
+func Zgetrf(m, n int, a []complex128, lda int, ipiv []int32) {
 	info := C.LAPACKE_zgetrf(
 		C.int(lapackColMajor),
 		C.lapack_int(m),
@@ -436,9 +425,8 @@ func Zgetrf(m, n int, a []complex128, lda int, ipiv []int32) (err error) {
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Dgetri computes the inverse of a matrix using the LU factorization computed by DGETRF.
@@ -449,7 +437,7 @@ func Zgetrf(m, n int, a []complex128, lda int, ipiv []int32) (err error) {
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Dgetri(n int, a []float64, lda int, ipiv []int32) (err error) {
+func Dgetri(n int, a []float64, lda int, ipiv []int32) {
 	info := C.LAPACKE_dgetri(
 		C.int(lapackColMajor),
 		C.lapack_int(n),
@@ -458,9 +446,8 @@ func Dgetri(n int, a []float64, lda int, ipiv []int32) (err error) {
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Zgetri computes the inverse of a matrix using the LU factorization computed by Zgetrf.
@@ -471,7 +458,7 @@ func Dgetri(n int, a []float64, lda int, ipiv []int32) (err error) {
 //
 //  This method inverts U and then computes inv(A) by solving the system
 //  inv(A)*L = inv(U) for inv(A).
-func Zgetri(n int, a []complex128, lda int, ipiv []int32) (err error) {
+func Zgetri(n int, a []complex128, lda int, ipiv []int32) {
 	info := C.LAPACKE_zgetri(
 		C.int(lapackColMajor),
 		C.lapack_int(n),
@@ -480,9 +467,8 @@ func Zgetri(n int, a []complex128, lda int, ipiv []int32) (err error) {
 		(*C.lapack_int)(unsafe.Pointer(&ipiv[0])),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Dsyrk performs one of the symmetric rank k operations
@@ -500,7 +486,7 @@ func Zgetri(n int, a []complex128, lda int, ipiv []int32) (err error) {
 //  where  alpha and beta  are scalars, C is an  n by n  symmetric matrix
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
-func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta float64, c []float64, ldc int) (err error) {
+func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta float64, c []float64, ldc int) {
 	C.cblas_dsyrk(
 		cblasColMajor,
 		cUplo(up),
@@ -514,7 +500,6 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta f
 		(*C.double)(unsafe.Pointer(&c[0])),
 		C.blasint(ldc),
 	)
-	return
 }
 
 // Zsyrk performs one of the symmetric rank k operations
@@ -532,7 +517,7 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a []float64, lda int, beta f
 //  where  alpha and beta  are scalars,  C is an  n by n symmetric matrix
 //  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
 //  in the second case.
-func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) (err error) {
+func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, beta complex128, c []complex128, ldc int) {
 	C.cblas_zsyrk(
 		cblasColMajor,
 		cUplo(up),
@@ -546,7 +531,6 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, 
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&c[0]))),
 		C.blasint(ldc),
 	)
-	return
 }
 
 // Zherk performs one of the hermitian rank k operations
@@ -564,7 +548,7 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a []complex128, lda int, 
 //  where  alpha and beta  are  real scalars,  C is an  n by n  hermitian
 //  matrix and  A  is an  n by k  matrix in the  first case and a  k by n
 //  matrix in the second case.
-func Zherk(up, trans bool, n, k int, alpha float64, a []complex128, lda int, beta float64, c []complex128, ldc int) (err error) {
+func Zherk(up, trans bool, n, k int, alpha float64, a []complex128, lda int, beta float64, c []complex128, ldc int) {
 	C.cblas_zherk(
 		cblasColMajor,
 		cUplo(up),
@@ -578,7 +562,6 @@ func Zherk(up, trans bool, n, k int, alpha float64, a []complex128, lda int, bet
 		C.cpt((*C.complexdouble)(unsafe.Pointer(&c[0]))),
 		C.blasint(ldc),
 	)
-	return
 }
 
 // Dpotrf computes the Cholesky factorization of a real symmetric positive definite matrix A.
@@ -598,7 +581,7 @@ func Zherk(up, trans bool, n, k int, alpha float64, a []complex128, lda int, bet
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
-func Dpotrf(up bool, n int, a []float64, lda int) (err error) {
+func Dpotrf(up bool, n int, a []float64, lda int) {
 	info := C.LAPACKE_dpotrf(
 		C.int(lapackColMajor),
 		lUplo(up),
@@ -607,9 +590,8 @@ func Dpotrf(up bool, n int, a []float64, lda int) (err error) {
 		C.lapack_int(lda),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Zpotrf computes the Cholesky factorization of a complex Hermitian positive definite matrix A.
@@ -629,7 +611,7 @@ func Dpotrf(up bool, n int, a []float64, lda int) (err error) {
 //  where U is an upper triangular matrix and L is lower triangular.
 //
 //  This is the block version of the algorithm, calling Level 3 BLAS.
-func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
+func Zpotrf(up bool, n int, a []complex128, lda int) {
 	info := C.LAPACKE_zpotrf(
 		C.int(lapackColMajor),
 		lUplo(up),
@@ -638,9 +620,8 @@ func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
 		C.lapack_int(lda),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // Dgeev computes for an N-by-N real nonsymmetric matrix A, the
@@ -666,7 +647,7 @@ func Zpotrf(up bool, n int, a []complex128, lda int) (err error) {
 //
 //  The computed eigenvectors are normalized to have Euclidean norm
 //  equal to 1 and largest component real.
-func Dgeev(calcVl, calcVr bool, n int, a []float64, lda int, wr []float64, wi, vl []float64, ldvl int, vr []float64, ldvr int) (err error) {
+func Dgeev(calcVl, calcVr bool, n int, a []float64, lda int, wr []float64, wi, vl []float64, ldvl int, vr []float64, ldvr int) {
 	var vvl, vvr *C.double
 	if calcVl {
 		vvl = (*C.double)(unsafe.Pointer(&vl[0]))
@@ -693,9 +674,8 @@ func Dgeev(calcVl, calcVr bool, n int, a []float64, lda int, wr []float64, wi, v
 		C.lapack_int(ldvr),
 	)
 	if info != 0 {
-		err = chk.Err("lapack failed\n")
+		chk.Panic("lapack failed\n")
 	}
-	return
 }
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////

@@ -77,10 +77,7 @@ func MatSvd(s []float64, u, vt, a *Matrix, copyA bool) {
 	if copyA {
 		acpy = a.GetCopy()
 	}
-	err := oblas.Dgesvd('A', 'A', a.M, a.N, acpy.Data, a.M, s, u.Data, a.M, vt.Data, a.N, superb)
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
+	oblas.Dgesvd('A', 'A', a.M, a.N, acpy.Data, a.M, s, u.Data, a.M, vt.Data, a.N, superb)
 }
 
 // MatInv computes the inverse of a general matrix (square or not). It also computes the
@@ -97,10 +94,7 @@ func MatInv(ai, a *Matrix, calcDet bool) (det float64) {
 	if a.M == a.N {
 		copy(ai.Data, a.Data)
 		ipiv := make([]int32, utl.Imin(a.M, a.N))
-		err := oblas.Dgetrf(a.M, a.N, ai.Data, a.M, ipiv) // NOTE: ipiv are 1-based indices
-		if err != nil {
-			chk.Panic("%v\n", err)
-		}
+		oblas.Dgetrf(a.M, a.N, ai.Data, a.M, ipiv) // NOTE: ipiv are 1-based indices
 		if calcDet {
 			det = 1.0
 			for i := 0; i < a.M; i++ {
@@ -111,7 +105,7 @@ func MatInv(ai, a *Matrix, calcDet bool) (det float64) {
 				}
 			}
 		}
-		err = oblas.Dgetri(a.N, ai.Data, a.M, ipiv)
+		oblas.Dgetri(a.N, ai.Data, a.M, ipiv)
 		return
 	}
 
