@@ -61,11 +61,7 @@ func main() {
 
 	// plot
 	plt.Reset(true, &plt.A{WidthPt: 250, Dpi: 150, Prop: 1.0})
-	err := g.Draw(nil, nil, radius, width, gap, nil, nil, nil, nil)
-	if err != nil {
-		io.Pf("%v", err)
-		return
-	}
+	g.Draw(nil, nil, radius, width, gap, nil, nil, nil, nil)
 	plt.Equal()
 	plt.AxisOff()
 	plt.Save("/tmp/gosl/graph", "graph_shortestpath01")
