@@ -21,12 +21,11 @@ func init() {
 func (o *DistGumbel) Name() string { return "Gumbel" }
 
 // Init initialises Gumbel distribution
-func (o *DistGumbel) Init(p *Variable) error {
+func (o *DistGumbel) Init(p *Variable) {
 	euler := 0.57721566490153286060651209008240243104215
 	μ, σ := p.M, p.S
 	o.B = σ * math.Sqrt(6.0) / math.Pi
 	o.U = μ - euler*o.B
-	return nil
 }
 
 // Pdf computes the probability density function @ x

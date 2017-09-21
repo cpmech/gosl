@@ -47,14 +47,10 @@ type Variable struct {
 type Variables []*Variable
 
 // SetDistribution sets the implementation of Distribution in VarData
-func (o *Variable) SetDistribution(dtype string) (err error) {
+func (o *Variable) SetDistribution(dtype string) {
 	o.Normal = dtype == "N"
-	o.Distr, err = GetDistrib(dtype)
-	if err != nil {
-		return
-	}
-	err = o.Distr.Init(o)
-	return
+	o.Distr = GetDistrib(dtype)
+	o.Distr.Init(o)
 }
 
 // Transform transform x into standard normal space
@@ -73,14 +69,10 @@ func (o *Variable) Transform(x float64) (y float64, invalid bool) {
 }
 
 // Init initialises distributions in Variables
-func (o *Variables) Init() (err error) {
+func (o *Variables) Init() {
 	for _, d := range *o {
-		err = d.SetDistribution(d.D)
-		if err != nil {
-			return
-		}
+		d.SetDistribution(d.D)
 	}
-	return
 }
 
 // Transform transforms all variables

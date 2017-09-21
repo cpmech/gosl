@@ -28,14 +28,13 @@ func init() {
 func (o *DistFrechet) Name() string { return "Frechet" }
 
 // Init initialises Frechet distribution
-func (o *DistFrechet) Init(p *Variable) error {
+func (o *DistFrechet) Init(p *Variable) {
 	o.L, o.C, o.A = p.L, p.C, p.A
 	if math.Abs(o.C) < 1e-15 {
 		o.C = 1
 	}
 	p.M = o.Mean()
 	p.S = math.Sqrt(o.Variance())
-	return nil
 }
 
 // Pdf computes the probability density function @ x

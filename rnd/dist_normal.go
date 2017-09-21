@@ -56,10 +56,9 @@ func (o *DistNormal) CalcDerived() {
 }
 
 // Init initialises normal distribution
-func (o *DistNormal) Init(p *Variable) error {
+func (o *DistNormal) Init(p *Variable) {
 	o.Mu, o.Sig = p.M, p.S
 	o.CalcDerived()
-	return nil
 }
 
 // Pdf computes the probability density function @ x

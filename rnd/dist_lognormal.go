@@ -45,14 +45,13 @@ func (o *DistLogNormal) CalcDerived() {
 }
 
 // Init initialises lognormal distribution
-func (o *DistLogNormal) Init(p *Variable) error {
+func (o *DistLogNormal) Init(p *Variable) {
 	μ, σ := p.M, p.S
 	δ := σ / μ
 	v := math.Log(1.0 + δ*δ)
 	o.Z = math.Sqrt(v)
 	o.N = math.Log(μ) - v/2.0
 	o.CalcDerived()
-	return nil
 }
 
 // Pdf computes the probability density function @ x
