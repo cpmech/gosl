@@ -20,15 +20,14 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Rmp) Init(prms Params) (err error) {
+func (o *Rmp) Init(prms Params) {
 	e := prms.Connect(&o.Ca, "ca", "rmp function")
 	e += prms.Connect(&o.Cb, "cb", "rmp function")
 	e += prms.Connect(&o.Ta, "ta", "rmp function")
 	e += prms.Connect(&o.Tb, "tb", "rmp function")
 	if e != "" {
-		err = chk.Err("%v\n", e)
+		chk.Panic("%v\n", e)
 	}
-	return
 }
 
 // F returns y = F(t, x)

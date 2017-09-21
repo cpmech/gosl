@@ -31,7 +31,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Cos) Init(prms Params) (err error) {
+func (o *Cos) Init(prms Params) {
 	e := prms.Connect(&o.A, "a", "cos function")
 	e += prms.Connect(&o.C, "c", "cos function")
 	p := prms.Find("b/pi")
@@ -42,9 +42,8 @@ func (o *Cos) Init(prms Params) (err error) {
 		o.bIsBdivPi = true
 	}
 	if e != "" {
-		err = chk.Err("%v\n", e)
+		chk.Panic("%v\n", e)
 	}
-	return
 }
 
 // F returns y = F(t, x)

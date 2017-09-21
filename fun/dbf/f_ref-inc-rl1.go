@@ -35,7 +35,7 @@ func init() {
 }
 
 // Init initialises the model
-func (o *RefIncRL1) Init(prms Params) (err error) {
+func (o *RefIncRL1) Init(prms Params) {
 
 	// parameters
 	e := prms.Connect(&o.λ0, "lam0", "ref-inc-rl1 function")
@@ -43,8 +43,7 @@ func (o *RefIncRL1) Init(prms Params) (err error) {
 	e += prms.Connect(&o.α, "alp", "ref-inc-rl1 function")
 	e += prms.Connect(&o.β, "bet", "ref-inc-rl1 function")
 	if e != "" {
-		err = chk.Err("%v\n", e)
-		return
+		chk.Panic("%v\n", e)
 	}
 
 	// set b
@@ -57,7 +56,6 @@ func (o *RefIncRL1) Init(prms Params) (err error) {
 	o.c1 = o.β * o.b * (o.λ1 - o.λ0)
 	o.c2 = math.Exp(o.β * o.b * o.α)
 	o.c3 = math.Exp(o.β*o.b*(1.0-o.λ0)) - o.c2*math.Exp(o.c1)
-	return
 }
 
 // F returns y = F(t, x)

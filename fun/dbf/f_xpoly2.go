@@ -31,7 +31,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Xpoly2) Init(prms Params) (err error) {
+func (o *Xpoly2) Init(prms Params) {
 	o.ndim = 3
 	for _, p := range prms {
 		if p.N == "2D" {
@@ -50,7 +50,6 @@ func (o *Xpoly2) Init(prms Params) (err error) {
 		prms.Connect(&o.c12, "c12", "xpoly2 function")
 		prms.Connect(&o.c20, "c20", "xpoly2 function")
 	}
-	return
 }
 
 // F returns y = F(t, x)

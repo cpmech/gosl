@@ -21,13 +21,12 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Exc1) Init(prms Params) (err error) {
+func (o *Exc1) Init(prms Params) {
 	e := prms.Connect(&o.A, "a", "exc1 function")
 	e += prms.Connect(&o.B, "b", "exc1 function")
 	if e != "" {
-		err = chk.Err("%v\n", e)
+		chk.Panic("%v\n", e)
 	}
-	return
 }
 
 // F returns y = F(t, x)

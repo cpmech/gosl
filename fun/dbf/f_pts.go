@@ -25,7 +25,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Pts) Init(prms Params) (err error) {
+func (o *Pts) Init(prms Params) {
 
 	// read parameters
 	var T, Y []float64
@@ -47,7 +47,7 @@ func (o *Pts) Init(prms Params) (err error) {
 			case "y":
 				Y = append(Y, p.V)
 			default:
-				return chk.Err("pts: parameter named %q is invalid", p.N)
+				chk.Panic("pts: parameter named %q is invalid", p.N)
 			}
 		}
 	}
@@ -86,12 +86,10 @@ func (o *Pts) Init(prms Params) (err error) {
 			T[i+1] = T[i] + Y[i]
 		}
 	}
-	//io.Pforan("T = %v\n", T)
-	//io.Pforan("Y = %v\n", Y)
 
 	// check
 	if len(T) != len(Y) {
-		return chk.Err("number of 't' parameters must be the same as the number of 'y' parameters. len(T)=%d != len(Y)=%d", len(T), len(Y))
+		chk.Panic("number of 't' parameters must be the same as the number of 'y' parameters. len(T)=%d != len(Y)=%d\n", len(T), len(Y))
 	}
 
 	// add points
@@ -101,12 +99,11 @@ func (o *Pts) Init(prms Params) (err error) {
 	sort.Sort(o.p)
 	for i := 1; i < len(o.p); i++ {
 		if math.Abs(o.p[i].t-o.p[i-1].t) < 1e-7 {
-			return chk.Err("points must not have coincident t coordinates (t=%g; tol=%g)", o.p[i].t, 1e-7)
+			chk.Panic("points must not have coincident t coordinates (t=%g; tol=%g)\n", o.p[i].t, 1e-7)
 		}
 	}
 	o.tmin = o.p[0].t
 	o.tmax = o.p[len(o.p)-1].t
-	return
 }
 
 // F returns y = F(t, x)

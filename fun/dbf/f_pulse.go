@@ -24,15 +24,14 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Pulse) Init(prms Params) (err error) {
+func (o *Pulse) Init(prms Params) {
 	e := prms.Connect(&o.Ca, "ca", "pulse function")
 	e += prms.Connect(&o.Cb, "cb", "pulse function")
 	e += prms.Connect(&o.Ta, "ta", "pulse function")
 	e += prms.Connect(&o.Tb, "tb", "pulse function")
 	if e != "" {
-		err = chk.Err("%v\n", e)
+		chk.Panic("%v\n", e)
 	}
-	return
 }
 
 // F returns y = F(t, x)

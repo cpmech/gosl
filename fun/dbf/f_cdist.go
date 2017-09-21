@@ -27,7 +27,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Cdist) Init(prms Params) (err error) {
+func (o *Cdist) Init(prms Params) {
 	ndim := 2
 	for _, p := range prms {
 		if p.N == "zc" {
@@ -43,14 +43,12 @@ func (o *Cdist) Init(prms Params) (err error) {
 		e += prms.Connect(&o.xc[2], "zc", "cdist function")
 	}
 	if e != "" {
-		err = chk.Err("%v\n", e)
-		return
+		chk.Panic("%v\n", e)
 	}
 	rtol := 1e-10
 	if o.r < rtol {
-		return chk.Err("cdist: radius must be greater than %g", rtol)
+		chk.Panic("cdist: radius must be greater than %g", rtol)
 	}
-	return
 }
 
 // F returns y = F(t, x)

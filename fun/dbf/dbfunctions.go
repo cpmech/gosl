@@ -18,7 +18,7 @@ import (
 
 // T defines the interface for t-x functions; i.e. f(t, {x})
 type T interface {
-	Init(prms Params) error                   // initialise function parameters
+	Init(prms Params)                         // initialise function parameters
 	F(t float64, x []float64) float64         // y = F(t, x)
 	G(t float64, x []float64) float64         // ∂y/∂t_cteX = G(t, x)
 	H(t float64, x []float64) float64         // ∂²y/∂t²_cteX = H(t, x)
@@ -29,20 +29,17 @@ type T interface {
 var allocators = map[string]func() T{} // type => function allocator
 
 // New allocates function by name
-func New(name string, prms Params) (T, error) {
+func New(name string, prms Params) T {
 	if name == "zero" {
-		return &Zero, nil
+		return &Zero
 	}
 	allocator, ok := allocators[name]
 	if !ok {
-		return nil, chk.Err("cannot find function named %q", name)
+		chk.Panic("cannot find function named %q\n", name)
 	}
 	o := allocator()
-	err := o.Init(prms)
-	if err != nil {
-		return nil, err
-	}
-	return o, nil
+	o.Init(prms)
+	return o
 }
 
 // PlotT plots F, G and H for varying t and fixed coordinates x

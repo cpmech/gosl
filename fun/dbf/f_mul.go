@@ -18,7 +18,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Mul) Init(prms Params) (err error) {
+func (o *Mul) Init(prms Params) {
 	for _, p := range prms {
 		switch p.N {
 		case "fa":
@@ -26,10 +26,9 @@ func (o *Mul) Init(prms Params) (err error) {
 		case "fb":
 			o.Fb = p.Fcn
 		default:
-			return chk.Err("mul: parameter named %q is invalid", p.N)
+			chk.Panic("mul: parameter named %q is invalid", p.N)
 		}
 	}
-	return
 }
 
 // F returns y = F(t, x)

@@ -50,7 +50,7 @@ func init() {
 }
 
 // Init initialises the model
-func (o *RefDecSp1) Init(prms Params) (err error) {
+func (o *RefDecSp1) Init(prms Params) {
 
 	// parameters
 	e := prms.Connect(&o.β, "bet", "ref-dec-sp1 function")
@@ -58,13 +58,12 @@ func (o *RefDecSp1) Init(prms Params) (err error) {
 	e += prms.Connect(&o.ya, "ya", "ref-dec-sp1 function")
 	e += prms.Connect(&o.yb, "yb", "ref-dec-sp1 function")
 	if e != "" {
-		err = chk.Err("%v\n", e)
-		return
+		chk.Panic("%v\n", e)
 	}
 
 	// check
 	if o.yb >= o.ya {
-		return chk.Err("yb(%g) must be smaller than ya(%g)", o.yb, o.ya)
+		chk.Panic("yb(%g) must be smaller than ya(%g)", o.yb, o.ya)
 	}
 
 	// constants
@@ -75,9 +74,8 @@ func (o *RefDecSp1) Init(prms Params) (err error) {
 
 	// check
 	if math.IsInf(o.c2, 0) || math.IsInf(o.c3, 0) {
-		return chk.Err("β*ya or β*yb is too large:\n β=%v, ya=%v, yb=%v\n c1=%v, c2=%v, c3=%v", o.β, o.ya, o.yb, o.c1, o.c2, o.c3)
+		chk.Panic("β*ya or β*yb is too large:\n β=%v, ya=%v, yb=%v\n c1=%v, c2=%v, c3=%v", o.β, o.ya, o.yb, o.c1, o.c2, o.c3)
 	}
-	return
 }
 
 // F returns y = F(t, x)

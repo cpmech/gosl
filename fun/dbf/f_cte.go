@@ -23,12 +23,11 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Cte) Init(prms Params) (err error) {
+func (o *Cte) Init(prms Params) {
 	e := prms.Connect(&o.C, "c", "cte function")
 	if e != "" {
-		err = chk.Err("%v\n", e)
+		chk.Panic("%v\n", e)
 	}
-	return
 }
 
 // F returns y = F(t, x)

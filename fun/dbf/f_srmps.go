@@ -22,15 +22,14 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Srmps) Init(prms Params) (err error) {
+func (o *Srmps) Init(prms Params) {
 	e := prms.Connect(&o.Ca, "ca", "srmps function")
 	e += prms.Connect(&o.Cb, "cb", "srmps function")
 	e += prms.Connect(&o.Ta, "ta", "srmps function")
 	e += prms.Connect(&o.Tb, "tb", "srmps function")
 	if e != "" {
-		err = chk.Err("%v\n", e)
+		chk.Panic("%v\n", e)
 	}
-	return
 }
 
 // F returns y = F(t, x)

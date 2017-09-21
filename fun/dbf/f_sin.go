@@ -31,7 +31,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *Sin) Init(prms Params) (err error) {
+func (o *Sin) Init(prms Params) {
 	e := prms.Connect(&o.A, "a", "sin function")
 	e += prms.Connect(&o.C, "c", "sin function")
 	p := prms.Find("b/pi")
@@ -42,9 +42,8 @@ func (o *Sin) Init(prms Params) (err error) {
 		o.bDivPi = true
 	}
 	if e != "" {
-		err = chk.Err("%v\n", e)
+		chk.Panic("%v\n", e)
 	}
-	return
 }
 
 // F returns y = F(t, x)

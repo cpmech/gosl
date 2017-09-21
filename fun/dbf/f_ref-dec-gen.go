@@ -29,7 +29,7 @@ func init() {
 }
 
 // Init initialises the function
-func (o *RefDecGen) Init(prms Params) (err error) {
+func (o *RefDecGen) Init(prms Params) {
 
 	// parameters
 	e := prms.Connect(&o.β, "bet", "ref-dec-gen function")
@@ -41,15 +41,13 @@ func (o *RefDecGen) Init(prms Params) (err error) {
 	e += prms.Connect(&o.xini, "xini", "ref-dec-gen function")
 	e += prms.Connect(&o.yini, "yini", "ref-dec-gen function")
 	if e != "" {
-		err = chk.Err("%v\n", e)
-		return
+		chk.Panic("%v\n", e)
 	}
 
 	// constants
 	o.c1 = o.β * (o.b*o.A - o.a)
 	o.c2 = ((o.A - o.B) / (o.A - o.a/o.b)) * math.Exp(-o.β*o.c)
 	o.c3 = math.Exp(o.β*o.b*(o.yini+o.A*o.xini)) - o.c2*math.Exp(o.c1*o.xini)
-	return
 }
 
 // F returns y = F(t, x)
