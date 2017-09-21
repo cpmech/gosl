@@ -45,26 +45,14 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 	defer o.Free()
 
 	// initialise solver
-	err := o.Init(t, symmetric, verbose, "", "", comm)
-	if err != nil {
-		tst.Errorf("Init failed:\n%v\n", err)
-		return
-	}
+	o.Init(t, symmetric, verbose, "", "", comm)
 
 	// factorise
-	err = o.Fact()
-	if err != nil {
-		tst.Errorf("Fact failed:\n%v\n", err)
-		return
-	}
+	o.Fact()
 
 	// solve
 	x := NewVector(len(b))
-	err = o.Solve(x, b, bIsDistr) // x := inv(A) * b
-	if err != nil {
-		tst.Errorf("Solve failed:\n%v\n", err)
-		return
-	}
+	o.Solve(x, b, bIsDistr) // x := inv(A) * b
 
 	// check
 	chk.Array(tst, "x", tolX, x, xCorrect)
@@ -80,26 +68,14 @@ func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *Triplet
 	defer o.Free()
 
 	// initialise solver
-	err := o.Init(t, symmetric, verbose, "", "", comm)
-	if err != nil {
-		tst.Errorf("Init failed:\n%v\n", err)
-		return
-	}
+	o.Init(t, symmetric, verbose, "", "", comm)
 
 	// factorise
-	err = o.Fact()
-	if err != nil {
-		tst.Errorf("Fact failed:\n%v\n", err)
-		return
-	}
+	o.Fact()
 
 	// solve
 	x := NewVectorC(len(b))
-	err = o.Solve(x, b, bIsDistr) // x := inv(A) * b
-	if err != nil {
-		tst.Errorf("Solve failed:\n%v\n", err)
-		return
-	}
+	o.Solve(x, b, bIsDistr) // x := inv(A) * b
 
 	// check
 	chk.ArrayC(tst, "x", tolX, x, xCorrect)

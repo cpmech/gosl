@@ -209,19 +209,10 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 
 		// solve linear system
 		if it == 0 {
-			err = o.Lis.Init(o.J, symmetric, false, "", "", nil)
-			if err != nil {
-				return
-			}
+			o.Lis.Init(o.J, symmetric, false, "", "", nil)
 		}
-		err = o.Lis.Fact()
-		if err != nil {
-			return
-		}
-		err = o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
-		if err != nil {
-			return
-		}
+		o.Lis.Fact()
+		o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
 
 		// control variables
 		xrmin, srmin = o.calcMinRatios()
@@ -240,10 +231,7 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 		}
 
 		// solve linear system again
-		err = o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
-		if err != nil {
-			return
-		}
+		o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
 
 		// step lengths
 		xrmin, srmin = o.calcMinRatios()

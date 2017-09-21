@@ -5,7 +5,6 @@
 package ode
 
 import (
-	"errors"
 	"math"
 	"sync"
 
@@ -272,27 +271,15 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
 
 		// initialise linear solver
 		if !o.ready {
-			err = o.lsR.Init(o.kmatR, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
-			if err != nil {
-				return
-			}
-			err = o.lsC.Init(o.kmatC, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
-			if err != nil {
-				return
-			}
+			o.lsR.Init(o.kmatR, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
+			o.lsC.Init(o.kmatC, o.conf.Symmetric, o.conf.LsVerbose, o.conf.Ordering, o.conf.Scaling, o.conf.comm)
 			o.ready = true
 		}
 
 		// perform factorisation
 		o.stat.Ndecomp++
-		err = o.lsR.Fact()
-		if err != nil {
-			return
-		}
-		err = o.lsC.Fact()
-		if err != nil {
-			return
-		}
+		o.lsR.Fact()
+		o.lsC.Fact()
 	}
 
 	// update u[i]
@@ -329,7 +316,6 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
 	o.work.eta = math.Pow(utl.Max(o.work.eta, o.conf.Eps), 0.8)
 	o.work.theta = o.conf.ThetaMax
 	o.work.diverg = false
-	var errR, errC error
 	var Ldw, LdwOld, thq, othq, iterr, itRerr, qnewt, ratio0, ratio1, ratio2, nitf float64
 	var it int
 	for it = 0; it < o.conf.NmaxIt; it++ {
@@ -381,37 +367,21 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
 			wg := new(sync.WaitGroup)
 			wg.Add(2)
 			go func() {
-				errR = o.lsR.Solve(o.dw[0], v[0], false)
+				o.lsR.Solve(o.dw[0], v[0], false)
 				wg.Done()
 			}()
 			go func() {
 				o.v12.JoinRealImag(v[1], v[2])
-				errC = o.lsC.Solve(o.dw12, o.v12, false)
+				o.lsC.Solve(o.dw12, o.v12, false)
 				o.dw12.SplitRealImag(o.dw[1], o.dw[2])
 				wg.Done()
 			}()
 			wg.Wait()
 		} else {
 			o.v12.JoinRealImag(v[1], v[2])
-			errR = o.lsR.Solve(o.dw[0], v[0], false)
-			errC = o.lsC.Solve(o.dw12, o.v12, false)
+			o.lsR.Solve(o.dw[0], v[0], false)
+			o.lsC.Solve(o.dw12, o.v12, false)
 			o.dw12.SplitRealImag(o.dw[1], o.dw[2])
-		}
-
-		// check for errors from linear solution
-		if errR != nil || errC != nil {
-			var errmsg string
-			if errR != nil {
-				errmsg += errR.Error()
-			}
-			if errC != nil {
-				if errR != nil {
-					errmsg += "\n"
-				}
-				errmsg += errC.Error()
-			}
-			err = errors.New(errmsg)
-			return
 		}
 
 		// update w and z

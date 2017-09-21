@@ -46,14 +46,14 @@ type Mumps struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) (err error) {
+func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) {
 
 	// check
 	if o.initialised {
-		return chk.Err("solver must be initialised just once\n")
+		chk.Panic("solver must be initialised just once\n")
 	}
 	if t.pos == 0 {
-		return chk.Err("triplet must have at least one item for initialisation\n")
+		chk.Panic("triplet must have at least one item for initialisation\n")
 	}
 
 	// set comm
@@ -61,7 +61,7 @@ func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling stri
 
 	// allocate data
 	if C.NumData == C.NumMaxData {
-		return chk.Err("number of MUMPS data available reached. can only allocate %d structures\n", C.NumMaxData)
+		chk.Panic("number of MUMPS data available reached. can only allocate %d structures\n", C.NumMaxData)
 	}
 	o.data = &C.AllData[C.NumData]
 	C.NumData++
@@ -76,7 +76,7 @@ func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling stri
 	o.data.job = -1 // initialisation code
 	C.dmumps_c(o.data)
 	if o.data.info[1-1] < 0 {
-		return chk.Err("init failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
+		chk.Panic("init failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// convert indices to C.int (not C.long) and
@@ -115,10 +115,7 @@ func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling stri
 	o.data.icntl[23-1] = 2000 // max 2000Mb per processor // TODO: check this
 
 	// set ordering and scaling
-	ord, sca, err := mumOrderingScaling(ordering, scaling)
-	if err != nil {
-		return
-	}
+	ord, sca := mumOrderingScaling(ordering, scaling)
 	o.data.icntl[7-1] = C.int(ord) // ordering
 	o.data.icntl[8-1] = C.int(sca) // scaling
 
@@ -126,12 +123,11 @@ func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling stri
 	o.data.job = 1     // analysis code
 	C.dmumps_c(o.data) // analyse
 	if o.data.info[1-1] < 0 {
-		return chk.Err("analysis failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
+		chk.Panic("analysis failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// success
 	o.initialised = true
-	return
 }
 
 // Free clears extra memory allocated by MUMPS
@@ -143,23 +139,22 @@ func (o *Mumps) Free() {
 }
 
 // Fact performs the factorisation
-func (o *Mumps) Fact() (err error) {
+func (o *Mumps) Fact() {
 
 	// check
 	if !o.initialised {
-		return chk.Err("linear solver must be initialised first\n")
+		chk.Panic("linear solver must be initialised first\n")
 	}
 
 	// factorisation
 	o.data.job = 2     // factorisation code
 	C.dmumps_c(o.data) // factorise
 	if o.data.info[1-1] < 0 {
-		return chk.Err("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
+		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// success
 	o.factorised = true
-	return
 }
 
 // Solve solves sparse linear systems using MUMPS or MUMPS
@@ -168,11 +163,11 @@ func (o *Mumps) Fact() (err error) {
 //
 //   bIsDistr -- this flag tells that the right-hand-side vector 'b' is distributed.
 //
-func (o *Mumps) Solve(x, b Vector, bIsDistr bool) (err error) {
+func (o *Mumps) Solve(x, b Vector, bIsDistr bool) {
 
 	// check
 	if !o.factorised {
-		return chk.Err("factorisation must be performed first\n")
+		chk.Panic("factorisation must be performed first\n")
 	}
 
 	// set RHS in processor # 0
@@ -193,12 +188,11 @@ func (o *Mumps) Solve(x, b Vector, bIsDistr bool) (err error) {
 	o.data.job = 3     // solution code
 	C.dmumps_c(o.data) // solve
 	if o.data.info[1-1] < 0 {
-		return chk.Err("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
+		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// broadcast from root
 	o.comm.BcastFromRoot(x)
-	return
 }
 
 // complex /////////////////////////////////////////////////////////////////////////////////////////
@@ -221,14 +215,14 @@ type MumpsC struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) (err error) {
+func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) {
 
 	// check
 	if o.initialised {
-		return chk.Err("solver must be initialised just once\n")
+		chk.Panic("solver must be initialised just once\n")
 	}
 	if t.pos == 0 {
-		return chk.Err("triplet must have at least one item for initialisation\n")
+		chk.Panic("triplet must have at least one item for initialisation\n")
 	}
 
 	// set comm
@@ -236,7 +230,7 @@ func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling st
 
 	// allocate data
 	if C.NumDataC == C.NumMaxData {
-		return chk.Err("number of MUMPS data available reached. can only allocate %d structures\n", C.NumMaxData)
+		chk.Panic("number of MUMPS data available reached. can only allocate %d structures\n", C.NumMaxData)
 	}
 	o.data = &C.AllDataC[C.NumDataC]
 	C.NumDataC++
@@ -251,7 +245,7 @@ func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling st
 	o.data.job = -1 // initialisation code
 	C.zmumps_c(o.data)
 	if o.data.info[1-1] < 0 {
-		return chk.Err("init failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
+		chk.Panic("init failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// convert indices to C.int (not C.long) and
@@ -290,10 +284,7 @@ func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling st
 	o.data.icntl[23-1] = 2000 // max 2000Mb per processor // TODO: check this
 
 	// set ordering and scaling
-	ord, sca, err := mumOrderingScaling(ordering, scaling)
-	if err != nil {
-		return
-	}
+	ord, sca := mumOrderingScaling(ordering, scaling)
 	o.data.icntl[7-1] = C.int(ord) // ordering
 	o.data.icntl[8-1] = C.int(sca) // scaling
 
@@ -301,12 +292,11 @@ func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling st
 	o.data.job = 1     // analysis code
 	C.zmumps_c(o.data) // analyse
 	if o.data.info[1-1] < 0 {
-		return chk.Err("analysis failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
+		chk.Panic("analysis failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// success
 	o.initialised = true
-	return
 }
 
 // Free clears extra memory allocated by MUMPS
@@ -318,23 +308,22 @@ func (o *MumpsC) Free() {
 }
 
 // Fact performs the factorisation
-func (o *MumpsC) Fact() (err error) {
+func (o *MumpsC) Fact() {
 
 	// check
 	if !o.initialised {
-		return chk.Err("linear solver must be initialised first\n")
+		chk.Panic("linear solver must be initialised first\n")
 	}
 
 	// factorisation
 	o.data.job = 2     // factorisation code
 	C.zmumps_c(o.data) // factorise
 	if o.data.info[1-1] < 0 {
-		return chk.Err("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
+		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// success
 	o.factorised = true
-	return
 }
 
 // Solve solves sparse linear systems using MUMPS or MUMPS
@@ -343,11 +332,11 @@ func (o *MumpsC) Fact() (err error) {
 //
 //   bIsDistr -- this flag tells that the right-hand-side vector 'b' is distributed.
 //
-func (o *MumpsC) Solve(x, b VectorC, bIsDistr bool) (err error) {
+func (o *MumpsC) Solve(x, b VectorC, bIsDistr bool) {
 
 	// check
 	if !o.factorised {
-		return chk.Err("factorisation must be performed first\n")
+		chk.Panic("factorisation must be performed first\n")
 	}
 
 	// set RHS in processor # 0
@@ -368,18 +357,17 @@ func (o *MumpsC) Solve(x, b VectorC, bIsDistr bool) (err error) {
 	o.data.job = 3     // solution code
 	C.zmumps_c(o.data) // solve
 	if o.data.info[1-1] < 0 {
-		return chk.Err("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
+		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// broadcast from root
 	o.comm.BcastFromRootC(x)
-	return
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
 // mumOrderingScaling sets the ordering and scaling methods for MUMPS
-func mumOrderingScaling(ordering, scaling string) (ord, sca int, err error) {
+func mumOrderingScaling(ordering, scaling string) (ord, sca int) {
 
 	// ordering
 	if ordering == "" {
@@ -401,8 +389,7 @@ func mumOrderingScaling(ordering, scaling string) (ord, sca int, err error) {
 	case "auto":
 		ord = 7
 	default:
-		err = chk.Err("ordering scheme %s is not available\n", ordering)
-		return
+		chk.Panic("ordering scheme %s is not available\n", ordering)
 	}
 
 	// scaling
@@ -421,8 +408,7 @@ func mumOrderingScaling(ordering, scaling string) (ord, sca int, err error) {
 	case "auto":
 		sca = 77 // automatic
 	default:
-		err = chk.Err("scaling scheme %s is not available\n", scaling)
-		return
+		chk.Panic("scaling scheme %s is not available\n", scaling)
 	}
 	return
 }

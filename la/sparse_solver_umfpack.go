@@ -55,14 +55,14 @@ type Umfpack struct {
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
-func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, dummy *mpi.Communicator) (err error) {
+func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, dummy *mpi.Communicator) {
 
 	// check
 	if o.initialised {
-		return chk.Err("solver must be initialised just once\n")
+		chk.Panic("solver must be initialised just once\n")
 	}
 	if t.pos == 0 {
-		return chk.Err("triplet must have at least one item for initialisation\n")
+		chk.Panic("triplet must have at least one item for initialisation\n")
 	}
 
 	// allocate data
@@ -96,7 +96,6 @@ func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling st
 
 	// success
 	o.initialised = true
-	return
 }
 
 // Free clears extra memory allocated by UMFPACK
@@ -112,18 +111,18 @@ func (o *Umfpack) Free() {
 }
 
 // Fact performs the factorisation
-func (o *Umfpack) Fact() (err error) {
+func (o *Umfpack) Fact() {
 
 	// check
 	if !o.initialised {
-		return chk.Err("linear solver must be initialised first\n")
+		chk.Panic("linear solver must be initialised first\n")
 	}
 	o.factorised = false
 
 	// convert triplet to column-compressed format
 	code := C.umfpack_dl_triplet_to_col(C.LONG(o.t.m), C.LONG(o.t.n), C.LONG(o.t.pos), o.ti, o.tj, o.tx, o.ap, o.ai, o.ax, nil)
 	if code != C.UMFPACK_OK {
-		return chk.Err("conversion failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("conversion failed (UMFPACK error: %s)\n", umfErr(code))
 	}
 
 	// symbolic factorisation
@@ -133,7 +132,7 @@ func (o *Umfpack) Fact() (err error) {
 	}
 	code = C.umfpack_dl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		return chk.Err("symbolic factorised failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("symbolic factorised failed (UMFPACK error: %s)\n", umfErr(code))
 	}
 	o.symbFact = true
 
@@ -144,24 +143,23 @@ func (o *Umfpack) Fact() (err error) {
 	}
 	code = C.umfpack_dl_numeric(o.ap, o.ai, o.ax, o.usymb, &o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		return chk.Err("numeric factorisation failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("numeric factorisation failed (UMFPACK error: %s)\n", umfErr(code))
 	}
 	o.numeFact = true
 
 	// success
 	o.factorised = true
-	return
 }
 
 // Solve solves sparse linear systems using UMFPACK or MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *Umfpack) Solve(x, b Vector, dummy bool) (err error) {
+func (o *Umfpack) Solve(x, b Vector, dummy bool) {
 
 	// check
 	if !o.factorised {
-		return chk.Err("factorisation must be performed first\n")
+		chk.Panic("factorisation must be performed first\n")
 	}
 
 	// pointers
@@ -171,9 +169,8 @@ func (o *Umfpack) Solve(x, b Vector, dummy bool) (err error) {
 	// solve
 	code := C.umfpack_dl_solve(C.UMFPACK_A, o.ap, o.ai, o.ax, px, pb, o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		err = chk.Err("solve failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("solve failed (UMFPACK error: %s)\n", umfErr(code))
 	}
-	return
 }
 
 // complex /////////////////////////////////////////////////////////////////////////////////////////
@@ -211,14 +208,14 @@ type UmfpackC struct {
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
-func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, dummy *mpi.Communicator) (err error) {
+func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, dummy *mpi.Communicator) {
 
 	// check
 	if o.initialised {
-		return chk.Err("solver must be initialised just once\n")
+		chk.Panic("solver must be initialised just once\n")
 	}
 	if t.pos == 0 {
-		return chk.Err("triplet must have at least one item for initialisation\n")
+		chk.Panic("triplet must have at least one item for initialisation\n")
 	}
 
 	// allocate data
@@ -252,7 +249,6 @@ func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling 
 
 	// success
 	o.initialised = true
-	return
 }
 
 // Free clears extra memory allocated by UMFPACK
@@ -268,18 +264,18 @@ func (o *UmfpackC) Free() {
 }
 
 // Fact performs the factorisation
-func (o *UmfpackC) Fact() (err error) {
+func (o *UmfpackC) Fact() {
 
 	// check
 	if !o.initialised {
-		return chk.Err("linear solver must be initialised first\n")
+		chk.Panic("linear solver must be initialised first\n")
 	}
 	o.factorised = false
 
 	// convert triplet to column-compressed format
 	code := C.umfpack_zl_triplet_to_col(C.LONG(o.t.m), C.LONG(o.t.n), C.LONG(o.t.pos), o.ti, o.tj, o.tx, nil, o.ap, o.ai, o.ax, nil, nil)
 	if code != C.UMFPACK_OK {
-		return chk.Err("conversion failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("conversion failed (UMFPACK error: %s)\n", umfErr(code))
 	}
 
 	// symbolic factorisation
@@ -289,7 +285,7 @@ func (o *UmfpackC) Fact() (err error) {
 	}
 	code = C.umfpack_zl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, nil, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		return chk.Err("symbolic factorised failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("symbolic factorised failed (UMFPACK error: %s)\n", umfErr(code))
 	}
 	o.symbFact = true
 
@@ -300,24 +296,23 @@ func (o *UmfpackC) Fact() (err error) {
 	}
 	code = C.umfpack_zl_numeric(o.ap, o.ai, o.ax, nil, o.usymb, &o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		return chk.Err("numeric factorisation failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("numeric factorisation failed (UMFPACK error: %s)\n", umfErr(code))
 	}
 	o.numeFact = true
 
 	// success
 	o.factorised = true
-	return
 }
 
 // Solve solves sparse linear systems using UMFPACK or MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *UmfpackC) Solve(x, b VectorC, dummy bool) (err error) {
+func (o *UmfpackC) Solve(x, b VectorC, dummy bool) {
 
 	// check
 	if !o.factorised {
-		return chk.Err("factorisation must be performed first\n")
+		chk.Panic("factorisation must be performed first\n")
 	}
 
 	// pointers
@@ -327,9 +322,8 @@ func (o *UmfpackC) Solve(x, b VectorC, dummy bool) (err error) {
 	// solve
 	code := C.umfpack_zl_solve(C.UMFPACK_A, o.ap, o.ai, o.ax, nil, px, nil, pb, nil, o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		err = chk.Err("solve failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("solve failed (UMFPACK error: %s)\n", umfErr(code))
 	}
-	return
 }
 
 // add solvers to database /////////////////////////////////////////////////////////////////////////

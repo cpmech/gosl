@@ -315,7 +315,6 @@ func TestSpUmfpack07a(tst *testing.T) {
 	defer sol.Free()
 
 	// loop
-	var err error
 	for k := 0; k < 3; k++ {
 
 		// generate matrix
@@ -323,18 +322,15 @@ func TestSpUmfpack07a(tst *testing.T) {
 
 		// initialise solver
 		if k == 0 {
-			err = sol.Init(A, false, false, "", "", nil)
-			status(tst, err)
+			sol.Init(A, false, false, "", "", nil)
 		}
 
 		// factorise
-		err = sol.Fact()
-		status(tst, err)
+		sol.Fact()
 
 		// solve
 		x := NewVector(len(b))
-		err = sol.Solve(x, b, false) // x := inv(A) * b
-		status(tst, err)
+		sol.Solve(x, b, false) // x := inv(A) * b
 	}
 }
 
@@ -375,7 +371,6 @@ func TestSpUmfpack07b(tst *testing.T) {
 	defer sol.Free()
 
 	// loop
-	var err error
 	for k := 0; k < 3; k++ {
 
 		// generate matrix
@@ -384,17 +379,14 @@ func TestSpUmfpack07b(tst *testing.T) {
 
 		// initialise solver
 		if k == 0 {
-			err = sol.Init(A, false, false, "", "", nil)
-			status(tst, err)
+			sol.Init(A, false, false, "", "", nil)
 		}
 
 		// factorise
-		err = sol.Fact()
-		status(tst, err)
+		sol.Fact()
 
 		// solve
 		x := NewVectorC(len(b))
-		err = sol.Solve(x, b, false) // x := inv(A) * b
-		status(tst, err)
+		sol.Solve(x, b, false) // x := inv(A) * b
 	}
 }
