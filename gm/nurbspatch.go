@@ -168,13 +168,12 @@ func (o *NurbsPatch) ResetFromExchangeData(binsNdiv int, tolerance float64) {
 // read/write function ////////////////////////////////////////////////////////////////////////////
 
 // Write writes ExchangeData to json file
-func (o NurbsPatch) Write(dirout, fnkey string) (err error) {
+func (o NurbsPatch) Write(dirout, fnkey string) {
 	b, err := json.Marshal(o)
 	if err != nil {
-		return
+		chk.Panic("%v\n", err)
 	}
 	io.WriteBytesToFileVD(dirout, fnkey+".json", b)
-	return
 }
 
 // NewNurbsPatchFromFile allocates a NurbsPatch with data from file
