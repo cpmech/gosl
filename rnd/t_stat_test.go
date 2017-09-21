@@ -26,10 +26,7 @@ func Test_stat01(tst *testing.T) {
 	xave2a, xdev2a := StatAveDev(x, true)
 	xave2b, xdev2b := StatAveDev(x, false)
 
-	sum, mean, adev, sdev, vari, skew, kurt, err := StatMoments(x)
-	if err != nil {
-		chk.Panic("Moments failed:\n%v", err)
-	}
+	sum, mean, adev, sdev, vari, skew, kurt := StatMoments(x)
 	io.Pforan("x    = %v\n", x)
 	io.Pforan("sum  = %v\n", sum)
 	io.Pforan("mean = %v  (%v)  (%v)\n", mean, xave, xave1)

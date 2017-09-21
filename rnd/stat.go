@@ -159,13 +159,12 @@ func StatBasic(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
 //  Based on:
 //     Press WH, Teukolsky SA, Vetterling WT and Flannery BP (2007)
 //       Numerical Recipes in C++ 2007 (3rd Edition), page 725.
-func StatMoments(x []float64) (sum, mean, adev, sdev, vari, skew, kurt float64, err error) {
+func StatMoments(x []float64) (sum, mean, adev, sdev, vari, skew, kurt float64) {
 
 	// check
 	n := len(x)
 	if n < 2 {
-		err = chk.Err("x set must have at least 2 items")
-		return
+		chk.Panic("x set must have at least 2 items\n")
 	}
 
 	// first pass to get the mean
@@ -194,8 +193,7 @@ func StatMoments(x []float64) (sum, mean, adev, sdev, vari, skew, kurt float64, 
 	sdev = math.Sqrt(vari)
 	TOL := 1e-15
 	if math.Abs(vari) < 1e-15 {
-		err = chk.Err("cannot compute skew and kurtosis because variance is zero. vari=%g (tol=%g)", vari, TOL)
-		return
+		chk.Panic("cannot compute skew and kurtosis because variance is zero. vari=%g (tol=%g)\n", vari, TOL)
 	}
 	skew /= (N * vari * sdev)
 	kurt = kurt/(N*vari*vari) - 3.0

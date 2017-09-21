@@ -7,8 +7,6 @@
 package sfmt
 
 import (
-	"testing"
-
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 )
@@ -20,11 +18,4 @@ func init() {
 func verbose() {
 	io.Verbose = true
 	chk.Verbose = true
-}
-
-func status(tst *testing.T, err error) {
-	if err != nil {
-		tst.Errorf("ERROR: %v\n", err)
-		tst.FailNow()
-	}
 }
