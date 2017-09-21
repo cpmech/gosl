@@ -73,11 +73,7 @@ func main() {
 	var ipm opt.LinIpm
 	defer ipm.Free()
 	ipm.Init(Am, b, c, nil)
-	err := ipm.Solve(true)
-	if err != nil {
-		io.Pf("%v", err)
-		return
-	}
+	ipm.Solve(true)
 
 	// print solution
 	io.Pl()

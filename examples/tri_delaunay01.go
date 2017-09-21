@@ -33,11 +33,7 @@ func main() {
 	}
 
 	// generate
-	V, C, err := tri.Delaunay(X, Y, false)
-	if err != nil {
-		io.Pf("%v", err)
-		return
-	}
+	V, C := tri.Delaunay(X, Y, false)
 
 	io.Pforan("V = %v\n", V)
 	io.Pf("C = %v\n", C)
