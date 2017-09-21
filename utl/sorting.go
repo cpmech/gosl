@@ -229,7 +229,7 @@ func (o QuadruplesByZ) Less(i, j int) bool { return o.Quadruples[i].Z < o.Quadru
 
 // SortQuadruples sorts i, x, y, and z by "i", "x", "y", or "z"
 //  Note: either i, x, y, or z can be nil; i.e. at least one of them must be non nil
-func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []float64, err error) {
+func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []float64) {
 	q := BuildQuadruples(i, x, y, z)
 	switch by {
 	case "i":
@@ -241,7 +241,7 @@ func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []f
 	case "z":
 		sort.Sort(QuadruplesByZ{q})
 	default:
-		return nil, nil, nil, nil, chk.Err("sort quadruples command must be 'i', 'x', 'y', or 'z'. by == '%s' is invalid", by)
+		chk.Panic("sort quadruples command must be 'i', 'x', 'y', or 'z'. by == '%s' is invalid\n", by)
 	}
 	if i != nil {
 		I = q.I()

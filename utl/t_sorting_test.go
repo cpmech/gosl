@@ -20,18 +20,12 @@ func Test_sort01(tst *testing.T) {
 	x := []float64{1000.33, 0, -77.7, 88.8}
 
 	io.Pforan("by 'i'\n")
-	I, X, _, _, err := SortQuadruples(i, x, nil, nil, "i")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	I, X, _, _ := SortQuadruples(i, x, nil, nil, "i")
 	chk.Ints(tst, "i", I, []int{0, 7, 8, 33})
 	chk.Array(tst, "x", 1e-16, X, []float64{0, -77.7, 88.8, 1000.33})
 
 	io.Pforan("by 'x'\n")
-	I, X, _, _, err = SortQuadruples(i, x, nil, nil, "x")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	I, X, _, _ = SortQuadruples(i, x, nil, nil, "x")
 	chk.Ints(tst, "i", I, []int{7, 0, 8, 33})
 	chk.Array(tst, "x", 1e-16, X, []float64{-77.7, 0.0, 88.8, 1000.33})
 
@@ -72,40 +66,28 @@ func Test_sort02(tst *testing.T) {
 	z := []float64{-8000, -7000, 0, -1}
 
 	io.Pforan("by 'i'\n")
-	I, X, Y, Z, err := SortQuadruples(i, x, y, z, "i")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	I, X, Y, Z := SortQuadruples(i, x, y, z, "i")
 	chk.Ints(tst, "i", I, []int{0, 7, 8, 33})
 	chk.Array(tst, "x", 1e-16, X, []float64{0, -77.7, 88.8, 1000.33})
 	chk.Array(tst, "y", 1e-16, Y, []float64{1e-7, 1e-2, 1e-9, 1e-5})
 	chk.Array(tst, "z", 1e-16, Z, []float64{-7000, 0, -1, -8000})
 
 	io.Pforan("by 'x'\n")
-	I, X, Y, Z, err = SortQuadruples(i, x, y, z, "x")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	I, X, Y, Z = SortQuadruples(i, x, y, z, "x")
 	chk.Ints(tst, "i", I, []int{7, 0, 8, 33})
 	chk.Array(tst, "x", 1e-16, X, []float64{-77.7, 0.0, 88.8, 1000.33})
 	chk.Array(tst, "y", 1e-16, Y, []float64{1e-2, 1e-7, 1e-9, 1e-5})
 	chk.Array(tst, "z", 1e-16, Z, []float64{0, -7000, -1, -8000})
 
 	io.Pforan("by 'y'\n")
-	I, X, Y, Z, err = SortQuadruples(i, x, y, z, "y")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	I, X, Y, Z = SortQuadruples(i, x, y, z, "y")
 	chk.Ints(tst, "i", I, []int{8, 0, 33, 7})
 	chk.Array(tst, "x", 1e-16, X, []float64{88.8, 0, 1000.33, -77.7})
 	chk.Array(tst, "y", 1e-16, Y, []float64{1e-9, 1e-7, 1e-5, 1e-2})
 	chk.Array(tst, "z", 1e-16, Z, []float64{-1, -7000, -8000, 0})
 
 	io.Pforan("by 'z'\n")
-	I, X, Y, Z, err = SortQuadruples(i, x, y, z, "z")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	I, X, Y, Z = SortQuadruples(i, x, y, z, "z")
 	chk.Ints(tst, "i", I, []int{33, 0, 8, 7})
 	chk.Array(tst, "x", 1e-16, X, []float64{1000.33, 0, 88.8, -77.7})
 	chk.Array(tst, "y", 1e-16, Y, []float64{1e-5, 1e-7, 1e-9, 1e-2})
