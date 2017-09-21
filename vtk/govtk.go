@@ -213,27 +213,23 @@ func NewIsoSurf(f FxType) *IsoSurf {
 }
 
 // AddTo adds Arrow to Scene
-func (o *Arrow) AddTo(scn *Scene) (err error) {
+func (o *Arrow) AddTo(scn *Scene) {
 	scn.arrows = append(scn.arrows, o)
-	return
 }
 
 // AddTo adds Sphere to Scene
-func (o *Sphere) AddTo(scn *Scene) (err error) {
+func (o *Sphere) AddTo(scn *Scene) {
 	scn.spheres = append(scn.spheres, o)
-	return
 }
 
 // AddTo adds Spheres to Scene
-func (o *Spheres) AddTo(scn *Scene) (err error) {
+func (o *Spheres) AddTo(scn *Scene) {
 	scn.spheresSet = append(scn.spheresSet, o)
-	return
 }
 
 // AddTo adds IsoSurf to Scene
-func (o *IsoSurf) AddTo(scn *Scene) (err error) {
+func (o *IsoSurf) AddTo(scn *Scene) {
 	scn.isosurfs = append(scn.isosurfs, o)
-	return
 }
 
 // b2i converts bool to int
@@ -250,7 +246,7 @@ func (o *Scene) SetCamera(xUp, yUp, zUp, xFoc, yFoc, zFoc, xPos, yPos, zPos floa
 }
 
 // Run shows Scene in interactive mode or saving a .png file
-func (o *Scene) Run() (err error) {
+func (o *Scene) Run() {
 
 	// input data
 	axeslen := (C.double)(o.AxesLen)
@@ -284,14 +280,14 @@ func (o *Scene) Run() (err error) {
 	o.win = C.win_alloc(C.long(o.Width), C.long(o.Height), reverse)
 	defer C.win_dealloc(o.win)
 	if o.win == nil {
-		return chk.Err("C.scene_begin failed\n")
+		chk.Panic("C.scene_begin failed\n")
 	}
 
 	// set camera
 	if len(o.camData) == 9 {
 		status := C.set_camera(o.win, (*C.double)(unsafe.Pointer(&o.camData[0])))
 		if status != 0 {
-			return chk.Err("C.set_camera failed\n")
+			chk.Panic("C.set_camera failed\n")
 		}
 	}
 
@@ -324,7 +320,7 @@ func (o *Scene) Run() (err error) {
 			continue
 		}
 		if len(O.Y) != n || len(O.Z) != n || len(O.R) != n {
-			return chk.Err("cannot add set of spheres because X,Y,Z,R have different dimensions")
+			chk.Panic("cannot add set of spheres because X,Y,Z,R have different dimensions")
 		}
 		x := (*C.double)(unsafe.Pointer(&O.X[0]))
 		y := (*C.double)(unsafe.Pointer(&O.Y[0]))
@@ -388,7 +384,7 @@ func (o *Scene) Run() (err error) {
 		interact, saveeps, savepng, pngmag, fnk, lblX, lblY, lblZ, lblSz, lblClr,
 		C.double(o.Zoom))
 	if status != 0 {
-		return chk.Err("C.scene_end failed\n")
+		chk.Panic("C.scene_end failed\n")
 	}
 	if savepng > 0 {
 		io.Pfblue2("file <%s.png> written\n", o.Fnk)
@@ -396,7 +392,6 @@ func (o *Scene) Run() (err error) {
 	if saveeps > 0 {
 		io.Pfblue2("file <%s.eps> written\n", o.Fnk)
 	}
-	return
 }
 
 // global variables for communication with C
