@@ -113,7 +113,7 @@ func (o *LinIpm) Init(A *la.CCMatrix, b, c la.Vector, prms dbf.Params) {
 }
 
 // Solve solves linear programming problem
-func (o *LinIpm) Solve(verbose bool) (err error) {
+func (o *LinIpm) Solve(verbose bool) {
 
 	// starting point
 	AAt := la.NewMatrix(o.Nl, o.Nl)               // A*Aᵀ
@@ -250,9 +250,8 @@ func (o *LinIpm) Solve(verbose bool) (err error) {
 
 	// check convergence
 	if it == o.NmaxIt {
-		err = chk.Err("iterations did not converge")
+		chk.Panic("iterations did not converge")
 	}
-	return
 }
 
 func (o *LinIpm) calcMinRatios() (xrmin, srmin float64) {

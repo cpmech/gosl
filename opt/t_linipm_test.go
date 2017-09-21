@@ -46,11 +46,7 @@ func Test_linipm01(tst *testing.T) {
 	var ipm LinIpm
 	defer ipm.Free()
 	ipm.Init(Am, b, c, nil)
-	err := ipm.Solve(chk.Verbose)
-	if err != nil {
-		tst.Errorf("ipm failed:\n%v", err)
-		return
-	}
+	ipm.Solve(chk.Verbose)
 
 	// check x
 	io.Pl()
@@ -129,11 +125,7 @@ func Test_linipm02(tst *testing.T) {
 	var ipm LinIpm
 	defer ipm.Free()
 	ipm.Init(Am, b, c, nil)
-	err := ipm.Solve(chk.Verbose)
-	if err != nil {
-		tst.Errorf("ipm failed:\n%v", err)
-		return
-	}
+	ipm.Solve(chk.Verbose)
 
 	// check
 	io.Pf("\n")
@@ -189,11 +181,7 @@ func Test_linipm03(tst *testing.T) {
 	var ipm LinIpm
 	defer ipm.Free()
 	ipm.Init(A, b, c, nil)
-	err := ipm.Solve(chk.Verbose)
-	if err != nil {
-		tst.Errorf("ipm failed:\n%v", err)
-		return
-	}
+	ipm.Solve(chk.Verbose)
 
 	// check
 	io.Pf("\n")
