@@ -261,7 +261,7 @@ func newERKhighOrder(kind string) rkmethod {
 		o.kd = make([]la.Vector, 3)
 
 		// function for dense output (Accept)
-		o.dfunA = func(y0 la.Vector, x0 float64) (err error) {
+		o.dfunA = func(y0 la.Vector, x0 float64) {
 
 			// auxiliary variables
 			h := o.work.h
@@ -274,10 +274,7 @@ func newERKhighOrder(kind string) rkmethod {
 			}
 			o.stat.Nfeval++
 			u := x0 + o.Cd[0]*h
-			err = o.fcn(o.kd[0], h, u, o.yd)
-			if err != nil {
-				return
-			}
+			o.fcn(o.kd[0], h, u, o.yd)
 
 			// second function evaluation
 			for m := 0; m < o.ndim; m++ {
@@ -285,10 +282,7 @@ func newERKhighOrder(kind string) rkmethod {
 			}
 			o.stat.Nfeval++
 			u = x0 + o.Cd[1]*h
-			err = o.fcn(o.kd[1], h, u, o.yd)
-			if err != nil {
-				return
-			}
+			o.fcn(o.kd[1], h, u, o.yd)
 
 			// next third function evaluation
 			for m := 0; m < o.ndim; m++ {
@@ -296,10 +290,7 @@ func newERKhighOrder(kind string) rkmethod {
 			}
 			o.stat.Nfeval++
 			u = x0 + o.Cd[2]*h
-			err = o.fcn(o.kd[2], h, u, o.yd)
-			if err != nil {
-				return
-			}
+			o.fcn(o.kd[2], h, u, o.yd)
 
 			// final results
 			for m := 0; m < o.ndim; m++ {

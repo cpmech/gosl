@@ -68,12 +68,12 @@ func newOutput(ndim int, conf *Config) (o *Output) {
 }
 
 // execute executes output; e.g. call Fcn and saves x and y values
-func (o *Output) execute(istep int, last bool, ρs, h, x float64, y []float64) (stop bool, err error) {
+func (o *Output) execute(istep int, last bool, ρs, h, x float64, y []float64) (stop bool) {
 
 	// step output using function
 	if o.conf.stepF != nil {
-		stop, err = o.conf.stepF(istep, h, x, y)
-		if stop || err != nil {
+		stop = o.conf.stepF(istep, h, x, y)
+		if stop {
 			return
 		}
 	}
@@ -94,8 +94,8 @@ func (o *Output) execute(istep int, last bool, ρs, h, x float64, y []float64) (
 		if istep == 0 || last {
 			xo = x
 			o.yout.Apply(1, y)
-			stop, err = o.conf.denseF(istep, h, x, y, xo, o.yout)
-			if stop || err != nil {
+			stop = o.conf.denseF(istep, h, x, y, xo, o.yout)
+			if stop {
 				return
 			}
 			xo += o.conf.denseDx
@@ -103,8 +103,8 @@ func (o *Output) execute(istep int, last bool, ρs, h, x float64, y []float64) (
 			xo = o.xout
 			for x >= xo {
 				o.dout(o.yout, h, x, y, xo)
-				stop, err = o.conf.denseF(istep, h, x, y, xo, o.yout)
-				if stop || err != nil {
+				stop = o.conf.denseF(istep, h, x, y, xo, o.yout)
+				if stop {
 					return
 				}
 				xo += o.conf.denseDx

@@ -133,8 +133,7 @@ func TestErk02(tst *testing.T) {
 	for im, method := range []string{"moeuler", "rk2", "rk3", "heun3", "rk4", "rk4-3/8", "merson4", "zonneveld4"} {
 
 		// solve problem
-		y, _, out, err := p.Solve(method, true, false)
-		status(tst, err)
+		y, _, out := p.Solve(method, true, false)
 
 		// results
 		X := out.GetStepX()
@@ -188,8 +187,7 @@ func TestErk03a(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []float64{4, 4, 4, 4}
 	tols := []float64{0.011, 0.023, 0.00471, 0.011}
-	err := p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
-	status(tst, err)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {
@@ -222,8 +220,7 @@ func TestErk03b(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []float64{4, 4, 4, 4}
 	tols := []float64{0.086, 0.164, 0.07, 0.09}
-	err := p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
-	status(tst, err)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {
@@ -260,8 +257,7 @@ func TestErk04(tst *testing.T) {
 		4, 4, 4, 4, 4}
 	tols := []float64{0.043, 0.0176, 0.11, 0.049, 0.016, 0.0023,
 		0.086, 0.164, 0.07, 0.09, 0.005}
-	err := p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
-	status(tst, err)
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
 
 	// plot
 	if chk.Verbose {
@@ -296,8 +292,7 @@ func TestErk05(tst *testing.T) {
 	methods := []string{"rk4", "fehlberg4", "dopri5", "verner6", "fehlberg7", "dopri8"}
 	orders := []float64{3.9874, 4.6923, 6.3012, 6.5916, 8.0283, 6.8463}
 	tols := []float64{1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4}
-	err := p.ConvergenceTest(tst, 8e-2, 3e-1, 3, yExact, methods, orders, tols, chk.Verbose)
-	status(tst, err)
+	p.ConvergenceTest(tst, 8e-2, 3e-1, 3, yExact, methods, orders, tols, chk.Verbose)
 
 	if chk.Verbose {
 		plt.Gll("$nFeval$", "$error$", &plt.A{LegOut: true, LegHlen: 2, LegNcol: 3})

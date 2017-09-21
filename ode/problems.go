@@ -32,7 +32,7 @@ type Problem struct {
 
 // Solve solves ODE problem using standard parameters
 // NOTE: this solver doesn't change o.Y
-func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat *Stat, out *Output, err error) {
+func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat *Stat, out *Output) {
 
 	// current y vector
 	y = la.NewVector(o.Ndim)
@@ -50,14 +50,11 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 	if numJac {
 		jac = nil
 	}
-	sol, err := NewSolver(o.Ndim, conf, o.Fcn, jac, nil)
-	if err != nil {
-		return
-	}
+	sol := NewSolver(o.Ndim, conf, o.Fcn, jac, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(y, 0.0, o.Xf)
+	sol.Solve(y, 0.0, o.Xf)
 
 	// set output
 	stat = sol.Stat
@@ -71,7 +68,7 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 // ConvergenceTest runs convergence test
 //   yExact -- is the exact (reference) y @ xf
 func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int, yExact la.Vector,
-	methods []string, orders, tols []float64, doPlot bool) (err error) {
+	methods []string, orders, tols []float64, doPlot bool) {
 
 	// constants
 	dxs := utl.LinSpace(dxmin, dxmax, ndx)
@@ -88,10 +85,7 @@ func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int,
 
 			// solve problem
 			o.Dx = dx
-			y, stat, _, e := o.Solve(method, true, false)
-			if e != nil {
-				return e
-			}
+			y, stat, _ := o.Solve(method, true, false)
 
 			// global error
 			diff := la.VecMaxDiff(y, yExact)
@@ -111,7 +105,6 @@ func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int,
 			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: plt.M(im, 0), NoClip: true})
 		}
 	}
-	return
 }
 
 // Plot plots Y[i] versus x series
@@ -161,18 +154,16 @@ func ProbHwEq11() (o *Problem) {
 		res[0] = -λ * (math.Sin(x) - λ*math.Cos(x) + λ*math.Exp(λ*x)) / (λ*λ + 1.0)
 	}
 
-	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
 		f[0] = λ*y[0] - λ*math.Cos(x)
-		return nil
 	}
 
-	o.Jac = func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
+	o.Jac = func(dfdy *la.Triplet, dx, x float64, y la.Vector) {
 		if dfdy.Max() == 0 {
 			dfdy.Init(1, 1, 1)
 		}
 		dfdy.Start()
 		dfdy.Put(0, 0, λ)
-		return nil
 	}
 	return
 }
@@ -201,13 +192,12 @@ func ProbVanDerPol(eps float64, stationary bool) (o *Problem) {
 		o.Xf = T
 	}
 
-	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
 		f[0] = y[1]
 		f[1] = ((1.0-y[0]*y[0])*y[1] - y[0]) / eps
-		return nil
 	}
 
-	o.Jac = func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
+	o.Jac = func(dfdy *la.Triplet, dx, x float64, y la.Vector) {
 		if dfdy.Max() == 0 {
 			dfdy.Init(2, 2, 4)
 		}
@@ -216,7 +206,6 @@ func ProbVanDerPol(eps float64, stationary bool) (o *Problem) {
 		dfdy.Put(0, 1, 1.0)
 		dfdy.Put(1, 0, (-2.0*y[0]*y[1]-1.0)/eps)
 		dfdy.Put(1, 1, (1.0-y[0]*y[0])/eps)
-		return nil
 	}
 	return
 }
@@ -229,14 +218,13 @@ func ProbRobertson() (o *Problem) {
 	o.Y = la.Vector([]float64{1.0, 0.0, 0.0})
 	o.Ndim = len(o.Y)
 
-	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
 		f[0] = -0.04*y[0] + 1.0e4*y[1]*y[2]
 		f[1] = 0.04*y[0] - 1.0e4*y[1]*y[2] - 3.0e7*y[1]*y[1]
 		f[2] = 3.0e7 * y[1] * y[1]
-		return nil
 	}
 
-	o.Jac = func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
+	o.Jac = func(dfdy *la.Triplet, dx, x float64, y la.Vector) {
 		if dfdy.Max() == 0 {
 			dfdy.Init(3, 3, 9)
 		}
@@ -250,7 +238,6 @@ func ProbRobertson() (o *Problem) {
 		dfdy.Put(2, 0, 0.0)
 		dfdy.Put(2, 1, 6.0e7*y[1])
 		dfdy.Put(2, 2, 0.0)
-		return nil
 	}
 	return
 }
@@ -285,7 +272,7 @@ func ProbHwAmplifier() (o *Problem) {
 	o.Ndim = len(o.Y)
 
 	// right-hand side of the amplifier problem
-	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
 		uet := ue * math.Sin(w*x)
 		fac1 := β * (math.Exp((y[3]-y[2])/uf) - 1.0)
 		fac2 := β * (math.Exp((y[6]-y[5])/uf) - 1.0)
@@ -297,11 +284,10 @@ func ProbHwAmplifier() (o *Problem) {
 		f[5] = y[5]/r3 - fac2
 		f[6] = y[6]/r1 + (y[6]-ub)/r2 + (1.0-α)*fac2
 		f[7] = (y[7] - uet) / r0
-		return nil
 	}
 
 	// Jacobian of the amplifier problem
-	o.Jac = func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
+	o.Jac = func(dfdy *la.Triplet, dx, x float64, y la.Vector) {
 		fac14 := β * math.Exp((y[3]-y[2])/uf) / uf
 		fac27 := β * math.Exp((y[6]-y[5])/uf) / uf
 		if dfdy.Max() == 0 {
@@ -325,7 +311,6 @@ func ProbHwAmplifier() (o *Problem) {
 		dfdy.Put(2+6-nu, 6, 1.0/r1+1.0/r2+(1.0-α)*fac27)
 		dfdy.Put(3+5-nu, 5, -(1.0-α)*fac27)
 		dfdy.Put(2+7-nu, 7, 1.0/r0)
-		return nil
 	}
 
 	// "mass" matrix
@@ -362,7 +347,7 @@ func ProbArenstorf() (o *Problem) {
 		-2.00158510637908252240537862224,
 	})
 	o.Ndim = len(o.Y)
-	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
 		amu := 0.012277471
 		amup := 1.0 - amu
 		f[0] = y[2]
@@ -373,7 +358,6 @@ func ProbArenstorf() (o *Problem) {
 		r2 = r2 * math.Sqrt(r2)
 		f[2] = y[0] + 2*y[3] - amup*(y[0]+amu)/r1 - amu*(y[0]-amup)/r2
 		f[3] = y[1] - 2*y[2] - amup*y[1]/r1 - amu*y[1]/r2
-		return nil
 	}
 	return
 }
@@ -386,10 +370,9 @@ func ProbSimpleNdim2() (o *Problem) {
 		res[0] = -0.5*e2x + x*x + 2*x - 0.5
 		res[1] = +0.5*e2x + x*x - 0.5
 	}
-	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
 		f[0] = +y[0] - y[1] + 2.0
 		f[1] = -y[0] + y[1] + 4.0*x
-		return nil
 	}
 	o.Y = la.Vector([]float64{-1.0, 0.0})
 	o.Ndim = len(o.Y)
@@ -407,12 +390,11 @@ func ProbSimpleNdim4a() (o *Problem) {
 		res[2] = math.Sin(x*x) + 1.0
 		res[3] = math.Cos(x * x)
 	}
-	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
 		f[0] = 2.0 * x * y[3] * y[0]
 		f[1] = 10.0 * x * y[3] * fun.PowP(y[0], 5)
 		f[2] = 2.0 * x * y[3]
 		f[3] = -2.0 * x * (y[2] - 1)
-		return nil
 	}
 	o.Y = la.Vector([]float64{1, 1, 1, 1})
 	o.Ndim = len(o.Y)
@@ -430,7 +412,7 @@ func ProbSimpleNdim4b() (o *Problem) {
 		res[2] = math.Sin(x*x) + 1.0
 		res[3] = math.Cos(x * x)
 	}
-	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) error {
+	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
 		f[0] = 2.0 * x * math.Pow(y[1], 1.0/5.0) * y[3]
 		f[1] = 10.0 * x * math.Exp(5.0*(y[2]-1.0)) * y[3]
 		f[2] = 2.0 * x * y[3]
@@ -439,9 +421,8 @@ func ProbSimpleNdim4b() (o *Problem) {
 			io.Pf("x = %v\n", x)
 			io.Pf("y = %v\n", y)
 			io.Pf("f = %v\n", f)
-			return chk.Err("y0 and y1 cannot be negative\n")
+			chk.Panic("y0 and y1 cannot be negative\n")
 		}
-		return nil
 	}
 	o.Y = la.Vector([]float64{1, 1, 1, 1})
 	o.Ndim = len(o.Y)

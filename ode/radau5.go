@@ -94,7 +94,7 @@ func (o *Radau5) Info() (fixedOnly, implicit bool, nstages int) {
 }
 
 // Init initialises structure
-func (o *Radau5) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) {
+func (o *Radau5) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) {
 
 	// main
 	o.ndim = ndim
@@ -151,11 +151,10 @@ func (o *Radau5) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func
 
 	// constants
 	o.initConstants()
-	return
 }
 
 // Accept accepts update and computes next stepsize
-func (o *Radau5) Accept(y0 la.Vector, x0 float64) (dxnew float64, err error) {
+func (o *Radau5) Accept(y0 la.Vector, x0 float64) (dxnew float64) {
 
 	// update y
 	for m := 0; m < o.ndim; m++ {
@@ -205,7 +204,7 @@ func (o *Radau5) DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float6
 }
 
 // Step steps update
-func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
+func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
 	// auxiliary
 	h := o.work.h
@@ -236,23 +235,16 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
 				if o.conf.distr {
 					num.JacobianMpi(o.conf.comm, o.dfdy, func(fy, yy la.Vector) {
 						o.fcn(fy, h, x0, yy)
-						return
 					}, y0, o.work.f0, o.w[0], true) // w works here as workspace variable
 				} else {
 					num.Jacobian(o.dfdy, func(fy, yy la.Vector) {
 						o.fcn(fy, h, x0, yy)
-						return
 					}, y0, o.work.f0, o.w[0]) // w works here as workspace variable
 				}
 
 				// analytical Jacobian
 			} else {
-				err = o.jac(o.dfdy, h, x0, y0)
-			}
-
-			// check
-			if err != nil {
-				return
+				o.jac(o.dfdy, h, x0, y0)
 			}
 
 			// set flag
@@ -332,10 +324,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
 				v[i][m] = y0[m] + o.z[i][m]
 			}
 			o.stat.Nfeval++
-			err = o.fcn(k[i], h, u[i], v[i])
-			if err != nil {
-				return
-			}
+			o.fcn(k[i], h, u[i], v[i])
 		}
 
 		// calc rhs
@@ -442,8 +431,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
 
 	// did not converge
 	if it == o.conf.NmaxIt-1 {
-		err = chk.Err("Radau5 did not converge with nit=%d", o.work.nit)
-		return
+		chk.Panic("Radau5 did not converge with nit=%d", o.work.nit)
 	}
 
 	// diverging => stop
@@ -454,11 +442,10 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) (err error) {
 
 	// error estimate
 	o.errorEstimate(x0, y0)
-	return
 }
 
 // errorEstimate computes error estimate
-func (o *Radau5) errorEstimate(x0 float64, y0 la.Vector) (err error) {
+func (o *Radau5) errorEstimate(x0 float64, y0 la.Vector) {
 
 	// auxiliary
 	h := o.work.h
@@ -514,10 +501,7 @@ func (o *Radau5) errorEstimate(x0 float64, y0 la.Vector) (err error) {
 				v[0][m] = y0[m] + o.lerr[m] // y0perr
 			}
 			o.stat.Nfeval++
-			err = o.fcn(k[0], h, x0, v[0]) // f0perr
-			if err != nil {
-				return
-			}
+			o.fcn(k[0], h, x0, v[0]) // f0perr
 			if o.hasM {
 				o.rhs.Apply(1, k[0]) // rhs := f0perr
 				if o.conf.distr {
@@ -532,7 +516,6 @@ func (o *Radau5) errorEstimate(x0 float64, y0 la.Vector) (err error) {
 			o.work.rerr = o.rmsNorm(o.lerr)
 		}
 	}
-	return
 }
 
 // distrM sets M matrix (distributed version)

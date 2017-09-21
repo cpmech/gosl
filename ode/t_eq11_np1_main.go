@@ -7,11 +7,9 @@
 package main
 
 import (
-	"os"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/ode"
 	"github.com/cpmech/gosl/plt"
@@ -38,13 +36,11 @@ func main() {
 	conf.SetStepOut(true, nil)
 
 	// solver
-	sol, err := ode.NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(err)
+	sol := ode.NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// check Stat
 	chk.Verbose = true
@@ -66,11 +62,4 @@ func main() {
 	plt.Reset(true, nil)
 	p.Plot("Radau5,Jana", 0, sol.Out, 101, true, nil, nil)
 	plt.Save("/tmp/gosl/ode", "mpi_eq11_np1")
-}
-
-func status(err error) {
-	if err != nil {
-		io.Pf("ERROR: %v\n", err)
-		os.Exit(1)
-	}
 }

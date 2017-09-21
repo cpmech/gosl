@@ -27,13 +27,11 @@ func TestRadau501a(tst *testing.T) {
 	conf.SetStepOut(true, nil)
 
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 66)
@@ -80,7 +78,7 @@ func TestRadau502(tst *testing.T) {
 	yy1 := make([]float64, 11)
 	iout := 0
 	io.Pf("\n%5s%7s%23s%23s\n", "s", "x", "y0", "y1")
-	conf.SetDenseOut(true, 0.2, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+	conf.SetDenseOut(true, 0.2, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool) {
 		io.Pf("%5d%7.3f%23.15e%23.15e\n", istep, x, y[0], y[1])
 		ss[iout] = istep
 		xx[iout] = xout
@@ -91,13 +89,11 @@ func TestRadau502(tst *testing.T) {
 	})
 
 	// allocate ODE object
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve problem
-	err = sol.Solve(p.Y, 0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0, p.Xf)
 
 	// check
 	io.Pl()

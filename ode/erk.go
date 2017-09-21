@@ -81,7 +81,7 @@ type ExplicitRK struct {
 	yd la.Vector   // y values for dense output (allocated here if len(kd)>0)
 
 	// functions to compute variables for dense output
-	dfunA func(y0 la.Vector, x0 float64) error                          // in Accept function
+	dfunA func(y0 la.Vector, x0 float64)                                // in Accept function
 	dfunB func(yout la.Vector, h, x float64, y la.Vector, xout float64) // DenseOut function
 }
 
@@ -94,7 +94,7 @@ func (o *ExplicitRK) Info() (fixedOnly, implicit bool, nstages int) {
 }
 
 // Init initialises structure
-func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) {
+func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) {
 
 	// data
 	o.ndim = ndim
@@ -129,19 +129,15 @@ func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn 
 			o.yd = la.NewVector(ndim)
 		}
 	}
-	return nil
 }
 
 // Accept accepts update and computes next stepsize
-func (o *ExplicitRK) Accept(y0 la.Vector, x0 float64) (dxnew float64, err error) {
+func (o *ExplicitRK) Accept(y0 la.Vector, x0 float64) (dxnew float64) {
 
 	// store data for future dense output
 	if o.conf.denseOut {
 		if o.dfunA != nil {
-			err := o.dfunA(y0, x0)
-			if err != nil {
-				chk.Panic("%v", err)
-			}
+			o.dfunA(y0, x0)
 		}
 	}
 
@@ -181,7 +177,7 @@ func (o *ExplicitRK) DenseOut(yout la.Vector, h, x float64, y la.Vector, xout fl
 }
 
 // Step steps update
-func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
+func (o *ExplicitRK) Step(xa float64, ya la.Vector) {
 
 	// auxiliary
 	h := o.work.h
@@ -192,10 +188,7 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 	if (o.work.first || !o.FSAL) && !o.work.reject {
 		u0 := xa + h*o.C[0]
 		o.stat.Nfeval++
-		err = o.fcn(k[0], h, u0, ya) // k0 := f(ui,vi)
-		if err != nil {
-			return
-		}
+		o.fcn(k[0], h, u0, ya) // k0 := f(ui,vi)
 	}
 
 	// compute ki
@@ -207,10 +200,7 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 			la.VecAdd(v[i], 1, v[i], h*o.A[i][j], k[j]) // vi += h⋅aij⋅kj
 		}
 		o.stat.Nfeval++
-		err = o.fcn(k[i], h, ui, v[i]) // ki := f(ui,vi)
-		if err != nil {
-			return
-		}
+		o.fcn(k[i], h, ui, v[i]) // ki := f(ui,vi)
 	}
 
 	// update
@@ -280,7 +270,6 @@ func (o *ExplicitRK) Step(xa float64, ya la.Vector) (err error) {
 	if sden > 0 {
 		o.work.rs = h * math.Sqrt(snum/sden)
 	}
-	return
 }
 
 // newERK returns the coefficients of the explicit Runge-Kutta method
@@ -434,7 +423,7 @@ func newERK(kind string) rkmethod {
 		o.P = 5
 		o.Q = 4
 		o.do = make([]la.Vector, 5)
-		o.dfunA = func(y0 la.Vector, x0 float64) (err error) {
+		o.dfunA = func(y0 la.Vector, x0 float64) {
 			h := o.work.h
 			k := o.work.f
 			var ydiff, bspl float64
@@ -448,7 +437,6 @@ func newERK(kind string) rkmethod {
 				o.do[4][m] = o.D[0][0]*k[0][m] + o.D[0][2]*k[2][m] + o.D[0][3]*k[3][m] + o.D[0][4]*k[4][m] + o.D[0][5]*k[5][m] + o.D[0][6]*k[6][m]
 				o.do[4][m] *= o.work.h
 			}
-			return
 		}
 		o.dfunB = func(yout la.Vector, h, x float64, y la.Vector, xout float64) {
 			xold := x - h

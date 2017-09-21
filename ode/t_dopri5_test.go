@@ -26,13 +26,11 @@ func TestDoPri501(tst *testing.T) {
 	conf.SetStepOut(true, nil)
 
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 242)
@@ -72,9 +70,9 @@ func TestDoPri502(tst *testing.T) {
 
 	// step output
 	io.Pf("\n%5s%15s%12s%15s%15s%15s%15s\n", "s", "h", "x", "y0", "y1", "y2", "y3")
-	conf.SetStepOut(true, func(istep int, h, x float64, y la.Vector) (stop bool, err error) {
+	conf.SetStepOut(true, func(istep int, h, x float64, y la.Vector) (stop bool) {
 		io.Pf("%5d%15.7E%12.7f%15.7E%15.7E%15.7E%15.7E\n", istep, h, x, y[0], y[1], y[2], y[3])
-		return false, nil
+		return false
 	})
 
 	// dense output function
@@ -85,7 +83,7 @@ func TestDoPri502(tst *testing.T) {
 	yy2 := make([]float64, 10)
 	yy3 := make([]float64, 10)
 	iout := 0
-	conf.SetDenseOut(true, 2.0, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+	conf.SetDenseOut(true, 2.0, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool) {
 		xold := x - h
 		dx := xout - xold
 		io.Pforan("%5d%15.7E%12.7f%15.7E%15.7E%15.7E%15.7E\n", istep, dx, xout, yout[0], yout[1], yout[2], yout[3])
@@ -100,13 +98,11 @@ func TestDoPri502(tst *testing.T) {
 	})
 
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// print stat
 	sol.Stat.Print(false)
@@ -154,9 +150,9 @@ func TestDoPri503(tst *testing.T) {
 
 	// step output
 	io.Pf("\n%6s%15s%15s%15s%15s\n", "s", "h", "x", "y0", "y1")
-	conf.SetStepOut(true, func(istep int, h, x float64, y la.Vector) (stop bool, err error) {
+	conf.SetStepOut(true, func(istep int, h, x float64, y la.Vector) (stop bool) {
 		io.Pf("%6d%15.7E%12.7f%15.7E%15.7E\n", istep, h, x, y[0], y[1])
-		return false, nil
+		return false
 	})
 
 	// dense output function
@@ -165,7 +161,7 @@ func TestDoPri503(tst *testing.T) {
 	yy0 := make([]float64, 11)
 	yy1 := make([]float64, 11)
 	iout := 0
-	conf.SetDenseOut(true, 0.02, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error) {
+	conf.SetDenseOut(true, 0.02, p.Xf, func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool) {
 		xold := x - h
 		dx := xout - xold
 		_ = dx
@@ -179,13 +175,11 @@ func TestDoPri503(tst *testing.T) {
 	})
 
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// print stat
 	sol.Stat.Print(false)

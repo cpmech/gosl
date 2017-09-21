@@ -25,13 +25,11 @@ func TestBwEuler01a(tst *testing.T) {
 	conf.SetStepOut(true, nil)
 
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 80)
@@ -68,13 +66,11 @@ func TestBwEuler01b(tst *testing.T) {
 	conf.SetStepOut(true, nil)
 
 	// solver
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, nil, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, nil, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 120)

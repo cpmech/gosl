@@ -8,7 +8,6 @@ package main
 
 import (
 	"math"
-	"os"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -60,7 +59,7 @@ func main() {
 	ndim := len(y)
 
 	// right-hand side of the amplifier problem
-	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) {
 		uet := ue * math.Sin(w*x)
 		fac1 := β * (math.Exp((y[3]-y[2])/uf) - 1.0)
 		fac2 := β * (math.Exp((y[6]-y[5])/uf) - 1.0)
@@ -72,11 +71,10 @@ func main() {
 		f[5] = y[5]/r3 - fac2
 		f[6] = y[6]/r1 + (y[6]-ub)/r2 + (1.0-α)*fac2
 		f[7] = (y[7] - uet) / r0
-		return nil
 	}
 
 	// Jacobian of the amplifier problem
-	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) {
 		fac14 := β * math.Exp((y[3]-y[2])/uf) / uf
 		fac27 := β * math.Exp((y[6]-y[5])/uf) / uf
 		if dfdy.Max() == 0 {
@@ -105,7 +103,6 @@ func main() {
 			dfdy.Put(3+5-nu, 5, -(1.0-α)*fac27)
 			dfdy.Put(2+7-nu, 7, 1.0/r0)
 		}
-		return nil
 	}
 
 	// "mass" matrix
@@ -144,13 +141,11 @@ func main() {
 	conf.SetTols(atol, rtol)
 
 	// ODE solver
-	sol, err := ode.NewSolver(ndim, conf, fcn, jac, M)
-	status(err)
+	sol := ode.NewSolver(ndim, conf, fcn, jac, M)
 	defer sol.Free()
 
 	// run
-	err = sol.Solve(y, 0.0, xf)
-	status(err)
+	sol.Solve(y, 0.0, xf)
 
 	// only root
 	if mpi.WorldRank() == 0 {
@@ -190,12 +185,5 @@ func main() {
 		plt.AxisXmax(0.05)
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "amp_np3")
-	}
-}
-
-func status(err error) {
-	if err != nil {
-		io.Pf("ERROR: %v\n", err)
-		os.Exit(1)
 	}
 }

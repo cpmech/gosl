@@ -24,8 +24,7 @@ func TestOde01(tst *testing.T) {
 
 	// FwEuler
 	io.Pforan("\n. . . FwEuler . . . \n")
-	_, stat1, out1, err := p.Solve("fweuler", true, false)
-	status(tst, err)
+	_, stat1, out1 := p.Solve("fweuler", true, false)
 	chk.Int(tst, "number of F evaluations ", stat1.Nfeval, 40)
 	chk.Int(tst, "number of J evaluations ", stat1.Njeval, 0)
 	chk.Int(tst, "total number of steps   ", stat1.Nsteps, 40)
@@ -37,8 +36,7 @@ func TestOde01(tst *testing.T) {
 
 	// BwEuler
 	io.Pforan("\n. . . BwEuler . . . \n")
-	_, stat2, out2, err := p.Solve("bweuler", true, false)
-	status(tst, err)
+	_, stat2, out2 := p.Solve("bweuler", true, false)
 	chk.Int(tst, "number of F evaluations ", stat2.Nfeval, 80)
 	chk.Int(tst, "number of J evaluations ", stat2.Njeval, 40)
 	chk.Int(tst, "total number of steps   ", stat2.Nsteps, 40)
@@ -50,8 +48,7 @@ func TestOde01(tst *testing.T) {
 
 	// MoEuler
 	io.Pforan("\n. . . MoEuler . . . \n")
-	_, stat3, out3, err := p.Solve("moeuler", false, false)
-	status(tst, err)
+	_, stat3, out3 := p.Solve("moeuler", false, false)
 	chk.Int(tst, "number of F evaluations ", stat3.Nfeval, 425)
 	chk.Int(tst, "number of J evaluations ", stat3.Njeval, 0)
 	chk.Int(tst, "total number of steps   ", stat3.Nsteps, 212)
@@ -63,8 +60,7 @@ func TestOde01(tst *testing.T) {
 
 	// DoPri5
 	io.Pforan("\n. . . DoPri5 . . . \n")
-	_, stat4, out4, err := p.Solve("dopri5", false, false)
-	status(tst, err)
+	_, stat4, out4 := p.Solve("dopri5", false, false)
 	chk.Int(tst, "number of F evaluations ", stat4.Nfeval, 242)
 	chk.Int(tst, "number of J evaluations ", stat4.Njeval, 0)
 	chk.Int(tst, "total number of steps   ", stat4.Nsteps, 40)
@@ -76,8 +72,7 @@ func TestOde01(tst *testing.T) {
 
 	// Radau5
 	io.Pforan("\n. . . Radau5 . . . \n")
-	_, stat5, out5, err := p.Solve("radau5", false, false)
-	status(tst, err)
+	_, stat5, out5 := p.Solve("radau5", false, false)
 	chk.Int(tst, "number of F evaluations ", stat5.Nfeval, 66)
 	chk.Int(tst, "number of J evaluations ", stat5.Njeval, 1)
 	chk.Int(tst, "total number of steps   ", stat5.Nsteps, 15)
@@ -115,13 +110,11 @@ func TestOde02(tst *testing.T) {
 	conf.SetStepOut(true, nil)
 
 	// allocate ODE object
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve problem
-	err = sol.Solve(p.Y, 0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0, p.Xf)
 
 	// check
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2233)
@@ -177,13 +170,11 @@ func TestOde03(tst *testing.T) {
 	conf.IniH = 1.0e-6
 
 	// allocate ODE object
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, nil)
 	defer sol.Free()
 
 	// solve problem
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// check
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 87)
@@ -238,14 +229,12 @@ func TestOde04(tst *testing.T) {
 	conf.SetTols(atol, rtol)
 
 	// ODE solver
-	sol, err := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, p.M)
-	status(tst, err)
+	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, p.M)
 	defer sol.Free()
 
 	// run
 	t0 := time.Now()
-	err = sol.Solve(p.Y, 0.0, p.Xf)
-	status(tst, err)
+	sol.Solve(p.Y, 0.0, p.Xf)
 	io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
 
 	// check

@@ -28,7 +28,7 @@ import "github.com/cpmech/gosl/la"
 //   out  -- output with all steps results with save==true
 //
 func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol float64,
-	numJac, fixedStep, saveStep, saveDense bool) (stat *Stat, out *Output, err error) {
+	numJac, fixedStep, saveStep, saveDense bool) (stat *Stat, out *Output) {
 
 	// configuration
 	conf := NewConfig(method, "", nil)
@@ -50,14 +50,11 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 	if numJac {
 		J = nil
 	}
-	sol, err := NewSolver(len(y), conf, fcn, J, nil)
-	if err != nil {
-		return
-	}
+	sol := NewSolver(len(y), conf, fcn, J, nil)
 	defer sol.Free()
 
 	// solve ODE
-	err = sol.Solve(y, 0.0, xf)
+	sol.Solve(y, 0.0, xf)
 
 	// results
 	stat = sol.Stat
@@ -66,20 +63,17 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 }
 
 // Dopri5simple solves ODE using DoPri5 method without options for saving results and others
-func Dopri5simple(fcn Func, y la.Vector, xf, tol float64) (err error) {
-	_, _, err = Solve("dopri5", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
-	return
+func Dopri5simple(fcn Func, y la.Vector, xf, tol float64) {
+	Solve("dopri5", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
 }
 
 // Dopri8simple solves ODE using DoPri8 method without options for saving results and others
-func Dopri8simple(fcn Func, y la.Vector, xf, tol float64) (err error) {
-	_, _, err = Solve("dopri8", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
-	return
+func Dopri8simple(fcn Func, y la.Vector, xf, tol float64) {
+	Solve("dopri8", fcn, nil, y, xf, 0, tol, tol, false, false, false, false)
 }
 
 // Radau5simple solves ODE using Radau5 method without options for saving results and others
-func Radau5simple(fcn Func, jac JacF, y la.Vector, xf, tol float64) (err error) {
+func Radau5simple(fcn Func, jac JacF, y la.Vector, xf, tol float64) {
 	numJac := jac == nil
-	_, _, err = Solve("radau5", fcn, jac, y, xf, 0, tol, tol, numJac, false, false, false)
-	return
+	Solve("radau5", fcn, jac, y, xf, 0, tol, tol, numJac, false, false, false)
 }

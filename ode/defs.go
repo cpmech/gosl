@@ -18,10 +18,9 @@ import "github.com/cpmech/gosl/la"
 //     y -- current {y}
 //
 //   OUTPUT:
-//     f     -- {f}(h, x, {y})
-//     error -- occurred error
+//     f -- {f}(h, x, {y})
 //
-type Func func(f la.Vector, h, x float64, y la.Vector) error
+type Func func(f la.Vector, h, x float64, y la.Vector)
 
 // JacF defines the Jacobian matrix of Func
 //
@@ -30,16 +29,14 @@ type Func func(f la.Vector, h, x float64, y la.Vector) error
 //   d{f}/d{y} := [J](h=dx, x, {y})
 //
 //   INPUT:
-//     h     -- current stepsize = dx
-//     x     -- current x
-//     y     -- current {y}
-//     error -- occurred error
+//     h -- current stepsize = dx
+//     x -- current x
+//     y -- current {y}
 //
 //   OUTPUT:
-//     dfdy  -- Jacobian matrix d{f}/d{y} := [J](h=dx, x, {y})
-//     error -- occurred error
+//     dfdy -- Jacobian matrix d{f}/d{y} := [J](h=dx, x, {y})
 //
-type JacF func(dfdy *la.Triplet, h, x float64, y la.Vector) error
+type JacF func(dfdy *la.Triplet, h, x float64, y la.Vector)
 
 // StepOutF defines a callback function to be called when a step is accepted
 //
@@ -51,9 +48,8 @@ type JacF func(dfdy *la.Triplet, h, x float64, y la.Vector) error
 //
 //   OUTPUT:
 //     stop -- stop simulation (nicely)
-//     err  -- occurred error
 //
-type StepOutF func(istep int, h, x float64, y la.Vector) (stop bool, err error)
+type StepOutF func(istep int, h, x float64, y la.Vector) (stop bool)
 
 // DenseOutF defines a function to produce a dense output (i.e. many equally spaced points,
 // regardless of the actual stepsize)
@@ -68,9 +64,8 @@ type StepOutF func(istep int, h, x float64, y la.Vector) (stop bool, err error)
 //
 //   OUTPUT:
 //     stop -- stop simulation (nicely)
-//     err  -- occurred error
 //
-type DenseOutF func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool, err error)
+type DenseOutF func(istep int, h, x float64, y la.Vector, xout float64, yout la.Vector) (stop bool)
 
 // YanaF defines a function to be used when computing analytical solutions
 type YanaF func(res []float64, x float64)

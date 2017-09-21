@@ -48,10 +48,9 @@ func (o *BwEuler) Info() (fixedOnly, implicit bool, nstages int) {
 }
 
 // Init initialises structure
-func (o *BwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) (err error) {
+func (o *BwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) {
 	if M != nil {
-		err = chk.Err("Backward-Euler solver cannot handle M matrix yet\n")
-		return
+		chk.Panic("Backward-Euler solver cannot handle M matrix yet\n")
 	}
 	o.ndim = ndim
 	o.conf = conf
@@ -66,11 +65,10 @@ func (o *BwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Fun
 	o.r = la.NewVector(ndim)
 	o.dr = la.NewVector(ndim)
 	o.ls = la.NewSparseSolver(o.conf.lsKind)
-	return
 }
 
 // Accept accepts update
-func (o *BwEuler) Accept(y0 la.Vector, x0 float64) (dxnew float64, err error) {
+func (o *BwEuler) Accept(y0 la.Vector, x0 float64) (dxnew float64) {
 	return
 }
 
@@ -85,7 +83,7 @@ func (o *BwEuler) DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float
 }
 
 // Step steps update
-func (o *BwEuler) Step(x0 float64, y0 la.Vector) (err error) {
+func (o *BwEuler) Step(x0 float64, y0 la.Vector) {
 
 	// auxiliary
 	h := o.work.h
@@ -110,10 +108,7 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) (err error) {
 
 		// trial f @ update y
 		o.stat.Nfeval++
-		err = o.fcn(k, h, x0, y0)
-		if err != nil {
-			return
-		}
+		o.fcn(k, h, x0, y0)
 
 		// calculate residual
 		rmsnr = 0.0
@@ -136,8 +131,7 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) (err error) {
 
 		// converged
 		if math.IsNaN(rmsnr) || math.IsInf(rmsnr, 0) {
-			err = chk.Err("residual is NaN or Inf. rmsnr = %v\n", rmsnr)
-			return
+			chk.Panic("residual is NaN or Inf. rmsnr = %v\n", rmsnr)
 		}
 		if rmsnr < o.conf.fnewt {
 			break
@@ -157,12 +151,7 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) (err error) {
 
 				// analytical Jacobian
 			} else {
-				err = o.jac(o.dfdy, h, x0, y0)
-			}
-
-			// check
-			if err != nil {
-				return
+				o.jac(o.dfdy, h, x0, y0)
 			}
 
 			// initialise drdy matrix
@@ -196,7 +185,6 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) (err error) {
 
 	// did not converge
 	if it == o.conf.NmaxIt-1 {
-		err = chk.Err("convergence failed with nit = %d", it+1)
+		chk.Panic("convergence failed with nit = %d", it+1)
 	}
-	return
 }

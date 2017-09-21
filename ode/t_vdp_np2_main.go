@@ -7,7 +7,6 @@
 package main
 
 import (
-	"os"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -42,7 +41,7 @@ func main() {
 	// dy/dx function
 	eps := 1.0e-6
 	w := la.NewVector(2) // workspace
-	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) {
 		w.Fill(0)
 		switch comm.Rank() {
 		case 0:
@@ -51,11 +50,10 @@ func main() {
 			w[1] = ((1.0-y[0]*y[0])*y[1] - y[0]) / eps
 		}
 		comm.AllReduceSum(f, w)
-		return nil
 	}
 
 	// Jacobian
-	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) error {
+	jac := func(dfdy *la.Triplet, dx, x float64, y la.Vector) {
 		if dfdy.Max() == 0 {
 			dfdy.Init(2, 2, 4)
 		}
@@ -68,7 +66,6 @@ func main() {
 			dfdy.Put(1, 0, (-2.0*y[0]*y[1]-1.0)/eps)
 			dfdy.Put(1, 1, (1.0-y[0]*y[0])/eps)
 		}
-		return nil
 	}
 
 	// initial values
@@ -82,12 +79,10 @@ func main() {
 	conf.SetTol(1e-4)
 
 	// solver
-	sol, err := ode.NewSolver(ndim, conf, fcn, jac, nil)
-	status(err)
+	sol := ode.NewSolver(ndim, conf, fcn, jac, nil)
 
 	// solve
-	err = sol.Solve(y, 0, xb)
-	status(err)
+	sol.Solve(y, 0, xb)
 
 	// only root
 	if mpi.WorldRank() == 0 {
@@ -124,12 +119,5 @@ func main() {
 		plt.SetYlog()
 		plt.Gll("$x$", "$\\log{(h)}$", nil)
 		plt.Save("/tmp/gosl/ode", "vdp_np2")
-	}
-}
-
-func status(err error) {
-	if err != nil {
-		io.Pf("ERROR: %v\n", err)
-		os.Exit(1)
 	}
 }

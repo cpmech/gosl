@@ -55,7 +55,7 @@ type Solver struct {
 //
 //  NOTE: remember to call Free() to release allocated resources (e.g. from the linear solvers)
 //
-func NewSolver(ndim int, conf *Config, fcn Func, jac JacF, M *la.Triplet) (o *Solver, err error) {
+func NewSolver(ndim int, conf *Config, fcn Func, jac JacF, M *la.Triplet) (o *Solver) {
 
 	// main
 	o = new(Solver)
@@ -68,10 +68,7 @@ func NewSolver(ndim int, conf *Config, fcn Func, jac JacF, M *la.Triplet) (o *So
 	o.jac = jac
 
 	// allocate method
-	o.rkm, err = newRKmethod(o.conf.method)
-	if err != nil {
-		return
-	}
+	o.rkm = newRKmethod(o.conf.method)
 
 	// information
 	var nstg int
@@ -84,10 +81,7 @@ func NewSolver(ndim int, conf *Config, fcn Func, jac JacF, M *la.Triplet) (o *So
 	o.work = newRKwork(nstg, o.ndim)
 
 	// initialise method
-	err = o.rkm.Init(ndim, o.conf, o.work, o.Stat, fcn, jac, M)
-	if err != nil {
-		return
-	}
+	o.rkm.Init(ndim, o.conf, o.work, o.Stat, fcn, jac, M)
 
 	// connect dense output function
 	if o.Out != nil {
@@ -104,16 +98,14 @@ func (o *Solver) Free() {
 }
 
 // Solve solves dy/dx = f(x,y) from x to xf with initial y given in y
-func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
+func (o *Solver) Solve(y la.Vector, x, xf float64) {
 
 	// check
 	if xf < x {
-		err = chk.Err("xf=%v must be greater than x=%v\n", xf, x)
-		return
+		chk.Panic("xf=%v must be greater than x=%v\n", xf, x)
 	}
 	if o.FixedOnly && !o.conf.fixed {
-		err = chk.Err("method %q can only be used with fixed steps. make sure to call conf.SetFixedH > 0", o.conf.method)
-		return
+		chk.Panic("method %q can only be used with fixed steps. make sure to call conf.SetFixedH > 0\n", o.conf.method)
 	}
 
 	// initial step size
@@ -128,9 +120,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 	o.Stat.Reset()
 	o.Stat.Hopt = o.work.h
 	if o.Out != nil {
-		stop, e := o.Out.execute(0, false, o.work.rs, o.work.h, x, y)
-		if stop || e != nil {
-			err = e
+		stop := o.Out.execute(0, false, o.work.rs, o.work.h, x, y)
+		if stop {
 			return
 		}
 	}
@@ -143,10 +134,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 	// make sure that final x is equal to xf in the end
 	defer func() {
-		if err == nil {
-			if math.Abs(x-xf) > 1e-15 {
-				err = chk.Err("internal error: x must be equal to xf in the end. x-xf=%v\n", x-xf)
-			}
+		if math.Abs(x-xf) > 1e-15 {
+			chk.Panic("internal error: x must be equal to xf in the end. x-xf=%v\n", x-xf)
 		}
 	}()
 
@@ -162,21 +151,14 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				o.Stat.Nfeval++
 				o.fcn(o.work.f0, o.work.h, x, y)
 			}
-			err = o.rkm.Step(x, y)
-			if err != nil {
-				return
-			}
+			o.rkm.Step(x, y)
 			o.Stat.Nsteps++
 			o.work.first = false
 			x = float64(n+1) * o.work.h
-			_, err = o.rkm.Accept(y, x)
-			if err != nil {
-				return
-			}
+			o.rkm.Accept(y, x)
 			if o.Out != nil {
-				stop, e := o.Out.execute(istep, false, o.work.rs, o.work.h, x, y)
-				if stop || e != nil {
-					err = e
+				stop := o.Out.execute(istep, false, o.work.rs, o.work.h, x, y)
+				if stop {
 					return
 				}
 			}
@@ -234,10 +216,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 			}
 
 			// step update
-			err = o.rkm.Step(x, y)
-			if err != nil {
-				return
-			}
+			o.rkm.Step(x, y)
 
 			// iterations diverging ?
 			if o.work.diverg {
@@ -275,17 +254,13 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 				}
 
 				// update x and y
-				dxnew, err = o.rkm.Accept(y, x)
-				if err != nil {
-					return
-				}
+				dxnew = o.rkm.Accept(y, x)
 				x += o.work.h
 
 				// output
 				if o.Out != nil {
-					stop, e := o.Out.execute(o.Stat.Naccepted, last, o.work.rs, o.work.h, x, y)
-					if stop || e != nil {
-						err = e
+					stop := o.Out.execute(o.Stat.Naccepted, last, o.work.rs, o.work.h, x, y)
+					if stop {
 						return
 					}
 				}
@@ -369,9 +344,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) (err error) {
 
 		// sub-stepping failed
 		if failed {
-			err = chk.Err("substepping did not converge after %d steps\n", o.conf.NmaxSS)
+			chk.Panic("substepping did not converge after %d steps\n", o.conf.NmaxSS)
 			break
 		}
 	}
-	return
 }

@@ -173,7 +173,6 @@ func (o *Config) SetTols(atol, rtol float64) {
 
 	// tolerance for iterations
 	o.fnewt = utl.Max(10.0*o.Eps/o.rtol, utl.Min(0.03, math.Sqrt(o.rtol)))
-	return
 }
 
 // SetTol sets both tolerances: Atol and Rtol

@@ -26,18 +26,16 @@ func TestHL01(tst *testing.T) {
 	dx := 0.1
 
 	// function
-	fcn := func(f la.Vector, dx, x float64, y la.Vector) error {
+	fcn := func(f la.Vector, dx, x float64, y la.Vector) {
 		f[0] = y[1]
 		f[1] = (1.0-y[0]*y[0])*y[1] - y[0]
-		return nil
 	}
 
 	// solve
 	yf := y.GetCopy()
 	atol, rtol := 1e-5, 1e-5
 	numJac, fixedStep, saveStep, saveCont := false, false, true, false
-	stat, out, err := Solve("dopri5", fcn, nil, yf, xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveCont)
-	status(tst, err)
+	stat, out := Solve("dopri5", fcn, nil, yf, xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveCont)
 
 	// results
 	io.Pf("yf = %v\n", yf)
@@ -49,18 +47,18 @@ func TestHL01(tst *testing.T) {
 
 	// using simple version
 	yf2 := y.GetCopy()
-	err = Dopri5simple(fcn, yf2, xf, atol)
+	Dopri5simple(fcn, yf2, xf, atol)
 	chk.Array(tst, "dopri5: yf2", 1e-17, yf, yf2)
 
 	// dopri8
 	yf3 := y.GetCopy()
-	err = Dopri8simple(fcn, yf3, xf, atol)
+	Dopri8simple(fcn, yf3, xf, atol)
 	chk.AnaNum(tst, "dopri8: y0", 1e-7, yf3[0], y[0], chk.Verbose)
 	chk.AnaNum(tst, "dopri8: y1", 1e-5, yf3[1], y[1], chk.Verbose)
 
 	// radau5
 	yf4 := y.GetCopy()
-	err = Radau5simple(fcn, nil, yf4, xf, atol)
+	Radau5simple(fcn, nil, yf4, xf, atol)
 	chk.AnaNum(tst, "radau5: y0", 1e-6, yf4[0], y[0], chk.Verbose)
 	chk.AnaNum(tst, "radau5: y1", 1e-5, yf4[1], y[1], chk.Verbose)
 
