@@ -12,6 +12,7 @@ import (
 	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // LinIpm implements the interior-point methods for linear programming problems
@@ -128,11 +129,11 @@ func (o *LinIpm) Solve(verbose bool) {
 	xmin := o.X[0]
 	smin := o.S[0]
 	for i := 1; i < o.Nx; i++ {
-		xmin = min(xmin, o.X[i])
-		smin = min(smin, o.S[i])
+		xmin = utl.Min(xmin, o.X[i])
+		smin = utl.Min(smin, o.S[i])
 	}
-	δx := max(-1.5*xmin, 0)
-	δs := max(-1.5*smin, 0)
+	δx := utl.Max(-1.5*xmin, 0)
+	δs := utl.Max(-1.5*smin, 0)
 	var xdots, xsum, ssum float64
 	for i := 0; i < o.Nx; i++ {
 		o.X[i] += δx
@@ -216,8 +217,8 @@ func (o *LinIpm) Solve(verbose bool) {
 
 		// control variables
 		xrmin, srmin = o.calcMinRatios()
-		αpa = min(1, xrmin)
-		αda = min(1, srmin)
+		αpa = utl.Min(1, xrmin)
+		αda = utl.Min(1, srmin)
 		μaff = 0
 		for i := 0; i < o.Nx; i++ {
 			μaff += (o.X[i] - αpa*o.Mdx[i]) * (o.S[i] - αda*o.Mds[i])
@@ -235,8 +236,8 @@ func (o *LinIpm) Solve(verbose bool) {
 
 		// step lengths
 		xrmin, srmin = o.calcMinRatios()
-		αpa = min(1, 0.99*xrmin)
-		αda = min(1, 0.99*srmin)
+		αpa = utl.Min(1, 0.99*xrmin)
+		αda = utl.Min(1, 0.99*srmin)
 
 		// update
 		for i := 0; i < o.Nx; i++ {
@@ -262,7 +263,7 @@ func (o *LinIpm) calcMinRatios() (xrmin, srmin float64) {
 				xrmin = o.X[i] / o.Mdx[i]
 				firstxrmin = false
 			} else {
-				xrmin = min(xrmin, o.X[i]/o.Mdx[i])
+				xrmin = utl.Min(xrmin, o.X[i]/o.Mdx[i])
 			}
 		}
 		if o.Mds[i] > 0 {
@@ -270,7 +271,7 @@ func (o *LinIpm) calcMinRatios() (xrmin, srmin float64) {
 				srmin = o.S[i] / o.Mds[i]
 				firstsrmin = false
 			} else {
-				srmin = min(srmin, o.S[i]/o.Mds[i])
+				srmin = utl.Min(srmin, o.S[i]/o.Mds[i])
 			}
 		}
 	}
