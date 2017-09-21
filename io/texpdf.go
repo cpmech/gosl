@@ -255,7 +255,7 @@ func (o *Report) AddTableF(caption, label, notes string, keys []string, nrows in
 
 // WriteTexPdf writes tex file and generates pdf file
 //  extra -- extra LaTeX commands; may be nil
-func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err error) {
+func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) {
 
 	// header
 	pdf := new(bytes.Buffer)
@@ -313,13 +313,7 @@ func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err err
 
 	// run pdflatex
 	if !o.DoNotGeneratePDF {
-		_, err = RunCmd(false, "pdflatex", "-interaction=batchmode", "-halt-on-error", "-output-directory="+dirout, fn)
-		if err != nil {
-			if !o.DoNotShowMessages {
-				PfRed("file <%s/%s> generated\n", dirout, fn)
-			}
-			return
-		}
+		RunCmd(false, "pdflatex", "-interaction=batchmode", "-halt-on-error", "-output-directory="+dirout, fn)
 		if !o.DoNotShowMessages {
 			PfBlue("file <%s/%s.pdf> generated\n", dirout, fnkey)
 		}
@@ -328,7 +322,7 @@ func (o *Report) WriteTexPdf(dirout, fnkey string, extra *bytes.Buffer) (err err
 }
 
 // WriteTexTables writes tables to tex file
-func (o *Report) WriteTexTables(dirout string, label2fnkey map[string]string) (err error) {
+func (o *Report) WriteTexTables(dirout string, label2fnkey map[string]string) {
 	for label, fnkey := range label2fnkey {
 		fn := fnkey + ".tex"
 		if idx, ok := o.tables[label]; ok {

@@ -74,10 +74,7 @@ func Test_texpdf02(tst *testing.T) {
 	Ff(extra, `\sigma = E \, \varepsilon`+"\n")
 	Ff(extra, `\end{equation}`)
 
-	err := rpt.WriteTexPdf("/tmp/gosl", "test_texpdf02", extra)
-	if err != nil {
-		tst.Errorf("%v", err)
-	}
+	rpt.WriteTexPdf("/tmp/gosl", "test_texpdf02", extra)
 }
 
 func Test_texpdf03(tst *testing.T) {
@@ -126,14 +123,6 @@ func Test_texpdf03(tst *testing.T) {
 	rpt.RowGapStep = 2
 	rpt.AddTableF("Results from simulation (again).", "resultsAgain", notes, keys, nrows, F, key2tex)
 
-	err := rpt.WriteTexPdf("/tmp/gosl", "test_texpdf03", nil)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
-
-	err = rpt.WriteTexTables("/tmp/gosl", map[string]string{"resultsAgain": "test_texpdf03_results"})
-	if err != nil {
-		tst.Errorf("%v", err)
-	}
+	rpt.WriteTexPdf("/tmp/gosl", "test_texpdf03", nil)
+	rpt.WriteTexTables("/tmp/gosl", map[string]string{"resultsAgain": "test_texpdf03_results"})
 }

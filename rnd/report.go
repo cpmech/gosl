@@ -104,11 +104,7 @@ name & var & $\mu$ & $\sigma$ & D$^{\star}$ & min & max \\ \hline
 		io.WriteFileD(dirout, tex, header, buf, footer)
 
 		// run pdflatex
-		_, err := io.RunCmd(false, "pdflatex", "-interaction=batchmode", "-halt-on-error", "-output-directory="+dirout, tex)
-		if err != nil {
-			io.PfRed("pdflatex failed: %v\n", err)
-			return
-		}
+		io.RunCmd(false, "pdflatex", "-interaction=batchmode", "-halt-on-error", "-output-directory="+dirout, tex)
 		io.PfBlue("file <%s/tmp_%s.pdf> generated\n", dirout, fnkey)
 	}
 }

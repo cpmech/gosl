@@ -18,12 +18,8 @@ func Test_runcmd01(tst *testing.T) {
 
 	ver := false
 	Pforan("running 'ls -la'\n")
-	out, err := RunCmd(ver, "ls", "-la")
+	out := RunCmd(ver, "ls", "-la")
 	Pfblue2("\noutput:\n%v\n", out)
-	if err != nil {
-		tst.Errorf("error: %v\n", err)
-		return
-	}
 }
 
 func Test_pipe01(tst *testing.T) {
@@ -43,11 +39,7 @@ func Test_pipe01(tst *testing.T) {
 	// | sort -t. -k2 # Sort by file extension
 	sort := exec.Command("sort", "-t.", "-k2")
 
-	output, stderr, err := Pipeline(find, egrep, sort)
+	output, stderr := Pipeline(find, egrep, sort)
 	Pfblue2("\noutput:\n%v\n", string(output))
 	Pfcyan("stderr:\n%v\n", string(stderr))
-	if err != nil {
-		tst.Errorf("error: %v\n", err)
-		return
-	}
 }

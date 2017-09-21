@@ -12,27 +12,25 @@ import (
 )
 
 // RunCmd runs external command
-func RunCmd(verbose bool, cmd string, args ...string) (string, error) {
+func RunCmd(verbose bool, cmd string, args ...string) string {
 	exe := exec.Command(cmd, args...)
 	var out, serr bytes.Buffer
 	exe.Stdout = &out
 	exe.Stderr = &serr
 	err := exe.Run()
 	if err != nil {
-		Pf("\n")
-		return Sf("%s\n%s\n", out.String(), serr.String()), chk.Err("%q command failed:", cmd)
+		chk.Panic("%v\n", err)
 	}
 	if verbose {
 		Pf("\n")
 		Pf("%s", out.String())
 	}
-	return out.String(), nil
+	return out.String()
 }
 
 // CopyFileOver copies file (Linux only with cp), overwriting if it exists already
-func CopyFileOver(destination, source string) (err error) {
-	_, err = RunCmd(false, "cp", "-rf", source, destination)
-	return
+func CopyFileOver(destination, source string) {
+	RunCmd(false, "cp", "-rf", source, destination)
 }
 
 // Pipeline strings together the given exec.Cmd commands in a similar fashion
@@ -44,10 +42,11 @@ func CopyFileOver(destination, source string) (err error) {
 // by Kyle Lemons
 //
 // To provide input to the pipeline, assign an io.Reader to the first's Stdin.
-func Pipeline(cmds ...*exec.Cmd) (pipeLineOutput, collectedStandardError []byte, pipeLineError error) {
+func Pipeline(cmds ...*exec.Cmd) (pipeLineOutput, collectedStandardError []byte) {
+
 	// Require at least one command
 	if len(cmds) < 1 {
-		return nil, nil, nil
+		return nil, nil
 	}
 
 	// Collect the output from the command(s)
@@ -56,10 +55,10 @@ func Pipeline(cmds ...*exec.Cmd) (pipeLineOutput, collectedStandardError []byte,
 
 	last := len(cmds) - 1
 	for i, cmd := range cmds[:last] {
-		var err error
 		// Connect each command's stdin to the previous command's stdout
+		var err error
 		if cmds[i+1].Stdin, err = cmd.StdoutPipe(); err != nil {
-			return nil, nil, err
+			chk.Panic("%v\n", err)
 		}
 		// Connect each command's stderr to a buffer
 		cmd.Stderr = &stderr
@@ -71,17 +70,17 @@ func Pipeline(cmds ...*exec.Cmd) (pipeLineOutput, collectedStandardError []byte,
 	// Start each command
 	for _, cmd := range cmds {
 		if err := cmd.Start(); err != nil {
-			return output.Bytes(), stderr.Bytes(), err
+			chk.Panic("%v\n", err)
 		}
 	}
 
 	// Wait for each command to complete
 	for _, cmd := range cmds {
 		if err := cmd.Wait(); err != nil {
-			return output.Bytes(), stderr.Bytes(), err
+			chk.Panic("%v\n", err)
 		}
 	}
 
 	// Return the pipeline output and the collected standard error
-	return output.Bytes(), stderr.Bytes(), nil
+	return output.Bytes(), stderr.Bytes()
 }
