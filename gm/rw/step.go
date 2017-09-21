@@ -46,16 +46,13 @@ type StepFile struct {
 }
 
 // ParseDataFile parses data section from file
-func (o *StepFile) ParseDataFile(filename string) (err error) {
-	buf, err := io.ReadFile(filename)
-	if err != nil {
-		return
-	}
-	return o.ParseData(string(buf))
+func (o *StepFile) ParseDataFile(filename string) {
+	buf := io.ReadFile(filename)
+	o.ParseData(string(buf))
 }
 
 // ParseData parses data section of Step file
-func (o *StepFile) ParseData(dat string) (err error) {
+func (o *StepFile) ParseData(dat string) {
 
 	// remove newlines and split commands
 	sdat := strings.Replace(dat, "\n", "", -1)
@@ -111,8 +108,7 @@ func (o *StepFile) ParseData(dat string) (err error) {
 				name = args[0]
 				strFloats = args[1]
 			default:
-				err = chk.Err("cartesian_point has the wrong number of arguments. n=%d is invalid", n)
-				return
+				chk.Panic("cartesian_point has the wrong number of arguments. n=%d is invalid\n", n)
 			}
 			p := CartesianPoint{
 				Name:        name,
@@ -126,8 +122,7 @@ func (o *StepFile) ParseData(dat string) (err error) {
 			args := io.SplitWithinParentheses(sargs)
 			n := len(args)
 			if n != 9 {
-				err = chk.Err("b_spline_curve_with_knots has the wrong number of arguments. %d != %d", n, 9)
-				return
+				chk.Panic("b_spline_curve_with_knots has the wrong number of arguments. %d != %d\n", n, 9)
 			}
 			b := BsplineCurveWithKnots{
 				Name:               args[0],
@@ -149,8 +144,7 @@ func (o *StepFile) ParseData(dat string) (err error) {
 			args := io.SplitWithinParentheses(sargs)
 			n := len(args)
 			if n != 4 {
-				err = chk.Err("surface_curve has the wrong number of arguments. %d != %d", n, 4)
-				return
+				chk.Panic("surface_curve has the wrong number of arguments. %d != %d\n", n, 4)
 			}
 			b := SurfaceCurve{
 				Name:                 args[0],
@@ -161,5 +155,4 @@ func (o *StepFile) ParseData(dat string) (err error) {
 			o.SurfaceCurves[lhs] = &b
 		}
 	}
-	return
 }

@@ -176,18 +176,16 @@ var (
 )
 
 // IntPointsFindSet finds set of integration points by cell kind and set name
-func IntPointsFindSet(cellKind int, setName string) (P [][]float64, err error) {
+func IntPointsFindSet(cellKind int, setName string) (P [][]float64) {
 	if cellKind < 0 || cellKind > KindNumMax {
-		err = chk.Err("cellKind = %d is invalid\n", cellKind)
-		return
+		chk.Panic("cellKind = %d is invalid\n", cellKind)
 	}
 	db, ok := IntPoints[cellKind]
 	if !ok {
-		err = chk.Err("integration points set for cellKind = %d is not implemented yet\n", cellKind)
-		return
+		chk.Panic("integration points set for cellKind = %d is not implemented yet\n", cellKind)
 	}
 	if P, ok = db[setName]; !ok {
-		err = chk.Err("cannot find integration points set named = %q for cellKind = %d\n", setName, cellKind)
+		chk.Panic("cannot find integration points set named = %q for cellKind = %d\n", setName, cellKind)
 	}
 	return
 }

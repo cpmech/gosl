@@ -20,19 +20,19 @@ import (
 //   Output:
 //     ai  -- the inverse matrix
 //     det -- determinant of a
-func MatInvSmall(ai, a *Matrix, tol float64) (det float64, err error) {
+func MatInvSmall(ai, a *Matrix, tol float64) (det float64) {
 	switch {
 	case a.M == 1 && a.N == 1:
 		det = a.Get(0, 0)
 		if math.Abs(det) < tol {
-			return 0, chk.Err("inverse of (%dx%d) matrix failed with zero determinant: |det(a)|=%g < %g", a.M, a.N, det, tol)
+			chk.Panic("inverse of (%dx%d) matrix failed with zero determinant: |det(a)|=%g < %g\n", a.M, a.N, det, tol)
 		}
 		ai.Set(0, 0, 1.0/det)
 
 	case a.M == 2 && a.N == 2:
 		det = a.Get(0, 0)*a.Get(1, 1) - a.Get(0, 1)*a.Get(1, 0)
 		if math.Abs(det) < tol {
-			return 0, chk.Err("inverse of (%dx%d) matrix failed with zero determinant: |det(a)|=%g < %g", a.M, a.N, det, tol)
+			chk.Panic("inverse of (%dx%d) matrix failed with zero determinant: |det(a)|=%g < %g\n", a.M, a.N, det, tol)
 		}
 		ai.Set(0, 0, +a.Get(1, 1)/det)
 		ai.Set(0, 1, -a.Get(0, 1)/det)
@@ -42,7 +42,7 @@ func MatInvSmall(ai, a *Matrix, tol float64) (det float64, err error) {
 	case a.M == 3 && a.N == 3:
 		det = a.Get(0, 0)*(a.Get(1, 1)*a.Get(2, 2)-a.Get(1, 2)*a.Get(2, 1)) - a.Get(0, 1)*(a.Get(1, 0)*a.Get(2, 2)-a.Get(1, 2)*a.Get(2, 0)) + a.Get(0, 2)*(a.Get(1, 0)*a.Get(2, 1)-a.Get(1, 1)*a.Get(2, 0))
 		if math.Abs(det) < tol {
-			return 0, chk.Err("inverse of (%dx%d) matrix failed with zero determinant: |det(a)|=%g < %g", a.M, a.N, det, tol)
+			chk.Panic("inverse of (%dx%d) matrix failed with zero determinant: |det(a)|=%g < %g\n", a.M, a.N, det, tol)
 		}
 
 		ai.Set(0, 0, (a.Get(1, 1)*a.Get(2, 2)-a.Get(1, 2)*a.Get(2, 1))/det)
@@ -58,7 +58,7 @@ func MatInvSmall(ai, a *Matrix, tol float64) (det float64, err error) {
 		ai.Set(2, 2, (a.Get(0, 0)*a.Get(1, 1)-a.Get(0, 1)*a.Get(1, 0))/det)
 
 	default:
-		return 0, chk.Err("cannot compute inverse of %dx%d matrix with this function\n", a.M, a.N)
+		chk.Panic("cannot compute inverse of %dx%d matrix with this function\n", a.M, a.N)
 	}
 	return
 }
@@ -91,15 +91,15 @@ func MatSvd(s []float64, u, vt, a *Matrix, copyA bool) {
 //     ai -- inverse matrix (N x M)
 //     det -- determinant of matrix (ONLY if calcDet == true and the matrix is square)
 //   NOTE: the dimension of the ai matrix must be N x M for the pseudo-inverse
-func MatInv(ai, a *Matrix, calcDet bool) (det float64, err error) {
+func MatInv(ai, a *Matrix, calcDet bool) (det float64) {
 
 	// square inverse
 	if a.M == a.N {
 		copy(ai.Data, a.Data)
 		ipiv := make([]int32, utl.Imin(a.M, a.N))
-		err = oblas.Dgetrf(a.M, a.N, ai.Data, a.M, ipiv) // NOTE: ipiv are 1-based indices
+		err := oblas.Dgetrf(a.M, a.N, ai.Data, a.M, ipiv) // NOTE: ipiv are 1-based indices
 		if err != nil {
-			return
+			chk.Panic("%v\n", err)
 		}
 		if calcDet {
 			det = 1.0
@@ -141,12 +141,9 @@ func MatInv(ai, a *Matrix, calcDet bool) (det float64, err error) {
 //  normtype -- Type of norm to use:
 //    "F" or "" => Frobenius
 //    "I"       => Infinite
-func MatCondNum(a *Matrix, normtype string) (res float64, err error) {
+func MatCondNum(a *Matrix, normtype string) (res float64) {
 	ai := NewMatrix(a.M, a.N)
-	_, err = MatInv(ai, a, false)
-	if err != nil {
-		return
-	}
+	MatInv(ai, a, false)
 	if normtype == "I" {
 		res = a.NormInf() * ai.NormInf()
 		return

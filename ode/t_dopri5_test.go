@@ -118,16 +118,14 @@ func TestDoPri502(tst *testing.T) {
 	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 21)
 
 	// check results: step
-	_, d, err := io.ReadTable("data/dr_dopri5.txt")
-	status(tst, err)
+	_, d := io.ReadTable("data/dr_dopri5.txt")
 	chk.Array(tst, "step: y0", 1e-6, sol.Out.GetStepY(0), d["y0"])
 	chk.Array(tst, "step: y1", 1e-6, sol.Out.GetStepY(1), d["y1"])
 	chk.Array(tst, "step: y2", 1e-6, sol.Out.GetStepY(2), d["y2"])
 	chk.Array(tst, "step: y3", 1e-6, sol.Out.GetStepY(3), d["y3"])
 
 	// check results: dense
-	_, dd, err := io.ReadTable("data/dr_dopri5_dense.txt")
-	status(tst, err)
+	_, dd := io.ReadTable("data/dr_dopri5_dense.txt")
 	chk.Array(tst, "dense: y0", 1e-7, yy0, dd["y0"])
 	chk.Array(tst, "dense: y1", 1e-7, yy1, dd["y1"])
 	chk.Array(tst, "dense: y2", 1e-7, yy2, dd["y2"])
@@ -199,8 +197,7 @@ func TestDoPri503(tst *testing.T) {
 	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 0)
 
 	// check results: dense
-	_, dd, err := io.ReadTable("data/dr2_dopri5_dense.txt")
-	status(tst, err)
+	_, dd := io.ReadTable("data/dr2_dopri5_dense.txt")
 	chk.Array(tst, "dense: y0", 1e-7, yy0, dd["y0"])
 	chk.Array(tst, "dense: y1", 1e-7, yy1, dd["y1"])
 

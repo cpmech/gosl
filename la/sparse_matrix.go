@@ -138,31 +138,24 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrix) 
 //      ...
 //     i j x
 //
-func (o *Triplet) ReadSmat(filename string) (err error) {
-	var e error
-	err = io.ReadLines(filename, func(idx int, line string) (stop bool) {
+func (o *Triplet) ReadSmat(filename string) {
+	io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		r := strings.Fields(line)
 		if idx == 0 {
 			if len(r) != 3 {
-				e = chk.Err("number of columns in header must be 3 (m,n,nnz)\n")
-				return true // stop
+				chk.Panic("number of columns in header must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 			o.Init(m, n, nnz)
 		} else {
 			if len(r) != 3 {
-				e = chk.Err("number of columns in data lines must be 4 (i,j,x)\n")
-				return true // stop
+				chk.Panic("number of columns in data lines must be 4 (i,j,x)\n")
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
 			o.Put(i, j, x)
 		}
 		return
 	})
-	if err != nil {
-		return
-	}
-	return e
 }
 
 // WriteSmat writes a ".smat" file that can be visualised with vismatrix
@@ -304,31 +297,24 @@ func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrixC
 //          ...
 //     i j xReal xImag
 //
-func (o *TripletC) ReadSmat(filename string) (err error) {
-	var e error
-	err = io.ReadLines(filename, func(idx int, line string) (stop bool) {
+func (o *TripletC) ReadSmat(filename string) {
+	io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		r := strings.Fields(line)
 		if idx == 0 {
 			if len(r) != 3 {
-				e = chk.Err("number of columns in header must be 3 (m,n,nnz)\n")
-				return true // stop
+				chk.Panic("number of columns in header must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 			o.Init(m, n, nnz)
 		} else {
 			if len(r) != 4 {
-				e = chk.Err("number of columns in data lines must be 4 (i,j,xReal,xImag)\n")
-				return true // stop
+				chk.Panic("number of columns in data lines must be 4 (i,j,xReal,xImag)\n")
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), complex(io.Atof(r[2]), io.Atof(r[3]))
 			o.Put(i, j, x)
 		}
 		return
 	})
-	if err != nil {
-		return
-	}
-	return e
 }
 
 // WriteSmat writes a ".smat" file that can be visualised with vismatrix

@@ -21,8 +21,8 @@ var (
 func init() {
 	r, R := 1.0, 3.0
 	nr, na := 10, 35
-	benchmarkMesh, _ = GenRing2d(TypeQua17, nr, na, r, R, 2.0*math.Pi)
-	benchmarkMint, _ = NewMeshIntegrator(benchmarkMesh, 1)
+	benchmarkMesh = GenRing2d(TypeQua17, nr, na, r, R, 2.0*math.Pi)
+	benchmarkMint = NewMeshIntegrator(benchmarkMesh, 1)
 	if false {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
 		args := NewArgs()
@@ -42,7 +42,7 @@ func BenchmarkInteg(b *testing.B) {
 	}
 	var Ix float64
 	for i := 0; i < b.N; i++ {
-		Ix, _ = benchmarkMint.IntegrateSv(0, fcnIx)
+		Ix = benchmarkMint.IntegrateSv(0, fcnIx)
 	}
 	benchmarkIx = Ix
 }

@@ -49,12 +49,7 @@ func Test_elliptic01(tst *testing.T) {
 	}
 
 	// load data
-	_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.5-small.cmp")
-	//_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.5-big.cmp")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	_, dat := io.ReadTable("data/as-17-elliptic-integrals-table17.5-small.cmp")
 	for i, p := range dat["phi"] {
 		k := dat["k"][i]
 		F := Elliptic1(p, k)
@@ -101,12 +96,8 @@ func Test_elliptic02(tst *testing.T) {
 	chk.Float64(tst, "E(85°,90°)", 1e-8, E, 1)
 
 	// load data
-	_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.6-small.cmp")
-	//_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.6-big.cmp")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	_, dat := io.ReadTable("data/as-17-elliptic-integrals-table17.6-small.cmp")
+	//_, dat := io.ReadTable("data/as-17-elliptic-integrals-table17.6-big.cmp")
 	for i, p := range dat["phi"] {
 		k := dat["k"][i]
 		E := Elliptic2(p, k)
@@ -130,12 +121,8 @@ func Test_elliptic03(tst *testing.T) {
 	chk.Float64(tst, "Π(0,90°,0)", 1e-5, P, 0.26239)
 
 	// load data
-	_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.9-small.cmp")
-	//_, dat, err := io.ReadTable("data/as-17-elliptic-integrals-table17.9-big.cmp")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	_, dat := io.ReadTable("data/as-17-elliptic-integrals-table17.9-small.cmp")
+	//_, dat := io.ReadTable("data/as-17-elliptic-integrals-table17.9-big.cmp")
 	for i, n := range dat["n"] {
 		p := dat["phi"][i]
 		k := dat["k"][i]

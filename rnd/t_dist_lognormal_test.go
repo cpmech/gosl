@@ -40,11 +40,7 @@ func Test_dist_lognormal_01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("dist_lognormal_01")
 
-	_, dat, err := io.ReadTable("data/lognormal.dat")
-	if err != nil {
-		tst.Errorf("cannot read comparison results:\n%v\n", err)
-		return
-	}
+	_, dat := io.ReadTable("data/lognormal.dat")
 
 	X, ok := dat["x"]
 	if !ok {

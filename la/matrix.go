@@ -273,17 +273,16 @@ func (o Matrix) Apply(α float64, another *Matrix) {
 
 // Det computes the determinant of matrix using the LU factorization
 //   NOTE: this method may fail due to overflow...
-func (o *Matrix) Det() (det float64, err error) {
+func (o *Matrix) Det() (det float64) {
 	if o.M != o.N {
-		err = chk.Err("matrix must be square to compute determinant. %d × %d is invalid\n", o.M, o.N)
-		return
+		chk.Panic("matrix must be square to compute determinant. %d × %d is invalid\n", o.M, o.N)
 	}
 	ai := make([]float64, len(o.Data))
 	copy(ai, o.Data)
 	ipiv := make([]int32, utl.Imin(o.M, o.N))
-	err = oblas.Dgetrf(o.M, o.N, ai, o.M, ipiv) // NOTE: ipiv are 1-based indices
+	err := oblas.Dgetrf(o.M, o.N, ai, o.M, ipiv) // NOTE: ipiv are 1-based indices
 	if err != nil {
-		return
+		chk.Panic("%v\n", err)
 	}
 	det = 1.0
 	for i := 0; i < o.M; i++ {

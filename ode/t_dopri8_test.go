@@ -76,16 +76,14 @@ func TestDoPri802(tst *testing.T) {
 	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 33)
 
 	// check results: setps
-	_, d, err := io.ReadTable("data/dr_dop853.txt")
-	status(tst, err)
+	_, d := io.ReadTable("data/dr_dop853.txt")
 	chk.Array(tst, "h", 1e-6, sol.Out.GetStepH(), d["h"])
 	chk.Array(tst, "x", 1e-6, sol.Out.GetStepX(), d["x"])
 	chk.Array(tst, "y0", 1e-6, sol.Out.GetStepY(0), d["y0"])
 	chk.Array(tst, "y1", 1e-6, sol.Out.GetStepY(1), d["y1"])
 
 	// check results: dense
-	_, dd, err := io.ReadTable("data/dr_dop853_dense.txt")
-	status(tst, err)
+	_, dd := io.ReadTable("data/dr_dop853_dense.txt")
 	chk.Array(tst, "dense: y0", 1e-7, yy0, dd["y0"])
 	chk.Array(tst, "dense: y1", 1e-7, yy1, dd["y1"])
 

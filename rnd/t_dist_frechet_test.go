@@ -41,11 +41,7 @@ func Test_dist_frechet_01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("dist_frechet_01")
 
-	_, dat, err := io.ReadTable("data/frechet.dat")
-	if err != nil {
-		tst.Errorf("cannot read comparison results:\n%v\n", err)
-		return
-	}
+	_, dat := io.ReadTable("data/frechet.dat")
 
 	X, ok := dat["x"]
 	if !ok {

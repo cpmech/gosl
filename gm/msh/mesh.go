@@ -139,37 +139,33 @@ type TagMaps struct {
 }
 
 // Read reads mesh and call CheckAndDerivedVars
-func Read(fn string) (o *Mesh, err error) {
+func Read(fn string) (o *Mesh) {
 
 	// new mesh
 	o = new(Mesh)
 
 	// read file
-	b, err := io.ReadFile(fn)
-	if err != nil {
-		return
-	}
+	b := io.ReadFile(fn)
 
 	// decode
-	err = json.Unmarshal(b, &o)
+	err := json.Unmarshal(b, &o)
 	if err != nil {
-		return
+		chk.Panic("%v\n", err)
 	}
 
 	// check
-	err = o.CheckAndCalcDerivedVars()
+	o.CheckAndCalcDerivedVars()
 	return
 }
 
 // CheckAndCalcDerivedVars checks input data and computes derived quantities such as the max space
 // dimension, min(x) and max(x) among all vertices, cells' gndim, etc.
 // This function will set o.Ndim, o.Xmin and o.Xmax
-func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
+func (o *Mesh) CheckAndCalcDerivedVars() {
 
 	// check for at least one vertex
 	if len(o.Verts) < 1 {
-		err = chk.Err("at least 1 vertex is required in mesh\n")
-		return
+		chk.Panic("at least 1 vertex is required in mesh\n")
 	}
 
 	// check vertex data and find max(ndim), Xmin, and Xmax
@@ -182,8 +178,7 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 	o.Ndim = len(o.Verts[0].X)
 	for id, vert := range o.Verts {
 		if id != vert.ID {
-			err = chk.Err("vertex ids must be sequential. vertex %d must be %d", vert.ID, id)
-			return
+			chk.Panic("vertex ids must be sequential. vertex %d must be %d\n", vert.ID, id)
 		}
 		ndim := len(vert.X)
 		if ndim > o.Ndim {
@@ -204,36 +199,31 @@ func (o *Mesh) CheckAndCalcDerivedVars() (err error) {
 	// check cell data, set TypeIndex, gndim, and coordinates X
 	for id, cell := range o.Cells {
 		if id != cell.ID {
-			err = chk.Err("cell ids must be sequential. cell %d must be %d", cell.ID, id)
-			return
+			chk.Panic("cell ids must be sequential. cell %d must be %d\n", cell.ID, id)
 		}
 		tindex, ok := TypeKeyToIndex[cell.TypeKey]
 		if !ok {
-			err = chk.Err("cannot find cell type key %q in database\n", cell.TypeKey)
-			return
+			chk.Panic("cannot find cell type key %q in database\n", cell.TypeKey)
 		}
 		cell.TypeIndex = tindex
 		cell.Gndim = GeomNdim[cell.TypeIndex]
 		nv := NumVerts[cell.TypeIndex]
 		if len(cell.V) != nv {
-			err = chk.Err("number of vertices for cell %d is incorrect. %d != %d", cell.ID, len(cell.V), nv)
-			return
+			chk.Panic("number of vertices for cell %d is incorrect. %d != %d\n", cell.ID, len(cell.V), nv)
 		}
 		nEtags := len(cell.EdgeTags)
 		if nEtags > 0 {
 			lv := EdgeLocalVerts[cell.TypeIndex]
 			if nEtags != len(lv) {
-				err = chk.Err("number of edge tags for cell %d is incorrect. %d != %d", cell.ID, nEtags, len(lv))
-				return
+				chk.Panic("number of edge tags for cell %d is incorrect. %d != %d\n", cell.ID, nEtags, len(lv))
 			}
 		}
 		cell.X = o.ExtractCellCoords(cell.ID)
 	}
-	return
 }
 
 // GetTagMaps finds tagged entities
-func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
+func (o *Mesh) GetTagMaps() (m *TagMaps) {
 
 	// new tag maps
 	m = new(TagMaps)
@@ -268,16 +258,14 @@ func (o *Mesh) GetTagMaps() (m *TagMaps, err error) {
 		// check edge tags
 		if len(cell.EdgeTags) > 0 {
 			if len(cell.EdgeTags) != len(edgeLocVerts) {
-				err = chk.Err("number of edge tags in \"et\" list for cell # %d is incorrect. %d != %d", cell.ID, len(cell.EdgeTags), len(edgeLocVerts))
-				return
+				chk.Panic("number of edge tags in \"et\" list for cell # %d is incorrect. %d != %d\n", cell.ID, len(cell.EdgeTags), len(edgeLocVerts))
 			}
 		}
 
 		// check face tags
 		if len(cell.FaceTags) > 0 {
 			if len(cell.FaceTags) != len(faceLocVerts) {
-				err = chk.Err("number of face tags in \"ft\" list for cell # %d is incorrect. %d != %d", cell.ID, len(cell.FaceTags), len(faceLocVerts))
-				return
+				chk.Panic("number of face tags in \"ft\" list for cell # %d is incorrect. %d != %d\n", cell.ID, len(cell.FaceTags), len(faceLocVerts))
 			}
 		}
 

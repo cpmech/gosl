@@ -181,12 +181,9 @@ func (o NurbsPatch) Write(dirout, fnkey string) (err error) {
 func NewNurbsPatchFromFile(filename string, binsNdiv int, tolerance float64) (o *NurbsPatch) {
 
 	// read exchange data
-	b, err := io.ReadFile(filename)
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
+	b := io.ReadFile(filename)
 	o = new(NurbsPatch)
-	err = json.Unmarshal(b, o)
+	err := json.Unmarshal(b, o)
 	if err != nil {
 		chk.Panic("%v\n", err)
 	}

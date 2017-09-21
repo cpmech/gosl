@@ -40,11 +40,7 @@ func checkAiSmall(tst *testing.T, k string, a *Matrix, zeroDet float64,
 
 	// compute inverse and determinant
 	ai := NewMatrix(a.M, a.N)
-	det, err := MatInvSmall(ai, a, zeroDet)
-	if err != nil {
-		tst.Errorf("MatInvSmall failed:\n%v\n", err)
-		return
-	}
+	det := MatInvSmall(ai, a, zeroDet)
 
 	// check inverse and determinant
 	chk.Float64(tst, "det("+k+")", tolDet, det, correctDet)
@@ -61,20 +57,12 @@ func checkAi(tst *testing.T, k string, a *Matrix,
 
 	// compute inverse
 	ai := NewMatrix(a.N, a.M)
-	det, err := MatInv(ai, a, true)
-	if err != nil {
-		tst.Errorf("MatInv failed:\n%v\n", err)
-		return
-	}
+	det := MatInv(ai, a, true)
 
 	// check determinant
 	if a.M == a.N {
 		chk.AnaNum(tst, "det("+k+") ", tolDet, det, correctDet, chk.Verbose)
-		ddet, err := a.Det()
-		if err != nil {
-			tst.Errorf("%v\n", err)
-			return
-		}
+		ddet := a.Det()
 		chk.AnaNum(tst, k+".Det()", tolDet, ddet, correctDet, chk.Verbose)
 	}
 
@@ -496,11 +484,7 @@ func TestCondNum01(tst *testing.T) {
 		{2, 3.999},
 	})
 
-	cIa, err := MatCondNum(a, "I")
-	if err != nil {
-		tst.Errorf("MatCondNum failed:\n%v\n", err)
-		return
-	}
+	cIa := MatCondNum(a, "I")
 	chk.Float64(tst, "condI(a) ", 1e-8, cIa, 35988.001)
 
 	b := NewMatrixDeep2([][]float64{
@@ -508,17 +492,8 @@ func TestCondNum01(tst *testing.T) {
 		{2, 3},
 	})
 
-	cIb, err := MatCondNum(b, "I")
-	if err != nil {
-		tst.Errorf("MatCondNum failed:\n%v\n", err)
-		return
-	}
-
-	cFb, err := MatCondNum(b, "F")
-	if err != nil {
-		tst.Errorf("MatCondNum failed:\n%v\n", err)
-		return
-	}
+	cIb := MatCondNum(b, "I")
+	cFb := MatCondNum(b, "F")
 	chk.Float64(tst, "condI(b) ", 1e-17, cIb, 25.0)
 	chk.Float64(tst, "condF(b) ", 1e-14, cFb, 18.0)
 }

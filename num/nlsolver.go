@@ -333,7 +333,7 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	}
 
 	// condition number
-	cnd, _ = la.MatCondNum(Jmat, "F")
+	cnd = la.MatCondNum(Jmat, "F")
 	if math.IsInf(cnd, 0) || math.IsNaN(cnd) {
 		chk.Panic("condition number is Inf or NaN: %v", cnd)
 	}

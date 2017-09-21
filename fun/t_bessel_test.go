@@ -22,12 +22,8 @@ func TestBessel01(tst *testing.T) {
 	chk.PrintTitle("Bessel01. Standard Bessel functions")
 
 	// load data
-	_, dat, err := io.ReadTable("data/as-9-bessel-integer-sml.cmp")
-	//_, dat, err := io.ReadTable("data/as-9-bessel-integer-big.cmp")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	_, dat := io.ReadTable("data/as-9-bessel-integer-sml.cmp")
+	//_, dat := io.ReadTable("data/as-9-bessel-integer-big.cmp")
 
 	// check J0
 	for i, x := range dat["x"] {
@@ -110,17 +106,9 @@ func TestBessel02(tst *testing.T) {
 	chk.PrintTitle("Bessel02. Modified Bessel functions")
 
 	// load data
-	_, dneg, err := io.ReadTable("data/as-9-modbessel-integer-neg.cmp")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
-	_, dat, err := io.ReadTable("data/as-9-modbessel-integer-sml.cmp")
-	//_, dat, err := io.ReadTable("data/as-9-modbessel-integer-big.cmp")
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	_, dneg := io.ReadTable("data/as-9-modbessel-integer-neg.cmp")
+	_, dat := io.ReadTable("data/as-9-modbessel-integer-sml.cmp")
+	//_, dat := io.ReadTable("data/as-9-modbessel-integer-big.cmp")
 
 	// check I0 (negative values)
 	for i, x := range dneg["x"] {

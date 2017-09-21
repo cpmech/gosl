@@ -106,10 +106,7 @@ func PyCmds(text string) {
 
 // PyFile loads Python file and copy its contents to temporary buffer
 func PyFile(filename string) {
-	b, err := io.ReadFile(filename)
-	if err != nil {
-		chk.Panic("%v\n", err)
-	}
+	b := io.ReadFile(filename)
 	io.Ff(&bufferPy, string(b))
 	return
 }

@@ -46,11 +46,7 @@ func TestGen01(tst *testing.T) {
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
 	for _, ctype := range ctypes {
-		mesh, err := GenQuadRegion(ctype, ndivU, ndivV, circle, f)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		mesh := GenQuadRegion(ctype, ndivU, ndivV, circle, f)
 
 		// check connectivity
 		n := ndivU*ndivV - 1
@@ -76,11 +72,7 @@ func TestGen01(tst *testing.T) {
 		}
 
 		// compute tags map
-		tm, err := mesh.GetTagMaps()
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		tm := mesh.GetTagMaps()
 
 		// vertices along left border
 		vset := tm.VertTag2verts[4]
@@ -121,11 +113,7 @@ func TestGen02(tst *testing.T) {
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
 	for _, ctype := range ctypes {
-		mesh, err := GenQuadRegionHL(ctype, ndivU, ndivV, xmin, xmax, ymin, ymax)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		mesh := GenQuadRegionHL(ctype, ndivU, ndivV, xmin, xmax, ymin, ymax)
 
 		// check connectivity
 		n := ndivU*ndivV - 1
@@ -184,11 +172,7 @@ func TestGen03(tst *testing.T) {
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
 	for _, ctype := range ctypes {
-		mesh, err := GenQuadRegion(ctype, ndivU, ndivV, circle, f)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		mesh := GenQuadRegion(ctype, ndivU, ndivV, circle, f)
 
 		// check connectivity
 		n := ndivU*ndivV - 1
@@ -214,11 +198,7 @@ func TestGen03(tst *testing.T) {
 		}
 
 		// compute tags map
-		tm, err := mesh.GetTagMaps()
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		tm := mesh.GetTagMaps()
 
 		// vertices along left border
 		vset := tm.VertTag2verts[4]
@@ -267,11 +247,7 @@ func TestGen04(tst *testing.T) {
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
 	for _, ctype := range ctypes {
-		mesh, err := GenRing2d(ctype, ndivR, ndivA, r, R, alpha)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		mesh := GenRing2d(ctype, ndivR, ndivA, r, R, alpha)
 
 		// check connectivity
 		n := ndivR*ndivA - 1
@@ -297,11 +273,7 @@ func TestGen04(tst *testing.T) {
 		}
 
 		// compute tags map
-		tm, err := mesh.GetTagMaps()
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		tm := mesh.GetTagMaps()
 
 		// vertices along left border
 		vset := tm.VertTag2verts[4]
@@ -351,11 +323,7 @@ func TestGen05(tst *testing.T) {
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
 	for _, ctype := range ctypes {
-		mesh, err := GenRing2d(ctype, ndivR, ndivA, r, R, alpha)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		mesh := GenRing2d(ctype, ndivR, ndivA, r, R, alpha)
 
 		// check connectivity
 		n := ndivR*ndivA - 1
@@ -381,11 +349,7 @@ func TestGen05(tst *testing.T) {
 		}
 
 		// compute tags map
-		tm, err := mesh.GetTagMaps()
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		tm := mesh.GetTagMaps()
 
 		// vertices along left border
 		vset := tm.VertTag2verts[4]

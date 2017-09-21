@@ -35,12 +35,11 @@ type Integrator struct {
 //   ctype -- index of cell type; e.g. TypeQuad4
 //   P     -- integration points [npoints][ndim]. may be nil => default will be selected
 //   pName -- use integration points from database instead of P or default ones. may be ""
-func NewIntegrator(ctype int, P [][]float64, pName string) (o *Integrator, err error) {
+func NewIntegrator(ctype int, P [][]float64, pName string) (o *Integrator) {
 
 	// check
 	if ctype < 0 || ctype > TypeNumMax {
-		err = chk.Err("ctype=%d is invalid; it must be in [0,%d]\n", ctype, TypeNumMax)
-		return
+		chk.Panic("ctype=%d is invalid; it must be in [0,%d]\n", ctype, TypeNumMax)
 	}
 
 	// create new object
@@ -50,10 +49,7 @@ func NewIntegrator(ctype int, P [][]float64, pName string) (o *Integrator, err e
 	o.Ndim = GeomNdim[ctype]
 
 	// set integration points and related slices
-	err = o.ResetP(P, pName)
-	if err != nil {
-		return
-	}
+	o.ResetP(P, pName)
 
 	// allocate mutable data
 	o.JacobianMat = la.NewMatrix(o.Ndim, o.Ndim)
@@ -64,16 +60,13 @@ func NewIntegrator(ctype int, P [][]float64, pName string) (o *Integrator, err e
 // ResetP resets integration points
 //   P     -- integration points [npoints][ndim]. may be nil => default will be selected
 //   pName -- use integration points from database instead of P or default ones. may be ""
-func (o *Integrator) ResetP(P [][]float64, pName string) (err error) {
+func (o *Integrator) ResetP(P [][]float64, pName string) {
 
 	// set integration points
 	if P != nil { // use given slice
 		o.P = P
 	} else if pName != "" { // find in database
-		o.P, err = IntPointsFindSet(TypeIndexToKind[o.Ctype], pName)
-		if err != nil {
-			return
-		}
+		o.P = IntPointsFindSet(TypeIndexToKind[o.Ctype], pName)
 	} else { // set default
 		o.P = DefaultIntPoints[o.Ctype]
 	}
@@ -130,13 +123,10 @@ func (o *Integrator) GetXip(X *la.Matrix) (Xip *la.Matrix) {
 //   Input:
 //     X  -- coordinates of vertices of cell (polyhedron/polygon) [nverts][ndim]
 //     f  -- integrand function
-func (o *Integrator) IntegrateSv(X *la.Matrix, f fun.Sv) (res float64, err error) {
+func (o *Integrator) IntegrateSv(X *la.Matrix, f fun.Sv) (res float64) {
 	var fx float64
 	for ip, point := range o.P {
-		err = o.EvalJacobian(X, ip)
-		if err != nil {
-			return
-		}
+		o.EvalJacobian(X, ip)
 		la.MatTrVecMul(o.xip, 1, X, o.ShapeFcns[ip]) // xip := 1⋅Xᵀ⋅S
 		fx = f(o.xip)
 		res += fx * o.DetJacobian * point[3]
@@ -170,7 +160,7 @@ func (o *Integrator) IntegrateSv(X *la.Matrix, f fun.Sv) (res float64, err error
 //     InvJacobMat -- inverse of Jmat [ndim][ndim]
 //     DetJacobian -- determinat of the reference Jacobian matrix
 //
-func (o *Integrator) EvalJacobian(X *la.Matrix, ip int) (err error) {
+func (o *Integrator) EvalJacobian(X *la.Matrix, ip int) {
 	if ip < 0 || ip > o.Npts {
 		chk.Err("index of integration point %d is invalid. ip must be in [0,%d]\n", ip, o.Npts)
 		return
@@ -180,7 +170,7 @@ func (o *Integrator) EvalJacobian(X *la.Matrix, ip int) (err error) {
 		return
 	}
 	la.MatTrMatMul(o.JacobianMat, 1, X, o.RefGrads[ip]) // Jmat := 1⋅Xᵀ⋅gmat
-	o.DetJacobian, err = la.MatInvSmall(o.InvJacobMat, o.JacobianMat, 1e-14)
+	o.DetJacobian = la.MatInvSmall(o.InvJacobMat, o.JacobianMat, 1e-14)
 	return
 }
 
@@ -194,12 +184,11 @@ type MeshIntegrator struct {
 }
 
 // NewMeshIntegrator returns a new MeshIntegrator
-func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator, err error) {
+func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator) {
 
 	// check
 	if Ngoroutines < 1 {
-		err = chk.Err("number of goroutines must be at least 1\n")
-		return
+		chk.Panic("number of goroutines must be at least 1\n")
 	}
 
 	// allocate integrators
@@ -209,10 +198,7 @@ func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator, err erro
 	for i := 0; i < Ngoroutines; i++ {
 		o.Integrators[i] = make([]*Integrator, TypeNumMax)
 		for j := 0; j < TypeNumMax; j++ {
-			o.Integrators[i][j], err = NewIntegrator(j, nil, "")
-			if err != nil {
-				return
-			}
+			o.Integrators[i][j] = NewIntegrator(j, nil, "")
 		}
 	}
 	return
@@ -226,13 +212,9 @@ func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator, err erro
 //              Ω
 //   Input:
 //     goroutineId -- go routine id to use when performing optimisation (not to partition mesh)
-func (o *MeshIntegrator) IntegrateSv(goroutineID int, f fun.Sv) (res float64, err error) {
+func (o *MeshIntegrator) IntegrateSv(goroutineID int, f fun.Sv) (res float64) {
 	for _, c := range o.M.Cells {
-		r, e := o.Integrators[goroutineID][c.TypeIndex].IntegrateSv(c.X, f)
-		if e != nil {
-			err = e
-			return
-		}
+		r := o.Integrators[goroutineID][c.TypeIndex].IntegrateSv(c.X, f)
 		res += r
 	}
 	return

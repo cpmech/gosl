@@ -35,7 +35,7 @@ func Test_texpdf02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("texpdf02")
 
-	keys, T := ReadTableOrPanic("data/table01.dat")
+	keys, T := ReadTable("data/table01.dat")
 
 	key2tex := map[string]string{
 		"a": `$a = \int x \, \mathrm{d}x$`,
@@ -85,7 +85,7 @@ func Test_texpdf03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("texpdf03")
 
-	keys, T := ReadTableOrPanic("data/table01.dat")
+	keys, T := ReadTable("data/table01.dat")
 
 	key2tex := map[string]string{
 		"a": `$a^\star$`,

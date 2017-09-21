@@ -18,11 +18,7 @@ func Test_singleq4(tst *testing.T) {
 	chk.PrintTitle("singleq4")
 
 	// load mesh
-	m, err := Read("data/singleq4square1x1.msh")
-	if err != nil {
-		tst.Errorf("Read failed:\n%v\n", err)
-		return
-	}
+	m := Read("data/singleq4square1x1.msh")
 
 	// correct data
 	nverts := 4
@@ -66,11 +62,7 @@ func Test_singleq4(tst *testing.T) {
 	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
 
 	// get map of tags
-	tm, err := m.GetTagMaps()
-	if err != nil {
-		tst.Errorf("GetTagMaps failed:\n%v\n", err)
-		return
-	}
+	tm := m.GetTagMaps()
 
 	// correct data
 	vtags := []int{-1}
@@ -106,11 +98,7 @@ func Test_mesh01(tst *testing.T) {
 	chk.PrintTitle("mesh01")
 
 	// load mesh
-	m, err := Read("data/mesh01.msh")
-	if err != nil {
-		tst.Errorf("Read failed:\n%v\n", err)
-		return
-	}
+	m := Read("data/mesh01.msh")
 
 	// correct data
 	nverts := 11
@@ -199,11 +187,7 @@ func Test_mesh01(tst *testing.T) {
 	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
 
 	// get map of tags
-	tm, err := m.GetTagMaps()
-	if err != nil {
-		tst.Errorf("GetTagMaps failed:\n%v\n", err)
-		return
-	}
+	tm := m.GetTagMaps()
 
 	// correct data
 	vtags := []int{-1, -2, -3, -4, -5}
@@ -240,11 +224,7 @@ func Test_cubeandtet(tst *testing.T) {
 	chk.PrintTitle("cubeandtet")
 
 	// load mesh
-	m, err := Read("data/cubeandtet.msh")
-	if err != nil {
-		tst.Errorf("Read failed:\n%v\n", err)
-		return
-	}
+	m := Read("data/cubeandtet.msh")
 
 	// correct data
 	nverts := 9
@@ -305,11 +285,7 @@ func Test_cubeandtet(tst *testing.T) {
 	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
 
 	// get map of tags
-	tm, err := m.GetTagMaps()
-	if err != nil {
-		tst.Errorf("GetTagMaps failed:\n%v\n", err)
-		return
-	}
+	tm := m.GetTagMaps()
 
 	// correct data
 	vtags := []int{-12, -14, -18}

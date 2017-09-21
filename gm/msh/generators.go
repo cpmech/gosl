@@ -12,7 +12,7 @@ import (
 
 // GenQuadRegionHL generates 2D region made of quads (high-level version of GenQuadRegion)
 //   NOTE: see GenQuadRegion for more details
-func GenQuadRegionHL(ctype, ndivR, ndivS int, xmin, xmax, ymin, ymax float64) (o *Mesh, err error) {
+func GenQuadRegionHL(ctype, ndivR, ndivS int, xmin, xmax, ymin, ymax float64) (o *Mesh) {
 	return GenQuadRegion(ctype, ndivR, ndivS, false, func(i, j, nr, ns int) (x, y float64) {
 		dx := (xmax - xmin) / float64(nr-1)
 		dy := (ymax - ymin) / float64(ns-1)
@@ -30,7 +30,7 @@ func GenQuadRegionHL(ctype, ndivR, ndivS int, xmin, xmax, ymin, ymax float64) (o
 //   R     -- maximum radius
 //   alpha -- maximum alpha
 //   NOTE: a circular region is created if maxA=2⋅π
-func GenRing2d(ctype int, ndivR, ndivA int, r, R, alpha float64) (o *Mesh, err error) {
+func GenRing2d(ctype int, ndivR, ndivA int, r, R, alpha float64) (o *Mesh) {
 	circle := math.Abs(alpha-2.0*math.Pi) < 1e-14
 	return GenQuadRegion(ctype, ndivR, ndivA, circle, func(i, j, nr, ns int) (x, y float64) {
 		dr := (R - r) / float64(nr-1)
@@ -75,16 +75,14 @@ func GenRing2d(ctype int, ndivR, ndivA int, r, R, alpha float64) (o *Mesh, err e
 //         @-----@------@               +-----------+
 //       41      1       12                  10
 //
-func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int) (x, y float64)) (o *Mesh, err error) {
+func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int) (x, y float64)) (o *Mesh) {
 
 	// check
 	if ndivR < 1 {
-		err = chk.Err("number of divisions along u must be greater than zero")
-		return
+		chk.Panic("number of divisions along u must be greater than zero\n")
 	}
 	if ndivS < 1 {
-		err = chk.Err("number of divisions along v must be greater than zero")
-		return
+		chk.Panic("number of divisions along v must be greater than zero\n")
 	}
 
 	// type of cell
@@ -125,8 +123,7 @@ func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int
 			nvlCen[1]++            // per cell
 			nvertR[2] += 1 * ndivR // total along cen line
 		default:
-			err = chk.Err("cannot handle central vertices of %q cells\n", typekey)
-			return
+			chk.Panic("cannot handle central vertices of %q cells\n", typekey)
 		}
 	}
 
@@ -226,8 +223,7 @@ func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int
 				e := up(2)
 				v = []int{a, a + 4, b + 4, b, a + 1, c + 1, b + 3, e, a + 2, d + 2, b + 2, d, a + 3, e + 1, b + 1, c, d + 1}
 			default:
-				err = chk.Err("cannot handle cell type = %q at this time\n", typekey)
-				return
+				chk.Panic("cannot handle cell type = %q at this time\n", typekey)
 			}
 
 			// set cell
@@ -237,7 +233,7 @@ func GenQuadRegion(ctype, ndivR, ndivS int, circle bool, f func(i, j, nr, ns int
 	}
 
 	// results
-	err = o.CheckAndCalcDerivedVars()
+	o.CheckAndCalcDerivedVars()
 	return
 }
 

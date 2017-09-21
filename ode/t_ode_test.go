@@ -136,8 +136,7 @@ func TestOde02(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
-		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
-		status(tst, err)
+		_, T := io.ReadTable("data/vdpol_radau5_for.dat")
 		X := sol.Out.GetStepX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""
@@ -199,10 +198,7 @@ func TestOde03(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
-		_, T, err := io.ReadTable("data/rober_radau5_cpp.dat")
-		if err != nil {
-			chk.Panic("%v", err)
-		}
+		_, T := io.ReadTable("data/rober_radau5_cpp.dat")
 		X := sol.Out.GetStepX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""
@@ -267,10 +263,7 @@ func TestOde04(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 450, Dpi: 150, Prop: 1.8, FszXtck: 6, FszYtck: 6})
-		_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
-		if err != nil {
-			chk.Panic("%v", err)
-		}
+		_, T := io.ReadTable("data/radau5_hwamplifier.dat")
 		X := sol.Out.GetStepX()
 		for j := 0; j < p.Ndim; j++ {
 			labelA, labelB := "", ""

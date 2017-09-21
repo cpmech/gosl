@@ -93,13 +93,12 @@ func Test_fileIO2(tst *testing.T) {
 	Ff(&bout, "just testing %g\n", 666.0)
 	AppendToFile(fn, &bout)
 
-	err := ReadLines(fn, func(idx int, line string) (stop bool) {
+	ReadLines(fn, func(idx int, line string) (stop bool) {
 		if line != "just testing 666" {
 			tst.Errorf("read wrong line: '%v'", line)
 		}
 		return false
 	})
-	status(tst, err)
 }
 
 func Test_fileIO3(tst *testing.T) {
@@ -132,15 +131,11 @@ func Test_fileIO4(tst *testing.T) {
 	theline := "Hello World !!!"
 	WriteStringToFileD("/tmp/gosl", "filestring.txt", theline)
 
-	f, err := OpenFileR("/tmp/gosl/filestring.txt")
-	if err != nil {
-		chk.Panic("%v", err)
-	}
+	f := OpenFileR("/tmp/gosl/filestring.txt")
 
-	err = ReadLinesFile(f, func(idx int, line string) (stop bool) {
+	ReadLinesFile(f, func(idx int, line string) (stop bool) {
 		Pforan("line = %v\n", line)
 		chk.String(tst, line, theline)
 		return
 	})
-	status(tst, err)
 }

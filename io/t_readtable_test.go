@@ -15,7 +15,7 @@ func TestReadTable01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ReadTable 01")
 
-	keys, res := ReadTableOrPanic("data/table01.dat")
+	keys, res := ReadTable("data/table01.dat")
 
 	chk.Strings(tst, "keys", keys, []string{"a", "b", "c", "d"})
 	chk.Array(tst, "a", 1.0e-17, res["a"], []float64{1, 4, 7})
@@ -29,10 +29,7 @@ func TestReadMatrix01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ReadMatrix 01")
 
-	res, err := ReadMatrix("data/mat01.dat")
-	if err != nil {
-		tst.Errorf("[1;31mfile cannot be read:[0m\n%v\n", err.Error())
-	}
+	res := ReadMatrix("data/mat01.dat")
 
 	chk.Deep2(tst, "mat", 1.0e-17, res, [][]float64{
 		{1, 2, 3, 4},

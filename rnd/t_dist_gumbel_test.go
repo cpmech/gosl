@@ -41,11 +41,7 @@ func Test_dist_gumbel_01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("dist_gumbel_01")
 
-	_, dat, err := io.ReadTable("data/gumbel.dat")
-	if err != nil {
-		tst.Errorf("cannot read comparison results:\n%v\n", err)
-		return
-	}
+	_, dat := io.ReadTable("data/gumbel.dat")
 
 	X, ok := dat["x"]
 	if !ok {

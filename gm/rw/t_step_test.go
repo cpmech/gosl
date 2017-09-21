@@ -50,11 +50,7 @@ func Test_step01(tst *testing.T) {
 ENDSEC;`
 
 	var stp StepFile
-	err := stp.ParseData(dat)
-	if err != nil {
-		tst.Errorf("Parse failed:\n%v", err)
-		return
-	}
+	stp.ParseData(dat)
 
 	np := len(stp.Points)
 	x := make([]float64, np)
@@ -84,19 +80,11 @@ func Test_step02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("step02")
 
-	buf, err := io.ReadFile("data/beadpanel.step")
-	if err != nil {
-		tst.Errorf("cannot read file:\n%v", err)
-		return
-	}
+	buf := io.ReadFile("data/beadpanel.step")
 	dat := string(buf)
 
 	var stp StepFile
-	err = stp.ParseData(dat)
-	if err != nil {
-		tst.Errorf("Parse filed:\n%v", err)
-		return
-	}
+	stp.ParseData(dat)
 
 	for _, c := range stp.BsplineCurves {
 		io.Pforan("c = %v\n", c)

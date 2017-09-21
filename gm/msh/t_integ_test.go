@@ -28,11 +28,7 @@ func TestInteg01(tst *testing.T) {
 	})
 
 	// allocate cell integrator with default integration points
-	o, err := NewIntegrator(TypeQua4, nil, "")
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	o := NewIntegrator(TypeQua4, nil, "")
 	chk.Int(tst, "Nverts", o.Nverts, 4)
 	chk.Int(tst, "Ndim", o.Ndim, 2)
 	chk.Int(tst, "Npts", o.Npts, 4)
@@ -44,43 +40,23 @@ func TestInteg01(tst *testing.T) {
 	}
 
 	// perform integration
-	res, err := o.IntegrateSv(X, fcn)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	res := o.IntegrateSv(X, fcn)
 	io.Pforan("1: res = %v\n", res)
 	chk.Float64(tst, "∫(x²+y²)dxdy (default)", 1e-15, res, 8.0/3.0)
 
 	// reset integration points
-	err = o.ResetP(nil, "legendre_9")
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	o.ResetP(nil, "legendre_9")
 
 	// perform integration again
-	res, err = o.IntegrateSv(X, fcn)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	res = o.IntegrateSv(X, fcn)
 	io.Pforan("2: res = %v\n", res)
 	chk.Float64(tst, "∫(x²+y²)dxdy (legendre 9)", 1e-15, res, 8.0/3.0)
 
 	// reset integration points
-	err = o.ResetP(nil, "wilson5corner_5")
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	o.ResetP(nil, "wilson5corner_5")
 
 	// perform integration again
-	res, err = o.IntegrateSv(X, fcn)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	res = o.IntegrateSv(X, fcn)
 	io.Pforan("3: res = %v\n", res)
 	chk.Float64(tst, "∫(x²+y²)dxdy (wilson5corner)", 1e-15, res, 8.0/3.0)
 
@@ -115,11 +91,7 @@ func TestInteg02(tst *testing.T) {
 	})
 
 	// allocate cell integrator with default integration points
-	o, err := NewIntegrator(TypeQua4, nil, "legendre_4")
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	o := NewIntegrator(TypeQua4, nil, "legendre_4")
 
 	// integrand function for second moment of inertia about x-axis: Ix
 	fcnIx := func(x la.Vector) (f float64) {
@@ -145,29 +117,17 @@ func TestInteg02(tst *testing.T) {
 	anaI0 := anaIx + anaIy
 
 	// compute Ix
-	Ix, err := o.IntegrateSv(X, fcnIx)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	Ix := o.IntegrateSv(X, fcnIx)
 	io.Pforan("Ix = %v\n", Ix)
 	chk.Float64(tst, "Ix", 1e-15, Ix, anaIx)
 
 	// compute Iy
-	Iy, err := o.IntegrateSv(X, fcnIy)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	Iy := o.IntegrateSv(X, fcnIy)
 	io.Pforan("Iy = %v\n", Iy)
 	chk.Float64(tst, "Iy", 1e-15, Iy, anaIy)
 
 	// compute I0
-	I0, err := o.IntegrateSv(X, fcnI0)
-	if err != nil {
-		tst.Errorf("%v", err)
-		return
-	}
+	I0 := o.IntegrateSv(X, fcnI0)
 	io.Pforan("I0 = %v\n", I0)
 	chk.Float64(tst, "I0", 1e-15, I0, anaI0)
 
@@ -208,25 +168,13 @@ func TestInteg03(tst *testing.T) {
 	tols := []float64{0.007, 1e-5, 1e-5, 1e-5, 1e-5, 1e-8} // 5 x 5
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
 	for i, ctype := range ctypes {
-		mesh, err := GenRing2d(ctype, nr, na, r, R, math.Pi/2.0)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		mesh := GenRing2d(ctype, nr, na, r, R, math.Pi/2.0)
 
 		// allocate cell integrator with default integration points
-		o, err := NewMeshIntegrator(mesh, 1)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		o := NewMeshIntegrator(mesh, 1)
 
 		// compute Ix
-		Ix, err := o.IntegrateSv(0, fcnIx)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		Ix := o.IntegrateSv(0, fcnIx)
 		typekey := TypeIndexToKey[ctype]
 		io.Pf("%s : Ix = %v  error = %v\n", typekey, Ix, math.Abs(Ix-anaIx))
 		chk.Float64(tst, "Ix", tols[i], Ix, anaIx)
@@ -264,25 +212,13 @@ func TestInteg04(tst *testing.T) {
 	tols := []float64{5, 0.02, 0.02, 0.003, 0.003, 1e-5} // 4 x 13
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
 	for i, ctype := range ctypes {
-		mesh, err := GenRing2d(ctype, nr, na, r, R, 2.0*math.Pi)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		mesh := GenRing2d(ctype, nr, na, r, R, 2.0*math.Pi)
 
 		// allocate cell integrator with default integration points
-		o, err := NewMeshIntegrator(mesh, 1)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		o := NewMeshIntegrator(mesh, 1)
 
 		// compute Ix
-		Ix, err := o.IntegrateSv(0, fcnIx)
-		if err != nil {
-			tst.Errorf("%v", err)
-			return
-		}
+		Ix := o.IntegrateSv(0, fcnIx)
 		typekey := TypeIndexToKey[ctype]
 		io.Pf("%s : Ix = %v  error = %v\n", typekey, Ix, math.Abs(Ix-anaIx))
 		chk.Float64(tst, "Ix", tols[i], Ix, anaIx)

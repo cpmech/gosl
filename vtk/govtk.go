@@ -187,10 +187,7 @@ func NewSpheres() *Spheres {
 //  1.0  0.0  0.0  0.1
 //   ...
 func NewSpheresFromFile(filename string) *Spheres {
-	_, dat, err := io.ReadTable(filename)
-	if err != nil {
-		chk.Panic("NewSpheresFromFile failed:\n%v", err)
-	}
+	_, dat := io.ReadTable(filename)
 	return &Spheres{
 		X:     dat["x"],
 		Y:     dat["y"],

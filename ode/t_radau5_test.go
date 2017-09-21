@@ -111,8 +111,7 @@ func TestRadau502(tst *testing.T) {
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
 
 	// compare with fortran code
-	d, err := readRefData("data/dr1_radau5.cmp")
-	status(tst, err)
+	d := readRefData("data/dr1_radau5.cmp")
 	chk.Ints(tst, "S", sol.Out.GetDenseS(), d.S)
 	chk.Array(tst, "X", 1e-15, sol.Out.GetDenseX(), d.X)
 	chk.Deep2(tst, "Y", 1e-11, sol.Out.GetDenseYtableT(), d.Y)
@@ -139,12 +138,12 @@ type refData struct {
 	Y [][]float64 // [dim][nout]
 }
 
-func readRefData(fn string) (o *refData, err error) {
+func readRefData(fn string) (o *refData) {
 	o = new(refData)
-	b, err := io.ReadFile(fn)
+	b := io.ReadFile(fn)
+	err := json.Unmarshal(b, o)
 	if err != nil {
-		return
+		chk.Panic("%v\n", err)
 	}
-	err = json.Unmarshal(b, o)
 	return
 }

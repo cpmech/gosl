@@ -18,19 +18,11 @@ func testRWstep01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("RWstep01")
 
-	buf, err := io.ReadFile("rw/data/beadpanel.step")
-	if err != nil {
-		tst.Errorf("cannot read file:\n%v", err)
-		return
-	}
+	buf := io.ReadFile("rw/data/beadpanel.step")
 	dat := string(buf)
 
 	var stp rw.StepFile
-	err = stp.ParseData(dat)
-	if err != nil {
-		tst.Errorf("Parse filed:\n%v", err)
-		return
-	}
+	stp.ParseData(dat)
 
 	var bsplines []*Bspline
 

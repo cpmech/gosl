@@ -135,24 +135,31 @@ func WriteBytesToFileVD(dirout, fn string, b []byte) {
 // functions to read files ////////////////////////////////////////////////////////////////////////
 
 // OpenFileR opens a file for reading data
-func OpenFileR(fn string) (fil *os.File, err error) {
-	fil, err = os.Open(os.ExpandEnv(fn))
+func OpenFileR(fn string) (fil *os.File) {
+	fil, err := os.Open(os.ExpandEnv(fn))
+	if err != nil {
+		chk.Panic("%v\n", err)
+	}
 	return
 }
 
 // ReadFile reads bytes from a file
-func ReadFile(fn string) (b []byte, err error) {
-	return ioutil.ReadFile(os.ExpandEnv(fn))
+func ReadFile(fn string) (b []byte) {
+	b, err := ioutil.ReadFile(os.ExpandEnv(fn))
+	if err != nil {
+		chk.Panic("%v\n", err)
+	}
+	return
 }
 
 // ReadLinesCallback is used in ReadLines to process line by line during reading of a file
 type ReadLinesCallback func(idx int, line string) (stop bool)
 
 // ReadLines reads lines from a file and calls ReadLinesCallback to process each line being read
-func ReadLines(fn string, cb ReadLinesCallback) (err error) {
+func ReadLines(fn string, cb ReadLinesCallback) {
 	fil, err := os.Open(os.ExpandEnv(fn))
 	if err != nil {
-		return
+		chk.Panic("%v\n", err)
 	}
 	defer fil.Close()
 	r := bufio.NewReader(fil)
@@ -176,23 +183,22 @@ func ReadLines(fn string, cb ReadLinesCallback) (err error) {
 		}
 		idx++
 	}
-	return
 }
 
 // ReadLinesFile reads lines from a file and calls ReadLinesCallback to process each line being read
-func ReadLinesFile(fil *os.File, cb ReadLinesCallback) (oserr error) {
+func ReadLinesFile(fil *os.File, cb ReadLinesCallback) {
 	r := bufio.NewReader(fil)
 	idx := 0
 	for {
 		lin, prefix, errl := r.ReadLine()
 		if prefix {
-			return chk.Err("cannot read long line. file = <%s>", fil.Name())
+			chk.Panic("cannot read long line. file = <%s>\n", fil.Name())
 		}
 		if errl == io.EOF {
 			break
 		}
 		if errl != nil {
-			return chk.Err("cannot read line. file = <%s>", fil.Name())
+			chk.Panic("cannot read line. file = <%s>\n", fil.Name())
 		}
 		stop := cb(idx, string(lin))
 		if stop {
@@ -200,26 +206,12 @@ func ReadLinesFile(fil *os.File, cb ReadLinesCallback) (oserr error) {
 		}
 		idx++
 	}
-	return
-}
-
-// ReadTableOrPanic reads text file as ReadTable; but panic on errors
-func ReadTableOrPanic(fn string) (keys []string, T map[string][]float64) {
-	var err error
-	keys, T, err = ReadTable(fn)
-	if err != nil {
-		chk.Panic("cannot read table:\n%v", err)
-	}
-	return
 }
 
 // ReadTable reads a text file in which the first line contains the headers and the next lines the float64
 // type of numeric values. The number of columns must be equal, including for the headers
-func ReadTable(fn string) (keys []string, T map[string][]float64, err error) {
-	f, err := OpenFileR(fn)
-	if err != nil {
-		return
-	}
+func ReadTable(fn string) (keys []string, T map[string][]float64) {
+	f := OpenFileR(fn)
 	header := true
 	ReadLinesFile(f, func(idx int, line string) (stop bool) {
 		r := strings.Fields(line)
@@ -231,8 +223,7 @@ func ReadTable(fn string) (keys []string, T map[string][]float64, err error) {
 		}
 		ncol := len(r)
 		if ncol < 1 {
-			err = chk.Err("ReadTable: number of columns must be at least 1")
-			return true
+			chk.Panic("number of columns must be at least 1\n")
 		}
 		if header {
 			T = make(map[string][]float64)
@@ -254,11 +245,8 @@ func ReadTable(fn string) (keys []string, T map[string][]float64, err error) {
 
 // ReadMatrix reads a text file in which the float64 type of numeric values represent
 // a matrix of data. The number of columns must be equal, including for the headers
-func ReadMatrix(fn string) (M [][]float64, err error) {
-	f, err := OpenFileR(fn)
-	if err != nil {
-		return
-	}
+func ReadMatrix(fn string) (M [][]float64) {
+	f := OpenFileR(fn)
 	ncolFix := 0
 	ReadLinesFile(f, func(idx int, line string) (stop bool) {
 		r := strings.Fields(line)
@@ -270,16 +258,14 @@ func ReadMatrix(fn string) (M [][]float64, err error) {
 		}
 		ncol := len(r)
 		if ncol < 1 {
-			err = chk.Err("ReadMatrix: number of columns must be at least 1")
-			return true
+			chk.Panic("number of columns must be at least 1\n")
 		}
 		if M == nil {
 			M = make([][]float64, 0)
 			ncolFix = ncol
 		}
 		if ncol != ncolFix {
-			err = chk.Err("ReadMatrix: nubmer of columns must be equal for all lines (%d != %d)", ncol, ncolFix)
-			return
+			chk.Panic("number of columns must be equal for all lines. %d != %d\n", ncol, ncolFix)
 		}
 		vals := make([]float64, ncol)
 		for i := 0; i < ncol; i++ {
