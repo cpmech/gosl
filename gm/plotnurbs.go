@@ -5,7 +5,9 @@
 package gm
 
 import (
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -510,6 +512,33 @@ func (o *Nurbs) DrawSurface(ndim int, nu, nv int, withSurf, withWire bool, argsS
 		}
 		if withWire {
 			plt.Wireframe(X, Y, Z, argsWire)
+		}
+	}
+}
+
+// DrawVectors3d draws tangent vectors of 3D surface
+func (o *Nurbs) DrawVectors3d(nu, nv int, sf float64, argsU, argsV *plt.A) {
+	if o.gnd != 2 {
+		chk.Panic("method works with surfaces only\n")
+	}
+	if argsU == nil {
+		argsU = &plt.A{C: plt.C(0, 0)}
+	}
+	if argsV == nil {
+		argsV = &plt.A{C: plt.C(1, 0)}
+	}
+	du0 := (o.b[0].tmax - o.b[0].tmin) / float64(nu-1)
+	du1 := (o.b[1].tmax - o.b[1].tmin) / float64(nv-1)
+	u := la.NewVector(2)
+	c := la.NewVector(3)
+	dCdu := la.NewMatrix(3, o.gnd)
+	for n := 0; n < nv; n++ {
+		u[1] = o.b[1].tmin + float64(n)*du1
+		for m := 0; m < nu; m++ {
+			u[0] = o.b[0].tmin + float64(m)*du0
+			o.PointDeriv(dCdu, c, u, 3)
+			DrawArrow3dM(c, dCdu, 0, true, sf, argsU)
+			DrawArrow3dM(c, dCdu, 1, true, sf, argsV)
 		}
 	}
 }

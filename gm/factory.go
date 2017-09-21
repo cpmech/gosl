@@ -197,7 +197,7 @@ func (o facNurbsT) Surf3dCylinder(xc, yc, zc, r, h float64) (curve *Nurbs) {
 	return
 }
 
-// SurfTorus generates a NURBS toroidal surface
+// Surf3dTorus generates a NURBS toroidal surface
 //  r -- is the tube radius
 //  R -- is the distance from the centre of the torus to the centre of the tube
 func (o facNurbsT) Surf3dTorus(xc, yc, zc, r, R float64) (surf *Nurbs) {
@@ -298,6 +298,29 @@ func (o facNurbsT) Surf3dTorus(xc, yc, zc, r, R float64) (surf *Nurbs) {
 	knots := [][]float64{
 		{0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4},
 		{0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4},
+	}
+	surf = NewNurbs(2, []int{2, 2}, knots)
+	surf.SetControl(verts, utl.IntRange(len(verts)))
+	return
+}
+
+// Surf3dQuarterHemisphere generates a NURBS toroidal surface
+func (o facNurbsT) Surf3dQuarterHemisphere(xc, yc, zc, r float64) (surf *Nurbs) {
+	s := math.Sqrt2 / 2.0
+	verts := [][]float64{
+		{xc + r, yc + 0, zc + 0, 1},
+		{xc + r, yc + r, zc + 0, s},
+		{xc + 0, yc + r, zc + 0, 1},
+		{xc + r, yc + 0, zc + r, s},
+		{xc + r, yc + r, zc + r, 0.5},
+		{xc + 0, yc + r, zc + r, s},
+		{xc + 0, yc + 0, zc + r, 1},
+		{xc + 0, yc + 0, zc + r, s},
+		{xc + 0, yc + 0, zc + r, 1},
+	}
+	knots := [][]float64{
+		{0, 0, 0, 1, 1, 1},
+		{0, 0, 0, 1, 1, 1},
 	}
 	surf = NewNurbs(2, []int{2, 2}, knots)
 	surf.SetControl(verts, utl.IntRange(len(verts)))

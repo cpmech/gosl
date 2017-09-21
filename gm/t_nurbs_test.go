@@ -536,3 +536,56 @@ func TestNurbs07(tst *testing.T) {
 		//plt.ShowSave("/tmp/gosl/gm", "nurbs07")
 	}
 }
+
+func TestNurbs08(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Nurbs08. Quarter of Hemisphere")
+
+	surf := FactoryNurbs.Surf3dQuarterHemisphere(1, 2, 3, 4)
+
+	cA := la.NewVector(3)
+	dCduA := la.NewMatrix(3, surf.Gnd())
+	surf.PointDeriv(dCduA, cA, []float64{0, 1}, 3)
+	io.Pf("dCduA =\n%v\n", dCduA.Print("%23.15e"))
+
+	cB := la.NewVector(3)
+	dCduB := la.NewMatrix(3, surf.Gnd())
+	surf.PointDeriv(dCduB, cB, []float64{0.25, 1}, 3)
+	io.Pf("dCduB =\n%v\n", dCduB.Print("%23.15e"))
+
+	cC := la.NewVector(3)
+	dCduC := la.NewMatrix(3, surf.Gnd())
+	surf.PointDeriv(dCduC, cC, []float64{0.5, 1}, 3)
+	io.Pf("dCduC =\n%v\n", dCduC.Print("%23.15e"))
+
+	cD := la.NewVector(3)
+	dCduD := la.NewMatrix(3, surf.Gnd())
+	surf.PointDeriv(dCduD, cD, []float64{1, 1}, 3)
+	io.Pf("dCduD =\n%v\n", dCduD.Print("%23.15e"))
+
+	chk.Array(tst, "cA", 1e-15, cA, []float64{1, 2, 7})
+	chk.Array(tst, "cB", 1e-15, cB, []float64{1, 2, 7})
+	chk.Array(tst, "cC", 1e-15, cC, []float64{1, 2, 7})
+	chk.Array(tst, "cD", 1e-15, cD, []float64{1, 2, 7})
+	chk.Array(tst, "dCduA_u", 1e-15, GetVec3d(dCduA, 0, false), []float64{0, 0, 0})
+	chk.Array(tst, "dCduB_u", 1e-15, GetVec3d(dCduB, 0, false), []float64{0, 0, 0})
+	chk.Array(tst, "dCduC_u", 1e-15, GetVec3d(dCduC, 0, false), []float64{0, 0, 0})
+	chk.Array(tst, "dCduD_u", 1e-15, GetVec3d(dCduD, 0, false), []float64{0, 0, 0})
+
+	if chk.Verbose {
+		nu, nv := 21, 21
+		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
+		surf.DrawCtrl(3, false, &plt.A{C: "grey", Lw: 0.5}, nil)
+		surf.DrawSurface(3, nu, nv, true, false, &plt.A{C: plt.C(2, 9), Rstride: 2, Cstride: 2}, &plt.A{C: "#2782c8", Lw: 0.5})
+		surf.DrawVectors3d(5, 5, 1, nil, nil)
+
+		sf := 1.0
+		DrawArrow3dM(cA, dCduA, 0, true, sf, &plt.A{C: plt.C(0, 2), Lw: 4})
+		DrawArrow3dM(cA, dCduA, 1, true, sf, &plt.A{C: plt.C(1, 2), Lw: 4})
+
+		plt.Default3dView(-1, 5, -1, 5, -1, 5, true)
+		plt.Save("/tmp/gosl/gm", "nurbs07")
+		//plt.ShowSave("/tmp/gosl/gm", "nurbs07")
+	}
+}
