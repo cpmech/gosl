@@ -12,6 +12,7 @@ import (
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
+	"github.com/cpmech/gosl/utl"
 )
 
 // JacobianMpi computes Jacobian (sparse) matrix
@@ -50,7 +51,7 @@ func JacobianMpi(comm *mpi.Communicator, J *la.Triplet, ffcn fun.Vv, x, fx, w []
 	var df float64
 	for col := 0; col < ndim; col++ {
 		xsafe := x[col]
-		delta := math.Sqrt(MACHEPS * max(1e-5, math.Abs(xsafe)))
+		delta := math.Sqrt(MACHEPS * utl.Max(1e-5, math.Abs(xsafe)))
 		x[col] = xsafe + delta
 		ffcn(w, x) // w := f(x+δx[col])
 		for row := start; row < endp1; row++ {

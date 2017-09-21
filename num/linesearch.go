@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/utl"
 )
 
 // LineSearch finds a new point x along the direction dx, from x0, where the function
@@ -59,7 +60,7 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 		nrmDx += dx[i] * dx[i]
 	}
 	nrmX0, nrmDx = math.Sqrt(nrmX0), math.Sqrt(nrmDx)
-	nrmDxMax := mulDxMax * max(nrmX0, float64(n))
+	nrmDxMax := mulDxMax * utl.Max(nrmX0, float64(n))
 	if nrmDx > nrmDxMax {
 		for i := 0; i < n; i++ {
 			dx[i] *= nrmDxMax / nrmDx // scale if attempted step is to big
@@ -70,7 +71,7 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 	var slope, maxVal, tmp float64
 	for i := 0; i < n; i++ {
 		slope += dφdx0[i] * dx[i]
-		tmp = math.Abs(dx[i]) / max(math.Abs(x0[i]), 1.0)
+		tmp = math.Abs(dx[i]) / utl.Max(math.Abs(x0[i]), 1.0)
 		if tmp > maxVal {
 			maxVal = tmp
 		}
@@ -106,9 +107,9 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 		if λ < λmin {
 			// check for spurious convergence (local minimum)
 			gra = 0.0
-			den = max(φ, 0.5*float64(n))
+			den = utl.Max(φ, 0.5*float64(n))
 			for i := 0; i < n; i++ {
-				tmp = math.Abs(dφdx0[i]) * max(math.Abs(x[i]), 1.0) / den
+				tmp = math.Abs(dφdx0[i]) * utl.Max(math.Abs(x[i]), 1.0) / den
 				if tmp > gra {
 					gra = tmp
 				}
@@ -144,14 +145,14 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 					tmp = -slope / (b + math.Sqrt(d))
 				}
 			}
-			tmp = min(tmp, 0.5*λ) // make sure tmp is smaller than 0.5*λ
+			tmp = utl.Min(tmp, 0.5*λ) // make sure tmp is smaller than 0.5*λ
 		}
 
 		// save previous values
 		λ2, φ2 = λ, φ
 
 		// new λ
-		λ = max(tmp, 0.1*λ) // make sure λ is greater than 0.1*λ
+		λ = utl.Max(tmp, 0.1*λ) // make sure λ is greater than 0.1*λ
 	}
 
 	// check convergence

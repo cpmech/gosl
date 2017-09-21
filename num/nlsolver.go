@@ -11,6 +11,7 @@ import (
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // NlSolver implements a solver to nonlinear systems of equations
@@ -145,7 +146,7 @@ func (o *NlSolver) Free() {
 // SetTols set tolerances
 func (o *NlSolver) SetTols(Atol, Rtol, Ftol, ϵ float64) {
 	o.atol, o.rtol, o.ftol = Atol, Rtol, Ftol
-	o.fnewt = max(10.0*ϵ/Rtol, min(0.03, math.Sqrt(Rtol)))
+	o.fnewt = utl.Max(10.0*ϵ/Rtol, utl.Min(0.03, math.Sqrt(Rtol)))
 }
 
 // Solve solves non-linear problem f(x) == 0

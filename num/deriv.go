@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/utl"
 )
 
 // DerivCen5 approximates the derivative of f w.r.t x using central differences with 5 points.
@@ -87,7 +88,7 @@ func centralDeriv5(x float64, h float64, f fun.Ss) (res, absErrRound, absErrTrun
 	e5 := 2.0*(math.Abs(fph)+math.Abs(fmh))*EPS + e3
 
 	// The next term is due to finite precision in x+h = O (eps * x)
-	dy := max(math.Abs(r3/h), math.Abs(r5/h)) * (math.Abs(x) / h) * EPS
+	dy := utl.Max(math.Abs(r3/h), math.Abs(r5/h)) * (math.Abs(x) / h) * EPS
 
 	// The truncation error in the r5 approximation itself is O(h^4).
 	// However, for safety, we estimate the error from r5-r3, which is O(h^2).
@@ -117,7 +118,7 @@ func forwardDeriv4(x, h float64, f fun.Ss) (res, absErrRound, absErrTrunc float6
 	e4 := 2 * 20.67 * (math.Abs(f4) + math.Abs(f3) + math.Abs(f2) + math.Abs(f1)) * EPS
 
 	// The next term is due to finite precision in x+h = O (eps * x)
-	dy := max(math.Abs(r2/h), math.Abs(r4/h)) * math.Abs(x/h) * EPS
+	dy := utl.Max(math.Abs(r2/h), math.Abs(r4/h)) * math.Abs(x/h) * EPS
 
 	// The truncation error in the r4 approximation itself is O(h^3).
 	// However, for safety, we estimate the error from r4-r2, which is O(h).

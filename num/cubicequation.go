@@ -4,7 +4,11 @@
 
 package num
 
-import "math"
+import (
+	"math"
+
+	"github.com/cpmech/gosl/fun"
+)
 
 // EqCubicSolveReal solves a cubic equation, ignoring the complex answers.
 //  The equation is specified by:
@@ -42,7 +46,7 @@ func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int) {
 	}
 
 	// auxiliary
-	A := -sign(R) * math.Pow(math.Abs(R)+math.Sqrt(R*R-QQQ), 1.0/3.0)
+	A := -fun.Sign(R) * math.Pow(math.Abs(R)+math.Sqrt(R*R-QQQ), 1.0/3.0)
 	B := 0.0
 	if math.Abs(A) > ϵ {
 		B = Q / A
