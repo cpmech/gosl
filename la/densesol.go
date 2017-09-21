@@ -15,7 +15,7 @@ import (
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func DenSolve(x Vector, A *Matrix, b Vector, preserveA bool) (err error) {
+func DenSolve(x Vector, A *Matrix, b Vector, preserveA bool) {
 	a := A
 	if preserveA {
 		a = NewMatrix(A.M, A.N)
@@ -23,15 +23,17 @@ func DenSolve(x Vector, A *Matrix, b Vector, preserveA bool) (err error) {
 	}
 	copy(x, b)
 	ipiv := make([]int32, A.M)
-	err = oblas.Dgesv(A.M, 1, a.Data, A.M, ipiv, x, A.M)
-	return
+	err := oblas.Dgesv(A.M, 1, a.Data, A.M, ipiv, x, A.M)
+	if err != nil {
+		chk.Panic("%v\n", err)
+	}
 }
 
 // Cholesky returns the Cholesky decomposition of a symmetric positive-definite matrix
 //
 //   a = L * trans(L)
 //
-func Cholesky(L, a *Matrix) (err error) {
+func Cholesky(L, a *Matrix) {
 	for j := 0; j < a.M; j++ { // loop over columns
 		for i := j; i < a.M; i++ { // loop over lower diagonal rows (including diagonal)
 			amsum := a.Get(i, j)
@@ -40,7 +42,7 @@ func Cholesky(L, a *Matrix) (err error) {
 			}
 			if i == j {
 				if amsum <= 0.0 {
-					err = chk.Err("Cholesky factorization failed due to non positive-definite matrix")
+					chk.Panic("Cholesky factorization failed due to non positive-definite matrix")
 				}
 				L.Set(i, j, math.Sqrt(amsum))
 			} else {
@@ -48,7 +50,6 @@ func Cholesky(L, a *Matrix) (err error) {
 			}
 		}
 	}
-	return
 }
 
 // SolveRealLinSysSPD solves a linear system with real numbres and a Symmetric-Positive-Definite (SPD) matrix
@@ -56,15 +57,11 @@ func Cholesky(L, a *Matrix) (err error) {
 //        x := inv(a) * b
 //
 //   NOTE: this function uses Cholesky decomposition and should be used for small systems
-func SolveRealLinSysSPD(x Vector, a *Matrix, b Vector) (err error) {
+func SolveRealLinSysSPD(x Vector, a *Matrix, b Vector) {
 
 	// Cholesky factorisation
 	L := NewMatrix(a.M, a.M)
-	cerr := Cholesky(L, a)
-	if cerr != nil {
-		err = chk.Err("SymPDsolve failed: %s", cerr.Error())
-		return
-	}
+	Cholesky(L, a)
 
 	// solve L*y = b storing y in x
 	for i := 0; i < a.M; i++ {
@@ -83,7 +80,6 @@ func SolveRealLinSysSPD(x Vector, a *Matrix, b Vector) (err error) {
 		}
 		x[i] = bmsum / L.Get(i, i)
 	}
-	return
 }
 
 // SolveTwoRealLinSysSPD solves two linear systems with real numbres and Symmetric-Positive-Definite (SPD) matrices
@@ -91,15 +87,11 @@ func SolveRealLinSysSPD(x Vector, a *Matrix, b Vector) (err error) {
 //        x := inv(a) * b    and    X := inv(a) * B
 //
 //   NOTE: this function uses Cholesky decomposition and should be used for small systems
-func SolveTwoRealLinSysSPD(x, X Vector, a *Matrix, b, B Vector) (err error) {
+func SolveTwoRealLinSysSPD(x, X Vector, a *Matrix, b, B Vector) {
 
 	// Cholesky factorisation
 	L := NewMatrix(a.M, a.M)
-	cerr := Cholesky(L, a)
-	if cerr != nil {
-		err = chk.Err("SymPDsolve failed: %s", cerr.Error())
-		return
-	}
+	Cholesky(L, a)
 
 	// solve L*y = b storing y in x
 	for i := 0; i < a.M; i++ {
@@ -124,5 +116,4 @@ func SolveTwoRealLinSysSPD(x, X Vector, a *Matrix, b, B Vector) (err error) {
 		x[i] = bmsum / L.Get(i, i)
 		X[i] = Bmsum / L.Get(i, i)
 	}
-	return
 }

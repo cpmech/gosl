@@ -37,8 +37,7 @@ func TestDenSolve01(tst *testing.T) {
 	})
 	b := []float64{-2, 4, 3, -5, 1}
 	x := make([]float64, 5)
-	err := DenSolve(x, a, b, true)
-	status(tst, err)
+	DenSolve(x, a, b, true)
 	TestSolverResidual(tst, a, x, b, 1e-14)
 	chk.Array(tst, "x = inv(a) * b", 1e-13, x, []float64{
 		-629.0 / 98.0,
