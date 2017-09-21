@@ -22,11 +22,7 @@ func TestAgs01a(tst *testing.T) {
 	}
 
 	var fid int32
-	A, abserr, neval, last, err := Agse(fid, y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-		return
-	}
+	A, abserr, neval, last := Agse(fid, y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
 	io.Pforan("A      = %v\n", A)
 	io.Pforan("abserr = %v\n", abserr)
 	io.Pforan("neval  = %v\n", neval)
@@ -50,7 +46,7 @@ func TestAgs01b(tst *testing.T) {
 	// run all
 	for ich := 0; ich < nch; ich++ {
 		go func(fid int) {
-			A, _, _, _, _ := Agse(int32(fid), y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
+			A, _, _, _ := Agse(int32(fid), y, 0, 1, 0, 0, nil, nil, nil, nil, nil)
 			chk.Float64(tst, "A", 1e-12, A, 1.08268158558)
 			done <- 1
 		}(ich)
@@ -65,28 +61,19 @@ func TestAgs01b(tst *testing.T) {
 // auxiliary function to run test
 
 func runQ(tst *testing.T, name string, y fType, a, b, correct, tol float64) {
-	res, _, _, _, err := Agse(0, y, a, b, 0, 0, nil, nil, nil, nil, nil)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	res, _, _, _ := Agse(0, y, a, b, 0, 0, nil, nil, nil, nil, nil)
 	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
 }
 
 // auxiliary function to run test (unbounded cases)
 func runU(tst *testing.T, name string, y fType, bound float64, infCode int32, correct, tol float64) {
-	res, _, _, _, err := Agie(0, y, bound, infCode, 0, 0, nil, nil, nil, nil, nil)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	res, _, _, _ := Agie(0, y, bound, infCode, 0, 0, nil, nil, nil, nil, nil)
 	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
 }
 
 // auxiliary function to run test (with points cases)
 func runP(tst *testing.T, name string, y fType, a, b, correct, tol float64, ptsAndBuf2 []float64) {
-	res, _, _, _, err := Agpe(0, y, a, b, ptsAndBuf2, 0, 0, nil, nil, nil, nil, nil, nil, nil, nil)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	res, _, _, _ := Agpe(0, y, a, b, ptsAndBuf2, 0, 0, nil, nil, nil, nil, nil, nil, nil, nil)
 	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
 }
 
@@ -96,10 +83,7 @@ func runO(tst *testing.T, name string, y fType, a, b, omega, correct, tol float6
 	if isSin {
 		integr = 2 // sin(omega*x)
 	}
-	res, _, _, _, err := Awoe(0, y, a, b, omega, integr, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
-	if err != nil {
-		tst.Errorf("%v\n", err)
-	}
+	res, _, _, _ := Awoe(0, y, a, b, omega, integr, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
 	chk.AnaNum(tst, name, tol, res, correct, chk.Verbose)
 }
 

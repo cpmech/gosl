@@ -88,12 +88,11 @@ var functions = make([]fType, 64)
 //     neval  -- number of integrand evaluations
 //     last   -- number of subintervals actually produced in the subdivision process
 //
-func Agse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
+func Agse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32) {
 
 	// set function in database
 	if fid >= int32(len(functions)) {
-		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
-		return
+		chk.Panic("functions database capacity exceeded. max number of functions = %d\n", len(functions))
 	}
 	functions[fid] = f
 
@@ -138,8 +137,8 @@ func Agse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist,
 		(*C.int)(unsafe.Pointer(&fid)),
 	)
 
-	// check error
-	err = getErr(ier)
+	// check
+	checkIer(ier)
 	return
 }
 
@@ -189,12 +188,11 @@ func Agse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist,
 //     neval  -- number of integrand evaluations
 //     last   -- number of subintervals actually produced in the subdivision process
 //
-func Agie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32, err error) {
+func Agie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32) {
 
 	// set function in database
 	if fid >= int32(len(functions)) {
-		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
-		return
+		chk.Panic("functions database capacity exceeded. max number of functions = %d\n", len(functions))
 	}
 	functions[fid] = f
 
@@ -239,8 +237,8 @@ func Agie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, 
 		(*C.int)(unsafe.Pointer(&fid)),
 	)
 
-	// check error
-	err = getErr(ier)
+	// check
+	checkIer(ier)
 	return
 }
 
@@ -255,19 +253,17 @@ func Agie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, 
 //                      The first (len(pointsAndBuf2)-2) elements are the user provided break points
 //                      Automatic ascending sorting is carried out
 //
-func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32, err error) {
+func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32) {
 
 	// check nubmer of points
 	npts2 := int32(len(pointsAndBuf2))
 	if npts2 < 2 {
-		err = chk.Err("number of points (and buffer) must be at least 2; i.e. there are no points and just the 2-point buffer\n")
-		return
+		chk.Panic("number of points (and buffer) must be at least 2; i.e. there are no points and just the 2-point buffer\n")
 	}
 
 	// set function in database
 	if fid >= int32(len(functions)) {
-		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
-		return
+		chk.Panic("functions database capacity exceeded. max number of functions = %d\n", len(functions))
 	}
 	functions[fid] = f
 
@@ -324,8 +320,8 @@ func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, eps
 		(*C.int)(unsafe.Pointer(&fid)),
 	)
 
-	// check error
-	err = getErr(ier)
+	// check
+	checkIer(ier)
 	return
 }
 
@@ -370,12 +366,11 @@ func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, eps
 //     nnlog -- vector containing the subdivision levels of the subintervals, i.e.
 //              l means that the subinterval numbered i is of length abs(b-a)*2**(1-l)
 //
-func Awoe(fid int32, f fType, a, b, omega float64, integr int32, epsabs, epsrel float64, icall, maxp1 int32, alist, blist, rlist, elist []float64, iord, nnlog []int32, momcom int32, chebmo []float64) (result, abserr float64, neval, last int32, err error) {
+func Awoe(fid int32, f fType, a, b, omega float64, integr int32, epsabs, epsrel float64, icall, maxp1 int32, alist, blist, rlist, elist []float64, iord, nnlog []int32, momcom int32, chebmo []float64) (result, abserr float64, neval, last int32) {
 
 	// set function in database
 	if fid >= int32(len(functions)) {
-		err = chk.Err("functions database capacity exceeded. max number of functions = %d\n", len(functions))
-		return
+		chk.Panic("functions database capacity exceeded. max number of functions = %d\n", len(functions))
 	}
 	functions[fid] = f
 
@@ -444,31 +439,31 @@ func Awoe(fid int32, f fType, a, b, omega float64, integr int32, epsabs, epsrel 
 		(*C.int)(unsafe.Pointer(&fid)),
 	)
 
-	// check error
-	err = getErr(ier)
+	// check
+	checkIer(ier)
 	return
 }
 
-// getErr returns error message
-func getErr(ier int32) error {
+// status checks ier code
+func checkIer(ier int32) {
 	if ier == 0 {
-		return nil
+		return
 	}
 	switch ier {
 	case 1:
-		return chk.Err("error # 1: maximum number of subdivisions reached\n")
+		chk.Panic("error # 1: maximum number of subdivisions reached\n")
 	case 2:
-		return chk.Err("error # 2: the occurrence of roundoff error is detected\n")
+		chk.Panic("error # 2: the occurrence of roundoff error is detected\n")
 	case 3:
-		return chk.Err("error # 3: extremely bad integrand behaviour\n")
+		chk.Panic("error # 3: extremely bad integrand behaviour\n")
 	case 4:
-		return chk.Err("error # 4: the algorithm does not converge\n")
+		chk.Panic("error # 4: the algorithm does not converge\n")
 	case 5:
-		return chk.Err("error # 5: the integral is probably divergent, or slowly convergent\n")
+		chk.Panic("error # 5: the integral is probably divergent, or slowly convergent\n")
 	case 6:
-		return chk.Err("error # 6: the input is invalid\n")
+		chk.Panic("error # 6: the input is invalid\n")
 	}
-	return chk.Err("unknown error\n")
+	chk.Panic("unknown error\n")
 }
 
 //export gofcn

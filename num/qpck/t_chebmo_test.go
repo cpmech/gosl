@@ -37,15 +37,13 @@ func runIntegConly(tst *testing.T, N int, f func(x float64) float64, reuse bool)
 	// calculate all values
 	a, b := 0.0, 2.0*math.Pi
 	C = make([]float64, N)
-	var err error
 	for j := 0; j < N; j++ {
 
 		// coefficient of exp(i⋅m⋅x)
 		m := -float64(j)
 
 		// perform integration of cos term
-		C[j], _, _, _, err = Awoe(0, f, a, b, m, icos, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
-		status(tst, err)
+		C[j], _, _, _ = Awoe(0, f, a, b, m, icos, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
 
 		// set flags
 		if reuse {
@@ -82,15 +80,13 @@ func runIntegCandS(tst *testing.T, N int, f func(x float64) float64, reuse bool)
 	a, b := 0.0, 2.0*math.Pi
 	C = make([]float64, N)
 	S = make([]float64, N)
-	var err error
 	for j := 0; j < N; j++ {
 
 		// coefficient of exp(i⋅m⋅x)
 		m := -float64(j)
 
 		// perform integration of cos term
-		C[j], _, _, _, err = Awoe(0, f, a, b, m, icos, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
-		status(tst, err)
+		C[j], _, _, _ = Awoe(0, f, a, b, m, icos, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
 
 		// set flags
 		if reuse {
@@ -98,8 +94,7 @@ func runIntegCandS(tst *testing.T, N int, f func(x float64) float64, reuse bool)
 		}
 
 		// perform integration of sin term
-		S[j], _, _, _, err = Awoe(0, f, a, b, m, isin, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
-		status(tst, err)
+		S[j], _, _, _ = Awoe(0, f, a, b, m, isin, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
 	}
 	return
 }

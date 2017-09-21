@@ -21,7 +21,7 @@ import "github.com/cpmech/gosl/num/qpck"
 //
 func QuadGen(a, b float64, fid int, f func(x float64) float64) (res float64) {
 	id := int32(fid)
-	res, _, _, _, _ = qpck.Agse(id, f, a, b, 0, 0, nil, nil, nil, nil, nil)
+	res, _, _, _ = qpck.Agse(id, f, a, b, 0, 0, nil, nil, nil, nil, nil)
 	return
 }
 
@@ -46,7 +46,7 @@ func QuadCs(a, b, ω float64, useSin bool, fid int, f func(x float64) float64) (
 	if useSin {
 		cs = 2 // sin
 	}
-	res, _, _, _, _ = qpck.Awoe(id, f, a, b, ω, cs, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
+	res, _, _, _ = qpck.Awoe(id, f, a, b, ω, cs, 0, 0, 0, 0, nil, nil, nil, nil, nil, nil, 0, nil)
 	return
 }
 
@@ -85,11 +85,11 @@ func QuadExpIx(a, b, m float64, fid int, f func(x float64) float64) (res complex
 
 	// perform integration of cos term
 	var integr int32 = 1 // w(x) = cos(m*x)
-	Icos, _, _, _, _ := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
+	Icos, _, _, _ := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
 
 	// perform integration of sin term
 	integr = 2 // w(x) = sin(m*x)
-	Isin, _, _, _, _ := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
+	Isin, _, _, _ := qpck.Awoe(id, f, a, b, m, integr, 0, 0, icall, maxp1, alist, blist, rlist, elist, iord, nnlog, momcom, chebmo)
 
 	// results
 	res = complex(Icos, Isin)
