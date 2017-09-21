@@ -73,6 +73,18 @@ func TestAuxFuncs01(tst *testing.T) {
 		tst.Errorf("Swap failed\n")
 		return
 	}
+
+	c := -1
+	if Iabs(c) != 1 {
+		tst.Errorf("Iabs failed\n")
+		return
+	}
+
+	c = 1
+	if Iabs(c) != 1 {
+		tst.Errorf("Iabs failed\n")
+		return
+	}
 }
 
 func TestMinMax01(tst *testing.T) {

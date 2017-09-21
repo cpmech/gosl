@@ -27,6 +27,14 @@ func BestSquare(size int) (nrow, ncol int) {
 	return
 }
 
+// Iabs performs the absolute operation with ints
+func Iabs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
+
 // Imin returns the minimum between two integers
 func Imin(a, b int) int {
 	if a < b {
