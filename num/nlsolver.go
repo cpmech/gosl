@@ -44,7 +44,7 @@ type NlSolver struct {
 	JfcnDn fun.Mv // J(x)=dfdx Jacobian for dense solver
 
 	// output callback
-	Out func(x []float64) error // output callback function
+	Out func(x []float64) // output callback function
 
 	// data for Umfpack (sparse)
 	Jtri    la.Triplet // triplet

@@ -16,7 +16,7 @@ import "math"
 //  Output:
 //   x[i] -- roots
 //   nx   -- number of real roots: 1, 2 or 3
-func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int) { //, err error) {
+func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int) {
 
 	// tolerance
 	ϵ := 1e-14
