@@ -61,21 +61,21 @@ func main() {
 	r := make([]float64, n)
 	comm.ReduceSum(r, x)
 	if id == 0 {
-		chk.Vector(&tst, fmt.Sprintf("ReduceSum:       r @ proc # %d", id), 1e-17, r, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+		chk.Array(&tst, fmt.Sprintf("ReduceSum:       r @ proc # %d", id), 1e-17, r, []float64{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 	} else {
-		chk.Vector(&tst, fmt.Sprintf("ReduceSum:       r @ proc # %d", id), 1e-17, r, make([]float64, n))
+		chk.Array(&tst, fmt.Sprintf("ReduceSum:       r @ proc # %d", id), 1e-17, r, make([]float64, n))
 	}
 
 	// BcastFromRoot
 	r[0] = 123
 	comm.BcastFromRoot(r)
-	chk.Vector(&tst, fmt.Sprintf("BcastFromRoot:   r @ proc # %d", id), 1e-17, r, []float64{123, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	chk.Array(&tst, fmt.Sprintf("BcastFromRoot:   r @ proc # %d", id), 1e-17, r, []float64{123, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
 
 	// AllReduceSum
 	setslice(x)
 	w := make([]float64, n)
 	comm.AllReduceSum(w, x)
-	chk.Vector(&tst, fmt.Sprintf("AllReduceSum:    w @ proc # %d", id), 1e-17, w, []float64{110, 110, 110, 1021, 1021, 1021, 2032, 2032, 2032, 3043, 3043})
+	chk.Array(&tst, fmt.Sprintf("AllReduceSum:    w @ proc # %d", id), 1e-17, w, []float64{110, 110, 110, 1021, 1021, 1021, 2032, 2032, 2032, 3043, 3043})
 
 	// AllReduceSum
 	setslice(x)
@@ -87,15 +87,15 @@ func main() {
 	for i := 0; i < len(w); i++ {
 		y[i] += w[i]
 	}
-	chk.Vector(&tst, fmt.Sprintf("AllReduceSum:    y @ proc # %d", id), 1e-17, y, []float64{-890, -890, -890, 21, 21, 21, 1032, 1032, 1032, 2043, 2043})
+	chk.Array(&tst, fmt.Sprintf("AllReduceSum:    y @ proc # %d", id), 1e-17, y, []float64{-890, -890, -890, 21, 21, 21, 1032, 1032, 1032, 2043, 2043})
 
 	// AllReduceMin
 	setslice(x)
 	comm.AllReduceMin(w, x)
-	chk.Vector(&tst, fmt.Sprintf("AllReduceMin:    w @ proc # %d", id), 1e-17, w, []float64{0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3})
+	chk.Array(&tst, fmt.Sprintf("AllReduceMin:    w @ proc # %d", id), 1e-17, w, []float64{0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3})
 
 	// AllReduceMax
 	setslice(x)
 	comm.AllReduceMax(w, x)
-	chk.Vector(&tst, fmt.Sprintf("AllReduceMax:    w @ proc # %d", id), 1e-17, w, []float64{100, 100, 100, 1000, 1000, 1000, 2000, 2000, 2000, 3000, 3000})
+	chk.Array(&tst, fmt.Sprintf("AllReduceMax:    w @ proc # %d", id), 1e-17, w, []float64{100, 100, 100, 1000, 1000, 1000, 2000, 2000, 2000, 3000, 3000})
 }

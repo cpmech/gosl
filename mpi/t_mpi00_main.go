@@ -78,16 +78,16 @@ func main() {
 			}
 		}
 		A.BcastFromRoot(x)
-		chk.Vector(tst, "A: x (real)", 1e-17, x, []float64{1, 2, 3, 4, 5, 6, 7, 8})
+		chk.Array(tst, "A: x (real)", 1e-17, x, []float64{1, 2, 3, 4, 5, 6, 7, 8})
 
 		// ReduceSum
 		setSlice(x, int(A.Rank()), int(A.Size()))
 		res := make([]float64, len(x))
 		A.ReduceSum(res, x)
 		if A.Rank() == 0 {
-			chk.Vector(tst, "A root: res", 1e-17, res, []float64{1 - 3, 1 - 3, 2 - 3, 2 - 3, 3 - 3, 3 - 3, 4 - 3, 4 - 3})
+			chk.Array(tst, "A root: res", 1e-17, res, []float64{1 - 3, 1 - 3, 2 - 3, 2 - 3, 3 - 3, 3 - 3, 4 - 3, 4 - 3})
 		} else {
-			chk.Vector(tst, "A others: res", 1e-17, res, nil)
+			chk.Array(tst, "A others: res", 1e-17, res, nil)
 		}
 
 		// AllReduceSum
@@ -96,7 +96,7 @@ func main() {
 			res[i] = 0
 		}
 		A.AllReduceSum(res, x)
-		chk.Vector(tst, "A all (sum): res", 1e-17, res, []float64{1 - 3, 1 - 3, 2 - 3, 2 - 3, 3 - 3, 3 - 3, 4 - 3, 4 - 3})
+		chk.Array(tst, "A all (sum): res", 1e-17, res, []float64{1 - 3, 1 - 3, 2 - 3, 2 - 3, 3 - 3, 3 - 3, 4 - 3, 4 - 3})
 
 		// AllReduceMin
 		setSlice(x, int(A.Rank()), int(A.Size()))
@@ -104,7 +104,7 @@ func main() {
 			res[i] = 0
 		}
 		A.AllReduceMin(res, x)
-		chk.Vector(tst, "A all (min): res", 1e-17, res, []float64{-1, -1, -1, -1, -1, -1, -1, -1})
+		chk.Array(tst, "A all (min): res", 1e-17, res, []float64{-1, -1, -1, -1, -1, -1, -1, -1})
 
 		// AllReduceMax
 		setSlice(x, int(A.Rank()), int(A.Size()))
@@ -112,7 +112,7 @@ func main() {
 			res[i] = 0
 		}
 		A.AllReduceMax(res, x)
-		chk.Vector(tst, "A all (max): res", 1e-17, res, []float64{1, 1, 2, 2, 3, 3, 4, 4})
+		chk.Array(tst, "A all (max): res", 1e-17, res, []float64{1, 1, 2, 2, 3, 3, 4, 4})
 
 		// Send & Recv
 		if A.Rank() == 0 {
@@ -123,7 +123,7 @@ func main() {
 		} else {
 			y := make([]float64, 4)
 			A.Recv(y, 0)
-			chk.Vector(tst, "A recv", 1e-17, y, []float64{123, 123, 123, 123})
+			chk.Array(tst, "A recv", 1e-17, y, []float64{123, 123, 123, 123})
 		}
 
 		// SendI & RecvI
@@ -158,16 +158,16 @@ func main() {
 			}
 		}
 		B.BcastFromRootC(x)
-		chk.VectorC(tst, "B: x (complex)", 1e-17, x, []complex128{1 + 0.1i, 2 + 0.2i, 3 + 0.3i, 4 + 0.4i, 5 + 0.5i, 6 + 0.6i, 7 + 0.7i, 8 + 0.8i})
+		chk.ArrayC(tst, "B: x (complex)", 1e-17, x, []complex128{1 + 0.1i, 2 + 0.2i, 3 + 0.3i, 4 + 0.4i, 5 + 0.5i, 6 + 0.6i, 7 + 0.7i, 8 + 0.8i})
 
 		// ReduceSum
 		setSliceC(x, int(B.Rank()), int(B.Size()))
 		res := make([]complex128, len(x))
 		B.ReduceSumC(res, x)
 		if B.Rank() == 0 {
-			chk.VectorC(tst, "B root: res", 1e-17, res, []complex128{1 + 0.1i, 1 + 0.1i, 2 + 0.2i, 2 + 0.2i, 3 + 0.3i, 3 + 0.3i, 4 + 0.4i, 4 + 0.4i})
+			chk.ArrayC(tst, "B root: res", 1e-17, res, []complex128{1 + 0.1i, 1 + 0.1i, 2 + 0.2i, 2 + 0.2i, 3 + 0.3i, 3 + 0.3i, 4 + 0.4i, 4 + 0.4i})
 		} else {
-			chk.VectorC(tst, "B others: res", 1e-17, res, nil)
+			chk.ArrayC(tst, "B others: res", 1e-17, res, nil)
 		}
 
 		// AllReduceSumC
@@ -176,7 +176,7 @@ func main() {
 			res[i] = 0
 		}
 		B.AllReduceSumC(res, x)
-		chk.VectorC(tst, "B all: res", 1e-17, res, []complex128{1 + 0.1i, 1 + 0.1i, 2 + 0.2i, 2 + 0.2i, 3 + 0.3i, 3 + 0.3i, 4 + 0.4i, 4 + 0.4i})
+		chk.ArrayC(tst, "B all: res", 1e-17, res, []complex128{1 + 0.1i, 1 + 0.1i, 2 + 0.2i, 2 + 0.2i, 3 + 0.3i, 3 + 0.3i, 4 + 0.4i, 4 + 0.4i})
 
 		// AllReduceMinI
 		z := make([]int, 8)
@@ -202,7 +202,7 @@ func main() {
 		} else {
 			y := make([]complex128, 4)
 			B.RecvC(y, 0)
-			chk.VectorC(tst, "B recv", 1e-17, y, []complex128{123 + 1i, 123 + 2i, 123 + 3i, 123 + 4i})
+			chk.ArrayC(tst, "B recv", 1e-17, y, []complex128{123 + 1i, 123 + 2i, 123 + 3i, 123 + 4i})
 		}
 
 		// SendOne & RecvOne
@@ -212,7 +212,7 @@ func main() {
 			}
 		} else {
 			res := B.RecvOne(0)
-			chk.Scalar(tst, "B RecvOne", 1e-17, res, -123)
+			chk.Float64(tst, "B RecvOne", 1e-17, res, -123)
 		}
 	}
 
