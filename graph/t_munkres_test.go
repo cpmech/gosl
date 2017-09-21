@@ -386,20 +386,20 @@ func Test_munkres03(tst *testing.T) {
 
 func checkMaskMatrix(tst *testing.T, msg string, res, correct [][]MaskType) {
 	if len(res) != len(correct) {
-		io.Pf("%s [1;31merror len(res)=%d != len(correct)=%d[0m\n", msg, len(res), len(correct))
-		tst.Errorf("[1;31m%s failed: res and correct matrices have different lengths. %d != %d[0m", msg, len(res), len(correct))
+		io.Pf("%s. len(res)=%d != len(correct)=%d[0m\n", msg, len(res), len(correct))
+		tst.Errorf("%s failed: res and correct matrices have different lengths. %d != %d", msg, len(res), len(correct))
 		return
 	}
 	for i := 0; i < len(res); i++ {
 		if len(res[i]) != len(correct[i]) {
-			io.Pf("%s [1;31merror len(res[%d])=%d != len(correct[%d])=%d[0m\n", msg, i, len(res[i]), i, len(correct[i]))
-			tst.Errorf("[1;31m%s failed: matrices have different number of columns[0m", msg)
+			io.Pf("%s. len(res[%d])=%d != len(correct[%d])=%d[0m\n", msg, i, len(res[i]), i, len(correct[i]))
+			tst.Errorf("%s failed: matrices have different number of columns", msg)
 			return
 		}
 		for j := 0; j < len(res[i]); j++ {
 			if res[i][j] != correct[i][j] {
-				io.Pf("%s [1;31merror [%d,%d] %v != %v[0m\n", msg, i, j, res[i][j], correct[i][j])
-				tst.Errorf("[1;31m%s failed: different int matrices:\n [%d,%d] item is wrong: %v != %v[0m", msg, i, j, res[i][j], correct[i][j])
+				io.Pf("[%d,%d] %v != %v[0m\n", msg, i, j, res[i][j], correct[i][j])
+				tst.Errorf("%s failed: different int matrices:\n [%d,%d] item is wrong: %v != %v", msg, i, j, res[i][j], correct[i][j])
 				return
 			}
 		}

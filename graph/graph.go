@@ -56,12 +56,11 @@ func (o *Graph) Init(edges [][]int, weightsE []float64, verts [][]float64, weigh
 }
 
 // GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes ides
-func (o *Graph) GetEdge(i, j int) (k int, err error) {
+func (o *Graph) GetEdge(i, j int) (k int) {
 	key := o.HashEdgeKey(i, j)
 	var ok bool
 	if k, ok = o.Key2edge[key]; !ok {
-		err = chk.Err("cannot find edge from %d to %d", i, j)
-		return
+		chk.Panic("cannot find edge from %d to %d\n", i, j)
 	}
 	return
 }
@@ -84,14 +83,11 @@ func (o *Graph) GetEdge(i, j int) (k int, err error) {
 //              ∞  ∞  ∞  0 |  3
 //  Input:
 //   method -- FW: Floyd-Warshall method
-func (o *Graph) ShortestPaths(method string) (err error) {
+func (o *Graph) ShortestPaths(method string) {
 	if method != "FW" {
 		chk.Panic("ShortestPaths works with FW (Floyd-Warshall) method only for now")
 	}
-	err = o.CalcDist()
-	if err != nil {
-		return
-	}
+	o.CalcDist()
 	nv := len(o.Dist)
 	var sum float64
 	for k := 0; k < nv; k++ {
@@ -124,7 +120,7 @@ func (o *Graph) Path(s, t int) (p []int) {
 }
 
 // CalcDist computes distances beetween all vertices and initialises 'Next' matrix
-func (o *Graph) CalcDist() (err error) {
+func (o *Graph) CalcDist() {
 	nv := len(o.Dist)
 	for i := 0; i < nv; i++ {
 		for j := 0; j < nv; j++ {
@@ -154,7 +150,7 @@ func (o *Graph) CalcDist() (err error) {
 		o.Dist[i][j] = d
 		o.Next[i][j] = j
 		if o.Dist[i][j] < 0 {
-			return chk.Err("distance between vertices cannot be negative: %g", o.Dist[i][j])
+			chk.Panic("distance between vertices cannot be negative: %g\n", o.Dist[i][j])
 		}
 	}
 	return

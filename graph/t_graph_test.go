@@ -56,41 +56,20 @@ func Test_graph01(tst *testing.T) {
 	chk.IntAssert(G.Key2edge[G.HashEdgeKey(1, 2)], 2) // (1,2) → edge 2
 	chk.IntAssert(G.Key2edge[G.HashEdgeKey(2, 3)], 3) // (2,3) → edge 3
 
-	edg, err := G.GetEdge(-1, 1)
-	if err == nil {
-		tst.Errorf("GetEdge should have failed with (-1,1)\n")
-		return
-	}
-	edg, err = G.GetEdge(0, 1)
-	if err != nil {
-		tst.Errorf("GetEdge failed:\n%v", err)
-		return
-	}
+	func() {
+		defer chk.RecoverTstPanicIsOK(tst)
+		G.GetEdge(-1, 1)
+	}()
+	edg := G.GetEdge(0, 1)
 	chk.IntAssert(edg, 0)
-	edg, err = G.GetEdge(0, 3)
-	if err != nil {
-		tst.Errorf("GetEdge failed:\n%v", err)
-		return
-	}
+	edg = G.GetEdge(0, 3)
 	chk.IntAssert(edg, 1)
-	edg, err = G.GetEdge(1, 2)
-	if err != nil {
-		tst.Errorf("GetEdge failed:\n%v", err)
-		return
-	}
+	edg = G.GetEdge(1, 2)
 	chk.IntAssert(edg, 2)
-	edg, err = G.GetEdge(2, 3)
-	if err != nil {
-		tst.Errorf("GetEdge failed:\n%v", err)
-		return
-	}
+	edg = G.GetEdge(2, 3)
 	chk.IntAssert(edg, 3)
 
-	err = G.ShortestPaths("FW")
-	if err != nil {
-		tst.Errorf("ShortestPaths failed:\n%v", err)
-		return
-	}
+	G.ShortestPaths("FW")
 	inf := math.MaxFloat64
 	pth := G.Path(0, 3)
 	io.Pforan("dist =\n%v", G.StrDistMatrix())
@@ -104,11 +83,7 @@ func Test_graph01(tst *testing.T) {
 	})
 
 	G.WeightsE[3] = 13
-	err = G.ShortestPaths("FW")
-	if err != nil {
-		tst.Errorf("ShortestPaths failed:\n%v", err)
-		return
-	}
+	G.ShortestPaths("FW")
 	pth = G.Path(0, 3)
 	io.Pf("\n")
 	io.Pfcyan("dist =\n%v", G.StrDistMatrix())
@@ -171,11 +146,7 @@ func Test_graph02(tst *testing.T) {
 	chk.IntAssert(G.Key2edge[G.HashEdgeKey(2, 3)], 5) // (2,3) → edge 5
 	chk.IntAssert(G.Key2edge[G.HashEdgeKey(5, 3)], 6) // (5,3) → edge 6
 
-	err := G.ShortestPaths("FW")
-	if err != nil {
-		tst.Errorf("ShortestPaths failed:\n%v", err)
-		return
-	}
+	G.ShortestPaths("FW")
 	inf := math.MaxFloat64
 	pth := G.Path(1, 3)
 	io.Pforan("dist =\n%v", G.StrDistMatrix())
@@ -198,11 +169,7 @@ func Test_graph03(tst *testing.T) {
 
 	G := ReadGraphTable("data/SiouxFalls.flow", false)
 
-	err := G.ShortestPaths("FW")
-	if err != nil {
-		tst.Errorf("ShortestPaths failed:\n%v", err)
-		return
-	}
+	G.ShortestPaths("FW")
 
 	pth := G.Path(0, 22)
 	io.Pforan("1 → 23 = %v\n", pth)
@@ -327,11 +294,7 @@ func Test_graph04(tst *testing.T) {
 		nil, nil,
 	)
 
-	err := G.ShortestPaths("FW")
-	if err != nil {
-		tst.Errorf("ShortestPaths failed:\n%v", err)
-		return
-	}
+	G.ShortestPaths("FW")
 
 	source, target := 0, 3
 	pth := G.Path(source, target)

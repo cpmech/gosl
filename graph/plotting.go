@@ -24,12 +24,11 @@ import (
 //  argsVerts -- plt arguments for vertices. may be nil
 //  argsEdges -- plt arguments for edges. may be nil
 func (o *Graph) Draw(vertsLabels map[int]string, edgesLabels map[int]string, radius, width, gap float64,
-	argsVertsTxt, argsEdgesTxt, argsVerts, argsEdges *plt.A) (err error) {
+	argsVertsTxt, argsEdgesTxt, argsVerts, argsEdges *plt.A) {
 
 	// check
 	if len(o.Verts) < 1 {
-		err = chk.Err("vertices are required to draw graph")
-		return
+		chk.Panic("vertices are required to draw graph\n")
 	}
 
 	// plot arguments
