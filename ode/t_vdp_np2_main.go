@@ -105,8 +105,7 @@ func main() {
 
 		// plot
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5, FszXtck: 6, FszYtck: 6})
-		_, T, err := io.ReadTable("data/vdpol_radau5_for.dat")
-		status(err)
+		_, T := io.ReadTable("data/vdpol_radau5_for.dat")
 		X := sol.Out.GetStepX()
 		H := sol.Out.GetStepH()
 		for j := 0; j < ndim; j++ {

@@ -168,10 +168,7 @@ func main() {
 
 		// plot
 		plt.Reset(true, &plt.A{WidthPt: 450, Dpi: 150, Prop: 1.8, FszXtck: 6, FszYtck: 6})
-		_, T, err := io.ReadTable("data/radau5_hwamplifier.dat")
-		if err != nil {
-			chk.Panic("%v", err)
-		}
+		_, T := io.ReadTable("data/radau5_hwamplifier.dat")
 		X := sol.Out.GetStepX()
 		H := sol.Out.GetStepH()
 		for j := 0; j < ndim; j++ {
