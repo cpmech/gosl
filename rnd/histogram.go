@@ -28,9 +28,9 @@ func TextHist(labels []string, counts []int, barlen int) string {
 	lmax := 0
 	Lmax := 0
 	for i, f := range counts {
-		fmax = imax(fmax, f)
-		lmax = imax(lmax, len(labels[i]))
-		Lmax = imax(Lmax, len(io.Sf("%d", f)))
+		fmax = utl.Imax(fmax, f)
+		lmax = utl.Imax(lmax, len(labels[i]))
+		Lmax = utl.Imax(Lmax, len(io.Sf("%d", f)))
 	}
 	if fmax < 1 {
 		return io.Sf("max frequency is too small: fmax=%d\n", fmax)
@@ -176,7 +176,7 @@ func (o Histogram) PlotDensity(args *plt.A) {
 		dx := xf - xi
 		prob := float64(o.Counts[i]) / (float64(nsamples) * dx)
 		plt.Polyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, prob}, {xi, prob}}, args)
-		ymax = max(ymax, prob)
+		ymax = utl.Max(ymax, prob)
 	}
 	return
 }
@@ -307,7 +307,7 @@ func (o IntHistogram) Plot(withText bool, args, argsTxt *plt.A) {
 		if withText {
 			plt.Text((xi+xf)/2.0, y/2.0, io.Sf("%d", o.Counts[i]), argsTxt)
 		}
-		ymax = max(ymax, y)
+		ymax = utl.Max(ymax, y)
 	}
 	plt.AxisRange(float64(o.Stations[0]), float64(o.Stations[nstations-1]), 0, ymax)
 	return

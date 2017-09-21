@@ -137,8 +137,8 @@ func StatBasic(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
 	xmin, xmax = x[0], x[0]
 	for i := 0; i < n; i++ {
 		xave += x[i]
-		xmin = min(xmin, x[i])
-		xmax = max(xmax, x[i])
+		xmin = utl.Min(xmin, x[i])
+		xmax = utl.Max(xmax, x[i])
 	}
 	xave /= float64(n)
 	xdev = StatDevFirst(x, xave, std)
