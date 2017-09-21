@@ -81,11 +81,7 @@ func TestDaxpy01(tst *testing.T) {
 	x := []float64{20, 10, 30, 123, 123}
 	y := []float64{-15, -5, -24, 666, 666, 666}
 	n, incx, incy := 3, 1, 1
-	err := Daxpy(n, α, x, incx, y, incy)
-	if err != nil {
-		tst.Errorf("Daxpy failed:\n%v\n", err)
-		return
-	}
+	Daxpy(n, α, x, incx, y, incy)
 
 	chk.Array(tst, "x", 1e-15, x, []float64{20, 10, 30, 123, 123})
 	chk.Array(tst, "y", 1e-15, y, []float64{-5, 0, -9, 666, 666, 666})
@@ -100,21 +96,13 @@ func TestZaxpy01(tst *testing.T) {
 	x := []complex128{20 + 1i, 10 + 2i, 30 + 1.5i, -123 + 0.5i, -123 + 0.5i}
 	y := []complex128{-15 + 1.5i, -5 - 2i, -24 + 1i, 666 - 0.5i, 666 + 5i}
 	n, incx, incy := len(x), 1, 1
-	err := Zaxpy(n, α, x, incx, y, incy)
-	if err != nil {
-		tst.Errorf("Daxpy failed:\n%v\n", err)
-		return
-	}
+	Zaxpy(n, α, x, incx, y, incy)
 
 	chk.ArrayC(tst, "x", 1e-15, x, []complex128{20 + 1i, 10 + 2i, 30 + 1.5i, -123 + 0.5i, -123 + 0.5i})
 	chk.ArrayC(tst, "y", 1e-15, y, []complex128{5 + 2.5i, 5, 6 + 2.5i, 543, 543 + 5.5i})
 
 	α = 0.5 + 1i
-	err = Zaxpy(n, α, x, incx, y, incy)
-	if err != nil {
-		tst.Errorf("Daxpy failed:\n%v\n", err)
-		return
-	}
+	Zaxpy(n, α, x, incx, y, incy)
 	chk.ArrayC(tst, "y", 1e-15, y, []complex128{14.0 + 23.i, 8.0 + 11.i, 19.5 + 33.25i, 481.0 - 122.75i, 481.0 - 117.25i})
 }
 
@@ -138,19 +126,11 @@ func TestDgemv01(tst *testing.T) {
 	x := []float64{20, 10, 30}
 	y := []float64{3, 1, 2, 4}
 	lda, incx, incy := m, 1, 1
-	err := Dgemv(false, m, n, α, a, lda, x, incx, β, y, incy)
-	if err != nil {
-		tst.Errorf("Dgemv failed:\n%v\n", err)
-		return
-	}
+	Dgemv(false, m, n, α, a, lda, x, incx, β, y, incy)
 	chk.Array(tst, "y", 1e-15, y, []float64{12.5, 17.5, 29.5, 43.5})
 
 	// perform mv with transpose
-	err = Dgemv(true, m, n, α, a, lda, y, incy, β, x, incx)
-	if err != nil {
-		tst.Errorf("Dgemv failed:\n%v\n", err)
-		return
-	}
+	Dgemv(true, m, n, α, a, lda, y, incy, β, x, incx)
 	chk.Array(tst, "x", 1e-15, x, []float64{144.125, 30.3, 75.45})
 
 	// check that a is unmodified
@@ -177,19 +157,11 @@ func TestZgemv01(tst *testing.T) {
 	x := []complex128{20, 10, 30}
 	y := []complex128{3, 1, 2, 4}
 	lda, incx, incy := m, 1, 1
-	err := Zgemv(false, m, n, α, a, lda, x, incx, β, y, incy)
-	if err != nil {
-		tst.Errorf("Zgemv failed:\n%v\n", err)
-		return
-	}
+	Zgemv(false, m, n, α, a, lda, x, incx, β, y, incy)
 	chk.ArrayC(tst, "y", 1e-15, y, []complex128{-38.5 + 41.5i, -10.5 + 46i, 24.5 + 55.5i, 59.5 + 67i})
 
 	// perform mv with transpose
-	err = Zgemv(true, m, n, α, a, lda, y, incy, β, x, incx)
-	if err != nil {
-		tst.Errorf("Zgemv failed:\n%v\n", err)
-		return
-	}
+	Zgemv(true, m, n, α, a, lda, y, incy, β, x, incx)
 	chk.ArrayC(tst, "x", 1e-13, x, []complex128{-248.875 + 82.5i, -18.5 + 38i, 83.85 + 154.7i})
 
 	// check that a is unmodified
@@ -231,11 +203,7 @@ func TestDgemm01(tst *testing.T) {
 	transA, transB := false, false
 	alpha, beta := 0.5, 2.0
 	lda, ldb, ldc := 4, 5, 4
-	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
-	if err != nil {
-		tst.Errorf("Dgemm failed:\n%v\n", err)
-		return
-	}
+	Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
 
 	// check
 	chk.Deep2(tst, "0.5⋅a⋅b + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
@@ -279,11 +247,7 @@ func TestDgemm02(tst *testing.T) {
 	transA, transB := false, true
 	alpha, beta := 0.5, 2.0
 	lda, ldb, ldc := 4, 3, 4
-	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
-	if err != nil {
-		tst.Errorf("Dgemm failed:\n%v\n", err)
-		return
-	}
+	Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
 
 	// check
 	chk.Deep2(tst, "0.5⋅a⋅bᵀ + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
@@ -330,11 +294,7 @@ func TestDgemm03(tst *testing.T) {
 	transA, transB := true, false
 	alpha, beta := 0.5, 2.0
 	lda, ldb, ldc := 5, 5, 4
-	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
-	if err != nil {
-		tst.Errorf("Dgemm failed:\n%v\n", err)
-		return
-	}
+	Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
 
 	// check
 	chk.Deep2(tst, "0.5⋅aᵀ⋅b + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
@@ -379,11 +339,7 @@ func TestDgemm04(tst *testing.T) {
 	transA, transB := true, true
 	alpha, beta := 0.5, 2.0
 	lda, ldb, ldc := 5, 3, 4
-	err := Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
-	if err != nil {
-		tst.Errorf("Dgemm failed:\n%v\n", err)
-		return
-	}
+	Dgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
 
 	// check
 	chk.Deep2(tst, "0.5⋅aᵀ⋅bᵀ + 2⋅c", 1e-17, ColMajorToSlice(4, 3, c), [][]float64{
@@ -428,11 +384,7 @@ func TestZgemm01(tst *testing.T) {
 	transA, transB := false, false
 	alpha, beta := 0.5-2i, 2.0-4i
 	lda, ldb, ldc := m, k, m
-	err := Zgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
-	if err != nil {
-		tst.Errorf("Zgemm failed:\n%v\n", err)
-		return
-	}
+	Zgemm(transA, transB, m, n, k, alpha, a, lda, b, ldb, beta, c, ldc)
 
 	// check
 	chk.Deep2c(tst, "(0.5-2i)⋅a⋅b + (2-4i)⋅c", 1e-17, ColMajorCtoSlice(4, 3, c), [][]complex128{
@@ -469,11 +421,7 @@ func TestDgesv01(tst *testing.T) {
 	nrhs := 1
 	lda, ldb := n, n
 	ipiv := make([]int64, n)
-	err := Dgesv(n, nrhs, a, lda, ipiv, b, ldb)
-	if err != nil {
-		tst.Errorf("Dgesv failed:\n%v\n", err)
-		return
-	}
+	Dgesv(n, nrhs, a, lda, ipiv, b, ldb)
 	chk.Array(tst, "x = A⁻¹ b", 1e-14, b, xCorrect) // oblas works with 1e-15
 
 	// check ipiv
@@ -522,11 +470,7 @@ func TestZgesv01(tst *testing.T) {
 	nrhs := 1
 	lda, ldb := n, n
 	ipiv := make([]int64, n)
-	err := Zgesv(n, nrhs, a, lda, ipiv, b, ldb)
-	if err != nil {
-		tst.Errorf("Zgesv failed:\n%v\n", err)
-		return
-	}
+	Zgesv(n, nrhs, a, lda, ipiv, b, ldb)
 	chk.ArrayC(tst, "x = A⁻¹ b", tol, b, xCorrect)
 
 	// compare with python results
@@ -564,11 +508,7 @@ func checksvd(tst *testing.T, amat, uCorrect, vtCorrect [][]float64, sCorrect []
 	// perform SVD
 	jobu := 'A'
 	jobvt := 'A'
-	err := Dgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, superb)
-	if err != nil {
-		tst.Errorf("Dgesvd failed:\n%v\n", err)
-		return
-	}
+	Dgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, superb)
 
 	// compare results
 	umat := ColMajorToSlice(m, m, u)
@@ -700,11 +640,7 @@ func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrec
 	// perform SVD
 	jobu := 'A'
 	jobvt := 'A'
-	err := Zgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, superb)
-	if err != nil {
-		tst.Errorf("Zgesvd failed:\n%v\n", err)
-		return
-	}
+	Zgesvd(jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, superb)
 
 	// compare results
 	umat := ColMajorCtoSlice(m, m, u)
@@ -796,11 +732,7 @@ func TestDgetrf01(tst *testing.T) {
 	// run dgetrf
 	lda := m
 	ipiv := make([]int64, utl.Imin(m, n))
-	err := Dgetrf(m, n, a, lda, ipiv)
-	if err != nil {
-		tst.Errorf("Dgetrf failed:\n%v\n", err)
-		return
-	}
+	Dgetrf(m, n, a, lda, ipiv)
 
 	// check ipiv
 	chk.Int64s(tst, "ipiv", ipiv, []int64{4, 2, 3, 4})
@@ -814,11 +746,7 @@ func TestDgetrf01(tst *testing.T) {
 	})
 
 	// run dgetri
-	err = Dgetri(n, a, lda, ipiv)
-	if err != nil {
-		tst.Errorf("Dgetri failed:\n%v\n", err)
-		return
-	}
+	Dgetri(n, a, lda, ipiv)
 
 	// compare inverse
 	ai := ColMajorToSlice(n, m, a)
@@ -863,11 +791,7 @@ func TestZgetrf01(tst *testing.T) {
 	// run
 	lda := m
 	ipiv := make([]int64, utl.Imin(m, n))
-	err := Zgetrf(m, n, a, lda, ipiv)
-	if err != nil {
-		tst.Errorf("Zgetrf failed:\n%v\n", err)
-		return
-	}
+	Zgetrf(m, n, a, lda, ipiv)
 
 	// check ipiv
 	chk.Int64s(tst, "ipiv", ipiv, []int64{4, 2, 3, 4})
@@ -881,11 +805,7 @@ func TestZgetrf01(tst *testing.T) {
 	})
 
 	// run zgetri
-	err = Zgetri(n, a, lda, ipiv)
-	if err != nil {
-		tst.Errorf("Zgetri failed:\n%v\n", err)
-		return
-	}
+	Zgetri(n, a, lda, ipiv)
 
 	// compare inverse
 	ai := ColMajorCtoSlice(n, m, a)
@@ -989,11 +909,7 @@ func TestDsyrk01(tst *testing.T) {
 	// run dsyrk with up(c)
 	up, trans := true, false
 	lda, ldc := n, n
-	err := Dsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
-	if err != nil {
-		tst.Errorf("Dsyrk failed:\n%v\n", err)
-		return
-	}
+	Dsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
 
 	// compare resulting up(c) matrix
 	chk.Deep2(tst, "using up(c): c := 3⋅a⋅aᵀ - c", 1e-17, ColMajorToSlice(n, n, cUp), [][]float64{
@@ -1005,11 +921,7 @@ func TestDsyrk01(tst *testing.T) {
 
 	// run dsyrk with lo(c)
 	up = false
-	err = Dsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
-	if err != nil {
-		tst.Errorf("Dsyrk failed:\n%v\n", err)
-		return
-	}
+	Dsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
 
 	// compare resulting up(c) matrix
 	chk.Deep2(tst, "using lo(c): c := 3⋅a⋅aᵀ - c", 1e-17, ColMajorToSlice(n, n, cLo), [][]float64{
@@ -1074,11 +986,7 @@ func TestDsyrk02(tst *testing.T) {
 	// run dsyrk with up(c)
 	up, trans := true, true
 	lda, ldc := k, n
-	err := Dsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
-	if err != nil {
-		tst.Errorf("Dsyrk failed:\n%v\n", err)
-		return
-	}
+	Dsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
 
 	// compare resulting up(c) matrix
 	chk.Deep2(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorToSlice(n, n, cUp), [][]float64{
@@ -1092,11 +1000,7 @@ func TestDsyrk02(tst *testing.T) {
 
 	// run dsyrk with lo(c)
 	up = false
-	err = Dsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
-	if err != nil {
-		tst.Errorf("Dsyrk failed:\n%v\n", err)
-		return
-	}
+	Dsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
 
 	// compare resulting up(c) matrix
 	chk.Deep2(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorToSlice(n, n, cLo), [][]float64{
@@ -1198,11 +1102,7 @@ func TestZsyrk01(tst *testing.T) {
 	// run zsyrk with up(c)
 	up, trans := true, false
 	lda, ldc := n, n
-	err := Zsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
-	if err != nil {
-		tst.Errorf("Zsyrk failed:\n%v\n", err)
-		return
-	}
+	Zsyrk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
 
 	// compare resulting up(c) matrix
 	chk.Deep2c(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cUp), [][]complex128{
@@ -1214,11 +1114,7 @@ func TestZsyrk01(tst *testing.T) {
 
 	// run zsyrk with lo(c)
 	up = false
-	err = Zsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
-	if err != nil {
-		tst.Errorf("Zsyrk failed:\n%v\n", err)
-		return
-	}
+	Zsyrk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
 
 	// compare resulting up(c) matrix
 	chk.Deep2c(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cLo), [][]complex128{
@@ -1277,11 +1173,7 @@ func TestZherk01(tst *testing.T) {
 	// run zherk with up(c)
 	up, trans := true, false
 	lda, ldc := n, n
-	err := Zherk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
-	if err != nil {
-		tst.Errorf("Zherk failed:\n%v\n", err)
-		return
-	}
+	Zherk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
 
 	// compare resulting up(c) matrix
 	chk.Deep2c(tst, "using up(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cUp), [][]complex128{
@@ -1293,11 +1185,7 @@ func TestZherk01(tst *testing.T) {
 
 	// run zherk with lo(c)
 	up = false
-	err = Zherk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
-	if err != nil {
-		tst.Errorf("Zherk failed:\n%v\n", err)
-		return
-	}
+	Zherk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
 
 	// compare resulting up(c) matrix
 	chk.Deep2c(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cLo), [][]complex128{
@@ -1342,11 +1230,7 @@ func TestDpotrf01(tst *testing.T) {
 	// run dpotrf with up(a)
 	up := true
 	lda := n
-	err := Dpotrf(up, n, aUp, lda)
-	if err != nil {
-		tst.Errorf("Dpotrf failed:\n%v\n", err)
-		return
-	}
+	Dpotrf(up, n, aUp, lda)
 
 	// check aUp
 	chk.Deep2(tst, "chol(aUp)", 1e-15, ColMajorToSlice(n, n, aUp), [][]float64{
@@ -1358,11 +1242,7 @@ func TestDpotrf01(tst *testing.T) {
 
 	// run dpotrf with lo(a)
 	up = false
-	err = Dpotrf(up, n, aLo, lda)
-	if err != nil {
-		tst.Errorf("Dpotrf failed:\n%v\n", err)
-		return
-	}
+	Dpotrf(up, n, aLo, lda)
 
 	// check aLo
 	chk.Deep2(tst, "chol(aLo)", 1e-15, ColMajorToSlice(n, n, aLo), [][]float64{
@@ -1407,11 +1287,7 @@ func TestZpotrf01(tst *testing.T) {
 	// run zpotrf with up(a)
 	up := true
 	lda := n
-	err := Zpotrf(up, n, aUp, lda)
-	if err != nil {
-		tst.Errorf("Zpotrf failed:\n%v\n", err)
-		return
-	}
+	Zpotrf(up, n, aUp, lda)
 
 	// check aUp
 	chk.Deep2c(tst, "chol(aUp)", 1e-15, ColMajorCtoSlice(n, n, aUp), [][]complex128{
@@ -1423,11 +1299,7 @@ func TestZpotrf01(tst *testing.T) {
 
 	// run zpotrf with lo(a)
 	up = false
-	err = Zpotrf(up, n, aLo, lda)
-	if err != nil {
-		tst.Errorf("Dpotrf failed:\n%v\n", err)
-		return
-	}
+	Zpotrf(up, n, aLo, lda)
 
 	// check aLo
 	chk.Deep2c(tst, "chol(aLo)", 1e-15, ColMajorCtoSlice(n, n, aLo), [][]complex128{
@@ -1465,8 +1337,7 @@ func TestDgeev01(tst *testing.T) {
 	calcVl := true
 	calcVr := true
 
-	err := Dgeev(calcVl, calcVr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr)
-	status(tst, err)
+	Dgeev(calcVl, calcVr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr)
 
 	vvl := make([]complex128, n*n)
 	vvr := make([]complex128, n*n)
@@ -1549,8 +1420,7 @@ func TestDgeev01(tst *testing.T) {
 	vl2 := make([]float64, n*n) // left eigenvectors
 	calcVl = true
 	calcVr = false
-	err = Dgeev(calcVl, calcVr, n, a2, lda, wr2, wi2, vl2, ldvl, nil, 0)
-	status(tst, err)
+	Dgeev(calcVl, calcVr, n, a2, lda, wr2, wi2, vl2, ldvl, nil, 0)
 
 	// check eigenvalues and left eigenvectors
 	vvl2 := make([]complex128, n*n)
@@ -1569,8 +1439,7 @@ func TestDgeev01(tst *testing.T) {
 	vr3 := make([]float64, n*n) // right eigenvectors
 	calcVl = false
 	calcVr = true
-	err = Dgeev(calcVl, calcVr, n, a3, lda, wr3, wi3, nil, 0, vr3, ldvr)
-	status(tst, err)
+	Dgeev(calcVl, calcVr, n, a3, lda, wr3, wi3, nil, 0, vr3, ldvr)
 
 	// check eigenvalues and right eigenvectors
 	vvr3 := make([]complex128, n*n)
@@ -1588,8 +1457,7 @@ func TestDgeev01(tst *testing.T) {
 	wi4 := make([]float64, n) // eigen values (imaginary part)
 	calcVl = false
 	calcVr = false
-	err = Dgeev(calcVl, calcVr, n, a4, lda, wr4, wi4, nil, 0, nil, 0)
-	status(tst, err)
+	Dgeev(calcVl, calcVr, n, a4, lda, wr4, wi4, nil, 0, nil, 0)
 
 	// check eigenvalues
 	ww4 := GetJoinComplex(wr4, wi4)
