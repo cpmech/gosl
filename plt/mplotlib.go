@@ -544,6 +544,11 @@ func Quiver(x, y, gx, gy [][]float64, args *A) {
 	genMat(&bufferPy, sgx, gx)
 	genMat(&bufferPy, sgy, gy)
 	io.Ff(&bufferPy, "plt.quiver(%s,%s,%s,%s", sx, sy, sgx, sgy)
+	if args != nil {
+		if args.Scale > 0 {
+			io.Ff(&bufferPy, ",scale=%g", args.Scale)
+		}
+	}
 	updateBufferAndClose(&bufferPy, args, false, false)
 }
 
