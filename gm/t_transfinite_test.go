@@ -21,82 +21,31 @@ func TestTransfinite01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Transfinite01")
 
-	π := math.Pi
-	e0 := []float64{1, 0}
-	e1 := []float64{0, 1}
-
-	// mapping
-	trf := NewTransfinite(2, []fun.Vs{
-		func(x la.Vector, r float64) {
-			for i := 0; i < 2; i++ {
-				x[i] = (2 + r) * e0[i]
-			}
-		},
-		func(x la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			for i := 0; i < 2; i++ {
-				x[i] = 3*math.Cos(θ)*e0[i] + 3*math.Sin(θ)*e1[i]
-			}
-		},
-		func(x la.Vector, r float64) {
-			for i := 0; i < 2; i++ {
-				x[i] = (2 + r) * e1[i]
-			}
-		},
-		func(x la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			for i := 0; i < 2; i++ {
-				x[i] = math.Cos(θ)*e0[i] + math.Sin(θ)*e1[i]
-			}
-		},
-	}, []fun.Vs{
-		func(dxdr la.Vector, r float64) {
-			for i := 0; i < 2; i++ {
-				dxdr[i] = e0[i]
-			}
-		},
-		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			for i := 0; i < 2; i++ {
-				dxds[i] = (-3*math.Sin(θ)*e0[i] + 3*math.Cos(θ)*e1[i]) * dθds
-			}
-		},
-		func(dxdr la.Vector, r float64) {
-			for i := 0; i < 2; i++ {
-				dxdr[i] = e1[i]
-			}
-		},
-		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			for i := 0; i < 2; i++ {
-				dxds[i] = (-math.Sin(θ)*e0[i] + math.Cos(θ)*e1[i]) * dθds
-			}
-		},
-	})
+	// new object
+	rin, rou := 2.0, 6.0 // radii
+	trf := FactoryTfinite.Surf2dQuarterRing(rin, rou)
 
 	// check corners
-	chk.Array(tst, "C0", 1e-17, trf.C[0], []float64{1, 0})
-	chk.Array(tst, "C1", 1e-17, trf.C[1], []float64{3, 0})
-	chk.Array(tst, "C2", 1e-17, trf.C[2], []float64{0, 3})
-	chk.Array(tst, "C3", 1e-17, trf.C[3], []float64{0, 1})
+	chk.Array(tst, "C0", 1e-17, trf.C[0], []float64{rin, 0})
+	chk.Array(tst, "C1", 1e-17, trf.C[1], []float64{rou, 0})
+	chk.Array(tst, "C2", 1e-17, trf.C[2], []float64{0, rou})
+	chk.Array(tst, "C3", 1e-17, trf.C[3], []float64{0, rin})
 
 	// auxiliary
-	a := 1.0 / math.Sqrt(2)
-	b := 2.0 / math.Sqrt(2)
-	c := 3.0 / math.Sqrt(2)
+	a := rin / math.Sqrt(2)
+	b := 0.5 * (rin + rou) / math.Sqrt(2)
+	c := rou / math.Sqrt(2)
 	x := la.NewVector(2)
 
 	// check points
 	trf.Point(x, []float64{-1, -1})
-	chk.Array(tst, "x(-1,-1)", 1e-17, x, []float64{1, 0})
+	chk.Array(tst, "x(-1,-1)", 1e-17, x, []float64{rin, 0})
 
 	trf.Point(x, []float64{0, -1})
-	chk.Array(tst, "x( 0,-1)", 1e-17, x, []float64{2, 0})
+	chk.Array(tst, "x( 0,-1)", 1e-17, x, []float64{0.5 * (rin + rou), 0})
 
 	trf.Point(x, []float64{+1, -1})
-	chk.Array(tst, "x(+1,-1)", 1e-17, x, []float64{3, 0})
+	chk.Array(tst, "x(+1,-1)", 1e-17, x, []float64{rou, 0})
 
 	trf.Point(x, []float64{-1, 0})
 	chk.Array(tst, "x(-1, 0)", 1e-15, x, []float64{a, a})
@@ -108,19 +57,19 @@ func TestTransfinite01(tst *testing.T) {
 	chk.Array(tst, "x(+1, 0)", 1e-15, x, []float64{c, c})
 
 	trf.Point(x, []float64{-1, +1})
-	chk.Array(tst, "x(-1,+1)", 1e-15, x, []float64{0, 1})
+	chk.Array(tst, "x(-1,+1)", 1e-15, x, []float64{0, rin})
 
 	trf.Point(x, []float64{0, +1})
-	chk.Array(tst, "x( 0,+1)", 1e-15, x, []float64{0, 2})
+	chk.Array(tst, "x( 0,+1)", 1e-15, x, []float64{0, 0.5 * (rin + rou)})
 
 	trf.Point(x, []float64{+1, +1})
-	chk.Array(tst, "x(+1,+1)", 1e-15, x, []float64{0, 3})
+	chk.Array(tst, "x(+1,+1)", 1e-15, x, []float64{0, rou})
 
 	// check derivs
 	dxdu := la.NewMatrix(2, 2)
 	u := la.NewVector(2)
-	rvals := utl.LinSpace(-1, 1, 3)
-	svals := utl.LinSpace(-1, 1, 3)
+	rvals := utl.LinSpace(-1, 1, 5)
+	svals := utl.LinSpace(-1, 1, 5)
 	verb := false
 	for _, s := range svals {
 		for _, r := range rvals {
@@ -137,8 +86,8 @@ func TestTransfinite01(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
 		trf.Draw([]int{21, 21}, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
-		plt.Arc(0, 0, 1, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
-		plt.Arc(0, 0, 3, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
+		plt.Arc(0, 0, rin, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
+		plt.Arc(0, 0, rou, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
 		for _, s := range svals {
 			for _, r := range rvals {
 				u[0] = r
