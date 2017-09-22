@@ -85,7 +85,7 @@ func TestTransfinite01(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		trf.Draw([]int{21, 21}, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
+		trf.Draw([]int{21, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
 		plt.Arc(0, 0, rin, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
 		plt.Arc(0, 0, rou, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
 		for _, s := range svals {
@@ -200,7 +200,7 @@ func TestTransfinite02(tst *testing.T) {
 
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		trf.Draw([]int{21, 21}, nil, nil)
+		trf.Draw([]int{21, 21}, false, nil, nil)
 		plt.Arc(0, 0, 1, 0, 90, &plt.A{C: plt.C(2, 0), NoClip: true, Z: 10})
 		plt.HideAllBorders()
 		plt.Equal()
@@ -352,7 +352,7 @@ func TestTransfinite03(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
 		curve0.DrawElems(2, 41, false, &plt.A{C: plt.C(2, 0), Z: 10}, nil)
-		trf.Draw([]int{21, 21}, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
+		trf.Draw([]int{21, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
 		for _, s := range svals {
 			for _, r := range rvals {
 				u[0] = r

@@ -133,7 +133,7 @@ func (o *Transfinite) Derivs(dxdu *la.Matrix, x, u la.Vector) {
 }
 
 // Draw draws figure formed by B
-func (o *Transfinite) Draw(npts []int, args, argsBry *plt.A) {
+func (o *Transfinite) Draw(npts []int, onlyBry bool, args, argsBry *plt.A) {
 
 	// auxiliary
 	if len(npts) != o.Ndim {
@@ -152,33 +152,35 @@ func (o *Transfinite) Draw(npts []int, args, argsBry *plt.A) {
 	}
 	x := la.NewVector(o.Ndim)
 	u := la.NewVector(o.Ndim)
-
-	// draw 0-lines
 	x0 := make([]float64, npts[0])
 	y0 := make([]float64, npts[0])
-	for j := 0; j < npts[1]; j++ {
-		u[1] = -1 + 2*float64(j)/float64(npts[1]-1)
-		for i := 0; i < npts[0]; i++ {
-			u[0] = -1 + 2*float64(i)/float64(npts[0]-1)
-			o.Point(x, u)
-			x0[i] = x[0]
-			y0[i] = x[1]
-		}
-		plt.Plot(x0, y0, args)
-	}
-
-	// draw 1-lines
 	x1 := make([]float64, npts[1])
 	y1 := make([]float64, npts[1])
-	for i := 0; i < npts[0]; i++ {
-		u[0] = -1 + 2*float64(i)/float64(npts[0]-1)
+
+	if !onlyBry {
+		// draw 0-lines
 		for j := 0; j < npts[1]; j++ {
 			u[1] = -1 + 2*float64(j)/float64(npts[1]-1)
-			o.Point(x, u)
-			x1[j] = x[0]
-			y1[j] = x[1]
+			for i := 0; i < npts[0]; i++ {
+				u[0] = -1 + 2*float64(i)/float64(npts[0]-1)
+				o.Point(x, u)
+				x0[i] = x[0]
+				y0[i] = x[1]
+			}
+			plt.Plot(x0, y0, args)
 		}
-		plt.Plot(x1, y1, args)
+
+		// draw 1-lines
+		for i := 0; i < npts[0]; i++ {
+			u[0] = -1 + 2*float64(i)/float64(npts[0]-1)
+			for j := 0; j < npts[1]; j++ {
+				u[1] = -1 + 2*float64(j)/float64(npts[1]-1)
+				o.Point(x, u)
+				x1[j] = x[0]
+				y1[j] = x[1]
+			}
+			plt.Plot(x1, y1, args)
+		}
 	}
 
 	// draw B0(r)
