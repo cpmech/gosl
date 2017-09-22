@@ -11,24 +11,28 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
-// Transfinite maps a reference square [-1,1]×[-1,1] into a curve-bounded quadrilateral
+// Transfinite maps a reference square [-1,+1]×[-1,+1] into a curve-bounded quadrilateral
 //
-//                                   B1(s) _,B
-//       c———————b                C--.___-'  |
-//       |       |                 \         | B0(r)
-//   s   |       |      y     B2(r) \        |
-//   ↑   |       |      ↑           /      __A
-//   |   d———————a      |          / ____,'
-//   |                  |         D-'   B3(s)
-//   +————→r            +————→x
-//
+//                                             B[2](r(x,y)) _,'\
+//              B[2](r)                                  _,'    \ B[1](s(x,y))
+//             ┌───────┐                              _,'        \
+//             │       │                             \            \
+//      B[3](s)│       │B[1](s)     ⇒                 \         _,'
+//   s         │       │                  B[3](s(x,y)) \     _,'
+//   │         └───────┘               y                \ _,'  B[0](r(x,y))
+//   └──r       B[0](r)                │                 '
+//                                     └──x
 type Transfinite struct {
+
+	// input
 	Ndim int         // space dimension
 	B    []fun.Vs    // the boundary functions
 	Bd   []fun.Vs    // derivatives of boundary functions
 	C    []la.Vector // "corner" points
-	X    []la.Vector // points at arbitrary positions along edges/faces
-	Xd   []la.Vector // derivatives at arbitrary positions along edges/faces
+
+	// workspase
+	xface  []la.Vector // points at arbitrary positions along edges/faces
+	dxface []la.Vector // derivatives at arbitrary positions along edges/faces
 }
 
 // NewTransfinite allocates a new structure
@@ -44,12 +48,12 @@ func NewTransfinite(ndim int, B, Bd []fun.Vs) (o *Transfinite) {
 			chk.Panic("in 2D, four boundary functions B are required\n")
 		}
 		o.C = make([]la.Vector, 4)
-		o.X = make([]la.Vector, 4)
-		o.Xd = make([]la.Vector, 4)
+		o.xface = make([]la.Vector, 4)
+		o.dxface = make([]la.Vector, 4)
 		for i := 0; i < len(o.C); i++ {
 			o.C[i] = la.NewVector(o.Ndim)
-			o.X[i] = la.NewVector(o.Ndim)
-			o.Xd[i] = la.NewVector(o.Ndim)
+			o.xface[i] = la.NewVector(o.Ndim)
+			o.dxface[i] = la.NewVector(o.Ndim)
 		}
 		o.B[0](o.C[0], -1)
 		o.B[0](o.C[1], +1)
@@ -73,7 +77,7 @@ func NewTransfinite(ndim int, B, Bd []fun.Vs) (o *Transfinite) {
 func (o *Transfinite) Point(x, u la.Vector) {
 	if o.Ndim == 2 {
 		r, s := u[0], u[1]
-		A, B, C, D := o.X[0], o.X[1], o.X[2], o.X[3]
+		A, B, C, D := o.xface[0], o.xface[1], o.xface[2], o.xface[3]
 		m, n, p, q := o.C[0], o.C[1], o.C[2], o.C[3]
 		o.B[0](A, r)
 		o.B[1](B, s)
@@ -97,8 +101,8 @@ func (o *Transfinite) Point(x, u la.Vector) {
 func (o *Transfinite) Derivs(dxdu *la.Matrix, x, u la.Vector) {
 	if o.Ndim == 2 {
 		r, s := u[0], u[1]
-		A, B, C, D := o.X[0], o.X[1], o.X[2], o.X[3]
-		a, b, c, d := o.Xd[0], o.Xd[1], o.Xd[2], o.Xd[3]
+		A, B, C, D := o.xface[0], o.xface[1], o.xface[2], o.xface[3]
+		a, b, c, d := o.dxface[0], o.dxface[1], o.dxface[2], o.dxface[3]
 		m, n, p, q := o.C[0], o.C[1], o.C[2], o.C[3]
 		o.B[0](A, r)
 		o.B[1](B, s)
