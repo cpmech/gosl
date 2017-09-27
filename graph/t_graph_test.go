@@ -264,8 +264,9 @@ func Test_graph03(tst *testing.T) {
 			vlabels[i] = io.Sf("%d", i)
 		}
 
+		p := Plotter{G: G}
 		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150, Prop: 1.2})
-		G.Draw(vlabels, elabels, 0, 0, 0, nil, nil, nil, nil)
+		p.Draw()
 		plt.Equal()
 		plt.AxisOff()
 		plt.Save("/tmp/graph", "siouxfalls")

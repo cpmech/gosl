@@ -7,5 +7,5 @@ while true; do
     echo
     echo
     go install
-    go test -test.run="graph03"
+    go test -test.run="Adjacency01"
 done

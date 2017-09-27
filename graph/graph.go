@@ -7,7 +7,6 @@ package graph
 
 import (
 	"math"
-	"strings"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -53,6 +52,11 @@ func (o *Graph) Init(edges [][]int, weightsE []float64, verts [][]float64, weigh
 	nv := len(o.Shares)
 	o.Dist = utl.Alloc(nv, nv)
 	o.Next = utl.IntAlloc(nv, nv)
+}
+
+// Nverts returns the number of vertices
+func (o *Graph) Nverts() int {
+	return len(o.Shares)
 }
 
 // GetEdge performs a lookup on Key2edge map and returs id of edge for given nodes ides
@@ -188,57 +192,27 @@ func (o *Graph) StrDistMatrix() (l string) {
 	return
 }
 
-// ReadGraphTable reads data and allocate graph
-func ReadGraphTable(fname string, bargera bool) *Graph {
-
-	// data
-	var ne int
-	var edges [][]int
-	var weights []float64
-
-	// Bar-Gera format files from: http://www.bgu.ac.il/~bargera/tntp/
-	if bargera {
-		k := 0
-		readingMeta := true
-		io.ReadLines(fname, func(idx int, line string) (stop bool) {
-			if len(line) < 1 {
-				return false
-			}
-			line = strings.TrimSpace(line)
-			if line[0] == '~' {
-				return false
-			}
-			if readingMeta {
-				switch {
-				case strings.HasPrefix(line, "<NUMBER OF LINKS>"):
-					res := strings.Split(line, "<NUMBER OF LINKS>")
-					ne = io.Atoi(strings.TrimSpace(res[1]))
-					edges = make([][]int, ne)
-					weights = make([]float64, ne)
-				case strings.HasPrefix(line, "<END OF METADATA>"):
-					readingMeta = false
-				}
-				return false
-			}
-			l := strings.Fields(line)
-			edges[k] = []int{io.Atoi(l[0]) - 1, io.Atoi(l[1]) - 1}
-			weights[k] = io.Atof(l[4])
-			k++
-			return false
-		})
-	} else {
-		_, dat := io.ReadTable(fname)
-		ne = len(dat["from"]) // number of edges
-		edges = make([][]int, ne)
-		weights = make([]float64, ne)
-		for i := 0; i < ne; i++ {
-			edges[i] = []int{int(dat["from"][i]) - 1, int(dat["to"][i]) - 1}
-			weights[i] = dat["cost"][i]
-		}
+// GetAdjacency returns adjacency list as a compressed storage format for METIS
+func (o *Graph) GetAdjacency() (xadj, adjncy []int32) {
+	nv := o.Nverts()
+	szadj := 0
+	for vid := 0; vid < nv; vid++ {
+		szadj += len(o.Shares[vid]) // = number of connected vertices
 	}
-
-	// graph
-	var G Graph
-	G.Init(edges, weights, nil, nil)
-	return &G
+	xadj = make([]int32, nv+1)
+	adjncy = make([]int32, szadj)
+	k := 0
+	for vid := 0; vid < nv; vid++ {
+		edges := o.Shares[vid]
+		for _, eid := range edges {
+			otherVid := o.Edges[eid][0]
+			if otherVid == vid {
+				otherVid = o.Edges[eid][1]
+			}
+			adjncy[k] = int32(otherVid)
+			k++
+		}
+		xadj[1+vid] = xadj[vid] + int32(len(edges))
+	}
+	return
 }
