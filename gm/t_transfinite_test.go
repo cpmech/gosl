@@ -21,7 +21,7 @@ func TestTransfinite01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Transfinite01")
 
-	// new object
+	// new mapping
 	rin, rou := 2.0, 6.0 // radii
 	trf := FactoryTfinite.Surf2dQuarterRing(rin, rou)
 
@@ -108,100 +108,81 @@ func TestTransfinite02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Transfinite02")
 
-	π := math.Pi
-	e0 := []float64{1, 0}
-	e1 := []float64{0, 1}
+	// new mapping
+	a, b := 2.0, 8.0
+	trf := FactoryTfinite.Surf2dQuarterPerfLozenge(a, b)
 
-	trf := NewTransfinite(2, []fun.Vs{
-		func(x la.Vector, r float64) {
-			for i := 0; i < len(x); i++ {
-				x[i] = (2 + r) * e0[i]
-			}
-		},
-		func(x la.Vector, s float64) {
-			for i := 0; i < len(x); i++ {
-				x[i] = 1.5*(1-s)*e0[i] + 1.5*(1+s)*e1[i]
-			}
-		},
-		func(x la.Vector, r float64) {
-			for i := 0; i < len(x); i++ {
-				x[i] = (2 + r) * e1[i]
-			}
-		},
-		func(x la.Vector, s float64) {
-			for i := 0; i < len(x); i++ {
-				θ := π * (s + 1) / 4.0
-				x[i] = math.Cos(θ)*e0[i] + math.Sin(θ)*e1[i]
-			}
-		},
-	}, []fun.Vs{
-		func(dxdr la.Vector, r float64) {
-			for i := 0; i < 2; i++ {
-				dxdr[i] = e0[i]
-			}
-		},
-		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			for i := 0; i < 2; i++ {
-				dxds[i] = (-3*math.Sin(θ)*e0[i] + 3*math.Cos(θ)*e1[i]) * dθds
-			}
-		},
-		func(dxdr la.Vector, r float64) {
-			for i := 0; i < 2; i++ {
-				dxdr[i] = e1[i]
-			}
-		},
-		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			for i := 0; i < 2; i++ {
-				dxds[i] = (-math.Sin(θ)*e0[i] + math.Cos(θ)*e1[i]) * dθds
-			}
-		},
-	})
-
-	chk.Array(tst, "C0", 1e-17, trf.C[0], []float64{1, 0})
-	chk.Array(tst, "C1", 1e-17, trf.C[1], []float64{3, 0})
-	chk.Array(tst, "C2", 1e-17, trf.C[2], []float64{0, 3})
-	chk.Array(tst, "C3", 1e-17, trf.C[3], []float64{0, 1})
-
-	a := 1.0 / math.Sqrt(2)
-	c := 1.5
-	b := (a + c) / 2.0
+	// auxiliary
+	c := 0.5 * (a + b)
+	A := a / math.Sqrt(2)
+	B := b / 2.0
+	C := (A + B) / 2.0
 	x := la.NewVector(2)
 
+	// check corners
+	chk.Array(tst, "C0", 1e-17, trf.C[0], []float64{a, 0})
+	chk.Array(tst, "C1", 1e-17, trf.C[1], []float64{b, 0})
+	chk.Array(tst, "C2", 1e-17, trf.C[2], []float64{0, b})
+	chk.Array(tst, "C3", 1e-17, trf.C[3], []float64{0, a})
+
+	// check points
 	trf.Point(x, []float64{-1, -1})
-	chk.Array(tst, "x(-1,-1)", 1e-17, x, []float64{1, 0})
+	chk.Array(tst, "x(-1,-1)", 1e-17, x, []float64{a, 0})
 
 	trf.Point(x, []float64{0, -1})
-	chk.Array(tst, "x( 0,-1)", 1e-17, x, []float64{2, 0})
+	chk.Array(tst, "x( 0,-1)", 1e-17, x, []float64{c, 0})
 
 	trf.Point(x, []float64{+1, -1})
-	chk.Array(tst, "x(+1,-1)", 1e-17, x, []float64{3, 0})
+	chk.Array(tst, "x(+1,-1)", 1e-17, x, []float64{b, 0})
 
 	trf.Point(x, []float64{-1, 0})
-	chk.Array(tst, "x(-1, 0)", 1e-15, x, []float64{a, a})
+	chk.Array(tst, "x(-1, 0)", 1e-15, x, []float64{A, A})
 
 	trf.Point(x, []float64{0, 0})
-	chk.Array(tst, "x( 0, 0)", 1e-15, x, []float64{b, b})
+	chk.Array(tst, "x( 0, 0)", 1e-15, x, []float64{C, C})
 
 	trf.Point(x, []float64{+1, 0})
-	chk.Array(tst, "x(+1, 0)", 1e-15, x, []float64{c, c})
+	chk.Array(tst, "x(+1, 0)", 1e-15, x, []float64{B, B})
 
 	trf.Point(x, []float64{-1, +1})
-	chk.Array(tst, "x(-1,+1)", 1e-15, x, []float64{0, 1})
+	chk.Array(tst, "x(-1,+1)", 1e-15, x, []float64{0, a})
 
 	trf.Point(x, []float64{0, +1})
-	chk.Array(tst, "x( 0,+1)", 1e-15, x, []float64{0, 2})
+	chk.Array(tst, "x( 0,+1)", 1e-15, x, []float64{0, c})
 
 	trf.Point(x, []float64{+1, +1})
-	chk.Array(tst, "x(+1,+1)", 1e-15, x, []float64{0, 3})
+	chk.Array(tst, "x(+1,+1)", 1e-15, x, []float64{0, b})
 
+	// check derivs
+	dxdu := la.NewMatrix(2, 2)
+	u := la.NewVector(2)
+	rvals := utl.LinSpace(-1, 1, 5)
+	svals := utl.LinSpace(-1, 1, 5)
+	verb := false
+	for _, s := range svals {
+		for _, r := range rvals {
+			u[0] = r
+			u[1] = s
+			trf.Derivs(dxdu, x, u)
+			chk.DerivVecVec(tst, "dx/dr", 1e-9, dxdu.GetDeep2(), u, 1e-3, verb, func(xx, rr []float64) {
+				trf.Point(xx, rr)
+			})
+		}
+	}
+
+	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		trf.Draw([]int{21, 21}, false, nil, nil)
-		plt.Arc(0, 0, 1, 0, 90, &plt.A{C: plt.C(2, 0), NoClip: true, Z: 10})
+		trf.Draw([]int{11, 11}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
+		for _, s := range svals {
+			for _, r := range rvals {
+				u[0] = r
+				u[1] = s
+				trf.Derivs(dxdu, x, u)
+				DrawArrow2dM(x, dxdu, 0, true, 0.5, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
+				DrawArrow2dM(x, dxdu, 1, true, 0.5, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
+			}
+		}
 		plt.HideAllBorders()
 		plt.Equal()
 		plt.Save("/tmp/gosl/gm", "transfinite02")
@@ -281,8 +262,8 @@ func TestTransfinite03(tst *testing.T) {
 	xtmp := la.NewVector(2)
 	dxdr := la.NewVector(2)
 	dxds := la.NewVector(2)
-	rvals := utl.LinSpace(-1, 1, 5)
-	svals := utl.LinSpace(-1, 1, 5)
+	rvals := utl.LinSpace(-1, 1, 9)
+	svals := utl.LinSpace(-1, 1, 9)
 
 	// check: dB0/dr
 	//verb := chk.Verbose
@@ -350,20 +331,21 @@ func TestTransfinite03(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		curve0.DrawElems(2, 41, false, &plt.A{C: plt.C(2, 0), Z: 10}, nil)
+		plt.Reset(true, &plt.A{WidthPt: 400, Prop: 1, Eps: true})
+		//curve0.DrawElems(2, 41, false, &plt.A{C: plt.C(2, 0), Z: 10}, nil)
 		trf.Draw([]int{21, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
 		for _, s := range svals {
 			for _, r := range rvals {
 				u[0] = r
 				u[1] = s
 				trf.Derivs(dxdu, x, u)
-				DrawArrow2dM(x, dxdu, 0, true, 0.3, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
-				DrawArrow2dM(x, dxdu, 1, true, 0.3, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
+				DrawArrow2dM(x, dxdu, 0, true, 0.13, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
+				DrawArrow2dM(x, dxdu, 1, true, 0.13, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
 			}
 		}
-		plt.HideAllBorders()
+		plt.AxisOff()
 		plt.Equal()
+		plt.AxisRange(-0.1, 3.2, -0.1, 3.2)
 		plt.Save("/tmp/gosl/gm", "transfinite03")
 	}
 }
