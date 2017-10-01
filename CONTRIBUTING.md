@@ -8,7 +8,7 @@ a pull request.
 
 #### Table Of Contents
 
-[TODO List](#TODO List)
+[TODO List](#todo-list)
 
 [Code of Conduct](#code-of-conduct)
 
