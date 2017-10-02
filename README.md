@@ -1,5 +1,7 @@
 # Gosl &ndash; Go scientific library
 
+[![Join the chat at https://gitter.im/cpmech/gosl](https://badges.gitter.im/cpmech/gosl.svg)](https://gitter.im/cpmech/gosl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![GoDoc](https://godoc.org/github.com/cpmech/gosl?status.svg)](https://godoc.org/github.com/cpmech/gosl)
 
 Gosl is a library written in [Go](https://golang.org) to develop high-performance scientific
