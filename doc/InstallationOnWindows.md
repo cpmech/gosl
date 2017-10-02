@@ -11,11 +11,11 @@ Below, two options to install Gosl (and Gcc) are presented:
 * __Option A__: Quick install using pre-compiled code (Windows 10 Installer)
 * __Option B__: Installing from sources (i.e. compiling Lapack and SuiteSparse)
 
-## [Strongly Recommended] Install PythonXY
+### [Strongly Recommended] Install PythonXY
 
 1. Download and install *Python(x,y)-2.7.10.0.exe* from http://python-xy.github.io/downloads.html
 
-## [Recommended] Install Git and Bash
+### [Recommended] Install Git and Bash
 
 2. Download and install *Git-2.13.1.2-64-bit.exe* from https://git-scm.com/download/
 
@@ -23,7 +23,7 @@ Below, two options to install Gosl (and Gcc) are presented:
 
 All the other default options are OK.
 
-## [Recommended] Install Visual Studio Code
+### [Recommended] Install Visual Studio Code
 
 3. Download and install VS-Code from https://code.visualstudio.com/docs/?dv=win
 
@@ -32,7 +32,7 @@ Steps to Install [Go extension for VS Code](https://marketplace.visualstudio.com
 * Type `ext install Go`
 * Select the version by *lukehoban*, click install, and click reload
 
-## [Option A] Quick Install (Windows 10 Installer)
+### [Option A] Quick Install (Windows 10 Installer)
 
 The _Windows 10 Installer_ will install Gosl, TDM Gcc64, compiled SuiteSparse and FFTW,
 and will set the required environment variables automatically.
@@ -46,6 +46,8 @@ Also the environment variables can be replaced as desired.
 *Finished!*
 
 
+
+------------------------------------------------------------------------------------------------------------------------------------
 
 ## [Option B] Installing from Sources
 
