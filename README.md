@@ -23,6 +23,7 @@ functions and use structures).
 
 [Welcome to contributing!](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md) + TODO list.
 
+[Ask questions on our Slack #gosl channel](https://cpmech.slack.com).
 
 
 ## Contents
