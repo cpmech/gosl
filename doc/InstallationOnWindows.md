@@ -53,7 +53,7 @@ Also the environment variables can be replaced as desired.
 
 Skip these steps if you have used the _installer_ already.
 
-*NOTE*: Git Bash is required for the commandes below. Thus, see the section on installing Git and Bash above first.
+*NOTE*: Git Bash is required for the commands below. Thus, see the section on installing Git and Bash above.
 
 ### Install Go and Set Environment Variable
 
