@@ -22,7 +22,7 @@ equations.
 [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
 functions and use structures).
 
-[Welcome to contributing!](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md) + TODO list.
+[Welcome to contributing](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md) + TODO list.
 
 
 ## Contents
