@@ -36,6 +36,14 @@ type Sv func(v la.Vector) float64
 //     f -- output vector
 type Vs func(f la.Vector, s float64)
 
+// Vss defines a vector function f(a,b) of two scalar arguments (vector scalar scalar)
+//   Input:
+//     a -- first input scalar
+//     b -- second input scalar
+//   Output:
+//     f -- output vector
+type Vss func(f la.Vector, a, b float64)
+
 // Vv defines a vector function f(v) of a vector argument v (vector vector)
 //   Input:
 //     v -- input vector
