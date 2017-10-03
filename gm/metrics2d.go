@@ -172,7 +172,8 @@ func (o *Transfinite) GetMetrics2d(rvals, svals []float64) (m *Metrics2d) {
 		for i, r := range rvals {
 			u[0] = r
 			u[1] = s
-			o.Derivs(dxdu, x, u)
+			o.Point(x, u)
+			o.Derivs(dxdu, u)
 			Xr = dxdu.Get(0, 0)
 			Xs = dxdu.Get(0, 1)
 			Yr = dxdu.Get(1, 0)
@@ -193,7 +194,8 @@ func (o *Transfinite) GetMetrics2d(rvals, svals []float64) (m *Metrics2d) {
 		// B0
 		u[0] = r
 		u[1] = -1
-		o.Derivs(dxdu, x, u)
+		o.Point(x, u)
+		o.Derivs(dxdu, u)
 		Xr = dxdu.Get(0, 0)
 		Xs = dxdu.Get(0, 1)
 		Yr = dxdu.Get(1, 0)
@@ -209,7 +211,8 @@ func (o *Transfinite) GetMetrics2d(rvals, svals []float64) (m *Metrics2d) {
 		// B2
 		u[0] = r
 		u[1] = +1
-		o.Derivs(dxdu, x, u)
+		o.Point(x, u)
+		o.Derivs(dxdu, u)
 		Xr = dxdu.Get(0, 0)
 		Xs = dxdu.Get(0, 1)
 		Yr = dxdu.Get(1, 0)
@@ -228,7 +231,8 @@ func (o *Transfinite) GetMetrics2d(rvals, svals []float64) (m *Metrics2d) {
 		// B1
 		u[0] = +1
 		u[1] = s
-		o.Derivs(dxdu, x, u)
+		o.Point(x, u)
+		o.Derivs(dxdu, u)
 		Xr = dxdu.Get(0, 0)
 		Xs = dxdu.Get(0, 1)
 		Yr = dxdu.Get(1, 0)
@@ -244,7 +248,8 @@ func (o *Transfinite) GetMetrics2d(rvals, svals []float64) (m *Metrics2d) {
 		// B3
 		u[0] = -1
 		u[1] = s
-		o.Derivs(dxdu, x, u)
+		o.Point(x, u)
+		o.Derivs(dxdu, u)
 		Xr = dxdu.Get(0, 0)
 		Xs = dxdu.Get(0, 1)
 		Yr = dxdu.Get(1, 0)

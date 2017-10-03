@@ -27,10 +27,11 @@ func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 	π := math.Pi
 	surf = NewTransfinite(2, []fun.Vs{
 
-		// B[0](r)
-		func(x la.Vector, r float64) { // r ϵ [-1,+1]
-			x[0] = a + 0.5*(1.0+r)*(b-a)
-			x[1] = 0.0
+		// B[0](s)
+		func(x la.Vector, s float64) { // s ϵ [-1,+1]
+			θ := π * (s + 1) / 4.0
+			x[0] = a * math.Cos(θ)
+			x[1] = a * math.Sin(θ)
 		},
 
 		// B[1](s)
@@ -42,22 +43,23 @@ func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 
 		// B[2](r)
 		func(x la.Vector, r float64) { // r ϵ [-1,+1]
+			x[0] = a + 0.5*(1.0+r)*(b-a)
+			x[1] = 0.0
+		},
+
+		// B[3](r)
+		func(x la.Vector, r float64) { // r ϵ [-1,+1]
 			x[0] = 0.0
 			x[1] = a + 0.5*(1.0+r)*(b-a)
 		},
-
-		// B[3](s)
-		func(x la.Vector, s float64) { // s ϵ [-1,+1]
-			θ := π * (s + 1) / 4.0
-			x[0] = a * math.Cos(θ)
-			x[1] = a * math.Sin(θ)
-		},
 	}, []fun.Vs{
 
-		// dB[0]/dr
-		func(dxdr la.Vector, r float64) {
-			dxdr[0] = 0.5 * (b - a)
-			dxdr[1] = 0.0
+		// dB[0]/ds
+		func(dxds la.Vector, s float64) {
+			θ := π * (s + 1) / 4.0
+			dθds := π / 4.0
+			dxds[0] = -a * math.Sin(θ) * dθds
+			dxds[1] = +a * math.Cos(θ) * dθds
 		},
 
 		// dB[1]/ds
@@ -70,16 +72,14 @@ func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 
 		// dB[2]/dr
 		func(dxdr la.Vector, r float64) {
-			dxdr[0] = 0.0
-			dxdr[1] = 0.5 * (b - a)
+			dxdr[0] = 0.5 * (b - a)
+			dxdr[1] = 0.0
 		},
 
-		// dB[3]/ds
-		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			dxds[0] = -a * math.Sin(θ) * dθds
-			dxds[1] = +a * math.Cos(θ) * dθds
+		// dB[3]/dr
+		func(dxdr la.Vector, r float64) {
+			dxdr[0] = 0.0
+			dxdr[1] = 0.5 * (b - a)
 		},
 	})
 	return
@@ -94,10 +94,11 @@ func (o facTfinite) Surf2dQuarterPerfLozenge(a, b float64) (surf *Transfinite) {
 	π := math.Pi
 	surf = NewTransfinite(2, []fun.Vs{
 
-		// B[0](r)
-		func(x la.Vector, r float64) { // r ϵ [-1,+1]
-			x[0] = a + 0.5*(1.0+r)*(b-a)
-			x[1] = 0.0
+		// B[0](s)
+		func(x la.Vector, s float64) { // s ϵ [-1,+1]
+			θ := π * (s + 1) / 4.0
+			x[0] = a * math.Cos(θ)
+			x[1] = a * math.Sin(θ)
 		},
 
 		// B[1](s)
@@ -108,22 +109,23 @@ func (o facTfinite) Surf2dQuarterPerfLozenge(a, b float64) (surf *Transfinite) {
 
 		// B[2](r)
 		func(x la.Vector, r float64) { // r ϵ [-1,+1]
+			x[0] = a + 0.5*(1.0+r)*(b-a)
+			x[1] = 0.0
+		},
+
+		// B[3](r)
+		func(x la.Vector, r float64) { // r ϵ [-1,+1]
 			x[0] = 0.0
 			x[1] = a + 0.5*(1.0+r)*(b-a)
 		},
-
-		// B[3](s)
-		func(x la.Vector, s float64) { // s ϵ [-1,+1]
-			θ := π * (s + 1) / 4.0
-			x[0] = a * math.Cos(θ)
-			x[1] = a * math.Sin(θ)
-		},
 	}, []fun.Vs{
 
-		// dB[0]/dr
-		func(dxdr la.Vector, r float64) {
-			dxdr[0] = 0.5 * (b - a)
-			dxdr[1] = 0.0
+		// dB[0]/ds
+		func(dxds la.Vector, s float64) {
+			θ := π * (s + 1) / 4.0
+			dθds := π / 4.0
+			dxds[0] = -a * math.Sin(θ) * dθds
+			dxds[1] = +a * math.Cos(θ) * dθds
 		},
 
 		// dB[1]/ds
@@ -134,16 +136,14 @@ func (o facTfinite) Surf2dQuarterPerfLozenge(a, b float64) (surf *Transfinite) {
 
 		// dB[2]/dr
 		func(dxdr la.Vector, r float64) {
-			dxdr[0] = 0.0
-			dxdr[1] = 0.5 * (b - a)
+			dxdr[0] = 0.5 * (b - a)
+			dxdr[1] = 0.0
 		},
 
-		// dB[3]/ds
-		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			dxds[0] = -a * math.Sin(θ) * dθds
-			dxds[1] = +a * math.Cos(θ) * dθds
+		// dB[3]/dr
+		func(dxdr la.Vector, r float64) {
+			dxdr[0] = 0.0
+			dxdr[1] = 0.5 * (b - a)
 		},
 	})
 	return
