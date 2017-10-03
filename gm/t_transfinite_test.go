@@ -201,7 +201,7 @@ func TestTransfinite03(tst *testing.T) {
 	e0 := []float64{1, 0}
 	e1 := []float64{0, 1}
 	knot := []float64{0}
-	trf := NewTransfinite(2, []fun.Vs{
+	trf := NewTransfinite2d(2, []fun.Vs{
 
 		// B0
 		func(x la.Vector, s float64) {
@@ -350,5 +350,104 @@ func TestTransfinite03(tst *testing.T) {
 		plt.Equal()
 		plt.AxisRange(-0.1, 3.2, -0.1, 3.2)
 		plt.Save("/tmp/gosl/gm", "transfinite03")
+	}
+}
+
+func TestTransfinite04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Transfinite04")
+
+	// new mapping
+	trf := FactoryTfinite.Surf3dCube(1, 1, 1)
+
+	// check corners
+	chk.Array(tst, "p0", 1e-15, trf.p0, []float64{0, 0, 0})
+	chk.Array(tst, "p1", 1e-15, trf.p1, []float64{1, 0, 0})
+	chk.Array(tst, "p2", 1e-15, trf.p2, []float64{1, 1, 0})
+	chk.Array(tst, "p3", 1e-15, trf.p3, []float64{0, 1, 0})
+	chk.Array(tst, "p4", 1e-15, trf.p4, []float64{0, 0, 1})
+	chk.Array(tst, "p5", 1e-15, trf.p5, []float64{1, 0, 1})
+	chk.Array(tst, "p6", 1e-15, trf.p6, []float64{1, 1, 1})
+	chk.Array(tst, "p7", 1e-15, trf.p7, []float64{0, 1, 1})
+
+	// auxiliary
+	verb := false
+	rvals := utl.LinSpace(-1, 1, 3)
+	svals := utl.LinSpace(-1, 1, 3)
+	tvals := utl.LinSpace(-1, 1, 3)
+
+	// check derivs
+	dxdu := la.NewMatrix(3, 3)
+	u := la.NewVector(3)
+	for _, t := range tvals {
+		for _, s := range svals {
+			for _, r := range rvals {
+				u[0], u[1], u[2] = r, s, t
+				trf.Derivs(dxdu, u)
+				chk.DerivVecVec(tst, "dx/dr", 1e-10, dxdu.GetDeep2(), u, 1e-3, verb, func(xx, rr []float64) {
+					trf.Point(xx, rr)
+				})
+			}
+		}
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400})
+		trf.Draw([]int{3, 3, 3}, false, nil, nil)
+		plt.Default3dView(0, 1, 0, 1, 0, 1, true)
+		//plt.Show()
+		plt.Save("/tmp/gosl/gm", "transfinite04")
+	}
+}
+
+func TestTransfinite05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Transfinite05")
+
+	// new mapping
+	a, b, h := 2.0, 3.0, 1.0 // radii and thickness
+	trf := FactoryTfinite.Surf3dQuarterRing(a, b, h)
+
+	// check corners
+	chk.Array(tst, "p0", 1e-15, trf.p0, []float64{0, a, 0})
+	chk.Array(tst, "p1", 1e-15, trf.p1, []float64{h, a, 0})
+	chk.Array(tst, "p2", 1e-15, trf.p2, []float64{h, b, 0})
+	chk.Array(tst, "p3", 1e-15, trf.p3, []float64{0, b, 0})
+	chk.Array(tst, "p4", 1e-15, trf.p4, []float64{0, 0, a})
+	chk.Array(tst, "p5", 1e-15, trf.p5, []float64{h, 0, a})
+	chk.Array(tst, "p6", 1e-15, trf.p6, []float64{h, 0, b})
+	chk.Array(tst, "p7", 1e-15, trf.p7, []float64{0, 0, b})
+
+	// auxiliary
+	verb := false
+	rvals := utl.LinSpace(-1, 1, 3)
+	svals := utl.LinSpace(-1, 1, 3)
+	tvals := utl.LinSpace(-1, 1, 3)
+
+	// check derivs
+	dxdu := la.NewMatrix(3, 3)
+	u := la.NewVector(3)
+	for _, t := range tvals {
+		for _, s := range svals {
+			for _, r := range rvals {
+				u[0], u[1], u[2] = r, s, t
+				trf.Derivs(dxdu, u)
+				chk.DerivVecVec(tst, "dx/dr", 1e-10, dxdu.GetDeep2(), u, 1e-3, verb, func(xx, rr []float64) {
+					trf.Point(xx, rr)
+				})
+			}
+		}
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400})
+		trf.Draw([]int{5, 5, 11}, true, nil, nil)
+		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
+		//plt.Show()
+		plt.Save("/tmp/gosl/gm", "transfinite05")
 	}
 }
