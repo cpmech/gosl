@@ -4,16 +4,17 @@
 [![GoDoc](https://godoc.org/github.com/cpmech/gosl?status.svg)](https://godoc.org/github.com/cpmech/gosl)
 
 Gosl is a library written in [Go](https://golang.org) to develop high-performance scientific
-computing with ease. The library tries to be as general and _easy_ as possible. Gosl considers the
-use of both Go concurrency routines and parallel computing using the message passing interface. Gosl
-has several modules (sub-libraries/sub-packages) for a variety of tasks in scientific computing,
-image analysis, and data post-processing. For example, it includes high-performant linear algebra
-functions (e.g. wrapping MKL/OpenBLAS/LAPACK/SuiteSparse/UMFPACK etc.), fast Fourier transform
-algorithms (e.g. wrapping FFTW), functions and structures for geometry calculations, random numbers
-generation and probability distributions, optimisation algorithms, plotting and visualisation using
+computations. The library tries to be as general and _easy_ as possible. Gosl considers the use of
+both Go concurrency routines and parallel computing using the message passing interface. Gosl has
+several modules (sub-packages) for a variety of tasks in scientific computing, image analysis, and
+data post-processing. For example, it includes high-performant linear algebra functions (wrapping
+MKL/OpenBLAS/LAPACK/SuiteSparse/UMFPACK...), fast Fourier transform algorithms (wrapping FFTW),
+numerical integration (wrapping QUADPACK), functions and structures for geometry calculations (e.g.
+3D transfinite interpolation, grid search, octree...), random numbers generation (SFMT and DSFMT)
+and probability distributions, optimisation and graph algorithms, plotting and visualisation using
 the VTK, and much more. Gosl has also solvers to (stiff or not) ordinary differential equations and
-several tools for mesh generation to assist on the development of solvers to partial differential
-equations.
+several tools for 2D/3D mesh generation to assist on the development of solvers for partial
+differential equations.
 
 <div id="container">
 <p><img src="examples/figs/gosl-collage1-sml.png"></p>
