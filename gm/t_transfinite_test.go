@@ -271,10 +271,10 @@ func TestTransfinite03(tst *testing.T) {
 	//verb := chk.Verbose
 	verb := false
 	for _, r := range rvals {
-		trf.bd[0](dxdr, r)
+		trf.ed[0](dxdr, r)
 		for i := 0; i < 2; i++ {
 			chk.DerivScaSca(tst, io.Sf("dB0_%d/dr", i), 1e-10, dxdr[i], r, 1e-3, verb, func(s float64) float64 {
-				trf.b[0](xtmp, s)
+				trf.e[0](xtmp, s)
 				return xtmp[i]
 			})
 		}
@@ -283,10 +283,10 @@ func TestTransfinite03(tst *testing.T) {
 	// check: dB1/ds
 	io.Pl()
 	for _, s := range svals {
-		trf.bd[1](dxds, s)
+		trf.ed[1](dxds, s)
 		for i := 0; i < 2; i++ {
 			chk.DerivScaSca(tst, io.Sf("dB1_%d/ds", i), 1e-12, dxds[i], s, 1e-3, verb, func(s float64) float64 {
-				trf.b[1](xtmp, s)
+				trf.e[1](xtmp, s)
 				return xtmp[i]
 			})
 		}
@@ -295,10 +295,10 @@ func TestTransfinite03(tst *testing.T) {
 	// check: dB2/dr
 	io.Pl()
 	for _, r := range rvals {
-		trf.bd[2](dxdr, r)
+		trf.ed[2](dxdr, r)
 		for i := 0; i < 2; i++ {
 			chk.DerivScaSca(tst, io.Sf("dB2_%d/dr", i), 1e-10, dxdr[i], r, 1e-3, verb, func(s float64) float64 {
-				trf.b[2](xtmp, s)
+				trf.e[2](xtmp, s)
 				return xtmp[i]
 			})
 		}
@@ -307,10 +307,10 @@ func TestTransfinite03(tst *testing.T) {
 	// check: dB3/ds
 	io.Pl()
 	for _, s := range svals {
-		trf.bd[3](dxds, s)
+		trf.ed[3](dxds, s)
 		for i := 0; i < 2; i++ {
 			chk.DerivScaSca(tst, io.Sf("dB3_%d/ds", i), 1e-12, dxds[i], s, 1e-3, verb, func(s float64) float64 {
-				trf.b[3](xtmp, s)
+				trf.e[3](xtmp, s)
 				return xtmp[i]
 			})
 		}

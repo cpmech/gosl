@@ -41,18 +41,18 @@ type Transfinite struct {
 
 	// input
 	ndim int       // space dimension
-	b    []fun.Vs  // 2D: the boundary functions
-	bd   []fun.Vs  // 2D: derivatives of boundary functions
-	b3d  []fun.Vss // 3D: the boundary functions
-	bd3d []fun.Mss // 3D: derivatives of boundary functions
+	e    []fun.Vs  // 2D: the boundary functions
+	ed   []fun.Vs  // 2D: derivatives of boundary functions
+	b    []fun.Vss // 3D: the boundary functions
+	bd   []fun.Mss // 3D: derivatives of boundary functions
 
 	// workspace for 2d
 	p0, p1     la.Vector // corner points
 	p2, p3     la.Vector // corner points
-	b0s, b1s   la.Vector // 2d function evaluations
-	b2r, b3r   la.Vector // 2d function evaluations
-	bd0s, bd1s la.Vector // 2d derivatives evaluations
-	bd2r, bd3r la.Vector // 2d derivatives evaluations
+	e0s, e1s   la.Vector // 2d function evaluations
+	e2r, e3r   la.Vector // 2d function evaluations
+	ad0s, ed1s la.Vector // 2d derivatives evaluations
+	ed2r, ed3r la.Vector // 2d derivatives evaluations
 
 	// workspace for 3d
 	p4, p5     la.Vector // corner points
@@ -92,32 +92,32 @@ func NewTransfinite2d(ndim int, B, Bd []fun.Vs) (o *Transfinite) {
 	}
 	o = new(Transfinite)
 	o.ndim = ndim
-	o.b = B
-	o.bd = Bd
+	o.e = B
+	o.ed = Bd
 	o.p0, o.p1 = la.NewVector(2), la.NewVector(2)
 	o.p2, o.p3 = la.NewVector(2), la.NewVector(2)
-	o.b0s, o.b1s = la.NewVector(2), la.NewVector(2)
-	o.b2r, o.b3r = la.NewVector(2), la.NewVector(2)
-	o.bd0s, o.bd1s = la.NewVector(2), la.NewVector(2)
-	o.bd2r, o.bd3r = la.NewVector(2), la.NewVector(2)
-	o.b[0](o.p0, -1)
-	o.b[0](o.p3, +1)
-	o.b[1](o.p1, -1)
-	o.b[1](o.p2, +1)
+	o.e0s, o.e1s = la.NewVector(2), la.NewVector(2)
+	o.e2r, o.e3r = la.NewVector(2), la.NewVector(2)
+	o.ad0s, o.ed1s = la.NewVector(2), la.NewVector(2)
+	o.ed2r, o.ed3r = la.NewVector(2), la.NewVector(2)
+	o.e[0](o.p0, -1)
+	o.e[0](o.p3, +1)
+	o.e[1](o.p1, -1)
+	o.e[1](o.p2, +1)
 	return
 }
 
 // NewTransfinite3d allocates a new structure
-//  B  -- boundary functions x(s) = B(r,s)
-//  Bd -- derivative functions dxds(s) = B'(r,s)
+//  B  -- boundary functions x(r,s) = B(r,s)
+//  Bd -- derivative functions dxdrs(r,s) = dBdrds(r,s)
 func NewTransfinite3d(B []fun.Vss, Bd []fun.Mss) (o *Transfinite) {
 	if len(B) != 6 {
 		chk.Panic("in 3D, six boundary functions B are required\n")
 	}
 	o = new(Transfinite)
 	o.ndim = 3
-	o.b3d = B
-	o.bd3d = Bd
+	o.b = B
+	o.bd = Bd
 	o.p0, o.p1 = la.NewVector(3), la.NewVector(3)
 	o.p2, o.p3 = la.NewVector(3), la.NewVector(3)
 	o.p4, o.p5 = la.NewVector(3), la.NewVector(3)
@@ -131,14 +131,14 @@ func NewTransfinite3d(B []fun.Vss, Bd []fun.Mss) (o *Transfinite) {
 	o.b1sm, o.b1sp = la.NewVector(3), la.NewVector(3)
 	o.b2rm, o.b2rp = la.NewVector(3), la.NewVector(3)
 	o.b3rm, o.b3rp = la.NewVector(3), la.NewVector(3)
-	o.b3d[4](o.p0, -1.0, -1.0)
-	o.b3d[4](o.p1, +1.0, -1.0)
-	o.b3d[4](o.p2, +1.0, +1.0)
-	o.b3d[4](o.p3, -1.0, +1.0)
-	o.b3d[5](o.p4, -1.0, -1.0)
-	o.b3d[5](o.p5, +1.0, -1.0)
-	o.b3d[5](o.p6, +1.0, +1.0)
-	o.b3d[5](o.p7, -1.0, +1.0)
+	o.b[4](o.p0, -1.0, -1.0)
+	o.b[4](o.p1, +1.0, -1.0)
+	o.b[4](o.p2, +1.0, +1.0)
+	o.b[4](o.p3, -1.0, +1.0)
+	o.b[5](o.p4, -1.0, -1.0)
+	o.b[5](o.p5, +1.0, -1.0)
+	o.b[5](o.p6, +1.0, +1.0)
+	o.b[5](o.p7, -1.0, +1.0)
 
 	o.bdr2rt, o.bdr3rt = la.NewMatrix(3, 3), la.NewMatrix(3, 3)
 	o.bdr4rs, o.bdr5rs = la.NewMatrix(3, 3), la.NewMatrix(3, 3)
@@ -166,14 +166,14 @@ func (o *Transfinite) Point(x, u la.Vector) {
 	// 2D
 	if o.ndim == 2 {
 		r, s := u[0], u[1]
-		o.b[0](o.b0s, s)
-		o.b[1](o.b1s, s)
-		o.b[2](o.b2r, r)
-		o.b[3](o.b3r, r)
+		o.e[0](o.e0s, s)
+		o.e[1](o.e1s, s)
+		o.e[2](o.e2r, r)
+		o.e[3](o.e3r, r)
 		for i := 0; i < o.ndim; i++ {
 			x[i] = 0 + // trick to enforce alignment
-				+(1.0-r)*o.b0s[i]/2.0 + (1.0+r)*o.b1s[i]/2.0 +
-				+(1.0-s)*o.b2r[i]/2.0 + (1.0+s)*o.b3r[i]/2.0 +
+				+(1.0-r)*o.e0s[i]/2.0 + (1.0+r)*o.e1s[i]/2.0 +
+				+(1.0-s)*o.e2r[i]/2.0 + (1.0+s)*o.e3r[i]/2.0 +
 				-(1.0-r)*(1.0-s)*o.p0[i]/4.0 - (1.0+r)*(1.0-s)*o.p1[i]/4.0 +
 				-(1.0+r)*(1.0+s)*o.p2[i]/4.0 - (1.0-r)*(1.0+s)*o.p3[i]/4.0
 		}
@@ -183,27 +183,27 @@ func (o *Transfinite) Point(x, u la.Vector) {
 	// 3D
 	r, s, t := u[0], u[1], u[2]
 	m, p := -1.0, +1.0
-	o.b3d[0](o.b0st, s, t)
-	o.b3d[1](o.b1st, s, t)
-	o.b3d[2](o.b2rt, r, t)
-	o.b3d[3](o.b3rt, r, t)
-	o.b3d[4](o.b4rs, r, s)
-	o.b3d[5](o.b5rs, r, s)
+	o.b[0](o.b0st, s, t)
+	o.b[1](o.b1st, s, t)
+	o.b[2](o.b2rt, r, t)
+	o.b[3](o.b3rt, r, t)
+	o.b[4](o.b4rs, r, s)
+	o.b[5](o.b5rs, r, s)
 
-	o.b3d[0](o.b0mt, m, t)
-	o.b3d[0](o.b0pt, p, t)
-	o.b3d[1](o.b1mt, m, t)
-	o.b3d[1](o.b1pt, p, t)
+	o.b[0](o.b0mt, m, t)
+	o.b[0](o.b0pt, p, t)
+	o.b[1](o.b1mt, m, t)
+	o.b[1](o.b1pt, p, t)
 
-	o.b3d[0](o.b0sm, s, m)
-	o.b3d[0](o.b0sp, s, p)
-	o.b3d[1](o.b1sm, s, m)
-	o.b3d[1](o.b1sp, s, p)
+	o.b[0](o.b0sm, s, m)
+	o.b[0](o.b0sp, s, p)
+	o.b[1](o.b1sm, s, m)
+	o.b[1](o.b1sp, s, p)
 
-	o.b3d[2](o.b2rm, r, m)
-	o.b3d[2](o.b2rp, r, p)
-	o.b3d[3](o.b3rm, r, m)
-	o.b3d[3](o.b3rp, r, p)
+	o.b[2](o.b2rm, r, m)
+	o.b[2](o.b2rp, r, p)
+	o.b[3](o.b3rm, r, m)
+	o.b[3](o.b3rp, r, p)
 	for i := 0; i < o.ndim; i++ {
 		x[i] = 0 + // trick to force alignment
 
@@ -237,26 +237,26 @@ func (o *Transfinite) Derivs(dxdu *la.Matrix, u la.Vector) {
 	// 2D
 	if o.ndim == 2 {
 		r, s := u[0], u[1]
-		o.b[0](o.b0s, s)
-		o.b[1](o.b1s, s)
-		o.b[2](o.b2r, r)
-		o.b[3](o.b3r, r)
-		o.bd[0](o.bd0s, s)
-		o.bd[1](o.bd1s, s)
-		o.bd[2](o.bd2r, r)
-		o.bd[3](o.bd3r, r)
+		o.e[0](o.e0s, s)
+		o.e[1](o.e1s, s)
+		o.e[2](o.e2r, r)
+		o.e[3](o.e3r, r)
+		o.ed[0](o.ad0s, s)
+		o.ed[1](o.ed1s, s)
+		o.ed[2](o.ed2r, r)
+		o.ed[3](o.ed3r, r)
 		var dxidr, dxids float64
 		for i := 0; i < o.ndim; i++ {
 
 			dxidr = 0 + // trick to enforce alignment
-				-o.b0s[i]/2.0 + o.b1s[i]/2.0 +
-				+(1.0-s)*o.bd2r[i]/2.0 + (1.0+s)*o.bd3r[i]/2.0 +
+				-o.e0s[i]/2.0 + o.e1s[i]/2.0 +
+				+(1.0-s)*o.ed2r[i]/2.0 + (1.0+s)*o.ed3r[i]/2.0 +
 				+(1.0-s)*o.p0[i]/4.0 - (1.0-s)*o.p1[i]/4.0 +
 				-(1.0+s)*o.p2[i]/4.0 + (1.0+s)*o.p3[i]/4.0
 
 			dxids = 0 + // trick to enforce alignment
-				+(1.0-r)*o.bd0s[i]/2.0 + (1.0+r)*o.bd1s[i]/2.0 +
-				-o.b2r[i]/2.0 + o.b3r[i]/2.0 +
+				+(1.0-r)*o.ad0s[i]/2.0 + (1.0+r)*o.ed1s[i]/2.0 +
+				-o.e2r[i]/2.0 + o.e3r[i]/2.0 +
 				+(1.0-r)*o.p0[i]/4.0 + (1.0+r)*o.p1[i]/4.0 +
 				-(1.0+r)*o.p2[i]/4.0 - (1.0-r)*o.p3[i]/4.0
 
@@ -269,52 +269,52 @@ func (o *Transfinite) Derivs(dxdu *la.Matrix, u la.Vector) {
 	// 3D
 	r, s, t := u[0], u[1], u[2]
 	m, p := -1.0, +1.0
-	o.b3d[0](o.b0st, s, t)
-	o.b3d[1](o.b1st, s, t)
-	o.b3d[2](o.b2rt, r, t)
-	o.b3d[3](o.b3rt, r, t)
-	o.b3d[4](o.b4rs, r, s)
-	o.b3d[5](o.b5rs, r, s)
+	o.b[0](o.b0st, s, t)
+	o.b[1](o.b1st, s, t)
+	o.b[2](o.b2rt, r, t)
+	o.b[3](o.b3rt, r, t)
+	o.b[4](o.b4rs, r, s)
+	o.b[5](o.b5rs, r, s)
 
-	o.b3d[0](o.b0mt, m, t)
-	o.b3d[0](o.b0pt, p, t)
-	o.b3d[1](o.b1mt, m, t)
-	o.b3d[1](o.b1pt, p, t)
+	o.b[0](o.b0mt, m, t)
+	o.b[0](o.b0pt, p, t)
+	o.b[1](o.b1mt, m, t)
+	o.b[1](o.b1pt, p, t)
 
-	o.b3d[0](o.b0sm, s, m)
-	o.b3d[0](o.b0sp, s, p)
-	o.b3d[1](o.b1sm, s, m)
-	o.b3d[1](o.b1sp, s, p)
+	o.b[0](o.b0sm, s, m)
+	o.b[0](o.b0sp, s, p)
+	o.b[1](o.b1sm, s, m)
+	o.b[1](o.b1sp, s, p)
 
-	o.b3d[2](o.b2rm, r, m)
-	o.b3d[2](o.b2rp, r, p)
-	o.b3d[3](o.b3rm, r, m)
-	o.b3d[3](o.b3rp, r, p)
+	o.b[2](o.b2rm, r, m)
+	o.b[2](o.b2rp, r, p)
+	o.b[3](o.b3rm, r, m)
+	o.b[3](o.b3rp, r, p)
 
-	o.bd3d[2](o.bdr2rt, r, t)
-	o.bd3d[3](o.bdr3rt, r, t)
-	o.bd3d[4](o.bdr4rs, r, s)
-	o.bd3d[5](o.bdr5rs, r, s)
-	o.bd3d[2](o.bdr2rm, r, m)
-	o.bd3d[2](o.bdr2rp, r, p)
-	o.bd3d[3](o.bdr3rm, r, m)
-	o.bd3d[3](o.bdr3rp, r, p)
+	o.bd[2](o.bdr2rt, r, t)
+	o.bd[3](o.bdr3rt, r, t)
+	o.bd[4](o.bdr4rs, r, s)
+	o.bd[5](o.bdr5rs, r, s)
+	o.bd[2](o.bdr2rm, r, m)
+	o.bd[2](o.bdr2rp, r, p)
+	o.bd[3](o.bdr3rm, r, m)
+	o.bd[3](o.bdr3rp, r, p)
 
-	o.bd3d[0](o.bd0st, s, t)
-	o.bd3d[1](o.bd1st, s, t)
-	o.bd3d[4](o.bd4rs, r, s)
-	o.bd3d[5](o.bd5rs, r, s)
-	o.bd3d[0](o.bd0sm, s, m)
-	o.bd3d[0](o.bd0sp, s, p)
-	o.bd3d[1](o.bd1sm, s, m)
-	o.bd3d[1](o.bd1sp, s, p)
+	o.bd[0](o.bd0st, s, t)
+	o.bd[1](o.bd1st, s, t)
+	o.bd[4](o.bd4rs, r, s)
+	o.bd[5](o.bd5rs, r, s)
+	o.bd[0](o.bd0sm, s, m)
+	o.bd[0](o.bd0sp, s, p)
+	o.bd[1](o.bd1sm, s, m)
+	o.bd[1](o.bd1sp, s, p)
 
-	o.bd3d[2](o.bd2rt, r, t)
-	o.bd3d[3](o.bd3rt, r, t)
-	o.bd3d[0](o.bd0mt, m, t)
-	o.bd3d[0](o.bd0pt, p, t)
-	o.bd3d[1](o.bd1mt, m, t)
-	o.bd3d[1](o.bd1pt, p, t)
+	o.bd[2](o.bd2rt, r, t)
+	o.bd[3](o.bd3rt, r, t)
+	o.bd[0](o.bd0mt, m, t)
+	o.bd[0](o.bd0pt, p, t)
+	o.bd[1](o.bd1mt, m, t)
+	o.bd[1](o.bd1pt, p, t)
 
 	var dxidr, dxids, dxidt float64
 	for i := 0; i < o.ndim; i++ {
@@ -439,7 +439,7 @@ func (o *Transfinite) Draw(npts []int, onlyBry bool, args, argsBry *plt.A) {
 		// draw B0(r)
 		for i := 0; i < npts[0]; i++ {
 			r := -1 + 2*float64(i)/float64(npts[0]-1)
-			o.b[0](x, r)
+			o.e[0](x, r)
 			x0[i] = x[0]
 			y0[i] = x[1]
 		}
@@ -448,7 +448,7 @@ func (o *Transfinite) Draw(npts []int, onlyBry bool, args, argsBry *plt.A) {
 		// draw B1(s)
 		for j := 0; j < npts[1]; j++ {
 			s := -1 + 2*float64(j)/float64(npts[1]-1)
-			o.b[1](x, s)
+			o.e[1](x, s)
 			x1[j] = x[0]
 			y1[j] = x[1]
 		}
@@ -457,7 +457,7 @@ func (o *Transfinite) Draw(npts []int, onlyBry bool, args, argsBry *plt.A) {
 		// draw B2(r)
 		for i := 0; i < npts[0]; i++ {
 			r := -1 + 2*float64(i)/float64(npts[0]-1)
-			o.b[2](x, r)
+			o.e[2](x, r)
 			x0[i] = x[0]
 			y0[i] = x[1]
 		}
@@ -466,7 +466,7 @@ func (o *Transfinite) Draw(npts []int, onlyBry bool, args, argsBry *plt.A) {
 		// draw B3(s)
 		for j := 0; j < npts[1]; j++ {
 			s := -1 + 2*float64(j)/float64(npts[1]-1)
-			o.b[3](x, s)
+			o.e[3](x, s)
 			x1[j] = x[0]
 			y1[j] = x[1]
 		}
