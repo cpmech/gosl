@@ -17,7 +17,7 @@ several tools for 2D/3D mesh generation to assist on the development of solvers 
 differential equations.
 
 <div id="container">
-<p><img src="examples/figs/gosl-collage1-sml.png"></p>
+<p><a href="examples/figs/gosl-collage1.png"><img src="examples/figs/gosl-collage1-sml.png"></a></p>
 </div>
 
 [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
