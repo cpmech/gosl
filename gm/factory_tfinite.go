@@ -25,18 +25,18 @@ var FactoryTfinite = facTfinite{}
 func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 
 	π := math.Pi
-	surf = NewTransfinite2d(2, []fun.Vs{
+	surf = NewTransfinite2d([]fun.Vs{
 
 		// B[0](s)
 		func(x la.Vector, s float64) { // s ϵ [-1,+1]
-			θ := π * (s + 1) / 4.0
+			θ := π * (1.0 + s) / 4.0
 			x[0] = a * math.Cos(θ)
 			x[1] = a * math.Sin(θ)
 		},
 
 		// B[1](s)
 		func(x la.Vector, s float64) { // s ϵ [-1,+1]
-			θ := π * (s + 1) / 4.0
+			θ := π * (1.0 + s) / 4.0
 			x[0] = b * math.Cos(θ)
 			x[1] = b * math.Sin(θ)
 		},
@@ -52,22 +52,23 @@ func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 			x[0] = 0.0
 			x[1] = a + 0.5*(1.0+r)*(b-a)
 		},
+
+		// first order derivatives
+
 	}, []fun.Vs{
 
 		// dB[0]/ds
 		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			dxds[0] = -a * math.Sin(θ) * dθds
-			dxds[1] = +a * math.Cos(θ) * dθds
+			θ := π * (1.0 + s) / 4.0
+			dxds[0] = -a * math.Sin(θ) * π / 4.0
+			dxds[1] = +a * math.Cos(θ) * π / 4.0
 		},
 
 		// dB[1]/ds
 		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			dxds[0] = -b * math.Sin(θ) * dθds
-			dxds[1] = +b * math.Cos(θ) * dθds
+			θ := π * (1.0 + s) / 4.0
+			dxds[0] = -b * math.Sin(θ) * π / 4.0
+			dxds[1] = +b * math.Cos(θ) * π / 4.0
 		},
 
 		// dB[2]/dr
@@ -81,6 +82,36 @@ func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 			dxdr[0] = 0.0
 			dxdr[1] = 0.5 * (b - a)
 		},
+
+		// second order derivatives
+
+	}, []fun.Vs{
+
+		// d²B[0]/ds²
+		func(ddxdss la.Vector, s float64) {
+			θ := π * (1.0 + s) / 4.0
+			ddxdss[0] = -a * math.Cos(θ) * π * π / 16.0
+			ddxdss[1] = -a * math.Sin(θ) * π * π / 16.0
+		},
+
+		// d²B[1]/ds²
+		func(ddxdss la.Vector, s float64) {
+			θ := π * (1.0 + s) / 4.0
+			ddxdss[0] = -b * math.Cos(θ) * π * π / 16.0
+			ddxdss[1] = -b * math.Sin(θ) * π * π / 16.0
+		},
+
+		// d²B[2]/dr²
+		func(ddxdrr la.Vector, r float64) {
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+		},
+
+		// d²B[3]/dr²
+		func(ddxdrr la.Vector, r float64) {
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+		},
 	})
 	return
 }
@@ -92,11 +123,11 @@ func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 func (o facTfinite) Surf2dQuarterPerfLozenge(a, b float64) (surf *Transfinite) {
 
 	π := math.Pi
-	surf = NewTransfinite2d(2, []fun.Vs{
+	surf = NewTransfinite2d([]fun.Vs{
 
 		// B[0](s)
 		func(x la.Vector, s float64) { // s ϵ [-1,+1]
-			θ := π * (s + 1) / 4.0
+			θ := π * (1.0 + s) / 4.0
 			x[0] = a * math.Cos(θ)
 			x[1] = a * math.Sin(θ)
 		},
@@ -118,14 +149,16 @@ func (o facTfinite) Surf2dQuarterPerfLozenge(a, b float64) (surf *Transfinite) {
 			x[0] = 0.0
 			x[1] = a + 0.5*(1.0+r)*(b-a)
 		},
+
+		// first order derivatives
+
 	}, []fun.Vs{
 
 		// dB[0]/ds
 		func(dxds la.Vector, s float64) {
-			θ := π * (s + 1) / 4.0
-			dθds := π / 4.0
-			dxds[0] = -a * math.Sin(θ) * dθds
-			dxds[1] = +a * math.Cos(θ) * dθds
+			θ := π * (1.0 + s) / 4.0
+			dxds[0] = -a * math.Sin(θ) * π / 4.0
+			dxds[1] = +a * math.Cos(θ) * π / 4.0
 		},
 
 		// dB[1]/ds
@@ -144,6 +177,35 @@ func (o facTfinite) Surf2dQuarterPerfLozenge(a, b float64) (surf *Transfinite) {
 		func(dxdr la.Vector, r float64) {
 			dxdr[0] = 0.0
 			dxdr[1] = 0.5 * (b - a)
+		},
+
+		// second order derivatives
+
+	}, []fun.Vs{
+
+		// d²B[0]/ds²
+		func(ddxdss la.Vector, s float64) {
+			θ := π * (1.0 + s) / 4.0
+			ddxdss[0] = -a * math.Cos(θ) * π * π / 16.0
+			ddxdss[1] = -a * math.Sin(θ) * π * π / 16.0
+		},
+
+		// d²B[1]/ds²
+		func(ddxdss la.Vector, s float64) {
+			ddxdss[0] = 0.0
+			ddxdss[1] = 0.0
+		},
+
+		// d²B[2]/dr²
+		func(ddxdrr la.Vector, r float64) {
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+		},
+
+		// d²B[3]/dr²
+		func(ddxdrr la.Vector, r float64) {
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
 		},
 	})
 	return
@@ -197,68 +259,71 @@ func (o facTfinite) Surf3dCube(lx, ly, lz float64) (solid *Transfinite) {
 			x[1] = (1.0 + s) * ly / 2.0
 			x[2] = lz
 		},
-	}, []fun.Mss{
 
-		// dB[0]/dst
-		func(dxdst *la.Matrix, s, t float64) {
-			dxdst.Set(0, 0, 0.0)    // dx[0]/ds
-			dxdst.Set(0, 1, 0.0)    // dx[0]/dt
-			dxdst.Set(1, 0, ly/2.0) // dx[1]/ds
-			dxdst.Set(1, 1, 0.0)    // dx[1]/dt
-			dxdst.Set(2, 0, 0.0)    // dx[2]/ds
-			dxdst.Set(2, 1, lz/2.0) // dx[2]/dt
+		// first order derivatives
+
+	}, []fun.Vvss{
+
+		// Bd[0](s,t)
+		func(dxds, dxdt la.Vector, s, t float64) {
+			dxds[0] = 0.0
+			dxds[1] = ly / 2.0
+			dxds[2] = 0.0
+			dxdt[0] = 0.0
+			dxdt[1] = 0.0
+			dxdt[2] = lz / 2.0
 		},
 
-		// dB[1]/dst
-		func(dxdst *la.Matrix, s, t float64) {
-			dxdst.Set(0, 0, 0.0)    // dx[0]/ds
-			dxdst.Set(0, 1, 0.0)    // dx[0]/dt
-			dxdst.Set(1, 0, ly/2.0) // dx[1]/ds
-			dxdst.Set(1, 1, 0.0)    // dx[1]/dt
-			dxdst.Set(2, 0, 0.0)    // dx[2]/ds
-			dxdst.Set(2, 1, lz/2.0) // dx[2]/dt
+		// Bd[1](s,t)
+		func(dxds, dxdt la.Vector, s, t float64) {
+			dxds[0] = 0.0
+			dxds[1] = ly / 2.0
+			dxds[2] = 0.0
+			dxdt[0] = 0.0
+			dxdt[1] = 0.0
+			dxdt[2] = lz / 2.0
 		},
 
-		// dB[2]/drt
-		func(dxdrt *la.Matrix, r, t float64) {
-			dxdrt.Set(0, 0, lx/2.0) // dx[0]/dr
-			dxdrt.Set(0, 1, 0.0)    // dx[0]/dt
-			dxdrt.Set(1, 0, 0.0)    // dx[1]/dr
-			dxdrt.Set(1, 1, 0.0)    // dx[1]/dt
-			dxdrt.Set(2, 0, 0.0)    // dx[2]/dr
-			dxdrt.Set(2, 1, lz/2.0) // dx[2]/dt
+		// Bd[2](r,t)
+		func(dxdr, dxdt la.Vector, r, t float64) {
+			dxdr[0] = lx / 2.0
+			dxdr[1] = 0.0
+			dxdr[2] = 0.0
+			dxdt[0] = 0.0
+			dxdt[1] = 0.0
+			dxdt[2] = lz / 2.0
 		},
 
-		// dB[3]/drt
-		func(dxdrt *la.Matrix, r, t float64) {
-			dxdrt.Set(0, 0, lx/2.0) // dx[0]/dr
-			dxdrt.Set(0, 1, 0.0)    // dx[0]/dt
-			dxdrt.Set(1, 0, 0.0)    // dx[1]/dr
-			dxdrt.Set(1, 1, 0.0)    // dx[1]/dt
-			dxdrt.Set(2, 0, 0.0)    // dx[2]/dr
-			dxdrt.Set(2, 1, lz/2.0) // dx[2]/dt
+		// Bd[3](r,t)
+		func(dxdr, dxdt la.Vector, r, t float64) {
+			dxdr[0] = lx / 2.0
+			dxdr[1] = 0.0
+			dxdr[2] = 0.0
+			dxdt[0] = 0.0
+			dxdt[1] = 0.0
+			dxdt[2] = lz / 2.0
 		},
 
-		// dB[4]/drs
-		func(dxdrs *la.Matrix, r, s float64) {
-			dxdrs.Set(0, 0, lx/2.0) // dx[0]/dr
-			dxdrs.Set(0, 1, 0.0)    // dx[0]/ds
-			dxdrs.Set(1, 0, 0.0)    // dx[1]/dr
-			dxdrs.Set(1, 1, ly/2.0) // dx[1]/ds
-			dxdrs.Set(2, 0, 0.0)    // dx[2]/dr
-			dxdrs.Set(2, 1, 0.0)    // dx[2]/ds
+		// Bd[4](r,s)
+		func(dxdr, dxds la.Vector, r, s float64) {
+			dxdr[0] = lx / 2.0
+			dxdr[1] = 0.0
+			dxdr[2] = 0.0
+			dxds[0] = 0.0
+			dxds[1] = ly / 2.0
+			dxds[2] = 0.0
 		},
 
-		// dB[5]/drs
-		func(dxdrs *la.Matrix, r, s float64) {
-			dxdrs.Set(0, 0, lx/2.0) // dx[0]/dr
-			dxdrs.Set(0, 1, 0.0)    // dx[0]/ds
-			dxdrs.Set(1, 0, 0.0)    // dx[1]/dr
-			dxdrs.Set(1, 1, ly/2.0) // dx[1]/ds
-			dxdrs.Set(2, 0, 0.0)    // dx[2]/dr
-			dxdrs.Set(2, 1, 0.0)    // dx[2]/ds
+		// Bd[5](r,s)
+		func(dxdr, dxds la.Vector, r, s float64) {
+			dxdr[0] = lx / 2.0
+			dxdr[1] = 0.0
+			dxdr[2] = 0.0
+			dxds[0] = 0.0
+			dxds[1] = ly / 2.0
+			dxds[2] = 0.0
 		},
-	})
+	}, nil)
 	return
 }
 
@@ -269,10 +334,17 @@ func (o facTfinite) Surf3dCube(lx, ly, lz float64) (solid *Transfinite) {
 func (o facTfinite) Surf3dQuarterRing(a, b, h float64) (solid *Transfinite) {
 
 	π := math.Pi
+	tmp := la.NewVector(2)
 	x2d := la.NewVector(2)
 	u2d := la.NewVector(2)
-	dxdu2d := la.NewMatrix(2, 2)
+	dxdr2d := la.NewVector(2)
+	dxds2d := la.NewVector(2)
+	ddxdrr2d := la.NewVector(2)
+	ddxdss2d := la.NewVector(2)
+	ddxdrs2d := la.NewVector(2)
+
 	surf := FactoryTfinite.Surf2dQuarterRing(a, b)
+
 	solid = NewTransfinite3d([]fun.Vss{
 
 		// B[0](s,t)
@@ -322,72 +394,175 @@ func (o facTfinite) Surf3dQuarterRing(a, b, h float64) (solid *Transfinite) {
 			x[1] = 0.0
 			x[2] = a + (1.0+s)*(b-a)/2.0
 		},
-	}, []fun.Mss{
 
-		// dB[0]/dst
-		func(dxdst *la.Matrix, s, t float64) {
+		// first order derivatives
+
+	}, []fun.Vvss{
+
+		// Bd[0](s,t)
+		func(dxds, dxdt la.Vector, s, t float64) {
 			u2d[0], u2d[1] = s, t
-			surf.Derivs(dxdu2d, u2d)
-			dxdst.Set(0, 0, 0.0)              // dx[0]/ds
-			dxdst.Set(0, 1, 0.0)              // dx[0]/dt
-			dxdst.Set(1, 0, dxdu2d.Get(0, 0)) // dx[1]/ds
-			dxdst.Set(1, 1, dxdu2d.Get(0, 1)) // dx[1]/dt
-			dxdst.Set(2, 0, dxdu2d.Get(1, 0)) // dx[2]/ds
-			dxdst.Set(2, 1, dxdu2d.Get(1, 1)) // dx[2]/dt
+			surf.PointAndDerivs(tmp, dxdr2d, dxds2d, nil, nil, nil, nil, nil, nil, nil, u2d)
+			dxds[0] = 0.0
+			dxds[1] = dxdr2d[0]
+			dxds[2] = dxdr2d[1]
+			dxdt[0] = 0.0
+			dxdt[1] = dxds2d[0]
+			dxdt[2] = dxds2d[1]
 		},
 
-		// dB[1]/dst
-		func(dxdst *la.Matrix, s, t float64) {
+		// Bd[1](s,t)
+		func(dxds, dxdt la.Vector, s, t float64) {
 			u2d[0], u2d[1] = s, t
-			surf.Derivs(dxdu2d, u2d)
-			dxdst.Set(0, 0, 0.0)              // dx[0]/ds
-			dxdst.Set(0, 1, 0.0)              // dx[0]/dt
-			dxdst.Set(1, 0, dxdu2d.Get(0, 0)) // dx[1]/ds
-			dxdst.Set(1, 1, dxdu2d.Get(0, 1)) // dx[1]/dt
-			dxdst.Set(2, 0, dxdu2d.Get(1, 0)) // dx[2]/ds
-			dxdst.Set(2, 1, dxdu2d.Get(1, 1)) // dx[2]/dt
+			surf.PointAndDerivs(tmp, dxdr2d, dxds2d, nil, nil, nil, nil, nil, nil, nil, u2d)
+			dxds[0] = 0.0
+			dxds[1] = dxdr2d[0]
+			dxds[2] = dxdr2d[1]
+			dxdt[0] = 0.0
+			dxdt[1] = dxds2d[0]
+			dxdt[2] = dxds2d[1]
 		},
 
-		// dB[2]/drt
-		func(dxdrt *la.Matrix, r, t float64) {
+		// Bd[2](r,t)
+		func(dxdr, dxdt la.Vector, r, t float64) {
 			θ := (1.0 + t) * π / 4.0
-			dxdrt.Set(0, 0, h/2.0)                // dx[0]/dr
-			dxdrt.Set(0, 1, 0.0)                  // dx[0]/dt
-			dxdrt.Set(1, 0, 0.0)                  // dx[1]/dr
-			dxdrt.Set(1, 1, -a*math.Sin(θ)*π/4.0) // dx[1]/dt
-			dxdrt.Set(2, 0, 0.0)                  // dx[2]/dr
-			dxdrt.Set(2, 1, a*math.Cos(θ)*π/4.0)  // dx[2]/dt
+			dxdr[0] = h / 2.0
+			dxdr[1] = 0.0
+			dxdr[2] = 0.0
+			dxdt[0] = 0.0
+			dxdt[1] = -a * math.Sin(θ) * π / 4.0
+			dxdt[2] = +a * math.Cos(θ) * π / 4.0
 		},
 
-		// dB[3]/drt
-		func(dxdrt *la.Matrix, r, t float64) {
+		// Bd[3](r,t)
+		func(dxdr, dxdt la.Vector, r, t float64) {
 			θ := (1.0 + t) * π / 4.0
-			dxdrt.Set(0, 0, h/2.0)                // dx[0]/dr
-			dxdrt.Set(0, 1, 0.0)                  // dx[0]/dt
-			dxdrt.Set(1, 0, 0.0)                  // dx[1]/dr
-			dxdrt.Set(1, 1, -b*math.Sin(θ)*π/4.0) // dx[1]/dt
-			dxdrt.Set(2, 0, 0.0)                  // dx[2]/dr
-			dxdrt.Set(2, 1, b*math.Cos(θ)*π/4.0)  // dx[2]/dt
+			dxdr[0] = h / 2.0
+			dxdr[1] = 0.0
+			dxdr[2] = 0.0
+			dxdt[0] = 0.0
+			dxdt[1] = -b * math.Sin(θ) * π / 4.0
+			dxdt[2] = +b * math.Cos(θ) * π / 4.0
 		},
 
-		// dB[4]/drs
-		func(dxdrs *la.Matrix, r, s float64) {
-			dxdrs.Set(0, 0, h/2.0)     // dx[0]/dr
-			dxdrs.Set(0, 1, 0.0)       // dx[0]/ds
-			dxdrs.Set(1, 0, 0.0)       // dx[1]/dr
-			dxdrs.Set(1, 1, (b-a)/2.0) // dx[1]/ds
-			dxdrs.Set(2, 0, 0.0)       // dx[2]/dr
-			dxdrs.Set(2, 1, 0.0)       // dx[2]/ds
+		// Bd[4](r,s)
+		func(dxdr, dxds la.Vector, r, s float64) {
+			dxdr[0] = h / 2.0
+			dxdr[1] = 0.0
+			dxdr[2] = 0.0
+			dxds[0] = 0.0
+			dxds[1] = (b - a) / 2.0
+			dxds[2] = 0.0
 		},
 
-		// dB[5]/drs
-		func(dxdrs *la.Matrix, r, s float64) {
-			dxdrs.Set(0, 0, h/2.0)     // dx[0]/dr
-			dxdrs.Set(0, 1, 0.0)       // dx[0]/ds
-			dxdrs.Set(1, 0, 0.0)       // dx[1]/dr
-			dxdrs.Set(1, 1, 0.0)       // dx[1]/ds
-			dxdrs.Set(2, 0, 0.0)       // dx[2]/dr
-			dxdrs.Set(2, 1, (b-a)/2.0) // dx[2]/ds
+		// Bd[5](r,s)
+		func(dxdr, dxds la.Vector, r, s float64) {
+			dxdr[0] = h / 2.0
+			dxdr[1] = 0.0
+			dxdr[2] = 0.0
+			dxds[0] = 0.0
+			dxds[1] = 0.0
+			dxds[2] = (b - a) / 2.0
+		},
+
+		// second order derivatives
+
+	}, []fun.Vvvss{
+
+		// Bdd[0](s,t)
+		func(ddxdss, ddxdtt, ddxdst la.Vector, s, t float64) {
+			u2d[0], u2d[1] = s, t
+			surf.PointAndDerivs(tmp, tmp, tmp, nil, ddxdrr2d, ddxdss2d, tmp, ddxdrs2d, tmp, tmp, u2d)
+			ddxdss[0] = 0.0
+			ddxdss[1] = ddxdrr2d[0]
+			ddxdss[2] = ddxdrr2d[1]
+
+			ddxdtt[0] = 0.0
+			ddxdtt[1] = ddxdss2d[0]
+			ddxdtt[2] = ddxdss2d[1]
+
+			ddxdst[0] = 0.0
+			ddxdst[1] = ddxdrs2d[0]
+			ddxdst[2] = ddxdrs2d[1]
+		},
+
+		// Bdd[1](s,t)
+		func(ddxdss, ddxdtt, ddxdst la.Vector, s, t float64) {
+			u2d[0], u2d[1] = s, t
+			surf.PointAndDerivs(tmp, tmp, tmp, nil, ddxdrr2d, ddxdss2d, tmp, ddxdrs2d, tmp, tmp, u2d)
+			ddxdss[0] = 0.0
+			ddxdss[1] = ddxdrr2d[0]
+			ddxdss[2] = ddxdrr2d[1]
+
+			ddxdtt[0] = 0.0
+			ddxdtt[1] = ddxdss2d[0]
+			ddxdtt[2] = ddxdss2d[1]
+
+			ddxdst[0] = 0.0
+			ddxdst[1] = ddxdrs2d[0]
+			ddxdst[2] = ddxdrs2d[1]
+		},
+
+		// Bdd[2](r,t)
+		func(ddxdrr, ddxdtt, ddxdrt la.Vector, r, t float64) {
+			θ := (1.0 + t) * π / 4.0
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+			ddxdrr[2] = 0.0
+
+			ddxdtt[0] = 0.0
+			ddxdtt[1] = -a * math.Cos(θ) * π * π / 16.0
+			ddxdtt[2] = -a * math.Sin(θ) * π * π / 16.0
+
+			ddxdrt[0] = 0.0
+			ddxdrt[1] = 0.0
+			ddxdrt[2] = 0.0
+		},
+
+		// Bdd[3](r,t)
+		func(ddxdrr, ddxdtt, ddxdrt la.Vector, r, t float64) {
+			θ := (1.0 + t) * π / 4.0
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+			ddxdrr[2] = 0.0
+
+			ddxdtt[0] = 0.0
+			ddxdtt[1] = -b * math.Cos(θ) * π * π / 16.0
+			ddxdtt[2] = -b * math.Sin(θ) * π * π / 16.0
+
+			ddxdrt[0] = 0.0
+			ddxdrt[1] = 0.0
+			ddxdrt[2] = 0.0
+		},
+
+		// Bdd[4](r,s)
+		func(ddxdrr, ddxdss, ddxdrs la.Vector, r, s float64) {
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+			ddxdrr[2] = 0.0
+
+			ddxdss[0] = 0.0
+			ddxdss[1] = 0.0
+			ddxdss[2] = 0.0
+
+			ddxdrs[0] = 0.0
+			ddxdrs[1] = 0.0
+			ddxdrs[2] = 0.0
+		},
+
+		// Bdd[5](r,s)
+		func(ddxdrr, ddxdss, ddxdrs la.Vector, r, s float64) {
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+			ddxdrr[2] = 0.0
+
+			ddxdss[0] = 0.0
+			ddxdss[1] = 0.0
+			ddxdss[2] = 0.0
+
+			ddxdrs[0] = 0.0
+			ddxdrs[1] = 0.0
+			ddxdrs[2] = 0.0
 		},
 	})
 	return

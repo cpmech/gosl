@@ -44,6 +44,27 @@ type Vs func(f la.Vector, s float64)
 //     f -- output vector
 type Vss func(f la.Vector, a, b float64)
 
+// Vvss defines two vector functions u(a,b) and v(a,b) of two scalar arguments
+// (vector vector scalar scalar)
+//   Input:
+//     a -- first input scalar
+//     b -- second input scalar
+//   Output:
+//     u -- first output vector
+//     v -- second output vector
+type Vvss func(u, v la.Vector, a, b float64)
+
+// Vvvss defines three vector functions u(a,b), v(a,b) and w(a,b) of two scalar arguments
+// (vector vector vector scalar scalar)
+//   Input:
+//     a -- first input scalar
+//     b -- second input scalar
+//   Output:
+//     u -- first output vector
+//     v -- second output vector
+//     w -- second output vector
+type Vvvss func(u, v, w la.Vector, a, b float64)
+
 // Mss defines a matrix function f(a,b) of two scalar arguments (matrix scalar scalar)
 //   Input:
 //     a -- first input scalar
