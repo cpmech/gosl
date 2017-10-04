@@ -8,7 +8,7 @@ computations. The library tries to be as general and _easy_ as possible. Gosl co
 both Go concurrency routines and parallel computing using the message passing interface. Gosl has
 several modules (sub-packages) for a variety of tasks in scientific computing, image analysis, and
 data post-processing. For example, it includes high-performant linear algebra functions (wrapping
-MKL/OpenBLAS/LAPACK/SuiteSparse/UMFPACK...), fast Fourier transform algorithms (wrapping FFTW),
+MKL, OpenBLAS, LAPACK, SuiteSparse, UMFPACK...), fast Fourier transform algorithms (wrapping FFTW),
 numerical integration (wrapping QUADPACK), functions and structures for geometry calculations (e.g.
 3D transfinite interpolation, grid search, octree...), random numbers generation (SFMT and DSFMT)
 and probability distributions, optimisation and graph algorithms, plotting and visualisation using
