@@ -145,8 +145,8 @@ func (o *opJacobi) M(n int) int {
 }
 
 func (o *opJacobi) d(n int) float64 {
-	var twon uint64 = 1 << uint64(n) // 1<<n = 2ⁿ
-	return 1.0 / float64(twon)
+	var twoPown uint64 = 1 << uint64(n) // 1<<n = 2ⁿ
+	return 1.0 / float64(twoPown)
 }
 
 func (o *opJacobi) c(n, m int) float64 {
@@ -175,8 +175,8 @@ func (o *opLegendre) M(n int) int {
 }
 
 func (o *opLegendre) d(n int) float64 {
-	var twon uint64 = 1 << uint64(n) // 1<<n = 2ⁿ
-	return 1.0 / float64(twon)
+	var twoPown uint64 = 1 << uint64(n) // 1<<n = 2ⁿ
+	return 1.0 / float64(twoPown)
 }
 
 func (o *opLegendre) c(n, m int) float64 {
