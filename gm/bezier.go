@@ -63,7 +63,7 @@ func (o *BezierQuad) GetPoints(T []float64) (X, Y, Z []float64) {
 	return
 }
 
-// GetControlCoords returns the coordiantes of control points as 1D arrays (e.g. for plotting)
+// GetControlCoords returns the coordinates of control points as 1D arrays (e.g. for plotting)
 func (o *BezierQuad) GetControlCoords() (X, Y, Z []float64) {
 	if len(o.Q) != 3 {
 		chk.Panic("GetControlCoords: quadratic Bezier must be initialised first (with 3 control points)")

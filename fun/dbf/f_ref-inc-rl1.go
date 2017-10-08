@@ -16,7 +16,7 @@ import (
 // Flipped model is also available if λ1 < λ0 ( b == 1 )
 type RefIncRL1 struct {
 
-	// paramters
+	// parameters
 	λ0 float64 // slope @ right side
 	λ1 float64 // slope @ left side
 	α  float64 // minimum y @ left side

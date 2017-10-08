@@ -20,7 +20,7 @@ import (
 //   filename -- the filename with extension added
 //   fnkey    -- filename key == filename without extension
 //  Notes:
-//   The first first argument may be a file with extention or not.
+//   The first first argument may be a file with extension or not.
 //  Examples:
 //   If the first argument is "simulation.sim" or "simulation" (with ext=".sim")
 //   then the results are: filename="simulation.sim" and fnkey="simulation"

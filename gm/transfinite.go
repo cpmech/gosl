@@ -133,7 +133,7 @@ func NewTransfinite2d(B, Bd, Bdd []fun.Vs) (o *Transfinite) {
 
 	if o.edd != nil {
 		if len(o.edd) != 4 {
-			chk.Panic("in 2D, four boundary functions B are required. len(Bdd) = %d is incorect\n", len(o.edd))
+			chk.Panic("in 2D, four boundary functions B are required. len(Bdd) = %d is incorrect\n", len(o.edd))
 		}
 		o.dde0sDss, o.dde1sDss = la.NewVector(2), la.NewVector(2)
 		o.dde2rDrr, o.dde3rDrr = la.NewVector(2), la.NewVector(2)
@@ -196,7 +196,7 @@ func NewTransfinite3d(B []fun.Vss, Bd []fun.Vvss, Bdd []fun.Vvvss) (o *Transfini
 
 	if o.bdd != nil {
 		if len(o.bdd) != 6 {
-			chk.Panic("in 3D, six boundary functions B are required. len(Bdd) = %d is incorect\n", len(o.bdd))
+			chk.Panic("in 3D, six boundary functions B are required. len(Bdd) = %d is incorrect\n", len(o.bdd))
 		}
 		o.ddb0stDss, o.ddb0stDtt, o.ddb0stDst = la.NewVector(3), la.NewVector(3), la.NewVector(3)
 		o.ddb1stDss, o.ddb1stDtt, o.ddb1stDst = la.NewVector(3), la.NewVector(3), la.NewVector(3)

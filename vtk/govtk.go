@@ -21,7 +21,7 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// Scene holds essential data to draw and interect with the x-y-z Cartesian system
+// Scene holds essential data to draw and interact with the x-y-z Cartesian system
 type Scene struct {
 
 	// options

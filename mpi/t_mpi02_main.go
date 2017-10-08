@@ -48,26 +48,26 @@ func main() {
 
 			// RecvOneI
 			val := comm.RecvOneI(proc)
-			io.Pf("root recieved val=%d from proc=%d\n", val, proc)
+			io.Pf("root received val=%d from proc=%d\n", val, proc)
 			v1[proc] = val
 			val = comm.RecvOneI(proc)
-			io.Pf("root recieved val=%d from proc=%d\n", val, proc)
+			io.Pf("root received val=%d from proc=%d\n", val, proc)
 			v2[proc] = val
 
 			// RecvI
 			n := comm.RecvOneI(proc)
-			io.Pf("root recieved n=%d from proc=%d\n", n, proc)
+			io.Pf("root received n=%d from proc=%d\n", n, proc)
 			ints := make([]int, n)
 			comm.RecvI(ints, proc)
-			io.Pf("root recieved ints=%v from proc=%d\n", ints, proc)
+			io.Pf("root received ints=%v from proc=%d\n", ints, proc)
 			allints = append(allints, ints...)
 
 			// Recv
 			n = comm.RecvOneI(proc)
-			io.Pf("root recieved n=%d from proc=%d\n", n, proc)
+			io.Pf("root received n=%d from proc=%d\n", n, proc)
 			dbls := make([]float64, n)
 			comm.Recv(dbls, proc)
-			io.Pf("root recieved dbls=%v from proc=%d\n", dbls, proc)
+			io.Pf("root received dbls=%v from proc=%d\n", dbls, proc)
 			alldbls = append(alldbls, dbls...)
 		}
 

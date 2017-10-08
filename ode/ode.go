@@ -50,7 +50,7 @@ type Solver struct {
 //    conf -- configuration parameters
 //    out  -- output handler [may be nil]
 //    fcn  -- f(x,y) = dy/dx function
-//    jac  -- Jacobian: df/dy function [may be nil ⇒ use numerical Jacobian, if neccessary]
+//    jac  -- Jacobian: df/dy function [may be nil ⇒ use numerical Jacobian, if necessary]
 //    M    -- "mass" matrix, such that M ⋅ dy/dx = f(x,y) [may be nil]
 //
 //  NOTE: remember to call Free() to release allocated resources (e.g. from the linear solvers)

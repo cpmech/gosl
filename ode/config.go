@@ -32,7 +32,7 @@ type Config struct {
 	LerrStrat  int     // strategy to select local error computation method
 	GoChan     bool    // allow use of go channels (threaded); e.g. to solve R and C systems concurrently
 	CteTg      bool    // use constant tangent (Jacobian) in BwEuler
-	UseRmsNorm bool    // use RMS norm instead of Euclidian in BwEuler
+	UseRmsNorm bool    // use RMS norm instead of Euclidean in BwEuler
 	Verbose    bool    // show messages, e.g. during iterations
 	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
 	StabBeta   float64 // Lund stabilisation coefficient β

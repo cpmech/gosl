@@ -43,7 +43,7 @@ type ChebyInterp struct {
 	// derived
 	X     []float64 // points. NOTE: mirrowed version of Chebyshev X; i.e. from +1 to -1
 	Wb    []float64 // weights for Gaussian quadrature
-	Gamma []float64 // denominador of coefficients equation ~ ‖p[i]‖²
+	Gamma []float64 // denominator of coefficients equation ~ ‖p[i]‖²
 	Lam   []float64 // λ_i barycentric weights (also w_i in some papers)
 
 	// computed by auxiliary methods

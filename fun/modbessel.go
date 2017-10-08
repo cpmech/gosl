@@ -46,7 +46,7 @@ func ModBesselIn(n int, x float64) (ans float64) {
 		return 0.0
 	}
 	ACC := 200.0     // ACC determines accuracy.
-	IEXP := 1024 / 2 // numeric_limits<Doub>::max_exponent/2;
+	IEXP := 1024 / 2 // numeric_limits<double>::max_exponent/2;
 	tox := 2.0 / math.Abs(x)
 	bip := 0.0
 	bi := 1.0

@@ -69,7 +69,7 @@ func (o Vector) Accum() (sum float64) {
 	return
 }
 
-// Norm returns the Euclidian norm of a vector:
+// Norm returns the Euclidean norm of a vector:
 //  nrm := ‖v‖
 func (o Vector) Norm() (nrm float64) {
 	for i := 0; i < len(o); i++ {
@@ -93,7 +93,7 @@ func (o Vector) Rms() (rms float64) {
 	return
 }
 
-// NormDiff returns the Euclidian norm of the difference:
+// NormDiff returns the Euclidean norm of the difference:
 //  nrm := ||u - v||
 func (o Vector) NormDiff(v Vector) (nrm float64) {
 	for i := 0; i < len(v); i++ {
@@ -205,7 +205,7 @@ func (o VectorC) GetCopy() (clone VectorC) {
 	return
 }
 
-// Norm returns the Euclidian norm of a vector:
+// Norm returns the Euclidean norm of a vector:
 //  nrm := ‖v‖
 func (o VectorC) Norm() (nrm complex128) {
 	for i := 0; i < len(o); i++ {

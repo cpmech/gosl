@@ -34,8 +34,8 @@ import (
 //                  |
 //                  |
 type RefDecSp1 struct {
-	// paramters
-	β      float64 // beta coeficient
+	// parameters
+	β      float64 // beta coefficient
 	λ1     float64 // slope
 	ya, yb float64 // points on curve
 

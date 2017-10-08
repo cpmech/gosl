@@ -15,7 +15,7 @@ import (
 //  download LP files from here: http://users.clas.ufl.edu/hager/coap/format.html
 //  Output:
 //   A -- compressed-column sparse matrix where:
-//        Ap -- pointers to the begining of storage of column (size n+1)
+//        Ap -- pointers to the beginning of storage of column (size n+1)
 //        Ai -- row indices for each non zero entry (input, nnz A)
 //        Ax -- non zero entries (input, nnz A)
 //   b -- right hand side (input, size m)
@@ -27,7 +27,7 @@ func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64) {
 	// variables
 	var m int        // number or rows (input)
 	var n int        // number of columns (input)
-	var Ap []int     // pointers to the begining of storage of column (size n+1)
+	var Ap []int     // pointers to the beginning of storage of column (size n+1)
 	var Ai []int     // row indices for each non zero entry (input, nnz A)
 	var Ax []float64 // non zero entries (input, nnz A)
 	var z0 float64   // initial fixed value for objective

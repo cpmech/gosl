@@ -46,7 +46,7 @@ func DistPointPoint(a, b *Point) float64 {
 
 // Segment methods ///////////////////////////////////////////////////////////////////////////////////
 
-// Len computes the length of Segment == Euclidian norm
+// Len computes the length of Segment == Euclidean norm
 func (o *Segment) Len() float64 {
 	return DistPointPoint(o.A, o.B)
 }
@@ -82,7 +82,7 @@ func VecDot(u, v []float64) float64 {
 	return u[0]*v[0] + u[1]*v[1] + u[2]*v[2]
 }
 
-// VecNorm returns the length (Euclidian norm) of a vector
+// VecNorm returns the length (Euclidean norm) of a vector
 func VecNorm(u []float64) float64 {
 	return math.Sqrt(u[0]*u[0] + u[1]*u[1] + u[2]*u[2])
 }

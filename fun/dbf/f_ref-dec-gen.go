@@ -13,7 +13,7 @@ import (
 // RefDecGen implements the reference decreasing model (general)
 //  [1] Pedroso DM, Sheng D, Zhao J. The concept of reference curves for constitutive modelling in soil mechanics, Computers and Geotechnics, 36, 1-2, http://dx.doi.org/10.1016/j.compgeo.2008.01.009
 type RefDecGen struct {
-	// paramters
+	// parameters
 	β          float64 // beta coeficient
 	a, b, c    float64 // distance function coeffcients
 	A, B       float64 // lambda function coeficients

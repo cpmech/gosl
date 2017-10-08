@@ -33,7 +33,7 @@ func main() {
 		{6, 17},
 	}
 
-	// data for drawing: y-coordinats of vertices in plot
+	// data for drawing: y-coordinates of vertices in plot
 	Y := [][]float64{
 		{7, 6, 4, 0},          // col0
 		{6, 4, 2, 1, 0},       // col1

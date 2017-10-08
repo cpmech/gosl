@@ -22,7 +22,7 @@ type OutFcnType func(u []float64, t float64)
 type Outputter struct {
 	Dt     float64     // time step
 	DtOut  float64     // time step for output
-	Tmax   float64     // final time (eventually increased to accomodate all time steps)
+	Tmax   float64     // final time (eventually increased to accommodate all time steps)
 	Nsteps int         // number of time steps
 	Every  int         // increment to output after every time step
 	Tidx   int         // the index of the time step for the next output
@@ -68,7 +68,7 @@ func (o *Outputter) MaybeNow(tidx int, t float64) {
 	if o.Fcn == nil {
 		return
 	}
-	if tidx == o.Tidx || tidx == o.Nsteps-1 { // always proces the last one
+	if tidx == o.Tidx || tidx == o.Nsteps-1 { // always process the last one
 		o.T[o.Idx] = t
 		o.Fcn(o.U[o.Idx], t)
 		o.Tidx += o.Every

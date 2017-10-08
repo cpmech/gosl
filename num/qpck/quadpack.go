@@ -341,14 +341,14 @@ func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, eps
 //     icall -- indicates whether to reuse or not moments
 //                icall = 1  ⇒  dqawoe is to be used only once, assuming that, the Chebyshev moments
 //                              (for Clenshaw-Curtis integration of degree 24) have been computed for
-//                              intervals of lenghts (abs(b-a))*2**(-l), l=0,1,2,...momcom-1.
+//                              intervals of lengths (abs(b-a))*2**(-l), l=0,1,2,...momcom-1.
 //                icall > 1  ⇒  this means that dqawoe has been called twice or more on intervals of
 //                              the same length abs(b-a). The Chebyshev moments already computed are
 //                              then re-used in subsequent calls.
 //              [default = 1,  icall ≥ 1]
 //
 //     maxp1 -- upper bound on the number of Chebyshev moments which can be stored, i.e. for the
-//              intervals of lenghts abs(b-a)*2**(-l),  l=0,1, ..., maxp1-2.
+//              intervals of lengths abs(b-a)*2**(-l),  l=0,1, ..., maxp1-2.
 //              [default = 50,  maxp1 ≥ 1]
 //
 //     momcom -- momcom = 1 indicates that the Chebyshev moments have been computed for intervals of

@@ -191,7 +191,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64) {
 //   x - the last and the best approximation to the minimum location,
 //       i.e. f(x) <= f(a) or/and f(x) <= f(b)
 //       (if the function f has a local minimum in (a,b), then the both
-//       conditions are fulfiled after one or two steps).
+//       conditions are fulfilled after one or two steps).
 //   v,w are previous approximations to the minimum location. They may
 //   coincide with a, b, or x (although the algorithm tries to make all
 //   u, v, and w distinct). Points x, v, and w are used to construct
