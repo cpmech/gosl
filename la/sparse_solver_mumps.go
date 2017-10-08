@@ -426,10 +426,8 @@ func mumErr(info, infx C.int) string {
 		return "MUMPS Error # -10: singular matrix"
 	case -13:
 		return "MUMPS Error # -13: out of memory"
-	default:
-		return io.Sf("MUMPS Error # %d: unknown error", info)
 	}
-	return ""
+	return io.Sf("MUMPS Error # %d: unknown error", info)
 }
 
 // add solvers to database /////////////////////////////////////////////////////////////////////////
