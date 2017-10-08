@@ -7,6 +7,7 @@ package io
 import (
 	"bytes"
 	"strings"
+	"time"
 )
 
 // FcnConvertNum is a function to convert number to string
@@ -371,6 +372,30 @@ func TexNum(fmt string, num float64, scientificNotation bool) (l string) {
 		}
 	}
 	return
+}
+
+// RoundDuration rounds duration
+//  Input:
+//    d -- duration
+//    r -- rounding amount in milliseconds; e.g. 1e6 [ms]
+//         NOTE: use -1 for default value [1e6]
+func RoundDuration(d, r time.Duration) time.Duration {
+	if r <= 0 {
+		r = 1e6
+	}
+	neg := d < 0
+	if neg {
+		d = -d
+	}
+	if m := d % r; m+m < r {
+		d = d - m
+	} else {
+		d = d + r - m
+	}
+	if neg {
+		return -d
+	}
+	return d
 }
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////

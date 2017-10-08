@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="enums01"
+    go test -test.run="texpdf01"
 done

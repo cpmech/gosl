@@ -7,6 +7,7 @@ package io
 import (
 	"bytes"
 	"testing"
+	"time"
 
 	"github.com/cpmech/gosl/chk"
 )
@@ -28,6 +29,19 @@ func Test_texpdf01(tst *testing.T) {
 	chk.String(tst, l2, "1.23456\\cdot 10^{-6}")
 	chk.String(tst, l3, "1.2\\cdot 10^{10}")
 	chk.String(tst, l4, "1.23e-06")
+
+	Pl()
+	var d1 time.Duration = 123.081823e6
+	Pf("d1 = %v\n", d1)
+	d1round := RoundDuration(d1, -1)
+	d2round := RoundDuration(d1, 1e6)
+	d3round := RoundDuration(d1, 1e5)
+	chk.String(tst, Sf("%v", d1round), "123ms")
+	chk.String(tst, Sf("%v", d2round), "123ms")
+	chk.String(tst, Sf("%v", d3round), "123.1ms")
+	var d2 time.Duration = -123.081823e6
+	d4round := RoundDuration(d2, 1e6)
+	chk.String(tst, Sf("%v", d4round), "-123ms")
 }
 
 func Test_texpdf02(tst *testing.T) {
