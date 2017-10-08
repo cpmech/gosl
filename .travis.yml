@@ -1,0 +1,16 @@
+language: go
+
+go:
+  - 1.8
+  - 1.9
+  - tip
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
+  - sudo apt-get install -y gfortran libvtk6-dev python-scipy python-matplotlib dvipng
+  - sudo apt-get install -y libfftw3-dev libfftw3-mpi-dev libmetis-dev
+  - sudo apt-get install -y liblapacke-dev libopenblas-dev
+
+script:
+  - ./all.bash
