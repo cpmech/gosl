@@ -422,7 +422,7 @@ func TestDgesv01(tst *testing.T) {
 	lda, ldb := n, n
 	ipiv := make([]int32, n)
 	Dgesv(n, nrhs, a, lda, ipiv, b, ldb)
-	chk.Array(tst, "x = A⁻¹ b", 1e-15, b, xCorrect)
+	chk.Array(tst, "x = A⁻¹ b", 1e-14, b, xCorrect)
 
 	// check ipiv
 	chk.Int32s(tst, "ipiv", ipiv, []int32{2, 5, 5, 5, 5})
@@ -726,7 +726,7 @@ func TestDgetrf01(tst *testing.T) {
 	chk.Int32s(tst, "ipiv", ipiv, []int32{4, 2, 3, 4})
 
 	// check LU
-	chk.Deep2(tst, "lu", 1e-17, ColMajorToSlice(m, n, a), [][]float64{
+	chk.Deep2(tst, "lu", 1e-15, ColMajorToSlice(m, n, a), [][]float64{
 		{+4.0e+00, +0.000000000000000e+00, +3.000000000000000e+00, +1.000000000000000e+00},
 		{+5.0e-01, +3.000000000000000e+00, -2.500000000000000e+00, +5.000000000000000e-01},
 		{+2.5e-01, +6.666666666666666e-01, +9.166666666666665e-01, +3.416666666666667e+00},
