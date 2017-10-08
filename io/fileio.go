@@ -167,15 +167,13 @@ func ReadLines(fn string, cb ReadLinesCallback) {
 	for {
 		lin, prefix, errl := r.ReadLine()
 		if prefix {
-			err = chk.Err("cannot read long line. file = <%s>", fn)
-			return
+			chk.Panic("cannot read long line. file = <%s>", fn)
 		}
 		if errl == io.EOF {
 			break
 		}
 		if errl != nil {
-			err = chk.Err("cannot read line. file = <%s>", fn)
-			return
+			chk.Panic("cannot read line. file = <%s>", fn)
 		}
 		stop := cb(idx, string(lin))
 		if stop {
