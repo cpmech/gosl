@@ -46,10 +46,9 @@ func ParetoMin(u, v []float64) (uDominates, vDominates bool) {
 //        (2) v dominates if !uDominates
 func ParetoMinProb(u, v []float64, φ float64) (uDominates bool) {
 	chk.IntAssert(len(u), len(v))
-	var pu, pv float64
+	var pu float64
 	for i := 0; i < len(u); i++ {
 		pu += ProbContestSmall(u[i], v[i], φ)
-		pv += ProbContestSmall(v[i], u[i], φ)
 	}
 	pu /= float64(len(u))
 	if FlipCoin(pu) {
