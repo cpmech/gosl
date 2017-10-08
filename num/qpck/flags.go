@@ -5,7 +5,7 @@
 package qpck
 
 /*
-#cgo linux LDFLAGS: -lopenblas -lgfortran -lm
+#cgo linux LDFLAGS: -lopenblas -llapacke -lgfortran -lm
 
 #cgo windows LDFLAGS: -lopenblas -lgfortran -lm
 
