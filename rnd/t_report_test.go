@@ -25,33 +25,33 @@ func Test_report01(tst *testing.T) {
 			&SetOfVars{
 				Name: "problem 1",
 				Vars: []*Variable{
-					&Variable{D: "N", M: 1, S: 0.1},
-					&Variable{D: "N", M: 2, S: 0.2},
-					&Variable{D: "N", M: 3, S: 0.3},
+					{D: "N", M: 1, S: 0.1},
+					{D: "N", M: 2, S: 0.2},
+					{D: "N", M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem:2",
 				Vars: []*Variable{
-					&Variable{D: "G", M: 1, S: 0.1},
-					&Variable{D: "G", M: 2, S: 0.2},
-					&Variable{D: "G", M: 3, S: 0.3},
+					{D: "G", M: 1, S: 0.1},
+					{D: "G", M: 2, S: 0.2},
+					{D: "G", M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem_3",
 				Vars: []*Variable{
-					&Variable{D: "L", M: 1, S: 0.1},
-					&Variable{D: "L", M: 2, S: 0.2},
-					&Variable{D: "L", M: 3, S: 0.3},
+					{D: "L", M: 1, S: 0.1},
+					{D: "L", M: 2, S: 0.2},
+					{D: "L", M: 3, S: 0.3},
 				},
 			},
 			&SetOfVars{
 				Name: "problem-4",
 				Vars: []*Variable{
-					&Variable{D: "U", Min: 1, Max: 10},
-					&Variable{D: "U", Min: 2, Max: 20},
-					&Variable{D: "U", Min: 3, Max: 30},
+					{D: "U", Min: 1, Max: 10},
+					{D: "U", Min: 2, Max: 20},
+					{D: "U", Min: 3, Max: 30},
 				},
 			},
 		}

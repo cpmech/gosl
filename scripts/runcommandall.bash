@@ -6,10 +6,11 @@ echo "usage:"
 echo "    $0 JOB"
 echo "where JOB is:"
 echo "    0 -- count lines [default]"
-echo "    1 -- execute golint"
-echo "    2 -- execute goimports"
-echo "    3 -- generate depedency graphs"
-echo "    4 -- fix links in README files"
+echo "    1 -- execute gofmt"
+echo "    2 -- execute golint"
+echo "    3 -- execute goimports"
+echo "    4 -- generate depedency graphs"
+echo "    5 -- fix links in README files"
 
 JOB=0
 if [[ $# != 0 ]]; then
@@ -68,6 +69,13 @@ examples \
 tools \
 "
 
+rungofmt() {
+    pkg=$1
+    for f in *.go; do
+        gofmt -s -w $f
+    done
+}
+
 rungolint() {
     pkg=$1
     for f in *.go; do
@@ -121,15 +129,18 @@ for pkg in $ALL; do
     echo
     echo ">>> $idx $pkg <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
     if [[ $JOB == 1 ]]; then
-        rungolint $pkg
+        rungofmt $pkg
     fi
     if [[ $JOB == 2 ]]; then
-        rungoimports $pkg
+        rungolint $pkg
     fi
     if [[ $JOB == 3 ]]; then
-        depgraph $pkg
+        rungoimports $pkg
     fi
     if [[ $JOB == 4 ]]; then
+        depgraph $pkg
+    fi
+    if [[ $JOB == 5 ]]; then
         fixreadme $pkg
     fi
     cd $HERE

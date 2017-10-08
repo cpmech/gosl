@@ -41,17 +41,17 @@ func Test_npatch01(tst *testing.T) {
 	// check number of entries in bins
 	io.Pf("\n")
 	entries := map[int][]int{ // maps idx of bin to ids of entries
-		0:  []int{0, 1},
-		1:  []int{2},
-		4:  []int{3, 4},
-		5:  []int{5},
-		6:  []int{6},
-		7:  []int{7},
-		9:  []int{8, 11, 12},
-		10: []int{9, 13},
-		11: []int{10},
-		13: []int{14, 15},
-		14: []int{16},
+		0:  {0, 1},
+		1:  {2},
+		4:  {3, 4},
+		5:  {5},
+		6:  {6},
+		7:  {7},
+		9:  {8, 11, 12},
+		10: {9, 13},
+		11: {10},
+		13: {14, 15},
+		14: {16},
 	}
 	checkBinsEntries(tst, patch.Bins.All, entries)
 
@@ -101,18 +101,18 @@ func Test_npatch02(tst *testing.T) {
 	// check number of entries in bins
 	io.Pf("\n")
 	entries := map[int][]int{ // maps idx of bin to ids of entries
-		0:  []int{0, 1},
-		1:  []int{2},
-		4:  []int{3, 4, 21, 22},
-		5:  []int{5, 23},
-		6:  []int{6, 7, 28, 29, 30},
-		7:  []int{24, 31},
-		8:  []int{18, 19, 20},
-		9:  []int{8, 11, 12, 17},
-		10: []int{9, 10, 13, 26, 27},
-		11: []int{25},
-		13: []int{14, 15},
-		14: []int{16},
+		0:  {0, 1},
+		1:  {2},
+		4:  {3, 4, 21, 22},
+		5:  {5, 23},
+		6:  {6, 7, 28, 29, 30},
+		7:  {24, 31},
+		8:  {18, 19, 20},
+		9:  {8, 11, 12, 17},
+		10: {9, 10, 13, 26, 27},
+		11: {25},
+		13: {14, 15},
+		14: {16},
 	}
 	checkBinsEntries(tst, patch.Bins.All, entries)
 

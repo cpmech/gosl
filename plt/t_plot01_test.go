@@ -521,9 +521,9 @@ func Test_plot11(tst *testing.T) {
 		Plot(x, y, nil)
 
 		LegendX([]*A{
-			&A{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
-			&A{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
-			&A{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
+			{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
+			{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
+			{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
 		},
 			&A{LegOut: true, LegNcol: 3},
 		)

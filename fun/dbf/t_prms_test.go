@@ -19,9 +19,9 @@ func Test_prms01(tst *testing.T) {
 
 	var prms Params
 	prms = []*P{
-		&P{N: "a", V: 1.0},
-		&P{N: "b", V: 2.0},
-		&P{N: "c", V: 3.0},
+		{N: "a", V: 1.0},
+		{N: "b", V: 2.0},
+		{N: "c", V: 3.0},
 	}
 	io.Pforan("%v\n", prms)
 
@@ -59,9 +59,9 @@ func Test_prms02(tst *testing.T) {
 
 	var prms Params
 	prms = []*P{
-		&P{N: "klx", V: 1.0},
-		&P{N: "kly", V: 2.0},
-		&P{N: "klz", V: 3.0},
+		{N: "klx", V: 1.0},
+		{N: "kly", V: 2.0},
+		{N: "klz", V: 3.0},
 	}
 	io.Pf("%v\n", prms)
 
@@ -110,9 +110,9 @@ func Test_prms03(tst *testing.T) {
 
 	var prms Params
 	prms = []*P{
-		&P{N: "klx", V: 1.0},
-		&P{N: "kly", V: 2.0},
-		&P{N: "klz", V: 3.0},
+		{N: "klx", V: 1.0},
+		{N: "kly", V: 2.0},
+		{N: "klz", V: 3.0},
 	}
 	io.Pforan("%v\n", prms)
 
@@ -132,8 +132,8 @@ func Test_prms04(tst *testing.T) {
 
 	var prms Params
 	prms = []*P{
-		&P{N: "a", V: 123, Min: 0, Max: math.MaxFloat64},
-		&P{N: "b", V: 456, Min: 0, Max: math.MaxFloat64},
+		{N: "a", V: 123, Min: 0, Max: math.MaxFloat64},
+		{N: "b", V: 456, Min: 0, Max: math.MaxFloat64},
 	}
 
 	prms.CheckLimits()

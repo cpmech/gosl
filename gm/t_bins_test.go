@@ -164,7 +164,7 @@ func Test_bins02(tst *testing.T) {
 
 	// check entries
 	io.Pf("\n")
-	entries := map[int][]int{0: []int{0}, 1: []int{1}, 2: []int{2}, 8: []int{3}, 13: []int{8, 9}, 20: []int{4, 6, 7}, 21: []int{5}}
+	entries := map[int][]int{0: {0}, 1: {1}, 2: {2}, 8: {3}, 13: {8, 9}, 20: {4, 6, 7}, 21: {5}}
 	checkBinsEntries(tst, bins.All, entries)
 
 	// draw
@@ -262,7 +262,7 @@ func Test_bins03(tst *testing.T) {
 
 	// check entries
 	io.Pf("\n")
-	entries := map[int][]int{7: []int{0}, 14: []int{1}, 15: []int{2}, 28: []int{3}, 35: []int{4}}
+	entries := map[int][]int{7: {0}, 14: {1}, 15: {2}, 28: {3}, 35: {4}}
 	checkBinsEntries(tst, bins.All, entries)
 	chk.Int(tst, "Nactive", bins.Nactive(), 5)
 	chk.Int(tst, "Nentries", bins.Nentries(), 5)

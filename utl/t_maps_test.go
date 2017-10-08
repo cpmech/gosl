@@ -17,9 +17,9 @@ func Test_map01(tst *testing.T) {
 	chk.PrintTitle("map01")
 
 	m := map[int][]int{
-		1: []int{100, 101},
-		2: []int{1000},
-		3: []int{200, 300, 400},
+		1: {100, 101},
+		2: {1000},
+		3: {200, 300, 400},
 	}
 	io.Pforan("m (before) = %v\n", m)
 	IntIntsMapAppend(m, 1, 102)
@@ -42,9 +42,9 @@ func Test_map02(tst *testing.T) {
 	chk.PrintTitle("map02")
 
 	m := map[string][]float64{
-		"a": []float64{100, 101},
-		"b": []float64{1000},
-		"c": []float64{200, 300, 400},
+		"a": {100, 101},
+		"b": {1000},
+		"c": {200, 300, 400},
 	}
 	io.Pforan("m (before) = %v\n", m)
 	StrFltsMapAppend(m, "a", 102)
@@ -67,9 +67,9 @@ func Test_map03(tst *testing.T) {
 	chk.PrintTitle("map03")
 
 	m := map[string][]int{
-		"a": []int{100, 101},
-		"b": []int{1000},
-		"c": []int{200, 300, 400},
+		"a": {100, 101},
+		"b": {1000},
+		"c": {200, 300, 400},
 	}
 	io.Pforan("m (before) = %v\n", m)
 	StrIntsMapAppend(m, "a", 102)

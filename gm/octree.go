@@ -143,10 +143,10 @@ func (o BoxN) Draw(withTxt bool, args, argsTxt *plt.A) {
 			args = &plt.A{Ec: "#005cd9", Fc: "#dfe7f3", Closed: true, NoClip: true}
 		}
 		pts := [][]float64{
-			[]float64{o.Lo.X[0], o.Lo.X[1]},
-			[]float64{o.Hi.X[0], o.Lo.X[1]},
-			[]float64{o.Hi.X[0], o.Hi.X[1]},
-			[]float64{o.Lo.X[0], o.Hi.X[1]},
+			{o.Lo.X[0], o.Lo.X[1]},
+			{o.Hi.X[0], o.Lo.X[1]},
+			{o.Hi.X[0], o.Hi.X[1]},
+			{o.Lo.X[0], o.Hi.X[1]},
 		}
 		plt.Polyline(pts, args)
 		if withTxt {

@@ -46,8 +46,8 @@ func (o *DrawArgs) Default() {
 	o.WithEdges = false
 	o.ArgsVerts = &plt.A{C: "k", M: ".", Ms: 3, Ls: "none", NoClip: true}
 	o.ArgsEdges = &plt.A{C: "#480085", NoClip: true}
-	o.ArgsCells = map[int]*plt.A{-1: &plt.A{Fc: "#dce1f4", Ec: "k", Closed: true, NoClip: true}}
-	o.ArgsLins = map[int]*plt.A{-1: &plt.A{C: "#41045a", NoClip: true}}
+	o.ArgsCells = map[int]*plt.A{-1: {Fc: "#dce1f4", Ec: "k", Closed: true, NoClip: true}}
+	o.ArgsLins = map[int]*plt.A{-1: {C: "#41045a", NoClip: true}}
 	o.ArgsIdsCells = &plt.A{C: "k", Fsz: 6, Ha: "center", Va: "center", NoClip: true}
 	o.ArgsIdsVerts = &plt.A{C: "r", Fsz: 6, Ha: "left", Va: "bottom", NoClip: true}
 	o.ArgsTagsVerts = &plt.A{C: "g", Fsz: 6, Ha: "right", Va: "bottom", NoClip: true}
