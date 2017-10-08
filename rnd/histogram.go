@@ -295,10 +295,6 @@ func (o IntHistogram) Plot(withText bool, args, argsTxt *plt.A) {
 	if nstations < 2 {
 		chk.Panic("histogram density graph needs at least two stations")
 	}
-	nsamples := 0
-	for _, cnt := range o.Counts {
-		nsamples += cnt
-	}
 	ymax := 0.0
 	for i := 0; i < nstations-1; i++ {
 		xi, xf := float64(o.Stations[i]), float64(o.Stations[i+1])
