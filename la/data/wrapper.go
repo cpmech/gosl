@@ -77,22 +77,26 @@ import "unsafe"
 
 // functions //////////////////////////////////////////////////////////////////////////////////////
 
+// Det returns the determinant
 func Det(n int, a []float64) (det float64) {
 	res := C.r8mat_determinant(C.int(n), (*C.double)(unsafe.Pointer(&a[0])))
 	return float64(res)
 }
 
+// NormFrob returns the Frobenius norm
 func NormFrob(m, n int, a []float64) (norm float64) {
 	res := C.r8mat_norm_fro(C.int(m), C.int(n), (*C.double)(unsafe.Pointer(&a[0])))
 	return float64(res)
 }
 
+// Print prints information about matrix
 func Print(m, n int, a []float64, title string) {
 	ctitle := C.CString(title)
 	defer C.free(unsafe.Pointer(ctitle))
 	C.r8mat_print(C.int(m), C.int(n), (*C.double)(unsafe.Pointer(&a[0])), ctitle)
 }
 
+// Plot draws matrix
 func Plot(m, n int, a []float64, title string) {
 	ctitle := C.CString(title)
 	defer C.free(unsafe.Pointer(ctitle))
@@ -101,6 +105,7 @@ func Plot(m, n int, a []float64, title string) {
 
 // a123 ///////////////////////////////////////////////////////////////////////////////////////////
 
+// A123 implements the 'A123' matrix
 type A123 struct {
 
 	// size
@@ -124,13 +129,14 @@ type A123 struct {
 	Ev  []float64 // eigen data
 	Nl  []float64 // null vector
 	Nr  []float64 // null vector
-	Rhs []float64 // rhs
+	RHS []float64 // right-hand-side
 	Sol []float64 // solution
 
 	// scalars
 	Det float64 // determinant
 }
 
+// Generate connects Go with C code
 func (o *A123) Generate() {
 
 	var a *C.double
@@ -207,14 +213,14 @@ func (o *A123) Generate() {
 	o.Ev = make([]float64, o.M)
 	o.Nl = make([]float64, o.M)
 	o.Nr = make([]float64, o.M)
-	o.Rhs = make([]float64, o.M)
+	o.RHS = make([]float64, o.M)
 	o.Sol = make([]float64, o.M)
 
 	for i := 0; i < o.M; i++ {
 		o.Ev[i] = float64(C.get(C.int(i), ev))
 		o.Nl[i] = float64(C.get(C.int(i), nl))
 		o.Nr[i] = float64(C.get(C.int(i), nr))
-		o.Rhs[i] = float64(C.get(C.int(i), rhs))
+		o.RHS[i] = float64(C.get(C.int(i), rhs))
 		o.Sol[i] = float64(C.get(C.int(i), sol))
 	}
 
@@ -225,6 +231,7 @@ func (o *A123) Generate() {
 
 // cheby_t ////////////////////////////////////////////////////////////////////////////////////////
 
+// ChebyT implements the Chebychev matrix
 type ChebyT struct {
 
 	// size
@@ -238,6 +245,7 @@ type ChebyT struct {
 	Det float64 // determinant
 }
 
+// Generate connects Go with C code
 func (o *ChebyT) Generate(n int) {
 
 	var a *C.double
