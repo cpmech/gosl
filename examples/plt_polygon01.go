@@ -51,9 +51,9 @@ func main() {
 
 	// draw a _posteriori_ legend
 	plt.LegendX([]*plt.A{
-		&plt.A{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
-		&plt.A{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
-		&plt.A{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
+		{C: "red", M: "o", Ls: "-", Lw: 1, Ms: -1, L: "first", Me: -1},
+		{C: "green", M: "s", Ls: "-", Lw: 2, Ms: 0, L: "second", Me: -1},
+		{C: "blue", M: "+", Ls: "-", Lw: 3, Ms: 10, L: "third", Me: -1},
 	}, nil)
 
 	// save figure (default is PNG)

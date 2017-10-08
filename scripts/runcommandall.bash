@@ -114,7 +114,7 @@ fixreadme() {
     #sed -i "/More information is available in/i $lnk \n" README.md
 }
 
-if [[ $JOB == 2 ]]; then
+if [[ $JOB != 4 ]]; then
     ALL="$ALL $EXTRA"
 fi
 
