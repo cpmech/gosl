@@ -94,7 +94,6 @@ func QuadPointsWilson8(wbinput float64) (pts [][]float64) {
 		{+0, +b, 0, wb},
 		{+a, +a, 0, wa},
 	}
-	return
 }
 
 // QuadPointsWilson9 computes the 9-points for hexahedra according to Wilson's Appendix G-7 formulae

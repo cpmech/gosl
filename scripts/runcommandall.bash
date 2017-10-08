@@ -8,9 +8,10 @@ echo "where JOB is:"
 echo "    0 -- count lines [default]"
 echo "    1 -- execute gofmt"
 echo "    2 -- execute golint"
-echo "    3 -- execute goimports"
-echo "    4 -- generate depedency graphs"
-echo "    5 -- fix links in README files"
+echo "    3 -- execute go vet"
+echo "    4 -- execute goimports"
+echo "    5 -- generate depedency graphs"
+echo "    6 -- fix links in README files"
 
 JOB=0
 if [[ $# != 0 ]]; then
@@ -62,6 +63,7 @@ rnd \
 rnd/sfmt \
 rnd/dsfmt \
 vtk \
+pde \
 "
 
 EXTRA="
@@ -80,6 +82,13 @@ rungolint() {
     pkg=$1
     for f in *.go; do
         golint $f
+    done
+}
+
+rungovet() {
+    pkg=$1
+    for f in *.go; do
+        go vet $f
     done
 }
 
@@ -114,7 +123,7 @@ fixreadme() {
     #sed -i "/More information is available in/i $lnk \n" README.md
 }
 
-if [[ $JOB != 4 ]]; then
+if [[ $JOB != 5 ]]; then
     ALL="$ALL $EXTRA"
 fi
 
@@ -135,12 +144,15 @@ for pkg in $ALL; do
         rungolint $pkg
     fi
     if [[ $JOB == 3 ]]; then
-        rungoimports $pkg
+        rungovet $pkg
     fi
     if [[ $JOB == 4 ]]; then
-        depgraph $pkg
+        rungoimports $pkg
     fi
     if [[ $JOB == 5 ]]; then
+        depgraph $pkg
+    fi
+    if [[ $JOB == 6 ]]; then
         fixreadme $pkg
     fi
     cd $HERE
