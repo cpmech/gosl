@@ -259,8 +259,8 @@ void isosurf_fcn(double & f, double v[3], const double x[3], int index) {
     *GOVTK_I   = index;
 
     // call go callback function
-    extern void govtk_isosurf_fcn();
-    govtk_isosurf_fcn();
+    extern void govtkIsosurfFcn();
+    govtkIsosurfFcn();
 
     // read global data
     f    = *GOVTK_F;

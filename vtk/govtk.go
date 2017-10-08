@@ -405,7 +405,7 @@ var (
 	govtkI   int
 )
 
-//export govtk_isosurf_fcn
-func govtk_isosurf_fcn() {
+//export govtkIsosurfFcn
+func govtkIsosurfFcn() {
 	govtkF, govtkVx, govtkVy, govtkVz = govtkFcn[govtkI](govtkX)
 }
