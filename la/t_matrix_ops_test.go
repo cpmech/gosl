@@ -97,13 +97,13 @@ func checkSvd(tst *testing.T, k string, a *Matrix, correctS []float64, correctU,
 
 	// compare results
 	if correctS != nil {
-		chk.Array(tst, "s", tolS, s, correctS)
+		chk.Array(tst, k+": s", tolS, s, correctS)
 	}
 	if correctU != nil {
-		chk.Array(tst, "u", tolU, u.Data, correctU.Data)
+		chk.Array(tst, k+": u", tolU, u.Data, correctU.Data)
 	}
 	if correctVt != nil {
-		chk.Array(tst, "vt", tolVt, vt.Data, correctVt.Data)
+		chk.Array(tst, k+": vt", tolVt, vt.Data, correctVt.Data)
 	}
 
 	// check u⋅s⋅vt
@@ -115,7 +115,7 @@ func checkSvd(tst *testing.T, k string, a *Matrix, correctS []float64, correctU,
 			}
 		}
 	}
-	chk.Array(tst, "u⋅s⋅vt", tolUsv, usv.Data, a.Data)
+	chk.Array(tst, k+": u⋅s⋅vt", tolUsv, usv.Data, a.Data)
 }
 
 func TestMatInv01(tst *testing.T) {
