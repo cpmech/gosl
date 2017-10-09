@@ -9,14 +9,15 @@ echo "    0 -- count lines [default]"
 echo "    1 -- execute gofmt"
 echo "    2 -- execute golint"
 echo "    3 -- execute go vet"
-echo "    4 -- execute goimports"
-echo "    5 -- generate depedency graphs"
-echo "    6 -- fix links in README files"
+echo "    4 -- execute gocyclo"
+echo "    5 -- execute goimports"
+echo "    6 -- generate depedency graphs"
+echo "    7 -- fix links in README files"
 
 JOB=0
 if [[ $# != 0 ]]; then
     JOB=$1
-    if [[ $JOB -lt 0 || $JOB -gt 3 ]]; then
+    if [[ $JOB -lt 0 || $JOB -gt 7 ]]; then
         echo
         echo "Job number $1 is invalid"
         echo
@@ -64,9 +65,6 @@ rnd/sfmt \
 rnd/dsfmt \
 vtk \
 pde \
-"
-
-EXTRA="
 examples \
 tools \
 "
@@ -79,17 +77,18 @@ rungofmt() {
 }
 
 rungolint() {
-    pkg=$1
-    for f in *.go; do
-        golint $f
-    done
+    golint .
 }
 
 rungovet() {
-    pkg=$1
-    for f in *.go; do
-        go vet $f
-    done
+    go vet .
+}
+
+rungocyclo() {
+    level=`gocyclo -top 1 . | awk '{print $1}'`
+    if [[ $level -gt 15 ]]; then
+        echo "PROBLEM: level = $level"
+    fi
 }
 
 rungoimports() {
@@ -101,6 +100,9 @@ rungoimports() {
 }
 
 depgraph(){
+    if [[ $1 == "examples" || $1 == "tools" ]]; then
+        return
+    fi
     pkg=$1
     fna="/tmp/gosl/depgraph-${pkg/\//_}-A.png"
     fnb="/tmp/gosl/depgraph-${pkg/\//_}-B.svg"
@@ -123,11 +125,7 @@ fixreadme() {
     #sed -i "/More information is available in/i $lnk \n" README.md
 }
 
-if [[ $JOB != 5 ]]; then
-    ALL="$ALL $EXTRA"
-fi
-
-if [[ $JOB == 3 ]]; then
+if [[ $JOB == 6 ]]; then # graphs
     mkdir -p /tmp/gosl
 fi
 
@@ -147,12 +145,15 @@ for pkg in $ALL; do
         rungovet $pkg
     fi
     if [[ $JOB == 4 ]]; then
-        rungoimports $pkg
+        rungocyclo $pkg
     fi
     if [[ $JOB == 5 ]]; then
-        depgraph $pkg
+        rungoimports $pkg
     fi
     if [[ $JOB == 6 ]]; then
+        depgraph $pkg
+    fi
+    if [[ $JOB == 7 ]]; then
         fixreadme $pkg
     fi
     cd $HERE
