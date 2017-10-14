@@ -14,7 +14,7 @@ a pull request.
 
 ## TODO List
 
-1.  Create more examples using all packages
+1.  Create more examples using all packages, in particular, improve `la` Examples and Readme.md
 2.  Apply English language editing to GitHub pages
 3.  Finalise the Octree structure in `gm`
 4.  Improve the computational geometry functions in `gm`
