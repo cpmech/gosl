@@ -5,6 +5,8 @@
 [![Build Status](https://travis-ci.org/cpmech/gosl.svg?branch=master)](https://travis-ci.org/cpmech/gosl)
 [![Go Report Card](https://goreportcard.com/badge/github.com/cpmech/gosl)](https://goreportcard.com/report/github.com/cpmech/gosl)
 
+![cover.run go chk](https://cover.run/go/github.com/cpmech/gosl/chk.svg)
+
 Gosl is a library written in [Go](https://golang.org) to develop high-performance scientific
 computations. The library tries to be as general and _easy_ as possible. Gosl considers the use of
 both Go concurrency routines and parallel computing using the message passing interface. Gosl has
