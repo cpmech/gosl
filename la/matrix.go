@@ -234,6 +234,13 @@ func (o *Matrix) GetCol(j int) (col Vector) {
 	return
 }
 
+// SetCol sets the values of a column j with a single value
+func (o *Matrix) SetCol(j int, value float64) {
+	for k := j * o.M; k < (j+1)*o.M; k++ {
+		o.Data[k] = value
+	}
+}
+
 // NormFrob returns the Frobenious norm of this matrix
 //  nrm := ‖a‖_F = sqrt(Σ_i Σ_j a[ij]⋅a[ij]) = ‖a‖_2
 func (o *Matrix) NormFrob() (nrm float64) {

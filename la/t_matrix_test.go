@@ -262,6 +262,14 @@ func TestMatrix03(tst *testing.T) {
 	// NormInf
 	normIA := A.NormInf()
 	chk.Float64(tst, "NormInf", 1e-17, normIA, 15.0)
+
+	// SetCol
+	A.SetCol(2, 123)
+	chk.Deep2(tst, "A after SetCol(0,1)", 1e-17, A.GetDeep2(), [][]float64{
+		{-3, 5, 123},
+		{+2, 6, 123},
+		{+0, 2, 123},
+	})
 }
 
 func TestMatrix04(tst *testing.T) {
