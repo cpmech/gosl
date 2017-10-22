@@ -235,7 +235,7 @@ func (o *RegData) PlotModel(reg Regression, iFeature, npts int, args *plt.A) {
 
 // PlotContModel plots contour of model
 //  minX and maxX may be nil
-func (o *RegData) PlotContModel(reg Regression, iFeature, jFeature, npi, npj int, minX, maxX []float64, args *plt.A) {
+func (o *RegData) PlotContModel(reg Regression, iFeature, jFeature, npi, npj int, minX, maxX []float64, filled bool, args *plt.A) {
 	if len(o.xxi) != npj {
 		o.xxi = utl.Alloc(npj, npi)
 		o.xxj = utl.Alloc(npj, npi)
@@ -264,10 +264,14 @@ func (o *RegData) PlotContModel(reg Regression, iFeature, jFeature, npi, npj int
 			o.zz[r][c] = reg.Model(xmdl, o.θ)
 		}
 	}
-	if args == nil {
-		args = &plt.A{Colors: []string{"k"}, Levels: []float64{0}}
+	if filled {
+		plt.ContourF(o.xxi, o.xxj, o.zz, args)
+	} else {
+		if args == nil {
+			args = &plt.A{Colors: []string{"k"}, Levels: []float64{0}}
+		}
+		plt.ContourL(o.xxi, o.xxj, o.zz, args)
 	}
-	plt.ContourL(o.xxi, o.xxj, o.zz, args)
 	plt.Gll(io.Sf("$x_{%d}$", iFeature), io.Sf("$x_{%d}$", jFeature), nil)
 }
 

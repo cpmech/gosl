@@ -27,7 +27,8 @@ func NewLogReg(data *RegData) (o *LogReg) {
 //   x -- [nFeatures] x-values
 //   θ -- [1+nFeatures] parameters
 func (o *LogReg) Model(x, θ la.Vector) float64 {
-	return θ[0] + la.VecDot(x, θ[1:])
+	z := θ[0] + la.VecDot(x, θ[1:])
+	return 1.0 / (1.0 + math.Exp(-z))
 }
 
 // Set sets LogReg with given regression data

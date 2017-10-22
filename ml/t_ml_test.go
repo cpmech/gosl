@@ -173,9 +173,10 @@ func TestLogReg01(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.7})
 
+		args := &plt.A{Colors: []string{"k"}, Levels: []float64{0.5}}
 		plt.Subplot(2, 1, 1)
 		d.PlotX(0, 1, map[int]*plt.A{0: {C: "b", M: "o", Void: true}, 1: {C: "r", M: "x"}})
-		d.PlotContModel(r, 0, 1, 11, 11, nil, nil, nil)
+		d.PlotContModel(r, 0, 1, 11, 11, nil, nil, false, args)
 		plt.Equal()
 		plt.HideTRborders()
 
