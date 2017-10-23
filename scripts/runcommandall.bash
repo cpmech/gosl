@@ -35,8 +35,8 @@ if [[ $JOB == 0 ]]; then
         totnlines=$(($totnlines+`wc -l $f | awk '{print $1}'`))
     done
     echo
-    echo "Total number of files = $totnfiles"
-    echo "Total number of lines = $totnlines"
+    echo "Total number of go files = $totnfiles"
+    echo "Total number of go lines = $totnlines"
     exit 0
 fi
 
@@ -45,6 +45,7 @@ chk \
 io \
 utl \
 plt \
+ml \
 mpi \
 la  \
 la/mkl \
