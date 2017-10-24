@@ -32,12 +32,15 @@ Steps to Install [Go extension for VS Code](https://marketplace.visualstudio.com
 * Type `ext install Go`
 * Select the version by *lukehoban*, click install, and click reload
 
+### [Required] Install Go
+
+4. Download and install *go1.9.1.windows-amd64.msi* (or newer) from https://golang.org/dl/
+
 ### [Option A] Quick Install (Windows 10 Installer)
 
 The _Windows 10 Installer_ will install Gosl, TDM Gcc64, compiled SuiteSparse and FFTW,
 and will set the required environment variables automatically.
 
-4. Download and install *go1.8.3.windows-amd64.msi* (or newer) from https://golang.org/dl/
 5. Download and install the [gosl installer from here](https://sourceforge.net/projects/gosl-installer/files/)
 
 After the installation, the Gosl code can be updated with the current version from GitHub.
@@ -57,7 +60,7 @@ Skip these steps if you have used the _installer_ already.
 
 ### Install Go and Set Environment Variable
 
-Download and install *go1.8.3.windows-amd64.msi* (or newer) from https://golang.org/dl/
+Download and install *go1.9.1.windows-amd64.msi* (or newer) from https://golang.org/dl/
 
 Create `C:\MyGo` directory (or any other to be set as `GOPATH`).
 
