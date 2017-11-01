@@ -22,14 +22,19 @@ func main() {
 	//
 	// specific problem:
 	//
-	//        min      -4*x0 - 5*x1
-	//   {x0,x1,x2,x3}
+	//       min   -4*x0 - 5*x1
+	//     {x0,x1}
 	//
 	//    s.t.  2*x0 +   x1 ≤ 3
 	//            x0 + 2*x1 ≤ 3
 	//          x0,x1 ≥ 0
 	//
 	// standard form:
+	//
+	//        min      -4*x0 - 5*x1
+	//   {x0,x1,x2,x3}
+	//
+	//   s.t.
 	//
 	//    2*x0 +   x1 + x2     = 3
 	//      x0 + 2*x1     + x3 = 3
