@@ -28,17 +28,17 @@ type Vertex struct {
 	Entity interface{} `json:"-"` // any entity attached to this vertex
 }
 
-// VertSet defines a set of vertices
-type VertSet []*Vertex
+// VertexSet defines a set of vertices
+type VertexSet []*Vertex
 
 // Len returns the length of vertex set
-func (o VertSet) Len() int { return len(o) }
+func (o VertexSet) Len() int { return len(o) }
 
 // Swap swaps two entries in vertex set
-func (o VertSet) Swap(i, j int) { o[i], o[j] = o[j], o[i] }
+func (o VertexSet) Swap(i, j int) { o[i], o[j] = o[j], o[i] }
 
 // Less compares ides in vertex set
-func (o VertSet) Less(i, j int) bool { return o[i].ID < o[j].ID }
+func (o VertexSet) Less(i, j int) bool { return o[i].ID < o[j].ID }
 
 // Cell holds cell data (in e.g. from msh file)
 type Cell struct {
@@ -68,8 +68,8 @@ type CellSet []*Cell
 type Mesh struct {
 
 	// input
-	Verts VertSet `json:"verts"` // vertices
-	Cells CellSet `json:"cells"` // cells
+	Verts VertexSet `json:"verts"` // vertices
+	Cells CellSet   `json:"cells"` // cells
 
 	// derived
 	Ndim int       // max space dimension among all vertices
@@ -77,28 +77,28 @@ type Mesh struct {
 	Xmax []float64 // max(x) among all vertices [ndim]
 }
 
-// BryPair defines a structure to identify bryIds => cells pairs
-type BryPair struct {
-	C     *Cell // cell
-	BryID int   // edge local id (edgeId) OR face local id (faceId)
+// BoundaryData holds ID of edge or face and pointer to Cell at boundary (edge or face)
+type BoundaryData struct {
+	ID int   // edge local id (edgeId) OR face local id (faceId)
+	C  *Cell // cell
 }
 
-// BryPairSet defines a set of BryPair identifiers
-type BryPairSet []*BryPair
+// BoundaryDataSet defines a set of BoundaryData
+type BoundaryDataSet []*BoundaryData
 
-// TagMaps holds data for finding information based on tags
+// TagMaps holds data for finding information using on tags
 type TagMaps struct {
-	VertTag2verts  map[int]VertSet    // vertex tag => set of vertices
-	CellTag2cells  map[int]CellSet    // cell tag => set of cells
-	CellType2cells map[int]CellSet    // cell type => set of cells
-	CellPart2cells map[int]CellSet    // partition number => set of cells
-	EdgeTag2cells  map[int]BryPairSet // edge tag => set of cells {cell,boundaryId}
-	EdgeTag2verts  map[int]VertSet    // edge tag => vertices on tagged edge [unique]
-	FaceTag2cells  map[int]BryPairSet // face tag => set of cells {cell,boundaryId}
-	FaceTag2verts  map[int]VertSet    // face tag => vertices on tagged edge [unique]
+	VertexTag2verts map[int]VertexSet       // vertex tag => set of vertices
+	CellTag2cells   map[int]CellSet         // cell tag => set of cells
+	CellType2cells  map[int]CellSet         // cell type => set of cells
+	CellPart2cells  map[int]CellSet         // partition number => set of cells
+	EdgeTag2cells   map[int]BoundaryDataSet // edge tag => set of cells {cell,boundaryId}
+	EdgeTag2verts   map[int]VertexSet       // edge tag => vertices on tagged edge [unique]
+	FaceTag2cells   map[int]BoundaryDataSet // face tag => set of cells {cell,boundaryId}
+	FaceTag2verts   map[int]VertexSet       // face tag => vertices on tagged edge [unique]
 }
 
-// Read reads mesh and call CheckAndDerivedVars
+// Read reads mesh and call CheckAndCalcDerivedVars
 func Read(fn string) (o *Mesh) {
 
 	// new mesh
@@ -182,24 +182,24 @@ func (o *Mesh) CheckAndCalcDerivedVars() {
 	}
 }
 
-// GetTagMaps finds tagged entities
-func (o *Mesh) GetTagMaps() (m *TagMaps) {
+// GenTagMaps generates maps of tags
+func (o *Mesh) GenTagMaps() (m *TagMaps) {
 
 	// new tag maps
 	m = new(TagMaps)
-	m.VertTag2verts = make(map[int]VertSet)
+	m.VertexTag2verts = make(map[int]VertexSet)
 	m.CellTag2cells = make(map[int]CellSet)
 	m.CellType2cells = make(map[int]CellSet)
 	m.CellPart2cells = make(map[int]CellSet)
-	m.EdgeTag2cells = make(map[int]BryPairSet)
-	m.EdgeTag2verts = make(map[int]VertSet)
-	m.FaceTag2cells = make(map[int]BryPairSet)
-	m.FaceTag2verts = make(map[int]VertSet)
+	m.EdgeTag2cells = make(map[int]BoundaryDataSet)
+	m.EdgeTag2verts = make(map[int]VertexSet)
+	m.FaceTag2cells = make(map[int]BoundaryDataSet)
+	m.FaceTag2verts = make(map[int]VertexSet)
 
 	// loop over vertices
 	for _, vert := range o.Verts {
 		if vert.Tag != 0 {
-			m.VertTag2verts[vert.Tag] = append(m.VertTag2verts[vert.Tag], vert)
+			m.VertexTag2verts[vert.Tag] = append(m.VertexTag2verts[vert.Tag], vert)
 		}
 	}
 
@@ -268,7 +268,7 @@ func (o *Mesh) ExtractCellCoords(cellID int) (X *la.Matrix) {
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 // setBryTagMaps sets maps of boundary tags
-func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BryPairSet, vertBryMap *map[int]VertSet, cell *Cell, tagList []int, locVerts [][]int) {
+func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BoundaryDataSet, vertBryMap *map[int]VertexSet, cell *Cell, tagList []int, locVerts [][]int) {
 
 	// loop over each tag attached to a side of the cell
 	for edgeID, edgeTag := range tagList {
@@ -277,7 +277,7 @@ func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BryPairSet, vertBryMap *map[int
 		if edgeTag != 0 {
 
 			// set edgeTag => cells map
-			(*cellBryMap)[edgeTag] = append((*cellBryMap)[edgeTag], &BryPair{cell, edgeID})
+			(*cellBryMap)[edgeTag] = append((*cellBryMap)[edgeTag], &BoundaryData{edgeID, cell})
 
 			// loop over local edges of cell
 			for _, locVid := range locVerts[edgeID] {

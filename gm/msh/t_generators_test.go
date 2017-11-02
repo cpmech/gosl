@@ -72,20 +72,20 @@ func TestGen01(tst *testing.T) {
 		}
 
 		// compute tags map
-		tm := mesh.GetTagMaps()
+		tm := mesh.GenTagMaps()
 
 		// vertices along left border
-		vset := tm.VertTag2verts[4]
-		vset = append(vset, tm.VertTag2verts[41]...)
-		vset = append(vset, tm.VertTag2verts[34]...)
+		vset := tm.VertexTag2verts[4]
+		vset = append(vset, tm.VertexTag2verts[41]...)
+		vset = append(vset, tm.VertexTag2verts[34]...)
 		for _, v := range vset {
 			chk.Float64(tst, "x=xmin", 1e-15, v.X[0], xmin)
 		}
 
 		// vertices along right border
-		vset = tm.VertTag2verts[2]
-		vset = append(vset, tm.VertTag2verts[12]...)
-		vset = append(vset, tm.VertTag2verts[23]...)
+		vset = tm.VertexTag2verts[2]
+		vset = append(vset, tm.VertexTag2verts[12]...)
+		vset = append(vset, tm.VertexTag2verts[23]...)
 		for _, v := range vset {
 			chk.Float64(tst, "x=xmax", 1e-15, v.X[0], xmax)
 		}
@@ -198,21 +198,21 @@ func TestGen03(tst *testing.T) {
 		}
 
 		// compute tags map
-		tm := mesh.GetTagMaps()
+		tm := mesh.GenTagMaps()
 
 		// vertices along left border
-		vset := tm.VertTag2verts[4]
-		vset = append(vset, tm.VertTag2verts[41]...)
-		vset = append(vset, tm.VertTag2verts[34]...)
+		vset := tm.VertexTag2verts[4]
+		vset = append(vset, tm.VertexTag2verts[41]...)
+		vset = append(vset, tm.VertexTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
-		vset = tm.VertTag2verts[2]
-		vset = append(vset, tm.VertTag2verts[12]...)
-		vset = append(vset, tm.VertTag2verts[23]...)
+		vset = tm.VertexTag2verts[2]
+		vset = append(vset, tm.VertexTag2verts[12]...)
+		vset = append(vset, tm.VertexTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)
@@ -273,21 +273,21 @@ func TestGen04(tst *testing.T) {
 		}
 
 		// compute tags map
-		tm := mesh.GetTagMaps()
+		tm := mesh.GenTagMaps()
 
 		// vertices along left border
-		vset := tm.VertTag2verts[4]
-		vset = append(vset, tm.VertTag2verts[41]...)
-		vset = append(vset, tm.VertTag2verts[34]...)
+		vset := tm.VertexTag2verts[4]
+		vset = append(vset, tm.VertexTag2verts[41]...)
+		vset = append(vset, tm.VertexTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
-		vset = tm.VertTag2verts[2]
-		vset = append(vset, tm.VertTag2verts[12]...)
-		vset = append(vset, tm.VertTag2verts[23]...)
+		vset = tm.VertexTag2verts[2]
+		vset = append(vset, tm.VertexTag2verts[12]...)
+		vset = append(vset, tm.VertexTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)
@@ -349,21 +349,21 @@ func TestGen05(tst *testing.T) {
 		}
 
 		// compute tags map
-		tm := mesh.GetTagMaps()
+		tm := mesh.GenTagMaps()
 
 		// vertices along left border
-		vset := tm.VertTag2verts[4]
-		vset = append(vset, tm.VertTag2verts[41]...)
-		vset = append(vset, tm.VertTag2verts[34]...)
+		vset := tm.VertexTag2verts[4]
+		vset = append(vset, tm.VertexTag2verts[41]...)
+		vset = append(vset, tm.VertexTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
-		vset = tm.VertTag2verts[2]
-		vset = append(vset, tm.VertTag2verts[12]...)
-		vset = append(vset, tm.VertTag2verts[23]...)
+		vset = tm.VertexTag2verts[2]
+		vset = append(vset, tm.VertexTag2verts[12]...)
+		vset = append(vset, tm.VertexTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)

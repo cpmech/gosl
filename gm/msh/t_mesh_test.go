@@ -62,7 +62,7 @@ func Test_singleq4(tst *testing.T) {
 	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
 
 	// get map of tags
-	tm := m.GetTagMaps()
+	tm := m.GenTagMaps()
 
 	// correct data
 	vtags := []int{-1}
@@ -187,7 +187,7 @@ func Test_mesh01(tst *testing.T) {
 	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
 
 	// get map of tags
-	tm := m.GetTagMaps()
+	tm := m.GenTagMaps()
 
 	// correct data
 	vtags := []int{-1, -2, -3, -4, -5}
@@ -285,7 +285,7 @@ func Test_cubeandtet(tst *testing.T) {
 	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
 
 	// get map of tags
-	tm := m.GetTagMaps()
+	tm := m.GenTagMaps()
 
 	// correct data
 	vtags := []int{-12, -14, -18}
@@ -371,19 +371,19 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 
 	// VertTag2verts
 	io.Pfyel("\nVertTag2verts:\n")
-	for key, val := range tm.VertTag2verts {
+	for key, val := range tm.VertexTag2verts {
 		io.Pf("%v:\n", key)
 		for _, s := range val {
 			io.Pf("  vert: %v\n", s)
 		}
 	}
-	if len(tm.VertTag2verts) != len(vtags) {
-		tst.Errorf("size of map of vert tags is incorrect. %d != %d", len(tm.VertTag2verts), len(vtags))
+	if len(tm.VertexTag2verts) != len(vtags) {
+		tst.Errorf("size of map of vert tags is incorrect. %d != %d", len(tm.VertexTag2verts), len(vtags))
 		return
 	}
 	for i, tag := range vtags {
 		var ids []int
-		if verts, ok := tm.VertTag2verts[tag]; ok {
+		if verts, ok := tm.VertexTag2verts[tag]; ok {
 			for _, v := range verts {
 				ids = append(ids, v.ID)
 			}
@@ -487,7 +487,7 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		if pairs, ok := tm.EdgeTag2cells[tag]; ok {
 			for _, pair := range pairs {
 				cids = append(cids, pair.C.ID)
-				bryids = append(bryids, pair.BryID)
+				bryids = append(bryids, pair.ID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in EdgeTag2cells map", tag)
@@ -540,7 +540,7 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		if pairs, ok := tm.FaceTag2cells[tag]; ok {
 			for _, pair := range pairs {
 				cids = append(cids, pair.C.ID)
-				bryids = append(bryids, pair.BryID)
+				bryids = append(bryids, pair.ID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in FaceTag2cells map", tag)
