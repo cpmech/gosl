@@ -16,36 +16,6 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// EdgeKey implements a key to identify edges
-type EdgeKey struct {
-	NumVerts int // number of vertices, from A to C
-	A, B, C  int // vertices
-}
-
-// FaceKey implements a key to identify faces
-type FaceKey struct {
-	NumVerts   int // number of vertices, from A to D
-	A, B, C, D int // vertices
-}
-
-// VertSet defines a set of vertices
-type VertSet []*Vertex
-
-// EdgeSet defines a set of edges
-type EdgeSet []*Edge
-
-// FaceSet defines a set of faces
-type FaceSet []*Face
-
-// CellSet defines a set of cells
-type CellSet []*Cell
-
-// EdgesMap defines a map of Edges
-type EdgesMap map[EdgeKey]*Edge
-
-// FacesMap defines a map of Faces
-type FacesMap map[FaceKey]*Face
-
 // Vertex holds vertex data (e.g. from msh file)
 type Vertex struct {
 
@@ -56,13 +26,21 @@ type Vertex struct {
 
 	// auxiliary
 	Entity interface{} `json:"-"` // any entity attached to this vertex
-
-	// derived
-	SharedByCells CellSet `json:"-"` // cells sharing this vertex
-	Neighbours    VertSet `json:"-"` // neighbour vertices
 }
 
-// Cell holds cell data (in .msh file)
+// VertSet defines a set of vertices
+type VertSet []*Vertex
+
+// Len returns the length of vertex set
+func (o VertSet) Len() int { return len(o) }
+
+// Swap swaps two entries in vertex set
+func (o VertSet) Swap(i, j int) { o[i], o[j] = o[j], o[i] }
+
+// Less compares ides in vertex set
+func (o VertSet) Less(i, j int) bool { return o[i].ID < o[j].ID }
+
+// Cell holds cell data (in e.g. from msh file)
 type Cell struct {
 
 	// input
@@ -77,16 +55,14 @@ type Cell struct {
 	NurbsID  int    `json:"b"`  // id of NURBS (or something else) that this cell belongs to
 	Span     []int  `json:"s"`  // span in NURBS
 
-	// auxiliary
-	TypeIndex int `json:"-"` // type index of cell. converted from TypeKey
-
 	// derived
-	Edges      EdgeSet    `json:"-"` // edges on this cell
-	Faces      FaceSet    `json:"-"` // faces on this cell
-	Neighbours CellSet    `json:"-"` // neighbour cells
-	Gndim      int        `json:"-"` // geometry ndim
-	X          *la.Matrix `json:"-"` // all vertex coordinates [nverts][ndim]
+	TypeIndex int        `json:"-"` // type index of cell. converted from TypeKey
+	Gndim     int        `json:"-"` // geometry ndim
+	X         *la.Matrix `json:"-"` // all vertex coordinates [nverts][ndim]
 }
+
+// CellSet defines a set of cells
+type CellSet []*Cell
 
 // Mesh defines mesh data
 type Mesh struct {
@@ -96,25 +72,9 @@ type Mesh struct {
 	Cells CellSet `json:"cells"` // cells
 
 	// derived
-	EdgesMap EdgesMap `json:"-"` // all edges
-	FacesMap FacesMap `json:"-"` // all faces
-
-	// calculated by CalcDerived
 	Ndim int       // max space dimension among all vertices
 	Xmin []float64 // min(x) among all vertices [ndim]
 	Xmax []float64 // max(x) among all vertices [ndim]
-}
-
-// Edge defines an edge
-type Edge struct {
-	V VertSet // vertices on edge
-	C CellSet // cells connected to this edge
-}
-
-// Face defines a face
-type Face struct {
-	V VertSet // vertices on face
-	C CellSet // cells connected to this face
 }
 
 // BryPair defines a structure to identify bryIds => cells pairs
@@ -291,8 +251,6 @@ func (o *Mesh) GetTagMaps() (m *TagMaps) {
 	}
 	return
 }
-
-// methods ////////////////////////////////////////////////////////////////////////////////////////
 
 // ExtractCellCoords extracts cell coordinates
 //   X -- matrix with coordinates [nverts][gndim]
