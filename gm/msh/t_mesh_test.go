@@ -135,8 +135,8 @@ func Test_mesh01(tst *testing.T) {
 		{0.5, 1.0},
 		{1.0, 1.0},
 	}
-	allVtags := []int{-1, -1, -1, -2, -3, -3, -3, -4, -5, -5, -5}
-	allCtags := []int{-1, -1, -1, -2, -2, -2}
+	allVtags := []int{1, 1, 1, 2, 3, 3, 3, 4, 5, 5, 5}
+	allCtags := []int{1, 1, 1, 2, 2, 2}
 	allParts := []int{0, 1, 2, 0, 1, 2}
 	allTypeKeys := []string{"qua4", "qua4", "tri3", "qua4", "qua4", "tri3"}
 	allTypeIndices := []int{TypeQua4, TypeQua4, TypeTri3, TypeQua4, TypeQua4, TypeTri3}
@@ -149,12 +149,12 @@ func Test_mesh01(tst *testing.T) {
 		{6, 7, 10},
 	}
 	allEtags := [][]int{
-		{-10, 0, 0, -13},
-		{-10, 0, 0, 0},
-		{-11, -11, 0},
-		{0, 0, -12, -13},
-		{0, 0, -12, 0},
-		{-11, -11, 0},
+		{10, 0, 0, 13},
+		{10, 0, 0, 0},
+		{11, 11, 0},
+		{0, 0, 12, 13},
+		{0, 0, 12, 0},
+		{11, 11, 0},
 	}
 
 	// check input data
@@ -209,10 +209,10 @@ func Test_mesh01(tst *testing.T) {
 	tm := m.GenTagMaps()
 
 	// correct data
-	vtags := []int{-1, -2, -3, -4, -5}
-	ctags := []int{-1, -2}
+	vtags := []int{1, 2, 3, 4, 5}
+	ctags := []int{1, 2}
 	cparts := []int{0, 1, 2}
-	etags := []int{-10, -11, -12, -13}
+	etags := []int{10, 11, 12, 13}
 	ctypeinds := []int{TypeQua4, TypeTri3}
 	vtagsVids := [][]int{{0, 1, 2}, {3}, {4, 5, 6}, {7}, {8, 9, 10}}
 	ctagsCids := [][]int{{0, 1, 2}, {3, 4, 5}}
