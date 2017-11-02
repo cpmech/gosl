@@ -83,21 +83,21 @@ func Test_singleq4(tst *testing.T) {
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 
 	// check edges
+	io.Pf("\nedges\n")
 	edgesmap := m.ExtractEdges()
 	checkEdges(tst, edgesmap, map[EdgeKey]edge{
-		{0, 1, 4}: {[]int{0, 1}, []int{0}},
-		{1, 2, 4}: {[]int{1, 2}, []int{0}},
-		{2, 3, 4}: {[]int{2, 3}, []int{0}},
-		{0, 3, 4}: {[]int{0, 3}, []int{0}},
+		{0, 1, 4}: {[]int{0, 1}, []int{0}, []int{0}},
+		{1, 2, 4}: {[]int{1, 2}, []int{0}, []int{1}},
+		{2, 3, 4}: {[]int{2, 3}, []int{0}, []int{2}},
+		{0, 3, 4}: {[]int{0, 3}, []int{0}, []int{3}},
 	})
 	internal, boundary := edgesmap.Split()
-	checkEdges(tst, internal, map[EdgeKey]edge{})
-	checkEdges(tst, boundary, map[EdgeKey]edge{
-		{0, 1, 4}: {[]int{0, 1}, []int{0}},
-		{1, 2, 4}: {[]int{1, 2}, []int{0}},
-		{2, 3, 4}: {[]int{2, 3}, []int{0}},
-		{0, 3, 4}: {[]int{0, 3}, []int{0}},
-	})
+	if len(internal) != 0 {
+		tst.Errorf("len(internal) != 0\n")
+	}
+	if len(boundary) != 4 {
+		tst.Errorf("len(internal) != 4\n")
+	}
 
 	// draw
 	if chk.Verbose {
@@ -158,7 +158,9 @@ func Test_mesh01(tst *testing.T) {
 	}
 
 	// check input data
-	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypeKeys, allTypeIndices, allV, allEtags, nil)
+	if false {
+		checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypeKeys, allTypeIndices, allV, allEtags, nil)
+	}
 
 	// derived data
 	ndim := 2
@@ -203,7 +205,9 @@ func Test_mesh01(tst *testing.T) {
 	}
 
 	// check derived data
-	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
+	if false {
+		checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
+	}
 
 	// get map of tags
 	tm := m.GenTagMaps()
@@ -223,52 +227,38 @@ func Test_mesh01(tst *testing.T) {
 	etagsVids := [][]int{{0, 1, 2}, {2, 3, 6, 7, 10}, {8, 9, 10}, {0, 4, 8}}
 
 	// check maps
-	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
+	if false {
+		checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
+	}
 
 	// check edges
-	io.Pf("\nall edges\n")
+	io.Pf("\nedges\n")
 	edgesmap := m.ExtractEdges()
 	checkEdges(tst, edgesmap, map[EdgeKey]edge{
-		{0, 1, 11}:  {[]int{0, 1}, []int{0}},
-		{1, 2, 11}:  {[]int{1, 2}, []int{1}},
-		{2, 3, 11}:  {[]int{2, 3}, []int{2}},
-		{3, 6, 11}:  {[]int{3, 6}, []int{2}},
-		{6, 7, 11}:  {[]int{6, 7}, []int{5}},
-		{7, 10, 11}: {[]int{7, 10}, []int{5}},
-		{9, 10, 11}: {[]int{9, 10}, []int{4}},
-		{8, 9, 11}:  {[]int{8, 9}, []int{3}},
-		{4, 8, 11}:  {[]int{4, 8}, []int{3}},
-		{0, 4, 11}:  {[]int{0, 4}, []int{0}},
-		{1, 5, 11}:  {[]int{1, 5}, []int{0, 1}},
-		{2, 6, 11}:  {[]int{2, 6}, []int{1, 2}},
-		{5, 9, 11}:  {[]int{5, 9}, []int{3, 4}},
-		{6, 10, 11}: {[]int{6, 10}, []int{4, 5}},
-		{4, 5, 11}:  {[]int{4, 5}, []int{0, 3}},
-		{5, 6, 11}:  {[]int{5, 6}, []int{1, 4}},
+		{0, 1, 11}:  {[]int{0, 1}, []int{0}, []int{0}},
+		{1, 2, 11}:  {[]int{1, 2}, []int{1}, []int{0}},
+		{2, 3, 11}:  {[]int{2, 3}, []int{2}, []int{0}},
+		{3, 6, 11}:  {[]int{3, 6}, []int{2}, []int{1}},
+		{6, 7, 11}:  {[]int{6, 7}, []int{5}, []int{0}},
+		{7, 10, 11}: {[]int{7, 10}, []int{5}, []int{1}},
+		{9, 10, 11}: {[]int{9, 10}, []int{4}, []int{2}},
+		{8, 9, 11}:  {[]int{8, 9}, []int{3}, []int{2}},
+		{4, 8, 11}:  {[]int{4, 8}, []int{3}, []int{3}},
+		{0, 4, 11}:  {[]int{0, 4}, []int{0}, []int{3}},
+		{1, 5, 11}:  {[]int{1, 5}, []int{0, 1}, []int{1, 3}},
+		{2, 6, 11}:  {[]int{2, 6}, []int{1, 2}, []int{1, 2}},
+		{5, 9, 11}:  {[]int{5, 9}, []int{3, 4}, []int{1, 3}},
+		{6, 10, 11}: {[]int{6, 10}, []int{4, 5}, []int{1, 2}},
+		{4, 5, 11}:  {[]int{4, 5}, []int{0, 3}, []int{2, 0}},
+		{5, 6, 11}:  {[]int{5, 6}, []int{1, 4}, []int{2, 0}},
 	})
-	io.Pf("\ninternal edges\n")
 	internal, boundary := edgesmap.Split()
-	checkEdges(tst, internal, map[EdgeKey]edge{
-		{1, 5, 11}:  {[]int{1, 5}, []int{0, 1}},
-		{2, 6, 11}:  {[]int{2, 6}, []int{1, 2}},
-		{5, 9, 11}:  {[]int{5, 9}, []int{3, 4}},
-		{6, 10, 11}: {[]int{6, 10}, []int{4, 5}},
-		{4, 5, 11}:  {[]int{4, 5}, []int{0, 3}},
-		{5, 6, 11}:  {[]int{5, 6}, []int{1, 4}},
-	})
-	io.Pf("\nboundary edges\n")
-	checkEdges(tst, boundary, map[EdgeKey]edge{
-		{0, 1, 11}:  {[]int{0, 1}, []int{0}},
-		{1, 2, 11}:  {[]int{1, 2}, []int{1}},
-		{2, 3, 11}:  {[]int{2, 3}, []int{2}},
-		{3, 6, 11}:  {[]int{3, 6}, []int{2}},
-		{6, 7, 11}:  {[]int{6, 7}, []int{5}},
-		{7, 10, 11}: {[]int{7, 10}, []int{5}},
-		{9, 10, 11}: {[]int{9, 10}, []int{4}},
-		{8, 9, 11}:  {[]int{8, 9}, []int{3}},
-		{4, 8, 11}:  {[]int{4, 8}, []int{3}},
-		{0, 4, 11}:  {[]int{0, 4}, []int{0}},
-	})
+	if len(internal) != 6 {
+		tst.Errorf("len(internal) != 6\n")
+	}
+	if len(boundary) != 10 {
+		tst.Errorf("len(internal) != 10\n")
+	}
 
 	// draw
 	if chk.Verbose {
@@ -374,49 +364,33 @@ func Test_cubeandtet(tst *testing.T) {
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ftags, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids)
 
 	// check edges
-	io.Pf("\nall edges\n")
+	io.Pf("\nedges\n")
 	edgesmap := m.ExtractEdges()
 	checkEdges(tst, edgesmap, map[EdgeKey]edge{
-		{0, 1, 9}: {[]int{0, 1}, []int{0}},
-		{1, 2, 9}: {[]int{1, 2}, []int{0}},
-		{2, 3, 9}: {[]int{2, 3}, []int{0, 1}},
-		{0, 3, 9}: {[]int{0, 3}, []int{0}},
-		{4, 5, 9}: {[]int{4, 5}, []int{0}},
-		{5, 6, 9}: {[]int{5, 6}, []int{0}},
-		{6, 7, 9}: {[]int{6, 7}, []int{0}},
-		{4, 7, 9}: {[]int{4, 7}, []int{0}},
-		{0, 4, 9}: {[]int{0, 4}, []int{0}},
-		{1, 5, 9}: {[]int{1, 5}, []int{0}},
-		{2, 6, 9}: {[]int{2, 6}, []int{0}},
-		{3, 7, 9}: {[]int{3, 7}, []int{0, 1}},
-		{2, 7, 9}: {[]int{2, 7}, []int{1}},
-		{2, 8, 9}: {[]int{2, 8}, []int{1}},
-		{3, 8, 9}: {[]int{3, 8}, []int{1}},
-		{7, 8, 9}: {[]int{7, 8}, []int{1}},
+		{0, 1, 9}: {[]int{0, 1}, []int{0}, []int{0}},
+		{1, 2, 9}: {[]int{1, 2}, []int{0}, []int{1}},
+		{2, 3, 9}: {[]int{2, 3}, []int{0, 1}, []int{2, 0}},
+		{0, 3, 9}: {[]int{0, 3}, []int{0}, []int{3}},
+		{4, 5, 9}: {[]int{4, 5}, []int{0}, []int{4}},
+		{5, 6, 9}: {[]int{5, 6}, []int{0}, []int{5}},
+		{6, 7, 9}: {[]int{6, 7}, []int{0}, []int{6}},
+		{4, 7, 9}: {[]int{4, 7}, []int{0}, []int{7}},
+		{0, 4, 9}: {[]int{0, 4}, []int{0}, []int{8}},
+		{1, 5, 9}: {[]int{1, 5}, []int{0}, []int{9}},
+		{2, 6, 9}: {[]int{2, 6}, []int{0}, []int{10}},
+		{3, 7, 9}: {[]int{3, 7}, []int{0, 1}, []int{11, 3}},
+		{2, 7, 9}: {[]int{2, 7}, []int{1}, []int{4}},
+		{2, 8, 9}: {[]int{2, 8}, []int{1}, []int{1}},
+		{3, 8, 9}: {[]int{3, 8}, []int{1}, []int{2}},
+		{7, 8, 9}: {[]int{7, 8}, []int{1}, []int{5}},
 	})
-	io.Pf("\ninternal edges\n")
 	internal, boundary := edgesmap.Split()
-	checkEdges(tst, internal, map[EdgeKey]edge{
-		{2, 3, 9}: {[]int{2, 3}, []int{0, 1}},
-		{3, 7, 9}: {[]int{3, 7}, []int{0, 1}},
-	})
-	io.Pf("\nboundary edges\n")
-	checkEdges(tst, boundary, map[EdgeKey]edge{
-		{0, 1, 9}: {[]int{0, 1}, []int{0}},
-		{1, 2, 9}: {[]int{1, 2}, []int{0}},
-		{0, 3, 9}: {[]int{0, 3}, []int{0}},
-		{4, 5, 9}: {[]int{4, 5}, []int{0}},
-		{5, 6, 9}: {[]int{5, 6}, []int{0}},
-		{6, 7, 9}: {[]int{6, 7}, []int{0}},
-		{4, 7, 9}: {[]int{4, 7}, []int{0}},
-		{0, 4, 9}: {[]int{0, 4}, []int{0}},
-		{1, 5, 9}: {[]int{1, 5}, []int{0}},
-		{2, 6, 9}: {[]int{2, 6}, []int{0}},
-		{2, 7, 9}: {[]int{2, 7}, []int{1}},
-		{2, 8, 9}: {[]int{2, 8}, []int{1}},
-		{3, 8, 9}: {[]int{3, 8}, []int{1}},
-		{7, 8, 9}: {[]int{7, 8}, []int{1}},
-	})
+	if len(internal) != 2 {
+		tst.Errorf("len(internal) != 2\n")
+	}
+	if len(boundary) != 14 {
+		tst.Errorf("len(internal) != 14\n")
+	}
 
 	// draw
 	if chk.Verbose {
@@ -597,8 +571,8 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var bryids []int
 		if pairs, ok := tm.EdgeTag2cells[tag]; ok {
 			for _, pair := range pairs {
-				cids = append(cids, pair.C.ID)
-				bryids = append(bryids, pair.ID)
+				cids = append(cids, pair.Cell.ID)
+				bryids = append(bryids, pair.LocalID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in EdgeTag2cells map", tag)
@@ -650,8 +624,8 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 		var bryids []int
 		if pairs, ok := tm.FaceTag2cells[tag]; ok {
 			for _, pair := range pairs {
-				cids = append(cids, pair.C.ID)
-				bryids = append(bryids, pair.ID)
+				cids = append(cids, pair.Cell.ID)
+				bryids = append(bryids, pair.LocalID)
 			}
 		} else {
 			tst.Errorf("cannot find tag %d in FaceTag2cells map", tag)
@@ -688,8 +662,9 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 }
 
 type edge struct {
-	verts []int
-	cells []int
+	verts   []int
+	cells   []int
+	edgeids []int
 }
 
 type edgesmap map[EdgeKey]edge
@@ -699,12 +674,12 @@ func checkEdges(tst *testing.T, edges EdgesMap, reference edgesmap) {
 		tst.Errorf("number of edges is incorrect. %d != %d\n", len(edges), len(reference))
 		return
 	}
-	for ekey, edgedata := range reference {
+	for ekey, ref := range reference {
 		if e, ok := edges[ekey]; ok {
 
 			// check vertices
-			if len(e.Verts) != len(edgedata.verts) {
-				tst.Errorf("number of vertices on edge %d is incorrect. %d != %d\n", ekey, len(e.Verts), len(edgedata.verts))
+			if len(e.Verts) != len(ref.verts) {
+				tst.Errorf("number of vertices on edge %d is incorrect. %d != %d\n", ekey, len(e.Verts), len(ref.verts))
 				return
 			}
 			verts := make([]int, len(e.Verts))
@@ -712,19 +687,24 @@ func checkEdges(tst *testing.T, edges EdgesMap, reference edgesmap) {
 				verts[i] = v.ID
 			}
 			sort.Ints(verts)
-			chk.Ints(tst, io.Sf("verts of edge %v", ekey), verts, edgedata.verts)
+			chk.Ints(tst, io.Sf("verts of edge %v", ekey), verts, ref.verts)
 
-			// check cells
-			if len(e.Cells) != len(edgedata.cells) {
-				tst.Errorf("number of cells attached to edge %d is incorrect. %d != %d\n", ekey, len(e.Cells), len(edgedata.cells))
+			// check cells and local edge IDs
+			if len(e.Bdata) != len(ref.cells) {
+				tst.Errorf("number of cells attached to edge %d is incorrect. %d != %d\n", ekey, len(e.Bdata), len(ref.cells))
 				return
 			}
-			cells := make([]int, len(e.Cells))
-			for i, c := range e.Cells {
-				cells[i] = c.ID
+			cells := make([]int, len(e.Bdata))
+			localedgeIDs := make([]int, len(e.Bdata))
+			for i, d := range e.Bdata {
+				cells[i] = d.Cell.ID
+				localedgeIDs[i] = d.LocalID
 			}
 			sort.Ints(cells)
-			chk.Ints(tst, io.Sf("cells of edge %v", ekey), cells, edgedata.cells)
+			chk.Ints(tst, io.Sf("cells of edge %v", ekey), cells, ref.cells)
+			chk.Ints(tst, io.Sf("local edge IDs of cell @ edge %v", ekey), localedgeIDs, ref.edgeids)
+
+			// check localEdgeIDs
 		} else {
 			tst.Errorf("edge <%v> is missing in edges map\n", ekey)
 		}

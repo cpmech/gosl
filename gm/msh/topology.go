@@ -17,8 +17,8 @@ type EdgeKey struct {
 
 // Edge holds the vertices and cells attached to an edge
 type Edge struct {
-	Verts VertexSet // vertices on edge
-	Cells CellSet   // cells attached to edge
+	Verts VertexSet       // vertices on edge
+	Bdata BoundaryDataSet // cells attached to edge, including which local edge id of cell is attached
 }
 
 // EdgesMap is a map of edges
@@ -35,7 +35,7 @@ func (o *Mesh) ExtractEdges() (edges EdgesMap) {
 	for _, cell := range o.Cells {
 
 		// loop over edges of cell
-		for _, localVids := range EdgeLocalVerts[cell.TypeIndex] {
+		for localEdgeID, localVids := range EdgeLocalVerts[cell.TypeIndex] {
 
 			// set edge key as triple of vertices
 			nVertsOnEdge := len(localVids)
@@ -50,13 +50,13 @@ func (o *Mesh) ExtractEdges() (edges EdgesMap) {
 
 			// append this cell to list of shared cells of edge
 			if edge, ok := edges[edgeKey]; ok {
-				edge.Cells = append(edge.Cells, cell)
+				edge.Bdata = append(edge.Bdata, &BoundaryData{localEdgeID, cell})
 
 				// new edge
 			} else {
 				edge = new(Edge)
 				edge.Verts = make([]*Vertex, nVertsOnEdge)
-				edge.Cells = []*Cell{cell}
+				edge.Bdata = []*BoundaryData{&BoundaryData{localEdgeID, cell}}
 				for j, lvid := range localVids {
 					edge.Verts[j] = o.Verts[cell.V[lvid]]
 				}
@@ -73,7 +73,7 @@ func (o *EdgesMap) Split() (internal, boundary EdgesMap) {
 	internal = make(map[EdgeKey]*Edge)
 	boundary = make(map[EdgeKey]*Edge)
 	for ekey, edge := range *o {
-		if len(edge.Cells) == 1 {
+		if len(edge.Bdata) == 1 {
 			boundary[ekey] = edge
 		} else {
 			internal[ekey] = edge

@@ -79,8 +79,8 @@ type Mesh struct {
 
 // BoundaryData holds ID of edge or face and pointer to Cell at boundary (edge or face)
 type BoundaryData struct {
-	ID int   // edge local id (edgeId) OR face local id (faceId)
-	C  *Cell // cell
+	LocalID int   // edge local id (edgeId) OR face local id (faceId)
+	Cell    *Cell // cell
 }
 
 // BoundaryDataSet defines a set of BoundaryData
@@ -100,20 +100,12 @@ type TagMaps struct {
 
 // Read reads mesh and call CheckAndCalcDerivedVars
 func Read(fn string) (o *Mesh) {
-
-	// new mesh
 	o = new(Mesh)
-
-	// read file
 	b := io.ReadFile(fn)
-
-	// decode
 	err := json.Unmarshal(b, &o)
 	if err != nil {
 		chk.Panic("%v\n", err)
 	}
-
-	// check
 	o.CheckAndCalcDerivedVars()
 	return
 }
@@ -271,23 +263,23 @@ func (o *Mesh) ExtractCellCoords(cellID int) (X *la.Matrix) {
 func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BoundaryDataSet, vertBryMap *map[int]VertexSet, cell *Cell, tagList []int, locVerts [][]int) {
 
 	// loop over each tag attached to a side of the cell
-	for edgeID, edgeTag := range tagList {
+	for localID, tag := range tagList {
 
 		// there is a tag (i.e. it's nonzero)
-		if edgeTag != 0 {
+		if tag != 0 {
 
 			// set edgeTag => cells map
-			(*cellBryMap)[edgeTag] = append((*cellBryMap)[edgeTag], &BoundaryData{edgeID, cell})
+			(*cellBryMap)[tag] = append((*cellBryMap)[tag], &BoundaryData{localID, cell})
 
 			// loop over local edges of cell
-			for _, locVid := range locVerts[edgeID] {
+			for _, locVid := range locVerts[localID] {
 
 				// find vertex
 				vid := cell.V[locVid] // local vertex id => global vertex id (vid)
 				vert := o.Verts[vid]  // pointer to vertex
 
 				// find whether this edgeTag is present in the map or not
-				if vertsOnEdge, ok := (*vertBryMap)[edgeTag]; ok {
+				if vertsOnEdge, ok := (*vertBryMap)[tag]; ok {
 
 					// find whether this vertex is in the slice attached to edgeTag or not
 					found := false
@@ -300,12 +292,12 @@ func (o *Mesh) setBryTagMaps(cellBryMap *map[int]BoundaryDataSet, vertBryMap *ma
 
 					// add vertex to (unique) slice attached to edgeTag
 					if !found {
-						(*vertBryMap)[edgeTag] = append(vertsOnEdge, vert)
+						(*vertBryMap)[tag] = append(vertsOnEdge, vert)
 					}
 
 					// edgeTag is not in the map => create new slice with the first vertex in it
 				} else {
-					(*vertBryMap)[edgeTag] = []*Vertex{vert}
+					(*vertBryMap)[tag] = []*Vertex{vert}
 				}
 			}
 		}
