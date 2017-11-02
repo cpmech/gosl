@@ -274,7 +274,6 @@ func Test_mesh01(tst *testing.T) {
 	if chk.Verbose {
 		args := NewArgs()
 		args.WithIdsVerts = true
-		args.WithEdges = true
 		args.WithIdsCells = true
 		args.WithTagsEdges = true
 		plt.Reset(true, nil)

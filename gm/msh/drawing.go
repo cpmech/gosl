@@ -105,7 +105,7 @@ func (o *Mesh) Draw(args *DrawArgs) {
 		}
 
 		// draw edges
-		if args.WithEdges || args.WithIdsEdges {
+		if args.WithEdges || args.WithIdsEdges || args.WithTagsEdges {
 			for iedge, lvids := range EdgeLocalVertsD[cell.TypeIndex] {
 
 				// set triple of vertices
