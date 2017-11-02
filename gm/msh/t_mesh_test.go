@@ -5,6 +5,7 @@
 package msh
 
 import (
+	"sort"
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
@@ -81,9 +82,18 @@ func Test_singleq4(tst *testing.T) {
 	// check maps
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 
+	// check edges
+	checkEdges(tst, m.ExtractEdges(), map[EdgeKey]edge{
+		{0, 1, 4}: {[]int{0, 1}, []int{0}},
+		{1, 2, 4}: {[]int{1, 2}, []int{0}},
+		{2, 3, 4}: {[]int{2, 3}, []int{0}},
+		{0, 3, 4}: {[]int{0, 3}, []int{0}},
+	})
+
 	// draw
 	if chk.Verbose {
 		args := NewArgs()
+		args.WithIdsVerts = true
 		args.WithIdsCells = true
 		plt.Reset(true, nil)
 		m.Draw(args)
@@ -206,9 +216,30 @@ func Test_mesh01(tst *testing.T) {
 	// check maps
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 
+	// check edges
+	checkEdges(tst, m.ExtractEdges(), map[EdgeKey]edge{
+		{0, 1, 11}:  {[]int{0, 1}, []int{0}},
+		{1, 2, 11}:  {[]int{1, 2}, []int{1}},
+		{2, 3, 11}:  {[]int{2, 3}, []int{2}},
+		{3, 6, 11}:  {[]int{3, 6}, []int{2}},
+		{6, 7, 11}:  {[]int{6, 7}, []int{5}},
+		{7, 10, 11}: {[]int{7, 10}, []int{5}},
+		{9, 10, 11}: {[]int{9, 10}, []int{4}},
+		{8, 9, 11}:  {[]int{8, 9}, []int{3}},
+		{4, 8, 11}:  {[]int{4, 8}, []int{3}},
+		{0, 4, 11}:  {[]int{0, 4}, []int{0}},
+		{1, 5, 11}:  {[]int{1, 5}, []int{0, 1}},
+		{2, 6, 11}:  {[]int{2, 6}, []int{1, 2}},
+		{5, 9, 11}:  {[]int{5, 9}, []int{3, 4}},
+		{6, 10, 11}: {[]int{6, 10}, []int{4, 5}},
+		{4, 5, 11}:  {[]int{4, 5}, []int{0, 3}},
+		{5, 6, 11}:  {[]int{5, 6}, []int{1, 4}},
+	})
+
 	// draw
 	if chk.Verbose {
 		args := NewArgs()
+		args.WithIdsVerts = true
 		args.WithEdges = true
 		args.WithIdsCells = true
 		plt.Reset(true, nil)
@@ -308,9 +339,30 @@ func Test_cubeandtet(tst *testing.T) {
 	// check maps
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ftags, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids)
 
+	// check edges
+	checkEdges(tst, m.ExtractEdges(), map[EdgeKey]edge{
+		{0, 1, 9}: {[]int{0, 1}, []int{0}},
+		{1, 2, 9}: {[]int{1, 2}, []int{0}},
+		{2, 3, 9}: {[]int{2, 3}, []int{0, 1}},
+		{0, 3, 9}: {[]int{0, 3}, []int{0}},
+		{4, 5, 9}: {[]int{4, 5}, []int{0}},
+		{5, 6, 9}: {[]int{5, 6}, []int{0}},
+		{6, 7, 9}: {[]int{6, 7}, []int{0}},
+		{4, 7, 9}: {[]int{4, 7}, []int{0}},
+		{0, 4, 9}: {[]int{0, 4}, []int{0}},
+		{1, 5, 9}: {[]int{1, 5}, []int{0}},
+		{2, 6, 9}: {[]int{2, 6}, []int{0}},
+		{3, 7, 9}: {[]int{3, 7}, []int{0, 1}},
+		{2, 7, 9}: {[]int{2, 7}, []int{1}},
+		{2, 8, 9}: {[]int{2, 8}, []int{1}},
+		{3, 8, 9}: {[]int{3, 8}, []int{1}},
+		{7, 8, 9}: {[]int{7, 8}, []int{1}},
+	})
+
 	// draw
 	if chk.Verbose {
 		args := NewArgs()
+		args.WithIdsVerts = true
 		args.WithIdsCells = true
 		args.WithEdges = true
 		plt.Reset(true, nil)
@@ -573,5 +625,49 @@ func checkmaps(tst *testing.T, m *Mesh, tm *TagMaps, vtags, ctags, cparts, etags
 			return
 		}
 		chk.Ints(tst, io.Sf("%d faces => verts", tag), ids, ftagsVids[i])
+	}
+}
+
+type edge struct {
+	verts []int
+	cells []int
+}
+
+type edgesmap map[EdgeKey]edge
+
+func checkEdges(tst *testing.T, edges EdgesMap, reference edgesmap) {
+	if len(edges) != len(reference) {
+		tst.Errorf("number of edges is incorrect. %d != %d\n", len(edges), len(reference))
+		return
+	}
+	for ekey, edgedata := range reference {
+		if e, ok := edges[ekey]; ok {
+
+			// check vertices
+			if len(e.Verts) != len(edgedata.verts) {
+				tst.Errorf("number of vertices on edge %d is incorrect. %d != %d\n", ekey, len(e.Verts), len(edgedata.verts))
+				return
+			}
+			verts := make([]int, len(e.Verts))
+			for i, v := range e.Verts {
+				verts[i] = v.ID
+			}
+			sort.Ints(verts)
+			chk.Ints(tst, io.Sf("verts of edge %v", ekey), verts, edgedata.verts)
+
+			// check cells
+			if len(e.Cells) != len(edgedata.cells) {
+				tst.Errorf("number of cells attached to edge %d is incorrect. %d != %d\n", ekey, len(e.Cells), len(edgedata.cells))
+				return
+			}
+			cells := make([]int, len(e.Cells))
+			for i, c := range e.Cells {
+				cells[i] = c.ID
+			}
+			sort.Ints(cells)
+			chk.Ints(tst, io.Sf("cells of edge %v", ekey), cells, edgedata.cells)
+		} else {
+			tst.Errorf("edge <%v> is missing in edges map\n", ekey)
+		}
 	}
 }
