@@ -83,7 +83,16 @@ func Test_singleq4(tst *testing.T) {
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 
 	// check edges
-	checkEdges(tst, m.ExtractEdges(), map[EdgeKey]edge{
+	edgesmap := m.ExtractEdges()
+	checkEdges(tst, edgesmap, map[EdgeKey]edge{
+		{0, 1, 4}: {[]int{0, 1}, []int{0}},
+		{1, 2, 4}: {[]int{1, 2}, []int{0}},
+		{2, 3, 4}: {[]int{2, 3}, []int{0}},
+		{0, 3, 4}: {[]int{0, 3}, []int{0}},
+	})
+	internal, boundary := edgesmap.Split()
+	checkEdges(tst, internal, map[EdgeKey]edge{})
+	checkEdges(tst, boundary, map[EdgeKey]edge{
 		{0, 1, 4}: {[]int{0, 1}, []int{0}},
 		{1, 2, 4}: {[]int{1, 2}, []int{0}},
 		{2, 3, 4}: {[]int{2, 3}, []int{0}},
@@ -217,7 +226,9 @@ func Test_mesh01(tst *testing.T) {
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
 
 	// check edges
-	checkEdges(tst, m.ExtractEdges(), map[EdgeKey]edge{
+	io.Pf("\nall edges\n")
+	edgesmap := m.ExtractEdges()
+	checkEdges(tst, edgesmap, map[EdgeKey]edge{
 		{0, 1, 11}:  {[]int{0, 1}, []int{0}},
 		{1, 2, 11}:  {[]int{1, 2}, []int{1}},
 		{2, 3, 11}:  {[]int{2, 3}, []int{2}},
@@ -234,6 +245,29 @@ func Test_mesh01(tst *testing.T) {
 		{6, 10, 11}: {[]int{6, 10}, []int{4, 5}},
 		{4, 5, 11}:  {[]int{4, 5}, []int{0, 3}},
 		{5, 6, 11}:  {[]int{5, 6}, []int{1, 4}},
+	})
+	io.Pf("\ninternal edges\n")
+	internal, boundary := edgesmap.Split()
+	checkEdges(tst, internal, map[EdgeKey]edge{
+		{1, 5, 11}:  {[]int{1, 5}, []int{0, 1}},
+		{2, 6, 11}:  {[]int{2, 6}, []int{1, 2}},
+		{5, 9, 11}:  {[]int{5, 9}, []int{3, 4}},
+		{6, 10, 11}: {[]int{6, 10}, []int{4, 5}},
+		{4, 5, 11}:  {[]int{4, 5}, []int{0, 3}},
+		{5, 6, 11}:  {[]int{5, 6}, []int{1, 4}},
+	})
+	io.Pf("\nboundary edges\n")
+	checkEdges(tst, boundary, map[EdgeKey]edge{
+		{0, 1, 11}:  {[]int{0, 1}, []int{0}},
+		{1, 2, 11}:  {[]int{1, 2}, []int{1}},
+		{2, 3, 11}:  {[]int{2, 3}, []int{2}},
+		{3, 6, 11}:  {[]int{3, 6}, []int{2}},
+		{6, 7, 11}:  {[]int{6, 7}, []int{5}},
+		{7, 10, 11}: {[]int{7, 10}, []int{5}},
+		{9, 10, 11}: {[]int{9, 10}, []int{4}},
+		{8, 9, 11}:  {[]int{8, 9}, []int{3}},
+		{4, 8, 11}:  {[]int{4, 8}, []int{3}},
+		{0, 4, 11}:  {[]int{0, 4}, []int{0}},
 	})
 
 	// draw
@@ -340,7 +374,9 @@ func Test_cubeandtet(tst *testing.T) {
 	checkmaps(tst, m, tm, vtags, ctags, cparts, etags, ftags, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, ftagsVids, ftagsCids, ftagsLocEids)
 
 	// check edges
-	checkEdges(tst, m.ExtractEdges(), map[EdgeKey]edge{
+	io.Pf("\nall edges\n")
+	edgesmap := m.ExtractEdges()
+	checkEdges(tst, edgesmap, map[EdgeKey]edge{
 		{0, 1, 9}: {[]int{0, 1}, []int{0}},
 		{1, 2, 9}: {[]int{1, 2}, []int{0}},
 		{2, 3, 9}: {[]int{2, 3}, []int{0, 1}},
@@ -353,6 +389,29 @@ func Test_cubeandtet(tst *testing.T) {
 		{1, 5, 9}: {[]int{1, 5}, []int{0}},
 		{2, 6, 9}: {[]int{2, 6}, []int{0}},
 		{3, 7, 9}: {[]int{3, 7}, []int{0, 1}},
+		{2, 7, 9}: {[]int{2, 7}, []int{1}},
+		{2, 8, 9}: {[]int{2, 8}, []int{1}},
+		{3, 8, 9}: {[]int{3, 8}, []int{1}},
+		{7, 8, 9}: {[]int{7, 8}, []int{1}},
+	})
+	io.Pf("\ninternal edges\n")
+	internal, boundary := edgesmap.Split()
+	checkEdges(tst, internal, map[EdgeKey]edge{
+		{2, 3, 9}: {[]int{2, 3}, []int{0, 1}},
+		{3, 7, 9}: {[]int{3, 7}, []int{0, 1}},
+	})
+	io.Pf("\nboundary edges\n")
+	checkEdges(tst, boundary, map[EdgeKey]edge{
+		{0, 1, 9}: {[]int{0, 1}, []int{0}},
+		{1, 2, 9}: {[]int{1, 2}, []int{0}},
+		{0, 3, 9}: {[]int{0, 3}, []int{0}},
+		{4, 5, 9}: {[]int{4, 5}, []int{0}},
+		{5, 6, 9}: {[]int{5, 6}, []int{0}},
+		{6, 7, 9}: {[]int{6, 7}, []int{0}},
+		{4, 7, 9}: {[]int{4, 7}, []int{0}},
+		{0, 4, 9}: {[]int{0, 4}, []int{0}},
+		{1, 5, 9}: {[]int{1, 5}, []int{0}},
+		{2, 6, 9}: {[]int{2, 6}, []int{0}},
 		{2, 7, 9}: {[]int{2, 7}, []int{1}},
 		{2, 8, 9}: {[]int{2, 8}, []int{1}},
 		{3, 8, 9}: {[]int{3, 8}, []int{1}},

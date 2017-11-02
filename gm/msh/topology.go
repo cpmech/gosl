@@ -66,3 +66,18 @@ func (o *Mesh) ExtractEdges() (edges EdgesMap) {
 	}
 	return
 }
+
+// Split splits map into two sets: internal and boundary edges
+// NOTE: boundary edge is determined by checking if edge is shared by only cell only
+func (o *EdgesMap) Split() (internal, boundary EdgesMap) {
+	internal = make(map[EdgeKey]*Edge)
+	boundary = make(map[EdgeKey]*Edge)
+	for ekey, edge := range *o {
+		if len(edge.Cells) == 1 {
+			boundary[ekey] = edge
+		} else {
+			internal[ekey] = edge
+		}
+	}
+	return
+}
