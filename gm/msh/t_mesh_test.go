@@ -276,6 +276,7 @@ func Test_mesh01(tst *testing.T) {
 		args.WithIdsVerts = true
 		args.WithEdges = true
 		args.WithIdsCells = true
+		args.WithTagsEdges = true
 		plt.Reset(true, nil)
 		m.Draw(args)
 		plt.HideAllBorders()
