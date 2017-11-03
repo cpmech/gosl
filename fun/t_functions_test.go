@@ -237,16 +237,20 @@ func Test_beta01(tst *testing.T) {
 	chk.PrintTitle("beta01. Beta function")
 
 	aValues := []float64{1, 3, 10}
-	bValues := []float64{5, 2, 11}
+	bValues := []float64{5, 2, 11, -0.5}
 	answers := [][]float64{ // values from wxMaxima beta(a,b) function
-		{1.0 / 5.0, 1.0 / 2.0, 1.0 / 11},
-		{1.0 / 105.0, 1.0 / 12.0, 1.0 / 858.0},
-		{1.0 / 10010.0, 1.0 / 110, 1.0 / 1847560},
+		{1.0 / 5.0, 1.0 / 2.0, 1.0 / 11, -2.0},
+		{1.0 / 105.0, 1.0 / 12.0, 1.0 / 858.0, -16.0 / 3.0},
+		{1.0 / 10010.0, 1.0 / 110, 1.0 / 1847560, -131072.0 / 12155.0},
 	}
 	for i, a := range aValues {
 		for j, b := range bValues {
+			tol := 1e-15
+			if i == 2 && j == 3 {
+				tol = 5e-14
+			}
 			res := Beta(a, b)
-			chk.Float64(tst, io.Sf("Beta(%2f,%2f)", a, b), 1e-15, res, answers[i][j])
+			chk.Float64(tst, io.Sf("Beta(%2f,%2f)", a, b), tol, res, answers[i][j])
 		}
 	}
 }
