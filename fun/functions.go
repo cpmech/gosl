@@ -68,10 +68,10 @@ func Factorial100(n int) big.Float {
 
 // Beta computes the beta function by calling the Lgamma function
 func Beta(a, b float64) float64 {
-	la, _ := math.Lgamma(a)
-	lb, _ := math.Lgamma(b)
-	lc, _ := math.Lgamma(a + b)
-	return math.Exp(la + lb - lc)
+	la, sgnla := math.Lgamma(a)
+	lb, sgnlb := math.Lgamma(b)
+	lc, sgnlc := math.Lgamma(a + b)
+	return float64(sgnla * sgnlb * sgnlc) * math.Exp(la + lb - lc)
 }
 
 // Binomial comptues the binomial coefficient (n k)^T
