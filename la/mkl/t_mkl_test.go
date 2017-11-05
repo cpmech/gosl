@@ -580,21 +580,10 @@ func TestDgesvd02(tst *testing.T) {
 		{-s33, +s33, 1},
 		{+s33, +s33, 1},
 	}
-	uCorrect := [][]float64{
-		{-0.5, -0.5, -0.5, +0.5},
-		{-0.5, -0.5, +0.5, -0.5},
-		{-0.5, +0.5, -0.5, -0.5},
-		{-0.5, +0.5, +0.5, +0.5},
-	}
 	sCorrect := []float64{2, 2.0 / math.Sqrt(3.0), 2.0 / math.Sqrt(3.0)}
-	vtCorrect := [][]float64{
-		{+0, +0, -1},
-		{+0, +1, +0},
-		{+1, +0, +0},
-	}
 
 	// check
-	checksvd(tst, amat, uCorrect, vtCorrect, sCorrect, 1e-15, 1e-15, 1e-17, 1e-15)
+	checksvd(tst, amat, nil, nil, sCorrect, 1e-15, 1e-15, 1e-17, 1e-15)
 }
 
 func TestDgesvd03(tst *testing.T) {
