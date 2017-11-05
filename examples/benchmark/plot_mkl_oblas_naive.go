@@ -16,29 +16,13 @@ func main() {
 	nSamplesA := 1000
 	nSamplesB := 100
 
-	_, oblasA, err := io.ReadTable(io.Sf("/tmp/gosl/oblas-dgemm01a-%dsamples.res", nSamplesA))
-	if err != nil {
-		io.Pf("cannot read file: %v\n", err)
-		return
-	}
+	_, oblasA := io.ReadTable(io.Sf("/tmp/gosl/oblas-dgemm01a-%dsamples.res", nSamplesA))
 
-	_, oblasB, err := io.ReadTable(io.Sf("/tmp/gosl/oblas-dgemm01b-%dsamples.res", nSamplesB))
-	if err != nil {
-		io.Pf("cannot read file: %v\n", err)
-		return
-	}
+	_, oblasB := io.ReadTable(io.Sf("/tmp/gosl/oblas-dgemm01b-%dsamples.res", nSamplesB))
 
-	_, mklA, err := io.ReadTable(io.Sf("/tmp/gosl/mkl-dgemm01a-%dsamples.res", nSamplesA))
-	if err != nil {
-		io.Pf("cannot read file: %v\n", err)
-		return
-	}
+	_, mklA := io.ReadTable(io.Sf("/tmp/gosl/mkl-dgemm01a-%dsamples.res", nSamplesA))
 
-	_, mklB, err := io.ReadTable(io.Sf("/tmp/gosl/mkl-dgemm01b-%dsamples.res", nSamplesB))
-	if err != nil {
-		io.Pf("cannot read file: %v\n", err)
-		return
-	}
+	_, mklB := io.ReadTable(io.Sf("/tmp/gosl/mkl-dgemm01b-%dsamples.res", nSamplesB))
 
 	nNaive := 0
 	for _, gflops := range oblasB["naiveGflops"] {
