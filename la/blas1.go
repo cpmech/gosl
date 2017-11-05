@@ -4,7 +4,11 @@
 
 package la
 
-import "math"
+import (
+	"math"
+
+	"github.com/cpmech/gosl/la/oblas"
+)
 
 // VecRmsError returns the scaled root-mean-square of the difference between two vectors
 // with components normalised by a scaling factor
@@ -31,10 +35,13 @@ func VecRmsError(u, v Vector, a, m float64, s Vector) (rms float64) {
 // VecDot returns the dot product between two vectors:
 //   s := u・v
 func VecDot(u, v Vector) (res float64) {
-	for i := 0; i < len(u); i++ {
-		res += u[i] * v[i]
+	if len(u) < 9 {
+		for i := 0; i < len(u); i++ {
+			res += u[i] * v[i]
+		}
+		return
 	}
-	return
+	return oblas.Ddot(len(u), u, 1, v, 1)
 }
 
 // VecAdd adds the scaled components of two vectors
