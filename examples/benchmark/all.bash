@@ -4,6 +4,8 @@ set -e
 
 keys="\
 oblas_dgemm01
+mkl_dgemm01
+plot_mkl_oblas_naive
 "
 
 for k in $keys; do
