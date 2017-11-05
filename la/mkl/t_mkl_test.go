@@ -72,6 +72,18 @@ func TestMatrix02(tst *testing.T) {
 	chk.String(tst, l, lCorrect)
 }
 
+func TestDdot01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Ddot01")
+
+	x := []float64{20, 10, 30, 123, 123}
+	y := []float64{-15, -5, -24, 666, 666, 666}
+	n, incx, incy := 3, 1, 1
+	res := Ddot(n, x, incx, y, incy)
+	chk.Float64(tst, "x⋅y", 1e-15, res, -1070)
+}
+
 func TestDaxpy01(tst *testing.T) {
 
 	//verbose()

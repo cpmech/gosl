@@ -37,6 +37,20 @@ func SetNumThreads(n int) {
 	C.mkl_set_num_threads(C.int(n))
 }
 
+// Ddot forms the dot product of two vectors. uses unrolled loops for increments equal to one.
+//
+//  See: http://www.netlib.org/lapack/explore-html/d5/df6/ddot_8f.html
+func Ddot(n int, x []float64, incx int, y []float64, incy int) (res float64) {
+	cres := C.cblas_ddot(
+		C.MKL_INT(n),
+		(*C.double)(unsafe.Pointer(&x[0])),
+		C.MKL_INT(incx),
+		(*C.double)(unsafe.Pointer(&y[0])),
+		C.MKL_INT(incy),
+	)
+	return float64(cres)
+}
+
 // Daxpy computes constant times a vector plus a vector.
 //
 //  See: http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html
