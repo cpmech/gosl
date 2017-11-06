@@ -37,7 +37,7 @@ func SetNumThreads(n int) {
 	C.openblas_set_num_threads(C.int(n))
 }
 
-// Ddot forms the dot product of two vectors. uses unrolled loops for increments equal to one.
+// Ddot forms the dot product of two vectors. Uses unrolled loops for increments equal to one.
 //
 //  See: http://www.netlib.org/lapack/explore-html/d5/df6/ddot_8f.html
 func Ddot(n int, x []float64, incx int, y []float64, incy int) (res float64) {
@@ -49,6 +49,18 @@ func Ddot(n int, x []float64, incx int, y []float64, incy int) (res float64) {
 		C.blasint(incy),
 	)
 	return float64(cres)
+}
+
+// Dscal scales a vector by a constant. Uses unrolled loops for increment equal to 1.
+//
+//  See: http://www.netlib.org/lapack/explore-html/d4/dd0/dscal_8f.html
+func Dscal(n int, alpha float64, x []float64, incx int) {
+	C.cblas_dscal(
+		C.blasint(n),
+		C.double(alpha),
+		(*C.double)(unsafe.Pointer(&x[0])),
+		C.blasint(incx),
+	)
 }
 
 // Daxpy computes constant times a vector plus a vector.

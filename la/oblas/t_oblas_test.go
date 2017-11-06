@@ -84,6 +84,18 @@ func TestDdot01(tst *testing.T) {
 	chk.Float64(tst, "x⋅y", 1e-15, res, -1070)
 }
 
+func TestDscal01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dscal01")
+
+	α := 0.5
+	x := []float64{20, 10, 30, 123, 123}
+	n, incx := 3, 1
+	Dscal(n, α, x, incx)
+	chk.Array(tst, "x", 1e-15, x, []float64{10, 5, 15, 123, 123})
+}
+
 func TestDaxpy01(tst *testing.T) {
 
 	//verbose()
