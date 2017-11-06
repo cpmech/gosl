@@ -51,6 +51,18 @@ func Ddot(n int, x []float64, incx int, y []float64, incy int) (res float64) {
 	return float64(cres)
 }
 
+// Dscal scales a vector by a constant. Uses unrolled loops for increment equal to 1.
+//
+//  See: http://www.netlib.org/lapack/explore-html/d4/dd0/dscal_8f.html
+func Dscal(n int, alpha float64, x []float64, incx int) {
+	C.cblas_dscal(
+		C.MKL_INT(n),
+		C.double(alpha),
+		(*C.double)(unsafe.Pointer(&x[0])),
+		C.MKL_INT(incx),
+	)
+}
+
 // Daxpy computes constant times a vector plus a vector.
 //
 //  See: http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html
