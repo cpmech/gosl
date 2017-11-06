@@ -57,11 +57,16 @@ func main() {
 	io.Pf("dist =\n%v", g.StrDistMatrix())
 
 	// constants for plot
-	radius, width, gap := 0.05, 1e-8, 0.05
+	p := graph.Plotter{
+		G:      &g,
+		Radius: 0.05,
+		Width:  1e-8,
+		Gap:    0.05,
+	}
 
 	// plot
 	plt.Reset(true, &plt.A{WidthPt: 250, Dpi: 150, Prop: 1.0})
-	g.Draw(nil, nil, radius, width, gap, nil, nil, nil, nil)
+	p.Draw() //nil, nil, radius, width, gap, nil, nil, nil, nil)
 	plt.Equal()
 	plt.AxisOff()
 	plt.Save("/tmp/gosl/graph", "graph_shortestpath01")
