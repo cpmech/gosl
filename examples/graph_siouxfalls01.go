@@ -54,22 +54,25 @@ func main() {
 		}
 	}
 
+	// plotter
+	p := graph.Plotter{G: g}
+
 	// data for drawing: set vertex labels
-	vlabels := make(map[int]string)
+	p.VertsLabels = make(map[int]string)
 	for i := 0; i < nv; i++ {
-		vlabels[i] = io.Sf("%d", i)
+		p.VertsLabels[i] = io.Sf("%d", i)
 	}
 
 	// data for drawing: set edge labels
 	ne := 76
-	elabels := make(map[int]string)
+	p.EdgesLabels = make(map[int]string)
 	for i := 0; i < ne; i++ {
-		elabels[i] = io.Sf("%d", i)
+		p.EdgesLabels[i] = io.Sf("%d", i)
 	}
 
 	// plot
 	plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150, Prop: 1.1})
-	g.Draw(vlabels, elabels, 0, 0, 0, nil, nil, nil, nil)
+	p.Draw()
 	plt.Equal()
 	plt.AxisOff()
 	plt.Save("/tmp/gosl/graph", "graph_siouxfalls01")
