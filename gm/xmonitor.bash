@@ -17,5 +17,5 @@ while true; do
     #go test -test.run="Transfinite03"
     #go test -test.run="Transfinite04"
     #go test -test.run="Transfinite05"
-    go test -test.run="CurvGrid01"
+    go test -test.run="CurvGrid02"
 done
