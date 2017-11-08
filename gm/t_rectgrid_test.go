@@ -11,10 +11,10 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
-func TestGrid01(tst *testing.T) {
+func TestRectGrid01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid01")
+	chk.PrintTitle("RectGrid01")
 
 	g := new(RectGrid)
 	g.GenUniform([]float64{-6, -3}, []float64{6, 3}, []int{4, 3}, true)
@@ -74,14 +74,14 @@ func TestGrid01(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.SetXnticks(12)
 		plt.SetYnticks(12)
-		plt.Save("/tmp/gosl/gm", "grid01")
+		plt.Save("/tmp/gosl/gm", "rectgrid01")
 	}
 }
 
-func TestGrid02(tst *testing.T) {
+func TestRectGrid02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid02")
+	chk.PrintTitle("RectGrid02")
 
 	g := new(RectGrid)
 	g.Set2d([]float64{1, 2, 4, 8, 16}, []float64{0, 3, 4, 7}, true)
@@ -132,14 +132,14 @@ func TestGrid02(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.SetXnticks(17)
 		plt.SetYnticks(17)
-		plt.Save("/tmp/gosl/gm", "grid02")
+		plt.Save("/tmp/gosl/gm", "rectgrid02")
 	}
 }
 
 func TestGrid03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid03")
+	chk.PrintTitle("RectGrid03")
 
 	g := new(RectGrid)
 	g.Set3d([]float64{1, 2, 4, 8}, []float64{0, 3, 4}, []float64{-1, -0.5}, true)
@@ -230,6 +230,6 @@ func TestGrid03(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.DefaultTriad(1)
 		plt.Default3dView(g.Min(0), g.Max(0), g.Min(1), g.Max(1), g.Min(2), g.Max(2), true)
-		plt.Save("/tmp/gosl/gm", "grid03")
+		plt.Save("/tmp/gosl/gm", "rectgrid03")
 	}
 }
