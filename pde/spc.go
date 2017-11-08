@@ -23,7 +23,7 @@ type SpcLaplacian struct {
 	ky  float64               // isotropic coefficient y
 	kz  float64               // isotropic coefficient z
 	s   fun.Svs               // source term function s({x},t)
-	g   *gm.Grid              // grid
+	g   *gm.RectGrid          // grid
 	lip []*fun.LagrangeInterp // Lagrange interpolators [ndim]
 }
 
@@ -51,7 +51,7 @@ func newSpcLaplacian(params dbf.Params, source fun.Svs) (o *SpcLaplacian) {
 }
 
 // InitWithGrid initialises operator with new grid
-func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.Grid) {
+func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.RectGrid) {
 
 	// Lagrange interpolators
 	ndim := len(xmin)
@@ -66,7 +66,7 @@ func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []i
 	}
 
 	// new grid
-	g = new(gm.Grid)
+	g = new(gm.RectGrid)
 	if ndim == 2 {
 		g.Set2d(o.lip[0].X, o.lip[1].X, false)
 	} else {

@@ -27,7 +27,7 @@ func TestEssentialBcs01(tst *testing.T) {
 	//          |        |        |
 	//          |0       |1       |2
 	//          o--------o--------o
-	g := new(gm.Grid)
+	g := new(gm.RectGrid)
 	g.GenUniform([]float64{0, 0}, []float64{2, 2}, []int{2, 2}, false) // 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
 
 	// essential boundary conditions

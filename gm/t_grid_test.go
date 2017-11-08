@@ -16,7 +16,7 @@ func TestGrid01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Grid01")
 
-	g := new(Grid)
+	g := new(RectGrid)
 	g.GenUniform([]float64{-6, -3}, []float64{6, 3}, []int{4, 3}, true)
 
 	chk.Int(tst, "ndim", g.Ndim(), 2)
@@ -83,7 +83,7 @@ func TestGrid02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Grid02")
 
-	g := new(Grid)
+	g := new(RectGrid)
 	g.Set2d([]float64{1, 2, 4, 8, 16}, []float64{0, 3, 4, 7}, true)
 
 	chk.Int(tst, "ndim", g.Ndim(), 2)
@@ -141,7 +141,7 @@ func TestGrid03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Grid03")
 
-	g := new(Grid)
+	g := new(RectGrid)
 	g.Set3d([]float64{1, 2, 4, 8}, []float64{0, 3, 4}, []float64{-1, -0.5}, true)
 
 	chk.Int(tst, "ndim", g.Ndim(), 3)

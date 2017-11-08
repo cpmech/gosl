@@ -19,11 +19,11 @@ import (
 //                ∂x²        ∂y²        ∂z²
 //
 type FdmLaplacian struct {
-	kx float64  // isotropic coefficient x
-	ky float64  // isotropic coefficient y
-	kz float64  // isotropic coefficient z
-	s  fun.Svs  // source term function s({x},t)
-	g  *gm.Grid // grid
+	kx float64      // isotropic coefficient x
+	ky float64      // isotropic coefficient y
+	kz float64      // isotropic coefficient z
+	s  fun.Svs      // source term function s({x},t)
+	g  *gm.RectGrid // grid
 }
 
 // add to database
@@ -50,8 +50,8 @@ func newFdmLaplacian(params dbf.Params, source fun.Svs) (o *FdmLaplacian) {
 }
 
 // InitWithGrid initialises operator with new grid
-func (o *FdmLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.Grid) {
-	g = new(gm.Grid)
+func (o *FdmLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.RectGrid) {
+	g = new(gm.RectGrid)
 	g.GenUniform(xmin, xmax, ndiv, false)
 	o.g = g
 	return

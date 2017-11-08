@@ -17,7 +17,7 @@ import (
 type Solver struct {
 	Op     Operator        // differential operator
 	Eqs    *la.Equations   // equations numbering in linear system
-	Grid   *gm.Grid        // grid structure
+	Grid   *gm.RectGrid    // grid structure
 	Ebcs   *EssentialBcs   // essential boundary conditions
 	U      la.Vector       // vector of unknowns
 	F      la.Vector       // right hand-side [if reactions=true]
