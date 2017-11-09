@@ -67,16 +67,15 @@ func TestRectGrid01(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		/*
-			plt.Reset(true, &plt.A{WidthPt: 500})
-			g.Draw(true, nil, nil)
-			plt.Grid(&plt.A{C: "grey"})
-			plt.Equal()
-			plt.HideAllBorders()
-			plt.SetXnticks(12)
-			plt.SetYnticks(12)
-			plt.Save("/tmp/gosl/gm", "rectgrid01")
-		*/
+		gp := GridPlotter{G: g}
+		plt.Reset(true, &plt.A{WidthPt: 500})
+		gp.Draw()
+		plt.Grid(&plt.A{C: "grey"})
+		plt.Equal()
+		plt.HideAllBorders()
+		plt.SetXnticks(12)
+		plt.SetYnticks(12)
+		plt.Save("/tmp/gosl/gm", "rectgrid01")
 	}
 }
 
