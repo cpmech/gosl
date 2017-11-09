@@ -11,19 +11,21 @@ import (
 
 // Metrics holds data related to a position in a space represented by curvilinear coordinates
 type Metrics struct {
-	U          la.Vector     // reference coordinates {r,s,t}
-	X          la.Vector     // physical coordinates {x,y,z}
-	CovG0      la.Vector     // covariant basis g_0 = d{x}/dr
-	CovG1      la.Vector     // covariant basis g_1 = d{x}/ds
-	CovG2      la.Vector     // covariant basis g_2 = d{x}/dt
-	CovGmat    *la.Matrix    // covariant metrics g_ij = g_i ⋅ g_j
-	CntGmat    *la.Matrix    // contravariant metrics g^ij = g^i ⋅ g^j
-	DetCovGmat float64       // determinant of covariant g matrix = det(CovGmat)
-	GammaS     [][][]float64 // [k][i][j] Christoffel coefficients of second kind
-	L          []float64     // [3] L-coefficients = sum(Γ_ij^k ⋅ g^ij)
+	U           la.Vector     // reference coordinates {r,s,t}
+	X           la.Vector     // physical coordinates {x,y,z}
+	CovG0       la.Vector     // covariant basis g_0 = d{x}/dr
+	CovG1       la.Vector     // covariant basis g_1 = d{x}/ds
+	CovG2       la.Vector     // covariant basis g_2 = d{x}/dt
+	CovGmat     *la.Matrix    // covariant metrics g_ij = g_i ⋅ g_j
+	CntGmat     *la.Matrix    // contravariant metrics g^ij = g^i ⋅ g^j
+	DetCovGmat  float64       // determinant of covariant g matrix = det(CovGmat)
+	Homogeneous bool          // homogeneous grid => nil second order derivatives and Christoffel symbols
+	GammaS      [][][]float64 // [k][i][j] Christoffel coefficients of second kind (non-homogeneous)
+	L           []float64     // [3] L-coefficients = sum(Γ_ij^k ⋅ g^ij) (non-homogeneous)
 }
 
 // NewMetrics2d allocate new 2D metrics structure
+//  NOTE: the second order derivatives (from ddxdrr) may be nil => homogeneous grid
 func NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs la.Vector) (o *Metrics) {
 
 	// input
@@ -51,6 +53,12 @@ func NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs la.Vector) (o *Metric
 		cntG1[i] += o.CntGmat.Get(1, 0)*o.CovG0[i] + o.CntGmat.Get(1, 1)*o.CovG1[i]
 	}
 
+	// check if homogeneous grid
+	o.Homogeneous = ddxdrr == nil
+	if o.Homogeneous {
+		return
+	}
+
 	// Christoffel vectors
 	Γ00, Γ11, Γ01 := ddxdrr, ddxdss, ddxdrs
 
@@ -73,6 +81,7 @@ func NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs la.Vector) (o *Metric
 }
 
 // NewMetrics3d allocate new 3D metrics structure
+//  NOTE: the second order derivatives (from ddxdrr) may be nil => homogeneous grid
 func NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst la.Vector) (o *Metrics) {
 
 	// input
@@ -107,12 +116,17 @@ func NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt
 		cntG2[i] += o.CntGmat.Get(2, 0)*o.CovG0[i] + o.CntGmat.Get(2, 1)*o.CovG1[i] + o.CntGmat.Get(2, 2)*o.CovG2[i]
 	}
 
+	// check if homogeneous grid
+	o.Homogeneous = ddxdrr == nil
+	if o.Homogeneous {
+		return
+	}
+
 	// Christoffel vectors
 	Γ00, Γ11, Γ22, Γ01, Γ02, Γ12 := ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst
 
 	// Christoffel symbols of second kind
 	o.GammaS = utl.Deep3alloc(3, 3, 3)
-
 	o.GammaS[0][0][0] = la.VecDot(Γ00, cntG0)
 	o.GammaS[0][1][1] = la.VecDot(Γ11, cntG0)
 	o.GammaS[0][2][2] = la.VecDot(Γ22, cntG0)
