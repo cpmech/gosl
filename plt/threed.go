@@ -240,6 +240,47 @@ func Grid3dZlevels(X, Y [][]float64, Zlevels []float64, argsLines *A) {
 	}
 }
 
+// Grid3d draws grid lines (and points) of 3D grid
+//  NOTE: assuming that the meshgrid is organised as [z][y][x]
+func Grid3d(X, Y, Z [][][]float64, withIDs bool, argsLines *A, argsIDs *A) {
+	if len(X) < 2 || len(Y) < 2 || len(Z) < 2 {
+		return
+	}
+	if len(X[0]) < 2 || len(Y[0]) < 2 || len(Z[0]) < 2 {
+		return
+	}
+	if argsLines == nil {
+		argsLines = &A{C: "#427ce5", Lw: 0.8, NoClip: true}
+	}
+	if argsIDs == nil {
+		argsIDs = &A{C: C(2, 0), Fsz: 6}
+	}
+	n2 := len(X)
+	n1 := len(X[0])
+	n0 := len(X[0][0])
+	xx := make([]float64, 2) // min,max
+	yy := make([]float64, 2) // min,max
+	zz := make([]float64, 2) // min,max
+	idx := 0
+	for k := 0; k < n2; k++ {
+		for j := 0; j < n1; j++ {
+			for i := 0; i < n0; i++ {
+				if k > 0 {
+					xx[0], xx[1] = X[k-1][j][i], X[k][j][i]
+					yy[0], yy[1] = Y[k-1][j][i], Y[k][j][i]
+					zz[0], zz[1] = Z[k-1][j][i], Z[k][j][i]
+					Plot3dLine(xx, yy, zz, argsLines)
+				}
+				if withIDs {
+					Text3d(X[k][j][i], Y[k][j][i], Z[k][j][i], io.Sf("%d", idx), argsIDs)
+					idx++
+				}
+			}
+		}
+		Wireframe(X[k], Y[k], Z[k], argsLines)
+	}
+}
+
 // 3d shapes using meshgrid ///////////////////////////////////////////////////////////////////////
 
 // PlaneZ draws a plane that has a normal vector with non-zero z component.

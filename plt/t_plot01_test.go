@@ -575,7 +575,7 @@ func Test_plot12(tst *testing.T) {
 func Test_plot13(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot13. Grid3d")
+	chk.PrintTitle("plot13. Grid3dZlevels")
 
 	if chk.Verbose {
 
@@ -624,5 +624,60 @@ func Test_plot14(tst *testing.T) {
 		Sphere(nil, 1, 30, 30, &A{Surf: true})
 		Default3dView(-1.1, 1.1, -1.1, 1.1, -1.1, 1.1, true)
 		Save("/tmp/gosl/plt", "t_plot14")
+	}
+}
+
+func Test_plot15(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot15. Grid3d")
+
+	if chk.Verbose {
+
+		X := [][][]float64{
+			{
+				{1, 2, 4, 8},
+				{1, 2, 4, 8},
+				{1, 2, 4, 8},
+			},
+			{
+				{2, 3, 5, 9},
+				{2, 3, 5, 9},
+				{2, 3, 5, 9},
+			},
+		}
+
+		Y := [][][]float64{
+			{
+				{0, 0, 0, 0},
+				{3, 3, 3, 3},
+				{4, 4, 4, 4},
+			},
+			{
+				{0, 0, 0, 0},
+				{3, 3, 3, 3},
+				{4, 4, 4, 4},
+			},
+		}
+
+		Z := [][][]float64{
+			{
+				{-1, -1, -1, -1},
+				{-1, -1, -1, -1},
+				{-1, -1, -1, -1},
+			},
+			{
+				{-2.5, -2.5, -2.5, -2.5},
+				{-2.5, -2.5, -2.5, -2.5},
+				{-2.5, -2.5, -2.5, -2.5},
+			},
+		}
+
+		Reset(true, &A{WidthPt: 500})
+		Grid3d(X, Y, Z, true, nil, nil)
+		DefaultTriad(1)
+		Default3dView(1, 8, 0, 4, -1, -0.5, true)
+
+		Save("/tmp/gosl/plt", "t_plot15")
 	}
 }

@@ -16,6 +16,6 @@ while true; do
     echo
     #go test -test.run="Waterfall01"
     #go test -test.run="draw03"
-    #go test -test.run="plot01"
-    go test -test.run="Matrix01"
+    go test -test.run="plot15"
+    #go test -test.run="Matrix01"
 done
