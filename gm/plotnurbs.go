@@ -537,8 +537,8 @@ func (o *Nurbs) DrawVectors3d(nu, nv int, sf float64, argsU, argsV *plt.A) {
 		for m := 0; m < nu; m++ {
 			u[0] = o.b[0].tmin + float64(m)*du0
 			o.PointDeriv(dCdu, c, u, 3)
-			DrawArrow3dM(c, dCdu, 0, true, sf, argsU)
-			DrawArrow3dM(c, dCdu, 1, true, sf, argsV)
+			plt.DrawArrow3d(c, dCdu.Col(0), true, sf, argsU)
+			plt.DrawArrow3d(c, dCdu.Col(1), true, sf, argsV)
 		}
 	}
 }
