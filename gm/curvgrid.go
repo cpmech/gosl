@@ -10,6 +10,16 @@ import (
 )
 
 // CurvGrid holds metrics data for 2d or 3d grids represented by curvilinear coordinates
+//
+//   Notation:
+//              m,n,p -- indices used for grid points
+//              i,j,k -- indices used for dimension (x,y,z)
+//
+//   NOTE: the deep3 structure mtr holds data with the outer index corresponding to z
+//
+//   Example: the covariant vector @ (m,n,p) is:     o.mtr[p][n][m].GovG0
+//            the first component of this vector is: o.mtr[p][n][m].GovG0[0]
+//
 type CurvGrid struct {
 	ndim int            // space dimension
 	npts []int          // number of points along each direction. In 2D, npts[2] := 1
@@ -33,19 +43,19 @@ func (o *CurvGrid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 	ddxdrr, ddxdss, ddxdrs := la.NewVector(2), la.NewVector(2), la.NewVector(2)
 
 	// compute metrics
-	k := 0
+	p := 0
 	o.mtr = make([][][]*Metrics, 1)
-	o.mtr[k] = make([][]*Metrics, o.npts[1])
-	for j := 0; j < o.npts[1]; j++ {
-		o.mtr[k][j] = make([]*Metrics, o.npts[0])
-		for i := 0; i < o.npts[0]; i++ {
+	o.mtr[p] = make([][]*Metrics, o.npts[1])
+	for n := 0; n < o.npts[1]; n++ {
+		o.mtr[p][n] = make([]*Metrics, o.npts[0])
+		for m := 0; m < o.npts[0]; m++ {
 
 			// derivatives
-			u[0], u[1] = R[i], S[j]
+			u[0], u[1] = R[m], S[n]
 			trf.PointAndDerivs(x, dxdr, dxds, nil, ddxdrr, ddxdss, nil, ddxdrs, nil, nil, u)
 
 			// metrics
-			o.mtr[k][j][i] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
+			o.mtr[p][n][m] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
 		}
 	}
 }
@@ -65,18 +75,18 @@ func (o *CurvGrid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 
 	// compute metrics
 	o.mtr = make([][][]*Metrics, o.npts[2])
-	for k := 0; k < o.npts[2]; k++ {
-		o.mtr[k] = make([][]*Metrics, o.npts[1])
-		for j := 0; j < o.npts[1]; j++ {
-			o.mtr[k][j] = make([]*Metrics, o.npts[0])
-			for i := 0; i < o.npts[0]; i++ {
+	for p := 0; p < o.npts[2]; p++ {
+		o.mtr[p] = make([][]*Metrics, o.npts[1])
+		for n := 0; n < o.npts[1]; n++ {
+			o.mtr[p][n] = make([]*Metrics, o.npts[0])
+			for m := 0; m < o.npts[0]; m++ {
 
 				// derivatives
-				u[0], u[1], u[2] = R[i], S[j], T[k]
+				u[0], u[1], u[2] = R[m], S[n], T[p]
 				trf.PointAndDerivs(x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, u)
 
 				// metrics
-				o.mtr[k][j][i] = NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst)
+				o.mtr[p][n][m] = NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst)
 			}
 		}
 	}
@@ -91,12 +101,12 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 		argsG1 = &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10}
 	}
 	if o.ndim == 2 {
-		k := 0
-		for j := 0; j < o.npts[1]; j++ {
-			for i := 0; i < o.npts[0]; i++ {
-				m := o.mtr[k][j][i]
-				DrawArrow2d(m.X, m.CovG0, true, scale, argsG0)
-				DrawArrow2d(m.X, m.CovG1, true, scale, argsG1)
+		p := 0
+		for n := 0; n < o.npts[1]; n++ {
+			for m := 0; m < o.npts[0]; m++ {
+				M := o.mtr[p][n][m]
+				DrawArrow2d(M.X, M.CovG0, true, scale, argsG0)
+				DrawArrow2d(M.X, M.CovG1, true, scale, argsG1)
 			}
 		}
 		return
@@ -104,13 +114,13 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 	if argsG2 == nil {
 		argsG2 = &plt.A{C: plt.C(2, 0), Scale: 7, Z: 10}
 	}
-	for k := 0; k < o.npts[2]; k++ {
-		for j := 0; j < o.npts[1]; j++ {
-			for i := 0; i < o.npts[0]; i++ {
-				m := o.mtr[k][j][i]
-				DrawArrow3d(m.X, m.CovG0, true, scale, argsG0)
-				DrawArrow3d(m.X, m.CovG1, true, scale, argsG1)
-				DrawArrow3d(m.X, m.CovG2, true, scale, argsG2)
+	for p := 0; p < o.npts[2]; p++ {
+		for n := 0; n < o.npts[1]; n++ {
+			for m := 0; m < o.npts[0]; m++ {
+				M := o.mtr[p][n][m]
+				DrawArrow3d(M.X, M.CovG0, true, scale, argsG0)
+				DrawArrow3d(M.X, M.CovG1, true, scale, argsG1)
+				DrawArrow3d(M.X, M.CovG2, true, scale, argsG2)
 			}
 		}
 	}
