@@ -605,8 +605,8 @@ func Test_plot13(tst *testing.T) {
 		}
 
 		Reset(false, nil)
-		Grid3d(X, Y, Zlevels, &A{C: "b", NoClip: true})
-		Grid3d(U, V, Zlevels, &A{C: "r", NoClip: true})
+		Grid3dZlevels(X, Y, Zlevels, &A{C: "b", NoClip: true})
+		Grid3dZlevels(U, V, Zlevels, &A{C: "r", NoClip: true})
 		DefaultTriad(1.1)
 		Default3dView(0, 1.1+dx, 0, 1.1+dy, 0, 1.1, true)
 

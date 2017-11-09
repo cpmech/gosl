@@ -332,7 +332,7 @@ func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEnt
 			for k := 0; k < o.Npts[2]; k++ {
 				Zlevels[k] = o.Xmin[2] + float64(k)*o.Size[2]
 			}
-			plt.Grid3d(X, Y, Zlevels, argsGrid)
+			plt.Grid3dZlevels(X, Y, Zlevels, argsGrid)
 		}
 	}
 

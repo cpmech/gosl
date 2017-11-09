@@ -8,14 +8,7 @@ while true; do
     echo
     echo
     echo
-    go install
-    #go test -test.run="octree02"
-    #go test -test.run="Grid03"
-    #go test -test.run="Nurbs08"
-    #go test -test.run="Transfinite01"
-    #go test -test.run="Transfinite02"
-    #go test -test.run="Transfinite03"
-    #go test -test.run="Transfinite04"
-    #go test -test.run="Transfinite05"
-    go test -test.run="CurvGrid02"
+    #go test -run TestGrid01
+    go test -run TestRectGrid01
+    #go test -run TestCurvGrid02
 done

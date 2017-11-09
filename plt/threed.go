@@ -209,8 +209,8 @@ func Diag3d(scale float64, args *A) {
 	updateBufferAndClose(&bufferPy, a, false, false)
 }
 
-// Grid3d draws grid lines (and points) of 3D grid
-func Grid3d(X, Y [][]float64, Zlevels []float64, argsLines *A) {
+// Grid3dZlevels draws grid lines (and points) of 3D grid
+func Grid3dZlevels(X, Y [][]float64, Zlevels []float64, argsLines *A) {
 	if len(X) < 2 || len(Y) < 2 || len(Zlevels) < 2 {
 		return
 	}
