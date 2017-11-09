@@ -67,18 +67,15 @@ func TestRectGrid01(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		gp := GridPlotter{
-			G:        g,
-			WithVids: true,
-		}
+		gp := GridPlotter{G: g, WithVids: true}
 		plt.Reset(true, &plt.A{WidthPt: 500})
 		gp.Draw()
 		gp.Bases(1)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.HideAllBorders()
-		plt.SetXnticks(12)
-		plt.SetYnticks(12)
+		plt.SetXnticks(19)
+		plt.SetYnticks(15)
 		plt.Save("/tmp/gosl/gm", "rectgrid01")
 	}
 }
@@ -88,18 +85,17 @@ func TestRectGrid02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("RectGrid02")
 
-	g := new(RectGrid)
-	g.Set2d([]float64{1, 2, 4, 8, 16}, []float64{0, 3, 4, 7}, true)
+	g := new(CurvGrid)
+	g.RectSet2d([]float64{1, 2, 4, 8, 16}, []float64{0, 3, 4, 7})
 
 	chk.Int(tst, "ndim", g.Ndim(), 2)
 	chk.Int(tst, "size", g.Size(), 20)
 	chk.Int(tst, "nx", g.Npts(0), 5)
 	chk.Int(tst, "ny", g.Npts(1), 4)
 
-	xx, yy := g.Mesh2d()
-	min := []float64{g.Min(0), g.Min(1)}
-	max := []float64{g.Max(0), g.Max(1)}
-	del := []float64{g.Length(0), g.Length(1)}
+	min := []float64{g.Xmin(0), g.Xmin(1)}
+	max := []float64{g.Xmax(0), g.Xmax(1)}
+	del := []float64{g.Xlength(0), g.Xlength(1)}
 
 	chk.Array(tst, "Min", 1e-17, min, []float64{1, 0})
 	chk.Array(tst, "Max", 1e-17, max, []float64{16, 7})
@@ -115,13 +111,14 @@ func TestRectGrid02(tst *testing.T) {
 	chk.Ints(tst, "Tag # 20: B", g.EdgeT(20), []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "Tag # 21: T", g.EdgeT(21), []int{15, 16, 17, 18, 19})
 
-	chk.Deep2(tst, "x2d", 1e-17, xx, [][]float64{
+	xx, yy := g.Meshgrid2d()
+	chk.Deep2(tst, "xx", 1e-17, xx, [][]float64{
 		{1, 2, 4, 8, 16},
 		{1, 2, 4, 8, 16},
 		{1, 2, 4, 8, 16},
 		{1, 2, 4, 8, 16},
 	})
-	chk.Deep2(tst, "y2d", 1e-17, yy, [][]float64{
+	chk.Deep2(tst, "yy", 1e-17, yy, [][]float64{
 		{0, 0, 0, 0, 0},
 		{3, 3, 3, 3, 3},
 		{4, 4, 4, 4, 4},
@@ -131,7 +128,9 @@ func TestRectGrid02(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 500})
-		g.Draw(true, nil, nil)
+		gp := GridPlotter{G: g, WithVids: true}
+		gp.Draw()
+		gp.Bases(1)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.HideAllBorders()
@@ -146,8 +145,8 @@ func TestGrid03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("RectGrid03")
 
-	g := new(RectGrid)
-	g.Set3d([]float64{1, 2, 4, 8}, []float64{0, 3, 4}, []float64{-1, -0.5}, true)
+	g := new(CurvGrid)
+	g.RectSet3d([]float64{1, 2, 4, 8}, []float64{0, 3, 4}, []float64{-1, -0.5})
 
 	chk.Int(tst, "ndim", g.Ndim(), 3)
 	chk.Int(tst, "size", g.Size(), 24)
@@ -169,9 +168,9 @@ func TestGrid03(tst *testing.T) {
 	chk.Ints(tst, "Tag # 30: zmin", g.Boundary(300), g.Face(4))
 	chk.Ints(tst, "Tag # 31: zmax", g.Boundary(301), g.Face(5))
 
-	xx, yy, zz := g.Mesh3d()
+	xx, yy, zz := g.Meshgrid3d()
 
-	chk.Deep3(tst, "X3d", 1e-17, xx, [][][]float64{
+	chk.Deep3(tst, "xx", 1e-17, xx, [][][]float64{
 		{
 			{1, 2, 4, 8},
 			{1, 2, 4, 8},
@@ -183,7 +182,7 @@ func TestGrid03(tst *testing.T) {
 			{1, 2, 4, 8},
 		},
 	})
-	chk.Deep3(tst, "Y3d", 1e-17, yy, [][][]float64{
+	chk.Deep3(tst, "yy", 1e-17, yy, [][][]float64{
 		{
 			{0, 0, 0, 0},
 			{3, 3, 3, 3},
@@ -195,7 +194,7 @@ func TestGrid03(tst *testing.T) {
 			{4, 4, 4, 4},
 		},
 	})
-	chk.Deep3(tst, "Z3d", 1e-17, zz, [][][]float64{
+	chk.Deep3(tst, "zz", 1e-17, zz, [][][]float64{
 		{
 			{-1, -1, -1, -1},
 			{-1, -1, -1, -1},
@@ -208,33 +207,35 @@ func TestGrid03(tst *testing.T) {
 		},
 	})
 
-	min := []float64{g.Min(0), g.Min(1), g.Min(2)}
-	max := []float64{g.Max(0), g.Max(1), g.Max(2)}
-	del := []float64{g.Length(0), g.Length(1), g.Length(2)}
+	min := []float64{g.Xmin(0), g.Xmin(1), g.Xmin(2)}
+	max := []float64{g.Xmax(0), g.Xmax(1), g.Xmax(2)}
+	del := []float64{g.Xlength(0), g.Xlength(1), g.Xlength(2)}
 
 	chk.Array(tst, "Min", 1e-17, min, []float64{1, 0, -1})
 	chk.Array(tst, "Max", 1e-17, max, []float64{8, 4, -0.5})
 	chk.Array(tst, "Del", 1e-17, del, []float64{7, 4, 0.5})
 
-	chk.Array(tst, "x[0]", 1e-17, g.GetNode(0), []float64{1, 0, -1})
-	chk.Array(tst, "x[1]", 1e-17, g.GetNode(1), []float64{2, 0, -1})
-	chk.Array(tst, "x[6]", 1e-17, g.GetNode(6), []float64{4, 3, -1})
-	chk.Array(tst, "x[8]", 1e-17, g.GetNode(8), []float64{1, 4, -1})
-	chk.Array(tst, "x[11]", 1e-17, g.GetNode(11), []float64{8, 4, -1})
-	chk.Array(tst, "x[12]", 1e-17, g.GetNode(12), []float64{1, 0, -0.5})
-	chk.Array(tst, "x[17]", 1e-17, g.GetNode(17), []float64{2, 3, -0.5})
-	chk.Array(tst, "x[19]", 1e-17, g.GetNode(19), []float64{8, 3, -0.5})
-	chk.Array(tst, "x[22]", 1e-17, g.GetNode(22), []float64{4, 4, -0.5})
+	chk.Array(tst, "x[0]", 1e-17, g.Node(0), []float64{1, 0, -1})
+	chk.Array(tst, "x[1]", 1e-17, g.Node(1), []float64{2, 0, -1})
+	chk.Array(tst, "x[6]", 1e-17, g.Node(6), []float64{4, 3, -1})
+	chk.Array(tst, "x[8]", 1e-17, g.Node(8), []float64{1, 4, -1})
+	chk.Array(tst, "x[11]", 1e-17, g.Node(11), []float64{8, 4, -1})
+	chk.Array(tst, "x[12]", 1e-17, g.Node(12), []float64{1, 0, -0.5})
+	chk.Array(tst, "x[17]", 1e-17, g.Node(17), []float64{2, 3, -0.5})
+	chk.Array(tst, "x[19]", 1e-17, g.Node(19), []float64{8, 3, -0.5})
+	chk.Array(tst, "x[22]", 1e-17, g.Node(22), []float64{4, 4, -0.5})
 
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 500})
-		g.Draw(true, nil, &plt.A{Fsz: 6})
+		gp := GridPlotter{G: g, WithVids: true}
+		gp.Draw()
+		gp.Bases(0.5)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.HideAllBorders()
 		plt.DefaultTriad(1)
-		plt.Default3dView(g.Min(0), g.Max(0), g.Min(1), g.Max(1), g.Min(2), g.Max(2), true)
+		plt.Default3dView(g.Xmin(0), g.Xmax(0), g.Xmin(1), g.Xmax(1), g.Xmin(2), g.Xmax(2), true)
 		plt.Save("/tmp/gosl/gm", "rectgrid03")
 	}
 }

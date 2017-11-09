@@ -8,7 +8,5 @@ while true; do
     echo
     echo
     echo
-    #go test -run TestGrid01
-    go test -run TestRectGrid01
-    #go test -run TestCurvGrid02
+    go test -run TestGrid03
 done

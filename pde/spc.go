@@ -23,7 +23,7 @@ type SpcLaplacian struct {
 	ky  float64               // isotropic coefficient y
 	kz  float64               // isotropic coefficient z
 	s   fun.Svs               // source term function s({x},t)
-	g   *gm.RectGrid          // grid
+	g   *gm.CurvGrid          // grid
 	lip []*fun.LagrangeInterp // Lagrange interpolators [ndim]
 }
 
@@ -51,7 +51,7 @@ func newSpcLaplacian(params dbf.Params, source fun.Svs) (o *SpcLaplacian) {
 }
 
 // InitWithGrid initialises operator with new grid
-func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.RectGrid) {
+func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.CurvGrid) {
 
 	// Lagrange interpolators
 	ndim := len(xmin)
@@ -66,11 +66,11 @@ func (o *SpcLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []i
 	}
 
 	// new grid
-	g = new(gm.RectGrid)
+	g = new(gm.CurvGrid)
 	if ndim == 2 {
-		g.Set2d(o.lip[0].X, o.lip[1].X, false)
+		g.RectSet2d(o.lip[0].X, o.lip[1].X)
 	} else {
-		g.Set3d(o.lip[0].X, o.lip[1].X, o.lip[2].X, false)
+		g.RectSet3d(o.lip[0].X, o.lip[1].X, o.lip[2].X)
 	}
 	o.g = g
 
@@ -114,15 +114,12 @@ func (o *SpcLaplacian) SourceTerm(e *la.Equations, reactions bool) {
 	if o.s == nil {
 		return
 	}
-	x := la.NewVector(o.g.Ndim())
 	for i, I := range e.UtoF {
-		o.g.Node(x, I)
-		e.Bu[i] = o.s(x, 0)
+		e.Bu[i] = o.s(o.g.Node(I), 0)
 	}
 	if reactions {
 		for i, I := range e.KtoF {
-			o.g.Node(x, I)
-			e.Bk[i] = o.s(x, 0)
+			e.Bk[i] = o.s(o.g.Node(I), 0)
 		}
 	}
 	return

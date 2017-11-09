@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -123,10 +124,10 @@ func TestSpc02(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
+		gp := gm.GridPlotter{G: spc.Grid, WithVids: true}
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		spc.Grid.Draw(true, nil, &plt.A{C: plt.C(1, 0), Fsz: 7})
-		xx, yy := spc.Grid.Mesh2d()
-		plt.ContourL(xx, yy, uu, nil)
+		gp.Draw()
+		plt.ContourL(gp.X2d, gp.Y2d, uu, nil)
 		plt.Gll("$x$", "$y$", nil)
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/pde", "spc02")
@@ -171,7 +172,7 @@ func TestSpc03(tst *testing.T) {
 
 	// output
 	uu := spc.Ugrid2d()
-	xx, yy := spc.Grid.Mesh2d()
+	xx, yy := spc.Grid.Meshgrid2d()
 	io.Pf("xx =\n%v\n", la.NewMatrixDeep2(xx).Print("%17.13f"))
 	io.Pf("yy=\n%v\n", la.NewMatrixDeep2(yy).Print("%17.13f"))
 	io.Pf("uu=\n%v\n", la.NewMatrixDeep2(uu).Print("%17.13f"))

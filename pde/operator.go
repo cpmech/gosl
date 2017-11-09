@@ -14,7 +14,7 @@ import (
 
 // Operator defines the interface for differential operators such as the Laplacian and so on
 type Operator interface {
-	InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) *gm.RectGrid
+	InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) *gm.CurvGrid
 	Assemble(e *la.Equations)
 	SourceTerm(e *la.Equations, reactions bool)
 }

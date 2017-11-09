@@ -7,7 +7,6 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -45,6 +44,7 @@ type CurvGrid struct {
 //
 //     -1 ≤ u ≤ +1
 //     x(u) = xmin + (xmax - xmin) ⋅ (1 + u) / 2
+//     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
 //     dx/du = (xmax - xmin) / 2
 //
 func (o *CurvGrid) RectGenUniform(xmin, xmax []float64, npts []int) {
@@ -119,14 +119,112 @@ func (o *CurvGrid) RectGenUniform(xmin, xmax []float64, npts []int) {
 
 	// limits and boundaries
 	o.umin = []float64{-1, -1, -1}
-	o.umax = []float64{+1, +1, -1}
-	if o.ndim == 2 {
-		o.xmin = []float64{xmin[0], xmin[1], 0}
-		o.xmax = []float64{xmax[0], xmax[1], 0}
-	} else {
-		o.xmin = utl.GetCopy(xmin)
-		o.xmax = utl.GetCopy(xmax)
+	o.umax = []float64{+1, +1, +1}
+	o.xmin = utl.GetCopy(xmin)
+	o.xmax = utl.GetCopy(xmax)
+	o.boundaries()
+}
+
+// RectSet2d sets rectangular grid with given coordinates
+//
+//     -1 ≤ u ≤ +1
+//     x(u) = xmin + (xmax - xmin) ⋅ (1 + u) / 2
+//     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
+//     dx/du = (xmax - xmin) / 2
+//
+func (o *CurvGrid) RectSet2d(X, Y []float64) {
+
+	// input
+	o.ndim = 2
+	o.npts = []int{len(X), len(Y), 1}
+
+	// limits
+	o.umin = []float64{-1, -1, -1}
+	o.umax = []float64{+1, +1, +1}
+	o.xmin = make([]float64, 2)
+	o.xmax = make([]float64, 2)
+	o.xmin[0], o.xmax[0] = utl.MinMax(X)
+	o.xmin[1], o.xmax[1] = utl.MinMax(Y)
+
+	// auxiliary
+	x := la.NewVector(2)
+	u := la.NewVector(2)
+	dxdr, dxds := la.NewVector(2), la.NewVector(2)
+
+	// (constant) derivatives (all the 2nd order derivatives are zero)
+	dxdr[0] = (o.xmax[0] - o.xmin[0]) / 2.0
+	dxds[1] = (o.xmax[1] - o.xmin[1]) / 2.0
+
+	// compute metrics
+	p := 0
+	o.mtr = make([][][]*Metrics, 1)
+	o.mtr[p] = make([][]*Metrics, o.npts[1])
+	for n := 0; n < o.npts[1]; n++ {
+		o.mtr[p][n] = make([]*Metrics, o.npts[0])
+		x[1] = Y[n]
+		u[1] = -1.0 + 2.0*(x[1]-o.xmin[1])/(o.xmax[1]-o.xmin[1])
+		for m := 0; m < o.npts[0]; m++ {
+			x[0] = X[m]
+			u[0] = -1.0 + 2.0*(x[0]-o.xmin[0])/(o.xmax[0]-o.xmin[0])
+			o.mtr[p][n][m] = NewMetrics2d(u, x, dxdr, dxds, nil, nil, nil)
+		}
 	}
+
+	// boundaries
+	o.boundaries()
+}
+
+// RectSet3d sets rectangular grid with given coordinates
+//
+//     -1 ≤ u ≤ +1
+//     x(u) = xmin + (xmax - xmin) ⋅ (1 + u) / 2
+//     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
+//     dx/du = (xmax - xmin) / 2
+//
+func (o *CurvGrid) RectSet3d(X, Y, Z []float64) {
+
+	// input
+	o.ndim = 3
+	o.npts = []int{len(X), len(Y), len(Z)}
+
+	// limits
+	o.umin = []float64{-1, -1, -1}
+	o.umax = []float64{+1, +1, +1}
+	o.xmin = make([]float64, 3)
+	o.xmax = make([]float64, 3)
+	o.xmin[0], o.xmax[0] = utl.MinMax(X)
+	o.xmin[1], o.xmax[1] = utl.MinMax(Y)
+	o.xmin[2], o.xmax[2] = utl.MinMax(Z)
+
+	// auxiliary
+	x := la.NewVector(3)
+	u := la.NewVector(3)
+	dxdr, dxds, dxdt := la.NewVector(3), la.NewVector(3), la.NewVector(3)
+
+	// (constant) derivatives (all the 2nd order derivatives are zero)
+	dxdr[0] = (o.xmax[0] - o.xmin[0]) / 2.0
+	dxds[1] = (o.xmax[1] - o.xmin[1]) / 2.0
+	dxdt[2] = (o.xmax[2] - o.xmin[2]) / 2.0
+
+	// compute metrics
+	o.mtr = make([][][]*Metrics, o.npts[2])
+	for p := 0; p < o.npts[2]; p++ {
+		o.mtr[p] = make([][]*Metrics, o.npts[1])
+		x[2] = Z[p]
+		u[2] = -1.0 + 2.0*(x[2]-o.xmin[2])/(o.xmax[2]-o.xmin[2])
+		for n := 0; n < o.npts[1]; n++ {
+			o.mtr[p][n] = make([]*Metrics, o.npts[0])
+			x[1] = Y[n]
+			u[1] = -1.0 + 2.0*(x[1]-o.xmin[1])/(o.xmax[1]-o.xmin[1])
+			for m := 0; m < o.npts[0]; m++ {
+				x[0] = X[m]
+				u[0] = -1.0 + 2.0*(x[0]-o.xmin[0])/(o.xmax[0]-o.xmin[0])
+				o.mtr[p][n][m] = NewMetrics3d(u, x, dxdr, dxds, dxdt, nil, nil, nil, nil, nil, nil)
+			}
+		}
+	}
+
+	// boundaries
 	o.boundaries()
 }
 
@@ -408,17 +506,6 @@ func (o *CurvGrid) IndexMNP(N int) (m, n, p int) {
 	return
 }
 
-// SetNode sets x with the physical coordinates of a node N (see IndexN())
-func (o *CurvGrid) SetNode(x la.Vector, N int) {
-	m, n, p := o.IndexMNP(N)
-	x[0] = o.mtr[p][n][m].X[0]
-	x[1] = o.mtr[p][n][m].X[1]
-	if o.ndim == 2 {
-		return
-	}
-	x[2] = o.mtr[p][n][m].X[2]
-}
-
 // Node returns the physical coordinates of node N (see IndexN()) [may be used to change X]
 func (o *CurvGrid) Node(N int) (x la.Vector) {
 	m, n, p := o.IndexMNP(N)
@@ -580,7 +667,6 @@ func (o *CurvGrid) boundaries() {
 		}
 		return
 	}
-	io.Pforan("here = %v\n", o.edge)
 	n2 := o.npts[2]
 	o.face = make([][]int, 6)
 	o.face[0] = make([]int, n1*n2) // xmin[0]

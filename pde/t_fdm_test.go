@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -22,8 +23,8 @@ func TestFdm01(tst *testing.T) {
 	// operator
 	op := NewOperator("fdm.laplacian", dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}, nil)
 
-	// init operator with grid: 2x2 divs ⇒ 3x3 grid ⇒ 9 equations
-	g := op.InitWithGrid("uni", []float64{0, 0}, []float64{2, 2}, []int{2, 2})
+	// init operator with grid: 3x3 grid ⇒ 9 equations
+	g := op.InitWithGrid("uni", []float64{0, 0}, []float64{2, 2}, []int{3, 3})
 
 	// equations
 	e := la.NewEquations(g.Size(), nil)
@@ -61,10 +62,10 @@ func TestFdm02(tst *testing.T) {
 	params := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	xmin := []float64{0, 0}
 	xmax := []float64{3, 3}
-	ndiv := []int{3, 3} // 3x3 divs ⇒ 4x4 grid ⇒ 16 equations
+	npts := []int{4, 4} // 4x4 grid ⇒ 16 equations
 
 	// fdm solver
-	fdm := NewGridSolver("fdm", "uni", "laplacian", params, nil, xmin, xmax, ndiv)
+	fdm := NewGridSolver("fdm", "uni", "laplacian", params, nil, xmin, xmax, npts)
 
 	// essential boundary conditions
 	ebcs := NewEssentialBcs()
@@ -113,10 +114,10 @@ func TestFdm02(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
+		gp := gm.GridPlotter{G: fdm.Grid, WithVids: true}
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		fdm.Grid.Draw(true, nil, &plt.A{C: plt.C(1, 0), Fsz: 7})
-		xx, yy := fdm.Grid.Mesh2d()
-		plt.ContourL(xx, yy, uu, nil)
+		gp.Draw()
+		plt.ContourL(gp.X2d, gp.Y2d, uu, nil)
 		plt.Gll("$x$", "$y$", nil)
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/pde", "fdm02")

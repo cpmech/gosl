@@ -23,7 +23,7 @@ type FdmLaplacian struct {
 	ky float64      // isotropic coefficient y
 	kz float64      // isotropic coefficient z
 	s  fun.Svs      // source term function s({x},t)
-	g  *gm.RectGrid // grid
+	g  *gm.CurvGrid // grid
 }
 
 // add to database
@@ -50,9 +50,9 @@ func newFdmLaplacian(params dbf.Params, source fun.Svs) (o *FdmLaplacian) {
 }
 
 // InitWithGrid initialises operator with new grid
-func (o *FdmLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, ndiv []int) (g *gm.RectGrid) {
-	g = new(gm.RectGrid)
-	g.GenUniform(xmin, xmax, ndiv, false)
+func (o *FdmLaplacian) InitWithGrid(gtype string, xmin, xmax []float64, npts []int) (g *gm.CurvGrid) {
+	g = new(gm.CurvGrid)
+	g.RectGenUniform(xmin, xmax, npts)
 	o.g = g
 	return
 }
@@ -66,8 +66,8 @@ func (o *FdmLaplacian) Assemble(e *la.Equations) {
 	if o.g.Ndim() == 2 {
 		nx := o.g.Npts(0)
 		ny := o.g.Npts(1)
-		dx := o.g.Length(0) / float64(nx-1)
-		dy := o.g.Length(1) / float64(ny-1)
+		dx := o.g.Xlength(0) / float64(nx-1)
+		dy := o.g.Xlength(1) / float64(ny-1)
 		dx2 := dx * dx
 		dy2 := dy * dy
 		α := 2.0 * (o.kx/dx2 + o.ky/dy2)
