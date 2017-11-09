@@ -458,12 +458,12 @@ func Hist(x [][]float64, labels []string, args *A) {
 }
 
 // Grid2d draws grid lines (and points) of 2D grid
-func Grid2d(X, Y [][]float64, withPoints bool, argsLines, argsPoints *A) {
+func Grid2d(X, Y [][]float64, withIDs bool, argsLines, argsIDs *A) {
 	if argsLines == nil {
-		argsLines = &A{C: "k", NoClip: true}
+		argsLines = &A{C: "#427ce5", Lw: 0.8, NoClip: true}
 	}
-	if argsPoints == nil {
-		argsPoints = &A{C: "k", M: ".", Ls: "none", NoClip: true}
+	if argsIDs == nil {
+		argsIDs = &A{C: C(2, 0), Fsz: 6}
 	}
 	for i := 0; i < len(X); i++ {
 		Plot(X[i], Y[i], argsLines)
@@ -474,11 +474,13 @@ func Grid2d(X, Y [][]float64, withPoints bool, argsLines, argsPoints *A) {
 	}
 	ncols := len(X[0])
 	x, y := make([]float64, nrows), make([]float64, nrows)
+	idx := 0
 	for j := 0; j < ncols; j++ {
 		for i := 0; i < nrows; i++ {
 			x[i], y[i] = X[i][j], Y[i][j]
-			if withPoints {
-				PlotOne(X[i][j], Y[i][j], argsPoints)
+			if withIDs {
+				Text(X[i][j], Y[i][j], io.Sf("%d", idx), argsIDs)
+				idx++
 			}
 		}
 		Plot(x, y, argsLines)
