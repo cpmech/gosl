@@ -60,6 +60,17 @@ func (o Vector) GetCopy() (clone Vector) {
 	return
 }
 
+// GetUnit returns the unit vector parallel to this vector
+//  b := a / norm(a)
+func (o Vector) GetUnit() (unit Vector) {
+	unit = make([]float64, len(o))
+	s := o.Norm()
+	if s > 0 {
+		unit.Apply(1.0/s, o)
+	}
+	return
+}
+
 // Accum sum/accumulates all components in a vector
 //  sum := Σ_i v[i]
 func (o Vector) Accum() (sum float64) {

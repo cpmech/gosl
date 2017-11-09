@@ -33,9 +33,16 @@ func TestVector01(tst *testing.T) {
 	c := b.GetCopy()
 	chk.Array(tst, "b.GetCopy", 1e-17, c, []float64{1, 2, 3})
 
+	unit := b.GetUnit()
+	s := math.Sqrt(14.0)
+	chk.Array(tst, "b.GetUnit", 1e-17, unit, []float64{1.0 / s, 2.0 / s, 3.0 / s})
+	zero := NewVector(3)
+	unit = zero.GetUnit()
+	chk.Array(tst, "zero.GetUnit", 1e-17, unit, []float64{0, 0, 0})
+
 	chk.Float64(tst, "c.Accum", 1e-17, c.Accum(), 6)
 
-	chk.Float64(tst, "c.Norm", 1e-17, c.Norm(), math.Sqrt(14.0))
+	chk.Float64(tst, "c.Norm", 1e-17, c.Norm(), s)
 
 	chk.Float64(tst, "c.NormDiff(b)", 1e-17, c.NormDiff(b), 0)
 
