@@ -11,12 +11,10 @@ import (
 
 // CurvGrid holds metrics data for 2d or 3d grids represented by curvilinear coordinates
 type CurvGrid struct {
-	Ndim int            // space dimension
-	N0   int            // number of points along 0-direction
-	N1   int            // number of points along 1-direction
-	N2   int            // number of points along 2-direction [default = 1]
-	M2d  [][]*Metrics   // [n1][n0] metrics in 2D
-	M3d  [][][]*Metrics // [n2][n1][n0] metrics in 3D
+	ndim int            // space dimension
+	npts []int          // number of points along each direction
+	m2d  [][]*Metrics   // [n1][n0] metrics in 2D
+	m3d  [][][]*Metrics // [n2][n1][n0] metrics in 3D
 }
 
 // SetTransfinite2d sets grid from 2D transfinite mapping
@@ -26,9 +24,8 @@ type CurvGrid struct {
 func (o *CurvGrid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 
 	// input
-	o.Ndim = 2
-	o.N0 = len(R)
-	o.N1 = len(S)
+	o.ndim = 2
+	o.npts = []int{len(R), len(S), 0}
 
 	// auxiliary
 	x := la.NewVector(2)
@@ -37,17 +34,17 @@ func (o *CurvGrid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 	ddxdrr, ddxdss, ddxdrs := la.NewVector(2), la.NewVector(2), la.NewVector(2)
 
 	// compute metrics
-	o.M2d = make([][]*Metrics, o.N1)
-	for j := 0; j < o.N1; j++ {
-		o.M2d[j] = make([]*Metrics, o.N0)
-		for i := 0; i < o.N0; i++ {
+	o.m2d = make([][]*Metrics, o.npts[1])
+	for j := 0; j < o.npts[1]; j++ {
+		o.m2d[j] = make([]*Metrics, o.npts[0])
+		for i := 0; i < o.npts[0]; i++ {
 
 			// derivatives
 			u[0], u[1] = R[i], S[j]
 			trf.PointAndDerivs(x, dxdr, dxds, nil, ddxdrr, ddxdss, nil, ddxdrs, nil, nil, u)
 
 			// metrics
-			o.M2d[j][i] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
+			o.m2d[j][i] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
 		}
 	}
 }
@@ -56,10 +53,8 @@ func (o *CurvGrid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 func (o *CurvGrid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 
 	// input
-	o.Ndim = 3
-	o.N0 = len(R)
-	o.N1 = len(S)
-	o.N2 = len(T)
+	o.ndim = 3
+	o.npts = []int{len(R), len(S), len(T)}
 
 	// auxiliary
 	x := la.NewVector(3)
@@ -68,19 +63,19 @@ func (o *CurvGrid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 	ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst := la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3)
 
 	// compute metrics
-	o.M3d = make([][][]*Metrics, o.N2)
-	for k := 0; k < o.N2; k++ {
-		o.M3d[k] = make([][]*Metrics, o.N1)
-		for j := 0; j < o.N1; j++ {
-			o.M3d[k][j] = make([]*Metrics, o.N0)
-			for i := 0; i < o.N0; i++ {
+	o.m3d = make([][][]*Metrics, o.npts[2])
+	for k := 0; k < o.npts[2]; k++ {
+		o.m3d[k] = make([][]*Metrics, o.npts[1])
+		for j := 0; j < o.npts[1]; j++ {
+			o.m3d[k][j] = make([]*Metrics, o.npts[0])
+			for i := 0; i < o.npts[0]; i++ {
 
 				// derivatives
 				u[0], u[1], u[2] = R[i], S[j], T[k]
 				trf.PointAndDerivs(x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, u)
 
 				// metrics
-				o.M3d[k][j][i] = NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst)
+				o.m3d[k][j][i] = NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst)
 			}
 		}
 	}
@@ -94,10 +89,10 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 	if argsG1 == nil {
 		argsG1 = &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10}
 	}
-	if o.Ndim == 2 {
-		for j := 0; j < o.N1; j++ {
-			for i := 0; i < o.N0; i++ {
-				m := o.M2d[j][i]
+	if o.ndim == 2 {
+		for j := 0; j < o.npts[1]; j++ {
+			for i := 0; i < o.npts[0]; i++ {
+				m := o.m2d[j][i]
 				DrawArrow2d(m.X, m.CovG0, true, scale, argsG0)
 				DrawArrow2d(m.X, m.CovG1, true, scale, argsG1)
 			}
@@ -107,10 +102,10 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 	if argsG2 == nil {
 		argsG2 = &plt.A{C: plt.C(2, 0), Scale: 7, Z: 10}
 	}
-	for k := 0; k < o.N2; k++ {
-		for j := 0; j < o.N1; j++ {
-			for i := 0; i < o.N0; i++ {
-				m := o.M3d[k][j][i]
+	for k := 0; k < o.npts[2]; k++ {
+		for j := 0; j < o.npts[1]; j++ {
+			for i := 0; i < o.npts[0]; i++ {
+				m := o.m3d[k][j][i]
 				DrawArrow3d(m.X, m.CovG0, true, scale, argsG0)
 				DrawArrow3d(m.X, m.CovG1, true, scale, argsG1)
 				DrawArrow3d(m.X, m.CovG2, true, scale, argsG2)
