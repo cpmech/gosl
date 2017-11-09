@@ -34,9 +34,10 @@ func TestCurvGrid01(tst *testing.T) {
 	π := math.Pi
 	A := (b - a) / 2.0 // dρ/dr
 	B := π / 4.0       // dα/ds
+	p := 0             // z-index
 	for n := 0; n < cg.npts[1]; n++ {
 		for m := 0; m < cg.npts[0]; m++ {
-			mtr := cg.m2d[n][m]
+			mtr := cg.mtr[p][n][m]
 			ρ := a + (1.0+mtr.U[0])*A // cylindrical coordinates
 			α := (1.0 + mtr.U[1]) * B // cylindrical coordinates
 			cα, sα := math.Cos(α), math.Sin(α)
@@ -99,10 +100,10 @@ func TestCurvGrid02(tst *testing.T) {
 	π := math.Pi
 	A := (b - a) / 2.0 // dρ/dr
 	B := π / 4.0       // dα/ds
-	for o := 0; o < cg.npts[2]; o++ {
+	for p := 0; p < cg.npts[2]; p++ {
 		for n := 0; n < cg.npts[1]; n++ {
 			for m := 0; m < cg.npts[0]; m++ {
-				mtr := cg.m3d[o][n][m]
+				mtr := cg.mtr[p][n][m]
 				x0 := h * float64(m) / float64(cg.npts[0]-1)
 				ρ := a + (1.0+mtr.U[1])*A // cylindrical coordinates
 				α := (1.0 + mtr.U[2]) * B // cylindrical coordinates
