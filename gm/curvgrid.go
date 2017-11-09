@@ -5,8 +5,11 @@
 package gm
 
 import (
+	"math"
+
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 // CurvGrid holds metrics data for 2d or 3d grids represented by curvilinear coordinates
@@ -24,6 +27,10 @@ type CurvGrid struct {
 	ndim int            // space dimension
 	npts []int          // number of points along each direction. In 2D, npts[2] := 1
 	mtr  [][][]*Metrics // [n2][n1][n0] metrics in 2D (with n2=1) or 3D
+	umin []float64      // min reference coordinates [3]
+	umax []float64      // max reference coordinates [3]
+	xmin []float64      // min physical coordinates [3]
+	xmax []float64      // max physical coordinates [3]
 }
 
 // SetTransfinite2d sets grid from 2D transfinite mapping
@@ -58,6 +65,9 @@ func (o *CurvGrid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 			o.mtr[p][n][m] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
 		}
 	}
+
+	// limits
+	o.limits()
 }
 
 // SetTransfinite3d sets grid from 3D transfinite mapping
@@ -90,6 +100,9 @@ func (o *CurvGrid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 			}
 		}
 	}
+
+	// limits
+	o.limits()
 }
 
 // DrawBases draw basis vectors
@@ -121,6 +134,31 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 				DrawArrow3d(M.X, M.CovG0, true, scale, argsG0)
 				DrawArrow3d(M.X, M.CovG1, true, scale, argsG1)
 				DrawArrow3d(M.X, M.CovG2, true, scale, argsG2)
+			}
+		}
+	}
+}
+
+// auxiliary ///////////////////////////////////////////////////////////////////////////////////////
+
+func (o *CurvGrid) limits() {
+	o.umin = []float64{+math.MaxFloat64, +math.MaxFloat64, +math.MaxFloat64}
+	o.umax = []float64{-math.MaxFloat64, -math.MaxFloat64, -math.MaxFloat64}
+	o.xmin = []float64{+math.MaxFloat64, +math.MaxFloat64, +math.MaxFloat64}
+	o.xmax = []float64{-math.MaxFloat64, -math.MaxFloat64, -math.MaxFloat64}
+	if o.ndim == 2 {
+		o.umin[2], o.umax[2] = -1, -1
+		o.xmin[2], o.xmax[2] = 0, 0
+	}
+	for p := 0; p < o.npts[2]; p++ {
+		for n := 0; n < o.npts[1]; n++ {
+			for m := 0; m < o.npts[0]; m++ {
+				for i := 0; i < o.ndim; i++ {
+					o.umin[i] = utl.Min(o.umin[i], o.mtr[p][n][m].U[i])
+					o.umax[i] = utl.Max(o.umax[i], o.mtr[p][n][m].U[i])
+					o.xmin[i] = utl.Min(o.xmin[i], o.mtr[p][n][m].X[i])
+					o.xmax[i] = utl.Max(o.xmax[i], o.mtr[p][n][m].X[i])
+				}
 			}
 		}
 	}

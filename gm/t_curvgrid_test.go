@@ -30,7 +30,13 @@ func TestCurvGrid01(tst *testing.T) {
 	cg := new(CurvGrid)
 	cg.SetTransfinite2d(trf, R, S)
 
-	// check
+	// check limits
+	chk.Array(tst, "umin", 1e-15, cg.umin, []float64{-1, -1, -1})
+	chk.Array(tst, "umax", 1e-15, cg.umax, []float64{+1, +1, -1})
+	chk.Array(tst, "xmin", 1e-15, cg.xmin, []float64{0, 0, 0})
+	chk.Array(tst, "xmax", 1e-15, cg.xmax, []float64{b, b, 0})
+
+	// check metrics
 	π := math.Pi
 	A := (b - a) / 2.0 // dρ/dr
 	B := π / 4.0       // dα/ds
@@ -41,10 +47,10 @@ func TestCurvGrid01(tst *testing.T) {
 			ρ := a + (1.0+mtr.U[0])*A // cylindrical coordinates
 			α := (1.0 + mtr.U[1]) * B // cylindrical coordinates
 			cα, sα := math.Cos(α), math.Sin(α)
-			chk.Array(tst, "x      ", 1e-15, mtr.X, []float64{ρ * cα, ρ * sα})
-			chk.Array(tst, "CovG0  ", 1e-15, mtr.CovG0, []float64{cα * A, sα * A})
-			chk.Array(tst, "CovG1  ", 1e-15, mtr.CovG1, []float64{-ρ * sα * B, ρ * cα * B})
-			chk.Deep2(tst, "CovGmat", 1e-15, mtr.CovGmat.GetDeep2(), [][]float64{
+			chk.Array(tst, "x      ", 1e-14, mtr.X, []float64{ρ * cα, ρ * sα})
+			chk.Array(tst, "CovG0  ", 1e-14, mtr.CovG0, []float64{cα * A, sα * A})
+			chk.Array(tst, "CovG1  ", 1e-14, mtr.CovG1, []float64{-ρ * sα * B, ρ * cα * B})
+			chk.Deep2(tst, "CovGmat", 1e-14, mtr.CovGmat.GetDeep2(), [][]float64{
 				{A * A, 0.0},
 				{0.0, ρ * ρ * B * B},
 			})
@@ -52,7 +58,7 @@ func TestCurvGrid01(tst *testing.T) {
 				{1.0 / (A * A), 0.0},
 				{0.0, 1.0 / (ρ * ρ * B * B)},
 			})
-			chk.Deep3(tst, "GammaS", 1e-15, mtr.GammaS, [][][]float64{
+			chk.Deep3(tst, "GammaS", 1e-14, mtr.GammaS, [][][]float64{
 				{
 					{0, 0},
 					{0, -ρ * B * B / A},
@@ -95,6 +101,12 @@ func TestCurvGrid02(tst *testing.T) {
 	// curvgrid
 	cg := new(CurvGrid)
 	cg.SetTransfinite3d(trf, R, S, T)
+
+	// check limits
+	chk.Array(tst, "umin", 1e-15, cg.umin, []float64{-1, -1, -1})
+	chk.Array(tst, "umax", 1e-15, cg.umax, []float64{+1, +1, +1})
+	chk.Array(tst, "xmin", 1e-15, cg.xmin, []float64{0, 0, 0})
+	chk.Array(tst, "xmax", 1e-15, cg.xmax, []float64{h, b, b})
 
 	// check
 	π := math.Pi
