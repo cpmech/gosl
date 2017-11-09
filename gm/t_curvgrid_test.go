@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -71,6 +72,32 @@ func TestCurvGrid01(tst *testing.T) {
 			chk.Array(tst, "L", 1e-14, mtr.L, []float64{-1.0 / (ρ * A), 0})
 		}
 	}
+
+	// check interface functions
+	io.Pl()
+	chk.Int(tst, "Ndim()", cg.Ndim(), 2)
+	chk.Int(tst, "Npts(0)", cg.Npts(0), len(R))
+	chk.Int(tst, "Size()", cg.Size(), len(R)*len(S))
+	chk.Float64(tst, "Umin(0)", 1e-14, cg.Umin(0), -1)
+	chk.Float64(tst, "Umax(0)", 1e-14, cg.Umax(0), +1)
+	chk.Float64(tst, "Xmin(0)", 1e-14, cg.Xmin(0), 0)
+	chk.Float64(tst, "Xmax(0)", 1e-14, cg.Xmax(0), b)
+	chk.Array(tst, "U(0,0,0)", 1e-14, cg.U(0, 0, 0), []float64{-1, -1})
+	chk.Array(tst, "X(0,0,0)", 1e-14, cg.X(0, 0, 0), []float64{a, 0})
+	chk.Array(tst, "g0(0,0,0)", 1e-14, cg.CovarBasis(0, 0, 0, 0), []float64{A, 0})
+	chk.Array(tst, "g1(0,0,0)", 1e-14, cg.CovarBasis(0, 0, 0, 1), []float64{0, a * B})
+	chk.Array(tst, "g2(0,0,0)", 1e-14, cg.CovarBasis(0, 0, 0, 2), nil)
+	chk.Deep2(tst, "g_ij(0,0,0)", 1e-14, cg.CovarMatrix(0, 0, 0).GetDeep2(), [][]float64{
+		{A * A, 0},
+		{0, a * a * B * B},
+	})
+	chk.Deep2(tst, "g^ij(0,0,0)", 1e-14, cg.ContraMatrix(0, 0, 0).GetDeep2(), [][]float64{
+		{1.0 / (A * A), 0},
+		{0, 1.0 / (a * a * B * B)},
+	})
+	chk.Float64(tst, "det(g)(0,0,0)", 1e-14, cg.DetCovarMatrix(0, 0, 0), A*A*a*a*B*B)
+	chk.Float64(tst, "Γ(0,0,0; 0,1,1)", 1e-14, cg.GammaS(0, 0, 0, 0, 1, 1), -a*B*B/A)
+	chk.Float64(tst, "L(0,0,0; 0)", 1e-14, cg.Lcoeff(0, 0, 0, 0), -1.0/(a*A))
 
 	// plot
 	if chk.Verbose {
@@ -155,6 +182,34 @@ func TestCurvGrid02(tst *testing.T) {
 			}
 		}
 	}
+
+	// check interface functions
+	io.Pl()
+	chk.Int(tst, "Ndim()", cg.Ndim(), 3)
+	chk.Int(tst, "Npts(0)", cg.Npts(0), len(R))
+	chk.Int(tst, "Size()", cg.Size(), len(R)*len(S)*len(T))
+	chk.Float64(tst, "Umin(2)", 1e-14, cg.Umin(2), -1)
+	chk.Float64(tst, "Umax(2)", 1e-14, cg.Umax(2), +1)
+	chk.Float64(tst, "Xmin(2)", 1e-14, cg.Xmin(2), 0)
+	chk.Float64(tst, "Xmax(2)", 1e-14, cg.Xmax(2), b)
+	chk.Array(tst, "U(0,0,0)", 1e-14, cg.U(0, 0, 0), []float64{-1, -1, -1})
+	chk.Array(tst, "X(0,0,0)", 1e-14, cg.X(0, 0, 0), []float64{0, a, 0})
+	chk.Array(tst, "g0(0,0,0)", 1e-14, cg.CovarBasis(0, 0, 0, 0), []float64{1, 0, 0})
+	chk.Array(tst, "g1(0,0,0)", 1e-14, cg.CovarBasis(0, 0, 0, 1), []float64{0, A, 0})
+	chk.Array(tst, "g2(0,0,0)", 1e-14, cg.CovarBasis(0, 0, 0, 2), []float64{0, 0, a * B})
+	chk.Deep2(tst, "g_ij(0,0,0)", 1e-14, cg.CovarMatrix(0, 0, 0).GetDeep2(), [][]float64{
+		{1.0, 0.0, 0.0},
+		{0.0, A * A, 0.0},
+		{0.0, 0.0, a * a * B * B},
+	})
+	chk.Deep2(tst, "g^ij(0,0,0)", 1e-14, cg.ContraMatrix(0, 0, 0).GetDeep2(), [][]float64{
+		{1.0, 0.0, 0.0},
+		{0.0, 1.0 / (A * A), 0.0},
+		{0.0, 0.0, 1.0 / (a * a * B * B)},
+	})
+	chk.Float64(tst, "det(g)(0,0,0)", 1e-14, cg.DetCovarMatrix(0, 0, 0), A*A*a*a*B*B)
+	chk.Float64(tst, "Γ(0,0,0; 1,2,2)", 1e-14, cg.GammaS(0, 0, 0, 1, 2, 2), -a*B*B/A)
+	chk.Float64(tst, "L(0,0,0; 1)", 1e-14, cg.Lcoeff(0, 0, 0, 1), -1.0/(a*A))
 
 	// plot
 	if chk.Verbose {

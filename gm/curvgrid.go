@@ -139,6 +139,89 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 	}
 }
 
+// interface methods //////////////////////////////////////////////////////////////////////////////
+
+// Ndim returns the number of dimensions (2D or 3D)
+func (o *CurvGrid) Ndim() int {
+	return o.ndim
+}
+
+// Npts returns number of points along idim dimension
+func (o *CurvGrid) Npts(idim int) int {
+	return o.npts[idim]
+}
+
+// Size returns total number of points
+func (o *CurvGrid) Size() int {
+	return o.npts[0] * o.npts[1] * o.npts[2]
+}
+
+// Umin returns the minimum reference coordinate at dimension idim
+func (o *CurvGrid) Umin(idim int) float64 {
+	return o.umin[idim]
+}
+
+// Umax returns the maximum reference coordinate at dimension idim
+func (o *CurvGrid) Umax(idim int) float64 {
+	return o.umax[idim]
+}
+
+// Xmin returns the minimum physical coordinate at dimension idim
+func (o *CurvGrid) Xmin(idim int) float64 {
+	return o.xmin[idim]
+}
+
+// Xmax returns the maximum physical coordinate at dimension idim
+func (o *CurvGrid) Xmax(idim int) float64 {
+	return o.xmax[idim]
+}
+
+// U returns the reference coordinates at point m,n,p
+func (o *CurvGrid) U(m, n, p int) la.Vector {
+	return o.mtr[p][n][m].U
+}
+
+// X returns the physical coordinates at point m,n,p
+func (o *CurvGrid) X(m, n, p int) la.Vector {
+	return o.mtr[p][n][m].X
+}
+
+// CovarBasis returns the [k] covariant basis g_{k} = d{x[k]}/d{u[k]} [@ point m,n,p]
+func (o *CurvGrid) CovarBasis(m, n, p, k int) la.Vector {
+	if k == 0 {
+		return o.mtr[p][n][m].CovG0
+	}
+	if k == 1 {
+		return o.mtr[p][n][m].CovG1
+	}
+	return o.mtr[p][n][m].CovG2
+}
+
+// CovarMatrix returns the covariant metrics g_ij = g_i ⋅ g_j [@ point m,n,p]
+func (o *CurvGrid) CovarMatrix(m, n, p int) *la.Matrix {
+	return o.mtr[p][n][m].CovGmat
+}
+
+// ContraMatrix returns contravariant metrics g^ij = g^i ⋅ g^j [@ point m,n,p]
+func (o *CurvGrid) ContraMatrix(m, n, p int) *la.Matrix {
+	return o.mtr[p][n][m].CntGmat
+}
+
+// DetCovarMatrix returns the determinant of covariant g matrix = det(CovariantMatrix) [@ point m,n,p]
+func (o *CurvGrid) DetCovarMatrix(m, n, p int) float64 {
+	return o.mtr[p][n][m].DetCovGmat
+}
+
+// GammaS returns the [k][i][j] Christoffel coefficients of second kind [@ point m,n,p]
+func (o *CurvGrid) GammaS(m, n, p, k, i, j int) float64 {
+	return o.mtr[p][n][m].GammaS[k][i][j]
+}
+
+// Lcoeff returns the [k] L-coefficients = sum(Γ_ij^k ⋅ g^ij) [@ point m,n,p]
+func (o *CurvGrid) Lcoeff(m, n, p, k int) float64 {
+	return o.mtr[p][n][m].L[k]
+}
+
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
 func (o *CurvGrid) limits() {
