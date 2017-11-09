@@ -215,7 +215,6 @@ func DrawArrow2d(c, v []float64, normalize bool, sf float64, args *A) {
 			y /= s
 		}
 	}
-	io.Pforan("x=%v y=%v\n", x, y)
 	Arrow(c[0], c[1], c[0]+x*sf, c[1]+y*sf, args)
 }
 
