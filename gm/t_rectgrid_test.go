@@ -16,24 +16,23 @@ func TestRectGrid01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("RectGrid01")
 
-	g := new(RectGrid)
-	g.GenUniform([]float64{-6, -3}, []float64{6, 3}, []int{4, 3}, true)
+	g := new(CurvGrid)
+	g.RectGenUniform([]float64{-6, -3}, []float64{6, 3}, []int{5, 4})
 
 	chk.Int(tst, "ndim", g.Ndim(), 2)
 	chk.Int(tst, "size", g.Size(), 20)
 	chk.Int(tst, "nx", g.Npts(0), 5)
 	chk.Int(tst, "ny", g.Npts(1), 4)
 
-	chk.Float64(tst, "Lx", 1e-15, g.Length(0), 12.0)
-	chk.Float64(tst, "Ly", 1e-15, g.Length(1), 6.0)
+	chk.Float64(tst, "Lx", 1e-15, g.Xlength(0), 12.0)
+	chk.Float64(tst, "Ly", 1e-15, g.Xlength(1), 6.0)
 
-	xx, yy := g.Mesh2d()
-	min := []float64{g.Min(0), g.Min(1)}
-	max := []float64{g.Max(0), g.Max(1)}
-	del := []float64{g.Length(0), g.Length(1)}
+	min := []float64{g.Xmin(0), g.Xmin(1)}
+	max := []float64{g.Xmax(0), g.Xmax(1)}
+	del := []float64{g.Xlength(0), g.Xlength(1)}
 
 	chk.Array(tst, "Min", 1e-17, min, []float64{-6, -3})
-	chk.Array(tst, "Max", 1e-17, max, []float64{6, 3})
+	chk.Array(tst, "Max", 1e-17, max, []float64{+6, +3})
 	chk.Array(tst, "Del", 1e-17, del, []float64{12, 6})
 
 	chk.Ints(tst, "B", g.Edge(0), []int{0, 1, 2, 3, 4})
@@ -46,35 +45,38 @@ func TestRectGrid01(tst *testing.T) {
 	chk.Ints(tst, "Tag # 20: B", g.EdgeT(20), []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "Tag # 21: T", g.EdgeT(21), []int{15, 16, 17, 18, 19})
 
-	chk.Deep2(tst, "x2d", 1e-17, xx, [][]float64{
+	xx, yy := g.Meshgrid2d()
+	chk.Deep2(tst, "xx", 1e-17, xx, [][]float64{
 		{-6, -3, 0, 3, 6},
 		{-6, -3, 0, 3, 6},
 		{-6, -3, 0, 3, 6},
 		{-6, -3, 0, 3, 6},
 	})
-	chk.Deep2(tst, "y2d", 1e-17, yy, [][]float64{
+	chk.Deep2(tst, "yy", 1e-17, yy, [][]float64{
 		{-3, -3, -3, -3, -3},
 		{-1, -1, -1, -1, -1},
 		{+1, +1, +1, +1, +1},
 		{+3, +3, +3, +3, +3},
 	})
 
-	chk.Array(tst, "x[0]", 1e-17, g.GetNode(0), []float64{-6, -3})
-	chk.Array(tst, "x[7]", 1e-17, g.GetNode(7), []float64{0, -1})
-	chk.Array(tst, "x[9]", 1e-17, g.GetNode(9), []float64{6, -1})
-	chk.Array(tst, "x[15]", 1e-17, g.GetNode(15), []float64{-6, 3})
-	chk.Array(tst, "x[19]", 1e-17, g.GetNode(19), []float64{6, 3})
+	chk.Array(tst, "x[0]", 1e-17, g.Node(0), []float64{-6, -3})
+	chk.Array(tst, "x[7]", 1e-17, g.Node(7), []float64{0, -1})
+	chk.Array(tst, "x[9]", 1e-17, g.Node(9), []float64{6, -1})
+	chk.Array(tst, "x[15]", 1e-17, g.Node(15), []float64{-6, 3})
+	chk.Array(tst, "x[19]", 1e-17, g.Node(19), []float64{6, 3})
 
 	// plot
 	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		g.Draw(true, nil, nil)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.SetXnticks(12)
-		plt.SetYnticks(12)
-		plt.Save("/tmp/gosl/gm", "rectgrid01")
+		/*
+			plt.Reset(true, &plt.A{WidthPt: 500})
+			g.Draw(true, nil, nil)
+			plt.Grid(&plt.A{C: "grey"})
+			plt.Equal()
+			plt.HideAllBorders()
+			plt.SetXnticks(12)
+			plt.SetYnticks(12)
+			plt.Save("/tmp/gosl/gm", "rectgrid01")
+		*/
 	}
 }
 
