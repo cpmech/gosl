@@ -599,14 +599,14 @@ func Test_plot13(tst *testing.T) {
 		}
 
 		V := [][]float64{
-			{dy, dy + 1},
-			{dy, dy + 1},
-			{dy, dy + 1},
+			{dy + 0, dy + 1},
+			{dy + 0, dy + 1},
+			{dy + 0, dy + 1},
 		}
 
 		Reset(false, nil)
-		Grid3dZlevels(X, Y, Zlevels, &A{C: "b", NoClip: true})
-		Grid3dZlevels(U, V, Zlevels, &A{C: "r", NoClip: true})
+		Grid3dZlevels(X, Y, Zlevels, true, &A{Lw: 1, C: C(0, 0)}, &A{Fsz: 7, C: C(1, 0)})
+		Grid3dZlevels(U, V, Zlevels, true, &A{Lw: 1, C: C(2, 0)}, &A{Fsz: 7, C: C(3, 0)})
 		DefaultTriad(1.1)
 		Default3dView(0, 1.1+dx, 0, 1.1+dy, 0, 1.1, true)
 
@@ -617,12 +617,136 @@ func Test_plot13(tst *testing.T) {
 func Test_plot14(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("plot14. Sphere")
+	chk.PrintTitle("plot14. Grid3dZlevels")
 
 	if chk.Verbose {
-		Reset(true, nil)
-		Sphere(nil, 1, 30, 30, &A{Surf: true})
-		Default3dView(-1.1, 1.1, -1.1, 1.1, -1.1, 1.1, true)
+
+		X := [][][]float64{
+			{ // z=0
+				{0, 0.5, 1},
+				{0, 0.5, 1},
+			},
+			{ // z=1
+				{0, 0.5, 1},
+				{0, 0.5, 1},
+			},
+		}
+
+		Y := [][][]float64{
+			{
+				{0, 0, 0},
+				{1, 1, 1},
+			},
+			{
+				{0, 0, 0},
+				{0.5, 0.5, 0.5},
+			},
+		}
+
+		Z := [][][]float64{
+			{
+				{0, 0, 0},
+				{0, 0, 0},
+			},
+			{
+				{1, 1, 1},
+				{1, 1, 1},
+			},
+		}
+
+		dx, dy := 1.1, 1.1
+		U := [][][]float64{
+			{ // z=0
+				{dx + 0.0, dx + 0.0},
+				{dx + 0.5, dx + 0.5},
+				{dx + 1.0, dx + 1.0},
+			}, // z=1
+			{
+				{dx + 0.0 - 0.5, dx + 0.0 - 0.5},
+				{dx + 0.5 - 0.5, dx + 0.5 - 0.5},
+				{dx + 1.0 - 0.5, dx + 1.0 - 0.5},
+			},
+		}
+
+		V := [][][]float64{
+			{
+				{dy + 0, dy + 1},
+				{dy + 0, dy + 1},
+				{dy + 0, dy + 1},
+			},
+			{
+				{dy + 0, dy + 1},
+				{dy + 0, dy + 1},
+				{dy + 0, dy + 1},
+			},
+		}
+
+		W := [][][]float64{
+			{
+				{0, 0},
+				{0, 0},
+				{0, 0},
+			},
+			{
+				{1, 1},
+				{1, 1},
+				{1, 1},
+			},
+		}
+
+		dx, dy = 2, 0
+		M := [][][]float64{
+			{ // y=0, y=1
+				{dx + 0, dx + 0}, // z=0
+				{dx + 0, dx + 0}, // z=1
+			},
+			{
+				{dx + 0.5, dx + 0.5},
+				{dx + 0.5, dx + 0.5},
+			},
+			{
+				{dx + 1, dx + 1},
+				{dx + 1, dx + 1},
+			},
+		}
+
+		N := [][][]float64{
+			{
+				{0, 1},
+				{0, 1},
+			},
+			{
+				{0, 1},
+				{0, 1},
+			},
+			{
+				{0, 1},
+				{0, 1},
+			},
+		}
+
+		P := [][][]float64{
+			{
+				{0, 0},
+				{1, 1},
+			},
+			{
+				{0, 0},
+				{1, 1},
+			},
+			{
+				{0, 0},
+				{1, 1},
+			},
+		}
+
+		Reset(false, nil)
+		Grid3d(X, Y, Z, true, &A{Lw: 1, C: C(0, 0)}, &A{Fsz: 7, C: C(1, 0)})
+		Grid3d(U, V, W, true, &A{Lw: 1, C: C(2, 0)}, &A{Fsz: 7, C: C(3, 0)})
+		Grid3d(M, N, P, true, &A{Lw: 2, C: C(4, 0)}, &A{Fsz: 7, C: "k"})
+		DefaultTriad(1.1)
+		Default3dView(0, 1.1+dx, 0, 1.1+dy, 0, 1.1, true)
+
 		Save("/tmp/gosl/plt", "t_plot14")
 	}
 }
@@ -679,5 +803,18 @@ func Test_plot15(tst *testing.T) {
 		Default3dView(1, 8, 0, 4, -1, -0.5, true)
 
 		Save("/tmp/gosl/plt", "t_plot15")
+	}
+}
+
+func Test_plot16(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("plot14. Sphere")
+
+	if chk.Verbose {
+		Reset(true, nil)
+		Sphere(nil, 1, 30, 30, &A{Surf: true})
+		Default3dView(-1.1, 1.1, -1.1, 1.1, -1.1, 1.1, true)
+		Save("/tmp/gosl/plt", "t_plot16")
 	}
 }

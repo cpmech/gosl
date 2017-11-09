@@ -331,7 +331,7 @@ func (o *RectGrid) Draw(withTxt bool, argsGrid, argsTxt *plt.A) (coordsGenerated
 	if o.ndim == 2 {
 		plt.Grid2d(o.x2d, o.y2d, false, argsGrid, nil)
 	} else {
-		plt.Grid3dZlevels(o.x3d[0], o.y3d[0], o.coords[2], argsGrid)
+		plt.Grid3dZlevels(o.x3d[0], o.y3d[0], o.coords[2], false, argsGrid, nil)
 	}
 
 	// grid txt

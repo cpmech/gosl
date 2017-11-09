@@ -210,29 +210,37 @@ func Diag3d(scale float64, args *A) {
 }
 
 // Grid3dZlevels draws grid lines (and points) of 3D grid
-func Grid3dZlevels(X, Y [][]float64, Zlevels []float64, argsLines *A) {
+func Grid3dZlevels(X, Y [][]float64, Zlevels []float64, withIDs bool, argsLines, argsIDs *A) {
 	if len(X) < 2 || len(Y) < 2 || len(Zlevels) < 2 {
 		return
 	}
 	if argsLines == nil {
-		argsLines = &A{C: "k", NoClip: true}
+		argsLines = &A{C: "#427ce5", Lw: 0.8, NoClip: true}
 	}
-	n0 := len(X)
-	n1 := len(X[0])
+	if argsIDs == nil {
+		argsIDs = &A{C: C(2, 0), Fsz: 6}
+	}
 	n2 := len(Zlevels)
+	n1 := len(X)
+	n0 := len(X[0])
 	xx := make([]float64, 2) // min,max
 	yy := make([]float64, 2) // min,max
 	zz := make([]float64, 2) // min,max
-	Z := utl.Alloc(n0, n1)
+	Z := utl.Alloc(n1, n0)
+	idx := 0
 	for k := 0; k < n2; k++ {
-		for i := 0; i < n0; i++ {
-			for j := 0; j < n1; j++ {
-				Z[i][j] = Zlevels[k]
+		for j := 0; j < n1; j++ {
+			for i := 0; i < n0; i++ {
+				Z[j][i] = Zlevels[k]
 				if k > 0 { // vertical lines
-					xx[0], xx[1] = X[i][j], X[i][j]
-					yy[0], yy[1] = Y[i][j], Y[i][j]
+					xx[0], xx[1] = X[j][i], X[j][i]
+					yy[0], yy[1] = Y[j][i], Y[j][i]
 					zz[0], zz[1] = Zlevels[k], Zlevels[k-1]
 					Plot3dLine(xx, yy, zz, argsLines)
+				}
+				if withIDs {
+					Text3d(X[j][i], Y[j][i], Z[j][i], io.Sf("%d", idx), argsIDs)
+					idx++
 				}
 			}
 		}
@@ -241,7 +249,6 @@ func Grid3dZlevels(X, Y [][]float64, Zlevels []float64, argsLines *A) {
 }
 
 // Grid3d draws grid lines (and points) of 3D grid
-//  NOTE: assuming that the meshgrid is organised as [z][y][x]
 func Grid3d(X, Y, Z [][][]float64, withIDs bool, argsLines *A, argsIDs *A) {
 	if len(X) < 2 || len(Y) < 2 || len(Z) < 2 {
 		return
