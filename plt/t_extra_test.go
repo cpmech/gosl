@@ -199,3 +199,37 @@ func TestMatrixSym01(tst *testing.T) {
 		Save("/tmp/gosl/plt", "t_matrixsym01")
 	}
 }
+
+func TestDrawArrow2d(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("DrawArrow2d")
+
+	if chk.Verbose {
+		Reset(true, &A{WidthPt: 500})
+		Circle(0, 0, 1, &A{C: "grey", Lw: 0.8})
+		DrawArrow2d([]float64{0, 0}, []float64{123, 0}, true, 1, nil)
+		DrawArrow2d([]float64{0, 0}, []float64{66, 66}, true, 1, nil)
+		DrawArrow2d([]float64{0, 0}, []float64{0, 88}, true, 1, nil)
+		Equal()
+		Grid(nil)
+		Save("/tmp/gosl/plt", "t_arrow2d")
+	}
+}
+
+func TestDrawArrow3d(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("DrawArrow3d")
+
+	if chk.Verbose {
+		Reset(true, &A{WidthPt: 500})
+		DrawArrow3d([]float64{0, 0, 0}, []float64{12, 0, 0}, true, 1, nil)
+		DrawArrow3d([]float64{0, 0, 0}, []float64{66, 66, 66}, true, 1, nil)
+		DrawArrow3d([]float64{0, 0, 0}, []float64{0, 88, 0}, true, 1, nil)
+		DrawArrow3d([]float64{0, 0, 0}, []float64{0, 0, 88}, true, 1, nil)
+		Camera(40, 30, nil)
+		Equal()
+		Save("/tmp/gosl/plt", "t_arrow3d")
+	}
+}

@@ -203,3 +203,34 @@ func SubplotMatrixSym(nrow, ncol int, cmds func(i, j int), corner func()) (n, co
 	}
 	return
 }
+
+// DrawArrow2d draws 2d arrow @ c with direction v
+func DrawArrow2d(c, v []float64, normalize bool, sf float64, args *A) {
+	x := v[0]
+	y := v[1]
+	if normalize {
+		s := math.Sqrt(x*x + y*y)
+		if s > 0 {
+			x /= s
+			y /= s
+		}
+	}
+	io.Pforan("x=%v y=%v\n", x, y)
+	Arrow(c[0], c[1], c[0]+x*sf, c[1]+y*sf, args)
+}
+
+// DrawArrow3d draws 3d arrow @ c with direction v
+func DrawArrow3d(c, v []float64, normalize bool, sf float64, args *A) {
+	x := v[0]
+	y := v[1]
+	z := v[2]
+	if normalize {
+		s := math.Sqrt(x*x + y*y + z*z)
+		if s > 0 {
+			x /= s
+			y /= s
+			z /= s
+		}
+	}
+	Draw3dVector(c, []float64{x, y, z}, sf, false, args)
+}
