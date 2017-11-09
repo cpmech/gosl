@@ -112,8 +112,8 @@ func TestTransfinite01(tst *testing.T) {
 			for _, r := range rvals {
 				u[0], u[1] = r, s
 				trf.PointAndDerivs(x, dxDr, dxDs, nil, nil, nil, nil, nil, nil, nil, u)
-				DrawArrow2d(x, dxDr, true, 0.3, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
-				DrawArrow2d(x, dxDs, true, 0.3, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
+				plt.DrawArrow2d(x, dxDr, true, 0.3, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
+				plt.DrawArrow2d(x, dxDs, true, 0.3, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
 			}
 		}
 		plt.HideAllBorders()
@@ -217,8 +217,8 @@ func TestTransfinite02(tst *testing.T) {
 			for _, r := range rvals {
 				u[0], u[1] = r, s
 				trf.PointAndDerivs(x, dxDr, dxDs, nil, nil, nil, nil, nil, nil, nil, u)
-				DrawArrow2d(x, dxDr, true, 0.3, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
-				DrawArrow2d(x, dxDs, true, 0.3, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
+				plt.DrawArrow2d(x, dxDr, true, 0.3, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
+				plt.DrawArrow2d(x, dxDs, true, 0.3, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
 			}
 		}
 		plt.HideAllBorders()
@@ -432,8 +432,8 @@ func TestTransfinite03(tst *testing.T) {
 			for _, r := range rvals {
 				u[0], u[1] = r, s
 				trf.PointAndDerivs(x, dxDr, dxDs, nil, nil, nil, nil, nil, nil, nil, u)
-				DrawArrow2d(x, dxDr, true, 0.15, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
-				DrawArrow2d(x, dxDs, true, 0.15, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
+				plt.DrawArrow2d(x, dxDr, true, 0.15, &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10})
+				plt.DrawArrow2d(x, dxDs, true, 0.15, &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10})
 			}
 		}
 		plt.AxisOff()

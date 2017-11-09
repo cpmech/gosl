@@ -217,8 +217,8 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 		for n := 0; n < o.npts[1]; n++ {
 			for m := 0; m < o.npts[0]; m++ {
 				M := o.mtr[p][n][m]
-				DrawArrow2d(M.X, M.CovG0, true, scale, argsG0)
-				DrawArrow2d(M.X, M.CovG1, true, scale, argsG1)
+				plt.DrawArrow2d(M.X, M.CovG0, true, scale, argsG0)
+				plt.DrawArrow2d(M.X, M.CovG1, true, scale, argsG1)
 			}
 		}
 		return
@@ -230,9 +230,9 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 		for n := 0; n < o.npts[1]; n++ {
 			for m := 0; m < o.npts[0]; m++ {
 				M := o.mtr[p][n][m]
-				DrawArrow3d(M.X, M.CovG0, true, scale, argsG0)
-				DrawArrow3d(M.X, M.CovG1, true, scale, argsG1)
-				DrawArrow3d(M.X, M.CovG2, true, scale, argsG2)
+				plt.DrawArrow3d(M.X, M.CovG0, true, scale, argsG0)
+				plt.DrawArrow3d(M.X, M.CovG1, true, scale, argsG1)
+				plt.DrawArrow3d(M.X, M.CovG2, true, scale, argsG2)
 			}
 		}
 	}

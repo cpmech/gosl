@@ -67,9 +67,13 @@ func TestRectGrid01(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		gp := GridPlotter{G: g}
+		gp := GridPlotter{
+			G:        g,
+			WithVids: true,
+		}
 		plt.Reset(true, &plt.A{WidthPt: 500})
 		gp.Draw()
+		gp.Bases(1)
 		plt.Grid(&plt.A{C: "grey"})
 		plt.Equal()
 		plt.HideAllBorders()
