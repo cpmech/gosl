@@ -540,31 +540,31 @@ func Test_plot12(tst *testing.T) {
 	if chk.Verbose {
 
 		X := [][]float64{
-			{0, 0.5, 1},
-			{0, 0.5, 1},
+			{0, 0.5, 1}, // j=0
+			{0, 0.5, 1}, // j=1
 		}
 
 		Y := [][]float64{
-			{0, 0, 0},
-			{1, 1, 1},
+			{0, 0, 0}, // j=0
+			{1, 1, 1}, // j=1
 		}
 
 		dx, dy := 1.1, 1.1
 		U := [][]float64{
-			{dx + 0.0, dx + 0.0},
-			{dx + 0.5, dx + 0.5},
-			{dx + 1.0, dx + 1.0},
+			{dx + 0.0, dx + 0.0}, // j=0
+			{dx + 0.5, dx + 0.5}, // j=1
+			{dx + 1.0, dx + 1.0}, // j=2
 		}
 
 		V := [][]float64{
-			{dy, dy + 1},
-			{dy, dy + 1},
-			{dy, dy + 1},
+			{dy, dy + 1}, // j=0
+			{dy, dy + 1}, // j=1
+			{dy, dy + 1}, // j=2
 		}
 
 		Reset(false, nil)
-		Grid2d(X, Y, true, &A{C: "r", NoClip: true}, nil)
-		Grid2d(U, V, true, &A{C: "b"}, nil)
+		Grid2d(X, Y, true, &A{C: "b", NoClip: true}, &A{C: "r", Fsz: 7})
+		Grid2d(U, V, true, &A{C: "r", NoClip: true}, &A{C: "b", Fsz: 7})
 		HideAllBorders()
 		Equal()
 
@@ -580,28 +580,28 @@ func Test_plot13(tst *testing.T) {
 	if chk.Verbose {
 
 		X := [][]float64{
-			{0, 0.5, 1},
-			{0, 0.5, 1},
+			{0, 0.5, 1}, // j=0
+			{0, 0.5, 1}, // j=1
 		}
 
 		Y := [][]float64{
-			{0, 0, 0},
-			{1, 1, 1},
+			{0, 0, 0}, // j=0
+			{1, 1, 1}, // j=1
 		}
 
-		Zlevels := []float64{0, 1}
+		Zlevels := []float64{0, 1} // k=0,1
 
 		dx, dy := 1.1, 1.1
 		U := [][]float64{
-			{dx + 0.0, dx + 0.0},
-			{dx + 0.5, dx + 0.5},
-			{dx + 1.0, dx + 1.0},
+			{dx + 0.0, dx + 0.0}, // j=0
+			{dx + 0.5, dx + 0.5}, // j=1
+			{dx + 1.0, dx + 1.0}, // j=2
 		}
 
 		V := [][]float64{
-			{dy + 0, dy + 1},
-			{dy + 0, dy + 1},
-			{dy + 0, dy + 1},
+			{dy + 0, dy + 1}, // j=0
+			{dy + 0, dy + 1}, // j=1
+			{dy + 0, dy + 1}, // j=2
 		}
 
 		Reset(false, nil)
@@ -622,11 +622,11 @@ func Test_plot14(tst *testing.T) {
 	if chk.Verbose {
 
 		X := [][][]float64{
-			{ // z=0
-				{0, 0.5, 1},
-				{0, 0.5, 1},
+			{ // k=0
+				{0, 0.5, 1}, // j=0
+				{0, 0.5, 1}, // j=1
 			},
-			{ // z=1
+			{ // k=1
 				{0, 0.5, 1},
 				{0, 0.5, 1},
 			},
@@ -656,11 +656,11 @@ func Test_plot14(tst *testing.T) {
 
 		dx, dy := 1.1, 1.1
 		U := [][][]float64{
-			{ // z=0
-				{dx + 0.0, dx + 0.0},
-				{dx + 0.5, dx + 0.5},
-				{dx + 1.0, dx + 1.0},
-			}, // z=1
+			{ // k=0
+				{dx + 0.0, dx + 0.0}, // j=0
+				{dx + 0.5, dx + 0.5}, // j=1
+				{dx + 1.0, dx + 1.0}, // j=2
+			}, // k=1
 			{
 				{dx + 0.0 - 0.5, dx + 0.0 - 0.5},
 				{dx + 0.5 - 0.5, dx + 0.5 - 0.5},
@@ -696,9 +696,9 @@ func Test_plot14(tst *testing.T) {
 
 		dx, dy = 2, 0
 		M := [][][]float64{
-			{ // y=0, y=1
-				{dx + 0, dx + 0}, // z=0
-				{dx + 0, dx + 0}, // z=1
+			{ // k=0
+				{dx + 0, dx + 0}, // j=0
+				{dx + 0, dx + 0}, // j=1
 			},
 			{
 				{dx + 0.5, dx + 0.5},
@@ -759,10 +759,10 @@ func Test_plot15(tst *testing.T) {
 	if chk.Verbose {
 
 		X := [][][]float64{
-			{
-				{1, 2, 4, 8},
-				{1, 2, 4, 8},
-				{1, 2, 4, 8},
+			{ // k=0
+				{1, 2, 4, 8}, // j=0
+				{1, 2, 4, 8}, // j=1
+				{1, 2, 4, 8}, // j=2
 			},
 			{
 				{2, 3, 5, 9},

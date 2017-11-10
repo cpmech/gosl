@@ -457,33 +457,40 @@ func Hist(x [][]float64, labels []string, args *A) {
 	updateBufferAndClose(&bufferPy, args, true, false)
 }
 
-// Grid2d draws grid lines (and points) of 2D grid
+// Grid2d draws grid lines of 2D grid
+//   withIDs -- add text with IDs numbered by looping over {X,Y}[j][i] (j:outer, i:inner)
 func Grid2d(X, Y [][]float64, withIDs bool, argsLines, argsIDs *A) {
+	if len(X) < 2 || len(Y) < 2 {
+		return
+	}
 	if argsLines == nil {
 		argsLines = &A{C: "#427ce5", Lw: 0.8, NoClip: true}
 	}
 	if argsIDs == nil {
 		argsIDs = &A{C: C(2, 0), Fsz: 6}
 	}
-	for i := 0; i < len(X); i++ {
-		Plot(X[i], Y[i], argsLines)
-	}
-	nrows := len(X)
-	if nrows < 1 {
-		return
-	}
-	ncols := len(X[0])
-	x, y := make([]float64, nrows), make([]float64, nrows)
+	n1 := len(X)
+	n0 := len(X[0])
+	xx := make([]float64, 2) // min,max
+	yy := make([]float64, 2) // min,max
 	idx := 0
-	for j := 0; j < ncols; j++ {
-		for i := 0; i < nrows; i++ {
-			x[i], y[i] = X[i][j], Y[i][j]
+	for j := 0; j < n1; j++ {
+		for i := 0; i < n0; i++ {
+			if i > 0 {
+				xx[0], xx[1] = X[j][i-1], X[j][i]
+				yy[0], yy[1] = Y[j][i-1], Y[j][i]
+				Plot(xx, yy, argsLines)
+			}
+			if j > 0 {
+				xx[0], xx[1] = X[j-1][i], X[j][i]
+				yy[0], yy[1] = Y[j-1][i], Y[j][i]
+				Plot(xx, yy, argsLines)
+			}
 			if withIDs {
-				Text(X[i][j], Y[i][j], io.Sf("%d", idx), argsIDs)
+				Text(X[j][i], Y[j][i], io.Sf("%d", idx), argsIDs)
 				idx++
 			}
 		}
-		Plot(x, y, argsLines)
 	}
 }
 

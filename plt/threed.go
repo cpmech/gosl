@@ -209,7 +209,8 @@ func Diag3d(scale float64, args *A) {
 	updateBufferAndClose(&bufferPy, a, false, false)
 }
 
-// Grid3dZlevels draws grid lines (and points) of 3D grid
+// Grid3dZlevels draws grid lines of 3D grid
+//   withIDs -- add text with IDs numbered by looping over {X,Y,Z}[k][j][i] (k:outer, j:mid, i:inner)
 func Grid3dZlevels(X, Y [][]float64, Zlevels []float64, withIDs bool, argsLines, argsIDs *A) {
 	if len(X) < 2 || len(Y) < 2 || len(Zlevels) < 2 {
 		return
@@ -248,7 +249,8 @@ func Grid3dZlevels(X, Y [][]float64, Zlevels []float64, withIDs bool, argsLines,
 	}
 }
 
-// Grid3d draws grid lines (and points) of 3D grid
+// Grid3d draws grid lines of 3D grid
+//   withIDs -- add text with IDs numbered by looping over {X,Y,Z}[k][j][i] (k:outer, j:mid, i:inner)
 func Grid3d(X, Y, Z [][][]float64, withIDs bool, argsLines *A, argsIDs *A) {
 	if len(X) < 2 || len(Y) < 2 || len(Z) < 2 {
 		return
