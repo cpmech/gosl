@@ -339,8 +339,8 @@ func (o *Grid) Xmax(idim int) float64 {
 	return o.xmax[idim]
 }
 
-// Xlength returns the lengths along each direction (whole box) == Xmax(idim) - Xmin(idim)
-func (o *Grid) Xlength(idim int) float64 {
+// Xlen returns the lengths along each direction (whole box) == Xmax(idim) - Xmin(idim)
+func (o *Grid) Xlen(idim int) float64 {
 	return o.xmax[idim] - o.xmin[idim]
 }
 
@@ -380,6 +380,8 @@ func (o *Grid) Meshgrid3d() (X, Y, Z [][][]float64) {
 	return
 }
 
+// metrics accessors ///////////////////////////////////////////////////////////////////////////////
+
 // U returns the reference coordinates at point m,n,p
 func (o *Grid) U(m, n, p int) la.Vector {
 	return o.mtr[p][n][m].U
@@ -418,147 +420,172 @@ func (o *Grid) DetCovarMatrix(m, n, p int) float64 {
 
 // GammaS returns the [k][i][j] Christoffel coefficients of second kind [@ point m,n,p]
 func (o *Grid) GammaS(m, n, p, k, i, j int) float64 {
+	if o.mtr[p][n][m].Homogeneous {
+		return 0
+	}
 	return o.mtr[p][n][m].GammaS[k][i][j]
 }
 
 // Lcoeff returns the [k] L-coefficients = sum(Γ_ij^k ⋅ g^ij) [@ point m,n,p]
 func (o *Grid) Lcoeff(m, n, p, k int) float64 {
+	if o.mtr[p][n][m].Homogeneous {
+		return 0
+	}
 	return o.mtr[p][n][m].L[k]
 }
 
-// access nodes ////////////////////////////////////////////////////////////////////////////////////
+// node accessors //////////////////////////////////////////////////////////////////////////////////
 
-// IndexN converts triplet node index (m,n,p) into node index N
+// IndexMNPtoI converts node triplet indices (m,n,p) into node index I
 //
-//  2D:   N = m + n⋅n0
-//        m = N % n0
-//        n = N / n0
+//  2D:   I = m + n⋅n0
+//        m = I % n0
+//        n = I / n0
 //
-//  3D:   N = m + n⋅n0 + p⋅n0⋅n1
-//        p = N / (n0⋅n1)
-//        t = N % (n0⋅n1)  (projection @ z=0)
+//  3D:   I = m + n⋅n0 + p⋅n0⋅n1
+//        p = I / (n0⋅n1)
+//        t = I % (n0⋅n1)  (projection @ z=0)
 //        m = t % n0
 //        n = t / n0
 //
-func (o *Grid) IndexN(m, n, p int) (N int) {
+func (o *Grid) IndexMNPtoI(m, n, p int) (I int) {
 	if o.ndim == 2 {
 		return m + n*o.npts[0]
 	}
 	return m + n*o.npts[0] + p*o.npts[0]*o.npts[1]
 }
 
-// IndexMNP converts node index N into triplet node index (m,n,p)
+// IndexItoMNP converts node index I into triplet indices (m,n,p)
 //
-//  2D:   N = m + n⋅n0
-//        m = N % n0
-//        n = N / n0
+//  2D:   I = m + n⋅n0
+//        m = I % n0
+//        n = I / n0
 //
-//  3D:   N = m + n⋅n0 + p⋅n0⋅n1
-//        p = N / (n0⋅n1)
-//        t = N % (n0⋅n1)  (projection @ z=0)
+//  3D:   I = m + n⋅n0 + p⋅n0⋅n1
+//        p = I / (n0⋅n1)
+//        t = I % (n0⋅n1)  (projection @ z=0)
 //        m = t % n0
 //        n = t / n0
 //
-func (o *Grid) IndexMNP(N int) (m, n, p int) {
+func (o *Grid) IndexItoMNP(I int) (m, n, p int) {
 	if o.ndim == 2 {
-		m = N % o.npts[0]
-		n = N / o.npts[0]
+		m = I % o.npts[0]
+		n = I / o.npts[0]
 		return
 	}
-	p = N / (o.npts[0] * o.npts[1])
-	t := N % (o.npts[0] * o.npts[1])
+	p = I / (o.npts[0] * o.npts[1])
+	t := I % (o.npts[0] * o.npts[1])
 	m = t % o.npts[0]
 	n = t / o.npts[0]
 	return
 }
 
-// Node returns the physical coordinates of node N (see IndexN()) [may be used to change X]
-func (o *Grid) Node(N int) (x la.Vector) {
-	m, n, p := o.IndexMNP(N)
+// Node returns the physical coordinates of node I. See IndexItoMNP(I) ⇒ (m,n,p).
+//   x -- slice to position vector @ [p][n][m] [may be used to change values]
+func (o *Grid) Node(I int) (x la.Vector) {
+	m, n, p := o.IndexItoMNP(I)
 	return o.mtr[p][n][m].X
 }
 
 // boundaries and tags /////////////////////////////////////////////////////////////////////////////
 
 // Edge returns the ids of points on edges: [edge0, edge1, edge2, edge3]
+//
+//            3
+//      +-----------+    Considering the x-y axes below, the order of indices follows:
+//      |           |
+//      |           |       y         0          1          2          3
+//     0|           |1      ↑    {xmin_edge, xmax_edge, ymin_edge, ymax_edge}
+//      |           |       │
+//      |           |       +——→ x
+//      +-----------+
 //            2
-//      +-----------+
-//      |           |
-//      |           |
-//     3|           |1
-//      |           |
-//      |           |
-//      +-----------+
-//            0
+//
 func (o *Grid) Edge(iEdge int) []int {
+	if o.ndim == 3 {
+		return nil
+	}
 	return o.edge[iEdge]
 }
 
 // EdgeGivenTag returns a list of nodes marked with given tag
+//
 //           21
-//      +-----------+
+//      +-----------+     Considering the x-y axes below, the order of tags follows:
 //      |           |
-//      |           |
-//    10|           |11
-//      |           |
-//      |           |
+//      |           |        y      0   1   2   3
+//    10|           |11      ↑    {10, 11, 20, 21}
+//      |           |        │
+//      |           |        +——→ x
 //      +-----------+
 //           20
 //
 //   NOTE: will return empty list if tag is not available
 //
 func (o *Grid) EdgeGivenTag(tag int) []int {
+	if o.ndim == 3 {
+		return nil
+	}
 	switch tag {
-	case 20:
+	case 10:
 		return o.edge[0]
 	case 11:
 		return o.edge[1]
-	case 21:
+	case 20:
 		return o.edge[2]
-	case 10:
+	case 21:
 		return o.edge[3]
 	}
 	return nil
 }
 
 // Face returns the ids of points on faces: [face0, face1, face2, face3, face4, face5]
-//               +----------------+
+//
+//               +----------------+   Considering the x-y-z axes below, the order of indices follows:
 //             ,'|              ,'|
-//           ,'  |  ___       ,'  |
-//         ,'    |,'5,' [0] ,'    |
-//       ,'      |~~~     ,'  ,   |
-//     +'===============+'  ,'|   |
-//     |   ,'|   |      |   |3|   |
-//     |   |2|   |      |   |,'   |
+//           ,'  |  ___       ,'  |      z         0: xmin_face
+//         ,'    |,'5,' [0] ,'    |      ↑         1: xmax_face
+//       ,'      |~~~     ,'  ,   |      │         2: ymin_face
+//     +'===============+'  ,'|   |      +——→y     3: ymax_face
+//     |   ,'|   |      |   |3|   |    ,'          4: zmin_face
+//     |   |2|   |      |   |,'   |   x            5: zmax_face
 //     |   |,'   +- - - | +- - - -+
 //     |   '   ,'       |       ,'
 //     |     ,' [1]  ___|     ,'
 //     |   ,'      ,'4,'|   ,'
 //     | ,'        ~~~  | ,'
 //     +----------------+'
+//
 func (o *Grid) Face(iFace int) []int {
+	if o.ndim == 2 {
+		return nil
+	}
 	return o.face[iFace]
 }
 
 // FaceGivenTag returns a list of nodes marked with given tag
-//               +----------------+
+//
+//               +----------------+   Considering the x-y-z axes below, the order of tags follows:
 //             ,'|              ,'|
-//           ,'  |  ___       ,'  |
-//         ,'    |,'31'  10 ,'    |
-//       ,'      |~~~     ,'  ,,  |
-//     +'===============+'  ,' |  |
-//     |   ,'|   |      |   |21|  |
-//     |  |20|   |      |   |,'   |
+//           ,'  |  ___       ,'  |      z         100: xmin_face
+//         ,'    |,301' 100 ,'    |      ↑         101: xmax_face
+//       ,'      |~~~     ,'  ,'  |      │         200: ymin_face
+//     +'===============+'  ,' |  |      +——→y     201: ymax_face
+//     |   ,'|   |      |   |201  |    ,'          300: zmin_face
+//     |  |200   |      |   |,'   |   x            301: zmax_face
 //     |  | ,'   +- - - | +- - - -+
-//     |   '   ,'       |       ,'
-//     |     ,' 11   ___|     ,'
-//     |   ,'      ,'30'|   ,'
+//     |  ,'   ,'       |       ,'
+//     |     ,'101   ___|     ,'
+//     |   ,'      ,300'|   ,'
 //     | ,'        ~~~  | ,'
 //     +----------------+'
 //
 //   NOTE: will return empty list if tag is not available
 //
 func (o *Grid) FaceGivenTag(tag int) []int {
+	if o.ndim == 2 {
+		return nil
+	}
 	switch tag {
 	case 100:
 		return o.face[0]
@@ -576,14 +603,18 @@ func (o *Grid) FaceGivenTag(tag int) []int {
 	return nil
 }
 
-// Boundary returns list of edge or face nodes on boundary
+// Boundary returns a list of indices of nodes on edge or face of boundary
 //   NOTE: will return empty list if tag is not available
+//         see EdgeGivenTag() and FaceGivenTag() functions
 func (o *Grid) Boundary(tag int) []int {
 	if tag > 50 {
 		if o.ndim == 2 {
 			return nil
 		}
 		return o.FaceGivenTag(tag)
+	}
+	if o.ndim == 3 {
+		return nil
 	}
 	return o.EdgeGivenTag(tag)
 }
@@ -618,50 +649,50 @@ func (o *Grid) boundaries() {
 	n0 := o.npts[0]
 	n1 := o.npts[1]
 	if o.ndim == 2 {
-		o.edge = make([][]int, 4)   // bottom, right, top, left
-		o.edge[0] = make([]int, n0) // bottom
-		o.edge[1] = make([]int, n1) // right
-		o.edge[2] = make([]int, n0) // top
-		o.edge[3] = make([]int, n1) // left
-		for m := 0; m < n0; m++ {
-			o.edge[0][m] = m             // bottom
-			o.edge[2][m] = m + n0*(n1-1) // top
-		}
+		o.edge = make([][]int, 4)   // xmin,xmax,ymin,ymax
+		o.edge[0] = make([]int, n1) // xmin
+		o.edge[1] = make([]int, n1) // xmax
+		o.edge[2] = make([]int, n0) // ymin
+		o.edge[3] = make([]int, n0) // ymax
 		for n := 0; n < n1; n++ {
-			o.edge[1][n] = n*n0 + n0 - 1 // right
-			o.edge[3][n] = n * n0        // left
+			o.edge[0][n] = n * n0        // xmin
+			o.edge[1][n] = n*n0 + n0 - 1 // xmax
+		}
+		for m := 0; m < n0; m++ {
+			o.edge[2][m] = m             // ymin
+			o.edge[3][m] = m + n0*(n1-1) // ymax
 		}
 		return
 	}
 	n2 := o.npts[2]
-	o.face = make([][]int, 6)
-	o.face[0] = make([]int, n1*n2) // xmin[0]
-	o.face[1] = make([]int, n1*n2) // xmax[0]
-	o.face[2] = make([]int, n0*n2) // xmin[1]
-	o.face[3] = make([]int, n0*n2) // xmax[1]
-	o.face[4] = make([]int, n0*n1) // xmin[2]
-	o.face[5] = make([]int, n0*n1) // xmax[2]
+	o.face = make([][]int, 6)      // xmin,xmax,ymin,ymax,zmin,zmax
+	o.face[0] = make([]int, n1*n2) // xmin
+	o.face[1] = make([]int, n1*n2) // xmax
+	o.face[2] = make([]int, n0*n2) // ymin
+	o.face[3] = make([]int, n0*n2) // ymax
+	o.face[4] = make([]int, n0*n1) // zmin
+	o.face[5] = make([]int, n0*n1) // zmax
 	t := 0
-	for n := 0; n < n1; n++ {
-		for m := 0; m < n0; m++ {
-			o.face[4][t] = m + n0*n                  // xmin[2]
-			o.face[5][t] = m + n0*n + (n0*n1)*(n2-1) // xmax[2]
+	for p := 0; p < n2; p++ { // loop over z
+		for n := 0; n < n1; n++ { // loop over y
+			o.face[0][t] = n*n0 + (n0*n1)*p            // xmin
+			o.face[1][t] = n*n0 + (n0*n1)*p + (n0 - 1) // xmax
 			t++
 		}
 	}
 	t = 0
-	for p := 0; p < n2; p++ {
-		for m := 0; m < n0; m++ {
-			o.face[2][t] = m + (n0*n1)*p             // xmin[1]
-			o.face[3][t] = m + (n0*n1)*p + n0*(n1-1) // xmax[1]
+	for p := 0; p < n2; p++ { // loop over z
+		for m := 0; m < n0; m++ { // loop over x
+			o.face[2][t] = m + (n0*n1)*p             // ymin
+			o.face[3][t] = m + (n0*n1)*p + n0*(n1-1) // ymax
 			t++
 		}
 	}
 	t = 0
-	for p := 0; p < n2; p++ {
-		for n := 0; n < n1; n++ {
-			o.face[0][t] = n*n0 + (n0*n1)*p            // xmin[0]
-			o.face[1][t] = n*n0 + (n0*n1)*p + (n0 - 1) // xmax[0]
+	for n := 0; n < n1; n++ { // loop over y
+		for m := 0; m < n0; m++ { // loop over x
+			o.face[4][t] = m + n0*n                  // zmin
+			o.face[5][t] = m + n0*n + (n0*n1)*(n2-1) // zmax
 			t++
 		}
 	}

@@ -66,8 +66,8 @@ func (o *FdmLaplacian) Assemble(e *la.Equations) {
 	if o.g.Ndim() == 2 {
 		nx := o.g.Npts(0)
 		ny := o.g.Npts(1)
-		dx := o.g.Xlength(0) / float64(nx-1)
-		dy := o.g.Xlength(1) / float64(ny-1)
+		dx := o.g.Xlen(0) / float64(nx-1)
+		dy := o.g.Xlen(1) / float64(ny-1)
 		dx2 := dx * dx
 		dy2 := dy * dy
 		α := 2.0 * (o.kx/dx2 + o.ky/dy2)
