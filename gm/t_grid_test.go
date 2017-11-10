@@ -27,26 +27,19 @@ func TestGrid01(tst *testing.T) {
 	chk.Int(tst, "nx", g.Npts(0), 5)
 	chk.Int(tst, "ny", g.Npts(1), 4)
 
-	chk.Float64(tst, "Lx", 1e-15, g.Xlength(0), 12.0)
-	chk.Float64(tst, "Ly", 1e-15, g.Xlength(1), 6.0)
-
-	min := []float64{g.Xmin(0), g.Xmin(1)}
-	max := []float64{g.Xmax(0), g.Xmax(1)}
-	del := []float64{g.Xlength(0), g.Xlength(1)}
-
-	chk.Array(tst, "Min", 1e-17, min, []float64{-6, -3})
-	chk.Array(tst, "Max", 1e-17, max, []float64{+6, +3})
-	chk.Array(tst, "Del", 1e-17, del, []float64{12, 6})
+	chk.Array(tst, "Min", 1e-17, []float64{g.Xmin(0), g.Xmin(1)}, []float64{-6, -3})
+	chk.Array(tst, "Max", 1e-17, []float64{g.Xmax(0), g.Xmax(1)}, []float64{+6, +3})
+	chk.Array(tst, "Del", 1e-17, []float64{g.Xlength(0), g.Xlength(1)}, []float64{12, 6})
 
 	chk.Ints(tst, "B", g.Edge(0), []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "R", g.Edge(1), []int{4, 9, 14, 19})
 	chk.Ints(tst, "T", g.Edge(2), []int{15, 16, 17, 18, 19})
 	chk.Ints(tst, "L", g.Edge(3), []int{0, 5, 10, 15})
 
-	chk.Ints(tst, "Tag # 10: L", g.EdgeT(10), []int{0, 5, 10, 15})
-	chk.Ints(tst, "Tag # 11: R", g.EdgeT(11), []int{4, 9, 14, 19})
-	chk.Ints(tst, "Tag # 20: B", g.EdgeT(20), []int{0, 1, 2, 3, 4})
-	chk.Ints(tst, "Tag # 21: T", g.EdgeT(21), []int{15, 16, 17, 18, 19})
+	chk.Ints(tst, "Tag # 10: L", g.EdgeGivenTag(10), []int{0, 5, 10, 15})
+	chk.Ints(tst, "Tag # 11: R", g.EdgeGivenTag(11), []int{4, 9, 14, 19})
+	chk.Ints(tst, "Tag # 20: B", g.EdgeGivenTag(20), []int{0, 1, 2, 3, 4})
+	chk.Ints(tst, "Tag # 21: T", g.EdgeGivenTag(21), []int{15, 16, 17, 18, 19})
 
 	xx, yy := g.Meshgrid2d()
 	chk.Deep2(tst, "xx", 1e-17, xx, [][]float64{
@@ -88,7 +81,51 @@ func TestGrid02(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Grid02. rectangular uniform 3D")
 
-	//TODO
+	g := new(Grid)
+	g.RectGenUniform([]float64{-2, -2, -2}, []float64{-1, 2, 0}, []int{3, 4, 2})
+
+	chk.Int(tst, "ndim", g.Ndim(), 3)
+	chk.Int(tst, "size", g.Size(), 24)
+	chk.Int(tst, "nx", g.Npts(0), 3)
+	chk.Int(tst, "ny", g.Npts(1), 4)
+	chk.Int(tst, "nz", g.Npts(2), 2)
+
+	chk.Array(tst, "Min", 1e-17, []float64{g.Xmin(0), g.Xmin(1), g.Xmin(2)}, []float64{-2, -2, -2})
+	chk.Array(tst, "Max", 1e-17, []float64{g.Xmax(0), g.Xmax(1), g.Xmax(2)}, []float64{-1, 2, 0})
+	chk.Array(tst, "Del", 1e-17, []float64{g.Xlength(0), g.Xlength(1), g.Xlength(2)}, []float64{1, 4, 2})
+
+	chk.Ints(tst, "Face 0 (xmin)", g.Face(0), []int{0, 3, 6, 9, 12, 15, 18, 21})
+	chk.Ints(tst, "Face 1 (xmax)", g.Face(1), []int{2, 5, 8, 11, 14, 17, 20, 23})
+	chk.Ints(tst, "Face 2 (ymin)", g.Face(2), []int{0, 1, 2, 12, 13, 14})
+	chk.Ints(tst, "Face 3 (ymax)", g.Face(3), []int{9, 10, 11, 21, 22, 23})
+	chk.Ints(tst, "Face 4 (zmin)", g.Face(4), []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11})
+	chk.Ints(tst, "Face 5 (zmax)", g.Face(5), []int{12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23})
+
+	chk.Ints(tst, "Face 0 (xmin)", g.FaceGivenTag(100), g.Face(0))
+	chk.Ints(tst, "Face 1 (xmax)", g.FaceGivenTag(101), g.Face(1))
+	chk.Ints(tst, "Face 2 (ymin)", g.FaceGivenTag(200), g.Face(2))
+	chk.Ints(tst, "Face 3 (ymax)", g.FaceGivenTag(201), g.Face(3))
+	chk.Ints(tst, "Face 4 (zmin)", g.FaceGivenTag(300), g.Face(4))
+	chk.Ints(tst, "Face 5 (zmax)", g.FaceGivenTag(301), g.Face(5))
+
+	chk.Ints(tst, "Tag # 100 (xmin)", g.Boundary(100), g.Face(0))
+	chk.Ints(tst, "Tag # 101 (xmax)", g.Boundary(101), g.Face(1))
+	chk.Ints(tst, "Tag # 200 (ymin)", g.Boundary(200), g.Face(2))
+	chk.Ints(tst, "Tag # 201 (ymax)", g.Boundary(201), g.Face(3))
+	chk.Ints(tst, "Tag # 300 (zmin)", g.Boundary(300), g.Face(4))
+	chk.Ints(tst, "Tag # 301 (zmax)", g.Boundary(301), g.Face(5))
+
+	// plot
+	if chk.Verbose {
+		gp := GridPlotter{G: g, WithVids: true}
+		plt.Reset(true, &plt.A{WidthPt: 500})
+		gp.Draw()
+		gp.Bases(0.5)
+		plt.Grid(&plt.A{C: "grey"})
+		plt.Triad(3, "x", "y", "z", &plt.A{C: "orange"}, nil)
+		plt.Default3dView(-2, 2, -2, 2, -2, 2, true)
+		plt.Save("/tmp/gosl/gm", "grid02")
+	}
 }
 
 func TestGrid03(tst *testing.T) {
@@ -104,23 +141,19 @@ func TestGrid03(tst *testing.T) {
 	chk.Int(tst, "nx", g.Npts(0), 5)
 	chk.Int(tst, "ny", g.Npts(1), 4)
 
-	min := []float64{g.Xmin(0), g.Xmin(1)}
-	max := []float64{g.Xmax(0), g.Xmax(1)}
-	del := []float64{g.Xlength(0), g.Xlength(1)}
-
-	chk.Array(tst, "Min", 1e-17, min, []float64{1, 0})
-	chk.Array(tst, "Max", 1e-17, max, []float64{16, 7})
-	chk.Array(tst, "Del", 1e-17, del, []float64{15, 7})
+	chk.Array(tst, "Min", 1e-17, []float64{g.Xmin(0), g.Xmin(1)}, []float64{1, 0})
+	chk.Array(tst, "Max", 1e-17, []float64{g.Xmax(0), g.Xmax(1)}, []float64{16, 7})
+	chk.Array(tst, "Del", 1e-17, []float64{g.Xlength(0), g.Xlength(1)}, []float64{15, 7})
 
 	chk.Ints(tst, "B", g.Edge(0), []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "R", g.Edge(1), []int{4, 9, 14, 19})
 	chk.Ints(tst, "T", g.Edge(2), []int{15, 16, 17, 18, 19})
 	chk.Ints(tst, "L", g.Edge(3), []int{0, 5, 10, 15})
 
-	chk.Ints(tst, "Tag # 10: L", g.EdgeT(10), []int{0, 5, 10, 15})
-	chk.Ints(tst, "Tag # 11: R", g.EdgeT(11), []int{4, 9, 14, 19})
-	chk.Ints(tst, "Tag # 20: B", g.EdgeT(20), []int{0, 1, 2, 3, 4})
-	chk.Ints(tst, "Tag # 21: T", g.EdgeT(21), []int{15, 16, 17, 18, 19})
+	chk.Ints(tst, "Tag # 10: L", g.EdgeGivenTag(10), []int{0, 5, 10, 15})
+	chk.Ints(tst, "Tag # 11: R", g.EdgeGivenTag(11), []int{4, 9, 14, 19})
+	chk.Ints(tst, "Tag # 20: B", g.EdgeGivenTag(20), []int{0, 1, 2, 3, 4})
+	chk.Ints(tst, "Tag # 21: T", g.EdgeGivenTag(21), []int{15, 16, 17, 18, 19})
 
 	xx, yy := g.Meshgrid2d()
 	chk.Deep2(tst, "xx", 1e-17, xx, [][]float64{
@@ -172,12 +205,12 @@ func TestGrid04(tst *testing.T) {
 	chk.Ints(tst, "zmin", g.Face(4), []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11})
 	chk.Ints(tst, "zmax", g.Face(5), []int{12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23})
 
-	chk.Ints(tst, "Tag # 10: xmin", g.Boundary(100), g.Face(0))
-	chk.Ints(tst, "Tag # 11: xmax", g.Boundary(101), g.Face(1))
-	chk.Ints(tst, "Tag # 20: ymin", g.Boundary(200), g.Face(2))
-	chk.Ints(tst, "Tag # 21: ymax", g.Boundary(201), g.Face(3))
-	chk.Ints(tst, "Tag # 30: zmin", g.Boundary(300), g.Face(4))
-	chk.Ints(tst, "Tag # 31: zmax", g.Boundary(301), g.Face(5))
+	chk.Ints(tst, "Tag # 100: xmin", g.Boundary(100), g.Face(0))
+	chk.Ints(tst, "Tag # 101: xmax", g.Boundary(101), g.Face(1))
+	chk.Ints(tst, "Tag # 200: ymin", g.Boundary(200), g.Face(2))
+	chk.Ints(tst, "Tag # 201: ymax", g.Boundary(201), g.Face(3))
+	chk.Ints(tst, "Tag # 300: zmin", g.Boundary(300), g.Face(4))
+	chk.Ints(tst, "Tag # 301: zmax", g.Boundary(301), g.Face(5))
 
 	xx, yy, zz := g.Meshgrid3d()
 
@@ -218,13 +251,9 @@ func TestGrid04(tst *testing.T) {
 		},
 	})
 
-	min := []float64{g.Xmin(0), g.Xmin(1), g.Xmin(2)}
-	max := []float64{g.Xmax(0), g.Xmax(1), g.Xmax(2)}
-	del := []float64{g.Xlength(0), g.Xlength(1), g.Xlength(2)}
-
-	chk.Array(tst, "Min", 1e-17, min, []float64{1, 0, -1})
-	chk.Array(tst, "Max", 1e-17, max, []float64{8, 4, -0.5})
-	chk.Array(tst, "Del", 1e-17, del, []float64{7, 4, 0.5})
+	chk.Array(tst, "Min", 1e-17, []float64{g.Xmin(0), g.Xmin(1), g.Xmin(2)}, []float64{1, 0, -1})
+	chk.Array(tst, "Max", 1e-17, []float64{g.Xmax(0), g.Xmax(1), g.Xmax(2)}, []float64{8, 4, -0.5})
+	chk.Array(tst, "Del", 1e-17, []float64{g.Xlength(0), g.Xlength(1), g.Xlength(2)}, []float64{7, 4, 0.5})
 
 	chk.Array(tst, "x[0]", 1e-17, g.Node(0), []float64{1, 0, -1})
 	chk.Array(tst, "x[1]", 1e-17, g.Node(1), []float64{2, 0, -1})

@@ -529,7 +529,7 @@ func (o *Grid) Edge(iEdge int) []int {
 	return o.edge[iEdge]
 }
 
-// EdgeT returns a list of nodes marked with given tag
+// EdgeGivenTag returns a list of nodes marked with given tag
 //           21
 //      +-----------+
 //      |           |
@@ -542,7 +542,7 @@ func (o *Grid) Edge(iEdge int) []int {
 //
 //   NOTE: will return empty list if tag is not available
 //
-func (o *Grid) EdgeT(tag int) []int {
+func (o *Grid) EdgeGivenTag(tag int) []int {
 	switch tag {
 	case 20:
 		return o.edge[0]
@@ -575,7 +575,7 @@ func (o *Grid) Face(iFace int) []int {
 	return o.face[iFace]
 }
 
-// FaceT returns a list of nodes marked with given tag
+// FaceGivenTag returns a list of nodes marked with given tag
 //               +----------------+
 //             ,'|              ,'|
 //           ,'  |  ___       ,'  |
@@ -593,7 +593,7 @@ func (o *Grid) Face(iFace int) []int {
 //
 //   NOTE: will return empty list if tag is not available
 //
-func (o *Grid) FaceT(tag int) []int {
+func (o *Grid) FaceGivenTag(tag int) []int {
 	switch tag {
 	case 100:
 		return o.face[0]
@@ -618,9 +618,9 @@ func (o *Grid) Boundary(tag int) []int {
 		if o.ndim == 2 {
 			return nil
 		}
-		return o.FaceT(tag)
+		return o.FaceGivenTag(tag)
 	}
-	return o.EdgeT(tag)
+	return o.EdgeGivenTag(tag)
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////

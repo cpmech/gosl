@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -run TestGrid03
+    go test -run TestGrid02
 done
