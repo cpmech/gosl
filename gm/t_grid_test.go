@@ -19,7 +19,7 @@ func TestGrid01(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Grid01. rectangular uniform 2D")
 
-	g := new(CurvGrid)
+	g := new(Grid)
 	g.RectGenUniform([]float64{-6, -3}, []float64{6, 3}, []int{5, 4})
 
 	chk.Int(tst, "ndim", g.Ndim(), 2)
@@ -96,7 +96,7 @@ func TestGrid03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Grid03. rectangular uniform (RectSet2D)")
 
-	g := new(CurvGrid)
+	g := new(Grid)
 	g.RectSet2d([]float64{1, 2, 4, 8, 16}, []float64{0, 3, 4, 7})
 
 	chk.Int(tst, "ndim", g.Ndim(), 2)
@@ -156,7 +156,7 @@ func TestGrid04(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Grid04. rectangular uniform (RectSet3D)")
 
-	g := new(CurvGrid)
+	g := new(Grid)
 	g.RectSet3d([]float64{1, 2, 4, 8}, []float64{0, 3, 4}, []float64{-1, -0.5})
 
 	chk.Int(tst, "ndim", g.Ndim(), 3)
@@ -265,7 +265,7 @@ func TestGrid05(tst *testing.T) {
 	S := utl.LinSpace(-1, 1, 5)
 
 	// curvgrid
-	cg := new(CurvGrid)
+	cg := new(Grid)
 	cg.SetTransfinite2d(trf, R, S)
 
 	// check limits
@@ -363,7 +363,7 @@ func TestGrid06(tst *testing.T) {
 	T := utl.LinSpace(-1, 1, npts)
 
 	// curvgrid
-	cg := new(CurvGrid)
+	cg := new(Grid)
 	cg.SetTransfinite3d(trf, R, S, T)
 
 	// check limits

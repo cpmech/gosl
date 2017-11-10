@@ -12,7 +12,8 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// CurvGrid holds metrics data for 2d or 3d grids represented by curvilinear coordinates
+// Grid implements (2D/3D) rectangular or curvilinear grid.
+// It also holds metrics data related to curvilinear coordinates.
 //
 //   Notation:
 //      m,n,p -- indices used for grid points
@@ -25,7 +26,7 @@ import (
 //         (2) the reference coordinates of generated rectangular grids are assumed to be
 //             -1 ≤ u ≤ +1
 //
-type CurvGrid struct {
+type Grid struct {
 	ndim int            // space dimension
 	npts []int          // number of points along each direction. In 2D, npts[2] := 1
 	mtr  [][][]*Metrics // [n2][n1][n0] metrics in 2D (with n2=1) or 3D
@@ -47,7 +48,7 @@ type CurvGrid struct {
 //     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
 //     dx/du = (xmax - xmin) / 2
 //
-func (o *CurvGrid) RectGenUniform(xmin, xmax []float64, npts []int) {
+func (o *Grid) RectGenUniform(xmin, xmax []float64, npts []int) {
 
 	// input
 	o.ndim = len(xmin)
@@ -132,7 +133,7 @@ func (o *CurvGrid) RectGenUniform(xmin, xmax []float64, npts []int) {
 //     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
 //     dx/du = (xmax - xmin) / 2
 //
-func (o *CurvGrid) RectSet2d(X, Y []float64) {
+func (o *Grid) RectSet2d(X, Y []float64) {
 
 	// input
 	o.ndim = 2
@@ -181,7 +182,7 @@ func (o *CurvGrid) RectSet2d(X, Y []float64) {
 //     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
 //     dx/du = (xmax - xmin) / 2
 //
-func (o *CurvGrid) RectSet3d(X, Y, Z []float64) {
+func (o *Grid) RectSet3d(X, Y, Z []float64) {
 
 	// input
 	o.ndim = 3
@@ -232,7 +233,7 @@ func (o *CurvGrid) RectSet3d(X, Y, Z []float64) {
 //  trf -- 2D transfinite structure
 //  R   -- [n1] reference coordinates along r-direction
 //  S   -- [n2] reference coordinates along s-direction
-func (o *CurvGrid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
+func (o *Grid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 
 	// input
 	o.ndim = 2
@@ -267,7 +268,7 @@ func (o *CurvGrid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 }
 
 // SetTransfinite3d sets grid from 3D transfinite mapping
-func (o *CurvGrid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
+func (o *Grid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 
 	// input
 	o.ndim = 3
@@ -303,7 +304,7 @@ func (o *CurvGrid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 }
 
 // DrawBases draw basis vectors
-func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
+func (o *Grid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 	if argsG0 == nil {
 		argsG0 = &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10}
 	}
@@ -339,49 +340,49 @@ func (o *CurvGrid) DrawBases(scale float64, argsG0, argsG1, argsG2 *plt.A) {
 // accessors //////////////////////////////////////////////////////////////////////////////////////
 
 // Ndim returns the number of dimensions (2D or 3D)
-func (o *CurvGrid) Ndim() int {
+func (o *Grid) Ndim() int {
 	return o.ndim
 }
 
 // Npts returns number of points along idim dimension
-func (o *CurvGrid) Npts(idim int) int {
+func (o *Grid) Npts(idim int) int {
 	return o.npts[idim]
 }
 
 // Size returns total number of points
-func (o *CurvGrid) Size() int {
+func (o *Grid) Size() int {
 	return o.npts[0] * o.npts[1] * o.npts[2]
 }
 
 // Umin returns the minimum reference coordinate at dimension idim
-func (o *CurvGrid) Umin(idim int) float64 {
+func (o *Grid) Umin(idim int) float64 {
 	return o.umin[idim]
 }
 
 // Umax returns the maximum reference coordinate at dimension idim
-func (o *CurvGrid) Umax(idim int) float64 {
+func (o *Grid) Umax(idim int) float64 {
 	return o.umax[idim]
 }
 
 // Xmin returns the minimum physical coordinate at dimension idim
-func (o *CurvGrid) Xmin(idim int) float64 {
+func (o *Grid) Xmin(idim int) float64 {
 	return o.xmin[idim]
 }
 
 // Xmax returns the maximum physical coordinate at dimension idim
-func (o *CurvGrid) Xmax(idim int) float64 {
+func (o *Grid) Xmax(idim int) float64 {
 	return o.xmax[idim]
 }
 
 // Xlength returns the lengths along each direction (whole box) == Xmax(idim) - Xmin(idim)
-func (o *CurvGrid) Xlength(idim int) float64 {
+func (o *Grid) Xlength(idim int) float64 {
 	return o.xmax[idim] - o.xmin[idim]
 }
 
 // Meshgrid2d extracts 2D meshgrid
 //  X -- x0[ny][nx]
 //  Y -- x1[ny][nx]
-func (o *CurvGrid) Meshgrid2d() (X, Y [][]float64) {
+func (o *Grid) Meshgrid2d() (X, Y [][]float64) {
 	X = utl.Alloc(o.npts[1], o.npts[0])
 	Y = utl.Alloc(o.npts[1], o.npts[0])
 	p := 0
@@ -398,7 +399,7 @@ func (o *CurvGrid) Meshgrid2d() (X, Y [][]float64) {
 //  X -- x0[nz][ny][nx]
 //  Y -- x1[nz][ny][nx]
 //  Z -- x2[nz][ny][nx]
-func (o *CurvGrid) Meshgrid3d() (X, Y, Z [][][]float64) {
+func (o *Grid) Meshgrid3d() (X, Y, Z [][][]float64) {
 	X = utl.Deep3alloc(o.npts[2], o.npts[1], o.npts[0])
 	Y = utl.Deep3alloc(o.npts[2], o.npts[1], o.npts[0])
 	Z = utl.Deep3alloc(o.npts[2], o.npts[1], o.npts[0])
@@ -415,17 +416,17 @@ func (o *CurvGrid) Meshgrid3d() (X, Y, Z [][][]float64) {
 }
 
 // U returns the reference coordinates at point m,n,p
-func (o *CurvGrid) U(m, n, p int) la.Vector {
+func (o *Grid) U(m, n, p int) la.Vector {
 	return o.mtr[p][n][m].U
 }
 
 // X returns the physical coordinates at point m,n,p
-func (o *CurvGrid) X(m, n, p int) la.Vector {
+func (o *Grid) X(m, n, p int) la.Vector {
 	return o.mtr[p][n][m].X
 }
 
 // CovarBasis returns the [k] covariant basis g_{k} = d{x[k]}/d{u[k]} [@ point m,n,p]
-func (o *CurvGrid) CovarBasis(m, n, p, k int) la.Vector {
+func (o *Grid) CovarBasis(m, n, p, k int) la.Vector {
 	if k == 0 {
 		return o.mtr[p][n][m].CovG0
 	}
@@ -436,27 +437,27 @@ func (o *CurvGrid) CovarBasis(m, n, p, k int) la.Vector {
 }
 
 // CovarMatrix returns the covariant metrics g_ij = g_i ⋅ g_j [@ point m,n,p]
-func (o *CurvGrid) CovarMatrix(m, n, p int) *la.Matrix {
+func (o *Grid) CovarMatrix(m, n, p int) *la.Matrix {
 	return o.mtr[p][n][m].CovGmat
 }
 
 // ContraMatrix returns contravariant metrics g^ij = g^i ⋅ g^j [@ point m,n,p]
-func (o *CurvGrid) ContraMatrix(m, n, p int) *la.Matrix {
+func (o *Grid) ContraMatrix(m, n, p int) *la.Matrix {
 	return o.mtr[p][n][m].CntGmat
 }
 
 // DetCovarMatrix returns the determinant of covariant g matrix = det(CovariantMatrix) [@ point m,n,p]
-func (o *CurvGrid) DetCovarMatrix(m, n, p int) float64 {
+func (o *Grid) DetCovarMatrix(m, n, p int) float64 {
 	return o.mtr[p][n][m].DetCovGmat
 }
 
 // GammaS returns the [k][i][j] Christoffel coefficients of second kind [@ point m,n,p]
-func (o *CurvGrid) GammaS(m, n, p, k, i, j int) float64 {
+func (o *Grid) GammaS(m, n, p, k, i, j int) float64 {
 	return o.mtr[p][n][m].GammaS[k][i][j]
 }
 
 // Lcoeff returns the [k] L-coefficients = sum(Γ_ij^k ⋅ g^ij) [@ point m,n,p]
-func (o *CurvGrid) Lcoeff(m, n, p, k int) float64 {
+func (o *Grid) Lcoeff(m, n, p, k int) float64 {
 	return o.mtr[p][n][m].L[k]
 }
 
@@ -474,7 +475,7 @@ func (o *CurvGrid) Lcoeff(m, n, p, k int) float64 {
 //        m = t % n0
 //        n = t / n0
 //
-func (o *CurvGrid) IndexN(m, n, p int) (N int) {
+func (o *Grid) IndexN(m, n, p int) (N int) {
 	if o.ndim == 2 {
 		return m + n*o.npts[0]
 	}
@@ -493,7 +494,7 @@ func (o *CurvGrid) IndexN(m, n, p int) (N int) {
 //        m = t % n0
 //        n = t / n0
 //
-func (o *CurvGrid) IndexMNP(N int) (m, n, p int) {
+func (o *Grid) IndexMNP(N int) (m, n, p int) {
 	if o.ndim == 2 {
 		m = N % o.npts[0]
 		n = N / o.npts[0]
@@ -507,7 +508,7 @@ func (o *CurvGrid) IndexMNP(N int) (m, n, p int) {
 }
 
 // Node returns the physical coordinates of node N (see IndexN()) [may be used to change X]
-func (o *CurvGrid) Node(N int) (x la.Vector) {
+func (o *Grid) Node(N int) (x la.Vector) {
 	m, n, p := o.IndexMNP(N)
 	return o.mtr[p][n][m].X
 }
@@ -524,7 +525,7 @@ func (o *CurvGrid) Node(N int) (x la.Vector) {
 //      |           |
 //      +-----------+
 //            0
-func (o *CurvGrid) Edge(iEdge int) []int {
+func (o *Grid) Edge(iEdge int) []int {
 	return o.edge[iEdge]
 }
 
@@ -541,7 +542,7 @@ func (o *CurvGrid) Edge(iEdge int) []int {
 //
 //   NOTE: will return empty list if tag is not available
 //
-func (o *CurvGrid) EdgeT(tag int) []int {
+func (o *Grid) EdgeT(tag int) []int {
 	switch tag {
 	case 20:
 		return o.edge[0]
@@ -570,7 +571,7 @@ func (o *CurvGrid) EdgeT(tag int) []int {
 //     |   ,'      ,'4,'|   ,'
 //     | ,'        ~~~  | ,'
 //     +----------------+'
-func (o *CurvGrid) Face(iFace int) []int {
+func (o *Grid) Face(iFace int) []int {
 	return o.face[iFace]
 }
 
@@ -592,7 +593,7 @@ func (o *CurvGrid) Face(iFace int) []int {
 //
 //   NOTE: will return empty list if tag is not available
 //
-func (o *CurvGrid) FaceT(tag int) []int {
+func (o *Grid) FaceT(tag int) []int {
 	switch tag {
 	case 100:
 		return o.face[0]
@@ -612,7 +613,7 @@ func (o *CurvGrid) FaceT(tag int) []int {
 
 // Boundary returns list of edge or face nodes on boundary
 //   NOTE: will return empty list if tag is not available
-func (o *CurvGrid) Boundary(tag int) []int {
+func (o *Grid) Boundary(tag int) []int {
 	if tag > 50 {
 		if o.ndim == 2 {
 			return nil
@@ -624,7 +625,7 @@ func (o *CurvGrid) Boundary(tag int) []int {
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
-func (o *CurvGrid) limits() {
+func (o *Grid) limits() {
 	o.umin = []float64{+math.MaxFloat64, +math.MaxFloat64, +math.MaxFloat64}
 	o.umax = []float64{-math.MaxFloat64, -math.MaxFloat64, -math.MaxFloat64}
 	o.xmin = []float64{+math.MaxFloat64, +math.MaxFloat64, +math.MaxFloat64}
@@ -648,7 +649,7 @@ func (o *CurvGrid) limits() {
 }
 
 // boundaries generates the IDs of nodes on the boundaries of a rectangular grid
-func (o *CurvGrid) boundaries() {
+func (o *Grid) boundaries() {
 	n0 := o.npts[0]
 	n1 := o.npts[1]
 	if o.ndim == 2 {

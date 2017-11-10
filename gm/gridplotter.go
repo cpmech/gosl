@@ -12,16 +12,16 @@ import (
 type GridPlotter struct {
 
 	// input
-	G         *CurvGrid // the grid
-	OnlyBry   bool      // draw boundary only
-	WithVids  bool      // with IDs of vertices
-	WithBases bool      // with (covariant) basis vectors (g_0, g_1, g_2)
-	Npts      []int     // number of points (to reduce the number of lines) [nil => all points]
-	ArgsVids  *plt.A    // arguments for vertex ids [may be nil]
-	ArgsEdges *plt.A    // arguments for edges [may be nil]
-	ArgsG0    *plt.A    // arguments for (covariant) basis vector g_0 [may be nil]
-	ArgsG1    *plt.A    // arguments for (covariant) basis vector g_1 [may be nil]
-	ArgsG2    *plt.A    // arguments for (covariant) basis vector g_2 [may be nil]
+	G         *Grid  // the grid
+	OnlyBry   bool   // draw boundary only
+	WithVids  bool   // with IDs of vertices
+	WithBases bool   // with (covariant) basis vectors (g_0, g_1, g_2)
+	Npts      []int  // number of points (to reduce the number of lines) [nil => all points]
+	ArgsVids  *plt.A // arguments for vertex ids [may be nil]
+	ArgsEdges *plt.A // arguments for edges [may be nil]
+	ArgsG0    *plt.A // arguments for (covariant) basis vector g_0 [may be nil]
+	ArgsG1    *plt.A // arguments for (covariant) basis vector g_1 [may be nil]
+	ArgsG2    *plt.A // arguments for (covariant) basis vector g_2 [may be nil]
 
 	// generated
 	X2d, Y2d      [][]float64   // 2D meshgrid

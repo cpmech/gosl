@@ -27,7 +27,7 @@ func TestEssentialBcs01(tst *testing.T) {
 	//          |        |        |
 	//          |0       |1       |2
 	//          o--------o--------o
-	g := new(gm.CurvGrid)
+	g := new(gm.Grid)
 	g.RectGenUniform([]float64{0, 0}, []float64{2, 2}, []int{3, 3}) // 3x3 grid ⇒ 9 equations
 
 	// essential boundary conditions

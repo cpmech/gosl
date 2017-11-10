@@ -55,7 +55,7 @@ func NewEssentialBcs() (o *EssentialBcs) {
 }
 
 // SetInGrid sets boundary condition considering Grid data
-func (o *EssentialBcs) SetInGrid(g *gm.CurvGrid, tag int, key string, cvalue float64, fvalue dbf.T) {
+func (o *EssentialBcs) SetInGrid(g *gm.Grid, tag int, key string, cvalue float64, fvalue dbf.T) {
 	nodes := g.Boundary(tag)
 	if nodes == nil {
 		chk.Panic("cannot find nodes with tag=%d in grid\n", tag)
