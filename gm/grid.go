@@ -541,15 +541,15 @@ func (o *Grid) EdgeGivenTag(tag int) []int {
 
 // Face returns the ids of points on faces: [face0, face1, face2, face3, face4, face5]
 //
-//               +----------------+   Considering the x-y-z axes below, the order of indices follows:
-//             ,'|              ,'|
-//           ,'  |  ___       ,'  |      z         0: xmin_face
-//         ,'    |,'5,' [0] ,'    |      ↑         1: xmax_face
-//       ,'      |~~~     ,'  ,   |      │         2: ymin_face
-//     +'===============+'  ,'|   |      +——→y     3: ymax_face
-//     |   ,'|   |      |   |3|   |    ,'          4: zmin_face
-//     |   |2|   |      |   |,'   |   x            5: zmax_face
-//     |   |,'   +- - - | +- - - -+
+//               +----------------+   Considering the x-y-z axes below,
+//             ,'|              ,'|   the order of indices follows:
+//           ,'  |  ___       ,'  |
+//         ,'    |,'5,' [0] ,'    |      z         0: xmin_face
+//       ,'      |~~~     ,'  ,   |      ↑         1: xmax_face
+//     +'===============+'  ,'|   |      │         2: ymin_face
+//     |   ,'|   |      |   |3|   |      +——→y     3: ymax_face
+//     |   |2|   |      |   |,'   |    ,'          4: zmin_face
+//     |   |,'   +- - - | +- - - -+   x            5: zmax_face
 //     |   '   ,'       |       ,'
 //     |     ,' [1]  ___|     ,'
 //     |   ,'      ,'4,'|   ,'
@@ -565,15 +565,15 @@ func (o *Grid) Face(iFace int) []int {
 
 // FaceGivenTag returns a list of nodes marked with given tag
 //
-//               +----------------+   Considering the x-y-z axes below, the order of tags follows:
-//             ,'|              ,'|
-//           ,'  |  ___       ,'  |      z         100: xmin_face
-//         ,'    |,301' 100 ,'    |      ↑         101: xmax_face
-//       ,'      |~~~     ,'  ,'  |      │         200: ymin_face
-//     +'===============+'  ,' |  |      +——→y     201: ymax_face
-//     |   ,'|   |      |   |201  |    ,'          300: zmin_face
-//     |  |200   |      |   |,'   |   x            301: zmax_face
-//     |  | ,'   +- - - | +- - - -+
+//               +----------------+   Considering the x-y-z axes below,
+//             ,'|              ,'|   the order of tags follows:
+//           ,'  |  ___       ,'  |
+//         ,'    |,301' 100 ,'    |      z         100: xmin_face
+//       ,'      |~~~     ,'  ,'  |      ↑         101: xmax_face
+//     +'===============+'  ,' |  |      │         200: ymin_face
+//     |   ,'|   |      |   |201  |      +——→y     201: ymax_face
+//     |  |200   |      |   |,'   |    ,'          300: zmin_face
+//     |  | ,'   +- - - | +- - - -+   x            301: zmax_face
 //     |  ,'   ,'       |       ,'
 //     |     ,'101   ___|     ,'
 //     |   ,'      ,300'|   ,'
