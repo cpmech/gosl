@@ -31,7 +31,7 @@ import (
 //
 //   * We define the u-reduced system of equations with the unknown {x} (and known {b})
 //                   ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄                       ┄┄┄┄┄┄┄
-//     i.e. the "effective" system that needs to be solved: [Auu] ⋅ {xu} = {bu}
+//     i.e. the system that needs to be solved is:  [Auu]⋅{xu} = {bu} - [Auk]⋅{xk}
 //
 //   * We define the k-reduced system of equations with the known {x} values.
 //                   ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄                       ┄┄┄┄┄
