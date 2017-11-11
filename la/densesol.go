@@ -11,7 +11,7 @@ import (
 	"github.com/cpmech/gosl/la/oblas"
 )
 
-// DenSolve solves dense linear system using LAPACK (OpemBLAS)
+// DenSolve solves dense linear system using LAPACK (OpenBLAS)
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
