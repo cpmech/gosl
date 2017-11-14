@@ -161,7 +161,7 @@ func NewEquations(n int, kx []int) (o *Equations) {
 	return
 }
 
-// Alloc allocates the A matrices in triplet format
+// Alloc allocates the A matrices in triplet format (sparse format)
 //  INPUT:
 //    nnz -- total number of nonzeros in each part [nnz(Auu), nnz(Auk), nnz(Aku), nnz(Akk)]
 //           nnz may be nil, in this case, the following values are assumed:
@@ -204,7 +204,8 @@ func (o *Equations) Start() {
 }
 
 // Put puts component into the right place in partitioned Triplet (Auu, Auk, Aku, Akk)
-//  I and J are the equation numbers in the FULL system
+//  NOTE: (1) I and J are the equation numbers in the FULL system
+//        (2) Aku and Akk are ignored if the "kparts" have not been allocated
 func (o *Equations) Put(I, J int, value float64) {
 	i := o.FtoU[I]
 	j := o.FtoU[J]
@@ -295,6 +296,69 @@ func (o *Equations) SetDense(A *Matrix, kparts bool) {
 		}
 	}
 	return
+}
+
+// Solve solves linear system (represented by sparse matrices)
+//
+//   Solve:               {xu} = [Auu]⁻¹ ⋅ ( {bu} - [Auk]⋅{xk} )
+//   and, if Aku != nil:  {bk} = [Aku]⋅{xu} + [Akk]⋅{xk}
+//
+//   Input:
+//    solver -- a pre-configured SparseSolver
+//    t      -- [optional] a scalar (e.g. time) to be used with calcXk and calcBu
+//    calcXk -- [optional] a function to calculate the known values of X
+//    calcBu -- [optional] a function to calculate the right-hand-side Bu
+//
+//   NOTE: (1) the following must be computed already:
+//                [Auu], [Auk] (optionally, [Aku] and [Akk] as well)
+//         (2) if calcXk is nil, the current values in Xk will be used
+//         (3) if calcBu is nil, the current values in Bu will be used
+//
+//   Instead of providing the functions calcXk and calcBu, the vectors {xk} and {bu} can be
+//   pre-computed. For example, in a FDM grid, the following loops can be used:
+//
+//         // compute known X values (e.g. Dirichlet boundary conditions)
+//         for i, I := range KtoF { // i:known, I:full
+//             xk[i] = dirichlet(node(I), time)
+//         }
+//
+//         // compute RHS
+//         for i, I := range UtoF { // i:unknown, I:full
+//             bu[i] = source(node(I), time)
+//         }
+//
+func (o *Equations) Solve(solver SparseSolver, t float64, calcXk, calcBu func(I int, t float64) float64) {
+
+	// compute known X values (e.g. Dirichlet boundary conditions)
+	if calcXk != nil {
+		for i, I := range o.KtoF { // i:known, I:full
+			o.Xk[i] = calcXk(I, t)
+		}
+	}
+
+	// compute RHS
+	if calcBu != nil {
+		for i, I := range o.UtoF { // i:unknown, I:full
+			o.Bu[i] = calcBu(I, t)
+		}
+	}
+
+	// fix RHS vector: bu -= Auk⋅xk
+	if o.Nk > 0 {
+		auk := o.Auk.ToMatrix(nil)
+		SpMatVecMulAdd(o.Bu, -1.0, auk, o.Xk)
+	}
+
+	// solve system
+	solver.Solve(o.Xu, o.Bu, false)
+
+	// calc {bk}
+	if o.Nk > 0 && o.Aku != nil {
+		aku := o.Aku.ToMatrix(nil)
+		akk := o.Akk.ToMatrix(nil)
+		SpMatVecMul(o.Bk, 1.0, aku, o.Xu)    // {bk} = [Aku]⋅{xu}
+		SpMatVecMulAdd(o.Bk, 1.0, akk, o.Xk) // {bk} += [Akk]⋅{xk}
+	}
 }
 
 // Print prints information about Equations

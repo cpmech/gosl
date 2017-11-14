@@ -8,5 +8,6 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="Blas1tst02"
+    #go test -test.run="Blas1tst02"
+    go test -test.run="Eqs05"
 done

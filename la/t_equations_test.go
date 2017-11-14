@@ -228,3 +228,93 @@ func TestEqs04d(tst *testing.T) {
 	e := NewEquations(15, []int{0, 4, 8, 12, 3, 7, 11, 15, 0, 1, 2, 3, 12, 13, 14, 15})
 	io.Pf("equations = %v+#\n", e)
 }
+
+func TestEqs05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Eqs05. Solve()")
+
+	/*
+	          Auu       Auk  ⋅  xu ?  =  bu ✓
+	          Aku       Akk     xk ✓     bk ?
+
+	    1   3  -2  │ 11   0     x0        5          x0 = -15
+	    3   5   6  │  4   1     x1        7     ⇒    x1 =   8
+	    2   4   3  │ -3   0  ⋅  x2    =   8          x2 =   2
+	    ———————————│———————     ——       ——
+	   -1   2   3  │  2   1      0       b3     ⇒    b3 =  37
+	    4   1  -3  │  5   0      0       b4          b4 = -58
+	*/
+
+	// system
+	n := 5                   // total number of equations
+	kx := []int{3, 4}        // known equations
+	nnz := []int{9, 4, 6, 3} // number of non-zeros in Auu, Auk, Aku, Akk
+	kparts := true           // also allocates Aku and Akk
+	vectors := true          // also allocates B and X vectors
+	e := NewEquations(n, kx)
+	e.Alloc(nnz, kparts, vectors)
+
+	// Auu
+	e.Start()
+	e.Put(0, 0, 1.0)
+	e.Put(0, 1, 3.0)
+	e.Put(0, 2, -2.0)
+	e.Put(1, 0, 3.0)
+	e.Put(1, 1, 5.0)
+	e.Put(1, 2, 6.0)
+	e.Put(2, 0, 2.0)
+	e.Put(2, 1, 4.0)
+	e.Put(2, 2, 3.0)
+
+	// Auk
+	e.Put(0, 3, 11.0)
+	e.Put(1, 3, 4.0)
+	e.Put(1, 4, 1.0)
+	e.Put(2, 3, -3.0)
+
+	// Aku
+	e.Put(3, 0, -1.0)
+	e.Put(3, 1, 2.0)
+	e.Put(3, 2, 3.0)
+	e.Put(4, 0, 4.0)
+	e.Put(4, 1, 1.0)
+	e.Put(4, 2, -3.0)
+
+	// Akk
+	e.Put(3, 3, 2.0)
+	e.Put(3, 4, 1.0)
+	e.Put(4, 3, 5.0)
+
+	// solver
+	s := NewSparseSolver("umfpack")
+	defer s.Free()
+	s.Init(e.Auu, false, false, "", "", nil)
+	s.Fact()
+
+	// functions
+	calcXk := func(I int, t float64) float64 {
+		return 0.0 // returns zero for all known values: x3 and x4
+	}
+	calcBu := func(I int, t float64) float64 {
+		switch I {
+		case 0:
+			return 5.0
+		case 1:
+			return 7.0
+		case 2:
+			return 8.0
+		}
+		chk.Panic("I=%d does not correspond to unknown value\n", I)
+		return 0 // unreachable
+	}
+
+	// solve linear system
+	e.Solve(s, 0, calcXk, calcBu)
+
+	// check
+	chk.Array(tst, "{xu}", 1e-13, e.Xu, []float64{-15, 8, 2})
+	chk.Array(tst, "{xk}", 1e-13, e.Xk, []float64{0, 0})
+	chk.Array(tst, "{bu}", 1e-13, e.Bu, []float64{5, 7, 8})
+	chk.Array(tst, "{bk}", 1e-12, e.Bk, []float64{37, -58})
+}
