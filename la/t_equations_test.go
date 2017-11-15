@@ -311,4 +311,127 @@ func TestEqs05(tst *testing.T) {
 	chk.Array(tst, "{xk}", 1e-13, e.Xk, []float64{0, 0})
 	chk.Array(tst, "{bu}", 1e-13, e.Bu, []float64{5, 7, 8})
 	chk.Array(tst, "{bk}", 1e-12, e.Bk, []float64{37, -58})
+
+	// check full system
+	b := NewVector(n)
+	bRef := NewVector(n)
+	buRef := NewVector(e.Nu)
+	bkRef := NewVector(e.Nk)
+	SpMatVecMul(buRef, 1.0, e.Auu.ToMatrix(nil), e.Xu)
+	SpMatVecMulAdd(buRef, 1.0, e.Auk.ToMatrix(nil), e.Xk)
+	SpMatVecMul(bkRef, 1.0, e.Aku.ToMatrix(nil), e.Xu)
+	SpMatVecMulAdd(bkRef, 1.0, e.Akk.ToMatrix(nil), e.Xk)
+	e.JoinVector(b, e.Bu, e.Bk)
+	e.JoinVector(bRef, buRef, bkRef)
+	chk.Array(tst, "{b}", 1e-12, bRef, b)
+}
+
+func TestEqs06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Eqs06. Solve()")
+
+	/*
+		  k   u  u   k   u
+		k 1 │ 2  1 │ 2 │ 1     -7.5       b0          b0 =  1.0
+		  ——│——————│———│——     ————       ——
+		u 2 │ 4  4 │ 6 │ 1       x1        2     ⇒    x1 =  2.5
+		u 3 │ 6  1 │ 4 │ 5       x2        4          x2 = -1.5
+		  ——│——————│———│——  ⋅  ————   =   ——
+		k 1 │ 2  3 │ 5 │ 1        2       b3     ⇒    b3 =  4.0
+		  ——│——————│———│——     ————       ——
+		u 1 │ 1  0 │ 3 │ 0       x4        1          x4 =  1.0
+	*/
+
+	// system
+	n := 5                   // total number of equations
+	kx := []int{0, 3}        // known equations
+	nnz := []int{7, 6, 6, 4} // number of non-zeros in Auu, Auk, Aku, Akk
+	kparts := true           // also allocates Aku and Akk
+	vectors := true          // also allocates B and X vectors
+	e := NewEquations(n, kx)
+	e.Alloc(nnz, kparts, vectors)
+
+	// Auu
+	e.Start()
+	e.Put(1, 1, 4.0)
+	e.Put(1, 2, 4.0)
+	e.Put(1, 4, 1.0)
+	e.Put(2, 1, 6.0)
+	e.Put(2, 2, 1.0)
+	e.Put(2, 4, 5.0)
+	e.Put(4, 1, 1.0)
+
+	// Auk
+	e.Put(1, 0, 2.0)
+	e.Put(1, 3, 6.0)
+	e.Put(2, 0, 3.0)
+	e.Put(2, 3, 4.0)
+	e.Put(4, 0, 1.0)
+	e.Put(4, 3, 3.0)
+
+	// Aku
+	e.Put(0, 1, 2.0)
+	e.Put(0, 2, 1.0)
+	e.Put(0, 4, 1.0)
+	e.Put(3, 1, 2.0)
+	e.Put(3, 2, 3.0)
+	e.Put(3, 4, 1.0)
+
+	// Akk
+	e.Put(0, 0, 1.0)
+	e.Put(0, 3, 2.0)
+	e.Put(3, 0, 1.0)
+	e.Put(3, 3, 5.0)
+
+	// functions
+	calcXk := func(I int, t float64) float64 {
+		switch I {
+		case 0:
+			return -7.5
+		case 3:
+			return 2.0
+		}
+		chk.Panic("I=%d does not correspond to known value\n", I)
+		return 0 // unreachable
+	}
+	calcBu := func(I int, t float64) float64 {
+		switch I {
+		case 1:
+			return 2.0
+		case 2:
+			return 4.0
+		case 4:
+			return 1.0
+		}
+		chk.Panic("I=%d does not correspond to unknown value\n", I)
+		return 0 // unreachable
+	}
+
+	// solve linear system
+	e.SolveOnce(calcXk, calcBu)
+
+	// calc {bu} because SolveOnce will return with modified {bu}
+	e.Bu[0] = calcBu(1, 0)
+	e.Bu[1] = calcBu(2, 0)
+	e.Bu[2] = calcBu(4, 0)
+
+	// check
+	chk.Array(tst, "{xu}", 1e-13, e.Xu, []float64{2.5, -1.5, 1.0})
+	chk.Array(tst, "{xk}", 1e-13, e.Xk, []float64{-7.5, 2.0})
+	chk.Array(tst, "{bu}", 1e-13, e.Bu, []float64{2.0, 4.0, 1.0})
+	chk.Array(tst, "{bk}", 1e-12, e.Bk, []float64{1.0, 4.0})
+
+	// check full system
+	b := NewVector(n)
+	bRef := NewVector(n)
+	buRef := NewVector(e.Nu)
+	bkRef := NewVector(e.Nk)
+	SpMatVecMul(buRef, 1.0, e.Auu.ToMatrix(nil), e.Xu)
+	SpMatVecMulAdd(buRef, 1.0, e.Auk.ToMatrix(nil), e.Xk)
+	SpMatVecMul(bkRef, 1.0, e.Aku.ToMatrix(nil), e.Xu)
+	SpMatVecMulAdd(bkRef, 1.0, e.Akk.ToMatrix(nil), e.Xk)
+	e.JoinVector(b, e.Bu, e.Bk)
+	e.JoinVector(bRef, buRef, bkRef)
+	chk.Array(tst, "{b}", 1e-12, bRef, b)
 }

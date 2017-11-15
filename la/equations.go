@@ -313,6 +313,7 @@ func (o *Equations) SetDense(A *Matrix, kparts bool) {
 //                [Auu], [Auk] (optionally, [Aku] and [Akk] as well)
 //         (2) if calcXk is nil, the current values in Xk will be used
 //         (3) if calcBu is nil, the current values in Bu will be used
+//         (4) on exit, {bu} is the modified value {bu} - [Auk]⋅{xk} if [Auk] == !nil
 //
 //   Instead of providing the functions calcXk and calcBu, the vectors {xk} and {bu} can be
 //   pre-computed. For example, in a FDM grid, the following loops can be used:
