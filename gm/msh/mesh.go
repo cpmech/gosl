@@ -75,6 +75,9 @@ type Mesh struct {
 	Ndim int       // max space dimension among all vertices
 	Xmin []float64 // min(x) among all vertices [ndim]
 	Xmax []float64 // max(x) among all vertices [ndim]
+
+	// auxiliary
+	Tmaps *TagMaps // map of tags
 }
 
 // BoundaryData holds ID of edge or face and pointer to Cell at boundary (edge or face)
@@ -98,11 +101,22 @@ type TagMaps struct {
 	FaceTag2verts   map[int]VertexSet       // face tag => vertices on tagged edge [unique]
 }
 
+// NewMesh creates mesh from json string
+func NewMesh(jsonString string) (o *Mesh) {
+	o = new(Mesh)
+	err := json.Unmarshal([]byte(jsonString), o)
+	if err != nil {
+		chk.Panic("%v\n", err)
+	}
+	o.CheckAndCalcDerivedVars()
+	return
+}
+
 // Read reads mesh and call CheckAndCalcDerivedVars
 func Read(fn string) (o *Mesh) {
 	o = new(Mesh)
 	b := io.ReadFile(fn)
-	err := json.Unmarshal(b, &o)
+	err := json.Unmarshal(b, o)
 	if err != nil {
 		chk.Panic("%v\n", err)
 	}
@@ -112,7 +126,8 @@ func Read(fn string) (o *Mesh) {
 
 // CheckAndCalcDerivedVars checks input data and computes derived quantities such as the max space
 // dimension, min(x) and max(x) among all vertices, cells' gndim, etc.
-// This function will set o.Ndim, o.Xmin and o.Xmax
+// This function will set o.Ndim, o.Xmin and o.Xmax.
+// This function will also generate the maps of tags.
 func (o *Mesh) CheckAndCalcDerivedVars() {
 
 	// check for at least one vertex
@@ -172,26 +187,22 @@ func (o *Mesh) CheckAndCalcDerivedVars() {
 		}
 		cell.X = o.ExtractCellCoords(cell.ID)
 	}
-}
-
-// GenTagMaps generates maps of tags
-func (o *Mesh) GenTagMaps() (m *TagMaps) {
 
 	// new tag maps
-	m = new(TagMaps)
-	m.VertexTag2verts = make(map[int]VertexSet)
-	m.CellTag2cells = make(map[int]CellSet)
-	m.CellType2cells = make(map[int]CellSet)
-	m.CellPart2cells = make(map[int]CellSet)
-	m.EdgeTag2cells = make(map[int]BoundaryDataSet)
-	m.EdgeTag2verts = make(map[int]VertexSet)
-	m.FaceTag2cells = make(map[int]BoundaryDataSet)
-	m.FaceTag2verts = make(map[int]VertexSet)
+	o.Tmaps = new(TagMaps)
+	o.Tmaps.VertexTag2verts = make(map[int]VertexSet)
+	o.Tmaps.CellTag2cells = make(map[int]CellSet)
+	o.Tmaps.CellType2cells = make(map[int]CellSet)
+	o.Tmaps.CellPart2cells = make(map[int]CellSet)
+	o.Tmaps.EdgeTag2cells = make(map[int]BoundaryDataSet)
+	o.Tmaps.EdgeTag2verts = make(map[int]VertexSet)
+	o.Tmaps.FaceTag2cells = make(map[int]BoundaryDataSet)
+	o.Tmaps.FaceTag2verts = make(map[int]VertexSet)
 
 	// loop over vertices
 	for _, vert := range o.Verts {
 		if vert.Tag != 0 {
-			m.VertexTag2verts[vert.Tag] = append(m.VertexTag2verts[vert.Tag], vert)
+			o.Tmaps.VertexTag2verts[vert.Tag] = append(o.Tmaps.VertexTag2verts[vert.Tag], vert)
 		}
 	}
 
@@ -203,9 +214,9 @@ func (o *Mesh) GenTagMaps() (m *TagMaps) {
 		faceLocVerts := FaceLocalVerts[cell.TypeIndex]
 
 		// cell data
-		m.CellTag2cells[cell.Tag] = append(m.CellTag2cells[cell.Tag], cell)
-		m.CellType2cells[cell.TypeIndex] = append(m.CellType2cells[cell.TypeIndex], cell)
-		m.CellPart2cells[cell.Part] = append(m.CellPart2cells[cell.Part], cell)
+		o.Tmaps.CellTag2cells[cell.Tag] = append(o.Tmaps.CellTag2cells[cell.Tag], cell)
+		o.Tmaps.CellType2cells[cell.TypeIndex] = append(o.Tmaps.CellType2cells[cell.TypeIndex], cell)
+		o.Tmaps.CellPart2cells[cell.Part] = append(o.Tmaps.CellPart2cells[cell.Part], cell)
 
 		// check edge tags
 		if len(cell.EdgeTags) > 0 {
@@ -222,24 +233,24 @@ func (o *Mesh) GenTagMaps() (m *TagMaps) {
 		}
 
 		// edge tags => cells, verts
-		o.setBryTagMaps(&m.EdgeTag2cells, &m.EdgeTag2verts, cell, cell.EdgeTags, edgeLocVerts)
+		o.setBryTagMaps(&o.Tmaps.EdgeTag2cells, &o.Tmaps.EdgeTag2verts, cell, cell.EdgeTags, edgeLocVerts)
 
 		// face tags => cells, verts
 		if len(faceLocVerts) > 0 {
-			o.setBryTagMaps(&m.FaceTag2cells, &m.FaceTag2verts, cell, cell.FaceTags, faceLocVerts)
+			o.setBryTagMaps(&o.Tmaps.FaceTag2cells, &o.Tmaps.FaceTag2verts, cell, cell.FaceTags, faceLocVerts)
 		}
 	}
 
 	// sort entries in EdgeTag2verts
-	for edgeTag, vertsOnEdge := range m.EdgeTag2verts {
+	for edgeTag, vertsOnEdge := range o.Tmaps.EdgeTag2verts {
 		sort.Sort(vertsOnEdge)
-		m.EdgeTag2verts[edgeTag] = vertsOnEdge
+		o.Tmaps.EdgeTag2verts[edgeTag] = vertsOnEdge
 	}
 
 	// sort entries in FaceTag2verts
-	for faceTag, vertsOnFace := range m.FaceTag2verts {
+	for faceTag, vertsOnFace := range o.Tmaps.FaceTag2verts {
 		sort.Sort(vertsOnFace)
-		m.FaceTag2verts[faceTag] = vertsOnFace
+		o.Tmaps.FaceTag2verts[faceTag] = vertsOnFace
 	}
 	return
 }

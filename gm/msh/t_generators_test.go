@@ -71,21 +71,18 @@ func TestGen01(tst *testing.T) {
 			chk.Ints(tst, "Qua17: cn.V", mesh.Cells[n].V, []int{36, 40, 68, 64, 37, 44, 67, 54, 38, 51, 66, 49, 39, 55, 65, 43, 50})
 		}
 
-		// compute tags map
-		tm := mesh.GenTagMaps()
-
 		// vertices along left border
-		vset := tm.VertexTag2verts[4]
-		vset = append(vset, tm.VertexTag2verts[41]...)
-		vset = append(vset, tm.VertexTag2verts[34]...)
+		vset := mesh.Tmaps.VertexTag2verts[4]
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[41]...)
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[34]...)
 		for _, v := range vset {
 			chk.Float64(tst, "x=xmin", 1e-15, v.X[0], xmin)
 		}
 
 		// vertices along right border
-		vset = tm.VertexTag2verts[2]
-		vset = append(vset, tm.VertexTag2verts[12]...)
-		vset = append(vset, tm.VertexTag2verts[23]...)
+		vset = mesh.Tmaps.VertexTag2verts[2]
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[12]...)
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[23]...)
 		for _, v := range vset {
 			chk.Float64(tst, "x=xmax", 1e-15, v.X[0], xmax)
 		}
@@ -197,22 +194,19 @@ func TestGen03(tst *testing.T) {
 			chk.Ints(tst, "Qua17: cn.V", mesh.Cells[n].V, []int{120, 124, 152, 148, 121, 128, 151, 138, 122, 135, 150, 133, 123, 139, 149, 127, 134})
 		}
 
-		// compute tags map
-		tm := mesh.GenTagMaps()
-
 		// vertices along left border
-		vset := tm.VertexTag2verts[4]
-		vset = append(vset, tm.VertexTag2verts[41]...)
-		vset = append(vset, tm.VertexTag2verts[34]...)
+		vset := mesh.Tmaps.VertexTag2verts[4]
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[41]...)
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
-		vset = tm.VertexTag2verts[2]
-		vset = append(vset, tm.VertexTag2verts[12]...)
-		vset = append(vset, tm.VertexTag2verts[23]...)
+		vset = mesh.Tmaps.VertexTag2verts[2]
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[12]...)
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)
@@ -272,22 +266,19 @@ func TestGen04(tst *testing.T) {
 			chk.Ints(tst, "Qua17: cn.V", mesh.Cells[n].V, []int{120, 124, 152, 148, 121, 128, 151, 138, 122, 135, 150, 133, 123, 139, 149, 127, 134})
 		}
 
-		// compute tags map
-		tm := mesh.GenTagMaps()
-
 		// vertices along left border
-		vset := tm.VertexTag2verts[4]
-		vset = append(vset, tm.VertexTag2verts[41]...)
-		vset = append(vset, tm.VertexTag2verts[34]...)
+		vset := mesh.Tmaps.VertexTag2verts[4]
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[41]...)
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
-		vset = tm.VertexTag2verts[2]
-		vset = append(vset, tm.VertexTag2verts[12]...)
-		vset = append(vset, tm.VertexTag2verts[23]...)
+		vset = mesh.Tmaps.VertexTag2verts[2]
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[12]...)
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)
@@ -348,22 +339,19 @@ func TestGen05(tst *testing.T) {
 			chk.Ints(tst, "Qua17: cn.V", mesh.Cells[n].V, []int{44, 48, 8, 4, 45, 51, 7, 58, 46, 56, 6, 54, 47, 59, 5, 50, 55})
 		}
 
-		// compute tags map
-		tm := mesh.GenTagMaps()
-
 		// vertices along left border
-		vset := tm.VertexTag2verts[4]
-		vset = append(vset, tm.VertexTag2verts[41]...)
-		vset = append(vset, tm.VertexTag2verts[34]...)
+		vset := mesh.Tmaps.VertexTag2verts[4]
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[41]...)
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[34]...)
 		for _, v := range vset {
 			rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "r", 1e-15, r, rm)
 		}
 
 		// vertices along right border
-		vset = tm.VertexTag2verts[2]
-		vset = append(vset, tm.VertexTag2verts[12]...)
-		vset = append(vset, tm.VertexTag2verts[23]...)
+		vset = mesh.Tmaps.VertexTag2verts[2]
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[12]...)
+		vset = append(vset, mesh.Tmaps.VertexTag2verts[23]...)
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)
