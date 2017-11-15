@@ -13,10 +13,10 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
-func Test_singleq4(tst *testing.T) {
+func TestSingleq4(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("singleq4")
+	chk.PrintTitle("Singleq4")
 
 	// load mesh
 	m := Read("data/singleq4square1x1.msh")
@@ -108,10 +108,10 @@ func Test_singleq4(tst *testing.T) {
 	}
 }
 
-func Test_mesh01(tst *testing.T) {
+func TestMesh01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("mesh01")
+	chk.PrintTitle("Mesh01")
 
 	// load mesh
 	m := Read("data/mesh01.msh")
@@ -261,10 +261,10 @@ func Test_mesh01(tst *testing.T) {
 	}
 }
 
-func Test_cubeandtet(tst *testing.T) {
+func TestCubeandtet(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("cubeandtet")
+	chk.PrintTitle("Cubeandtet")
 
 	// load mesh
 	m := Read("data/cubeandtet.msh")
@@ -283,8 +283,8 @@ func Test_cubeandtet(tst *testing.T) {
 		{0.0, 1.0, 1.0},
 		{0.0, 2.0, 0.0},
 	}
-	allVtags := []int{0, 0, -12, 0, -14, 0, 0, 0, -18}
-	allCtags := []int{-1, -1}
+	allVtags := []int{0, 0, 12, 0, 14, 0, 0, 0, 18}
+	allCtags := []int{1, 1}
 	allParts := []int{0, 0}
 	allTypeKeys := []string{"hex8", "tet4"}
 	allTypeIndices := []int{TypeHex8, TypeTet4}
@@ -293,8 +293,8 @@ func Test_cubeandtet(tst *testing.T) {
 		{3, 2, 8, 7},
 	}
 	allEtags := [][]int{
-		{-10, -11, -12, -13, 0, 0, 0, 0, 0, 0, -15, 0},
-		{-12, -12, -12, 0, -66, 0},
+		{10, 11, 12, 13, 0, 0, 0, 0, 0, 0, 15, 0},
+		{12, 12, 12, 0, 66, 0},
 	}
 
 	// check input data
@@ -328,11 +328,11 @@ func Test_cubeandtet(tst *testing.T) {
 	checkderived(tst, m, ndim, xmin, xmax, allGndim, allCoords)
 
 	// correct data
-	vtags := []int{-12, -14, -18}
-	ctags := []int{-1}
+	vtags := []int{12, 14, 18}
+	ctags := []int{1}
 	cparts := []int{0}
-	etags := []int{-10, -11, -12, -13, -15, -66}
-	ftags := []int{-100, -101, -200, -300, -400}
+	etags := []int{10, 11, 12, 13, 15, 66}
+	ftags := []int{100, 101, 200, 300, 400}
 	ctypeinds := []int{TypeHex8, TypeTet4}
 	vtagsVids := [][]int{{2}, {4}, {8}}
 	ctagsCids := [][]int{{0, 1}}
@@ -377,6 +377,16 @@ func Test_cubeandtet(tst *testing.T) {
 		tst.Errorf("len(internal) != 14\n")
 	}
 
+	// Boundary() method
+	chk.Ints(tst, "nodes @ face 100", m.Boundary(100), []int{0, 3, 4, 7, 8})
+	chk.Ints(tst, "nodes @ face 101", m.Boundary(101), []int{1, 2, 5, 6})
+	chk.Ints(tst, "nodes @ face 200", m.Boundary(200), []int{0, 1, 4, 5})
+	chk.Ints(tst, "nodes @ face 300", m.Boundary(300), []int{0, 1, 2, 3, 8})
+	chk.Ints(tst, "nodes @ face 400", m.Boundary(400), []int{2, 7, 8})
+	if m.Boundary(123) != nil {
+		chk.Panic("Boundary(123) should return nil\n")
+	}
+
 	// draw
 	if chk.Verbose {
 		args := NewArgs()
@@ -389,6 +399,126 @@ func Test_cubeandtet(tst *testing.T) {
 		plt.Save("/tmp/gosl/gm", "cubeandtet")
 	}
 }
+
+func TestMesh02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Mesh02. using string")
+
+	m := NewMesh(`{
+  "verts" : [
+    { "i":0, "t":0, "x":[0, 0] },
+    { "i":1, "t":0, "x":[1, 0] },
+    { "i":2, "t":0, "x":[2, 0] },
+    { "i":3, "t":0, "x":[0, 1] },
+    { "i":4, "t":1, "x":[1, 1] },
+    { "i":5, "t":0, "x":[2, 1] },
+    { "i":6, "t":0, "x":[0, 2] },
+    { "i":7, "t":0, "x":[1, 2] },
+    { "i":8, "t":1, "x":[2, 2] }
+  ],
+  "cells" : [
+    { "i":0, "t":1, "p":0, "y":"qua4", "v":[0,1,4,3], "et":[20,  0,  0, 10] },
+    { "i":1, "t":1, "p":1, "y":"qua4", "v":[1,2,5,4], "et":[20, 11,  0,  0] },
+    { "i":2, "t":2, "p":0, "y":"qua4", "v":[3,4,7,6], "et":[ 0,  0, 21, 10] },
+    { "i":3, "t":2, "p":1, "y":"qua4", "v":[4,5,8,7], "et":[ 0, 11, 21,  0] }
+  ]
+}`)
+
+	// correct data
+	nverts := 9
+	ncells := 4
+	allX := [][]float64{
+		{0, 0}, {1, 0}, {2, 0},
+		{0, 1}, {1, 1}, {2, 1},
+		{0, 2}, {1, 2}, {2, 2},
+	}
+	allVtags := []int{0, 0, 0, 0, 1, 0, 0, 0, 1}
+	allCtags := []int{1, 1, 2, 2}
+	allParts := []int{0, 1, 0, 1}
+	allTypeKeys := []string{"qua4", "qua4", "qua4", "qua4"}
+	allTypeIndices := []int{TypeQua4, TypeQua4, TypeQua4, TypeQua4}
+	allV := [][]int{
+		{0, 1, 4, 3},
+		{1, 2, 5, 4},
+		{3, 4, 7, 6},
+		{4, 5, 8, 7},
+	}
+	allEtags := [][]int{
+		{20, 0, 0, 10},
+		{20, 11, 0, 0},
+		{0, 0, 21, 10},
+		{0, 11, 21, 0},
+	}
+
+	// check input data
+	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypeKeys, allTypeIndices, allV, allEtags, nil)
+
+	// correct data
+	vtags := []int{1}
+	ctags := []int{1, 2}
+	cparts := []int{0, 1}
+	etags := []int{10, 11, 20, 21}
+	ctypeinds := []int{TypeQua4}
+	vtagsVids := [][]int{{4, 8}}
+	ctagsCids := [][]int{{0, 1}, {2, 3}}
+	cpartsCids := [][]int{{0, 2}, {1, 3}}
+	ctypesCids := [][]int{{0, 1, 2, 3}}
+	etagsCids := [][]int{{0, 2}, {1, 3}, {0, 1}, {2, 3}} // not unique
+	etagsLocEids := [][]int{{3, 3}, {1, 1}, {0, 0}, {2, 2}}
+	etagsVids := [][]int{{0, 3, 6}, {2, 5, 8}, {0, 1, 2}, {6, 7, 8}}
+
+	// check maps
+	checkmaps(tst, m, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
+
+	// check edges
+	io.Pf("\nedges\n")
+	edgesmap := m.ExtractEdges()
+	checkEdges(tst, edgesmap, map[EdgeKey]edge{
+		{0, 1, 9}: {[]int{0, 1}, []int{0}, []int{0}},
+		{1, 2, 9}: {[]int{1, 2}, []int{1}, []int{0}},
+		{3, 4, 9}: {[]int{3, 4}, []int{0, 2}, []int{2, 0}},
+		{4, 5, 9}: {[]int{4, 5}, []int{1, 3}, []int{2, 0}},
+		{6, 7, 9}: {[]int{6, 7}, []int{2}, []int{2}},
+		{7, 8, 9}: {[]int{7, 8}, []int{3}, []int{2}},
+		{0, 3, 9}: {[]int{0, 3}, []int{0}, []int{3}},
+		{3, 6, 9}: {[]int{3, 6}, []int{2}, []int{3}},
+		{1, 4, 9}: {[]int{1, 4}, []int{0, 1}, []int{1, 3}},
+		{4, 7, 9}: {[]int{4, 7}, []int{2, 3}, []int{1, 3}},
+		{2, 5, 9}: {[]int{2, 5}, []int{1}, []int{1}},
+		{5, 8, 9}: {[]int{5, 8}, []int{3}, []int{1}},
+	})
+	internal, boundary := edgesmap.Split()
+	if len(internal) != 4 {
+		tst.Errorf("len(internal) != 4\n")
+	}
+	if len(boundary) != 8 {
+		tst.Errorf("len(internal) != 8\n")
+	}
+
+	// Boundary() method
+	chk.Ints(tst, "nodes @ edge 10", m.Boundary(10), []int{0, 3, 6})
+	chk.Ints(tst, "nodes @ edge 11", m.Boundary(11), []int{2, 5, 8})
+	chk.Ints(tst, "nodes @ edge 20", m.Boundary(20), []int{0, 1, 2})
+	chk.Ints(tst, "nodes @ edge 21", m.Boundary(21), []int{6, 7, 8})
+	if m.Boundary(33) != nil {
+		chk.Panic("Boundary(33) should return nil\n")
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		args := NewArgs()
+		args.WithIdsVerts = true
+		args.WithIdsCells = true
+		args.WithTagsEdges = true
+		m.Draw(args)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/msh", "mesh02")
+	}
+}
+
+// auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
 func checkinput(tst *testing.T, m *Mesh, nverts, ncells int, X [][]float64, vtags, ctags, parts []int, typekeys []string, typeindices []int, V [][]int, etags, ftags [][]int) {
 	if len(m.Verts) != nverts {
@@ -693,114 +823,5 @@ func checkEdges(tst *testing.T, edges EdgesMap, reference edgesmap) {
 		} else {
 			tst.Errorf("edge <%v> is missing in edges map\n", ekey)
 		}
-	}
-}
-
-func TestMesh02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("Mesh02. using string")
-
-	m := NewMesh(`{
-  "verts" : [
-    { "i":0, "t":0, "x":[0, 0] },
-    { "i":1, "t":0, "x":[1, 0] },
-    { "i":2, "t":0, "x":[2, 0] },
-    { "i":3, "t":0, "x":[0, 1] },
-    { "i":4, "t":1, "x":[1, 1] },
-    { "i":5, "t":0, "x":[2, 1] },
-    { "i":6, "t":0, "x":[0, 2] },
-    { "i":7, "t":0, "x":[1, 2] },
-    { "i":8, "t":1, "x":[2, 2] }
-  ],
-  "cells" : [
-    { "i":0, "t":1, "p":0, "y":"qua4", "v":[0,1,4,3], "et":[20,  0,  0, 10] },
-    { "i":1, "t":1, "p":1, "y":"qua4", "v":[1,2,5,4], "et":[20, 11,  0,  0] },
-    { "i":2, "t":2, "p":0, "y":"qua4", "v":[3,4,7,6], "et":[ 0,  0, 21, 10] },
-    { "i":3, "t":2, "p":1, "y":"qua4", "v":[4,5,8,7], "et":[ 0, 11, 21,  0] }
-  ]
-}`)
-
-	// correct data
-	nverts := 9
-	ncells := 4
-	allX := [][]float64{
-		{0, 0}, {1, 0}, {2, 0},
-		{0, 1}, {1, 1}, {2, 1},
-		{0, 2}, {1, 2}, {2, 2},
-	}
-	allVtags := []int{0, 0, 0, 0, 1, 0, 0, 0, 1}
-	allCtags := []int{1, 1, 2, 2}
-	allParts := []int{0, 1, 0, 1}
-	allTypeKeys := []string{"qua4", "qua4", "qua4", "qua4"}
-	allTypeIndices := []int{TypeQua4, TypeQua4, TypeQua4, TypeQua4}
-	allV := [][]int{
-		{0, 1, 4, 3},
-		{1, 2, 5, 4},
-		{3, 4, 7, 6},
-		{4, 5, 8, 7},
-	}
-	allEtags := [][]int{
-		{20, 0, 0, 10},
-		{20, 11, 0, 0},
-		{0, 0, 21, 10},
-		{0, 11, 21, 0},
-	}
-
-	// check input data
-	checkinput(tst, m, nverts, ncells, allX, allVtags, allCtags, allParts, allTypeKeys, allTypeIndices, allV, allEtags, nil)
-
-	// correct data
-	vtags := []int{1}
-	ctags := []int{1, 2}
-	cparts := []int{0, 1}
-	etags := []int{10, 11, 20, 21}
-	ctypeinds := []int{TypeQua4}
-	vtagsVids := [][]int{{4, 8}}
-	ctagsCids := [][]int{{0, 1}, {2, 3}}
-	cpartsCids := [][]int{{0, 2}, {1, 3}}
-	ctypesCids := [][]int{{0, 1, 2, 3}}
-	etagsCids := [][]int{{0, 2}, {1, 3}, {0, 1}, {2, 3}} // not unique
-	etagsLocEids := [][]int{{3, 3}, {1, 1}, {0, 0}, {2, 2}}
-	etagsVids := [][]int{{0, 3, 6}, {2, 5, 8}, {0, 1, 2}, {6, 7, 8}}
-
-	// check maps
-	checkmaps(tst, m, vtags, ctags, cparts, etags, nil, ctypeinds, vtagsVids, ctagsCids, cpartsCids, ctypesCids, etagsVids, etagsCids, etagsLocEids, nil, nil, nil)
-
-	// check edges
-	io.Pf("\nedges\n")
-	edgesmap := m.ExtractEdges()
-	checkEdges(tst, edgesmap, map[EdgeKey]edge{
-		{0, 1, 9}: {[]int{0, 1}, []int{0}, []int{0}},
-		{1, 2, 9}: {[]int{1, 2}, []int{1}, []int{0}},
-		{3, 4, 9}: {[]int{3, 4}, []int{0, 2}, []int{2, 0}},
-		{4, 5, 9}: {[]int{4, 5}, []int{1, 3}, []int{2, 0}},
-		{6, 7, 9}: {[]int{6, 7}, []int{2}, []int{2}},
-		{7, 8, 9}: {[]int{7, 8}, []int{3}, []int{2}},
-		{0, 3, 9}: {[]int{0, 3}, []int{0}, []int{3}},
-		{3, 6, 9}: {[]int{3, 6}, []int{2}, []int{3}},
-		{1, 4, 9}: {[]int{1, 4}, []int{0, 1}, []int{1, 3}},
-		{4, 7, 9}: {[]int{4, 7}, []int{2, 3}, []int{1, 3}},
-		{2, 5, 9}: {[]int{2, 5}, []int{1}, []int{1}},
-		{5, 8, 9}: {[]int{5, 8}, []int{3}, []int{1}},
-	})
-	internal, boundary := edgesmap.Split()
-	if len(internal) != 4 {
-		tst.Errorf("len(internal) != 4\n")
-	}
-	if len(boundary) != 8 {
-		tst.Errorf("len(internal) != 8\n")
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		args := NewArgs()
-		args.WithIdsVerts = true
-		args.WithIdsCells = true
-		args.WithTagsEdges = true
-		m.Draw(args)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/msh", "mesh02")
 	}
 }

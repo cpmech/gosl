@@ -8,11 +8,5 @@ while true; do
     echo
     echo
     echo
-    #go test -test.run="singleq4"
-    #go test -test.run="mesh01"
-    #go test -test.run="cubeandtet"
-    #go test -test.run="Quadpts01"
-    #go test -test.run="Integ04"
-    #go test -test.run="Gen05"
-    go test -test.run="Mesh02"
+    go test -test.run="Cubeandtet"
 done

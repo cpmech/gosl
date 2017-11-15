@@ -40,6 +40,15 @@ func (o VertexSet) Swap(i, j int) { o[i], o[j] = o[j], o[i] }
 // Less compares ides in vertex set
 func (o VertexSet) Less(i, j int) bool { return o[i].ID < o[j].ID }
 
+// IDs returns the IDs of vertices in VertexSet
+func (o VertexSet) IDs() (ids []int) {
+	ids = make([]int, len(o))
+	for i, vertex := range o {
+		ids[i] = vertex.ID
+	}
+	return
+}
+
 // Cell holds cell data (in e.g. from msh file)
 type Cell struct {
 
@@ -266,6 +275,21 @@ func (o *Mesh) ExtractCellCoords(cellID int) (X *la.Matrix) {
 		}
 	}
 	return
+}
+
+// Boundary returns a list of indices of nodes on edge (2D) or face (3D) of boundary
+//   NOTE: will return empty list if tag is not available
+func (o *Mesh) Boundary(tag int) []int {
+	if o.Ndim == 2 {
+		if vset, ok := o.Tmaps.EdgeTag2verts[tag]; ok {
+			return vset.IDs()
+		}
+		return nil
+	}
+	if vset, ok := o.Tmaps.FaceTag2verts[tag]; ok {
+		return vset.IDs()
+	}
+	return nil
 }
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
