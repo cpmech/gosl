@@ -286,12 +286,6 @@ func TestEqs05(tst *testing.T) {
 	e.Put(3, 4, 1.0)
 	e.Put(4, 3, 5.0)
 
-	// solver
-	s := NewSparseSolver("umfpack")
-	defer s.Free()
-	s.Init(e.Auu, false, false, "", "", nil)
-	s.Fact()
-
 	// functions
 	calcXk := func(I int, t float64) float64 {
 		return 0.0 // returns zero for all known values: x3 and x4
@@ -310,7 +304,7 @@ func TestEqs05(tst *testing.T) {
 	}
 
 	// solve linear system
-	e.Solve(s, 0, calcXk, calcBu)
+	e.SolveOnce(calcXk, calcBu)
 
 	// check
 	chk.Array(tst, "{xu}", 1e-13, e.Xu, []float64{-15, 8, 2})

@@ -361,6 +361,16 @@ func (o *Equations) Solve(solver SparseSolver, t float64, calcXk, calcBu func(I 
 	}
 }
 
+// SolveOnce solves linear system just once; thus allocating and discarding a linear solver
+// (umfpack) internally. See method Solve() for more details
+func (o *Equations) SolveOnce(calcXk, calcBu func(I int, t float64) float64) {
+	s := NewSparseSolver("umfpack")
+	defer s.Free()
+	s.Init(o.Auu, false, false, "", "", nil)
+	s.Fact()
+	o.Solve(s, 0, calcXk, calcBu)
+}
+
 // Print prints information about Equations
 func (o *Equations) Print(full bool) {
 	io.Pf("number of unknown x-components: Nu = %d\n", o.Nu)
