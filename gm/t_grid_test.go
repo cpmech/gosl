@@ -99,6 +99,18 @@ func TestGrid01(tst *testing.T) {
 	chk.Array(tst, "Node(10)", 1e-17, g.Node(10), []float64{-6, 1})
 	chk.Array(tst, "Node(15)", 1e-17, g.Node(15), []float64{-6, 3})
 	chk.Array(tst, "Node(19)", 1e-17, g.Node(19), []float64{6, 3})
+	V := g.MapMeshgrid2d([]float64{
+		100, 101, 102, 103, 104,
+		200, 201, 202, 203, 204,
+		300, 301, 302, 303, 304,
+		400, 401, 402, 403, 404,
+	})
+	chk.Deep2(tst, "V", 1e-17, V, [][]float64{
+		{100, 101, 102, 103, 104},
+		{200, 201, 202, 203, 204},
+		{300, 301, 302, 303, 304},
+		{400, 401, 402, 403, 404},
+	})
 
 	// boundaries and tags
 	io.Pf("\nboundaries and tags\n")
@@ -268,6 +280,30 @@ func TestGrid02(tst *testing.T) {
 	chk.Array(tst, "Node(10)", 1e-15, g.Node(14), []float64{-1, -2, 0})
 	chk.Array(tst, "Node(15)", 1e-15, g.Node(18), []float64{-2, b, 0})
 	chk.Array(tst, "Node(19)", 1e-15, g.Node(23), []float64{-1, 2, 0})
+	V := g.MapMeshgrid3d([]float64{
+		100, 101, 102, // i:0→2, j:0, k:0
+		110, 111, 112, // i:0→2, j:1, k:0
+		120, 121, 122, // i:0→2, j:2, k:0
+		130, 131, 132, // i:0→2, j:3, k:0
+		200, 201, 202, // i:0→2, j:0, k:1
+		210, 211, 212, // i:0→2, j:1, k:1
+		220, 221, 222, // i:0→2, j:2, k:1
+		230, 231, 232, // i:0→2, j:3, k:1
+	})
+	chk.Deep3(tst, "V", 1e-17, V, [][][]float64{
+		{ //k=0
+			{100, 101, 102}, // j=0
+			{110, 111, 112}, // j=1
+			{120, 121, 122}, // j=2
+			{130, 131, 132}, // j=3
+		},
+		{ // k=1
+			{200, 201, 202}, // j=0
+			{210, 211, 212}, // j=1
+			{220, 221, 222}, // j=2
+			{230, 231, 232}, // j=3
+		},
+	})
 
 	// boundaries and tags
 	io.Pf("\nboundaries and tags\n")

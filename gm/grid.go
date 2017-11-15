@@ -487,6 +487,33 @@ func (o *Grid) Node(I int) (x la.Vector) {
 	return o.mtr[p][n][m].X
 }
 
+// MapMeshgrid2d maps vector V into 2D meshgrid using node indices conversion IndexMNPtoI()
+//  vv[ny][nx] -- mapped values: vv[n][m] ⇐ V[I] (see also Meshgrid2d)
+func (o *Grid) MapMeshgrid2d(v la.Vector) (V [][]float64) {
+	V = utl.Alloc(o.npts[1], o.npts[0])
+	p := 0
+	for n := 0; n < o.npts[1]; n++ {
+		for m := 0; m < o.npts[0]; m++ {
+			V[n][m] = v[o.IndexMNPtoI(m, n, p)]
+		}
+	}
+	return
+}
+
+// MapMeshgrid3d maps vector V into 3D meshgrid using node indices conversion IndexMNPtoI()
+//  V[nz][ny][nx] -- mapped values: V[p][n][m] ⇐ v[I] (see also Meshgrid2d)
+func (o *Grid) MapMeshgrid3d(v la.Vector) (V [][][]float64) {
+	V = utl.Deep3alloc(o.npts[2], o.npts[1], o.npts[0])
+	for p := 0; p < o.npts[2]; p++ {
+		for n := 0; n < o.npts[1]; n++ {
+			for m := 0; m < o.npts[0]; m++ {
+				V[p][n][m] = v[o.IndexMNPtoI(m, n, p)]
+			}
+		}
+	}
+	return
+}
+
 // boundaries and tags /////////////////////////////////////////////////////////////////////////////
 
 // Edge returns the ids of points on edges: [edge0, edge1, edge2, edge3]
