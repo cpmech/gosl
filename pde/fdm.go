@@ -111,10 +111,26 @@ func (o *FdmLaplacian) Assemble(reactions bool) {
 	return
 }
 
-// CalcKnownU calculates know U values (CalcXk in la.Equations)
+// SolveSteady solves steady problem
+//   Solves: K⋅u = f
+func (o *FdmLaplacian) SolveSteady(reactions bool) (u, f []float64) {
+	o.Eqs.SolveOnce(o.calcXk, o.calcBu)
+	u = make([]float64, o.Grid.Size())
+	f = make([]float64, o.Grid.Size())
+	for i, I := range o.Eqs.UtoF { // need to calc Bu again because it may be modified
+		o.Eqs.Bu[i] = o.calcBu(I, 0)
+	}
+	o.Eqs.JoinVector(u, o.Eqs.Xu, o.Eqs.Xk)
+	o.Eqs.JoinVector(f, o.Eqs.Bu, o.Eqs.Bk)
+	return
+}
+
+// auxiliary //////////////////////////////////////////////////////////////////////////////////////
+
+// calcXk calculates know U values (CalcXk in la.Equations)
 //  I -- node number
 //  t -- time
-func (o *FdmLaplacian) CalcKnownU(I int, t float64) float64 {
+func (o *FdmLaplacian) calcXk(I int, t float64) float64 {
 	val, available := o.EssenBcs.Value(I, 0, t)
 	if available {
 		return val
@@ -122,26 +138,12 @@ func (o *FdmLaplacian) CalcKnownU(I int, t float64) float64 {
 	return 0
 }
 
-// CalcRHS calculates RHS vector corresponding to known values of U (CalcBu in la.Equations)
+// calcBu calculates RHS vector corresponding to known values of U (CalcBu in la.Equations)
 //  I -- node number
 //  t -- time
-func (o *FdmLaplacian) CalcRHS(I int, t float64) float64 {
+func (o *FdmLaplacian) calcBu(I int, t float64) float64 {
 	if o.Source != nil {
 		return o.Source(o.Grid.Node(I), t)
 	}
 	return 0
-}
-
-// SolveSteady solves steady problem
-//   Solves: K⋅u = f
-func (o *FdmLaplacian) SolveSteady(reactions bool) (u, f []float64) {
-	o.Eqs.SolveOnce(o.CalcKnownU, o.CalcRHS)
-	u = make([]float64, o.Grid.Size())
-	f = make([]float64, o.Grid.Size())
-	for i, I := range o.Eqs.UtoF { // need to calc Bu again because it may be modified
-		o.Eqs.Bu[i] = o.CalcRHS(I, 0)
-	}
-	o.Eqs.JoinVector(u, o.Eqs.Xu, o.Eqs.Xk)
-	o.Eqs.JoinVector(f, o.Eqs.Bu, o.Eqs.Bk)
-	return
 }
