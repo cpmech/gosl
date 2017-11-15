@@ -1,0 +1,147 @@
+// Copyright 2016 The Gosl Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package pde
+
+import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/gm"
+	"github.com/cpmech/gosl/la"
+)
+
+// FdmLaplacian implements the FDM Laplacian operator (2D or 3D)
+//
+//              ∂²u        ∂²u        ∂²u
+//    L{u} = kx ———  +  ky ———  +  kz ———
+//              ∂x²        ∂y²        ∂z²
+//
+type FdmLaplacian struct {
+	Kx       float64       // isotropic coefficient x
+	Ky       float64       // isotropic coefficient y
+	Kz       float64       // isotropic coefficient z
+	Grid     *gm.Grid      // grid
+	Source   fun.Svs       // source term function s({x},t)
+	EssenBcs *EssentialBcs // essential boundary conditions
+	Eqs      *la.Equations // equations
+	bcsReady bool          // boundary conditions are set
+}
+
+// NewFdmLaplacian creates a new Laplacian operator with given parameters
+func NewFdmLaplacian(params dbf.Params, grid *gm.Grid, source fun.Svs) (o *FdmLaplacian) {
+	o = new(FdmLaplacian)
+	err := params.ConnectSetOpt(
+		[]*float64{&o.Kx, &o.Ky, &o.Kz},
+		[]string{"kx", "ky", "kz"},
+		[]bool{false, false, true},
+		"FdmLaplacian",
+	)
+	if err != "" {
+		chk.Panic(err)
+	}
+	o.Grid = grid
+	o.Source = source
+	o.EssenBcs = NewEssentialBcsGrid(grid, 1) // 1:maxNdof
+	o.bcsReady = false
+	return
+}
+
+// AddBc adds essential or natural boundary condition
+//   essential -- essential BC; otherwise natural boundary condition
+//   tag       -- edge or face tag in grid
+//   cvalue    -- constant value [optional]; or
+//   fvalue    -- function value [optional]
+func (o *FdmLaplacian) AddBc(essential bool, tag int, cvalue float64, fvalue dbf.T) {
+	o.bcsReady = false
+	if essential {
+		o.EssenBcs.AddUsingTag(tag, 0, cvalue, fvalue)
+		return
+	}
+	chk.Panic("TODO: Implement natural boundary condition\n")
+}
+
+// Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
+//  reactions -- prepare for computation of RHS
+func (o *FdmLaplacian) Assemble(reactions bool) {
+	if !o.bcsReady {
+		o.Eqs = la.NewEquations(o.Grid.Size(), o.EssenBcs.Nodes())
+		o.Eqs.Alloc([]int{5 * o.Eqs.Nu, 5 * o.Eqs.Nu, 5 * o.Eqs.Nk, 5 * o.Eqs.Nk}, reactions, true)
+		o.bcsReady = true
+	}
+	o.Eqs.Start()
+	if o.Grid.Ndim() == 2 {
+		nx := o.Grid.Npts(0)
+		ny := o.Grid.Npts(1)
+		dx := o.Grid.Xlen(0) / float64(nx-1)
+		dy := o.Grid.Xlen(1) / float64(ny-1)
+		dx2 := dx * dx
+		dy2 := dy * dy
+		α := -2.0 * (o.Kx/dx2 + o.Ky/dy2)
+		β := o.Kx / dx2
+		γ := o.Ky / dy2
+		mol := []float64{α, β, β, γ, γ}
+		jays := make([]int, 5)
+		for I := 0; I < o.Eqs.N; I++ { // loop over all Nx*Ny equations
+			col := I % nx    // grid column number
+			row := I / nx    // grid row number
+			jays[0] = I      // current node
+			jays[1] = I - 1  // left node
+			jays[2] = I + 1  // right node
+			jays[3] = I - nx // bottom node
+			jays[4] = I + nx // top node
+			if col == 0 {
+				jays[1] = jays[2]
+			}
+			if col == nx-1 {
+				jays[2] = jays[1]
+			}
+			if row == 0 {
+				jays[3] = jays[4]
+			}
+			if row == ny-1 {
+				jays[4] = jays[3]
+			}
+			for k, J := range jays { // loop over non-zero columns
+				o.Eqs.Put(I, J, mol[k])
+			}
+		}
+	}
+	return
+}
+
+// CalcKnownU calculates know U values (CalcXk in la.Equations)
+//  I -- node number
+//  t -- time
+func (o *FdmLaplacian) CalcKnownU(I int, t float64) float64 {
+	val, available := o.EssenBcs.Value(I, 0, t)
+	if available {
+		return val
+	}
+	return 0
+}
+
+// CalcRHS calculates RHS vector corresponding to known values of U (CalcBu in la.Equations)
+//  I -- node number
+//  t -- time
+func (o *FdmLaplacian) CalcRHS(I int, t float64) float64 {
+	if o.Source != nil {
+		return o.Source(o.Grid.Node(I), t)
+	}
+	return 0
+}
+
+// SolveSteady solves steady problem
+//   Solves: K⋅u = f
+func (o *FdmLaplacian) SolveSteady(reactions bool) (u, f []float64) {
+	o.Eqs.SolveOnce(o.CalcKnownU, o.CalcRHS)
+	u = make([]float64, o.Grid.Size())
+	f = make([]float64, o.Grid.Size())
+	for i, I := range o.Eqs.UtoF { // need to calc Bu again because it may be modified
+		o.Eqs.Bu[i] = o.CalcRHS(I, 0)
+	}
+	o.Eqs.JoinVector(u, o.Eqs.Xu, o.Eqs.Xk)
+	o.Eqs.JoinVector(f, o.Eqs.Bu, o.Eqs.Bk)
+	return
+}
