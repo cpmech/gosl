@@ -12,11 +12,11 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// FdmLaplacian implements the (negative) FDM Laplacian operator (2D or 3D)
+// FdmLaplacian implements the FDM Laplacian operator (2D or 3D)
 //
-//                ∂²u        ∂²u        ∂²u
-//    L{u} = - kx ———  -  ky ———  -  kz ———
-//                ∂x²        ∂y²        ∂z²
+//              ∂²u        ∂²u        ∂²u
+//    L{u} = kx ———  +  ky ———  +  kz ———
+//              ∂x²        ∂y²        ∂z²
 //
 type FdmLaplacian struct {
 	kx float64  // isotropic coefficient x
@@ -70,9 +70,9 @@ func (o *FdmLaplacian) Assemble(e *la.Equations) {
 		dy := o.g.Xlen(1) / float64(ny-1)
 		dx2 := dx * dx
 		dy2 := dy * dy
-		α := 2.0 * (o.kx/dx2 + o.ky/dy2)
-		β := -o.kx / dx2
-		γ := -o.ky / dy2
+		α := -2.0 * (o.kx/dx2 + o.ky/dy2)
+		β := o.kx / dx2
+		γ := o.ky / dy2
 		mol := []float64{α, β, β, γ, γ}
 		jays := make([]int, 5)
 		for I := 0; I < e.N; I++ { // loop over all Nx*Ny equations
