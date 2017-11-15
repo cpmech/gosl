@@ -12,7 +12,7 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// FdmLaplacian implements the FDM Laplacian operator (2D or 3D)
+// FdmLaplacian implements the Finite Difference (FDM) Laplacian operator (2D or 3D)
 //
 //              ∂²u        ∂²u        ∂²u
 //    L{u} = kx ———  +  ky ———  +  kz ———
@@ -29,7 +29,7 @@ type FdmLaplacian struct {
 	bcsReady bool          // boundary conditions are set
 }
 
-// NewFdmLaplacian creates a new Laplacian operator with given parameters
+// NewFdmLaplacian creates a new FDM Laplacian operator with given parameters
 func NewFdmLaplacian(params dbf.Params, grid *gm.Grid, source fun.Svs) (o *FdmLaplacian) {
 	o = new(FdmLaplacian)
 	err := params.ConnectSetOpt(
@@ -107,27 +107,32 @@ func (o *FdmLaplacian) Assemble(reactions bool) {
 				o.Eqs.Put(I, J, mol[k])
 			}
 		}
+		return
 	}
-	return
+	chk.Panic("TODO: Implement Assemble() in 3D\n")
 }
 
 // SolveSteady solves steady problem
-//   Solves: K⋅u = f
+//   Solves: [K]⋅{u} = {f} represented by [A]⋅{x} = {b}
 func (o *FdmLaplacian) SolveSteady(reactions bool) (u, f []float64) {
 	o.Eqs.SolveOnce(o.calcXk, o.calcBu)
 	u = make([]float64, o.Grid.Size())
-	f = make([]float64, o.Grid.Size())
-	for i, I := range o.Eqs.UtoF { // need to calc Bu again because it may be modified
-		o.Eqs.Bu[i] = o.calcBu(I, 0)
-	}
 	o.Eqs.JoinVector(u, o.Eqs.Xu, o.Eqs.Xk)
-	o.Eqs.JoinVector(f, o.Eqs.Bu, o.Eqs.Bk)
+	if reactions {
+		f = make([]float64, o.Grid.Size())
+		if o.Eqs.Nk > 0 { // need to calc Bu again because it was modified
+			for i, I := range o.Eqs.UtoF {
+				o.Eqs.Bu[i] = o.calcBu(I, 0)
+			}
+		}
+		o.Eqs.JoinVector(f, o.Eqs.Bu, o.Eqs.Bk)
+	}
 	return
 }
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
-// calcXk calculates know U values (CalcXk in la.Equations)
+// calcXk calculates know {u} values (CalcXk in la.Equations)
 //  I -- node number
 //  t -- time
 func (o *FdmLaplacian) calcXk(I int, t float64) float64 {
@@ -138,7 +143,7 @@ func (o *FdmLaplacian) calcXk(I int, t float64) float64 {
 	return 0
 }
 
-// calcBu calculates RHS vector corresponding to known values of U (CalcBu in la.Equations)
+// calcBu calculates RHS vector (e.g. source) corresponding to known values of {u} (CalcBu in la.Equations)
 //  I -- node number
 //  t -- time
 func (o *FdmLaplacian) calcBu(I int, t float64) float64 {

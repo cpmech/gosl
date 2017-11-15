@@ -86,27 +86,44 @@ func TestFdm02(tst *testing.T) {
 	chk.Ints(tst, "KtoF", s.Eqs.KtoF, []int{0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15})
 
 	// solve
-	U, F := s.SolveSteady(reactions)
-	io.Pf("U = %v\n", U)
-	io.Pf("F = %v\n", F)
-	chk.Array(tst, "U", 1e-15, U, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
+	u, f := s.SolveSteady(reactions)
+	io.Pf("u = %v\n", u)
+	io.Pf("f = %v\n", f)
+	chk.Array(tst, "u", 1e-15, u, []float64{1, 1, 1, 1, 1, 1.25, 1.5, 2, 1, 1.5, 1.75, 2, 2, 2, 2, 2})
 
-	// check F
+	// check f
 	sFull := NewFdmLaplacian(p, g, nil)
 	sFull.Assemble(false)
 	K := sFull.Eqs.Auu.ToMatrix(nil)
 	Fref := la.NewVector(g.Size())
-	la.SpMatVecMul(Fref, 1.0, K, U)
-	chk.Array(tst, "F", 1e-15, F, Fref)
+	la.SpMatVecMul(Fref, 1.0, K, u)
+	chk.Array(tst, "f", 1e-15, f, Fref)
 
 	// get results over grid
-	uu := g.MapMeshgrid2d(U)
+	uu := g.MapMeshgrid2d(u)
 	chk.Deep2(tst, "uu", 1e-15, uu, [][]float64{
 		{1.00, 1.00, 1.00, 1.00},
 		{1.00, 1.25, 1.50, 2.00},
 		{1.00, 1.50, 1.75, 2.00},
 		{2.00, 2.00, 2.00, 2.00},
 	})
+
+	// solve again without reactions
+	reactions = false
+	sNoreact := NewFdmLaplacian(p, g, nil)
+	sNoreact.AddBc(true, 10, 1.0, nil) // left
+	sNoreact.AddBc(true, 11, 2.0, nil) // right
+	sNoreact.AddBc(true, 20, 1.0, nil) // bottom
+	sNoreact.AddBc(true, 21, 2.0, nil) // top
+	sNoreact.Assemble(reactions)
+	uNoreact, fNoreact := sNoreact.SolveSteady(reactions)
+	io.Pf("uNoreact = %v\n", uNoreact)
+	io.Pf("fNoreact = %v\n", fNoreact)
+	if fNoreact != nil {
+		tst.Errorf("fNoreact should be nil\n")
+		return
+	}
+	chk.Array(tst, "uNoreact", 1e-15, uNoreact, u)
 
 	// plot
 	if chk.Verbose {
