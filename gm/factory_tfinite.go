@@ -19,6 +19,82 @@ var FactoryTfinite = facTfinite{}
 
 // 2D surfaces ////////////////////////////////////////////////////////////////////////////////////
 
+// Surf2dQuad generates a transfinite mapping of a quadrilateral
+//
+//   A,B,C,D -- the four corners (counter-clockwise order)
+//
+//              Γ[3](r)
+//             D───────C
+//             │       │
+//      Γ[0](s)│       │Γ[1](s)
+//             │       │
+//             A───────B
+//              Γ[2](r)
+//
+func (o facTfinite) Surf2dQuad(A, B, C, D []float64) (surf *Transfinite) {
+
+	u0 := []float64{D[0] - A[0], D[1] - A[1]}
+	u1 := []float64{C[0] - B[0], C[1] - B[1]}
+	u2 := []float64{B[0] - A[0], B[1] - A[1]}
+	u3 := []float64{C[0] - D[0], C[1] - D[1]}
+
+	surf = NewTransfinite2d([]fun.Vs{
+
+		// Γ[0](s)
+		func(x la.Vector, s float64) { // s ϵ [-1,+1]
+			x[0] = A[0] + (1.0+s)*u0[0]/2.0
+			x[1] = A[1] + (1.0+s)*u0[1]/2.0
+		},
+
+		// Γ[1](s)
+		func(x la.Vector, s float64) { // s ϵ [-1,+1]
+			x[0] = B[0] + (1.0+s)*u1[0]/2.0
+			x[1] = B[1] + (1.0+s)*u1[1]/2.0
+		},
+
+		// Γ[2](r)
+		func(x la.Vector, r float64) { // r ϵ [-1,+1]
+			x[0] = A[0] + (1.0+r)*u2[0]/2.0
+			x[1] = A[1] + (1.0+r)*u2[1]/2.0
+		},
+
+		// Γ[3](r)
+		func(x la.Vector, r float64) { // r ϵ [-1,+1]
+			x[0] = D[0] + (1.0+r)*u3[0]/2.0
+			x[1] = D[1] + (1.0+r)*u3[1]/2.0
+		},
+
+		// first order derivatives
+
+	}, []fun.Vs{
+
+		// dΓ[0]/ds
+		func(dxds la.Vector, s float64) {
+			dxds[0] = u0[0] / 2.0
+			dxds[1] = u0[1] / 2.0
+		},
+
+		// dΓ[1]/ds
+		func(dxds la.Vector, s float64) {
+			dxds[0] = u1[0] / 2.0
+			dxds[1] = u1[1] / 2.0
+		},
+
+		// dΓ[2]/dr
+		func(dxdr la.Vector, r float64) {
+			dxdr[0] = u2[0] / 2.0
+			dxdr[1] = u2[1] / 2.0
+		},
+
+		// dΓ[3]/dr
+		func(dxdr la.Vector, r float64) {
+			dxdr[0] = u3[0] / 2.0
+			dxdr[1] = u3[1] / 2.0
+		},
+	}, nil)
+	return
+}
+
 // Surf2dQuarterRing generates a transfinite mapping of a quarter of a ring centered @ (0,0)
 //   a -- inner radius
 //   b -- outer radius
