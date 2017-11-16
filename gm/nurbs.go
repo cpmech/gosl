@@ -409,15 +409,15 @@ func (o *Nurbs) Point(C, u []float64, ndim int) {
 	return
 }
 
-// PointDeriv returns the derivatives of the x-y-z coordinates of a point on curve/surface/volume
-// with respect to the knot values u @ u
+// PointAndFirstDerivs returns the point and first order derivatives with respect to the knot values u
+// of the x-y-z coordinates of a point on curve/surface/volume
 //   Input:
 //     u    -- [gnd] knot values
 //     ndim -- the dimension of the point. E.g. allows drawing curves in 3D
 //   Output:
 //     dCdu -- [ndim][gnd] derivatives dC_i/du_j
 //     C    -- [ndim] point coordinates
-func (o *Nurbs) PointDeriv(dCdu *la.Matrix, C, u []float64, ndim int) {
+func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 	for d := 0; d < o.gnd; d++ {
 		o.span[d] = o.b[d].findSpan(u[d])
 		o.b[d].basisFuns(u[d], o.span[d])

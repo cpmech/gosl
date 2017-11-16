@@ -357,7 +357,7 @@ func TestNurbs04(tst *testing.T) {
 func TestNurbs05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Nurbs05. PointDeriv. Curve")
+	chk.PrintTitle("Nurbs05. PointAndFirstDerivs. Curve")
 
 	// NURBS
 	verts := [][]float64{
@@ -386,19 +386,19 @@ func TestNurbs05(tst *testing.T) {
 	cE := la.NewVector(2)
 
 	// check
-	curve.PointDeriv(dCduA, cA, []float64{0}, 2)
+	curve.PointAndFirstDerivs(dCduA, cA, []float64{0}, 2)
 	chk.Array(tst, "dCdu @ u=0  ", 1e-17, dCduA.Col(0), []float64{5, 15})
 
-	curve.PointDeriv(dCduB, cB, []float64{2.0 / 5.0}, 2)
+	curve.PointAndFirstDerivs(dCduB, cB, []float64{2.0 / 5.0}, 2)
 	chk.Array(tst, "dCdu @ u=2/5", 1e-17, dCduB.Col(0), []float64{10, 0})
 
-	curve.PointDeriv(dCduC, cC, []float64{3.0 / 5.0}, 2)
+	curve.PointAndFirstDerivs(dCduC, cC, []float64{3.0 / 5.0}, 2)
 	chk.Array(tst, "dCdu @ u=3/5", 1e-17, dCduC.Col(0), []float64{10.0 / 3.0, -10})
 
-	curve.PointDeriv(dCduD, cD, []float64{4.0 / 5.0}, 2)
+	curve.PointAndFirstDerivs(dCduD, cD, []float64{4.0 / 5.0}, 2)
 	chk.Array(tst, "dCdu @ u=4/5", 1e-15, dCduD.Col(0).GetUnit(), []float64{1, 0})
 
-	curve.PointDeriv(dCduE, cE, []float64{1}, 2)
+	curve.PointAndFirstDerivs(dCduE, cE, []float64{1}, 2)
 	chk.Array(tst, "dCdu @ u=1  ", 1e-17, dCduE.Col(0), []float64{5, 10})
 
 	// plot
@@ -409,7 +409,7 @@ func TestNurbs05(tst *testing.T) {
 			plt.DrawArrow2d(cC, dCduC.Col(0), true, 1, nil)
 			plt.DrawArrow2d(cD, dCduD.Col(0), true, 1, nil)
 			plt.DrawArrow2d(cE, dCduE.Col(0), true, 1, nil)
-			curve.PointDeriv(dCduA, cA, []float64{1.0 / 5.0}, 2)
+			curve.PointAndFirstDerivs(dCduA, cA, []float64{1.0 / 5.0}, 2)
 			plt.DrawArrow2d(cA, dCduA.Col(0), true, 1, nil)
 			plt.Gll("x", "y", nil)
 			plt.HideTRborders()
@@ -446,14 +446,14 @@ func TestNurbs06(tst *testing.T) {
 	cD := la.NewVector(2)
 
 	// check
-	curve.PointDeriv(dCduA, cA, []float64{0}, 2)
+	curve.PointAndFirstDerivs(dCduA, cA, []float64{0}, 2)
 	chk.Array(tst, "dCdu @ u=0  ", 1e-17, dCduA.Col(0), []float64{0, 2})
 
-	curve.PointDeriv(dCduB, cB, []float64{2.0 / 5.0}, 2)
+	curve.PointAndFirstDerivs(dCduB, cB, []float64{2.0 / 5.0}, 2)
 
-	curve.PointDeriv(dCduC, cC, []float64{3.0 / 5.0}, 2)
+	curve.PointAndFirstDerivs(dCduC, cC, []float64{3.0 / 5.0}, 2)
 
-	curve.PointDeriv(dCduD, cD, []float64{1}, 2)
+	curve.PointAndFirstDerivs(dCduD, cD, []float64{1}, 2)
 	chk.Array(tst, "dCdu @ u=1  ", 1e-17, dCduD.Col(0), []float64{-1, 0})
 
 	// plot
@@ -481,19 +481,19 @@ func TestNurbs07(tst *testing.T) {
 
 	cA := la.NewVector(3)
 	dCduA := la.NewMatrix(3, surf.Gnd())
-	surf.PointDeriv(dCduA, cA, []float64{1, 0}, 3)
+	surf.PointAndFirstDerivs(dCduA, cA, []float64{1, 0}, 3)
 
 	cB := la.NewVector(3)
 	dCduB := la.NewMatrix(3, surf.Gnd())
-	surf.PointDeriv(dCduB, cB, []float64{2, 0}, 3)
+	surf.PointAndFirstDerivs(dCduB, cB, []float64{2, 0}, 3)
 
 	cC := la.NewVector(3)
 	dCduC := la.NewMatrix(3, surf.Gnd())
-	surf.PointDeriv(dCduC, cC, []float64{1, 1}, 3)
+	surf.PointAndFirstDerivs(dCduC, cC, []float64{1, 1}, 3)
 
 	cD := la.NewVector(3)
 	dCduD := la.NewMatrix(3, surf.Gnd())
-	surf.PointDeriv(dCduD, cD, []float64{2, 1}, 3)
+	surf.PointAndFirstDerivs(dCduD, cD, []float64{2, 1}, 3)
 
 	chk.Array(tst, "cA", 1e-17, cA, []float64{6, 0, 0})
 	chk.Array(tst, "cB", 1e-17, cB, []float64{4, 0, 2})
@@ -546,22 +546,22 @@ func TestNurbs08(tst *testing.T) {
 
 	cA := la.NewVector(3)
 	dCduA := la.NewMatrix(3, surf.Gnd())
-	surf.PointDeriv(dCduA, cA, []float64{0, 1}, 3)
+	surf.PointAndFirstDerivs(dCduA, cA, []float64{0, 1}, 3)
 	io.Pf("dCduA =\n%v\n", dCduA.Print("%23.15e"))
 
 	cB := la.NewVector(3)
 	dCduB := la.NewMatrix(3, surf.Gnd())
-	surf.PointDeriv(dCduB, cB, []float64{0.25, 1}, 3)
+	surf.PointAndFirstDerivs(dCduB, cB, []float64{0.25, 1}, 3)
 	io.Pf("dCduB =\n%v\n", dCduB.Print("%23.15e"))
 
 	cC := la.NewVector(3)
 	dCduC := la.NewMatrix(3, surf.Gnd())
-	surf.PointDeriv(dCduC, cC, []float64{0.5, 1}, 3)
+	surf.PointAndFirstDerivs(dCduC, cC, []float64{0.5, 1}, 3)
 	io.Pf("dCduC =\n%v\n", dCduC.Print("%23.15e"))
 
 	cD := la.NewVector(3)
 	dCduD := la.NewMatrix(3, surf.Gnd())
-	surf.PointDeriv(dCduD, cD, []float64{1, 1}, 3)
+	surf.PointAndFirstDerivs(dCduD, cD, []float64{1, 1}, 3)
 	io.Pf("dCduD =\n%v\n", dCduD.Print("%23.15e"))
 
 	chk.Array(tst, "cA", 1e-15, cA, []float64{1, 2, 7})

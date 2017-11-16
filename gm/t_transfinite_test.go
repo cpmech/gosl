@@ -282,7 +282,7 @@ func TestTransfinite03(tst *testing.T) {
 			knot[0] = (1.0 + r) / 2.0
 			dCdu := la.NewMatrix(2, curve0.Gnd())
 			C := la.NewVector(2)
-			curve0.PointDeriv(dCdu, C, knot, 2)
+			curve0.PointAndFirstDerivs(dCdu, C, knot, 2)
 			for i := 0; i < 2; i++ {
 				dxdr[i] = dCdu.Get(i, 0) * 0.5
 			}
@@ -316,7 +316,7 @@ func TestTransfinite03(tst *testing.T) {
 			dCdu := la.NewMatrix(2, curve0.Gnd())
 			C := la.NewVector(2)
 			// TODO: fix this
-			curve0.PointDeriv(dCdu, C, knot, 2)
+			curve0.PointAndFirstDerivs(dCdu, C, knot, 2)
 			for i := 0; i < 2; i++ {
 				ddxdrr[i] = dCdu.Get(i, 0) * 0.5
 			}
