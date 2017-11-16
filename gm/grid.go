@@ -230,8 +230,8 @@ func (o *Grid) RectSet3d(X, Y, Z []float64) {
 
 // SetTransfinite2d sets grid from 2D transfinite mapping
 //  trf -- 2D transfinite structure
-//  R   -- [n1] reference coordinates along r-direction
-//  S   -- [n2] reference coordinates along s-direction
+//  R   -- [n0] reference coordinates along r-direction  -1 ≤ r ≤ +1
+//  S   -- [n1] reference coordinates along s-direction  -1 ≤ s ≤ +1
 func (o *Grid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 
 	// input
@@ -251,12 +251,8 @@ func (o *Grid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 	for n := 0; n < o.npts[1]; n++ {
 		o.mtr[p][n] = make([]*Metrics, o.npts[0])
 		for m := 0; m < o.npts[0]; m++ {
-
-			// derivatives
 			u[0], u[1] = R[m], S[n]
 			trf.PointAndDerivs(x, dxdr, dxds, nil, ddxdrr, ddxdss, nil, ddxdrs, nil, nil, u)
-
-			// metrics
 			o.mtr[p][n][m] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
 		}
 	}
@@ -267,6 +263,10 @@ func (o *Grid) SetTransfinite2d(trf *Transfinite, R, S []float64) {
 }
 
 // SetTransfinite3d sets grid from 3D transfinite mapping
+//  trf -- 2D transfinite structure
+//  R   -- [n0] reference coordinates along r-direction  -1 ≤ r ≤ +1
+//  S   -- [n1] reference coordinates along s-direction  -1 ≤ s ≤ +1
+//  T   -- [n2] reference coordinates along s-direction  -1 ≤ t ≤ +1
 func (o *Grid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 
 	// input
@@ -286,12 +286,8 @@ func (o *Grid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 		for n := 0; n < o.npts[1]; n++ {
 			o.mtr[p][n] = make([]*Metrics, o.npts[0])
 			for m := 0; m < o.npts[0]; m++ {
-
-				// derivatives
 				u[0], u[1], u[2] = R[m], S[n], T[p]
 				trf.PointAndDerivs(x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, u)
-
-				// metrics
 				o.mtr[p][n][m] = NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst)
 			}
 		}
