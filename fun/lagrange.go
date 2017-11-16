@@ -99,6 +99,18 @@ type LagrangeInterp struct {
 	D2 *la.Matrix // (d²ℓj/dx²)(xi)
 }
 
+// LagIntSet is groups interpolators together; e.g. 2D, 3D
+type LagIntSet []*LagrangeInterp
+
+// NewLagIntSet returns a set of LagrangeInterp
+func NewLagIntSet(ndim int, degrees []int, gridTypes []string) (lis LagIntSet) {
+	lis = make([]*LagrangeInterp, ndim)
+	for i := 0; i < ndim; i++ {
+		lis[i] = NewLagrangeInterp(degrees[i], gridTypes[i])
+	}
+	return
+}
+
 // NewLagrangeInterp allocates a new LagrangeInterp
 //
 //     N -- degree
