@@ -553,15 +553,69 @@ func (o *Transfinite) PointAndDerivs(x, dxDr, dxDs, dxDt,
 	if !secondDerivs {
 		return
 	}
-	// second derivatives are zero
+	// only 2nd cross-derivatives may be non-zero
 	if o.bdd == nil {
 		for i := 0; i < o.ndim; i++ {
 			ddxDrr[i] = 0.0
 			ddxDss[i] = 0.0
 			ddxDtt[i] = 0.0
-			ddxDrs[i] = 0.0
-			ddxDrt[i] = 0.0
-			ddxDst[i] = 0.0
+
+			// derivative of dx/dr with respect to s
+			ddxDrs[i] = 0 +
+				-o.db0stDs[i]/2.0 + o.db1stDs[i]/2.0 +
+				-o.db2rtDr[i]/2.0 + o.db3rtDr[i]/2.0 +
+
+				-o.b0mt[i]/4.0 + o.b0pt[i]/4.0 +
+				+o.b1mt[i]/4.0 - o.b1pt[i]/4.0 +
+
+				+(1.0-t)*o.db0smDs[i]/4.0 + (1.0+t)*o.db0spDs[i]/4.0 +
+				-(1.0-t)*o.db1smDs[i]/4.0 - (1.0+t)*o.db1spDs[i]/4.0 +
+
+				+(1.0-t)*o.db2rmDr[i]/4.0 + (1.0+t)*o.db2rpDr[i]/4.0 +
+				-(1.0-t)*o.db3rmDr[i]/4.0 - (1.0+t)*o.db3rpDr[i]/4.0 +
+
+				+(1.0-t)*o.p0[i]/8.0 - (1.0-t)*o.p1[i]/8.0 +
+				+(1.0-t)*o.p2[i]/8.0 - (1.0-t)*o.p3[i]/8.0 +
+				+(1.0+t)*o.p4[i]/8.0 - (1.0+t)*o.p5[i]/8.0 +
+				+(1.0+t)*o.p6[i]/8.0 - (1.0+t)*o.p7[i]/8.0
+
+			// derivative of dx/dr with respect to t
+			ddxDrt[i] = 0 +
+				-o.db0stDt[i]/2.0 + o.db1stDt[i]/2.0 +
+				-o.db4rsDr[i]/2.0 + o.db5rsDr[i]/2.0 +
+
+				+(1.0-s)*o.db0mtDt[i]/4.0 + (1.0+s)*o.db0ptDt[i]/4.0 +
+				-(1.0-s)*o.db1mtDt[i]/4.0 - (1.0+s)*o.db1ptDt[i]/4.0 +
+
+				-o.b0sm[i]/4.0 + o.b0sp[i]/4.0 +
+				+o.b1sm[i]/4.0 - o.b1sp[i]/4.0 +
+
+				+(1.0-s)*o.db2rmDr[i]/4.0 - (1.0-s)*o.db2rpDr[i]/4.0 +
+				+(1.0+s)*o.db3rmDr[i]/4.0 - (1.0+s)*o.db3rpDr[i]/4.0 +
+
+				+(1.0-s)*o.p0[i]/8.0 - (1.0-s)*o.p1[i]/8.0 +
+				-(1.0+s)*o.p2[i]/8.0 + (1.0+s)*o.p3[i]/8.0 +
+				-(1.0-s)*o.p4[i]/8.0 + (1.0-s)*o.p5[i]/8.0 +
+				+(1.0+s)*o.p6[i]/8.0 - (1.0+s)*o.p7[i]/8.0
+
+			// derivative of dx/ds with respect to t
+			ddxDst[i] = 0 +
+				-o.db2rtDt[i]/2.0 + o.db3rtDt[i]/2.0 +
+				-o.db4rsDs[i]/2.0 + o.db5rsDs[i]/2.0 +
+
+				+(1.0-r)*o.db0mtDt[i]/4.0 - (1.0-r)*o.db0ptDt[i]/4.0 +
+				+(1.0+r)*o.db1mtDt[i]/4.0 - (1.0+r)*o.db1ptDt[i]/4.0 +
+
+				+(1.0-r)*o.db0smDs[i]/4.0 - (1.0-r)*o.db0spDs[i]/4.0 +
+				+(1.0+r)*o.db1smDs[i]/4.0 - (1.0+r)*o.db1spDs[i]/4.0 +
+
+				-o.b2rm[i]/4.0 + o.b2rp[i]/4.0 +
+				+o.b3rm[i]/4.0 - o.b3rp[i]/4.0 +
+
+				+(1.0-r)*o.p0[i]/8.0 + (1.0+r)*o.p1[i]/8.0 +
+				-(1.0+r)*o.p2[i]/8.0 - (1.0-r)*o.p3[i]/8.0 +
+				-(1.0-r)*o.p4[i]/8.0 - (1.0+r)*o.p5[i]/8.0 +
+				+(1.0+r)*o.p6[i]/8.0 + (1.0-r)*o.p7[i]/8.0
 		}
 		return
 	}
