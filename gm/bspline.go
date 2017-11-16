@@ -259,6 +259,7 @@ func (o *Bspline) basisFuns(t float64, span int) {
 }
 
 // dersBasisFuns computes derivatives of basis functions using Piegl-Tiller algorithm A2.3 p72
+// NOTE: this function also computes basis functions by calling basisFuns()
 func (o *Bspline) dersBasisFuns(t float64, span, upto int) {
 	// compute and load the basis functions
 	o.basisFuns(t, span)
