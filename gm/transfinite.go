@@ -373,12 +373,16 @@ func (o *Transfinite) PointAndDerivs(x, dxDr, dxDs, dxDt,
 			return
 		}
 
-		// second derivatives are zero
+		// only 2nd cross-derivatives may be non-zero
 		if o.edd == nil {
 			for i := 0; i < o.ndim; i++ {
 				ddxDrr[i] = 0.0
 				ddxDss[i] = 0.0
-				ddxDrs[i] = 0.0
+				ddxDrs[i] = 0 +
+					-o.de0sDs[i]/2.0 + o.de1sDs[i]/2.0 +
+					-o.de2rDr[i]/2.0 + o.de3rDr[i]/2.0 +
+					-o.p0[i]/4.0 + o.p1[i]/4.0 +
+					-o.p2[i]/4.0 + o.p3[i]/4.0
 			}
 			return
 		}

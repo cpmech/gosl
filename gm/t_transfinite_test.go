@@ -619,3 +619,69 @@ func TestTransfinite05(tst *testing.T) {
 		plt.Save("/tmp/gosl/gm", "transfinite05")
 	}
 }
+
+func TestTransfinite06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Transfinite06. quadrilateral")
+
+	// new mapping
+	A := []float64{0, 0}
+	B := []float64{4, 1}
+	C := []float64{3, 3}
+	D := []float64{-1, 4}
+	trf := FactoryTfinite.Surf2dQuad(A, B, C, D)
+
+	// check corners
+	chk.Array(tst, "p0", 1e-15, trf.p0, A)
+	chk.Array(tst, "p1", 1e-15, trf.p1, B)
+	chk.Array(tst, "p2", 1e-15, trf.p2, C)
+	chk.Array(tst, "p3", 1e-15, trf.p3, D)
+
+	// check derivs
+	x := la.NewVector(2)
+	dxDr, dxDs := la.NewVector(2), la.NewVector(2)
+	ddxDrr, ddxDss, ddxDrs := la.NewVector(2), la.NewVector(2), la.NewVector(2)
+	u, utmp, tmp := la.NewVector(2), la.NewVector(2), la.NewVector(2)
+	rvals := utl.LinSpace(-1, 1, 5)
+	svals := utl.LinSpace(-1, 1, 5)
+	verb := chk.Verbose
+	for _, s := range svals {
+		for _, r := range rvals {
+			u[0], u[1] = r, s
+			trf.PointAndDerivs(x, dxDr, dxDs, nil, ddxDrr, ddxDss, nil, ddxDrs, nil, nil, u)
+			chk.DerivVecSca(tst, "dx/dr   ", 1e-11, dxDr, r, 1e-3, verb, func(xx []float64, ξ float64) {
+				utmp[0], utmp[1] = ξ, u[1]
+				trf.Point(xx, utmp)
+			})
+			chk.DerivVecSca(tst, "dx/ds   ", 1e-11, dxDs, s, 1e-3, verb, func(xx []float64, ξ float64) {
+				utmp[0], utmp[1] = u[0], ξ
+				trf.Point(xx, utmp)
+			})
+			chk.DerivVecSca(tst, "d²x/dr² ", 1e-11, ddxDrr, r, 1e-3, verb, func(d []float64, ξ float64) {
+				utmp[0], utmp[1] = ξ, u[1]
+				trf.PointAndDerivs(tmp, d, tmp, tmp, nil, nil, nil, nil, nil, nil, utmp)
+			})
+			chk.DerivVecSca(tst, "d²x/ds² ", 1e-11, ddxDss, s, 1e-3, verb, func(d []float64, ξ float64) {
+				utmp[0], utmp[1] = u[0], ξ
+				trf.PointAndDerivs(tmp, tmp, d, tmp, nil, nil, nil, nil, nil, nil, utmp)
+			})
+			chk.DerivVecSca(tst, "d²x/drds", 1e-11, ddxDrs, s, 1e-3, verb, func(d []float64, ξ float64) {
+				utmp[0], utmp[1] = u[0], ξ
+				trf.PointAndDerivs(tmp, d, tmp, tmp, nil, nil, nil, nil, nil, nil, utmp)
+			})
+			if verb {
+				io.Pl()
+			}
+		}
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		trf.Draw([]int{11, 11}, false, &plt.A{C: plt.C(2, 9), NoClip: true}, &plt.A{C: plt.C(3, 9), Lw: 2, NoClip: true})
+		plt.HideAllBorders()
+		plt.Equal()
+		plt.Save("/tmp/gosl/gm", "transfinite06")
+	}
+}
