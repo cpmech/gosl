@@ -310,6 +310,9 @@ func (o *Nurbs) DrawCtrl(ndim int, withIds bool, args, argsIds *plt.A) {
 	if argsIds == nil {
 		argsIds = &plt.A{C: "r", Fsz: 7, NoClip: true}
 	}
+	if o.gnd == 3 {
+		ndim = 3
+	}
 	switch o.gnd {
 	// curve
 	case 1:
@@ -387,12 +390,75 @@ func (o *Nurbs) DrawCtrl(ndim int, withIds bool, args, argsIds *plt.A) {
 				}
 			}
 		}
+	// solid
+	case 3:
+		xx := make([]float64, 2) // min,max
+		yy := make([]float64, 2) // min,max
+		zz := make([]float64, 2) // min,max
+		for i := 0; i < o.n[0]; i++ {
+			for j := 0; j < o.n[1]; j++ {
+				for k := 0; k < o.n[2]; k++ {
+					x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
+					y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
+					z := o.Q[i][j][k][2] / o.Q[i][j][k][3]
+					if i > 0 {
+						xp := o.Q[i-1][j][k][0] / o.Q[i-1][j][k][3]
+						yp := o.Q[i-1][j][k][1] / o.Q[i-1][j][k][3]
+						zp := o.Q[i-1][j][k][2] / o.Q[i-1][j][k][3]
+						xx[0], xx[1] = xp, x
+						yy[0], yy[1] = yp, y
+						zz[0], zz[1] = zp, z
+						plt.Plot3dLine(xx, yy, zz, args)
+					}
+				}
+			}
+		}
+		for j := 0; j < o.n[1]; j++ {
+			for i := 0; i < o.n[0]; i++ {
+				for k := 0; k < o.n[2]; k++ {
+					x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
+					y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
+					z := o.Q[i][j][k][2] / o.Q[i][j][k][3]
+					if j > 0 {
+						xp := o.Q[i][j-1][k][0] / o.Q[i][j-1][k][3]
+						yp := o.Q[i][j-1][k][1] / o.Q[i][j-1][k][3]
+						zp := o.Q[i][j-1][k][2] / o.Q[i][j-1][k][3]
+						xx[0], xx[1] = xp, x
+						yy[0], yy[1] = yp, y
+						zz[0], zz[1] = zp, z
+						plt.Plot3dLine(xx, yy, zz, args)
+					}
+				}
+			}
+		}
+		for k := 0; k < o.n[2]; k++ {
+			for j := 0; j < o.n[1]; j++ {
+				for i := 0; i < o.n[0]; i++ {
+					x := o.Q[i][j][k][0] / o.Q[i][j][k][3]
+					y := o.Q[i][j][k][1] / o.Q[i][j][k][3]
+					z := o.Q[i][j][k][2] / o.Q[i][j][k][3]
+					if k > 0 {
+						xp := o.Q[i][j][k-1][0] / o.Q[i][j][k-1][3]
+						yp := o.Q[i][j][k-1][1] / o.Q[i][j][k-1][3]
+						zp := o.Q[i][j][k-1][2] / o.Q[i][j][k-1][3]
+						xx[0], xx[1] = xp, x
+						yy[0], yy[1] = yp, y
+						zz[0], zz[1] = zp, z
+						plt.Plot3dLine(xx, yy, zz, args)
+					}
+					if withIds {
+						l := i + j*o.n[0] + k*o.n[0]*o.n[1]
+						plt.Text3d(x, y, z, io.Sf("%d", l), argsIds)
+					}
+				}
+			}
+		}
 	}
 }
 
 // DrawEdge draws edge from tmin to tmax in 2D or 3D space
 //  ndim -- 2 or 3 => to plot in a 2D or 3D space
-func (o *Nurbs) DrawEdge(ndim int, tmin, tmax, cte float64, along, npts int, args *plt.A) {
+func (o *Nurbs) DrawEdge(ndim int, tmin, tmax, cteA, cteB float64, along, npts int, args *plt.A) {
 	if args == nil {
 		args = &plt.A{C: "b", Ls: "-", NoClip: true}
 	}
@@ -405,11 +471,11 @@ func (o *Nurbs) DrawEdge(ndim int, tmin, tmax, cte float64, along, npts int, arg
 	for i, t := range tt {
 		switch along {
 		case 0:
-			u[0], u[1], u[2] = t, cte, cte
+			u[0], u[1], u[2] = t, cteA, cteB
 		case 1:
-			u[0], u[1], u[2] = cte, t, cte
+			u[0], u[1], u[2] = cteA, t, cteB
 		case 2:
-			u[0], u[1], u[2] = cte, cte, t
+			u[0], u[1], u[2] = cteA, cteB, t
 		}
 		o.Point(x, u, ndim)
 		xx[i], yy[i], zz[i] = x[0], x[1], x[2]
@@ -428,11 +494,14 @@ func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, arg
 		argsIds = &plt.A{C: "r", Fsz: 7}
 	}
 	c := make([]float64, 3)
+	if o.gnd == 3 {
+		ndim = 3
+	}
 	switch o.gnd {
 	// curve
 	case 1:
 		umin, umax := o.b[0].T[span[0]], o.b[0].T[span[1]]
-		o.DrawEdge(ndim, umin, umax, 0.0, 0, npts, args)
+		o.DrawEdge(ndim, umin, umax, 0.0, 0.0, 0, npts, args)
 		if withIds {
 			o.Point(c, []float64{umin}, ndim)
 			drawElemID(c, ndim, span[0], -1, -1, argsIds)
@@ -443,10 +512,10 @@ func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, arg
 	case 2:
 		umin, umax := o.b[0].T[span[0]], o.b[0].T[span[1]]
 		vmin, vmax := o.b[1].T[span[2]], o.b[1].T[span[3]]
-		o.DrawEdge(ndim, umin, umax, vmin, 0, npts, args)
-		o.DrawEdge(ndim, umin, umax, vmax, 0, npts, args)
-		o.DrawEdge(ndim, vmin, vmax, umin, 1, npts, args)
-		o.DrawEdge(ndim, vmin, vmax, umax, 1, npts, args)
+		o.DrawEdge(ndim, umin, umax, vmin, 0.0, 0, npts, args)
+		o.DrawEdge(ndim, umin, umax, vmax, 0.0, 0, npts, args)
+		o.DrawEdge(ndim, vmin, vmax, umin, 0.0, 1, npts, args)
+		o.DrawEdge(ndim, vmin, vmax, umax, 0.0, 1, npts, args)
 		if withIds {
 			o.Point(c, []float64{umin, vmin}, ndim)
 			drawElemID(c, ndim, span[0], span[2], -1, argsIds)
@@ -456,6 +525,41 @@ func (o *Nurbs) DrawElem(ndim int, span []int, npts int, withIds bool, args, arg
 			drawElemID(c, ndim, span[1], span[2], -1, argsIds)
 			o.Point(c, []float64{umax, vmax}, ndim)
 			drawElemID(c, ndim, span[1], span[3], -1, argsIds)
+		}
+		// solid
+	case 3:
+		umin, umax := o.b[0].T[span[0]], o.b[0].T[span[1]]
+		vmin, vmax := o.b[1].T[span[2]], o.b[1].T[span[3]]
+		wmin, wmax := o.b[2].T[span[4]], o.b[2].T[span[5]]
+		o.DrawEdge(ndim, umin, umax, vmin, wmin, 0, npts, args)
+		o.DrawEdge(ndim, umin, umax, vmax, wmin, 0, npts, args)
+		o.DrawEdge(ndim, vmin, vmax, umin, wmin, 1, npts, args)
+		o.DrawEdge(ndim, vmin, vmax, umax, wmin, 1, npts, args)
+		o.DrawEdge(ndim, umin, umax, vmin, wmax, 0, npts, args)
+		o.DrawEdge(ndim, umin, umax, vmax, wmax, 0, npts, args)
+		o.DrawEdge(ndim, vmin, vmax, umin, wmax, 1, npts, args)
+		o.DrawEdge(ndim, vmin, vmax, umax, wmax, 1, npts, args)
+		o.DrawEdge(ndim, wmin, wmax, umin, vmin, 2, npts, args)
+		o.DrawEdge(ndim, wmin, wmax, umax, vmin, 2, npts, args)
+		o.DrawEdge(ndim, wmin, wmax, umin, vmax, 2, npts, args)
+		o.DrawEdge(ndim, wmin, wmax, umax, vmax, 2, npts, args)
+		if withIds {
+			o.Point(c, []float64{umin, vmin, wmin}, ndim)
+			drawElemID(c, ndim, span[0], span[2], span[4], argsIds)
+			o.Point(c, []float64{umin, vmax, wmin}, ndim)
+			drawElemID(c, ndim, span[0], span[3], span[4], argsIds)
+			o.Point(c, []float64{umax, vmin, wmin}, ndim)
+			drawElemID(c, ndim, span[1], span[2], span[4], argsIds)
+			o.Point(c, []float64{umax, vmax, wmin}, ndim)
+			drawElemID(c, ndim, span[1], span[3], span[4], argsIds)
+			o.Point(c, []float64{umin, vmin, wmax}, ndim)
+			drawElemID(c, ndim, span[0], span[2], span[5], argsIds)
+			o.Point(c, []float64{umin, vmax, wmax}, ndim)
+			drawElemID(c, ndim, span[0], span[3], span[5], argsIds)
+			o.Point(c, []float64{umax, vmin, wmax}, ndim)
+			drawElemID(c, ndim, span[1], span[2], span[5], argsIds)
+			o.Point(c, []float64{umax, vmax, wmax}, ndim)
+			drawElemID(c, ndim, span[1], span[3], span[5], argsIds)
 		}
 	}
 }
@@ -512,6 +616,75 @@ func (o *Nurbs) DrawSurface(ndim int, nu, nv int, withSurf, withWire bool, argsS
 		}
 		if withWire {
 			plt.Wireframe(X, Y, Z, argsWire)
+		}
+	}
+}
+
+// DrawSolid draws wireframe representing solid NURBS
+func (o *Nurbs) DrawSolid(nu, nv, nw int, args *plt.A) {
+	if o.gnd != 3 {
+		return
+	}
+	du := (o.b[0].tmax - o.b[0].tmin) / float64(nu-1)
+	dv := (o.b[1].tmax - o.b[1].tmin) / float64(nv-1)
+	dw := (o.b[2].tmax - o.b[2].tmin) / float64(nw-1)
+	u := make([]float64, 3)
+	x := make([]float64, 3)
+	x0 := make([]float64, nu)
+	y0 := make([]float64, nu)
+	z0 := make([]float64, nu)
+	x1 := make([]float64, nv)
+	y1 := make([]float64, nv)
+	z1 := make([]float64, nv)
+	x2 := make([]float64, nw)
+	y2 := make([]float64, nw)
+	z2 := make([]float64, nw)
+
+	// draw 0-lines
+	for k := 0; k < nw; k++ {
+		u[2] = o.b[2].tmin + float64(k)*dw
+		for j := 0; j < nv; j++ {
+			u[1] = o.b[1].tmin + float64(j)*dv
+			for i := 0; i < nu; i++ {
+				u[0] = o.b[0].tmin + float64(i)*du
+				o.Point(x, u, 3)
+				x0[i] = x[0]
+				y0[i] = x[1]
+				z0[i] = x[2]
+			}
+			plt.Plot3dLine(x0, y0, z0, args)
+		}
+	}
+
+	// draw 1-lines
+	for k := 0; k < nw; k++ {
+		u[2] = o.b[2].tmin + float64(k)*dw
+		for i := 0; i < nu; i++ {
+			u[0] = o.b[0].tmin + float64(i)*du
+			for j := 0; j < nv; j++ {
+				u[1] = o.b[1].tmin + float64(j)*dv
+				o.Point(x, u, 3)
+				x1[j] = x[0]
+				y1[j] = x[1]
+				z1[j] = x[2]
+			}
+			plt.Plot3dLine(x1, y1, z1, args)
+		}
+	}
+
+	// draw 2-lines
+	for j := 0; j < nv; j++ {
+		u[1] = o.b[1].tmin + float64(j)*dv
+		for i := 0; i < nu; i++ {
+			u[0] = o.b[0].tmin + float64(i)*du
+			for k := 0; k < nw; k++ {
+				u[2] = o.b[2].tmin + float64(k)*dw
+				o.Point(x, u, 3)
+				x2[k] = x[0]
+				y2[k] = x[1]
+				z2[k] = x[2]
+			}
+			plt.Plot3dLine(x2, y2, z2, args)
 		}
 	}
 }

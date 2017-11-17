@@ -710,6 +710,36 @@ func TestNurbs11(tst *testing.T) {
 	}
 }
 
+func TestNurbs12(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Nurbs12. First and second derivatives of volume")
+
+	// NURBS
+	solid := FactoryNurbs.SolidHex([][]float64{
+		{0, 0, 0},
+		{1, 0, 0},
+		{0, 2, 0},
+		{2, 2, 0},
+		{0, 0, 1},
+		{1, 0, 1},
+		{0, 2, 1},
+		{2, 2, 1},
+	})
+
+	// plot
+	if chk.Verbose {
+		npts := 3
+		plt.Reset(true, &plt.A{WidthPt: 500, Prop: 1})
+		solid.DrawSolid(2, 4, 3, &plt.A{C: plt.C(1, 0)})
+		solid.DrawElems(3, npts, true, &plt.A{C: plt.C(0, 0)}, &plt.A{C: "k", Fsz: 7})
+		solid.DrawCtrl(3, true, nil, nil)
+		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
+		plt.Default3dView(0, 2, 0, 2, 0, 2, true)
+		plt.Save("/tmp/gosl/gm", "nurb12")
+	}
+}
+
 func checkNurbsCurveDerivs(tst *testing.T, curve *Nurbs, uvals []float64, verb bool) {
 	ndim := 2
 	u := la.NewVector(1)
