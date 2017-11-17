@@ -94,7 +94,7 @@ func (o facNurbsT) Curve2dQuarterCircle(xc, yc, r float64) (curve *Nurbs) {
 // 2D surfaces ////////////////////////////////////////////////////////////////////////////////////
 
 // Surf2dRectangleQL generates a 2D NURBS surface with x being quadratic and y being linear
-func (o facNurbsT) Surf2dRectangleQL(x0, y0, dx, dy float64) (curve *Nurbs) {
+func (o facNurbsT) Surf2dRectangleQL(x0, y0, dx, dy float64) (surf *Nurbs) {
 	xm, xf, yf := x0+dx/2.0, x0+dx, y0+dy
 	verts := [][]float64{
 		{x0, y0, 0.0, 1.0},
@@ -108,8 +108,8 @@ func (o facNurbsT) Surf2dRectangleQL(x0, y0, dx, dy float64) (curve *Nurbs) {
 		{0, 0, 0, 1, 1, 1},
 		{0, 0, 1, 1},
 	}
-	curve = NewNurbs(2, []int{2, 1}, knots)
-	curve.SetControl(verts, utl.IntRange(len(verts)))
+	surf = NewNurbs(2, []int{2, 1}, knots)
+	surf.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
 
