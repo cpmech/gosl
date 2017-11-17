@@ -598,28 +598,26 @@ func TestNurbs09(tst *testing.T) {
 	// NURBS
 	curve := FactoryNurbs.Curve2dCircle(0, 0, 1)
 
-	// auxiliary
-	ndim := 2
-	x := la.NewVector(ndim)
-	u := la.NewVector(ndim)
-	C := la.NewVector(ndim)
-	dCdu := la.NewMatrix(ndim, curve.gnd)
-	dxDr, ddxDrr := la.NewVector(ndim), la.NewVector(ndim)
-
 	// check derivatives
 	verb := chk.Verbose
-	checkNurbsDerivs(tst, curve, []float64{0, 0.2, 0.5, 1.5, 2.5, 3.5, 4}, verb)
+	checkNurbsCurveDerivs(tst, curve, []float64{0, 0.2, 0.5, 1.5, 2.5, 3.5, 4}, verb)
 
 	// plot
 	if chk.Verbose {
+		ndim := 2
+		x := la.NewVector(ndim)
+		u := la.NewVector(ndim)
+		C := la.NewVector(ndim)
+		dCdu := la.NewMatrix(ndim, curve.gnd)
+		dxdr, ddxdrr := la.NewVector(ndim), la.NewVector(ndim)
 		u[0] = 0.5
-		curve.PointAndDerivs(x, dxDr, nil, nil, ddxDrr, nil, nil, nil, nil, nil, u, ndim)
+		curve.PointAndDerivs(x, dxdr, nil, nil, ddxdrr, nil, nil, nil, nil, nil, u, ndim)
 		curve.PointAndFirstDerivs(dCdu, C, u, ndim)
 		plt.Reset(true, nil)
 		PlotNurbs("/tmp/gosl/gm", "nurbs09", curve, ndim, 21, true, true, nil, nil, nil, func() {
 			plt.PlotOne(x[0], x[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
 			plt.DrawArrow2d(C, dCdu.GetCol(0), true, 1, &plt.A{C: "orange", Lw: 7})
-			plt.DrawArrow2d(x, dxDr, true, 1, &plt.A{C: "k"})
+			plt.DrawArrow2d(x, dxdr, true, 1, &plt.A{C: "k"})
 			plt.AxisOff()
 			plt.Equal()
 		})
@@ -645,56 +643,134 @@ func TestNurbs10(tst *testing.T) {
 	curve := NewNurbs(1, []int{1}, knots)
 	curve.SetControl(verts, utl.IntRange(len(verts)))
 
-	// auxiliary
-	ndim := 2
-	x := la.NewVector(ndim)
-	u := la.NewVector(ndim)
-	C := la.NewVector(ndim)
-	dCdu := la.NewMatrix(ndim, curve.gnd)
-	dxDr, ddxDrr := la.NewVector(ndim), la.NewVector(ndim)
-
 	// check derivatives
 	verb := chk.Verbose
-	checkNurbsDerivs(tst, curve, []float64{0, 1.01, 1.5, 2.01, 3.01, 4}, verb)
+	checkNurbsCurveDerivs(tst, curve, []float64{0, 1.01, 1.5, 2.01, 3.01, 4}, verb)
 
 	// plot
 	if chk.Verbose {
+		ndim := 2
+		x := la.NewVector(ndim)
+		u := la.NewVector(ndim)
+		C := la.NewVector(ndim)
+		dCdu := la.NewMatrix(ndim, curve.gnd)
+		dxdr, ddxdrr := la.NewVector(ndim), la.NewVector(ndim)
 		u[0] = 1.0
-		curve.PointAndDerivs(x, dxDr, nil, nil, ddxDrr, nil, nil, nil, nil, nil, u, ndim)
+		curve.PointAndDerivs(x, dxdr, nil, nil, ddxdrr, nil, nil, nil, nil, nil, u, ndim)
 		curve.PointAndFirstDerivs(dCdu, C, u, ndim)
 		plt.Reset(true, nil)
 		PlotNurbs("/tmp/gosl/gm", "nurbs10", curve, ndim, 21, true, true, nil, nil, nil, func() {
 			plt.PlotOne(x[0], x[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
 			plt.DrawArrow2d(C, dCdu.GetCol(0), true, 1, &plt.A{C: "orange", Lw: 7})
-			plt.DrawArrow2d(x, dxDr, true, 1, &plt.A{C: "k"})
+			plt.DrawArrow2d(x, dxdr, true, 1, &plt.A{C: "k"})
 			plt.AxisOff()
 			plt.Equal()
 		})
 	}
 }
 
-func checkNurbsDerivs(tst *testing.T, curve *Nurbs, uvals []float64, verb bool) {
+func TestNurbs11(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Nurbs11. First and second derivatives of 2D surf")
+
+	// NURBS
+	surf := FactoryNurbs.Surf2dExample1()
+
+	// check derivatives
+	verb := chk.Verbose
+	checkNurbsSurfDerivs(tst, surf, []float64{0, 1.01, 2.01, 3}, []float64{0, 1}, verb, 1e-14, 1e-9, 1e-8)
+
+	// plot
+	if chk.Verbose {
+		ndim := 2
+		x := la.NewVector(ndim)
+		u := la.NewVector(ndim)
+		C := la.NewVector(ndim)
+		dCdu := la.NewMatrix(ndim, surf.gnd)
+		dxdr, dxds := la.NewVector(ndim), la.NewVector(ndim)
+		arrows := func(r, s float64) {
+			u[0], u[1] = r, s
+			surf.PointAndDerivs(x, dxdr, dxds, nil, nil, nil, nil, nil, nil, nil, u, ndim)
+			surf.PointAndFirstDerivs(dCdu, C, u, ndim)
+			plt.DrawArrow2d(C, dCdu.GetCol(0), true, 0.5, &plt.A{C: "orange", Lw: 7})
+			plt.DrawArrow2d(C, dCdu.GetCol(1), true, 0.5, &plt.A{C: "orange", Lw: 7})
+			plt.DrawArrow2d(x, dxdr, true, 0.5, &plt.A{C: "k"})
+			plt.DrawArrow2d(x, dxds, true, 0.5, &plt.A{C: "k"})
+		}
+		plt.Reset(true, &plt.A{WidthPt: 500, Prop: 0.7})
+		PlotNurbs("/tmp/gosl/gm", "nurbs11", surf, ndim, 21, true, true, nil, nil, nil, func() {
+			plt.PlotOne(x[0], x[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
+			arrows(0, 0)
+			arrows(2, 0)
+			arrows(3, 1)
+			plt.AxisOff()
+			plt.Equal()
+		})
+	}
+}
+
+func checkNurbsCurveDerivs(tst *testing.T, curve *Nurbs, uvals []float64, verb bool) {
 	ndim := 2
+	u := la.NewVector(1)
 	x := la.NewVector(ndim)
-	u := la.NewVector(ndim)
 	C := la.NewVector(ndim)
 	tmp := la.NewVector(ndim)
 	dCdu := la.NewMatrix(ndim, curve.gnd)
-	dxDr, ddxDrr := la.NewVector(ndim), la.NewVector(ndim)
+	dxdr, ddxdrr := la.NewVector(ndim), la.NewVector(ndim)
 	for i := 0; i < len(uvals); i++ {
 		u[0] = uvals[i]
-		curve.PointAndDerivs(x, dxDr, nil, nil, ddxDrr, nil, nil, nil, nil, nil, u, ndim)
+		curve.PointAndDerivs(x, dxdr, nil, nil, ddxdrr, nil, nil, nil, nil, nil, u, ndim)
 		curve.PointAndFirstDerivs(dCdu, C, u, ndim)
 		chk.Array(tst, io.Sf("x      (%.2f)", u[0]), 1e-13, x, C)
-		chk.Array(tst, io.Sf("dC/du  (%.2f)", u[0]), 1e-13, dxDr, dCdu.GetCol(0))
-		chk.DerivVecSca(tst, io.Sf("dx/dr  (%.2f)", u[0]), 1e-7, dxDr, u[0], 1e-6, verb, func(xx []float64, r float64) {
+		chk.Array(tst, io.Sf("dC/du0 (%.2f)", u[0]), 1e-13, dxdr, dCdu.GetCol(0))
+		chk.DerivVecSca(tst, io.Sf("dx/dr  (%.2f)", u[0]), 1e-7, dxdr, u[0], 1e-6, verb, func(xx []float64, r float64) {
 			curve.Point(xx, []float64{r}, ndim)
 		})
-		chk.DerivVecSca(tst, io.Sf("d²x/dr²(%.2f)", u[0]), 1e-7, ddxDrr, u[0], 1e-6, verb, func(xx []float64, r float64) {
+		chk.DerivVecSca(tst, io.Sf("d²x/dr²(%.2f)", u[0]), 1e-7, ddxdrr, u[0], 1e-6, verb, func(xx []float64, r float64) {
 			curve.PointAndDerivs(tmp, xx, nil, nil, nil, nil, nil, nil, nil, nil, []float64{r}, ndim)
 		})
 		if verb {
 			io.Pl()
+		}
+	}
+}
+
+func checkNurbsSurfDerivs(tst *testing.T, surf *Nurbs, uvals, vvals []float64, verb bool, tol0, tol1, tol2 float64) {
+	ndim := 2
+	u := la.NewVector(2)
+	x := la.NewVector(ndim)
+	C := la.NewVector(ndim)
+	tmp1 := la.NewVector(ndim)
+	tmp2 := la.NewVector(ndim)
+	dCdu := la.NewMatrix(ndim, surf.gnd)
+	dxdr, dxds, ddxdrr, ddxdss, ddxdrs := la.NewVector(ndim), la.NewVector(ndim), la.NewVector(ndim), la.NewVector(ndim), la.NewVector(ndim)
+	for i := 0; i < len(uvals); i++ {
+		for j := 0; j < len(vvals); j++ {
+			u[0], u[1] = uvals[i], vvals[j]
+			if verb {
+				io.Pf("\nu = %f\n", u)
+			}
+			surf.PointAndDerivs(x, dxdr, dxds, nil, ddxdrr, ddxdss, nil, ddxdrs, nil, nil, u, ndim)
+			surf.PointAndFirstDerivs(dCdu, C, u, ndim)
+			chk.Array(tst, "x     ", tol0, x, C)
+			chk.Array(tst, "dC/du0", tol0, dxdr, dCdu.GetCol(0))
+			chk.Array(tst, "dC/du1", tol0, dxds, dCdu.GetCol(1))
+			chk.DerivVecSca(tst, "dx/dr    ", tol1, dxdr, u[0], 1e-6, verb, func(xx []float64, r float64) {
+				surf.Point(xx, []float64{r, u[1]}, ndim)
+			})
+			chk.DerivVecSca(tst, "dx/ds    ", tol1, dxds, u[1], 1e-6, verb, func(xx []float64, s float64) {
+				surf.Point(xx, []float64{u[0], s}, ndim)
+			})
+			chk.DerivVecSca(tst, "d²x/dr²  ", tol2, ddxdrr, u[0], 1e-6, verb, func(xx []float64, r float64) {
+				surf.PointAndDerivs(tmp1, xx, tmp2, nil, nil, nil, nil, nil, nil, nil, []float64{r, u[1]}, ndim)
+			})
+			chk.DerivVecSca(tst, "d²x/ds²  ", tol2, ddxdss, u[1], 1e-6, verb, func(xx []float64, s float64) {
+				surf.PointAndDerivs(tmp1, tmp2, xx, nil, nil, nil, nil, nil, nil, nil, []float64{u[0], s}, ndim)
+			})
+			chk.DerivVecSca(tst, "d²x/drds ", tol2, ddxdrs, u[1], 1e-6, verb, func(xx []float64, s float64) {
+				surf.PointAndDerivs(tmp1, xx, tmp2, nil, nil, nil, nil, nil, nil, nil, []float64{u[0], s}, ndim)
+			})
 		}
 	}
 }

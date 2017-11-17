@@ -43,6 +43,7 @@ type Nurbs struct {
 	dcwds   []float64 // 1st derivative w.r.t u[1] of augmented homogeneous coordinates Cw [4]
 	ddcwdrr []float64 // 2nd derivative w.r.t u[0] of augmented homogeneous coordinates Cw [4]
 	ddcwdss []float64 // 2nd derivative w.r.t u[1] of augmented homogeneous coordinates Cw [4]
+	ddcwdrs []float64 // 2nd derivative w.r.t u[0],u[1] of augmented homogeneous coordinates Cw [4]
 }
 
 // initialisation methods ////////////////////////////////////////////////////////////////////////////
@@ -102,6 +103,7 @@ func NewNurbs(gnd int, ords []int, knots [][]float64) (o *Nurbs) {
 	o.dcwds = make([]float64, 4)
 	o.ddcwdrr = make([]float64, 4)
 	o.ddcwdss = make([]float64, 4)
+	o.ddcwdrs = make([]float64, 4)
 	return
 }
 
@@ -488,20 +490,21 @@ func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 
 // PointAndDerivs computes position and the first and second order derivatives
 // Using Algorithms A3.2(p93), A3.6(p111), A4.2(p127), and A4.4(p137)
-//   Input:
-//     u    -- knot values {r,s,t} [gnd]
-//     ndim -- the dimension of the point. E.g. allows drawing curves in 3D
-//   Output:
-//     x      -- position {x,y,z} (the same as the C varible in [1])
-//     dxdr   -- ∂{x}/∂r
-//     dxds   -- ∂{x}/∂s    [may be nil] (volume and surfaces)
-//     dxdt   -- ∂{x}/∂t    [may be nil] (volume)
-//     ddxdrr -- ∂²{x}/∂r²  [optional]
-//     ddxdss -- ∂²{x}/∂s²  [optional] [may be nil] (volume and surfaces)
-//     ddxdtt -- ∂²{x}/∂t²  [optional] [may be nil] (volume)
-//     ddxdrs -- ∂²{x}/∂r∂s [optional] [may be nil] (volume and surfaces)
-//     ddxdrt -- ∂²{x}/∂r∂t [optional] [may be nil] (volume)
-//     ddxdst -- ∂²{x}/∂s∂t [optional] [may be nil] (volume)
+//  Input:
+//    u    -- knot values {r,s,t} [gnd]
+//    ndim -- the dimension of the point. E.g. allows drawing curves in 3D
+//  Output:
+//    x      -- position {x,y,z} (the same as the C varible in [1])
+//    dxdr   -- ∂{x}/∂r
+//    dxds   -- ∂{x}/∂s    [may be nil] (volume and surfaces)
+//    dxdt   -- ∂{x}/∂t    [may be nil] (volume)
+//    ddxdrr -- ∂²{x}/∂r²  [optional]
+//    ddxdss -- ∂²{x}/∂s²  [optional] [may be nil] (volume and surfaces)
+//    ddxdtt -- ∂²{x}/∂t²  [optional] [may be nil] (volume)
+//    ddxdrs -- ∂²{x}/∂r∂s [optional] [may be nil] (volume and surfaces)
+//    ddxdrt -- ∂²{x}/∂r∂t [optional] [may be nil] (volume)
+//    ddxdst -- ∂²{x}/∂s∂t [optional] [may be nil] (volume)
+//  NOTE: the second order derivatives will be ignored if ddxdrr == nil; otherwise, all 2nd derivs will be computed
 func (o *Nurbs) PointAndDerivs(x, dxdr, dxds, dxdt,
 	ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, u la.Vector, ndim int) {
 
@@ -516,14 +519,12 @@ func (o *Nurbs) PointAndDerivs(x, dxdr, dxds, dxdt,
 	// curve
 	switch o.gnd {
 	case 1:
-		for e := 0; e < 4; e++ {
+		j, k := 0, 0
+		for e := 0; e < 4; e++ { // for each homogeneous component
 			o.cw[e] = 0.0
 			o.dcwdr[e] = 0.0
 			o.ddcwdrr[e] = 0.0
-		}
-		j, k := 0, 0
-		for e := 0; e < 4; e++ { // for each homogeneous component
-			for i := 0; i <= o.p[0]; i++ { // summing over i
+			for i := 0; i <= o.p[0]; i++ { // sum over i
 				o.cw[e] += o.b[0].ndu[i][o.p[0]] * o.Q[o.idx[0]+i][j][k][e]
 				o.dcwdr[e] += o.b[0].der[1][i] * o.Q[o.idx[0]+i][j][k][e]
 				if o.b[0].p > 1 { // 2nd order is possible
@@ -533,17 +534,51 @@ func (o *Nurbs) PointAndDerivs(x, dxdr, dxds, dxdt,
 		}
 		for d := 0; d < ndim; d++ {
 			x[d] = o.cw[d] / o.cw[3]
-			dxdr[d] = (o.dcwdr[d] - o.dcwdr[3]*x[d]) / o.cw[3]
+			dxdr[d] = (o.dcwdr[d] - o.dcwdr[3]*x[d]) / o.cw[3] // Eq (4.7)
 		}
 		if ddxdrr != nil {
 			for d := 0; d < ndim; d++ {
-				ddxdrr[d] = (o.ddcwdrr[d] - 2.0*o.dcwdr[3]*dxdr[d] - o.ddcwdrr[3]*x[d]) / o.cw[3]
+				ddxdrr[d] = (o.ddcwdrr[d] - 2.0*o.dcwdr[3]*dxdr[d] - o.ddcwdrr[3]*x[d]) / o.cw[3] // Eq (4.8)
 			}
 		}
 
 	// surface
 	case 2:
-		chk.Panic("PointAndDerivs of surface is not available yet\n")
+		k := 0
+		for e := 0; e < 4; e++ {
+			o.cw[e] = 0.0
+			o.dcwdr[e] = 0.0
+			o.dcwds[e] = 0.0
+			o.ddcwdrr[e] = 0.0
+			o.ddcwdss[e] = 0.0
+			o.ddcwdrs[e] = 0.0
+			for i := 0; i <= o.p[0]; i++ { // sum over i
+				for j := 0; j <= o.p[1]; j++ { // sum over j
+					o.cw[e] += o.b[0].ndu[i][o.p[0]] * o.b[1].ndu[j][o.p[1]] * o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+					o.dcwdr[e] += o.b[0].der[1][i] * o.b[1].ndu[j][o.p[1]] * o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+					o.dcwds[e] += o.b[0].ndu[i][o.p[0]] * o.b[1].der[1][j] * o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+					if o.b[0].p > 1 { // 2nd order is possible
+						o.ddcwdrr[e] += o.b[0].der[2][i] * o.b[1].ndu[j][o.p[1]] * o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+					}
+					if o.b[1].p > 1 { // 2nd order is possible
+						o.ddcwdss[e] += o.b[0].ndu[i][o.p[0]] * o.b[1].der[2][j] * o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+					}
+					o.ddcwdrs[e] += o.b[0].der[1][i] * o.b[1].der[1][j] * o.Q[o.idx[0]+i][o.idx[1]+j][k][e]
+				}
+			}
+		}
+		for d := 0; d < ndim; d++ {
+			x[d] = o.cw[d] / o.cw[3]
+			dxdr[d] = (o.dcwdr[d] - o.dcwdr[3]*x[d]) / o.cw[3] // Eq (4.7)
+			dxds[d] = (o.dcwds[d] - o.dcwds[3]*x[d]) / o.cw[3] // Eq (4.7)
+		}
+		if ddxdrr != nil {
+			for d := 0; d < ndim; d++ {
+				ddxdrr[d] = (o.ddcwdrr[d] - 2.0*o.dcwdr[3]*dxdr[d] - o.ddcwdrr[3]*x[d]) / o.cw[3]                  // Eq (4.22)
+				ddxdss[d] = (o.ddcwdss[d] - 2.0*o.dcwds[3]*dxds[d] - o.ddcwdss[3]*x[d]) / o.cw[3]                  // Eq (4.23)
+				ddxdrs[d] = (o.ddcwdrs[d] - o.ddcwdrs[3]*x[d] - o.dcwdr[3]*dxds[d] - o.dcwds[3]*dxdr[d]) / o.cw[3] // Eq (4.21)
+			}
+		}
 
 	// volume
 	case 3:
