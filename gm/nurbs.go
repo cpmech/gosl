@@ -463,7 +463,7 @@ func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 		}
 	// volume
 	case 3:
-		chk.Panic("PointDeriv of volume is not available yet\n")
+		chk.Panic("PointAndFirstDerivs of volume is not available yet\n")
 	}
 	for e := 0; e < ndim; e++ {
 		C[e] = o.cw[e] / o.cw[3]
@@ -472,6 +472,72 @@ func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 		}
 	}
 	return
+}
+
+// PointAndDerivs computes position and the first and second order derivatives
+// Using Algorithms A3.2(p93), A3.6(p111), A4.2(p127), and A4.4(p137)
+//   Input:
+//     u    -- knot values {r,s,t} [gnd]
+//     ndim -- the dimension of the point. E.g. allows drawing curves in 3D
+//   Output:
+//     x      -- position {x,y,z} (the same as the C varible in [1])
+//     dxDr   -- ∂{x}/∂r
+//     dxDs   -- ∂{x}/∂s    [may be nil] (volume and surfaces)
+//     dxDt   -- ∂{x}/∂t    [may be nil] (volume)
+//     ddxDrr -- ∂²{x}/∂r²
+//     ddxDss -- ∂²{x}/∂s²  [may be nil] (volume and surfaces)
+//     ddxDtt -- ∂²{x}/∂t²  [may be nil] (volume)
+//     ddxDrs -- ∂²{x}/∂r∂s [may be nil] (volume and surfaces)
+//     ddxDrt -- ∂²{x}/∂r∂t [may be nil] (volume)
+//     ddxDst -- ∂²{x}/∂s∂t [may be nil] (volume)
+func (o *Nurbs) PointAndDerivs(x, dxDr, dxDs, dxDt,
+	ddxDrr, ddxDss, ddxDtt, ddxDrs, ddxDrt, ddxDst, u la.Vector, ndim int) {
+
+	// find span and ctrl indices, and compute basis functions and their derivatives
+	upto := 2
+	for d := 0; d < o.gnd; d++ {
+		o.span[d] = o.b[d].findSpan(u[d])
+		o.b[d].dersBasisFuns(u[d], o.span[d], upto)
+		o.idx[d] = o.span[d] - o.p[d]
+	}
+	for e := 0; e < 4; e++ {
+		o.cw[e] = 0
+	}
+
+	// derivative of augmented homogeneous coordinates Cw
+	dcwdr := la.NewVector(4)
+	ddcwdrr := la.NewVector(4)
+
+	switch o.gnd {
+
+	// curve
+	case 1:
+		j, k := 0, 0
+		for e := 0; e < 4; e++ { // for each homogeneous component
+			for i := 0; i <= o.p[0]; i++ { // summing over i
+				o.cw[e] += o.b[0].ndu[i][o.p[0]] * o.Q[o.idx[0]+i][j][k][e]
+				dcwdr[e] += o.b[0].der[1][i] * o.Q[o.idx[0]+i][j][k][e]
+				ddcwdrr[e] += o.b[0].der[2][i] * o.Q[o.idx[0]+i][j][k][e]
+			}
+		}
+
+	// surface
+	case 2:
+		chk.Panic("PointAndDerivs of surface is not available yet\n")
+
+	// volume
+	case 3:
+		chk.Panic("PointAndDerivs of volume is not available yet\n")
+	}
+
+	// correct values
+	for d := 0; d < ndim; d++ {
+		x[d] = o.cw[d] / o.cw[3]
+		dxDr[d] = (dcwdr[d] - dcwdr[3]*x[d]) / o.cw[3]
+		if ddxDrr != nil {
+			ddxDrr[d] = (ddcwdrr[d] - 2.0*dcwdr[3]*dxDr[d] - ddcwdrr[3]*x[d]) / o.cw[3]
+		}
+	}
 }
 
 // accessors methods /////////////////////////////////////////////////////////////////////////////////

@@ -589,3 +589,55 @@ func TestNurbs08(tst *testing.T) {
 		//plt.ShowSave("/tmp/gosl/gm", "nurbs08")
 	}
 }
+
+func TestNurbs09(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Nurbs09. First and second derivatives of curve")
+
+	// NURBS
+	curve := FactoryNurbs.Curve2dCircle(0, 0, 1)
+
+	// auxiliary
+	ndim := 2
+	x := la.NewVector(ndim)
+	u := la.NewVector(ndim)
+	C := la.NewVector(ndim)
+	dCdu := la.NewMatrix(ndim, curve.gnd)
+	dxDr, ddxDrr := la.NewVector(ndim), la.NewVector(ndim)
+
+	// check derivatives
+	verb := chk.Verbose
+	tmp := la.NewVector(ndim)
+	U := []float64{0, 0.2, 0.5, 1.5, 2.5, 3.5, 4} // cannot compute numerical derivs @ {1,2,3}
+	for i := 0; i < len(U); i++ {
+		u[0] = U[i]
+		curve.PointAndDerivs(x, dxDr, nil, nil, ddxDrr, nil, nil, nil, nil, nil, u, ndim)
+		curve.PointAndFirstDerivs(dCdu, C, u, ndim)
+		chk.Array(tst, io.Sf("x      (%.2f)", u[0]), 1e-13, x, C)
+		chk.DerivVecSca(tst, io.Sf("dx/dr  (%.2f)", u[0]), 1e-7, dxDr, u[0], 1e-6, verb, func(xx []float64, r float64) {
+			curve.Point(xx, []float64{r}, ndim)
+		})
+		chk.DerivVecSca(tst, io.Sf("d²x/dr²(%.2f)", u[0]), 1e-7, ddxDrr, u[0], 1e-6, verb, func(xx []float64, r float64) {
+			curve.PointAndDerivs(tmp, xx, nil, nil, nil, nil, nil, nil, nil, nil, []float64{r}, ndim)
+		})
+		if verb {
+			io.Pl()
+		}
+	}
+
+	// plot
+	if chk.Verbose {
+		u[0] = 0.5
+		curve.PointAndDerivs(x, dxDr, nil, nil, ddxDrr, nil, nil, nil, nil, nil, u, ndim)
+		curve.PointAndFirstDerivs(dCdu, C, u, ndim)
+		plt.Reset(true, nil)
+		PlotNurbs("/tmp/gosl/gm", "nurbs09", curve, ndim, 21, true, true, nil, nil, nil, func() {
+			plt.PlotOne(x[0], x[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
+			plt.DrawArrow2d(C, dCdu.GetCol(0), true, 1, &plt.A{C: "orange", Lw: 7})
+			plt.DrawArrow2d(x, dxDr, true, 1, &plt.A{C: "k"})
+			plt.AxisOff()
+			plt.Equal()
+		})
+	}
+}
