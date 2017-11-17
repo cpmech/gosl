@@ -33,10 +33,16 @@ type Nurbs struct {
 	// auxiliary
 	span []int           // spans computed by CalcBasis or CalcBasisAndDerivs for given u [3] (from CalcBasis/CalcBasisAndDerivs to GetBasis{I,L}/GetDeriv{I,L})
 	idx  []int           // buffer to hold indices of non-zero basis functions [3]
-	cw   []float64       // point on 4D entity [4]
 	rr   [][][]float64   // non-zero basis functions [p0+1][p1+1][p2+1]
 	drr  [][][][]float64 // derivatives of non-zero basis functions w.r.t u [p0+1][p1+1][p2+1][gnd]
 	dww  []float64       // derivative of W function w.r.t u [gnd]
+
+	// homogeneous coordinates
+	cw      []float64 // augmented homogeneous coordinates Cw [4]
+	dcwdr   []float64 // 1st derivative w.r.t u[0] of augmented homogeneous coordinates Cw [4]
+	dcwds   []float64 // 1st derivative w.r.t u[1] of augmented homogeneous coordinates Cw [4]
+	ddcwdrr []float64 // 2nd derivative w.r.t u[0] of augmented homogeneous coordinates Cw [4]
+	ddcwdss []float64 // 2nd derivative w.r.t u[1] of augmented homogeneous coordinates Cw [4]
 }
 
 // initialisation methods ////////////////////////////////////////////////////////////////////////////
@@ -86,10 +92,16 @@ func NewNurbs(gnd int, ords []int, knots [][]float64) (o *Nurbs) {
 	// auxiliary
 	o.span = make([]int, 3)
 	o.idx = make([]int, 3)
-	o.cw = make([]float64, 4)
 	o.rr = utl.Deep3alloc(o.p[0]+1, o.p[1]+1, o.p[2]+1)
 	o.drr = utl.Deep4alloc(o.p[0]+1, o.p[1]+1, o.p[2]+1, o.gnd)
 	o.dww = make([]float64, o.gnd)
+
+	// homogeneous coordinates
+	o.cw = make([]float64, 4)
+	o.dcwdr = make([]float64, 4)
+	o.dcwds = make([]float64, 4)
+	o.ddcwdrr = make([]float64, 4)
+	o.ddcwdss = make([]float64, 4)
 	return
 }
 
@@ -481,43 +493,51 @@ func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 //     ndim -- the dimension of the point. E.g. allows drawing curves in 3D
 //   Output:
 //     x      -- position {x,y,z} (the same as the C varible in [1])
-//     dxDr   -- ∂{x}/∂r
-//     dxDs   -- ∂{x}/∂s    [may be nil] (volume and surfaces)
-//     dxDt   -- ∂{x}/∂t    [may be nil] (volume)
-//     ddxDrr -- ∂²{x}/∂r²
-//     ddxDss -- ∂²{x}/∂s²  [may be nil] (volume and surfaces)
-//     ddxDtt -- ∂²{x}/∂t²  [may be nil] (volume)
-//     ddxDrs -- ∂²{x}/∂r∂s [may be nil] (volume and surfaces)
-//     ddxDrt -- ∂²{x}/∂r∂t [may be nil] (volume)
-//     ddxDst -- ∂²{x}/∂s∂t [may be nil] (volume)
-func (o *Nurbs) PointAndDerivs(x, dxDr, dxDs, dxDt,
-	ddxDrr, ddxDss, ddxDtt, ddxDrs, ddxDrt, ddxDst, u la.Vector, ndim int) {
+//     dxdr   -- ∂{x}/∂r
+//     dxds   -- ∂{x}/∂s    [may be nil] (volume and surfaces)
+//     dxdt   -- ∂{x}/∂t    [may be nil] (volume)
+//     ddxdrr -- ∂²{x}/∂r²  [optional]
+//     ddxdss -- ∂²{x}/∂s²  [optional] [may be nil] (volume and surfaces)
+//     ddxdtt -- ∂²{x}/∂t²  [optional] [may be nil] (volume)
+//     ddxdrs -- ∂²{x}/∂r∂s [optional] [may be nil] (volume and surfaces)
+//     ddxdrt -- ∂²{x}/∂r∂t [optional] [may be nil] (volume)
+//     ddxdst -- ∂²{x}/∂s∂t [optional] [may be nil] (volume)
+func (o *Nurbs) PointAndDerivs(x, dxdr, dxds, dxdt,
+	ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, u la.Vector, ndim int) {
 
-	// find span and ctrl indices, and compute basis functions and their derivatives
-	upto := 2
+	// span, ctrl-idx, basis functions, and basis derivatives
 	for d := 0; d < o.gnd; d++ {
+		upto := utl.Imin(2, o.b[d].p) // 2 ⇒ up to 2nd order, if possible
 		o.span[d] = o.b[d].findSpan(u[d])
 		o.b[d].dersBasisFuns(u[d], o.span[d], upto)
 		o.idx[d] = o.span[d] - o.p[d]
 	}
-	for e := 0; e < 4; e++ {
-		o.cw[e] = 0
-	}
-
-	// derivative of augmented homogeneous coordinates Cw
-	dcwdr := la.NewVector(4)
-	ddcwdrr := la.NewVector(4)
-
-	switch o.gnd {
 
 	// curve
+	switch o.gnd {
 	case 1:
+		for e := 0; e < 4; e++ {
+			o.cw[e] = 0.0
+			o.dcwdr[e] = 0.0
+			o.ddcwdrr[e] = 0.0
+		}
 		j, k := 0, 0
 		for e := 0; e < 4; e++ { // for each homogeneous component
 			for i := 0; i <= o.p[0]; i++ { // summing over i
 				o.cw[e] += o.b[0].ndu[i][o.p[0]] * o.Q[o.idx[0]+i][j][k][e]
-				dcwdr[e] += o.b[0].der[1][i] * o.Q[o.idx[0]+i][j][k][e]
-				ddcwdrr[e] += o.b[0].der[2][i] * o.Q[o.idx[0]+i][j][k][e]
+				o.dcwdr[e] += o.b[0].der[1][i] * o.Q[o.idx[0]+i][j][k][e]
+				if o.b[0].p > 1 { // 2nd order is possible
+					o.ddcwdrr[e] += o.b[0].der[2][i] * o.Q[o.idx[0]+i][j][k][e]
+				}
+			}
+		}
+		for d := 0; d < ndim; d++ {
+			x[d] = o.cw[d] / o.cw[3]
+			dxdr[d] = (o.dcwdr[d] - o.dcwdr[3]*x[d]) / o.cw[3]
+		}
+		if ddxdrr != nil {
+			for d := 0; d < ndim; d++ {
+				ddxdrr[d] = (o.ddcwdrr[d] - 2.0*o.dcwdr[3]*dxdr[d] - o.ddcwdrr[3]*x[d]) / o.cw[3]
 			}
 		}
 
@@ -528,15 +548,6 @@ func (o *Nurbs) PointAndDerivs(x, dxDr, dxDs, dxDt,
 	// volume
 	case 3:
 		chk.Panic("PointAndDerivs of volume is not available yet\n")
-	}
-
-	// correct values
-	for d := 0; d < ndim; d++ {
-		x[d] = o.cw[d] / o.cw[3]
-		dxDr[d] = (dcwdr[d] - dcwdr[3]*x[d]) / o.cw[3]
-		if ddxDrr != nil {
-			ddxDrr[d] = (ddcwdrr[d] - 2.0*dcwdr[3]*dxDr[d] - ddcwdrr[3]*x[d]) / o.cw[3]
-		}
 	}
 }
 
