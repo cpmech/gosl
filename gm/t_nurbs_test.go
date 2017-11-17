@@ -717,15 +717,19 @@ func TestNurbs12(tst *testing.T) {
 
 	// NURBS
 	solid := FactoryNurbs.SolidHex([][]float64{
-		{0, 0, 0},
-		{1, 0, 0},
-		{0, 2, 0},
-		{2, 2, 0},
-		{0, 0, 1},
-		{1, 0, 1},
-		{0, 2, 1},
-		{2, 2, 1},
+		{0.0, 0, 0.0}, // 0
+		{1.0, 0, 0.0}, // 1
+		{0.0, 2, 0.0}, // 2
+		{2.0, 2, 0.0}, // 3
+		{0.0, 0, 1.0}, // 4
+		{0.8, 0, 0.8}, // 5
+		{0.0, 2, 2.0}, // 6
+		{2.0, 2, 2.0}, // 7
 	})
+
+	// check derivatives
+	verb := chk.Verbose
+	checkNurbsSolidDerivs(tst, solid, []float64{0, 1}, []float64{0, 1}, []float64{0, 1}, verb, 1e-14, 1e-9, 1e-8)
 
 	// plot
 	if chk.Verbose {
@@ -801,6 +805,55 @@ func checkNurbsSurfDerivs(tst *testing.T, surf *Nurbs, uvals, vvals []float64, v
 			chk.DerivVecSca(tst, "d²x/drds ", tol2, ddxdrs, u[1], 1e-6, verb, func(xx []float64, s float64) {
 				surf.PointAndDerivs(tmp1, xx, tmp2, nil, nil, nil, nil, nil, nil, nil, []float64{u[0], s}, ndim)
 			})
+		}
+	}
+}
+
+func checkNurbsSolidDerivs(tst *testing.T, solid *Nurbs, uvals, vvals, wvals []float64, verb bool, tol0, tol1, tol2 float64) {
+	ndim := 3
+	u := la.NewVector(3)
+	x := la.NewVector(ndim)
+	tmp1 := la.NewVector(ndim)
+	tmp2 := la.NewVector(ndim)
+	tmp3 := la.NewVector(ndim)
+	dxdr, dxds, dxdt := la.NewVector(ndim), la.NewVector(ndim), la.NewVector(ndim)
+	ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst := la.NewVector(ndim), la.NewVector(ndim), la.NewVector(ndim), la.NewVector(ndim), la.NewVector(ndim), la.NewVector(ndim)
+	for i := 0; i < len(uvals); i++ {
+		for j := 0; j < len(vvals); j++ {
+			for k := 0; k < len(wvals); k++ {
+				u[0], u[1], u[2] = uvals[i], vvals[j], wvals[k]
+				if verb {
+					io.Pf("\nu = %f\n", u)
+				}
+				solid.PointAndDerivs(x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, u, ndim)
+				chk.DerivVecSca(tst, "dx/dr    ", tol1, dxdr, u[0], 1e-6, verb, func(xx []float64, r float64) {
+					solid.Point(xx, []float64{r, u[1], u[2]}, ndim)
+				})
+				chk.DerivVecSca(tst, "dx/ds    ", tol1, dxds, u[1], 1e-6, verb, func(xx []float64, s float64) {
+					solid.Point(xx, []float64{u[0], s, u[2]}, ndim)
+				})
+				chk.DerivVecSca(tst, "dx/dt    ", tol1, dxdt, u[2], 1e-6, verb, func(xx []float64, t float64) {
+					solid.Point(xx, []float64{u[0], u[1], t}, ndim)
+				})
+				chk.DerivVecSca(tst, "d²x/dr²  ", tol2, ddxdrr, u[0], 1e-6, verb, func(xx []float64, r float64) {
+					solid.PointAndDerivs(tmp1, xx, tmp2, tmp3, nil, nil, nil, nil, nil, nil, []float64{r, u[1], u[2]}, ndim)
+				})
+				chk.DerivVecSca(tst, "d²x/ds²  ", tol2, ddxdss, u[1], 1e-6, verb, func(xx []float64, s float64) {
+					solid.PointAndDerivs(tmp1, tmp2, xx, tmp3, nil, nil, nil, nil, nil, nil, []float64{u[0], s, u[2]}, ndim)
+				})
+				chk.DerivVecSca(tst, "d²x/dt²  ", tol2, ddxdtt, u[2], 1e-6, verb, func(xx []float64, t float64) {
+					solid.PointAndDerivs(tmp1, tmp2, tmp3, xx, nil, nil, nil, nil, nil, nil, []float64{u[0], u[1], t}, ndim)
+				})
+				chk.DerivVecSca(tst, "d²x/drds ", tol2, ddxdrs, u[1], 1e-6, verb, func(xx []float64, s float64) {
+					solid.PointAndDerivs(tmp1, xx, tmp2, tmp3, nil, nil, nil, nil, nil, nil, []float64{u[0], s, u[2]}, ndim)
+				})
+				chk.DerivVecSca(tst, "d²x/drdt ", tol2, ddxdrt, u[2], 1e-6, verb, func(xx []float64, t float64) {
+					solid.PointAndDerivs(tmp1, xx, tmp2, tmp3, nil, nil, nil, nil, nil, nil, []float64{u[0], u[1], t}, ndim)
+				})
+				chk.DerivVecSca(tst, "d²x/dsdt ", tol2, ddxdst, u[2], 1e-6, verb, func(xx []float64, t float64) {
+					solid.PointAndDerivs(tmp1, tmp2, xx, tmp3, nil, nil, nil, nil, nil, nil, []float64{u[0], u[1], t}, ndim)
+				})
+			}
 		}
 	}
 }
