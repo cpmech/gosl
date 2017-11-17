@@ -23,7 +23,7 @@ import (
 type Nurbs struct {
 
 	// essential
-	gnd int             // 1: curve, 2:surface, 3:volume (geometry dimension)
+	gnd int             // 1: curve, 2:surface, 3:solid (geometry dimension)
 	p   []int           // orders [3]
 	b   []*Bspline      // B-splines [gnd]
 	n   []int           // number of basis functions along each direction [3]
@@ -177,7 +177,7 @@ func (o *Nurbs) CalcBasis(u []float64) {
 				o.rr[i][j][k] /= ww
 			}
 		}
-	// volume
+	// solid
 	case 3:
 		for i := 0; i <= α; i++ {
 			for j := 0; j <= β; j++ {
@@ -249,7 +249,7 @@ func (o *Nurbs) CalcBasisAndDerivs(u []float64) {
 				o.drr[i][j][k][1] = o.b[0].ndu[i][α] * o.Q[x+i][y+j][k][3] * (ww*o.b[1].der[π][j] - o.b[1].ndu[j][β]*o.dww[1]) / ww2
 			}
 		}
-	// volume
+	// solid
 	case 3:
 		for i := 0; i <= α; i++ {
 			for j := 0; j <= β; j++ {
@@ -353,7 +353,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 			chk.Panic("denominator is zero (%v) @ %v for point %d", den, u, l)
 		}
 		res = o.b[0].RecursiveBasis(u[0], I[0]) * o.b[1].RecursiveBasis(u[1], I[1]) * o.Q[I[0]][I[1]][k][3] / den
-	// volume
+	// solid
 	case 3:
 		for i := 0; i < o.n[0]; i++ {
 			for j := 0; j < o.n[1]; j++ {
@@ -370,7 +370,7 @@ func (o *Nurbs) RecursiveBasis(u []float64, l int) (res float64) {
 	return
 }
 
-// Point returns the x-y-z coordinates of a point on curve/surface/volume
+// Point returns the x-y-z coordinates of a point on curve/surface/solid
 //   Input:
 //     u    -- [gnd] knot values
 //     ndim -- the dimension of the point. E.g. allows drawing curves in 3D
@@ -405,7 +405,7 @@ func (o *Nurbs) Point(C, u []float64, ndim int) {
 				}
 			}
 		}
-	// volume
+	// solid
 	case 3:
 		for i := 0; i <= o.p[0]; i++ {
 			for j := 0; j <= o.p[1]; j++ {
@@ -424,7 +424,7 @@ func (o *Nurbs) Point(C, u []float64, ndim int) {
 }
 
 // PointAndFirstDerivs returns the point and first order derivatives with respect to the knot values u
-// of the x-y-z coordinates of a point on curve/surface/volume
+// of the x-y-z coordinates of a point on curve/surface/solid
 //   Input:
 //     u    -- [gnd] knot values
 //     ndim -- the dimension of the point. E.g. allows drawing curves in 3D
@@ -475,9 +475,9 @@ func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 				}
 			}
 		}
-	// volume
+	// solid
 	case 3:
-		chk.Panic("PointAndFirstDerivs of volume is not available yet\n")
+		chk.Panic("PointAndFirstDerivs of solid is not available yet\n")
 	}
 	for e := 0; e < ndim; e++ {
 		C[e] = o.cw[e] / o.cw[3]
@@ -496,14 +496,14 @@ func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 //  Output:
 //    x      -- position {x,y,z} (the same as the C varible in [1])
 //    dxdr   -- ∂{x}/∂r
-//    dxds   -- ∂{x}/∂s    [may be nil] (volume and surfaces)
-//    dxdt   -- ∂{x}/∂t    [may be nil] (volume)
+//    dxds   -- ∂{x}/∂s    [may be nil] (solid and surfaces)
+//    dxdt   -- ∂{x}/∂t    [may be nil] (solid)
 //    ddxdrr -- ∂²{x}/∂r²  [optional]
-//    ddxdss -- ∂²{x}/∂s²  [optional] [may be nil] (volume and surfaces)
-//    ddxdtt -- ∂²{x}/∂t²  [optional] [may be nil] (volume)
-//    ddxdrs -- ∂²{x}/∂r∂s [optional] [may be nil] (volume and surfaces)
-//    ddxdrt -- ∂²{x}/∂r∂t [optional] [may be nil] (volume)
-//    ddxdst -- ∂²{x}/∂s∂t [optional] [may be nil] (volume)
+//    ddxdss -- ∂²{x}/∂s²  [optional] [may be nil] (solid and surfaces)
+//    ddxdtt -- ∂²{x}/∂t²  [optional] [may be nil] (solid)
+//    ddxdrs -- ∂²{x}/∂r∂s [optional] [may be nil] (solid and surfaces)
+//    ddxdrt -- ∂²{x}/∂r∂t [optional] [may be nil] (solid)
+//    ddxdst -- ∂²{x}/∂s∂t [optional] [may be nil] (solid)
 //  NOTE: the second order derivatives will be ignored if ddxdrr == nil; otherwise, all 2nd derivs will be computed
 func (o *Nurbs) PointAndDerivs(x, dxdr, dxds, dxdt,
 	ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, u la.Vector, ndim int) {
@@ -580,9 +580,9 @@ func (o *Nurbs) PointAndDerivs(x, dxdr, dxds, dxdt,
 			}
 		}
 
-	// volume
+	// solid
 	case 3:
-		chk.Panic("PointAndDerivs of volume is not available yet\n")
+		chk.Panic("PointAndDerivs of solid is not available yet\n")
 	}
 }
 
@@ -669,7 +669,7 @@ func (o *Nurbs) Elements() (spans [][]int) {
 				spans[e] = []int{s0[i][0], s0[i][1], s1[j][0], s1[j][1]}
 			}
 		}
-	// volume
+	// solid
 	case 3:
 		s0, s1, s2 := o.b[0].Elements(), o.b[1].Elements(), o.b[2].Elements()
 		n0, n1, n2 := len(s0), len(s1), len(s2)
@@ -720,7 +720,7 @@ func (o *Nurbs) IndBasis(span []int) (L []int) {
 				c++
 			}
 		}
-	// volume
+	// solid
 	case 3:
 		nbu := o.p[0] + 1 // number of basis functions along u
 		nbv := o.p[1] + 1 // number of basis functions along v
