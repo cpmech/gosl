@@ -260,3 +260,77 @@ func TestDeriv03(tst *testing.T) {
 		}
 	}
 }
+
+func TestDeriv04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Deriv04. mixed derivatives d²f/dxdy²")
+
+	names := []string{
+		"2x³+3xy+2y²", // 1
+		"exp(xy)",     // 2
+		"x⋅sin(y)+y⋅cos(x)+xy⋅sin(xy)+xy⋅cos(xy)", // 3
+	}
+
+	fcns := []fun.Sss{
+		func(x, y float64) float64 { // 1
+			return 2*x*x*x + 3*x*y + 2*y*y
+		},
+		func(x, y float64) float64 { // 2
+			return math.Exp(x * y)
+		},
+		func(x, y float64) float64 { // 3
+			return x*math.Sin(y) + y*math.Cos(x) + x*y*math.Sin(x*y) + x*y*math.Cos(x*y)
+		},
+	}
+
+	dxdanas := []fun.Sss{ // d²f/dxdy
+		func(x, y float64) float64 { // 1
+			return 3
+		},
+		func(x, y float64) float64 { // 2
+			return x*y*math.Exp(x*y) + math.Exp(x*y)
+		},
+		func(x, y float64) float64 { // 3
+			return -x*x*y*y*math.Sin(x*y) - 3*x*y*math.Sin(x*y) + math.Sin(x*y) - x*x*y*y*cos(x*y) + 3*x*y*math.Cos(x*y) + math.Cos(x*y) + math.Cos(y) - math.Sin(x)
+		},
+	}
+
+	xvals := [][]float64{
+		{-0.5, 0, 0.5}, // 1
+		{-0.5, 0, 0.5}, // 2
+		{-0.5, 0, 0.5}, // 3
+	}
+
+	yvals := [][]float64{
+		{-0.5, 0, 0.5}, // 1
+		{-0.5, 0, 0.5}, // 2
+		{-0.5, 0, 0.5}, // 3
+	}
+
+	tols := [][]float64{
+		{1e-10, 1e-6, 1e-5},   // method 1
+		{1e-10, 1e-10, 1e-10}, // method 2
+		{1e-9, 1e-9, 1e-10},   // method 3
+	}
+
+	hs := []float64{1e-3, 1e-3, 1e-3}
+
+	// check
+	smethods := []string{"SecondDerivMixedO2", "SecondDerivMixedO4v1", "SecondDerivMixedO4v2"}
+	methods := []func(float64, float64, float64, fun.Sss) float64{
+		SecondDerivMixedO2, SecondDerivMixedO4v1, SecondDerivMixedO4v2,
+	}
+	for idx, method := range methods {
+		io.Pf("\ncheck %s:\n", smethods[idx])
+		for i, f := range fcns {
+			for _, x := range xvals[i] {
+				for _, y := range yvals[i] {
+					dnum := method(x, y, hs[i], f)
+					dana := dxdanas[i](x, y)
+					chk.Float64(tst, "    "+names[i], tols[idx][i], dnum, dana)
+				}
+			}
+		}
+	}
+}

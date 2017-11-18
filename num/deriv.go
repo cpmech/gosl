@@ -76,6 +76,47 @@ func SecondDerivCen5(x, h float64, f fun.Ss) float64 {
 	return (-f(x-2.0*h) + 16.0*f(x-h) - 30.0*f(x) + 16.0*f(x+h) - f(x+2.0*h)) / (12.0 * h * h)
 }
 
+// SecondDerivMixedO2 approximates ∂²f/∂x∂y @ x={x,y} using O(h²) formula
+func SecondDerivMixedO2(x, y, h float64, f fun.Sss) float64 {
+	return (f(x-h, y-h) + f(x+h, y+h) - f(x+h, y-h) - f(x-h, y+h)) / (4.0 * h * h)
+}
+
+// SecondDerivMixedO4v1 approximates ∂²f/∂x∂y @ x={x,y} using O(h⁴) formula
+// from http://www.holoborodko.com/pavel/numerical-methods/numerical-derivative/central-differences
+func SecondDerivMixedO4v1(x, y, h float64, f fun.Sss) float64 {
+	a1 := x + h
+	a2 := x + 2.0*h
+	α1 := x - h
+	α2 := x - 2.0*h
+	b1 := y + h
+	b2 := y + 2.0*h
+	β1 := y - h
+	β2 := y - 2.0*h
+	k := f(a1, β2) + f(a2, β1) + f(α2, b1) + f(α1, b2)
+	l := f(α1, β2) + f(α2, β1) + f(a1, b2) + f(a2, b1)
+	m := f(a2, β2) + f(α2, b2) - f(α2, β2) - f(a2, b2)
+	n := f(α1, β1) + f(a1, b1) - f(a1, β1) - f(α1, b1)
+	return (-63.0*k + 63.0*l + 44.0*m + 74.0*n) / (600.0 * h * h)
+}
+
+// SecondDerivMixedO4v2 approximates ∂²f/∂x∂y @ x={x,y} using O(h⁴) formula
+// from http://www.holoborodko.com/pavel/numerical-methods/numerical-derivative/central-differences
+func SecondDerivMixedO4v2(x, y, h float64, f fun.Sss) float64 {
+	a1 := x + h
+	a2 := x + 2.0*h
+	α1 := x - h
+	α2 := x - 2.0*h
+	b1 := y + h
+	b2 := y + 2.0*h
+	β1 := y - h
+	β2 := y - 2.0*h
+	k := f(a1, β2) + f(a2, β1) + f(α2, b1) + f(α1, b2)
+	l := f(α1, β2) + f(α2, β1) + f(a1, b2) + f(a2, b1)
+	m := f(a2, β2) + f(α2, b2) - f(α2, β2) - f(a2, b2)
+	n := f(α1, β1) + f(a1, b1) - f(a1, β1) - f(α1, b1)
+	return (8.0*k - 8.0*l - m + 64.0*n) / (144.0 * h * h)
+}
+
 // lower level functions //////////////////////////////////////////////////////////////////////////
 
 // centralDeriv5 computes the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
