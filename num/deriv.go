@@ -11,7 +11,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// DerivCen5 approximates the derivative of f w.r.t x using central differences with 5 points.
+// DerivCen5 approximates the derivative df/dx using central differences with 5 points.
 func DerivCen5(x, h float64, f fun.Ss) (res float64) {
 
 	// first estimate
@@ -36,7 +36,7 @@ func DerivCen5(x, h float64, f fun.Ss) (res float64) {
 	return
 }
 
-// DerivFwd4 approximates the derivative of f w.r.t x using forward differences with 4 points.
+// DerivFwd4 approximates the derivative df/dx using forward differences with 4 points.
 func DerivFwd4(x, h float64, f fun.Ss) (res float64) {
 
 	// first estimate
@@ -61,9 +61,19 @@ func DerivFwd4(x, h float64, f fun.Ss) (res float64) {
 	return
 }
 
-// DerivBwd4 approximates the derivative of f w.r.t x using backward differences with 4 points.
+// DerivBwd4 approximates the derivative df/dx using backward differences with 4 points.
 func DerivBwd4(x, h float64, f fun.Ss) (res float64) {
 	return DerivFwd4(x, -h, f)
+}
+
+// SecondDerivCen3 approximates the second derivative d²f/dx² using central differences with 3 points
+func SecondDerivCen3(x, h float64, f fun.Ss) float64 {
+	return (f(x-h) - 2.0*f(x) + f(x+h)) / (h * h)
+}
+
+// SecondDerivCen5 approximates the second derivative d²f/dx² using central differences with 5 points
+func SecondDerivCen5(x, h float64, f fun.Ss) float64 {
+	return (-f(x-2.0*h) + 16.0*f(x-h) - 30.0*f(x) + 16.0*f(x+h) - f(x+2.0*h)) / (12.0 * h * h)
 }
 
 // lower level functions //////////////////////////////////////////////////////////////////////////

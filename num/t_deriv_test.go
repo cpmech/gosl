@@ -13,10 +13,10 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func Test_deriv01(tst *testing.T) {
+func TestDeriv01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("deriv01")
+	chk.PrintTitle("Deriv01. 1st derivs using Cen5, Fwd4, Bwd4")
 
 	names := []string{
 		"x²",       // 1
@@ -104,10 +104,10 @@ func Test_deriv01(tst *testing.T) {
 	}
 }
 
-func Test_deriv02(tst *testing.T) {
+func TestDeriv02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("deriv02")
+	chk.PrintTitle("Deriv02. 1st deriv using Cen5")
 
 	// scalar field
 	fcn := func(x, y float64) float64 {
@@ -165,6 +165,97 @@ func Test_deriv02(tst *testing.T) {
 			if math.Abs(vnum-v) > tol {
 				tst.Errorf("x=%v y=%v f=%v u=%v v=%v unum=%v vnum=%v error=%v\n", x, y, f, u, v, unum, vnum, math.Abs(vnum-v))
 				return
+			}
+		}
+	}
+}
+
+func TestDeriv03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Deriv03. d²f/dx² using 2nd order Cen3 and Cen5")
+
+	names := []string{
+		"x²",       // 1
+		"exp(x)",   // 2
+		"exp(-x²)", // 3
+		"1/x",      // 4
+		"x⋅√x",     // 5
+		"sin(1/x)", // 6
+	}
+
+	fcns := []fun.Ss{
+		func(x float64) float64 { // 1
+			return x * x
+		},
+		func(x float64) float64 { // 2
+			return math.Exp(x)
+		},
+		func(x float64) float64 { // 3
+			return math.Exp(-x * x)
+		},
+		func(x float64) float64 { // 4
+			return 1.0 / x
+		},
+		func(x float64) float64 { // 5
+			return x * math.Sqrt(x)
+		},
+		func(x float64) float64 { // 6
+			return math.Sin(1.0 / x)
+		},
+	}
+
+	ddanas := []fun.Ss{ // d²f/dx²
+		func(x float64) float64 { // 1
+			return 2
+		},
+		func(x float64) float64 { // 2
+			return math.Exp(x)
+		},
+		func(x float64) float64 { // 3
+			return 4*x*x*math.Exp(-x*x) - 2*math.Exp(-x*x)
+		},
+		func(x float64) float64 { // 4
+			return 2.0 / (x * x * x)
+		},
+		func(x float64) float64 { // 5
+			return 0.75 / math.Sqrt(x)
+		},
+		func(x float64) float64 { // 6
+			x3 := x * x * x
+			x4 := x * x3
+			return 2.0*math.Cos(1.0/x)/x3 - math.Sin(1.0/x)/x4
+		},
+	}
+
+	xvals := [][]float64{
+		{-0.5, 0, 0.5},   // 1
+		{-0.5, 0, 0.5},   // 2
+		{-0.5, 0, 0.5},   // 3
+		{-0.5, 0.2, 0.5}, // 4
+		{0.2, 0.5, 1.0},  // 5
+		{-0.5, 0.2, 0.5}, // 6
+	}
+
+	tols := [][]float64{
+		{1e-10, 1e-6, 1e-6, 1e-2, 1e-5, 1e-2},
+		{1e-10, 1e-9, 1e-9, 1e-6, 1e-9, 1e-4},
+	}
+
+	hs := []float64{1e-3, 1e-3, 1e-3, 1e-3, 1e-3, 1e-3}
+
+	// check
+	smethods := []string{"SecondDerivCen3", "SecondDerivCen5"}
+	methods := []func(float64, float64, fun.Ss) float64{
+		SecondDerivCen3, SecondDerivCen5,
+	}
+	for idx, method := range methods {
+		io.Pf("\ncheck %s:\n", smethods[idx])
+		for i, f := range fcns {
+			for _, x := range xvals[i] {
+				dnum := method(x, hs[i], f)
+				dana := ddanas[i](x)
+				chk.Float64(tst, "    "+names[i], tols[idx][i], dnum, dana)
 			}
 		}
 	}
