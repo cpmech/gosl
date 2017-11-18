@@ -22,6 +22,13 @@ const π = math.Pi
 //     scalar
 type Ss func(s float64) float64
 
+// Sss defines a scalar function f(r,s) of two scalar arguments (scalar scalar scalar)
+//   Input:
+//     s1, s2 -- input scalar
+//   Returns:
+//     scalar
+type Sss func(s1, s2 float64) float64
+
 // Sv defines a scalar functioin f(v) of a vector argument v (scalar vector)
 //   Input:
 //     v -- input vector
