@@ -732,6 +732,43 @@ func TestGrid07(tst *testing.T) {
 	}
 }
 
+func TestGrid08(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Grid08. using 2D NURBS (quarter ring)")
+
+	// nurbs
+	nrb := FactoryNurbs.Surf2dQuarterCircle(0, 0, 1, 3)
+
+	// coordinates
+	R := utl.LinSpace(-1, 1, 3)
+	S := utl.LinSpace(-1, 1, 3)
+
+	// grid
+	g := new(Grid)
+	g.SetNurbsSurf2d(nrb, R, S)
+
+	// check
+	verb := chk.Verbose
+	checkGridNurbsDerivs2d(tst, nrb, g, 1e-10, 1e-12, 1e-8, verb)
+
+	// plot
+	if chk.Verbose {
+		gp := GridPlotter{G: g, WithVids: true}
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		plt.HideAllBorders()
+		PlotNurbs("/tmp/gosl/gm", "grid08", nrb, 2, 21, true, true, nil, nil, nil, func() {
+			gp.Draw()
+			gp.Bases(0.5)
+			nrb.DrawSurface(2, 11, 11, false, true, nil, nil)
+			plt.AxisOff()
+			plt.Equal()
+		})
+	}
+}
+
+// auxiliary //////////////////////////////////////////////////////////////////////////////////////
+
 func checkGridNurbsDerivs2d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol3 float64, verb bool) {
 	x := la.NewVector(2)
 	T := la.NewVector(2)

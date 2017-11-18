@@ -113,6 +113,26 @@ func (o facNurbsT) Surf2dRectangleQL(x0, y0, dx, dy float64) (surf *Nurbs) {
 	return
 }
 
+// Surf2dQuarterCircle generates a 2D NURBS representing a quarter of circle
+//   a, b -- inner and outer radii
+func (o facNurbsT) Surf2dQuarterCircle(xc, yc, a, b float64) (surf *Nurbs) {
+	verts := [][]float64{
+		{xc + a, yc, 0, math.Sqrt2},
+		{xc + b, yc, 0, math.Sqrt2},
+		{xc + a, yc + a, 0, 1.0},
+		{xc + b, yc + b, 0, 1.0},
+		{xc, yc + a, 0, math.Sqrt2},
+		{xc, yc + b, 0, math.Sqrt2},
+	}
+	knots := [][]float64{
+		{0, 0, 1, 1},
+		{0, 0, 0, 1, 1, 1},
+	}
+	surf = NewNurbs(2, []int{1, 2}, knots)
+	surf.SetControl(verts, utl.IntRange(len(verts)))
+	return
+}
+
 // Surf2dExample1 generates a 2D NURBS of a 2D strip (x-quadratic, y-linear) (example 1)
 func (o facNurbsT) Surf2dExample1() (surf *Nurbs) {
 	verts := [][]float64{
