@@ -46,18 +46,14 @@ func NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs la.Vector) (o *Metric
 	o.CntGmat = la.NewMatrix(2, 2)
 	o.DetCovGmat = la.MatInvSmall(o.CntGmat, o.CovGmat, 1e-13)
 
-	// contravariant basis vectors
-	cntG0, cntG1 := la.NewVector(2), la.NewVector(2)
-	for i := 0; i < 2; i++ {
-		cntG0[i] += o.CntGmat.Get(0, 0)*o.CovG0[i] + o.CntGmat.Get(0, 1)*o.CovG1[i]
-		cntG1[i] += o.CntGmat.Get(1, 0)*o.CovG0[i] + o.CntGmat.Get(1, 1)*o.CovG1[i]
-	}
-
 	// check if homogeneous grid
 	o.Homogeneous = ddxdrr == nil
 	if o.Homogeneous {
 		return
 	}
+
+	// contravariant basis vectors
+	cntG0, cntG1 := o.GetContraVectors2d()
 
 	// Christoffel vectors
 	Γ00, Γ11, Γ01 := ddxdrr, ddxdss, ddxdrs
@@ -108,19 +104,14 @@ func NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt
 	o.CntGmat = la.NewMatrix(3, 3)
 	o.DetCovGmat = la.MatInvSmall(o.CntGmat, o.CovGmat, 1e-13)
 
-	// contravariant basis vectors
-	cntG0, cntG1, cntG2 := la.NewVector(3), la.NewVector(3), la.NewVector(3)
-	for i := 0; i < 3; i++ {
-		cntG0[i] += o.CntGmat.Get(0, 0)*o.CovG0[i] + o.CntGmat.Get(0, 1)*o.CovG1[i] + o.CntGmat.Get(0, 2)*o.CovG2[i]
-		cntG1[i] += o.CntGmat.Get(1, 0)*o.CovG0[i] + o.CntGmat.Get(1, 1)*o.CovG1[i] + o.CntGmat.Get(1, 2)*o.CovG2[i]
-		cntG2[i] += o.CntGmat.Get(2, 0)*o.CovG0[i] + o.CntGmat.Get(2, 1)*o.CovG1[i] + o.CntGmat.Get(2, 2)*o.CovG2[i]
-	}
-
 	// check if homogeneous grid
 	o.Homogeneous = ddxdrr == nil
 	if o.Homogeneous {
 		return
 	}
+
+	// contravariant basis vectors
+	cntG0, cntG1, cntG2 := o.GetContraVectors3d()
 
 	// Christoffel vectors
 	Γ00, Γ11, Γ22, Γ01, Γ02, Γ12 := ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst
@@ -162,5 +153,28 @@ func NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt
 	o.L[0] = o.GammaS[0][0][0]*o.CntGmat.Get(0, 0) + o.GammaS[0][1][1]*o.CntGmat.Get(1, 1) + o.GammaS[0][2][2]*o.CntGmat.Get(2, 2) + 2.0*o.GammaS[0][0][1]*o.CntGmat.Get(0, 1) + 2.0*o.GammaS[0][0][2]*o.CntGmat.Get(0, 2) + 2.0*o.GammaS[0][1][2]*o.CntGmat.Get(1, 2)
 	o.L[1] = o.GammaS[1][0][0]*o.CntGmat.Get(0, 0) + o.GammaS[1][1][1]*o.CntGmat.Get(1, 1) + o.GammaS[1][2][2]*o.CntGmat.Get(2, 2) + 2.0*o.GammaS[1][0][1]*o.CntGmat.Get(0, 1) + 2.0*o.GammaS[1][0][2]*o.CntGmat.Get(0, 2) + 2.0*o.GammaS[1][1][2]*o.CntGmat.Get(1, 2)
 	o.L[2] = o.GammaS[2][0][0]*o.CntGmat.Get(0, 0) + o.GammaS[2][1][1]*o.CntGmat.Get(1, 1) + o.GammaS[2][2][2]*o.CntGmat.Get(2, 2) + 2.0*o.GammaS[2][0][1]*o.CntGmat.Get(0, 1) + 2.0*o.GammaS[2][0][2]*o.CntGmat.Get(0, 2) + 2.0*o.GammaS[2][1][2]*o.CntGmat.Get(1, 2)
+	return
+}
+
+// convenience /////////////////////////////////////////////////////////////////////////////////////
+
+// GetContraVectors2d computes contravariant basis vectors
+func (o *Metrics) GetContraVectors2d() (cntG0, cntG1 la.Vector) {
+	cntG0, cntG1 = la.NewVector(2), la.NewVector(2)
+	for i := 0; i < 2; i++ {
+		cntG0[i] += o.CntGmat.Get(0, 0)*o.CovG0[i] + o.CntGmat.Get(0, 1)*o.CovG1[i]
+		cntG1[i] += o.CntGmat.Get(1, 0)*o.CovG0[i] + o.CntGmat.Get(1, 1)*o.CovG1[i]
+	}
+	return
+}
+
+// GetContraVectors3d computes contravariant basis vectors
+func (o *Metrics) GetContraVectors3d() (cntG0, cntG1, cntG2 la.Vector) {
+	cntG0, cntG1, cntG2 = la.NewVector(3), la.NewVector(3), la.NewVector(3)
+	for i := 0; i < 3; i++ {
+		cntG0[i] += o.CntGmat.Get(0, 0)*o.CovG0[i] + o.CntGmat.Get(0, 1)*o.CovG1[i] + o.CntGmat.Get(0, 2)*o.CovG2[i]
+		cntG1[i] += o.CntGmat.Get(1, 0)*o.CovG0[i] + o.CntGmat.Get(1, 1)*o.CovG1[i] + o.CntGmat.Get(1, 2)*o.CovG2[i]
+		cntG2[i] += o.CntGmat.Get(2, 0)*o.CovG0[i] + o.CntGmat.Get(2, 1)*o.CovG1[i] + o.CntGmat.Get(2, 2)*o.CovG2[i]
+	}
 	return
 }

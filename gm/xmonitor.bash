@@ -8,6 +8,6 @@ while true; do
     echo
     echo
     echo
-    #go test -run TestGrid06
-    go test -run Nurbs12
+    #go test -run Nurbs12
+    go test -run TestGrid07
 done

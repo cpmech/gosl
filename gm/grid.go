@@ -298,6 +298,49 @@ func (o *Grid) SetTransfinite3d(trf *Transfinite, R, S, T []float64) {
 	o.boundaries()
 }
 
+// SetNurbsSurf2d sets grid with NURBS surface in 2D (flat surface)
+//  nrb -- NURBS surface in 2D (flat)
+//  R   -- [n0] reference coordinates along r-direction  -1 ≤ r ≤ +1
+//  S   -- [n1] reference coordinates along s-direction  -1 ≤ s ≤ +1
+func (o *Grid) SetNurbsSurf2d(nrb *Nurbs, R, S []float64) {
+
+	// input
+	o.ndim = 2
+	o.npts = []int{len(R), len(S), 1}
+
+	// auxiliary
+	x := la.NewVector(2)
+	u := la.NewVector(2)
+	T := la.NewVector(2)
+	dxdr, dxds := la.NewVector(2), la.NewVector(2)
+	ddxdrr, ddxdss, ddxdrs := la.NewVector(2), la.NewVector(2), la.NewVector(2)
+
+	// compute metrics
+	p := 0
+	o.mtr = make([][][]*Metrics, 1)
+	o.mtr[p] = make([][]*Metrics, o.npts[1])
+	for n := 0; n < o.npts[1]; n++ {
+		o.mtr[p][n] = make([]*Metrics, o.npts[0])
+		for m := 0; m < o.npts[0]; m++ {
+			u[0], u[1] = R[m], S[n]
+			T[0], T[1] = (1.0+u[0])/2.0, (1.0+u[1])/2.0
+			nrb.PointAndDerivs(x, dxdr, dxds, nil, ddxdrr, ddxdss, nil, ddxdrs, nil, nil, T, 2)
+			for i := 0; i < o.ndim; i++ {
+				dxdr[i] /= 2.0
+				dxds[i] /= 2.0
+				ddxdrr[i] /= 4.0
+				ddxdss[i] /= 4.0
+				ddxdrs[i] /= 4.0
+			}
+			o.mtr[p][n][m] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
+		}
+	}
+
+	// limits and boundaries
+	o.limits()
+	o.boundaries()
+}
+
 // accessors //////////////////////////////////////////////////////////////////////////////////////
 
 // Ndim returns the number of dimensions (2D or 3D)

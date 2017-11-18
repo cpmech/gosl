@@ -10,6 +10,8 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -681,5 +683,126 @@ func TestGrid06(tst *testing.T) {
 		gp.Bases(0.20)
 		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
 		plt.Save("/tmp/gosl/gm", "grid06")
+	}
+}
+
+func TestGrid07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Grid07. using 2D NURBS surface (flat)")
+
+	// nurbs
+	verts := [][]float64{
+		{0, 0, 0, 1},
+		{4, 1, 0, 1},
+		{-1, 4, 0, 1},
+		{3, 3, 0, 1},
+	}
+	knots := [][]float64{
+		{0, 0, 1, 1},
+		{0, 0, 1, 1},
+	}
+	nrb := NewNurbs(2, []int{1, 1}, knots)
+	nrb.SetControl(verts, utl.IntRange(len(verts)))
+
+	// coordinates
+	R := utl.LinSpace(-1, 1, 3)
+	S := utl.LinSpace(-1, 1, 3)
+
+	// grid
+	g := new(Grid)
+	g.SetNurbsSurf2d(nrb, R, S)
+
+	// check
+	verb := chk.Verbose
+	checkGridNurbsDerivs2d(tst, nrb, g, 1e-12, 1e-12, 1e-9, verb)
+
+	// plot
+	if chk.Verbose {
+		gp := GridPlotter{G: g, WithVids: true}
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		plt.HideAllBorders()
+		PlotNurbs("/tmp/gosl/gm", "grid07", nrb, 2, 41, true, true, nil, nil, nil, func() {
+			gp.Draw()
+			gp.Bases(0.5)
+			nrb.DrawSurface(2, 5, 5, false, true, nil, nil)
+			plt.AxisOff()
+			plt.Equal()
+		})
+	}
+}
+
+func checkGridNurbsDerivs2d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol3 float64, verb bool) {
+	x := la.NewVector(2)
+	T := la.NewVector(2)
+	Γ00 := la.NewVector(2)
+	Γ11 := la.NewVector(2)
+	Γ01 := la.NewVector(2)
+	p := 0
+	for n := 0; n < g.npts[1]; n++ {
+		for m := 0; m < g.npts[0]; m++ {
+			mtr := g.mtr[p][n][m]
+			if verb {
+				io.Pf("\nx = %v\n", mtr.X)
+			}
+			chk.DerivVecSca(tst, "g0 ", tol1, mtr.CovG0, mtr.U[0], 1e-3, verb, func(xx []float64, r float64) {
+				T[0], T[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
+				nrb.Point(xx, T, 2)
+			})
+			chk.DerivVecSca(tst, "g1 ", tol1, mtr.CovG1, mtr.U[1], 1e-3, verb, func(xx []float64, s float64) {
+				T[0], T[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
+				nrb.Point(xx, T, 2)
+			})
+			ddx0drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
+				T[0], T[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
+				nrb.Point(x, T, 2)
+				return x[0]
+			})
+			ddx1drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
+				T[0], T[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
+				nrb.Point(x, T, 2)
+				return x[1]
+			})
+			ddx0dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
+				T[0], T[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
+				nrb.Point(x, T, 2)
+				return x[0]
+			})
+			ddx1dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
+				T[0], T[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
+				nrb.Point(x, T, 2)
+				return x[1]
+			})
+			ddx0drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
+				T[0], T[1] = (1.0+r)/2.0, (1.0+s)/2.0
+				nrb.Point(x, T, 2)
+				return x[0]
+			})
+			ddx1drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
+				T[0], T[1] = (1.0+r)/2.0, (1.0+s)/2.0
+				nrb.Point(x, T, 2)
+				return x[1]
+			})
+			Γ00[0], Γ00[1] = ddx0drr, ddx1drr
+			Γ11[0], Γ11[1] = ddx0dss, ddx1dss
+			Γ01[0], Γ01[1] = ddx0drs, ddx1drs
+			cntG0, cntG1 := mtr.GetContraVectors2d()
+			Γ000 := la.VecDot(Γ00, cntG0)
+			Γ011 := la.VecDot(Γ11, cntG0)
+			Γ001 := la.VecDot(Γ01, cntG0)
+			Γ100 := la.VecDot(Γ00, cntG1)
+			Γ111 := la.VecDot(Γ11, cntG1)
+			Γ101 := la.VecDot(Γ01, cntG1)
+			chk.Deep3(tst, "GammaS", tol3, mtr.GammaS, [][][]float64{
+				{
+					{Γ000, Γ001},
+					{Γ001, Γ011},
+				},
+				{
+					{Γ100, Γ101},
+					{Γ101, Γ111},
+				},
+			})
+		}
 	}
 }
