@@ -460,7 +460,7 @@ func TestZgesv01(tst *testing.T) {
 	// NOTE: zgesv performs badly with this problem
 	//       the best tolerance that can be selected is 0.00038
 	//       the same problem happens in python (probably using lapack as well)
-	tol := 0.00038
+	tol := 0.00049
 
 	// matrix
 	a := SliceToColMajorC([][]complex128{
@@ -495,7 +495,7 @@ func TestZgesv01(tst *testing.T) {
 	lda, ldb := n, n
 	ipiv := make([]int32, n)
 	Zgesv(n, nrhs, a, lda, ipiv, b, ldb)
-	chk.ArrayC(tst, "x = A⁻¹ b", tol, b, xCorrect)
+	chk.ArrayC(tst, "x = A⁻¹ b (comparison)", tol, b, xCorrect)
 
 	// compare with python results
 	xPython := []complex128{

@@ -29,35 +29,65 @@ func TestPrintOk(tst *testing.T) {
 	ColorsOn = prevC
 }
 
-func TestPrintFail(tst *testing.T) {
+func TestTstFail(tst *testing.T) {
 	prevV := Verbose
 	prevC := ColorsOn
 	//Verbose = true
 	ColorsOn = false
-	PrintTitle("PrintFail: verbose is ON for this test")
-	PrintFail("the message 'FAIL' is ok ⇒ ")
+	PrintTitle("TstFail: verbose is ON for this test")
+	t1 := new(testing.T)
+	TstFail(t1, "the message 'FAIL' is ok ⇒ ")
+	if !t1.Failed() {
+		tst.Errorf("t1 should have failed\n")
+	}
 	ColorsOn = true
-	PrintFail("the message 'FAIL' is ok ⇒ ")
+	t2 := new(testing.T)
+	TstFail(t2, "the message 'FAIL' is ok ⇒ ")
+	if !t1.Failed() {
+		tst.Errorf("t1 should have failed\n")
+	}
 	Verbose = prevV
 	ColorsOn = prevC
 }
 
-func TestCheckAndPrint(tst *testing.T) {
+func TestTstDiff(tst *testing.T) {
 	prevV := Verbose
 	//Verbose = true
-	PrintTitle("CheckAndPrint: verbose is ON for this test")
+	PrintTitle("TstDiff: verbose is ON for this test")
 	t1 := new(testing.T)
-	CheckAndPrint(t1, "x", 0, math.Sqrt(-1))
+	TstDiff(t1, "x", 0, math.Sqrt(-1), math.Sqrt(-1), false)
 	if !t1.Failed() {
 		tst.Errorf("t1 should have failed\n")
 	}
 	t2 := new(testing.T)
-	CheckAndPrint(t2, "x", 0, math.Inf(+1))
+	TstDiff(t2, "x", 0, math.Inf(+1), math.Inf(+1), true)
 	if !t2.Failed() {
 		tst.Errorf("t2 should have failed\n")
 	}
 	t3 := new(testing.T)
-	CheckAndPrint(t3, "x", 0, 1)
+	TstDiff(t3, "x", 0, 1, 0, false)
+	if !t3.Failed() {
+		tst.Errorf("t3 should have failed\n")
+	}
+	Verbose = prevV
+}
+
+func TestTstDiffC(tst *testing.T) {
+	prevV := Verbose
+	//Verbose = true
+	PrintTitle("TstDiffC: verbose is ON for this test")
+	t1 := new(testing.T)
+	TestDiffC(t1, "x", 0, complex(math.Sqrt(-1), 1), complex(math.Sqrt(-1), 1), false)
+	if !t1.Failed() {
+		tst.Errorf("t1 should have failed\n")
+	}
+	t2 := new(testing.T)
+	TestDiffC(t2, "x", 0, complex(math.Inf(+1), 1), complex(math.Inf(+1), 1), true)
+	if !t2.Failed() {
+		tst.Errorf("t2 should have failed\n")
+	}
+	t3 := new(testing.T)
+	TestDiffC(t3, "x", 0, 1+1i, 0, false)
 	if !t3.Failed() {
 		tst.Errorf("t3 should have failed\n")
 	}

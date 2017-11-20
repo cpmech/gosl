@@ -22,7 +22,7 @@ func Test_list01(tst *testing.T) {
 	io.Pforan("m = %v\n", m)
 	equal := reflect.DeepEqual(m.Vals, [][]float64{{}, {}, {2}})
 	if !equal {
-		chk.PrintFail("List Append")
+		chk.TstFail(tst, "List Append")
 	}
 
 	m.Append(0, 0.0)
@@ -30,7 +30,7 @@ func Test_list01(tst *testing.T) {
 	io.Pforan("m = %v\n", m)
 	equal = reflect.DeepEqual(m.Vals, [][]float64{{0}, {1}, {2}})
 	if !equal {
-		chk.PrintFail("List Append")
+		chk.TstFail(tst, "List Append")
 	}
 }
 

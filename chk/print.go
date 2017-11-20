@@ -7,9 +7,19 @@ package chk
 import (
 	"fmt"
 	"math"
+	"math/cmplx"
 	"runtime"
 	"testing"
 )
+
+// PrintTitle returns the Test Title
+func PrintTitle(title string) {
+	if Verbose {
+		fmt.Printf("\n=== %s =================\n", title)
+		return
+	}
+	fmt.Printf("   . . . testing . . .   %s\n", title)
+}
 
 // PrintOk prints "OK" in green (if ColorsOn==true)
 func PrintOk(msg string, prm ...interface{}) {
@@ -23,48 +33,60 @@ func PrintOk(msg string, prm ...interface{}) {
 	}
 }
 
-// PrintFail prints "FAIL" in red (if ColorsOn==true)
-func PrintFail(msg string, prm ...interface{}) {
+// TstFail calls tst.Errorf() with msg and parameters.
+// It also prints "FAIL" in red (if ColorsOn==true)
+func TstFail(tst *testing.T, msg string, prm ...interface{}) {
+	tst.Errorf(msg, prm...)
 	if Verbose {
 		fmt.Printf(msg, prm...)
 		if ColorsOn {
-			fmt.Println("[1;31mFAIL[0m")
+			fmt.Println(" [1;31mFAIL[0m")
 			return
 		}
-		fmt.Println("FAIL")
+		fmt.Println(" FAIL")
 	}
 }
 
-// PrintTitle returns the Test Title
-func PrintTitle(title string) {
-	if Verbose {
-		fmt.Printf("\n=== %s =================\n", title)
-		return
-	}
-	fmt.Printf("   . . . testing . . .   %s\n", title)
-}
-
-// CheckAndPrint returns a formatted error message
-func CheckAndPrint(tst *testing.T, msg string, tol, diff float64) {
+// TstDiff tests difference between float64
+func TstDiff(tst *testing.T, msg string, tol, a, b float64, showOK bool) (failed bool) {
+	diff := math.Abs(a - b)
 	if math.IsNaN(diff) || math.IsInf(diff, 0) {
-		tst.Errorf("[1;31m%s failed with NaN or Inf: %v[0m", msg, diff)
-		return
+		TstFail(tst, "%s NaN or Inf in a=%v b=%v", msg, a, b)
+		return true
 	}
 	if diff > tol {
-		if Verbose {
-			fmt.Printf("%s [1;31merror |diff| = %g[0m\n", msg, diff)
-		}
-		tst.Errorf("[1;31m%s failed with |diff| = %g[0m", msg, diff)
-		return
+		TstFail(tst, "%s |diff| = %g", msg, diff)
+		return true
 	}
-	PrintOk(msg)
+	if showOK {
+		PrintOk(msg)
+	}
+	return
+}
+
+// TestDiffC tests difference between complex128.
+// It also prints "FAIL" or "OK"
+func TestDiffC(tst *testing.T, msg string, tol float64, a, b complex128, showOK bool) (failed bool) {
+	diff := cmplx.Abs(a - b)
+	if math.IsNaN(diff) || math.IsInf(diff, 0) {
+		TstFail(tst, "%s NaN or Inf in a=%v b=%v", msg, a, b)
+		return true
+	}
+	if diff > tol {
+		TstFail(tst, "%s |diff| = %g", msg, diff)
+		return true
+	}
+	if showOK {
+		PrintOk(msg)
+	}
+	return
 }
 
 // PrintAnaNum formats the output of analytical versus numerical comparisons
 func PrintAnaNum(msg string, tol, ana, num float64, verbose bool) (e error) {
 	diff := math.Abs(ana - num)
 	if math.IsNaN(diff) || math.IsInf(diff, 0) {
-		e = Err("[1;31m%s failed with NaN or Inf: %v[0m", msg, diff)
+		e = Err("[1;31m%s NaN or Inf: %v[0m", msg, diff)
 		return
 	}
 	if verbose {
@@ -75,7 +97,7 @@ func PrintAnaNum(msg string, tol, ana, num float64, verbose bool) (e error) {
 		fmt.Printf("%s %23v %23v %s%23v[0m\n", msg, ana, num, clr, diff)
 	}
 	if diff > tol {
-		e = Err("[1;31m%s failed with |diff| = %g[0m", msg, diff)
+		e = Err("[1;31m%s |diff| = %g[0m", msg, diff)
 	}
 	return
 }
@@ -85,11 +107,11 @@ func PrintAnaNumC(msg string, tol float64, ana, num complex128, verbose bool) (e
 	diffR := math.Abs(real(ana) - real(num))
 	diffC := math.Abs(imag(ana) - imag(num))
 	if math.IsNaN(diffR) || math.IsInf(diffR, 0) {
-		e = Err("[1;31m%s (real part) failed with NaN or Inf: %v[0m", msg, diffR)
+		e = Err("[1;31m%s (real part) NaN or Inf: %v[0m", msg, diffR)
 		return
 	}
 	if math.IsNaN(diffC) || math.IsInf(diffC, 0) {
-		e = Err("[1;31m%s (imag part) failed with NaN or Inf: %v[0m", msg, diffC)
+		e = Err("[1;31m%s (imag part) NaN or Inf: %v[0m", msg, diffC)
 		return
 	}
 	if verbose {
@@ -106,7 +128,7 @@ func PrintAnaNumC(msg string, tol float64, ana, num complex128, verbose bool) (e
 		fmt.Printf(f+" %23vi %23vi %s%23v[0m\n", "", imag(ana), imag(num), clrC, diffC)
 	}
 	if diffR > tol || diffC > tol {
-		e = Err("[1;31m%s failed with |diffR| = %g  |diffC| = %g[0m", msg, diffR, diffC)
+		e = Err("[1;31m%s |diffR| = %g  |diffC| = %g[0m", msg, diffR, diffC)
 	}
 	return
 }

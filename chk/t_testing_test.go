@@ -171,7 +171,7 @@ func TestInts01(tst *testing.T) {
 	}
 
 	t2 := new(testing.T)
-	Ints(t2, "a", a, []int{1, 2, 3, 4})
+	Ints(t2, "a(fixed)", a, []int{1, 2, 3, 4})
 	if t2.Failed() {
 		tst.Errorf("t2 should NOT have failed\n")
 		return
@@ -188,7 +188,7 @@ func TestInts01(tst *testing.T) {
 	}
 
 	t4 := new(testing.T)
-	Int32s(t4, "b", b, []int32{1, 2, 3, 4})
+	Int32s(t4, "b(fixed)", b, []int32{1, 2, 3, 4})
 	if t4.Failed() {
 		tst.Errorf("t4 should NOT have failed\n")
 		return
@@ -205,7 +205,7 @@ func TestInts01(tst *testing.T) {
 	}
 
 	t6 := new(testing.T)
-	Int64s(t6, "c", c, []int64{1, 2, 3, 4})
+	Int64s(t6, "c(fixed)", c, []int64{1, 2, 3, 4})
 	if t6.Failed() {
 		tst.Errorf("t6 should NOT have failed\n")
 		return
@@ -259,7 +259,7 @@ func TestBools(tst *testing.T) {
 	}
 
 	t3 := new(testing.T)
-	Bools(t3, "x", []bool{true, false, false}, []bool{true, false, false})
+	Bools(t3, "x(fixed)", []bool{true, false, false}, []bool{true, false, false})
 	if t3.Failed() {
 		tst.Errorf("t3 should NOT have failed\n")
 		return
@@ -286,7 +286,7 @@ func TestStrings(tst *testing.T) {
 	}
 
 	t3 := new(testing.T)
-	Strings(t3, "x", []string{"t", "f", "f"}, []string{"t", "f", "f"})
+	Strings(t3, "x(fixed)", []string{"t", "f", "f"}, []string{"t", "f", "f"})
 	if t3.Failed() {
 		tst.Errorf("t3 should NOT have failed\n")
 		return

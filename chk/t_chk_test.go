@@ -17,5 +17,4 @@ func TestErr01(tst *testing.T) {
 	}
 
 	PrintOk("hello from PrintOk => ")
-	PrintFail("hello from PrintFail => ")
 }
