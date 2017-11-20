@@ -738,7 +738,7 @@ func TestGrid08(tst *testing.T) {
 	chk.PrintTitle("Grid08. using 2D NURBS (quarter ring)")
 
 	// nurbs
-	nrb := FactoryNurbs.Surf2dQuarterCircle(0, 0, 1, 3)
+	nrb := FactoryNurbs.Surf2dQuarterRing(0, 0, 1, 3)
 
 	// coordinates
 	R := utl.LinSpace(-1, 1, 3)

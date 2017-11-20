@@ -113,9 +113,9 @@ func (o facNurbsT) Surf2dRectangleQL(x0, y0, dx, dy float64) (surf *Nurbs) {
 	return
 }
 
-// Surf2dQuarterCircle generates a 2D NURBS representing a quarter of circle
+// Surf2dQuarterRing generates a 2D NURBS representing a quarter of ring
 //   a, b -- inner and outer radii
-func (o facNurbsT) Surf2dQuarterCircle(xc, yc, a, b float64) (surf *Nurbs) {
+func (o facNurbsT) Surf2dQuarterRing(xc, yc, a, b float64) (surf *Nurbs) {
 	verts := [][]float64{
 		{xc + a, yc, 0, math.Sqrt2},
 		{xc + b, yc, 0, math.Sqrt2},
