@@ -460,7 +460,7 @@ func TestZgesv01(tst *testing.T) {
 	// NOTE: zgesv performs badly with this problem
 	//       the best tolerance that can be selected is 0.00038
 	//       the same problem happens in python (probably using lapack as well)
-	tol := 0.00038
+	tol := 0.00049
 
 	// matrix
 	a := SliceToColMajorC([][]complex128{
