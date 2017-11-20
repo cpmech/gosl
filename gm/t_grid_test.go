@@ -771,7 +771,7 @@ func TestGrid08(tst *testing.T) {
 
 func checkGridNurbsDerivs2d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol3 float64, verb bool) {
 	x := la.NewVector(2)
-	T := la.NewVector(2)
+	U := la.NewVector(2)
 	Γ00 := la.NewVector(2)
 	Γ11 := la.NewVector(2)
 	Γ01 := la.NewVector(2)
@@ -783,41 +783,41 @@ func checkGridNurbsDerivs2d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol
 				io.Pf("\nx = %v\n", mtr.X)
 			}
 			chk.DerivVecSca(tst, "g0 ", tol1, mtr.CovG0, mtr.U[0], 1e-3, verb, func(xx []float64, r float64) {
-				T[0], T[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
-				nrb.Point(xx, T, 2)
+				U[0], U[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
+				nrb.Point(xx, U, 2)
 			})
 			chk.DerivVecSca(tst, "g1 ", tol1, mtr.CovG1, mtr.U[1], 1e-3, verb, func(xx []float64, s float64) {
-				T[0], T[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
-				nrb.Point(xx, T, 2)
+				U[0], U[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
+				nrb.Point(xx, U, 2)
 			})
 			ddx0drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
-				T[0], T[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
-				nrb.Point(x, T, 2)
+				U[0], U[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
+				nrb.Point(x, U, 2)
 				return x[0]
 			})
 			ddx1drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
-				T[0], T[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
-				nrb.Point(x, T, 2)
+				U[0], U[1] = (1.0+r)/2.0, (1.0+mtr.U[1])/2.0
+				nrb.Point(x, U, 2)
 				return x[1]
 			})
 			ddx0dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
-				T[0], T[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
-				nrb.Point(x, T, 2)
+				U[0], U[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
+				nrb.Point(x, U, 2)
 				return x[0]
 			})
 			ddx1dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
-				T[0], T[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
-				nrb.Point(x, T, 2)
+				U[0], U[1] = (1.0+mtr.U[0])/2.0, (1.0+s)/2.0
+				nrb.Point(x, U, 2)
 				return x[1]
 			})
 			ddx0drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
-				T[0], T[1] = (1.0+r)/2.0, (1.0+s)/2.0
-				nrb.Point(x, T, 2)
+				U[0], U[1] = (1.0+r)/2.0, (1.0+s)/2.0
+				nrb.Point(x, U, 2)
 				return x[0]
 			})
 			ddx1drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
-				T[0], T[1] = (1.0+r)/2.0, (1.0+s)/2.0
-				nrb.Point(x, T, 2)
+				U[0], U[1] = (1.0+r)/2.0, (1.0+s)/2.0
+				nrb.Point(x, U, 2)
 				return x[1]
 			})
 			Γ00[0], Γ00[1] = ddx0drr, ddx1drr
