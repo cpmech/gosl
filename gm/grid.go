@@ -311,7 +311,7 @@ func (o *Grid) SetNurbsSurf2d(nrb *Nurbs, R, S []float64) {
 	// auxiliary
 	x := la.NewVector(2)
 	u := la.NewVector(2)
-	T := la.NewVector(2)
+	U := la.NewVector(2)
 	dxdr, dxds := la.NewVector(2), la.NewVector(2)
 	ddxdrr, ddxdss, ddxdrs := la.NewVector(2), la.NewVector(2), la.NewVector(2)
 
@@ -323,8 +323,8 @@ func (o *Grid) SetNurbsSurf2d(nrb *Nurbs, R, S []float64) {
 		o.mtr[p][n] = make([]*Metrics, o.npts[0])
 		for m := 0; m < o.npts[0]; m++ {
 			u[0], u[1] = R[m], S[n]
-			T[0], T[1] = (1.0+u[0])/2.0, (1.0+u[1])/2.0
-			nrb.PointAndDerivs(x, dxdr, dxds, nil, ddxdrr, ddxdss, nil, ddxdrs, nil, nil, T, 2)
+			U[0], U[1] = (1.0+u[0])/2.0, (1.0+u[1])/2.0
+			nrb.PointAndDerivs(x, dxdr, dxds, nil, ddxdrr, ddxdss, nil, ddxdrs, nil, nil, U, 2)
 			for i := 0; i < o.ndim; i++ {
 				dxdr[i] /= 2.0
 				dxds[i] /= 2.0
@@ -333,6 +333,55 @@ func (o *Grid) SetNurbsSurf2d(nrb *Nurbs, R, S []float64) {
 				ddxdrs[i] /= 4.0
 			}
 			o.mtr[p][n][m] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
+		}
+	}
+
+	// limits and boundaries
+	o.limits()
+	o.boundaries()
+}
+
+// SetNurbsSolid sets grid with NURBS solid
+//  nrb -- NURBS solid
+//  R   -- [n0] reference coordinates along r-direction  -1 ≤ r ≤ +1
+//  S   -- [n1] reference coordinates along s-direction  -1 ≤ s ≤ +1
+//  T   -- [n2] reference coordinates along s-direction  -1 ≤ s ≤ +1
+func (o *Grid) SetNurbsSolid(nrb *Nurbs, R, S, T []float64) {
+
+	// input
+	o.ndim = 3
+	o.npts = []int{len(R), len(S), len(T)}
+
+	// auxiliary
+	x := la.NewVector(3)
+	u := la.NewVector(3)
+	U := la.NewVector(3)
+	dxdr, dxds, dxdt := la.NewVector(3), la.NewVector(3), la.NewVector(3)
+	ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst := la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3)
+
+	// compute metrics
+	o.mtr = make([][][]*Metrics, o.npts[2])
+	for p := 0; p < o.npts[2]; p++ {
+		o.mtr[p] = make([][]*Metrics, o.npts[1])
+		for n := 0; n < o.npts[1]; n++ {
+			o.mtr[p][n] = make([]*Metrics, o.npts[0])
+			for m := 0; m < o.npts[0]; m++ {
+				u[0], u[1], u[2] = R[m], S[n], T[p]
+				U[0], U[1], U[2] = (1.0+u[0])/2.0, (1.0+u[1])/2.0, (1.0+u[2])/2.0
+				nrb.PointAndDerivs(x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, U, 3)
+				for i := 0; i < o.ndim; i++ {
+					dxdr[i] /= 2.0
+					dxds[i] /= 2.0
+					dxdt[i] /= 2.0
+					ddxdrr[i] /= 4.0
+					ddxdss[i] /= 4.0
+					ddxdtt[i] /= 4.0
+					ddxdrs[i] /= 4.0
+					ddxdrt[i] /= 4.0
+					ddxdst[i] /= 4.0
+				}
+				o.mtr[p][n][m] = NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst)
+			}
 		}
 	}
 

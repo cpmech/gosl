@@ -9,5 +9,5 @@ while true; do
     echo
     echo
     #go test -run Nurbs12
-    go test -run TestGrid08
+    go test -run TestGrid09
 done
