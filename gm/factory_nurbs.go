@@ -350,7 +350,7 @@ func (o facNurbsT) Surf3dQuarterHemisphere(xc, yc, zc, r float64) (surf *Nurbs) 
 // Solids /////////////////////////////////////////////////////////////////////////////////////////
 
 // SolidHex generates a solid hexahedron
-func (o facNurbsT) SolidHex(corners [][]float64) (vol *Nurbs) {
+func (o facNurbsT) SolidHex(corners [][]float64) (solid *Nurbs) {
 	verts := utl.Alloc(8, 4)
 	for i := 0; i < 8; i++ {
 		for j := 0; j < 3; j++ {
@@ -363,7 +363,7 @@ func (o facNurbsT) SolidHex(corners [][]float64) (vol *Nurbs) {
 		{0, 0, 1, 1},
 		{0, 0, 1, 1},
 	}
-	vol = NewNurbs(3, []int{1, 1, 1}, knots)
-	vol.SetControl(verts, utl.IntRange(len(verts)))
+	solid = NewNurbs(3, []int{1, 1, 1}, knots)
+	solid.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }

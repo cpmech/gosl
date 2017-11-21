@@ -445,7 +445,7 @@ func TestTransfinite03(tst *testing.T) {
 
 func TestTransfinite04(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("Transfinite04. 3d cube")
 
 	// new mapping
