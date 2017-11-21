@@ -314,6 +314,7 @@ func (o *Grid) SetNurbsSurf2d(nrb *Nurbs, R, S []float64) {
 	U := la.NewVector(2)
 	dxdr, dxds := la.NewVector(2), la.NewVector(2)
 	ddxdrr, ddxdss, ddxdrs := la.NewVector(2), la.NewVector(2), la.NewVector(2)
+	ΔU0, ΔU1 := nrb.Udelta(0), nrb.Udelta(1)
 
 	// compute metrics
 	p := 0
@@ -323,14 +324,14 @@ func (o *Grid) SetNurbsSurf2d(nrb *Nurbs, R, S []float64) {
 		o.mtr[p][n] = make([]*Metrics, o.npts[0])
 		for m := 0; m < o.npts[0]; m++ {
 			u[0], u[1] = R[m], S[n]
-			U[0], U[1] = (1.0+u[0])/2.0, (1.0+u[1])/2.0
+			U[0], U[1] = nrb.UfromR(0, u[0]), nrb.UfromR(1, u[1])
 			nrb.PointAndDerivs(x, dxdr, dxds, nil, ddxdrr, ddxdss, nil, ddxdrs, nil, nil, U, 2)
 			for i := 0; i < o.ndim; i++ {
-				dxdr[i] /= 2.0
-				dxds[i] /= 2.0
-				ddxdrr[i] /= 4.0
-				ddxdss[i] /= 4.0
-				ddxdrs[i] /= 4.0
+				dxdr[i] *= ΔU0 / 2.0
+				dxds[i] *= ΔU1 / 2.0
+				ddxdrr[i] *= ΔU0 * ΔU0 / 4.0
+				ddxdss[i] *= ΔU1 * ΔU1 / 4.0
+				ddxdrs[i] *= ΔU0 * ΔU1 / 4.0
 			}
 			o.mtr[p][n][m] = NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs)
 		}
