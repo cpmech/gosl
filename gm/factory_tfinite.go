@@ -406,7 +406,7 @@ func (o facTfinite) SolidCube(lx, ly, lz float64) (solid *Transfinite) {
 // SolidQuarterRing generates a transfinite mapping of a quarter of a 3d ring centered @ (0,0)
 //   a -- inner radius
 //   b -- outer radius
-//   h -- thickness
+//   h -- thickness along x-direction
 func (o facTfinite) SolidQuarterRing(a, b, h float64) (solid *Transfinite) {
 
 	π := math.Pi
