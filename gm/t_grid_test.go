@@ -815,7 +815,7 @@ func TestGrid09(tst *testing.T) {
 func TestGrid10(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid10. using 2D NURBS (wave domain)")
+	chk.PrintTitle("Grid10. using 2D NURBS (wavy domain)")
 
 	// nurbs
 	nrb := FactoryNurbs.Surf2dExample1()
