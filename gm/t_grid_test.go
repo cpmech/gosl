@@ -770,7 +770,7 @@ func TestGrid08(tst *testing.T) {
 func TestGrid09(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid09. using 2D NURBS (quarter ring)")
+	chk.PrintTitle("Grid09. using 3D NURBS (solid hexahedron)")
 
 	// nurbs
 	nrb := FactoryNurbs.SolidHex([][]float64{
