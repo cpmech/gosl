@@ -55,7 +55,7 @@ func TstDiff(tst *testing.T, msg string, tol, a, b float64, showOK bool) (failed
 		return true
 	}
 	if diff > tol {
-		TstFail(tst, "%s |diff| = %g", msg, diff)
+		TstFail(tst, "%s %v != %v |diff| = %g", msg, a, b, diff)
 		return true
 	}
 	if showOK {
