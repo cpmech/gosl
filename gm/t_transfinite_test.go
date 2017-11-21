@@ -445,11 +445,11 @@ func TestTransfinite03(tst *testing.T) {
 
 func TestTransfinite04(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("Transfinite04. 3d cube")
 
 	// new mapping
-	trf := FactoryTfinite.Surf3dCube(1, 1, 1)
+	trf := FactoryTfinite.SolidCube(1, 1, 1)
 
 	// check corners
 	chk.Array(tst, "p0", 1e-15, trf.p0, []float64{0, 0, 0})
@@ -538,7 +538,7 @@ func TestTransfinite05(tst *testing.T) {
 
 	// new mapping
 	a, b, h := 2.0, 3.0, 1.0 // radii and thickness
-	trf := FactoryTfinite.Surf3dQuarterRing(a, b, h)
+	trf := FactoryTfinite.SolidQuarterRing(a, b, h)
 
 	// check corners
 	chk.Array(tst, "p0", 1e-15, trf.p0, []float64{0, a, 0})

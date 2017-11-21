@@ -581,7 +581,7 @@ func TestGrid06(tst *testing.T) {
 
 	// mapping
 	a, b, h := 2.0, 3.0, 2.0 // radii and thickness
-	trf := FactoryTfinite.Surf3dQuarterRing(a, b, h)
+	trf := FactoryTfinite.SolidQuarterRing(a, b, h)
 
 	// coordinates
 	npts := 3

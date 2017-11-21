@@ -287,10 +287,10 @@ func (o facTfinite) Surf2dQuarterPerfLozenge(a, b float64) (surf *Transfinite) {
 	return
 }
 
-// 3D surfaces ////////////////////////////////////////////////////////////////////////////////////
+// solids /////////////////////////////////////////////////////////////////////////////////////////
 
-// Surf3dCube generates a transfinite mapping of a cube
-func (o facTfinite) Surf3dCube(lx, ly, lz float64) (solid *Transfinite) {
+// SolidCube generates a transfinite mapping of a cube
+func (o facTfinite) SolidCube(lx, ly, lz float64) (solid *Transfinite) {
 
 	solid = NewTransfinite3d([]fun.Vss{
 
@@ -403,11 +403,11 @@ func (o facTfinite) Surf3dCube(lx, ly, lz float64) (solid *Transfinite) {
 	return
 }
 
-// Surf3dQuarterRing generates a transfinite mapping of a quarter of a 3d ring centered @ (0,0)
+// SolidQuarterRing generates a transfinite mapping of a quarter of a 3d ring centered @ (0,0)
 //   a -- inner radius
 //   b -- outer radius
 //   h -- thickness
-func (o facTfinite) Surf3dQuarterRing(a, b, h float64) (solid *Transfinite) {
+func (o facTfinite) SolidQuarterRing(a, b, h float64) (solid *Transfinite) {
 
 	π := math.Pi
 	tmp := la.NewVector(2)
