@@ -668,6 +668,22 @@ func (o *Nurbs) U(dir, idx int) float64 {
 	return o.b[dir].T[idx]
 }
 
+// Udelta returns the difference between max knot value and min knot value.
+// Returns umax - umin along direnction "dir"
+func (o *Nurbs) Udelta(dir int) (Δu float64) {
+	return o.b[dir].tmax - o.b[dir].tmin
+}
+
+// UfromR returns knot value from reference value -1 ≤ r ≤ +1
+//  Input:
+//    dir -- direction (dimension)
+//    r   -- "reference" (e.g. spectral) coordinates -1 ≤ r ≤ +1
+//  Output:
+//    u -- knot value
+func (o *Nurbs) UfromR(dir int, r float64) (u float64) {
+	return o.b[dir].tmin + (o.b[dir].tmax-o.b[dir].tmin)*(1.0+r)/2.0
+}
+
 // NumBasis returns the number of basis (controls) along direction dir
 func (o *Nurbs) NumBasis(dir int) int {
 	return o.b[dir].NumBasis()
