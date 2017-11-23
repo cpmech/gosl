@@ -367,3 +367,34 @@ func (o facNurbsT) SolidHex(corners [][]float64) (solid *Nurbs) {
 	solid.SetControl(verts, utl.IntRange(len(verts)))
 	return
 }
+
+// SolidQuarterRing generates a solid NURBS representing a quarter of ring
+//   xc,yc,yc -- centre
+//   a,b      -- inner and outer radii [b > a]
+//   h        -- thickness along x-direction
+func (o facNurbsT) SolidQuarterRing(xc, yc, zc, a, b, h float64) (solid *Nurbs) {
+	verts := [][]float64{
+		{xc + 0, yc + a, zc + 0, math.Sqrt2},
+		{xc + h, yc + a, zc + 0, math.Sqrt2},
+		{xc + 0, yc + b, zc + 0, math.Sqrt2},
+		{xc + h, yc + b, zc + 0, math.Sqrt2},
+
+		{xc + 0, yc + a, zc + a, 1.0},
+		{xc + h, yc + a, zc + a, 1.0},
+		{xc + 0, yc + b, zc + b, 1.0},
+		{xc + h, yc + b, zc + b, 1.0},
+
+		{xc + 0, yc + 0, zc + a, math.Sqrt2},
+		{xc + h, yc + 0, zc + a, math.Sqrt2},
+		{xc + 0, yc + 0, zc + b, math.Sqrt2},
+		{xc + h, yc + 0, zc + b, math.Sqrt2},
+	}
+	knots := [][]float64{
+		{0, 0, 1, 1},
+		{0, 0, 1, 1},
+		{0, 0, 0, 1, 1, 1},
+	}
+	solid = NewNurbs(3, []int{1, 1, 2}, knots)
+	solid.SetControl(verts, utl.IntRange(len(verts)))
+	return
+}

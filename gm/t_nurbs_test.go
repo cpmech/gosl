@@ -746,7 +746,7 @@ func TestNurbs12(tst *testing.T) {
 func TestNurbs13(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Nurbs13. First and second derivatives of volume")
+	chk.PrintTitle("Nurbs13. First and second derivatives of solid")
 
 	// NURBS
 	solid := FactoryNurbs.SolidHex([][]float64{
@@ -774,6 +774,31 @@ func TestNurbs13(tst *testing.T) {
 		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
 		plt.Default3dView(0, 2, 0, 2, 0, 2, true)
 		plt.Save("/tmp/gosl/gm", "nurbs13")
+	}
+}
+
+func TestNurbs14(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Nurbs14. Derivatives of solid quarter of ring")
+
+	// NURBS
+	solid := FactoryNurbs.SolidQuarterRing(0, 0, 0, 2, 3, 1)
+
+	// check derivatives
+	verb := chk.Verbose
+	checkNurbsSolidDerivs(tst, solid, []float64{0, 1}, []float64{0, 1}, []float64{0, 1}, verb, 1e-14, 1e-9, 1e-8, 1e-8)
+
+	// plot
+	if chk.Verbose {
+		npts := 11
+		plt.Reset(true, &plt.A{WidthPt: 500, Prop: 1})
+		solid.DrawSolid(3, 3, 9, &plt.A{C: plt.C(1, 0)})
+		solid.DrawElems(3, npts, true, &plt.A{C: plt.C(0, 0)}, &plt.A{C: "k", Fsz: 7})
+		solid.DrawCtrl(3, true, nil, nil)
+		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
+		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
+		plt.Save("/tmp/gosl/gm", "nurbs14")
 	}
 }
 
