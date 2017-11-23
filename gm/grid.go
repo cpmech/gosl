@@ -359,6 +359,7 @@ func (o *Grid) SetNurbsSolid(nrb *Nurbs, R, S, T []float64) {
 	U := la.NewVector(3)
 	dxdr, dxds, dxdt := la.NewVector(3), la.NewVector(3), la.NewVector(3)
 	ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst := la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3)
+	ΔU0, ΔU1, ΔU2 := nrb.Udelta(0), nrb.Udelta(1), nrb.Udelta(2)
 
 	// compute metrics
 	o.mtr = make([][][]*Metrics, o.npts[2])
@@ -368,18 +369,18 @@ func (o *Grid) SetNurbsSolid(nrb *Nurbs, R, S, T []float64) {
 			o.mtr[p][n] = make([]*Metrics, o.npts[0])
 			for m := 0; m < o.npts[0]; m++ {
 				u[0], u[1], u[2] = R[m], S[n], T[p]
-				U[0], U[1], U[2] = (1.0+u[0])/2.0, (1.0+u[1])/2.0, (1.0+u[2])/2.0
+				U[0], U[1], U[2] = nrb.UfromR(0, u[0]), nrb.UfromR(1, u[1]), nrb.UfromR(2, u[2])
 				nrb.PointAndDerivs(x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst, U, 3)
 				for i := 0; i < o.ndim; i++ {
-					dxdr[i] /= 2.0
-					dxds[i] /= 2.0
-					dxdt[i] /= 2.0
-					ddxdrr[i] /= 4.0
-					ddxdss[i] /= 4.0
-					ddxdtt[i] /= 4.0
-					ddxdrs[i] /= 4.0
-					ddxdrt[i] /= 4.0
-					ddxdst[i] /= 4.0
+					dxdr[i] *= ΔU0 / 2.0
+					dxds[i] *= ΔU1 / 2.0
+					dxdt[i] *= ΔU2 / 2.0
+					ddxdrr[i] *= ΔU0 * ΔU0 / 4.0
+					ddxdss[i] *= ΔU1 * ΔU1 / 4.0
+					ddxdtt[i] *= ΔU2 * ΔU2 / 4.0
+					ddxdrs[i] *= ΔU0 * ΔU1 / 4.0
+					ddxdrt[i] *= ΔU0 * ΔU2 / 4.0
+					ddxdst[i] *= ΔU1 * ΔU2 / 4.0
 				}
 				o.mtr[p][n][m] = NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst)
 			}

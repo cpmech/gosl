@@ -8,7 +8,7 @@ while true; do
     echo
     echo
     echo
-    #go test -run Nurbs12
+    #go test -run Nurbs14
     #go test -run TestNurbsMethods01
-    go test -run TestGrid10
+    go test -run TestGrid11
 done
