@@ -480,7 +480,7 @@ func TestGrid04(tst *testing.T) {
 func TestGrid05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid05. 2d ring")
+	chk.PrintTitle("Grid05. 2d ring (using Transfinite)")
 
 	// mapping
 	a, b := 1.0, 2.0
@@ -536,6 +536,9 @@ func TestGrid05(tst *testing.T) {
 		}
 	}
 
+	// check derivatives
+	checkGridTfiniteDerivs2d(tst, trf, g, 1e-10, 1e-9, 1e-8, chk.Verbose)
+
 	// check interface functions
 	io.Pl()
 	chk.Int(tst, "Ndim()", g.Ndim(), 2)
@@ -577,7 +580,7 @@ func TestGrid05(tst *testing.T) {
 func TestGrid06(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid06. 3d ring")
+	chk.PrintTitle("Grid06. 3d ring (using Transfinite)")
 
 	// mapping
 	a, b, h := 2.0, 3.0, 2.0 // radii and thickness
@@ -646,6 +649,9 @@ func TestGrid06(tst *testing.T) {
 			}
 		}
 	}
+
+	// check derivatives
+	checkGridTfiniteDerivs3d(tst, trf, g, 1e-10, 1e-9, 1e-8, chk.Verbose)
 
 	// check interface functions
 	io.Pl()
@@ -964,6 +970,84 @@ func checkGridNurbsDerivs2d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol
 	}
 }
 
+func checkGridTfiniteDerivs2d(tst *testing.T, trf *Transfinite, g *Grid, tol1, tol2, tol3 float64, verb bool) {
+	x := la.NewVector(2)
+	U := la.NewVector(2)
+	Γ00 := la.NewVector(2)
+	Γ11 := la.NewVector(2)
+	Γ01 := la.NewVector(2)
+	p := 0
+	for n := 0; n < g.npts[1]; n++ {
+		for m := 0; m < g.npts[0]; m++ {
+			mtr := g.mtr[p][n][m]
+			if verb {
+				io.Pf("\nx = %v\n", mtr.X)
+			}
+			chk.DerivVecSca(tst, "g0 ", tol1, mtr.CovG0, mtr.U[0], 1e-3, verb, func(xx []float64, r float64) {
+				U[0], U[1] = r, mtr.U[1]
+				trf.Point(xx, U)
+			})
+			chk.DerivVecSca(tst, "g1 ", tol1, mtr.CovG1, mtr.U[1], 1e-3, verb, func(xx []float64, s float64) {
+				U[0], U[1] = mtr.U[0], s
+				trf.Point(xx, U)
+			})
+			ddx0drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
+				U[0], U[1] = r, mtr.U[1]
+				trf.Point(x, U)
+				return x[0]
+			})
+			ddx1drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
+				U[0], U[1] = r, mtr.U[1]
+				trf.Point(x, U)
+				return x[1]
+			})
+			ddx0dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
+				U[0], U[1] = mtr.U[0], s
+				trf.Point(x, U)
+				return x[0]
+			})
+			ddx1dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
+				U[0], U[1] = mtr.U[0], s
+				trf.Point(x, U)
+				return x[1]
+			})
+			ddx0drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
+				U[0], U[1] = r, s
+				trf.Point(x, U)
+				return x[0]
+			})
+			ddx1drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
+				U[0], U[1] = r, s
+				trf.Point(x, U)
+				return x[1]
+			})
+			Γ00[0], Γ00[1] = ddx0drr, ddx1drr
+			Γ11[0], Γ11[1] = ddx0dss, ddx1dss
+			Γ01[0], Γ01[1] = ddx0drs, ddx1drs
+			cntG0, cntG1 := mtr.GetContraVectors2d()
+			Γ000 := la.VecDot(Γ00, cntG0)
+			Γ011 := la.VecDot(Γ11, cntG0)
+			Γ001 := la.VecDot(Γ01, cntG0)
+			Γ100 := la.VecDot(Γ00, cntG1)
+			Γ111 := la.VecDot(Γ11, cntG1)
+			Γ101 := la.VecDot(Γ01, cntG1)
+			chk.Deep3(tst, "GammaS", tol3, mtr.GammaS, [][][]float64{
+				{
+					{Γ000, Γ001},
+					{Γ001, Γ011},
+				},
+				{
+					{Γ100, Γ101},
+					{Γ101, Γ111},
+				},
+			})
+			if tst.Failed() {
+				return
+			}
+		}
+	}
+}
+
 func checkGridNurbsDerivs3d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol3 float64, verb bool) {
 	x := la.NewVector(3)
 	U := la.NewVector(3)
@@ -1089,6 +1173,185 @@ func checkGridNurbsDerivs3d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol
 				ddx2dst := num.SecondDerivMixedO4v1(mtr.U[1], mtr.U[2], 1e-3, func(s, t float64) float64 {
 					U[0], U[1], U[2] = rst2uvw(mtr.U[0], s, t)
 					nrb.Point(x, U, 3)
+					return x[2]
+				})
+
+				Γ00[0], Γ00[1], Γ00[2] = ddx0drr, ddx1drr, ddx2drr
+				Γ11[0], Γ11[1], Γ11[2] = ddx0dss, ddx1dss, ddx2dss
+				Γ22[0], Γ22[1], Γ22[2] = ddx0dtt, ddx1dtt, ddx2dtt
+				Γ01[0], Γ01[1], Γ01[2] = ddx0drs, ddx1drs, ddx2drs
+				Γ02[0], Γ02[1], Γ02[2] = ddx0drt, ddx1drt, ddx2drt
+				Γ12[0], Γ12[1], Γ12[2] = ddx0dst, ddx1dst, ddx2dst
+				cntG0, cntG1, cntG2 := mtr.GetContraVectors3d()
+
+				Γ000 := la.VecDot(Γ00, cntG0)
+				Γ011 := la.VecDot(Γ11, cntG0)
+				Γ022 := la.VecDot(Γ22, cntG0)
+				Γ001 := la.VecDot(Γ01, cntG0)
+				Γ002 := la.VecDot(Γ02, cntG0)
+				Γ012 := la.VecDot(Γ12, cntG0)
+
+				Γ100 := la.VecDot(Γ00, cntG1)
+				Γ111 := la.VecDot(Γ11, cntG1)
+				Γ122 := la.VecDot(Γ22, cntG1)
+				Γ101 := la.VecDot(Γ01, cntG1)
+				Γ102 := la.VecDot(Γ02, cntG1)
+				Γ112 := la.VecDot(Γ12, cntG1)
+
+				Γ200 := la.VecDot(Γ00, cntG2)
+				Γ211 := la.VecDot(Γ11, cntG2)
+				Γ222 := la.VecDot(Γ22, cntG2)
+				Γ201 := la.VecDot(Γ01, cntG2)
+				Γ202 := la.VecDot(Γ02, cntG2)
+				Γ212 := la.VecDot(Γ12, cntG2)
+
+				chk.Deep3(tst, "GammaS", tol3, mtr.GammaS, [][][]float64{
+					{
+						{Γ000, Γ001, Γ002},
+						{Γ001, Γ011, Γ012},
+						{Γ002, Γ012, Γ022},
+					},
+					{
+						{Γ100, Γ101, Γ102},
+						{Γ101, Γ111, Γ112},
+						{Γ102, Γ112, Γ122},
+					},
+					{
+						{Γ200, Γ201, Γ202},
+						{Γ201, Γ211, Γ212},
+						{Γ202, Γ212, Γ222},
+					},
+				})
+				if tst.Failed() {
+					return
+				}
+			}
+		}
+	}
+}
+
+func checkGridTfiniteDerivs3d(tst *testing.T, trf *Transfinite, g *Grid, tol1, tol2, tol3 float64, verb bool) {
+	x := la.NewVector(3)
+	U := la.NewVector(3)
+	Γ00 := la.NewVector(3)
+	Γ11 := la.NewVector(3)
+	Γ22 := la.NewVector(3)
+	Γ01 := la.NewVector(3)
+	Γ02 := la.NewVector(3)
+	Γ12 := la.NewVector(3)
+	for p := 0; p < g.npts[2]; p++ {
+		for n := 0; n < g.npts[1]; n++ {
+			for m := 0; m < g.npts[0]; m++ {
+				mtr := g.mtr[p][n][m]
+				if verb {
+					io.Pf("\nx = %v\n", mtr.X)
+				}
+				chk.DerivVecSca(tst, "g0 ", tol1, mtr.CovG0, mtr.U[0], 1e-3, verb, func(xx []float64, r float64) {
+					U[0], U[1], U[2] = r, mtr.U[1], mtr.U[2]
+					trf.Point(xx, U)
+				})
+				chk.DerivVecSca(tst, "g1 ", tol1, mtr.CovG1, mtr.U[1], 1e-3, verb, func(xx []float64, s float64) {
+					U[0], U[1], U[2] = mtr.U[0], s, mtr.U[2]
+					trf.Point(xx, U)
+				})
+				chk.DerivVecSca(tst, "g2 ", tol1, mtr.CovG2, mtr.U[2], 1e-3, verb, func(xx []float64, t float64) {
+					U[0], U[1], U[2] = mtr.U[0], mtr.U[1], t
+					trf.Point(xx, U)
+				})
+
+				ddx0drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
+					U[0], U[1], U[2] = r, mtr.U[1], mtr.U[2]
+					trf.Point(x, U)
+					return x[0]
+				})
+				ddx1drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
+					U[0], U[1], U[2] = r, mtr.U[1], mtr.U[2]
+					trf.Point(x, U)
+					return x[1]
+				})
+				ddx2drr := num.SecondDerivCen5(mtr.U[0], 1e-3, func(r float64) float64 {
+					U[0], U[1], U[2] = r, mtr.U[1], mtr.U[2]
+					trf.Point(x, U)
+					return x[2]
+				})
+
+				ddx0dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], s, mtr.U[2]
+					trf.Point(x, U)
+					return x[0]
+				})
+				ddx1dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], s, mtr.U[2]
+					trf.Point(x, U)
+					return x[1]
+				})
+				ddx2dss := num.SecondDerivCen5(mtr.U[1], 1e-3, func(s float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], s, mtr.U[2]
+					trf.Point(x, U)
+					return x[2]
+				})
+
+				ddx0dtt := num.SecondDerivCen5(mtr.U[2], 1e-3, func(t float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], mtr.U[1], t
+					trf.Point(x, U)
+					return x[0]
+				})
+				ddx1dtt := num.SecondDerivCen5(mtr.U[2], 1e-3, func(t float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], mtr.U[1], t
+					trf.Point(x, U)
+					return x[1]
+				})
+				ddx2dtt := num.SecondDerivCen5(mtr.U[2], 1e-3, func(t float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], mtr.U[1], t
+					trf.Point(x, U)
+					return x[2]
+				})
+
+				ddx0drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
+					U[0], U[1], U[2] = r, s, mtr.U[2]
+					trf.Point(x, U)
+					return x[0]
+				})
+				ddx1drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
+					U[0], U[1], U[2] = r, s, mtr.U[2]
+					trf.Point(x, U)
+					return x[1]
+				})
+				ddx2drs := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[1], 1e-3, func(r, s float64) float64 {
+					U[0], U[1], U[2] = r, s, mtr.U[2]
+					trf.Point(x, U)
+					return x[2]
+				})
+
+				ddx0drt := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[2], 1e-3, func(r, t float64) float64 {
+					U[0], U[1], U[2] = r, mtr.U[1], t
+					trf.Point(x, U)
+					return x[0]
+				})
+				ddx1drt := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[2], 1e-3, func(r, t float64) float64 {
+					U[0], U[1], U[2] = r, mtr.U[1], t
+					trf.Point(x, U)
+					return x[1]
+				})
+				ddx2drt := num.SecondDerivMixedO4v1(mtr.U[0], mtr.U[2], 1e-3, func(r, t float64) float64 {
+					U[0], U[1], U[2] = r, mtr.U[1], t
+					trf.Point(x, U)
+					return x[2]
+				})
+
+				ddx0dst := num.SecondDerivMixedO4v1(mtr.U[1], mtr.U[2], 1e-3, func(s, t float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], s, t
+					trf.Point(x, U)
+					return x[0]
+				})
+				ddx1dst := num.SecondDerivMixedO4v1(mtr.U[1], mtr.U[2], 1e-3, func(s, t float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], s, t
+					trf.Point(x, U)
+					return x[1]
+				})
+				ddx2dst := num.SecondDerivMixedO4v1(mtr.U[1], mtr.U[2], 1e-3, func(s, t float64) float64 {
+					U[0], U[1], U[2] = mtr.U[0], s, t
+					trf.Point(x, U)
 					return x[2]
 				})
 
