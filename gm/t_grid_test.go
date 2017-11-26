@@ -887,6 +887,56 @@ func TestGrid11(tst *testing.T) {
 	}
 }
 
+func TestGrid12(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Grid12. Quarter ring: NURBS vs Transfinite")
+
+	// nurbs and transfinite
+	a, b, h := 2.0, 3.0, 1.0
+	nrb := FactoryNurbs.SolidQuarterRing(0, 0, 0, a, b, h)
+	trf := FactoryTfinite.SolidQuarterRing(a, b, h)
+
+	// coordinates
+	R := utl.LinSpace(-1, 1, 3)
+	S := utl.LinSpace(-1, 1, 3)
+	T := utl.LinSpace(-1, 1, 7)
+
+	// grids
+	gnrb := new(Grid)
+	gtrf := new(Grid)
+	gnrb.SetNurbsSolid(nrb, R, S, T)
+	gtrf.SetTransfinite3d(trf, R, S, T)
+
+	// check
+	tolx := 0.05  // yes: there's a difference between Tfinite and NURBS
+	tolg1 := 0.01 // yes: there's a difference between Tfinite and NURBS
+	tolg2 := 0.25 // yes: there's a difference between Tfinite and NURBS
+	for p, t := range T {
+		for n, s := range S {
+			for m, r := range R {
+				io.Pf("\nrst = (%v,%v,%v)\n", r, s, t)
+				chk.Array(tst, "x", tolx, gnrb.X(m, n, p), gtrf.X(m, n, p))
+				chk.Array(tst, "g0", 1e-15, gnrb.CovarBasis(m, n, p, 0), gtrf.CovarBasis(m, n, p, 0))
+				chk.Array(tst, "g1", tolg1, gnrb.CovarBasis(m, n, p, 1), gtrf.CovarBasis(m, n, p, 1))
+				chk.Array(tst, "g2", tolg2, gnrb.CovarBasis(m, n, p, 2), gtrf.CovarBasis(m, n, p, 2))
+			}
+		}
+	}
+
+	// plot
+	if chk.Verbose {
+		gpnrb := GridPlotter{G: gnrb, ArgsEdges: &plt.A{C: plt.C(5, 0), Lw: 4}}
+		gptrf := GridPlotter{G: gtrf, ArgsEdges: &plt.A{C: plt.C(0, 0)}}
+		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
+		gpnrb.Draw()
+		gptrf.Draw()
+		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
+		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
+		plt.Save("/tmp/gosl/gm", "grid12")
+	}
+}
+
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
 func checkGridNurbsDerivs2d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol3 float64, verb bool) {
