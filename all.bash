@@ -23,7 +23,7 @@ install_and_test(){
     HASGENBASH=$3
     echo
     echo
-    echo ">>> compiling $PKG <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    echo "=== compiling $PKG ============================================================="
     cd $PKG
     if [[ ! -z $HASGENBASH ]]; then
         ./xgenflagsfile.bash
@@ -63,4 +63,4 @@ install_and_test rnd 1
 #fi
 
 echo
-echo ">>> SUCCESS! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+echo "=== SUCCESS! ============================================================"
