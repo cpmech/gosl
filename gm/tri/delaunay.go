@@ -7,9 +7,10 @@ package tri
 
 /*
 #cgo LDFLAGS: -lm
-#include "connecttriangle.h"
+#include "triangle.h"
 */
 import "C"
+
 import (
 	"unsafe"
 
@@ -35,8 +36,8 @@ func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int) {
 	}
 
 	// perform triangulation
-	var T C.triangulateio
-	defer func() { C.trifree(&T) }()
+	var T C.struct_triangulateio
+	defer func() { C.tiofree(&T) }()
 	res := C.delaunay2d(
 		&T,
 		(C.long)(n),

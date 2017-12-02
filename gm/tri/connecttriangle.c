@@ -5,9 +5,7 @@
 #include <stdlib.h> // for malloc and free
 #include "triangle.h"
 
-extern "C" {
-
-void trisetnull(triangulateio * t) {
+void tiosetnull(struct triangulateio * t) {
     // points
     t->pointlist               = NULL;
     t->pointattributelist      = NULL;
@@ -45,7 +43,7 @@ void trisetnull(triangulateio * t) {
     t->numberofedges  = 0;
 }
 
-void trifree(triangulateio * t) {
+void tiofree(struct triangulateio * t) {
     // points
     if (t->pointlist          != NULL) free(t->pointlist);
     if (t->pointattributelist != NULL) free(t->pointattributelist);
@@ -74,14 +72,14 @@ void trifree(triangulateio * t) {
     if (t->normlist       != NULL) free(t->normlist);
 
     // clear all
-    trisetnull(t);
+    tiosetnull(t);
 }
 
-long delaunay2d(triangulateio *out, long npoints, double *X, double *Y, long verbose) {
+long delaunay2d(struct triangulateio *out, long npoints, double *X, double *Y, long verbose) {
 
     // input structure
-    triangulateio tin;
-    trisetnull(&tin);
+    struct triangulateio tin;
+    tiosetnull(&tin);
 
     // set points
 	tin.pointlist = (double*)malloc(npoints*2*sizeof(double));
@@ -99,8 +97,16 @@ long delaunay2d(triangulateio *out, long npoints, double *X, double *Y, long ver
     }
 
     // clean up
-    trifree(&tin);
+    tiofree(&tin);
     return 0; // success
 }
 
-} // extern "C"
+double getpoint(long pointId, long dimIdx, struct triangulateio *T) {
+    return T->pointlist[pointId*2 + dimIdx];
+}
+
+long ptmap[] = {0,1,2,5,3,4};
+
+long getcorner(long cellId, long pointIdx, struct triangulateio *T) {
+    return T->trianglelist[cellId*T->numberofcorners + ptmap[pointIdx]];
+}
