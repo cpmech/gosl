@@ -28,7 +28,7 @@ func main() {
 
 	// plot
 	plt.Reset(true, &plt.A{WidthPt: 300})
-	tri.Draw(V, C, &plt.A{C: "#376ac6", Lw: 2, NoClip: true})
+	tri.DrawVC(V, C, &plt.A{C: "#376ac6", Lw: 2, NoClip: true})
 	for i, v := range V {
 		plt.Text(v[0], v[1], io.Sf("(%d)", i), &plt.A{C: "r", Fsz: 12, NoClip: true})
 	}

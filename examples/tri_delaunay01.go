@@ -40,7 +40,7 @@ func main() {
 
 	// plot
 	plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-	tri.Draw(V, C, &plt.A{C: "orange", Ls: "-", NoClip: true})
+	tri.DrawVC(V, C, &plt.A{C: "orange", Ls: "-", NoClip: true})
 	plt.Plot(X, Y, &plt.A{C: "k", Ls: "none", M: ".", NoClip: true})
 	plt.Gll("x", "y", nil)
 	plt.Equal()
