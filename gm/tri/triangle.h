@@ -40,15 +40,31 @@ struct triangulateio {
   int numberofedges;                                             /* Out only */
 };
 
-void tiofree(struct triangulateio * t);
+void tiosetnull(struct triangulateio *t);
+
+void tiofree(struct triangulateio *t);
+
+void tioalloc(struct triangulateio *t, int npoints, int nsegments, int nregions, int nholes);
 
 void triangulate(char const *switches, struct triangulateio *in, struct triangulateio *out,
     struct triangulateio *vorout);
 
-long delaunay2d(struct triangulateio *out, long npoints, double *X, double *Y, long verbose);
+int delaunay2d(struct triangulateio *out, int npoints, double *X, double *Y, int verbose);
 
-double getpoint(long pointId, long dimIdx, struct triangulateio *T);
+double getpoint(int pointId, int dimIdx, struct triangulateio *t);
 
-long getcorner(long cellId, long pointIdx, struct triangulateio *T);
+int getcorner(int cellId, int pointIdx, struct triangulateio *T);
+
+int getcelltag(int cellId, struct triangulateio *T);
+
+int getedgetag(int cellId, int edgeIdx, struct triangulateio *T);
+
+void setpoint(struct triangulateio *t, int i, int tag, double x, double y);
+
+void setsegment(struct triangulateio *t, int iSeg, int tag, int l, int r);
+
+void setregion(struct triangulateio *t, int i, int tag, double maxarea, double x, double y);
+
+void sethole(struct triangulateio *t, int i, double x, double y);
 
 #endif /* TRIANGLE_H_INCLUDED */

@@ -33,7 +33,7 @@ func Test_tri01(tst *testing.T) {
 
 	if chk.Verbose {
 		plt.Reset(false, nil)
-		Draw(V, C, nil)
+		DrawVC(V, C, nil)
 		plt.Equal()
 		plt.AxisRange(-0.1, 1.1, -0.1, 1.1)
 		plt.Gll("x", "y", nil)

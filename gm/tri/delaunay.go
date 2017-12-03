@@ -40,10 +40,10 @@ func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int) {
 	defer func() { C.tiofree(&T) }()
 	res := C.delaunay2d(
 		&T,
-		(C.long)(n),
+		C.int(n),
 		(*C.double)(unsafe.Pointer(&X[0])),
 		(*C.double)(unsafe.Pointer(&Y[0])),
-		(C.long)(verb),
+		C.int(verb),
 	)
 	if res != 0 {
 		chk.Panic("Delaunay2d failed: Triangle returned %d code\n", res)
@@ -55,13 +55,13 @@ func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int) {
 	V = utl.Alloc(nverts, 2)
 	C = utl.IntAlloc(ncells, 3)
 	for i := 0; i < nverts; i++ {
-		V[i][0] = float64(C.getpoint((C.long)(i), 0, &T))
-		V[i][1] = float64(C.getpoint((C.long)(i), 1, &T))
+		V[i][0] = float64(C.getpoint(C.int(i), 0, &T))
+		V[i][1] = float64(C.getpoint(C.int(i), 1, &T))
 	}
 	for i := 0; i < ncells; i++ {
-		C[i][0] = int(C.getcorner((C.long)(i), 0, &T))
-		C[i][1] = int(C.getcorner((C.long)(i), 1, &T))
-		C[i][2] = int(C.getcorner((C.long)(i), 2, &T))
+		C[i][0] = int(C.getcorner(C.int(i), 0, &T))
+		C[i][1] = int(C.getcorner(C.int(i), 1, &T))
+		C[i][2] = int(C.getcorner(C.int(i), 2, &T))
 	}
 	return
 }
