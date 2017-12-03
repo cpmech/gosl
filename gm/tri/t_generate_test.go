@@ -24,17 +24,17 @@ func TestGenerate01(tst *testing.T) {
 
 	p := &Input{
 		[]*Point{
-			{1000, 0.0, 0.0},
-			{2000, l, 0.0},
-			{3000, l / 2.0, h},
+			{11, 0.0, 0.0},
+			{22, l, 0.0},
+			{33, l / 2.0, h},
 		},
 		[]*Segment{
 			{100, 0, 1},
 			{200, 1, 2},
 			{300, 2, 0},
 		},
-		[]*Region{{
-			10, 1.0, l / 2.0, h / 2.0},
+		[]*Region{
+			{10, 1.0, l / 2.0, h / 2.0},
 		},
 		[]*Hole{},
 	}
@@ -54,6 +54,9 @@ func TestGenerate01(tst *testing.T) {
 		io.Pf("%+v\n", c)
 	}
 
+	chk.Int(tst, "vert0: tag", m.Verts[0].Tag, 11)
+	chk.Int(tst, "vert1: tag", m.Verts[1].Tag, 22)
+	chk.Int(tst, "vert2: tag", m.Verts[2].Tag, 33)
 	chk.Ints(tst, "cell0: verts", m.Cells[0].V, []int{4, 2, 5, 6, 7, 8})
 	chk.Ints(tst, "cell0: etags", m.Cells[0].EdgeTags, []int{200, 300, 0})
 	chk.Ints(tst, "cell1: verts", m.Cells[1].V, []int{4, 5, 3, 8, 9, 10})

@@ -123,10 +123,16 @@ func (o *Input) Generate(globalMaxArea, globalMinAngle float64, o2, verbose bool
 	m.Verts = make([]*Vertex, tout.numberofpoints)
 	m.Cells = make([]*Cell, tout.numberoftriangles)
 	for i := 0; i < int(tout.numberofpoints); i++ {
-		m.Verts[i] = &Vertex{i, 0, []float64{
+		v := new(Vertex)
+		v.ID = i
+		if i < len(o.Points) {
+			v.Tag = o.Points[i].Tag
+		}
+		v.X = []float64{
 			float64(C.getpoint(C.int(i), 0, &tout)),
 			float64(C.getpoint(C.int(i), 1, &tout)),
-		}}
+		}
+		m.Verts[i] = v
 	}
 	for i := 0; i < int(tout.numberoftriangles); i++ {
 		c := new(Cell)
