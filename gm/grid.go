@@ -228,6 +228,128 @@ func (o *Grid) RectSet3d(X, Y, Z []float64) {
 	o.boundaries()
 }
 
+// RectSet2dU sets rectangular grid with given reference coordinates and limits
+//
+//  Input:
+//    xmin -- min (real) coordinates along x
+//    xmax -- max (real) coordinates along x
+//    ymin -- min (real) coordinates along y
+//    ymax -- max (real) coordinates along y
+//    R -- reference coordinates along x:  -1 ≤ r ≤ +1
+//    S -- reference coordinates along y:  -1 ≤ s ≤ +1
+//
+//     -1 ≤ u ≤ +1
+//     x(u) = xmin + (xmax - xmin) ⋅ (1 + u) / 2
+//     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
+//     dx/du = (xmax - xmin) / 2
+//
+func (o *Grid) RectSet2dU(xmin, xmax, ymin, ymax float64, R, S []float64) {
+
+	// input
+	o.ndim = 2
+	o.npts = []int{len(R), len(S), 1}
+
+	// limits
+	rmin, rmax := utl.MinMax(R)
+	smin, smax := utl.MinMax(S)
+	o.umin = []float64{rmin, smin, -1}
+	o.umax = []float64{rmax, smax, +1}
+	o.xmin = []float64{xmin, ymin}
+	o.xmax = []float64{xmax, ymax}
+
+	// auxiliary
+	x := la.NewVector(2)
+	u := la.NewVector(2)
+	dxdr, dxds := la.NewVector(2), la.NewVector(2)
+
+	// (constant) derivatives (all the 2nd order derivatives are zero)
+	dxdr[0] = (o.xmax[0] - o.xmin[0]) / 2.0
+	dxds[1] = (o.xmax[1] - o.xmin[1]) / 2.0
+
+	// compute metrics
+	p := 0
+	o.mtr = make([][][]*Metrics, 1)
+	o.mtr[p] = make([][]*Metrics, o.npts[1])
+	for n := 0; n < o.npts[1]; n++ {
+		o.mtr[p][n] = make([]*Metrics, o.npts[0])
+		u[1] = S[n]
+		x[1] = o.xmin[1] + (o.xmax[1]-o.xmin[1])*(1.0+u[1])/2.0
+		for m := 0; m < o.npts[0]; m++ {
+			u[0] = R[m]
+			x[0] = o.xmin[0] + (o.xmax[0]-o.xmin[0])*(1.0+u[0])/2.0
+			o.mtr[p][n][m] = NewMetrics2d(u, x, dxdr, dxds, nil, nil, nil)
+		}
+	}
+
+	// boundaries
+	o.boundaries()
+}
+
+// RectSet3dU sets rectangular grid with given reference coordinates and limits
+//
+//  Input:
+//    xmin -- min (real) coordinates along x
+//    xmax -- max (real) coordinates along x
+//    ymin -- min (real) coordinates along y
+//    ymax -- max (real) coordinates along y
+//    zmin -- min (real) coordinates along z
+//    zmax -- max (real) coordinates along z
+//    R -- reference coordinates along x:  -1 ≤ r ≤ +1
+//    S -- reference coordinates along y:  -1 ≤ s ≤ +1
+//    T -- reference coordinates along z:  -1 ≤ t ≤ +1
+//
+//     -1 ≤ u ≤ +1
+//     x(u) = xmin + (xmax - xmin) ⋅ (1 + u) / 2
+//     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
+//     dx/du = (xmax - xmin) / 2
+//
+func (o *Grid) RectSet3dU(xmin, xmax, ymin, ymax, zmin, zmax float64, R, S, T []float64) {
+
+	// input
+	o.ndim = 3
+	o.npts = []int{len(R), len(S), len(T)}
+
+	// limits
+	rmin, rmax := utl.MinMax(R)
+	smin, smax := utl.MinMax(S)
+	tmin, tmax := utl.MinMax(T)
+	o.umin = []float64{rmin, smin, tmin}
+	o.umax = []float64{rmax, smax, tmax}
+	o.xmin = []float64{xmin, ymin, zmin}
+	o.xmax = []float64{xmax, ymax, zmax}
+
+	// auxiliary
+	x := la.NewVector(3)
+	u := la.NewVector(3)
+	dxdr, dxds, dxdt := la.NewVector(3), la.NewVector(3), la.NewVector(3)
+
+	// (constant) derivatives (all the 2nd order derivatives are zero)
+	dxdr[0] = (o.xmax[0] - o.xmin[0]) / 2.0
+	dxds[1] = (o.xmax[1] - o.xmin[1]) / 2.0
+	dxdt[2] = (o.xmax[2] - o.xmin[2]) / 2.0
+
+	// compute metrics
+	o.mtr = make([][][]*Metrics, o.npts[2])
+	for p := 0; p < o.npts[2]; p++ {
+		o.mtr[p] = make([][]*Metrics, o.npts[1])
+		u[2] = T[p]
+		x[2] = o.xmin[2] + (o.xmax[2]-o.xmin[2])*(1.0+u[2])/2.0
+		for n := 0; n < o.npts[1]; n++ {
+			o.mtr[p][n] = make([]*Metrics, o.npts[0])
+			u[1] = S[n]
+			x[1] = o.xmin[1] + (o.xmax[1]-o.xmin[1])*(1.0+u[1])/2.0
+			for m := 0; m < o.npts[0]; m++ {
+				u[0] = R[m]
+				x[0] = o.xmin[0] + (o.xmax[0]-o.xmin[0])*(1.0+u[0])/2.0
+				o.mtr[p][n][m] = NewMetrics3d(u, x, dxdr, dxds, dxdt, nil, nil, nil, nil, nil, nil)
+			}
+		}
+	}
+
+	// boundaries
+	o.boundaries()
+}
+
 // SetTransfinite2d sets grid from 2D transfinite mapping
 //  trf -- 2D transfinite structure
 //  R   -- [n0] reference coordinates along r-direction  -1 ≤ r ≤ +1

@@ -359,7 +359,7 @@ func TestGrid02(tst *testing.T) {
 func TestGrid03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid03. rectangular uniform (RectSet2D)")
+	chk.PrintTitle("Grid03. rectangular uniform (RectSet2d)")
 
 	// grid
 	g := new(Grid)
@@ -402,7 +402,7 @@ func TestGrid03(tst *testing.T) {
 func TestGrid04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Grid04. rectangular uniform (RectSet3D)")
+	chk.PrintTitle("Grid04. rectangular uniform (RectSet3d)")
 
 	// grid
 	g := new(Grid)
@@ -932,5 +932,145 @@ func TestGrid12(tst *testing.T) {
 		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
 		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
 		plt.Save("/tmp/gosl/gm", "grid12")
+	}
+}
+
+func TestGrid13(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Grid13. rectangular uniform (RectSet2dU)")
+
+	// grid
+	R := []float64{-1, -0.5, 0, +0.5, +1}
+	S := []float64{-1, 0, +1}
+	g := new(Grid)
+	g.RectSet2dU(2, 4, 5, 6, R, S)
+
+	// check
+	xx, yy := g.Meshgrid2d()
+	chk.Deep2(tst, "xx", 1e-17, xx, [][]float64{
+		{2, 2.5, 3, 3.5, 4},
+		{2, 2.5, 3, 3.5, 4},
+		{2, 2.5, 3, 3.5, 4},
+	})
+	chk.Deep2(tst, "yy", 1e-17, yy, [][]float64{
+		{5, 5, 5, 5, 5},
+		{5.5, 5.5, 5.5, 5.5, 5.5},
+		{6, 6, 6, 6, 6},
+	})
+	rr := make([]float64, g.npts[0])
+	for n := 0; n < g.npts[1]; n++ {
+		for m := 0; m < g.npts[0]; m++ {
+			rr[m] = g.U(m, n, 0)[0]
+		}
+		chk.Array(tst, "R", 1e-17, rr, R)
+	}
+	ss := make([]float64, g.npts[1])
+	for m := 0; m < g.npts[0]; m++ {
+		for n := 0; n < g.npts[1]; n++ {
+			ss[n] = g.U(m, n, 0)[1]
+		}
+		chk.Array(tst, "S", 1e-17, ss, S)
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 500})
+		gp := GridPlotter{G: g, WithVids: true}
+		gp.Draw()
+		plt.Grid(&plt.A{C: "grey"})
+		plt.Equal()
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/gm", "grid13")
+	}
+}
+
+func TestGrid14(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Grid14. rectangular uniform (RectSet3dU)")
+
+	// grid
+	lu := 2.0 / 7.0
+	R := []float64{-1, -1 + lu, -1 + 3*lu, 1}
+	S := []float64{-1, 0.5, +1}
+	T := []float64{-1, +1}
+	g := new(Grid)
+	g.RectSet3dU(1, 8, 0, 4, -1, -0.5, R, S, T)
+
+	// check
+	xx, yy, zz := g.Meshgrid3d()
+	chk.Deep3(tst, "xx", 1e-17, xx, [][][]float64{
+		{
+			{1, 2, 4, 8},
+			{1, 2, 4, 8},
+			{1, 2, 4, 8},
+		},
+		{
+			{1, 2, 4, 8},
+			{1, 2, 4, 8},
+			{1, 2, 4, 8},
+		},
+	})
+	chk.Deep3(tst, "yy", 1e-17, yy, [][][]float64{
+		{
+			{0, 0, 0, 0},
+			{3, 3, 3, 3},
+			{4, 4, 4, 4},
+		},
+		{
+			{0, 0, 0, 0},
+			{3, 3, 3, 3},
+			{4, 4, 4, 4},
+		},
+	})
+	chk.Deep3(tst, "zz", 1e-17, zz, [][][]float64{
+		{
+			{-1, -1, -1, -1},
+			{-1, -1, -1, -1},
+			{-1, -1, -1, -1},
+		},
+		{
+			{-0.5, -0.5, -0.5, -0.5},
+			{-0.5, -0.5, -0.5, -0.5},
+			{-0.5, -0.5, -0.5, -0.5},
+		},
+	})
+	rr := make([]float64, g.npts[0])
+	ss := make([]float64, g.npts[1])
+	for p := 0; p < g.npts[2]; p++ {
+		for n := 0; n < g.npts[1]; n++ {
+			for m := 0; m < g.npts[0]; m++ {
+				rr[m] = g.U(m, n, p)[0]
+			}
+			chk.Array(tst, "R", 1e-17, rr, R)
+		}
+		for m := 0; m < g.npts[0]; m++ {
+			for n := 0; n < g.npts[1]; n++ {
+				ss[n] = g.U(m, n, p)[1]
+			}
+			chk.Array(tst, "S", 1e-17, ss, S)
+		}
+	}
+	tt := make([]float64, g.npts[2])
+	for n := 0; n < g.npts[1]; n++ {
+		for m := 0; m < g.npts[0]; m++ {
+			for p := 0; p < g.npts[2]; p++ {
+				tt[p] = g.U(m, n, p)[2]
+			}
+			chk.Array(tst, "T", 1e-17, tt, T)
+		}
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 500})
+		gp := GridPlotter{G: g, WithVids: true}
+		gp.Draw()
+		gp.Bases(0.5)
+		plt.Grid(&plt.A{C: "grey"})
+		plt.DefaultTriad(1)
+		plt.Default3dView(g.Xmin(0), g.Xmax(0), g.Xmin(1), g.Xmax(1), g.Xmin(2), g.Xmax(2), true)
+		plt.Save("/tmp/gosl/gm", "grid14")
 	}
 }
