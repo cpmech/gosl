@@ -9,6 +9,6 @@ while true; do
     echo
     echo
     #go test -test.run="EssentialBcs02"
-    go test -test.run="Fdm02"
-    #go test -test.run="Spc03"
+    #go test -test.run="Fdm02"
+    go test -test.run="Spc03"
 done
