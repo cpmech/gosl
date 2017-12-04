@@ -73,6 +73,13 @@ func TestFdm02(tst *testing.T) {
 	// set equationa and assemble A matrix
 	reactions := true
 	s.Assemble(reactions)
+
+	// check equations (must be after Assemble)
+	chk.Int(tst, "number of equations == number of nodes", s.Eqs.N, 16)
+	chk.Ints(tst, "UtoF", s.Eqs.UtoF, []int{5, 6, 9, 10})
+	chk.Ints(tst, "KtoF", s.Eqs.KtoF, []int{0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15})
+
+	// check Duu
 	Duu := s.Eqs.Auu.ToDense()
 	io.Pf("Auu =\n%v\n", Duu.Print("%4g"))
 	chk.Deep2(tst, "Auu", 1e-17, Duu.GetDeep2(), [][]float64{
@@ -81,9 +88,6 @@ func TestFdm02(tst *testing.T) {
 		{+1, +0, -4, +1}, // 2 ⇒ node (1,2) 9
 		{+0, +1, +1, -4}, // 3 ⇒ node (2,2) 10
 	})
-	chk.Int(tst, "number of equations == number of nodes", s.Eqs.N, 16)
-	chk.Ints(tst, "UtoF", s.Eqs.UtoF, []int{5, 6, 9, 10})
-	chk.Ints(tst, "KtoF", s.Eqs.KtoF, []int{0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15})
 
 	// solve
 	u, f := s.SolveSteady(reactions)
