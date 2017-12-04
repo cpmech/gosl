@@ -46,12 +46,11 @@ else
     install_and_test mpi 0
 fi
 
-for p in la/oblas la fun/dbf fun/fftw fun num/qpck num gm/rw gm/msh gm graph opt ode; do
+for p in la/oblas la fun/dbf fun/fftw fun num/qpck num gm/rw gm/tri gm/msh gm graph opt ode; do
     install_and_test $p 1
 done
 
 if [[ $platform != 'windows' ]]; then
-    install_and_test gm/tri 1
     install_and_test rnd/sfmt 1
     install_and_test rnd/dsfmt 1
 fi

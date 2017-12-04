@@ -6,6 +6,7 @@
 package tri
 
 /*
+#cgo CFLAGS: -Wno-pointer-to-int-cast -Wno-int-to-pointer-cast
 #cgo LDFLAGS: -lm
 #include "triangle.h"
 */
