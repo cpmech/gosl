@@ -944,7 +944,7 @@ func TestGrid13(tst *testing.T) {
 	R := []float64{-1, -0.5, 0, +0.5, +1}
 	S := []float64{-1, 0, +1}
 	g := new(Grid)
-	g.RectSet2dU(2, 4, 5, 6, R, S)
+	g.RectSet2dU([]float64{2, 5}, []float64{4, 6}, R, S)
 
 	// check
 	xx, yy := g.Meshgrid2d()
@@ -996,7 +996,7 @@ func TestGrid14(tst *testing.T) {
 	S := []float64{-1, 0.5, +1}
 	T := []float64{-1, +1}
 	g := new(Grid)
-	g.RectSet3dU(1, 8, 0, 4, -1, -0.5, R, S, T)
+	g.RectSet3dU([]float64{1, 0, -1}, []float64{8, 4, -0.5}, R, S, T)
 
 	// check
 	xx, yy, zz := g.Meshgrid3d()

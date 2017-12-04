@@ -231,10 +231,8 @@ func (o *Grid) RectSet3d(X, Y, Z []float64) {
 // RectSet2dU sets rectangular grid with given reference coordinates and limits
 //
 //  Input:
-//    xmin -- min (real) coordinates along x
-//    xmax -- max (real) coordinates along x
-//    ymin -- min (real) coordinates along y
-//    ymax -- max (real) coordinates along y
+//    xmin -- min x-y values: [xmin, ymin]
+//    xmax -- max x-y values: [xmax, ymax]
 //    R -- reference coordinates along x:  -1 ≤ r ≤ +1
 //    S -- reference coordinates along y:  -1 ≤ s ≤ +1
 //
@@ -243,7 +241,7 @@ func (o *Grid) RectSet3d(X, Y, Z []float64) {
 //     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
 //     dx/du = (xmax - xmin) / 2
 //
-func (o *Grid) RectSet2dU(xmin, xmax, ymin, ymax float64, R, S []float64) {
+func (o *Grid) RectSet2dU(xmin, xmax, R, S []float64) {
 
 	// input
 	o.ndim = 2
@@ -254,8 +252,8 @@ func (o *Grid) RectSet2dU(xmin, xmax, ymin, ymax float64, R, S []float64) {
 	smin, smax := utl.MinMax(S)
 	o.umin = []float64{rmin, smin, -1}
 	o.umax = []float64{rmax, smax, +1}
-	o.xmin = []float64{xmin, ymin}
-	o.xmax = []float64{xmax, ymax}
+	o.xmin = xmin
+	o.xmax = xmax
 
 	// auxiliary
 	x := la.NewVector(2)
@@ -288,12 +286,8 @@ func (o *Grid) RectSet2dU(xmin, xmax, ymin, ymax float64, R, S []float64) {
 // RectSet3dU sets rectangular grid with given reference coordinates and limits
 //
 //  Input:
-//    xmin -- min (real) coordinates along x
-//    xmax -- max (real) coordinates along x
-//    ymin -- min (real) coordinates along y
-//    ymax -- max (real) coordinates along y
-//    zmin -- min (real) coordinates along z
-//    zmax -- max (real) coordinates along z
+//    xmin -- min x-y-z values: [xmin, ymin, zmin]
+//    xmax -- max x-y-z values: [xmax, ymax, zmax]
 //    R -- reference coordinates along x:  -1 ≤ r ≤ +1
 //    S -- reference coordinates along y:  -1 ≤ s ≤ +1
 //    T -- reference coordinates along z:  -1 ≤ t ≤ +1
@@ -303,7 +297,7 @@ func (o *Grid) RectSet2dU(xmin, xmax, ymin, ymax float64, R, S []float64) {
 //     u(x) = -1 + 2⋅(x - xmin) / (xmax - xmin)
 //     dx/du = (xmax - xmin) / 2
 //
-func (o *Grid) RectSet3dU(xmin, xmax, ymin, ymax, zmin, zmax float64, R, S, T []float64) {
+func (o *Grid) RectSet3dU(xmin, xmax, R, S, T []float64) {
 
 	// input
 	o.ndim = 3
@@ -315,8 +309,8 @@ func (o *Grid) RectSet3dU(xmin, xmax, ymin, ymax, zmin, zmax float64, R, S, T []
 	tmin, tmax := utl.MinMax(T)
 	o.umin = []float64{rmin, smin, tmin}
 	o.umax = []float64{rmax, smax, tmax}
-	o.xmin = []float64{xmin, ymin, zmin}
-	o.xmax = []float64{xmax, ymax, zmax}
+	o.xmin = xmin
+	o.xmax = xmax
 
 	// auxiliary
 	x := la.NewVector(3)
