@@ -132,7 +132,7 @@ func (o *FdmLaplacian) SolveSteady(reactions bool) (u, f []float64) {
 
 // auxiliary //////////////////////////////////////////////////////////////////////////////////////
 
-// calcXk calculates know {u} values (CalcXk in la.Equations)
+// calcXk calculates known {u} values (CalcXk in la.Equations)
 //  I -- node number
 //  t -- time
 func (o *FdmLaplacian) calcXk(I int, t float64) float64 {
