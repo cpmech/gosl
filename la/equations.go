@@ -230,6 +230,26 @@ func (o *Equations) Put(I, J int, value float64) {
 	o.Akk.Put(i, j, value)
 }
 
+// GetAmat returns the full A matrix (sparse/triplet format) made by Auu, Auk, Aku and Akk
+// (e.g. for debugging)
+func (o *Equations) GetAmat() (A *Triplet) {
+	nnz := o.Auu.max + o.Auk.max + o.Aku.max + o.Akk.max
+	A = NewTriplet(o.N, o.N, nnz)
+	for k := 0; k < o.Auu.pos; k++ {
+		A.Put(o.UtoF[o.Auu.i[k]], o.UtoF[o.Auu.j[k]], o.Auu.x[k])
+	}
+	for k := 0; k < o.Auk.pos; k++ {
+		A.Put(o.UtoF[o.Auk.i[k]], o.KtoF[o.Auk.j[k]], o.Auk.x[k])
+	}
+	for k := 0; k < o.Aku.pos; k++ {
+		A.Put(o.KtoF[o.Aku.i[k]], o.UtoF[o.Aku.j[k]], o.Aku.x[k])
+	}
+	for k := 0; k < o.Akk.pos; k++ {
+		A.Put(o.KtoF[o.Akk.i[k]], o.KtoF[o.Akk.j[k]], o.Akk.x[k])
+	}
+	return
+}
+
 // JoinVector joins uknown with known parts of vector
 //  INPUT:
 //   bu, bk -- partitioned vectors; e.g. o.Bu, and o.Bk or o.Xu, o.Xk

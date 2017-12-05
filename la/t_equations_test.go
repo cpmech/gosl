@@ -384,6 +384,18 @@ func TestEqs06(tst *testing.T) {
 	e.Put(3, 0, 1.0)
 	e.Put(3, 3, 5.0)
 
+	// check A
+	A := e.GetAmat()
+	D := A.ToMatrix(nil).ToDense()
+	io.Pf("%v\n", D.Print("%4g"))
+	chk.Deep2(tst, "D", 1e-17, D.GetDeep2(), [][]float64{
+		{1, 2, 1, 2, 1},
+		{2, 4, 4, 6, 1},
+		{3, 6, 1, 4, 5},
+		{1, 2, 3, 5, 1},
+		{1, 1, 0, 3, 0},
+	})
+
 	// functions
 	calcXk := func(I int, t float64) float64 {
 		switch I {
