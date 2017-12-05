@@ -18,7 +18,7 @@ func TestEqs01(tst *testing.T) {
 
 	// some prescribed
 	e := NewEquations(9, []int{0, 6, 3})
-	e.Print(true)
+	e.Info(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{1, 2, 4, 5, 7, 8})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, 0, 1, -1, 2, 3, -1, 4, 5})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{0, 3, 6})
@@ -27,7 +27,7 @@ func TestEqs01(tst *testing.T) {
 	// some prescribed
 	io.Pl()
 	e = NewEquations(9, []int{0, 2, 1})
-	e.Print(true)
+	e.Info(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{3, 4, 5, 6, 7, 8})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{-1, -1, -1, 0, 1, 2, 3, 4, 5})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{0, 1, 2})
@@ -36,7 +36,7 @@ func TestEqs01(tst *testing.T) {
 	// none prescribed
 	io.Pl()
 	e = NewEquations(5, nil)
-	e.Print(true)
+	e.Info(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{0, 1, 2, 3, 4})
 	chk.Ints(tst, "KtoF", e.KtoF, nil)
@@ -45,7 +45,7 @@ func TestEqs01(tst *testing.T) {
 	// most prescribed
 	io.Pl()
 	e = NewEquations(5, []int{1, 2, 3, 4})
-	e.Print(true)
+	e.Info(true)
 	chk.Ints(tst, "UtoF", e.UtoF, []int{0})
 	chk.Ints(tst, "FtoU", e.FtoU, []int{0, -1, -1, -1, -1})
 	chk.Ints(tst, "KtoF", e.KtoF, []int{1, 2, 3, 4})

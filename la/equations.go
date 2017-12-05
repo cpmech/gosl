@@ -372,8 +372,8 @@ func (o *Equations) SolveOnce(calcXk, calcBu func(I int, t float64) float64) {
 	o.Solve(s, 0, calcXk, calcBu)
 }
 
-// Print prints information about Equations
-func (o *Equations) Print(full bool) {
+// Info prints information about Equations
+func (o *Equations) Info(full bool) {
 	io.Pf("number of unknown x-components: Nu = %d\n", o.Nu)
 	io.Pf("number of known x-components:   Nk = %d\n", o.Nk)
 	io.Pf("total number of equations:      N  = %d\n", o.N)
