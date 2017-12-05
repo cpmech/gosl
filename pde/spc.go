@@ -14,14 +14,13 @@ import (
 
 // SpcLaplacian implements the Spectral Collocation (SPC) Laplacian operator (2D or 3D)
 //
-//              ∂²u        ∂²u        ∂²u
-//    L{u} = kx ———  +  ky ———  +  kz ———
-//              ∂x²        ∂y²        ∂z²
+//                 ∂²φ         ∂²φ        ∂²φ         ∂φ      ∂φ
+//    L{φ} = ∇²φ = ——— g¹¹  +  ——— g²² +  ———— 2g¹² - —— L¹ - —— L²
+//                 ∂a²         ∂b²        ∂a∂b        ∂a      ∂b
+//
+//    with a=u[0]=r and b=u[1]=s
 //
 type SpcLaplacian struct {
-	Kx       float64       // isotropic coefficient x
-	Ky       float64       // isotropic coefficient y
-	Kz       float64       // isotropic coefficient z
 	LagInt   fun.LagIntSet // Lagrange interpolators [ndim]
 	Grid     *gm.Grid      // grid
 	Source   fun.Svs       // source term function s({x},t)
@@ -31,17 +30,9 @@ type SpcLaplacian struct {
 }
 
 // NewSpcLaplacian creates a new SPC Laplacian operator with given parameters
+//  NOTE: params is not used at the moment
 func NewSpcLaplacian(params dbf.Params, lis fun.LagIntSet, grid *gm.Grid, source fun.Svs) (o *SpcLaplacian) {
 	o = new(SpcLaplacian)
-	err := params.ConnectSetOpt(
-		[]*float64{&o.Kx, &o.Ky, &o.Kz},
-		[]string{"kx", "ky", "kz"},
-		[]bool{false, false, true},
-		"SpcLaplacian",
-	)
-	if err != "" {
-		chk.Panic(err)
-	}
 	o.LagInt = lis
 	o.Grid = grid
 	o.Source = source
@@ -70,27 +61,40 @@ func (o *SpcLaplacian) Assemble(reactions bool) {
 	nx := o.LagInt[0].N + 1
 	ny := o.LagInt[1].N + 1
 	if !o.bcsReady {
-		nnz := (nx*nx)*ny + (ny*ny)*nx
+		nnz := (nx * nx) * (ny * ny)
 		o.Eqs = la.NewEquations(o.Grid.Size(), o.EssenBcs.Nodes())
 		o.Eqs.Alloc([]int{nnz, nnz, nnz, nnz}, reactions, true) // TODO: optimise nnz
 		for _, li := range o.LagInt {
-			li.CalcD2()
+			li.CalcD2() // also calculates D1
 		}
 		o.bcsReady = true
 	}
+	ι := func(m, n int) int { return o.Grid.IndexMNPtoI(m, n, 0) }
+	δ := func(m, n int) float64 {
+		if m == n {
+			return 1
+		}
+		return 0
+	}
+	g := func(i, j, m, n int) float64 { return o.Grid.ContraMatrix(m, n, 0).Get(i, j) }
+	L := func(i, m, n int) float64 { return o.Grid.Lcoeff(m, n, 0, i) }
+	D1a := func(m, n int) float64 { return o.LagInt[0].D1.Get(m, n) }
+	D1b := func(m, n int) float64 { return o.LagInt[1].D1.Get(m, n) }
+	D2a := func(m, n int) float64 { return o.LagInt[0].D2.Get(m, n) }
+	D2b := func(m, n int) float64 { return o.LagInt[1].D2.Get(m, n) }
 	o.Eqs.Start()
 	if o.Grid.Ndim() == 2 {
-		for k := 0; k < ny; k++ {
-			for i := 0; i < nx; i++ {
-				for j := 0; j < nx; j++ {
-					o.Eqs.Put(i+k*nx, j+k*nx, o.Kx*o.LagInt[0].D2.Get(i, j))
-				}
-			}
-		}
-		for k := 0; k < nx; k++ {
-			for i := 0; i < ny; i++ {
-				for j := 0; j < ny; j++ {
-					o.Eqs.Put(i*nx+k, j*nx+k, o.Ky*o.LagInt[1].D2.Get(i, j))
+		for p := 0; p < nx; p++ {
+			for q := 0; q < ny; q++ {
+				for m := 0; m < nx; m++ {
+					for n := 0; n < ny; n++ {
+						o.Eqs.Put(ι(p, q), ι(m, n), 0+
+							D2a(p, m)*δ(q, n)*g(0, 0, p, q)+
+							δ(p, m)*D2b(q, n)*g(1, 1, p, q)+
+							D1a(p, m)*D1b(q, n)*2.0*g(0, 1, p, q)+
+							-D1a(p, m)*δ(q, n)*L(0, p, q)+
+							-δ(p, m)*D1b(q, n)*L(1, p, q))
+					}
 				}
 			}
 		}

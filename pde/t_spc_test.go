@@ -86,7 +86,7 @@ func TestSpc02(tst *testing.T) {
 
 	// grid
 	g := new(gm.Grid)
-	g.RectSet2dU([]float64{0, 0}, []float64{3, 3}, lis[0].X, lis[1].X)
+	g.RectSet2dU([]float64{0, 0}, []float64{2, 2}, lis[0].X, lis[1].X)
 
 	// solver
 	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
