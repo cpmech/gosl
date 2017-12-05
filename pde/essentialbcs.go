@@ -6,16 +6,17 @@ package pde
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/gm/msh"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
 
 // EssentialBcs holds data for prescribing a SET of essential (Dirichlet) boundary conditions
 type EssentialBcs struct {
-	all     [][]dbf.T    // [node][dof] function to compute BCs
+	all     [][]fun.Svs  // [node][dof] function to compute BCs; f({x}, t)
 	grid    *gm.Grid     // using grid
 	mesh    *msh.Mesh    // using mesh
 	maxNdof int          // max number of "degrees-of-freedom" per node
@@ -27,7 +28,7 @@ type EssentialBcs struct {
 //  maxNdof -- max number of "degrees-of-freedom" per node
 func NewEssentialBcsGrid(grid *gm.Grid, maxNdof int) (o *EssentialBcs) {
 	o = new(EssentialBcs)
-	o.all = make([][]dbf.T, grid.Size())
+	o.all = make([][]fun.Svs, grid.Size())
 	o.grid = grid
 	o.maxNdof = maxNdof
 	o.nodes = make(map[int]bool)
@@ -39,7 +40,7 @@ func NewEssentialBcsGrid(grid *gm.Grid, maxNdof int) (o *EssentialBcs) {
 //  maxNdof -- max number of "degrees-of-freedom" per node
 func NewEssentialBcsMesh(mesh *msh.Mesh, maxNdof int) (o *EssentialBcs) {
 	o = new(EssentialBcs)
-	o.all = make([][]dbf.T, len(mesh.Verts))
+	o.all = make([][]fun.Svs, len(mesh.Verts))
 	o.mesh = mesh
 	o.maxNdof = maxNdof
 	o.nodes = make(map[int]bool)
@@ -51,7 +52,7 @@ func NewEssentialBcsMesh(mesh *msh.Mesh, maxNdof int) (o *EssentialBcs) {
 //   dof    -- index of "degree-of-freedom"; e.g. 0⇒horizontal displacement, 1⇒vertical displacement
 //   cvalue -- constant value [optional]; or
 //   fvalue -- function value [optional]
-func (o *EssentialBcs) AddUsingTag(tag, dof int, cvalue float64, fvalue dbf.T) {
+func (o *EssentialBcs) AddUsingTag(tag, dof int, cvalue float64, fvalue fun.Svs) {
 
 	// check
 	if dof > o.maxNdof-1 {
@@ -61,7 +62,7 @@ func (o *EssentialBcs) AddUsingTag(tag, dof int, cvalue float64, fvalue dbf.T) {
 	// function
 	f := fvalue
 	if fvalue == nil {
-		f = &dbf.Cte{cvalue}
+		f = func(x la.Vector, t float64) float64 { return cvalue }
 	}
 
 	// using grid
@@ -85,7 +86,7 @@ func (o *EssentialBcs) AddUsingTag(tag, dof int, cvalue float64, fvalue dbf.T) {
 	// set
 	for _, n := range nodes {
 		if o.all[n] == nil {
-			o.all[n] = make([]dbf.T, o.maxNdof)
+			o.all[n] = make([]fun.Svs, o.maxNdof)
 		}
 		o.all[n][dof] = f
 		o.nodes[n] = true
@@ -111,11 +112,11 @@ func (o *EssentialBcs) Value(node, dof int, t float64) (val float64, available b
 
 	// using grid
 	if o.grid != nil {
-		return bc[dof].F(t, o.grid.Node(node)), true
+		return bc[dof](o.grid.Node(node), t), true
 	}
 
 	// using mesh
-	return bc[dof].F(t, o.mesh.Verts[node].X), true
+	return bc[dof](o.mesh.Verts[node].X, t), true
 }
 
 // Print prints boundary conditions

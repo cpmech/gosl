@@ -252,3 +252,70 @@ func TestSpc03(tst *testing.T) {
 		plt.Save("/tmp/gosl/pde", "spc03")
 	}
 }
+
+func TestSpc04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Spc04. Kopriva 7.1.4 p259")
+
+	// auxiliary
+	polar := func(x []float64) (r, θ float64) {
+		r = math.Sqrt(x[0]*x[0] + x[1]*x[1])
+		θ = math.Atan2(x[1], x[0])
+		return
+	}
+
+	// Lagrange interpolators
+	lis := fun.NewLagIntSet(2, []int{8, 8}, []string{"cgl", "cgl"})
+
+	// grid
+	trf := gm.FactoryTfinite.Surf2dQuarterRing(1.0, 3.0)
+	g := new(gm.Grid)
+	g.SetTransfinite2d(trf, lis[0].X, lis[1].X)
+
+	// solver
+	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	source := func(x la.Vector, t float64) float64 {
+		r, θ := polar(x)
+		return -16.0 * math.Log(r) * math.Sin(4.0*θ) / (r * r)
+	}
+	s := NewSpcLaplacian(p, lis, g, source)
+
+	// essential boundary conditions
+	s.AddBc(true, 10, 0.0, nil) // left
+	s.AddBc(true, 11, 0.0, func(x la.Vector, t float64) float64 {
+		r, θ := polar(x)
+		return math.Log(r) * math.Sin(4.0*θ)
+	}) // right
+	s.AddBc(true, 20, 0.0, nil) // bottom
+	s.AddBc(true, 21, 0.0, nil) // top
+
+	// solve
+	reactions := false
+	s.Assemble(reactions)
+	u, _ := s.SolveSteady(reactions)
+
+	// check
+	ana := func(x []float64) float64 {
+		r, θ := polar(x)
+		return math.Log(r) * math.Sin(4.0*θ)
+	}
+	for n := 0; n < g.Npts(1); n++ {
+		for m := 0; m < g.Npts(0); m++ {
+			I := g.IndexMNPtoI(m, n, 0)
+			x := g.X(m, n, 0)
+			chk.AnaNum(tst, io.Sf("u(%5.2f,%5.2f)", x[0], x[1]), 1e-3, u[I], ana(x), chk.Verbose)
+		}
+	}
+
+	// plot
+	if chk.Verbose && false {
+		gp := gm.GridPlotter{G: g, WithVids: false}
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		gp.Draw()
+		plt.Equal()
+		plt.Gll("$x$", "$y$", nil)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/pde", "spc04")
+	}
+}

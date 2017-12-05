@@ -46,7 +46,7 @@ func NewSpcLaplacian(params dbf.Params, lis fun.LagIntSet, grid *gm.Grid, source
 //   tag       -- edge or face tag in grid
 //   cvalue    -- constant value [optional]; or
 //   fvalue    -- function value [optional]
-func (o *SpcLaplacian) AddBc(essential bool, tag int, cvalue float64, fvalue dbf.T) {
+func (o *SpcLaplacian) AddBc(essential bool, tag int, cvalue float64, fvalue fun.Svs) {
 	o.bcsReady = false
 	if essential {
 		o.EssenBcs.AddUsingTag(tag, 0, cvalue, fvalue)

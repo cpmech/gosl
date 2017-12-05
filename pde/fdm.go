@@ -53,7 +53,7 @@ func NewFdmLaplacian(params dbf.Params, grid *gm.Grid, source fun.Svs) (o *FdmLa
 //   tag       -- edge or face tag in grid
 //   cvalue    -- constant value [optional]; or
 //   fvalue    -- function value [optional]
-func (o *FdmLaplacian) AddBc(essential bool, tag int, cvalue float64, fvalue dbf.T) {
+func (o *FdmLaplacian) AddBc(essential bool, tag int, cvalue float64, fvalue fun.Svs) {
 	o.bcsReady = false
 	if essential {
 		o.EssenBcs.AddUsingTag(tag, 0, cvalue, fvalue)
