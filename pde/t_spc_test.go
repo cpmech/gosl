@@ -316,7 +316,7 @@ func TestSpc04(tst *testing.T) {
 	}
 
 	// plot
-	if chk.Verbose && false {
+	if chk.Verbose {
 		gp := gm.GridPlotter{G: g, WithVids: false}
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
 		gp.Draw()
