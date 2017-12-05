@@ -34,11 +34,8 @@ func TestSpc01a(tst *testing.T) {
 	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewSpcLaplacian(p, l, g, nil)
 
-	// essential boundary conditions
-	s.AddBc(true, 10, 0.0, nil) // left
-	s.AddBc(true, 11, 0.0, nil) // right
-	s.AddBc(true, 20, 0.0, nil) // bottom
-	s.AddBc(true, 21, 0.0, nil) // top
+	// homogeneous boundary conditions
+	s.SetHbc()
 
 	// assemble
 	s.Assemble(false)
@@ -100,10 +97,10 @@ func TestSpc02(tst *testing.T) {
 	s := NewSpcLaplacian(p, lis, g, nil)
 
 	// essential boundary conditions
-	s.AddBc(true, 10, 1.0, nil) // left
-	s.AddBc(true, 11, 2.0, nil) // right
-	s.AddBc(true, 20, 1.0, nil) // bottom
-	s.AddBc(true, 21, 2.0, nil) // top
+	s.AddEbc(10, 1.0, nil) // left
+	s.AddEbc(11, 2.0, nil) // right
+	s.AddEbc(20, 1.0, nil) // bottom
+	s.AddEbc(21, 2.0, nil) // top
 
 	// set equations and assemble A matrix
 	reactions := true
@@ -182,11 +179,8 @@ func TestSpc03(tst *testing.T) {
 	}
 	s := NewSpcLaplacian(p, lis, g, source)
 
-	// essential boundary conditions
-	s.AddBc(true, 10, 0.0, nil) // left
-	s.AddBc(true, 11, 0.0, nil) // right
-	s.AddBc(true, 20, 0.0, nil) // bottom
-	s.AddBc(true, 21, 0.0, nil) // top
+	// homogeneous boundary conditions
+	s.SetHbc()
 
 	// set equations and assemble A matrix
 	reactions := false
@@ -289,13 +283,13 @@ func TestSpc04(tst *testing.T) {
 	s := NewSpcLaplacian(p, lis, g, source)
 
 	// essential boundary conditions
-	s.AddBc(true, 10, 0.0, nil) // left
-	s.AddBc(true, 11, 0.0, func(x la.Vector, t float64) float64 {
+	s.AddEbc(10, 0.0, nil) // left
+	s.AddEbc(11, 0.0, func(x la.Vector, t float64) float64 {
 		r, θ := polar(x)
 		return math.Log(r) * math.Sin(4.0*θ)
 	}) // right
-	s.AddBc(true, 20, 0.0, nil) // bottom
-	s.AddBc(true, 21, 0.0, nil) // top
+	s.AddEbc(20, 0.0, nil) // bottom
+	s.AddEbc(21, 0.0, nil) // top
 
 	// solve
 	reactions := false
