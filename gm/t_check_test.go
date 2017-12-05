@@ -14,6 +14,99 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
+// check transfinite derivatives ///////////////////////////////////////////////////////////////////
+
+func checkTfiniteDerivs2d(tst *testing.T, trf *Transfinite, rvals, svals []float64, verb bool, tol0, tol1 float64) {
+	x := la.NewVector(2)
+	dxDr, dxDs := la.NewVector(2), la.NewVector(2)
+	ddxDrr, ddxDss, ddxDrs := la.NewVector(2), la.NewVector(2), la.NewVector(2)
+	u, utmp, tmp := la.NewVector(2), la.NewVector(2), la.NewVector(2)
+	for _, s := range svals {
+		for _, r := range rvals {
+			u[0], u[1] = r, s
+			trf.PointAndDerivs(x, dxDr, dxDs, nil, ddxDrr, ddxDss, nil, ddxDrs, nil, nil, u)
+			chk.DerivVecSca(tst, "dx/dr   ", tol0, dxDr, r, 1e-3, verb, func(xx []float64, ξ float64) {
+				utmp[0], utmp[1] = ξ, u[1]
+				trf.Point(xx, utmp)
+			})
+			chk.DerivVecSca(tst, "dx/ds   ", tol0, dxDs, s, 1e-3, verb, func(xx []float64, ξ float64) {
+				utmp[0], utmp[1] = u[0], ξ
+				trf.Point(xx, utmp)
+			})
+			chk.DerivVecSca(tst, "d²x/dr² ", tol1, ddxDrr, r, 1e-3, verb, func(d []float64, ξ float64) {
+				utmp[0], utmp[1] = ξ, u[1]
+				trf.PointAndDerivs(tmp, d, tmp, tmp, nil, nil, nil, nil, nil, nil, utmp)
+			})
+			chk.DerivVecSca(tst, "d²x/ds² ", tol1, ddxDss, s, 1e-3, verb, func(d []float64, ξ float64) {
+				utmp[0], utmp[1] = u[0], ξ
+				trf.PointAndDerivs(tmp, tmp, d, tmp, nil, nil, nil, nil, nil, nil, utmp)
+			})
+			chk.DerivVecSca(tst, "d²x/drds", tol1, ddxDrs, s, 1e-3, verb, func(d []float64, ξ float64) {
+				utmp[0], utmp[1] = u[0], ξ
+				trf.PointAndDerivs(tmp, d, tmp, tmp, nil, nil, nil, nil, nil, nil, utmp)
+			})
+			if verb {
+				io.Pl()
+			}
+		}
+	}
+}
+
+func checkTfiniteDerivs3d(tst *testing.T, trf *Transfinite, rvals, svals, tvals []float64, verb bool, tol0, tol1 float64) {
+	dxDr, dxDs, dxDt := la.NewVector(3), la.NewVector(3), la.NewVector(3)
+	ddxDrr, ddxDss, ddxDtt := la.NewVector(3), la.NewVector(3), la.NewVector(3)
+	ddxDrs, ddxDrt, ddxDst := la.NewVector(3), la.NewVector(3), la.NewVector(3)
+	x, u, utmp := la.NewVector(3), la.NewVector(3), la.NewVector(3)
+	xtmp, dxDrTmp, dxDsTmp, dxDtTmp := la.NewVector(3), la.NewVector(3), la.NewVector(3), la.NewVector(3)
+	for _, t := range tvals {
+		for _, s := range svals {
+			for _, r := range rvals {
+				u[0], u[1], u[2] = r, s, t
+				trf.PointAndDerivs(x, dxDr, dxDs, dxDt, ddxDrr, ddxDss, ddxDtt, ddxDrs, ddxDrt, ddxDst, u)
+				chk.DerivVecSca(tst, "dx/dr   ", tol0, dxDr, r, 1e-3, verb, func(xx []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = ξ, u[1], u[2]
+					trf.Point(xx, utmp)
+				})
+				chk.DerivVecSca(tst, "dx/ds   ", tol0, dxDs, s, 1e-3, verb, func(xx []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = u[0], ξ, u[2]
+					trf.Point(xx, utmp)
+				})
+				chk.DerivVecSca(tst, "dx/dt   ", tol0, dxDt, t, 1e-3, verb, func(xx []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = u[0], u[1], ξ
+					trf.Point(xx, utmp)
+				})
+				chk.DerivVecSca(tst, "d²x/dr² ", tol1, ddxDrr, r, 1e-3, verb, func(d []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = ξ, u[1], u[2]
+					trf.PointAndDerivs(xtmp, d, dxDsTmp, dxDtTmp, nil, nil, nil, nil, nil, nil, utmp)
+				})
+				chk.DerivVecSca(tst, "d²x/ds² ", tol1, ddxDss, s, 1e-3, verb, func(d []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = u[0], ξ, u[2]
+					trf.PointAndDerivs(xtmp, dxDrTmp, d, dxDtTmp, nil, nil, nil, nil, nil, nil, utmp)
+				})
+				chk.DerivVecSca(tst, "d²x/dt² ", tol1, ddxDtt, t, 1e-3, verb, func(d []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = u[0], u[1], ξ
+					trf.PointAndDerivs(xtmp, dxDrTmp, dxDsTmp, d, nil, nil, nil, nil, nil, nil, utmp)
+				})
+				chk.DerivVecSca(tst, "d²x/drds", tol1, ddxDrs, s, 1e-3, verb, func(d []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = u[0], ξ, u[2]
+					trf.PointAndDerivs(xtmp, d, dxDsTmp, dxDtTmp, nil, nil, nil, nil, nil, nil, utmp)
+				})
+				chk.DerivVecSca(tst, "d²x/drdt", tol1, ddxDrt, t, 1e-3, verb, func(d []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = u[0], u[1], ξ
+					trf.PointAndDerivs(xtmp, d, dxDsTmp, dxDtTmp, nil, nil, nil, nil, nil, nil, utmp)
+				})
+				chk.DerivVecSca(tst, "d²x/dsdt", tol1, ddxDst, t, 1e-3, verb, func(d []float64, ξ float64) {
+					utmp[0], utmp[1], utmp[2] = u[0], u[1], ξ
+					trf.PointAndDerivs(xtmp, dxDrTmp, d, dxDtTmp, nil, nil, nil, nil, nil, nil, utmp)
+				})
+				if verb {
+					io.Pl()
+				}
+			}
+		}
+	}
+}
+
 // check NURBS derivatives /////////////////////////////////////////////////////////////////////////
 
 func checkNurbsBasisDerivs(tst *testing.T, b *Nurbs, npts int, tol float64, verb bool) {

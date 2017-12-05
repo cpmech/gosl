@@ -1038,3 +1038,22 @@ func (o *Transfinite) Draw(npts []int, onlyBry bool, args, argsBry *plt.A) {
 		plt.Plot3dLine(x1, y1, z1, args)
 	}
 }
+
+// DrawArrows2d draw arrows defined by {dxdr, dxds}
+func (o *Transfinite) DrawArrows2d(rvals, svals []float64, scale float64, argsR, argsS *plt.A) {
+	if argsR == nil {
+		argsR = &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10}
+	}
+	if argsS == nil {
+		argsS = &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10}
+	}
+	x, u, dxDr, dxDs := la.NewVector(2), la.NewVector(2), la.NewVector(2), la.NewVector(2)
+	for _, s := range svals {
+		for _, r := range rvals {
+			u[0], u[1] = r, s
+			o.PointAndDerivs(x, dxDr, dxDs, nil, nil, nil, nil, nil, nil, nil, u)
+			plt.DrawArrow2d(x, dxDr, true, scale, argsR)
+			plt.DrawArrow2d(x, dxDs, true, scale, argsS)
+		}
+	}
+}
