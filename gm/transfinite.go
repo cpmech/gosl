@@ -1042,10 +1042,10 @@ func (o *Transfinite) Draw(npts []int, onlyBry bool, args, argsBry *plt.A) {
 // DrawArrows2d draw arrows defined by {dxdr, dxds}
 func (o *Transfinite) DrawArrows2d(rvals, svals []float64, scale float64, argsR, argsS *plt.A) {
 	if argsR == nil {
-		argsR = &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10}
+		argsR = &plt.A{C: plt.C(0, 0), Scale: 7, Z: 10, NoClip: true}
 	}
 	if argsS == nil {
-		argsS = &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10}
+		argsS = &plt.A{C: plt.C(1, 0), Scale: 7, Z: 10, NoClip: true}
 	}
 	x, u, dxDr, dxDs := la.NewVector(2), la.NewVector(2), la.NewVector(2), la.NewVector(2)
 	for _, s := range svals {

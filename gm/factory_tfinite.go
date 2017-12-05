@@ -96,8 +96,19 @@ func (o facTfinite) Surf2dQuad(A, B, C, D []float64) (surf *Transfinite) {
 }
 
 // Surf2dQuarterRing generates a transfinite mapping of a quarter of a ring centered @ (0,0)
-//   a -- inner radius
-//   b -- outer radius
+//
+//      ,- ,
+//    B3|    ' ,B1       B0(s)
+//      |        ,       B1(s)
+//      ''-.B0    ,      B2(r)
+//          \      ,     B3(r)
+//      .    |_B2__,
+//      |←a →|
+//      |←    b   →|
+//
+//      a -- inner radius
+//      b -- outer radius
+//
 func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 
 	π := math.Pi
@@ -175,6 +186,115 @@ func (o facTfinite) Surf2dQuarterRing(a, b float64) (surf *Transfinite) {
 			θ := π * (1.0 + s) / 4.0
 			ddxdss[0] = -b * math.Cos(θ) * π * π / 16.0
 			ddxdss[1] = -b * math.Sin(θ) * π * π / 16.0
+		},
+
+		// d²B[2]/dr²
+		func(ddxdrr la.Vector, r float64) {
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+		},
+
+		// d²B[3]/dr²
+		func(ddxdrr la.Vector, r float64) {
+			ddxdrr[0] = 0.0
+			ddxdrr[1] = 0.0
+		},
+	})
+	return
+}
+
+// Surf2dHalfRing generates a transfinite mapping of a half of a ring centered @ (0,0)
+//
+//                 B1
+//               , - - ,
+//           , '         ' ,        B0(s)
+//         ,       B0        ,      B1(s)
+//        ,      .-'''-.      ,     B2(r)
+//       ,      /       \      ,    B3(r)
+//       ,_B3__|    .    |_B2__,
+//                  |←a →|
+//                  |←    b   →|
+//
+//      a -- inner radius
+//      b -- outer radius
+//
+func (o facTfinite) Surf2dHalfRing(a, b float64) (surf *Transfinite) {
+
+	π := math.Pi
+	surf = NewTransfinite2d([]fun.Vs{
+
+		// B[0](s)
+		func(x la.Vector, s float64) { // s ϵ [-1,+1]
+			θ := π * (s + 1.0) / 2.0
+			x[0] = a * math.Cos(θ)
+			x[1] = a * math.Sin(θ)
+		},
+
+		// B[1](s)
+		func(x la.Vector, s float64) { // s ϵ [-1,+1]
+			θ := π * (s + 1.0) / 2.0
+			x[0] = b * math.Cos(θ)
+			x[1] = b * math.Sin(θ)
+		},
+
+		// B[2](r)
+		func(x la.Vector, r float64) { // r ϵ [-1,+1]
+			x[0] = a + (b-a)*(r+1.0)/2.0
+			x[1] = 0.0
+		},
+
+		// B[3](r)
+		func(x la.Vector, r float64) { // r ϵ [-1,+1]
+			x[0] = -a - (b-a)*(r+1.0)/2.0
+			x[1] = 0.0
+		},
+
+		// first order derivatives
+
+	}, []fun.Vs{
+
+		// dB[0]/ds
+		func(dxds la.Vector, s float64) {
+			θ := π * (s + 1.0) / 2.0
+			dxds[0] = -a * math.Sin(θ) * π / 2.0
+			dxds[1] = +a * math.Cos(θ) * π / 2.0
+		},
+
+		// dB[1]/ds
+		func(dxds la.Vector, s float64) {
+			θ := π * (s + 1.0) / 2.0
+			dxds[0] = -b * math.Sin(θ) * π / 2.0
+			dxds[1] = +b * math.Cos(θ) * π / 2.0
+		},
+
+		// dB[2]/dr
+		func(dxdr la.Vector, r float64) {
+			dxdr[0] = (b - a) / 2.0
+			dxdr[1] = 0.0
+		},
+
+		// dB[3]/dr
+		func(dxdr la.Vector, r float64) {
+			dxdr[0] = -(b - a) / 2.0
+			dxdr[1] = 0.0
+		},
+
+		// second order derivatives
+
+	}, []fun.Vs{
+
+		// d²B[0]/ds²
+		func(ddxdss la.Vector, s float64) {
+			θ := π * (s + 1.0) / 2.0
+			ddxdss[0] = -a * math.Cos(θ) * π * π / 4.0
+			ddxdss[1] = -a * math.Sin(θ) * π * π / 4.0
+		},
+
+		// d²B[1]/ds²
+		func(ddxdss la.Vector, s float64) {
+			θ := π * (s + 1.0) / 2.0
+			ddxdss[0] = -b * math.Cos(θ) * π * π / 4.0
+			ddxdss[1] = -b * math.Sin(θ) * π * π / 4.0
 		},
 
 		// d²B[2]/dr²

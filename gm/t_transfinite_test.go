@@ -432,3 +432,31 @@ func TestTransfinite06(tst *testing.T) {
 		plt.Save("/tmp/gosl/gm", "transfinite06")
 	}
 }
+
+func TestTransfinite07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Transfinite07. 2d half ring")
+
+	// new mapping
+	rin, rou := 2.0, 6.0 // radii
+	trf := FactoryTfinite.Surf2dHalfRing(rin, rou)
+
+	// check derivs
+	rvals := utl.LinSpace(-1, 1, 7)
+	svals := utl.LinSpace(-1, 1, 7)
+	checkTfiniteDerivs2d(tst, trf, rvals, svals, chk.Verbose, 1e-8, 1e-8)
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
+		trf.Draw([]int{21, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
+		plt.Arc(0, 0, rin, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
+		plt.Arc(0, 0, rou, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
+		trf.DrawArrows2d(rvals, svals, 0.5, nil, nil)
+		plt.HideAllBorders()
+		plt.Equal()
+		plt.AxisRange(-6.5, 6.5, -2, 6)
+		plt.Save("/tmp/gosl/gm", "transfinite07")
+	}
+}
