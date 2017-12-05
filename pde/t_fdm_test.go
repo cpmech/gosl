@@ -72,10 +72,10 @@ func TestFdm02(tst *testing.T) {
 	s := NewFdmLaplacian(p, g, nil)
 
 	// essential boundary conditions
-	s.AddBc(true, 10, 1.0, nil) // left
-	s.AddBc(true, 11, 2.0, nil) // right
-	s.AddBc(true, 20, 1.0, nil) // bottom
-	s.AddBc(true, 21, 2.0, nil) // top
+	s.AddEbc(10, 1.0, nil) // left
+	s.AddEbc(11, 2.0, nil) // right
+	s.AddEbc(20, 1.0, nil) // bottom
+	s.AddEbc(21, 2.0, nil) // top
 
 	// set equations and assemble A matrix
 	reactions := true
@@ -122,10 +122,10 @@ func TestFdm02(tst *testing.T) {
 	// solve again without reactions
 	reactions = false
 	sNoreact := NewFdmLaplacian(p, g, nil)
-	sNoreact.AddBc(true, 10, 1.0, nil) // left
-	sNoreact.AddBc(true, 11, 2.0, nil) // right
-	sNoreact.AddBc(true, 20, 1.0, nil) // bottom
-	sNoreact.AddBc(true, 21, 2.0, nil) // top
+	sNoreact.AddEbc(10, 1.0, nil) // left
+	sNoreact.AddEbc(11, 2.0, nil) // right
+	sNoreact.AddEbc(20, 1.0, nil) // bottom
+	sNoreact.AddEbc(21, 2.0, nil) // top
 	sNoreact.Assemble(reactions)
 	uNoreact, fNoreact := sNoreact.SolveSteady(reactions)
 	io.Pf("uNoreact = %v\n", uNoreact)
@@ -166,11 +166,8 @@ func TestFdm03(tst *testing.T) {
 		return 14.0*yyy - (16.0-12.0*x)*yy - (-42.0*xx+54.0*x-2.0)*y + 4.0*xxx - 16.0*xx + 12.0*x
 	})
 
-	// essential boundary conditions
-	s.AddBc(true, 10, 0.0, nil) // left
-	s.AddBc(true, 11, 0.0, nil) // right
-	s.AddBc(true, 20, 0.0, nil) // bottom
-	s.AddBc(true, 21, 0.0, nil) // top
+	// homogeneous boundary conditions
+	s.SetHbc()
 
 	// set equations and assemble A matrix
 	reactions := false

@@ -48,18 +48,30 @@ func NewFdmLaplacian(params dbf.Params, grid *gm.Grid, source fun.Svs) (o *FdmLa
 	return
 }
 
-// AddBc adds essential or natural boundary condition
-//   essential -- essential BC; otherwise natural boundary condition
-//   tag       -- edge or face tag in grid
-//   cvalue    -- constant value [optional]; or
-//   fvalue    -- function value [optional]
-func (o *FdmLaplacian) AddBc(essential bool, tag int, cvalue float64, fvalue fun.Svs) {
+// AddEbc adds essential boundary condition given tag of edge or face
+//   tag    -- edge or face tag in grid
+//   cvalue -- constant value [optional]; or
+//   fvalue -- function value [optional]
+func (o *FdmLaplacian) AddEbc(tag int, cvalue float64, fvalue fun.Svs) {
 	o.bcsReady = false
-	if essential {
-		o.EssenBcs.AddUsingTag(tag, 0, cvalue, fvalue)
+	o.EssenBcs.AddUsingTag(tag, 0, cvalue, fvalue)
+}
+
+// SetHbc sets homogeneous boundary conditions; i.e. all boundaries with zero EBC
+func (o *FdmLaplacian) SetHbc() {
+	if o.Grid.Ndim() == 2 {
+		o.AddEbc(10, 0.0, nil)
+		o.AddEbc(11, 0.0, nil)
+		o.AddEbc(20, 0.0, nil)
+		o.AddEbc(21, 0.0, nil)
 		return
 	}
-	chk.Panic("TODO: Implement natural boundary condition\n")
+	o.AddEbc(100, 0.0, nil)
+	o.AddEbc(101, 0.0, nil)
+	o.AddEbc(200, 0.0, nil)
+	o.AddEbc(201, 0.0, nil)
+	o.AddEbc(300, 0.0, nil)
+	o.AddEbc(301, 0.0, nil)
 }
 
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
