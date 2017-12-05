@@ -12,6 +12,7 @@ import (
 	"github.com/cpmech/gosl/gm"
 	"github.com/cpmech/gosl/gm/msh"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
 
@@ -111,8 +112,8 @@ func TestEssentialBcs02(tst *testing.T) {
 
 	// essential boundary conditions
 	e := NewEssentialBcsMesh(m, 2)
-	e.AddUsingTag(10, 0, 123.0, nil) // left ⇒ 0:ux
-	e.AddUsingTag(20, 1, 456.0, nil) // bottom ⇒ 1:uy
+	e.AddUsingTag(10, 0, 0, func(x la.Vector, t float64) float64 { return 123 })        // left ⇒ 0:ux
+	e.AddUsingTag(20, 1, 0, func(x la.Vector, t float64) float64 { return 100 + x[0] }) // bottom ⇒ 1:uy
 
 	// print bcs
 	io.Pf("%v\n", e.Print())
@@ -134,7 +135,7 @@ func TestEssentialBcs02(tst *testing.T) {
 		}
 	}
 	chk.Array(tst, "vals0", 1e-14, vals0, []float64{123, -1, -1, 123, -1, -1, 123, -1, -1})
-	chk.Array(tst, "vals1", 1e-14, vals1, []float64{456, 456, 456, -1, -1, -1, -1, -1, -1})
+	chk.Array(tst, "vals1", 1e-14, vals1, []float64{100, 101, 102, -1, -1, -1, -1, -1, -1})
 
 	// plot
 	if chk.Verbose {
