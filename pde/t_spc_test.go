@@ -98,7 +98,7 @@ func TestSpc02(tst *testing.T) {
 	s.AddBc(true, 20, 1.0, nil) // bottom
 	s.AddBc(true, 21, 2.0, nil) // top
 
-	// set equationa and assemble A matrix
+	// set equations and assemble A matrix
 	reactions := true
 	s.Assemble(reactions)
 
@@ -181,7 +181,7 @@ func TestSpc03(tst *testing.T) {
 	s.AddBc(true, 20, 0.0, nil) // bottom
 	s.AddBc(true, 21, 0.0, nil) // top
 
-	// set equationa and assemble A matrix
+	// set equations and assemble A matrix
 	reactions := false
 	s.Assemble(reactions)
 
