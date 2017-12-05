@@ -18,10 +18,10 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-func TestSpc01(tst *testing.T) {
+func TestSpc01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Spc01. Auu matrix after homogeneous bcs")
+	chk.PrintTitle("Spc01a. Auu matrix after homogeneous bcs")
 
 	// lagrange interpolators (5x5 grid)
 	l := fun.NewLagIntSet(2, []int{4, 4}, []string{"cgl", "cgl"})
@@ -69,6 +69,13 @@ func TestSpc01(tst *testing.T) {
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/pde", "spc01")
 	}
+}
+
+func TestSpc01b(tst *testing.T) {
+	//verbose()
+	chk.PrintTitle("Spc01b. panic on params")
+	defer chk.RecoverTstPanicIsOK(tst)
+	NewSpcLaplacian(nil, nil, nil, nil)
 }
 
 func TestSpc02(tst *testing.T) {

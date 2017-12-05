@@ -15,10 +15,10 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
-func TestFdm01(tst *testing.T) {
+func TestFdm01a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Fdm01. Full Auu matrix.")
+	chk.PrintTitle("Fdm01a. Full Auu matrix.")
 
 	// 3x3 grid ⇒ 9 equations
 	g := new(gm.Grid)
@@ -44,6 +44,13 @@ func TestFdm01(tst *testing.T) {
 		{+0, +0, +0, +0, +2, +0, +1, -4, +1}, // 7
 		{+0, +0, +0, +0, +0, +2, +0, +2, -4}, // 8
 	})
+}
+
+func TestFdm01b(tst *testing.T) {
+	//verbose()
+	chk.PrintTitle("Fdm01b. panic on params")
+	defer chk.RecoverTstPanicIsOK(tst)
+	NewFdmLaplacian(nil, nil, nil)
 }
 
 func TestFdm02(tst *testing.T) {
@@ -138,5 +145,60 @@ func TestFdm02(tst *testing.T) {
 		plt.Gll("$x$", "$y$", nil)
 		plt.HideAllBorders()
 		plt.Save("/tmp/gosl/pde", "fdm02")
+	}
+}
+
+func TestFdm03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Fdm03. ZZ p1342 Example 2")
+
+	// 5x5 grid ⇒ 25 equations
+	g := new(gm.Grid)
+	g.RectGenUniform([]float64{0, 0}, []float64{1, 1}, []int{5, 5})
+
+	// solver
+	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	s := NewFdmLaplacian(p, g, func(X la.Vector, t float64) float64 {
+		x, y := X[0], X[1]
+		xx, yy := x*x, y*x
+		xxx, yyy := xx*x, yy*y
+		return 14.0*yyy - (16.0-12.0*x)*yy - (-42.0*xx+54.0*x-2.0)*y + 4.0*xxx - 16.0*xx + 12.0*x
+	})
+
+	// essential boundary conditions
+	s.AddBc(true, 10, 0.0, nil) // left
+	s.AddBc(true, 11, 0.0, nil) // right
+	s.AddBc(true, 20, 0.0, nil) // bottom
+	s.AddBc(true, 21, 0.0, nil) // top
+
+	// set equations and assemble A matrix
+	reactions := false
+	s.Assemble(reactions)
+
+	// solve
+	u, _ := s.SolveSteady(reactions)
+
+	// check
+	ana := func(X []float64) float64 {
+		x, y := X[0], X[1]
+		return x * (1.0 - x) * y * (1.0 - y) * (1.0 + 2.0*x + 7.0*y)
+	}
+	for n := 0; n < g.Npts(1); n++ {
+		for m := 0; m < g.Npts(0); m++ {
+			chk.AnaNum(tst, "u", 0.021, u[g.IndexMNPtoI(m, n, 0)], ana(g.X(m, n, 0)), chk.Verbose)
+		}
+	}
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		uu := g.MapMeshgrid2d(u)
+		x2d, y2d := g.Meshgrid2d()
+		plt.Equal()
+		plt.ContourF(x2d, y2d, uu, nil)
+		plt.Gll("$x$", "$y$", nil)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/pde", "fdm03")
 	}
 }
