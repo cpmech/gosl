@@ -44,6 +44,11 @@ func TestBryConds01(tst *testing.T) {
 	// print bcs
 	io.Pf("%v\n", e.Print())
 
+	// check n2i                      0  1  2  3   4   5  6   7   8
+	chk.Ints(tst, "n2i", e.n2i, []int{0, 3, 4, 1, -1, -1, 2, -1, -1})
+	chk.Ints(tst, "tags", e.tags, []int{20, 10, 10, 20, 20}) // note that tag@0 changes from 10 to 20
+	chk.Int(tst, "len(fcns)", len(e.fcns), 5)
+
 	// check
 	nodes := e.Nodes()
 	chk.Ints(tst, "nodes", nodes, []int{0, 1, 2, 3, 6})
@@ -118,6 +123,11 @@ func TestBryConds02(tst *testing.T) {
 	// print bcs
 	io.Pf("%v\n", e.Print())
 
+	// check n2i                      0  1  2  3   4   5  6   7   8
+	chk.Ints(tst, "n2i", e.n2i, []int{0, 3, 4, 1, -1, -1, 2, -1, -1})
+	chk.Ints(tst, "tags", e.tags, []int{20, 10, 10, 20, 20})
+	chk.Int(tst, "len(fcns)", len(e.fcns), 5)
+
 	// check
 	nodes := e.Nodes()
 	chk.Ints(tst, "nodes", nodes, []int{0, 1, 2, 3, 6})
@@ -184,6 +194,6 @@ func TestBryConds05(tst *testing.T) {
 	defer chk.RecoverTstPanicIsOK(tst)
 
 	e := new(BoundaryConds)
-	e.maxNdof = 1
+	e.ndof = 1
 	e.AddUsingTag(0, 0, 0, nil)
 }

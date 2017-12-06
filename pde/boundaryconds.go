@@ -5,6 +5,8 @@
 package pde
 
 import (
+	"sort"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/gm"
@@ -16,34 +18,31 @@ import (
 
 // BoundaryConds holds data for prescribing a SET of boundary conditions
 type BoundaryConds struct {
-	all     [][]fun.Svs  // [node][dof] function to compute BCs; f({x}, t)
-	grid    *gm.Grid     // using grid
-	mesh    *msh.Mesh    // using mesh
-	maxNdof int          // max number of "degrees-of-freedom" per node
-	nodes   map[int]bool // list of nodes with prescribed boundary conditions
+	grid *gm.Grid    // using grid
+	mesh *msh.Mesh   // using mesh
+	ndof int         // max number of degrees of freedom
+	fcns [][]fun.Svs // [...][dof] function to compute BCs; f({x}, t)
+	tags []int       // [...] tag used to set BC
+	n2i  []int       // [nnodesTotal] maps node ID to position in fcns and tags; -1 means not set
 }
 
 // NewBoundaryCondsGrid returns a new structure using Grid
-//  grid    -- grid
-//  maxNdof -- max number of "degrees-of-freedom" per node
-func NewBoundaryCondsGrid(grid *gm.Grid, maxNdof int) (o *BoundaryConds) {
+func NewBoundaryCondsGrid(grid *gm.Grid, ndof int) (o *BoundaryConds) {
 	o = new(BoundaryConds)
-	o.all = make([][]fun.Svs, grid.Size())
 	o.grid = grid
-	o.maxNdof = maxNdof
-	o.nodes = make(map[int]bool)
+	o.ndof = ndof
+	o.n2i = make([]int, grid.Size())
+	utl.IntFill(o.n2i, -1)
 	return
 }
 
 // NewBoundaryCondsMesh returns a new structure using Mesh
-//  mesh    -- mesh
-//  maxNdof -- max number of "degrees-of-freedom" per node
-func NewBoundaryCondsMesh(mesh *msh.Mesh, maxNdof int) (o *BoundaryConds) {
+func NewBoundaryCondsMesh(mesh *msh.Mesh, ndof int) (o *BoundaryConds) {
 	o = new(BoundaryConds)
-	o.all = make([][]fun.Svs, len(mesh.Verts))
 	o.mesh = mesh
-	o.maxNdof = maxNdof
-	o.nodes = make(map[int]bool)
+	o.ndof = ndof
+	o.n2i = make([]int, len(mesh.Verts))
+	utl.IntFill(o.n2i, -1)
 	return
 }
 
@@ -54,27 +53,20 @@ func NewBoundaryCondsMesh(mesh *msh.Mesh, maxNdof int) (o *BoundaryConds) {
 //   fvalue -- function value [optional]
 func (o *BoundaryConds) AddUsingTag(tag, dof int, cvalue float64, fvalue fun.Svs) {
 
-	// check
-	if dof > o.maxNdof-1 {
-		chk.Panic("cannot set dof=%d because maxNdof=%d\n", dof, o.maxNdof)
-	}
-
-	// function
+	// use or create function
 	f := fvalue
 	if fvalue == nil {
 		f = func(x la.Vector, t float64) float64 { return cvalue }
 	}
 
-	// using grid
+	// grid nodes
 	var nodes []int
 	if o.grid != nil {
 		nodes = o.grid.Boundary(tag)
-	} else {
+	}
 
-		// using mesh
-		if o.mesh == nil {
-			chk.Panic("mesh is required if not using grid\n")
-		}
+	// or mesh nodes
+	if o.mesh != nil {
 		nodes = o.mesh.Boundary(tag)
 	}
 
@@ -85,38 +77,50 @@ func (o *BoundaryConds) AddUsingTag(tag, dof int, cvalue float64, fvalue fun.Svs
 
 	// set
 	for _, n := range nodes {
-		if o.all[n] == nil {
-			o.all[n] = make([]fun.Svs, o.maxNdof)
+		if o.n2i[n] < 0 { // new
+			o.n2i[n] = len(o.fcns)
+			ff := make([]fun.Svs, o.ndof)
+			ff[dof] = f
+			o.fcns = append(o.fcns, ff)
+			o.tags = append(o.tags, tag)
+		} else { // existent
+			o.fcns[o.n2i[n]][dof] = f
+			o.tags[o.n2i[n]] = tag
 		}
-		o.all[n][dof] = f
-		o.nodes[n] = true
 	}
 }
 
 // Nodes returns (unique/sorted) list of nodes with prescribed boundary conditions
-func (o *BoundaryConds) Nodes() []int {
-	return utl.IntBoolMapSort(o.nodes)
+func (o *BoundaryConds) Nodes() (list []int) {
+	list = make([]int, len(o.fcns))
+	for n, i := range o.n2i {
+		if i >= 0 {
+			list[i] = n
+		}
+	}
+	sort.Ints(list)
+	return
 }
 
 // Value returns the value of prescribed boundary condition @ {node,dof,time}
 func (o *BoundaryConds) Value(node, dof int, t float64) (val float64, available bool) {
 
 	// check if available
-	bc := o.all[node]
-	if bc == nil {
+	i := o.n2i[node]
+	if i < 0 {
 		return
 	}
-	if bc[dof] == nil {
+	if o.fcns[i][dof] == nil {
 		return
 	}
 
 	// using grid
 	if o.grid != nil {
-		return bc[dof](o.grid.Node(node), t), true
+		return o.fcns[i][dof](o.grid.Node(node), t), true
 	}
 
 	// using mesh
-	return bc[dof](o.mesh.Verts[node].X, t), true
+	return o.fcns[i][dof](o.mesh.Verts[node].X, t), true
 }
 
 // Print prints boundary conditions
@@ -128,10 +132,10 @@ func (o *BoundaryConds) Print() (l string) {
 	if o.mesh != nil {
 		_, strNid = utl.Digits(len(o.mesh.Verts))
 	}
-	_, strDof := utl.Digits(o.maxNdof)
+	_, strDof := utl.Digits(o.ndof)
 	for _, n := range o.Nodes() {
 		list := ""
-		for dof := 0; dof < o.maxNdof; dof++ {
+		for dof := 0; dof < o.ndof; dof++ {
 			val, available := o.Value(n, dof, 0)
 			if available {
 				list += io.Sf("  dof="+strDof+" value=%g", dof, val)
