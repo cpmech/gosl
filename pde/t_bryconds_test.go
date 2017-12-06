@@ -16,10 +16,10 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
-func TestEssentialBcs01(tst *testing.T) {
+func TestBryConds01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("EssentialBcs01. Using Grid")
+	chk.PrintTitle("BryConds01. Using Grid")
 
 	// grid             [21]
 	//          6         7         8
@@ -64,10 +64,10 @@ func TestEssentialBcs01(tst *testing.T) {
 	chk.Array(tst, "vals1", 1e-14, vals1, []float64{456, 456, 456, -1, -1, -1, -1, -1, -1})
 }
 
-func TestEssentialBcs02(tst *testing.T) {
+func TestBryConds02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("EssentialBcs02. Using Mesh")
+	chk.PrintTitle("BryConds02. Using Mesh")
 
 	// mesh             [21]
 	//          6         7         8
@@ -150,10 +150,10 @@ func TestEssentialBcs02(tst *testing.T) {
 	}
 }
 
-func TestEssentialBcs03(tst *testing.T) {
+func TestBryConds03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("EssentialBcs03. panic in AddUsingTag. wrong dof")
+	chk.PrintTitle("BryConds03. panic in AddUsingTag. wrong dof")
 
 	defer chk.RecoverTstPanicIsOK(tst)
 
@@ -163,10 +163,10 @@ func TestEssentialBcs03(tst *testing.T) {
 	e.AddUsingTag(20, 2, 456.0, nil) // 2:wrong dof
 }
 
-func TestEssentialBcs04(tst *testing.T) {
+func TestBryConds04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("EssentialBcs04. panic in AddUsingTag. wrong tag")
+	chk.PrintTitle("BryConds04. panic in AddUsingTag. wrong tag")
 
 	defer chk.RecoverTstPanicIsOK(tst)
 
@@ -176,10 +176,10 @@ func TestEssentialBcs04(tst *testing.T) {
 	e.AddUsingTag(200, 1, 456.0, nil) // 200:wrong tag
 }
 
-func TestEssentialBcs05(tst *testing.T) {
+func TestBryConds05(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("EssentialBcs05. panic in AddUsingTag. no grid, no mesh")
+	chk.PrintTitle("BryConds05. panic in AddUsingTag. no grid, no mesh")
 
 	defer chk.RecoverTstPanicIsOK(tst)
 
