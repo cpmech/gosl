@@ -37,7 +37,7 @@ func TestEssentialBcs01(tst *testing.T) {
 	g.RectGenUniform([]float64{0, 0}, []float64{2, 2}, []int{3, 3}) // 3x3 grid ⇒ 9 equations
 
 	// essential boundary conditions
-	e := NewEssentialBcsGrid(g, 2)
+	e := NewBoundaryCondsGrid(g, 2)
 	e.AddUsingTag(10, 0, 123.0, nil) // left ⇒ 0:ux
 	e.AddUsingTag(20, 1, 456.0, nil) // bottom ⇒ 1:uy
 
@@ -111,7 +111,7 @@ func TestEssentialBcs02(tst *testing.T) {
 	m.CheckAndCalcDerivedVars()
 
 	// essential boundary conditions
-	e := NewEssentialBcsMesh(m, 2)
+	e := NewBoundaryCondsMesh(m, 2)
 	e.AddUsingTag(10, 0, 0, func(x la.Vector, t float64) float64 { return 123 })        // left ⇒ 0:ux
 	e.AddUsingTag(20, 1, 0, func(x la.Vector, t float64) float64 { return 100 + x[0] }) // bottom ⇒ 1:uy
 
@@ -159,7 +159,7 @@ func TestEssentialBcs03(tst *testing.T) {
 
 	g := new(gm.Grid)
 	g.RectGenUniform([]float64{0, 0}, []float64{2, 2}, []int{3, 3}) // 3x3 grid ⇒ 9 equations
-	e := NewEssentialBcsGrid(g, 2)
+	e := NewBoundaryCondsGrid(g, 2)
 	e.AddUsingTag(20, 2, 456.0, nil) // 2:wrong dof
 }
 
@@ -172,7 +172,7 @@ func TestEssentialBcs04(tst *testing.T) {
 
 	g := new(gm.Grid)
 	g.RectGenUniform([]float64{0, 0}, []float64{2, 2}, []int{3, 3}) // 3x3 grid ⇒ 9 equations
-	e := NewEssentialBcsGrid(g, 2)
+	e := NewBoundaryCondsGrid(g, 2)
 	e.AddUsingTag(200, 1, 456.0, nil) // 200:wrong tag
 }
 
@@ -183,7 +183,7 @@ func TestEssentialBcs05(tst *testing.T) {
 
 	defer chk.RecoverTstPanicIsOK(tst)
 
-	e := new(EssentialBcs)
+	e := new(BoundaryConds)
 	e.maxNdof = 1
 	e.AddUsingTag(0, 0, 0, nil)
 }

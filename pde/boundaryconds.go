@@ -14,8 +14,8 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// EssentialBcs holds data for prescribing a SET of essential (Dirichlet) boundary conditions
-type EssentialBcs struct {
+// BoundaryConds holds data for prescribing a SET of boundary conditions
+type BoundaryConds struct {
 	all     [][]fun.Svs  // [node][dof] function to compute BCs; f({x}, t)
 	grid    *gm.Grid     // using grid
 	mesh    *msh.Mesh    // using mesh
@@ -23,11 +23,11 @@ type EssentialBcs struct {
 	nodes   map[int]bool // list of nodes with prescribed boundary conditions
 }
 
-// NewEssentialBcsGrid returns a new EssentialBcs structure using Grid
+// NewBoundaryCondsGrid returns a new structure using Grid
 //  grid    -- grid
 //  maxNdof -- max number of "degrees-of-freedom" per node
-func NewEssentialBcsGrid(grid *gm.Grid, maxNdof int) (o *EssentialBcs) {
-	o = new(EssentialBcs)
+func NewBoundaryCondsGrid(grid *gm.Grid, maxNdof int) (o *BoundaryConds) {
+	o = new(BoundaryConds)
 	o.all = make([][]fun.Svs, grid.Size())
 	o.grid = grid
 	o.maxNdof = maxNdof
@@ -35,11 +35,11 @@ func NewEssentialBcsGrid(grid *gm.Grid, maxNdof int) (o *EssentialBcs) {
 	return
 }
 
-// NewEssentialBcsMesh returns a new EssentialBcs structure using Mesh
+// NewBoundaryCondsMesh returns a new structure using Mesh
 //  mesh    -- mesh
 //  maxNdof -- max number of "degrees-of-freedom" per node
-func NewEssentialBcsMesh(mesh *msh.Mesh, maxNdof int) (o *EssentialBcs) {
-	o = new(EssentialBcs)
+func NewBoundaryCondsMesh(mesh *msh.Mesh, maxNdof int) (o *BoundaryConds) {
+	o = new(BoundaryConds)
 	o.all = make([][]fun.Svs, len(mesh.Verts))
 	o.mesh = mesh
 	o.maxNdof = maxNdof
@@ -52,7 +52,7 @@ func NewEssentialBcsMesh(mesh *msh.Mesh, maxNdof int) (o *EssentialBcs) {
 //   dof    -- index of "degree-of-freedom"; e.g. 0⇒horizontal displacement, 1⇒vertical displacement
 //   cvalue -- constant value [optional]; or
 //   fvalue -- function value [optional]
-func (o *EssentialBcs) AddUsingTag(tag, dof int, cvalue float64, fvalue fun.Svs) {
+func (o *BoundaryConds) AddUsingTag(tag, dof int, cvalue float64, fvalue fun.Svs) {
 
 	// check
 	if dof > o.maxNdof-1 {
@@ -94,12 +94,12 @@ func (o *EssentialBcs) AddUsingTag(tag, dof int, cvalue float64, fvalue fun.Svs)
 }
 
 // Nodes returns (unique/sorted) list of nodes with prescribed boundary conditions
-func (o *EssentialBcs) Nodes() []int {
+func (o *BoundaryConds) Nodes() []int {
 	return utl.IntBoolMapSort(o.nodes)
 }
 
 // Value returns the value of prescribed boundary condition @ {node,dof,time}
-func (o *EssentialBcs) Value(node, dof int, t float64) (val float64, available bool) {
+func (o *BoundaryConds) Value(node, dof int, t float64) (val float64, available bool) {
 
 	// check if available
 	bc := o.all[node]
@@ -120,7 +120,7 @@ func (o *EssentialBcs) Value(node, dof int, t float64) (val float64, available b
 }
 
 // Print prints boundary conditions
-func (o *EssentialBcs) Print() (l string) {
+func (o *BoundaryConds) Print() (l string) {
 	var strNid string
 	if o.grid != nil {
 		_, strNid = utl.Digits(o.grid.Size())

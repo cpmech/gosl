@@ -19,14 +19,14 @@ import (
 //              ∂x²        ∂y²        ∂z²
 //
 type FdmLaplacian struct {
-	Kx       float64       // isotropic coefficient x
-	Ky       float64       // isotropic coefficient y
-	Kz       float64       // isotropic coefficient z
-	Grid     *gm.Grid      // grid
-	Source   fun.Svs       // source term function s({x},t)
-	EssenBcs *EssentialBcs // essential boundary conditions
-	Eqs      *la.Equations // equations
-	bcsReady bool          // boundary conditions are set
+	Kx       float64        // isotropic coefficient x
+	Ky       float64        // isotropic coefficient y
+	Kz       float64        // isotropic coefficient z
+	Grid     *gm.Grid       // grid
+	Source   fun.Svs        // source term function s({x},t)
+	EssenBcs *BoundaryConds // essential boundary conditions
+	Eqs      *la.Equations  // equations
+	bcsReady bool           // boundary conditions are set
 }
 
 // NewFdmLaplacian creates a new FDM Laplacian operator with given parameters
@@ -43,7 +43,7 @@ func NewFdmLaplacian(params dbf.Params, grid *gm.Grid, source fun.Svs) (o *FdmLa
 	}
 	o.Grid = grid
 	o.Source = source
-	o.EssenBcs = NewEssentialBcsGrid(grid, 1) // 1:maxNdof
+	o.EssenBcs = NewBoundaryCondsGrid(grid, 1) // 1:maxNdof
 	o.bcsReady = false
 	return
 }

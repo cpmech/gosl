@@ -21,12 +21,12 @@ import (
 //    with a=u[0]=r and b=u[1]=s
 //
 type SpcLaplacian struct {
-	LagInt   fun.LagIntSet // Lagrange interpolators [ndim]
-	Grid     *gm.Grid      // grid
-	Source   fun.Svs       // source term function s({x},t)
-	EssenBcs *EssentialBcs // essential boundary conditions
-	Eqs      *la.Equations // equations
-	bcsReady bool          // boundary conditions are set
+	LagInt   fun.LagIntSet  // Lagrange interpolators [ndim]
+	Grid     *gm.Grid       // grid
+	Source   fun.Svs        // source term function s({x},t)
+	EssenBcs *BoundaryConds // essential boundary conditions
+	Eqs      *la.Equations  // equations
+	bcsReady bool           // boundary conditions are set
 }
 
 // NewSpcLaplacian creates a new SPC Laplacian operator with given parameters
@@ -36,7 +36,7 @@ func NewSpcLaplacian(params dbf.Params, lis fun.LagIntSet, grid *gm.Grid, source
 	o.LagInt = lis
 	o.Grid = grid
 	o.Source = source
-	o.EssenBcs = NewEssentialBcsGrid(grid, 1) // 1:maxNdof
+	o.EssenBcs = NewBoundaryCondsGrid(grid, 1) // 1:maxNdof
 	o.bcsReady = false
 	return
 }
