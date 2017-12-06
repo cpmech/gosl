@@ -568,6 +568,7 @@ func TestGrid05(tst *testing.T) {
 		gp := GridPlotter{G: g, WithVids: true}
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
 		trf.Draw([]int{11, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
+		gp.Draw()
 		gp.Bases(0.15)
 		plt.HideAllBorders()
 		plt.Equal()
@@ -684,6 +685,7 @@ func TestGrid06(tst *testing.T) {
 		gp := GridPlotter{G: g, WithVids: true}
 		plt.Reset(true, &plt.A{WidthPt: 400})
 		trf.Draw([]int{5, 5, 11}, true, &plt.A{C: "#7d8891"}, &plt.A{C: plt.C(3, 9), Lw: 2})
+		gp.Draw()
 		gp.Bases(0.20)
 		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
 		plt.Save("/tmp/gosl/gm", "grid06")
