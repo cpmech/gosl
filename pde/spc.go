@@ -98,9 +98,11 @@ func (o *SpcLaplacian) Assemble(reactions bool) {
 	if o.Grid.Ndim() == 2 {
 		for p := 0; p < nx; p++ {
 			for q := 0; q < ny; q++ {
+				I := ι(p, q)
 				for m := 0; m < nx; m++ {
 					for n := 0; n < ny; n++ {
-						o.Eqs.Put(ι(p, q), ι(m, n), 0+
+						J := ι(m, n)
+						o.Eqs.Put(I, J, 0+
 							D2a(p, m)*δ(q, n)*g(0, 0, p, q)+
 							δ(p, m)*D2b(q, n)*g(1, 1, p, q)+
 							D1a(p, m)*D1b(q, n)*2.0*g(0, 1, p, q)+
