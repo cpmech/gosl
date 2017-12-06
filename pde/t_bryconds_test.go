@@ -52,12 +52,14 @@ func TestBryConds01(tst *testing.T) {
 	// check
 	nodes := e.Nodes()
 	chk.Ints(tst, "nodes", nodes, []int{0, 1, 2, 3, 6})
+	tags0 := make([]int, 9)
+	tags1 := make([]int, 9)
 	vals0 := make([]float64, 9)
 	vals1 := make([]float64, 9)
 	var available0, available1 bool
 	for n := 0; n < 9; n++ {
-		vals0[n], available0 = e.Value(n, 0, 0)
-		vals1[n], available1 = e.Value(n, 1, 0)
+		tags0[n], vals0[n], available0 = e.Value(n, 0, 0)
+		tags1[n], vals1[n], available1 = e.Value(n, 1, 0)
 		if !available0 {
 			vals0[n] = -1
 		}
@@ -65,6 +67,8 @@ func TestBryConds01(tst *testing.T) {
 			vals1[n] = -1
 		}
 	}
+	chk.Ints(tst, "tags0", tags0, []int{20, 0, 0, 10, 0, 0, 10, 0, 0})
+	chk.Ints(tst, "tags1", tags1, []int{20, 20, 20, 0, 0, 0, 0, 0, 0})
 	chk.Array(tst, "vals0", 1e-14, vals0, []float64{123, -1, -1, 123, -1, -1, 123, -1, -1})
 	chk.Array(tst, "vals1", 1e-14, vals1, []float64{456, 456, 456, -1, -1, -1, -1, -1, -1})
 }
@@ -131,12 +135,14 @@ func TestBryConds02(tst *testing.T) {
 	// check
 	nodes := e.Nodes()
 	chk.Ints(tst, "nodes", nodes, []int{0, 1, 2, 3, 6})
+	tags0 := make([]int, 9)
+	tags1 := make([]int, 9)
 	vals0 := make([]float64, 9)
 	vals1 := make([]float64, 9)
 	var available0, available1 bool
 	for n := 0; n < 9; n++ {
-		vals0[n], available0 = e.Value(n, 0, 0)
-		vals1[n], available1 = e.Value(n, 1, 0)
+		tags0[n], vals0[n], available0 = e.Value(n, 0, 0)
+		tags1[n], vals1[n], available1 = e.Value(n, 1, 0)
 		if !available0 {
 			vals0[n] = -1
 		}
@@ -144,6 +150,8 @@ func TestBryConds02(tst *testing.T) {
 			vals1[n] = -1
 		}
 	}
+	chk.Ints(tst, "tags0", tags0, []int{20, 0, 0, 10, 0, 0, 10, 0, 0})
+	chk.Ints(tst, "tags1", tags1, []int{20, 20, 20, 0, 0, 0, 0, 0, 0})
 	chk.Array(tst, "vals0", 1e-14, vals0, []float64{123, -1, -1, 123, -1, -1, 123, -1, -1})
 	chk.Array(tst, "vals1", 1e-14, vals1, []float64{100, 101, 102, -1, -1, -1, -1, -1, -1})
 

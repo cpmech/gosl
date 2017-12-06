@@ -148,7 +148,7 @@ func (o *FdmLaplacian) SolveSteady(reactions bool) (u, f []float64) {
 //  I -- node number
 //  t -- time
 func (o *FdmLaplacian) calcXk(I int, t float64) float64 {
-	val, available := o.EssenBcs.Value(I, 0, t)
+	_, val, available := o.EssenBcs.Value(I, 0, t)
 	if available {
 		return val
 	}

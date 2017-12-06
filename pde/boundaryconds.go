@@ -103,7 +103,7 @@ func (o *BoundaryConds) Nodes() (list []int) {
 }
 
 // Value returns the value of prescribed boundary condition @ {node,dof,time}
-func (o *BoundaryConds) Value(node, dof int, t float64) (val float64, available bool) {
+func (o *BoundaryConds) Value(node, dof int, t float64) (tag int, val float64, available bool) {
 
 	// check if available
 	i := o.n2i[node]
@@ -116,11 +116,11 @@ func (o *BoundaryConds) Value(node, dof int, t float64) (val float64, available 
 
 	// using grid
 	if o.grid != nil {
-		return o.fcns[i][dof](o.grid.Node(node), t), true
+		return o.tags[i], o.fcns[i][dof](o.grid.Node(node), t), true
 	}
 
 	// using mesh
-	return o.fcns[i][dof](o.mesh.Verts[node].X, t), true
+	return o.tags[i], o.fcns[i][dof](o.mesh.Verts[node].X, t), true
 }
 
 // Print prints boundary conditions
@@ -136,9 +136,9 @@ func (o *BoundaryConds) Print() (l string) {
 	for _, n := range o.Nodes() {
 		list := ""
 		for dof := 0; dof < o.ndof; dof++ {
-			val, available := o.Value(n, dof, 0)
+			tag, val, available := o.Value(n, dof, 0)
 			if available {
-				list += io.Sf("  dof="+strDof+" value=%g", dof, val)
+				list += io.Sf("  dof="+strDof+" tag=%3d value=%g", dof, tag, val)
 			}
 		}
 		l += io.Sf("node = "+strNid+list+"\n", n)
