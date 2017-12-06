@@ -852,6 +852,82 @@ func (o *Grid) Boundary(tag int) []int {
 	return o.EdgeGivenTag(tag)
 }
 
+// UnitNormal computes the unit normal vector at an edge or face defined by "tag" and
+// at a node specified by index "I".
+//
+//  Input:
+//    tag -- tag of edge or face; see EdgeGivenTag() or FaceGivenTag()
+//    I   -- node index; see IndexMNPtoI() [must be a node on boundary; otherwise, panic]
+//  Output:
+//    N -- unit normal vector
+//
+//  NOTE: this function does not check whether point I is on the selected edge or not
+//
+func (o *Grid) UnitNormal(N la.Vector, tag, I int) {
+	for i := 0; i < o.ndim; i++ {
+		N[i] = 0.0
+	}
+	m, n, p := o.IndexItoMNP(I)
+	O := o.mtr[p][n][m]
+	if o.ndim == 2 { // set N set as the relevant contravariant vector pointing outwards
+		switch tag {
+		case 10:
+			for i := 0; i < 2; i++ {
+				N[i] -= O.CntGmat.Get(0, 0)*O.CovG0[i] + O.CntGmat.Get(0, 1)*O.CovG1[i]
+			}
+		case 11:
+			for i := 0; i < 2; i++ {
+				N[i] += O.CntGmat.Get(0, 0)*O.CovG0[i] + O.CntGmat.Get(0, 1)*O.CovG1[i]
+			}
+		case 20:
+			for i := 0; i < 2; i++ {
+				N[i] -= O.CntGmat.Get(1, 0)*O.CovG0[i] + O.CntGmat.Get(1, 1)*O.CovG1[i]
+			}
+		case 21:
+			for i := 0; i < 2; i++ {
+				N[i] += O.CntGmat.Get(1, 0)*O.CovG0[i] + O.CntGmat.Get(1, 1)*O.CovG1[i]
+			}
+		}
+	} else {
+		switch tag { // set N as the relevant contravariant vector pointing outwards
+		case 100:
+			for i := 0; i < 3; i++ {
+				N[i] -= O.CntGmat.Get(0, 0)*O.CovG0[i] + O.CntGmat.Get(0, 1)*O.CovG1[i] + O.CntGmat.Get(0, 2)*O.CovG2[i]
+			}
+		case 101:
+			for i := 0; i < 3; i++ {
+				N[i] += O.CntGmat.Get(0, 0)*O.CovG0[i] + O.CntGmat.Get(0, 1)*O.CovG1[i] + O.CntGmat.Get(0, 2)*O.CovG2[i]
+			}
+		case 200:
+			for i := 0; i < 3; i++ {
+				N[i] -= O.CntGmat.Get(1, 0)*O.CovG0[i] + O.CntGmat.Get(1, 1)*O.CovG1[i] + O.CntGmat.Get(1, 2)*O.CovG2[i]
+			}
+		case 201:
+			for i := 0; i < 3; i++ {
+				N[i] += O.CntGmat.Get(1, 0)*O.CovG0[i] + O.CntGmat.Get(1, 1)*O.CovG1[i] + O.CntGmat.Get(1, 2)*O.CovG2[i]
+			}
+		case 300:
+			for i := 0; i < 3; i++ {
+				N[i] -= O.CntGmat.Get(2, 0)*O.CovG0[i] + O.CntGmat.Get(2, 1)*O.CovG1[i] + O.CntGmat.Get(2, 2)*O.CovG2[i]
+			}
+		case 301:
+			for i := 0; i < 3; i++ {
+				N[i] += O.CntGmat.Get(2, 0)*O.CovG0[i] + O.CntGmat.Get(2, 1)*O.CovG1[i] + O.CntGmat.Get(2, 2)*O.CovG2[i]
+			}
+		}
+	}
+	var sum float64
+	for i := 0; i < o.ndim; i++ {
+		sum += N[i] * N[i]
+	}
+	if sum > 0 {
+		for i := 0; i < o.ndim; i++ {
+			N[i] /= math.Sqrt(sum)
+		}
+	}
+	return
+}
+
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
 func (o *Grid) limits() {

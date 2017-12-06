@@ -10,6 +10,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
@@ -141,6 +142,26 @@ func TestGrid01(tst *testing.T) {
 	if g.Boundary(100) != nil {
 		tst.Error("g.Boundary(100) should be nil\n")
 		return
+	}
+
+	// unit normal
+	io.Pl()
+	N := la.NewVector(g.Ndim())
+	for _, I := range []int{0, 5, 15} {
+		g.UnitNormal(N, 10, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{-1, 0})
+	}
+	for _, I := range []int{4, 14, 19} {
+		g.UnitNormal(N, 11, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{+1, 0})
+	}
+	for _, I := range []int{0, 2, 4} {
+		g.UnitNormal(N, 20, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{0, -1})
+	}
+	for _, I := range []int{15, 17, 19} {
+		g.UnitNormal(N, 21, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{0, +1})
 	}
 
 	// plot
@@ -343,6 +364,34 @@ func TestGrid02(tst *testing.T) {
 		return
 	}
 
+	// unit normal
+	io.Pl()
+	N := la.NewVector(g.Ndim())
+	for _, I := range []int{0, 9, 21} {
+		g.UnitNormal(N, 100, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{-1, 0, 0})
+	}
+	for _, I := range []int{2, 14, 23} {
+		g.UnitNormal(N, 101, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{+1, 0, 0})
+	}
+	for _, I := range []int{0, 12, 14} {
+		g.UnitNormal(N, 200, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{0, -1, 0})
+	}
+	for _, I := range []int{9, 21, 23} {
+		g.UnitNormal(N, 201, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{0, +1, 0})
+	}
+	for _, I := range []int{0, 6, 11} {
+		g.UnitNormal(N, 300, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{0, 0, -1})
+	}
+	for _, I := range []int{12, 20, 23} {
+		g.UnitNormal(N, 301, I)
+		chk.Array(tst, "unit normal", 1e-15, N, []float64{0, 0, +1})
+	}
+
 	// plot
 	if chk.Verbose {
 		gp := GridPlotter{G: g, WithVids: true}
@@ -534,6 +583,30 @@ func TestGrid05(tst *testing.T) {
 		}
 	}
 
+	// unit normal
+	io.Pl()
+	N := la.NewVector(g.Ndim())
+	g.UnitNormal(N, 10, 0)
+	chk.Array(tst, "unit normal (0)", 1e-15, N, []float64{-1, 0})
+	g.UnitNormal(N, 10, 10)
+	chk.Array(tst, "unit normal (10)", 1e-15, N, []float64{-1.0 / math.Sqrt2, -1.0 / math.Sqrt2})
+	g.UnitNormal(N, 10, 20)
+	chk.Array(tst, "unit normal (20)", 1e-15, N, []float64{0, -1})
+	g.UnitNormal(N, 11, 4)
+	chk.Array(tst, "unit normal (4)", 1e-15, N, []float64{+1, 0})
+	g.UnitNormal(N, 11, 14)
+	chk.Array(tst, "unit normal (14)", 1e-15, N, []float64{+1.0 / math.Sqrt2, +1.0 / math.Sqrt2})
+	g.UnitNormal(N, 11, 24)
+	chk.Array(tst, "unit normal (24)", 1e-15, N, []float64{0, +1})
+	for _, I := range []int{0, 2, 4} {
+		g.UnitNormal(N, 20, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, -1})
+	}
+	for _, I := range []int{20, 22, 24} {
+		g.UnitNormal(N, 21, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{-1, 0})
+	}
+
 	// check derivatives
 	checkGridTfiniteDerivs2d(tst, trf, g, 1e-10, 1e-9, 1e-8, chk.Verbose)
 
@@ -647,6 +720,55 @@ func TestGrid06(tst *testing.T) {
 				chk.Array(tst, "L", 1e-14, mtr.L, []float64{0, -1.0 / (ρ * A), 0})
 			}
 		}
+	}
+
+	// unit normal
+	dv := 1.0 / math.Sqrt2
+	io.Pl()
+	N := la.NewVector(g.Ndim())
+	// n0-planes
+	for _, I := range []int{0, 15, 24} {
+		g.UnitNormal(N, 100, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{-1, 0, 0})
+	}
+	for _, I := range []int{2, 11, 26} {
+		g.UnitNormal(N, 101, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{+1, 0, 0})
+	}
+	// n1-plane: inner cylindrical face
+	for _, I := range []int{0, 1, 2} {
+		g.UnitNormal(N, 200, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, -1, 0})
+	}
+	for _, I := range []int{9, 10, 11} {
+		g.UnitNormal(N, 200, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, -dv, -dv})
+	}
+	for _, I := range []int{18, 19, 20} {
+		g.UnitNormal(N, 200, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, 0, -1})
+	}
+	// n1-plane: outer cylindrical face
+	for _, I := range []int{6, 7, 8} {
+		g.UnitNormal(N, 201, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, +1, 0})
+	}
+	for _, I := range []int{15, 16, 17} {
+		g.UnitNormal(N, 201, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, +dv, +dv})
+	}
+	for _, I := range []int{24, 25, 26} {
+		g.UnitNormal(N, 201, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, 0, +1})
+	}
+	// n2-planes
+	for _, I := range []int{0, 4, 8} {
+		g.UnitNormal(N, 300, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, 0, -1})
+	}
+	for _, I := range []int{18, 22, 26} {
+		g.UnitNormal(N, 301, I)
+		chk.Array(tst, io.Sf("unit normal (%d)", I), 1e-15, N, []float64{0, -1, 0})
 	}
 
 	// check derivatives
