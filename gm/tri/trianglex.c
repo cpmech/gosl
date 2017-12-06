@@ -86,7 +86,8 @@ void tioalloc(struct triangulateio *t, int npoints, int nsegments, int nregions,
     t->segmentlist       = (int*)malloc(nsegments*2*sizeof(int));
     t->segmentmarkerlist = (int*)malloc(nsegments * sizeof(int));
     t->numberofsegments  = nsegments;
-    for (int i=0; i<nsegments; ++i) {
+    int i;
+    for (i=0; i<nsegments; ++i) {
         t->segmentmarkerlist[i]=0;
     }
 
@@ -112,7 +113,8 @@ int delaunay2d(struct triangulateio *out, int npoints, double *X, double *Y, int
     // set points
 	tin.pointlist = (double*)malloc(npoints*2*sizeof(double));
 	tin.numberofpoints = npoints;
-    for (int i=0; i<npoints; ++i) {
+    int i;
+    for (i=0; i<npoints; ++i) {
         tin.pointlist[0+i*2] = X[i];
         tin.pointlist[1+i*2] = Y[i];
     }
