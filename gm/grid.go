@@ -879,59 +879,65 @@ func (o *Grid) UnitNormal(N la.Vector, tag, I int) {
 		N[i] = 0.0
 	}
 	m, n, p := o.IndexItoMNP(I)
-	O := o.mtr[p][n][m]
+	var sum float64
 	if o.ndim == 2 { // set N set as the relevant contravariant vector pointing outwards
 		switch tag {
 		case 10:
 			for i := 0; i < 2; i++ {
-				N[i] -= O.CntGmat.Get(0, 0)*O.CovG0[i] + O.CntGmat.Get(0, 1)*O.CovG1[i]
+				N[i] = -o.mtr[p][n][m].CntG0[i]
+				sum += N[i] * N[i]
 			}
 		case 11:
 			for i := 0; i < 2; i++ {
-				N[i] += O.CntGmat.Get(0, 0)*O.CovG0[i] + O.CntGmat.Get(0, 1)*O.CovG1[i]
+				N[i] = o.mtr[p][n][m].CntG0[i]
+				sum += N[i] * N[i]
 			}
 		case 20:
 			for i := 0; i < 2; i++ {
-				N[i] -= O.CntGmat.Get(1, 0)*O.CovG0[i] + O.CntGmat.Get(1, 1)*O.CovG1[i]
+				N[i] = -o.mtr[p][n][m].CntG1[i]
+				sum += N[i] * N[i]
 			}
 		case 21:
 			for i := 0; i < 2; i++ {
-				N[i] += O.CntGmat.Get(1, 0)*O.CovG0[i] + O.CntGmat.Get(1, 1)*O.CovG1[i]
+				N[i] = o.mtr[p][n][m].CntG1[i]
+				sum += N[i] * N[i]
 			}
 		}
 	} else {
 		switch tag { // set N as the relevant contravariant vector pointing outwards
 		case 100:
 			for i := 0; i < 3; i++ {
-				N[i] -= O.CntGmat.Get(0, 0)*O.CovG0[i] + O.CntGmat.Get(0, 1)*O.CovG1[i] + O.CntGmat.Get(0, 2)*O.CovG2[i]
+				N[i] = -o.mtr[p][n][m].CntG0[i]
+				sum += N[i] * N[i]
 			}
 		case 101:
 			for i := 0; i < 3; i++ {
-				N[i] += O.CntGmat.Get(0, 0)*O.CovG0[i] + O.CntGmat.Get(0, 1)*O.CovG1[i] + O.CntGmat.Get(0, 2)*O.CovG2[i]
+				N[i] = o.mtr[p][n][m].CntG0[i]
+				sum += N[i] * N[i]
 			}
 		case 200:
 			for i := 0; i < 3; i++ {
-				N[i] -= O.CntGmat.Get(1, 0)*O.CovG0[i] + O.CntGmat.Get(1, 1)*O.CovG1[i] + O.CntGmat.Get(1, 2)*O.CovG2[i]
+				N[i] = -o.mtr[p][n][m].CntG1[i]
+				sum += N[i] * N[i]
 			}
 		case 201:
 			for i := 0; i < 3; i++ {
-				N[i] += O.CntGmat.Get(1, 0)*O.CovG0[i] + O.CntGmat.Get(1, 1)*O.CovG1[i] + O.CntGmat.Get(1, 2)*O.CovG2[i]
+				N[i] = o.mtr[p][n][m].CntG1[i]
+				sum += N[i] * N[i]
 			}
 		case 300:
 			for i := 0; i < 3; i++ {
-				N[i] -= O.CntGmat.Get(2, 0)*O.CovG0[i] + O.CntGmat.Get(2, 1)*O.CovG1[i] + O.CntGmat.Get(2, 2)*O.CovG2[i]
+				N[i] = -o.mtr[p][n][m].CntG2[i]
+				sum += N[i] * N[i]
 			}
 		case 301:
 			for i := 0; i < 3; i++ {
-				N[i] += O.CntGmat.Get(2, 0)*O.CovG0[i] + O.CntGmat.Get(2, 1)*O.CovG1[i] + O.CntGmat.Get(2, 2)*O.CovG2[i]
+				N[i] = o.mtr[p][n][m].CntG2[i]
+				sum += N[i] * N[i]
 			}
 		}
 	}
-	var sum float64
-	for i := 0; i < o.ndim; i++ {
-		sum += N[i] * N[i]
-	}
-	if sum > 0 {
+	if sum > 0 { // normalize
 		for i := 0; i < o.ndim; i++ {
 			N[i] /= math.Sqrt(sum)
 		}
