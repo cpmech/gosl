@@ -25,6 +25,7 @@ type SpcLaplacian struct {
 	Grid     *gm.Grid       // grid
 	Source   fun.Svs        // source term function s({x},t)
 	EssenBcs *BoundaryConds // essential boundary conditions
+	NaturBcs *BoundaryConds // natural boundary conditions
 	Eqs      *la.Equations  // equations
 	bcsReady bool           // boundary conditions are set
 }
@@ -37,6 +38,7 @@ func NewSpcLaplacian(params dbf.Params, lis fun.LagIntSet, grid *gm.Grid, source
 	o.Grid = grid
 	o.Source = source
 	o.EssenBcs = NewBoundaryCondsGrid(grid, 1) // 1:maxNdof
+	o.NaturBcs = NewBoundaryCondsGrid(grid, 1) // 1:maxNdof
 	o.bcsReady = false
 	return
 }
@@ -67,6 +69,15 @@ func (o *SpcLaplacian) SetHbc() {
 	o.AddEbc(301, 0.0, nil)
 }
 
+// AddNbc adds natural boundary condition given tag of edge or face
+//   tag    -- edge or face tag in grid
+//   cvalue -- constant value [optional]; or
+//   fvalue -- function value [optional]
+func (o *SpcLaplacian) AddNbc(tag int, cvalue float64, fvalue fun.Svs) {
+	o.bcsReady = false
+	o.NaturBcs.AddUsingTag(tag, 0, cvalue, fvalue)
+}
+
 // Assemble assembles operator into A matrix from [A] ⋅ {u} = {b}
 //  reactions -- prepare for computation of RHS
 func (o *SpcLaplacian) Assemble(reactions bool) {
@@ -94,20 +105,33 @@ func (o *SpcLaplacian) Assemble(reactions bool) {
 	D1b := func(m, n int) float64 { return o.LagInt[1].D1.Get(m, n) }
 	D2a := func(m, n int) float64 { return o.LagInt[0].D2.Get(m, n) }
 	D2b := func(m, n int) float64 { return o.LagInt[1].D2.Get(m, n) }
+	N := la.NewVector(o.Grid.Ndim())
 	o.Eqs.Start()
 	if o.Grid.Ndim() == 2 {
 		for p := 0; p < nx; p++ {
 			for q := 0; q < ny; q++ {
 				I := ι(p, q)
-				for m := 0; m < nx; m++ {
-					for n := 0; n < ny; n++ {
-						J := ι(m, n)
-						o.Eqs.Put(I, J, 0+
-							D2a(p, m)*δ(q, n)*g(0, 0, p, q)+
-							δ(p, m)*D2b(q, n)*g(1, 1, p, q)+
-							D1a(p, m)*D1b(q, n)*2.0*g(0, 1, p, q)+
-							-D1a(p, m)*δ(q, n)*L(0, p, q)+
-							-δ(p, m)*D1b(q, n)*L(1, p, q))
+				if o.NaturBcs.Has(I) {
+					o.NaturBcs.NormalGrid(N, I)
+					α := la.VecDot(N, o.Grid.ContraBasis(p, q, 0, 0)) // n⋅g^0
+					β := la.VecDot(N, o.Grid.ContraBasis(p, q, 0, 1)) // n⋅g^1
+					for m := 0; m < nx; m++ {
+						for n := 0; n < ny; n++ {
+							J := ι(m, n)
+							o.Eqs.Put(I, J, D1a(p, m)*δ(q, n)*α+δ(p, m)*D1b(q, n)*β)
+						}
+					}
+				} else {
+					for m := 0; m < nx; m++ {
+						for n := 0; n < ny; n++ {
+							J := ι(m, n)
+							o.Eqs.Put(I, J, 0+
+								D2a(p, m)*δ(q, n)*g(0, 0, p, q)+
+								δ(p, m)*D2b(q, n)*g(1, 1, p, q)+
+								D1a(p, m)*D1b(q, n)*2.0*g(0, 1, p, q)+
+								-D1a(p, m)*δ(q, n)*L(0, p, q)+
+								-δ(p, m)*D1b(q, n)*L(1, p, q))
+						}
 					}
 				}
 			}

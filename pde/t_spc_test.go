@@ -320,3 +320,62 @@ func TestSpc04(tst *testing.T) {
 		plt.Save("/tmp/gosl/pde", "spc04")
 	}
 }
+
+func TestSpc05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Spc05. Kopriva 7.1.5 p261")
+
+	// Lagrange interpolators
+	lis := fun.NewLagIntSet(2, []int{8, 8}, []string{"cgl", "cgl"})
+
+	// grid
+	r0, rinf := 0.5, 10.0
+	trf := gm.FactoryTfinite.Surf2dHalfRing(r0, rinf)
+	g := new(gm.Grid)
+	g.SetTransfinite2d(trf, lis[0].X, lis[1].X)
+
+	// solver
+	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	s := NewSpcLaplacian(p, lis, g, nil)
+
+	// essential boundary conditions
+	Vinf := 0.5
+	s.AddNbc(10, 0.0, nil) // inner circle
+	s.AddEbc(11, 0.0, func(x la.Vector, t float64) float64 {
+		return Vinf * x[0]
+	}) // outer circle
+	s.AddNbc(20, 0.0, nil) // right horizontal line
+	s.AddNbc(21, 0.0, nil) // left horizontal line
+
+	// solve
+	reactions := false
+	s.Assemble(reactions)
+	u, _ := s.SolveSteady(reactions)
+
+	// check
+	ana := func(x []float64) float64 {
+		r := math.Sqrt(x[0]*x[0] + x[1]*x[1])
+		θ := math.Atan2(x[1], x[0])
+		return Vinf * (r + r0*r0/r) * math.Cos(θ)
+	}
+	for n := 0; n < g.Npts(1); n++ {
+		for m := 0; m < g.Npts(0); m++ {
+			I := g.IndexMNPtoI(m, n, 0)
+			x := g.X(m, n, 0)
+			//chk.PrintAnaNum(io.Sf("u(%5.2f,%5.2f)", x[0], x[1]), 1e-3, u[I], ana(x), chk.Verbose)
+			chk.AnaNum(tst, io.Sf("u(%5.2f,%5.2f)", x[0], x[1]), 0.053, u[I], ana(x), chk.Verbose)
+		}
+	}
+
+	// plot
+	if chk.Verbose && false {
+		gp := gm.GridPlotter{G: g, WithVids: true}
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
+		gp.Draw()
+		plt.Equal()
+		plt.Gll("$x$", "$y$", nil)
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/pde", "spc05")
+	}
+}

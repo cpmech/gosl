@@ -16,6 +16,45 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
+func check3x3grid(tst *testing.T, e *BoundaryConds, checkNormals bool) {
+	chk.Ints(tst, "n2i", e.n2i, []int{0, 3, 4, 1, -1, -1, 2, -1, -1})
+	chk.IntDeep2(tst, "tags", e.tags, [][]int{{10, 20}, {10}, {10}, {20}, {20}})
+	chk.Int(tst, "len(fcns)", len(e.fcns), 5)
+	chk.Ints(tst, "nodes", e.Nodes(), []int{0, 1, 2, 3, 6})
+	tags0 := make([][]int, 9)
+	tags1 := make([][]int, 9)
+	vals0 := make([]float64, 9)
+	vals1 := make([]float64, 9)
+	normals := make([][]float64, 9)
+	N := la.NewVector(2)
+	var available0, available1 bool
+	for n := 0; n < 9; n++ {
+		tags0[n], vals0[n], available0 = e.Value(n, 0, 0)
+		tags1[n], vals1[n], available1 = e.Value(n, 1, 0)
+		if !available0 {
+			vals0[n] = -1
+		}
+		if !available1 {
+			vals1[n] = -1
+		}
+		if checkNormals {
+			e.NormalGrid(N, n)
+			normals[n] = N.GetCopy()
+		}
+	}
+	chk.IntDeep2(tst, "tags0", tags0, [][]int{{10, 20}, {}, {}, {10}, {}, {}, {10}, {}, {}})
+	chk.IntDeep2(tst, "tags1", tags1, [][]int{{10, 20}, {20}, {20}, {}, {}, {}, {}, {}, {}})
+	chk.Array(tst, "vals0", 1e-14, vals0, []float64{123, -1, -1, 123, -1, -1, 123, -1, -1})
+	chk.Array(tst, "vals1", 1e-14, vals1, []float64{100, 101, 102, -1, -1, -1, -1, -1, -1})
+	if checkNormals {
+		chk.Deep2(tst, "normals", 1e-14, normals, [][]float64{
+			{-1, -1}, {0, -1}, {0, -1},
+			{-1, 0}, {0, 0}, {0, 0},
+			{-1, 0}, {0, 0}, {0, 0},
+		})
+	}
+}
+
 func TestBryConds01(tst *testing.T) {
 
 	//verbose()
@@ -38,39 +77,14 @@ func TestBryConds01(tst *testing.T) {
 
 	// essential boundary conditions
 	e := NewBoundaryCondsGrid(g, 2)
-	e.AddUsingTag(10, 0, 123.0, nil) // left ⇒ 0:ux
-	e.AddUsingTag(20, 1, 456.0, nil) // bottom ⇒ 1:uy
+	e.AddUsingTag(10, 0, 123.0, nil)                                                    // left ⇒ 0:ux
+	e.AddUsingTag(20, 1, 0, func(x la.Vector, t float64) float64 { return 100 + x[0] }) // bottom ⇒ 1:uy
 
 	// print bcs
 	io.Pf("%v\n", e.Print())
 
-	// check n2i                      0  1  2  3   4   5  6   7   8
-	chk.Ints(tst, "n2i", e.n2i, []int{0, 3, 4, 1, -1, -1, 2, -1, -1})
-	chk.Ints(tst, "tags", e.tags, []int{20, 10, 10, 20, 20}) // note that tag@0 changes from 10 to 20
-	chk.Int(tst, "len(fcns)", len(e.fcns), 5)
-
 	// check
-	nodes := e.Nodes()
-	chk.Ints(tst, "nodes", nodes, []int{0, 1, 2, 3, 6})
-	tags0 := make([]int, 9)
-	tags1 := make([]int, 9)
-	vals0 := make([]float64, 9)
-	vals1 := make([]float64, 9)
-	var available0, available1 bool
-	for n := 0; n < 9; n++ {
-		tags0[n], vals0[n], available0 = e.Value(n, 0, 0)
-		tags1[n], vals1[n], available1 = e.Value(n, 1, 0)
-		if !available0 {
-			vals0[n] = -1
-		}
-		if !available1 {
-			vals1[n] = -1
-		}
-	}
-	chk.Ints(tst, "tags0", tags0, []int{20, 0, 0, 10, 0, 0, 10, 0, 0})
-	chk.Ints(tst, "tags1", tags1, []int{20, 20, 20, 0, 0, 0, 0, 0, 0})
-	chk.Array(tst, "vals0", 1e-14, vals0, []float64{123, -1, -1, 123, -1, -1, 123, -1, -1})
-	chk.Array(tst, "vals1", 1e-14, vals1, []float64{456, 456, 456, -1, -1, -1, -1, -1, -1})
+	check3x3grid(tst, e, true)
 }
 
 func TestBryConds02(tst *testing.T) {
@@ -127,33 +141,8 @@ func TestBryConds02(tst *testing.T) {
 	// print bcs
 	io.Pf("%v\n", e.Print())
 
-	// check n2i                      0  1  2  3   4   5  6   7   8
-	chk.Ints(tst, "n2i", e.n2i, []int{0, 3, 4, 1, -1, -1, 2, -1, -1})
-	chk.Ints(tst, "tags", e.tags, []int{20, 10, 10, 20, 20})
-	chk.Int(tst, "len(fcns)", len(e.fcns), 5)
-
 	// check
-	nodes := e.Nodes()
-	chk.Ints(tst, "nodes", nodes, []int{0, 1, 2, 3, 6})
-	tags0 := make([]int, 9)
-	tags1 := make([]int, 9)
-	vals0 := make([]float64, 9)
-	vals1 := make([]float64, 9)
-	var available0, available1 bool
-	for n := 0; n < 9; n++ {
-		tags0[n], vals0[n], available0 = e.Value(n, 0, 0)
-		tags1[n], vals1[n], available1 = e.Value(n, 1, 0)
-		if !available0 {
-			vals0[n] = -1
-		}
-		if !available1 {
-			vals1[n] = -1
-		}
-	}
-	chk.Ints(tst, "tags0", tags0, []int{20, 0, 0, 10, 0, 0, 10, 0, 0})
-	chk.Ints(tst, "tags1", tags1, []int{20, 20, 20, 0, 0, 0, 0, 0, 0})
-	chk.Array(tst, "vals0", 1e-14, vals0, []float64{123, -1, -1, 123, -1, -1, 123, -1, -1})
-	chk.Array(tst, "vals1", 1e-14, vals1, []float64{100, 101, 102, -1, -1, -1, -1, -1, -1})
+	check3x3grid(tst, e, false)
 
 	// plot
 	if chk.Verbose {

@@ -22,7 +22,7 @@ type BoundaryConds struct {
 	mesh *msh.Mesh   // using mesh
 	ndof int         // max number of degrees of freedom
 	fcns [][]fun.Svs // [...][dof] function to compute BCs; f({x}, t)
-	tags []int       // [...] tag used to set BC
+	tags [][]int     // [...][3] tag used to set BC; max 3 sides (e.g. corner node)
 	n2i  []int       // [nnodesTotal] maps node ID to position in fcns and tags; -1 means not set
 }
 
@@ -44,6 +44,40 @@ func NewBoundaryCondsMesh(mesh *msh.Mesh, ndof int) (o *BoundaryConds) {
 	o.n2i = make([]int, len(mesh.Verts))
 	utl.IntFill(o.n2i, -1)
 	return
+}
+
+// Has tells whether node has prescribed boundary condition or not
+func (o *BoundaryConds) Has(node int) bool {
+	return o.n2i[node] >= 0
+}
+
+// Tags returns tags used to prescrie boundary condition at node
+// NOTE: returns empty list of node does not have boundary condition
+func (o *BoundaryConds) Tags(node int) []int {
+	if o.n2i[node] < 0 {
+		return nil
+	}
+	return o.tags[o.n2i[node]]
+}
+
+// NormalGrid computes the outward normal at node (summed at corners) [when using Grid only]
+// NOTE: returns zero normal if node doesn't have prescribed condition
+func (o *BoundaryConds) NormalGrid(N la.Vector, node int) {
+	if o.n2i[node] < 0 {
+		N.Fill(0)
+		return
+	}
+	tt := o.tags[o.n2i[node]]
+	o.grid.UnitNormal(N, tt[0], node)
+	if len(tt) > 1 {
+		Ntmp := la.NewVector(o.grid.Ndim())
+		for k := 1; k < len(tt); k++ {
+			o.grid.UnitNormal(Ntmp, tt[k], node)
+			for i := 0; i < o.grid.Ndim(); i++ {
+				N[i] += Ntmp[i]
+			}
+		}
+	}
 }
 
 // AddUsingTag sets boundary condition using edge or face tag from grid or mesh
@@ -82,10 +116,10 @@ func (o *BoundaryConds) AddUsingTag(tag, dof int, cvalue float64, fvalue fun.Svs
 			ff := make([]fun.Svs, o.ndof)
 			ff[dof] = f
 			o.fcns = append(o.fcns, ff)
-			o.tags = append(o.tags, tag)
+			o.tags = append(o.tags, []int{tag})
 		} else { // existent
 			o.fcns[o.n2i[n]][dof] = f
-			o.tags[o.n2i[n]] = tag
+			o.tags[o.n2i[n]] = append(o.tags[o.n2i[n]], tag)
 		}
 	}
 }
@@ -103,7 +137,7 @@ func (o *BoundaryConds) Nodes() (list []int) {
 }
 
 // Value returns the value of prescribed boundary condition @ {node,dof,time}
-func (o *BoundaryConds) Value(node, dof int, t float64) (tag int, val float64, available bool) {
+func (o *BoundaryConds) Value(node, dof int, t float64) (tags []int, val float64, available bool) {
 
 	// check if available
 	i := o.n2i[node]
@@ -136,9 +170,9 @@ func (o *BoundaryConds) Print() (l string) {
 	for _, n := range o.Nodes() {
 		list := ""
 		for dof := 0; dof < o.ndof; dof++ {
-			tag, val, available := o.Value(n, dof, 0)
+			tags, val, available := o.Value(n, dof, 0)
 			if available {
-				list += io.Sf("  dof="+strDof+" tag=%3d value=%g", dof, tag, val)
+				list += io.Sf("  dof="+strDof+" tags=%v value=%g", dof, tags, val)
 			}
 		}
 		l += io.Sf("node = "+strNid+list+"\n", n)
