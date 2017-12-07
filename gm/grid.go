@@ -598,7 +598,7 @@ func (o *Grid) X(m, n, p int) la.Vector {
 	return o.mtr[p][n][m].X
 }
 
-// CovarBasis returns the [k] covariant basis g_{k} = d{x[k]}/d{u[k]} [@ point m,n,p]
+// CovarBasis returns the [k] covariant basis g_{k} = d{x}/d{u[k]} [@ point m,n,p]
 func (o *Grid) CovarBasis(m, n, p, k int) la.Vector {
 	if k == 0 {
 		return o.mtr[p][n][m].CovG0
@@ -607,6 +607,17 @@ func (o *Grid) CovarBasis(m, n, p, k int) la.Vector {
 		return o.mtr[p][n][m].CovG1
 	}
 	return o.mtr[p][n][m].CovG2
+}
+
+// ContraBasis returns the [k] contravariant basis g^{k} = d{u[k]}/d{x} [@ point m,n,p]
+func (o *Grid) ContraBasis(m, n, p, k int) la.Vector {
+	if k == 0 {
+		return o.mtr[p][n][m].CntG0
+	}
+	if k == 1 {
+		return o.mtr[p][n][m].CntG1
+	}
+	return o.mtr[p][n][m].CntG2
 }
 
 // CovarMatrix returns the covariant metrics g_ij = g_i ⋅ g_j [@ point m,n,p]

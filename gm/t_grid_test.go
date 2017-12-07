@@ -59,18 +59,19 @@ func TestGrid01(tst *testing.T) {
 	for _, n := range []int{0, 2} {
 		for _, m := range []int{0, 3} {
 			t := io.Sf("%d,%d,p", m, n)
-			chk.Array(tst, "g0("+t+")", 1e-14, g.CovarBasis(m, n, p, 0), []float64{6, 0}) // (xmax-xmin)/2
-			chk.Array(tst, "g1("+t+")", 1e-14, g.CovarBasis(m, n, p, 1), []float64{0, 3}) // (ymax-ymin)/2
-			chk.Array(tst, "g2("+t+")", 1e-14, g.CovarBasis(m, n, p, 2), nil)
+			chk.Array(tst, "g_0("+t+")", 1e-14, g.CovarBasis(m, n, p, 0), []float64{6, 0}) // (xmax-xmin)/2
+			chk.Array(tst, "g_1("+t+")", 1e-14, g.CovarBasis(m, n, p, 1), []float64{0, 3}) // (ymax-ymin)/2
+			chk.Array(tst, "g_2("+t+")", 1e-14, g.CovarBasis(m, n, p, 2), nil)
 			chk.Deep2(tst, "g_ij("+t+")", 1e-14, g.CovarMatrix(m, n, p).GetDeep2(), [][]float64{
 				{36, 0}, // g0⋅g0 = 6*6
 				{0, 9},  // g1⋅g1 = 3*3
 			})
-			io.Pf("%v\n", g.ContraMatrix(m, n, p).Print(""))
 			chk.Deep2(tst, "g^ij("+t+")", 1e-14, g.ContraMatrix(m, n, p).GetDeep2(), [][]float64{
 				{9.0 / det, -0},
 				{-0, 36.0 / det},
 			})
+			chk.Array(tst, "g^0("+t+")", 1e-14, g.ContraBasis(m, n, p, 0), []float64{6 * 9 / det, 0})
+			chk.Array(tst, "g^1("+t+")", 1e-14, g.ContraBasis(m, n, p, 1), []float64{0, 3 * 36 / det})
 			chk.Float64(tst, "det(g)("+t+")", 1e-14, g.DetCovarMatrix(m, n, p), det)
 			chk.Float64(tst, "Γ("+t+"; 0,0,0)", 1e-14, g.GammaS(m, n, p, 0, 0, 0), 0)
 			chk.Float64(tst, "L("+t+"; 0)", 1e-14, g.Lcoeff(0, 0, 0, 0), 0)
@@ -269,6 +270,9 @@ func TestGrid02(tst *testing.T) {
 					{0, 1.0 / 4.0, 0},
 					{0, 0, 1.0 / 1.0},
 				})
+				chk.Array(tst, "g^0("+t+")", 1e-14, g.ContraBasis(m, n, p, 0), []float64{0.5 / 0.25, 0, 0})
+				chk.Array(tst, "g^1("+t+")", 1e-14, g.ContraBasis(m, n, p, 1), []float64{0, 2 / 4.0, 0})
+				chk.Array(tst, "g^2("+t+")", 1e-14, g.ContraBasis(m, n, p, 2), []float64{0, 0, 1})
 				chk.Float64(tst, "det(g)("+t+")", 1e-14, g.DetCovarMatrix(m, n, p), det)
 				chk.Float64(tst, "Γ("+t+"; 0,0,0)", 1e-14, g.GammaS(m, n, p, 0, 0, 0), 0)
 				chk.Float64(tst, "L("+t+"; 0)", 1e-14, g.Lcoeff(0, 0, 0, 0), 0)
@@ -558,9 +562,9 @@ func TestGrid05(tst *testing.T) {
 			ρ := a + (1.0+mtr.U[0])*A // cylindrical coordinates
 			α := (1.0 + mtr.U[1]) * B // cylindrical coordinates
 			cα, sα := math.Cos(α), math.Sin(α)
-			chk.Array(tst, "x      ", 1e-14, mtr.X, []float64{ρ * cα, ρ * sα})
-			chk.Array(tst, "CovG0  ", 1e-14, mtr.CovG0, []float64{cα * A, sα * A})
-			chk.Array(tst, "CovG1  ", 1e-14, mtr.CovG1, []float64{-ρ * sα * B, ρ * cα * B})
+			chk.Array(tst, "x", 1e-14, mtr.X, []float64{ρ * cα, ρ * sα})
+			chk.Array(tst, "g_0", 1e-14, mtr.CovG0, []float64{cα * A, sα * A})
+			chk.Array(tst, "g_1", 1e-14, mtr.CovG1, []float64{-ρ * sα * B, ρ * cα * B})
 			chk.Deep2(tst, "CovGmat", 1e-14, mtr.CovGmat.GetDeep2(), [][]float64{
 				{A * A, 0.0},
 				{0.0, ρ * ρ * B * B},
@@ -569,6 +573,8 @@ func TestGrid05(tst *testing.T) {
 				{1.0 / (A * A), 0.0},
 				{0.0, 1.0 / (ρ * ρ * B * B)},
 			})
+			chk.Array(tst, "g^0", 1e-14, mtr.CntG0, []float64{cα * A / (A * A), sα * A / (A * A)})
+			chk.Array(tst, "g^1", 1e-14, mtr.CntG1, []float64{-ρ * sα * B / (ρ * ρ * B * B), ρ * cα * B / (ρ * ρ * B * B)})
 			chk.Deep3(tst, "GammaS", 1e-14, mtr.GammaS, [][][]float64{
 				{
 					{0, 0},
@@ -621,9 +627,12 @@ func TestGrid05(tst *testing.T) {
 	chk.Float64(tst, "Xmax(0)", 1e-14, g.Xmax(0), b)
 	chk.Array(tst, "U(0,0,0)", 1e-14, g.U(0, 0, 0), []float64{-1, -1})
 	chk.Array(tst, "X(0,0,0)", 1e-14, g.X(0, 0, 0), []float64{a, 0})
-	chk.Array(tst, "g0(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 0), []float64{A, 0})
-	chk.Array(tst, "g1(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 1), []float64{0, a * B})
-	chk.Array(tst, "g2(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 2), nil)
+	chk.Array(tst, "g_0(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 0), []float64{A, 0})
+	chk.Array(tst, "g_1(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 1), []float64{0, a * B})
+	chk.Array(tst, "g_2(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 2), nil)
+	chk.Array(tst, "g^0(0,0,0)", 1e-14, g.ContraBasis(0, 0, 0, 0), []float64{A / (A * A), 0})
+	chk.Array(tst, "g^1(0,0,0)", 1e-14, g.ContraBasis(0, 0, 0, 1), []float64{0, a * B / (a * a * B * B)})
+	chk.Array(tst, "g^2(0,0,0)", 1e-14, g.ContraBasis(0, 0, 0, 2), nil)
 	chk.Deep2(tst, "g_ij(0,0,0)", 1e-14, g.CovarMatrix(0, 0, 0).GetDeep2(), [][]float64{
 		{A * A, 0},
 		{0, a * a * B * B},
@@ -686,10 +695,10 @@ func TestGrid06(tst *testing.T) {
 				ρ := a + (1.0+mtr.U[1])*A // cylindrical coordinates
 				α := (1.0 + mtr.U[2]) * B // cylindrical coordinates
 				cα, sα := math.Cos(α), math.Sin(α)
-				chk.Array(tst, "x      ", 1e-14, mtr.X, []float64{x0, ρ * cα, ρ * sα})
-				chk.Array(tst, "CovG0  ", 1e-14, mtr.CovG0, []float64{1, 0, 0})
-				chk.Array(tst, "CovG1  ", 1e-14, mtr.CovG1, []float64{0, cα * A, sα * A})
-				chk.Array(tst, "CovG2  ", 1e-14, mtr.CovG2, []float64{0, -ρ * sα * B, ρ * cα * B})
+				chk.Array(tst, "x", 1e-14, mtr.X, []float64{x0, ρ * cα, ρ * sα})
+				chk.Array(tst, "g_0", 1e-14, mtr.CovG0, []float64{1, 0, 0})
+				chk.Array(tst, "g_1", 1e-14, mtr.CovG1, []float64{0, cα * A, sα * A})
+				chk.Array(tst, "g_2", 1e-14, mtr.CovG2, []float64{0, -ρ * sα * B, ρ * cα * B})
 				chk.Deep2(tst, "CovGmat", 1e-14, mtr.CovGmat.GetDeep2(), [][]float64{
 					{1.0, 0.0, 0.0},
 					{0.0, A * A, 0.0},
@@ -700,6 +709,9 @@ func TestGrid06(tst *testing.T) {
 					{0.0, 1.0 / (A * A), 0.0},
 					{0.0, 0.0, 1.0 / (ρ * ρ * B * B)},
 				})
+				chk.Array(tst, "g^0", 1e-14, mtr.CntG0, []float64{1, 0, 0})
+				chk.Array(tst, "g^1", 1e-14, mtr.CntG1, []float64{0, cα * A / (A * A), sα * A / (A * A)})
+				chk.Array(tst, "g^2", 1e-14, mtr.CntG2, []float64{0, -ρ * sα * B / (ρ * ρ * B * B), ρ * cα * B / (ρ * ρ * B * B)})
 				chk.Deep3(tst, "GammaS", 1e-14, mtr.GammaS, [][][]float64{
 					{
 						{0, 0, 0},
@@ -785,9 +797,12 @@ func TestGrid06(tst *testing.T) {
 	chk.Float64(tst, "Xmax(2)", 1e-14, g.Xmax(2), b)
 	chk.Array(tst, "U(0,0,0)", 1e-14, g.U(0, 0, 0), []float64{-1, -1, -1})
 	chk.Array(tst, "X(0,0,0)", 1e-14, g.X(0, 0, 0), []float64{0, a, 0})
-	chk.Array(tst, "g0(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 0), []float64{1, 0, 0})
-	chk.Array(tst, "g1(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 1), []float64{0, A, 0})
-	chk.Array(tst, "g2(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 2), []float64{0, 0, a * B})
+	chk.Array(tst, "g_0(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 0), []float64{1, 0, 0})
+	chk.Array(tst, "g_1(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 1), []float64{0, A, 0})
+	chk.Array(tst, "g_2(0,0,0)", 1e-14, g.CovarBasis(0, 0, 0, 2), []float64{0, 0, a * B})
+	chk.Array(tst, "g^0(0,0,0)", 1e-14, g.ContraBasis(0, 0, 0, 0), []float64{1, 0, 0})
+	chk.Array(tst, "g^1(0,0,0)", 1e-14, g.ContraBasis(0, 0, 0, 1), []float64{0, A / (A * A), 0})
+	chk.Array(tst, "g^2(0,0,0)", 1e-14, g.ContraBasis(0, 0, 0, 2), []float64{0, 0, a * B / (a * a * B * B)})
 	chk.Deep2(tst, "g_ij(0,0,0)", 1e-14, g.CovarMatrix(0, 0, 0).GetDeep2(), [][]float64{
 		{1.0, 0.0, 0.0},
 		{0.0, A * A, 0.0},

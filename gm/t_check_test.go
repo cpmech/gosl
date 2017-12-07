@@ -378,13 +378,12 @@ func checkGridNurbsDerivs2d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol
 			Γ00[0], Γ00[1] = ddx0drr, ddx1drr
 			Γ11[0], Γ11[1] = ddx0dss, ddx1dss
 			Γ01[0], Γ01[1] = ddx0drs, ddx1drs
-			cntG0, cntG1 := mtr.GetContraVectors2d()
-			Γ000 := la.VecDot(Γ00, cntG0)
-			Γ011 := la.VecDot(Γ11, cntG0)
-			Γ001 := la.VecDot(Γ01, cntG0)
-			Γ100 := la.VecDot(Γ00, cntG1)
-			Γ111 := la.VecDot(Γ11, cntG1)
-			Γ101 := la.VecDot(Γ01, cntG1)
+			Γ000 := la.VecDot(Γ00, mtr.CntG0)
+			Γ011 := la.VecDot(Γ11, mtr.CntG0)
+			Γ001 := la.VecDot(Γ01, mtr.CntG0)
+			Γ100 := la.VecDot(Γ00, mtr.CntG1)
+			Γ111 := la.VecDot(Γ11, mtr.CntG1)
+			Γ101 := la.VecDot(Γ01, mtr.CntG1)
 			chk.Deep3(tst, "GammaS", tol3, mtr.GammaS, [][][]float64{
 				{
 					{Γ000, Γ001},
@@ -456,13 +455,12 @@ func checkGridTfiniteDerivs2d(tst *testing.T, trf *Transfinite, g *Grid, tol1, t
 			Γ00[0], Γ00[1] = ddx0drr, ddx1drr
 			Γ11[0], Γ11[1] = ddx0dss, ddx1dss
 			Γ01[0], Γ01[1] = ddx0drs, ddx1drs
-			cntG0, cntG1 := mtr.GetContraVectors2d()
-			Γ000 := la.VecDot(Γ00, cntG0)
-			Γ011 := la.VecDot(Γ11, cntG0)
-			Γ001 := la.VecDot(Γ01, cntG0)
-			Γ100 := la.VecDot(Γ00, cntG1)
-			Γ111 := la.VecDot(Γ11, cntG1)
-			Γ101 := la.VecDot(Γ01, cntG1)
+			Γ000 := la.VecDot(Γ00, mtr.CntG0)
+			Γ011 := la.VecDot(Γ11, mtr.CntG0)
+			Γ001 := la.VecDot(Γ01, mtr.CntG0)
+			Γ100 := la.VecDot(Γ00, mtr.CntG1)
+			Γ111 := la.VecDot(Γ11, mtr.CntG1)
+			Γ101 := la.VecDot(Γ01, mtr.CntG1)
 			chk.Deep3(tst, "GammaS", tol3, mtr.GammaS, [][][]float64{
 				{
 					{Γ000, Γ001},
@@ -614,28 +612,27 @@ func checkGridNurbsDerivs3d(tst *testing.T, nrb *Nurbs, g *Grid, tol1, tol2, tol
 				Γ01[0], Γ01[1], Γ01[2] = ddx0drs, ddx1drs, ddx2drs
 				Γ02[0], Γ02[1], Γ02[2] = ddx0drt, ddx1drt, ddx2drt
 				Γ12[0], Γ12[1], Γ12[2] = ddx0dst, ddx1dst, ddx2dst
-				cntG0, cntG1, cntG2 := mtr.GetContraVectors3d()
 
-				Γ000 := la.VecDot(Γ00, cntG0)
-				Γ011 := la.VecDot(Γ11, cntG0)
-				Γ022 := la.VecDot(Γ22, cntG0)
-				Γ001 := la.VecDot(Γ01, cntG0)
-				Γ002 := la.VecDot(Γ02, cntG0)
-				Γ012 := la.VecDot(Γ12, cntG0)
+				Γ000 := la.VecDot(Γ00, mtr.CntG0)
+				Γ011 := la.VecDot(Γ11, mtr.CntG0)
+				Γ022 := la.VecDot(Γ22, mtr.CntG0)
+				Γ001 := la.VecDot(Γ01, mtr.CntG0)
+				Γ002 := la.VecDot(Γ02, mtr.CntG0)
+				Γ012 := la.VecDot(Γ12, mtr.CntG0)
 
-				Γ100 := la.VecDot(Γ00, cntG1)
-				Γ111 := la.VecDot(Γ11, cntG1)
-				Γ122 := la.VecDot(Γ22, cntG1)
-				Γ101 := la.VecDot(Γ01, cntG1)
-				Γ102 := la.VecDot(Γ02, cntG1)
-				Γ112 := la.VecDot(Γ12, cntG1)
+				Γ100 := la.VecDot(Γ00, mtr.CntG1)
+				Γ111 := la.VecDot(Γ11, mtr.CntG1)
+				Γ122 := la.VecDot(Γ22, mtr.CntG1)
+				Γ101 := la.VecDot(Γ01, mtr.CntG1)
+				Γ102 := la.VecDot(Γ02, mtr.CntG1)
+				Γ112 := la.VecDot(Γ12, mtr.CntG1)
 
-				Γ200 := la.VecDot(Γ00, cntG2)
-				Γ211 := la.VecDot(Γ11, cntG2)
-				Γ222 := la.VecDot(Γ22, cntG2)
-				Γ201 := la.VecDot(Γ01, cntG2)
-				Γ202 := la.VecDot(Γ02, cntG2)
-				Γ212 := la.VecDot(Γ12, cntG2)
+				Γ200 := la.VecDot(Γ00, mtr.CntG2)
+				Γ211 := la.VecDot(Γ11, mtr.CntG2)
+				Γ222 := la.VecDot(Γ22, mtr.CntG2)
+				Γ201 := la.VecDot(Γ01, mtr.CntG2)
+				Γ202 := la.VecDot(Γ02, mtr.CntG2)
+				Γ212 := la.VecDot(Γ12, mtr.CntG2)
 
 				chk.Deep3(tst, "GammaS", tol3, mtr.GammaS, [][][]float64{
 					{
@@ -793,28 +790,27 @@ func checkGridTfiniteDerivs3d(tst *testing.T, trf *Transfinite, g *Grid, tol1, t
 				Γ01[0], Γ01[1], Γ01[2] = ddx0drs, ddx1drs, ddx2drs
 				Γ02[0], Γ02[1], Γ02[2] = ddx0drt, ddx1drt, ddx2drt
 				Γ12[0], Γ12[1], Γ12[2] = ddx0dst, ddx1dst, ddx2dst
-				cntG0, cntG1, cntG2 := mtr.GetContraVectors3d()
 
-				Γ000 := la.VecDot(Γ00, cntG0)
-				Γ011 := la.VecDot(Γ11, cntG0)
-				Γ022 := la.VecDot(Γ22, cntG0)
-				Γ001 := la.VecDot(Γ01, cntG0)
-				Γ002 := la.VecDot(Γ02, cntG0)
-				Γ012 := la.VecDot(Γ12, cntG0)
+				Γ000 := la.VecDot(Γ00, mtr.CntG0)
+				Γ011 := la.VecDot(Γ11, mtr.CntG0)
+				Γ022 := la.VecDot(Γ22, mtr.CntG0)
+				Γ001 := la.VecDot(Γ01, mtr.CntG0)
+				Γ002 := la.VecDot(Γ02, mtr.CntG0)
+				Γ012 := la.VecDot(Γ12, mtr.CntG0)
 
-				Γ100 := la.VecDot(Γ00, cntG1)
-				Γ111 := la.VecDot(Γ11, cntG1)
-				Γ122 := la.VecDot(Γ22, cntG1)
-				Γ101 := la.VecDot(Γ01, cntG1)
-				Γ102 := la.VecDot(Γ02, cntG1)
-				Γ112 := la.VecDot(Γ12, cntG1)
+				Γ100 := la.VecDot(Γ00, mtr.CntG1)
+				Γ111 := la.VecDot(Γ11, mtr.CntG1)
+				Γ122 := la.VecDot(Γ22, mtr.CntG1)
+				Γ101 := la.VecDot(Γ01, mtr.CntG1)
+				Γ102 := la.VecDot(Γ02, mtr.CntG1)
+				Γ112 := la.VecDot(Γ12, mtr.CntG1)
 
-				Γ200 := la.VecDot(Γ00, cntG2)
-				Γ211 := la.VecDot(Γ11, cntG2)
-				Γ222 := la.VecDot(Γ22, cntG2)
-				Γ201 := la.VecDot(Γ01, cntG2)
-				Γ202 := la.VecDot(Γ02, cntG2)
-				Γ212 := la.VecDot(Γ12, cntG2)
+				Γ200 := la.VecDot(Γ00, mtr.CntG2)
+				Γ211 := la.VecDot(Γ11, mtr.CntG2)
+				Γ222 := la.VecDot(Γ22, mtr.CntG2)
+				Γ201 := la.VecDot(Γ01, mtr.CntG2)
+				Γ202 := la.VecDot(Γ02, mtr.CntG2)
+				Γ212 := la.VecDot(Γ12, mtr.CntG2)
 
 				chk.Deep3(tst, "GammaS", tol3, mtr.GammaS, [][][]float64{
 					{

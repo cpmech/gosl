@@ -10,6 +10,6 @@ while true; do
     echo
     #go test -run Nurbs14
     #go test -run TestNurbsMethods01
-    #go test -run TestGrid14
-    go test -run Transfinite07
+    go test -run TestGrid06
+    #go test -run Transfinite07
 done
