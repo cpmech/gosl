@@ -29,5 +29,5 @@ while true; do
     echo
     echo
     echo
-    go run spc_simple01.go
+    go run spc_fdm_simple01.go
 done
