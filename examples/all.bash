@@ -24,6 +24,7 @@ num_deriv01.go
 num_newton01.go
 opt_ipm01.go
 opt_ipm02.go
+plt_bigo.go
 plt_contour01.go
 plt_polygon01.go
 plt_zoomwindow01.go

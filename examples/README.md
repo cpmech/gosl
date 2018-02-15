@@ -19,6 +19,7 @@
 * Lagrange interpolation using Chebyshev points
 * Fourier interpolation
 * Solving ordinary differential equations
+* Plotting Big-O complexity chart
 
 
 
@@ -474,4 +475,14 @@ Source code: <a href="ode_hweq11.go">ode_hweq11.go</a>
 
 <div id="container">
 <p><img src="figs/ode_hweq11.png" width="500"></p>
+</div>
+
+
+
+# Plotting Big-O complexity chart
+
+Source code: <a href="plt_bigo.go">plt_bigo.go</a>
+
+<div id="container">
+<p><img src="figs/plt_bigo.png" width="500"></p>
 </div>
