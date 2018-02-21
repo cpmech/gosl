@@ -292,7 +292,7 @@ func TestGrid02(tst *testing.T) {
 				}
 				M, N, P := g.IndexItoMNP(idx)
 				if M != m || N != n || P != p {
-					tst.Errorf("I to MNP(%d,%d,-1) failed\n", m, n, p)
+					tst.Errorf("I to MNP(%d,%d,%d) failed\n", m, n, p)
 					return
 				}
 				idx++
