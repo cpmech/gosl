@@ -56,7 +56,7 @@ func (o *Mesh) ExtractEdges() (edges EdgesMap) {
 			} else {
 				edge = new(Edge)
 				edge.Verts = make([]*Vertex, nVertsOnEdge)
-				edge.Bdata = []*BoundaryData{&BoundaryData{localEdgeID, cell}}
+				edge.Bdata = []*BoundaryData{{localEdgeID, cell}}
 				for j, lvid := range localVids {
 					edge.Verts[j] = o.Verts[cell.V[lvid]]
 				}

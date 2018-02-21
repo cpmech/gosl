@@ -71,7 +71,7 @@ func Beta(a, b float64) float64 {
 	la, sgnla := math.Lgamma(a)
 	lb, sgnlb := math.Lgamma(b)
 	lc, sgnlc := math.Lgamma(a + b)
-	return float64(sgnla * sgnlb * sgnlc) * math.Exp(la + lb - lc)
+	return float64(sgnla*sgnlb*sgnlc) * math.Exp(la+lb-lc)
 }
 
 // Binomial comptues the binomial coefficient (n k)^T
