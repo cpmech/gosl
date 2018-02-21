@@ -44,7 +44,7 @@ func TestRadau501a(tst *testing.T) {
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 2)
 
 	// check results
-	chk.Float64(tst, "yFin", 2.88898538383e-5, p.Y[0], p.CalcYana(0, p.Xf))
+	chk.Float64(tst, "yFin", 2.889e-5, p.Y[0], p.CalcYana(0, p.Xf))
 
 	// plot
 	if chk.Verbose {
@@ -115,7 +115,7 @@ func TestRadau502(tst *testing.T) {
 	// check saved output
 	chk.Ints(tst, "ss", ss, d.S)
 	chk.Array(tst, "xx", 1e-15, xx, d.X)
-	chk.Array(tst, "yy0", 1e-12, yy0, d.Y[0])
+	chk.Array(tst, "yy0", 1e-11, yy0, d.Y[0])
 	chk.Array(tst, "yy1", 1e-11, yy1, d.Y[1])
 
 	// plot
