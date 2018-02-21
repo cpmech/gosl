@@ -8,7 +8,7 @@
 package dsfmt
 
 /*
-#cgo CFLAGS: -O3 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing --param max-inline-insns-single=1800 -Wall -std=c99 -msse2 -DHAVE_SSE2 -DDSFMT_MEXP=19937
+#cgo CFLAGS: -O3 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing -Wall -std=c99 -msse2 -DHAVE_SSE2 -DDSFMT_MEXP=19937
 #include "connectdsfmt.h"
 */
 import "C"

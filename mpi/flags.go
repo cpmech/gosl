@@ -8,7 +8,7 @@ package mpi
 
 /*
 #cgo CFLAGS: -O2 -I/usr/lib/openmpi/include/openmpi/opal/mca/event/libevent2021/libevent -I/usr/lib/openmpi/include/openmpi/opal/mca/event/libevent2021/libevent/include -I/usr/lib/openmpi/include -I/usr/lib/openmpi/include/openmpi -I/usr/include/openmpi -pthread
-#cgo LDFLAGS: -pthread -Wl,-rpath -Wl,/usr/lib/openmpi/lib -Wl,--enable-new-dtags -L/usr/lib/openmpi/lib -lmpi
+#cgo LDFLAGS: -pthread -L/usr/lib/openmpi/lib -lmpi
 */
 import "C"
 

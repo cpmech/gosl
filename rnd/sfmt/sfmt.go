@@ -8,7 +8,7 @@
 package sfmt
 
 /*
-#cgo CFLAGS: -O3 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing --param max-inline-insns-single=1800 -std=c99 -msse2 -DHAVE_SSE2 -DSFMT_MEXP=19937
+#cgo CFLAGS: -O3 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing -std=c99 -msse2 -DHAVE_SSE2 -DSFMT_MEXP=19937
 // #cgo CFLAGS: -Wall // deactivated since cgo fails with Wunused-variable for SfmtPrintIdString
 #include "connectsfmt.h"
 #ifdef WIN32
