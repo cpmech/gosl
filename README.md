@@ -129,7 +129,7 @@ memory. Be aware of this requirement! In this case, the function is named `Free`
 few sub-packages that use CGO. Also, some objects may need to be initialised before use. In this
 case, functions named `Init` have to be called.
 
-The directories corresponding to each package has a README.md file that should help with
+The directories corresponding to each package have a README.md file that should help with
 understanding the library. Also, there are links to `godoc.org` where all functions, structures, and
 variables are well explained.
 
