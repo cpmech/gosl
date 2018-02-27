@@ -1,12 +1,5 @@
 # Installing Gosl on Windows
 
-Four tools are neccessary/recommended to work with Go/Gosl:
-* Python is used for plotting but the user does not need to explicitly call Python; it
-  is run on the background to generate figures.
-* Lapack and SuiteSparse are required by the Linear Algebra package.
-* Git and Git Bash are convenient to work with Git Version Control System
-* Visual Studio Code (VS-Code) is a great tool to develop Go code (and more).
-
 Below, two options to install Gosl (and Gcc) are presented:
 * __Option A__: Quick install using pre-compiled code (Windows 10 Installer)
 * __Option B__: Installing from sources (i.e. compiling Lapack and SuiteSparse)
@@ -54,9 +47,14 @@ Also the environment variables can be replaced as desired.
 
 ## [Option B] Installing from Sources
 
-Skip these steps if you have used the _installer_ already.
+Four tools are neccessary/recommended to work with Go/Gosl:
+* Python is used for plotting but the user does not need to explicitly call Python; it
+  is run on the background to generate figures.
+* Lapack and SuiteSparse are required by the Linear Algebra package.
+* Git and Git Bash are convenient to work with Git Version Control System
+* Visual Studio Code (VS-Code) is a great tool to develop Go code (and more).
 
-*NOTE*: Git Bash is required for the commands below. Thus, see the section on installing Git and Bash above.
+*NOTE*: Git Bash is required for the commands below. Thus, see the section above regarding the installation of Git and Bash.
 
 ### Install Go and Set Environment Variable
 
