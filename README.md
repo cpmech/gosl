@@ -107,8 +107,8 @@ _rnd/dsfmt_. Help to compile these packages in all platforms is much welcome and
 1. `t_something_test.go` is a **unit test**. We have several of them! Some usage
    information can be learned from these files.
 2. `t_something_main.go` is a test with a main function to be run with `go run ...` or `mpirun -np ? go
-   run ...` (replace ? with the number of cpus). There very few of these files.
-3. `t_b_something_test.go` is a benchmark test. There a few of them. Run benchmarks with `go test -run=XXX -bench=.`
+   run ...` (replace ? with the number of cpus).
+3. `t_b_something_test.go` is a benchmark test. Run benchmarks with `go test -run=XXX -bench=.`
 
 
 
