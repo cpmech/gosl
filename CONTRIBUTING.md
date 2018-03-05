@@ -30,7 +30,8 @@ a pull request.
 14. Add more probability distributions to `rnd`
 15. Wrapp more VTK classes in `vtk`
 16. Implement multistep ODE solves in `ode`
-17. Finalise and publish package `pde`
+17. Finalise and publish package `pde` (Partial Differential Equations)
+18. Finalise and publish package `ml` (Machine Learning)
 
 ## Code of Conduct
 
