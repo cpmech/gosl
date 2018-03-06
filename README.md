@@ -59,6 +59,13 @@ Gosl includes the following _packages_:
 23. [vtk](https://github.com/cpmech/gosl/tree/master/vtk)             &ndash; 3D Visualisation with the VTK tool kit
 24. [ode](https://github.com/cpmech/gosl/tree/master/ode)             &ndash; Solvers for ordinary differential equations
 
+We are currently working on the following additional packages:
+25. ml - Machine learning algorithms
+26. pde - Solvers for partial differential equations (FDM, Spectral, FEM)
+27. tsr - Tensors, continuum mechanics, and tensor algebra (eigendyads)
+28. img - Image and machine learning algorithms for images
+29. img/ocv - Wrapper to OpenCV
+
 
 
 ## Examples
