@@ -60,11 +60,13 @@ Gosl includes the following _packages_:
 24. [ode](https://github.com/cpmech/gosl/tree/master/ode)             &ndash; Solvers for ordinary differential equations
 
 We are currently working on the following additional packages:
-25. ml - Machine learning algorithms
-26. pde - Solvers for partial differential equations (FDM, Spectral, FEM)
-27. tsr - Tensors, continuum mechanics, and tensor algebra (eigendyads)
-28. img - Image and machine learning algorithms for images
-29. img/ocv - Wrapper to OpenCV
+<ol start="25">
+<li>ml - Machine learning algorithms</li>
+<li>pde - Solvers for partial differential equations (FDM, Spectral, FEM)</li>
+<li>tsr - Tensors, continuum mechanics, and tensor algebra (eigendyads)</li>
+<li>img - Image and machine learning algorithms for images</li>
+<li>img/ocv - Wrapper to OpenCV</li>
+</ol>
 
 
 
