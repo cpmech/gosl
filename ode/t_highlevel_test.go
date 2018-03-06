@@ -21,7 +21,7 @@ func TestHL01(tst *testing.T) {
 	// constants
 	T := 6.6632868593231301896996820305
 	A := 2.00861986087484313650940188
-	y := la.Vector([]float64{A, 0})
+	y := la.NewVectorSlice([]float64{A, 0})
 	xf := T
 	dx := 0.1
 

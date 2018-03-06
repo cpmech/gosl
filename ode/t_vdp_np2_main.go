@@ -71,7 +71,7 @@ func main() {
 	// initial values
 	xb := 2.0
 	ndim := 2
-	y := la.Vector([]float64{2.0, -0.6})
+	y := la.NewVectorSlice([]float64{2.0, -0.6})
 
 	// configurations
 	conf := ode.NewConfig("radau5", "", comm)

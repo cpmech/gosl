@@ -28,7 +28,7 @@ func main() {
 	}
 
 	var t la.Triplet
-	b := la.Vector([]float64{8.0, 45.0, -3.0, 3.0, 19.0})
+	b := la.NewVectorSlice([]float64{8.0, 45.0, -3.0, 3.0, 19.0})
 	switch comm.Size() {
 	case 1:
 		t.Init(5, 5, 13)
@@ -83,6 +83,6 @@ func main() {
 	tst := new(testing.T)
 
 	bIsDistr := true
-	xCorrect := la.Vector([]float64{1, 2, 3, 4, 5})
+	xCorrect := la.NewVectorSlice([]float64{1, 2, 3, 4, 5})
 	la.TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-14, false, bIsDistr, comm)
 }

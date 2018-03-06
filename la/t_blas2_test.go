@@ -23,7 +23,7 @@ func TestBlas2tst01(tst *testing.T) {
 		{0, +0, +1, 0, 0},
 		{0, +4, +2, 0, 1},
 	})
-	x := Vector([]float64{1, 2, 3, 4, 5})
+	x := NewVectorSlice([]float64{1, 2, 3, 4, 5})
 
 	// MatVecMul
 	r := NewVector(5)
@@ -100,8 +100,8 @@ func TestBlas2tst03(tst *testing.T) {
 		{1, 2, +0, 4, -1},
 		{4, 0, +3, 1, +1},
 	})
-	u := Vector([]float64{1, 2, 3, 4, 5})
-	v := Vector([]float64{1, 2, 3, 4})
+	u := NewVectorSlice([]float64{1, 2, 3, 4, 5})
+	v := NewVectorSlice([]float64{1, 2, 3, 4})
 
 	// MatVecMul
 	x := NewVector(4)

@@ -17,6 +17,13 @@ func NewVector(m int) Vector {
 	return make([]float64, m)
 }
 
+// NewVectorSlice returns a new vector from given Slice
+// NOTE: This is equivalent to cast a slice to Vector as in:
+//    v := la.Vector([]float64{1,2,3})
+func NewVectorSlice(v []float64) Vector {
+	return Vector(v)
+}
+
 // NewVectorMapped returns a new vector after applying a function over all of its components
 //  new: vi = f(i)
 func NewVectorMapped(m int, f func(i int) float64) (o Vector) {

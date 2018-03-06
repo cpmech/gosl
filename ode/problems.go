@@ -147,7 +147,7 @@ func ProbHwEq11() (o *Problem) {
 	λ := -50.0
 	o.Dx = 1.875 / 50.0
 	o.Xf = 1.5
-	o.Y = la.Vector([]float64{0.0})
+	o.Y = la.NewVectorSlice([]float64{0.0})
 	o.Ndim = len(o.Y)
 
 	o.Yana = func(res []float64, x float64) {
@@ -176,7 +176,7 @@ func ProbVanDerPol(eps float64, stationary bool) (o *Problem) {
 
 	o = new(Problem)
 	o.Xf = 2.0
-	o.Y = la.Vector([]float64{2.0, -0.6})
+	o.Y = la.NewVectorSlice([]float64{2.0, -0.6})
 	o.Ndim = len(o.Y)
 
 	if eps < 1e-16 {
@@ -215,7 +215,7 @@ func ProbRobertson() (o *Problem) {
 
 	o = new(Problem)
 	o.Xf = 0.3
-	o.Y = la.Vector([]float64{1.0, 0.0, 0.0})
+	o.Y = la.NewVectorSlice([]float64{1.0, 0.0, 0.0})
 	o.Ndim = len(o.Y)
 
 	o.Fcn = func(f la.Vector, dx, x float64, y la.Vector) {
@@ -259,7 +259,7 @@ func ProbHwAmplifier() (o *Problem) {
 	w := 2.0 * 3.141592654 * 100.0
 
 	// initial values
-	o.Y = la.Vector([]float64{
+	o.Y = la.NewVectorSlice([]float64{
 		0.0,
 		ub,
 		ub / (r6/r5 + 1.0),
@@ -340,7 +340,7 @@ func ProbHwAmplifier() (o *Problem) {
 func ProbArenstorf() (o *Problem) {
 	o = new(Problem)
 	o.Xf = 17.0652165601579625588917206249
-	o.Y = la.Vector([]float64{
+	o.Y = la.NewVectorSlice([]float64{
 		0.994,
 		0.0,
 		0.0,
@@ -374,7 +374,7 @@ func ProbSimpleNdim2() (o *Problem) {
 		f[0] = +y[0] - y[1] + 2.0
 		f[1] = -y[0] + y[1] + 4.0*x
 	}
-	o.Y = la.Vector([]float64{-1.0, 0.0})
+	o.Y = la.NewVectorSlice([]float64{-1.0, 0.0})
 	o.Ndim = len(o.Y)
 	o.Dx = 0.1
 	o.Xf = 1.0
@@ -396,7 +396,7 @@ func ProbSimpleNdim4a() (o *Problem) {
 		f[2] = 2.0 * x * y[3]
 		f[3] = -2.0 * x * (y[2] - 1)
 	}
-	o.Y = la.Vector([]float64{1, 1, 1, 1})
+	o.Y = la.NewVectorSlice([]float64{1, 1, 1, 1})
 	o.Ndim = len(o.Y)
 	o.Dx = 0.1
 	o.Xf = 2.8
@@ -424,7 +424,7 @@ func ProbSimpleNdim4b() (o *Problem) {
 			chk.Panic("y0 and y1 cannot be negative\n")
 		}
 	}
-	o.Y = la.Vector([]float64{1, 1, 1, 1})
+	o.Y = la.NewVectorSlice([]float64{1, 1, 1, 1})
 	o.Ndim = len(o.Y)
 	o.Dx = 0.1
 	o.Xf = 2.8

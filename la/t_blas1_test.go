@@ -18,16 +18,16 @@ func TestBlas1tst01(tst *testing.T) {
 	chk.PrintTitle("Blas1tst01. (real) Blas1 functions")
 
 	// VecRmsError
-	u := Vector([]float64{1, 2, 3})
-	v := Vector([]float64{3, 2, 1})
-	s := Vector([]float64{-1, -1, -1})
+	u := NewVectorSlice([]float64{1, 2, 3})
+	v := NewVectorSlice([]float64{3, 2, 1})
+	s := NewVectorSlice([]float64{-1, -1, -1})
 	a, m := 1.0, 1.0
 	rms := VecRmsError(u, v, a, m, s)
 	chk.Float64(tst, "rms", 1e-17, rms, math.Sqrt(2.0/3.0))
 
 	// VecDot
-	U := Vector([]float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16})
-	V := Vector([]float64{16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1})
+	U := NewVectorSlice([]float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16})
+	V := NewVectorSlice([]float64{16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1})
 	chk.Float64(tst, "u・v", 1e-17, VecDot(u, v), 10.0)
 	chk.Float64(tst, "U・V", 1e-17, VecDot(U, V), 816.0)
 

@@ -47,7 +47,7 @@ func main() {
 	xf := 0.05
 
 	// initial values
-	y := la.Vector([]float64{0.0,
+	y := la.NewVectorSlice([]float64{0.0,
 		ub,
 		ub / (r6/r5 + 1.0),
 		ub / (r6/r5 + 1.0),
