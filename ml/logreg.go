@@ -23,7 +23,7 @@ func NewLogReg(data *RegData) (o *LogReg) {
 	return
 }
 
-// Model implements the model equation: xᵀθ
+// Model implements the model equation: logistic(xᵀθ)
 //   x -- [nFeatures] x-values
 //   θ -- [1+nFeatures] parameters
 func (o *LogReg) Model(x, θ la.Vector) float64 {
