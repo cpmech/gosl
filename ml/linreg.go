@@ -50,8 +50,9 @@ func (o *LinReg) Deriv(dCdθ la.Vector, data *RegData) {
 	la.MatTrVecMul(dCdθ, 1.0/float64(data.m), data.x, o.e)
 }
 
-// CalcTheta calculates θ using anlalytical solution
+// CalcTheta calculates θ using the analytical solution
 //   Solve:  XᵀX θ = Xᵀy
+//   TODO: handle pseudo-inverse cases
 func (o *LinReg) CalcTheta(data *RegData) {
 	XtX := la.NewMatrix(data.n, data.n)
 	la.MatTrMatMul(XtX, 1, data.x, data.x)
