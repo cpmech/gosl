@@ -55,7 +55,7 @@ func (o *GradDesc) Run(data *RegData, reg Regression, θini []float64) {
 	} else {
 		data.θ.Apply(1, θini)
 	}
-	dCdθ := la.NewVector(data.m)
+	dCdθ := la.NewVector(data.n)
 	for o.Niter = 0; o.Niter < o.maxIter; o.Niter++ {
 		reg.Deriv(dCdθ, data)
 		la.VecAdd(data.θ, 1, data.θ, -o.α, dCdθ)
