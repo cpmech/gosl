@@ -6,7 +6,9 @@ More information is available in **[the documentation of this package](https://g
 
 Package `ml` implements functions to develop Machine Learning algorithms.
 
-[Draft documentation](https://github.com/cpmech/gosl/blob/master/doc/machlearn.pdf)
+## White papers
+
+1. [Machine Learning](https://github.com/cpmech/gosl/blob/master/doc/machlearn.pdf)
 
 ## TODO
 
