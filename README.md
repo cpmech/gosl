@@ -25,10 +25,10 @@ differential equations.
 <p><a href="examples/figs/gosl-collage1.jpg"><img src="examples/figs/gosl-collage1-sml.png"></a></p>
 </div>
 
-[See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
+1. [White papers available here](https://github.com/cpmech/gosl/tree/master/doc)
+2. [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
 functions and use structures).
-
-[Welcome to contributing](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md) + TODO list.
+3. [Welcome to contributing](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md) + TODO list.
 
 
 ## Contents
