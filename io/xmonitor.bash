@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="texpdf01"
+    go test -test.run="ReadMatrix01"
 done

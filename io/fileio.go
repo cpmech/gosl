@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/cpmech/gosl/chk"
@@ -252,6 +253,10 @@ func ReadMatrix(fn string) (M [][]float64) {
 			return
 		}
 		if r[0] == "#" { // skip comments
+			return
+		}
+		_, err := strconv.ParseFloat(r[0], 64)
+		if err != nil { // skip lines with text
 			return
 		}
 		ncol := len(r)
