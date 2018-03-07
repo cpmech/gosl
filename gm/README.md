@@ -7,6 +7,11 @@ More information is available in **[the documentation of this package](https://g
 This package provides some functions to help with the solution of geometry problems. It also
 includes some routines loosely related with geometry.
 
+## White papers
+
+1. [Curvilinear Coordinates and Metrics](https://github.com/cpmech/gosl/blob/master/doc/metrics.pdf)
+2. [Transfinite Mapping](https://github.com/cpmech/gosl/blob/master/doc/transfinite.pdf)
+
 ## Bezier curve
 
 Source code: <a href="../examples/gm_bezier01.go">../examples/gm_bezier01.go</a>
