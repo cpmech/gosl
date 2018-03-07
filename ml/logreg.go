@@ -24,34 +24,34 @@ func NewLogReg(data *RegData) (o *LogReg) {
 }
 
 // Model implements the model equation: logistic(xᵀθ)
-//   x -- [nFeatures] x-values
+//   x -- [1+nFeatures] x-values (augmented)
 //   θ -- [1+nFeatures] parameters
 func (o *LogReg) Model(x, θ la.Vector) float64 {
-	z := θ[0] + la.VecDot(x, θ[1:])
+	z := la.VecDot(x, θ)
 	return 1.0 / (1.0 + math.Exp(-z))
 }
 
 // Set sets LogReg with given regression data
 //  data -- regressin data where m=numData, n=numParams
 func (o *LogReg) Set(data *RegData) {
-	if len(o.ybar) != data.m {
-		o.ybar = la.NewVector(data.m)
-		o.hmy = la.NewVector(data.m)
+	if len(o.ybar) != data.mData {
+		o.ybar = la.NewVector(data.mData)
+		o.hmy = la.NewVector(data.mData)
 	}
-	for i := 0; i < data.m; i++ {
-		o.ybar[i] = (1.0 - data.y[i]) / float64(data.m)
+	for i := 0; i < data.mData; i++ {
+		o.ybar[i] = (1.0 - data.yVec[i]) / float64(data.mData)
 	}
 }
 
 // Cost computes the total cost
 func (o *LogReg) Cost(data *RegData) float64 {
-	la.MatVecMul(data.l, 1, data.x, data.θ)
+	la.MatVecMul(data.lVec, 1, data.xMat, data.thetaVec)
 	sq := 0.0
-	for i := 0; i < data.m; i++ {
-		sq += math.Log(1.0 + math.Exp(-data.l[i]))
+	for i := 0; i < data.mData; i++ {
+		sq += math.Log(1.0 + math.Exp(-data.lVec[i]))
 	}
-	sq /= float64(data.m)
-	return sq + la.VecDot(o.ybar, data.l)
+	sq /= float64(data.mData)
+	return sq + la.VecDot(o.ybar, data.lVec)
 }
 
 // Deriv computes the derivative of the cost function: dC/dθ
@@ -60,9 +60,9 @@ func (o *LogReg) Cost(data *RegData) float64 {
 //   Output:
 //     dCdθ -- derivative of cost function
 func (o *LogReg) Deriv(dCdθ la.Vector, data *RegData) {
-	la.MatVecMul(data.l, 1, data.x, data.θ)
-	for i := 0; i < data.m; i++ {
-		o.hmy[i] = 1.0/(1.0+math.Exp(-data.l[i])) - data.y[i]
+	la.MatVecMul(data.lVec, 1, data.xMat, data.thetaVec)
+	for i := 0; i < data.mData; i++ {
+		o.hmy[i] = 1.0/(1.0+math.Exp(-data.lVec[i])) - data.yVec[i]
 	}
-	la.MatTrVecMul(dCdθ, 1.0/float64(data.m), data.x, o.hmy)
+	la.MatTrVecMul(dCdθ, 1.0/float64(data.mData), data.xMat, o.hmy)
 }

@@ -51,14 +51,14 @@ func (o *GradDesc) SetControl(α, tolCost, tolDeriv float64) {
 //   θini -- [n] initial θ values [may be nil]
 func (o *GradDesc) Run(data *RegData, reg Regression, θini []float64) {
 	if θini == nil {
-		data.θ.Fill(0.5)
+		data.thetaVec.Fill(0.5)
 	} else {
-		data.θ.Apply(1, θini)
+		data.thetaVec.Apply(1, θini)
 	}
-	dCdθ := la.NewVector(data.n)
+	dCdθ := la.NewVector(data.nParams)
 	for o.Niter = 0; o.Niter < o.maxIter; o.Niter++ {
 		reg.Deriv(dCdθ, data)
-		la.VecAdd(data.θ, 1, data.θ, -o.α, dCdθ)
+		la.VecAdd(data.thetaVec, 1, data.thetaVec, -o.α, dCdθ)
 		o.Costs[o.Niter] = reg.Cost(data)
 		if o.tolCost > 0 {
 			if math.Abs(o.Costs[o.Niter]) < o.tolCost {

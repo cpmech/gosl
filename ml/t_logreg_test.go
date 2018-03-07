@@ -43,11 +43,11 @@ func TestLogReg01(tst *testing.T) {
 	dCdθ := la.NewVector(d.Nparams())
 	for _, θ0 := range []float64{0.5, 1.0} {
 		for _, θ1 := range []float64{0.5, 1.0} {
-			d.θ[0] = θ0
-			d.θ[1] = θ1
+			d.thetaVec[0] = θ0
+			d.thetaVec[1] = θ1
 			r.Deriv(dCdθ, d)
-			chk.DerivScaVec(tst, "dCdθ", 1e-7, dCdθ, d.θ, 1e-6, chk.Verbose, func(th []float64) float64 {
-				copy(d.θ, th)
+			chk.DerivScaVec(tst, "dCdθ", 1e-7, dCdθ, d.thetaVec, 1e-6, chk.Verbose, func(th []float64) float64 {
+				copy(d.thetaVec, th)
 				return r.Cost(d)
 			})
 		}
@@ -58,7 +58,7 @@ func TestLogReg01(tst *testing.T) {
 	g := NewGradDesc(20)
 	g.SetControl(5.0, 0, 0)
 	g.Run(d, r, []float64{5, 5, 5})
-	io.Pf("grad.desc: θ = %v\n", d.θ)
+	io.Pf("grad.desc: θ = %v\n", d.thetaVec)
 
 	// plot
 	if chk.Verbose {

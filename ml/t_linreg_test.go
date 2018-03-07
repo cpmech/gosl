@@ -46,38 +46,45 @@ func TestLinReg01(tst *testing.T) {
 		{0.95, 87.33},
 	})
 
+	// check data
+	chk.Int(tst, "m", d.Ndata(), 20)
+	chk.Int(tst, "nf", d.Nfeatures(), 1)
+
 	// check stat
-	d.Stat()
-	chk.Array(tst, "x[:,0]", 1e-15, d.x.GetCol(0), utl.Vals(20, 1))
-	chk.Float64(tst, "min(x)", 1e-15, d.MinX[0], 0.87)
-	chk.Float64(tst, "max(x)", 1e-15, d.MaxX[0], 1.55)
-	chk.Float64(tst, "mean(x)", 1e-15, d.MeanX[0], 1.1960)
-	chk.Float64(tst, "sig(x)", 1e-15, d.SigX[0], 0.189303432281837)
-	chk.Float64(tst, "sum(x)", 1e-15, d.SumX[0], 23.92)
-	chk.Float64(tst, "min(y)", 1e-15, d.MinY, 87.33)
-	chk.Float64(tst, "max(y)", 1e-15, d.MaxY, 99.42)
-	chk.Float64(tst, "mean(y)", 1e-15, d.MeanY, 92.1605)
-	chk.Float64(tst, "sig(y)", 1e-15, d.SigY, 3.020778001913102)
-	chk.Float64(tst, "sum(y)", 1e-15, d.SumY, 1843.21)
+	d.stat()
+	chk.Array(tst, "x[:,0]", 1e-15, d.xMat.GetCol(0), utl.Vals(20, 1))
+	checkStat := func() {
+		chk.Float64(tst, "min(x)", 1e-15, d.minX[0], 0.87)
+		chk.Float64(tst, "max(x)", 1e-15, d.maxX[0], 1.55)
+		chk.Float64(tst, "mean(x)", 1e-15, d.meanX[0], 1.1960)
+		chk.Float64(tst, "sig(x)", 1e-15, d.sigX[0], 0.189303432281837)
+		chk.Float64(tst, "sum(x)", 1e-15, d.sumX[0], 23.92)
+		chk.Float64(tst, "min(y)", 1e-15, d.minY, 87.33)
+		chk.Float64(tst, "max(y)", 1e-15, d.maxY, 99.42)
+		chk.Float64(tst, "mean(y)", 1e-15, d.meanY, 92.1605)
+		chk.Float64(tst, "sig(y)", 1e-15, d.sigY, 3.020778001913102)
+		chk.Float64(tst, "sum(y)", 1e-15, d.sumY, 1843.21)
+	}
+	checkStat()
 
 	// analytical θ
 	io.Pl()
 	r := NewLinReg()
 	r.CalcTheta(d)
-	io.Pf("analytical: θ = %v\n", d.θ)
-	chk.Float64(tst, "θ0", 1e-5, d.θ[0], 74.28331)
-	chk.Float64(tst, "θ1", 1e-5, d.θ[1], 14.94748)
+	io.Pf("analytical: θ = %v\n", d.thetaVec)
+	chk.Float64(tst, "analytical: θ0", 1e-5, d.thetaVec[0], 74.28331)
+	chk.Float64(tst, "analytical: θ1", 1e-5, d.thetaVec[1], 14.94748)
 
 	// check dCdθ
 	io.Pl()
 	dCdθ := la.NewVector(d.Nparams())
 	for _, θ0 := range []float64{50, 80} {
 		for _, θ1 := range []float64{5, 20} {
-			d.θ[0] = θ0
-			d.θ[1] = θ1
+			d.thetaVec[0] = θ0
+			d.thetaVec[1] = θ1
 			r.Deriv(dCdθ, d)
-			chk.DerivScaVec(tst, "dCdθ", 1e-6, dCdθ, d.θ, 1e-6, chk.Verbose, func(th []float64) float64 {
-				copy(d.θ, th)
+			chk.DerivScaVec(tst, "dCdθ", 1e-6, dCdθ, d.thetaVec, 1e-6, chk.Verbose, func(th []float64) float64 {
+				copy(d.thetaVec, th)
 				return r.Cost(d)
 			})
 		}
@@ -88,16 +95,16 @@ func TestLinReg01(tst *testing.T) {
 	g := NewGradDesc(10)
 	g.SetControl(0.1, 0, 0)
 	g.Run(d, r, []float64{70, 10})
-	io.Pf("grad.desc: θ = %v\n", d.θ)
-	chk.Float64(tst, "θ0", 1e-5, d.θ[0], 73.91321)
-	chk.Float64(tst, "θ1", 1e-5, d.θ[1], 14.74272)
+	io.Pf("grad.desc: θ = %v\n", d.thetaVec)
+	chk.Float64(tst, "grad.desc: θ0", 1e-5, d.thetaVec[0], 73.91321)
+	chk.Float64(tst, "grad.desc: θ1", 1e-5, d.thetaVec[1], 14.74272)
 
-	// plot
+	// plot: unormalised model
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.7})
 
 		plt.Subplot(3, 1, 1)
-		plt.Plot(d.GetFeature(0), d.GetY(), &plt.A{C: plt.C(2, 0), M: ".", Ls: "none", NoClip: true})
+		plt.Plot(d.GetXvals(0), d.GetYvals(), &plt.A{C: plt.C(2, 0), M: ".", Ls: "none", NoClip: true})
 		d.PlotModel(r, 0, 11, nil)
 		plt.Gll("$x$", "$y$", nil)
 		plt.HideTRborders()
@@ -110,14 +117,31 @@ func TestLinReg01(tst *testing.T) {
 		args := &plt.A{Nlevels: 20}
 		plt.Subplot(3, 1, 3)
 		d.PlotContCost(r, 0, 1, 11, 11, []float64{0, 0}, []float64{100, 70}, args)
-		plt.PlotOne(d.θ[0], d.θ[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
-		plt.Save("/tmp/gosl/ml", "linreg01")
+		plt.PlotOne(d.thetaVec[0], d.thetaVec[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
+		plt.Save("/tmp/gosl/ml", "linreg01a")
 	}
 
 	// normalize
-	io.Pl()
+	io.Pf("\n. . . . normalized model . . . . . . . . .\n")
 	d.Normalize(false)
-	d.Stat()
-	chk.Float64(tst, "normalized: mean(x)", 1e-15, d.MeanX[0], 0)
-	chk.Float64(tst, "normalized: sig(x)", 1e-15, d.SigX[0], 1)
+	checkStat()
+	r.CalcTheta(d)
+	io.Pf("analytical: θ = %v\n", d.thetaVec)
+
+	// plot: normalised model
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.3})
+
+		plt.Subplot(2, 1, 1)
+		plt.Plot(d.GetXvals(0), d.GetYvals(), &plt.A{C: plt.C(2, 0), M: ".", Ls: "none", NoClip: true})
+		d.PlotModel(r, 0, 11, nil)
+		plt.Gll("$x$", "$y$", nil)
+		plt.HideTRborders()
+
+		args := &plt.A{Nlevels: 20}
+		plt.Subplot(2, 1, 2)
+		d.PlotContCost(r, 0, 1, 11, 11, []float64{50, -50}, []float64{150, 50}, args)
+		plt.PlotOne(d.thetaVec[0], d.thetaVec[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
+		plt.Save("/tmp/gosl/ml", "linreg01b")
+	}
 }

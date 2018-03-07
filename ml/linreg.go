@@ -20,20 +20,20 @@ func NewLinReg() (o *LinReg) {
 }
 
 // Model implements the model equation: xᵀθ
-//   x -- [nFeatures] x-values
+//   x -- [1+nFeatures] x-values (augmented)
 //   θ -- [1+nFeatures] parameters
 func (o *LinReg) Model(x, θ la.Vector) float64 {
-	return θ[0] + la.VecDot(x, θ[1:])
+	return la.VecDot(x, θ)
 }
 
 // Cost computes the total cost
 func (o *LinReg) Cost(data *RegData) float64 {
-	if len(o.e) != data.m {
-		o.e = la.NewVector(data.m)
+	if len(o.e) != data.mData {
+		o.e = la.NewVector(data.mData)
 	}
-	la.MatVecMul(data.l, 1, data.x, data.θ)
-	la.VecAdd(o.e, 1, data.l, -1, data.y)
-	return la.VecDot(o.e, o.e) / float64(2*data.m)
+	la.MatVecMul(data.lVec, 1, data.xMat, data.thetaVec)
+	la.VecAdd(o.e, 1, data.lVec, -1, data.yVec)
+	return la.VecDot(o.e, o.e) / float64(2*data.mData)
 }
 
 // Deriv computes the derivative of the cost function: dC/dθ
@@ -42,21 +42,21 @@ func (o *LinReg) Cost(data *RegData) float64 {
 //   Output:
 //     dCdθ -- derivative of cost function
 func (o *LinReg) Deriv(dCdθ la.Vector, data *RegData) {
-	if len(o.e) != data.m {
-		o.e = la.NewVector(data.m)
+	if len(o.e) != data.mData {
+		o.e = la.NewVector(data.mData)
 	}
-	la.MatVecMul(data.l, 1, data.x, data.θ)
-	la.VecAdd(o.e, 1, data.l, -1, data.y)
-	la.MatTrVecMul(dCdθ, 1.0/float64(data.m), data.x, o.e)
+	la.MatVecMul(data.lVec, 1, data.xMat, data.thetaVec)
+	la.VecAdd(o.e, 1, data.lVec, -1, data.yVec)
+	la.MatTrVecMul(dCdθ, 1.0/float64(data.mData), data.xMat, o.e)
 }
 
 // CalcTheta calculates θ using the analytical solution
 //   Solve:  XᵀX θ = Xᵀy
 //   TODO: handle pseudo-inverse cases
 func (o *LinReg) CalcTheta(data *RegData) {
-	XtX := la.NewMatrix(data.n, data.n)
-	la.MatTrMatMul(XtX, 1, data.x, data.x)
-	b := la.NewVector(data.n)
-	la.MatTrVecMul(b, 1, data.x, data.y)
-	la.DenSolve(data.θ, XtX, b, false)
+	XtX := la.NewMatrix(data.nParams, data.nParams)
+	la.MatTrMatMul(XtX, 1, data.xMat, data.xMat)
+	b := la.NewVector(data.nParams)
+	la.MatTrVecMul(b, 1, data.xMat, data.yVec)
+	la.DenSolve(data.thetaVec, XtX, b, false)
 }
