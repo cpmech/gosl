@@ -21,15 +21,15 @@ import (
 type NlSolver struct {
 
 	// constants
-	CteJac  bool    // constant Jacobian (Modified Newton's method)
-	Lsearch bool    // use linear search
-	LsMaxIt int     // linear solver maximum iterations
-	MaxIt   int     // Newton's method maximum iterations
-	ChkConv bool    // check convergence
-	atol    float64 // absolute tolerance
-	rtol    float64 // relative tolerance
-	ftol    float64 // minimum value of fx
-	fnewt   float64 // Newton's method tolerance
+	cteJac      bool    // constant Jacobian (Modified Newton's method)
+	linSearch   bool    // use linear search
+	linSchMaxIt int     // line search maximum iterations
+	maxIt       int     // Newton's method maximum iterations
+	chkConv     bool    // check convergence
+	atol        float64 // absolute tolerance
+	rtol        float64 // relative tolerance
+	ftol        float64 // minimum value of fx
+	fnewt       float64 // [derived] Newton's method tolerance
 
 	// auxiliary data
 	neq   int       // number of equations
@@ -73,30 +73,48 @@ type NlSolver struct {
 //   useSp -- Use sparse solver with JfcnSp
 //   useDn -- Use dense solver (matrix inversion) with JfcnDn
 //   numJ  -- Use numeric Jacobian (sparse version only)
-//   prms  -- atol, rtol, ftol, lSearch, lsMaxIt, maxIt
+//   prms  -- control parameters (default values)
+//             "cteJac"      = -1 [false]  constant Jacobian (Modified Newton's method)
+//             "linSearch"   = -1 [false]  use linear search
+//             "linSchMaxIt" = 20          linear solver maximum iterations
+//             "maxIt"       = 20          Newton's method maximum iterations
+//             "chkConv"     = -1 [false]  check convergence
+//             "atol"        = 1e-8        absolute tolerance
+//             "rtol"        = 1e-8        relative tolerance
+//             "ftol"        = 1e-9        minimum value of fx
 func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useDn, numJ bool, prms map[string]float64) {
 
 	// set default values
-	atol, rtol, ftol := 1e-8, 1e-8, 1e-9
-	o.LsMaxIt = 20
-	o.MaxIt = 20
-	o.ChkConv = true
+	o.cteJac = false
+	o.linSearch = false
+	o.linSchMaxIt = 20
+	o.maxIt = 20
+	o.chkConv = false
+	atol := 1e-8
+	rtol := 1e-8
+	ftol := 1e-9
 
 	// read parameters
 	for k, v := range prms {
 		switch k {
+		case "cteJac":
+			o.cteJac = v > 0
+		case "linSearch":
+			o.linSearch = v > 0
+		case "linSchMaxIt":
+			o.linSchMaxIt = int(v)
+		case "maxIt":
+			o.maxIt = int(v)
+		case "chkConv":
+			o.chkConv = v > 0
 		case "atol":
 			atol = v
 		case "rtol":
 			rtol = v
 		case "ftol":
 			ftol = v
-		case "lSearch":
-			o.Lsearch = v > 0.0
-		case "lsMaxIt":
-			o.LsMaxIt = int(v)
-		case "maxIt":
-			o.MaxIt = int(v)
+		default:
+			chk.Panic("parameter named %q is invalid\n", k)
 		}
 	}
 
@@ -168,7 +186,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 	var Ldx, LdxPrev, Θ float64 // RMS norm of delta x, convergence rate
 	var fxMax float64
 	var nfv int
-	for o.It = 0; o.It < o.MaxIt; o.It++ {
+	for o.It = 0; o.It < o.maxIt; o.It++ {
 
 		// check convergence on f(x)
 		fxMax = o.fx.Largest(1.0) // den = 1.0
@@ -190,7 +208,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 		}
 
 		// evaluate Jacobian @ x
-		if o.It == 0 || !o.CteJac {
+		if o.It == 0 || !o.cteJac {
 			if o.useDn {
 				o.JfcnDn(o.J, x)
 			} else {
@@ -239,7 +257,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 			o.lis.Solve(o.mdx, o.fx, false) // mdx = inv(J) * fx   false => !sumToRoot
 
 			// compute lin-search data
-			if o.Lsearch {
+			if o.linSearch {
 				o.φ = 0.5 * la.VecDot(o.fx, o.fx)
 				la.SpTriMatTrVecMul(o.dφdx, &o.Jtri, o.fx) // dφdx := transpose(J) * fx
 			}
@@ -276,8 +294,8 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 		}
 
 		// call line-search => update x and fx
-		if o.Lsearch {
-			nfv = LineSearch(x, o.fx, o.Ffcn, o.mdx, o.x0, o.dφdx, o.φ, o.LsMaxIt, true)
+		if o.linSearch {
+			nfv = LineSearch(x, o.fx, o.Ffcn, o.mdx, o.x0, o.dφdx, o.φ, o.linSchMaxIt, true)
 			o.NFeval += nfv
 			Ldx = 0.0
 			for i := 0; i < o.neq; i++ {
@@ -294,7 +312,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 		}
 
 		// check convergence rate
-		if o.It > 0 && o.ChkConv {
+		if o.It > 0 && o.chkConv {
 			Θ = Ldx / LdxPrev
 			if Θ > 0.99 {
 				chk.Panic("solver is diverging with Θ = %g (Ldx=%g, LdxPrev=%g)", Θ, Ldx, LdxPrev)
@@ -309,7 +327,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 	}
 
 	// check convergence
-	if o.It == o.MaxIt {
+	if o.It == o.maxIt {
 		chk.Panic("cannot converge after %d iterations", o.It)
 	}
 	return

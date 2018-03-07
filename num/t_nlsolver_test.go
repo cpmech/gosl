@@ -13,10 +13,10 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-func Test_nls01(tst *testing.T) {
+func TestNls01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nls01. 2 eqs system")
+	chk.PrintTitle("Nls01. 2 eqs system")
 
 	ffcn := func(fx, x la.Vector) {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
@@ -38,10 +38,10 @@ func Test_nls01(tst *testing.T) {
 	neq := len(x)
 
 	prms := map[string]float64{
-		"atol":    atol,
-		"rtol":    rtol,
-		"ftol":    ftol,
-		"lSearch": 1.0,
+		"atol":      atol,
+		"rtol":      rtol,
+		"ftol":      ftol,
+		"linSearch": 1.0,
 	}
 
 	io.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
@@ -87,10 +87,10 @@ func Test_nls01(tst *testing.T) {
 	nlsAna.CheckJ(x, 1e-5, false, true)
 }
 
-func Test_nls02(tst *testing.T) {
+func TestNls02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nls02. 2 eqs system with exp function")
+	chk.PrintTitle("Nls02. 2 eqs system with exp function")
 
 	ffcn := func(fx, x la.Vector) {
 		fx[0] = 2.0*x[0] - x[1] - math.Exp(-x[0])
@@ -112,10 +112,10 @@ func Test_nls02(tst *testing.T) {
 	neq := len(x)
 
 	prms := map[string]float64{
-		"atol":    atol,
-		"rtol":    rtol,
-		"ftol":    ftol,
-		"lSearch": 1.0,
+		"atol":      atol,
+		"rtol":      rtol,
+		"ftol":      ftol,
+		"linSearch": 1.0,
 	}
 
 	io.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
@@ -161,10 +161,10 @@ func Test_nls02(tst *testing.T) {
 	nlsAna.CheckJ(x, 1e-5, false, true)
 }
 
-func Test_nls03(tst *testing.T) {
+func TestNls03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("nls03. 2 eqs system with trig functions")
+	chk.PrintTitle("Nls03. 2 eqs system with trig functions")
 
 	e := math.E
 	ffcn := func(fx, x la.Vector) {
@@ -196,10 +196,10 @@ func Test_nls03(tst *testing.T) {
 	neq := len(x)
 
 	prms := map[string]float64{
-		"atol":    atol,
-		"rtol":    rtol,
-		"ftol":    ftol,
-		"lSearch": 0.0, // does not work with line search
+		"atol":      atol,
+		"rtol":      rtol,
+		"ftol":      ftol,
+		"linSearch": 0.0, // does not work with line search
 	}
 
 	// init
@@ -233,10 +233,9 @@ func Test_nls03(tst *testing.T) {
 
 	x = []float64{1.0, 4.0}
 	io.PfYel("\n--- sparse ------------- with x = %v ---------------\n", x)
-	//lSearch, chkConv := false, true  // this combination fails due to divergence
-	//lSearch, chkConv := false, false // this combination works but results are different
-	//lSearch, chkConv := true, true   // this combination works but results are wrong => fails
-	nlsSps.ChkConv = false
+	//linSearch, chkConv := false, true  // this combination fails due to divergence
+	//linSearch, chkConv := false, false // this combination works but results are different
+	//linSearch, chkConv := true, true   // this combination works but results are wrong => fails
 	nlsSps.Solve(x, false)
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
@@ -266,7 +265,6 @@ func Test_nls03(tst *testing.T) {
 
 	x = []float64{1.0, 4.0}
 	io.PfYel("\n--- dense ------------- with x = %v ---------------\n", x)
-	nlsDen.ChkConv = false
 	nlsDen.Solve(x, false)
 	ffcn(fx, x)
 	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
