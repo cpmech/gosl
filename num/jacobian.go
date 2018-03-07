@@ -67,5 +67,25 @@ func CompareJac(tst *testing.T, ffcn fun.Vv, Jfcn fun.Tv, x []float64, tol float
 	Jfcn(&Jana, x)
 
 	// compare
-	chk.Array(tst, "Jacobian matrix", tol, Jnum.ToDense().Data, Jana.ToDense().Data)
+	chk.Array(tst, "Sparse Jacobian matrix", tol, Jnum.ToDense().Data, Jana.ToDense().Data)
+}
+
+// CompareJacDense compares Jacobian matrix (e.g. for testing) in dense format
+func CompareJacDense(tst *testing.T, ffcn fun.Vv, Jfcn fun.Mv, x []float64, tol float64) {
+
+	// numerical
+	n := len(x)
+	fx := make([]float64, n)
+	w := make([]float64, n) // workspace
+	ffcn(fx, x)
+	var Jnum la.Triplet
+	Jnum.Init(n, n, n*n)
+	Jacobian(&Jnum, ffcn, x, fx, w)
+
+	// analytical
+	Jana := la.NewMatrix(n, n)
+	Jfcn(Jana, x)
+
+	// compare
+	chk.Array(tst, "Dense Jacobian matrix", tol, Jnum.ToDense().Data, Jana.Data)
 }
