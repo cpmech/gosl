@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
@@ -31,7 +32,7 @@ func NewGradDesc(maxIter int) (o *GradDesc) {
 	o.tolCost = -1
 	o.tolDeriv = -1
 	o.maxIter = maxIter
-	o.Costs = make([]float64, o.maxIter)
+	o.Costs = make([]float64, 1+o.maxIter)
 	return
 }
 
@@ -51,15 +52,16 @@ func (o *GradDesc) SetControl(α, tolCost, tolDeriv float64) {
 //   θini -- [n] initial θ values [may be nil]
 func (o *GradDesc) Run(data *RegData, reg Regression, θini []float64) {
 	if θini == nil {
-		data.thetaVec.Fill(0.5)
+		data.thetaVec.Fill(0)
 	} else {
 		data.thetaVec.Apply(1, θini)
 	}
+	o.Costs[0] = reg.Cost(data)
 	dCdθ := la.NewVector(data.nParams)
 	for o.Niter = 0; o.Niter < o.maxIter; o.Niter++ {
 		reg.Deriv(dCdθ, data)
 		la.VecAdd(data.thetaVec, 1, data.thetaVec, -o.α, dCdθ)
-		o.Costs[o.Niter] = reg.Cost(data)
+		o.Costs[1+o.Niter] = reg.Cost(data)
 		if o.tolCost > 0 {
 			if math.Abs(o.Costs[o.Niter]) < o.tolCost {
 				break
@@ -76,8 +78,13 @@ func (o *GradDesc) Run(data *RegData, reg Regression, θini []float64) {
 // PlotCostIter plots cost versus iterations
 func (o *GradDesc) PlotCostIter(args *plt.A) {
 	if args == nil {
-		args = &plt.A{C: plt.C(0, 0), NoClip: true}
+		args = &plt.A{C: plt.C(2, 0), Lw: 1.25, NoClip: true, M: ".", Ms: 5}
 	}
-	I := utl.LinSpace(1, float64(o.Niter), o.Niter)
-	plt.Plot(I, o.Costs[:o.Niter], args)
+	l := float64(o.Niter)  // last iteration
+	c0 := o.Costs[0]       // first cost
+	cl := o.Costs[o.Niter] // last cost
+	I := utl.LinSpace(0, l, o.Niter+1)
+	plt.Plot(I, o.Costs, args)
+	plt.Text(0, c0, io.Sf("%.6f", c0), &plt.A{C: plt.C(0, 0), Fsz: 7, Ha: "left", Va: "bottom"})
+	plt.Text(l, cl, io.Sf("%.6f", cl), &plt.A{C: plt.C(0, 0), Fsz: 7, Ha: "right", Va: "bottom"})
 }
