@@ -14,12 +14,13 @@ import (
 
 // LogReg implements functions to perform the logistic regression
 type LogReg struct {
-	ybar la.Vector  // [m] ybar[i] = (y[i] - 1) / m
-	hmy  la.Vector  // [m] hmy[i] = h[i] - y[i]
-	aMat *la.Matrix // [m][m] A-matrix for Hessian computation
-	bMat *la.Matrix // [n][m] auxiliary matrix: B = Xt*A
-	hMat *la.Matrix // [n][n] Hessian matrix = Xt*A*X = B*X
-	tmp  la.Vector  // [m] temporary vector; e.g. = h - l
+	ybar   la.Vector  // [m] ybar[i] = (y[i] - 1) / m
+	hmy    la.Vector  // [m] hmy[i] = h[i] - y[i]
+	aMat   *la.Matrix // [m][m] A-matrix for Hessian computation
+	bMat   *la.Matrix // [n][m] auxiliary matrix: B = Xt*A
+	hMat   *la.Matrix // [n][n] Hessian matrix = Xt*A*X = B*X
+	tmp    la.Vector  // [m] temporary vector; e.g. = h - l
+	lambda float64    // regularization parameter
 }
 
 // NewLogReg returns new LogReg object
@@ -41,6 +42,11 @@ func (o *LogReg) Model(x, θ la.Vector) float64 {
 	return h(la.VecDot(x, θ))
 }
 
+// SetRegularization sets regularization parameter and activates regularization
+func (o *LogReg) SetRegularization(λ float64) {
+	o.lambda = λ
+}
+
 // Set sets LogReg with given regression data
 //  data -- regressin data where m=numData, n=numParams
 func (o *LogReg) Set(data *RegData) {
@@ -54,13 +60,21 @@ func (o *LogReg) Set(data *RegData) {
 }
 
 // Cost computes the total cost
-func (o *LogReg) Cost(data *RegData) float64 {
+func (o *LogReg) Cost(data *RegData) (C float64) {
 	la.MatVecMul(data.lVec, 1, data.xMat, data.thetaVec)
 	sq := 0.0
 	for i := 0; i < data.mData; i++ {
 		sq += math.Log(1.0 + math.Exp(-data.lVec[i]))
 	}
-	return sq/float64(data.mData) + la.VecDot(o.ybar, data.lVec)
+	mCoef := float64(data.mData)
+	C = sq/mCoef + la.VecDot(o.ybar, data.lVec)
+	if o.lambda > 0 {
+		tmp := data.thetaVec[0]
+		data.thetaVec[0] = 0.0
+		C += (0.5 * o.lambda / mCoef) * la.VecDot(data.thetaVec, data.thetaVec)
+		data.thetaVec[0] = tmp
+	}
+	return C
 }
 
 // Deriv computes the derivative of the cost function: dC/dθ
@@ -73,7 +87,14 @@ func (o *LogReg) Deriv(dCdθ la.Vector, data *RegData) {
 	for i := 0; i < data.mData; i++ {
 		o.hmy[i] = h(data.lVec[i]) - data.yVec[i]
 	}
-	la.MatTrVecMul(dCdθ, 1.0/float64(data.mData), data.xMat, o.hmy)
+	mCoef := float64(data.mData)
+	la.MatTrVecMul(dCdθ, 1.0/mCoef, data.xMat, o.hmy)
+	if o.lambda > 0 {
+		tmp := data.thetaVec[0]
+		data.thetaVec[0] = 0.0
+		la.VecAdd(dCdθ, 1, dCdθ, o.lambda/mCoef, data.thetaVec)
+		data.thetaVec[0] = tmp
+	}
 }
 
 // CalcTheta calculates θ using Newton-Raphson solver
@@ -113,6 +134,11 @@ func (o *LogReg) CalcTheta(data *RegData, verbose, checkJac bool, tolJac0, tolJa
 		}
 		la.MatTrMatTrMul(o.bMat, 1, data.xMat, o.aMat) // B := Xt*A
 		la.MatMatMul(dfdz, 1, o.bMat, data.xMat)       // H := Xt*A*X
+		if o.lambda > 0 {
+			for i := 1; i < data.Nparams(); i++ {
+				dfdz.Set(i, i, dfdz.Get(i, i)+o.lambda/mCoef)
+			}
+		}
 	}
 
 	// debug

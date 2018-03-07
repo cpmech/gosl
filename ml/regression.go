@@ -209,7 +209,7 @@ func (o *RegData) PlotModel(reg Regression, iFeature, npts int, args *plt.A) {
 // PlotContModel plots contour of model
 //  xmin -- minimum x[iFeature,jFeature] value for meshgrid; may be nil
 //  xmax -- maximum x[iFeature,jFeature] value for meshgrid; may be nil
-func (o *RegData) PlotContModel(reg Regression, iFeature, jFeature, npi, npj int, xmin, xmax []float64, filled bool, args *plt.A) {
+func (o *RegData) PlotContModel(reg Regression, iFeature, jFeature, npi, npj int, mapper DataMapper, xmin, xmax []float64, filled bool, args *plt.A) {
 	if len(o.xxi) != npj {
 		o.xxi = utl.Alloc(npj, npi)
 		o.xxj = utl.Alloc(npj, npi)
@@ -226,14 +226,24 @@ func (o *RegData) PlotContModel(reg Regression, iFeature, jFeature, npi, npj int
 	if xmax == nil {
 		xmax = o.maxX
 	}
+	var xRaw []float64
+	if mapper != nil {
+		xRaw = make([]float64, mapper.NumOriginalFeatures())
+	}
 	dxi := (xmax[iFeature] - xmin[iFeature]) / float64(npi-1)
 	dxj := (xmax[jFeature] - xmin[jFeature]) / float64(npj-1)
 	for r := 0; r < npj; r++ {
 		for c := 0; c < npi; c++ {
 			o.xxi[r][c] = xmin[iFeature] + float64(c)*dxi
 			o.xxj[r][c] = xmin[jFeature] + float64(r)*dxj
-			xVec[i] = o.xxi[r][c]
-			xVec[j] = o.xxj[r][c]
+			if mapper == nil {
+				xVec[i] = o.xxi[r][c]
+				xVec[j] = o.xxj[r][c]
+			} else {
+				xRaw[iFeature] = o.xxi[r][c]
+				xRaw[jFeature] = o.xxj[r][c]
+				mapper.Map(xVec, xRaw)
+			}
 			o.zz[r][c] = reg.Model(xVec, o.thetaVec)
 		}
 	}
