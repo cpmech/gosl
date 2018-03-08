@@ -45,15 +45,21 @@ type File struct {
 	furl   string // furl = join(dir,fname)
 
 	// GOB
-	b    *bytes.Buffer // buffer for GOB
-	enc  *gob.Encoder  // encoder in case of writing
-	dec  *gob.Decoder  // decoder in case of reading
-	read bool          // reading file instead of writing?
+	gobBuffer  *bytes.Buffer // buffer for GOB
+	gobEnc     *gob.Encoder  // encoder in case of writing
+	gobDec     *gob.Decoder  // decoder in case of reading
+	gobReading bool          // reading file instead of writing?
 
 	// HDF5
 	chunkSize int     // HDF5 chunk size
-	h         C.hid_t // handle
+	hdfHandle C.hid_t // handle
 }
+
+// Filename returns the filename; i.e. fileNameKey + extension
+func (o File) Filename() string { return o.fname }
+
+// Filepath returns the full filepath, including directory name
+func (o File) Filepath() string { return o.furl }
 
 // Create creates a new file, deleting existent one
 //
@@ -80,8 +86,8 @@ func Create(dirOut, fnameKey string, useGob bool) (o *File) {
 		o.dir = dirOut
 		o.fname = fname
 		o.furl = furl
-		o.b = new(bytes.Buffer)
-		o.enc = gob.NewEncoder(o.b)
+		o.gobBuffer = new(bytes.Buffer)
+		o.gobEnc = gob.NewEncoder(o.gobBuffer)
 		return
 	}
 
@@ -93,8 +99,8 @@ func Create(dirOut, fnameKey string, useGob bool) (o *File) {
 	o.fname = fname
 	o.furl = furl
 	o.chunkSize = 1
-	o.h = C.H5Fcreate(cfn, C.H5Ftrunc(), C.H5P_DEFAULT, C.H5P_DEFAULT)
-	if o.h < 0 {
+	o.hdfHandle = C.H5Fcreate(cfn, C.H5Ftrunc(), C.H5P_DEFAULT, C.H5P_DEFAULT)
+	if o.hdfHandle < 0 {
 		chk.Panic("failed to create file <%s>", o.furl)
 	}
 	return
@@ -121,9 +127,9 @@ func Open(dirIn, fnameKey string, useGob bool) (o *File) {
 	if useGob {
 		o = Create(dirIn, fnameKey, true)
 		b := io.ReadFile(o.furl)
-		o.b = bytes.NewBuffer(b)
-		o.dec = gob.NewDecoder(o.b)
-		o.read = true
+		o.gobBuffer = bytes.NewBuffer(b)
+		o.gobDec = gob.NewDecoder(o.gobBuffer)
+		o.gobReading = true
 		return
 	}
 
@@ -134,9 +140,9 @@ func Open(dirIn, fnameKey string, useGob bool) (o *File) {
 	o.dir = dirIn
 	o.fname = fname
 	o.furl = furl
-	o.h = C.H5Fopen(cfn, C.H5Frdwr(), C.H5P_DEFAULT)
-	o.read = true
-	if o.h < 0 {
+	o.hdfHandle = C.H5Fopen(cfn, C.H5Frdwr(), C.H5P_DEFAULT)
+	o.gobReading = true
+	if o.hdfHandle < 0 {
 		chk.Panic("failed to open file <%s>", o.furl)
 	}
 	return
@@ -145,12 +151,12 @@ func Open(dirIn, fnameKey string, useGob bool) (o *File) {
 // Close closes file
 func (o *File) Close() {
 	if o.useGob {
-		if !o.read {
-			io.WriteFileD(o.dir, o.fname, o.b)
+		if !o.gobReading {
+			io.WriteFileD(o.dir, o.fname, o.gobBuffer)
 		}
 		return
 	}
-	st := C.H5Fclose(o.h)
+	st := C.H5Fclose(o.hdfHandle)
 	if st < 0 {
 		chk.Panic("failed to close file <%s>", o.furl)
 	}
@@ -259,7 +265,7 @@ func (o *File) VarVecPut(path string, v []float64) {
 		chk.Panic("this method is not available with useGob == true yet")
 	}
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		pt := C.H5PTcreate_fl(o.h, cp, C.H5Tdouble(), C.hsize_t(o.chunkSize), -1)
+		pt := C.H5PTcreate_fl(o.hdfHandle, cp, C.H5Tdouble(), C.hsize_t(o.chunkSize), -1)
 		if pt == C.H5I_INVALID_HID {
 			chk.Panic("cannot create []float64 to path=%q", path)
 			return -1
@@ -290,7 +296,7 @@ func (o *File) VarVecAppend(path string, v []float64) {
 	}
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
-	pt := C.H5PTopen(o.h, cpth)
+	pt := C.H5PTopen(o.hdfHandle, cpth)
 	if pt == C.H5I_INVALID_HID {
 		chk.Panic("cannot open vector in path %q", path)
 	}
@@ -311,7 +317,7 @@ func (o *File) TabAppend(path string, r []float64) {
 	}
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
-	pt := C.H5PTopen(o.h, cpth)
+	pt := C.H5PTopen(o.hdfHandle, cpth)
 	if pt == C.H5I_INVALID_HID {
 		chk.Panic("cannot open table in path %q", path)
 	}
@@ -352,15 +358,15 @@ func (o *File) TabPut(path string, keys []string, a [][]float64) {
 		if hid == C.H5I_INVALID_HID {
 			chk.Panic("cannot create data type for table in path=%q", path)
 		}
-		pt := C.H5PTcreate_fl(o.h, cp, hid, C.hsize_t(o.chunkSize), -1)
+		pt := C.H5PTcreate_fl(o.hdfHandle, cp, hid, C.hsize_t(o.chunkSize), -1)
 		if pt == C.H5I_INVALID_HID {
 			chk.Panic("cannot create table in path=%q", path)
 		}
-		st := C.H5LTset_attribute_long(o.h, cp, sncol, (*C.long)(unsafe.Pointer(&ncol[0])), 1)
+		st := C.H5LTset_attribute_long(o.hdfHandle, cp, sncol, (*C.long)(unsafe.Pointer(&ncol[0])), 1)
 		if st < 0 {
 			chk.Panic("cannot set attibute ncol to table in path=%q", path)
 		}
-		st = C.H5LTset_attribute_string(o.h, cp, skeys, kkeys)
+		st = C.H5LTset_attribute_string(o.hdfHandle, cp, skeys, kkeys)
 		if st < 0 {
 			chk.Panic("cannot set attibute keys to table in path=%q", path)
 		}
@@ -393,16 +399,16 @@ func (o *File) TabRead(path string) (keys []string, a [][]float64) {
 	defer C.free(unsafe.Pointer(kkeys))
 	rank := 2
 	dims := make([]int, rank)
-	st := C.H5LTget_dataset_info(o.h, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
+	st := C.H5LTget_dataset_info(o.hdfHandle, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
 	if st < 0 {
 		chk.Panic("cannot read dimensions with path=%q and file <%s>", "TabRead", path, o.furl)
 	}
 	ncol := []int{0}
-	st = C.H5LTget_attribute_long(o.h, cpth, sncol, (*C.long)(unsafe.Pointer(&ncol[0])))
+	st = C.H5LTget_attribute_long(o.hdfHandle, cpth, sncol, (*C.long)(unsafe.Pointer(&ncol[0])))
 	if st < 0 {
 		chk.Panic("cannot read attibute ncol from table in path=%q", path)
 	}
-	st = C.H5LTget_attribute_string(o.h, cpth, skeys, kkeys)
+	st = C.H5LTget_attribute_string(o.hdfHandle, cpth, skeys, kkeys)
 	if st < 0 {
 		chk.Panic("cannot read attibute keys from table in path=%q", path)
 	}
@@ -412,7 +418,7 @@ func (o *File) TabRead(path string) (keys []string, a [][]float64) {
 	}
 	dims[1] = ncol[0]
 	aser := make([]float64, dims[0]*dims[1])
-	st = C.H5LTread_dataset(o.h, cpth, hid, unsafe.Pointer(&aser[0]))
+	st = C.H5LTread_dataset(o.hdfHandle, cpth, hid, unsafe.Pointer(&aser[0]))
 	if st < 0 {
 		chk.Panic("cannot read dataset with path=%q in file=<%s>\n  ncol=%v  dims=%v  keys=%v\n", path, o.furl, ncol, dims, C.GoString(kkeys))
 	}
@@ -424,20 +430,20 @@ func (o *File) TabRead(path string) (keys []string, a [][]float64) {
 // StrSetAttr sets a string attibute
 func (o *File) StrSetAttr(path, key, val string) {
 	if o.useGob {
-		if o.read {
+		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.enc.Encode("StrSetAttr")
-		o.enc.Encode(path)
-		o.enc.Encode(key)
-		o.enc.Encode(val)
+		o.gobEnc.Encode("StrSetAttr")
+		o.gobEnc.Encode(path)
+		o.gobEnc.Encode(key)
+		o.gobEnc.Encode(val)
 		return
 	}
 	ckey, cval := C.CString(key), C.CString(val)
 	defer C.free(unsafe.Pointer(ckey))
 	defer C.free(unsafe.Pointer(cval))
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		st := C.H5LTset_attribute_string(o.h, cp, ckey, cval)
+		st := C.H5LTset_attribute_string(o.hdfHandle, cp, ckey, cval)
 		if st < 0 {
 			chk.Panic("cannot set attibute key to attr in path=%q", path)
 		}
@@ -449,21 +455,21 @@ func (o *File) StrSetAttr(path, key, val string) {
 func (o *File) StrReadAttr(path, key string) (val string) {
 	if o.useGob {
 		var cmd string
-		o.dec.Decode(&cmd)
+		o.gobDec.Decode(&cmd)
 		if cmd != "StrSetAttr" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
-		o.dec.Decode(&rpath)
+		o.gobDec.Decode(&rpath)
 		if rpath != path {
 			chk.Panic("cannot read path: %s != %s\n(r/w commands need to be called in the same order)", path, rpath)
 		}
 		var rkey string
-		o.dec.Decode(&rkey)
+		o.gobDec.Decode(&rkey)
 		if rkey != key {
 			chk.Panic("cannot read key: %s != %s\n(r/w commands need to be called in the same order)", key, rkey)
 		}
-		o.dec.Decode(&val)
+		o.gobDec.Decode(&val)
 		return
 	}
 	o.filterPath(path)
@@ -472,7 +478,7 @@ func (o *File) StrReadAttr(path, key string) (val string) {
 	defer C.free(unsafe.Pointer(cpth))
 	defer C.free(unsafe.Pointer(ckey))
 	defer C.free(unsafe.Pointer(cval))
-	st := C.H5LTget_attribute_string(o.h, cpth, ckey, cval)
+	st := C.H5LTget_attribute_string(o.hdfHandle, cpth, ckey, cval)
 	if st < 0 {
 		chk.Panic("cannot read attibute %q from val in path=%q", key, path)
 	}
@@ -482,20 +488,20 @@ func (o *File) StrReadAttr(path, key string) (val string) {
 // IntSetAttr sets int attibute
 func (o *File) IntSetAttr(path, key string, val int) {
 	if o.useGob {
-		if o.read {
+		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.enc.Encode("IntSetAttr")
-		o.enc.Encode(path)
-		o.enc.Encode(key)
-		o.enc.Encode(val)
+		o.gobEnc.Encode("IntSetAttr")
+		o.gobEnc.Encode(path)
+		o.gobEnc.Encode(key)
+		o.gobEnc.Encode(val)
 		return
 	}
 	ckey := C.CString(key)
 	defer C.free(unsafe.Pointer(ckey))
 	vals := []int{val}
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		st := C.H5LTset_attribute_long(o.h, cp, ckey, (*C.long)(unsafe.Pointer(&vals[0])), 1)
+		st := C.H5LTset_attribute_long(o.hdfHandle, cp, ckey, (*C.long)(unsafe.Pointer(&vals[0])), 1)
 		if st < 0 {
 			chk.Panic("cannot set attibute %q to val in path=%q", key, path)
 		}
@@ -507,21 +513,21 @@ func (o *File) IntSetAttr(path, key string, val int) {
 func (o *File) IntReadAttr(path, key string) (val int) {
 	if o.useGob {
 		var cmd string
-		o.dec.Decode(&cmd)
+		o.gobDec.Decode(&cmd)
 		if cmd != "IntSetAttr" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
-		o.dec.Decode(&rpath)
+		o.gobDec.Decode(&rpath)
 		if rpath != path {
 			chk.Panic("cannot read path: %s != %s\n(r/w commands need to be called in the same order)", path, rpath)
 		}
 		var rkey string
-		o.dec.Decode(&rkey)
+		o.gobDec.Decode(&rkey)
 		if rkey != key {
 			chk.Panic("cannot read key: %s != %s\n(r/w commands need to be called in the same order)", key, rkey)
 		}
-		o.dec.Decode(&val)
+		o.gobDec.Decode(&val)
 		return
 	}
 	o.filterPath(path)
@@ -529,7 +535,7 @@ func (o *File) IntReadAttr(path, key string) (val int) {
 	defer C.free(unsafe.Pointer(cpth))
 	defer C.free(unsafe.Pointer(ckey))
 	vals := []int{0}
-	st := C.H5LTget_attribute_long(o.h, cpth, ckey, (*C.long)(unsafe.Pointer(&vals[0])))
+	st := C.H5LTget_attribute_long(o.hdfHandle, cpth, ckey, (*C.long)(unsafe.Pointer(&vals[0])))
 	if st < 0 {
 		chk.Panic("cannot read attibute %q from val in path=%q", key, path)
 	}
@@ -539,20 +545,20 @@ func (o *File) IntReadAttr(path, key string) (val int) {
 // IntsSetAttr sets ints attibute
 func (o *File) IntsSetAttr(path, key string, vals []int) {
 	if o.useGob {
-		if o.read {
+		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.enc.Encode("IntsSetAttr")
-		o.enc.Encode(path)
-		o.enc.Encode(key)
-		o.enc.Encode(vals)
+		o.gobEnc.Encode("IntsSetAttr")
+		o.gobEnc.Encode(path)
+		o.gobEnc.Encode(key)
+		o.gobEnc.Encode(vals)
 		return
 	}
 	ckey := C.CString(key)
 	defer C.free(unsafe.Pointer(ckey))
 	n := C.size_t(len(vals))
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		st := C.H5LTset_attribute_long(o.h, cp, ckey, (*C.long)(unsafe.Pointer(&vals[0])), n)
+		st := C.H5LTset_attribute_long(o.hdfHandle, cp, ckey, (*C.long)(unsafe.Pointer(&vals[0])), n)
 		if st < 0 {
 			chk.Panic("cannot set attibute %q to vals in path=%q", key, path)
 		}
@@ -564,21 +570,21 @@ func (o *File) IntsSetAttr(path, key string, vals []int) {
 func (o *File) IntsReadAttr(path, key string) (vals []int) {
 	if o.useGob {
 		var cmd string
-		o.dec.Decode(&cmd)
+		o.gobDec.Decode(&cmd)
 		if cmd != "IntsSetAttr" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
-		o.dec.Decode(&rpath)
+		o.gobDec.Decode(&rpath)
 		if rpath != path {
 			chk.Panic("cannot read path: %s != %s\n(r/w commands need to be called in the same order)", path, rpath)
 		}
 		var rkey string
-		o.dec.Decode(&rkey)
+		o.gobDec.Decode(&rkey)
 		if rkey != key {
 			chk.Panic("cannot read key: %s != %s\n(r/w commands need to be called in the same order)", key, rkey)
 		}
-		o.dec.Decode(&vals)
+		o.gobDec.Decode(&vals)
 		return
 	}
 	o.filterPath(path)
@@ -586,7 +592,7 @@ func (o *File) IntsReadAttr(path, key string) (vals []int) {
 	defer C.free(unsafe.Pointer(cpth))
 	defer C.free(unsafe.Pointer(ckey))
 	var rank int
-	st := C.H5LTget_attribute_ndims(o.h, cpth, ckey, (*C.int)(unsafe.Pointer(&rank))) //unsafe.Pointer(&rank[0])))
+	st := C.H5LTget_attribute_ndims(o.hdfHandle, cpth, ckey, (*C.int)(unsafe.Pointer(&rank))) //unsafe.Pointer(&rank[0])))
 	if st < 0 {
 		chk.Panic("cannot read attibute %q from rank in path=%q", key, path)
 	}
@@ -596,12 +602,12 @@ func (o *File) IntsReadAttr(path, key string) (vals []int) {
 	var typeClass C.H5T_class_t
 	var typeSize C.size_t
 	dims := make([]int, rank)
-	st = C.H5LTget_attribute_info(o.h, cpth, ckey, (*C.hsize_t)(unsafe.Pointer(&dims[0])), &typeClass, &typeSize)
+	st = C.H5LTget_attribute_info(o.hdfHandle, cpth, ckey, (*C.hsize_t)(unsafe.Pointer(&dims[0])), &typeClass, &typeSize)
 	if st < 0 {
 		chk.Panic("cannot read attibute %q from dims in path=%q", key, path)
 	}
 	vals = make([]int, dims[0])
-	st = C.H5LTget_attribute_long(o.h, cpth, ckey, (*C.long)(unsafe.Pointer(&vals[0])))
+	st = C.H5LTget_attribute_long(o.hdfHandle, cpth, ckey, (*C.long)(unsafe.Pointer(&vals[0])))
 	if st < 0 {
 		chk.Panic("cannot read attibute %q from vals in path=%q", key, path)
 	}
@@ -629,14 +635,14 @@ func (o *File) hierarchCreate(path string, docreate func(cp *C.char) C.herr_t) {
 		cpth := C.CString(pth)
 		defer C.free(unsafe.Pointer(cpth))
 		if i < len(res)-1 { // create group
-			st := C.H5Lexists(o.h, cpth, C.H5P_DEFAULT)
+			st := C.H5Lexists(o.hdfHandle, cpth, C.H5P_DEFAULT)
 			if st < 0 {
 				chk.Panic("cannot check whether path=%q exists or not", path)
 			}
 			if st == 1 { // group exists
 				continue
 			}
-			gid := C.H5Gcreate2(o.h, cpth, C.H5P_DEFAULT, C.H5P_DEFAULT, C.H5P_DEFAULT)
+			gid := C.H5Gcreate2(o.hdfHandle, cpth, C.H5P_DEFAULT, C.H5P_DEFAULT, C.H5P_DEFAULT)
 			if gid < 0 {
 				chk.Panic("cannot create group with path=%q in file <%s>", path, o.furl)
 			}
@@ -653,38 +659,38 @@ func (o *File) hierarchCreate(path string, docreate func(cp *C.char) C.herr_t) {
 // putArray puts an array into file
 func (o *File) putArray(path string, dims []int, dat []float64) {
 	if o.useGob {
-		if o.read {
+		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.enc.Encode("putArray")
-		o.enc.Encode(path)
-		o.enc.Encode(len(dims))
-		o.enc.Encode(dims)
-		o.enc.Encode(dat)
+		o.gobEnc.Encode("putArray")
+		o.gobEnc.Encode(path)
+		o.gobEnc.Encode(len(dims))
+		o.gobEnc.Encode(dims)
+		o.gobEnc.Encode(dat)
 		return
 	}
 	rnk := C.int(len(dims))
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		return C.H5LTmake_dataset_double(o.h, cp, rnk, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.double)(unsafe.Pointer(&dat[0])))
+		return C.H5LTmake_dataset_double(o.hdfHandle, cp, rnk, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.double)(unsafe.Pointer(&dat[0])))
 	})
 }
 
 // putArrayInt puts an array of integers into file
 func (o *File) putArrayInt(path string, dims []int, dat []int) {
 	if o.useGob {
-		if o.read {
+		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.enc.Encode("putArrayInt")
-		o.enc.Encode(path)
-		o.enc.Encode(len(dims))
-		o.enc.Encode(dims)
-		o.enc.Encode(dat)
+		o.gobEnc.Encode("putArrayInt")
+		o.gobEnc.Encode(path)
+		o.gobEnc.Encode(len(dims))
+		o.gobEnc.Encode(dims)
+		o.gobEnc.Encode(dat)
 		return
 	}
 	rnk := C.int(len(dims))
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		return C.H5LTmake_dataset_long(o.h, cp, rnk, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.long)(unsafe.Pointer(&dat[0])))
+		return C.H5LTmake_dataset_long(o.hdfHandle, cp, rnk, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.long)(unsafe.Pointer(&dat[0])))
 	})
 }
 
@@ -697,16 +703,16 @@ func (o *File) putArrayIntNoGroups(path string, dat []int) {
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
 	dims := []int{len(dat)}
-	st := C.H5LTmake_dataset_long(o.h, cpth, 1, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.long)(unsafe.Pointer(&dat[0])))
+	st := C.H5LTmake_dataset_long(o.hdfHandle, cpth, 1, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.long)(unsafe.Pointer(&dat[0])))
 	if st < 0 {
 		chk.Panic("cannot put int array with path=%q in file <%s>", path, o.furl)
 	}
 }
 
 func (o *File) deGobRnkDims() (rnk int, dims []int, length int) {
-	o.dec.Decode(&rnk)
+	o.gobDec.Decode(&rnk)
 	dims = make([]int, rnk)
-	o.dec.Decode(&dims)
+	o.gobDec.Decode(&dims)
 	if rnk == 1 {
 		length = dims[0]
 	} else if rnk == 2 {
@@ -721,19 +727,19 @@ func (o *File) deGobRnkDims() (rnk int, dims []int, length int) {
 func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 	if o.useGob {
 		var cmd string
-		o.dec.Decode(&cmd)
+		o.gobDec.Decode(&cmd)
 		if cmd != "putArray" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
-		o.dec.Decode(&rpath)
+		o.gobDec.Decode(&rpath)
 		if rpath != path {
 			chk.Panic("cannot read path: %s != %s\n(r/w commands need to be called in the same order)", path, rpath)
 		}
 		var length int
 		_, dims, length = o.deGobRnkDims()
 		dat = make([]float64, length)
-		o.dec.Decode(&dat)
+		o.gobDec.Decode(&dat)
 		return
 	}
 	o.filterPath(path)
@@ -744,7 +750,7 @@ func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 		rank = 2
 	}
 	dims = make([]int, rank)
-	st := C.H5LTget_dataset_info(o.h, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
+	st := C.H5LTget_dataset_info(o.hdfHandle, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
 	if st < 0 {
 		chk.Panic("cannot read dimensions with path=%q and file <%s>", path, o.furl)
 	}
@@ -756,7 +762,7 @@ func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 	} else {
 		dat = make([]float64, dims[0])
 	}
-	st = C.H5LTread_dataset_double(o.h, cpth, (*C.double)(unsafe.Pointer(&dat[0])))
+	st = C.H5LTread_dataset_double(o.hdfHandle, cpth, (*C.double)(unsafe.Pointer(&dat[0])))
 	if st < 0 {
 		chk.Panic("cannot read dataset with path=%q in file=<%s>", path, o.furl)
 	}
@@ -767,19 +773,19 @@ func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 func (o *File) getArrayInt(path string, ismat bool) (dims, dat []int) {
 	if o.useGob {
 		var cmd string
-		o.dec.Decode(&cmd)
+		o.gobDec.Decode(&cmd)
 		if cmd != "putArrayInt" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
-		o.dec.Decode(&rpath)
+		o.gobDec.Decode(&rpath)
 		if rpath != path {
 			chk.Panic("cannot read path: %s != %s\n(r/w commands need to be called in the same order)", path, rpath)
 		}
 		var length int
 		_, dims, length = o.deGobRnkDims()
 		dat = make([]int, length)
-		o.dec.Decode(&dat)
+		o.gobDec.Decode(&dat)
 		return
 	}
 	o.filterPath(path)
@@ -790,7 +796,7 @@ func (o *File) getArrayInt(path string, ismat bool) (dims, dat []int) {
 		rank = 2
 	}
 	dims = make([]int, rank)
-	st := C.H5LTget_dataset_info(o.h, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
+	st := C.H5LTget_dataset_info(o.hdfHandle, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
 	if st < 0 {
 		chk.Panic("cannot read dimensions with path=%q and file <%s>", path, o.furl)
 	}
@@ -802,7 +808,7 @@ func (o *File) getArrayInt(path string, ismat bool) (dims, dat []int) {
 	} else {
 		dat = make([]int, dims[0])
 	}
-	st = C.H5LTread_dataset_long(o.h, cpth, (*C.long)(unsafe.Pointer(&dat[0])))
+	st = C.H5LTread_dataset_long(o.hdfHandle, cpth, (*C.long)(unsafe.Pointer(&dat[0])))
 	if st < 0 {
 		chk.Panic("cannot read dataset with path=%q in file=<%s>", path, o.furl)
 	}
@@ -813,17 +819,17 @@ func (o *File) getArrayInt(path string, ismat bool) (dims, dat []int) {
 func (o *File) getArrayInto(dat *[]float64, path string, ismat bool) (dims []int) {
 	if o.useGob {
 		var cmd string
-		o.dec.Decode(&cmd)
+		o.gobDec.Decode(&cmd)
 		if cmd != "putArray" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
-		o.dec.Decode(&rpath)
+		o.gobDec.Decode(&rpath)
 		if rpath != path {
 			chk.Panic("cannot read path: %s != %s\n(r/w commands need to be called in the same order)", path, rpath)
 		}
 		_, dims, _ = o.deGobRnkDims()
-		o.dec.Decode(dat)
+		o.gobDec.Decode(dat)
 		return
 	}
 	o.filterPath(path)
@@ -834,7 +840,7 @@ func (o *File) getArrayInto(dat *[]float64, path string, ismat bool) (dims []int
 		rank = 2
 	}
 	dims = make([]int, rank)
-	st := C.H5LTget_dataset_info(o.h, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
+	st := C.H5LTget_dataset_info(o.hdfHandle, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
 	if st < 0 {
 		chk.Panic("cannot read dimensions with path=%q and file <%s>", path, o.furl)
 	}
@@ -850,7 +856,7 @@ func (o *File) getArrayInto(dat *[]float64, path string, ismat bool) (dims []int
 			chk.Panic("size of pre-allocated array with vector data is incorrect. %d != %d. path=%q. file <%s>", len(*dat), dims[0], path, o.furl)
 		}
 	}
-	st = C.H5LTread_dataset_double(o.h, cpth, (*C.double)(unsafe.Pointer(&(*dat)[0])))
+	st = C.H5LTread_dataset_double(o.hdfHandle, cpth, (*C.double)(unsafe.Pointer(&(*dat)[0])))
 	if st < 0 {
 		chk.Panic("cannot read dataset with path=%q in file=<%s>", path, o.furl)
 	}
