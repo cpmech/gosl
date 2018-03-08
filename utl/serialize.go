@@ -6,8 +6,8 @@ package utl
 
 import "github.com/cpmech/gosl/io"
 
-// MatToArray converts a matrix into a column-major array
-func MatToArray(a [][]float64) (v []float64) {
+// SerializeDeep2 converts a matrix into a column-major array
+func SerializeDeep2(a [][]float64) (v []float64) {
 	m, n, k := len(a), len(a[0]), 0
 	v = make([]float64, m*n)
 	for j := 0; j < n; j++ {
@@ -19,8 +19,8 @@ func MatToArray(a [][]float64) (v []float64) {
 	return
 }
 
-// ArrayToMat converts a column-major array to a matrix
-func ArrayToMat(v []float64, m, n int) (a [][]float64) {
+// DeserializeDeep2 converts a column-major array to a matrix
+func DeserializeDeep2(v []float64, m, n int) (a [][]float64) {
 	a = make([][]float64, m)
 	for i := 0; i < m; i++ {
 		a[i] = make([]float64, n)
@@ -32,10 +32,8 @@ func ArrayToMat(v []float64, m, n int) (a [][]float64) {
 	return
 }
 
-// Deep3Serialize serializes an array of array of array in column-compressed format
-//  Example:
-//
-func Deep3Serialize(A [][][]float64) (I, P []int, S []float64) {
+// SerializeDeep3 serializes an array of array of array in column-compressed format
+func SerializeDeep3(A [][][]float64) (I, P []int, S []float64) {
 	i, p := 0, 0
 	for _, a := range A {
 		for _, b := range a {
@@ -63,7 +61,6 @@ func Deep3Serialize(A [][][]float64) (I, P []int, S []float64) {
 }
 
 // Deep3GetInfo returns information of serialized array of array of array
-//  Example:
 func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncolsTot int, ncols []int) {
 	if verbose {
 		io.Pf("I = %v\n", I)
@@ -86,9 +83,8 @@ func Deep3GetInfo(I, P []int, S []float64, verbose bool) (nitems, nrows, ncolsTo
 	return
 }
 
-// Deep3Deserialize deserializes an array of array of array in column-compressed format
-//  Example:
-func Deep3Deserialize(I, P []int, S []float64, debug bool) (A [][][]float64) {
+// DeserializeDeep3 deserializes an array of array of array in column-compressed format
+func DeserializeDeep3(I, P []int, S []float64, debug bool) (A [][][]float64) {
 	_, nrows, _, ncols := Deep3GetInfo(I, P, S, false)
 	A = make([][][]float64, nrows)
 	for i := 0; i < nrows; i++ {
