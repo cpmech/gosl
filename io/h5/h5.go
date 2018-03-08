@@ -37,40 +37,62 @@ import (
 
 // File represents a HDF5 file
 type File struct {
-	Gob   bool          // use GOB instead of HDF5
-	Cs    int           // chunk_size
-	dir   string        // directory name
-	fname string        // file name
-	furl  string        // furl = join(dir,fname)
-	h     C.hid_t       // handle
-	b     *bytes.Buffer // buffer for GOB
-	enc   *gob.Encoder  // encoder in case of writing
-	dec   *gob.Decoder  // decoder in case of reading
-	read  bool          // reading file instead of writing?
+
+	// constants
+	useGob bool   // use GOB instead of HDF5
+	dir    string // directory name
+	fname  string // file name: fnKey + ext
+	furl   string // furl = join(dir,fname)
+
+	// GOB
+	b    *bytes.Buffer // buffer for GOB
+	enc  *gob.Encoder  // encoder in case of writing
+	dec  *gob.Decoder  // decoder in case of reading
+	read bool          // reading file instead of writing?
+
+	// HDF5
+	chunkSize int     // HDF5 chunk size
+	h         C.hid_t // handle
 }
 
 // Create creates a new file, deleting existent one
-// NOTE: dirOut will be created if non-existent
-func Create(dirOut, filename string, useGob bool) (o *File) {
-	furl := path.Join(dirOut, filename)
+//
+//   Input:
+//     dirOut   -- directory name that will be created if non-existent
+//     fnameKey -- filename key; e.g. without extension
+//     useGob   -- use Go's own format gob instead of HDF5
+//
+//   Output:
+//     returns a new File object where the filename will be:
+//       fnameKey + .h5   if useGob == false, or
+//       fnameKey + .gob  if useGob == true
+//
+func Create(dirOut, fnameKey string, useGob bool) (o *File) {
+
+	// constants
+	fname, furl := filepath(dirOut, fnameKey, useGob)
 	os.MkdirAll(dirOut, 0777)
+
+	// GOB
 	if useGob {
 		o = new(File)
-		o.Gob = true
+		o.useGob = true
 		o.dir = dirOut
-		o.fname = filename
+		o.fname = fname
 		o.furl = furl
 		o.b = new(bytes.Buffer)
 		o.enc = gob.NewEncoder(o.b)
 		return
 	}
+
+	// HDF5
 	cfn := C.CString(furl)
 	defer C.free(unsafe.Pointer(cfn))
 	o = new(File)
-	o.Cs = 1
 	o.dir = dirOut
-	o.fname = filename
+	o.fname = fname
 	o.furl = furl
+	o.chunkSize = 1
 	o.h = C.H5Fcreate(cfn, C.H5Ftrunc(), C.H5P_DEFAULT, C.H5P_DEFAULT)
 	if o.h < 0 {
 		chk.Panic("failed to create file <%s>", o.furl)
@@ -79,21 +101,38 @@ func Create(dirOut, filename string, useGob bool) (o *File) {
 }
 
 // Open opens an existent file for read only
-func Open(dirIn, filename string, isGob bool) (o *File) {
-	if isGob {
-		o = Create(dirIn, filename, true)
+//
+//   Input:
+//     dirIn    -- directory name where the file is located
+//     fnameKey -- filename key; e.g. without extension
+//     useGob   -- use Go's own format gob instead of HDF5
+//
+//   Output:
+//     returns a new File object where the filename will be:
+//       fnameKey + .h5   if useGob == false, or
+//       fnameKey + .gob  if useGob == true
+//
+func Open(dirIn, fnameKey string, useGob bool) (o *File) {
+
+	// constants
+	fname, furl := filepath(dirIn, fnameKey, useGob)
+
+	// GOB
+	if useGob {
+		o = Create(dirIn, fnameKey, true)
 		b := io.ReadFile(o.furl)
 		o.b = bytes.NewBuffer(b)
 		o.dec = gob.NewDecoder(o.b)
 		o.read = true
 		return
 	}
-	furl := path.Join(dirIn, filename)
+
+	// HDF5
 	cfn := C.CString(furl)
 	defer C.free(unsafe.Pointer(cfn))
 	o = new(File)
 	o.dir = dirIn
-	o.fname = filename
+	o.fname = fname
 	o.furl = furl
 	o.h = C.H5Fopen(cfn, C.H5Frdwr(), C.H5P_DEFAULT)
 	o.read = true
@@ -105,7 +144,7 @@ func Open(dirIn, filename string, isGob bool) (o *File) {
 
 // Close closes file
 func (o *File) Close() {
-	if o.Gob {
+	if o.useGob {
 		if !o.read {
 			io.WriteFileD(o.dir, o.fname, o.b)
 		}
@@ -216,11 +255,11 @@ func (o *File) Deep3Read(path string) (a [][][]float64) {
 
 // VarVecPut puts a variable length vector
 func (o *File) VarVecPut(path string, v []float64) {
-	if o.Gob {
-		chk.Panic("this method is not available with o.Gob == true yet")
+	if o.useGob {
+		chk.Panic("this method is not available with useGob == true yet")
 	}
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		pt := C.H5PTcreate_fl(o.h, cp, C.H5Tdouble(), C.hsize_t(o.Cs), -1)
+		pt := C.H5PTcreate_fl(o.h, cp, C.H5Tdouble(), C.hsize_t(o.chunkSize), -1)
 		if pt == C.H5I_INVALID_HID {
 			chk.Panic("cannot create []float64 to path=%q", path)
 			return -1
@@ -246,8 +285,8 @@ func (o *File) VarVecPut(path string, v []float64) {
 
 // VarVecAppend appends to a variable length vector
 func (o *File) VarVecAppend(path string, v []float64) {
-	if o.Gob {
-		chk.Panic("this method is not available with o.Gob == true yet")
+	if o.useGob {
+		chk.Panic("this method is not available with useGob == true yet")
 	}
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
@@ -267,8 +306,8 @@ func (o *File) VarVecAppend(path string, v []float64) {
 
 // TabAppend appends a row to table
 func (o *File) TabAppend(path string, r []float64) {
-	if o.Gob {
-		chk.Panic("this method is not available with o.Gob == true yet")
+	if o.useGob {
+		chk.Panic("this method is not available with useGob == true yet")
 	}
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
@@ -288,8 +327,8 @@ func (o *File) TabAppend(path string, r []float64) {
 
 // TabPut puts a table
 func (o *File) TabPut(path string, keys []string, a [][]float64) {
-	if o.Gob {
-		chk.Panic("this method is not available with o.Gob == true yet")
+	if o.useGob {
+		chk.Panic("this method is not available with useGob == true yet")
 	}
 	if len(a) < 1 {
 		chk.Panic("cannot put empty table in HDF file. path=%q", path)
@@ -313,7 +352,7 @@ func (o *File) TabPut(path string, keys []string, a [][]float64) {
 		if hid == C.H5I_INVALID_HID {
 			chk.Panic("cannot create data type for table in path=%q", path)
 		}
-		pt := C.H5PTcreate_fl(o.h, cp, hid, C.hsize_t(o.Cs), -1)
+		pt := C.H5PTcreate_fl(o.h, cp, hid, C.hsize_t(o.chunkSize), -1)
 		if pt == C.H5I_INVALID_HID {
 			chk.Panic("cannot create table in path=%q", path)
 		}
@@ -343,8 +382,8 @@ func (o *File) TabPut(path string, keys []string, a [][]float64) {
 
 // TabRead reads a table
 func (o *File) TabRead(path string) (keys []string, a [][]float64) {
-	if o.Gob {
-		chk.Panic("this method is not available with o.Gob == true yet")
+	if o.useGob {
+		chk.Panic("this method is not available with useGob == true yet")
 	}
 	o.filterPath(path)
 	cpth, sncol, skeys, kkeys := C.CString(path), C.CString("ncol"), C.CString("keys"), C.CString("")
@@ -384,7 +423,7 @@ func (o *File) TabRead(path string) (keys []string, a [][]float64) {
 
 // StrSetAttr sets a string attibute
 func (o *File) StrSetAttr(path, key, val string) {
-	if o.Gob {
+	if o.useGob {
 		if o.read {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
@@ -408,7 +447,7 @@ func (o *File) StrSetAttr(path, key, val string) {
 
 // StrReadAttr reads string attribute
 func (o *File) StrReadAttr(path, key string) (val string) {
-	if o.Gob {
+	if o.useGob {
 		var cmd string
 		o.dec.Decode(&cmd)
 		if cmd != "StrSetAttr" {
@@ -442,7 +481,7 @@ func (o *File) StrReadAttr(path, key string) (val string) {
 
 // IntSetAttr sets int attibute
 func (o *File) IntSetAttr(path, key string, val int) {
-	if o.Gob {
+	if o.useGob {
 		if o.read {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
@@ -466,7 +505,7 @@ func (o *File) IntSetAttr(path, key string, val int) {
 
 // IntReadAttr reads int attribute
 func (o *File) IntReadAttr(path, key string) (val int) {
-	if o.Gob {
+	if o.useGob {
 		var cmd string
 		o.dec.Decode(&cmd)
 		if cmd != "IntSetAttr" {
@@ -499,7 +538,7 @@ func (o *File) IntReadAttr(path, key string) (val int) {
 
 // IntsSetAttr sets ints attibute
 func (o *File) IntsSetAttr(path, key string, vals []int) {
-	if o.Gob {
+	if o.useGob {
 		if o.read {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
@@ -523,7 +562,7 @@ func (o *File) IntsSetAttr(path, key string, vals []int) {
 
 // IntsReadAttr reads ints attribute
 func (o *File) IntsReadAttr(path, key string) (vals []int) {
-	if o.Gob {
+	if o.useGob {
 		var cmd string
 		o.dec.Decode(&cmd)
 		if cmd != "IntsSetAttr" {
@@ -569,7 +608,7 @@ func (o *File) IntsReadAttr(path, key string) (vals []int) {
 	return
 }
 
-// -------- Auxiliary methods ------------------------------------------------------------------------
+// auxiliary methods ///////////////////////////////////////////////////////////////////////////
 
 // filterPath checks path syntax and return a list split by '/'
 func (o *File) filterPath(path string) []string {
@@ -613,7 +652,7 @@ func (o *File) hierarchCreate(path string, docreate func(cp *C.char) C.herr_t) {
 
 // putArray puts an array into file
 func (o *File) putArray(path string, dims []int, dat []float64) {
-	if o.Gob {
+	if o.useGob {
 		if o.read {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
@@ -632,7 +671,7 @@ func (o *File) putArray(path string, dims []int, dat []float64) {
 
 // putArrayInt puts an array of integers into file
 func (o *File) putArrayInt(path string, dims []int, dat []int) {
-	if o.Gob {
+	if o.useGob {
 		if o.read {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
@@ -651,7 +690,7 @@ func (o *File) putArrayInt(path string, dims []int, dat []int) {
 
 // putArrayIntNoGroups puts integers into file without creating groups
 func (o *File) putArrayIntNoGroups(path string, dat []int) {
-	if o.Gob {
+	if o.useGob {
 		o.putArrayInt(path, []int{len(dat)}, dat)
 		return
 	}
@@ -680,7 +719,7 @@ func (o *File) deGobRnkDims() (rnk int, dims []int, length int) {
 
 // getArray gets an array from file
 func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
-	if o.Gob {
+	if o.useGob {
 		var cmd string
 		o.dec.Decode(&cmd)
 		if cmd != "putArray" {
@@ -726,7 +765,7 @@ func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 
 // getArrayInt gets an array of integers from file
 func (o *File) getArrayInt(path string, ismat bool) (dims, dat []int) {
-	if o.Gob {
+	if o.useGob {
 		var cmd string
 		o.dec.Decode(&cmd)
 		if cmd != "putArrayInt" {
@@ -772,7 +811,7 @@ func (o *File) getArrayInt(path string, ismat bool) (dims, dat []int) {
 
 // getArrayInto gets an array from file and store in pre-allocated variable
 func (o *File) getArrayInto(dat *[]float64, path string, ismat bool) (dims []int) {
-	if o.Gob {
+	if o.useGob {
 		var cmd string
 		o.dec.Decode(&cmd)
 		if cmd != "putArray" {
@@ -815,5 +854,17 @@ func (o *File) getArrayInto(dat *[]float64, path string, ismat bool) (dims []int
 	if st < 0 {
 		chk.Panic("cannot read dataset with path=%q in file=<%s>", path, o.furl)
 	}
+	return
+}
+
+// auxiliary functions /////////////////////////////////////////////////////////////////////////
+
+func filepath(dir, fnameKey string, useGob bool) (filename, fileurl string) {
+	ext := ".h5"
+	if useGob {
+		ext = ".gob"
+	}
+	filename = fnameKey + ext
+	fileurl = path.Join(dir, filename)
 	return
 }

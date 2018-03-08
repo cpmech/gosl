@@ -15,7 +15,7 @@ func runBasic01(tst *testing.T, Gob bool) {
 
 	uSource := []float64{2.895225697183167e-07, 0.7, -1, 8.431314054288291e-10, -6.4544742997839375, -15.060440179324589, -6.454474343732561, 1.4446963710799783e-08, 0.7, -1, 8.431260528668272e-10, -6.454473969747283, -15.060439619456256, -6.454474076761063, 3.919168102695628e-08, 0.7, -1, 8.431207003048254e-10, -6.454473665192271}
 
-	f := Create("/tmp/gosl/h5", "basic01.h5", Gob)
+	f := Create("/tmp/gosl/h5", "basic01", Gob)
 	f.VecPut("/u", uSource)
 	f.VecPut("/displacements/u", []float64{4, 5, 6})
 	f.VecPut("/displacements/v", []float64{40, 50, 60})
@@ -24,7 +24,7 @@ func runBasic01(tst *testing.T, Gob bool) {
 	f.IntPut("/someints", []int{100, 200, 300, 400})
 	f.Close()
 
-	g := Open("/tmp/gosl/h5", "basic01.h5", Gob)
+	g := Open("/tmp/gosl/h5", "basic01", Gob)
 	u := g.VecRead("/u")
 	du := g.VecRead("/displacements/u")
 	dv := g.VecRead("/displacements/v")
@@ -46,7 +46,7 @@ func runBasic01(tst *testing.T, Gob bool) {
 	if Gob {
 		io.Pfblue2(". . . using gob . . .\n")
 		g.Close()
-		g = Open("/tmp/gosl/h5", "basic01.h5", Gob)
+		g = Open("/tmp/gosl/h5", "basic01", Gob)
 	}
 
 	intoU := make([]float64, len(uSource))
@@ -77,7 +77,7 @@ func runBasic01(tst *testing.T, Gob bool) {
 
 func runBasic02(tst *testing.T, Gob bool) {
 
-	f := Create("/tmp/gosl/h5", "basic02.h5", Gob)
+	f := Create("/tmp/gosl/h5", "basic02", Gob)
 	f.MatPut("/matrix/a", [][]float64{
 		{1, 2, 3},
 		{4, 5, 6},
@@ -96,7 +96,7 @@ func runBasic02(tst *testing.T, Gob bool) {
 	})
 	f.Close()
 
-	g := Open("/tmp/gosl/h5", "basic02.h5", Gob)
+	g := Open("/tmp/gosl/h5", "basic02", Gob)
 	a := g.MatRead("/matrix/a")
 	b := g.MatRead("/matrix/b")
 	c := g.MatRead("/matrix/c")
@@ -124,7 +124,7 @@ func runBasic02(tst *testing.T, Gob bool) {
 
 func runBasic03(tst *testing.T, Gob bool) {
 
-	f := Create("/tmp/gosl/h5", "basic03.h5", Gob)
+	f := Create("/tmp/gosl/h5", "basic03", Gob)
 	f.Deep3Put("/a", [][][]float64{
 		{{1, 2, 3}, {4}, {5, 6}},
 		{{7}, {8, 9}, {10, 11, 12}},
@@ -132,7 +132,7 @@ func runBasic03(tst *testing.T, Gob bool) {
 	})
 	f.Close()
 
-	g := Open("/tmp/gosl/h5", "basic03.h5", Gob)
+	g := Open("/tmp/gosl/h5", "basic03", Gob)
 	a := g.Deep3Read("/a")
 	g.Close()
 	io.Pfpink("a = %v\n", a)
@@ -145,13 +145,13 @@ func runBasic03(tst *testing.T, Gob bool) {
 
 func runBasic04(tst *testing.T, Gob bool) {
 
-	f := Create("/tmp/gosl/h5", "basic04.h5", Gob)
+	f := Create("/tmp/gosl/h5", "basic04", Gob)
 	f.VarVecPut("/varvec", nil)
 	f.VarVecAppend("/varvec", []float64{0, 1, 2})
 	f.VarVecAppend("/varvec", []float64{3, 4, 5})
 	f.Close()
 
-	g := Open("/tmp/gosl/h5", "basic04.h5", Gob)
+	g := Open("/tmp/gosl/h5", "basic04", Gob)
 	u := g.VecRead("/varvec")
 	g.Close()
 	chk.Array(tst, "varvec", 1e-17, u, []float64{0, 1, 2, 3, 4, 5})
@@ -159,7 +159,7 @@ func runBasic04(tst *testing.T, Gob bool) {
 
 func runBasic05(tst *testing.T, Gob bool) {
 
-	f := Create("/tmp/gosl/h5", "basic05.h5", Gob)
+	f := Create("/tmp/gosl/h5", "basic05", Gob)
 	f.TabPut("/table", []string{"c0", "c1", "c2"}, [][]float64{
 		{1, 2, 3},
 		{4, 5, 6},
@@ -168,7 +168,7 @@ func runBasic05(tst *testing.T, Gob bool) {
 	f.TabAppend("/table", []float64{10, 11, 12})
 	f.Close()
 
-	g := Open("/tmp/gosl/h5", "basic05.h5", Gob)
+	g := Open("/tmp/gosl/h5", "basic05", Gob)
 	keys, a := g.TabRead("/table")
 	g.Close()
 	io.Pf("keys     = %v\n", keys)
@@ -184,13 +184,13 @@ func runBasic05(tst *testing.T, Gob bool) {
 
 func runBasic06(tst *testing.T, Gob bool) {
 
-	f := Create("/tmp/gosl/h5", "basic06.h5", Gob)
+	f := Create("/tmp/gosl/h5", "basic06", Gob)
 	f.StrSetAttr("/", "summary", "simulation went well")
 	f.IntSetAttr("/", "nverts", 666)
 	f.IntsSetAttr("/", "someints", []int{111, 222, 333})
 	f.Close()
 
-	g := Open("/tmp/gosl/h5", "basic06.h5", Gob)
+	g := Open("/tmp/gosl/h5", "basic06", Gob)
 	res := g.StrReadAttr("/", "summary")
 	nverts := g.IntReadAttr("/", "nverts")
 	vals := g.IntsReadAttr("/", "someints")
