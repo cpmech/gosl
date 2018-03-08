@@ -65,6 +65,7 @@ func (o File) Filepath() string { return o.furl }
 //
 //   Input:
 //     dirOut   -- directory name that will be created if non-existent
+//                 Note: dirOut may contain environment variables
 //     fnameKey -- filename key; e.g. without extension
 //     useGob   -- use Go's own format gob instead of HDF5
 //
@@ -110,6 +111,7 @@ func Create(dirOut, fnameKey string, useGob bool) (o *File) {
 //
 //   Input:
 //     dirIn    -- directory name where the file is located
+//                 Note: dirIn may contain environment variables
 //     fnameKey -- filename key; e.g. without extension
 //     useGob   -- use Go's own format gob instead of HDF5
 //
@@ -871,6 +873,6 @@ func filepath(dir, fnameKey string, useGob bool) (filename, fileurl string) {
 		ext = ".gob"
 	}
 	filename = fnameKey + ext
-	fileurl = path.Join(dir, filename)
+	fileurl = path.Join(os.ExpandEnv(dir), filename)
 	return
 }
