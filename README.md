@@ -66,6 +66,7 @@ We are currently working on the following additional packages:
 <li>tsr - Tensors, continuum mechanics, and tensor algebra (eigendyads)</li>
 <li>img - Image and machine learning algorithms for images</li>
 <li>img/ocv - Wrapper to OpenCV</li>
+<li>h5 - Wrapper to HDF5 for big data files</li>
 </ol>
 
 
