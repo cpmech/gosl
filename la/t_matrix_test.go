@@ -23,7 +23,8 @@ func TestMatrix01(tst *testing.T) {
 	}
 
 	a := NewMatrixDeep2(A)
-	chk.Array(tst, "A to a", 1e-15, a.Data, []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2})
+	araw := []float64{1, 5, 9, 2, 6, 0, 3, 7, -1, 4, 8, -2}
+	chk.Array(tst, "A to a", 1e-15, a.Data, araw)
 
 	chk.Float64(tst, "Get(0,0)", 1e-17, a.Get(0, 0), 1)
 	chk.Float64(tst, "Get(0,1)", 1e-17, a.Get(0, 1), 2)
@@ -67,6 +68,9 @@ func TestMatrix01(tst *testing.T) {
 		return
 	}
 	chk.Array(tst, "b.Data", 1e-17, b.Data, a.Data)
+
+	c := NewMatrixRaw(3, 4, araw)
+	chk.Deep2(tst, "c := araw", 1e-15, c.GetDeep2(), A)
 }
 
 func TestMatrix02(tst *testing.T) {

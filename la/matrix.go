@@ -53,6 +53,19 @@ func NewMatrixDeep2(a [][]float64) (o *Matrix) {
 	return
 }
 
+// NewMatrixRaw creates a new Matrix using given raw data
+//  Input:
+//    rawdata -- data organized as column-major; e.g. Fortran format
+//  NOTE:
+//    (1) rawdata is not copied!
+//    (2) the external slice rawdata should not be changed or deleted
+func NewMatrixRaw(m, n int, rawdata []float64) (o *Matrix) {
+	o = new(Matrix)
+	o.M, o.N = m, n
+	o.Data = rawdata
+	return
+}
+
 // SetFromDeep2 sets matrix with data from a nested slice (Deep2) structure
 func (o *Matrix) SetFromDeep2(a [][]float64) {
 	k := 0
