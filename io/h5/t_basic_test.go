@@ -83,30 +83,33 @@ func runBasic01(tst *testing.T, Gob bool) {
 
 func runBasic02(tst *testing.T, Gob bool) {
 
+	io.Pf(". . . writing . . .\n")
+
 	f := Create("/tmp/gosl/h5", "basic02", Gob)
-	f.MatPut("/matrix/a", [][]float64{
+	f.PutDeep2("/deep2/a", [][]float64{
 		{1, 2, 3},
 		{4, 5, 6},
 		{7, 8, 9},
 		{10, 11, 12},
 	})
-	f.MatPut("/matrix/b", [][]float64{
+	f.PutDeep2("/deep2/b", [][]float64{
 		{10, 20, 30, 11},
 		{40, 50, 60, 21},
 		{70, 80, 90, 31},
 	})
-	f.MatPut("/matrix/c", [][]float64{
+	f.PutDeep2("/deep2/c", [][]float64{
 		{10, 20, 11},
 		{40, 50, 21},
 		{70, 80, 31},
 	})
 	f.Close()
 
+	io.Pf(". . . reading . . .\n")
+
 	g := Open("/tmp/gosl/h5", "basic02", Gob)
-	a := g.MatRead("/matrix/a")
-	b := g.MatRead("/matrix/b")
-	c := g.MatRead("/matrix/c")
-	g.Close()
+	a := g.GetDeep2("/deep2/a")
+	b := g.GetDeep2("/deep2/b")
+	c := g.GetDeep2("/deep2/c")
 	io.Pforan("a = %v\n", a)
 	io.Pforan("b = %v\n", b)
 	io.Pforan("c = %v\n", c)
@@ -126,6 +129,21 @@ func runBasic02(tst *testing.T, Gob bool) {
 		{40, 50, 21},
 		{70, 80, 31},
 	})
+
+	if Gob {
+		io.Pf(". . . reopening file because gob requires same reading order . . .\n")
+		g.Close()
+		g = Open("/tmp/gosl/h5", "basic02", Gob)
+	}
+
+	io.Pf(". . . reading again . . .\n")
+
+	m, n, araw := g.GetDeep2raw("/deep2/a")
+	g.Close()
+
+	chk.Int(tst, "m", m, 4)
+	chk.Int(tst, "n", n, 3)
+	chk.Array(tst, "araw", 1e-15, araw, []float64{1, 4, 7, 10, 2, 5, 8, 11, 3, 6, 9, 12})
 }
 
 func runBasic03(tst *testing.T, Gob bool) {
@@ -202,14 +220,14 @@ func TestBasic01b(tst *testing.T) {
 
 func TestBasic02a(tst *testing.T) {
 	//verbose()
-	chk.PrintTitle("Basic02a")
+	chk.PrintTitle("Basic02a. HDF5. Deep2")
 	Gob := false
 	runBasic02(tst, Gob)
 }
 
 func TestBasic02b(tst *testing.T) {
 	//verbose()
-	chk.PrintTitle("Basic02b")
+	chk.PrintTitle("Basic02b. Gob. Deep2")
 	Gob := true
 	runBasic02(tst, Gob)
 }

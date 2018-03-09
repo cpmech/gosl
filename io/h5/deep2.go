@@ -18,23 +18,34 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// MatPut puts a matrix with name described in path into HDF5 file
-//  NOTE: path = "/mymat"  or   path = "/group/mymat"
-func (o *File) MatPut(path string, a [][]float64) {
+// PutDeep2 puts a Deep2 slice into file
+//  Input:
+//    path -- HDF5 path such as "/myvec" or "/group/myvec"
+//    a    -- slice of slices of float64
+//  Note: Slice will be serialized
+func (o *File) PutDeep2(path string, a [][]float64) {
 	m := len(a)
 	if m < 1 {
-		chk.Panic("cannot put matrix in HDF file. path = %q", path)
+		chk.Panic("cannot put empty Deep2 into file. path = %q", path)
 	}
 	n := len(a[0])
 	if n < 1 {
-		chk.Panic("cannot put empty matrix in HDF file. path = %q", path)
+		chk.Panic("cannot put empty Deep2 into file. path = %q", path)
 	}
 	aser := utl.SerializeDeep2(a)
 	o.putArray(path, []int{m, n}, aser)
 }
 
-// MatRead reads a matrix from file
-func (o *File) MatRead(path string) (a [][]float64) {
+// GetDeep2 gets a Deep2 slice (that was serialized). Memory will be allocated
+func (o *File) GetDeep2(path string) (a [][]float64) {
 	dims, aser := o.getArray(path, true) // ismat=true
 	return utl.DeserializeDeep2(aser, dims[0], dims[1])
+}
+
+// GetDeep2raw returns the serialized data corresponding to a Deep2 slice
+func (o *File) GetDeep2raw(path string) (m, n int, a []float64) {
+	var dims []int
+	dims, a = o.getArray(path, true)
+	m, n = dims[0], dims[1]
+	return
 }
