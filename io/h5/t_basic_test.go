@@ -168,29 +168,15 @@ func runBasic03(tst *testing.T, Gob bool) {
 func runBasic04(tst *testing.T, Gob bool) {
 
 	f := Create("/tmp/gosl/h5", "basic04", Gob)
-	f.VarVecPut("/varvec", nil)
-	f.VarVecAppend("/varvec", []float64{0, 1, 2})
-	f.VarVecAppend("/varvec", []float64{3, 4, 5})
+	f.SetStringAttribute("/", "summary", "simulation went well")
+	f.SetIntAttribute("/", "nverts", 666)
+	f.SetIntsAttribute("/", "someints", []int{111, 222, 333})
 	f.Close()
 
 	g := Open("/tmp/gosl/h5", "basic04", Gob)
-	u := g.GetArray("/varvec")
-	g.Close()
-	chk.Array(tst, "varvec", 1e-17, u, []float64{0, 1, 2, 3, 4, 5})
-}
-
-func runBasic05(tst *testing.T, Gob bool) {
-
-	f := Create("/tmp/gosl/h5", "basic06", Gob)
-	f.StrSetAttr("/", "summary", "simulation went well")
-	f.IntSetAttr("/", "nverts", 666)
-	f.IntsSetAttr("/", "someints", []int{111, 222, 333})
-	f.Close()
-
-	g := Open("/tmp/gosl/h5", "basic06", Gob)
-	res := g.StrReadAttr("/", "summary")
-	nverts := g.IntReadAttr("/", "nverts")
-	vals := g.IntsReadAttr("/", "someints")
+	res := g.GetStringAttribute("/", "summary")
+	nverts := g.GetIntAttribute("/", "nverts")
+	vals := g.GetIntsAttribute("/", "someints")
 	g.Close()
 	io.Pf("summary  = %v\n", res)
 	io.Pf("nverts   = %v\n", nverts)
@@ -200,6 +186,20 @@ func runBasic05(tst *testing.T, Gob bool) {
 		chk.Panic("error with nverts. %d != 666", nverts)
 	}
 	chk.Ints(tst, "someints", vals, []int{111, 222, 333})
+}
+
+func runBasic05(tst *testing.T, Gob bool) {
+
+	f := Create("/tmp/gosl/h5", "basic05", Gob)
+	f.VarVecPut("/varvec", nil)
+	f.VarVecAppend("/varvec", []float64{0, 1, 2})
+	f.VarVecAppend("/varvec", []float64{3, 4, 5})
+	f.Close()
+
+	g := Open("/tmp/gosl/h5", "basic05", Gob)
+	u := g.GetArray("/varvec")
+	g.Close()
+	chk.Array(tst, "varvec", 1e-17, u, []float64{0, 1, 2, 3, 4, 5})
 }
 
 func TestBasic01a(tst *testing.T) {
@@ -245,31 +245,22 @@ func TestBasic03b(tst *testing.T) {
 }
 
 func TestBasic04a(tst *testing.T) {
-	//verbose()
-	chk.PrintTitle("Basic04a")
+	verbose()
+	chk.PrintTitle("Basic04a. HDF5. Attributes")
 	Gob := false
 	runBasic04(tst, Gob)
 }
 
-/* TODO
 func TestBasic04b(tst *testing.T) {
 	verbose()
-	chk.PrintTitle("Basic04b")
+	chk.PrintTitle("Basic04b. Gob. Attributes")
 	Gob := true
 	runBasic04(tst, Gob)
 }
-*/
 
 func TestBasic05a(tst *testing.T) {
-	//verbose()
-	chk.PrintTitle("Basic05a")
+	verbose()
+	chk.PrintTitle("Basic05a. VariableArray")
 	Gob := false
-	runBasic05(tst, Gob)
-}
-
-func TestBasic05b(tst *testing.T) {
-	//verbose()
-	chk.PrintTitle("Basic05b")
-	Gob := true
 	runBasic05(tst, Gob)
 }

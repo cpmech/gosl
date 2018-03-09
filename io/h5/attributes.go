@@ -22,18 +22,22 @@ import (
 
 // String //////////////////////////////////////////////////////////////////////////////////////
 
-// StrSetAttr sets a string attibute
-func (o *File) StrSetAttr(path, key, val string) {
+// SetStringAttribute sets a string attibute
+func (o *File) SetStringAttribute(path, key, val string) {
+
+	// GOB
 	if o.useGob {
 		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.gobEnc.Encode("StrSetAttr")
+		o.gobEnc.Encode("SetStringAttribute")
 		o.gobEnc.Encode(path)
 		o.gobEnc.Encode(key)
 		o.gobEnc.Encode(val)
 		return
 	}
+
+	// HDF5
 	ckey, cval := C.CString(key), C.CString(val)
 	defer C.free(unsafe.Pointer(ckey))
 	defer C.free(unsafe.Pointer(cval))
@@ -46,12 +50,14 @@ func (o *File) StrSetAttr(path, key, val string) {
 	})
 }
 
-// StrReadAttr reads string attribute
-func (o *File) StrReadAttr(path, key string) (val string) {
+// GetStringAttribute gets string attribute
+func (o *File) GetStringAttribute(path, key string) (val string) {
+
+	// GOB
 	if o.useGob {
 		var cmd string
 		o.gobDec.Decode(&cmd)
-		if cmd != "StrSetAttr" {
+		if cmd != "SetStringAttribute" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
@@ -67,6 +73,8 @@ func (o *File) StrReadAttr(path, key string) (val string) {
 		o.gobDec.Decode(&val)
 		return
 	}
+
+	// HDF5
 	o.filterPath(path)
 	val = strings.Repeat(" ", 2048)
 	cpth, ckey, cval := C.CString(path), C.CString(key), C.CString(val)
@@ -82,18 +90,22 @@ func (o *File) StrReadAttr(path, key string) (val string) {
 
 // Int /////////////////////////////////////////////////////////////////////////////////////////
 
-// IntSetAttr sets int attibute
-func (o *File) IntSetAttr(path, key string, val int) {
+// SetIntAttribute sets int attibute
+func (o *File) SetIntAttribute(path, key string, val int) {
+
+	// GOB
 	if o.useGob {
 		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.gobEnc.Encode("IntSetAttr")
+		o.gobEnc.Encode("SetIntAttribute")
 		o.gobEnc.Encode(path)
 		o.gobEnc.Encode(key)
 		o.gobEnc.Encode(val)
 		return
 	}
+
+	// HDF5
 	ckey := C.CString(key)
 	defer C.free(unsafe.Pointer(ckey))
 	vals := []int{val}
@@ -106,12 +118,14 @@ func (o *File) IntSetAttr(path, key string, val int) {
 	})
 }
 
-// IntReadAttr reads int attribute
-func (o *File) IntReadAttr(path, key string) (val int) {
+// GetIntAttribute gets int attribute
+func (o *File) GetIntAttribute(path, key string) (val int) {
+
+	// GOB
 	if o.useGob {
 		var cmd string
 		o.gobDec.Decode(&cmd)
-		if cmd != "IntSetAttr" {
+		if cmd != "SetIntAttribute" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
@@ -127,6 +141,8 @@ func (o *File) IntReadAttr(path, key string) (val int) {
 		o.gobDec.Decode(&val)
 		return
 	}
+
+	// HDF5
 	o.filterPath(path)
 	cpth, ckey := C.CString(path), C.CString(key)
 	defer C.free(unsafe.Pointer(cpth))
@@ -141,15 +157,15 @@ func (o *File) IntReadAttr(path, key string) (val int) {
 
 // Ints /////////////////////////////////////////////////////////////////////////////////////////
 
-// IntsSetAttr sets ints attibute
-func (o *File) IntsSetAttr(path, key string, vals []int) {
+// SetIntsAttribute sets slice-of-ints attibute
+func (o *File) SetIntsAttribute(path, key string, vals []int) {
 
 	// GOB
 	if o.useGob {
 		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.gobEnc.Encode("IntsSetAttr")
+		o.gobEnc.Encode("SetIntsAttribute")
 		o.gobEnc.Encode(path)
 		o.gobEnc.Encode(key)
 		o.gobEnc.Encode(vals)
@@ -169,14 +185,14 @@ func (o *File) IntsSetAttr(path, key string, vals []int) {
 	})
 }
 
-// IntsReadAttr reads ints attribute
-func (o *File) IntsReadAttr(path, key string) (vals []int) {
+// GetIntsAttribute gets slice-of-ints attribute
+func (o *File) GetIntsAttribute(path, key string) (vals []int) {
 
 	// GOB
 	if o.useGob {
 		var cmd string
 		o.gobDec.Decode(&cmd)
-		if cmd != "IntsSetAttr" {
+		if cmd != "SetIntsAttribute" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string
