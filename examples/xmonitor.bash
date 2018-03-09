@@ -29,6 +29,5 @@ while true; do
     echo
     echo
     echo
-    #go run fun_fft01.go
-    go run fun_fourierinterp01.go
+    go run h5_ang_mnist01.go
 done

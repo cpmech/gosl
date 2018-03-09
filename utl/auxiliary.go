@@ -4,6 +4,8 @@
 
 package utl
 
+import "math"
+
 // BestSquare finds the best square for given size=Nrows * Ncolumns
 func BestSquare(size int) (nrow, ncol int) {
 	nrow = -1 // not found
@@ -24,6 +26,15 @@ func BestSquare(size int) (nrow, ncol int) {
 			}
 		}
 	}
+	return
+}
+
+// BestSquareApprox finds the best square for given size=Nrows * Ncolumns.
+// Approximate version; i.e. nrow*ncol may not be equal to size
+func BestSquareApprox(size int) (nrow, ncol int) {
+	fsize := float64(size)
+	ncol = int(math.Floor(math.Sqrt(fsize)))
+	nrow = int(math.Ceil(fsize / float64(ncol)))
 	return
 }
 

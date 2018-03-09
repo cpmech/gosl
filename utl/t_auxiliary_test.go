@@ -11,14 +11,23 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func TestBestsq01(tst *testing.T) {
+func TestBestSquare01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Bestsq01")
+	chk.PrintTitle("BestSquare01")
 
 	for i := 1; i <= 12; i++ {
 		nrow, ncol := BestSquare(i)
-		io.Pforan("nrow, ncol, nrow*ncol = %2d, %2d, %2d\n", nrow, ncol, nrow*ncol)
+		p, q := BestSquareApprox(i)
+		pointer := ""
+		if p*q != nrow*ncol {
+			pointer = " <---"
+		} else {
+			if p != nrow || q != ncol {
+				pointer = " <==="
+			}
+		}
+		io.Pf("nrow(p), ncol(q), nrow*ncol(p*q) = %2d(%2d), %2d(%2d), %2d(%2d)%s\n", nrow, p, ncol, q, nrow*ncol, p*q, pointer)
 		if nrow*ncol != i {
 			chk.Panic("BestSquare failed")
 		}
