@@ -159,31 +159,6 @@ func runBasic04(tst *testing.T, Gob bool) {
 
 func runBasic05(tst *testing.T, Gob bool) {
 
-	f := Create("/tmp/gosl/h5", "basic05", Gob)
-	f.TabPut("/table", []string{"c0", "c1", "c2"}, [][]float64{
-		{1, 2, 3},
-		{4, 5, 6},
-	})
-	f.TabAppend("/table", []float64{7, 8, 9})
-	f.TabAppend("/table", []float64{10, 11, 12})
-	f.Close()
-
-	g := Open("/tmp/gosl/h5", "basic05", Gob)
-	keys, a := g.TabRead("/table")
-	g.Close()
-	io.Pf("keys     = %v\n", keys)
-	io.Pf("a        = %v\n", a)
-	chk.Deep2(tst, "a", 1e-17, a, [][]float64{
-		{1, 2, 3},
-		{4, 5, 6},
-		{7, 8, 9},
-		{10, 11, 12},
-	})
-	chk.Strings(tst, "keys", keys, []string{"c0", "c1", "c2"})
-}
-
-func runBasic06(tst *testing.T, Gob bool) {
-
 	f := Create("/tmp/gosl/h5", "basic06", Gob)
 	f.StrSetAttr("/", "summary", "simulation went well")
 	f.IntSetAttr("/", "nverts", 666)
@@ -270,25 +245,9 @@ func TestBasic05a(tst *testing.T) {
 	runBasic05(tst, Gob)
 }
 
-/* TODO
 func TestBasic05b(tst *testing.T) {
-	verbose()
+	//verbose()
 	chk.PrintTitle("Basic05b")
 	Gob := true
 	runBasic05(tst, Gob)
-}
-*/
-
-func TestBasic06a(tst *testing.T) {
-	//verbose()
-	chk.PrintTitle("Basic06a")
-	Gob := false
-	runBasic06(tst, Gob)
-}
-
-func TestBasic06b(tst *testing.T) {
-	//verbose()
-	chk.PrintTitle("Basic06b")
-	Gob := true
-	runBasic06(tst, Gob)
 }

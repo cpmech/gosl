@@ -185,47 +185,25 @@ func (o *File) VecReadInto(v *[]float64, path string) (dims []int) {
 	return
 }
 
-func matSerialize(path string, a [][]float64) (m, n int, aser []float64) {
-	m, n = len(a), len(a[0])
-	aser = make([]float64, m*n)
-	for i := 0; i < m; i++ {
-		if len(a[i]) != n {
-			chk.Panic("all rows in matrix must have the same size. path = %q", path)
-		}
-		for j := 0; j < n; j++ {
-			aser[j+i*n] = a[i][j]
-		}
-	}
-	return
-}
-
-func matUnserialize(dims []int, aser []float64) (a [][]float64) {
-	a = utl.Alloc(dims[0], dims[1])
-	for i := 0; i < dims[0]; i++ {
-		for j := 0; j < dims[1]; j++ {
-			a[i][j] = aser[j+i*dims[1]]
-		}
-	}
-	return
-}
-
 // MatPut puts a matrix with name described in path into HDF5 file
 //  NOTE: path = "/mymat"  or   path = "/group/mymat"
 func (o *File) MatPut(path string, a [][]float64) {
-	if len(a) < 1 {
+	m := len(a)
+	if m < 1 {
+		chk.Panic("cannot put matrix in HDF file. path = %q", path)
+	}
+	n := len(a[0])
+	if n < 1 {
 		chk.Panic("cannot put empty matrix in HDF file. path = %q", path)
 	}
-	if len(a[0]) < 1 {
-		chk.Panic("cannot put empty matrix in HDF file. path = %q", path)
-	}
-	m, n, aser := matSerialize(path, a)
+	aser := utl.SerializeDeep2(a)
 	o.putArray(path, []int{m, n}, aser)
 }
 
 // MatRead reads a matrix from file
 func (o *File) MatRead(path string) (a [][]float64) {
 	dims, aser := o.getArray(path, true) // ismat=true
-	return matUnserialize(dims, aser)
+	return utl.DeserializeDeep2(aser, dims[0], dims[1])
 }
 
 // IntPut puts a slice of integers into file
@@ -246,7 +224,7 @@ func (o *File) IntRead(path string) (v []int) {
 // Deep3Put puts a deep slice with 3 levels and name described in path into HDF5 file
 //  NOTE: path = "/mydeep3"  or   path = "/group/mydeep3"
 func (o *File) Deep3Put(path string, a [][][]float64) {
-	I, P, S := utl.Deep3Serialize(a)
+	I, P, S := utl.SerializeDeep3(a)
 	o.putArray(path+"/S", []int{len(S)}, S)
 	o.putArrayIntNoGroups(path+"/I", I)
 	o.putArrayIntNoGroups(path+"/P", P)
@@ -257,7 +235,7 @@ func (o *File) Deep3Read(path string) (a [][][]float64) {
 	_, S := o.getArray(path+"/S", false) // ismat=false
 	_, I := o.getArrayInt(path+"/I", false)
 	_, P := o.getArrayInt(path+"/P", false)
-	a = utl.Deep3Deserialize(I, P, S, false)
+	a = utl.DeserializeDeep3(I, P, S, false)
 	return
 }
 
@@ -310,123 +288,6 @@ func (o *File) VarVecAppend(path string, v []float64) {
 	if st < 0 {
 		chk.Panic("cannot close vector in path=%q", path)
 	}
-}
-
-// TabAppend appends a row to table
-func (o *File) TabAppend(path string, r []float64) {
-	if o.useGob {
-		chk.Panic("this method is not available with useGob == true yet")
-	}
-	cpth := C.CString(path)
-	defer C.free(unsafe.Pointer(cpth))
-	pt := C.H5PTopen(o.hdfHandle, cpth)
-	if pt == C.H5I_INVALID_HID {
-		chk.Panic("cannot open table in path %q", path)
-	}
-	st := C.H5PTappend(pt, 1, unsafe.Pointer(&r[0]))
-	if st < 0 {
-		chk.Panic("cannot append data to table in path=%q", path)
-	}
-	st = C.H5PTclose(pt)
-	if st < 0 {
-		chk.Panic("cannot close table in path=%q", path)
-	}
-}
-
-// TabPut puts a table
-func (o *File) TabPut(path string, keys []string, a [][]float64) {
-	if o.useGob {
-		chk.Panic("this method is not available with useGob == true yet")
-	}
-	if len(a) < 1 {
-		chk.Panic("cannot put empty table in HDF file. path=%q", path)
-	}
-	if len(a[0]) < 1 {
-		chk.Panic("cannot put empty table in HDF file. path=%q", path)
-	}
-	var allkeys string
-	for _, key := range keys {
-		allkeys += " " + key
-	}
-	allkeys = strings.TrimSpace(allkeys)
-	sncol, skeys, kkeys := C.CString("ncol"), C.CString("keys"), C.CString(allkeys)
-	defer C.free(unsafe.Pointer(sncol))
-	defer C.free(unsafe.Pointer(skeys))
-	defer C.free(unsafe.Pointer(kkeys))
-	m, n, aser := matSerialize(path, a)
-	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		ncol := []int{n}
-		hid := C.H5Tarray_create(C.H5Tdouble(), 1, (*C.hsize_t)(unsafe.Pointer(&ncol[0])))
-		if hid == C.H5I_INVALID_HID {
-			chk.Panic("cannot create data type for table in path=%q", path)
-		}
-		pt := C.H5PTcreate_fl(o.hdfHandle, cp, hid, C.hsize_t(o.chunkSize), -1)
-		if pt == C.H5I_INVALID_HID {
-			chk.Panic("cannot create table in path=%q", path)
-		}
-		st := C.H5LTset_attribute_long(o.hdfHandle, cp, sncol, (*C.long)(unsafe.Pointer(&ncol[0])), 1)
-		if st < 0 {
-			chk.Panic("cannot set attibute ncol to table in path=%q", path)
-		}
-		st = C.H5LTset_attribute_string(o.hdfHandle, cp, skeys, kkeys)
-		if st < 0 {
-			chk.Panic("cannot set attibute keys to table in path=%q", path)
-		}
-		st = C.H5PTappend(pt, C.size_t(m), unsafe.Pointer(&aser[0]))
-		if st < 0 {
-			chk.Panic("cannot append data to table in path=%q", path)
-		}
-		st = C.H5PTcreate_index(pt)
-		if st < 0 {
-			chk.Panic("cannot create index in table of path=%q", path)
-		}
-		st = C.H5PTclose(pt)
-		if st < 0 {
-			chk.Panic("cannot close table in path=%q", path)
-		}
-		return 0
-	})
-}
-
-// TabRead reads a table
-func (o *File) TabRead(path string) (keys []string, a [][]float64) {
-	if o.useGob {
-		chk.Panic("this method is not available with useGob == true yet")
-	}
-	o.filterPath(path)
-	cpth, sncol, skeys, kkeys := C.CString(path), C.CString("ncol"), C.CString("keys"), C.CString("")
-	defer C.free(unsafe.Pointer(cpth))
-	defer C.free(unsafe.Pointer(sncol))
-	defer C.free(unsafe.Pointer(skeys))
-	defer C.free(unsafe.Pointer(kkeys))
-	rank := 2
-	dims := make([]int, rank)
-	st := C.H5LTget_dataset_info(o.hdfHandle, cpth, (*C.hsize_t)(unsafe.Pointer(&dims[0])), nil, nil)
-	if st < 0 {
-		chk.Panic("cannot read dimensions with path=%q and file <%s>", "TabRead", path, o.furl)
-	}
-	ncol := []int{0}
-	st = C.H5LTget_attribute_long(o.hdfHandle, cpth, sncol, (*C.long)(unsafe.Pointer(&ncol[0])))
-	if st < 0 {
-		chk.Panic("cannot read attibute ncol from table in path=%q", path)
-	}
-	st = C.H5LTget_attribute_string(o.hdfHandle, cpth, skeys, kkeys)
-	if st < 0 {
-		chk.Panic("cannot read attibute keys from table in path=%q", path)
-	}
-	hid := C.H5Tarray_create(C.H5Tdouble(), 1, (*C.hsize_t)(unsafe.Pointer(&ncol[0])))
-	if hid == C.H5I_INVALID_HID {
-		chk.Panic("cannot create data type for table in path=%q", path)
-	}
-	dims[1] = ncol[0]
-	aser := make([]float64, dims[0]*dims[1])
-	st = C.H5LTread_dataset(o.hdfHandle, cpth, hid, unsafe.Pointer(&aser[0]))
-	if st < 0 {
-		chk.Panic("cannot read dataset with path=%q in file=<%s>\n  ncol=%v  dims=%v  keys=%v\n", path, o.furl, ncol, dims, C.GoString(kkeys))
-	}
-	keys = strings.Split(strings.TrimSpace(C.GoString(kkeys)), " ")
-	a = matUnserialize(dims, aser)
-	return
 }
 
 // StrSetAttr sets a string attibute
