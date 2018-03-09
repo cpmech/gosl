@@ -23,7 +23,7 @@ func runBasic01(tst *testing.T, Gob bool) {
 	f.PutArray("/displacements/v", []float64{40, 50, 60})
 	f.PutArray("/time0/ip0/a0/u", []float64{7, 8, 9})
 	f.PutArray("/time1/ip0/b0/u", []float64{70, 80, 90})
-	f.IntPut("/someints", []int{100, 200, 300, 400})
+	f.PutInts("/someints", []int{100, 200, 300, 400})
 	f.Close()
 
 	io.Pf(". . . reading . . .\n")
@@ -34,7 +34,7 @@ func runBasic01(tst *testing.T, Gob bool) {
 	dv := g.GetArray("/displacements/v")
 	t0i0a0u := g.GetArray("/time0/ip0/a0/u")
 	t1i0b0u := g.GetArray("/time1/ip0/b0/u")
-	someints := g.IntRead("/someints")
+	someints := g.GetInts("/someints")
 	io.Pforan("u          = %v\n", u)
 	io.Pforan("d_u        = %v\n", du)
 	io.Pforan("d_v        = %v\n", dv)
@@ -188,14 +188,14 @@ func runBasic05(tst *testing.T, Gob bool) {
 
 func TestBasic01a(tst *testing.T) {
 	//verbose()
-	chk.PrintTitle("Basic01a")
+	chk.PrintTitle("Basic01a. HDF5. Array and Ints")
 	Gob := false
 	runBasic01(tst, Gob)
 }
 
 func TestBasic01b(tst *testing.T) {
 	//verbose()
-	chk.PrintTitle("Basic01b")
+	chk.PrintTitle("Basic01b. Gob. Array and Ints")
 	Gob := true
 	runBasic01(tst, Gob)
 }

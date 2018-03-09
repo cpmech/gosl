@@ -19,18 +19,20 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// IntPut puts a slice of integers into file
-//  NOTE: path = "/myint"  or   path = "/group/myint"
-func (o *File) IntPut(path string, v []int) {
+// PutInts puts a slice of integers into file
+//  Input:
+//    path -- HDF5 path such as "/myvec" or "/group/myvec"
+//    v    -- slice of integers
+func (o *File) PutInts(path string, v []int) {
 	if len(v) < 1 {
 		chk.Panic("cannot put empty slice in HDF file. path = %q", path)
 	}
-	o.putArrayInt(path, []int{len(v)}, v)
+	o.putInts(path, []int{len(v)}, v)
 }
 
-// IntRead reads a slice of integers from file
-func (o *File) IntRead(path string) (v []int) {
-	_, v = o.getArrayInt(path, false) // ismat=false
+// GetInts gets a slice of ints from file. Memory will be allocated
+func (o *File) GetInts(path string) (v []int) {
+	_, v = o.getInts(path, false) // ismat=false
 	return
 }
 
@@ -108,13 +110,13 @@ func (o *File) IntsReadAttr(path, key string) (vals []int) {
 
 // auxiliary methods ///////////////////////////////////////////////////////////////////////////
 
-// putArrayInt puts an array of integers into file
-func (o *File) putArrayInt(path string, dims []int, dat []int) {
+// putInts puts an array of integers into file
+func (o *File) putInts(path string, dims []int, dat []int) {
 	if o.useGob {
 		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
 		}
-		o.gobEnc.Encode("putArrayInt")
+		o.gobEnc.Encode("putInts")
 		o.gobEnc.Encode(path)
 		o.gobEnc.Encode(len(dims))
 		o.gobEnc.Encode(dims)
@@ -130,7 +132,7 @@ func (o *File) putArrayInt(path string, dims []int, dat []int) {
 // putArrayIntNoGroups puts integers into file without creating groups
 func (o *File) putArrayIntNoGroups(path string, dat []int) {
 	if o.useGob {
-		o.putArrayInt(path, []int{len(dat)}, dat)
+		o.putInts(path, []int{len(dat)}, dat)
 		return
 	}
 	cpth := C.CString(path)
@@ -142,12 +144,12 @@ func (o *File) putArrayIntNoGroups(path string, dat []int) {
 	}
 }
 
-// getArrayInt gets an array of integers from file
-func (o *File) getArrayInt(path string, ismat bool) (dims, dat []int) {
+// getInts gets an array of integers from file
+func (o *File) getInts(path string, ismat bool) (dims, dat []int) {
 	if o.useGob {
 		var cmd string
 		o.gobDec.Decode(&cmd)
-		if cmd != "putArrayInt" {
+		if cmd != "putInts" {
 			chk.Panic("wrong command => %q\n(r/w commands need to be called in the same order)", cmd)
 		}
 		var rpath string

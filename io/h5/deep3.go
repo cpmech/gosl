@@ -29,8 +29,8 @@ func (o *File) Deep3Put(path string, a [][][]float64) {
 // Deep3Read reads a deep slice with 3 levels from file
 func (o *File) Deep3Read(path string) (a [][][]float64) {
 	_, S := o.getArray(path+"/S", false) // ismat=false
-	_, I := o.getArrayInt(path+"/I", false)
-	_, P := o.getArrayInt(path+"/P", false)
+	_, I := o.getInts(path+"/I", false)
+	_, P := o.getInts(path+"/P", false)
 	a = utl.DeserializeDeep3(I, P, S, false)
 	return
 }

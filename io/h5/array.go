@@ -22,6 +22,7 @@ import (
 // PutArray puts an array with name described in path into HDF5 file
 //  Input:
 //    path -- HDF5 path such as "/myvec" or "/group/myvec"
+//    v    -- slice of float64
 func (o *File) PutArray(path string, v []float64) {
 	if len(v) < 1 {
 		chk.Panic("cannot put empty vector in HDF file. path = %q", path)
