@@ -19,24 +19,30 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// VecPut puts a vector with name described in path into HDF5 file
-//  NOTE: path = "/myvec"  or   path = "/group/myvec"
-func (o *File) VecPut(path string, v []float64) {
+// PutArray puts an array with name described in path into HDF5 file
+//  Input:
+//    path -- HDF5 path such as "/myvec" or "/group/myvec"
+func (o *File) PutArray(path string, v []float64) {
 	if len(v) < 1 {
 		chk.Panic("cannot put empty vector in HDF file. path = %q", path)
 	}
 	o.putArray(path, []int{len(v)}, v)
 }
 
-// VecRead reads a vector from file
-func (o *File) VecRead(path string) (v []float64) {
+// GetArray gets an array from file. Memory will be allocated
+func (o *File) GetArray(path string) (v []float64) {
 	_, v = o.getArray(path, false) // ismat=false
 	return
 }
 
-// VecReadInto reads a vector from file into existent pre-allocated variable
-func (o *File) VecReadInto(v *[]float64, path string) (dims []int) {
-	dims = o.getArrayInto(v, path, false) // ismat=false
+// ReadArray reads an array from file into existent pre-allocated memory
+//  Input:
+//    path -- HDF5 path such as "/myvec" or "/group/myvec"
+//  Output:
+//    array -- values in pre-allocated array => must know dimension
+//    dims  -- dimensions (for confirmation)
+func (o *File) ReadArray(v []float64, path string) (dims []int) {
+	dims = o.readArray(&v, path, false) // ismat=false
 	return
 }
 
@@ -44,6 +50,8 @@ func (o *File) VecReadInto(v *[]float64, path string) (dims []int) {
 
 // putArray puts an array into file
 func (o *File) putArray(path string, dims []int, dat []float64) {
+
+	// GOB
 	if o.useGob {
 		if o.gobReading {
 			chk.Panic("cannot put %q because file is open for READONLY", path)
@@ -55,6 +63,8 @@ func (o *File) putArray(path string, dims []int, dat []float64) {
 		o.gobEnc.Encode(dat)
 		return
 	}
+
+	// HDF5
 	rnk := C.int(len(dims))
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
 		return C.H5LTmake_dataset_double(o.hdfHandle, cp, rnk, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.double)(unsafe.Pointer(&dat[0])))
@@ -63,6 +73,8 @@ func (o *File) putArray(path string, dims []int, dat []float64) {
 
 // getArray gets an array from file
 func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
+
+	// GOB
 	if o.useGob {
 		var cmd string
 		o.gobDec.Decode(&cmd)
@@ -80,6 +92,8 @@ func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 		o.gobDec.Decode(&dat)
 		return
 	}
+
+	// HDF5
 	o.filterPath(path)
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
@@ -107,8 +121,10 @@ func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 	return
 }
 
-// getArrayInto gets an array from file and store in pre-allocated variable
-func (o *File) getArrayInto(dat *[]float64, path string, ismat bool) (dims []int) {
+// readArray gets an array from file and store in pre-allocated variable
+func (o *File) readArray(dat *[]float64, path string, ismat bool) (dims []int) {
+
+	// GOB
 	if o.useGob {
 		var cmd string
 		o.gobDec.Decode(&cmd)
@@ -124,6 +140,8 @@ func (o *File) getArrayInto(dat *[]float64, path string, ismat bool) (dims []int
 		o.gobDec.Decode(dat)
 		return
 	}
+
+	// HDF5
 	o.filterPath(path)
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))

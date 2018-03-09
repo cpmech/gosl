@@ -13,23 +13,27 @@ import (
 
 func runBasic01(tst *testing.T, Gob bool) {
 
+	io.Pf(". . . writing . . .\n")
+
 	uSource := []float64{2.895225697183167e-07, 0.7, -1, 8.431314054288291e-10, -6.4544742997839375, -15.060440179324589, -6.454474343732561, 1.4446963710799783e-08, 0.7, -1, 8.431260528668272e-10, -6.454473969747283, -15.060439619456256, -6.454474076761063, 3.919168102695628e-08, 0.7, -1, 8.431207003048254e-10, -6.454473665192271}
 
 	f := Create("/tmp/gosl/h5", "basic01", Gob)
-	f.VecPut("/u", uSource)
-	f.VecPut("/displacements/u", []float64{4, 5, 6})
-	f.VecPut("/displacements/v", []float64{40, 50, 60})
-	f.VecPut("/time0/ip0/a0/u", []float64{7, 8, 9})
-	f.VecPut("/time1/ip0/b0/u", []float64{70, 80, 90})
+	f.PutArray("/u", uSource)
+	f.PutArray("/displacements/u", []float64{4, 5, 6})
+	f.PutArray("/displacements/v", []float64{40, 50, 60})
+	f.PutArray("/time0/ip0/a0/u", []float64{7, 8, 9})
+	f.PutArray("/time1/ip0/b0/u", []float64{70, 80, 90})
 	f.IntPut("/someints", []int{100, 200, 300, 400})
 	f.Close()
 
+	io.Pf(". . . reading . . .\n")
+
 	g := Open("/tmp/gosl/h5", "basic01", Gob)
-	u := g.VecRead("/u")
-	du := g.VecRead("/displacements/u")
-	dv := g.VecRead("/displacements/v")
-	t0i0a0u := g.VecRead("/time0/ip0/a0/u")
-	t1i0b0u := g.VecRead("/time1/ip0/b0/u")
+	u := g.GetArray("/u")
+	du := g.GetArray("/displacements/u")
+	dv := g.GetArray("/displacements/v")
+	t0i0a0u := g.GetArray("/time0/ip0/a0/u")
+	t1i0b0u := g.GetArray("/time1/ip0/b0/u")
 	someints := g.IntRead("/someints")
 	io.Pforan("u          = %v\n", u)
 	io.Pforan("d_u        = %v\n", du)
@@ -44,10 +48,12 @@ func runBasic01(tst *testing.T, Gob bool) {
 	chk.Ints(tst, "someints", someints, []int{100, 200, 300, 400})
 
 	if Gob {
-		io.Pfblue2(". . . using gob . . .\n")
+		io.Pf(". . . reopening file because gob requires same reading order . . .\n")
 		g.Close()
 		g = Open("/tmp/gosl/h5", "basic01", Gob)
 	}
+
+	io.Pf(". . . reading again . . .\n")
 
 	intoU := make([]float64, len(uSource))
 	intoDu := make([]float64, 3)
@@ -55,11 +61,11 @@ func runBasic01(tst *testing.T, Gob bool) {
 	intoT0i0a0u := make([]float64, 3)
 	intoT1i0b0u := make([]float64, 3)
 
-	dimsU := g.VecReadInto(&intoU, "/u")
-	dimsDu := g.VecReadInto(&intoDu, "/displacements/u")
-	dimsDv := g.VecReadInto(&intoDv, "/displacements/v")
-	dimsT0i0a0u := g.VecReadInto(&intoT0i0a0u, "/time0/ip0/a0/u")
-	dimsT1i0b0u := g.VecReadInto(&intoT1i0b0u, "/time1/ip0/b0/u")
+	dimsU := g.ReadArray(intoU, "/u")
+	dimsDu := g.ReadArray(intoDu, "/displacements/u")
+	dimsDv := g.ReadArray(intoDv, "/displacements/v")
+	dimsT0i0a0u := g.ReadArray(intoT0i0a0u, "/time0/ip0/a0/u")
+	dimsT1i0b0u := g.ReadArray(intoT1i0b0u, "/time1/ip0/b0/u")
 	g.Close()
 
 	chk.Ints(tst, "dims: /u", dimsU, []int{len(uSource)})
@@ -152,7 +158,7 @@ func runBasic04(tst *testing.T, Gob bool) {
 	f.Close()
 
 	g := Open("/tmp/gosl/h5", "basic04", Gob)
-	u := g.VecRead("/varvec")
+	u := g.GetArray("/varvec")
 	g.Close()
 	chk.Array(tst, "varvec", 1e-17, u, []float64{0, 1, 2, 3, 4, 5})
 }
