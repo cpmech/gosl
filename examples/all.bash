@@ -35,9 +35,10 @@ rnd_normalDistribution.go
 tri_delaunay01.go
 tri_draw01.go
 tri_generate01.go
-vtk_isosurf01.go
-vtk_spheres01.go
 "
+
+#vtk_isosurf01.go
+#vtk_spheres01.go
 
 for ex in $examples; do
     echo
