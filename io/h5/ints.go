@@ -61,8 +61,8 @@ func (o *File) putInts(path string, dims []int, dat []int) {
 	})
 }
 
-// putArrayIntNoGroups puts integers into file without creating groups
-func (o *File) putArrayIntNoGroups(path string, dat []int) {
+// putIntsNoGroup puts integers into file without creating groups
+func (o *File) putIntsNoGroup(path string, dat []int) {
 
 	// GOB
 	if o.useGob {
