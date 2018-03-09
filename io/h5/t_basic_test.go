@@ -191,9 +191,9 @@ func runBasic04(tst *testing.T, Gob bool) {
 func runBasic05(tst *testing.T, Gob bool) {
 
 	f := Create("/tmp/gosl/h5", "basic05", Gob)
-	f.VarVecPut("/varvec", nil)
-	f.VarVecAppend("/varvec", []float64{0, 1, 2})
-	f.VarVecAppend("/varvec", []float64{3, 4, 5})
+	f.PutVarArray("/varvec", nil)
+	f.AppendToArray("/varvec", []float64{0, 1, 2})
+	f.AppendToArray("/varvec", []float64{3, 4, 5})
 	f.Close()
 
 	g := Open("/tmp/gosl/h5", "basic05", Gob)
@@ -245,22 +245,22 @@ func TestBasic03b(tst *testing.T) {
 }
 
 func TestBasic04a(tst *testing.T) {
-	verbose()
+	//verbose()
 	chk.PrintTitle("Basic04a. HDF5. Attributes")
 	Gob := false
 	runBasic04(tst, Gob)
 }
 
 func TestBasic04b(tst *testing.T) {
-	verbose()
+	//verbose()
 	chk.PrintTitle("Basic04b. Gob. Attributes")
 	Gob := true
 	runBasic04(tst, Gob)
 }
 
 func TestBasic05a(tst *testing.T) {
-	verbose()
-	chk.PrintTitle("Basic05a. VariableArray")
+	//verbose()
+	chk.PrintTitle("Basic05a. HDF5. VarArray")
 	Gob := false
 	runBasic05(tst, Gob)
 }

@@ -21,13 +21,20 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// VariableArray ///////////////////////////////////////////////////////////////////////////////
+// VarArray ///////////////////////////////////////////////////////////////////////////////
 
-// VarVecPut puts a variable length vector
-func (o *File) VarVecPut(path string, v []float64) {
+// PutVarArray puts a variable array with name described in path into HDF5 file
+//  Input:
+//    path -- HDF5 path such as "/myvec" or "/group/myvec"
+//    v    -- slice of float64
+func (o *File) PutVarArray(path string, v []float64) {
+
+	// GOB
 	if o.useGob {
 		chk.Panic("this method is not available with useGob == true yet")
 	}
+
+	// HDF5
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
 		pt := C.H5PTcreate_fl(o.hdfHandle, cp, C.H5Tdouble(), C.hsize_t(o.chunkSize), -1)
 		if pt == C.H5I_INVALID_HID {
@@ -53,11 +60,15 @@ func (o *File) VarVecPut(path string, v []float64) {
 	})
 }
 
-// VarVecAppend appends to a variable length vector
-func (o *File) VarVecAppend(path string, v []float64) {
+// AppendToArray appends values to a variable array
+func (o *File) AppendToArray(path string, v []float64) {
+
+	// GOB
 	if o.useGob {
 		chk.Panic("this method is not available with useGob == true yet")
 	}
+
+	// HDF5
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
 	pt := C.H5PTopen(o.hdfHandle, cpth)
