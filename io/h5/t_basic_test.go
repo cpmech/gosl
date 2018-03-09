@@ -148,23 +148,21 @@ func runBasic02(tst *testing.T, Gob bool) {
 
 func runBasic03(tst *testing.T, Gob bool) {
 
-	f := Create("/tmp/gosl/h5", "basic03", Gob)
-	f.Deep3Put("/a", [][][]float64{
+	data := [][][]float64{
 		{{1, 2, 3}, {4}, {5, 6}},
 		{{7}, {8, 9}, {10, 11, 12}},
 		{{-1, -2}, {-3, -4}, {-5, -6, -7}, {-8}},
-	})
+	}
+
+	f := Create("/tmp/gosl/h5", "basic03", Gob)
+	f.PutDeep3("/a", data)
 	f.Close()
 
 	g := Open("/tmp/gosl/h5", "basic03", Gob)
-	a := g.Deep3Read("/a")
+	a := g.GetDeep3("/a")
 	g.Close()
 	io.Pfpink("a = %v\n", a)
-	chk.Deep3(tst, "a", 1e-5, a, [][][]float64{
-		{{1, 2, 3}, {4}, {5, 6}},
-		{{7}, {8, 9}, {10, 11, 12}},
-		{{-1, -2}, {-3, -4}, {-5, -6, -7}, {-8}},
-	})
+	chk.Deep3(tst, "a", 1e-5, a, data)
 }
 
 func runBasic04(tst *testing.T, Gob bool) {
@@ -234,14 +232,14 @@ func TestBasic02b(tst *testing.T) {
 
 func TestBasic03a(tst *testing.T) {
 	//verbose()
-	chk.PrintTitle("Basic03a")
+	chk.PrintTitle("Basic03a. HDF5. Deep3")
 	Gob := false
 	runBasic03(tst, Gob)
 }
 
 func TestBasic03b(tst *testing.T) {
 	//verbose()
-	chk.PrintTitle("Basic03b")
+	chk.PrintTitle("Basic03b. Gob. Deep3")
 	Gob := true
 	runBasic03(tst, Gob)
 }

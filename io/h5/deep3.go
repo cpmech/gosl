@@ -17,22 +17,20 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Deep3 ///////////////////////////////////////////////////////////////////////////////////////
-
-// Deep3Put puts a deep slice with 3 levels and name described in path into HDF5 file
+// PutDeep3 puts a deep slice with 3 levels and name described in path into HDF5 file
 //  Input:
 //    path -- HDF5 path such as "/myvec" or "/group/myvec"
 //    a    -- slice of slices of slices of float64
 //  Note: Slice will be serialized
-func (o *File) Deep3Put(path string, a [][][]float64) {
+func (o *File) PutDeep3(path string, a [][][]float64) {
 	I, P, S := utl.SerializeDeep3(a)
 	o.putArray(path+"/S", []int{len(S)}, S)
 	o.putIntsNoGroup(path+"/I", I)
 	o.putIntsNoGroup(path+"/P", P)
 }
 
-// Deep3Read reads a deep slice with 3 levels from file
-func (o *File) Deep3Read(path string) (a [][][]float64) {
+// GetDeep3 gets a deep slice with 3 levels from file. Memory will be allocated
+func (o *File) GetDeep3(path string) (a [][][]float64) {
 	_, S := o.getArray(path+"/S", false) // ismat=false
 	_, I := o.getInts(path+"/I", false)
 	_, P := o.getInts(path+"/P", false)
