@@ -47,6 +47,25 @@ func (o *File) ReadArray(v []float64, path string) (dims []int) {
 	return
 }
 
+// PutFloat64 puts one float64 into file
+//  Input:
+//    path -- HDF5 path such as "/myvec" or "/group/myvec"
+//    val  -- value
+//  Note: this is a convenience function wrapping PutArray
+func (o *File) PutFloat64(path string, val float64) {
+	o.putArray(path, []int{1}, []float64{val})
+}
+
+// GetFloat64 gets one float64 from file
+//  Note: this is a convenience function wrapping GetArray
+func (o *File) GetFloat64(path string) float64 {
+	_, v := o.getArray(path, false)
+	if len(v) != 1 {
+		chk.Panic("failed to get ONE integer\n")
+	}
+	return v[0]
+}
+
 // auxiliary methods ///////////////////////////////////////////////////////////////////////////
 
 // putArray puts an array into file

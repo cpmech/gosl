@@ -24,6 +24,8 @@ func runBasic01(tst *testing.T, Gob bool) {
 	f.PutArray("/time0/ip0/a0/u", []float64{7, 8, 9})
 	f.PutArray("/time1/ip0/b0/u", []float64{70, 80, 90})
 	f.PutInts("/someints", []int{100, 200, 300, 400})
+	f.PutInt("/data/oneint", 123)
+	f.PutFloat64("/data/onef64", 123.456)
 	f.Close()
 
 	io.Pf(". . . reading . . .\n")
@@ -35,7 +37,9 @@ func runBasic01(tst *testing.T, Gob bool) {
 	t0i0a0u := g.GetArray("/time0/ip0/a0/u")
 	t1i0b0u := g.GetArray("/time1/ip0/b0/u")
 	someints := g.GetInts("/someints")
-	io.Pforan("u          = %v\n", u)
+	oneint := g.GetInt("/data/oneint")
+	onef64 := g.GetFloat64("/data/onef64")
+	io.Pforan("u          = %.2f\n", u)
 	io.Pforan("d_u        = %v\n", du)
 	io.Pforan("d_v        = %v\n", dv)
 	io.Pforan("t0_i0_a0_u = %v\n", t0i0a0u)
@@ -46,6 +50,8 @@ func runBasic01(tst *testing.T, Gob bool) {
 	chk.Array(tst, "t0_i0_a0_u", 1e-17, t0i0a0u, []float64{7, 8, 9})
 	chk.Array(tst, "t1_i0_b0_u", 1e-17, t1i0b0u, []float64{70, 80, 90})
 	chk.Ints(tst, "someints", someints, []int{100, 200, 300, 400})
+	chk.Int(tst, "onevalue", oneint, 123)
+	chk.Float64(tst, "onef64", 1e-15, onef64, 123.456)
 
 	if Gob {
 		io.Pf(". . . reopening file because gob requires same reading order . . .\n")

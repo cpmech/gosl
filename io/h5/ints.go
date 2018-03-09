@@ -32,8 +32,27 @@ func (o *File) PutInts(path string, v []int) {
 
 // GetInts gets a slice of ints from file. Memory will be allocated
 func (o *File) GetInts(path string) (v []int) {
-	_, v = o.getInts(path, false) // ismat=false
+	_, v = o.getInts(path, false)
 	return
+}
+
+// PutInt puts one integer into file
+//  Input:
+//    path -- HDF5 path such as "/myvec" or "/group/myvec"
+//    val  -- value
+//  Note: this is a convenience function wrapping PutInts
+func (o *File) PutInt(path string, val int) {
+	o.putInts(path, []int{1}, []int{val})
+}
+
+// GetInt gets one integer from file
+//  Note: this is a convenience function wrapping GetInts
+func (o *File) GetInt(path string) int {
+	_, v := o.getInts(path, false)
+	if len(v) != 1 {
+		chk.Panic("failed to get ONE integer\n")
+	}
+	return v[0]
 }
 
 // auxiliary methods ///////////////////////////////////////////////////////////////////////////
