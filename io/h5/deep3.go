@@ -31,9 +31,9 @@ func (o *File) PutDeep3(path string, a [][][]float64) {
 
 // GetDeep3 gets a deep slice with 3 levels from file. Memory will be allocated
 func (o *File) GetDeep3(path string) (a [][][]float64) {
-	_, S := o.getArray(path+"/S", false) // ismat=false
-	_, I := o.getInts(path+"/I", false)
-	_, P := o.getInts(path+"/P", false)
+	_, S := o.getArray(path+"/S", false, false)
+	_, I := o.getInts(path+"/I", false, false)
+	_, P := o.getInts(path+"/P", false, false)
 	a = utl.DeserializeDeep3(I, P, S, false)
 	return
 }

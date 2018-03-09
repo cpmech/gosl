@@ -32,7 +32,7 @@ func (o *File) PutInts(path string, v []int) {
 
 // GetInts gets a slice of ints from file. Memory will be allocated
 func (o *File) GetInts(path string) (v []int) {
-	_, v = o.getInts(path, false)
+	_, v = o.getInts(path, false, false)
 	return
 }
 
@@ -48,7 +48,7 @@ func (o *File) PutInt(path string, val int) {
 // GetInt gets one integer from file
 //  Note: this is a convenience function wrapping GetInts
 func (o *File) GetInt(path string) int {
-	_, v := o.getInts(path, false)
+	_, v := o.getInts(path, true, false)
 	if len(v) != 1 {
 		chk.Panic("failed to get ONE integer\n")
 	}
@@ -100,7 +100,7 @@ func (o *File) putIntsNoGroup(path string, dat []int) {
 }
 
 // getInts gets an array of integers from file
-func (o *File) getInts(path string, ismat bool) (dims, dat []int) {
+func (o *File) getInts(path string, isScalar, isMatrix bool) (dims, dat []int) {
 
 	// GOB
 	if o.useGob {
@@ -126,7 +126,7 @@ func (o *File) getInts(path string, ismat bool) (dims, dat []int) {
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
 	rank := 1
-	if ismat {
+	if isMatrix {
 		rank = 2
 	}
 	dims = make([]int, rank)
@@ -137,9 +137,14 @@ func (o *File) getInts(path string, ismat bool) (dims, dat []int) {
 	if len(dims) != rank {
 		chk.Panic("size of dims=%d is incorrectly read: %d != %d. path=%q. file <%s>", dims, len(dims), rank, path, o.furl)
 	}
-	if ismat {
+	if isMatrix {
 		dat = make([]int, dims[0]*dims[1])
 	} else {
+		if isScalar {
+			if dims[0] == 0 { // TODO: check why Matlab/Octave scalars set this to zero
+				dims[0] = 1
+			}
+		}
 		dat = make([]int, dims[0])
 	}
 	st = C.H5LTread_dataset_long(o.hdfHandle, cpth, (*C.long)(unsafe.Pointer(&dat[0])))

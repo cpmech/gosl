@@ -38,14 +38,14 @@ func (o *File) PutDeep2(path string, a [][]float64) {
 
 // GetDeep2 gets a Deep2 slice (that was serialized). Memory will be allocated
 func (o *File) GetDeep2(path string) (a [][]float64) {
-	dims, aser := o.getArray(path, true) // ismat=true
+	dims, aser := o.getArray(path, false, true)
 	return utl.DeserializeDeep2(aser, dims[0], dims[1])
 }
 
 // GetDeep2raw returns the serialized data corresponding to a Deep2 slice
 func (o *File) GetDeep2raw(path string) (m, n int, a []float64) {
 	var dims []int
-	dims, a = o.getArray(path, true)
+	dims, a = o.getArray(path, false, true)
 	m, n = dims[0], dims[1]
 	return
 }

@@ -32,7 +32,7 @@ func (o *File) PutArray(path string, v []float64) {
 
 // GetArray gets an array from file. Memory will be allocated
 func (o *File) GetArray(path string) (v []float64) {
-	_, v = o.getArray(path, false) // ismat=false
+	_, v = o.getArray(path, false, false)
 	return
 }
 
@@ -59,7 +59,7 @@ func (o *File) PutFloat64(path string, val float64) {
 // GetFloat64 gets one float64 from file
 //  Note: this is a convenience function wrapping GetArray
 func (o *File) GetFloat64(path string) float64 {
-	_, v := o.getArray(path, false)
+	_, v := o.getArray(path, true, false)
 	if len(v) != 1 {
 		chk.Panic("failed to get ONE integer\n")
 	}
@@ -92,7 +92,7 @@ func (o *File) putArray(path string, dims []int, dat []float64) {
 }
 
 // getArray gets an array from file
-func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
+func (o *File) getArray(path string, isScalar, isMatrix bool) (dims []int, dat []float64) {
 
 	// GOB
 	if o.useGob {
@@ -118,7 +118,7 @@ func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
 	rank := 1
-	if ismat {
+	if isMatrix {
 		rank = 2
 	}
 	dims = make([]int, rank)
@@ -129,9 +129,14 @@ func (o *File) getArray(path string, ismat bool) (dims []int, dat []float64) {
 	if len(dims) != rank {
 		chk.Panic("size of dims=%d is incorrectly read: %d != %d. path=%q. file <%s>", dims, len(dims), rank, path, o.furl)
 	}
-	if ismat {
+	if isMatrix {
 		dat = make([]float64, dims[0]*dims[1])
 	} else {
+		if isScalar {
+			if dims[0] == 0 { // TODO: check why Matlab/Octave scalars set this to zero
+				dims[0] = 1
+			}
+		}
 		dat = make([]float64, dims[0])
 	}
 	st = C.H5LTread_dataset_double(o.hdfHandle, cpth, (*C.double)(unsafe.Pointer(&dat[0])))
