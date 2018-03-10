@@ -95,3 +95,28 @@ func MatMatTrMulAdd(c *Matrix, α float64, a, b *Matrix) {
 func MatTrMatTrMulAdd(c *Matrix, α float64, a, b *Matrix) {
 	oblas.Dgemm(true, true, a.N, b.M, a.M, α, a.Data, a.M, b.Data, b.M, 1.0, c.Data, c.M)
 }
+
+// matrix addition ////////////////////////////////////////////////////////////////////////////////
+
+// MatAdd adds the scaled components of two matrices
+//   res := α⋅a + β⋅b   ⇒   result[i][j] := α⋅a[i][j] + β⋅b[i][j]
+func MatAdd(res *Matrix, α float64, a *Matrix, β float64, b *Matrix) {
+	n := len(a.Data) // treating these matrices as vectors
+	cutoff := 150
+	if β == 1 && n > cutoff {
+		copy(res.Data, b.Data)
+		oblas.Daxpy(n, α, a.Data, 1, res.Data, 1)
+		return
+	}
+	m := n % 4
+	for i := 0; i < m; i++ {
+		res.Data[i] = α*a.Data[i] + β*b.Data[i]
+	}
+	for i := m; i < n; i += 4 {
+		res.Data[i+0] = α*a.Data[i+0] + β*b.Data[i+0]
+		res.Data[i+1] = α*a.Data[i+1] + β*b.Data[i+1]
+		res.Data[i+2] = α*a.Data[i+2] + β*b.Data[i+2]
+		res.Data[i+3] = α*a.Data[i+3] + β*b.Data[i+3]
+	}
+	return
+}

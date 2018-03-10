@@ -105,3 +105,28 @@ func TestBlas3tst02(tst *testing.T) {
 	MatTrMatTrMulAdd(c, 2, atrans, btrans)
 	chk.Deep2(tst, "c := 2⋅aᵀ⋅bᵀ + 100", 1e-17, c.GetDeep2(), cref)
 }
+
+func TestBlas3tst03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Blas3tst03. (real) MatAdd. matrix addition")
+
+	// allocate data
+	a := NewMatrixDeep2([][]float64{
+		{10, 20, 30},
+		{40, 50, 60},
+	})
+	b := NewMatrixDeep2([][]float64{
+		{1, 2, 3},
+		{3, 2, 1},
+	})
+	cref := [][]float64{
+		{120, 240, 360},
+		{460, 540, 620},
+	}
+
+	// MatAdd
+	c := NewMatrix(2, 3)
+	MatAdd(c, 10, a, 20, b)
+	chk.Deep2(tst, "c := 10⋅a + 20⋅b", 1e-15, c.GetDeep2(), cref)
+}
