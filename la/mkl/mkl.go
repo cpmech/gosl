@@ -160,6 +160,31 @@ func Zgemv(trans bool, m, n int, alpha complex128, a []complex128, lda int, x []
 	)
 }
 
+// Dger performs the rank 1 operation
+//
+//  See: http://www.netlib.org/lapack/explore-html/dc/da8/dger_8f.html
+//
+//  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-ger
+//
+//    A := alpha*x*y**T + A,
+//
+// where alpha is a scalar, x is an m element vector, y is an n element
+// vector and A is an m by n matrix.
+func Dger(m, n int, alpha float64, x []float64, incx int, y []float64, incy int, a []float64, lda int) {
+	C.cblas_dger(
+		cblasColMajor,
+		C.MKL_INT(m),
+		C.MKL_INT(n),
+		C.double(alpha),
+		(*C.double)(unsafe.Pointer(&x[0])),
+		C.MKL_INT(incx),
+		(*C.double)(unsafe.Pointer(&y[0])),
+		C.MKL_INT(incy),
+		(*C.double)(unsafe.Pointer(&a[0])),
+		C.MKL_INT(lda),
+	)
+}
+
 // Dgemm performs one of the matrix-matrix operations
 //
 //  false,false:  C_{m,n} := α ⋅ A_{m,k} ⋅ B_{k,n}  +  β ⋅ C_{m,n}

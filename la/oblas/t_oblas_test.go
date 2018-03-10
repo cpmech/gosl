@@ -192,6 +192,39 @@ func TestZgemv01(tst *testing.T) {
 	chk.ArrayC(tst, "a", 1e-15, a, []complex128{0.1 + 3i, 1 + 2i, 2 + 1i, 3 + 0.1i, 0.2, 0.2, 0.2, 0.2, 0.3 - 0.3i, 0.3 - 0.4i, 0.3 - 0.5i, 0.3 - 0.6i})
 }
 
+func TestDger01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Dger01: a = 100 + 0.5⋅u⋅vᵀ")
+
+	// allocate matrix
+	a := SliceToColMajor([][]float64{ // 4 x 3
+		{100, 100, 100},
+		{100, 100, 100},
+		{100, 100, 100},
+		{100, 100, 100},
+	})
+	u := []float64{1, 2, 3, 4}
+	v := []float64{4, 3, 2}
+
+	// sizes
+	m := 4 // m = nrow(a) = len(u)
+	n := 3 // n = ncol(a) = len(v)
+
+	// run dger
+	alpha := 0.5
+	lda := 4
+	Dger(m, n, alpha, u, 1, v, 1, a, lda)
+
+	// check
+	chk.Deep2(tst, "100 + 0.5⋅u⋅vᵀ", 1e-17, ColMajorToSlice(4, 3, a), [][]float64{
+		{102, 101.5, 101},
+		{104, 103.0, 102},
+		{106, 104.5, 103},
+		{108, 106.0, 104},
+	})
+}
+
 func TestDgemm01(tst *testing.T) {
 
 	//verbose()
