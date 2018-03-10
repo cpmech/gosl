@@ -12,10 +12,10 @@ import (
 
 // DataMapper defines maps features into an expanded set of features
 type DataMapper interface {
-	Map(x, xRaw []float64)                // maps and augment xRaw into x
-	GetMapped(XYraw [][]float64) *RegData // returns a new Regression data with mapped/augmented X values
-	NumOriginalFeatures() int             // returns the number of original features, before mapping/augmentation
-	NumExtraFeatures() int                // returns the added number of features
+	Map(x, xRaw []float64)                   // maps and augment xRaw into x
+	GetMapped(XYraw [][]float64) *DataMatrix // returns a new Regression data with mapped/augmented X values
+	NumOriginalFeatures() int                // returns the number of original features, before mapping/augmentation
+	NumExtraFeatures() int                   // returns the added number of features
 }
 
 // PolyDataMapper maps features to polynomial
@@ -93,7 +93,7 @@ func (o *PolyDataMapper) Map(x, xRaw []float64) {
 }
 
 // GetMapped returns a new Regression data with mapped/augmented X values
-func (o *PolyDataMapper) GetMapped(XYraw [][]float64) (rd *RegData) {
+func (o *PolyDataMapper) GetMapped(XYraw [][]float64) (rd *DataMatrix) {
 
 	// check
 	nRows := len(XYraw)
@@ -109,7 +109,7 @@ func (o *PolyDataMapper) GetMapped(XYraw [][]float64) (rd *RegData) {
 	}
 
 	// set data
-	rd = NewRegData(nRows, o.NumOriginalFeatures()+o.NumExtraFeatures())
+	rd = NewDataMatrix(nRows, o.NumOriginalFeatures()+o.NumExtraFeatures())
 	x := make([]float64, rd.Nparams())
 	for i := 0; i < nRows; i++ {
 		o.Map(x, XYraw[i])

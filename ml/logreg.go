@@ -24,7 +24,7 @@ type LogReg struct {
 }
 
 // NewLogReg returns new LogReg object
-func NewLogReg(data *RegData) (o *LogReg) {
+func NewLogReg(data *DataMatrix) (o *LogReg) {
 	o = new(LogReg)
 	o.Set(data)
 	return
@@ -49,30 +49,30 @@ func (o *LogReg) SetRegularization(λ float64) {
 
 // Set sets LogReg with given regression data
 //  data -- regressin data where m=numData, n=numParams
-func (o *LogReg) Set(data *RegData) {
-	if len(o.ybar) != data.mData {
-		o.ybar = la.NewVector(data.mData)
-		o.hmy = la.NewVector(data.mData)
+func (o *LogReg) Set(data *DataMatrix) {
+	if len(o.ybar) != data.nSamples {
+		o.ybar = la.NewVector(data.nSamples)
+		o.hmy = la.NewVector(data.nSamples)
 	}
-	for i := 0; i < data.mData; i++ {
-		o.ybar[i] = (1.0 - data.yVec[i]) / float64(data.mData)
+	for i := 0; i < data.nSamples; i++ {
+		o.ybar[i] = (1.0 - data.yVec[i]) / float64(data.nSamples)
 	}
 }
 
 // Cost computes the total cost
-func (o *LogReg) Cost(data *RegData) (C float64) {
-	la.MatVecMul(data.lVec, 1, data.xMat, data.thetaVec)
+func (o *LogReg) Cost(data *DataMatrix) (C float64) {
+	la.MatVecMul(data.lVec, 1, data.xMat, data.params)
 	sq := 0.0
-	for i := 0; i < data.mData; i++ {
+	for i := 0; i < data.nSamples; i++ {
 		sq += math.Log(1.0 + math.Exp(-data.lVec[i]))
 	}
-	mCoef := float64(data.mData)
+	mCoef := float64(data.nSamples)
 	C = sq/mCoef + la.VecDot(o.ybar, data.lVec)
 	if o.lambda > 0 {
-		tmp := data.thetaVec[0]
-		data.thetaVec[0] = 0.0
-		C += (0.5 * o.lambda / mCoef) * la.VecDot(data.thetaVec, data.thetaVec)
-		data.thetaVec[0] = tmp
+		tmp := data.params[0]
+		data.params[0] = 0.0
+		C += (0.5 * o.lambda / mCoef) * la.VecDot(data.params, data.params)
+		data.params[0] = tmp
 	}
 	return C
 }
@@ -82,28 +82,28 @@ func (o *LogReg) Cost(data *RegData) (C float64) {
 //     data -- regression data
 //   Output:
 //     dCdθ -- derivative of cost function
-func (o *LogReg) Deriv(dCdθ la.Vector, data *RegData) {
-	la.MatVecMul(data.lVec, 1, data.xMat, data.thetaVec)
-	for i := 0; i < data.mData; i++ {
+func (o *LogReg) Deriv(dCdθ la.Vector, data *DataMatrix) {
+	la.MatVecMul(data.lVec, 1, data.xMat, data.params)
+	for i := 0; i < data.nSamples; i++ {
 		o.hmy[i] = h(data.lVec[i]) - data.yVec[i]
 	}
-	mCoef := float64(data.mData)
+	mCoef := float64(data.nSamples)
 	la.MatTrVecMul(dCdθ, 1.0/mCoef, data.xMat, o.hmy)
 	if o.lambda > 0 {
-		tmp := data.thetaVec[0]
-		data.thetaVec[0] = 0.0
-		la.VecAdd(dCdθ, 1, dCdθ, o.lambda/mCoef, data.thetaVec)
-		data.thetaVec[0] = tmp
+		tmp := data.params[0]
+		data.params[0] = 0.0
+		la.VecAdd(dCdθ, 1, dCdθ, o.lambda/mCoef, data.params)
+		data.params[0] = tmp
 	}
 }
 
 // CalcTheta calculates θ using Newton-Raphson solver
 //  solverParams -- nonlinear solver parameters (see num.NlSolver)
 //  verbose      -- show nonlinear solver output
-func (o *LogReg) CalcTheta(data *RegData, verbose, checkJac bool, tolJac0, tolJac1 float64, solverParams map[string]float64) {
+func (o *LogReg) CalcTheta(data *DataMatrix, verbose, checkJac bool, tolJac0, tolJac1 float64, solverParams map[string]float64) {
 
 	// constants
-	m := data.Ndata()
+	m := data.Nsamples()
 	n := data.Nparams()
 
 	// allocate arrays
@@ -121,7 +121,7 @@ func (o *LogReg) CalcTheta(data *RegData, verbose, checkJac bool, tolJac0, tolJa
 
 	// objective function: z=θ  and  fz = Xt*(h-y) / m
 	ffcn := func(fz, z la.Vector) {
-		data.thetaVec.Apply(1, z)
+		data.params.Apply(1, z)
 		o.Deriv(fz, data)
 	}
 
@@ -147,7 +147,7 @@ func (o *LogReg) CalcTheta(data *RegData, verbose, checkJac bool, tolJac0, tolJa
 			tolJac0 = 1e-3
 		}
 		tst := new(testing.T)
-		num.CompareJacDense(tst, ffcn, Jfcn, data.thetaVec, tolJac0)
+		num.CompareJacDense(tst, ffcn, Jfcn, data.params, tolJac0)
 	}
 
 	// solver parameters
@@ -161,7 +161,7 @@ func (o *LogReg) CalcTheta(data *RegData, verbose, checkJac bool, tolJac0, tolJa
 	}
 
 	// solution array := initial values
-	z := data.thetaVec.GetCopy()
+	z := data.params.GetCopy()
 
 	// solve nonlinear problem
 	silent := !verbose
@@ -173,7 +173,7 @@ func (o *LogReg) CalcTheta(data *RegData, verbose, checkJac bool, tolJac0, tolJa
 	solver.Solve(z, silent)
 
 	// results
-	data.thetaVec.Apply(1, z)
+	data.params.Apply(1, z)
 
 	// debug
 	if checkJac {
@@ -181,6 +181,6 @@ func (o *LogReg) CalcTheta(data *RegData, verbose, checkJac bool, tolJac0, tolJa
 			tolJac1 = 1e-3
 		}
 		tst := new(testing.T)
-		num.CompareJacDense(tst, ffcn, Jfcn, data.thetaVec, tolJac1)
+		num.CompareJacDense(tst, ffcn, Jfcn, data.params, tolJac1)
 	}
 }
