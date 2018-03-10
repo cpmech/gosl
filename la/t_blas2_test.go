@@ -35,6 +35,16 @@ func TestBlas2tst01(tst *testing.T) {
 	MatVecMul(r, 1, a, x)
 	chk.Array(tst, "r = 1⋅a⋅x (again)", 1e-17, r, []float64{8, 45, -3, 3, 19})
 
+	// MatVecMul (larger)
+	A := NewMatrix(10, 10)
+	A.SetDiag(2)
+	U := []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	V := NewVector(10)
+	MatVecMul(V, 0.5, A, U)
+	chk.Array(tst, "V = 1⋅A⋅U (larger)", 1e-17, V, []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+	MatTrVecMul(V, 0.5, A, U)
+	chk.Array(tst, "V = 1⋅Aᵀ⋅U (larger)", 1e-17, V, []float64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+
 	// MatVecMulAdd
 	r.Fill(0)
 	MatVecMulAdd(r, 1, a, x)
@@ -47,6 +57,35 @@ func TestBlas2tst01(tst *testing.T) {
 	// MatVecMulAdd
 	MatVecMulAdd(r, 1, a, x)
 	chk.Array(tst, "r = 1⋅a⋅x - b", 1e-17, r, nil)
+
+	// VecVecTrMul
+	b := NewMatrix(5, 2)
+	u := []float64{10, 20, 30, 40, 50}
+	v := []float64{1, 2}
+	VecVecTrMul(b, 0.5, u, v)
+	chk.Deep2(tst, "b = 0.5⋅u⋅vᵀ", 1e-17, b.GetDeep2(), [][]float64{
+		{+5, 10},
+		{10, 20},
+		{15, 30},
+		{20, 40},
+		{25, 50},
+	})
+
+	// VecVecTrMul (larger)
+	B := NewMatrix(10, 2)
+	VecVecTrMul(B, 2.0, U, v)
+	chk.Deep2(tst, "B = 2⋅U⋅vᵀ", 1e-17, B.GetDeep2(), [][]float64{
+		{2, 4},
+		{4, 8},
+		{6, 12},
+		{8, 16},
+		{10, 20},
+		{12, 24},
+		{14, 28},
+		{16, 32},
+		{18, 36},
+		{20, 40},
+	})
 }
 
 func TestBlas2tst02(tst *testing.T) {

@@ -6,6 +6,7 @@ package la
 
 import (
 	"github.com/cpmech/gosl/la/oblas"
+	"github.com/cpmech/gosl/utl"
 )
 
 // MatVecMul returns the matrix-vector multiplication
@@ -40,6 +41,23 @@ func MatTrVecMul(v Vector, α float64, a *Matrix, u Vector) {
 		return
 	}
 	oblas.Dgemv(true, a.M, a.N, α, a.Data, a.M, u, 1, 0.0, v, 1)
+}
+
+// VecVecTrMul returns the matrix = vector-transpose(vector) multiplication
+// (e.g. dyadic product)
+//
+//   a = α⋅u⋅vᵀ    ⇒    aij = α * ui * vj
+//
+func VecVecTrMul(a *Matrix, α float64, u, v Vector) {
+	if a.M < 9 && a.N < 9 {
+		for i := 0; i < a.M; i++ {
+			for j := 0; j < a.N; j++ {
+				a.Set(i, j, α*u[i]*v[j])
+			}
+		}
+		return
+	}
+	oblas.Dger(a.M, a.N, α, u, 1, v, 1, a.Data, utl.Imax(a.M, a.N))
 }
 
 // MatVecMulAdd returns the matrix-vector multiplication with addition
