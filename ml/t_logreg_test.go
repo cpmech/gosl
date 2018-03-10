@@ -20,7 +20,7 @@ func TestLogReg00(tst *testing.T) {
 
 	// data
 	nr, nc := 5, 5
-	d := NewDataMatrix(nr*nc, 2)
+	d := NewDataMatrix(nr*nc, 2, true)
 	k := 0
 	for j := 0; j < nc; j++ {
 		for i := 0; i < nr; i++ {
@@ -182,7 +182,7 @@ func TestLogReg02(tst *testing.T) {
 	// mapped data
 	nOriFeatures := len(XYraw[0]) - 1 // -1 because y-column
 	mapper := NewPolyDataMapper(nOriFeatures, 0, 1, 6)
-	d := mapper.GetMapped(XYraw)
+	d := mapper.GetMapped(XYraw, true)
 	chk.Int(tst, "nData", d.Nsamples(), 118)
 	chk.Int(tst, "nFeatures", d.Nfeatures(), 27)
 

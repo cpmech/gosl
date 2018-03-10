@@ -28,6 +28,7 @@ type DataMatrix struct {
 	// input
 	nSamples int        // number of data points (samples). number of rows
 	nParams  int        // number of features + 1. number of columns
+	hasY     bool       // has y vector
 	xMat     *la.Matrix // [nSamples][nParams] matrix with the first column being filled with ones
 	yVec     la.Vector  // [nSamples] y-data
 	lVec     la.Vector  // [nSamples] l = X⋅θ (linear model)
@@ -53,14 +54,23 @@ type DataMatrix struct {
 }
 
 // NewDataMatrix returns a new structure to hold ML data
-func NewDataMatrix(nSamples, nFeatures int) (o *DataMatrix) {
+//  Input:
+//    nSamples  -- number of data samples (rows in X)
+//    nFeatures -- number of features (columsn in X)
+//    yData     -- use y data vector
+//  Output:
+//    new object
+func NewDataMatrix(nSamples, nFeatures int, yData bool) (o *DataMatrix) {
 
 	// main
 	o = new(DataMatrix)
 	o.nSamples = nSamples
 	o.nParams = nFeatures + 1
+	o.hasY = yData
 	o.xMat = la.NewMatrix(o.nSamples, o.nParams)
-	o.yVec = la.NewVector(o.nSamples)
+	if o.hasY {
+		o.yVec = la.NewVector(o.nSamples)
+	}
 	o.lVec = la.NewVector(o.nSamples)
 	o.params = la.NewVector(o.nParams)
 	o.xMat.SetCol(0, 1.0)
@@ -75,16 +85,19 @@ func NewDataMatrix(nSamples, nFeatures int) (o *DataMatrix) {
 	return
 }
 
-// NewDataMatrixTable sets X and Y values given table
-//  xyRawTable -- [nData][nFeatures+1] table with x and y raw values,
-//                where the last column contains y-values
+// NewDataMatrixTable sets X and y values given table
+//  Input:
+//    xyRawTable -- [nData][nFeatures+1] table with x and y raw values,
+//                  where the last column contains y-values
+//  Output:
+//    new object
 func NewDataMatrixTable(xyRawTable [][]float64) (o *DataMatrix) {
 	nSamples := len(xyRawTable)
 	if nSamples < 1 {
-		chk.Panic("at leat one row of data in table must be provided\n")
+		chk.Panic("at least one row of data in table must be provided\n")
 	}
 	nFeatures := len(xyRawTable[0]) - 1
-	o = NewDataMatrix(nSamples, nFeatures)
+	o = NewDataMatrix(nSamples, nFeatures, true)
 	for i := 0; i < nSamples; i++ {
 		for j := 0; j < nFeatures; j++ {
 			o.SetX(i, j, xyRawTable[i][j])
@@ -123,6 +136,9 @@ func (o *DataMatrix) GetXvalues(iFeature int) (xValues []float64) {
 
 // SetY sets y-value
 func (o *DataMatrix) SetY(iData int, value float64) {
+	if !o.hasY {
+		chk.Panic("this data set does not contain y values")
+	}
 	o.yVec[iData] = value
 	o.statOk = false
 }
@@ -131,6 +147,9 @@ func (o *DataMatrix) SetY(iData int, value float64) {
 // NOTE: (1) this function returns an access to the internal slice; i.e. no copies are made
 //       (2) do not modify the output slice
 func (o *DataMatrix) GetYvalues() (yValues []float64) {
+	if !o.hasY {
+		chk.Panic("this data set does not contain y values")
+	}
 	return o.yVec
 }
 
@@ -158,6 +177,8 @@ func (o *DataMatrix) Normalize(useMinMax bool) {
 
 // stat computes statistics
 func (o *DataMatrix) stat() {
+
+	// x values
 	for J := 0; J < o.Nfeatures(); J++ {
 		j := 1 + J
 		o.minX[J] = o.xMat.Get(0, j)
@@ -173,21 +194,27 @@ func (o *DataMatrix) stat() {
 		o.sigX[J] = rnd.StatDevFirst(o.xMat.Col(j), o.meanX[J], true)
 		o.delX[J] = o.maxX[J] - o.minX[J]
 	}
-	o.minY = o.yVec[0]
-	o.maxY = o.minY
-	o.sumY = 0.0
-	for i := 0; i < o.nSamples; i++ {
-		o.minY = utl.Min(o.minY, o.yVec[i])
-		o.maxY = utl.Max(o.maxY, o.yVec[i])
-		o.sumY += o.yVec[i]
+
+	// y values
+	if o.hasY {
+		o.minY = o.yVec[0]
+		o.maxY = o.minY
+		o.sumY = 0.0
+		for i := 0; i < o.nSamples; i++ {
+			o.minY = utl.Min(o.minY, o.yVec[i])
+			o.maxY = utl.Max(o.maxY, o.yVec[i])
+			o.sumY += o.yVec[i]
+		}
+		o.meanY = o.sumY / float64(o.nSamples)
+		o.sigY = rnd.StatDevFirst(o.yVec, o.meanY, true)
+		o.delY = o.maxY - o.minY
 	}
-	o.meanY = o.sumY / float64(o.nSamples)
-	o.sigY = rnd.StatDevFirst(o.yVec, o.meanY, true)
-	o.delY = o.maxY - o.minY
+
+	// flag
 	o.statOk = true
 }
 
-// newXvec creates a new xVec[1+nFeatures] vector
+// newXvec creates a new xVec[1+nFeatures] vector by initializing it with some values
 func (o *DataMatrix) newXvec(initWithMin, initWithMax, initWithMean bool) (xVec la.Vector) {
 	xVec = la.NewVector(o.nParams)
 	if initWithMin || initWithMax || initWithMax {
