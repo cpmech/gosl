@@ -11,15 +11,15 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-func checkXY01(tst *testing.T, X *la.Matrix, y la.Vector) {
-	chk.Deep2(tst, "X", 1e-15, X.GetDeep2(), [][]float64{
+func checkXY01(tst *testing.T, label string, X *la.Matrix, y la.Vector) {
+	chk.Deep2(tst, "X"+label, 1e-15, X.GetDeep2(), [][]float64{
 		{-1, +0, -3},
 		{-2, +3, +3},
 		{+3, +1, +4},
 		{-4, +5, +0},
 		{+1, -8, +5},
 	})
-	chk.Array(tst, "y", 1e-15, y, []float64{0, 1, 1, 0, 1})
+	chk.Array(tst, "y"+label, 1e-15, y, []float64{0, 1, 1, 0, 1})
 }
 
 func TestData00(tst *testing.T) {
@@ -39,5 +39,9 @@ func TestData01(tst *testing.T) {
 		{-4, +5, +0, 0},
 		{+1, -8, +5, 1},
 	})
-	checkXY01(tst, data.X, data.Y)
+	checkXY01(tst, "", data.X, data.Y)
+	dataBackup := data.GetCopy()
+	checkXY01(tst, "bkp", dataBackup.X, dataBackup.Y)
+	chk.Int(tst, "nSamples", dataBackup.Nsamples, 5)
+	chk.Int(tst, "nFeatures", dataBackup.Nfeatures, 3)
 }

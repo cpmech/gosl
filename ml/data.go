@@ -74,3 +74,13 @@ func NewDataGivenRawXY(xyRaw [][]float64) (o *Data) {
 	}
 	return
 }
+
+// GetCopy returns a deep copy of this object
+func (o *Data) GetCopy() (p *Data) {
+	p = NewData(o.Nsamples, o.Nfeatures, o.UseY)
+	o.X.CopyInto(p.X, 1)
+	if o.UseY {
+		copy(p.Y, o.Y)
+	}
+	return
+}
