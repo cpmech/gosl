@@ -15,8 +15,9 @@ import (
 type PlotterReg struct {
 
 	// input
-	data  *Data      // data
-	model Regression // model
+	data   *Data      // data
+	params *ParamsReg // parameters
+	model  Regression // model
 
 	// constants
 	YlineNpts int // number of points for ModelY()
@@ -31,11 +32,12 @@ type PlotterReg struct {
 }
 
 // NewPlotterReg returns a new ploter
-func NewPlotterReg(data *Data, reg Regression) (o *PlotterReg) {
+func NewPlotterReg(data *Data, params *ParamsReg, reg Regression) (o *PlotterReg) {
 
 	// input
 	o = new(PlotterReg)
 	o.data = data
+	o.params = params
 	o.model = reg
 
 	// constants
@@ -88,16 +90,25 @@ func (o *PlotterReg) DataClass(iFeature, jFeature int) {
 // ContourCost plots a contour of Cost for many parameters values
 //  iParam, jParam -- selected parameters [use -1 for bias]
 func (o *PlotterReg) ContourCost(iParam, jParam int, pimin, pimax, pjmin, pjmax float64) {
+
+	// create meshgrid
+	o.params.Backup()
 	U, V, W := utl.MeshGrid2dF(pimin, pimax, pjmin, pjmax, o.MgridNpts, o.MgridNpts, func(s, t float64) (w float64) {
-		o.model.BackupParams()
-		o.model.SetParam(iParam, s)
-		o.model.SetParam(jParam, t)
+		o.params.Restore(true)
+		o.params.SetParam(iParam, s)
+		o.params.SetParam(jParam, t)
 		w = o.model.Cost()
-		o.model.RestoreParams()
 		return
 	})
+
+	// plot contour
 	plt.ContourF(U, V, W, o.ArgsCcost)
-	plt.PlotOne(o.model.GetParam(iParam), o.model.GetParam(jParam), o.ArgsCcostMdl)
+
+	// plot optimal solution
+	o.params.Restore(true)
+	plt.PlotOne(o.params.GetParam(iParam), o.params.GetParam(jParam), o.ArgsCcostMdl)
+
+	// set labels
 	stri := "$b$"
 	strj := "$b$"
 	if iParam >= 0 {

@@ -13,8 +13,8 @@ type LinReg struct {
 
 	// main
 	data   *Data      // X-y data
+	params *ParamsReg // parameters: θ, b, λ
 	stat   *Stat      // statistics
-	Params *ParamsReg // θ and b
 
 	// workspace
 	e la.Vector // vector e = b⋅o + X⋅θ - y [nSamples]
@@ -22,46 +22,17 @@ type LinReg struct {
 
 // NewLinReg returns a new LinReg object
 //   Input:
-//     data -- X,y data
-//     params -- θ and b
-//     name -- unique name of this object
-func NewLinReg(data *Data, name string) (o *LinReg) {
+//     data   -- X,y data
+//     params -- θ, b, λ
+//     name   -- unique name of this (observer) object
+func NewLinReg(data *Data, params *ParamsReg, name string) (o *LinReg) {
 	o = new(LinReg)
 	o.data = data
-	o.Params = NewParamsReg(data.Nfeatures)
+	o.params = params
 	o.stat = NewStat(data, name)
 	o.stat.Update()
 	o.e = la.NewVector(data.Nsamples)
 	return
-}
-
-// BackupParams saves θ and b
-func (o *LinReg) BackupParams() {
-	o.Params.Backup()
-}
-
-// SetParam sets parameter
-//  i -- index of θ or -1 for bias
-func (o *LinReg) SetParam(i int, value float64) {
-	if i < 0 {
-		o.Params.Bias = value
-		return
-	}
-	o.Params.Theta[i] = value
-}
-
-// GetParam sets parameter
-//  i -- index of θ or -1 for bias
-func (o *LinReg) GetParam(i int) (value float64) {
-	if i < 0 {
-		return o.Params.Bias
-	}
-	return o.Params.Theta[i]
-}
-
-// RestoreParams restores θ and b
-func (o *LinReg) RestoreParams() {
-	o.Params.Restore()
 }
 
 // Predict returns the model evaluation @ {x;θ,b}
@@ -70,7 +41,9 @@ func (o *LinReg) RestoreParams() {
 //   Output:
 //     y -- model prediction y(x)
 func (o *LinReg) Predict(x la.Vector) (y float64) {
-	return o.Params.Bias + la.VecDot(x, o.Params.Theta) // b + xᵀθ
+	θ := o.params.AccessThetas()
+	b := o.params.GetBias()
+	return b + la.VecDot(x, θ) // b + xᵀθ
 }
 
 // Cost returns the cost c(x;θ,b)
@@ -84,8 +57,8 @@ func (o *LinReg) Cost() (c float64) {
 
 	// auxiliary
 	m := float64(o.data.Nsamples)
-	λ := o.Params.Lambda
-	θ := o.Params.Theta
+	λ := o.params.GetLambda()
+	θ := o.params.AccessThetas()
 
 	// cost
 	o.calce()                           // e := b⋅o + X⋅θ - y
@@ -96,12 +69,28 @@ func (o *LinReg) Cost() (c float64) {
 	return c
 }
 
-// Gradients return ∂C/∂θ and ∂C/∂b
+// Gradients returns ∂C/∂θ and ∂C/∂b
 //   Output:
-//     dCdT -- ∂C/∂θ
+//     dCdθ -- ∂C/∂θ
 //     dCdb -- ∂C/∂b
-func (o *LinReg) Gradients(dCdT la.Vector) (dCdb float64) {
-	return 0
+func (o *LinReg) Gradients(dCdθ la.Vector) (dCdb float64) {
+
+	// auxiliary
+	m := float64(o.data.Nsamples)
+	λ := o.params.GetLambda()
+	θ := o.params.AccessThetas()
+	X := o.data.X
+
+	// dCdθ
+	o.calce()                           // e := b⋅o + X⋅θ - y
+	la.MatTrVecMul(dCdθ, 1.0/m, X, o.e) // dCdθ := (1/m) Xᵀe
+	if λ > 0 {
+		la.VecAdd(dCdθ, 1, dCdθ, λ/m, θ) // dCdθ += (1/m) θ
+	}
+
+	// dCdb
+	dCdb = (1.0 / m) * o.e.Accum() // dCdb = (1/m) oᵀe
+	return
 }
 
 // Train finds θ and b using closed-form solution
@@ -112,7 +101,7 @@ func (o *LinReg) Gradients(dCdT la.Vector) (dCdb float64) {
 func (o *LinReg) Train() {
 
 	// auxiliary
-	λ := o.Params.Lambda
+	λ := o.params.GetLambda()
 	X, y := o.data.X, o.data.Y
 	s, t := o.stat.SumVars()
 
@@ -136,9 +125,10 @@ func (o *LinReg) Train() {
 	}
 
 	// solve system
-	θ := o.Params.Theta
+	θ := o.params.AccessThetas()
 	la.DenSolve(θ, K, r, false)
-	o.Params.Bias = (t - la.VecDot(s, θ)) / m
+	b := (t - la.VecDot(s, θ)) / m
+	o.params.SetBias(b)
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
@@ -146,7 +136,8 @@ func (o *LinReg) Train() {
 // calce calculates e vector (save into o.e)
 //  Output: e = b⋅o + X⋅θ - y
 func (o *LinReg) calce() {
-	θ, b := o.Params.Theta, o.Params.Bias
+	θ := o.params.AccessThetas()
+	b := o.params.GetBias()
 	X, y := o.data.X, o.data.Y
 	o.e.Fill(b)                   // e := b⋅o
 	la.MatVecMulAdd(o.e, 1, X, θ) // e := b⋅o + X⋅θ

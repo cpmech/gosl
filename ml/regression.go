@@ -8,10 +8,6 @@ import "github.com/cpmech/gosl/la"
 
 // Regression defines an interface for regression models
 type Regression interface {
-	BackupParams()
-	SetParam(i int, value float64)
-	GetParam(i int) (value float64)
-	RestoreParams()
 	Predict(x la.Vector) (y float64)
 	Cost() (c float64)
 }
