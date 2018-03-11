@@ -108,6 +108,11 @@ func (o *ParamsReg) AccessThetas() (θ la.Vector) {
 	return o.theta
 }
 
+// AccessBias returns access (pointer) to b
+func (o *ParamsReg) AccessBias() (ptb *float64) {
+	return &o.bias
+}
+
 // SetTheta sets one component of θ and notifies observers
 func (o *ParamsReg) SetTheta(i int, θi float64) {
 	o.theta[i] = θi

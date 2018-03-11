@@ -219,4 +219,15 @@ func TestParamsReg03(tst *testing.T) {
 	chk.String(tst, observer.msg, "got θ=[11.0 22.0 33.0] b=44.0 λ=0.500 p=6") // << not modified
 	params.Restore(false)
 	chk.String(tst, observer.msg, "got θ=[-33.0 -2.0 -1.0] b=123.0 λ=0.010 p=8") // << restored
+
+	// check Access thetas and bias
+	θ := params.AccessThetas()
+	b := params.AccessBias()
+	θ[0] = 654
+	*b = 987
+	chk.Float64(tst, "access: GetTheta[0]", 1e-15, params.GetTheta(0), 654)
+	chk.Float64(tst, "access: GetBias", 1e-15, params.GetBias(), 987)
+	chk.String(tst, observer.msg, "got θ=[-33.0 -2.0 -1.0] b=123.0 λ=0.010 p=8") // << unmodified
+	params.NotifyUpdate()
+	chk.String(tst, observer.msg, "got θ=[654.0 -2.0 -1.0] b=987.0 λ=0.010 p=8") // << updated
 }
