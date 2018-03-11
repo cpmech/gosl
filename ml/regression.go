@@ -11,7 +11,11 @@ import (
 
 // Regression defines the functions required to perform regression computations
 type Regression interface {
-	Model(xVec, theta la.Vector) float64        // model equation where xVec[1+nFeatures] (augmented vector) and theta[1+nFeatures]
-	Cost(data *DataMatrix) float64              // computes cost
-	Deriv(dCdTheta la.Vector, data *DataMatrix) // computes dCdθ for given data len(dCdθ) = 1+nFeatures
+	GetParams() (θ la.Vector, b float64)    // return a copy of parameters
+	SetParams(θ la.Vector, b float64)       // set parameters
+	SetTheta(iFeature int, value float64)   // set θ parameter
+	SetBias(value float64)                  // set b parameter
+	Model(x la.Vector) float64              // model equation. return y(x;θ,b)
+	Cost(data *DataMatrix) float64          // computes cost
+	Deriv(dCdθ la.Vector, data *DataMatrix) // computes dCdθ
 }

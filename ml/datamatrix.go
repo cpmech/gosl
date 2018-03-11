@@ -32,7 +32,6 @@ type DataMatrix struct {
 	xMat     *la.Matrix // [nSamples][nParams] matrix with the first column being filled with ones
 	yVec     la.Vector  // [nSamples] y-data
 	lVec     la.Vector  // [nSamples] l = X⋅θ (linear model)
-	params   la.Vector  // [nParams] parameters θ
 
 	// control
 	statOk bool // indicates that Stat is OK; otherwise Stat() must be called because x,y changed
@@ -72,7 +71,6 @@ func NewDataMatrix(nSamples, nFeatures int, yData bool) (o *DataMatrix) {
 		o.yVec = la.NewVector(o.nSamples)
 	}
 	o.lVec = la.NewVector(o.nSamples)
-	o.params = la.NewVector(o.nParams)
 	o.xMat.SetCol(0, 1.0)
 
 	// stat

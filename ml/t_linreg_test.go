@@ -69,22 +69,22 @@ func TestLinReg01(tst *testing.T) {
 
 	// analytical θ
 	io.Pl()
-	r := NewLinReg()
+	r := NewLinReg(d)
 	r.CalcTheta(d)
-	io.Pf("analytical: θ = %v\n", d.params)
-	chk.Float64(tst, "analytical: θ0", 1e-5, d.params[0], 74.28331)
-	chk.Float64(tst, "analytical: θ1", 1e-5, d.params[1], 14.94748)
+	io.Pf("analytical: θ = %v\n", r.θ)
+	chk.Float64(tst, "analytical: θ0", 1e-5, r.θ[0], 74.28331)
+	chk.Float64(tst, "analytical: θ1", 1e-5, r.θ[1], 14.94748)
 
 	// check dCdθ
 	io.Pl()
 	dCdθ := la.NewVector(d.Nparams())
 	for _, θ0 := range []float64{50, 80} {
 		for _, θ1 := range []float64{5, 20} {
-			d.params[0] = θ0
-			d.params[1] = θ1
+			r.θ[0] = θ0
+			r.θ[1] = θ1
 			r.Deriv(dCdθ, d)
-			chk.DerivScaVec(tst, "dCdθ", 1e-6, dCdθ, d.params, 1e-6, chk.Verbose, func(th []float64) float64 {
-				copy(d.params, th)
+			chk.DerivScaVec(tst, "dCdθ", 1e-6, dCdθ, r.θ, 1e-6, chk.Verbose, func(th []float64) float64 {
+				copy(r.θ, th)
 				return r.Cost(d)
 			})
 		}
@@ -94,10 +94,10 @@ func TestLinReg01(tst *testing.T) {
 	io.Pl()
 	g := NewGradDesc(10)
 	g.SetControl(0.1, 0, 0)
-	g.Run(d, r, []float64{70, 10})
-	io.Pf("grad.desc: θ = %v\n", d.params)
-	chk.Float64(tst, "grad.desc: θ0", 1e-5, d.params[0], 73.91321)
-	chk.Float64(tst, "grad.desc: θ1", 1e-5, d.params[1], 14.74272)
+	g.Run(d, r, []float64{70, 10}, 70)
+	io.Pf("grad.desc: θ = %v\n", r.θ)
+	chk.Float64(tst, "grad.desc: θ0", 1e-5, r.θ[0], 73.91321)
+	chk.Float64(tst, "grad.desc: θ1", 1e-5, r.θ[1], 14.74272)
 
 	// plot: unormalised model
 	if chk.Verbose {
@@ -117,7 +117,7 @@ func TestLinReg01(tst *testing.T) {
 		args := &plt.A{Nlevels: 20}
 		plt.Subplot(3, 1, 3)
 		d.PlotContCost(r, 0, 1, 11, 11, []float64{0, 0}, []float64{100, 70}, args)
-		plt.PlotOne(d.params[0], d.params[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
+		plt.PlotOne(r.θ[0], r.θ[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
 		plt.Save("/tmp/gosl/ml", "linreg01a")
 	}
 
@@ -126,7 +126,7 @@ func TestLinReg01(tst *testing.T) {
 	d.Normalize(false)
 	checkStat()
 	r.CalcTheta(d)
-	io.Pf("analytical: θ = %v\n", d.params)
+	io.Pf("analytical: θ = %v\n", r.θ)
 
 	// plot: normalised model
 	if chk.Verbose {
@@ -141,7 +141,7 @@ func TestLinReg01(tst *testing.T) {
 		args := &plt.A{Nlevels: 20}
 		plt.Subplot(2, 1, 2)
 		d.PlotContCost(r, 0, 1, 11, 11, []float64{50, -50}, []float64{150, 50}, args)
-		plt.PlotOne(d.params[0], d.params[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
+		plt.PlotOne(r.θ[0], r.θ[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
 		plt.Save("/tmp/gosl/ml", "linreg01b")
 	}
 }

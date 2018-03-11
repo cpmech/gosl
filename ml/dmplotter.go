@@ -58,7 +58,7 @@ func (o *DataMatrix) PlotModel(reg Regression, iFeature, npts int, args *plt.A) 
 	for k := 0; k < npts; k++ {
 		o.horiz[k] = o.minX[iFeature] + float64(k)*dxi
 		xVec[i] = o.horiz[k]
-		o.vert[k] = reg.Model(xVec, o.params)
+		o.vert[k] = reg.Model(xVec)
 	}
 	plt.Plot(o.horiz, o.vert, args)
 }
@@ -101,7 +101,7 @@ func (o *DataMatrix) PlotContModel(reg Regression, iFeature, jFeature, npi, npj 
 				xRaw[jFeature] = o.xxj[r][c]
 				mapper.Map(xVec, xRaw)
 			}
-			o.zz[r][c] = reg.Model(xVec, o.params)
+			o.zz[r][c] = reg.Model(xVec)
 		}
 	}
 	if filled {
@@ -122,19 +122,19 @@ func (o *DataMatrix) PlotContCost(reg Regression, iPrm, jPrm, npi, npj int, min�
 		o.thj = utl.Alloc(npj, npi)
 		o.cc = utl.Alloc(npj, npi)
 	}
-	θcpy := o.params.GetCopy()
+	θcpy, bcpy := reg.GetParams()
 	dthi := (maxθ[iPrm] - minθ[iPrm]) / float64(npi-1)
 	dthj := (maxθ[jPrm] - minθ[jPrm]) / float64(npj-1)
 	for r := 0; r < npj; r++ {
 		for c := 0; c < npi; c++ {
 			o.thi[r][c] = minθ[iPrm] + float64(c)*dthi
 			o.thj[r][c] = minθ[jPrm] + float64(r)*dthj
-			o.params[iPrm] = o.thi[r][c]
-			o.params[jPrm] = o.thj[r][c]
+			reg.SetTheta(iPrm, o.thi[r][c])
+			reg.SetTheta(jPrm, o.thj[r][c])
 			o.cc[r][c] = reg.Cost(o)
 		}
 	}
-	o.params.Apply(1, θcpy)
 	plt.ContourF(o.thi, o.thj, o.cc, args)
 	plt.Gll(io.Sf("$\\theta_{%d}$", iPrm), io.Sf("$\\theta_{%d}$", jPrm), nil)
+	reg.SetParams(θcpy, bcpy)
 }

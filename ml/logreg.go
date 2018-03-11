@@ -21,11 +21,14 @@ type LogReg struct {
 	hMat   *la.Matrix // [n][n] Hessian matrix = Xt*A*X = B*X
 	tmp    la.Vector  // [m] temporary vector; e.g. = h - l
 	lambda float64    // regularization parameter
+	θ      la.Vector  // θ parameters
+	b      float64    // bias parameter
 }
 
 // NewLogReg returns new LogReg object
 func NewLogReg(data *DataMatrix) (o *LogReg) {
 	o = new(LogReg)
+	o.θ = la.NewVector(data.Nparams())
 	o.Set(data)
 	return
 }
@@ -35,11 +38,31 @@ func h(z float64) float64 {
 	return 1.0 / (1.0 + math.Exp(-z))
 }
 
+// GetParams return a copy of parameters
+func (o *LogReg) GetParams() (θ la.Vector, b float64) {
+	return o.θ.GetCopy(), o.b
+}
+
+// SetParams set parameters
+func (o *LogReg) SetParams(θ la.Vector, b float64) {
+	copy(o.θ, θ)
+	o.b = b
+}
+
+// SetTheta set θ parameter
+func (o *LogReg) SetTheta(iFeature int, value float64) {
+	o.θ[iFeature] = value
+}
+
+// SetBias set b parameter
+func (o *LogReg) SetBias(value float64) {
+	o.b = value
+}
+
 // Model implements the model equation: logistic(xᵀθ)
-//   x -- [1+nFeatures] x-values (augmented)
-//   θ -- [1+nFeatures] parameters
-func (o *LogReg) Model(x, θ la.Vector) float64 {
-	return h(la.VecDot(x, θ))
+//   x -- [nFeatures] x-values
+func (o *LogReg) Model(x la.Vector) float64 {
+	return h(la.VecDot(x, o.θ))
 }
 
 // SetRegularization sets regularization parameter and activates regularization
@@ -61,7 +84,7 @@ func (o *LogReg) Set(data *DataMatrix) {
 
 // Cost computes the total cost
 func (o *LogReg) Cost(data *DataMatrix) (C float64) {
-	la.MatVecMul(data.lVec, 1, data.xMat, data.params)
+	la.MatVecMul(data.lVec, 1, data.xMat, o.θ)
 	sq := 0.0
 	for i := 0; i < data.nSamples; i++ {
 		sq += math.Log(1.0 + math.Exp(-data.lVec[i]))
@@ -69,10 +92,10 @@ func (o *LogReg) Cost(data *DataMatrix) (C float64) {
 	mCoef := float64(data.nSamples)
 	C = sq/mCoef + la.VecDot(o.ybar, data.lVec)
 	if o.lambda > 0 {
-		tmp := data.params[0]
-		data.params[0] = 0.0
-		C += (0.5 * o.lambda / mCoef) * la.VecDot(data.params, data.params)
-		data.params[0] = tmp
+		tmp := o.θ[0]
+		o.θ[0] = 0.0
+		C += (0.5 * o.lambda / mCoef) * la.VecDot(o.θ, o.θ)
+		o.θ[0] = tmp
 	}
 	return C
 }
@@ -83,17 +106,17 @@ func (o *LogReg) Cost(data *DataMatrix) (C float64) {
 //   Output:
 //     dCdθ -- derivative of cost function
 func (o *LogReg) Deriv(dCdθ la.Vector, data *DataMatrix) {
-	la.MatVecMul(data.lVec, 1, data.xMat, data.params)
+	la.MatVecMul(data.lVec, 1, data.xMat, o.θ)
 	for i := 0; i < data.nSamples; i++ {
 		o.hmy[i] = h(data.lVec[i]) - data.yVec[i]
 	}
 	mCoef := float64(data.nSamples)
 	la.MatTrVecMul(dCdθ, 1.0/mCoef, data.xMat, o.hmy)
 	if o.lambda > 0 {
-		tmp := data.params[0]
-		data.params[0] = 0.0
-		la.VecAdd(dCdθ, 1, dCdθ, o.lambda/mCoef, data.params)
-		data.params[0] = tmp
+		tmp := o.θ[0]
+		o.θ[0] = 0.0
+		la.VecAdd(dCdθ, 1, dCdθ, o.lambda/mCoef, o.θ)
+		o.θ[0] = tmp
 	}
 }
 
@@ -121,7 +144,7 @@ func (o *LogReg) CalcTheta(data *DataMatrix, verbose, checkJac bool, tolJac0, to
 
 	// objective function: z=θ  and  fz = Xt*(h-y) / m
 	ffcn := func(fz, z la.Vector) {
-		data.params.Apply(1, z)
+		o.θ.Apply(1, z)
 		o.Deriv(fz, data)
 	}
 
@@ -147,7 +170,7 @@ func (o *LogReg) CalcTheta(data *DataMatrix, verbose, checkJac bool, tolJac0, to
 			tolJac0 = 1e-3
 		}
 		tst := new(testing.T)
-		num.CompareJacDense(tst, ffcn, Jfcn, data.params, tolJac0)
+		num.CompareJacDense(tst, ffcn, Jfcn, o.θ, tolJac0)
 	}
 
 	// solver parameters
@@ -161,7 +184,7 @@ func (o *LogReg) CalcTheta(data *DataMatrix, verbose, checkJac bool, tolJac0, to
 	}
 
 	// solution array := initial values
-	z := data.params.GetCopy()
+	z := o.θ.GetCopy()
 
 	// solve nonlinear problem
 	silent := !verbose
@@ -173,7 +196,7 @@ func (o *LogReg) CalcTheta(data *DataMatrix, verbose, checkJac bool, tolJac0, to
 	solver.Solve(z, silent)
 
 	// results
-	data.params.Apply(1, z)
+	o.θ.Apply(1, z)
 
 	// debug
 	if checkJac {
@@ -181,6 +204,6 @@ func (o *LogReg) CalcTheta(data *DataMatrix, verbose, checkJac bool, tolJac0, to
 			tolJac1 = 1e-3
 		}
 		tst := new(testing.T)
-		num.CompareJacDense(tst, ffcn, Jfcn, data.params, tolJac1)
+		num.CompareJacDense(tst, ffcn, Jfcn, o.θ, tolJac1)
 	}
 }
