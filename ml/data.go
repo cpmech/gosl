@@ -21,17 +21,11 @@ import (
 //         |_  1 -8  5 _|(nSamples x nFeatures)             |_ 1 _|(nSamples)
 //
 type Data struct {
-
-	// input
 	Nsamples  int        // number of data points (samples). number of rows in X and Y
 	Nfeatures int        // number of features. number of columns in X
 	UseY      bool       // use Y vector
 	X         *la.Matrix // [nSamples][nFeatures] X values
 	Y         la.Vector  // [nSamples] Y values
-
-	// stat
-	stat   *Stat // statistics
-	statOk bool  // indicates that Stat is OK; otherwise Stat() must be called because x,y changed
 }
 
 // NewData returns a new object to hold ML data
@@ -42,8 +36,6 @@ type Data struct {
 //  Output:
 //    new object
 func NewData(nSamples, nFeatures int, useY bool) (o *Data) {
-
-	// input
 	o = new(Data)
 	o.Nsamples = nSamples
 	o.Nfeatures = nFeatures
@@ -52,10 +44,6 @@ func NewData(nSamples, nFeatures int, useY bool) (o *Data) {
 	if o.UseY {
 		o.Y = la.NewVector(o.Nsamples)
 	}
-
-	// stat
-	o.stat = NewStat(nFeatures, useY)
-	o.statOk = false
 	return
 }
 
