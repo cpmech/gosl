@@ -10,4 +10,5 @@ import "github.com/cpmech/gosl/la"
 type Regression interface {
 	Predict(x la.Vector) (y float64)
 	Cost() (c float64)
+	Gradients(dCdθ la.Vector) (dCdb float64)
 }

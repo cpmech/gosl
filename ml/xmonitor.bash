@@ -19,5 +19,6 @@ while true; do
     #go test -run ParamsReg02
     #go test -run ParamsReg03
     #go test -run LinReg01
-    go test -run LinReg02
+    #go test -run LinReg02
+    go test -run LinReg03
 done
