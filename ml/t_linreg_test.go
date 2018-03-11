@@ -44,6 +44,7 @@ func TestLinReg02(tst *testing.T) {
 
 	// train
 	reg.Train()
-	chk.Array(tst, "θ", 1e-12, reg.Params.Theta, []float64{14.947479732111082})
-	chk.Float64(tst, "b", 1e-12, reg.Params.Bias, 74.28331424039514)
+	chk.Float64(tst, "cost", 1e-15, reg.Cost(), 5.312454218805082e-01)
+	chk.Array(tst, "θ", 1e-12, reg.Params.Theta, []float64{1.494747973211108e+01})
+	chk.Float64(tst, "b", 1e-12, reg.Params.Bias, 7.428331424039514e+01)
 }
