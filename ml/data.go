@@ -8,6 +8,7 @@ package ml
 import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Data holds data in matrix format; e.g. for regression computations
@@ -20,7 +21,11 @@ import (
 //         |  -4  5  0  |                                   |  0  |
 //         |_  1 -8  5 _|(nSamples x nFeatures)             |_ 1 _|(nSamples)
 //
+//   NOTE: remember to call data.NotifyUpdate() after changing X or y components
+//
 type Data struct {
+	utl.Observable // can notify others of changes here via data.NotifyUpdate()
+
 	Nsamples  int        // number of data points (samples). number of rows in X and Y
 	Nfeatures int        // number of features. number of columns in X
 	UseY      bool       // use Y vector

@@ -6,15 +6,18 @@
 package ml
 
 import (
-	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/rnd"
 	"github.com/cpmech/gosl/utl"
 )
 
 // Stat holds statistics about data
+//
+//  NOTE: Stat is an Observer of Data; thus, data.NotifyUpdate() will recompute stat
+//
 type Stat struct {
-	UseY  bool      // use y values
+	data  *Data     // data
+	name  string    // name of this object
 	MinX  []float64 // [nFeatures] min x values
 	MaxX  []float64 // [nFeatures] max x values
 	SumX  []float64 // [nFeatures] sum of x values
@@ -30,59 +33,61 @@ type Stat struct {
 }
 
 // NewStat returns a new Stat object
-func NewStat(nFeatures int, useY bool) (o *Stat) {
+func NewStat(data *Data, name string) (o *Stat) {
 	o = new(Stat)
-	o.UseY = useY
-	o.MinX = make([]float64, nFeatures)
-	o.MaxX = make([]float64, nFeatures)
-	o.SumX = make([]float64, nFeatures)
-	o.MeanX = make([]float64, nFeatures)
-	o.SigX = make([]float64, nFeatures)
-	o.DelX = make([]float64, nFeatures)
+	o.data = data
+	o.name = name
+	o.data.AddObserver(o)
+	o.MinX = make([]float64, data.Nfeatures)
+	o.MaxX = make([]float64, data.Nfeatures)
+	o.SumX = make([]float64, data.Nfeatures)
+	o.MeanX = make([]float64, data.Nfeatures)
+	o.SigX = make([]float64, data.Nfeatures)
+	o.DelX = make([]float64, data.Nfeatures)
 	return
 }
 
-// Compute compute statistics for given data
-//   X -- [nSamples][nFeatures] x values
-//   y -- [nSamples] y values (may be nil)
-func (o *Stat) Compute(X *la.Matrix, y la.Vector) {
+// Name returns the name of this stat object (thus defining the Observer interface)
+func (o *Stat) Name() string {
+	return o.name
+}
+
+// Update compute statistics for given data (an Observer of Data)
+func (o *Stat) Update() {
 
 	// constants
-	m := X.M // number of samples
-	n := X.N // number of features
-	if n != len(o.MinX) {
-		chk.Panic("number of columns in X matrix does not correspond with the number of features. %d != %d\n", n, len(o.MinX))
-	}
+	m := o.data.X.M // number of samples
+	n := o.data.X.N // number of features
 
 	// x values
 	mf := float64(m)
 	for j := 0; j < n; j++ {
-		o.MinX[j] = X.Get(0, j)
+		o.MinX[j] = o.data.X.Get(0, j)
 		o.MaxX[j] = o.MinX[j]
 		o.SumX[j] = 0.0
 		for i := 0; i < m; i++ {
-			xval := X.Get(i, j)
+			xval := o.data.X.Get(i, j)
 			o.MinX[j] = utl.Min(o.MinX[j], xval)
 			o.MaxX[j] = utl.Max(o.MaxX[j], xval)
 			o.SumX[j] += xval
 		}
 		o.MeanX[j] = o.SumX[j] / mf
-		o.SigX[j] = rnd.StatDevFirst(X.Col(j), o.MeanX[j], true)
+		o.SigX[j] = rnd.StatDevFirst(o.data.X.Col(j), o.MeanX[j], true)
 		o.DelX[j] = o.MaxX[j] - o.MinX[j]
 	}
 
 	// y values
-	if o.UseY {
-		o.MinY = y[0]
+	if o.data.UseY {
+		o.MinY = o.data.Y[0]
 		o.MaxY = o.MinY
 		o.SumY = 0.0
 		for i := 0; i < m; i++ {
-			o.MinY = utl.Min(o.MinY, y[i])
-			o.MaxY = utl.Max(o.MaxY, y[i])
-			o.SumY += y[i]
+			o.MinY = utl.Min(o.MinY, o.data.Y[i])
+			o.MaxY = utl.Max(o.MaxY, o.data.Y[i])
+			o.SumY += o.data.Y[i]
 		}
 		o.MeanY = o.SumY / mf
-		o.SigY = rnd.StatDevFirst(y, o.MeanY, true)
+		o.SigY = rnd.StatDevFirst(o.data.Y, o.MeanY, true)
 		o.DelY = o.MaxY - o.MinY
 	}
 }
@@ -91,11 +96,11 @@ func (o *Stat) Compute(X *la.Matrix, y la.Vector) {
 //   Output:
 //     t -- scalar t = oᵀy  sum of columns of the y vector: t = Σ_i^m o_i y_i
 //     s -- vector s = Xᵀo  sum of columns of the X matrix: s_j = Σ_i^m o_i X_ij  [nFeatures]
-func (o *Stat) SumVars(X *la.Matrix, y la.Vector) (s la.Vector, t float64) {
-	one := la.NewVector(X.M)
+func (o *Stat) SumVars() (s la.Vector, t float64) {
+	one := la.NewVector(o.data.X.M)
 	one.Fill(1.0)
-	t = la.VecDot(one, y)
-	s = la.NewVector(X.N)
-	la.MatTrVecMul(s, 1, X, one)
+	t = la.VecDot(one, o.data.Y)
+	s = la.NewVector(o.data.X.N)
+	la.MatTrVecMul(s, 1, o.data.X, one)
 	return
 }

@@ -9,12 +9,15 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
 )
 
 func sample01checkStat(tst *testing.T, o *Stat) {
-	if !o.UseY {
+	if !o.data.UseY {
 		tst.Errorf("flag UseY should be true\n")
+		return
+	}
+	if o.name != "stat01" {
+		tst.Error("name is incorrect\n")
 		return
 	}
 	io.Pf("X\n")
@@ -31,23 +34,13 @@ func sample01checkStat(tst *testing.T, o *Stat) {
 	chk.Float64(tst, "sum(y)", 1e-15, o.SumY, 1843.21)
 }
 
-func TestStat00(tst *testing.T) {
-	//verbose()
-	chk.PrintTitle("Stat00. capture panic")
-	defer chk.RecoverTstPanicIsOK(tst)
-	nSamples, nFeatures, nFeaturesWrong := 4, 3, 2
-	stat := NewStat(nFeatures, false)
-	X := la.NewMatrix(nSamples, nFeaturesWrong)
-	stat.Compute(X, nil)
-}
-
 func TestStat01(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("Stat01. statistics")
 
-	// raw data
-	XYraw := la.NewMatrixDeep2([][]float64{
+	// data
+	data := NewDataGivenRawXY([][]float64{
 		{0.99, 90.01},
 		{1.02, 89.05},
 		{1.15, 91.43},
@@ -70,21 +63,18 @@ func TestStat01(tst *testing.T) {
 		{0.95, 87.33},
 	})
 
-	// X and y
-	X := XYraw.ExtractCols(0, 1) // from 0 to 1, but not 1
-	y := XYraw.GetCol(1)         // y column
-
 	// stat
-	nFeatures := 1
-	stat := NewStat(nFeatures, true)
-	stat.Compute(X, y)
+	stat := NewStat(data, "stat01")
+
+	// notify update
+	data.NotifyUpdate()
 
 	// check
 	sample01checkStat(tst, stat)
 
 	// s and t sums
 	io.Pl()
-	s, t := stat.SumVars(X, y)
+	s, t := stat.SumVars()
 	chk.Array(tst, "s = sum(X)", 1e-15, s, []float64{23.92})
 	chk.Float64(tst, "t = sum(y)", 1e-15, t, 1843.21)
 }
