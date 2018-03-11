@@ -243,6 +243,30 @@ func TestMatrix03(tst *testing.T) {
 	chk.Array(tst, "GetCol(2)", 1e-17, col2, []float64{3, 0.3, 30})
 	chk.Array(tst, "GetCol(4)", 1e-17, col4, []float64{5, 0.5, 50})
 
+	// ExtractCols
+	aNew := a.ExtractCols(0, a.N)
+	chk.Int(tst, "aNew.M = a.M", aNew.M, a.M)
+	chk.Int(tst, "aNew.N = a.N", aNew.N, a.N)
+	chk.Array(tst, "aNew := a", 1e-17, aNew.Data, a.Data)
+	a1 := a.ExtractCols(1, 2)
+	chk.Deep2(tst, "a1 := a[:,1]", 1e-17, a1.GetDeep2(), [][]float64{
+		{2},
+		{0.2},
+		{20},
+	})
+	a23 := a.ExtractCols(2, 4)
+	chk.Deep2(tst, "a23 := a[:,2:3]", 1e-17, a23.GetDeep2(), [][]float64{
+		{3, 4},
+		{0.3, 0.4},
+		{30, 40},
+	})
+	a15 := a.ExtractCols(1, 5)
+	chk.Deep2(tst, "a15 := a[:,1:5]", 1e-17, a15.GetDeep2(), [][]float64{
+		{2, 3, 4, 5},
+		{0.2, 0.3, 0.4, 0.5},
+		{20, 30, 40, 50},
+	})
+
 	// Col
 	c0 := a.Col(0)
 	c0[0] = 123

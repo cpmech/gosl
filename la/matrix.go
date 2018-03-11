@@ -247,6 +247,19 @@ func (o *Matrix) GetCol(j int) (col Vector) {
 	return
 }
 
+// ExtractCols returns columns from j=start to j=endp1-1
+//  start -- first column
+//  endp1 -- "end-plus-one", the number of the last requested column + 1
+func (o *Matrix) ExtractCols(start, endp1 int) (reduced *Matrix) {
+	if endp1 <= start {
+		chk.Panic("endp1 'end-plus-one' must be greater than start. start=%d, endp1=%d invalid\n", start, endp1)
+	}
+	ncolNew := endp1 - start
+	reduced = NewMatrix(o.M, ncolNew)
+	copy(reduced.Data, o.Data[start*o.M:endp1*o.M])
+	return
+}
+
 // SetCol sets the values of a column j with a single value
 func (o *Matrix) SetCol(j int, value float64) {
 	for k := j * o.M; k < (j+1)*o.M; k++ {
