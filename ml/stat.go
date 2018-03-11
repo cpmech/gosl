@@ -86,3 +86,16 @@ func (o *Stat) Compute(X *la.Matrix, y la.Vector) {
 		o.DelY = o.MaxY - o.MinY
 	}
 }
+
+// SumVars computes the sums along the columns of X and y
+//   Output:
+//     t -- scalar t = oᵀy  sum of columns of the y vector: t = Σ_i^m o_i y_i
+//     s -- vector s = Xᵀo  sum of columns of the X matrix: s_j = Σ_i^m o_i X_ij  [nFeatures]
+func (o *Stat) SumVars(X *la.Matrix, y la.Vector) (s la.Vector, t float64) {
+	one := la.NewVector(X.M)
+	one.Fill(1.0)
+	t = la.VecDot(one, y)
+	s = la.NewVector(X.N)
+	la.MatTrVecMul(s, 1, X, one)
+	return
+}

@@ -76,9 +76,15 @@ func TestStat01(tst *testing.T) {
 
 	// stat
 	nFeatures := 1
-	s := NewStat(nFeatures, true)
-	s.Compute(X, y)
+	stat := NewStat(nFeatures, true)
+	stat.Compute(X, y)
 
 	// check
-	sample01checkStat(tst, s)
+	sample01checkStat(tst, stat)
+
+	// s and t sums
+	io.Pl()
+	s, t := stat.SumVars(X, y)
+	chk.Array(tst, "s = sum(X)", 1e-15, s, []float64{23.92})
+	chk.Float64(tst, "t = sum(y)", 1e-15, t, 1843.21)
 }
