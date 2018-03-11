@@ -14,5 +14,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="BestSquare01"
+    go test -run Observer01
 done
