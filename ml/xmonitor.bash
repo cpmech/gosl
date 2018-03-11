@@ -8,9 +8,12 @@ while true; do
     echo
     echo
     echo
+    echo
+    echo
     #go test -test.run="LinReg01"
     #go test -test.run="LogReg00"
     #go test -test.run="LogReg01"
     #go test -test.run="LogReg02"
-    go test
+    #go test
+    go test | diff - data/log01b.txt 
 done
