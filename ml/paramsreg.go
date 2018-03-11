@@ -5,6 +5,9 @@
 package ml
 
 import (
+	"encoding/json"
+
+	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
@@ -34,6 +37,15 @@ func NewParamsReg(nFeatures int) (o *ParamsReg) {
 	return o
 }
 
+// NewParamsRegFromJSON returns a new object to hold regression parameters with input given in a
+// JSON string
+func NewParamsRegFromJSON(jsonString string) (o *ParamsReg) {
+	o = new(ParamsReg)
+	o.SetJSON(jsonString)
+	o.bkpTheta = la.NewVector(len(o.theta))
+	return
+}
+
 // Backup creates an internal copy of parameters
 func (o *ParamsReg) Backup() {
 	copy(o.bkpTheta, o.theta)
@@ -43,12 +55,14 @@ func (o *ParamsReg) Backup() {
 }
 
 // Restore restores an internal copy of parameters and notifies observers
-func (o *ParamsReg) Restore() {
+func (o *ParamsReg) Restore(skipNotification bool) {
 	copy(o.theta, o.bkpTheta)
 	o.bias = o.bkpBias
 	o.lambda = o.bkpLambda
 	o.degree = o.bkpDegree
-	o.NotifyUpdate()
+	if !skipNotification {
+		o.NotifyUpdate()
+	}
 }
 
 // SetParams sets θ and b and notifies observers
@@ -87,6 +101,11 @@ func (o *ParamsReg) SetThetas(θ la.Vector) {
 // GetThetas gets a copy of θ
 func (o *ParamsReg) GetThetas() (θ la.Vector) {
 	return o.theta.GetCopy()
+}
+
+// AccessThetas returns access (slice) to θ
+func (o *ParamsReg) AccessThetas() (θ la.Vector) {
+	return o.theta
 }
 
 // SetTheta sets one component of θ and notifies observers
@@ -131,4 +150,32 @@ func (o *ParamsReg) SetDegree(p int) {
 // GetDegree gets a copy of p
 func (o *ParamsReg) GetDegree() (p int) {
 	return o.degree
+}
+
+// SetJSON sets parameters from JSON string and notifies observers
+func (o *ParamsReg) SetJSON(jsonString string) {
+
+	// variable to hold input
+	type jsonType struct {
+		Theta  la.Vector
+		Bias   float64
+		Lambda float64
+		Degree int
+	}
+	input := &jsonType{}
+
+	// decode
+	err := json.Unmarshal([]byte(jsonString), input)
+	if err != nil {
+		chk.Panic("cannot unmarshal json string\n")
+	}
+
+	// set data
+	o.theta = input.Theta
+	o.bias = input.Bias
+	o.lambda = input.Lambda
+	o.degree = input.Degree
+
+	// notifications
+	o.NotifyUpdate()
 }
