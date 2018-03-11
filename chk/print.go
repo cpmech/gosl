@@ -86,18 +86,30 @@ func TestDiffC(tst *testing.T, msg string, tol float64, a, b complex128, showOK 
 func PrintAnaNum(msg string, tol, ana, num float64, verbose bool) (e error) {
 	diff := math.Abs(ana - num)
 	if math.IsNaN(diff) || math.IsInf(diff, 0) {
-		e = Err("[1;31m%s NaN or Inf: %v[0m", msg, diff)
+		if ColorsOn {
+			e = Err("[1;31m%s NaN or Inf: %v[0m", msg, diff)
+		} else {
+			e = Err("%s NaN or Inf: %v", msg, diff)
+		}
 		return
 	}
 	if verbose {
-		clr := "[1;32m" // green
-		if diff > tol {
-			clr = "[1;31m" // red
+		if ColorsOn {
+			clr := "[1;32m" // green
+			if diff > tol {
+				clr = "[1;31m" // red
+			}
+			fmt.Printf("%s %23v %23v %s%23v[0m\n", msg, ana, num, clr, diff)
+		} else {
+			fmt.Printf("%s %23v %23v %23v\n", msg, ana, num, diff)
 		}
-		fmt.Printf("%s %23v %23v %s%23v[0m\n", msg, ana, num, clr, diff)
 	}
 	if diff > tol {
-		e = Err("[1;31m%s |diff| = %g[0m", msg, diff)
+		if ColorsOn {
+			e = Err("[1;31m%s |diff| = %g[0m", msg, diff)
+		} else {
+			e = Err("%s |diff| = %g", msg, diff)
+		}
 	}
 	return
 }
