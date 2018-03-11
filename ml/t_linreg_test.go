@@ -18,11 +18,8 @@ func TestLinReg01(tst *testing.T) {
 	// data
 	data := NewDataGivenRawXY(dataReg01)
 
-	// parameters
-	params := NewParamsReg(data.Nfeatures)
-
 	// regression
-	reg := NewLinReg(data, params, "reg01")
+	reg := NewLinReg(data, "reg01")
 
 	// check stat
 	chk.Float64(tst, "reg.stat.min(x)", 1e-15, reg.stat.MinX[0], 0.87)
@@ -32,4 +29,21 @@ func TestLinReg01(tst *testing.T) {
 	data.NotifyUpdate()
 	chk.Float64(tst, "new: reg.stat.min(x)", 1e-15, reg.stat.MinX[0], 0.88)
 	chk.Float64(tst, "new: reg.stat.min(y)", 1e-15, reg.stat.MinY, 87.34)
+}
+
+func TestLinReg02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LinReg02. Train simple problem.")
+
+	// data
+	data := NewDataGivenRawXY(dataReg01)
+
+	// regression
+	reg := NewLinReg(data, "reg01")
+
+	// train
+	reg.Train()
+	chk.Array(tst, "θ", 1e-12, reg.Params.Theta, []float64{14.947479732111082})
+	chk.Float64(tst, "b", 1e-12, reg.Params.Bias, 74.28331424039514)
 }
