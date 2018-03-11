@@ -43,7 +43,7 @@ func TestStat00(tst *testing.T) {
 
 func TestStat01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("Stat01. statistics")
 
 	// raw data
