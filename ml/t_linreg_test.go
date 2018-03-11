@@ -202,7 +202,7 @@ func TestLinReg02b(tst *testing.T) {
 
 func TestLinReg03a(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("LinReg03a. Train simple problem (gradient-descent).")
 
 	// data and parameters
