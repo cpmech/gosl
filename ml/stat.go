@@ -30,7 +30,7 @@ type Stat struct {
 }
 
 // NewStat returns a new Stat object
-func (o *Stat) NewStat(nFeatures int, useY bool) {
+func NewStat(nFeatures int, useY bool) (o *Stat) {
 	o = new(Stat)
 	o.UseY = useY
 	o.MinX = make([]float64, nFeatures)

@@ -10,5 +10,6 @@ while true; do
     echo
     echo
     echo
-    go test
+    #go test -run Stat00
+    go test -run Stat01
 done
