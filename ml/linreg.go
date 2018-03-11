@@ -35,13 +35,42 @@ func NewLinReg(data *Data, name string) (o *LinReg) {
 	return
 }
 
+// BackupParams saves θ and b
+func (o *LinReg) BackupParams() {
+	o.Params.Backup()
+}
+
+// SetParam sets parameter
+//  i -- index of θ or -1 for bias
+func (o *LinReg) SetParam(i int, value float64) {
+	if i < 0 {
+		o.Params.Bias = value
+		return
+	}
+	o.Params.Theta[i] = value
+}
+
+// GetParam sets parameter
+//  i -- index of θ or -1 for bias
+func (o *LinReg) GetParam(i int) (value float64) {
+	if i < 0 {
+		return o.Params.Bias
+	}
+	return o.Params.Theta[i]
+}
+
+// RestoreParams restores θ and b
+func (o *LinReg) RestoreParams() {
+	o.Params.Restore()
+}
+
 // Predict returns the model evaluation @ {x;θ,b}
 //   Input:
 //     x -- vector of features
 //   Output:
 //     y -- model prediction y(x)
 func (o *LinReg) Predict(x la.Vector) (y float64) {
-	return 0
+	return o.Params.Bias + la.VecDot(x, o.Params.Theta) // b + xᵀθ
 }
 
 // Cost returns the cost c(x;θ,b)
