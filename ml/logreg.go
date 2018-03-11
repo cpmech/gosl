@@ -20,6 +20,7 @@ type LogReg struct {
 	bMat   *la.Matrix // [n][m] auxiliary matrix: B = Xt*A
 	hMat   *la.Matrix // [n][n] Hessian matrix = Xt*A*X = B*X
 	tmp    la.Vector  // [m] temporary vector; e.g. = h - l
+	l      la.Vector  // l = X⋅θ
 	lambda float64    // regularization parameter
 	θ      la.Vector  // θ parameters
 	b      float64    // bias parameter
@@ -28,6 +29,7 @@ type LogReg struct {
 // NewLogReg returns new LogReg object
 func NewLogReg(data *DataMatrix) (o *LogReg) {
 	o = new(LogReg)
+	o.l = la.NewVector(data.nSamples)
 	o.θ = la.NewVector(data.Nparams())
 	o.Set(data)
 	return
@@ -84,13 +86,13 @@ func (o *LogReg) Set(data *DataMatrix) {
 
 // Cost computes the total cost
 func (o *LogReg) Cost(data *DataMatrix) (C float64) {
-	la.MatVecMul(data.lVec, 1, data.xMat, o.θ)
+	la.MatVecMul(o.l, 1, data.xMat, o.θ)
 	sq := 0.0
 	for i := 0; i < data.nSamples; i++ {
-		sq += math.Log(1.0 + math.Exp(-data.lVec[i]))
+		sq += math.Log(1.0 + math.Exp(-o.l[i]))
 	}
 	mCoef := float64(data.nSamples)
-	C = sq/mCoef + la.VecDot(o.ybar, data.lVec)
+	C = sq/mCoef + la.VecDot(o.ybar, o.l)
 	if o.lambda > 0 {
 		tmp := o.θ[0]
 		o.θ[0] = 0.0
@@ -106,9 +108,9 @@ func (o *LogReg) Cost(data *DataMatrix) (C float64) {
 //   Output:
 //     dCdθ -- derivative of cost function
 func (o *LogReg) Deriv(dCdθ la.Vector, data *DataMatrix) {
-	la.MatVecMul(data.lVec, 1, data.xMat, o.θ)
+	la.MatVecMul(o.l, 1, data.xMat, o.θ)
 	for i := 0; i < data.nSamples; i++ {
-		o.hmy[i] = h(data.lVec[i]) - data.yVec[i]
+		o.hmy[i] = h(o.l[i]) - data.yVec[i]
 	}
 	mCoef := float64(data.nSamples)
 	la.MatTrVecMul(dCdθ, 1.0/mCoef, data.xMat, o.hmy)
@@ -150,9 +152,9 @@ func (o *LogReg) CalcTheta(data *DataMatrix, verbose, checkJac bool, tolJac0, to
 
 	// Jacobian function
 	Jfcn := func(dfdz *la.Matrix, z la.Vector) {
-		la.MatVecMul(data.lVec, 1, data.xMat, z) // l := X⋅θ (linear model)
+		la.MatVecMul(o.l, 1, data.xMat, z) // l := X⋅θ (linear model)
 		for i := 0; i < m; i++ {
-			hi := h(data.lVec[i])
+			hi := h(o.l[i])
 			o.aMat.Set(i, i, hi*(1.0-hi)/mCoef)
 		}
 		la.MatTrMatTrMul(o.bMat, 1, data.xMat, o.aMat) // B := Xt*A

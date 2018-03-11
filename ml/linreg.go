@@ -12,6 +12,7 @@ import (
 type LinReg struct {
 	θ la.Vector // θ parameters
 	b float64   // bias parameter
+	l la.Vector // l = X⋅θ
 	e la.Vector // error = l - y
 }
 
@@ -19,6 +20,7 @@ type LinReg struct {
 func NewLinReg(data *DataMatrix) (o *LinReg) {
 	o = new(LinReg)
 	o.θ = la.NewVector(data.Nparams())
+	o.l = la.NewVector(data.nSamples)
 	o.e = la.NewVector(data.nSamples)
 	return
 }
@@ -52,8 +54,8 @@ func (o *LinReg) Model(x la.Vector) float64 {
 
 // Cost computes the total cost
 func (o *LinReg) Cost(data *DataMatrix) float64 {
-	la.MatVecMul(data.lVec, 1, data.xMat, o.θ)
-	la.VecAdd(o.e, 1, data.lVec, -1, data.yVec)
+	la.MatVecMul(o.l, 1, data.xMat, o.θ)
+	la.VecAdd(o.e, 1, o.l, -1, data.yVec)
 	return la.VecDot(o.e, o.e) / float64(2*data.nSamples)
 }
 
@@ -66,8 +68,8 @@ func (o *LinReg) Deriv(dCdθ la.Vector, data *DataMatrix) {
 	if len(o.e) != data.nSamples {
 		o.e = la.NewVector(data.nSamples)
 	}
-	la.MatVecMul(data.lVec, 1, data.xMat, o.θ)
-	la.VecAdd(o.e, 1, data.lVec, -1, data.yVec)
+	la.MatVecMul(o.l, 1, data.xMat, o.θ)
+	la.VecAdd(o.e, 1, o.l, -1, data.yVec)
 	la.MatTrVecMul(dCdθ, 1.0/float64(data.nSamples), data.xMat, o.e)
 }
 
