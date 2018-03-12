@@ -7,7 +7,7 @@ package ml
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/la"
 )
 
@@ -67,7 +67,7 @@ func (o *LogReg) Update() {
 func (o *LogReg) Predict(x la.Vector) (y float64) {
 	θ := o.params.AccessThetas()
 	b := o.params.GetBias()
-	return h(b + la.VecDot(x, θ)) // h(b + xᵀθ) where h is logistic
+	return fun.Logistic(b + la.VecDot(x, θ)) // g(b + xᵀθ) where g is logistic
 }
 
 // Cost returns the cost c(x;θ,b)
@@ -119,13 +119,72 @@ func (o *LogReg) Gradients(dCdθ la.Vector) (dCdb float64) {
 	return
 }
 
+// AllocateHessian allocate objects to compute Hessian
+func (o *LogReg) AllocateHessian() (d, v la.Vector, D, H *la.Matrix) {
+	m := o.data.Nsamples
+	n := o.data.Nfeatures
+	d = la.NewVector(m)
+	v = la.NewVector(n)
+	D = la.NewMatrix(m, n)
+	H = la.NewMatrix(n, n)
+	return
+}
+
+// Hessian computes the Hessian matrix and other partial derivatives
+//
+//   Input, if d !=nil, otherwise allocate these four objects:
+//     d -- [nSamples]  d[i] = g(l[i]) * [ 1 - g(l[i]) ]  auxiliary vector
+//     v -- [nFeatures] v = ∂²C/∂θ∂b second order partial derivative
+//     D -- [nSamples][nFeatures]  D[i][j] = d[i]*X[i][j]  auxiliary matrix
+//     H -- [nFeatures][nFeatures]  H = ∂²C/∂θ² Hessian matrix
+//
+//   Output, either new objectos or pointers to the input ones:
+//     dNew := d   (allocated here if d == nil)
+//     vNew := v   (allocated here if v == nil)
+//     Dnew := D   (allocated here if D == nil)
+//     Hnew := H   (allocated here if H == nil)
+//     w -- H = ∂²C/∂b²
+//
+func (o *LogReg) Hessian(d, v la.Vector, D, H *la.Matrix) (w float64) {
+
+	// auxiliary
+	m := o.data.Nsamples
+	n := o.data.Nfeatures
+	X := o.data.X
+	λ := o.params.GetLambda()
+	mm := float64(m)
+
+	// calc d vector and D matrix
+	o.calcl()
+	for i := 0; i < m; i++ {
+		d[i] = fun.LogisticD1(o.l[i]) // d vector
+		for j := 0; j < n; j++ {
+			D.Set(i, j, d[i]*X.Get(i, j)) // D matrix   (TODO: optimize this)
+		}
+	}
+
+	// calc H matrix
+	la.MatTrMatMul(H, 1.0/mm, X, D)
+	if λ > 0 {
+		for i := 0; i < n; i++ {
+			H.Set(i, i, H.Get(i, i)+λ/mm) // D += (λ/m) I   (TODO: optimize here?)
+		}
+	}
+
+	// calc v
+	la.MatTrVecMul(v, 1.0/mm, X, d) // v := (1/m) Xᵀd
+
+	// calc w
+	w = d.Accum() / mm
+	return
+}
+
 // Train finds θ and b using closed-form solution
 //   Input:
 //     data -- X,y data
 //   Output:
 //     params -- θ and b
 func (o *LogReg) Train() {
-	chk.Panic("TODO")
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +206,7 @@ func (o *LogReg) calcl() {
 //    sq -- sum(q)
 func (o *LogReg) calcsumq() (sq float64) {
 	for i := 0; i < o.data.Nsamples; i++ {
-		sq += math.Log(1.0 + math.Exp(-o.l[i]))
+		sq += safeLog1pExp(o.l[i])
 	}
 	return
 }
@@ -159,11 +218,15 @@ func (o *LogReg) calcsumq() (sq float64) {
 //    hmy -- computes hmy = h(l) - y
 func (o *LogReg) calchmy() {
 	for i := 0; i < o.data.Nsamples; i++ {
-		o.hmy[i] = h(o.l[i]) - o.data.Y[i]
+		o.hmy[i] = fun.Logistic(o.l[i]) - o.data.Y[i]
 	}
 }
 
-// h implements the sigmoid/logistic function
-func h(z float64) float64 {
-	return 1.0 / (1.0 + math.Exp(-z))
+// safeLog1pExp computes log(1+exp(-z)) safely by checking if exp(-z) is >> 1,
+// thus returning -z. This is the case when z<0 and |z| is too large
+func safeLog1pExp(z float64) float64 {
+	if z < -500 {
+		return -z
+	}
+	return math.Log(1.0 + math.Exp(-z))
 }

@@ -10,6 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 func TestLogReg01a(tst *testing.T) {
@@ -20,6 +21,9 @@ func TestLogReg01a(tst *testing.T) {
 	// data and parameters
 	data := NewDataGivenRawXY(dataReg01)
 	params := NewParamsReg(data.Nfeatures)
+
+	// set regularization
+	params.SetLambda(0.25)
 
 	// regression
 	reg := NewLogReg(data, params, "reg01")
@@ -33,45 +37,84 @@ func TestLogReg01a(tst *testing.T) {
 	chk.Float64(tst, "notified: reg.stat.min(x)", 1e-15, reg.stat.MinX[0], 0.88)
 	chk.Float64(tst, "notified: reg.stat.min(y)", 1e-15, reg.stat.MinY, 87.34)
 
-	// check gradient: dCdθ
+	// meshgrid
+	thetas := utl.LinSpace(-100, 100, 11)
+	biass := utl.LinSpace(-100, 100, 11)
+
+	// check gradient: dCdθ and dCdb
 	io.Pl()
 	verb := chk.Verbose
-	tol, hsmall := 1e-8, 1e-3
-	params.Backup()
+	tol, hsmall := 1e-7, 1e-3
+	θat := la.NewVector(data.Nfeatures)
 	dCdθ := la.NewVector(data.Nfeatures)
-	for _, θ0 := range []float64{5, 10, 15} {
+	for _, θ0 := range thetas {
+		for _, b := range biass {
 
-		// analytical
-		params.Restore(false)
-		params.SetTheta(0, θ0)
-		reg.Gradients(dCdθ)
+			// analytical
+			io.Pf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> θ0=%v b=%v <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n", θ0, b)
+			params.SetTheta(0, θ0)
+			params.SetBias(b)
+			params.Backup()
+			dCdb := reg.Gradients(dCdθ)
 
-		// numerical
-		θat := params.GetThetas()
-		θat[0] = θ0
-		chk.DerivScaVec(tst, "dCdθ_", tol, dCdθ, θat, hsmall, verb, func(θtmp []float64) (cost float64) {
-			params.Restore(false)
-			params.SetThetas(θtmp)
-			cost = reg.Cost()
-			return
-		})
+			// numerical
+			θat[0] = params.GetTheta(0)
+			chk.DerivScaVec(tst, "dCdθ_", tol, dCdθ, θat, hsmall, verb, func(θtmp []float64) (cost float64) {
+				params.Restore(false)
+				params.SetThetas(θtmp)
+				cost = reg.Cost()
+				return
+			})
+
+			// numerical
+			chk.DerivScaSca(tst, "dCdb  ", tol, dCdb, b, hsmall, verb, func(btmp float64) (cost float64) {
+				params.Restore(false)
+				params.SetBias(btmp)
+				cost = reg.Cost()
+				return
+			})
+		}
 	}
 
-	// check gradient: dCdb
+	// check Hessian
+	tol2 := 1e-8
 	io.Pl()
-	for _, b := range []float64{35, 70, 140} {
+	var w float64
+	d, v, D, H := reg.AllocateHessian()
+	for _, θ0 := range thetas {
+		for _, b := range biass {
 
-		// analytical
-		params.Restore(false)
-		params.SetBias(b)
-		dCdb := reg.Gradients(dCdθ)
+			// analytical
+			io.Pf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> θ0=%v b=%v <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n", θ0, b)
+			params.SetTheta(0, θ0)
+			params.SetBias(b)
+			params.Backup()
+			w = reg.Hessian(d, v, D, H)
 
-		// numerical
-		chk.DerivScaSca(tst, "dCdb", tol, dCdb, b, hsmall, verb, func(btmp float64) (cost float64) {
-			params.Restore(false)
-			params.SetBias(btmp)
-			cost = reg.Cost()
-			return
-		})
+			// numerical
+			θat[0] = params.GetTheta(0)
+			chk.DerivVecVec(tst, "∂²C/∂θ∂θ_", tol2, H.GetDeep2(), θat, hsmall, verb, func(dCdθtmp, θtmp []float64) {
+				params.Restore(false)
+				params.SetThetas(θtmp)
+				reg.Gradients(dCdθtmp)
+				return
+			})
+
+			// numerical
+			chk.DerivVecSca(tst, "∂²C/∂θ∂b_ ", tol2, v, b, hsmall, verb, func(dCdθtmp []float64, btmp float64) {
+				params.Restore(false)
+				params.SetBias(btmp)
+				reg.Gradients(dCdθtmp)
+				return
+			})
+
+			// numerical
+			chk.DerivScaSca(tst, "∂²C/∂b∂b   ", tol2, w, b, hsmall, verb, func(btmp float64) (dCdbtmp float64) {
+				params.Restore(false)
+				params.SetBias(btmp)
+				dCdbtmp = reg.Gradients(dCdθ)
+				return
+			})
+		}
 	}
 }
