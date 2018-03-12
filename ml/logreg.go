@@ -230,7 +230,7 @@ func (o *LogReg) Train() {
 
 	// debug
 	if true { // check Jacobian
-		tolJac0 := 1e-6
+		tolJac0 := 1e-4
 		tst := new(testing.T)
 		num.CompareJacDense(tst, ffcn, Jfcn, z, tolJac0)
 	}
@@ -258,7 +258,7 @@ func (o *LogReg) Train() {
 
 	// debug
 	if true { // check Jacobian
-		tolJac0 := 1e-8
+		tolJac0 := 1e-4
 		tst := new(testing.T)
 		num.CompareJacDense(tst, ffcn, Jfcn, z, tolJac0)
 	}

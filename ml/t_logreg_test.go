@@ -187,3 +187,63 @@ func TestLogReg02(tst *testing.T) {
 		plt.Save("/tmp/gosl/ml", "logreg02")
 	}
 }
+
+func TestLogReg03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LogReg03. ANG test # 1")
+
+	// data
+	XYraw := io.ReadMatrix("./samples/angEx2data1.txt")
+	data := NewDataGivenRawXY(XYraw)
+	chk.Int(tst, "nSamples", data.Nsamples, 100)
+	chk.Int(tst, "nFeatures", data.Nfeatures, 2)
+
+	// parameters and initial guess
+	θini := []float64{0.2, 0.2}
+	bini := -24.0
+	params := NewParamsReg(data.Nfeatures)
+	params.SetThetas(θini)
+	params.SetBias(bini)
+
+	// model
+	reg := NewLogReg(data, params, "reg01")
+	cost := reg.Cost()
+	io.Pf("Initial: θ = %.8f\n", params.GetThetas())
+	io.Pf("Initial: b = %.8f\n", params.GetBias())
+	io.Pf("Initial: cost = %.8f\n", cost)
+	chk.Float64(tst, "\ncostIni", 1e-15, reg.Cost(), 2.183301938265978e-01)
+
+	// train using analytical solution
+	reg.Train()
+	chk.Float64(tst, "\ncost", 1e-15, reg.Cost(), 2.034977015894404e-01)
+	chk.Array(tst, "θ", 1e-8, params.AccessThetas(), []float64{2.062317052577260e-01, 2.014715922708144e-01})
+	chk.Float64(tst, "b", 1e-6, params.GetBias(), -2.516133256589910e+01)
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
+		plt.Subplot(2, 1, 1)
+		pp := NewPlotterReg(data, params, reg)
+		pp.DataClass(0, 1, true)
+		pp.ContourModel(0, 1, 0.5, 20, 100, 20, 100)
+	}
+
+	// train using gradient-descent
+	maxNit := 10
+	params.SetThetas(θini)
+	params.SetBias(bini)
+	gdesc := NewGraDescReg(maxNit)
+	gdesc.Alpha = 0.002
+	gdesc.Train(data, params, reg)
+	chk.Float64(tst, "\ncost", 1e-15, reg.Cost(), 2.037591668976244e-01)
+	chk.Array(tst, "θ", 1e-8, params.AccessThetas(), []float64{1.957478716620902e-01, 1.933175159514175e-01})
+	chk.Float64(tst, "b", 1e-6, params.GetBias(), -2.400009669708430e+01)
+
+	// plot
+	if chk.Verbose {
+		plt.Subplot(2, 1, 2)
+		gdesc.Plot(nil)
+		plt.Save("/tmp/gosl/ml", "logreg03")
+	}
+}
