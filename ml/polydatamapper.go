@@ -103,7 +103,7 @@ func (o *PolyDataMapper) GetMapped(XYraw [][]float64, useY bool) (data *Data) {
 	// set data
 	nSamples := nRows
 	nFeatures := o.NumOriginalFeatures() + o.NumExtraFeatures()
-	data = NewData(nSamples, nFeatures, useY)
+	data = NewData(nSamples, nFeatures, useY, true)
 	x := la.NewVector(nFeatures)
 	for i := 0; i < nSamples; i++ {
 		o.Map(x, XYraw[i])

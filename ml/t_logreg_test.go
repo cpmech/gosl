@@ -127,7 +127,9 @@ func TestLogReg02(tst *testing.T) {
 
 	// data
 	nr, nc := 5, 5
-	data := NewData(nr*nc, 2, true)
+	useY := true
+	allocate := true
+	data := NewData(nr*nc, 2, useY, allocate)
 	k := 0
 	for j := 0; j < nc; j++ {
 		for i := 0; i < nr; i++ {

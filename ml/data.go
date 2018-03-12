@@ -38,16 +38,19 @@ type Data struct {
 //    nSamples  -- number of data samples (rows in X)
 //    nFeatures -- number of features (columsn in X)
 //    useY      -- use y data vector
+//    allocate  -- allocates X (and Y); otherwise, X and Y must be set externally
 //  Output:
 //    new object
-func NewData(nSamples, nFeatures int, useY bool) (o *Data) {
+func NewData(nSamples, nFeatures int, useY, allocate bool) (o *Data) {
 	o = new(Data)
 	o.Nsamples = nSamples
 	o.Nfeatures = nFeatures
 	o.UseY = useY
-	o.X = la.NewMatrix(o.Nsamples, o.Nfeatures)
-	if o.UseY {
-		o.Y = la.NewVector(o.Nsamples)
+	if allocate {
+		o.X = la.NewMatrix(o.Nsamples, o.Nfeatures)
+		if o.UseY {
+			o.Y = la.NewVector(o.Nsamples)
+		}
 	}
 	return
 }
@@ -68,7 +71,7 @@ func NewDataGivenRawXY(xyRaw [][]float64) (o *Data) {
 
 	// allocate new object
 	nFeatures := len(xyRaw[0]) - 1 // -1 because of y column
-	o = NewData(nSamples, nFeatures, true)
+	o = NewData(nSamples, nFeatures, true, true)
 
 	// copy data from raw table to X and Y arrays
 	for i := 0; i < nSamples; i++ {
@@ -82,7 +85,7 @@ func NewDataGivenRawXY(xyRaw [][]float64) (o *Data) {
 
 // GetCopy returns a deep copy of this object
 func (o *Data) GetCopy() (p *Data) {
-	p = NewData(o.Nsamples, o.Nfeatures, o.UseY)
+	p = NewData(o.Nsamples, o.Nfeatures, o.UseY, true)
 	o.X.CopyInto(p.X, 1)
 	if o.UseY {
 		copy(p.Y, o.Y)
