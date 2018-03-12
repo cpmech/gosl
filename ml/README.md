@@ -98,4 +98,5 @@ Prof A Ng's Test 2
 ## References
 
 [1] Ng A, CS229 Machine Learning, Stanford, https://see.stanford.edu/Course/CS229
+
 [2] Ng A, Coursera https://www.coursera.org/learn/machine-learning
