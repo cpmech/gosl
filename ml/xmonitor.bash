@@ -22,5 +22,6 @@ while true; do
     #go test -run LinReg02
     #go test -run LinReg03
     #go test -run LogReg01
-    go test -run LogReg02
+    #go test -run LogReg02
+    go test -run PolyDataMapper01
 done
