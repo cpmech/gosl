@@ -6,9 +6,11 @@ package ml
 
 import (
 	"math"
+	"testing"
 
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/num"
 )
 
 // LogReg implements a logistic regression model
@@ -185,6 +187,81 @@ func (o *LogReg) Hessian(d, v la.Vector, D, H *la.Matrix) (w float64) {
 //   Output:
 //     params -- θ and b
 func (o *LogReg) Train() {
+
+	// auxiliary
+	//m := o.data.Nsamples
+	n := o.data.Nfeatures
+
+	// allocate arrays
+	//dCdθ := la.NewVector(o.data.Nfeatures)
+	var w float64
+	d, v, D, H := o.AllocateHessian()
+
+	// objective function where z={θ,b} and fz={dCdθ,dCdb}
+	ffcn := func(fz, z la.Vector) {
+		o.params.Backup()
+		o.params.SetThetas(z[:n])
+		o.params.SetBias(z[n])
+		dCdb := o.Gradients(fz[:n])
+		fz[n] = dCdb
+		o.params.Restore(false)
+	}
+
+	// Jacobian function
+	Jfcn := func(dfdz *la.Matrix, z la.Vector) {
+		o.params.Backup()
+		o.params.SetThetas(z[:n])
+		o.params.SetBias(z[n])
+		w = o.Hessian(d, v, D, H)
+		for j := 0; j < n; j++ { // TODO: optimize here
+			for i := 0; i < n; i++ { //
+				dfdz.Set(i, j, H.Get(i, j))
+			}
+			dfdz.Set(n, j, v[j])
+			dfdz.Set(j, n, v[j])
+		}
+		dfdz.Set(n, n, w)
+	}
+
+	// initial values
+	z := la.NewVector(n + 1) // {θ, b}
+	copy(z, o.params.AccessThetas())
+	z[n] = o.params.GetBias()
+
+	// debug
+	if true { // check Jacobian
+		tolJac0 := 1e-6
+		tst := new(testing.T)
+		num.CompareJacDense(tst, ffcn, Jfcn, z, tolJac0)
+	}
+
+	// solver parameters
+	solverParams := map[string]float64{
+		"atol":    1e-4,
+		"rtol":    1e-4,
+		"ftol":    1e-4,
+		"chkConv": 0,
+	}
+
+	// solve nonlinear problem
+	silent := false
+	useDenseJacobian := true
+	numericalJacobian := false
+	var solver num.NlSolver
+	defer solver.Free()
+	solver.Init(n+1, ffcn, nil, Jfcn, useDenseJacobian, numericalJacobian, solverParams)
+	solver.Solve(z, silent)
+
+	// results
+	o.params.SetThetas(z[:n])
+	o.params.SetBias(z[n])
+
+	// debug
+	if true { // check Jacobian
+		tolJac0 := 1e-8
+		tst := new(testing.T)
+		num.CompareJacDense(tst, ffcn, Jfcn, z, tolJac0)
+	}
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////

@@ -10,6 +10,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -116,5 +117,73 @@ func TestLogReg01a(tst *testing.T) {
 				return
 			})
 		}
+	}
+}
+
+func TestLogReg02(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LogReg02. simple -45° grid")
+
+	// data
+	nr, nc := 5, 5
+	data := NewData(nr*nc, 2, true)
+	k := 0
+	for j := 0; j < nc; j++ {
+		for i := 0; i < nr; i++ {
+			x0 := -1 + 2*float64(i)/float64(nc-1)
+			x1 := -1 + 2*float64(j)/float64(nr-1)
+			data.X.Set(k, 0, x0)
+			data.X.Set(k, 1, x1)
+			if x0+x1+1e-15 >= 0 {
+				data.Y[k] = 1
+			}
+			k++
+		}
+	}
+
+	// parameters
+	params := NewParamsReg(data.Nfeatures)
+	//params.SetThetas([]float64{20, 30})
+	//params.SetBias(10)
+
+	// regression
+	reg := NewLogReg(data, params, "reg01")
+	reg.Train()
+	io.Pforan("cost = %v\n", reg.Cost())
+	io.Pforan("θ = %v\n", params.AccessThetas())
+	io.Pforan("b = %v\n", params.GetBias())
+	chk.Float64(tst, "cost", 1e-15, reg.Cost(), 0.0007850399226816407)
+	chk.Array(tst, "θ", 1e-14, params.AccessThetas(), []float64{24.488302802315026, 24.48830280231502})
+	chk.Float64(tst, "b", 1e-14, params.GetBias(), 6.183574567556589)
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
+		plt.Subplot(2, 1, 1)
+		pp := NewPlotterReg(data, params, reg)
+		pp.DataClass(0, 1, true)
+		pp.ContourModel(0, 1, 0.5, -1, 1, -1, 1)
+	}
+
+	// gradient-descent
+	params.SetThetas([]float64{0, 0})
+	params.SetBias(0)
+	maxNit := 10
+	gdesc := NewGraDescReg(maxNit)
+	gdesc.Alpha = 100
+	gdesc.Train(data, params, reg)
+	io.Pfblue2("cost = %v\n", reg.Cost())
+	io.Pfblue2("θ = %v\n", params.AccessThetas())
+	io.Pfblue2("b = %v\n", params.GetBias())
+	chk.Float64(tst, "cost", 1e-15, reg.Cost(), 0.0015372029816003163)
+	chk.Array(tst, "θ", 1e-14, params.AccessThetas(), []float64{22.06214330726067, 22.06214330726067})
+	chk.Float64(tst, "b", 1e-14, params.GetBias(), 5.254524501188747)
+
+	// plot
+	if chk.Verbose {
+		plt.Subplot(2, 1, 2)
+		gdesc.Plot(nil)
+		plt.Save("/tmp/gosl/ml", "logreg02")
 	}
 }

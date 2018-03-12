@@ -150,7 +150,7 @@ func TestLinReg02a(tst *testing.T) {
 	// train
 	reg.Train()
 	chk.Float64(tst, "cost", 1e-15, reg.Cost(), 5.312454218805082e-01)
-	chk.Array(tst, "θ", 1e-12, params.GetThetas(), []float64{1.494747973211108e+01})
+	chk.Array(tst, "θ", 1e-12, params.AccessThetas(), []float64{1.494747973211108e+01})
 	chk.Float64(tst, "b", 1e-12, params.GetBias(), 7.428331424039514e+01)
 
 	// plot
@@ -221,7 +221,7 @@ func TestLinReg03a(tst *testing.T) {
 	gdesc := NewGraDescReg(maxNit)
 	gdesc.Train(data, params, reg)
 	chk.Float64(tst, "cost", 1e-15, reg.Cost(), 7.210668065539239e-01)
-	chk.Array(tst, "θ", 1e-14, params.GetThetas(), []float64{1.474272084686805e+01})
+	chk.Array(tst, "θ", 1e-14, params.AccessThetas(), []float64{1.474272084686805e+01})
 	chk.Float64(tst, "b", 1e-14, params.GetBias(), 7.391321364462827e+01)
 
 	// plot

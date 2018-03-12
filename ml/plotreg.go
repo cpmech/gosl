@@ -27,8 +27,10 @@ type PlotterReg struct {
 	ArgsYdata    *plt.A         // arguments for x-y data plots
 	ArgsYmodel   *plt.A         // arguments for x-y model line
 	ArgsYclasses map[int]*plt.A // maps y classes [0, 1, 2, ...] to plot arguments
+	ArgsYbinary  map[int]*plt.A // maps y classes [0 or 1] to plot arguments
 	ArgsCcost    *plt.A         // arguments for ContourCost
 	ArgsCcostMdl *plt.A         // arguments for the model parameters in ContourCost
+	ArgsCmodel   *plt.A         // arguments for ContourModel
 }
 
 // NewPlotterReg returns a new ploter
@@ -48,12 +50,17 @@ func NewPlotterReg(data *Data, params *ParamsReg, reg Regression) (o *PlotterReg
 	o.ArgsYdata = &plt.A{C: plt.C(2, 0), M: plt.M(0, 0), Ls: "None", NoClip: true}
 	o.ArgsYmodel = &plt.A{C: plt.C(0, 0), M: "None", Ls: "-", NoClip: true}
 	o.ArgsYclasses = make(map[int]*plt.A)
+	o.ArgsYbinary = map[int]*plt.A{
+		0: &plt.A{C: plt.C(0, 0), M: "o", Ls: "None", NoClip: true},
+		1: &plt.A{C: plt.C(2, 0), M: "*", Ls: "None", NoClip: true, Mec: plt.C(2, 0), Ms: 8},
+	}
 	nMaxClassesIni := 10
 	for k := 0; k < nMaxClassesIni; k++ {
 		o.ArgsYclasses[k] = &plt.A{C: plt.C(k, 0), M: plt.M(k, 0), NoClip: true}
 	}
 	o.ArgsCcost = &plt.A{}
 	o.ArgsCcostMdl = &plt.A{C: "yellow", M: "o"}
+	o.ArgsCmodel = &plt.A{Colors: []string{plt.C(1, 0)}, Levels: []float64{0.5}}
 	return
 }
 
@@ -77,16 +84,6 @@ func (o *PlotterReg) ModelY(iFeature int, xmin, xmax float64) {
 	plt.Plot(u, v, o.ArgsYmodel)
 }
 
-// DataClass plots data classes
-func (o *PlotterReg) DataClass(iFeature, jFeature int) {
-	for iSample := 0; iSample < o.data.Nsamples; iSample++ {
-		args := o.ArgsYclasses[iSample%len(o.ArgsYclasses)]
-		ui := o.data.X.Get(iSample, iFeature)
-		vi := o.data.X.Get(iSample, jFeature)
-		plt.PlotOne(ui, vi, args)
-	}
-}
-
 // ContourCost plots a contour of Cost for many parameters values
 //  iParam, jParam -- selected parameters [use -1 for bias]
 func (o *PlotterReg) ContourCost(iParam, jParam int, pimin, pimax, pjmin, pjmax float64) {
@@ -100,6 +97,7 @@ func (o *PlotterReg) ContourCost(iParam, jParam int, pimin, pimax, pjmin, pjmax 
 		w = o.model.Cost()
 		return
 	})
+	o.params.Restore(false)
 
 	// plot contour
 	plt.ContourF(U, V, W, o.ArgsCcost)
@@ -119,4 +117,39 @@ func (o *PlotterReg) ContourCost(iParam, jParam int, pimin, pimax, pjmin, pjmax 
 	}
 	plt.SetXlabel(stri, nil)
 	plt.SetYlabel(strj, nil)
+}
+
+// for classification /////////////////////////////////////////////////////////////////////////////
+
+// DataClass plots data classes; e.g. for classification
+func (o *PlotterReg) DataClass(iFeature, jFeature int, binary bool) {
+	argsmap := o.ArgsYclasses
+	if binary {
+		argsmap = o.ArgsYbinary
+	}
+	for iSample := 0; iSample < o.data.Nsamples; iSample++ {
+		k := int(o.data.Y[iSample]) % len(argsmap)
+		args := argsmap[k]
+		ui := o.data.X.Get(iSample, iFeature)
+		vi := o.data.X.Get(iSample, jFeature)
+		plt.PlotOne(ui, vi, args)
+	}
+	plt.HideTRborders()
+	plt.Gll(io.Sf("$x_{%d}$", iFeature), io.Sf("$y_{%d}$", jFeature), nil)
+}
+
+// ContourModel plots contour of model points; e.g. for classification
+func (o *PlotterReg) ContourModel(iFeature, jFeature int, level float64, ximin, ximax, xjmin, xjmax float64) {
+
+	// create meshgrid
+	x := la.NewVector(o.data.Nfeatures) // TODO: set x with xmean
+	U, V, W := utl.MeshGrid2dF(ximin, ximax, xjmin, xjmax, o.MgridNpts, o.MgridNpts, func(s, t float64) (w float64) {
+		x[0] = s
+		x[1] = t
+		w = o.model.Predict(x)
+		return
+	})
+
+	// plot contour
+	plt.ContourL(U, V, W, o.ArgsCmodel)
 }

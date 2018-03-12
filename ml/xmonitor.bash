@@ -21,5 +21,6 @@ while true; do
     #go test -run LinReg01
     #go test -run LinReg02
     #go test -run LinReg03
-    go test -run LogReg01
+    #go test -run LogReg01
+    go test -run LogReg02
 done
