@@ -90,10 +90,7 @@ func (o Vector) Accum() (sum float64) {
 // Norm returns the Euclidean norm of a vector:
 //  nrm := ‖v‖
 func (o Vector) Norm() (nrm float64) {
-	for i := 0; i < len(o); i++ {
-		nrm += o[i] * o[i]
-	}
-	return math.Sqrt(nrm)
+	return math.Sqrt(VecDot(o, o))
 }
 
 // Rms returns the root-mean-square of this vector
