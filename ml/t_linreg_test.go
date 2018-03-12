@@ -157,7 +157,7 @@ func TestLinReg02a(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
 		plt.Subplot(2, 1, 1)
-		pp := NewPlotterReg(data, params, reg)
+		pp := NewPlotterReg(data, params, reg, nil)
 		pp.DataY(0)
 		pp.ModelY(0, 0.8, 1.6)
 		plt.Subplot(2, 1, 2)
@@ -191,7 +191,7 @@ func TestLinReg02b(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
 		plt.Subplot(2, 1, 1)
-		pp := NewPlotterReg(data, params, reg)
+		pp := NewPlotterReg(data, params, reg, nil)
 		pp.DataY(0)
 		pp.ModelY(0, 0.8, 1.6)
 		plt.Subplot(2, 1, 2)
@@ -228,7 +228,7 @@ func TestLinReg03a(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 2.0})
 		plt.Subplot(3, 1, 1)
-		pp := NewPlotterReg(data, params, reg)
+		pp := NewPlotterReg(data, params, reg, nil)
 		pp.DataY(0)
 		pp.ModelY(0, 0.8, 1.6)
 		plt.Subplot(3, 1, 2)

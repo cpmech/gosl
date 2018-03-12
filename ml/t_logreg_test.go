@@ -161,7 +161,7 @@ func TestLogReg02(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
 		plt.Subplot(2, 1, 1)
-		pp := NewPlotterReg(data, params, reg)
+		pp := NewPlotterReg(data, params, reg, nil)
 		pp.DataClass(0, 1, true)
 		pp.ContourModel(0, 1, 0.5, -1, 1, -1, 1)
 	}
@@ -224,7 +224,7 @@ func TestLogReg03(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
 		plt.Subplot(2, 1, 1)
-		pp := NewPlotterReg(data, params, reg)
+		pp := NewPlotterReg(data, params, reg, nil)
 		pp.DataClass(0, 1, true)
 		pp.ContourModel(0, 1, 0.5, 20, 100, 20, 100)
 	}
@@ -245,5 +245,73 @@ func TestLogReg03(tst *testing.T) {
 		plt.Subplot(2, 1, 2)
 		gdesc.Plot(nil)
 		plt.Save("/tmp/gosl/ml", "logreg03")
+	}
+}
+
+func TestLogReg04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LogReg04. ANG test # 2")
+
+	// data (mapped)
+	XYraw := io.ReadMatrix("./samples/angEx2data2.txt")
+	nOriFeatures := len(XYraw[0]) - 1
+	iFeature := 0
+	jFeature := 1
+	degree := 6
+	mapper := NewPolyDataMapper(nOriFeatures, iFeature, jFeature, degree)
+	data := mapper.GetMapped(XYraw, true)
+	chk.Int(tst, "nSamples", data.Nsamples, 118)
+	chk.Int(tst, "nFeatures", data.Nfeatures, 27)
+
+	// parameters and initial guess
+	θini := utl.Vals(data.Nfeatures, 1.0) // all ones
+	bini := 1.0
+	params := NewParamsReg(data.Nfeatures)
+	params.SetThetas(θini)
+	params.SetBias(bini)
+	params.SetLambda(1.0) // regularization
+
+	// model
+	reg := NewLogReg(data, params, "reg01")
+	cost := reg.Cost()
+	io.Pf("Initial: θ = %.3f\n", params.GetThetas()[:4])
+	io.Pf("Initial: b = %.8f\n", params.GetBias())
+	io.Pf("Initial: cost = %.8f\n", cost)
+	chk.Float64(tst, "\ncostIni", 1e-15, reg.Cost(), 2.134848314666066)
+
+	// train using analytical solution
+	params.SetThetas(utl.Vals(data.Nfeatures, 0.0)) // all zeros
+	params.SetBias(0.0)
+	reg.Train()
+	chk.Float64(tst, "\ncost", 1e-15, reg.Cost(), 5.290027411158117e-01)
+	chk.Array(tst, "θ", 1e-14, params.AccessThetas()[:4], []float64{6.252526148274546e-01, 1.180976145721166, -2.019842398401904, -9.173659359499787e-01})
+	chk.Float64(tst, "b", 1e-14, params.GetBias(), 1.272656700281225)
+
+	// plot
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
+		plt.Subplot(2, 1, 1)
+		pp := NewPlotterReg(data, params, reg, mapper)
+		pp.DataClass(0, 1, true)
+		pp.ContourModel(0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
+	}
+
+	// train using gradient-descent
+	maxNit := 10
+	params.SetThetas(θini)
+	params.SetBias(bini)
+	gdesc := NewGraDescReg(maxNit)
+	gdesc.Alpha = 5.0
+	gdesc.Train(data, params, reg)
+	chk.Float64(tst, "\ncost", 1e-15, reg.Cost(), 5.920108560779025e-01)
+	chk.Array(tst, "θ", 1e-15, params.AccessThetas()[:4], []float64{-1.730594903181217e-01, 3.615618466861891e-01, -1.194645899263627e+00, -4.186288373383852e-01})
+	chk.Float64(tst, "b", 1e-15, params.GetBias(), 6.527575848138054e-01)
+
+	// plot
+	if chk.Verbose {
+		plt.Subplot(2, 1, 2)
+		gdesc.Plot(nil)
+		plt.Save("/tmp/gosl/ml", "logreg04")
 	}
 }

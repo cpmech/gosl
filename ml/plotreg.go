@@ -18,6 +18,7 @@ type PlotterReg struct {
 	data   *Data      // data
 	params *ParamsReg // parameters
 	model  Regression // model
+	mapper DataMapper // mapper
 
 	// constants
 	YlineNpts int // number of points for ModelY()
@@ -34,13 +35,15 @@ type PlotterReg struct {
 }
 
 // NewPlotterReg returns a new ploter
-func NewPlotterReg(data *Data, params *ParamsReg, reg Regression) (o *PlotterReg) {
+//   mapper -- data mapper [may be nil]
+func NewPlotterReg(data *Data, params *ParamsReg, reg Regression, mapper DataMapper) (o *PlotterReg) {
 
 	// input
 	o = new(PlotterReg)
 	o.data = data
 	o.params = params
 	o.model = reg
+	o.mapper = mapper
 
 	// constants
 	o.YlineNpts = 21
@@ -141,11 +144,23 @@ func (o *PlotterReg) DataClass(iFeature, jFeature int, binary bool) {
 // ContourModel plots contour of model points; e.g. for classification
 func (o *PlotterReg) ContourModel(iFeature, jFeature int, level float64, ximin, ximax, xjmin, xjmax float64) {
 
-	// create meshgrid
+	// x vectors
 	x := la.NewVector(o.data.Nfeatures) // TODO: set x with xmean
+	var xRaw la.Vector
+	if o.mapper != nil {
+		xRaw = la.NewVector(o.mapper.NumOriginalFeatures())
+	}
+
+	// create meshgrid
 	U, V, W := utl.MeshGrid2dF(ximin, ximax, xjmin, xjmax, o.MgridNpts, o.MgridNpts, func(s, t float64) (w float64) {
-		x[0] = s
-		x[1] = t
+		if o.mapper == nil {
+			x[iFeature] = s
+			x[jFeature] = t
+		} else {
+			xRaw[iFeature] = s
+			xRaw[jFeature] = t
+			o.mapper.Map(x, xRaw)
+		}
 		w = o.model.Predict(x)
 		return
 	})
