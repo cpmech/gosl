@@ -13,7 +13,7 @@ import (
 	"github.com/cpmech/gosl/num"
 )
 
-// LogReg implements a logistic regression model
+// LogReg implements a logistic regression model (Observer of Data)
 type LogReg struct {
 
 	// main
