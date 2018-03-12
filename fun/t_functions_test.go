@@ -57,7 +57,7 @@ func Test_functions02(tst *testing.T) {
 	f := func(x float64) float64 { return Sramp(x, β) }
 	ff := func(x float64) float64 { return SrampD1(x, β) }
 
-	np := 401
+	np := 101
 	//x  := utl.LinSpace(-5e5, 5e5, np)
 	//x  := utl.LinSpace(-5e2, 5e2, np)
 	x := utl.LinSpace(-5e1, 5e1, np)
@@ -89,6 +89,50 @@ func Test_functions02(tst *testing.T) {
 	}
 }
 
+func TestLogistic01(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Logistic01")
+
+	f := func(x float64) float64 { return Logistic(x) }
+
+	np := 101
+	//x := utl.LinSpace(-5e5, 5e5, np)
+	//x := utl.LinSpace(-5e2, 5e2, np)
+	x := utl.LinSpace(-5e1, 5e1, np)
+	y := make([]float64, np)
+	g := make([]float64, np)
+	tolg := 1e-6
+	withErr := false
+	for i := 0; i < np; i++ {
+		y[i] = Logistic(x[i])
+		g[i] = LogisticD1(x[i])
+		gnum := numderiv(f, x[i])
+		errg := math.Abs(g[i] - gnum)
+		clrg := "[1;32m"
+		if errg > tolg {
+			clrg, withErr = "[1;31m", true
+		}
+		io.Pf("errg = %s%23.15e[0m\n", clrg, errg)
+	}
+
+	if withErr {
+		chk.Panic("errors found")
+	}
+
+	//if false {
+	if true {
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.25})
+		plt.Subplot(2, 1, 1)
+		plt.Plot(x, y, &plt.A{C: plt.C(0, 0), Ls: "-", Lw: 1.5, L: "logistic", NoClip: true})
+		plt.Gll("z", "g(z)", nil)
+		plt.Subplot(2, 1, 2)
+		plt.Plot(x, g, &plt.A{C: plt.C(2, 0), Ls: "-", Lw: 1.5, L: "derivative", NoClip: true})
+		plt.Gll("z", "dgdz(z)", nil)
+		plt.Save("/tmp/gosl/fun", "logistic01")
+	}
+}
+
 func Test_functions03(tst *testing.T) {
 
 	//verbose()
@@ -98,7 +142,7 @@ func Test_functions03(tst *testing.T) {
 	f := func(x float64) float64 { return Sabs(x, eps) }
 	ff := func(x float64) float64 { return SabsD1(x, eps) }
 
-	np := 401
+	np := 101
 	//x  := utl.LinSpace(-5e5, 5e5, np)
 	//x  := utl.LinSpace(-5e2, 5e2, np)
 	x := utl.LinSpace(-5e1, 5e1, np)

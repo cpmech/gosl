@@ -302,6 +302,17 @@ func SrampD2(x, β float64) float64 {
 	return β * math.Exp(β*x) / math.Pow(math.Exp(β*x)+1.0, 2.0)
 }
 
+// Logistic implements the sigmoid/logistic function
+func Logistic(z float64) float64 {
+	return 1.0 / (1.0 + math.Exp(-z))
+}
+
+// LogisticD1 implements the first derivative of the sigmoid/logistic function
+func LogisticD1(z float64) float64 {
+	g := Logistic(z)
+	return g * (1.0 - g)
+}
+
 // Sabs implements a smooth abs function: Sabs(x) = x*x / (sign(x)*x + eps)
 func Sabs(x, eps float64) float64 {
 	s := 0.0

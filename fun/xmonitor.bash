@@ -17,6 +17,7 @@ while true; do
     #go test -test.run="Hat01"
     #go test -test.run="ImagPowN"
     #go test -test.run="ImagXpowN"
-    go test -test.run="PowP"
+    #go test -test.run="PowP"
     #go test -run=XXX -bench=kPow
+    go test -run Logistic01
 done
