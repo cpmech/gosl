@@ -29,5 +29,8 @@ while true; do
     echo
     echo
     echo
-    go run h5_ang_mnist01.go
+    #go run h5_ang_mnist01.go
+    go run ml_simple01.go
+    go run ml_ang01.go
+    go run ml_ang02.go
 done

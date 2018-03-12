@@ -3,6 +3,9 @@
 set -e
 
 examples="\
+ml_simple01.go
+ml_ang01.go
+ml_ang02.go
 chk_example01.go
 fun_fft01.go
 fun_orthopoly01.go
