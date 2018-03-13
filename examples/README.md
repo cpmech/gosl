@@ -4,6 +4,7 @@
 
 ## Summary
 
+* Machine Learning: Linear and Logistic Regressions
 * Compute (fast) discrete Fourier transform
 * Generate and draw a NURBS toroidal surface
 * Generating normally distributed pseudo-random numbers
@@ -21,6 +22,38 @@
 * Solving ordinary differential equations
 * Plotting Big-O complexity chart
 
+
+# Machine Learning: Linear and Logistic Regressions
+
+Initial implementation of Linear and Logistic regressions, based on [Prof. Andrew Ng's online notes](http://cs229.stanford.edu) (see also Coursera).
+
+## Linear Regression Test 1
+
+Source code: <a href="ml_simple01.go">ml_simple01.go</a>
+
+<div id="container">
+<p><img src="figs/ml_simple01.png" width="500"></p>
+</div>
+
+## Logistic Regression Test 1
+
+Prof. Andrew Ng's example number 1.
+
+Source code: <a href="ml_ang01.go">ml_ang01.go</a>
+
+<div id="container">
+<p><img src="figs/ml_ang01.png" width="500"></p>
+</div>
+
+## Logistic Regression Test 2
+
+Prof. Andrew Ng's example number 2.
+
+Source code: <a href="ml_ang02.go">ml_ang02.go</a>
+
+<div id="container">
+<p><img src="figs/ml_ang02.png" width="500"></p>
+</div>
 
 
 # Compute (fast) discrete Fourier transform
