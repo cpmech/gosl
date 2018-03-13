@@ -55,7 +55,7 @@ func (o *PlotterClass) Data(iFeature, jFeature int, binary bool) {
 		plt.PlotOne(ui, vi, args)
 	}
 	plt.HideTRborders()
-	plt.Gll(io.Sf("$x_{%d}$", iFeature), io.Sf("$y_{%d}$", jFeature), nil)
+	plt.Gll(io.Sf("$x_{%d}$", iFeature), io.Sf("$x_{%d}$", jFeature), nil)
 }
 
 // Centroids plots centroids of classes
