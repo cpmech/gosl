@@ -95,6 +95,14 @@ Prof A Ng's Test 2
 <p><img src="../examples/figs/ml_ang02.png" width="500"></p>
 </div>
 
+
+## K-means Clustering
+
+Prof A Ng's Test 1
+<div id="container">
+<p><img src="../examples/figs/ml_kmeans01.png" width="500"></p>
+</div>
+
 ## References
 
 [1] Ng A, CS229 Machine Learning, Stanford, https://see.stanford.edu/Course/CS229

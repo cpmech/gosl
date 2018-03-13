@@ -5,6 +5,7 @@
 ## Summary
 
 * Machine Learning: Linear and Logistic Regressions
+* Machine Learning: Clustering
 * Compute (fast) discrete Fourier transform
 * Generate and draw a NURBS toroidal surface
 * Generating normally distributed pseudo-random numbers
@@ -53,6 +54,18 @@ Source code: <a href="ml_ang02.go">ml_ang02.go</a>
 
 <div id="container">
 <p><img src="figs/ml_ang02.png" width="500"></p>
+</div>
+
+# Machine Learning: Clustering
+
+## K-means Example 1
+
+Prof. Andrew Ng's K-means example number 1.
+
+Source code: <a href="ml_kmeans01.go">ml_kmeans01.go</a>
+
+<div id="container">
+<p><img src="figs/ml_kmeans01.png" width="500"></p>
 </div>
 
 
