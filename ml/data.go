@@ -55,30 +55,56 @@ func NewData(nSamples, nFeatures int, useY, allocate bool) (o *Data) {
 	return
 }
 
-// NewDataGivenRawXY returns a new object with data set from raw XY values
+// NewDataGivenRawX returns a new object with data set from raw X values
 //  Input:
-//    xyRaw -- [nSamples][nFeatures+1] table with x and y raw values,
-//             where the last column contains y-values
+//    Xraw -- [nSamples][nFeatures] table with x and y raw values,
 //  Output:
 //    new object
-func NewDataGivenRawXY(xyRaw [][]float64) (o *Data) {
+func NewDataGivenRawX(Xraw [][]float64) (o *Data) {
 
 	// check
-	nSamples := len(xyRaw)
+	nSamples := len(Xraw)
 	if nSamples < 1 {
 		chk.Panic("at least one row of data in table must be provided\n")
 	}
 
 	// allocate new object
-	nFeatures := len(xyRaw[0]) - 1 // -1 because of y column
+	nFeatures := len(Xraw[0])
+	o = NewData(nSamples, nFeatures, true, true)
+
+	// copy data from raw table to X matrix
+	for i := 0; i < nSamples; i++ {
+		for j := 0; j < nFeatures; j++ {
+			o.X.Set(i, j, Xraw[i][j])
+		}
+	}
+	return
+}
+
+// NewDataGivenRawXY returns a new object with data set from raw XY values
+//  Input:
+//    XYraw -- [nSamples][nFeatures+1] table with x and y raw values,
+//             where the last column contains y-values
+//  Output:
+//    new object
+func NewDataGivenRawXY(XYraw [][]float64) (o *Data) {
+
+	// check
+	nSamples := len(XYraw)
+	if nSamples < 1 {
+		chk.Panic("at least one row of data in table must be provided\n")
+	}
+
+	// allocate new object
+	nFeatures := len(XYraw[0]) - 1 // -1 because of y column
 	o = NewData(nSamples, nFeatures, true, true)
 
 	// copy data from raw table to X and Y arrays
 	for i := 0; i < nSamples; i++ {
 		for j := 0; j < nFeatures; j++ {
-			o.X.Set(i, j, xyRaw[i][j])
+			o.X.Set(i, j, XYraw[i][j])
 		}
-		o.Y[i] = xyRaw[i][nFeatures]
+		o.Y[i] = XYraw[i][nFeatures]
 	}
 	return
 }
