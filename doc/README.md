@@ -18,3 +18,4 @@ functions and use structures).
 2. [Curvilinear Coordinates and Metrics](https://github.com/cpmech/gosl/blob/master/doc/metrics.pdf)
 3. [Transfinite Mapping](https://github.com/cpmech/gosl/blob/master/doc/transfinite.pdf)
 4. [Tensor Algebra, Calculus, and Definitions](https://github.com/cpmech/gosl/blob/master/doc/definitions.pdf)
+5. [Spectral Collocation](https://github.com/cpmech/gosl/blob/master/doc/spectral.pdf)
