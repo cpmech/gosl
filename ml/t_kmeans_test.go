@@ -64,7 +64,7 @@ func TestKmeans02(tst *testing.T) {
 	chk.PrintTitle("Kmeans02. ANT test # 1")
 
 	// load raw data from HDF5 file
-	f := h5.Open("$GOSLDATA", "angEx7data2", false)
+	f := h5.Open("./samples", "angEx7data2", false)
 	defer f.Close()
 	Xraw := f.GetArray("/Xcolmaj/value")
 	nSamples := f.GetInt("/m/value")
