@@ -23,6 +23,8 @@ type PlotterClass struct {
 	// arguments
 	ArgsYclasses  map[int]*plt.A // maps y classes [0, 1, 2, ...] to plot arguments
 	ArgsCentroids *plt.A         // args for centroids
+	ArgsCircle1   *plt.A         // args for centroids
+	ArgsCircle2   *plt.A         // args for centroids
 }
 
 // NewPlotterClass returns a new ploter
@@ -42,6 +44,8 @@ func NewPlotterClass(data *Data, classes []int, nClasses int) (o *PlotterClass) 
 		o.ArgsYclasses[k] = &plt.A{C: plt.C(k, 0), M: plt.M(k, 2), NoClip: true}
 	}
 	o.ArgsCentroids = &plt.A{Ls: "None", M: "*", Ms: 10, Mec: "k", NoClip: true}
+	o.ArgsCircle1 = &plt.A{M: "o", Void: true, Ms: 13, Mec: "k", Mew: 4.4, NoClip: true}
+	o.ArgsCircle2 = &plt.A{M: "o", Void: true, Ms: 13, Mec: "w", Mew: 1.3, NoClip: true}
 	return
 }
 
@@ -66,6 +70,8 @@ func (o *PlotterClass) Centroids(centroids []la.Vector) {
 		o.ArgsCentroids.C = o.ArgsYclasses[k].C
 		u, v := centroids[i][0], centroids[i][1]
 		plt.PlotOne(u, v, o.ArgsCentroids)
+		plt.PlotOne(u, v, o.ArgsCircle1)
+		plt.PlotOne(u, v, o.ArgsCircle2)
 		plt.Text(u, v, io.Sf("%d", i), &plt.A{Fsz: 8})
 	}
 }
