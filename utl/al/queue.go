@@ -10,7 +10,7 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// Qmember defined a Queue member by wrapping interface{}
+// Qmember defines a Queue member by wrapping interface{}
 type Qmember interface{}
 
 // Queue implements a FIFO queue, a sequence where the first inserted will be the first removed.
