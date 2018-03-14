@@ -9,3 +9,10 @@ before_install:
   - sudo apt-get install -y gfortran libvtk6-dev
   - sudo apt-get install -y libfftw3-dev libfftw3-mpi-dev libmetis-dev
   - sudo apt-get install -y liblapacke-dev libopenblas-dev
+
+notifications:
+  email:
+    recipients:
+      - dorival.pedroso@gmail.com
+    on_success: never
+    on_failure: always
