@@ -10,18 +10,15 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// Qmember defines a Queue member by wrapping interface{}
-type Qmember interface{}
-
 // Queue implements a FIFO queue, a sequence where the first inserted will be the first removed.
 // Think of arriving people at the Bank or DMV...
 type Queue struct {
-	bfSize   int       // guessed buffer size
-	front    int       // index in ring of member at front
-	back     int       // index in ring of member at back
-	nMembers int       // current number of members
-	ring     []Qmember // ring holds all data in a "ring fashion"
-	Debug    bool      // debug flag
+	bfSize   int     // guessed buffer size
+	front    int     // index in ring of member at front
+	back     int     // index in ring of member at back
+	nMembers int     // current number of members
+	ring     []Adata // ring holds all data in a "ring fashion"
+	Debug    bool    // debug flag
 }
 
 // NewQueue returns a new object
@@ -34,7 +31,7 @@ func NewQueue(guessedBufferSize int) (o *Queue) {
 }
 
 // Front returns the member @ front of queue (close to the DMV window...) or nil if empty
-func (o *Queue) Front() Qmember {
+func (o *Queue) Front() Adata {
 	if o.nMembers == 0 {
 		return nil
 	}
@@ -43,7 +40,7 @@ func (o *Queue) Front() Qmember {
 
 // Back returns the member @ back (unlucky guy/girl...) or nil if empty.
 // It is always the last item in the data array
-func (o *Queue) Back() Qmember {
+func (o *Queue) Back() Adata {
 	if o.nMembers == 0 {
 		return nil
 	}
@@ -57,7 +54,7 @@ func (o *Queue) Nmembers() int {
 
 // In receives a new member arrival
 // TODO: implement use of different grow rates
-func (o *Queue) In(member Qmember) {
+func (o *Queue) In(member Adata) {
 
 	// debug
 	if o.Debug {
@@ -69,7 +66,7 @@ func (o *Queue) In(member Qmember) {
 
 	// first ring
 	if o.front < 0 {
-		o.ring = make([]Qmember, 1, o.bfSize+1)
+		o.ring = make([]Adata, 1, o.bfSize+1)
 		o.ring[0] = member
 		o.front = 0
 		o.back = o.front
@@ -90,7 +87,7 @@ func (o *Queue) In(member Qmember) {
 
 // Out removes the member @ front and returns a pointer to him/her
 // TODO: implement memory recovery
-func (o *Queue) Out() (member Qmember) {
+func (o *Queue) Out() (member Adata) {
 
 	// debug
 	if o.Debug {
@@ -139,7 +136,7 @@ func (o *Queue) grow() {
 	}
 
 	// temporary array
-	tmp := make([]Qmember, o.nMembers+1, o.bfSize+o.nMembers+1)
+	tmp := make([]Adata, o.nMembers+1, o.bfSize+o.nMembers+1)
 
 	// members are at different sides
 	if o.back < o.front {
