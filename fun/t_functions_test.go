@@ -120,8 +120,7 @@ func TestLogistic01(tst *testing.T) {
 		chk.Panic("errors found")
 	}
 
-	//if false {
-	if true {
+	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.25})
 		plt.Subplot(2, 1, 1)
 		plt.Plot(x, y, &plt.A{C: plt.C(0, 0), Ls: "-", Lw: 1.5, L: "logistic", NoClip: true})
