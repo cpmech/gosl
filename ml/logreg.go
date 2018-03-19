@@ -96,6 +96,11 @@ func (o *LogReg) Cost() (c float64) {
 	return c
 }
 
+// AllocateGradient allocate object to compute Gradients
+func (o *LogReg) AllocateGradient() (dCdθ la.Vector) {
+	return la.NewVector(o.data.Nfeatures)
+}
+
 // Gradients returns ∂C/∂θ and ∂C/∂b
 //   Output:
 //     dCdθ -- ∂C/∂θ
