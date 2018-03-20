@@ -14,8 +14,13 @@ while true; do
     echo
     echo
     echo
+    echo
+    echo
+    echo
+    echo
     #go test -run Adata01
     #go test -run Queue01
     #go test -run LinkedList01
-    go test -run LinkedList02
+    #go test -run LinkedList02
+    go test -run NaiveQuickSort01
 done
