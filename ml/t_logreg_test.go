@@ -361,7 +361,7 @@ func TestLogReg05(tst *testing.T) {
 	chk.Int(tst, "nFeatures", data.Nfeatures, 2)
 
 	// model
-	model := NewLogRegMultiClass(data, "model01")
+	model := NewLogRegMulti(data, "model01")
 
 	// train
 	gradDesc := false

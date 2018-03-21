@@ -11,7 +11,7 @@ import (
 )
 
 // PlotRegMultiClass plots multi-class classification using Logistic Regression
-func PlotRegMultiClass(data *Data, model *LogRegMultiClass, iFeature, jFeature int, ximin, ximax, xjmin, xjmax float64, npts int) {
+func PlotRegMultiClass(data *Data, model *LogRegMulti, iFeature, jFeature int, ximin, ximax, xjmin, xjmax float64, npts int) {
 
 	// set classes
 	classes := make([]int, data.Nsamples)
@@ -46,7 +46,7 @@ func PlotRegMultiClass(data *Data, model *LogRegMultiClass, iFeature, jFeature i
 }
 
 // PlotRegMultiClassOneVsAll plots multi-class classification using Logistic Regression
-func PlotRegMultiClassOneVsAll(data *Data, model *LogRegMultiClass, iFeature, jFeature int, ximin, ximax, xjmin, xjmax float64, npts int) {
+func PlotRegMultiClassOneVsAll(data *Data, model *LogRegMulti, iFeature, jFeature int, ximin, ximax, xjmin, xjmax float64, npts int) {
 
 	// set classes
 	classes := make([]int, data.Nsamples)

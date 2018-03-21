@@ -9,8 +9,8 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// LogRegMultiClass implements a logistic regression model for multiple classes (Observer of data)
-type LogRegMultiClass struct {
+// LogRegMulti implements a logistic regression model for multiple classes (Observer of data)
+type LogRegMulti struct {
 	name   string       // name of this "observer"
 	data   *Data        // X-y data
 	nClass int          // number of classes
@@ -19,10 +19,10 @@ type LogRegMultiClass struct {
 	models []*LogReg    // [nClass] one-versus-all models
 }
 
-// NewLogRegMultiClass returns a new object
+// NewLogRegMulti returns a new object
 // NOTE: the y-vector in data must have values in [0, nClass-1]
-func NewLogRegMultiClass(data *Data, name string) (o *LogRegMultiClass) {
-	o = new(LogRegMultiClass)
+func NewLogRegMulti(data *Data, name string) (o *LogRegMulti) {
+	o = new(LogRegMulti)
 	o.name = name
 	o.data = data
 	o.data.AddObserver(o)
@@ -41,12 +41,12 @@ func NewLogRegMultiClass(data *Data, name string) (o *LogRegMultiClass) {
 }
 
 // Name returns the name of this "Observer"
-func (o *LogRegMultiClass) Name() string {
+func (o *LogRegMulti) Name() string {
 	return o.name
 }
 
 // Update perform updates after data has been changed (as an Observer)
-func (o *LogRegMultiClass) Update() {
+func (o *LogRegMulti) Update() {
 	for k := 0; k < o.nClass; k++ {
 		o.dataB[k].X = o.data.X
 		if len(o.dataB[k].Y) != o.data.Nsamples {
@@ -68,7 +68,7 @@ func (o *LogRegMultiClass) Update() {
 }
 
 // SetLambda sets the regularization parameter
-func (o *LogRegMultiClass) SetLambda(lambda float64) {
+func (o *LogRegMulti) SetLambda(lambda float64) {
 	for k := 0; k < o.nClass; k++ {
 		o.models[k].params.SetLambda(lambda)
 	}
@@ -80,7 +80,7 @@ func (o *LogRegMultiClass) SetLambda(lambda float64) {
 //   Output:
 //     class -- class with the highest probability
 //     probs -- probabilities
-func (o *LogRegMultiClass) Predict(x la.Vector) (class int, probs []float64) {
+func (o *LogRegMulti) Predict(x la.Vector) (class int, probs []float64) {
 	pMax := 0.0
 	probs = make([]float64, o.nClass)
 	for k := 0; k < o.nClass; k++ {
@@ -95,7 +95,7 @@ func (o *LogRegMultiClass) Predict(x la.Vector) (class int, probs []float64) {
 
 // Train finds the parameters using closed-form solutions
 //  gradDesc -- use Gradient-Descent
-func (o *LogRegMultiClass) Train(gardDesc bool) {
+func (o *LogRegMulti) Train(gardDesc bool) {
 	for k := 0; k < o.nClass; k++ {
 		o.models[k].Train()
 		io.Pforan("%v  %v\n", o.params[k].GetBias(), o.params[k].GetThetas())

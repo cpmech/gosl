@@ -22,7 +22,7 @@ func main() {
 	data := ml.NewDataGivenRawXY(XYraw)
 
 	// model
-	model := ml.NewLogRegMultiClass(data, "model01")
+	model := ml.NewLogRegMulti(data, "model01")
 
 	// train
 	gradDesc := false

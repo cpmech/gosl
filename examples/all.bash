@@ -3,9 +3,6 @@
 set -e
 
 examples="\
-ml_simple01.go
-ml_ang01.go
-ml_ang02.go
 chk_example01.go
 fun_fft01.go
 fun_orthopoly01.go
@@ -22,6 +19,11 @@ la_HLsparseComplex01.go
 la_HLsparseReal01.go
 la_sparseComplex01.go
 la_sparseReal01.go
+ml_ang01.go
+ml_ang02.go
+ml_kmeans01.go
+ml_mclass01.go
+ml_simple01.go
 num_brent01.go
 num_deriv01.go
 num_newton01.go
