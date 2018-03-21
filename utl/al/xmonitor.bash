@@ -22,5 +22,5 @@ while true; do
     #go test -run Queue01
     #go test -run LinkedList01
     #go test -run LinkedList02
-    go test -run NaiveQuickSort01
+    go test -run NaiveQuickSort
 done
