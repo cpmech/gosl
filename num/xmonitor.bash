@@ -14,5 +14,7 @@ while true; do
     #go test -run Bracket02
     #go test -run Brent01
     #go test -run Brent02
-    go test -run Brent03
+    #go test -run Brent03
+    #go test -run LineSolver01
+    go test -run LineSolver02
 done
