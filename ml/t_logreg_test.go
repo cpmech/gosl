@@ -348,3 +348,50 @@ func TestLogReg04(tst *testing.T) {
 		plt.Save("/tmp/gosl/ml", "logreg04")
 	}
 }
+
+func TestLogReg05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("LogReg05. 3-class problem")
+
+	// data
+	XYraw := io.ReadMatrix("./samples/multiclass01.txt")
+	data := NewDataGivenRawXY(XYraw)
+	chk.Int(tst, "nSamples", data.Nsamples, 150)
+	chk.Int(tst, "nFeatures", data.Nfeatures, 2)
+
+	// model
+	model := NewLogRegMultiClass(data, "model01")
+
+	// train
+	gradDesc := false
+	model.SetLambda(1e-5)
+	model.Train(gradDesc)
+
+	// check
+	classes := make([]int, data.Nsamples)
+	fails := 0
+	for i := 0; i < data.Nsamples; i++ {
+		x := data.X.GetRow(i)
+		class, _ := model.Predict(x)
+		classes[i] = class
+		if class != int(data.Y[i]) {
+			fails++
+		}
+	}
+	chk.Ints(tst, "prediction", classes, []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1})
+	chk.Int(tst, "fails", fails, 29)
+
+	// plot
+	if chk.Verbose {
+		npts := 201
+		iFeature, jFeature := 0, 1
+		ximin, ximax, xjmin, xjmax := 3.8, 8.4, 1.5, 4.9
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.7})
+		plt.Subplot(2, 1, 1)
+		PlotRegMultiClass(data, model, iFeature, jFeature, ximin, ximax, xjmin, xjmax, npts)
+		plt.Subplot(2, 1, 2)
+		PlotRegMultiClassOneVsAll(data, model, iFeature, jFeature, ximin, ximax, xjmin, xjmax, npts)
+		plt.Save("/tmp/gosl/ml", "logreg05")
+	}
+}
