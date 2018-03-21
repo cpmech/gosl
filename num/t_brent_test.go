@@ -22,7 +22,7 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 
 	// Brent
 	io.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")
-	o := NewBrent(ffcnA)
+	o := NewBrent(ffcnA, nil)
 	xbrent = o.Solve(xa, xb, false)
 	var ybrent float64
 	ybrent = ffcnA(xbrent)
@@ -144,8 +144,11 @@ func TestBrent03(tst *testing.T) {
 	ffcn := func(x float64) (res float64) {
 		return x*x*x - 2.0*x - 5.0
 	}
+	Jfcn := func(x float64) (dfdx float64) {
+		return 3*x*x - 2
+	}
 
-	o := NewBrent(ffcn)
+	o := NewBrent(ffcn, Jfcn)
 	//xa, xb := -2.0, 2.0 // ===> MinWithDerivs fails
 	//xa, xb := -1.5, 1.5 // ===> MinWithDerivs fails
 	xa, xb := -1.4, 1.4
@@ -158,11 +161,7 @@ func TestBrent03(tst *testing.T) {
 	io.Pforan("nfeval = %v\n", o.NFeval)
 	chk.Float64(tst, "xcorrect", 1e-8, x, xcor)
 
-	Jfcn := func(x float64) (dfdx float64) {
-		return 3*x*x - 2
-	}
-
-	xd := o.MinWithDerivs(xa, xb, Jfcn)
+	xd := o.MinUseD(xa, xb)
 	io.Pf("xd     = %v (correct=%g)\n", xd, xcor)
 	io.Pf("f(xd)  = %v\n", ffcn(xd))
 	io.Pf("nit    = %v\n", o.It)

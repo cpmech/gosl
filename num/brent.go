@@ -27,16 +27,20 @@ type Brent struct {
 
 	// internal
 	ffcn  fun.Ss  // y = f(x) function
+	Jfcn  fun.Ss  // Jfcn(x) = dy/dx [optional / may be nil]
 	gsr   float64 // gold section ratio
 	sqeps float64 // sqrt(EPS)
 }
 
 // NewBrent returns a new Brent structure
-func NewBrent(ffcn fun.Ss) (o *Brent) {
+//  ffcn -- function f(x)
+//  Jfcn -- derivative df(x)/dx [optinal / may be nil]
+func NewBrent(ffcn, Jfcn fun.Ss) (o *Brent) {
 	o = new(Brent)
 	o.MaxIt = 100
 	o.Tol = 1e-10
 	o.ffcn = ffcn
+	o.Jfcn = Jfcn
 	o.gsr = (3.0 - math.Sqrt(5.0)) / 2.0
 	o.sqeps = math.Sqrt(MACHEPS)
 	return
@@ -335,7 +339,7 @@ func (o *Brent) Min(xa, xb float64) (res float64) {
 	return
 }
 
-// MinWithDerivs finds minimum and uses information about derivatives
+// MinUseD finds minimum and uses information about derivatives
 //
 //   Given a function and deriva funcd that computes a function and also its derivative function df, and
 //   given a bracketing triplet of abscissas ax, bx, cx [such that bx is between ax and cx, and
@@ -348,9 +352,12 @@ func (o *Brent) Min(xa, xb float64) (res float64) {
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes:
 //       The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 //
-func (o *Brent) MinWithDerivs(xa, xb float64, Jfcn fun.Ss) (xmin float64) {
+func (o *Brent) MinUseD(xa, xb float64) (xmin float64) {
 
 	// check
+	if o.Jfcn == nil {
+		chk.Panic("MinUseD requires derivative function Jfcn\n")
+	}
 	if xb < xa {
 		chk.Panic("xa(%g) must be smaller than xb(%g)", xa, xb)
 	}
@@ -374,7 +381,7 @@ func (o *Brent) MinWithDerivs(xa, xb float64, Jfcn fun.Ss) (xmin float64) {
 	}
 	x = bx
 	fx = fb
-	dx = Jfcn(x)
+	dx = o.Jfcn(x)
 	w, v = x, x
 	fw, fv = fx, fx
 	dw, dv = dx, dx
@@ -460,7 +467,7 @@ func (o *Brent) MinWithDerivs(xa, xb float64, Jfcn fun.Ss) (xmin float64) {
 				return
 			}
 		}
-		du = Jfcn(u)
+		du = o.Jfcn(u)
 		o.NJeval++
 		if fu <= fx {
 			if u >= x {
