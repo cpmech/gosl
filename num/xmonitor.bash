@@ -11,5 +11,8 @@ while true; do
     echo
     echo
     #go test -run Bracket01
-    go test -run Bracket02
+    #go test -run Bracket02
+    #go test -run Brent01
+    #go test -run Brent02
+    go test -run Brent03
 done

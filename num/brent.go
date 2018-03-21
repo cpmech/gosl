@@ -22,6 +22,7 @@ type Brent struct {
 
 	// statistics
 	NFeval int // number of calls to Ffcn (function evaluations)
+	NJeval int // number of calls to Jfcn (Jacobian/derivatives)
 	It     int // number of iterations from last call to Solve
 
 	// internal
@@ -33,8 +34,8 @@ type Brent struct {
 // NewBrent returns a new Brent structure
 func NewBrent(ffcn fun.Ss) (o *Brent) {
 	o = new(Brent)
-	o.MaxIt = 30
-	o.Tol = 1e-14
+	o.MaxIt = 100
+	o.Tol = 1e-10
 	o.ffcn = ffcn
 	o.gsr = (3.0 - math.Sqrt(5.0)) / 2.0
 	o.sqeps = math.Sqrt(MACHEPS)
@@ -293,6 +294,7 @@ func (o *Brent) Min(xa, xb float64) (res float64) {
 		// obtain the next approximation to min and reduce the enveloping rng
 		t = x + newStep // tentative point for the min  */
 		ft = o.ffcn(t)
+		o.NFeval++
 
 		// t is a better approximation
 		if ft <= fx {
@@ -331,4 +333,170 @@ func (o *Brent) Min(xa, xb float64) (res float64) {
 	// did not converge
 	chk.Panic("fail to converge after %d iterations", o.It)
 	return
+}
+
+// MinWithDerivs finds minimum and uses information about derivatives
+//
+//   Given a function and deriva funcd that computes a function and also its derivative function df, and
+//   given a bracketing triplet of abscissas ax, bx, cx [such that bx is between ax and cx, and
+//   f(bx) is less than both f(ax) and f(cx)], this routine isolates the minimum to a fractional
+//   precision of about tol using a modification of Brent’s method that uses derivatives. The
+//   abscissa of the minimum is returned as xmin, and the minimum function value is returned
+//   as min, the returned function value.
+//
+//   REFERENCES:
+//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes:
+//       The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+func (o *Brent) MinWithDerivs(xa, xb float64, Jfcn fun.Ss) (xmin float64) {
+
+	// check
+	if xb < xa {
+		chk.Panic("xa(%g) must be smaller than xb(%g)", xa, xb)
+	}
+
+	// bracket
+	bracket := NewBracket(o.ffcn)
+	ax, bx, cx, _, fb, _ := bracket.Min(xa, xb)
+
+	// auxiliary
+	var ok1, ok2 bool // will be used as flags for whether proposed steps are acceptable or not.
+	var a, b, d, d1, d2, du, dv, dw, dx, e float64
+	var fu, fv, fw, fx, olde, tol1, tol2, u, u1, u2, v, w, x, xm float64
+
+	// initialization
+	a, b = cx, cx
+	if ax < cx {
+		a = ax
+	}
+	if ax > cx {
+		b = ax
+	}
+	x = bx
+	fx = fb
+	dx = Jfcn(x)
+	w, v = x, x
+	fw, fv = fx, fx
+	dw, dv = dx, dx
+
+	// constants
+	zeps := MACHEPS * 1e-3
+
+	// stat
+	o.NFeval = bracket.NFeval
+	o.NJeval = 1
+
+	// iterations
+	for o.It = 0; o.It < o.MaxIt; o.It++ {
+		xm = 0.5 * (a + b)
+		tol1 = o.Tol*math.Abs(x) + zeps
+		tol2 = 2.0 * tol1
+		if math.Abs(x-xm) <= (tol2 - 0.5*(b-a)) {
+			xmin = x
+			return
+		}
+		if math.Abs(e) > tol1 {
+			d1 = 2.0 * (b - a)
+			d2 = d1
+			if dw != dx {
+				d1 = (w - x) * dx / (dx - dw)
+			}
+			if dv != dx {
+				d2 = (v - x) * dx / (dx - dv)
+			}
+			u1 = x + d1
+			u2 = x + d2
+			ok1 = (a-u1)*(u1-b) > 0.0 && dx*d1 <= 0.0
+			ok2 = (a-u2)*(u2-b) > 0.0 && dx*d2 <= 0.0
+			olde = e
+			e = d
+			if ok1 || ok2 {
+				if ok1 && ok2 {
+					d = d2
+					if math.Abs(d1) < math.Abs(d2) {
+						d = d1
+					}
+				} else if ok1 {
+					d = d1
+				} else {
+					d = d2
+				}
+				if math.Abs(d) <= math.Abs(0.5*olde) {
+					u = x + d
+					if u-a < tol2 || b-u < tol2 {
+						d = sgn(tol1, xm-x)
+					}
+				} else {
+					e = b - x
+					if dx >= 0.0 {
+						e = a - x
+					}
+					d = 0.5 * e
+				}
+			} else {
+				e = b - x
+				if dx >= 0.0 {
+					e = a - x
+				}
+				d = 0.5 * e
+			}
+		} else {
+			e = b - x
+			if dx >= 0.0 {
+				e = a - x
+			}
+			d = 0.5 * e
+		}
+		if math.Abs(d) >= tol1 {
+			u = x + d
+			fu = o.ffcn(u)
+			o.NFeval++
+		} else {
+			u = x + sgn(tol1, d)
+			fu = o.ffcn(u)
+			o.NFeval++
+			if fu > fx {
+				xmin = x
+				return
+			}
+		}
+		du = Jfcn(u)
+		o.NJeval++
+		if fu <= fx {
+			if u >= x {
+				a = x
+			} else {
+				b = x
+			}
+			mov3(&v, &fv, &dv, w, fw, dw)
+			mov3(&w, &fw, &dw, x, fx, dx)
+			mov3(&x, &fx, &dx, u, fu, du)
+		} else {
+			if u < x {
+				a = u
+			} else {
+				b = u
+			}
+			if fu <= fw || w == x {
+				mov3(&v, &fv, &dv, w, fw, dw)
+				mov3(&w, &fw, &dw, u, fu, du)
+			} else if fu < fv || v == x || v == w {
+				mov3(&v, &fv, &dv, u, fu, du)
+			}
+		}
+	}
+
+	// did not converge
+	chk.Panic("fail to converge after %d iterations", o.It)
+	return
+}
+
+// auxiliary //////////////////////////////////////////////////////////////////////////////////////
+
+// sgn returns a value with the same magnitude as a and the same sign as b
+func sgn(a, b float64) float64 {
+	if b < 0 {
+		return -math.Abs(a) // return - |a|
+	}
+	return math.Abs(a) // return + |a|
 }
