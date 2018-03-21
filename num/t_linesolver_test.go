@@ -15,7 +15,7 @@ import (
 
 func TestLineSolver01(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("LineSolver01. Root")
 
 	ffcn := func(x la.Vector) float64 {
@@ -71,7 +71,7 @@ func TestLineSolver01(tst *testing.T) {
 
 func TestLineSolver02(tst *testing.T) {
 
-	verbose()
+	//verbose()
 	chk.PrintTitle("LineSolver02. Min")
 
 	ffcn := func(x la.Vector) float64 {
