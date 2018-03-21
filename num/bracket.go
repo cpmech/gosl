@@ -180,33 +180,3 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 	chk.Panic("fail to converge after %d iterations", o.It)
 	return
 }
-
-// auxiliary //////////////////////////////////////////////////////////////////////////////////////
-
-func swap(a, b *float64) {
-	*a, *b = *b, *a
-}
-
-func shft2(a, b *float64, c float64) {
-	*a = *b
-	*b = c
-}
-
-func shft3(a, b, c *float64, d float64) {
-	*a = *b
-	*b = *c
-	*c = d
-}
-
-func mov3(a, b, c *float64, d, e, f float64) {
-	*a = d
-	*b = e
-	*c = f
-}
-
-func signp(x float64) float64 {
-	if x < 0.0 {
-		return -1.0
-	}
-	return +1.0
-}

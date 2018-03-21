@@ -490,13 +490,3 @@ func (o *Brent) MinWithDerivs(xa, xb float64, Jfcn fun.Ss) (xmin float64) {
 	chk.Panic("fail to converge after %d iterations", o.It)
 	return
 }
-
-// auxiliary //////////////////////////////////////////////////////////////////////////////////////
-
-// sgn returns a value with the same magnitude as a and the same sign as b
-func sgn(a, b float64) float64 {
-	if b < 0 {
-		return -math.Abs(a) // return - |a|
-	}
-	return math.Abs(a) // return + |a|
-}

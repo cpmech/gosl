@@ -121,7 +121,7 @@ func TestBrent02(tst *testing.T) {
 	xa, xb := 2.0, 3.0
 	xguess := 2.1
 	xbrent := rootSolTest(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB)
-	chk.Float64(tst, "xsol", 1e-14, xbrent, 2.09455148154233)
+	chk.Float64(tst, "xsol", 1e-11, xbrent, 2.09455148154233)
 
 	if chk.Verbose {
 		xx := utl.LinSpace(1, 3, 101)
