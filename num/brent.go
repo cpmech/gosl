@@ -23,13 +23,15 @@ type Brent struct {
 	gsr    float64 // gold section ratio
 }
 
-// Init intialises Brent structure
-func (o *Brent) Init(ffcn fun.Ss) {
+// NewBrent returns a new Brent structure
+func NewBrent(ffcn fun.Ss) (o *Brent) {
+	o = new(Brent)
 	o.MaxIt = 30
 	o.Tol = 1e-14
 	o.Ffcn = ffcn
 	o.gsr = (3.0 - math.Sqrt(5.0)) / 2.0
 	o.sqeps = math.Sqrt(MACHEPS)
+	return
 }
 
 // Solve solves y(x) = 0 for x in [xa, xb] with f(xa) * f(xb) < 0

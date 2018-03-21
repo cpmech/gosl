@@ -20,8 +20,7 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 
 	// Brent
 	io.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")
-	var o Brent
-	o.Init(ffcnA)
+	o := NewBrent(ffcnA)
 	xbrent = o.Solve(xa, xb, false)
 	var ybrent float64
 	ybrent = ffcnA(xbrent)
@@ -60,10 +59,10 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 	return
 }
 
-func Test_brent01(tst *testing.T) {
+func TestBrent01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("brent01. root finding")
+	chk.PrintTitle("Brent01. root finding")
 
 	ffcnA := func(x float64) (res float64) {
 		res = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
@@ -88,10 +87,10 @@ func Test_brent01(tst *testing.T) {
 	rootSolTest(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB, "brent01.png", save, false)
 }
 
-func Test_brent02(tst *testing.T) {
+func TestBrent02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("brent02. root finding")
+	chk.PrintTitle("Brent02. root finding")
 
 	ffcnA := func(x float64) (res float64) {
 		return x*x*x - 2.0*x - 5.0
@@ -115,17 +114,16 @@ func Test_brent02(tst *testing.T) {
 	chk.Float64(tst, "xsol", 1e-14, xbrent, 2.09455148154233)
 }
 
-func Test_brent03(tst *testing.T) {
+func TestBrent03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("brent03. minimum finding")
+	chk.PrintTitle("Brent03. minimum finding")
 
 	ffcn := func(x float64) (res float64) {
 		return x*x*x - 2.0*x - 5.0
 	}
 
-	var o Brent
-	o.Init(ffcn)
+	o := NewBrent(ffcn)
 	xa, xb := 0.0, 1.0
 	x := o.Min(xa, xb, false)
 	y := ffcn(x)
