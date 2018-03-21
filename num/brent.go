@@ -14,13 +14,20 @@ import (
 
 // Brent implements Brent's method for finding the roots of an equation
 type Brent struct {
-	MaxIt  int     // max iterations
-	Tol    float64 // tolerance
-	Ffcn   fun.Ss  // y = f(x) function
-	NFeval int     // number of calls to Ffcn (function evaluations)
-	It     int     // number of iterations from last call to Solve
-	sqeps  float64 // sqrt(EPS)
-	gsr    float64 // gold section ratio
+
+	// configuration
+	MaxIt   int     // max iterations
+	Tol     float64 // tolerance
+	Verbose bool    // show messages
+
+	// statistics
+	NFeval int // number of calls to Ffcn (function evaluations)
+	It     int // number of iterations from last call to Solve
+
+	// internal
+	ffcn  fun.Ss  // y = f(x) function
+	gsr   float64 // gold section ratio
+	sqeps float64 // sqrt(EPS)
 }
 
 // NewBrent returns a new Brent structure
@@ -28,7 +35,7 @@ func NewBrent(ffcn fun.Ss) (o *Brent) {
 	o = new(Brent)
 	o.MaxIt = 30
 	o.Tol = 1e-14
-	o.Ffcn = ffcn
+	o.ffcn = ffcn
 	o.gsr = (3.0 - math.Sqrt(5.0)) / 2.0
 	o.sqeps = math.Sqrt(MACHEPS)
 	return
@@ -61,14 +68,14 @@ func NewBrent(ffcn fun.Ss) (o *Brent) {
 //   is used in the other case. Therefore, the range of uncertainty is
 //   ensured to be reduced at least by the factor 1.6
 //
-func (o *Brent) Solve(xa, xb float64, silent bool) (res float64) {
+func (o *Brent) Solve(xa, xb float64, verbose bool) (res float64) {
 
 	// basic variables and function evaluation
 	a := xa // the last but one approximation
 	b := xb // the last and the best approximation to the root
 	c := a  // the last but one or even earlier approximation than a that
-	fa := o.Ffcn(a)
-	fb := o.Ffcn(b)
+	fa := o.ffcn(a)
+	fb := o.ffcn(b)
 	o.NFeval = 2
 	fc := fa
 
@@ -78,7 +85,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64) {
 	}
 
 	// message
-	if !silent {
+	if o.Verbose {
 		io.Pf("%4s%23s%23s%23s\n", "it", "x", "f(x)", "err")
 		io.Pf("%50s%23.1e\n", "", o.Tol)
 	}
@@ -107,7 +114,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64) {
 		newStep = (c - b) / 2.0
 
 		// converged?
-		if !silent {
+		if o.Verbose {
 			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(newStep))
 		}
 		if math.Abs(newStep) <= tolAct || fb == 0.0 {
@@ -164,7 +171,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64) {
 
 		// do step to a new approximation
 		b += newStep
-		fb = o.Ffcn(b)
+		fb = o.ffcn(b)
 		o.NFeval++
 
 		// adjust c for it to have a sign opposite to that of b
@@ -211,7 +218,7 @@ func (o *Brent) Solve(xa, xb float64, silent bool) (res float64) {
 //   within the given range, Fminbr returns 'a' (if f(a) < f(b)), otherwise
 //   it returns the right range boundary value b.
 //
-func (o *Brent) Min(xa, xb float64, silent bool) (res float64) {
+func (o *Brent) Min(xa, xb float64) (res float64) {
 
 	// check
 	if xb < xa {
@@ -220,7 +227,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64) {
 
 	// first step: always gold section
 	v := xa + o.gsr*(xb-xa)
-	fv := o.Ffcn(v)
+	fv := o.ffcn(v)
 	o.NFeval = 1
 	x, w, fx, fw := v, v, fv, fv
 
@@ -239,7 +246,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64) {
 		tolAct = o.sqeps*math.Abs(x) + o.Tol/3.0
 
 		// converged?
-		if !silent {
+		if o.Verbose {
 			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-midRng)+rng/2.0)
 		}
 		if math.Abs(x-midRng)+rng/2.0 <= 2.0*tolAct {
@@ -285,7 +292,7 @@ func (o *Brent) Min(xa, xb float64, silent bool) (res float64) {
 
 		// obtain the next approximation to min and reduce the enveloping rng
 		t = x + newStep // tentative point for the min  */
-		ft = o.Ffcn(t)
+		ft = o.ffcn(t)
 
 		// t is a better approximation
 		if ft <= fx {

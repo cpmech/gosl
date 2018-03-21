@@ -125,7 +125,7 @@ func TestBrent03(tst *testing.T) {
 
 	o := NewBrent(ffcn)
 	xa, xb := 0.0, 1.0
-	x := o.Min(xa, xb, false)
+	x := o.Min(xa, xb)
 	y := ffcn(x)
 	xcor := math.Sqrt(2.0 / 3.0)
 	io.Pforan("x      = %v (correct=%g)\n", x, xcor)
