@@ -98,6 +98,5 @@ func (o *LogRegMulti) Predict(x la.Vector) (class int, probs []float64) {
 func (o *LogRegMulti) Train(gardDesc bool) {
 	for k := 0; k < o.nClass; k++ {
 		o.models[k].Train()
-		io.Pforan("%v  %v\n", o.params[k].GetBias(), o.params[k].GetThetas())
 	}
 }
