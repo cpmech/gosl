@@ -8,5 +8,8 @@ while true; do
     echo
     echo
     echo
-    go test -run "Nls01"
+    echo
+    echo
+    #go test -run Bracket01
+    go test -run Bracket02
 done
