@@ -73,7 +73,7 @@ func NewBrent(ffcn, Jfcn fun.Ss) (o *Brent) {
 //   is used in the other case. Therefore, the range of uncertainty is
 //   ensured to be reduced at least by the factor 1.6
 //
-func (o *Brent) Solve(xa, xb float64, verbose bool) (res float64) {
+func (o *Brent) Solve(xa, xb float64) (res float64) {
 
 	// basic variables and function evaluation
 	a := xa // the last but one approximation

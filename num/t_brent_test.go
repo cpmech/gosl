@@ -23,7 +23,7 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 	// Brent
 	io.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")
 	o := NewBrent(ffcnA, nil)
-	xbrent = o.Solve(xa, xb, false)
+	xbrent = o.Solve(xa, xb)
 	var ybrent float64
 	ybrent = ffcnA(xbrent)
 	io.Pforan("x      = %v\n", xbrent)
