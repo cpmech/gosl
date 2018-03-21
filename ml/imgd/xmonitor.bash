@@ -10,5 +10,6 @@ while true; do
     echo
     echo
     echo
-    go test -run Sample01
+    #go test -run Sample01
+    go test -run Board01
 done

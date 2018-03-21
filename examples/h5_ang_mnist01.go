@@ -10,7 +10,6 @@ import (
 	"image"
 	"image/color"
 	"image/png"
-	"math"
 	"os"
 	"path"
 
@@ -21,72 +20,6 @@ import (
 	"github.com/cpmech/gosl/rnd"
 	"github.com/cpmech/gosl/utl"
 )
-
-// Sample holds sample data
-type Sample struct {
-	idx    int       // position in X matrix
-	size   int       // total number of pixels = width*height
-	data   la.Vector // gray intensities
-	width  int       // number of row pixels
-	height int       // number of col pixels
-}
-
-// Samples holds a set of sample data
-type Samples []*Sample
-
-// NewSample returns a new sample data
-func NewSample(idx, size int, X *la.Matrix) (o *Sample) {
-	width := int(math.Sqrt(float64(size)))
-	height := size / width
-	return &Sample{
-		idx:    idx,
-		width:  width,
-		height: height,
-		size:   width * height,
-		data:   X.GetRow(idx),
-	}
-}
-
-// NewSamples returns a set of randomly selected samples
-func NewSamples(X *la.Matrix, nSelected int) (selected Samples) {
-	selected = make([]*Sample, nSelected)
-	nSamples := X.M   // rows of X
-	sampleSize := X.N // columns of X
-	idxSelected := rnd.IntGetUniqueN(0, nSamples, nSelected)
-	for i, idx := range idxSelected {
-		selected[i] = NewSample(idx, sampleSize, X)
-	}
-	return
-}
-
-// Paint paints sample into img
-func (o *Sample) Paint(img *image.Gray, row, col int, smin, smax float64) {
-	for i := 0; i < o.height; i++ {
-		for j := 0; j < o.width; j++ {
-			intensity := o.data[j+i*o.width] // row-major
-			scale := (intensity - smin) / (smax - smin)
-			clr := uint8(255 * scale)
-			img.Set(row+i, col+j, color.RGBA{clr, clr, clr, 255})
-		}
-	}
-}
-
-// Stat returns some statistics about all samples
-// smin and smax are the min and max intensities
-func (o *Samples) Stat() (smin, smax float64, maxWidth, maxHeight int) {
-	smin = math.MaxFloat64
-	smax = math.SmallestNonzeroFloat64
-	maxWidth = 0
-	maxHeight = 0
-	for _, sample := range *o {
-		min, max := sample.data.MinMax()
-		smin = utl.Min(smin, min)
-		smax = utl.Max(smax, max)
-		maxWidth = utl.Imax(maxWidth, sample.width)
-		maxHeight = utl.Imax(maxHeight, sample.height)
-	}
-	return
-}
 
 // Board holds figure/board data
 type Board struct {

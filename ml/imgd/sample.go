@@ -46,11 +46,16 @@ func NewGraySample(idx, size int, X *la.Matrix, rowMaj bool) (o *GraySample) {
 }
 
 // NewGraySamples returns a set of randomly selected samples
-func NewGraySamples(X *la.Matrix, nSelected int, rowMaj bool) (selected GraySamples) {
+func NewGraySamples(X *la.Matrix, nSelected int, rowMaj, random bool) (selected GraySamples) {
 	selected = make([]*GraySample, nSelected)
 	nSamples := X.M   // rows of X
 	sampleSize := X.N // columns of X
-	idxSelected := rnd.IntGetUniqueN(0, nSamples, nSelected)
+	var idxSelected []int
+	if random {
+		idxSelected = rnd.IntGetUniqueN(0, nSamples, nSelected)
+	} else {
+		idxSelected = utl.IntRange(nSelected)
+	}
 	for i, idx := range idxSelected {
 		selected[i] = NewGraySample(idx, sampleSize, X, rowMaj)
 	}

@@ -14,6 +14,11 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
+// GetGrayImage returns a gray image object
+func GetGrayImage(width, height, pad int) (img *image.Gray) {
+	return image.NewGray(image.Rect(0, 0, width+pad, height+pad))
+}
+
 // SavePng saves png figure
 func SavePng(outdir, fnameKey string, img image.Image) {
 
