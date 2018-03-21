@@ -7,6 +7,9 @@ package num
 import "math"
 
 // sgn returns a value with the same magnitude as a and the same sign as b
+//
+//  returns:  |a| * sign(b)
+//
 func sgn(a, b float64) float64 {
 	if b < 0 {
 		return -math.Abs(a) // return - |a|
@@ -33,11 +36,4 @@ func mov3(a, b, c *float64, d, e, f float64) {
 	*a = d
 	*b = e
 	*c = f
-}
-
-func signp(x float64) float64 {
-	if x < 0.0 {
-		return -1.0
-	}
-	return +1.0
 }

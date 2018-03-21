@@ -115,7 +115,7 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 		q = (b - c) * (fb - fa) // tiny is used to prevent any possible division by zero.
 		del = q - r
 		if math.Abs(del) < o.tiny {
-			del = signp(del) * o.tiny
+			del = sgn(o.tiny, del)
 		}
 		den = 2.0 * del
 		u = b - ((b-c)*q-(b-a)*r)/den
