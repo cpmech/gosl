@@ -5,6 +5,7 @@
 ## Summary
 
 * Machine Learning: Linear and Logistic Regressions
+* Machine Learning: Multi-class classification
 * Machine Learning: Clustering
 * Compute (fast) discrete Fourier transform
 * Generate and draw a NURBS toroidal surface
@@ -55,6 +56,19 @@ Source code: <a href="ml_ang02.go">ml_ang02.go</a>
 <div id="container">
 <p><img src="figs/ml_ang02.png" width="500"></p>
 </div>
+
+
+
+# Machine Learning: Multi-class classification
+
+## Multi-class classification using logistic regression
+
+Source code: <a href="ml_mclass01.go">ml_mclass01.go</a>
+
+<div id="container">
+<p><img src="figs/ml_mclass01.png" width="500"></p>
+</div>
+
 
 # Machine Learning: Clustering
 
