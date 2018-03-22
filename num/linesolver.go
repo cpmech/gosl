@@ -6,7 +6,10 @@ package num
 
 import (
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 // LineSolver finds the scalar λ that zeroes or minimizes f(x+λ⋅n)
@@ -72,4 +75,46 @@ func (o *LineSolver) H(λ float64) float64 {
 	la.VecAdd(o.y, 1, o.x, λ, o.n) // y := x + λ⋅n
 	o.Jfcn(o.dfdx, o.y)            // dfdx @ y
 	return la.VecDot(o.dfdx, o.n)  // dfdx ⋅ n
+}
+
+// PlotC plots contour for current x and n vectors
+//   i, j -- the indices in x[i] and x[j] to plot x[j] versus x[i]
+func (o *LineSolver) PlotC(i, j int, λ, xmin, xmax, ymin, ymax float64, npts int) {
+
+	// auxiliary
+	x2d := []float64{o.x[i], o.x[j]}
+	n2d := []float64{o.n[i], o.n[j]}
+	xvec := la.NewVector(len(o.x))
+	copy(xvec, o.x)
+
+	// contour
+	xx, yy, zz := utl.MeshGrid2dF(xmin, xmax, ymin, ymax, npts, npts, func(u, v float64) float64 {
+		xvec[i], xvec[j] = u, v
+		return o.ffcn(xvec)
+	})
+	plt.ContourF(xx, yy, zz, nil)
+	plt.PlotOne(x2d[0]+λ*n2d[0], x2d[1]+λ*n2d[1], &plt.A{C: "y", M: "o", NoClip: true})
+	plt.DrawArrow2d(x2d, n2d, false, 1, nil)
+	plt.Gll(io.Sf("$x_{%d}$", i), io.Sf("$x_{%d}$", j), nil)
+	plt.HideTRborders()
+}
+
+// PlotG plots g(λ) curve for current x and n vectors
+func (o *LineSolver) PlotG(λ, λmin, λmax float64, npts int, useBracket bool) {
+
+	// auxiliary
+	if useBracket {
+		λmin, _, λmax, _, _, _ = o.bracket.Min(0, 1)
+	}
+	ll := utl.LinSpace(λmin, λmax, npts)
+
+	// scalar function along n
+	gg := utl.GetMapped(ll, o.G)
+	plt.Plot(ll, gg, &plt.A{C: plt.C(0, 0), L: "$g(\\lambda)$", NoClip: true})
+	plt.PlotOne(λmin, o.G(λmin), &plt.A{C: "r", M: "|", Ms: 40, NoClip: true})
+	plt.PlotOne(λmax, o.G(λmax), &plt.A{C: "r", M: "|", Ms: 40, NoClip: true})
+	plt.PlotOne(λ, o.G(λ), &plt.A{C: "y", M: "o", NoClip: true})
+	plt.Cross(0, 0, nil)
+	plt.Gll("$\\lambda$", "$g(\\lambda)$", nil)
+	plt.HideTRborders()
 }
