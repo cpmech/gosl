@@ -8,6 +8,8 @@ while true; do
     echo
     echo
     echo
+    echo
+    echo
     go install
     go test -test.run="linipm01"
 done

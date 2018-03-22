@@ -15,10 +15,10 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
-func Test_linipm01(tst *testing.T) {
+func TestLinipm01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linipm01")
+	chk.PrintTitle("Linipm01. Small linear program")
 
 	// linear programming problem
 	//   min  -4*x0 - 5*x1
@@ -75,14 +75,14 @@ func Test_linipm01(tst *testing.T) {
 			func(x []float64) float64 { return g(x, 0) },
 			func(x []float64) float64 { return g(x, 1) },
 		)
-		plt.Save("/tmp/gosl/opt", "t_linipm01")
+		plt.Save("/tmp/gosl/opt", "linipm01")
 	}
 }
 
-func Test_linipm02(tst *testing.T) {
+func TestLinipm02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linipm02")
+	chk.PrintTitle("Linipm02. Small Linear program (slack)")
 
 	// linear program
 	//   min   2*x0 +   x1
@@ -153,10 +153,10 @@ func Test_linipm02(tst *testing.T) {
 	}
 }
 
-func Test_linipm03(tst *testing.T) {
+func TestLinipm03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("linipm03")
+	chk.PrintTitle("Linipm03. Read linear program from file")
 
 	t0 := time.Now()
 	defer func() { io.Pfblue2("\ntime elapsed = %v\n", time.Now().Sub(t0)) }()
