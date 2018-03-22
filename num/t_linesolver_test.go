@@ -99,3 +99,31 @@ func TestLineSolver02(tst *testing.T) {
 		plt.Save("/tmp/gosl/num", "linesolver02")
 	}
 }
+
+func TestLineSolver03(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("LineSolver03. Min with vertical n")
+
+	ffcn := func(x la.Vector) float64 {
+		return x[0]*x[0] + x[1]*x[1] - 0.5
+	}
+
+	io.Pf(". . .solution is @ halfway in x + n\n")
+	x := la.NewVectorSlice([]float64{0.5, -0.5})
+	n := la.NewVectorSlice([]float64{0, 1})
+	line := NewLineSolver(2, ffcn, nil)
+	λmin := line.Min(x, n)
+	chk.Float64(tst, "λroot", 1e-11, λmin, 0.5)
+	chk.Float64(tst, "g(λroot)", 1e-11, line.G(λmin), -0.250)
+
+	if chk.Verbose {
+		useBracket := true
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
+		plt.Subplot(2, 1, 1)
+		line.PlotC(0, 1, λmin, -1, 1, -1, 1, 41)
+		plt.Subplot(2, 1, 2)
+		line.PlotG(λmin, 0, 1, 101, useBracket)
+		plt.Save("/tmp/gosl/num", "linesolver03")
+	}
+}
