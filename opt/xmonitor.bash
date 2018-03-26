@@ -11,5 +11,5 @@ while true; do
     echo
     echo
     go install
-    go test -test.run="linipm01"
+    go test -run Powell01
 done
