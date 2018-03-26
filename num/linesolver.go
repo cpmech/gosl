@@ -58,6 +58,21 @@ func (o *LineSolver) Min(x, n la.Vector) (λ float64) {
 	return o.Brent.Min(λmin, λmax)
 }
 
+// MinUpdateX finds the scalar λ that minimizes f(x+λ⋅n), updates x and returns fmin = f({x})
+//  Input:
+//    x -- initial point
+//    n -- direction
+//  Output:
+//    λ -- scale parameter
+//    x -- x @ minimum
+//    fmin -- f({x})
+func (o *LineSolver) MinUpdateX(x, n la.Vector) (λ, fmin float64) {
+	λ = o.Min(x, n)
+	la.VecAdd(o.x, 1, x, λ, n) // x := x + λ⋅n
+	fmin = o.ffcn(o.x)
+	return
+}
+
 // Set sets x and n vectors as required by G(λ) and H(λ) functions
 func (o *LineSolver) Set(x, n la.Vector) {
 	o.x = x

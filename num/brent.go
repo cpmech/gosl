@@ -223,7 +223,7 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 //   within the given range, Fminbr returns 'a' (if f(a) < f(b)), otherwise
 //   it returns the right range boundary value b.
 //
-func (o *Brent) Min(xa, xb float64) (res float64) {
+func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 
 	// check
 	if xb < xa {
@@ -345,14 +345,14 @@ func (o *Brent) Min(xa, xb float64) (res float64) {
 //   given a bracketing triplet of abscissas ax, bx, cx [such that bx is between ax and cx, and
 //   f(bx) is less than both f(ax) and f(cx)], this routine isolates the minimum to a fractional
 //   precision of about tol using a modification of Brent’s method that uses derivatives. The
-//   abscissa of the minimum is returned as xmin, and the minimum function value is returned
+//   abscissa of the minimum is returned as xAtMin, and the minimum function value is returned
 //   as min, the returned function value.
 //
 //   REFERENCES:
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes:
 //       The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 //
-func (o *Brent) MinUseD(xa, xb float64) (xmin float64) {
+func (o *Brent) MinUseD(xa, xb float64) (xAtMin float64) {
 
 	// check
 	if o.Jfcn == nil {
@@ -399,8 +399,7 @@ func (o *Brent) MinUseD(xa, xb float64) (xmin float64) {
 		tol1 = o.Tol*math.Abs(x) + zeps
 		tol2 = 2.0 * tol1
 		if math.Abs(x-xm) <= (tol2 - 0.5*(b-a)) {
-			xmin = x
-			return
+			return x
 		}
 		if math.Abs(e) > tol1 {
 			d1 = 2.0 * (b - a)
@@ -463,8 +462,7 @@ func (o *Brent) MinUseD(xa, xb float64) (xmin float64) {
 			fu = o.ffcn(u)
 			o.NFeval++
 			if fu > fx {
-				xmin = x
-				return
+				return x
 			}
 		}
 		du = o.Jfcn(u)
