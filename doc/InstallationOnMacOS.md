@@ -29,6 +29,7 @@ Install dependencies with:
 brew install fftw
 brew install homebrew/science/openblas
 brew install suite-sparse
+brew install openmpi
 ```
 
 ## 3 Go language
