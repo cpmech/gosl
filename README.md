@@ -22,12 +22,14 @@ several tools for 2D/3D mesh generation to assist on the development of solvers 
 differential equations.
 
 A recent focus is now given to Machine Learning (see `ml` package) and Big Data (see `h5` package).
-Wrappers to powerful tools such as CNTK, TensorFlow, and Hadoop are being planned. A wrapper to
-OpenCV has been initiated as well.
+Wrappers to powerful tools such as CNTK, TensorFlow, and Hadoop are planned. A wrapper to OpenCV has
+been initiated as well.
 
 <div id="container">
 <p><a href="examples/figs/gosl-collage1.jpg"><img src="examples/figs/gosl-collage1-sml.png"></a></p>
 </div>
+
+See **Installation** section below. Gosl works on Windows, macOS, and Linux.
 
 1. [White papers available here](https://github.com/cpmech/gosl/tree/master/doc)
 2. [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
@@ -103,16 +105,27 @@ Selected:
 
 ## Installation
 
-Since Gosl needs some other C and Fortran codes, **not** all sub-packages can be directly installed
-using `go get ...`. Nonetheless, **Gosl is pretty easy to install!** See links below:
+Gosl works on Windows, macOS, and Linux.
+
+<div id="container">
+<p>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png"></a>
+</p>
+</div>
+
+Since Gosl needs some other C and Fortran libraries, **not** all sub-packages can be directly
+installed using `go get ...`. Nonetheless, **Gosl is pretty easy to install!** See links below:
 
 1. [Ubuntu](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md)
 2. [Windows](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
 3. [macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
 
-The following subpackages are available on Linux only at the moment: _mpi_, _la/mkl_, and _vtk_. The
-following subpackages are not available for Windows at the moment: _gm/tri_, _rnd/sfmt_, and
-_rnd/dsfmt_. Help to compile these packages in all platforms is much welcome and appreciated.
+The following subpackages are only available on Linux at the moment: _la/mkl_ and _vtk_. The
+following subpackages are not available for Windows: _mpi_, _gm/tri_, _rnd/sfmt_, and _rnd/dsfmt_.
+Your help to compile these packages in all platforms is much welcome and appreciated.
 
 
 
