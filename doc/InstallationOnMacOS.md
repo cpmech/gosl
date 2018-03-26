@@ -50,6 +50,8 @@ export GOPATH=/Users/name/mygo
 
 (or another location as desired)
 
+[More information is available here](https://github.com/cpmech/gosl/blob/master/doc/InstallAndTestGo.md)
+
 ## 4 Gosl
  
 Type the following commands:
