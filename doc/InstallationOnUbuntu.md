@@ -1,5 +1,9 @@
 # Installing Gosl on Ubuntu Linux (Debian)
 
+## 0. [Required] Install Go language
+
+[See instructions here](https://github.com/cpmech/gosl/blob/master/doc/InstallAndTestGo.md)
+
 ## 1. [Required] Install some dependencies:
 
 Type:
