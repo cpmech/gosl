@@ -1,5 +1,11 @@
 # Installing Gosl on Windows
 
+<div id="container">
+<p>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="icon-windows.png"></a>
+</p>
+</div>
+
 Below, two options to install Gosl (and Gcc) are presented:
 * __Option A__: Quick install using pre-compiled code (Windows 10 Installer)
 * __Option B__: Installing from sources (i.e. compiling Lapack and SuiteSparse)

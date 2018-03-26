@@ -1,5 +1,11 @@
 # Installing Gosl on macOS
 
+<div id="container">
+<p>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="icon-macos.png"></a>
+</p>
+</div>
+
 The installation on macOS includes:
 
 1. Xcode
