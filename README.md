@@ -21,15 +21,25 @@ the VTK, and much more. Gosl has also solvers to (stiff or not) ordinary differe
 several tools for 2D/3D mesh generation to assist on the development of solvers for partial
 differential equations.
 
-A recent focus is now given to Machine Learning (see `ml` package) and Big Data (see `h5` package).
-Wrappers to powerful tools such as CNTK, TensorFlow, and Hadoop are planned. A wrapper to OpenCV has
-been initiated as well.
-
 <div id="container">
 <p><a href="examples/figs/gosl-collage1.jpg"><img src="examples/figs/gosl-collage1-sml.png"></a></p>
 </div>
 
+<div id="container">
+<p>
 See **Installation** section below. Gosl works on Windows, macOS, and Linux.
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png"></a>
+</p>
+</div>
+
+A recent focus is now given to Machine Learning (see `ml` package) and Big Data (see `h5` package).
+Wrappers to powerful tools such as CNTK, TensorFlow, and Hadoop are planned. A wrapper to OpenCV has
+been initiated as well.
+
+**Resources**
 
 1. [White papers available here](https://github.com/cpmech/gosl/tree/master/doc)
 2. [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
