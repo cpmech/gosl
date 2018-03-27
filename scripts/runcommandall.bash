@@ -44,8 +44,10 @@ ALL="
 chk \
 io \
 utl \
+utl/al \
 plt \
 ml \
+ml/imgd \
 mpi \
 la  \
 la/mkl \
