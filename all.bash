@@ -42,11 +42,12 @@ done
 
 if [[ $platform != 'windows' ]]; then
     install_and_test mpi 1
+    install_and_test io/h5 1
 else
     install_and_test mpi 0
 fi
 
-for p in la/oblas la fun/dbf fun/fftw fun num/qpck num gm/rw gm/tri gm/msh gm graph opt ode; do
+for p in la/oblas la fun/dbf fun/fftw fun num/qpck num gm/rw gm/tri gm/msh gm graph opt; do
     install_and_test $p 1
 done
 
@@ -55,13 +56,7 @@ if [[ $platform != 'windows' ]]; then
     install_and_test rnd/dsfmt 1
 fi
 
-install_and_test rnd 1
-
-#if [[ $platform == 'linux' ]]; then
-#    install_and_test vtk 0 1
-#fi
-
-for p in io/h5 ml/imgd ml pde; do
+for p in rnd ml/imgd ml ode pde tsr; do
     install_and_test $p 1
 done
 
