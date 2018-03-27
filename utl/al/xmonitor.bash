@@ -18,9 +18,7 @@ while true; do
     echo
     echo
     echo
-    #go test -run Adata01
-    #go test -run Queue01
-    #go test -run LinkedList01
-    #go test -run LinkedList02
-    go test -run NaiveQuickSort
+    #go test -run "IntQueue01"
+    #go test -run "Float64Queue01"
+    go test -run "StringQueue01"
 done

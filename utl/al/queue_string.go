@@ -8,20 +8,20 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// TYPENAMEQueue implements a FIFO queue, a sequence where the first inserted will be the first removed.
+// StringQueue implements a FIFO queue, a sequence where the first inserted will be the first removed.
 // Think of arriving people at the Bank or DMV...
-type TYPENAMEQueue struct {
-	bfSize   int         // guessed buffer size
-	front    int         // index in ring of member at front
-	back     int         // index in ring of member at back
-	nMembers int         // current number of members
-	ring     []*DATATYPE // ring holds all data in a "ring fashion"
-	Debug    bool        // debug flag
+type StringQueue struct {
+	bfSize   int       // guessed buffer size
+	front    int       // index in ring of member at front
+	back     int       // index in ring of member at back
+	nMembers int       // current number of members
+	ring     []*string // ring holds all data in a "ring fashion"
+	Debug    bool      // debug flag
 }
 
-// NewTYPENAMEQueue returns a new object
-func NewTYPENAMEQueue(guessedBufferSize int) (o *TYPENAMEQueue) {
-	o = new(TYPENAMEQueue)
+// NewStringQueue returns a new object
+func NewStringQueue(guessedBufferSize int) (o *StringQueue) {
+	o = new(StringQueue)
 	o.bfSize = guessedBufferSize
 	o.front = -1 // indicates first ring
 	o.back = -1  // indicates first ring
@@ -29,7 +29,7 @@ func NewTYPENAMEQueue(guessedBufferSize int) (o *TYPENAMEQueue) {
 }
 
 // Front returns the member @ front of queue (close to the DMV window...) or nil if empty
-func (o *TYPENAMEQueue) Front() *DATATYPE {
+func (o *StringQueue) Front() *string {
 	if o.nMembers == 0 {
 		return nil
 	}
@@ -38,7 +38,7 @@ func (o *TYPENAMEQueue) Front() *DATATYPE {
 
 // Back returns the member @ back (unlucky guy/girl...) or nil if empty.
 // It is always the last item in the data array
-func (o *TYPENAMEQueue) Back() *DATATYPE {
+func (o *StringQueue) Back() *string {
 	if o.nMembers == 0 {
 		return nil
 	}
@@ -46,25 +46,25 @@ func (o *TYPENAMEQueue) Back() *DATATYPE {
 }
 
 // Nmembers returns the length of queue; i.e. the number of members
-func (o *TYPENAMEQueue) Nmembers() int {
+func (o *StringQueue) Nmembers() int {
 	return o.nMembers
 }
 
 // In receives a new member arrival
 // TODO: implement use of different grow rates
-func (o *TYPENAMEQueue) In(member DATATYPE) {
+func (o *StringQueue) In(member string) {
 
 	// debug
 	if o.Debug {
-		io.Pfgrey("in  : before: F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceTYPENAMEToString(o.ring))
+		io.Pfgrey("in  : before: F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceStringToString(o.ring))
 		defer func() {
-			io.Pfyel("in  : after : F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceTYPENAMEToString(o.ring))
+			io.Pfyel("in  : after : F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceStringToString(o.ring))
 		}()
 	}
 
 	// first ring
 	if o.front < 0 {
-		o.ring = make([]*DATATYPE, 1, o.bfSize+1)
+		o.ring = make([]*string, 1, o.bfSize+1)
 		o.ring[0] = &member
 		o.front = 0
 		o.back = o.front
@@ -85,13 +85,13 @@ func (o *TYPENAMEQueue) In(member DATATYPE) {
 
 // Out removes the member @ front and returns a pointer to him/her
 // TODO: implement memory recovery
-func (o *TYPENAMEQueue) Out() (member *DATATYPE) {
+func (o *StringQueue) Out() (member *string) {
 
 	// debug
 	if o.Debug {
-		io.Pfpink("out : before: F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceTYPENAMEToString(o.ring))
+		io.Pfpink("out : before: F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceStringToString(o.ring))
 		defer func() {
-			io.Pfpink("out : after : F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceTYPENAMEToString(o.ring))
+			io.Pfpink("out : after : F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceStringToString(o.ring))
 		}()
 	}
 
@@ -108,33 +108,33 @@ func (o *TYPENAMEQueue) Out() (member *DATATYPE) {
 }
 
 // String returns the string representation of this object
-func (o *TYPENAMEQueue) String() (l string) {
+func (o *StringQueue) String() (l string) {
 	if o.nMembers == 0 {
 		return "[]"
 	}
 	if o.back < o.front {
 		left := o.ring[o.front:]
 		right := o.ring[:o.back+1]
-		return "[" + sliceTYPENAMEToString(left) + " " + sliceTYPENAMEToString(right) + "]"
+		return "[" + sliceStringToString(left) + " " + sliceStringToString(right) + "]"
 	}
-	return "[" + sliceTYPENAMEToString(o.ring[o.front:o.back+1]) + "]"
+	return "[" + sliceStringToString(o.ring[o.front:o.back+1]) + "]"
 }
 
 // auxiliary ////////////////////////////////////////////////////////////////////////////////////
 
 // grow grows ring
-func (o *TYPENAMEQueue) grow() {
+func (o *StringQueue) grow() {
 
 	// debug
 	if o.Debug {
-		io.Pfblue("grow: before: F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceTYPENAMEToString(o.ring))
+		io.Pfblue("grow: before: F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceStringToString(o.ring))
 		defer func() {
-			io.Pfblue("grow: after : F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceTYPENAMEToString(o.ring))
+			io.Pfblue("grow: after : F=%d B=%d N=%d ring=%q\n", o.front, o.back, o.nMembers, sliceStringToString(o.ring))
 		}()
 	}
 
 	// temporary array
-	tmp := make([]*DATATYPE, o.nMembers+1, o.bfSize+o.nMembers+1)
+	tmp := make([]*string, o.nMembers+1, o.bfSize+o.nMembers+1)
 
 	// members are at different sides
 	if o.back < o.front {
@@ -154,8 +154,8 @@ func (o *TYPENAMEQueue) grow() {
 	o.ring = tmp
 }
 
-// sliceTYPENAMEToString string converts slice of pointers to string
-func sliceTYPENAMEToString(input []*DATATYPE) (l string) {
+// sliceStringToString string converts slice of pointers to string
+func sliceStringToString(input []*string) (l string) {
 	for i := 0; i < len(input); i++ {
 		if input[i] == nil {
 			continue

@@ -6,7 +6,7 @@ queue \
 recquicksort \
 "
 
-FNKEYS="recquicksort"
+FNKEYS="queue"
 
 TYPES[1]="int"
 NAMES[1]="Int"
@@ -25,5 +25,6 @@ for key in $FNKEYS; do
         fng="$key"_"$TYPE".go
         sed -e 's,DATATYPE,'"$TYPE"',g' \
             -e 's,TYPENAME,'"$NAME"',g' $fnt > $fng
+        gofmt -s -w $fng
     done
 done
