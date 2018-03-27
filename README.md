@@ -169,7 +169,6 @@ gocov() {
 * [utl](https://cover.run/go/github.com/cpmech/gosl/utl)             test coverage
 * [utl/al](https://cover.run/go/github.com/cpmech/gosl/utl/al)       test coverage
 * [fun/dbf](https://cover.run/go/github.com/cpmech/gosl/fun/dbf)     test coverage
-* [gm](https://cover.run/go/github.com/cpmech/gosl/gm)               test coverage
 * [gm/tri](https://cover.run/go/github.com/cpmech/gosl/gm/tri)       test coverage
 * [gm/rw](https://cover.run/go/github.com/cpmech/gosl/gm/rw)         test coverage
 * [rnd](https://cover.run/go/github.com/cpmech/gosl/rnd)             test coverage
