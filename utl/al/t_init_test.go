@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package al implements classical algorithms such as Queue, Stack and others
 package al
 
 import (
