@@ -4,10 +4,6 @@
 
 package al
 
-import (
-	"github.com/cpmech/gosl/chk"
-)
-
 // NaiveQuickSort is a Naive implementation of the quicksort algorithm (Hoare version)
 //
 //  compare -- returns:  +1 if a > b
@@ -54,6 +50,6 @@ func partition(A []int, lo, hi int, compare func(a, b int) int) int {
 		}
 		A[i], A[j] = A[j], A[i]
 	}
-	chk.Panic("partition failed\n")
-	return 0 // unreachable
+	//chk.Panic("partition failed\n")
+	//return 0 // unreachable
 }
