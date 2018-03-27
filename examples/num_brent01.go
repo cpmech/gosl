@@ -25,19 +25,18 @@ func main() {
 	xa, xb := 0.0, 0.11
 
 	// initialise solver
-	var o num.Brent
-	o.Init(yx)
+	solver := num.NewBrent(yx, nil)
 
 	// solve
-	xo := o.Solve(xa, xb, false)
+	xo := solver.Root(xa, xb)
 
 	// output
 	yo := yx(xo)
 	io.Pf("\n")
 	io.Pf("x      = %v\n", xo)
 	io.Pf("f(x)   = %v\n", yo)
-	io.Pf("nfeval = %v\n", o.NFeval)
-	io.Pf("niter. = %v\n", o.It)
+	io.Pf("nfeval = %v\n", solver.NFeval)
+	io.Pf("niter. = %v\n", solver.It)
 
 	// plotting
 	npts := 101
