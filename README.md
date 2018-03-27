@@ -48,7 +48,7 @@ See <b>Installation</b> section below. Gosl works on Windows, macOS, and Linux.
 
 ## Contents (sub-packages)
 
-Gosl includes the following _packages_:
+Gosl includes the following _sub-packages_:
 1.  [chk](https://github.com/cpmech/gosl/tree/master/chk)             &ndash; Check code and unit test tools
 2.  [io](https://github.com/cpmech/gosl/tree/master/io)               &ndash; Input/output, read/write files, and print commands
 3.  [io/h5](https://github.com/cpmech/gosl/tree/master/io/h5)         &ndash; Read/write HDF5 (Big Data) files
@@ -58,7 +58,7 @@ Gosl includes the following _packages_:
 7.  [mpi](https://github.com/cpmech/gosl/tree/master/mpi)             &ndash; Message Passing Interface for parallel computing
 8.  [la](https://github.com/cpmech/gosl/tree/master/la)               &ndash; Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions, etc.
 9.  [la/mkl](https://github.com/cpmech/gosl/tree/master/la/mkl)       &ndash; Lower level linear algebra using Intel MKL
-10.  [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas)   &ndash; Lower level linear algebra using OpenBLAS
+10. [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas)   &ndash; Lower level linear algebra using OpenBLAS
 11. [num/qpck](https://github.com/cpmech/gosl/tree/master/num/qpck)   &ndash; Go wrapper to QUADPACK for numerical integration
 12. [num](https://github.com/cpmech/gosl/tree/master/num)             &ndash; Fundamental numerical methods such as root solvers, non-linear solvers, numerical derivatives and quadrature
 13. [fun](https://github.com/cpmech/gosl/tree/master/fun)             &ndash; Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
@@ -162,9 +162,38 @@ gocov() {
 }
 ```
 
-Some results from `cover.run`:
+### Results from cover.run
 
-* [chk](https://cover.run/go/github.com/cpmech/gosl/chk)
+1.  [chk](https://cover.run/go/github.com/cpmech/gosl/chk)             test coverage
+2.  [io](https://cover.run/go/github.com/cpmech/gosl/io)               test coverage
+3.  [io/h5](https://cover.run/go/github.com/cpmech/gosl/io/h5)         test coverage
+4.  [utl](https://cover.run/go/github.com/cpmech/gosl/utl)             test coverage
+5.  [utl/al](https://cover.run/go/github.com/cpmech/gosl/utl/al)       test coverage
+6.  [plt](https://cover.run/go/github.com/cpmech/gosl/plt)             test coverage
+7.  [mpi](https://cover.run/go/github.com/cpmech/gosl/mpi)             test coverage
+8.  [la](https://cover.run/go/github.com/cpmech/gosl/la)               test coverage
+9.  [la/mkl](https://cover.run/go/github.com/cpmech/gosl/la/mkl)       test coverage
+10. [la/oblas](https://cover.run/go/github.com/cpmech/gosl/la/oblas)   test coverage
+11. [num/qpck](https://cover.run/go/github.com/cpmech/gosl/num/qpck)   test coverage
+12. [num](https://cover.run/go/github.com/cpmech/gosl/num)             test coverage
+13. [fun](https://cover.run/go/github.com/cpmech/gosl/fun)             test coverage
+14. [fun/dbf](https://cover.run/go/github.com/cpmech/gosl/fun/dbf)     test coverage
+15. [fun/fftw](https://cover.run/go/github.com/cpmech/gosl/fun/fftw)   test coverage
+16. [gm](https://github.com/cpmech/gosl/tree/master/gm)                test coverage
+17. [gm/msh](https://cover.run/go/github.com/cpmech/gosl/gm/msh)       test coverage
+18. [gm/tri](https://cover.run/go/github.com/cpmech/gosl/gm/tri)       test coverage
+19. [gm/rw](https://cover.run/go/github.com/cpmech/gosl/gm/rw)         test coverage
+20. [graph](https://cover.run/go/github.com/cpmech/gosl/graph)         test coverage
+21. [opt](https://cover.run/go/github.com/cpmech/gosl/opt)             test coverage
+22. [rnd](https://cover.run/go/github.com/cpmech/gosl/rnd)             test coverage
+23. [rnd/dsfmt](https://cover.run/go/github.com/cpmech/gosl/rnd/dsfmt) test coverage
+24. [rnd/sfmt](https://cover.run/go/github.com/cpmech/gosl/rnd/sfmt)   test coverage
+25. [vtk](https://cover.run/go/github.com/cpmech/gosl/vtk)             test coverage
+26. [ode](https://cover.run/go/github.com/cpmech/gosl/ode)             test coverage
+27. [ml](https://cover.run/go/github.com/cpmech/gosl/ml)               test coverage
+28. [ml/imgd](https://cover.run/go/github.com/cpmech/gosl/ml/imgd)     test coverage
+29. [pde](https://cover.run/go/github.com/cpmech/gosl/pde)             test coverage
+30. [tsr](https://cover.run/go/github.com/cpmech/gosl/tsr)             test coverage
 
 
 
