@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package benchmark contains some benchmark tests using Gosl.
+// NOTE: this is NOT a Go package actually.
+// This file is created as required by some tools such as go vet and eslint.
 package benchmark
 
 // NaiveVecDot is the naive version of la.VecDot
