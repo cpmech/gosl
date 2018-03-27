@@ -18,7 +18,7 @@ Type:
 sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
 sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
 sudo apt-get install libfftw3-dev libfftw3-mpi-dev libmetis-dev
-sudo apt-get install liblapacke-dev libopenblas-dev git
+sudo apt-get install liblapacke-dev libopenblas-dev libhdf5-dev git
 ```
 
 ## 2. [Optional] Install Intel MKL
