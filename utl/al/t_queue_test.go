@@ -102,6 +102,7 @@ func TestQueue01(tst *testing.T) {
 
 	io.PfYel("\nOut(a)\n")
 	res = ToString(qu.Out())
+	chk.String(tst, res, "a")
 	chk.String(tst, "[a b v]", io.Sf("%v", qu.ring))
 	chk.String(tst, "[b]", qu.String())
 	chk.String(tst, ToString(qu.Front()), "b")
@@ -134,6 +135,7 @@ func TestQueue01(tst *testing.T) {
 
 	io.PfYel("\nOut(b)\n")
 	res = ToString(qu.Out())
+	chk.String(tst, res, "b")
 	chk.String(tst, "[b a c x]", io.Sf("%v", qu.ring))
 	chk.String(tst, "[a c x]", qu.String())
 	chk.String(tst, ToString(qu.Front()), "a")
@@ -142,6 +144,7 @@ func TestQueue01(tst *testing.T) {
 
 	io.PfYel("\nOut(a)\n")
 	res = ToString(qu.Out())
+	chk.String(tst, res, "a")
 	chk.String(tst, "[b a c x]", io.Sf("%v", qu.ring))
 	chk.String(tst, "[c x]", qu.String())
 	chk.String(tst, ToString(qu.Front()), "c")
@@ -150,6 +153,7 @@ func TestQueue01(tst *testing.T) {
 
 	io.PfYel("\nOut(c)\n")
 	res = ToString(qu.Out())
+	chk.String(tst, res, "c")
 	chk.String(tst, "[b a c x]", io.Sf("%v", qu.ring))
 	chk.String(tst, "[x]", qu.String())
 	chk.String(tst, ToString(qu.Front()), "x")
@@ -158,6 +162,7 @@ func TestQueue01(tst *testing.T) {
 
 	io.PfYel("\nOut(x)\n")
 	res = ToString(qu.Out())
+	chk.String(tst, res, "x")
 	chk.String(tst, "[b a c x]", io.Sf("%v", qu.ring))
 	chk.String(tst, "[]", qu.String())
 	chk.Int(tst, "len(queue)", qu.Nmembers(), 0)
