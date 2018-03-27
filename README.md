@@ -25,16 +25,6 @@ differential equations.
 <p><a href="examples/figs/gosl-collage1.jpg"><img src="examples/figs/gosl-collage1-sml.png"></a></p>
 </div>
 
-<div id="container">
-<p>
-See **Installation** section below. Gosl works on Windows, macOS, and Linux.
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png"></a>
-</p>
-</div>
-
 A recent focus is now given to Machine Learning (see `ml` package) and Big Data (see `h5` package).
 Wrappers to powerful tools such as CNTK, TensorFlow, and Hadoop are planned. A wrapper to OpenCV has
 been initiated as well.
@@ -46,8 +36,19 @@ been initiated as well.
 functions and use structures).
 3. [Welcome to contributing](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md) + TODO list.
 
+<div id="container">
+<p>
+See <b>Installation</b> section below. Gosl works on Windows, macOS, and Linux.
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png" alt="Installation on Windows" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png" alt="Installation on macOS" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png" alt="Installation on Linux/Debian/Ubuntu" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
+</p>
+</div>
 
-## Contents
+
+
+## Contents (sub-packages)
 
 Gosl includes the following _packages_:
 1.  [chk](https://github.com/cpmech/gosl/tree/master/chk)             &ndash; Check code and unit test tools
@@ -115,14 +116,14 @@ Selected:
 
 ## Installation
 
-Gosl works on Windows, macOS, and Linux.
+Gosl works on Windows, macOS, and Linux (Debian/Ubuntu).
 
 <div id="container">
 <p>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png" alt="Installation on Windows" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png" alt="Installation on macOS" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png" alt="Installation on Linux/Debian/Ubuntu" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
 </p>
 </div>
 
