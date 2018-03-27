@@ -32,11 +32,8 @@ Download and install HomeBrew from https://brew.sh
 Install dependencies with:
 
 ```
-brew install gcc
-brew install fftw
-brew install openblas
-brew install suite-sparse
-brew install openmpi
+brew install gcc fftw hdf5
+brew install openblas suite-sparse openmpi
 ```
 
 ## 3 Go language
