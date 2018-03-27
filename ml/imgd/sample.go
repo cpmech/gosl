@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package imgd (image-data) adds functionality to process image-data,
+// e.g. for pattern recognition using images.
 package imgd
 
 import (
