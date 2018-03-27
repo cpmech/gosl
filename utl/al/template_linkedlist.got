@@ -7,31 +7,31 @@ package al
 
 import "github.com/cpmech/gosl/io"
 
-// LinkedNode defines a node in a Doubly Linked List
-type LinkedNode struct {
-	prev *LinkedNode
-	next *LinkedNode
-	Data Adata
+// DATATYPELinkedNode defines a node in a Doubly Linked List
+type DATATYPELinkedNode struct {
+	prev *DATATYPELinkedNode
+	next *DATATYPELinkedNode
+	Data DATATYPE
 }
 
-// LinkedList defines Doubly Linked List
-type LinkedList struct {
-	root *LinkedNode // root has prev always <nil>
+// DATATYPELinkedList defines Doubly Linked List
+type DATATYPELinkedList struct {
+	root *DATATYPELinkedNode // root has prev always <nil>
 }
 
-// NewLinkedList returns a new Doubly Linked List object
-func NewLinkedList() (o *LinkedList) {
-	o = new(LinkedList)
+// NewDATATYPELinkedList returns a new Doubly Linked List object
+func NewDATATYPELinkedList() (o *DATATYPELinkedList) {
+	o = new(DATATYPELinkedList)
 	return
 }
 
 // Insert inserts data just after root and returns the inserted node
-func (o *LinkedList) Insert(data Adata) (newNode *LinkedNode) {
+func (o *DATATYPELinkedList) Insert(data DATATYPE) (newNode *DATATYPELinkedNode) {
 	if o.root == nil { // first node
-		o.root = &LinkedNode{nil, nil, data}
+		o.root = &DATATYPELinkedNode{nil, nil, data}
 		return o.root
 	}
-	newNode = &LinkedNode{
+	newNode = &DATATYPELinkedNode{
 		prev: o.root,
 		next: o.root.next,
 		Data: data,
@@ -44,7 +44,7 @@ func (o *LinkedList) Insert(data Adata) (newNode *LinkedNode) {
 }
 
 // Remove removes node from Doubly Linked List
-func (o *LinkedList) Remove(node *LinkedNode) {
+func (o *DATATYPELinkedList) Remove(node *DATATYPELinkedNode) {
 	if node == nil { // nothing to remove
 		return
 	}
@@ -61,7 +61,7 @@ func (o *LinkedList) Remove(node *LinkedNode) {
 
 // Traverse traverses the Doubly Linked List and executes action(node)
 // Note action(node) may never be called if there aren't any nodes in the list
-func (o *LinkedList) Traverse(action func(node *LinkedNode) (stop bool)) {
+func (o *DATATYPELinkedList) Traverse(action func(node *DATATYPELinkedNode) (stop bool)) {
 	if o.root == nil { // list is empty
 		return
 	}
@@ -79,11 +79,11 @@ func (o *LinkedList) Traverse(action func(node *LinkedNode) (stop bool)) {
 }
 
 // Find finds a node by traversing the list and comparing a to b
-func (o *LinkedList) Find(condition func(node *LinkedNode) bool) (found *LinkedNode) {
+func (o *DATATYPELinkedList) Find(condition func(node *DATATYPELinkedNode) bool) (found *DATATYPELinkedNode) {
 	if o.root == nil { // list is empty
 		return
 	}
-	o.Traverse(func(node *LinkedNode) (stop bool) {
+	o.Traverse(func(node *DATATYPELinkedNode) (stop bool) {
 		if condition(node) {
 			found = node
 			return true // stop
@@ -94,10 +94,10 @@ func (o *LinkedList) Find(condition func(node *LinkedNode) bool) (found *LinkedN
 }
 
 // String returns a string representation of this list, after traversing all nodes
-func (o *LinkedList) String() (l string) {
+func (o *DATATYPELinkedList) String() (l string) {
 	first := true
 	l = "["
-	o.Traverse(func(node *LinkedNode) (stop bool) {
+	o.Traverse(func(node *DATATYPELinkedNode) (stop bool) {
 		if !first {
 			l += " "
 		}

@@ -10,20 +10,20 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// Queue implements a FIFO queue, a sequence where the first inserted will be the first removed.
+// DATATYPEQueue implements a FIFO queue, a sequence where the first inserted will be the first removed.
 // Think of arriving people at the Bank or DMV...
-type Queue struct {
-	bfSize   int     // guessed buffer size
-	front    int     // index in ring of member at front
-	back     int     // index in ring of member at back
-	nMembers int     // current number of members
-	ring     []Adata // ring holds all data in a "ring fashion"
-	Debug    bool    // debug flag
+type DATATYPEQueue struct {
+	bfSize   int        // guessed buffer size
+	front    int        // index in ring of member at front
+	back     int        // index in ring of member at back
+	nMembers int        // current number of members
+	ring     []DATATYPE // ring holds all data in a "ring fashion"
+	Debug    bool       // debug flag
 }
 
-// NewQueue returns a new object
-func NewQueue(guessedBufferSize int) (o *Queue) {
-	o = new(Queue)
+// NewDATATYPEQueue returns a new object
+func NewDATATYPEQueue(guessedBufferSize int) (o *DATATYPEQueue) {
+	o = new(DATATYPEQueue)
 	o.bfSize = guessedBufferSize
 	o.front = -1 // indicates first ring
 	o.back = -1  // indicates first ring
@@ -31,7 +31,7 @@ func NewQueue(guessedBufferSize int) (o *Queue) {
 }
 
 // Front returns the member @ front of queue (close to the DMV window...) or nil if empty
-func (o *Queue) Front() Adata {
+func (o *DATATYPEQueue) Front() DATATYPE {
 	if o.nMembers == 0 {
 		return nil
 	}
@@ -40,7 +40,7 @@ func (o *Queue) Front() Adata {
 
 // Back returns the member @ back (unlucky guy/girl...) or nil if empty.
 // It is always the last item in the data array
-func (o *Queue) Back() Adata {
+func (o *DATATYPEQueue) Back() DATATYPE {
 	if o.nMembers == 0 {
 		return nil
 	}
@@ -48,13 +48,13 @@ func (o *Queue) Back() Adata {
 }
 
 // Nmembers returns the length of queue; i.e. the number of members
-func (o *Queue) Nmembers() int {
+func (o *DATATYPEQueue) Nmembers() int {
 	return o.nMembers
 }
 
 // In receives a new member arrival
 // TODO: implement use of different grow rates
-func (o *Queue) In(member Adata) {
+func (o *DATATYPEQueue) In(member DATATYPE) {
 
 	// debug
 	if o.Debug {
@@ -66,7 +66,7 @@ func (o *Queue) In(member Adata) {
 
 	// first ring
 	if o.front < 0 {
-		o.ring = make([]Adata, 1, o.bfSize+1)
+		o.ring = make([]DATATYPE, 1, o.bfSize+1)
 		o.ring[0] = member
 		o.front = 0
 		o.back = o.front
@@ -87,7 +87,7 @@ func (o *Queue) In(member Adata) {
 
 // Out removes the member @ front and returns a pointer to him/her
 // TODO: implement memory recovery
-func (o *Queue) Out() (member Adata) {
+func (o *DATATYPEQueue) Out() (member DATATYPE) {
 
 	// debug
 	if o.Debug {
@@ -110,7 +110,7 @@ func (o *Queue) Out() (member Adata) {
 }
 
 // String returns the string representation of this object
-func (o *Queue) String() (l string) {
+func (o *DATATYPEQueue) String() (l string) {
 	if o.nMembers == 0 {
 		return "[]"
 	}
@@ -125,7 +125,7 @@ func (o *Queue) String() (l string) {
 // auxiliary ////////////////////////////////////////////////////////////////////////////////////
 
 // grow grows ring
-func (o *Queue) grow() {
+func (o *DATATYPEQueue) grow() {
 
 	// debug
 	if o.Debug {
@@ -136,7 +136,7 @@ func (o *Queue) grow() {
 	}
 
 	// temporary array
-	tmp := make([]Adata, o.nMembers+1, o.bfSize+o.nMembers+1)
+	tmp := make([]DATATYPE, o.nMembers+1, o.bfSize+o.nMembers+1)
 
 	// members are at different sides
 	if o.back < o.front {
