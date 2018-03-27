@@ -7,31 +7,31 @@ package al
 
 import "github.com/cpmech/gosl/io"
 
-// TYPENAMELinkedNode defines a node in a Doubly Linked List
-type TYPENAMELinkedNode struct {
-	prev *TYPENAMELinkedNode
-	next *TYPENAMELinkedNode
-	Data *DATATYPE
+// IntLinkedNode defines a node in a Doubly Linked List
+type IntLinkedNode struct {
+	prev *IntLinkedNode
+	next *IntLinkedNode
+	Data *int
 }
 
-// TYPENAMELinkedList defines Doubly Linked List
-type TYPENAMELinkedList struct {
-	root *TYPENAMELinkedNode // root has prev always <nil>
+// IntLinkedList defines Doubly Linked List
+type IntLinkedList struct {
+	root *IntLinkedNode // root has prev always <nil>
 }
 
-// NewTYPENAMELinkedList returns a new Doubly Linked List object
-func NewTYPENAMELinkedList() (o *TYPENAMELinkedList) {
-	o = new(TYPENAMELinkedList)
+// NewIntLinkedList returns a new Doubly Linked List object
+func NewIntLinkedList() (o *IntLinkedList) {
+	o = new(IntLinkedList)
 	return
 }
 
 // Insert inserts data just after root and returns the inserted node
-func (o *TYPENAMELinkedList) Insert(data DATATYPE) (newNode *TYPENAMELinkedNode) {
+func (o *IntLinkedList) Insert(data int) (newNode *IntLinkedNode) {
 	if o.root == nil { // first node
-		o.root = &TYPENAMELinkedNode{nil, nil, &data}
+		o.root = &IntLinkedNode{nil, nil, &data}
 		return o.root
 	}
-	newNode = &TYPENAMELinkedNode{
+	newNode = &IntLinkedNode{
 		prev: o.root,
 		next: o.root.next,
 		Data: &data,
@@ -44,7 +44,7 @@ func (o *TYPENAMELinkedList) Insert(data DATATYPE) (newNode *TYPENAMELinkedNode)
 }
 
 // Remove removes node from Doubly Linked List
-func (o *TYPENAMELinkedList) Remove(node *TYPENAMELinkedNode) {
+func (o *IntLinkedList) Remove(node *IntLinkedNode) {
 	if node == nil { // nothing to remove
 		return
 	}
@@ -61,7 +61,7 @@ func (o *TYPENAMELinkedList) Remove(node *TYPENAMELinkedNode) {
 
 // Traverse traverses the Doubly Linked List and executes action(node)
 // Note action(node) may never be called if there aren't any nodes in the list
-func (o *TYPENAMELinkedList) Traverse(action func(node *TYPENAMELinkedNode) (stop bool)) {
+func (o *IntLinkedList) Traverse(action func(node *IntLinkedNode) (stop bool)) {
 	if o.root == nil { // list is empty
 		return
 	}
@@ -79,11 +79,11 @@ func (o *TYPENAMELinkedList) Traverse(action func(node *TYPENAMELinkedNode) (sto
 }
 
 // Find finds a node by traversing the list and comparing a to b
-func (o *TYPENAMELinkedList) Find(condition func(node *TYPENAMELinkedNode) bool) (found *TYPENAMELinkedNode) {
+func (o *IntLinkedList) Find(condition func(node *IntLinkedNode) bool) (found *IntLinkedNode) {
 	if o.root == nil { // list is empty
 		return
 	}
-	o.Traverse(func(node *TYPENAMELinkedNode) (stop bool) {
+	o.Traverse(func(node *IntLinkedNode) (stop bool) {
 		if condition(node) {
 			found = node
 			return true // stop
@@ -94,10 +94,10 @@ func (o *TYPENAMELinkedList) Find(condition func(node *TYPENAMELinkedNode) bool)
 }
 
 // String returns a string representation of this list, after traversing all nodes
-func (o *TYPENAMELinkedList) String() (l string) {
+func (o *IntLinkedList) String() (l string) {
 	first := true
 	l = "["
-	o.Traverse(func(node *TYPENAMELinkedNode) (stop bool) {
+	o.Traverse(func(node *IntLinkedNode) (stop bool) {
 		if !first {
 			l += " "
 		}

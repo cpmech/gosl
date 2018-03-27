@@ -20,5 +20,8 @@ while true; do
     echo
     #go test -run "IntQueue01"
     #go test -run "Float64Queue01"
-    go test -run "StringQueue01"
+    #go test -run "StringQueue01"
+    #go test -run "IntLinkedList"
+    go test -run "Float64LinkedList"
+    #go test -run "StringLinkedList"
 done

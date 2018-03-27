@@ -6,8 +6,6 @@ queue \
 recquicksort \
 "
 
-FNKEYS="queue"
-
 TYPES[1]="int"
 NAMES[1]="Int"
 

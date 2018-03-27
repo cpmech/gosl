@@ -7,31 +7,31 @@ package al
 
 import "github.com/cpmech/gosl/io"
 
-// TYPENAMELinkedNode defines a node in a Doubly Linked List
-type TYPENAMELinkedNode struct {
-	prev *TYPENAMELinkedNode
-	next *TYPENAMELinkedNode
-	Data *DATATYPE
+// Float64LinkedNode defines a node in a Doubly Linked List
+type Float64LinkedNode struct {
+	prev *Float64LinkedNode
+	next *Float64LinkedNode
+	Data *float64
 }
 
-// TYPENAMELinkedList defines Doubly Linked List
-type TYPENAMELinkedList struct {
-	root *TYPENAMELinkedNode // root has prev always <nil>
+// Float64LinkedList defines Doubly Linked List
+type Float64LinkedList struct {
+	root *Float64LinkedNode // root has prev always <nil>
 }
 
-// NewTYPENAMELinkedList returns a new Doubly Linked List object
-func NewTYPENAMELinkedList() (o *TYPENAMELinkedList) {
-	o = new(TYPENAMELinkedList)
+// NewFloat64LinkedList returns a new Doubly Linked List object
+func NewFloat64LinkedList() (o *Float64LinkedList) {
+	o = new(Float64LinkedList)
 	return
 }
 
 // Insert inserts data just after root and returns the inserted node
-func (o *TYPENAMELinkedList) Insert(data DATATYPE) (newNode *TYPENAMELinkedNode) {
+func (o *Float64LinkedList) Insert(data float64) (newNode *Float64LinkedNode) {
 	if o.root == nil { // first node
-		o.root = &TYPENAMELinkedNode{nil, nil, &data}
+		o.root = &Float64LinkedNode{nil, nil, &data}
 		return o.root
 	}
-	newNode = &TYPENAMELinkedNode{
+	newNode = &Float64LinkedNode{
 		prev: o.root,
 		next: o.root.next,
 		Data: &data,
@@ -44,7 +44,7 @@ func (o *TYPENAMELinkedList) Insert(data DATATYPE) (newNode *TYPENAMELinkedNode)
 }
 
 // Remove removes node from Doubly Linked List
-func (o *TYPENAMELinkedList) Remove(node *TYPENAMELinkedNode) {
+func (o *Float64LinkedList) Remove(node *Float64LinkedNode) {
 	if node == nil { // nothing to remove
 		return
 	}
@@ -61,7 +61,7 @@ func (o *TYPENAMELinkedList) Remove(node *TYPENAMELinkedNode) {
 
 // Traverse traverses the Doubly Linked List and executes action(node)
 // Note action(node) may never be called if there aren't any nodes in the list
-func (o *TYPENAMELinkedList) Traverse(action func(node *TYPENAMELinkedNode) (stop bool)) {
+func (o *Float64LinkedList) Traverse(action func(node *Float64LinkedNode) (stop bool)) {
 	if o.root == nil { // list is empty
 		return
 	}
@@ -79,11 +79,11 @@ func (o *TYPENAMELinkedList) Traverse(action func(node *TYPENAMELinkedNode) (sto
 }
 
 // Find finds a node by traversing the list and comparing a to b
-func (o *TYPENAMELinkedList) Find(condition func(node *TYPENAMELinkedNode) bool) (found *TYPENAMELinkedNode) {
+func (o *Float64LinkedList) Find(condition func(node *Float64LinkedNode) bool) (found *Float64LinkedNode) {
 	if o.root == nil { // list is empty
 		return
 	}
-	o.Traverse(func(node *TYPENAMELinkedNode) (stop bool) {
+	o.Traverse(func(node *Float64LinkedNode) (stop bool) {
 		if condition(node) {
 			found = node
 			return true // stop
@@ -94,10 +94,10 @@ func (o *TYPENAMELinkedList) Find(condition func(node *TYPENAMELinkedNode) bool)
 }
 
 // String returns a string representation of this list, after traversing all nodes
-func (o *TYPENAMELinkedList) String() (l string) {
+func (o *Float64LinkedList) String() (l string) {
 	first := true
 	l = "["
-	o.Traverse(func(node *TYPENAMELinkedNode) (stop bool) {
+	o.Traverse(func(node *Float64LinkedNode) (stop bool) {
 		if !first {
 			l += " "
 		}
