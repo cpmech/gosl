@@ -40,7 +40,7 @@ for p in chk io utl plt; do
     install_and_test $p 1
 done
 
-if [[ $platform == 'linux' ]]; then
+if [[ $platform != 'windows' ]]; then
     install_and_test mpi 1
 else
     install_and_test mpi 0

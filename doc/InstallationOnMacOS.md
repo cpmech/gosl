@@ -32,8 +32,9 @@ Download and install HomeBrew from https://brew.sh
 Install dependencies with:
 
 ```
+brew install gcc
 brew install fftw
-brew install homebrew/science/openblas
+brew install openblas
 brew install suite-sparse
 brew install openmpi
 ```
