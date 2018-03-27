@@ -31,10 +31,10 @@ been initiated as well.
 
 **Resources**
 
-1. [White papers available here](https://github.com/cpmech/gosl/tree/master/doc)
-2. [See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
-functions and use structures).
-3. [Welcome to contributing](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md) + TODO list.
+1. [Examples](examples/README.md)
+2. [White papers](https://github.com/cpmech/gosl/tree/master/doc)
+3. [Documentation](https://godoc.org/github.com/cpmech/gosl)
+4. [Contributing and TODO](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md)
 
 <div id="container">
 <p>
