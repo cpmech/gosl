@@ -6,8 +6,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/cpmech/gosl)](https://goreportcard.com/report/github.com/cpmech/gosl)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/avelino/awesome-go)
 
-[cover.run chk](https://cover.run/go/github.com/cpmech/gosl/chk)
-
 Gosl is a library written in [Go](https://golang.org) to develop high-performance scientific
 computations. The library tries to be as general and _easy_ as possible. Gosl considers the use of
 both Go concurrency routines and parallel computing using the message passing interface. Gosl has
@@ -31,7 +29,7 @@ been initiated as well.
 
 **Resources**
 
-1. [Examples](examples/README.md)
+1. [Examples](examples/README.md) and [benchmarks](examples/benchmark/README.md)
 2. [White papers](https://github.com/cpmech/gosl/tree/master/doc)
 3. [Documentation](https://godoc.org/github.com/cpmech/gosl)
 4. [Contributing and TODO](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md)
@@ -87,32 +85,6 @@ We are currently working on the following additional packages:
 <li>img - Image and machine learning algorithms for images</li>
 <li>img/ocv - Wrapper to OpenCV</li>
 </ol>
-
-
-
-## Examples
-
-[See all examples here](examples/README.md)
-
-[See benchmarks here](examples/benchmark/README.md)
-
-Selected:
-
-* [Compute (fast) discrete Fourier transform](examples/fun_fft01.go)
-* [Generate and draw a NURBS toroidal surface](examples/gm_nurbs03.go)
-* [Generating normally distributed pseudo-random numbers](examples/rnd_normalDistribution.go)
-* [Solution of sparse linear system](examples/la_HLsparseReal01.go)
-* [Solution of sparse linear system with complex numbers](examples/la_HLsparseComplex01.go)
-* [Numerical differentiation](examples/num_deriv01.go)
-* [Drawing iso-surfaces with VTK](examples/vtk_isosurf01.go)
-* [Plotting a contour](examples/plt_contour01.go)
-* [Root finding problems](examples/num_brent01.go)
-* [B-splines: curve, control, and basis](examples/gm_bspline02.go)
-* [Orthogonal polynomials](examples/fun_orthopoly01.go)
-* [Chebyshev interpolation](examples/fun_laginterp01.go)
-* [Fourier interpolation](examples/fun_fourierinterp01.go)
-* [Solving ordinary differential equations](examples/ode_hweq11.go)
-
 
 
 
@@ -172,6 +144,27 @@ case, functions named `Init` have to be called.
 The directories corresponding to each package have a README.md file that should help with
 understanding the library. Also, there are links to `godoc.org` where all functions, structures, and
 variables are well explained.
+
+
+
+## Test coverage
+
+We aim for a 100% test coverage! Despite trying our best to accomplish this goal, full coverage is
+difficult, in particular with (sub)packages that involve `Panic` or `figure generation`.
+Nonetheless, critical algorithms are completely tested.
+
+We use the following `bash` macro frequently to check our test coverage:
+
+```bash
+gocov() {
+    go test -coverprofile=/tmp/cv.out
+    go tool cover -html=/tmp/cv.out
+}
+```
+
+Some results from `cover.run`:
+
+* [chk](https://cover.run/go/github.com/cpmech/gosl/chk)
 
 
 
