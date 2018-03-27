@@ -36,7 +36,7 @@ type Data struct {
 // NewData returns a new object to hold ML data
 //  Input:
 //    nSamples  -- number of data samples (rows in X)
-//    nFeatures -- number of features (columsn in X)
+//    nFeatures -- number of features (columns in X)
 //    useY      -- use y data vector
 //    allocate  -- allocates X (and Y); otherwise, X and Y must be set externally
 //  Output:

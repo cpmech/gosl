@@ -134,7 +134,7 @@ func TestLogReg01b(tst *testing.T) {
 		{0.5, 1.00, 1.5, 1},
 	})
 
-	// parameteres
+	// parameters
 	params := NewParamsReg(data.Nfeatures)
 	params.SetThetas([]float64{-1, 1, 2})
 	params.SetBias(-2)
