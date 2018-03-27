@@ -54,8 +54,8 @@ func NewPlotterReg(data *Data, params *ParamsReg, reg Regression, mapper DataMap
 	o.ArgsYmodel = &plt.A{C: plt.C(0, 0), M: "None", Ls: "-", NoClip: true}
 	o.ArgsYclasses = make(map[int]*plt.A)
 	o.ArgsYbinary = map[int]*plt.A{
-		0: &plt.A{C: plt.C(0, 0), M: "o", Ls: "None", NoClip: true},
-		1: &plt.A{C: plt.C(2, 0), M: "*", Ls: "None", NoClip: true, Mec: plt.C(2, 0), Ms: 8},
+		0: {C: plt.C(0, 0), M: "o", Ls: "None", NoClip: true},
+		1: {C: plt.C(2, 0), M: "*", Ls: "None", NoClip: true, Mec: plt.C(2, 0), Ms: 8},
 	}
 	nMaxClassesIni := 10
 	for k := 0; k < nMaxClassesIni; k++ {
