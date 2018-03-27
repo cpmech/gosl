@@ -162,38 +162,24 @@ gocov() {
 }
 ```
 
-### Results from cover.run
+### Some results from cover.run
 
-1.  [chk](https://cover.run/go/github.com/cpmech/gosl/chk)             test coverage
-2.  [io](https://cover.run/go/github.com/cpmech/gosl/io)               test coverage
-3.  [io/h5](https://cover.run/go/github.com/cpmech/gosl/io/h5)         test coverage
-4.  [utl](https://cover.run/go/github.com/cpmech/gosl/utl)             test coverage
-5.  [utl/al](https://cover.run/go/github.com/cpmech/gosl/utl/al)       test coverage
-6.  [plt](https://cover.run/go/github.com/cpmech/gosl/plt)             test coverage
-7.  [mpi](https://cover.run/go/github.com/cpmech/gosl/mpi)             test coverage
-8.  [la](https://cover.run/go/github.com/cpmech/gosl/la)               test coverage
-9.  [la/mkl](https://cover.run/go/github.com/cpmech/gosl/la/mkl)       test coverage
-10. [la/oblas](https://cover.run/go/github.com/cpmech/gosl/la/oblas)   test coverage
-11. [num/qpck](https://cover.run/go/github.com/cpmech/gosl/num/qpck)   test coverage
-12. [num](https://cover.run/go/github.com/cpmech/gosl/num)             test coverage
-13. [fun](https://cover.run/go/github.com/cpmech/gosl/fun)             test coverage
-14. [fun/dbf](https://cover.run/go/github.com/cpmech/gosl/fun/dbf)     test coverage
-15. [fun/fftw](https://cover.run/go/github.com/cpmech/gosl/fun/fftw)   test coverage
-16. [gm](https://github.com/cpmech/gosl/tree/master/gm)                test coverage
-17. [gm/msh](https://cover.run/go/github.com/cpmech/gosl/gm/msh)       test coverage
-18. [gm/tri](https://cover.run/go/github.com/cpmech/gosl/gm/tri)       test coverage
-19. [gm/rw](https://cover.run/go/github.com/cpmech/gosl/gm/rw)         test coverage
-20. [graph](https://cover.run/go/github.com/cpmech/gosl/graph)         test coverage
-21. [opt](https://cover.run/go/github.com/cpmech/gosl/opt)             test coverage
-22. [rnd](https://cover.run/go/github.com/cpmech/gosl/rnd)             test coverage
-23. [rnd/dsfmt](https://cover.run/go/github.com/cpmech/gosl/rnd/dsfmt) test coverage
-24. [rnd/sfmt](https://cover.run/go/github.com/cpmech/gosl/rnd/sfmt)   test coverage
-25. [vtk](https://cover.run/go/github.com/cpmech/gosl/vtk)             test coverage
-26. [ode](https://cover.run/go/github.com/cpmech/gosl/ode)             test coverage
-27. [ml](https://cover.run/go/github.com/cpmech/gosl/ml)               test coverage
-28. [ml/imgd](https://cover.run/go/github.com/cpmech/gosl/ml/imgd)     test coverage
-29. [pde](https://cover.run/go/github.com/cpmech/gosl/pde)             test coverage
-30. [tsr](https://cover.run/go/github.com/cpmech/gosl/tsr)             test coverage
+* [chk](https://cover.run/go/github.com/cpmech/gosl/chk)             test coverage
+* [io](https://cover.run/go/github.com/cpmech/gosl/io)               test coverage
+* [utl](https://cover.run/go/github.com/cpmech/gosl/utl)             test coverage
+* [utl/al](https://cover.run/go/github.com/cpmech/gosl/utl/al)       test coverage
+* [la](https://cover.run/go/github.com/cpmech/gosl/la)               test coverage
+* [la/mkl](https://cover.run/go/github.com/cpmech/gosl/la/mkl)       test coverage
+* [la/oblas](https://cover.run/go/github.com/cpmech/gosl/la/oblas)   test coverage
+* [num/qpck](https://cover.run/go/github.com/cpmech/gosl/num/qpck)   test coverage
+* [fun/dbf](https://cover.run/go/github.com/cpmech/gosl/fun/dbf)     test coverage
+* [gm](https://github.com/cpmech/gosl/tree/master/gm)                test coverage
+* [gm/tri](https://cover.run/go/github.com/cpmech/gosl/gm/tri)       test coverage
+* [gm/rw](https://cover.run/go/github.com/cpmech/gosl/gm/rw)         test coverage
+* [rnd](https://cover.run/go/github.com/cpmech/gosl/rnd)             test coverage
+* [rnd/dsfmt](https://cover.run/go/github.com/cpmech/gosl/rnd/dsfmt) test coverage
+* [rnd/sfmt](https://cover.run/go/github.com/cpmech/gosl/rnd/sfmt)   test coverage
+* [tsr](https://cover.run/go/github.com/cpmech/gosl/tsr)             test coverage
 
 
 
