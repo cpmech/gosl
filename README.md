@@ -168,18 +168,13 @@ gocov() {
 * [io](https://cover.run/go/github.com/cpmech/gosl/io)               test coverage
 * [utl](https://cover.run/go/github.com/cpmech/gosl/utl)             test coverage
 * [utl/al](https://cover.run/go/github.com/cpmech/gosl/utl/al)       test coverage
-* [la](https://cover.run/go/github.com/cpmech/gosl/la)               test coverage
-* [la/mkl](https://cover.run/go/github.com/cpmech/gosl/la/mkl)       test coverage
-* [la/oblas](https://cover.run/go/github.com/cpmech/gosl/la/oblas)   test coverage
-* [num/qpck](https://cover.run/go/github.com/cpmech/gosl/num/qpck)   test coverage
 * [fun/dbf](https://cover.run/go/github.com/cpmech/gosl/fun/dbf)     test coverage
-* [gm](https://github.com/cpmech/gosl/tree/master/gm)                test coverage
+* [gm](https://cover.run/go/github.com/cpmech/gosl/gm)               test coverage
 * [gm/tri](https://cover.run/go/github.com/cpmech/gosl/gm/tri)       test coverage
 * [gm/rw](https://cover.run/go/github.com/cpmech/gosl/gm/rw)         test coverage
 * [rnd](https://cover.run/go/github.com/cpmech/gosl/rnd)             test coverage
 * [rnd/dsfmt](https://cover.run/go/github.com/cpmech/gosl/rnd/dsfmt) test coverage
 * [rnd/sfmt](https://cover.run/go/github.com/cpmech/gosl/rnd/sfmt)   test coverage
-* [tsr](https://cover.run/go/github.com/cpmech/gosl/tsr)             test coverage
 
 
 

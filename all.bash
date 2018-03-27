@@ -61,7 +61,7 @@ install_and_test rnd 1
 #    install_and_test vtk 0 1
 #fi
 
-for p in ml/imgd ml pde; do
+for p in io/h5 ml/imgd ml pde; do
     install_and_test $p 1
 done
 
