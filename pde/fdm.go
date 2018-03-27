@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package pde implements numerical methods for the solution of Partial Differential Equations.
+// For example, this package includes the Finite Difference and the Spectral Collocation methods.
 package pde
 
 import (
