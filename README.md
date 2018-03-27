@@ -80,10 +80,10 @@ Gosl includes the following _packages_:
 27. [ml](https://github.com/cpmech/gosl/tree/master/ml)               &ndash; Machine learning algorithms
 28. [ml/imgd](https://github.com/cpmech/gosl/tree/master/ml/imgd)     &ndash; Machine learning. Auxiliary functions for handling images
 29. [pde](https://github.com/cpmech/gosl/tree/master/pde)             &ndash; Solvers for partial differential equations (FDM, Spectral, FEM)
+30. [tsr](https://github.com/cpmech/gosl/tree/master/tsr)             &ndash; Tensors, continuum mechanics, and tensor algebra (e.g. eigendyads)
 
 We are currently working on the following additional packages:
-<ol start="27">
-<li>tsr - Tensors, continuum mechanics, and tensor algebra (eigendyads)</li>
+<ol start="31">
 <li>img - Image and machine learning algorithms for images</li>
 <li>img/ocv - Wrapper to OpenCV</li>
 </ol>
