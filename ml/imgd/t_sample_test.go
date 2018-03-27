@@ -32,12 +32,12 @@ func TestSample01(tst *testing.T) {
 
 	smin, smax := 0.0, 1.0
 
-	A := NewGraySample(0, 16, charsX, true) // A
-	chk.Int(tst, "idx", A.idx, 0)
-	chk.Int(tst, "width", A.width, 4)
-	chk.Int(tst, "height", A.height, 4)
-	img := A.GetImage(10)
-	A.Paint(img, 2, 2, smin, smax)
+	sampleA := NewGraySample(0, 16, charsX, true) // A
+	chk.Int(tst, "idx", sampleA.idx, 0)
+	chk.Int(tst, "width", sampleA.width, 4)
+	chk.Int(tst, "height", sampleA.height, 4)
+	img := sampleA.GetImage(10)
+	sampleA.Paint(img, 2, 2, smin, smax)
 
 	io.Pl()
 	chk.Int(tst, "A: pix@(2,2)", int(img.GrayAt(2, 2).Y), 0)
@@ -64,11 +64,11 @@ func TestSample01(tst *testing.T) {
 	chk.Int(tst, "A: pix@(5,5)", int(img.GrayAt(5, 5).Y), 255)
 
 	io.Pl()
-	C := NewGraySample(1, 16, charsX, true) // C
-	chk.Int(tst, "idx", C.idx, 1)
-	chk.Int(tst, "width", C.width, 4)
-	chk.Int(tst, "height", C.height, 4)
-	C.Paint(img, 8, 8, smin, smax)
+	sampleC := NewGraySample(1, 16, charsX, true) // C
+	chk.Int(tst, "idx", sampleC.idx, 1)
+	chk.Int(tst, "width", sampleC.width, 4)
+	chk.Int(tst, "height", sampleC.height, 4)
+	sampleC.Paint(img, 8, 8, smin, smax)
 
 	io.Pl()
 	chk.Int(tst, "C: pix@( 8, 8)", int(img.GrayAt(8, 8).Y), 255)
