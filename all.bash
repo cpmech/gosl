@@ -36,7 +36,7 @@ install_and_test(){
     cd $HERE
 }
 
-for p in chk io utl plt; do
+for p in chk io utl/al utl plt; do
     install_and_test $p 1
 done
 
@@ -60,6 +60,10 @@ install_and_test rnd 1
 #if [[ $platform == 'linux' ]]; then
 #    install_and_test vtk 0 1
 #fi
+
+for p in ml/imgd ml pde; do
+    install_and_test $p 1
+done
 
 echo
 echo "=== SUCCESS! ============================================================"
