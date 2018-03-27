@@ -9,6 +9,6 @@ package qpck
 
 #cgo windows LDFLAGS: -lopenblas -lgfortran -lm
 
-#cgo darwin LDFLAGS: -L/usr/local/opt/openblas/lib -L/usr/local/Cellar/gcc/7.3.0/lib/gcc/7/ -lopenblas -lgfortran -lm
+#cgo darwin LDFLAGS: -L/usr/local/opt/openblas/lib -L/usr/local/Cellar/gcc/7.3.0_1/lib/gcc/7/ -lopenblas -lgfortran -lm
 */
 import "C"
