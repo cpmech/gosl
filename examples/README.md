@@ -1,28 +1,27 @@
 # Gosl Examples
 
-[See benchmark examples here](benchmark/README.md)
+[See also benchmarks here](benchmark/README.md)
 
-## Summary
+After installing Gosl, most of the examples below can be executed using
 
-* Machine Learning: Linear and Logistic Regressions
-* Machine Learning: Multi-class classification
-* Machine Learning: Clustering
-* Compute (fast) discrete Fourier transform
-* Generate and draw a NURBS toroidal surface
-* Generating normally distributed pseudo-random numbers
-* Visualising Triplets for sparse matrix input
-* Solution of sparse linear system
-* Solution of sparse linear system with complex numbers
-* Numerical differentiation
-* Drawing iso-surfaces with VTK
-* Plotting a contour
-* Root finding problems
-* B-splines: curve, control, and basis
-* Orthogonal polynomials
-* Lagrange interpolation using Chebyshev points
-* Fourier interpolation
-* Solving ordinary differential equations
-* Plotting Big-O complexity chart
+```bash
+./all.bash
+```
+
+
+
+# Note about extra data files
+
+Some few examples may need [extra data files that are available here](https://sourceforge.net/projects/gosl-installer/files/).
+Nonetheless, these examples are not executed by `all.bash` by default. Thus, you may not need to worry about the extra files!
+
+If you want to execute the extra examples, an environment variable named `GOSLDATA` pointing to the
+location of the extra data files is required. For instance:
+
+```bash
+export GOSLDATA=$HOME/Download/GoslDataFiles
+```
+
 
 
 # Machine Learning: Linear and Logistic Regressions
