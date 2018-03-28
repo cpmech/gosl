@@ -137,6 +137,32 @@ cp api/fftw3.h ../include/
 cp .libs/libfftw3.a ../lib/
 ```
 
+### Download and Compile HDF5
+
+Download cmake-3.11.0-rc4-win64-x64.msi from https://cmake.org/download/ and save it into your Downloads directory. Then, proceed with the (straightfoward) installation of CMake.
+
+Download *hdf5-1.10.1.tar.bz2* from https://www.hdfgroup.org/downloads/hdf5/source-code/ and save it into  `C:\TDM-GCC-64`
+
+Extract HDF5 as follows
+```bash
+cd /c/TDM-GCC-64
+tar xjf hdf5-1.10.1.tar.bz2
+```
+
+Load CMake (click on its icon from the Start Menu). On the CMake GUI, set:
+* Where is the source code = C:/TDM-GCC-64/hdf5-1.10.1
+* Where to build the binaries = C:/TDM-GCC-64/build_hdf5
+* Click _Configure_ and choose `MinGW Makefiles`
+* All default options are OK (initially in red)
+* Click _Configure_ again
+* Then, click _Generate_
+
+Compile HDF5 with the following commands:
+```bash
+cd /c/TDM-GCC-64/build_hdf5
+make
+```
+
 ### Build Gosl
 
 Open Git Bash and type:
