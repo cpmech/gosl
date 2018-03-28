@@ -249,7 +249,7 @@ func TestLogReg03(tst *testing.T) {
 
 	// train using analytical solution
 	model.Train()
-	chk.Float64(tst, "\ncost", 1e-15, model.Cost(), 2.034977015894404e-01)
+	chk.Float64(tst, "\ncost", 1e-14, model.Cost(), 2.034977015894404e-01)
 	chk.Array(tst, "θ", 1e-8, params.AccessThetas(), []float64{2.062317052577260e-01, 2.014715922708144e-01})
 	chk.Float64(tst, "b", 1e-6, params.GetBias(), -2.516133256589910e+01)
 
