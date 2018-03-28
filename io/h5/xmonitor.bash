@@ -8,6 +8,7 @@ while true; do
     echo
     echo
     echo
-    #go test -test.run="Basic01b"
-    go test
+    echo
+    echo
+    go test -run "Data01"
 done

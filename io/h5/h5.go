@@ -221,11 +221,16 @@ func (o *File) deGobRnkDims() (rnk int, dims []int, length int) {
 // auxiliary functions /////////////////////////////////////////////////////////////////////////
 
 func filepath(dir, fnameKey string, useGob bool) (filename, fileurl string) {
-	ext := ".h5"
-	if useGob {
-		ext = ".gob"
+	ext := io.FnExt(fnameKey)
+	if ext != "" {
+		filename = fnameKey
+	} else {
+		ext = ".h5"
+		if useGob {
+			ext = ".gob"
+		}
+		filename = fnameKey + ext
 	}
-	filename = fnameKey + ext
 	fileurl = path.Join(os.ExpandEnv(dir), filename)
 	return
 }

@@ -1,28 +1,28 @@
 # Gosl Examples
 
-[See benchmark examples here](benchmark/README.md)
+After installing Gosl, most of the examples below can be executed using
 
-## Summary
+```bash
+./all.bash
+```
 
-* Machine Learning: Linear and Logistic Regressions
-* Machine Learning: Multi-class classification
-* Machine Learning: Clustering
-* Compute (fast) discrete Fourier transform
-* Generate and draw a NURBS toroidal surface
-* Generating normally distributed pseudo-random numbers
-* Visualising Triplets for sparse matrix input
-* Solution of sparse linear system
-* Solution of sparse linear system with complex numbers
-* Numerical differentiation
-* Drawing iso-surfaces with VTK
-* Plotting a contour
-* Root finding problems
-* B-splines: curve, control, and basis
-* Orthogonal polynomials
-* Lagrange interpolation using Chebyshev points
-* Fourier interpolation
-* Solving ordinary differential equations
-* Plotting Big-O complexity chart
+[See also benchmark tests](benchmark/README.md).
+
+
+
+## Note about extra data files
+
+Some few examples need [extra data files that are available here](https://sourceforge.net/projects/gosl-installer/files/).
+Nonetheless, these examples are not executed by `all.bash` automatically.
+Thus, you may not need to worry about the extra files!
+
+If you want to execute the extra examples, an environment variable named `GOSLDATA` pointing to the
+location of the extra data files is required. For instance:
+
+```bash
+export GOSLDATA=$HOME/GoslDataFiles
+```
+
 
 
 # Machine Learning: Linear and Logistic Regressions
@@ -70,6 +70,7 @@ Source code: <a href="ml_mclass01.go">ml_mclass01.go</a>
 </div>
 
 
+
 # Machine Learning: Clustering
 
 ## K-means Example 1
@@ -81,6 +82,22 @@ Source code: <a href="ml_kmeans01.go">ml_kmeans01.go</a>
 <div id="container">
 <p><img src="figs/ml_kmeans01.png" width="500"></p>
 </div>
+
+
+
+# Reading HDF5 files (e.g. from Matlab/Octave)
+
+This example reads the MNIST subset data given in Prof. Andrew Ng's course.
+
+[The data file is available here](https://sourceforge.net/projects/gosl-installer/files/)
+and the environment variable `GOSLDATA` must be defined as explained above.
+
+Source code: <a href="h5_ang_mnist01.go">h5_ang_mnist01.go</a>
+
+<div id="container">
+<p><img src="figs/angEx4data1fig.png"></p>
+</div>
+
 
 
 # Compute (fast) discrete Fourier transform
