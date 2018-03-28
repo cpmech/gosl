@@ -1,25 +1,26 @@
 # Gosl Examples
 
-[See also benchmarks here](benchmark/README.md)
-
 After installing Gosl, most of the examples below can be executed using
 
 ```bash
 ./all.bash
 ```
 
+[See also benchmark tests](benchmark/README.md).
 
 
-# Note about extra data files
 
-Some few examples may need [extra data files that are available here](https://sourceforge.net/projects/gosl-installer/files/).
-Nonetheless, these examples are not executed by `all.bash` by default. Thus, you may not need to worry about the extra files!
+## Note about extra data files
+
+Some few examples need [extra data files that are available here](https://sourceforge.net/projects/gosl-installer/files/).
+Nonetheless, these examples are not executed by `all.bash` automatically.
+Thus, you may not need to worry about the extra files!
 
 If you want to execute the extra examples, an environment variable named `GOSLDATA` pointing to the
 location of the extra data files is required. For instance:
 
 ```bash
-export GOSLDATA=$HOME/Download/GoslDataFiles
+export GOSLDATA=$HOME/GoslDataFiles
 ```
 
 
@@ -69,6 +70,7 @@ Source code: <a href="ml_mclass01.go">ml_mclass01.go</a>
 </div>
 
 
+
 # Machine Learning: Clustering
 
 ## K-means Example 1
@@ -80,6 +82,22 @@ Source code: <a href="ml_kmeans01.go">ml_kmeans01.go</a>
 <div id="container">
 <p><img src="figs/ml_kmeans01.png" width="500"></p>
 </div>
+
+
+
+# Reading HDF5 files (e.g. from Matlab/Octave)
+
+This example reads the MNIST subset data given in Prof. Andrew Ng's course.
+
+[The data file is available here](https://sourceforge.net/projects/gosl-installer/files/)
+and the environment variable `GOSLDATA` must be defined as explained above.
+
+Source code: <a href="h5_ang_mnist01.go">h5_ang_mnist01.go</a>
+
+<div id="container">
+<p><img src="figs/angEx4data1fig.png"></p>
+</div>
+
 
 
 # Compute (fast) discrete Fourier transform
