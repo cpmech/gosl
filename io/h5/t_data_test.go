@@ -16,6 +16,7 @@ func TestData01(tst *testing.T) {
 	chk.PrintTitle("Data01. Reading data exported from Matlab")
 
 	dat := Open("./data", "hdf5_sample_from_matlab_online.h5", false)
+	defer dat.Close()
 	M := dat.GetDeep2("/M")
 	chk.Deep2(tst, "M", 1e-15, M, [][]float64{
 		{1, 2, 3},
