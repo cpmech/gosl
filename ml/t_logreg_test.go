@@ -186,8 +186,8 @@ func TestLogReg02(tst *testing.T) {
 	io.Pforan("cost = %v\n", model.Cost())
 	io.Pforan("θ = %v\n", params.AccessThetas())
 	io.Pforan("b = %v\n", params.GetBias())
-	chk.Float64(tst, "cost", 1e-15, model.Cost(), 0.0007850399226816407)
-	chk.Array(tst, "θ", 1e-14, params.AccessThetas(), []float64{24.488302802315026, 24.48830280231502})
+	chk.Float64(tst, "cost", 1e-14, model.Cost(), 0.0007850399226816407)
+	chk.Array(tst, "θ", 1e-13, params.AccessThetas(), []float64{24.488302802315026, 24.48830280231502})
 	chk.Float64(tst, "b", 1e-14, params.GetBias(), 6.183574567556589)
 
 	// plot

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !windows,!darwin
+// +build !windows
 
 // Package h5 wraps the HDF5 library. HDF5 is a data model, library, and file format for storing and
 // managing data.
