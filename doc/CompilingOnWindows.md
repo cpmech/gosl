@@ -2,7 +2,7 @@
 
 # 1 Git+Bash
 
-1. Install *Git+Bash* from https://git-scm.com/download/win **IMPORTANT** install Git+Bash on `C:\Git` or `D:\Git` but NOT on "C:\Program Files" because MinGW fails due to the space in "Program Files."
+1. Install *Git+Bash* from https://git-scm.com/download/win **IMPORTANT** install Git+Bash on `C:\Git` or `D:\Git` but NOT on "C:\Program Files" because MinGW fails due to the space in "Program Files." [Screenshot of suggested "Select Destination Location"](https://github.com/cpmech/gosl/blob/master/doc/git-installation-windows-must-be-on-c-drive.png)
 
 
 
@@ -10,7 +10,7 @@
 
 1. Download and Install TDM64-GCC (tdm64-gcc-5.1.0-2.exe) from http://tdm-gcc.tdragon.net/download
 2. IMPORTANT: Make sure to select the 64-bit version
-3. IMPORTANT: Make sure to select **fortran** under **gcc** (TDM64 Current: 5.1.0-tdm64-1)
+3. IMPORTANT: Make sure to select **fortran** under **gcc** (TDM64 Current: 5.1.0-tdm64-1) [Screenshot of "New Installation: Choose Components"](https://github.com/cpmech/gosl/blob/master/doc/tdm64-gcc-with-fortran.png)
 4. Install TDM64-GCC to `C:\TDM-GCC-64`
 5. IMPORTANT: Duplicate **mingw32-make.exe** located in C:\TDM-GCC-64\bin an rename it to **make** (without .exe)
 
@@ -20,7 +20,7 @@
 
 1. Download and Install Go (go1.10.windows-amd64.msi) from https://golang.org/dl/
 2. Create the directory `C:\MyGo`
-3. Set environment variable `GOPATH = C:\MyGo` (press WindowsKey + R or run sysdm.cpl)
+3. Set environment variable `GOPATH = C:\MyGo` (press WindowsKey + R or run sysdm.cpl) [Screenshot of "Setting Environment Variables"](https://github.com/cpmech/gosl/blob/master/doc/go-environment-variables.png)
 4. Close any Git+Bash terminals
 
 
