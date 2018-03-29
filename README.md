@@ -47,12 +47,13 @@ Gosl works on Windows, macOS, and Linux.
 
 <div id="container">
 <p>
-Click on the corresponding platform:
+Click on
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png" alt="Installation on Windows" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png" alt="Installation on macOS" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png" alt="Installation on Linux/Debian/Ubuntu" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-ubuntu.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
+for installation instructions.
 </p>
 </div>
 
