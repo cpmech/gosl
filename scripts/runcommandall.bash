@@ -43,6 +43,7 @@ fi
 ALL="
 chk \
 io \
+io/h5 \
 utl \
 utl/al \
 plt \
