@@ -11,9 +11,9 @@ package h5
 
 // constants from H5Tpublic.h
 #ifdef WIN32
-	int H5LONG() { return H5T_NATIVE_LLONG; }
+	hid_t H5LONG() { return H5T_NATIVE_LLONG; }
 #else
-	int H5LONG() { return H5T_NATIVE_LONG; }
+	hid_t H5LONG() { return H5T_NATIVE_LONG; }
 #endif
 */
 import "C"
