@@ -4,6 +4,7 @@
 <p>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="icon-linux.png"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="icon-debian.png"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="icon-ubuntu.png"></a>
 </p>
 </div>
 
