@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/cpmech/gosl)](https://goreportcard.com/report/github.com/cpmech/gosl)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/avelino/awesome-go)
 
-Gosl is a [Go](https://golang.org) library to develop Artificial Intelligence and High-performance
+Gosl is a [Go](https://golang.org) library to develop Artificial Intelligence and High-Performance
 Scientific Computations.
 
 <div id="container">
