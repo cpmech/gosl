@@ -76,18 +76,16 @@ cp .libs/libfftw3.a ../lib/
 https://cmake.org/download/
 8.2 Proceed with the straightforward installation of CMake
 
-# 9. HDF5 [Not working yet]
-9.1 Download HDF5 source code (hdf5-1.8.20.tar.bz2, under
-"Distributions containing Unix line endings [bzip2]") from
-https://support.hdfgroup.org/HDF5/release/obtainsrc518.html and save
+# 9. HDF5
+9.1 Download HDF5 source code (hdf5-1.8.16.tar.bz2) from https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8/hdf5-1.8.16/src/ and save
 it into `C:\TDM-GCC-64`
 9.2 Run the following commands (in a Git+Bash terminal)
 ```bash
 cd /c/TDM-GCC-64
-tar xjf hdf5-1.8.20.tar.bz2
+tar xjf hdf5-1.8.16.tar.bz2
 ```
 9.3 Load CMake by clicking on its icon (Start Menu)
-9.4 Set `Where is the source code = C:/TDM-GCC-64/hdf5-1.8.20`
+9.4 Set `Where is the source code = C:/TDM-GCC-64/hdf5-1.8.16`
 9.5 Set `Where to build the binaries = C:/TDM-GCC-64/build_hdf5`
 9.6 Click **Configure**
 9.7 Select **MinGW Makefiles** under _Specify the generator for this project_

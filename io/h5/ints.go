@@ -2,14 +2,18 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !windows
-
 package h5
 
 /*
 #include "hdf5.h"
 #include "hdf5_hl.h"
 #include "stdlib.h"
+
+#ifdef WIN32
+	#define H5LONG H5T_NATIVE_LLONG
+#else
+	#define H5LONG H5T_NATIVE_LONG
+#endif
 */
 import "C"
 
@@ -76,7 +80,7 @@ func (o *File) putInts(path string, dims []int, dat []int) {
 	// HDF5
 	rnk := C.int(len(dims))
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		return C.H5LTmake_dataset_long(o.hdfHandle, cp, rnk, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.long)(unsafe.Pointer(&dat[0])))
+		return C.H5LTmake_dataset(o.hdfHandle, cp, rnk, (*C.hsize_t)(unsafe.Pointer(&dims[0])), C.H5LONG, unsafe.Pointer(&dat[0]))
 	})
 }
 
@@ -93,7 +97,7 @@ func (o *File) putIntsNoGroup(path string, dat []int) {
 	cpth := C.CString(path)
 	defer C.free(unsafe.Pointer(cpth))
 	dims := []int{len(dat)}
-	st := C.H5LTmake_dataset_long(o.hdfHandle, cpth, 1, (*C.hsize_t)(unsafe.Pointer(&dims[0])), (*C.long)(unsafe.Pointer(&dat[0])))
+	st := C.H5LTmake_dataset(o.hdfHandle, cpth, 1, (*C.hsize_t)(unsafe.Pointer(&dims[0])), C.H5LONG, unsafe.Pointer(&dat[0]))
 	if st < 0 {
 		chk.Panic("cannot put int array with path=%q in file <%s>", path, o.furl)
 	}
@@ -147,7 +151,7 @@ func (o *File) getInts(path string, isScalar, isMatrix bool) (dims, dat []int) {
 		}
 		dat = make([]int, dims[0])
 	}
-	st = C.H5LTread_dataset_long(o.hdfHandle, cpth, (*C.long)(unsafe.Pointer(&dat[0])))
+	st = C.H5LTread_dataset(o.hdfHandle, cpth, C.H5LONG, unsafe.Pointer(&dat[0]))
 	if st < 0 {
 		chk.Panic("cannot read dataset with path=%q in file=<%s>", path, o.furl)
 	}

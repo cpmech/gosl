@@ -36,13 +36,12 @@ install_and_test(){
     cd $HERE
 }
 
-for p in chk io utl/al utl plt; do
+for p in chk io io/h5 utl/al utl plt; do
     install_and_test $p 1
 done
 
 if [[ $platform != 'windows' ]]; then
     install_and_test mpi 1
-    install_and_test io/h5 1
 else
     install_and_test mpi 0
 fi
