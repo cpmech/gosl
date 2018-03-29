@@ -19,11 +19,11 @@ Gosl works on Windows, macOS, and Linux.
 <div id="container">
 <p>
 Click on
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png" alt="Installation on Windows" align="middle"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png" alt="Installation on macOS" align="middle"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png" alt="Installation on Linux/Debian/Ubuntu" align="middle"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-ubuntu.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="icon-windows.png" alt="Installation on Windows" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="icon-macos.png" alt="Installation on macOS" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="icon-linux.png" alt="Installation on Linux/Debian/Ubuntu" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="icon-debian.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="icon-ubuntu.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
 for installation instructions.
 </p>
 </div>
@@ -35,7 +35,7 @@ for installation instructions.
 The following PDF files may help with understanding the implementation of some sub-packages.
 
 1. [Machine Learning](https://github.com/cpmech/gosl/blob/master/doc/machlearn.pdf)
+4. [Tensor Algebra, Calculus, and Definitions](https://github.com/cpmech/gosl/blob/master/doc/definitions.pdf)
 2. [Curvilinear Coordinates and Metrics](https://github.com/cpmech/gosl/blob/master/doc/metrics.pdf)
 3. [Transfinite Mapping](https://github.com/cpmech/gosl/blob/master/doc/transfinite.pdf)
-4. [Tensor Algebra, Calculus, and Definitions](https://github.com/cpmech/gosl/blob/master/doc/definitions.pdf)
 5. [Spectral Collocation](https://github.com/cpmech/gosl/blob/master/doc/spectral.pdf)
