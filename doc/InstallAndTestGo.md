@@ -15,6 +15,8 @@ export GOPATH=$HOME/mygo
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 ```
 
+On Windows, set environment variable `GOPATH = C:\MyGo` (press WindowsKey + R or run sysdm.cpl) [Screenshot of "Setting Environment Variables"](https://github.com/cpmech/gosl/blob/master/doc/go-environment-variables.png)
+
 ## Create a new library
 
 Create this directory
