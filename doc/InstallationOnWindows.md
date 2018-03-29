@@ -19,6 +19,6 @@ but NOT on "C:\Program Files"
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
-## Compiling all dependencies
+## Compiling and Installing all Dependencies
 
-The compilation of all dependencies is [described here](https://github.com/cpmech/gosl/blob/master/doc/CompilingOnWindows.md)
+The compilation and installation of all dependencies are [described here](https://github.com/cpmech/gosl/blob/master/doc/CompilingOnWindows.md)
