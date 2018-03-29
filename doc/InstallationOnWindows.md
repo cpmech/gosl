@@ -15,6 +15,15 @@ but NOT on "C:\Program Files"
 4. Install *Go* (go1.10.windows-amd64.msi) from https://golang.org/dl/
 5. Install *Gosl* (gosl-installer-v1.0.2.msi) from https://sourceforge.net/projects/gosl-installer/files/
 
+### Testing
+
+Open a Git+Bash terminal and type:
+
+```bash
+cd /c/MyGo/src/github.com/cpmech/gosl
+./all.bash
+```
+
 *Finished!*
 
 ----------------------------------------------------------------------------------------------------------------------------------
