@@ -5,35 +5,43 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/cpmech/gosl)](https://goreportcard.com/report/github.com/cpmech/gosl)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/avelino/awesome-go)
 
-Gosl is a library written in [Go](https://golang.org) to develop high-performance scientific
-computations. The library tries to be as general and _easy_ as possible. Gosl considers the use of
-both Go concurrency routines and parallel computing using the message passing interface. Gosl has
-several modules (sub-packages) for a variety of tasks in scientific computing, image analysis, and
-data post-processing. For example, it includes high-performant linear algebra functions (wrapping
-MKL, OpenBLAS, LAPACK, SuiteSparse, UMFPACK...), fast Fourier transform algorithms (wrapping FFTW),
-numerical integration (wrapping QUADPACK), functions and structures for geometry calculations (e.g.
-3D transfinite interpolation, grid search, octree...), random numbers generation (SFMT and DSFMT)
-and probability distributions, optimisation and graph algorithms, plotting and visualisation using
-the VTK, and much more. Gosl has also solvers to (stiff or not) ordinary differential equations and
-several tools for 2D/3D mesh generation to assist on the development of solvers for partial
-differential equations.
+Gosl is a [Go](https://golang.org) library to develop Artificial Intelligence and High-performance
+Scientific Computations.
 
 <div id="container">
 <p><a href="examples/figs/gosl-collage1.jpg"><img src="examples/figs/gosl-collage1-sml.png"></a></p>
 </div>
 
-A recent focus is now given to Machine Learning (see `ml` package) and Big Data (see `h5` package).
-Wrappers to powerful tools such as CNTK, TensorFlow, and Hadoop are planned. A wrapper to OpenCV has
-been initiated as well.
+The library tries to be as general and _easy_ as possible. Gosl considers the use of both Go
+concurrency routines and parallel computing using the message passing interface (MPI). Gosl has
+several modules (sub-packages) for a variety of tasks in scientific computing, image analysis, and
+data post-processing.
 
-**Resources**
+Gosl includes high-performant linear algebra functions (wrapping MKL, OpenBLAS, LAPACK, SuiteSparse,
+UMFPACK...), fast Fourier transform algorithms (wrapping FFTW), numerical integration (wrapping
+QUADPACK), functions and structures for geometry calculations (e.g. 3D transfinite interpolation,
+grid search, octree...), random numbers generation (SFMT and DSFMT) and probability distributions,
+optimisation and graph algorithms, plotting and visualisation using the VTK, and much more.
+
+Gosl has also solvers to (stiff or not) ordinary differential equations and several tools for 2D/3D
+mesh generation to assist on the development of solvers for partial differential equations.
+
+We now give focus to Machine Learning (see `ml` package) and Big Data (see `h5` package). We are
+also planning wrappers to powerful tools such as CNTK, TensorFlow, and Hadoop. We have a wrapper to
+OpenCV in the works as well.
+
+
+
+## Resources
 
 1. [Examples](examples/README.md) and [benchmarks](examples/benchmark/README.md)
 2. [White papers](https://github.com/cpmech/gosl/tree/master/doc)
 3. [Documentation](https://godoc.org/github.com/cpmech/gosl)
 4. [Contributing and TODO](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md)
 
-**Installation**
+
+
+## Installation
 
 Gosl works on Windows, macOS, and Linux.
 
@@ -50,7 +58,7 @@ Click on the corresponding platform:
 
 
 
-## Contents (sub-packages)
+## Sub-packages
 
 Gosl includes the following _sub-packages_:
 1.  [chk](https://github.com/cpmech/gosl/tree/master/chk)             &ndash; Check code and unit test tools
@@ -116,7 +124,7 @@ called **methods**. In Gosl, the variable holding the pointer to an object is al
 Functions that allocate a pointer to a structure are prefixed with `New`; for instance:
 `NewIsoSurf`. Some structures require an explicit call to another function to release allocated
 memory. Be aware of this requirement! In this case, the function is named `Free` and appears in a
-few sub-packages that use CGO. Also, some objects may need to be initialised before use. In this
+few sub-packages that use CGO. Also, some objects may need to be initialized before use. In this
 case, functions named `Init` have to be called.
 
 The directories corresponding to each package have a README.md file that should help with
@@ -159,7 +167,7 @@ gocov() {
 
 The following works take advantage of Gosl:
 
-1. Pedroso DM, Bonyadi MR, Gallagher M (2017) Parallel evolutionary algorithm for single and multi-objective optimisation: differential evolution and constraints handling, Applied Soft Computing http://dx.doi.org/10.1016/j.asoc.2017.09.006
+1. Pedroso DM, Bonyadi MR, Gallagher M (2017) Parallel evolutionary algorithm for single and multi-objective optimisation: differential evolution and constraints handling, Applied Soft Computing http://dx.doi.org/10.1016/j.asoc.2017.09.006 [paper available here](https://github.com/cpmech/goga/blob/master/doc/goga.pdf)
 2. Pedroso DM (2017) FORM reliability analysis using a parallel evolutionary algorithm, Structural Safety 65:84-99 http://dx.doi.org/10.1016/j.strusafe.2017.01.001
 3. Pedroso DM, Zhang YP, Ehlers W (2017) Solution of liquid-gas-solid coupled equations for porous media considering dynamics and hysteretic retention behaviour, Journal of Engineering Mechanics 04017021 http://dx.doi.org/10.1061/(ASCE)EM.1943-7889.0001208 
 4. Pedroso DM (2015) A solution to transient seepage in unsaturated porous media. Computer Methods in Applied Mechanics and Engineering, 285:791-816 http://dx.doi.org/10.1016/j.cma.2014.12.009
