@@ -18,7 +18,7 @@
 
 ## 1 [Required] Install some dependencies:
 
-2. Run the following commands
+1. Run the following commands
 
 ```bash
 sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
