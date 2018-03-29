@@ -92,7 +92,7 @@ tar xjf hdf5-1.8.20.tar.bz2
 9.6 Click **Configure**
 9.7 Select **MinGW Makefiles** under _Specify the generator for this project_
 9.8 Leave _Use default native compilers_ selected and click Finish
-9.9 Unselect BUILD_SHARED_LIBS and unselect BUILD_TESTING
+9.9 Unselect BUILD_SHARED_LIBS, BUILD_TESTING, and HDF5_BUILD_TOOLS
 9.10 Set `CMAKE_INSTALL_PREFIX = C:/TDM-GCC-64`
 9.11 Click **Configure** again and then click **Generate**
 9.12 Run the following commands (in a Git+Bash terminal)
