@@ -28,6 +28,6 @@ cd /c/MyGo/src/github.com/cpmech/gosl
 
 ----------------------------------------------------------------------------------------------------------------------------------
 
-## Compiling and Installing all Dependencies
+## Compiling and Installing from Sources
 
 The compilation and installation of all dependencies are [described here](https://github.com/cpmech/gosl/blob/master/doc/CompilingOnWindows.md)
