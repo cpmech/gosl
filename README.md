@@ -33,13 +33,18 @@ been initiated as well.
 3. [Documentation](https://godoc.org/github.com/cpmech/gosl)
 4. [Contributing and TODO](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md)
 
+**Installation**
+
+Gosl works on Windows, macOS, and Linux.
+
 <div id="container">
 <p>
-See <b>Installation</b> section below. Gosl works on Windows, macOS, and Linux.
+Click on the corresponding platform:
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png" alt="Installation on Windows" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png" alt="Installation on macOS" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png" alt="Installation on Linux/Debian/Ubuntu" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
+<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-ubuntu.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
 </p>
 </div>
 
@@ -84,32 +89,6 @@ We are currently working on the following additional packages:
 <li>img - Image and machine learning algorithms for images</li>
 <li>img/ocv - Wrapper to OpenCV</li>
 </ol>
-
-
-
-## Installation
-
-Gosl works on Windows, macOS, and Linux (Debian/Ubuntu).
-
-<div id="container">
-<p>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png" alt="Installation on Windows" align="middle"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png" alt="Installation on macOS" align="middle"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-linux.png" alt="Installation on Linux/Debian/Ubuntu" align="middle"></a>
-<a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-debian.png" alt-"Installation on Linux/Debian/Ubuntu" align="middle"></a>
-</p>
-</div>
-
-Since Gosl needs some other C and Fortran libraries, **not** all sub-packages can be directly
-installed using `go get ...`. Nonetheless, **Gosl is pretty easy to install!** See links below:
-
-1. [Ubuntu](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md)
-2. [Windows](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md)
-3. [macOS](https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md)
-
-The following subpackages are only available on Linux at the moment: _la/mkl_ and _vtk_. The
-following subpackages are not available for Windows: _mpi_, _gm/tri_, _rnd/sfmt_, and _rnd/dsfmt_.
-Your help to compile these packages in all platforms is much welcome and appreciated.
 
 
 
