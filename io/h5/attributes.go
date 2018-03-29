@@ -11,12 +11,10 @@ package h5
 
 #ifdef WIN32
 	#define LONG long long
-	#define H5LONG H5T_NATIVE_LLONG
 	#define setAttributeLong H5LTset_attribute_long_long
 	#define getAttributeLong H5LTget_attribute_long_long
 #else
 	#define LONG long
-	#define H5LONG H5T_NATIVE_LONG
 	#define setAttributeLong H5LTset_attribute_long
 	#define getAttributeLong H5LTget_attribute_long
 #endif

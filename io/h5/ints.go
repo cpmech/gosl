@@ -8,6 +8,7 @@ package h5
 #include "hdf5.h"
 #include "hdf5_hl.h"
 #include "stdlib.h"
+#include "H5Tpublic.h"
 
 #ifdef WIN32
 	#define H5LONG H5T_NATIVE_LLONG
