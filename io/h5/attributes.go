@@ -2,14 +2,22 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !windows
-
 package h5
 
 /*
 #include "hdf5.h"
 #include "hdf5_hl.h"
 #include "stdlib.h"
+
+#ifdef WIN32
+	#define LONG long long
+	#define setAttributeLong H5LTset_attribute_long_long
+	#define getAttributeLong H5LTget_attribute_long_long
+#else
+	#define LONG long
+	#define setAttributeLong H5LTset_attribute_long
+	#define getAttributeLong H5LTget_attribute_long
+#endif
 */
 import "C"
 
@@ -110,7 +118,7 @@ func (o *File) SetIntAttribute(path, key string, val int) {
 	defer C.free(unsafe.Pointer(ckey))
 	vals := []int{val}
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		st := C.H5LTset_attribute_long(o.hdfHandle, cp, ckey, (*C.long)(unsafe.Pointer(&vals[0])), 1)
+		st := C.setAttributeLong(o.hdfHandle, cp, ckey, (*C.LONG)(unsafe.Pointer(&vals[0])), 1)
 		if st < 0 {
 			chk.Panic("cannot set attibute %q to val in path=%q", key, path)
 		}
@@ -148,7 +156,7 @@ func (o *File) GetIntAttribute(path, key string) (val int) {
 	defer C.free(unsafe.Pointer(cpth))
 	defer C.free(unsafe.Pointer(ckey))
 	vals := []int{0}
-	st := C.H5LTget_attribute_long(o.hdfHandle, cpth, ckey, (*C.long)(unsafe.Pointer(&vals[0])))
+	st := C.getAttributeLong(o.hdfHandle, cpth, ckey, (*C.LONG)(unsafe.Pointer(&vals[0])))
 	if st < 0 {
 		chk.Panic("cannot read attibute %q from val in path=%q", key, path)
 	}
@@ -177,7 +185,7 @@ func (o *File) SetIntsAttribute(path, key string, vals []int) {
 	defer C.free(unsafe.Pointer(ckey))
 	n := C.size_t(len(vals))
 	o.hierarchCreate(path, func(cp *C.char) C.herr_t {
-		st := C.H5LTset_attribute_long(o.hdfHandle, cp, ckey, (*C.long)(unsafe.Pointer(&vals[0])), n)
+		st := C.setAttributeLong(o.hdfHandle, cp, ckey, (*C.LONG)(unsafe.Pointer(&vals[0])), n)
 		if st < 0 {
 			chk.Panic("cannot set attibute %q to vals in path=%q", key, path)
 		}
@@ -230,7 +238,7 @@ func (o *File) GetIntsAttribute(path, key string) (vals []int) {
 		chk.Panic("cannot read attibute %q from dims in path=%q", key, path)
 	}
 	vals = make([]int, dims[0])
-	st = C.H5LTget_attribute_long(o.hdfHandle, cpth, ckey, (*C.long)(unsafe.Pointer(&vals[0])))
+	st = C.getAttributeLong(o.hdfHandle, cpth, ckey, (*C.LONG)(unsafe.Pointer(&vals[0])))
 	if st < 0 {
 		chk.Panic("cannot read attibute %q from vals in path=%q", key, path)
 	}

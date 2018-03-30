@@ -295,7 +295,7 @@ func TestMatInv02(tst *testing.T) {
 		{+0.00000000000000000e+00, +0.00000000000000000e+00, +0.00000000000000000e+00, 0.00000000000000000e+00, +0.00000000000000000e+00, 1.00000000000000000e+00},
 	})
 	detB := 0.0
-	checkAi(tst, "b", b, bi, detB, 1e-17, 1e-8, 1e-12)
+	checkAi(tst, "b", b, bi, detB, 1e-15, 1e-8, 1e-9)
 }
 
 func TestMatSvd01(tst *testing.T) {
