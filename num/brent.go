@@ -21,9 +21,9 @@ type Brent struct {
 	Verbose bool    // show messages
 
 	// statistics
-	NFeval int // number of calls to Ffcn (function evaluations)
-	NJeval int // number of calls to Jfcn (Jacobian/derivatives)
-	It     int // number of iterations from last call to Solve
+	NumFeval int // number of calls to Ffcn (function evaluations)
+	NumJeval int // number of calls to Jfcn (Jacobian/derivatives)
+	NumIter  int // number of iterations from last call to Solve
 
 	// internal
 	ffcn  fun.Ss  // y = f(x) function
@@ -81,7 +81,8 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 	c := a  // the last but one or even earlier approximation than a that
 	fa := o.ffcn(a)
 	fb := o.ffcn(b)
-	o.NFeval = 2
+	o.NumFeval = 2
+	o.NumJeval = 0
 	fc := fa
 
 	// check input
@@ -101,7 +102,7 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 	var p, q float64       // interpol. step is calculated in the form p/q (divisions are delayed)
 	var newStep float64    // step at this iteration
 	var t1, cb, t2 float64 // auxiliary variables
-	for o.It = 0; o.It < o.MaxIt; o.It++ {
+	for o.NumIter = 0; o.NumIter < o.MaxIt; o.NumIter++ {
 
 		// distance
 		prevStep = b - a
@@ -120,7 +121,7 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 
 		// converged?
 		if o.Verbose {
-			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, b, fb, math.Abs(newStep))
+			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.NumIter, b, fb, math.Abs(newStep))
 		}
 		if math.Abs(newStep) <= tolAct || fb == 0.0 {
 			return b
@@ -177,7 +178,7 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 		// do step to a new approximation
 		b += newStep
 		fb = o.ffcn(b)
-		o.NFeval++
+		o.NumFeval++
 
 		// adjust c for it to have a sign opposite to that of b
 		if (fb > 0.0 && fc > 0.0) || (fb < 0.0 && fc < 0.0) {
@@ -187,7 +188,7 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 	}
 
 	// did not converge
-	chk.Panic("fail to converge after %d iterations", o.It)
+	chk.Panic("fail to converge after %d iterations", o.NumIter)
 	return
 }
 
@@ -233,7 +234,8 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 	// first step: always gold section
 	v := xa + o.gsr*(xb-xa)
 	fv := o.ffcn(v)
-	o.NFeval = 1
+	o.NumFeval = 1
+	o.NumJeval = 0
 	x, w, fx, fw := v, v, fv, fv
 
 	// solve
@@ -243,7 +245,7 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 	var newStep float64     // step at one iteration
 	var tmp float64         // temporary
 	var p, q, t, ft float64 // auxiliary
-	for o.It = 0; o.It < o.MaxIt; o.It++ {
+	for o.NumIter = 0; o.NumIter < o.MaxIt; o.NumIter++ {
 
 		// auxiliary variables
 		rng = xb - xa
@@ -252,7 +254,7 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 
 		// converged?
 		if o.Verbose {
-			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.It, x, fx, math.Abs(x-midRng)+rng/2.0)
+			io.Pf("%4d%23.15e%23.15e%23.15e\n", o.NumIter, x, fx, math.Abs(x-midRng)+rng/2.0)
 		}
 		if math.Abs(x-midRng)+rng/2.0 <= 2.0*tolAct {
 			return x
@@ -298,7 +300,7 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 		// obtain the next approximation to min and reduce the enveloping rng
 		t = x + newStep // tentative point for the min  */
 		ft = o.ffcn(t)
-		o.NFeval++
+		o.NumFeval++
 
 		// t is a better approximation
 		if ft <= fx {
@@ -335,7 +337,7 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 	}
 
 	// did not converge
-	chk.Panic("fail to converge after %d iterations", o.It)
+	chk.Panic("fail to converge after %d iterations", o.NumIter)
 	return
 }
 
@@ -390,11 +392,11 @@ func (o *Brent) MinUseD(xa, xb float64) (xAtMin float64) {
 	zeps := MACHEPS * 1e-3
 
 	// stat
-	o.NFeval = bracket.NFeval
-	o.NJeval = 1
+	o.NumFeval = bracket.NumFeval
+	o.NumJeval = 1
 
 	// iterations
-	for o.It = 0; o.It < o.MaxIt; o.It++ {
+	for o.NumIter = 0; o.NumIter < o.MaxIt; o.NumIter++ {
 		xm = 0.5 * (a + b)
 		tol1 = o.Tol*math.Abs(x) + zeps
 		tol2 = 2.0 * tol1
@@ -456,17 +458,17 @@ func (o *Brent) MinUseD(xa, xb float64) (xAtMin float64) {
 		if math.Abs(d) >= tol1 {
 			u = x + d
 			fu = o.ffcn(u)
-			o.NFeval++
+			o.NumFeval++
 		} else {
 			u = x + sgn(tol1, d)
 			fu = o.ffcn(u)
-			o.NFeval++
+			o.NumFeval++
 			if fu > fx {
 				return x
 			}
 		}
 		du = o.Jfcn(u)
-		o.NJeval++
+		o.NumJeval++
 		if fu <= fx {
 			if u >= x {
 				a = x
@@ -492,6 +494,6 @@ func (o *Brent) MinUseD(xa, xb float64) (xAtMin float64) {
 	}
 
 	// did not converge
-	chk.Panic("fail to converge after %d iterations", o.It)
+	chk.Panic("fail to converge after %d iterations", o.NumIter)
 	return
 }

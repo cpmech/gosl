@@ -28,8 +28,8 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 	ybrent = ffcnA(xbrent)
 	io.Pforan("x      = %v\n", xbrent)
 	io.Pforan("f(x)   = %v\n", ybrent)
-	io.Pforan("nfeval = %v\n", o.NFeval)
-	io.Pforan("nit    = %v\n", o.It)
+	io.Pforan("nfeval = %v\n", o.NumFeval)
+	io.Pforan("nit    = %v\n", o.NumIter)
 	if math.Abs(ybrent) > 1e-10 {
 		tst.Errorf("Brent failed: f(x) = %g > 1e-10\n", ybrent)
 		return
@@ -157,16 +157,16 @@ func TestBrent03(tst *testing.T) {
 	xcor := math.Sqrt(2.0 / 3.0)
 	io.Pforan("x      = %v (correct=%g)\n", x, xcor)
 	io.Pforan("f(x)   = %v\n", y)
-	io.Pforan("nit    = %v\n", o.It)
-	io.Pforan("nfeval = %v\n", o.NFeval)
+	io.Pforan("nit    = %v\n", o.NumIter)
+	io.Pforan("nfeval = %v\n", o.NumFeval)
 	chk.Float64(tst, "xcorrect", 1e-8, x, xcor)
 
 	xd := o.MinUseD(xa, xb)
 	io.Pf("xd     = %v (correct=%g)\n", xd, xcor)
 	io.Pf("f(xd)  = %v\n", ffcn(xd))
-	io.Pf("nit    = %v\n", o.It)
-	io.Pf("nfeval = %v\n", o.NFeval)
-	io.Pf("nJeval = %v\n", o.NJeval)
+	io.Pf("nit    = %v\n", o.NumIter)
+	io.Pf("nfeval = %v\n", o.NumFeval)
+	io.Pf("nJeval = %v\n", o.NumJeval)
 
 	if chk.Verbose {
 		xx := utl.LinSpace(-2, 2, 101)

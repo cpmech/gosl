@@ -31,8 +31,8 @@ type Bracket struct {
 	Verbose bool // show messages
 
 	// statistics
-	NFeval int // number of calls to Ffcn (function evaluations)
-	It     int // number of iterations from last call to Solve
+	NumFeval int // number of calls to Ffcn (function evaluations)
+	NumIter  int // number of iterations from last call to Solve
 
 	// internal
 	ffcn   fun.Ss  // y = f(x) function
@@ -81,7 +81,7 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 			if exitCase == 3 {
 				txtCase = "min between a and u"
 			}
-			io.Pf("exit case = %q\n\ta=%g b=%g c=%g\n\tfa=%g fb=%g fc=%g\n\tnIterations=%d nFeval=%d\n", txtCase, a, b, c, fa, fb, fc, o.It+1, o.NFeval)
+			io.Pf("exit case = %q\n\ta=%g b=%g c=%g\n\tfa=%g fb=%g fc=%g\n\tnIterations=%d nFeval=%d\n", txtCase, a, b, c, fa, fb, fc, o.NumIter+1, o.NumFeval)
 		}
 	}()
 
@@ -96,13 +96,13 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 	}
 	c = b + o.gold*(b-a) // first guess for c
 	fc = o.ffcn(c)
-	o.NFeval = 3
+	o.NumFeval = 3
 
 	// auxiliary
 	var r, q, del, den, u, fu, ulim, aux float64
 
 	// search
-	for o.It = 0; o.It < o.MaxIt; o.It++ {
+	for o.NumIter = 0; o.NumIter < o.MaxIt; o.NumIter++ {
 
 		// exit point
 		if fb <= fc {
@@ -124,7 +124,7 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 		// parabolic u is between b and c: try it
 		if (b-u)*(u-c) > 0.0 {
 			fu = o.ffcn(u)
-			o.NFeval++
+			o.NumFeval++
 
 			// got a minimum between u and c
 			if fu < fc {
@@ -146,12 +146,12 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 			// parabolic fit was no use. Use default magnification
 			u = c + o.gold*(c-b)
 			fu = o.ffcn(u)
-			o.NFeval++
+			o.NumFeval++
 
 			// parabolic fit is between c and its allowed limit
 		} else if (c-u)*(u-ulim) > 0.0 {
 			fu = o.ffcn(u)
-			o.NFeval++
+			o.NumFeval++
 			if fu < fc {
 				aux = u + o.gold*(u-c)
 				shft3(&b, &c, &u, aux)
@@ -162,13 +162,13 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 		} else if (u-ulim)*(ulim-c) >= 0.0 {
 			u = ulim
 			fu = o.ffcn(u)
-			o.NFeval++
+			o.NumFeval++
 
 			// reject parabolic u, use default magnification
 		} else {
 			u = c + o.gold*(c-b)
 			fu = o.ffcn(u)
-			o.NFeval++
+			o.NumFeval++
 		}
 
 		// eliminate oldest point and continue
@@ -177,6 +177,6 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 	}
 
 	// check
-	chk.Panic("fail to converge after %d iterations", o.It)
+	chk.Panic("fail to converge after %d iterations", o.NumIter)
 	return
 }

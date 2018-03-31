@@ -21,9 +21,11 @@ type LineSolver struct {
 	y       la.Vector // {y} = {x} + λ⋅{n}
 	dfdx    la.Vector // derivative df/d{x}
 	bracket *Bracket  // bracket
+	solver  *Brent    // scalar minimizer
 
-	// minimizer
-	Brent *Brent // scalar minimizer
+	// Stat
+	NumFeval int // number of function evalutions
+	NumJeval int // number of Jacobian evaluations
 
 	// pointers
 	x la.Vector // starting point
@@ -41,21 +43,27 @@ func NewLineSolver(size int, ffcn fun.Sv, Jfcn fun.Vv) (o *LineSolver) {
 	o.y = la.NewVector(size)
 	o.dfdx = la.NewVector(size)
 	o.bracket = NewBracket(o.G)
-	o.Brent = NewBrent(o.G, o.H)
+	o.solver = NewBrent(o.G, o.H)
 	return
 }
 
 // Root finds the scalar λ that zeroes f(x+λ⋅n)
 func (o *LineSolver) Root(x, n la.Vector) (λ float64) {
 	o.Set(x, n)
-	return o.Brent.Root(0, 1)
+	λ = o.solver.Root(0, 1)
+	o.NumFeval = o.solver.NumFeval
+	o.NumJeval = o.solver.NumJeval
+	return
 }
 
 // Min finds the scalar λ that minimizes f(x+λ⋅n)
 func (o *LineSolver) Min(x, n la.Vector) (λ float64) {
 	o.Set(x, n)
 	λmin, _, λmax, _, _, _ := o.bracket.Min(0, 1)
-	return o.Brent.Min(λmin, λmax)
+	λ = o.solver.Min(λmin, λmax)
+	o.NumFeval = o.solver.NumFeval
+	o.NumJeval = o.solver.NumJeval
+	return
 }
 
 // MinUpdateX finds the scalar λ that minimizes f(x+λ⋅n), updates x and returns fmin = f({x})
@@ -70,6 +78,8 @@ func (o *LineSolver) MinUpdateX(x, n la.Vector) (λ, fmin float64) {
 	λ = o.Min(x, n)
 	la.VecAdd(o.x, 1, x, λ, n) // x := x + λ⋅n
 	fmin = o.ffcn(o.x)
+	o.NumFeval = o.solver.NumFeval + 1
+	o.NumJeval = o.solver.NumJeval
 	return
 }
 

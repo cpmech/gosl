@@ -10,6 +10,6 @@ while true; do
     echo
     echo
     echo
-    go install
-    go test -run Powell01
+    #go test -run Powell01
+    go test -run Powell02
 done
