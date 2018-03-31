@@ -475,3 +475,8 @@ func PowP(x float64, n uint32) (r float64) {
 	}
 	return
 }
+
+// Pow2 computes x²
+func Pow2(x float64) float64 {
+	return x * x
+}

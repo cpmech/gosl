@@ -598,3 +598,12 @@ func TestPowP(tst *testing.T) {
 		chk.AnaNum(tst, io.Sf("pow(x,%2d)", n), tol, res, math.Pow(x, float64(n)), chk.Verbose)
 	}
 }
+
+func TestPow2(tst *testing.T) {
+	//verbose()
+	chk.PrintTitle("Pow2. calc x²")
+	chk.Float64(tst, "2²", 1e-15, Pow2(2), 4)
+	chk.Float64(tst, "3²", 1e-15, Pow2(3), 9)
+	chk.Float64(tst, "4²", 1e-15, Pow2(4), 16)
+	chk.Float64(tst, "10²", 1e-15, Pow2(10), 100)
+}

@@ -10,5 +10,6 @@ while true; do
     echo
     echo
     echo
-    go test -run MultiInterp01
+    #go test -run MultiInterp01
+    go test -run Pow2
 done
