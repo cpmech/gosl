@@ -51,7 +51,7 @@ func NewLineSolver(size int, ffcn fun.Sv, Jfcn fun.Vv) (o *LineSolver) {
 func (o *LineSolver) Root(x, n la.Vector) (λ float64) {
 	o.Set(x, n)
 	λ = o.solver.Root(0, 1)
-	o.NumFeval = o.solver.NumFeval
+	o.NumFeval = o.solver.NumFeval + o.bracket.NumFeval
 	o.NumJeval = o.solver.NumJeval
 	return
 }
@@ -61,7 +61,7 @@ func (o *LineSolver) Min(x, n la.Vector) (λ float64) {
 	o.Set(x, n)
 	λmin, _, λmax, _, _, _ := o.bracket.Min(0, 1)
 	λ = o.solver.Min(λmin, λmax)
-	o.NumFeval = o.solver.NumFeval
+	o.NumFeval = o.solver.NumFeval + o.bracket.NumFeval
 	o.NumJeval = o.solver.NumJeval
 	return
 }
@@ -78,8 +78,7 @@ func (o *LineSolver) MinUpdateX(x, n la.Vector) (λ, fmin float64) {
 	λ = o.Min(x, n)
 	la.VecAdd(o.x, 1, x, λ, n) // x := x + λ⋅n
 	fmin = o.ffcn(o.x)
-	o.NumFeval = o.solver.NumFeval + 1
-	o.NumJeval = o.solver.NumJeval
+	o.NumFeval++
 	return
 }
 

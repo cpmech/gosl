@@ -105,7 +105,9 @@ func TestLineSolver03(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("LineSolver03. Min with vertical n")
 
+	nfeval := 0
 	ffcn := func(x la.Vector) float64 {
+		nfeval++
 		return x[0]*x[0] + x[1]*x[1] - 0.5
 	}
 
@@ -114,6 +116,7 @@ func TestLineSolver03(tst *testing.T) {
 	n := la.NewVectorSlice([]float64{0, 1})
 	line := NewLineSolver(2, ffcn, nil)
 	λmin := line.Min(x, n)
+	chk.Int(tst, "NumFeval", line.NumFeval, nfeval)
 	chk.Float64(tst, "λroot", 1e-11, λmin, 0.5)
 	chk.Float64(tst, "g(λroot)", 1e-11, line.G(λmin), -0.250)
 
