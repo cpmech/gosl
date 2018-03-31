@@ -16,6 +16,5 @@ while true; do
     #go test -run Brent02
     #go test -run Brent03
     #go test -run LineSolver01
-    #go test -run LineSolver02
-    go test -run ConjGrad01
+    go test -run LineSolver02
 done
