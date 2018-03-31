@@ -22,13 +22,13 @@ According to the figure below, we can see that the `Recursive` and `RecNonOpt` p
 The implementation from Numerical Recipes (`utl.Qsort`) is the best (in this test set only,
 obviously).
 
+*One thousand*
 <div id="container">
-One thousand:
 <p><img src="figs/al_recquicksort.png" width="500"></p>
 </div>
 
+*One million*
 <div id="container">
-One million:
 <p><img src="figs/al_recquicksort_1mi.png" width="500"></p>
 </div>
 
