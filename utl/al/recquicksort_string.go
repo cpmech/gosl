@@ -16,8 +16,27 @@ func StringRecQuickSort(A []string, compare func(a, b string) int) {
 	recursiveStringRecQuickSort(A, 0, len(A)-1, compare)
 }
 
+// StringRecQuickSortNonOpt is the non-optimal version of StringRecQuickSort
+func StringRecQuickSortNonOpt(A []string, compare func(a, b string) int) {
+	recursiveStringRecQuickSortNonOpt(A, 0, len(A)-1, compare)
+}
+
 // recursiveStringRecQuickSort performs the quick sort operations recursively
 func recursiveStringRecQuickSort(A []string, lo, hi int, compare func(a, b string) int) {
+	if lo < hi {
+		p := partitionString(A, lo, hi, compare)
+		if (p - lo) < (hi - p) {
+			recursiveStringRecQuickSort(A, lo, p, compare)
+			recursiveStringRecQuickSort(A, p+1, hi, compare)
+		} else {
+			recursiveStringRecQuickSort(A, p+1, hi, compare)
+			recursiveStringRecQuickSort(A, lo, p, compare)
+		}
+	}
+}
+
+// recursiveStringRecQuickSortNonOpt performs the quick sort operations recursively
+func recursiveStringRecQuickSortNonOpt(A []string, lo, hi int, compare func(a, b string) int) {
 	if lo < hi {
 		p := partitionString(A, lo, hi, compare)
 		recursiveStringRecQuickSort(A, lo, p, compare)

@@ -16,8 +16,27 @@ func IntRecQuickSort(A []int, compare func(a, b int) int) {
 	recursiveIntRecQuickSort(A, 0, len(A)-1, compare)
 }
 
+// IntRecQuickSortNonOpt is the non-optimal version of IntRecQuickSort
+func IntRecQuickSortNonOpt(A []int, compare func(a, b int) int) {
+	recursiveIntRecQuickSortNonOpt(A, 0, len(A)-1, compare)
+}
+
 // recursiveIntRecQuickSort performs the quick sort operations recursively
 func recursiveIntRecQuickSort(A []int, lo, hi int, compare func(a, b int) int) {
+	if lo < hi {
+		p := partitionInt(A, lo, hi, compare)
+		if (p - lo) < (hi - p) {
+			recursiveIntRecQuickSort(A, lo, p, compare)
+			recursiveIntRecQuickSort(A, p+1, hi, compare)
+		} else {
+			recursiveIntRecQuickSort(A, p+1, hi, compare)
+			recursiveIntRecQuickSort(A, lo, p, compare)
+		}
+	}
+}
+
+// recursiveIntRecQuickSortNonOpt performs the quick sort operations recursively
+func recursiveIntRecQuickSortNonOpt(A []int, lo, hi int, compare func(a, b int) int) {
 	if lo < hi {
 		p := partitionInt(A, lo, hi, compare)
 		recursiveIntRecQuickSort(A, lo, p, compare)

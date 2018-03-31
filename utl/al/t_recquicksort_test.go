@@ -20,6 +20,10 @@ func TestIntRecQuickSort01(tst *testing.T) {
 	A := []int{0, 1, 4, 5, -1, 3, 8, 2}
 	IntRecQuickSort(A, IntComparator)
 	chk.Ints(tst, "A.sorted", A, []int{-1, 0, 1, 2, 3, 4, 5, 8})
+
+	A = []int{0, 1, 4, 5, -1, 3, 8, 2}
+	IntRecQuickSortNonOpt(A, IntComparator)
+	chk.Ints(tst, "A.sorted (nonopt)", A, []int{-1, 0, 1, 2, 3, 4, 5, 8})
 }
 
 func TestIntRecQuickSort02(tst *testing.T) {
@@ -30,6 +34,10 @@ func TestIntRecQuickSort02(tst *testing.T) {
 	A := []int{-1, 0, 1, 2, 3, 4, 5, 8}
 	IntRecQuickSort(A, IntComparator)
 	chk.Ints(tst, "A.sorted", A, []int{-1, 0, 1, 2, 3, 4, 5, 8})
+
+	A = []int{-1, 0, 1, 2, 3, 4, 5, 8}
+	IntRecQuickSortNonOpt(A, IntComparator)
+	chk.Ints(tst, "A.sorted (nonopt)", A, []int{-1, 0, 1, 2, 3, 4, 5, 8})
 }
 
 func TestIntRecQuickSort03(tst *testing.T) {
@@ -40,6 +48,10 @@ func TestIntRecQuickSort03(tst *testing.T) {
 	A := []int{100, 99, 988, 5, 4, 3, 2, 1, 0, -1}
 	IntRecQuickSort(A, IntComparator)
 	chk.Ints(tst, "A.sorted", A, []int{-1, 0, 1, 2, 3, 4, 5, 99, 100, 988})
+
+	A = []int{100, 99, 988, 5, 4, 3, 2, 1, 0, -1}
+	IntRecQuickSortNonOpt(A, IntComparator)
+	chk.Ints(tst, "A.sorted (nonopt)", A, []int{-1, 0, 1, 2, 3, 4, 5, 99, 100, 988})
 }
 
 // float64 ///////////////////////////////////////////////////////////////////////

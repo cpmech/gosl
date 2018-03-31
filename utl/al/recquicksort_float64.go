@@ -16,8 +16,27 @@ func Float64RecQuickSort(A []float64, compare func(a, b float64) int) {
 	recursiveFloat64RecQuickSort(A, 0, len(A)-1, compare)
 }
 
+// Float64RecQuickSortNonOpt is the non-optimal version of Float64RecQuickSort
+func Float64RecQuickSortNonOpt(A []float64, compare func(a, b float64) int) {
+	recursiveFloat64RecQuickSortNonOpt(A, 0, len(A)-1, compare)
+}
+
 // recursiveFloat64RecQuickSort performs the quick sort operations recursively
 func recursiveFloat64RecQuickSort(A []float64, lo, hi int, compare func(a, b float64) int) {
+	if lo < hi {
+		p := partitionFloat64(A, lo, hi, compare)
+		if (p - lo) < (hi - p) {
+			recursiveFloat64RecQuickSort(A, lo, p, compare)
+			recursiveFloat64RecQuickSort(A, p+1, hi, compare)
+		} else {
+			recursiveFloat64RecQuickSort(A, p+1, hi, compare)
+			recursiveFloat64RecQuickSort(A, lo, p, compare)
+		}
+	}
+}
+
+// recursiveFloat64RecQuickSortNonOpt performs the quick sort operations recursively
+func recursiveFloat64RecQuickSortNonOpt(A []float64, lo, hi int, compare func(a, b float64) int) {
 	if lo < hi {
 		p := partitionFloat64(A, lo, hi, compare)
 		recursiveFloat64RecQuickSort(A, lo, p, compare)
