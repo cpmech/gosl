@@ -8,5 +8,8 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="VecDot"
+    echo
+    echo
+    #go test -run VecDot
+    go run al_recquicksort.go
 done

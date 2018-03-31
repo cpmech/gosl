@@ -1,19 +1,45 @@
 # Gosl Benchmark
 
-## Summary
+# Quicksort algorithms
 
-* Matrix-Matrix multiplication: OpenBLAS, MKL and Naïve approach
-* Matrix-Matrix multiplication: OpenBLAS versus Naïve approach
+We compare four implementations of the Quicksort algorithm:
+1. Our recursive implementation of the Hoare version (`Recursive`/Naive)
+2. Our recursive implementation that does not avoid recursion on the larger subproblem (`RecNonOpt`:
+   recursive non-optimal version)
+3. Our non-recursive implementation based on the Numerical Recipes book (`utl.Qsort`)
+4. Go native implementation (`Go native`)
 
-These tests were run on:
-* Ubuntu 16.04.2 LTS (from lsb_release -a)
-* Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz (from cat /proc/cpuinfo) and "standard flags"
-with default OpenBLAS compilation.
+We consider three kinds of arrays:
+1. Already sorted (`fwd`)
+2. Sorted in decreasing order (`bwd`)
+3. Randomly generated (`rnd`) with results averaged
+
+Source code: <a href="al_recquicksort.go">al_recquicksort.go</a>
+
+According to the figure below, we can see that the `Recursive` and `RecNonOpt` perform really bad
+(n-squared) with sorted arrays.
+
+The implementation from Numerical Recipes (`utl.Qsort`) is the best (in this test set only,
+obviously).
+
+<div id="container">
+One thousand:
+<p><img src="figs/al_recquicksort.png" width="500"></p>
+</div>
+
+<div id="container">
+One million:
+<p><img src="figs/al_recquicksort_1mi.png" width="500"></p>
+</div>
+
+Tests were run on:
+* Ubuntu 16.04.4 LTS
+* Intel(R) Core(TM) i7-8700K CPU @ 3.70GHz (from cat /proc/cpuinfo)
+* At 2018 Mar 31
+
 
 
 # Matrix-Matrix multiplication: OpenBLAS, MKL and Naïve approach
-
-Test ran at: 2017 Jun 23
 
 Source code 1: <a href="oblas_dgemm01.go">oblas_dgemm01.go</a>
 Source code 2: <a href="mkl_dgemm01.go">mkl_dgemm01.go</a>
@@ -50,11 +76,14 @@ Single-threaded
 <p><img src="figs/mkl-oblas-comparison-small-4t.png" width="600"></p>
 </div>
 
+Tests were run on:
+* Ubuntu 16.04.2 LTS (from lsb_release -a)
+* Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz (from cat /proc/cpuinfo) and "standard flags" with default OpenBLAS compilation.
+* At 2017 Jun 23
+
 
 
 # Matrix-Matrix multiplication: OpenBLAS versus Naïve approach
-
-Test ran at: 2017 Jun 23
 
 Source code: <a href="oblas_dgemm01.go">oblas_dgemm01.go</a>
 
@@ -135,3 +164,8 @@ Output (small matrices):
   62×  62 ┃ 24.02 GFlops (    19.842µs) ┃ naive:  0.84 GFlops (   566.528µs) ┃ 28.552 
   64×  64 ┃ 26.61 GFlops (    19.703µs) ┃ naive:  0.84 GFlops (   623.595µs) ┃ 31.650 
 ```
+
+Tests were run on:
+* Ubuntu 16.04.2 LTS (from lsb_release -a)
+* Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz (from cat /proc/cpuinfo) and "standard flags" with default OpenBLAS compilation.
+* At 2017 Jun 23
