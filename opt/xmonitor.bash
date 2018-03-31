@@ -11,5 +11,6 @@ while true; do
     echo
     echo
     #go test -run Powell01
-    go test -run Powell02
+    #go test -run Powell02
+    go test -run Powell03
 done
