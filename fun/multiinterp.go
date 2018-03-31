@@ -1,17 +1,27 @@
+// Copyright 2016 The Gosl Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package fun
 
 import (
+	"math"
+
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
-	"math"
 )
 
+// InterpType specifies the type of interpolant
 type InterpType int
 
 const (
-	biLinear InterpType = 2
-	biCubic  InterpType = 3
+
+	// BiLinearType defines the bi-linear type
+	BiLinearType InterpType = 2
+
+	// BiCubicType defines the bi-cubic type
+	BiCubicType InterpType = 3
 )
 
 // Axis implements a type to hold an arbitrarily spaced discrete data
@@ -30,18 +40,19 @@ type Axis struct {
 	djHunt  int  // increent of j to decide on using hunt function or locate
 	useHunt bool // use hunt code instead of locate
 	ascnd   bool // ascending order of values
-
 }
 
-// Builds a new Axis type from a data slice for an InterpType
+// NewAxis builds a new Axis type from a data slice for an InterpType
 func NewAxis(data []float64, interpType InterpType) (o *Axis) {
+
+	// input
 	o = new(Axis)
 	o.n = len(data)
 	o.data = data
 	switch interpType {
-	case biLinear:
+	case BiLinearType:
 		o.m = 2
-	case biCubic:
+	case BiCubicType:
 		o.m = 3
 	}
 
@@ -63,13 +74,13 @@ func NewAxis(data []float64, interpType InterpType) (o *Axis) {
 		chk.Panic("length of an axis must be at least 2, %d is invalid\n", o.n)
 	}
 
+	// derived
 	o.djHunt = utl.Imin(1, int(math.Pow(float64(o.n), 0.25)))
 	o.useHunt = false
-
 	return
 }
 
-// returns the value at data[i]
+// Get returns the value at data[i]
 func (o *Axis) Get(i int) float64 {
 	if i >= o.n || i < 0 {
 		chk.Panic("Axis out of bounds %d is not a valid query for axis of length %d", i, o.n)
@@ -77,7 +88,7 @@ func (o *Axis) Get(i int) float64 {
 	return o.data[i]
 }
 
-// locate returns a value j such that x is (insofar as possible) centered in the subrange
+// bisect returns a value j such that x is (insofar as possible) centered in the subrange
 // xx[j..j+mm-1], where xx is the stored pointer. The values in xx must be monotonic, either
 // increasing or decreasing. The returned value is not less than 0, nor greater than n-1.
 func (o *Axis) bisect(x float64) int {
@@ -101,7 +112,6 @@ func (o *Axis) bisect(x float64) int {
 	o.jHunt = jl
 
 	return utl.Imax(0, utl.Imin(o.n-o.m, jl-((o.m-2)>>1)))
-
 }
 
 // hunt returns a value j such that x is (insofar as possible) centered in the subrange
@@ -179,15 +189,14 @@ func (o *Axis) locate(x float64) int {
 	return jlo
 }
 
-// BiLinear two dimensional interpolant
+// BiLinear implements a two dimensional interpolant
 type BiLinear struct {
-	// input data
 	data *la.Matrix // column major data array
 	yy   *Axis      // "y"
 	xx   *Axis      // "x"
 }
 
-// This function builds a two dimensional bi-linear interpolant
+// NewBiLinear builds a two dimensional bi-linear interpolant
 // Input:
 // 		xx -- function sample points abscissas
 // 		yy -- function sample points ordinates
@@ -201,7 +210,6 @@ type BiLinear struct {
 //  f  = [a:0.00,b:0.25,c:1.00,		|
 //		  d:2.00,e:2,25,f:3.00,		a___b___c
 //		  h:8.00,i:8.25,j:9.00]	   0   0.5 1.0
-
 func NewBiLinear(f, xx, yy []float64) (o *BiLinear) {
 	o = new(BiLinear)
 
@@ -210,16 +218,16 @@ func NewBiLinear(f, xx, yy []float64) (o *BiLinear) {
 	return
 }
 
-// Disable the hunt function for both axis
+// SetDisableHunt disables the hunt function for both axis
 func (o *BiLinear) SetDisableHunt(disable bool) {
 	o.xx.DisableHunt = disable
 	o.yy.DisableHunt = disable
 }
 
-// (Re)Set the axis and matrix for the interpolant
+// Reset (Re)Set the axis and matrix for the interpolant
 func (o *BiLinear) Reset(f, xx, yy []float64) {
-	o.xx = NewAxis(xx, biLinear)
-	o.yy = NewAxis(yy, biLinear)
+	o.xx = NewAxis(xx, BiLinearType)
+	o.yy = NewAxis(yy, BiLinearType)
 
 	if len(f) != len(xx)*len(yy) {
 		chk.Panic("Length of function matrix %d is not equal to axis' lengths %d*%d",
@@ -235,6 +243,7 @@ func (o *BiLinear) locate(x, y float64) (i, j int) {
 	return
 }
 
+// P is the interpolation polynomial
 func (o *BiLinear) P(x, y float64) float64 {
 	i, j := o.locate(x, y)
 
