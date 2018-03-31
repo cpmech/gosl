@@ -96,7 +96,7 @@ func (o *Powell) Min(x0 la.Vector, reuseNmat bool) (fmin float64) {
 
 		// set iteration values
 		fx := fmin  // iteration f({x})
-		jDel := 0   // index of largest decrease
+		delJ := 0   // index of largest decrease
 		delF := 0.0 // largest function decrease
 
 		// loop over all directions in the set
@@ -110,7 +110,7 @@ func (o *Powell) Min(x0 la.Vector, reuseNmat bool) (fmin float64) {
 			// record direction if it corresponds to the largest decrease so far
 			if fold-fmin > delF {
 				delF = fold - fmin
-				jDel = jDir + 1
+				delJ = jDir + 1
 			}
 
 			// history
@@ -141,7 +141,7 @@ func (o *Powell) Min(x0 la.Vector, reuseNmat bool) (fmin float64) {
 			if t < 0.0 {
 				fmin = o.LS.Min(o.x, o.nAve)
 				for i := 0; i < o.size; i++ {
-					o.Nmat.Set(i, jDel-1, o.Nmat.Get(i, o.size-1))
+					o.Nmat.Set(i, delJ-1, o.Nmat.Get(i, o.size-1))
 					o.Nmat.Set(i, o.size-1, o.nAve[i])
 				}
 			}
