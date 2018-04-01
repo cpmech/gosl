@@ -86,7 +86,6 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 	// initializations
 	fmin = o.ffcn(x)
 	o.NumFeval = 1
-	o.NumIter = 0
 
 	// history
 	var λhist float64
