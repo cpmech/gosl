@@ -607,3 +607,12 @@ func TestPow2(tst *testing.T) {
 	chk.Float64(tst, "4²", 1e-15, Pow2(4), 16)
 	chk.Float64(tst, "10²", 1e-15, Pow2(10), 100)
 }
+
+func TestPow3(tst *testing.T) {
+	//verbose()
+	chk.PrintTitle("Pow3. calc x³")
+	chk.Float64(tst, "2³", 1e-15, Pow3(2), 8)
+	chk.Float64(tst, "3³", 1e-15, Pow3(3), 27)
+	chk.Float64(tst, "4³", 1e-15, Pow3(4), 64)
+	chk.Float64(tst, "10³", 1e-15, Pow3(10), 1000)
+}

@@ -480,3 +480,8 @@ func PowP(x float64, n uint32) (r float64) {
 func Pow2(x float64) float64 {
 	return x * x
 }
+
+// Pow3 computes x³
+func Pow3(x float64) float64 {
+	return x * x * x
+}
