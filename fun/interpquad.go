@@ -20,7 +20,7 @@ type InterpQuad struct {
 // NewInterpQuad returns a new object
 func NewInterpQuad() (o *InterpQuad) {
 	o = new(InterpQuad)
-	o.TolDen = 1e-13
+	o.TolDen = 1e-15
 	return
 }
 
