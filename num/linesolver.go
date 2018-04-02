@@ -15,6 +15,9 @@ import (
 // LineSolver finds the scalar λ that zeroes or minimizes f(x+λ⋅n)
 type LineSolver struct {
 
+	// configuration
+	UseDeriv bool // use Jacobian function [default = true if Jfcn is provided]
+
 	// inernal
 	ffcn    fun.Sv    // scalar function of vector: y = f({x})
 	Jfcn    fun.Vv    // vector function of vector: {J} = df/d{x} @ {x} [optional / may be nil]
@@ -44,6 +47,9 @@ func NewLineSolver(size int, ffcn fun.Sv, Jfcn fun.Vv) (o *LineSolver) {
 	o.dfdx = la.NewVector(size)
 	o.bracket = NewBracket(o.G)
 	o.solver = NewBrent(o.G, o.H)
+	if Jfcn != nil {
+		o.UseDeriv = true
+	}
 	return
 }
 
@@ -60,7 +66,11 @@ func (o *LineSolver) Root(x, n la.Vector) (λ float64) {
 func (o *LineSolver) Min(x, n la.Vector) (λ float64) {
 	o.Set(x, n)
 	λmin, _, λmax, _, _, _ := o.bracket.Min(0, 1)
-	λ = o.solver.Min(λmin, λmax)
+	if o.UseDeriv {
+		λ = o.solver.MinUseD(λmin, λmax)
+	} else {
+		λ = o.solver.Min(λmin, λmax)
+	}
 	o.NumFeval = o.solver.NumFeval + o.bracket.NumFeval
 	o.NumJeval = o.solver.NumJeval
 	return
