@@ -25,11 +25,23 @@ export GOSLDATA=$HOME/GoslDataFiles
 
 
 
-# Optimization: Conjugate Gradients
+# Optimization: Conjugate Gradients, Powell, Gradient Descent
+
+## Comparison using Simple Quadratic Function
+
+Source code: <a href="opt_comparison01.go">opt_comparison01.go</a>
+
+<div id="container">
+<p><img src="figs/opt_comparison01a.png" width="500"></p>
+</div>
+
+<div id="container">
+<p><img src="figs/opt_comparison01b.png" width="500"></p>
+</div>
 
 ## Rosenbrock Function
 
-Source code: <a href="opt_conjgrad01.go">opt_conjgrad01.go</a>
+Source code: <a href="opt_conjgrad01.go" width="600">opt_conjgrad01.go</a>
 
 <div id="container">
 <p><img src="figs/opt_conjgrad01.png"></p>

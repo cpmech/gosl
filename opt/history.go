@@ -163,8 +163,8 @@ func (o *History) PlotAll2d(name string, xref la.Vector) {
 	argsArrow := &plt.A{C: clr, Scale: 40}
 	argsF := &plt.A{C: clr, Lw: 3, L: name, NoClip: true}
 
-	o.GapXi = 0.5
-	o.GapXj = 0.5
+	o.GapXi = 0.1
+	o.GapXj = 0.1
 
 	plt.SplotGap(0.25, 0.25)
 
@@ -185,8 +185,8 @@ func (o *History) PlotAll3d(name string, xref la.Vector) {
 	argsArrow := &plt.A{C: clr, Scale: 40}
 	argsF := &plt.A{C: clr, Lw: 3, L: name, NoClip: true}
 
-	o.GapXi = 0.5
-	o.GapXj = 0.5
+	o.GapXi = 0.1
+	o.GapXj = 0.1
 
 	plt.SplotGap(0.25, 0.25)
 
@@ -222,8 +222,8 @@ func CompareHistory2d(name1, name2 string, hist1, hist2 *History, xref1, xref2 l
 	hist1.RangeXi = make([]float64, 2)
 	hist1.RangeXj = make([]float64, 2)
 
-	hist1.GapXi = 0.5
-	hist1.GapXj = 0.5
+	hist1.GapXi = 0.1
+	hist1.GapXj = 0.1
 
 	plt.SplotGap(0.25, 0.25)
 
