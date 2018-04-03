@@ -5,8 +5,6 @@
 package opt
 
 import (
-	"math"
-
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/la"
@@ -15,49 +13,35 @@ import (
 
 // Powell implements the multidimensional minimization by Powell's method (no derivatives required)
 //
+//   NOTE: Check Convergence to see how to set convergence parameters,
+//         max iteration number, or to enable and access history of iterations
+//
 //   REFERENCES:
 //   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes:
 //       The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 //
 type Powell struct {
 
-	// configuration
-	MaxIt   int     // max iterations
-	Ftol    float64 // tolerance on f({x})
-	Verbose bool    // show messages
-	History bool    // save history
-
-	// statistics and History (for debugging)
-	NumFeval int      // number of calls to Ffcn (function evaluations)
-	NumIter  int      // number of iterations from last call to Solve
-	Hist     *History // history of optimization data (for debugging)
+	// merge properties
+	Convergence // auxiliary object to check convergence
 
 	// access
 	Umat *la.Matrix // matrix whose columns contain the directions u
 
 	// internal
-	size int       // problem dimension = len(x)
-	ffcn fun.Sv    // scalar function of vector: y = f({x})
-	xcpy la.Vector // copy of initial x
-	xext la.Vector // auxiliary "extrapolated" point
-	uave la.Vector // average direction moved
-	tiny float64   // small number for convergence check
-
-	// line solver
 	line *num.LineSolver // line solver wrapping Brent's method
+	xcpy la.Vector       // copy of initial x
+	xext la.Vector       // auxiliary "extrapolated" point
+	uave la.Vector       // average direction moved
 }
 
 // NewPowell returns a new multidimensional optimizer using Powell's method (no derivatives required)
 //   size -- length(x)
 //   ffcn -- scalar function of vector: y = f({x})
-func NewPowell(size int, ffcn fun.Sv) (o *Powell) {
+func NewPowell(size int, Ffcn fun.Sv) (o *Powell) {
 	o = new(Powell)
-	o.size = size
-	o.ffcn = ffcn
-	o.MaxIt = 200
-	o.Ftol = 3e-8
-	o.tiny = 1e-15
-	o.line = num.NewLineSolver(size, ffcn, nil)
+	o.InitConvergence(Ffcn, nil)
+	o.line = num.NewLineSolver(size, o.Ffcn, nil)
 	o.xcpy = la.NewVector(size)
 	o.xext = la.NewVector(size)
 	o.uave = la.NewVector(size)
@@ -84,15 +68,14 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 	}
 
 	// initializations
-	fmin = o.ffcn(x)
-	o.NumFeval = 1
+	o.NumFeval = 0
+	size := len(x)
+	fmin = o.Ffcn(x)
 
 	// history
 	var λhist float64
-	var uhist la.Vector
-	if o.History {
-		o.Hist = NewHistory(o.MaxIt, fmin, x, o.ffcn)
-		uhist = la.NewVector(o.size)
+	if o.UseHist {
+		o.InitHist(x)
 	}
 
 	// save initial x
@@ -107,13 +90,12 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 		delF := 0.0 // largest function decrease
 
 		// loop over all directions in the set
-		for jdir := 0; jdir < o.size; jdir++ {
+		for jdir := 0; jdir < size; jdir++ {
 
 			// minimize along direction jdir
 			u := o.Umat.GetCol(jdir)              // direction
 			fold := fmin                          // save fmin
 			λhist, fmin = o.line.MinUpdateX(x, u) // x := x @ min
-			o.NumFeval += o.line.NumFeval
 
 			// update jdel if jdir gives the largest decrease
 			if fold-fmin > delF {
@@ -122,27 +104,26 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 			}
 
 			// history
-			if o.History {
-				uhist.Apply(λhist, u)
-				o.Hist.Append(fmin, x, uhist)
+			if o.UseHist {
+				o.uhist.Apply(λhist, u)
+				o.Hist.Append(fmin, x, o.uhist)
 			}
 		}
 
 		// exit point
-		if 2.0*(fx-fmin) <= o.Ftol*(math.Abs(fx)+math.Abs(fmin))+o.tiny {
+		if o.Fconvergence(fx, fmin) {
 			return
 		}
 
 		// compute extrapolated point, compute average direction, and save starting point
-		for i := 0; i < o.size; i++ {
+		for i := 0; i < size; i++ {
 			o.xext[i] = 2.0*x[i] - o.xcpy[i] // xext := 2⋅x - x0  extrapolated point
 			o.uave[i] = x[i] - o.xcpy[i]     // uave := x - x0    average direction moved
 			o.xcpy[i] = x[i]                 // xcpy := x         save the old starting point
 		}
 
 		// function value at extrapolated point
-		fext := o.ffcn(o.xext)
-		o.NumFeval++
+		fext := o.Ffcn(o.xext)
 
 		// move to the minimum of the new direction, and save the new direction
 		if fext < fx {
@@ -150,18 +131,17 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 
 				// minimize along average direction
 				λhist, fmin = o.line.MinUpdateX(x, o.uave)
-				o.NumFeval += o.line.NumFeval
 
 				// save average direction
-				for i := 0; i < o.size; i++ {
-					o.Umat.Set(i, jdel, o.Umat.Get(i, o.size-1))
-					o.Umat.Set(i, o.size-1, o.uave[i])
+				for i := 0; i < size; i++ {
+					o.Umat.Set(i, jdel, o.Umat.Get(i, size-1))
+					o.Umat.Set(i, size-1, o.uave[i])
 				}
 
 				// history
-				if o.History {
-					uhist.Apply(λhist, o.uave)
-					o.Hist.Append(fmin, x, uhist)
+				if o.UseHist {
+					o.uhist.Apply(λhist, o.uave)
+					o.Hist.Append(fmin, x, o.uhist)
 				}
 
 			} // else: keep the old set of directions for the next basic procedure, because either
