@@ -28,7 +28,6 @@ func runGradDescTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tol
 	ndim := len(x0)
 
 	// solve using Gradient-Descent
-	nFeval, nGeval = 0, 0
 	xmin := x0.GetCopy()
 	sol = NewGradDesc(ndim, FfcnWrapped, GfcnWrapped)
 	sol.Alpha = α
