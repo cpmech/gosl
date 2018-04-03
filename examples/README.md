@@ -596,3 +596,13 @@ Source code: <a href="plt_bigo.go">plt_bigo.go</a>
 <div id="container">
 <p><img src="figs/plt_bigo.png" width="500"></p>
 </div>
+
+
+
+# Delaunay Triangle Generation
+
+Source code: <a href="tri_delaunay01.go">tri_delaunay01.go</a>
+
+<div id="container">
+<p><img src="figs/generate01.png" width="500"></p>
+</div>
