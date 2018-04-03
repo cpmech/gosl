@@ -599,10 +599,20 @@ Source code: <a href="plt_bigo.go">plt_bigo.go</a>
 
 
 
-# Delaunay Triangle Generation
+# Triangle Mesh
+
+## Delaunay triangulation
 
 Source code: <a href="tri_delaunay01.go">tri_delaunay01.go</a>
 
 <div id="container">
-<p><img src="figs/generate01.png" width="500"></p>
+<p><img src="figs/tri_delaunay01.png" width="500"></p>
+</div>
+
+## Mesh generation
+
+Source code: <a href="tri_generate01.go">tri_generate01.go</a>
+
+<div id="container">
+<p><img src="figs/tri_generate01.png" width="500"></p>
 </div>

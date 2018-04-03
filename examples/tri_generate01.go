@@ -46,5 +46,5 @@ func main() {
 	plt.Gll("x", "y", nil)
 	plt.Equal()
 	plt.HideAllBorders()
-	plt.Save("/tmp/gosl", "generate01")
+	plt.Save("/tmp/gosl", "tri_generate01")
 }
