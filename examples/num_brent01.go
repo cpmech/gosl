@@ -35,8 +35,8 @@ func main() {
 	io.Pf("\n")
 	io.Pf("x      = %v\n", xo)
 	io.Pf("f(x)   = %v\n", yo)
-	io.Pf("nfeval = %v\n", solver.NFeval)
-	io.Pf("niter. = %v\n", solver.It)
+	io.Pf("nfeval = %v\n", solver.NumFeval)
+	io.Pf("niter. = %v\n", solver.NumIter)
 
 	// plotting
 	npts := 101
