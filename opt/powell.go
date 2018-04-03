@@ -36,23 +36,23 @@ type Powell struct {
 }
 
 // NewPowell returns a new multidimensional optimizer using Powell's method (no derivatives required)
-//   size -- length(x)
-//   ffcn -- scalar function of vector: y = f({x})
-func NewPowell(size int, Ffcn fun.Sv) (o *Powell) {
+//   ndim -- length(x)
+//   Ffcn -- objective function: y = f({x})
+func NewPowell(ndim int, Ffcn fun.Sv) (o *Powell) {
 	o = new(Powell)
 	o.InitConvergence(Ffcn, nil)
-	o.line = num.NewLineSolver(size, o.Ffcn, nil)
-	o.xcpy = la.NewVector(size)
-	o.xext = la.NewVector(size)
-	o.uave = la.NewVector(size)
-	o.Umat = la.NewMatrix(size, size)
+	o.line = num.NewLineSolver(ndim, o.Ffcn, nil)
+	o.xcpy = la.NewVector(ndim)
+	o.xext = la.NewVector(ndim)
+	o.uave = la.NewVector(ndim)
+	o.Umat = la.NewMatrix(ndim, ndim)
 	return
 }
 
 // Min solves minimization problem
 //
 //  Input:
-//    x -- [size] initial starting point (will be modified)
+//    x -- [ndim] initial starting point (will be modified)
 //    reuseUmat -- use pre-computed Nmat containing the directions as columns;
 //                 otherwise, set diagonal matrix
 //
@@ -69,7 +69,7 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 
 	// initializations
 	o.NumFeval = 0
-	size := len(x)
+	ndim := len(x)
 	fmin = o.Ffcn(x)
 
 	// history
@@ -90,7 +90,7 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 		delF := 0.0 // largest function decrease
 
 		// loop over all directions in the set
-		for jdir := 0; jdir < size; jdir++ {
+		for jdir := 0; jdir < ndim; jdir++ {
 
 			// minimize along direction jdir
 			u := o.Umat.GetCol(jdir)              // direction
@@ -116,7 +116,7 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 		}
 
 		// compute extrapolated point, compute average direction, and save starting point
-		for i := 0; i < size; i++ {
+		for i := 0; i < ndim; i++ {
 			o.xext[i] = 2.0*x[i] - o.xcpy[i] // xext := 2⋅x - x0  extrapolated point
 			o.uave[i] = x[i] - o.xcpy[i]     // uave := x - x0    average direction moved
 			o.xcpy[i] = x[i]                 // xcpy := x         save the old starting point
@@ -133,9 +133,9 @@ func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
 				λhist, fmin = o.line.MinUpdateX(x, o.uave)
 
 				// save average direction
-				for i := 0; i < size; i++ {
-					o.Umat.Set(i, jdel, o.Umat.Get(i, size-1))
-					o.Umat.Set(i, size-1, o.uave[i])
+				for i := 0; i < ndim; i++ {
+					o.Umat.Set(i, jdel, o.Umat.Get(i, ndim-1))
+					o.Umat.Set(i, ndim-1, o.uave[i])
 				}
 
 				// history
