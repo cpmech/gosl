@@ -13,6 +13,15 @@ import (
 	"github.com/cpmech/gosl/plt"
 )
 
+func checkPowell(tst *testing.T, sol *Powell, nfevalRef, nJevalRef int, fmin, fminRef, tolf, tolx float64, xmin, xminRef []float64) {
+	name := "Powell"
+	io.Pforan("%s: NumIter = %v\n", name, sol.NumIter)
+	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nfevalRef)
+	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, fminRef)
+	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, xminRef)
+	io.Pl()
+}
+
 func TestPowell01(tst *testing.T) {
 
 	//verbose()
@@ -43,10 +52,10 @@ func TestPowell01(tst *testing.T) {
 		plt.Subplot(2, 1, 1)
 		solver.Hist.RangeXi = []float64{-1.5, 1.5}
 		solver.Hist.RangeXj = []float64{-1.5, 1.5}
-		solver.Hist.PlotX(0, 1, x)
+		//solver.Hist.PlotX(0, 1, x)
 
 		plt.Subplot(2, 1, 2)
-		solver.Hist.PlotF()
+		solver.Hist.PlotF(nil)
 		plt.Save("/tmp/gosl/opt", "powell01")
 	}
 }
@@ -94,10 +103,10 @@ func TestPowell02(tst *testing.T) {
 		plt.Subplot(2, 1, 1)
 		solver.Hist.RangeXi = []float64{-1.5, 1.5}
 		solver.Hist.RangeXj = []float64{-1.5, 1.5}
-		solver.Hist.PlotX(0, 1, x)
+		//solver.Hist.PlotX(0, 1, x)
 
 		plt.Subplot(2, 1, 2)
-		solver.Hist.PlotF()
+		solver.Hist.PlotF(nil)
 		plt.Save("/tmp/gosl/opt", "powell02")
 	}
 }
@@ -142,20 +151,20 @@ func TestPowell03(tst *testing.T) {
 		plt.Subplot(4, 1, 1)
 		solver.Hist.GapXi = 0.5
 		solver.Hist.GapXj = 0.5
-		solver.Hist.PlotX(0, 1, x)
+		//solver.Hist.PlotX(0, 1, x)
 
 		plt.Subplot(4, 1, 2)
 		solver.Hist.GapXi = 0.5
 		solver.Hist.GapXj = 0.5
-		solver.Hist.PlotX(1, 2, x)
+		//solver.Hist.PlotX(1, 2, x)
 
 		plt.Subplot(4, 1, 3)
 		solver.Hist.GapXi = 0.5
 		solver.Hist.GapXj = 0.5
-		solver.Hist.PlotX(2, 0, x)
+		//solver.Hist.PlotX(2, 0, x)
 
 		plt.Subplot(4, 1, 4)
-		solver.Hist.PlotF()
+		solver.Hist.PlotF(nil)
 		plt.Save("/tmp/gosl/opt", "powell03")
 	}
 }

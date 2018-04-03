@@ -58,19 +58,36 @@ func (o *History) Append(fx float64, x, u la.Vector) {
 	o.HistI = append(o.HistI, float64(len(o.HistI)))
 }
 
-// PlotX plots contour and trajectory of x-points
-func (o *History) PlotX(iDim, jDim int, xref la.Vector) {
+// Limits computes range of X variables
+func (o *History) Limits() (Xmin []float64, Xmax []float64) {
+	Xmin = make([]float64, o.Ndim)
+	Xmax = make([]float64, o.Ndim)
+	for j := 0; j < o.Ndim; j++ {
+		Xmin[j] = math.MaxFloat64
+		Xmax[j] = math.SmallestNonzeroFloat64
+		for _, x := range o.HistX {
+			Xmin[j] = utl.Min(Xmin[j], x[j])
+			Xmax[j] = utl.Max(Xmax[j], x[j])
+		}
+	}
+	return
+}
+
+// PlotC plots contour
+func (o *History) PlotC(iDim, jDim int, xref la.Vector) {
+
+	// limits
+	var Xmin, Xmax []float64
+	if len(o.RangeXi) != 2 || len(o.RangeXj) != 2 {
+		Xmin, Xmax = o.Limits()
+	}
 
 	// i-range
 	var ximin, ximax float64
 	if len(o.RangeXi) == 2 {
 		ximin, ximax = o.RangeXi[0], o.RangeXi[1]
 	} else {
-		ximin, ximax = math.MaxFloat64, math.SmallestNonzeroFloat64
-		for _, x := range o.HistX {
-			ximin = utl.Min(ximin, x[iDim])
-			ximax = utl.Max(ximax, x[iDim])
-		}
+		ximin, ximax = Xmin[iDim], Xmax[iDim]
 	}
 
 	// j-range
@@ -78,11 +95,7 @@ func (o *History) PlotX(iDim, jDim int, xref la.Vector) {
 	if len(o.RangeXj) == 2 {
 		xjmin, xjmax = o.RangeXj[0], o.RangeXj[1]
 	} else {
-		xjmin, xjmax = math.MaxFloat64, math.SmallestNonzeroFloat64
-		for _, x := range o.HistX {
-			xjmin = utl.Min(xjmin, x[jDim])
-			xjmax = utl.Max(xjmax, x[jDim])
-		}
+		xjmin, xjmax = Xmin[jDim], Xmax[jDim]
 	}
 
 	// use gap
@@ -99,6 +112,13 @@ func (o *History) PlotX(iDim, jDim int, xref la.Vector) {
 	})
 	plt.ContourF(xx, yy, zz, nil)
 
+	// labels
+	plt.SetLabels(io.Sf("$x_{%d}$", iDim), io.Sf("$x_{%d}$", jDim), nil)
+}
+
+// PlotX plots trajectory of x-points
+func (o *History) PlotX(iDim, jDim int, xref la.Vector, argsArrow *plt.A) {
+
 	// trajectory
 	x2d := la.NewVector(2)
 	u2d := la.NewVector(2)
@@ -109,7 +129,7 @@ func (o *History) PlotX(iDim, jDim int, xref la.Vector) {
 		u2d[0], u2d[1] = u[iDim], u[jDim]
 		if u.Norm() > 1e-10 {
 			plt.PlotOne(x2d[0], x2d[1], &plt.A{C: "y", M: "o", Z: 10, NoClip: true})
-			plt.DrawArrow2d(x2d, u2d, false, 1, nil)
+			plt.DrawArrow2d(x2d, u2d, false, 1, argsArrow)
 		}
 	}
 
@@ -122,11 +142,102 @@ func (o *History) PlotX(iDim, jDim int, xref la.Vector) {
 }
 
 // PlotF plots f-values along iterations
-func (o *History) PlotF() {
+func (o *History) PlotF(args *plt.A) {
+	if args == nil {
+		args = &plt.A{C: plt.C(2, 0), M: ".", Ls: "-", Lw: 2, NoClip: true}
+	}
 	l := len(o.HistI) - 1
-	plt.Plot(o.HistI, o.HistF, &plt.A{C: plt.C(2, 0), M: ".", Ls: "-", Lw: 2, NoClip: true})
+	plt.Plot(o.HistI, o.HistF, args)
 	plt.Text(o.HistI[0], o.HistF[0], io.Sf("%.3f", o.HistF[0]), &plt.A{C: plt.C(0, 0), Fsz: 7, Ha: "left", Va: "top", NoClip: true})
 	plt.Text(o.HistI[l], o.HistF[l], io.Sf("%.3f", o.HistF[l]), &plt.A{C: plt.C(0, 0), Fsz: 7, Ha: "right", Va: "bottom", NoClip: true})
 	plt.Gll("$iteration$", "$f(x)$", nil)
 	plt.HideTRborders()
+}
+
+// CompareHistory2d generate plots to compare two history data with ndim >= 2
+func CompareHistory2d(name1, name2 string, hist1, hist2 *History, xref1, xref2 la.Vector) {
+
+	clr1 := "orange"
+	clr2 := "#5a5252"
+
+	argsArrow1 := &plt.A{C: clr1, Scale: 40}
+	argsArrow2 := &plt.A{C: clr2, Scale: 10}
+	argsF1 := &plt.A{C: clr1, Lw: 5, L: name1, NoClip: true}
+	argsF2 := &plt.A{C: clr2, Lw: 2, L: name2, NoClip: true}
+
+	Xmin1, Xmax1 := hist1.Limits()
+	Xmin2, Xmax2 := hist2.Limits()
+	hist1.RangeXi = make([]float64, 2)
+	hist1.RangeXj = make([]float64, 2)
+
+	hist1.GapXi = 0.5
+	hist1.GapXj = 0.5
+
+	plt.SplotGap(0.25, 0.25)
+
+	plt.Subplot(2, 1, 1)
+	hist1.RangeXi[0] = utl.Min(Xmin1[0], Xmin2[0])
+	hist1.RangeXi[1] = utl.Max(Xmax1[0], Xmax2[0])
+	hist1.RangeXj[0] = utl.Min(Xmin1[1], Xmin2[1])
+	hist1.RangeXj[1] = utl.Max(Xmax1[1], Xmax2[1])
+	hist1.PlotC(0, 1, xref1)
+	hist1.PlotX(0, 1, xref1, argsArrow1)
+	hist2.PlotX(0, 1, xref2, argsArrow2)
+
+	plt.Subplot(2, 1, 2)
+	hist1.PlotF(argsF1)
+	hist2.PlotF(argsF2)
+}
+
+// CompareHistory3d generate plots to compare two history data with ndim >= 3
+func CompareHistory3d(name1, name2 string, hist1, hist2 *History, xref1, xref2 la.Vector) {
+
+	clr1 := "orange"
+	clr2 := "#5a5252"
+
+	argsArrow1 := &plt.A{C: clr1, Scale: 40}
+	argsArrow2 := &plt.A{C: clr2, Scale: 10}
+	argsF1 := &plt.A{C: clr1, Lw: 5, L: name1, NoClip: true}
+	argsF2 := &plt.A{C: clr2, Lw: 2, L: name2, NoClip: true}
+
+	Xmin1, Xmax1 := hist1.Limits()
+	Xmin2, Xmax2 := hist2.Limits()
+	hist1.RangeXi = make([]float64, 2)
+	hist1.RangeXj = make([]float64, 2)
+
+	hist1.GapXi = 0.5
+	hist1.GapXj = 0.5
+
+	plt.SplotGap(0.25, 0.25)
+
+	plt.Subplot(2, 2, 1)
+	hist1.RangeXi[0] = utl.Min(Xmin1[0], Xmin2[0])
+	hist1.RangeXi[1] = utl.Max(Xmax1[0], Xmax2[0])
+	hist1.RangeXj[0] = utl.Min(Xmin1[1], Xmin2[1])
+	hist1.RangeXj[1] = utl.Max(Xmax1[1], Xmax2[1])
+	hist1.PlotC(0, 1, xref1)
+	hist1.PlotX(0, 1, xref1, argsArrow1)
+	hist2.PlotX(0, 1, xref2, argsArrow2)
+
+	plt.Subplot(2, 2, 2)
+	hist1.RangeXi[0] = utl.Min(Xmin1[1], Xmin2[1])
+	hist1.RangeXi[1] = utl.Max(Xmax1[1], Xmax2[1])
+	hist1.RangeXj[0] = utl.Min(Xmin1[2], Xmin2[2])
+	hist1.RangeXj[1] = utl.Max(Xmax1[2], Xmax2[2])
+	hist1.PlotC(1, 2, xref1)
+	hist1.PlotX(1, 2, xref1, argsArrow1)
+	hist2.PlotX(1, 2, xref2, argsArrow2)
+
+	plt.Subplot(2, 2, 3)
+	hist1.RangeXi[0] = utl.Min(Xmin1[2], Xmin2[2])
+	hist1.RangeXi[1] = utl.Max(Xmax1[2], Xmax2[2])
+	hist1.RangeXj[0] = utl.Min(Xmin1[0], Xmin2[0])
+	hist1.RangeXj[1] = utl.Max(Xmax1[0], Xmax2[0])
+	hist1.PlotC(2, 0, xref1)
+	hist1.PlotX(2, 0, xref1, argsArrow1)
+	hist2.PlotX(2, 0, xref2, argsArrow2)
+
+	plt.Subplot(2, 2, 4)
+	hist1.PlotF(argsF1)
+	hist2.PlotF(argsF2)
 }
