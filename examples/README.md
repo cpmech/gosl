@@ -25,6 +25,39 @@ export GOSLDATA=$HOME/GoslDataFiles
 
 
 
+# Optimization: Conjugate Gradients
+
+## Rosenbrock Function
+
+Source code: <a href="opt_conjgrad01.go">opt_conjgrad01.go</a>
+
+<div id="container">
+<p><img src="figs/opt_conjgrad01.png" width="500"></p>
+</div>
+
+
+
+# Optimization: Interior Point Method
+
+## Simple problem 1
+
+Source code: <a href="opt_ipm01.go">opt_ipm01.go</a>
+
+<div id="container">
+<p><img src="figs/opt_ipm01.png" width="500"></p>
+</div>
+
+## Simple problem 2
+
+Source code: <a href="opt_ipm02.go">opt_ipm02.go</a>
+
+<div id="container">
+<p><img src="figs/opt_ipm02.png" width="500"></p>
+</div>
+
+
+
+
 # Machine Learning: Linear and Logistic Regressions
 
 Initial implementation of Linear and Logistic regressions, based on [Prof. Andrew Ng's online notes](http://cs229.stanford.edu) (see also Coursera).

@@ -257,8 +257,8 @@ func CompareHistory3d(name1, name2 string, hist1, hist2 *History, xref1, xref2 l
 	hist1.RangeXi = make([]float64, 2)
 	hist1.RangeXj = make([]float64, 2)
 
-	hist1.GapXi = 0.5
-	hist1.GapXj = 0.5
+	hist1.GapXi = 0.1
+	hist1.GapXj = 0.1
 
 	plt.SplotGap(0.25, 0.25)
 
