@@ -44,13 +44,10 @@ tri_draw01.go
 tri_generate01.go
 "
 
-#vtk_isosurf01.go
-#vtk_spheres01.go
-
 for ex in $examples; do
     echo
     echo
-    echo "[1;32m>>> running $ex <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<[0m"
+    echo ">>> running $ex <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
     go run "$ex"
 done
 
