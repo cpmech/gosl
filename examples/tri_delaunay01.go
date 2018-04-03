@@ -8,7 +8,6 @@ package main
 
 import (
 	"github.com/cpmech/gosl/gm/tri"
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/plt"
 	"github.com/cpmech/gosl/rnd"
 )
@@ -34,9 +33,6 @@ func main() {
 
 	// generate
 	V, C := tri.Delaunay(X, Y, false)
-
-	io.Pforan("V = %v\n", V)
-	io.Pf("C = %v\n", C)
 
 	// plot
 	plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
