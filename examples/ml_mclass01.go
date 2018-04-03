@@ -25,9 +25,8 @@ func main() {
 	model := ml.NewLogRegMulti(data, "model01")
 
 	// train
-	gradDesc := false
 	model.SetLambda(1e-5)
-	model.Train(gradDesc)
+	model.Train()
 
 	// plot
 	npts := 201

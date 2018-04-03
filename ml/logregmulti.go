@@ -93,9 +93,8 @@ func (o *LogRegMulti) Predict(x la.Vector) (class int, probs []float64) {
 	return
 }
 
-// Train finds the parameters using closed-form solutions
-//  gradDesc -- use Gradient-Descent
-func (o *LogRegMulti) Train(gardDesc bool) {
+// Train finds the parameters using Newton's method
+func (o *LogRegMulti) Train() {
 	for k := 0; k < o.nClass; k++ {
 		o.models[k].Train()
 	}

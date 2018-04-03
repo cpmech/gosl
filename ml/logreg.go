@@ -186,7 +186,7 @@ func (o *LogReg) Hessian(d, v la.Vector, D, H *la.Matrix) (w float64) {
 	return
 }
 
-// Train finds θ and b using closed-form solution
+// Train finds θ and b using Newton's method
 //   Input:
 //     data -- X,y data
 //   Output:

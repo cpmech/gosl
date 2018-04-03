@@ -43,22 +43,9 @@ func main() {
 	model.Train()
 
 	// plot data and model prediction (analytical)
-	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
-	plt.Subplot(2, 1, 1)
+	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 	pp := ml.NewPlotterReg(data, params, model, mapper)
 	pp.DataClass(0, 1, true)
 	pp.ContourModel(0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
-
-	// train using gradient-descent
-	maxNit := 10
-	params.SetThetas(θini)
-	params.SetBias(bini)
-	gdesc := ml.NewGraDescReg(maxNit)
-	gdesc.Alpha = 5.0
-	gdesc.Train(data, params, model)
-
-	// plot gradient-descent convergence graph
-	plt.Subplot(2, 1, 2)
-	gdesc.Plot(nil)
 	plt.Save("/tmp/gosl", "ml_ang02")
 }

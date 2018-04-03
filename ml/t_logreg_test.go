@@ -192,31 +192,10 @@ func TestLogReg02(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
-		plt.Subplot(2, 1, 1)
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 		pp := NewPlotterReg(data, params, model, nil)
 		pp.DataClass(0, 1, true)
 		pp.ContourModel(0, 1, 0.5, -1, 1, -1, 1)
-	}
-
-	// gradient-descent
-	params.SetThetas([]float64{0, 0})
-	params.SetBias(0)
-	maxNit := 10
-	gdesc := NewGraDescReg(maxNit)
-	gdesc.Alpha = 100
-	gdesc.Train(data, params, model)
-	io.Pfblue2("cost = %v\n", model.Cost())
-	io.Pfblue2("θ = %v\n", params.AccessThetas())
-	io.Pfblue2("b = %v\n", params.GetBias())
-	chk.Float64(tst, "cost", 1e-15, model.Cost(), 0.0015372029816003163)
-	chk.Array(tst, "θ", 1e-14, params.AccessThetas(), []float64{22.06214330726067, 22.06214330726067})
-	chk.Float64(tst, "b", 1e-14, params.GetBias(), 5.254524501188747)
-
-	// plot
-	if chk.Verbose {
-		plt.Subplot(2, 1, 2)
-		gdesc.Plot(nil)
 		plt.Save("/tmp/gosl/ml", "logreg02")
 	}
 }
@@ -255,28 +234,10 @@ func TestLogReg03(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
-		plt.Subplot(2, 1, 1)
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 		pp := NewPlotterReg(data, params, model, nil)
 		pp.DataClass(0, 1, true)
 		pp.ContourModel(0, 1, 0.5, 20, 100, 20, 100)
-	}
-
-	// train using gradient-descent
-	maxNit := 10
-	params.SetThetas(θini)
-	params.SetBias(bini)
-	gdesc := NewGraDescReg(maxNit)
-	gdesc.Alpha = 0.002
-	gdesc.Train(data, params, model)
-	chk.Float64(tst, "\ncost", 1e-15, model.Cost(), 2.037591668976244e-01)
-	chk.Array(tst, "θ", 1e-8, params.AccessThetas(), []float64{1.957478716620902e-01, 1.933175159514175e-01})
-	chk.Float64(tst, "b", 1e-6, params.GetBias(), -2.400009669708430e+01)
-
-	// plot
-	if chk.Verbose {
-		plt.Subplot(2, 1, 2)
-		gdesc.Plot(nil)
 		plt.Save("/tmp/gosl/ml", "logreg03")
 	}
 }
@@ -323,28 +284,10 @@ func TestLogReg04(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
-		plt.Subplot(2, 1, 1)
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 		pp := NewPlotterReg(data, params, model, mapper)
 		pp.DataClass(0, 1, true)
 		pp.ContourModel(0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
-	}
-
-	// train using gradient-descent
-	maxNit := 10
-	params.SetThetas(θini)
-	params.SetBias(bini)
-	gdesc := NewGraDescReg(maxNit)
-	gdesc.Alpha = 5.0
-	gdesc.Train(data, params, model)
-	chk.Float64(tst, "\ncost", 1e-15, model.Cost(), 5.920108560779025e-01)
-	chk.Array(tst, "θ", 1e-15, params.AccessThetas()[:4], []float64{-1.730594903181217e-01, 3.615618466861891e-01, -1.194645899263627e+00, -4.186288373383852e-01})
-	chk.Float64(tst, "b", 1e-15, params.GetBias(), 6.527575848138054e-01)
-
-	// plot
-	if chk.Verbose {
-		plt.Subplot(2, 1, 2)
-		gdesc.Plot(nil)
 		plt.Save("/tmp/gosl/ml", "logreg04")
 	}
 }
@@ -364,9 +307,8 @@ func TestLogReg05(tst *testing.T) {
 	model := NewLogRegMulti(data, "model01")
 
 	// train
-	gradDesc := false
 	model.SetLambda(1e-5)
-	model.Train(gradDesc)
+	model.Train()
 
 	// check
 	classes := make([]int, data.Nsamples)
