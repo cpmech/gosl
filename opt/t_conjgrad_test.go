@@ -21,7 +21,7 @@ func checkCG(tst *testing.T, sol *ConjGrad, nfevalRef, nJevalRef int, fmin, fmin
 	}
 	io.Pforan("%s: NumIter = %v\n", name, sol.NumIter)
 	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nfevalRef)
-	chk.Int(tst, io.Sf("%s: NumJeval", name), sol.NumJeval, nJevalRef)
+	chk.Int(tst, io.Sf("%s: NumJeval", name), sol.NumGeval, nJevalRef)
 	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, fminRef)
 	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, xminRef)
 	io.Pl()
@@ -46,7 +46,7 @@ func runCGtest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 la.Vec
 	xmin1 := x0.GetCopy()
 	sol1 = NewConjGrad(ndim, ffcnWrapped, JfcnWrapped)
 	sol1.UseBrent = true
-	sol1.History = true
+	sol1.UseHist = true
 	fmin1 := sol1.Min(xmin1)
 	checkCG(tst, sol1, nfeval, nJeval, fmin1, fminRef, tolf, tolx, xmin1, xminRef)
 
@@ -54,7 +54,7 @@ func runCGtest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 la.Vec
 	nfeval, nJeval = 0, 0
 	xmin2 := x0.GetCopy()
 	sol2 = NewConjGrad(ndim, ffcnWrapped, JfcnWrapped)
-	sol2.History = true
+	sol2.UseHist = true
 	fmin2 := sol2.Min(xmin2)
 	checkCG(tst, sol2, nfeval, nJeval, fmin2, fminRef, tolf, tolx, xmin2, xminRef)
 
@@ -175,7 +175,7 @@ func TestConjGrad03(tst *testing.T) {
 	x0 := la.NewVectorSlice([]float64{1, 2, 3})
 
 	// run test
-	runCGtest(tst, "conjgrad03", ffcn, Jfcn, x0, fref, 1e-15, 1e-9, xref)
+	runCGtest(tst, "conjgrad03", ffcn, Jfcn, x0, fref, 1e-15, 1e-8, xref)
 }
 
 func TestConjGrad04(tst *testing.T) {
@@ -191,5 +191,5 @@ func TestConjGrad04(tst *testing.T) {
 	x0 := la.NewVectorSlice([]float64{1.3, 0.7, 0.8, 1.9, 1.2})
 
 	// run test
-	runCGtest(tst, "conjgrad04", p.Ffcn, p.Gfcn, x0, p.Fref, 1e-15, 1e-8, p.Xref)
+	runCGtest(tst, "conjgrad04", p.Ffcn, p.Gfcn, x0, p.Fref, 1e-13, 1e-6, p.Xref)
 }

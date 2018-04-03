@@ -45,9 +45,7 @@ func (o *Convergence) InitConvergence(Ffcn fun.Sv, Gfcn fun.Vv) {
 		o.NumGeval++
 		Gfcn(g, x)
 	}
-	//o.Ffcn = Ffcn
-	//o.Gfcn = Gfcn
-	o.MaxIt = 100
+	o.MaxIt = 200
 	o.Ftol = 1e-8
 	o.Gtol = 1e-6
 	o.EpsF = 1e-18

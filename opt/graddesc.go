@@ -26,7 +26,7 @@ type GradDesc struct {
 }
 
 // NewGradDesc returns a new multidimensional optimizer using GradDesc's method (no derivatives required)
-//   Ndim -- length(x)
+//   ndim -- length(x)
 //   Ffcn -- objective function: y = f({x})
 //   Gfcn -- gradient function: g = dy/d{x} = deriv(f({x}), {x})
 func NewGradDesc(ndim int, Ffcn fun.Sv, Gfcn fun.Vv) (o *GradDesc) {
@@ -40,7 +40,7 @@ func NewGradDesc(ndim int, Ffcn fun.Sv, Gfcn fun.Vv) (o *GradDesc) {
 // Min solves minimization problem
 //
 //  Input:
-//    x -- [size] initial starting point (will be modified)
+//    x -- [ndim] initial starting point (will be modified)
 //
 //  Output:
 //    fmin -- f(x@min) minimum f({x}) found
