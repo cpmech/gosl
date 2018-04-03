@@ -8,55 +8,54 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
 
-func checkCG(tst *testing.T, sol *ConjGrad, nfevalRef, nJevalRef int, fmin, fminRef, tolf, tolx float64, xmin, xminRef []float64) {
+func checkConjGrad(tst *testing.T, sol *ConjGrad, nFeval, nGeval int, fmin, fref, tolf, tolx float64, xmin, xref []float64) {
 	name := "Wolfe"
 	if sol.UseBrent {
 		name = "Brent"
 	}
 	io.Pforan("%s: NumIter = %v\n", name, sol.NumIter)
-	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nfevalRef)
-	chk.Int(tst, io.Sf("%s: NumJeval", name), sol.NumGeval, nJevalRef)
-	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, fminRef)
-	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, xminRef)
+	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nFeval)
+	chk.Int(tst, io.Sf("%s: NumGeval", name), sol.NumGeval, nGeval)
+	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, fref)
+	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, xref)
 	io.Pl()
 }
 
-func runCGtest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 la.Vector, fminRef, tolf, tolx float64, xminRef []float64) (sol1, sol2 *ConjGrad) {
+func runConjGradTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tolf, tolx float64) (sol1, sol2 *ConjGrad) {
 
 	// wrap functions to compute nfeval and nJeval
-	nfeval, nJeval := 0, 0
-	ffcnWrapped := func(x la.Vector) float64 {
-		nfeval++
-		return ffcn(x)
+	nFeval, nGeval := 0, 0
+	FfcnWrapped := func(x la.Vector) float64 {
+		nFeval++
+		return p.Ffcn(x)
 	}
-	JfcnWrapped := func(g, x la.Vector) {
-		nJeval++
-		Jfcn(g, x)
+	GfcnWrapped := func(g, x la.Vector) {
+		nGeval++
+		p.Gfcn(g, x)
 	}
 	ndim := len(x0)
 
 	// solve using Brent
-	nfeval, nJeval = 0, 0
 	xmin1 := x0.GetCopy()
-	sol1 = NewConjGrad(ndim, ffcnWrapped, JfcnWrapped)
+	sol1 = NewConjGrad(ndim, FfcnWrapped, GfcnWrapped)
 	sol1.UseBrent = true
 	sol1.UseHist = true
 	fmin1 := sol1.Min(xmin1)
-	checkCG(tst, sol1, nfeval, nJeval, fmin1, fminRef, tolf, tolx, xmin1, xminRef)
+	checkConjGrad(tst, sol1, nFeval, nGeval, fmin1, p.Fref, tolf, tolx, xmin1, p.Xref)
 
 	// solve again using Wolfe's method
-	nfeval, nJeval = 0, 0
+	nFeval, nGeval = 0, 0
 	xmin2 := x0.GetCopy()
-	sol2 = NewConjGrad(ndim, ffcnWrapped, JfcnWrapped)
+	sol2 = NewConjGrad(ndim, FfcnWrapped, GfcnWrapped)
+	sol2.UseBrent = false
 	sol2.UseHist = true
 	fmin2 := sol2.Min(xmin2)
-	checkCG(tst, sol2, nfeval, nJeval, fmin2, fminRef, tolf, tolx, xmin2, xminRef)
+	checkConjGrad(tst, sol2, nFeval, nGeval, fmin2, p.Fref, tolf, tolx, xmin2, p.Xref)
 
 	// plot
 	if chk.Verbose {
@@ -77,105 +76,46 @@ func runCGtest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 la.Vec
 func TestConjGrad01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ConjGrad01. Simple bi-dimensional optimization")
+	chk.PrintTitle("ConjGrad01. Very simple bi-dimensional optimization")
 
-	// function f({x})
-	nfeval := 0
-	ffcn := func(x la.Vector) float64 {
-		nfeval++
-		return x[0]*x[0] + x[1]*x[1] - 0.5
-	}
+	// problem
+	p := Factory.SimpleParaboloid()
 
-	// Jacobian df/dx
-	nJeval := 0
-	Jfcn := func(g, x la.Vector) {
-		nJeval++
-		g[0] = 2.0 * x[0]
-		g[1] = 2.0 * x[1]
-	}
-
-	// initial point and reference
-	fref := -0.5
-	xref := []float64{0, 0}
+	// initial point
 	x0 := la.NewVectorSlice([]float64{1, 1})
 
 	// run test
-	runCGtest(tst, "conjgrad01", ffcn, Jfcn, x0, fref, 1e-15, 1e-10, xref)
+	runConjGradTest(tst, "conjgrad01", p, x0, 1e-15, 1e-10)
 }
 
 func TestConjGrad02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ConjGrad02. Simple bi-dimensional optimization")
+	chk.PrintTitle("ConjGrad02. quadratic optimization in 2D")
 
-	// function f({x})
-	A := la.NewMatrixDeep2([][]float64{
-		{3, 1},
-		{1, 2},
-	})
-	tmp := la.NewVector(A.M)
-	nfeval := 0
-	ffcn := func(x la.Vector) float64 {
-		nfeval++
-		la.MatVecMul(tmp, 1, A, x)
-		return la.VecDot(x, tmp) // xᵀ A x
-	}
+	// problem
+	p := Factory.SimpleQuadratic2d()
 
-	// Jacobian df/dx
-	At := A.GetTranspose()
-	AtPlusA := la.NewMatrix(A.M, A.M)
-	la.MatAdd(AtPlusA, 1, At, 1, A)
-	nJeval := 0
-	Jfcn := func(g, x la.Vector) {
-		nJeval++
-		la.MatVecMul(g, 1, AtPlusA, x) // g := (Aᵀ+A)⋅x
-	}
-
-	// initial point and reference
-	fref := 0.0
-	xref := []float64{0, 0}
+	// initial point
 	x0 := la.NewVectorSlice([]float64{1.5, -0.75})
 
 	// run test
-	runCGtest(tst, "conjgrad02", ffcn, Jfcn, x0, fref, 1e-15, 1e-9, xref)
+	runConjGradTest(tst, "conjgrad02", p, x0, 1e-15, 1e-9)
 }
 
 func TestConjGrad03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ConjGrad03. Simple three-dimensional optimization")
+	chk.PrintTitle("ConjGard03. quadratic optimization in 3D")
 
-	// function f({x})
-	A := la.NewMatrixDeep2([][]float64{
-		{5, 3, 1},
-		{3, 4, 2},
-		{1, 2, 3},
-	})
-	tmp := la.NewVector(A.M)
-	nfeval := 0
-	ffcn := func(x la.Vector) float64 {
-		nfeval++
-		la.MatVecMul(tmp, 1, A, x)
-		return la.VecDot(x, tmp) // xᵀ A x
-	}
+	// problem
+	p := Factory.SimpleQuadratic3d()
 
-	// Jacobian df/dx
-	At := A.GetTranspose()
-	AtPlusA := la.NewMatrix(A.M, A.M)
-	la.MatAdd(AtPlusA, 1, At, 1, A)
-	nJeval := 0
-	Jfcn := func(g, x la.Vector) {
-		nJeval++
-		la.MatVecMul(g, 1, AtPlusA, x) // g := (Aᵀ+A)⋅x
-	}
-
-	// initial point and reference
-	fref := 0.0
-	xref := []float64{0, 0, 0}
+	// initial point
 	x0 := la.NewVectorSlice([]float64{1, 2, 3})
 
 	// run test
-	runCGtest(tst, "conjgrad03", ffcn, Jfcn, x0, fref, 1e-15, 1e-8, xref)
+	runConjGradTest(tst, "conjgrad03", p, x0, 1e-15, 1e-8)
 }
 
 func TestConjGrad04(tst *testing.T) {
@@ -191,5 +131,5 @@ func TestConjGrad04(tst *testing.T) {
 	x0 := la.NewVectorSlice([]float64{1.3, 0.7, 0.8, 1.9, 1.2})
 
 	// run test
-	runCGtest(tst, "conjgrad04", p.Ffcn, p.Gfcn, x0, p.Fref, 1e-13, 1e-6, p.Xref)
+	runConjGradTest(tst, "conjgrad04", p, x0, 1e-13, 1e-6)
 }
