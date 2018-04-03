@@ -127,7 +127,7 @@ func TestConjGrad04(tst *testing.T) {
 	N := 5
 	p := Factory.RosenbrockMulti(N)
 
-	// initial point => xmin
+	// initial point
 	x0 := la.NewVectorSlice([]float64{1.3, 0.7, 0.8, 1.9, 1.2})
 
 	// run test
