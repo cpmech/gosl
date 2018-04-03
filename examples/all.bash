@@ -27,6 +27,7 @@ ml_simple01.go
 num_brent01.go
 num_deriv01.go
 num_newton01.go
+opt_conjgrad01.go
 opt_ipm01.go
 opt_ipm02.go
 plt_bigo.go
