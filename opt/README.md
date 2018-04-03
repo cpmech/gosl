@@ -4,8 +4,55 @@
 
 More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/opt).**
 
-This package provides routines to solve optimisation problems. Currently, linear programming
-problems can be solved with the interior-point method.
+This package provides routines to solve optimisation problems. The methods Conjugate Gradients
+`ConjGrad`, Powell's method `Powell` and Gradient Descent `GradDesc` can be used to solve
+unconstrained nonlinear problems. Linear programming problems can be solved with the Interior-Point
+Method for linear problems `LinIpm`.
+
+*Auxiliary structures*
+
+* History -- holds history of numerical optimization
+* Factory -- holds some pre-configured optimization problems
+* Problem -- defines functions required for each optimization problem
+* Convergence -- holds the objective and gradient functions and some control parameters to assess
+  the convergence of the nonlinear solver. An instance of History is also recorded here.
+
+*Nonlinear problems*
+
+* ConjGrad -- conjugate gradients
+* Powell -- Powell's method
+* GradDesc -- gradient descent
+
+These structures are instantiated with a given objective function and its gradient. They are all
+instances of Convergence and thus use the control parameters from there. The method `Min` can be
+called to solve the problem. 
+
+
+
+
+## Conjugate Gradients, Powell, Gradient Descent
+
+### Comparison using Simple Quadratic Function
+
+Source code: <a href="../examples/opt_comparison01.go">opt_comparison01.go</a>
+
+<div id="container">
+<p><img src="../examples/figs/opt_comparison01a.png" width="500"></p>
+</div>
+
+<div id="container">
+<p><img src="../examples/figs/opt_comparison01b.png" width="500"></p>
+</div>
+
+### Rosenbrock Function
+
+Source code: <a href="../examples/opt_conjgrad01.go" width="600">opt_conjgrad01.go</a>
+
+<div id="container">
+<p><img src="../examples/figs/opt_conjgrad01.png"></p>
+</div>
+
+
 
 ## Interior-point method for linear problems
 
