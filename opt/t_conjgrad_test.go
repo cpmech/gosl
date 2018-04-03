@@ -27,7 +27,7 @@ func checkCG(tst *testing.T, sol *ConjGrad, nfevalRef, nJevalRef int, fmin, fmin
 	io.Pl()
 }
 
-func runCGtest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 la.Vector, fminRef, tolf, tolx float64, xminRef []float64) (sol1, sol2 *ConjGrad, sol3 *Powell) {
+func runCGtest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 la.Vector, fminRef, tolf, tolx float64, xminRef []float64) (sol1, sol2 *ConjGrad) {
 
 	// wrap functions to compute nfeval and nJeval
 	nfeval, nJeval := 0, 0
@@ -58,32 +58,16 @@ func runCGtest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 la.Vec
 	fmin2 := sol2.Min(xmin2)
 	checkCG(tst, sol2, nfeval, nJeval, fmin2, fminRef, tolf, tolx, xmin2, xminRef)
 
-	// solve with Powell's method
-	nfeval, nJeval = 0, 0
-	xmin3 := x0.GetCopy()
-	sol3 = NewPowell(ndim, ffcnWrapped)
-	sol3.History = true
-	fmin3 := sol3.Min(xmin3, false)
-	checkPowell(tst, sol3, nfeval, nJeval, fmin3, fminRef, tolf, tolx, xmin3, xminRef)
-
 	// plot
 	if chk.Verbose {
 		if ndim > 2 {
 			plt.Reset(true, &plt.A{WidthPt: 600, Dpi: 150, Prop: 0.8})
 			CompareHistory3d("Brent", "Wolfe", sol1.Hist, sol2.Hist, xmin1, xmin2)
-			plt.Save("/tmp/gosl/opt", fnkey+"a")
-
-			plt.Reset(true, &plt.A{WidthPt: 600, Dpi: 150, Prop: 0.8})
-			CompareHistory3d("CG", "Powell", sol2.Hist, sol3.Hist, xmin2, xmin3)
-			plt.Save("/tmp/gosl/opt", fnkey+"b")
+			plt.Save("/tmp/gosl/opt", fnkey)
 		} else {
 			plt.Reset(true, &plt.A{WidthPt: 300, Dpi: 150, Prop: 1.5})
 			CompareHistory2d("Brent", "Wolfe", sol1.Hist, sol2.Hist, xmin1, xmin2)
-			plt.Save("/tmp/gosl/opt", fnkey+"a")
-
-			plt.Reset(true, &plt.A{WidthPt: 300, Dpi: 150, Prop: 1.5})
-			CompareHistory2d("CG", "Powell", sol2.Hist, sol3.Hist, xmin2, xmin3)
-			plt.Save("/tmp/gosl/opt", fnkey+"b")
+			plt.Save("/tmp/gosl/opt", fnkey)
 		}
 		io.Pl()
 	}
