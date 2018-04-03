@@ -32,7 +32,7 @@ export GOSLDATA=$HOME/GoslDataFiles
 Source code: <a href="opt_conjgrad01.go">opt_conjgrad01.go</a>
 
 <div id="container">
-<p><img src="figs/opt_conjgrad01.png" width="500"></p>
+<p><img src="figs/opt_conjgrad01.png"></p>
 </div>
 
 
