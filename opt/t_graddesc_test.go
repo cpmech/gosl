@@ -38,7 +38,7 @@ func runGradDescTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tol
 	name := "GradDesc"
 	io.Pforan("%s: NumIter = %v\n", name, sol.NumIter)
 	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nFeval)
-	chk.Int(tst, io.Sf("%s: NumJeval", name), sol.NumGeval, nGeval)
+	chk.Int(tst, io.Sf("%s: NumGeval", name), sol.NumGeval, nGeval)
 	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, p.Fref)
 	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, p.Xref)
 	io.Pl()
