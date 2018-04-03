@@ -123,7 +123,7 @@ func (o *ConjGrad) Min(x la.Vector) (fmin float64) {
 	fold := fx + o.u.Norm()/2.0 // TODO: find reference to this
 
 	// iterations
-	for o.NumIter = 0; o.NumIter < o.MaxIt; o.NumIter++ { //  Loop over iterations.
+	for o.NumIter = 0; o.NumIter < o.MaxIt; o.NumIter++ {
 
 		// exit point # 1: old gradient is exactly zero
 		deno = la.VecDot(o.g, o.g)
