@@ -141,7 +141,7 @@ func (o *History) PlotX(iDim, jDim int, xref la.Vector, argsArrow *plt.A) {
 	plt.SetLabels(io.Sf("$x_{%d}$", iDim), io.Sf("$x_{%d}$", jDim), nil)
 }
 
-// PlotF plots f-values along iterations
+// PlotF plots convergence on F values versus iteration numbers
 func (o *History) PlotF(args *plt.A) {
 	if args == nil {
 		args = &plt.A{C: plt.C(2, 0), M: ".", Ls: "-", Lw: 2, NoClip: true}
@@ -152,6 +152,58 @@ func (o *History) PlotF(args *plt.A) {
 	plt.Text(o.HistI[l], o.HistF[l], io.Sf("%.3f", o.HistF[l]), &plt.A{C: plt.C(0, 0), Fsz: 7, Ha: "right", Va: "bottom", NoClip: true})
 	plt.Gll("$iteration$", "$f(x)$", nil)
 	plt.HideTRborders()
+}
+
+// PlotAll2d plots contour using PlotC, trajectory using PlotX, and convergence on F values using
+// PlotF for history data with ndim >= 2
+func (o *History) PlotAll2d(name string, xref la.Vector) {
+
+	clr := "orange"
+
+	argsArrow := &plt.A{C: clr, Scale: 40}
+	argsF := &plt.A{C: clr, Lw: 3, L: name, NoClip: true}
+
+	o.GapXi = 0.5
+	o.GapXj = 0.5
+
+	plt.SplotGap(0.25, 0.25)
+
+	plt.Subplot(2, 1, 1)
+	o.PlotC(0, 1, xref)
+	o.PlotX(0, 1, xref, argsArrow)
+
+	plt.Subplot(2, 1, 2)
+	o.PlotF(argsF)
+}
+
+// PlotAll3d plots contour using PlotC, trajectory using PlotX, and convergence on F values using
+// PlotF for history data with ndim >= 3
+func (o *History) PlotAll3d(name string, xref la.Vector) {
+
+	clr := "orange"
+
+	argsArrow := &plt.A{C: clr, Scale: 40}
+	argsF := &plt.A{C: clr, Lw: 3, L: name, NoClip: true}
+
+	o.GapXi = 0.5
+	o.GapXj = 0.5
+
+	plt.SplotGap(0.25, 0.25)
+
+	plt.Subplot(2, 2, 1)
+	o.PlotC(0, 1, xref)
+	o.PlotX(0, 1, xref, argsArrow)
+
+	plt.Subplot(2, 2, 2)
+	o.PlotC(1, 2, xref)
+	o.PlotX(1, 2, xref, argsArrow)
+
+	plt.Subplot(2, 2, 3)
+	o.PlotC(2, 0, xref)
+	o.PlotX(2, 0, xref, argsArrow)
+
+	plt.Subplot(2, 2, 4)
+	o.PlotF(argsF)
 }
 
 // CompareHistory2d generate plots to compare two history data with ndim >= 2

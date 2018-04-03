@@ -18,6 +18,81 @@ var FactoryObjectives = facObjectivesT{}
 
 // unconstrained multi-dimensional problems ////////////////////////////////////////////////////////
 
+// SimpleParaboloid returns a simple optimization problem using a paraboloid as the objective function
+func (o facObjectivesT) SimpleParaboloid() (Ffcn fun.Sv, Gfcn fun.Vv, Hfcn fun.Mv, fmin float64, xmin la.Vector) {
+
+	// objective function f({x})
+	Ffcn = func(x la.Vector) float64 {
+		return x[0]*x[0] + x[1]*x[1] - 0.5
+	}
+
+	// gradient function df/d{x}|(x)
+	Gfcn = func(g, x la.Vector) {
+		g[0] = 2.0 * x[0]
+		g[1] = 2.0 * x[1]
+	}
+
+	// Hessian function d²f/d{x}d{x}!(x)
+	Hfcn = func(h *la.Matrix, x la.Vector) {
+		h.Set(0, 0, 2.0)
+		h.Set(0, 1, 0.0)
+		h.Set(1, 0, 0.0)
+		h.Set(1, 1, 2.0)
+	}
+
+	// known solution
+	fmin = -0.5
+	xmin = la.NewVectorSlice([]float64{0, 0})
+	return
+}
+
+// quadraticProblem returns a quadratic optimization problem such that f(x) = xᵀ A x
+func quadraticProblem(Amat [][]float64) (Ffcn fun.Sv, Gfcn fun.Vv, Hfcn fun.Mv, fmin float64, xmin la.Vector) {
+
+	// objective function f({x})
+	A := la.NewMatrixDeep2(Amat)
+	tmp := la.NewVector(A.M)
+	Ffcn = func(x la.Vector) float64 {
+		la.MatVecMul(tmp, 1, A, x)
+		return la.VecDot(x, tmp) // xᵀ A x
+	}
+
+	// gradient function df/d{x}|(x)
+	At := A.GetTranspose()
+	AtPlusA := la.NewMatrix(A.M, A.M)
+	la.MatAdd(AtPlusA, 1, At, 1, A)
+	Gfcn = func(g, x la.Vector) {
+		la.MatVecMul(g, 1, AtPlusA, x) // g := (Aᵀ+A)⋅x
+	}
+
+	// Hessian function d²f/d{x}d{x}!(x)
+	Hfcn = func(h *la.Matrix, x la.Vector) {
+		AtPlusA.CopyInto(h, 1) // H := Aᵀ + A
+	}
+
+	// solution
+	fmin = 0.0
+	xmin = la.NewVector(A.M) // xmin := 0.0
+	return
+}
+
+// SimpleQuadratic2d returns a simple problem with a quadratic function such that f(x) = xᵀ A x (2D)
+func (o facObjectivesT) SimpleQuadratic2d() (Ffcn fun.Sv, Gfcn fun.Vv, Hfcn fun.Mv, fmin float64, xmin la.Vector) {
+	return quadraticProblem([][]float64{
+		{3, 1},
+		{1, 2},
+	})
+}
+
+// SimpleQuadratic3d returns a simple problem with a quadratic function such that f(x) = xᵀ A x (3D)
+func (o facObjectivesT) SimpleQuadratic3d() (Ffcn fun.Sv, Gfcn fun.Vv, Hfcn fun.Mv, fmin float64, xmin la.Vector) {
+	return quadraticProblem([][]float64{
+		{5, 3, 1},
+		{3, 4, 2},
+		{1, 2, 3},
+	})
+}
+
 // Rosenbrock returns the classical Rosenbrock function
 //
 //   See https://en.wikipedia.org/wiki/Rosenbrock_function

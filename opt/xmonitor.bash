@@ -19,5 +19,8 @@ while true; do
     #go test -run ConjGrad01
     #go test -run ConjGrad02
     #go test -run ConjGrad03
-    go test -run ConjGrad04
+    #go test -run ConjGrad04
+    #go test -run GradDesc01
+    #go test -run GradDesc02
+    go test -run GradDesc03
 done
