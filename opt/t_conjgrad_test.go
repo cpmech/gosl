@@ -201,11 +201,11 @@ func TestConjGrad04(tst *testing.T) {
 
 	// objective function: Rosenbrock
 	N := 5
-	ffcn, Jfcn, _, _, xref, fref := FactoryObjectives.RosenbrockMulti(N)
+	p := Factory.RosenbrockMulti(N)
 
 	// initial point => xmin
 	x0 := la.NewVectorSlice([]float64{1.3, 0.7, 0.8, 1.9, 1.2})
 
 	// run test
-	runCGtest(tst, "conjgrad04", ffcn, Jfcn, x0, fref, 1e-15, 1e-8, xref)
+	runCGtest(tst, "conjgrad04", p.Ffcn, p.Gfcn, x0, p.Fref, 1e-15, 1e-8, p.Xref)
 }

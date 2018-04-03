@@ -8,33 +8,22 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
 )
 
-func checkGradDesc(tst *testing.T, sol *GradDesc, nFevalRef, nGevalRef int, fmin, fminRef, tolf, tolx float64, xmin, xminRef []float64) {
-	name := "GradDesc"
-	io.Pforan("%s: NumIter = %v\n", name, sol.NumIter)
-	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nFevalRef)
-	chk.Int(tst, io.Sf("%s: NumJeval", name), sol.NumGeval, nGevalRef)
-	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, fminRef)
-	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, xminRef)
-	io.Pl()
-}
+func runGradDescTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tolf, tolx, α float64) (sol *GradDesc) {
 
-func runGradDesctest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 la.Vector, α, fminRef, tolf, tolx float64, xminRef []float64) (sol *GradDesc) {
-
-	// wrap functions to compute nfeval and nJeval
+	// wrap functions
 	nFeval, nGeval := 0, 0
 	FfcnWrapped := func(x la.Vector) float64 {
 		nFeval++
-		return ffcn(x)
+		return p.Ffcn(x)
 	}
 	GfcnWrapped := func(g, x la.Vector) {
 		nGeval++
-		Jfcn(g, x)
+		p.Gfcn(g, x)
 	}
 	ndim := len(x0)
 
@@ -45,7 +34,15 @@ func runGradDesctest(tst *testing.T, fnkey string, ffcn fun.Sv, Jfcn fun.Vv, x0 
 	sol.Alpha = α
 	sol.UseHist = true
 	fmin := sol.Min(xmin)
-	checkGradDesc(tst, sol, nFeval, nGeval, fmin, fminRef, tolf, tolx, xmin, xminRef)
+
+	// check
+	name := "GradDesc"
+	io.Pforan("%s: NumIter = %v\n", name, sol.NumIter)
+	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nFeval)
+	chk.Int(tst, io.Sf("%s: NumJeval", name), sol.NumGeval, nGeval)
+	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, p.Fref)
+	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, p.Xref)
+	io.Pl()
 
 	// plot
 	if chk.Verbose {
@@ -68,14 +65,14 @@ func TestGradDesc01(tst *testing.T) {
 	chk.PrintTitle("GradDesc01. Very simple bi-dimensional optimization")
 
 	// problem
-	Ffcn, Gfcn, _, fref, xref := FactoryObjectives.SimpleParaboloid()
+	p := Factory.SimpleParaboloid()
 
 	// initial point
 	x0 := la.NewVectorSlice([]float64{1, 1})
 
 	// run test
 	α := 0.6
-	runGradDesctest(tst, "graddesc01", Ffcn, Gfcn, x0, α, fref, 1e-10, 1e-5, xref)
+	runGradDescTest(tst, "graddesc01", p, x0, 1e-10, 1e-5, α)
 }
 
 func TestGradDesc02(tst *testing.T) {
@@ -84,14 +81,14 @@ func TestGradDesc02(tst *testing.T) {
 	chk.PrintTitle("GradDesc02. quadratic optimization in 2D")
 
 	// problem
-	Ffcn, Gfcn, _, fref, xref := FactoryObjectives.SimpleQuadratic2d()
+	p := Factory.SimpleQuadratic2d()
 
 	// initial point
 	x0 := la.NewVectorSlice([]float64{1.5, -0.75})
 
 	// run test
 	α := 0.2
-	runGradDesctest(tst, "graddesc02", Ffcn, Gfcn, x0, α, fref, 1e-13, 1e-6, xref)
+	runGradDescTest(tst, "graddesc02", p, x0, 1e-13, 1e-6, α)
 }
 
 func TestGradDesc03(tst *testing.T) {
@@ -100,12 +97,12 @@ func TestGradDesc03(tst *testing.T) {
 	chk.PrintTitle("GradDesc02. quadratic optimization in 3D")
 
 	// problem
-	Ffcn, Gfcn, _, fref, xref := FactoryObjectives.SimpleQuadratic3d()
+	p := Factory.SimpleQuadratic3d()
 
 	// initial point
 	x0 := la.NewVectorSlice([]float64{1, 2, 3})
 
 	// run test
 	α := 0.1
-	runGradDesctest(tst, "graddesc03", Ffcn, Gfcn, x0, α, fref, 1e-10, 1e-5, xref)
+	runGradDescTest(tst, "graddesc03", p, x0, 1e-10, 1e-5, α)
 }
