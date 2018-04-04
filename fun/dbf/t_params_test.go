@@ -401,3 +401,48 @@ func TestParams17(tst *testing.T) {
 	chk.String(tst, errmsg, `cannot find parameter named "b" as requested by "TestParams17"
 `)
 }
+
+func TestParams18(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params18. GetValueOrDefault")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+	)
+
+	res := params.GetValueOrDefault("a", -2)
+	chk.Float64(tst, "a", 1e-15, res, +1)
+
+	res = params.GetValueOrDefault("invalid", -2)
+	chk.Float64(tst, "a", 1e-15, res, -2)
+}
+
+func TestParams19(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params19. GetBoolOrDefault")
+
+	params := NewParams(
+		&P{N: "a", V: 0, Min: -2, Max: +2}, // V=0 => false
+		&P{N: "b", V: 1, Min: -2, Max: +2}, // V=1 => true
+	)
+
+	res := params.GetBoolOrDefault("a", true)
+	if res != false {
+		tst.Errorf("res(a) should be false\n")
+		return
+	}
+
+	res = params.GetBoolOrDefault("b", false)
+	if res != true {
+		tst.Errorf("res(b) should be true\n")
+		return
+	}
+
+	res = params.GetBoolOrDefault("invalid", true)
+	if res != true {
+		tst.Errorf("res(invalid) should be true\n")
+		return
+	}
+}

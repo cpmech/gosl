@@ -24,5 +24,7 @@ while true; do
     #go test -run Params14
     #go test -run Params15
     #go test -run Params16
-    go test -run Params17
+    #go test -run Params17
+    #go test -run Params18
+    go test -run Params19
 done

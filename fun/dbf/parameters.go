@@ -110,6 +110,16 @@ func (o *Params) GetValue(name string) float64 {
 	return p.V
 }
 
+// GetValueOrDefault reads parameter or returns default value
+// Will return defaultValue if name does not exist in parameters set
+func (o *Params) GetValueOrDefault(name string, defaultValue float64) float64 {
+	p := o.Find(name)
+	if p == nil {
+		return defaultValue
+	}
+	return p.V
+}
+
 // GetBool reads Boolean parameter or Panic
 // Returns true if P[name] > 0; otherwise returns false
 // Will panic if name does not exist in parameters set
@@ -117,6 +127,20 @@ func (o *Params) GetBool(name string) bool {
 	p := o.Find(name)
 	if p == nil {
 		chk.Panic("cannot find Boolean parameter named %q\n", name)
+	}
+	if p.V > 0 {
+		return true
+	}
+	return false
+}
+
+// GetBoolOrDefault reads Boolean parameter or returns default value
+// Returns true if P[name] > 0; otherwise returns false
+// Will return defaultValue if name does not exist in parameters set
+func (o *Params) GetBoolOrDefault(name string, defaultValue bool) bool {
+	p := o.Find(name)
+	if p == nil {
+		return defaultValue
 	}
 	if p.V > 0 {
 		return true
