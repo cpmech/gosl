@@ -15,17 +15,9 @@ import (
 
 func runPowellTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tolf, tolx, α float64) (sol *Powell) {
 
-	// wrap functions
-	nFeval, nGeval := 0, 0
-	FfcnWrapped := func(x la.Vector) float64 {
-		nFeval++
-		return p.Ffcn(x)
-	}
-	ndim := len(x0)
-
 	// solve using Gradient-Descent
 	xmin := x0.GetCopy()
-	sol = NewPowell(ndim, FfcnWrapped)
+	sol = NewPowell(p)
 	sol.UseHist = true
 	reuseUmat := false
 	fmin := sol.Min(xmin, reuseUmat)
@@ -33,15 +25,14 @@ func runPowellTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tolf,
 	// check
 	name := "Powell"
 	io.Pforan("%s: NumIter = %v\n", name, sol.NumIter)
-	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nFeval)
-	chk.Int(tst, io.Sf("%s: NumGeval", name), sol.NumGeval, nGeval)
+	io.Pf("%s: NumFeval = %v\n", name, sol.NumFeval)
 	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, p.Fref)
 	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, p.Xref)
 	io.Pl()
 
 	// plot
 	if chk.Verbose {
-		if ndim > 2 {
+		if p.Ndim > 2 {
 			plt.Reset(true, &plt.A{WidthPt: 600, Dpi: 150, Prop: 0.8})
 			sol.Hist.PlotAll3d("Powell", xmin)
 		} else {

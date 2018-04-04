@@ -36,16 +36,14 @@ type Powell struct {
 }
 
 // NewPowell returns a new multidimensional optimizer using Powell's method (no derivatives required)
-//   ndim -- length(x)
-//   Ffcn -- objective function: y = f({x})
-func NewPowell(ndim int, Ffcn fun.Sv) (o *Powell) {
+func NewPowell(prob *Problem) (o *Powell) {
 	o = new(Powell)
-	o.InitConvergence(Ffcn, nil)
-	o.line = num.NewLineSolver(ndim, o.Ffcn, nil)
-	o.xcpy = la.NewVector(ndim)
-	o.xext = la.NewVector(ndim)
-	o.uave = la.NewVector(ndim)
-	o.Umat = la.NewMatrix(ndim, ndim)
+	o.InitConvergence(prob.Ffcn, nil)
+	o.line = num.NewLineSolver(prob.Ndim, o.Ffcn, nil)
+	o.xcpy = la.NewVector(prob.Ndim)
+	o.xext = la.NewVector(prob.Ndim)
+	o.uave = la.NewVector(prob.Ndim)
+	o.Umat = la.NewMatrix(prob.Ndim, prob.Ndim)
 	return
 }
 

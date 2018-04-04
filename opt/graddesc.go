@@ -6,7 +6,6 @@ package opt
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/la"
 )
 
@@ -26,14 +25,11 @@ type GradDesc struct {
 }
 
 // NewGradDesc returns a new multidimensional optimizer using GradDesc's method (no derivatives required)
-//   ndim -- length(x)
-//   Ffcn -- objective function: y = f({x})
-//   Gfcn -- gradient function: g = dy/d{x} = deriv(f({x}), {x})
-func NewGradDesc(ndim int, Ffcn fun.Sv, Gfcn fun.Vv) (o *GradDesc) {
+func NewGradDesc(prob *Problem) (o *GradDesc) {
 	o = new(GradDesc)
-	o.InitConvergence(Ffcn, Gfcn)
+	o.InitConvergence(prob.Ffcn, prob.Gfcn)
 	o.Alpha = 1e-3
-	o.dfdx = la.NewVector(ndim)
+	o.dfdx = la.NewVector(prob.Ndim)
 	return
 }
 

@@ -8,7 +8,6 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
@@ -46,18 +45,15 @@ type ConjGrad struct {
 }
 
 // NewConjGrad returns a new multidimensional optimizer using ConjGrad's method (no derivatives required)
-//   ndim -- length(x)
-//   Ffcn -- objective function: y = f({x})
-//   Gfcn -- gradient function: g = dy/d{x} = deriv(f({x}), {x})
-func NewConjGrad(ndim int, Ffcn fun.Sv, Gfcn fun.Vv) (o *ConjGrad) {
+func NewConjGrad(prob *Problem) (o *ConjGrad) {
 	o = new(ConjGrad)
-	o.InitConvergence(Ffcn, Gfcn)
-	o.lines = NewLineSearch(ndim, o.Ffcn, o.Gfcn)
-	o.lineb = num.NewLineSolver(ndim, o.Ffcn, o.Gfcn)
-	o.u = la.NewVector(ndim)
-	o.g = la.NewVector(ndim)
-	o.h = la.NewVector(ndim)
-	o.tmp = la.NewVector(ndim)
+	o.InitConvergence(prob.Ffcn, prob.Gfcn)
+	o.lines = NewLineSearch(prob.Ndim, o.Ffcn, o.Gfcn)
+	o.lineb = num.NewLineSolver(prob.Ndim, o.Ffcn, o.Gfcn)
+	o.u = la.NewVector(prob.Ndim)
+	o.g = la.NewVector(prob.Ndim)
+	o.h = la.NewVector(prob.Ndim)
+	o.tmp = la.NewVector(prob.Ndim)
 	o.zero = 1e-18
 	return
 }

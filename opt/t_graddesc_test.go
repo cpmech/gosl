@@ -15,21 +15,9 @@ import (
 
 func runGradDescTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tolf, tolx, α float64) (sol *GradDesc) {
 
-	// wrap functions
-	nFeval, nGeval := 0, 0
-	FfcnWrapped := func(x la.Vector) float64 {
-		nFeval++
-		return p.Ffcn(x)
-	}
-	GfcnWrapped := func(g, x la.Vector) {
-		nGeval++
-		p.Gfcn(g, x)
-	}
-	ndim := len(x0)
-
 	// solve using Gradient-Descent
 	xmin := x0.GetCopy()
-	sol = NewGradDesc(ndim, FfcnWrapped, GfcnWrapped)
+	sol = NewGradDesc(p)
 	sol.Alpha = α
 	sol.UseHist = true
 	fmin := sol.Min(xmin)
@@ -37,15 +25,15 @@ func runGradDescTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tol
 	// check
 	name := "GradDesc"
 	io.Pforan("%s: NumIter = %v\n", name, sol.NumIter)
-	chk.Int(tst, io.Sf("%s: NumFeval", name), sol.NumFeval, nFeval)
-	chk.Int(tst, io.Sf("%s: NumGeval", name), sol.NumGeval, nGeval)
+	io.Pf("%s: NumFeval = %v\n", name, sol.NumFeval)
+	io.Pf("%s: NumGeval = %v\n", name, sol.NumGeval)
 	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, p.Fref)
 	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, p.Xref)
 	io.Pl()
 
 	// plot
 	if chk.Verbose {
-		if ndim > 2 {
+		if p.Ndim > 2 {
 			plt.Reset(true, &plt.A{WidthPt: 600, Dpi: 150, Prop: 0.8})
 			sol.Hist.PlotAll3d("GradDesc", xmin)
 		} else {
