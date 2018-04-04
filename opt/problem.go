@@ -11,6 +11,7 @@ import (
 
 // Problem holds the functions defining an optimization problem
 type Problem struct {
+	Ndim int       // dimension of x == len(x)
 	Ffcn fun.Sv    // objective function f({x})
 	Gfcn fun.Vv    // gradient function df/d{x}|(x)
 	Hfcn fun.Mv    // Hessian function d²f/d{x}d{x}|(x)
@@ -23,6 +24,7 @@ func NewQuadraticProblem(Amat [][]float64) (p *Problem) {
 
 	// new problem
 	p = new(Problem)
+	p.Ndim = len(Amat)
 
 	// objective function f({x})
 	A := la.NewMatrixDeep2(Amat)

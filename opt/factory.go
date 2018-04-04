@@ -23,6 +23,7 @@ func (o FactoryType) SimpleParaboloid() (p *Problem) {
 
 	// new problem
 	p = new(Problem)
+	p.Ndim = 2
 
 	// objective function f({x})
 	p.Ffcn = func(x la.Vector) float64 {
@@ -80,6 +81,7 @@ func (o FactoryType) Rosenbrock2d(a, b float64) (p *Problem) {
 
 	// new problem
 	p = new(Problem)
+	p.Ndim = 2
 
 	// objective function f({x})
 	p.Ffcn = func(x la.Vector) float64 {
@@ -115,6 +117,7 @@ func (o FactoryType) RosenbrockMulti(N int) (p *Problem) {
 
 	// new problem
 	p = new(Problem)
+	p.Ndim = N
 
 	// objective function f({x})
 	p.Ffcn = func(x la.Vector) float64 {
