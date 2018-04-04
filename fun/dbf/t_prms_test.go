@@ -12,25 +12,25 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-func Test_prms01(tst *testing.T) {
+func TestParams01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("prms01")
+	chk.PrintTitle("Params01")
 
-	var prms Params
-	prms = []*P{
+	var params Params
+	params = []*P{
 		{N: "a", V: 1.0},
 		{N: "b", V: 2.0},
 		{N: "c", V: 3.0},
 	}
-	io.Pforan("%v\n", prms)
+	io.Pforan("%v\n", params)
 
 	var a, b, c, A, B float64
-	e := prms.Connect(&a, "a", "test call")
-	e += prms.Connect(&b, "b", "test call")
-	e += prms.Connect(&c, "c", "test call")
-	e += prms.Connect(&A, "a", "test call")
-	e += prms.Connect(&B, "b", "test call")
+	e := params.Connect(&a, "a", "test call")
+	e += params.Connect(&b, "b", "test call")
+	e += params.Connect(&c, "c", "test call")
+	e += params.Connect(&A, "a", "test call")
+	e += params.Connect(&B, "b", "test call")
 	if e != "" {
 		tst.Errorf("connect failed: %v\n", e)
 		return
@@ -42,7 +42,7 @@ func Test_prms01(tst *testing.T) {
 	chk.Float64(tst, "A", 1e-15, A, 1.0)
 	chk.Float64(tst, "B", 1e-15, B, 2.0)
 
-	prm := prms.Find("a")
+	prm := params.Find("a")
 	if prm == nil {
 		tst.Error("cannot find parameter 'a'\n")
 		return
@@ -52,21 +52,21 @@ func Test_prms01(tst *testing.T) {
 	chk.Float64(tst, "A", 1e-15, A, 123)
 }
 
-func Test_prms02(tst *testing.T) {
+func TestParams02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("prms02")
+	chk.PrintTitle("Params02")
 
-	var prms Params
-	prms = []*P{
+	var params Params
+	params = []*P{
 		{N: "klx", V: 1.0},
 		{N: "kly", V: 2.0},
 		{N: "klz", V: 3.0},
 	}
-	io.Pf("%v\n", prms)
+	io.Pf("%v\n", params)
 
 	var klx, kly, klz float64
-	errMsg := prms.ConnectSet([]*float64{&klx, &kly, &klz}, []string{"klx", "kly", "klz"}, "Test_prms02")
+	errMsg := params.ConnectSet([]*float64{&klx, &kly, &klz}, []string{"klx", "kly", "klz"}, "TestParams02")
 	if errMsg != "" {
 		tst.Errorf("connect set failed: %v\n", errMsg)
 		return
@@ -76,26 +76,26 @@ func Test_prms02(tst *testing.T) {
 	chk.Float64(tst, "kly", 1e-15, kly, 2.0)
 	chk.Float64(tst, "klz", 1e-15, klz, 3.0)
 
-	prms[1].Set(2.2)
+	params[1].Set(2.2)
 	chk.Float64(tst, "kly", 1e-15, kly, 2.2)
 
 	var dummy float64
-	errMsg = prms.ConnectSetOpt(
+	errMsg = params.ConnectSetOpt(
 		[]*float64{&klx, &kly, &dummy},
 		[]string{"klx", "kly", "dummy"},
 		[]bool{false, false, true},
-		"Test_prms02",
+		"TestParams02",
 	)
 	if errMsg != "" {
 		tst.Errorf("connect set failed: %v\n", errMsg)
 		return
 	}
 
-	errMsg = prms.ConnectSetOpt(
+	errMsg = params.ConnectSetOpt(
 		[]*float64{&klx, &kly, &dummy},
 		[]string{"klx", "kly", "dummy"},
 		[]bool{false, false, false},
-		"Test_prms02",
+		"TestParams02",
 	)
 	if errMsg == "" {
 		tst.Errorf("errMsg should not be empty\n")
@@ -103,46 +103,46 @@ func Test_prms02(tst *testing.T) {
 	}
 }
 
-func Test_prms03(tst *testing.T) {
+func TestParams03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("prms03")
+	chk.PrintTitle("Params03")
 
-	var prms Params
-	prms = []*P{
+	var params Params
+	params = []*P{
 		{N: "klx", V: 1.0},
 		{N: "kly", V: 2.0},
 		{N: "klz", V: 3.0},
 	}
-	io.Pforan("%v\n", prms)
+	io.Pforan("%v\n", params)
 
-	values, found := prms.GetValues([]string{"klx", "kly", "klz"})
+	values, found := params.GetValues([]string{"klx", "kly", "klz"})
 	chk.Array(tst, "values", 1e-15, values, []float64{1, 2, 3})
 	chk.Bools(tst, "found", found, []bool{true, true, true})
 
-	values, found = prms.GetValues([]string{"klx", "klY", "klz"})
+	values, found = params.GetValues([]string{"klx", "klY", "klz"})
 	chk.Array(tst, "values", 1e-15, values, []float64{1, 0, 3})
 	chk.Bools(tst, "found", found, []bool{true, false, true})
 }
 
-func Test_prms04(tst *testing.T) {
+func TestParams04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("prms04")
+	chk.PrintTitle("Params04")
 
-	var prms Params
-	prms = []*P{
+	var params Params
+	params = []*P{
 		{N: "a", V: 123, Min: 0, Max: math.MaxFloat64},
 		{N: "b", V: 456, Min: 0, Max: math.MaxFloat64},
 	}
 
-	prms.CheckLimits()
+	params.CheckLimits()
 
-	values := prms.CheckAndGetValues([]string{"a", "b"})
+	values := params.CheckAndGetValues([]string{"a", "b"})
 	chk.Array(tst, "values", 1e-15, values, []float64{123, 456})
 
 	var a, b float64
-	prms.CheckAndSetVars([]string{"a", "b"}, []*float64{&a, &b})
+	params.CheckAndSetVars([]string{"a", "b"}, []*float64{&a, &b})
 	chk.Float64(tst, "a", 1e-15, a, 123)
 	chk.Float64(tst, "b", 1e-15, b, 456)
 }
