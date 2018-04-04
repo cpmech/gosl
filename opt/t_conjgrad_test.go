@@ -33,7 +33,7 @@ func runConjGradTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tol
 	sol1 = NewConjGrad(p)
 	sol1.UseBrent = true
 	sol1.UseHist = true
-	fmin1 := sol1.Min(xmin1)
+	fmin1 := sol1.Min(xmin1, nil)
 	checkConjGrad(tst, sol1, fmin1, p.Fref, tolf, tolx, xmin1, p.Xref)
 
 	// solve again using Wolfe's method
@@ -41,7 +41,7 @@ func runConjGradTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tol
 	sol2 = NewConjGrad(p)
 	sol2.UseBrent = false
 	sol2.UseHist = true
-	fmin2 := sol2.Min(xmin2)
+	fmin2 := sol2.Min(xmin2, nil)
 	checkConjGrad(tst, sol2, fmin2, p.Fref, tolf, tolx, xmin2, p.Xref)
 
 	// plot

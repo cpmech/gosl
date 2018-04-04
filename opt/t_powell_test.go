@@ -19,8 +19,7 @@ func runPowellTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tolf,
 	xmin := x0.GetCopy()
 	sol = NewPowell(p)
 	sol.UseHist = true
-	reuseUmat := false
-	fmin := sol.Min(xmin, reuseUmat)
+	fmin := sol.Min(xmin, nil)
 
 	// check
 	name := "Powell"

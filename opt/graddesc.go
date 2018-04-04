@@ -6,6 +6,7 @@ package opt
 
 import (
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/la"
 )
 
@@ -37,12 +38,13 @@ func NewGradDesc(prob *Problem) (o *GradDesc) {
 //
 //  Input:
 //    x -- [ndim] initial starting point (will be modified)
+//    params -- [may be nil] optional parameters
 //
 //  Output:
 //    fmin -- f(x@min) minimum f({x}) found
 //    x -- [modify input] position of minimum f({x})
 //
-func (o *GradDesc) Min(x la.Vector) (fmin float64) {
+func (o *GradDesc) Min(x la.Vector, params dbf.Params) (fmin float64) {
 
 	// initializations
 	o.NumFeval, o.NumGeval = 0, 0

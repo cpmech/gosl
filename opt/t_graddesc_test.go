@@ -20,7 +20,7 @@ func runGradDescTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tol
 	sol = NewGradDesc(p)
 	sol.Alpha = α
 	sol.UseHist = true
-	fmin := sol.Min(xmin)
+	fmin := sol.Min(xmin, nil)
 
 	// check
 	name := "GradDesc"

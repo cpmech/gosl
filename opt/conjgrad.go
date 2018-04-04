@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 	"github.com/cpmech/gosl/utl"
@@ -62,12 +63,13 @@ func NewConjGrad(prob *Problem) (o *ConjGrad) {
 //
 //  Input:
 //    x -- [ndim] initial starting point (will be modified)
+//    params -- [may be nil] optional parameters
 //
 //  Output:
 //    fmin -- f(x@min) minimum f({x}) found
 //    x -- [modify input] position of minimum f({x})
 //
-func (o *ConjGrad) Min(x la.Vector) (fmin float64) {
+func (o *ConjGrad) Min(x la.Vector, params dbf.Params) (fmin float64) {
 
 	// line search function and counters
 	linesearch := o.lines.Wolfe

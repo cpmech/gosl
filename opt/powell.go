@@ -7,6 +7,7 @@ package opt
 import (
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/num"
 )
@@ -51,18 +52,22 @@ func NewPowell(prob *Problem) (o *Powell) {
 //
 //  Input:
 //    x -- [ndim] initial starting point (will be modified)
-//    reuseUmat -- use pre-computed Nmat containing the directions as columns;
-//                 otherwise, set diagonal matrix
+//
+//    params -- [may be nil] optional parameters:
+//
+//            "reuse" > 0 -- use pre-computed matrix containing the directions as columns;
+//                           otherwise, set Umat as a diagonal matrix
 //
 //  Output:
 //    fmin -- f(x@min) minimum f({x}) found
 //    x -- [given as input] position of minimum f({x})
 //
-func (o *Powell) Min(x la.Vector, reuseUmat bool) (fmin float64) {
+func (o *Powell) Min(x la.Vector, params dbf.Params) (fmin float64) {
 
-	// set Nmat with unit vectors
+	// set Umat with unit vectors
+	reuseUmat := params.GetBoolOrDefault("reuse", false) // default = false
 	if !reuseUmat {
-		o.Umat.SetDiag(1) // set diagonal
+		o.Umat.SetDiag(1)
 	}
 
 	// initializations
