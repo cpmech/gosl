@@ -53,7 +53,41 @@ func (o *P) Set(V float64) {
 }
 
 // Params holds many parameters
+//
+//   A set of Params can be initialized as follows:
+//
+//     var params Params
+//     params = []*P{
+//         {N: "klx", V: 1.0},
+//         {N: "kly", V: 2.0},
+//         {N: "klz", V: 3.0},
+//     }
+//
+//   Alternatively, see NewParams function
+//
 type Params []*P
+
+// NewParams returns a set of parameters
+//
+//   This is an alternative to initializing Params by setting slice items
+//
+//   A set of Params can be initialized as follows:
+//
+//     params := NewParams(
+//         &P{N: "P1", V: 1},
+//         &P{N: "P2", V: 2},
+//         &P{N: "P3", V: 3},
+//     )
+//
+//   Alternatively, you may set slice components directly (see Params definition)
+//
+func NewParams(pp ...interface{}) (o Params) {
+	o = make([]*P, len(pp))
+	for i, p := range pp {
+		o[i] = p.(*P)
+	}
+	return
+}
 
 // Find finds a parameter by name
 //  Note: returns nil if not found
@@ -64,6 +98,55 @@ func (o *Params) Find(name string) *P {
 		}
 	}
 	return nil
+}
+
+// GetValue reads parameter or Panic
+// Will panic if name does not exist in parameters set
+func (o *Params) GetValue(name string) float64 {
+	p := o.Find(name)
+	if p == nil {
+		chk.Panic("cannot find parameter named %q\n", name)
+	}
+	return p.V
+}
+
+// GetBool reads Boolean parameter or Panic
+// Returns true if P[name] > 0; otherwise returns false
+// Will panic if name does not exist in parameters set
+func (o *Params) GetBool(name string) bool {
+	p := o.Find(name)
+	if p == nil {
+		chk.Panic("cannot find Boolean parameter named %q\n", name)
+	}
+	if p.V > 0 {
+		return true
+	}
+	return false
+}
+
+// SetValue sets parameter or Panic
+// Will panic if name does not exist in parameters set
+func (o *Params) SetValue(name string, value float64) {
+	p := o.Find(name)
+	if p == nil {
+		chk.Panic("cannot find parameter named %q\n", name)
+	}
+	p.V = value
+}
+
+// SetBool sets Boolean parameter or Panic
+// Sets +1==true if value > 0; otherwise sets -1==false
+// Will panic if name does not exist in parameters set
+func (o *Params) SetBool(name string, value float64) {
+	p := o.Find(name)
+	if p == nil {
+		chk.Panic("cannot find Boolean parameter named %q\n", name)
+	}
+	if value > 0 {
+		p.V = +1.0
+		return
+	}
+	p.V = -1.0
 }
 
 // CheckLimits check limits of variables given in Min/Max
@@ -116,10 +199,10 @@ func (o *Params) CheckAndGetValues(names []string) (values []float64) {
 	return
 }
 
-// CheckAndSetVars get parameter values and check limits defined in Min and Max
+// CheckAndSetVariables get parameter values and check limits defined in Min and Max
 // Will panic if values are outside corresponding Min/Max range.
 // Will also panic if a parameter name is not found.
-func (o *Params) CheckAndSetVars(names []string, variables []*float64) {
+func (o *Params) CheckAndSetVariables(names []string, variables []*float64) {
 	n := len(names)
 	if len(variables) != n {
 		chk.Panic("array of variables must have the same size as the slice of names. %d != %d", len(variables), n)
@@ -158,6 +241,7 @@ func (o *Params) ConnectSet(V []*float64, names []string, caller string) (errorM
 	chk.IntAssert(len(V), len(names))
 	for i, name := range names {
 		prm := o.Find(name)
+		io.Pforan("name=%v  prm = %v\n", name, prm)
 		if prm == nil {
 			errorMessage += io.Sf("cannot find parameter named %q as requested by %q\n", name, caller)
 		} else {

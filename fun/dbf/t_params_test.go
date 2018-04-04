@@ -123,6 +123,13 @@ func TestParams03(tst *testing.T) {
 	values, found = params.GetValues([]string{"klx", "klY", "klz"})
 	chk.Array(tst, "values", 1e-15, values, []float64{1, 0, 3})
 	chk.Bools(tst, "found", found, []bool{true, false, true})
+
+	params.SetValue("klx", 0.001)
+	chk.Float64(tst, "klx", 1e-15, params.GetValue("klx"), 0.001)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.SetValue("invalid", 666)
 }
 
 func TestParams04(tst *testing.T) {
@@ -130,11 +137,10 @@ func TestParams04(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("Params04")
 
-	var params Params
-	params = []*P{
-		{N: "a", V: 123, Min: 0, Max: math.MaxFloat64},
-		{N: "b", V: 456, Min: 0, Max: math.MaxFloat64},
-	}
+	params := NewParams(
+		&P{N: "a", V: 123, Min: 0, Max: math.MaxFloat64},
+		&P{N: "b", V: 456, Min: 0, Max: math.MaxFloat64},
+	)
 
 	params.CheckLimits()
 
@@ -142,7 +148,256 @@ func TestParams04(tst *testing.T) {
 	chk.Array(tst, "values", 1e-15, values, []float64{123, 456})
 
 	var a, b float64
-	params.CheckAndSetVars([]string{"a", "b"}, []*float64{&a, &b})
+	params.CheckAndSetVariables([]string{"a", "b"}, []*float64{&a, &b})
 	chk.Float64(tst, "a", 1e-15, a, 123)
 	chk.Float64(tst, "b", 1e-15, b, 456)
+
+	params.SetBool("b", -100)
+	chk.Float64(tst, "b-", 1e-15, params.GetValue("b"), -1.0)
+
+	params.SetBool("b", +100)
+	chk.Float64(tst, "b+", 1e-15, params.GetValue("b"), +1.0)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.SetBool("invalid", 666)
+}
+
+func TestParams05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params05")
+
+	params := NewParams(
+		&P{N: "P0", V: 0},
+		&P{N: "P1", V: 1},
+		&P{N: "P2", V: 2},
+		&P{N: "P3", V: 3},
+	)
+	io.Pf("%v\n", params)
+
+	values, found := params.GetValues([]string{"P1", "P2", "P3", "P4"})
+	chk.Array(tst, "values", 1e-15, values, []float64{1, 2, 3, 0})
+	chk.Bools(tst, "found", found, []bool{true, true, true, false})
+
+	res := params.GetValue("P1")
+	chk.Float64(tst, "P1", 1e-15, res, 1.0)
+
+	res = params.GetValue("P2")
+	chk.Float64(tst, "2", 1e-15, res, 2.0)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	res = params.GetValue("invalid")
+}
+
+func TestParams06(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params06")
+
+	params := NewParams(
+		&P{N: "P0", V: 0},
+		&P{N: "P1", V: 1},
+		&P{N: "P2", V: 2},
+		&P{N: "P3", V: 3},
+	)
+	io.Pf("%v\n", params)
+
+	values, found := params.GetValues([]string{"P1", "P2", "P3", "P4"})
+	chk.Array(tst, "values", 1e-15, values, []float64{1, 2, 3, 0})
+	chk.Bools(tst, "found", found, []bool{true, true, true, false})
+
+	res := params.GetBool("P1")
+	if res == false {
+		tst.Error("res should be true\n")
+		return
+	}
+
+	res = params.GetBool("P0")
+	if res == true {
+		tst.Error("res should be false\n")
+		return
+	}
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	res = params.GetBool("invalid")
+}
+
+func TestParams07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params07. String and CheckLimits")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+		&P{N: "b", V: 1, Min: -2, Max: +2},
+	)
+	chk.String(tst, params.String(), `{"n":"a", "v":1, "min":-2, "max":2, "s":0, "d":"", "u":"", "adj":0, "dep":0, "extra":"", "inact":false, "setdef":false},
+{"n":"b", "v":1, "min":-2, "max":2, "s":0, "d":"", "u":"", "adj":0, "dep":0, "extra":"", "inact":false, "setdef":false}`)
+
+	params.CheckLimits()
+
+	params.SetValue("a", -10) // out of range
+	res := params.GetValue("a")
+	chk.Float64(tst, "a", 1e-15, res, -10)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckLimits()
+}
+
+func TestParams08(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params08. CheckLimits")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+	)
+
+	params.CheckLimits()
+
+	params.SetValue("a", +10) // out of range
+	res := params.GetValue("a")
+	chk.Float64(tst, "a", 1e-15, res, +10)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckLimits()
+}
+
+func TestParams09(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params09. CheckAndGetValues. Panic # 1")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+	)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckAndGetValues([]string{"invalid"})
+}
+
+func TestParams10(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params09. CheckAndGetValues. Panic # 2")
+
+	params := NewParams(
+		&P{N: "a", V: -10, Min: -2, Max: +2},
+	)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckAndGetValues([]string{"a"})
+}
+
+func TestParams11(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params09. CheckAndGetValues. Panic # 3")
+
+	params := NewParams(
+		&P{N: "a", V: +10, Min: -2, Max: +2},
+	)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckAndGetValues([]string{"a"})
+}
+
+func TestParams12(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params12. CheckAndSetVariables. Panic # 1")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+	)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckAndSetVariables([]string{"a"}, nil)
+}
+
+func TestParams13(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params13. CheckAndSetVariables. Panic # 2")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+	)
+	a := 0.0
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckAndSetVariables([]string{"invalid"}, []*float64{&a})
+}
+
+func TestParams14(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params14. CheckAndSetVariables. Panic # 3")
+
+	params := NewParams(
+		&P{N: "a", V: -10, Min: -2, Max: +2},
+	)
+	a := 0.0
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckAndSetVariables([]string{"a"}, []*float64{&a})
+}
+
+func TestParams15(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params15. CheckAndSetVariables. Panic # 4")
+
+	params := NewParams(
+		&P{N: "a", V: +10, Min: -2, Max: +2},
+	)
+	a := 0.0
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckAndSetVariables([]string{"a"}, []*float64{&a})
+}
+
+func TestParams16(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params16. CheckAndSetVariables. Panic # 5")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+	)
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	defer chk.RecoverTstPanicIsOK(tst)
+	params.CheckAndSetVariables([]string{"a"}, []*float64{nil})
+}
+
+func TestParams17(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params17. ConnectSet. Error")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+	)
+
+	a := 0.0
+	vars := []*float64{&a}
+	names := []string{"b"}
+
+	io.Pf("\n>>> the following Panic is OK <<<\n")
+	errmsg := params.ConnectSet(vars, names, "TestParams17")
+	chk.String(tst, errmsg, `cannot find parameter named "b" as requested by "TestParams17"
+`)
 }
