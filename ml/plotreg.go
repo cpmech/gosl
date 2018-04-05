@@ -16,7 +16,6 @@ type PlotterReg struct {
 
 	// input
 	data   *Data      // data
-	params *ParamsReg // parameters
 	model  Regression // model
 	mapper DataMapper // mapper
 
@@ -36,12 +35,11 @@ type PlotterReg struct {
 
 // NewPlotterReg returns a new ploter
 //   mapper -- data mapper [may be nil]
-func NewPlotterReg(data *Data, params *ParamsReg, reg Regression, mapper DataMapper) (o *PlotterReg) {
+func NewPlotterReg(data *Data, reg Regression, mapper DataMapper) (o *PlotterReg) {
 
 	// input
 	o = new(PlotterReg)
 	o.data = data
-	o.params = params
 	o.model = reg
 	o.mapper = mapper
 
@@ -85,41 +83,6 @@ func (o *PlotterReg) ModelY(iFeature int, xmin, xmax float64) {
 		return o.model.Predict(x)
 	})
 	plt.Plot(u, v, o.ArgsYmodel)
-}
-
-// ContourCost plots a contour of Cost for many parameters values
-//  iParam, jParam -- selected parameters [use -1 for bias]
-func (o *PlotterReg) ContourCost(iParam, jParam int, pimin, pimax, pjmin, pjmax float64) {
-
-	// create meshgrid
-	o.params.Backup()
-	U, V, W := utl.MeshGrid2dF(pimin, pimax, pjmin, pjmax, o.MgridNpts, o.MgridNpts, func(s, t float64) (w float64) {
-		o.params.Restore(true)
-		o.params.SetParam(iParam, s)
-		o.params.SetParam(jParam, t)
-		w = o.model.Cost()
-		return
-	})
-	o.params.Restore(false)
-
-	// plot contour
-	plt.ContourF(U, V, W, o.ArgsCcost)
-
-	// plot optimal solution
-	o.params.Restore(true)
-	plt.PlotOne(o.params.GetParam(iParam), o.params.GetParam(jParam), o.ArgsCcostMdl)
-
-	// set labels
-	stri := "$b$"
-	strj := "$b$"
-	if iParam >= 0 {
-		stri = io.Sf("$\\theta_{%d}$", iParam)
-	}
-	if jParam >= 0 {
-		strj = io.Sf("$\\theta_{%d}$", jParam)
-	}
-	plt.SetXlabel(stri, nil)
-	plt.SetYlabel(strj, nil)
 }
 
 // for classification /////////////////////////////////////////////////////////////////////////////

@@ -14,8 +14,9 @@ import (
 func TestParamsReg00(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("ParamsReg00. Parameters for regression. Panic(JSON)")
+	params := new(ParamsReg)
 	defer chk.RecoverTstPanicIsOK(tst)
-	NewParamsRegFromJSON("wrong JSON")
+	params.SetJSON("wrong JSON")
 }
 
 func TestParamsReg01(tst *testing.T) {
@@ -24,7 +25,8 @@ func TestParamsReg01(tst *testing.T) {
 	chk.PrintTitle("ParamsReg01. Parameters for regression. Basic")
 
 	nFeatures := 3
-	params := NewParamsReg(nFeatures)
+	params := new(ParamsReg)
+	params.Init(nFeatures)
 	params.theta[0] = 1
 	params.theta[1] = 2
 	params.theta[2] = 3
@@ -75,7 +77,8 @@ func TestParamsReg02(tst *testing.T) {
 	chk.PrintTitle("ParamsReg02. Parameters for regression. JSON")
 
 	nFeatures := 3
-	params := NewParamsReg(nFeatures)
+	params := new(ParamsReg)
+	params.Init(nFeatures)
 	params.theta[0] = 1
 	params.theta[1] = 2
 	params.theta[2] = 3
@@ -105,7 +108,9 @@ func TestParamsReg02(tst *testing.T) {
 	chk.Int(tst, "Pcopy", params.bkpDegree, 0)                          // brand new
 
 	io.Pl()
-	newParams := NewParamsRegFromJSON(jsonString)
+	newParams := new(ParamsReg)
+	newParams.Init(nFeatures)
+	newParams.SetJSON(jsonString)
 	chk.Array(tst, "θnew", 1e-15, newParams.theta, []float64{-1, -2, -3})
 	chk.Float64(tst, "bnew", 1e-15, newParams.bias, -4)
 	chk.Float64(tst, "λnew", 1e-15, newParams.lambda, 0.01)
@@ -132,7 +137,8 @@ func TestParamsReg03(tst *testing.T) {
 
 	// parameters
 	nFeatures := 3
-	params := NewParamsReg(nFeatures)
+	params := new(ParamsReg)
+	params.Init(nFeatures)
 
 	// observer
 	observer := &observerT{params, "nothing here yet"}

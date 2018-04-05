@@ -15,11 +15,11 @@ import (
 
 // LogReg implements a logistic regression model (Observer of Data)
 type LogReg struct {
+	ParamsReg // import ParamsReg
 
 	// main
-	data   *Data      // X-y data
-	params *ParamsReg // parameters: θ, b, λ
-	stat   *Stat      // statistics
+	data *Data // X-y data
+	stat *Stat // statistics
 
 	// workspace
 	ybar la.Vector // bar{y}: yb[i] = (1 - y[i]) / m
@@ -28,14 +28,12 @@ type LogReg struct {
 }
 
 // NewLogReg returns a new LogReg object
-//   Input:
-//     data   -- X,y data
-//     params -- θ, b, λ
-func NewLogReg(data *Data, params *ParamsReg) (o *LogReg) {
+//   data -- X,y data
+func NewLogReg(data *Data) (o *LogReg) {
 	o = new(LogReg)
 	o.data = data
+	o.Init(o.data.Nfeatures)
 	o.data.AddObserver(o) // need to recompute yb upon changes on y
-	o.params = params
 	o.stat = NewStat(data)
 	o.stat.Update()
 	o.ybar = la.NewVector(data.Nsamples)
@@ -59,8 +57,8 @@ func (o *LogReg) Update() {
 //   Output:
 //     y -- model prediction y(x)
 func (o *LogReg) Predict(x la.Vector) (y float64) {
-	θ := o.params.AccessThetas()
-	b := o.params.GetBias()
+	θ := o.AccessThetas()
+	b := o.GetBias()
 	return fun.Logistic(b + la.VecDot(x, θ)) // g(b + xᵀθ) where g is logistic
 }
 
@@ -75,8 +73,8 @@ func (o *LogReg) Cost() (c float64) {
 
 	// auxiliary
 	m := float64(o.data.Nsamples)
-	λ := o.params.GetLambda()
-	θ := o.params.AccessThetas()
+	λ := o.GetLambda()
+	θ := o.AccessThetas()
 
 	// cost
 	o.calcl()
@@ -101,8 +99,8 @@ func (o *LogReg) Gradients(dCdθ la.Vector) (dCdb float64) {
 
 	// auxiliary
 	m := float64(o.data.Nsamples)
-	λ := o.params.GetLambda()
-	θ := o.params.AccessThetas()
+	λ := o.GetLambda()
+	θ := o.AccessThetas()
 	X := o.data.X
 
 	// dCdθ
@@ -150,7 +148,7 @@ func (o *LogReg) Hessian(d, v la.Vector, D, H *la.Matrix) (w float64) {
 	m := o.data.Nsamples
 	n := o.data.Nfeatures
 	X := o.data.X
-	λ := o.params.GetLambda()
+	λ := o.GetLambda()
 	mm := float64(m)
 
 	// calc d vector and D matrix
@@ -196,19 +194,19 @@ func (o *LogReg) Train() {
 
 	// objective function where z={θ,b} and fz={dCdθ,dCdb}
 	ffcn := func(fz, z la.Vector) {
-		o.params.Backup()
-		o.params.SetThetas(z[:n])
-		o.params.SetBias(z[n])
+		o.Backup()
+		o.SetThetas(z[:n])
+		o.SetBias(z[n])
 		dCdb := o.Gradients(fz[:n])
 		fz[n] = dCdb
-		o.params.Restore(false)
+		o.Restore(false)
 	}
 
 	// Jacobian function
 	Jfcn := func(dfdz *la.Matrix, z la.Vector) {
-		o.params.Backup()
-		o.params.SetThetas(z[:n])
-		o.params.SetBias(z[n])
+		o.Backup()
+		o.SetThetas(z[:n])
+		o.SetBias(z[n])
 		w = o.Hessian(d, v, D, H)
 		for j := 0; j < n; j++ { // TODO: optimize here
 			for i := 0; i < n; i++ { //
@@ -222,8 +220,8 @@ func (o *LogReg) Train() {
 
 	// initial values
 	z := la.NewVector(n + 1) // {θ, b}
-	copy(z, o.params.AccessThetas())
-	z[n] = o.params.GetBias()
+	copy(z, o.AccessThetas())
+	z[n] = o.GetBias()
 
 	// debug
 	if true { // check Jacobian
@@ -250,8 +248,8 @@ func (o *LogReg) Train() {
 	solver.Solve(z, silent)
 
 	// results
-	o.params.SetThetas(z[:n])
-	o.params.SetBias(z[n])
+	o.SetThetas(z[:n])
+	o.SetBias(z[n])
 
 	// debug
 	if true { // check Jacobian
@@ -266,8 +264,8 @@ func (o *LogReg) Train() {
 // calce calculates l vector (saves into o.l) (linear model)
 //  Output: l = b⋅o + X⋅θ
 func (o *LogReg) calcl() {
-	θ := o.params.AccessThetas()
-	b := o.params.GetBias()
+	θ := o.AccessThetas()
+	b := o.GetBias()
 	X := o.data.X
 	o.l.Fill(b)                   // l := b⋅o
 	la.MatVecMulAdd(o.l, 1, X, θ) // l := b⋅o + X⋅θ

@@ -10,11 +10,10 @@ import (
 
 // LogRegMulti implements a logistic regression model for multiple classes (Observer of data)
 type LogRegMulti struct {
-	data   *Data        // X-y data
-	nClass int          // number of classes
-	params []*ParamsReg // [nClass] parameters for each class
-	dataB  []*Data      // [nClass] reference to X-y data but with binary y-vector
-	models []*LogReg    // [nClass] one-versus-all models
+	data   *Data     // X-y data
+	nClass int       // number of classes
+	dataB  []*Data   // [nClass] reference to X-y data but with binary y-vector
+	models []*LogReg // [nClass] one-versus-all models
 }
 
 // NewLogRegMulti returns a new object
@@ -24,13 +23,11 @@ func NewLogRegMulti(data *Data) (o *LogRegMulti) {
 	o.data = data
 	o.data.AddObserver(o)
 	o.nClass = int(data.Y.Max()) + 1
-	o.params = make([]*ParamsReg, o.nClass)
 	o.dataB = make([]*Data, o.nClass)
 	o.models = make([]*LogReg, o.nClass)
 	useY := true
 	allocate := false
 	for k := 0; k < o.nClass; k++ {
-		o.params[k] = NewParamsReg(data.Nfeatures)
 		o.dataB[k] = NewData(data.Nsamples, data.Nfeatures, useY, allocate)
 	}
 	o.Update()
@@ -52,7 +49,7 @@ func (o *LogRegMulti) Update() {
 			}
 		}
 		if o.models[k] == nil {
-			o.models[k] = NewLogReg(o.dataB[k], o.params[k])
+			o.models[k] = NewLogReg(o.dataB[k])
 		} else {
 			o.models[k].Update()
 		}
@@ -62,7 +59,7 @@ func (o *LogRegMulti) Update() {
 // SetLambda sets the regularization parameter
 func (o *LogRegMulti) SetLambda(lambda float64) {
 	for k := 0; k < o.nClass; k++ {
-		o.models[k].params.SetLambda(lambda)
+		o.models[k].SetLambda(lambda)
 	}
 }
 

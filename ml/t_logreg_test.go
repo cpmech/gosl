@@ -19,15 +19,14 @@ func TestLogReg01a(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("LogReg01a. Basic functionality (no regularizaton).")
 
-	// data and parameters
+	// data
 	data := NewDataGivenRawXY(dataReg01)
-	params := NewParamsReg(data.Nfeatures)
-
-	// set regularization
-	params.SetLambda(0.25)
 
 	// regression
-	model := NewLogReg(data, params)
+	model := NewLogReg(data)
+
+	// set regularization
+	model.SetLambda(0.25)
 
 	// check stat
 	chk.Float64(tst, "reg.stat.min(x)", 1e-15, model.stat.MinX[0], 0.87)
@@ -53,24 +52,24 @@ func TestLogReg01a(tst *testing.T) {
 
 			// analytical
 			io.Pf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> θ0=%v b=%v <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n", θ0, b)
-			params.SetTheta(0, θ0)
-			params.SetBias(b)
-			params.Backup()
+			model.SetTheta(0, θ0)
+			model.SetBias(b)
+			model.Backup()
 			dCdb := model.Gradients(dCdθ)
 
 			// numerical
-			θat[0] = params.GetTheta(0)
+			θat[0] = model.GetTheta(0)
 			chk.DerivScaVec(tst, "dCdθ_", tol, dCdθ, θat, hsmall, verb, func(θtmp []float64) (cost float64) {
-				params.Restore(false)
-				params.SetThetas(θtmp)
+				model.Restore(false)
+				model.SetThetas(θtmp)
 				cost = model.Cost()
 				return
 			})
 
 			// numerical
 			chk.DerivScaSca(tst, "dCdb  ", tol, dCdb, b, hsmall, verb, func(btmp float64) (cost float64) {
-				params.Restore(false)
-				params.SetBias(btmp)
+				model.Restore(false)
+				model.SetBias(btmp)
 				cost = model.Cost()
 				return
 			})
@@ -87,32 +86,32 @@ func TestLogReg01a(tst *testing.T) {
 
 			// analytical
 			io.Pf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> θ0=%v b=%v <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n", θ0, b)
-			params.SetTheta(0, θ0)
-			params.SetBias(b)
-			params.Backup()
+			model.SetTheta(0, θ0)
+			model.SetBias(b)
+			model.Backup()
 			w = model.Hessian(d, v, D, H)
 
 			// numerical
-			θat[0] = params.GetTheta(0)
+			θat[0] = model.GetTheta(0)
 			chk.DerivVecVec(tst, "∂²C/∂θ∂θ_", tol2, H.GetDeep2(), θat, hsmall, verb, func(dCdθtmp, θtmp []float64) {
-				params.Restore(false)
-				params.SetThetas(θtmp)
+				model.Restore(false)
+				model.SetThetas(θtmp)
 				model.Gradients(dCdθtmp)
 				return
 			})
 
 			// numerical
 			chk.DerivVecSca(tst, "∂²C/∂θ∂b_ ", tol2, v, b, hsmall, verb, func(dCdθtmp []float64, btmp float64) {
-				params.Restore(false)
-				params.SetBias(btmp)
+				model.Restore(false)
+				model.SetBias(btmp)
 				model.Gradients(dCdθtmp)
 				return
 			})
 
 			// numerical
 			chk.DerivScaSca(tst, "∂²C/∂b∂b   ", tol2, w, b, hsmall, verb, func(btmp float64) (dCdbtmp float64) {
-				params.Restore(false)
-				params.SetBias(btmp)
+				model.Restore(false)
+				model.SetBias(btmp)
 				dCdbtmp = model.Gradients(dCdθ)
 				return
 			})
@@ -134,14 +133,13 @@ func TestLogReg01b(tst *testing.T) {
 		{0.5, 1.00, 1.5, 1},
 	})
 
-	// parameters
-	params := NewParamsReg(data.Nfeatures)
-	params.SetThetas([]float64{-1, 1, 2})
-	params.SetBias(-2)
-	params.SetLambda(3)
-
 	// regression
-	model := NewLogReg(data, params)
+	model := NewLogReg(data)
+
+	// set parameters
+	model.SetThetas([]float64{-1, 1, 2})
+	model.SetBias(-2)
+	model.SetLambda(3)
 
 	// check
 	dCdθ := model.AllocateGradient()
@@ -175,25 +173,20 @@ func TestLogReg02(tst *testing.T) {
 		}
 	}
 
-	// parameters
-	params := NewParamsReg(data.Nfeatures)
-	//params.SetThetas([]float64{20, 30})
-	//params.SetBias(10)
-
 	// regression
-	model := NewLogReg(data, params)
+	model := NewLogReg(data)
 	model.Train()
 	io.Pforan("cost = %v\n", model.Cost())
-	io.Pforan("θ = %v\n", params.AccessThetas())
-	io.Pforan("b = %v\n", params.GetBias())
+	io.Pforan("θ = %v\n", model.AccessThetas())
+	io.Pforan("b = %v\n", model.GetBias())
 	chk.Float64(tst, "cost", 1e-14, model.Cost(), 0.0007850399226816407)
-	chk.Array(tst, "θ", 1e-13, params.AccessThetas(), []float64{24.488302802315026, 24.48830280231502})
-	chk.Float64(tst, "b", 1e-14, params.GetBias(), 6.183574567556589)
+	chk.Array(tst, "θ", 1e-13, model.AccessThetas(), []float64{24.488302802315026, 24.48830280231502})
+	chk.Float64(tst, "b", 1e-14, model.GetBias(), 6.183574567556589)
 
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotterReg(data, params, model, nil)
+		pp := NewPlotterReg(data, model, nil)
 		pp.DataClass(0, 1, true)
 		pp.ContourModel(0, 1, 0.5, -1, 1, -1, 1)
 		plt.Save("/tmp/gosl/ml", "logreg02")
@@ -211,31 +204,32 @@ func TestLogReg03(tst *testing.T) {
 	chk.Int(tst, "nSamples", data.Nsamples, 100)
 	chk.Int(tst, "nFeatures", data.Nfeatures, 2)
 
+	// model
+	model := NewLogReg(data)
+
 	// parameters and initial guess
 	θini := []float64{0.2, 0.2}
 	bini := -24.0
-	params := NewParamsReg(data.Nfeatures)
-	params.SetThetas(θini)
-	params.SetBias(bini)
+	model.SetThetas(θini)
+	model.SetBias(bini)
 
-	// model
-	model := NewLogReg(data, params)
+	// cost
 	cost := model.Cost()
-	io.Pf("Initial: θ = %.8f\n", params.GetThetas())
-	io.Pf("Initial: b = %.8f\n", params.GetBias())
+	io.Pf("Initial: θ = %.8f\n", model.GetThetas())
+	io.Pf("Initial: b = %.8f\n", model.GetBias())
 	io.Pf("Initial: cost = %.8f\n", cost)
 	chk.Float64(tst, "\ncostIni", 1e-15, model.Cost(), 2.183301938265978e-01)
 
 	// train using analytical solution
 	model.Train()
 	chk.Float64(tst, "\ncost", 1e-14, model.Cost(), 2.034977015894404e-01)
-	chk.Array(tst, "θ", 1e-8, params.AccessThetas(), []float64{2.062317052577260e-01, 2.014715922708144e-01})
-	chk.Float64(tst, "b", 1e-6, params.GetBias(), -2.516133256589910e+01)
+	chk.Array(tst, "θ", 1e-8, model.AccessThetas(), []float64{2.062317052577260e-01, 2.014715922708144e-01})
+	chk.Float64(tst, "b", 1e-6, model.GetBias(), -2.516133256589910e+01)
 
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotterReg(data, params, model, nil)
+		pp := NewPlotterReg(data, model, nil)
 		pp.DataClass(0, 1, true)
 		pp.ContourModel(0, 1, 0.5, 20, 100, 20, 100)
 		plt.Save("/tmp/gosl/ml", "logreg03")
@@ -258,34 +252,35 @@ func TestLogReg04(tst *testing.T) {
 	chk.Int(tst, "nSamples", data.Nsamples, 118)
 	chk.Int(tst, "nFeatures", data.Nfeatures, 27)
 
+	// model
+	model := NewLogReg(data)
+
 	// parameters and initial guess
 	θini := utl.Vals(data.Nfeatures, 1.0) // all ones
 	bini := 1.0
-	params := NewParamsReg(data.Nfeatures)
-	params.SetThetas(θini)
-	params.SetBias(bini)
-	params.SetLambda(1.0) // regularization
+	model.SetThetas(θini)
+	model.SetBias(bini)
+	model.SetLambda(1.0) // regularization
 
-	// model
-	model := NewLogReg(data, params)
+	// cost
 	cost := model.Cost()
-	io.Pf("Initial: θ = %.3f\n", params.GetThetas()[:4])
-	io.Pf("Initial: b = %.8f\n", params.GetBias())
+	io.Pf("Initial: θ = %.3f\n", model.GetThetas()[:4])
+	io.Pf("Initial: b = %.8f\n", model.GetBias())
 	io.Pf("Initial: cost = %.8f\n", cost)
 	chk.Float64(tst, "\ncostIni", 1e-15, model.Cost(), 2.134848314666066)
 
 	// train using analytical solution
-	params.SetThetas(utl.Vals(data.Nfeatures, 0.0)) // all zeros
-	params.SetBias(0.0)
+	model.SetThetas(utl.Vals(data.Nfeatures, 0.0)) // all zeros
+	model.SetBias(0.0)
 	model.Train()
 	chk.Float64(tst, "\ncost", 1e-15, model.Cost(), 5.290027411158117e-01)
-	chk.Array(tst, "θ", 1e-14, params.AccessThetas()[:4], []float64{6.252526148274546e-01, 1.180976145721166, -2.019842398401904, -9.173659359499787e-01})
-	chk.Float64(tst, "b", 1e-14, params.GetBias(), 1.272656700281225)
+	chk.Array(tst, "θ", 1e-14, model.AccessThetas()[:4], []float64{6.252526148274546e-01, 1.180976145721166, -2.019842398401904, -9.173659359499787e-01})
+	chk.Float64(tst, "b", 1e-14, model.GetBias(), 1.272656700281225)
 
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotterReg(data, params, model, mapper)
+		pp := NewPlotterReg(data, model, mapper)
 		pp.DataClass(0, 1, true)
 		pp.ContourModel(0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
 		plt.Save("/tmp/gosl/ml", "logreg04")

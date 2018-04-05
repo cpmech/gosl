@@ -10,24 +10,22 @@ import (
 
 // LinReg implements a linear regression model
 type LinReg struct {
+	ParamsReg // import ParamsReg
 
 	// main
-	data   *Data      // X-y data
-	params *ParamsReg // parameters: θ, b, λ
-	stat   *Stat      // statistics
+	data *Data // X-y data
+	stat *Stat // statistics
 
 	// workspace
 	e la.Vector // vector e = b⋅o + X⋅θ - y [nSamples]
 }
 
 // NewLinReg returns a new LinReg object
-//   Input:
-//     data   -- X,y data
-//     params -- θ, b, λ
-func NewLinReg(data *Data, params *ParamsReg) (o *LinReg) {
+//   data -- X,y data
+func NewLinReg(data *Data) (o *LinReg) {
 	o = new(LinReg)
 	o.data = data
-	o.params = params
+	o.Init(o.data.Nfeatures)
 	o.stat = NewStat(data)
 	o.stat.Update()
 	o.e = la.NewVector(data.Nsamples)
@@ -40,8 +38,8 @@ func NewLinReg(data *Data, params *ParamsReg) (o *LinReg) {
 //   Output:
 //     y -- model prediction y(x)
 func (o *LinReg) Predict(x la.Vector) (y float64) {
-	θ := o.params.AccessThetas()
-	b := o.params.GetBias()
+	θ := o.AccessThetas()
+	b := o.GetBias()
 	return b + la.VecDot(x, θ) // b + xᵀθ
 }
 
@@ -56,8 +54,8 @@ func (o *LinReg) Cost() (c float64) {
 
 	// auxiliary
 	m := float64(o.data.Nsamples)
-	λ := o.params.GetLambda()
-	θ := o.params.AccessThetas()
+	λ := o.GetLambda()
+	θ := o.AccessThetas()
 
 	// cost
 	o.calce()                           // e := b⋅o + X⋅θ - y
@@ -76,8 +74,8 @@ func (o *LinReg) Gradients(dCdθ la.Vector) (dCdb float64) {
 
 	// auxiliary
 	m := float64(o.data.Nsamples)
-	λ := o.params.GetLambda()
-	θ := o.params.AccessThetas()
+	λ := o.GetLambda()
+	θ := o.AccessThetas()
 	X := o.data.X
 
 	// dCdθ
@@ -100,7 +98,7 @@ func (o *LinReg) Gradients(dCdθ la.Vector) (dCdb float64) {
 func (o *LinReg) Train() {
 
 	// auxiliary
-	λ := o.params.GetLambda()
+	λ := o.GetLambda()
 	X, y := o.data.X, o.data.Y
 	s, t := o.stat.SumVars()
 
@@ -124,10 +122,10 @@ func (o *LinReg) Train() {
 	}
 
 	// solve system
-	θ := o.params.AccessThetas()
+	θ := o.AccessThetas()
 	la.DenSolve(θ, K, r, false)
 	b := (t - la.VecDot(s, θ)) / m
-	o.params.SetBias(b)
+	o.SetBias(b)
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
@@ -135,8 +133,8 @@ func (o *LinReg) Train() {
 // calce calculates e vector (save into o.e)
 //  Output: e = b⋅o + X⋅θ - y
 func (o *LinReg) calce() {
-	θ := o.params.AccessThetas()
-	b := o.params.GetBias()
+	θ := o.AccessThetas()
+	b := o.GetBias()
 	X, y := o.data.X, o.data.Y
 	o.e.Fill(b)                   // e := b⋅o
 	la.MatVecMulAdd(o.e, 1, X, θ) // e := b⋅o + X⋅θ

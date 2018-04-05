@@ -13,6 +13,11 @@ import (
 )
 
 // ParamsReg holds the θ and b parameters for regression computations
+//
+//  NOTE: Since ParamsReg is an Observable, the internal values
+//        should only be changed by calling the Set... methods since
+//        these methods will notify the Observers
+//
 type ParamsReg struct {
 	utl.Observable // notifies interested parties
 
@@ -29,21 +34,10 @@ type ParamsReg struct {
 	bkpDegree int       // copy of degree
 }
 
-// NewParamsReg returns a new object to hold regression parameters
-func NewParamsReg(nFeatures int) (o *ParamsReg) {
-	o = new(ParamsReg)
+// Init initializes ParamsReg with nFeatures (number of features)
+func (o *ParamsReg) Init(nFeatures int) {
 	o.theta = la.NewVector(nFeatures)
 	o.bkpTheta = la.NewVector(nFeatures)
-	return o
-}
-
-// NewParamsRegFromJSON returns a new object to hold regression parameters with input given in a
-// JSON string
-func NewParamsRegFromJSON(jsonString string) (o *ParamsReg) {
-	o = new(ParamsReg)
-	o.SetJSON(jsonString)
-	o.bkpTheta = la.NewVector(len(o.theta))
-	return
 }
 
 // Backup creates an internal copy of parameters
