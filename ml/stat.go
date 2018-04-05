@@ -70,7 +70,7 @@ func (o *Stat) Update() {
 	}
 
 	// y values
-	if o.data.UseY {
+	if len(o.data.Y) > 0 {
 		o.MinY = o.data.Y[0]
 		o.MaxY = o.MinY
 		o.SumY = 0.0
@@ -92,8 +92,26 @@ func (o *Stat) Update() {
 func (o *Stat) SumVars() (s la.Vector, t float64) {
 	one := la.NewVector(o.data.X.M)
 	one.Fill(1.0)
-	t = la.VecDot(one, o.data.Y)
 	s = la.NewVector(o.data.X.N)
 	la.MatTrVecMul(s, 1, o.data.X, one)
+	if len(o.data.Y) > 0 {
+		t = la.VecDot(one, o.data.Y)
+	}
 	return
+}
+
+// CopyInto copies stat into p
+func (o *Stat) CopyInto(p *Stat) {
+	copy(p.MinX, o.MinX)
+	copy(p.MaxX, o.MaxX)
+	copy(p.SumX, o.SumX)
+	copy(p.MeanX, o.MeanX)
+	copy(p.SigX, o.SigX)
+	copy(p.DelX, o.DelX)
+	p.MinY = o.MinY
+	p.MaxY = o.MaxY
+	p.SumY = o.SumY
+	p.MeanY = o.MeanY
+	p.SigY = o.SigY
+	p.DelY = o.DelY
 }

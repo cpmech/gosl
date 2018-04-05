@@ -19,7 +19,6 @@ type LogReg struct {
 
 	// main
 	data *Data // X-y data
-	stat *Stat // statistics
 
 	// workspace
 	ybar la.Vector // bar{y}: yb[i] = (1 - y[i]) / m
@@ -34,8 +33,6 @@ func NewLogReg(data *Data) (o *LogReg) {
 	o.data = data
 	o.Init(o.data.Nfeatures)
 	o.data.AddObserver(o) // need to recompute yb upon changes on y
-	o.stat = NewStat(data)
-	o.stat.Update()
 	o.ybar = la.NewVector(data.Nsamples)
 	o.l = la.NewVector(data.Nsamples)
 	o.hmy = la.NewVector(data.Nsamples)

@@ -16,3 +16,7 @@ type Regression interface {
 // RegressionTrainer performs training of Regression models by using numerical optimization methods
 type RegressionTrainer struct {
 }
+
+// Train model
+func (o *RegressionTrainer) Train() {
+}

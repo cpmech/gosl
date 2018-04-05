@@ -37,10 +37,6 @@ var (
 )
 
 func sample01checkStat(tst *testing.T, o *Stat) {
-	if !o.data.UseY {
-		tst.Errorf("flag UseY should be true\n")
-		return
-	}
 	io.Pf("X\n")
 	chk.Float64(tst, "min(x)", 1e-15, o.MinX[0], 0.87)
 	chk.Float64(tst, "max(x)", 1e-15, o.MaxX[0], 1.55)

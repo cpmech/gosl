@@ -20,14 +20,14 @@ while true; do
     #go test -run ParamsReg03
     #go test -run PolyDataMapper01
     #go test -run LinReg01
-    #go test -run LinReg02
+    go test -run LinReg02
     #go test -run LinReg03
     #go test -run LogReg01a
     #go test -run LogReg01b
     #go test -run LogReg02
     #go test -run LogReg03
     #go test -run LogReg04
-    go test -run LogReg05
+    #go test -run LogReg05
     #go test -run Kmeans01
     #go test -run Kmeans02
 done

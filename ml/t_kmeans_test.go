@@ -74,7 +74,7 @@ func TestKmeans02(tst *testing.T) {
 	useY := false
 	allocate := false
 	data := NewData(nSamples, nColumns, useY, allocate)
-	data.X = la.NewMatrixRaw(nSamples, nColumns, Xraw)
+	data.Set(la.NewMatrixRaw(nSamples, nColumns, Xraw), nil)
 	chk.Int(tst, "m", data.X.M, 300)
 	chk.Int(tst, "n", data.X.N, 2)
 

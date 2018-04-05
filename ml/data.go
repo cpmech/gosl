@@ -26,11 +26,14 @@ import (
 type Data struct {
 	utl.Observable // can notify others of changes here via data.NotifyUpdate()
 
+	// input
 	Nsamples  int        // number of data points (samples). number of rows in X and Y
 	Nfeatures int        // number of features. number of columns in X
-	UseY      bool       // use Y vector
 	X         *la.Matrix // [nSamples][nFeatures] X values
-	Y         la.Vector  // [nSamples] Y values
+	Y         la.Vector  // [nSamples] Y values [optional]
+
+	// access
+	Stat *Stat // statistics about this data
 }
 
 // NewData returns a new object to hold ML data
@@ -38,26 +41,37 @@ type Data struct {
 //    nSamples  -- number of data samples (rows in X)
 //    nFeatures -- number of features (columns in X)
 //    useY      -- use y data vector
-//    allocate  -- allocates X (and Y); otherwise, X and Y must be set externally
+//    allocate  -- allocates X (and Y); otherwise,
+//                 X and Y must be set using Set() method
 //  Output:
 //    new object
 func NewData(nSamples, nFeatures int, useY, allocate bool) (o *Data) {
 	o = new(Data)
 	o.Nsamples = nSamples
 	o.Nfeatures = nFeatures
-	o.UseY = useY
 	if allocate {
 		o.X = la.NewMatrix(o.Nsamples, o.Nfeatures)
-		if o.UseY {
+		if useY {
 			o.Y = la.NewVector(o.Nsamples)
 		}
 	}
+	o.Stat = NewStat(o)
 	return
+}
+
+// Set sets X matrix and Y vector [optional] and notify observers
+//   Input:
+//     X -- x values
+//     Y -- y values [optional]
+func (o *Data) Set(X *la.Matrix, Y la.Vector) {
+	o.X = X
+	o.Y = Y
+	o.NotifyUpdate()
 }
 
 // NewDataGivenRawX returns a new object with data set from raw X values
 //  Input:
-//    Xraw -- [nSamples][nFeatures] table with x and y raw values,
+//    Xraw -- [nSamples][nFeatures] table with x values (NO y values)
 //  Output:
 //    new object
 func NewDataGivenRawX(Xraw [][]float64) (o *Data) {
@@ -78,6 +92,10 @@ func NewDataGivenRawX(Xraw [][]float64) (o *Data) {
 			o.X.Set(i, j, Xraw[i][j])
 		}
 	}
+
+	// stat
+	o.Stat = NewStat(o)
+	o.NotifyUpdate()
 	return
 }
 
@@ -106,15 +124,21 @@ func NewDataGivenRawXY(XYraw [][]float64) (o *Data) {
 		}
 		o.Y[i] = XYraw[i][nFeatures]
 	}
+
+	// stat
+	o.Stat = NewStat(o)
+	o.NotifyUpdate()
 	return
 }
 
 // GetCopy returns a deep copy of this object
 func (o *Data) GetCopy() (p *Data) {
-	p = NewData(o.Nsamples, o.Nfeatures, o.UseY, true)
+	useY := len(o.Y) > 0
+	p = NewData(o.Nsamples, o.Nfeatures, useY, true)
 	o.X.CopyInto(p.X, 1)
-	if o.UseY {
+	if useY {
 		copy(p.Y, o.Y)
 	}
+	o.Stat.CopyInto(p.Stat)
 	return
 }

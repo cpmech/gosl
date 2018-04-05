@@ -14,7 +14,6 @@ import (
 // Kmeans implements the K-means model (Observer of Data)
 type Kmeans struct {
 	data      *Data       // X data
-	stat      *Stat       // statistics about X (data)
 	nClasses  int         // expected number of classes
 	Classes   []int       // [nSamples] indices of classes of each sample
 	Centroids []la.Vector // [nClasses][nFeatures] coordinates of centroids
@@ -30,10 +29,6 @@ func NewKmeans(data *Data, nClasses int) (o *Kmeans) {
 	o.data = data
 	o.data.AddObserver(o) // need to recompute bins upon data changes
 
-	// stat
-	o.stat = NewStat(data)
-	o.stat.Update()
-
 	// classes
 	o.nClasses = nClasses
 	o.Classes = make([]int, data.Nsamples)
@@ -42,9 +37,9 @@ func NewKmeans(data *Data, nClasses int) (o *Kmeans) {
 
 	// bins
 	o.bins = new(gm.Bins)
-	ndiv := []int{10, 10}                       // TODO: make this a parameter
-	o.bins.Init(o.stat.MinX, o.stat.MaxX, ndiv) // TODO: make sure minX and maxX are 2D or 3D; i.e. nFeatures ≤ 2
-	o.Update()                                  // compute first bins
+	ndiv := []int{10, 10}                                 // TODO: make this a parameter
+	o.bins.Init(o.data.Stat.MinX, o.data.Stat.MaxX, ndiv) // TODO: make sure minX and maxX are 2D or 3D; i.e. nFeatures ≤ 2
+	o.Update()                                            // compute first bins
 	return
 }
 

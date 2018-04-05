@@ -22,20 +22,20 @@ func TestLogReg01a(tst *testing.T) {
 	// data
 	data := NewDataGivenRawXY(dataReg01)
 
+	// check stat
+	chk.Float64(tst, "min(x)", 1e-15, data.Stat.MinX[0], 0.87)
+	chk.Float64(tst, "min(y)", 1e-15, data.Stat.MinY, 87.33)
+	data.X.Set(6, 0, 0.88)
+	data.Y[19] = 87.34
+	data.NotifyUpdate()
+	chk.Float64(tst, "notified: min(x)", 1e-15, data.Stat.MinX[0], 0.88)
+	chk.Float64(tst, "notified: min(y)", 1e-15, data.Stat.MinY, 87.34)
+
 	// regression
 	model := NewLogReg(data)
 
 	// set regularization
 	model.SetLambda(0.25)
-
-	// check stat
-	chk.Float64(tst, "reg.stat.min(x)", 1e-15, model.stat.MinX[0], 0.87)
-	chk.Float64(tst, "reg.stat.min(y)", 1e-15, model.stat.MinY, 87.33)
-	data.X.Set(6, 0, 0.88)
-	data.Y[19] = 87.34
-	data.NotifyUpdate()
-	chk.Float64(tst, "notified: reg.stat.min(x)", 1e-15, model.stat.MinX[0], 0.88)
-	chk.Float64(tst, "notified: reg.stat.min(y)", 1e-15, model.stat.MinY, 87.34)
 
 	// meshgrid
 	thetas := utl.LinSpace(-100, 100, 11)

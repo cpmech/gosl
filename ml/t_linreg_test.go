@@ -21,17 +21,17 @@ func TestLinReg01a(tst *testing.T) {
 	// data
 	data := NewDataGivenRawXY(dataReg01)
 
-	// model
-	reg := NewLinReg(data)
-
 	// check stat
-	chk.Float64(tst, "reg.stat.min(x)", 1e-15, reg.stat.MinX[0], 0.87)
-	chk.Float64(tst, "reg.stat.min(y)", 1e-15, reg.stat.MinY, 87.33)
+	chk.Float64(tst, "min(x)", 1e-15, data.Stat.MinX[0], 0.87)
+	chk.Float64(tst, "min(y)", 1e-15, data.Stat.MinY, 87.33)
 	data.X.Set(6, 0, 0.88)
 	data.Y[19] = 87.34
 	data.NotifyUpdate()
-	chk.Float64(tst, "notified: reg.stat.min(x)", 1e-15, reg.stat.MinX[0], 0.88)
-	chk.Float64(tst, "notified: reg.stat.min(y)", 1e-15, reg.stat.MinY, 87.34)
+	chk.Float64(tst, "notified: min(x)", 1e-15, data.Stat.MinX[0], 0.88)
+	chk.Float64(tst, "notified: min(y)", 1e-15, data.Stat.MinY, 87.34)
+
+	// model
+	reg := NewLinReg(data)
 
 	// check gradient: dCdθ
 	io.Pl()
@@ -177,7 +177,7 @@ func TestLinReg02b(tst *testing.T) {
 	// train
 	reg.Train()
 	for _, x0 := range []float64{0.8, 1.2, 2.0} {
-		chk.Float64(tst, io.Sf("y(x0=%.2f)", x0), 1e-11, reg.Predict([]float64{x0}), reg.stat.MeanY)
+		chk.Float64(tst, io.Sf("y(x0=%.2f)", x0), 1e-11, reg.Predict([]float64{x0}), data.Stat.MeanY)
 	}
 
 	// plot

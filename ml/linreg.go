@@ -14,7 +14,6 @@ type LinReg struct {
 
 	// main
 	data *Data // X-y data
-	stat *Stat // statistics
 
 	// workspace
 	e la.Vector // vector e = b⋅o + X⋅θ - y [nSamples]
@@ -26,8 +25,6 @@ func NewLinReg(data *Data) (o *LinReg) {
 	o = new(LinReg)
 	o.data = data
 	o.Init(o.data.Nfeatures)
-	o.stat = NewStat(data)
-	o.stat.Update()
 	o.e = la.NewVector(data.Nsamples)
 	return
 }
@@ -100,7 +97,7 @@ func (o *LinReg) Train() {
 	// auxiliary
 	λ := o.GetLambda()
 	X, y := o.data.X, o.data.Y
-	s, t := o.stat.SumVars()
+	s, t := o.data.Stat.SumVars()
 
 	// r vector
 	m := float64(o.data.Nsamples)
