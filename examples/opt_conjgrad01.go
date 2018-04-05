@@ -26,11 +26,11 @@ func main() {
 
 	// solve using Brent's method as Line Search
 	xmin1 := x0.GetCopy()
-	sol1 := opt.NewConjGrad(N, problem.Ffcn, problem.Gfcn)
+	sol1 := opt.NewConjGrad(problem)
 	sol1.UseBrent = true
 	sol1.UseHist = true
 	t0 := time.Now()
-	fmin1 := sol1.Min(xmin1)
+	fmin1 := sol1.Min(xmin1, nil)
 	dt := time.Now().Sub(t0)
 
 	// stat
@@ -43,11 +43,11 @@ func main() {
 
 	// solve using Wolfe's method as Line Search
 	xmin2 := x0.GetCopy()
-	sol2 := opt.NewConjGrad(N, problem.Ffcn, problem.Gfcn)
+	sol2 := opt.NewConjGrad(problem)
 	sol2.UseBrent = false
 	sol2.UseHist = true
 	t0 = time.Now()
-	fmin2 := sol2.Min(xmin2)
+	fmin2 := sol2.Min(xmin2, nil)
 	dt = time.Now().Sub(t0)
 
 	// stat

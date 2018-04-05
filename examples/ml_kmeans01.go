@@ -33,7 +33,7 @@ func main() {
 
 	// model
 	nClasses := 3
-	model := ml.NewKmeans(data, "model01", nClasses)
+	model := ml.NewKmeans(data, nClasses)
 	model.SetCentroids([][]float64{
 		{3, 3}, // class 0
 		{6, 2}, // class 1

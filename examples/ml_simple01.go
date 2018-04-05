@@ -44,7 +44,7 @@ func main() {
 	params := ml.NewParamsReg(data.Nfeatures)
 
 	// model
-	model := ml.NewLinReg(data, params, "reg01")
+	model := ml.NewLinReg(data, params)
 
 	// train using analytical solution
 	model.Train()

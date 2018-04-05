@@ -35,7 +35,7 @@ func main() {
 	params.SetLambda(1.0) // regularization
 
 	// model
-	model := ml.NewLogReg(data, params, "reg01")
+	model := ml.NewLogReg(data, params)
 
 	// train using analytical solution
 	params.SetThetas(utl.Vals(data.Nfeatures, 0.0)) // all zeros

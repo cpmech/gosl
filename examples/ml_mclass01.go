@@ -22,7 +22,7 @@ func main() {
 	data := ml.NewDataGivenRawXY(XYraw)
 
 	// model
-	model := ml.NewLogRegMulti(data, "model01")
+	model := ml.NewLogRegMulti(data)
 
 	// train
 	model.SetLambda(1e-5)

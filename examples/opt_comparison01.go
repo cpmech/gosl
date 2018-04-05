@@ -25,10 +25,10 @@ func main() {
 
 	// ConjGrad
 	xmin1 := x0.GetCopy()
-	sol1 := opt.NewConjGrad(len(x0), problem.Ffcn, problem.Gfcn)
+	sol1 := opt.NewConjGrad(problem)
 	sol1.UseHist = true
 	t0 := time.Now()
-	fmin1 := sol1.Min(xmin1)
+	fmin1 := sol1.Min(xmin1, nil)
 	dt := time.Now().Sub(t0)
 
 	// stat
@@ -41,11 +41,10 @@ func main() {
 
 	// Powell
 	xmin2 := x0.GetCopy()
-	sol2 := opt.NewPowell(len(x0), problem.Ffcn)
+	sol2 := opt.NewPowell(problem)
 	sol2.UseHist = true
-	reuseUmat := false
 	t0 = time.Now()
-	fmin2 := sol2.Min(xmin2, reuseUmat)
+	fmin2 := sol2.Min(xmin2, nil)
 	dt = time.Now().Sub(t0)
 
 	// stat
@@ -59,11 +58,11 @@ func main() {
 
 	// GradDesc
 	xmin3 := x0.GetCopy()
-	sol3 := opt.NewGradDesc(len(x0), problem.Ffcn, problem.Gfcn)
+	sol3 := opt.NewGradDesc(problem)
 	sol3.UseHist = true
 	sol3.Alpha = 0.2
 	t0 = time.Now()
-	fmin3 := sol3.Min(xmin3)
+	fmin3 := sol3.Min(xmin3, nil)
 	dt = time.Now().Sub(t0)
 
 	// stat

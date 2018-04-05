@@ -28,7 +28,7 @@ func main() {
 	params.SetBias(bini)
 
 	// model
-	model := ml.NewLogReg(data, params, "reg01")
+	model := ml.NewLogReg(data, params)
 
 	// train using analytical solution
 	model.Train()
