@@ -9,10 +9,17 @@ import (
 	"github.com/cpmech/gosl/io"
 )
 
-// P holds material parameter names and values
+// P holds numeric parameters defined by a name N and a value V.
 //
-// The connected variables to V data holds pointers to other scalars that need to be updated when
-// the parameter is changed. For instance, when running simulations with variable parameters.
+// P is convenient to store the range of allowed values in Min and Max,
+// and other information such as standard deviation S, probability distribution type D,
+// among others.
+//
+// Dependent variables may be connected to P using Connect so when Set is called,
+// the dependendt variable is updated as well.
+//
+// Other parameters can be linked to this one via the Other data member
+// and Fcn may be useful to compute y=f(t,x)
 //
 type P struct {
 
