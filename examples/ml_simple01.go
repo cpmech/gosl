@@ -40,11 +40,8 @@ func main() {
 	}
 	data := ml.NewDataGivenRawXY(XYraw)
 
-	// parameters
-	params := ml.NewParamsReg(data.Nfeatures)
-
 	// model
-	model := ml.NewLinReg(data, params)
+	model := ml.NewLinReg(data)
 
 	// train using analytical solution
 	model.Train()
@@ -52,19 +49,14 @@ func main() {
 	// ----------------------- plotting --------------------------
 
 	// clear plotting area
-	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
+	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 
 	// plot data x-y
-	plt.Subplot(2, 1, 1)
-	pp := ml.NewPlotterReg(data, params, model, nil)
+	pp := ml.NewPlotterReg(data, model, nil)
 	pp.DataY(0)
 
 	// plot model x-y
 	pp.ModelY(0, 0.8, 1.6)
-
-	// plot contour of cost function
-	plt.Subplot(2, 1, 2)
-	pp.ContourCost(-1, 0, 0, 100, 0, 70)
 
 	// save figure
 	plt.Save("/tmp/gosl", "ml_simple01")

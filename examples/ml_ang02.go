@@ -10,7 +10,6 @@ import (
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/ml"
 	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
 )
 
 func main() {
@@ -26,25 +25,18 @@ func main() {
 	mapper := ml.NewPolyDataMapper(nOriFeatures, iFeature, jFeature, degree)
 	data := mapper.GetMapped(XYraw, true)
 
-	// parameters and initial guess
-	θini := utl.Vals(data.Nfeatures, 1.0) // all ones
-	bini := 1.0
-	params := ml.NewParamsReg(data.Nfeatures)
-	params.SetThetas(θini)
-	params.SetBias(bini)
-	params.SetLambda(1.0) // regularization
-
 	// model
-	model := ml.NewLogReg(data, params)
+	model := ml.NewLogReg(data)
+
+	// parameters
+	model.SetLambda(1.0)
 
 	// train using analytical solution
-	params.SetThetas(utl.Vals(data.Nfeatures, 0.0)) // all zeros
-	params.SetBias(0.0)
 	model.Train()
 
 	// plot data and model prediction (analytical)
 	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-	pp := ml.NewPlotterReg(data, params, model, mapper)
+	pp := ml.NewPlotterReg(data, model, mapper)
 	pp.DataClass(0, 1, true)
 	pp.ContourModel(0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
 	plt.Save("/tmp/gosl", "ml_ang02")
