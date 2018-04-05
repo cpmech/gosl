@@ -31,28 +31,28 @@ func TestLinReg01a(tst *testing.T) {
 	chk.Float64(tst, "notified: min(y)", 1e-15, data.Stat.MinY, 87.34)
 
 	// model
-	reg := NewLinReg(data)
+	model := NewLinReg(data)
 
 	// check gradient: dCdθ
 	io.Pl()
 	verb := chk.Verbose
 	tol, hsmall := 1e-8, 1e-3
-	reg.Backup()
+	model.Backup()
 	dCdθ := la.NewVector(data.Nfeatures)
 	for _, θ0 := range []float64{5, 10, 15} {
 
 		// analytical
-		reg.Restore(false)
-		reg.SetTheta(0, θ0)
-		reg.Gradients(dCdθ)
+		model.Restore(false)
+		model.SetTheta(0, θ0)
+		model.Gradients(dCdθ)
 
 		// numerical
-		θat := reg.GetThetas()
+		θat := model.GetThetas()
 		θat[0] = θ0
 		chk.DerivScaVec(tst, "dCdθ_", tol, dCdθ, θat, hsmall, verb, func(θtmp []float64) (cost float64) {
-			reg.Restore(false)
-			reg.SetThetas(θtmp)
-			cost = reg.Cost()
+			model.Restore(false)
+			model.SetThetas(θtmp)
+			cost = model.Cost()
 			return
 		})
 	}
@@ -62,15 +62,15 @@ func TestLinReg01a(tst *testing.T) {
 	for _, b := range []float64{35, 70, 140} {
 
 		// analytical
-		reg.Restore(false)
-		reg.SetBias(b)
-		dCdb := reg.Gradients(dCdθ)
+		model.Restore(false)
+		model.SetBias(b)
+		dCdb := model.Gradients(dCdθ)
 
 		// numerical
 		chk.DerivScaSca(tst, "dCdb", tol, dCdb, b, hsmall, verb, func(btmp float64) (cost float64) {
-			reg.Restore(false)
-			reg.SetBias(btmp)
-			cost = reg.Cost()
+			model.Restore(false)
+			model.SetBias(btmp)
+			cost = model.Cost()
 			return
 		})
 	}
@@ -85,31 +85,31 @@ func TestLinReg01b(tst *testing.T) {
 	data := NewDataGivenRawXY(dataReg01)
 
 	// regression
-	reg := NewLinReg(data)
+	model := NewLinReg(data)
 
 	// set regularization parameter
-	reg.SetLambda(10.0)
+	model.SetLambda(10.0)
 
 	// check gradient: dCdθ
 	io.Pl()
 	verb := chk.Verbose
 	tol, hsmall := 1e-8, 1e-3
-	reg.Backup()
+	model.Backup()
 	dCdθ := la.NewVector(data.Nfeatures)
 	for _, θ0 := range []float64{5, 10, 15} {
 
 		// analytical
-		reg.Restore(false)
-		reg.SetTheta(0, θ0)
-		reg.Gradients(dCdθ)
+		model.Restore(false)
+		model.SetTheta(0, θ0)
+		model.Gradients(dCdθ)
 
 		// numerical
-		θat := reg.GetThetas()
+		θat := model.GetThetas()
 		θat[0] = θ0
 		chk.DerivScaVec(tst, "dCdθ_", tol, dCdθ, θat, hsmall, verb, func(θtmp []float64) (cost float64) {
-			reg.Restore(false)
-			reg.SetThetas(θtmp)
-			cost = reg.Cost()
+			model.Restore(false)
+			model.SetThetas(θtmp)
+			cost = model.Cost()
 			return
 		})
 	}
@@ -119,15 +119,15 @@ func TestLinReg01b(tst *testing.T) {
 	for _, b := range []float64{35, 70, 140} {
 
 		// analytical
-		reg.Restore(false)
-		reg.SetBias(b)
-		dCdb := reg.Gradients(dCdθ)
+		model.Restore(false)
+		model.SetBias(b)
+		dCdb := model.Gradients(dCdθ)
 
 		// numerical
 		chk.DerivScaSca(tst, "dCdb", tol, dCdb, b, hsmall, verb, func(btmp float64) (cost float64) {
-			reg.Restore(false)
-			reg.SetBias(btmp)
-			cost = reg.Cost()
+			model.Restore(false)
+			model.SetBias(btmp)
+			cost = model.Cost()
 			return
 		})
 	}
@@ -142,20 +142,20 @@ func TestLinReg02a(tst *testing.T) {
 	data := NewDataGivenRawXY(dataReg01)
 
 	// regression
-	reg := NewLinReg(data)
+	model := NewLinReg(data)
 
 	// train
-	reg.Train()
-	chk.Float64(tst, "cost", 1e-15, reg.Cost(), 5.312454218805082e-01)
-	chk.Array(tst, "θ", 1e-12, reg.AccessThetas(), []float64{1.494747973211108e+01})
-	chk.Float64(tst, "b", 1e-12, reg.GetBias(), 7.428331424039514e+01)
+	model.Train()
+	chk.Float64(tst, "cost", 1e-15, model.Cost(), 5.312454218805082e-01)
+	chk.Array(tst, "θ", 1e-12, model.AccessThetas(), []float64{1.494747973211108e+01})
+	chk.Float64(tst, "b", 1e-12, model.GetBias(), 7.428331424039514e+01)
 
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotterReg(data, reg, nil)
+		pp := NewPlotter(data, nil)
 		pp.DataY(0)
-		pp.ModelY(0, 0.8, 1.6)
+		pp.ModelY(model.Predict, 0, 0.8, 1.6)
 		plt.Save("/tmp/gosl/ml", "linreg02a")
 	}
 }
@@ -169,23 +169,23 @@ func TestLinReg02b(tst *testing.T) {
 	data := NewDataGivenRawXY(dataReg01)
 
 	// regression
-	reg := NewLinReg(data)
+	model := NewLinReg(data)
 
 	// set regularization parameter
-	reg.SetLambda(1e12) // very high bias => constant line
+	model.SetLambda(1e12) // very high bias => constant line
 
 	// train
-	reg.Train()
+	model.Train()
 	for _, x0 := range []float64{0.8, 1.2, 2.0} {
-		chk.Float64(tst, io.Sf("y(x0=%.2f)", x0), 1e-11, reg.Predict([]float64{x0}), data.Stat.MeanY)
+		chk.Float64(tst, io.Sf("y(x0=%.2f)", x0), 1e-11, model.Predict([]float64{x0}), data.Stat.MeanY)
 	}
 
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotterReg(data, reg, nil)
+		pp := NewPlotter(data, nil)
 		pp.DataY(0)
-		pp.ModelY(0, 0.8, 1.6)
+		pp.ModelY(model.Predict, 0, 0.8, 1.6)
 		plt.Save("/tmp/gosl/ml", "linreg02b")
 	}
 }

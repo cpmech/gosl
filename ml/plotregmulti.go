@@ -61,9 +61,9 @@ func PlotRegMultiClassOneVsAll(data *Data, model *LogRegMulti, iFeature, jFeatur
 
 	// plot contour
 	for k, m := range model.models {
-		pp := NewPlotterReg(model.dataB[k], m, nil)
-		pp.MgridNpts = npts
-		pp.ArgsCmodel.Colors = []string{pc.ArgsYclasses[k].C}
-		pp.ContourModel(iFeature, jFeature, 0.5, ximin, ximax, xjmin, xjmax)
+		pp := NewPlotter(model.dataB[k], nil)
+		pp.NumPointsModelC = npts
+		pp.ArgsModelC.Colors = []string{pc.ArgsYclasses[k].C}
+		pp.ModelC(m.Predict, iFeature, jFeature, 0.5, ximin, ximax, xjmin, xjmax)
 	}
 }

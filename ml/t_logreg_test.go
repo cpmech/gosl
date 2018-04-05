@@ -186,9 +186,9 @@ func TestLogReg02(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotterReg(data, model, nil)
+		pp := NewPlotter(data, nil)
 		pp.DataClass(0, 1, true)
-		pp.ContourModel(0, 1, 0.5, -1, 1, -1, 1)
+		pp.ModelC(model.Predict, 0, 1, 0.5, -1, 1, -1, 1)
 		plt.Save("/tmp/gosl/ml", "logreg02")
 	}
 }
@@ -229,9 +229,9 @@ func TestLogReg03(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotterReg(data, model, nil)
+		pp := NewPlotter(data, nil)
 		pp.DataClass(0, 1, true)
-		pp.ContourModel(0, 1, 0.5, 20, 100, 20, 100)
+		pp.ModelC(model.Predict, 0, 1, 0.5, 20, 100, 20, 100)
 		plt.Save("/tmp/gosl/ml", "logreg03")
 	}
 }
@@ -280,9 +280,9 @@ func TestLogReg04(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotterReg(data, model, mapper)
+		pp := NewPlotter(data, mapper)
 		pp.DataClass(0, 1, true)
-		pp.ContourModel(0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
+		pp.ModelC(model.Predict, 0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
 		plt.Save("/tmp/gosl/ml", "logreg04")
 	}
 }
