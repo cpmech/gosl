@@ -41,10 +41,6 @@ func sample01checkStat(tst *testing.T, o *Stat) {
 		tst.Errorf("flag UseY should be true\n")
 		return
 	}
-	if o.name != "stat01" {
-		tst.Error("name is incorrect\n")
-		return
-	}
 	io.Pf("X\n")
 	chk.Float64(tst, "min(x)", 1e-15, o.MinX[0], 0.87)
 	chk.Float64(tst, "max(x)", 1e-15, o.MaxX[0], 1.55)
@@ -68,7 +64,7 @@ func TestStat01(tst *testing.T) {
 	data := NewDataGivenRawXY(dataReg01)
 
 	// stat
-	stat := NewStat(data, "stat01")
+	stat := NewStat(data)
 
 	// notify update
 	data.NotifyUpdate()

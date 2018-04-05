@@ -29,7 +29,7 @@ func TestKmeans01(tst *testing.T) {
 
 	// model
 	nClasses := 2
-	model := NewKmeans(data, "model01", nClasses)
+	model := NewKmeans(data, nClasses)
 	model.SetCentroids([][]float64{
 		{0.4, 0.6}, // class 0
 		{0.6, 0.4}, // class 1
@@ -80,7 +80,7 @@ func TestKmeans02(tst *testing.T) {
 
 	// model
 	nClasses := 3
-	model := NewKmeans(data, "model01", nClasses)
+	model := NewKmeans(data, nClasses)
 	model.SetCentroids([][]float64{
 		{3, 3}, // class 0
 		{6, 2}, // class 1

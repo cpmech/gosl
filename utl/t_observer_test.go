@@ -22,17 +22,13 @@ func (o *observabledata) Set(x, y, z int) {
 }
 
 type iminterested struct {
-	name, desc   string
+	desc         string
 	notification string
 	data         *observabledata
 }
 
-func (o *iminterested) Name() string {
-	return o.name
-}
-
 func (o *iminterested) Update() {
-	o.notification = io.Sf("%s got x=%d y=%d z=%d", o.name, o.data.x, o.data.y, o.data.z)
+	o.notification = io.Sf("got x=%d y=%d z=%d", o.data.x, o.data.y, o.data.z)
 }
 
 func TestObserver01(tst *testing.T) {
@@ -42,19 +38,15 @@ func TestObserver01(tst *testing.T) {
 
 	var data observabledata
 
-	obs01 := &iminterested{"iminterested01", "I'm interested in updates", "", &data}
-	obs02 := &iminterested{"iminterested02", "I'm interested in updates as well", "", &data}
-	wrong := &iminterested{"iminterested01", "repeated name", "", &data}
+	obs01 := &iminterested{"I'm interested in updates", "", &data}
+	obs02 := &iminterested{"I'm interested in updates as well", "", &data}
 
 	data.AddObserver(obs01)
 	data.AddObserver(obs02)
-	data.AddObserver(wrong)
 
 	chk.String(tst, obs01.notification, "")
 	chk.String(tst, obs02.notification, "")
-	chk.String(tst, wrong.notification, "")
 	data.Set(1, 2, 3)
-	chk.String(tst, obs01.notification, "iminterested01 got x=1 y=2 z=3")
-	chk.String(tst, obs02.notification, "iminterested02 got x=1 y=2 z=3")
-	chk.String(tst, wrong.notification, "")
+	chk.String(tst, obs01.notification, "got x=1 y=2 z=3")
+	chk.String(tst, obs02.notification, "got x=1 y=2 z=3")
 }

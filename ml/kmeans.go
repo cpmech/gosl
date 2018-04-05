@@ -13,7 +13,6 @@ import (
 
 // Kmeans implements the K-means model (Observer of Data)
 type Kmeans struct {
-	name      string      // nome of this "observer"
 	data      *Data       // X data
 	stat      *Stat       // statistics about X (data)
 	nClasses  int         // expected number of classes
@@ -24,16 +23,15 @@ type Kmeans struct {
 }
 
 // NewKmeans returns a new K-means model
-func NewKmeans(data *Data, name string, nClasses int) (o *Kmeans) {
+func NewKmeans(data *Data, nClasses int) (o *Kmeans) {
 
 	// input
 	o = new(Kmeans)
-	o.name = name
 	o.data = data
 	o.data.AddObserver(o) // need to recompute bins upon data changes
 
 	// stat
-	o.stat = NewStat(data, "stat_"+name)
+	o.stat = NewStat(data)
 	o.stat.Update()
 
 	// classes
@@ -48,11 +46,6 @@ func NewKmeans(data *Data, name string, nClasses int) (o *Kmeans) {
 	o.bins.Init(o.stat.MinX, o.stat.MaxX, ndiv) // TODO: make sure minX and maxX are 2D or 3D; i.e. nFeatures ≤ 2
 	o.Update()                                  // compute first bins
 	return
-}
-
-// Name returns the name of this "Observer"
-func (o *Kmeans) Name() string {
-	return o.name
 }
 
 // Update perform updates after data has been changed (as an Observer)

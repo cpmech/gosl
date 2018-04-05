@@ -23,7 +23,7 @@ func TestLinReg01a(tst *testing.T) {
 	params := NewParamsReg(data.Nfeatures)
 
 	// regression
-	reg := NewLinReg(data, params, "reg01")
+	reg := NewLinReg(data, params)
 
 	// check stat
 	chk.Float64(tst, "reg.stat.min(x)", 1e-15, reg.stat.MinX[0], 0.87)
@@ -90,7 +90,7 @@ func TestLinReg01b(tst *testing.T) {
 	params.SetLambda(10.0)
 
 	// regression
-	reg := NewLinReg(data, params, "reg01")
+	reg := NewLinReg(data, params)
 
 	// check gradient: dCdθ
 	io.Pl()
@@ -145,7 +145,7 @@ func TestLinReg02a(tst *testing.T) {
 	params := NewParamsReg(data.Nfeatures)
 
 	// regression
-	reg := NewLinReg(data, params, "reg01")
+	reg := NewLinReg(data, params)
 
 	// train
 	reg.Train()
@@ -179,7 +179,7 @@ func TestLinReg02b(tst *testing.T) {
 	params.SetLambda(1e12) // very high bias => constant line
 
 	// regression
-	reg := NewLinReg(data, params, "reg01")
+	reg := NewLinReg(data, params)
 
 	// train
 	reg.Train()

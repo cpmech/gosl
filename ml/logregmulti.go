@@ -5,13 +5,11 @@
 package ml
 
 import (
-	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 )
 
 // LogRegMulti implements a logistic regression model for multiple classes (Observer of data)
 type LogRegMulti struct {
-	name   string       // name of this "observer"
 	data   *Data        // X-y data
 	nClass int          // number of classes
 	params []*ParamsReg // [nClass] parameters for each class
@@ -21,9 +19,8 @@ type LogRegMulti struct {
 
 // NewLogRegMulti returns a new object
 // NOTE: the y-vector in data must have values in [0, nClass-1]
-func NewLogRegMulti(data *Data, name string) (o *LogRegMulti) {
+func NewLogRegMulti(data *Data) (o *LogRegMulti) {
 	o = new(LogRegMulti)
-	o.name = name
 	o.data = data
 	o.data.AddObserver(o)
 	o.nClass = int(data.Y.Max()) + 1
@@ -38,11 +35,6 @@ func NewLogRegMulti(data *Data, name string) (o *LogRegMulti) {
 	}
 	o.Update()
 	return
-}
-
-// Name returns the name of this "Observer"
-func (o *LogRegMulti) Name() string {
-	return o.name
 }
 
 // Update perform updates after data has been changed (as an Observer)
@@ -60,7 +52,7 @@ func (o *LogRegMulti) Update() {
 			}
 		}
 		if o.models[k] == nil {
-			o.models[k] = NewLogReg(o.dataB[k], o.params[k], io.Sf("%s_%dclass", o.name, k))
+			o.models[k] = NewLogReg(o.dataB[k], o.params[k])
 		} else {
 			o.models[k].Update()
 		}

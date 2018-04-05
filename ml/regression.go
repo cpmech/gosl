@@ -12,3 +12,7 @@ type Regression interface {
 	Cost() (c float64)
 	Gradients(dCdθ la.Vector) (dCdb float64)
 }
+
+// RegressionTrainer performs training of Regression models buy using numerical optimization methods
+type RegressionTrainer struct {
+}

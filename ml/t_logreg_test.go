@@ -27,7 +27,7 @@ func TestLogReg01a(tst *testing.T) {
 	params.SetLambda(0.25)
 
 	// regression
-	model := NewLogReg(data, params, "reg01")
+	model := NewLogReg(data, params)
 
 	// check stat
 	chk.Float64(tst, "reg.stat.min(x)", 1e-15, model.stat.MinX[0], 0.87)
@@ -141,7 +141,7 @@ func TestLogReg01b(tst *testing.T) {
 	params.SetLambda(3)
 
 	// regression
-	model := NewLogReg(data, params, "reg01")
+	model := NewLogReg(data, params)
 
 	// check
 	dCdθ := model.AllocateGradient()
@@ -181,7 +181,7 @@ func TestLogReg02(tst *testing.T) {
 	//params.SetBias(10)
 
 	// regression
-	model := NewLogReg(data, params, "reg01")
+	model := NewLogReg(data, params)
 	model.Train()
 	io.Pforan("cost = %v\n", model.Cost())
 	io.Pforan("θ = %v\n", params.AccessThetas())
@@ -219,7 +219,7 @@ func TestLogReg03(tst *testing.T) {
 	params.SetBias(bini)
 
 	// model
-	model := NewLogReg(data, params, "reg01")
+	model := NewLogReg(data, params)
 	cost := model.Cost()
 	io.Pf("Initial: θ = %.8f\n", params.GetThetas())
 	io.Pf("Initial: b = %.8f\n", params.GetBias())
@@ -267,7 +267,7 @@ func TestLogReg04(tst *testing.T) {
 	params.SetLambda(1.0) // regularization
 
 	// model
-	model := NewLogReg(data, params, "reg01")
+	model := NewLogReg(data, params)
 	cost := model.Cost()
 	io.Pf("Initial: θ = %.3f\n", params.GetThetas()[:4])
 	io.Pf("Initial: b = %.8f\n", params.GetBias())
@@ -304,7 +304,7 @@ func TestLogReg05(tst *testing.T) {
 	chk.Int(tst, "nFeatures", data.Nfeatures, 2)
 
 	// model
-	model := NewLogRegMulti(data, "model01")
+	model := NewLogRegMulti(data)
 
 	// train
 	model.SetLambda(1e-5)

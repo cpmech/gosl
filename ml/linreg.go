@@ -24,12 +24,11 @@ type LinReg struct {
 //   Input:
 //     data   -- X,y data
 //     params -- θ, b, λ
-//     name   -- unique name of this (observer) object
-func NewLinReg(data *Data, params *ParamsReg, name string) (o *LinReg) {
+func NewLinReg(data *Data, params *ParamsReg) (o *LinReg) {
 	o = new(LinReg)
 	o.data = data
 	o.params = params
-	o.stat = NewStat(data, name)
+	o.stat = NewStat(data)
 	o.stat.Update()
 	o.e = la.NewVector(data.Nsamples)
 	return

@@ -17,7 +17,6 @@ import (
 type LogReg struct {
 
 	// main
-	name   string     // name of this "observer"
 	data   *Data      // X-y data
 	params *ParamsReg // parameters: θ, b, λ
 	stat   *Stat      // statistics
@@ -32,25 +31,18 @@ type LogReg struct {
 //   Input:
 //     data   -- X,y data
 //     params -- θ, b, λ
-//     name   -- unique name of this (observer) object
-func NewLogReg(data *Data, params *ParamsReg, name string) (o *LogReg) {
+func NewLogReg(data *Data, params *ParamsReg) (o *LogReg) {
 	o = new(LogReg)
-	o.name = name
 	o.data = data
 	o.data.AddObserver(o) // need to recompute yb upon changes on y
 	o.params = params
-	o.stat = NewStat(data, "stat_"+name)
+	o.stat = NewStat(data)
 	o.stat.Update()
 	o.ybar = la.NewVector(data.Nsamples)
 	o.l = la.NewVector(data.Nsamples)
 	o.hmy = la.NewVector(data.Nsamples)
 	o.Update() // compute first ybar
 	return
-}
-
-// Name returns the name of this "Observer"
-func (o *LogReg) Name() string {
-	return o.name
 }
 
 // Update perform updates after data has been changed (as an Observer)

@@ -117,13 +117,8 @@ func TestParamsReg02(tst *testing.T) {
 }
 
 type observerT struct {
-	name   string
 	params *ParamsReg
 	msg    string
-}
-
-func (o *observerT) Name() string {
-	return o.name
 }
 
 func (o *observerT) Update() {
@@ -140,7 +135,7 @@ func TestParamsReg03(tst *testing.T) {
 	params := NewParamsReg(nFeatures)
 
 	// observer
-	observer := &observerT{"obs01", params, "nothing here yet"}
+	observer := &observerT{params, "nothing here yet"}
 	params.AddObserver(observer)
 	chk.String(tst, observer.msg, "nothing here yet")
 

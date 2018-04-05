@@ -17,7 +17,6 @@ import (
 //
 type Stat struct {
 	data  *Data     // data
-	name  string    // name of this object
 	MinX  []float64 // [nFeatures] min x values
 	MaxX  []float64 // [nFeatures] max x values
 	SumX  []float64 // [nFeatures] sum of x values
@@ -33,10 +32,9 @@ type Stat struct {
 }
 
 // NewStat returns a new Stat object
-func NewStat(data *Data, name string) (o *Stat) {
+func NewStat(data *Data) (o *Stat) {
 	o = new(Stat)
 	o.data = data
-	o.name = name
 	o.data.AddObserver(o)
 	o.MinX = make([]float64, data.Nfeatures)
 	o.MaxX = make([]float64, data.Nfeatures)
@@ -45,11 +43,6 @@ func NewStat(data *Data, name string) (o *Stat) {
 	o.SigX = make([]float64, data.Nfeatures)
 	o.DelX = make([]float64, data.Nfeatures)
 	return
-}
-
-// Name returns the name of this stat object (thus defining the Observer interface)
-func (o *Stat) Name() string {
-	return o.name
 }
 
 // Update compute statistics for given data (an Observer of Data)
