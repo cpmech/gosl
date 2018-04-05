@@ -18,7 +18,7 @@ type PlotterClass struct {
 	classes []int // y-data
 
 	// constants
-	MgridNpts int // nubmer of poitns for meshgrid (for contours)
+	MgridNpts int // number of points for meshgrid (for contours)
 
 	// arguments
 	ArgsYclasses  map[int]*plt.A // maps y classes [0, 1, 2, ...] to plot arguments
