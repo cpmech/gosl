@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -185,9 +186,10 @@ func TestLogReg02(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
+		io.Pforan("Y = %v\n", data.Y)
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 		pp := NewPlotter(data, nil)
-		pp.DataClass(0, 1, true)
+		pp.DataClass(2, 0, 1, utl.FromFloat64s(data.Y))
 		pp.ModelC(model.Predict, 0, 1, 0.5, -1, 1, -1, 1)
 		plt.Save("/tmp/gosl/ml", "logreg02")
 	}
@@ -230,7 +232,7 @@ func TestLogReg03(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 		pp := NewPlotter(data, nil)
-		pp.DataClass(0, 1, true)
+		pp.DataClass(2, 0, 1, utl.FromFloat64s(data.Y))
 		pp.ModelC(model.Predict, 0, 1, 0.5, 20, 100, 20, 100)
 		plt.Save("/tmp/gosl/ml", "logreg03")
 	}
@@ -281,7 +283,7 @@ func TestLogReg04(tst *testing.T) {
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 		pp := NewPlotter(data, mapper)
-		pp.DataClass(0, 1, true)
+		pp.DataClass(2, 0, 1, utl.FromFloat64s(data.Y))
 		pp.ModelC(model.Predict, 0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
 		plt.Save("/tmp/gosl/ml", "logreg04")
 	}
@@ -321,14 +323,27 @@ func TestLogReg05(tst *testing.T) {
 
 	// plot
 	if chk.Verbose {
-		npts := 201
 		iFeature, jFeature := 0, 1
 		ximin, ximax, xjmin, xjmax := 3.8, 8.4, 1.5, 4.9
+		pp := NewPlotter(data, nil)
+		pp.NumPointsModelC = 201
+		ffcn := func(x la.Vector) float64 {
+			class, _ := model.Predict(x)
+			return float64(class)
+		}
+		ffcns := []fun.Sv{
+			model.models[0].Predict,
+			model.models[1].Predict,
+			model.models[2].Predict,
+		}
+		classes := utl.FromFloat64s(data.Y)
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.7})
 		plt.Subplot(2, 1, 1)
-		PlotRegMultiClass(data, model, iFeature, jFeature, ximin, ximax, xjmin, xjmax, npts)
+		pp.ModelClass(ffcn, model.nClass, 0, 1, ximin, ximax, xjmin, xjmax)
+		pp.DataClass(model.nClass, 0, 1, classes)
 		plt.Subplot(2, 1, 2)
-		PlotRegMultiClassOneVsAll(data, model, iFeature, jFeature, ximin, ximax, xjmin, xjmax, npts)
+		pp.DataClass(model.nClass, 0, 1, classes)
+		pp.ModelClassOneVsAll(ffcns, iFeature, jFeature, ximin, ximax, xjmin, xjmax)
 		plt.Save("/tmp/gosl/ml", "logreg05")
 	}
 }

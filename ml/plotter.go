@@ -60,8 +60,9 @@ func NewPlotter(data *Data, mapper DataMapper) (o *Plotter) {
 	nMaxClassesIni := 10
 	o.ArgsClassesY = make(map[int]*plt.A)
 	for k := 0; k < nMaxClassesIni; k++ {
-		o.ArgsClassesY[k] = &plt.A{C: plt.C(k, 0), M: plt.M(k, 0), NoClip: true}
+		o.ArgsClassesY[k] = &plt.A{C: plt.C(k, 0), M: plt.M(k, 2), NoClip: true}
 	}
+	o.ArgsClassesY[0].M = "o"
 
 	// arguments: centroids
 	o.ArgsCentroids = &plt.A{Ls: "None", M: "*", Ms: 10, Mec: "k", NoClip: true}
@@ -84,19 +85,30 @@ func (o *Plotter) DataY(iFeature int) {
 }
 
 // DataClass plots data classes
-func (o *Plotter) DataClass(iFeature, jFeature int, binary bool) {
+//   classes -- use given classes instead of data.Y
+func (o *Plotter) DataClass(nClass, iFeature, jFeature int, classes []int) {
+
+	// argsmap
 	argsmap := o.ArgsClassesY
-	if binary {
+	if nClass == 2 {
 		argsmap = o.ArgsBinClassY
 	}
+
+	// plot points
+	var k int
 	for iSample := 0; iSample < o.data.Nsamples; iSample++ {
-		k := int(o.data.Y[iSample]) % len(argsmap)
-		//k := classes[iSample] % len(argsmap)
+		if classes != nil {
+			k = classes[iSample] % len(argsmap)
+		} else {
+			k = int(o.data.Y[iSample]) % len(argsmap)
+		}
 		args := argsmap[k]
 		ui := o.data.X.Get(iSample, iFeature)
 		vi := o.data.X.Get(iSample, jFeature)
 		plt.PlotOne(ui, vi, args)
 	}
+
+	// setup
 	plt.HideTRborders()
 	plt.Gll(io.Sf("$x_{%d}$", iFeature), io.Sf("$x_{%d}$", jFeature), nil)
 }
@@ -167,4 +179,62 @@ func (o *Plotter) ModelC(model fun.Sv, iFeature, jFeature int, level float64, xi
 
 	// plot contour
 	plt.ContourL(U, V, W, o.ArgsModelC)
+}
+
+// ModelClass plots contour indicating model Classes
+func (o *Plotter) ModelClass(model fun.Sv, nClass, iFeature, jFeature int, ximin, ximax, xjmin, xjmax float64) {
+
+	// args map
+	argsmap := o.ArgsClassesY
+	if nClass == 2 {
+		argsmap = o.ArgsBinClassY
+	}
+
+	// x vectors
+	x := la.NewVector(o.data.Nfeatures) // TODO: set x with xmean
+	var xRaw la.Vector
+	if o.mapper != nil {
+		xRaw = la.NewVector(o.mapper.NumOriginalFeatures())
+	}
+
+	// create meshgrid
+	U, V, W := utl.MeshGrid2dF(ximin, ximax, xjmin, xjmax, o.NumPointsModelC, o.NumPointsModelC, func(s, t float64) (w float64) {
+		if o.mapper == nil {
+			x[iFeature] = s
+			x[jFeature] = t
+		} else {
+			xRaw[iFeature] = s
+			xRaw[jFeature] = t
+			o.mapper.Map(x, xRaw)
+		}
+		w = model(x)
+		return
+	})
+
+	// get colors
+	colors := make([]string, nClass+1)
+	for k := 0; k < nClass; k++ {
+		colors[k] = argsmap[k].C
+	}
+	colors[nClass] = "white"
+
+	// plot contour
+	levels := utl.LinSpace(0, float64(nClass-1), nClass+1)
+	plt.ContourF(U, V, W, &plt.A{Colors: colors, Levels: levels, NoLines: true, NoLabels: true})
+}
+
+// ModelClassOneVsAll plots each Model prediction using 1 = this model, 0 = other models
+func (o *Plotter) ModelClassOneVsAll(models []fun.Sv, iFeature, jFeature int, ximin, ximax, xjmin, xjmax float64) {
+
+	// set classes
+	classes := make([]int, o.data.Nsamples)
+	for i := 0; i < o.data.Nsamples; i++ {
+		classes[i] = int(o.data.Y[i])
+	}
+
+	// plot contour
+	for _, ffcn := range models {
+		//pp.ArgsModelC.Colors = []string{pc.ArgsYclasses[k].C}
+		o.ModelC(ffcn, iFeature, jFeature, 0.5, ximin, ximax, xjmin, xjmax)
+	}
 }

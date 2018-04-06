@@ -10,8 +10,14 @@ import (
 
 // LogRegMulti implements a logistic regression model for multiple classes (Observer of data)
 type LogRegMulti struct {
-	data   *Data     // X-y data
-	nClass int       // number of classes
+
+	// input
+	data *Data // X-y data
+
+	// access
+	nClass int // number of classes
+
+	// internal
 	dataB  []*Data   // [nClass] reference to X-y data but with binary y-vector
 	models []*LogReg // [nClass] one-versus-all models
 }

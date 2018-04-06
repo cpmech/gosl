@@ -49,9 +49,9 @@ func TestKmeans01(tst *testing.T) {
 		//argsGrid := &plt.A{C: "gray", Ls: "--", Lw: 0.7}
 		//argsTxtEntry := &plt.A{Fsz: 5}
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		pp := NewPlotterClass(data, model.Classes, model.Nclasses())
+		pp := NewPlotter(data, nil)
 		//model.bins.Draw(true, true, true, false, nil, argsGrid, argsTxtEntry, nil, nil)
-		pp.Data(0, 1, false)
+		pp.DataClass(model.nClasses, 0, 1, model.Classes)
 		pp.Centroids(model.Centroids)
 		plt.AxisRange(0, 1, 0, 1)
 		plt.Save("/tmp/gosl/ml", "kmeans01")
@@ -106,8 +106,8 @@ func TestKmeans02(tst *testing.T) {
 	// plot
 	if chk.Verbose {
 		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		pp := NewPlotterClass(data, model.Classes, model.Nclasses())
-		pp.Data(0, 1, false)
+		pp := NewPlotter(data, nil)
+		pp.DataClass(model.nClasses, 0, 1, model.Classes)
 		pp.Centroids(model.Centroids)
 		plt.Equal()
 		plt.Save("/tmp/gosl/ml", "kmeans02")
