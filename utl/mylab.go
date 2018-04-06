@@ -681,6 +681,15 @@ func ArgMinMax(v []float64) (imin, imax int) {
 	return
 }
 
+// FromInts returns a new slice of float64 from a slice of ints
+func FromInts(a []int) (b []float64) {
+	b = make([]float64, len(a))
+	for i, x := range a {
+		b[i] = float64(x)
+	}
+	return
+}
+
 // bool //////////////////////////////////////////////////////////////////////////////////////////
 
 // AllTrue returns true if all values are true

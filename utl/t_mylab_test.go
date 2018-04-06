@@ -495,3 +495,13 @@ func TestMylab13(tst *testing.T) {
 	b := GetReversed(a)
 	chk.Array(tst, "rev(a)", 1e-17, b, []float64{5, 4, 3, 2, 1})
 }
+
+func TestMylab14(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab14. FromInts")
+
+	a := []int{1, 2, 3, 4, 5}
+	b := FromInts(a)
+	chk.Array(tst, "ints(a)", 1e-17, b, []float64{1, 2, 3, 4, 5})
+}
