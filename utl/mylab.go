@@ -690,6 +690,15 @@ func FromInts(a []int) (b []float64) {
 	return
 }
 
+// FromFloat64s returns a new slice of int from a slice of float64
+func FromFloat64s(a []float64) (b []int) {
+	b = make([]int, len(a))
+	for i, x := range a {
+		b[i] = int(x)
+	}
+	return
+}
+
 // bool //////////////////////////////////////////////////////////////////////////////////////////
 
 // AllTrue returns true if all values are true

@@ -505,3 +505,13 @@ func TestMylab14(tst *testing.T) {
 	b := FromInts(a)
 	chk.Array(tst, "ints(a)", 1e-17, b, []float64{1, 2, 3, 4, 5})
 }
+
+func TestMylab15(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("mylab15. FromFloat64s")
+
+	a := []float64{1, 2, 3, 4, 5}
+	b := FromFloat64s(a)
+	chk.Ints(tst, "floats(a)", b, []int{1, 2, 3, 4, 5})
+}
