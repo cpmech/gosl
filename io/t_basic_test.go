@@ -10,61 +10,77 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-func Test_basic01(tst *testing.T) {
+func TestBasic01(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("basic01")
+	chk.PrintTitle("Basic01")
 
-	v0 := Atob("1")
-	if !v0 {
-		chk.Panic("Atob failed: v0")
+	if !Atob("1") {
+		tst.Errorf("Atob(\"1\") should have returned true\n")
+		return
+	}
+	if !Atob("true") {
+		tst.Errorf("Atob(\"true\") should have returned true\n")
+	}
+	if Atob("0") {
+		tst.Errorf("Atob(\"0\") should have returned false\n")
+	}
+	if Atob("false") {
+		tst.Errorf("Atob(\"false\") should have returned false\n")
 	}
 
-	v1 := Atob("true")
-	if !v1 {
-		chk.Panic("Atob failed: v1")
+	if Itob(0) {
+		tst.Errorf("Itob(0) should have returned false\n")
+	}
+	if !Itob(-1) {
+		tst.Errorf("Itob(-1) should have returned true\n")
+	}
+	if !Itob(+1) {
+		tst.Errorf("Itob(+1) should have returned true\n")
 	}
 
-	v2 := Atob("0")
-	if v2 {
-		chk.Panic("Atob failed: v2")
-	}
+	chk.Int(tst, "true => 1", Btoi(true), 1)
+	chk.Int(tst, "false => 0", Btoi(false), 0)
 
-	v3 := Itob(0)
-	if v3 {
-		chk.Panic("Itob failed: v3")
-	}
+	chk.Int(tst, "\"123\" => 123", Atoi("123"), 123)
 
-	v4 := Itob(-1)
-	if !v4 {
-		chk.Panic("Itob failed: v4")
-	}
+	chk.String(tst, Btoa(true), "true")
+	chk.String(tst, Btoa(false), "false")
 
-	v5 := Btoi(true)
-	if v5 != 1 {
-		chk.Panic("Btoi failed: v5")
-	}
-
-	v6 := Btoi(false)
-	if v6 != 0 {
-		chk.Panic("Btoi failed: v6")
-	}
-
-	v7 := Btoa(true)
-	if v7 != "true" {
-		chk.Panic("Btoa failed: v7")
-	}
-
-	v8 := Btoa(false)
-	if v8 != "false" {
-		chk.Panic("Btoa failed: v8")
-	}
+	chk.Float64(tst, "\"123.456\" => 123.456", 1e-15, Atof("123.456"), 123.456)
 }
 
-func Test_basic02(tst *testing.T) {
+func TestBasic02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("basic02")
+	chk.PrintTitle("Parsing02. Atob panic")
+
+	defer chk.RecoverTstPanicIsOK(tst)
+	Atob("dorival")
+}
+
+func TestBasic03(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Parsing03. Atoi panic")
+
+	defer chk.RecoverTstPanicIsOK(tst)
+	Atoi("dorival")
+}
+
+func TestBasic04(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Parsing04. Atof panic")
+
+	defer chk.RecoverTstPanicIsOK(tst)
+	Atof("dorival")
+}
+
+func TestBasic05(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Basic05. IntSf, DblSf, StrSf")
 
 	res := IntSf("%4d", []int{1, 2, 3}) // note that an inner space is always added
 	Pforan("res = %q\n", res)
