@@ -45,6 +45,11 @@ type ConjGrad struct {
 	lineb *num.LineSolver // line solver wrapping Brent's method
 }
 
+// add optimizer to database
+func init() {
+	nlsMakersDB["conjgrad"] = func(prob *Problem) NonLinSolver { return NewConjGrad(prob) }
+}
+
 // NewConjGrad returns a new multidimensional optimizer using ConjGrad's method (no derivatives required)
 func NewConjGrad(prob *Problem) (o *ConjGrad) {
 	o = new(ConjGrad)

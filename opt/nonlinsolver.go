@@ -4,22 +4,32 @@
 
 package opt
 
-import "github.com/cpmech/gosl/la"
+import (
+	"strings"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/dbf"
+	"github.com/cpmech/gosl/la"
+)
 
 // NonLinSolver solves (unconstrained) nonlinear optimization problems
 type NonLinSolver interface {
-	Min(x la.Vector, args map[string]float64) (fmin float64) // computes minimum and updates x @ min
+	Min(x la.Vector, params dbf.Params) (fmin float64) // computes minimum and updates x @ min
 }
 
-// NewNonLinSolver returns new object
-//  method --   "conjgrad"
-//              "powell"
-//              "graddesc"
-func NewNonLinSolver(method string, prob *Problem) (o *NonLinSolver) {
-	o = new(NonLinSolver)
-	//switch method{
-	//case "conjgrad":
-	//return NewConjGrad(ndim, prob.Ffcn, prob
-	//}
-	return
+// nlsMaker defines a function that makes non-linear-solvers
+type nlsMaker func(prob *Problem) NonLinSolver
+
+// nlsMakersDB implements a database of non-linear-solver makers
+var nlsMakersDB = make(map[string]nlsMaker)
+
+// GetNonLinSolver finds a non-linear-solver in database or panic
+//  kind -- e.g. conjgrad, powel, graddesc
+func GetNonLinSolver(kind string, prob *Problem) NonLinSolver {
+	strKind := strings.ToLower(kind)
+	if maker, ok := nlsMakersDB[strKind]; ok {
+		return maker(prob)
+	}
+	chk.Panic("cannot find NonLinSolver named %q in database\n", kind)
+	return nil
 }

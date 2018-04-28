@@ -16,11 +16,12 @@ while true; do
     #go test -run GradDesc02
     #go test -run GradDesc03
     #go test -run LineSearch01
-    go test -run Powell01
+    #go test -run Powell01
     #go test -run Powell02
     #go test -run Powell03
     #go test -run ConjGrad01
     #go test -run ConjGrad02
     #go test -run ConjGrad03
     #go test -run ConjGrad04
+    go test -run NLS01
 done

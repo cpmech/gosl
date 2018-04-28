@@ -25,6 +25,11 @@ type GradDesc struct {
 	dfdx la.Vector // gradient vector
 }
 
+// add optimizer to database
+func init() {
+	nlsMakersDB["graddesc"] = func(prob *Problem) NonLinSolver { return NewGradDesc(prob) }
+}
+
 // NewGradDesc returns a new multidimensional optimizer using GradDesc's method (no derivatives required)
 func NewGradDesc(prob *Problem) (o *GradDesc) {
 	o = new(GradDesc)

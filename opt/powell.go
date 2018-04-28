@@ -36,6 +36,11 @@ type Powell struct {
 	uave la.Vector       // average direction moved
 }
 
+// add optimizer to database
+func init() {
+	nlsMakersDB["powell"] = func(prob *Problem) NonLinSolver { return NewPowell(prob) }
+}
+
 // NewPowell returns a new multidimensional optimizer using Powell's method (no derivatives required)
 func NewPowell(prob *Problem) (o *Powell) {
 	o = new(Powell)
