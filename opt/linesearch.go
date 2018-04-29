@@ -80,7 +80,7 @@ func NewLineSearch(ndim int, ffcn fun.Sv, Jfcn fun.Vv) (o *LineSearch) {
 // SetParams sets parameters
 //   Example:
 //             o.SetParams(dbf.NewParams(
-//                 &dbf.P{N: "maxit", V: 10},
+//                 &dbf.P{N: "maxitls", V: 10},
 //                 &dbf.P{N: "maxitzoom", V: 10},
 //                 &dbf.P{N: "maxalpha", V: 100},
 //                 &dbf.P{N: "mulalpha", V: 2},
@@ -90,7 +90,7 @@ func NewLineSearch(ndim int, ffcn fun.Sv, Jfcn fun.Vv) (o *LineSearch) {
 //                 &dbf.P{N: "coefcubic", V: 0.2},
 //             ))
 func (o *LineSearch) SetParams(params dbf.Params) {
-	o.MaxIt = params.GetIntOrDefault("maxit", o.MaxIt)
+	o.MaxIt = params.GetIntOrDefault("maxitls", o.MaxIt)
 	o.MaxItZoom = params.GetIntOrDefault("maxitzoom", o.MaxItZoom)
 	o.MaxAlpha = params.GetValueOrDefault("maxalpha", o.MaxAlpha)
 	o.MulAlpha = params.GetValueOrDefault("mulalpha", o.MulAlpha)

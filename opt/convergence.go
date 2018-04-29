@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/utl"
 )
@@ -56,6 +57,45 @@ func (o *Convergence) InitHist(x0 la.Vector) {
 	fmin := o.Ffcn(x0)
 	o.Hist = NewHistory(o.MaxIt, fmin, x0, o.Ffcn)
 	o.uhist = la.NewVector(len(x0))
+}
+
+// SetParams sets parameters
+//   Example:
+//             o.SetParams(dbf.NewParams(
+//                 &dbf.P{N: "maxit", V: 1000},
+//                 &dbf.P{N: "ftol", V: 1e-2},
+//                 &dbf.P{N: "gtol", V: 1e-2},
+//                 &dbf.P{N: "hist", V: 1},
+//                 &dbf.P{N: "verb", V: 1},
+//             ))
+func (o *Convergence) SetParams(params dbf.Params) {
+	o.MaxIt = params.GetIntOrDefault("maxit", o.MaxIt)
+	o.Ftol = params.GetValueOrDefault("ftol", o.Ftol)
+	o.Gtol = params.GetValueOrDefault("gtol", o.Gtol)
+	o.UseHist = params.GetBoolOrDefault("hist", o.UseHist)
+	o.Verbose = params.GetBoolOrDefault("verb", o.Verbose)
+}
+
+// SetConvParams sets convergence parameters
+func (o *Convergence) SetConvParams(maxIt int, ftol, gtol float64) {
+	o.MaxIt = maxIt
+	o.Ftol = ftol
+	o.Gtol = gtol
+}
+
+// SetUseHistory sets use history parameter
+func (o *Convergence) SetUseHistory(useHist bool) {
+	o.UseHist = useHist
+}
+
+// SetVerbose sets verbose mode
+func (o *Convergence) SetVerbose(verbose bool) {
+	o.Verbose = verbose
+}
+
+// AccessHistory gets access to History
+func (o *Convergence) AccessHistory() *History {
+	return o.Hist
 }
 
 // Fconvergence performs the check for f({x}) values

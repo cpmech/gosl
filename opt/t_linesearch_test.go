@@ -40,7 +40,7 @@ func TestLineSearch01(tst *testing.T) {
 
 	// set params
 	line.SetParams(dbf.NewParams(
-		&dbf.P{N: "maxit", V: 2},
+		&dbf.P{N: "maxitls", V: 2},
 		&dbf.P{N: "maxitzoom", V: 2},
 		&dbf.P{N: "maxalpha", V: 100},
 		&dbf.P{N: "mulalpha", V: 2},
