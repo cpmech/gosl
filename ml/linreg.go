@@ -5,7 +5,10 @@
 package ml
 
 import (
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/opt"
 )
 
 // LinReg implements a linear regression model
@@ -123,6 +126,53 @@ func (o *LinReg) Train() {
 	la.DenSolve(θ, K, r, false)
 	b := (t - la.VecDot(s, θ)) / m
 	o.SetBias(b)
+}
+
+// TrainNumerical trains model using numerical optimizer
+//   θini -- initial (trial) θ values
+//   bini -- initial (trial) bias
+//   method -- method/kind of numerical solver. e.g. conjgrad, powel, graddesc
+//   saveHist -- save history
+//   control -- parameters to numerical solver. See package 'opt'
+func (o *LinReg) TrainNumerical(θini la.Vector, bini float64, method string, saveHist bool, control dbf.Params) (minCost float64, hist *opt.History) {
+
+	// auxiliary
+	n := o.data.Nfeatures
+
+	// set optimization problem
+	// v = {θ, b}  ⇒  θ = v[:n], b = v[n]
+	problem := &opt.Problem{
+		Ndim: n + 1, // nθ + bias
+		Ffcn: func(v la.Vector) float64 {
+			o.SetThetas(v[:n])
+			o.SetBias(v[n])
+			return o.Cost()
+		},
+		Gfcn: func(g, v la.Vector) {
+			o.SetThetas(v[:n])
+			o.SetBias(v[n])
+			g[n] = o.Gradients(g[:n])
+		},
+		Hfcn: func(f *la.Matrix, v la.Vector) {
+			chk.Panic("cannot use Hessian yet\n")
+		},
+	}
+
+	// initial solution
+	v := la.NewVector(n + 1)
+	copy(v[:n], θini)
+	v[n] = bini
+
+	// solve
+	solver := opt.GetNonLinSolver(method, problem)
+	solver.SetUseHistory(saveHist)
+	minCost = solver.Min(v, control)
+	hist = solver.AccessHistory()
+
+	// set params
+	o.SetThetas(v[:n])
+	o.SetBias(v[n])
+	return
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////

@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -229,11 +230,30 @@ func TestLogReg03(tst *testing.T) {
 	chk.Float64(tst, "b", 1e-6, model.GetBias(), -2.516133256589910e+01)
 
 	// plot
+	var pp *Plotter
 	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotter(data, nil)
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
+		plt.Subplot(2, 1, 1)
+		pp = NewPlotter(data, nil)
 		pp.DataClass(2, 0, 1, utl.FromFloat64s(data.Y))
 		pp.ModelC(model.Predict, 0, 1, 0.5, 20, 100, 20, 100)
+	}
+
+	// train using numerical method
+	control := dbf.NewParams(
+		&dbf.P{N: "maxit", V: 10},
+		&dbf.P{N: "ftol", V: 1e-2},
+	)
+	minCost, hist := model.TrainNumerical(θini, bini, "conjgrad", true, control)
+	io.Pf("minCost = %v\n", minCost)
+
+	// plot
+	if chk.Verbose {
+		plt.Subplot(2, 1, 1)
+		pp.ArgsModelC = &plt.A{Colors: []string{plt.C(4, 0)}, Levels: []float64{0.5}}
+		pp.ModelC(model.Predict, 0, 1, 0.5, 20, 100, 20, 100)
+		plt.Subplot(2, 1, 2)
+		hist.PlotF(nil)
 		plt.Save("/tmp/gosl/ml", "logreg03")
 	}
 }

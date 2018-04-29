@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -136,7 +137,7 @@ func TestLinReg01b(tst *testing.T) {
 func TestLinReg02a(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("LinReg02a. Train simple problem (analytical solution).")
+	chk.PrintTitle("LinReg02a. Train simple problem (ana and num solutions).")
 
 	// data
 	data := NewDataGivenRawXY(dataReg01)
@@ -144,18 +145,42 @@ func TestLinReg02a(tst *testing.T) {
 	// regression
 	model := NewLinReg(data)
 
-	// train
+	// train using analytical solution
 	model.Train()
 	chk.Float64(tst, "cost", 1e-15, model.Cost(), 5.312454218805082e-01)
 	chk.Array(tst, "θ", 1e-12, model.AccessThetas(), []float64{1.494747973211108e+01})
 	chk.Float64(tst, "b", 1e-12, model.GetBias(), 7.428331424039514e+01)
 
 	// plot
+	var pp *Plotter
 	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-		pp := NewPlotter(data, nil)
+		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.5})
+		plt.Subplot(2, 1, 1)
+		pp = NewPlotter(data, nil)
+		pp.ArgsModelY = &plt.A{C: plt.C(0, 0), M: "None", Ls: "-", NoClip: true, L: "analytical"}
 		pp.DataY(0)
 		pp.ModelY(model.Predict, 0, 0.8, 1.6)
+	}
+
+	// train using numerical method
+	θini := la.NewVectorSlice([]float64{1.0})
+	bini := 1.0
+	control := dbf.NewParams(
+		&dbf.P{N: "alpha", V: 0.8},
+		&dbf.P{N: "maxit", V: 180},
+		&dbf.P{N: "ftol", V: 1e-2},
+	)
+	minCost, hist := model.TrainNumerical(θini, bini, "graddesc", true, control)
+	io.Pf("minCost = %v\n", minCost)
+
+	// plot
+	if chk.Verbose {
+		plt.Subplot(2, 1, 1)
+		pp.ArgsModelY = &plt.A{C: plt.C(1, 0), M: "None", Ls: "-", NoClip: true, L: "numerical"}
+		pp.ModelY(model.Predict, 0, 0.8, 1.6)
+		plt.Gll("$x_{0}$", "$y$", nil)
+		plt.Subplot(2, 1, 2)
+		hist.PlotF(nil)
 		plt.Save("/tmp/gosl/ml", "linreg02a")
 	}
 }
