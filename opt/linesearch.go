@@ -9,6 +9,7 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -74,6 +75,29 @@ func NewLineSearch(ndim int, ffcn fun.Sv, Jfcn fun.Vv) (o *LineSearch) {
 	o.interp3 = fun.NewInterpCubic()
 	o.interp3.TolDen = 1e-20
 	return
+}
+
+// SetParams sets parameters
+//   Example:
+//             o.SetParams(dbf.NewParams(
+//                 &dbf.P{N: "maxit", V: 10},
+//                 &dbf.P{N: "maxitzoom", V: 10},
+//                 &dbf.P{N: "maxalpha", V: 100},
+//                 &dbf.P{N: "mulalpha", V: 2},
+//                 &dbf.P{N: "coef1", V: 1e-4},
+//                 &dbf.P{N: "coef2", V: 0.4},
+//                 &dbf.P{N: "coefquad", V: 0.1},
+//                 &dbf.P{N: "coefcubic", V: 0.2},
+//             ))
+func (o *LineSearch) SetParams(params dbf.Params) {
+	o.MaxIt = params.GetIntOrDefault("maxit", o.MaxIt)
+	o.MaxItZoom = params.GetIntOrDefault("maxitzoom", o.MaxItZoom)
+	o.MaxAlpha = params.GetValueOrDefault("maxalpha", o.MaxAlpha)
+	o.MulAlpha = params.GetValueOrDefault("mulalpha", o.MulAlpha)
+	o.Coef1 = params.GetValueOrDefault("coef1", o.Coef1)
+	o.Coef2 = params.GetValueOrDefault("coef2", o.Coef2)
+	o.CoefQuad = params.GetValueOrDefault("coefquad", o.CoefQuad)
+	o.CoefCubic = params.GetValueOrDefault("coefcubic", o.CoefCubic)
 }
 
 // Wolfe finds the scalar 'a' that gives a substantial reduction of f({x}+a⋅{u}) (Wolfe conditions)

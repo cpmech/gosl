@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/plt"
@@ -36,6 +37,20 @@ func TestLineSearch01(tst *testing.T) {
 
 	// solver
 	line := NewLineSearch(2, ffcn, Jfcn)
+
+	// set params
+	line.SetParams(dbf.NewParams(
+		&dbf.P{N: "maxit", V: 2},
+		&dbf.P{N: "maxitzoom", V: 2},
+		&dbf.P{N: "maxalpha", V: 100},
+		&dbf.P{N: "mulalpha", V: 2},
+		&dbf.P{N: "coef1", V: 1e-4},
+		&dbf.P{N: "coef2", V: 0.4},
+		&dbf.P{N: "coefquad", V: 0.1},
+		&dbf.P{N: "coefcubic", V: 0.2},
+	))
+
+	// solve
 	a, f := line.Wolfe(x, u, false, 0)
 	io.Pforan("a = %v\n", a)
 	io.Pforan("f = %v\n", f)
