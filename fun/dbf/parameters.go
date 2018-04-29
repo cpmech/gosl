@@ -127,6 +127,12 @@ func (o *Params) GetValueOrDefault(name string, defaultValue float64) float64 {
 	return p.V
 }
 
+// GetIntOrDefault reads parameter or returns default value
+// Will return defaultInt if name does not exist in parameters set
+func (o *Params) GetIntOrDefault(name string, defaultInt int) int {
+	return int(o.GetValueOrDefault(name, float64(defaultInt)))
+}
+
 // GetBool reads Boolean parameter or Panic
 // Returns true if P[name] > 0; otherwise returns false
 // Will panic if name does not exist in parameters set

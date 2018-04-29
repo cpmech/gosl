@@ -446,3 +446,19 @@ func TestParams19(tst *testing.T) {
 		return
 	}
 }
+
+func TestParams20(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("Params20. GetIntOrDefault")
+
+	params := NewParams(
+		&P{N: "a", V: 1, Min: -2, Max: +2},
+	)
+
+	res := params.GetIntOrDefault("a", -2)
+	chk.Int(tst, "a", res, +1)
+
+	res = params.GetIntOrDefault("invalid", -2)
+	chk.Int(tst, "a", res, -2)
+}
