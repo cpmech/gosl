@@ -5,6 +5,7 @@
 package ml
 
 import (
+	"github.com/cpmech/gosl/fun"
 	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/opt"
@@ -64,6 +65,11 @@ func (o *LogRegMulti) Update() {
 	}
 }
 
+// Nclasses returns the number of classes
+func (o *LogRegMulti) Nclasses() int {
+	return o.nClass
+}
+
 // SetLambda sets the regularization parameter
 func (o *LogRegMulti) SetLambda(lambda float64) {
 	for k := 0; k < o.nClass; k++ {
@@ -114,6 +120,20 @@ func (o *LogRegMulti) TrainNumerical(method string, saveHist bool, control dbf.P
 		if saveHist {
 			hists[k] = h
 		}
+	}
+	return
+}
+
+// GetFunctionsForPlotting returns functions for plotting
+func (o *LogRegMulti) GetFunctionsForPlotting() (ffcn fun.Sv, ffcns []fun.Sv) {
+	ffcn = func(x la.Vector) float64 {
+		class, _ := o.Predict(x)
+		return float64(class)
+	}
+	ffcns = []fun.Sv{
+		o.models[0].Predict,
+		o.models[1].Predict,
+		o.models[2].Predict,
 	}
 	return
 }

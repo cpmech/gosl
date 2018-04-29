@@ -61,7 +61,7 @@ func TestKmeans01(tst *testing.T) {
 func TestKmeans02(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Kmeans02. ANT test # 1")
+	chk.PrintTitle("Kmeans02. ANG test # 1")
 
 	// load raw data from HDF5 file
 	f := h5.Open("./samples", "angEx7data2", false)
