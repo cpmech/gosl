@@ -10,6 +10,7 @@ import (
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/ml"
 	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 func main() {
@@ -36,8 +37,8 @@ func main() {
 
 	// plot data and model prediction (analytical)
 	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
-	pp := ml.NewPlotterReg(data, model, mapper)
-	pp.DataClass(0, 1, true)
-	pp.ContourModel(0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
+	pp := ml.NewPlotter(data, mapper)
+	pp.DataClass(2, 0, 1, utl.FromFloat64s(data.Y))
+	pp.ModelC(model.Predict, 0, 1, 0.5, -1.0, 1.1, -1.0, 1.1)
 	plt.Save("/tmp/gosl", "ml_ang02")
 }

@@ -52,11 +52,11 @@ func main() {
 	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 0.8})
 
 	// plot data x-y
-	pp := ml.NewPlotterReg(data, model, nil)
+	pp := ml.NewPlotter(data, nil)
 	pp.DataY(0)
 
 	// plot model x-y
-	pp.ModelY(0, 0.8, 1.6)
+	pp.ModelY(model.Predict, 0, 0.8, 1.6)
 
 	// save figure
 	plt.Save("/tmp/gosl", "ml_simple01")

@@ -10,6 +10,7 @@ import (
 	"github.com/cpmech/gosl/io"
 	"github.com/cpmech/gosl/ml"
 	"github.com/cpmech/gosl/plt"
+	"github.com/cpmech/gosl/utl"
 )
 
 func main() {
@@ -29,13 +30,18 @@ func main() {
 	model.Train()
 
 	// plot
-	npts := 201
+	ffcn, ffcns := model.GetFunctionsForPlotting()
 	iFeature, jFeature := 0, 1
 	ximin, ximax, xjmin, xjmax := 3.8, 8.4, 1.5, 4.9
+	pp := ml.NewPlotter(data, nil)
+	pp.NumPointsModelC = 201
+	classes := utl.FromFloat64s(data.Y)
 	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.7})
 	plt.Subplot(2, 1, 1)
-	ml.PlotRegMultiClass(data, model, iFeature, jFeature, ximin, ximax, xjmin, xjmax, npts)
+	pp.ModelClass(ffcn, model.Nclasses(), 0, 1, ximin, ximax, xjmin, xjmax)
+	pp.DataClass(model.Nclasses(), 0, 1, classes)
 	plt.Subplot(2, 1, 2)
-	ml.PlotRegMultiClassOneVsAll(data, model, iFeature, jFeature, ximin, ximax, xjmin, xjmax, npts)
+	pp.DataClass(model.Nclasses(), 0, 1, classes)
+	pp.ModelClassOneVsAll(ffcns, iFeature, jFeature, ximin, ximax, xjmin, xjmax)
 	plt.Save("/tmp/gosl", "ml_mclass01")
 }

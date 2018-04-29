@@ -29,7 +29,7 @@ func main() {
 	useY := false
 	allocate := false
 	data := ml.NewData(nSamples, nColumns, useY, allocate)
-	data.X = la.NewMatrixRaw(nSamples, nColumns, Xraw)
+	data.Set(la.NewMatrixRaw(nSamples, nColumns, Xraw), nil)
 
 	// model
 	nClasses := 3
@@ -40,10 +40,10 @@ func main() {
 		{8, 5}, // class 2
 	})
 
-	// check initial classes
+	// initial classes
 	model.FindClosestCentroids()
 
-	// check initial computation of centroids
+	// initial computation of centroids
 	model.ComputeCentroids()
 	io.Pf("number of members in each cluster = %v\n", model.Nmembers)
 
@@ -52,8 +52,8 @@ func main() {
 
 	// plot
 	plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-	pp := ml.NewPlotterClass(data, model.Classes, model.Nclasses())
-	pp.Data(0, 1, false)
+	pp := ml.NewPlotter(data, nil)
+	pp.DataClass(model.Nclasses(), 0, 1, model.Classes)
 	pp.Centroids(model.Centroids)
 	plt.Equal()
 	plt.Save("/tmp/gosl", "ml_kmeans01")
