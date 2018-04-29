@@ -5,7 +5,9 @@
 package ml
 
 import (
+	"github.com/cpmech/gosl/fun/dbf"
 	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/opt"
 )
 
 // LogRegMulti implements a logistic regression model for multiple classes (Observer of data)
@@ -93,4 +95,25 @@ func (o *LogRegMulti) Train() {
 	for k := 0; k < o.nClass; k++ {
 		o.models[k].Train()
 	}
+}
+
+// TrainNumerical trains model using numerical optimizer
+//   method -- method/kind of numerical solver. e.g. conjgrad, powel, graddesc
+//   saveHist -- save history
+//   control -- parameters to numerical solver. See package 'opt'
+func (o *LogRegMulti) TrainNumerical(method string, saveHist bool, control dbf.Params) (minCosts []float64, hists []*opt.History) {
+	minCosts = make([]float64, o.nClass)
+	if saveHist {
+		hists = make([]*opt.History, o.nClass)
+	}
+	for k := 0; k < o.nClass; k++ {
+		θini := la.NewVector(o.data.Nfeatures)
+		bini := 0.0
+		c, h := o.models[k].TrainNumerical(θini, bini, method, saveHist, control)
+		minCosts[k] = c
+		if saveHist {
+			hists[k] = h
+		}
+	}
+	return
 }

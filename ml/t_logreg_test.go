@@ -322,24 +322,31 @@ func TestLogReg05(tst *testing.T) {
 
 	// model
 	model := NewLogRegMulti(data)
-
-	// train
 	model.SetLambda(1e-5)
-	model.Train()
 
-	// check
+	// function to check results
 	classes := make([]int, data.Nsamples)
-	fails := 0
-	for i := 0; i < data.Nsamples; i++ {
-		x := data.X.GetRow(i)
-		class, _ := model.Predict(x)
-		classes[i] = class
-		if class != int(data.Y[i]) {
-			fails++
+	docheck := func() {
+		fails := 0
+		for i := 0; i < data.Nsamples; i++ {
+			x := data.X.GetRow(i)
+			class, _ := model.Predict(x)
+			classes[i] = class
+			if class != int(data.Y[i]) {
+				fails++
+			}
 		}
+		chk.Ints(tst, "prediction", classes, []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1})
+		chk.Int(tst, "fails", fails, 29)
 	}
-	chk.Ints(tst, "prediction", classes, []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1})
-	chk.Int(tst, "fails", fails, 29)
+
+	// train using Newton's method
+	model.Train()
+	docheck()
+
+	// train using numerical method
+	model.TrainNumerical("powell", false, nil)
+	docheck()
 
 	// plot
 	if chk.Verbose {
