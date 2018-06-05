@@ -28,30 +28,27 @@ func Test_npatch01(tst *testing.T) {
 	)
 
 	// check bins
+	io.Pforan("entries = %v\n", patch.Bins.All)
 	io.Pf("%v\n", patch.Bins)
 	chk.Array(tst, "Xmin", 1e-15, patch.Bins.Xmin, []float64{-1, -0.5})
 	chk.Array(tst, "Xmax", 1e-15, patch.Bins.Xmax, []float64{3, 2.5})
 	chk.Array(tst, "Xdel", 1e-15, patch.Bins.Xdel, []float64{3 + 1, 2.5 + 0.5})
 	chk.Array(tst, "Size", 1e-15, patch.Bins.Size, []float64{4.0 / 3.0, 3.0 / 3.0})
-	chk.Ints(tst, "Npts", patch.Bins.Npts, []int{4, 4})
-	chk.Int(tst, "Nall", len(patch.Bins.All), 4*4)    // there are ghost bins along each direction
-	chk.Int(tst, "Nactive", patch.Bins.Nactive(), 11) // mind the ghost bins
+	chk.Ints(tst, "Ndiv", patch.Bins.Ndiv, []int{3, 3})
+	chk.Int(tst, "Nall", len(patch.Bins.All), 3*3)
+	chk.Int(tst, "Nactive", patch.Bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", patch.Bins.Nentries(), 17)
 
 	// check number of entries in bins
 	io.Pf("\n")
 	entries := map[int][]int{ // maps idx of bin to ids of entries
-		0:  {0, 1},
-		1:  {2},
-		4:  {3, 4},
-		5:  {5},
-		6:  {6},
-		7:  {7},
-		9:  {8, 11, 12},
-		10: {9, 13},
-		11: {10},
-		13: {14, 15},
-		14: {16},
+		0: {0, 1},
+		1: {2},
+		3: {3, 4},
+		4: {5},
+		5: {6, 7},
+		7: {8, 11, 12, 14, 15},
+		8: {9, 10, 13, 16},
 	}
 	checkBinsEntries(tst, patch.Bins.All, entries)
 
@@ -101,18 +98,14 @@ func Test_npatch02(tst *testing.T) {
 	// check number of entries in bins
 	io.Pf("\n")
 	entries := map[int][]int{ // maps idx of bin to ids of entries
-		0:  {0, 1},
-		1:  {2},
-		4:  {3, 4, 21, 22},
-		5:  {5, 23},
-		6:  {6, 7, 28, 29, 30},
-		7:  {24, 31},
-		8:  {18, 19, 20},
-		9:  {8, 11, 12, 17},
-		10: {9, 10, 13, 26, 27},
-		11: {25},
-		13: {14, 15},
-		14: {16},
+		0: {0, 1},
+		1: {2},
+		3: {3, 4, 21, 22},
+		4: {5, 23},
+		5: {6, 7, 24, 28, 29, 30, 31},
+		6: {18, 19, 20},
+		7: {8, 11, 12, 14, 15, 17},
+		8: {9, 10, 13, 16, 25, 26, 27},
 	}
 	checkBinsEntries(tst, patch.Bins.All, entries)
 

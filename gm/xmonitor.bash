@@ -12,5 +12,6 @@ while true; do
     #go test -run TestNurbsMethods01
     #go test -run TestGrid06
     #go test -run Transfinite07
-    go test -run bins03
+    #go test -run bins07
+    go test -run npatch02
 done
