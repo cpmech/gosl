@@ -200,6 +200,20 @@ func Test_bins03(tst *testing.T) {
 	chk.Int(tst, "Nactive", bins.Nactive(), 0)
 	chk.Int(tst, "Nentries", bins.Nentries(), 0)
 
+	// check limits
+	xmin, xmax := bins.GetLimits(0)
+	chk.Array(tst, "xmin @ 0", 1e-15, xmin, []float64{-0.2, -0.2})
+	chk.Array(tst, "xmax @ 0", 1e-15, xmax, []float64{0, 0.2})
+	xmin, xmax = bins.GetLimits(4)
+	chk.Array(tst, "xmin @ 4", 1e-15, xmin, []float64{0.6, -0.2})
+	chk.Array(tst, "xmax @ 4", 1e-15, xmax, []float64{0.8, 0.2})
+	xmin, xmax = bins.GetLimits(28)
+	chk.Array(tst, "xmin @ 28", 1e-15, xmin, []float64{0.6, 1.4})
+	chk.Array(tst, "xmax @ 28", 1e-15, xmax, []float64{0.8, 1.8})
+	xmin, xmax = bins.GetLimits(35)
+	chk.Array(tst, "xmin @ 35", 1e-15, xmin, []float64{0.8, 1.8})
+	chk.Array(tst, "xmax @ 35", 1e-15, xmax, []float64{1.0, 2.2})
+
 	// fill bins structure
 	maxit := 5 // number of entries
 	ID := make([]int, maxit)
