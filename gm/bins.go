@@ -299,14 +299,19 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 	return ids
 }
 
+// GetLimits returns limigs of a specific bin
 func (o *Bins) GetLimits(idxBin int) (xmin, xmax []float64) {
-	if o.Ndim == 3 {
-		chk.Panic("binsLimits cannot handle 3D yet")
-	}
+	nxy := o.Npts[0] * o.Npts[1]
 	i := idxBin % o.Npts[0]
-	j := int(idxBin / o.Npts[0])
-	xmin = []float64{o.Xmin[0] + float64(i+0)*o.Size[0], o.Xmin[1] + float64(j+0)*o.Size[1]}
-	xmax = []float64{o.Xmin[0] + float64(i+1)*o.Size[0], o.Xmin[1] + float64(j+1)*o.Size[1]}
+	j := (idxBin % nxy) / o.Npts[0]
+	if o.Ndim == 2 {
+		xmin = []float64{o.Xmin[0] + float64(i+0)*o.Size[0], o.Xmin[1] + float64(j+0)*o.Size[1]}
+		xmax = []float64{o.Xmin[0] + float64(i+1)*o.Size[0], o.Xmin[1] + float64(j+1)*o.Size[1]}
+	} else {
+		k := idxBin / nxy
+		xmin = []float64{o.Xmin[0] + float64(i+0)*o.Size[0], o.Xmin[1] + float64(j+0)*o.Size[1], o.Xmin[2] + float64(k+0)*o.Size[2]}
+		xmax = []float64{o.Xmin[0] + float64(i+1)*o.Size[0], o.Xmin[1] + float64(j+1)*o.Size[1], o.Xmin[2] + float64(k+1)*o.Size[2]}
+	}
 	return
 }
 
