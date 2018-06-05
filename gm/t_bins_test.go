@@ -94,8 +94,8 @@ func Test_bins02(tst *testing.T) {
 	chk.Array(tst, "Xmax", 1e-15, bins.Xmax, []float64{4, 3})
 	chk.Array(tst, "Xdel", 1e-15, bins.Xdel, []float64{4, 3})
 	chk.Array(tst, "Size", 1e-15, bins.Size, []float64{4.0 / 5.0, 3.0 / 5.0})
-	chk.Ints(tst, "Npts", bins.Npts, []int{6, 6})
-	chk.Int(tst, "Nall", len(bins.All), 6*6) // there are ghost bins along each direction
+	chk.Ints(tst, "Ndiv", bins.Ndiv, []int{5, 5})
+	chk.Int(tst, "Nall", len(bins.All), 5*5)
 	chk.Int(tst, "Nactive", bins.Nactive(), 6)
 	chk.Int(tst, "Nentries", bins.Nentries(), 8)
 
@@ -162,10 +162,26 @@ func Test_bins02(tst *testing.T) {
 	chk.Int(tst, "Nactive", bins.Nactive(), 7)
 	chk.Int(tst, "Nentries", bins.Nentries(), 10)
 
+	// add point: new
+	io.Pf("\n")
+	currentID, ex = bins.FindClosestAndAppend(&nextID, []float64{4.0, 3.0}, nil, tolerance, nil)
+	if ex {
+		tst.Errorf("existent flag is incorrect")
+		return
+	}
+	chk.Int(tst, "currentId 10", currentID, 10)
+	chk.Int(tst, "nextId 11", nextID, 11)
+	chk.Int(tst, "Nactive", bins.Nactive(), 8)
+	chk.Int(tst, "Nentries", bins.Nentries(), 11)
+
 	// check entries
 	io.Pf("\n")
-	entries := map[int][]int{0: {0}, 1: {1}, 2: {2}, 8: {3}, 13: {8, 9}, 20: {4, 6, 7}, 21: {5}}
+	entries := map[int][]int{0: {0}, 1: {1}, 2: {2}, 7: {3}, 11: {8, 9}, 17: {4, 6, 7}, 18: {5}, 24: {10}}
 	checkBinsEntries(tst, bins.All, entries)
+
+	io.Pf("\n")
+	id, sqDist = bins.FindClosest([]float64{0.1, 2.9})
+	io.Pforan("cannot find: id=%v sqDist=%v\n", id, sqDist)
 
 	// draw
 	if chk.Verbose {
@@ -195,8 +211,8 @@ func Test_bins03(tst *testing.T) {
 	chk.Array(tst, "Xmax", 1e-15, bins.Xmax, []float64{0.8, 1.8})
 	chk.Array(tst, "Xdel", 1e-15, bins.Xdel, []float64{1, 2})
 	chk.Array(tst, "Size", 1e-15, bins.Size, []float64{1.0 / 5.0, 2.0 / 5.0})
-	chk.Ints(tst, "Npts", bins.Npts, []int{6, 6})
-	chk.Int(tst, "Nall", len(bins.All), 6*6) // there are ghost bins along each direction
+	chk.Ints(tst, "Ndiv", bins.Ndiv, []int{5, 5})
+	chk.Int(tst, "Nall", len(bins.All), 5*5)
 	chk.Int(tst, "Nactive", bins.Nactive(), 0)
 	chk.Int(tst, "Nentries", bins.Nentries(), 0)
 
@@ -207,12 +223,9 @@ func Test_bins03(tst *testing.T) {
 	xmin, xmax = bins.GetLimits(4)
 	chk.Array(tst, "xmin @ 4", 1e-15, xmin, []float64{0.6, -0.2})
 	chk.Array(tst, "xmax @ 4", 1e-15, xmax, []float64{0.8, 0.2})
-	xmin, xmax = bins.GetLimits(28)
-	chk.Array(tst, "xmin @ 28", 1e-15, xmin, []float64{0.6, 1.4})
-	chk.Array(tst, "xmax @ 28", 1e-15, xmax, []float64{0.8, 1.8})
-	xmin, xmax = bins.GetLimits(35)
-	chk.Array(tst, "xmin @ 35", 1e-15, xmin, []float64{0.8, 1.8})
-	chk.Array(tst, "xmax @ 35", 1e-15, xmax, []float64{1.0, 2.2})
+	xmin, xmax = bins.GetLimits(24)
+	chk.Array(tst, "xmin @ 24", 1e-15, xmin, []float64{0.6, 1.4})
+	chk.Array(tst, "xmax @ 24", 1e-15, xmax, []float64{0.8, 1.8})
 
 	// fill bins structure
 	maxit := 5 // number of entries
@@ -227,15 +240,15 @@ func Test_bins03(tst *testing.T) {
 			io.Pf("  The expression (x - xmin) / size results in:\n")
 			io.Pf("    %v (my: 3.0000000000000004)\n", (x[0]-bins.Xmin[0])/bins.Size[0])
 			io.Pf("    %v (my: 2.9999999999999996)\n", (x[1]-bins.Xmin[1])/bins.Size[1])
-			io.Pf("  Therefore, bin # 15 will be selected instead of bin # 21.\n")
+			io.Pf("  Therefore, bin # 13 will be selected instead of bin # 18.\n")
 			io.Pf("\n")
 			io.Pf("  This is OK, but other systems may have slightly different rounding errors.\n")
 			io.Pf("\n")
-			io.Pf("  To avoid results in different systems, x[1] is subtracted by a small value\n")
-			io.Pf("  in order to make sure bin # 15 is selected.\n")
+			io.Pf("  To avoid results in different systems, x[1] is added by a small value\n")
+			io.Pf("  in order to make sure bin # 18 is selected.\n")
 			io.Pf("\n")
 			δ := 1e-15
-			x[1] -= δ
+			x[1] += δ
 			io.Pf("  The small value is = %v leading to x = %v.\n", δ, x)
 			io.Pf("\n")
 			io.Pf("  Now, (x - xmin) / size results in:\n")
@@ -250,7 +263,7 @@ func Test_bins03(tst *testing.T) {
 			io.Pf("  The expression (x - xmin) / size results in:\n")
 			io.Pf("    %18v (my: 4)\n", (x[0]-bins.Xmin[0])/bins.Size[0])
 			io.Pf("    %v (my: 3.9999999999999996)\n", (x[1]-bins.Xmin[1])/bins.Size[1])
-			io.Pf("  Therefore, bin # 22 will be selected instead of bin # 28.\n")
+			io.Pf("  Therefore, bin # 19 will be selected instead of bin # 24.\n")
 			io.Pf("\n")
 			δ := 1e-15
 			x[1] += δ
@@ -260,7 +273,7 @@ func Test_bins03(tst *testing.T) {
 			io.Pf("  Now, (x - xmin) / size results in:\n")
 			io.Pf("    %17v (my: 4)\n", (x[0]-bins.Xmin[0])/bins.Size[0])
 			io.Pf("    %v (my: 4.000000000000002)\n", (x[1]-bins.Xmin[1])/bins.Size[1])
-			io.Pf("  which will induce x falling within bin # 28.\n")
+			io.Pf("  which will induce x falling within bin # 24.\n")
 			io.Pf("------------------------------------------------------------------------------\n")
 		}
 		bins.Append(x, ID[k], nil)
@@ -276,15 +289,23 @@ func Test_bins03(tst *testing.T) {
 
 	// check entries
 	io.Pf("\n")
-	entries := map[int][]int{7: {0}, 14: {1}, 15: {2}, 28: {3}, 35: {4}}
+	entries := map[int][]int{6: {0}, 12: {1}, 18: {2}, 24: {3, 4}}
 	checkBinsEntries(tst, bins.All, entries)
-	chk.Int(tst, "Nactive", bins.Nactive(), 5)
+	chk.Int(tst, "Nactive", bins.Nactive(), 4)
 	chk.Int(tst, "Nentries", bins.Nentries(), 5)
 
 	// add more points to bins
 	for i := 0; i < 5; i++ {
 		bins.Append([]float64{float64(i) * 0.1, 1.8}, 100+i, nil)
 	}
+
+	// check entries again
+	io.Pf("\n")
+	io.Pforan("all = %v\n", bins.All)
+	entries = map[int][]int{6: {0}, 12: {1}, 18: {2}, 21: {100, 101}, 22: {102, 103}, 23: {104}, 24: {3, 4}}
+	checkBinsEntries(tst, bins.All, entries)
+	chk.Int(tst, "Nactive", bins.Nactive(), 7)
+	chk.Int(tst, "Nentries", bins.Nentries(), 10)
 
 	// find points along diagonal
 	io.Pf("\n")
@@ -300,7 +321,7 @@ func Test_bins03(tst *testing.T) {
 
 	// draw
 	if chk.Verbose {
-		selBins := map[int]bool{8: true, 9: true, 10: true}
+		selBins := map[int]bool{7: true, 8: true, 9: true}
 		plt.Reset(true, &plt.A{WidthPt: 500})
 		bins.Draw(true, true, true, true, nil, nil, nil, nil, selBins)
 		plt.SetXnticks(15)
@@ -444,8 +465,8 @@ func Test_bins06(tst *testing.T) {
 	chk.Array(tst, "Xmax", 1e-15, bins.Xmax, []float64{10, 10, 10})
 	chk.Array(tst, "Xdel", 1e-15, bins.Xdel, []float64{5, 5, 5})
 	chk.Array(tst, "Size", 1e-15, bins.Size, []float64{2.5, 2.5, 2.5})
-	chk.Ints(tst, "Npts", bins.Npts, []int{3, 3, 3})
-	chk.Int(tst, "Nall", len(bins.All), 27) // there are extra bins along each direction
+	chk.Ints(tst, "Ndiv", bins.Ndiv, []int{2, 2, 2})
+	chk.Int(tst, "Nall", len(bins.All), 2*2*2)
 	chk.Int(tst, "Nactive", bins.Nactive(), 0)
 	chk.Int(tst, "Nentries", bins.Nentries(), 0)
 
@@ -455,24 +476,19 @@ func Test_bins06(tst *testing.T) {
 	bins.Append([]float64{7, 7, 5}, 3, nil)
 	bins.Append([]float64{5, 7, 6}, 4, nil)
 	bins.Append([]float64{5, 5, 5}, 5, nil)
-	bins.Append([]float64{10, 10, 10}, 6, nil) // this one goes to a ghost bin
-	bins.Append([]float64{5, 5, 10}, 7, nil)   // this one goes to a ghost bin too
+	bins.Append([]float64{10, 10, 10}, 6, nil)
+	bins.Append([]float64{5, 5, 10}, 7, nil)
 
 	// check again
 	chk.Int(tst, "Nactive", bins.Nactive(), 4)
 	chk.Int(tst, "Nentries", bins.Nentries(), 7)
 	chk.Int(tst, "N0", len(bins.All[0].Entries), 3)
 	chk.Int(tst, "N1", len(bins.All[1].Entries), 2)
-	for i := 2; i < 25; i++ {
-		if i == 18 { // this contain one entry
-			continue
-		}
-		if bins.All[i] != nil {
-			tst.Errorf("bin # %d should be empty", i)
-			return
-		}
-	}
-	chk.Int(tst, "N26", len(bins.All[26].Entries), 1)
+
+	// check entries
+	io.Pforan("entries = %v\n", bins.All)
+	entries := map[int][]int{0: {3, 4, 5}, 1: {1, 2}, 4: {7}, 7: {6}}
+	checkBinsEntries(tst, bins.All, entries)
 
 	// plot
 	if chk.Verbose {
@@ -484,6 +500,75 @@ func Test_bins06(tst *testing.T) {
 		} else {
 			plt.Save("/tmp/gosl/gm", "t_bins06")
 		}
+	}
+}
+
+func Test_bins07(tst *testing.T) {
+
+	//verbose()
+	chk.PrintTitle("bins07. index problem after removing ghost bins")
+
+	// bins
+	var bins Bins
+	bins.Init([]float64{-1, -0.5}, []float64{3.5, 2.5}, []int{3, 3})
+	io.Pf(bins.Summary())
+
+	// x near edge from the outside
+	x := []float64{3.500000000000001, 1.7}
+	idx := bins.CalcIndex(x)
+	chk.Int(tst, "x near edge from the outside: idx", idx, -1)
+
+	// x near edge from the outside, but very close
+	x = []float64{3.5000000000000001, 1.7}
+	idx = bins.CalcIndex(x)
+	chk.Int(tst, "x near edge from the outside, but very close: idx", idx, 8)
+
+	// x exact @ edge
+	x = []float64{3.5, 1.7}
+	idx = bins.CalcIndex(x)
+	chk.Int(tst, "x exact @ edge: idx", idx, 8)
+
+	// x almost exact @ edge => very close
+	x = []float64{3.4999999999999996, 1.7}
+	idx = bins.CalcIndex(x)
+	chk.Int(tst, "x almost exact @ edge => very close: idx", idx, 8)
+
+	// append
+	bins.Append(x, 666, nil)
+
+	// y near edge from the outside
+	x = []float64{1.2, 2.500000000000001}
+	idx = bins.CalcIndex(x)
+	chk.Int(tst, "y near edge from the outside: idx", idx, -1)
+
+	// y near edge from the outside, but very close
+	x = []float64{0, 2.5000000000000001}
+	idx = bins.CalcIndex(x)
+	chk.Int(tst, "y near edge from the outside, but very close: idx", idx, 6)
+
+	// y exact @ edge
+	x = []float64{0, 2.5}
+	idx = bins.CalcIndex(x)
+	chk.Int(tst, "y exact @ edge: idx", idx, 6)
+
+	// y almost exact @ edge => very close
+	x = []float64{0, 2.4999999999999999}
+	idx = bins.CalcIndex(x)
+	chk.Int(tst, "y almost exact @ edge => very close: idx", idx, 6)
+
+	// append
+	bins.Append(x, 999, nil)
+
+	// draw
+	if chk.Verbose {
+		plt.Reset(true, &plt.A{WidthPt: 500})
+		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
+		plt.SetXnticks(15)
+		plt.SetYnticks(12)
+		plt.Grid(&plt.A{C: "grey"})
+		plt.Equal()
+		plt.HideAllBorders()
+		plt.Save("/tmp/gosl/gm", "t_bins07")
 	}
 }
 

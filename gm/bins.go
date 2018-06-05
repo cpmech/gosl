@@ -38,7 +38,7 @@ type Bins struct {
 	Xmax []float64 // [ndim] right/upper-most point
 	Xdel []float64 // [ndim] the lengths along each direction (whole box)
 	Size []float64 // size of bins
-	Npts []int     // [ndim] number of points along each direction; i.e. ndiv + 1
+	Ndiv []int     // [ndim] number of divisions along each direction
 	All  []*Bin    // [nbins] all bins (there will be an extra "ghost" bin along each dimension)
 	tmp  []int     // [ndim] temporary (auxiliary) slice
 }
@@ -74,11 +74,11 @@ func (o *Bins) Init(xmin, xmax []float64, ndiv []int) {
 	}
 
 	// number of divisions
-	o.Npts = make([]int, o.Ndim)
+	o.Ndiv = make([]int, o.Ndim)
 	nbins := 1
 	for k := 0; k < o.Ndim; k++ {
-		o.Npts[k] = int(o.Xdel[k]/o.Size[k]) + 1
-		nbins *= o.Npts[k]
+		o.Ndiv[k] = int(o.Xdel[k] / o.Size[k])
+		nbins *= o.Ndiv[k]
 	}
 
 	// other slices
@@ -130,10 +130,13 @@ func (o Bins) CalcIndex(x []float64) int {
 			return -1
 		}
 		o.tmp[k] = int((x[k] - o.Xmin[k]) / o.Size[k])
+		if o.tmp[k] == o.Ndiv[k] { // it's exactly on max edge => select inner bin
+			o.tmp[k]-- // move to the inside
+		}
 	}
-	idx := o.tmp[0] + o.tmp[1]*o.Npts[0]
+	idx := o.tmp[0] + o.tmp[1]*o.Ndiv[0]
 	if o.Ndim > 2 {
-		idx += o.tmp[2] * o.Npts[0] * o.Npts[1]
+		idx += o.tmp[2] * o.Ndiv[0] * o.Ndiv[1]
 	}
 	return idx
 }
@@ -143,6 +146,11 @@ func (o Bins) CalcIndex(x []float64) int {
 // FindClosest returns the id of the entry whose coordinates are closest to x
 //   idClosest -- the id of the closest entity. return -1 if out-of-range or not found
 //   sqDistMin -- the minimum distance (squared) between x and the closest entity in the same bin
+//
+//  NOTE: FindClosest does search the whole area.
+//        It only locates neighbours in the same bin where the given x is located.
+//        So, if there area no entries in the bin containing x, no entry will be found.
+//
 func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
 
 	// set "not-found" results
@@ -247,7 +255,7 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 	// loop along all bins
 	var i, j, k int
 	var x, y, z float64
-	nxy := o.Npts[0] * o.Npts[1]
+	nxy := o.Ndiv[0] * o.Ndiv[1]
 	for idx, bin := range o.All {
 
 		// skip empty bins
@@ -256,8 +264,8 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 		}
 
 		// coordinates of bin center
-		i = idx % o.Npts[0] // indices representing bin
-		j = (idx % nxy) / o.Npts[0]
+		i = idx % o.Ndiv[0] // indices representing bin
+		j = (idx % nxy) / o.Ndiv[0]
 		x = o.Xmin[0] + float64(i)*o.Size[0] // coordinates of bin corner
 		y = o.Xmin[1] + float64(j)*o.Size[1]
 		x += o.Size[0] / 2.0
@@ -301,9 +309,9 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 
 // GetLimits returns limigs of a specific bin
 func (o *Bins) GetLimits(idxBin int) (xmin, xmax []float64) {
-	nxy := o.Npts[0] * o.Npts[1]
-	i := idxBin % o.Npts[0]
-	j := (idxBin % nxy) / o.Npts[0]
+	nxy := o.Ndiv[0] * o.Ndiv[1]
+	i := idxBin % o.Ndiv[0]
+	j := (idxBin % nxy) / o.Ndiv[0]
 	if o.Ndim == 2 {
 		xmin = []float64{o.Xmin[0] + float64(i+0)*o.Size[0], o.Xmin[1] + float64(j+0)*o.Size[1]}
 		xmax = []float64{o.Xmin[0] + float64(i+1)*o.Size[0], o.Xmin[1] + float64(j+1)*o.Size[1]}
@@ -329,12 +337,12 @@ func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEnt
 		}
 
 		// x-y coordinates
-		X := make([][]float64, o.Npts[0])
-		Y := make([][]float64, o.Npts[0])
-		for i := 0; i < o.Npts[0]; i++ {
-			X[i] = make([]float64, o.Npts[1])
-			Y[i] = make([]float64, o.Npts[1])
-			for j := 0; j < o.Npts[1]; j++ {
+		X := make([][]float64, o.Ndiv[0]+1)
+		Y := make([][]float64, o.Ndiv[0]+1)
+		for i := 0; i < o.Ndiv[0]+1; i++ {
+			X[i] = make([]float64, o.Ndiv[1]+1)
+			Y[i] = make([]float64, o.Ndiv[1]+1)
+			for j := 0; j < o.Ndiv[1]+1; j++ {
 				X[i][j] = o.Xmin[0] + float64(i)*o.Size[0]
 				Y[i][j] = o.Xmin[1] + float64(j)*o.Size[1]
 			}
@@ -344,8 +352,8 @@ func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEnt
 		if o.Ndim == 2 {
 			plt.Grid2d(X, Y, false, argsGrid, nil)
 		} else {
-			Zlevels := make([]float64, o.Npts[2])
-			for k := 0; k < o.Npts[2]; k++ {
+			Zlevels := make([]float64, o.Ndiv[2]+1)
+			for k := 0; k < o.Ndiv[2]+1; k++ {
 				Zlevels[k] = o.Xmin[2] + float64(k)*o.Size[2]
 			}
 			plt.Grid3dZlevels(X, Y, Zlevels, false, argsGrid, nil)
@@ -354,10 +362,10 @@ func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEnt
 
 	// selected bins
 	if o.Ndim == 2 {
-		nxy := o.Npts[0] * o.Npts[1]
+		nxy := o.Ndiv[0] * o.Ndiv[1]
 		for idx := range selBins {
-			i := idx % o.Npts[0] // indices representing bin
-			j := (idx % nxy) / o.Npts[0]
+			i := idx % o.Ndiv[0] // indices representing bin
+			j := (idx % nxy) / o.Ndiv[0]
 			x := o.Xmin[0] + float64(i)*o.Size[0] // coordinates of bin corner
 			y := o.Xmin[1] + float64(j)*o.Size[1]
 			plt.Polyline([][]float64{
@@ -431,18 +439,18 @@ func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEnt
 		// add text
 		n2 := 1
 		if o.Ndim == 3 {
-			n2 = o.Npts[2]
+			n2 = o.Ndiv[2]
 		}
 		for k := 0; k < n2; k++ {
 			z := 0.0
 			if o.Ndim == 3 {
 				z = o.Xmin[2] + float64(k)*o.Size[2] + 0.02*o.Size[2]
 			}
-			for j := 0; j < o.Npts[1]; j++ {
-				for i := 0; i < o.Npts[0]; i++ {
-					idx := i + j*o.Npts[0]
+			for j := 0; j < o.Ndiv[1]; j++ {
+				for i := 0; i < o.Ndiv[0]; i++ {
+					idx := i + j*o.Ndiv[0]
 					if o.Ndim == 3 {
-						idx += k * o.Npts[0] * o.Npts[1]
+						idx += k * o.Ndiv[0] * o.Ndiv[1]
 					}
 					x := o.Xmin[0] + float64(i)*o.Size[0] + 0.02*o.Size[0]
 					y := o.Xmin[1] + float64(j)*o.Size[1] + 0.02*o.Size[1]
@@ -487,8 +495,8 @@ func (o *Bins) Summary() (l string) {
 	l += io.Sf("Xmax        = %v\n", o.Xmax)
 	l += io.Sf("Xdel        = %v\n", o.Xdel)
 	l += io.Sf("Size        = %v\n", o.Size)
-	l += io.Sf("Npts        = %v\n", o.Npts)
-	l += io.Sf("Nalll(+ext) = %d\n", len(o.All))
+	l += io.Sf("Ndiv        = %v\n", o.Ndiv)
+	l += io.Sf("Nalll       = %d\n", len(o.All))
 	l += io.Sf("NactiveBins = %d\n", o.Nactive())
 	l += io.Sf("Nentries    = %d\n", o.Nentries())
 	return
