@@ -14,24 +14,27 @@ a pull request.
 
 ## TODO List
 
-1.  Create more examples using all packages, in particular, improve `la` Examples and Readme.md
-2.  Apply English language editing to GitHub pages
-3.  Finalise the Octree structure in `gm`
-4.  Improve the computational geometry functions in `gm`
-5.  Finalise the functions `WireLength` and `DistAlongWire` in `gm`
-6.  Wrap more functions in `oblas` and `mkl`
-7.  Reimplement the the tensors (`tsr`) package
-8.  Implement a wrapper to ARPACK
-9.  Implement more functions from [Numerical Recipes](http://numerical.recipes) in `num`
-10. Improve the database of functions (`dbf`) with better explanation of functions and more functions
-11. Implement triagulation methods in `msh/tri`
-12. Add a new package called `msh/tet` to wrap [TetGen](http://wias-berlin.de/software/index.jsp?id=TetGen&lang=1)
-13. Implement parallel graph routines (using channels) in `graph`
-14. Add more probability distributions to `rnd`
-15. Wrapp more VTK classes in `vtk`
-16. Implement multistep ODE solves in `ode`
-17. Finalise and publish package `pde` (Partial Differential Equations)
-18. Finalise and publish package `ml` (Machine Learning)
+1.  Improve package `ml` (Machine Learning)
+2.  Re-implement the OpneCV wrapper
+3.  Implement wrappers to TensorFlow and CNTK
+4.  Improve documentation and examples of Machine Learning examples
+5.  Re-implement the the tensors (`tsr`) package
+6.  Create more examples using all packages, in particular, improve `la` Examples and Readme.md
+7.  Apply English language editing to GitHub pages
+8.  Finalise the Octree structure in `gm`
+9.  Improve the computational geometry functions in `gm`
+10. Finalise the functions `WireLength` and `DistAlongWire` in `gm`
+11. Wrap more functions in `oblas` and `mkl`
+12. Implement a wrapper to ARPACK
+13. Implement more functions from [Numerical Recipes](http://numerical.recipes) in `num`
+14. Improve the database of functions (`dbf`) with better explanation of functions and more functions
+15. Implement triagulation methods in `msh/tri`
+16. Add a new package called `msh/tet` to wrap [TetGen](http://wias-berlin.de/software/index.jsp?id=TetGen&lang=1)
+17. Implement parallel graph routines (using channels) in `graph`
+18. Add more probability distributions to `rnd`
+19. Wrap more VTK classes in `vtk`
+20. Implement multistep ODE solves in `ode`
+21. Finalise and publish package `pde` (Partial Differential Equations)
 
 ## Code of Conduct
 
