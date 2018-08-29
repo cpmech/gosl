@@ -17,8 +17,7 @@ This package has been initiated with basis on the great teachings of Prof. Andre
 
 1. Implement Support Vector Machines
 2. Implement Artificial Neural Networks
-3. Implement K-means clustering
-4. Implement concurrency and add an option to run code in parallel
+3. Implement concurrency and add an option to run code in parallel
 
 ## Linear and Logistic Regression
 
