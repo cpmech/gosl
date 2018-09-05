@@ -261,21 +261,21 @@ func Test_basicgeom05(tst *testing.T) {
 	chk.Array(tst, "cmin", 1e-17, cmin, []float64{0, 0, 0})
 	chk.Array(tst, "cmax", 1e-17, cmax, []float64{1, 1, 1})
 	if !IsPointIn(a, cmin, cmax, zero) {
-		chk.Panic("a=%v must be in box")
+		chk.Panic("a=%v must be in box", a)
 	}
 	if !IsPointIn(b, cmin, cmax, zero) {
-		chk.Panic("b=%v must be in box")
+		chk.Panic("b=%v must be in box", b)
 	}
 	if !IsPointIn(c, cmin, cmax, zero) {
-		chk.Panic("c=%v must be in box")
+		chk.Panic("c=%v must be in box", c)
 	}
 
 	p := &Point{0.5, 0.5, 0.5}
 	q := &Point{1.5, 1.5, 1.5}
 	if !IsPointInLine(p, o, c, zero, told, tolin) {
-		chk.Panic("p=%v must be in line")
+		chk.Panic("p=%v must be in line", p)
 	}
 	if IsPointInLine(q, o, c, zero, told, tolin) {
-		chk.Panic("q=%v must not be in line")
+		chk.Panic("q=%v must not be in line", q)
 	}
 }

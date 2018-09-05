@@ -38,7 +38,7 @@ func QuadDiscreteTrapzXF(x []float64, y fun.Ss) (A float64) {
 // with npts points
 func QuadDiscreteTrapzRF(xa, xb float64, npts int, y fun.Ss) (A float64) {
 	if npts < 2 {
-		chk.Panic("number of points must be at least 2", npts)
+		chk.Panic("number of points must be at least 2. %d is incorrect", npts)
 	}
 	dx := (xb - xa) / float64(npts-1)
 	var x0, x1, y0, y1 float64

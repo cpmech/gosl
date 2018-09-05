@@ -54,7 +54,7 @@ func (o *InterpQuad) Fit3points(x0, y0, x1, y1, x2, y2 float64) (err error) {
 	z0, z1, z2 := x0*x0, x1*x1, x2*x2
 	den := x0*(z2-z1) - x1*z2 + x2*z1 + (x1-x2)*z0
 	if math.Abs(den) < o.TolDen {
-		return chk.Err("Cannot fit 3 points because denominator=%g is near zero.\n\t(x0,y0)=(%g,%g)\t(x1,y1)=(%g,%g)\t(x2,y2)=(%g,%g)\n", x0, y0, x1, y1, x2, y2)
+		return chk.Err("Cannot fit 3 points because denominator=%g is near zero.\n\t(x0,y0)=(%g,%g)\t(x1,y1)=(%g,%g)\t(x2,y2)=(%g,%g)\n", den, x0, y0, x1, y1, x2, y2)
 	}
 	o.A = ((x1-x2)*y0 + x2*y1 - x1*y2 + x0*(y2-y1)) / den
 	o.B = ((y1-y2)*z0 + y2*z1 - y1*z2 + y0*(z2-z1)) / den
@@ -70,7 +70,7 @@ func (o *InterpQuad) Fit2pointsD(x0, y0, x1, y1, x2, d2 float64) (err error) {
 	z0, z1 := x0*x0, x1*x1
 	den := -z1 + z0 + 2*x1*x2 - 2*x0*x2
 	if math.Abs(den) < o.TolDen {
-		return chk.Err("Cannot fit 2 points + deriv because denominator=%g is near zero.\n\t(x0,y0)=(%g,%g)\t(x1,y1)=(%g,%g)\t(x2,d2)=(%g,%g)\n", x0, y0, x1, y1, x2, d2)
+		return chk.Err("Cannot fit 2 points + deriv because denominator=%g is near zero.\n\t(x0,y0)=(%g,%g)\t(x1,y1)=(%g,%g)\t(x2,d2)=(%g,%g)\n", den, x0, y0, x1, y1, x2, d2)
 	}
 	o.A = (-d2*x0 + d2*x1 + y0 - y1) / den
 	o.B = (-2*x2*y0 + 2*x2*y1 + d2*z0 - d2*z1) / den
