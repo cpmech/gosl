@@ -46,6 +46,14 @@ else
     install_and_test mpi 0
 fi
 
+if [[ $platform == 'darwin' ]]; then
+    echo
+    echo "... configuring num/qpck for macOS ..."
+    cd num/qpck
+    bash xgenflagsfile.bash
+    cd ../../
+fi
+
 for p in la/oblas la fun/dbf fun/fftw fun num/qpck num gm/rw gm/tri gm/msh gm graph; do
     install_and_test $p 1
 done

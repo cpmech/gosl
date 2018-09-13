@@ -36,6 +36,13 @@ brew install gcc fftw hdf5
 brew install openblas suite-sparse openmpi
 ```
 
+Useful commands:
+```
+brew update
+brew upgrade
+brew cleanup
+```
+
 ## 3 Go language
 
 Install Go for macOS from https://golang.org

@@ -9,7 +9,7 @@ package h5
 #cgo linux LDFLAGS: -L/usr/lib/x86_64-linux-gnu/hdf5/serial -lhdf5_hl -lhdf5 -lpthread -lz -ldl -lm
 
 #cgo darwin CFLAGS: -I/usr/local/opt/szip/include
-#cgo darwin LDFLAGS: -L/usr/local/opt/szip/lib -L/usr/local/Cellar/hdf5/1.10.1_2/lib -lhdf5_hl -lhdf5 -lz -ldl -lm
+#cgo darwin LDFLAGS: -L/usr/local/opt/szip/lib -lhdf5_hl -lhdf5 -lz -ldl -lm
 
 #cgo windows LDFLAGS: -lhdf5_hl-static -lhdf5-static -lm
 */
