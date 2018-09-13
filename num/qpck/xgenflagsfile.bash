@@ -27,7 +27,7 @@ GCC_PATH=`ls -d /usr/local/Cellar/gcc/*`
 echo "   GCC_PATH = $GCC_PATH"
 
 if [[ -z $GCC_PATH ]]; then
-    echo "cannot find /usr/include/vtk*"
+    echo "cannot find /usr/local/Cellar/gcc path"
     exit 1
 fi
 
