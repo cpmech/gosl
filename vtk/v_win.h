@@ -10,7 +10,8 @@
 VTK_MODULE_INIT(vtkInteractionStyle);
 VTK_MODULE_INIT(vtkRenderingFreeType);
 // VTK_MODULE_INIT(vtkRenderingFreeTypeOpenGL); // does not work with VTK 6.3
-VTK_MODULE_INIT(vtkRenderingOpenGL);
+// VTK_MODULE_INIT(vtkRenderingOpenGL); // does not work with VTK 7.1
+VTK_MODULE_INIT(vtkRenderingOpenGL2);
 
 // VTK
 #include <vtkCamera.h>

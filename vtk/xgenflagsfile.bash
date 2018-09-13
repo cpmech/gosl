@@ -48,9 +48,9 @@ VTK_LDFLAGS="-lvtkCommonCore-$VTK_VERSION -lvtkFiltersHybrid-$VTK_VERSION \
 -lvtkIOGeometry-$VTK_VERSION -lvtkIOExport-$VTK_VERSION -lvtkIOImage-$VTK_VERSION \
 -lvtkInteractionStyle-$VTK_VERSION -lvtkRenderingAnnotation-$VTK_VERSION \
 -lvtkRenderingFreeType-$VTK_VERSION \
--lvtkRenderingOpenGL-$VTK_VERSION -lvtkRenderingCore-$VTK_VERSION -lvtkFiltersCore-$VTK_VERSION \
+-lvtkRenderingOpenGL2-$VTK_VERSION -lvtkRenderingCore-$VTK_VERSION -lvtkFiltersCore-$VTK_VERSION \
 -lvtkCommonExecutionModel-$VTK_VERSION -lvtkCommonDataModel-$VTK_VERSION \
--lvtkCommonTransforms-$VTK_VERSION -lvtkRenderingGL2PS-$VTK_VERSION -lvtkRenderingImage-$VTK_VERSION \
+-lvtkCommonTransforms-$VTK_VERSION -lvtkRenderingGL2PSOpenGL2-$VTK_VERSION -lvtkRenderingImage-$VTK_VERSION \
 -lvtkalglib-$VTK_VERSION -lvtksys-$VTK_VERSION -lvtkRenderingLOD-$VTK_VERSION \
 -lvtkViewsCore-$VTK_VERSION -lvtkInteractionStyle-$VTK_VERSION"
 

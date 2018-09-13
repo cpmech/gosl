@@ -71,3 +71,17 @@ cd ${GOPATH%:*}/src/github.com/cpmech/la/mkl
 go install
 go test
 ```
+
+
+
+## 5 [Optional] Install VTK
+
+```bash
+sudo apt-get install libvtk7-dev
+cd ${GOPATH%:*}/src/github.com/cpmech/vtk
+./xgenflagsfile.bash
+go install
+go test
+cd ../examples
+go run vtk_isosurf01.go
+```
