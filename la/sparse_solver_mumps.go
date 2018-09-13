@@ -46,7 +46,7 @@ type Mumps struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) {
+func (o *Mumps) Init(t *Triplet, args *SpArgs) {
 
 	// check
 	if o.initialised {
@@ -56,8 +56,13 @@ func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling stri
 		chk.Panic("triplet must have at least one item for initialisation\n")
 	}
 
+	// default arguments
+	if args == nil {
+		args = new(SpArgs)
+	}
+
 	// set comm
-	o.comm = comm
+	o.comm = args.Communicator
 
 	// allocate data
 	if C.NumData == C.NumMaxData {
@@ -70,7 +75,7 @@ func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling stri
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
 	o.data.sym = 0                // 0=unsymmetric, 1=sym(pos-def), 2=symmetric(undef)
-	if symmetric {
+	if args.Symmetric {
 		o.data.sym = 2
 	}
 	o.data.job = -1 // initialisation code
@@ -97,7 +102,7 @@ func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling stri
 	o.data.a_loc = (*C.double)(unsafe.Pointer(&o.t.x[0]))
 
 	// control
-	if verbose {
+	if args.Verbose {
 		o.data.icntl[1-1] = 6 // output stream for error messages
 		o.data.icntl[2-1] = 0 // output stream for statistics and warnings
 		o.data.icntl[3-1] = 6 // output stream for global information
@@ -115,7 +120,7 @@ func (o *Mumps) Init(t *Triplet, symmetric, verbose bool, ordering, scaling stri
 	o.data.icntl[23-1] = 2000 // max 2000Mb per processor // TODO: check this
 
 	// set ordering and scaling
-	ord, sca := mumOrderingScaling(ordering, scaling)
+	ord, sca := mumOrderingScaling(args.Ordering, args.Scaling)
 	o.data.icntl[7-1] = C.int(ord) // ordering
 	o.data.icntl[8-1] = C.int(sca) // scaling
 
@@ -215,7 +220,7 @@ type MumpsC struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator) {
+func (o *MumpsC) Init(t *TripletC, args *SpArgs) {
 
 	// check
 	if o.initialised {
@@ -225,8 +230,13 @@ func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling st
 		chk.Panic("triplet must have at least one item for initialisation\n")
 	}
 
+	// default arguments
+	if args == nil {
+		args = new(SpArgs)
+	}
+
 	// set comm
-	o.comm = comm
+	o.comm = args.Communicator
 
 	// allocate data
 	if C.NumDataC == C.NumMaxData {
@@ -239,7 +249,7 @@ func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling st
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
 	o.data.sym = 0                // 0=unsymmetric, 1=sym(pos-def), 2=symmetric(undef)
-	if symmetric {
+	if args.Symmetric {
 		o.data.sym = 2
 	}
 	o.data.job = -1 // initialisation code
@@ -266,7 +276,7 @@ func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling st
 	o.data.a_loc = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.t.x[0]))
 
 	// control
-	if verbose {
+	if args.Verbose {
 		o.data.icntl[1-1] = 6 // output stream for error messages
 		o.data.icntl[2-1] = 0 // output stream for statistics and warnings
 		o.data.icntl[3-1] = 6 // output stream for global information
@@ -284,7 +294,7 @@ func (o *MumpsC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling st
 	o.data.icntl[23-1] = 2000 // max 2000Mb per processor // TODO: check this
 
 	// set ordering and scaling
-	ord, sca := mumOrderingScaling(ordering, scaling)
+	ord, sca := mumOrderingScaling(args.Ordering, args.Scaling)
 	o.data.icntl[7-1] = C.int(ord) // ordering
 	o.data.icntl[8-1] = C.int(sca) // scaling
 

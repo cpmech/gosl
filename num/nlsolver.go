@@ -246,7 +246,7 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 			// init sparse solver
 			if !o.lsReady {
 				symmetric, verbose := false, false
-				o.lis.Init(&o.Jtri, symmetric, verbose, "", "", nil)
+				o.lis.Init(&o.Jtri, &la.SpArgs{Symmetric: symmetric, Verbose: verbose, Ordering: "", Scaling: "", Guess: nil, Communicator: nil})
 				o.lsReady = true
 			}
 

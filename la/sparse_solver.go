@@ -9,6 +9,16 @@ import (
 	"github.com/cpmech/gosl/mpi"
 )
 
+// The SpArgs structure holds arguments to configure Solvers
+type SpArgs struct {
+	Symmetric    bool              // indicates symmetric system
+	Verbose      bool              // run on Verbose mode
+	Ordering     string            // set Ordering type (check MUMPS solver) [may be empty]
+	Scaling      string            // set Scaling type (check MUMPS solver) [may be empty]
+	Guess        Vector            // initial guess for iterative solvers [may be nil]
+	Communicator *mpi.Communicator // MPI communicator for parallel solvers [may be nil]
+}
+
 // real ////////////////////////////////////////////////////////////////////////////////////////////
 
 // SparseSolver solves sparse linear systems using UMFPACK or MUMPS
@@ -16,7 +26,7 @@ import (
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
 type SparseSolver interface {
-	Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator)
+	Init(t *Triplet, args *SpArgs)
 	Free()
 	Fact()
 	Solve(x, b Vector, bIsDistr bool)
@@ -46,7 +56,7 @@ func NewSparseSolver(kind string) SparseSolver {
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
 type SparseSolverC interface {
-	Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, comm *mpi.Communicator)
+	Init(t *TripletC, args *SpArgs)
 	Free()
 	Fact()
 	Solve(x, b VectorC, bIsDistr bool)
@@ -81,7 +91,7 @@ func SpSolve(A *Triplet, b Vector) (x Vector) {
 	defer o.Free()
 
 	// initialise solver
-	o.Init(A, false, false, "", "", nil)
+	o.Init(A, nil)
 
 	// factorise
 	o.Fact()
@@ -103,7 +113,7 @@ func SpSolveC(A *TripletC, b VectorC) (x VectorC) {
 	defer o.Free()
 
 	// initialise solver
-	o.Init(A, false, false, "", "", nil)
+	o.Init(A, nil)
 
 	// factorise
 	o.Fact()

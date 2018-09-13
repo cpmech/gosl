@@ -322,7 +322,7 @@ func TestSpUmfpack07a(tst *testing.T) {
 
 		// initialise solver
 		if k == 0 {
-			sol.Init(A, false, false, "", "", nil)
+			sol.Init(A, nil)
 		}
 
 		// factorise
@@ -379,7 +379,7 @@ func TestSpUmfpack07b(tst *testing.T) {
 
 		// initialise solver
 		if k == 0 {
-			sol.Init(A, false, false, "", "", nil)
+			sol.Init(A, nil)
 		}
 
 		// factorise

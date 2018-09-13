@@ -387,7 +387,7 @@ func (o *Equations) Solve(solver SparseSolver, t float64, calcXk, calcBu func(I 
 func (o *Equations) SolveOnce(calcXk, calcBu func(I int, t float64) float64) {
 	s := NewSparseSolver("umfpack")
 	defer s.Free()
-	s.Init(o.Auu, false, false, "", "", nil)
+	s.Init(o.Auu, nil)
 	s.Fact()
 	o.Solve(s, 0, calcXk, calcBu)
 }

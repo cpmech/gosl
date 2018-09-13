@@ -45,7 +45,7 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 	defer o.Free()
 
 	// initialise solver
-	o.Init(t, symmetric, verbose, "", "", comm)
+	o.Init(t, &SpArgs{symmetric, verbose, "", "", nil, comm})
 
 	// factorise
 	o.Fact()
@@ -68,7 +68,7 @@ func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *Triplet
 	defer o.Free()
 
 	// initialise solver
-	o.Init(t, symmetric, verbose, "", "", comm)
+	o.Init(t, &SpArgs{symmetric, verbose, "", "", nil, comm})
 
 	// factorise
 	o.Fact()

@@ -19,7 +19,6 @@ import (
 	"unsafe"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/mpi"
 )
 
 // Umfpack wraps the UMFPACK solver
@@ -55,7 +54,7 @@ type Umfpack struct {
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
-func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling string, dummy *mpi.Communicator) {
+func (o *Umfpack) Init(t *Triplet, args *SpArgs) {
 
 	// check
 	if o.initialised {
@@ -63,6 +62,11 @@ func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling st
 	}
 	if t.pos == 0 {
 		chk.Panic("triplet must have at least one item for initialisation\n")
+	}
+
+	// default arguments
+	if args == nil {
+		args = new(SpArgs)
 	}
 
 	// allocate data
@@ -87,10 +91,10 @@ func (o *Umfpack) Init(t *Triplet, symmetric, verbose bool, ordering, scaling st
 	C.umfpack_dl_defaults(o.uctrl)
 
 	// flags
-	if symmetric {
+	if args.Symmetric {
 		o.ctrl[C.UMFPACK_STRATEGY] = C.UMFPACK_STRATEGY_SYMMETRIC
 	}
-	if verbose {
+	if args.Verbose {
 		o.ctrl[C.UMFPACK_PRL] = 6
 	}
 
@@ -208,7 +212,7 @@ type UmfpackC struct {
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
-func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling string, dummy *mpi.Communicator) {
+func (o *UmfpackC) Init(t *TripletC, args *SpArgs) {
 
 	// check
 	if o.initialised {
@@ -216,6 +220,11 @@ func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling 
 	}
 	if t.pos == 0 {
 		chk.Panic("triplet must have at least one item for initialisation\n")
+	}
+
+	// default arguments
+	if args == nil {
+		args = new(SpArgs)
 	}
 
 	// allocate data
@@ -240,10 +249,10 @@ func (o *UmfpackC) Init(t *TripletC, symmetric, verbose bool, ordering, scaling 
 	C.umfpack_zl_defaults(o.uctrl)
 
 	// flags
-	if symmetric {
+	if args.Symmetric {
 		o.ctrl[C.UMFPACK_STRATEGY] = C.UMFPACK_STRATEGY_SYMMETRIC
 	}
-	if verbose {
+	if args.Verbose {
 		o.ctrl[C.UMFPACK_PRL] = 6
 	}
 

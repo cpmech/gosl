@@ -8,6 +8,7 @@ import (
 	"math"
 
 	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/la"
 	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/utl"
 )
@@ -209,4 +210,9 @@ func (o *Config) SetDenseOut(save bool, dxOut, xf float64, out DenseOutF) {
 		o.denseNstp = int(math.Ceil(xf / dxOut))
 		o.denseDx = dxOut
 	}
+}
+
+// GetSpArgs returns arguments for sparse solvers
+func (o *Config) GetSpArgs() *la.SpArgs {
+	return &la.SpArgs{Symmetric: o.Symmetric, Verbose: o.LsVerbose, Ordering: o.Ordering, Scaling: o.Scaling, Guess: nil, Communicator: o.comm}
 }

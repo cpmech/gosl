@@ -8,5 +8,5 @@ while true; do
     echo
     echo
     echo
-    go test -test.run="Matrix01"
+    go test -test.run="SpSolver01"
 done
