@@ -35,18 +35,16 @@ sudo apt-get install liblapacke-dev libopenblas-dev libhdf5-dev git
    1. Click on Free Download
    2. Need to sign-in
    3. [See figure of download options here](https://github.com/cpmech/gosl/blob/master/doc/intel-mkl-page.png)
-2. Run the following commands
+2. Run the following commands (must install using `sudo`)
 
 ```bash
 mkdir -p $HOME/xpkg && cd $HOME/xpkg
-tar xzf l_mkl_2017.3.196.tgz
-cd l_mkl_2017.3.196/
-bash install_GUI.sh
+tar xzf tar xzf l_mkl_2019.0.117.tgz
+cd cd l_mkl_2019.0.117/
+sudo bash install_GUI.sh
 ```
 
-3. Follow the instructions. The following options seem OK:
-* Choose _Install as root using sudo_
-* Keep default install location: **/opt/intel**
+3. Click next then make sure that the installation directory is **/opt/intel**. Then click Install.
 
 
 
