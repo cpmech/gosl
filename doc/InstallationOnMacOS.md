@@ -6,22 +6,9 @@
 </p>
 </div>
 
-The installation on macOS includes:
-
-1. Xcode
-2. HomeBrew and dependencies
-3. Go language
-4. Gosl 
+Tested on macOS Mojave 10.14 with Xcode 10.1 beta 2
  
-## 1 Xcode
-
-In a terminal, type the following commands and click install to install the *command line developer tools*:
-
-```
-xcode-select --install
-```
-
-## 2 HomeBrew and dependencies
+## HomeBrew and dependencies
 
 Download and install HomeBrew from https://brew.sh
 
@@ -43,9 +30,9 @@ brew upgrade
 brew cleanup
 ```
 
-## 3 Go language
+## Go language
 
-Install Go for macOS from https://golang.org
+Install Go for macOS from https://golang.org (Tested with Go 1.11.1)
 
 Edit `/Users/name/.bash_profile` (or `/Users/name/.profile`) and add:
 
@@ -57,17 +44,17 @@ export GOPATH=/Users/name/mygo
 
 [More information is available here](https://github.com/cpmech/gosl/blob/master/doc/InstallAndTestGo.md)
 
-## 4 Gosl
+## Gosl
  
 Type the following commands:
 
 ```
-cd mygo
-mkdir -p src/github.com/cpmech
-cd src/github.com/cpmech/
+cd ~
+mkdir -p mygo/src/github.com/cpmech
+cd ~/mygo/src/github.com/cpmech/
 git clone https://github.com/cpmech/gosl.git
 cd gosl
 ./all.bash
 ```
 
-Yay!
+Enjoy!
