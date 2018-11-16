@@ -19,7 +19,7 @@
 package oblas
 
 /*
-#include <openblas_cblas.h>
+#include "openblas_cblas.h"
 #include <lapacke.h>
 
 static inline double* cpt(double complex* p) { return (double*)p; }
