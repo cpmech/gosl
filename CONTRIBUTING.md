@@ -15,7 +15,7 @@ a pull request.
 ## TODO List
 
 1.  Improve package `ml` (Machine Learning)
-2.  Re-implement the OpneCV wrapper
+2.  Re-implement the OpenCV wrapper
 3.  Implement wrappers to TensorFlow and CNTK
 4.  Improve documentation and examples of Machine Learning examples
 5.  Re-implement the the tensors (`tsr`) package
