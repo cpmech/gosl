@@ -14,9 +14,9 @@ import (
 
 // SpcLaplacian implements the Spectral Collocation (SPC) Laplacian operator (2D or 3D)
 //
-//                 ∂²φ         ∂²φ        ∂²φ         ∂φ      ∂φ
-//    L{φ} = ∇²φ = ——— g¹¹  +  ——— g²² +  ———— 2g¹² - —— L¹ - —— L²
-//                 ∂a²         ∂b²        ∂a∂b        ∂a      ∂b
+//                 ∂²φ        ∂²φ        ∂²φ         ∂φ      ∂φ
+//    L{φ} = ∇²φ = ——— g¹¹ +  ——— g²² +  ———— 2g¹² - —— L¹ - —— L²
+//                 ∂a²        ∂b²        ∂a∂b        ∂a      ∂b
 //
 //    with a=u[0]=r and b=u[1]=s
 //
