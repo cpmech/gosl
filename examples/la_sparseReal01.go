@@ -40,7 +40,7 @@ func main() {
 
 	// initialise solver
 	symmetric, verbose := false, false
-	o.Init(A, symmetric, verbose, "", "", nil)
+	o.Init(A, &la.SpArgs{symmetric, verbose, "", "", nil, nil})
 
 	// factorise
 	o.Fact()
