@@ -229,7 +229,7 @@ where (the minimum cost is highlighted):
 
 The code is based on [Bob Pilgrim' work](http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html).
 
-The method runs in O(n²), in the worst case; therefore is not efficient for large matrices.
+The method runs in O(n³), in the worst case; therefore is not efficient for large matrices.
 
 The `Munkres` structure implements the solver.
 

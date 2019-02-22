@@ -29,7 +29,7 @@ const (
 
 // Munkres (Hungarian algorithm) method to solve the assignment problem
 //  based on code by Bob Pilgrim from http://csclab.murraystate.edu/bob.pilgrim/445/munkres.html
-//  Note: this method runs in O(n²), in the worst case; therefore is not efficient for large matrix
+//  Note: this method runs in O(n³), in the worst case; therefore is not efficient for large matrix
 //   Example:
 //           $ | Clean  Sweep   Wash
 //      -------|--------------------
