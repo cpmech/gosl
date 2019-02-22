@@ -1,11 +1,20 @@
 # Gosl Examples
 
-<aside class="notice">
+:exclamation:
+:exclamation:
+:exclamation:
+
 NOTE: For the sake of convenience, we are (slowly) moving the examples to another repository: https://github.com/cpmech/gosl-examples
+
+:exclamation:
+:exclamation:
+:exclamation:
 
 The examples about Machine Learning have been moved already.
 
-</aside>
+:exclamation:
+:exclamation:
+:exclamation:
 
 After installing Gosl, most of the examples below can be executed using
 
