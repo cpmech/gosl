@@ -45,8 +45,6 @@ OpenCV in the works as well.
 
 Gosl works on Windows, macOS, and Linux.
 
-Gosl has zero external dependencies!
-
 <div id="container">
 <p>
 Click on
