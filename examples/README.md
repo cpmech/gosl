@@ -1,5 +1,12 @@
 # Gosl Examples
 
+<aside class="notice">
+NOTE: For the sake of convenience, we are (slowly) moving the examples to another repository: https://github.com/cpmech/gosl-examples
+
+The examples about Machine Learning have been moved already.
+
+</aside>
+
 After installing Gosl, most of the examples below can be executed using
 
 ```bash
@@ -7,8 +14,6 @@ After installing Gosl, most of the examples below can be executed using
 ```
 
 [See also benchmark tests](benchmark/README.md).
-
-
 
 ## Note about extra data files
 
@@ -22,8 +27,6 @@ location of the extra data files is required. For instance:
 ```bash
 export GOSLDATA=$HOME/GoslDataFiles
 ```
-
-
 
 # Optimization: Conjugate Gradients, Powell, Gradient Descent
 
@@ -47,8 +50,6 @@ Source code: <a href="opt_conjgrad01.go" width="600">opt_conjgrad01.go</a>
 <p><img src="figs/opt_conjgrad01.png"></p>
 </div>
 
-
-
 # Optimization: Interior Point Method
 
 ## Simple problem 1
@@ -67,69 +68,6 @@ Source code: <a href="opt_ipm02.go">opt_ipm02.go</a>
 <p><img src="figs/opt_ipm02.png" width="500"></p>
 </div>
 
-
-
-
-# Machine Learning: Linear and Logistic Regressions
-
-Initial implementation of Linear and Logistic regressions, based on [Prof. Andrew Ng's online notes](http://cs229.stanford.edu) (see also Coursera).
-
-## Linear Regression Test 1
-
-Source code: <a href="ml_simple01.go">ml_simple01.go</a>
-
-<div id="container">
-<p><img src="figs/ml_simple01.png" width="500"></p>
-</div>
-
-## Logistic Regression Test 1
-
-Prof. Andrew Ng's example number 1.
-
-Source code: <a href="ml_ang01.go">ml_ang01.go</a>
-
-<div id="container">
-<p><img src="figs/ml_ang01.png" width="500"></p>
-</div>
-
-## Logistic Regression Test 2
-
-Prof. Andrew Ng's example number 2.
-
-Source code: <a href="ml_ang02.go">ml_ang02.go</a>
-
-<div id="container">
-<p><img src="figs/ml_ang02.png" width="500"></p>
-</div>
-
-
-
-# Machine Learning: Multi-class classification
-
-## Multi-class classification using logistic regression
-
-Source code: <a href="ml_mclass01.go">ml_mclass01.go</a>
-
-<div id="container">
-<p><img src="figs/ml_mclass01.png" width="500"></p>
-</div>
-
-
-
-# Machine Learning: Clustering
-
-## K-means Example 1
-
-Prof. Andrew Ng's K-means example number 1.
-
-Source code: <a href="ml_kmeans01.go">ml_kmeans01.go</a>
-
-<div id="container">
-<p><img src="figs/ml_kmeans01.png" width="500"></p>
-</div>
-
-
-
 # Reading HDF5 files (e.g. from Matlab/Octave)
 
 This example reads the MNIST subset data given in Prof. Andrew Ng's course.
@@ -143,8 +81,6 @@ Source code: <a href="h5_ang_mnist01.go">h5_ang_mnist01.go</a>
 <p><img src="figs/angEx4data1fig.png"></p>
 </div>
 
-
-
 # Compute (fast) discrete Fourier transform
 
 Source code: <a href="fun_fft01.go">fun_fft01.go</a>
@@ -153,8 +89,6 @@ Source code: <a href="fun_fft01.go">fun_fft01.go</a>
 <p><img src="figs/fun_fft01.png" width="500"></p>
 </div>
 
-
-
 # Generate and draw a NURBS toroidal surface
 
 Source code: <a href="gm_nurbs03.go">gm_nurbs03.go</a>
@@ -162,8 +96,6 @@ Source code: <a href="gm_nurbs03.go">gm_nurbs03.go</a>
 <div id="container">
 <p><img src="figs/gm_nurbs03.png" width="500"></p>
 </div>
-
-
 
 # Generating normally distributed pseudo-random numbers
 
@@ -179,8 +111,6 @@ Source code: <a href="rnd_normalDistribution.go">rnd_normalDistribution.go</a>
 <p><img src="figs/rnd_normalDistribution.png" width="400"></p>
 Normally distributed pseudo-random numbers
 </div>
-
-
 
 # Visualising Triplets for sparse matrix input
 
@@ -205,8 +135,6 @@ The matrix can be visualised using Vismatrix resulting in:
 <p><img src="figs/la_triplet01.png" width="300"></p>
 Output of Vismatrix
 </div>
-
-
 
 # Solution of sparse linear system
 
@@ -244,6 +172,7 @@ solve:
 ```
 
 Output:
+
 ```
 a =
     2    3    0    0    0
@@ -251,8 +180,8 @@ a =
     0   -1   -3    2    0
     0    0    1    0    0
     0    4    2    0    1
-b = 8 45 -3 3 19 
-x = 0.9999999999999998 2 3 4 4.999999999999998 
+b = 8 45 -3 3 19
+x = 0.9999999999999998 2 3 4 4.999999999999998
 ```
 
 Source code: <a href="la_HLsparseReal01.go">la_HLsparseReal01.go</a>
@@ -266,8 +195,6 @@ In this case, three steps must be taken:
 3. Solve problem
 
 See: <a href="la_sparseReal01.go">la_sparseReal01.go</a>
-
-
 
 # Solution of sparse linear system with complex numbers
 
@@ -301,7 +228,7 @@ solve:
          A.x = b
 ```
 
- the solution is:
+the solution is:
 
 ```
       _            _
@@ -318,8 +245,6 @@ Source code: <a href="la_HLsparseComplex01.go">la_HLsparseComplex01.go</a>
 
 See: <a href="la_sparseComplex01.go">la_sparseComplex01.go</a>
 
-
-
 # Numerical differentiation
 
 There are numerous uses for numerical differentiation.
@@ -335,6 +260,7 @@ Sin function
 </div>
 
 Output:
+
 ```
                  x              analytical               numerical                   error
 dy/dx   @ 0.000000                       1      0.9999999999999998   2.220446049250313e-16
@@ -361,8 +287,6 @@ dy/dx   @ 6.283185                       1      0.9999999999840412   1.595878984
 d²y/dx² @ 6.283185   2.449293598294703e-16                       0   2.449293598294703e-16
 ```
 
-
-
 # Drawing iso-surfaces with VTK
 
 An isosurface is a geometric construction representing a 2D region containing equal values. This
@@ -380,8 +304,6 @@ Source code: <a href="vtk_isosurf01.go">vtk_isosurf01.go</a>
 Iso-surface
 </div>
 
-
-
 # Plotting a contour
 
 The `plt` subpackage is a convenient wrapper to python.matplotlib/pyplot that can generate nice
@@ -394,20 +316,21 @@ Source code: <a href="plt_contour01.go">plt_contour01.go</a>
 Contour
 </div>
 
-
-
 # Root finding problems
 
 Example: find the root of
+
 ```
     y(x) = x³ - 0.165 x² + 3.993e-4
 ```
+
 within [0, 0.11]. We have to make sure that the root is bounded otherwise Brent's method doesn't
 work.
 
 Using Brent's method: <a href="num_brent01.go">num_brent01.go</a>
 
 Output:
+
 ```
   it                      x                   f(x)                    err
                                                                   1.0e-14
@@ -430,10 +353,10 @@ niter. = 6
 Simple root finding problem solved by Brent's method.
 </div>
 
-
 Using Newton's method: <a href="num_newton01.go">num_newton01.go</a>
 
 Output:
+
 ```
   it                    Ldx                 fx_max
                   (1.0e-04)              (1.0e-09)
@@ -454,8 +377,6 @@ niter. = 2
 Simple root finding problem solved by Newton's method.
 </div>
 
-
-
 # B-splines: curve, control, and basis
 
 Source code: <a href="gm_bspline02.go">gm_bspline02.go</a>
@@ -464,17 +385,15 @@ Source code: <a href="gm_bspline02.go">gm_bspline02.go</a>
 <p><img src="figs/gm_bspline02.png" width="400"></p>
 </div>
 
-
-
 # Orthogonal polynomials
 
 This example generates the following orthogonal polynomials and plot according to figures in [1]
 
-* Jacobi
-* Chebyshev First Kind
-* Chebyshev Second Kind
-* Legendre
-* Hermite
+- Jacobi
+- Chebyshev First Kind
+- Chebyshev Second Kind
+- Legendre
+- Hermite
 
 Source code: <a href="fun_orthopoly01.go">fun_orthopoly01.go</a>
 
@@ -514,10 +433,9 @@ Hermite orthogonal polynomials. Figure 22.10 of [1]
 </div>
 
 ## Reference:
+
 [1] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas,
-    Graphs, and Mathematical Tables. U.S. Department of Commerce, NIST
-
-
+Graphs, and Mathematical Tables. U.S. Department of Commerce, NIST
 
 # Lagrange interpolation using Chebyshev points
 
@@ -558,14 +476,11 @@ With N = 8
 <p><img src="figs/fun_laginterp01b.png" width="500"></p>
 </div>
 
-
 ## Error estimate
 
 <div id="container">
 <p><img src="figs/fun_laginterp01c.png" width="500"></p>
 </div>
-
-
 
 # Fourier interpolation
 
@@ -576,8 +491,6 @@ Source code: <a href="fun_fourierinterp01.go">fun_fourierinterp01.go</a>
 <div id="container">
 <p><img src="figs/fun_fourierinterp01.png" width="500"></p>
 </div>
-
-
 
 # Solving ordinary differential equations
 
@@ -599,8 +512,6 @@ Source code: <a href="ode_hweq11.go">ode_hweq11.go</a>
 <p><img src="figs/ode_hweq11.png" width="500"></p>
 </div>
 
-
-
 # Plotting Big-O complexity chart
 
 Source code: <a href="plt_bigo.go">plt_bigo.go</a>
@@ -608,8 +519,6 @@ Source code: <a href="plt_bigo.go">plt_bigo.go</a>
 <div id="container">
 <p><img src="figs/plt_bigo.png" width="500"></p>
 </div>
-
-
 
 # Triangle Mesh
 
