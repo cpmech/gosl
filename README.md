@@ -43,16 +43,17 @@ OpenCV in the works as well.
 
 ## Installation
 
-Gosl works on Windows, macOS, and Linux.
+Gosl works on Windows, macOS, and Linux (Debian, Ubuntu).
 
-Click on
+For installation instructions, click on:
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnWindows.md"><img src="doc/icon-windows.png" alt="Installation on Windows" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnMacOS.md"><img src="doc/icon-macos.png" alt="Installation on macOS" align="middle"></a>
 <a href="https://github.com/cpmech/gosl/blob/master/doc/InstallationOnUbuntu.md"><img src="doc/icon-ubuntu.png" alt="Installation on Linux/Debian/Ubuntu" align="middle"></a>
-for installation instructions.
 
+Alternatively, to use Docker, click on:
 <a href="https://hub.docker.com/r/gosl/gosl"><img src="doc/icon-docker.png" alt="Docker image" align="middle"></a>
-Or use Docker:
+
+The Docker image contains Ubuntu and all the dependencies, including MPI and VTK.
 
 ```bash
 docker pull gosl/gosl
