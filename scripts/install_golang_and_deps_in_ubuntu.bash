@@ -5,7 +5,7 @@ GOFN=go$GOVER.linux-amd64
 
 # deps
 echo "... installing deps ..."
-sudo apt-get -y install wget git \
+sudo apt-get -y install wget git gcc \
     libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev \
     gfortran python-scipy python-matplotlib dvipng \
     libfftw3-dev libfftw3-mpi-dev libmetis-dev \
