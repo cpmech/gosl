@@ -67,5 +67,16 @@ for p in rnd opt ml/imgd ml ode pde tsr; do
     install_and_test $p 1
 done
 
+if [[ $platform == 'linux' ]]; then
+    if [[ ! -z "$USE_VTK" ]]; then
+        echo
+        echo "... configuring vtk for linux ..."
+        cd vtk
+        bash xgenflagsfile.bash
+        cd ..
+        install_and_test vtk 1
+    fi
+fi
+
 echo
 echo "=== SUCCESS! ============================================================"
