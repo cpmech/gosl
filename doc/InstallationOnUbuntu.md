@@ -8,26 +8,23 @@
 </p>
 </div>
 
-
-
 ## 0 [Required] Install Go language
 
-1. [See instructions here](https://github.com/cpmech/gosl/blob/master/doc/InstallAndTestGo.md)
-
-
+1. [See instructions here](https://golang.org/doc/install)
+2. OR use the `install_golang_and_deps_in_ubuntu.bash` located in the `scripts` directory
 
 ## 1 [Required] Install some dependencies:
 
 1. Run the following commands
+2. OR use the `install_golang_and_deps_in_ubuntu.bash` located in the `scripts` directory
 
 ```bash
-sudo apt-get install libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
-sudo apt-get install gfortran libvtk6-dev python-scipy python-matplotlib dvipng
-sudo apt-get install libfftw3-dev libfftw3-mpi-dev libmetis-dev
-sudo apt-get install liblapacke-dev libopenblas-dev libhdf5-dev git
+sudo apt-get -y install wget git \
+  libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev \
+  gfortran python-scipy python-matplotlib dvipng \
+  libfftw3-dev libfftw3-mpi-dev libmetis-dev \
+  liblapacke-dev libopenblas-dev libhdf5-dev
 ```
-
-
 
 ## 2 [Optional] Install Intel MKL
 
@@ -46,39 +43,34 @@ sudo bash install_GUI.sh
 
 3. Click next then make sure that the installation directory is **/opt/intel**. Then click Install.
 
-
-
 ## 3 [Required] Clone and install Gosl
 
 1. Run the following commands
+2. Assuming that you want to install Gosl in `~/mygo/gosl`
 
 ```bash
-mkdir -p ${GOPATH%:*}/src/github.com/cpmech
-cd ${GOPATH%:*}/src/github.com/cpmech
+mkdir -p ~/mygo/gosl
+cd ~/mygo/gosl
 git clone https://github.com/cpmech/gosl.git
 cd gosl
 ./all.bash
 ```
-
-
 
 ## 4 [Optional] Test la/mkl subpackage
 
 1. Run the following commands
 
 ```bash
-cd ${GOPATH%:*}/src/github.com/cpmech/la/mkl
+cd ~/mygo/gosl/la/mkl
 go install
 go test
 ```
-
-
 
 ## 5 [Optional] Install VTK
 
 ```bash
 sudo apt-get install libvtk7-dev
-cd ${GOPATH%:*}/src/github.com/cpmech/vtk
+cd ~/mygo/gosl/vtk
 ./xgenflagsfile.bash
 go install
 go test
