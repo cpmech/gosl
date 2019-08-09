@@ -26,7 +26,7 @@ install_and_test(){
     echo "=== compiling $PKG ============================================================="
     cd $PKG
     if [[ ! -z $HASGENBASH ]]; then
-        ./xgenflagsfile.bash
+        bash xgenflagsfile.bash
     fi
     touch *.go
     go install
@@ -41,7 +41,7 @@ for p in chk io io/h5 utl/al utl plt; do
 done
 
 if [[ $platform != 'windows' ]]; then
-    install_and_test mpi 1
+    install_and_test mpi 1 1
 else
     install_and_test mpi 0
 fi
