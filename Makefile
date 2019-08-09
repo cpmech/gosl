@@ -1,2 +1,2 @@
 all:
-	./all.bash
+	bash all.bash
