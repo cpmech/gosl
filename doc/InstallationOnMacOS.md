@@ -6,8 +6,8 @@
 </p>
 </div>
 
-Tested on macOS Mojave 10.14 with Xcode 10.1 beta 2
- 
+Tested on macOS Mojave 10.14 with Xcode 10.3
+
 ## HomeBrew and dependencies
 
 Download and install HomeBrew from https://brew.sh
@@ -24,6 +24,7 @@ brew install openblas suite-sparse openmpi
 ```
 
 Useful commands:
+
 ```
 brew update
 brew upgrade
@@ -45,7 +46,7 @@ export GOPATH=/Users/name/mygo
 [More information is available here](https://github.com/cpmech/gosl/blob/master/doc/InstallAndTestGo.md)
 
 ## Gosl
- 
+
 Type the following commands:
 
 ```
