@@ -33,17 +33,7 @@ brew cleanup
 
 ## Go language
 
-Install Go for macOS from https://golang.org (Tested with Go 1.11.1)
-
-Edit `/Users/name/.bash_profile` (or `/Users/name/.profile`) and add:
-
-```
-export GOPATH=/Users/name/mygo
-```
-
-(or another location as desired)
-
-[More information is available here](https://github.com/cpmech/gosl/blob/master/doc/InstallAndTestGo.md)
+Install Go for macOS from https://golang.org (Tested with Go 1.12.7)
 
 ## Gosl
 
@@ -55,7 +45,7 @@ mkdir -p mygo/src/github.com/cpmech
 cd ~/mygo/src/github.com/cpmech/
 git clone https://github.com/cpmech/gosl.git
 cd gosl
-./all.bash
+bash all.bash
 ```
 
 Enjoy!
