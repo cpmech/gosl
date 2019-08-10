@@ -1,7 +1,8 @@
 #!/bin/bash
 
-GOVER=1.12
+GOVER=1.12.7
 GOFN=go$GOVER.linux-amd64
+USE_VTK=1
 
 # deps
 echo "... installing deps ..."
