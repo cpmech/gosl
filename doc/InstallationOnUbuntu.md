@@ -19,11 +19,11 @@
 2. OR use the `install_golang_and_deps_in_ubuntu.bash` located in the `scripts` directory
 
 ```bash
-sudo apt-get -y install wget git \
-  libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev \
-  gfortran python-scipy python-matplotlib dvipng \
-  libfftw3-dev libfftw3-mpi-dev libmetis-dev \
-  liblapacke-dev libopenblas-dev libhdf5-dev
+sudo apt-get -y install wget git gcc \
+    libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev \
+    gfortran python-scipy python-matplotlib dvipng \
+    libfftw3-dev libfftw3-mpi-dev libmetis-dev \
+    liblapacke-dev libopenblas-dev libhdf5-dev
 ```
 
 ## 2 [Optional] Install Intel MKL
@@ -53,7 +53,7 @@ mkdir -p ~/mygo/gosl
 cd ~/mygo/gosl
 git clone https://github.com/cpmech/gosl.git
 cd gosl
-./all.bash
+bash all.bash
 ```
 
 ## 4 [Optional] Test la/mkl subpackage
@@ -71,7 +71,7 @@ go test
 ```bash
 sudo apt-get install libvtk7-dev
 cd ~/mygo/gosl/vtk
-./xgenflagsfile.bash
+bash xgenflagsfile.bash
 go install
 go test
 cd ../examples
