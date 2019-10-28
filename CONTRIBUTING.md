@@ -28,7 +28,7 @@ a pull request.
 12. Implement a wrapper to ARPACK
 13. Implement more functions from [Numerical Recipes](http://numerical.recipes) in `num`
 14. Improve the database of functions (`dbf`) with better explanation of functions and more functions
-15. Implement triagulation methods in `msh/tri`
+15. Implement triangulation methods in `msh/tri`
 16. Add a new package called `msh/tet` to wrap [TetGen](http://wias-berlin.de/software/index.jsp?id=TetGen&lang=1)
 17. Implement parallel graph routines (using channels) in `graph`
 18. Add more probability distributions to `rnd`
