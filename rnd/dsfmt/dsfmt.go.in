@@ -7,10 +7,7 @@
 // Package dsfmt wraps the dSFMT Double precision SIMD-oriented Fast Mersenne Twister
 package dsfmt
 
-/*
-#cgo CFLAGS: -O3 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing -Wall -std=c99 -msse2 -DHAVE_SSE2 -DDSFMT_MEXP=19937
-#include "connectdsfmt.h"
-*/
+@@CGO@@
 import "C"
 
 import "time"

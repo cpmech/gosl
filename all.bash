@@ -46,6 +46,11 @@ else
     install_and_test io/h5 0
 fi
 
+if [[ $platform != 'windows' ]]; then
+    install_and_test rnd/sfmt 1 1
+    install_and_test rnd/dsfmt 1 1
+fi
+
 for p in utl/al utl plt; do
     install_and_test $p 1
 done
@@ -67,11 +72,6 @@ fi
 for p in la/oblas la fun/dbf fun/fftw fun num/qpck num gm/rw gm/tri gm/msh gm graph; do
     install_and_test $p 1
 done
-
-if [[ $platform != 'windows' ]]; then
-    install_and_test rnd/sfmt 1
-    install_and_test rnd/dsfmt 1
-fi
 
 for p in rnd opt ml/imgd ml ode pde tsr; do
     install_and_test $p 1
