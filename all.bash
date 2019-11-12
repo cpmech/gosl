@@ -36,7 +36,17 @@ install_and_test(){
     cd $HERE
 }
 
-for p in chk io io/h5 utl/al utl plt; do
+for p in chk io; do
+    install_and_test $p 1
+done
+
+if [[ $platform == 'linux' ]]; then
+    install_and_test io/h5 1 1
+else
+    install_and_test io/h5 0
+fi
+
+for p in utl/al utl plt; do
     install_and_test $p 1
 done
 
