@@ -26,7 +26,7 @@ func TestFactObjs01(tst *testing.T) {
 	x := la.NewVectorSlice([]float64{-3, -4})
 	gAna := la.NewVector(2)
 	p.Gfcn(gAna, x)
-	chk.DerivScaVec(tst, "Gfcn", 1e-7, gAna, x, 1e-3, chk.Verbose, func(xx []float64) float64 { return p.Ffcn(xx) })
+	chk.DerivScaVec(tst, "Gfcn", 1.67e-7, gAna, x, 1e-3, chk.Verbose, func(xx []float64) float64 { return p.Ffcn(xx) })
 
 	// plot
 	if chk.Verbose {

@@ -29,6 +29,9 @@ func TestShp01(tst *testing.T) {
 		if ctypeindex == TypeTri10 {
 			tol = 1e-14
 		}
+		if ctypeindex == TypeQua12 {
+			tol = 6.67e-16
+		}
 		checkShape(tst, ctypeindex, tol, chk.Verbose)
 
 		// check dSdR

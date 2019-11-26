@@ -118,5 +118,5 @@ func TestConjGrad04(tst *testing.T) {
 	x0 := la.NewVectorSlice([]float64{1.3, 0.7, 0.8, 1.9, 1.2})
 
 	// run test
-	runConjGradTest(tst, "conjgrad04", p, x0, 1e-13, 1e-6)
+	runConjGradTest(tst, "conjgrad04", p, x0, 3.68e-13, 1.06e-6)
 }

@@ -159,7 +159,7 @@ func TestBrent03(tst *testing.T) {
 	io.Pforan("f(x)   = %v\n", y)
 	io.Pforan("nit    = %v\n", o.NumIter)
 	io.Pforan("nfeval = %v\n", o.NumFeval)
-	chk.Float64(tst, "xcorrect", 1e-8, x, xcor)
+	chk.Float64(tst, "xcorrect", 1.18e-8, x, xcor)
 
 	xd := o.MinUseD(xa, xb)
 	io.Pf("xd     = %v (correct=%g)\n", xd, xcor)

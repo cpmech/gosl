@@ -358,11 +358,20 @@ func Test_binomial02(tst *testing.T) {
 		for j, b := range bValues {
 			res := Rbinomial(a, b)
 			tol := 1e-15
-			if i == 2 && j == 0 {
-				tol = 1e-9
-			}
-			if i == 2 && j == 2 {
-				tol = 1e-5 // for MacBook Air
+			if i == 2 {
+				switch j {
+				case 0:
+					tol = 1e-9
+					break
+				case 1:
+					tol = 2.3e-13  // For aarch64
+					break
+				case 2:
+					tol = 1e-5 // for MacBook Air
+					break
+				default:
+					tst.Errorf("Unexpected key value: %d\n", j)
+				}
 			}
 			chk.AnaNum(tst, io.Sf("Rbinomial(%g,%g)", a, b), tol, res, answers[i][j], chk.Verbose)
 		}

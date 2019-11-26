@@ -166,7 +166,7 @@ func TestChebyInterp02(tst *testing.T) {
 	io.Pf("u  = %.6f\n", u)
 	io.Pfyel("ub = %.6f\n", ub)
 	io.Pfyel("cf = %.6f\n", o.CoefI)
-	chk.Array(tst, "ub", 1e-15, ub, o.CoefI)
+	chk.Array(tst, "ub", 1.05e-15, ub, o.CoefI)
 
 	// check inversion
 	uu := la.NewVector(np)
