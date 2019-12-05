@@ -12,5 +12,8 @@ package mpi
 
 #cgo darwin CFLAGS: -I/usr/local/Cellar/open-mpi/4.0.1_2/include
 #cgo darwin LDFLAGS: -L/usr/local/opt/libevent/lib -L/usr/local/Cellar/open-mpi/4.0.1_2/lib -lmpi
+
+#cgo freebsd CFLAGS: -I/usr/local/include
+#cgo freebsd LDFLAGS: -L/usr/local/lib -lmpi
 */
 import "C"
