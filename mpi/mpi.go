@@ -23,7 +23,10 @@ MPI_Status*  StIgnore  = MPI_STATUS_IGNORE;
 */
 import "C"
 
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
 
 // IsOn tells whether MPI is on or not
 //  NOTE: this returns true even after Stop
@@ -39,6 +42,16 @@ func IsOn() bool {
 // Start initialises MPI
 func Start() {
 	C.MPI_Init(nil, nil)
+}
+
+// StartThreadSafe initialises MPI thread safe
+func StartThreadSafe() error {
+	var r int32
+	C.MPI_Init_thread(nil, nil, C.MPI_THREAD_MULTIPLE, (*C.int)(unsafe.Pointer(&r)))
+	if r != C.MPI_THREAD_MULTIPLE {
+		return fmt.Errorf("MPI_THREAD_MULTIPLE can't be set: got %d", r)
+	}
+	return nil
 }
 
 // Stop finalises MPI
