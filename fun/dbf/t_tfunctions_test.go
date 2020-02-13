@@ -450,7 +450,7 @@ func Test_ts13(tst *testing.T) {
 
 	sktol := 1e-17
 	dtol := 1e-10
-	dtol2 := 1e-10
+	dtol2 := 1.48e-10
 	ver := chk.Verbose
 	tskip := []float64{1, 4}
 	CheckDerivT(tst, pulse, tmin, tmax, xcte, 11, tskip, sktol, dtol, dtol2, ver)

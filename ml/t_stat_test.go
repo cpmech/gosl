@@ -71,6 +71,6 @@ func TestStat01(tst *testing.T) {
 	// s and t sums
 	io.Pl()
 	s, t := stat.SumVars()
-	chk.Array(tst, "s = sum(X)", 1e-15, s, []float64{23.92})
+	chk.Array(tst, "s = sum(X)", 3.56e-15, s, []float64{23.92})
 	chk.Float64(tst, "t = sum(y)", 1e-15, t, 1843.21)
 }

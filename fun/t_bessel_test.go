@@ -141,7 +141,7 @@ func TestBessel02(tst *testing.T) {
 	io.Pl()
 	for i, x := range dat["x"] {
 		I0 := ModBesselI0(x)
-		chk.Float64(tst, io.Sf("I0(%11.8f)=%23.15e", x, I0), 1e-8, I0, dat["I0"][i])
+		chk.Float64(tst, io.Sf("I0(%11.8f)=%23.15e", x, I0), 1.12e-8, I0, dat["I0"][i])
 	}
 
 	// check I1

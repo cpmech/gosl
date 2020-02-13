@@ -159,7 +159,7 @@ func TestSpUmfpack04(tst *testing.T) {
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-5, 1e-9, true, false, nil)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 2.7e-5, 1e-9, true, false, nil)
 }
 
 func TestSpUmfpack05(tst *testing.T) {
