@@ -23,7 +23,7 @@ import (
 func EqCubicSolveReal(a, b, c float64) (x1, x2, x3 float64, nx int) {
 
 	// tolerance
-	ϵ := 1e-14
+	ϵ := 1.4e-9
 
 	// auxiliary
 	aa := a * a
