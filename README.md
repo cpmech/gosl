@@ -12,6 +12,8 @@ Scientific Computations.
 <p><a href="examples/figs/gosl-collage1.jpg"><img src="examples/figs/gosl-collage1-sml.png"></a></p>
 </div>
 
+**NOTICE** 2020-02-14 Thank you, Contributors!!! 😃
+
 The library tries to be as general and as _easy_ as possible. Gosl considers the use of both Go
 concurrency routines and parallel computing using the message passing interface (MPI). Gosl has
 several modules (sub-packages) for a variety of tasks in scientific computing, image analysis, and
