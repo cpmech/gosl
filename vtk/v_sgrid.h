@@ -57,7 +57,7 @@ public:
     void SetPoint (int i, const double x[3]) { if (_initialized) _points->SetPoint(i, x); }
     
     // Additional access methods
-    vtkStructuredGrid * GetGrid() const { if (_initialized) return _sgrid; }
+    vtkStructuredGrid * GetGrid() const { if (_initialized) return _sgrid; return NULL; }
 
     // Methods
     void ShowWire    ()             { if (_initialized) _sgrid_actor->GetProperty()->SetRepresentationToWireframe(); }
