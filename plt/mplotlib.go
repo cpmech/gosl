@@ -792,9 +792,13 @@ func run(fn string) {
 
 	// write file
 	io.WriteFile(TemporaryDir, &bufferEa, &bufferPy)
+	python := os.Getenv("PYTHON")
+	if python == "" {
+		python = "python"
+	}
 
 	// set command
-	cmd := exec.Command("python", TemporaryDir)
+	cmd := exec.Command(python, TemporaryDir)
 	var out, serr bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &serr
