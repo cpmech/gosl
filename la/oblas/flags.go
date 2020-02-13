@@ -6,7 +6,7 @@ package oblas
 
 /*
 #cgo linux CFLAGS: -O2 -I/usr/local/include
-#cgo linux LDFLAGS: -lopenblas -llapacke -L/local/lib
+#cgo linux LDFLAGS: -lopenblas -llapacke -L/usr/local/lib
 
 #cgo windows CFLAGS: -O2
 #cgo windows LDFLAGS: -lopenblas -lgfortran
