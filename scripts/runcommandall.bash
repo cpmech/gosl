@@ -119,15 +119,9 @@ depgraph(){
 
 fixreadme() {
     pkg=$1
-    old="https://godoc.org/github.com/cpmech/gosl/${pkg}"
-    new="https://pkg.go.dev/github.com/cpmech/gosl/${pkg}"
-    sed -i 's,'"$old"','"$new"',' README.md
-
-    # prepend link before key
-    #key="More information is available in"
-    #lnk="[![GoDoc](https://godoc.org/github.com/cpmech/gosl/${pkg}?status.svg)](https://godoc.org/github.com/cpmech/gosl/${pkg})"
-    #lnk=$(echo "$lnk" | sed 's/\//\\\//g')
-    #sed -i "/More information is available in/i $lnk \n" README.md
+    #old="https://godoc.org/github.com/cpmech/gosl/${pkg}"
+    #new="https://pkg.go.dev/github.com/cpmech/gosl/${pkg}"
+    #sed -i 's,'"$old"','"$new"',' README.md
 }
 
 if [[ $JOB == 6 ]]; then # graphs

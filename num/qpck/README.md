@@ -1,6 +1,6 @@
 # Gosl. num/qpck. Wrapper to QUADPACK
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/num/qpck?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/num/qpck) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/num/qpck)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/num/qpck).**
 
@@ -8,9 +8,6 @@ This package wraps the QUADPACK package written in FORTRAN to compute definite o
 integrals.
 
 The code here was obtained from the [SciPy version](https://github.com/scipy/scipy/tree/master/scipy/integrate/quadpack).
-
-
-
 
 ## Original Readme
 
@@ -119,20 +116,18 @@ use a request like  "send dqag from quadpack slatec".
 [see also toms/691]
 ```
 
-
-
 ## Original doc file
 
-This version obtained on 1 Jun 84 from    (kahaner@nbs-sdc)
-   David K. Kahaner
-   Scientific Computing Division
-   National Bureau of Standards
-   Washington DC 20234
+This version obtained on 1 Jun 84 from (kahaner@nbs-sdc)
+David K. Kahaner
+Scientific Computing Division
+National Bureau of Standards
+Washington DC 20234
 
 WARNING: the calling sequences here differ from those in the book:
-  R. Piessens, E. deDoncker-Kapenga, C. Uberhuber, D. Kahaner
-  Quadpack: a Subroutine Package for Automatic Integration
-  Springer Verlag, 1983.    Series in Computational Mathematics v.1
+R. Piessens, E. deDoncker-Kapenga, C. Uberhuber, D. Kahaner
+Quadpack: a Subroutine Package for Automatic Integration
+Springer Verlag, 1983. Series in Computational Mathematics v.1
 
 ```
 See also:

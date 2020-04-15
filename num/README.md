@@ -1,6 +1,6 @@
 # Gosl. num. Fundamental numerical methods
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/num?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/num) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/num)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/num).**
 
@@ -13,20 +13,21 @@ implements few (simpler) methods to compute numerical integrals. Here, there are
 algorithms: (1) basic methods for discrete data; and (2) using refinment for integrating general
 functions.
 
-
-
 ## Example: Using Brent's method:
 
 Find the root of
+
 ```
     y(x) = x³ - 0.165 x² + 3.993e-4
 ```
+
 within [0, 0.11]. We have to make sure that the root is bounded otherwise Brent's method doesn't
 work.
 
 Source: <a href="../examples/num_brent01.go">../examples/num_brent01.go</a>
 
 Output of Brent's solution:
+
 ```
   it                      x                   f(x)                    err
                                                                   1.0e-14
@@ -49,14 +50,14 @@ niter. = 6
 Simple root finding problem solved by Brent's method.
 </div>
 
-
-## Example:  Using Newton's method:
+## Example: Using Newton's method:
 
 Same problem as before.
 
 Source: <a href="../examples/num_newton01.go">../examples/num_newton01.go</a>
 
 Output of NlSolver:
+
 ```
   it                    Ldx                 fx_max
                   (1.0e-04)              (1.0e-09)
@@ -77,8 +78,6 @@ niter. = 2
 Simple root finding problem solved by Newton's method.
 </div>
 
-
-
 ## Example: Quadrature with discrete data
 
 Source code: <a href="t_quadDisc_test.go">t_quadDisc_test.go</a>
@@ -87,30 +86,27 @@ Source code: <a href="t_quadDisc_test.go">t_quadDisc_test.go</a>
 
 Source code: <a href="t_quadElem_test.go">t_quadElem_test.go</a>
 
-
-
 ## Example: numerical differentiation
 
 Check first and second derivative of `y(x) = sin(x)`
 
 See source code: <a href="../examples/num_deriv01.go">num_deriv01.go</a>
 
-
-
 ## Examples: nonlinear problems
 
 Source code: <a href="t_nlsolver_test.go">t_nlsolver_test.go</a>
 
 Find `x0` and `x1` such that `f0` and `f1` are zero, with:
+
 ```
 f0(x0,x1) = 2.0*x0 - x1 - exp(-x0)
 f1(x0,x1) = -x0 + 2.0*x1 - exp(-x1)
 ```
 
-
 ### Using analytical (sparse) Jacobian matrix
 
 Output:
+
 ```
   it                    Ldx                 fx_max
                   (1.0e-05)              (1.0e-15)
@@ -126,10 +122,10 @@ x    = [0.5671432904097838 0.5671432904097838]  expected = [0.5671 0.5671]
 f(x) = [-1.1102230246251565e-16 -1.1102230246251565e-16]
 ```
 
-
 ### Using numerical Jacobian matrix
 
 Output:
+
 ```
   it                    Ldx                 fx_max
                   (1.0e-05)              (1.0e-15)
@@ -145,10 +141,10 @@ xx    = [0.5671432904097838 0.5671432904097838]  expected = [0.5671 0.5671]
 f(xx) = [-1.1102230246251565e-16 -1.1102230246251565e-16]
 ```
 
-
 ### Using analytical dense Jacobian matrix
 
 Just replace `Jfcn` with
+
 ```
 JfcnD := func(dfdx [][]float64, x []float64) error {
     dfdx[0][0] = 2.0+math.Exp(-x[0])

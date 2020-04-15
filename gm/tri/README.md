@@ -1,6 +1,6 @@
 # Gosl. gm/tri. Mesh generation: triangles
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/gm/tri?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/gm/tri) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/gm/tri)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/gm/tri).**
 
@@ -14,6 +14,7 @@ In addition of being very fast, `Triangle` can generate meshes with great qualit
 **quality-mesh triangulator**.
 
 Here, the Cartesian coordinates of points are stored in continuous 1D arrays (slices) such as:
+
 ```
 X = { x0, x1, x2, ... Npoints }
 Y = { y0, y1, y2, ... Npoints }
@@ -21,14 +22,14 @@ Y = { y0, y1, y2, ... Npoints }
 
 The topology is simply defined by two slices usually named `V` for vertices and `C` for cells
 (triangles):
+
 ```
 V = { { x0, y0 }, { x1, y1 }, { x2, y2 } ... Nvertices }
 C = { { id0, id1, id2 }, { id0, id1, id2 } ... Ncellls }
 ```
+
 where `V` is the list of vertices (there are Nvertices vertices) and `C` is the list of triangles
 (there are Ncells triangles). The ids (e.g. id0, id1, id2) in `C` are the indices in `V`.
-
-
 
 ## Draw mesh
 
@@ -53,8 +54,6 @@ C := [][]int{
 ```
 
 Source code: <a href="../../examples/tri_draw01.go">../../examples/tri_draw01.go</a>
-
-
 
 ## Delaunay triangulation
 

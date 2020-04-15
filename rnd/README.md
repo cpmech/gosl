@@ -1,6 +1,6 @@
 # Gosl. rnd. Random numbers and probability distributions
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/rnd?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/rnd) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/rnd)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/rnd).**
 
@@ -15,6 +15,7 @@ random generation functions have an equivalent function wrapping the Mersenne Tw
 Mutsuo Saito and Makoto Matsumoto.
 
 Some useful functions are:
+
 1. `Init` initialise the system with a seed
 2. `Int`, `Ints`, `Float64`, `Float64s` to generate integers and floats
 3. Shuffle and GetUnique functions to shuffle slices and filter slices with unique values,
@@ -24,6 +25,7 @@ Some useful functions are:
 
 The probability distributions in the `rnd` package are initialised with the help of the `VarData`
 structure that contains the following main fields:
+
 ```go
 // input
 D DistType // type of distribution
@@ -41,11 +43,12 @@ Max float64 // max value
 ```
 
 The currently available distributions are:
-1. `NormalKind`    Normal distribution
+
+1. `NormalKind` Normal distribution
 2. `LognormalKind` Lognormal distribution
-3. `GumbelKind`    Type I Extreme Value distribution
-4. `FrechetKind`   Type II Extreme Value distribution
-5. `UniformKind`   Uniform distribution
+3. `GumbelKind` Type I Extreme Value distribution
+4. `FrechetKind` Type II Extreme Value distribution
+5. `UniformKind` Uniform distribution
 
 ## Sampling algorithms: Halton and Latin Hypercube methods
 
@@ -55,8 +58,6 @@ hypercube.
 The `LatinIHS` function implements the Latin improved distributed hypercube sampling method. The
 results are the indices of points. The point coordinates can be computed with the `HypercubeCoords`
 function.
-
-
 
 ## Examples
 
@@ -93,7 +94,6 @@ time elapsed = 3.259988ms
   count = 100000
 ```
 
-
 ### Generate samples based on the Lognormal distribution
 
 Source code: <a href="../examples/rnd_lognormalDistribution.go">../examples/rnd_lognormalDistribution.go</a>
@@ -101,7 +101,6 @@ Source code: <a href="../examples/rnd_lognormalDistribution.go">../examples/rnd_
 <div id="container">
 <p><img src="../examples/figs/rnd_lognormalDistribution.png" width="500"></p>
 </div>
-
 
 ### Example: sampling algorithms
 

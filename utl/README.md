@@ -1,6 +1,6 @@
 # Gosl. utl. Utilities. Lists. Dictionaries. Simple Numerics
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/utl?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/utl) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/utl)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/utl).**
 
@@ -15,16 +15,17 @@ in the 3D space. It also tries to use the best algorithms for sorting that are i
 standard Go library and others.
 
 Example of what the functions here can do:
-* Generate lists of integers
-* Generate lists of float64s
-* Cumulative sums
-* Handling tables of float64s
-* Pareto fronts
-* Slices and deep (nested) slices up to the 4th depth
-* Allocate deep slices
-* Serialization of deep slices
-* Sorting
-* Maps and _dictionaries_
-* Append to maps of slices of float64
-* Find the _best square_ for given `size = numberOfRows * numberOfColumns`
-* ...
+
+- Generate lists of integers
+- Generate lists of float64s
+- Cumulative sums
+- Handling tables of float64s
+- Pareto fronts
+- Slices and deep (nested) slices up to the 4th depth
+- Allocate deep slices
+- Serialization of deep slices
+- Sorting
+- Maps and _dictionaries_
+- Append to maps of slices of float64
+- Find the _best square_ for given `size = numberOfRows * numberOfColumns`
+- ...

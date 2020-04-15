@@ -1,6 +1,6 @@
 # Gosl. gm/msh. Mesh generation and Delaunay triangulation
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh).**
 
@@ -10,7 +10,6 @@ More information is available in **[the documentation of this package](https://p
 <p><img src="data/meshelems1.png"></p>
 Nodes, edges and faces numbering convention.
 </div>
-
 
 ### Quadrilaterals and Hexahedra
 
@@ -55,13 +54,13 @@ Nodes, edges and faces numbering convention.
    ,+--y         +----------------+
  x'            ,'|              ,'|
            4 ,'  |8          6,'  |
-           ,'    |          ,'    |   
+           ,'    |          ,'    |
          ,'      |   5    ,'      |11
        +'===============+'        |
        |         |      |         |
        |         |      |  3      |
        |         .- - - | -  - - -+
-      9|       ,'       |       ,' 
+      9|       ,'       |       ,'
        |    0,'         |10   ,'
        |   ,'           |   ,' 2
        | ,'             | ,'
@@ -69,15 +68,13 @@ Nodes, edges and faces numbering convention.
                1
 ```
 
-
-
 ### Triangles and Tetrahedra
 
 ```
   2D:
              Nodes                      Edges
-                               
-   y           2               
+
+   y           2
    |           @                          @
    +--x       / \                        / \
            5 /   \ 4                    /   \
@@ -89,7 +86,7 @@ Nodes, edges and faces numbering convention.
 
 
   3D:              Nodes                                     Faces
-    z   
+    z
     |                |                                          |
    ,+--y             3                                          +
  x'                 /|`.                                       /|`.
@@ -115,10 +112,10 @@ Nodes, edges and faces numbering convention.
           |/      ,.-``                              |/      ,.-``
           /  _,-``                                   /  _,-``
          1 '`                                       +.'`
-         
+
     3D:
          Seams (aka edges)
-                                             
+
                |
                +
               /|`.
@@ -143,5 +140,5 @@ Nodes, edges and faces numbering convention.
      '/          ,-'`   1
     |/      ,.-``
     /  _,-``
-   +.'` 
+   +.'`
 ```

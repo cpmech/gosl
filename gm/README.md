@@ -1,6 +1,6 @@
 # Gosl. gm. Geometry algorithms and structures
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/gm?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/gm) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/gm)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/gm).**
 
@@ -20,8 +20,6 @@ Source code: <a href="../examples/gm_bezier01.go">../examples/gm_bezier01.go</a>
 <p><img src="../examples/figs/gm_bezier01.png" width="400"></p>
 </div>
 
-
-
 ## B-spline curve and control net
 
 Source code: <a href="../examples/gm_bspline01.go">../examples/gm_bspline01.go</a>
@@ -30,8 +28,6 @@ Source code: <a href="../examples/gm_bspline01.go">../examples/gm_bspline01.go</
 <p><img src="../examples/figs/gm_bspline01.png" width="400"></p>
 </div>
 
-
-
 ## NURBS curve: quarter of Circle
 
 Source code: <a href="../examples/gm_nurbs01.go">../examples/gm_nurbs01.go</a>
@@ -39,8 +35,6 @@ Source code: <a href="../examples/gm_nurbs01.go">../examples/gm_nurbs01.go</a>
 <div id="container">
 <p><img src="../examples/figs/gm_nurbs01.png" width="500"></p>
 </div>
-
-
 
 ## NURBS curve: circle
 

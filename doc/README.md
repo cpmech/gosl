@@ -8,7 +8,7 @@ considered.
 [See the documentation](https://pkg.go.dev/github.com/cpmech/gosl) for more details (e.g. how to call
 functions and use structures).
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl)
 
 ## Installation
 

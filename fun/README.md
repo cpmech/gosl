@@ -1,6 +1,6 @@
 # Gosl. fun. Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/fun?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/fun) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/fun)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/fun).**
 

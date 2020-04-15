@@ -1,6 +1,6 @@
 # Gosl. ml. Machine Learning
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/ml?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/ml) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/ml)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/ml).**
 
@@ -81,24 +81,27 @@ plt.Save("/tmp/gosl", "ml_simple01")
 ### Output of some examples
 
 Simple
+
 <div id="container">
 <p><img src="../examples/figs/ml_simple01.png" width="500"></p>
 </div>
 
 Prof A Ng's Test 1
+
 <div id="container">
 <p><img src="../examples/figs/ml_ang01.png" width="500"></p>
 </div>
 
 Prof A Ng's Test 2
+
 <div id="container">
 <p><img src="../examples/figs/ml_ang02.png" width="500"></p>
 </div>
 
-
 ## K-means Clustering
 
 Prof A Ng's Test 1
+
 <div id="container">
 <p><img src="../examples/figs/ml_kmeans01.png" width="500"></p>
 </div>

@@ -1,6 +1,6 @@
 # Gosl. io. Input/output, read/write files, and print commands
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/io?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/io) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/io)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/io).**
 
@@ -8,7 +8,6 @@ This subpackage helps with reading and writing files, printing nice formatted me
 colours), and parsing strings.
 
 It has also functions to generate TeX reports.
-
 
 ## Examples
 

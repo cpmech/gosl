@@ -1,18 +1,17 @@
 # Gosl. gm. Graph theory structures and algorithms
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/graph?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/graph) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/graph)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/graph).**
 
 This package implements algorithms for handling graphs and solving problems such as shortest path
 finding. It also implements an algorithm to solve the assignment problem.
 
-
-
 ## Graph representation
 
 In `graph`, directed graphs are mainly defined by edges. A weight can be assigned to each edge as
 well. For example, the graph below:
+
 ```
           [10]
      0 ––––––––→ 3      numbers in parentheses
@@ -23,7 +22,9 @@ well. For example, the graph below:
      1 ––––––––→ 2      indicate weights
           [3]
 ```
+
 is defined with the following code:
+
 ```go
 var G Graph
 G.Init(
@@ -37,12 +38,11 @@ G.Init(
 Vertex coordinates can be specified as well. Furthermore, weights can be assigned to vertices. These
 are useful when computing distances, for example.
 
-
-
 ## Floyd-Warshall algorithm to compute shortest paths
 
 The `ShortestPaths` method of `Graph` computes the shortest paths using the Floyd-Warshall
 algorithm. For example, the graph above has the following distances matrix:
+
 ```
        [10]
     0 ––––––→ 3            numbers in brackets
@@ -62,8 +62,6 @@ graph:  j= 0  1  2  3
 
 After running the `ShortestPaths` command, paths from source (s) to destination (t) can be extracted
 with the `Path` method.
-
-
 
 ### Example: Small graph
 
@@ -130,8 +128,6 @@ Source code: <a href="../examples/graph_shortestpaths01.go">../examples/graph_sh
 <div id="container">
 <p><img src="../examples/figs/graph_shortestpath01.png" width="250"></p>
 </div>
-
-
 
 ### Example: Sioux Falls
 
@@ -207,9 +203,6 @@ Source code: <a href="../examples/graph_siouxfalls01.go">../examples/graph_sioux
 <p><img src="../examples/figs/graph_siouxfalls01.png" width="500"></p>
 </div>
 
-
-
-
 ## Munkres (Hungarian algorithm): the assignment problem
 
 The Munkres method, also known as the Hungarian algorithm, aims to solve the assignment problem;
@@ -278,6 +271,7 @@ io.Pf("cost = %v  (optimal 13938)\n", -mnk.Cost)
 ```
 
 Output:
+
 ```
 links = [9 10 7 4 3 0 13 2 14 11 6 5 12 8 1]
 cost = 13938  (optimal 13938)

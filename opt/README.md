@@ -1,6 +1,6 @@
 # Gosl. opt. Solvers for optimisation problems
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/opt?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/opt) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/opt)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/opt).**
 
@@ -9,26 +9,23 @@ This package provides routines to solve optimisation problems. The methods Conju
 unconstrained nonlinear problems. Linear programming problems can be solved with the Interior-Point
 Method for linear problems `LinIpm`.
 
-*Auxiliary structures*
+_Auxiliary structures_
 
-* History -- holds history of numerical optimization
-* Factory -- holds some pre-configured optimization problems
-* Problem -- defines functions required for each optimization problem
-* Convergence -- holds the objective and gradient functions and some control parameters to assess
+- History -- holds history of numerical optimization
+- Factory -- holds some pre-configured optimization problems
+- Problem -- defines functions required for each optimization problem
+- Convergence -- holds the objective and gradient functions and some control parameters to assess
   the convergence of the nonlinear solver. An instance of History is also recorded here.
 
-*Nonlinear problems*
+_Nonlinear problems_
 
-* ConjGrad -- conjugate gradients
-* Powell -- Powell's method
-* GradDesc -- gradient descent
+- ConjGrad -- conjugate gradients
+- Powell -- Powell's method
+- GradDesc -- gradient descent
 
 These structures are instantiated with a given objective function and its gradient. They are all
 instances of Convergence and thus use the control parameters from there. The method `Min` can be
-called to solve the problem. 
-
-
-
+called to solve the problem.
 
 ## Conjugate Gradients, Powell, Gradient Descent
 
@@ -52,8 +49,6 @@ Source code: <a href="../examples/opt_conjgrad01.go" width="600">opt_conjgrad01.
 <p><img src="../examples/figs/opt_conjgrad01.png"></p>
 </div>
 
-
-
 ## Interior-point method for linear problems
 
 ```
@@ -73,8 +68,6 @@ initialised with the `Init` command and by giving the matrix of constraint coeff
 right-hand side vector (b) of the constraints, and the vector defining the minimisation problem (c).
 
 The matrix `A` is given as compressed-column sparse for efficiency purposes.
-
-
 
 ### Example 1
 
@@ -124,6 +117,7 @@ as matrix:
 Source code: <a href="../examples/opt_ipm01.go">../examples/opt_ipm01.go</a>
 
 Output:
+
 ```
 A =
      2     1     1     0
@@ -150,8 +144,6 @@ b(check) = [2.9999999980796686 2.9999999991580326]
 <div id="container">
 <p><img src="../examples/figs/opt_ipm01.png" width="500"></p>
 </div>
-
-
 
 ### Example 2
 
@@ -190,6 +182,7 @@ standard (step 2)
 Source code: <a href="../examples/opt_ipm02.go">../examples/opt_ipm02.go</a>
 
 Output:
+
 ```
 A =
     -1     1     1     0     0     1

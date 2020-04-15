@@ -1,6 +1,6 @@
 # Gosl. la. Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions, etc.
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/la?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/la) 
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/la)
 
 More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/la).**
 
@@ -16,11 +16,11 @@ The other subpackages [la/oblas](https://github.com/cpmech/gosl/tree/master/la/o
 [la/mkl](https://github.com/cpmech/gosl/tree/master/la/mkl) are sometimes called by `la` to improve
 performance.
 
-
 ## Structures for sparse problems
 
 In `la`, there are two types of structures to hold data for solving a sparse linear system:
 _triplet_ and _column-compressed matrix_. Both have a complex version and are named as follows:
+
 1. `Triplet` and `TripletC` (complex)
 2. `CCMatrix` and `CCMatrixC` (complex)
 
@@ -43,6 +43,7 @@ matrix) into the positions starting with the maximum number of columns of this s
 positions starting with the maximum number of rows of this second matrix. This is done with the
 method `PutMatAndMatT`. This operation is particularly common when solving mechanical problems with
 Lagrange multipliers and can be illustrated as follows:
+
 ```
 [... ... ... a00 a10 ...] 0
 [... ... ... a01 a11 ...] 1
@@ -51,23 +52,24 @@ Lagrange multipliers and can be illustrated as follows:
 [a10 a11 a12 ... ... ...] 4      [.  .  .]
 [... ... ... ... ... ...] 5
 ```
-The version in which the second matrix is a column-compressed matrix is named `PutCCMatAndMatT`.
 
+The version in which the second matrix is a column-compressed matrix is named `PutCCMatAndMatT`.
 
 ## Linear solvers for sparse problems
 
 `SparseSolver` defines an interface for linear solvers in `la`. Two implementations satisfying this
 interface are:
+
 1. `Umfpack` wrapper to Umfpack; and
 2. `Mumps` wrapper to MUMPS
 
 There are also _high level_ functions to solve linear systems with Umfpack:
+
 1. `SpSolve`; and
 2. `SpSolveC` with complex numbers
 
 Note however that the high level functions shouldn't be used for repeated executions because memory
 would be constantly allocated and deallocated.
-
 
 ## Examples
 
@@ -96,6 +98,7 @@ would be constantly allocated and deallocated.
 <a href="t_jacobi_test.go">source file</a>
 
 ### Sparse BLAS functions
+
 <a href="t_sp_blas_test.go">source file</a>
 
 ### Conversions related to sparse matrices
