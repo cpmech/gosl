@@ -60,7 +60,7 @@ func LatinIHS(dim, n, d int) (x [][]int) {
 	var minAll, minCan, dist float64
 
 	// constant
-	r8huge := 1.0E+30
+	r8huge := 1.0e+30
 
 	// slices
 	avail := make([]int, dim*n)

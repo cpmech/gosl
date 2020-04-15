@@ -364,7 +364,7 @@ func Test_binomial02(tst *testing.T) {
 					tol = 1e-9
 					break
 				case 1:
-					tol = 2.3e-13  // For aarch64
+					tol = 2.3e-13 // For aarch64
 					break
 				case 2:
 					tol = 1e-5 // for MacBook Air
