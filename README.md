@@ -1,6 +1,6 @@
 # Gosl &ndash; Go scientific library
 
-[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl)
 [![Build Status](https://travis-ci.org/cpmech/gosl.svg?branch=master)](https://travis-ci.org/cpmech/gosl)
 [![Go Report Card](https://goreportcard.com/badge/github.com/cpmech/gosl)](https://goreportcard.com/report/github.com/cpmech/gosl)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/avelino/awesome-go)
