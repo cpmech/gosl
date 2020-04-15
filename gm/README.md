@@ -1,8 +1,8 @@
 # Gosl. gm. Geometry algorithms and structures
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl/gm?status.svg)](https://godoc.org/github.com/cpmech/gosl/gm) 
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/gm?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/gm) 
 
-More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/gm).**
+More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/gm).**
 
 This package provides some functions to help with the solution of geometry problems. It also
 includes some routines loosely related with geometry.

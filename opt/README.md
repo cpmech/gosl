@@ -1,8 +1,8 @@
 # Gosl. opt. Solvers for optimisation problems
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl/opt?status.svg)](https://godoc.org/github.com/cpmech/gosl/opt) 
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/opt?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/opt) 
 
-More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/opt).**
+More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/opt).**
 
 This package provides routines to solve optimisation problems. The methods Conjugate Gradients
 `ConjGrad`, Powell's method `Powell` and Gradient Descent `GradDesc` can be used to solve

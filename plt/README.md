@@ -1,8 +1,8 @@
 # Gosl. plt. Plotting and drawing (png and eps)
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl/plt?status.svg)](https://godoc.org/github.com/cpmech/gosl/plt) 
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/plt?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/plt) 
 
-More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/plt).**
+More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/plt).**
 
 This package provides several functions to draw figures, plot results and annotate graphs. `plt` has
 been largelly based on [matplotlib](https://matplotlib.org) and is, currently, a wrapper to

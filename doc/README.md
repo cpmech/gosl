@@ -5,12 +5,10 @@ and Software for Scientific Research. The library tries to be as general as poss
 concurrency for multi-threaded applications and message passing (MPI) for parallel computations are
 considered.
 
-[See the documentation](https://godoc.org/github.com/cpmech/gosl) for more details (e.g. how to call
+[See the documentation](https://pkg.go.dev/github.com/cpmech/gosl) for more details (e.g. how to call
 functions and use structures).
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl?status.svg)](https://godoc.org/github.com/cpmech/gosl)
-
-
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl)
 
 ## Installation
 
@@ -28,14 +26,12 @@ for installation instructions.
 </p>
 </div>
 
-
-
 ## White papers
 
 The following PDF files may help with understanding the implementation of some sub-packages.
 
 1. [Machine Learning](https://github.com/cpmech/gosl/blob/master/doc/machlearn.pdf)
-4. [Tensor Algebra, Calculus, and Definitions](https://github.com/cpmech/gosl/blob/master/doc/definitions.pdf)
-2. [Curvilinear Coordinates and Metrics](https://github.com/cpmech/gosl/blob/master/doc/metrics.pdf)
-3. [Transfinite Mapping](https://github.com/cpmech/gosl/blob/master/doc/transfinite.pdf)
+2. [Tensor Algebra, Calculus, and Definitions](https://github.com/cpmech/gosl/blob/master/doc/definitions.pdf)
+3. [Curvilinear Coordinates and Metrics](https://github.com/cpmech/gosl/blob/master/doc/metrics.pdf)
+4. [Transfinite Mapping](https://github.com/cpmech/gosl/blob/master/doc/transfinite.pdf)
 5. [Spectral Collocation](https://github.com/cpmech/gosl/blob/master/doc/spectral.pdf)

@@ -1,6 +1,6 @@
 # Gosl &ndash; Go scientific library
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl?status.svg)](https://godoc.org/github.com/cpmech/gosl)
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl)
 [![Build Status](https://travis-ci.org/cpmech/gosl.svg?branch=master)](https://travis-ci.org/cpmech/gosl)
 [![Go Report Card](https://goreportcard.com/badge/github.com/cpmech/gosl)](https://goreportcard.com/report/github.com/cpmech/gosl)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/avelino/awesome-go)
@@ -36,7 +36,7 @@ OpenCV in the works as well.
 
 1. [Examples](examples/README.md) and [benchmarks](examples/benchmark/README.md)
 2. [White papers](https://github.com/cpmech/gosl/tree/master/doc)
-3. [Documentation](https://godoc.org/github.com/cpmech/gosl)
+3. [Documentation](https://pkg.go.dev/github.com/cpmech/gosl)
 4. [Contributing and TODO](https://github.com/cpmech/gosl/blob/master/CONTRIBUTING.md)
 
 ## Installation
@@ -161,7 +161,7 @@ few sub-packages that use CGO. Also, some objects may need to be initialized bef
 case, functions named `Init` have to be called.
 
 The directories corresponding to each package have a README.md file that should help with
-understanding the library. Also, there are links to `godoc.org` where all functions, structures, and
+understanding the library. Also, there are links to `pkg.go.dev` where all functions, structures, and
 variables are well explained.
 
 ## Test coverage

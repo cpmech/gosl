@@ -1,8 +1,8 @@
 # Gosl. vtk. 3D Visualisation with the VTK tool kit
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl/vtk?status.svg)](https://godoc.org/github.com/cpmech/gosl/vtk) 
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/vtk?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/vtk) 
 
-More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/vtk).**
+More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/vtk).**
 
 This package uses the [Visualisation Toolkit](http://www.vtk.org) to generate interactive 3D
 visualisations.

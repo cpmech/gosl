@@ -1,8 +1,8 @@
 # Gosl. gm/msh. Mesh generation and Delaunay triangulation
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl/gm/msh?status.svg)](https://godoc.org/github.com/cpmech/gosl/gm/msh) 
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh) 
 
-More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/gm/msh).**
+More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh).**
 
 ## Shapes: Definitions
 

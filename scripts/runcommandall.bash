@@ -70,7 +70,8 @@ rnd/dsfmt \
 vtk \
 pde \
 examples \
-tools \
+tsr \
+ode \
 "
 
 rungofmt() {
@@ -118,9 +119,9 @@ depgraph(){
 
 fixreadme() {
     pkg=$1
-    #old="http://rawgit.com/cpmech/gosl/master/doc/xx${pkg/\//-}.html"
-    #new="https://godoc.org/github.com/cpmech/gosl/${pkg}"
-    #sed -i 's,'"$old"','"$new"',' README.md
+    old="https://godoc.org/github.com/cpmech/gosl/${pkg}"
+    new="https://pkg.go.dev/github.com/cpmech/gosl/${pkg}"
+    sed -i 's,'"$old"','"$new"',' README.md
 
     # prepend link before key
     #key="More information is available in"

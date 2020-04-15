@@ -1,8 +1,8 @@
 # Gosl. ml/imgd. Machine Learning: Functions to Handle Images
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl/ml/imgd?status.svg)](https://godoc.org/github.com/cpmech/gosl/ml/imgd) 
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/ml/imgd?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/ml/imgd) 
 
-More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/ml/imgd).**
+More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/ml/imgd).**
 
 This package contains some functions and structures to assists on Machine Learning works involving
 images.

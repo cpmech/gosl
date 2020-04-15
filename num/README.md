@@ -1,8 +1,8 @@
 # Gosl. num. Fundamental numerical methods
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl/num?status.svg)](https://godoc.org/github.com/cpmech/gosl/num) 
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/num?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/num) 
 
-More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/num).**
+More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/num).**
 
 This package implements essential numerical methods such as for root finding, numerical quadrature,
 numerical differentiation, and solution of simple nonlinear problems.

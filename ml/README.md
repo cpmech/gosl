@@ -1,8 +1,8 @@
 # Gosl. ml. Machine Learning
 
-[![GoDoc](https://godoc.org/github.com/cpmech/gosl/ml?status.svg)](https://godoc.org/github.com/cpmech/gosl/ml) 
+[![GoDoc](https://pkg.go.dev/github.com/cpmech/gosl/ml?status.svg)](https://pkg.go.dev/github.com/cpmech/gosl/ml) 
 
-More information is available in **[the documentation of this package](https://godoc.org/github.com/cpmech/gosl/ml).**
+More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/ml).**
 
 Package `ml` implements functions to develop Machine Learning algorithms. A goal is to handle large
 problems. Nonetheless, this package is on its early stages of development.
