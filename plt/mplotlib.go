@@ -676,7 +676,7 @@ func ZoomWindow(lef, bot, wid, hei float64, args *A) (axOld, axNew string) {
 	axOld = io.Sf("axOld%d", uid)
 	io.Ff(&bufferPy, "%s = plt.gca()\n", axOld)
 	axNew = io.Sf("axNew%d", uid)
-	io.Ff(&bufferPy, "%s = plt.axes([%g,%g,%g,%g], axisbg='%s')\n", axNew, lef, bot, wid, hei, clr)
+	io.Ff(&bufferPy, "%s = plt.axes([%g,%g,%g,%g], facecolor='%s')\n", axNew, lef, bot, wid, hei, clr)
 	return
 }
 
