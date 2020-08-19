@@ -7,7 +7,7 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/utl"
+	"gosl/utl"
 )
 
 // facNurbsT defines a structure to implement a factory of NURBS

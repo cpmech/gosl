@@ -5,8 +5,8 @@
 package dbf
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 // P holds numeric parameters defined by a name N and a value V.

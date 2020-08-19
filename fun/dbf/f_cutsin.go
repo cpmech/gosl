@@ -7,7 +7,7 @@ package dbf
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // CutSin implements a sine function such as:

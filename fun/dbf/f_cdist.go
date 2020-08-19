@@ -7,7 +7,7 @@ package dbf
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // Cdist implements the distance from point to a circle (2D) or a sphere (3D)

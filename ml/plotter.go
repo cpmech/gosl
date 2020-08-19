@@ -5,11 +5,11 @@
 package ml
 
 import (
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/fun"
+	"gosl/io"
+	"gosl/la"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 // Plotter plots results from Machine Learning models

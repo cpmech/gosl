@@ -23,9 +23,9 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/mpi"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/mpi"
 )
 
 // Mumps wraps the MUMPS solver

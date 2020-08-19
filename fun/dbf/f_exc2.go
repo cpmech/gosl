@@ -7,7 +7,7 @@ package dbf
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // Exc2 implements excitation # 2: y(t) = if t < ta a*sin(b*π*t), else 0

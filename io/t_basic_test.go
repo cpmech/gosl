@@ -7,7 +7,7 @@ package io
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 func TestBasic01(tst *testing.T) {

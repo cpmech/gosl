@@ -7,8 +7,8 @@ package plt
 import (
 	"math"
 
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
+	"gosl/io"
+	"gosl/utl"
 )
 
 // SetLabels3d sets x-y-z axes labels

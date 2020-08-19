@@ -7,7 +7,7 @@ package plt
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 func Test_draw01(tst *testing.T) {

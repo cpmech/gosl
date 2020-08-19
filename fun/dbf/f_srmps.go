@@ -7,7 +7,7 @@ package dbf
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // Srmps implements the increasing or decreasing smooth-ramp-smooth function

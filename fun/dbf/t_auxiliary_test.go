@@ -7,7 +7,7 @@ package dbf
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 func TestSetVzero(tst *testing.T) {

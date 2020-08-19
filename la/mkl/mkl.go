@@ -29,7 +29,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // SetNumThreads sets the number of threads in OpenBLAS

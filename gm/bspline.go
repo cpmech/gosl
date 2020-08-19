@@ -9,8 +9,8 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/utl"
 )
 
 // Bspline holds B-spline data

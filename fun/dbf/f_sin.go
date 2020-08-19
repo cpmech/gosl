@@ -7,7 +7,7 @@ package dbf
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // Sin implements y(t) = a * sin(b*t) + c

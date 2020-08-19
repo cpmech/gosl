@@ -8,12 +8,12 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/opt"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/fun/dbf"
+	"gosl/la"
+	"gosl/num"
+	"gosl/opt"
 )
 
 // LogReg implements a logistic regression model (Observer of Data)

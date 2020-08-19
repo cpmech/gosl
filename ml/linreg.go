@@ -5,10 +5,10 @@
 package ml
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/opt"
+	"gosl/chk"
+	"gosl/fun/dbf"
+	"gosl/la"
+	"gosl/opt"
 )
 
 // LinReg implements a linear regression model

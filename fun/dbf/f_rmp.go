@@ -4,7 +4,7 @@
 
 package dbf
 
-import "github.com/cpmech/gosl/chk"
+import "gosl/chk"
 
 // Rmp implements a ramp function
 type Rmp struct {

@@ -4,7 +4,7 @@
 
 package dbf
 
-import "github.com/cpmech/gosl/chk"
+import "gosl/chk"
 
 // Add implements the addition of two other functions.
 //  F(t, x) := A*Fa(t,x) + B*Fb(t,x)

@@ -7,8 +7,8 @@ package ml
 import (
 	"math"
 
-	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/la"
+	"gosl/gm"
+	"gosl/la"
 )
 
 // Kmeans implements the K-means model (Observer of Data)

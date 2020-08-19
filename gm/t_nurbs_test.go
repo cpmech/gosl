@@ -7,11 +7,11 @@ package gm
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 func TestNurbs01(tst *testing.T) {

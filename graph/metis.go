@@ -17,7 +17,7 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // MetisPartition performs graph partitioning using METIS

@@ -7,8 +7,8 @@ package ml
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/plt"
 )
 
 func TestKmeans01(tst *testing.T) {

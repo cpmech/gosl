@@ -5,7 +5,7 @@
 package al
 
 import (
-	"github.com/cpmech/gosl/io"
+	"gosl/io"
 )
 
 // Float64Queue implements a FIFO queue, a sequence where the first inserted will be the first removed.

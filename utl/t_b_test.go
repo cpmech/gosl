@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/cpmech/gosl/io"
+	"gosl/io"
 )
 
 var (

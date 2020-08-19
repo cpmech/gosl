@@ -5,8 +5,8 @@
 package tri
 
 import (
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
+	"gosl/io"
+	"gosl/plt"
 )
 
 // DrawVC draws mesh with given vertices in V (coordinates) and cells in C (connectivity)

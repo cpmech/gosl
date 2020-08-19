@@ -4,7 +4,7 @@
 
 package dbf
 
-import "github.com/cpmech/gosl/chk"
+import "gosl/chk"
 
 // Lin implements a linear function w.r.t t
 //  y = m * (t - ts)

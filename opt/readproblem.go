@@ -7,8 +7,8 @@ package opt
 import (
 	"strings"
 
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
+	"gosl/io"
+	"gosl/la"
 )
 
 // ReadLPfortran reads linear program from particular fortran file

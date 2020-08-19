@@ -5,9 +5,9 @@
 package msh
 
 import (
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/io"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 // DrawArgs holds drawing arguments

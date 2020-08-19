@@ -5,10 +5,10 @@
 package ml
 
 import (
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/opt"
+	"gosl/fun"
+	"gosl/fun/dbf"
+	"gosl/la"
+	"gosl/opt"
 )
 
 // LogRegMulti implements a logistic regression model for multiple classes (Observer of data)

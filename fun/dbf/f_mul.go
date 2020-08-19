@@ -4,7 +4,7 @@
 
 package dbf
 
-import "github.com/cpmech/gosl/chk"
+import "gosl/chk"
 
 // Mul implements the multiplication of two other functions.
 //  F(t, x) := fa(t,x) * fb(t,x)

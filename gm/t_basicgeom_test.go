@@ -8,8 +8,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func Test_basicgeom01(tst *testing.T) {

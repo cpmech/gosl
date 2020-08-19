@@ -8,9 +8,9 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/plt"
 )
 
 func TestGenerate01(tst *testing.T) {

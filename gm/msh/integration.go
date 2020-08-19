@@ -5,9 +5,9 @@
 package msh
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/la"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/la"
 )
 
 // Integrator implements methods to perform numerical integration over a polyhedron/polygon

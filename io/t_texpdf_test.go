@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 func Test_texpdf01(tst *testing.T) {

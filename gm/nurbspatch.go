@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/utl"
 )
 
 // PointExchangeData holds data for exchanging control points

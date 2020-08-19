@@ -11,8 +11,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 // TemporaryDir defines the default directory to save Python (matplotlib) files

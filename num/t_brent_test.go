@@ -8,12 +8,12 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/io"
+	"gosl/la"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 // rootSolTest runs root solution test

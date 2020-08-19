@@ -8,8 +8,8 @@ import (
 	"math"
 	"sort"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/utl"
 )
 
 // Pts is a function based on a linear interpolation over a set of points

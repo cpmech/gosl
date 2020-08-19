@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 func TestJacobi01(tst *testing.T) {

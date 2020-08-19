@@ -7,11 +7,11 @@ package opt
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/fun/dbf"
+	"gosl/io"
+	"gosl/la"
+	"gosl/plt"
 )
 
 func TestLineSearch01(tst *testing.T) {

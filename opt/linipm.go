@@ -8,11 +8,11 @@ package opt
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/fun/dbf"
+	"gosl/io"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // LinIpm implements the interior-point methods for linear programming problems

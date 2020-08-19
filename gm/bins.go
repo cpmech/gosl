@@ -7,10 +7,10 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 // consts

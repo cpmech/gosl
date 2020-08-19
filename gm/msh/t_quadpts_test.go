@@ -9,10 +9,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/num"
+	"gosl/plt"
 )
 
 func TestQuadpts01(tst *testing.T) {

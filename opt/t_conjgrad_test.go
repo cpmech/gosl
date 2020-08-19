@@ -7,10 +7,10 @@ package opt
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
+	"gosl/plt"
 )
 
 func checkConjGrad(tst *testing.T, sol *ConjGrad, fmin, fref, tolf, tolx float64, xmin, xref []float64) {

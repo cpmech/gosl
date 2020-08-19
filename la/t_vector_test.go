@@ -9,8 +9,8 @@ import (
 	"math/cmplx"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func TestVector01(tst *testing.T) {

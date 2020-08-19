@@ -4,7 +4,7 @@
 
 package ode
 
-import "github.com/cpmech/gosl/la"
+import "gosl/la"
 
 // Func defines the main function d{y}/dx = {f}(x, {y})
 //

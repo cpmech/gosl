@@ -5,9 +5,9 @@
 package opt
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 // TwoVarsFuncType defines a function to plot contours (len(x)==2)

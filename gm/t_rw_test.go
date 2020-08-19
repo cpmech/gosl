@@ -7,10 +7,10 @@ package gm
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/gm/rw"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/gm/rw"
+	"gosl/io"
+	"gosl/utl"
 )
 
 func testRWstep01(tst *testing.T) {

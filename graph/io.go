@@ -7,7 +7,7 @@ package graph
 import (
 	"strings"
 
-	"github.com/cpmech/gosl/io"
+	"gosl/io"
 )
 
 // ReadGraphTable reads data and allocate graph

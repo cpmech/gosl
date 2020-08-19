@@ -6,7 +6,7 @@
 
 package graph
 
-import "github.com/cpmech/gosl/chk"
+import "gosl/chk"
 
 // MetisPartition performs graph partitioning using METIS
 func MetisPartition(npart, nvert int, xadj, adjncy []int32, recursive bool) (objval int32, parts []int32) {

@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 func Test_bspline01(tst *testing.T) {

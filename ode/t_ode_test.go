@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/plt"
 )
 
 // Hairer-Wanner VII-p2 Eq.(1.1)

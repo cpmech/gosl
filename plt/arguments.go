@@ -7,7 +7,7 @@ package plt
 import (
 	"bytes"
 
-	"github.com/cpmech/gosl/io"
+	"gosl/io"
 )
 
 // The A structure holds arguments to configure plots, including style data for shapes (e.g. polygons)

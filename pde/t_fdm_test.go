@@ -7,12 +7,12 @@ package pde
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/fun/dbf"
+	"gosl/gm"
+	"gosl/io"
+	"gosl/la"
+	"gosl/plt"
 )
 
 func TestFdm01a(tst *testing.T) {

@@ -5,7 +5,7 @@
 // Package tsr implements Tensors using the smart approach by considering the Mandel's basis
 package tsr
 
-import "github.com/cpmech/gosl/la"
+import "gosl/la"
 
 // Tensor2 holds the (Orthonormal/Cartesian) components of a 2nd order tensor,
 // symmetric or not

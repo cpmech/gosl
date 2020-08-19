@@ -7,7 +7,7 @@ package io
 import (
 	"flag"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // ArgToFilename parses an argument as a filename

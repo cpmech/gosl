@@ -5,8 +5,8 @@
 package rnd
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func init() {

@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // GeneralOrthoPoly (main) structure ////////////////////////////////////////////////////////////////

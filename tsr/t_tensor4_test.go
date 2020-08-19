@@ -7,8 +7,8 @@ package tsr
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func TestTensor4set01(tst *testing.T) {

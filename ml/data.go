@@ -6,9 +6,9 @@
 package ml
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // Data holds data in matrix format; e.g. for regression computations

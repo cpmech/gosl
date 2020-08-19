@@ -7,7 +7,7 @@
 // Package mpi wraps the Message Passing Interface for parallel computations
 package mpi
 
-import "github.com/cpmech/gosl/chk"
+import "gosl/chk"
 
 // IsOn tells whether MPI is on or not
 //  NOTE: this returns true even after Stop

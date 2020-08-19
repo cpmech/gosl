@@ -7,8 +7,8 @@ package tri
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/plt"
 )
 
 func Test_tri01(tst *testing.T) {

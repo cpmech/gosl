@@ -4,7 +4,7 @@
 
 package tsr
 
-import "github.com/cpmech/gosl/la"
+import "gosl/la"
 
 // Tensor4 holds the (Orthonormal/Cartesian) components of a 4th order tensor,
 // full-symmetric or not.

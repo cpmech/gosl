@@ -3,10 +3,10 @@ package opt
 import (
 	"math"
 
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
+	"gosl/fun"
+	"gosl/fun/dbf"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // Convergence assists in checking the convergence of numerical optimizers

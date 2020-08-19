@@ -7,10 +7,10 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/num"
+	"gosl/plt"
 )
 
 // BezierQuad implements a quadratic Bezier curve

@@ -5,7 +5,7 @@
 package rnd
 
 import (
-	"github.com/cpmech/gosl/fun/dbf"
+	"gosl/fun/dbf"
 )
 
 // Variable holds all data defining a single random variable including information about a

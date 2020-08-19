@@ -7,11 +7,11 @@ package opt
 import (
 	"math"
 
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/fun"
+	"gosl/io"
+	"gosl/la"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 // History holds history of optmization using directiors; e.g. for Debugging

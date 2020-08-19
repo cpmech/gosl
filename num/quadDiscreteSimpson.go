@@ -5,8 +5,8 @@
 package num
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
+	"gosl/chk"
+	"gosl/fun"
 )
 
 // QuadDiscreteSimpsonRF approximates the area below the discrete curve defined by [xa,xy] range and

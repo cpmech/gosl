@@ -7,8 +7,8 @@ package ode
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/plt"
 )
 
 func TestBwEuler01a(tst *testing.T) {

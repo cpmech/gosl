@@ -5,7 +5,7 @@
 // Package al implements classical algorithms such as Queue, Stack and others
 package al
 
-import "github.com/cpmech/gosl/io"
+import "gosl/io"
 
 // StringLinkedNode defines a node in a Doubly Linked List
 type StringLinkedNode struct {

@@ -7,10 +7,10 @@ package opt
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/la"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 func TestFactObjs01(tst *testing.T) {

@@ -10,10 +10,10 @@ package dbf
 import (
 	"os"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 // T defines the interface for t-x functions; i.e. f(t, {x})

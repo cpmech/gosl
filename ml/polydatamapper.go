@@ -7,8 +7,8 @@ package ml
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la"
+	"gosl/chk"
+	"gosl/la"
 )
 
 // PolyDataMapper maps features to expanded polynomial

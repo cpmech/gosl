@@ -10,8 +10,8 @@ import (
 	"os"
 	"path"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 // GetGrayImage returns a gray image object

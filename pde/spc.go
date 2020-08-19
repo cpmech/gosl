@@ -5,11 +5,11 @@
 package pde
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/la"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/fun/dbf"
+	"gosl/gm"
+	"gosl/la"
 )
 
 // SpcLaplacian implements the Spectral Collocation (SPC) Laplacian operator (2D or 3D)

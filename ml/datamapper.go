@@ -4,7 +4,7 @@
 
 package ml
 
-import "github.com/cpmech/gosl/la"
+import "gosl/la"
 
 // DataMapper maps features into an expanded set of features
 type DataMapper interface {

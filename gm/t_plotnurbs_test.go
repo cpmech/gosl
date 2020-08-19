@@ -7,9 +7,9 @@ package gm
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 func Test_plotnurbs01(tst *testing.T) {

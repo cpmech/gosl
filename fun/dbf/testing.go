@@ -8,9 +8,9 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/utl"
 )
 
 // CheckDerivT checks derivatives w.r.t to t for fixed coordinates x

@@ -20,7 +20,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/cpmech/gosl/io"
+	"gosl/io"
 )
 
 // Init initialises random numbers generator

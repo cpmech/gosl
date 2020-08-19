@@ -4,7 +4,7 @@
 
 package dbf
 
-import "github.com/cpmech/gosl/chk"
+import "gosl/chk"
 
 // Halo implements the equation of a circle in 2D or a sphere in 3D
 // by means of the following implicit form F(x) = 0

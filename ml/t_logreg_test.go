@@ -7,12 +7,12 @@ package ml
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/fun/dbf"
+	"gosl/io"
+	"gosl/la"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 func TestLogReg01a(tst *testing.T) {

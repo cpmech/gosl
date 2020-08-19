@@ -7,9 +7,9 @@ package ml
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
 )
 
 func checkXY01(tst *testing.T, label string, X *la.Matrix, y la.Vector) {

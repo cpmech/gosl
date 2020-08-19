@@ -7,7 +7,7 @@ package dbf
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // Exc1 implements excitation #1 y(t) = a * (1 - cos(b*π*t)) / 2

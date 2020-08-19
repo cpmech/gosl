@@ -5,10 +5,10 @@
 package opt
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
+	"gosl/chk"
+	"gosl/fun/dbf"
+	"gosl/io"
+	"gosl/la"
 )
 
 // GradDesc implements a simple gradient-descent optimizer

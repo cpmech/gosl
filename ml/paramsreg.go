@@ -7,9 +7,9 @@ package ml
 import (
 	"encoding/json"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // ParamsReg holds the θ and b parameters for regression computations

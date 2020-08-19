@@ -5,8 +5,8 @@
 package rnd
 
 import (
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 // PlotPdf plots PDF

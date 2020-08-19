@@ -7,10 +7,10 @@ package fun
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/plt"
+	"gosl/utl"
 )
 
 func TestInterpQuad01(tst *testing.T) {
