@@ -2,12 +2,13 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !windows
-
 // Package dsfmt wraps the dSFMT Double precision SIMD-oriented Fast Mersenne Twister
 package dsfmt
 
-@@CGO@@
+/*
+#cgo CFLAGS: -O3 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing -std=c99 -msse2 -DHAVE_SSE2 -DDSFMT_MEXP=19937
+#include "connectdsfmt.h"
+*/
 import "C"
 
 import "time"

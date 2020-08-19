@@ -2,12 +2,18 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !windows
-
 // Package sfmt wraps the SFMT SIMD-oriented Fast Mersenne Twister
 package sfmt
 
-@@CGO@@
+/*
+#cgo CFLAGS: -O3 -fomit-frame-pointer -DNDEBUG -fno-strict-aliasing -std=c99 -msse2 -DHAVE_SSE2 -DSFMT_MEXP=19937
+#include "connectsfmt.h"
+#ifdef WIN32
+#define LONG long long
+#else
+#define LONG long
+#endif
+*/
 import "C"
 
 import (

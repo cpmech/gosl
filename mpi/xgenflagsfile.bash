@@ -2,25 +2,6 @@
 
 set -e
 
-platform='unknown'
-unamestr=`uname`
-if [[ "$unamestr" == 'Linux' ]]; then
-   platform='linux'
-elif [[ "$unamestr" == 'MINGW32_NT-6.2' ]]; then
-   platform='windows'
-elif [[ "$unamestr" == 'MINGW64_NT-10.0' ]]; then
-   platform='windows'
-elif [[ "$unamestr" == 'Darwin' ]]; then
-   platform='darwin'
-fi
-
-echo "   platform = $platform"
-
-if [[ $platform == 'windows' ]]; then
-    echo "MPI doesn't work on Windows at this time"
-    exit 1
-fi
-
 CFLAGS=`mpicc -showme:compile`
 LDFLAGS=`mpicc -showme:link`
 

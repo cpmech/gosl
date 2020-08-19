@@ -21,9 +21,9 @@
 ```bash
 sudo apt-get -y install wget git gcc \
     libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev \
-    gfortran python-scipy python-matplotlib dvipng \
+    gfortran \
     libfftw3-dev libfftw3-mpi-dev libmetis-dev \
-    liblapacke-dev libopenblas-dev libhdf5-dev
+    liblapacke-dev libopenblas-dev
 ```
 
 ## 2 [Optional] Install Intel MKL

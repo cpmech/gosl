@@ -31,10 +31,6 @@ _testmain.go
 *.test
 *.prof
 
-# auto generated files
-rnd/dsfmt/dsfmt.go
-rnd/sfmt/sfmt.go
-
 # Temporary files
 *.goa
 
