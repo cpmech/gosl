@@ -2,4 +2,4 @@
 
 NAME=gosl
 
-docker run --rm -it gosl/$NAME /bin/sh
+docker run --rm -it gosl/$NAME /bin/bash
