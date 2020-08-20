@@ -49,12 +49,19 @@ RUN rm /usr/local/$GOFN
 ENV PATH $PATH:/usr/local/go/bin
 RUN go version
 
+# build gosl
+ARG GOROOT_SRC="/usr/local/go/src"
+WORKDIR $GOROOT_SRC
+RUN git clone -b $GOSL_BRANCH --single-branch --depth 1 https://github.com/cpmech/gosl.git
+WORKDIR $GOROOT_SRC/gosl
+RUN bash ./all.bash
+
 ##################################################################################################
 #                                                                                                #
-# The code below is copied from:                                                                 #
-#    https://github.com/microsoft/vscode-remote-try-go/blob/master/.devcontainer/Dockerfile      #
+#   The code below is copied from:                                                               #
+#      https://github.com/microsoft/vscode-remote-try-go/blob/master/.devcontainer/Dockerfile    #
 #                                                                                                #
-# NOTE: remember to fix zscripts/common-debian.sh                                                #
+#   NOTE: remember to fix zscripts/common-debian.sh                                              #
 #                                                                                                #
 ##################################################################################################
 
@@ -115,14 +122,3 @@ ENV GO111MODULE=auto
 
 ##################################################################################################
 ##################################################################################################
-
-# set path for my go apps
-ARG GOPATH="/home/vscode/mygo"
-ENV GOPATH $GOPATH
-ENV PATH $PATH:"${GOPATH}/bin"
-
-# build gosl
-WORKDIR $GOPATH/src
-RUN git clone -b $GOSL_BRANCH --single-branch --depth 1 https://github.com/cpmech/gosl.git
-WORKDIR $GOPATH/src/gosl
-RUN bash ./all.bash
