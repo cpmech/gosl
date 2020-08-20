@@ -1,28 +1,57 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
-ARG GOVER=1.12
-ARG GOFN=go$GOVER.linux-amd64
+# set go version
+ARG GOVER=1.15
 
-WORKDIR /gosl
+# disable tzdata questions
+ENV DEBIAN_FRONTEND=noninteractive
 
-COPY . /gosl
+# use bash
+SHELL ["/bin/bash", "-c"]
 
-RUN apt-get update
+# install apt-utils
+RUN apt-get update -y && \
+    apt-get install -y apt-utils 2> >( grep -v 'debconf: delaying package configuration, since apt-utils is not installed' >&2 ) \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
-RUN ln -fs /usr/share/zoneinfo/Australia/Brisbane /etc/localtime
-RUN dpkg-reconfigure --frontend noninteractive tzdata
+# essential net tools
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    netbase \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get -y install wget git gcc \
-    libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev \
-    gfortran python-scipy python-matplotlib dvipng \
-    libfftw3-dev libfftw3-mpi-dev libmetis-dev \
-    liblapacke-dev libopenblas-dev libhdf5-dev \
-    libvtk7-dev
+# download tools and compilers
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    gcc \
+    gfortran \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://dl.google.com/go/$GOFN.tar.gz -O /opt/$GOFN.tar.gz
-RUN tar xf /opt/$GOFN.tar.gz -C /opt/
-ENV PATH "$PATH:/opt/go/bin"
+# required libraries for gosl
+RUN apt-get update -y && apt-get install -y --no-install-recommends \
+    libopenmpi-dev \
+    libhwloc-dev \
+    liblapacke-dev \
+    libopenblas-dev \
+    libmetis-dev \
+    libsuitesparse-dev \
+    libmumps-dev \
+    libfftw3-dev \
+    libfftw3-mpi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# download go
+ARG GOFN=go$GOVER.linux-amd64.tar.gz
+RUN curl https://dl.google.com/go/$GOFN -o /usr/local/$GOFN
+RUN tar -xzf /usr/local/$GOFN -C /usr/local/
+RUN rm /usr/local/$GOFN
+
+# set path for go apps
+ENV GOPATH /mygo
+ENV PATH $PATH:/mygo/bin:/usr/local/go/bin
 RUN go version
 
-RUN USE_VTK=1 bash all.bash
+# build gosl
+WORKDIR /mygo
+#RUN bash all.bash
