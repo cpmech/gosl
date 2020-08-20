@@ -1,14 +1,22 @@
 language: go
 
 go:
-  - 1.12
+  - 1.15
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y libopenmpi-dev libhwloc-dev libsuitesparse-dev libmumps-dev 
-  - sudo apt-get install -y gfortran
-  - sudo apt-get install -y libfftw3-dev libfftw3-mpi-dev libmetis-dev
-  - sudo apt-get install -y liblapacke-dev libopenblas-dev libhdf5-dev
+  - sudo apt-get install -y \
+    gcc \
+    gfortran \
+    libopenmpi-dev \
+    libhwloc-dev \
+    liblapacke-dev \
+    libopenblas-dev \
+    libmetis-dev \
+    libsuitesparse-dev \
+    libmumps-dev \
+    libfftw3-dev \
+    libfftw3-mpi-dev
 
 notifications:
   email:
