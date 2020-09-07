@@ -5,7 +5,7 @@ type PageRank struct {
 	DirectedNetwork [][]bool
 	H               [][]float64
 	G               [][]float64
-	Rank            []int64
+	Rank            map[int64]float64
 	Directed        map[int64]bool
 	NodeNum         int64
 }
@@ -18,6 +18,7 @@ func NewPageRank(nodeNum int64, edges [][2]int64) *PageRank {
 	pagerank.H = make([][]float64, nodeNum)
 	pagerank.G = make([][]float64, nodeNum)
 	pagerank.Directed = make(map[int64]bool)
+	pagerank.Rank = make(map[int64]float64)
 	for node := range pagerank.DirectedNetwork {
 		pagerank.DirectedNetwork[node] = make([]bool, nodeNum)
 		pagerank.H[node] = make([]float64, nodeNum)
@@ -129,7 +130,7 @@ func multi(m, n [][]float64) [][]float64 {
 }
 
 // CalcPageRank calclate each nodes pagerank
-func (o *PageRank) CalcPageRank(randomsurfer float64, repetition int) []float64 {
+func (o *PageRank) CalcPageRank(randomsurfer float64, repetition int) map[int64]float64 {
 	o.HyperLinkMatrix()
 	o.GoogleMatrix(0.5)
 	pie := make([]float64, o.NodeNum)
@@ -140,7 +141,10 @@ func (o *PageRank) CalcPageRank(randomsurfer float64, repetition int) []float64 
 	base := make([][]float64, 1)
 	base[0] = pie
 	for i := 0; i < repetition; i++ {
-		multi(base, o.G)
+		base = multi(base, o.G)
 	}
-	return base[0]
+	for node := range base[0] {
+		o.Rank[int64(node)] = base[0][node]
+	}
+	return o.Rank
 }
