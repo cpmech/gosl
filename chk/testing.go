@@ -116,6 +116,16 @@ func Int64s(tst *testing.T, msg string, a, b []int64) {
 	PrintOk(msg)
 }
 
+// Float32s compares two slices of 32 float. The b slice may be nil indicating that all values are zero
+func Float32s(tst *testing.T, msg string, a, b []float32) {
+
+}
+
+// Float64s compares two slices of 64 float. The b slice may be nil indicating that all values are zero
+func Float64s(tst *testing.T, msg string, a, b []float64) {
+
+}
+
 // Bools compare two slices of bool. The b slice may be nil indicating that all values are false
 func Bools(tst *testing.T, msg string, a, b []bool) {
 	if len(a) != len(b) {
