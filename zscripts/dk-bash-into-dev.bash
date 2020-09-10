@@ -1,5 +1,5 @@
 #!/bin/bash
 
-NAME=gosl
+NAME=gosl_dev
 
-docker run --rm -it gosl/$NAME-dev /bin/bash
+docker run --rm -it gosl/$NAME /bin/bash

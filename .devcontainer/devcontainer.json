@@ -1,0 +1,13 @@
+{
+  "name": "Gosl Dev Mode",
+  "image": "gosl/gosl_dev",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "go.useGoProxyToCheckForToolUpdates": false,
+    "go.useLanguageServer": true
+  },
+  "runArgs": ["--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"],
+  "extensions": ["golang.Go"],
+  "forwardPorts": [9000],
+  "remoteUser": "vscode"
+}
