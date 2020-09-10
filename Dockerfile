@@ -1,9 +1,11 @@
 FROM ubuntu:20.04
 
-# set go and gosl version
-ARG GO_VERSION=1.15
-ARG GOSL_VERSION=1.2.0
-ARG GOSL_BRANCH=trim-gosl
+# dev image or not
+ARG DEV_IMG="false"
+
+# set go and gosl branch
+ARG GO_VERSION="1.15.2"
+ARG GOSL_BRANCH="trim-gosl"
 
 # disable tzdata questions
 ENV DEBIAN_FRONTEND=noninteractive
@@ -50,11 +52,8 @@ ENV PATH $PATH:/usr/local/go/bin
 RUN go version
 
 # build gosl
-ARG GOROOT_SRC="/usr/local/go/src"
-WORKDIR $GOROOT_SRC
-RUN git clone -b $GOSL_BRANCH --single-branch --depth 1 https://github.com/cpmech/gosl.git
-WORKDIR $GOROOT_SRC/gosl
-RUN bash ./all.bash
+COPY zscripts/gosl-clone-and-build.bash /tmp/library-scripts/
+RUN /bin/bash /tmp/library-scripts/gosl-clone-and-build.bash "${DEV_IMG}" "${GOSL_BRANCH}"
 
 ##################################################################################################
 #                                                                                                #
