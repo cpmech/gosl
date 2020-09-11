@@ -18,7 +18,6 @@ opt \
 pde \
 plt \
 rnd/sfmt rnd/dsfmt rnd \
-tsr \
 utl \
 "
 
