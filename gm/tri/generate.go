@@ -4,8 +4,6 @@
 
 package tri
 
-import "C"
-
 /*
 #include "triangle.h"
 #include <stdlib.h>

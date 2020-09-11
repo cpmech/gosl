@@ -24,9 +24,9 @@ import (
 //    X = { x0, x1, x2, ... Npoints }
 //    Y = { y0, y1, y2, ... Npoints }
 //  Ouptut:
-//    V = { { x0, y0 }, { x1, y1 }, { x2, y2 } ... Nvertices }
-//    C = { { id0, id1, id2 }, { id0, id1, id2 } ... Ncellls }
-func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int) {
+//    Verts = { { x0, y0 }, { x1, y1 }, { x2, y2 } ... Nvertices }
+//    Cells = { { id0, id1, id2 }, { id0, id1, id2 } ... Ncellls }
+func Delaunay(X, Y []float64, verbose bool) (Verts [][]float64, Cells [][]int) {
 
 	// input
 	chk.IntAssert(len(X), len(Y))
@@ -53,16 +53,16 @@ func Delaunay(X, Y []float64, verbose bool) (V [][]float64, C [][]int) {
 	// output
 	nverts := int(T.numberofpoints)
 	ncells := int(T.numberoftriangles)
-	V = utl.Alloc(nverts, 2)
-	C = utl.IntAlloc(ncells, 3)
+	Verts = utl.Alloc(nverts, 2)
+	Cells = utl.IntAlloc(ncells, 3)
 	for i := 0; i < nverts; i++ {
-		V[i][0] = float64(C.getpoint(C.int(i), 0, &T))
-		V[i][1] = float64(C.getpoint(C.int(i), 1, &T))
+		Verts[i][0] = float64(C.getpoint(C.int(i), 0, &T))
+		Verts[i][1] = float64(C.getpoint(C.int(i), 1, &T))
 	}
 	for i := 0; i < ncells; i++ {
-		C[i][0] = int(C.getcorner(C.int(i), 0, &T))
-		C[i][1] = int(C.getcorner(C.int(i), 1, &T))
-		C[i][2] = int(C.getcorner(C.int(i), 2, &T))
+		Cells[i][0] = int(C.getcorner(C.int(i), 0, &T))
+		Cells[i][1] = int(C.getcorner(C.int(i), 1, &T))
+		Cells[i][2] = int(C.getcorner(C.int(i), 2, &T))
 	}
 	return
 }
