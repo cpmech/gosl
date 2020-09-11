@@ -15,7 +15,6 @@ num/qpck num \
 ode \
 opt \
 pde \
-plt \
 rnd/sfmt rnd/dsfmt rnd \
 utl \
 "
