@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package dbf
+package utl
 
 import (
 	"gosl/chk"
@@ -19,7 +19,7 @@ import (
 // the dependendt variable is updated as well.
 //
 // Other parameters can be linked to this one via the Other data member
-// and Fcn may be useful to compute y=f(t,x)
+// and Func may be useful to compute y=f(t,x)
 //
 type P struct {
 
@@ -37,9 +37,11 @@ type P struct {
 	Inact  bool    `json:"inact"`  // parameter is inactive in optimisation
 	SetDef bool    `json:"setdef"` // tells model to use a default value
 
-	// auxiliary
-	Fcn   T  // a function y=f(t,x)
+	// connected parameter
 	Other *P // dependency: connected parameter
+
+	// function
+	Func func(t float64, x []float64) // a function y=f(t,x)
 
 	// derived
 	conn []*float64 // connected variables to V

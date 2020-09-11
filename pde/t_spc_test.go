@@ -10,7 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/fun"
-	"gosl/fun/dbf"
 	"gosl/gm"
 	"gosl/io"
 	"gosl/la"
@@ -31,7 +30,7 @@ func TestSpc01a(tst *testing.T) {
 	g.RectSet2d(l[0].X, l[1].X)
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewSpcLaplacian(p, l, g, nil)
 
 	// homogeneous boundary conditions
@@ -93,7 +92,7 @@ func TestSpc02(tst *testing.T) {
 	g.RectSet2dU([]float64{0, 0}, []float64{2, 2}, lis[0].X, lis[1].X)
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewSpcLaplacian(p, lis, g, nil)
 
 	// essential boundary conditions
@@ -173,7 +172,7 @@ func TestSpc03(tst *testing.T) {
 	g.RectSet2dU([]float64{-1, -1}, []float64{+1, +1}, lis[0].X, lis[1].X)
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	source := func(x la.Vector, t float64) float64 {
 		return 10.0 * math.Sin(8.0*x[0]*(x[1]-1.0))
 	}
@@ -275,7 +274,7 @@ func TestSpc04(tst *testing.T) {
 	g.SetTransfinite2d(trf, lis[0].X, lis[1].X)
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	source := func(x la.Vector, t float64) float64 {
 		r, θ := polar(x)
 		return -16.0 * math.Log(r) * math.Sin(4.0*θ) / (r * r)
@@ -336,7 +335,7 @@ func TestSpc05(tst *testing.T) {
 	g.SetTransfinite2d(trf, lis[0].X, lis[1].X)
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewSpcLaplacian(p, lis, g, nil)
 
 	// essential boundary conditions

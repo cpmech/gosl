@@ -8,13 +8,13 @@ import (
 	"strings"
 
 	"gosl/chk"
-	"gosl/fun/dbf"
 	"gosl/la"
+	"gosl/utl"
 )
 
 // NonLinSolver solves (unconstrained) nonlinear optimization problems
 type NonLinSolver interface {
-	Min(x la.Vector, params dbf.Params) (fmin float64) // computes minimum and updates x @ min
+	Min(x la.Vector, params utl.Params) (fmin float64) // computes minimum and updates x @ min
 	SetConvParams(maxIt int, ftol, gtol float64)       // SetConvParams sets convergence parameters
 	SetUseHistory(useHist bool)                        // SetUseHist sets use history parameter
 	SetVerbose(verbose bool)                           // SetVerbose sets verbose mode

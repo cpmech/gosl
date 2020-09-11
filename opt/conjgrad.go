@@ -8,7 +8,6 @@ import (
 	"math"
 
 	"gosl/chk"
-	"gosl/fun/dbf"
 	"gosl/la"
 	"gosl/num"
 	"gosl/utl"
@@ -69,22 +68,22 @@ func NewConjGrad(prob *Problem) (o *ConjGrad) {
 //  Input:
 //    x -- [ndim] initial starting point (will be modified)
 //    params -- [may be nil] optional parameters. e.g. "alpha", "maxit". Example:
-//                 params := dbf.NewParams(
-//                     &dbf.P{N: "brent", V: 1},
-//                     &dbf.P{N: "maxit", V: 1000},
-//                     &dbf.P{N: "maxitls", V: 20},
-//                     &dbf.P{N: "maxitzoom", V: 20},
-//                     &dbf.P{N: "ftol", V: 1e-2},
-//                     &dbf.P{N: "gtol", V: 1e-2},
-//                     &dbf.P{N: "hist", V: 1},
-//                     &dbf.P{N: "verb", V: 1},
+//                 params := utl.NewParams(
+//                     &utl.P{N: "brent", V: 1},
+//                     &utl.P{N: "maxit", V: 1000},
+//                     &utl.P{N: "maxitls", V: 20},
+//                     &utl.P{N: "maxitzoom", V: 20},
+//                     &utl.P{N: "ftol", V: 1e-2},
+//                     &utl.P{N: "gtol", V: 1e-2},
+//                     &utl.P{N: "hist", V: 1},
+//                     &utl.P{N: "verb", V: 1},
 //                 )
 //
 //  Output:
 //    fmin -- f(x@min) minimum f({x}) found
 //    x -- [modify input] position of minimum f({x})
 //
-func (o *ConjGrad) Min(x la.Vector, params dbf.Params) (fmin float64) {
+func (o *ConjGrad) Min(x la.Vector, params utl.Params) (fmin float64) {
 
 	// set parameters
 	o.Convergence.SetParams(params)

@@ -9,7 +9,6 @@ import (
 
 	"gosl/chk"
 	"gosl/fun"
-	"gosl/fun/dbf"
 	"gosl/io"
 	"gosl/la"
 	"gosl/plt"
@@ -79,17 +78,17 @@ func NewLineSearch(ndim int, ffcn fun.Sv, Jfcn fun.Vv) (o *LineSearch) {
 
 // SetParams sets parameters
 //   Example:
-//             o.SetParams(dbf.NewParams(
-//                 &dbf.P{N: "maxitls", V: 10},
-//                 &dbf.P{N: "maxitzoom", V: 10},
-//                 &dbf.P{N: "maxalpha", V: 100},
-//                 &dbf.P{N: "mulalpha", V: 2},
-//                 &dbf.P{N: "coef1", V: 1e-4},
-//                 &dbf.P{N: "coef2", V: 0.4},
-//                 &dbf.P{N: "coefquad", V: 0.1},
-//                 &dbf.P{N: "coefcubic", V: 0.2},
+//             o.SetParams(utl.NewParams(
+//                 &utl.P{N: "maxitls", V: 10},
+//                 &utl.P{N: "maxitzoom", V: 10},
+//                 &utl.P{N: "maxalpha", V: 100},
+//                 &utl.P{N: "mulalpha", V: 2},
+//                 &utl.P{N: "coef1", V: 1e-4},
+//                 &utl.P{N: "coef2", V: 0.4},
+//                 &utl.P{N: "coefquad", V: 0.1},
+//                 &utl.P{N: "coefcubic", V: 0.2},
 //             ))
-func (o *LineSearch) SetParams(params dbf.Params) {
+func (o *LineSearch) SetParams(params utl.Params) {
 	o.MaxIt = params.GetIntOrDefault("maxitls", o.MaxIt)
 	o.MaxItZoom = params.GetIntOrDefault("maxitzoom", o.MaxItZoom)
 	o.MaxAlpha = params.GetValueOrDefault("maxalpha", o.MaxAlpha)

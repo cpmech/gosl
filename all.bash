@@ -7,7 +7,7 @@ PKGS_ESSENTIAL="chk io"
 PKGS_NEED_FLAGS="mpi"
 
 PKGS_ALL=" \
-fun/dbf fun/fftw fun \
+fun/fftw fun \
 gm/rw gm/tri gm/msh gm \
 graph \
 la/oblas la \

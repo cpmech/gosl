@@ -8,11 +8,11 @@ import (
 	"testing"
 
 	"gosl/chk"
-	"gosl/fun/dbf"
 	"gosl/gm"
 	"gosl/io"
 	"gosl/la"
 	"gosl/plt"
+	"gosl/utl"
 )
 
 func TestFdm01a(tst *testing.T) {
@@ -25,7 +25,7 @@ func TestFdm01a(tst *testing.T) {
 	g.RectGenUniform([]float64{0, 0}, []float64{2, 2}, []int{3, 3})
 
 	// operator
-	s := NewFdmLaplacian(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}, g, nil)
+	s := NewFdmLaplacian(utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}, g, nil)
 
 	// assemble
 	s.Assemble(false)
@@ -68,7 +68,7 @@ func TestFdm02(tst *testing.T) {
 	g.RectGenUniform([]float64{0, 0}, []float64{3, 3}, []int{4, 4})
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewFdmLaplacian(p, g, nil)
 
 	// essential boundary conditions
@@ -158,7 +158,7 @@ func TestFdm03(tst *testing.T) {
 	g.RectGenUniform([]float64{0, 0}, []float64{1, 1}, []int{5, 5})
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewFdmLaplacian(p, g, func(X la.Vector, t float64) float64 {
 		x, y := X[0], X[1]
 		xx, yy := x*x, y*x

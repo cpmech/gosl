@@ -8,10 +8,10 @@ import (
 	"testing"
 
 	"gosl/chk"
-	"gosl/fun/dbf"
 	"gosl/io"
 	"gosl/la"
 	"gosl/plt"
+	"gosl/utl"
 )
 
 func TestLineSearch01(tst *testing.T) {
@@ -39,15 +39,15 @@ func TestLineSearch01(tst *testing.T) {
 	line := NewLineSearch(2, ffcn, Jfcn)
 
 	// set params
-	line.SetParams(dbf.NewParams(
-		&dbf.P{N: "maxitls", V: 2},
-		&dbf.P{N: "maxitzoom", V: 2},
-		&dbf.P{N: "maxalpha", V: 100},
-		&dbf.P{N: "mulalpha", V: 2},
-		&dbf.P{N: "coef1", V: 1e-4},
-		&dbf.P{N: "coef2", V: 0.4},
-		&dbf.P{N: "coefquad", V: 0.1},
-		&dbf.P{N: "coefcubic", V: 0.2},
+	line.SetParams(utl.NewParams(
+		&utl.P{N: "maxitls", V: 2},
+		&utl.P{N: "maxitzoom", V: 2},
+		&utl.P{N: "maxalpha", V: 100},
+		&utl.P{N: "mulalpha", V: 2},
+		&utl.P{N: "coef1", V: 1e-4},
+		&utl.P{N: "coef2", V: 0.4},
+		&utl.P{N: "coefquad", V: 0.1},
+		&utl.P{N: "coefcubic", V: 0.2},
 	))
 
 	// solve

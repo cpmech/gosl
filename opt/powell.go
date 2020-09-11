@@ -7,9 +7,9 @@ package opt
 import (
 	"gosl/chk"
 	"gosl/fun"
-	"gosl/fun/dbf"
 	"gosl/la"
 	"gosl/num"
+	"gosl/utl"
 )
 
 // Powell implements the multidimensional minimization by Powell's method (no derivatives required)
@@ -67,7 +67,7 @@ func NewPowell(prob *Problem) (o *Powell) {
 //    fmin -- f(x@min) minimum f({x}) found
 //    x -- [given as input] position of minimum f({x})
 //
-func (o *Powell) Min(x la.Vector, params dbf.Params) (fmin float64) {
+func (o *Powell) Min(x la.Vector, params utl.Params) (fmin float64) {
 
 	// set Umat with unit vectors
 	reuseUmat := params.GetBoolOrDefault("reuse", false) // default = false

@@ -9,7 +9,6 @@ import (
 	"math"
 
 	"gosl/chk"
-	"gosl/fun/dbf"
 	"gosl/io"
 	"gosl/la"
 	"gosl/utl"
@@ -67,7 +66,7 @@ func (o *LinIpm) Free() {
 }
 
 // Init initialises LinIpm
-func (o *LinIpm) Init(A *la.CCMatrix, b, c la.Vector, prms dbf.Params) {
+func (o *LinIpm) Init(A *la.CCMatrix, b, c la.Vector, prms utl.Params) {
 
 	// problem
 	o.A, o.B, o.C = A, b, c
