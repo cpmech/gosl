@@ -10,7 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -52,24 +51,6 @@ func TestGenOrthoPoly02(tst *testing.T) {
 		chk.Float64(tst, "P0", 1e-15, y, 1)
 		y = op.P(1, x)
 		chk.Float64(tst, "P1", 1e-15, y, 0.5*(2*(α+1)+(α+β+2)*(x-1)))
-	}
-
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{Prop: 1.5})
-		X := utl.LinSpace(-1, 1, 101)
-		Y := make([]float64, len(X))
-		for n := 0; n <= 5; n++ {
-			for i := 0; i < len(X); i++ {
-				Y[i] = op.P(n, X[i])
-			}
-			plt.Plot(X, Y, &plt.A{L: io.Sf("$P_{%d}^{(%g,%g)}$", n, α, β), NoClip: true})
-		}
-		plt.Cross(0, 0, nil)
-		plt.Equal()
-		plt.AxisYrange(-1, 3.3)
-		plt.HideAllBorders()
-		plt.Gll("$x$", io.Sf("$P_n^{(%g,%g)}$", α, β), &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl/fun", "genorthopoly02")
 	}
 }
 
@@ -119,24 +100,6 @@ func TestGenOrthoPoly03(tst *testing.T) {
 			chk.Float64(tst, "calcLegendre", 1e-17, op.P(n, x), calcLegendre(n, x))
 		}
 	}
-
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{Prop: 1.0})
-		X := utl.LinSpace(-1, 1, 101)
-		Y := make([]float64, len(X))
-		for n := 0; n <= 5; n++ {
-			for i := 0; i < len(X); i++ {
-				Y[i] = op.P(n, X[i])
-			}
-			plt.Plot(X, Y, &plt.A{L: io.Sf("$P_{%d}$", n), NoClip: true})
-		}
-		plt.Cross(0, 0, nil)
-		plt.Equal()
-		plt.AxisYrange(-0.5, 1.0)
-		plt.HideAllBorders()
-		plt.Gll("$x$", "$P_n$", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl/fun", "genorthopoly03")
-	}
 }
 
 func TestGenOrthoPoly04(tst *testing.T) {
@@ -161,24 +124,6 @@ func TestGenOrthoPoly04(tst *testing.T) {
 		chk.Float64(tst, "H4", 1e-13, y, 16*math.Pow(x, 4)-48*x*x+12)
 		y = op.P(5, x)
 		chk.Float64(tst, "H5", 1e-13, y, 32*math.Pow(x, 5)-160*x*x*x+120*x)
-	}
-
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{Prop: 0.8})
-		X := utl.LinSpace(0, 4, 101)
-		Y := make([]float64, len(X))
-		for n := 2; n <= 5; n++ {
-			den := math.Pow(float64(n), 3)
-			for i := 0; i < len(X); i++ {
-				Y[i] = op.P(n, X[i]) / den
-			}
-			plt.Plot(X, Y, &plt.A{L: io.Sf("$P_{%d}/%g$", n, den), NoClip: true})
-		}
-		plt.Cross(0, 0, nil)
-		plt.AxisYrange(-1, 8.5)
-		plt.HideAllBorders()
-		plt.Gll("$x$", "$P_n$", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl/fun", "genorthopoly04")
 	}
 }
 
@@ -224,22 +169,6 @@ func TestGenOrthoPoly05(tst *testing.T) {
 			chk.AnaNum(tst, io.Sf("p%d(%+.2f)", n, x), tol, y, yref, chk.Verbose)
 		}
 	}
-
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{Prop: 0.8})
-		X := utl.LinSpace(-1, 1, 101)
-		Y := make([]float64, len(X))
-		for n := 1; n <= 5; n++ {
-			for i := 0; i < len(X); i++ {
-				Y[i] = op.P(n, X[i])
-			}
-			plt.Plot(X, Y, &plt.A{L: io.Sf("$P_{%d}$", n), NoClip: true})
-		}
-		plt.Cross(0, 0, nil)
-		plt.HideAllBorders()
-		plt.Gll("$x$", "$P_n$", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl/fun", "genorthopoly05")
-	}
 }
 
 func TestGenOrthoPoly06(tst *testing.T) {
@@ -264,22 +193,5 @@ func TestGenOrthoPoly06(tst *testing.T) {
 		chk.Float64(tst, "U4", 1e-13, y, 1-12*x*x+16*math.Pow(x, 4))
 		y = op.P(5, x)
 		chk.Float64(tst, "U5", 1e-13, y, 6*x-32*x*x*x+32*math.Pow(x, 5))
-	}
-
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{Prop: 0.8})
-		X := utl.LinSpace(-1, 1, 101)
-		Y := make([]float64, len(X))
-		for n := 1; n <= 5; n++ {
-			for i := 0; i < len(X); i++ {
-				Y[i] = op.P(n, X[i])
-			}
-			plt.Plot(X, Y, &plt.A{L: io.Sf("$P_{%d}$", n), NoClip: true})
-		}
-		plt.Cross(0, 0, nil)
-		plt.HideAllBorders()
-		plt.AxisYrange(-3, 5.5)
-		plt.Gll("$x$", "$P_n$", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl/fun", "genorthopoly06")
 	}
 }

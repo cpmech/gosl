@@ -9,8 +9,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
-	"gosl/utl"
 )
 
 func TestInterpCubic01(tst *testing.T) {
@@ -55,22 +53,6 @@ func TestInterpCubic01(tst *testing.T) {
 	chk.Float64(tst, "xmin", 1e-15, xmin, 8)
 	chk.Float64(tst, "xmax", 1e-15, xmax, -6)
 	chk.Float64(tst, "xifl", 1e-15, xifl, 1)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xx := utl.LinSpace(-13, 13, 41)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return interp.F(x) })
-		plt.Plot(xx, yy, &plt.A{C: plt.C(0, 0), M: ".", Ls: "-", NoClip: true})
-		plt.PlotOne(x0, y0, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x1, y1, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x2, y2, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x3, y3, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interpcubic01")
-	}
 }
 
 func TestInterpCubic02(tst *testing.T) {
@@ -111,21 +93,6 @@ func TestInterpCubic02(tst *testing.T) {
 		return
 	}
 	chk.Float64(tst, "xifl", 1e-15, xifl, 25)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xx := utl.LinSpace(20, 30, 41)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return interp.F(x) })
-		plt.Plot(xx, yy, &plt.A{C: plt.C(0, 0), M: ".", Ls: "-", NoClip: true})
-		plt.PlotOne(x0, y0, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x1, y1, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x2, y2, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x3, y3, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interpcubic02")
-	}
 }
 
 func TestInterpCubic03(tst *testing.T) {
@@ -164,21 +131,6 @@ func TestInterpCubic03(tst *testing.T) {
 	if hasIfl {
 		tst.Errorf("hasIfl should be false\n")
 		return
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xx := utl.LinSpace(-2, 2, 41)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return interp.F(x) })
-		plt.Plot(xx, yy, &plt.A{C: plt.C(0, 0), M: ".", Ls: "-", NoClip: true})
-		plt.PlotOne(x0, y0, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x1, y1, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x2, y2, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x3, y3, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interpcubic03")
 	}
 }
 
@@ -224,20 +176,4 @@ func TestInterpCubic04(tst *testing.T) {
 	chk.Float64(tst, "xmin", 1e-15, xmin, 8)
 	chk.Float64(tst, "xmax", 1e-15, xmax, -6)
 	chk.Float64(tst, "xifl", 1e-15, xifl, 1)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xx := utl.LinSpace(-13, 13, 41)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return interp.F(x) })
-		plt.Plot(xx, yy, &plt.A{C: plt.C(0, 0), M: ".", Ls: "-", NoClip: true})
-		plt.PlotOne(x0, y0, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x1, y1, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x2, y2, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x3, interp.F(x3), &plt.A{C: "k", M: "x", Ms: 20, NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interpcubic04")
-	}
 }

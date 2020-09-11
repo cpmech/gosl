@@ -13,7 +13,6 @@ import (
 	"gosl/gm"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -56,15 +55,6 @@ func TestSpc01a(tst *testing.T) {
 		{zzz, -2., zzz /* */, zzz, +6., zzz /* */, +4., -20, +4.},
 		{zzz, zzz, -2. /* */, zzz, zzz, +6. /* */, -2., +6., -28},
 	})
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		gp := gm.GridPlotter{G: g, WithVids: true}
-		gp.Draw()
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "spc01")
-	}
 }
 
 func TestSpc01b(tst *testing.T) {
@@ -141,17 +131,6 @@ func TestSpc02(tst *testing.T) {
 		{1.00, 1.50, 1.75, 2.00},
 		{2.00, 2.00, 2.00, 2.00},
 	})
-
-	// plot
-	if chk.Verbose {
-		gp := gm.GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		gp.Draw()
-		plt.ContourL(gp.X2d, gp.Y2d, uu, nil)
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "spc02")
-	}
 }
 
 func TestSpc03(tst *testing.T) {
@@ -197,60 +176,6 @@ func TestSpc03(tst *testing.T) {
 		{0, -0.329593843114906, +0, +0.329593843114906, 0},
 		{0, +0.000000000000000, +0, +0.000000000000000, 0},
 	})
-
-	// draw surface
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 600})
-
-		// data for dense output
-		npts := 101
-		xdense := make([]float64, npts)
-		ydense := make([]float64, npts)
-		zdense := make([]float64, npts)
-
-		// draw lines along x
-		nx, ny := g.Npts(0), g.Npts(1)
-		X := lis[0].X
-		Y := make([]float64, ny)
-		Z := make([]float64, nx)
-		for j := 0; j < ny; j++ {
-			utl.Fill(Y, lis[1].X[j])
-			for i := 0; i < nx; i++ {
-				Z[i] = uu[j][i]
-			}
-			lis[0].U = Z
-			for k := 0; k < npts; k++ {
-				xdense[k] = -1.0 + 2.0*float64(k)/float64(npts-1)
-				ydense[k] = lis[1].X[j]
-				zdense[k] = lis[0].I(xdense[k])
-			}
-			plt.Plot3dLine(xdense, ydense, zdense, &plt.A{C: "gray"})
-			plt.Plot3dPoints(X, Y, Z, &plt.A{C: plt.C(0, 0), M: ".", Mec: plt.C(0, 0)})
-		}
-
-		// draw lines along y
-		X = make([]float64, nx)
-		Y = lis[1].X
-		Z = make([]float64, ny)
-		for i := 0; i < nx; i++ {
-			utl.Fill(X, lis[0].X[i])
-			for j := 0; j < ny; j++ {
-				Z[j] = uu[j][i]
-			}
-			lis[1].U = Z
-			for k := 0; k < npts; k++ {
-				xdense[k] = lis[0].X[i]
-				ydense[k] = -1.0 + 2.0*float64(k)/float64(npts-1)
-				zdense[k] = lis[1].I(ydense[k])
-			}
-			plt.Plot3dLine(xdense, ydense, zdense, &plt.A{C: "gray"})
-			plt.Plot3dPoints(X, Y, Z, &plt.A{C: plt.C(2, 0), M: "+", Mec: plt.C(0, 0)})
-		}
-
-		plt.AxisRange3d(-1, 1, -1, 1, -0.5, 0.5)
-		plt.Camera(45, 220, nil)
-		plt.Save("/tmp/gosl/pde", "spc03")
-	}
 }
 
 func TestSpc04(tst *testing.T) {
@@ -307,17 +232,6 @@ func TestSpc04(tst *testing.T) {
 			chk.AnaNum(tst, io.Sf("u(%5.2f,%5.2f)", x[0], x[1]), 1e-3, u[I], ana(x), chk.Verbose)
 		}
 	}
-
-	// plot
-	if chk.Verbose {
-		gp := gm.GridPlotter{G: g, WithVids: false}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		gp.Draw()
-		plt.Equal()
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "spc04")
-	}
 }
 
 func TestSpc05(tst *testing.T) {
@@ -365,16 +279,5 @@ func TestSpc05(tst *testing.T) {
 			//chk.PrintAnaNum(io.Sf("u(%5.2f,%5.2f)", x[0], x[1]), 1e-3, u[I], ana(x), chk.Verbose)
 			chk.AnaNum(tst, io.Sf("u(%5.2f,%5.2f)", x[0], x[1]), 0.053, u[I], ana(x), chk.Verbose)
 		}
-	}
-
-	// plot
-	if chk.Verbose && false {
-		gp := gm.GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		gp.Draw()
-		plt.Equal()
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "spc05")
 	}
 }

@@ -10,7 +10,6 @@ import (
 	"gosl/chk"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 )
 
 func checkConjGrad(tst *testing.T, sol *ConjGrad, fmin, fref, tolf, tolx float64, xmin, xref []float64) {
@@ -43,20 +42,6 @@ func runConjGradTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tol
 	sol2.UseHist = true
 	fmin2 := sol2.Min(xmin2, nil)
 	checkConjGrad(tst, sol2, fmin2, p.Fref, tolf, tolx, xmin2, p.Xref)
-
-	// plot
-	if chk.Verbose {
-		if p.Ndim > 2 {
-			plt.Reset(true, &plt.A{WidthPt: 600, Dpi: 150, Prop: 0.8})
-			CompareHistory3d("Brent", "Wolfe", sol1.Hist, sol2.Hist, xmin1, xmin2)
-			plt.Save("/tmp/gosl/opt", fnkey)
-		} else {
-			plt.Reset(true, &plt.A{WidthPt: 300, Dpi: 150, Prop: 1.5})
-			CompareHistory2d("Brent", "Wolfe", sol1.Hist, sol2.Hist, xmin1, xmin2)
-			plt.Save("/tmp/gosl/opt", fnkey)
-		}
-		io.Pl()
-	}
 	return
 }
 

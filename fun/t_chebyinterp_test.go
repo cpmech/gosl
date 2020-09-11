@@ -11,7 +11,6 @@ import (
 	"gosl/chk"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -93,41 +92,6 @@ func TestChebyInterp01(tst *testing.T) {
 	Einte, _ = lob.EstimateMaxErr(f, false)
 	io.Pforan("Gauss-Lobatto: E{proj} = %v\n", Eproj)
 	io.Pforan("Gauss-Lobatto: E{inte} = %v\n", Einte)
-
-	if chk.Verbose {
-
-		// plot projection and interpolation
-		X := utl.LinSpace(-1, 1, 201)
-		Y := make([]float64, len(X))
-		Yinte := make([]float64, len(X))
-		Yproj := make([]float64, len(X))
-		for i, x := range X {
-			Y[i] = f(x)
-			Yinte[i] = lob.I(x)
-			Yproj[i] = lob.P(x)
-		}
-		plt.Reset(true, nil)
-		plt.Plot(X, Y, &plt.A{C: "r", L: "$f$", NoClip: true})
-		plt.Plot(X, Yinte, &plt.A{C: "g", L: "$I_N^{GL}f$", NoClip: true})
-		plt.Plot(X, Yproj, &plt.A{C: "b", L: "$\\Pi_N^{w}f$", NoClip: true})
-		plt.Gll("$x$", "$f(x)$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "chebyinterp01a")
-
-		// plot error
-		Nvalues := []float64{1, 8, 16, 24, 36, 40, 48, 60, 80, 100, 120}
-		Yerr := make([]float64, len(Nvalues))
-		for i, nn := range Nvalues {
-			o := NewChebyInterp(int(nn), false)
-			o.CalcCoefP(f)
-			Yerr[i], _ = o.EstimateMaxErr(f, true)
-		}
-		plt.Reset(true, nil)
-		plt.Plot(Nvalues, Yerr, &plt.A{C: "r", M: "o", Void: true, NoClip: true})
-		plt.SetYlog()
-		plt.Gll("$N$", "$||f-\\Pi_N\\{f\\}||$", nil)
-		plt.Save("/tmp/gosl/fun", "chebyinterp01b")
-	}
 }
 
 func TestChebyInterp02(tst *testing.T) {
@@ -173,28 +137,6 @@ func TestChebyInterp02(tst *testing.T) {
 	la.MatVecMul(uu, 1, o.Ci, ub)
 	io.Pf("uu = %.6f\n", uu)
 	chk.Array(tst, "uu", 1e-15, uu, u)
-
-	// plot
-	if chk.Verbose {
-		y0 := make([]float64, len(o.X))
-		for i := range o.X {
-			y0[i] = 0.2
-		}
-		xx := utl.LinSpace(-1, 1, 201)
-		y1 := make([]float64, len(xx))
-		y2 := make([]float64, len(xx))
-		for i, x := range xx {
-			y1[i] = f(x)
-			y2[i] = o.I(x)
-		}
-		plt.Reset(true, nil)
-		plt.Plot(o.X, y0, &plt.A{C: "k", M: "o", Ls: "none", Void: true, NoClip: true})
-		plt.Plot(xx, y1, &plt.A{C: plt.C(0, 1), L: "$f$", NoClip: true})
-		plt.Plot(xx, y2, &plt.A{C: plt.C(1, 1), L: "$I$", NoClip: true})
-		plt.Gll("$x$", "$f(x)$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "chebyinterp02")
-	}
 }
 
 // checkIandIs checks I, Is and ℓl @ nodes
@@ -251,25 +193,6 @@ func TestChebyInterp03(tst *testing.T) {
 	Nvals := []int{5, 6}
 	for _, N := range Nvals {
 		checkIandIs(tst, N, f, 1e-15, chk.Verbose)
-	}
-
-	// plot
-	if chk.Verbose {
-		N := 5
-		o := NewChebyInterp(N, false) // Gauss-Lobatto
-		npts := 201
-		xx := utl.LinSpace(-1, 1, npts)
-		yy := make([]float64, npts)
-		plt.Reset(true, nil)
-		for l := 0; l < N+1; l++ {
-			for i := 0; i < npts; i++ {
-				yy[i] = o.L(l, xx[i])
-			}
-			plt.Plot(xx, yy, &plt.A{C: plt.C(l, 1), L: io.Sf("l=%d", l), NoClip: true})
-		}
-		plt.HideTRborders()
-		plt.Gll("$x$", "$\\psi_l(x)$", &plt.A{LegOut: true, LegNcol: 7, LegHlen: 2})
-		plt.Save("/tmp/gosl/fun", "chebyinterp03")
 	}
 }
 
@@ -420,45 +343,6 @@ func TestChebyInterp05(tst *testing.T) {
 	// check D1 matrices
 	io.Pl()
 	checkD1ana(tst, N, f, g, 1e-14, 1e-13, 1e-13, chk.Verbose)
-
-	// plot
-	if chk.Verbose && true {
-		npts := 201
-		xx := utl.LinSpace(-1, 1, npts)
-		y1 := make([]float64, len(xx))
-		y2 := make([]float64, len(xx))
-		y3 := make([]float64, len(xx))
-		y4 := make([]float64, len(xx))
-		for i, x := range xx {
-			y1[i] = f(x)
-			y2[i] = o.I(x)
-			y3[i] = o.Il(x)
-			y4[i] = g(x)
-		}
-
-		o.CalcD1()
-		u := o.CoefIs //f @ nodes: u = f(x_i)
-		v := la.NewVector(o.N + 1)
-		la.MatVecMul(v, 1, o.D1, u)
-
-		plt.Reset(true, &plt.A{Prop: 1.5})
-
-		plt.Subplot(2, 1, 1)
-		plt.Plot(o.X, u, &plt.A{L: "$f(x_i)$", C: "r", Ls: "none", M: "o", Void: true, NoClip: true})
-		plt.Plot(xx, y1, &plt.A{C: plt.C(0, 1), L: "$f$", NoClip: true})
-		plt.Plot(xx, y2, &plt.A{C: plt.C(1, 1), L: "$I$", Lw: 3, NoClip: true})
-		plt.Plot(xx, y3, &plt.A{C: plt.C(2, 1), L: "$Is$", M: "+", Me: 20, NoClip: true})
-		plt.Gll("$x$", "$f(x)$", nil)
-		plt.HideAllBorders()
-
-		plt.Subplot(2, 1, 2)
-		plt.Plot(xx, y4, &plt.A{C: plt.C(0, 1), L: "df/dx", NoClip: true})
-		plt.Plot(o.X, v, &plt.A{C: "r", Ls: "none", M: ".", L: "d(Iu)/dx @ xi", NoClip: true})
-		plt.Gll("$x$", "$g(x)$", nil)
-		plt.HideAllBorders()
-
-		plt.Save("/tmp/gosl/fun", "chebyinterp05")
-	}
 }
 
 func calcD1errorChe(tst *testing.T, N int, f, dfdxAna Ss, trig, flip, nst bool) (maxDiff float64) {
@@ -493,67 +377,6 @@ func calcD2errorChe(tst *testing.T, N int, f, dfdxAna Ss, stdD2 bool) (maxDiff f
 	// compute error
 	maxDiff = o.CalcErrorD2(dfdxAna)
 	return
-}
-
-func TestChebyInterp06(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("ChebyInterp06. round-off errors")
-
-	// test function
-	f := func(x float64) float64 {
-		return math.Pow(x, 8)
-		//return math.Sin(8.0*x) / math.Pow(x+1.1, 1.5)
-	}
-	g := func(x float64) float64 {
-		//d := math.Pow(x+1.1, 1.5)
-		//return (8*math.Cos(8*x))/d - (3*math.Sin(8*x))/(2*(1.1+x)*d)
-		return 8.0 * math.Pow(x, 7)
-	}
-
-	if chk.Verbose {
-		var dummy bool
-
-		// check
-		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
-		//Nvals := utl.IntRange3(16, 2048, 10)
-		nn := make([]float64, len(Nvals))
-		eeA := make([]float64, len(Nvals))
-		eeB := make([]float64, len(Nvals))
-		eeC := make([]float64, len(Nvals))
-		eeD := make([]float64, len(Nvals))
-		eeE := make([]float64, len(Nvals))
-		eeF := make([]float64, len(Nvals))
-		for i, N := range Nvals {
-			nn[i] = float64(N)
-
-			eeA[i] = calcD1errorChe(tst, N, f, g, false, false, false)
-			eeB[i] = calcD1errorChe(tst, N, f, g, true, false, false)
-			eeC[i] = calcD1errorChe(tst, N, f, g, false, true, false)
-			eeD[i] = calcD1errorChe(tst, N, f, g, true, true, false)
-			eeE[i] = calcD1errorChe(tst, N, f, g, false, dummy, true)
-			eeF[i] = calcD1errorChe(tst, N, f, g, true, dummy, true)
-
-			io.Pf("%4d: %.2e  %.2e  %.2e  %.2e  %.2e  %.2e\n", N,
-				eeA[i], eeB[i], eeC[i], eeD[i], eeE[i], eeF[i])
-
-		}
-
-		// plot
-		plt.Reset(true, nil)
-
-		plt.Plot(nn, eeA, &plt.A{C: "b", L: "std,nof", M: "s", Me: 1, NoClip: true})
-		plt.Plot(nn, eeB, &plt.A{C: "r", L: "tri,nof", M: "+", Me: 1, NoClip: true})
-		plt.Plot(nn, eeC, &plt.A{C: "c", L: "std,fli", M: ".", Me: 1, NoClip: true})
-		plt.Plot(nn, eeD, &plt.A{C: "m", L: "tri,fli", M: "*", Me: 1, NoClip: true})
-		plt.Plot(nn, eeE, &plt.A{C: "y", L: "std,nst", M: "s", Me: 1, NoClip: true})
-		plt.Plot(nn, eeF, &plt.A{C: "k", L: "tri,nst", M: "+", Me: 1, NoClip: true})
-
-		plt.Gll("$N$", "$||Df-df/dx||_\\infty$", &plt.A{LegOut: true, LegNcol: 3, LegHlen: 3})
-		plt.SetYlog()
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "chebyinterp06")
-	}
 }
 
 func checkD2che(tst *testing.T, N int, h, tolD float64, verb bool) {

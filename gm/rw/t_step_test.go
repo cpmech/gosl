@@ -9,7 +9,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 )
 
 func Test_step01(tst *testing.T) {
@@ -66,12 +65,6 @@ ENDSEC;`
 
 	for _, c := range stp.BsplineCurves {
 		io.Pf("c = %#v\n", c)
-	}
-
-	if chk.Verbose {
-		plt.Reset(false, nil)
-		plt.Plot3dPoints(x, y, z, nil)
-		plt.Save("/tmp/gosl/gm", "t_step01")
 	}
 }
 

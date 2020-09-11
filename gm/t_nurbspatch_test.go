@@ -10,7 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 )
 
 func Test_npatch01(tst *testing.T) {
@@ -63,20 +62,6 @@ func Test_npatch01(tst *testing.T) {
 	chk.Deep2(tst, "1: Knots", 1e-15, patch.ExchangeData[1].Knots, [][]float64{{0, 0, 0, 1, 1, 1}, {0, 0, 1, 1}})
 	chk.Ints(tst, "0: Ctrls", patch.ExchangeData[0].Ctrls, []int{0, 1, 2, 3, 4, 5})
 	chk.Ints(tst, "1: Ctrls", patch.ExchangeData[1].Ctrls, []int{5, 6, 7, 8, 9, 10})
-
-	// plot
-	if chk.Verbose {
-		ndim := 2
-		plt.Reset(false, nil)
-		for _, surf := range patch.Entities {
-			surf.DrawCtrl(ndim, false, nil, nil)
-			surf.DrawElems(ndim, 3, false, nil, nil)
-		}
-		patch.Bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "t_npatch01")
-	}
 }
 
 func Test_npatch02(tst *testing.T) {
@@ -180,30 +165,4 @@ func Test_npatch02(tst *testing.T) {
 	chk.Ints(tst, "2: Nbasis", pp.Entities[2].n, []int{3, 2, 1})
 	chk.Ints(tst, "3: Nbasis", pp.Entities[3].n, []int{9, 1, 1})
 	chk.Ints(tst, "4: Nbasis", pp.Entities[4].n, []int{9, 1, 1})
-
-	// plot
-	if chk.Verbose {
-		ndim := 2
-		plt.Reset(false, nil)
-
-		// original patch
-		for _, surf := range patch.Entities {
-			surf.DrawCtrl(ndim, false, nil, nil)
-			surf.DrawElems(ndim, 11, false, &plt.A{C: "blue", Z: 10}, nil)
-		}
-		patch.Bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
-
-		// read patch
-		for _, surf := range pp.Entities {
-			//surf.DrawCtrl(ndim, false, &plt.A{C: "g"}, nil)
-			surf.DrawElems(ndim, 11, false, &plt.A{C: "#f1e09a", Lw: 10, NoClip: true}, nil)
-		}
-		argsEntry := &plt.A{C: "k", M: "o", Ms: 10, Void: true, NoClip: true}
-		pp.Bins.Draw(true, false, false, false, argsEntry, nil, nil, nil, nil)
-
-		// save
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "t_npatch02")
-	}
 }

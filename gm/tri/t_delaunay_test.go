@@ -9,7 +9,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 )
 
 func Test_delaunay01(tst *testing.T) {
@@ -41,14 +40,4 @@ func Test_delaunay01(tst *testing.T) {
 	chk.Ints(tst, "verts of cell 1", C[1], []int{4, 1, 2})
 	chk.Ints(tst, "verts of cell 2", C[2], []int{1, 4, 0})
 	chk.Ints(tst, "verts of cell 3", C[3], []int{4, 2, 3})
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(false, nil)
-		DrawVC(V, C, nil)
-		plt.Equal()
-		plt.AxisRange(-0.1, 1.1, -0.1, 1.1)
-		plt.Gll("x", "y", nil)
-		plt.Save("/tmp/gosl", "t_delaunay01")
-	}
 }

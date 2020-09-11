@@ -10,7 +10,6 @@ import (
 	"gosl/chk"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 )
 
 func runGradDescTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tolf, tolx, α float64) (sol *GradDesc) {
@@ -30,19 +29,6 @@ func runGradDescTest(tst *testing.T, fnkey string, p *Problem, x0 la.Vector, tol
 	chk.Float64(tst, io.Sf("%s: fmin", name), tolf, fmin, p.Fref)
 	chk.Array(tst, io.Sf("%s: xmin", name), tolx, xmin, p.Xref)
 	io.Pl()
-
-	// plot
-	if chk.Verbose {
-		if p.Ndim > 2 {
-			plt.Reset(true, &plt.A{WidthPt: 600, Dpi: 150, Prop: 0.8})
-			sol.Hist.PlotAll3d("GradDesc", xmin)
-		} else {
-			plt.Reset(true, &plt.A{WidthPt: 300, Dpi: 150, Prop: 1.5})
-			sol.Hist.PlotAll2d("GradDesc", xmin)
-		}
-		plt.Save("/tmp/gosl/opt", fnkey)
-		io.Pl()
-	}
 	return
 }
 

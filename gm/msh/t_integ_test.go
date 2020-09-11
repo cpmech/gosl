@@ -11,7 +11,6 @@ import (
 	"gosl/chk"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 )
 
 func TestInteg01(tst *testing.T) {
@@ -59,21 +58,6 @@ func TestInteg01(tst *testing.T) {
 	res = o.IntegrateSv(X, fcn)
 	io.Pforan("3: res = %v\n", res)
 	chk.Float64(tst, "∫(x²+y²)dxdy (wilson5corner)", 1e-15, res, 8.0/3.0)
-
-	// draw polygon
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Polyline(X.GetDeep2(), &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
-		Xip := o.GetXip(X)
-		for i := 0; i < Xip.M; i++ {
-			plt.PlotOne(Xip.Get(i, 0), Xip.Get(i, 1), &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
-		}
-		plt.Gll("x", "y", nil)
-		plt.AxisRange(0, 2, -1, 1)
-		plt.Equal()
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/gm", "integ01")
-	}
 }
 
 func TestInteg02(tst *testing.T) {
@@ -130,21 +114,6 @@ func TestInteg02(tst *testing.T) {
 	I0 := o.IntegrateSv(X, fcnI0)
 	io.Pforan("I0 = %v\n", I0)
 	chk.Float64(tst, "I0", 1e-15, I0, anaI0)
-
-	// draw polygon
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Polyline(X.GetDeep2(), &plt.A{C: "#f4c392", L: "curve1", NoClip: true})
-		Xip := o.GetXip(X)
-		for i := 0; i < Xip.M; i++ {
-			plt.PlotOne(Xip.Get(i, 0), Xip.Get(i, 1), &plt.A{C: "b", M: "o", Ms: 6, NoClip: true})
-		}
-		plt.Gll("x", "y", nil)
-		plt.AxisRange(0, 2, -1, 1)
-		plt.Equal()
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/gm", "integ02")
-	}
 }
 
 func TestInteg03(tst *testing.T) {
@@ -178,16 +147,6 @@ func TestInteg03(tst *testing.T) {
 		typekey := TypeIndexToKey[ctype]
 		io.Pf("%s : Ix = %v  error = %v\n", typekey, Ix, math.Abs(Ix-anaIx))
 		chk.Float64(tst, "Ix", tols[i], Ix, anaIx)
-
-		if chk.Verbose {
-			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-			args := NewArgs()
-			args.WithEdges = true
-			args.WithVerts = true
-			args.WithCells = false
-			mesh.Draw(args)
-			plt.Save("/tmp/gosl/gm", io.Sf("integ03-%s", typekey))
-		}
 	}
 }
 
@@ -222,16 +181,5 @@ func TestInteg04(tst *testing.T) {
 		typekey := TypeIndexToKey[ctype]
 		io.Pf("%s : Ix = %v  error = %v\n", typekey, Ix, math.Abs(Ix-anaIx))
 		chk.Float64(tst, "Ix", tols[i], Ix, anaIx)
-
-		if chk.Verbose {
-			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-			args := NewArgs()
-			args.WithEdges = true
-			args.WithVerts = true
-			args.WithCells = false
-			mesh.Draw(args)
-			plt.HideAllBorders()
-			plt.Save("/tmp/gosl/gm", io.Sf("integ04-%s", typekey))
-		}
 	}
 }

@@ -5,35 +5,12 @@
 package rnd
 
 import (
-	"math"
 	"testing"
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 	"gosl/utl"
 )
-
-func plotNormal(μ, σ, xmin, xmax float64) {
-
-	var dist DistNormal
-	dist.Init(&Variable{M: μ, S: σ})
-
-	n := 101
-	x := utl.LinSpace(xmin, xmax, n)
-	y := make([]float64, n)
-	Y := make([]float64, n)
-	for i := 0; i < n; i++ {
-		y[i] = dist.Pdf(x[i])
-		Y[i] = dist.Cdf(x[i])
-	}
-	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, nil)
-	plt.Gll("$x$", "$f(x)$", nil)
-	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, nil)
-	plt.Gll("$x$", "$F(x)$", nil)
-}
 
 func Test_dist_normal_01(tst *testing.T) {
 
@@ -88,21 +65,6 @@ func Test_dist_normal_01(tst *testing.T) {
 	}
 }
 
-func Test_dist_normal_02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("dist_normal_02")
-
-	doplot := chk.Verbose
-	if doplot {
-		plt.Reset(false, nil)
-		for _, σ := range []float64{1, 0.5, 0.25} {
-			plotNormal(0, σ, -2, 2)
-		}
-		plt.Save("/tmp/gosl", "rnd_dist_normal_02")
-	}
-}
-
 func Test_dist_normal_03(tst *testing.T) {
 
 	//verbose()
@@ -123,25 +85,6 @@ func Test_dist_normal_03(tst *testing.T) {
 	chk.Float64(tst, "Φ⁻¹(Φ(0))", 1e-16, StdInvPhi(0.5), 0.0)
 	chk.Float64(tst, "Φ⁻¹(Φ(2))", 1e-9, StdInvPhi(0.97724986805182079), 2.0)
 	chk.Float64(tst, "Φ⁻¹(Φ(4))", 1e-8, StdInvPhi(0.99996832875816688), 4.0)
-}
-
-func Test_dist_normal_04(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("dist_normal_04. problem with Φ")
-
-	if chk.Verbose {
-		np := 101
-		x := utl.LinSpace(0, 8.2, np)
-		y := make([]float64, np)
-		for i := 0; i < np; i++ {
-			//io.Pforan("x=%v Φ(x)=%v Φ⁻¹(Φ(x))=%v\n", x[i], StdPhi(x[i]), StdInvPhi(StdPhi(x[i])))
-			y[i] = StdInvPhi(StdPhi(x[i]))
-		}
-		plt.Plot(x, y, nil)
-		plt.Gll("$x$", "$\\Phi^{-1}(\\Phi(x))$", nil)
-		plt.Save("/tmp/gosl", "rnd_dist_normal_04")
-	}
 }
 
 func Test_dist_normal_05(tst *testing.T) {
@@ -181,57 +124,4 @@ func Test_dist_normal_05(tst *testing.T) {
 	}
 	io.Pforan("area = %v\n", area)
 	chk.Float64(tst, "area", 1e-15, area, 1)
-
-	if chk.Verbose {
-		plt.Reset(false, nil)
-		plotNormal(μ, σ, 0, 2)
-		plt.Subplot(2, 1, 1)
-		hist.PlotDensity(nil)
-		plt.Save("/tmp/gosl", "rnd_dist_normal_05")
-	}
-}
-
-func Test_dist_normal_06(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("dist_normal_06. transformation")
-
-	doplot := chk.Verbose
-	if doplot {
-
-		vard := &Variable{M: 1.5, S: 0.1}
-		vard.Distr = new(DistNormal)
-		vard.Distr.Init(vard)
-
-		npts := 1001
-		X := utl.LinSpace(1, 2, npts)
-		F, Y := make([]float64, npts), make([]float64, npts)
-		for i := 0; i < npts; i++ {
-			y, invalid := vard.Transform(X[i])
-			if invalid {
-				io.Pf("invalid: x=%g\n", X[i])
-				y = math.NaN()
-			}
-			Y[i] = y
-			F[i] = vard.Distr.Pdf(X[i])
-		}
-
-		plt.Reset(true, &plt.A{Prop: 1})
-
-		plt.Subplot(2, 1, 1)
-		plt.Plot(X, F, &plt.A{C: "#0046ba", Lw: 2, NoClip: true})
-		plt.HideTRborders()
-		plt.Gll("$x$", "$f(x)$", nil)
-		plt.AxisXmin(1)
-
-		plt.Subplot(2, 1, 2)
-		plt.Plot(X, Y, &plt.A{C: "b", Lw: 2, NoClip: true})
-		plt.HideTRborders()
-		plt.SetYnticks(12)
-		plt.AxisYrange(-5, 5)
-		plt.Gll("$x$", "$y=T(x)$", nil)
-		plt.AxisXmin(1)
-
-		plt.Save("/tmp/gosl", "rnd_dist_normal_06")
-	}
 }

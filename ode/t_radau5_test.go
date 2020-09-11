@@ -11,7 +11,6 @@ import (
 	"gosl/chk"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 )
 
 func TestRadau501a(tst *testing.T) {
@@ -45,13 +44,6 @@ func TestRadau501a(tst *testing.T) {
 
 	// check results
 	chk.Float64(tst, "yFin", 2.889e-5, p.Y[0], p.CalcYana(0, p.Xf))
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-		p.Plot("Radau5,Jana", 0, sol.Out, 101, true, nil, nil)
-		plt.Save("/tmp/gosl/ode", "radau501a")
-	}
 }
 
 func TestRadau502(tst *testing.T) {
@@ -117,15 +109,6 @@ func TestRadau502(tst *testing.T) {
 	chk.Array(tst, "xx", 1e-15, xx, d.X)
 	chk.Array(tst, "yy0", 1e-11, yy0, d.Y[0])
 	chk.Array(tst, "yy1", 1e-11, yy1, d.Y[1])
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-		p.Plot("steps", 0, sol.Out, 101, false, nil, &plt.A{M: "+", C: plt.C(1, 0), NoClip: true})
-		plt.Plot(sol.Out.GetDenseX(), sol.Out.GetDenseY(0), &plt.A{L: "cont", Ls: "none", M: ".", C: plt.C(0, 0), NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Save("/tmp/gosl/ode", "radau502")
-	}
 }
 
 type refData struct {

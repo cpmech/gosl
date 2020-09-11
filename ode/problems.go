@@ -13,7 +13,6 @@ import (
 	"gosl/io"
 	"gosl/la"
 	"gosl/num"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -68,7 +67,7 @@ func (o *Problem) Solve(method string, fixedStp, numJac bool) (y la.Vector, stat
 // ConvergenceTest runs convergence test
 //   yExact -- is the exact (reference) y @ xf
 func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int, yExact la.Vector,
-	methods []string, orders, tols []float64, doPlot bool) {
+	methods []string, orders, tols []float64) {
 
 	// constants
 	dxs := utl.LinSpace(dxmin, dxmax, ndx)
@@ -100,30 +99,7 @@ func (o *Problem) ConvergenceTest(tst *testing.T, dxmin, dxmax float64, ndx int,
 		// calc convergence rate
 		_, m := num.LinFit(lu, lv)
 		chk.AnaNum(tst, "slope m", tols[im], m, -orders[im], chk.Verbose)
-
-		if chk.Verbose {
-			plt.Plot(U, V, &plt.A{L: method, C: plt.C(im, 0), M: plt.M(im, 0), NoClip: true})
-		}
 	}
-}
-
-// Plot plots Y[i] versus x series
-func (o *Problem) Plot(label string, idxY int, out *Output, npts int, withAna bool, argsAna, argsNum *plt.A) {
-	if argsAna == nil {
-		argsAna = &plt.A{C: "grey", Ls: "-", Lw: 5, L: "ana", NoClip: true}
-	}
-	if argsNum == nil {
-		argsNum = &plt.A{C: "r", M: ".", Ls: "-", L: label, NoClip: true}
-	}
-	argsNum.L = label
-	if withAna && o.Yana != nil {
-		X := utl.LinSpace(0, o.Xf, npts)
-		Y := utl.GetMapped(X, func(x float64) float64 {
-			return o.CalcYana(idxY, x)
-		})
-		plt.Plot(X, Y, argsAna)
-	}
-	plt.Plot(out.GetStepX(), out.GetStepY(idxY), argsNum)
 }
 
 // CalcYana computes component idxY of analytical solution @ x, if available

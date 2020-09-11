@@ -10,7 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 )
 
 func Test_octree01(tst *testing.T) {
@@ -130,17 +129,6 @@ func Test_octree02(tst *testing.T) {
 	chk.Array(tst, "b1.Hi", 1e-15, b1.Hi.X, []float64{1, 3})
 	chk.Array(tst, "b2.Lo", 1e-15, b2.Lo.X, []float64{0, 2, 4})
 	chk.Array(tst, "b2.Hi", 1e-15, b2.Hi.X, []float64{1, 3, 5})
-
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-		b.Draw(true, nil, nil)
-		plt.Plot3dPoint(p.X[0], p.X[1], p.X[2], &plt.A{C: "r", Ec: "r"})
-		plt.Plot3dPoint(q.X[0], q.X[1], q.X[2], &plt.A{C: "g", Ec: "g"})
-		plt.Plot3dPoint(r.X[0], r.X[1], r.X[2], &plt.A{C: "y", Ec: "y"})
-		plt.Triad(1, "x", "y", "z", nil, nil)
-		plt.Default3dView(-3, 3, -3, 3, -3, 3, true)
-		plt.Save("/tmp/gosl", "octree02")
-	}
 }
 
 func Test_octree03(tst *testing.T) {
@@ -191,30 +179,4 @@ func Test_octree03(tst *testing.T) {
 	chk.Array(tst, "45: hi", 1e-15, b45.Hi.X, []float64{1, -1.25})
 	chk.Array(tst, "52: lo", 1e-15, b52.Lo.X, []float64{0.5, -0.875})
 	chk.Array(tst, "52: hi", 1e-15, b52.Hi.X, []float64{0.75, -0.5})
-
-	if chk.Verbose {
-		b85 := o.qobox(85)
-		b200 := o.qobox(200)
-		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-		b1.Draw(true, nil, nil)
-		b2.Draw(true, &plt.A{C: "red", A: 0.2}, nil)
-		b3.Draw(true, &plt.A{C: "blue", A: 0.2}, nil)
-		b4.Draw(true, &plt.A{C: "yellow", A: 0.2}, nil)
-		b5.Draw(true, &plt.A{C: "green", A: 0.2}, nil)
-		b6.Draw(true, &plt.A{C: "green", A: 0.2}, nil)
-		b7.Draw(true, &plt.A{C: "yellow", A: 0.2}, nil)
-		b15.Draw(true, &plt.A{C: "red", A: 0.2}, nil)
-		b21.Draw(true, &plt.A{C: "red", A: 0.2}, nil)
-		b22.Draw(true, &plt.A{C: "yellow", A: 0.2}, nil)
-		b41.Draw(true, &plt.A{C: "yellow", A: 0.2}, nil)
-		b45.Draw(true, &plt.A{C: "blue", A: 0.2}, nil)
-		b52.Draw(true, &plt.A{C: "red", A: 0.2}, nil)
-		b85.Draw(true, &plt.A{C: "blue", A: 0.2}, nil)
-		b200.Draw(true, &plt.A{C: "green", A: 0.2}, nil)
-		plt.AxisRange(-3, 3, -3, 3)
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.Grid(nil)
-		plt.Save("/tmp/gosl", "octree03")
-	}
 }

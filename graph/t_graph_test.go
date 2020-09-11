@@ -10,7 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -223,54 +222,6 @@ func Test_graph03(tst *testing.T) {
 	pth = G.Path(9, 11)
 	io.Pforan("10 → 12 = %v\n", pth)
 	chk.Ints(tst, "10 → 12", pth, []int{9, 10, 11})
-
-	// plotting
-	if chk.Verbose {
-
-		columns := [][]int{
-			{0, 2, 11, 12},
-			{3, 10, 13, 22, 23},
-			{4, 8, 9, 14, 21, 20},
-			{1, 5, 7, 15, 16, 18, 19},
-			{6, 17},
-		}
-		Y := [][]float64{
-			{7, 6, 4, 0},          // col0
-			{6, 4, 2, 1, 0},       // col1
-			{6, 5, 4, 2, 1, 0},    // col2
-			{7, 6, 5, 4, 3, 2, 0}, // col3
-			{5, 4},                // col4
-		}
-
-		scalex := 1.8
-		scaley := 1.3
-		nv := 24
-		G.Verts = make([][]float64, nv)
-		for j, col := range columns {
-			x := float64(j) * scalex
-			for i, vid := range col {
-				G.Verts[vid] = []float64{x, Y[j][i] * scaley}
-			}
-		}
-
-		ne := 76
-		elabels := make(map[int]string)
-		for i := 0; i < ne; i++ {
-			elabels[i] = io.Sf("%d", i)
-		}
-
-		vlabels := make(map[int]string)
-		for i := 0; i < nv; i++ {
-			vlabels[i] = io.Sf("%d", i)
-		}
-
-		p := Plotter{G: G}
-		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150, Prop: 1.2})
-		p.Draw()
-		plt.Equal()
-		plt.AxisOff()
-		plt.Save("/tmp/graph", "siouxfalls")
-	}
 }
 
 func Test_graph04(tst *testing.T) {

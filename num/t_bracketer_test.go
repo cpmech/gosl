@@ -9,9 +9,6 @@ import (
 	"testing"
 
 	"gosl/chk"
-	"gosl/io"
-	"gosl/plt"
-	"gosl/utl"
 )
 
 func checkBracket(tst *testing.T, a, b, c, fa, fb, fc float64) {
@@ -64,25 +61,6 @@ func TestBracket01(tst *testing.T) {
 	// check
 	a, b, c, fa, fb, fc = bracket.Min(-1, -2)
 	checkBracket(tst, a, b, c, fa, fb, fc)
-
-	// plot
-	if chk.Verbose {
-		xx := utl.LinSpace(-1.2, 1.2, 101)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return ffcn(x) })
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Cross(0, 0, nil)
-		plt.Plot(xx, yy, &plt.A{C: "b", Ls: "-", L: "curve1", NoClip: true})
-		plt.PlotOne(a, fa, &plt.A{C: "r", M: "|", Ms: 40, NoClip: true})
-		plt.PlotOne(b, fb, &plt.A{C: "r", M: "*", Ms: 10, NoClip: true})
-		plt.PlotOne(c, fc, &plt.A{C: "r", M: "|", Ms: 40, NoClip: true})
-		plt.Text(a-0.2, fa-0.2, io.Sf("a=(%.2f,%.2f)", a, fa), &plt.A{Fsz: 7, NoClip: true, Ha: "right", Va: "bottom"})
-		plt.Text(b+0.0, fb+0.0, io.Sf("b=(%.2f,%.2f)", b, fb), &plt.A{Fsz: 7, NoClip: true, Ha: "center", Va: "center"})
-		plt.Text(c+0.2, fc+0.2, io.Sf("c=(%.2f,%.2f)", c, fc), &plt.A{Fsz: 7, NoClip: true, Ha: "left", Va: "top"})
-		//plt.AxisYrange(-1.5, 1.5)
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/num", "bracket01")
-	}
 }
 
 func TestBracket02(tst *testing.T) {
@@ -120,23 +98,4 @@ func TestBracket02(tst *testing.T) {
 	// check
 	a, b, c, fa, fb, fc = bracket.Min(-1, -2)
 	checkBracket(tst, a, b, c, fa, fb, fc)
-
-	// plot
-	if chk.Verbose {
-		xx := utl.LinSpace(-4.0, 1.0, 101)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return ffcn(x) })
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Cross(0, 0, nil)
-		plt.Plot(xx, yy, &plt.A{C: "b", Ls: "-", L: "curve1", NoClip: true})
-		plt.PlotOne(a, fa, &plt.A{C: "r", M: "|", Ms: 40, NoClip: true})
-		plt.PlotOne(b, fb, &plt.A{C: "r", M: "*", Ms: 10, NoClip: true})
-		plt.PlotOne(c, fc, &plt.A{C: "r", M: "|", Ms: 40, NoClip: true})
-		plt.Text(a-0.1, fa-0.1, io.Sf("a=(%.2f,%.2f)", a, fa), &plt.A{Fsz: 7, NoClip: true, Ha: "right", Va: "bottom"})
-		plt.Text(b+0.0, fb+0.0, io.Sf("b=(%.2f,%.2f)", b, fb), &plt.A{Fsz: 7, NoClip: true, Ha: "center", Va: "center"})
-		plt.Text(c+0.1, fc+0.1, io.Sf("c=(%.2f,%.2f)", c, fc), &plt.A{Fsz: 7, NoClip: true, Ha: "left", Va: "top"})
-		plt.AxisYrange(-1.2, 1.2)
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/num", "bracket02")
-	}
 }

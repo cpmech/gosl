@@ -10,30 +10,8 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 	"gosl/utl"
 )
-
-func plotLognormal(μ, σ float64) {
-
-	var dist DistLogNormal
-	dist.Init(&Variable{M: μ, S: σ})
-
-	n := 101
-	x := utl.LinSpace(0, 3, n)
-	y := make([]float64, n)
-	Y := make([]float64, n)
-	for i := 0; i < n; i++ {
-		y[i] = dist.Pdf(x[i])
-		Y[i] = dist.Cdf(x[i])
-	}
-	plt.Subplot(2, 1, 1)
-	plt.Plot(x, y, nil)
-	plt.Gll("$x$", "$f(x)$", nil)
-	plt.Subplot(2, 1, 2)
-	plt.Plot(x, Y, nil)
-	plt.Gll("$x$", "$F(x)$", nil)
-}
 
 func Test_dist_lognormal_01(tst *testing.T) {
 
@@ -91,25 +69,6 @@ func Test_dist_lognormal_01(tst *testing.T) {
 	}
 }
 
-func Test_dist_lognormal_02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("dist_lognormal_02")
-
-	doplot := chk.Verbose
-	if doplot {
-		plt.Reset(false, nil)
-		n := 0.0
-		for _, z := range []float64{1, 0.5, 0.25} {
-			w := z * z
-			μ := math.Exp(n + w/2.0)
-			σ := μ * math.Sqrt(math.Exp(w)-1.0)
-			plotLognormal(μ, σ)
-		}
-		plt.Save("/tmp/gosl", "rnd_dist_lognormal_02")
-	}
-}
-
 func Test_dist_lognormal_03(tst *testing.T) {
 
 	//verbose()
@@ -137,55 +96,4 @@ func Test_dist_lognormal_03(tst *testing.T) {
 	area := hist.DensityArea(nsamples)
 	io.Pforan("area = %v\n", area)
 	chk.Float64(tst, "area", 1e-15, area, 1)
-
-	if chk.Verbose {
-		plt.Reset(false, nil)
-		plotLognormal(μ, σ)
-		plt.Subplot(2, 1, 1)
-		hist.PlotDensity(nil)
-		plt.Save("/tmp/gosl", "rnd_dist_lognormal_03")
-	}
-}
-
-func Test_dist_lognormal_04(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("dist_lognormal_04. transformation")
-
-	doplot := chk.Verbose
-	if doplot {
-
-		vard := &Variable{M: 1.5, S: 0.1}
-		vard.Distr = new(DistLogNormal)
-		vard.Distr.Init(vard)
-
-		npts := 1001
-		X := utl.LinSpace(1, 2, npts)
-		F, Y := make([]float64, npts), make([]float64, npts)
-		for i := 0; i < npts; i++ {
-			y, invalid := vard.Transform(X[i])
-			if invalid {
-				io.Pf("invalid: x=%g\n", X[i])
-				y = math.NaN()
-			}
-			Y[i] = y
-			F[i] = vard.Distr.Pdf(X[i])
-		}
-
-		plt.Reset(true, &plt.A{Prop: 1})
-
-		plt.Subplot(2, 1, 1)
-		plt.Plot(X, F, &plt.A{C: "#0046ba", Lw: 2, NoClip: true})
-		plt.HideTRborders()
-		plt.Gll("$x$", "$f(x)$", nil)
-		plt.AxisXmin(1)
-
-		plt.Subplot(2, 1, 2)
-		plt.Plot(X, Y, &plt.A{C: "b", Lw: 2, NoClip: true})
-		plt.HideTRborders()
-		plt.Gll("$x$", "$y=T(x)$", nil)
-		plt.AxisXmin(1)
-
-		plt.Save("/tmp/gosl", "rnd_dist_lognormal_04")
-	}
 }

@@ -10,8 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
-	"gosl/utl"
 )
 
 func TestDft01(tst *testing.T) {
@@ -86,36 +84,6 @@ func TestDft02(tst *testing.T) {
 	}
 	io.Pforan("maxRf = %v\n", maxRf)
 	chk.Float64(tst, "maxRf", 1e-12, maxRf, 0.383616856748)
-
-	// plot
-	if chk.Verbose {
-		ts := utl.LinSpace(0, 1, 201)
-		xs := make([]float64, len(ts))
-		for i := 0; i < len(ts); i++ {
-			xs[i] = ss.Ybasis(ts[i])
-		}
-		fn := utl.LinSpace(0, float64(N), N)
-
-		plt.Reset(true, &plt.A{Prop: 1.2})
-
-		plt.Subplot(3, 1, 1)
-		plt.Plot(ts, xs, &plt.A{C: "b", L: "continuous signal", NoClip: true})
-		plt.Plot(tt, xx, &plt.A{C: "r", M: ".", L: "discrete signal", NoClip: true})
-		plt.Cross(0, 0, nil)
-		plt.HideAllBorders()
-		plt.Gll("t", "x(t)", &plt.A{LegOut: true, LegNcol: 3})
-
-		plt.Subplot(3, 1, 2)
-		plt.Plot(tt, Xr, &plt.A{C: "r", M: ".", L: "real(X)", NoClip: true})
-		plt.HideAllBorders()
-		plt.Gll("t", "f(t)", &plt.A{LegOut: true, LegNcol: 3})
-
-		plt.Subplot(3, 1, 3)
-		plt.Plot(fn, Rf, &plt.A{C: "m", M: ".", NoClip: true})
-		plt.HideAllBorders()
-		plt.Gll("freq", "|X(f)|/n", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl/fun", "dft02")
-	}
 }
 
 func TestDft03(tst *testing.T) {

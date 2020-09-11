@@ -7,8 +7,6 @@ package fun
 import (
 	"math/rand"
 	"testing"
-
-	"gosl/plt"
 )
 
 var (
@@ -25,13 +23,6 @@ func init() {
 	for i := 0; i < N; i++ {
 		benchmarkingX[i] = 100 * float64(i) / float64(N)
 		benchmarkingY[i] = -5.0 + 10.0*rand.Float64()
-	}
-	if false {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Plot(benchmarkingX, benchmarkingY, &plt.A{C: "r", Ls: "-", M: ".", NoClip: true})
-		plt.Gll("x", "y", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "benchInterp01")
 	}
 }
 

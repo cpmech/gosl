@@ -12,7 +12,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 )
 
 func Test_bins01(tst *testing.T) {
@@ -54,20 +53,6 @@ func Test_bins01(tst *testing.T) {
 		}
 	}
 	chk.Ints(tst, "check ids", ID, IDchk)
-
-	// plot
-	if chk.Verbose {
-
-		// draw
-		plt.Reset(false, nil)
-		bins.Draw(true, false, false, false, nil, nil, nil, nil, nil)
-		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
-		if false {
-			plt.ShowSave("/tmp/gosl/gm", "t_bins01")
-		} else {
-			plt.Save("/tmp/gosl/gm", "t_bins01")
-		}
-	}
 }
 
 func Test_bins02(tst *testing.T) {
@@ -182,16 +167,6 @@ func Test_bins02(tst *testing.T) {
 	io.Pf("\n")
 	id, sqDist = bins.FindClosest([]float64{0.1, 2.9})
 	io.Pforan("cannot find: id=%v sqDist=%v\n", id, sqDist)
-
-	// draw
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "t_bins02")
-	}
 }
 
 func Test_bins03(tst *testing.T) {
@@ -318,19 +293,6 @@ func Test_bins03(tst *testing.T) {
 	ids = bins.FindAlongSegment([]float64{-0.2, 1.8}, []float64{0.8, 1.8}, 1e-8)
 	io.Pf("ids along top edge = %v\n", ids)
 	chk.Ints(tst, "ids along top edge", ids, []int{100, 101, 102, 103, 104, 4})
-
-	// draw
-	if chk.Verbose {
-		selBins := map[int]bool{7: true, 8: true, 9: true}
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(true, true, true, true, nil, nil, nil, nil, selBins)
-		plt.SetXnticks(15)
-		plt.SetYnticks(12)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "t_bins03")
-	}
 }
 
 func Test_bins04(tst *testing.T) {
@@ -355,16 +317,6 @@ func Test_bins04(tst *testing.T) {
 	ids := bins.FindAlongSegment([]float64{0, 0, 0}, []float64{10, 10, 10}, 0.0000001)
 	io.Pforan("ids along space diagonal = %v\n", ids)
 	chk.Ints(tst, "ids along space diagonal", ID, ids)
-
-	// draw
-	if chk.Verbose {
-		argsGrid := &plt.A{C: "#427ce5", Lw: 0.1}
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(true, true, false, false, nil, argsGrid, nil, nil, nil)
-		plt.DefaultTriad(10.1)
-		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
-		plt.Save("/tmp/gosl/gm", "t_bins04")
-	}
 }
 
 func Test_bins05a(tst *testing.T) {
@@ -397,15 +349,6 @@ func Test_bins05a(tst *testing.T) {
 	ids := bins.FindAlongSegment([]float64{x, 0}, []float64{x, 2}, 1.e-15)
 	io.Pf("ids = %v\n", ids)
 	chk.Ints(tst, "ids", []int{1, 3, 5, 7}, ids)
-
-	// draw
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.Save("/tmp/gosl/gm", "t_bins05a")
-	}
 }
 
 func Test_bins05b(tst *testing.T) {
@@ -438,15 +381,6 @@ func Test_bins05b(tst *testing.T) {
 	ids := bins.FindAlongSegment([]float64{x, 0}, []float64{x, 2}, 1.e-15)
 	io.Pf("ids = %v\n", ids)
 	chk.Ints(tst, "ids", []int{1, 3, 5, 7}, ids)
-
-	// draw
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.Save("/tmp/gosl/gm", "t_bins05b")
-	}
 }
 
 func Test_bins06(tst *testing.T) {
@@ -489,18 +423,6 @@ func Test_bins06(tst *testing.T) {
 	io.Pforan("entries = %v\n", bins.All)
 	entries := map[int][]int{0: {3, 4, 5}, 1: {1, 2}, 4: {7}, 7: {6}}
 	checkBinsEntries(tst, bins.All, entries)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(false, nil)
-		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
-		plt.Default3dView(bins.Xmin[0], bins.Xmax[0], bins.Xmin[1], bins.Xmax[1], bins.Xmin[2], bins.Xmax[2], true)
-		if false {
-			plt.ShowSave("/tmp/gosl/gm", "t_bins06")
-		} else {
-			plt.Save("/tmp/gosl/gm", "t_bins06")
-		}
-	}
 }
 
 func Test_bins07(tst *testing.T) {
@@ -555,21 +477,6 @@ func Test_bins07(tst *testing.T) {
 	x = []float64{0, 2.4999999999999999}
 	idx = bins.CalcIndex(x)
 	chk.Int(tst, "y almost exact @ edge => very close: idx", idx, 6)
-
-	// append
-	bins.Append(x, 999, nil)
-
-	// draw
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		bins.Draw(true, true, true, true, nil, nil, nil, nil, nil)
-		plt.SetXnticks(15)
-		plt.SetYnticks(12)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "t_bins07")
-	}
 }
 
 // auxiliary /////////////////////////////////////////////////////////////////////////////////////

@@ -8,8 +8,6 @@ import (
 	"testing"
 
 	"gosl/chk"
-	"gosl/io"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -48,63 +46,4 @@ func Test_bezier01(tst *testing.T) {
 	Xq, Yq, _ := bez.GetControlCoords()
 	chk.Array(tst, "Xq", 1e-15, Xq, []float64{-1, 0.5, 2})
 	chk.Array(tst, "Yq", 1e-15, Yq, []float64{1, -2, 4})
-
-	if false {
-		plt.Reset(false, nil)
-		plt.Plot(X2, Y2, &plt.A{C: "y", Ls: "-", Lw: 4, L: "y=x*x"})
-		plt.Plot(X, Y, &plt.A{C: "b", Ls: "-", M: ".", L: "Bezier"})
-		plt.Gll("x", "y", nil)
-		plt.Equal()
-		plt.Save("/tmp/gosl", "fig_gm_bezier01")
-	}
-}
-
-func Test_bezier02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("bezier02. quadratic Bezier. point-distance")
-
-	bez := BezierQuad{
-		Q: [][]float64{
-			{-1, 1},
-			{0.5, -2},
-			{2, 4},
-		},
-	}
-
-	nx, ny := 5, 5
-	xx, yy := utl.MeshGrid2d(-1.5, 2.5, -0.5, 4.5, nx, ny)
-	//zz := la.MatAlloc(nx, ny)
-
-	// TODO: finish this test
-
-	doplot := false
-	if doplot {
-		plt.Reset(false, nil)
-	}
-
-	C := make([]float64, 2)
-	for j := 0; j < ny; j++ {
-		for i := 0; i < nx; i++ {
-			C[0], C[1] = xx[i][j], yy[i][j]
-			d := bez.DistPoint(C, doplot)
-			io.Pforan("d = %v\n", d)
-		}
-	}
-
-	np := 21
-	T := utl.LinSpace(0, 1, np)
-	X := make([]float64, np)
-	Y := make([]float64, np)
-	for i, t := range T {
-		bez.Point(C, t)
-		X[i], Y[i] = C[0], C[1]
-	}
-
-	if doplot {
-		plt.Plot(X, Y, &plt.A{C: "b", Ls: "-", M: ".", L: "Bezier"})
-		plt.Gll("x", "y", nil)
-		plt.Equal()
-		plt.Save("/tmp/gosl", "fig_gm_bezier02")
-	}
 }

@@ -66,11 +66,4 @@ func testRWstep01(tst *testing.T) {
 		bsp.SetControl(verts)
 		bsplines = append(bsplines, bsp)
 	}
-
-	if chk.Verbose {
-		io.Pforan("n = %v\n", len(bsplines))
-		for _, bsp := range bsplines {
-			bsp.Draw3d(21)
-		}
-	}
 }

@@ -10,7 +10,6 @@ import (
 	"gosl/chk"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -153,27 +152,6 @@ func TestNurbs01(tst *testing.T) {
 	chk.Ints(tst, "l1s1a0", c.IndsAlongCurve(1, 2, 0), []int{8, 16})
 	chk.Ints(tst, "l1s2a7", c.IndsAlongCurve(1, 1, 7), []int{7, 15})
 	chk.Ints(tst, "l1s2a7", c.IndsAlongCurve(1, 2, 7), []int{15, 23})
-
-	// plot
-	if chk.Verbose {
-		io.Pf("\n------------ plot -------------\n")
-		ndim := 2
-		plt.Reset(true, nil)
-		PlotNurbs("/tmp/gosl/gm", "nurbs01a", surf, ndim, 41, true, true, nil, nil, nil, func() {
-			plt.AxisOff()
-			plt.Equal()
-		})
-		plt.Reset(true, nil)
-		PlotNurbsBasis2d("/tmp/gosl/gm", "nurbs01b", surf, 0, 7, true, true, nil, nil, func(idx int) {
-			plt.AxisOff()
-			plt.Equal()
-		})
-		plt.Reset(true, &plt.A{Prop: 1.0})
-		PlotNurbsDerivs2d("/tmp/gosl/gm", "nurbs01c", surf, 0, 7, false, false, nil, nil, func(idx int) {
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs02(tst *testing.T) {
@@ -228,29 +206,6 @@ func TestNurbs02(tst *testing.T) {
 	chk.Ints(tst, "ibasis5", refined.IndBasis(elems[5]), []int{7, 8, 9, 13, 14, 15, 19, 20, 21})
 	chk.Ints(tst, "ibasis6", refined.IndBasis(elems[6]), []int{8, 9, 10, 14, 15, 16, 20, 21, 22})
 	chk.Ints(tst, "ibasis7", refined.IndBasis(elems[7]), []int{9, 10, 11, 15, 16, 17, 21, 22, 23})
-
-	// plot
-	if chk.Verbose {
-		io.Pf("\n------------ plot -------------\n")
-		ndim := 2
-		la := 0 + 0*surf.n[0]
-		lb := 2 + 1*surf.n[0]
-		plt.Reset(true, nil)
-		PlotNurbs("/tmp/gosl/gm", "nurbs02a", surf, ndim, 41, true, true, nil, nil, nil, func() {
-			plt.AxisOff()
-			plt.Equal()
-		})
-		plt.Reset(true, &plt.A{Prop: 1.5})
-		PlotNurbsBasis2d("/tmp/gosl/gm", "nurbs02b", surf, la, lb, false, false, nil, nil, func(idx int) {
-			plt.AxisOff()
-			plt.Equal()
-		})
-		plt.Reset(true, &plt.A{Prop: 1.7})
-		PlotNurbsDerivs2d("/tmp/gosl/gm", "nurbs02c", surf, la, lb, false, false, nil, nil, func(idx int) {
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs03(tst *testing.T) {
@@ -272,65 +227,6 @@ func TestNurbs03(tst *testing.T) {
 	chk.Ints(tst, "ibasis0", surf.IndBasis(elems[0]), []int{0, 1, 2, 3})
 	chk.Ints(tst, "ibasis1", surf.IndBasis(elems[1]), []int{1, 2, 3, 4})
 	chk.Ints(tst, "ibasis2", surf.IndBasis(elems[2]), []int{2, 3, 4, 5})
-
-	// refine NURBS
-	refined := surf.Krefine([][]float64{
-		{0.15, 0.5, 0.85},
-	})
-
-	// plot
-	if chk.Verbose {
-
-		// geometry
-		plt.Reset(true, &plt.A{WidthPt: 450})
-		plotTwoNurbs2d("/tmp/gosl/gm", "nurbs03a", surf, refined, "original", "refined", func() {
-			plt.AxisOff()
-			plt.Equal()
-		})
-
-		// basis
-		plt.Reset(true, &plt.A{Prop: 1.2})
-		PlotNurbsBasis2d("/tmp/gosl/gm", "nurbs03b", surf, 0, 1, false, false, nil, nil, func(idx int) {
-			plt.HideBorders(&plt.A{HideR: true, HideT: true})
-		})
-		plt.Reset(true, &plt.A{Prop: 1.2})
-		plt.HideBorders(&plt.A{HideR: true, HideT: true})
-		PlotNurbsDerivs2d("/tmp/gosl/gm", "nurbs03c", surf, 0, 1, false, false, nil, nil, func(idx int) {
-			plt.HideBorders(&plt.A{HideR: true, HideT: true})
-		})
-	}
-}
-
-func TestNurbs04(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("Nurbs04. KrefineN and file read-write")
-
-	// NURBS
-	a := FactoryNurbs.Surf2dQuarterPlateHole1()
-	b := a.KrefineN(2, false)
-	c := a.KrefineN(4, false)
-
-	// plot
-	if chk.Verbose {
-		ndim := 2
-		plt.Reset(true, nil)
-		PlotNurbs("/tmp/gosl/gm", "nurbs04a", b, ndim, 41, true, true, nil, nil, nil, func() {
-			plt.AxisOff()
-			plt.Equal()
-		})
-		plt.Reset(true, nil)
-		plt.Reset(true, nil)
-		plotTwoNurbs2d("/tmp/gosl/gm", "nurbs04c", a, b, "original", "refined", func() {
-			plt.AxisOff()
-			plt.Equal()
-		})
-		plt.Reset(true, nil)
-		plotTwoNurbs2d("/tmp/gosl/gm", "nurbs04d", a, c, "original", "refined", func() {
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs05(tst *testing.T) {
@@ -379,22 +275,6 @@ func TestNurbs05(tst *testing.T) {
 
 	curve.PointAndFirstDerivs(dCduE, cE, []float64{1}, 2)
 	chk.Array(tst, "dCdu @ u=1  ", 1e-17, dCduE.Col(0), []float64{5, 10})
-
-	// plot
-	if chk.Verbose {
-		PlotNurbs("/tmp/gosl/gm", "nurbs05", curve, 2, 41, false, true, nil, nil, nil, func() {
-			plt.DrawArrow2d(cA, dCduA.Col(0), true, 1, nil)
-			plt.DrawArrow2d(cB, dCduB.Col(0), true, 1, nil)
-			plt.DrawArrow2d(cC, dCduC.Col(0), true, 1, nil)
-			plt.DrawArrow2d(cD, dCduD.Col(0), true, 1, nil)
-			plt.DrawArrow2d(cE, dCduE.Col(0), true, 1, nil)
-			curve.PointAndFirstDerivs(dCduA, cA, []float64{1.0 / 5.0}, 2)
-			plt.DrawArrow2d(cA, dCduA.Col(0), true, 1, nil)
-			plt.Gll("x", "y", nil)
-			plt.HideTRborders()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs06(tst *testing.T) {
@@ -434,19 +314,6 @@ func TestNurbs06(tst *testing.T) {
 
 	curve.PointAndFirstDerivs(dCduD, cD, []float64{1}, 2)
 	chk.Array(tst, "dCdu @ u=1  ", 1e-17, dCduD.Col(0), []float64{-1, 0})
-
-	// plot
-	if chk.Verbose {
-		PlotNurbs("/tmp/gosl/gm", "nurbs06", curve, 2, 41, false, true, nil, nil, nil, func() {
-			plt.DrawArrow2d(cA, dCduA.Col(0), false, 1, nil)
-			plt.DrawArrow2d(cB, dCduB.Col(0), false, 1, nil)
-			plt.DrawArrow2d(cC, dCduC.Col(0), false, 1, nil)
-			plt.DrawArrow2d(cD, dCduD.Col(0), false, 1, nil)
-			plt.Gll("x", "y", nil)
-			plt.HideTRborders()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs07(tst *testing.T) {
@@ -486,34 +353,6 @@ func TestNurbs07(tst *testing.T) {
 	chk.Array(tst, "dCduC_v", 1e-15, dCduC.Col(1).GetUnit(), []float64{-1, 0, 0})
 	chk.Array(tst, "dCduD_u", 1e-15, dCduD.Col(0).GetUnit(), []float64{0, -1, 0})
 	chk.Array(tst, "dCduD_v", 1e-15, dCduD.Col(1).GetUnit(), []float64{-1, 0, 0})
-
-	// plot
-	if chk.Verbose {
-		nu, nv := 18, 41
-		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-		//surf.DrawCtrl(3, false, &plt.A{C: "grey", Lw: 0.5}, nil)
-		surf.DrawSurface(3, nu, nv, true, false, &plt.A{C: plt.C(2, 9), Rstride: 1, Cstride: 1}, &plt.A{C: "#2782c8", Lw: 0.5})
-		//surf.DrawSurface(3, nu, nv, false, true, &plt.A{C: plt.C(0, 9), Rstride: 1, Cstride: 1}, &plt.A{C: "#2782c8", Lw: 0.5})
-		plt.Sphere(cA, 0.5, 11, 11, &plt.A{C: "r", Surf: true})
-		plt.Sphere(cB, 0.5, 11, 11, &plt.A{C: "r", Surf: true})
-
-		sf := 3.0
-		plt.DrawArrow3d(cA, dCduA.Col(0), true, sf, &plt.A{C: plt.C(0, 0)})
-		plt.DrawArrow3d(cA, dCduA.Col(1), true, sf, &plt.A{C: plt.C(1, 0)})
-
-		plt.DrawArrow3d(cB, dCduB.Col(0), true, sf, &plt.A{C: plt.C(0, 0)})
-		plt.DrawArrow3d(cB, dCduB.Col(1), true, sf, &plt.A{C: plt.C(1, 0)})
-
-		plt.DrawArrow3d(cC, dCduC.Col(0), true, sf, &plt.A{C: plt.C(0, 0)})
-		plt.DrawArrow3d(cC, dCduC.Col(1), true, sf, &plt.A{C: plt.C(1, 0)})
-
-		plt.DrawArrow3d(cD, dCduD.Col(0), true, sf, &plt.A{C: plt.C(0, 0)})
-		plt.DrawArrow3d(cD, dCduD.Col(1), true, sf, &plt.A{C: plt.C(1, 0)})
-
-		plt.Default3dView(-6.1, 6.1, -6.1, 6.1, -6.1, 6.1, true)
-		plt.Save("/tmp/gosl/gm", "nurbs07")
-		//plt.ShowSave("/tmp/gosl/gm", "nurbs07")
-	}
 }
 
 func TestNurbs08(tst *testing.T) {
@@ -551,22 +390,6 @@ func TestNurbs08(tst *testing.T) {
 	chk.Array(tst, "dCduB_u", 1e-15, dCduB.Col(0), []float64{0, 0, 0})
 	chk.Array(tst, "dCduC_u", 1e-15, dCduC.Col(0), []float64{0, 0, 0})
 	chk.Array(tst, "dCduD_u", 1e-15, dCduD.Col(0), []float64{0, 0, 0})
-
-	if chk.Verbose {
-		nu, nv := 21, 21
-		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-		surf.DrawCtrl(3, false, &plt.A{C: "grey", Lw: 0.5}, nil)
-		surf.DrawSurface(3, nu, nv, true, false, &plt.A{C: plt.C(2, 9), Rstride: 2, Cstride: 2}, &plt.A{C: "#2782c8", Lw: 0.5})
-		surf.DrawVectors3d(5, 5, 1, nil, nil)
-
-		sf := 1.0
-		plt.DrawArrow3d(cA, dCduA.Col(0), true, sf, &plt.A{C: plt.C(2, 2), Lw: 4})
-		plt.DrawArrow3d(cA, dCduA.Col(1), true, sf, &plt.A{C: plt.C(3, 2), Lw: 4})
-
-		plt.Default3dView(-1, 5, -1, 5, -1, 5, true)
-		plt.Save("/tmp/gosl/gm", "nurbs08")
-		//plt.ShowSave("/tmp/gosl/gm", "nurbs08")
-	}
 }
 
 func TestNurbs09(tst *testing.T) {
@@ -580,27 +403,6 @@ func TestNurbs09(tst *testing.T) {
 	// check derivatives
 	verb := chk.Verbose
 	checkNurbsCurveDerivs(tst, curve, []float64{0, 0.2, 0.5, 1.5, 2.5, 3.5, 4}, verb)
-
-	// plot
-	if chk.Verbose {
-		ndim := 2
-		x := la.NewVector(ndim)
-		u := la.NewVector(ndim)
-		C := la.NewVector(ndim)
-		dCdu := la.NewMatrix(ndim, curve.gnd)
-		dxdr, ddxdrr := la.NewVector(ndim), la.NewVector(ndim)
-		u[0] = 0.5
-		curve.PointAndDerivs(x, dxdr, nil, nil, ddxdrr, nil, nil, nil, nil, nil, u, ndim)
-		curve.PointAndFirstDerivs(dCdu, C, u, ndim)
-		plt.Reset(true, nil)
-		PlotNurbs("/tmp/gosl/gm", "nurbs09", curve, ndim, 21, true, true, nil, nil, nil, func() {
-			plt.PlotOne(x[0], x[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
-			plt.DrawArrow2d(C, dCdu.GetCol(0), true, 1, &plt.A{C: "orange", Lw: 7})
-			plt.DrawArrow2d(x, dxdr, true, 1, &plt.A{C: "k"})
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs10(tst *testing.T) {
@@ -625,27 +427,6 @@ func TestNurbs10(tst *testing.T) {
 	// check derivatives
 	verb := chk.Verbose
 	checkNurbsCurveDerivs(tst, curve, []float64{0, 1.01, 1.5, 2.01, 3.01, 4}, verb)
-
-	// plot
-	if chk.Verbose {
-		ndim := 2
-		x := la.NewVector(ndim)
-		u := la.NewVector(ndim)
-		C := la.NewVector(ndim)
-		dCdu := la.NewMatrix(ndim, curve.gnd)
-		dxdr, ddxdrr := la.NewVector(ndim), la.NewVector(ndim)
-		u[0] = 1.0
-		curve.PointAndDerivs(x, dxdr, nil, nil, ddxdrr, nil, nil, nil, nil, nil, u, ndim)
-		curve.PointAndFirstDerivs(dCdu, C, u, ndim)
-		plt.Reset(true, nil)
-		PlotNurbs("/tmp/gosl/gm", "nurbs10", curve, ndim, 21, true, true, nil, nil, nil, func() {
-			plt.PlotOne(x[0], x[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
-			plt.DrawArrow2d(C, dCdu.GetCol(0), true, 1, &plt.A{C: "orange", Lw: 7})
-			plt.DrawArrow2d(x, dxdr, true, 1, &plt.A{C: "k"})
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs11(tst *testing.T) {
@@ -670,35 +451,6 @@ func TestNurbs11(tst *testing.T) {
 	// check derivatives
 	verb := chk.Verbose
 	checkNurbsSurfDerivs(tst, surf, []float64{0, 1.01, 2.01, 3}, []float64{0, 1}, verb, 1e-14, 1e-8, 1e-8, 1e-7)
-
-	// plot
-	if chk.Verbose {
-		ndim := 2
-		x := la.NewVector(ndim)
-		u := la.NewVector(ndim)
-		C := la.NewVector(ndim)
-		dCdu := la.NewMatrix(ndim, surf.gnd)
-		dxdr, dxds := la.NewVector(ndim), la.NewVector(ndim)
-		arrows := func(r, s float64) {
-			u[0], u[1] = r, s
-			surf.PointAndDerivs(x, dxdr, dxds, nil, nil, nil, nil, nil, nil, nil, u, ndim)
-			surf.PointAndFirstDerivs(dCdu, C, u, ndim)
-			plt.DrawArrow2d(C, dCdu.GetCol(0), true, 0.5, &plt.A{C: "orange", Lw: 7})
-			plt.DrawArrow2d(C, dCdu.GetCol(1), true, 0.5, &plt.A{C: "orange", Lw: 7})
-			plt.DrawArrow2d(x, dxdr, true, 0.5, &plt.A{C: "k"})
-			plt.DrawArrow2d(x, dxds, true, 0.5, &plt.A{C: "k"})
-		}
-		plt.Reset(true, &plt.A{WidthPt: 500, Prop: 0.7})
-		PlotNurbs("/tmp/gosl/gm", "nurbs11", surf, ndim, 21, true, true, nil, nil, nil, func() {
-			plt.PlotOne(x[0], x[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
-			arrows(0, 0)
-			arrows(1, 0)
-			arrows(0, 1)
-			arrows(1, 1)
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs12(tst *testing.T) {
@@ -712,34 +464,6 @@ func TestNurbs12(tst *testing.T) {
 	// check derivatives
 	verb := chk.Verbose
 	checkNurbsSurfDerivs(tst, surf, []float64{0, 1.01, 2.01, 3}, []float64{0, 1}, verb, 1e-14, 1e-9, 1e-8, 1e-7)
-
-	// plot
-	if chk.Verbose {
-		ndim := 2
-		x := la.NewVector(ndim)
-		u := la.NewVector(ndim)
-		C := la.NewVector(ndim)
-		dCdu := la.NewMatrix(ndim, surf.gnd)
-		dxdr, dxds := la.NewVector(ndim), la.NewVector(ndim)
-		arrows := func(r, s float64) {
-			u[0], u[1] = r, s
-			surf.PointAndDerivs(x, dxdr, dxds, nil, nil, nil, nil, nil, nil, nil, u, ndim)
-			surf.PointAndFirstDerivs(dCdu, C, u, ndim)
-			plt.DrawArrow2d(C, dCdu.GetCol(0), true, 0.5, &plt.A{C: "orange", Lw: 7})
-			plt.DrawArrow2d(C, dCdu.GetCol(1), true, 0.5, &plt.A{C: "orange", Lw: 7})
-			plt.DrawArrow2d(x, dxdr, true, 0.5, &plt.A{C: "k"})
-			plt.DrawArrow2d(x, dxds, true, 0.5, &plt.A{C: "k"})
-		}
-		plt.Reset(true, &plt.A{WidthPt: 500, Prop: 0.7})
-		PlotNurbs("/tmp/gosl/gm", "nurbs12", surf, ndim, 21, true, true, nil, nil, nil, func() {
-			plt.PlotOne(x[0], x[1], &plt.A{C: plt.C(4, 0), M: "o", NoClip: true})
-			arrows(0, 0)
-			arrows(2, 0)
-			arrows(3, 1)
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestNurbs13(tst *testing.T) {
@@ -762,18 +486,6 @@ func TestNurbs13(tst *testing.T) {
 	// check derivatives
 	verb := chk.Verbose
 	checkNurbsSolidDerivs(tst, solid, []float64{0, 1}, []float64{0, 1}, []float64{0, 1}, verb, 1e-14, 1e-9, 1e-8, 1e-8)
-
-	// plot
-	if chk.Verbose {
-		npts := 3
-		plt.Reset(true, &plt.A{WidthPt: 500, Prop: 1})
-		solid.DrawSolid(2, 4, 3, &plt.A{C: plt.C(1, 0)})
-		solid.DrawElems(3, npts, true, &plt.A{C: plt.C(0, 0)}, &plt.A{C: "k", Fsz: 7})
-		solid.DrawCtrl(3, true, nil, nil)
-		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
-		plt.Default3dView(0, 2, 0, 2, 0, 2, true)
-		plt.Save("/tmp/gosl/gm", "nurbs13")
-	}
 }
 
 func TestNurbs14(tst *testing.T) {
@@ -787,16 +499,4 @@ func TestNurbs14(tst *testing.T) {
 	// check derivatives
 	verb := chk.Verbose
 	checkNurbsSolidDerivs(tst, solid, []float64{0, 1}, []float64{0, 1}, []float64{0, 1}, verb, 1e-14, 1e-9, 1e-8, 1e-8)
-
-	// plot
-	if chk.Verbose {
-		npts := 11
-		plt.Reset(true, &plt.A{WidthPt: 500, Prop: 1})
-		solid.DrawSolid(3, 3, 9, &plt.A{C: plt.C(1, 0)})
-		solid.DrawElems(3, npts, true, &plt.A{C: plt.C(0, 0)}, &plt.A{C: "k", Fsz: 7})
-		solid.DrawCtrl(3, true, nil, nil)
-		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
-		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
-		plt.Save("/tmp/gosl/gm", "nurbs14")
-	}
 }

@@ -10,7 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -57,7 +56,7 @@ func TestLagCheby01(tst *testing.T) {
 	}
 }
 
-func runAndPlotD1err(tst *testing.T, fnkey string, Nvals []int, f, g Ss) {
+func runD1err(tst *testing.T, fnkey string, Nvals []int, f, g Ss) {
 	nn := make([]float64, len(Nvals))
 	eeA := make([]float64, len(Nvals))
 	eeB := make([]float64, len(Nvals))
@@ -72,18 +71,9 @@ func runAndPlotD1err(tst *testing.T, fnkey string, Nvals []int, f, g Ss) {
 		eeD[i] = calcD1errorLag(tst, N, f, g, true)               // lag,eta
 		io.Pf("%4d: %.2e  %.2e  %.2e  %.2e\n", N, eeA[i], eeB[i], eeC[i], eeD[i])
 	}
-	plt.Reset(true, nil)
-	plt.Plot(nn, eeA, &plt.A{C: "y", L: "std,nst", M: "s", Me: 1, NoClip: true})
-	plt.Plot(nn, eeB, &plt.A{C: "k", L: "tri,nst", M: "+", Me: 1, NoClip: true})
-	plt.Plot(nn, eeC, &plt.A{C: "r", L: "lag,---", M: ".", Me: 1, NoClip: true})
-	plt.Plot(nn, eeD, &plt.A{C: "b", L: "lag,eta", M: "^", Me: 1, NoClip: true})
-	plt.Gll("$N$", "$||Df-df/dx||_\\infty$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 3})
-	plt.SetYlog()
-	plt.HideTRborders()
-	plt.Save("/tmp/gosl/fun", fnkey)
 }
 
-func runAndPlotD2err(tst *testing.T, fnkey string, Nvals []int, f, h Ss) {
+func runD2err(tst *testing.T, fnkey string, Nvals []int, f, h Ss) {
 	nn := make([]float64, len(Nvals))
 	eeA := make([]float64, len(Nvals))
 	eeB := make([]float64, len(Nvals))
@@ -97,15 +87,6 @@ func runAndPlotD2err(tst *testing.T, fnkey string, Nvals []int, f, h Ss) {
 		eeD[i] = calcD2errorLag(tst, N, f, h, true)  // lag,eta
 		io.Pf("%4d: %.2e  %.2e  %.2e  %.2e\n", N, eeA[i], eeB[i], eeC[i], eeD[i])
 	}
-	plt.Reset(true, nil)
-	plt.Plot(nn, eeA, &plt.A{C: "g", L: "che,uD1", M: "+", Me: 1, NoClip: true})
-	plt.Plot(nn, eeB, &plt.A{C: "r", L: "che,std", M: "s", Me: 1, NoClip: true})
-	plt.Plot(nn, eeC, &plt.A{C: "b", L: "lag,lam", M: ".", Me: 1, NoClip: true})
-	plt.Plot(nn, eeD, &plt.A{C: "m", L: "lag,eta", M: "^", Me: 1, NoClip: true})
-	plt.Gll("$N$", "$||D^{(2)}f-d^2f/dx^2||_\\infty$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 3})
-	plt.SetYlog()
-	plt.HideTRborders()
-	plt.Save("/tmp/gosl/fun", fnkey)
 }
 
 func TestLagCheby02a(tst *testing.T) {
@@ -121,7 +102,7 @@ func TestLagCheby02a(tst *testing.T) {
 	}
 	if chk.Verbose {
 		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
-		runAndPlotD1err(tst, "lagcheby02a", Nvals, f, g)
+		runD1err(tst, "lagcheby02a", Nvals, f, g)
 	}
 }
 
@@ -139,7 +120,7 @@ func TestLagCheby02b(tst *testing.T) {
 	}
 	if chk.Verbose {
 		Nvals := []int{64, 100, 128, 250, 256, 500, 512, 1000, 1024, 2000, 2048}
-		runAndPlotD1err(tst, "lagcheby02b", Nvals, f, g)
+		runD1err(tst, "lagcheby02b", Nvals, f, g)
 	}
 }
 
@@ -156,7 +137,7 @@ func TestLagCheby03a(tst *testing.T) {
 	}
 	if chk.Verbose {
 		Nvals := []int{16, 32, 50, 64, 100, 128, 250, 256, 500}
-		runAndPlotD2err(tst, "lagcheby03a", Nvals, f, h)
+		runD2err(tst, "lagcheby03a", Nvals, f, h)
 	}
 }
 
@@ -175,6 +156,6 @@ func TestLagCheby03b(tst *testing.T) {
 	}
 	if chk.Verbose {
 		Nvals := []int{64, 100, 128, 250, 256, 500}
-		runAndPlotD2err(tst, "lagcheby03b", Nvals, f, h)
+		runD2err(tst, "lagcheby03b", Nvals, f, h)
 	}
 }

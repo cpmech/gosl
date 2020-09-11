@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"gosl/chk"
-	"gosl/plt"
 )
 
 func TestMoEuler01(tst *testing.T) {
@@ -42,11 +41,4 @@ func TestMoEuler01(tst *testing.T) {
 
 	// check results
 	chk.Float64(tst, "yFin", 4.294973673e-5, p.Y[0], p.CalcYana(0, p.Xf))
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-		p.Plot("MoEuler", 0, sol.Out, 101, true, nil, nil)
-		plt.Save("/tmp/gosl/ode", "moeuler01")
-	}
 }

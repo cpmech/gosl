@@ -12,8 +12,6 @@ import (
 	"gosl/fun"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
-	"gosl/utl"
 )
 
 // rootSolTest runs root solution test
@@ -84,19 +82,7 @@ func TestBrent01(tst *testing.T) {
 	xa, xb := 0.0, 0.11
 	//xguess := 0.001 // ===> this one fails (Newton)
 	xguess := 0.03
-	xsol := rootSolTest(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB)
-
-	if chk.Verbose {
-		xx := utl.LinSpace(-0.5, 0.5, 101)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return ffcnA(x) })
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Plot(xx, yy, &plt.A{C: "b", Ls: "-", L: "curve1", NoClip: true})
-		plt.PlotOne(xsol, ffcnA(xsol), &plt.A{C: "r", M: "o", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/num", "brent01")
-	}
+	rootSolTest(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB)
 }
 
 func TestBrent02(tst *testing.T) {
@@ -122,18 +108,6 @@ func TestBrent02(tst *testing.T) {
 	xguess := 2.1
 	xbrent := rootSolTest(tst, xa, xb, xguess, 1e-7, ffcnA, ffcnB, JfcnB)
 	chk.Float64(tst, "xsol", 1e-11, xbrent, 2.09455148154233)
-
-	if chk.Verbose {
-		xx := utl.LinSpace(1, 3, 101)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return ffcnA(x) })
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Plot(xx, yy, &plt.A{C: "b", Ls: "-", L: "curve1", NoClip: true})
-		plt.PlotOne(xbrent, ffcnA(xbrent), &plt.A{C: "r", M: "o", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/num", "brent02")
-	}
 }
 
 func TestBrent03(tst *testing.T) {
@@ -167,16 +141,4 @@ func TestBrent03(tst *testing.T) {
 	io.Pf("nit    = %v\n", o.NumIter)
 	io.Pf("nfeval = %v\n", o.NumFeval)
 	io.Pf("nJeval = %v\n", o.NumJeval)
-
-	if chk.Verbose {
-		xx := utl.LinSpace(-2, 2, 101)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return ffcn(x) })
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Plot(xx, yy, &plt.A{C: "b", Ls: "-", L: "curve1", NoClip: true})
-		plt.PlotOne(x, y, &plt.A{C: "r", M: "o", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/num", "brent03")
-	}
 }

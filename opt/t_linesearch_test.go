@@ -10,7 +10,6 @@ import (
 	"gosl/chk"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -56,21 +55,4 @@ func TestLineSearch01(tst *testing.T) {
 	io.Pforan("f = %v\n", f)
 	chk.Float64(tst, "a", 1e-15, a, 0.5)
 	chk.Float64(tst, "f", 1e-15, a, 0.5)
-
-	// plot
-	if chk.Verbose {
-
-		line.Set(x0, u) // must set x again because x has changed
-
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.7})
-
-		plt.Subplot(2, 1, 1)
-		line.PlotC(0, 1, x0, u, a, -2, 2, -2, 2, 41)
-		plt.HideTRborders()
-
-		plt.Subplot(2, 1, 2)
-		line.PlotF(a, -1.5, 1.5, 41)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/opt", "linesearch01")
-	}
 }

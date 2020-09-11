@@ -11,7 +11,6 @@ import (
 	"gosl/gm"
 	"gosl/io"
 	"gosl/la"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -135,17 +134,6 @@ func TestFdm02(tst *testing.T) {
 		return
 	}
 	chk.Array(tst, "uNoreact", 1e-15, uNoreact, u)
-
-	// plot
-	if chk.Verbose {
-		gp := gm.GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		gp.Draw()
-		plt.ContourL(gp.X2d, gp.Y2d, uu, nil)
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "fdm02")
-	}
 }
 
 func TestFdm03(tst *testing.T) {
@@ -185,17 +173,5 @@ func TestFdm03(tst *testing.T) {
 		for m := 0; m < g.Npts(0); m++ {
 			chk.AnaNum(tst, "u", 0.021, u[g.IndexMNPtoI(m, n, 0)], ana(g.X(m, n, 0)), chk.Verbose)
 		}
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		uu := g.MapMeshgrid2d(u)
-		x2d, y2d := g.Meshgrid2d()
-		plt.Equal()
-		plt.ContourF(x2d, y2d, uu, nil)
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "fdm03")
 	}
 }

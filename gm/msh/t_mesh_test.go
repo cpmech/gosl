@@ -10,7 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 )
 
 func TestSingleq4(tst *testing.T) {
@@ -94,17 +93,6 @@ func TestSingleq4(tst *testing.T) {
 	}
 	if len(boundary) != 4 {
 		tst.Errorf("len(internal) != 4\n")
-	}
-
-	// draw
-	if chk.Verbose {
-		args := NewArgs()
-		args.WithIdsVerts = true
-		args.WithIdsCells = true
-		plt.Reset(true, nil)
-		m.Draw(args)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "singleq4")
 	}
 }
 
@@ -247,18 +235,6 @@ func TestMesh01(tst *testing.T) {
 	if len(boundary) != 10 {
 		tst.Errorf("len(internal) != 10\n")
 	}
-
-	// draw
-	if chk.Verbose {
-		args := NewArgs()
-		args.WithIdsVerts = true
-		args.WithIdsCells = true
-		args.WithTagsEdges = true
-		plt.Reset(true, nil)
-		m.Draw(args)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "mesh01")
-	}
 }
 
 func TestCubeandtet(tst *testing.T) {
@@ -386,18 +362,6 @@ func TestCubeandtet(tst *testing.T) {
 	if m.Boundary(123) != nil {
 		chk.Panic("Boundary(123) should return nil\n")
 	}
-
-	// draw
-	if chk.Verbose {
-		args := NewArgs()
-		args.WithIdsVerts = true
-		args.WithIdsCells = true
-		args.WithEdges = true
-		plt.Reset(true, nil)
-		m.Draw(args)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "cubeandtet")
-	}
 }
 
 func TestMesh02(tst *testing.T) {
@@ -503,18 +467,6 @@ func TestMesh02(tst *testing.T) {
 	chk.Ints(tst, "nodes @ edge 21", m.Boundary(21), []int{6, 7, 8})
 	if m.Boundary(33) != nil {
 		chk.Panic("Boundary(33) should return nil\n")
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		args := NewArgs()
-		args.WithIdsVerts = true
-		args.WithIdsCells = true
-		args.WithTagsEdges = true
-		m.Draw(args)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/msh", "mesh02")
 	}
 }
 

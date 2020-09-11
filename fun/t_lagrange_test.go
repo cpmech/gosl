@@ -10,7 +10,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -62,13 +61,6 @@ func TestLagCardinal01(tst *testing.T) {
 			chk.AnaNum(tst, io.Sf("l%d", i), 1e-15, li1, li2, chk.Verbose)
 		}
 	}
-
-	// plot basis
-	if chk.Verbose {
-		plt.Reset(true, nil)
-		PlotLagInterpL(N, kind)
-		plt.Save("/tmp/gosl/fun", "lagcardinal01")
-	}
 }
 
 func TestLagInterp01(tst *testing.T) {
@@ -94,13 +86,6 @@ func TestLagInterp01(tst *testing.T) {
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
 	}
 	io.Pl()
-
-	// plot interpolation
-	if chk.Verbose {
-		plt.Reset(true, nil)
-		PlotLagInterpI([]int{4, 6, 8, 12, 16, 24}, kind, f)
-		plt.Save("/tmp/gosl/fun", "laginterp01")
-	}
 }
 
 func TestLagInterp02(tst *testing.T) {
@@ -126,21 +111,6 @@ func TestLagInterp02(tst *testing.T) {
 		chk.AnaNum(tst, io.Sf("I(X[%d])", i), 1e-17, ynum, yana, chk.Verbose)
 	}
 	io.Pl()
-
-	if chk.Verbose {
-
-		// plot nodal polynomial
-		plt.Reset(true, nil)
-		PlotLagInterpW(8, kind)
-		plt.AxisYrange(-0.02, 0.02)
-		plt.Save("/tmp/gosl/fun", "laginterp02a")
-
-		// plot interpolation
-		plt.Reset(true, nil)
-		PlotLagInterpI([]int{4, 6, 8, 12, 16, 24}, kind, f)
-		plt.AxisYrange(-1, 1)
-		plt.Save("/tmp/gosl/fun", "laginterp02b")
-	}
 }
 
 func TestLagInterp03(tst *testing.T) {
@@ -173,37 +143,6 @@ func TestLagInterp03(tst *testing.T) {
 		p := NewLagrangeInterp(n, kind)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-13, p.EstimateLebesgue(), ΛN[i])
 	}
-
-	if chk.Verbose {
-
-		// plot nodal polynomial
-		plt.Reset(true, nil)
-		PlotLagInterpW(8, kind)
-		plt.AxisYrange(-0.02, 0.02)
-		plt.Save("/tmp/gosl/fun", "laginterp03a")
-
-		// plot interpolation
-		plt.Reset(true, nil)
-		PlotLagInterpI([]int{4, 6, 8, 12, 16, 24}, kind, f)
-		plt.AxisYrange(-1, 1)
-		plt.Save("/tmp/gosl/fun", "laginterp03b")
-
-		// plot error
-		plt.Reset(true, nil)
-		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
-		E := make([]float64, len(Nvalues))
-		for i, n := range Nvalues {
-			p := NewLagrangeInterp(int(n), kind)
-			p.CalcU(f)
-			E[i], _ = p.EstimateMaxErr(0, f)
-		}
-		plt.Plot(Nvalues, E, &plt.A{C: "red", M: ".", NoClip: true})
-		plt.Grid(nil)
-		plt.Gll("$N$", "$\\max[|f(x) - I^X_N\\{f\\}(x)|]$", nil)
-		plt.HideTRborders()
-		plt.SetYlog()
-		plt.Save("/tmp/gosl/fun", "laginterp03c")
-	}
 }
 
 func TestLagInterp04(tst *testing.T) {
@@ -235,37 +174,6 @@ func TestLagInterp04(tst *testing.T) {
 	for i, n := range []int{4, 8, 24} {
 		p := NewLagrangeInterp(n, kind)
 		chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-14, p.EstimateLebesgue(), ΛN[i])
-	}
-
-	if chk.Verbose {
-
-		// plot nodal polynomial
-		plt.Reset(true, nil)
-		PlotLagInterpW(8, kind)
-		plt.AxisYrange(-0.02, 0.02)
-		plt.Save("/tmp/gosl/fun", "laginterp04a")
-
-		// plot interpolation
-		plt.Reset(true, nil)
-		PlotLagInterpI([]int{4, 6, 8, 12, 16, 24}, kind, f)
-		plt.AxisYrange(-1, 1)
-		plt.Save("/tmp/gosl/fun", "laginterp04b")
-
-		// plot error
-		plt.Reset(true, nil)
-		Nvalues := []float64{1, 4, 8, 16, 24, 40, 80, 100, 120, 140, 200}
-		E := make([]float64, len(Nvalues))
-		for i, n := range Nvalues {
-			p := NewLagrangeInterp(int(n), kind)
-			p.CalcU(f)
-			E[i], _ = p.EstimateMaxErr(0, f)
-		}
-		plt.Plot(Nvalues, E, &plt.A{C: "red", M: ".", NoClip: true})
-		plt.Grid(nil)
-		plt.Gll("$N$", "$\\max[|f(x) - I^X_N\\{f\\}(x)|]$", nil)
-		plt.HideTRborders()
-		plt.SetYlog()
-		plt.Save("/tmp/gosl/fun", "laginterp04c")
 	}
 }
 

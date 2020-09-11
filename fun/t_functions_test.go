@@ -12,7 +12,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 	"gosl/utl"
 )
 
@@ -119,17 +118,6 @@ func TestLogistic01(tst *testing.T) {
 	if withErr {
 		chk.Panic("errors found")
 	}
-
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.25})
-		plt.Subplot(2, 1, 1)
-		plt.Plot(x, y, &plt.A{C: plt.C(0, 0), Ls: "-", Lw: 1.5, L: "logistic", NoClip: true})
-		plt.Gll("z", "g(z)", nil)
-		plt.Subplot(2, 1, 2)
-		plt.Plot(x, g, &plt.A{C: plt.C(2, 0), Ls: "-", Lw: 1.5, L: "derivative", NoClip: true})
-		plt.Gll("z", "dgdz(z)", nil)
-		plt.Save("/tmp/gosl/fun", "logistic01")
-	}
 }
 
 func Test_functions03(tst *testing.T) {
@@ -172,42 +160,6 @@ func Test_functions03(tst *testing.T) {
 
 	if withErr {
 		chk.Panic("errors found")
-	}
-
-	if false {
-		//if true {
-		plt.Subplot(3, 1, 1)
-		plt.Plot(x, y, &plt.A{C: "k", Ls: "--", L: "abs"})
-		plt.Plot(x, y, &plt.A{C: "b", Ls: "-", L: "sabs"})
-		plt.Gll("x", "y", nil)
-
-		plt.Subplot(3, 1, 2)
-		plt.Plot(x, g, &plt.A{C: "b", Ls: "-", L: "sabs"})
-		plt.Gll("x", "dy/dx", nil)
-
-		plt.Subplot(3, 1, 3)
-		plt.Plot(x, h, &plt.A{C: "b", Ls: "-", L: "sabs"})
-		plt.Gll("x", "d2y/dx2", nil)
-
-		plt.Show()
-	}
-}
-
-func Test_suq01(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("suq01. superquadric functions")
-
-	if chk.Verbose {
-		np := 101
-		X := utl.LinSpace(0, math.Pi, np)
-		Y := make([]float64, np)
-		for i := 0; i < np; i++ {
-			Y[i] = SuqCos(X[i], 4)
-		}
-		plt.Plot(X, Y, nil)
-		plt.Gll("x", "y", nil)
-		plt.Save("/tmp/gosl", "t_suq01")
 	}
 }
 
@@ -412,17 +364,6 @@ func TestSinc01(tst *testing.T) {
 	chk.Float64(tst, "sinc(π)", 1e-16, Sinc(math.Pi), 0)
 	chk.Float64(tst, "sinc(π/2)", 1e-17, Sinc(math.Pi/2), 2.0/math.Pi)
 	chk.Float64(tst, "sinc(3π/2)", 1e-17, Sinc(3*math.Pi/2), -2.0/(3.0*math.Pi))
-
-	if chk.Verbose {
-		X := utl.LinSpace(-15, 15, 201)
-		Y := utl.GetMapped(X, func(x float64) float64 { return Sinc(x) })
-		plt.Reset(true, nil)
-		plt.Plot(X, Y, &plt.A{C: "r", NoClip: true})
-		plt.Gll("x", "sinc(x)", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "sinc01")
-	}
 }
 
 func TestBoxcar01(tst *testing.T) {
@@ -440,20 +381,6 @@ func TestBoxcar01(tst *testing.T) {
 	for _, x := range []float64{-1, 0, 0.5, 0.7, 1.0, 1.5} {
 		chk.Float64(tst, "H(x-a)-H(x-b)", 1e-17, Boxcar(x, a, b), Heav(x-a)-Heav(x-b))
 	}
-
-	if chk.Verbose {
-		Xa := utl.LinSpace(-1.0, 1.5, 201)
-		Xb := utl.LinSpace(-1.0, 1.5, 16)
-		Ya := utl.GetMapped(Xa, func(x float64) float64 { return Boxcar(x, a, b) })
-		Yb := utl.GetMapped(Xb, func(x float64) float64 { return Boxcar(x, a, b) })
-		plt.Reset(true, nil)
-		plt.Plot(Xa, Ya, &plt.A{C: "b", NoClip: true})
-		plt.Plot(Xb, Yb, &plt.A{C: "r", Ls: "none", M: ".", NoClip: true})
-		plt.Gll("x", "boxcar(x)", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "boxcar01")
-	}
 }
 
 func TestRect01(tst *testing.T) {
@@ -466,20 +393,6 @@ func TestRect01(tst *testing.T) {
 	chk.Float64(tst, "rect(0)", 1e-17, Rect(0), 1)
 	chk.Float64(tst, "rect(-0.7)", 1e-17, Rect(-0.7), 0)
 	chk.Float64(tst, "rect(+0.7)", 1e-17, Rect(+0.7), 0)
-
-	if chk.Verbose {
-		Xa := utl.LinSpace(-1.5, 1.5, 201)
-		Xb := utl.LinSpace(-1.5, 1.5, 16)
-		Ya := utl.GetMapped(Xa, func(x float64) float64 { return Rect(x) })
-		Yb := utl.GetMapped(Xb, func(x float64) float64 { return Rect(x) })
-		plt.Reset(true, nil)
-		plt.Plot(Xa, Ya, &plt.A{C: "b", NoClip: true})
-		plt.Plot(Xb, Yb, &plt.A{C: "r", Ls: "none", M: ".", NoClip: true})
-		plt.Gll("x", "rect(x)", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "rect01")
-	}
 }
 
 func TestHat01(tst *testing.T) {
@@ -511,20 +424,6 @@ func TestHat01(tst *testing.T) {
 		chk.DerivScaSca(tst, "HatD1", 1e-12, HatD1(x, xc, y0, h, l), x, 1e-3, chk.Verbose, func(t float64) float64 {
 			return Hat(t, xc, y0, h, l)
 		})
-	}
-
-	if chk.Verbose {
-		Xa := utl.LinSpace(-2, 4, 201)
-		Ya := utl.GetMapped(Xa, func(x float64) float64 { return Hat(x, xc, y0, h, l) })
-		Yb := utl.GetMapped(Xb, func(x float64) float64 { return Hat(x, xc, y0, h, l) })
-		plt.Reset(true, nil)
-		plt.Plot(Xa, Ya, &plt.A{C: "b", NoClip: true})
-		plt.Plot(Xb, Yb, &plt.A{C: "r", Ls: "none", M: ".", NoClip: true})
-		plt.Equal()
-		plt.Gll("x", "hat(x)", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/fun", "hat01")
 	}
 }
 

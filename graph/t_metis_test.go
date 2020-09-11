@@ -11,7 +11,6 @@ import (
 
 	"gosl/chk"
 	"gosl/io"
-	"gosl/plt"
 )
 
 func TestAdjacency01(tst *testing.T) {
@@ -43,20 +42,4 @@ func TestAdjacency01(tst *testing.T) {
 	io.Pf("parts = %v\n", parts)
 	chk.Int32(tst, "objval", objval, 7)
 	chk.Int32s(tst, "parts", parts, []int32{0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1})
-
-	// plot
-	if chk.Verbose {
-		g.Verts = [][]float64{
-			{0, 2}, {1, 2}, {2, 2}, {3, 2}, {4, 2},
-			{0, 1}, {1, 1}, {2, 1}, {3, 1}, {4, 1},
-			{0, 0}, {1, 0}, {2, 0}, {3, 0}, {4, 0},
-		}
-		p := Plotter{G: g, Parts: parts}
-		plt.Reset(true, &plt.A{Prop: 0.7})
-		p.Draw()
-		plt.AxisOff()
-		plt.Equal()
-		plt.AxisRange(-0.5, 4.5, -1, 3)
-		plt.Save("/tmp/gosl/graph", "adjacency01")
-	}
 }
