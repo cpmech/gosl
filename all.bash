@@ -19,7 +19,7 @@ pde \
 plt \
 rnd/sfmt rnd/dsfmt rnd \
 tsr \
-utl/al utl \
+utl \
 "
 
 install_and_test(){
