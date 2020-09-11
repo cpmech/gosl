@@ -2,13 +2,13 @@
 
 set -e
 
-PKGS_ESSENTIAL="chk io"
+PKGS_ESSENTIAL="chk io utl"
 
 PKGS_NEED_FLAGS="mpi"
 
 PKGS_ALL=" \
 fun/fftw fun \
-gm/rw gm/tri gm/msh gm \
+gm/tri gm/msh gm \
 graph \
 la/oblas la \
 num/qpck num \
@@ -16,7 +16,6 @@ ode \
 opt \
 pde \
 rnd/sfmt rnd/dsfmt rnd \
-utl \
 "
 
 install_and_test(){
