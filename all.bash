@@ -11,7 +11,6 @@ fun/dbf fun/fftw fun \
 gm/rw gm/tri gm/msh gm \
 graph \
 la/oblas la \
-ml/imgd ml \
 num/qpck num \
 ode \
 opt \
