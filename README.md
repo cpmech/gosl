@@ -28,7 +28,7 @@ Gosl is then copied inside the "/usr/local/go/src" directory right where the Go 
 
 Again because of CGO and the other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of seconds. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
 
-Nonetheless, if you are using a Debian-based Linux distribution, you basically just need the following (apt) packages: `gcc gfortran libopenmpi-dev libhwloc-dev liblapacke-dev libopenblas-dev libmetis-dev libsuitesparse-dev libmumps-dev libfftw3-dev libfftw3-mpi-dev`. After installition of these dependencies, run `bash all.bash`. However, we do not recommend this approach because with Docker your system will remain "clean."
+Nonetheless, if you are using a Debian-based Linux distribution, you basically just need the following (apt) packages: `gcc gfortran libopenmpi-dev libhwloc-dev liblapacke-dev libopenblas-dev libmetis-dev libsuitesparse-dev libmumps-dev libfftw3-dev libfftw3-mpi-dev`. After the installation of these dependencies, run `bash all.bash`. However, we do not recommend this approach because with Docker your system will remain "clean."
 
 ## Documentation
 
