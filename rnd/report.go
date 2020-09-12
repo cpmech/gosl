@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/cpmech/gosl/io"
+	"gosl/io"
 )
 
 // SetOfVars defines a set of random variables

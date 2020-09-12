@@ -7,13 +7,13 @@ package pde
 import (
 	"sort"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/gm/msh"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/gm"
+	"gosl/gm/msh"
+	"gosl/io"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // BoundaryConds holds data for prescribing a SET of boundary conditions

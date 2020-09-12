@@ -7,9 +7,9 @@ package ode
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // ExplicitRK implements explicit Runge-Kutta methods

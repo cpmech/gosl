@@ -5,10 +5,9 @@
 package rnd
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/utl"
 )
 
 // TextHist prints a text histogram
@@ -156,31 +155,6 @@ func (o Histogram) GenLabels(numfmt string) (labels []string) {
 	return
 }
 
-// PlotDensity plots histogram in density values
-//  args -- plot arguments. may be nil
-func (o Histogram) PlotDensity(args *plt.A) {
-	if args == nil {
-		args = &plt.A{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true, NoClip: true}
-	}
-	nstations := len(o.Stations)
-	if nstations < 2 {
-		chk.Panic("histogram density graph needs at least two stations")
-	}
-	nsamples := 0
-	for _, cnt := range o.Counts {
-		nsamples += cnt
-	}
-	ymax := 0.0
-	for i := 0; i < nstations-1; i++ {
-		xi, xf := o.Stations[i], o.Stations[i+1]
-		dx := xf - xi
-		prob := float64(o.Counts[i]) / (float64(nsamples) * dx)
-		plt.Polyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, prob}, {xi, prob}}, args)
-		ymax = utl.Max(ymax, prob)
-	}
-	return
-}
-
 // DensityArea computes the area of the density diagram
 //  nsamples -- number of samples used when generating pseudo-random numbers
 func (o Histogram) DensityArea(nsamples int) (area float64) {
@@ -279,32 +253,5 @@ func (o IntHistogram) GenLabels(numfmt string) (labels []string) {
 	for i := 0; i < nbins; i++ {
 		labels[i] = io.Sf("["+numfmt+","+numfmt+")", o.Stations[i], o.Stations[i+1])
 	}
-	return
-}
-
-// Plot plots histogram
-//  args -- plot arguments. may be nil
-func (o IntHistogram) Plot(withText bool, args, argsTxt *plt.A) {
-	if args == nil {
-		args = &plt.A{Fc: "#fbc175", Ec: "k", Lw: 1, Closed: true, NoClip: true}
-	}
-	if argsTxt == nil {
-		argsTxt = &plt.A{C: "k", Ha: "center", Va: "center", NoClip: true}
-	}
-	nstations := len(o.Stations)
-	if nstations < 2 {
-		chk.Panic("histogram density graph needs at least two stations")
-	}
-	ymax := 0.0
-	for i := 0; i < nstations-1; i++ {
-		xi, xf := float64(o.Stations[i]), float64(o.Stations[i+1])
-		y := float64(o.Counts[i])
-		plt.Polyline([][]float64{{xi, 0.0}, {xf, 0.0}, {xf, y}, {xi, y}}, args)
-		if withText {
-			plt.Text((xi+xf)/2.0, y/2.0, io.Sf("%d", o.Counts[i]), argsTxt)
-		}
-		ymax = utl.Max(ymax, y)
-	}
-	plt.AxisRange(float64(o.Stations[0]), float64(o.Stations[nstations-1]), 0, ymax)
 	return
 }

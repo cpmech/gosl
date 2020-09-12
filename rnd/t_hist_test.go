@@ -7,9 +7,8 @@ package rnd
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func Test_hist01(tst *testing.T) {
@@ -105,10 +104,4 @@ func Test_hist02(tst *testing.T) {
 
 	labels := hist.GenLabels("%d")
 	io.Pforan("labels = %v\n", labels)
-
-	if chk.Verbose {
-		plt.Reset(true, nil)
-		hist.Plot(true, nil, nil)
-		plt.Save("/tmp/gosl/rnd", "hist02")
-	}
 }

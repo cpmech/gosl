@@ -7,11 +7,11 @@
 package pde
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/la"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/gm"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // FdmLaplacian implements the Finite Difference (FDM) Laplacian operator (2D or 3D)
@@ -32,7 +32,7 @@ type FdmLaplacian struct {
 }
 
 // NewFdmLaplacian creates a new FDM Laplacian operator with given parameters
-func NewFdmLaplacian(params dbf.Params, grid *gm.Grid, source fun.Svs) (o *FdmLaplacian) {
+func NewFdmLaplacian(params utl.Params, grid *gm.Grid, source fun.Svs) (o *FdmLaplacian) {
 	o = new(FdmLaplacian)
 	err := params.ConnectSetOpt(
 		[]*float64{&o.Kx, &o.Ky, &o.Kz},

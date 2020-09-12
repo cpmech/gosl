@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 var (

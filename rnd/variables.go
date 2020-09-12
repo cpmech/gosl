@@ -4,9 +4,7 @@
 
 package rnd
 
-import (
-	"github.com/cpmech/gosl/fun/dbf"
-)
+import "gosl/utl"
 
 // Variable holds all data defining a single random variable including information about a
 // probability distribution that bests represents this variable
@@ -36,7 +34,7 @@ type Variable struct {
 
 	// optional
 	Key string // [optional] auxiliary indentifier
-	Prm *dbf.P // [optional] parameter connected to this random variable
+	Prm *utl.P // [optional] parameter connected to this random variable
 
 	// derived
 	Normal bool         // [derived] is normal distribution

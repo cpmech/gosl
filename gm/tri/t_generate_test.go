@@ -8,9 +8,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func TestGenerate01(tst *testing.T) {
@@ -65,12 +64,4 @@ func TestGenerate01(tst *testing.T) {
 	chk.Ints(tst, "cell2: etags", m.Cells[2].EdgeTags, []int{300, 100, 0})
 	chk.Ints(tst, "cell3: verts", m.Cells[3].V, []int{3, 1, 4, 13, 14, 10})
 	chk.Ints(tst, "cell3: etags", m.Cells[3].EdgeTags, []int{100, 200, 0})
-
-	if chk.Verbose {
-		io.Pl()
-		plt.Reset(true, nil)
-		DrawMesh(m, true, nil, nil, nil, nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/tri", "generate01")
-	}
 }

@@ -7,11 +7,10 @@ package opt
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
+	"gosl/utl"
 )
 
 func TestLineSearch01(tst *testing.T) {
@@ -39,15 +38,15 @@ func TestLineSearch01(tst *testing.T) {
 	line := NewLineSearch(2, ffcn, Jfcn)
 
 	// set params
-	line.SetParams(dbf.NewParams(
-		&dbf.P{N: "maxitls", V: 2},
-		&dbf.P{N: "maxitzoom", V: 2},
-		&dbf.P{N: "maxalpha", V: 100},
-		&dbf.P{N: "mulalpha", V: 2},
-		&dbf.P{N: "coef1", V: 1e-4},
-		&dbf.P{N: "coef2", V: 0.4},
-		&dbf.P{N: "coefquad", V: 0.1},
-		&dbf.P{N: "coefcubic", V: 0.2},
+	line.SetParams(utl.NewParams(
+		&utl.P{N: "maxitls", V: 2},
+		&utl.P{N: "maxitzoom", V: 2},
+		&utl.P{N: "maxalpha", V: 100},
+		&utl.P{N: "mulalpha", V: 2},
+		&utl.P{N: "coef1", V: 1e-4},
+		&utl.P{N: "coef2", V: 0.4},
+		&utl.P{N: "coefquad", V: 0.1},
+		&utl.P{N: "coefcubic", V: 0.2},
 	))
 
 	// solve
@@ -56,21 +55,4 @@ func TestLineSearch01(tst *testing.T) {
 	io.Pforan("f = %v\n", f)
 	chk.Float64(tst, "a", 1e-15, a, 0.5)
 	chk.Float64(tst, "f", 1e-15, a, 0.5)
-
-	// plot
-	if chk.Verbose {
-
-		line.Set(x0, u) // must set x again because x has changed
-
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150, Prop: 1.7})
-
-		plt.Subplot(2, 1, 1)
-		line.PlotC(0, 1, x0, u, a, -2, 2, -2, 2, 41)
-		plt.HideTRborders()
-
-		plt.Subplot(2, 1, 2)
-		line.PlotF(a, -1.5, 1.5, 41)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/opt", "linesearch01")
-	}
 }

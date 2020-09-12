@@ -8,10 +8,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/utl"
 )
 
 func TestSinusoid01(tst *testing.T) {
@@ -52,60 +50,5 @@ func TestSinusoid01(tst *testing.T) {
 	// check periodicity
 	if !sa.TestPeriodicity(0, 4*π, 10) {
 		chk.Panic("failed\n")
-	}
-
-	// plot
-	if chk.Verbose {
-		tt = utl.LinSpace(-sa.TimeShift, 2.5, 201)
-		yy := utl.GetMapped(tt, func(t float64) float64 { return sa.Yessen(t) })
-		plt.Reset(true, nil)
-		plt.AxVline(-sa.TimeShift, &plt.A{C: "grey"})
-		plt.AxVline(0.0, &plt.A{C: "grey"})
-		plt.AxHline(1.7, &plt.A{C: "grey"})
-		plt.Text(-sa.TimeShift, A0, io.Sf("%g", -sa.TimeShift), &plt.A{C: "r", Fsz: 9, Rot: 90, Ha: "center", Va: "center"})
-		plt.Plot(tt, yy, &plt.A{C: "r", NoClip: true})
-		plt.AxisYmin(0)
-		plt.Gll("t", "y(t)", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "sinusoid01")
-	}
-}
-
-func TestSinusoid02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("Sinusoid02. Fourier approx of square wave")
-
-	T := 1.0  // period [s]
-	A0 := 0.5 // mean value
-	C1 := 1.0 // amplitude
-	θ := 0.0  // phase shift [rad]
-	ss := NewSinusoidEssential(T, A0, C1, θ)
-
-	square := func(t float64) float64 {
-		t0 := -T / 4.0
-		return A0 + C1*math.Pow(-1, math.Floor(2*(t-t0)/T))
-	}
-
-	// plot
-	if chk.Verbose {
-		ss.ApproxSquareFourier(5)
-		tt := utl.LinSpace(-ss.Period, ss.Period, 201)
-		y1 := make([]float64, len(tt))
-		y2 := make([]float64, len(tt))
-		y3 := make([]float64, len(tt))
-		for i := 0; i < len(tt); i++ {
-			y1[i] = square(tt[i])
-			y2[i] = ss.Yessen(tt[i])
-			y3[i] = ss.Ybasis(tt[i])
-		}
-		plt.Reset(true, nil)
-		plt.Plot(tt, y1, &plt.A{C: "b", NoClip: true, L: "analytic"})
-		plt.Plot(tt, y2, &plt.A{C: "r", NoClip: true, L: "essential"})
-		plt.Plot(tt, y3, &plt.A{C: "g", NoClip: true, L: "Fourier"})
-		plt.Cross(0, 0, nil)
-		plt.HideAllBorders()
-		plt.Gll("t", "y(t)", &plt.A{LegOut: true, LegNcol: 3})
-		plt.Save("/tmp/gosl/fun", "sinusoid02")
 	}
 }

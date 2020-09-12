@@ -8,13 +8,12 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/io"
+	"gosl/la"
+	"gosl/num"
+	"gosl/utl"
 )
 
 func TestTransfinite01(tst *testing.T) {
@@ -70,18 +69,6 @@ func TestTransfinite01(tst *testing.T) {
 	rvals := utl.LinSpace(-1, 1, 5)
 	svals := utl.LinSpace(-1, 1, 5)
 	checkTfiniteDerivs2d(tst, trf, rvals, svals, chk.Verbose, 1e-9, 1e-10)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		trf.Draw([]int{21, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
-		plt.Arc(0, 0, rin, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
-		plt.Arc(0, 0, rou, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
-		trf.DrawArrows2d(rvals, svals, 0.3, nil, nil)
-		plt.HideAllBorders()
-		plt.Equal()
-		plt.Save("/tmp/gosl/gm", "transfinite01")
-	}
 }
 
 func TestTransfinite02(tst *testing.T) {
@@ -138,16 +125,6 @@ func TestTransfinite02(tst *testing.T) {
 	rvals := utl.LinSpace(-1, 1, 5)
 	svals := utl.LinSpace(-1, 1, 5)
 	checkTfiniteDerivs2d(tst, trf, rvals, svals, chk.Verbose, 1e-10, 1e-10)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		trf.Draw([]int{11, 11}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
-		trf.DrawArrows2d(rvals, svals, 0.3, nil, nil)
-		plt.HideAllBorders()
-		plt.Equal()
-		plt.Save("/tmp/gosl/gm", "transfinite02")
-	}
 }
 
 func TestTransfinite03(tst *testing.T) {
@@ -315,19 +292,6 @@ func TestTransfinite03(tst *testing.T) {
 
 	// check derivs
 	checkTfiniteDerivs2d(tst, trf, rvals, svals, chk.Verbose, 1e-9, 1e-11)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400})
-		//plt.Reset(true, &plt.A{WidthPt: 400, Prop: 1, Eps: true})
-		//curve0.DrawElems(2, 41, false, &plt.A{C: plt.C(2, 0), Z: 10}, nil)
-		trf.Draw([]int{21, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
-		trf.DrawArrows2d(rvals, svals, 0.15, nil, nil)
-		plt.AxisOff()
-		plt.Equal()
-		plt.AxisRange(-0.1, 3.2, -0.1, 3.2)
-		plt.Save("/tmp/gosl/gm", "transfinite03")
-	}
 }
 
 func TestTransfinite04(tst *testing.T) {
@@ -353,15 +317,6 @@ func TestTransfinite04(tst *testing.T) {
 	svals := utl.LinSpace(-1, 1, 3)
 	tvals := utl.LinSpace(-1, 1, 3)
 	checkTfiniteDerivs3d(tst, trf, rvals, svals, tvals, chk.Verbose, 1e-11, 1e-12)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400})
-		trf.Draw([]int{3, 3, 3}, false, nil, nil)
-		plt.Default3dView(0, 1, 0, 1, 0, 1, true)
-		//plt.Show()
-		plt.Save("/tmp/gosl/gm", "transfinite04")
-	}
 }
 
 func TestTransfinite05(tst *testing.T) {
@@ -388,15 +343,6 @@ func TestTransfinite05(tst *testing.T) {
 	svals := utl.LinSpace(-1, 1, 3)
 	tvals := utl.LinSpace(-1, 1, 3)
 	checkTfiniteDerivs3d(tst, trf, rvals, svals, tvals, chk.Verbose, 1e-10, 1e-10)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400})
-		trf.Draw([]int{5, 5, 11}, true, nil, nil)
-		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
-		//plt.Show()
-		plt.Save("/tmp/gosl/gm", "transfinite05")
-	}
 }
 
 func TestTransfinite06(tst *testing.T) {
@@ -421,16 +367,6 @@ func TestTransfinite06(tst *testing.T) {
 	rvals := utl.LinSpace(-1, 1, 5)
 	svals := utl.LinSpace(-1, 1, 5)
 	checkTfiniteDerivs2d(tst, trf, rvals, svals, chk.Verbose, 1e-11, 1e-12)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		trf.Draw([]int{11, 11}, false, &plt.A{C: plt.C(2, 9), NoClip: true}, &plt.A{C: plt.C(3, 9), Lw: 2, NoClip: true})
-		trf.DrawArrows2d(rvals, svals, 0.3, nil, nil)
-		plt.HideAllBorders()
-		plt.Equal()
-		plt.Save("/tmp/gosl/gm", "transfinite06")
-	}
 }
 
 func TestTransfinite07(tst *testing.T) {
@@ -446,17 +382,4 @@ func TestTransfinite07(tst *testing.T) {
 	rvals := utl.LinSpace(-1, 1, 7)
 	svals := utl.LinSpace(-1, 1, 7)
 	checkTfiniteDerivs2d(tst, trf, rvals, svals, chk.Verbose, 1e-8, 1e-8)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-		trf.Draw([]int{21, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
-		plt.Arc(0, 0, rin, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
-		plt.Arc(0, 0, rou, 0, 90, &plt.A{C: plt.C(5, 9), NoClip: true, Z: 10})
-		trf.DrawArrows2d(rvals, svals, 0.5, nil, nil)
-		plt.HideAllBorders()
-		plt.Equal()
-		plt.AxisRange(-6.5, 6.5, -2, 6)
-		plt.Save("/tmp/gosl/gm", "transfinite07")
-	}
 }

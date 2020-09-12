@@ -3,10 +3,9 @@ package opt
 import (
 	"math"
 
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
+	"gosl/fun"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // Convergence assists in checking the convergence of numerical optimizers
@@ -61,14 +60,14 @@ func (o *Convergence) InitHist(x0 la.Vector) {
 
 // SetParams sets parameters
 //   Example:
-//             o.SetParams(dbf.NewParams(
-//                 &dbf.P{N: "maxit", V: 1000},
-//                 &dbf.P{N: "ftol", V: 1e-2},
-//                 &dbf.P{N: "gtol", V: 1e-2},
-//                 &dbf.P{N: "hist", V: 1},
-//                 &dbf.P{N: "verb", V: 1},
+//             o.SetParams(utl.NewParams(
+//                 &utl.P{N: "maxit", V: 1000},
+//                 &utl.P{N: "ftol", V: 1e-2},
+//                 &utl.P{N: "gtol", V: 1e-2},
+//                 &utl.P{N: "hist", V: 1},
+//                 &utl.P{N: "verb", V: 1},
 //             ))
-func (o *Convergence) SetParams(params dbf.Params) {
+func (o *Convergence) SetParams(params utl.Params) {
 	o.MaxIt = params.GetIntOrDefault("maxit", o.MaxIt)
 	o.Ftol = params.GetValueOrDefault("ftol", o.Ftol)
 	o.Gtol = params.GetValueOrDefault("gtol", o.Gtol)

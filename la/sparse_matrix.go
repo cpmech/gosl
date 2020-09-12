@@ -10,8 +10,8 @@ import (
 	"math/cmplx"
 	"strings"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 // Triplet is a simple representation of a sparse matrix, where the indices and values

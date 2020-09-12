@@ -4,7 +4,7 @@
 
 package utl
 
-import "github.com/cpmech/gosl/io"
+import "gosl/io"
 
 // SerializeDeep2 converts a matrix into a column-major array
 func SerializeDeep2(a [][]float64) (v []float64) {

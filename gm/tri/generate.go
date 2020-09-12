@@ -4,8 +4,6 @@
 
 package tri
 
-import "C"
-
 /*
 #include "triangle.h"
 #include <stdlib.h>
@@ -14,8 +12,8 @@ import "C"
 import (
 	"unsafe"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 // Point holds input data defining a "point"

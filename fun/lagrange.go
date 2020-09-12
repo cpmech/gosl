@@ -7,11 +7,9 @@ package fun
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // LagrangeInterp implements Lagrange interpolators associated with a grid X
@@ -476,66 +474,4 @@ func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float
 		}
 	}
 	return
-}
-
-// plotting ////////////////////////////////////////////////////////////////////////////////////////
-
-// PlotLagInterpL plots cardinal polynomials ℓ
-func PlotLagInterpL(N int, gridType string) {
-	xx := utl.LinSpace(-1, 1, 201)
-	yy := make([]float64, len(xx))
-	o := NewLagrangeInterp(N, gridType)
-	for n := 0; n < N+1; n++ {
-		for k, x := range xx {
-			yy[k] = o.L(n, x)
-		}
-		plt.Plot(xx, yy, &plt.A{NoClip: true})
-	}
-	Y := make([]float64, N+1)
-	plt.Plot(o.X, Y, &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true})
-	plt.Gll("$x$", "$\\ell(x)$", nil)
-	plt.Cross(0, 0, &plt.A{C: "grey"})
-	plt.HideAllBorders()
-}
-
-// PlotLagInterpW plots nodal polynomial
-func PlotLagInterpW(N int, gridType string) {
-	npts := 201
-	xx := utl.LinSpace(-1, 1, npts)
-	yy := make([]float64, len(xx))
-	o := NewLagrangeInterp(N, gridType)
-	for k, x := range xx {
-		yy[k] = o.Om(x)
-	}
-	Y := make([]float64, len(o.X))
-	plt.Plot(o.X, Y, &plt.A{C: "k", Ls: "none", M: "o", Void: true, NoClip: true})
-	plt.Plot(xx, yy, &plt.A{C: "b", Lw: 1, NoClip: true})
-	plt.Gll("$x$", "$\\omega(x)$", nil)
-	plt.Cross(0, 0, &plt.A{C: "grey"})
-	plt.HideAllBorders()
-}
-
-// PlotLagInterpI plots Lagrange interpolation I(x) function for many degrees Nvalues
-func PlotLagInterpI(Nvalues []int, gridType string, f Ss) {
-	npts := 201
-	xx := utl.LinSpace(-1, 1, npts)
-	yy := make([]float64, len(xx))
-	for k, x := range xx {
-		yy[k] = f(x)
-	}
-	iy := make([]float64, len(xx))
-	plt.Plot(xx, yy, &plt.A{C: "k", Lw: 4, NoClip: true})
-	for _, N := range Nvalues {
-		p := NewLagrangeInterp(N, gridType)
-		p.CalcU(f)
-		for k, x := range xx {
-			iy[k] = p.I(x)
-		}
-		E, xloc := p.EstimateMaxErr(0, f)
-		plt.AxVline(xloc, &plt.A{C: "k", Ls: ":"})
-		plt.Plot(xx, iy, &plt.A{L: io.Sf("$N=%d\\;E=%.3e$", N, E), NoClip: true})
-	}
-	plt.Cross(0, 0, &plt.A{C: "grey"})
-	plt.Gll("$x$", "$f(x)\\quad I{f}(x)$", nil)
-	plt.HideAllBorders()
 }

@@ -9,10 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/num"
 )
 
 func TestQuadpts01(tst *testing.T) {
@@ -164,47 +163,5 @@ func TestQuadpts01(tst *testing.T) {
 				}
 			}
 		}
-	}
-
-	if chk.Verbose {
-		plt.Reset(true, nil)
-		QuadPointDraw(IntPoints[KindQua]["legendre_9"], 2, false, nil, nil)
-		QuadPointDraw(IntPoints[KindQua]["wilson5corner_5"], 2, false, []float64{2.5, 0.0}, nil)
-		QuadPointDraw(IntPoints[KindQua]["wilson5stable_5"], 2, false, []float64{0.0, 2.5}, nil)
-		QuadPointDraw(IntPoints[KindQua]["wilson8default_8"], 2, false, []float64{2.5, 2.5}, nil)
-		plt.Text(0.0, 1.05, "legendre9", &plt.A{Ha: "center", Fsz: 7})
-		plt.Text(2.5, 1.05, "wilson5corner", &plt.A{Ha: "center", Fsz: 7})
-		plt.Text(0.0, 3.55, "wilson5stable", &plt.A{Ha: "center", Fsz: 7})
-		plt.Text(2.5, 3.55, "wilson8default", &plt.A{Ha: "center", Fsz: 7})
-		plt.Equal()
-		plt.AxisRange(-2, 4.5, -2, 4.5)
-		plt.HideAllBorders()
-		plt.Gll("x", "y", nil)
-		plt.Save("/tmp/gosl", "quadpts01a")
-
-		plt.Reset(true, nil)
-		QuadPointDraw(IntPoints[KindTri]["internal_3"], 2, true, nil, nil)
-		QuadPointDraw(IntPoints[KindTri]["edge_3"], 2, true, []float64{1.5, 0.0}, nil)
-		QuadPointDraw(IntPoints[KindTri]["internal_4"], 2, true, []float64{0.0, 1.5}, nil)
-		QuadPointDraw(IntPoints[KindTri]["internal_12"], 2, true, []float64{1.5, 1.5}, nil)
-		plt.Text(0.5, 1.05, "internal_3", &plt.A{Ha: "center", Fsz: 7})
-		plt.Text(2.0, 1.05, "edge_3", &plt.A{Ha: "center", Fsz: 7})
-		plt.Text(0.5, 2.55, "internal_4", &plt.A{Ha: "center", Fsz: 7})
-		plt.Text(2.0, 2.55, "internal_12", &plt.A{Ha: "center", Fsz: 7})
-		plt.Equal()
-		plt.AxisRange(-1, 3.5, -1, 3.5)
-		plt.HideAllBorders()
-		plt.Gll("x", "y", nil)
-		plt.Save("/tmp/gosl", "quadpts01b")
-
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		QuadPointDraw(IntPoints[KindHex]["legendre_8"], 3, false, nil, nil)
-		QuadPointDraw(IntPoints[KindHex]["wilson9corner_9"], 3, false, []float64{0.0, 2.5, 0.0}, nil)
-		QuadPointDraw(IntPoints[KindHex]["wilson9stable_9"], 3, false, []float64{0.0, 0.0, 2.5}, nil)
-		QuadPointDraw(IntPoints[KindHex]["irons_6"], 3, false, []float64{0.0, 2.5, 2.5}, nil)
-		plt.Triad(0.5, "", "", "", &plt.A{C: "g"}, nil)
-		plt.Default3dView(-2, 2, -2, 4, -2, 2, true)
-		//plt.ShowSave("/tmp/gosl", "quadpts01c")
-		plt.Save("/tmp/gosl", "quadpts01c")
 	}
 }

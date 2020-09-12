@@ -8,8 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/la"
 )
 
 var (
@@ -23,16 +22,6 @@ func init() {
 	nr, na := 10, 35
 	benchmarkMesh = GenRing2d(TypeQua17, nr, na, r, R, 2.0*math.Pi)
 	benchmarkMint = NewMeshIntegrator(benchmarkMesh, 1)
-	if false {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		args := NewArgs()
-		args.WithEdges = true
-		args.WithVerts = true
-		args.WithCells = false
-		benchmarkMesh.Draw(args)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "testmsh")
-	}
 }
 
 func BenchmarkInteg(b *testing.B) {

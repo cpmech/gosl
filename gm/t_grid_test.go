@@ -8,11 +8,10 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
+	"gosl/utl"
 )
 
 func TestGrid01(tst *testing.T) {
@@ -163,20 +162,6 @@ func TestGrid01(tst *testing.T) {
 	for _, I := range []int{15, 17, 19} {
 		g.UnitNormal(N, 21, I)
 		chk.Array(tst, "unit normal", 1e-15, N, []float64{0, +1})
-	}
-
-	// plot
-	if chk.Verbose {
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		gp.Draw()
-		gp.Bases(1)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.SetXnticks(19)
-		plt.SetYnticks(15)
-		plt.Save("/tmp/gosl/gm", "grid01")
 	}
 }
 
@@ -395,18 +380,6 @@ func TestGrid02(tst *testing.T) {
 		g.UnitNormal(N, 301, I)
 		chk.Array(tst, "unit normal", 1e-15, N, []float64{0, 0, +1})
 	}
-
-	// plot
-	if chk.Verbose {
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		gp.Draw()
-		gp.Bases(0.5)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Triad(3, "x", "y", "z", &plt.A{C: "orange"}, nil)
-		plt.Default3dView(-2, 2, -2, 2, -2, 2, true)
-		plt.Save("/tmp/gosl/gm", "grid02")
-	}
 }
 
 func TestGrid03(tst *testing.T) {
@@ -436,20 +409,6 @@ func TestGrid03(tst *testing.T) {
 	chk.Array(tst, "Node( 8)", 1e-15, g.Node(8), []float64{8, 3})
 	chk.Array(tst, "Node(14)", 1e-15, g.Node(14), []float64{16, 4})
 	chk.Array(tst, "Node(19)", 1e-15, g.Node(19), []float64{16, 7})
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		gp := GridPlotter{G: g, WithVids: true}
-		gp.Draw()
-		gp.Bases(1)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.SetXnticks(19)
-		plt.SetYnticks(17)
-		plt.Save("/tmp/gosl/gm", "grid03")
-	}
 }
 
 func TestGrid04(tst *testing.T) {
@@ -514,18 +473,6 @@ func TestGrid04(tst *testing.T) {
 	chk.Array(tst, "Node(17)", 1e-17, g.Node(17), []float64{2, 3, -0.5})
 	chk.Array(tst, "Node(19)", 1e-17, g.Node(19), []float64{8, 3, -0.5})
 	chk.Array(tst, "Node(22)", 1e-17, g.Node(22), []float64{4, 4, -0.5})
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		gp := GridPlotter{G: g, WithVids: true}
-		gp.Draw()
-		gp.Bases(0.5)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.DefaultTriad(1)
-		plt.Default3dView(g.Xmin(0), g.Xmax(0), g.Xmin(1), g.Xmax(1), g.Xmin(2), g.Xmax(2), true)
-		plt.Save("/tmp/gosl/gm", "grid04")
-	}
 }
 
 func TestGrid05(tst *testing.T) {
@@ -644,18 +591,6 @@ func TestGrid05(tst *testing.T) {
 	chk.Float64(tst, "det(g)(0,0,0)", 1e-14, g.DetCovarMatrix(0, 0, 0), A*A*a*a*B*B)
 	chk.Float64(tst, "Γ(0,0,0; 0,1,1)", 1e-14, g.GammaS(0, 0, 0, 0, 1, 1), -a*B*B/A)
 	chk.Float64(tst, "L(0,0,0; 0)", 1e-14, g.Lcoeff(0, 0, 0, 0), -1.0/(a*A))
-
-	// plot
-	if chk.Verbose {
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		trf.Draw([]int{11, 21}, false, &plt.A{C: plt.C(2, 9)}, &plt.A{C: plt.C(3, 9), Lw: 2})
-		gp.Draw()
-		gp.Bases(0.15)
-		plt.HideAllBorders()
-		plt.Equal()
-		plt.Save("/tmp/gosl/gm", "grid05")
-	}
 }
 
 func TestGrid06(tst *testing.T) {
@@ -816,17 +751,6 @@ func TestGrid06(tst *testing.T) {
 	chk.Float64(tst, "det(g)(0,0,0)", 1e-14, g.DetCovarMatrix(0, 0, 0), A*A*a*a*B*B)
 	chk.Float64(tst, "Γ(0,0,0; 1,2,2)", 1e-14, g.GammaS(0, 0, 0, 1, 2, 2), -a*B*B/A)
 	chk.Float64(tst, "L(0,0,0; 1)", 1e-14, g.Lcoeff(0, 0, 0, 1), -1.0/(a*A))
-
-	// plot
-	if chk.Verbose {
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400})
-		trf.Draw([]int{5, 5, 11}, true, &plt.A{C: "#7d8891"}, &plt.A{C: plt.C(3, 9), Lw: 2})
-		gp.Draw()
-		gp.Bases(0.20)
-		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
-		plt.Save("/tmp/gosl/gm", "grid06")
-	}
 }
 
 func TestGrid07(tst *testing.T) {
@@ -859,20 +783,6 @@ func TestGrid07(tst *testing.T) {
 	// check
 	verb := chk.Verbose
 	checkGridNurbsDerivs2d(tst, nrb, g, 1e-12, 1e-12, 1e-9, verb)
-
-	// plot
-	if chk.Verbose {
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.HideAllBorders()
-		PlotNurbs("/tmp/gosl/gm", "grid07", nrb, 2, 41, true, true, nil, nil, nil, func() {
-			gp.Draw()
-			gp.Bases(0.5)
-			nrb.DrawSurface(2, 5, 5, false, true, nil, nil)
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestGrid08(tst *testing.T) {
@@ -894,20 +804,6 @@ func TestGrid08(tst *testing.T) {
 	// check
 	verb := chk.Verbose
 	checkGridNurbsDerivs2d(tst, nrb, g, 1e-10, 1e-12, 1e-8, verb)
-
-	// plot
-	if chk.Verbose {
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.HideAllBorders()
-		PlotNurbs("/tmp/gosl/gm", "grid08", nrb, 2, 21, true, true, nil, nil, nil, func() {
-			gp.Draw()
-			gp.Bases(0.5)
-			nrb.DrawSurface(2, 11, 11, false, true, nil, nil)
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestGrid09(tst *testing.T) {
@@ -929,20 +825,6 @@ func TestGrid09(tst *testing.T) {
 	// check
 	verb := chk.Verbose
 	checkGridNurbsDerivs2d(tst, nrb, g, 1e-10, 1e-12, 1e-7, verb)
-
-	// plot
-	if chk.Verbose {
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.HideAllBorders()
-		PlotNurbs("/tmp/gosl/gm", "grid09", nrb, 2, 11, true, true, nil, nil, nil, func() {
-			gp.Draw()
-			gp.Bases(0.1)
-			//nrb.DrawSurface(2, 11, 11, false, true, nil, nil)
-			plt.AxisOff()
-			plt.Equal()
-		})
-	}
 }
 
 func TestGrid10(tst *testing.T) {
@@ -974,20 +856,6 @@ func TestGrid10(tst *testing.T) {
 	// check
 	verb := chk.Verbose
 	checkGridNurbsDerivs3d(tst, nrb, g, 1e-10, 1e-12, 1e-8, verb)
-
-	// plot
-	if chk.Verbose {
-		npts := 3
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		gp.Draw()
-		nrb.DrawSolid(2, 4, 3, &plt.A{C: plt.C(1, 0)})
-		nrb.DrawElems(3, npts, true, &plt.A{C: plt.C(0, 0)}, &plt.A{C: "k", Fsz: 7})
-		nrb.DrawCtrl(3, true, nil, nil)
-		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
-		plt.Default3dView(0, 2, 0, 2, 0, 2, true)
-		plt.Save("/tmp/gosl/gm", "grid10")
-	}
 }
 
 func TestGrid11(tst *testing.T) {
@@ -1010,18 +878,6 @@ func TestGrid11(tst *testing.T) {
 	// check
 	verb := chk.Verbose
 	checkGridNurbsDerivs3d(tst, nrb, g, 1e-10, 1e-12, 1e-7, verb)
-
-	// plot
-	if chk.Verbose {
-		gp := GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-		gp.Draw()
-		nrb.DrawSolid(3, 3, 9, &plt.A{C: plt.C(1, 0)})
-		nrb.DrawCtrl(3, false, nil, nil)
-		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
-		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
-		plt.Save("/tmp/gosl/gm", "grid11")
-	}
 }
 
 func TestGrid12(tst *testing.T) {
@@ -1059,18 +915,6 @@ func TestGrid12(tst *testing.T) {
 				chk.Array(tst, "g2", tolg2, gnrb.CovarBasis(m, n, p, 2), gtrf.CovarBasis(m, n, p, 2))
 			}
 		}
-	}
-
-	// plot
-	if chk.Verbose {
-		gpnrb := GridPlotter{G: gnrb, ArgsEdges: &plt.A{C: plt.C(5, 0), Lw: 4}}
-		gptrf := GridPlotter{G: gtrf, ArgsEdges: &plt.A{C: plt.C(0, 0)}}
-		plt.Reset(true, &plt.A{WidthPt: 500, Dpi: 150})
-		gpnrb.Draw()
-		gptrf.Draw()
-		plt.Triad(0.5, "x", "y", "z", &plt.A{C: "orange"}, &plt.A{C: "green"})
-		plt.Default3dView(0, 3, 0, 3, 0, 3, true)
-		plt.Save("/tmp/gosl/gm", "grid12")
 	}
 }
 
@@ -1110,17 +954,6 @@ func TestGrid13(tst *testing.T) {
 			ss[n] = g.U(m, n, 0)[1]
 		}
 		chk.Array(tst, "S", 1e-17, ss, S)
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		gp := GridPlotter{G: g, WithVids: true}
-		gp.Draw()
-		plt.Grid(&plt.A{C: "grey"})
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/gm", "grid13")
 	}
 }
 
@@ -1199,17 +1032,5 @@ func TestGrid14(tst *testing.T) {
 			}
 			chk.Array(tst, "T", 1e-17, tt, T)
 		}
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 500})
-		gp := GridPlotter{G: g, WithVids: true}
-		gp.Draw()
-		gp.Bases(0.5)
-		plt.Grid(&plt.A{C: "grey"})
-		plt.DefaultTriad(1)
-		plt.Default3dView(g.Xmin(0), g.Xmax(0), g.Xmin(1), g.Xmax(1), g.Xmin(2), g.Xmax(2), true)
-		plt.Save("/tmp/gosl/gm", "grid14")
 	}
 }

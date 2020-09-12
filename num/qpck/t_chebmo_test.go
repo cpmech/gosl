@@ -8,10 +8,8 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func runIntegConly(tst *testing.T, N int, f func(x float64) float64, reuse bool) (C []float64) {
@@ -113,16 +111,6 @@ func TestChebmo01(tst *testing.T) {
 	io.Pforan("Ca = %v\n", Ca)
 	io.Pf("Cb = %v\n", Cb)
 	chk.Array(tst, "C", 1e-17, Ca, Cb)
-
-	if chk.Verbose {
-		xx := utl.LinSpace(0, 2.0*math.Pi, 201)
-		y1 := utl.GetMapped(xx, func(x float64) float64 { return f(x) })
-		plt.Reset(true, nil)
-		plt.Plot(xx, y1, &plt.A{L: "f(x)", C: "r", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/num/", "chebmo01")
-	}
 }
 
 func TestChebmo02(tst *testing.T) {

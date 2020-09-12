@@ -7,10 +7,7 @@ package fun
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
 )
 
 func TestInterp01(tst *testing.T) {
@@ -32,18 +29,6 @@ func TestInterp01(tst *testing.T) {
 	for i, x := range xref {
 		chk.Float64(tst, "P(xref)", 1e-16, o.P(x), yref[i])
 	}
-
-	if chk.Verbose {
-		X := utl.LinSpace(-0.5, 5.5, 101)
-		Y := utl.GetMapped(X, func(x float64) float64 { return o.P(x) })
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Plot(xx, yy, &plt.A{C: "b", Ls: "-", M: ".", L: "data", NoClip: true})
-		plt.Plot(X, Y, &plt.A{C: "r", Ls: ":", M: "+", L: "interp", NoClip: true})
-		plt.Plot(xref, yref, &plt.A{C: "g", Ls: "none", M: "o", L: "interp", NoClip: true})
-		plt.Gll("x", "y", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interp01")
-	}
 }
 
 func TestInterp02(tst *testing.T) {
@@ -53,11 +38,6 @@ func TestInterp02(tst *testing.T) {
 
 	xx := []float64{0, 1, 2, 3, 4, 5}
 	yy := []float64{0.50, 0.20, 0.20, 0.05, 0.01, 0.00}
-
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		plt.Plot(xx, yy, &plt.A{C: "k", Ls: "-", M: ".", L: "data", NoClip: true})
-	}
 
 	for _, p := range []int{1, 2, 3} {
 
@@ -74,16 +54,5 @@ func TestInterp02(tst *testing.T) {
 				chk.Float64(tst, "P(xref)", 1e-16, o.P(x), yref[i])
 			}
 		}
-
-		if chk.Verbose {
-			X := utl.LinSpace(-0.5, 5.5, 101)
-			Y := utl.GetMapped(X, func(x float64) float64 { return o.P(x) })
-			plt.Plot(X, Y, &plt.A{Ls: "-", L: io.Sf("p=%d", p), NoClip: true})
-			plt.Gll("x", "y", nil)
-			plt.HideTRborders()
-		}
-	}
-	if chk.Verbose {
-		plt.Save("/tmp/gosl/fun", "interp02")
 	}
 }

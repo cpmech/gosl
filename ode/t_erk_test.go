@@ -7,12 +7,10 @@ package ode
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/io"
+	"gosl/la"
 )
 
 func TestErk01(tst *testing.T) {
@@ -121,14 +119,7 @@ func TestErk02(tst *testing.T) {
 	p := ProbSimpleNdim2()
 	p.Dx = 0.17
 
-	// prepare plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-	}
-
 	// try methods
-	M := []string{"s", ".", "+", "^", "x", "*", "|", ""}
-	Ms := []int{4, 6, 6, 6, 6, 6, 6, 6}
 	tols := []float64{0.11, 0.11, 0.0077, 0.009, 5.8e-4, 5.8e-4, 1.3e-4, 5.8e-4}
 	for im, method := range []string{"moeuler", "rk2", "rk3", "heun3", "rk4", "rk4-3/8", "merson4", "zonneveld4"} {
 
@@ -137,32 +128,9 @@ func TestErk02(tst *testing.T) {
 
 		// results
 		X := out.GetStepX()
-		Y0 := out.GetStepY(0)
-		Y1 := out.GetStepY(1)
 		chk.Float64(tst, "xf == X[last]", 1e-15, p.Xf, X[out.StepIdx-1])
 		chk.AnaNum(tst, "y0(xf)", tols[im], y[0], p.CalcYana(0, p.Xf), chk.Verbose)
 		chk.AnaNum(tst, "y1(xf)", tols[im], y[1], p.CalcYana(1, p.Xf), chk.Verbose)
-
-		// plot
-		if chk.Verbose {
-			plt.Plot(X, Y0, &plt.A{L: method + ":y0", C: plt.C(im*2+0, 8), M: M[im], Ms: Ms[im], NoClip: true})
-			plt.Plot(X, Y1, &plt.A{L: method + ":y1", C: plt.C(im*2+1, 8), M: M[im], Ms: Ms[im], NoClip: true})
-		}
-	}
-
-	// save plot
-	if chk.Verbose {
-		xx := utl.LinSpace(0, p.Xf, 101)
-		y0 := make([]float64, len(xx))
-		y1 := make([]float64, len(xx))
-		for i := 0; i < len(xx); i++ {
-			p.Yana(p.Ytmp, xx[i])
-			y0[i], y1[i] = p.Ytmp[0], p.Ytmp[1]
-		}
-		plt.Plot(xx, y0, &plt.A{C: "k", Ls: "--", NoClip: true})
-		plt.Plot(xx, y1, &plt.A{C: "k", Ls: "--", NoClip: true})
-		plt.Gll("$x$", "$y$", &plt.A{LegOut: true, LegNcol: 4, LegHlen: 2})
-		plt.Save("/tmp/gosl/ode", "erk02")
 	}
 }
 
@@ -174,11 +142,6 @@ func TestErk03a(tst *testing.T) {
 	// problem
 	p := ProbSimpleNdim4a()
 
-	// prepare plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-	}
-
 	// reference solution
 	yExact := la.NewVector(p.Ndim)
 	p.Yana(yExact, p.Xf)
@@ -187,16 +150,7 @@ func TestErk03a(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []float64{4, 4, 4, 4}
 	tols := []float64{0.011, 0.023, 0.00471, 0.011}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
-
-	// plot
-	if chk.Verbose {
-		plt.Gll("$nFeval$", "$error$", nil)
-		plt.SlopeInd(-4, 3.8, -6, 0.4, "4", false, true, true, nil, nil)
-		plt.SetXlog()
-		plt.SetYlog()
-		plt.Save("/tmp/gosl/ode", "erk03a")
-	}
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols)
 }
 
 func TestErk03b(tst *testing.T) {
@@ -207,11 +161,6 @@ func TestErk03b(tst *testing.T) {
 	// problem
 	p := ProbSimpleNdim4b()
 
-	// prepare plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-	}
-
 	// reference solution
 	yExact := la.NewVector(p.Ndim)
 	p.Yana(yExact, p.Xf)
@@ -220,17 +169,7 @@ func TestErk03b(tst *testing.T) {
 	methods := []string{"rk4", "rk4-3/8", "merson4", "zonneveld4"}
 	orders := []float64{4, 4, 4, 4}
 	tols := []float64{0.086, 0.164, 0.07, 0.09}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
-
-	// plot
-	if chk.Verbose {
-		plt.Gll("$nFeval$", "$error$", nil)
-		plt.SlopeInd(-4, 3.8, -5, 0.4, "4", false, true, true, nil, nil)
-		plt.SetXlog()
-		plt.SetYlog()
-		//plt.Equal()
-		plt.Save("/tmp/gosl/ode", "erk03b")
-	}
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols)
 }
 
 func TestErk04(tst *testing.T) {
@@ -240,11 +179,6 @@ func TestErk04(tst *testing.T) {
 
 	// problem
 	p := ProbSimpleNdim4a()
-
-	// prepare plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-	}
 
 	// reference solution
 	yExact := la.NewVector(p.Ndim)
@@ -257,19 +191,7 @@ func TestErk04(tst *testing.T) {
 		4, 4, 4, 4, 4}
 	tols := []float64{0.043, 0.0176, 0.11, 0.049, 0.016, 0.0023,
 		0.086, 0.164, 0.07, 0.09, 0.005}
-	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols, chk.Verbose)
-
-	// plot
-	if chk.Verbose {
-		plt.Gll("$nFeval$", "$error$", &plt.A{LegOut: true, LegHlen: 2, LegNcol: 4})
-		plt.SlopeInd(-1, 2.8, +1.0, 0.4, "1", true, true, true, nil, nil)
-		plt.SlopeInd(-2, 3.3, -1.5, 0.4, "2", false, true, true, nil, nil)
-		plt.SlopeInd(-3, 4.0, -4.5, 0.4, "3", false, true, true, nil, nil)
-		plt.SlopeInd(-4, 3.4, -6.0, 0.4, "4", true, true, true, nil, nil)
-		plt.SetXlog()
-		plt.SetYlog()
-		plt.Save("/tmp/gosl/ode", "erk04")
-	}
+	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols)
 }
 
 func TestErk05(tst *testing.T) {
@@ -280,11 +202,6 @@ func TestErk05(tst *testing.T) {
 	// problem
 	p := ProbVanDerPol(0, true)
 
-	// prepare plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-	}
-
 	// reference solution
 	yExact := p.Y.GetCopy()
 
@@ -292,12 +209,5 @@ func TestErk05(tst *testing.T) {
 	methods := []string{"rk4", "fehlberg4", "dopri5", "verner6", "fehlberg7", "dopri8"}
 	orders := []float64{3.9874, 4.6923, 6.3012, 6.5916, 8.0283, 6.8463}
 	tols := []float64{1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4}
-	p.ConvergenceTest(tst, 8e-2, 3e-1, 3, yExact, methods, orders, tols, chk.Verbose)
-
-	if chk.Verbose {
-		plt.Gll("$nFeval$", "$error$", &plt.A{LegOut: true, LegHlen: 2, LegNcol: 3})
-		plt.SetXlog()
-		plt.SetYlog()
-		plt.Save("/tmp/gosl/ode", "erk05")
-	}
+	p.ConvergenceTest(tst, 8e-2, 3e-1, 3, yExact, methods, orders, tols)
 }

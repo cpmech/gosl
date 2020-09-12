@@ -7,9 +7,9 @@ package la
 import (
 	"sort"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/utl"
 )
 
 // Equations organises the identification numbers (IDs) of equations in a linear system:

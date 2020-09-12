@@ -7,10 +7,9 @@ package msh
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/num"
+	"gosl/utl"
 )
 
 // QuadPointsGaussLegendre generate quadrature points for Gauss-Legendre integration
@@ -123,40 +122,6 @@ func QuadPointsWilson9(w0input float64, p8stable bool) (pts [][]float64) {
 		{+a, -a, +a, wa},
 		{-a, +a, +a, wa},
 		{+a, +a, +a, wa},
-	}
-}
-
-// QuadPointDraw draws quadrature point within standard rectangle or box
-//   dx -- can be used to displace box; may be nil
-func QuadPointDraw(pts [][]float64, ndim int, triOrTet bool, dx []float64, args *plt.A) {
-	if args == nil {
-		args = &plt.A{C: "r", M: "*", Mec: "r", NoClip: true}
-	}
-	if len(dx) != ndim {
-		dx = []float64{0, 0, 0}
-	}
-	argsPoly := &plt.A{Fc: "none", Ec: "#2645cb", Closed: true, NoClip: true}
-	if ndim == 2 {
-		if triOrTet {
-			plt.Polyline([][]float64{
-				{dx[0], dx[1]}, {dx[0] + 1, dx[1]}, {dx[0] + 0, dx[1] + 1},
-			}, argsPoly)
-		} else {
-			plt.Polyline([][]float64{
-				{dx[0] - 1, dx[1] - 1}, {dx[0] + 1, dx[1] - 1}, {dx[0] + 1, dx[1] + 1}, {dx[0] - 1, dx[1] + 1},
-			}, argsPoly)
-		}
-		for _, p := range pts {
-			plt.PlotOne(dx[0]+p[0], dx[1]+p[1], args)
-		}
-	} else {
-		if triOrTet {
-		} else {
-			plt.Box(dx[0]-1, dx[0]+1, dx[1]-1, dx[1]+1, dx[2]-1, dx[2]+1, &plt.A{Wire: true, Ls: "-", Ec: "#2645cb", Lw: 3})
-		}
-		for _, p := range pts {
-			plt.Plot3dPoint(dx[0]+p[0], dx[1]+p[1], dx[2]+p[2], args)
-		}
 	}
 }
 

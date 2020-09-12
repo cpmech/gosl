@@ -5,10 +5,10 @@
 package opt
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // GradDesc implements a simple gradient-descent optimizer
@@ -45,19 +45,19 @@ func NewGradDesc(prob *Problem) (o *GradDesc) {
 //  Input:
 //    x -- [ndim] initial starting point (will be modified)
 //    params -- [may be nil] optional parameters. e.g. "alpha", "maxit". Example:
-//                 params := dbf.NewParams(
-//                     &dbf.P{N: "alpha", V: 0.5},
-//                     &dbf.P{N: "maxit", V: 1000},
-//                     &dbf.P{N: "ftol", V: 1e-2},
-//                     &dbf.P{N: "gtol", V: 1e-2},
-//                     &dbf.P{N: "hist", V: 1},
-//                     &dbf.P{N: "verb", V: 1},
+//                 params := utl.NewParams(
+//                     &utl.P{N: "alpha", V: 0.5},
+//                     &utl.P{N: "maxit", V: 1000},
+//                     &utl.P{N: "ftol", V: 1e-2},
+//                     &utl.P{N: "gtol", V: 1e-2},
+//                     &utl.P{N: "hist", V: 1},
+//                     &utl.P{N: "verb", V: 1},
 //                 )
 //  Output:
 //    fmin -- f(x@min) minimum f({x}) found
 //    x -- [modify input] position of minimum f({x})
 //
-func (o *GradDesc) Min(x la.Vector, params dbf.Params) (fmin float64) {
+func (o *GradDesc) Min(x la.Vector, params utl.Params) (fmin float64) {
 
 	// set parameters
 	o.Convergence.SetParams(params)

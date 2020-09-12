@@ -8,12 +8,11 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/gm/msh"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/gm"
+	"gosl/gm/msh"
+	"gosl/io"
+	"gosl/la"
 )
 
 func check3x3grid(tst *testing.T, e *BoundaryConds, checkNormals bool) {
@@ -143,18 +142,6 @@ func TestBryConds02(tst *testing.T) {
 
 	// check
 	check3x3grid(tst, e, false)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		args := msh.NewArgs()
-		args.WithIdsVerts = true
-		args.WithIdsCells = true
-		args.WithTagsEdges = true
-		m.Draw(args)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "bcs02")
-	}
 }
 
 func TestBryConds03(tst *testing.T) {

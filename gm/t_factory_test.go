@@ -8,10 +8,9 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/utl"
 )
 
 func Test_factory01(tst *testing.T) {
@@ -31,22 +30,6 @@ func Test_factory01(tst *testing.T) {
 		curve.Point(x, []float64{u}, 2)
 		e := math.Sqrt(math.Pow(x[0]-xc, 2)+math.Pow(x[1]-yc, 2)) - r
 		chk.Float64(tst, io.Sf("error @ (%+.8f,%+.8f) == 0?", x[0], x[1]), 1e-15, e, 0)
-	}
-
-	// plot
-	if chk.Verbose {
-		extra := func() {
-			plt.Circle(xc, yc, r, &plt.A{C: "#478275", Lw: 1})
-		}
-		ndim := 2
-		argsCurve := &plt.A{C: "orange", M: "+", Mec: "k", Lw: 4, L: "curve", NoClip: true}
-		argsCtrl := &plt.A{C: "k", M: ".", Ls: "--", L: "control", NoClip: true}
-		argsIds := &plt.A{C: "b", Fsz: 10}
-		plt.Reset(false, nil)
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.PlotOne(xc, yc, &plt.A{C: "k", M: "+", Ms: 20})
-		PlotNurbs("/tmp/gosl", "t_factory01", curve, ndim, 11, true, true, argsCurve, argsCtrl, argsIds, extra)
 	}
 }
 
@@ -77,32 +60,6 @@ func Test_factory02(tst *testing.T) {
 	// refine NURBS
 	refined := curve.Krefine([][]float64{{0.5, 1.5, 2.5, 3.5}})
 	checkCircle(refined)
-
-	// plot
-	if chk.Verbose {
-
-		argsIdsA := &plt.A{C: "b", Fsz: 10}
-		argsCtrlA := &plt.A{C: "k", M: ".", Ls: "--", L: "control", NoClip: true}
-		argsCurveA := &plt.A{C: "orange", M: "+", Mec: "k", Lw: 4, L: "curve", NoClip: true}
-
-		argsIdsB := &plt.A{C: "green", Fsz: 7}
-		argsCtrlB := &plt.A{C: "green", L: "refined: control"}
-		argsElemsB := &plt.A{C: "orange", Ls: "none", M: "*", Me: 20, L: "refined: curve"}
-
-		ndim := 2
-		np := 11
-		extra := func() {
-			plt.Circle(xc, yc, r, &plt.A{C: "#478275", Lw: 1})
-			refined.DrawCtrl(ndim, true, argsCtrlB, argsIdsB)
-			refined.DrawElems(ndim, np, false, argsElemsB, nil)
-		}
-
-		plt.Reset(false, nil)
-		plt.Equal()
-		plt.HideAllBorders()
-		plt.AxisRange(-3, 3, -3, 3)
-		PlotNurbs("/tmp/gosl", "t_factory02", curve, ndim, np, true, true, argsCurveA, argsCtrlA, argsIdsA, extra)
-	}
 }
 
 func Test_factory03(tst *testing.T) {

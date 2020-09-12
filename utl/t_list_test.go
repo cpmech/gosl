@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func Test_list01(tst *testing.T) {

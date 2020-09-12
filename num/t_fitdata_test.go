@@ -7,10 +7,8 @@ package num
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func TestLinFit01(tst *testing.T) {
@@ -28,19 +26,6 @@ func TestLinFit01(tst *testing.T) {
 	chk.Float64(tst, "σa", 1e-17, σa, 0)
 	chk.Float64(tst, "σb", 1e-17, σb, 0)
 	chk.Float64(tst, "χ2", 1e-17, χ2, 0)
-
-	// plot
-	if chk.Verbose {
-		model := func(x float64) float64 { return a + b*x }
-		xx := utl.LinSpace(0, 5, 11)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return model(x) })
-		plt.Reset(true, nil)
-		plt.Plot(x, y, &plt.A{L: "data", C: plt.C(0, 0), M: plt.M(0, 0), NoClip: true})
-		plt.Plot(xx, yy, &plt.A{L: "model", C: plt.C(1, 0), NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/num", "linfit01")
-	}
 }
 
 func TestLinFit02(tst *testing.T) {
@@ -55,17 +40,4 @@ func TestLinFit02(tst *testing.T) {
 	io.Pforan("a=%v b=%v\n", a, b)
 	chk.Float64(tst, "a", 1e-17, a, 3.5)
 	chk.Float64(tst, "b", 1e-17, b, 1.4)
-
-	// plot
-	if chk.Verbose {
-		model := func(x float64) float64 { return a + b*x }
-		xx := utl.LinSpace(0, 5, 11)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return model(x) })
-		plt.Reset(true, nil)
-		plt.Plot(x, y, &plt.A{L: "data", C: plt.C(0, 0), M: plt.M(0, 0), NoClip: true})
-		plt.Plot(xx, yy, &plt.A{L: "model", C: plt.C(1, 0), NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/num", "linfit02")
-	}
 }

@@ -7,10 +7,9 @@ package ode
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
 )
 
 func TestHL01(tst *testing.T) {
@@ -35,7 +34,7 @@ func TestHL01(tst *testing.T) {
 	yf := y.GetCopy()
 	atol, rtol := 1e-5, 1e-5
 	numJac, fixedStep, saveStep, saveCont := false, false, true, false
-	stat, out := Solve("dopri5", fcn, nil, yf, xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveCont)
+	stat, _ := Solve("dopri5", fcn, nil, yf, xf, dx, atol, rtol, numJac, fixedStep, saveStep, saveCont)
 
 	// results
 	io.Pf("yf = %v\n", yf)
@@ -61,13 +60,4 @@ func TestHL01(tst *testing.T) {
 	Radau5simple(fcn, nil, yf4, xf, atol)
 	chk.AnaNum(tst, "radau5: y0", 1e-6, yf4[0], y[0], chk.Verbose)
 	chk.AnaNum(tst, "radau5: y1", 1e-5, yf4[1], y[1], chk.Verbose)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, nil)
-		plt.Plot(out.GetStepY(0), out.GetStepY(1), &plt.A{M: ".", C: plt.C(0, 0), NoClip: true})
-		plt.Gll("$y_0$", "$y_1$", nil)
-		plt.Equal()
-		plt.Save("/tmp/gosl/ode", "hl01")
-	}
 }

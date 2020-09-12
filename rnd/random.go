@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/cpmech/gosl/utl"
+	"gosl/utl"
 )
 
 // Init initialises random numbers generators

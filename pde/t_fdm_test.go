@@ -7,12 +7,11 @@ package pde
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/gm"
+	"gosl/io"
+	"gosl/la"
+	"gosl/utl"
 )
 
 func TestFdm01a(tst *testing.T) {
@@ -25,7 +24,7 @@ func TestFdm01a(tst *testing.T) {
 	g.RectGenUniform([]float64{0, 0}, []float64{2, 2}, []int{3, 3})
 
 	// operator
-	s := NewFdmLaplacian(dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}, g, nil)
+	s := NewFdmLaplacian(utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}, g, nil)
 
 	// assemble
 	s.Assemble(false)
@@ -68,7 +67,7 @@ func TestFdm02(tst *testing.T) {
 	g.RectGenUniform([]float64{0, 0}, []float64{3, 3}, []int{4, 4})
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewFdmLaplacian(p, g, nil)
 
 	// essential boundary conditions
@@ -135,17 +134,6 @@ func TestFdm02(tst *testing.T) {
 		return
 	}
 	chk.Array(tst, "uNoreact", 1e-15, uNoreact, u)
-
-	// plot
-	if chk.Verbose {
-		gp := gm.GridPlotter{G: g, WithVids: true}
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		gp.Draw()
-		plt.ContourL(gp.X2d, gp.Y2d, uu, nil)
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "fdm02")
-	}
 }
 
 func TestFdm03(tst *testing.T) {
@@ -158,7 +146,7 @@ func TestFdm03(tst *testing.T) {
 	g.RectGenUniform([]float64{0, 0}, []float64{1, 1}, []int{5, 5})
 
 	// solver
-	p := dbf.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
+	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewFdmLaplacian(p, g, func(X la.Vector, t float64) float64 {
 		x, y := X[0], X[1]
 		xx, yy := x*x, y*x
@@ -185,17 +173,5 @@ func TestFdm03(tst *testing.T) {
 		for m := 0; m < g.Npts(0); m++ {
 			chk.AnaNum(tst, "u", 0.021, u[g.IndexMNPtoI(m, n, 0)], ana(g.X(m, n, 0)), chk.Verbose)
 		}
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		uu := g.MapMeshgrid2d(u)
-		x2d, y2d := g.Meshgrid2d()
-		plt.Equal()
-		plt.ContourF(x2d, y2d, uu, nil)
-		plt.Gll("$x$", "$y$", nil)
-		plt.HideAllBorders()
-		plt.Save("/tmp/gosl/pde", "fdm03")
 	}
 }

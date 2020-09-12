@@ -7,13 +7,10 @@ package opt
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // LineSearch finds the scalar 'a' that gives a substantial reduction of f({x}+a⋅{u})
@@ -79,17 +76,17 @@ func NewLineSearch(ndim int, ffcn fun.Sv, Jfcn fun.Vv) (o *LineSearch) {
 
 // SetParams sets parameters
 //   Example:
-//             o.SetParams(dbf.NewParams(
-//                 &dbf.P{N: "maxitls", V: 10},
-//                 &dbf.P{N: "maxitzoom", V: 10},
-//                 &dbf.P{N: "maxalpha", V: 100},
-//                 &dbf.P{N: "mulalpha", V: 2},
-//                 &dbf.P{N: "coef1", V: 1e-4},
-//                 &dbf.P{N: "coef2", V: 0.4},
-//                 &dbf.P{N: "coefquad", V: 0.1},
-//                 &dbf.P{N: "coefcubic", V: 0.2},
+//             o.SetParams(utl.NewParams(
+//                 &utl.P{N: "maxitls", V: 10},
+//                 &utl.P{N: "maxitzoom", V: 10},
+//                 &utl.P{N: "maxalpha", V: 100},
+//                 &utl.P{N: "mulalpha", V: 2},
+//                 &utl.P{N: "coef1", V: 1e-4},
+//                 &utl.P{N: "coef2", V: 0.4},
+//                 &utl.P{N: "coefquad", V: 0.1},
+//                 &utl.P{N: "coefcubic", V: 0.2},
 //             ))
-func (o *LineSearch) SetParams(params dbf.Params) {
+func (o *LineSearch) SetParams(params utl.Params) {
 	o.MaxIt = params.GetIntOrDefault("maxitls", o.MaxIt)
 	o.MaxItZoom = params.GetIntOrDefault("maxitzoom", o.MaxItZoom)
 	o.MaxAlpha = params.GetValueOrDefault("maxalpha", o.MaxAlpha)
@@ -290,45 +287,6 @@ func (o *LineSearch) G(a float64) float64 {
 	la.VecAdd(o.xnew, 1, o.x, a, o.u) // xnew := x + a⋅u
 	o.Jfcn(o.dfdx, o.xnew)            // dfdx @ xnew
 	return la.VecDot(o.dfdx, o.u)     // dfdx ⋅ u
-}
-
-// PlotC plots contour for current x and u vectors
-//   i, j -- the indices in x[i] and x[j] to plot xnew[j] versus xnew[i] with xnew = x + a⋅u
-func (o *LineSearch) PlotC(i, j int, x, u la.Vector, a, ximin, ximax, xjmin, xjmax float64, npts int) {
-
-	// auxiliary
-	la.VecAdd(o.xnew, 1, o.x, a, o.u) // xnew := x + a⋅u
-	x2d := []float64{o.x[i], o.x[j]}
-	u2d := []float64{o.u[i], o.u[j]}
-	xvec := la.NewVector(len(o.x))
-	copy(xvec, o.xnew)
-
-	// meshgrid
-	xx, yy, zz := utl.MeshGrid2dF(ximin, ximax, xjmin, xjmax, npts, npts, func(r, s float64) float64 {
-		xvec[i], xvec[j] = r, s
-		return o.ffcn(xvec)
-	})
-
-	// contour
-	plt.ContourF(xx, yy, zz, nil)
-	plt.PlotOne(x[i], x[j], &plt.A{C: "y", M: "o", NoClip: true})
-	plt.PlotOne(o.xnew[i], o.xnew[j], &plt.A{C: "y", M: "*", Ms: 10, NoClip: true})
-	plt.DrawArrow2d(x2d, u2d, false, 1, &plt.A{C: "k"})
-	plt.DrawArrow2d(x2d, u2d, false, a, nil)
-	plt.Gll(io.Sf("$x_{%d}$", i), io.Sf("$x_{%d}$", j), nil)
-}
-
-// PlotF plots f(a) curve for current x and u vectors
-func (o *LineSearch) PlotF(a, amin, amax float64, npts int) {
-	ll := utl.LinSpace(amin-0.001, amax+0.001, npts)
-	ff := utl.GetMapped(ll, o.F)
-	plt.Plot(ll, ff, &plt.A{C: plt.C(0, 0), NoClip: true})
-	plt.PlotOne(amin, o.F(amin), &plt.A{C: "r", Mew: 2, M: "|", Ms: 40, NoClip: true})
-	plt.PlotOne(amax, o.F(amax), &plt.A{C: "r", Mew: 2, M: "|", Ms: 40, NoClip: true})
-	plt.PlotOne(0, o.F(0), &plt.A{C: "y", M: "o", NoClip: true})
-	plt.PlotOne(a, o.F(a), &plt.A{C: "y", M: "*", Ms: 10, NoClip: true})
-	plt.Cross(0, 0, nil)
-	plt.Gll("$a$", "$f(a)$", nil)
 }
 
 // temporary ///////////////////////////////////////////////////////////////////////////////////////

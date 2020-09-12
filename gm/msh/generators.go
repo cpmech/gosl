@@ -7,7 +7,7 @@ package msh
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // GenQuadRegionHL generates 2D region made of quads (high-level version of GenQuadRegion)

@@ -8,10 +8,9 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/utl"
 )
 
 func checkSymmetry(tst *testing.T, X []float64) {
@@ -153,24 +152,6 @@ func TestChebyshev02(tst *testing.T) {
 		}
 		io.Pl()
 	}
-
-	if chk.Verbose {
-		N := 3
-		plt.Reset(true, nil)
-		x1 := utl.LinSpace(-1.0, 1.0, 201)
-		x2 := utl.LinSpace(-1.1, 1.1, 201)
-		y1 := utl.GetMapped(x1, func(x float64) float64 { return ChebyshevT(N, x) })
-		y2 := utl.GetMapped(x2, func(x float64) float64 { return ChebyshevT(N, x) })
-		yy1 := utl.GetMapped(x1, func(x float64) float64 { return ChebyshevTdiff1(N, x) })
-		yy2 := utl.GetMapped(x2, func(x float64) float64 { return ChebyshevTdiff1(N, x) })
-		plt.Plot(x1, y1, &plt.A{C: "r", Lw: 4, NoClip: true, L: "Tn(x)"})
-		plt.Plot(x2, y2, &plt.A{C: "r", NoClip: true})
-		plt.Gll("$x$", io.Sf("$T_%d(x)$", N), nil)
-		plt.DoubleYscale(io.Sf("$dT_%d(x)/dx$", N))
-		plt.Plot(x1, yy1, &plt.A{C: "b", Lw: 4, NoClip: true, L: "deriv"})
-		plt.Plot(x2, yy2, &plt.A{C: "b", NoClip: true, L: "deriv"})
-		plt.Save("/tmp/gosl/fun", "chebydiff1")
-	}
 }
 
 func TestChebyshev03(tst *testing.T) {
@@ -200,23 +181,5 @@ func TestChebyshev03(tst *testing.T) {
 			})
 		}
 		io.Pl()
-	}
-
-	if chk.Verbose {
-		N := 5
-		plt.Reset(true, nil)
-		x1 := utl.LinSpace(-1.0, 1.0, 201)
-		x2 := utl.LinSpace(-1.1, 1.1, 201)
-		y1 := utl.GetMapped(x1, func(x float64) float64 { return ChebyshevTdiff1(N, x) })
-		y2 := utl.GetMapped(x2, func(x float64) float64 { return ChebyshevTdiff1(N, x) })
-		yy1 := utl.GetMapped(x1, func(x float64) float64 { return ChebyshevTdiff2(N, x) })
-		yy2 := utl.GetMapped(x2, func(x float64) float64 { return ChebyshevTdiff2(N, x) })
-		plt.Plot(x1, y1, &plt.A{C: "r", Lw: 4, NoClip: true, L: "dTndx(x)"})
-		plt.Plot(x2, y2, &plt.A{C: "r", NoClip: true})
-		plt.Gll("$x$", io.Sf("$dT_%d(x)/dx$", N), nil)
-		plt.DoubleYscale(io.Sf("$d^2T_%d(x)/dx^2$", N))
-		plt.Plot(x1, yy1, &plt.A{C: "b", Lw: 4, NoClip: true, L: "deriv"})
-		plt.Plot(x2, yy2, &plt.A{C: "b", NoClip: true, L: "deriv"})
-		plt.Save("/tmp/gosl/fun", "chebydiff2")
 	}
 }

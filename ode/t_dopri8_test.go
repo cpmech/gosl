@@ -7,10 +7,9 @@ package ode
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
 )
 
 func TestDoPri802(tst *testing.T) {
@@ -84,25 +83,4 @@ func TestDoPri802(tst *testing.T) {
 	_, dd := io.ReadTable("data/dr_dop853_dense.txt")
 	chk.Array(tst, "dense: y0", 1e-7, yy0, dd["y0"])
 	chk.Array(tst, "dense: y1", 1e-7, yy1, dd["y1"])
-
-	// plot
-	if chk.Verbose {
-		XX := sol.Out.GetStepX()
-		plt.Reset(true, &plt.A{Prop: 1.5})
-		plt.Subplot(2, 1, 1)
-		plt.Plot(XX, sol.Out.GetStepY(0), &plt.A{C: "r", M: ".", Ms: 3, NoClip: true})
-		plt.Plot(xx, yy0, &plt.A{C: "r", M: "o", NoClip: true})
-		plt.Gll("$x$", "$y_0$", nil)
-		plt.DoubleYscale("")
-		plt.Plot(XX, sol.Out.GetStepY(1), &plt.A{C: "b", M: "+", Ms: 3, NoClip: true})
-		plt.Plot(xx, yy1, &plt.A{C: "b", M: "x", Ls: "none", NoClip: true})
-		plt.AxisXrange(-0.01, 0.2)
-		plt.Gll("$x$", "$y_1$", nil)
-		plt.HideTRborders()
-		plt.Subplot(2, 1, 2)
-		plt.Plot(XX, sol.Out.GetStepRs(), &plt.A{C: plt.C(3, 0), NoClip: true})
-		plt.AxisXrange(-0.01, 0.2)
-		plt.Gll("$x$", "$\\rho_s$", nil)
-		plt.Save("/tmp/gosl/ode", "dopri802")
-	}
 }

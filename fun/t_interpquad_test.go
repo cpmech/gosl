@@ -7,10 +7,8 @@ package fun
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func TestInterpQuad01(tst *testing.T) {
@@ -41,21 +39,6 @@ func TestInterpQuad01(tst *testing.T) {
 	xopt, fopt := interp.Optimum()
 	chk.Float64(tst, "xopt", 1e-15, xopt, 1.0)
 	chk.Float64(tst, "fopt", 1e-15, fopt, 1.0)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xx := utl.LinSpace(-2, 4, 21)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return interp.F(x) })
-		plt.Plot(xx, yy, &plt.A{C: plt.C(0, 0), M: ".", Ls: "-", NoClip: true})
-		plt.PlotOne(x0, y0, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x1, y1, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x2, y2, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interpquad01")
-	}
 }
 
 func TestInterpQuad02(tst *testing.T) {
@@ -86,21 +69,6 @@ func TestInterpQuad02(tst *testing.T) {
 	xopt, fopt := interp.Optimum()
 	chk.Float64(tst, "xopt", 1e-15, xopt, 1.0)
 	chk.Float64(tst, "fopt", 1e-15, fopt, 3.0)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xx := utl.LinSpace(-2, 4, 21)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return interp.F(x) })
-		plt.Plot(xx, yy, &plt.A{C: plt.C(0, 0), M: ".", Ls: "-", NoClip: true})
-		plt.PlotOne(x0, y0, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x1, y1, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x2, y2, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interpquad02")
-	}
 }
 
 func TestInterpQuad03(tst *testing.T) {
@@ -131,22 +99,6 @@ func TestInterpQuad03(tst *testing.T) {
 	xopt, fopt := interp.Optimum()
 	chk.Float64(tst, "xopt", 1e-15, xopt, 1.0)
 	chk.Float64(tst, "fopt", 1e-15, fopt, 1.0)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xx := utl.LinSpace(-2, 4, 21)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return interp.F(x) })
-		plt.Plot(xx, yy, &plt.A{C: plt.C(0, 0), M: ".", Ls: "-", NoClip: true})
-		plt.PlotOne(x0, y0, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x1, y1, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x2, ycor(x2), &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.SlopeInd(d2, x2, ycor(x2), 1.0, io.Sf("%g", d2), true, false, false, nil, nil)
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interpquad03")
-	}
 }
 
 func TestInterpQuad04(tst *testing.T) {
@@ -177,20 +129,4 @@ func TestInterpQuad04(tst *testing.T) {
 	xopt, fopt := interp.Optimum()
 	chk.Float64(tst, "xopt", 1e-15, xopt, 1.0)
 	chk.Float64(tst, "fopt", 1e-15, fopt, 3.0)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xx := utl.LinSpace(-2, 4, 21)
-		yy := utl.GetMapped(xx, func(x float64) float64 { return interp.F(x) })
-		plt.Plot(xx, yy, &plt.A{C: plt.C(0, 0), M: ".", Ls: "-", NoClip: true})
-		plt.PlotOne(x0, y0, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x1, y1, &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.PlotOne(x2, ycor(x2), &plt.A{C: plt.C(2, 0), M: "o", NoClip: true})
-		plt.SlopeInd(d2, x2, ycor(x2), 1.0, io.Sf("%g", d2), true, false, false, nil, nil)
-		plt.Gll("$x$", "$y$", nil)
-		plt.Cross(0, 0, nil)
-		plt.HideTRborders()
-		plt.Save("/tmp/gosl/fun", "interpquad04")
-	}
 }

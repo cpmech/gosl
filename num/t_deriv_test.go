@@ -8,9 +8,9 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/io"
 )
 
 func TestDeriv01(tst *testing.T) {

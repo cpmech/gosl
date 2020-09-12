@@ -5,11 +5,11 @@
 package pde
 
 import (
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/gm"
-	"github.com/cpmech/gosl/la"
+	"gosl/chk"
+	"gosl/fun"
+	"gosl/gm"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // SpcLaplacian implements the Spectral Collocation (SPC) Laplacian operator (2D or 3D)
@@ -32,7 +32,7 @@ type SpcLaplacian struct {
 
 // NewSpcLaplacian creates a new SPC Laplacian operator with given parameters
 //  NOTE: params is not used at the moment
-func NewSpcLaplacian(params dbf.Params, lis fun.LagIntSet, grid *gm.Grid, source fun.Svs) (o *SpcLaplacian) {
+func NewSpcLaplacian(params utl.Params, lis fun.LagIntSet, grid *gm.Grid, source fun.Svs) (o *SpcLaplacian) {
 	o = new(SpcLaplacian)
 	o.LagInt = lis
 	o.Grid = grid

@@ -8,11 +8,10 @@ package opt
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/fun/dbf"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
+	"gosl/utl"
 )
 
 // LinIpm implements the interior-point methods for linear programming problems
@@ -67,7 +66,7 @@ func (o *LinIpm) Free() {
 }
 
 // Init initialises LinIpm
-func (o *LinIpm) Init(A *la.CCMatrix, b, c la.Vector, prms dbf.Params) {
+func (o *LinIpm) Init(A *la.CCMatrix, b, c la.Vector, prms utl.Params) {
 
 	// problem
 	o.A, o.B, o.C = A, b, c

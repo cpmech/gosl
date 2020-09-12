@@ -9,10 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/la"
 )
 
 func TestLinipm01(tst *testing.T) {
@@ -62,21 +61,6 @@ func TestLinipm01(tst *testing.T) {
 	io.Pf("A =\n%v\n", A.Print(""))
 	io.Pf("bres = %v\n", bres)
 	chk.Array(tst, "A*x=b", 1e-8, bres, b)
-
-	// plot
-	if chk.Verbose {
-		np := 41
-		f := func(x []float64) float64 { return c[0]*x[0] + c[1]*x[1] }
-		g := func(x []float64, i int) float64 { return A.Get(i, 0)*x[0] + A.Get(i, 1)*x[1] - b[i] }
-		vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
-		plt.Reset(false, nil)
-		argsG := &plt.A{Levels: []float64{0}, Colors: []string{"yellow"}, Lw: 2, Fsz: 10}
-		PlotTwoVarsContour(ipm.X[:2], np, nil, true, vmin, vmax, nil, argsG, f,
-			func(x []float64) float64 { return g(x, 0) },
-			func(x []float64) float64 { return g(x, 1) },
-		)
-		plt.Save("/tmp/gosl/opt", "linipm01")
-	}
 }
 
 func TestLinipm02(tst *testing.T) {
@@ -139,18 +123,6 @@ func TestLinipm02(tst *testing.T) {
 	x[0] -= ipm.X[5]
 	io.Pforan("x = %v\n", x)
 	chk.Array(tst, "x", 1e-8, x, []float64{0.5, 1.5})
-
-	// plot
-	if chk.Verbose {
-		np := 41
-		f := func(x []float64) float64 { return c[0]*x[0] + c[1]*x[1] }
-		g := func(x []float64, i int) float64 { return A.Get(i, 0)*x[0] + A.Get(i, 1)*x[1] - b[i] }
-		vmin, vmax := []float64{-2.0, -2.0}, []float64{2.0, 2.0}
-		PlotTwoVarsContour(x, np, nil, true, vmin, vmax, nil, nil, f,
-			func(x []float64) float64 { return g(x, 0) },
-			func(x []float64) float64 { return g(x, 1) },
-		)
-	}
 }
 
 func TestLinipm03(tst *testing.T) {

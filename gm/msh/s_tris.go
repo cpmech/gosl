@@ -4,7 +4,7 @@
 
 package msh
 
-import "github.com/cpmech/gosl/la"
+import "gosl/la"
 
 // FuncTri3 calculates the shape functions (S) and derivatives of shape functions (dSdR) of tri3
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.

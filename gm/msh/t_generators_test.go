@@ -8,9 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
 )
 
 func TestGen01(tst *testing.T) {
@@ -32,16 +30,6 @@ func TestGen01(tst *testing.T) {
 	// constants
 	circle := false
 	ndivU, ndivV := 3, 2
-
-	// plot arguments
-	args := NewArgs()
-	args.WithEdges = true
-	args.WithCells = true
-	args.WithVerts = true
-	args.WithIdsCells = true
-	args.WithIdsVerts = true
-	args.WithTagsVerts = true
-	args.WithTagsEdges = true
 
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
@@ -85,14 +73,6 @@ func TestGen01(tst *testing.T) {
 		vset = append(vset, mesh.Tmaps.VertexTag2verts[23]...)
 		for _, v := range vset {
 			chk.Float64(tst, "x=xmax", 1e-15, v.X[0], xmax)
-		}
-
-		// plot
-		if chk.Verbose {
-			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-			mesh.Draw(args)
-			plt.HideAllBorders()
-			plt.Save("/tmp/gosl/gm", io.Sf("region-%s", TypeIndexToKey[ctype]))
 		}
 	}
 }
@@ -159,13 +139,6 @@ func TestGen03(tst *testing.T) {
 	circle := false
 	ndivU, ndivV := 3, 5
 
-	// plot arguments
-	args := NewArgs()
-	args.WithEdges = true
-	args.WithCells = true
-	args.WithVerts = true
-	args.WithIdsVerts = true
-
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
 	for _, ctype := range ctypes {
@@ -211,14 +184,6 @@ func TestGen03(tst *testing.T) {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)
 		}
-
-		// plot
-		if chk.Verbose {
-			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-			mesh.Draw(args)
-			plt.HideAllBorders()
-			plt.Save("/tmp/gosl/gm", io.Sf("ring-%s", TypeIndexToKey[ctype]))
-		}
 	}
 }
 
@@ -231,12 +196,6 @@ func TestGen04(tst *testing.T) {
 	alpha := math.Pi / 2.0
 	r, R := 1.0, 3.0
 	ndivR, ndivA := 3, 5
-
-	// plot arguments
-	args := NewArgs()
-	args.WithEdges = true
-	args.WithCells = true
-	args.WithVerts = true
 
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
@@ -283,14 +242,6 @@ func TestGen04(tst *testing.T) {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)
 		}
-
-		// plot
-		if chk.Verbose {
-			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-			mesh.Draw(args)
-			plt.HideAllBorders()
-			plt.Save("/tmp/gosl/gm", io.Sf("ring-%s-hl", TypeIndexToKey[ctype]))
-		}
 	}
 }
 
@@ -303,13 +254,6 @@ func TestGen05(tst *testing.T) {
 	alpha := 2.0 * math.Pi
 	r, R := 1.0, 3.0
 	ndivR, ndivA := 2, 3
-
-	// plot arguments
-	args := NewArgs()
-	args.WithEdges = true
-	args.WithCells = true
-	args.WithVerts = true
-	args.WithIdsVerts = true
 
 	// generate many quads
 	ctypes := []int{TypeQua4, TypeQua8, TypeQua9, TypeQua12, TypeQua16, TypeQua17}
@@ -355,14 +299,6 @@ func TestGen05(tst *testing.T) {
 		for _, v := range vset {
 			Rm := math.Sqrt(v.X[0]*v.X[0] + v.X[1]*v.X[1])
 			chk.Float64(tst, "R", 1e-15, R, Rm)
-		}
-
-		// plot
-		if chk.Verbose {
-			plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-			mesh.Draw(args)
-			plt.HideAllBorders()
-			plt.Save("/tmp/gosl/gm", io.Sf("ring-%s-full", TypeIndexToKey[ctype]))
 		}
 	}
 }

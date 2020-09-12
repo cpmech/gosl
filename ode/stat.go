@@ -4,7 +4,7 @@
 
 package ode
 
-import "github.com/cpmech/gosl/io"
+import "gosl/io"
 
 // Stat holds statistics and output data
 type Stat struct {

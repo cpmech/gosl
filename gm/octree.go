@@ -7,9 +7,7 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
 )
 
 // PointN /////////////////////////////////////////////////////////////////////////////////////////
@@ -128,41 +126,6 @@ func (o *BoxN) GetMid() (mid []float64) {
 		mid[i] = (o.Lo.X[i] + o.Hi.X[i]) / 2.0
 	}
 	return
-}
-
-// Draw draws box
-func (o BoxN) Draw(withTxt bool, args, argsTxt *plt.A) {
-	if argsTxt == nil {
-		argsTxt = &plt.A{C: "k", Fsz: 8, Ha: "center", Va: "center"}
-	}
-	lbl := io.Sf("%d", o.ID)
-	ndim := len(o.Lo.X)
-	mid := o.GetMid()
-	if ndim == 2 {
-		if args == nil {
-			args = &plt.A{Ec: "#005cd9", Fc: "#dfe7f3", Closed: true, NoClip: true}
-		}
-		pts := [][]float64{
-			{o.Lo.X[0], o.Lo.X[1]},
-			{o.Hi.X[0], o.Lo.X[1]},
-			{o.Hi.X[0], o.Hi.X[1]},
-			{o.Lo.X[0], o.Hi.X[1]},
-		}
-		plt.Polyline(pts, args)
-		if withTxt {
-			plt.Text(mid[0], mid[1], lbl, argsTxt)
-		}
-		plt.AxisRange(o.Lo.X[0], o.Hi.X[0], o.Lo.X[1], o.Hi.X[1])
-	} else {
-		if args == nil {
-			args = &plt.A{Ec: "#005cd9", Fc: "#dfe7f3", A: 0.7, Lw: 2, Ls: ":"}
-		}
-		plt.Box(o.Lo.X[0], o.Hi.X[0], o.Lo.X[1], o.Hi.X[1], o.Lo.X[2], o.Hi.X[2], args)
-		if withTxt {
-			plt.Text3d(mid[0], mid[1], mid[2], lbl, argsTxt)
-		}
-		plt.AxisRange3d(o.Lo.X[0], o.Hi.X[0], o.Lo.X[1], o.Hi.X[1], o.Lo.X[2], o.Hi.X[2])
-	}
 }
 
 // DistPointBoxN returns the distance of a point to the box

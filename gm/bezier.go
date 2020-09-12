@@ -7,10 +7,8 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/num"
-	"github.com/cpmech/gosl/plt"
+	"gosl/chk"
+	"gosl/num"
 )
 
 // BezierQuad implements a quadratic Bezier curve
@@ -86,7 +84,7 @@ func (o *BezierQuad) GetControlCoords() (X, Y, Z []float64) {
 
 // DistPoint returns the distance from a point to this Bezier curve
 // It finds the closest projection which is stored in P
-func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64 {
+func (o *BezierQuad) DistPoint(X []float64) float64 {
 
 	// TODO:
 	//   1) split this into closest projections finding
@@ -110,12 +108,10 @@ func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64 {
 		c += 2.0*Bi*Bi + Mi*Ai
 		d += Mi * Bi
 	}
-	//io.Pforan("a=%v b=%v c=%v d=%v\n", a, b, c, d)
 	if math.Abs(a) < 1e-7 {
 		chk.Panic("DistPoint does not yet work with this type of Bezier (straight line?):\nQ=%v\n", o.Q)
 	}
 	x1, x2, x3, nx := num.EqCubicSolveReal(b/a, c/a, d/a)
-	io.Pfyel("\nx1=%v x2=%v x3=%v nx=%v\n", x1, x2, x3, nx)
 
 	// auxiliary
 	if len(o.P) != ndim {
@@ -135,22 +131,14 @@ func (o *BezierQuad) DistPoint(X []float64, doplot bool) float64 {
 			!(x2 < 0.0 || x2 > 1.0),
 			!(x3 < 0.0 || x3 > 1.0),
 		}
-		io.Pforan("ok = %v\n", ok)
 		for i, t := range T {
 			if ok[i] {
 				o.Point(o.P, t)
-				if doplot {
-					plt.PlotOne(X[0], X[1], &plt.A{C: "k", M: "o"})
-					plt.PlotOne(o.P[0], o.P[1], &plt.A{C: "k", M: "."})
-					plt.Arrow(X[0], X[1], o.P[0], o.P[1], &plt.A{Ec: "none"})
-				}
 				D[i] = ppdist(X, o.P)
 			}
 		}
-		io.Pforan("D = %v\n", D)
 	}
 	o.Point(o.P, t)
-	io.Pfcyan("P = %v\n", o.P)
 	return 0
 }
 

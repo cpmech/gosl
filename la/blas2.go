@@ -5,8 +5,8 @@
 package la
 
 import (
-	"github.com/cpmech/gosl/la/oblas"
-	"github.com/cpmech/gosl/utl"
+	"gosl/la/oblas"
+	"gosl/utl"
 )
 
 // MatVecMul returns the matrix-vector multiplication

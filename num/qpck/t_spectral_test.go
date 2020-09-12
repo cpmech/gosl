@@ -9,8 +9,8 @@ import (
 
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
+	"gosl/chk"
+	"gosl/io"
 )
 
 func TestSpecProb01(tst *testing.T) {

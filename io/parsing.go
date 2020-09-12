@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/cpmech/gosl/chk"
+	"gosl/chk"
 )
 
 // ExtractStrPair extracts the pair from, e.g., "key:val"

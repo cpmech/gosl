@@ -7,10 +7,9 @@ package gm
 import (
 	"math"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/utl"
 )
 
 // consts
@@ -321,149 +320,6 @@ func (o *Bins) GetLimits(idxBin int) (xmin, xmax []float64) {
 		xmax = []float64{o.Xmin[0] + float64(i+1)*o.Size[0], o.Xmin[1] + float64(j+1)*o.Size[1], o.Xmin[2] + float64(k+1)*o.Size[2]}
 	}
 	return
-}
-
-// plotting ///////////////////////////////////////////////////////////////////////////////////////
-
-// Draw draws bins; i.e. grid
-func (o *Bins) Draw(withEntry, withGrid, withEntryTxt, withGridTxt bool, argsEntry, argsGrid, argsTxtEntry, argsTxtGrid *plt.A, selBins map[int]bool) {
-
-	// grid
-	if withGrid {
-
-		// configuration
-		if argsGrid == nil {
-			argsGrid = &plt.A{C: "#427ce5", Lw: 0.8, NoClip: true}
-		}
-
-		// x-y coordinates
-		X := make([][]float64, o.Ndiv[0]+1)
-		Y := make([][]float64, o.Ndiv[0]+1)
-		for i := 0; i < o.Ndiv[0]+1; i++ {
-			X[i] = make([]float64, o.Ndiv[1]+1)
-			Y[i] = make([]float64, o.Ndiv[1]+1)
-			for j := 0; j < o.Ndiv[1]+1; j++ {
-				X[i][j] = o.Xmin[0] + float64(i)*o.Size[0]
-				Y[i][j] = o.Xmin[1] + float64(j)*o.Size[1]
-			}
-		}
-
-		// draw grid
-		if o.Ndim == 2 {
-			plt.Grid2d(X, Y, false, argsGrid, nil)
-		} else {
-			Zlevels := make([]float64, o.Ndiv[2]+1)
-			for k := 0; k < o.Ndiv[2]+1; k++ {
-				Zlevels[k] = o.Xmin[2] + float64(k)*o.Size[2]
-			}
-			plt.Grid3dZlevels(X, Y, Zlevels, false, argsGrid, nil)
-		}
-	}
-
-	// selected bins
-	if o.Ndim == 2 {
-		nxy := o.Ndiv[0] * o.Ndiv[1]
-		for idx := range selBins {
-			i := idx % o.Ndiv[0] // indices representing bin
-			j := (idx % nxy) / o.Ndiv[0]
-			x := o.Xmin[0] + float64(i)*o.Size[0] // coordinates of bin corner
-			y := o.Xmin[1] + float64(j)*o.Size[1]
-			plt.Polyline([][]float64{
-				{x, y},
-				{x + o.Size[0], y},
-				{x + o.Size[0], y + o.Size[1]},
-				{x, y + o.Size[1]},
-			}, &plt.A{Fc: "#fbefdc", Ec: "#8e8371", Lw: 0.5, Closed: true, NoClip: true})
-		}
-	}
-
-	// plot items
-	if withEntry {
-
-		// configuration
-		if argsEntry == nil {
-			argsEntry = &plt.A{C: "r", M: ".", NoClip: true}
-			if o.Ndim == 3 {
-				argsEntry.M = "o"
-			}
-		}
-		if argsTxtEntry == nil {
-			argsTxtEntry = &plt.A{C: "g", Fsz: 8}
-		}
-		argsTxtEntry.Ha = "right"
-
-		// draw markers indicating entries
-		nentries := o.Nentries()
-		X := make([]float64, nentries)
-		Y := make([]float64, nentries)
-		var Z []float64
-		if o.Ndim == 3 {
-			Z = make([]float64, nentries)
-		}
-		k := 0
-		for _, bin := range o.All {
-			if bin != nil {
-				for _, entry := range bin.Entries {
-					X[k] = entry.X[0]
-					Y[k] = entry.X[1]
-					if o.Ndim == 3 {
-						Z[k] = entry.X[2]
-						if withEntryTxt {
-							plt.Text3d(X[k], Y[k], Z[k], io.Sf("%d", entry.ID), argsTxtEntry)
-						}
-					} else {
-						if withEntryTxt {
-							plt.Text(X[k], Y[k], io.Sf("%d", entry.ID), argsTxtEntry)
-						}
-					}
-					k++
-				}
-			}
-		}
-		if o.Ndim == 2 {
-			argsEntry.Ls = "none"
-			plt.Plot(X, Y, argsEntry)
-		} else {
-			plt.Plot3dPoints(X, Y, Z, argsEntry)
-		}
-	}
-
-	// grid txt
-	if withGridTxt {
-
-		// configuration
-		if argsTxtGrid == nil {
-			argsTxtGrid = &plt.A{C: "orange", Fsz: 8}
-		}
-
-		// add text
-		n2 := 1
-		if o.Ndim == 3 {
-			n2 = o.Ndiv[2]
-		}
-		for k := 0; k < n2; k++ {
-			z := 0.0
-			if o.Ndim == 3 {
-				z = o.Xmin[2] + float64(k)*o.Size[2] + 0.02*o.Size[2]
-			}
-			for j := 0; j < o.Ndiv[1]; j++ {
-				for i := 0; i < o.Ndiv[0]; i++ {
-					idx := i + j*o.Ndiv[0]
-					if o.Ndim == 3 {
-						idx += k * o.Ndiv[0] * o.Ndiv[1]
-					}
-					x := o.Xmin[0] + float64(i)*o.Size[0] + 0.02*o.Size[0]
-					y := o.Xmin[1] + float64(j)*o.Size[1] + 0.02*o.Size[1]
-					txt := io.Sf("%d", idx)
-					if o.Ndim == 3 {
-						plt.Text3d(x, y, z, txt, argsTxtGrid)
-					} else {
-						plt.Text(x, y, txt, argsTxtGrid)
-					}
-				}
-			}
-		}
-	}
 }
 
 // information ////////////////////////////////////////////////////////////////////////////////////

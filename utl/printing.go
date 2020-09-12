@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/cpmech/gosl/io"
+	"gosl/io"
 )
 
 // PrintDeep3 prints an array of array of array

@@ -7,9 +7,7 @@ package fun
 import (
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
 )
 
 func TestMultiInterp01(t *testing.T) {
@@ -41,26 +39,5 @@ func TestMultiInterp01(t *testing.T) {
 
 	for i := 0; i < len(fref); i++ {
 		chk.Float64(t, "P(xref,yref)", 1e-17, o.P(xref[i], yref[i]), fref[i])
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{WidthPt: 400, Dpi: 150})
-		xmin, xmax, ymin, ymax := 0.0, 2.0, 0.0, 2.0
-		nx, ny := 41, 41
-		uu, vv, ww := utl.MeshGrid2dF(xmin, xmax, ymin, ymax, nx, ny, func(x, y float64) float64 {
-			return x*x + 2*y*y
-		})
-		rr, ss, tt := utl.MeshGrid2dF(xmin, xmax, ymin, ymax, nx, ny, func(x, y float64) float64 {
-			return o.P(x, y)
-		})
-		plt.Wireframe(uu, vv, ww, &plt.A{C: plt.C(0, 0), Rstride: 5, Cstride: 5})
-		plt.Wireframe(rr, ss, tt, &plt.A{C: plt.C(1, 0), Rstride: 5, Cstride: 5})
-		for i, x := range xx {
-			for j, y := range yy {
-				plt.Plot3dPoint(x, y, f[i+j*len(xx)], &plt.A{C: "r", M: "o"})
-			}
-		}
-		plt.Save("/tmp/gosl/fun", "multiinterp01")
 	}
 }

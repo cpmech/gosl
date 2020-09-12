@@ -8,10 +8,9 @@ import (
 	"math"
 	"testing"
 
-	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/plt"
-	"github.com/cpmech/gosl/utl"
+	"gosl/chk"
+	"gosl/io"
+	"gosl/utl"
 )
 
 func TestFourierInterp01(tst *testing.T) {
@@ -79,8 +78,6 @@ func TestFourierInterp02(tst *testing.T) {
 
 	// function and analytic derivative
 	f := func(x float64) float64 { return math.Sin(x / 2.0) }
-	dfdx := func(x float64) float64 { return math.Cos(x/2.0) / 2.0 }
-	d2fdx2 := func(x float64) float64 { return -math.Cos(x/2.0) / 4.0 }
 
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
@@ -90,7 +87,6 @@ func TestFourierInterp02(tst *testing.T) {
 
 	// compute A using 3/2-rule
 	fou.CalcAwithAliasRemoval(f)
-	A32 := fou.A.GetCopy()
 	io.Pf("\n............3/2-rule.............\n")
 	fouCheckD1andD2(tst, fou, f)
 
@@ -100,29 +96,6 @@ func TestFourierInterp02(tst *testing.T) {
 	io.Pf("\n.......no aliasing removal.......\n")
 	fouCheckI(tst, fou, f)
 	fouCheckD1andD2(tst, fou, f)
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{Prop: 1.7})
-		plt.SplotGap(0.0, 0.3)
-
-		plt.Subplot(3, 1, 1)
-		plt.Title(io.Sf("f(x) and interpolation. N=%d", N), &plt.A{Fsz: 9})
-
-		plt.Subplot(3, 1, 2)
-		plt.Title(io.Sf("df/dx(x) and derivative of interpolation. N=%d", N), &plt.A{Fsz: 9})
-
-		plt.Subplot(3, 1, 3)
-		plt.Title(io.Sf("d2f/dx2(x) and second deriv interpolation. N=%d", N), &plt.A{Fsz: 9})
-
-		fou.Plot(3, 3, f, dfdx, d2fdx2, nil,
-			&plt.A{L: "noAliasRem", C: plt.C(1, 1), Ls: "--", NoClip: true},
-			&plt.A{L: "noAliasRem", C: plt.C(2, 1), Ls: "--", NoClip: true},
-			&plt.A{L: "noAliasRem", C: plt.C(3, 1), Ls: "--", NoClip: true})
-		copy(fou.A, A32)
-		fou.Plot(3, 3, nil, nil, nil, nil, nil, nil, nil)
-		plt.Save("/tmp/gosl/fun", "fourierinterp02")
-	}
 }
 
 func TestFourierInterp03(tst *testing.T) {
@@ -160,75 +133,6 @@ func TestFourierInterp03(tst *testing.T) {
 		chk.DerivScaSca(tst, io.Sf("D2I{f}(%5.3f)", x), 1e-9, fou.Idiff(2, x), x, 1e-3, chk.Verbose, func(t float64) float64 {
 			return fou.Idiff(1, t)
 		})
-	}
-
-	// plot
-	if chk.Verbose {
-
-		plt.Reset(true, &plt.A{Prop: 1.7})
-		plt.SplotGap(0.0, 0.3)
-
-		plt.Subplot(3, 1, 1)
-		plt.Title("f(x) and interpolation", &plt.A{Fsz: 9})
-
-		plt.Subplot(3, 1, 2)
-		plt.Title("df/dx(x) and derivative of interpolation", &plt.A{Fsz: 9})
-
-		plt.Subplot(3, 1, 3)
-		plt.Title("d2f/dx2(x) and second deriv interpolation", &plt.A{Fsz: 9})
-
-		for k, p := range []uint64{2, 3, 4, 5} {
-
-			N := 1 << p
-			fou := NewFourierInterp(N, "lanc")
-			defer fou.Free()
-
-			fou.CalcU(f)
-			fou.CalcA()
-
-			ff := f
-			ll := ""
-			if k == 2 {
-				ff = nil
-				ll = "Lanczos"
-			}
-			l := io.Sf("%d", N)
-			fou.Plot(3, 3, ff, nil, nil, &plt.A{C: "k", L: ""}, &plt.A{C: plt.C(k, 0), L: l}, &plt.A{C: plt.C(k, 0), L: ll}, &plt.A{C: plt.C(k, 0), L: l})
-		}
-
-		for k, p := range []uint64{2, 3, 4, 5} {
-
-			N := 1 << p
-			fou := NewFourierInterp(N, "rcos")
-			defer fou.Free()
-
-			fou.CalcU(f)
-			fou.CalcA()
-
-			ll := ""
-			if k == 2 {
-				ll = "Rcos"
-			}
-			fou.Plot(3, 3, nil, nil, nil, nil, &plt.A{C: plt.C(k, 0), Ls: "--", L: ""}, &plt.A{C: plt.C(k, 0), Ls: "--", L: ll}, &plt.A{C: plt.C(k, 0), Ls: "--", L: ""})
-		}
-
-		for k, p := range []uint64{2, 3, 4, 5} {
-
-			N := 1 << p
-			fou := NewFourierInterp(N, "ces")
-			defer fou.Free()
-
-			fou.CalcU(f)
-			fou.CalcA()
-
-			ll := ""
-			if k == 2 {
-				ll = "Cesaro"
-			}
-			fou.Plot(3, 3, nil, nil, nil, nil, &plt.A{C: plt.C(k, 0), Ls: ":", L: ""}, &plt.A{C: plt.C(k, 0), Ls: ":", L: ll}, &plt.A{C: plt.C(k, 0), Ls: ":", L: ""})
-		}
-
-		plt.Save("/tmp/gosl/fun", "fourierinterp03")
 	}
 }
 
@@ -272,8 +176,6 @@ func TestFourierInterp05(tst *testing.T) {
 
 	// function
 	f := func(x float64) float64 { return math.Sin(x / 2.0) }
-	dfdx := func(x float64) float64 { return math.Cos(x/2.0) / 2.0 }
-	d2fdx2 := func(x float64) float64 { return -math.Cos(x/2.0) / 4.0 }
 
 	// constants
 	var p uint64 = 3 // exponent of 2ⁿ
@@ -301,25 +203,5 @@ func TestFourierInterp05(tst *testing.T) {
 		d2 := fou.Idiff(2, x)
 		chk.AnaNum(tst, "d1", 1e-15, fou.Du1[j], d1, chk.Verbose)
 		chk.AnaNum(tst, "d2", 1e-15, fou.Du2[j], d2, chk.Verbose)
-	}
-
-	// plot
-	if chk.Verbose {
-		plt.Reset(true, &plt.A{Prop: 1.7})
-		plt.SplotGap(0.0, 0.3)
-
-		plt.Subplot(3, 1, 1)
-		plt.Title(io.Sf("f(x) and interpolation. N=%d", N), &plt.A{Fsz: 9})
-
-		plt.Subplot(3, 1, 2)
-		plt.Title(io.Sf("df/dx(x) and derivative of interpolation. N=%d", N), &plt.A{Fsz: 9})
-		plt.Plot(fou.X, fou.Du1, &plt.A{C: "k", M: ".", Ls: "none", Void: true, NoClip: true})
-
-		plt.Subplot(3, 1, 3)
-		plt.Title(io.Sf("d2f/dx2(x) and second deriv interpolation. N=%d", N), &plt.A{Fsz: 9})
-		plt.Plot(fou.X, fou.Du2, &plt.A{C: "k", M: ".", Ls: "none", Void: true, NoClip: true})
-
-		fou.Plot(3, 3, f, dfdx, d2fdx2, nil, nil, nil, nil)
-		plt.Save("/tmp/gosl/fun", "fourierinterp05")
 	}
 }
