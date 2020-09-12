@@ -15,7 +15,6 @@ import (
 	"gosl/la"
 	"gosl/mpi"
 	"gosl/ode"
-	"gosl/plt"
 )
 
 func main() {
@@ -160,30 +159,5 @@ func main() {
 		chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 281)
 		chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 809)
 		chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
-
-		// plot
-		plt.Reset(true, &plt.A{WidthPt: 450, Dpi: 150, Prop: 1.8, FszXtck: 6, FszYtck: 6})
-		_, T := io.ReadTable("data/radau5_hwamplifier.dat")
-		X := sol.Out.GetStepX()
-		H := sol.Out.GetStepH()
-		for j := 0; j < ndim; j++ {
-			labelA, labelB := "", ""
-			if j == 4 {
-				labelA, labelB = "reference", "gosl"
-			}
-			Yj := sol.Out.GetStepY(j)
-			plt.Subplot(ndim+1, 1, j+1)
-			plt.Plot(T["x"], T[io.Sf("y%d", j)], &plt.A{C: "k", M: "+", L: labelA, NoClip: true})
-			plt.Plot(X, Yj, &plt.A{C: "r", M: ".", Ms: 1, Ls: "none", L: labelB, NoClip: true})
-			plt.AxisXmax(0.05)
-			plt.HideTRborders()
-			plt.Gll("$x$", io.Sf("$y_%d$", j), nil)
-		}
-		plt.Subplot(ndim+1, 1, ndim+1)
-		plt.Plot(X, H, &plt.A{C: "b", NoClip: true})
-		plt.SetYlog()
-		plt.AxisXmax(0.05)
-		plt.Gll("$x$", "$\\log{(h)}$", nil)
-		plt.Save("/tmp/gosl/ode", "amp_np3")
 	}
 }

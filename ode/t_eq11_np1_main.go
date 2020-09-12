@@ -12,7 +12,6 @@ import (
 	"gosl/chk"
 	"gosl/mpi"
 	"gosl/ode"
-	"gosl/plt"
 )
 
 func main() {
@@ -57,9 +56,4 @@ func main() {
 
 	// check results
 	chk.Float64(tst, "yFin", 2.94e-5, p.Y[0], p.CalcYana(0, p.Xf))
-
-	// plot
-	plt.Reset(true, nil)
-	p.Plot("Radau5,Jana", 0, sol.Out, 101, true, nil, nil)
-	plt.Save("/tmp/gosl/ode", "mpi_eq11_np1")
 }
