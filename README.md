@@ -55,3 +55,7 @@ Gosl includes the following *main* packages:
 ## Examples
 
 Pelase check out https://github.com/cpmech/gosl-examples
+
+## Benchmarks
+
+Pelase check out https://github.com/cpmech/gosl-benchmarks
