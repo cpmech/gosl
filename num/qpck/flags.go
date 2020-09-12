@@ -2,15 +2,10 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// +build !darwin
-
 package qpck
 
 /*
 #cgo FFLAGS: -std=legacy
-
-#cgo linux LDFLAGS: -lopenblas -llapack -lgfortran -lm
-
-#cgo windows LDFLAGS: -lopenblas -lgfortran -lm
+#cgo LDFLAGS: -lopenblas -llapack -lgfortran -lm
 */
 import "C"

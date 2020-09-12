@@ -2,9 +2,7 @@
 
 set -e
 
-PKGS_ESSENTIAL="chk io utl"
-
-PKGS_NEED_FLAGS="mpi"
+PKGS_ESSENTIAL="chk io utl mpi"
 
 PKGS_ALL=" \
 fun/fftw fun \
@@ -21,14 +19,10 @@ install_and_test(){
     HERE=`pwd`
     PKG=$1
     DOTEST=$2
-    HASGENBASH=$3
     echo
     echo
     echo "=== compiling $PKG ============================================================="
     cd $PKG
-    if [[ ! -z $HASGENBASH ]]; then
-        bash xgenflagsfile.bash
-    fi
     touch *.go
     go install
     if [ "$DOTEST" -eq 1 ]; then
@@ -39,10 +33,6 @@ install_and_test(){
 
 for p in $PKGS_ESSENTIAL; do
     install_and_test $p 1
-done
-
-for p in $PKGS_NEED_FLAGS; do
-    install_and_test $p 1 1
 done
 
 for p in $PKGS_ALL; do

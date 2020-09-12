@@ -5,8 +5,8 @@
 package gm
 
 /*
-#cgo linux CFLAGS: -O2
-#cgo linux LDFLAGS: -L/usr/lib -L/usr/local/lib -lmetis
+#cgo CFLAGS: -O2
+#cgo LDFLAGS: -L/usr/lib -L/usr/local/lib -lmetis
 
 #include <metis.h>
 */
