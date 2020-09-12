@@ -51,3 +51,7 @@ Gosl includes the following *main* packages:
 - rnd. Random numbers and probability distributions
 
 (see each sub directory for more information)
+
+## Examples
+
+Pelase check out https://github.com/cpmech/gosl-examples
