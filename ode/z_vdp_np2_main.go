@@ -73,7 +73,7 @@ func main() {
 	y := la.NewVectorSlice([]float64{2.0, -0.6})
 
 	// configurations
-	conf := ode.NewConfig("radau5", "", comm)
+	conf := ode.NewConfig("radau5", "mumps", comm)
 	conf.SetStepOut(true, nil)
 	conf.SetTol(1e-4)
 

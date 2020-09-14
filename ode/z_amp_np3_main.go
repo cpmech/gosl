@@ -131,7 +131,7 @@ func main() {
 	}
 
 	// configurations
-	conf := ode.NewConfig("radau5", "", comm)
+	conf := ode.NewConfig("radau5", "mumps", comm)
 	conf.SetStepOut(true, nil)
 	conf.IniH = 1.0e-6 // initial step size
 

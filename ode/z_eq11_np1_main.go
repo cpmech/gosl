@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"gosl/chk"
+	"gosl/io"
 	"gosl/mpi"
 	"gosl/ode"
 )
@@ -22,7 +23,18 @@ func main() {
 
 	// message
 	chk.Verbose = true
-	chk.PrintTitle("Hairer-Wanner VII-p2 Eq.(1.1) (mumps)")
+
+	// check number of processors
+	if mpi.WorldRank() == 0 {
+		chk.Verbose = true
+		chk.PrintTitle("Hairer-Wanner VII-p2 Eq.(1.1) (mumps)")
+	}
+	if mpi.WorldSize() != 1 {
+		if mpi.WorldRank() == 0 {
+			io.Pf("ERROR: this test can only be run with 1 processor\n")
+		}
+		return
+	}
 
 	// communicator
 	comm := mpi.NewCommunicator(nil)

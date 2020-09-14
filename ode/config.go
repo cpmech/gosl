@@ -126,7 +126,7 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config)
 		lsKind = "umfpack"
 	}
 	if comm != nil {
-		if comm.Size() > 1 {
+		if comm.Size() > 0 {
 			lsKind = "mumps"
 			o.distr = true
 		}
