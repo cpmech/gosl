@@ -1,13 +1,13 @@
 #!/bin/bash
 
 tests="\
-t_mumpssol01a_main \
-t_mumpssol01b_main \
-t_mumpssol02_main \
-t_mumpssol03_main \
-t_mumpssol04_main \
-t_mumpssol05_main \
-t_sp_mpi_main
+z_mumpssol01a_main \
+z_mumpssol01b_main \
+z_mumpssol02_main \
+z_mumpssol03_main \
+z_mumpssol04_main \
+z_mumpssol05_main \
+z_sp_mpi_main
 "
 
 for t in $tests; do

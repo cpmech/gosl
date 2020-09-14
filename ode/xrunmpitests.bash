@@ -1,15 +1,15 @@
 #!/bin/bash
 
 NP1="
-t_eq11_np1_main \
+z_eq11_np1_main \
 "
 
 NP2="
-t_vdp_np2_main \
+z_vdp_np2_main \
 "
 
 NP3="
-t_amp_np3_main
+z_amp_np3_main
 "
 
 for main in $NP1; do
