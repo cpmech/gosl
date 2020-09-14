@@ -151,13 +151,13 @@ func main() {
 
 		// check
 		tst := new(testing.T)
-		chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2655)
-		chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 217)
-		chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 282)
-		chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 221)
+		chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2559)
+		chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 212)
+		chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 266)
+		chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 217)
 		chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 23)
-		chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 281)
-		chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 809)
+		chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 265)
+		chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 780)
 		chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
 	}
 }
