@@ -1,11 +1,9 @@
 FROM ubuntu:20.04
 
-# dev image or not
+# options
 ARG DEV_IMG="false"
-
-# set go and gosl branch
+ARG GOSL_VERSION="2.0.0"
 ARG GO_VERSION="1.15.2"
-ARG GOSL_BRANCH="trim-gosl"
 
 # disable tzdata questions
 ENV DEBIAN_FRONTEND=noninteractive
@@ -53,7 +51,7 @@ RUN go version
 
 # build gosl
 COPY zscripts/gosl-clone-and-build.bash /tmp/library-scripts/
-RUN /bin/bash /tmp/library-scripts/gosl-clone-and-build.bash "${DEV_IMG}" "${GOSL_BRANCH}"
+RUN /bin/bash /tmp/library-scripts/gosl-clone-and-build.bash "${DEV_IMG}" "${GOSL_VERSION}"
 
 ##################################################################################################
 #                                                                                                #
