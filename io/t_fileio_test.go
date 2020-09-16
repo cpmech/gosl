@@ -7,6 +7,7 @@ package io
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -138,4 +139,31 @@ func Test_fileIO4(tst *testing.T) {
 		chk.String(tst, line, theline)
 		return
 	})
+}
+
+func TestWriteTableVD(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("WriteTableVD")
+
+	x := []float64{1, 2, 3, 4, 5, 6}
+	y := []float64{-1, -2, -3, -4, -5, -6}
+	z := []float64{10000, 20000, 30000, 40000, 50000, 60000}
+	headers := []string{"x", "y", "z"}
+	WriteTableVD("/tmp/gosl", "mytable.txt", headers, x, y, z)
+
+	buf, err := ioutil.ReadFile("/tmp/gosl/mytable.txt")
+	if err != nil {
+		chk.Panic("%v\n", err)
+	}
+
+	correct := `                      x                      y                      z
+  1.000000000000000e+00 -1.000000000000000e+00  1.000000000000000e+04
+  2.000000000000000e+00 -2.000000000000000e+00  2.000000000000000e+04
+  3.000000000000000e+00 -3.000000000000000e+00  3.000000000000000e+04
+  4.000000000000000e+00 -4.000000000000000e+00  4.000000000000000e+04
+  5.000000000000000e+00 -5.000000000000000e+00  5.000000000000000e+04
+  6.000000000000000e+00 -6.000000000000000e+00  6.000000000000000e+04
+`
+	chk.String(tst, string(buf), correct)
 }

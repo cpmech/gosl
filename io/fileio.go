@@ -133,6 +133,36 @@ func WriteBytesToFileVD(dirout, fn string, b []byte) {
 	Pf("file <%s> written\n", filepath.Join(dirout, fn))
 }
 
+// WriteTableVD writes a text file in which the first line contains the headers,
+// and the next lines contain the numeric values (float64).
+// The number of columns must be equal to the number of headers.
+func WriteTableVD(dirout, fn string, headers []string, columns ...[]float64) {
+	ncol := len(headers)
+	if ncol != len(columns) {
+		chk.Panic("the number of headers and columns must be equal to each other")
+	}
+	if ncol < 1 {
+		return
+	}
+	nrow := len(columns[0])
+	buf := new(bytes.Buffer)
+	for col := 0; col < ncol; col++ {
+		Ff(buf, "%23s", headers[col])
+	}
+	Ff(buf, "\n")
+	for row := 0; row < nrow; row++ {
+		for col := 0; col < ncol; col++ {
+			if len(columns[col]) < nrow {
+				Ff(buf, "%23s", "NaN")
+			} else {
+				Ff(buf, "%23.15e", columns[col][row])
+			}
+		}
+		Ff(buf, "\n")
+	}
+	WriteBytesToFileVD(dirout, fn, buf.Bytes())
+}
+
 // functions to read files ////////////////////////////////////////////////////////////////////////
 
 // OpenFileR opens a file for reading data
