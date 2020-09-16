@@ -143,7 +143,7 @@ func Test_fileIO4(tst *testing.T) {
 
 func TestWriteTableVD(tst *testing.T) {
 
-	verbose()
+	// verbose()
 	chk.PrintTitle("WriteTableVD")
 
 	x := []float64{1, 2, 3, 4, 5, 6}

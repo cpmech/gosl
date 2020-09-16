@@ -9,7 +9,12 @@ if [ "${DEV_IMG}" = "true" ]; then
   exit 0
 fi
 
+BRANCH="v$GOSL_VERSION"
+if [ "${GOSL_VERSION}" = "latest" ]; then
+  BRANCH="master"
+fi
+
 cd /usr/local/go/src
-git clone -b "v$GOSL_VERSION" --single-branch --depth 1 https://github.com/cpmech/gosl.git
+git clone -b $BRANCH --single-branch --depth 1 https://github.com/cpmech/gosl.git
 cd gosl
 bash ./all.bash
