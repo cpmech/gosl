@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME="gosl"
-VERSION="2.0.0"
+VERSION="latest"
 
 echo
 echo
