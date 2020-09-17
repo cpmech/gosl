@@ -134,8 +134,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 
 	// make sure that final x is equal to xf in the end
 	defer func() {
-		if math.Abs(x-xf) > 1e-15 {
-			chk.Panic("internal error: x must be equal to xf in the end. x-xf=%v\n", x-xf)
+		if math.Abs(x-xf) > 1e-10 {
+			io.Pf("warning: |x - xf| = %v > 1e-8\n", math.Abs(x-xf))
 		}
 	}()
 
