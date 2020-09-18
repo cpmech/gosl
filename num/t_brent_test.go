@@ -22,8 +22,7 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 	io.Pfcyan("\n       - - - - - - - using Brent's method - - -- - - - \n")
 	o := NewBrent(ffcnA, nil)
 	xbrent = o.Root(xa, xb)
-	var ybrent float64
-	ybrent = ffcnA(xbrent)
+	ybrent := ffcnA(xbrent)
 	io.Pforan("x      = %v\n", xbrent)
 	io.Pforan("f(x)   = %v\n", ybrent)
 	io.Pforan("nfeval = %v\n", o.NumFeval)
@@ -35,20 +34,18 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 
 	// Newton
 	io.Pfcyan("\n       - - - - - - - using Newton's method - - -- - - - \n")
-	var p NlSolver
-	p.Init(1, ffcnB, nil, JfcnB, true, false, nil)
+	sol := NewNlSolver(1, ffcnB)
+	sol.SetJacobianFunction(nil, JfcnB)
 	xnewt := []float64{xguess}
-	var cnd float64
-	cnd = p.CheckJ(xnewt, 1e-6, true, !chk.Verbose)
+	cnd := sol.CheckJ(xnewt, 1e-6, chk.Verbose)
 	io.Pforan("cond(J) = %v\n", cnd)
-	p.Solve(xnewt, false)
-	var ynewt float64
-	ynewt = ffcnA(xnewt[0])
-	io.Pforan("x      = %v\n", xnewt[0])
-	io.Pforan("f(x)   = %v\n", ynewt)
-	io.Pforan("nfeval = %v\n", p.NFeval)
-	io.Pforan("nJeval = %v\n", p.NJeval)
-	io.Pforan("nit    = %v\n", p.It)
+	sol.Solve(xnewt)
+	ynewt := ffcnA(xnewt[0])
+	io.Pforan("x       = %v\n", xnewt[0])
+	io.Pforan("f(x)    = %v\n", ynewt)
+	io.Pforan("nfeval  = %v\n", sol.Nfeval)
+	io.Pforan("nJeval  = %v\n", sol.Njeval)
+	io.Pforan("nit     = %v\n", sol.Niter)
 	if math.Abs(ynewt) > 1e-9 {
 		tst.Errorf("Newton failed: f(x) = %g > 1e-10\n", ynewt)
 		return
@@ -61,7 +58,7 @@ func rootSolTest(tst *testing.T, xa, xb, xguess, tolcmp float64, ffcnA fun.Ss, f
 
 func TestBrent01(tst *testing.T) {
 
-	//verbose()
+	// verbose()
 	chk.PrintTitle("Brent01. root finding")
 
 	ffcnA := func(x float64) (res float64) {
@@ -87,7 +84,7 @@ func TestBrent01(tst *testing.T) {
 
 func TestBrent02(tst *testing.T) {
 
-	//verbose()
+	// verbose()
 	chk.PrintTitle("Brent02. root finding")
 
 	ffcnA := func(x float64) (res float64) {
@@ -112,7 +109,7 @@ func TestBrent02(tst *testing.T) {
 
 func TestBrent03(tst *testing.T) {
 
-	//verbose()
+	// verbose()
 	chk.PrintTitle("Brent03. minimum finding")
 
 	ffcn := func(x float64) (res float64) {
@@ -123,8 +120,8 @@ func TestBrent03(tst *testing.T) {
 	}
 
 	o := NewBrent(ffcn, Jfcn)
-	//xa, xb := -2.0, 2.0 // ===> MinWithDerivs fails
-	//xa, xb := -1.5, 1.5 // ===> MinWithDerivs fails
+	//xa, xb := -2.0, 2.0 // ===> fails
+	//xa, xb := -1.5, 1.5 // ===> fails
 	xa, xb := -1.4, 1.4
 	x := o.Min(xa, xb)
 	y := ffcn(x)

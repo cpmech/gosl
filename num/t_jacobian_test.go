@@ -12,16 +12,12 @@ import (
 	"gosl/la"
 )
 
-const (
-	pi = math.Pi
-)
-
 func sin(x float64) float64 { return math.Sin(x) }
 func cos(x float64) float64 { return math.Cos(x) }
 
 func TestJacobian01a(tst *testing.T) {
 
-	//verbose()
+	// verbose()
 	chk.PrintTitle("TestJacobian 01a (sparse)")
 
 	ffcn := func(fx, x la.Vector) {
@@ -41,7 +37,7 @@ func TestJacobian01a(tst *testing.T) {
 
 func TestJacobian02a(tst *testing.T) {
 
-	//verbose()
+	// verbose()
 	chk.PrintTitle("TestJacobian 02a (sparse)")
 
 	ffcn := func(fx, x la.Vector) {
@@ -85,13 +81,13 @@ func TestJacobian02a(tst *testing.T) {
 		dfdx.Put(5, 4, -sin(x[4]))
 		dfdx.Put(5, 5, 1.0)
 	}
-	x := []float64{5.0, 5.0, pi, pi, pi, 5.0}
+	x := []float64{5.0, 5.0, math.Pi, math.Pi, math.Pi, 5.0}
 	CompareJac(tst, ffcn, Jfcn, x, 1e-6)
 }
 
 func TestJacobian03(tst *testing.T) {
 
-	//verbose()
+	// verbose()
 	chk.PrintTitle("TestJacobian 03 (dense)")
 
 	ffcn := func(fx, x la.Vector) {
