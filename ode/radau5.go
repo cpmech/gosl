@@ -263,9 +263,8 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
 		// initialise linear solver
 		if !o.ready {
-			args := o.conf.GetSpArgs()
-			o.lsR.Init(o.kmatR, args)
-			o.lsC.Init(o.kmatC, args)
+			o.lsR.Init(o.kmatR, o.conf.LinSolConfig)
+			o.lsC.Init(o.kmatC, o.conf.LinSolConfig)
 			o.ready = true
 		}
 

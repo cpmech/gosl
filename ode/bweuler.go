@@ -164,7 +164,7 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) {
 
 			// initialise linear solver
 			if !o.ready {
-				o.ls.Init(o.drdy, o.conf.GetSpArgs())
+				o.ls.Init(o.drdy, o.conf.LinSolConfig)
 				o.ready = true
 			}
 

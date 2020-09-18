@@ -44,6 +44,9 @@ type Config struct {
 	StiffNyes  int     // number of "yes" stiff steps allowed [default = 15]
 	StiffNnot  int     // number of "not" stiff steps to disregard stiffness [default = 6]
 
+	// configurations for linear solver
+	LinSolConfig *la.SparseConfig // configurations for sparse linear solver
+
 	// output
 	stepF     StepOutF  // function to process step output (of accepted steps) [may be nil]
 	denseF    DenseOutF // function to process dense output [may be nil]
@@ -52,20 +55,14 @@ type Config struct {
 	denseOut  bool      // perform dense output is active
 	denseNstp int       // number of dense steps
 
-	// linear solver
-	Symmetric bool   // assume symmetric matrix
-	LsVerbose bool   // show linear solver messages
-	Ordering  string // ordering for linear solver
-	Scaling   string // scaling for linear solver
-
 	// internal data
 	method    string  // the ODE method
 	stabBetaM float64 // factor to multiply stabilisation coefficient β
 
 	// linear solver control
-	comm   *mpi.Communicator // for MPI run (real linear solver)
 	lsKind string            // linear solver kind
 	distr  bool              // MPI distributed execution
+	comm   *mpi.Communicator // for MPI run (real linear solver)
 
 	// tolerances
 	atol  float64 // absolute tolerance
@@ -83,12 +80,20 @@ type Config struct {
 
 // NewConfig returns a new [default] set of configuration parameters
 //   method -- the ODE method: e.g. fweuler, bweuler, radau5, moeuler, dopri5
-//   comm   -- communicator for the linear solver [may be nil]
 //   lsKind -- kind of linear solver: "umfpack" or "mumps" [may be empty]
+//   comm   -- communicator for the linear solver [may be nil]
 //   NOTE: (1) if comm == nil, the linear solver will be "umfpack" by default
 //         (2) if comm != nil and comm.Size() == 1, you can use either "umfpack" or "mumps"
 //         (3) if comm != nil and comm.Size() > 1, the linear solver will be set to "mumps" automatically
 func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config) {
+
+	// check kind of linear solver
+	if lsKind == "" {
+		lsKind = "umfpack"
+	}
+	if lsKind != "umfpack" && lsKind != "mumps" {
+		chk.Panic("lsKind must be empty or \"umfpack\" or \"mumps\"")
+	}
 
 	// parameters
 	o = new(Config)
@@ -118,21 +123,24 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config)
 	o.StiffNyes = 15
 	o.StiffNnot = 6
 
+	// configurations for linear solver
+	o.LinSolConfig = la.NewSparseConfig(comm)
+
 	// internal data
 	o.method = method
 
 	// linear solver control
-	if comm == nil || lsKind == "" {
-		lsKind = "umfpack"
-	}
+	o.lsKind = lsKind
+	o.distr = false
+	o.comm = comm
 	if comm != nil {
-		if comm.Size() > 0 {
+		if comm.Size() > 1 {
 			lsKind = "mumps"
+		}
+		if lsKind == "mumps" {
 			o.distr = true
 		}
 	}
-	o.lsKind = lsKind
-	o.comm = comm
 
 	// set tolerances
 	o.SetTols(1e-4, 1e-4)
@@ -210,9 +218,4 @@ func (o *Config) SetDenseOut(save bool, dxOut, xf float64, out DenseOutF) {
 		o.denseNstp = int(math.Ceil(xf / dxOut))
 		o.denseDx = dxOut
 	}
-}
-
-// GetSpArgs returns arguments for sparse solvers
-func (o *Config) GetSpArgs() *la.SpArgs {
-	return &la.SpArgs{Symmetric: o.Symmetric, Verbose: o.LsVerbose, Ordering: o.Ordering, Scaling: o.Scaling, Guess: nil, Communicator: o.comm}
 }
