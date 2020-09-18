@@ -11,7 +11,6 @@ import (
 	"gosl/fun"
 	"gosl/io"
 	"gosl/la"
-	"gosl/utl"
 )
 
 // NlSolver implements a solver to nonlinear systems of equations
@@ -20,106 +19,51 @@ import (
 //        computations. M., Mir, 1980, p.180 of the Russian edition
 type NlSolver struct {
 
-	// constants
-	cteJac      bool    // constant Jacobian (Modified Newton's method)
-	linSearch   bool    // use linear search
-	linSchMaxIt int     // line search maximum iterations
-	maxIt       int     // Newton's method maximum iterations
-	chkConv     bool    // check convergence
-	atol        float64 // absolute tolerance
-	rtol        float64 // relative tolerance
-	ftol        float64 // minimum value of fx
-	fnewt       float64 // [derived] Newton's method tolerance
+	// configuration
+	config *NlSolverConfig // configuration parameters
 
 	// auxiliary data
-	neq   int       // number of equations
-	scal  la.Vector // scaling vector
-	fx    la.Vector // f(x)
-	mdx   la.Vector // - delta x
-	useDn bool      // use dense solver (matrix inversion) instead of Umfpack (sparse)
-	numJ  bool      // use numerical Jacobian (with sparse solver)
+	neq  int       // number of equations
+	scal la.Vector // scaling vector
+	fx   la.Vector // f(x)
+	mdx  la.Vector // - delta x
 
-	// callbacks
-	Ffcn   fun.Vv // f(x) function f:vector, x:vector
-	JfcnSp fun.Tv // J(x)=dfdx Jacobian for sparse solver
-	JfcnDn fun.Mv // J(x)=dfdx Jacobian for dense solver
-
-	// output callback
-	Out func(x []float64) // output callback function
-
-	// data for Umfpack (sparse)
-	Jtri    la.Triplet // triplet
-	w       la.Vector  // workspace
-	lis     la.Umfpack // linear solver
-	lsReady bool       // linear solver is lsReady
-
-	// data for dense solver (matrix inversion)
-	J  *la.Matrix // dense Jacobian matrix
-	Ji *la.Matrix // inverse of Jacobian matrix
+	// functions
+	functionF       fun.Vv // f(x) function f:vector, x:vector
+	functionJsparse fun.Tv // J(x)=dfdx Jacobian for sparse solver J is T:triplet, x:vector
+	functionJdense  fun.Mv // [non-recommended] J(x)=dfdx Jacobian for dense solver J is M:matrix, x:vector
 
 	// data for line-search
-	φ    float64
-	dφdx la.Vector
-	x0   la.Vector
+	phi    float64
+	dphidx la.Vector
+	x0     la.Vector
 
-	// stat data
-	It     int // number of iterations from the last call to Solve
-	NFeval int // number of calls to Ffcn (function evaluations)
-	NJeval int // number of calls to Jfcn (Jacobian evaluations)
+	// data for Umfpack (sparse)
+	tripletJ la.Triplet // triplet
+	linsol   la.Umfpack // linear solver
+	lsReady  bool       // linear solver is ready
+
+	// workspace for numerical Jacobian (sparse)
+	workspaceNumJac la.Vector // workspace
+
+	// data for dense solver (matrix inversion)
+	matrixJ    *la.Matrix // dense Jacobian matrix
+	matrixJinv *la.Matrix // inverse of Jacobian matrix
+
+	// stats
+	Niter  int // number of iterations from the last call to Solve
+	Nfeval int // number of calls to Ffcn (function evaluations)
+	Njeval int // number of calls to Jfcn (Jacobian evaluations)
 }
 
-// Init initialises solver
-//  Input:
-//   useSp -- Use sparse solver with JfcnSp
-//   useDn -- Use dense solver (matrix inversion) with JfcnDn
-//   numJ  -- Use numeric Jacobian (sparse version only)
-//   prms  -- control parameters (default values)
-//             "cteJac"      = -1 [false]  constant Jacobian (Modified Newton's method)
-//             "linSearch"   = -1 [false]  use linear search
-//             "linSchMaxIt" = 20          linear solver maximum iterations
-//             "maxIt"       = 20          Newton's method maximum iterations
-//             "chkConv"     = -1 [false]  check convergence
-//             "atol"        = 1e-8        absolute tolerance
-//             "rtol"        = 1e-8        relative tolerance
-//             "ftol"        = 1e-9        minimum value of fx
-func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useDn, numJ bool, prms map[string]float64) {
+// NewNlSolver creates a new NlSolver
+// F is the f(x) function f:vector, x:vector
+// Will use numerical Jacobian (with sparse solver) by default
+func NewNlSolver(neq int, F fun.Vv) (o *NlSolver) {
 
-	// set default values
-	o.cteJac = false
-	o.linSearch = false
-	o.linSchMaxIt = 20
-	o.maxIt = 20
-	o.chkConv = false
-	atol := 1e-8
-	rtol := 1e-8
-	ftol := 1e-9
-
-	// read parameters
-	for k, v := range prms {
-		switch k {
-		case "cteJac":
-			o.cteJac = v > 0
-		case "linSearch":
-			o.linSearch = v > 0
-		case "linSchMaxIt":
-			o.linSchMaxIt = int(v)
-		case "maxIt":
-			o.maxIt = int(v)
-		case "chkConv":
-			o.chkConv = v > 0
-		case "atol":
-			atol = v
-		case "rtol":
-			rtol = v
-		case "ftol":
-			ftol = v
-		default:
-			chk.Panic("parameter named %q is invalid\n", k)
-		}
-	}
-
-	// set tolerances
-	o.SetTols(atol, rtol, ftol, MACHEPS)
+	// default configuration
+	o = new(NlSolver)
+	o.config = NewNlSolverConfig()
 
 	// auxiliary data
 	o.neq = neq
@@ -127,58 +71,62 @@ func (o *NlSolver) Init(neq int, Ffcn fun.Vv, JfcnSp fun.Tv, JfcnDn fun.Mv, useD
 	o.fx = la.NewVector(o.neq)
 	o.mdx = la.NewVector(o.neq)
 
-	// callbacks
-	o.Ffcn, o.JfcnSp, o.JfcnDn = Ffcn, JfcnSp, JfcnDn
+	// functions
+	o.functionF = F
 
-	// type of linear solver and Jacobian matrix (numerical or analytical: sparse only)
-	o.useDn, o.numJ = useDn, numJ
-
-	// use dense linear solver
-	if o.useDn {
-		o.J = la.NewMatrix(o.neq, o.neq)
-		o.Ji = la.NewMatrix(o.neq, o.neq)
-
-		// use sparse linear solver
-	} else {
-		o.Jtri.Init(o.neq, o.neq, o.neq*o.neq)
-		if JfcnSp == nil {
-			o.numJ = true
-		}
-		if o.numJ {
-			o.w = la.NewVector(o.neq)
-		}
-	}
-
-	// allocate slices for line search
-	o.dφdx = la.NewVector(o.neq)
+	// data for line search
+	o.dphidx = la.NewVector(o.neq)
 	o.x0 = la.NewVector(o.neq)
+	return
+}
+
+// SetJacobianFunction sets function to compute the Jacobian (dense or sparse)
+// One of sparse [recommended] or dense must be given.
+// If both sparse and dense functions are given, the sparse will be used.
+// With Jdense, matrix inversion is used (not very efficient. use for small systems)
+func (o *NlSolver) SetJacobianFunction(Jsparse fun.Tv, Jdense fun.Mv) {
+	if Jsparse == nil && Jdense == nil {
+		chk.Panic("one of sparse or dense versions must be given")
+	}
+	if Jsparse != nil {
+		o.functionJsparse = Jsparse
+		o.tripletJ.Init(o.neq, o.neq, o.neq*o.neq)
+	} else {
+		o.config.useDenseSolver = true
+		o.functionJdense = Jdense
+		o.matrixJ = la.NewMatrix(o.neq, o.neq)
+		o.matrixJinv = la.NewMatrix(o.neq, o.neq)
+	}
+	o.config.hasJacobianFunction = true
 }
 
 // Free frees memory
 func (o *NlSolver) Free() {
-	if !o.useDn {
-		o.lis.Free()
+	if !o.config.useDenseSolver {
+		o.linsol.Free()
 	}
 }
 
-// SetTols set tolerances
-func (o *NlSolver) SetTols(Atol, Rtol, Ftol, ϵ float64) {
-	o.atol, o.rtol, o.ftol = Atol, Rtol, Ftol
-	o.fnewt = utl.Max(10.0*ϵ/Rtol, utl.Min(0.03, math.Sqrt(Rtol)))
-}
-
 // Solve solves non-linear problem f(x) == 0
-func (o *NlSolver) Solve(x []float64, silent bool) {
+// x -- trial x "near" the solution; otherwise it may not converge
+func (o *NlSolver) Solve(x []float64) {
+
+	// allocate workspace for numerical Jacobian
+	if !o.config.hasJacobianFunction {
+		if len(o.workspaceNumJac) != o.neq {
+			o.workspaceNumJac = la.NewVector(o.neq)
+		}
+	}
 
 	// compute scaling vector
-	la.VecScaleAbs(o.scal, o.atol, o.rtol, x) // scal = Atol + Rtol*abs(x)
+	la.VecScaleAbs(o.scal, o.config.atol, o.config.rtol, x) // scal = Atol + Rtol*abs(x)
 
 	// evaluate function @ x
-	o.Ffcn(o.fx, x) // fx := f(x)
-	o.NFeval, o.NJeval = 1, 0
+	o.functionF(o.fx, x) // fx := f(x)
+	o.Nfeval, o.Njeval = 1, 0
 
 	// show message
-	if !silent {
+	if o.config.Verbose {
 		o.msg("", 0, 0, 0, true, false)
 	}
 
@@ -186,80 +134,79 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 	var Ldx, LdxPrev, Θ float64 // RMS norm of delta x, convergence rate
 	var fxMax float64
 	var nfv int
-	for o.It = 0; o.It < o.maxIt; o.It++ {
+	for o.Niter = 0; o.Niter < o.config.MaxIterations; o.Niter++ {
 
 		// check convergence on f(x)
 		fxMax = o.fx.Largest(1.0) // den = 1.0
-		if fxMax < o.ftol {
-			if !silent {
-				o.msg("fxMax(ini)", o.It, Ldx, fxMax, false, true)
+		if fxMax < o.config.ftol {
+			if o.config.Verbose {
+				o.msg("fxMax(ini)", o.Niter, Ldx, fxMax, false, true)
 			}
 			break
 		}
 
 		// show message
-		if !silent {
-			o.msg("", o.It, Ldx, fxMax, false, false)
+		if o.config.Verbose {
+			o.msg("", o.Niter, Ldx, fxMax, false, false)
 		}
 
 		// output
-		if o.Out != nil {
-			o.Out(x)
+		if o.config.OutCallback != nil {
+			o.config.OutCallback(x)
 		}
 
 		// evaluate Jacobian @ x
-		if o.It == 0 || !o.cteJac {
-			if o.useDn {
-				o.JfcnDn(o.J, x)
+		if o.Niter == 0 || !o.config.ConstantJacobian {
+			if o.config.useDenseSolver {
+				o.functionJdense(o.matrixJ, x)
 			} else {
-				if o.numJ {
-					Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
-					o.NFeval += o.neq
+				if o.config.hasJacobianFunction {
+					o.functionJsparse(&o.tripletJ, x)
 				} else {
-					o.JfcnSp(&o.Jtri, x)
+					Jacobian(&o.tripletJ, o.functionF, x, o.fx, o.workspaceNumJac)
+					o.Nfeval += o.neq
 				}
 			}
-			o.NJeval++
+			o.Njeval++
 		}
 
 		// dense solution
-		if o.useDn {
+		if o.config.useDenseSolver {
 
 			// invert matrix
-			la.MatInv(o.Ji, o.J, false)
+			la.MatInv(o.matrixJinv, o.matrixJ, false)
 
 			// solve linear system (compute mdx) and compute lin-search data
-			o.φ = 0.0
+			o.phi = 0.0
 			for i := 0; i < o.neq; i++ {
-				o.mdx[i], o.dφdx[i] = 0.0, 0.0
+				o.mdx[i], o.dphidx[i] = 0.0, 0.0
 				for j := 0; j < o.neq; j++ {
-					o.mdx[i] += o.Ji.Get(i, j) * o.fx[j] // mdx  = inv(J) * fx
-					o.dφdx[i] += o.J.Get(j, i) * o.fx[j] // dφdx = tra(J) * fx
+					o.mdx[i] += o.matrixJinv.Get(i, j) * o.fx[j] // mdx  = inv(J) * fx
+					o.dphidx[i] += o.matrixJ.Get(j, i) * o.fx[j] // dφdx = tra(J) * fx
 				}
-				o.φ += o.fx[i] * o.fx[i]
+				o.phi += o.fx[i] * o.fx[i]
 			}
-			o.φ *= 0.5
+			o.phi *= 0.5
 
 			// sparse solution
 		} else {
 
 			// init sparse solver
 			if !o.lsReady {
-				symmetric, verbose := false, false
-				o.lis.Init(&o.Jtri, &la.SpArgs{Symmetric: symmetric, Verbose: verbose, Ordering: "", Scaling: "", Guess: nil, Communicator: nil})
+				o.linsol.Init(&o.tripletJ, o.config.LinSolConfig)
 				o.lsReady = true
 			}
 
 			// factorisation (must be done for all iterations)
-			o.lis.Fact()
+			o.linsol.Fact()
 
 			// solve linear system => compute mdx
-			o.lis.Solve(o.mdx, o.fx, false) // mdx = inv(J) * fx   false => !sumToRoot
+			o.linsol.Solve(o.mdx, o.fx, false) // mdx = inv(J) * fx   false => !sumToRoot
 
 			// compute lin-search data
-			if o.linSearch {
-				o.φ = 0.5 * la.VecDot(o.fx, o.fx)
-				la.SpTriMatTrVecMul(o.dφdx, &o.Jtri, o.fx) // dφdx := transpose(J) * fx
+			if o.config.LineSearch {
+				o.phi = 0.5 * la.VecDot(o.fx, o.fx)
+				la.SpTriMatTrVecMul(o.dphidx, &o.tripletJ, o.fx) // dφdx := transpose(J) * fx
 			}
 		}
 
@@ -273,46 +220,46 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 		Ldx = math.Sqrt(Ldx / float64(o.neq))
 
 		// calculate fx := f(x) @ update x
-		o.Ffcn(o.fx, x)
-		o.NFeval++
+		o.functionF(o.fx, x)
+		o.Nfeval++
 
 		// check convergence on f(x) => avoid line-search if converged already
 		fxMax = o.fx.Largest(1.0) // den = 1.0
-		if fxMax < o.ftol {
-			if !silent {
-				o.msg("fxMax", o.It, Ldx, fxMax, false, true)
+		if fxMax < o.config.ftol {
+			if o.config.Verbose {
+				o.msg("fxMax", o.Niter, Ldx, fxMax, false, true)
 			}
 			break
 		}
 
 		// check convergence on Ldx
-		if Ldx < o.fnewt {
-			if !silent {
-				o.msg("Ldx", o.It, Ldx, fxMax, false, true)
+		if Ldx < o.config.fnewt {
+			if o.config.Verbose {
+				o.msg("Ldx", o.Niter, Ldx, fxMax, false, true)
 			}
 			break
 		}
 
 		// call line-search => update x and fx
-		if o.linSearch {
-			nfv = LineSearch(x, o.fx, o.Ffcn, o.mdx, o.x0, o.dφdx, o.φ, o.linSchMaxIt, true)
-			o.NFeval += nfv
+		if o.config.LineSearch {
+			nfv = LineSearch(x, o.fx, o.functionF, o.mdx, o.x0, o.dphidx, o.phi, o.config.LineSearchMaxIt, true)
+			o.Nfeval += nfv
 			Ldx = 0.0
 			for i := 0; i < o.neq; i++ {
 				Ldx += ((x[i] - o.x0[i]) / o.scal[i]) * ((x[i] - o.x0[i]) / o.scal[i])
 			}
 			Ldx = math.Sqrt(Ldx / float64(o.neq))
 			fxMax = o.fx.Largest(1.0) // den = 1.0
-			if Ldx < o.fnewt {
-				if !silent {
-					o.msg("Ldx(linsrch)", o.It, Ldx, fxMax, false, true)
+			if Ldx < o.config.fnewt {
+				if o.config.Verbose {
+					o.msg("Ldx(linsrch)", o.Niter, Ldx, fxMax, false, true)
 				}
 				break
 			}
 		}
 
 		// check convergence rate
-		if o.It > 0 && o.chkConv {
+		if o.Niter > 0 && o.config.EnforceConvRate {
 			Θ = Ldx / LdxPrev
 			if Θ > 0.99 {
 				chk.Panic("solver is diverging with Θ = %g (Ldx=%g, LdxPrev=%g)", Θ, Ldx, LdxPrev)
@@ -322,33 +269,34 @@ func (o *NlSolver) Solve(x []float64, silent bool) {
 	}
 
 	// output
-	if o.Out != nil {
-		o.Out(x)
+	if o.config.OutCallback != nil {
+		o.config.OutCallback(x)
 	}
 
 	// check convergence
-	if o.It == o.maxIt {
-		chk.Panic("cannot converge after %d iterations", o.It)
+	if o.Niter == o.config.MaxIterations {
+		chk.Panic("cannot converge after %d iterations", o.Niter)
 	}
 	return
 }
 
 // CheckJ check Jacobian matrix
 //  Ouptut: cnd -- condition number (with Frobenius norm)
-func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd float64) {
+func (o *NlSolver) CheckJ(x []float64, tol float64, verbose bool) (cnd float64) {
 
 	// Jacobian matrix
 	var Jmat *la.Matrix
-	if o.useDn {
+	if o.config.useDenseSolver {
 		Jmat = la.NewMatrix(o.neq, o.neq)
-		o.JfcnDn(Jmat, x)
+		o.functionJdense(Jmat, x)
 	} else {
-		if o.numJ {
-			Jacobian(&o.Jtri, o.Ffcn, x, o.fx, o.w)
+		if o.config.hasJacobianFunction {
+			o.functionJsparse(&o.tripletJ, x)
 		} else {
-			o.JfcnSp(&o.Jtri, x)
+			work := la.NewVector(o.neq)
+			Jacobian(&o.tripletJ, o.functionF, x, o.fx, work)
 		}
-		Jmat = o.Jtri.ToDense()
+		Jmat = o.tripletJ.ToDense()
 	}
 
 	// condition number
@@ -358,18 +306,15 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 	}
 
 	// numerical Jacobian
-	if !chkJnum {
-		return
-	}
 	var Jtmp la.Triplet
 	ws := la.NewVector(o.neq)
-	o.Ffcn(o.fx, x)
+	o.functionF(o.fx, x)
 	Jtmp.Init(o.neq, o.neq, o.neq*o.neq)
-	Jacobian(&Jtmp, o.Ffcn, x, o.fx, ws)
+	Jacobian(&Jtmp, o.functionF, x, o.fx, ws)
 	Jnum := Jtmp.ToMatrix(nil).ToDense()
 	for i := 0; i < o.neq; i++ {
 		for j := 0; j < o.neq; j++ {
-			chk.PrintAnaNum(io.Sf("J[%d][%d]", i, j), tol, Jmat.Get(i, j), Jnum.Get(i, j), !silent)
+			chk.PrintAnaNum(io.Sf("J[%d][%d]", i, j), tol, Jmat.Get(i, j), Jnum.Get(i, j), verbose)
 		}
 	}
 	maxdiff := Jmat.MaxDiff(Jnum)
@@ -383,11 +328,11 @@ func (o *NlSolver) CheckJ(x []float64, tol float64, chkJnum, silent bool) (cnd f
 func (o *NlSolver) msg(typ string, it int, Ldx, fxMax float64, first, last bool) {
 	if first {
 		io.Pf("\n%4s%23s%23s\n", "it", "Ldx", "fxMax")
-		io.Pf("%4s%23s%23s\n", "", io.Sf("(%7.1e)", o.fnewt), io.Sf("(%7.1e)", o.ftol))
+		io.Pf("%4s%23s%23s\n", "", io.Sf("(%7.1e)", o.config.fnewt), io.Sf("(%7.1e)", o.config.ftol))
 		return
 	}
 	io.Pf("%4d%23.15e%23.15e\n", it, Ldx, fxMax)
 	if last {
-		io.Pf(". . . converged with %s. nit=%d, nFeval=%d, nJeval=%d\n", typ, it, o.NFeval, o.NJeval)
+		io.Pf(". . . converged with %s. nit=%d, nFeval=%d, nJeval=%d\n", typ, it, o.Nfeval, o.Njeval)
 	}
 }

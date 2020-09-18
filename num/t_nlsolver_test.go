@@ -9,265 +9,257 @@ import (
 	"testing"
 
 	"gosl/chk"
+	"gosl/fun"
 	"gosl/io"
 	"gosl/la"
 )
 
-func TestNls01(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("Nls01. 2 eqs system")
-
-	ffcn := func(fx, x la.Vector) {
-		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
-		fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
+func problem(index int) (name string, xTrial, xReference la.Vector, funcF fun.Vv, funcJsparse fun.Tv, funcJdense fun.Mv) {
+	switch index {
+	case 0:
+		name = "simple 2 equations"
+		xTrial = []float64{0.5, 0.5}
+		xReference = []float64{1.0, 0.0}
+		funcF = func(fx, x la.Vector) {
+			fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
+			fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
+			return
+		}
+		funcJsparse = func(dfdx *la.Triplet, x la.Vector) {
+			dfdx.Start()
+			dfdx.Put(0, 0, 3.0*x[0]*x[0])
+			dfdx.Put(0, 1, 1.0)
+			dfdx.Put(1, 0, -1.0)
+			dfdx.Put(1, 1, 3.0*x[1]*x[1])
+			return
+		}
+		funcJdense = func(dfdx *la.Matrix, x la.Vector) {
+			dfdx.Set(0, 0, 3.0*x[0]*x[0])
+			dfdx.Set(0, 1, 1.0)
+			dfdx.Set(1, 0, -1.0)
+			dfdx.Set(1, 1, 3.0*x[1]*x[1])
+		}
 		return
+
+	case 1:
+		name = "with exponential function"
+		xTrial = []float64{5.0, 5.0}
+		xReference = []float64{0.5671, 0.5671}
+		funcF = func(fx, x la.Vector) {
+			fx[0] = 2.0*x[0] - x[1] - math.Exp(-x[0])
+			fx[1] = -x[0] + 2.0*x[1] - math.Exp(-x[1])
+			return
+		}
+		funcJsparse = func(dfdx *la.Triplet, x la.Vector) {
+			dfdx.Start()
+			dfdx.Put(0, 0, 2.0+math.Exp(-x[0]))
+			dfdx.Put(0, 1, -1.0)
+			dfdx.Put(1, 0, -1.0)
+			dfdx.Put(1, 1, 2.0+math.Exp(-x[1]))
+			return
+		}
+		funcJdense = func(dfdx *la.Matrix, x la.Vector) {
+			dfdx.Set(0, 0, 2.0+math.Exp(-x[0]))
+			dfdx.Set(0, 1, -1.0)
+			dfdx.Set(1, 0, -1.0)
+			dfdx.Set(1, 1, 2.0+math.Exp(-x[1]))
+		}
+
+	case 2:
+		name = "trigonometric and exponential"
+		xTrial = []float64{0.4, 3.0}
+		xReference = []float64{-0.2605992900257, 0.6225308965998}
+		funcF = func(fx, x la.Vector) {
+			pi := math.Pi
+			e := math.E
+			fx[0] = 0.5*sin(x[0]*x[1]) - 0.25*x[1]/pi - 0.5*x[0]
+			fx[1] = (1.0-0.25/pi)*(math.Exp(2.0*x[0])-e) + e*x[1]/pi - 2.0*e*x[0]
+			return
+		}
+		funcJsparse = func(dfdx *la.Triplet, x la.Vector) {
+			pi := math.Pi
+			e := math.E
+			dfdx.Start()
+			dfdx.Put(0, 0, 0.5*x[1]*cos(x[0]*x[1])-0.5)
+			dfdx.Put(0, 1, 0.5*x[0]*cos(x[0]*x[1])-0.25/pi)
+			dfdx.Put(1, 0, (2.0-0.5/pi)*math.Exp(2.0*x[0])-2.0*e)
+			dfdx.Put(1, 1, e/pi)
+			return
+		}
+		funcJdense = func(dfdx *la.Matrix, x la.Vector) {
+			pi := math.Pi
+			e := math.E
+			dfdx.Set(0, 0, 0.5*x[1]*cos(x[0]*x[1])-0.5)
+			dfdx.Set(0, 1, 0.5*x[0]*cos(x[0]*x[1])-0.25/pi)
+			dfdx.Set(1, 0, (2.0-0.5/pi)*math.Exp(2.0*x[0])-2.0*e)
+			dfdx.Set(1, 1, e/pi)
+			return
+		}
+
+	default:
+		chk.Panic("there is no problem index = %d", index)
 	}
-	Jfcn := func(dfdx *la.Triplet, x la.Vector) {
-		dfdx.Start()
-		dfdx.Put(0, 0, 3.0*x[0]*x[0])
-		dfdx.Put(0, 1, 1.0)
-		dfdx.Put(1, 0, -1.0)
-		dfdx.Put(1, 1, 3.0*x[1]*x[1])
-		return
-	}
-
-	x := []float64{0.5, 0.5}
-	atol, rtol, ftol := 1e-10, 1e-10, 10*MACHEPS
-	fx := make([]float64, len(x))
-	neq := len(x)
-
-	prms := map[string]float64{
-		"atol":      atol,
-		"rtol":      rtol,
-		"ftol":      ftol,
-		"linSearch": 1.0,
-	}
-
-	io.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
-
-	// init
-	var nlsAna NlSolver
-	nlsAna.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-	defer nlsAna.Free()
-
-	// solve
-	nlsAna.Solve(x, false)
-
-	// check
-	ffcn(fx, x)
-	io.Pf("x    = %v  expected = %v\n", x, []float64{1.0, 0.0})
-	io.Pf("f(x) = %v\n", fx)
-	chk.Array(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
-
-	// check Jacobian
-	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	nlsAna.CheckJ(x, 1e-5, false, true)
-
-	io.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
-	xx := []float64{0.5, 0.5}
-
-	// init
-	var nlsNum NlSolver
-	nlsNum.Init(neq, ffcn, nil, nil, false, true, prms)
-	defer nlsNum.Free()
-
-	// solve
-	nlsNum.Solve(xx, false)
-
-	// check
-	ffcn(fx, xx)
-	io.Pf("xx    = %v  expected = %v\n", xx, []float64{1.0, 0.0})
-	io.Pf("f(xx) = %v\n", fx)
-	chk.Array(tst, "f(x) = 0? ", 1e-16, fx, []float64{})
-	chk.Array(tst, "x == xx", 1e-15, x, xx)
-
-	// check Jacobian
-	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	nlsAna.CheckJ(x, 1e-5, false, true)
+	return
 }
 
-func TestNls02(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("Nls02. 2 eqs system with exp function")
-
-	ffcn := func(fx, x la.Vector) {
-		fx[0] = 2.0*x[0] - x[1] - math.Exp(-x[0])
-		fx[1] = -x[0] + 2.0*x[1] - math.Exp(-x[1])
-		return
-	}
-	Jfcn := func(dfdx *la.Triplet, x la.Vector) {
-		dfdx.Start()
-		dfdx.Put(0, 0, 2.0+math.Exp(-x[0]))
-		dfdx.Put(0, 1, -1.0)
-		dfdx.Put(1, 0, -1.0)
-		dfdx.Put(1, 1, 2.0+math.Exp(-x[1]))
-		return
-	}
-
-	x := []float64{5.0, 5.0}
-	atol, rtol, ftol := 1e-10, 1e-10, 10*MACHEPS
+func checkProblem(tst *testing.T, sol *NlSolver, x, xRef la.Vector, funcF fun.Vv, tolx, tolf float64, checkJacobian bool) {
+	// check solution
 	fx := make([]float64, len(x))
-	neq := len(x)
-
-	prms := map[string]float64{
-		"atol":      atol,
-		"rtol":      rtol,
-		"ftol":      ftol,
-		"linSearch": 1.0,
-	}
-
-	io.PfYel("\n-------------------- Analytical Jacobian -------------------\n")
-
-	// init
-	var nlsAna NlSolver
-	nlsAna.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-	defer nlsAna.Free()
-
-	// solve
-	nlsAna.Solve(x, false)
-
-	// check
-	ffcn(fx, x)
-	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
+	funcF(fx, x)
+	io.Pf("x    = %v  expected = %v\n", x, xRef)
 	io.Pf("f(x) = %v\n", fx)
-	chk.Array(tst, "f(x) = 0? ", 1e-14, fx, []float64{})
+	chk.Array(tst, "x  ", tolx, x, xRef)
+	chk.Array(tst, "f(x) = 0? ", tolf, fx, nil)
 
 	// check Jacobian
-	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	nlsAna.CheckJ(x, 1e-5, false, true)
-
-	io.PfYel("\n\n-------------------- Numerical Jacobian --------------------\n")
-	xx := []float64{5.0, 5.0}
-
-	// init
-	var nlsNum NlSolver
-	nlsNum.Init(neq, ffcn, nil, nil, false, true, prms)
-	defer nlsNum.Free()
-
-	// solve
-	nlsNum.Solve(xx, false)
-
-	// check
-	ffcn(fx, x)
-	io.Pf("xx    = %v  expected = %v\n", x, []float64{0.5671, 0.5671})
-	io.Pf("f(xx) = %v\n", fx)
-	chk.Array(tst, "f(x) = 0? ", 1e-14, fx, []float64{})
-	chk.Array(tst, "x == xx", 1e-15, x, xx)
-
-	// check Jacobian
-	io.Pforan("\nchecking Jacobian @ %v\n", x)
-	nlsAna.CheckJ(x, 1e-5, false, true)
+	if checkJacobian {
+		io.Pforan("\nchecking Jacobian @ %v\n", x)
+		sol.CheckJ(x, 1e-5, chk.Verbose)
+	}
 }
 
-func TestNls03(tst *testing.T) {
+func solveProblem(tst *testing.T, index int, xTrialOrNil, xRefOrNil la.Vector,
+	denseMatrix bool, numJacobian bool, lineSearch bool,
+	tolx, tolf float64) {
 
-	//verbose()
-	chk.PrintTitle("Nls03. 2 eqs system with trig functions")
+	// problem data
+	name, xTrial, xReference, funcF, funcJsparse, funcJdense := problem(index)
 
-	e := math.E
-	ffcn := func(fx, x la.Vector) {
-		fx[0] = 0.5*sin(x[0]*x[1]) - 0.25*x[1]/pi - 0.5*x[0]
-		fx[1] = (1.0-0.25/pi)*(math.Exp(2.0*x[0])-e) + e*x[1]/pi - 2.0*e*x[0]
-		return
+	// title
+	anaOrNum := "ana"
+	if numJacobian {
+		anaOrNum = "num"
 	}
-	Jfcn := func(dfdx *la.Triplet, x la.Vector) {
-		dfdx.Start()
-		dfdx.Put(0, 0, 0.5*x[1]*cos(x[0]*x[1])-0.5)
-		dfdx.Put(0, 1, 0.5*x[0]*cos(x[0]*x[1])-0.25/pi)
-		dfdx.Put(1, 0, (2.0-0.5/pi)*math.Exp(2.0*x[0])-2.0*e)
-		dfdx.Put(1, 1, e/pi)
-		return
+	sparseOrDense := "sparse"
+	if denseMatrix {
+		sparseOrDense = "dense"
 	}
-	JfcnD := func(dfdx *la.Matrix, x la.Vector) {
-		dfdx.Set(0, 0, 0.5*x[1]*cos(x[0]*x[1])-0.5)
-		dfdx.Set(0, 1, 0.5*x[0]*cos(x[0]*x[1])-0.25/pi)
-		dfdx.Set(1, 0, (2.0-0.5/pi)*math.Exp(2.0*x[0])-2.0*e)
-		dfdx.Set(1, 1, e/pi)
-		return
+	lineSearchOrNot := ""
+	if lineSearch {
+		lineSearchOrNot = "/line"
 	}
-
-	x := []float64{0.4, 3.0}
-	fx := make([]float64, len(x))
-	atol := 1e-6
-	rtol := 1e-3
-	ftol := 10 * MACHEPS
-	neq := len(x)
-
-	prms := map[string]float64{
-		"atol":      atol,
-		"rtol":      rtol,
-		"ftol":      ftol,
-		"linSearch": 0.0, // does not work with line search
-	}
+	chk.PrintTitle(io.Sf("NlSolver %d (%s/%s%s): %s", index, anaOrNum, sparseOrDense, lineSearchOrNot, name))
 
 	// init
-	var nlsSps NlSolver // sparse
-	var nlsDen NlSolver // dense
-	nlsSps.Init(neq, ffcn, Jfcn, nil, false, false, prms)
-	nlsDen.Init(neq, ffcn, nil, JfcnD, true, false, prms)
-	defer nlsSps.Free()
-	defer nlsDen.Free()
+	sol := NewNlSolver(len(xTrial), funcF)
+	defer sol.Free()
 
-	io.PfMag("\n/////////////////////// sparse //////////////////////////////////////////\n")
+	// config
+	sol.config.Verbose = chk.Verbose
+	sol.config.LineSearch = lineSearch
+	if !numJacobian {
+		if denseMatrix {
+			sol.SetJacobianFunction(nil, funcJdense)
+		} else {
+			sol.SetJacobianFunction(funcJsparse, nil)
+		}
+	}
 
-	x = []float64{0.4, 3.0}
-	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
-	nlsSps.Solve(x, false)
-	ffcn(fx, x)
-	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
-	io.Pf("f(x) = %v\n", fx)
-	chk.Array(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
-	chk.Array(tst, "f(x) = 0? ", 1e-11, fx, nil)
+	// alternative xTrial and xReference
+	x := xTrial
+	xRef := xReference
+	if xTrialOrNil != nil {
+		x = xTrialOrNil
+	}
+	if xRefOrNil != nil {
+		xRef = xRefOrNil
+	}
 
-	x = []float64{0.7, 4.0}
-	io.PfYel("\n--- sparse ------------- with x = %v --------------\n", x)
-	//rtol = 1e-2
-	nlsSps.Solve(x, false)
-	ffcn(fx, x)
-	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
-	io.Pf("f(x) = %v\n", fx)
-	chk.Array(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
-	chk.Array(tst, "f(x) = 0? ", 1e-7, fx, nil)
+	// solve non linear system
+	sol.Solve(x)
+	checkProblem(tst, sol, x, xRef, funcF, tolx, tolf, true)
+}
 
-	x = []float64{1.0, 4.0}
-	io.PfYel("\n--- sparse ------------- with x = %v ---------------\n", x)
-	//linSearch, chkConv := false, true  // this combination fails due to divergence
-	//linSearch, chkConv := false, false // this combination works but results are different
-	//linSearch, chkConv := true, true   // this combination works but results are wrong => fails
-	nlsSps.Solve(x, false)
-	ffcn(fx, x)
-	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
-	io.Pf("f(x) = %v << converges to a different solution\n", fx)
-	chk.Array(tst, "f(x) = 0? ", 1e-8, fx, nil)
+// ------ problem 0
 
-	io.PfMag("\n/////////////////////// dense //////////////////////////////////////////\n")
+func TestNlSolver0AnaSparseNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 0, nil, nil, false, false, false, 1e-15, 1e-15)
+}
 
-	x = []float64{0.4, 3.0}
-	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
-	nlsDen.Solve(x, false)
-	ffcn(fx, x)
-	io.Pf("x    = %v  expected = %v\n", x, []float64{-0.2605992900257, 0.6225308965998})
-	io.Pf("f(x) = %v\n", fx)
-	chk.Array(tst, "x", 1e-13, x, []float64{-0.2605992900257, 0.6225308965998})
-	chk.Array(tst, "f(x) = 0? ", 1e-11, fx, nil)
+func TestNlSolver0AnaSparseLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 0, nil, nil, false, false, true, 1e-15, 1e-15)
+}
 
-	x = []float64{0.7, 4.0}
-	io.PfYel("\n--- dense ------------- with x = %v --------------\n", x)
-	//rtol = 1e-2
-	nlsDen.Solve(x, false)
-	ffcn(fx, x)
-	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5000000377836, 3.1415927055406})
-	io.Pf("f(x) = %v\n", fx)
-	chk.Array(tst, "x  ", 1e-7, x, []float64{0.5000000377836, 3.1415927055406})
-	chk.Array(tst, "f(x) = 0? ", 1e-7, fx, nil)
+func TestNlSolver0AnaDenseNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 0, nil, nil, true, false, false, 1e-15, 1e-15)
+}
 
-	x = []float64{1.0, 4.0}
-	io.PfYel("\n--- dense ------------- with x = %v ---------------\n", x)
-	nlsDen.Solve(x, false)
-	ffcn(fx, x)
-	io.Pf("x    = %v  expected = %v\n", x, []float64{0.5, pi})
-	io.Pf("f(x) = %v << converges to a different solution\n", fx)
-	chk.Array(tst, "f(x) = 0? ", 1e-8, fx, nil)
+func TestNlSolver0AnaDenseLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 0, nil, nil, true, false, true, 1e-15, 1e-15)
+}
+
+func TestNlSolver0NumNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 0, nil, nil, false, true, false, 1e-13, 1e-13)
+}
+
+func TestNlSolver0NumLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 0, nil, nil, false, true, true, 1e-13, 1e-13)
+}
+
+// ------ problem 1
+
+func TestNlSolver1AnaSparseNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 1, nil, nil, false, false, false, 1e-4, 1e-14)
+}
+
+func TestNlSolver1AnaSparseLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 1, nil, nil, false, false, true, 1e-4, 1e-14)
+}
+
+func TestNlSolver1AnaDenseNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 1, nil, nil, true, false, false, 1e-4, 1e-14)
+}
+
+func TestNlSolver1AnaDenseLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 1, nil, nil, true, false, true, 1e-4, 1e-14)
+}
+
+func TestNlSolver1NumNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 1, nil, nil, false, true, false, 1e-4, 1e-14)
+}
+
+func TestNlSolver1NumLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 1, nil, nil, false, true, true, 1e-4, 1e-14)
+}
+
+// ------ problem 2
+
+func TestNlSolver2AnaSparseNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 2, nil, nil, false, false, false, 1e-13, 1e-11)
+	solveProblem(tst, 2, []float64{0.7, 4.0}, []float64{0.5000000377836, 3.1415927055406}, false, false, false, 1e-7, 1e-14)
+	solveProblem(tst, 2, []float64{1.0, 4.0}, []float64{1.65458271876435, -15.819188232171314}, false, false, false, 1e-15, 1e-14)
+}
+
+/* this problem does not work with line-search
+func TestNlSolver2AnaSparseLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 2, nil, nil, false, false, true, 1e-13, 1e-11)
+}
+*/
+
+func TestNlSolver2AnaDenseNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 2, nil, nil, true, false, false, 1e-13, 1e-11)
+	solveProblem(tst, 2, []float64{0.7, 4.0}, []float64{0.5000000377836, 3.1415927055406}, true, false, false, 1e-7, 1e-14)
+	solveProblem(tst, 2, []float64{1.0, 4.0}, []float64{1.65458271876435, -15.819188232171314}, true, false, false, 1e-14, 1e-14)
+}
+
+func TestNlSolver2NumNoLine(tst *testing.T) {
+	// verbose()
+	solveProblem(tst, 2, nil, nil, false, true, false, 1e-13, 1e-11)
+	solveProblem(tst, 2, []float64{0.7, 4.0}, []float64{0.5000000377836, 3.1415927055406}, false, true, false, 1e-7, 1e-14)
+	solveProblem(tst, 2, []float64{1.0, 4.0}, []float64{1.65458271876435, -15.819188232171314}, false, true, false, 1e-15, 1e-14)
 }
