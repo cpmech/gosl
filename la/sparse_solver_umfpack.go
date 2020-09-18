@@ -54,7 +54,8 @@ type Umfpack struct {
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
-func (o *Umfpack) Init(t *Triplet, args *SpArgs) {
+// args may be nil
+func (o *Umfpack) Init(t *Triplet, args *SparseConfig) {
 
 	// check
 	if o.initialised {
@@ -66,7 +67,7 @@ func (o *Umfpack) Init(t *Triplet, args *SpArgs) {
 
 	// default arguments
 	if args == nil {
-		args = new(SpArgs)
+		args = NewSparseConfig(nil)
 	}
 
 	// allocate data
@@ -212,7 +213,8 @@ type UmfpackC struct {
 }
 
 // Init initialises umfpack for sparse linear systems with real numbers
-func (o *UmfpackC) Init(t *TripletC, args *SpArgs) {
+// args may be nil
+func (o *UmfpackC) Init(t *TripletC, args *SparseConfig) {
 
 	// check
 	if o.initialised {
@@ -224,7 +226,7 @@ func (o *UmfpackC) Init(t *TripletC, args *SpArgs) {
 
 	// default arguments
 	if args == nil {
-		args = new(SpArgs)
+		args = NewSparseConfig(nil)
 	}
 
 	// allocate data

@@ -46,7 +46,8 @@ type Mumps struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-func (o *Mumps) Init(t *Triplet, args *SpArgs) {
+// args may be nil
+func (o *Mumps) Init(t *Triplet, args *SparseConfig) {
 
 	// check
 	if o.initialised {
@@ -58,11 +59,11 @@ func (o *Mumps) Init(t *Triplet, args *SpArgs) {
 
 	// default arguments
 	if args == nil {
-		args = new(SpArgs)
+		args = NewSparseConfig(nil)
 	}
 
 	// set comm
-	o.comm = args.Communicator
+	o.comm = args.communicator
 
 	// allocate data
 	if C.NumData == C.NumMaxData {
@@ -74,9 +75,12 @@ func (o *Mumps) Init(t *Triplet, args *SpArgs) {
 	// initialise data
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
-	o.data.sym = 0                // 0=unsymmetric, 1=sym(pos-def), 2=symmetric(undef)
+	o.data.sym = 0                // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
 	if args.Symmetric {
 		o.data.sym = 2
+	}
+	if args.SymPosDef {
+		o.data.sym = 1
 	}
 	o.data.job = -1 // initialisation code
 	C.dmumps_c(o.data)
@@ -113,16 +117,15 @@ func (o *Mumps) Init(t *Triplet, args *SpArgs) {
 		o.data.icntl[3-1] = -1 // no global information
 		o.data.icntl[4-1] = -1 // message level
 	}
-	o.data.icntl[5-1] = 0     // assembled matrix (needed for distributed matrix)
-	o.data.icntl[6-1] = 7     // automatic (default) permuting strategy for diagonal terms
-	o.data.icntl[14-1] = 5000 // % increase of working space
-	o.data.icntl[18-1] = 3    // distributed matrix
-	o.data.icntl[23-1] = 2000 // max 2000Mb per processor // TODO: check this
+	o.data.icntl[5-1] = 0  // assembled matrix (needed for distributed matrix)
+	o.data.icntl[6-1] = 7  // automatic (default) permuting strategy for diagonal terms
+	o.data.icntl[18-1] = 3 // distributed matrix
+	o.data.icntl[14-1] = C.int(args.MumpsIncreaseOfWorkingSpacePct)
+	o.data.icntl[23-1] = C.int(args.MumpsMaxMemoryPerProcessor)
 
 	// set ordering and scaling
-	ord, sca := mumOrderingScaling(args.Ordering, args.Scaling)
-	o.data.icntl[7-1] = C.int(ord) // ordering
-	o.data.icntl[8-1] = C.int(sca) // scaling
+	o.data.icntl[7-1] = C.int(args.mumpsOrdering) // ordering
+	o.data.icntl[8-1] = C.int(args.mumpsScaling)  // scaling
 
 	// analysis step
 	o.data.job = 1     // analysis code
@@ -220,7 +223,8 @@ type MumpsC struct {
 }
 
 // Init initialises mumps for sparse linear systems with real numbers
-func (o *MumpsC) Init(t *TripletC, args *SpArgs) {
+// args may be nil
+func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// check
 	if o.initialised {
@@ -232,11 +236,11 @@ func (o *MumpsC) Init(t *TripletC, args *SpArgs) {
 
 	// default arguments
 	if args == nil {
-		args = new(SpArgs)
+		args = NewSparseConfig(nil)
 	}
 
 	// set comm
-	o.comm = args.Communicator
+	o.comm = args.communicator
 
 	// allocate data
 	if C.NumDataC == C.NumMaxData {
@@ -248,9 +252,12 @@ func (o *MumpsC) Init(t *TripletC, args *SpArgs) {
 	// initialise data
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
-	o.data.sym = 0                // 0=unsymmetric, 1=sym(pos-def), 2=symmetric(undef)
+	o.data.sym = 0                // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
 	if args.Symmetric {
 		o.data.sym = 2
+	}
+	if args.SymPosDef {
+		o.data.sym = 1
 	}
 	o.data.job = -1 // initialisation code
 	C.zmumps_c(o.data)
@@ -287,16 +294,15 @@ func (o *MumpsC) Init(t *TripletC, args *SpArgs) {
 		o.data.icntl[3-1] = -1 // no global information
 		o.data.icntl[4-1] = -1 // message level
 	}
-	o.data.icntl[5-1] = 0     // assembled matrix (needed for distributed matrix)
-	o.data.icntl[6-1] = 7     // automatic (default) permuting strategy for diagonal terms
-	o.data.icntl[14-1] = 5000 // % increase of working space
-	o.data.icntl[18-1] = 3    // distributed matrix
-	o.data.icntl[23-1] = 2000 // max 2000Mb per processor // TODO: check this
+	o.data.icntl[5-1] = 0  // assembled matrix (needed for distributed matrix)
+	o.data.icntl[6-1] = 7  // automatic (default) permuting strategy for diagonal terms
+	o.data.icntl[18-1] = 3 // distributed matrix
+	o.data.icntl[14-1] = C.int(args.MumpsIncreaseOfWorkingSpacePct)
+	o.data.icntl[23-1] = C.int(args.MumpsMaxMemoryPerProcessor)
 
 	// set ordering and scaling
-	ord, sca := mumOrderingScaling(args.Ordering, args.Scaling)
-	o.data.icntl[7-1] = C.int(ord) // ordering
-	o.data.icntl[8-1] = C.int(sca) // scaling
+	o.data.icntl[7-1] = C.int(args.mumpsOrdering) // ordering
+	o.data.icntl[8-1] = C.int(args.mumpsScaling)  // scaling
 
 	// analysis step
 	o.data.job = 1     // analysis code
@@ -376,53 +382,6 @@ func (o *MumpsC) Solve(x, b VectorC, bIsDistr bool) {
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
 
-// mumOrderingScaling sets the ordering and scaling methods for MUMPS
-func mumOrderingScaling(ordering, scaling string) (ord, sca int) {
-
-	// ordering
-	if ordering == "" {
-		ordering = "amf"
-	}
-	switch ordering {
-	case "amd":
-		ord = 0
-	case "amf":
-		ord = 2
-	case "scotch":
-		ord = 3
-	case "pord":
-		ord = 4
-	case "metis":
-		ord = 5
-	case "qamd":
-		ord = 6
-	case "auto":
-		ord = 7
-	default:
-		chk.Panic("ordering scheme %s is not available\n", ordering)
-	}
-
-	// scaling
-	if scaling == "" {
-		scaling = "rcit"
-	}
-	switch scaling {
-	case "no":
-		sca = 0 // no scaling
-	case "diag":
-		sca = 1 // diagonal scaling
-	case "rcit":
-		sca = 7 // row/col iterative
-	case "rrcit":
-		sca = 8 // rigorous row/col it
-	case "auto":
-		sca = 77 // automatic
-	default:
-		chk.Panic("scaling scheme %s is not available\n", scaling)
-	}
-	return
-}
-
 // mumErr returns error message from MUMPS
 func mumErr(info, infx C.int) string {
 	switch info {
@@ -436,6 +395,8 @@ func mumErr(info, infx C.int) string {
 		return "MUMPS Error # -10: singular matrix"
 	case -13:
 		return "MUMPS Error # -13: out of memory"
+	case -19:
+		return "MUMPS Error # -19: the maximum allowed size of working memory is too small to run the factorization"
 	}
 	return io.Sf("MUMPS Error # %d: unknown error", info)
 }
