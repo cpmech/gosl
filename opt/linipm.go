@@ -209,7 +209,9 @@ func (o *LinIpm) Solve(verbose bool) {
 
 		// solve linear system
 		if it == 0 {
-			o.Lis.Init(o.J, &la.SpArgs{Symmetric: symmetric, Verbose: false, Ordering: "", Scaling: "", Guess: nil, Communicator: nil})
+			args := la.NewSparseConfig(nil)
+			args.Symmetric = symmetric
+			o.Lis.Init(o.J, args)
 		}
 		o.Lis.Fact()
 		o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
