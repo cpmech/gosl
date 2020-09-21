@@ -27,7 +27,7 @@ func main() {
 		io.Pf("\n------------------- Test MUMPS Sol 04 --- (complex) -----\n")
 	}
 
-	ndim := 10
+	ndim := 10 // this test only works with ndim=10
 	id, sz := comm.Rank(), comm.Size()
 	start, endp1 := (id*ndim)/sz, ((id+1)*ndim)/sz
 

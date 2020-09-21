@@ -35,9 +35,8 @@ func main() {
 		chk.Panic("the number of processors must be smaller than or equal to %d", ndim)
 	}
 
-	n := 10
-	b := make([]complex128, n)
-	xCorrect := make([]complex128, n)
+	b := make([]complex128, ndim)
+	xCorrect := make([]complex128, ndim)
 
 	// Let exact solution = 1 + 0.5i
 	for i := 0; i < ndim; i++ {
@@ -64,5 +63,5 @@ func main() {
 	tst := new(testing.T)
 
 	bIsDistr := true
-	la.TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-17, false, bIsDistr, comm)
+	la.TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-11, 1e-17, false, bIsDistr, comm)
 }
