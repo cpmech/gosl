@@ -96,5 +96,6 @@ func main() {
 		chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 251)
 		chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 663)
 		chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
+		chk.String(tst, sol.Stat.LsKind, "mumps")
 	}
 }

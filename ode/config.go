@@ -88,11 +88,18 @@ type Config struct {
 func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config) {
 
 	// check kind of linear solver
+	if lsKind != "" && lsKind != "umfpack" && lsKind != "mumps" {
+		chk.Panic("lsKind must be empty or \"umfpack\" or \"mumps\"")
+	}
 	if lsKind == "" {
 		lsKind = "umfpack"
 	}
-	if lsKind != "umfpack" && lsKind != "mumps" {
-		chk.Panic("lsKind must be empty or \"umfpack\" or \"mumps\"")
+	if comm == nil {
+		lsKind = "umfpack"
+	} else {
+		if comm.Size() > 1 {
+			lsKind = "mumps"
+		}
 	}
 
 	// parameters
@@ -133,13 +140,8 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config)
 	o.lsKind = lsKind
 	o.distr = false
 	o.comm = comm
-	if comm != nil {
-		if comm.Size() > 1 {
-			lsKind = "mumps"
-		}
-		if lsKind == "mumps" {
-			o.distr = true
-		}
+	if lsKind == "mumps" {
+		o.distr = true
 	}
 
 	// set tolerances
