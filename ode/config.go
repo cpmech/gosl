@@ -94,13 +94,6 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config)
 	if lsKind == "" {
 		lsKind = "umfpack"
 	}
-	if comm == nil {
-		lsKind = "umfpack"
-	} else {
-		if comm.Size() > 1 {
-			lsKind = "mumps"
-		}
-	}
 
 	// parameters
 	o = new(Config)
@@ -140,8 +133,11 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config)
 	o.lsKind = lsKind
 	o.distr = false
 	o.comm = comm
-	if lsKind == "mumps" {
-		o.distr = true
+	if comm != nil {
+		if comm.Size() > 1 {
+			o.lsKind = "mumps"
+			o.distr = true
+		}
 	}
 
 	// set tolerances
