@@ -118,6 +118,14 @@ func (o *Triplet) ToDense() (a *Matrix) {
 }
 
 // WriteSmat writes a ".smat" file that can be visualised with vismatrix
+//  Example of .smat file:
+//  (indices are 0-based)
+//
+//    m n nnz
+//     i j x
+//      ...
+//     i j x
+//
 //
 //  NOTE: this method will create a CCMatrix first because
 //        duplicates must be added before saving the file
@@ -132,6 +140,8 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrix) 
 }
 
 // ReadSmat reads ".smat" file
+//  Example of .smat file:
+//  (indices are 0-based)
 //
 //    m n nnz
 //     i j x
