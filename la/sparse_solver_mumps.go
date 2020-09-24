@@ -56,10 +56,11 @@ func (o *Mumps) Init(t *Triplet, args *SparseConfig) {
 	if t.pos == 0 {
 		chk.Panic("triplet must have at least one item for initialisation\n")
 	}
-
-	// default arguments
 	if args == nil {
-		args = NewSparseConfig(nil)
+		chk.Panic("the MUMPS solver requires args with an MPI communicator")
+	}
+	if args.communicator == nil {
+		chk.Panic("the MUMPS solver requires an MPI communicator")
 	}
 
 	// set comm
