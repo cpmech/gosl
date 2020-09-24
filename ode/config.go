@@ -91,7 +91,7 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config)
 	if lsKind != "" && lsKind != "umfpack" && lsKind != "mumps" {
 		chk.Panic("lsKind must be empty or \"umfpack\" or \"mumps\"")
 	}
-	if lsKind == "" {
+	if lsKind == "" || comm == nil {
 		lsKind = "umfpack"
 	}
 
@@ -133,11 +133,8 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config)
 	o.lsKind = lsKind
 	o.distr = false
 	o.comm = comm
-	if comm != nil {
-		if comm.Size() > 1 {
-			o.lsKind = "mumps"
-			o.distr = true
-		}
+	if o.lsKind == "mumps" {
+		o.distr = true
 	}
 
 	// set tolerances
