@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	"gosl/chk"
-	"gosl/io"
 	"gosl/la"
 	"gosl/num"
 	"gosl/utl"
@@ -271,7 +270,6 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
 		// perform factorisation
 		if !o.conf.distr && o.conf.GoChan {
-			io.PfYel("here\n")
 			wg := new(sync.WaitGroup)
 			wg.Add(2)
 			go func() {
