@@ -27,32 +27,6 @@ io.ReadLinesFile(f, func(idx int, line string) (stop bool) {
 })
 ```
 
-### Read table and generate LaTeX report
-
-To read a table with results separeted by spaces and then generate a LaTeX report:
-
-```go
-keys, values := io.ReadTableOrPanic("data/table01.dat")
-
-rpt := io.Report{
-    Title:  "Gosl test",
-    Author: "Gosl authors",
-}
-
-rpt.AddSection("Introduction", 0) // 0 is the section level
-rpt.AddTex("In this test, we add one table and one equation to the LaTeX document.")
-rpt.AddTex("Then we generate a PDF files in the temporary directory.")
-rpt.AddTex("The numbers in the rows of the table have a fancy format.")
-
-rpt.AddSection("MyTable", 1) // 1 is the section level (i.e. subsection)
-rpt.AddTable(keys, values, "Results from simulation.", "results", nil, nil)
-
-err := rpt.WriteTexPdf("/tmp/gosl", "test_texpdf02", nil)
-if err != nil {
-    chk.Panic("%v", err)
-}
-```
-
 ## API
 
 **go doc**
