@@ -207,10 +207,6 @@ func (o *Radau5) DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float6
 // Step steps update
 func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
-	// benchmark
-	startTime := time.Now()
-	defer o.stat.updateNanosecondsStep(startTime)
-
 	// auxiliary
 	h := o.work.h
 	u := o.work.u
@@ -273,9 +269,11 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
 		// initialise linear solver
 		if !o.ready {
+			startTimeIniSol := time.Now()
 			o.lsR.Init(o.kmatR, o.conf.LinSolConfig)
 			o.lsC.Init(o.kmatC, o.conf.LinSolConfig)
 			o.ready = true
+			o.stat.updateNanosecondsIniSol(startTimeIniSol)
 		}
 
 		// perform factorisation

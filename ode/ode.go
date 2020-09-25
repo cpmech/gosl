@@ -16,6 +16,7 @@ package ode
 
 import (
 	"math"
+	"time"
 
 	"gosl/chk"
 	"gosl/io"
@@ -216,7 +217,9 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 			}
 
 			// step update
+			startTimeStep := time.Now()
 			o.rkm.Step(x, y)
+			o.Stat.updateNanosecondsStep(startTimeStep)
 
 			// iterations diverging ?
 			if o.work.diverg {
