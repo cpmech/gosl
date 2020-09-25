@@ -1,9 +1,5 @@
 # Gosl. gm. Geometry algorithms and structures
 
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/gm)
-
-More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/gm).**
-
 This package provides some functions to help with the solution of geometry problems. It also
 includes some routines loosely related with geometry.
 

@@ -4,8 +4,6 @@ Hierarchical Data Format (HDF) is a set of file formats (HDF4, HDF5) designed to
 
 [HDF](https://portal.hdfgroup.org/) enables the management of extremely large and complex data collections.
 
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/hdf)
-
 ## Usage
 
 HDF is quite simple to use. You basically give a string resembling a file path and the data to be stored or read.

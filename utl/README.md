@@ -1,9 +1,5 @@
 # Gosl. utl. Utilities. Lists. Dictionaries. Simple Numerics
 
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/utl)
-
-More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/utl).**
-
 This package implements functions for simplifying numeric calculations such as finding the maximum
 and minimum of lists (i.e. slices), allocation of _deep_ structures such as slices of slices, and
 generation of _arrays_. It also contains functions for sorting quantities and updating dictionaries

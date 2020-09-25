@@ -1,9 +1,5 @@
 # Gosl. io. Input/output, read/write files, and print commands
 
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/io)
-
-More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/io).**
-
 This subpackage helps with reading and writing files, printing nice formatted messages (with
 colours), and parsing strings.
 

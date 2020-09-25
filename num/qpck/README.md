@@ -1,9 +1,5 @@
 # Gosl. num/qpck. Wrapper to QUADPACK
 
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/num/qpck)
-
-More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/num/qpck).**
-
 This package wraps the QUADPACK package written in FORTRAN to compute definite one-dimensional
 integrals.
 

@@ -1,9 +1,5 @@
 # Gosl. opt. Solvers for optimisation problems
 
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/opt)
-
-More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/opt).**
-
 This package provides routines to solve optimisation problems. The methods Conjugate Gradients
 `ConjGrad`, Powell's method `Powell` and Gradient Descent `GradDesc` can be used to solve
 unconstrained nonlinear problems. Linear programming problems can be solved with the Interior-Point

@@ -1,9 +1,5 @@
 # Gosl. gm/msh. Mesh generation and Delaunay triangulation
 
-[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh)
-
-More information is available in **[the documentation of this package](https://pkg.go.dev/github.com/cpmech/gosl/gm/msh).**
-
 ## Shapes: Definitions
 
 <div id="container">
