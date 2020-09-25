@@ -1,5 +1,9 @@
 # Gosl. gm/msh. Mesh generation and Delaunay triangulation
 
+### Definitions
+
+![](data/meshelems1.png)
+
 ### Quadrilaterals and Hexahedra
 
 ```
