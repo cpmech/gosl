@@ -6,7 +6,7 @@ package ode
 
 import "gosl/la"
 
-// rkwork holds the Runge-Kuta "workspace" variales
+// rkwork holds the Runge-Kuta "workspace" variables
 type rkwork struct {
 
 	// workspace
