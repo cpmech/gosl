@@ -2,6 +2,8 @@
 
 Package `chk` provides tools to check numerical results and to perform unit tests.
 
+## API
+
 **go doc**
 
 ```
@@ -240,4 +242,5 @@ func TstDiff(tst *testing.T, msg string, tol, a, b float64, showOK bool) (failed
 func TstFail(tst *testing.T, msg string, prm ...interface{})
     TstFail calls tst.Errorf() with msg and parameters. It also prints "FAIL" in
     red (if ColorsOn==true)
+
 ```

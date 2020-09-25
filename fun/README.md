@@ -6,6 +6,8 @@ of first, second and third kind.
 Routines to interpolate and/or assist on spectral methods are also available; e.g. FourierInterp,
 ChebyInterp.
 
+## API
+
 **go doc**
 
 ```
@@ -1384,4 +1386,5 @@ type Vvvss func(u, v, w la.Vector, a, b float64)
           u -- first output vector
           v -- second output vector
           w -- second output vector
+
 ```
