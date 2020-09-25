@@ -40,10 +40,10 @@ func NewSparseConfig(comm *mpi.Communicator) (o *SparseConfig) {
 }
 
 // SetMumpsOrdering sets ordering for MUMPS solver
-// ordering -- "auto" or "" [default]
-//             "amf", "amd", "scotch", "pord", "metis", "qamd", "auto"
+// ordering -- "" or "amd" [default]
+//             "amf", "scotch", "pord", "metis", "qamd", "auto"
 // ICNTL(7)
-//   0: "amd" Approximate Minimum Degree (AMD)
+//   0: "amd" Approximate Minimum Degree (AMD) [default]
 //   2: "amf" Approximate Minimum Fill (AMF)
 //   3: "scotch" SCOTCH5 package is used if previously installed by the user otherwise treated as 7.
 //   4: "pord" PORD6 is used if previously installed by the user otherwise treated as 7.
@@ -53,7 +53,7 @@ func NewSparseConfig(comm *mpi.Communicator) (o *SparseConfig) {
 //       ordering packages made available, on the matrix (type and size), and on the number of processors.
 func (o *SparseConfig) SetMumpsOrdering(ordering string) {
 	switch ordering {
-	case "amd":
+	case "", "amd":
 		o.mumpsOrdering = 0
 	case "amf":
 		o.mumpsOrdering = 2
@@ -65,7 +65,7 @@ func (o *SparseConfig) SetMumpsOrdering(ordering string) {
 		o.mumpsOrdering = 5
 	case "qamd":
 		o.mumpsOrdering = 6
-	case "", "auto":
+	case "auto":
 		o.mumpsOrdering = 7
 	default:
 		chk.Panic("ordering scheme %s is not available\n", ordering)
@@ -73,7 +73,7 @@ func (o *SparseConfig) SetMumpsOrdering(ordering string) {
 }
 
 // SetMumpsScaling sets scaling for MUMPS solver
-// scaling -- "auto" or "" [default]
+// scaling -- "" or "rcit" [default]
 //            "no", "diag", "col", "rcinf", "rcit", "rrcit", "auto"
 // ICNTL(8)
 //   0: "no" No scaling applied/computed.
@@ -96,11 +96,11 @@ func (o *SparseConfig) SetMumpsScaling(scaling string) {
 		o.mumpsScaling = 3 // column
 	case "rcinf":
 		o.mumpsScaling = 4 // row and column based on inf norms
-	case "rcit":
+	case "", "rcit":
 		o.mumpsScaling = 7 // row/col iterative
 	case "rrcit":
 		o.mumpsScaling = 8 // rigorous row/col it
-	case "", "auto":
+	case "auto":
 		o.mumpsScaling = 77 // automatic
 	default:
 		chk.Panic("scaling scheme %s is not available\n", scaling)
