@@ -40,10 +40,10 @@ func NewSparseConfig(comm *mpi.Communicator) (o *SparseConfig) {
 }
 
 // SetMumpsOrdering sets ordering for MUMPS solver
-// ordering -- "" or "amd" [default]
+// ordering -- "" or "amf" [default]
 //             "amf", "scotch", "pord", "metis", "qamd", "auto"
 // ICNTL(7)
-//   0: "amd" Approximate Minimum Degree (AMD) [default]
+//   0: "amd" Approximate Minimum Degree (AMD)
 //   2: "amf" Approximate Minimum Fill (AMF)
 //   3: "scotch" SCOTCH5 package is used if previously installed by the user otherwise treated as 7.
 //   4: "pord" PORD6 is used if previously installed by the user otherwise treated as 7.
@@ -53,9 +53,9 @@ func NewSparseConfig(comm *mpi.Communicator) (o *SparseConfig) {
 //       ordering packages made available, on the matrix (type and size), and on the number of processors.
 func (o *SparseConfig) SetMumpsOrdering(ordering string) {
 	switch ordering {
-	case "", "amd":
+	case "amd":
 		o.mumpsOrdering = 0
-	case "amf":
+	case "", "amf":
 		o.mumpsOrdering = 2
 	case "scotch":
 		o.mumpsOrdering = 3
