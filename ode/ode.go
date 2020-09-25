@@ -101,6 +101,10 @@ func (o *Solver) Free() {
 // Solve solves dy/dx = f(x,y) from x to xf with initial y given in y
 func (o *Solver) Solve(y la.Vector, x, xf float64) {
 
+	// benchmark
+	startTime := time.Now()
+	defer o.Stat.updateNanosecondsTotal(startTime)
+
 	// check
 	if xf < x {
 		chk.Panic("xf=%v must be greater than x=%v\n", xf, x)
