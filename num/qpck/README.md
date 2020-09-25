@@ -604,3 +604,158 @@ C***REFERENCES  (NONE)
 C***ROUTINES CALLED  (NONE)
 C***END PROLOGUE  QPDOC
 ```
+
+## API
+
+**go doc**
+
+```
+package qpck // import "gosl/num/qpck"
+
+Package qpck wraps the QUADPACK library for numerical integration
+
+FUNCTIONS
+
+func Agie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32)
+    Agie performs integration over infinite intervals
+
+    AG: Automatic/general-purpose, I: with infinite intervals
+
+        INPUT:
+          fid -- id of function to avoid goroutine problems
+          f   -- function defining the integrand
+
+          bound -- finite bound of integration range
+                   (has no meaning if interval is doubly-infinite)
+
+          inf -- indicates the kind of integration range involved:
+                   inf = 1 corresponds to  (bound,+infinity),
+                   inf = -1            to  (-infinity,bound),
+                   inf = 2             to (-infinity,+infinity).
+
+          epsabs -- absolute accuracy requested [use ≤0 for default]
+          epsrel -- relative accuracy requested [use ≤0 for default]
+
+        INPUT/OUTPUT:
+          NOTE: (1) the length of the 5 vectors below is equal to the "limit" variable in the original
+                    code which is an upperbound on the number of subintervals in the partition of (a,b)
+                (2) the 5 vectors below may be <nil>, thus memory is allocated here
+
+          alist -- the first last  elements of which are the left
+                   end points of the subintervals in the partition of the given integration range (a,b)
+
+          blist -- the first last elements of which are the right
+                   end points of the subintervals in the partition of the given integration range (a,b)
+
+          rlist -- the first last elements of which are the integral
+                   approximations on the subintervals
+
+          elist -- the first last  elements of which are the moduli
+                   of the absolute error estimates on the subintervals
+
+          iord  -- the first k elements of which are pointers to
+                   the error estimates over the subintervals, such that elist(iord(1)), ...,
+                   elist(iord(k)) form a decreasing sequence, with k = last if last.le.(limit/2+2), and
+                   k = limit+1-last otherwise
+        OUTPUT:
+          result -- approximation to the integral
+          abserr -- estimate of the modulus of the absolute error, which should equal or exceed abs(i-result)
+          neval  -- number of integrand evaluations
+          last   -- number of subintervals actually produced in the subdivision process
+
+func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32)
+    Agpe approximates a definite integral over (a,b), hopefully satisfying given
+    accuracy Break points of the integration interval, where local difficulties
+    of the integrand may occur (e.g. singularities, discontinuities, etc),
+    provided by user.
+
+    AG: Automatic/general-purpose, P: with points
+
+        INPUT:
+          pointsAndBuf2 -- break points and a buffer with 2 extra spaces.
+                           The first (len(pointsAndBuf2)-2) elements are the user provided break points
+                           Automatic ascending sorting is carried out
+
+func Agse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist, elist []float64, iord []int32) (result, abserr float64, neval, last int32)
+    Agse computes a definite integral using an automatic integrator 1D globally
+    adaptive integrator using interval subdivision and extrapolation.
+
+    AG: Automatic/general-purpose, S: end-point singularities
+
+        INPUT:
+          fid    -- id of function to avoid goroutine problems
+          f      -- function defining the integrand
+          a      -- lower limit of integration
+          b      -- upper limit of integration
+          epsabs -- absolute accuracy requested [use ≤0 for default]
+          epsrel -- relative accuracy requested [use ≤0 for default]
+
+        INPUT/OUTPUT:
+          NOTE: (1) the length of the 5 vectors below is equal to the "limit" variable in the original
+                    code which is an upperbound on the number of subintervals in the partition of (a,b)
+                (2) the 5 vectors below may be <nil>, thus memory is allocated here
+
+          alist -- the first last  elements of which are the left
+                   end points of the subintervals in the partition of the given integration range (a,b)
+
+          blist -- the first last elements of which are the right
+                   end points of the subintervals in the partition of the given integration range (a,b)
+
+          rlist -- the first last elements of which are the integral
+                   approximations on the subintervals
+
+          elist -- the first last  elements of which are the moduli
+                   of the absolute error estimates on the subintervals
+
+          iord  -- the first k elements of which are pointers to
+                   the error estimates over the subintervals, such that elist(iord(1)), ...,
+                   elist(iord(k)) form a decreasing sequence, with k = last if last.le.(limit/2+2), and
+                   k = limit+1-last otherwise
+        OUTPUT:
+          result -- approximation to the integral
+          abserr -- estimate of the modulus of the absolute error, which should equal or exceed abs(i-result)
+          neval  -- number of integrand evaluations
+          last   -- number of subintervals actually produced in the subdivision process
+
+func Awoe(fid int32, f fType, a, b, omega float64, integr int32, epsabs, epsrel float64, icall, maxp1 int32, alist, blist, rlist, elist []float64, iord, nnlog []int32, momcom int32, chebmo []float64) (result, abserr float64, neval, last int32)
+    Awoe approximates the definite integral ∫ f(x)⋅w(x) dx over (a,b) where w(x)
+    = cos(omega*x) or w(x)=sin(omega*x)
+
+    AW: Automatic with omega ω, O: oscillatory
+
+        INPUT:
+
+          integr -- indicates which of the weight functions is to be used:
+                      integr = 1  ⇒   w(x) = cos(omega*x)
+                      integr = 2  ⇒   w(x) = sin(omega*x)
+                    [default = 1]
+
+          icall -- indicates whether to reuse or not moments
+                     icall = 1  ⇒  dqawoe is to be used only once, assuming that, the Chebyshev moments
+                                   (for Clenshaw-Curtis integration of degree 24) have been computed for
+                                   intervals of lengths (abs(b-a))*2**(-l), l=0,1,2,...momcom-1.
+                     icall > 1  ⇒  this means that dqawoe has been called twice or more on intervals of
+                                   the same length abs(b-a). The Chebyshev moments already computed are
+                                   then re-used in subsequent calls.
+                   [default = 1,  icall ≥ 1]
+
+          maxp1 -- upper bound on the number of Chebyshev moments which can be stored, i.e. for the
+                   intervals of lengths abs(b-a)*2**(-l),  l=0,1, ..., maxp1-2.
+                   [default = 50,  maxp1 ≥ 1]
+
+          momcom -- momcom = 1 indicates that the Chebyshev moments have been computed for intervals of
+                    lengths (abs(b-a))*2**(-l), l=0,1,2, ..., momcom-1.
+                    [default = 0,  momcom < maxp1]
+
+          chebmo -- A rank-2 array of shape (25, maxp1) containing the computed Chebyshev moments
+                    [may be nil]
+
+        INPUT/OUTPUT:
+          NOTE: (1) the length of the vectors below is equal to the "limit" variable in the original
+                    code which is an upperbound on the number of subintervals in the partition of (a,b)
+                (2) the 5 vectors below may be <nil>, thus memory is allocated here
+
+          nnlog -- vector containing the subdivision levels of the subintervals, i.e.
+                   l means that the subinterval numbered i is of length abs(b-a)*2**(1-l)
+
+```
