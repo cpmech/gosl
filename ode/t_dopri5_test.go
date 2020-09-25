@@ -97,7 +97,7 @@ func TestDoPri502(tst *testing.T) {
 	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// print stat
-	sol.Stat.Print(false)
+	sol.Stat.Print()
 
 	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 1430)
@@ -174,7 +174,7 @@ func TestDoPri503(tst *testing.T) {
 	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// print stat
-	sol.Stat.Print(false)
+	sol.Stat.Print()
 
 	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 1274)

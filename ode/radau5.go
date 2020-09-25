@@ -7,6 +7,7 @@ package ode
 import (
 	"math"
 	"sync"
+	"time"
 
 	"gosl/chk"
 	"gosl/la"
@@ -206,6 +207,10 @@ func (o *Radau5) DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float6
 // Step steps update
 func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
+	// benchmark
+	startTime := time.Now()
+	defer o.stat.updateNanosecondsStep(startTime)
+
 	// auxiliary
 	h := o.work.h
 	u := o.work.u
@@ -229,6 +234,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
 			// stat
 			o.stat.Njeval++
+			startTimeJacobian := time.Now()
 
 			// numerical Jacobian
 			if o.jac == nil { // numerical
@@ -249,6 +255,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
 			// set flag
 			o.work.jacIsOK = true
+			o.stat.updateNanosecondsJeval(startTimeJacobian)
 		}
 
 		// initialise drdy matrix
@@ -269,6 +276,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 		}
 
 		// perform factorisation
+		startTimeFactorization := time.Now()
 		if !o.conf.distr && o.conf.GoChan {
 			wg := new(sync.WaitGroup)
 			wg.Add(2)
@@ -286,6 +294,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 			o.lsC.Fact()
 		}
 		o.stat.Ndecomp++
+		o.stat.updateNanosecondsFact(startTimeFactorization)
 	}
 
 	// update u[i]
@@ -366,6 +375,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
 		// solve linear system
 		o.stat.Nlinsol++
+		startTimeSolver := time.Now()
 		if !o.conf.distr && o.conf.GoChan {
 			wg := new(sync.WaitGroup)
 			wg.Add(2)
@@ -386,6 +396,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 			o.lsC.Solve(o.dw12, o.v12, false)
 			o.dw12.SplitRealImag(o.dw[1], o.dw[2])
 		}
+		o.stat.updateNanosecondsLinSol(startTimeSolver)
 
 		// update w and z
 		for m := 0; m < o.ndim; m++ {
@@ -460,6 +471,10 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 
 // errorEstimate computes error estimate
 func (o *Radau5) errorEstimate(x0 float64, y0 la.Vector) {
+
+	// benchmark
+	startTime := time.Now()
+	defer o.stat.updateNanosecondsErrorEstim(startTime)
 
 	// auxiliary
 	h := o.work.h

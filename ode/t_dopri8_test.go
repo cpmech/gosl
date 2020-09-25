@@ -64,7 +64,7 @@ func TestDoPri802(tst *testing.T) {
 	sol.Solve(p.Y, 0.0, p.Xf)
 
 	// print stat
-	sol.Stat.Print(false)
+	sol.Stat.Print()
 
 	// check Stat
 	chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2314)

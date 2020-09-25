@@ -4,7 +4,10 @@
 
 package ode
 
-import "gosl/io"
+import (
+	"gosl/io"
+	"time"
+)
 
 // Stat holds statistics and output data
 type Stat struct {
@@ -19,6 +22,13 @@ type Stat struct {
 	Hopt      float64 // optimal step size at the end
 	LsKind    string  // kind of linear solver used
 	Implicit  bool    // method is implicit
+
+	// benchmark
+	NanosecondsStep       int64 // maximum time elapsed during steps [nanoseconds]
+	NanosecondsJeval      int64 // maximum time elapsed during Jacobian evaluation [nanoseconds]
+	NanosecondsFact       int64 // maximum time elapsed during factorization (if any) [nanoseconds]
+	NanosecondsLinSol     int64 // maximum time elapsed during solution of linear system (if any) [nanoseconds]
+	NanosecondsErrorEstim int64 // maximum time elapsed during the error estimate [nanoseconds]
 }
 
 // NewStat returns a new structure
@@ -42,7 +52,16 @@ func (o *Stat) Reset() {
 }
 
 // Print prints information about the solution process
-func (o *Stat) Print(extra bool) {
+// options -- noExtraInfo, noElapsedTime [all default to true]
+func (o *Stat) Print(options ...bool) {
+	noExtraInfo := false
+	noElapsedTime := false
+	if len(options) > 0 {
+		noExtraInfo = options[0]
+	}
+	if len(options) > 1 {
+		noElapsedTime = options[1]
+	}
 	io.Pf("number of F evaluations   =%6d\n", o.Nfeval)
 	if o.Implicit {
 		io.Pf("number of J evaluations   =%6d\n", o.Njeval)
@@ -55,8 +74,55 @@ func (o *Stat) Print(extra bool) {
 		io.Pf("number of lin solutions   =%6d\n", o.Nlinsol)
 		io.Pf("max number of iterations  =%6d\n", o.Nitmax)
 	}
-	if extra {
+	if !noExtraInfo {
 		io.Pf("optimal step size Hopt    = %g\n", o.Hopt)
 		io.Pf("kind of linear solver     = %q\n", o.LsKind)
+	}
+	if !noElapsedTime {
+		durSteps, _ := time.ParseDuration(io.Sf("%dns", o.NanosecondsStep))
+		durJeval, _ := time.ParseDuration(io.Sf("%dns", o.NanosecondsJeval))
+		durFacto, _ := time.ParseDuration(io.Sf("%dns", o.NanosecondsFact))
+		durLiSol, _ := time.ParseDuration(io.Sf("%dns", o.NanosecondsLinSol))
+		durEstim, _ := time.ParseDuration(io.Sf("%dns", o.NanosecondsErrorEstim))
+		io.Pf("elapsed time:       Steps = %v\n", durSteps)
+		io.Pf("elapsed time:       Jeval = %v\n", durJeval)
+		io.Pf("elapsed time:        Fact = %v\n", durFacto)
+		io.Pf("elapsed time:      LinSol = %v\n", durLiSol)
+		io.Pf("elapsed time:  ErrorEstim = %v\n", durEstim)
+	}
+}
+
+func (o *Stat) updateNanosecondsStep(start time.Time) {
+	delta := time.Now().Sub(start).Nanoseconds()
+	if delta > o.NanosecondsStep {
+		o.NanosecondsStep = delta
+	}
+}
+
+func (o *Stat) updateNanosecondsJeval(start time.Time) {
+	delta := time.Now().Sub(start).Nanoseconds()
+	if delta > o.NanosecondsJeval {
+		o.NanosecondsJeval = delta
+	}
+}
+
+func (o *Stat) updateNanosecondsFact(start time.Time) {
+	delta := time.Now().Sub(start).Nanoseconds()
+	if delta > o.NanosecondsFact {
+		o.NanosecondsFact = delta
+	}
+}
+
+func (o *Stat) updateNanosecondsLinSol(start time.Time) {
+	delta := time.Now().Sub(start).Nanoseconds()
+	if delta > o.NanosecondsLinSol {
+		o.NanosecondsLinSol = delta
+	}
+}
+
+func (o *Stat) updateNanosecondsErrorEstim(start time.Time) {
+	delta := time.Now().Sub(start).Nanoseconds()
+	if delta > o.NanosecondsErrorEstim {
+		o.NanosecondsErrorEstim = delta
 	}
 }
