@@ -12,19 +12,20 @@ Example of saving data:
 
 ```go
 useGob := false // do not use standard Go binary file, i.e. use HDF5
+defer f.Close()
 f := Create("/tmp/gosl", "mydatafile", useGob)
 f.PutArray("/displacements/u", []float64{4, 5, 6})
 f.PutArray("/displacements/v", []float64{40, 50, 60})
 f.PutInts("/someints", []int{100, 200, 300, 400})
 f.PutInt("/data/oneint", 123)
 f.PutFloat64("/data/onef64", 123.456)
-f.Close()
 ```
 
 Example of reading data:
 
 ```go
 g := Open("/tmp/gosl", "mydatafile", useGob)
+defer g.Close()
 u := g.GetArray("/displacements/u")
 v := g.GetArray("/displacements/v")
 someints := g.GetInts("/someints")
