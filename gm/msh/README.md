@@ -1,6 +1,6 @@
 # Gosl. gm/msh. Mesh generation and Delaunay triangulation
 
-### Definitions
+## Definitions
 
 ![](data/meshelems1.png)
 
@@ -135,6 +135,8 @@
     /  _,-``
    +.'`
 ```
+
+## API
 
 **go doc**
 
