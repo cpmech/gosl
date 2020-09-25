@@ -209,7 +209,6 @@ b(check) = [0.999999997028485 -2.0000000002234333 -2.499999995654444]
 <p><img src="../examples/figs/opt_ipm02.png" width="500"></p>
 </div>
 
-
 ## API
 
 **go doc**
