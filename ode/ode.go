@@ -175,7 +175,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 
 	// control variables
 	o.work.reuseJacAndDecOnce = false
-	o.work.reuseJ = false
+	o.work.reuseJacOnce = false
 	o.work.jacIsOK = false
 	o.work.hPrev = o.work.h
 	o.work.nit = 0
@@ -311,7 +311,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 				// check θ to decide if at least the Jacobian can be reused
 				if o.Implicit {
 					if !o.work.reuseJacAndDecOnce {
-						o.work.reuseJ = o.work.theta <= o.conf.ThetaMax
+						o.work.reuseJacOnce = o.work.theta <= o.conf.ThetaMax
 					}
 				}
 

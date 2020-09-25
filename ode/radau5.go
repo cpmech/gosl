@@ -227,9 +227,12 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 		o.work.reuseJacAndDecOnce = false
 	} else {
 
-		// calculate only first Jacobian for all iterations (simple/modified Newton's method)
-		if o.work.reuseJ {
-			o.work.reuseJ = false
+		// if we can reuse the Jacobian (once) skip calculation of Jacobian
+		if o.work.reuseJacOnce {
+			o.work.reuseJacOnce = false
+
+			// otherwise, if the Jacobian is not OK,
+			// calculate the Jacobian for all iterations (simple/modified Newton's method)
 		} else if !o.work.jacIsOK {
 
 			// stat

@@ -26,7 +26,7 @@ type rkwork struct {
 
 	// step control data
 	reuseJacAndDecOnce bool    // reuse current Jacobian and current decomposition
-	reuseJ             bool    // reuse last Jacobian (only)
+	reuseJacOnce       bool    // reuse last Jacobian (only)
 	jacIsOK            bool    // Jacobian is OK
 	nit                int     // current number of iterations
 	eta                float64 // eta tolerance
