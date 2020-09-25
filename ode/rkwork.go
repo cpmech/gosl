@@ -25,15 +25,15 @@ type rkwork struct {
 	scal  la.Vector // scal = Atol + Rtol*abs(y)
 
 	// step control data
-	reuseJdec bool    // reuse current Jacobian and current decomposition
-	reuseJ    bool    // reuse last Jacobian (only)
-	jacIsOK   bool    // Jacobian is OK
-	nit       int     // current number of iterations
-	eta       float64 // eta tolerance
-	theta     float64 // theta variable
-	dvfac     float64 // divergence factor
-	diverg    bool    // flag diverging step
-	reject    bool    // reject step
+	reuseJdecOnce bool    // reuse current Jacobian and current decomposition
+	reuseJ        bool    // reuse last Jacobian (only)
+	jacIsOK       bool    // Jacobian is OK
+	nit           int     // current number of iterations
+	eta           float64 // eta tolerance
+	theta         float64 // theta variable
+	dvfac         float64 // divergence factor
+	diverg        bool    // flag diverging step
+	reject        bool    // reject step
 
 	// error control
 	rerr     float64 // relative error

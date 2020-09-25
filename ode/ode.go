@@ -174,7 +174,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 	// variable steps //////////////////////////////
 
 	// control variables
-	o.work.reuseJdec = false
+	o.work.reuseJdecOnce = false
 	o.work.reuseJ = false
 	o.work.jacIsOK = false
 	o.work.hPrev = o.work.h
@@ -290,7 +290,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 				o.work.reject = false
 
 				// do not reuse current Jacobian and decomposition by default
-				o.work.reuseJdec = false
+				o.work.reuseJdecOnce = false
 
 				// last step ?
 				if x+dxnew-xstep >= 0.0 {
@@ -299,8 +299,8 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 				} else {
 					if o.Implicit {
 						dxratio = dxnew / o.work.h
-						o.work.reuseJdec = o.work.theta <= o.conf.ThetaMax && dxratio >= o.conf.C1h && dxratio <= o.conf.C2h
-						if !o.work.reuseJdec {
+						o.work.reuseJdecOnce = o.work.theta <= o.conf.ThetaMax && dxratio >= o.conf.C1h && dxratio <= o.conf.C2h
+						if !o.work.reuseJdecOnce {
 							o.work.h = dxnew
 						}
 					} else {
@@ -310,7 +310,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 
 				// check θ to decide if at least the Jacobian can be reused
 				if o.Implicit {
-					if !o.work.reuseJdec {
+					if !o.work.reuseJdecOnce {
 						o.work.reuseJ = o.work.theta <= o.conf.ThetaMax
 					}
 				}
