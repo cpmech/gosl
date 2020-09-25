@@ -223,8 +223,8 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 	γ := o.Gam / h
 
 	// Jacobian and decomposition
-	if o.work.reuseJdecOnce {
-		o.work.reuseJdecOnce = false
+	if o.work.reuseJacAndDecOnce {
+		o.work.reuseJacAndDecOnce = false
 	} else {
 
 		// calculate only first Jacobian for all iterations (simple/modified Newton's method)
