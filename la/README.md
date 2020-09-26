@@ -8,9 +8,8 @@ solvers such as [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html) an
 Both [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html) and
 [MUMPS](http://mumps.enseeiht.fr) solvers are very efficient!
 
-The other subpackages [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas) and
-[la/mkl](https://github.com/cpmech/gosl/tree/master/la/mkl) are sometimes called by `la` to improve
-performance.
+Sometimes, we call the _lower level_ functions in [la/oblas](https://github.com/cpmech/gosl/tree/master/la/oblas)
+to improve performance.
 
 ## Structures for sparse problems
 
