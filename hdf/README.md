@@ -33,6 +33,14 @@ oneint := g.GetInt("/data/oneint")
 onef64 := g.GetFloat64("/data/onef64")
 ```
 
+## HDFView
+
+`hdfview` is a convenient tool to visualize the data in a HDF5 file.
+
+```
+sudo apt-get intall hdfview
+```
+
 ## API
 
 **go doc**
