@@ -7,7 +7,7 @@ Data is stored in binary streams and then to files by providing a **path** and t
 Example of writing data:
 
 ```go
-f := Create("/tmp/gosl/h5", "basic01")
+f := Create("/tmp/gosl/hb", "basic01")
 defer f.Close()
 f.PutArray("/u", uSource)
 f.PutArray("/displacements/u", []float64{4, 5, 6})
@@ -17,13 +17,12 @@ f.PutArray("/time1/ip0/b0/u", []float64{70, 80, 90})
 f.PutInts("/someints", []int{100, 200, 300, 400})
 f.PutInt("/data/oneint", 123)
 f.PutFloat64("/data/onef64", 123.456)
-f.Close()
 ```
 
 Example of reading data (must be in the same order used during writing):
 
 ```go
-g := Open("/tmp/gosl/h5", "basic01")
+g := Open("/tmp/gosl/hb", "basic01")
 defer g.Close()
 u := g.GetArray("/u")
 du := g.GetArray("/displacements/u")

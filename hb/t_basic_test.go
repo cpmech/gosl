@@ -19,7 +19,7 @@ func TestArrayAndInts(tst *testing.T) {
 
 	uSource := []float64{2.895225697183167e-07, 0.7, -1, 8.431314054288291e-10, -6.4544742997839375, -15.060440179324589, -6.454474343732561, 1.4446963710799783e-08, 0.7, -1, 8.431260528668272e-10, -6.454473969747283, -15.060439619456256, -6.454474076761063, 3.919168102695628e-08, 0.7, -1, 8.431207003048254e-10, -6.454473665192271}
 
-	f := Create("/tmp/gosl/h5", "basic01")
+	f := Create("/tmp/gosl/hb", "basic01")
 	f.PutArray("/u", uSource)
 	f.PutArray("/displacements/u", []float64{4, 5, 6})
 	f.PutArray("/displacements/v", []float64{40, 50, 60})
@@ -32,7 +32,7 @@ func TestArrayAndInts(tst *testing.T) {
 
 	io.Pf(". . . reading . . .\n")
 
-	g := Open("/tmp/gosl/h5", "basic01")
+	g := Open("/tmp/gosl/hb", "basic01")
 	u := g.GetArray("/u")
 	du := g.GetArray("/displacements/u")
 	dv := g.GetArray("/displacements/v")
@@ -57,7 +57,7 @@ func TestArrayAndInts(tst *testing.T) {
 
 	io.Pf(". . . reopening file because gob requires same reading order . . .\n")
 	g.Close()
-	g = Open("/tmp/gosl/h5", "basic01")
+	g = Open("/tmp/gosl/hb", "basic01")
 
 	io.Pf(". . . reading again . . .\n")
 
@@ -94,7 +94,7 @@ func TestDeep2(tst *testing.T) {
 
 	io.Pf(". . . writing . . .\n")
 
-	f := Create("/tmp/gosl/h5", "basic02")
+	f := Create("/tmp/gosl/hb", "basic02")
 	f.PutDeep2("/deep2/a", [][]float64{
 		{1, 2, 3},
 		{4, 5, 6},
@@ -115,7 +115,7 @@ func TestDeep2(tst *testing.T) {
 
 	io.Pf(". . . reading . . .\n")
 
-	g := Open("/tmp/gosl/h5", "basic02")
+	g := Open("/tmp/gosl/hb", "basic02")
 	a := g.GetDeep2("/deep2/a")
 	b := g.GetDeep2("/deep2/b")
 	c := g.GetDeep2("/deep2/c")
@@ -141,7 +141,7 @@ func TestDeep2(tst *testing.T) {
 
 	io.Pf(". . . reopening file because gob requires same reading order . . .\n")
 	g.Close()
-	g = Open("/tmp/gosl/h5", "basic02")
+	g = Open("/tmp/gosl/hb", "basic02")
 
 	io.Pf(". . . reading again . . .\n")
 
@@ -166,13 +166,13 @@ func TestDeep3(tst *testing.T) {
 		{{-1, -2}, {-3, -4}, {-5, -6, -7}, {-8}},
 	}
 
-	f := Create("/tmp/gosl/h5", "basic03")
+	f := Create("/tmp/gosl/hb", "basic03")
 	f.PutDeep3("/a", data)
 	f.Close()
 
 	io.Pf(". . . reading . . .\n")
 
-	g := Open("/tmp/gosl/h5", "basic03")
+	g := Open("/tmp/gosl/hb", "basic03")
 	a := g.GetDeep3("/a")
 	g.Close()
 	io.Pfpink("a = %v\n", a)
@@ -186,7 +186,7 @@ func TestAttributes(tst *testing.T) {
 
 	io.Pf(". . . writing . . .\n")
 
-	f := Create("/tmp/gosl/h5", "basic04")
+	f := Create("/tmp/gosl/hb", "basic04")
 	f.SetStringAttribute("/", "summary", "simulation went well")
 	f.SetIntAttribute("/", "nverts", 666)
 	f.SetIntsAttribute("/", "someints", []int{111, 222, 333})
@@ -194,7 +194,7 @@ func TestAttributes(tst *testing.T) {
 
 	io.Pf(". . . reading . . .\n")
 
-	g := Open("/tmp/gosl/h5", "basic04")
+	g := Open("/tmp/gosl/hb", "basic04")
 	res := g.GetStringAttribute("/", "summary")
 	nverts := g.GetIntAttribute("/", "nverts")
 	vals := g.GetIntsAttribute("/", "someints")

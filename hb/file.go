@@ -45,7 +45,7 @@ func (o File) Filepath() string { return o.furl }
 //
 //   Output:
 //     returns a new File object where the filename will be:
-//       fnameKey + .gob
+//       fnameKey + .hb
 //
 func Create(dirOut, fnameKey string) (o *File) {
 	fname, furl := filepath(dirOut, fnameKey)
@@ -67,7 +67,7 @@ func Create(dirOut, fnameKey string) (o *File) {
 //
 //   Output:
 //     returns a new File object where the filename will be:
-//       fnameKey + .gob
+//       fnameKey + .hb
 //
 func Open(dirIn, fnameKey string) (o *File) {
 	fname, furl := filepath(dirIn, fnameKey)
@@ -123,7 +123,7 @@ func filepath(dir, fnameKey string) (filename, fileurl string) {
 	if ext != "" {
 		filename = fnameKey
 	} else {
-		ext = ".gob"
+		ext = ".hb"
 		filename = fnameKey + ext
 	}
 	fileurl = path.Join(os.ExpandEnv(dir), filename)
