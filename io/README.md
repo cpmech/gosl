@@ -3,8 +3,6 @@
 This subpackage helps with reading and writing files, printing nice formatted messages (with
 colours), and parsing strings.
 
-It has also functions to generate TeX reports.
-
 ## Examples
 
 ### Read and write files
