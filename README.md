@@ -51,8 +51,7 @@ sudo apt-get install -y --no-install-recommends \
   libsuitesparse-dev \
   libmumps-dev \
   libfftw3-dev \
-  libfftw3-mpi-dev \
-  libhdf5-dev
+  libfftw3-mpi-dev
 ```
 
 **Compile Gosl**
@@ -76,7 +75,6 @@ Gosl includes the following *main* packages:
 
 - [fun](https://github.com/cpmech/gosl/tree/master/fun). Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
 - [gm](https://github.com/cpmech/gosl/tree/master/gm). Geometry algorithms and structures
-- [hdf](https://github.com/cpmech/gosl/tree/master/hdf). Hierarchical Data Format for very large data storage
 - [la](https://github.com/cpmech/gosl/tree/master/la). Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions
 - [mpi](https://github.com/cpmech/gosl/tree/master/mpi). Message Passing Interface for parallel computing
 - [num](https://github.com/cpmech/gosl/tree/master/num). Fundamental numerical methods such as root solvers, non-linear solvers, numerical derivatives and quadrature

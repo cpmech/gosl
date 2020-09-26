@@ -37,7 +37,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   libmumps-dev \
   libfftw3-dev \
   libfftw3-mpi-dev \
-  libhdf5-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # download go
