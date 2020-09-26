@@ -8,7 +8,7 @@ We link Gosl with existent libraries written in C and Fortran, such as OpenBLAS,
 
 ## Installation
 
-Because of CGO and the other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of seconds. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
+Because of CGO and other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of seconds. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
 
 ### 1. Quick, containerized (recommended)
 
