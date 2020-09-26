@@ -155,7 +155,7 @@ Go code:
 
 	// lognormal distribution
 	var dist rnd.DistLogNormal
-  dist.Init(&rnd.Variable{M: μ, S: σ})
+	dist.Init(&rnd.Variable{M: μ, S: σ})
   
 	// compute lognormal points
 	n := 101
