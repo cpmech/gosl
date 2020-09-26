@@ -52,7 +52,7 @@ sudo apt-get install -y --no-install-recommends \
   libmumps-dev \
   libfftw3-dev \
   libfftw3-mpi-dev \
-  libhdf5-dev \
+  libhdf5-dev
 ```
 
 **Compile Gosl**
