@@ -27,23 +27,116 @@ called to solve the problem.
 
 ### Comparison using Simple Quadratic Function
 
-Source code: <a href="../examples/opt_comparison01.go">opt_comparison01.go</a>
+```go
+	// objective function
+	problem := opt.Factory.SimpleQuadratic2d()
 
-<div id="container">
-<p><img src="../examples/figs/opt_comparison01a.png" width="500"></p>
-</div>
+	// initial point
+	x0 := la.NewVectorSlice([]float64{1.5, -0.75})
 
-<div id="container">
-<p><img src="../examples/figs/opt_comparison01b.png" width="500"></p>
-</div>
+	// ConjGrad
+	xmin1 := x0.GetCopy()
+	sol1 := opt.NewConjGrad(problem)
+	sol1.UseHist = true
+	t0 := time.Now()
+	fmin1 := sol1.Min(xmin1, nil)
+	dt := time.Now().Sub(t0)
+
+	// stat
+	io.Pf("ConjGrad: fmin     = %g  (fref = %g)\n", fmin1, problem.Fref)
+	io.Pf("ConjGrad: xmin     = %.9f  (xref = %g)\n", xmin1, problem.Xref)
+	io.Pf("ConjGrad: NumIter  = %d\n", sol1.NumIter)
+	io.Pf("ConjGrad: NumFeval = %d\n", sol1.NumFeval)
+	io.Pf("ConjGrad: NumGeval = %d\n", sol1.NumGeval)
+	io.Pf("ConjGrad: ElapsedT = %v\n", dt)
+
+	// Powell
+	xmin2 := x0.GetCopy()
+	sol2 := opt.NewPowell(problem)
+	sol2.UseHist = true
+	t0 = time.Now()
+	fmin2 := sol2.Min(xmin2, nil)
+	dt = time.Now().Sub(t0)
+
+	// stat
+	io.Pl()
+	io.Pf("Powell: fmin     = %g  (fref = %g)\n", fmin2, problem.Fref)
+	io.Pf("Powell: xmin     = %.9f  (xref = %g)\n", xmin2, problem.Xref)
+	io.Pf("Powell: NumIter  = %d\n", sol2.NumIter)
+	io.Pf("Powell: NumFeval = %d\n", sol2.NumFeval)
+	io.Pf("Powell: NumGeval = %d\n", sol2.NumGeval)
+	io.Pf("Powell: ElapsedT = %v\n", dt)
+
+	// GradDesc
+	xmin3 := x0.GetCopy()
+	sol3 := opt.NewGradDesc(problem)
+	sol3.UseHist = true
+	sol3.Alpha = 0.2
+	t0 = time.Now()
+	fmin3 := sol3.Min(xmin3, nil)
+	dt = time.Now().Sub(t0)
+
+	// stat
+	io.Pl()
+	io.Pf("GradDesc: fmin     = %g  (fref = %g)\n", fmin3, problem.Fref)
+	io.Pf("GradDesc: xmin     = %.9f  (xref = %g)\n", xmin3, problem.Xref)
+	io.Pf("GradDesc: NumIter  = %d\n", sol3.NumIter)
+	io.Pf("GradDesc: NumFeval = %d\n", sol3.NumFeval)
+	io.Pf("GradDesc: NumGeval = %d\n", sol3.NumGeval)
+	io.Pf("GradDesc: ElapsedT = %v\n", dt)
+```
+
+![](data/opt_comparison01a.png)
+
+![](data/opt_comparison01b.png)
 
 ### Rosenbrock Function
 
-Source code: <a href="../examples/opt_conjgrad01.go" width="600">opt_conjgrad01.go</a>
+```go
+	// objective function: Rosenbrock
+	N := 5 // 5D
+	problem := opt.Factory.RosenbrockMulti(N)
 
-<div id="container">
-<p><img src="../examples/figs/opt_conjgrad01.png"></p>
-</div>
+	// initial point
+	x0 := la.NewVectorSlice([]float64{1.3, 0.7, 0.8, 1.9, 1.2})
+
+	// solve using Brent's method as Line Search
+	xmin1 := x0.GetCopy()
+	sol1 := opt.NewConjGrad(problem)
+	sol1.UseBrent = true
+	sol1.UseHist = true
+	t0 := time.Now()
+	fmin1 := sol1.Min(xmin1, nil)
+	dt := time.Now().Sub(t0)
+
+	// stat
+	io.Pf("Brent: fmin     = %g  (fref = %g)\n", fmin1, problem.Fref)
+	io.Pf("Brent: xmin     = %.9f\n", xmin1)
+	io.Pf("Brent: NumIter  = %d\n", sol1.NumIter)
+	io.Pf("Brent: NumFeval = %d\n", sol1.NumFeval)
+	io.Pf("Brent: NumGeval = %d\n", sol1.NumGeval)
+	io.Pf("Brent: ElapsedT = %v\n", dt)
+
+	// solve using Wolfe's method as Line Search
+	xmin2 := x0.GetCopy()
+	sol2 := opt.NewConjGrad(problem)
+	sol2.UseBrent = false
+	sol2.UseHist = true
+	t0 = time.Now()
+	fmin2 := sol2.Min(xmin2, nil)
+	dt = time.Now().Sub(t0)
+
+	// stat
+	io.Pl()
+	io.Pf("Wolfe: fmin     = %g  (fref = %g)\n", fmin2, problem.Fref)
+	io.Pf("Wolfe: xmin     = %.9f\n", xmin2)
+	io.Pf("Wolfe: NumIter  = %d\n", sol2.NumIter)
+	io.Pf("Wolfe: NumFeval = %d\n", sol2.NumFeval)
+	io.Pf("Wolfe: NumGeval = %d\n", sol2.NumGeval)
+	io.Pf("Wolfe: ElapsedT = %v\n", dt)
+```
+
+![](data/opt_conjgrad01.png)
 
 ## Interior-point method for linear problems
 
@@ -110,7 +203,42 @@ as matrix:
 
 ```
 
-Source code: <a href="../examples/opt_ipm01.go">../examples/opt_ipm01.go</a>
+```go
+	// coefficients vector
+	c := []float64{-4, -5, 0, 0}
+
+	// constraints as a sparse matrix
+	var T la.Triplet
+	T.Init(2, 4, 6) // 2 by 4 matrix, with 6 non-zeros
+	T.Put(0, 0, 2.0)
+	T.Put(0, 1, 1.0)
+	T.Put(0, 2, 1.0)
+	T.Put(1, 0, 1.0)
+	T.Put(1, 1, 2.0)
+	T.Put(1, 3, 1.0)
+	Am := T.ToMatrix(nil) // compressed-column matrix
+
+	// right-hand side
+	b := []float64{3, 3}
+
+	// solve LP
+	var ipm opt.LinIpm
+	defer ipm.Free()
+	ipm.Init(Am, b, c, nil)
+	ipm.Solve(true)
+
+	// print solution
+	io.Pf("\n")
+	io.Pf("x = %v\n", ipm.X)
+	io.Pf("λ = %v\n", ipm.L)
+	io.Pf("s = %v\n", ipm.S)
+
+	// check solution
+	A := Am.ToDense()
+	bchk := la.NewVector(2)
+	la.MatVecMul(bchk, 1, A, ipm.X)
+	io.Pf("b(check) = %v\n", bchk)
+```
 
 Output:
 
@@ -137,9 +265,7 @@ s = [7.256799795925211e-10 1.218218347079067e-10 1.0000000006656913 2.0000000000
 b(check) = [2.9999999980796686 2.9999999991580326]
 ```
 
-<div id="container">
-<p><img src="../examples/figs/opt_ipm01.png" width="500"></p>
-</div>
+![](data/opt_ipm01.png)
 
 ### Example 2
 
@@ -175,7 +301,55 @@ standard (step 2)
         x0_,x1,x2,x3,x4,x5 ≥ 0
 ```
 
-Source code: <a href="../examples/opt_ipm02.go">../examples/opt_ipm02.go</a>
+```go
+	// coefficients vector
+	c := []float64{2, 1, 0, 0, 0, -2}
+
+	// constraints as a sparse matrix
+	var T la.Triplet
+	T.Init(3, 6, 12) // 3 by 6 matrix, with 12 non-zeros
+	T.Put(0, 0, -1)
+	T.Put(0, 1, 1)
+	T.Put(0, 2, 1)
+	T.Put(0, 5, 1)
+	T.Put(1, 0, -1)
+	T.Put(1, 1, -1)
+	T.Put(1, 3, 1)
+	T.Put(1, 5, 1)
+	T.Put(2, 0, 1)
+	T.Put(2, 1, -2)
+	T.Put(2, 4, 1)
+	T.Put(2, 5, -1)
+	Am := T.ToMatrix(nil) // compressed-column matrix
+
+	// right-hand side
+	b := []float64{1, -2, 4}
+
+	// solve LP
+	var ipm opt.LinIpm
+	defer ipm.Free()
+	ipm.Init(Am, b, c, nil)
+	ipm.Solve(true)
+
+	// print solution
+	io.Pl()
+	io.Pf("x = %v\n", ipm.X)
+	io.Pf("λ = %v\n", ipm.L)
+	io.Pf("s = %v\n", ipm.S)
+
+	// check solution
+	chk.Verbose = true
+	tst := new(testing.T)
+	A := Am.ToDense()
+	bres := make([]float64, len(b))
+	la.MatVecMul(bres, 1, A, ipm.X)
+	chk.Array(tst, "A*x=b", 1e-8, bres, b)
+
+	// fix and check x
+	x := ipm.X[:2]
+	x[0] -= ipm.X[5]
+	chk.Array(tst, "x", 1e-8, x, []float64{0.5, 1.5})
+```
 
 Output:
 
@@ -205,9 +379,7 @@ x = [0.5000000015974742 1.4999999986259591]
 b(check) = [0.999999997028485 -2.0000000002234333 -2.499999995654444]
 ```
 
-<div id="container">
-<p><img src="../examples/figs/opt_ipm02.png" width="500"></p>
-</div>
+![](data/opt_ipm02.png)
 
 ## API
 
