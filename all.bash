@@ -7,6 +7,7 @@ PKGS_ESSENTIAL="chk io utl mpi"
 PKGS_ALL=" \
 fun/fftw fun \
 gm/tri gm/msh gm \
+hb \
 la/oblas la \
 num/qpck num \
 ode \
