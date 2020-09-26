@@ -59,7 +59,38 @@ function.
 
 ### Generate 100,000 integers and draw Histogram
 
-Source code: <a href="../examples/rnd_ints01.go">../examples/rnd_ints01.go</a>
+Go code:
+
+```go
+	// initialise seed with fixed number; use 0 to use current time
+	rnd.Init(1234)
+
+	// allocate slice for integers
+	nsamples := 100000
+	nints := 10
+	vals := make([]int, nsamples)
+
+	// using the rnd.Int function
+	t0 := time.Now()
+	for i := 0; i < nsamples; i++ {
+		vals[i] = rnd.Int(0, nints-1)
+	}
+	io.Pf("time elapsed = %v\n", time.Now().Sub(t0))
+
+	// text histogram
+	hist := rnd.IntHistogram{Stations: utl.IntRange(nints + 1)}
+	hist.Count(vals, true)
+	io.Pf(rnd.TextHist(hist.GenLabels("%d"), hist.Counts, 60))
+
+	// using the rnd.Ints function
+	t0 = time.Now()
+	rnd.Ints(vals, 0, nints-1)
+	io.Pf("time elapsed = %v\n", time.Now().Sub(t0))
+
+	// text histogram
+	hist.Count(vals, true)
+	io.Pf(rnd.TextHist(hist.GenLabels("%d"), hist.Counts, 60))
+```
 
 Output:
 
@@ -92,19 +123,73 @@ time elapsed = 3.259988ms
 
 ### Generate samples based on the Lognormal distribution
 
-Source code: <a href="../examples/rnd_lognormalDistribution.go">../examples/rnd_lognormalDistribution.go</a>
+Go code:
 
-<div id="container">
-<p><img src="../examples/figs/rnd_lognormalDistribution.png" width="500"></p>
-</div>
+```go
+	// initialise generator
+	rnd.Init(1234)
+
+	// parameters
+	μ := 1.0
+	σ := 0.25
+
+	// generate samples
+	nsamples := 1000
+	X := make([]float64, nsamples)
+	for i := 0; i < nsamples; i++ {
+		X[i] = rnd.Lognormal(μ, σ)
+	}
+
+	// constants
+	nstations := 41        // number of bins + 1
+	xmin, xmax := 0.0, 3.0 // limits for histogram
+
+	// build histogram: count number of samples within each bin
+	var hist rnd.Histogram
+	hist.Stations = utl.LinSpace(xmin, xmax, nstations)
+	hist.Count(X, true)
+
+	// compute area of density diagram
+	area := hist.DensityArea(nsamples)
+	io.Pf("area = %v\n", area)
+
+	// lognormal distribution
+	var dist rnd.DistLogNormal
+  dist.Init(&rnd.Variable{M: μ, S: σ})
+  
+	// compute lognormal points
+	n := 101
+	x := utl.LinSpace(0, 3, n)
+	y := make([]float64, n)
+	Y := make([]float64, n)
+	for i := 0; i < n; i++ {
+		y[i] = dist.Pdf(x[i])
+		Y[i] = dist.Cdf(x[i])
+	}
+```
+
+![](data/rnd_lognormalDistribution.png)
 
 ### Example: sampling algorithms
 
-Source code: <a href="../examples/rnd_haltonAndLatin01.go">../examples/rnd_haltonAndLatin01.go</a>
+```go
+	// initialise generator
+	rnd.Init(1234)
 
-<div id="container">
-<p><img src="../examples/figs/rnd_haltonAndLatin01.png" width="400"></p>
-</div>
+	// Halton points
+	ndim := 2
+	npts := 100
+	Xhps := rnd.HaltonPoints(ndim, npts)
+
+	// Latin Hypercube
+	dupfactor := 5
+	lhs := rnd.LatinIHS(ndim, npts, dupfactor)
+	xmin := []float64{0, 0}
+	xmax := []float64{1, 1}
+	Xlhs := rnd.HypercubeCoords(lhs, xmin, xmax)
+```
+
+![](data/rnd_haltonAndLatin01.png)
 
 ## API
 
