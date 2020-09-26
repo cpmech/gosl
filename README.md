@@ -58,7 +58,7 @@ sudo apt-get install -y --no-install-recommends \
 **Compile Gosl**
 
 ```
-cd $HOME/go/src/gosl
+cd $HOME/mygo/gosl
 bash ./all.bash
 ```
 
