@@ -17,10 +17,32 @@ Find the root of
     y(x) = x³ - 0.165 x² + 3.993e-4
 ```
 
-within [0, 0.11]. We have to make sure that the root is bounded otherwise Brent's method doesn't
-work.
+within [0, 0.11] See figure below. Note: we have to make sure that the root is bounded otherwise Brent's method doesn't work. 
 
-Source: <a href="../examples/num_brent01.go">../examples/num_brent01.go</a>
+![](data/num_brent01.png)
+
+```go
+	// y(x) function
+	yx := func(x float64) float64 {
+		return math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
+	}
+
+	// range: be sure to enclose root
+	xa, xb := 0.0, 0.11
+
+	// initialise solver
+	solver := num.NewBrent(yx, nil)
+
+	// solve
+	xo := solver.Root(xa, xb)
+
+	// output
+	yo := yx(xo)
+	io.Pf("x      = %v\n", xo)
+	io.Pf("f(x)   = %v\n", yo)
+	io.Pf("nfeval = %v\n", solver.NumFeval)
+	io.Pf("niter. = %v\n", solver.NumIter)
+```
 
 Output of Brent's solution:
 
@@ -41,16 +63,46 @@ nfeval = 8
 niter. = 6
 ```
 
-<div id="container">
-<p><img src="../examples/figs/num_brent01.png" width="400"></p>
-Simple root finding problem solved by Brent's method.
-</div>
-
 ## Example: Using Newton's method:
 
 Same problem as before.
 
-Source: <a href="../examples/num_newton01.go">../examples/num_newton01.go</a>
+```go
+	// Function: y(x) = fx[0] with x = xvec[0]
+	fcn := func(fx, xvec la.Vector) {
+		x := xvec[0]
+		fx[0] = math.Pow(x, 3.0) - 0.165*math.Pow(x, 2.0) + 3.993e-4
+	}
+
+	// Jacobian: dfdx(x) function
+	Jfcn := func(dfdx *la.Matrix, x la.Vector) {
+		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0*0.165*x[0])
+		return
+	}
+
+	// trial solution
+	xguess := 0.03
+
+	// initialise solver
+	neq := 1      // number of equations
+	useDn := true // use dense Jacobian
+	numJ := false // numerical Jacobian
+	var o num.NlSolver
+	o.Init(neq, fcn, nil, Jfcn, useDn, numJ, nil)
+
+	// solve
+	xvec := []float64{xguess}
+	o.Solve(xvec, false)
+
+	// output
+	fx := []float64{123}
+	fcn(fx, xvec)
+	xo, yo := xvec[0], fx[0]
+	io.Pf("x      = %v\n", xo)
+	io.Pf("f(x)   = %v\n", yo)
+	io.Pf("nfeval = %v\n", o.NFeval)
+	io.Pf("niter. = %v\n", o.It)
+```
 
 Output of NlSolver:
 
@@ -69,28 +121,57 @@ nfeval = 4
 niter. = 2
 ```
 
-<div id="container">
-<p><img src="../examples/figs/num_newton01.png" width="400"></p>
-Simple root finding problem solved by Newton's method.
-</div>
-
 ## Example: Quadrature with discrete data
 
-Source code: <a href="t_quadDisc_test.go">t_quadDisc_test.go</a>
+[source code](t_quadDisc_test.go)
 
 ## Example: Quadrature with methods using refinement
 
-Source code: <a href="t_quadElem_test.go">t_quadElem_test.go</a>
+[source code](t_quadElem_test.go)
 
 ## Example: numerical differentiation
 
 Check first and second derivative of `y(x) = sin(x)`
 
-See source code: <a href="../examples/num_deriv01.go">num_deriv01.go</a>
+```go
+	// define function and derivative function
+	yFcn := func(x float64) float64 { return math.Sin(x) }
+	dydxFcn := func(x float64) float64 { return math.Cos(x) }
+	d2ydx2Fcn := func(x float64) float64 { return -math.Sin(x) }
+
+	// run test for 11 points
+	X := utl.LinSpace(0, 2*math.Pi, 11)
+	io.Pf("          %8s %23s %23s %23s\n", "x", "analytical", "numerical", "error")
+	for _, x := range X {
+
+		// analytical derivatives
+		dydxAna := dydxFcn(x)
+		d2ydx2Ana := d2ydx2Fcn(x)
+
+		// numerical derivative: dydx
+		dydxNum := num.DerivCen5(x, 1e-3, func(t float64) float64 {
+			return yFcn(t)
+		})
+
+		// numerical derivative d2ydx2
+		d2ydx2Num := num.DerivCen5(x, 1e-3, func(t float64) float64 {
+			return dydxFcn(t)
+		})
+
+		// check
+		chk.PrintAnaNum(io.Sf("dy/dx   @ %.6f", x), 1e-10, dydxAna, dydxNum, true)
+		chk.PrintAnaNum(io.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2Ana, d2ydx2Num, true)
+	}
+
+	// generate 101 points for plotting
+	X = utl.LinSpace(0, 2*math.Pi, 101)
+	Y := make([]float64, len(X))
+	for i, x := range X {
+		Y[i] = yFcn(x)
+	}
+```
 
 ## Examples: nonlinear problems
-
-Source code: <a href="t_nlsolver_test.go">t_nlsolver_test.go</a>
 
 Find `x0` and `x1` such that `f0` and `f1` are zero, with:
 
@@ -98,6 +179,8 @@ Find `x0` and `x1` such that `f0` and `f1` are zero, with:
 f0(x0,x1) = 2.0*x0 - x1 - exp(-x0)
 f1(x0,x1) = -x0 + 2.0*x1 - exp(-x1)
 ```
+
+[source code](t_nlsolver_test.go)
 
 ### Using analytical (sparse) Jacobian matrix
 
