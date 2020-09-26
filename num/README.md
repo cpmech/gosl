@@ -17,7 +17,7 @@ Find the root of
     y(x) = x³ - 0.165 x² + 3.993e-4
 ```
 
-within [0, 0.11] See figure below. Note: we have to make sure that the root is bounded otherwise Brent's method doesn't work. 
+within [0, 0.11]. See figure below. Note: we have to make sure that the root is bounded otherwise Brent's method doesn't work. 
 
 ![](data/num_brent01.png)
 
@@ -161,13 +161,6 @@ Check first and second derivative of `y(x) = sin(x)`
 		// check
 		chk.PrintAnaNum(io.Sf("dy/dx   @ %.6f", x), 1e-10, dydxAna, dydxNum, true)
 		chk.PrintAnaNum(io.Sf("d²y/dx² @ %.6f", x), 1e-10, d2ydx2Ana, d2ydx2Num, true)
-	}
-
-	// generate 101 points for plotting
-	X = utl.LinSpace(0, 2*math.Pi, 101)
-	Y := make([]float64, len(X))
-	for i, x := range X {
-		Y[i] = yFcn(x)
 	}
 ```
 
