@@ -10,7 +10,7 @@ We link Gosl with existent libraries written in C and Fortran, such as OpenBLAS,
 
 Because of CGO and other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of seconds. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
 
-### 1. Quick, containerized (recommended)
+### Quick, containerized (recommended)
 
 1. Install Docker
 2. Install Visual Studio Code
@@ -22,22 +22,22 @@ Done. And your system will remain "clean."
 
 ![](zdocs/open-in-container.gif)
 
-### 2. Debian/Ubuntu GNU Linux
+### Debian/Ubuntu GNU Linux
 
-Because we use CGO for linking Gosl with these many libraries, we cannot use the so convenient _go get_ functionality for installing Gosl. Moreover, we view Gosl as the most basic set of libraries for high-performance computing and therefore prefer to install Gosl directly alongside Go. In other words, Gosl extends Go with powerful tools for scientific simulations.
+Because we use CGO for linking Gosl with many libraries, we cannot use the so convenient _go get_ functionality for installing Gosl. Moreover, we view Gosl as the most basic set of libraries for high-performance computing and therefore prefer to install Gosl directly alongside Go. In other words, Gosl extends Go with powerful tools for scientific simulations.
 
 Gosl is then linked to `WHEREVER_GO_IS_LOCATED/src/gosl`; e.g. `/usr/local/go/src/gosl`. We have experimented with GOPATH and the newer Go Modules approach, but both do not work well with CGO (and hence Gosl).
 
-Assuming that your go code is located in `$HOME/mygo` and that go has been installed in `$HOME/go`:
+**Download and link Gosl**
 
-### 2.1. Download and link Gosl
+Assuming that your go code is located in `$HOME/mygo` and that go has been installed in `$HOME/go`:
 
 ```
 git clone https://github.com/cpmech/gosl.git $HOME/mygo/gosl
 ln -s $HOME/mygo/gosl $HOME/go/src/gosl
 ```
 
-### 2.2. Install dependencies 
+**Install dependencies**
 
 ```
 sudo apt-get install -y --no-install-recommends \
@@ -55,7 +55,7 @@ sudo apt-get install -y --no-install-recommends \
   libhdf5-dev \
 ```
 
-### 2.3. Compile Gosl
+**Compile Gosl**
 
 ```
 cd $HOME/go/src/gosl
