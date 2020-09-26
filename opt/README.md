@@ -203,6 +203,8 @@ as matrix:
 
 ```
 
+Go code:
+
 ```go
 	// coefficients vector
 	c := []float64{-4, -5, 0, 0}
@@ -300,6 +302,8 @@ standard (step 2)
           x0_ - 2*x1           + x4 -   x5 = 4
         x0_,x1,x2,x3,x4,x5 ≥ 0
 ```
+
+Go code:
 
 ```go
 	// coefficients vector
