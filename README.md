@@ -68,22 +68,22 @@ Done.
 
 Gosl includes the following *essential* packages:
 
-- chk. To check numerical results and for unit testing
-- io. Input/output including printing to the terminal and handling files
-- utl. To generate series (e.g. linspace) and other functions as in pylab/matlab/octave
+- [chk](https://github.com/cpmech/gosl/tree/master/chk). To check numerical results and for unit testing
+- [io](https://github.com/cpmech/gosl/tree/master/io). Input/output including printing to the terminal and handling files
+- [utl](https://github.com/cpmech/gosl/tree/master/utl). To generate series (e.g. linspace) and other functions as in pylab/matlab/octave
 
 Gosl includes the following *main* packages:
 
-- fun. Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
-- gm. Geometry algorithms and structures
-- hdf. Hierarchical Data Format for very large data storage
-- la. Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions
-- mpi. Message Passing Interface for parallel computing
-- num. Fundamental numerical methods such as root solvers, non-linear solvers, numerical derivatives and quadrature
-- ode. Solvers for ordinary differential equations
-- opt. Numerical optimization: Interior Point, Conjugate Gradients, Powell, Grad Descent
-- pde. Solvers for partial differential equations (FDM, Spectral, FEM)
-- rnd. Random numbers and probability distributions
+- [fun](https://github.com/cpmech/gosl/tree/master/fun). Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
+- [gm](https://github.com/cpmech/gosl/tree/master/gm). Geometry algorithms and structures
+- [hdf](https://github.com/cpmech/gosl/tree/master/hdf). Hierarchical Data Format for very large data storage
+- [la](https://github.com/cpmech/gosl/tree/master/la). Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions
+- [mpi](https://github.com/cpmech/gosl/tree/master/mpi). Message Passing Interface for parallel computing
+- [num](https://github.com/cpmech/gosl/tree/master/num). Fundamental numerical methods such as root solvers, non-linear solvers, numerical derivatives and quadrature
+- [ode](https://github.com/cpmech/gosl/tree/master/ode). Solvers for ordinary differential equations
+- [opt](https://github.com/cpmech/gosl/tree/master/opt). Numerical optimization: Interior Point, Conjugate Gradients, Powell, Grad Descent
+- [pde](https://github.com/cpmech/gosl/tree/master/pde). Solvers for partial differential equations (FDM, Spectral, FEM)
+- [rnd](https://github.com/cpmech/gosl/tree/master/rnd). Random numbers and probability distributions
 
 (see each sub directory for more information)
 
