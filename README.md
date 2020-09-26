@@ -8,7 +8,9 @@ We link Gosl with existent libraries written in C and Fortran, such as OpenBLAS,
 
 ## Installation
 
-**TLDR**
+Because of CGO and the other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of seconds. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
+
+### 1. Quick, containerized (recommended)
 
 1. Install Docker
 2. Install Visual Studio Code
@@ -20,15 +22,47 @@ Done. And your system will remain "clean."
 
 ![](zdocs/open-in-container.gif)
 
-**Long version**
+### 2. Debian/Ubuntu GNU Linux
 
-Because we use CGO for linking Gosl with these many libraries, we cannot use the so convenient "go get" functionality for installing Gosl. Moreover, we view Gosl as the most basic set of libraries for high-performance computing and therefore prefer to install Gosl directly alongside Go. In other words, Gosl extends Go with powerful tools for scientific simulations.
+Because we use CGO for linking Gosl with these many libraries, we cannot use the so convenient _go get_ functionality for installing Gosl. Moreover, we view Gosl as the most basic set of libraries for high-performance computing and therefore prefer to install Gosl directly alongside Go. In other words, Gosl extends Go with powerful tools for scientific simulations.
 
-Gosl is then copied inside the "/usr/local/go/src" directory right where the Go code itself is located. We have experimented with GOPATH and the newer Go Modules approach, but both do not work well with CGO (and hence Gosl).
+Gosl is then linked to `WHEREVER_GO_IS_LOCATED/src/gosl`; e.g. `/usr/local/go/src/gosl`. We have experimented with GOPATH and the newer Go Modules approach, but both do not work well with CGO (and hence Gosl).
 
-Again because of CGO and the other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of seconds. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
+Assuming that your go code is located in `$HOME/mygo` and that go has been installed in `$HOME/go`:
 
-Nonetheless, if you are using a Debian-based Linux distribution, you basically just need the following (apt) packages: `gcc gfortran libopenmpi-dev libhwloc-dev liblapacke-dev libopenblas-dev libmetis-dev libsuitesparse-dev libmumps-dev libfftw3-dev libfftw3-mpi-dev`. After the installation of these dependencies, run `bash all.bash`. However, we do not recommend this approach because with Docker your system will remain "clean."
+### 2.1. Download and link Gosl
+
+```
+git clone https://github.com/cpmech/gosl.git $HOME/mygo/gosl
+ln -s $HOME/mygo/gosl $HOME/go/src/gosl
+```
+
+### 2.2. Install dependencies 
+
+```
+sudo apt-get install -y --no-install-recommends \
+  gcc \
+  gfortran \
+  libopenmpi-dev \
+  libhwloc-dev \
+  liblapacke-dev \
+  libopenblas-dev \
+  libmetis-dev \
+  libsuitesparse-dev \
+  libmumps-dev \
+  libfftw3-dev \
+  libfftw3-mpi-dev \
+  libhdf5-dev \
+```
+
+### 2.3. Compile Gosl
+
+```
+cd $HOME/go/src/gosl
+bash ./all.bash
+```
+
+Done.
 
 ## Documentation
 
@@ -42,6 +76,7 @@ Gosl includes the following *main* packages:
 
 - fun. Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
 - gm. Geometry algorithms and structures
+- hdf. Hierarchical Data Format for very large data storage
 - la. Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions
 - mpi. Message Passing Interface for parallel computing
 - num. Fundamental numerical methods such as root solvers, non-linear solvers, numerical derivatives and quadrature
