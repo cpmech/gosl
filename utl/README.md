@@ -573,22 +573,6 @@ func Vals(n int, v float64) (res []float64)
 
 TYPES
 
-type Decoder interface {
-	Decode(e interface{}) error
-}
-    Decoder defines decoders; e.g. gob or json
-
-func NewDecoder(r goio.Reader, enctype string) Decoder
-    NewDecoder returns a new decoder
-
-type Encoder interface {
-	Encode(e interface{}) error
-}
-    Encoder defines encoders; e.g. gob or json
-
-func NewEncoder(w goio.Writer, enctype string) Encoder
-    NewEncoder returns a new encoder
-
 type List struct {
 	Vals [][]float64 // values
 }

@@ -388,6 +388,22 @@ func WriteTableVD(dirout, fn string, headers []string, columns ...[]float64)
 
 TYPES
 
+type Decoder interface {
+	Decode(e interface{}) error
+}
+    Decoder defines decoders; e.g. gob or json
+
+func NewDecoder(r goio.Reader, enctype string) Decoder
+    NewDecoder returns a new decoder
+
+type Encoder interface {
+	Encode(e interface{}) error
+}
+    Encoder defines encoders; e.g. gob or json
+
+func NewEncoder(w goio.Writer, enctype string) Encoder
+    NewEncoder returns a new encoder
+
 type ReadLinesCallback func(idx int, line string) (stop bool)
     ReadLinesCallback is used in ReadLines to process line by line during
     reading of a file

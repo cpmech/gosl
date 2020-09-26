@@ -60,7 +60,7 @@ func Create(dirOut, fnameKey string) (o *File)
 
         Output:
           returns a new File object where the filename will be:
-            fnameKey + .gob
+            fnameKey + .hb
 
 func Open(dirIn, fnameKey string) (o *File)
     Open opens an existent file for read only
@@ -72,7 +72,7 @@ func Open(dirIn, fnameKey string) (o *File)
 
         Output:
           returns a new File object where the filename will be:
-            fnameKey + .gob
+            fnameKey + .hb
 
 func (o *File) Close()
     Close closes file
