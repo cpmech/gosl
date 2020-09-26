@@ -9,24 +9,19 @@ Runge-Kutta method. Methods that can handle stiff problems are also available.
 
 From Hairer-Wanner VII-p3 Eq.(1.4) [2].
 
-<div id="container">
-<p><img src="../examples/figs/rober.png" width="400"></p>
-Solution of Robertson's equation
-</div>
+Solution of Robertson's equation:
+
+![](data/rober.png)
 
 ## Output of Tests
 
 ### Convergence of explicit Runge-Kutta methods
 
-Source code: <a href="t_erk_test.go">t_erk_test.go</a>
+[source code](t_erk_test.go)
 
-<div id="container">
-<p><img src="../examples/figs/t_erk04.png" width="500"></p>
-</div>
+![](data/t_erk04.png)
 
-<div id="container">
-<p><img src="../examples/figs/t_erk05.png" width="500"></p>
-</div>
+![](data/t_erk05.png)
 
 ## References
 
