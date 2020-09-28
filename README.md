@@ -20,7 +20,11 @@ Because of CGO and other libraries, the easiest way to work with Gosl is via Doc
 
 Done. And your system will remain "clean."
 
-![](zdocs/open-in-container.gif)
+![](zdocs/vscode-open-in-container.gif)
+
+Our [Docker Image](https://hub.docker.com/repository/docker/gosl/gosl) also contains Go and the Go Tools for working with VS Code (or not). Below is a video showing the convenience of VS Code + Gosl:
+
+![](zdocs/vscode-gosl-01.gif)
 
 ### Debian/Ubuntu GNU Linux
 
