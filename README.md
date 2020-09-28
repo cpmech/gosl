@@ -22,9 +22,10 @@ Done. And your system will remain "clean."
 
 ![](zdocs/vscode-open-in-container.gif)
 
-Our [Docker Image](https://hub.docker.com/repository/docker/gosl/gosl) also contains Go and the Go Tools for working with VS Code (or not). Below is a video showing the convenience of VS Code + Gosl:
+Our [Docker Image](https://hub.docker.com/repository/docker/gosl/gosl) also contains Go and the Go Tools for working with VS Code (or not). Below is a video showing the convenience of VS Code + the Go tools + Gosl. Note how fast VS Code is in finding the function ReadLines and the package gosl/io even under a clash with go's own io package. Upon file save, the Go tools automatically add the required imports. Note also the very convenient auto-completion of the callback function given to ReadLines. Also, Code + the Go tools nicely fill the function arguments with default values.
 
 ![](zdocs/vscode-gosl-01.gif)
+
 
 ### Debian/Ubuntu GNU Linux
 
