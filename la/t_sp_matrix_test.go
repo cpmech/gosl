@@ -154,3 +154,26 @@ func TestSpMatrix02(tst *testing.T) {
 	chk.Deep2(tst, "Kaug", 1.0e-17, Kaug.GetDeep2(), Cor)
 	chk.Deep2(tst, "Laug", 1.0e-17, Laug.GetDeep2(), Cor)
 }
+
+func TestSmat01(tst *testing.T) {
+
+	// verbose()
+	chk.PrintTitle("Smat01. read/write .smat file")
+
+	correct := [][]float64{
+		{2, 3, 0, 0, 0},
+		{3, 0, 4, 0, 6},
+		{0, -1, -3, 2, 0},
+		{0, 0, 1, 0, 0},
+		{0, 4, 2, 0, 1},
+	}
+
+	var T Triplet
+	T.ReadSmat("data/small-sparse-matrix.mtx", true)
+	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
+
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 1e-17)
+	var S Triplet
+	S.ReadSmat("/tmp/gosl/la/small-test-matrix.smat")
+	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
+}

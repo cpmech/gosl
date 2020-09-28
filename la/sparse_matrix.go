@@ -117,15 +117,23 @@ func (o *Triplet) ToDense() (a *Matrix) {
 	return
 }
 
-// WriteSmat writes a ".smat" file that can be visualised with vismatrix
-//  Example of .smat file:
-//  (indices are 0-based)
+// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
 //
+//  About the .smat file:
+//   - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
+//   - the first line contains the number of rows, columns, and non-zero entries
+//   - the following lines contain the indices of row, column, and the non-zero entry
+//   - indices are 0-based, unless oneBasedIndices == true
+//   - with one-based indices, smat is similar to MatrixMarket without the header
+//
+//  Example of .smat file:
+//
+//    # this is a comment
+//    % this is also a comment
 //    m n nnz
 //     i j x
 //      ...
 //     i j x
-//
 //
 //  NOTE: this method will create a CCMatrix first because
 //        duplicates must be added before saving the file
@@ -133,42 +141,84 @@ func (o *Triplet) ToDense() (a *Matrix) {
 //  dirout -- directory for output. will be created
 //  fnkey  -- filename key (filename without extension). ".smat" will be added
 //  tol    -- tolerance to skip zero values
-func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrix) {
+//  oneBasedIndices -- if true, 1 is added to all indices (like MatrixMarket file format)
+func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices ...bool) (cmat *CCMatrix) {
 	cmat = o.ToMatrix(nil)
-	cmat.WriteSmat(dirout, fnkey, tol)
+	cmat.WriteSmat(dirout, fnkey, tol, oneBasedIndices...)
 	return
 }
 
-// ReadSmat reads ".smat" file
-//  Example of .smat file:
-//  (indices are 0-based)
+// ReadSmat reads a SMAT file or a MatrixMarket file
 //
+//  About the .smat file:
+//   - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
+//   - the first line contains the number of rows, columns, and non-zero entries
+//   - the following lines contain the indices of row, column, and the non-zero entry
+//   - indices are 0-based, unless oneBasedIndices == true
+//   - with one-based indices, smat is similar to MatrixMarket without the header
+//
+//  Example of .smat file:
+//
+//    # this is a comment
+//    % this is also a comment
 //    m n nnz
 //     i j x
 //      ...
 //     i j x
 //
-func (o *Triplet) ReadSmat(filename string) {
+//  filename -- the name of the .smat file
+//  oneBasedIndices -- if true, 1 is removed from all indices (input like MatrixMarket file format)
+func (o *Triplet) ReadSmat(filename string, oneBasedIndices ...bool) {
+	deltaIndex := 0
+	if len(oneBasedIndices) > 0 {
+		if oneBasedIndices[0] {
+			deltaIndex = 1
+		}
+	}
+	initialized := false
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
+		if strings.HasPrefix(line, "%") {
+			return
+		}
+		if strings.HasPrefix(line, "#") {
+			return
+		}
 		r := strings.Fields(line)
-		if idx == 0 {
+		if !initialized {
 			if len(r) != 3 {
-				chk.Panic("number of columns in header must be 3 (m,n,nnz)\n")
+				chk.Panic("the number of columns in the line with dimensions must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 			o.Init(m, n, nnz)
+			initialized = true
 		} else {
 			if len(r) != 3 {
-				chk.Panic("number of columns in data lines must be 4 (i,j,x)\n")
+				chk.Panic("the number of columns in the data lines must be 3 (i,j,x)\n")
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
-			o.Put(i, j, x)
+			o.Put(i-deltaIndex, j-deltaIndex, x)
 		}
 		return
 	})
 }
 
-// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
+//
+//  About the .smat file:
+//   - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
+//   - the first line contains the number of rows, columns, and non-zero entries
+//   - the following lines contain the indices of row, column, and the non-zero entry
+//   - indices are 0-based, unless oneBasedIndices == true
+//   - with one-based indices, smat is similar to MatrixMarket without the header
+//
+//  Example of .smat file:
+//
+//    # this is a comment
+//    % this is also a comment
+//    m n nnz
+//     i j x
+//      ...
+//     i j x
 //
 //  NOTE: CCMatrix must be used to generate the resulting values because
 //        duplicates must be added before saving file
@@ -176,13 +226,20 @@ func (o *Triplet) ReadSmat(filename string) {
 //  dirout -- directory for output. will be created
 //  fnkey  -- filename key (filename without extension). ".smat" will be added
 //  tol    -- tolerance to skip zero values
-func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64) {
+//  oneBasedIndices -- if true, 1 is added to all indices (like MatrixMarket file format)
+func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices ...bool) {
+	deltaIndex := 0
+	if len(oneBasedIndices) > 0 {
+		if oneBasedIndices[0] {
+			deltaIndex = 1
+		}
+	}
 	var bfa, bfb bytes.Buffer
 	var nnz int
 	for j := 0; j < o.n; j++ {
 		for p := o.p[j]; p < o.p[j+1]; p++ {
 			if math.Abs(o.x[p]) > tol {
-				io.Ff(&bfb, "  %d  %d  %23.15e\n", o.i[p], j, o.x[p])
+				io.Ff(&bfb, "  %d  %d  %23.15e\n", o.i[p]+deltaIndex, j+deltaIndex, o.x[p])
 				nnz++
 			}
 		}
