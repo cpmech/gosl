@@ -177,3 +177,37 @@ func TestSmat01(tst *testing.T) {
 	S.ReadSmat("/tmp/gosl/la/small-test-matrix.smat")
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
 }
+
+func TestTripletInfo01(tst *testing.T) {
+
+	// verbose()
+	chk.PrintTitle("TripletInfo01")
+
+	A := new(Triplet)
+	chk.Int(tst, "Len", A.Len(), 0)
+	chk.Int(tst, "Max", A.Max(), 0)
+
+	A.Init(5, 5, 13)
+	chk.Int(tst, "Len", A.Len(), 0)
+	chk.Int(tst, "Max", A.Max(), 13)
+
+	A.Put(0, 0, +1.0) // << duplicated
+	A.Put(0, 0, +1.0) // << duplicated
+	A.Put(1, 0, +3.0)
+	A.Put(0, 1, +3.0)
+	A.Put(2, 1, -1.0)
+	A.Put(4, 1, +4.0)
+	A.Put(1, 2, +4.0)
+	A.Put(2, 2, -3.0)
+	A.Put(3, 2, +1.0)
+	A.Put(4, 2, +2.0)
+	A.Put(2, 3, +2.0)
+	A.Put(1, 4, +6.0)
+	A.Put(4, 4, +1.0)
+	chk.Int(tst, "Len", A.Len(), 13)
+	chk.Int(tst, "Max", A.Max(), 13)
+
+	m, n := A.Size()
+	chk.Int(tst, "m", m, 5)
+	chk.Int(tst, "n", n, 5)
+}

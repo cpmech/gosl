@@ -108,6 +108,11 @@ func (o *Triplet) Max() int {
 	return o.max
 }
 
+// Size returns the row/column size of the matrix represented by the Triplet
+func (o *Triplet) Size() (m, n int) {
+	return o.m, o.n
+}
+
 // ToDense returns the dense matrix corresponding to this Triplet
 func (o *Triplet) ToDense() (a *Matrix) {
 	a = NewMatrix(o.m, o.n)

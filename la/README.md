@@ -595,8 +595,25 @@ func (o *CCMatrix) Set(m, n int, Ap, Ai []int, Ax []float64)
 func (o *CCMatrix) ToDense() (res *Matrix)
     ToDense converts a column-compressed matrix to dense form
 
-func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64)
-    WriteSmat writes a ".smat" file that can be visualised with vismatrix
+func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices ...bool)
+    WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a
+    MatrixMarket file
+
+        About the .smat file:
+         - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
+         - the first line contains the number of rows, columns, and non-zero entries
+         - the following lines contain the indices of row, column, and the non-zero entry
+         - indices are 0-based, unless oneBasedIndices == true
+         - with one-based indices, smat is similar to MatrixMarket without the header
+
+        Example of .smat file:
+
+          # this is a comment
+          % this is also a comment
+          m n nnz
+           i j x
+            ...
+           i j x
 
         NOTE: CCMatrix must be used to generate the resulting values because
               duplicates must be added before saving file
@@ -604,6 +621,7 @@ func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64)
         dirout -- directory for output. will be created
         fnkey  -- filename key (filename without extension). ".smat" will be added
         tol    -- tolerance to skip zero values
+        oneBasedIndices -- if true, 1 is added to all indices (like MatrixMarket file format)
 
 type CCMatrixC struct {
 	// Has unexported fields.
@@ -1250,16 +1268,30 @@ func (o *Triplet) PutMatAndMatT(a *Triplet)
         [a10 a11 a12 ... ... ...] 4      [.  .  .]
         [... ... ... ... ... ...] 5
 
-func (o *Triplet) ReadSmat(filename string)
-    ReadSmat reads ".smat" file
+func (o *Triplet) ReadSmat(filename string, oneBasedIndices ...bool)
+    ReadSmat reads a SMAT file or a MatrixMarket file
+
+        About the .smat file:
+         - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
+         - the first line contains the number of rows, columns, and non-zero entries
+         - the following lines contain the indices of row, column, and the non-zero entry
+         - indices are 0-based, unless oneBasedIndices == true
+         - with one-based indices, smat is similar to MatrixMarket without the header
 
         Example of .smat file:
-        (indices are 0-based)
 
+          # this is a comment
+          % this is also a comment
           m n nnz
            i j x
             ...
            i j x
+
+        filename -- the name of the .smat file
+        oneBasedIndices -- if true, 1 is removed from all indices (input like MatrixMarket file format)
+
+func (o *Triplet) Size() (m, n int)
+    Size returns the row/column size of the matrix represented by the Triplet
 
 func (o *Triplet) Start()
     Start (re)starts index for inserting items using the Put command
@@ -1278,12 +1310,21 @@ func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix
         OUTPUT:
          the previous "a" matrix or a pointer to a new one
 
-func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrix)
-    WriteSmat writes a ".smat" file that can be visualised with vismatrix
+func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices ...bool) (cmat *CCMatrix)
+    WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a
+    MatrixMarket file
+
+        About the .smat file:
+         - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
+         - the first line contains the number of rows, columns, and non-zero entries
+         - the following lines contain the indices of row, column, and the non-zero entry
+         - indices are 0-based, unless oneBasedIndices == true
+         - with one-based indices, smat is similar to MatrixMarket without the header
 
         Example of .smat file:
-        (indices are 0-based)
 
+          # this is a comment
+          % this is also a comment
           m n nnz
            i j x
             ...
@@ -1295,6 +1336,7 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrix)
         dirout -- directory for output. will be created
         fnkey  -- filename key (filename without extension). ".smat" will be added
         tol    -- tolerance to skip zero values
+        oneBasedIndices -- if true, 1 is added to all indices (like MatrixMarket file format)
 
 type TripletC struct {
 	// Has unexported fields.
