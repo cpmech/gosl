@@ -4,7 +4,7 @@ Gosl is a set of tools for developing scientific simulations using the Go langua
 
 This library contains essential functions for linear algebra computations (operations between all combinations of vectors and matrices, eigenvalues and eigenvectors, linear solvers) and the development of numerical methods (e.g. numerical quadrature).
 
-We link Gosl with existent libraries written in C and Fortran, such as OpenBLAS, LAPACK, UMFPACK, MUMPS, QUADPACK and FFTW3. These existent libraries have been fundamental for the development of high-performant simulations over many years. We believe that it is nearly impossible to rewrite these libraries in native Go and at the same time achieve the same speed delivered by them. Just for reference, a naive implementation of matrix-matrix multiplication in Go is more than 100 times slower than OpenBLAS.
+We link Gosl with existent libraries written in C and Fortran, such as OpenBLAS, LAPACK, UMFPACK, MUMPS, QUADPACK and FFTW3. These existing libraries have been fundamental for the development of high-performant simulations over many years. We believe that it is nearly impossible to rewrite these libraries in native Go and at the same time achieve the same speed delivered by them. Just for reference, a naive implementation of matrix-matrix multiplication in Go is more than 100 times slower than OpenBLAS.
 
 ## Installation
 
@@ -16,16 +16,19 @@ Because of CGO and other libraries, the easiest way to work with Gosl is via Doc
 2. Install Visual Studio Code
 3. Install the Remote Development extension for VS Code
 4. Clone https://github.com/cpmech/hello-gosl
-5. Create your own application within a container (see gif below)
+5. Create your application within a container (see gif below)
 
 Done. And your system will remain "clean."
 
 ![](zdocs/vscode-open-in-container.gif)
 
-Our [Docker Image](https://hub.docker.com/repository/docker/gosl/gosl) also contains Go and the Go Tools for working with VS Code (or not). Below is a video showing the convenience of VS Code + the Go tools + Gosl. Note how fast VS Code is in finding the function ReadLines and the package gosl/io even under a clash with Go's own io package. Upon file save, the Go tools automatically add the required imports. Note also the very convenient auto-completion of the callback function given to ReadLines. Also, Code + the Go tools nicely fill the function arguments with default values.
+Our [Docker Image](https://hub.docker.com/repository/docker/gosl/gosl) also contains Go and the Go Tools for working with VS Code (or not). Below is a video showing the convenience of VS Code + the Go tools + Gosl. Note how fast VS Code is in finding the function ReadLines and the package gosl/io even under a clash with Go's io package. Upon file save, the Go tools automatically add the required imports. Note also the very convenient auto-completion of the callback function given to ReadLines. Also, Code + the Go tools nicely fill the function arguments with default values.
 
 ![](zdocs/vscode-gosl-01.gif)
 
+Another great thing about VS Code is the IntelliSense. Here, as soon as we start typing "m comma n two-dot equal T dot", Code immediately offers Size() as the first option because it matches the preceding code. Fantastic!
+
+![](zdocs/vscode-intellisense-01.png)
 
 ### Debian/Ubuntu GNU Linux
 
@@ -35,7 +38,7 @@ Gosl is then linked to `WHEREVER_GO_IS_LOCATED/src/gosl`; e.g. `/usr/local/go/sr
 
 **Download and link Gosl**
 
-Assuming that your go code is located in `$HOME/mygo` and that go has been installed in `$HOME/go`:
+Assuming that you have saved your go code in `$HOME/mygo` and that go has been installed in `$HOME/go`:
 
 ```
 git clone https://github.com/cpmech/gosl.git $HOME/mygo/gosl
@@ -66,7 +69,7 @@ cd $HOME/mygo/gosl
 bash ./all.bash
 ```
 
-Done.
+Done. Installation completed.
 
 ## Documentation
 
@@ -89,12 +92,12 @@ Gosl includes the following *main* packages:
 - [pde](https://github.com/cpmech/gosl/tree/master/pde). Solvers for partial differential equations (FDM, Spectral, FEM)
 - [rnd](https://github.com/cpmech/gosl/tree/master/rnd). Random numbers and probability distributions
 
-(see each sub directory for more information)
+(see each subdirectory for more information)
 
 ## Examples
 
-Pelase check out https://github.com/cpmech/gosl-examples
+Please check out https://github.com/cpmech/gosl-examples
 
 ## Benchmarks
 
-Pelase check out https://github.com/cpmech/gosl-benchmarks
+Please check out https://github.com/cpmech/gosl-benchmarks
