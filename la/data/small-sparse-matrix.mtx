@@ -11,9 +11,6 @@
 % fields: name title A Zeros id date author ed kind
 % kind: blah blah blah
 %-------------------------------------------------------------------------------
-# comments may start with a hashtag too
-# comments may start with a hashtag too
-# comments may start with a hashtag too
 5 5 12
 1 1 +2.0
 2 1 +3.0

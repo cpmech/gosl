@@ -169,7 +169,7 @@ func TestSmat01(tst *testing.T) {
 	}
 
 	var T Triplet
-	T.ReadSmat("data/small-sparse-matrix.mtx", true)
+	T.ReadSmat("data/small-sparse-matrix.mtx")
 	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 1e-17)

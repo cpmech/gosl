@@ -156,36 +156,93 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices .
 // ReadSmat reads a SMAT file or a MatrixMarket file
 //
 //  About the .smat file:
-//   - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
-//   - the first line contains the number of rows, columns, and non-zero entries
+//   - lines starting with the percent mark (%) are ignored (they are comments)
+//   - the first non-comment line contains the number of rows, columns, and non-zero entries
 //   - the following lines contain the indices of row, column, and the non-zero entry
-//   - indices are 0-based, unless oneBasedIndices == true
-//   - with one-based indices, smat is similar to MatrixMarket without the header
 //
-//  Example of .smat file:
+//  Example of .smat file (0-based indices):
 //
-//    # this is a comment
-//    % this is also a comment
-//    m n nnz
-//     i j x
-//      ...
-//     i j x
+//     % this is a comment
+//     % ---------------------
+//     % m n nnz
+//     %  i j x
+//     %   ...
+//     %  i j x
+//     % ---------------------
+//        5  5  8
+//          0     0   1.000e+00
+//          1     1   1.050e+01
+//          2     2   1.500e-02
+//          0     3   6.000e+00
+//          3     1   2.505e+02
+//          3     3  -2.800e+02
+//          3     4   3.332e+01
+//          4     4   1.200e+01
 //
-//  filename -- the name of the .smat file
-//  oneBasedIndices -- if true, 1 is removed from all indices (input like MatrixMarket file format)
-func (o *Triplet) ReadSmat(filename string, oneBasedIndices ...bool) {
+//  Example of MatrixMarket file (1-based indices):
+//
+//     %%MatrixMarket matrix coordinate real general
+//     %=================================================================================
+//     %
+//     % This ASCII file represents a sparse MxN matrix with L
+//     % nonzeros in the following Matrix Market format:
+//     %
+//     % Reference: https://math.nist.gov/MatrixMarket/formats.html
+//     %
+//     % +----------------------------------------------+
+//     % |%%MatrixMarket matrix coordinate real general | <--- header line
+//     % |%                                             | <--+
+//     % |% comments                                    |    |-- 0 or more comment lines
+//     % |%                                             | <--+
+//     % |    M  N  L                                   | <--- rows, columns, entries
+//     % |    I1  J1  A(I1, J1)                         | <--+
+//     % |    I2  J2  A(I2, J2)                         |    |
+//     % |    I3  J3  A(I3, J3)                         |    |-- L lines
+//     % |        . . .                                 |    |
+//     % |    IL JL  A(IL, JL)                          | <--+
+//     % +----------------------------------------------+
+//     %
+//     % Indices are 1-based, i.e. A(1,1) is the first element.
+//     %
+//     %=================================================================================
+//       5  5  8
+//         1     1   1.000e+00
+//         2     2   1.050e+01
+//         3     3   1.500e-02
+//         1     4   6.000e+00
+//         4     2   2.505e+02
+//         4     4  -2.800e+02
+//         4     5   3.332e+01
+//         5     5   1.200e+01
+//
+//  NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
+//
+func (o *Triplet) ReadSmat(filename string) {
+	mirrorBand := false
 	deltaIndex := 0
-	if len(oneBasedIndices) > 0 {
-		if oneBasedIndices[0] {
-			deltaIndex = 1
-		}
-	}
 	initialized := false
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
-		if strings.HasPrefix(line, "%") {
+		if strings.HasPrefix(line, "%%MatrixMarket") {
+			info := strings.Fields(line)
+			if info[1] != "matrix" {
+				chk.Panic("can only read \"matrix\" MatrixMarket at the moment")
+			}
+			if info[2] != "coordinate" {
+				chk.Panic("can only read \"coordinate\" MatrixMarket at the moment")
+			}
+			if info[3] != "real" {
+				chk.Panic("this function only works with \"real\" MatrixMarket files")
+			}
+			if info[4] != "general" && info[4] != "symmetric" && info[4] != "unsymmetric" {
+				chk.Panic("this function only works with \"general\", \"symmetric\" and \"unsymmetric\" MatrixMarket files")
+			}
+			if info[4] == "symmetric" {
+				mirrorBand = true
+			}
+			deltaIndex = 1
 			return
 		}
-		if strings.HasPrefix(line, "#") {
+		if strings.HasPrefix(line, "%") {
 			return
 		}
 		r := strings.Fields(line)
@@ -194,6 +251,9 @@ func (o *Triplet) ReadSmat(filename string, oneBasedIndices ...bool) {
 				chk.Panic("the number of columns in the line with dimensions must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
+			if mirrorBand {
+				nnz = 2 * nnz // assuming that the diagonal is all-zeros (for safety)
+			}
 			o.Init(m, n, nnz)
 			initialized = true
 		} else {
@@ -202,6 +262,9 @@ func (o *Triplet) ReadSmat(filename string, oneBasedIndices ...bool) {
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
 			o.Put(i-deltaIndex, j-deltaIndex, x)
+			if mirrorBand && i != j {
+				o.Put(j-deltaIndex, i-deltaIndex, x)
+			}
 		}
 		return
 	})
