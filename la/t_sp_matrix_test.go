@@ -158,7 +158,7 @@ func TestSpMatrix02(tst *testing.T) {
 func TestSmat01(tst *testing.T) {
 
 	// verbose()
-	chk.PrintTitle("Smat01. read/write .smat file")
+	chk.PrintTitle("Smat01. read/write .smat file (unsymmetric)")
 
 	correct := [][]float64{
 		{2, 3, 0, 0, 0},
@@ -175,6 +175,29 @@ func TestSmat01(tst *testing.T) {
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 1e-17)
 	var S Triplet
 	S.ReadSmat("/tmp/gosl/la/small-test-matrix.smat")
+	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
+}
+
+func TestSmat02(tst *testing.T) {
+
+	// verbose()
+	chk.PrintTitle("Smat02. read/write .smat file (symmetric)")
+
+	correct := [][]float64{
+		{+2, +3, +0, +0, +0},
+		{+3, +0, -1, +0, +6},
+		{+0, -1, +0, +2, +0},
+		{+0, +0, +2, +3, +0},
+		{+0, +6, +0, +0, +1},
+	}
+
+	var T Triplet
+	T.ReadSmat("data/small-sparse-matrix-sym.mtx")
+	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
+
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-sym", 1e-17)
+	var S Triplet
+	S.ReadSmat("/tmp/gosl/la/small-test-matrix-sym.smat")
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
 }
 
