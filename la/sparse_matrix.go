@@ -249,15 +249,15 @@ func (o *Triplet) ReadSmat(filename string) {
 //  fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
 //  tol -- tolerance to ignore near-zero values. only save values such that |value| > tol
 //  format -- format for real numbers; e.g. "%23.15g" [default is "%g"]
-//  enforceSymmetry -- ignore upper band of the matrix and save only the lower band + main diagonal
 //  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+//  enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
 //
 //  NOTE: This function converts the Triplet into CCMatrix (returned)
 //        because there may be repeated entries (added)
 //
-func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, format string, enforceSymmetry, matrixMarket bool) (cmat *CCMatrix) {
+func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry bool) (cmat *CCMatrix) {
 	cmat = o.ToMatrix(nil)
-	cmat.WriteSmat(dirout, fnkey, tol, format, enforceSymmetry, matrixMarket)
+	cmat.WriteSmat(dirout, fnkey, tol, format, matrixMarket, enforceSymmetry)
 	return
 }
 
@@ -271,10 +271,10 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, format string, en
 //  fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
 //  tol -- tolerance to ignore near-zero values. only save values such that |value| > tol
 //  format -- format for real numbers; e.g. "%23.15g" [default is "%g"]
-//  enforceSymmetry -- ignore upper band of the matrix and save only the lower band + main diagonal
 //  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+//  enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
 //
-func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, format string, enforceSymmetry, matrixMarket bool) {
+func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry bool) {
 	fmtVal := "%g"
 	if format != "" {
 		fmtVal = format
@@ -289,7 +289,13 @@ func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, format string, e
 	for j := 0; j < o.n; j++ {
 		for p := o.p[j]; p < o.p[j+1]; p++ {
 			if math.Abs(o.x[p]) > tol {
-				io.Ff(&bfb, fmtStr, o.i[p]+deltaIndex, j+deltaIndex, o.x[p])
+				row, col := o.i[p]+deltaIndex, j+deltaIndex
+				if matrixMarket && enforceSymmetry {
+					if col > row {
+						continue
+					}
+				}
+				io.Ff(&bfb, fmtStr, row, col, o.x[p])
 				nnz++
 			}
 		}
@@ -530,16 +536,16 @@ func (o *TripletC) ReadSmat(filename string) {
 //  fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
 //  tol -- tolerance to ignore near-zero values. only save values such that |real(value)| > tol OR |imag(value)| > tol
 //  format -- format for numbers; e.g. "%23.15g" [default is "%g"]
-//  enforceSymmetry -- ignore upper band of the matrix and save only the lower band + main diagonal
 //  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+//  enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
 //  normalize -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
 //
 //  NOTE: This function converts the Triplet into CCMatrixC (returned)
 //        because there may be repeated entries (added)
 //
-func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, enforceSymmetry, matrixMarket, normalize bool) (cmat *CCMatrixC) {
+func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry, normalize bool) (cmat *CCMatrixC) {
 	cmat = o.ToMatrix(nil)
-	cmat.WriteSmat(dirout, fnkey, tol, format, enforceSymmetry, matrixMarket, normalize)
+	cmat.WriteSmat(dirout, fnkey, tol, format, matrixMarket, enforceSymmetry, normalize)
 	return
 }
 
@@ -553,11 +559,11 @@ func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, e
 //  fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
 //  tol -- tolerance to ignore near-zero values. only save values such that |real(value)| > tol OR |imag(value)| > tol
 //  format -- format for numbers; e.g. "%23.15g" [default is "%g"]
-//  enforceSymmetry -- ignore upper band of the matrix and save only the lower band + main diagonal
 //  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+//  enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
 //  normalize -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
 //
-func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, enforceSymmetry, matrixMarket, normalize bool) {
+func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry, normalize bool) {
 	fmtVal := "%g"
 	if format != "" {
 		fmtVal = format
@@ -577,10 +583,16 @@ func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, 
 	for j := 0; j < o.n; j++ {
 		for p := o.p[j]; p < o.p[j+1]; p++ {
 			if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
+				row, col := o.i[p]+deltaIndex, j+deltaIndex
+				if matrixMarket && enforceSymmetry {
+					if col > row {
+						continue
+					}
+				}
 				if normalize {
-					io.Ff(&bfb, fmtStr, o.i[p]+deltaIndex, j+deltaIndex, cmplx.Abs(o.x[p]))
+					io.Ff(&bfb, fmtStr, row, col, cmplx.Abs(o.x[p]))
 				} else {
-					io.Ff(&bfb, fmtStr, o.i[p]+deltaIndex, j+deltaIndex, real(o.x[p]), imag(o.x[p]))
+					io.Ff(&bfb, fmtStr, row, col, real(o.x[p]), imag(o.x[p]))
 				}
 				nnz++
 			}

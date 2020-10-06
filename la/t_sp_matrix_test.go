@@ -168,14 +168,38 @@ func TestSmat01(tst *testing.T) {
 		{0, 4, 2, 0, 1},
 	}
 
+	// read MatrixMarket and check
 	var T Triplet
 	T.ReadSmat("data/small-sparse-matrix.mtx")
 	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 
-	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 1e-17, "", false, false)
+	// write SMAT and check
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 0, "", false, false)
 	var S Triplet
 	S.ReadSmat("/tmp/gosl/la/small-test-matrix.smat")
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
+
+	// write MatrixMarket and check
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 0, "", true, false)
+	var M Triplet
+	M.ReadSmat("/tmp/gosl/la/small-test-matrix.mtx")
+	chk.Deep2(tst, "M", 1e-17, M.ToDense().GetDeep2(), correct)
+	reference := `%%MatrixMarket matrix coordinate real general
+5 5 12
+1 1 2
+2 1 3
+1 2 3
+3 2 -1
+5 2 4
+2 3 4
+3 3 -3
+4 3 1
+5 3 2
+3 4 2
+2 5 6
+5 5 1
+`
+	chk.String(tst, string(io.ReadFile("/tmp/gosl/la/small-test-matrix.mtx")), reference)
 }
 
 func TestSmat02(tst *testing.T) {
@@ -191,14 +215,33 @@ func TestSmat02(tst *testing.T) {
 		{+0, +6, +0, +0, +1},
 	}
 
+	// read MatrixMarket and check
 	var T Triplet
 	T.ReadSmat("data/small-sparse-matrix-sym.mtx")
 	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 
+	// write SMAT and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-sym", 1e-17, "", false, false)
 	var S Triplet
 	S.ReadSmat("/tmp/gosl/la/small-test-matrix-sym.smat")
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
+
+	// write MatrixMarket and check
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-sym", 0, "", true, true)
+	var M Triplet
+	M.ReadSmat("/tmp/gosl/la/small-test-matrix-sym.mtx")
+	chk.Deep2(tst, "M", 1e-17, M.ToDense().GetDeep2(), correct)
+	reference := `%%MatrixMarket matrix coordinate real symmetric
+5 5 7
+1 1 2
+2 1 3
+3 2 -1
+5 2 6
+4 3 2
+4 4 3
+5 5 1
+`
+	chk.String(tst, string(io.ReadFile("/tmp/gosl/la/small-test-matrix-sym.mtx")), reference)
 }
 
 func TestSmat03(tst *testing.T) {
@@ -214,14 +257,39 @@ func TestSmat03(tst *testing.T) {
 		{0, 4, 2, 0 + 4i, 1 - 5i},
 	}
 
+	// read MatrixMarket and check
 	var T TripletC
 	T.ReadSmat("data/small-sparse-matrix-complex.mtx")
 	chk.Deep2c(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 
+	// write SMAT and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex", 1e-17, "", false, false, false)
 	var S TripletC
 	S.ReadSmat("/tmp/gosl/la/small-test-matrix-complex.smat")
 	chk.Deep2c(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
+
+	// write MatrixMarket and check
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex", 0, "", true, false, false)
+	var M TripletC
+	M.ReadSmat("/tmp/gosl/la/small-test-matrix-complex.mtx")
+	chk.Deep2c(tst, "M", 1e-17, M.ToDense().GetDeep2(), correct)
+	reference := `%%MatrixMarket matrix coordinate complex general
+5 5 13
+1 1 2 0
+2 1 3 1
+1 2 3 0
+3 2 -1 2
+5 2 4 0
+2 3 4 0
+3 3 -3 0
+4 3 1 -3
+5 3 2 0
+3 4 2 0
+5 4 0 4
+2 5 6 0
+5 5 1 -5
+`
+	chk.String(tst, string(io.ReadFile("/tmp/gosl/la/small-test-matrix-complex.mtx")), reference)
 }
 
 func TestSmat04(tst *testing.T) {
@@ -237,14 +305,33 @@ func TestSmat04(tst *testing.T) {
 		{+0, +6 - 1i, +0, +0, +1},
 	}
 
+	// read MatrixMarket and check
 	var T TripletC
 	T.ReadSmat("data/small-sparse-matrix-complex-sym.mtx")
 	chk.Deep2c(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 
+	// write SMAT and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex-sym", 1e-17, "", false, false, false)
 	var S TripletC
 	S.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym.smat")
 	chk.Deep2c(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
+
+	// write MatrixMarket and check
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex-sym", 0, "", true, true, false)
+	var M TripletC
+	M.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym.mtx")
+	chk.Deep2c(tst, "M", 1e-17, M.ToDense().GetDeep2(), correct)
+	reference := `%%MatrixMarket matrix coordinate complex symmetric
+5 5 7
+1 1 2 0
+2 1 3 1
+3 2 -1 0
+5 2 6 -1
+4 3 2 2
+4 4 3 0
+5 5 1 0
+`
+	chk.String(tst, string(io.ReadFile("/tmp/gosl/la/small-test-matrix-complex-sym.mtx")), reference)
 }
 
 func TestTripletInfo01(tst *testing.T) {
