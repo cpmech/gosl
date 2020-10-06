@@ -200,7 +200,7 @@ func (o *Triplet) ReadSmat(filename string) {
 				chk.Panic("can only read \"coordinate\" MatrixMarket at the moment")
 			}
 			if info[3] != "real" {
-				chk.Panic("this function only works with \"real\" MatrixMarket files")
+				chk.Panic("the given MatrixMarket file must have the word \"real\" in the header")
 			}
 			if info[4] != "general" && info[4] != "symmetric" && info[4] != "unsymmetric" {
 				chk.Panic("this function only works with \"general\", \"symmetric\" and \"unsymmetric\" MatrixMarket files")
@@ -481,7 +481,7 @@ func (o *TripletC) ReadSmat(filename string) {
 				chk.Panic("can only read \"coordinate\" MatrixMarket at the moment")
 			}
 			if info[3] != "complex" {
-				chk.Panic("this function only works with \"complex\" MatrixMarket files")
+				chk.Panic("the given MatrixMarket file must have the word \"complex\" in the header")
 			}
 			if info[4] != "general" && info[4] != "symmetric" && info[4] != "unsymmetric" {
 				chk.Panic("this function only works with \"general\", \"symmetric\" and \"unsymmetric\" MatrixMarket files")

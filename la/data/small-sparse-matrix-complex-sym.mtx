@@ -1,0 +1,21 @@
+%%MatrixMarket matrix coordinate complex symmetric
+%-------------------------------------------------------------------------------
+% UF Sparse Matrix Collection, Tim Davis
+% http://www.cise.ufl.edu/research/sparse/matrices/GHS_psdef/inline_1
+% name: gosl/small_sparse_matrix
+% [sample matrix]
+% id: 0000
+% date: 2020
+% author: Gosl
+% ed: Gosl
+% fields: name title A Zeros id date author ed kind
+% kind: blah blah blah
+%-------------------------------------------------------------------------------
+5 5 7
+  1 1 +2  0
+  2 1 +3  1
+  3 2 -1  0
+  4 3 +2  2
+  4 4 +3  0
+  5 2 +6 -1
+  5 5 +1  0

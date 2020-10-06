@@ -201,6 +201,52 @@ func TestSmat02(tst *testing.T) {
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
 }
 
+func TestSmat03(tst *testing.T) {
+
+	// verbose()
+	chk.PrintTitle("Smat03. read/write .smat file (complex/unsymmetric)")
+
+	correct := [][]complex128{
+		{2, 3, 0, 0, 0},
+		{3 + 1i, 0, 4, 0, 6},
+		{0, -1 + 2i, -3, 2, 0},
+		{0, 0, 1 - 3i, 0, 0},
+		{0, 4, 2, 0 + 4i, 1 - 5i},
+	}
+
+	var T TripletC
+	T.ReadSmat("data/small-sparse-matrix-complex.mtx")
+	chk.Deep2c(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
+
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex", 1e-17, "", false, false, false)
+	var S TripletC
+	S.ReadSmat("/tmp/gosl/la/small-test-matrix-complex.smat")
+	chk.Deep2c(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
+}
+
+func TestSmat04(tst *testing.T) {
+
+	// verbose()
+	chk.PrintTitle("Smat04. read/write .smat file (complex/symmetric)")
+
+	correct := [][]complex128{
+		{+2, +3 + 1i, +0, +0, +0},
+		{+3 + 1i, +0, -1, +0, +6 - 1i},
+		{+0, -1, +0, +2 + 2i, +0},
+		{+0, +0, +2 + 2i, +3, +0},
+		{+0, +6 - 1i, +0, +0, +1},
+	}
+
+	var T TripletC
+	T.ReadSmat("data/small-sparse-matrix-complex-sym.mtx")
+	chk.Deep2c(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
+
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex-sym", 1e-17, "", false, false, false)
+	var S TripletC
+	S.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym.smat")
+	chk.Deep2c(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
+}
+
 func TestTripletInfo01(tst *testing.T) {
 
 	// verbose()
