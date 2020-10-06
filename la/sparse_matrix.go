@@ -301,7 +301,7 @@ func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, format string, e
 		if enforceSymmetry {
 			kind = "symmetric"
 		}
-		header := "%%MatrixMarket matrix coordinate real " + kind + "\n"
+		header := "%%%%MatrixMarket matrix coordinate real " + kind + "\n"
 		io.Ff(&bfa, header)
 	}
 	io.Ff(&bfa, "%d %d %d\n", o.m, o.n, nnz)
@@ -598,7 +598,7 @@ func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, 
 		if enforceSymmetry {
 			kind = "symmetric"
 		}
-		header := "%%MatrixMarket matrix coordinate " + dataType + " " + kind + "\n"
+		header := "%%%%MatrixMarket matrix coordinate " + dataType + " " + kind + "\n"
 		io.Ff(&bfa, header)
 	}
 	io.Ff(&bfa, "%d %d %d\n", o.m, o.n, nnz)
