@@ -50,7 +50,7 @@ func TestTriplet01(tst *testing.T) {
 
 func TestTriplet02(tst *testing.T) {
 
-	//verbose()
+	// verbose()
 	chk.PrintTitle("SpTriplet02. (complex version)")
 
 	//   0    2+2i 0    0
@@ -70,17 +70,17 @@ func TestTriplet02(tst *testing.T) {
 	chk.String(tst, l, " 0+0i  2+2i  0+0i  0+0i\n 1+1i  0+0i  4+4i  0+0i\n 0+0i  0+0i  0+0i  5-5i\n 0+0i  3-3i  0+0i  6+6i")
 
 	am := a.ToMatrix(nil)
-	am.WriteSmat("/tmp/gosl/la", "triplet02", 0)
+	am.WriteSmat("/tmp/gosl/la", "triplet02", 0, "%23.15e", false, false, false)
 	d := io.ReadFile("/tmp/gosl/la/triplet02.smat")
 	io.Pforan("d = %v\n", string(d))
-	smat1 := "4  4  6\n  1  0    1.000000000000000e+00  +1.000000000000000e+00\n  0  1    2.000000000000000e+00  +2.000000000000000e+00\n  3  1    3.000000000000000e+00  -3.000000000000000e+00\n  1  2    4.000000000000000e+00  +4.000000000000000e+00\n  2  3    5.000000000000000e+00  -5.000000000000000e+00\n  3  3    6.000000000000000e+00  +6.000000000000000e+00\n"
+	smat1 := "4 4 6\n1 0   1.000000000000000e+00   1.000000000000000e+00\n0 1   2.000000000000000e+00   2.000000000000000e+00\n3 1   3.000000000000000e+00  -3.000000000000000e+00\n1 2   4.000000000000000e+00   4.000000000000000e+00\n2 3   5.000000000000000e+00  -5.000000000000000e+00\n3 3   6.000000000000000e+00   6.000000000000000e+00\n"
 	chk.String(tst, string(d), smat1)
 
 	b := new(TripletC)
 	b.ReadSmat("/tmp/gosl/la/triplet02.smat")
 	chk.Deep2c(tst, "b=a", 1e-17, a.ToDense().GetDeep2(), b.ToDense().GetDeep2())
 
-	am.WriteSmatAbs("/tmp/gosl/la", "triplet02b", 0)
+	am.WriteSmat("/tmp/gosl/la", "triplet02b", 0, "", false, false, true)
 	c := new(Triplet)
 	c.ReadSmat("/tmp/gosl/la/triplet02b.smat")
 	chk.Deep2(tst, "b=a", 1e-14, c.ToDense().GetDeep2(), [][]float64{
@@ -90,7 +90,7 @@ func TestTriplet02(tst *testing.T) {
 		{0, math.Sqrt(18), 0, math.Sqrt(72)},
 	})
 
-	a.WriteSmat("/tmp/gosl/la", "triplet02b", 0)
+	a.WriteSmat("/tmp/gosl/la", "triplet02b", 0, "%23.15e", false, false, false)
 	db := io.ReadFile("/tmp/gosl/la/triplet02b.smat")
 	chk.String(tst, string(db), smat1)
 }

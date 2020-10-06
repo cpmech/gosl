@@ -403,89 +403,206 @@ func (o *TripletC) ToDense() (a *MatrixC) {
 	return
 }
 
-// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+// ReadSmat reads a SMAT file or a MatrixMarket file
 //
-//  NOTE: this method will create a CCMatrixC first because
-//        duplicates must be added before saving the file
+//  About the .smat file:
+//   - lines starting with the percent mark (%) are ignored (they are comments)
+//   - the first non-comment line contains the number of rows, columns, and non-zero entries
+//   - the following lines contain the indices of row, column, and the non-zero entry
 //
-//  dirout -- directory for output. will be created
-//  fnkey  -- filename key (filename without extension). ".smat" will be added
-//  tol    -- tolerance to skip zero values
-func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrixC) {
-	cmat = o.ToMatrix(nil)
-	cmat.WriteSmat(dirout, fnkey, tol)
-	return
-}
-
-// ReadSmat reads ".smat" file
+//  Example of .smat file (0-based indices):
 //
-//    m n nnz
-//     i j xReal xImag
-//          ...
-//     i j xReal xImag
+//     % this is a comment
+//     % ---------------------
+//     % m n nnz
+//     %  i j real(x) imag(x)
+//     %   ...
+//     %  i j real(x) imag(x)
+//     % ---------------------
+//        5  5  8
+//          0     0   1.000e+00  0.0
+//          1     1   1.050e+01  0.0
+//          2     2   1.500e-02  0.1
+//          0     3   6.000e+00  0.1
+//          3     1   2.505e+02  0.0
+//          3     3  -2.800e+02  0.0
+//          3     4   3.332e+01  0.2
+//          4     4   1.200e+01  0.2
+//
+//  Example of MatrixMarket file (1-based indices):
+//
+//     %%MatrixMarket matrix coordinate complex general
+//     %=================================================================================
+//     %
+//     % This ASCII file represents a sparse MxN matrix with L
+//     % nonzeros in the following Matrix Market format:
+//     %
+//     % Reference: https://math.nist.gov/MatrixMarket/formats.html
+//     %
+//     % +-------------------------------------------------+
+//     % |%%MatrixMarket matrix coordinate complex general | <--- header line
+//     % |%                                                | <--+
+//     % |% comments                                       |    |-- 0 or more comment lines
+//     % |%                                                | <--+
+//     % |    M  N  L                                      | <--- rows, columns, entries
+//     % |    I1  J1  real(A(I1, J1)) imag(A(I1, J1))      | <--+
+//     % |    I2  J2  real(A(I2, J2)) imag(A(I2, J2))      |    |
+//     % |    I3  J3  real(A(I3, J3)) imag(A(I3, J3))      |    |-- L lines
+//     % |        . . .                                    |    |
+//     % |    IL JL  real(A(IL, JL)) imag(A(IL, JL))       | <--+
+//     % +-------------------------------------------------+
+//     %
+//     % Indices are 1-based, i.e. A(1,1) is the first element.
+//     %
+//     %=================================================================================
+//       5  5  8
+//         1     1   1.000e+00  0.0
+//         2     2   1.050e+01  0.0
+//         3     3   1.500e-02  0.1
+//         1     4   6.000e+00  0.1
+//         4     2   2.505e+02  0.0
+//         4     4  -2.800e+02  0.0
+//         4     5   3.332e+01  0.2
+//         5     5   1.200e+01  0.2
+//
+//  NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
 //
 func (o *TripletC) ReadSmat(filename string) {
+	mirrorBand := false
+	deltaIndex := 0
+	initialized := false
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
+		if strings.HasPrefix(line, "%%MatrixMarket") {
+			info := strings.Fields(line)
+			if info[1] != "matrix" {
+				chk.Panic("can only read \"matrix\" MatrixMarket at the moment")
+			}
+			if info[2] != "coordinate" {
+				chk.Panic("can only read \"coordinate\" MatrixMarket at the moment")
+			}
+			if info[3] != "complex" {
+				chk.Panic("this function only works with \"complex\" MatrixMarket files")
+			}
+			if info[4] != "general" && info[4] != "symmetric" && info[4] != "unsymmetric" {
+				chk.Panic("this function only works with \"general\", \"symmetric\" and \"unsymmetric\" MatrixMarket files")
+			}
+			if info[4] == "symmetric" {
+				mirrorBand = true
+			}
+			deltaIndex = 1
+			return
+		}
+		if strings.HasPrefix(line, "%") {
+			return
+		}
 		r := strings.Fields(line)
-		if idx == 0 {
+		if !initialized {
 			if len(r) != 3 {
 				chk.Panic("number of columns in header must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
+			if mirrorBand {
+				nnz = 2 * nnz // assuming that the diagonal is all-zeros (for safety)
+			}
 			o.Init(m, n, nnz)
+			initialized = true
 		} else {
 			if len(r) != 4 {
 				chk.Panic("number of columns in data lines must be 4 (i,j,xReal,xImag)\n")
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), complex(io.Atof(r[2]), io.Atof(r[3]))
-			o.Put(i, j, x)
+			o.Put(i-deltaIndex, j-deltaIndex, x)
+			if mirrorBand && i != j {
+				o.Put(j-deltaIndex, i-deltaIndex, x)
+			}
 		}
 		return
 	})
 }
 
-// WriteSmat writes a ".smat" file that can be visualised with vismatrix
+// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
 //
-//  NOTE: CCMatrix must be used to generate the resulting values because
-//        duplicates must be added before saving file
+//   For more information, see:
 //
-//  dirout -- directory for output. will be created
-//  fnkey  -- filename key (filename without extension). ".smat" will be added
-//  tol    -- tolerance to skip zero values
-func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64) {
-	var bfa, bfb bytes.Buffer
-	var nnz int
-	for j := 0; j < o.n; j++ {
-		for p := o.p[j]; p < o.p[j+1]; p++ {
-			if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
-				io.Ff(&bfb, "  %d  %d  %23.15e %+23.15e\n", o.i[p], j, real(o.x[p]), imag(o.x[p]))
-				nnz++
-			}
-		}
-	}
-	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
-	io.WriteFileVD(dirout, fnkey+".smat", &bfa, &bfb)
+//           func (o *TripletC) ReadSmat()
+//
+//  dirout -- directory (to be created if not empty) where the file is saved
+//  fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
+//  tol -- tolerance to ignore near-zero values. only save values such that |real(value)| > tol OR |imag(value)| > tol
+//  format -- format for numbers; e.g. "%23.15g" [default is "%g"]
+//  enforceSymmetry -- ignore upper band of the matrix and save only the lower band + main diagonal
+//  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+//  normalize -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
+//
+//  NOTE: This function converts the Triplet into CCMatrixC (returned)
+//        because there may be repeated entries (added)
+//
+func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, enforceSymmetry, matrixMarket, normalize bool) (cmat *CCMatrixC) {
+	cmat = o.ToMatrix(nil)
+	cmat.WriteSmat(dirout, fnkey, tol, format, enforceSymmetry, matrixMarket, normalize)
+	return
 }
 
-// WriteSmatAbs writes a ".smat" file that can be visualised with vismatrix (abs(complex) version)
+// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
 //
-//  NOTE: CCMatrix must be used to generate the resulting values because
-//        duplicates must be added before saving file
+//   For more information, see:
 //
-//  tol -- tolerance to skip zero values
-func (o *CCMatrixC) WriteSmatAbs(dirout, fnkey string, tol float64) {
+//           func (o *TripletC) ReadSmat()
+//
+//  dirout -- directory (to be created if not empty) where the file is saved
+//  fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
+//  tol -- tolerance to ignore near-zero values. only save values such that |real(value)| > tol OR |imag(value)| > tol
+//  format -- format for numbers; e.g. "%23.15g" [default is "%g"]
+//  enforceSymmetry -- ignore upper band of the matrix and save only the lower band + main diagonal
+//  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+//  normalize -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
+//
+func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, enforceSymmetry, matrixMarket, normalize bool) {
+	fmtVal := "%g"
+	if format != "" {
+		fmtVal = format
+	}
+	fmtStr := "%d %d " + fmtVal + " " + fmtVal + "\n"
+	deltaIndex := 0
+	if matrixMarket {
+		deltaIndex = 1
+	}
 	var bfa, bfb bytes.Buffer
 	var nnz int
-	for j := 0; j < o.n; j++ {
-		for p := o.p[j]; p < o.p[j+1]; p++ {
-			if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
-				io.Ff(&bfb, "  %d  %d  %23.15e\n", o.i[p], j, cmplx.Abs(o.x[p]))
-				nnz++
+	dataType := "complex"
+	if normalize {
+		dataType = "real"
+		fmtStr = "%d %d " + fmtVal + "\n"
+		for j := 0; j < o.n; j++ {
+			for p := o.p[j]; p < o.p[j+1]; p++ {
+				if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
+					io.Ff(&bfb, fmtStr, o.i[p]+deltaIndex, j+deltaIndex, cmplx.Abs(o.x[p]))
+					nnz++
+				}
+			}
+		}
+	} else {
+		for j := 0; j < o.n; j++ {
+			for p := o.p[j]; p < o.p[j+1]; p++ {
+				if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
+					io.Ff(&bfb, fmtStr, o.i[p]+deltaIndex, j+deltaIndex, real(o.x[p]), imag(o.x[p]))
+					nnz++
+				}
 			}
 		}
 	}
-	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
-	io.WriteFileVD(dirout, fnkey+".smat", &bfa, &bfb)
+	ext := ".smat"
+	if matrixMarket {
+		ext = ".mtx"
+		kind := "general"
+		if enforceSymmetry {
+			kind = "symmetric"
+		}
+		header := "%%MatrixMarket matrix coordinate " + dataType + " " + kind + "\n"
+		io.Ff(&bfa, header)
+	}
+	io.Ff(&bfa, "%d %d %d\n", o.m, o.n, nnz)
+	io.WriteFileVD(dirout, fnkey+ext, &bfa, &bfb)
 }
 
 // ToDense converts a column-compressed matrix (complex) to dense form
