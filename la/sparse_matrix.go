@@ -573,21 +573,16 @@ func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, 
 	if normalize {
 		dataType = "real"
 		fmtStr = "%d %d " + fmtVal + "\n"
-		for j := 0; j < o.n; j++ {
-			for p := o.p[j]; p < o.p[j+1]; p++ {
-				if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
+	}
+	for j := 0; j < o.n; j++ {
+		for p := o.p[j]; p < o.p[j+1]; p++ {
+			if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
+				if normalize {
 					io.Ff(&bfb, fmtStr, o.i[p]+deltaIndex, j+deltaIndex, cmplx.Abs(o.x[p]))
-					nnz++
-				}
-			}
-		}
-	} else {
-		for j := 0; j < o.n; j++ {
-			for p := o.p[j]; p < o.p[j+1]; p++ {
-				if math.Abs(real(o.x[p])) > tol || math.Abs(imag(o.x[p])) > tol {
+				} else {
 					io.Ff(&bfb, fmtStr, o.i[p]+deltaIndex, j+deltaIndex, real(o.x[p]), imag(o.x[p]))
-					nnz++
 				}
+				nnz++
 			}
 		}
 	}
