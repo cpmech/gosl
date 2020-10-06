@@ -538,14 +538,14 @@ func (o *TripletC) ReadSmat(filename string) {
 //  format -- format for numbers; e.g. "%23.15g" [default is "%g"]
 //  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
 //  enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
-//  normalize -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
+//  norm -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
 //
 //  NOTE: This function converts the Triplet into CCMatrixC (returned)
 //        because there may be repeated entries (added)
 //
-func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry, normalize bool) (cmat *CCMatrixC) {
+func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry, norm bool) (cmat *CCMatrixC) {
 	cmat = o.ToMatrix(nil)
-	cmat.WriteSmat(dirout, fnkey, tol, format, matrixMarket, enforceSymmetry, normalize)
+	cmat.WriteSmat(dirout, fnkey, tol, format, matrixMarket, enforceSymmetry, norm)
 	return
 }
 
@@ -561,9 +561,9 @@ func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, m
 //  format -- format for numbers; e.g. "%23.15g" [default is "%g"]
 //  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
 //  enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
-//  normalize -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
+//  norm -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
 //
-func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry, normalize bool) {
+func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry, norm bool) {
 	fmtVal := "%g"
 	if format != "" {
 		fmtVal = format
@@ -576,7 +576,7 @@ func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, 
 	var bfa, bfb bytes.Buffer
 	var nnz int
 	dataType := "complex"
-	if normalize {
+	if norm {
 		dataType = "real"
 		fmtStr = "%d %d " + fmtVal + "\n"
 	}
@@ -589,7 +589,7 @@ func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, 
 						continue
 					}
 				}
-				if normalize {
+				if norm {
 					io.Ff(&bfb, fmtStr, row, col, cmplx.Abs(o.x[p]))
 				} else {
 					io.Ff(&bfb, fmtStr, row, col, real(o.x[p]), imag(o.x[p]))

@@ -332,6 +332,20 @@ func TestSmat04(tst *testing.T) {
 5 5 1 0
 `
 	chk.String(tst, string(io.ReadFile("/tmp/gosl/la/small-test-matrix-complex-sym.mtx")), reference)
+
+	correctNorm := [][]float64{
+		{2, math.Sqrt(10), 0, 0, 0},
+		{math.Sqrt(10), 0, 1, 0, math.Sqrt(37)},
+		{0, 1, 0, math.Sqrt(8), 0},
+		{0, 0, math.Sqrt(8), 3, 0},
+		{0, math.Sqrt(37), 0, 0, 1},
+	}
+
+	// write normalized MatrixMarket and check
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex-sym-norm", 0, "", true, true, true)
+	var N Triplet
+	N.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym-norm.mtx")
+	chk.Deep2(tst, "N", 1e-14, N.ToDense().GetDeep2(), correctNorm)
 }
 
 func TestTripletInfo01(tst *testing.T) {
