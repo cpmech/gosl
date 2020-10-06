@@ -14,7 +14,7 @@ import (
 
 func TestTriplet01(tst *testing.T) {
 
-	//verbose()
+	// verbose()
 	chk.PrintTitle("SpTriplet01")
 
 	//   0 2 0 0
@@ -33,17 +33,17 @@ func TestTriplet01(tst *testing.T) {
 	io.Pf("%v\n", l)
 	chk.String(tst, l, " 0 2 0 0\n 1 0 4 0\n 0 0 0 5\n 0 3 0 6")
 
-	a.ToMatrix(nil).WriteSmat("/tmp/gosl/la", "triplet01", 0)
+	a.ToMatrix(nil).WriteSmat("/tmp/gosl/la", "triplet01", 0, "%23.15e", false, false)
 	d := io.ReadFile("/tmp/gosl/la/triplet01.smat")
 	io.Pforan("d = %v\n", string(d))
-	smat1 := "4  4  6\n  1  0    1.000000000000000e+00\n  0  1    2.000000000000000e+00\n  3  1    3.000000000000000e+00\n  1  2    4.000000000000000e+00\n  2  3    5.000000000000000e+00\n  3  3    6.000000000000000e+00\n"
+	smat1 := "4 4 6\n1 0   1.000000000000000e+00\n0 1   2.000000000000000e+00\n3 1   3.000000000000000e+00\n1 2   4.000000000000000e+00\n2 3   5.000000000000000e+00\n3 3   6.000000000000000e+00\n"
 	chk.String(tst, string(d), smat1)
 
 	b := new(Triplet)
 	b.ReadSmat("/tmp/gosl/la/triplet01.smat")
 	chk.Deep2(tst, "b=a", 1e-17, a.ToDense().GetDeep2(), b.ToDense().GetDeep2())
 
-	a.WriteSmat("/tmp/gosl/la", "triplet01b", 0)
+	a.WriteSmat("/tmp/gosl/la", "triplet01b", 0, "%23.15e", false, false)
 	db := io.ReadFile("/tmp/gosl/la/triplet01b.smat")
 	chk.String(tst, string(db), smat1)
 }
@@ -172,7 +172,7 @@ func TestSmat01(tst *testing.T) {
 	T.ReadSmat("data/small-sparse-matrix.mtx")
 	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 
-	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 1e-17)
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 1e-17, "", false, false)
 	var S Triplet
 	S.ReadSmat("/tmp/gosl/la/small-test-matrix.smat")
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
@@ -195,7 +195,7 @@ func TestSmat02(tst *testing.T) {
 	T.ReadSmat("data/small-sparse-matrix-sym.mtx")
 	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 
-	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-sym", 1e-17)
+	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-sym", 1e-17, "", false, false)
 	var S Triplet
 	S.ReadSmat("/tmp/gosl/la/small-test-matrix-sym.smat")
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)

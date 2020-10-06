@@ -122,18 +122,6 @@ func (o *Triplet) ToDense() (a *Matrix) {
 	return
 }
 
-// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
-//
-//   For more information, see:
-//
-//           func (o *Triplet) ReadSmat()
-//
-func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices ...bool) (cmat *CCMatrix) {
-	cmat = o.ToMatrix(nil)
-	cmat.WriteSmat(dirout, fnkey, tol, oneBasedIndices...)
-	return
-}
-
 // ReadSmat reads a SMAT file or a MatrixMarket file
 //
 //  About the .smat file:
@@ -257,25 +245,67 @@ func (o *Triplet) ReadSmat(filename string) {
 //
 //           func (o *Triplet) ReadSmat()
 //
-func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices ...bool) {
+//  dirout -- directory (to be created if not empty) where the file is saved
+//  fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
+//  tol -- tolerance to ignore near-zero values. only save values such that |value| > tol
+//  format -- format for real numbers; e.g. "%23.15g" [default is "%g"]
+//  enforceSymmetry -- ignore upper band of the matrix and save only the lower band + main diagonal
+//  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+//
+//  NOTE: This function converts the Triplet into CCMatrix (returned)
+//        because there may be repeated entries (added)
+//
+func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, format string, enforceSymmetry, matrixMarket bool) (cmat *CCMatrix) {
+	cmat = o.ToMatrix(nil)
+	cmat.WriteSmat(dirout, fnkey, tol, format, enforceSymmetry, matrixMarket)
+	return
+}
+
+// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
+//
+//   For more information, see:
+//
+//           func (o *Triplet) ReadSmat()
+//
+//  dirout -- directory (to be created if not empty) where the file is saved
+//  fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
+//  tol -- tolerance to ignore near-zero values. only save values such that |value| > tol
+//  format -- format for real numbers; e.g. "%23.15g" [default is "%g"]
+//  enforceSymmetry -- ignore upper band of the matrix and save only the lower band + main diagonal
+//  matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+//
+func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, format string, enforceSymmetry, matrixMarket bool) {
+	fmtVal := "%g"
+	if format != "" {
+		fmtVal = format
+	}
+	fmtStr := "%d %d " + fmtVal + "\n"
 	deltaIndex := 0
-	if len(oneBasedIndices) > 0 {
-		if oneBasedIndices[0] {
-			deltaIndex = 1
-		}
+	if matrixMarket {
+		deltaIndex = 1
 	}
 	var bfa, bfb bytes.Buffer
 	var nnz int
 	for j := 0; j < o.n; j++ {
 		for p := o.p[j]; p < o.p[j+1]; p++ {
 			if math.Abs(o.x[p]) > tol {
-				io.Ff(&bfb, "  %d  %d  %23.15e\n", o.i[p]+deltaIndex, j+deltaIndex, o.x[p])
+				io.Ff(&bfb, fmtStr, o.i[p]+deltaIndex, j+deltaIndex, o.x[p])
 				nnz++
 			}
 		}
 	}
-	io.Ff(&bfa, "%d  %d  %d\n", o.m, o.n, nnz)
-	io.WriteFileVD(dirout, fnkey+".smat", &bfa, &bfb)
+	ext := ".smat"
+	if matrixMarket {
+		ext = ".mtx"
+		kind := "general"
+		if enforceSymmetry {
+			kind = "symmetric"
+		}
+		header := "%%MatrixMarket matrix coordinate real " + kind + "\n"
+		io.Ff(&bfa, header)
+	}
+	io.Ff(&bfa, "%d %d %d\n", o.m, o.n, nnz)
+	io.WriteFileVD(dirout, fnkey+ext, &bfa, &bfb)
 }
 
 // ToDense converts a column-compressed matrix to dense form
