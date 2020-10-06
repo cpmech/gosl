@@ -595,33 +595,20 @@ func (o *CCMatrix) Set(m, n int, Ap, Ai []int, Ax []float64)
 func (o *CCMatrix) ToDense() (res *Matrix)
     ToDense converts a column-compressed matrix to dense form
 
-func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices ...bool)
+func (o *CCMatrix) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry bool)
     WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a
     MatrixMarket file
 
-        About the .smat file:
-         - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
-         - the first line contains the number of rows, columns, and non-zero entries
-         - the following lines contain the indices of row, column, and the non-zero entry
-         - indices are 0-based, unless oneBasedIndices == true
-         - with one-based indices, smat is similar to MatrixMarket without the header
+         For more information, see:
 
-        Example of .smat file:
+                 func (o *Triplet) ReadSmat()
 
-          # this is a comment
-          % this is also a comment
-          m n nnz
-           i j x
-            ...
-           i j x
-
-        NOTE: CCMatrix must be used to generate the resulting values because
-              duplicates must be added before saving file
-
-        dirout -- directory for output. will be created
-        fnkey  -- filename key (filename without extension). ".smat" will be added
-        tol    -- tolerance to skip zero values
-        oneBasedIndices -- if true, 1 is added to all indices (like MatrixMarket file format)
+        dirout -- directory (to be created if not empty) where the file is saved
+        fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
+        tol -- tolerance to ignore near-zero values. only save values such that |value| > tol
+        format -- format for real numbers; e.g. "%23.15g" [default is "%g"]
+        matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+        enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
 
 type CCMatrixC struct {
 	// Has unexported fields.
@@ -632,24 +619,21 @@ type CCMatrixC struct {
 func (o *CCMatrixC) ToDense() (res *MatrixC)
     ToDense converts a column-compressed matrix (complex) to dense form
 
-func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64)
-    WriteSmat writes a ".smat" file that can be visualised with vismatrix
+func (o *CCMatrixC) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry, norm bool)
+    WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a
+    MatrixMarket file
 
-        NOTE: CCMatrix must be used to generate the resulting values because
-              duplicates must be added before saving file
+         For more information, see:
 
-        dirout -- directory for output. will be created
-        fnkey  -- filename key (filename without extension). ".smat" will be added
-        tol    -- tolerance to skip zero values
+                 func (o *TripletC) ReadSmat()
 
-func (o *CCMatrixC) WriteSmatAbs(dirout, fnkey string, tol float64)
-    WriteSmatAbs writes a ".smat" file that can be visualised with vismatrix
-    (abs(complex) version)
-
-        NOTE: CCMatrix must be used to generate the resulting values because
-              duplicates must be added before saving file
-
-        tol -- tolerance to skip zero values
+        dirout -- directory (to be created if not empty) where the file is saved
+        fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
+        tol -- tolerance to ignore near-zero values. only save values such that |real(value)| > tol OR |imag(value)| > tol
+        format -- format for numbers; e.g. "%23.15g" [default is "%g"]
+        matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+        enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
+        norm -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
 
 type Equations struct {
 
@@ -1268,27 +1252,70 @@ func (o *Triplet) PutMatAndMatT(a *Triplet)
         [a10 a11 a12 ... ... ...] 4      [.  .  .]
         [... ... ... ... ... ...] 5
 
-func (o *Triplet) ReadSmat(filename string, oneBasedIndices ...bool)
+func (o *Triplet) ReadSmat(filename string)
     ReadSmat reads a SMAT file or a MatrixMarket file
 
         About the .smat file:
-         - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
-         - the first line contains the number of rows, columns, and non-zero entries
+         - lines starting with the percent mark (%) are ignored (they are comments)
+         - the first non-comment line contains the number of rows, columns, and non-zero entries
          - the following lines contain the indices of row, column, and the non-zero entry
-         - indices are 0-based, unless oneBasedIndices == true
-         - with one-based indices, smat is similar to MatrixMarket without the header
 
-        Example of .smat file:
+        Example of .smat file (0-based indices):
 
-          # this is a comment
-          % this is also a comment
-          m n nnz
-           i j x
-            ...
-           i j x
+           % this is a comment
+           % ---------------------
+           % m n nnz
+           %  i j x
+           %   ...
+           %  i j x
+           % ---------------------
+              5  5  8
+                0     0   1.000e+00
+                1     1   1.050e+01
+                2     2   1.500e-02
+                0     3   6.000e+00
+                3     1   2.505e+02
+                3     3  -2.800e+02
+                3     4   3.332e+01
+                4     4   1.200e+01
 
-        filename -- the name of the .smat file
-        oneBasedIndices -- if true, 1 is removed from all indices (input like MatrixMarket file format)
+        Example of MatrixMarket file (1-based indices):
+
+           %%MatrixMarket matrix coordinate real general
+           %=================================================================================
+           %
+           % This ASCII file represents a sparse MxN matrix with L
+           % nonzeros in the following Matrix Market format:
+           %
+           % Reference: https://math.nist.gov/MatrixMarket/formats.html
+           %
+           % +----------------------------------------------+
+           % |%%MatrixMarket matrix coordinate real general | <--- header line
+           % |%                                             | <--+
+           % |% comments                                    |    |-- 0 or more comment lines
+           % |%                                             | <--+
+           % |    M  N  L                                   | <--- rows, columns, entries
+           % |    I1  J1  A(I1, J1)                         | <--+
+           % |    I2  J2  A(I2, J2)                         |    |
+           % |    I3  J3  A(I3, J3)                         |    |-- L lines
+           % |        . . .                                 |    |
+           % |    IL JL  A(IL, JL)                          | <--+
+           % +----------------------------------------------+
+           %
+           % Indices are 1-based, i.e. A(1,1) is the first element.
+           %
+           %=================================================================================
+             5  5  8
+               1     1   1.000e+00
+               2     2   1.050e+01
+               3     3   1.500e-02
+               1     4   6.000e+00
+               4     2   2.505e+02
+               4     4  -2.800e+02
+               4     5   3.332e+01
+               5     5   1.200e+01
+
+        NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
 
 func (o *Triplet) Size() (m, n int)
     Size returns the row/column size of the matrix represented by the Triplet
@@ -1310,33 +1337,23 @@ func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix
         OUTPUT:
          the previous "a" matrix or a pointer to a new one
 
-func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, oneBasedIndices ...bool) (cmat *CCMatrix)
+func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry bool) (cmat *CCMatrix)
     WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a
     MatrixMarket file
 
-        About the .smat file:
-         - lines starting with the percent or hashtag mark (% or #) are ignored (they are comments)
-         - the first line contains the number of rows, columns, and non-zero entries
-         - the following lines contain the indices of row, column, and the non-zero entry
-         - indices are 0-based, unless oneBasedIndices == true
-         - with one-based indices, smat is similar to MatrixMarket without the header
+         For more information, see:
 
-        Example of .smat file:
+                 func (o *Triplet) ReadSmat()
 
-          # this is a comment
-          % this is also a comment
-          m n nnz
-           i j x
-            ...
-           i j x
+        dirout -- directory (to be created if not empty) where the file is saved
+        fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
+        tol -- tolerance to ignore near-zero values. only save values such that |value| > tol
+        format -- format for real numbers; e.g. "%23.15g" [default is "%g"]
+        matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+        enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
 
-        NOTE: this method will create a CCMatrix first because
-              duplicates must be added before saving the file
-
-        dirout -- directory for output. will be created
-        fnkey  -- filename key (filename without extension). ".smat" will be added
-        tol    -- tolerance to skip zero values
-        oneBasedIndices -- if true, 1 is added to all indices (like MatrixMarket file format)
+        NOTE: This function converts the Triplet into CCMatrix (returned)
+              because there may be repeated entries (added)
 
 type TripletC struct {
 	// Has unexported fields.
@@ -1364,12 +1381,69 @@ func (o *TripletC) Put(i, j int, x complex128)
     matrix
 
 func (o *TripletC) ReadSmat(filename string)
-    ReadSmat reads ".smat" file
+    ReadSmat reads a SMAT file or a MatrixMarket file
 
-        m n nnz
-         i j xReal xImag
-              ...
-         i j xReal xImag
+        About the .smat file:
+         - lines starting with the percent mark (%) are ignored (they are comments)
+         - the first non-comment line contains the number of rows, columns, and non-zero entries
+         - the following lines contain the indices of row, column, and the non-zero entry
+
+        Example of .smat file (0-based indices):
+
+           % this is a comment
+           % ---------------------
+           % m n nnz
+           %  i j real(x) imag(x)
+           %   ...
+           %  i j real(x) imag(x)
+           % ---------------------
+              5  5  8
+                0     0   1.000e+00  0.0
+                1     1   1.050e+01  0.0
+                2     2   1.500e-02  0.1
+                0     3   6.000e+00  0.1
+                3     1   2.505e+02  0.0
+                3     3  -2.800e+02  0.0
+                3     4   3.332e+01  0.2
+                4     4   1.200e+01  0.2
+
+        Example of MatrixMarket file (1-based indices):
+
+           %%MatrixMarket matrix coordinate complex general
+           %=================================================================================
+           %
+           % This ASCII file represents a sparse MxN matrix with L
+           % nonzeros in the following Matrix Market format:
+           %
+           % Reference: https://math.nist.gov/MatrixMarket/formats.html
+           %
+           % +-------------------------------------------------+
+           % |%%MatrixMarket matrix coordinate complex general | <--- header line
+           % |%                                                | <--+
+           % |% comments                                       |    |-- 0 or more comment lines
+           % |%                                                | <--+
+           % |    M  N  L                                      | <--- rows, columns, entries
+           % |    I1  J1  real(A(I1, J1)) imag(A(I1, J1))      | <--+
+           % |    I2  J2  real(A(I2, J2)) imag(A(I2, J2))      |    |
+           % |    I3  J3  real(A(I3, J3)) imag(A(I3, J3))      |    |-- L lines
+           % |        . . .                                    |    |
+           % |    IL JL  real(A(IL, JL)) imag(A(IL, JL))       | <--+
+           % +-------------------------------------------------+
+           %
+           % Indices are 1-based, i.e. A(1,1) is the first element.
+           %
+           %=================================================================================
+             5  5  8
+               1     1   1.000e+00  0.0
+               2     2   1.050e+01  0.0
+               3     3   1.500e-02  0.1
+               1     4   6.000e+00  0.1
+               4     2   2.505e+02  0.0
+               4     4  -2.800e+02  0.0
+               4     5   3.332e+01  0.2
+               5     5   1.200e+01  0.2
+
+        NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
 
 func (o *TripletC) Start()
     Start (re)starts index for inserting items using the Put command
@@ -1388,15 +1462,24 @@ func (t *TripletC) ToMatrix(a *CCMatrixC) *CCMatrixC
         OUTPUT:
          the previous "a" matrix or a pointer to a new one
 
-func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64) (cmat *CCMatrixC)
-    WriteSmat writes a ".smat" file that can be visualised with vismatrix
+func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, matrixMarket, enforceSymmetry, norm bool) (cmat *CCMatrixC)
+    WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a
+    MatrixMarket file
 
-        NOTE: this method will create a CCMatrixC first because
-              duplicates must be added before saving the file
+         For more information, see:
 
-        dirout -- directory for output. will be created
-        fnkey  -- filename key (filename without extension). ".smat" will be added
-        tol    -- tolerance to skip zero values
+                 func (o *TripletC) ReadSmat()
+
+        dirout -- directory (to be created if not empty) where the file is saved
+        fnkey -- filename without extension (we add .smat or .mtx if matrixMarket == true)
+        tol -- tolerance to ignore near-zero values. only save values such that |real(value)| > tol OR |imag(value)| > tol
+        format -- format for numbers; e.g. "%23.15g" [default is "%g"]
+        matrixMarket -- save according to the matrixMarket file format (1-based indices + header)
+        enforceSymmetry -- [MatrixMarket only] ignore upper band of the matrix and save only the lower band + main diagonal
+        norm -- writes a different matrix (real) such that the entries are the abs(entry) [modulus matrix]
+
+        NOTE: This function converts the Triplet into CCMatrixC (returned)
+              because there may be repeated entries (added)
 
 type Umfpack struct {
 	// Has unexported fields.
