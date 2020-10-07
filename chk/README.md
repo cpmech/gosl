@@ -40,6 +40,9 @@ func ArrayC(tst *testing.T, msg string, tol float64, a, b []complex128)
     ArrayC compares two slices of complex nummber. The b slice may be nil
     indicating that all values are zero
 
+func Bool(tst *testing.T, msg string, a, b bool)
+    Bool compares two bools
+
 func Bools(tst *testing.T, msg string, a, b []bool)
     Bools compare two slices of bool. The b slice may be nil indicating that all
     values are false

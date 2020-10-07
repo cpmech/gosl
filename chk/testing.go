@@ -116,6 +116,15 @@ func Int64s(tst *testing.T, msg string, a, b []int64) {
 	PrintOk(msg)
 }
 
+// Bool compares two bools
+func Bool(tst *testing.T, msg string, a, b bool) {
+	if a != b {
+		TstFail(tst, "%s: %v != %v", msg, a, b)
+		return
+	}
+	PrintOk("%s: %v == %v", msg, a, b)
+}
+
 // Bools compare two slices of bool. The b slice may be nil indicating that all values are false
 func Bools(tst *testing.T, msg string, a, b []bool) {
 	if len(a) != len(b) {

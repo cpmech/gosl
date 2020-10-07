@@ -239,6 +239,26 @@ func TestInts02(tst *testing.T) {
 	}
 }
 
+func TestBool(tst *testing.T) {
+
+	// Verbose = true
+	PrintTitle("Bool")
+
+	t1 := new(testing.T)
+	Bool(t1, "x", true, false)
+	if !t1.Failed() {
+		tst.Errorf("t1 should have failed\n")
+		return
+	}
+
+	t2 := new(testing.T)
+	Bool(t2, "x", true, true)
+	if t2.Failed() {
+		tst.Errorf("t2 should NOT have failed\n")
+		return
+	}
+}
+
 func TestBools(tst *testing.T) {
 
 	//Verbose = true
