@@ -186,8 +186,10 @@ func (o *Triplet) ToDense() (a *Matrix) {
 //
 //  NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
 //
-func (o *Triplet) ReadSmat(filename string) {
-	mirrorBand := false
+//  Output:
+//   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
+//
+func (o *Triplet) ReadSmat(filename string) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
@@ -206,7 +208,7 @@ func (o *Triplet) ReadSmat(filename string) {
 				chk.Panic("this function only works with \"general\", \"symmetric\" and \"unsymmetric\" MatrixMarket files")
 			}
 			if info[4] == "symmetric" {
-				mirrorBand = true
+				symmetric = true
 			}
 			deltaIndex = 1
 			return
@@ -220,7 +222,7 @@ func (o *Triplet) ReadSmat(filename string) {
 				chk.Panic("the number of columns in the line with dimensions must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
-			if mirrorBand {
+			if symmetric {
 				nnz = 2 * nnz // assuming that the diagonal is all-zeros (for safety)
 			}
 			o.Init(m, n, nnz)
@@ -231,12 +233,13 @@ func (o *Triplet) ReadSmat(filename string) {
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
 			o.Put(i-deltaIndex, j-deltaIndex, x)
-			if mirrorBand && i != j {
+			if symmetric && i != j {
 				o.Put(j-deltaIndex, i-deltaIndex, x)
 			}
 		}
 		return
 	})
+	return
 }
 
 // WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
@@ -473,8 +476,10 @@ func (o *TripletC) ToDense() (a *MatrixC) {
 //
 //  NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
 //
-func (o *TripletC) ReadSmat(filename string) {
-	mirrorBand := false
+//  Output:
+//   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
+//
+func (o *TripletC) ReadSmat(filename string) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
@@ -493,7 +498,7 @@ func (o *TripletC) ReadSmat(filename string) {
 				chk.Panic("this function only works with \"general\", \"symmetric\" and \"unsymmetric\" MatrixMarket files")
 			}
 			if info[4] == "symmetric" {
-				mirrorBand = true
+				symmetric = true
 			}
 			deltaIndex = 1
 			return
@@ -507,7 +512,7 @@ func (o *TripletC) ReadSmat(filename string) {
 				chk.Panic("number of columns in header must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
-			if mirrorBand {
+			if symmetric {
 				nnz = 2 * nnz // assuming that the diagonal is all-zeros (for safety)
 			}
 			o.Init(m, n, nnz)
@@ -518,12 +523,13 @@ func (o *TripletC) ReadSmat(filename string) {
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), complex(io.Atof(r[2]), io.Atof(r[3]))
 			o.Put(i-deltaIndex, j-deltaIndex, x)
-			if mirrorBand && i != j {
+			if symmetric && i != j {
 				o.Put(j-deltaIndex, i-deltaIndex, x)
 			}
 		}
 		return
 	})
+	return
 }
 
 // WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file

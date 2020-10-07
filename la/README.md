@@ -1252,7 +1252,7 @@ func (o *Triplet) PutMatAndMatT(a *Triplet)
         [a10 a11 a12 ... ... ...] 4      [.  .  .]
         [... ... ... ... ... ...] 5
 
-func (o *Triplet) ReadSmat(filename string)
+func (o *Triplet) ReadSmat(filename string) (symmetric bool)
     ReadSmat reads a SMAT file or a MatrixMarket file
 
         About the .smat file:
@@ -1317,6 +1317,9 @@ func (o *Triplet) ReadSmat(filename string)
 
         NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
 
+        Output:
+         symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
+
 func (o *Triplet) Size() (m, n int)
     Size returns the row/column size of the matrix represented by the Triplet
 
@@ -1380,7 +1383,7 @@ func (o *TripletC) Put(i, j int, x complex128)
     Put inserts an element to a pre-allocated (with Init) triplet (complex)
     matrix
 
-func (o *TripletC) ReadSmat(filename string)
+func (o *TripletC) ReadSmat(filename string) (symmetric bool)
     ReadSmat reads a SMAT file or a MatrixMarket file
 
         About the .smat file:
@@ -1444,6 +1447,9 @@ func (o *TripletC) ReadSmat(filename string)
                5     5   1.200e+01  0.2
 
         NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
+
+        Output:
+         symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
 
 func (o *TripletC) Start()
     Start (re)starts index for inserting items using the Put command
