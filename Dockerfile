@@ -2,7 +2,6 @@ FROM ubuntu:20.04
 
 # options
 ARG DEV_IMG="false"
-ARG GOSL_VERSION="1.1.3"
 ARG GO_VERSION="1.15.2"
 
 # disable tzdata questions
@@ -56,7 +55,7 @@ RUN go version
 
 # build gosl
 COPY zscripts/gosl-clone-and-build.bash /tmp/library-scripts/
-RUN /bin/bash /tmp/library-scripts/gosl-clone-and-build.bash "${DEV_IMG}" "${GOSL_VERSION}"
+RUN /bin/bash /tmp/library-scripts/gosl-clone-and-build.bash "${DEV_IMG}"
 
 ##################################################################################################
 #                                                                                                #
