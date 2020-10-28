@@ -40,8 +40,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   libhdf5-dev \
   libvtk7-dev \
   dvipng \
-  python-scipy \
-  python-matplotlib \
+  python3-scipy \
+  python3-matplotlib \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # download go
