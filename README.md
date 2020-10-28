@@ -73,13 +73,13 @@ Done. Installation completed.
 
 ## Documentation
 
-Gosl includes the following *essential* packages:
+Gosl includes the following _essential_ packages:
 
 - [chk](https://github.com/cpmech/gosl/tree/master/chk). To check numerical results and for unit testing
 - [io](https://github.com/cpmech/gosl/tree/master/io). Input/output including printing to the terminal and handling files
 - [utl](https://github.com/cpmech/gosl/tree/master/utl). To generate series (e.g. linspace) and other functions as in pylab/matlab/octave
 
-Gosl includes the following *main* packages:
+Gosl includes the following _main_ packages:
 
 - [fun](https://github.com/cpmech/gosl/tree/master/fun). Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
 - [gm](https://github.com/cpmech/gosl/tree/master/gm). Geometry algorithms and structures
@@ -101,3 +101,9 @@ Please check out https://github.com/cpmech/gosl-examples
 ## Benchmarks
 
 Please check out https://github.com/cpmech/gosl-benchmarks
+
+## Previous version
+
+The previous version, including more packages, is [available here ](https://github.com/cpmech/gosl/tree/stable-1.1.3) and can be used with the Docker image 1.1.3 as in this [hello gosl example](https://github.com/cpmech/hello-gosl-old-1.1.3).
+
+These other packages, such as machine learning, plotting, etc., have been removed because they do not depend on CGO and may be developed independently. We can now maintain the core of Gosl more efficiently, which has a focus on the foundation for other scientific code.
