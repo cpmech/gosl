@@ -794,7 +794,7 @@ func run(fn string) {
 	io.WriteFile(TemporaryDir, &bufferEa, &bufferPy)
 	python := os.Getenv("PYTHON")
 	if python == "" {
-		python = "python"
+		python = "python3"
 	}
 
 	// set command
