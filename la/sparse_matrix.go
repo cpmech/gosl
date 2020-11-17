@@ -6,6 +6,7 @@ package la
 
 import (
 	"bytes"
+	"gosl/mpi"
 	"math"
 	"math/cmplx"
 	"strings"
@@ -186,12 +187,22 @@ func (o *Triplet) ToDense() (a *Matrix) {
 //
 //  NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
 //
+//  Input:
+//   filename -- filename
+//   comm -- optional => will distribute the number of non-zeros equally to all processors
+//
 //  Output:
 //   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
 //
-func (o *Triplet) ReadSmat(filename string) (symmetric bool) {
+func (o *Triplet) ReadSmat(filename string, comm ...*mpi.Communicator) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
+	id, sz := 0, 1
+	if len(comm) > 0 {
+		id, sz = comm[0].Rank(), comm[0].Size()
+	}
+	start, endp1 := 0, 0
+	indexNnz := 0
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		if strings.HasPrefix(line, "%%MatrixMarket") {
 			info := strings.Fields(line)
@@ -222,20 +233,25 @@ func (o *Triplet) ReadSmat(filename string) (symmetric bool) {
 				chk.Panic("the number of columns in the line with dimensions must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
+			start, endp1 = (id*nnz)/sz, ((id+1)*nnz)/sz
 			if symmetric {
-				nnz = 2 * nnz // assuming that the diagonal is all-zeros (for safety)
+				o.Init(m, n, (endp1-start)*2) // assuming that the diagonal is all-zeros (for safety)
+			} else {
+				o.Init(m, n, endp1-start)
 			}
-			o.Init(m, n, nnz)
 			initialized = true
 		} else {
 			if len(r) != 3 {
 				chk.Panic("the number of columns in the data lines must be 3 (i,j,x)\n")
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
-			o.Put(i-deltaIndex, j-deltaIndex, x)
-			if symmetric && i != j {
-				o.Put(j-deltaIndex, i-deltaIndex, x)
+			if indexNnz >= start && indexNnz < endp1 {
+				o.Put(i-deltaIndex, j-deltaIndex, x)
+				if symmetric && i != j {
+					o.Put(j-deltaIndex, i-deltaIndex, x)
+				}
 			}
+			indexNnz++
 		}
 		return
 	})
