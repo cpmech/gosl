@@ -4,7 +4,7 @@
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash",
     "go.useGoProxyToCheckForToolUpdates": false,
-    "go.useLanguageServer": true
+    "go.useLanguageServer": false
   },
   "runArgs": ["--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined"],
   "extensions": ["golang.Go"],
