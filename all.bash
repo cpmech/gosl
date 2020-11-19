@@ -2,13 +2,12 @@
 
 set -e
 
-PKGS_ESSENTIAL="chk io utl mpi"
+PKGS_ESSENTIAL="chk io utl mpi la/oblas la"
 
 PKGS_ALL=" \
 fun/fftw fun \
 gm/tri gm/msh gm \
 hb \
-la/oblas la \
 num/qpck num \
 ode \
 opt \
