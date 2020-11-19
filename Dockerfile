@@ -4,7 +4,6 @@ FROM ubuntu:20.04
 ARG DEV_IMG="false"
 ARG GOSL_VERSION="2.0.0"
 ARG GO_VERSION="1.15.2"
-ARG MUMPS_VERSION="5.3.5"
 
 # disable tzdata questions
 ENV DEBIAN_FRONTEND=noninteractive
@@ -29,28 +28,16 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
   gcc \
   gfortran \
-  build-essential \
-  libmetis-dev libparmetis-dev libscotch-dev libptscotch-dev libatlas-base-dev \
-  openmpi-bin libopenmpi-dev libscalapack-openmpi-dev \
+  libopenmpi-dev \
   libhwloc-dev \
   liblapacke-dev \
   libopenblas-dev \
+  libmetis-dev \
   libsuitesparse-dev \
+  libmumps-dev \
   libfftw3-dev \
   libfftw3-mpi-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# download the source code of MUMPS and compile it
-ARG MUMPS_GZ=mumps_${MUMPS_VERSION}.orig.tar.gz
-ARG MUMPS_DIR=/tmp/MUMPS_${MUMPS_VERSION}
-ARG MUMPS_INC=MUMPS_${MUMPS_VERSION}_Makefile.inc
-RUN curl http://deb.debian.org/debian/pool/main/m/mumps/${MUMPS_GZ} -o /tmp/${MUMPS_GZ}
-RUN cd /tmp/ && tar xzf ${MUMPS_GZ}
-COPY zscripts/aux/${MUMPS_INC} ${MUMPS_DIR}/Makefile.inc
-RUN cd ${MUMPS_DIR} \
-  && make all \
-  && cp lib/*.a /usr/lib/ \
-  && cp include/*.h /usr/include/
 
 # download go
 ARG GOFN=go$GO_VERSION.linux-amd64.tar.gz

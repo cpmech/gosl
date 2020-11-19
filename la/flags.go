@@ -9,9 +9,5 @@ package la
 #cgo LDFLAGS: -L/usr/lib -L/usr/local/lib
 #cgo LDFLAGS: -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lopenblas -lgfortran
 #cgo LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord
-#cgo LDFLAGS: -lptesmumps -lptscotch -lptscotcherr -lparmetis -lmetis -lscalapack-openmpi
-#cgo LDFLAGS: -lm -ldl -lgfortran
-#cgo CFLAGS: -I/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi -I/usr/lib/x86_64-linux-gnu/openmpi/include -pthread
-#cgo LDFLAGS: -pthread -L/usr/lib/x86_64-linux-gnu/openmpi/lib -lmpi
 */
 import "C"
