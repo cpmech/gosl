@@ -4,6 +4,7 @@ FROM ubuntu:20.04
 ARG DEV_IMG="false"
 ARG GOSL_VERSION="2.0.0"
 ARG GO_VERSION="1.15.2"
+ARG MUMPS_VERSION="5.3.5"
 
 # disable tzdata questions
 ENV DEBIAN_FRONTEND=noninteractive
@@ -28,17 +29,28 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
   gcc \
   gfortran \
-  libopenmpi-dev \
+  build-essential \
+  libmetis-dev libparmetis-dev libscotch-dev libptscotch-dev libatlas-base-dev \
+  openmpi-bin libopenmpi-dev libscalapack-openmpi-dev \
   libhwloc-dev \
   liblapacke-dev \
   libopenblas-dev \
-  libmetis-dev \
   libsuitesparse-dev \
-  libmumps-dev \
   libfftw3-dev \
   libfftw3-mpi-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# download the source code of MUMPS and compile it
+ARG MUMPS_FN=mumps_$MUMPS_VERSION.orig.tar.gz
+RUN curl http://deb.debian.org/debian/pool/main/m/mumps/$MUMPS_FN -o /tmp/$MUMPS_FN
+RUN cd /tmp/ \
+    && tar xzvf $MUMPS_FN \
+    && cd MUMPS_$MUMPS_VERSION \
+    && cp Make.inc/Makefile.debian.PAR ./Makefile.inc \
+    && sed -i 's/-lblacs-openmpi//g' Makefile.inc \
+    && make all \
+    && cp lib/*.a /usr/lib
+ 
 # download go
 ARG GOFN=go$GO_VERSION.linux-amd64.tar.gz
 RUN curl https://dl.google.com/go/$GOFN -o /usr/local/$GOFN
@@ -119,3 +131,4 @@ ENV GO111MODULE=auto
 
 ##################################################################################################
 ##################################################################################################
+  

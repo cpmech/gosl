@@ -9,5 +9,6 @@ package la
 #cgo LDFLAGS: -L/usr/lib -L/usr/local/lib
 #cgo LDFLAGS: -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lopenblas -lgfortran
 #cgo LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord
+#cgo LDFLAGS: -lptesmumps -lptscotch -lptscotcherr -lparmetis -lmetis -lscalapack-openmpi
 */
 import "C"
