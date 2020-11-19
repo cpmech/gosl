@@ -41,16 +41,17 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # download the source code of MUMPS and compile it
-ARG MUMPS_FN=mumps_$MUMPS_VERSION.orig.tar.gz
-RUN curl http://deb.debian.org/debian/pool/main/m/mumps/$MUMPS_FN -o /tmp/$MUMPS_FN
-RUN cd /tmp/ \
-    && tar xzvf $MUMPS_FN \
-    && cd MUMPS_$MUMPS_VERSION \
-    && cp Make.inc/Makefile.debian.PAR ./Makefile.inc \
-    && sed -i 's/-lblacs-openmpi//g' Makefile.inc \
-    && make all \
-    && cp lib/*.a /usr/lib
- 
+ARG MUMPS_GZ=mumps_${MUMPS_VERSION}.orig.tar.gz
+ARG MUMPS_DIR=/tmp/MUMPS_${MUMPS_VERSION}
+ARG MUMPS_INC=MUMPS_${MUMPS_VERSION}_Makefile.inc
+RUN curl http://deb.debian.org/debian/pool/main/m/mumps/${MUMPS_GZ} -o /tmp/${MUMPS_GZ}
+RUN cd /tmp/ && tar xzf ${MUMPS_GZ}
+COPY zscripts/aux/${MUMPS_INC} ${MUMPS_DIR}/Makefile.inc
+RUN cd ${MUMPS_DIR} \
+  && make all \
+  && cp lib/*.a /usr/lib/ \
+  && cp include/*.h /usr/include/
+
 # download go
 ARG GOFN=go$GO_VERSION.linux-amd64.tar.gz
 RUN curl https://dl.google.com/go/$GOFN -o /usr/local/$GOFN
@@ -131,4 +132,3 @@ ENV GO111MODULE=auto
 
 ##################################################################################################
 ##################################################################################################
-  
