@@ -270,3 +270,55 @@ func TestSpMumps06(tst *testing.T) {
 	bIsDistr := false
 	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false, bIsDistr, comm)
 }
+
+func TestSpMumps07(tst *testing.T) {
+
+	// verbose()
+	chk.PrintTitle("SpMumps07. real/symmetric")
+
+	switchMPI()
+	comm := mpi.NewCommunicator(nil)
+
+	A := [][]float64{
+		{2, 1, 1, 3, 2},
+		{1, 2, 2, 1, 1},
+		{1, 2, 9, 1, 5},
+		{3, 1, 1, 7, 1},
+		{2, 1, 5, 1, 8},
+	}
+	b := []float64{-2, 4, 3, -5, 1}
+
+	T := new(Triplet)
+	T.Init(5, 5, 25)
+	for i := 0; i < 5; i++ {
+		for j := 0; j < 5; j++ {
+			T.Put(i, j, A[i][j])
+		}
+	}
+
+	// allocate solver (remember to call Free)
+	solver := NewSparseSolver("mumps")
+	defer solver.Free()
+
+	// initialization
+	args := NewSparseConfig(comm)
+	args.Symmetric = true
+	solver.Init(T, args)
+
+	// factorise matrix
+	solver.Fact()
+
+	// solve system
+	bIsDistr := false
+	x := NewVector(len(b))
+	solver.Solve(x, b, bIsDistr) // x := inv(A) * b
+
+	// check
+	chk.Array(tst, "x = inv(a) * b", 1e-13, x, []float64{
+		-629.0 / 98.0,
+		+237.0 / 49.0,
+		-53.0 / 49.0,
+		+62.0 / 49.0,
+		+23.0 / 14.0,
+	})
+}
