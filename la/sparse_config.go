@@ -12,7 +12,7 @@ import (
 // The SparseConfig structure holds configuration arguments for sparse solvers
 type SparseConfig struct {
 	// external
-	Symmetric bool   // indicates symmetric system
+	Symmetric bool   // indicates symmetric system. NOTE: when using MUMPS, only the upper or lower part of the matrix must be provided
 	SymPosDef bool   // indicates symmetric-positive-defined system
 	Verbose   bool   // run on Verbose mode
 	Guess     Vector // initial guess for iterative solvers [may be nil]

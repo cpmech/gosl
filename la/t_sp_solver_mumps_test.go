@@ -289,9 +289,9 @@ func TestSpMumps07(tst *testing.T) {
 	b := []float64{-2, 4, 3, -5, 1}
 
 	T := new(Triplet)
-	T.Init(5, 5, 25)
+	T.Init(5, 5, 15) // 15 => only the upper diagonal
 	for i := 0; i < 5; i++ {
-		for j := 0; j < 5; j++ {
+		for j := i; j < 5; j++ {
 			T.Put(i, j, A[i][j])
 		}
 	}

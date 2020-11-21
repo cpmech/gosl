@@ -75,15 +75,12 @@ func (o *Mumps) Init(t *Triplet, args *SparseConfig) {
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
 	o.data.sym = 0                // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
-	/*
-			NOTE: MUMPS is giving incorrect results when the sym flag is not 0
-		if args.Symmetric {
-			o.data.sym = 2
-		}
-		if args.SymPosDef {
-			o.data.sym = 1
-		}
-	*/
+	if args.Symmetric {
+		o.data.sym = 2
+	}
+	if args.SymPosDef {
+		o.data.sym = 1
+	}
 	o.data.job = -1 // initialisation code
 	C.dmumps_c(o.data)
 	if o.data.info[1-1] < 0 {
@@ -255,15 +252,12 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
 	o.data.sym = 0                // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
-	/*
-		NOTE: MUMPS is giving incorrect results when the sym flag is not 0
-		if args.Symmetric {
-			o.data.sym = 2
-		}
-		if args.SymPosDef {
-			o.data.sym = 1
-		}
-	*/
+	if args.Symmetric {
+		o.data.sym = 2
+	}
+	if args.SymPosDef {
+		o.data.sym = 1
+	}
 	o.data.job = -1 // initialisation code
 	C.zmumps_c(o.data)
 	if o.data.info[1-1] < 0 {
