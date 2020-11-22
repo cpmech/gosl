@@ -50,7 +50,7 @@ func main() {
 	}
 
 	var T la.Triplet
-	isSym := T.ReadSmat("data/small-sparse-matrix.mtx", comm)
+	isSym := T.ReadSmat("data/small-sparse-matrix.mtx", true, comm)
 	chk.Bool(tst, "isSym", isSym, false)
 
 	M := T.ToDense()

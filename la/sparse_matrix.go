@@ -189,17 +189,23 @@ func (o *Triplet) ToDense() (a *Matrix) {
 //
 //  Input:
 //   filename -- filename
-//   comm -- optional => will distribute the number of non-zeros equally to all processors
+//   mirrorIfSym -- do mirror off-diagonal entries is the matrix symmetric;
+//      i.e. for each i != j, set both A(i,j) = A(j,i) with the value just read from file.
+//      This option helps when you want all non-zero values of a symmetric matrix,
+//      noting that the MatrixMarket format stores only one "triangular side" of
+//      the matrix and the diagonal.
+//   comm -- [may be nil]. If the communication is given, this function will
+//      distribute the number of non-zeros (near) equally to all processors.
 //
 //  Output:
 //   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
 //
-func (o *Triplet) ReadSmat(filename string, comm ...*mpi.Communicator) (symmetric bool) {
+func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool, comm *mpi.Communicator) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
 	id, sz := 0, 1
-	if len(comm) > 0 {
-		id, sz = comm[0].Rank(), comm[0].Size()
+	if comm != nil {
+		id, sz = comm.Rank(), comm.Size()
 	}
 	start, endp1 := 0, 0
 	indexNnz := 0
@@ -247,7 +253,7 @@ func (o *Triplet) ReadSmat(filename string, comm ...*mpi.Communicator) (symmetri
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
 			if indexNnz >= start && indexNnz < endp1 {
 				o.Put(i-deltaIndex, j-deltaIndex, x)
-				if symmetric && i != j {
+				if symmetric && mirrorIfSym && i != j {
 					o.Put(j-deltaIndex, i-deltaIndex, x)
 				}
 			}
@@ -492,12 +498,28 @@ func (o *TripletC) ToDense() (a *MatrixC) {
 //
 //  NOTE: this function can only read a "coordinate" type MatrixMarket at the moment
 //
+//  Input:
+//   filename -- filename
+//   mirrorIfSym -- do mirror off-diagonal entries is the matrix symmetric;
+//      i.e. for each i != j, set both A(i,j) = A(j,i) with the value just read from file.
+//      This option helps when you want all non-zero values of a symmetric matrix,
+//      noting that the MatrixMarket format stores only one "triangular side" of
+//      the matrix and the diagonal.
+//   comm -- [may be nil]. If the communication is given, this function will
+//      distribute the number of non-zeros (near) equally to all processors.
+//
 //  Output:
 //   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
 //
-func (o *TripletC) ReadSmat(filename string) (symmetric bool) {
+func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool, comm *mpi.Communicator) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
+	id, sz := 0, 1
+	if comm != nil {
+		id, sz = comm.Rank(), comm.Size()
+	}
+	start, endp1 := 0, 0
+	indexNnz := 0
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		if strings.HasPrefix(line, "%%MatrixMarket") {
 			info := strings.Fields(line)
@@ -528,20 +550,25 @@ func (o *TripletC) ReadSmat(filename string) (symmetric bool) {
 				chk.Panic("number of columns in header must be 3 (m,n,nnz)\n")
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
+			start, endp1 = (id*nnz)/sz, ((id+1)*nnz)/sz
 			if symmetric {
-				nnz = 2 * nnz // assuming that the diagonal is all-zeros (for safety)
+				o.Init(m, n, (endp1-start)*2) // assuming that the diagonal is all-zeros (for safety)
+			} else {
+				o.Init(m, n, endp1-start)
 			}
-			o.Init(m, n, nnz)
 			initialized = true
 		} else {
 			if len(r) != 4 {
 				chk.Panic("number of columns in data lines must be 4 (i,j,xReal,xImag)\n")
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), complex(io.Atof(r[2]), io.Atof(r[3]))
-			o.Put(i-deltaIndex, j-deltaIndex, x)
-			if symmetric && i != j {
-				o.Put(j-deltaIndex, i-deltaIndex, x)
+			if indexNnz >= start && indexNnz < endp1 {
+				o.Put(i-deltaIndex, j-deltaIndex, x)
+				if symmetric && mirrorIfSym && i != j {
+					o.Put(j-deltaIndex, i-deltaIndex, x)
+				}
 			}
+			indexNnz++
 		}
 		return
 	})
