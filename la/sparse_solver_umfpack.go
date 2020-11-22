@@ -92,7 +92,7 @@ func (o *Umfpack) Init(t *Triplet, args *SparseConfig) {
 	C.umfpack_dl_defaults(o.uctrl)
 
 	// flags
-	if args.Symmetric {
+	if args.symmetric {
 		o.ctrl[C.UMFPACK_STRATEGY] = C.UMFPACK_STRATEGY_SYMMETRIC
 	}
 	if args.Verbose {
@@ -251,7 +251,7 @@ func (o *UmfpackC) Init(t *TripletC, args *SparseConfig) {
 	C.umfpack_zl_defaults(o.uctrl)
 
 	// flags
-	if args.Symmetric {
+	if args.symmetric {
 		o.ctrl[C.UMFPACK_STRATEGY] = C.UMFPACK_STRATEGY_SYMMETRIC
 	}
 	if args.Verbose {

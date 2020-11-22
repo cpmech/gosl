@@ -75,10 +75,10 @@ func (o *Mumps) Init(t *Triplet, args *SparseConfig) {
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
 	o.data.sym = 0                // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
-	if args.Symmetric {
+	if args.symmetric {
 		o.data.sym = 2
 	}
-	if args.SymPosDef {
+	if args.symPosDef {
 		o.data.sym = 1
 	}
 	o.data.job = -1 // initialisation code
@@ -252,10 +252,10 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
 	o.data.sym = 0                // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
-	if args.Symmetric {
+	if args.symmetric {
 		o.data.sym = 2
 	}
-	if args.SymPosDef {
+	if args.symPosDef {
 		o.data.sym = 1
 	}
 	o.data.job = -1 // initialisation code

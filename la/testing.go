@@ -46,7 +46,13 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 
 	// initialise solver
 	args := NewSparseConfig(comm)
-	args.Symmetric = symmetric
+	if symmetric {
+		if solverKind == "mumps" {
+			args.SetMumpsSymmetry(true, false)
+		} else {
+			args.SetUmfpackSymmetry()
+		}
+	}
 	args.Verbose = verbose
 	o.Init(t, args)
 
@@ -72,7 +78,13 @@ func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *Triplet
 
 	// initialise solver
 	args := NewSparseConfig(comm)
-	args.Symmetric = symmetric
+	if symmetric {
+		if solverKind == "mumps" {
+			args.SetMumpsSymmetry(true, false)
+		} else {
+			args.SetUmfpackSymmetry()
+		}
+	}
 	args.Verbose = verbose
 	o.Init(t, args)
 

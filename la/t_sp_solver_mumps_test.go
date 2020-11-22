@@ -302,7 +302,7 @@ func TestSpMumps07(tst *testing.T) {
 
 	// initialization
 	args := NewSparseConfig(comm)
-	args.Symmetric = true
+	args.SetMumpsSymmetry(true, false)
 	solver.Init(T, args)
 
 	// factorise matrix

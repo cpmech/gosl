@@ -306,7 +306,7 @@ func TestSpUmfpack07(tst *testing.T) {
 
 	// initialization
 	args := NewSparseConfig(nil)
-	args.Symmetric = true
+	args.SetUmfpackSymmetry()
 	solver.Init(T, args)
 
 	// factorise matrix
