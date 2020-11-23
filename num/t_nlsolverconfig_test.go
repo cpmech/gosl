@@ -25,11 +25,9 @@ func TestNlsConfig01(tst *testing.T) {
 		c.EnforceConvRate,
 		c.useDenseSolver,
 		c.hasJacobianFunction,
-		c.LinSolConfig.Symmetric,
-		c.LinSolConfig.SymPosDef,
 		c.LinSolConfig.Verbose,
 	}
-	correct := []bool{false, false, false, false, false, false, false, false, false}
+	correct := []bool{false, false, false, false, false, false, false}
 	chk.Bools(tst, "flags", res, correct)
 
 	// tolerances
