@@ -9,6 +9,7 @@ z_mumpssol04_main \
 z_mumpssol05_main \
 z_sp_matrix01_main \
 z_sp_matrix02_main \
+z_sp_matrix03_main \
 z_sp_mpi_main
 "
 
