@@ -148,9 +148,6 @@ func (o *LinIpm) Solve(verbose bool) {
 		o.S[i] += δs
 	}
 
-	// constants for linear solver
-	symmetric := false
-
 	// auxiliary
 	I := o.Nx + o.Nl
 
@@ -210,7 +207,6 @@ func (o *LinIpm) Solve(verbose bool) {
 		// solve linear system
 		if it == 0 {
 			args := la.NewSparseConfig(nil)
-			args.Symmetric = symmetric
 			o.Lis.Init(o.J, args)
 		}
 		o.Lis.Fact()
