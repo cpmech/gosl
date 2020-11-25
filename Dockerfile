@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 # options
 ARG DEV_IMG="false"
 ARG GOSL_VERSION="2.0.0"
-ARG GO_VERSION="1.15.2"
+ARG GO_VERSION="1.15.5"
 
 # disable tzdata questions
 ENV DEBIAN_FRONTEND=noninteractive
