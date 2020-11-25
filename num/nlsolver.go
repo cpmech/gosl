@@ -38,10 +38,10 @@ type NlSolver struct {
 	dphidx la.Vector
 	x0     la.Vector
 
-	// data for Umfpack (sparse)
-	tripletJ la.Triplet // triplet
-	linsol   la.Umfpack // linear solver
-	lsReady  bool       // linear solver is ready
+	// sparse solver
+	tripletJ la.Triplet      // triplet
+	linsol   la.SparseSolver // linear solver
+	lsReady  bool            // linear solver is ready
 
 	// workspace for numerical Jacobian (sparse)
 	workspaceNumJac la.Vector // workspace
@@ -77,6 +77,9 @@ func NewNlSolver(neq int, F fun.Vv) (o *NlSolver) {
 	// data for line search
 	o.dphidx = la.NewVector(o.neq)
 	o.x0 = la.NewVector(o.neq)
+
+	// sparse solver
+	o.linsol = la.NewSparseSolver("umfpack")
 	return
 }
 
