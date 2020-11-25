@@ -26,8 +26,8 @@ import (
 	"gosl/mpi"
 )
 
-// Mumps wraps the MUMPS solver
-type Mumps struct {
+// sparseSolverMumps wraps the MUMPS solver
+type sparseSolverMumps struct {
 
 	// internal
 	comm *mpi.Communicator
@@ -45,7 +45,7 @@ type Mumps struct {
 
 // Init initialises mumps for sparse linear systems with real numbers
 // args may be nil
-func (o *Mumps) Init(t *Triplet, args *SparseConfig) {
+func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 
 	// check
 	if o.initialised {
@@ -138,7 +138,7 @@ func (o *Mumps) Init(t *Triplet, args *SparseConfig) {
 }
 
 // Free clears extra memory allocated by MUMPS
-func (o *Mumps) Free() {
+func (o *sparseSolverMumps) Free() {
 	if o.initialised {
 		o.data.job = -2    // finalisation code
 		C.dmumps_c(o.data) // do finalize
@@ -146,7 +146,7 @@ func (o *Mumps) Free() {
 }
 
 // Fact performs the factorisation
-func (o *Mumps) Fact() {
+func (o *sparseSolverMumps) Fact() {
 
 	// check
 	if !o.initialised {
@@ -170,7 +170,7 @@ func (o *Mumps) Fact() {
 //
 //   bIsDistr -- this flag tells that the right-hand-side vector 'b' is distributed.
 //
-func (o *Mumps) Solve(x, b Vector, bIsDistr bool) {
+func (o *sparseSolverMumps) Solve(x, b Vector, bIsDistr bool) {
 
 	// check
 	if !o.factorised {
@@ -403,6 +403,6 @@ func mumErr(info, infx C.int) string {
 // add solvers to database /////////////////////////////////////////////////////////////////////////
 
 func init() {
-	spSolverDB["mumps"] = func() SparseSolver { return new(Mumps) }
+	spSolverDB["mumps"] = func() SparseSolver { return new(sparseSolverMumps) }
 	spSolverDBc["mumps"] = func() SparseSolverC { return new(MumpsC) }
 }

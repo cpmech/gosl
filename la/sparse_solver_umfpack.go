@@ -21,8 +21,8 @@ import (
 	"gosl/chk"
 )
 
-// Umfpack wraps the UMFPACK solver
-type Umfpack struct {
+// sparseSolverUmfpack wraps the UMFPACK solver
+type sparseSolverUmfpack struct {
 
 	// umfpack data
 	info  []float64
@@ -55,7 +55,7 @@ type Umfpack struct {
 
 // Init initialises umfpack for sparse linear systems with real numbers
 // args may be nil
-func (o *Umfpack) Init(t *Triplet, args *SparseConfig) {
+func (o *sparseSolverUmfpack) Init(t *Triplet, args *SparseConfig) {
 
 	// check
 	if o.initialised {
@@ -104,7 +104,7 @@ func (o *Umfpack) Init(t *Triplet, args *SparseConfig) {
 }
 
 // Free clears extra memory allocated by UMFPACK
-func (o *Umfpack) Free() {
+func (o *sparseSolverUmfpack) Free() {
 	if o.symbFact {
 		C.umfpack_dl_free_symbolic(&o.usymb)
 		o.symbFact = false
@@ -116,7 +116,7 @@ func (o *Umfpack) Free() {
 }
 
 // Fact performs the factorisation
-func (o *Umfpack) Fact() {
+func (o *sparseSolverUmfpack) Fact() {
 
 	// check
 	if !o.initialised {
@@ -160,7 +160,7 @@ func (o *Umfpack) Fact() {
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *Umfpack) Solve(x, b Vector, dummy bool) {
+func (o *sparseSolverUmfpack) Solve(x, b Vector, dummy bool) {
 
 	// check
 	if !o.factorised {
@@ -340,6 +340,6 @@ func (o *UmfpackC) Solve(x, b VectorC, dummy bool) {
 // add solvers to database /////////////////////////////////////////////////////////////////////////
 
 func init() {
-	spSolverDB["umfpack"] = func() SparseSolver { return new(Umfpack) }
+	spSolverDB["umfpack"] = func() SparseSolver { return new(sparseSolverUmfpack) }
 	spSolverDBc["umfpack"] = func() SparseSolverC { return new(UmfpackC) }
 }

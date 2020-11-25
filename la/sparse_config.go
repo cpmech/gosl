@@ -27,7 +27,8 @@ type SparseConfig struct {
 }
 
 // NewSparseConfig returns a new SparseConfig
-// comm may be nil
+// Input:
+//  comm -- may be nil
 func NewSparseConfig(comm *mpi.Communicator) (o *SparseConfig) {
 	o = new(SparseConfig)
 	o.communicator = comm
