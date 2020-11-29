@@ -15,6 +15,8 @@ if [ "${GOSL_VERSION}" = "latest" ]; then
 fi
 
 cd /usr/local/go/src
+mkdir -p github.com/cpmech
+cd github.com/cpmech
 git clone -b $BRANCH --single-branch --depth 1 https://github.com/cpmech/gosl.git
-cd github.com/cpmech/gosl
+cd gosl
 bash ./all.bash
