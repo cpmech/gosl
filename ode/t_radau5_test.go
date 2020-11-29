@@ -8,9 +8,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/la"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 )
 
 func TestRadau501a(tst *testing.T) {

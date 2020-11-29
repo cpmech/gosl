@@ -8,9 +8,9 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
 func compareLambda(tst *testing.T, N int, f Ss, tolU, tolL float64) {

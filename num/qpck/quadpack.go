@@ -39,7 +39,7 @@ import "C"
 import (
 	"unsafe"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 // fType defines the callback function

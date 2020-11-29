@@ -9,7 +9,7 @@ package mpi
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestMpi01(tst *testing.T) {

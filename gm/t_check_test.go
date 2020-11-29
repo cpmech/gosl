@@ -7,11 +7,11 @@ package gm
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/la"
-	"gosl/num"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/num"
+	"github.com/cpmech/gosl/utl"
 )
 
 // check transfinite derivatives ///////////////////////////////////////////////////////////////////

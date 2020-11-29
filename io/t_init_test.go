@@ -5,7 +5,7 @@
 package io
 
 import (
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func init() {

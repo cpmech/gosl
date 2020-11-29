@@ -4,7 +4,7 @@
 
 package ode
 
-import "gosl/la"
+import "github.com/cpmech/gosl/la"
 
 // rkwork holds the Runge-Kuta "workspace" variables
 type rkwork struct {

@@ -5,8 +5,8 @@
 package opt
 
 import (
-	"gosl/fun"
-	"gosl/la"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/la"
 )
 
 // Problem holds the functions defining an optimization problem

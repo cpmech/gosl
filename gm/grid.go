@@ -7,8 +7,8 @@ package gm
 import (
 	"math"
 
-	"gosl/la"
-	"gosl/utl"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Grid implements (2D/3D) rectangular or curvilinear grid.

@@ -9,10 +9,10 @@ package main
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/mpi"
-	"gosl/ode"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/mpi"
+	"github.com/cpmech/gosl/ode"
 )
 
 func main() {

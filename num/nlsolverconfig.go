@@ -5,9 +5,10 @@
 package num
 
 import (
-	"gosl/la"
-	"gosl/utl"
 	"math"
+
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // NlSolverConfig holds the configuration input for NlSolver

@@ -8,8 +8,8 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 func TestSinusoid01(tst *testing.T) {

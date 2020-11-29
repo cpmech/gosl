@@ -7,9 +7,9 @@ package gm
 import (
 	"math"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
 // consts

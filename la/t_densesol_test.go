@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func calcLLt(L *Matrix) (LLt *Matrix) {

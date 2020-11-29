@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestGen01(tst *testing.T) {

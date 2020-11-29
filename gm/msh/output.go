@@ -4,7 +4,7 @@
 
 package msh
 
-import "gosl/io"
+import "github.com/cpmech/gosl/io"
 
 // String returns a JSON representation of *Vert
 func (o *Vertex) String() string {

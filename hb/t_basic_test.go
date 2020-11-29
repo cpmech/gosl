@@ -5,9 +5,10 @@
 package hb
 
 import (
-	"gosl/chk"
-	"gosl/io"
 	"testing"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func TestArrayAndInts(tst *testing.T) {

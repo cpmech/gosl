@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"gosl/fun/fftw"
+	"github.com/cpmech/gosl/fun/fftw"
 )
 
 // Dft1d computes the discrete Fourier transform (DFT) in 1D.

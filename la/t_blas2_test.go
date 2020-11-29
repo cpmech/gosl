@@ -7,7 +7,7 @@ package la
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestBlas2tst01(tst *testing.T) {

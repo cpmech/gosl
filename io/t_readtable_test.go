@@ -7,7 +7,7 @@ package io
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestReadTable01(tst *testing.T) {

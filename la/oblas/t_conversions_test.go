@@ -7,8 +7,8 @@ package oblas
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func TestSplitJoinComplex(tst *testing.T) {

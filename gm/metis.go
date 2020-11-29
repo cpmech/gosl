@@ -15,8 +15,8 @@ import "C"
 import (
 	"unsafe"
 
-	"gosl/chk"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 // MetisShares returns a map of shares owned by vertices

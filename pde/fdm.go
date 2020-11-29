@@ -7,11 +7,11 @@
 package pde
 
 import (
-	"gosl/chk"
-	"gosl/fun"
-	"gosl/gm"
-	"gosl/la"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/gm"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // FdmLaplacian implements the Finite Difference (FDM) Laplacian operator (2D or 3D)

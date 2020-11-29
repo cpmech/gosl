@@ -4,7 +4,7 @@
 
 package ode
 
-import "gosl/la"
+import "github.com/cpmech/gosl/la"
 
 // Solve solves ODE problem using standard parameters
 //

@@ -15,8 +15,8 @@ import "C"
 import (
 	"unsafe"
 
-	"gosl/chk"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Delaunay computes 2D Delaunay triangulation using Triangle

@@ -10,8 +10,8 @@ import (
 
 	"math/rand"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func Test_bins01(tst *testing.T) {

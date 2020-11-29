@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 // InterpCubic computes a cubic polynomial to perform interpolation either using 4 points

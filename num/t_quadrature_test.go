@@ -9,8 +9,8 @@ import (
 	"math/cmplx"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func TestQuadGen01(tst *testing.T) {

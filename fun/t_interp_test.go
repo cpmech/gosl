@@ -7,7 +7,7 @@ package fun
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestInterp01(tst *testing.T) {

@@ -8,11 +8,12 @@ package hb
 import (
 	"bytes"
 	"encoding/gob"
-	"gosl/chk"
-	"gosl/io"
 	"os"
 	"path"
 	"strings"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // File represents a HDF5 file

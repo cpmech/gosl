@@ -5,7 +5,7 @@
 package hb
 
 import (
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 // PutArray puts an array with name described by path

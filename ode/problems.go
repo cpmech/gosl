@@ -8,12 +8,12 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/fun"
-	"gosl/io"
-	"gosl/la"
-	"gosl/num"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/num"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Problem defines the data for an ODE problems (e.g. for testing)

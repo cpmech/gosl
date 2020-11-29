@@ -18,7 +18,7 @@ import "C"
 import (
 	"unsafe"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 // sparseSolverUmfpack wraps the UMFPACK solver

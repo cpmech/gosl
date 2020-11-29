@@ -4,7 +4,7 @@
 
 package utl
 
-import "gosl/chk"
+import "github.com/cpmech/gosl/chk"
 
 // Deep3alloc allocates a slice of slice of slice
 func Deep3alloc(n1, n2, n3 int) (a [][][]float64) {

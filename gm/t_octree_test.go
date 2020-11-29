@@ -8,8 +8,8 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func Test_octree01(tst *testing.T) {

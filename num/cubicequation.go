@@ -7,7 +7,7 @@ package num
 import (
 	"math"
 
-	"gosl/fun"
+	"github.com/cpmech/gosl/fun"
 )
 
 // EqCubicSolveReal solves a cubic equation, ignoring the complex answers.

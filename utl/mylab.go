@@ -12,8 +12,8 @@ import (
 	"strconv"
 	"strings"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // functions /////////////////////////////////////////////////////////////////////////////////////

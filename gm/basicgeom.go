@@ -7,7 +7,7 @@ package gm
 import (
 	"math"
 
-	"gosl/io"
+	"github.com/cpmech/gosl/io"
 )
 
 // Point holds the Cartesian coordinates of a point in 3D space

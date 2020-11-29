@@ -7,7 +7,7 @@ package num
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestNlsConfig01(tst *testing.T) {

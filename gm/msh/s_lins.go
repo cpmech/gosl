@@ -4,7 +4,7 @@
 
 package msh
 
-import "gosl/la"
+import "github.com/cpmech/gosl/la"
 
 // FuncLin2 calculates the shape functions (S) and derivatives of shape functions (dSdR) of lin2
 // elements at {r,s,t} natural coordinates. The derivatives are calculated only if derivs==true.

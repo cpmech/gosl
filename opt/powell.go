@@ -5,11 +5,11 @@
 package opt
 
 import (
-	"gosl/chk"
-	"gosl/fun"
-	"gosl/la"
-	"gosl/num"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/num"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Powell implements the multidimensional minimization by Powell's method (no derivatives required)

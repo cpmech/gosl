@@ -7,7 +7,7 @@ package fun
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestMultiInterp01(t *testing.T) {

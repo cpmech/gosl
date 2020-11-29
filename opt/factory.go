@@ -5,9 +5,9 @@
 package opt
 
 import (
-	"gosl/chk"
-	"gosl/fun"
-	"gosl/la"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/la"
 )
 
 // FactoryType defines a structure to implement a factory of Objective functions to be minimized

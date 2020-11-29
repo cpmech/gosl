@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
 func Test_MTint01(tst *testing.T) {

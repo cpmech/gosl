@@ -7,8 +7,8 @@
 package sfmt
 
 import (
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func init() {

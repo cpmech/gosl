@@ -7,7 +7,7 @@ package fun
 import (
 	"math"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 // InterpQuad computes a quadratic polynomial to perform interpolation either using 3 points

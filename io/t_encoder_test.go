@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestEncDec01(tst *testing.T) {

@@ -8,8 +8,8 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func TestA123(tst *testing.T) {

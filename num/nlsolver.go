@@ -7,10 +7,10 @@ package num
 import (
 	"math"
 
-	"gosl/chk"
-	"gosl/fun"
-	"gosl/io"
-	"gosl/la"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 )
 
 // NlSolver implements a solver to nonlinear systems of equations

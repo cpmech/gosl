@@ -4,7 +4,7 @@
 
 package hb
 
-import "gosl/utl"
+import "github.com/cpmech/gosl/utl"
 
 // PutDeep3 puts a deep slice with 3 levels and name described in path into HDF5 file
 //  Input:

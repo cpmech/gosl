@@ -8,8 +8,8 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func runIntegConly(tst *testing.T, N int, f func(x float64) float64, reuse bool) (C []float64) {

@@ -8,8 +8,8 @@ import (
 	"sort"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func TestSingleq4(tst *testing.T) {

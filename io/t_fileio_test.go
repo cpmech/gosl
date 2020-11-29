@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func Test_fileIO1(tst *testing.T) {

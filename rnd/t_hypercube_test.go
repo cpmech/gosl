@@ -7,7 +7,7 @@ package rnd
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func Test_hc01(tst *testing.T) {

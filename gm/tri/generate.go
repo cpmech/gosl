@@ -12,8 +12,8 @@ import "C"
 import (
 	"unsafe"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // Point holds input data defining a "point"

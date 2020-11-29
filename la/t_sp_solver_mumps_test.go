@@ -9,8 +9,8 @@ package la
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/mpi"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/mpi"
 )
 
 func switchMPI() {

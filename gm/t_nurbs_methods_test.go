@@ -7,7 +7,7 @@ package gm
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestNurbsMethods01(tst *testing.T) {

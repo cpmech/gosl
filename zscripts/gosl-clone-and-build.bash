@@ -16,5 +16,5 @@ fi
 
 cd /usr/local/go/src
 git clone -b $BRANCH --single-branch --depth 1 https://github.com/cpmech/gosl.git
-cd gosl
+cd github.com/cpmech/gosl
 bash ./all.bash

@@ -7,9 +7,9 @@ package opt
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/la"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 )
 
 func TestNLS01(tst *testing.T) {

@@ -7,9 +7,9 @@ package la
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/la/oblas"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la/oblas"
 )
 
 // EigenVal computes eigenvalues of general matrix

@@ -4,7 +4,7 @@
 
 package rnd
 
-import "gosl/chk"
+import "github.com/cpmech/gosl/chk"
 
 // Distribution defines a probability distribution
 type Distribution interface {

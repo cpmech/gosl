@@ -7,8 +7,8 @@ package utl
 import (
 	"sort"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // IntSort3 sorts 3 values in ascending order

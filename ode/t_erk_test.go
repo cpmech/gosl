@@ -7,10 +7,10 @@ package ode
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/fun"
-	"gosl/io"
-	"gosl/la"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
 )
 
 func TestErk01(tst *testing.T) {

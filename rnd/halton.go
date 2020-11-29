@@ -5,8 +5,8 @@
 package rnd
 
 import (
-	"gosl/chk"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 // HaltonPoints generates randomly spaced points

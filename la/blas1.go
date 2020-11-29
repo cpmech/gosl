@@ -7,7 +7,7 @@ package la
 import (
 	"math"
 
-	"gosl/la/oblas"
+	"github.com/cpmech/gosl/la/oblas"
 )
 
 // VecRmsError returns the scaled root-mean-square of the difference between two vectors

@@ -8,9 +8,9 @@ import (
 	"math"
 	"math/cmplx"
 
-	"gosl/chk"
-	"gosl/fun/fftw"
-	"gosl/la"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun/fftw"
+	"github.com/cpmech/gosl/la"
 )
 
 // FourierInterp performs interpolation using truncated Fourier series

@@ -8,10 +8,10 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/fun"
-	"gosl/la"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Jacobian computes Jacobian (sparse) matrix

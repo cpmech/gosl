@@ -8,8 +8,8 @@ import (
 	"math"
 	"time"
 
-	"gosl/chk"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 // StatAve computes the average of x values

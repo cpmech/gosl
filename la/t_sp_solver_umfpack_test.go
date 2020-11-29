@@ -7,7 +7,7 @@ package la
 import (
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func TestSpUmfpack01a(tst *testing.T) {

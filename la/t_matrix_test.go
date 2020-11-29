@@ -7,8 +7,8 @@ package la
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func TestMatrix01(tst *testing.T) {

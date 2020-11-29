@@ -7,8 +7,8 @@ package fun
 import (
 	"math"
 
-	"gosl/chk"
-	"gosl/la"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/la"
 )
 
 // ChebyInterp defines a structure for efficient computations with Chebyshev polynomials such as

@@ -7,7 +7,7 @@
 package la
 
 import (
-	"gosl/mpi"
+	"github.com/cpmech/gosl/mpi"
 )
 
 // SpTriReduce joins (MPI) parallel triplets to root (Rank == 0) processor.

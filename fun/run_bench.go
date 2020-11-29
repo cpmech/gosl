@@ -11,12 +11,12 @@ import (
 	"testing"
 	"time"
 
-	"gosl/chk"
-	"gosl/fun"
-	"gosl/fun/fftw"
-	"gosl/io"
-	"gosl/la"
-	"gosl/rnd"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/fun/fftw"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/rnd"
 )
 
 func scaledMflops(N int, dt time.Duration) float64 {

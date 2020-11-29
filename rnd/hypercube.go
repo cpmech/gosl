@@ -7,7 +7,7 @@ package rnd
 import (
 	"math"
 
-	"gosl/utl"
+	"github.com/cpmech/gosl/utl"
 )
 
 // LatinIHS implements the improved distributed hypercube sampling algorithm.

@@ -10,9 +10,9 @@ import (
 	"fmt"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/mpi"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/mpi"
 )
 
 func setslice(x []float64) {

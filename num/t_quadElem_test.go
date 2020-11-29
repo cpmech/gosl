@@ -7,8 +7,8 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 func Test_QuadElem01(tst *testing.T) {

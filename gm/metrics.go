@@ -5,8 +5,8 @@
 package gm
 
 import (
-	"gosl/la"
-	"gosl/utl"
+	"github.com/cpmech/gosl/la"
+	"github.com/cpmech/gosl/utl"
 )
 
 // Metrics holds data related to a position in a space represented by curvilinear coordinates

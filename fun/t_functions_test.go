@@ -10,9 +10,9 @@ import (
 	"math/cmplx"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
 func Test_functions01(tst *testing.T) {

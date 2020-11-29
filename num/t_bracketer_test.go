@@ -8,7 +8,7 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func checkBracket(tst *testing.T, a, b, c, fa, fb, fc float64) {

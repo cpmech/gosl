@@ -5,8 +5,9 @@
 package ode
 
 import (
-	"gosl/io"
 	"time"
+
+	"github.com/cpmech/gosl/io"
 )
 
 // Stat holds statistics and output data

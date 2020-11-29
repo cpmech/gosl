@@ -4,7 +4,7 @@
 
 package num
 
-import "gosl/num/qpck"
+import "github.com/cpmech/gosl/num/qpck"
 
 // QuadGen performs automatic integration (quadrature) using the general-purpose
 // QUADPACK routine AGSE (Automatic, general-purpose, end-points singularities).

@@ -7,8 +7,8 @@ package gm
 import (
 	"testing"
 
-	"gosl/chk"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/utl"
 )
 
 func Test_bezier01(tst *testing.T) {

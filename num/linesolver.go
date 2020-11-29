@@ -5,8 +5,8 @@
 package num
 
 import (
-	"gosl/fun"
-	"gosl/la"
+	"github.com/cpmech/gosl/fun"
+	"github.com/cpmech/gosl/la"
 )
 
 // LineSolver finds the scalar λ that zeroes or minimizes f(x+λ⋅n)

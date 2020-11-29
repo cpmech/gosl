@@ -6,13 +6,14 @@ package la
 
 import (
 	"bytes"
-	"gosl/mpi"
 	"math"
 	"math/cmplx"
 	"strings"
 
-	"gosl/chk"
-	"gosl/io"
+	"github.com/cpmech/gosl/mpi"
+
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
 )
 
 // Triplet is a simple representation of a sparse matrix, where the indices and values

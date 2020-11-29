@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"testing"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 func Test_runcmd01(tst *testing.T) {

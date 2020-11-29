@@ -5,7 +5,7 @@
 package la
 
 import (
-	"gosl/la/oblas"
+	"github.com/cpmech/gosl/la/oblas"
 )
 
 // MatMatMul returns the matrix multiplication (scaled)

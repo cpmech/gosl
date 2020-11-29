@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"strings"
 
-	"gosl/chk"
+	"github.com/cpmech/gosl/chk"
 )
 
 // functions to handle filenames //////////////////////////////////////////////////////////////////

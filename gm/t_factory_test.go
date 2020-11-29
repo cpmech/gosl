@@ -8,9 +8,9 @@ import (
 	"math"
 	"testing"
 
-	"gosl/chk"
-	"gosl/io"
-	"gosl/utl"
+	"github.com/cpmech/gosl/chk"
+	"github.com/cpmech/gosl/io"
+	"github.com/cpmech/gosl/utl"
 )
 
 func Test_factory01(tst *testing.T) {
