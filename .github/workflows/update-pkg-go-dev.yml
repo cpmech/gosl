@@ -1,3 +1,5 @@
+name: update-pkg-go-dev
+    
 on:
   release:
     types:
