@@ -1,0 +1,24 @@
+name: Update pkg.go.dev
+    
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - '**/v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:  
+  build:
+    name: Renew documentation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Pull new module version
+      run: |
+        export TAG=${GITHUB_REF#refs/tags/*}
+        export VERSION=${TAG##*/}
+        export PACKAGE=github.com/${GITHUB_REPOSITORY}
+        if [[ "$VERSION" != "$TAG" ]]; then
+          export PACKAGE=github.com/${GITHUB_REPOSITORY}/${TAG%"/$VERSION"}
+        fi
+        export GO111MODULE=on
+        export GOPROXY="$INPUT_GOPROXY"
+        go get -d "$PACKAGE@$VERSION"
