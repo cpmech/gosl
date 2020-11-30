@@ -8,7 +8,7 @@ We link Gosl with existent libraries written in C and Fortran, such as OpenBLAS,
 
 ## Installation
 
-Because of CGO and other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of seconds. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
+Because of other (awesome) libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of minutes. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
 
 ### Containerized (recommended)
 
@@ -26,7 +26,7 @@ Our [Docker Image](https://hub.docker.com/repository/docker/gosl/gosl) also cont
 
 ![](zdocs/vscode-gosl-01.gif)
 
-Another great thing about VS Code is the IntelliSense. Here, as soon as we start typing "m comma n two-dot equal T dot", Code immediately offers Size() as the first option because it matches the preceding code. Fantastic!
+Another great thing about VS Code is it's _IntelliSense_. Here, as soon as we start typing "m comma n two-dot equal T dot", VS Code immediately offers `Size()` as the first option because it matches the preceding code. Fantastic!
 
 ![](zdocs/vscode-intellisense-01.png)
 
@@ -66,14 +66,14 @@ Gosl includes the following _essential_ packages:
 - [chk](https://github.com/cpmech/gosl/tree/master/chk). To check numerical results and for unit testing
 - [io](https://github.com/cpmech/gosl/tree/master/io). Input/output including printing to the terminal and handling files
 - [utl](https://github.com/cpmech/gosl/tree/master/utl). To generate series (e.g. linspace) and other functions as in pylab/matlab/octave
+- [mpi](https://github.com/cpmech/gosl/tree/master/mpi). Message Passing Interface for parallel computing
+- [la](https://github.com/cpmech/gosl/tree/master/la). Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions
 
 Gosl includes the following _main_ packages:
 
 - [fun](https://github.com/cpmech/gosl/tree/master/fun). Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
 - [gm](https://github.com/cpmech/gosl/tree/master/gm). Geometry algorithms and structures
 - [hb](https://github.com/cpmech/gosl/tree/master/hb). Pseudo hierarchical binary (hb) data file format
-- [la](https://github.com/cpmech/gosl/tree/master/la). Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions
-- [mpi](https://github.com/cpmech/gosl/tree/master/mpi). Message Passing Interface for parallel computing
 - [num](https://github.com/cpmech/gosl/tree/master/num). Fundamental numerical methods such as root solvers, non-linear solvers, numerical derivatives and quadrature
 - [ode](https://github.com/cpmech/gosl/tree/master/ode). Solvers for ordinary differential equations
 - [opt](https://github.com/cpmech/gosl/tree/master/opt). Numerical optimization: Interior Point, Conjugate Gradients, Powell, Grad Descent
