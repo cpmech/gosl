@@ -1,4 +1,4 @@
-# Gosl &ndash; Go scientific library
+# Gosl - Go scientific library
 
 Gosl is a set of tools for developing scientific simulations using the Go language. We mainly consider the development of numerical methods and solvers for differential equations but also present some functions for fast Fourier transforms, the generation of random numbers, probability distributions, and computational geometry.
 
