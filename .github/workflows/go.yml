@@ -49,3 +49,15 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+
+    - name: Renew documentation
+      run: |
+        export TAG=${GITHUB_REF#refs/tags/*}
+        export VERSION=${TAG##*/}
+        export PACKAGE=github.com/${GITHUB_REPOSITORY}
+        if [[ "$VERSION" != "$TAG" ]]; then
+          export PACKAGE=github.com/${GITHUB_REPOSITORY}/${TAG%"/$VERSION"}
+        fi
+        export GO111MODULE=on
+        export GOPROXY="$INPUT_GOPROXY"
+        go get -d "$PACKAGE@$VERSION"
