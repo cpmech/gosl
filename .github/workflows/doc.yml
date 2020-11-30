@@ -1,3 +1,5 @@
+name: Update pkg.go.dev
+
 on:
   release:
     types:
@@ -13,3 +15,9 @@ jobs:
     steps:
     - name: Pull new module version
       uses: andrewslotin/go-proxy-pull-action@master
+    
+    - name: Pull new module version (gocenter)
+      uses: andrewslotin/go-proxy-pull-action@master
+      with:
+        goproxy: https://gocenter.io
+  

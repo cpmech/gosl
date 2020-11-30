@@ -1,0 +1,51 @@
+name: Compile and test the code
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get install -y --no-install-recommends \
+        gcc \
+        gfortran \
+        libopenmpi-dev \
+        libhwloc-dev \
+        liblapacke-dev \
+        libopenblas-dev \
+        libmetis-dev \
+        libsuitesparse-dev \
+        libmumps-dev \
+        libfftw3-dev \
+        libfftw3-mpi-dev          
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.15
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v ./...
