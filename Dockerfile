@@ -39,9 +39,9 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 # download go
 ARG GOFN=go$GO_VERSION.linux-amd64.tar.gz
-RUN curl https://dl.google.com/go/$GOFN -o /usr/local/$GOFN
-RUN tar -xzf /usr/local/$GOFN -C /usr/local/
-RUN rm /usr/local/$GOFN
+RUN curl https://dl.google.com/go/$GOFN -o /usr/local/$GOFN \
+  && tar -xzf /usr/local/$GOFN -C /usr/local/ \
+  && rm /usr/local/$GOFN
 
 # set path for go executable
 ENV PATH $PATH:/usr/local/go/bin
