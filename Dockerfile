@@ -2,7 +2,6 @@ FROM ubuntu:20.04
 
 # options
 ARG DEV_IMG="false"
-ARG GOSL_VERSION="2.0.0"
 ARG GO_VERSION="1.15.5"
 
 # disable tzdata questions
@@ -48,10 +47,6 @@ RUN rm /usr/local/$GOFN
 # set path for go executable
 ENV PATH $PATH:/usr/local/go/bin
 RUN go version
-
-# build gosl
-COPY zscripts/gosl-clone-and-build.bash /tmp/library-scripts/
-RUN /bin/bash /tmp/library-scripts/gosl-clone-and-build.bash "${DEV_IMG}" "${GOSL_VERSION}"
 
 ##################################################################################################
 #                                                                                                #
