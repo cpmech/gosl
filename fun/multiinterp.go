@@ -198,18 +198,18 @@ type BiLinear struct {
 
 // NewBiLinear builds a two dimensional bi-linear interpolant
 // Input:
-// 		xx -- function sample points abscissas
-// 		yy -- function sample points ordinates
-// 		f  -- function values
-//			f(i,j) is stored at f[len(xx)*j + i]
+//   xx -- function sample points abscissas
+//   yy -- function sample points ordinates
+//   f  -- function values
+//   f(i,j) is stored at f[len(xx)*j + i]
 //
 // Ref:
-//  f(x,y) = x^2 + 2y^2		 	  2 h  	i  	j
-//  xx = [0.00,0.50,1.00]    		|
-//  yy = [0.00,1.00,2.00] 	 	  1 d  	e  	f
-//  f  = [a:0.00,b:0.25,c:1.00,		|
-//		  d:2.00,e:2,25,f:3.00,		a___b___c
-//		  h:8.00,i:8.25,j:9.00]	   0   0.5 1.0
+//  f(x,y) = x^2 + 2y^2         2 h    i    j
+//  xx = [0.00,0.50,1.00]         |
+//  yy = [0.00,1.00,2.00]       1 d    e    f
+//  f  = [a:0.00,b:0.25,c:1.00,   |
+//        d:2.00,e:2,25,f:3.00,   a____b____c
+//        h:8.00,i:8.25,j:9.00]  0   0.5   1.0
 func NewBiLinear(f, xx, yy []float64) (o *BiLinear) {
 	o = new(BiLinear)
 
