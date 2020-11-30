@@ -1,6 +1,6 @@
 {
   "name": "Gosl Dev Mode",
-  "image": "gosl/gosl_dev",
+  "image": "gosl/gosl",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash",
     "go.useGoProxyToCheckForToolUpdates": false,
