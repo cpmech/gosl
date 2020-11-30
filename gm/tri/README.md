@@ -49,18 +49,34 @@ C := [][]int{
 }
 ```
 
-Source code: <a href="../../examples/tri_draw01.go">../../examples/tri_draw01.go</a>
-
 ## Delaunay triangulation
 
 The Delaunay triangulation of a cloud of points in the `tri` package is easily computed with the
 `Delaunay` command that takes as input the Cartesian coordinates.
 
-<div id="container">
-<p><img src="../../examples/figs/tri_delaunay01.png"></p>
-</div>
+![](data/tri_draw01.png)
 
-Source code: <a href="../../examples/tri_delaunay01.go">../../examples/tri_delaunay01.go</a>
+```go
+// fix seed
+rnd.Init(1358)
+
+// generate cloud of points
+nx, ny := 6, 6
+dx := 1.0 / float64(nx-1)
+dy := 1.0 / float64(ny-1)
+X := make([]float64, nx*ny)
+Y := make([]float64, nx*ny)
+for j := 0; j < ny; j++ {
+    for i := 0; i < nx; i++ {
+        n := i + j*nx
+        X[n] = float64(i) * (dx * rnd.Float64(0.5, 1.0))
+        Y[n] = float64(j) * (dy * rnd.Float64(0.5, 1.0))
+    }
+}
+
+// generate
+V, C := tri.Delaunay(X, Y, false)
+```
 
 ## API
 
