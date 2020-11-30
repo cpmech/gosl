@@ -10,7 +10,7 @@ We link Gosl with existent libraries written in C and Fortran, such as OpenBLAS,
 
 Because of CGO and other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of seconds. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
 
-### Quick, containerized (recommended)
+### Containerized (recommended)
 
 1. Install Docker
 2. Install Visual Studio Code
@@ -18,7 +18,7 @@ Because of CGO and other libraries, the easiest way to work with Gosl is via Doc
 4. Clone https://github.com/cpmech/hello-gosl
 5. Create your application within a container (see gif below)
 
-Done. And your system will remain "clean."
+Done. And your system will "remain clean."
 
 ![](zdocs/vscode-open-in-container.gif)
 
@@ -32,18 +32,7 @@ Another great thing about VS Code is the IntelliSense. Here, as soon as we start
 
 ### Debian/Ubuntu GNU Linux
 
-Because we use CGO for linking Gosl with many libraries, we cannot use the so convenient _go get_ functionality for installing Gosl. Moreover, we view Gosl as the most basic set of libraries for high-performance computing and therefore prefer to install Gosl directly alongside Go. In other words, Gosl extends Go with powerful tools for scientific simulations.
-
-Gosl is then linked to `WHEREVER_GO_IS_LOCATED/src/gosl`; e.g. `/usr/local/go/src/gosl`. We have experimented with GOPATH and the newer Go Modules approach, but both do not work well with CGO (and hence Gosl).
-
-**Download and link Gosl**
-
-Assuming that you have saved your go code in `$HOME/mygo` and that go has been installed in `$HOME/go`:
-
-```
-git clone https://github.com/cpmech/gosl.git $HOME/mygo/gosl
-ln -s $HOME/mygo/gosl $HOME/go/src/gosl
-```
+First we have to first install some extra libraries **before** calling _go get_.
 
 **Install dependencies**
 
@@ -62,11 +51,10 @@ sudo apt-get install -y --no-install-recommends \
   libfftw3-mpi-dev
 ```
 
-**Compile Gosl**
+**Download Gosl**
 
 ```
-cd $HOME/mygo/gosl
-bash ./all.bash
+go get github.com/cpmech/gosl
 ```
 
 Done. Installation completed.
