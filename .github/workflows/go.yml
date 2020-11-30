@@ -15,17 +15,17 @@ jobs:
     
     - name: Install dependencies
       run: |
-        sudo apt-get install -y --no-install-recommends
-        gcc
-        gfortran
-        libopenmpi-dev
-        libhwloc-dev
-        liblapacke-dev
-        libopenblas-dev
-        libmetis-dev
-        libsuitesparse-dev
-        libmumps-dev
-        libfftw3-dev
+        sudo apt-get install -y --no-install-recommends \
+        gcc \
+        gfortran \
+        libopenmpi-dev \
+        libhwloc-dev \
+        liblapacke-dev \
+        libopenblas-dev \
+        libmetis-dev \
+        libsuitesparse-dev \
+        libmumps-dev \
+        libfftw3-dev \
         libfftw3-mpi-dev          
 
     - name: Set up Go 1.x
