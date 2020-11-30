@@ -65,6 +65,6 @@ RUN bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "$
 
 # install Go tools
 ENV GO111MODULE=auto
-COPY zscripts/go-debian.sh /tmp/library-scripts/
+COPY zscripts/microsoft/go-debian.sh /tmp/library-scripts/
 RUN bash /tmp/library-scripts/go-debian.sh "none" "/usr/local/go" "${GOPATH}" "${USERNAME}" "false" \
   && apt-get clean -y && rm -rf /tmp/library-scripts
