@@ -54,7 +54,7 @@ C := [][]int{
 The Delaunay triangulation of a cloud of points in the `tri` package is easily computed with the
 `Delaunay` command that takes as input the Cartesian coordinates.
 
-![](data/tri_draw01.png)
+![](data/tri_delaunay01.png)
 
 ```go
 // fix seed
