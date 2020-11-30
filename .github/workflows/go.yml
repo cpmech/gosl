@@ -15,7 +15,7 @@ jobs:
     
     - name: Install dependencies
       run: |
-        apt-get update -y && apt-get install -y --no-install-recommends
+        sudo apt-get install -y --no-install-recommends
         gcc
         gfortran
         libopenmpi-dev
