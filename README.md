@@ -45,10 +45,13 @@ sudo apt-get install -y --no-install-recommends \
   liblapacke-dev \
   libopenblas-dev \
   libmetis-dev \
+  libparmetis-dev \
+  libscotch-dev \
+  libptscotch-dev \
   libsuitesparse-dev \
-  libmumps-dev \
+  libmumps-ptscotch-dev \
   libfftw3-dev \
-  libfftw3-mpi-dev
+  libfftw3-mpi-dev          
 ```
 
 **Download Gosl**
