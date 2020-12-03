@@ -1,10 +1,13 @@
-FROM ubuntu:20.04
+FROM debian:sid
 
 # disable tzdata questions
 ENV DEBIAN_FRONTEND=noninteractive
 
 # use bash
 SHELL ["/bin/bash", "-c"]
+
+# enable non-free
+RUN sed -i "s#deb http://deb.debian.org/debian sid main#deb http://deb.debian.org/debian sid main non-free#g" /etc/apt/sources.list
 
 # install apt-utils
 RUN apt-get update -y && \
@@ -21,6 +24,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 
 # required compilers and libraries for gosl
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
+  build-essential \
   gcc \
   gfortran \
   libopenmpi-dev \
@@ -28,11 +32,36 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   liblapacke-dev \
   libopenblas-dev \
   libmetis-dev \
+  libparmetis-dev \
+  libscotch-dev \
+  libptscotch-dev \
+  libatlas-base-dev \
+  libscalapack-mpi-dev \
   libsuitesparse-dev \
-  libmumps-dev \
   libfftw3-dev \
   libfftw3-mpi-dev \
+  intel-mkl-full \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# download the source code of MUMPS and compile it
+ARG MUMPS_VERSION="5.3.5"
+ARG MUMPS_GZ=mumps_${MUMPS_VERSION}.orig.tar.gz
+ARG MUMPS_DIR=/tmp/MUMPS_${MUMPS_VERSION}
+RUN curl http://deb.debian.org/debian/pool/main/m/mumps/${MUMPS_GZ} -o /tmp/${MUMPS_GZ}
+RUN cd /tmp/ && tar xzf ${MUMPS_GZ}
+COPY zscripts/patches/mumps/PORD.lib.Makefile.diff ${MUMPS_DIR}/PORD/lib/Makefile.diff
+COPY zscripts/patches/mumps/src.Makefile.diff ${MUMPS_DIR}/src/Makefile.diff
+COPY zscripts/patches/mumps/Makefile.diff ${MUMPS_DIR}/Makefile.diff
+COPY zscripts/patches/mumps/Makefile.inc ${MUMPS_DIR}/Makefile.inc
+RUN cd ${MUMPS_DIR} \
+   && patch -u PORD/lib/Makefile PORD/lib/Makefile.diff \
+   && patch -u src/Makefile src/Makefile.diff \
+   && patch -u Makefile Makefile.diff \
+   && make all \
+   && cp include/*.h /usr/include/ \
+   && cp -av lib/*.so /usr/lib/ \
+   && cd .. && rm ${MUMPS_GZ} && rm -rf ${MUMPS_DIR} \
+   && ldconfig 
 
 ############################################################################################################
 # install other tools as in:

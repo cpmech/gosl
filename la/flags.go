@@ -5,9 +5,9 @@
 package la
 
 /*
-#cgo CFLAGS: -O2 -I/usr/include/suitesparse -I/usr/local/include/suitesparse
+#cgo CFLAGS: -O2 -I/usr/include -I/usr/include/suitesparse -I/usr/local/include/suitesparse
 #cgo LDFLAGS: -L/usr/lib -L/usr/local/lib
 #cgo LDFLAGS: -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lopenblas -lgfortran
-#cgo LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord
+#cgo LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord -lptesmumps -lptscotch -lptscotcherr -lparmetis -lmetis
 */
 import "C"

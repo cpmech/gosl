@@ -1,0 +1,29 @@
+--- Makefile.orig	2020-12-03 03:51:13.283288527 +0000
++++ Makefile	2020-12-03 05:48:03.196254406 +0000
+@@ -9,7 +9,7 @@
+ 
+ INCLUDES = -I../include
+ 
+-COPTIONS = $(INCLUDES) $(CFLAGS) $(OPTFLAGS)
++COPTIONS = $(INCLUDES) $(CFLAGS) $(OPTFLAGS) -fPIC
+ 
+ OBJS = graph.o gbipart.o gbisect.o ddcreate.o ddbisect.o nestdiss.o \
+        multisector.o gelim.o bucket.o tree.o \
+@@ -24,12 +24,13 @@
+ .c.o:
+ 	$(CC) $(COPTIONS) -c $*.c $(OUTC)$*.o
+ 
+-libpord$(LIBEXT):$(OBJS)
+-	$(AR)$@ $(OBJS)
+-	$(RANLIB) $@
++libpord$(PLAT).so: $(OBJS)
++	$(CC) -shared $(OBJS) -Wl,-soname,libpord$(PLAT)-$(SOVERSION).so -o libpord$(PLAT)-$(VERSION).so -Wl,-z,defs
++	ln -s libpord$(PLAT)-$(VERSION).so libpord$(PLAT)-$(SOVERSION).so
++	ln -s libpord$(PLAT)-$(VERSION).so $@
+ 
+ clean:
+ 	rm -f *.o
+ 
+ realclean:
+-	rm -f *.o libpord.a
++	rm -f *.o *.a *.so

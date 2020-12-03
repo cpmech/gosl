@@ -1,0 +1,12 @@
+--- Makefile.orig	2020-12-03 04:00:05.072307055 +0000
++++ Makefile	2020-12-03 05:56:09.312251207 +0000
+@@ -2,6 +2,9 @@
+ #  This file is part of MUMPS 5.3.5, released
+ #  on Thu Oct 22 09:29:08 UTC 2020
+ #
++export VERSION   = 5.3.5
++export SOVERSION = 5.3
++
+ topdir = .
+ libdir = $(topdir)/lib
+ 
