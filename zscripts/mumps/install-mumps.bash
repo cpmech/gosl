@@ -16,13 +16,18 @@ cd /tmp && tar xzf ${MUMPS_GZ} && rm ${MUMPS_GZ}
 cd ${MUMPS_TMP}
 patch -u PORD/lib/Makefile ${PDIR}/PORD/lib/Makefile.diff
 patch -u src/Makefile ${PDIR}/src/Makefile.diff
-patch -u Makefile ${PDIR}/Makefile.diff
 cp ${PDIR}/Makefile.inc .
-make all
+make d
+make z
+chmod -x lib/*
 
 # copy include and lib files to the right places
-cp include/*.h /usr/include/
-cp -av lib/*.so /usr/lib/
+sudo mkdir -p /usr/include/mumps
+sudo cp -av include/*.h /usr/include/mumps/
+sudo cp -av lib/libpord.so /usr/lib/
+sudo cp -av lib/libdmumps.so /usr/lib/
+sudo cp -av lib/libzmumps.so /usr/lib/
+sudo cp -av lib/libmumps_common.so /usr/lib/
 
 # clean up
 rm -rf ${MUMPS_TMP}

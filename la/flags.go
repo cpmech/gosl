@@ -7,6 +7,6 @@ package la
 /*
 #cgo CFLAGS: -O2 -I/usr/include/mumps -I/usr/include/suitesparse
 #cgo LDFLAGS: -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lopenblas -lgfortran
-#cgo LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord -lptesmumps -lptscotch -lptscotcherr -lparmetis -lmetis
+#cgo LDFLAGS: -ldmumps -lzmumps -lmumps_common -lpord 
 */
 import "C"

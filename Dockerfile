@@ -28,7 +28,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
   gcc \
   gfortran \
   libopenmpi-dev \
-  libhwloc-dev \
   liblapacke-dev \
   libopenblas-dev \
   libmetis-dev \
@@ -47,7 +46,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 COPY zscripts /tmp/zscripts
 
 # download the source code of MUMPS and compile it
-RUN bash /tmp/zscripts/mumps/install.bash
+RUN bash /tmp/zscripts/mumps/install-mumps.bash
 
 # configure basic system
 ARG INSTALL_ZSH="true"

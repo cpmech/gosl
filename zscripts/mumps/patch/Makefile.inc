@@ -36,9 +36,9 @@ LIBEXT  = .so
 OUTC    = -o 
 OUTF    = -o 
 RM = /bin/rm -f
-CC = mpicc
-FC = mpif90 -fallow-argument-mismatch -w
-FL = mpif90 -fallow-argument-mismatch -w
+CC = mpicc -O2
+FC = mpif90 -fallow-argument-mismatch -O2 -w
+FL = mpif90 -fallow-argument-mismatch -O2 -w
 AR = ar vr 
 RANLIB = ranlib
 LAPACK = -llapack
@@ -58,9 +58,9 @@ LIBOTHERS = -lpthread
 CDEFS   = -DAdd_
 
 #Begin Optimized options
-OPTF    = -O -fopenmp
-OPTL    = -O -fopenmp
-OPTC    = -O -fopenmp
+OPTF    = -O2 -fopenmp
+OPTL    = -O2 -fopenmp
+OPTC    = -O2 -fopenmp
 #End Optimized options
  
 INCS = $(INCPAR)
