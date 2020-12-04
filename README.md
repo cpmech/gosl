@@ -41,7 +41,6 @@ sudo apt-get install -y --no-install-recommends \
   gcc \
   gfortran \
   libopenmpi-dev \
-  libhwloc-dev \
   liblapacke-dev \
   libopenblas-dev \
   libmetis-dev \
