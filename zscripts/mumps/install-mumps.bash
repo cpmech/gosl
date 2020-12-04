@@ -22,12 +22,12 @@ make z
 chmod -x lib/*
 
 # copy include and lib files to the right places
-sudo mkdir -p /usr/include/mumps
-sudo cp -av include/*.h /usr/include/mumps/
-sudo cp -av lib/libpord.so /usr/lib/
-sudo cp -av lib/libdmumps.so /usr/lib/
-sudo cp -av lib/libzmumps.so /usr/lib/
-sudo cp -av lib/libmumps_common.so /usr/lib/
+mkdir -p /usr/include/mumps
+cp -av include/*.h /usr/include/mumps/
+cp -av lib/libpord.so /usr/lib/
+cp -av lib/libdmumps.so /usr/lib/
+cp -av lib/libzmumps.so /usr/lib/
+cp -av lib/libmumps_common.so /usr/lib/
 
 # clean up
 rm -rf ${MUMPS_TMP}
