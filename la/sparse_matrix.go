@@ -50,6 +50,12 @@ func (o *Triplet) Init(m, n, max int) {
 
 // Put inserts an element to a pre-allocated (with Init) triplet matrix
 func (o *Triplet) Put(i, j int, x float64) {
+	if i >= o.m {
+		chk.Panic("cannot put item because index of row is outside range (i=%d, m=%d)", i, o.m)
+	}
+	if j >= o.n {
+		chk.Panic("cannot put item because index of columns is outside range (j=%d, n=%d)", j, o.n)
+	}
 	if o.pos >= o.max {
 		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", o.pos, o.max)
 	}
@@ -404,6 +410,12 @@ func (o *TripletC) Init(m, n, max int) {
 
 // Put inserts an element to a pre-allocated (with Init) triplet (complex) matrix
 func (o *TripletC) Put(i, j int, x complex128) {
+	if i >= o.m {
+		chk.Panic("cannot put item because index of row is outside range (i=%d, m=%d)", i, o.m)
+	}
+	if j >= o.n {
+		chk.Panic("cannot put item because index of columns is outside range (j=%d, n=%d)", j, o.n)
+	}
 	if o.pos >= o.max {
 		chk.Panic("cannot put item because max number of items has been exceeded (pos = %d, max = %d)", o.pos, o.max)
 	}
