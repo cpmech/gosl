@@ -250,7 +250,7 @@ func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool, comm *mpi.Communic
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 			start, endp1 = (id*nnz)/sz, ((id+1)*nnz)/sz
-			if symmetric {
+			if symmetric && mirrorIfSym {
 				o.Init(m, n, (endp1-start)*2) // assuming that the diagonal is all-zeros (for safety)
 			} else {
 				o.Init(m, n, endp1-start)
@@ -570,7 +570,7 @@ func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool, comm *mpi.Communi
 			}
 			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 			start, endp1 = (id*nnz)/sz, ((id+1)*nnz)/sz
-			if symmetric {
+			if symmetric && mirrorIfSym {
 				o.Init(m, n, (endp1-start)*2) // assuming that the diagonal is all-zeros (for safety)
 			} else {
 				o.Init(m, n, endp1-start)
