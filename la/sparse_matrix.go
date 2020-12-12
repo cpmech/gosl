@@ -219,6 +219,9 @@ func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool, comm *mpi.Communic
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		if strings.HasPrefix(line, "%%MatrixMarket") {
 			info := strings.Fields(line)
+			if len(info) != 5 {
+				chk.Panic("info header starting with %%MatrixMarket is incorrect")
+			}
 			if info[1] != "matrix" {
 				chk.Panic("can only read \"matrix\" MatrixMarket at the moment")
 			}
@@ -536,6 +539,9 @@ func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool, comm *mpi.Communi
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		if strings.HasPrefix(line, "%%MatrixMarket") {
 			info := strings.Fields(line)
+			if len(info) != 5 {
+				chk.Panic("info header starting with %%MatrixMarket is incorrect")
+			}
 			if info[1] != "matrix" {
 				chk.Panic("can only read \"matrix\" MatrixMarket at the moment")
 			}
