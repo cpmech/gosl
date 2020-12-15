@@ -6,9 +6,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # use bash
 SHELL ["/bin/bash", "-c"]
 
-# enable non-free
-RUN sed -i "s#deb http://deb.debian.org/debian sid main#deb http://deb.debian.org/debian sid main non-free#g" /etc/apt/sources.list
-
 # install apt-utils
 RUN apt-get update -y && \
   apt-get install -y apt-utils 2> >( grep -v 'debconf: delaying package configuration, since apt-utils is not installed' >&2 ) \
