@@ -179,6 +179,7 @@ func (o *sparseSolverMumps) Solve(x, b Vector, bIsDistr bool) {
 
 	// set RHS in processor # 0
 	if bIsDistr { // b is distributed => must join
+		x.Fill(0)
 		o.comm.ReduceSum(x, b) // x := join(b)
 	} else {
 		if o.comm.Rank() == 0 {
