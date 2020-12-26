@@ -347,7 +347,7 @@ func EigenvecsBuild(vv []complex128, wr, wi, v []float64) {
 //   vvl, vvr -- complex version of left and right eigenvectors [pre-allocated]
 //  NOTE (no checks made)
 //   n = len(wr) = len(wi) = len(vl) = len(vr)
-//   2 * n = len(vvl) = len(vvr)
+//   n*n = len(vvl) = len(vvr)
 func EigenvecsBuildBoth(vvl, vvr []complex128, wr, wi, vl, vr []float64) {
 	n := len(wr)
 	dj := 1                      // increment for next conjugate pair
