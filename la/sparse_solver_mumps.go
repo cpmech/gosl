@@ -117,7 +117,7 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 		o.data.icntl[4-1] = -1 // message level
 	}
 	o.data.icntl[5-1] = 0  // assembled matrix (needed for distributed matrix)
-	o.data.icntl[6-1] = 7  // automatic (default) permuting strategy for diagonal terms
+	o.data.icntl[6-1] = 0  // must be zero because matrix is distributed
 	o.data.icntl[18-1] = 3 // distributed matrix
 	o.data.icntl[14-1] = C.int(args.MumpsIncreaseOfWorkingSpacePct)
 	o.data.icntl[23-1] = C.int(args.MumpsMaxMemoryPerProcessor)
