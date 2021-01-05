@@ -1,4 +1,4 @@
-%%MatrixMarket matrix coordinate complex unsymmetric
+%%MatrixMarket matrix coordinate complex general
 %-------------------------------------------------------------------------------
 % UF Sparse Matrix Collection, Tim Davis
 % http://www.cise.ufl.edu/research/sparse/matrices/GHS_psdef/inline_1
