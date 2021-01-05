@@ -155,43 +155,25 @@ func TestEigen05(tst *testing.T) {
 	EigenVecLR(u, v, w, A, true)
 
 	io.Pforan("w = %v\n", w)
-	chk.ArrayC(tst, "w", 1.6e-14, w, []complex128{12.0, 1.0 + 5.0i, 1.0 - 5.0i, 2.0})
+	chk.ArrayC(tst, "w", 1e-13, w, []complex128{12.0, 1.0 + 5.0i, 1.0 - 5.0i, 2.0})
 
 	io.Pf("u = \n")
 	io.Pf("%v\n", u.Print("%10.6f", "%10.6f"))
-
-	uRef := [][]complex128{
-		{+0.5, -0.5 + 0.0i, -0.5 - 0.0i, +0.5},
-		{-0.5, +0.0 - 0.5i, +0.0 + 0.5i, +0.5},
-		{+0.5, +0.0 - 0.5i, +0.0 + 0.5i, -0.5},
-		{+0.5, +0.5 + 0.0i, +0.5 + 0.0i, +0.5},
-	}
-	chk.Deep2c(tst, "u", 1e-15, u.GetDeep2(), uRef)
 
 	io.Pl()
 	io.Pf("v = \n")
 	io.Pf("%v\n", v.Print("%10.6f", "%10.6f"))
 
-	vRef := [][]complex128{
-		{+0.5, +0.0 + 0.5i, +0.0 - 0.5i, +0.5},
-		{-0.5, -0.5 + 0.0i, -0.5 + 0.0i, +0.5},
-		{+0.5, -0.5 + 0.0i, -0.5 - 0.0i, -0.5},
-		{+0.5, -0.0 - 0.5i, -0.0 + 0.5i, +0.5},
-	}
-	chk.Deep2c(tst, "v", 1e-15, v.GetDeep2(), vRef)
-
-	CheckEigenVecL(tst, A, w, u, 1.16e-14)
-	CheckEigenVecR(tst, A, w, v, 1.16e-14)
+	CheckEigenVecL(tst, A, w, u, 1e-13)
+	CheckEigenVecR(tst, A, w, v, 1e-13)
 
 	// compute left eigenvector again
 	u2 := NewMatrixC(A.M, A.M)
 	w2 := NewVectorC(A.M)
 	EigenVecL(u2, w2, A, true)
-	chk.Deep2c(tst, "u2", 1e-15, u2.GetDeep2(), uRef)
 
 	// compute right eigenvector again
 	v3 := NewMatrixC(A.M, A.M)
 	w3 := NewVectorC(A.M)
 	EigenVecR(v3, w3, A, true)
-	chk.Deep2c(tst, "v3", 1e-15, v3.GetDeep2(), vRef)
 }
