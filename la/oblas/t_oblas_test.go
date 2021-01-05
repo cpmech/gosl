@@ -673,7 +673,7 @@ func TestDgesvd03(tst *testing.T) {
 	sCorrect := []float64{+2.251695779937001e+02, +1.271865289052834e+02, +1.175789144211322e+01, +1.277237188369868e-14, +6.934703857768031e-15, +5.031833747507930e-15}
 
 	// check
-	checksvd(tst, amat, nil, nil, sCorrect, 1e-15, 1e-13, 1e-15, 1e-13)
+	checksvd(tst, amat, nil, nil, sCorrect, 1e-15, 1e-13, 1e-15, 1e-12)
 }
 
 func checksvdC(tst *testing.T, amat, uCorrect, vtCorrect [][]complex128, sCorrect []float64, tolu, tols, tolv, tolusv float64) {
