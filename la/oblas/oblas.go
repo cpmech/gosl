@@ -69,7 +69,7 @@ func Dscal(n int, alpha float64, x []float64, incx int) {
 //
 //  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-axpy
 //
-//  y += alpha*x + y
+//  y := alpha*x + y
 //
 func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) {
 	C.cblas_daxpy(
@@ -88,7 +88,7 @@ func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) {
 //
 //  See: https://software.intel.com/en-us/mkl-developer-reference-c-cblas-axpy
 //
-//  y += alpha*x + y
+//  y := alpha*x + y
 //
 func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, incy int) {
 	C.cblas_zaxpy(
