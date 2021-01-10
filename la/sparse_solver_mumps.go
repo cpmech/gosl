@@ -63,6 +63,7 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 
 	// set comm
 	o.comm = args.communicator
+	mpiSize := o.comm.Size()
 
 	// allocate data
 	if C.NumData == C.NumMaxData {
@@ -99,12 +100,19 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 
 	// set pointers
 	o.data.n = C.int(o.t.m)
-	o.data.nz_loc = C.int(o.t.pos)
-	o.data.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
-	o.data.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
-	o.data.a_loc = (*C.double)(unsafe.Pointer(&o.t.x[0]))
+	if mpiSize > 1 {
+		o.data.nz_loc = C.int(o.t.pos)
+		o.data.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
+		o.data.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
+		o.data.a_loc = (*C.double)(unsafe.Pointer(&o.t.x[0]))
+	} else {
+		o.data.nz = C.int(o.t.pos)
+		o.data.irn = (*C.int)(unsafe.Pointer(&o.mi[0]))
+		o.data.jcn = (*C.int)(unsafe.Pointer(&o.mj[0]))
+		o.data.a = (*C.double)(unsafe.Pointer(&o.t.x[0]))
+	}
 
-	// control
+	// verbose level
 	if args.Verbose {
 		o.data.icntl[1-1] = 6 // output stream for error messages
 		o.data.icntl[2-1] = 0 // output stream for statistics and warnings
@@ -116,15 +124,26 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 		o.data.icntl[3-1] = -1 // no global information
 		o.data.icntl[4-1] = -1 // message level
 	}
-	o.data.icntl[5-1] = 0  // assembled matrix (needed for distributed matrix)
-	o.data.icntl[6-1] = 0  // must be zero because matrix is distributed
-	o.data.icntl[18-1] = 3 // distributed matrix
+
+	// handle args
+	o.data.icntl[7-1] = C.int(args.mumpsOrdering) // ordering
+	o.data.icntl[8-1] = C.int(args.mumpsScaling)  // scaling
 	o.data.icntl[14-1] = C.int(args.MumpsIncreaseOfWorkingSpacePct)
 	o.data.icntl[23-1] = C.int(args.MumpsMaxMemoryPerProcessor)
 
-	// set ordering and scaling
-	o.data.icntl[7-1] = C.int(args.mumpsOrdering) // ordering
-	o.data.icntl[8-1] = C.int(args.mumpsScaling)  // scaling
+	// options
+	o.data.icntl[5-1] = 0 // assembled matrix (not elemental)
+	if mpiSize > 1 {
+		o.data.icntl[6-1] = 0  // no col perm for distr matrix => set this to remove warning
+		o.data.icntl[18-1] = 3 // use distributed matrix
+		o.data.icntl[28-1] = 2 // parallel computation
+		o.data.icntl[29-1] = 0 // parallel ordering tool => auto
+	} else {
+		o.data.icntl[6-1] = 7  // automatic col perm
+		o.data.icntl[18-1] = 0 // matrix is centralized on the host
+		o.data.icntl[28-1] = 1 // sequential computation
+		o.data.icntl[29-1] = 0 // auto => ignored
+	}
 
 	// analysis step
 	o.data.job = 1     // analysis code
@@ -241,6 +260,7 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// set comm
 	o.comm = args.communicator
+	mpiSize := o.comm.Size()
 
 	// allocate data
 	if C.NumDataC == C.NumMaxData {
@@ -277,12 +297,19 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// set pointers
 	o.data.n = C.int(o.t.m)
-	o.data.nz_loc = C.int(o.t.pos)
-	o.data.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
-	o.data.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
-	o.data.a_loc = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.t.x[0]))
+	if mpiSize > 1 {
+		o.data.nz_loc = C.int(o.t.pos)
+		o.data.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
+		o.data.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
+		o.data.a_loc = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.t.x[0]))
+	} else {
+		o.data.nz = C.int(o.t.pos)
+		o.data.irn = (*C.int)(unsafe.Pointer(&o.mi[0]))
+		o.data.jcn = (*C.int)(unsafe.Pointer(&o.mj[0]))
+		o.data.a = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.t.x[0]))
+	}
 
-	// control
+	// verbose level
 	if args.Verbose {
 		o.data.icntl[1-1] = 6 // output stream for error messages
 		o.data.icntl[2-1] = 0 // output stream for statistics and warnings
@@ -294,15 +321,26 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 		o.data.icntl[3-1] = -1 // no global information
 		o.data.icntl[4-1] = -1 // message level
 	}
-	o.data.icntl[5-1] = 0  // assembled matrix (needed for distributed matrix)
-	o.data.icntl[6-1] = 7  // automatic (default) permuting strategy for diagonal terms
-	o.data.icntl[18-1] = 3 // distributed matrix
+
+	// handle args
+	o.data.icntl[7-1] = C.int(args.mumpsOrdering) // ordering
+	o.data.icntl[8-1] = C.int(args.mumpsScaling)  // scaling
 	o.data.icntl[14-1] = C.int(args.MumpsIncreaseOfWorkingSpacePct)
 	o.data.icntl[23-1] = C.int(args.MumpsMaxMemoryPerProcessor)
 
-	// set ordering and scaling
-	o.data.icntl[7-1] = C.int(args.mumpsOrdering) // ordering
-	o.data.icntl[8-1] = C.int(args.mumpsScaling)  // scaling
+	// options
+	o.data.icntl[5-1] = 0  // assembled matrix (not elemental)
+	if mpiSize > 1 {
+		o.data.icntl[6-1] = 0  // no col perm for distr matrix => set this to remove warning
+		o.data.icntl[18-1] = 3 // use distributed matrix
+		o.data.icntl[28-1] = 2 // parallel computation
+		o.data.icntl[29-1] = 0 // parallel ordering tool => auto
+	}else{
+		o.data.icntl[6-1] = 7  // automatic col perm
+		o.data.icntl[18-1] = 0 // matrix is centralized on the host
+		o.data.icntl[28-1] = 1 // sequential computation
+		o.data.icntl[29-1] = 0 // auto => ignored
+	}
 
 	// analysis step
 	o.data.job = 1     // analysis code
