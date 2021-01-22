@@ -22,6 +22,11 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+# Ensure that login shells get the correct path if the user updated the PATH using ENV.
+rm -f /etc/profile.d/00-restore-env.sh
+echo "export PATH=${PATH//$(sh -lc 'echo $PATH')/\$PATH}" > /etc/profile.d/00-restore-env.sh
+chmod +x /etc/profile.d/00-restore-env.sh
+
 # If in automatic mode, determine if a user already exists, if not use vscode
 if [ "${USERNAME}" = "auto" ] || [ "${USERNAME}" = "automatic" ]; then
     USERNAME=""
@@ -92,6 +97,7 @@ if [ "${PACKAGES_ALREADY_INSTALLED}" != "true" ]; then
         dialog \
         libc6 \
         libgcc1 \
+        libkrb5-3 \
         libgssapi-krb5-2 \
         libicu[0-9][0-9] \
         liblttng-ust0 \
@@ -182,8 +188,7 @@ fi
 # .bashrc/.zshrc snippet
 RC_SNIPPET="$(cat << EOF
 export USER=\$(whoami)
-
-export PATH=\$PATH:\$HOME/.local/bin
+if [[ "\${PATH}" != *"\$HOME/.local/bin"* ]]; then export PATH="\${PATH}:\$HOME/.local/bin"; fi
 EOF
 )"
 
@@ -192,18 +197,18 @@ cat << 'EOF' > /usr/local/bin/code
 #!/bin/sh
 
 get_in_path_except_current() {
-  which -a "$1" | grep -v "$0" | head -1
+    which -a "$1" | grep -A1 "$0" | grep -v "$0"
 }
 
 code="$(get_in_path_except_current code)"
 
 if [ -n "$code" ]; then
-  exec "$code" "$@"
+    exec "$code" "$@"
 elif [ "$(command -v code-insiders)" ]; then
-  exec code-insiders "$@"
+    exec code-insiders "$@"
 else
-  echo "code or code-insiders is not installed" >&2
-  exit 127
+    echo "code or code-insiders is not installed" >&2
+    exit 127
 fi
 EOF
 chmod +x /usr/local/bin/code
