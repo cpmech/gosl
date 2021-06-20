@@ -23,14 +23,12 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
   gcc \
   gfortran \
-  libopenmpi-dev \
   liblapacke-dev \
   libopenblas-dev \
   libmetis-dev \
   libsuitesparse-dev \
-  libmumps-dev \
+  libmumps-seq-dev \
   libfftw3-dev \
-  libfftw3-mpi-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # configure basic system

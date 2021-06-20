@@ -206,11 +206,11 @@ func (o *LinIpm) Solve(verbose bool) {
 
 		// solve linear system
 		if it == 0 {
-			args := la.NewSparseConfig(nil)
+			args := la.NewSparseConfig()
 			o.Lis.Init(o.J, args)
 		}
 		o.Lis.Fact()
-		o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
+		o.Lis.Solve(o.Mdy, o.R) // mdy := inv(J) * R
 
 		// control variables
 		xrmin, srmin = o.calcMinRatios()
@@ -229,7 +229,7 @@ func (o *LinIpm) Solve(verbose bool) {
 		}
 
 		// solve linear system again
-		o.Lis.Solve(o.Mdy, o.R, false) // mdy := inv(J) * R
+		o.Lis.Solve(o.Mdy, o.R) // mdy := inv(J) * R
 
 		// step lengths
 		xrmin, srmin = o.calcMinRatios()

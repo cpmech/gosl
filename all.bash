@@ -2,7 +2,7 @@
 
 set -e
 
-PKGS_ESSENTIAL="chk io utl mpi la/oblas la"
+PKGS_ESSENTIAL="chk io utl la/oblas la"
 
 PKGS_ALL=" \
 fun/fftw fun \

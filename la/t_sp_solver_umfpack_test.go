@@ -35,7 +35,7 @@ func TestSpUmfpack01a(tst *testing.T) {
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []float64{1, 2, 3, 4, 5}
-	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, chk.Verbose, false, nil)
+	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, chk.Verbose)
 }
 
 func TestSpUmfpack01b(tst *testing.T) {
@@ -67,7 +67,7 @@ func TestSpUmfpack01b(tst *testing.T) {
 	done := make(chan int, nch)
 	for i := 0; i < nch; i++ {
 		go func() {
-			TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, false, false, nil)
+			TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, false)
 			done <- 1
 		}()
 	}
@@ -103,7 +103,7 @@ func TestSpUmfpack02(tst *testing.T) {
 	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
 	tolx := 1e-4 // << for macOS, for Linux and Windows, tol = 1e-5
 	tol := 1e-9  // TODO: check why tests fails with 1e-10 @ office but not @ home
-	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, tolx, tol, false, false, nil)
+	TestSpSolver(tst, "umfpack", false, &t, b, xCorrect, tolx, tol, false)
 }
 
 func TestSpUmfpack03(tst *testing.T) {
@@ -131,7 +131,7 @@ func TestSpUmfpack03(tst *testing.T) {
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
 	xCorrect := []complex128{1, 2, 3, 4, 5}
-	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, true, false, nil)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-14, 1e-13, true)
 }
 
 func TestSpUmfpack04(tst *testing.T) {
@@ -159,7 +159,7 @@ func TestSpUmfpack04(tst *testing.T) {
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
 	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 2.7e-5, 1e-9, true, false, nil)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 2.7e-5, 1e-9, true)
 }
 
 func TestSpUmfpack05(tst *testing.T) {
@@ -191,7 +191,7 @@ func TestSpUmfpack05(tst *testing.T) {
 	}
 
 	// run test
-	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-15, 1e-13, true, false, nil)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-15, 1e-13, true)
 }
 
 func TestSpUmfpack06(tst *testing.T) {
@@ -275,7 +275,7 @@ func TestSpUmfpack06(tst *testing.T) {
 	}
 
 	// run test
-	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-3, 1e-12, true, false, nil)
+	TestSpSolverC(tst, "umfpack", false, &t, b, xCorrect, 1e-3, 1e-12, true)
 }
 
 func TestSpUmfpack07(tst *testing.T) {
@@ -305,7 +305,7 @@ func TestSpUmfpack07(tst *testing.T) {
 	defer solver.Free()
 
 	// initialization
-	args := NewSparseConfig(nil)
+	args := NewSparseConfig()
 	args.SetUmfpackSymmetry()
 	solver.Init(T, args)
 
@@ -313,9 +313,8 @@ func TestSpUmfpack07(tst *testing.T) {
 	solver.Fact()
 
 	// solve system
-	bIsDistr := false
 	x := NewVector(len(b))
-	solver.Solve(x, b, bIsDistr) // x := inv(A) * b
+	solver.Solve(x, b) // x := inv(A) * b
 
 	// check
 	chk.Array(tst, "x = inv(a) * b", 1e-13, x, []float64{

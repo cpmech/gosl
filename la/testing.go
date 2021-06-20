@@ -9,7 +9,6 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/mpi"
 )
 
 // TestSolverResidual check the residual of a linear system solution
@@ -38,14 +37,14 @@ func TestSolverResidualC(tst *testing.T, a *MatrixC, x, b VectorC, tolNorm float
 
 // TestSpSolver tests a sparse solver
 func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet, b, xCorrect Vector,
-	tolX, tolRes float64, verbose, bIsDistr bool, comm *mpi.Communicator) {
+	tolX, tolRes float64, verbose bool) {
 
 	// allocate solver
 	o := NewSparseSolver(solverKind)
 	defer o.Free()
 
 	// initialise solver
-	args := NewSparseConfig(comm)
+	args := NewSparseConfig()
 	if symmetric {
 		if solverKind == "mumps" {
 			args.SetMumpsSymmetry(true, false)
@@ -61,7 +60,7 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 
 	// solve
 	x := NewVector(len(b))
-	o.Solve(x, b, bIsDistr) // x := inv(A) * b
+	o.Solve(x, b) // x := inv(A) * b
 
 	// check
 	chk.Array(tst, "x", tolX, x, xCorrect)
@@ -70,14 +69,14 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 
 // TestSpSolverC tests a sparse solver (complex version)
 func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *TripletC, b, xCorrect VectorC,
-	tolX, tolRes float64, verbose, bIsDistr bool, comm *mpi.Communicator) {
+	tolX, tolRes float64, verbose bool) {
 
 	// allocate solver
 	o := NewSparseSolverC(solverKind)
 	defer o.Free()
 
 	// initialise solver
-	args := NewSparseConfig(comm)
+	args := NewSparseConfig()
 	if symmetric {
 		if solverKind == "mumps" {
 			args.SetMumpsSymmetry(true, false)
@@ -93,7 +92,7 @@ func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *Triplet
 
 	// solve
 	x := NewVectorC(len(b))
-	o.Solve(x, b, bIsDistr) // x := inv(A) * b
+	o.Solve(x, b) // x := inv(A) * b
 
 	// check
 	chk.ArrayC(tst, "x", tolX, x, xCorrect)

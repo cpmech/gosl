@@ -23,17 +23,15 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
-	"github.com/cpmech/gosl/mpi"
 )
 
 // sparseSolverMumps wraps the MUMPS solver
 type sparseSolverMumps struct {
 
 	// internal
-	comm *mpi.Communicator
-	t    *Triplet
-	mi   []int32
-	mj   []int32
+	t  *Triplet
+	mi []int32
+	mj []int32
 
 	// MUMPS data
 	data *C.DMUMPS_STRUC_C
@@ -55,15 +53,8 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 		chk.Panic("triplet must have at least one item for initialisation\n")
 	}
 	if args == nil {
-		chk.Panic("the MUMPS solver requires args with an MPI communicator")
+		chk.Panic("the MUMPS solver requires args")
 	}
-	if args.communicator == nil {
-		chk.Panic("the MUMPS solver requires an MPI communicator")
-	}
-
-	// set comm
-	o.comm = args.communicator
-	mpiSize := o.comm.Size()
 
 	// allocate data
 	if C.NumData == C.NumMaxData {
@@ -73,9 +64,8 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 	C.NumData++
 
 	// initialise data
-	o.data.comm_fortran = -987654 // use Fortran communicator by default
-	o.data.par = 1                // host also works
-	o.data.sym = 0                // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
+	o.data.par = 1 // host also works
+	o.data.sym = 0 // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
 	if args.symmetric {
 		o.data.sym = 2
 	}
@@ -100,17 +90,10 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 
 	// set pointers
 	o.data.n = C.int(o.t.m)
-	if mpiSize > 1 {
-		o.data.nz_loc = C.int(o.t.pos)
-		o.data.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
-		o.data.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
-		o.data.a_loc = (*C.double)(unsafe.Pointer(&o.t.x[0]))
-	} else {
-		o.data.nz = C.int(o.t.pos)
-		o.data.irn = (*C.int)(unsafe.Pointer(&o.mi[0]))
-		o.data.jcn = (*C.int)(unsafe.Pointer(&o.mj[0]))
-		o.data.a = (*C.double)(unsafe.Pointer(&o.t.x[0]))
-	}
+	o.data.nz = C.int(o.t.pos)
+	o.data.irn = (*C.int)(unsafe.Pointer(&o.mi[0]))
+	o.data.jcn = (*C.int)(unsafe.Pointer(&o.mj[0]))
+	o.data.a = (*C.double)(unsafe.Pointer(&o.t.x[0]))
 
 	// verbose level
 	if args.Verbose {
@@ -132,18 +115,11 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 	o.data.icntl[23-1] = C.int(args.MumpsMaxMemoryPerProcessor)
 
 	// options
-	o.data.icntl[5-1] = 0 // assembled matrix (not elemental)
-	if mpiSize > 1 {
-		o.data.icntl[6-1] = 0  // no col perm for distr matrix => set this to remove warning
-		o.data.icntl[18-1] = 3 // use distributed matrix
-		o.data.icntl[28-1] = 2 // parallel computation
-		o.data.icntl[29-1] = 0 // parallel ordering tool => auto
-	} else {
-		o.data.icntl[6-1] = 7  // automatic col perm
-		o.data.icntl[18-1] = 0 // matrix is centralized on the host
-		o.data.icntl[28-1] = 1 // sequential computation
-		o.data.icntl[29-1] = 0 // auto => ignored
-	}
+	o.data.icntl[5-1] = 0  // assembled matrix (not elemental)
+	o.data.icntl[6-1] = 7  // automatic col perm
+	o.data.icntl[18-1] = 0 // matrix is centralized on the host
+	o.data.icntl[28-1] = 1 // sequential computation
+	o.data.icntl[29-1] = 0 // auto => ignored
 
 	// analysis step
 	o.data.job = 1     // analysis code
@@ -189,27 +165,16 @@ func (o *sparseSolverMumps) Fact() {
 //
 //   bIsDistr -- this flag tells that the right-hand-side vector 'b' is distributed.
 //
-func (o *sparseSolverMumps) Solve(x, b Vector, bIsDistr bool) {
+func (o *sparseSolverMumps) Solve(x, b Vector) {
 
 	// check
 	if !o.factorised {
 		chk.Panic("factorisation must be performed first\n")
 	}
 
-	// set RHS in processor # 0
-	if bIsDistr { // b is distributed => must join
-		x.Fill(0)
-		o.comm.ReduceSum(x, b) // x := join(b)
-	} else {
-		if o.comm.Rank() == 0 {
-			x.Apply(1, b) // x := b   or   copy(x, b)
-		}
-	}
-
-	// only proc # 0 needs the RHS
-	if o.comm.Rank() == 0 {
-		o.data.rhs = (*C.double)(unsafe.Pointer(&x[0]))
-	}
+	// set RHS
+	x.Apply(1, b) // x := b   or   copy(x, b)
+	o.data.rhs = (*C.double)(unsafe.Pointer(&x[0]))
 
 	// solve
 	o.data.job = 3     // solution code
@@ -217,21 +182,17 @@ func (o *sparseSolverMumps) Solve(x, b Vector, bIsDistr bool) {
 	if o.data.info[1-1] < 0 {
 		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
-
-	// broadcast from root
-	o.comm.BcastFromRoot(x)
 }
 
 // complex /////////////////////////////////////////////////////////////////////////////////////////
 
 // MumpsC wraps the MUMPS solver (complex version)
-type MumpsC struct {
+type sparseSolverMumpsC struct {
 
 	// internal
-	comm *mpi.Communicator
-	t    *TripletC
-	mi   []int32
-	mj   []int32
+	t  *TripletC
+	mi []int32
+	mj []int32
 
 	// MUMPS data
 	data *C.ZMUMPS_STRUC_C
@@ -243,7 +204,7 @@ type MumpsC struct {
 
 // Init initialises mumps for sparse linear systems with real numbers
 // args may be nil
-func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
+func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// check
 	if o.initialised {
@@ -255,12 +216,8 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// default arguments
 	if args == nil {
-		args = NewSparseConfig(nil)
+		args = NewSparseConfig()
 	}
-
-	// set comm
-	o.comm = args.communicator
-	mpiSize := o.comm.Size()
 
 	// allocate data
 	if C.NumDataC == C.NumMaxData {
@@ -297,17 +254,10 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// set pointers
 	o.data.n = C.int(o.t.m)
-	if mpiSize > 1 {
-		o.data.nz_loc = C.int(o.t.pos)
-		o.data.irn_loc = (*C.int)(unsafe.Pointer(&o.mi[0]))
-		o.data.jcn_loc = (*C.int)(unsafe.Pointer(&o.mj[0]))
-		o.data.a_loc = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.t.x[0]))
-	} else {
-		o.data.nz = C.int(o.t.pos)
-		o.data.irn = (*C.int)(unsafe.Pointer(&o.mi[0]))
-		o.data.jcn = (*C.int)(unsafe.Pointer(&o.mj[0]))
-		o.data.a = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.t.x[0]))
-	}
+	o.data.nz = C.int(o.t.pos)
+	o.data.irn = (*C.int)(unsafe.Pointer(&o.mi[0]))
+	o.data.jcn = (*C.int)(unsafe.Pointer(&o.mj[0]))
+	o.data.a = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&o.t.x[0]))
 
 	// verbose level
 	if args.Verbose {
@@ -330,17 +280,10 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// options
 	o.data.icntl[5-1] = 0  // assembled matrix (not elemental)
-	if mpiSize > 1 {
-		o.data.icntl[6-1] = 0  // no col perm for distr matrix => set this to remove warning
-		o.data.icntl[18-1] = 3 // use distributed matrix
-		o.data.icntl[28-1] = 2 // parallel computation
-		o.data.icntl[29-1] = 0 // parallel ordering tool => auto
-	}else{
-		o.data.icntl[6-1] = 7  // automatic col perm
-		o.data.icntl[18-1] = 0 // matrix is centralized on the host
-		o.data.icntl[28-1] = 1 // sequential computation
-		o.data.icntl[29-1] = 0 // auto => ignored
-	}
+	o.data.icntl[6-1] = 7  // automatic col perm
+	o.data.icntl[18-1] = 0 // matrix is centralized on the host
+	o.data.icntl[28-1] = 1 // sequential computation
+	o.data.icntl[29-1] = 0 // auto => ignored
 
 	// analysis step
 	o.data.job = 1     // analysis code
@@ -354,7 +297,7 @@ func (o *MumpsC) Init(t *TripletC, args *SparseConfig) {
 }
 
 // Free clears extra memory allocated by MUMPS
-func (o *MumpsC) Free() {
+func (o *sparseSolverMumpsC) Free() {
 	if o.initialised {
 		o.data.job = -2    // finalisation code
 		C.zmumps_c(o.data) // do finalize
@@ -362,7 +305,7 @@ func (o *MumpsC) Free() {
 }
 
 // Fact performs the factorisation
-func (o *MumpsC) Fact() {
+func (o *sparseSolverMumpsC) Fact() {
 
 	// check
 	if !o.initialised {
@@ -384,28 +327,16 @@ func (o *MumpsC) Fact() {
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-//   bIsDistr -- this flag tells that the right-hand-side vector 'b' is distributed.
-//
-func (o *MumpsC) Solve(x, b VectorC, bIsDistr bool) {
+func (o *sparseSolverMumpsC) Solve(x, b VectorC) {
 
 	// check
 	if !o.factorised {
 		chk.Panic("factorisation must be performed first\n")
 	}
 
-	// set RHS in processor # 0
-	if bIsDistr { // b is distributed => must join
-		o.comm.ReduceSumC(x, b) // x := join(b)
-	} else {
-		if o.comm.Rank() == 0 {
-			x.Apply(1, b) // x := b   or   copy(x, b)
-		}
-	}
-
-	// only proc # 0 needs the RHS
-	if o.comm.Rank() == 0 {
-		o.data.rhs = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&x[0]))
-	}
+	// set RHS
+	x.Apply(1, b) // x := b   or   copy(x, b)
+	o.data.rhs = (*C.ZMUMPS_COMPLEX)(unsafe.Pointer(&x[0]))
 
 	// solve
 	o.data.job = 3     // solution code
@@ -413,9 +344,6 @@ func (o *MumpsC) Solve(x, b VectorC, bIsDistr bool) {
 	if o.data.info[1-1] < 0 {
 		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
-
-	// broadcast from root
-	o.comm.BcastFromRootC(x)
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
@@ -443,5 +371,5 @@ func mumErr(info, infx C.int) string {
 
 func init() {
 	spSolverDB["mumps"] = func() SparseSolver { return new(sparseSolverMumps) }
-	spSolverDBc["mumps"] = func() SparseSolverC { return new(MumpsC) }
+	spSolverDBc["mumps"] = func() SparseSolverC { return new(sparseSolverMumpsC) }
 }

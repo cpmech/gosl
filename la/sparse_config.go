@@ -6,7 +6,6 @@ package la
 
 import (
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/mpi"
 )
 
 // The SparseConfig structure holds configuration arguments for sparse solvers
@@ -21,17 +20,15 @@ type SparseConfig struct {
 	mumpsScaling                   int // Scaling type (check MUMPS solver) [may be empty]
 
 	// internal
-	symmetric    bool              // indicates symmetric system. NOTE: when using MUMPS, only the upper or lower part of the matrix must be provided
-	symPosDef    bool              // indicates symmetric-positive-defined system. NOTE: when using MUMPS, only the upper or lower part of the matrix must be provided
-	communicator *mpi.Communicator // MPI communicator for parallel solvers [may be nil]
+	symmetric bool // indicates symmetric system. NOTE: when using MUMPS, only the upper or lower part of the matrix must be provided
+	symPosDef bool // indicates symmetric-positive-defined system. NOTE: when using MUMPS, only the upper or lower part of the matrix must be provided
 }
 
 // NewSparseConfig returns a new SparseConfig
 // Input:
 //  comm -- may be nil
-func NewSparseConfig(comm *mpi.Communicator) (o *SparseConfig) {
+func NewSparseConfig() (o *SparseConfig) {
 	o = new(SparseConfig)
-	o.communicator = comm
 	o.MumpsIncreaseOfWorkingSpacePct = 100
 	o.MumpsMaxMemoryPerProcessor = 2000
 	o.SetMumpsOrdering("")

@@ -65,7 +65,6 @@ func VecAdd(res Vector, α float64, u Vector, β float64, v Vector) {
 		res[i+2] = α*u[i+2] + β*v[i+2]
 		res[i+3] = α*u[i+3] + β*v[i+3]
 	}
-	return
 }
 
 // VecMaxDiff returns the maximum absolute difference between two vectors

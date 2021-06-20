@@ -175,7 +175,7 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) {
 
 		// solve linear system
 		o.stat.Nlinsol++
-		o.ls.Solve(o.dr, o.r, false) // dr := inv(drdy) * residual
+		o.ls.Solve(o.dr, o.r) // dr := inv(drdy) * residual
 
 		// update y
 		for i := 0; i < o.ndim; i++ {

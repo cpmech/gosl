@@ -10,22 +10,12 @@ import (
 	"testing"
 
 	"github.com/cpmech/gosl/chk"
-	"github.com/cpmech/gosl/mpi"
 )
-
-func switchMPI() {
-	if !mpi.IsOn() {
-		mpi.Start()
-	}
-}
 
 func TestSpMumps01a(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("SpMumps01a. real")
-
-	switchMPI()
-	comm := mpi.NewCommunicator(nil)
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -46,18 +36,14 @@ func TestSpMumps01a(tst *testing.T) {
 
 	// run test
 	b := []float64{8.0, 45.0, -3.0, 3.0, 19.0}
-	bIsDistr := false
 	xCorrect := []float64{1, 2, 3, 4, 5}
-	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
+	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
 }
 
 func TestSpMumps02(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("SpMumps02. real")
-
-	switchMPI()
-	comm := mpi.NewCommunicator(nil)
 
 	// input matrix data into Triplet
 	var t Triplet
@@ -78,18 +64,14 @@ func TestSpMumps02(tst *testing.T) {
 
 	// run test
 	b := []float64{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
-	bIsDistr := false
 	xCorrect := []float64{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, bIsDistr, comm)
+	TestSpSolver(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false)
 }
 
 func TestSpMumps03(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("SpMumps03. complex (without imaginary part)")
-
-	switchMPI()
-	comm := mpi.NewCommunicator(nil)
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -110,18 +92,14 @@ func TestSpMumps03(tst *testing.T) {
 
 	// run test
 	b := []complex128{8.0, 45.0, -3.0, 3.0, 19.0}
-	bIsDistr := false
 	xCorrect := []complex128{1, 2, 3, 4, 5}
-	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
 }
 
 func TestSpMumps04(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("SpMumps04. complex (without imaginary part)")
-
-	switchMPI()
-	comm := mpi.NewCommunicator(nil)
 
 	// input matrix data into Triplet
 	var t TripletC
@@ -142,18 +120,14 @@ func TestSpMumps04(tst *testing.T) {
 
 	// run test
 	b := []complex128{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0}
-	bIsDistr := false
 	xCorrect := []complex128{-1, 8, -65, 454, -2725, 13624, -54497, 163490, -326981, 326991}
-	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false, bIsDistr, comm)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-4, 1e-9, false)
 }
 
 func TestSpMumps05(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("SpMumps05. complex")
-
-	switchMPI()
-	comm := mpi.NewCommunicator(nil)
 
 	// data
 	n := 10
@@ -179,17 +153,13 @@ func TestSpMumps05(tst *testing.T) {
 	}
 
 	// run test
-	bIsDistr := false
-	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false, bIsDistr, comm)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-14, 1e-13, false)
 }
 
 func TestSpMumps06(tst *testing.T) {
 
 	//verbose()
 	chk.PrintTitle("SpMumps06. complex")
-
-	switchMPI()
-	comm := mpi.NewCommunicator(nil)
 
 	// given the following matrix of complex numbers:
 	//      _                                                  _
@@ -267,17 +237,13 @@ func TestSpMumps06(tst *testing.T) {
 	}
 
 	// run test
-	bIsDistr := false
-	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false, bIsDistr, comm)
+	TestSpSolverC(tst, "mumps", false, &t, b, xCorrect, 1e-3, 1e-12, false)
 }
 
 func TestSpMumps07(tst *testing.T) {
 
 	// verbose()
 	chk.PrintTitle("SpMumps07. real/symmetric")
-
-	switchMPI()
-	comm := mpi.NewCommunicator(nil)
 
 	A := [][]float64{
 		{2, 1, 1, 3, 2},
@@ -301,7 +267,7 @@ func TestSpMumps07(tst *testing.T) {
 	defer solver.Free()
 
 	// initialization
-	args := NewSparseConfig(comm)
+	args := NewSparseConfig()
 	args.SetMumpsSymmetry(true, false)
 	solver.Init(T, args)
 
@@ -309,9 +275,8 @@ func TestSpMumps07(tst *testing.T) {
 	solver.Fact()
 
 	// solve system
-	bIsDistr := false
 	x := NewVector(len(b))
-	solver.Solve(x, b, bIsDistr) // x := inv(A) * b
+	solver.Solve(x, b) // x := inv(A) * b
 
 	// check
 	chk.Array(tst, "x = inv(a) * b", 1e-13, x, []float64{

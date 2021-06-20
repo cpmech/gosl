@@ -24,7 +24,7 @@ func TestDoPri802(tst *testing.T) {
 	p.Xf = 0.2
 
 	// configuration
-	conf := NewConfig("dopri8", "", nil)
+	conf := NewConfig("dopri8", "")
 	conf.SetTols(1e-9, 1e-9)
 	conf.Mmin = 0.333
 	conf.Mmax = 6.0

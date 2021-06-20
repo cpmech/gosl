@@ -40,14 +40,12 @@ First we have to first install some extra libraries **before** calling _go get_.
 sudo apt-get install -y --no-install-recommends \
   gcc \
   gfortran \
-  libopenmpi-dev \
   liblapacke-dev \
   libopenblas-dev \
   libmetis-dev \
   libsuitesparse-dev \
-  libmumps-dev \
-  libfftw3-dev \
-  libfftw3-mpi-dev
+  libmumps-seq-dev \
+  libfftw3-dev
 ```
 
 **Download Gosl**
@@ -65,7 +63,6 @@ Gosl includes the following _essential_ packages:
 - [chk](https://github.com/cpmech/gosl/tree/master/chk). To check numerical results and for unit testing
 - [io](https://github.com/cpmech/gosl/tree/master/io). Input/output including printing to the terminal and handling files
 - [utl](https://github.com/cpmech/gosl/tree/master/utl). To generate series (e.g. linspace) and other functions as in pylab/matlab/octave
-- [mpi](https://github.com/cpmech/gosl/tree/master/mpi). Message Passing Interface for parallel computing
 - [la](https://github.com/cpmech/gosl/tree/master/la). Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions
 
 Gosl includes the following _main_ packages:
