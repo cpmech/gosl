@@ -1,4 +1,4 @@
 gm/tri/triangle.c linguist-vendored
 rnd/dsfmt/dSFMT.c linguist-vendored
 rnd/sfmt/SFMT.c linguist-vendored
-num/qpack/*.f linguist-vendored
+num/qpck/*.f linguist-vendored
