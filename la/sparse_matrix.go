@@ -10,8 +10,6 @@ import (
 	"math/cmplx"
 	"strings"
 
-	"github.com/cpmech/gosl/mpi"
-
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
 )
@@ -207,13 +205,10 @@ func (o *Triplet) ToDense() (a *Matrix) {
 //  Output:
 //   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
 //
-func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool, comm *mpi.Communicator) (symmetric bool) {
+func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
 	id, sz := 0, 1
-	if comm != nil {
-		id, sz = comm.Rank(), comm.Size()
-	}
 	start, endp1 := 0, 0
 	indexNnz := 0
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
@@ -527,13 +522,10 @@ func (o *TripletC) ToDense() (a *MatrixC) {
 //  Output:
 //   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
 //
-func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool, comm *mpi.Communicator) (symmetric bool) {
+func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
 	id, sz := 0, 1
-	if comm != nil {
-		id, sz = comm.Rank(), comm.Size()
-	}
 	start, endp1 := 0, 0
 	indexNnz := 0
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {

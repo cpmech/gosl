@@ -19,7 +19,7 @@ func TestMoEuler01(tst *testing.T) {
 	p := ProbHwEq11()
 
 	// configuration
-	conf := NewConfig("moeuler", "", nil)
+	conf := NewConfig("moeuler", "")
 	conf.SetStepOut(true, nil)
 
 	// solver

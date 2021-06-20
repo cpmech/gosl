@@ -67,7 +67,7 @@ func (o *sparseSolverUmfpack) Init(t *Triplet, args *SparseConfig) {
 
 	// default arguments
 	if args == nil {
-		args = NewSparseConfig(nil)
+		args = NewSparseConfig()
 	}
 
 	// allocate data
@@ -160,7 +160,7 @@ func (o *sparseSolverUmfpack) Fact() {
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *sparseSolverUmfpack) Solve(x, b Vector, dummy bool) {
+func (o *sparseSolverUmfpack) Solve(x, b Vector) {
 
 	// check
 	if !o.factorised {
@@ -181,7 +181,7 @@ func (o *sparseSolverUmfpack) Solve(x, b Vector, dummy bool) {
 // complex /////////////////////////////////////////////////////////////////////////////////////////
 
 // UmfpackC wraps the UMFPACK solver (complex version)
-type UmfpackC struct {
+type sparseSolverUmfpackC struct {
 
 	// umfpack data
 	info  []float64
@@ -214,7 +214,7 @@ type UmfpackC struct {
 
 // Init initialises umfpack for sparse linear systems with real numbers
 // args may be nil
-func (o *UmfpackC) Init(t *TripletC, args *SparseConfig) {
+func (o *sparseSolverUmfpackC) Init(t *TripletC, args *SparseConfig) {
 
 	// check
 	if o.initialised {
@@ -226,7 +226,7 @@ func (o *UmfpackC) Init(t *TripletC, args *SparseConfig) {
 
 	// default arguments
 	if args == nil {
-		args = NewSparseConfig(nil)
+		args = NewSparseConfig()
 	}
 
 	// allocate data
@@ -263,7 +263,7 @@ func (o *UmfpackC) Init(t *TripletC, args *SparseConfig) {
 }
 
 // Free clears extra memory allocated by UMFPACK
-func (o *UmfpackC) Free() {
+func (o *sparseSolverUmfpackC) Free() {
 	if o.symbFact {
 		C.umfpack_zl_free_symbolic(&o.usymb)
 		o.symbFact = false
@@ -275,7 +275,7 @@ func (o *UmfpackC) Free() {
 }
 
 // Fact performs the factorisation
-func (o *UmfpackC) Fact() {
+func (o *sparseSolverUmfpackC) Fact() {
 
 	// check
 	if !o.initialised {
@@ -319,7 +319,7 @@ func (o *UmfpackC) Fact() {
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
-func (o *UmfpackC) Solve(x, b VectorC, dummy bool) {
+func (o *sparseSolverUmfpackC) Solve(x, b VectorC) {
 
 	// check
 	if !o.factorised {
@@ -341,5 +341,5 @@ func (o *UmfpackC) Solve(x, b VectorC, dummy bool) {
 
 func init() {
 	spSolverDB["umfpack"] = func() SparseSolver { return new(sparseSolverUmfpack) }
-	spSolverDBc["umfpack"] = func() SparseSolverC { return new(UmfpackC) }
+	spSolverDBc["umfpack"] = func() SparseSolverC { return new(sparseSolverUmfpackC) }
 }

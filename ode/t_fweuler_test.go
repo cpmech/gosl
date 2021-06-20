@@ -19,7 +19,7 @@ func TestFwEuler01(tst *testing.T) {
 	p := ProbHwEq11()
 
 	// configuration
-	conf := NewConfig("fweuler", "", nil)
+	conf := NewConfig("fweuler", "")
 	conf.SetFixedH(p.Dx, p.Xf)
 	conf.SetStepOut(true, nil)
 

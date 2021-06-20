@@ -18,7 +18,7 @@ type SparseSolver interface {
 	Init(t *Triplet, args *SparseConfig)
 	Free()
 	Fact()
-	Solve(x, b Vector, bIsDistr bool)
+	Solve(x, b Vector)
 }
 
 // spSolverMaker defines a function that makes spSolvers
@@ -48,7 +48,7 @@ type SparseSolverC interface {
 	Init(t *TripletC, args *SparseConfig)
 	Free()
 	Fact()
-	Solve(x, b VectorC, bIsDistr bool)
+	Solve(x, b VectorC)
 }
 
 // spSolverMakerC defines a function that makes spSolvers (complex version)
@@ -87,7 +87,7 @@ func SpSolve(A *Triplet, b Vector) (x Vector) {
 
 	// solve
 	x = NewVector(len(b))
-	o.Solve(x, b, false) // x := inv(A) * b
+	o.Solve(x, b) // x := inv(A) * b
 	return
 }
 
@@ -109,6 +109,6 @@ func SpSolveC(A *TripletC, b VectorC) (x VectorC) {
 
 	// solve
 	x = NewVectorC(len(b))
-	o.Solve(x, b, false) // x := inv(A) * b
+	o.Solve(x, b) // x := inv(A) * b
 	return
 }

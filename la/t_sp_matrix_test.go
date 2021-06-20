@@ -40,7 +40,7 @@ func TestTriplet01(tst *testing.T) {
 	chk.String(tst, string(d), smat1)
 
 	b := new(Triplet)
-	b.ReadSmat("/tmp/gosl/la/triplet01.smat", true, nil)
+	b.ReadSmat("/tmp/gosl/la/triplet01.smat", true)
 	chk.Deep2(tst, "b=a", 1e-17, a.ToDense().GetDeep2(), b.ToDense().GetDeep2())
 
 	a.WriteSmat("/tmp/gosl/la", "triplet01b", 0, "%23.15e", false, false)
@@ -77,12 +77,12 @@ func TestTriplet02(tst *testing.T) {
 	chk.String(tst, string(d), smat1)
 
 	b := new(TripletC)
-	b.ReadSmat("/tmp/gosl/la/triplet02.smat", true, nil)
+	b.ReadSmat("/tmp/gosl/la/triplet02.smat", true)
 	chk.Deep2c(tst, "b=a", 1e-17, a.ToDense().GetDeep2(), b.ToDense().GetDeep2())
 
 	am.WriteSmat("/tmp/gosl/la", "triplet02b", 0, "", false, false, true)
 	c := new(Triplet)
-	c.ReadSmat("/tmp/gosl/la/triplet02b.smat", true, nil)
+	c.ReadSmat("/tmp/gosl/la/triplet02b.smat", true)
 	chk.Deep2(tst, "b=a", 1e-14, c.ToDense().GetDeep2(), [][]float64{
 		{0, math.Sqrt(8), 0, 0},
 		{math.Sqrt2, 0, math.Sqrt(32), 0},
@@ -170,21 +170,21 @@ func TestSmat01(tst *testing.T) {
 
 	// read MatrixMarket and check
 	var T Triplet
-	isSym1 := T.ReadSmat("data/small-sparse-matrix.mtx", true, nil)
+	isSym1 := T.ReadSmat("data/small-sparse-matrix.mtx", true)
 	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym1", isSym1, false)
 
 	// write SMAT and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 0, "", false, false)
 	var S Triplet
-	isSym2 := S.ReadSmat("/tmp/gosl/la/small-test-matrix.smat", true, nil)
+	isSym2 := S.ReadSmat("/tmp/gosl/la/small-test-matrix.smat", true)
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym2", isSym2, false)
 
 	// write MatrixMarket and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix", 0, "", true, false)
 	var M Triplet
-	isSym3 := M.ReadSmat("/tmp/gosl/la/small-test-matrix.mtx", true, nil)
+	isSym3 := M.ReadSmat("/tmp/gosl/la/small-test-matrix.mtx", true)
 	chk.Deep2(tst, "M", 1e-17, M.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym3", isSym3, false)
 	reference := `%%MatrixMarket matrix coordinate real general
@@ -220,21 +220,21 @@ func TestSmat02(tst *testing.T) {
 
 	// read MatrixMarket and check
 	var T Triplet
-	isSym1 := T.ReadSmat("data/small-sparse-matrix-sym.mtx", true, nil)
+	isSym1 := T.ReadSmat("data/small-sparse-matrix-sym.mtx", true)
 	chk.Deep2(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym1", isSym1, true)
 
 	// write SMAT and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-sym", 1e-17, "", false, false)
 	var S Triplet
-	isSym2 := S.ReadSmat("/tmp/gosl/la/small-test-matrix-sym.smat", true, nil)
+	isSym2 := S.ReadSmat("/tmp/gosl/la/small-test-matrix-sym.smat", true)
 	chk.Deep2(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym2", isSym2, false) // smat doesn't know about symmetry
 
 	// write MatrixMarket and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-sym", 0, "", true, true)
 	var M Triplet
-	isSym3 := M.ReadSmat("/tmp/gosl/la/small-test-matrix-sym.mtx", true, nil)
+	isSym3 := M.ReadSmat("/tmp/gosl/la/small-test-matrix-sym.mtx", true)
 	chk.Deep2(tst, "M", 1e-17, M.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym3", isSym3, true)
 	reference := `%%MatrixMarket matrix coordinate real symmetric
@@ -265,21 +265,21 @@ func TestSmat03(tst *testing.T) {
 
 	// read MatrixMarket and check
 	var T TripletC
-	isSym1 := T.ReadSmat("data/small-sparse-matrix-complex.mtx", true, nil)
+	isSym1 := T.ReadSmat("data/small-sparse-matrix-complex.mtx", true)
 	chk.Deep2c(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym1", isSym1, false)
 
 	// write SMAT and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex", 1e-17, "", false, false, false)
 	var S TripletC
-	isSym2 := S.ReadSmat("/tmp/gosl/la/small-test-matrix-complex.smat", true, nil)
+	isSym2 := S.ReadSmat("/tmp/gosl/la/small-test-matrix-complex.smat", true)
 	chk.Deep2c(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym2", isSym2, false)
 
 	// write MatrixMarket and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex", 0, "", true, false, false)
 	var M TripletC
-	isSym3 := M.ReadSmat("/tmp/gosl/la/small-test-matrix-complex.mtx", true, nil)
+	isSym3 := M.ReadSmat("/tmp/gosl/la/small-test-matrix-complex.mtx", true)
 	chk.Deep2c(tst, "M", 1e-17, M.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym3", isSym3, false)
 	reference := `%%MatrixMarket matrix coordinate complex general
@@ -316,21 +316,21 @@ func TestSmat04(tst *testing.T) {
 
 	// read MatrixMarket and check
 	var T TripletC
-	isSym1 := T.ReadSmat("data/small-sparse-matrix-complex-sym.mtx", true, nil)
+	isSym1 := T.ReadSmat("data/small-sparse-matrix-complex-sym.mtx", true)
 	chk.Deep2c(tst, "T", 1e-17, T.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym1", isSym1, true)
 
 	// write SMAT and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex-sym", 1e-17, "", false, false, false)
 	var S TripletC
-	isSym2 := S.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym.smat", true, nil)
+	isSym2 := S.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym.smat", true)
 	chk.Deep2c(tst, "S", 1e-17, S.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym2", isSym2, false) // smat doesn't know about symmetry
 
 	// write MatrixMarket and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex-sym", 0, "", true, true, false)
 	var M TripletC
-	isSym3 := M.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym.mtx", true, nil)
+	isSym3 := M.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym.mtx", true)
 	chk.Deep2c(tst, "M", 1e-17, M.ToDense().GetDeep2(), correct)
 	chk.Bool(tst, "isSym3", isSym3, true)
 	reference := `%%MatrixMarket matrix coordinate complex symmetric
@@ -356,7 +356,7 @@ func TestSmat04(tst *testing.T) {
 	// write normalized MatrixMarket and check
 	T.WriteSmat("/tmp/gosl/la", "small-test-matrix-complex-sym-norm", 0, "", true, true, true)
 	var N Triplet
-	N.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym-norm.mtx", true, nil)
+	N.ReadSmat("/tmp/gosl/la/small-test-matrix-complex-sym-norm.mtx", true)
 	chk.Deep2(tst, "N", 1e-14, N.ToDense().GetDeep2(), correctNorm)
 }
 

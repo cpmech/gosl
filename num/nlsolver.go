@@ -204,7 +204,7 @@ func (o *NlSolver) Solve(x []float64) {
 			o.linsol.Fact()
 
 			// solve linear system => compute mdx
-			o.linsol.Solve(o.mdx, o.fx, false) // mdx = inv(J) * fx   false => !sumToRoot
+			o.linsol.Solve(o.mdx, o.fx) // mdx = inv(J) * fx
 
 			// compute lin-search data
 			if o.config.LineSearch {

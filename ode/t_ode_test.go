@@ -92,7 +92,7 @@ func TestOde02(tst *testing.T) {
 	p := ProbVanDerPol(0, false)
 
 	// configuration
-	conf := NewConfig("radau5", "", nil)
+	conf := NewConfig("radau5", "")
 	conf.SetStepOut(true, nil)
 
 	// allocate ODE object
@@ -123,7 +123,7 @@ func TestOde03(tst *testing.T) {
 	p := ProbRobertson()
 
 	// configuration
-	conf := NewConfig("radau5", "", nil)
+	conf := NewConfig("radau5", "")
 	conf.SetStepOut(true, nil)
 
 	// tolerances and initial step size
@@ -159,7 +159,7 @@ func TestOde04(tst *testing.T) {
 	p := ProbHwAmplifier()
 
 	// configurations
-	conf := NewConfig("radau5", "", nil)
+	conf := NewConfig("radau5", "")
 	conf.SetStepOut(true, nil)
 	conf.IniH = 1.0e-6 // initial step size
 

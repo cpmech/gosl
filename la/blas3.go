@@ -118,5 +118,4 @@ func MatAdd(res *Matrix, α float64, a *Matrix, β float64, b *Matrix) {
 		res.Data[i+2] = α*a.Data[i+2] + β*b.Data[i+2]
 		res.Data[i+3] = α*a.Data[i+3] + β*b.Data[i+3]
 	}
-	return
 }

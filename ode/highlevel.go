@@ -31,7 +31,7 @@ func Solve(method string, fcn Func, jac JacF, y la.Vector, xf, dx, atol, rtol fl
 	numJac, fixedStep, saveStep, saveDense bool) (stat *Stat, out *Output) {
 
 	// configuration
-	conf := NewConfig(method, "", nil)
+	conf := NewConfig(method, "")
 	if atol > 0 && rtol > 0 {
 		conf.SetTols(atol, rtol)
 	}

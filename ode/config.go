@@ -9,7 +9,6 @@ import (
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/la"
-	"github.com/cpmech/gosl/mpi"
 	"github.com/cpmech/gosl/utl"
 )
 
@@ -60,9 +59,7 @@ type Config struct {
 	stabBetaM float64 // factor to multiply stabilisation coefficient β
 
 	// linear solver control
-	lsKind string            // linear solver kind
-	distr  bool              // MPI distributed execution
-	comm   *mpi.Communicator // for MPI run (real linear solver)
+	lsKind string // linear solver kind
 
 	// tolerances
 	atol  float64 // absolute tolerance
@@ -81,17 +78,13 @@ type Config struct {
 // NewConfig returns a new [default] set of configuration parameters
 //   method -- the ODE method: e.g. fweuler, bweuler, radau5, moeuler, dopri5
 //   lsKind -- kind of linear solver: "umfpack" or "mumps" [may be empty]
-//   comm   -- communicator for the linear solver [may be nil]
-//   NOTE: (1) if comm == nil, the linear solver will be "umfpack" by default
-//         (2) if comm != nil and comm.Size() == 1, you can use either "umfpack" or "mumps"
-//         (3) if comm != nil and comm.Size() > 1, the linear solver will be set to "mumps" automatically
-func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config) {
+func NewConfig(method string, lsKind string) (o *Config) {
 
 	// check kind of linear solver
 	if lsKind != "" && lsKind != "umfpack" && lsKind != "mumps" {
 		chk.Panic("lsKind must be empty or \"umfpack\" or \"mumps\"")
 	}
-	if lsKind == "" || comm == nil {
+	if lsKind == "" {
 		lsKind = "umfpack"
 	}
 
@@ -124,18 +117,13 @@ func NewConfig(method string, lsKind string, comm *mpi.Communicator) (o *Config)
 	o.StiffNnot = 6
 
 	// configurations for linear solver
-	o.LinSolConfig = la.NewSparseConfig(comm)
+	o.LinSolConfig = la.NewSparseConfig()
 
 	// internal data
 	o.method = method
 
 	// linear solver control
 	o.lsKind = lsKind
-	o.distr = false
-	o.comm = comm
-	if o.lsKind == "mumps" {
-		o.distr = true
-	}
 
 	// set tolerances
 	o.SetTols(1e-4, 1e-4)

@@ -21,7 +21,7 @@ func TestDoPri501(tst *testing.T) {
 	p := ProbHwEq11()
 
 	// configuration
-	conf := NewConfig("dopri5", "", nil)
+	conf := NewConfig("dopri5", "")
 	conf.SetStepOut(true, nil)
 
 	// solver
@@ -54,7 +54,7 @@ func TestDoPri502(tst *testing.T) {
 	p := ProbArenstorf()
 
 	// configuration
-	conf := NewConfig("dopri5", "", nil)
+	conf := NewConfig("dopri5", "")
 	conf.SetTols(1e-7, 1e-7)
 	conf.Mmin = 0.2
 	conf.Mmax = 10.0
@@ -132,7 +132,7 @@ func TestDoPri503(tst *testing.T) {
 	p.Xf = 0.2
 
 	// configuration
-	conf := NewConfig("dopri5", "", nil)
+	conf := NewConfig("dopri5", "")
 	conf.SetTols(1e-7, 1e-7)
 	conf.Mmin = 0.2
 	conf.Mmax = 10.0

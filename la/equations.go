@@ -190,7 +190,6 @@ func (o *Equations) Alloc(nnz []int, kparts, vectors bool) {
 		o.Xu = NewVector(o.Nu)
 		o.Xk = NewVector(o.Nk)
 	}
-	return
 }
 
 // Start (re)starts index for inserting items using the Put command
@@ -290,7 +289,6 @@ func (o *Equations) AllocDense(kparts bool) {
 		o.Dku = NewMatrix(o.Nk, o.Nu)
 		o.Dkk = NewMatrix(o.Nk, o.Nk)
 	}
-	return
 }
 
 // SetDense allocates and sets partitioned system in dense format
@@ -315,7 +313,6 @@ func (o *Equations) SetDense(A *Matrix, kparts bool) {
 			}
 		}
 	}
-	return
 }
 
 // Solve solves linear system (represented by sparse matrices)
@@ -371,7 +368,7 @@ func (o *Equations) Solve(solver SparseSolver, t float64, calcXk, calcBu func(I 
 	}
 
 	// solve system
-	solver.Solve(o.Xu, o.Bu, false)
+	solver.Solve(o.Xu, o.Bu)
 
 	// calc {bk}
 	if o.Nk > 0 && o.Aku != nil {

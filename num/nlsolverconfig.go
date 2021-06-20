@@ -60,7 +60,7 @@ func NewNlSolverConfig() (o *NlSolverConfig) {
 	o.EnforceConvRate = false
 
 	// configurations for linear solver
-	o.LinSolConfig = la.NewSparseConfig(nil)
+	o.LinSolConfig = la.NewSparseConfig()
 
 	// internal
 	o.useDenseSolver = false
