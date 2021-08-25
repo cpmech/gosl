@@ -305,15 +305,16 @@ func ExtractColC(j, m, n int, A []complex128) (colj []complex128) {
 
 // eigenvector matrices ////////////////////////////////////////////////////////////////////////////
 
-// EigenvecsBuild builds complex eigenvectros created by Dgeev function
+// EigenvecsBuild builds complex eigenvectors created by Dgeev function
 //  INPUT:
 //   wr, wi -- real and imag parts of eigenvalues
 //   v      -- left or right eigenvectors from Dgeev
 //  OUTPUT:
 //   vv -- complex version of left or right eigenvector [pre-allocated]
 //  NOTE (no checks made)
-//   n = len(wr) = len(wi) = len(v)
-//   2 * n = len(vv)
+//   n = len(wr) = len(wi)
+//   n * n = len(v)
+//   n * n = len(vv)
 func EigenvecsBuild(vv []complex128, wr, wi, v []float64) {
 	n := len(wr)
 	dj := 1                      // increment for next conjugate pair
@@ -339,15 +340,16 @@ func EigenvecsBuild(vv []complex128, wr, wi, v []float64) {
 	}
 }
 
-// EigenvecsBuildBoth builds complex left and right eigenvectros created by Dgeev function
+// EigenvecsBuildBoth builds complex left and right eigenvectors created by Dgeev function
 //  INPUT:
 //   wr, wi -- real and imag parts of eigenvalues
 //   vl, vr -- left and right eigenvectors from Dgeev
 //  OUTPUT:
 //   vvl, vvr -- complex version of left and right eigenvectors [pre-allocated]
 //  NOTE (no checks made)
-//   n = len(wr) = len(wi) = len(vl) = len(vr)
-//   n*n = len(vvl) = len(vvr)
+//   n = len(wr) = len(wi)
+//   n * n = len(vl) = len(vr)
+//   n * n = len(vvl) = len(vvr)
 func EigenvecsBuildBoth(vvl, vvr []complex128, wr, wi, vl, vr []float64) {
 	n := len(wr)
 	dj := 1                      // increment for next conjugate pair
