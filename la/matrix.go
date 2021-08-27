@@ -267,7 +267,7 @@ func (o *Matrix) SetCol(j int, value float64) {
 	}
 }
 
-// NormFrob returns the Frobenious norm of this matrix
+// NormFrob returns the Frobenius norm of this matrix
 //  nrm := ‖a‖_F = sqrt(Σ_i Σ_j a[ij]⋅a[ij]) = ‖a‖_2
 func (o *Matrix) NormFrob() (nrm float64) {
 	for k := 0; k < o.M*o.N; k++ {
