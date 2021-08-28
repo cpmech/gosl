@@ -49,7 +49,7 @@ func Cholesky(L, a *Matrix) {
 	}
 }
 
-// SolveRealLinSysSPD solves a linear system with real numbres and a Symmetric-Positive-Definite (SPD) matrix
+// SolveRealLinSysSPD solves a linear system with real numbers and a Symmetric-Positive-Definite (SPD) matrix
 //
 //        x := inv(a) * b
 //
@@ -79,7 +79,7 @@ func SolveRealLinSysSPD(x Vector, a *Matrix, b Vector) {
 	}
 }
 
-// SolveTwoRealLinSysSPD solves two linear systems with real numbres and Symmetric-Positive-Definite (SPD) matrices
+// SolveTwoRealLinSysSPD solves two linear systems with real numbers and Symmetric-Positive-Definite (SPD) matrices
 //
 //        x := inv(a) * b    and    X := inv(a) * B
 //
