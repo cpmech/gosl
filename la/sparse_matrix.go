@@ -206,9 +206,7 @@ func (o *Triplet) ToDense() (a *Matrix) {
 func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
-	id, sz := 0, 1
-	start, endp1 := 0, 0
-	indexNnz := 0
+	m, n, nnz, pos := 0, 0, 0, 0
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		if strings.HasPrefix(line, "%%MatrixMarket") {
 			info := strings.Fields(line)
@@ -241,12 +239,11 @@ func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) {
 			if len(r) != 3 {
 				chk.Panic("the number of columns in the line with dimensions must be 3 (m,n,nnz)\n")
 			}
-			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
-			start, endp1 = (id*nnz)/sz, ((id+1)*nnz)/sz
+			m, n, nnz = io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 			if symmetric && mirrorIfSym {
-				o.Init(m, n, (endp1-start)*2) // assuming that the diagonal is all-zeros (for safety)
+				o.Init(m, n, nnz*2) // assuming that the diagonal is all-zeros (for safety)
 			} else {
-				o.Init(m, n, endp1-start)
+				o.Init(m, n, nnz)
 			}
 			initialized = true
 		} else {
@@ -254,13 +251,13 @@ func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) {
 				chk.Panic("the number of columns in the data lines must be 3 (i,j,x)\n")
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), io.Atof(r[2])
-			if indexNnz >= start && indexNnz < endp1 {
+			if pos < nnz {
 				o.Put(i-deltaIndex, j-deltaIndex, x)
 				if symmetric && mirrorIfSym && i != j {
 					o.Put(j-deltaIndex, i-deltaIndex, x)
 				}
 			}
-			indexNnz++
+			pos++
 		}
 		return
 	})
@@ -521,9 +518,7 @@ func (o *TripletC) ToDense() (a *MatrixC) {
 func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) {
 	deltaIndex := 0
 	initialized := false
-	id, sz := 0, 1
-	start, endp1 := 0, 0
-	indexNnz := 0
+	m, n, nnz, pos := 0, 0, 0, 0
 	io.ReadLines(filename, func(idx int, line string) (stop bool) {
 		if strings.HasPrefix(line, "%%MatrixMarket") {
 			info := strings.Fields(line)
@@ -556,12 +551,11 @@ func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) 
 			if len(r) != 3 {
 				chk.Panic("number of columns in header must be 3 (m,n,nnz)\n")
 			}
-			m, n, nnz := io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
-			start, endp1 = (id*nnz)/sz, ((id+1)*nnz)/sz
+			m, n, nnz = io.Atoi(r[0]), io.Atoi(r[1]), io.Atoi(r[2])
 			if symmetric && mirrorIfSym {
-				o.Init(m, n, (endp1-start)*2) // assuming that the diagonal is all-zeros (for safety)
+				o.Init(m, n, nnz*2) // assuming that the diagonal is all-zeros (for safety)
 			} else {
-				o.Init(m, n, endp1-start)
+				o.Init(m, n, nnz)
 			}
 			initialized = true
 		} else {
@@ -569,13 +563,13 @@ func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) 
 				chk.Panic("number of columns in data lines must be 4 (i,j,xReal,xImag)\n")
 			}
 			i, j, x := io.Atoi(r[0]), io.Atoi(r[1]), complex(io.Atof(r[2]), io.Atof(r[3]))
-			if indexNnz >= start && indexNnz < endp1 {
+			if pos < nnz {
 				o.Put(i-deltaIndex, j-deltaIndex, x)
 				if symmetric && mirrorIfSym && i != j {
 					o.Put(j-deltaIndex, i-deltaIndex, x)
 				}
 			}
-			indexNnz++
+			pos++
 		}
 		return
 	})
