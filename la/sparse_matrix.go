@@ -199,8 +199,6 @@ func (o *Triplet) ToDense() (a *Matrix) {
 //      This option helps when you want all non-zero values of a symmetric matrix,
 //      noting that the MatrixMarket format stores only one "triangular side" of
 //      the matrix and the diagonal.
-//   comm -- [may be nil]. If the communication is given, this function will
-//      distribute the number of non-zeros (near) equally to all processors.
 //
 //  Output:
 //   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
@@ -516,8 +514,6 @@ func (o *TripletC) ToDense() (a *MatrixC) {
 //      This option helps when you want all non-zero values of a symmetric matrix,
 //      noting that the MatrixMarket format stores only one "triangular side" of
 //      the matrix and the diagonal.
-//   comm -- [may be nil]. If the communication is given, this function will
-//      distribute the number of non-zeros (near) equally to all processors.
 //
 //  Output:
 //   symmetric -- [MatrixMarket only] return true if the MatrixMarket header has "symmetric"
