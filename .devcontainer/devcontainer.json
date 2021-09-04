@@ -2,7 +2,6 @@
   "name": "Gosl",
   "image": "gosl/gosl",
   "settings": {
-    "go.useGoProxyToCheckForToolUpdates": false,
     "go.useLanguageServer": true,
     "go.gopath": "/go",
     "go.goroot": "/usr/local/go",
