@@ -8,9 +8,9 @@ We link Gosl with existent libraries written in C and Fortran, such as OpenBLAS,
 
 ## Installation
 
-Because of other (awesome) libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of minutes. Furthermore, the best part of it is that it works on Windows, Linux, and macOS out of the box.
+Because of the other libraries, the easiest way to work with Gosl is via Docker. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of minutes. Furthermore, it works on Windows, Linux, and macOS out of the box.
 
-### Containerized (recommended)
+### Containerized
 
 1. Install Docker
 2. Install Visual Studio Code
@@ -21,14 +21,6 @@ Because of other (awesome) libraries, the easiest way to work with Gosl is via D
 Done. And your system will "remain clean."
 
 ![](zdocs/vscode-open-in-container.gif)
-
-Our [Docker Image](https://hub.docker.com/repository/docker/gosl/gosl) also contains Go and the Go Tools for working with VS Code (or not). Below is a video showing the convenience of VS Code + the Go tools + Gosl. Note how fast VS Code is in finding the function ReadLines and the package gosl/io even under a clash with Go's io package. Upon file save, the Go tools automatically add the required imports. Note also the very convenient auto-completion of the callback function given to ReadLines. Also, Code + the Go tools nicely fill the function arguments with default values.
-
-![](zdocs/vscode-gosl-01.gif)
-
-Another great thing about VS Code is it's _IntelliSense_. Here, as soon as we start typing "m comma n two-dot equal T dot", VS Code immediately offers `Size()` as the first option because it matches the preceding code. Fantastic!
-
-![](zdocs/vscode-intellisense-01.png)
 
 ### Debian/Ubuntu GNU Linux
 
