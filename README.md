@@ -80,14 +80,6 @@ Gosl includes the following _main_ packages:
 
 (see each subdirectory for more information)
 
-## Examples
-
-Please check out https://github.com/cpmech/gosl-examples
-
-## Benchmarks
-
-Please check out https://github.com/cpmech/gosl-benchmarks
-
 ## Previous version
 
 The previous version, including more packages, is [available here ](https://github.com/cpmech/gosl/tree/stable-1.1.3) and can be used with the Docker image 1.1.3 as in this [hello gosl example](https://github.com/cpmech/hello-gosl-old-1.1.3).
