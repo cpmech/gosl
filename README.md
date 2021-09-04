@@ -32,9 +32,9 @@ Another great thing about VS Code is it's _IntelliSense_. Here, as soon as we st
 
 ### Debian/Ubuntu GNU Linux
 
-First we have to first install some extra libraries **before** calling _go get_.
+First, install Go as explained in https://golang.org/doc/install
 
-**Install dependencies**
+Second, install some libraries:
 
 ```
 sudo apt-get install -y --no-install-recommends \
@@ -48,10 +48,12 @@ sudo apt-get install -y --no-install-recommends \
   libfftw3-dev
 ```
 
-**Download Gosl**
+Finally, download and compile Gosl:
 
 ```
-go get github.com/cpmech/gosl
+git clone https://github.com/cpmech/gosl.git
+cd gosl
+./all.bash
 ```
 
 Done. Installation completed.
