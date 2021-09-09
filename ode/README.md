@@ -1,6 +1,6 @@
 # Gosl. ode. Ordinary differential equations
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/cpmech/gosl/ode)](https://pkg.go.dev/github.com/cpmech/gosl/ode)
+[![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/ode.svg)](https://pkg.go.dev/github.com/cpmech/gosl/ode)
 
 Package `ode` implements solution techniques to ordinary differential equations, such as the
 Runge-Kutta method. Methods that can handle stiff problems are also available.

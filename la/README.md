@@ -1,6 +1,6 @@
 # Gosl. la. Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions, etc.
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/cpmech/gosl/la)](https://pkg.go.dev/github.com/cpmech/gosl/la)
+[![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/la.svg)](https://pkg.go.dev/github.com/cpmech/gosl/la)
 
 The `la` subpackage implements functions to perform linear algebra operations such as vector
 addition or matrix-vector multiplications. It also wraps some efficient sparse linear systems

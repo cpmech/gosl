@@ -1,6 +1,6 @@
 # Gosl. hb. Read/Write hb (go-binary gob) files
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/cpmech/gosl/hb)](https://pkg.go.dev/github.com/cpmech/gosl/hb)
+[![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/hb.svg)](https://pkg.go.dev/github.com/cpmech/gosl/hb)
 
 This package is inspired by the Hierarchical Data File (HDF) format but uses go-binary (gob) _stream of gobs_ instead.
 

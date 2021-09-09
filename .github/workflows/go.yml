@@ -28,3 +28,6 @@ jobs:
           go test -coverprofile=coverage.out -covermode=atomic ./...
       - name: Upload to codecov.io
         uses: codecov/codecov-action@v1
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          fail_ci_if_error: true

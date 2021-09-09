@@ -1,6 +1,6 @@
 # Gosl. rnd. Random numbers and probability distributions
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/cpmech/gosl/rnd)](https://pkg.go.dev/github.com/cpmech/gosl/rnd)
+[![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/rnd.svg)](https://pkg.go.dev/github.com/cpmech/gosl/rnd)
 
 The `rnd` package assists on computations involving stochastic processes. The package has many
 functions to generate pseudo-random numbers, probability distributions, and sampling techniques such

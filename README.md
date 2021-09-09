@@ -1,5 +1,9 @@
 # Gosl - Go scientific library
 
+[![codecov](https://codecov.io/gh/cpmech/gosl/branch/master/graph/badge.svg?token=2QnqwyGTYx)](https://codecov.io/gh/cpmech/gosl)
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl.svg)](https://pkg.go.dev/github.com/cpmech/gosl)
+
 Gosl is a set of tools for developing scientific simulations using the Go language. We mainly consider the development of numerical methods and solvers for differential equations but also present some functions for fast Fourier transforms, the generation of random numbers, probability distributions, and computational geometry.
 
 This library contains essential functions for linear algebra computations (operations between all combinations of vectors and matrices, eigenvalues and eigenvectors, linear solvers) and the development of numerical methods (e.g. numerical quadrature).
