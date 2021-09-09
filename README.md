@@ -29,15 +29,15 @@ First, install Go as explained in https://golang.org/doc/install
 Second, install some libraries:
 
 ```
-sudo apt-get install -y --no-install-recommends \
+sudo apt-get install \
   gcc \
   gfortran \
+  libfftw3-dev \
   liblapacke-dev \
-  libopenblas-dev \
   libmetis-dev \
-  libsuitesparse-dev \
   libmumps-seq-dev \
-  libfftw3-dev
+  libopenblas-dev \
+  libsuitesparse-dev
 ```
 
 Finally, download and compile Gosl:

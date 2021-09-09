@@ -23,12 +23,12 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
   gcc \
   gfortran \
-  liblapacke-dev \
-  libopenblas-dev \
-  libmetis-dev \
-  libsuitesparse-dev \
-  libmumps-seq-dev \
   libfftw3-dev \
+  liblapacke-dev \
+  libmetis-dev \
+  libmumps-seq-dev \
+  libopenblas-dev \
+  libsuitesparse-dev \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # configure basic system
