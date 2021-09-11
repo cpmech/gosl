@@ -72,51 +72,51 @@ would be constantly allocated and deallocated.
 
 ### Vectors and matrices
 
-<a href="t_vector_test.go">source file</a>
-<a href="t_matrix_test.go">source file</a>
-<a href="t_matrix_ops_test.go">source file</a>
+* <a href="t_vector_test.go">source file</a>
+* <a href="t_matrix_test.go">source file</a>
+* <a href="t_matrix_ops_test.go">source file</a>
 
 ### BLAS1, 2 and 3 functions
 
-<a href="t_blas1_test.go">source file</a>
-<a href="t_blas2_test.go">source file</a>
-<a href="t_blas3_test.go">source file</a>
+* <a href="t_blas1_test.go">source file</a>
+* <a href="t_blas2_test.go">source file</a>
+* <a href="t_blas3_test.go">source file</a>
 
 ### General dense solver and Cholesky decomposition
 
-<a href="t_densesol_test.go">source file</a>
+* <a href="t_densesol_test.go">source file</a>
 
 ### Eigenvalues and eigenvectors of general matrix
 
-<a href="t_eigen_test.go">source file</a>
+* <a href="t_eigen_test.go">source file</a>
 
 ### Eigenvalues of symmetric (3 x 3) matrix
 
-<a href="t_jacobi_test.go">source file</a>
+* <a href="t_jacobi_test.go">source file</a>
 
 ### Sparse BLAS functions
 
-<a href="t_sp_blas_test.go">source file</a>
+* <a href="t_sp_blas_test.go">source file</a>
 
 ### Conversions related to sparse matrices
 
-<a href="t_sp_conversions_test.go">source file</a>
+* <a href="t_sp_conversions_test.go">source file</a>
 
 ### Sparse Triplet and Matrix
 
-<a href="t_sp_matrix_test.go">source file</a>
+* <a href="t_sp_matrix_test.go">source file</a>
 
 ### Sparse linear solver using MUMPS
 
-<a href="t_sp_solver_mumps_test.go">source file</a>
+* <a href="t_sp_solver_mumps_test.go">source file</a>
 
 ### Sparse linear solver using UMFPACK
 
-<a href="t_sp_solver_umfpack_test.go">source file</a>
+* <a href="t_sp_solver_umfpack_test.go">source file</a>
 
 ### Solutions using sparse solvers
 
-<a href="t_sp_solver_test.go">source file</a>
+* <a href="t_sp_solver_test.go">source file</a>
 
 ## API
 
