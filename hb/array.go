@@ -67,7 +67,6 @@ func (o *File) putArray(path string, dims []int, dat []float64) {
 	o.gobEnc.Encode(len(dims))  // 3. size of dims
 	o.gobEnc.Encode(dims)       // 4. dims
 	o.gobEnc.Encode(dat)        // 5. data
-	return
 }
 
 // getArray gets an array from file

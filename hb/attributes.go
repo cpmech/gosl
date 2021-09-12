@@ -17,7 +17,6 @@ func (o *File) SetStringAttribute(path, key, val string) {
 	o.gobEnc.Encode(path)
 	o.gobEnc.Encode(key)
 	o.gobEnc.Encode(val)
-	return
 }
 
 // GetStringAttribute gets string attribute
@@ -52,7 +51,6 @@ func (o *File) SetIntAttribute(path, key string, val int) {
 	o.gobEnc.Encode(path)
 	o.gobEnc.Encode(key)
 	o.gobEnc.Encode(val)
-	return
 }
 
 // GetIntAttribute gets int attribute
@@ -87,7 +85,6 @@ func (o *File) SetIntsAttribute(path, key string, vals []int) {
 	o.gobEnc.Encode(path)
 	o.gobEnc.Encode(key)
 	o.gobEnc.Encode(vals)
-	return
 }
 
 // GetIntsAttribute gets slice-of-ints attribute

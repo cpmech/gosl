@@ -54,13 +54,11 @@ func (o *File) putInts(path string, dims []int, dat []int) {
 	o.gobEnc.Encode(len(dims))
 	o.gobEnc.Encode(dims)
 	o.gobEnc.Encode(dat)
-	return
 }
 
 // putIntsNoGroup puts integers into file without creating groups
 func (o *File) putIntsNoGroup(path string, dat []int) {
 	o.putInts(path, []int{len(dat)}, dat)
-	return
 }
 
 // getInts gets an array of integers from file
