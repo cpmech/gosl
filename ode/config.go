@@ -35,7 +35,7 @@ type Config struct {
 	UseRmsNorm bool    // use RMS norm instead of Euclidean in BwEuler
 	Verbose    bool    // show messages, e.g. during iterations
 	ZeroTrial  bool    // always start iterations with zero trial values (instead of collocation interpolation)
-	StabBeta   float64 // Lund stabilisation coefficient β
+	StabBeta   float64 // Lund stabilization coefficient β
 
 	// stiffness detection
 	StiffNstp  int     // number of steps to check stiff situation. 0 ⇒ no check. [default = 1]
@@ -56,7 +56,7 @@ type Config struct {
 
 	// internal data
 	method    string  // the ODE method
-	stabBetaM float64 // factor to multiply stabilisation coefficient β
+	stabBetaM float64 // factor to multiply stabilization coefficient β
 
 	// linear solver control
 	lsKind string // linear solver kind
