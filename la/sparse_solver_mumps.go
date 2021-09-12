@@ -38,7 +38,7 @@ type sparseSolverMumps struct {
 
 	// derived
 	initialized bool
-	factorised  bool
+	factorized  bool
 }
 
 // Init initializes mumps for sparse linear systems with real numbers
@@ -150,13 +150,13 @@ func (o *sparseSolverMumps) Fact() {
 
 	// factorisation
 	o.data.job = 2     // factorisation code
-	C.dmumps_c(o.data) // factorise
+	C.dmumps_c(o.data) // factorize
 	if o.data.info[1-1] < 0 {
 		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// success
-	o.factorised = true
+	o.factorized = true
 }
 
 // Solve solves sparse linear systems using MUMPS or MUMPS
@@ -168,7 +168,7 @@ func (o *sparseSolverMumps) Fact() {
 func (o *sparseSolverMumps) Solve(x, b Vector) {
 
 	// check
-	if !o.factorised {
+	if !o.factorized {
 		chk.Panic("factorisation must be performed first\n")
 	}
 
@@ -199,7 +199,7 @@ type sparseSolverMumpsC struct {
 
 	// derived
 	initialized bool
-	factorised  bool
+	factorized  bool
 }
 
 // Init initializes mumps for sparse linear systems with real numbers
@@ -314,13 +314,13 @@ func (o *sparseSolverMumpsC) Fact() {
 
 	// factorisation
 	o.data.job = 2     // factorisation code
-	C.zmumps_c(o.data) // factorise
+	C.zmumps_c(o.data) // factorize
 	if o.data.info[1-1] < 0 {
 		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
 
 	// success
-	o.factorised = true
+	o.factorized = true
 }
 
 // Solve solves sparse linear systems using MUMPS or MUMPS
@@ -330,7 +330,7 @@ func (o *sparseSolverMumpsC) Fact() {
 func (o *sparseSolverMumpsC) Solve(x, b VectorC) {
 
 	// check
-	if !o.factorised {
+	if !o.factorized {
 		chk.Panic("factorisation must be performed first\n")
 	}
 

@@ -48,7 +48,7 @@ type sparseSolverUmfpack struct {
 
 	// derived
 	initialized bool
-	factorised  bool
+	factorized  bool
 	symbFact    bool
 	numeFact    bool
 }
@@ -122,7 +122,7 @@ func (o *sparseSolverUmfpack) Fact() {
 	if !o.initialized {
 		chk.Panic("linear solver must be initialized first\n")
 	}
-	o.factorised = false
+	o.factorized = false
 
 	// convert triplet to column-compressed format
 	code := C.umfpack_dl_triplet_to_col(C.LONG(o.t.m), C.LONG(o.t.n), C.LONG(o.t.pos), o.ti, o.tj, o.tx, o.ap, o.ai, o.ax, nil)
@@ -137,7 +137,7 @@ func (o *sparseSolverUmfpack) Fact() {
 	}
 	code = C.umfpack_dl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("symbolic factorised failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("symbolic factorized failed (UMFPACK error: %s)\n", umfErr(code))
 	}
 	o.symbFact = true
 
@@ -153,7 +153,7 @@ func (o *sparseSolverUmfpack) Fact() {
 	o.numeFact = true
 
 	// success
-	o.factorised = true
+	o.factorized = true
 }
 
 // Solve solves sparse linear systems using UMFPACK or MUMPS
@@ -163,7 +163,7 @@ func (o *sparseSolverUmfpack) Fact() {
 func (o *sparseSolverUmfpack) Solve(x, b Vector) {
 
 	// check
-	if !o.factorised {
+	if !o.factorized {
 		chk.Panic("factorisation must be performed first\n")
 	}
 
@@ -207,7 +207,7 @@ type sparseSolverUmfpackC struct {
 
 	// derived
 	initialized bool
-	factorised  bool
+	factorized  bool
 	symbFact    bool
 	numeFact    bool
 }
@@ -281,7 +281,7 @@ func (o *sparseSolverUmfpackC) Fact() {
 	if !o.initialized {
 		chk.Panic("linear solver must be initialized first\n")
 	}
-	o.factorised = false
+	o.factorized = false
 
 	// convert triplet to column-compressed format
 	code := C.umfpack_zl_triplet_to_col(C.LONG(o.t.m), C.LONG(o.t.n), C.LONG(o.t.pos), o.ti, o.tj, o.tx, nil, o.ap, o.ai, o.ax, nil, nil)
@@ -296,7 +296,7 @@ func (o *sparseSolverUmfpackC) Fact() {
 	}
 	code = C.umfpack_zl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, nil, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("symbolic factorised failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("symbolic factorized failed (UMFPACK error: %s)\n", umfErr(code))
 	}
 	o.symbFact = true
 
@@ -312,7 +312,7 @@ func (o *sparseSolverUmfpackC) Fact() {
 	o.numeFact = true
 
 	// success
-	o.factorised = true
+	o.factorized = true
 }
 
 // Solve solves sparse linear systems using UMFPACK or MUMPS
@@ -322,7 +322,7 @@ func (o *sparseSolverUmfpackC) Fact() {
 func (o *sparseSolverUmfpackC) Solve(x, b VectorC) {
 
 	// check
-	if !o.factorised {
+	if !o.factorized {
 		chk.Panic("factorisation must be performed first\n")
 	}
 

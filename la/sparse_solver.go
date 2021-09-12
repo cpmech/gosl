@@ -82,7 +82,7 @@ func SpSolve(A *Triplet, b Vector) (x Vector) {
 	// initialize solver
 	o.Init(A, nil)
 
-	// factorise
+	// factorize
 	o.Fact()
 
 	// solve
@@ -104,7 +104,7 @@ func SpSolveC(A *TripletC, b VectorC) (x VectorC) {
 	// initialize solver
 	o.Init(A, nil)
 
-	// factorise
+	// factorize
 	o.Fact()
 
 	// solve

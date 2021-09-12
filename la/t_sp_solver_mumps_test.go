@@ -271,7 +271,7 @@ func TestSpMumps07(tst *testing.T) {
 	args.SetMumpsSymmetry(true, false)
 	solver.Init(T, args)
 
-	// factorise matrix
+	// factorize matrix
 	solver.Fact()
 
 	// solve system

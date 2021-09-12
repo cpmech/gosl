@@ -309,7 +309,7 @@ func TestSpUmfpack07(tst *testing.T) {
 	args.SetUmfpackSymmetry()
 	solver.Init(T, args)
 
-	// factorise matrix
+	// factorize matrix
 	solver.Fact()
 
 	// solve system
