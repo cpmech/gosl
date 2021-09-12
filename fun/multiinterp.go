@@ -37,7 +37,7 @@ type Axis struct {
 	n       int  // length of data
 	m       int  // number of points of  interpolating formula
 	jHunt   int  // temporary j to decide on using hunt
-	djHunt  int  // increent of j to decide on using hunt function or locate
+	djHunt  int  // increment of j to decide on using hunt function or locate
 	useHunt bool // use hunt code instead of locate
 	ascnd   bool // ascending order of values
 }
