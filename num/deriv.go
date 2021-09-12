@@ -21,7 +21,7 @@ func DerivCen5(x, h float64, f fun.Ss) (res float64) {
 	// second estimate
 	if round < trunc && (round > 0 && trunc > 0) {
 
-		// Compute an optimised stepsize to minimize the total error,
+		// Compute an optimized stepsize to minimize the total error,
 		// using the scaling of the truncation error (O(h^2)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(2.0*trunc), 1.0/3.0)
 		rOpt, roundOpt, truncOpt := centralDeriv5(x, hOpt, f)
@@ -46,7 +46,7 @@ func DerivFwd4(x, h float64, f fun.Ss) (res float64) {
 	// second estimate
 	if round < trunc && (round > 0 && trunc > 0) {
 
-		// Compute an optimised stepsize to minimize the total error,
+		// Compute an optimized stepsize to minimize the total error,
 		// using the scaling of the estimated truncation error (O(h)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(trunc), 1.0/2.0)
 		rOpt, roundOpt, truncOpt := forwardDeriv4(x, hOpt, f)

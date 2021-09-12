@@ -152,7 +152,7 @@ func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb boo
 	// check rounding error
 	if round < trunc && (round > 0 && trunc > 0) {
 
-		// compute an optimised stepsize to minimize the total error, using the scaling of the
+		// compute an optimized stepsize to minimize the total error, using the scaling of the
 		// truncation error (O(h^2)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(2.0*trunc), 1.0/3.0)
 		rOpt, roundOpt, truncOpt := centralDeriv(fcn, xAt, hOpt)

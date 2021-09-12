@@ -86,7 +86,7 @@ func (o *SpcLaplacian) Assemble(reactions bool) {
 	if !o.bcsReady {
 		nnz := (nx * nx) * (ny * ny)
 		o.Eqs = la.NewEquations(o.Grid.Size(), o.EssenBcs.Nodes())
-		o.Eqs.Alloc([]int{nnz, nnz, nnz, nnz}, reactions, true) // TODO: optimise nnz
+		o.Eqs.Alloc([]int{nnz, nnz, nnz, nnz}, reactions, true) // TODO: optimize nnz
 		for _, li := range o.LagInt {
 			li.CalcD2() // also calculates D1
 		}
