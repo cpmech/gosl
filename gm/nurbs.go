@@ -428,7 +428,6 @@ func (o *Nurbs) Point(C, u []float64, ndim int) {
 	for e := 0; e < ndim; e++ {
 		C[e] = o.cw[e] / o.cw[3]
 	}
-	return
 }
 
 // PointAndFirstDerivs returns the point and first order derivatives with respect to the knot values u
@@ -493,7 +492,6 @@ func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 			dCdu.Set(e, d, (dcwdu[d][e]-dcwdu[d][3]*C[e])/o.cw[3])
 		}
 	}
-	return
 }
 
 // PointAndDerivs computes position and the first and second order derivatives

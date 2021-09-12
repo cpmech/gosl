@@ -118,7 +118,6 @@ func (o *NurbsPatch) ResetFromEntities(binsNdiv int, tolerance float64) {
 			}
 		}
 	}
-	return
 }
 
 // ResetFromExchangeData will reset all Entities with information from ExchangeData (and ControlPoints)

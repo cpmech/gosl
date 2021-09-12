@@ -35,7 +35,6 @@ func (o *BezierQuad) Point(C []float64, t float64) {
 	for i := 0; i < ndim; i++ {
 		C[i] = (1.0-t)*(1.0-t)*o.Q[0][i] + 2.0*t*(1.0-t)*o.Q[1][i] + t*t*o.Q[2][i]
 	}
-	return
 }
 
 // GetPoints returns points along the curve for given parameter values

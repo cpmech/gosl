@@ -942,7 +942,6 @@ func (o *Grid) UnitNormal(N la.Vector, tag, I int) {
 			N[i] /= math.Sqrt(sum)
 		}
 	}
-	return
 }
 
 // auxiliary ///////////////////////////////////////////////////////////////////////////////////////
@@ -1022,5 +1021,4 @@ func (o *Grid) boundaries() {
 			t++
 		}
 	}
-	return
 }
