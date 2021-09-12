@@ -8,7 +8,7 @@ import "github.com/cpmech/gosl/chk"
 
 // String //////////////////////////////////////////////////////////////////////////////////////
 
-// SetStringAttribute sets a string attibute
+// SetStringAttribute sets a string attribute
 func (o *File) SetStringAttribute(path, key, val string) {
 	if o.gobReading {
 		chk.Panic("cannot put %q because file is open for READONLY", path)
@@ -43,7 +43,7 @@ func (o *File) GetStringAttribute(path, key string) (val string) {
 
 // Int /////////////////////////////////////////////////////////////////////////////////////////
 
-// SetIntAttribute sets int attibute
+// SetIntAttribute sets int attribute
 func (o *File) SetIntAttribute(path, key string, val int) {
 	if o.gobReading {
 		chk.Panic("cannot put %q because file is open for READONLY", path)
@@ -78,7 +78,7 @@ func (o *File) GetIntAttribute(path, key string) (val int) {
 
 // Ints /////////////////////////////////////////////////////////////////////////////////////////
 
-// SetIntsAttribute sets slice-of-ints attibute
+// SetIntsAttribute sets slice-of-ints attribute
 func (o *File) SetIntsAttribute(path, key string, vals []int) {
 	if o.gobReading {
 		chk.Panic("cannot put %q because file is open for READONLY", path)
