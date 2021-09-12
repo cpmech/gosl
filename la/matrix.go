@@ -211,7 +211,7 @@ func (o *Matrix) MaxDiff(another *Matrix) (maxdiff float64) {
 	return
 }
 
-// Largest returns the largest component |a[ij]| of this matrix, normalised by den
+// Largest returns the largest component |a[ij]| of this matrix, normalized by den
 //   largest := |a[ij]| / den
 func (o *Matrix) Largest(den float64) (largest float64) {
 	largest = math.Abs(o.Data[0])

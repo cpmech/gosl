@@ -154,7 +154,7 @@ func (o Vector) MinMax() (min, max float64) {
 	return
 }
 
-// Largest returns the largest component |u[i]| of this vector, normalised by den
+// Largest returns the largest component |u[i]| of this vector, normalized by den
 //   largest := |u[i]| / den
 func (o Vector) Largest(den float64) (largest float64) {
 	largest = math.Abs(o[0])

@@ -11,7 +11,7 @@ import (
 )
 
 // VecRmsError returns the scaled root-mean-square of the difference between two vectors
-// with components normalised by a scaling factor
+// with components normalized by a scaling factor
 //                __________________________
 //               /     ————              2
 //              /  1   \    /  error[i]  \

@@ -53,7 +53,7 @@ import (
 //                  Σ   ————————
 //                 k=0  x - x[k]
 //
-//   The barycentric weights λk are normalised and computed from ηk as follows:
+//   The barycentric weights λk are normalized and computed from ηk as follows:
 //
 //      ηk = Σ ln(|xk-xl|) (k≠l)
 //
@@ -90,7 +90,7 @@ type LagrangeInterp struct {
 	Bary   bool      // [default=true] use barycentric weights
 	UseEta bool      // [default=true] use ηk when computing D1
 	Eta    la.Vector // sum of log of differences: ηk = Σ ln(|xk-xl|) (k≠l)
-	Lam    la.Vector // normalised barycentric weights λk = pow(-1, k+N) ⋅ ηk / (2ⁿ⁻¹/n)
+	Lam    la.Vector // normalized barycentric weights λk = pow(-1, k+N) ⋅ ηk / (2ⁿ⁻¹/n)
 
 	// computed
 	D1 *la.Matrix // (dℓj/dx)(xi)

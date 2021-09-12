@@ -44,7 +44,7 @@ type Radau5 struct {
 	lsC   la.SparseSolverC // solver for the imag part
 
 	// workspace
-	z    [][]float64 // [nstg][ndim] normalised arrays
+	z    [][]float64 // [nstg][ndim] normalized arrays
 	w    [][]float64 // [nstg][ndim] workspace
 	dw   [][]float64 // [nstg][ndim] workspace (incremental)
 	ycol [][]float64 // [nstg][ndim] colocation values

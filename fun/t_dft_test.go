@@ -116,14 +116,14 @@ func TestDft03(tst *testing.T) {
 
 		switch place {
 
-		// normalise at the beginning
+		// normalize at the beginning
 		case 1:
 
-			// normalise
+			// normalize
 			for i := 0; i < N; i++ {
 				U[i] /= complex(float64(N), 0)
 			}
-			io.Pfblue2("normalised\n")
+			io.Pfblue2("normalized\n")
 
 			// execute FFT
 			Dft1d(U, false)
@@ -134,25 +134,25 @@ func TestDft03(tst *testing.T) {
 			io.Pf("invFFT(U) = %.3f\n", U)
 			chk.ArrayC(tst, "U", 1e-15, U, Ucopy)
 
-		// normalise after direct FFT
+		// normalize after direct FFT
 		case 2:
 
 			// execute FFT
 			Dft1d(U, false)
 			io.Pforan("FFT(U) = %.3f\n", U)
 
-			// normalise
+			// normalize
 			for i := 0; i < N; i++ {
 				U[i] /= complex(float64(N), 0)
 			}
-			io.Pfblue2("normalised\n")
+			io.Pfblue2("normalized\n")
 
 			// execute inverse FFT
 			Dft1d(U, true)
 			io.Pf("invFFT(U) = %.3f\n", U)
 			chk.ArrayC(tst, "U", 1e-15, U, Ucopy)
 
-		// normalise after inverse FFT
+		// normalize after inverse FFT
 		case 3:
 
 			// execute FFT
@@ -163,11 +163,11 @@ func TestDft03(tst *testing.T) {
 			Dft1d(U, true)
 			io.Pf("invFFT(U) = %.3f\n", U)
 
-			// normalise
+			// normalize
 			for i := 0; i < N; i++ {
 				U[i] /= complex(float64(N), 0)
 			}
-			io.Pfblue2("normalised\n")
+			io.Pfblue2("normalized\n")
 
 			// check
 			chk.ArrayC(tst, "U", 1e-15, U, Ucopy)

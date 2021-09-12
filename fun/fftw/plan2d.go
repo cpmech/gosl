@@ -30,7 +30,7 @@ type Plan2d struct {
 //   N0, N1  -- dimensions
 //   data    -- [modified] data is a complex array of length N0*N1 (row-major matrix)
 //   inverse -- will perform inverse transform; otherwise will perform direct
-//              Note: both transforms are non-normalised;
+//              Note: both transforms are non-normalized;
 //              i.e. the user will have to multiply by (1/n) if computing inverse transforms
 //   measure -- use the FFTW_MEASURE flag for better optimisation analysis (slower initialisation times)
 //              Note: using this flag with given "data" as input will cause the allocation
