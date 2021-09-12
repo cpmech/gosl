@@ -364,7 +364,7 @@ func PfCyan(msg string, prm ...interface{}) {
 	}
 }
 
-// PfYel prints formatted string in high intensity yello
+// PfYel prints formatted string in high intensity yellow
 func PfYel(msg string, prm ...interface{}) {
 	if !Verbose {
 		return

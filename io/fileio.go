@@ -31,7 +31,7 @@ func FnExt(fn string) string {
 	return filepath.Ext(fn)
 }
 
-// PathKey returs the full path except the extension
+// PathKey returns the full path except the extension
 func PathKey(fn string) string {
 	return fn[:len(fn)-len(filepath.Ext(fn))]
 }

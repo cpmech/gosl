@@ -12,7 +12,7 @@ import (
 )
 
 // ExtractStrPair extracts the pair from, e.g., "key:val"
-//  Note: it returs empty strings if any is not found
+//  Note: it returns empty strings if any is not found
 func ExtractStrPair(pair, sep string) (key, val string) {
 	res := strings.Split(pair, sep)
 	if len(res) > 0 {
