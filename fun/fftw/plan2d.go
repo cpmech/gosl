@@ -32,7 +32,7 @@ type Plan2d struct {
 //   inverse -- will perform inverse transform; otherwise will perform direct
 //              Note: both transforms are non-normalized;
 //              i.e. the user will have to multiply by (1/n) if computing inverse transforms
-//   measure -- use the FFTW_MEASURE flag for better optimisation analysis (slower initialisation times)
+//   measure -- use the FFTW_MEASURE flag for better optimization analysis (slower initialization times)
 //              Note: using this flag with given "data" as input will cause the allocation
 //              of a temporary array and the execution of two copy commands with size len(data)
 //

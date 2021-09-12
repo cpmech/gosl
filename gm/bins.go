@@ -14,7 +14,7 @@ import (
 
 // consts
 var (
-	XDELZERO = 1e-10 // minimum distance between coordinates; i.e. xmax[i]-xmin[i] mininum
+	XDELZERO = 1e-10 // minimum distance between coordinates; i.e. xmax[i]-xmin[i] minimum
 )
 
 // BinEntry holds data of an entry to bin
@@ -147,7 +147,7 @@ func (o Bins) CalcIndex(x []float64) int {
 //   sqDistMin -- the minimum distance (squared) between x and the closest entity in the same bin
 //
 //  NOTE: FindClosest does search the whole area.
-//        It only locates neighbours in the same bin where the given x is located.
+//        It only locates neighbors in the same bin where the given x is located.
 //        So, if there area no entries in the bin containing x, no entry will be found.
 //
 func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {

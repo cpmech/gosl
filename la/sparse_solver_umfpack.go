@@ -62,7 +62,7 @@ func (o *sparseSolverUmfpack) Init(t *Triplet, args *SparseConfig) {
 		chk.Panic("solver must be initialized just once\n")
 	}
 	if t.pos == 0 {
-		chk.Panic("triplet must have at least one item for initialisation\n")
+		chk.Panic("triplet must have at least one item for initialization\n")
 	}
 
 	// default arguments
@@ -221,7 +221,7 @@ func (o *sparseSolverUmfpackC) Init(t *TripletC, args *SparseConfig) {
 		chk.Panic("solver must be initialized just once\n")
 	}
 	if t.pos == 0 {
-		chk.Panic("triplet must have at least one item for initialisation\n")
+		chk.Panic("triplet must have at least one item for initialization\n")
 	}
 
 	// default arguments

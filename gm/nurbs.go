@@ -50,7 +50,7 @@ type Nurbs struct {
 	ddcwdst []float64 // 2nd derivative w.r.t u[1],u[2] of augmented homogeneous coordinates Cw [4]
 }
 
-// initialisation methods ////////////////////////////////////////////////////////////////////////////
+// initialization methods ////////////////////////////////////////////////////////////////////////////
 
 // NewNurbs returns a new Nurbs object
 func NewNurbs(gnd int, ords []int, knots [][]float64) (o *Nurbs) {

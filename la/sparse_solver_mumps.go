@@ -50,7 +50,7 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 		chk.Panic("solver must be initialized just once\n")
 	}
 	if t.pos == 0 {
-		chk.Panic("triplet must have at least one item for initialisation\n")
+		chk.Panic("triplet must have at least one item for initialization\n")
 	}
 	if args == nil {
 		chk.Panic("the MUMPS solver requires args")
@@ -72,7 +72,7 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 	if args.symPosDef {
 		o.data.sym = 1
 	}
-	o.data.job = -1 // initialisation code
+	o.data.job = -1 // initialization code
 	C.dmumps_c(o.data)
 	if o.data.info[1-1] < 0 {
 		chk.Panic("init failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
@@ -211,7 +211,7 @@ func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 		chk.Panic("solver must be initialized just once\n")
 	}
 	if t.pos == 0 {
-		chk.Panic("triplet must have at least one item for initialisation\n")
+		chk.Panic("triplet must have at least one item for initialization\n")
 	}
 
 	// default arguments
@@ -236,7 +236,7 @@ func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 	if args.symPosDef {
 		o.data.sym = 1
 	}
-	o.data.job = -1 // initialisation code
+	o.data.job = -1 // initialization code
 	C.zmumps_c(o.data)
 	if o.data.info[1-1] < 0 {
 		chk.Panic("init failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))

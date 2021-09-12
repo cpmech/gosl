@@ -46,7 +46,7 @@ type NurbsPatch struct {
 	Bins Bins `json:"-"` // auxiliary structure to locate points
 }
 
-// initialisation functions ///////////////////////////////////////////////////////////////////////
+// initialization functions ///////////////////////////////////////////////////////////////////////
 
 // NewNurbsPatch returns new patch of NURBS
 //   tolerance -- tolerance to assume that two control points are the same

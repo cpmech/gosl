@@ -184,7 +184,7 @@ func (o facNurbsT) Surf2dQuarterPlateHole1() (surf *Nurbs) {
 
 // 3D surfaces ////////////////////////////////////////////////////////////////////////////////////
 
-// Surf3dCylinder generates a 3D NURBS representing the surface of a cyliner
+// Surf3dCylinder generates a 3D NURBS representing the surface of a cylinder
 func (o facNurbsT) Surf3dCylinder(xc, yc, zc, r, h float64) (curve *Nurbs) {
 	xa, xb := xc-r, xc+r
 	ya, yb := yc-r, yc+r
