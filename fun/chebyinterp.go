@@ -511,7 +511,7 @@ func (o *ChebyInterp) CalcD2() {
 	// allocate output
 	o.D2 = la.NewMatrix(o.N+1, o.N+1)
 
-	// use standarda formula. Equation (2.4.32), page 89 of [1]
+	// use standard formula. Equation (2.4.32), page 89 of [1]
 	if o.StdD2 {
 
 		// declare some constants/variables
