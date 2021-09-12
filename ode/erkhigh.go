@@ -305,7 +305,6 @@ func newERKhighOrder(kind string) rkmethod {
 				o.do[6][m] = h * (o.D[2][0]*k[0][m] + o.D[2][5]*k[5][m] + o.D[2][6]*k[6][m] + o.D[2][7]*k[7][m] + o.D[2][8]*k[8][m] + o.D[2][9]*k[9][m] + o.D[2][10]*k[10][m] + o.D[2][11]*k[11][m] + o.D[2][12]*k[11][m] + o.D[2][13]*o.kd[0][m] + o.D[2][14]*o.kd[1][m] + o.D[2][15]*o.kd[2][m])
 				o.do[7][m] = h * (o.D[3][0]*k[0][m] + o.D[3][5]*k[5][m] + o.D[3][6]*k[6][m] + o.D[3][7]*k[7][m] + o.D[3][8]*k[8][m] + o.D[3][9]*k[9][m] + o.D[3][10]*k[10][m] + o.D[3][11]*k[11][m] + o.D[3][12]*k[11][m] + o.D[3][13]*o.kd[0][m] + o.D[3][14]*o.kd[1][m] + o.D[3][15]*o.kd[2][m])
 			}
-			return
 		}
 
 		// function for dense output (DenseOut)
