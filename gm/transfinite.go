@@ -37,7 +37,7 @@ import (
 //                          | ,'        ~~~  | ,'
 //                          +----------------+'
 //
-//  NOTE: the "reference" coordinates {r,s,t} ϵ [-1,+1]×[-1,+1]×[-1,+1] are also symbolised as "u"
+//  NOTE: the "reference" coordinates {r,s,t} ϵ [-1,+1]×[-1,+1]×[-1,+1] are also symbolized as "u"
 //
 type Transfinite struct {
 

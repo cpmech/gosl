@@ -12,7 +12,7 @@ import (
 )
 
 // ChebyInterp defines a structure for efficient computations with Chebyshev polynomials such as
-// projecttion or interpolation
+// projection or interpolation
 //
 //   Some equations are based on [1,2,3]
 //
@@ -348,7 +348,7 @@ func (o *ChebyInterp) CalcCoefIs(f Ss) {
 //             l=0                                       i=0
 //
 //   NOTE: (1) CoefIs == f(x_i) coefficients must be computed (or set) first
-//         (2) ℓ is symbolised by ℓ in [1]
+//         (2) ℓ is symbolized by ℓ in [1]
 //
 func (o *ChebyInterp) Il(x float64) (res float64) {
 	for l := 0; l < o.N+1; l++ {
