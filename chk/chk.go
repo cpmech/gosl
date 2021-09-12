@@ -18,12 +18,12 @@ var (
 	ColorsOn = true
 )
 
-// PanicSimple panicks without calling CallerInfo
+// PanicSimple panics without calling CallerInfo
 func PanicSimple(msg string, prm ...interface{}) {
 	panic(fmt.Sprintf(msg, prm...))
 }
 
-// Panic calls CallerInfo and panicks
+// Panic calls CallerInfo and panics
 func Panic(msg string, prm ...interface{}) {
 	CallerInfo(4)
 	CallerInfo(3)
