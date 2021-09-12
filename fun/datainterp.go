@@ -80,7 +80,6 @@ func (o *DataInterp) Reset(xx, yy []float64) {
 	o.djHunt = utl.Imin(1, int(math.Pow(float64(o.n), 0.25)))
 	o.useHunt = false
 	o.ascnd = o.xx[o.n-1] >= o.xx[0]
-	return
 }
 
 // P computes P(x); i.e. performs the interpolation

@@ -191,7 +191,6 @@ func (o *ChebyInterp) CalcCoefI(f Ss) {
 		}
 		o.CoefI[k] /= o.Gamma[k]
 	}
-	return
 }
 
 // CalcCoefP computes the coefficients of the projection (slow)
@@ -237,7 +236,6 @@ func (o *ChebyInterp) CalcCoefP(f Ss) {
 			o.CoefP[i] /= gam
 		}
 	}
-	return
 }
 
 // I computes the interpolation
@@ -338,7 +336,6 @@ func (o *ChebyInterp) CalcCoefIs(f Ss) {
 	for l := 0; l < o.N+1; l++ {
 		o.CoefIs[l] = f(o.X[l])
 	}
-	return
 }
 
 // Il computes the interpolation using the Lagrange cardinal functions ℓ_i(x)
@@ -489,7 +486,6 @@ func (o *ChebyInterp) CalcD1() {
 		}
 	}
 	o.flipNstD1(flip)
-	return
 }
 
 // CalcD2 calculates the second derivative
@@ -569,7 +565,6 @@ func (o *ChebyInterp) CalcD2() {
 		}
 		o.D2.Set(k, k, -sumRow)
 	}
-	return
 }
 
 // CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
@@ -680,5 +675,4 @@ func (o *ChebyInterp) flipNstD1(flip bool) {
 			}
 		}
 	}
-	return
 }

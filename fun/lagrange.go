@@ -265,7 +265,6 @@ func (o *LagrangeInterp) CalcU(f Ss) {
 		fxi := f(o.X[i])
 		o.U[i] = fxi
 	}
-	return
 }
 
 // I computes the interpolation I^X_N{f}(x) @ x
@@ -359,7 +358,6 @@ func (o *LagrangeInterp) CalcD1() {
 		}
 		o.D1.Set(k, k, -sumRow)
 	}
-	return
 }
 
 // CalcD2 calculates the second derivative
@@ -391,7 +389,6 @@ func (o *LagrangeInterp) CalcD2() {
 		}
 		o.D2.Set(k, k, -sumRow)
 	}
-	return
 }
 
 // CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix

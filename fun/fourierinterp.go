@@ -160,7 +160,6 @@ func (o *FourierInterp) CalcU(f Ss) {
 	for j := 0; j < o.N; j++ {
 		o.U[j] = f(o.X[j])
 	}
-	return
 }
 
 // CalcA calculates the coefficients A of the interpolation using (fwd) FFT
@@ -222,7 +221,6 @@ func (o *FourierInterp) CalcAwithAliasRemoval(f Ss) {
 		}
 		o.A[jN] = o.workAli[jM]
 	}
-	return
 }
 
 // I computes the interpolation (with smoothing or not)

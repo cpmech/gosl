@@ -31,7 +31,6 @@ func Dft1d(data []complex128, inverse bool) {
 	plan := fftw.NewPlan1d(data, inverse, false)
 	defer plan.Free()
 	plan.Execute()
-	return
 }
 
 // dft1dslow computes the discrete Fourier transform of x (complex) by using the "slow" method; i.e.

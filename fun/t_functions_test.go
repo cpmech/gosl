@@ -314,13 +314,10 @@ func Test_binomial02(tst *testing.T) {
 				switch j {
 				case 0:
 					tol = 1e-9
-					break
 				case 1:
 					tol = 2.3e-13 // For aarch64
-					break
 				case 2:
 					tol = 1e-5 // for MacBook Air
-					break
 				default:
 					tst.Errorf("Unexpected key value: %d\n", j)
 				}
