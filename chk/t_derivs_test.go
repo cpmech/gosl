@@ -43,7 +43,6 @@ func TestDeriv02(tst *testing.T) {
 	fcn := func(f []float64, x float64) {
 		f[0] = math.Cos(math.Pi * x / 2.0)
 		f[1] = math.Sin(math.Pi * x / 2.0)
-		return
 	}
 
 	dfdx := func(x float64) []float64 {
@@ -144,7 +143,6 @@ func TestDeriv04(tst *testing.T) {
 	fcn := func(f, x []float64) {
 		f[0] = x[0]*x[0]*x[0] + x[1]*x[1] + x[0]*x[1] + x[0] - x[1]
 		f[1] = math.Cos(math.Pi*x[0]/2.0) * math.Sin(math.Pi*x[1]/2.0)
-		return
 	}
 
 	dfdx := func(x []float64) [][]float64 {
@@ -207,7 +205,7 @@ func TestDeriv05(tst *testing.T) {
 	}
 
 	t4 := new(testing.T)
-	DerivVecVec(t4, "", 0, [][]float64{{1}, {2, 1}, {3, 4}}, []float64{1}, 1e-3, false, func(f, x []float64) { return })
+	DerivVecVec(t4, "", 0, [][]float64{{1}, {2, 1}, {3, 4}}, []float64{1}, 1e-3, false, func(f, x []float64) {})
 	if !t4.Failed() {
 		tst.Errorf("t4 should have failed")
 	}
