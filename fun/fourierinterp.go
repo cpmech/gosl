@@ -52,7 +52,7 @@ type FourierInterp struct {
 	X la.Vector  // point coordinates == 2⋅π.j/N
 	K la.Vector  // k values computed from j such that j = 0...N-1 ⇒ k = -N/2...N/2-1
 	A la.VectorC // coefficients for interpolation. from FFT
-	S la.VectorC // smothing coefficients
+	S la.VectorC // smoothing coefficients
 
 	// computed (U may be set externally)
 	U      la.Vector  // values of f(x) at grid points (nodes) X[j]
@@ -83,7 +83,7 @@ type FourierInterp struct {
 //     "rcos"       : Raised Cosine
 //     "ces"        : Cesaro
 //
-//   NOTE: remember to call Free in the end to release memory allocatedy by FFTW; e.g.
+//   NOTE: remember to call Free in the end to release memory allocated by FFTW; e.g.
 //         defer o.Free()
 //
 func NewFourierInterp(N int, smoothing string) (o *FourierInterp) {

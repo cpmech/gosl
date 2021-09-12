@@ -29,7 +29,7 @@ type Ss func(s float64) float64
 //     scalar
 type Sss func(s1, s2 float64) float64
 
-// Sv defines a scalar functioin f(v) of a vector argument v (scalar vector)
+// Sv defines a scalar function f(v) of a vector argument v (scalar vector)
 //   Input:
 //     v -- input vector
 //   Returns:
