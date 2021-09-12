@@ -1,6 +1,6 @@
 # Gosl - Go scientific library
 
-[![codecov](https://codecov.io/gh/cpmech/gosl/branch/master/graph/badge.svg?token=2QnqwyGTYx)](https://codecov.io/gh/cpmech/gosl)
+[![codecov](https://codecov.io/gh/cpmech/gosl/branch/main/graph/badge.svg?token=2QnqwyGTYx)](https://codecov.io/gh/cpmech/gosl)
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl.svg)](https://pkg.go.dev/github.com/cpmech/gosl)
 
