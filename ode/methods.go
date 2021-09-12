@@ -13,7 +13,7 @@ import (
 type rkmethod interface {
 	Free()                                                                                    // free memory
 	Info() (fixedOnly, implicit bool, nstages int)                                            // information
-	Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) // initialise
+	Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) // initialize
 	Accept(y0 la.Vector, x0 float64) (dxnew float64)                                          // accept update (must compute rerr)
 	Reject() (dxnew float64)                                                                  // process step rejection (must compute rerr)
 	DenseOut(yout la.Vector, h, x float64, y la.Vector, xout float64)                         // dense output (after Accept)

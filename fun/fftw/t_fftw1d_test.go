@@ -22,7 +22,7 @@ func expmix(x float64) complex128 {
 	return complex(math.Cos(x), -math.Sin(x))
 }
 
-// initialise reference results
+// initialize reference results
 func init() {
 
 	x1 := []complex128{1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i}

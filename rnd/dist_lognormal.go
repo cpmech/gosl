@@ -44,7 +44,7 @@ func (o *DistLogNormal) CalcDerived() {
 	o.B = -1.0 / (2.0 * o.Z * o.Z)
 }
 
-// Init initialises lognormal distribution
+// Init initializes lognormal distribution
 func (o *DistLogNormal) Init(p *Variable) {
 	μ, σ := p.M, p.S
 	δ := σ / μ

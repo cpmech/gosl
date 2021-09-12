@@ -30,7 +30,7 @@ func SpMatMatTrMul(b *Matrix, α float64, a *CCMatrix) {
 
 // SpMatVecMul returns the (sparse) matrix-vector multiplication (scaled):
 //  v := α * a * u  =>  vi = α * aij * uj
-//  NOTE: dense vector v will be first initialised with zeros
+//  NOTE: dense vector v will be first initialized with zeros
 func SpMatVecMul(v Vector, α float64, a *CCMatrix, u Vector) {
 	v.Fill(0)
 	for j := 0; j < a.n; j++ {
@@ -62,7 +62,7 @@ func SpMatVecMulAddX(v Vector, a *CCMatrix, α float64, u Vector, β float64, w 
 
 // SpMatTrVecMul returns the (sparse) matrix-vector multiplication with "a" transposed (scaled):
 //  v := α * transp(a) * u  =>  vj = α * aij * ui
-//  NOTE: dense vector v will be first initialised with zeros
+//  NOTE: dense vector v will be first initialized with zeros
 func SpMatTrVecMul(v Vector, α float64, a *CCMatrix, u Vector) {
 	v.Fill(0)
 	for j := 0; j < a.n; j++ {
@@ -84,7 +84,7 @@ func SpMatTrVecMulAdd(v Vector, α float64, a *CCMatrix, u Vector) {
 
 // SpMatVecMulC returns the (sparse/complex) matrix-vector multiplication (scaled):
 //  v := α * a * u  =>  vi = α * aij * uj
-//  NOTE: dense vector v will be first initialised with zeros
+//  NOTE: dense vector v will be first initialized with zeros
 func SpMatVecMulC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 	v.Fill(0)
 	for j := 0; j < a.n; j++ {
@@ -106,7 +106,7 @@ func SpMatVecMulAddC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 
 // SpMatTrVecMulC returns the (sparse/complex) matrix-vector multiplication with "a" transposed (scaled):
 //  v := α * transp(a) * u  =>  vj = α * aij * ui
-//  NOTE: dense vector v will be first initialised with zeros
+//  NOTE: dense vector v will be first initialized with zeros
 func SpMatTrVecMulC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 	v.Fill(0)
 	for j := 0; j < a.n; j++ {
@@ -130,7 +130,7 @@ func SpMatTrVecMulAddC(v VectorC, α complex128, a *CCMatrixC, u VectorC) {
 // auxiliary ----------------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------------------------
 
-// SpInitSimilar initialises another matrix "b" with the same structure (Ap, Ai) of
+// SpInitSimilar initializes another matrix "b" with the same structure (Ap, Ai) of
 // sparse matrix "a". The values Ax are not copied though.
 func SpInitSimilar(b *CCMatrix, a *CCMatrix) {
 	b.m, b.n, b.nnz = a.m, a.n, a.nnz
@@ -145,7 +145,7 @@ func SpInitSimilar(b *CCMatrix, a *CCMatrix) {
 	}
 }
 
-// SpInitSimilarR2C initialises another matrix "b" (complex) with the same structure (Ap, Ai) of
+// SpInitSimilarR2C initializes another matrix "b" (complex) with the same structure (Ap, Ai) of
 // sparse matrix "a" (real). The values Ax are not copied though (Bx and Bz are not set).
 func SpInitSimilarR2C(b *CCMatrixC, a *CCMatrix) {
 	b.m, b.n, b.nnz = a.m, a.n, a.nnz
@@ -195,7 +195,7 @@ func SpCheckDiag(a *CCMatrix) bool {
 	return true
 }
 
-// SpInitRc initialises two complex sparse matrices (residual correction) according to:
+// SpInitRc initializes two complex sparse matrices (residual correction) according to:
 //  Real:       R :=  γ      *I - J
 //  Complex:    C := (α + βi)*I - J
 //  NOTE: "J" must include all diagonal elements

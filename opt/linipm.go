@@ -65,7 +65,7 @@ func (o *LinIpm) Free() {
 	o.Lis.Free()
 }
 
-// Init initialises LinIpm
+// Init initializes LinIpm
 func (o *LinIpm) Init(A *la.CCMatrix, b, c la.Vector, prms utl.Params) {
 
 	// problem

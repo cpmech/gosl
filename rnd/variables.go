@@ -66,7 +66,7 @@ func (o *Variable) Transform(x float64) (y float64, invalid bool) {
 	return
 }
 
-// Init initialises distributions in Variables
+// Init initializes distributions in Variables
 func (o *Variables) Init() {
 	for _, d := range *o {
 		d.SetDistribution(d.D)

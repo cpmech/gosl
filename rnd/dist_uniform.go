@@ -27,7 +27,7 @@ func init() {
 // Name returns the name of this probability distribution
 func (o *DistUniform) Name() string { return "Uniform" }
 
-// Init initialises uniform distribution
+// Init initializes uniform distribution
 func (o *DistUniform) Init(p *Variable) {
 	o.A, o.B = p.Min, p.Max
 }

@@ -47,19 +47,19 @@ type sparseSolverUmfpack struct {
 	ax *C.double
 
 	// derived
-	initialised bool
+	initialized bool
 	factorised  bool
 	symbFact    bool
 	numeFact    bool
 }
 
-// Init initialises umfpack for sparse linear systems with real numbers
+// Init initializes umfpack for sparse linear systems with real numbers
 // args may be nil
 func (o *sparseSolverUmfpack) Init(t *Triplet, args *SparseConfig) {
 
 	// check
-	if o.initialised {
-		chk.Panic("solver must be initialised just once\n")
+	if o.initialized {
+		chk.Panic("solver must be initialized just once\n")
 	}
 	if t.pos == 0 {
 		chk.Panic("triplet must have at least one item for initialisation\n")
@@ -100,7 +100,7 @@ func (o *sparseSolverUmfpack) Init(t *Triplet, args *SparseConfig) {
 	}
 
 	// success
-	o.initialised = true
+	o.initialized = true
 }
 
 // Free clears extra memory allocated by UMFPACK
@@ -119,8 +119,8 @@ func (o *sparseSolverUmfpack) Free() {
 func (o *sparseSolverUmfpack) Fact() {
 
 	// check
-	if !o.initialised {
-		chk.Panic("linear solver must be initialised first\n")
+	if !o.initialized {
+		chk.Panic("linear solver must be initialized first\n")
 	}
 	o.factorised = false
 
@@ -206,19 +206,19 @@ type sparseSolverUmfpackC struct {
 	ax *C.double
 
 	// derived
-	initialised bool
+	initialized bool
 	factorised  bool
 	symbFact    bool
 	numeFact    bool
 }
 
-// Init initialises umfpack for sparse linear systems with real numbers
+// Init initializes umfpack for sparse linear systems with real numbers
 // args may be nil
 func (o *sparseSolverUmfpackC) Init(t *TripletC, args *SparseConfig) {
 
 	// check
-	if o.initialised {
-		chk.Panic("solver must be initialised just once\n")
+	if o.initialized {
+		chk.Panic("solver must be initialized just once\n")
 	}
 	if t.pos == 0 {
 		chk.Panic("triplet must have at least one item for initialisation\n")
@@ -259,7 +259,7 @@ func (o *sparseSolverUmfpackC) Init(t *TripletC, args *SparseConfig) {
 	}
 
 	// success
-	o.initialised = true
+	o.initialized = true
 }
 
 // Free clears extra memory allocated by UMFPACK
@@ -278,8 +278,8 @@ func (o *sparseSolverUmfpackC) Free() {
 func (o *sparseSolverUmfpackC) Fact() {
 
 	// check
-	if !o.initialised {
-		chk.Panic("linear solver must be initialised first\n")
+	if !o.initialized {
+		chk.Panic("linear solver must be initialized first\n")
 	}
 	o.factorised = false
 

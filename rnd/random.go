@@ -13,7 +13,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Init initialises random numbers generators
+// Init initializes random numbers generators
 //  Input:
 //   seed -- seed value; use seed <= 0 to use current time
 func Init(seed int) {

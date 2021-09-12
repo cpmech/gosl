@@ -37,17 +37,17 @@ type sparseSolverMumps struct {
 	data *C.DMUMPS_STRUC_C
 
 	// derived
-	initialised bool
+	initialized bool
 	factorised  bool
 }
 
-// Init initialises mumps for sparse linear systems with real numbers
+// Init initializes mumps for sparse linear systems with real numbers
 // args may be nil
 func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 
 	// check
-	if o.initialised {
-		chk.Panic("solver must be initialised just once\n")
+	if o.initialized {
+		chk.Panic("solver must be initialized just once\n")
 	}
 	if t.pos == 0 {
 		chk.Panic("triplet must have at least one item for initialisation\n")
@@ -63,7 +63,7 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 	o.data = &C.AllData[C.NumData]
 	C.NumData++
 
-	// initialise data
+	// initialize data
 	o.data.par = 1 // host also works
 	o.data.sym = 0 // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
 	if args.symmetric {
@@ -129,12 +129,12 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 	}
 
 	// success
-	o.initialised = true
+	o.initialized = true
 }
 
 // Free clears extra memory allocated by MUMPS
 func (o *sparseSolverMumps) Free() {
-	if o.initialised {
+	if o.initialized {
 		o.data.job = -2    // finalisation code
 		C.dmumps_c(o.data) // do finalize
 	}
@@ -144,8 +144,8 @@ func (o *sparseSolverMumps) Free() {
 func (o *sparseSolverMumps) Fact() {
 
 	// check
-	if !o.initialised {
-		chk.Panic("linear solver must be initialised first\n")
+	if !o.initialized {
+		chk.Panic("linear solver must be initialized first\n")
 	}
 
 	// factorisation
@@ -198,17 +198,17 @@ type sparseSolverMumpsC struct {
 	data *C.ZMUMPS_STRUC_C
 
 	// derived
-	initialised bool
+	initialized bool
 	factorised  bool
 }
 
-// Init initialises mumps for sparse linear systems with real numbers
+// Init initializes mumps for sparse linear systems with real numbers
 // args may be nil
 func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// check
-	if o.initialised {
-		chk.Panic("solver must be initialised just once\n")
+	if o.initialized {
+		chk.Panic("solver must be initialized just once\n")
 	}
 	if t.pos == 0 {
 		chk.Panic("triplet must have at least one item for initialisation\n")
@@ -226,7 +226,7 @@ func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 	o.data = &C.AllDataC[C.NumDataC]
 	C.NumDataC++
 
-	// initialise data
+	// initialize data
 	o.data.comm_fortran = -987654 // use Fortran communicator by default
 	o.data.par = 1                // host also works
 	o.data.sym = 0                // 0=unsymmetric, 1=sym positive definite, 2=general symmetric
@@ -293,12 +293,12 @@ func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 	}
 
 	// success
-	o.initialised = true
+	o.initialized = true
 }
 
 // Free clears extra memory allocated by MUMPS
 func (o *sparseSolverMumpsC) Free() {
-	if o.initialised {
+	if o.initialized {
 		o.data.job = -2    // finalisation code
 		C.zmumps_c(o.data) // do finalize
 	}
@@ -308,8 +308,8 @@ func (o *sparseSolverMumpsC) Free() {
 func (o *sparseSolverMumpsC) Fact() {
 
 	// check
-	if !o.initialised {
-		chk.Panic("linear solver must be initialised first\n")
+	if !o.initialized {
+		chk.Panic("linear solver must be initialized first\n")
 	}
 
 	// factorisation

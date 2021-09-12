@@ -16,7 +16,7 @@ import (
 // reference results
 var test2d1Xref [][]complex128
 
-// initialise reference results
+// initialize reference results
 func init() {
 	x1 := [][]complex128{
 		{0 + 1i, 2 + 3i, 4 + 5i, 6 + 7i},

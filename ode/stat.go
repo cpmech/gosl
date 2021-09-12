@@ -42,7 +42,7 @@ func NewStat(lskind string, implicit bool) (o *Stat) {
 	return
 }
 
-// Reset initialises Stat
+// Reset initializes Stat
 func (o *Stat) Reset() {
 	o.Nfeval = 0
 	o.Njeval = 0

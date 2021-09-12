@@ -93,7 +93,7 @@ func (o *ExplicitRK) Info() (fixedOnly, implicit bool, nstages int) {
 	return !o.Embedded, false, o.Nstg
 }
 
-// Init initialises structure
+// Init initializes structure
 func (o *ExplicitRK) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) {
 
 	// data

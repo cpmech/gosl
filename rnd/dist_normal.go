@@ -55,7 +55,7 @@ func (o *DistNormal) CalcDerived() {
 	o.b = -1.0 / (2.0 * o.Sig * o.Sig)
 }
 
-// Init initialises normal distribution
+// Init initializes normal distribution
 func (o *DistNormal) Init(p *Variable) {
 	o.Mu, o.Sig = p.M, p.S
 	o.CalcDerived()

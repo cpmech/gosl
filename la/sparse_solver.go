@@ -79,7 +79,7 @@ func SpSolve(A *Triplet, b Vector) (x Vector) {
 	o := NewSparseSolver("umfpack")
 	defer o.Free()
 
-	// initialise solver
+	// initialize solver
 	o.Init(A, nil)
 
 	// factorise
@@ -101,7 +101,7 @@ func SpSolveC(A *TripletC, b VectorC) (x VectorC) {
 	o := NewSparseSolverC("umfpack")
 	defer o.Free()
 
-	// initialise solver
+	// initialize solver
 	o.Init(A, nil)
 
 	// factorise

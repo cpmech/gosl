@@ -94,7 +94,7 @@ func (o *Radau5) Info() (fixedOnly, implicit bool, nstages int) {
 	return false, true, 3
 }
 
-// Init initialises structure
+// Init initializes structure
 func (o *Radau5) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) {
 
 	// main
@@ -247,7 +247,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 			o.stat.updateNanosecondsJeval(startTimeJacobian)
 		}
 
-		// initialise drdy matrix
+		// initialize drdy matrix
 		if !o.ready {
 			o.kmatR.Init(o.ndim, o.ndim, o.mtri.Len()+o.dfdy.Len())
 			o.kmatC.Init(o.ndim, o.ndim, o.mtri.Len()+o.dfdy.Len())
@@ -257,7 +257,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 		la.SpTriAdd(o.kmatR, γ, o.mtri, -1, o.dfdy)       // kmatR :=      γ*M - dfdy
 		la.SpTriAddR2C(o.kmatC, α, β, o.mtri, -1, o.dfdy) // kmatC := (α+βi)*M - dfdy
 
-		// initialise linear solver
+		// initialize linear solver
 		if !o.ready {
 			startTimeIniSol := time.Now()
 			o.lsR.Init(o.kmatR, o.conf.LinSolConfig)
@@ -536,7 +536,7 @@ func (o *Radau5) rmsNorm(diff la.Vector) (rms float64) {
 	return utl.Max(math.Sqrt(rms/o.ndf), 1.0e-10)
 }
 
-// initConstants initialises constants
+// initConstants initializes constants
 func (o *Radau5) initConstants() {
 
 	o.C = []float64{(4.0 - math.Sqrt(6.0)) / 10.0, (4.0 + math.Sqrt(6.0)) / 10.0, 1.0}

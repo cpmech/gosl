@@ -343,7 +343,7 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 //
 func NonlinSpace(xa, xb float64, N int, R float64, symmetric bool) (x []float64) {
 
-	// initialise data
+	// initialize data
 	if N < 2 {
 		N = 2
 	}

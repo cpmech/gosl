@@ -23,7 +23,7 @@ func init() {
 // Name returns the name of this probability distribution
 func (o *DistFrechet) Name() string { return "Frechet" }
 
-// Init initialises Frechet distribution
+// Init initializes Frechet distribution
 func (o *DistFrechet) Init(p *Variable) {
 	o.L, o.C, o.A = p.L, p.C, p.A
 	if math.Abs(o.C) < 1e-15 {

@@ -20,7 +20,7 @@ func init() {
 // Name returns the name of this probability distribution
 func (o *DistGumbel) Name() string { return "Gumbel" }
 
-// Init initialises Gumbel distribution
+// Init initializes Gumbel distribution
 func (o *DistGumbel) Init(p *Variable) {
 	euler := 0.57721566490153286060651209008240243104215
 	μ, σ := p.M, p.S

@@ -31,7 +31,7 @@ type ElementaryTrapz struct {
 	f    fun.Ss  // the function
 }
 
-// Init initialises Trap structure
+// Init initializes Trap structure
 func (o *ElementaryTrapz) Init(f fun.Ss, a, b, eps float64) {
 	o.n = 0
 	o.f = f
@@ -99,7 +99,7 @@ type ElementarySimpson struct {
 	f    fun.Ss  // the function
 }
 
-// Init initialises Simp structure
+// Init initializes Simp structure
 func (o *ElementarySimpson) Init(f fun.Ss, a, b, eps float64) {
 	o.n = 0
 	o.f = f

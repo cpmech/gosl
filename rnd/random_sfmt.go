@@ -13,7 +13,7 @@ import (
 	"github.com/cpmech/gosl/rnd/sfmt"
 )
 
-// MTinit initialises random numbers generators (Mersenne Twister code)
+// MTinit initializes random numbers generators (Mersenne Twister code)
 //  Input:
 //   seed -- seed value; use seed <= 0 to use current time
 func MTinit(seed int) {

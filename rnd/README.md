@@ -64,7 +64,7 @@ function.
 Go code:
 
 ```go
-	// initialise seed with fixed number; use 0 to use current time
+	// initialize seed with fixed number; use 0 to use current time
 	rnd.Init(1234)
 
 	// allocate slice for integers
@@ -128,7 +128,7 @@ time elapsed = 3.259988ms
 Go code:
 
 ```go
-	// initialise generator
+	// initialize generator
 	rnd.Init(1234)
 
 	// parameters

@@ -43,7 +43,7 @@ func TestSpSolver(tst *testing.T, solverKind string, symmetric bool, t *Triplet,
 	o := NewSparseSolver(solverKind)
 	defer o.Free()
 
-	// initialise solver
+	// initialize solver
 	args := NewSparseConfig()
 	if symmetric {
 		if solverKind == "mumps" {
@@ -75,7 +75,7 @@ func TestSpSolverC(tst *testing.T, solverKind string, symmetric bool, t *Triplet
 	o := NewSparseSolverC(solverKind)
 	defer o.Free()
 
-	// initialise solver
+	// initialize solver
 	args := NewSparseConfig()
 	if symmetric {
 		if solverKind == "mumps" {

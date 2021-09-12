@@ -81,7 +81,7 @@ func NewSolver(ndim int, conf *Config, fcn Func, jac JacF, M *la.Triplet) (o *So
 	// workspace
 	o.work = newRKwork(nstg, o.ndim)
 
-	// initialise method
+	// initialize method
 	o.rkm.Init(ndim, o.conf, o.work, o.Stat, fcn, jac, M)
 
 	// connect dense output function

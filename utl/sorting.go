@@ -123,7 +123,7 @@ type Quadruple struct {
 // Quadruples helps to sort quadruples
 type Quadruples []*Quadruple
 
-// BuildQuadruples initialise Quadruples with i, x, y, and z
+// BuildQuadruples initialize Quadruples with i, x, y, and z
 //  Note: i, x, y, or z can be nil; but at least one of them must be non nil
 func BuildQuadruples(i []int, x, y, z []float64) (q Quadruples) {
 	ni := len(i)

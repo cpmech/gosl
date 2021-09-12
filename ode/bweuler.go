@@ -47,7 +47,7 @@ func (o *BwEuler) Info() (fixedOnly, implicit bool, nstages int) {
 	return true, true, 1
 }
 
-// Init initialises structure
+// Init initializes structure
 func (o *BwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) {
 	if M != nil {
 		chk.Panic("Backward-Euler solver cannot handle M matrix yet\n")
@@ -154,7 +154,7 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) {
 				o.jac(o.dfdy, h, x0, y0)
 			}
 
-			// initialise drdy matrix
+			// initialize drdy matrix
 			if !o.ready {
 				o.drdy.Init(o.ndim, o.ndim, o.imat.Len()+o.dfdy.Len())
 			}
@@ -162,7 +162,7 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) {
 			// calculate drdy matrix
 			la.SpTriAdd(o.drdy, 1, o.imat, -h, o.dfdy) // drdy = I - h ⋅ dfdy
 
-			// initialise linear solver
+			// initialize linear solver
 			if !o.ready {
 				o.ls.Init(o.drdy, o.conf.LinSolConfig)
 				o.ready = true

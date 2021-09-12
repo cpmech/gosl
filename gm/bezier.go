@@ -28,7 +28,7 @@ type BezierQuad struct {
 // Point returns the x-y-z coordinates of a point on Bezier curve
 func (o *BezierQuad) Point(C []float64, t float64) {
 	if len(o.Q) != 3 {
-		chk.Panic("Point: quadratic Bezier must be initialised first (with 3 control points)")
+		chk.Panic("Point: quadratic Bezier must be initialized first (with 3 control points)")
 	}
 	ndim := len(o.Q[0])
 	chk.IntAssert(len(C), ndim)
@@ -41,7 +41,7 @@ func (o *BezierQuad) Point(C []float64, t float64) {
 // GetPoints returns points along the curve for given parameter values
 func (o *BezierQuad) GetPoints(T []float64) (X, Y, Z []float64) {
 	if len(o.Q) != 3 {
-		chk.Panic("GetPoints: quadratic Bezier must be initialised first (with 3 control points)")
+		chk.Panic("GetPoints: quadratic Bezier must be initialized first (with 3 control points)")
 	}
 	ndim := len(o.Q[0])
 	C := make([]float64, ndim)
@@ -64,7 +64,7 @@ func (o *BezierQuad) GetPoints(T []float64) (X, Y, Z []float64) {
 // GetControlCoords returns the coordinates of control points as 1D arrays (e.g. for plotting)
 func (o *BezierQuad) GetControlCoords() (X, Y, Z []float64) {
 	if len(o.Q) != 3 {
-		chk.Panic("GetControlCoords: quadratic Bezier must be initialised first (with 3 control points)")
+		chk.Panic("GetControlCoords: quadratic Bezier must be initialized first (with 3 control points)")
 	}
 	ndim := len(o.Q[0])
 	X = make([]float64, len(o.Q))
@@ -92,7 +92,7 @@ func (o *BezierQuad) DistPoint(X []float64) float64 {
 
 	// check
 	if len(o.Q) != 3 {
-		chk.Panic("DistPoint: quadratic Bezier must be initialised first (with 3 control points)")
+		chk.Panic("DistPoint: quadratic Bezier must be initialized first (with 3 control points)")
 	}
 	ndim := len(o.Q[0])
 	chk.IntAssert(len(X), ndim)

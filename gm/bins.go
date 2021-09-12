@@ -42,7 +42,7 @@ type Bins struct {
 	tmp  []int     // [ndim] temporary (auxiliary) slice
 }
 
-// Init initialise Bins structure
+// Init initialize Bins structure
 //   xmin -- [ndim] min/initial coordinates of the whole space (box/cube)
 //   xmax -- [ndim] max/final coordinates of the whole space (box/cube)
 //   ndiv -- [ndim] number of divisions for xmax-xmin

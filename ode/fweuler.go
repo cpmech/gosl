@@ -31,7 +31,7 @@ func (o *FwEuler) Info() (fixedOnly, implicit bool, nstages int) {
 	return true, false, 1
 }
 
-// Init initialises structure
+// Init initializes structure
 func (o *FwEuler) Init(ndim int, conf *Config, work *rkwork, stat *Stat, fcn Func, jac JacF, M *la.Triplet) {
 	if M != nil {
 		chk.Panic("Forward-Euler solver cannot handle M matrix yet\n")
