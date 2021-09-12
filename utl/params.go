@@ -262,7 +262,6 @@ func (o *Params) CheckAndSetVariables(names []string, variables []*float64) {
 		}
 		*variables[i] = prm.V
 	}
-	return
 }
 
 // Connect connects parameter
