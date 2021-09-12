@@ -14,14 +14,14 @@ Mutsuo Saito and Makoto Matsumoto.
 
 Some useful functions are:
 
-1. `Init` initialise the system with a seed
+1. `Init` initialize the system with a seed
 2. `Int`, `Ints`, `Float64`, `Float64s` to generate integers and floats
 3. Shuffle and GetUnique functions to shuffle slices and filter slices with unique values,
    respectively.
 
 ## Probability distributions
 
-The probability distributions in the `rnd` package are initialised with the help of the `VarData`
+The probability distributions in the `rnd` package are initialized with the help of the `VarData`
 structure that contains the following main fields:
 
 ```go
@@ -175,7 +175,7 @@ Go code:
 ### Example: sampling algorithms
 
 ```go
-	// initialise generator
+	// initialize generator
 	rnd.Init(1234)
 
 	// Halton points

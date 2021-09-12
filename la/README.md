@@ -2,7 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/la.svg)](https://pkg.go.dev/github.com/cpmech/gosl/la)
 
-The `la` subpackage implements functions to perform linear algebra operations such as vector
+The `la` sub-package implements functions to perform linear algebra operations such as vector
 addition or matrix-vector multiplications. It also wraps some efficient sparse linear systems
 solvers such as [Umfpack](http://faculty.cse.tamu.edu/davis/suitesparse.html) and
 [MUMPS](http://mumps.enseeiht.fr) (**not** the _parotitis_ disease!).
@@ -24,7 +24,7 @@ _triplet_ and _column-compressed matrix_. Both have a complex version and are na
 The `Triplet` is more convenient for data input; e.g. during the assemblage step in a finite element
 code. The `CCMatrix` is better (faster) for computations and is the structure used by Umfpack.
 
-Triplets are initialised by giving the size of the corresponding matrix and the number of non-zero
+Triplets are initialized by giving the size of the corresponding matrix and the number of non-zero
 entries (components). Thus, only space for the non-zero entries is allocated. Afterwards, each
 component can be set by calling the `Put` method after calling the `Start` method. The `Start`
 method can be called several times. Therefore, this structure helps with the efficient
@@ -66,7 +66,7 @@ There are also _high level_ functions to solve linear systems with Umfpack:
 2. `SpSolveC` with complex numbers
 
 Note however that the high level functions shouldn't be used for repeated executions because memory
-would be constantly allocated and deallocated.
+would be constantly allocated and released.
 
 ## Examples
 

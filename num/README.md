@@ -5,10 +5,10 @@
 This package implements essential numerical methods such as for root finding, numerical quadrature,
 numerical differentiation, and solution of simple nonlinear problems.
 
-While the supackage [num/qpck](https://github.com/cpmech/gosl/tree/master/num/qpck) provides
+While the sub-package [num/qpck](https://github.com/cpmech/gosl/tree/master/num/qpck) provides
 advanced quadrature schemes (by wrapping [Quadpack](http://www.netlib.org/quadpack/)), this package
 implements few (simpler) methods to compute numerical integrals. Here, there are two kinds of
-algorithms: (1) basic methods for discrete data; and (2) using refinment for integrating general
+algorithms: (1) basic methods for discrete data; and (2) using refinement for integrating general
 functions.
 
 ## Example: Using Brent's method:
@@ -32,7 +32,7 @@ within [0, 0.11]. See figure below. Note: we have to make sure that the root is 
 	// range: be sure to enclose root
 	xa, xb := 0.0, 0.11
 
-	// initialise solver
+	// initialize solver
 	solver := num.NewBrent(yx, nil)
 
 	// solve
@@ -85,7 +85,7 @@ Same problem as before.
 	// trial solution
 	xguess := 0.03
 
-	// initialise solver
+	// initialize solver
 	neq := 1      // number of equations
 	useDn := true // use dense Jacobian
 	numJ := false // numerical Jacobian

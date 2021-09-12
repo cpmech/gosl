@@ -1,8 +1,8 @@
-# Gosl. opt. Solvers for optimisation problems
+# Gosl. opt. Solvers for optimization problems
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/opt.svg)](https://pkg.go.dev/github.com/cpmech/gosl/opt)
 
-This package provides routines to solve optimisation problems. The methods Conjugate Gradients
+This package provides routines to solve optimization problems. The methods Conjugate Gradients
 `ConjGrad`, Powell's method `Powell` and Gradient Descent `GradDesc` can be used to solve
 unconstrained nonlinear problems. Linear programming problems can be solved with the Interior-Point
 Method for linear problems `LinIpm`.
@@ -155,8 +155,8 @@ or the dual problem:
 ```
 
 Linear problems can be solved with the `LinIpm` structure. First, the problem definitions are
-initialised with the `Init` command and by giving the matrix of constraint coefficients (A), the
-right-hand side vector (b) of the constraints, and the vector defining the minimisation problem (c).
+initialized with the `Init` command and by giving the matrix of constraint coefficients (A), the
+right-hand side vector (b) of the constraints, and the vector defining the minimization problem (c).
 
 The matrix `A` is given as compressed-column sparse for efficiency purposes.
 
