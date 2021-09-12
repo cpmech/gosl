@@ -492,13 +492,12 @@ func TestPowP(tst *testing.T) {
 	//verbose()
 	chk.PrintTitle("PowP. calc xⁿ with positive integer n")
 
-	res := PowP(0, 0)
 	chk.Float64(tst, "0⁰", 1e-17, PowP(0, 0), math.Pow(0, 0))
 
 	var n uint32
 	x := 2.5
 	for n = 0; n < 23; n++ {
-		res = PowP(x, n)
+		res := PowP(x, n)
 		tol := 1e-17
 		chk.AnaNum(tst, io.Sf("pow(x,%2d)", n), tol, res, math.Pow(x, float64(n)), chk.Verbose)
 	}
