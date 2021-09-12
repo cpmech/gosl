@@ -66,7 +66,7 @@ func (o *SerialList) Append(startRow bool, value float64) {
 	o.Ptrs[len(o.Ptrs)-1]++
 }
 
-// Print prints the souble-serial-list
+// Print prints the double-serial-list
 func (o SerialList) Print(fmt string) {
 	for i := 0; i < len(o.Ptrs)-1; i++ {
 		for j := o.Ptrs[i]; j < o.Ptrs[i+1]; j++ {
