@@ -93,7 +93,6 @@ func TestJacobian03(tst *testing.T) {
 	ffcn := func(fx, x la.Vector) {
 		fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
 		fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
-		return
 	}
 	Jfcn := func(dfdx *la.Matrix, x la.Vector) {
 		dfdx.Set(0, 0, 3.0*x[0]*x[0])

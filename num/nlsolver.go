@@ -280,7 +280,6 @@ func (o *NlSolver) Solve(x []float64) {
 	if o.Niter == o.config.MaxIterations {
 		chk.Panic("cannot converge after %d iterations", o.Niter)
 	}
-	return
 }
 
 // CheckJ check Jacobian matrix

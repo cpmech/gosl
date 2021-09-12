@@ -23,7 +23,6 @@ func problem(index int) (name string, xTrial, xReference la.Vector, funcF fun.Vv
 		funcF = func(fx, x la.Vector) {
 			fx[0] = math.Pow(x[0], 3.0) + x[1] - 1.0
 			fx[1] = -x[0] + math.Pow(x[1], 3.0) + 1.0
-			return
 		}
 		funcJsparse = func(dfdx *la.Triplet, x la.Vector) {
 			dfdx.Start()
@@ -31,7 +30,6 @@ func problem(index int) (name string, xTrial, xReference la.Vector, funcF fun.Vv
 			dfdx.Put(0, 1, 1.0)
 			dfdx.Put(1, 0, -1.0)
 			dfdx.Put(1, 1, 3.0*x[1]*x[1])
-			return
 		}
 		funcJdense = func(dfdx *la.Matrix, x la.Vector) {
 			dfdx.Set(0, 0, 3.0*x[0]*x[0])
@@ -48,7 +46,6 @@ func problem(index int) (name string, xTrial, xReference la.Vector, funcF fun.Vv
 		funcF = func(fx, x la.Vector) {
 			fx[0] = 2.0*x[0] - x[1] - math.Exp(-x[0])
 			fx[1] = -x[0] + 2.0*x[1] - math.Exp(-x[1])
-			return
 		}
 		funcJsparse = func(dfdx *la.Triplet, x la.Vector) {
 			dfdx.Start()
@@ -56,7 +53,6 @@ func problem(index int) (name string, xTrial, xReference la.Vector, funcF fun.Vv
 			dfdx.Put(0, 1, -1.0)
 			dfdx.Put(1, 0, -1.0)
 			dfdx.Put(1, 1, 2.0+math.Exp(-x[1]))
-			return
 		}
 		funcJdense = func(dfdx *la.Matrix, x la.Vector) {
 			dfdx.Set(0, 0, 2.0+math.Exp(-x[0]))
@@ -74,7 +70,6 @@ func problem(index int) (name string, xTrial, xReference la.Vector, funcF fun.Vv
 			e := math.E
 			fx[0] = 0.5*sin(x[0]*x[1]) - 0.25*x[1]/pi - 0.5*x[0]
 			fx[1] = (1.0-0.25/pi)*(math.Exp(2.0*x[0])-e) + e*x[1]/pi - 2.0*e*x[0]
-			return
 		}
 		funcJsparse = func(dfdx *la.Triplet, x la.Vector) {
 			pi := math.Pi
@@ -84,7 +79,6 @@ func problem(index int) (name string, xTrial, xReference la.Vector, funcF fun.Vv
 			dfdx.Put(0, 1, 0.5*x[0]*cos(x[0]*x[1])-0.25/pi)
 			dfdx.Put(1, 0, (2.0-0.5/pi)*math.Exp(2.0*x[0])-2.0*e)
 			dfdx.Put(1, 1, e/pi)
-			return
 		}
 		funcJdense = func(dfdx *la.Matrix, x la.Vector) {
 			pi := math.Pi
@@ -93,7 +87,6 @@ func problem(index int) (name string, xTrial, xReference la.Vector, funcF fun.Vv
 			dfdx.Set(0, 1, 0.5*x[0]*cos(x[0]*x[1])-0.25/pi)
 			dfdx.Set(1, 0, (2.0-0.5/pi)*math.Exp(2.0*x[0])-2.0*e)
 			dfdx.Set(1, 1, e/pi)
-			return
 		}
 
 	default:

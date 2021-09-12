@@ -46,7 +46,6 @@ func Jacobian(J *la.Triplet, ffcn fun.Vv, x, fx, w []float64) {
 		}
 		x[col] = xsafe
 	}
-	return
 }
 
 // CompareJac compares Jacobian matrix (e.g. for testing)

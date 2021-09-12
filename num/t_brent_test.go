@@ -68,12 +68,10 @@ func TestBrent01(tst *testing.T) {
 
 	ffcnB := func(fx, x la.Vector) {
 		fx[0] = ffcnA(x[0])
-		return
 	}
 
 	JfcnB := func(dfdx *la.Matrix, x la.Vector) {
 		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0*0.165*x[0])
-		return
 	}
 
 	xa, xb := 0.0, 0.11
@@ -93,12 +91,10 @@ func TestBrent02(tst *testing.T) {
 
 	ffcnB := func(fx, x la.Vector) {
 		fx[0] = ffcnA(x[0])
-		return
 	}
 
 	JfcnB := func(dfdx *la.Matrix, x la.Vector) {
 		dfdx.Set(0, 0, 3.0*x[0]*x[0]-2.0)
-		return
 	}
 
 	xa, xb := 2.0, 3.0
