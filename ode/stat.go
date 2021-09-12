@@ -31,7 +31,7 @@ type Stat struct {
 	NanosecondsFact       int64 // maximum time elapsed during factorization (if any) [nanoseconds]
 	NanosecondsLinSol     int64 // maximum time elapsed during solution of linear system (if any) [nanoseconds]
 	NanosecondsErrorEstim int64 // maximum time elapsed during the error estimate [nanoseconds]
-	NanosecondsTotal      int64 // total time elapsed during solution of ODE system [nanosecons]
+	NanosecondsTotal      int64 // total time elapsed during solution of ODE system [nanoseconds]
 }
 
 // NewStat returns a new structure

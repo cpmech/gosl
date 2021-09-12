@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package opt implements routines for solving optimisation problems
+// Package opt implements routines for solving optimization problems
 package opt
 
 import (

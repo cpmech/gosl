@@ -42,8 +42,8 @@ type LineSearch struct {
 	Jfcn    fun.Vv           // vector function of vector: {J} = df/d{x} @ {x}
 	xnew    la.Vector        // {xnew} = {x} + a⋅{p}
 	dfdx    la.Vector        // derivative df/d{x}
-	interp2 *fun.InterpQuad  // quadratic intepolator
-	interp3 *fun.InterpCubic // cubic intepolator
+	interp2 *fun.InterpQuad  // quadratic interpolator
+	interp3 *fun.InterpCubic // cubic interpolator
 
 	// pointers
 	x la.Vector // starting point

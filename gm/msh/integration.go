@@ -211,7 +211,7 @@ func NewMeshIntegrator(mesh *Mesh, Ngoroutines int) (o *MeshIntegrator) {
 //           ⌡⌡⌡
 //              Ω
 //   Input:
-//     goroutineId -- go routine id to use when performing optimisation (not to partition mesh)
+//     goroutineId -- go routine id to use when performing optimization (not to partition mesh)
 func (o *MeshIntegrator) IntegrateSv(goroutineID int, f fun.Sv) (res float64) {
 	for _, c := range o.M.Cells {
 		r := o.Integrators[goroutineID][c.TypeIndex].IntegrateSv(c.X, f)

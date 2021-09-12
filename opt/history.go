@@ -12,7 +12,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// History holds history of optmization using directiors; e.g. for Debugging
+// History holds history of optimization using directions; e.g. for Debugging
 type History struct {
 
 	// data

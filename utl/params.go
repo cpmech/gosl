@@ -34,7 +34,7 @@ type P struct {
 	Adj    int     `json:"adj"`    // adjustable: unique ID (greater than zero)
 	Dep    int     `json:"dep"`    // depends on "adj"
 	Extra  string  `json:"extra"`  // extra data
-	Inact  bool    `json:"inact"`  // parameter is inactive in optimisation
+	Inact  bool    `json:"inact"`  // parameter is inactive in optimization
 	SetDef bool    `json:"setdef"` // tells model to use a default value
 
 	// connected parameter
