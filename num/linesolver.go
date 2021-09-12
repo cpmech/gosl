@@ -15,7 +15,7 @@ type LineSolver struct {
 	// configuration
 	UseDeriv bool // use Jacobian function [default = true if Jfcn is provided]
 
-	// inernal
+	// internal
 	ffcn    fun.Sv    // scalar function of vector: y = f({x})
 	Jfcn    fun.Vv    // vector function of vector: {J} = df/d{x} @ {x} [optional / may be nil]
 	y       la.Vector // {y} = {x} + λ⋅{n}
@@ -24,7 +24,7 @@ type LineSolver struct {
 	solver  *Brent    // scalar minimizer
 
 	// Stat
-	NumFeval int // number of function evalutions
+	NumFeval int // number of function evaluations
 	NumJeval int // number of Jacobian evaluations
 
 	// pointers

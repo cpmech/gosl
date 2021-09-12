@@ -36,8 +36,8 @@ func QuadDiscreteSimpsonRF(a, b float64, n int, f fun.Ss) (res float64) {
 }
 
 // QuadDiscreteSimps2d approximates a double integral over the x-y plane with the elevation given by
-// data points f[npts][npts]. Thus, the result is an estimate of the volume below the f[][] opints
-// and the plane ortogonal to z @ x=0. The very simple Simpson's method is used here.
+// data points f[npts][npts]. Thus, the result is an estimate of the volume below the f[][] points
+// and the plane orthogonal to z @ x=0. The very simple Simpson's method is used here.
 //  Lx -- total length of plane along x
 //  Ly -- total length of plane along y
 //  f  -- elevations f(x,y)

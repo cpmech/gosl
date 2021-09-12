@@ -34,7 +34,7 @@ type Brent struct {
 
 // NewBrent returns a new Brent structure
 //  ffcn -- function f(x)
-//  Jfcn -- derivative df(x)/dx [optinal / may be nil]
+//  Jfcn -- derivative df(x)/dx [optional / may be nil]
 func NewBrent(ffcn, Jfcn fun.Ss) (o *Brent) {
 	o = new(Brent)
 	o.MaxIt = 100
@@ -129,7 +129,7 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 
 		// decide if the interpolation can be tried
 		if math.Abs(prevStep) >= tolAct && math.Abs(fa) > math.Abs(fb) {
-			// if prev_step was large enough and was in true direction, interpolatiom may be tried
+			// if prev_step was large enough and was in true direction, interpolation may be tried
 			cb = c - b
 
 			// with two distinct points, linear interpolation must be applied
@@ -268,14 +268,14 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 		newStep = o.gsr * tmp
 
 		// decide if the interpolation can be tried
-		if math.Abs(x-w) >= tolAct { // if x and w are distinct interpolatiom may be tried
+		if math.Abs(x-w) >= tolAct { // if x and w are distinct interpolation may be tried
 
 			t = (x - w) * (fx - fv)
 			q = (x - v) * (fx - fw)
 			p = (x-v)*q - (x-w)*t
 			q = 2.0 * (q - t)
 
-			if q > 0.0 { // q was calculated with the op posite sign; make q positive and assign possible minus to p
+			if q > 0.0 { // q was calculated with the op positive sign; make q positive and assign possible minus to p
 				p = -p
 			} else {
 				q = -q
