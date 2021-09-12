@@ -45,7 +45,7 @@ import (
 //
 //  NOTE: the {bu} part is known and the {bk} can be (post-)computed if needed.
 //
-//  The partitioned system is symbolised as follows:
+//  The partitioned system is symbolized as follows:
 //
 //                                Auu Auk  u─────> unknown
 //                                Aku Akk  k─────> known
@@ -249,7 +249,7 @@ func (o *Equations) GetAmat() (A *Triplet) {
 	return
 }
 
-// JoinVector joins uknown with known parts of vector
+// JoinVector joins unknown with known parts of vector
 //  INPUT:
 //   bu, bk -- partitioned vectors; e.g. o.Bu, and o.Bk or o.Xu, o.Xk
 //  OUTPUT:
