@@ -264,7 +264,7 @@ func (o *Triplet) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) {
 	return
 }
 
-// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
+// WriteSmat writes a SMAT file (that can be visualized with vismatrix) or a MatrixMarket file
 //
 //   For more information, see:
 //
@@ -286,7 +286,7 @@ func (o *Triplet) WriteSmat(dirout, fnkey string, tol float64, format string, ma
 	return
 }
 
-// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
+// WriteSmat writes a SMAT file (that can be visualized with vismatrix) or a MatrixMarket file
 //
 //   For more information, see:
 //
@@ -576,7 +576,7 @@ func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) 
 	return
 }
 
-// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
+// WriteSmat writes a SMAT file (that can be visualized with vismatrix) or a MatrixMarket file
 //
 //   For more information, see:
 //
@@ -599,7 +599,7 @@ func (o *TripletC) WriteSmat(dirout, fnkey string, tol float64, format string, m
 	return
 }
 
-// WriteSmat writes a SMAT file (that can be visualised with vismatrix) or a MatrixMarket file
+// WriteSmat writes a SMAT file (that can be visualized with vismatrix) or a MatrixMarket file
 //
 //   For more information, see:
 //
