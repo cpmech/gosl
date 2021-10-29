@@ -146,7 +146,7 @@ func DerivVecVec(tst *testing.T, msg string, tol float64, gAna [][]float64, xAt 
 func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb bool, fcn func(x float64) float64) {
 
 	// call centralDeriv first
-	res, round, trunc := centralDeriv(fcn, xAt, h)
+	res, round, trunc := CentralDeriv(fcn, xAt, h)
 	numerr := round + trunc
 
 	// check rounding error
@@ -155,7 +155,7 @@ func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb boo
 		// compute an optimized stepsize to minimize the total error, using the scaling of the
 		// truncation error (O(h^2)) and rounding error (O(1/h)).
 		hOpt := h * math.Pow(round/(2.0*trunc), 1.0/3.0)
-		rOpt, roundOpt, truncOpt := centralDeriv(fcn, xAt, hOpt)
+		rOpt, roundOpt, truncOpt := CentralDeriv(fcn, xAt, hOpt)
 		errorOpt := roundOpt + truncOpt
 
 		// check that the new error is smaller, and that the new derivative is consistent with the
@@ -169,8 +169,8 @@ func DerivScaSca(tst *testing.T, msg string, tol, gAna, xAt, h float64, verb boo
 	AnaNum(tst, msg, tol, gAna, res, verb)
 }
 
-// centralDeriv Computes the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
-func centralDeriv(f func(x float64) float64, x float64, h float64) (res, absErrRound, absErrTrunc float64) {
+// CentralDeriv Computes the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
+func CentralDeriv(f func(x float64) float64, x float64, h float64) (res, absErrRound, absErrTrunc float64) {
 
 	// Compute the derivative using the 5-point rule (x-h, x-h/2, x, x+h/2, x+h).
 	// Note that the central point is not used.

@@ -9,6 +9,24 @@ import (
 	"testing"
 )
 
+func TestDeriv00(tst *testing.T) {
+	// Verbose = true
+	PrintTitle("Deriv00. CentralDeriv")
+	f := func(x float64) float64 { return x * x / 2.0 }
+	xAt := 1.0
+	dx := 1e-3
+	d1, er1, et1 := CentralDeriv(f, xAt, dx)
+	if math.Abs(d1-1.0) > 1e-12 {
+		tst.Errorf("numerical derivative is incorrect")
+	}
+	if er1 > 1e-11 {
+		tst.Errorf("rounding error is incorrect")
+	}
+	if et1 > 1e-13 {
+		tst.Errorf("truncation error is incorrect")
+	}
+}
+
 func TestDeriv01(tst *testing.T) {
 
 	//Verbose = true
