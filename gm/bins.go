@@ -306,7 +306,7 @@ func (o Bins) FindAlongSegment(xi, xf []float64, tol float64) []int {
 	return ids
 }
 
-// GetLimits returns limigs of a specific bin
+// GetLimits returns limits of a specific bin
 func (o *Bins) GetLimits(idxBin int) (xmin, xmax []float64) {
 	nxy := o.Ndiv[0] * o.Ndiv[1]
 	i := idxBin % o.Ndiv[0]
