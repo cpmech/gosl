@@ -158,7 +158,7 @@ func (o *Integrator) IntegrateSv(X *la.Matrix, f fun.Sv) (res float64) {
 //   Computed (stored):
 //     JacobianMat -- reference Jacobian matrix [ndim][ndim]
 //     InvJacobMat -- inverse of Jmat [ndim][ndim]
-//     DetJacobian -- determinat of the reference Jacobian matrix
+//     DetJacobian -- determinant of the reference Jacobian matrix
 //
 func (o *Integrator) EvalJacobian(X *la.Matrix, ip int) {
 	if ip < 0 || ip > o.Npts {
