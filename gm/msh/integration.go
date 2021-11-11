@@ -28,7 +28,7 @@ type Integrator struct {
 	xip         la.Vector  // x(r); i.e. x @ integration point
 	JacobianMat *la.Matrix // jacobian matrix Jr of the mapping reference to general coords [ndim][ndim]
 	InvJacobMat *la.Matrix // inverse of jacobian matrix [ndim][ndim]
-	DetJacobian float64    // determinat of jacobian matrix
+	DetJacobian float64    // determinant of jacobian matrix
 }
 
 // NewIntegrator returns a new object to integrate over polyhedra/polygons (cells)
