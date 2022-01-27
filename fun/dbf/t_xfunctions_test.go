@@ -22,7 +22,7 @@ func Test_xfun01(tst *testing.T) {
 		&P{N: "yc", V: 0.5},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed\n")
 		return
 	}
 
@@ -54,7 +54,7 @@ func Test_xfun02(tst *testing.T) {
 		&P{N: "yc", V: xc[1]},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed\n")
 		return
 	}
 
@@ -87,7 +87,7 @@ func Test_xfun03(tst *testing.T) {
 		//&Prm{N: "2D", V: 1},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed\n")
 		return
 	}
 
@@ -118,7 +118,7 @@ func Test_xfun04(tst *testing.T) {
 		&P{N: "2D", V: 1},
 	})
 	if err != nil {
-		tst.Errorf("test failed: %v\n")
+		tst.Errorf("test failed\n")
 		return
 	}
 

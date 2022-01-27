@@ -69,7 +69,7 @@ func Ints(tst *testing.T, msg string, a, b []int) {
 // Bools compare two slices of bools
 func Bools(tst *testing.T, msg string, a, b []bool) {
 	if len(a) != len(b) {
-		fmt.Printf("%s [1;31merror len(%q)=%d != len(%q)=%d[0m\n", msg, a, len(a), b, len(b))
+		fmt.Printf("%s [1;31merror len(a)=%d != len(b)=%d[0m\n", msg, len(a), len(b))
 		tst.Errorf("[1;31m%s failed: slices have different lengths: %v != %v[0m", msg, a, b)
 		return
 	}

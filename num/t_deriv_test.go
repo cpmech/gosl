@@ -79,7 +79,7 @@ func Test_deriv01(tst *testing.T) {
 	}
 
 	//                    1      2      3     4      5      6
-	tols := []float64{1e-15, 1e-11, 1e-11, 1e-9, 1e-11, 1e-10}
+	tols := []float64{1e-15, 1e-10, 1e-11, 1e-9, 1e-11, 1e-10}
 
 	//                 1     2     3     4     5     6
 	hs := []float64{1e-1, 1e-1, 1e-1, 1e-1, 1e-1, 1e-1}

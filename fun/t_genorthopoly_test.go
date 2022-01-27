@@ -211,7 +211,7 @@ func TestGenOrthoPoly05(tst *testing.T) {
 		for n := 0; n < 5; n++ {
 			yref := ChebyshevT(n, x)
 			y := op.P(n, x)
-			tol := 1e-15
+			tol := 1e-14
 			if math.Abs(y) > 8 {
 				tol = 1e-14
 			}

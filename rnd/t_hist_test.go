@@ -82,7 +82,6 @@ func Test_hist02(tst *testing.T) {
 
 	for i, x := range lims {
 		idx = hist.FindBin(x)
-		io.Pforan("x=%g idx=%d\n", x, idx)
 		if i < len(lims)-1 {
 			chk.IntAssert(idx, i)
 		} else {

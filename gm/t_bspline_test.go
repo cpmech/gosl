@@ -64,7 +64,7 @@ func Test_bspline01(tst *testing.T) {
 
 		err := plt.Save("/tmp/gosl", "bspline01")
 		if err != nil {
-			tst.Error("%v", err)
+			tst.Error(err)
 		}
 	}
 }

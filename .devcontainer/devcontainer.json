@@ -1,0 +1,22 @@
+{
+  "name": "dk-gosl-gofem",
+  "image": "dk-gosl-gofem",
+  "settings": {
+    "go.useLanguageServer": true,
+    "go.gopath": "/go",
+    "go.goroot": "/usr/local/go",
+    "go.toolsGopath": "/go/bin"
+  },
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined"
+  ],
+  "extensions": [
+    "golang.Go"
+  ],
+  "forwardPorts": [
+    9000
+  ],
+  "remoteUser": "vscode"
+}

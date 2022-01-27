@@ -175,6 +175,6 @@ func TestJacobian03(tst *testing.T) {
 		}
 		fU1 := make([]float64, e.N1)
 		min, max := la.VecMinMax(fU1)
-		io.Pf("min/max fU1 = %v\n", min, max)
+		io.Pf("min=%v, max=%v, fU1 = %v\n", min, max, fU1)
 	}
 }
