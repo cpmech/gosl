@@ -153,7 +153,7 @@ func TestInteg03(tst *testing.T) {
 func TestInteg04(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Integ04. 2nd mom inergia: ring")
+	chk.PrintTitle("Integ04. 2nd mom inertia: ring")
 
 	// integrand function for second moment of inertia about x-axis: Ix
 	fcnIx := func(x la.Vector) (f float64) {
