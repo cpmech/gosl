@@ -135,5 +135,5 @@ func Jacobi(Q *Matrix, v Vector, A *Matrix) {
 		}
 	}
 
-	chk.Panic("Jacobi rotation dit not converge after %d iterations", nItMax+1)
+	chk.Panic("Jacobi rotation did not converge after %d iterations", nItMax+1)
 }
