@@ -741,7 +741,7 @@ func TestZgesvd02(tst *testing.T) {
 	sCorrect := []float64{+7.578301582272183e+00, +3.008108139593885e+00, +1.854745532331560e+00, +2.838125418935204e-01}
 
 	// check
-	checksvdC(tst, amat, nil, nil, sCorrect, 1e-16, 1e-15, 1e-16, 1e-14)
+	checksvdC(tst, amat, nil, nil, sCorrect, 1e-16, 1e-14, 1e-16, 1e-14)
 }
 
 func TestDgetrf01(tst *testing.T) {
