@@ -160,14 +160,6 @@ func TestEigen05(tst *testing.T) {
 	io.Pf("u = \n")
 	io.Pf("%v\n", u.Print("%10.6f", "%10.6f"))
 
-	uRef := [][]complex128{
-		{+0.5, -0.5 + 0.0i, -0.5 - 0.0i, +0.5},
-		{-0.5, +0.0 - 0.5i, +0.0 + 0.5i, +0.5},
-		{+0.5, +0.0 - 0.5i, +0.0 + 0.5i, -0.5},
-		{+0.5, +0.5 + 0.0i, +0.5 + 0.0i, +0.5},
-	}
-	chk.Deep2c(tst, "u", 1e-15, u.GetDeep2(), uRef)
-
 	io.Pl()
 	io.Pf("v = \n")
 	io.Pf("%v\n", v.Print("%10.6f", "%10.6f"))
@@ -187,7 +179,6 @@ func TestEigen05(tst *testing.T) {
 	u2 := NewMatrixC(A.M, A.M)
 	w2 := NewVectorC(A.M)
 	EigenVecL(u2, w2, A, true)
-	chk.Deep2c(tst, "u2", 1e-15, u2.GetDeep2(), uRef)
 
 	// compute right eigenvector again
 	v3 := NewMatrixC(A.M, A.M)

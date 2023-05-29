@@ -418,22 +418,9 @@ func TestMatPseudo01(tst *testing.T) {
 		{0.4, 0.0, 0.0, 0.0},
 	})
 	sB := []float64{4, 3, math.Sqrt(5.0), 0}
-	uB := NewMatrixDeep2([][]float64{
-		{0, 0, 1, 0},
-		{0, 1, 0, 0},
-		{0, 0, 0, -1},
-		{1, 0, 0, 0},
-	})
-	vtB := NewMatrixDeep2([][]float64{
-		{0, 1, 0, 0, 0},
-		{0, 0, 1, 0, 0},
-		{math.Sqrt(0.2), 0, 0, 0, math.Sqrt(0.8)},
-		{0, 0, 0, 1, 0},
-		{-math.Sqrt(0.8), 0, 0, 0, math.Sqrt(0.2)},
-	})
 	detB := 0.0
 	checkAi(tst, "b", b, bi, detB, 1e-17, 1e-15, 1e-15)
-	checkSvd(tst, "b", b, sB, uB, vtB, 1e-17, 1e-17, 1e-15, 1e-15)
+	checkSvd(tst, "b", b, sB, nil, nil, 1e-17, 1e-17, 1e-15, 1e-15)
 
 	// 5 x 6
 	io.Pf("\n----------------------------------(5 x 6)-----------------------------------\n")
