@@ -20,9 +20,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// ToMatrix converts a sparse matrix in triplet form to column-compressed form using Umfpack's
-// routines. "realloc_a" indicates whether the internal "a" matrix must be reallocated or not,
-// for instance, in case the structure of the triplet has changed.
+// ToMatrix converts a sparse matrix in triplet form to column-compressed form using Umfpack's routines.
 //  INPUT:
 //   a -- a previous CCMatrix to be filled in; otherwise, "nil" tells to allocate a new one
 //  OUTPUT:
@@ -52,8 +50,6 @@ func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 }
 
 // ToMatrix converts a sparse matrix in triplet form with complex numbers to column-compressed form.
-// "realloc_a" indicates whether the internal "a" matrix must be reallocated or not, for instance,
-// in case the structure of the triplet has changed.
 //  INPUT:
 //   a -- a previous CCMatrixC to be filled in; otherwise, "nil" tells to allocate a new one
 //  OUTPUT:
