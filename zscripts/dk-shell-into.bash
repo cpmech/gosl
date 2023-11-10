@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAME="gosl"
+NAME="dk-gosl-gofem"
 VERSION="latest"
 
-docker run --rm -it gosl/$NAME:$VERSION /bin/bash
+docker run --rm -it $NAME:$VERSION /bin/bash
