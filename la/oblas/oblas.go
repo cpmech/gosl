@@ -12,7 +12,7 @@ package oblas
 #define LONG long
 #endif
 
-#include <cblas.h>
+#include "openblas_cblas.h"
 #include <lapacke.h>
 
 static inline double* cpt(double complex* p) { return (double*)p; }
@@ -31,10 +31,10 @@ func SetNumThreads(n int) {
 }
 
 // Daxpy computes constant times a vector plus a vector.
-//  See: http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html
 //
-//  y += alpha*x + y
+//	See: http://www.netlib.org/lapack/explore-html/d9/dcd/daxpy_8f.html
 //
+//	y += alpha*x + y
 func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (err error) {
 	nmin := imin(len(x), len(y))
 	if n > nmin {
@@ -52,10 +52,10 @@ func Daxpy(n int, alpha float64, x []float64, incx int, y []float64, incy int) (
 }
 
 // Zaxpy computes constant times a vector plus a vector.
-//  See: http://www.netlib.org/lapack/explore-html/d7/db2/zaxpy_8f.html
 //
-//  y += alpha*x + y
+//	See: http://www.netlib.org/lapack/explore-html/d7/db2/zaxpy_8f.html
 //
+//	y += alpha*x + y
 func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, incy int) (err error) {
 	nmin := imin(len(x), len(y))
 	if n > nmin {
@@ -73,15 +73,16 @@ func Zaxpy(n int, alpha complex128, x []complex128, incx int, y []complex128, in
 }
 
 // Dgemv performs one of the matrix-vector operations
-//  See: http://www.netlib.org/lapack/explore-html/dc/da8/dgemv_8f.html
 //
-//     y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,
+//	See: http://www.netlib.org/lapack/explore-html/dc/da8/dgemv_8f.html
 //
-//  where alpha and beta are scalars, x and y are vectors and A is an
-//  m by n matrix.
-//     trans=false     y := alpha*A*x + beta*y.
+//	   y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,
 //
-//     trans=true      y := alpha*A**T*x + beta*y.
+//	where alpha and beta are scalars, x and y are vectors and A is an
+//	m by n matrix.
+//	   trans=false     y := alpha*A*x + beta*y.
+//
+//	   trans=true      y := alpha*A**T*x + beta*y.
 func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64, incx int, beta float64, y []float64, incy int) (err error) {
 	if trans {
 		if len(x) != a.m {
@@ -116,14 +117,15 @@ func Dgemv(trans bool, m, n int, alpha float64, a *Matrix, lda int, x []float64,
 }
 
 // Zgemv performs one of the matrix-vector operations.
-//  See: http://www.netlib.org/lapack/explore-html/db/d40/zgemv_8f.html
 //
-//     y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
+//	See: http://www.netlib.org/lapack/explore-html/db/d40/zgemv_8f.html
 //
-//     y := alpha*A**H*x + beta*y,
+//	   y := alpha*A*x + beta*y,   or   y := alpha*A**T*x + beta*y,   or
 //
-//  where alpha and beta are scalars, x and y are vectors and A is an
-//  m by n matrix.
+//	   y := alpha*A**H*x + beta*y,
+//
+//	where alpha and beta are scalars, x and y are vectors and A is an
+//	m by n matrix.
 func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []complex128, incx int, beta complex128, y []complex128, incy int) (err error) {
 	if trans {
 		if len(x) != a.m {
@@ -158,16 +160,17 @@ func Zgemv(trans bool, m, n int, alpha complex128, a *MatrixC, lda int, x []comp
 }
 
 // Dgemm performs one of the matrix-matrix operations
-//  see: http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
 //
-//     C := alpha*op( A )*op( B ) + beta*C,
+//	see: http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
 //
-//  where  op( X ) is one of
+//	   C := alpha*op( A )*op( B ) + beta*C,
 //
-//     op( X ) = X   or   op( X ) = X**T,
+//	where  op( X ) is one of
 //
-//  alpha and beta are scalars, and A, B and C are matrices, with op( A )
-//  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
+//	   op( X ) = X   or   op( X ) = X**T,
+//
+//	alpha and beta are scalars, and A, B and C are matrices, with op( A )
+//	an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
 func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *Matrix, lda int, b *Matrix, ldb int, beta float64, c *Matrix, ldc int) (err error) {
 	C.cblas_dgemm(
 		cblasColMajor,
@@ -189,16 +192,17 @@ func Dgemm(transA, transB bool, m, n, k int, alpha float64, a *Matrix, lda int, 
 }
 
 // Zgemm performs one of the matrix-matrix operations
-//  see: http://www.netlib.org/lapack/explore-html/d7/d76/zgemm_8f.html
 //
-//     C := alpha*op( A )*op( B ) + beta*C,
+//	see: http://www.netlib.org/lapack/explore-html/d7/d76/zgemm_8f.html
 //
-//  where  op( X ) is one of
+//	   C := alpha*op( A )*op( B ) + beta*C,
 //
-//     op( X ) = X   or   op( X ) = X**T   or   op( X ) = X**H,
+//	where  op( X ) is one of
 //
-//  alpha and beta are scalars, and A, B and C are matrices, with op( A )
-//  an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
+//	   op( X ) = X   or   op( X ) = X**T   or   op( X ) = X**H,
+//
+//	alpha and beta are scalars, and A, B and C are matrices, with op( A )
+//	an m by k matrix,  op( B )  a  k by n matrix and  C an m by n matrix.
 func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *MatrixC, lda int, b *MatrixC, ldb int, beta complex128, c *MatrixC, ldc int) (err error) {
 	C.cblas_zgemm(
 		cblasColMajor,
@@ -220,23 +224,24 @@ func Zgemm(transA, transB bool, m, n, k int, alpha complex128, a *MatrixC, lda i
 }
 
 // Dgesv computes the solution to a real system of linear equations.
-//  See: http://www.netlib.org/lapack/explore-html/d8/d72/dgesv_8f.html
-//  The system is:
 //
-//     A * X = B,
+//	See: http://www.netlib.org/lapack/explore-html/d8/d72/dgesv_8f.html
+//	The system is:
 //
-//  where A is an N-by-N matrix and X and B are N-by-NRHS matrices.
+//	   A * X = B,
 //
-//  The LU decomposition with partial pivoting and row interchanges is
-//  used to factor A as
+//	where A is an N-by-N matrix and X and B are N-by-NRHS matrices.
 //
-//     A = P * L * U,
+//	The LU decomposition with partial pivoting and row interchanges is
+//	used to factor A as
 //
-//  where P is a permutation matrix, L is unit lower triangular, and U is
-//  upper triangular.  The factored form of A is then used to solve the
-//  system of equations A * X = B.
+//	   A = P * L * U,
 //
-//  NOTE: matrix 'a' will be modified
+//	where P is a permutation matrix, L is unit lower triangular, and U is
+//	upper triangular.  The factored form of A is then used to solve the
+//	system of equations A * X = B.
+//
+//	NOTE: matrix 'a' will be modified
 func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int32, b []float64, ldb int) (err error) {
 	if len(ipiv) != n {
 		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
@@ -258,23 +263,24 @@ func Dgesv(n, nrhs int, a *Matrix, lda int, ipiv []int32, b []float64, ldb int) 
 }
 
 // Zgesv computes the solution to a complex system of linear equations.
-//  See: http://www.netlib.org/lapack/explore-html/d1/ddc/zgesv_8f.html
-//  The system is:
 //
-//     A * X = B,
+//	See: http://www.netlib.org/lapack/explore-html/d1/ddc/zgesv_8f.html
+//	The system is:
 //
-//  where A is an N-by-N matrix and X and B are N-by-NRHS matrices.
+//	   A * X = B,
 //
-//  The LU decomposition with partial pivoting and row interchanges is
-//  used to factor A as
+//	where A is an N-by-N matrix and X and B are N-by-NRHS matrices.
 //
-//     A = P * L * U,
+//	The LU decomposition with partial pivoting and row interchanges is
+//	used to factor A as
 //
-//  where P is a permutation matrix, L is unit lower triangular, and U is
-//  upper triangular.  The factored form of A is then used to solve the
-//  system of equations A * X = B.
+//	   A = P * L * U,
 //
-//  NOTE: matrix 'a' will be modified
+//	where P is a permutation matrix, L is unit lower triangular, and U is
+//	upper triangular.  The factored form of A is then used to solve the
+//	system of equations A * X = B.
+//
+//	NOTE: matrix 'a' will be modified
 func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int32, b []complex128, ldb int) (err error) {
 	if len(ipiv) != n {
 		return chk.Err("len(ipiv) must be equal to n. %d != %d\n", len(ipiv), n)
@@ -296,21 +302,22 @@ func Zgesv(n, nrhs int, a *MatrixC, lda int, ipiv []int32, b []complex128, ldb i
 }
 
 // Dgesvd computes the singular value decomposition (SVD) of a real M-by-N matrix A, optionally computing the left and/or right singular vectors.
-//  See: http://www.netlib.org/lapack/explore-html/d8/d2d/dgesvd_8f.html
-//  The SVD is written
 //
-//       A = U * SIGMA * transpose(V)
+//	See: http://www.netlib.org/lapack/explore-html/d8/d2d/dgesvd_8f.html
+//	The SVD is written
 //
-//  where SIGMA is an M-by-N matrix which is zero except for its
-//  min(m,n) diagonal elements, U is an M-by-M orthogonal matrix, and
-//  V is an N-by-N orthogonal matrix.  The diagonal elements of SIGMA
-//  are the singular values of A; they are real and non-negative, and
-//  are returned in descending order.  The first min(m,n) columns of
-//  U and V are the left and right singular vectors of A.
+//	     A = U * SIGMA * transpose(V)
 //
-//  Note that the routine returns V**T, not V.
+//	where SIGMA is an M-by-N matrix which is zero except for its
+//	min(m,n) diagonal elements, U is an M-by-M orthogonal matrix, and
+//	V is an N-by-N orthogonal matrix.  The diagonal elements of SIGMA
+//	are the singular values of A; they are real and non-negative, and
+//	are returned in descending order.  The first min(m,n) columns of
+//	U and V are the left and right singular vectors of A.
 //
-//  NOTE: matrix 'a' will be modified
+//	Note that the routine returns V**T, not V.
+//
+//	NOTE: matrix 'a' will be modified
 func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matrix, ldu int, vt *Matrix, ldvt int, work []float64, lwork int) (err error) {
 	info := C.LAPACKE_dgesvd_work(
 		C.int(lapackColMajor),
@@ -335,21 +342,22 @@ func Dgesvd(jobu, jobvt rune, m, n int, a *Matrix, lda int, s []float64, u *Matr
 }
 
 // Zgesvd computes the singular value decomposition (SVD) of a complex M-by-N matrix A, optionally computing the left and/or right singular vectors.
-//  See: http://www.netlib.org/lapack/explore-html/d6/d42/zgesvd_8f.html
-//  The SVD is written
 //
-//       A = U * SIGMA * conjugate-transpose(V)
+//	See: http://www.netlib.org/lapack/explore-html/d6/d42/zgesvd_8f.html
+//	The SVD is written
 //
-//  where SIGMA is an M-by-N matrix which is zero except for its
-//  min(m,n) diagonal elements, U is an M-by-M unitary matrix, and
-//  V is an N-by-N unitary matrix.  The diagonal elements of SIGMA
-//  are the singular values of A; they are real and non-negative, and
-//  are returned in descending order.  The first min(m,n) columns of
-//  U and V are the left and right singular vectors of A.
+//	     A = U * SIGMA * conjugate-transpose(V)
 //
-//  Note that the routine returns V**H, not V.
+//	where SIGMA is an M-by-N matrix which is zero except for its
+//	min(m,n) diagonal elements, U is an M-by-M unitary matrix, and
+//	V is an N-by-N unitary matrix.  The diagonal elements of SIGMA
+//	are the singular values of A; they are real and non-negative, and
+//	are returned in descending order.  The first min(m,n) columns of
+//	U and V are the left and right singular vectors of A.
 //
-//  NOTE: matrix 'a' will be modified
+//	Note that the routine returns V**H, not V.
+//
+//	NOTE: matrix 'a' will be modified
 func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *MatrixC, ldu int, vt *MatrixC, ldvt int, work []complex128, lwork int, rwork []float64) (err error) {
 	info := C.LAPACKE_zgesvd_work(
 		C.int(lapackColMajor),
@@ -375,18 +383,19 @@ func Zgesvd(jobu, jobvt rune, m, n int, a *MatrixC, lda int, s []float64, u *Mat
 }
 
 // Dgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
-//  See: http://www.netlib.org/lapack/explore-html/d3/d6a/dgetrf_8f.html
 //
-//  The factorization has the form
-//     A = P * L * U
-//  where P is a permutation matrix, L is lower triangular with unit
-//  diagonal elements (lower trapezoidal if m > n), and U is upper
-//  triangular (upper trapezoidal if m < n).
+//	See: http://www.netlib.org/lapack/explore-html/d3/d6a/dgetrf_8f.html
 //
-//  This is the right-looking Level 3 BLAS version of the algorithm.
+//	The factorization has the form
+//	   A = P * L * U
+//	where P is a permutation matrix, L is lower triangular with unit
+//	diagonal elements (lower trapezoidal if m > n), and U is upper
+//	triangular (upper trapezoidal if m < n).
 //
-//  NOTE: (1) matrix 'a' will be modified
-//        (2) ipiv indices are 1-based (i.e. Fortran)
+//	This is the right-looking Level 3 BLAS version of the algorithm.
+//
+//	NOTE: (1) matrix 'a' will be modified
+//	      (2) ipiv indices are 1-based (i.e. Fortran)
 func Dgetrf(m, n int, a *Matrix, lda int, ipiv []int32) (err error) {
 	info := C.LAPACKE_dgetrf_work(
 		C.int(lapackColMajor),
@@ -403,18 +412,19 @@ func Dgetrf(m, n int, a *Matrix, lda int, ipiv []int32) (err error) {
 }
 
 // Zgetrf computes an LU factorization of a general M-by-N matrix A using partial pivoting with row interchanges.
-//  See: http://www.netlib.org/lapack/explore-html/dd/dd1/zgetrf_8f.html
 //
-//  The factorization has the form
-//     A = P * L * U
-//  where P is a permutation matrix, L is lower triangular with unit
-//  diagonal elements (lower trapezoidal if m > n), and U is upper
-//  triangular (upper trapezoidal if m < n).
+//	See: http://www.netlib.org/lapack/explore-html/dd/dd1/zgetrf_8f.html
 //
-//  This is the right-looking Level 3 BLAS version of the algorithm.
+//	The factorization has the form
+//	   A = P * L * U
+//	where P is a permutation matrix, L is lower triangular with unit
+//	diagonal elements (lower trapezoidal if m > n), and U is upper
+//	triangular (upper trapezoidal if m < n).
 //
-//  NOTE: (1) matrix 'a' will be modified
-//        (2) ipiv indices are 1-based (i.e. Fortran)
+//	This is the right-looking Level 3 BLAS version of the algorithm.
+//
+//	NOTE: (1) matrix 'a' will be modified
+//	      (2) ipiv indices are 1-based (i.e. Fortran)
 func Zgetrf(m, n int, a *MatrixC, lda int, ipiv []int32) (err error) {
 	info := C.LAPACKE_zgetrf_work(
 		C.int(lapackColMajor),
@@ -431,10 +441,11 @@ func Zgetrf(m, n int, a *MatrixC, lda int, ipiv []int32) (err error) {
 }
 
 // Dgetri computes the inverse of a matrix using the LU factorization computed by DGETRF.
-//  See: http://www.netlib.org/lapack/explore-html/df/da4/dgetri_8f.html
 //
-//  This method inverts U and then computes inv(A) by solving the system
-//  inv(A)*L = inv(U) for inv(A).
+//	See: http://www.netlib.org/lapack/explore-html/df/da4/dgetri_8f.html
+//
+//	This method inverts U and then computes inv(A) by solving the system
+//	inv(A)*L = inv(U) for inv(A).
 func Dgetri(n int, a *Matrix, lda int, ipiv []int32, work []float64, lwork int) (err error) {
 	info := C.LAPACKE_dgetri_work(
 		C.int(lapackColMajor),
@@ -452,10 +463,11 @@ func Dgetri(n int, a *Matrix, lda int, ipiv []int32, work []float64, lwork int) 
 }
 
 // Zgetri computes the inverse of a matrix using the LU factorization computed by Zgetrf.
-//  See: http://www.netlib.org/lapack/explore-html/d0/db3/zgetri_8f.html
 //
-//  This method inverts U and then computes inv(A) by solving the system
-//  inv(A)*L = inv(U) for inv(A).
+//	See: http://www.netlib.org/lapack/explore-html/d0/db3/zgetri_8f.html
+//
+//	This method inverts U and then computes inv(A) by solving the system
+//	inv(A)*L = inv(U) for inv(A).
 func Zgetri(n int, a *MatrixC, lda int, ipiv []int32, work []complex128, lwork int) (err error) {
 	info := C.LAPACKE_zgetri_work(
 		C.int(lapackColMajor),
@@ -473,17 +485,18 @@ func Zgetri(n int, a *MatrixC, lda int, ipiv []int32, work []complex128, lwork i
 }
 
 // Dsyrk performs one of the symmetric rank k operations
-//  See: http://www.netlib.org/lapack/explore-html/dc/d05/dsyrk_8f.html
 //
-//     C := alpha*A*A**T + beta*C,
+//	See: http://www.netlib.org/lapack/explore-html/dc/d05/dsyrk_8f.html
 //
-//  or
+//	   C := alpha*A*A**T + beta*C,
 //
-//     C := alpha*A**T*A + beta*C,
+//	or
 //
-//  where  alpha and beta  are scalars, C is an  n by n  symmetric matrix
-//  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
-//  in the second case.
+//	   C := alpha*A**T*A + beta*C,
+//
+//	where  alpha and beta  are scalars, C is an  n by n  symmetric matrix
+//	and  A  is an  n by k  matrix in the first case and a  k by n  matrix
+//	in the second case.
 func Dsyrk(up, trans bool, n, k int, alpha float64, a *Matrix, lda int, beta float64, c *Matrix, ldc int) (err error) {
 	C.cblas_dsyrk(
 		cblasColMajor,
@@ -502,17 +515,18 @@ func Dsyrk(up, trans bool, n, k int, alpha float64, a *Matrix, lda int, beta flo
 }
 
 // Zsyrk performs one of the symmetric rank k operations
-//  See: http://www.netlib.org/lapack/explore-html/de/d54/zsyrk_8f.html
 //
-//     C := alpha*A*A**T + beta*C,
+//	See: http://www.netlib.org/lapack/explore-html/de/d54/zsyrk_8f.html
 //
-//  or
+//	   C := alpha*A*A**T + beta*C,
 //
-//     C := alpha*A**T*A + beta*C,
+//	or
 //
-//  where  alpha and beta  are scalars,  C is an  n by n symmetric matrix
-//  and  A  is an  n by k  matrix in the first case and a  k by n  matrix
-//  in the second case.
+//	   C := alpha*A**T*A + beta*C,
+//
+//	where  alpha and beta  are scalars,  C is an  n by n symmetric matrix
+//	and  A  is an  n by k  matrix in the first case and a  k by n  matrix
+//	in the second case.
 func Zsyrk(up, trans bool, n, k int, alpha complex128, a *MatrixC, lda int, beta complex128, c *MatrixC, ldc int) (err error) {
 	C.cblas_zsyrk(
 		cblasColMajor,
@@ -531,17 +545,18 @@ func Zsyrk(up, trans bool, n, k int, alpha complex128, a *MatrixC, lda int, beta
 }
 
 // Zherk performs one of the hermitian rank k operations
-//  See: http://www.netlib.org/lapack/explore-html/d1/db1/zherk_8f.html
 //
-//     C := alpha*A*A**H + beta*C,
+//	See: http://www.netlib.org/lapack/explore-html/d1/db1/zherk_8f.html
 //
-//  or
+//	   C := alpha*A*A**H + beta*C,
 //
-//     C := alpha*A**H*A + beta*C,
+//	or
 //
-//  where  alpha and beta  are  real scalars,  C is an  n by n  hermitian
-//  matrix and  A  is an  n by k  matrix in the  first case and a  k by n
-//  matrix in the second case.
+//	   C := alpha*A**H*A + beta*C,
+//
+//	where  alpha and beta  are  real scalars,  C is an  n by n  hermitian
+//	matrix and  A  is an  n by k  matrix in the  first case and a  k by n
+//	matrix in the second case.
 func Zherk(up, trans bool, n, k int, alpha float64, a *MatrixC, lda int, beta float64, c *MatrixC, ldc int) (err error) {
 	C.cblas_zherk(
 		cblasColMajor,
@@ -560,19 +575,20 @@ func Zherk(up, trans bool, n, k int, alpha float64, a *MatrixC, lda int, beta fl
 }
 
 // Dpotrf computes the Cholesky factorization of a real symmetric positive definite matrix A.
-//  See: http://www.netlib.org/lapack/explore-html/d0/d8a/dpotrf_8f.html
 //
-//  The factorization has the form
+//	See: http://www.netlib.org/lapack/explore-html/d0/d8a/dpotrf_8f.html
 //
-//     A = U**T * U,  if UPLO = 'U'
+//	The factorization has the form
 //
-//  or
+//	   A = U**T * U,  if UPLO = 'U'
 //
-//     A = L  * L**T,  if UPLO = 'L'
+//	or
 //
-//  where U is an upper triangular matrix and L is lower triangular.
+//	   A = L  * L**T,  if UPLO = 'L'
 //
-//  This is the block version of the algorithm, calling Level 3 BLAS.
+//	where U is an upper triangular matrix and L is lower triangular.
+//
+//	This is the block version of the algorithm, calling Level 3 BLAS.
 func Dpotrf(up bool, n int, a *Matrix, lda int) (err error) {
 	info := C.LAPACKE_dpotrf(
 		C.int(lapackColMajor),
@@ -588,19 +604,20 @@ func Dpotrf(up bool, n int, a *Matrix, lda int) (err error) {
 }
 
 // Zpotrf computes the Cholesky factorization of a complex Hermitian positive definite matrix A.
-//  See: http://www.netlib.org/lapack/explore-html/d1/db9/zpotrf_8f.html
 //
-//  The factorization has the form
+//	See: http://www.netlib.org/lapack/explore-html/d1/db9/zpotrf_8f.html
 //
-//     A = U**H * U,  if UPLO = 'U'
+//	The factorization has the form
 //
-//  or
+//	   A = U**H * U,  if UPLO = 'U'
 //
-//     A = L  * L**H,  if UPLO = 'L'
+//	or
 //
-//  where U is an upper triangular matrix and L is lower triangular.
+//	   A = L  * L**H,  if UPLO = 'L'
 //
-//  This is the block version of the algorithm, calling Level 3 BLAS.
+//	where U is an upper triangular matrix and L is lower triangular.
+//
+//	This is the block version of the algorithm, calling Level 3 BLAS.
 func Zpotrf(up bool, n int, a *MatrixC, lda int) (err error) {
 	info := C.LAPACKE_zpotrf(
 		C.int(lapackColMajor),

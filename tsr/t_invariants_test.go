@@ -21,7 +21,7 @@ const (
 
 func Test_invs01(tst *testing.T) {
 
-	//verbose()
+	verbose()
 	chk.PrintTitle("invs01")
 
 	sig := [][]float64{

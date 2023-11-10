@@ -2,13 +2,14 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build !windows && !appengine && !heroku
 // +build !windows,!appengine,!heroku
 
 // package mpi wraps the Message Passing Interface for parallel computations
 package mpi
 
 /*
-#cgo CXXFLAGS: -O3 -I. -I/usr/lib/openmpi/include -I/usr/lib/openmpi/include/openmpi -pthread
+#cgo CXXFLAGS: -O3 -I. -I/usr/lib/openmpi/include -I/usr/lib/openmpi/include/openmpi -I/usr/lib/x86_64-linux-gnu/openmpi/include -pthread
 #cgo LDFLAGS: -L. -L/usr/lib/openmpi/lib -lmpi_cxx -lmpi -ldl -lstdc++
 #include "connectmpi.h"
 */
@@ -31,7 +32,8 @@ func Abort() {
 }
 
 // InOn tells whether MPI is on or not
-//  NOTE: this returns true even after Stop
+//
+//	NOTE: this returns true even after Stop
 func IsOn() bool {
 	if C.ison() == 1 {
 		return true
@@ -73,7 +75,8 @@ func Barrier() {
 }
 
 // SumToRoot sums all values in 'orig' to 'dest' in root (Rank == 0) processor
-//  NOTE: orig and dest must be different slices, i.e. not pointing to the same underlying data structure
+//
+//	NOTE: orig and dest must be different slices, i.e. not pointing to the same underlying data structure
 func SumToRoot(dest, orig []float64) {
 	C.sumtoroot((*C.double)(unsafe.Pointer(&dest[0])), (*C.double)(unsafe.Pointer(&orig[0])), C.int(len(orig)))
 }
@@ -85,8 +88,9 @@ func BcastFromRoot(x []float64) {
 
 // AllReduceSum combines all values in 'x' from all processors. Corresponding components in
 // slice 'x' are added together. 'w' is a workspace with length = len(x). The operations are:
-//   w := join_all_with_sum(x)
-//   x := w
+//
+//	w := join_all_with_sum(x)
+//	x := w
 func AllReduceSum(x, w []float64) {
 	for i := 0; i < len(x); i++ {
 		w[i] = 0
@@ -100,8 +104,9 @@ func AllReduceSum(x, w []float64) {
 // AllReduceSumAdd combines all values in 'x' from all processors and adds the result to another
 // slice 'y'. Corresponding components in slice 'x' are added together.
 // 'w' is a workspace with length = len(x). The operations are:
-//   w := join_all_with_sum(x)
-//   y += w
+//
+//	w := join_all_with_sum(x)
+//	y += w
 func AllReduceSumAdd(y, x, w []float64) {
 	for i := 0; i < len(x); i++ {
 		w[i] = 0
@@ -115,8 +120,9 @@ func AllReduceSumAdd(y, x, w []float64) {
 // AllReduceMin combines all values in 'x' from all processors. When corresponding components (at the
 // same position) exist in a number of processors, the minimum value is selected.
 // 'w' is a workspace with length = len(x). The operations are:
-//   w := join_all_selecting_min(x)
-//   x := w
+//
+//	w := join_all_selecting_min(x)
+//	x := w
 func AllReduceMin(x, w []float64) {
 	for i := 0; i < len(x); i++ {
 		w[i] = 0
@@ -130,8 +136,9 @@ func AllReduceMin(x, w []float64) {
 // AllReduceMax combines all values in 'x' from all processors. When corresponding components (at the
 // same position) exist in a number of processors, the maximum value is selected.
 // 'w' is a workspace with length = len(x). The operations are:
-//   w := join_all_selecting_max(x)
-//   x := w
+//
+//	w := join_all_selecting_max(x)
+//	x := w
 func AllReduceMax(x, w []float64) {
 	for i := 0; i < len(x); i++ {
 		w[i] = 0
@@ -145,8 +152,9 @@ func AllReduceMax(x, w []float64) {
 // IntAllReduceMax combines all (int) values in 'x' from all processors. When corresponding components (at the
 // same position) exist in a number of processors, the maximum value is selected.
 // 'w' is a workspace with length = len(x). The operations are:
-//   w := join_all_selecting_max(x)
-//   x := w
+//
+//	w := join_all_selecting_max(x)
+//	x := w
 func IntAllReduceMax(x, w []int) {
 	for i := 0; i < len(x); i++ {
 		w[i] = 0
@@ -176,8 +184,9 @@ func IntSend(vals []int, to_proc int) {
 }
 
 // IntRecv receives a slice of integers from processor 'from_proc'
-//  NOTE: 'vals' must be pre-allocated with the right number of values that will
-//        be sent by 'from_proc'
+//
+//	NOTE: 'vals' must be pre-allocated with the right number of values that will
+//	      be sent by 'from_proc'
 func IntRecv(vals []int, from_proc int) {
 	C.intrecv((*C.int)(unsafe.Pointer(&vals[0])), C.int(len(vals)), C.int(from_proc))
 }
@@ -188,8 +197,9 @@ func DblSend(vals []float64, to_proc int) {
 }
 
 // DblRecv receives a slice of floats from processor 'from_proc'
-//  NOTE: 'vals' must be pre-allocated with the right number of values that will
-//        be sent by 'from_proc'
+//
+//	NOTE: 'vals' must be pre-allocated with the right number of values that will
+//	      be sent by 'from_proc'
 func DblRecv(vals []float64, from_proc int) {
 	C.dblrecv((*C.double)(unsafe.Pointer(&vals[0])), C.int(len(vals)), C.int(from_proc))
 }
