@@ -149,7 +149,7 @@ func TestFdm03(tst *testing.T) {
 	p := utl.Params{{N: "kx", V: 1}, {N: "ky", V: 1}}
 	s := NewFdmLaplacian(p, g, func(X la.Vector, t float64) float64 {
 		x, y := X[0], X[1]
-		xx, yy := x*x, y*x
+		xx, yy := x*x, y*y
 		xxx, yyy := xx*x, yy*y
 		return 14.0*yyy - (16.0-12.0*x)*yy - (-42.0*xx+54.0*x-2.0)*y + 4.0*xxx - 16.0*xx + 12.0*x
 	})
