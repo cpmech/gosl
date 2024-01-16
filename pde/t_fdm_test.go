@@ -171,7 +171,7 @@ func TestFdm03(tst *testing.T) {
 	}
 	for n := 0; n < g.Npts(1); n++ {
 		for m := 0; m < g.Npts(0); m++ {
-			chk.AnaNum(tst, "u", 0.021, u[g.IndexMNPtoI(m, n, 0)], ana(g.X(m, n, 0)), chk.Verbose)
+			chk.AnaNum(tst, "u", 1e-14, u[g.IndexMNPtoI(m, n, 0)], ana(g.X(m, n, 0)), chk.Verbose)
 		}
 	}
 }
