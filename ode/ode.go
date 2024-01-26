@@ -5,13 +5,14 @@
 // Package ode implements solvers for ordinary differential equations, including explicit and
 // implicit Runge-Kutta methods; e.g. the fantastic Radau5 method by
 // Hairer, Norsett & Wanner [1, 2].
-//   References:
-//     [1] Hairer E, Nørsett SP, Wanner G (1993). Solving Ordinary Differential Equations I:
-//         Nonstiff Problems. Springer Series in Computational Mathematics, Vol. 8, Berlin,
-//         Germany, 523 p.
-//     [2] Hairer E, Wanner G (1996). Solving Ordinary Differential Equations II: Stiff and
-//         Differential-Algebraic Problems. Springer Series in Computational Mathematics,
-//         Vol. 14, Berlin, Germany, 614 p.
+//
+//	References:
+//	  [1] Hairer E, Nørsett SP, Wanner G (1993). Solving Ordinary Differential Equations I:
+//	      Nonstiff Problems. Springer Series in Computational Mathematics, Vol. 8, Berlin,
+//	      Germany, 523 p.
+//	  [2] Hairer E, Wanner G (1996). Solving Ordinary Differential Equations II: Stiff and
+//	      Differential-Algebraic Problems. Springer Series in Computational Mathematics,
+//	      Vol. 14, Berlin, Germany, 614 p.
 package ode
 
 import (
@@ -46,16 +47,15 @@ type Solver struct {
 
 // NewSolver returns a new ODE structure with default values and allocated slices
 //
-//  INPUT:
-//    ndim -- problem dimension
-//    conf -- configuration parameters
-//    out  -- output handler [may be nil]
-//    fcn  -- f(x,y) = dy/dx function
-//    jac  -- Jacobian: df/dy function [may be nil ⇒ use numerical Jacobian, if necessary]
-//    M    -- "mass" matrix, such that M ⋅ dy/dx = f(x,y) [may be nil]
+//	INPUT:
+//	  ndim -- problem dimension
+//	  conf -- configuration parameters
+//	  out  -- output handler [may be nil]
+//	  fcn  -- f(x,y) = dy/dx function
+//	  jac  -- Jacobian: df/dy function [may be nil ⇒ use numerical Jacobian, if necessary]
+//	  M    -- "mass" matrix, such that M ⋅ dy/dx = f(x,y) [may be nil]
 //
-//  NOTE: remember to call Free() to release allocated resources (e.g. from the linear solvers)
-//
+//	NOTE: remember to call Free() to release allocated resources (e.g. from the linear solvers)
 func NewSolver(ndim int, conf *Config, fcn Func, jac JacF, M *la.Triplet) (o *Solver) {
 
 	// main
@@ -201,158 +201,155 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 	Δx := xf - x
 	var dxmax, xstep, dxnew, dxratio float64
 	var last, failed bool
-	for x < xf {
-		dxmax, xstep = Δx, x+Δx
-		failed = false
-		for iss := 0; iss < o.conf.NmaxSS+1; iss++ {
+	dxmax, xstep = Δx, x+Δx
+	failed = false
+	for iss := 0; iss < o.conf.NmaxSS+1; iss++ {
 
-			// total number of substeps
-			o.Stat.Nsteps++
+		// total number of substeps
+		o.Stat.Nsteps++
 
-			// error: did not converge
-			if iss == o.conf.NmaxSS {
-				failed = true
-				break
-			}
+		// error: did not converge
+		if iss == o.conf.NmaxSS {
+			failed = true
+			break
+		}
 
-			// converged?
-			if x-xstep >= 0.0 {
-				break
-			}
+		// converged?
+		if x-xstep >= 0.0 {
+			break
+		}
 
-			// step update
-			startTimeStep := time.Now()
-			o.rkm.Step(x, y)
-			o.Stat.updateNanosecondsStep(startTimeStep)
+		// step update
+		startTimeStep := time.Now()
+		o.rkm.Step(x, y)
+		o.Stat.updateNanosecondsStep(startTimeStep)
 
-			// iterations diverging ?
-			if o.work.diverg {
-				o.work.diverg = false
-				o.work.reject = true
-				last = false
-				o.work.h *= o.work.dvfac
-				continue
-			}
+		// iterations diverging ?
+		if o.work.diverg {
+			o.work.diverg = false
+			o.work.reject = true
+			last = false
+			o.work.h *= o.work.dvfac
+			continue
+		}
 
-			// accepted
-			if o.work.rerr < 1.0 {
+		// accepted
+		if o.work.rerr < 1.0 {
 
-				// set flags
-				o.Stat.Naccepted++
-				o.work.first = false
-				o.work.jacIsOK = false
+			// set flags
+			o.Stat.Naccepted++
+			o.work.first = false
+			o.work.jacIsOK = false
 
-				// stiffness detection
-				if o.conf.StiffNstp > 0 {
-					if o.Stat.Naccepted%o.conf.StiffNstp == 0 || o.work.stiffYes > 0 {
-						if o.work.rs > o.conf.StiffRsMax {
-							o.work.stiffNot = 0
-							o.work.stiffYes++
-							if o.work.stiffYes == o.conf.StiffNyes {
-								io.Pf("stiff step detected @ x = %g\n", x)
-							}
-						} else {
-							o.work.stiffNot++
-							if o.work.stiffNot == o.conf.StiffNnot {
-								o.work.stiffYes = 0
-							}
-						}
-					}
-				}
-
-				// update x and y
-				dxnew = o.rkm.Accept(y, x)
-				x += o.work.h
-
-				// output
-				if o.Out != nil {
-					stop := o.Out.execute(o.Stat.Naccepted, last, o.work.rs, o.work.h, x, y)
-					if stop {
-						return
-					}
-				}
-
-				// converged ?
-				if last {
-					o.Stat.Hopt = o.work.h // optimal stepsize
-					break
-				}
-
-				// save previous stepsize and relative error
-				o.work.hPrev = o.work.h
-				o.work.rerrPrev = utl.Max(o.conf.rerrPrevMin, o.work.rerr)
-
-				// calc new scal and f0
-				if o.Implicit {
-					la.VecScaleAbs(o.work.scal, o.conf.atol, o.conf.rtol, y)
-					o.Stat.Nfeval++
-					o.fcn(o.work.f0, o.work.h, x, y) // o.f0 := f(x,y)
-				}
-
-				// check new step size
-				dxnew = utl.Min(dxnew, dxmax)
-				if o.work.reject { // do not alow h to grow if previous was a reject
-					dxnew = utl.Min(o.work.h, dxnew)
-				}
-				o.work.reject = false
-
-				// do not reuse current Jacobian and decomposition by default
-				o.work.reuseJacAndDecOnce = false
-
-				// last step ?
-				if x+dxnew-xstep >= 0.0 {
-					last = true
-					o.work.h = xstep - x
-				} else {
-					if o.Implicit {
-						dxratio = dxnew / o.work.h
-						o.work.reuseJacAndDecOnce = o.work.theta <= o.conf.ThetaMax && dxratio >= o.conf.C1h && dxratio <= o.conf.C2h
-						if !o.work.reuseJacAndDecOnce {
-							o.work.h = dxnew
+			// stiffness detection
+			if o.conf.StiffNstp > 0 {
+				if o.Stat.Naccepted%o.conf.StiffNstp == 0 || o.work.stiffYes > 0 {
+					if o.work.rs > o.conf.StiffRsMax {
+						o.work.stiffNot = 0
+						o.work.stiffYes++
+						if o.work.stiffYes == o.conf.StiffNyes {
+							io.Pf("stiff step detected @ x = %g\n", x)
 						}
 					} else {
+						o.work.stiffNot++
+						if o.work.stiffNot == o.conf.StiffNnot {
+							o.work.stiffYes = 0
+						}
+					}
+				}
+			}
+
+			// update x and y
+			dxnew = o.rkm.Accept(y, x)
+			x += o.work.h
+
+			// output
+			if o.Out != nil {
+				stop := o.Out.execute(o.Stat.Naccepted, last, o.work.rs, o.work.h, x, y)
+				if stop {
+					return
+				}
+			}
+
+			// converged ?
+			if last {
+				o.Stat.Hopt = o.work.h // optimal stepsize
+				break
+			}
+
+			// save previous stepsize and relative error
+			o.work.hPrev = o.work.h
+			o.work.rerrPrev = utl.Max(o.conf.rerrPrevMin, o.work.rerr)
+
+			// calc new scal and f0
+			if o.Implicit {
+				la.VecScaleAbs(o.work.scal, o.conf.atol, o.conf.rtol, y)
+				o.Stat.Nfeval++
+				o.fcn(o.work.f0, o.work.h, x, y) // o.f0 := f(x,y)
+			}
+
+			// check new step size
+			dxnew = utl.Min(dxnew, dxmax)
+			if o.work.reject { // do not alow h to grow if previous was a reject
+				dxnew = utl.Min(o.work.h, dxnew)
+			}
+			o.work.reject = false
+
+			// do not reuse current Jacobian and decomposition by default
+			o.work.reuseJacAndDecOnce = false
+
+			// last step ?
+			if x+dxnew-xstep >= 0.0 {
+				last = true
+				o.work.h = xstep - x
+			} else {
+				if o.Implicit {
+					dxratio = dxnew / o.work.h
+					o.work.reuseJacAndDecOnce = o.work.theta <= o.conf.ThetaMax && dxratio >= o.conf.C1h && dxratio <= o.conf.C2h
+					if !o.work.reuseJacAndDecOnce {
 						o.work.h = dxnew
 					}
-				}
-
-				// check θ to decide if at least the Jacobian can be reused
-				if o.Implicit {
-					if !o.work.reuseJacAndDecOnce {
-						o.work.reuseJacOnce = o.work.theta <= o.conf.ThetaMax
-					}
-				}
-
-				// rejected
-			} else {
-
-				// set flags
-				if o.Stat.Naccepted > 0 {
-					o.Stat.Nrejected++
-				}
-				o.work.reject = true
-				last = false
-
-				// compute next stepsize
-				dxnew = o.rkm.Reject()
-
-				// new step size
-				if o.work.first && o.conf.MfirstRej > 0 {
-					o.work.h = o.conf.MfirstRej * o.work.h
 				} else {
 					o.work.h = dxnew
 				}
+			}
 
-				// last step
-				if x+o.work.h > xstep {
-					o.work.h = xstep - x
+			// check θ to decide if at least the Jacobian can be reused
+			if o.Implicit {
+				if !o.work.reuseJacAndDecOnce {
+					o.work.reuseJacOnce = o.work.theta <= o.conf.ThetaMax
 				}
 			}
-		}
 
-		// sub-stepping failed
-		if failed {
-			chk.Panic("substepping did not converge after %d steps\n", o.conf.NmaxSS)
-			break
+			// rejected
+		} else {
+
+			// set flags
+			if o.Stat.Naccepted > 0 {
+				o.Stat.Nrejected++
+			}
+			o.work.reject = true
+			last = false
+
+			// compute next stepsize
+			dxnew = o.rkm.Reject()
+
+			// new step size
+			if o.work.first && o.conf.MfirstRej > 0 {
+				o.work.h = o.conf.MfirstRej * o.work.h
+			} else {
+				o.work.h = dxnew
+			}
+
+			// last step
+			if x+o.work.h > xstep {
+				o.work.h = xstep - x
+			}
 		}
+	}
+
+	// sub-stepping failed
+	if failed {
+		chk.Panic("substepping did not converge after %d steps\n", o.conf.NmaxSS)
 	}
 }
