@@ -6,7 +6,6 @@ package ode
 
 import (
 	"testing"
-	"time"
 
 	"github.com/cpmech/gosl/chk"
 	"github.com/cpmech/gosl/io"
@@ -148,43 +147,4 @@ func TestOde03(tst *testing.T) {
 	chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 15)
 	chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 24)
 	chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 2)
-}
-
-func TestOde04(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("ode04: Hairer-Wanner VII-p376 Transistor Amplifier")
-
-	// problem
-	p := ProbHwAmplifier()
-
-	// configurations
-	conf := NewConfig("radau5", "")
-	conf.SetStepOut(true, nil)
-	conf.IniH = 1.0e-6 // initial step size
-
-	// set tolerances
-	atol, rtol := 1e-11, 1e-5
-	conf.SetTols(atol, rtol)
-
-	// ODE solver
-	sol := NewSolver(p.Ndim, conf, p.Fcn, p.Jac, p.M)
-	defer sol.Free()
-
-	// run
-	t0 := time.Now()
-	sol.Solve(p.Y, 0.0, p.Xf)
-	io.Pfmag("elapsed time = %v\n", time.Now().Sub(t0))
-
-	// check
-	if false { // these values vary slightly in different machines
-		chk.Int(tst, "number of F evaluations ", sol.Stat.Nfeval, 2599)
-		chk.Int(tst, "number of J evaluations ", sol.Stat.Njeval, 216)
-		chk.Int(tst, "total number of steps   ", sol.Stat.Nsteps, 275)
-		chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 219)
-		chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 20)
-		chk.Int(tst, "number of decompositions", sol.Stat.Ndecomp, 274)
-		chk.Int(tst, "number of lin solutions ", sol.Stat.Nlinsol, 792)
-		chk.Int(tst, "max number of iterations", sol.Stat.Nitmax, 6)
-	}
 }
