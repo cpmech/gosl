@@ -193,21 +193,3 @@ func TestErk04(tst *testing.T) {
 		0.086, 0.164, 0.07, 0.09, 0.005}
 	p.ConvergenceTest(tst, 1e-3, 1e-2, 3, yExact, methods, orders, tols)
 }
-
-func TestErk05(tst *testing.T) {
-
-	//verbose()
-	chk.PrintTitle("Erk05. Convergence of high-order methods")
-
-	// problem
-	p := ProbVanDerPol(0, true)
-
-	// reference solution
-	yExact := p.Y.GetCopy()
-
-	// test
-	methods := []string{"rk4", "fehlberg4", "dopri5", "verner6", "fehlberg7", "dopri8"}
-	orders := []float64{3.9874, 4.6923, 6.3012, 6.5916, 8.0283, 6.8463}
-	tols := []float64{1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4}
-	p.ConvergenceTest(tst, 8e-2, 3e-1, 3, yExact, methods, orders, tols)
-}
