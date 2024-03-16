@@ -603,7 +603,7 @@ func Zherk(up, trans bool, n, k int, alpha float64, a []complex128, lda int, bet
 	C.cblas_zherk(
 		cblasColMajor,
 		cUplo(up),
-		cTrans(trans),
+		cConjTrans(trans),
 		C.blasint(n),
 		C.blasint(k),
 		C.double(alpha),
@@ -763,6 +763,13 @@ const (
 func cTrans(trans bool) uint32 {
 	if trans {
 		return cblasTrans
+	}
+	return cblasNoTrans
+}
+
+func cConjTrans(trans bool) uint32 {
+	if trans {
+		return cblasConjTrans
 	}
 	return cblasNoTrans
 }

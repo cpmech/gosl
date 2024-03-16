@@ -1217,12 +1217,81 @@ func TestZherk01(tst *testing.T) {
 	up = false
 	Zherk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
 
-	// compare resulting up(c) matrix
+	// compare resulting lo(c) matrix
 	chk.Deep2c(tst, "using lo(c): c := 3⋅a⋅aᵀ + c", 1e-17, ColMajorCtoSlice(n, n, cLo), [][]complex128{
 		{31 + 0i, +0 + 0i, +0 + 0i, +0 + 0i},
 		{21 + 5i, 33 + 0i, +0 + 0i, +0 + 0i},
 		{15 + 11i, 34 + 9i, 82 + 0i, +0 + 0i},
 		{+3 + 1i, 14 + 0i, 16 - 5i, 16 + 0i},
+	})
+}
+
+func TestZherk02(tst *testing.T) {
+
+	verbose()
+	chk.PrintTitle("Zherk02")
+
+	// c matrices
+	c := SliceToColMajorC([][]complex128{ // must be Hermitian: c = c^H
+		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
+		{+0 - 1i, 3 + 0i, +1 + 0i, 2 + 0i},
+		{-3 - 1i, 1 + 0i, +4 + 0i, 1 - 1i},
+		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
+	})
+	cUp := SliceToColMajorC([][]complex128{
+		{+4 + 0i, 0 + 1i, -3 + 1i, 0 + 2i},
+		{+0 + 0i, 3 + 0i, +1 + 0i, 2 + 0i},
+		{+0 + 0i, 0 + 0i, +4 + 0i, 1 - 1i},
+		{+0 + 0i, 0 + 0i, +0 + 0i, 4 + 0i},
+	})
+	cLo := SliceToColMajorC([][]complex128{
+		{+4 + 0i, 0 + 0i, +0 + 0i, 0 + 0i},
+		{+0 - 1i, 3 + 0i, +0 + 0i, 0 + 0i},
+		{-3 - 1i, 1 + 0i, +4 + 0i, 0 + 0i},
+		{+0 - 2i, 2 + 0i, +1 + 1i, 4 + 0i},
+	})
+
+	// n-size
+	n := 4 // c.N
+
+	// check cUp and cLo
+	checkUploC(tst, "Zherk02", n, c, cLo, cUp, 1e-17, 1e-17)
+
+	// a matrix
+	a := SliceToColMajorC([][]complex128{
+		{1.0 - 1.0i, 2.0 + 0.0i, 1.0 + 0.0i, 1.0 + 0.0i},
+		{3.0 + 1.0i, 1.0 + 0.0i, 3.0 + 0.0i, 1.0 + 2.0i},
+	})
+
+	// sizes
+	k := 2 // a.M
+
+	// constants
+	alpha, beta := 3.0, -2.0
+
+	// run zherk with up(c)
+	up, trans := true, true
+	lda, ldc := k, n
+	Zherk(up, trans, n, k, alpha, a, lda, beta, cUp, ldc)
+
+	// compare resulting up(c) matrix
+	chk.Deep2c(tst, "using up(c): c := 3 aᴴ⋅a - 2 c", 1e-17, ColMajorCtoSlice(n, n, cUp), [][]complex128{
+		{28.0 + 0.0i, 15.0 + 1.0i, 36.0 - 8.0i, 18.0 + 14.0i},
+		{0.0 + 0.0i, 9.0 + 0.0i, 13.0 + 0.0i, 5.0 + 6.0i},
+		{0.0 + 0.0i, 0.0 + 0.0i, 22.0 + 0.0i, 10.0 + 20.0i},
+		{0.0 + 0.0i, 0.0 + 0.0i, 0.0 + 0.0i, 10.0 + 0.0i},
+	})
+
+	// run zherk with lo(c)
+	up = false
+	Zherk(up, trans, n, k, alpha, a, lda, beta, cLo, ldc)
+
+	// compare resulting lo(c) matrix
+	chk.Deep2c(tst, "using lo(c): c := 3 aᴴ⋅a - 2 c", 1e-17, ColMajorCtoSlice(n, n, cLo), [][]complex128{
+		{28.0 + 0.0i, 0.0 + 0.0i, 0.0 + 0.0i, 0.0 + 0.0i},
+		{15.0 - 1.0i, 9.0 + 0.0i, 0.0 + 0.0i, 0.0 + 0.0i},
+		{36.0 + 8.0i, 13.0 + 0.0i, 22.0 + 0.0i, 0.0 + 0.0i},
+		{18.0 - 14.0i, 5.0 - 6.0i, 10.0 - 20.0i, 10.0 + 0.0i},
 	})
 }
 
