@@ -121,7 +121,7 @@ func Elliptic3(n, φ, k float64) float64 {
 	if math.Abs(k*s-1.0) < 1e-15 {
 		return math.Inf(1)
 	}
-	if math.Abs(n*s-1.0) < 1e-15 {
+	if math.Abs(n*s*s-1.0) < 1e-15 {
 		return math.Inf(1)
 	}
 	t := N * s * s
