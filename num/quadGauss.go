@@ -15,9 +15,10 @@ import (
 // QuadGaussL10 approximates the integral of the function f(x) between a and b, by ten-point
 // Gauss-Legendre integration. The function is evaluated exactly ten times at interior points
 // in the range of integration. See page 180 of [1].
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func QuadGaussL10(a, b float64, f fun.Ss) (res float64) {
 
 	// constants
@@ -42,13 +43,14 @@ func QuadGaussL10(a, b float64, f fun.Ss) (res float64) {
 }
 
 // GaussLegendreXW computes positions (xi) and weights (wi) to perform Gauss-Legendre integrations
-//   Input:
-//     x1 -- lower limit of integration
-//     x2 -- upper limit of integration
-//     n  -- number of points for quadrature formula
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	Input:
+//	  x1 -- lower limit of integration
+//	  x2 -- upper limit of integration
+//	  n  -- number of points for quadrature formula
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func GaussLegendreXW(x1, x2 float64, n int) (x, w []float64) {
 	x = make([]float64, n)
 	w = make([]float64, n)
@@ -91,13 +93,14 @@ func GaussLegendreXW(x1, x2 float64, n int) (x, w []float64) {
 // GaussJacobiXW computes positions (xi) and weights (wi) to perform Gauss-Jacobi integrations.
 // The largest abscissa is returned in x[0], the smallest in x[n-1].
 // The interval of integration is x ϵ [-1, 1]
-//   Input:
-//     alp -- coefficient of the Jacobi polynomial
-//     bet -- coefficient of the Jacobi polynomial
-//     n   -- number of points for quadrature formula
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	Input:
+//	  alp -- coefficient of the Jacobi polynomial
+//	  bet -- coefficient of the Jacobi polynomial
+//	  n   -- number of points for quadrature formula
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func GaussJacobiXW(alf, bet float64, n int) (x, w []float64) {
 	x = make([]float64, n)
 	w = make([]float64, n)

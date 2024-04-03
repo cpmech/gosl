@@ -13,7 +13,7 @@ import (
 
 // The algorithms below are based on [1]
 // REFERENCES:
-// [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
+// [1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
 //     Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 
 // QuadElementary defines the interface for elementary quadrature algorithms with refinement.

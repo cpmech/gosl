@@ -20,9 +20,10 @@ var (
 // Factorial22 implements the factorial function; i.e. computes n! up to 22!  According to [1],
 // factorials up to 22! have exact double precision representations (52 bits of mantissa, not
 // counting powers of two that are absorbed into the exponent)
-//   References
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//        Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	References
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	     Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func Factorial22(n int) float64 {
 	if n < 0 || n > 22 {
 		chk.Panic("cannot use Factorial22 with n = %d", n)
@@ -178,10 +179,9 @@ func Ramp(x float64) float64 {
 
 // Heav computes the Heaviside step function (== derivative of Ramp(x))
 //
-//             │ 0    if x < 0
-//   Heav(x) = ┤ 1/2  if x = 0
-//             │ 1    if x > 0
-//
+//	          │ 0    if x < 0
+//	Heav(x) = ┤ 1/2  if x = 0
+//	          │ 1    if x > 0
 func Heav(x float64) float64 {
 	if x < 0.0 {
 		return 0.0
@@ -194,10 +194,9 @@ func Heav(x float64) float64 {
 
 // Sign implements the sign function
 //
-//             │ -1   if x < 0
-//   Sign(x) = ┤  0   if x = 0
-//             │  1   if x > 0
-//
+//	          │ -1   if x < 0
+//	Sign(x) = ┤  0   if x = 0
+//	          │  1   if x > 0
 func Sign(x float64) float64 {
 	if x < 0.0 {
 		return -1.0
@@ -210,14 +209,13 @@ func Sign(x float64) float64 {
 
 // Boxcar implements the boxcar function
 //
-//   Boxcar(x;a,b) = Heav(x-a) - Heav(x-b)
+//	Boxcar(x;a,b) = Heav(x-a) - Heav(x-b)
 //
-//                   │ 0    if x < a or  x > b
-//   Boxcar(x;a,b) = ┤ 1/2  if x = a or  x = b
-//                   │ 1    if x > a and x < b
+//	                │ 0    if x < a or  x > b
+//	Boxcar(x;a,b) = ┤ 1/2  if x = a or  x = b
+//	                │ 1    if x > a and x < b
 //
-//   Note: a ≤ x ≤ b; i.e. b ≥ a (not checked)
-//
+//	Note: a ≤ x ≤ b; i.e. b ≥ a (not checked)
 func Boxcar(x, a, b float64) float64 {
 	if x < a || x > b {
 		return 0
@@ -230,12 +228,11 @@ func Boxcar(x, a, b float64) float64 {
 
 // Rect implements the rectangular function
 //
-//   Rect(x) = Boxcar(x;-0.5,0.5)
+//	Rect(x) = Boxcar(x;-0.5,0.5)
 //
-//             │ 0    if |x| > 1/2
-//   Rect(x) = ┤ 1/2  if |x| = 1/2
-//             │ 1    if |x| < 1/2
-//
+//	          │ 0    if |x| > 1/2
+//	Rect(x) = ┤ 1/2  if |x| = 1/2
+//	          │ 1    if |x| < 1/2
 func Rect(x float64) float64 {
 	if x < -0.5 || x > +0.5 {
 		return 0
@@ -248,14 +245,13 @@ func Rect(x float64) float64 {
 
 // Hat implements the hat function
 //
-//      --———--   o (xc,y0+h)
-//         |     / \
-//         h    /   \    m = h/l
-//         |   /m    \
-//   y0 ——————o       o—————————
+//	   --———--   o (xc,y0+h)
+//	      |     / \
+//	      h    /   \    m = h/l
+//	      |   /m    \
+//	y0 ——————o       o—————————
 //
-//            |<  2l >|
-//
+//	         |<  2l >|
 func Hat(x, xc, y0, h, l float64) float64 {
 	if x <= xc-l || x >= xc+l {
 		return y0
@@ -363,9 +359,8 @@ func ExpMix(x float64) complex128 {
 
 // Sinc computes the sine cardinal (sinc) function
 //
-//   Sinc(x) = |     1      if x = 0
-//             | sin(x)/x   otherwise
-//
+//	Sinc(x) = |     1      if x = 0
+//	          | sin(x)/x   otherwise
 func Sinc(x float64) float64 {
 	if x == 0 {
 		return 1
@@ -383,10 +378,9 @@ func NegOnePowN(n int) float64 {
 
 // ImagPowN computes iⁿ = (√-1)ⁿ
 //
-//   i¹ = i      i²  = -1      i³  = -i      i⁴  = 1
-//   i⁵ = i      i⁶  = -1      i⁷  = -i      i⁸  = 1
-//   i⁹ = i      i¹⁰ = -1      i¹¹ = -i      i¹² = 1
-//
+//	i¹ = i      i²  = -1      i³  = -i      i⁴  = 1
+//	i⁵ = i      i⁶  = -1      i⁷  = -i      i⁸  = 1
+//	i⁹ = i      i¹⁰ = -1      i¹¹ = -i      i¹² = 1
 func ImagPowN(n int) complex128 {
 	if n == 0 {
 		return 1
@@ -404,10 +398,9 @@ func ImagPowN(n int) complex128 {
 
 // ImagXpowN computes (x⋅i)ⁿ
 //
-//   (x⋅i)¹ = x¹⋅i      (x⋅i)²  = -x²       (x⋅i)³  = -x³ ⋅i      (x⋅i)⁴  = x⁴
-//   (x⋅i)⁵ = x⁵⋅i      (x⋅i)⁶  = -x⁶       (x⋅i)⁷  = -x⁷ ⋅i      (x⋅i)⁸  = x⁸
-//   (x⋅i)⁹ = x⁹⋅i      (x⋅i)¹⁰ = -x¹⁰      (x⋅i)¹¹ = -x¹¹⋅i      (x⋅i)¹² = x¹²
-//
+//	(x⋅i)¹ = x¹⋅i      (x⋅i)²  = -x²       (x⋅i)³  = -x³ ⋅i      (x⋅i)⁴  = x⁴
+//	(x⋅i)⁵ = x⁵⋅i      (x⋅i)⁶  = -x⁶       (x⋅i)⁷  = -x⁷ ⋅i      (x⋅i)⁸  = x⁸
+//	(x⋅i)⁹ = x⁹⋅i      (x⋅i)¹⁰ = -x¹⁰      (x⋅i)¹¹ = -x¹¹⋅i      (x⋅i)¹² = x¹²
 func ImagXpowN(x float64, n int) complex128 {
 	if n == 0 {
 		return 1

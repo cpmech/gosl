@@ -33,8 +33,9 @@ type Brent struct {
 }
 
 // NewBrent returns a new Brent structure
-//  ffcn -- function f(x)
-//  Jfcn -- derivative df(x)/dx [optional / may be nil]
+//
+//	ffcn -- function f(x)
+//	Jfcn -- derivative df(x)/dx [optional / may be nil]
 func NewBrent(ffcn, Jfcn fun.Ss) (o *Brent) {
 	o = new(Brent)
 	o.MaxIt = 100
@@ -48,31 +49,30 @@ func NewBrent(ffcn, Jfcn fun.Ss) (o *Brent) {
 
 // Root solves y(x) = 0 for x in [xa, xb] with f(xa) * f(xb) < 0
 //
-//  Based on ZEROIN C math library: http://www.netlib.org/c/
-//  By: Oleg Keselyov <oleg@ponder.csci.unt.edu, oleg@unt.edu> May 23, 1991
+//	Based on ZEROIN C math library: http://www.netlib.org/c/
+//	By: Oleg Keselyov <oleg@ponder.csci.unt.edu, oleg@unt.edu> May 23, 1991
 //
-//   G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
-//   computations. M., Mir, 1980, p.180 of the Russian edition
+//	 G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
+//	 computations. M., Mir, 1980, p.180 of the Russian edition
 //
-//   The function makes use of the bissection procedure combined with
-//   the linear or quadric inverse interpolation.
-//   At every step program operates on three abscissae - a, b, and c.
-//   b - the last and the best approximation to the root
-//   a - the last but one approximation
-//   c - the last but one or even earlier approximation than a that
-//       1) |f(b)| <= |f(c)|
-//       2) f(b) and f(c) have opposite signs, i.e. b and c confine
-//          the root
-//   At every step Zeroin selects one of the two new approximations, the
-//   former being obtained by the bissection procedure and the latter
-//   resulting in the interpolation (if a,b, and c are all different
-//   the quadric interpolation is utilized, otherwise the linear one).
-//   If the latter (i.e. obtained by the interpolation) point is
-//   reasonable (i.e. lies within the current interval [b,c] not being
-//   too close to the boundaries) it is accepted. The bissection result
-//   is used in the other case. Therefore, the range of uncertainty is
-//   ensured to be reduced at least by the factor 1.6
-//
+//	 The function makes use of the bissection procedure combined with
+//	 the linear or quadric inverse interpolation.
+//	 At every step program operates on three abscissae - a, b, and c.
+//	 b - the last and the best approximation to the root
+//	 a - the last but one approximation
+//	 c - the last but one or even earlier approximation than a that
+//	     1) |f(b)| <= |f(c)|
+//	     2) f(b) and f(c) have opposite signs, i.e. b and c confine
+//	        the root
+//	 At every step Zeroin selects one of the two new approximations, the
+//	 former being obtained by the bissection procedure and the latter
+//	 resulting in the interpolation (if a,b, and c are all different
+//	 the quadric interpolation is utilized, otherwise the linear one).
+//	 If the latter (i.e. obtained by the interpolation) point is
+//	 reasonable (i.e. lies within the current interval [b,c] not being
+//	 too close to the boundaries) it is accepted. The bissection result
+//	 is used in the other case. Therefore, the range of uncertainty is
+//	 ensured to be reduced at least by the factor 1.6
 func (o *Brent) Root(xa, xb float64) (res float64) {
 
 	// basic variables and function evaluation
@@ -194,36 +194,35 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 
 // Min finds the minimum of f(x) in [xa, xb]
 //
-//  Based on ZEROIN C math library: http://www.netlib.org/c/
-//  By: Oleg Keselyov <oleg@ponder.csci.unt.edu, oleg@unt.edu> May 23, 1991
+//	Based on ZEROIN C math library: http://www.netlib.org/c/
+//	By: Oleg Keselyov <oleg@ponder.csci.unt.edu, oleg@unt.edu> May 23, 1991
 //
-//   G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
-//   computations. M., Mir, 1980, p.202 of the Russian edition
+//	 G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
+//	 computations. M., Mir, 1980, p.202 of the Russian edition
 //
-//   The function makes use of the "gold section" procedure combined with
-//   the parabolic interpolation.
-//   At every step program operates three abscissae - x,v, and w.
-//   x - the last and the best approximation to the minimum location,
-//       i.e. f(x) <= f(a) or/and f(x) <= f(b)
-//       (if the function f has a local minimum in (a,b), then the both
-//       conditions are fulfilled after one or two steps).
-//   v,w are previous approximations to the minimum location. They may
-//   coincide with a, b, or x (although the algorithm tries to make all
-//   u, v, and w distinct). Points x, v, and w are used to construct
-//   interpolating parabola whose minimum will be treated as a new
-//   approximation to the minimum location if the former falls within
-//   [a,b] and reduces the range enveloping minimum more efficient than
-//   the gold section procedure.
-//   When f(x) has a second derivative positive at the minimum location
-//   (not coinciding with a or b) the procedure converges superlinearly
-//   at a rate order about 1.324
+//	 The function makes use of the "gold section" procedure combined with
+//	 the parabolic interpolation.
+//	 At every step program operates three abscissae - x,v, and w.
+//	 x - the last and the best approximation to the minimum location,
+//	     i.e. f(x) <= f(a) or/and f(x) <= f(b)
+//	     (if the function f has a local minimum in (a,b), then the both
+//	     conditions are fulfilled after one or two steps).
+//	 v,w are previous approximations to the minimum location. They may
+//	 coincide with a, b, or x (although the algorithm tries to make all
+//	 u, v, and w distinct). Points x, v, and w are used to construct
+//	 interpolating parabola whose minimum will be treated as a new
+//	 approximation to the minimum location if the former falls within
+//	 [a,b] and reduces the range enveloping minimum more efficient than
+//	 the gold section procedure.
+//	 When f(x) has a second derivative positive at the minimum location
+//	 (not coinciding with a or b) the procedure converges superlinearly
+//	 at a rate order about 1.324
 //
-//   The function always obtains a local minimum which coincides with
-//   the global one only if a function under investigation being
-//   unimodular. If a function being examined possesses no local minimum
-//   within the given range, Fminbr returns 'a' (if f(a) < f(b)), otherwise
-//   it returns the right range boundary value b.
-//
+//	 The function always obtains a local minimum which coincides with
+//	 the global one only if a function under investigation being
+//	 unimodular. If a function being examined possesses no local minimum
+//	 within the given range, Fminbr returns 'a' (if f(a) < f(b)), otherwise
+//	 it returns the right range boundary value b.
 func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 
 	// check
@@ -343,17 +342,16 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 
 // MinUseD finds minimum and uses information about derivatives
 //
-//   Given a function and deriva funcd that computes a function and also its derivative function df, and
-//   given a bracketing triplet of abscissas ax, bx, cx [such that bx is between ax and cx, and
-//   f(bx) is less than both f(ax) and f(cx)], this routine isolates the minimum to a fractional
-//   precision of about tol using a modification of Brent’s method that uses derivatives. The
-//   abscissa of the minimum is returned as xAtMin, and the minimum function value is returned
-//   as min, the returned function value.
+//	Given a function and deriva funcd that computes a function and also its derivative function df, and
+//	given a bracketing triplet of abscissas ax, bx, cx [such that bx is between ax and cx, and
+//	f(bx) is less than both f(ax) and f(cx)], this routine isolates the minimum to a fractional
+//	precision of about tol using a modification of Brent’s method that uses derivatives. The
+//	abscissa of the minimum is returned as xAtMin, and the minimum function value is returned
+//	as min, the returned function value.
 //
-//   REFERENCES:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes:
-//       The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-//
+//	REFERENCES:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes:
+//	    The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func (o *Brent) MinUseD(xa, xb float64) (xAtMin float64) {
 
 	// check

@@ -15,13 +15,12 @@ import (
 
 // ConjGrad implements the multidimensional minimization by the Fletcher-Reeves-Polak-Ribiere method.
 //
-//   NOTE: Check Convergence to see how to set convergence parameters,
-//         max iteration number, or to enable and access history of iterations
+//	NOTE: Check Convergence to see how to set convergence parameters,
+//	      max iteration number, or to enable and access history of iterations
 //
-//   REFERENCES:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes:
-//       The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-//
+//	REFERENCES:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes:
+//	    The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 type ConjGrad struct {
 
 	// merge properties
@@ -65,24 +64,23 @@ func NewConjGrad(prob *Problem) (o *ConjGrad) {
 
 // Min solves minimization problem
 //
-//  Input:
-//    x -- [ndim] initial starting point (will be modified)
-//    params -- [may be nil] optional parameters. e.g. "alpha", "maxit". Example:
-//                 params := utl.NewParams(
-//                     &utl.P{N: "brent", V: 1},
-//                     &utl.P{N: "maxit", V: 1000},
-//                     &utl.P{N: "maxitls", V: 20},
-//                     &utl.P{N: "maxitzoom", V: 20},
-//                     &utl.P{N: "ftol", V: 1e-2},
-//                     &utl.P{N: "gtol", V: 1e-2},
-//                     &utl.P{N: "hist", V: 1},
-//                     &utl.P{N: "verb", V: 1},
-//                 )
+//	Input:
+//	  x -- [ndim] initial starting point (will be modified)
+//	  params -- [may be nil] optional parameters. e.g. "alpha", "maxit". Example:
+//	               params := utl.NewParams(
+//	                   &utl.P{N: "brent", V: 1},
+//	                   &utl.P{N: "maxit", V: 1000},
+//	                   &utl.P{N: "maxitls", V: 20},
+//	                   &utl.P{N: "maxitzoom", V: 20},
+//	                   &utl.P{N: "ftol", V: 1e-2},
+//	                   &utl.P{N: "gtol", V: 1e-2},
+//	                   &utl.P{N: "hist", V: 1},
+//	                   &utl.P{N: "verb", V: 1},
+//	               )
 //
-//  Output:
-//    fmin -- f(x@min) minimum f({x}) found
-//    x -- [modify input] position of minimum f({x})
-//
+//	Output:
+//	  fmin -- f(x@min) minimum f({x}) found
+//	  x -- [modify input] position of minimum f({x})
 func (o *ConjGrad) Min(x la.Vector, params utl.Params) (fmin float64) {
 
 	// set parameters

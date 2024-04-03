@@ -15,20 +15,20 @@ import (
 // evaluated using Carlson’s function Rf [1].
 // The argument ranges are  0 ≤ φ ≤ π/2  and  0 ≤ k·sin(φ) ≤ 1
 //
-//   Computes:
-//                      φ
-//                     ⌠          dt
-//         F(φ, k)  =  │  ___________________
-//                     │     _______________
-//                     ⌡   \╱ 1 - k² sin²(t)
-//                    0
-//   where:
-//            0 ≤ φ ≤ π/2
-//            0 ≤ k·sin(φ) ≤ 1
+//	Computes:
+//	                   φ
+//	                  ⌠          dt
+//	      F(φ, k)  =  │  ___________________
+//	                  │     _______________
+//	                  ⌡   \╱ 1 - k² sin²(t)
+//	                 0
+//	where:
+//	         0 ≤ φ ≤ π/2
+//	         0 ≤ k·sin(φ) ≤ 1
 //
-//   References:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//	References:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func Elliptic1(φ, k float64) float64 {
 	if φ < 0 || k < 0 {
 		chk.Panic("φ and k must be non-negative. φ=%g, k=%g is invalid", φ, k)
@@ -53,19 +53,19 @@ func Elliptic1(φ, k float64) float64 {
 // evaluated using Carlson's functions Rf and Rd [1].
 // The argument ranges are  0 ≤ φ ≤ π/2  and  0 ≤ k⋅sin(φ) ≤ 1
 //
-//   Computes:
-//                      φ
-//                     ⌠     _______________
-//         E(φ, k)  =  │   \╱ 1 - k² sin²(t)  dt
-//                     ⌡
-//                    0
-//   where:
-//            0 ≤ φ ≤ π/2
-//            0 ≤ k·sin(φ) ≤ 1
+//	Computes:
+//	                   φ
+//	                  ⌠     _______________
+//	      E(φ, k)  =  │   \╱ 1 - k² sin²(t)  dt
+//	                  ⌡
+//	                 0
+//	where:
+//	         0 ≤ φ ≤ π/2
+//	         0 ≤ k·sin(φ) ≤ 1
 //
-//   References:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//	References:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func Elliptic2(φ, k float64) float64 {
 	if φ < 0 || k < 0 {
 		chk.Panic("φ and k must be non-negative. φ=%g, k=%g is invalid", φ, k)
@@ -90,22 +90,22 @@ func Elliptic2(φ, k float64) float64 {
 // NOTE that the sign convention on n corresponds to that of Abramowitz and Stegun [2] and not to [1].
 // The argument ranges are  0 ≤ φ ≤ π/2  and  0 ≤ k⋅sin(φ) ≤ 1
 //
-//   Computes:
-//                         φ
-//                        ⌠                  dt
-//         Π(n, φ, k)  =  │  ___________________________________
-//                        │                     _______________
-//                        ⌡   (1 - n sin²(t)) \╱ 1 - k² sin²(t)
-//                       0
-//   where:
-//            0 ≤ φ ≤ π/2
-//            0 ≤ k·sin(φ) ≤ 1
+//	Computes:
+//	                      φ
+//	                     ⌠                  dt
+//	      Π(n, φ, k)  =  │  ___________________________________
+//	                     │                     _______________
+//	                     ⌡   (1 - n sin²(t)) \╱ 1 - k² sin²(t)
+//	                    0
+//	where:
+//	         0 ≤ φ ≤ π/2
+//	         0 ≤ k·sin(φ) ≤ 1
 //
-//   References:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-//   [2] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas, Graphs,
-//       and Mathematical Tables. U.S. Department of Commerce, NIST
+//	References:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//	[2] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas, Graphs,
+//	    and Mathematical Tables. U.S. Department of Commerce, NIST
 func Elliptic3(n, φ, k float64) float64 {
 	if φ < 0 || k < 0 {
 		chk.Panic("φ and k must be non-negative. φ=%g, k=%g is invalid", φ, k)
@@ -132,11 +132,12 @@ func Elliptic3(n, φ, k float64) float64 {
 
 // CarlsonRf computes Carlson's elliptic integral of the first kind according to [1]. See also [2]
 // Computes Rf(x,y,z) where x,y,z must be non-negative and at most one can be zero.
-//   References:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-//   [2] Carlson BC (1977) Elliptic Integrals of the First Kind, SIAM Journal on Mathematical
-//       Analysis, vol. 8, pp. 231-242.
+//
+//	References:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//	[2] Carlson BC (1977) Elliptic Integrals of the First Kind, SIAM Journal on Mathematical
+//	    Analysis, vol. 8, pp. 231-242.
 func CarlsonRf(x, y, z float64) float64 {
 	ERRTOL := 0.0025 // a value of 0.0025 for the error tolerance parameter gives full double precision (16 sig ant digits) [1]
 	THIRD := 1.0 / 3.0
@@ -181,9 +182,10 @@ func CarlsonRf(x, y, z float64) float64 {
 // CarlsonRd computes Carlson’s elliptic integral of the second kind according to [1]
 // Computes Rf(x,y,z) where x,y must be non-negative and at most one can be zero.
 // z must be positive.
-//   References:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	References:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func CarlsonRd(x, y, z float64) float64 {
 	ERRTOL := 0.0015
 	C1 := 3.0 / 14.0

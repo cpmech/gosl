@@ -14,13 +14,12 @@ import (
 
 // Powell implements the multidimensional minimization by Powell's method (no derivatives required)
 //
-//   NOTE: Check Convergence to see how to set convergence parameters,
-//         max iteration number, or to enable and access history of iterations
+//	NOTE: Check Convergence to see how to set convergence parameters,
+//	      max iteration number, or to enable and access history of iterations
 //
-//   REFERENCES:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes:
-//       The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-//
+//	REFERENCES:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes:
+//	    The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 type Powell struct {
 
 	// merge properties
@@ -55,18 +54,17 @@ func NewPowell(prob *Problem) (o *Powell) {
 
 // Min solves minimization problem
 //
-//  Input:
-//    x -- [ndim] initial starting point (will be modified)
+//	Input:
+//	  x -- [ndim] initial starting point (will be modified)
 //
-//    params -- [may be nil] optional parameters:
+//	  params -- [may be nil] optional parameters:
 //
-//            "reuse" > 0 -- use pre-computed matrix containing the directions as columns;
-//                           otherwise, set Umat as a diagonal matrix
+//	          "reuse" > 0 -- use pre-computed matrix containing the directions as columns;
+//	                         otherwise, set Umat as a diagonal matrix
 //
-//  Output:
-//    fmin -- f(x@min) minimum f({x}) found
-//    x -- [given as input] position of minimum f({x})
-//
+//	Output:
+//	  fmin -- f(x@min) minimum f({x}) found
+//	  x -- [given as input] position of minimum f({x})
 func (o *Powell) Min(x la.Vector, params utl.Params) (fmin float64) {
 
 	// set Umat with unit vectors

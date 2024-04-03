@@ -124,7 +124,8 @@ type Quadruple struct {
 type Quadruples []*Quadruple
 
 // BuildQuadruples initialize Quadruples with i, x, y, and z
-//  Note: i, x, y, or z can be nil; but at least one of them must be non nil
+//
+//	Note: i, x, y, or z can be nil; but at least one of them must be non nil
 func BuildQuadruples(i []int, x, y, z []float64) (q Quadruples) {
 	ni := len(i)
 	nx := len(x)
@@ -228,7 +229,8 @@ type QuadruplesByZ struct{ Quadruples }
 func (o QuadruplesByZ) Less(i, j int) bool { return o.Quadruples[i].Z < o.Quadruples[j].Z }
 
 // SortQuadruples sorts i, x, y, and z by "i", "x", "y", or "z"
-//  Note: either i, x, y, or z can be nil; i.e. at least one of them must be non nil
+//
+//	Note: either i, x, y, or z can be nil; i.e. at least one of them must be non nil
 func SortQuadruples(i []int, x, y, z []float64, by string) (I []int, X, Y, Z []float64) {
 	q := BuildQuadruples(i, x, y, z)
 	switch by {
@@ -370,9 +372,10 @@ func iswap(a, b *int) { *a, *b = *b, *a }
 // arr is replaced on output by its sorted rearrangement. Normally, the optional argument m should
 // be omitted, but if it is set to a positive value, then only the first m elements of arr are
 // sorted. Implementation from [1]
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func Qsort(arr []float64) {
 	M := 7       // size of subarrays sorted by straight insertion
 	NSTACK := 64 // required auxiliary storage.
@@ -461,9 +464,10 @@ func Qsort(arr []float64) {
 
 // Qsort2 sorts an array arr[0..n-1] into ascending order using Quicksort, while making the
 // corresponding rearrangment of the array brr[0..n-1]. Implementation from [1]
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func Qsort2(arr, brr []float64) {
 	M := 7       // size of subarrays sorted by straight insertion
 	NSTACK := 64 // required auxiliary storage.
@@ -562,21 +566,23 @@ func Qsort2(arr, brr []float64) {
 // Sorter /////////////////////////////////////////////////////////////////////////////////////////
 
 // Sorter builds an index list to sort arrays of any type.
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 type Sorter struct {
 	Index []int
 }
 
 // Init builds an index indx[0..n-1] to sort an array a[0..n-1] such that a[indx[j]] is in
 // ascending order for j=0,1,...,n-1.
-//   Input:
-//     n    -- number of items in the array to be sorted. n must be ≤ len(a)
-//     less -- a function that returns true if a[i] < a[j]
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//
+//	Input:
+//	  n    -- number of items in the array to be sorted. n must be ≤ len(a)
+//	  less -- a function that returns true if a[i] < a[j]
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func (o *Sorter) Init(n int, less func(i, j int) bool) {
 	M := 7       // size of subarrays sorted by straight insertion
 	NSTACK := 64 // required auxiliary storage.

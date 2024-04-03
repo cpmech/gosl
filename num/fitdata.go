@@ -8,12 +8,12 @@ import "math"
 
 // LinFit computes linear fitting parameters. Errors on y-direction only
 //
-//   y(x) = a + b⋅x
+//	y(x) = a + b⋅x
 //
-//   See page 780 of [1]
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//	See page 780 of [1]
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func LinFit(x, y []float64) (a, b float64) {
 
 	// variables
@@ -44,12 +44,12 @@ func LinFit(x, y []float64) (a, b float64) {
 // LinFitSigma computes linear fitting parameters and variances (σa,σb) in the estimates of a and b
 // Errors on y-direction only
 //
-//   y(x) = a + b⋅x
+//	y(x) = a + b⋅x
 //
-//   See page 780 of [1]
-//   Reference:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes: The Art of
-//       Scientific Computing. Third Edition. Cambridge University Press. 1235p.
+//	See page 780 of [1]
+//	Reference:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of
+//	    Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 func LinFitSigma(x, y []float64) (a, b, σa, σb, χ2 float64) {
 
 	// variables

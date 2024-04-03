@@ -14,16 +14,15 @@ import (
 
 // Bracket implements routines to bracket roots or optima
 //
-//   A root of a function is known to be bracketed by a pair of points, a and b,
-//   when the function has opposite sign at those two points.
+//	A root of a function is known to be bracketed by a pair of points, a and b,
+//	when the function has opposite sign at those two points.
 //
-//   A minimum is known to be bracketed only when there is a triplet of points,
-//   a < b < c (or c < b < a), such that f(b) is less than both f(a) and f(c)
+//	A minimum is known to be bracketed only when there is a triplet of points,
+//	a < b < c (or c < b < a), such that f(b) is less than both f(a) and f(c)
 //
-//   REFERENCES:
-//   [1] Press WH, Teukolsky SA, Vetterling WT, Fnannery BP (2007) Numerical Recipes:
-//       The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
-//
+//	REFERENCES:
+//	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes:
+//	    The Art of Scientific Computing. Third Edition. Cambridge University Press. 1235p.
 type Bracket struct {
 
 	// configuration
@@ -53,12 +52,11 @@ func NewBracket(ffcn fun.Ss) (o *Bracket) {
 
 // Min brackets minimum
 //
-//  Given a function and given distinct initial points a0 and b0, search in the downhill direction
-//  (defined by the function as evaluated at the initial points) and return new points a, b, c
-//  that bracket a minimum of the function.
+//	Given a function and given distinct initial points a0 and b0, search in the downhill direction
+//	(defined by the function as evaluated at the initial points) and return new points a, b, c
+//	that bracket a minimum of the function.
 //
-//  Returns also the function values at the three points, fa, fb, and fc
-//
+//	Returns also the function values at the three points, fa, fb, and fc
 func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 
 	// check
