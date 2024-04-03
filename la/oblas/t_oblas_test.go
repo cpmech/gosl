@@ -1228,7 +1228,7 @@ func TestZherk01(tst *testing.T) {
 
 func TestZherk02(tst *testing.T) {
 
-	verbose()
+	// verbose()
 	chk.PrintTitle("Zherk02")
 
 	// c matrices
