@@ -9,10 +9,9 @@ import "math"
 // ChebyshevT directly computes the Chebyshev polynomial of first kind Tn(x) using the trigonometric
 // functions.
 //
-//           │ (-1)ⁿ cosh[n⋅acosh(-x)]   if x < -1
-//   Tn(x) = ┤       cosh[n⋅acosh( x)]   if x > 1
-//           │       cos [n⋅acos ( x)]   if |x| ≤ 1
-//
+//	        │ (-1)ⁿ cosh[n⋅acosh(-x)]   if x < -1
+//	Tn(x) = ┤       cosh[n⋅acosh( x)]   if x > 1
+//	        │       cos [n⋅acos ( x)]   if |x| ≤ 1
 func ChebyshevT(n int, x float64) float64 {
 	if n == 0 {
 		return 1
@@ -35,10 +34,9 @@ func ChebyshevT(n int, x float64) float64 {
 
 // ChebyshevXgauss computes Chebyshev-Gauss roots considering symmetry
 //
-//                       /  (2i+1)⋅π  \
-//           X[i] = -cos | —————————— |       i = 0 ... N
-//                       \   2N + 2   /
-//
+//	            /  (2i+1)⋅π  \
+//	X[i] = -cos | —————————— |       i = 0 ... N
+//	            \   2N + 2   /
 func ChebyshevXgauss(N int) (X []float64) {
 	X = make([]float64, N+1)
 	n := float64(N)
@@ -52,9 +50,7 @@ func ChebyshevXgauss(N int) (X []float64) {
 		l := (N+3)/2 - 1
 		for i := 0; i < l; i++ {
 			X[N-i] = math.Cos(float64(2*i+1) * math.Pi / d)
-			if i < l {
-				X[i] = -X[N-i]
-			}
+			X[i] = -X[N-i]
 		}
 	}
 	return
@@ -63,18 +59,17 @@ func ChebyshevXgauss(N int) (X []float64) {
 // ChebyshevXlob computes Chebyshev-Gauss-Lobatto points using the sin function and
 // considering symmetry
 //
-//                       /  π⋅(N-2i)  \
-//           X[i] = -sin | —————————— |       i = 0 ... N
-//                       \    2⋅N     /
-//     or
-//                       /  i⋅π  \
-//           X[i] = -cos | ————— |       i = 0 ... N
-//                       \   N   /
+//	                    /  π⋅(N-2i)  \
+//	        X[i] = -sin | —————————— |       i = 0 ... N
+//	                    \    2⋅N     /
+//	  or
+//	                    /  i⋅π  \
+//	        X[i] = -cos | ————— |       i = 0 ... N
+//	                    \   N   /
 //
-//   Reference:
-//   [1] Baltensperger R and Trummer MR (2003) Spectral differencing with a twist, SIAM J. Sci.
-//       Comput. 24(5):1465-1487
-//
+//	Reference:
+//	[1] Baltensperger R and Trummer MR (2003) Spectral differencing with a twist, SIAM J. Sci.
+//	    Comput. 24(5):1465-1487
 func ChebyshevXlob(N int) (X []float64) {
 	X = make([]float64, N+1)
 	X[0] = -1
@@ -93,9 +88,7 @@ func ChebyshevXlob(N int) (X []float64) {
 		l := (N+3)/2 - 1
 		for i := 1; i < l; i++ {
 			X[N-i] = math.Sin(π * (n - 2.0*float64(i)) / d)
-			if i < l {
-				X[i] = -X[N-i]
-			}
+			X[i] = -X[N-i]
 		}
 	}
 	return
@@ -103,10 +96,9 @@ func ChebyshevXlob(N int) (X []float64) {
 
 // ChebyshevTdiff1 computes the first derivative of the Chebyshev function Tn(x)
 //
-//       dTn
-//       ————
-//        dx
-//
+//	dTn
+//	————
+//	 dx
 func ChebyshevTdiff1(n int, x float64) float64 {
 	p := float64(n)
 	if x > -1 && x < +1 {
@@ -133,10 +125,9 @@ func ChebyshevTdiff1(n int, x float64) float64 {
 
 // ChebyshevTdiff2 computes the second derivative of the Chebyshev function Tn(x)
 //
-//       d²Tn
-//       —————
-//        dx²
-//
+//	d²Tn
+//	—————
+//	 dx²
 func ChebyshevTdiff2(n int, x float64) float64 {
 	p := float64(n)
 	pp := p * p
