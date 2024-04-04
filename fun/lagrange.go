@@ -14,71 +14,70 @@ import (
 
 // LagrangeInterp implements Lagrange interpolators associated with a grid X
 //
-//   An interpolant I^X_N{f} (associated with a grid X; of degree N; with N+1 points)
-//   is expressed in the Lagrange form as follows:
+//	An interpolant I^X_N{f} (associated with a grid X; of degree N; with N+1 points)
+//	is expressed in the Lagrange form as follows:
 //
-//                     N
-//         X          ————             X
-//        I {f}(x) =  \     f(x[i]) ⋅ ℓ (x)
-//         N          /                i
-//                    ————
-//                    i = 0
+//	                  N
+//	      X          ————             X
+//	     I {f}(x) =  \     f(x[i]) ⋅ ℓ (x)
+//	      N          /                i
+//	                 ————
+//	                 i = 0
 //
-//   where ℓ^X_i(x) is the i-th Lagrange cardinal polynomial associated with grid X and given by:
+//	where ℓ^X_i(x) is the i-th Lagrange cardinal polynomial associated with grid X and given by:
 //
-//                 N
-//         N      ━━━━    x  -  X[j]
-//        ℓ (x) = ┃  ┃  —————————————           0 ≤ i ≤ N
-//         i      ┃  ┃   X[i] - X[j]
-//               j = 0
-//               j ≠ i
+//	              N
+//	      N      ━━━━    x  -  X[j]
+//	     ℓ (x) = ┃  ┃  —————————————           0 ≤ i ≤ N
+//	      i      ┃  ┃   X[i] - X[j]
+//	            j = 0
+//	            j ≠ i
 //
-//   or, barycentric form:
+//	or, barycentric form:
 //
-//                     N   λ[i] ⋅ f[i]
-//                     Σ   ———————————
-//         X          i=0   x - x[i]
-//        I {f}(x) = ——————————————————
-//         N            N     λ[i]
-//                      Σ   ————————
-//                     i=0  x - x[i]
+//	                  N   λ[i] ⋅ f[i]
+//	                  Σ   ———————————
+//	      X          i=0   x - x[i]
+//	     I {f}(x) = ——————————————————
+//	      N            N     λ[i]
+//	                   Σ   ————————
+//	                  i=0  x - x[i]
 //
-//   with:
+//	with:
 //
-//                     λ[i]
-//                   ————————
-//         N         x - x[i]
-//        ℓ (x) = ———————————————
-//         i        N     λ[k]
-//                  Σ   ————————
-//                 k=0  x - x[k]
+//	                  λ[i]
+//	                ————————
+//	      N         x - x[i]
+//	     ℓ (x) = ———————————————
+//	      i        N     λ[k]
+//	               Σ   ————————
+//	              k=0  x - x[k]
 //
-//   The barycentric weights λk are normalized and computed from ηk as follows:
+//	The barycentric weights λk are normalized and computed from ηk as follows:
 //
-//      ηk = Σ ln(|xk-xl|) (k≠l)
+//	   ηk = Σ ln(|xk-xl|) (k≠l)
 //
-//            a ⋅ b             k+N
-//      λk =  —————     a = (-1)        b = exp(m)    m = -ηk
-//             lf0
+//	         a ⋅ b             k+N
+//	   λk =  —————     a = (-1)        b = exp(m)    m = -ηk
+//	          lf0
 //
-//      lf0 = 2ⁿ⁻¹/n
+//	   lf0 = 2ⁿ⁻¹/n
 //
-//    or, if N > 700:
+//	 or, if N > 700:
 //
-//            / a ⋅ b \   /  b  \   /  b  \
-//      λk =  | ————— | ⋅ | ——— | ⋅ | ——— |      b = exp(m/3)
-//            \  lf0  /   \ lf1 /   \ lf2 /
+//	         / a ⋅ b \   /  b  \   /  b  \
+//	   λk =  | ————— | ⋅ | ——— | ⋅ | ——— |      b = exp(m/3)
+//	         \  lf0  /   \ lf1 /   \ lf2 /
 //
-//      lf0⋅lf1⋅lf2 = 2ⁿ⁻¹/n
+//	   lf0⋅lf1⋅lf2 = 2ⁿ⁻¹/n
 //
-//   References:
-//     [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
-//         Single Domains. Springer. 563p
-//     [2] Berrut JP, Trefethen LN (2004) Barycentric Lagrange Interpolation,
-//         SIAM Review Vol. 46, No. 3, pp. 501-517
-//     [3] Costa B, Don WS (2000) On the computation of high order pseudospectral derivatives,
-//         Applied Numerical Mathematics, 33:151-159.
-//
+//	References:
+//	  [1] Canuto C, Hussaini MY, Quarteroni A, Zang TA (2006) Spectral Methods: Fundamentals in
+//	      Single Domains. Springer. 563p
+//	  [2] Berrut JP, Trefethen LN (2004) Barycentric Lagrange Interpolation,
+//	      SIAM Review Vol. 46, No. 3, pp. 501-517
+//	  [3] Costa B, Don WS (2000) On the computation of high order pseudospectral derivatives,
+//	      Applied Numerical Mathematics, 33:151-159.
 type LagrangeInterp struct {
 
 	// general
@@ -97,7 +96,7 @@ type LagrangeInterp struct {
 	D2 *la.Matrix // (d²ℓj/dx²)(xi)
 }
 
-// LagIntSet is groups interpolators together; e.g. 2D, 3D
+// LagIntSet holds interpolators; e.g. for 2D or 3D
 type LagIntSet []*LagrangeInterp
 
 // NewLagIntSet returns a set of LagrangeInterp
@@ -111,15 +110,14 @@ func NewLagIntSet(ndim int, degrees []int, gridTypes []string) (lis LagIntSet) {
 
 // NewLagrangeInterp allocates a new LagrangeInterp
 //
-//     N -- degree
+//	N -- degree
 //
-//     gridType -- type of grid:
-//        "uni" : uniform 1D grid kind
-//        "cg"  : Chebyshev-Gauss 1D grid kind
-//        "cgl" : Chebyshev-Gauss-Lobatto 1D grid kind
+//	gridType -- type of grid:
+//	   "uni" : uniform 1D grid kind
+//	   "cg"  : Chebyshev-Gauss 1D grid kind
+//	   "cgl" : Chebyshev-Gauss-Lobatto 1D grid kind
 //
-//     NOTE: the grid will be generated in [-1, 1]
-//
+//	NOTE: the grid will be generated in [-1, 1]
 func NewLagrangeInterp(N int, gridType string) (o *LagrangeInterp) {
 
 	// check
@@ -193,12 +191,11 @@ func NewLagrangeInterp(N int, gridType string) (o *LagrangeInterp) {
 // Om computes the generating (nodal) polynomial associated with grid X. The nodal polynomial is
 // the unique polynomial of degree N+1 and leading coefficient whose zeros are the N+1 nodes of X.
 //
-//                 N
-//         X      ━━━━
-//        ω (x) = ┃  ┃ (x - X[i])
-//        N+1     ┃  ┃
-//               i = 0
-//
+//	         N
+//	 X      ━━━━
+//	ω (x) = ┃  ┃ (x - X[i])
+//	N+1     ┃  ┃
+//	       i = 0
 func (o *LagrangeInterp) Om(x float64) (ω float64) {
 	ω = 1
 	for i := 0; i < o.N+1; i++ {
@@ -209,28 +206,28 @@ func (o *LagrangeInterp) Om(x float64) (ω float64) {
 
 // L computes the i-th Lagrange cardinal polynomial ℓ^X_i(x) associated with grid X
 //
-//                 N
-//         X      ━━━━    x  -  X[j]
-//        ℓ (x) = ┃  ┃  —————————————           0 ≤ i ≤ N
-//         i      ┃  ┃   X[i] - X[j]
-//               j = 0
-//               j ≠ i
+//	              N
+//	      X      ━━━━    x  -  X[j]
+//	     ℓ (x) = ┃  ┃  —————————————           0 ≤ i ≤ N
+//	      i      ┃  ┃   X[i] - X[j]
+//	            j = 0
+//	            j ≠ i
 //
-//   or (barycentric):
+//	or (barycentric):
 //
-//                    λ[i]
-//                  ————————
-//        X         x - x[i]
-//       ℓ (x) = ———————————————
-//        i        N     λ[k]
-//                 Σ   ————————
-//                k=0  x - x[k]
+//	                 λ[i]
+//	               ————————
+//	     X         x - x[i]
+//	    ℓ (x) = ———————————————
+//	     i        N     λ[k]
+//	              Σ   ————————
+//	             k=0  x - x[k]
 //
-//   Input:
-//      i -- index of X[i] point
-//      x -- where to evaluate the polynomial
-//   Output:
-//      lix -- ℓ^X_i(x)
+//	Input:
+//	   i -- index of X[i] point
+//	   x -- where to evaluate the polynomial
+//	Output:
+//	   lix -- ℓ^X_i(x)
 func (o *LagrangeInterp) L(i int, x float64) (lix float64) {
 
 	// barycentric formula
@@ -269,25 +266,24 @@ func (o *LagrangeInterp) CalcU(f Ss) {
 
 // I computes the interpolation I^X_N{f}(x) @ x
 //
-//                     N
-//         X          ————          X
-//        I {f}(x) =  \     U[i] ⋅ ℓ (x)       with   U[i] = f(x[i])
-//         N          /             i
-//                    ————
-//                    i = 0
+//	                  N
+//	      X          ————          X
+//	     I {f}(x) =  \     U[i] ⋅ ℓ (x)       with   U[i] = f(x[i])
+//	      N          /             i
+//	                 ————
+//	                 i = 0
 //
-//   or (barycentric):
+//	or (barycentric):
 //
-//                    N   λ[i] ⋅ f[i]
-//                    Σ   ———————————
-//        X          i=0   x - x[i]
-//       I {f}(x) = ——————————————————
-//        N            N     λ[i]
-//                     Σ   ————————
-//                    i=0  x - x[i]
+//	                 N   λ[i] ⋅ f[i]
+//	                 Σ   ———————————
+//	     X          i=0   x - x[i]
+//	    I {f}(x) = ——————————————————
+//	     N            N     λ[i]
+//	                  Σ   ————————
+//	                 i=0  x - x[i]
 //
-//   NOTE: U[i] = f(x[i]) must be calculated with o.CalcU or set first
-//
+//	NOTE: U[i] = f(x[i]) must be calculated with o.CalcU or set first
 func (o *LagrangeInterp) I(x float64) (res float64) {
 
 	// barycentric formula
@@ -315,12 +311,11 @@ func (o *LagrangeInterp) I(x float64) (res float64) {
 
 // CalcD1 computes the differentiation matrix D1 of the function L_i
 //
-//    d I{f}(x)  |         N
-//   ——————————— |      =  Σ   D1_kj ⋅ f(x_j)
-//        dx     |x=x_k   j=0
+//	 d I{f}(x)  |         N
+//	——————————— |      =  Σ   D1_kj ⋅ f(x_j)
+//	     dx     |x=x_k   j=0
 //
-//   see [2]
-//
+//	see [2]
 func (o *LagrangeInterp) CalcD1() {
 
 	// allocate output
@@ -362,12 +357,11 @@ func (o *LagrangeInterp) CalcD1() {
 
 // CalcD2 calculates the second derivative
 //
-//            d²ℓ_l  |
-//    D2_jl = —————— |
-//             dx²   |x=x_j
+//	          d²ℓ_l  |
+//	  D2_jl = —————— |
+//	           dx²   |x=x_j
 //
-//  NOTE: this function will call CalcD1() because the D1 values required to compute D2
-//
+//	NOTE: this function will call CalcD1() because the D1 values required to compute D2
 func (o *LagrangeInterp) CalcD2() {
 
 	// calculate D1
@@ -392,7 +386,8 @@ func (o *LagrangeInterp) CalcD2() {
 }
 
 // CalcErrorD1 computes the maximum error due to differentiation (@ X[i]) using the D1 matrix
-//   NOTE: U and D1 matrix must be computed previously
+//
+//	NOTE: U and D1 matrix must be computed previously
 func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 
 	// derivative of interpolation @ x_i
@@ -411,7 +406,8 @@ func (o *LagrangeInterp) CalcErrorD1(dfdxAna Ss) (maxDiff float64) {
 }
 
 // CalcErrorD2 computes the maximum error due to differentiation (@ X[i]) using the D2 matrix
-//   NOTE: U and D2 matrix must be computed previously
+//
+//	NOTE: U and D2 matrix must be computed previously
 func (o *LagrangeInterp) CalcErrorD2(d2fdx2Ana Ss) (maxDiff float64) {
 
 	// derivative of interpolation @ x_i
@@ -447,11 +443,11 @@ func (o *LagrangeInterp) EstimateLebesgue() (ΛN float64) {
 
 // EstimateMaxErr estimates the maximum error using 10000 stations along [-1,1]
 // This function also returns the location (xloc) of the estimated max error
-//   Computes:
-//             maxerr = max(|f(x) - I{f}(x)|)
 //
-//   e.g. nStations := 10000 (≥2) will generate several points along [-1,1]
+//	Computes:
+//	          maxerr = max(|f(x) - I{f}(x)|)
 //
+//	e.g. nStations := 10000 (≥2) will generate several points along [-1,1]
 func (o *LagrangeInterp) EstimateMaxErr(nStations int, f Ss) (maxerr, xloc float64) {
 	if nStations < 2 {
 		nStations = 10000
