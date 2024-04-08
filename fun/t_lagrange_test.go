@@ -24,7 +24,7 @@ func TestLagCardinal01(tst *testing.T) {
 	o := NewLagrangeInterp(N, kind)
 	chk.Float64(tst, "ΛN (Lebesgue constant)", 1e-15, o.EstimateLebesgue(), 3.106301040275436e+00)
 
-	// check Kronecker property (barycentic)
+	// check Kronecker property (barycentric)
 	o.Bary = true
 	for i := 0; i < N+1; i++ {
 		for j, x := range o.X {
