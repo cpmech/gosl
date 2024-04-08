@@ -376,12 +376,15 @@ func NegOnePowN(n int) float64 {
 	return -1
 }
 
-// ImagPowN computes iⁿ = (√-1)ⁿ
+// ImagPowN computes iⁿ = (√-1)ⁿ for non-negative n
 //
 //	i¹ = i      i²  = -1      i³  = -i      i⁴  = 1
 //	i⁵ = i      i⁶  = -1      i⁷  = -i      i⁸  = 1
 //	i⁹ = i      i¹⁰ = -1      i¹¹ = -i      i¹² = 1
 func ImagPowN(n int) complex128 {
+	if n < 0 {
+		panic("n must be non-negative")
+	}
 	if n == 0 {
 		return 1
 	}
@@ -396,12 +399,15 @@ func ImagPowN(n int) complex128 {
 	return 1
 }
 
-// ImagXpowN computes (x⋅i)ⁿ
+// ImagXpowN computes (x⋅i)ⁿ for non-negative n
 //
 //	(x⋅i)¹ = x¹⋅i      (x⋅i)²  = -x²       (x⋅i)³  = -x³ ⋅i      (x⋅i)⁴  = x⁴
 //	(x⋅i)⁵ = x⁵⋅i      (x⋅i)⁶  = -x⁶       (x⋅i)⁷  = -x⁷ ⋅i      (x⋅i)⁸  = x⁸
 //	(x⋅i)⁹ = x⁹⋅i      (x⋅i)¹⁰ = -x¹⁰      (x⋅i)¹¹ = -x¹¹⋅i      (x⋅i)¹² = x¹²
 func ImagXpowN(x float64, n int) complex128 {
+	if n < 0 {
+		panic("n must be non-negative")
+	}
 	if n == 0 {
 		return 1
 	}
