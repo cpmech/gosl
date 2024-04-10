@@ -35,10 +35,11 @@ func (o *InterpCubic) G(x float64) float64 {
 }
 
 // Critical returns the critical points
-//   xmin -- x @ min and y(xmin)
-//   xmax -- x @ max and y(xmax)
-//   xifl -- x @ inflection point and y(ifl)
-//   hasMin, hasMax, hasIfl -- flags telling what is available
+//
+//	xmin -- x @ min and y(xmin)
+//	xmax -- x @ max and y(xmax)
+//	xifl -- x @ inflection point and y(ifl)
+//	hasMin, hasMax, hasIfl -- flags telling what is available
 func (o *InterpCubic) Critical() (xmin, xmax, xifl float64, hasMin, hasMax, hasIfl bool) {
 	delBy4 := o.B*o.B - 3.0*o.A*o.C
 	if delBy4 < 0 {
@@ -59,11 +60,12 @@ func (o *InterpCubic) Critical() (xmin, xmax, xifl float64, hasMin, hasMax, hasI
 	return
 }
 
-// Fit4points fits polynomial to 3 points
-//   (x0, y0) -- first point
-//   (x1, y1) -- second point
-//   (x2, y2) -- third point
-//   (x3, y3) -- fourth point
+// Fit4points fits polynomial to 4 points
+//
+//	(x0, y0) -- first point
+//	(x1, y1) -- second point
+//	(x2, y2) -- third point
+//	(x3, y3) -- fourth point
 func (o *InterpCubic) Fit4points(x0, y0, x1, y1, x2, y2, x3, y3 float64) (err error) {
 	z0, z1, z2, z3 := x0*x0, x1*x1, x2*x2, x3*x3
 	w0, w1, w2, w3 := z0*x0, z1*x1, z2*x2, z3*x3
@@ -79,10 +81,11 @@ func (o *InterpCubic) Fit4points(x0, y0, x1, y1, x2, y2, x3, y3 float64) (err er
 }
 
 // Fit3pointsD fits polynomial to 3 points and known derivative
-//   (x0, y0) -- first point
-//   (x1, y1) -- second point
-//   (x2, y2) -- third point
-//   (x3, d3) -- derivative @ x3
+//
+//	(x0, y0) -- first point
+//	(x1, y1) -- second point
+//	(x2, y2) -- third point
+//	(x3, d3) -- derivative @ x3
 func (o *InterpCubic) Fit3pointsD(x0, y0, x1, y1, x2, y2, x3, d3 float64) (err error) {
 	z0, z1, z2, z3 := x0*x0, x1*x1, x2*x2, x3*x3
 	w0, w1, w2 := z0*x0, z1*x1, z2*x2
