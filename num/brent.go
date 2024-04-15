@@ -238,7 +238,7 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 	x, w, fx, fw := v, v, fv, fv
 
 	// solve
-	var rng float64         // range over which the minimum is seeked for
+	var rng float64         // range over which the minimum is sought for
 	var midRng float64      // middle range
 	var tolAct float64      // actual tolerance
 	var newStep float64     // step at one iteration
