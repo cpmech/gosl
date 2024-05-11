@@ -44,7 +44,7 @@ RUN bash /tmp/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${U
   && apt-get clean -y && rm -rf /var/lib/apt/lists/* && rm /tmp/common-debian.sh
 
 # install Go tools
-ARG GO_VERSION="1.19.13"
+ARG GO_VERSION="1.22.3"
 ARG GOROOT="/usr/local/go"
 ARG GOPATH="/go"
 ARG UPDATE_RC="true"

@@ -9,5 +9,5 @@ echo "... docker .................................................."
 echo "............................................................."
 echo
 
-docker buildx build --no-cache -t $NAME:$VERSION .
-docker images -q -f "dangling=true" | xargs docker rmi
+docker buildx build -t $NAME:$VERSION .
+#docker images -q -f "dangling=true" | xargs docker rmi
