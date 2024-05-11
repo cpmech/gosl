@@ -93,9 +93,7 @@ func IntClone(a [][]int) (b [][]int) {
 	b = make([][]int, len(a))
 	for i := 0; i < len(a); i++ {
 		b[i] = make([]int, len(a[i]))
-		for j := 0; j < len(a[i]); j++ {
-			b[i][j] = a[i][j]
-		}
+		copy(b[i], a[i])
 	}
 	return
 }
@@ -275,9 +273,7 @@ func Clone(a [][]float64) (b [][]float64) {
 	b = make([][]float64, len(a))
 	for i := 0; i < len(a); i++ {
 		b[i] = make([]float64, len(a[i]))
-		for j := 0; j < len(a[i]); j++ {
-			b[i][j] = a[i][j]
-		}
+		copy(b[i], a[i])
 	}
 	return
 }
