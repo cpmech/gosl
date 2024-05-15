@@ -1,7 +1,7 @@
-name: Test & Coverage
+name: Build and Test
 on: [pull_request, push]
 jobs:
-  test_and_coverage:
+  build_and_test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,14 +20,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: ^1.20
-      - name: Build all
+      - name: Build and test all
         run: |
           bash ./all.bash
-      - name: Test & Coverage
-        run: |
-          go test -coverprofile=coverage.out -covermode=atomic ./...
-      - name: Upload to codecov.io
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          fail_ci_if_error: true
