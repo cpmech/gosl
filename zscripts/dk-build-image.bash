@@ -1,7 +1,6 @@
 #!/bin/bash
 
-NAME="dk-gosl-gofem"
-VERSION="latest"
+NAME="gosl/dk-gosl-gofem"
 
 echo
 echo
@@ -9,5 +8,5 @@ echo "... docker .................................................."
 echo "............................................................."
 echo
 
-docker buildx build -t $NAME:$VERSION .
+docker build -t $NAME .
 #docker images -q -f "dangling=true" | xargs docker rmi

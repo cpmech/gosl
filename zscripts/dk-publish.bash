@@ -1,8 +1,7 @@
 #!/bin/bash
 
-NAME="gosl"
-VERSION="latest"
+NAME="gosl/dk-gosl-gofem"
 
 docker logout
 docker login
-docker push gosl/$NAME:$VERSION
+docker push $NAME
