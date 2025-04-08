@@ -21,10 +21,11 @@ import (
 )
 
 // ToMatrix converts a sparse matrix in triplet form to column-compressed form using Umfpack's routines.
-//  INPUT:
-//   a -- a previous CCMatrix to be filled in; otherwise, "nil" tells to allocate a new one
-//  OUTPUT:
-//   the previous "a" matrix or a pointer to a new one
+//
+//	INPUT:
+//	 a -- a previous CCMatrix to be filled in; otherwise, "nil" tells to allocate a new one
+//	OUTPUT:
+//	 the previous "a" matrix or a pointer to a new one
 func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 	if t.pos < 1 {
 		chk.Panic("conversion can only be made for non-empty triplets. error: (pos = %d)", t.pos)
@@ -44,16 +45,17 @@ func (t *Triplet) ToMatrix(a *CCMatrix) *CCMatrix {
 	Ax := (*C.double)(unsafe.Pointer(&a.x[0]))
 	status := C.umfpack_dl_triplet_to_col(C.LONG(a.m), C.LONG(a.n), C.LONG(a.nnz), Ti, Tj, Tx, Ap, Ai, Ax, nil)
 	if status != C.UMFPACK_OK {
-		chk.Panic("umfpack_dl_triplet_to_col failed (UMFPACK error: %s)", umfErr(status))
+		chk.Panic("umfpack_dl_triplet_to_col failed (UMFPACK error: %s)", umfErr((int)(status)))
 	}
 	return a
 }
 
 // ToMatrix converts a sparse matrix in triplet form with complex numbers to column-compressed form.
-//  INPUT:
-//   a -- a previous CCMatrixC to be filled in; otherwise, "nil" tells to allocate a new one
-//  OUTPUT:
-//   the previous "a" matrix or a pointer to a new one
+//
+//	INPUT:
+//	 a -- a previous CCMatrixC to be filled in; otherwise, "nil" tells to allocate a new one
+//	OUTPUT:
+//	 the previous "a" matrix or a pointer to a new one
 func (t *TripletC) ToMatrix(a *CCMatrixC) *CCMatrixC {
 	if t.pos < 1 {
 		chk.Panic("conversion can only be made for non-empty triplets. error: (pos = %d)", t.pos)
@@ -73,13 +75,13 @@ func (t *TripletC) ToMatrix(a *CCMatrixC) *CCMatrixC {
 	Tx := (*C.double)(unsafe.Pointer(&t.x[0]))
 	status := C.umfpack_zl_triplet_to_col(C.LONG(a.m), C.LONG(a.n), C.LONG(a.nnz), Ti, Tj, Tx, nil, Ap, Ai, Ax, nil, nil)
 	if status != C.UMFPACK_OK {
-		chk.Panic("umfpack_zl_triplet_to_col failed (UMFPACK error: %s)", umfErr(status))
+		chk.Panic("umfpack_zl_triplet_to_col failed (UMFPACK error: %s)", umfErr((int)(status)))
 	}
 	return a
 }
 
 // umfErr returns UMFPACK error codes
-func umfErr(code C.int) string {
+func umfErr(code int) string {
 	switch code {
 	case C.UMFPACK_ERROR_out_of_memory:
 		return "out_of_memory (-1)"

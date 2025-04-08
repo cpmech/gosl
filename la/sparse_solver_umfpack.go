@@ -127,7 +127,7 @@ func (o *sparseSolverUmfpack) Fact() {
 	// convert triplet to column-compressed format
 	code := C.umfpack_dl_triplet_to_col(C.LONG(o.t.m), C.LONG(o.t.n), C.LONG(o.t.pos), o.ti, o.tj, o.tx, o.ap, o.ai, o.ax, nil)
 	if code != C.UMFPACK_OK {
-		chk.Panic("conversion failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("conversion failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 
 	// symbolic factorisation
@@ -137,7 +137,7 @@ func (o *sparseSolverUmfpack) Fact() {
 	}
 	code = C.umfpack_dl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("symbolic factorized failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("symbolic factorized failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 	o.symbFact = true
 
@@ -148,7 +148,7 @@ func (o *sparseSolverUmfpack) Fact() {
 	}
 	code = C.umfpack_dl_numeric(o.ap, o.ai, o.ax, o.usymb, &o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("numeric factorisation failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("numeric factorisation failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 	o.numeFact = true
 
@@ -158,8 +158,7 @@ func (o *sparseSolverUmfpack) Fact() {
 
 // Solve solves sparse linear systems using UMFPACK or MUMPS
 //
-//   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
-//
+//	Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 func (o *sparseSolverUmfpack) Solve(x, b Vector) {
 
 	// check
@@ -174,7 +173,7 @@ func (o *sparseSolverUmfpack) Solve(x, b Vector) {
 	// solve
 	code := C.umfpack_dl_solve(C.UMFPACK_A, o.ap, o.ai, o.ax, px, pb, o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("solve failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("solve failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 }
 
@@ -286,7 +285,7 @@ func (o *sparseSolverUmfpackC) Fact() {
 	// convert triplet to column-compressed format
 	code := C.umfpack_zl_triplet_to_col(C.LONG(o.t.m), C.LONG(o.t.n), C.LONG(o.t.pos), o.ti, o.tj, o.tx, nil, o.ap, o.ai, o.ax, nil, nil)
 	if code != C.UMFPACK_OK {
-		chk.Panic("conversion failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("conversion failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 
 	// symbolic factorisation
@@ -296,7 +295,7 @@ func (o *sparseSolverUmfpackC) Fact() {
 	}
 	code = C.umfpack_zl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, nil, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("symbolic factorized failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("symbolic factorized failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 	o.symbFact = true
 
@@ -307,7 +306,7 @@ func (o *sparseSolverUmfpackC) Fact() {
 	}
 	code = C.umfpack_zl_numeric(o.ap, o.ai, o.ax, nil, o.usymb, &o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("numeric factorisation failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("numeric factorisation failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 	o.numeFact = true
 
@@ -317,8 +316,7 @@ func (o *sparseSolverUmfpackC) Fact() {
 
 // Solve solves sparse linear systems using UMFPACK or MUMPS
 //
-//   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
-//
+//	Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 func (o *sparseSolverUmfpackC) Solve(x, b VectorC) {
 
 	// check
@@ -333,7 +331,7 @@ func (o *sparseSolverUmfpackC) Solve(x, b VectorC) {
 	// solve
 	code := C.umfpack_zl_solve(C.UMFPACK_A, o.ap, o.ai, o.ax, nil, px, nil, pb, nil, o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("solve failed (UMFPACK error: %s)\n", umfErr(code))
+		chk.Panic("solve failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 }
 
