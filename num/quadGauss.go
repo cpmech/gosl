@@ -63,7 +63,7 @@ func GaussLegendreXW(x1, x2 float64, n int) (x, w []float64) {
 		z = math.Cos(3.141592654 * (float64(i) + 0.75) / (float64(n) + 0.5))
 		// starting with this approximation to the ith root, we enter the main loop of refinement by Newton's method.
 		it, MAXIT := 0, 10
-		for it := 0; it < MAXIT; it++ {
+		for it < MAXIT {
 			p1 = 1.0
 			p2 = 0.0
 			for j := 0; j < n; j++ { // Loop up the recurrence relation to get the Legendre polynomial evaluated at z.
@@ -78,6 +78,7 @@ func GaussLegendreXW(x1, x2 float64, n int) (x, w []float64) {
 			if math.Abs(z-z1) < EPS {
 				break
 			}
+			it++
 		}
 		if it == MAXIT {
 			chk.Panic("Newton's method did not converge after %d iterations", it)
