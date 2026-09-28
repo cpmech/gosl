@@ -32,4 +32,7 @@ _testmain.go
 *.prof
 
 # Temporary files
-*.goa
+
+# docker wrapper: build/module cache, coverage output
+.docker-cache/
+

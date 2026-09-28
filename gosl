@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# The only way to build or test Gosl on this machine: no Go is installed on the host.
+#
+#   ./gosl <cmd> [args...]     cmd: all build test race vet fmt cover bench shell go
+#
+# The container runs as you (same uid) and writes only inside the repo's .docker-cache/,
+# so nothing it produces is root-owned. Build and test run with no network: Gosl has no
+# Go dependencies, so a hermetic run costs nothing.
+set -euo pipefail
+
+IMAGE="${GOSL_IMAGE:-gosl:ci}"
+CACHE="${GOSL_CACHE:-$PWD/.docker-cache}"
+mkdir -p "$CACHE/build" "$CACHE/mod" "$CACHE/gopath"
+
+in_container() {
+    docker run --rm \
+        --network="${GOSL_NET:-none}" \
+        --user "$(id -u):$(id -g)" \
+        -e HOME=/tmp/gosl \
+        -e GOCACHE=/gosl/.docker-cache/build \
+        -e GOMODCACHE=/gosl/.docker-cache/mod \
+        -e GOPATH=/gosl/.docker-cache/gopath \
+        -v "$PWD:/gosl" -w /gosl \
+        "$IMAGE" "$@"
+}
+
+case "${1:-}" in
+    ''|-h|--help|help) sed -n '2,9p' "$0" | sed 's/^# \{0,1\}//' ;;
+    all)   in_container bash ./all.bash ;;
+    build) in_container go build ./... ;;
+    test)  in_container go test ./... ;;
+    race)  in_container go test -race ./... ;;
+    vet)   in_container go vet ./... ;;
+    fmt)   in_container gofmt -s -l . ;;
+    cover) in_container go test -covermode=atomic -coverprofile=/gosl/.docker-cache/cover.out ./... ;;
+    bench) in_container go test -bench=. -benchmem -run='^$' ./... ;;
+    shell) in_container bash ;;
+    go)    shift; in_container go "$@" ;;
+    *)     echo "unknown command: $1" >&2; exit 2 ;;
+esac
