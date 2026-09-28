@@ -1,36 +1,38 @@
-# Gosl - Go scientific library
+# Gosl — a Go library for scientific computing
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl.svg)](https://pkg.go.dev/github.com/cpmech/gosl)
 [![Go Report Card](https://goreportcard.com/badge/github.com/cpmech/gosl)](https://goreportcard.com/report/github.com/cpmech/gosl)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/avelino/awesome-go)
 
-Gosl is a set of tools for developing scientific simulations using the Go language. We mainly consider the development of numerical methods and solvers for differential equations. We also present some functions for fast Fourier transforms, the generation of random numbers, probability distributions, and computational geometry.
+Gosl is a set of tools for developing scientific simulations in Go. Its focus is numerical methods and solvers for differential equations. It also provides fast Fourier transforms, random-number generation, probability distributions, and computational geometry.
 
-This library contains essential functions for linear algebra computations (operations between all combinations of vectors and matrices, eigenvalues and eigenvectors, linear solvers) and the development of numerical methods (e.g., numerical quadrature).
+The library covers the linear algebra that numerical work requires — operations between all combinations of vectors and matrices, eigenvalues and eigenvectors, and linear solvers — together with the building blocks of numerical methods, such as numerical quadrature.
 
-We link Gosl with existing libraries written in C and Fortran, such as OpenBLAS, LAPACK, UMFPACK, MUMPS, QUADPACK, and FFTW3. These libraries have been fundamental for the development of high-performant simulations over many years. We believe that it is nearly impossible to rewrite these libraries in native Go and achieve the same speed delivered by them. For reference, a naive implementation of matrix-matrix multiplication in Go is more than 100 times slower than OpenBLAS.
+Gosl links against C and Fortran libraries: OpenBLAS, LAPACK, UMFPACK, MUMPS, QUADPACK, and FFTW3. These libraries have underpinned high-performance simulation for decades, and a rewrite in native Go is unlikely to match their speed: in our benchmark, a naive Go matrix-matrix multiplication runs more than 100 times slower than OpenBLAS.
 
 ## Installation
 
-Because of the other libraries, Docker is the easiest way to work with Gosl. Having Docker and VS Code installed, you can start developing powerful numerical simulations using Gosl in a matter of minutes. Furthermore, it works out of the box on Windows, Linux, and MacOS.
+Because Gosl links against these libraries, Docker is the easiest way to work with it. With Docker and VS Code installed, you can be running numerical simulations within minutes, on Windows, Linux, or macOS.
 
-### Containerized
+### Containerized (recommended)
 
-1. Install Docker
-2. Install Visual Studio Code
-3. Install the Remote Development extension for VS Code
-4. Clone https://github.com/cpmech/hello-gosl
-5. Create your application within a container (see gif below)
+1. Install Docker.
+2. Install Visual Studio Code.
+3. Install the Remote Development extension for VS Code.
+4. Clone https://github.com/cpmech/hello-gosl.
+5. Create your application inside a container (see the recording below).
 
-Done. And your system will "remain clean."
+Your system stays clean.
 
 ![](zdocs/vscode-open-in-container.gif)
 
-### Debian/Ubuntu GNU Linux
+### Native install (Debian/Ubuntu Linux)
 
-First, install Go as explained in https://golang.org/doc/install
+This is the path the CI workflow uses, on Ubuntu with Go 1.20 or newer.
 
-Second, install some libraries:
+First, install Go as explained in https://go.dev/doc/install.
+
+Second, install the C and Fortran libraries that Gosl links against:
 
 ```
 sudo apt-get install \
@@ -44,7 +46,7 @@ sudo apt-get install \
   libsuitesparse-dev
 ```
 
-Finally, download and compile Gosl:
+Finally, clone, build, and test Gosl:
 
 ```
 git clone https://github.com/cpmech/gosl.git
@@ -52,34 +54,32 @@ cd gosl
 ./all.bash
 ```
 
-Done. Installation completed.
+`./all.bash` builds every package and runs its tests; it prints `SUCCESS!` when it is done.
 
 ## Documentation
 
 Gosl includes the following _essential_ packages:
 
-- [chk](https://github.com/cpmech/gosl/tree/master/chk). To check numerical results and for unit testing
-- [io](https://github.com/cpmech/gosl/tree/master/io). Input/output, including printing to the terminal and handling files
-- [utl](https://github.com/cpmech/gosl/tree/master/utl). To generate series (e.g., linspace) and other functions as in pylab/matlab/octave
-- [la](https://github.com/cpmech/gosl/tree/master/la). Linear Algebra: vector, matrix, efficient sparse solvers, eigenvalues, decompositions
+- [chk](https://github.com/cpmech/gosl/tree/main/chk) — checks on numerical results, and helpers for unit testing.
+- [io](https://github.com/cpmech/gosl/tree/main/io) — input/output, including printing to the terminal and handling files.
+- [utl](https://github.com/cpmech/gosl/tree/main/utl) — series generation (e.g. linspace) and other functions as in pylab, MATLAB, and Octave.
+- [la](https://github.com/cpmech/gosl/tree/main/la) — linear algebra: vectors, matrices, efficient sparse solvers, eigenvalues, and decompositions.
 
 Gosl includes the following _main_ packages:
 
-- [fun](https://github.com/cpmech/gosl/tree/master/fun). Special functions, DFT, FFT, Bessel, elliptical integrals, orthogonal polynomials, interpolators
-- [gm](https://github.com/cpmech/gosl/tree/master/gm). Geometry algorithms and structures
-- [hb](https://github.com/cpmech/gosl/tree/master/hb). Pseudo hierarchical binary (hb) data file format
-- [num](https://github.com/cpmech/gosl/tree/master/num). Fundamental numerical methods such as root solvers, non-linear solvers, numerical derivatives, and quadrature
-- [ode](https://github.com/cpmech/gosl/tree/master/ode). Solvers for ordinary differential equations
-- [opt](https://github.com/cpmech/gosl/tree/master/opt). Numerical optimization: Interior Point, Conjugate Gradients, Powell, Grad Descent
-- [pde](https://github.com/cpmech/gosl/tree/master/pde). Solvers for partial differential equations (FDM, Spectral, FEM)
-- [rnd](https://github.com/cpmech/gosl/tree/master/rnd). Random numbers and probability distributions
+- [fun](https://github.com/cpmech/gosl/tree/main/fun) — special functions, DFT, FFT, Bessel functions, elliptic integrals, orthogonal polynomials, and interpolators.
+- [gm](https://github.com/cpmech/gosl/tree/main/gm) — geometry algorithms and structures.
+- [hb](https://github.com/cpmech/gosl/tree/main/hb) — the pseudo-hierarchical binary (hb) data file format.
+- [num](https://github.com/cpmech/gosl/tree/main/num) — fundamental numerical methods, such as root solvers, nonlinear solvers, numerical derivatives, and quadrature.
+- [ode](https://github.com/cpmech/gosl/tree/main/ode) — solvers for ordinary differential equations.
+- [opt](https://github.com/cpmech/gosl/tree/main/opt) — numerical optimization: interior point, conjugate gradients, Powell, and gradient descent.
+- [pde](https://github.com/cpmech/gosl/tree/main/pde) — solvers for partial differential equations (FDM, spectral, FEM).
+- [rnd](https://github.com/cpmech/gosl/tree/main/rnd) — random numbers and probability distributions.
 
-(see each subdirectory for more information)
+See each subdirectory for more information.
 
-We have removed the previous `mpi` sub-package for maintenance (see next section). However, if you plan to use MPI, we recommend the external library [gompi](https://github.com/sbromberger/gompi).
+The previous `mpi` sub-package has been removed for maintenance reasons. If you need MPI, we recommend the external library [gompi](https://github.com/sbromberger/gompi).
 
-## Previous version
+## Status
 
-The previous version, including more packages, is [available here ](https://github.com/cpmech/gosl/tree/stable-1.1.3) and can be used with the Docker image 1.1.3 as in this [hello gosl example](https://github.com/cpmech/hello-gosl-old-1.1.3).
-
-These other packages, such as machine learning, plotting, etc., have been removed because they do not depend on CGO and may be developed independently. We can now more efficiently maintain the core of Gosl, which focuses on the foundation for other scientific codes.
+Gosl is mature and in maintenance mode. It is stable and is used in published work, but new development has moved to [Russell](https://github.com/cpmech/russell), its successor. Reports about existing functionality are welcome; new features are unlikely.
