@@ -25,13 +25,10 @@ Because Gosl links against these libraries, Docker is the easiest way to work wi
 
 1. Install Docker.
 2. Install Visual Studio Code.
-3. Install the Remote Development extension for VS Code.
-4. Clone https://github.com/cpmech/hello-gosl.
-5. Create your application inside a container (see the recording below).
+3. Clone https://github.com/cpmech/hello-gosl.
+4. Create your application inside a container.
 
 Your system stays clean.
-
-![](zdocs/vscode-open-in-container.gif)
 
 ### Native install (Debian/Ubuntu Linux)
 
