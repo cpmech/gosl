@@ -10,6 +10,13 @@ The library covers the linear algebra that numerical work requires — operation
 
 Gosl links against C and Fortran libraries: OpenBLAS, LAPACK, UMFPACK, MUMPS, QUADPACK, and FFTW3. These libraries have underpinned high-performance simulation for decades, and a rewrite in native Go is unlikely to match their speed: in our benchmark, a naive Go matrix-matrix multiplication runs more than 100 times slower than OpenBLAS.
 
+## Status
+
+Gosl is mature and **in maintenance mode**. It is stable and is used in published work, but new
+development has moved to [Russell](https://github.com/cpmech/russell), its successor — if you are
+starting a new project, look there first. Reports about Gosl's existing functionality are welcome;
+new features are unlikely.
+
 ## Installation
 
 Because Gosl links against these libraries, Docker is the easiest way to work with it. With Docker and VS Code installed, you can be running numerical simulations within minutes, on Windows, Linux, or macOS.
@@ -80,6 +87,21 @@ See each subdirectory for more information.
 
 The previous `mpi` sub-package has been removed for maintenance reasons. If you need MPI, we recommend the external library [gompi](https://github.com/sbromberger/gompi).
 
-## Status
+## Licence
 
-Gosl is mature and in maintenance mode. It is stable and is used in published work, but new development has moved to [Russell](https://github.com/cpmech/russell), its successor. Reports about existing functionality are welcome; new features are unlikely.
+Gosl is released under the BSD-3-Clause licence — see [LICENSE](LICENSE).
+
+One component is not covered by it: `gm/tri` is a wrapper around
+[Triangle](https://www.cs.cmu.edu/~quake/triangle.html) by Jonathan Richard Shewchuk. Triangle is
+free for private, research and institutional use, and may be redistributed provided its copyright
+notices are kept and no compensation is received; distributing it as part of a commercial system
+requires a direct arrangement with the author. The full terms are in
+[gm/tri/triangle_README.txt](gm/tri/triangle_README.txt).
+
+The vendored source is not upstream Triangle 1.6 verbatim: it was adapted for Gosl when it was
+imported, and its file keeps Shewchuk's copyright and licence notice unchanged.
+
+If you publish results obtained with Triangle, please acknowledge it and cite: Jonathan Richard
+Shewchuk, "Triangle: Engineering a 2D Quality Mesh Generator and Delaunay Triangulator", in Applied
+Computational Geometry: Towards Geometric Engineering, LNCS 1148, pages 203--222, Springer-Verlag,
+May 1996.
