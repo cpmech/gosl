@@ -115,7 +115,7 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 				}
 			}
 			if gra < tolGraMin {
-				chk.Panic("local mininum reached? λ=%g, λ_min=%g, gra=%g", λ, λmin, gra)
+				chk.Panic("local minimum reached? λ=%g, λ_min=%g, gra=%g", λ, λmin, gra)
 			}
 			return // converged
 		}
