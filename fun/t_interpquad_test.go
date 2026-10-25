@@ -23,7 +23,7 @@ func TestInterpQuad01(tst *testing.T) {
 	x1, y1 := 2.0, 2.0
 	x2, y2 := 3.0, 5.0
 
-	// intepolator
+	// interpolator
 	interp := NewInterpQuad()
 	interp.Fit3points(x0, y0, x1, y1, x2, y2)
 
@@ -53,7 +53,7 @@ func TestInterpQuad02(tst *testing.T) {
 	x1, y1 := 2.0, 2.0
 	x2, y2 := 3.0, -1.0
 
-	// intepolator
+	// interpolator
 	interp := NewInterpQuad()
 	interp.Fit3points(x0, y0, x1, y1, x2, y2)
 
@@ -83,7 +83,7 @@ func TestInterpQuad03(tst *testing.T) {
 	x1, y1 := 2.0, 2.0
 	x2, d2 := -1.0, -4.0
 
-	// intepolator
+	// interpolator
 	interp := NewInterpQuad()
 	interp.Fit2pointsD(x0, y0, x1, y1, x2, d2)
 
@@ -113,7 +113,7 @@ func TestInterpQuad04(tst *testing.T) {
 	x1, y1 := 2.0, 2.0
 	x2, d2 := -1.0, +4.0
 
-	// intepolator
+	// interpolator
 	interp := NewInterpQuad()
 	interp.Fit2pointsD(x0, y0, x1, y1, x2, d2)
 

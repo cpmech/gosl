@@ -75,7 +75,7 @@ func Beta(a, b float64) float64 {
 	return float64(sgnla*sgnlb*sgnlc) * math.Exp(la+lb-lc)
 }
 
-// Binomial comptues the binomial coefficient (n k)^T
+// Binomial computes the binomial coefficient (n k)^T
 func Binomial(n, k int) float64 {
 	if n < 0 || k < 0 || k > n {
 		chk.Panic("Binomial function requires that k <= n (both positive). Incorrect values: n=%v, k=%v", n, k)
@@ -169,7 +169,7 @@ func Atan2pDeg(y, x float64) (αdeg float64) {
 	return
 }
 
-// Ramp function => MacAulay brackets
+// Ramp function => Macaulay brackets
 func Ramp(x float64) float64 {
 	if x < 0.0 {
 		return 0.0

@@ -25,7 +25,7 @@ import (
 func ReadLPfortran(fn string) (A *la.CCMatrix, b, c, l, u []float64) {
 
 	// variables
-	var m int        // number or rows (input)
+	var m int        // number of rows (input)
 	var n int        // number of columns (input)
 	var Ap []int     // pointers to the beginning of storage of column (size n+1)
 	var Ai []int     // row indices for each non zero entry (input, nnz A)

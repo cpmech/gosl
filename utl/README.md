@@ -8,7 +8,7 @@ generation of _arrays_. It also contains functions for sorting quantities and up
 (i.e. maps).
 
 This package does not aim for high performance linear algebra computations. For that purpose, we
-have the `la` package. Nonetheless, `utl` package is OK for _small computations_ such as for vectors
+have the `la` package. Nonetheless, the `utl` package is OK for _small computations_ such as for vectors
 in the 3D space. It also tries to use the best algorithms for sorting that are implemented in the
 standard Go library and others.
 

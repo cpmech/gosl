@@ -262,7 +262,7 @@ func TestOneDver05(tst *testing.T) {
 
 // solution ////////////////////////////////////////////////////////////////////////////////////////
 
-// dft1d compute the discrete Fourier Transform of x (very slow: for testing only)
+// dft1d computes the discrete Fourier Transform of x (very slow: for testing only)
 func dft1d(x []complex128) (X []complex128) {
 	N := len(x)
 	X = make([]complex128, N)

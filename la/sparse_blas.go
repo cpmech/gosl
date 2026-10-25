@@ -317,10 +317,10 @@ func SpAllocMatAddMat(a, b *CCMatrix) (c *CCMatrix, a2c, b2c []int) {
 	return
 }
 
-// SpMatAddMat adds two sparse matrices. The 'c' matrix matrix and the 'a2c' and 'b2c' arrays
+// SpMatAddMat adds two sparse matrices. The 'c' matrix and the 'a2c' and 'b2c' arrays
 // must be pre-allocated by SpAllocMatAddMat. The result is:
 //  c := α*a + β*b
-//  NOTE: this routine does not check for the correct sizes, since this is expect to be
+//  NOTE: this routine does not check for the correct sizes, since this is expected to be
 //        done by SpAllocMatAddMat
 func SpMatAddMat(c *CCMatrix, α float64, a *CCMatrix, β float64, b *CCMatrix, a2c, b2c []int) {
 	for i := 0; i < len(c.x); i++ {

@@ -158,9 +158,9 @@ See each subdirectory for more information.
 
 The previous `mpi` sub-package has been removed for maintenance reasons. If you need MPI, we recommend the external library [gompi](https://github.com/sbromberger/gompi).
 
-## Licence
+## License
 
-Gosl is released under the BSD-3-Clause licence — see [LICENSE](LICENSE).
+Gosl is released under the BSD-3-Clause license — see [LICENSE](LICENSE).
 
 One component is not covered by it: `gm/tri` is a wrapper around
 [Triangle](https://www.cs.cmu.edu/~quake/triangle.html) by Jonathan Richard Shewchuk. Triangle is
@@ -170,7 +170,7 @@ requires a direct arrangement with the author. The full terms are in
 [gm/tri/triangle_README.txt](gm/tri/triangle_README.txt).
 
 The vendored source is not upstream Triangle 1.6 verbatim: it was adapted for Gosl when it was
-imported, and its file keeps Shewchuk's copyright and licence notice unchanged.
+imported, and its file keeps Shewchuk's copyright and license notice unchanged.
 
 If you publish results obtained with Triangle, please acknowledge it and cite: Jonathan Richard
 Shewchuk, "Triangle: Engineering a 2D Quality Mesh Generator and Delaunay Triangulator", in Applied

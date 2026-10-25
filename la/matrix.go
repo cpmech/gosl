@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package la implements functions and structure for Linear Algebra computations. It defines a
+// Package la implements functions and structure for Linear Algebra computations. It defines
 // Vector and Matrix types for computations with dense data and also a Triplet and CCMatrix for
 // sparse data.
 package la
@@ -119,7 +119,7 @@ func (o *Matrix) GetCopy() (clone *Matrix) {
 	return
 }
 
-// GetTranspose returns the tranpose matrix
+// GetTranspose returns the transpose matrix
 func (o *Matrix) GetTranspose() (tran *Matrix) {
 	tran = NewMatrix(o.N, o.M)
 	for i := 0; i < o.N; i++ {
@@ -162,7 +162,7 @@ func (o *Matrix) Fill(val float64) {
 	}
 }
 
-// ClearRC clear rows and columns and set diagonal components
+// ClearRC clears rows and columns and sets the diagonal components
 //                 _         _                                     _         _
 //  Example:      |  1 2 3 4  |                                   |  1 2 3 4  |
 //            A = |  5 6 7 8  |  ⇒  clear([1,2], [], 1.0)  ⇒  A = |  0 1 0 0  |
@@ -460,7 +460,7 @@ func (o *MatrixC) GetCopy() (clone *MatrixC) {
 	return
 }
 
-// GetTranspose returns the tranpose matrix
+// GetTranspose returns the transpose matrix
 func (o *MatrixC) GetTranspose() (tran *MatrixC) {
 	tran = NewMatrixC(o.N, o.M)
 	for i := 0; i < o.N; i++ {

@@ -23,7 +23,7 @@ func Init(seed int) {
 	C.DsfmtInit(C.long(seed))
 }
 
-// Rand generates pseudo random real numbers between low and high; i.e. in [low, right)
+// Rand generates pseudo random real numbers between low and high; i.e. in [low, high)
 //  Input:
 //   low  -- lower limit (closed)
 //   high -- upper limit (open)

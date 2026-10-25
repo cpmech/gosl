@@ -31,7 +31,7 @@ type ChebyInterp struct {
 	Gauss bool // use roots (Gauss) or points (Lobatto)?
 
 	// options
-	Bary  bool // [default=true] use barycentric formulae in for ℓ_i and I{f} [default=true]
+	Bary  bool // [default=true] use barycentric formulae for ℓ_i and I{f}
 	Nst   bool // [default=true] use the "negative sum trick" to compute the diagonal components according to:
 	Trig  bool // [default=false] use trigonometric identities (to reduce round-off errors)
 	Flip  bool // [default=false] compute lower-diagonal part from upper diagonal part with D_{N-j,N-l} = -D_{j,l}
@@ -41,7 +41,7 @@ type ChebyInterp struct {
 	EstimationN int // N to use when estimating CoefP [default=128]
 
 	// derived
-	X     []float64 // points. NOTE: mirrowed version of Chebyshev X; i.e. from +1 to -1
+	X     []float64 // points. NOTE: mirrored version of Chebyshev X; i.e. from +1 to -1
 	Wb    []float64 // weights for Gaussian quadrature
 	Gamma []float64 // denominator of coefficients equation ~ ‖p[i]‖²
 	Lam   []float64 // λ_i barycentric weights (also w_i in some papers)
@@ -72,7 +72,7 @@ type ChebyInterp struct {
 //           X_j = cos | ————— |       j = 0 ... N
 //                     \   N   /
 //
-//   NOTE: X here is the mirrowed version of Chebyshev X; i.e. from +1 to -1
+//   NOTE: X here is the mirrored version of Chebyshev X; i.e. from +1 to -1
 //
 func NewChebyInterp(N int, gaussChebyshev bool) (o *ChebyInterp) {
 
@@ -158,7 +158,7 @@ func (o *ChebyInterp) CalcConvMats() {
 	}
 }
 
-// CalcCoefI computes the coefficients of the interpolant by (slow) direct formula
+// CalcCoefI computes the coefficients of the interpolant by the (slow) direct formula
 //
 //              1    N
 //   CoefI_k = ——— ⋅ Σ  f(x_j) ⋅ T_k(x_j) ⋅ wb_j

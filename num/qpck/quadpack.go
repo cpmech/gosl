@@ -63,7 +63,7 @@ var functions = make([]fType, 64)
 //
 //   INPUT/OUTPUT:
 //     NOTE: (1) the length of the 5 vectors below is equal to the "limit" variable in the original
-//               code which is an upperbound on the number of subintervals in the partition of (a,b)
+//               code which is an upper bound on the number of subintervals in the partition of (a,b)
 //           (2) the 5 vectors below may be <nil>, thus memory is allocated here
 //
 //     alist -- the first last  elements of which are the left
@@ -163,7 +163,7 @@ func Agse(fid int32, f fType, a, b, epsabs, epsrel float64, alist, blist, rlist,
 //
 //   INPUT/OUTPUT:
 //     NOTE: (1) the length of the 5 vectors below is equal to the "limit" variable in the original
-//               code which is an upperbound on the number of subintervals in the partition of (a,b)
+//               code which is an upper bound on the number of subintervals in the partition of (a,b)
 //           (2) the 5 vectors below may be <nil>, thus memory is allocated here
 //
 //     alist -- the first last  elements of which are the left
@@ -255,7 +255,7 @@ func Agie(fid int32, f fType, bound float64, inf int32, epsabs, epsrel float64, 
 //
 func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, epsrel float64, alist, blist, rlist, elist, pts []float64, iord, level, ndin []int32) (result, abserr float64, neval, last int32) {
 
-	// check nubmer of points
+	// check number of points
 	npts2 := int32(len(pointsAndBuf2))
 	if npts2 < 2 {
 		chk.Panic("number of points (and buffer) must be at least 2; i.e. there are no points and just the 2-point buffer\n")
@@ -344,7 +344,7 @@ func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, eps
 //                              intervals of lengths (abs(b-a))*2**(-l), l=0,1,2,...momcom-1.
 //                icall > 1  ⇒  this means that dqawoe has been called twice or more on intervals of
 //                              the same length abs(b-a). The Chebyshev moments already computed are
-//                              then re-used in subsequent calls.
+//                              then reused in subsequent calls.
 //              [default = 1,  icall ≥ 1]
 //
 //     maxp1 -- upper bound on the number of Chebyshev moments which can be stored, i.e. for the
@@ -360,7 +360,7 @@ func Agpe(fid int32, f fType, a, b float64, pointsAndBuf2 []float64, epsabs, eps
 //
 //   INPUT/OUTPUT:
 //     NOTE: (1) the length of the vectors below is equal to the "limit" variable in the original
-//               code which is an upperbound on the number of subintervals in the partition of (a,b)
+//               code which is an upper bound on the number of subintervals in the partition of (a,b)
 //           (2) the 5 vectors below may be <nil>, thus memory is allocated here
 //
 //     nnlog -- vector containing the subdivision levels of the subintervals, i.e.
@@ -455,7 +455,7 @@ func checkIer(ier int32) {
 	case 2:
 		chk.Panic("error # 2: the occurrence of roundoff error is detected\n")
 	case 3:
-		chk.Panic("error # 3: extremely bad integrand behaviour\n")
+		chk.Panic("error # 3: extremely bad integrand behavior\n")
 	case 4:
 		chk.Panic("error # 4: the algorithm does not converge\n")
 	case 5:

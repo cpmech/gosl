@@ -218,7 +218,7 @@ func NewBiLinear(f, xx, yy []float64) (o *BiLinear) {
 	return
 }
 
-// SetDisableHunt disables the hunt function for both axis
+// SetDisableHunt disables the hunt function for both axes
 func (o *BiLinear) SetDisableHunt(disable bool) {
 	o.xx.DisableHunt = disable
 	o.yy.DisableHunt = disable

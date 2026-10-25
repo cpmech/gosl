@@ -76,7 +76,7 @@ func (o facNurbsT) Curve2dCircle(xc, yc, r float64) (curve *Nurbs) {
 	return
 }
 
-// Curve2dQuarterCircle generates a 1D NURBS representing a quarter of circle
+// Curve2dQuarterCircle generates a 1D NURBS representing a quarter of a circle
 func (o facNurbsT) Curve2dQuarterCircle(xc, yc, r float64) (curve *Nurbs) {
 	verts := [][]float64{
 		{xc + r, yc, 0, math.Sqrt2},
@@ -113,7 +113,7 @@ func (o facNurbsT) Surf2dRectangleQL(x0, y0, dx, dy float64) (surf *Nurbs) {
 	return
 }
 
-// Surf2dQuarterRing generates a 2D NURBS representing a quarter of ring
+// Surf2dQuarterRing generates a 2D NURBS representing a quarter of a ring
 //   a, b -- inner and outer radii
 func (o facNurbsT) Surf2dQuarterRing(xc, yc, a, b float64) (surf *Nurbs) {
 	verts := [][]float64{
@@ -156,7 +156,7 @@ func (o facNurbsT) Surf2dExample1() (surf *Nurbs) {
 	return
 }
 
-// Surf2dQuarterPlateHole1 generates a 2D NURBS of a quarter of plate with hole (quadratic)
+// Surf2dQuarterPlateHole1 generates a 2D NURBS of a quarter of a plate with a hole (quadratic)
 func (o facNurbsT) Surf2dQuarterPlateHole1() (surf *Nurbs) {
 	verts := [][]float64{
 		{-1.000000000000000e+00, 0.000000000000000e+00, 0, 1.000000000000000e+00},
@@ -219,7 +219,7 @@ func (o facNurbsT) Surf3dCylinder(xc, yc, zc, r, h float64) (curve *Nurbs) {
 
 // Surf3dTorus generates a NURBS toroidal surface
 //  r -- is the tube radius
-//  R -- is the distance from the centre of the torus to the centre of the tube
+//  R -- is the distance from the center of the torus to the center of the tube
 func (o facNurbsT) Surf3dTorus(xc, yc, zc, r, R float64) (surf *Nurbs) {
 	a, b := R-r, R+r
 	s, h := 1.0/math.Sqrt2, 0.5
@@ -324,7 +324,7 @@ func (o facNurbsT) Surf3dTorus(xc, yc, zc, r, R float64) (surf *Nurbs) {
 	return
 }
 
-// Surf3dQuarterHemisphere generates a NURBS toroidal surface
+// Surf3dQuarterHemisphere generates a NURBS surface of a quarter of a sphere
 func (o facNurbsT) Surf3dQuarterHemisphere(xc, yc, zc, r float64) (surf *Nurbs) {
 	s := math.Sqrt2 / 2.0
 	verts := [][]float64{
@@ -368,8 +368,8 @@ func (o facNurbsT) SolidHex(corners [][]float64) (solid *Nurbs) {
 	return
 }
 
-// SolidQuarterRing generates a solid NURBS representing a quarter of ring
-//   xc,yc,yc -- centre
+// SolidQuarterRing generates a solid NURBS representing a quarter of a ring
+//   xc,yc,zc -- center
 //   a,b      -- inner and outer radii [b > a]
 //   h        -- thickness along x-direction
 func (o facNurbsT) SolidQuarterRing(xc, yc, zc, a, b, h float64) (solid *Nurbs) {

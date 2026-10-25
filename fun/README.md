@@ -5,7 +5,7 @@
 This package implements _special_ functions such as orthogonal polynomials and elliptical functions
 of first, second and third kind.
 
-Routines to interpolate and/or assist on spectral methods are also available; e.g. FourierInterp,
+Routines to interpolate and/or assist with spectral methods are also available; e.g. FourierInterp,
 ChebyInterp.
 
 ## API

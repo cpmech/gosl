@@ -178,7 +178,7 @@ func (o *LineSearch) Wolfe(x, u la.Vector, useFold bool, fold float64) (a, f flo
 	return
 }
 
-// zoom generates 'a' between alo and ahi to satisfy the 3 conditions in page 61 of [1]
+// zoom generates 'a' between alo and ahi to satisfy the 3 conditions on page 61 of [1]
 // Reference: Algorithm 3.6, page 61 of [1]
 func (o *LineSearch) zoom(fini, gini, alo, ahi, flo, fhi float64) (a, f float64) {
 

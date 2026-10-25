@@ -114,7 +114,7 @@ func GetITout(allOutputTimes, timeStationsOut []float64, tol float64) (I []int, 
 
 // GetStrides returns nReq indices from 0 (inclusive) to nTotal (inclusive)
 //   Input:
-//     nTotal -- total number of intices
+//     nTotal -- total number of indices
 //     nReq -- required indices
 //   Example:
 //     GetStrides(2001, 5) => [0 400 800 1200 1600 2000 2001]

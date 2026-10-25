@@ -22,7 +22,7 @@ import (
 //          dfNdx0, dfNdx1, dfNdx2, ... dfNdxN
 //  INPUT:
 //      ffcn : f(x) function
-//      x    : station where dfdx has to be calculated
+//      x    : point where dfdx has to be calculated
 //      fx   : f @ x
 //      w    : workspace with size == n == len(x)
 //  RETURNS:

@@ -27,7 +27,7 @@ type ConjGrad struct {
 	Convergence // auxiliary object to check convergence
 
 	// configuration
-	UseBrent    bool // use Brent method insted of LineSearch (Wolfe conditions)
+	UseBrent    bool // use Brent method instead of LineSearch (Wolfe conditions)
 	UseFRmethod bool // use Fletcher-Reeves method instead of Polak-Ribiere
 	CheckJfcn   bool // check Jacobian function at all points during minimization
 

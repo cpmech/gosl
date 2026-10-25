@@ -95,7 +95,7 @@ func (o *File) getArray(path string, isScalar, isMatrix bool) (dims []int, dat [
 	return
 }
 
-// readArray gets an array from file and store in pre-allocated variable
+// readArray gets an array from file and stores it in a pre-allocated variable
 func (o *File) readArray(dat *[]float64, path string, ismat bool) (dims []int) {
 	// 1. command
 	var cmd string

@@ -19,7 +19,7 @@ import (
 //   [1] Abramowitz M, Stegun IA (1972) Handbook of Mathematical Functions with Formulas, Graphs,
 //       and Mathematical Tables. U.S. Department of Commerce, NIST
 //
-//   NOTE: this structure should be not be used for high-performance computing;
+//   NOTE: this structure should not be used for high-performance computing;
 //         it's probably useful for verifications or learning purposes only
 //
 type GeneralOrthoPoly struct {
@@ -37,7 +37,7 @@ type GeneralOrthoPoly struct {
 
 // NewGeneralOrthoPoly creates a new orthogonal polynomial
 //
-//   kind -- is the type of orthognal polynomial:
+//   kind -- is the type of orthogonal polynomial:
 //     "J" or "jac"    : Jacobi
 //     "L" or "leg"    : Legendre
 //     "H" or "her"    : Hermite
@@ -54,7 +54,7 @@ type GeneralOrthoPoly struct {
 //
 //   NOTE: all coefficients for the 0...N polynomials will be generated
 //
-//   NOTE: this structure should be not be used for high-performance computing;
+//   NOTE: this structure should not be used for high-performance computing;
 //         it's probably useful for verifications or learning purposes only
 //
 func NewGeneralOrthoPoly(kind string, N int, alpha, beta float64) (o *GeneralOrthoPoly) {
@@ -74,7 +74,7 @@ func NewGeneralOrthoPoly(kind string, N int, alpha, beta float64) (o *GeneralOrt
 }
 
 // F computes P(n,x) with n=N (max)
-//   Since GeneralOrthoPoly is a general form, the summations are directly implement; i.e. no
+//   Since GeneralOrthoPoly is a general form, the summations are directly implemented; i.e. no
 //   advantages are taken w.r.t the structure of the polynomial. Thus, these functions are not
 //   highly efficient for large degrees N
 func (o *GeneralOrthoPoly) F(x float64) (res float64) {
@@ -82,7 +82,7 @@ func (o *GeneralOrthoPoly) F(x float64) (res float64) {
 }
 
 // P computes P(n,x) where n must be ≤ N
-//   Since GeneralOrthoPoly is a general form, the summations are directly implement; i.e. no
+//   Since GeneralOrthoPoly is a general form, the summations are directly implemented; i.e. no
 //   advantages are taken w.r.t the structure of the polynomial. Thus, these functions are not
 //   highly efficient for large degrees N
 func (o *GeneralOrthoPoly) P(n int, x float64) (res float64) {

@@ -19,7 +19,7 @@ type Stat struct {
 	Nrejected int     // number of rejected substeps
 	Ndecomp   int     // number of matrix decompositions
 	Nlinsol   int     // number of calls to linsolver
-	Nitmax    int     // number max of iterations
+	Nitmax    int     // max number of iterations
 	Hopt      float64 // optimal step size at the end
 	LsKind    string  // kind of linear solver used
 	Implicit  bool    // method is implicit

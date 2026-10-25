@@ -20,7 +20,7 @@ type Bspline struct {
 
 	// essential
 	T    []float64 // array of knots: e.g: T = [t_0, t_1, ..., t_{m-1}]
-	p    int       // order/degreee (has to call SetOrder to change this)
+	p    int       // order/degree (has to call SetOrder to change this)
 	m    int       // number of knots == len(T)
 	tmin float64   // minimum T
 	tmax float64   // maximum T

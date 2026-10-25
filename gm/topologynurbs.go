@@ -115,7 +115,7 @@ func (o *Nurbs) IndsAlongCurve(iAlong, iSpan0, jAt int) (L []int) {
 	return
 }
 
-// IndsAlongSurface return the control points indices along surface
+// IndsAlongSurface returns the control points indices along surface
 func (o *Nurbs) IndsAlongSurface(iAlong, jAlong, iSpan0, jSpan0, kat int) (L []int) {
 	nbu := o.p[iAlong] + 1 // number of basis functions along i
 	nbv := o.p[jAlong] + 1 // number of basis functions along j

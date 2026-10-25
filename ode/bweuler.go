@@ -168,7 +168,7 @@ func (o *BwEuler) Step(x0 float64, y0 la.Vector) {
 				o.ready = true
 			}
 
-			// perform factorisation
+			// perform factorization
 			o.stat.Ndecomp++
 			o.ls.Fact()
 		}

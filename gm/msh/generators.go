@@ -51,7 +51,7 @@ func GenRing2d(ctype int, ndivR, ndivA int, r, R, alpha float64) (o *Mesh) {
 //   circle -- connect last row (s=ndivS) with the previous one (s=0)
 //
 //   f(i,j,nr,ns) -- is a function that computes the (x,y) coordinates of grid nodes
-//                   were nr=ndivR+1 and nr=ndivS+1
+//                   where nr=ndivR+1 and nr=ndivS+1
 //
 //   example (to generate a rectangle):
 //

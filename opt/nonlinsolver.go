@@ -28,7 +28,7 @@ type nlsMaker func(prob *Problem) NonLinSolver
 var nlsMakersDB = make(map[string]nlsMaker)
 
 // GetNonLinSolver finds a non-linear-solver in database or panic
-//  kind -- e.g. conjgrad, powel, graddesc
+//  kind -- e.g. conjgrad, powell, graddesc
 func GetNonLinSolver(kind string, prob *Problem) NonLinSolver {
 	strKind := strings.ToLower(kind)
 	if maker, ok := nlsMakersDB[strKind]; ok {

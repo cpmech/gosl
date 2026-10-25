@@ -78,7 +78,7 @@ func QuadDiscreteTrapz2d(Lx, Ly float64, f [][]float64) (V float64) {
 	for i := 1; i < m-1; i++ {
 		V += 2.0 * (f[i][0] + f[i][n-1])
 
-		// centre: 4
+		// center: 4
 		for j := 1; j < n-1; j++ {
 			V += 4.0 * f[i][j]
 		}

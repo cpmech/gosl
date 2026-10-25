@@ -7,7 +7,7 @@ numerical differentiation, and solution of simple nonlinear problems.
 
 While the sub-package [num/qpck](https://github.com/cpmech/gosl/tree/master/num/qpck) provides
 advanced quadrature schemes (by wrapping [Quadpack](http://www.netlib.org/quadpack/)), this package
-implements few (simpler) methods to compute numerical integrals. Here, there are two kinds of
+implements a few (simpler) methods to compute numerical integrals. Here, there are two kinds of
 algorithms: (1) basic methods for discrete data; and (2) using refinement for integrating general
 functions.
 
@@ -19,7 +19,7 @@ Find the root of
     y(x) = x³ - 0.165 x² + 3.993e-4
 ```
 
-within [0, 0.11]. See figure below. Note: we have to make sure that the root is bounded otherwise Brent's method doesn't work. 
+within [0, 0.11]. See figure below. Note: we have to make sure that the root is bounded; otherwise, Brent's method does not work.
 
 ![](data/num_brent01.png)
 

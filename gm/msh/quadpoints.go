@@ -12,7 +12,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// QuadPointsGaussLegendre generate quadrature points for Gauss-Legendre integration
+// QuadPointsGaussLegendre generates quadrature points for Gauss-Legendre integration
 //    npts -- is the total number of points; e.g. 27 for 3D (boxes)
 func QuadPointsGaussLegendre(ndim, npts int) (pts [][]float64) {
 	n1d := int(math.Floor(math.Pow(float64(npts), 1.0/float64(ndim)) + 0.5))

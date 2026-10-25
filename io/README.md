@@ -3,7 +3,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/io.svg)](https://pkg.go.dev/github.com/cpmech/gosl/io)
 
 This sub-package helps with reading and writing files, printing nice formatted messages (with
-colours), and parsing strings.
+colors), and parsing strings.
 
 ## Examples
 

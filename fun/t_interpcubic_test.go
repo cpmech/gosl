@@ -24,7 +24,7 @@ func TestInterpCubic01(tst *testing.T) {
 	x2, y2 := 1.0, 286.0
 	x3, y3 := 12.0, 0.0
 
-	// intepolator
+	// interpolator
 	interp := NewInterpCubic()
 	interp.Fit4points(x0, y0, x1, y1, x2, y2, x3, y3)
 
@@ -66,7 +66,7 @@ func TestInterpCubic02(tst *testing.T) {
 	x0, x1, x2, x3 := 22.0, 23.0, 24.0, 25.0
 	y0, y1, y2, y3 := ycor(x0), ycor(x1), ycor(x2), ycor(x3)
 
-	// intepolator
+	// interpolator
 	interp := NewInterpCubic()
 	interp.Fit4points(x0, y0, x1, y1, x2, y2, x3, y3)
 
@@ -106,7 +106,7 @@ func TestInterpCubic03(tst *testing.T) {
 	x0, x1, x2, x3 := -2.0, -1.0, 1.0, 2.0
 	y0, y1, y2, y3 := ycor(x0), ycor(x1), ycor(x2), ycor(x3)
 
-	// intepolator
+	// interpolator
 	interp := NewInterpCubic()
 	interp.Fit4points(x0, y0, x1, y1, x2, y2, x3, y3)
 
@@ -147,7 +147,7 @@ func TestInterpCubic04(tst *testing.T) {
 	x2, y2 := 1.0, 286.0
 	x3, d3 := 8.0, 0.0
 
-	// intepolator
+	// interpolator
 	interp := NewInterpCubic()
 	interp.Fit3pointsD(x0, y0, x1, y1, x2, y2, x3, d3)
 

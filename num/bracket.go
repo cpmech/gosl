@@ -36,7 +36,7 @@ type Bracket struct {
 	// internal
 	ffcn   fun.Ss  // y = f(x) function
 	gold   float64 // golden ratio: default ratio by which successive intervals are magnified
-	glimit float64 // maximum magnification allowed fora parabolic-fit step
+	glimit float64 // maximum magnification allowed for a parabolic-fit step
 	tiny   float64 // small number to prevent division by zero
 }
 
@@ -133,7 +133,7 @@ func (o *Bracket) Min(a0, b0 float64) (a, b, c, fa, fb, fc float64) {
 				exitCase = 2
 				return // exit point
 
-				// got a minimum between between a and u
+				// got a minimum between a and u
 			} else if fu > fb {
 				c = u
 				fc = fu

@@ -27,7 +27,7 @@ type Metrics struct {
 	L           []float64     // [3] L-coefficients = sum(Γ_ij^k ⋅ g^ij) (non-homogeneous)
 }
 
-// NewMetrics2d allocate new 2D metrics structure
+// NewMetrics2d allocates new 2D metrics structure
 //  NOTE: the second order derivatives (from ddxdrr) may be nil => homogeneous grid
 func NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs la.Vector) (o *Metrics) {
 
@@ -84,7 +84,7 @@ func NewMetrics2d(u, x, dxdr, dxds, ddxdrr, ddxdss, ddxdrs la.Vector) (o *Metric
 	return
 }
 
-// NewMetrics3d allocate new 3D metrics structure
+// NewMetrics3d allocates new 3D metrics structure
 //  NOTE: the second order derivatives (from ddxdrr) may be nil => homogeneous grid
 func NewMetrics3d(u, x, dxdr, dxds, dxdt, ddxdrr, ddxdss, ddxdtt, ddxdrs, ddxdrt, ddxdst la.Vector) (o *Metrics) {
 

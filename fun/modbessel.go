@@ -141,7 +141,7 @@ func ModBesselKn(n int, x float64) float64 {
 	return bk
 }
 
-// mbpoly evaluate a polynomial for the modified Bessel functions
+// mbpoly evaluates a polynomial for the modified Bessel functions
 func mbpoly(cof []float64, n int, x float64) (ans float64) {
 	ans = cof[n]
 	for i := n - 1; i >= 0; i-- {

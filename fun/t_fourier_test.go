@@ -48,7 +48,7 @@ func fouCheckI(tst *testing.T, fou *FourierInterp, f Ss) {
 	}
 }
 
-// check derivatives @ notes
+// check derivatives @ nodes
 func fouCheckD1andD2(tst *testing.T, fou *FourierInterp, f Ss) {
 
 	// check first derivative of interpolation

@@ -189,7 +189,7 @@ func NewLagrangeInterp(N int, gridType string) (o *LagrangeInterp) {
 }
 
 // Om computes the generating (nodal) polynomial associated with grid X. The nodal polynomial is
-// the unique polynomial of degree N+1 and leading coefficient whose zeros are the N+1 nodes of X.
+// the unique polynomial of degree N+1 and leading coefficient 1 whose zeros are the N+1 nodes of X.
 //
 //	         N
 //	 X      ━━━━

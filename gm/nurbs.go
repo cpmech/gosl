@@ -500,7 +500,7 @@ func (o *Nurbs) PointAndFirstDerivs(dCdu *la.Matrix, C, u []float64, ndim int) {
 //    u    -- knot values {r,s,t} [gnd]
 //    ndim -- the dimension of the point. E.g. allows drawing curves in 3D [ndim=3 if gnd=3]
 //  Output:
-//    x      -- position {x,y,z} (the same as the C varible in [1])
+//    x      -- position {x,y,z} (the same as the C variable in [1])
 //    dxdr   -- ∂{x}/∂r
 //    dxds   -- ∂{x}/∂s    [may be nil] (solid and surfaces)
 //    dxdt   -- ∂{x}/∂t    [may be nil] (solid)
@@ -667,7 +667,7 @@ func (o *Nurbs) U(dir, idx int) float64 {
 }
 
 // Udelta returns the difference between max knot value and min knot value.
-// Returns umax - umin along direnction "dir"
+// Returns umax - umin along direction "dir"
 func (o *Nurbs) Udelta(dir int) (Δu float64) {
 	return o.b[dir].tmax - o.b[dir].tmin
 }
@@ -840,7 +840,7 @@ func (o *Nurbs) GetLimitsQ() (xmin, xmax []float64) {
 
 // manipulation methods //////////////////////////////////////////////////////////////////////////////
 
-// KrefineN return a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
+// KrefineN returns a new Nurbs with each span divided into ndiv parts = [2, 3, ...]
 func (o *Nurbs) KrefineN(ndiv int, hughesEtAlPaper bool) *Nurbs {
 	X := make([][]float64, o.gnd)
 	xa := make([]float64, 3)

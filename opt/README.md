@@ -158,7 +158,7 @@ Linear problems can be solved with the `LinIpm` structure. First, the problem de
 initialized with the `Init` command and by giving the matrix of constraint coefficients (A), the
 right-hand side vector (b) of the constraints, and the vector defining the minimization problem (c).
 
-The matrix `A` is given as compressed-column sparse for efficiency purposes.
+The matrix `A` is given as a compressed-column sparse matrix for efficiency.
 
 ### Example 1
 

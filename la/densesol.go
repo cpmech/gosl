@@ -56,7 +56,7 @@ func Cholesky(L, a *Matrix) {
 //   NOTE: this function uses Cholesky decomposition and should be used for small systems
 func SolveRealLinSysSPD(x Vector, a *Matrix, b Vector) {
 
-	// Cholesky factorisation
+	// Cholesky factorization
 	L := NewMatrix(a.M, a.M)
 	Cholesky(L, a)
 
@@ -86,7 +86,7 @@ func SolveRealLinSysSPD(x Vector, a *Matrix, b Vector) {
 //   NOTE: this function uses Cholesky decomposition and should be used for small systems
 func SolveTwoRealLinSysSPD(x, X Vector, a *Matrix, b, B Vector) {
 
-	// Cholesky factorisation
+	// Cholesky factorization
 	L := NewMatrix(a.M, a.M)
 	Cholesky(L, a)
 

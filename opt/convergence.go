@@ -35,7 +35,7 @@ type Convergence struct {
 	uhist la.Vector // direction of descents to be saved in History
 }
 
-// InitConvergence initialize convergence parameters
+// InitConvergence initializes convergence parameters
 func (o *Convergence) InitConvergence(Ffcn fun.Sv, Gfcn fun.Vv) {
 	o.Ffcn = func(x la.Vector) float64 {
 		o.NumFeval++

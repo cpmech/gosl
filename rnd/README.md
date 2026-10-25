@@ -2,7 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/rnd.svg)](https://pkg.go.dev/github.com/cpmech/gosl/rnd)
 
-The `rnd` package assists on computations involving stochastic processes. The package has many
+The `rnd` package assists with computations involving stochastic processes. The package has many
 functions to generate pseudo-random numbers, probability distributions, and sampling techniques such
 as the Latin hypercube algorithm.
 
@@ -14,7 +14,7 @@ Mutsuo Saito and Makoto Matsumoto.
 
 Some useful functions are:
 
-1. `Init` initialize the system with a seed
+1. `Init` initializes the system with a seed
 2. `Int`, `Ints`, `Float64`, `Float64s` to generate integers and floats
 3. Shuffle and GetUnique functions to shuffle slices and filter slices with unique values,
    respectively.

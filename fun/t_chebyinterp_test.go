@@ -163,7 +163,7 @@ func checkIandIs(tst *testing.T, N int, f Ss, tol float64, verb bool) {
 		io.Pl()
 	}
 
-	// check ℓ @ notes
+	// check ℓ @ nodes
 	for k, x := range o.X {
 		for l := 0; l < o.N+1; l++ {
 			res := o.L(l, x)

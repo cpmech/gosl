@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-// Recover catches panics and call os.Exit(1) on 'panic'
+// Recover catches panics and calls os.Exit(1) on 'panic'
 func Recover() {
 	if err := recover(); err != nil {
 		fmt.Printf("ERROR: %v\n", err)

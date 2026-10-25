@@ -73,7 +73,7 @@ func Keycodes(String string) (keycodes []string) {
 }
 
 // JoinKeys3 joins keys from 3 slices into a string with sets separated by sep
-// and keys separeted by spaces
+// and keys separated by spaces
 func JoinKeys3(k0, k1, k2 []string, sep string) (res string) {
 	res = strings.Join(k0, " ") + sep
 	if len(k1) > 0 {
@@ -108,7 +108,7 @@ func SplitKeys3(res string) (k0, k1, k2 []string) {
 }
 
 // JoinKeys4 joins keys from 4 slices into a string with sets separated by sep
-// and keys separeted by spaces
+// and keys separated by spaces
 func JoinKeys4(k0, k1, k2, k3 []string, sep string) (res string) {
 	res = strings.Join(k0, " ") + sep
 	if len(k1) > 0 {
@@ -150,12 +150,12 @@ func SplitKeys4(res string) (k0, k1, k2, k3 []string) {
 	return
 }
 
-// JoinKeys join keys separeted by spaces
+// JoinKeys joins keys separated by spaces
 func JoinKeys(keys []string) string {
 	return strings.Join(keys, " ")
 }
 
-// JoinKeysPre join keys separeted by spaces with a prefix
+// JoinKeysPre joins keys separated by spaces with a prefix
 func JoinKeysPre(prefix string, keys []string) (res string) {
 	for i, val := range keys {
 		res += prefix + val
@@ -166,7 +166,7 @@ func JoinKeysPre(prefix string, keys []string) (res string) {
 	return
 }
 
-// SplitKeys splits keys separeted by spaces
+// SplitKeys splits keys separated by spaces
 func SplitKeys(keys string) []string {
 	return strings.Split(keys, " ")
 }

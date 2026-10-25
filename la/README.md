@@ -25,7 +25,7 @@ The `Triplet` is more convenient for data input; e.g. during the assemblage step
 code. The `CCMatrix` is better (faster) for computations and is the structure used by Umfpack.
 
 Triplets are initialized by giving the size of the corresponding matrix and the number of non-zero
-entries (components). Thus, only space for the non-zero entries is allocated. Afterwards, each
+entries (components). Thus, only space for the non-zero entries is allocated. Afterward, each
 component can be set by calling the `Put` method after calling the `Start` method. The `Start`
 method can be called several times. Therefore, this structure helps with the efficient
 implementation of codes requiring multiple solutions of linear systems as in finite element
@@ -35,7 +35,7 @@ To convert the Triplet into a Column-Compressed Matrix, call the `ToMatrix` meth
 to convert the sparse matrix to a dense version (e.g. for reporting/printing), call the `ToDense`
 method of `CCMatrix`.
 
-The `Triplet` has also a very convenient method to copy the contents of another Triplet (i.e. sparse
+The `Triplet` also has a very convenient method to copy the contents of another Triplet (i.e. sparse
 matrix) into the positions starting with the maximum number of columns of this second matrix and the
 positions starting with the maximum number of rows of this second matrix. This is done with the
 method `PutMatAndMatT`. This operation is particularly common when solving mechanical problems with

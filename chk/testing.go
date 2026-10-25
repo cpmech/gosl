@@ -71,7 +71,7 @@ func Int64(tst *testing.T, msg string, a, b int64) {
 	PrintOk("%s: %d == %d", msg, a, b)
 }
 
-// Ints compares two slices of integer. The b slice may be nil indicating that all values are zero
+// Ints compares two slices of integers. The b slice may be nil indicating that all values are zero
 func Ints(tst *testing.T, msg string, a, b []int) {
 	if len(a) != len(b) {
 		TstFail(tst, "%s len(a)=%d != len(b)=%d", msg, len(a), len(b))
@@ -155,7 +155,7 @@ func Strings(tst *testing.T, msg string, a, b []string) {
 	PrintOk(msg)
 }
 
-// Array compares two array. The b slice may be nil indicating that all values are zero
+// Array compares two arrays. The b slice may be nil indicating that all values are zero
 func Array(tst *testing.T, msg string, tol float64, a, b []float64) {
 	zero := false
 	if len(b) == 0 {
@@ -178,7 +178,7 @@ func Array(tst *testing.T, msg string, tol float64, a, b []float64) {
 	PrintOk(msg)
 }
 
-// ArrayC compares two slices of complex nummber. The b slice may be nil indicating that all values are zero
+// ArrayC compares two slices of complex numbers. The b slice may be nil indicating that all values are zero
 func ArrayC(tst *testing.T, msg string, tol float64, a, b []complex128) {
 	zero := false
 	if len(b) == 0 {
@@ -201,7 +201,7 @@ func ArrayC(tst *testing.T, msg string, tol float64, a, b []complex128) {
 	PrintOk(msg)
 }
 
-// Deep2 compares two nested (depth=2) slice. The b slice may be nil indicating that all values are zero
+// Deep2 compares two nested (depth=2) slices. The b slice may be nil indicating that all values are zero
 func Deep2(tst *testing.T, msg string, tol float64, a, b [][]float64) {
 	zero := false
 	if len(b) == 0 {
