@@ -193,10 +193,10 @@ func (o *Params) SetBool(name string, value float64) {
 func (o *Params) CheckLimits() {
 	for _, p := range *o {
 		if p.V < p.Min {
-			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not aceptable", p.N, p.V, p.Min)
+			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not acceptable", p.N, p.V, p.Min)
 		}
 		if p.V > p.Max {
-			chk.Panic("parameter %q has value greater than maximum. %v > %v is not aceptable", p.N, p.V, p.Max)
+			chk.Panic("parameter %q has value greater than maximum. %v > %v is not acceptable", p.N, p.V, p.Max)
 		}
 	}
 }
@@ -228,10 +228,10 @@ func (o *Params) CheckAndGetValues(names []string) (values []float64) {
 			chk.Panic("cannot find parameter named %q", name)
 		}
 		if prm.V < prm.Min {
-			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not aceptable", name, prm.V, prm.Min)
+			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not acceptable", name, prm.V, prm.Min)
 		}
 		if prm.V > prm.Max {
-			chk.Panic("parameter %q has value greater than maximum. %v > %v is not aceptable", name, prm.V, prm.Max)
+			chk.Panic("parameter %q has value greater than maximum. %v > %v is not acceptable", name, prm.V, prm.Max)
 		}
 		values[i] = prm.V
 	}
@@ -252,10 +252,10 @@ func (o *Params) CheckAndSetVariables(names []string, variables []*float64) {
 			chk.Panic("cannot find parameter named %q", name)
 		}
 		if prm.V < prm.Min {
-			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not aceptable", name, prm.V, prm.Min)
+			chk.Panic("parameter %q has value smaller than minimum. %v < %v is not acceptable", name, prm.V, prm.Min)
 		}
 		if prm.V > prm.Max {
-			chk.Panic("parameter %q has value greater than maximum. %v > %v is not aceptable", name, prm.V, prm.Max)
+			chk.Panic("parameter %q has value greater than maximum. %v > %v is not acceptable", name, prm.V, prm.Max)
 		}
 		if variables[i] == nil {
 			chk.Panic("array of variables must not have nil entries")
