@@ -47,7 +47,7 @@ type Radau5 struct {
 	z    [][]float64 // [nstg][ndim] normalized arrays
 	w    [][]float64 // [nstg][ndim] workspace
 	dw   [][]float64 // [nstg][ndim] workspace (incremental)
-	ycol [][]float64 // [nstg][ndim] colocation values
+	ycol [][]float64 // [nstg][ndim] collocation values
 	v12  la.VectorC  // packed (v[1],v[2])
 	dw12 la.VectorC  // packed (dw[1],dw[2])
 
@@ -266,7 +266,7 @@ func (o *Radau5) Step(x0 float64, y0 la.Vector) {
 			o.stat.updateNanosecondsIniSol(startTimeIniSol)
 		}
 
-		// perform factorisation
+		// perform factorization
 		startTimeFactorization := time.Now()
 		if o.conf.GoChan {
 			wg := new(sync.WaitGroup)

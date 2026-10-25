@@ -143,14 +143,14 @@ func centralDeriv5(x float64, h float64, f fun.Ss) (res, absErrRound, absErrTrun
 
 	// The truncation error in the r5 approximation itself is O(h^4).
 	// However, for safety, we estimate the error from r5-r3, which is O(h^2).
-	// By scaling h we will minimise this estimated error, not the actual truncation error in r5.
+	// By scaling h we will minimize this estimated error, not the actual truncation error in r5.
 	res = r5 / h
 	absErrTrunc = math.Abs((r5 - r3) / h) // Estimated truncation error O(h^2)
 	absErrRound = math.Abs(e5/h) + dy     // Rounding error (cancellations)
 	return
 }
 
-// forwardDeriv4 compute the derivative using the 4-point rule (x+h/4, x+h/2, x+3h/4, x+h).
+// forwardDeriv4 computes the derivative using the 4-point rule (x+h/4, x+h/2, x+3h/4, x+h).
 func forwardDeriv4(x, h float64, f fun.Ss) (res, absErrRound, absErrTrunc float64) {
 
 	// constants
@@ -173,7 +173,7 @@ func forwardDeriv4(x, h float64, f fun.Ss) (res, absErrRound, absErrTrunc float6
 
 	// The truncation error in the r4 approximation itself is O(h^3).
 	// However, for safety, we estimate the error from r4-r2, which is O(h).
-	// By scaling h we will minimise this estimated error, not the actual truncation error in r4.
+	// By scaling h we will minimize this estimated error, not the actual truncation error in r4.
 	res = r4 / h
 	absErrTrunc = math.Abs((r4 - r2) / h) // Estimated truncation error O(h)
 	absErrRound = math.Abs(e4/h) + dy

@@ -152,7 +152,7 @@ func StatBasic(x []float64, std bool) (xmin, xave, xmax, xdev float64) {
 //   sum  -- sum of values
 //   mean -- mean average (first moment)
 //   adev -- average deviation
-//   sdev -- standrad deviation
+//   sdev -- standard deviation
 //   vari -- variance (second moment)
 //   skew -- skewness (third moment)
 //   kurt -- kurtosis (fourth moment)
@@ -200,7 +200,7 @@ func StatMoments(x []float64) (sum, mean, adev, sdev, vari, skew, kurt float64) 
 	return
 }
 
-// StatTable computes the min, ave, max, and dev of values organised in a table
+// StatTable computes the min, ave, max, and dev of values organized in a table
 //  Input:
 //   x     -- sample
 //   std   -- compute standard deviation (σ) instead of average deviation (adev)

@@ -94,7 +94,7 @@ func Itob(val int) bool {
 	return true
 }
 
-// Btoi converts flag to interger
+// Btoi converts flag to integer
 //  Note: true  => 1
 //        false => 0
 func Btoi(flag bool) int {
@@ -302,7 +302,7 @@ func Pfpurple(msg string, prm ...interface{}) {
 	}
 }
 
-// Pfgrey prints formatted string in grey
+// Pfgrey prints formatted string in gray
 func Pfgrey(msg string, prm ...interface{}) {
 	if !Verbose {
 		return
@@ -326,7 +326,7 @@ func Pfblue2(msg string, prm ...interface{}) {
 	}
 }
 
-// Pfgrey2 prints formatted string in another shade of grey
+// Pfgrey2 prints formatted string in another shade of gray
 func Pfgrey2(msg string, prm ...interface{}) {
 	if !Verbose {
 		return

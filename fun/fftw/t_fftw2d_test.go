@@ -157,7 +157,7 @@ func TestTwoDver02(tst *testing.T) {
 
 // solution ////////////////////////////////////////////////////////////////////////////////////////
 
-// dft2d compute the discrete Fourier Transform of x (very slow: for testing only)
+// dft2d computes the discrete Fourier Transform of x (very slow: for testing only)
 func dft2d(x [][]complex128) (X [][]complex128) {
 	N0 := len(x)
 	N1 := len(x[0])

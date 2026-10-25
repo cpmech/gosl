@@ -21,7 +21,7 @@ type SparseConfig struct {
 
 	// internal
 	symmetric bool // indicates symmetric system. NOTE: when using MUMPS, only the upper or lower part of the matrix must be provided
-	symPosDef bool // indicates symmetric-positive-defined system. NOTE: when using MUMPS, only the upper or lower part of the matrix must be provided
+	symPosDef bool // indicates symmetric-positive-definite system. NOTE: when using MUMPS, only the upper or lower part of the matrix must be provided
 }
 
 // NewSparseConfig returns a new SparseConfig
@@ -98,7 +98,7 @@ func (o *SparseConfig) SetMumpsOrdering(ordering string) {
 //      numerical factorization phase.
 //   8: "rrcit" Similar to 7 but more rigorous and expensive to compute; computed during the numerical
 //      factorization phase.
-//   77: "auto" Automatic choice of the value of ICNTL(8) done during analy
+//   77: "auto" Automatic choice of the value of ICNTL(8) done during analysis
 func (o *SparseConfig) SetMumpsScaling(scaling string) {
 	switch scaling {
 	case "no":

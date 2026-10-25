@@ -55,7 +55,7 @@ func NewBrent(ffcn, Jfcn fun.Ss) (o *Brent) {
 //	 G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
 //	 computations. M., Mir, 1980, p.180 of the Russian edition
 //
-//	 The function makes use of the bissection procedure combined with
+//	 The function makes use of the bisection procedure combined with
 //	 the linear or quadric inverse interpolation.
 //	 At every step program operates on three abscissae - a, b, and c.
 //	 b - the last and the best approximation to the root
@@ -65,12 +65,12 @@ func NewBrent(ffcn, Jfcn fun.Ss) (o *Brent) {
 //	     2) f(b) and f(c) have opposite signs, i.e. b and c confine
 //	        the root
 //	 At every step Zeroin selects one of the two new approximations, the
-//	 former being obtained by the bissection procedure and the latter
+//	 former being obtained by the bisection procedure and the latter
 //	 resulting in the interpolation (if a,b, and c are all different
 //	 the quadric interpolation is utilized, otherwise the linear one).
 //	 If the latter (i.e. obtained by the interpolation) point is
 //	 reasonable (i.e. lies within the current interval [b,c] not being
-//	 too close to the boundaries) it is accepted. The bissection result
+//	 too close to the boundaries) it is accepted. The bisection result
 //	 is used in the other case. Therefore, the range of uncertainty is
 //	 ensured to be reduced at least by the factor 1.6
 func (o *Brent) Root(xa, xb float64) (res float64) {
@@ -156,7 +156,7 @@ func (o *Brent) Root(xa, xb float64) (res float64) {
 			}
 
 			// if b+p/q falls in [b,c] and isn't too large, it is accepted
-			// if p/q is too large then the bissection procedure can reduce [b,c] range to more extent
+			// if p/q is too large then the bisection procedure can reduce [b,c] range to more extent
 			if p < (0.75*cb*q-math.Abs(tolAct*q)/2.0) && p < math.Abs(prevStep*q/2.0) {
 				newStep = p / q
 			}
@@ -342,7 +342,7 @@ func (o *Brent) Min(xa, xb float64) (xAtMin float64) {
 
 // MinUseD finds minimum and uses information about derivatives
 //
-//	Given a function and deriva funcd that computes a function and also its derivative function df, and
+//	Given a function funcd that computes a function and also its derivative function df, and
 //	given a bracketing triplet of abscissas ax, bx, cx [such that bx is between ax and cx, and
 //	f(bx) is less than both f(ax) and f(cx)], this routine isolates the minimum to a fractional
 //	precision of about tol using a modification of Brent’s method that uses derivatives. The

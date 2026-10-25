@@ -2,7 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl/ode.svg)](https://pkg.go.dev/github.com/cpmech/gosl/ode)
 
-Package `ode` implements solution techniques to ordinary differential equations, such as the
+Package `ode` implements solution techniques for ordinary differential equations, such as the
 Runge-Kutta method. Methods that can handle stiff problems are also available.
 
 ## Examples
@@ -27,11 +27,11 @@ Solution of Robertson's equation:
 
 ## References
 
-[1] Hairer E, Norset SP, Wanner G. Solving O. Solving Ordinary Differential Equations I. Nonstiff
+[1] Hairer E, Norsett SP, Wanner G. Solving Ordinary Differential Equations I. Nonstiff
 Problems, Springer. 1987
 
 [2] Hairer E, Wanner G. Solving Ordinary Differential Equations II. Stiff and Differential-Algebraic
-Problems, Second Revision Edition. Springer. 1996
+Problems, Second Revised Edition. Springer. 1996
 
 ## API
 

@@ -11,10 +11,10 @@ var (
 	// AssertOn activates or deactivates asserts
 	AssertOn = true
 
-	// Verbose turn on verbose mode
+	// Verbose turns on verbose mode
 	Verbose = false
 
-	// ColorsOn turn on use of colours on console
+	// ColorsOn turns on the use of colors on the console
 	ColorsOn = true
 )
 

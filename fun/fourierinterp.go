@@ -188,7 +188,7 @@ func (o *FourierInterp) CalcA() {
 // CalcAwithAliasRemoval calculates the coefficients A by using the 3/2-rule to remove alias error
 // via the padding method
 //
-//  NOTE: with the 3/2-rule, the intepolatory property is not exact; i.e. I(xi)≈f(xi) only
+//  NOTE: with the 3/2-rule, the interpolatory property is not exact; i.e. I(xi)≈f(xi) only
 //
 func (o *FourierInterp) CalcAwithAliasRemoval(f Ss) {
 

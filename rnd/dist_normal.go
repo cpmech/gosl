@@ -49,7 +49,7 @@ func init() {
 // Name returns the name of this probability distribution
 func (o *DistNormal) Name() string { return "Normal" }
 
-// CalcDerived compute derived/auxiliary quantities
+// CalcDerived computes derived/auxiliary quantities
 func (o *DistNormal) CalcDerived() {
 	o.a = 1.0 / (o.Sig * math.Sqrt2 * math.SqrtPi)
 	o.b = -1.0 / (2.0 * o.Sig * o.Sig)

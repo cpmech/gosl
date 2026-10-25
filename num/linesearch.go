@@ -63,7 +63,7 @@ func LineSearch(x, fx []float64, ffcn fun.Vv, dx, x0, dφdx0 []float64, φ0 floa
 	nrmDxMax := mulDxMax * utl.Max(nrmX0, float64(n))
 	if nrmDx > nrmDxMax {
 		for i := 0; i < n; i++ {
-			dx[i] *= nrmDxMax / nrmDx // scale if attempted step is to big
+			dx[i] *= nrmDxMax / nrmDx // scale if attempted step is too big
 		}
 	}
 

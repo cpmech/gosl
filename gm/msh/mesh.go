@@ -37,7 +37,7 @@ func (o VertexSet) Len() int { return len(o) }
 // Swap swaps two entries in vertex set
 func (o VertexSet) Swap(i, j int) { o[i], o[j] = o[j], o[i] }
 
-// Less compares ides in vertex set
+// Less compares IDs in vertex set
 func (o VertexSet) Less(i, j int) bool { return o[i].ID < o[j].ID }
 
 // IDs returns the IDs of vertices in VertexSet
@@ -98,7 +98,7 @@ type BoundaryData struct {
 // BoundaryDataSet defines a set of BoundaryData
 type BoundaryDataSet []*BoundaryData
 
-// TagMaps holds data for finding information using on tags
+// TagMaps holds data for finding information using tags
 type TagMaps struct {
 	VertexTag2verts map[int]VertexSet       // vertex tag => set of vertices
 	CellTag2cells   map[int]CellSet         // cell tag => set of cells
@@ -107,7 +107,7 @@ type TagMaps struct {
 	EdgeTag2cells   map[int]BoundaryDataSet // edge tag => set of cells {cell,boundaryId}
 	EdgeTag2verts   map[int]VertexSet       // edge tag => vertices on tagged edge [unique]
 	FaceTag2cells   map[int]BoundaryDataSet // face tag => set of cells {cell,boundaryId}
-	FaceTag2verts   map[int]VertexSet       // face tag => vertices on tagged edge [unique]
+	FaceTag2verts   map[int]VertexSet       // face tag => vertices on tagged face [unique]
 }
 
 // NewMesh creates mesh from json string

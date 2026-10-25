@@ -17,7 +17,7 @@ import "github.com/cpmech/gosl/la"
 //   dx        -- stepsize. [may be used for dense output]
 //   atol      -- absolute tolerance; use 0 for default [default = 1e-4] (for fixedStp=false)
 //   rtol      -- relative tolerance; use 0 for default [default = 1e-4] (for fixedStp=false)
-//   numJac    -- use numerical Jacobian if if jac is non nil
+//   numJac    -- use numerical Jacobian if jac is non nil
 //   fixedStep -- fixed steps
 //   saveStep  -- save steps
 //   saveDense -- save many steps (dense output) [using dx]

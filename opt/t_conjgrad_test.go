@@ -78,7 +78,7 @@ func TestConjGrad02(tst *testing.T) {
 func TestConjGrad03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("ConjGard03. quadratic optimization in 3D")
+	chk.PrintTitle("ConjGrad03. quadratic optimization in 3D")
 
 	// problem
 	p := Factory.SimpleQuadratic3d()

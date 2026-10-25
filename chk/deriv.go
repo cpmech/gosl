@@ -191,7 +191,7 @@ func CentralDeriv(f func(x float64) float64, x float64, h float64) (res, absErrR
 
 	// The truncation error in the r5 approximation itself is O(h^4).
 	// However, for safety, we estimate the error from r5-r3, which is O(h^2).
-	// By scaling h we will minimise this estimated error, not the actual truncation error in r5.
+	// By scaling h we will minimize this estimated error, not the actual truncation error in r5.
 	res = r5 / h
 	absErrTrunc = math.Abs((r5 - r3) / h) // Estimated truncation error O(h^2)
 	absErrRound = math.Abs(e5/h) + dy     // Rounding error (cancellations)

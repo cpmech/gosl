@@ -15,7 +15,7 @@ import (
 func TestDoPri802(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("DoPri802. Dormand-Prince8(5,3). Van de Pol")
+	chk.PrintTitle("DoPri802. Dormand-Prince8(5,3). Van der Pol")
 
 	// problem
 	p := ProbVanDerPol(1e-3, false)
@@ -72,7 +72,7 @@ func TestDoPri802(tst *testing.T) {
 	chk.Int(tst, "number of accepted steps", sol.Stat.Naccepted, 130)
 	chk.Int(tst, "number of rejected steps", sol.Stat.Nrejected, 33)
 
-	// check results: setps
+	// check results: steps
 	_, d := io.ReadTable("data/dr_dop853.txt")
 	chk.Array(tst, "h", 1e-6, sol.Out.GetStepH(), d["h"])
 	chk.Array(tst, "x", 1e-6, sol.Out.GetStepX(), d["x"])

@@ -54,7 +54,7 @@ type Input struct {
 
 // Generate generates unstructured mesh of triangles
 //  globalMaxArea  -- imposes a maximum triangle area constraint; fixed area constraint that applies to every triangle
-//  globalMinAngle -- quality mesh generation with no angles smaller than specified value in degrees
+//  globalMinAngle -- quality mesh generation with no angles smaller than the specified value in degrees
 //                    globalMinAngle must be in [0, 60]
 //  o2             -- generates quadratic triangles
 //  verbose        -- shows Triangle messages

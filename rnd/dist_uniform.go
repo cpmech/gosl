@@ -11,7 +11,7 @@ func Uniform(min, max float64) float64 {
 	return min + rand.Float64()*(max-min)
 }
 
-// DistUniform implements the normal distribution
+// DistUniform implements the uniform distribution
 type DistUniform struct {
 
 	// input

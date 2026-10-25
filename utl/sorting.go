@@ -24,7 +24,7 @@ func IntSort3(a, b, c *int) {
 	}
 }
 
-// IntSort4 sort four values in ascending order
+// IntSort4 sorts four values in ascending order
 func IntSort4(a, b, c, d *int) {
 	if *b < *a {
 		*b, *a = *a, *b
@@ -72,7 +72,7 @@ func Sort3Desc(a, b, c *float64) {
 	}
 }
 
-// Sort4 sort four values in ascending order
+// Sort4 sorts four values in ascending order
 func Sort4(a, b, c, d *float64) {
 	if *b < *a {
 		*b, *a = *a, *b
@@ -123,7 +123,7 @@ type Quadruple struct {
 // Quadruples helps to sort quadruples
 type Quadruples []*Quadruple
 
-// BuildQuadruples initialize Quadruples with i, x, y, and z
+// BuildQuadruples initializes Quadruples with i, x, y, and z
 //
 //	Note: i, x, y, or z can be nil; but at least one of them must be non nil
 func BuildQuadruples(i []int, x, y, z []float64) (q Quadruples) {
@@ -368,7 +368,7 @@ func swap(a, b *float64) { *a, *b = *b, *a }
 // iswap swaps two int numbers
 func iswap(a, b *int) { *a, *b = *b, *a }
 
-// Qsort sort an array arr[0..n-1] into ascending numerical order using the Quicksort algorithm.
+// Qsort sorts an array arr[0..n-1] into ascending numerical order using the Quicksort algorithm.
 // arr is replaced on output by its sorted rearrangement. Normally, the optional argument m should
 // be omitted, but if it is set to a positive value, then only the first m elements of arr are
 // sorted. Implementation from [1]
@@ -463,7 +463,7 @@ func Qsort(arr []float64) {
 }
 
 // Qsort2 sorts an array arr[0..n-1] into ascending order using Quicksort, while making the
-// corresponding rearrangment of the array brr[0..n-1]. Implementation from [1]
+// corresponding rearrangement of the array brr[0..n-1]. Implementation from [1]
 //
 //	Reference:
 //	[1] Press WH, Teukolsky SA, Vetterling WT, Flannery BP (2007) Numerical Recipes: The Art of

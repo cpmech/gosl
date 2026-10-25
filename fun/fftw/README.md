@@ -2,7 +2,7 @@
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/cpmech/gosl/fun/fftw)](https://pkg.go.dev/github.com/cpmech/gosl/fun/fftw)
 
-This package wraps the [Fast Fourier Transform library (FFTW)](http://www.fftw.org)
+This package wraps the [Fast Fourier Transform library (FFTW)](http://www.fftw.org).
 
 ## API
 

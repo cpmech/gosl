@@ -11,7 +11,7 @@ import (
 	"github.com/cpmech/gosl/chk"
 )
 
-// TestSolverResidual check the residual of a linear system solution
+// TestSolverResidual checks the residual of a linear system solution
 func TestSolverResidual(tst *testing.T, a *Matrix, x, b Vector, tolNorm float64) {
 	r := NewVector(len(x))
 	r.Apply(-1, b)           // r := -b
@@ -23,7 +23,7 @@ func TestSolverResidual(tst *testing.T, a *Matrix, x, b Vector, tolNorm float64)
 	}
 }
 
-// TestSolverResidualC check the residual of a linear system solution (complex version)
+// TestSolverResidualC checks the residual of a linear system solution (complex version)
 func TestSolverResidualC(tst *testing.T, a *MatrixC, x, b VectorC, tolNorm float64) {
 	r := NewVectorC(len(x))
 	r.Apply(-1, b)            // r = -b

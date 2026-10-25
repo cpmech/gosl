@@ -257,7 +257,7 @@ func plotParetoTest(buf *bytes.Buffer, fnkey string, Φ, Zu []float64, show, neg
 		io.Ff(buf, "plt.show()\n")
 	} else {
 		io.Ff(buf, "plt.savefig('/tmp/gosl/%s.eps')\n", fnkey)
-		io.Ff(buf, "print 'file </tmp/gosl/%s.eps> witten'\n", fnkey)
+		io.Ff(buf, "print 'file </tmp/gosl/%s.eps> written'\n", fnkey)
 	}
 	io.WriteFileVD("/tmp/gosl", io.Sf("%s.py", fnkey), buf)
 }
@@ -299,7 +299,7 @@ func Test_pareto04(tst *testing.T) {
 		io.Ff(&buf, "plt.plot(Xp,Yp,'ko',markerfacecolor='none',ms=7,clip_on=0)\n")
 		io.Ff(&buf, "Gll('x','y','')\n")
 		io.Ff(&buf, "Save('/tmp/gosl/test_pareto04.eps')\n")
-		io.Ff(&buf, "print 'file </tmp/gosl/test_pareto04.eps> witten'\n")
+		io.Ff(&buf, "print 'file </tmp/gosl/test_pareto04.eps> written'\n")
 		io.WriteFileVD("/tmp/gosl", "test_pareto04.py", &buf)
 	}
 }

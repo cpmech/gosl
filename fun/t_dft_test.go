@@ -100,7 +100,7 @@ func TestDft03(tst *testing.T) {
 	U := make([]complex128, N)
 	Ucopy := make([]complex128, N)
 
-	// run with 3 places for performing normalisation
+	// run with 3 places for performing normalization
 	for place := 1; place <= 3; place++ {
 
 		// message

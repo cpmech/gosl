@@ -51,7 +51,7 @@ type Config struct {
 	denseF    DenseOutF // function to process dense output [may be nil]
 	denseDx   float64   // step size for dense output
 	stepOut   bool      // perform output of (variable) steps
-	denseOut  bool      // perform dense output is active
+	denseOut  bool      // perform dense output if active
 	denseNstp int       // number of dense steps
 
 	// internal data
@@ -142,7 +142,7 @@ func NewConfig(method string, lsKind string) (o *Config) {
 	return
 }
 
-// SetTols sets tolerances according to Hairer and Wanner' suggestions
+// SetTols sets tolerances according to Hairer and Wanner's suggestions
 //   atol   -- absolute tolerance; use 0 for default [default = 1e-4]
 //   rtol   -- relative tolerance; use 0 for default [default = 1e-4]
 func (o *Config) SetTols(atol, rtol float64) {
@@ -185,7 +185,7 @@ func (o *Config) SetFixedH(dxApprox, xf float64) {
 
 // SetStepOut activates output of (variable) steps
 //  save -- save all values
-//  out  -- function to be during step output [may be nil]
+//  out  -- function to be called during step output [may be nil]
 func (o *Config) SetStepOut(save bool, out StepOutF) {
 	o.stepOut = save
 	o.stepF = out
@@ -193,7 +193,7 @@ func (o *Config) SetStepOut(save bool, out StepOutF) {
 
 // SetDenseOut activates dense output
 //  save -- save all values
-//  out  -- function to be during dense output [may be nil]
+//  out  -- function to be called during dense output [may be nil]
 func (o *Config) SetDenseOut(save bool, dxOut, xf float64, out DenseOutF) {
 	if dxOut > 0 {
 		o.denseOut = save

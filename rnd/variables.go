@@ -7,7 +7,7 @@ package rnd
 import "github.com/cpmech/gosl/utl"
 
 // Variable holds all data defining a single random variable including information about a
-// probability distribution that bests represents this variable
+// probability distribution that best represents this variable
 //
 //   Some distributions:
 //      "N" : Normal
@@ -33,7 +33,7 @@ type Variable struct {
 	Max float64 // [optional] max value
 
 	// optional
-	Key string // [optional] auxiliary indentifier
+	Key string // [optional] auxiliary identifier
 	Prm *utl.P // [optional] parameter connected to this random variable
 
 	// derived
@@ -51,7 +51,7 @@ func (o *Variable) SetDistribution(dtype string) {
 	o.Distr.Init(o)
 }
 
-// Transform transform x into standard normal space
+// Transform transforms x into standard normal space
 func (o *Variable) Transform(x float64) (y float64, invalid bool) {
 	if o.Normal {
 		y = (x - o.M) / o.S

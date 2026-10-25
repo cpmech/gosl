@@ -52,7 +52,7 @@ func (o *BoundaryConds) Has(node int) bool {
 }
 
 // Tags returns tags used to prescribe boundary condition at node
-// NOTE: returns empty list of node does not have boundary condition
+// NOTE: returns an empty list if the node does not have a boundary condition
 func (o *BoundaryConds) Tags(node int) []int {
 	if o.n2i[node] < 0 {
 		return nil

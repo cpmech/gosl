@@ -194,7 +194,7 @@ func (o *Triplet) ToDense() (a *Matrix) {
 //
 //  Input:
 //   filename -- filename
-//   mirrorIfSym -- do mirror off-diagonal entries is the matrix symmetric;
+//   mirrorIfSym -- do mirror off-diagonal entries if the matrix is symmetric;
 //      i.e. for each i != j, set both A(i,j) = A(j,i) with the value just read from file.
 //      This option helps when you want all non-zero values of a symmetric matrix,
 //      noting that the MatrixMarket format stores only one "triangular side" of
@@ -506,7 +506,7 @@ func (o *TripletC) ToDense() (a *MatrixC) {
 //
 //  Input:
 //   filename -- filename
-//   mirrorIfSym -- do mirror off-diagonal entries is the matrix symmetric;
+//   mirrorIfSym -- do mirror off-diagonal entries if the matrix is symmetric;
 //      i.e. for each i != j, set both A(i,j) = A(j,i) with the value just read from file.
 //      This option helps when you want all non-zero values of a symmetric matrix,
 //      noting that the MatrixMarket format stores only one "triangular side" of
@@ -535,7 +535,7 @@ func (o *TripletC) ReadSmat(filename string, mirrorIfSym bool) (symmetric bool) 
 				chk.Panic("the given MatrixMarket file must have the word \"complex\" in the header")
 			}
 			if info[4] != "general" && info[4] != "symmetric" {
-				chk.Panic("this function only works with \"general\" or \"unsymmetric\" MatrixMarket files")
+				chk.Panic("this function only works with \"general\" or \"symmetric\" MatrixMarket files")
 			}
 			if info[4] == "symmetric" {
 				symmetric = true

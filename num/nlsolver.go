@@ -13,7 +13,7 @@ import (
 	"github.com/cpmech/gosl/la"
 )
 
-// NlSolver implements a solver to nonlinear systems of equations
+// NlSolver implements a solver for nonlinear systems of equations
 //   References:
 //    [1] G.Forsythe, M.Malcolm, C.Moler, Computer methods for mathematical
 //        computations. M., Mir, 1980, p.180 of the Russian edition
@@ -200,7 +200,7 @@ func (o *NlSolver) Solve(x []float64) {
 				o.lsReady = true
 			}
 
-			// factorisation (must be done for all iterations)
+			// factorization (must be done for all iterations)
 			o.linsol.Fact()
 
 			// solve linear system => compute mdx
@@ -282,8 +282,8 @@ func (o *NlSolver) Solve(x []float64) {
 	}
 }
 
-// CheckJ check Jacobian matrix
-//  Ouptut: cnd -- condition number (with Frobenius norm)
+// CheckJ checks Jacobian matrix
+//  Output: cnd -- condition number (with Frobenius norm)
 func (o *NlSolver) CheckJ(x []float64, tol float64, verbose bool) (cnd float64) {
 
 	// Jacobian matrix

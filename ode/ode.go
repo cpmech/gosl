@@ -290,7 +290,7 @@ func (o *Solver) Solve(y la.Vector, x, xf float64) {
 
 			// check new step size
 			dxnew = utl.Min(dxnew, dxmax)
-			if o.work.reject { // do not alow h to grow if previous was a reject
+			if o.work.reject { // do not allow h to grow if previous was a reject
 				dxnew = utl.Min(o.work.h, dxnew)
 			}
 			o.work.reject = false

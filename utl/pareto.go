@@ -17,7 +17,7 @@ func ParetoMin(u, v []float64) (uDominates, vDominates bool) {
 	chk.IntAssert(len(u), len(v))
 	uHasAllLeq := true // all u values are less-than or equal-to v values
 	uHasOneLe := false // u has at least one value less-than v
-	vHasAllLeq := true // all v values are less-than or equalt-to u values
+	vHasAllLeq := true // all v values are less-than or equal-to u values
 	vHasOneLe := false // v has at least one value less-than u
 	for i := 0; i < len(u); i++ {
 		if u[i] > v[i] {

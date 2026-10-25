@@ -313,7 +313,7 @@ func Test_bins04(tst *testing.T) {
 		bins.Append([]float64{x, x, x}, ID[k], nil)
 	}
 
-	// find points along along space diagonal
+	// find points along the space diagonal
 	ids := bins.FindAlongSegment([]float64{0, 0, 0}, []float64{10, 10, 10}, 0.0000001)
 	io.Pforan("ids along space diagonal = %v\n", ids)
 	chk.Ints(tst, "ids along space diagonal", ID, ids)

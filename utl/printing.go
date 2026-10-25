@@ -20,7 +20,7 @@ func PrintDeep3(name string, A [][][]float64) {
 	io.Pf("]\n")
 }
 
-// PrintDeep4 prints an array of array of array
+// PrintDeep4 prints an array of array of array of array
 func PrintDeep4(name string, A [][][][]float64, format string) {
 	res := name + " = \n"
 	for _, a := range A {

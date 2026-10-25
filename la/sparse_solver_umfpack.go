@@ -115,7 +115,7 @@ func (o *sparseSolverUmfpack) Free() {
 	}
 }
 
-// Fact performs the factorisation
+// Fact performs the factorization
 func (o *sparseSolverUmfpack) Fact() {
 
 	// check
@@ -130,25 +130,25 @@ func (o *sparseSolverUmfpack) Fact() {
 		chk.Panic("conversion failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 
-	// symbolic factorisation
+	// symbolic factorization
 	if o.symbFact {
 		C.umfpack_dl_free_symbolic(&o.usymb)
 		o.symbFact = false
 	}
 	code = C.umfpack_dl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("symbolic factorized failed (UMFPACK error: %s)\n", umfErr((int)(code)))
+		chk.Panic("symbolic factorization failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 	o.symbFact = true
 
-	// numeric factorisation
+	// numeric factorization
 	if o.numeFact {
 		C.umfpack_dl_free_numeric(&o.unum)
 		o.numeFact = false
 	}
 	code = C.umfpack_dl_numeric(o.ap, o.ai, o.ax, o.usymb, &o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("numeric factorisation failed (UMFPACK error: %s)\n", umfErr((int)(code)))
+		chk.Panic("numeric factorization failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 	o.numeFact = true
 
@@ -163,7 +163,7 @@ func (o *sparseSolverUmfpack) Solve(x, b Vector) {
 
 	// check
 	if !o.factorized {
-		chk.Panic("factorisation must be performed first\n")
+		chk.Panic("factorization must be performed first\n")
 	}
 
 	// pointers
@@ -211,7 +211,7 @@ type sparseSolverUmfpackC struct {
 	numeFact    bool
 }
 
-// Init initializes umfpack for sparse linear systems with real numbers
+// Init initializes umfpack for sparse linear systems with complex numbers
 // args may be nil
 func (o *sparseSolverUmfpackC) Init(t *TripletC, args *SparseConfig) {
 
@@ -273,7 +273,7 @@ func (o *sparseSolverUmfpackC) Free() {
 	}
 }
 
-// Fact performs the factorisation
+// Fact performs the factorization
 func (o *sparseSolverUmfpackC) Fact() {
 
 	// check
@@ -288,25 +288,25 @@ func (o *sparseSolverUmfpackC) Fact() {
 		chk.Panic("conversion failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 
-	// symbolic factorisation
+	// symbolic factorization
 	if o.symbFact {
 		C.umfpack_zl_free_symbolic(&o.usymb)
 		o.symbFact = false
 	}
 	code = C.umfpack_zl_symbolic(C.LONG(o.t.m), C.LONG(o.t.n), o.ap, o.ai, o.ax, nil, &o.usymb, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("symbolic factorized failed (UMFPACK error: %s)\n", umfErr((int)(code)))
+		chk.Panic("symbolic factorization failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 	o.symbFact = true
 
-	// numeric factorisation
+	// numeric factorization
 	if o.numeFact {
 		C.umfpack_zl_free_numeric(&o.unum)
 		o.numeFact = false
 	}
 	code = C.umfpack_zl_numeric(o.ap, o.ai, o.ax, nil, o.usymb, &o.unum, o.uctrl, o.uinfo)
 	if code != C.UMFPACK_OK {
-		chk.Panic("numeric factorisation failed (UMFPACK error: %s)\n", umfErr((int)(code)))
+		chk.Panic("numeric factorization failed (UMFPACK error: %s)\n", umfErr((int)(code)))
 	}
 	o.numeFact = true
 
@@ -321,7 +321,7 @@ func (o *sparseSolverUmfpackC) Solve(x, b VectorC) {
 
 	// check
 	if !o.factorized {
-		chk.Panic("factorisation must be performed first\n")
+		chk.Panic("factorization must be performed first\n")
 	}
 
 	// pointers

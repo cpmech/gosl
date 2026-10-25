@@ -139,7 +139,7 @@ func Elliptic3(n, φ, k float64) float64 {
 //	[2] Carlson BC (1977) Elliptic Integrals of the First Kind, SIAM Journal on Mathematical
 //	    Analysis, vol. 8, pp. 231-242.
 func CarlsonRf(x, y, z float64) float64 {
-	ERRTOL := 0.0025 // a value of 0.0025 for the error tolerance parameter gives full double precision (16 sig ant digits) [1]
+	ERRTOL := 0.0025 // a value of 0.0025 for the error tolerance parameter gives full double precision (16 significant digits) [1]
 	THIRD := 1.0 / 3.0
 	C1 := 1.0 / 24.0
 	C2 := 0.1

@@ -14,7 +14,7 @@ import (
 // with npts points
 func QuadDiscreteSimpsonRF(a, b float64, n int, f fun.Ss) (res float64) {
 	if n < 2 || n%2 > 0 {
-		chk.Panic("number of subintervas should be even (n=%d)", n)
+		chk.Panic("number of subintervals should be even (n=%d)", n)
 	}
 	fa := f(a)
 	fb := f(b)
@@ -66,12 +66,12 @@ func QuadDiscreteSimps2d(Lx, Ly float64, f [][]float64) (V float64) {
 	for i := 1; i < m-1; i += 2 {
 		V += 4.0 * (f[i][0] + f[i][n-1])
 
-		// centre: 16
+		// center: 16
 		for j := 1; j < n-1; j += 2 {
 			V += 16.0 * f[i][j]
 		}
 
-		// centre: 8a
+		// center: 8a
 		for j := 2; j < n-1; j += 2 {
 			V += 8.0 * f[i][j]
 		}
@@ -81,12 +81,12 @@ func QuadDiscreteSimps2d(Lx, Ly float64, f [][]float64) (V float64) {
 	for i := 2; i < m-1; i += 2 {
 		V += 2.0 * (f[i][0] + f[i][n-1])
 
-		// centre: 4
+		// center: 4
 		for j := 2; j < n-1; j += 2 {
 			V += 4.0 * f[i][j]
 		}
 
-		// centre: 8b
+		// center: 8b
 		for j := 1; j < n-1; j += 2 {
 			V += 8.0 * f[i][j]
 		}

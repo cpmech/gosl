@@ -18,7 +18,7 @@ import (
 
 // functions /////////////////////////////////////////////////////////////////////////////////////
 
-// Digits returns the nubmer of digits
+// Digits returns the number of digits
 func Digits(maxint int) (ndigits int, format string) {
 	ndigits = int(math.Log10(float64(maxint))) + 1
 	format = io.Sf("%%%dd", ndigits)
@@ -110,12 +110,12 @@ func IntRange(n int) (res []int) {
 	return
 }
 
-// IntRange2 generates slice of integers from start to stop (but not stop)
+// IntRange2 generates a slice of integers from start to stop (excluding stop)
 func IntRange2(start, stop int) []int {
 	return IntRange3(start, stop, 1)
 }
 
-// IntRange3 generates a slice of integers from start to stop (but not stop), afer each 'step'
+// IntRange3 generates a slice of integers from start to stop (excluding stop), after each 'step'
 func IntRange3(start, stop, step int) (res []int) {
 	switch {
 	case stop == start:
@@ -258,7 +258,7 @@ func GetCopy(in []float64) (out []float64) {
 	return
 }
 
-// GetReversed return a copy with reversed items
+// GetReversed returns a copy with reversed items
 func GetReversed(in []float64) (out []float64) {
 	n := len(in)
 	out = make([]float64, n)
@@ -310,10 +310,10 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 	return
 }
 
-// NonlinSpace generates N points such that the ratio between the last segment (or the middle
+// NonlinSpace generates N points such that the ratio of the last segment (or the middle
 // segment) to the first one is equal to a given constant R.
 //
-//   The ratio between the last (or middle largest) segment to the first one is:
+//   The ratio of the last (or middle largest) segment to the first one is:
 //
 //       ΔxL   = Δx0 ⋅ R
 //
@@ -322,7 +322,7 @@ func LinSpaceOpen(start, stop float64, num int) (res []float64) {
 //                k-1
 //       Δx[k] = α    ⋅ Δx[0]
 //
-//   Unsymmetricc case:
+//   Unsymmetric case:
 //
 //     |--|-------|------------|-----------------|
 //      Δx0                            ΔxL
@@ -426,7 +426,7 @@ func FromStrings(s []string) (v []float64) {
 	return
 }
 
-// FromString splits a string with numbers separeted by spaces into float64
+// FromString splits a string with numbers separated by spaces into float64
 func FromString(s string) (r []float64) {
 	ss := strings.Fields(s)
 	r = make([]float64, len(ss))
@@ -542,7 +542,7 @@ func MeshGrid2dV(xVals, yVals []float64) (X, Y [][]float64) {
 //              i.e. 's' decreases from 1 to 0 while x goes from xmin to xmax
 //   useinds -- if (xmax-xmin)<tol, use indices to generate the 's' slice;
 //              otherwise, 's' will be filled with δs + zeros
-//  Ouptut:
+//  Output:
 //   s          -- scaled series; pre--allocated with len(s) == len(x)
 //   xmin, xmax -- min(x) and max(x)
 func Scaling(s, x []float64, ds, tol float64, reverse, useinds bool) (xmin, xmax float64) {
@@ -618,7 +618,7 @@ func GtPenalty(x, b, penaltyM float64) float64 {
 }
 
 // GtePenalty implements a 'greater than or equal' penalty function where
-// x must be greater than b or equal to be; otherwise the error is magnified
+// x must be greater than b or equal to b; otherwise the error is magnified
 func GtePenalty(x, b, penaltyM float64) float64 {
 	if x >= b {
 		return 0.0

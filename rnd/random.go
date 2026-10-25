@@ -48,7 +48,7 @@ func Ints(values []int, low, high int) {
 	}
 }
 
-// Float64 generates a pseudo random real number between low and high; i.e. in [low, right)
+// Float64 generates a pseudo random real number between low and high; i.e. in [low, high)
 //  Input:
 //   low  -- lower limit (closed)
 //   high -- upper limit (open)
@@ -58,7 +58,7 @@ func Float64(low, high float64) float64 {
 	return low + (high-low)*rand.Float64()
 }
 
-// Float64s generates pseudo random real numbers between low and high; i.e. in [low, right)
+// Float64s generates pseudo random real numbers between low and high; i.e. in [low, high)
 //  Input:
 //   low  -- lower limit (closed)
 //   high -- upper limit (open)
@@ -146,7 +146,7 @@ func IntShuffle(values []int) {
 	}
 }
 
-// IntGetShuffled returns a shufled slice of integers
+// IntGetShuffled returns a shuffled slice of integers
 func IntGetShuffled(values []int) (shuffled []int) {
 	shuffled = make([]int, len(values))
 	copy(shuffled, values)

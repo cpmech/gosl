@@ -16,7 +16,7 @@ import (
 // among others.
 //
 // Dependent variables may be connected to P using Connect so when Set is called,
-// the dependendt variable is updated as well.
+// the dependent variable is updated as well.
 //
 // Other parameters can be linked to this one via the Other data member
 // and Func may be useful to compute y=f(t,x)
@@ -188,7 +188,7 @@ func (o *Params) SetBool(name string, value float64) {
 	p.V = -1.0
 }
 
-// CheckLimits check limits of variables given in Min/Max
+// CheckLimits checks limits of variables given in Min/Max
 // Will panic if values are outside corresponding Min/Max range.
 func (o *Params) CheckLimits() {
 	for _, p := range *o {
@@ -201,7 +201,7 @@ func (o *Params) CheckLimits() {
 	}
 }
 
-// GetValues get parameter values
+// GetValues gets parameter values
 func (o *Params) GetValues(names []string) (values []float64, found []bool) {
 	n := len(names)
 	values = make([]float64, n)
@@ -216,7 +216,7 @@ func (o *Params) GetValues(names []string) (values []float64, found []bool) {
 	return
 }
 
-// CheckAndGetValues check min/max limits and return values.
+// CheckAndGetValues checks min/max limits and returns values.
 // Will panic if values are outside corresponding min/max range.
 // Will also panic if a parameter name is not found.
 func (o *Params) CheckAndGetValues(names []string) (values []float64) {
@@ -238,7 +238,7 @@ func (o *Params) CheckAndGetValues(names []string) (values []float64) {
 	return
 }
 
-// CheckAndSetVariables get parameter values and check limits defined in Min and Max
+// CheckAndSetVariables gets parameter values and checks limits defined in Min and Max
 // Will panic if values are outside corresponding Min/Max range.
 // Will also panic if a parameter name is not found.
 func (o *Params) CheckAndSetVariables(names []string, variables []*float64) {

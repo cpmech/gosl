@@ -42,7 +42,7 @@ type Bins struct {
 	tmp  []int     // [ndim] temporary (auxiliary) slice
 }
 
-// Init initialize Bins structure
+// Init initializes Bins structure
 //   xmin -- [ndim] min/initial coordinates of the whole space (box/cube)
 //   xmax -- [ndim] max/final coordinates of the whole space (box/cube)
 //   ndiv -- [ndim] number of divisions for xmax-xmin
@@ -105,7 +105,7 @@ func (o *Bins) Clear() {
 	o.All = make([]*Bin, 0)
 }
 
-// FindBinByIndex finds or allocate new bin corresponding to index idx
+// FindBinByIndex finds or allocates new bin corresponding to index idx
 func (o Bins) FindBinByIndex(idx int) *Bin {
 
 	// check
@@ -148,7 +148,7 @@ func (o Bins) CalcIndex(x []float64) int {
 //
 //  NOTE: FindClosest does search the whole area.
 //        It only locates neighbors in the same bin where the given x is located.
-//        So, if there area no entries in the bin containing x, no entry will be found.
+//        So, if there are no entries in the bin containing x, no entry will be found.
 //
 func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
 
@@ -179,7 +179,7 @@ func (o Bins) FindClosest(x []float64) (idClosest int, sqDistMin float64) {
 	return
 }
 
-// FindClosestAndAppend finds closest point and, if not found, append to bins with a new Id
+// FindClosestAndAppend finds closest point and, if not found, appends to bins with a new Id
 //   Input:
 //     nextId -- is the Id of the next point. Will be incremented if x is a new point to be added.
 //     x      -- is the point to be added
@@ -352,7 +352,7 @@ func (o *Bins) Summary() (l string) {
 	l += io.Sf("Xdel        = %v\n", o.Xdel)
 	l += io.Sf("Size        = %v\n", o.Size)
 	l += io.Sf("Ndiv        = %v\n", o.Ndiv)
-	l += io.Sf("Nalll       = %d\n", len(o.All))
+	l += io.Sf("Nall        = %d\n", len(o.All))
 	l += io.Sf("NactiveBins = %d\n", o.Nactive())
 	l += io.Sf("Nentries    = %d\n", o.Nentries())
 	return

@@ -92,10 +92,10 @@ func (o *File) Close() {
 
 // auxiliary methods ///////////////////////////////////////////////////////////////////////////
 
-// filterPath checks path syntax and return a list split by '/'
+// filterPath checks path syntax and returns a list split by '/'
 func (o *File) filterPath(path string) []string {
 	if len(path) < 1 {
-		chk.Panic("path must be contain at least 1 character, including '/'. path=%q is invalid. file =<%s>", path, o.furl)
+		chk.Panic("path must contain at least 1 character, including '/'. path=%q is invalid. file =<%s>", path, o.furl)
 	}
 	if path[0] != '/' {
 		chk.Panic("first character of path must be '/'. path=%q is invalid. file =<%s>", path, o.furl)

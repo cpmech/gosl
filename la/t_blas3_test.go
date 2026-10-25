@@ -30,7 +30,7 @@ func TestBlas3tst01(tst *testing.T) {
 		{1.30, +5.0, +5.0, +5.25},
 	}
 
-	// tranpose matrices
+	// transpose matrices
 	atrans := a.GetTranspose()
 	btrans := b.GetTranspose()
 
@@ -80,7 +80,7 @@ func TestBlas3tst02(tst *testing.T) {
 		{101.30, 105.0, 105.0, 105.25},
 	}
 
-	// tranpose matrices
+	// transpose matrices
 	atrans := a.GetTranspose()
 	btrans := b.GetTranspose()
 

@@ -123,7 +123,7 @@ func TestDoPri502(tst *testing.T) {
 func TestDoPri503(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("DoPri503. Dormand-Prince5(4). Van de Pol")
+	chk.PrintTitle("DoPri503. Dormand-Prince5(4). Van der Pol")
 
 	// problem
 	p := ProbVanDerPol(1e-3, false)

@@ -24,7 +24,7 @@ type Edge struct {
 // EdgesMap is a map of edges
 type EdgesMap map[EdgeKey]*Edge
 
-// ExtractEdges find edges in mesh
+// ExtractEdges finds edges in mesh
 func (o *Mesh) ExtractEdges() (edges EdgesMap) {
 
 	// new map
@@ -68,7 +68,7 @@ func (o *Mesh) ExtractEdges() (edges EdgesMap) {
 }
 
 // Split splits map into two sets: internal and boundary edges
-// NOTE: boundary edge is determined by checking if edge is shared by only cell only
+// NOTE: boundary edge is determined by checking if edge is shared by one cell only
 func (o *EdgesMap) Split() (internal, boundary EdgesMap) {
 	internal = make(map[EdgeKey]*Edge)
 	boundary = make(map[EdgeKey]*Edge)

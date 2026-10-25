@@ -49,7 +49,7 @@ func MTints(values []int, low, high int) {
 	}
 }
 
-// MTfloat64 generates pseudo random real numbers between low and high; i.e. in [low, right)
+// MTfloat64 generates pseudo random real numbers between low and high; i.e. in [low, high)
 // using the Mersenne Twister method.
 //  Input:
 //   low  -- lower limit (closed)
@@ -60,7 +60,7 @@ func MTfloat64(low, high float64) float64 {
 	return dsfmt.Rand(low, high)
 }
 
-// MTfloat64s generates pseudo random real numbers between low and high; i.e. in [low, right)
+// MTfloat64s generates pseudo random real numbers between low and high; i.e. in [low, high)
 // using the Mersenne Twister method.
 //  Input:
 //   low  -- lower limit (closed)

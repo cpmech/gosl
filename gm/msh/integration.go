@@ -26,7 +26,7 @@ type Integrator struct {
 
 	// mutable-data (scratchpad)
 	xip         la.Vector  // x(r); i.e. x @ integration point
-	JacobianMat *la.Matrix // jacobian matrix Jr of the mapping reference to general coords [ndim][ndim]
+	JacobianMat *la.Matrix // jacobian matrix Jr of the mapping from reference to general coords [ndim][ndim]
 	InvJacobMat *la.Matrix // inverse of jacobian matrix [ndim][ndim]
 	DetJacobian float64    // determinant of jacobian matrix
 }

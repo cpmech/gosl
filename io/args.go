@@ -20,7 +20,7 @@ import (
 //   filename -- the filename with extension added
 //   fnkey    -- filename key == filename without extension
 //  Notes:
-//   The first first argument may be a file with extension or not.
+//   The first argument may be a file with extension or not.
 //  Examples:
 //   If the first argument is "simulation.sim" or "simulation" (with ext=".sim")
 //   then the results are: filename="simulation.sim" and fnkey="simulation"
@@ -38,7 +38,7 @@ func ArgToFilename(idxArg int, fnDefault, ext string, check bool) (filename, fnk
 	fnkey = FnKey(filename)
 	if check {
 		if filename == "" || fnkey == "" {
-			chk.Panic("filename must be given as first argument")
+			chk.Panic("filename must be given as the first argument")
 		}
 	}
 	return

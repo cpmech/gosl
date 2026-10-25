@@ -142,7 +142,7 @@ func (o *Histogram) Count(vals []float64, clear bool) {
 	}
 }
 
-// GenLabels generate nice labels identifying bins
+// GenLabels generates nice labels identifying bins
 func (o Histogram) GenLabels(numfmt string) (labels []string) {
 	if len(o.Stations) < 2 {
 		chk.Panic("Histogram must have at least 2 stations")
@@ -243,7 +243,7 @@ func (o *IntHistogram) Count(vals []int, clear bool) {
 	}
 }
 
-// GenLabels generate nice labels identifying bins
+// GenLabels generates nice labels identifying bins
 func (o IntHistogram) GenLabels(numfmt string) (labels []string) {
 	if len(o.Stations) < 2 {
 		chk.Panic("IntHistogram must have at least 2 stations")

@@ -2,13 +2,13 @@
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/cpmech/gosl/gm/tri)](https://pkg.go.dev/github.com/cpmech/gosl/gm/tri)
 
-The `tri` package has functions go generate meshes of triangular elements and Delaunay
+The `tri` package has functions to generate meshes of triangular elements and Delaunay
 triangulations. The package is a light wrapper to the very efficient `Triangle` code by Jonathan
 Shewchuk and available at [the Triangle website](https://www.cs.cmu.edu/~quake/triangle.html).
 
-Triangle's licence details are in the <a href="triangle_README.txt">triangle_README.txt</a> file.
+Triangle's license details are in the <a href="triangle_README.txt">triangle_README.txt</a> file.
 
-In addition of being very fast, `Triangle` can generate meshes with great quality; i.e. it is a
+In addition to being very fast, `Triangle` can generate meshes with great quality; i.e. it is a
 **quality-mesh triangulator**.
 
 Here, the Cartesian coordinates of points are stored in continuous 1D arrays (slices) such as:
@@ -23,7 +23,7 @@ The topology is simply defined by two slices usually named `V` for vertices and 
 
 ```
 V = { { x0, y0 }, { x1, y1 }, { x2, y2 } ... Nvertices }
-C = { { id0, id1, id2 }, { id0, id1, id2 } ... Ncellls }
+C = { { id0, id1, id2 }, { id0, id1, id2 } ... Ncells }
 ```
 
 where `V` is the list of vertices (there are Nvertices vertices) and `C` is the list of triangles

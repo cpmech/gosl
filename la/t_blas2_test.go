@@ -130,7 +130,7 @@ func TestBlas2tst02(tst *testing.T) {
 func TestBlas2tst03(tst *testing.T) {
 
 	//verbose()
-	chk.PrintTitle("Blas2tst03. (real) Blas2 functions (tranpose)")
+	chk.PrintTitle("Blas2tst03. (real) Blas2 functions (transpose)")
 
 	// allocate data
 	a := NewMatrixDeep2([][]float64{

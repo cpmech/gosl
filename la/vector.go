@@ -78,7 +78,7 @@ func (o Vector) GetUnit() (unit Vector) {
 	return
 }
 
-// Accum sum/accumulates all components in a vector
+// Accum sums/accumulates all components in a vector
 //  sum := Σ_i v[i]
 func (o Vector) Accum() (sum float64) {
 	for i := 0; i < len(o); i++ {

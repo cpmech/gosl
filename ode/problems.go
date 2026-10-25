@@ -16,7 +16,7 @@ import (
 	"github.com/cpmech/gosl/utl"
 )
 
-// Problem defines the data for an ODE problems (e.g. for testing)
+// Problem defines the data for an ODE problem (e.g. for testing)
 type Problem struct {
 	Yana YanaF       // analytical solution
 	Fcn  Func        // the function f(x,y) = dy/df
@@ -145,7 +145,7 @@ func ProbHwEq11() (o *Problem) {
 	return
 }
 
-// ProbVanDerPol returns the Van der Pol' Equation as given in Hairer-Wanner VII-p5 Eq.(1.5)
+// ProbVanDerPol returns the Van der Pol equation as given in Hairer-Wanner VII-p5 Eq.(1.5)
 //
 //	eps  -- ε coefficient; use 0 for default value [=1e-6]
 //	stationary -- use eps=1 and compute period and amplitude such that

@@ -6,7 +6,7 @@ package utl
 
 // Observer is an interface to objects that need to observe something
 type Observer interface {
-	Update() // the data observed by this observer is being update
+	Update() // the data observed by this observer is being updated
 }
 
 // Observable indicates that an object is observable; i.e. it has a list of interested observers

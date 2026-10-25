@@ -15,7 +15,7 @@ import (
 // PointN implements a point in N-dim space
 type PointN struct {
 
-	// esssential
+	// essential
 	X []float64 // coordinates
 
 	// optional
@@ -27,7 +27,7 @@ func NewPointNdim(ndim uint32) (o *PointN) {
 	return &PointN{X: make([]float64, ndim)}
 }
 
-// NewPointN creats a new PointN with given coordinates; can be any number
+// NewPointN creates a new PointN with given coordinates; can be any number
 func NewPointN(X ...float64) (o *PointN) {
 	ndim := len(X)
 	o = new(PointN)
@@ -74,7 +74,7 @@ func DistPointPointN(p *PointN, q *PointN) (dist float64) {
 
 // BoxN ///////////////////////////////////////////////////////////////////////////////////////////
 
-// BoxN implements a box int he N-dimensional space
+// BoxN implements a box in the N-dimensional space
 type BoxN struct {
 	// essential
 	Lo *PointN // lower point
@@ -119,7 +119,7 @@ func (o *BoxN) GetSize() (delta []float64) {
 	return
 }
 
-// GetMid gets the centre coordinates of box
+// GetMid gets the center coordinates of box
 func (o *BoxN) GetMid() (mid []float64) {
 	mid = make([]float64, len(o.Lo.X))
 	for i := 0; i < len(o.Lo.X); i++ {

@@ -90,7 +90,7 @@ func (o *ElementaryTrapz) Integrate() (res float64) {
 	return
 }
 
-// ElementarySimpson structure implements the Simpson's method for quadrature with refinement.
+// ElementarySimpson structure implements Simpson's method for quadrature with refinement.
 type ElementarySimpson struct {
 	n    int     // current level of refinement.
 	a, b float64 // limits

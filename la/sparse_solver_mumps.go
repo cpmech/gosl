@@ -123,7 +123,7 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 
 	// analysis step
 	o.data.job = 1     // analysis code
-	C.dmumps_c(o.data) // analyse
+	C.dmumps_c(o.data) // analyze
 	if o.data.info[1-1] < 0 {
 		chk.Panic("analysis failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
@@ -135,12 +135,12 @@ func (o *sparseSolverMumps) Init(t *Triplet, args *SparseConfig) {
 // Free clears extra memory allocated by MUMPS
 func (o *sparseSolverMumps) Free() {
 	if o.initialized {
-		o.data.job = -2    // finalisation code
+		o.data.job = -2    // finalization code
 		C.dmumps_c(o.data) // do finalize
 	}
 }
 
-// Fact performs the factorisation
+// Fact performs the factorization
 func (o *sparseSolverMumps) Fact() {
 
 	// check
@@ -148,8 +148,8 @@ func (o *sparseSolverMumps) Fact() {
 		chk.Panic("linear solver must be initialized first\n")
 	}
 
-	// factorisation
-	o.data.job = 2     // factorisation code
+	// factorization
+	o.data.job = 2     // factorization code
 	C.dmumps_c(o.data) // factorize
 	if o.data.info[1-1] < 0 {
 		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
@@ -159,7 +159,7 @@ func (o *sparseSolverMumps) Fact() {
 	o.factorized = true
 }
 
-// Solve solves sparse linear systems using MUMPS or MUMPS
+// Solve solves sparse linear systems using MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
@@ -169,7 +169,7 @@ func (o *sparseSolverMumps) Solve(x, b Vector) {
 
 	// check
 	if !o.factorized {
-		chk.Panic("factorisation must be performed first\n")
+		chk.Panic("factorization must be performed first\n")
 	}
 
 	// set RHS
@@ -202,7 +202,7 @@ type sparseSolverMumpsC struct {
 	factorized  bool
 }
 
-// Init initializes mumps for sparse linear systems with real numbers
+// Init initializes mumps for sparse linear systems with complex numbers
 // args may be nil
 func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 
@@ -287,7 +287,7 @@ func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 
 	// analysis step
 	o.data.job = 1     // analysis code
-	C.zmumps_c(o.data) // analyse
+	C.zmumps_c(o.data) // analyze
 	if o.data.info[1-1] < 0 {
 		chk.Panic("analysis failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
 	}
@@ -299,12 +299,12 @@ func (o *sparseSolverMumpsC) Init(t *TripletC, args *SparseConfig) {
 // Free clears extra memory allocated by MUMPS
 func (o *sparseSolverMumpsC) Free() {
 	if o.initialized {
-		o.data.job = -2    // finalisation code
+		o.data.job = -2    // finalization code
 		C.zmumps_c(o.data) // do finalize
 	}
 }
 
-// Fact performs the factorisation
+// Fact performs the factorization
 func (o *sparseSolverMumpsC) Fact() {
 
 	// check
@@ -312,8 +312,8 @@ func (o *sparseSolverMumpsC) Fact() {
 		chk.Panic("linear solver must be initialized first\n")
 	}
 
-	// factorisation
-	o.data.job = 2     // factorisation code
+	// factorization
+	o.data.job = 2     // factorization code
 	C.zmumps_c(o.data) // factorize
 	if o.data.info[1-1] < 0 {
 		chk.Panic("solver failed: %v\n", mumErr(o.data.info[1-1], o.data.info[2-1]))
@@ -323,7 +323,7 @@ func (o *sparseSolverMumpsC) Fact() {
 	o.factorized = true
 }
 
-// Solve solves sparse linear systems using MUMPS or MUMPS
+// Solve solves sparse linear systems using MUMPS
 //
 //   Given:  A ⋅ x = b    find x   such that   x = A⁻¹ ⋅ b
 //
@@ -331,7 +331,7 @@ func (o *sparseSolverMumpsC) Solve(x, b VectorC) {
 
 	// check
 	if !o.factorized {
-		chk.Panic("factorisation must be performed first\n")
+		chk.Panic("factorization must be performed first\n")
 	}
 
 	// set RHS
