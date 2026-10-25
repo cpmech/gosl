@@ -1,7 +1,6 @@
 # Gosl — a Go library for scientific computing
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/cpmech/gosl.svg)](https://pkg.go.dev/github.com/cpmech/gosl)
-[![Go Report Card](https://goreportcard.com/badge/github.com/cpmech/gosl)](https://goreportcard.com/report/github.com/cpmech/gosl)
 [![Awesome](https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg)](https://github.com/avelino/awesome-go)
 
 Gosl is a set of tools for developing scientific simulations in Go. Its focus is numerical methods and solvers for differential equations. It also provides fast Fourier transforms, random-number generation, probability distributions, and computational geometry.
